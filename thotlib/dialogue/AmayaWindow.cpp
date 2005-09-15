@@ -55,35 +55,35 @@
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaWindow, wxFrame)
 
-/* contains the last activated window id. */
-int AmayaWindow::m_ActiveWindowId = -1;
+  /* contains the last activated window id. */
+  int AmayaWindow::m_ActiveWindowId = -1;
 
 DECLARE_EVENT_TYPE(wxEVT_AMAYA_ACTION_EVENT, -1)
-DEFINE_EVENT_TYPE(wxEVT_AMAYA_ACTION_EVENT)
+  DEFINE_EVENT_TYPE(wxEVT_AMAYA_ACTION_EVENT)
 
-/*
- *--------------------------------------------------------------------------------------
- *       Class:  AmayaWindow
- *      Method:  AmayaWindow
- * Description:  create a new AmayaWindow
- *--------------------------------------------------------------------------------------
- */
-AmayaWindow::AmayaWindow (  int            window_id
-                            ,wxWindow *     p_parent_window
-                            ,const wxPoint& pos
-                            ,const wxSize&  size
-                            ,int kind
-                            ,long style
-                            ) : 
-  wxFrame( wxDynamicCast(p_parent_window, wxWindow),
-           -1, _T(""), pos, size, style ),
-  m_Kind( kind ),
-  m_WindowId( window_id ),
-  m_IsClosing( FALSE ),
-  m_ShouldCleanUp( false ),
-  m_ActiveFrameId( 0 ),
-  m_MustCheckFocusIsNotLost( false ),
-  m_pMenuBar(NULL)
+  /*
+   *--------------------------------------------------------------------------------------
+   *       Class:  AmayaWindow
+   *      Method:  AmayaWindow
+   * Description:  create a new AmayaWindow
+   *--------------------------------------------------------------------------------------
+   */
+  AmayaWindow::AmayaWindow (  int            window_id
+                              ,wxWindow *     p_parent_window
+                              ,const wxPoint& pos
+                              ,const wxSize&  size
+                              ,int kind
+                              ,long style
+                              ) : 
+    wxFrame( wxDynamicCast(p_parent_window, wxWindow),
+             -1, _T(""), pos, size, style ),
+    m_Kind( kind ),
+    m_WindowId( window_id ),
+    m_IsClosing( FALSE ),
+    m_ShouldCleanUp( false ),
+    m_ActiveFrameId( 0 ),
+    m_MustCheckFocusIsNotLost( false ),
+    m_pMenuBar(NULL)
 {
   TTALOGDEBUG_1( TTA_LOG_DIALOG,  _T("AmayaWindow::AmayaWindow: window_id=%d"), m_WindowId );
   SetIcon( AmayaApp::GetAppIcon() );
@@ -310,9 +310,9 @@ void AmayaWindow::SetMenuBar( wxMenuBar * p_menu_bar )
 void AmayaWindow::OnSize( wxSizeEvent& event )
 {
   TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaWindow::OnSize - ")+
-		 wxString(_T(" w=%d h=%d")),
-		 event.GetSize().GetWidth(),
-		 event.GetSize().GetHeight() );
+                 wxString(_T(" w=%d h=%d")),
+                 event.GetSize().GetWidth(),
+                 event.GetSize().GetHeight() );
 
   // save the new window size
   WindowTable[GetWindowId()].FrWidth  = event.GetSize().GetWidth();
@@ -402,13 +402,16 @@ void AmayaWindow::OnIdle( wxIdleEvent& event )
     {
       wxWindow *       p_win_focus         = wxWindow::FindFocus();
       if (p_win_focus)
-	TTALOGDEBUG_1( TTA_LOG_FOCUS, _T("AmayaWindow::OnIdle - focus = %s"), p_win_focus->GetClassInfo()->GetClassName())
-      else
-	{
-	  TTALOGDEBUG_0( TTA_LOG_FOCUS, _T("AmayaWindow::OnIdle - no focus"));
-	  //TtaRedirectFocus();
-    TtaCheckLostFocus();
-	}
+        TTALOGDEBUG_1( TTA_LOG_FOCUS, _T("AmayaWindow::OnIdle - focus = %s"), p_win_focus->GetClassInfo()->GetClassName())
+          else
+            {
+              TTALOGDEBUG_0( TTA_LOG_FOCUS, _T("AmayaWindow::OnIdle - no focus"));
+#ifndef _MACOS
+              TtaRedirectFocus();
+#else /* _MACOS */
+              TtaCheckLostFocus();
+#endif /* _MACOS */
+            }
       m_MustCheckFocusIsNotLost = false;
     }
 
@@ -438,7 +441,7 @@ void AmayaWindow::OnActivate( wxActivateEvent & event )
       // this is necessary because when a window is closed, the active frame must be updated
       AmayaFrame * p_frame = GetActiveFrame();
       if (p_frame)
-	ChangeSelFrame(p_frame->GetFrameId());
+        ChangeSelFrame(p_frame->GetFrameId());
 
       // just chek on idle time if the focus is lost 
       m_MustCheckFocusIsNotLost = true;
@@ -552,7 +555,7 @@ void AmayaWindow::OnChar(wxKeyEvent& event)
   if (!TtaHandleUnicodeKey(event))
     if (!TtaHandleSpecialKey(event))
       if (!TtaHandleShortcutKey(event))
-	event.Skip();
+        event.Skip();
 }
 
 #if 0
@@ -573,28 +576,28 @@ bool AmayaWindow::CheckUnicodeKey( wxKeyEvent& event )
       wxSpinCtrl * p_spinctrl          = wxDynamicCast(p_win_focus, wxSpinCtrl);
       // do not proceed any characteres if the focused widget is a textctrl or a combobox or a spinctrl
       if (!p_text_ctrl && !p_combo_box && !p_spinctrl)
-	{
-	  wxButton *       p_button            = wxDynamicCast(p_win_focus, wxButton);
-	  wxCheckListBox * p_check_listbox     = wxDynamicCast(p_win_focus, wxCheckListBox);
-	  // do not proceed "space" key if the focused widget is a button or a wxCheckListBox
-	  if ( !(event.GetKeyCode() == WXK_SPACE && (p_button || p_check_listbox)) )
-	    {
-	      int thot_keysym = event.GetUnicodeKey();  
-	      int thotMask = 0;
-	      if (event.ControlDown())
-		thotMask |= THOT_MOD_CTRL;
-	      if (event.AltDown())
-		thotMask |= THOT_MOD_ALT;
-	      if (event.ShiftDown())
-		thotMask |= THOT_MOD_SHIFT; 
-	      ThotInput (GetActiveFrame()->GetFrameId(), thot_keysym, 0, thotMask, thot_keysym);
-	      return true;
-	    }
-	  else
-	    event.Skip();	  
-	}
+        {
+          wxButton *       p_button            = wxDynamicCast(p_win_focus, wxButton);
+          wxCheckListBox * p_check_listbox     = wxDynamicCast(p_win_focus, wxCheckListBox);
+          // do not proceed "space" key if the focused widget is a button or a wxCheckListBox
+          if ( !(event.GetKeyCode() == WXK_SPACE && (p_button || p_check_listbox)) )
+            {
+              int thot_keysym = event.GetUnicodeKey();  
+              int thotMask = 0;
+              if (event.ControlDown())
+                thotMask |= THOT_MOD_CTRL;
+              if (event.AltDown())
+                thotMask |= THOT_MOD_ALT;
+              if (event.ShiftDown())
+                thotMask |= THOT_MOD_SHIFT; 
+              ThotInput (GetActiveFrame()->GetFrameId(), thot_keysym, 0, thotMask, thot_keysym);
+              return true;
+            }
+          else
+            event.Skip();	  
+        }
       else
-	event.Skip();
+        event.Skip();
     }
   return false;
 }
@@ -609,78 +612,78 @@ bool AmayaWindow::CheckUnicodeKey( wxKeyEvent& event )
 bool AmayaWindow::CheckSpecialKey( wxKeyEvent& event )
 {
   if ( !event.ControlDown() && !event.AltDown() && IsSpecialKey(event.GetKeyCode()))
-  {
-  int thot_keysym = event.GetKeyCode();  
+    {
+      int thot_keysym = event.GetKeyCode();  
 
-  bool proceed_key = (
-       thot_keysym == WXK_F2     ||
-       thot_keysym == WXK_INSERT ||
-       thot_keysym == WXK_DELETE ||
-       thot_keysym == WXK_HOME   ||
-       thot_keysym == WXK_PRIOR  ||
-       thot_keysym == WXK_NEXT   ||
-       thot_keysym == WXK_END    ||
-       thot_keysym == WXK_LEFT   ||
-       thot_keysym == WXK_RIGHT  ||
-       thot_keysym == WXK_UP     ||
-       thot_keysym == WXK_DOWN   ||
-       thot_keysym == WXK_ESCAPE ||
-       thot_keysym == WXK_BACK   ||
-       thot_keysym == WXK_RETURN ||
-       thot_keysym == WXK_TAB );
+      bool proceed_key = (
+                          thot_keysym == WXK_F2     ||
+                          thot_keysym == WXK_INSERT ||
+                          thot_keysym == WXK_DELETE ||
+                          thot_keysym == WXK_HOME   ||
+                          thot_keysym == WXK_PRIOR  ||
+                          thot_keysym == WXK_NEXT   ||
+                          thot_keysym == WXK_END    ||
+                          thot_keysym == WXK_LEFT   ||
+                          thot_keysym == WXK_RIGHT  ||
+                          thot_keysym == WXK_UP     ||
+                          thot_keysym == WXK_DOWN   ||
+                          thot_keysym == WXK_ESCAPE ||
+                          thot_keysym == WXK_BACK   ||
+                          thot_keysym == WXK_RETURN ||
+                          thot_keysym == WXK_TAB );
 
-  wxWindow *       p_win_focus         = wxWindow::FindFocus();
-  wxPanel *        p_panel             = wxDynamicCast(p_win_focus, wxPanel);
-  wxGLCanvas *     p_gl_canvas         = wxDynamicCast(p_win_focus, wxGLCanvas);
-  wxTextCtrl *     p_text_ctrl         = wxDynamicCast(p_win_focus, wxTextCtrl);
-  wxComboBox *     p_combo_box         = wxDynamicCast(p_win_focus, wxComboBox);
-  wxSpinCtrl *     p_spinctrl          = wxDynamicCast(p_win_focus, wxSpinCtrl);
+      wxWindow *       p_win_focus         = wxWindow::FindFocus();
+      wxPanel *        p_panel             = wxDynamicCast(p_win_focus, wxPanel);
+      wxGLCanvas *     p_gl_canvas         = wxDynamicCast(p_win_focus, wxGLCanvas);
+      wxTextCtrl *     p_text_ctrl         = wxDynamicCast(p_win_focus, wxTextCtrl);
+      wxComboBox *     p_combo_box         = wxDynamicCast(p_win_focus, wxComboBox);
+      wxSpinCtrl *     p_spinctrl          = wxDynamicCast(p_win_focus, wxSpinCtrl);
 
 #if 0
-  /* allow other widgets to handel special keys only when the key is not F2 */
-  if ((p_combo_box || p_text_ctrl || p_spinctrl) && proceed_key && thot_keysym != WXK_F2)
-    {
-      event.Skip();
-      return true;
-    }
+      /* allow other widgets to handel special keys only when the key is not F2 */
+      if ((p_combo_box || p_text_ctrl || p_spinctrl) && proceed_key && thot_keysym != WXK_F2)
+        {
+          event.Skip();
+          return true;
+        }
 #endif /* 0 */
 
-  /* only allow the F2 special key outside canvas */
-  if (!p_gl_canvas && proceed_key && thot_keysym != WXK_F2)
-    {
-      event.Skip();
-      return true;      
-    }
+      /* only allow the F2 special key outside canvas */
+      if (!p_gl_canvas && proceed_key && thot_keysym != WXK_F2)
+        {
+          event.Skip();
+          return true;      
+        }
 
 #ifdef _WINDOWS
-  /* on windows, when the notebook is focused, the RIGHT and LEFT key are forwarded to wxWidgets,
-     we must ignore it */
-  wxNotebook *     p_notebook          = wxDynamicCast(p_win_focus, wxNotebook);
-  if ( p_notebook && proceed_key )
-  {
-    event.Skip();
-    return true;
-  }
+      /* on windows, when the notebook is focused, the RIGHT and LEFT key are forwarded to wxWidgets,
+         we must ignore it */
+      wxNotebook *     p_notebook          = wxDynamicCast(p_win_focus, wxNotebook);
+      if ( p_notebook && proceed_key )
+        {
+          event.Skip();
+          return true;
+        }
 #endif /* _WINDOWS */
 
-  if ( proceed_key )
-    {
-      int thotMask = 0;
-      if (event.ControlDown())
-	thotMask |= THOT_MOD_CTRL;
-      if (event.AltDown())
-	thotMask |= THOT_MOD_ALT;
-      if (event.ShiftDown())
-	thotMask |= THOT_MOD_SHIFT;
-      TTALOGDEBUG_1( TTA_LOG_KEYINPUT, _T("AmayaWindow::SpecialKey thot_keysym=%x"), thot_keysym );
-      ThotInput (GetActiveFrame()->GetFrameId(), thot_keysym, 0, thotMask, thot_keysym);
-      return true;
+      if ( proceed_key )
+        {
+          int thotMask = 0;
+          if (event.ControlDown())
+            thotMask |= THOT_MOD_CTRL;
+          if (event.AltDown())
+            thotMask |= THOT_MOD_ALT;
+          if (event.ShiftDown())
+            thotMask |= THOT_MOD_SHIFT;
+          TTALOGDEBUG_1( TTA_LOG_KEYINPUT, _T("AmayaWindow::SpecialKey thot_keysym=%x"), thot_keysym );
+          ThotInput (GetActiveFrame()->GetFrameId(), thot_keysym, 0, thotMask, thot_keysym);
+          return true;
+        }
+      else
+        return false;
     }
   else
-     return false;
-  }
-  else
-	return false;
+    return false;
 }
 
 /*
@@ -694,13 +697,13 @@ bool AmayaWindow::CheckShortcutKey( wxKeyEvent& event )
 {
   wxChar thot_keysym = event.GetKeyCode();  
 
-      int thotMask = 0;
-      if (event.ControlDown())
-	thotMask |= THOT_MOD_CTRL;
-      if (event.AltDown())
-	thotMask |= THOT_MOD_ALT;
-      if (event.ShiftDown())
-	thotMask |= THOT_MOD_SHIFT;
+  int thotMask = 0;
+  if (event.ControlDown())
+    thotMask |= THOT_MOD_CTRL;
+  if (event.AltDown())
+    thotMask |= THOT_MOD_ALT;
+  if (event.ShiftDown())
+    thotMask |= THOT_MOD_SHIFT;
 
 #ifdef _WINDOWS
   /* on windows, +/= key generate '+' key code, but is should generates '=' value */
@@ -710,41 +713,41 @@ bool AmayaWindow::CheckShortcutKey( wxKeyEvent& event )
 
   // on windows, CTRL+ALT is equivalent to ALTGR key
   if ( ((event.ControlDown() && !event.AltDown()) || (event.AltDown() && !event.ControlDown()))
-	    && !IsSpecialKey(thot_keysym)
-		// this is for the Windows menu shortcuts, 
-		// ALT+F => should open File menu
-		&& !(thot_keysym >= 'A' && thot_keysym <= 'Z' && event.AltDown() && !event.ControlDown()) 
+       && !IsSpecialKey(thot_keysym)
+       // this is for the Windows menu shortcuts, 
+       // ALT+F => should open File menu
+       && !(thot_keysym >= 'A' && thot_keysym <= 'Z' && event.AltDown() && !event.ControlDown()) 
 		                                               
-	 )
+       )
     {
       // le code suivant permet de convertire les majuscules
       // en minuscules pour les racourcis clavier specifiques a amaya.
       // OnKeyDown recoit tout le temps des majuscule que Shift soit enfonce ou pas.
       if (!event.ShiftDown())
-	{
-	  // shift key was not pressed
-	  // force the lowercase
-	  wxString s(thot_keysym);
-	  if (s.IsAscii())
-	    {
-	      TTALOGDEBUG_1( TTA_LOG_KEYINPUT, _T("AmayaWindow::CheckShortcutKey : thot_keysym=%x s=")+s, thot_keysym );
-	      s.MakeLower();
-	      thot_keysym = s.GetChar(0);
-	    }
-	}
-       // Call the generic function for key events management
-       ThotInput (GetActiveFrame()->GetFrameId(), (int)thot_keysym, 0, thotMask, (int)thot_keysym);
-       return true;
+        {
+          // shift key was not pressed
+          // force the lowercase
+          wxString s(thot_keysym);
+          if (s.IsAscii())
+            {
+              TTALOGDEBUG_1( TTA_LOG_KEYINPUT, _T("AmayaWindow::CheckShortcutKey : thot_keysym=%x s=")+s, thot_keysym );
+              s.MakeLower();
+              thot_keysym = s.GetChar(0);
+            }
+        }
+      // Call the generic function for key events management
+      ThotInput (GetActiveFrame()->GetFrameId(), (int)thot_keysym, 0, thotMask, (int)thot_keysym);
+      return true;
     }
   /* it is now the turn of special key shortcuts : CTRL+RIGHT, CTRL+ENTER ...*/
   else if ((event.ControlDown() || event.AltDown()) &&
-	       (thot_keysym == WXK_RIGHT ||
-		    thot_keysym == WXK_LEFT ||
-			thot_keysym == WXK_RETURN))
-  {
-    TTALOGDEBUG_1( TTA_LOG_KEYINPUT, _T("AmayaWindow::CheckShortcutKey : special shortcut thot_keysym=%x"), thot_keysym );
-    ThotInput (GetActiveFrame()->GetFrameId(), thot_keysym, 0, thotMask, thot_keysym);
-  }
+           (thot_keysym == WXK_RIGHT ||
+            thot_keysym == WXK_LEFT ||
+            thot_keysym == WXK_RETURN))
+    {
+      TTALOGDEBUG_1( TTA_LOG_KEYINPUT, _T("AmayaWindow::CheckShortcutKey : special shortcut thot_keysym=%x"), thot_keysym );
+      ThotInput (GetActiveFrame()->GetFrameId(), thot_keysym, 0, thotMask, thot_keysym);
+    }
   else
     return false;
 }
@@ -759,13 +762,13 @@ bool AmayaWindow::CheckShortcutKey( wxKeyEvent& event )
 bool AmayaWindow::IsSpecialKey( int wx_keycode )
 {
   return ( wx_keycode == WXK_BACK ||
-	       wx_keycode == WXK_TAB  ||
+           wx_keycode == WXK_TAB  ||
            wx_keycode == WXK_RETURN ||
            wx_keycode == WXK_ESCAPE ||
            /*wx_keycode == WXK_SPACE  ||*/
            wx_keycode == WXK_DELETE ||
-		   (wx_keycode >= WXK_START && wx_keycode <= WXK_COMMAND)
-  );
+           (wx_keycode >= WXK_START && wx_keycode <= WXK_COMMAND)
+           );
 }
 #endif /* 0 */
 
@@ -885,6 +888,6 @@ BEGIN_EVENT_TABLE(AmayaWindow, wxFrame)
   //  EVT_CHAR( AmayaWindow::OnChar )
 #endif /* !_WINDOWS  && ! MACOS */
   EVT_COMMAND(-1, wxEVT_AMAYA_ACTION_EVENT, AmayaWindow::OnAmayaAction)
-END_EVENT_TABLE()
+  END_EVENT_TABLE()
 
 #endif /* #ifdef _WX */
