@@ -2200,8 +2200,6 @@ ThotBool TtaHandleSpecialKey( wxKeyEvent& event )
         }
 #endif /* _WINDOWS */
 #endif /* 0 */
-      if (!proceed_key)
-          TTALOGDEBUG_1( TTA_LOG_KEYINPUT, _T("TtaHandleSpecialKey: unicode=%x"), event.GetUnicodeKey());
       if ( proceed_key )
         {
           int thotMask = 0;
