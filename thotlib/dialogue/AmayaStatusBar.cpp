@@ -37,6 +37,12 @@
 #include "displayview_f.h"
 
 #include "AmayaStatusBar.h"
+/* the log button should be shifted on MacOS platforms */
+#ifdef _MACOS
+#define LOG_SHIFT  24
+#else /* _MACOS */
+#define LOG_SHIFT  4
+#endif /* _MACOS */
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaStatusBar, wxStatusBar)
 
@@ -65,7 +71,7 @@ AmayaStatusBar::AmayaStatusBar( wxWindow * p_parent )
   wxASSERT(m_pLogErrorButton);  
 
   // setup statusbar attributes
-  static const int widths[Field_Max] = { -1, m_pLogErrorButton->GetSize().GetWidth()+4 };
+  static const int widths[Field_Max] = { -1, m_pLogErrorButton->GetSize().GetWidth()+LOG_SHIFT};
   SetFieldsCount(Field_Max);
   SetStatusWidths(Field_Max, widths);
   SetMinHeight(m_pLogErrorButton->GetSize().GetHeight()+4);
@@ -102,7 +108,7 @@ void AmayaStatusBar::OnSize(wxSizeEvent& event)
   
   wxASSERT(m_pLogErrorButton);
   wxSize size = m_pLogErrorButton->GetSize();
-  m_pLogErrorButton->Move(rect.x + (rect.width - size.x) / 2,
+  m_pLogErrorButton->Move(rect.x + (rect.width - size.x - LOG_SHIFT + 4) / 2,
                           rect.y + (rect.height - size.y) / 2);
   
   event.Skip();
