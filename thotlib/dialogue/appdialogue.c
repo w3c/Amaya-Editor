@@ -525,6 +525,9 @@ void TteInitMenus (char *name, int number)
 
   MenuActionList[CMD_Paste].ActionName = "TtcPaste";
   MenuActionList[CMD_Paste].Call_Action = (Proc) TtcPaste;
+
+  MenuActionList[CMD_CutSelection].ActionName = "TtcCutSelection";
+  MenuActionList[CMD_CutSelection].Call_Action = (Proc) TtcCutSelection;
 }
 
 /*----------------------------------------------------------------------

@@ -115,7 +115,7 @@ static int          SpecialShiftKeys[] = {
   CMD_NextSelChar,
   CMD_NextSelLine,
   CMD_DeletePrevChar,
-  CMD_DeleteSelection,
+  CMD_CutSelection,
   CMD_PageUp,
   CMD_PageDown,
   CMD_PageTop,

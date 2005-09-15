@@ -2071,7 +2071,7 @@ ThotBool TtaHandleShortcutKey( wxKeyEvent& event )
        !(thot_keysym >= 'A' && thot_keysym <= 'Z' &&
          event.AltDown() && !event.CmdDown()) &&  (thot_keysym != '`') )
     {
-      // le code suivant permet de convertire les majuscules
+      // le code suivant permet de convertir les majuscules
       // en minuscules pour les racourcis clavier specifiques a amaya.
       // OnKeyDown recoit tout le temps des majuscule que Shift soit enfonce ou pas.
       if (!event.ShiftDown())
@@ -2104,6 +2104,7 @@ ThotBool TtaHandleShortcutKey( wxKeyEvent& event )
             thot_keysym == (int) WXK_DOWN ||
             thot_keysym == (int) WXK_UP ||
             thot_keysym == (int) WXK_HOME ||
+            /*thot_keysym == (int) WXK_INSERT ||*/
             thot_keysym == (int) WXK_END))
     {
       TTALOGDEBUG_1( TTA_LOG_KEYINPUT, _T("TtaHandleShortcutKey : special shortcut thot_keysym=%x"), thot_keysym );
@@ -2120,7 +2121,7 @@ ThotBool TtaHandleShortcutKey( wxKeyEvent& event )
             thot_keysym == (int) WXK_F5 ||
             thot_keysym == (int) WXK_F7 ||
             thot_keysym == (int) WXK_F11 ||
-            thot_keysym == (int) WXK_F12 )
+            thot_keysym == (int) WXK_F12)
     {
       ThotInput (TtaGiveActiveFrame(), thot_keysym, 0, thotMask, thot_keysym);
       
@@ -2148,7 +2149,7 @@ ThotBool TtaHandleShortcutKey( wxKeyEvent& event )
 #ifdef _WX
 ThotBool TtaHandleSpecialKey( wxKeyEvent& event )
 {
-  if ( !event.CmdDown() && !event.AltDown() && TtaIsSpecialKey(event.GetKeyCode()))
+  if ( /*!event.CmdDown() &&*/ !event.AltDown() && TtaIsSpecialKey(event.GetKeyCode()))
     {
       int thot_keysym = event.GetKeyCode();  
       
@@ -2199,7 +2200,8 @@ ThotBool TtaHandleSpecialKey( wxKeyEvent& event )
         }
 #endif /* _WINDOWS */
 #endif /* 0 */
-      
+      if (!proceed_key)
+          TTALOGDEBUG_1( TTA_LOG_KEYINPUT, _T("TtaHandleSpecialKey: unicode=%x"), event.GetUnicodeKey());
       if ( proceed_key )
         {
           int thotMask = 0;
@@ -2243,7 +2245,7 @@ ThotBool TtaIsSpecialKey( int wx_keycode )
            wx_keycode == WXK_TAB  ||
            wx_keycode == WXK_RETURN ||
            wx_keycode == WXK_ESCAPE ||
-           /*wx_keycode == WXK_SPACE  ||*/
+           /*wx_keycode == WXK_INSERT  ||*/
            wx_keycode == WXK_DELETE ||
            (wx_keycode >= WXK_START && wx_keycode <= WXK_COMMAND)
            );

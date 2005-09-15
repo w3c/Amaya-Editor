@@ -143,7 +143,8 @@ typedef struct _Menu_Ctl
 #define CMD_SelEndOfLine	34
 #define CMD_Copy                35
 #define CMD_Paste               36
-#define MAX_INTERNAL_CMD	37
+#define CMD_CutSelection        37
+#define MAX_INTERNAL_CMD	38
 
 #define CST_EquivLineUp "C Up"
 #define CST_EquivScrollLeft "C Left"

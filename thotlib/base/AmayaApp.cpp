@@ -570,13 +570,13 @@ void AmayaApp::OnChar(wxKeyEvent& event)
  */
 void AmayaApp::OnKeyDown(wxKeyEvent& event)
 {
-  TTALOGDEBUG_1( TTA_LOG_KEYINPUT, _T("AmayaApp::OnKeyDown key=%d"), event.GetKeyCode());
   // forward the key event to active window.
   // this code is only usfull on windows because on gtk,
   // the events are directly proceed in AmayaWindow class
   AmayaWindow * p_window = TtaGetActiveWindow();
   if (p_window && p_window->IsActive())
   {
+  TTALOGDEBUG_1( TTA_LOG_KEYINPUT, _T("AmayaApp::OnKeyDown key=%d"), event.GetKeyCode());
     if(!TtaHandleSpecialKey(event))
       if (!TtaHandleShortcutKey(event))
         event.Skip();
