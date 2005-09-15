@@ -962,9 +962,6 @@ EXCEPT
   tbody:	        NoBreakByReturn;
   tfoot:	        NoBreakByReturn;
 	Table_row:	IsRow, PageBreakPlace, NoBreakByReturn;
-	IFRAME:	        NoBreakByReturn;
-	Iframe_Content: Hidden, NoCreate, NoCut, NoBreakByReturn;
-	Iframe_Src_Content: Hidden;
   rbc:	        Hidden;
   rtc1:	        Hidden;
   rtc2:	        Hidden;
@@ -997,9 +994,15 @@ EXCEPT
 	ID :		CssId; {Default id attribute}
 	Class:		CssClass;
 	External_Object_Content: Hidden;
+	Embed_:	        NoBreakByReturn, NoReplicate;
 	Embed_Content:  Hidden, NoSelect;
-	Object_Content: Hidden, NoCreate, NoCut, NoBreakByReturn;
-	Applet_Content: Hidden, NoCreate, NoCut, NoBreakByReturn;
+	Object:	        NoBreakByReturn, NoReplicate;
+	Object_Content: Hidden, NoSelect, NoCreate, NoCut, NoBreakByReturn;
+	Applet:	        NoBreakByReturn, NoReplicate;
+	Applet_Content: Hidden, NoSelect, NoCreate, NoCut, NoBreakByReturn;
+	IFRAME:	        NoBreakByReturn, NoReplicate;
+	Iframe_Content: Hidden, NoSelect, NoCut, NoBreakByReturn;
+	Iframe_Src_Content: Hidden, NoCut, NoSelect;
 	is_css:	        Invisible;
   Start:	        StartCounter;
   ItemValue:	SetCounter;

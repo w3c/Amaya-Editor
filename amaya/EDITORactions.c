@@ -3692,6 +3692,93 @@ void  CreateNOSCRIPT (Document document, View view)
 }
 
 /*----------------------------------------------------------------------
+  CreateIFrame
+  ----------------------------------------------------------------------*/
+void  CreateIFrame (Document document, View view)
+{
+  ElementType         elType;
+  Element             el, child;
+  Attribute           attr;
+  AttributeType       attrType;
+  int                 firstchar, lastchar;
+
+  if (HTMLelementAllowed (document))
+    {
+      /* Don't check mandatory attributes */
+      TtaSetStructureChecking (FALSE, document);
+      elType.ElSSchema = TtaGetSSchema ("HTML", document);
+      elType.ElTypeNum = HTML_EL_IFRAME;
+      TtaInsertElement (elType, document);
+      /* Check the Thot abstract tree against the structure schema. */
+      TtaSetStructureChecking (TRUE, document);
+
+      /* get the first selected element, i.e. the Object element */
+      TtaGiveFirstSelectedElement (document, &el, &firstchar, &lastchar);
+      
+      elType = TtaGetElementType (el);
+      while (el != NULL &&
+             elType.ElTypeNum != HTML_EL_IFRAME)
+        {
+          el = TtaGetParent (el);
+          elType = TtaGetElementType (el);
+        }
+      
+      if (el == NULL)
+        return;
+
+      TtaExtendUndoSequence (document);
+      /* copy SRC attribute */
+      attrType.AttrSSchema = elType.ElSSchema;
+      attrType.AttrTypeNum = HTML_ATTR_FrameSrc;
+      attr = TtaGetAttribute (el, attrType);
+      if (attr == NULL)
+        {
+#ifdef IV
+         CreateObjectDlgWX (RefFormImage, TtaGetViewFrame (document, view),
+			                      TtaGetMessage (AMAYA, AM_NEWOBJECT),
+			                      LastURLImage, UserMimeType);
+         TtaSetDialoguePosition ();
+         TtaShowDialogue (RefFormImage, FALSE);
+         TtaWaitShowDialogue ();
+         if (IsHTTPPath (DocumentURLs[document]) && !IsHTTPPath (LastURLImage))
+           {
+              TtaExtractName (LastURLImage, tempfile, s);
+              if (s[0] == EOS)
+	              strcpy (text, LastURLImage);
+              else
+                {
+	                NormalizeURL (s, document, tempfile, ImageName, NULL);
+                }
+            }
+#endif /* IV */
+           attr = TtaNewAttribute (attrType);
+           TtaAttachAttribute (el, attr, document);
+           TtaSetAttributeText (attr, "source.html", el, document);
+           TtaRegisterAttributeCreate (attr, el, document);
+         }
+      /* now create a child element */
+      child = TtaGetLastChild (el);
+      if (child == NULL)
+        {
+          elType.ElTypeNum = HTML_EL_Iframe_Content;
+          child = TtaNewElement (document, elType);
+          TtaInsertFirstChild (&child, el, document);
+          TtaRegisterElementCreate (child, document);
+        }
+      elType.ElTypeNum = HTML_EL_Pseudo_paragraph;
+      el = TtaNewElement (document, elType);
+      TtaInsertFirstChild (&el, child, document);
+      TtaRegisterElementCreate (el, document);
+      elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+      child = TtaNewElement (document, elType);
+      TtaInsertFirstChild (&child, el, document);
+      TtaSelectElement (document, child);
+      TtaRegisterElementCreate (child, document);
+      TtaCloseUndoSequence (document);
+  }
+}
+
+/*----------------------------------------------------------------------
   CreateObject
   ----------------------------------------------------------------------*/
 void  CreateObject (Document document, View view)
@@ -3755,14 +3842,6 @@ void  CreateObject (Document document, View view)
 void  CreateParameter (Document document, View view)
 {
   CreateHTMLelement (HTML_EL_Parameter, document);
-}
-
-/*----------------------------------------------------------------------
-  CreateIFrame
-  ----------------------------------------------------------------------*/
-void  CreateIFrame (Document document, View view)
-{
-  CreateHTMLelement (HTML_EL_IFRAME, document);
 }
 
 /*----------------------------------------------------------------------

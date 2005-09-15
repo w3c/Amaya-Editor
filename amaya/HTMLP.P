@@ -4786,7 +4786,7 @@ RULES
 	VertPos: Top = Previous . Bottom;
 	HorizRef: * . Bottom;
 	Width: 10 cm;
-	Line;
+	Height: Enclosed . Height;
 	LineBreak: No;
 	MarginLeft: 3 px;
 	MarginRight: 3 px;
