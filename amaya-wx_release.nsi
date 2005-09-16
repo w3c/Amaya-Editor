@@ -8,7 +8,7 @@
 ;General
 
   ;Name and file
-  !define VERSION "9.2.1"
+  !define VERSION "9.2.2"
   Name "Amaya ${VERSION}"
   OutFile "amaya-WinXP-${VERSION}.exe"
   
@@ -229,6 +229,16 @@ Section "Amaya" SecAmaya
   File resources\icons\22x22\*.ico
   SetOutPath "$INSTDIR\resources\xrc"
   File resources\xrc\*.xrc
+
+  SetOutPath "$INSTDIR\templates\en"
+  File templates\en\*.png
+  File templates\en\*.html
+  File templates\en\*.css
+  SetOutPath "$INSTDIR\templates\fr"
+  File templates\fr\*.png
+  File templates\fr\*.html
+  File templates\fr\*.css
+
   SetOutPath "$INSTDIR\amaya\wxdialog"
   File amaya\wxdialog\appicon.ico
   File amaya\wxdialog\amaya.rc
