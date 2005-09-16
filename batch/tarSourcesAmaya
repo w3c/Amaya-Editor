@@ -409,6 +409,8 @@ ${AMAYADIR}/thotlib/presentation/*.c \
 ${AMAYADIR}/thotlib/tree/*.c \
 ${AMAYADIR}/thotlib/unicode/*.c \
 ${AMAYADIR}/thotlib/view/*.c \
+${AMAYADIR}/templates/fr/*.* \
+${AMAYADIR}/templates/en/*.* \
 ${AMAYADIR}/tools/Makefile.in \
 ${AMAYADIR}/tools/mkdep/Makefile.in \
 ${AMAYADIR}/tools/mkdep/Makefile \

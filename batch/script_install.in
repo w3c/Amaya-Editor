@@ -58,6 +58,9 @@ if test ! -d $PREFIX/$AMAYA_INSTALLDIR/annotlib ; then $MKDIR $PREFIX/$AMAYA_INS
 if test ! -d $PREFIX/$AMAYA_INSTALLDIR/fonts ; then $MKDIR $PREFIX/$AMAYA_INSTALLDIR/fonts ; fi
 if test ! -d $PREFIX/$AMAYA_INSTALLDIR/dicopar ; then $MKDIR $PREFIX/$AMAYA_INSTALLDIR/dicopar ; fi
 if test ! -d $PREFIX/$AMAYA_INSTALLDIR/doc ; then $MKDIR $PREFIX/$AMAYA_INSTALLDIR/doc ; fi
+if test ! -d $PREFIX/$AMAYA_INSTALLDIR/templates ; then $MKDIR $PREFIX/$AMAYA_INSTALLDIR/templates ; fi
+if test ! -d $PREFIX/$AMAYA_INSTALLDIR/templates/fr ; then $MKDIR $PREFIX/$AMAYA_INSTALLDIR/templates/fr ; fi
+if test ! -d $PREFIX/$AMAYA_INSTALLDIR/templates/en ; then $MKDIR $PREFIX/$AMAYA_INSTALLDIR/templates/en ; fi
 if test ! -d $PREFIX/$AMAYA_INSTALLDIR/$AMAYAGUI ; then $MKDIR $PREFIX/$AMAYA_INSTALLDIR/$AMAYAGUI ; fi
 if test ! -d $PREFIX/$AMAYA_INSTALLDIR/$AMAYAGUI/bin ; then $MKDIR $PREFIX/$AMAYA_INSTALLDIR/$AMAYAGUI/bin ; fi
 if test ! -d $PREFIX/$AMAYA_INSTALLDIR/davlib ; then $MKDIR $PREFIX/$AMAYA_INSTALLDIR/davlib ; fi
