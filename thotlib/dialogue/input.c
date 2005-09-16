@@ -1349,7 +1349,7 @@ int ThotInput (int frame, unsigned int value, int command, int PicMask, int key)
         }
 #ifdef _MACOS
       else if ( modtype == THOT_MOD_ALT &&
-                (value == 230 || value == 37650 || value == '^' ||
+                (/* value == 230 || */ value == 37650 || value == '^' ||
                value == '`'))
         return 0;
 #endif /* _MACOS */
