@@ -1,0 +1,37 @@
+.header
+{ 
+  padding: 10px;
+  background-color: #CFCFCF;
+  text-align: center;
+ }
+
+.menu
+{ 
+  float: left;
+  background-color: #CFCFCF;
+  width: 25%;
+  margin-right: 2em;
+  padding-bottom: .5em;
+ }
+
+.menu-title
+{ 
+  margin-top: .5em;
+  margin-bottom: 0;
+  background-color: #6F6F6F;
+  color: #FFFFFF;
+ }
+
+.menu ul 
+{ 
+  list-style-type: none;
+  padding: 0 0 0 10px;
+  margin: 0 0 0 10px;
+  
+ }
+
+h1,h2,h3
+{ 
+  color : #0000B2;
+  margin-bottom: 0.5em;
+ }
