@@ -1216,8 +1216,11 @@ int ThotInput (int frame, unsigned int value, int command, int PicMask, int key)
       /* don't accept to insert a character when there is CTRL
          or ALT active and no shortcut is found */
       if (!found &&
-          (modtype == THOT_MOD_CTRL || modtype == THOT_MOD_S_CTRL ||
-           modtype == THOT_MOD_ALT || modtype == THOT_MOD_S_ALT))
+          (modtype == THOT_MOD_CTRL || modtype == THOT_MOD_S_CTRL
+#ifndef _MACOS
+           || modtype == THOT_MOD_ALT || modtype == THOT_MOD_S_ALT
+#endif /* _MACOS */
+))
         return 0;
       
       /* Appel d'une action Thot */
@@ -1344,6 +1347,12 @@ int ThotInput (int frame, unsigned int value, int command, int PicMask, int key)
               done = TRUE;
             }
         }
+#ifdef _MACOS
+      else if ( modtype == THOT_MOD_ALT &&
+                (value == 230 || value == 37650 || value == '^' ||
+               value == '`'))
+        return 0;
+#endif /* _MACOS */
       else if (value == 9 || value >= 32)
         {
           if (LoadedDocument[document - 1] == SelectedDocument &&

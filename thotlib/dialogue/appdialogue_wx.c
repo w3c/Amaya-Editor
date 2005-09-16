@@ -1976,9 +1976,15 @@ void TtaRedirectFocus ()
 ThotBool TtaHandleUnicodeKey (wxKeyEvent& event)
 {
   int thot_keycode = event.GetKeyCode();
-  int thot_keysym = event.GetUnicodeKey();  
+  int thot_keysym = event.GetUnicodeKey();
+  int ret = 0;
+
   if ((thot_keysym != 0) && !TtaIsSpecialKey(thot_keycode) &&
-      !event.CmdDown() && !event.AltDown())
+      !event.CmdDown()
+#ifndef _MACOS
+       && !event.AltDown()
+#endif /* _MACOS */
+       )
     {
       wxWindow *p_win_focus = wxWindow::FindFocus();
       wxTextCtrl *p_text_ctrl = wxDynamicCast(p_win_focus, wxTextCtrl);
@@ -2000,8 +2006,9 @@ ThotBool TtaHandleUnicodeKey (wxKeyEvent& event)
                 thotMask |= THOT_MOD_ALT;
               if (event.ShiftDown())
                 thotMask |= THOT_MOD_SHIFT; 
-              
-              if (ThotInput (TtaGiveActiveFrame(), thot_keysym, 0, thotMask, thot_keycode) == 3)
+              ret = ThotInput (TtaGiveActiveFrame(), thot_keysym, 0, thotMask, thot_keycode);
+              if (ret == 3)
+                {
                 /* if a simple caractere has been entred, give focus to canvas
                  * it resolves accesibility problems when the focus is blocked on a panel */
                 TtaRedirectFocus();
@@ -2011,6 +2018,9 @@ ThotBool TtaHandleUnicodeKey (wxKeyEvent& event)
               // before the user release the key.
               GL_DrawAll();
               return true;
+                }
+              else 
+                return false;
             }
           else
             event.Skip();	  
@@ -2061,15 +2071,15 @@ ThotBool TtaHandleShortcutKey( wxKeyEvent& event )
       event.Skip();
       return true;      
     }
-  
+
+#ifndef _MACOS
   // on windows, CTRL+ALT is equivalent to ALTGR key
   if (((event.CmdDown() && !event.AltDown()) ||
        (event.AltDown() && !event.CmdDown())) &&
        !TtaIsSpecialKey(thot_keysym) &&
        // this is for the Windows menu shortcuts, 
        // ALT+F => should open File menu
-       !(thot_keysym >= 'A' && thot_keysym <= 'Z' &&
-         event.AltDown() && !event.CmdDown()) &&  (thot_keysym != '`') )
+       (thot_keysym < 'A' || thot_keysym > 'Z' || event.CmdDown()) )
     {
       // le code suivant permet de convertir les majuscules
       // en minuscules pour les racourcis clavier specifiques a amaya.
@@ -2096,8 +2106,10 @@ ThotBool TtaHandleShortcutKey( wxKeyEvent& event )
       
       return true;
     }
+  else
+#endif /* _MACOS */
   /* it is now the turn of special key shortcuts : CTRL+RIGHT, CTRL+ENTER ...*/
-  else if ((event.CmdDown() || event.AltDown()) &&
+  if ((event.CmdDown() || event.AltDown()) &&
            (thot_keysym == (int) WXK_RIGHT ||
             thot_keysym == (int) WXK_LEFT ||
             thot_keysym == (int) WXK_RETURN ||
