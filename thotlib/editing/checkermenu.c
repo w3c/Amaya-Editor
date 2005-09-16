@@ -658,12 +658,14 @@ static ThotBool StartSpellChecker ()
       TtaDisplayMessage (CONFIRM, TtaGetMessage (LIB, TMSG_END_CHECK), NULL);
 #endif /* _GTK */
 #ifdef _WX
+#ifndef _MACOS
       wxMessageDialog 
 	spell_checker_messagedialog( (wxWindow*) NULL,
 				     TtaConvMessageToWX (TtaGetMessage (LIB, TMSG_END_CHECK)), 
 				     TtaConvMessageToWX (TtaGetMessage (LIB, TMSG_Correct)),
 				     (long) wxOK | wxICON_EXCLAMATION | wxSTAY_ON_TOP);
       spell_checker_messagedialog.ShowModal(); 
+#endif /* _MACOS */
 #endif /* _WX */
       ok = FALSE;
     }

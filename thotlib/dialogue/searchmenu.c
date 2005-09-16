@@ -901,12 +901,14 @@ void CallbackTextReplace (int ref, int val, char *txt)
 		}
 	      else
 		{
+#ifndef _MACOS
 		  wxMessageDialog 
 		    search_messagedialog( (wxWindow*) NULL,
 					  TtaConvMessageToWX (TtaGetMessage (LIB, TMSG_NOT_FOUND)), 
 					  TtaConvMessageToWX (Caption),
 					  (long) wxOK | wxICON_EXCLAMATION | wxSTAY_ON_TOP);
 		  search_messagedialog.ShowModal();
+#endif /* _MACOS */
 		}
 #endif /* _WX */
 	      StartSearch = TRUE;
