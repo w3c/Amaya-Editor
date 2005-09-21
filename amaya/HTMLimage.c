@@ -1231,9 +1231,9 @@ static void FetchImages (Document doc, int flags, Element elSubTree,
         {
           /* search the next element having an attribute SRC */
           elNext = el;
-          if (elSubTree == NULL)
-            TtaSearchAttributes (attrType1, attrType2,
-                                 SearchForward, elNext, &elFound, &attrFound);
+          // if (elSubTree == NULL)
+          TtaSearchAttributes (attrType1, attrType2,
+                               SearchForward, elNext, &elFound, &attrFound);
           if (elSubTree && elFound && !TtaIsAncestor (elFound, elSubTree))
             elFound = NULL;
               
