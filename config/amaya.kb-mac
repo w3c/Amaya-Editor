@@ -79,7 +79,7 @@ Ctrl <Key>6:                        CreateHeading6()
 Ctrl <Key>Return:                   CreateBreak("\212") 
 Ctrl <Key>Space:                    TtcInsertChar("\240")
 
-#Types 
+# Types 
 Ctrl Alt <Key>Return:    CreateParagraph() 
 Ctrl Alt <Key>a:         CreateAddress() 
 Ctrl Alt <Key>d:         CreateDefinitionList() 
@@ -95,9 +95,9 @@ Ctrl Alt <Key>t:         ChangeTitle()
 Ctrl Alt <Key>v:         CreateDivision() 
 Ctrl Alt <Key>w:         CreateParameter() 
 Ctrl Alt <Key>y:         CreateRuby() 
-Ctrl Alt <Key>z:         CreateComment() 
+Ctrl Alt <Key>z:         CreateComment()
 
-#Links
+# Links 
 Ctrl Alt <Key>c:         CreateOrChangeLink() 
 Ctrl Alt <Key>g:         CreateTarget()
 Ctrl Alt <Key>h:         DeleteAnchor() 
