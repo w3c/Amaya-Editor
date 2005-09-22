@@ -196,12 +196,12 @@ extern void CreateDivision ( Document document,
                              View view );
 extern void CreateNOSCRIPT ( Document document,
                              View view );
+extern void CreateIFrame ( Document document,
+                           View view );
 extern void CreateObject ( Document document,
                            View view );
 extern void CreateParameter ( Document document,
                               View view );
-extern void CreateIFrame ( Document document,
-                           View view );
 extern void CreateOrChangeLink ( Document doc,
                                  View view );
 extern void DeleteAnchor ( Document doc,
@@ -463,12 +463,12 @@ extern void CreateDivision ( Document document,
                                View view );
 extern void CreateNOSCRIPT ( Document document,
                                View view );
+extern void CreateIFrame ( Document document,
+                             View view );
 extern void CreateObject ( Document document,
                              View view );
 extern void CreateParameter ( Document document,
                                 View view );
-extern void CreateIFrame ( Document document,
-                             View view );
 extern void CreateOrChangeLink ( Document doc,
                                    View view );
 extern void DeleteAnchor ( Document doc,

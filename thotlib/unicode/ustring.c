@@ -98,6 +98,8 @@ static CharsetCode CharsetCodeTable[] =
     {"shift_jis",        SHIFT_JIS},
     {"shift-jis",        SHIFT_JIS},
     {"x-sjis",           SHIFT_JIS},
+    {"gb2312",           GB_2312},
+    {"gb-2312",          GB_2312},
     {"", UNSUPPORTED_CHARSET}
 };
 

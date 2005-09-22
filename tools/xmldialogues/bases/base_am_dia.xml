@@ -736,6 +736,18 @@
 	<message xml:lang="ru">Турецкая (Windows-1254)</message>
 	<message xml:lang="hu">Török (Windows-1254)</message>
 </label>
+<label define="BGB_2312">
+	<message xml:lang="en">Chinese Simplified (GB-2312)</message>
+	<message xml:lang="fr">Chinois simplifié (GB-2312)</message>
+	<message xml:lang="it">Cinese semplificato (GB-2312)</message>
+	<message xml:lang="es">Chino simplificó (GB-2312)</message>
+	<message xml:lang="pt">Chinês simplificou (GB-2312)</message>
+	<message xml:lang="fi">Chinese (GB-2312)</message>
+	<message xml:lang="tr">Chinese (GB-2312)</message>
+	<message xml:lang="de">Chinese vereinfacht (GB-2312)</message>
+	<message xml:lang="ru">Упрощанный китаец (GB-2312)</message>
+	<message xml:lang="hu">Chinese (GB-2312)</message>
+</label>
 <label define="BISO_2022_JP">
 	<message xml:lang="en">Japanese (ISO-2022-JP)</message>
 	<message xml:lang="fr">Japonais (ISO-2022-JP)</message>

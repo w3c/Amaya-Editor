@@ -67,6 +67,8 @@ extern void ReadAsWINDOWS_1256 ( Document doc,
                                  View view );
 extern void ReadAsWINDOWS_1257 ( Document doc,
                                  View view );
+extern void ReadAsGB_2312 ( Document doc,
+                            View view );
 extern void ReadAsISO_2022_JP ( Document doc,
                                 View view );
 extern void ReadAsEUC_JP ( Document doc,
@@ -141,6 +143,8 @@ extern void ReadAsWINDOWS_1256 ( Document doc,
                                    View view );
 extern void ReadAsWINDOWS_1257 ( Document doc,
                                    View view );
+extern void ReadAsGB_2312 ( Document doc,
+                              View view );
 extern void ReadAsISO_2022_JP ( Document doc,
                                   View view );
 extern void ReadAsEUC_JP ( Document doc,

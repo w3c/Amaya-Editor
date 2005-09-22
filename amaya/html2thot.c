@@ -6736,7 +6736,7 @@ void ParseExternalHTMLDoc (Document doc, FILE * infile,
           charset != WINDOWS_1256 && charset != WINDOWS_1257 &&
           charset != US_ASCII     && charset != SHIFT_JIS    &&
           charset != ISO_2022_JP  && charset != EUC_JP       &&
-          charset != SHIFT_JIS)
+          charset != SHIFT_JIS    && charset != GB_2312)
         HTMLParseError (doc,
                         TtaGetMessage (AMAYA, AM_UNKNOWN_ENCODING), 0);
     }
@@ -6904,7 +6904,7 @@ void StartParser (Document doc, char *fileName,
                   charset != WINDOWS_1256 && charset != WINDOWS_1257 &&
                   charset != US_ASCII     && charset != SHIFT_JIS    &&
                   charset != ISO_2022_JP  && charset != EUC_JP       &&
-                  charset != SHIFT_JIS)
+                  charset != SHIFT_JIS    && charset != GB_2312)
                 HTMLParseError (doc,
                                 TtaGetMessage (AMAYA, AM_UNKNOWN_ENCODING), 0);
             }

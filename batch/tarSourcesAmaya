@@ -448,7 +448,7 @@ cd $TMP
 tar xvzf $DEST/amaya-tmp-$AMAYAVERSION.tgz
 \rm -r */CVS */*/CVS */*/*/CVS */*/*/*/CVS */*/*/*/*/CVS */*/*/*/*/*/CVS */*/*/*/*/*/*/CVS */*/*/*/*/*/*/*/CVS
 
-AMAYADIR=amaya
+AMAYADIR=Amaya
 LIBWWWDIR=libwww
 REDLANDDIR=redland
 WXWIDGETS=wxWidgets

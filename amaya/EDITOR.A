@@ -83,6 +83,7 @@ MENUS
 	File.Charset1 button:BWINDOWS_1255 -> ReadAsWINDOWS_1255;
 	File.Charset1 button:BISO_8859_9 -> ReadAsISO_8859_9;
 	File.Charset1 button:BWINDOWS_1254 -> ReadAsWINDOWS_1254;
+	File.Charset1 button:BGB_2312 -> ReadAsGB_2312;
 	File.Charset1 button:BISO_2022_JP -> ReadAsISO_2022_JP;
 	File.Charset1 button:BEUC_JP -> ReadAsEUC_JP;
 	File.Charset1 button:BSHIFT_JIS -> ReadAsSHIFT_JIS;
