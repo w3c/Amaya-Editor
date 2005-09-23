@@ -1474,9 +1474,10 @@ PtrBox DisplayAllBoxes (int frame, PtrFlow pFlow,
   else
     root = pFrame->FrAbstractBox;
   pAb = root;
-  // Are bg images displayed?
-  show_bgimage = TtaGetEnvString ("ENABLE_BG_IMAGES");
-
+  // Check if background images should be displayed
+  TtaGetEnvBoolean ("ENABLE_BG_IMAGES", &show_bgimage);
+  /*if (show_bgimage)
+    TtaGetEnvBoolean ("LOAD_IMAGES", &show_bgimage);*/
   pBox = pAb->AbBox;
   if (pBox == NULL)
     return NULL;
@@ -1907,8 +1908,12 @@ void ComputeChangedBoundingBoxes (int frame)
   ThotBool            updateStatus;
   ThotBool            show_bgimage;
    
-  // Are bg images displayed?
-  show_bgimage = TtaGetEnvString ("ENABLE_BG_IMAGES");
+
+  // Check if background images should be displayed
+  TtaGetEnvBoolean ("ENABLE_BG_IMAGES", &show_bgimage);
+  /*if (show_bgimage)
+    TtaGetEnvBoolean ("LOAD_IMAGES", &show_bgimage);*/
+
   updateStatus = FrameUpdating;
   FrameUpdating = TRUE;  
   pFrame = &ViewFrameTable[frame - 1];
