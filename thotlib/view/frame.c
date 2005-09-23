@@ -48,6 +48,7 @@
 #include "xwindowdisplay_f.h"
 #include "buildlines_f.h"
 #include "memory_f.h"
+#include "registry.h"
 
 #ifdef _GL
 #if defined (_MACOS) && defined (_WX)
@@ -459,10 +460,12 @@ static void AddBoxToCreate (PtrBox * tocreate, PtrBox pBox, int frame)
   at the first position and/or the last position of pFrom (they must be
   TRUE for pFrom itself).
   selected is TRUE when a parent box or the box itself is selected.
+  show_bgimage is TRUE if bg_images can be displayed.
   ----------------------------------------------------------------------*/
 void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
                     int xmin, int xmax, int ymin, int ymax, ThotBool selected,
-                    ThotBool first, ThotBool last, ThotBool topdown)
+                    ThotBool first, ThotBool last, ThotBool topdown,
+                    ThotBool show_bgimage)
 {
   PtrBox              from;
   PtrAbstractBox      pChild, pAb, pParent, pNext;
@@ -520,7 +523,7 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
               /* draw each child boxes */
               DrawFilledBox (pChild->AbBox, pFrom, frame, pFlow,
                              xmin, xmax, ymin, ymax,
-                             selected, first, isLast, topdown);
+                             selected, first, isLast, topdown, show_bgimage);
               first = FALSE;
             }
           pChild = pNext;
@@ -535,7 +538,7 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
           isLast = (last && pBox->BxNexChild == NULL);
           DrawFilledBox (pBox, pFrom, frame, pFlow,
                          xmin, xmax, ymin, ymax,
-                         selected, first, isLast, topdown);
+                         selected, first, isLast, topdown, show_bgimage);
           pBox = pBox->BxNexChild;
           first = FALSE;
         }
@@ -714,7 +717,7 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
             DrawRectangle (frame, 0, 0, xd - x, yd - y, width, height,
                            pFrom->AbForeground, pFrom->AbBackground,
                            pFrom->AbFillPattern);
-          if (imageDesc)
+          if (imageDesc && show_bgimage)
             {
               /* draw the background image the default presentation is repeat */
               pres = imageDesc->PicPresent;
@@ -1156,7 +1159,7 @@ static void SyncBoundingboxes (PtrAbstractBox pInitAb,
   The parameter pInitAb gives the current root abstract box.
   ----------------------------------------------------------------------*/
 static void ComputeBoundingBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
-                                  PtrAbstractBox pInitAb)
+                                  PtrAbstractBox pInitAb, ThotBool show_bgimage)
 {
   PtrAbstractBox      pAb, specAb;
   PtrBox              pBox, box;
@@ -1247,7 +1250,7 @@ static void ComputeBoundingBoxes (int frame, int xmin, int xmax, int ymin, int y
                   /* Initialize bounding box*/
                   if (pAb->AbVisibility >= pFrame->FrVisibility &&
                       (pBox->BxDisplay || pAb->AbSelected))
-                    ComputeFilledBox (pBox, frame, xmin, xmax, ymin, ymax);
+                    ComputeFilledBox (pBox, frame, xmin, xmax, ymin, ymax, show_bgimage);
                   if (pBox->BxNew && pAb->AbFirstEnclosed == NULL)
                     {
                       /* this is a new box */
@@ -1270,7 +1273,7 @@ static void ComputeBoundingBoxes (int frame, int xmin, int xmax, int ymin, int y
                             specAb = specAb->AbEnclosing;
                         }
                     }
-                  ComputeBoundingBoxes (frame, xmin, xmax, ymin, ymax, pAb);
+                  ComputeBoundingBoxes (frame, xmin, xmax, ymin, ymax, pAb, show_bgimage);
                 }
               else
                 {
@@ -1454,10 +1457,10 @@ PtrBox DisplayAllBoxes (int frame, PtrFlow pFlow,
   int                 l, h;
   int                 x_min, x_max, y_min, y_max;
   ThotBool            userSpec = FALSE, selected;
+  ThotBool            show_bgimage;
 #ifdef _GL
   PtrBox              systemOriginRoot = NULL;
-  int                 xOrg, yOrg, 
-    clipXOfFirstCoordSys, clipYOfFirstCoordSys;
+  int                 xOrg, yOrg, clipXOfFirstCoordSys, clipYOfFirstCoordSys;
   ThotBool            updatingStatus, formatted;
   ThotBool            not_g_opacity_displayed, not_in_feedback;
 
@@ -1471,6 +1474,9 @@ PtrBox DisplayAllBoxes (int frame, PtrFlow pFlow,
   else
     root = pFrame->FrAbstractBox;
   pAb = root;
+  // Are bg images displayed?
+  show_bgimage = TtaGetEnvString ("ENABLE_BG_IMAGES");
+
   pBox = pAb->AbBox;
   if (pBox == NULL)
     return NULL;
@@ -1514,9 +1520,9 @@ PtrBox DisplayAllBoxes (int frame, PtrFlow pFlow,
     }
 
   selected = pAb->AbSelected;
-  if (pBox->BxDisplay || selected)
+  if (pAb->AbVis != 'H' && (pBox->BxDisplay || selected))
     DrawFilledBox (pBox, pAb, frame, pFlow, xmin, xmax, ymin, ymax,
-                   selected, TRUE, TRUE, TRUE);
+                   selected, TRUE, TRUE, TRUE, show_bgimage);
   while (plane != nextplane)
     /* there is a new plane to display */
     {
@@ -1529,11 +1535,11 @@ PtrBox DisplayAllBoxes (int frame, PtrFlow pFlow,
       while (pAb)
         {
           if (pAb->AbDepth == plane &&
-              /* don't display the document element */
-              pAb != pFrame->FrAbstractBox &&
-              pAb->AbBox &&
-              /* skip extra flow child */
-              (pAb == root || !IsFlow (pAb->AbBox, frame)))
+                   /* don't display the document element */
+                   pAb != pFrame->FrAbstractBox &&
+                   pAb->AbBox &&
+                   /* skip extra flow child */
+                   (pAb == root || !IsFlow (pAb->AbBox, frame)))
             {
               /* box in the current plane */
               pBox = pAb->AbBox;
@@ -1574,13 +1580,13 @@ PtrBox DisplayAllBoxes (int frame, PtrFlow pFlow,
                               pFrame->FrXOrg = 0;
                               pFrame->FrYOrg = 0;
                               ComputeBoundingBoxes (frame, x_min, x_max,
-                                                    y_min, y_max, pAb);
+                                                    y_min, y_max, pAb, show_bgimage);
                               clipXOfFirstCoordSys = pBox->BxClipX;
                               clipYOfFirstCoordSys = pBox->BxClipY;
                             }
                           else
                             ComputeBoundingBoxes (frame, x_min, x_max,
-                                                  y_min, y_max, pAb);
+                                                  y_min, y_max, pAb, show_bgimage);
                         }
                       if (pAb->AbOpacity != 1000 &&  not_in_feedback)
                         {
@@ -1625,10 +1631,11 @@ PtrBox DisplayAllBoxes (int frame, PtrFlow pFlow,
                   if (pAb->AbLeafType == LtCompound)
                     {
                       if (pAb->AbVisibility >= pFrame->FrVisibility &&
+                          pAb->AbVis != 'H' &&
                           (pBox->BxDisplay || pAb->AbSelected))
                         DrawFilledBox (pBox, pAb, frame, pFlow,
                                        xmin, xmax, ymin, ymax,
-                                       selected, TRUE, TRUE, TRUE);
+                                       selected, TRUE, TRUE, TRUE, show_bgimage);
                       if (pBox->BxNew && pAb->AbFirstEnclosed == NULL)
                         {
                           /* this is a new box */
@@ -1733,7 +1740,7 @@ PtrBox DisplayAllBoxes (int frame, PtrFlow pFlow,
                                     specAb = specAb->AbEnclosing;
                                 }
                             }
-                          if (!userSpec)
+                          if (!userSpec && pAb->AbVis != 'H')
                             {
                               if (pBox->BxType == BoSplit || pBox->BxType == BoMulScript)
                                 while (pBox->BxNexChild)
@@ -1758,10 +1765,10 @@ PtrBox DisplayAllBoxes (int frame, PtrFlow pFlow,
                                        pBox->BxClipX + pBox->BxClipW >= x_min &&
                                        pBox->BxClipX <= x_max)
 #else /* _GL */
-                                else if (bb >= y_min  &&
-                                         bt <= y_max && 
-                                         pBox->BxXOrg + pBox->BxWidth + pBox->BxEndOfBloc >= x_min &&
-                                         pBox->BxXOrg <= x_max)
+                              else if (bb >= y_min  &&
+                                       bt <= y_max && 
+                                       pBox->BxXOrg + pBox->BxWidth + pBox->BxEndOfBloc >= x_min &&
+                                       pBox->BxXOrg <= x_max)
 #endif /* _GL */
                                   DisplayBox (pBox, frame, xmin, xmax, ymin, ymax, pFlow, selected);
                             }
@@ -1896,9 +1903,12 @@ void ComputeChangedBoundingBoxes (int frame)
   int                 plane;
   int                 nextplane;
   int                 l, h;
-  ThotBool            updateStatus;
   int                 OldXOrg, OldYOrg, ClipXOfFirstCoordSys, ClipYOfFirstCoordSys;
+  ThotBool            updateStatus;
+  ThotBool            show_bgimage;
    
+  // Are bg images displayed?
+  show_bgimage = TtaGetEnvString ("ENABLE_BG_IMAGES");
   updateStatus = FrameUpdating;
   FrameUpdating = TRUE;  
   pFrame = &ViewFrameTable[frame - 1];
@@ -1966,8 +1976,8 @@ void ComputeChangedBoundingBoxes (int frame)
                         {
                           if (pAb->AbVisibility >= pFrame->FrVisibility &&
                               (pBox->BxDisplay || pAb->AbSelected))
-                            ComputeFilledBox (pAb->AbBox, frame, 0, l, 0, h);
-                          ComputeBoundingBoxes (frame, 0, l, 0, h, pAb);
+                            ComputeFilledBox (pAb->AbBox, frame, 0, l, 0, h, show_bgimage);
+                          ComputeBoundingBoxes (frame, 0, l, 0, h, pAb, show_bgimage);
                         }
                       else if (pBox->BxType == BoSplit || pBox->BxType == BoMulScript)
                         {

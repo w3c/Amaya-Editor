@@ -82,7 +82,7 @@ static void   ApplyRuleSubTree (PtrElement pE, PRuleType ruleType,
       pAbb = pE->ElAbstractBox[view - 1];
       if (pAbb == NULL)
         /* no abstract box */
-        if (ruleType == PtVisibility || ruleType == PtDisplay)
+        if (ruleType == PtVisibility  || ruleType == PtVis|| ruleType == PtDisplay)
           /* it's a visibility rule. Try to create the abstract box */
           pAbb = AbsBoxesCreate (pE, pDoc, view, True, True, &complete);
       if (pAbb)
@@ -407,6 +407,9 @@ int          NumTypePRuleAPI (PtrPRule pRule)
     {
     case PtVisibility:
       return PRVisibility;
+      break;
+    case PtVis:
+      return PRVis;
       break;
     case PtVertRef:
       return PRVertRef;
@@ -1057,15 +1060,15 @@ void  ApplyASpecificStyleRule (PtrPRule pRule, PtrElement pEl,
                                PtrDocument pDoc, ThotBool remove)
 {
   PtrAbstractBox  pAb, pParent;
-  PtrPRule	  pCurrentRule, pRP;
+  PtrPRule	      pCurrentRule, pRP;
   PtrElement      pPage;
-  PtrPSchema	  pSPR;
+  PtrPSchema	    pSPR;
   PtrAttribute	  pAttr;
-  PRuleType	  ruleType;
+  PRuleType	      ruleType;
   int             viewSch;
-  int             view;
+  int             view, d;
   ThotPictInfo   *image;
-  ThotBool	  done, enclosed, complete;
+  ThotBool	      done, enclosed, complete;
 
   enclosed = FALSE;
   /* do nothing if the document no longer exists */
@@ -1075,11 +1078,18 @@ void  ApplyASpecificStyleRule (PtrPRule pRule, PtrElement pEl,
       {
         /* the abstract box of the root element */
         pAb = pEl->ElAbstractBox[view];
-        if (pAb == NULL)
+        if (pAb == NULL &&
           /* no abstract box */
-          if (pRule->PrType == PtVisibility || pRule->PrType == PtDisplay)
-            /* it's a visibility rule. Try to create the abstract box */
-            pAb = AbsBoxesCreate (pEl, pDoc, view+1, True, True, &complete);
+            (pRule->PrType == PtVisibility || pRule->PrType == PtVis ||
+             pRule->PrType == PtDisplay))
+          {
+            d = 0;
+            while (d < MAX_DOCUMENTS - 1 && LoadedDocument[d] != pDoc)
+              d++;
+            if (d < MAX_DOCUMENTS - 1 && documentDisplayMode[d] != NoComputedDisplay)
+              /* it's a visibility rule. Try to create the abstract box */
+              pAb = AbsBoxesCreate (pEl, pDoc, view+1, True, True, &complete);
+          }
         /* the schema view associatde with the current view */
         viewSch = pDoc->DocView[view].DvPSchemaView;
         while (pAb != NULL)

@@ -137,6 +137,26 @@ static void SetAbsBoxAccessMode (PtrAbstractBox pAb, int accessMode)
 }
 
 /*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+static void UpdateCSSVisibility (PtrAbstractBox pAb)
+{
+  // @@@@@@@@@ Not sure we should do that here
+  if (pAb->AbVis == 'I')
+    {
+      if (pAb->AbEnclosing)
+        pAb->AbVis = pAb->AbEnclosing->AbVis;
+      else
+        pAb->AbVis = 'V';
+    }
+  if (pAb->AbVis == 'C' &&
+      !TypeHasException (ExcIsColHead,pAb->AbElement->ElTypeNumber,
+                         pAb->AbElement->ElStructSchema) &&
+      !TypeHasException (ExcIsRow, pAb->AbElement->ElTypeNumber,
+                         pAb->AbElement->ElStructSchema))
+    pAb->AbVis = 'V';
+}
+
+/*----------------------------------------------------------------------
   SetAccessMode updates the access  mode in all abstract boxes of
   all document views.
   ----------------------------------------------------------------------*/
@@ -446,6 +466,7 @@ PtrAbstractBox InitAbsBoxes (PtrElement pEl, DocViewNumber view, int Visib,
   pAb->AbFont = 1;
   pAb->AbLineStyle = 'S';
   pAb->AbDisplay = 'U';
+  pAb->AbVis = 'I';
   pAb->AbListStyleType = 'D';
   pAb->AbListStylePosition = 'O';
   pAb->AbListStyleImage = 'N';
@@ -1568,6 +1589,7 @@ PtrPRule SearchRuleListItemMarker (PRuleType ruleType, PtrElement pEl,
   switch (ruleType)
     {
     case PtVisibility:
+    case PtVis:
       pRule = &ListItemVisibility;
       break;
     case PtListStyleType:
@@ -1687,6 +1709,7 @@ PtrPRule SearchRuleListItemMarker (PRuleType ruleType, PtrElement pEl,
             pRule->PrMinValue = 6;
           break;
         case PtVisibility:
+        case PtVis:
           /* Visibility: Creator = */
         case PtListStyleType:
           /* ListStyleType: Creator =; */
@@ -1887,6 +1910,7 @@ ThotBool CreateListItemMarker (PtrAbstractBox pAb, PtrDocument pDoc,
         {
           /* insert the marker box in the box tree */
           pMarkerAb->AbEnclosing = pNextAb->AbEnclosing;
+          UpdateCSSVisibility (pMarkerAb);
           if (pMarkerAb->AbEnclosing->AbFirstEnclosed == pNextAb)
             pMarkerAb->AbEnclosing->AbFirstEnclosed = pMarkerAb;
           pMarkerAb->AbNext = pNextAb;
@@ -1915,6 +1939,7 @@ ThotBool CreateListItemMarker (PtrAbstractBox pAb, PtrDocument pDoc,
       pMarkerAb->AbListStyleImage = pAb->AbListStyleImage;
       pMarkerAb->AbListStylePosition = pAb->AbListStylePosition;
       pMarkerAb->AbDisplay = pAb->AbDisplay;
+      pMarkerAb->AbVis = pAb->AbVis;
       pMarkerAb->AbPresentationBox = TRUE;
       pMarkerAb->AbTypeNum = 0;
       pMarkerAb->AbVarNum = 0;
@@ -2119,37 +2144,33 @@ PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
     }
   /* on ne cree un pave de presentation que si le pave de l'element qui */
   /* provoque la creation existe dans la vue. */
-  if (ok)
-    if (pEl->ElAbstractBox[viewIndex] == NULL)
-      ok = FALSE;
+  if (ok && pEl->ElAbstractBox[viewIndex] == NULL)
+    ok = FALSE;
   /* on ne cree pas de pave fils pour un element holophraste' ou une feuille */
   funct = pRCre->PrPresFunction;
-  if (ok)
-    if (pEl->ElHolophrast || pEl->ElTerminal)
-      if (funct == FnCreateFirst || funct == FnCreateLast ||
-          funct == FnContent)
-        ok = FALSE;
+  if (ok && (pEl->ElHolophrast || pEl->ElTerminal))
+    if (funct == FnCreateFirst || funct == FnCreateLast || funct == FnContent)
+      ok = FALSE;
   /* on ne cree pas de pave de presentation qui soit un frere ou le pere du */
   /* pave racine de la vue. */
-  if (ok)
-    if (pEl->ElAbstractBox[viewIndex]->AbEnclosing == NULL)
-      switch (funct)
-        {
-        case FnCreateBefore:
-          funct = FnCreateFirst;
-          break;
-        case FnCreateAfter:
-          funct = FnCreateLast;
-          break;
-        case FnCreateWith:
-          ok = FALSE;
-          break;
-        case FnCreateEnclosing:
-          ok = FALSE;
-          break;
-        default:
-          break;
-        }
+  if (ok && pEl->ElAbstractBox[viewIndex]->AbEnclosing == NULL)
+    switch (funct)
+      {
+      case FnCreateBefore:
+        funct = FnCreateFirst;
+        break;
+      case FnCreateAfter:
+        funct = FnCreateLast;
+        break;
+      case FnCreateWith:
+        ok = FALSE;
+        break;
+      case FnCreateEnclosing:
+        ok = FALSE;
+        break;
+      default:
+        break;
+      }
 
   if (ok)
     {
@@ -2293,7 +2314,7 @@ PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
             pAb->AbTypeNum = 1;
           else
             pAb->AbTypeNum = pRCre->PrPresBox[0];
-	  pAb->AbVarNum = 0;
+          pAb->AbVarNum = 0;
           pAb->AbCanBeModified = FALSE;
           pAb->AbPSchema = pSchP;
           pAbb1 = pEl->ElAbstractBox[viewIndex];
@@ -2309,6 +2330,7 @@ PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
               while (pAbb1->AbPresentationBox)
                 pAbb1 = pAbb1->AbNext;
               pAb->AbEnclosing = pAbb1;
+              UpdateCSSVisibility (pAb);
               pAb->AbReadOnly = pAbb1->AbReadOnly;
               if (pAb->AbEnclosing->AbFirstEnclosed == NULL)
                 /* c'est le premier pave englobe' */
@@ -2398,6 +2420,7 @@ PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
               while (pAbb1->AbPresentationBox)
                 pAbb1 = pAbb1->AbNext;
               pAb->AbEnclosing = pAbb1;
+              UpdateCSSVisibility (pAb);
               pAb->AbReadOnly = pAbb1->AbReadOnly;
               if (pAb->AbEnclosing->AbFirstEnclosed == NULL)
                 pAb->AbEnclosing->AbFirstEnclosed = pAb;
@@ -2472,6 +2495,7 @@ PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
                 {
                   pAb->AbReadOnly = pAbb1->AbReadOnly;
                   pAb->AbEnclosing = pAbb1->AbEnclosing;
+                  UpdateCSSVisibility (pAb);
                   if (pAb->AbEnclosing->AbFirstEnclosed == pAbb1)
                     pAb->AbEnclosing->AbFirstEnclosed = pAb;
                   pAb->AbNext = pAbb1;
@@ -2517,6 +2541,7 @@ PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
                 {
                   pAb->AbReadOnly = pAbb1->AbReadOnly;
                   pAb->AbEnclosing = pAbb1->AbEnclosing;
+                  UpdateCSSVisibility (pAb);
                   pAb->AbNext = pAbb1->AbNext;
                   pAb->AbPrevious = pAbb1;
                   pAbb1->AbNext = pAb;
@@ -2536,6 +2561,7 @@ PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
                 {
                   pAb->AbReadOnly = pAbb1->AbReadOnly;
                   pAb->AbEnclosing = pAbb1->AbEnclosing;
+                  UpdateCSSVisibility (pAb);
                   if (pAb->AbEnclosing->AbFirstEnclosed == pAbb1)
                     pAb->AbEnclosing->AbFirstEnclosed = pAb;
                   pAb->AbPrevious = pAbb1->AbPrevious;
@@ -2549,7 +2575,8 @@ PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
                   while (!stop)
                     {
                       pAbb1->AbEnclosing = pAb;
-                      if (pAbb1->AbNext == NULL)
+                      UpdateCSSVisibility (pAbb1);
+                     if (pAbb1->AbNext == NULL)
                         stop = TRUE;
                       else if (pAbb1->AbNext->AbElement != pEl)
                         stop = TRUE;
@@ -4000,7 +4027,7 @@ static void ApplyVisibRuleAttr (PtrElement pEl, PtrAttribute pAttr,
                     *vis = IntegerRule (pRuleView1, pEl, viewNb, ok, &unit,
                                         pAttr, NULL);
                 }
-              if (pR->PrType == PtDisplay && pR->PrBoxType == BtElement)
+              else if (pR->PrType == PtDisplay && pR->PrBoxType == BtElement)
                 /* this is a Display rule that applies to the element itslef,
                    not to a pseudo belement generated by :before or :after */
                 {
@@ -4096,8 +4123,7 @@ static void ComputeVisib (PtrElement pEl, PtrDocument pDoc,
             }
           if (pRule->PrType == PtVisibility)
             *vis = IntegerRule (pRule, pEl, viewNb, &ok, &unit, pAttr, NULL);
-          else if (pRule->PrType == PtDisplay &&
-                   pRule->PrBoxType == BtElement)
+          if (pRule->PrType == PtDisplay && pRule->PrBoxType == BtElement)
             /* this is a Display rule that applies to the element itslef,
                not to a pseudo belement generated by :before or :after */
             {
@@ -4133,8 +4159,7 @@ static void ComputeVisib (PtrElement pEl, PtrDocument pDoc,
           /* s'il y a une regle de visibilite pour cette vue, on */
           /* la prend */
           if (pRuleV != NULL)
-            *vis = IntegerRule (pRuleV, pEl, viewNb, &ok, &unit, NULL,
-                                NULL);
+            *vis = IntegerRule (pRuleV, pEl, viewNb, &ok, &unit, NULL, NULL);
           /* sinon, on prend celle de la vue 1 */
           else
             *vis = IntegerRule (pRule, pEl, viewNb, &ok, &unit, NULL, NULL);
@@ -5122,6 +5147,7 @@ static void Attach (PtrAbstractBox pAb, PtrElement pEl, DocViewNumber nv,
         pP = pP->AbNext;
       /* le premier pave qui n'est pas de presentation est l'englobant */
       pPa1->AbEnclosing = pP;
+      UpdateCSSVisibility (pPa1);
       if (pPa1->AbEnclosing->AbFirstEnclosed == NULL)
         /* c'est le premier pave englobe */
         {

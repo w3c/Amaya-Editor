@@ -234,6 +234,7 @@ typedef enum
                 makes sure that the marker box can inherit properties from
 		the creator box (see function CreateListItemMarker). */
   /* the three following types must be the last ones */
+  PtVis, /* CSS visibility */
   PtBreak1, PtBreak2, PtPictInfo
 } PRuleType;
 

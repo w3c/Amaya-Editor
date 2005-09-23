@@ -38,7 +38,8 @@ extern void DrawFilledBox ( PtrBox pBox,
                             ThotBool selected,
                             ThotBool first,
                             ThotBool last,
-                            ThotBool topdown );
+                            ThotBool topdown,
+                            ThotBool show_bgimage );
 extern void GetBoxTransformedCoord ( PtrAbstractBox pAbSeeked,
                                      int frame,
                                      int *lowerx,
@@ -98,7 +99,8 @@ extern void DrawFilledBox ( PtrBox pBox,
                               ThotBool selected,
                               ThotBool first,
                               ThotBool last,
-                              ThotBool topdown );
+                              ThotBool topdown,
+                              ThotBool show_bgimage );
 extern void GetBoxTransformedCoord ( PtrAbstractBox pAbSeeked,
                                        int frame,
                                        int *lowerx,

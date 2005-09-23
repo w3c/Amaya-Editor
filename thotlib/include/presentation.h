@@ -79,23 +79,24 @@ typedef int        *PRule;
 #define PRFloat 64
 #define PRClear 65
 #define PRDisplay 66
-#define PRNoBreak1 67
-#define PRNoBreak2 68
-#define PRCreateEnclosing 69
-#define PRShowBox 70
-#define PRBackgroundPicture 71
-#define PRPictureMode 72
-#define PRNotInLine 73
-#define PRNone 74
-#define PRPageBefore 75
-#define PRPageAfter 76
-#define PRPageInside 77
+#define PRVis 67 // CSS visibility
+#define PRNoBreak1 68
+#define PRNoBreak2 69
+#define PRCreateEnclosing 70
+#define PRShowBox 71
+#define PRBackgroundPicture 72
+#define PRPictureMode 73
+#define PRNotInLine 74
+#define PRNone 75
+#define PRPageBefore 76
+#define PRPageAfter 77
+#define PRPageInside 78
 /* PtPictInfo */
-#define PRContent 78
-#define PRContentString 79
-#define PRContentURL 80
-#define PRContentAttr 81
-#define LAST_PRES_RULE_TYPE 81
+#define PRContent 79
+#define PRContentString 80
+#define PRContentURL 81
+#define PRContentAttr 82
+#define LAST_PRES_RULE_TYPE 82
 
 /*
  * A bunch of constants describing the most common values for presentation
@@ -238,6 +239,12 @@ typedef int        *PRule;
 /* values for rule PRHyphenate */
 #define Hyphenation 1
 #define NoHyphenation 2
+
+/* values for PRVis (CSS visibility) */
+#define VsInherit 0
+#define VsVisible 1
+#define VsCollapse 2
+#define VsHidden 3
 
 #define PageAuto			0
 #define PageAlways			1

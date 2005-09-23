@@ -7,10 +7,10 @@
  
 /*
 
-   This module writes in an output file the pivot representation of a
-   document.
+This module writes in an output file the pivot representation of a
+document.
 
- */
+*/
 
 #include "thot_gui.h"
 #include "thot_sys.h"
@@ -60,113 +60,113 @@
 #include "writepivot_f.h"
 
 /*----------------------------------------------------------------------
-   Ecrit dans le fichier le numero de version pivot courant           
+  Ecrit dans le fichier le numero de version pivot courant           
   ----------------------------------------------------------------------*/
 void WriteVersionNumber (BinFile pivFile)
 {
-   int                 version;
+  int                 version;
 
-   TtaWriteByte (pivFile, (char) C_PIV_VERSION);
-   TtaWriteByte (pivFile, (char) C_PIV_VERSION);
-   /* Version courante de PIVOT: 6 */
-   version = 6;
-   TtaWriteByte (pivFile, (char) version);
+  TtaWriteByte (pivFile, (char) C_PIV_VERSION);
+  TtaWriteByte (pivFile, (char) C_PIV_VERSION);
+  /* Version courante de PIVOT: 6 */
+  version = 6;
+  TtaWriteByte (pivFile, (char) version);
 }
 
 /*----------------------------------------------------------------------
-   PutShort   ecrit un entier court dans le fichier sur deux octets   
+  PutShort   ecrit un entier court dans le fichier sur deux octets   
   ----------------------------------------------------------------------*/
 static void PutShort (BinFile pivFile, int n)
 {
-   TtaWriteByte (pivFile, (char) (n / 256));
-   TtaWriteByte (pivFile, (char) (n % 256));
+  TtaWriteByte (pivFile, (char) (n / 256));
+  TtaWriteByte (pivFile, (char) (n % 256));
 }
 
 /*----------------------------------------------------------------------
-   PutInteger ecrit un entier long dans le fichier, sur 4 octets      
+  PutInteger ecrit un entier long dans le fichier, sur 4 octets      
   ----------------------------------------------------------------------*/
 static void PutInteger (BinFile pivFile, int n)
 {
-   PutShort (pivFile, n / 65536);
-   PutShort (pivFile, n % 65536);
+  PutShort (pivFile, n / 65536);
+  PutShort (pivFile, n % 65536);
 }
 
 /*----------------------------------------------------------------------
-   PutInteger ecrit un entier long dans le fichier, sur 4 octets      
+  PutInteger ecrit un entier long dans le fichier, sur 4 octets      
   ----------------------------------------------------------------------*/
 static void PutFloat (BinFile pivFile, float n)
 {
-   TtaWrite4Byte (pivFile, (unsigned char*) (&n));
+  TtaWrite4Byte (pivFile, (unsigned char*) (&n));
 }
 /*----------------------------------------------------------------------
-   PutDimensionType ecrit dans le fichier un type de dimension sur	
-   1 octet.								
+  PutDimensionType ecrit dans le fichier un type de dimension sur	
+  1 octet.								
   ----------------------------------------------------------------------*/
 static void PutDimensionType (BinFile pivFile, ThotBool b)
 {
-   if (b)
-      TtaWriteByte (pivFile, C_PIV_ABSOLUTE);
-   else
-      TtaWriteByte (pivFile, C_PIV_RELATIVE);
+  if (b)
+    TtaWriteByte (pivFile, C_PIV_ABSOLUTE);
+  else
+    TtaWriteByte (pivFile, C_PIV_RELATIVE);
 }
 
 /*----------------------------------------------------------------------
-   PutUnit ecrit dans le fichier l'unite                              
+  PutUnit ecrit dans le fichier l'unite                              
   ----------------------------------------------------------------------*/
 static void PutUnit (BinFile pivFile, TypeUnit unit)
 {
-   if (unit == UnPoint)
-      TtaWriteByte (pivFile, C_PIV_PT);
-   else if (unit == UnPixel)
-      TtaWriteByte (pivFile, C_PIV_PX);
-   else if (unit == UnAuto)
-      TtaWriteByte (pivFile, C_PIV_AUTO);
-   else if (unit == UnPercent)
-      TtaWriteByte (pivFile, C_PIV_PERCENT);
-   else
-      TtaWriteByte (pivFile, C_PIV_EM);
+  if (unit == UnPoint)
+    TtaWriteByte (pivFile, C_PIV_PT);
+  else if (unit == UnPixel)
+    TtaWriteByte (pivFile, C_PIV_PX);
+  else if (unit == UnAuto)
+    TtaWriteByte (pivFile, C_PIV_AUTO);
+  else if (unit == UnPercent)
+    TtaWriteByte (pivFile, C_PIV_PERCENT);
+  else
+    TtaWriteByte (pivFile, C_PIV_EM);
 }
 
 /*----------------------------------------------------------------------
-   PutSign   ecrit un signe dans le fichier sur un octet             
+  PutSign   ecrit un signe dans le fichier sur un octet             
   ----------------------------------------------------------------------*/
 static void PutSign (BinFile pivFile, ThotBool b)
 {
-   if (b)
-      TtaWriteByte (pivFile, C_PIV_PLUS);
-   else
-      TtaWriteByte (pivFile, C_PIV_MINUS);
+  if (b)
+    TtaWriteByte (pivFile, C_PIV_PLUS);
+  else
+    TtaWriteByte (pivFile, C_PIV_MINUS);
 }
 
 /*----------------------------------------------------------------------
-   PutDimension ecrit dans le fichier le contenu de la regle de       
-   dimension pointee par pRegle                            
+  PutDimension ecrit dans le fichier le contenu de la regle de       
+  dimension pointee par pRegle                            
   ----------------------------------------------------------------------*/
 static void PutDimension (BinFile pivFile, PtrPRule pPRule)
 {
 
-   PutDimensionType (pivFile, pPRule->PrDimRule.DrAbsolute);
-   PutShort (pivFile, abs (pPRule->PrDimRule.DrValue));
-   if (pPRule->PrDimRule.DrUnit == UnPercent)
-      TtaWriteByte (pivFile, C_PIV_PERCENT);
-   else
-      PutUnit (pivFile, pPRule->PrDimRule.DrUnit);
-   PutSign (pivFile, (ThotBool) (pPRule->PrDimRule.DrValue >= 0));
+  PutDimensionType (pivFile, pPRule->PrDimRule.DrAbsolute);
+  PutShort (pivFile, abs (pPRule->PrDimRule.DrValue));
+  if (pPRule->PrDimRule.DrUnit == UnPercent)
+    TtaWriteByte (pivFile, C_PIV_PERCENT);
+  else
+    PutUnit (pivFile, pPRule->PrDimRule.DrUnit);
+  PutSign (pivFile, (ThotBool) (pPRule->PrDimRule.DrValue >= 0));
 }
 
 /*----------------------------------------------------------------------
-   PutBoolean ecrit un booleen dans le fichier sur un octet           
+  PutBoolean ecrit un booleen dans le fichier sur un octet           
   ----------------------------------------------------------------------*/
 static void PutBoolean (BinFile pivFile, ThotBool b)
 {
-   if (b)
-      TtaWriteByte (pivFile, C_PIV_TRUE);
-   else
-      TtaWriteByte (pivFile, C_PIV_FALSE);
+  if (b)
+    TtaWriteByte (pivFile, C_PIV_TRUE);
+  else
+    TtaWriteByte (pivFile, C_PIV_FALSE);
 }
 
 /*----------------------------------------------------------------------
-   PutAlignment ecrit un BAlignment dans le fichier sur un octet      
+  PutAlignment ecrit un BAlignment dans le fichier sur un octet      
   ----------------------------------------------------------------------*/
 static void PutAlignment (BinFile pivFile, BAlignment c)
 {
@@ -191,7 +191,7 @@ static void PutAlignment (BinFile pivFile, BAlignment c)
 }
 
 /*----------------------------------------------------------------------
-   PutPageType ecrit un type de page dans le fichier sur un octet     
+  PutPageType ecrit un type de page dans le fichier sur un octet     
   ----------------------------------------------------------------------*/
 static void PutPageType (BinFile pivFile, PageType t)
 {
@@ -212,12 +212,12 @@ static void PutPageType (BinFile pivFile, PageType t)
 }
 
 /*----------------------------------------------------------------------
-   PutReferenceType ecrit un type de reference dans le fichier sur un	
-   octet. S'il s'agit d'une inclusion, expansion indique si c'est	
-   une inclusion avec ou sans expansion a l'ecran.                 
+  PutReferenceType ecrit un type de reference dans le fichier sur un	
+  octet. S'il s'agit d'une inclusion, expansion indique si c'est	
+  une inclusion avec ou sans expansion a l'ecran.                 
   ----------------------------------------------------------------------*/
 static void PutReferenceType (BinFile pivFile, ReferenceType t,
-			      ThotBool expansion)
+                              ThotBool expansion)
 {
   switch (t)
     {
@@ -226,184 +226,184 @@ static void PutReferenceType (BinFile pivFile, ReferenceType t,
       break;
     case RefInclusion:
       if (expansion)
-	TtaWriteByte (pivFile, C_PIV_REF_INCLUS_EXP);
+        TtaWriteByte (pivFile, C_PIV_REF_INCLUS_EXP);
       else
-	TtaWriteByte (pivFile, C_PIV_REF_INCLUSION);
+        TtaWriteByte (pivFile, C_PIV_REF_INCLUSION);
       break;
     }
 }
 
 /*----------------------------------------------------------------------
-   WriteNatureNumber ecrit une marque de nature suivie du numero du schema    
-   de structure pointe par pSS.                            
+  WriteNatureNumber ecrit une marque de nature suivie du numero du schema    
+  de structure pointe par pSS.                            
   ----------------------------------------------------------------------*/
 void WriteNatureNumber (PtrSSchema pSS, BinFile pivFile,
-			PtrDocument pDoc)
+                        PtrDocument pDoc)
 {
-   int                 n;
-   ThotBool            stop;
+  int                 n;
+  ThotBool            stop;
 
-   TtaWriteByte (pivFile, C_PIV_NATURE);
-   /* cherche le schema de structure */
-   n = 0;
-   stop = FALSE;
-   do
-      if (strcmp (pSS->SsName, pDoc->DocNatureName[n]) == 0)
-	 stop = TRUE;
-      else if (n < pDoc->DocNNatures - 1)
-	 n++;
-      else
-	{
-	   n = 0;
-	   stop = TRUE;
-	}
-   while (!stop);
-   PutShort (pivFile, n);
+  TtaWriteByte (pivFile, C_PIV_NATURE);
+  /* cherche le schema de structure */
+  n = 0;
+  stop = FALSE;
+  do
+    if (strcmp (pSS->SsName, pDoc->DocNatureName[n]) == 0)
+      stop = TRUE;
+    else if (n < pDoc->DocNNatures - 1)
+      n++;
+    else
+      {
+        n = 0;
+        stop = TRUE;
+      }
+  while (!stop);
+  PutShort (pivFile, n);
 }
 
 /*----------------------------------------------------------------------
-   PutLabel   ecrit le label label dans le fichier pivFile            
+  PutLabel   ecrit le label label dans le fichier pivFile            
   ----------------------------------------------------------------------*/
 void PutLabel (BinFile pivFile, LabelString label)
 {
-   int              i;
+  int              i;
 
-   TtaWriteByte (pivFile, C_PIV_LABEL);
-   i = 0;
-   do
-      TtaWriteByte (pivFile, label[i++]);
-   while (label[i - 1] != EOS);
+  TtaWriteByte (pivFile, C_PIV_LABEL);
+  i = 0;
+  do
+    TtaWriteByte (pivFile, label[i++]);
+  while (label[i - 1] != EOS);
 }
 
 /*----------------------------------------------------------------------
-   PutReference ecrit dans le fichier pivFile la reference pointee	
-   par pRef.                                               
+  PutReference ecrit dans le fichier pivFile la reference pointee	
+  par pRef.                                               
   ----------------------------------------------------------------------*/
 static void PutReference (BinFile pivFile, PtrReference pRef)
 {
-   PtrReferredDescr    pRefD;
-   LabelString         label;
-   LabelString         labelNul;
-   ThotBool            expansion;
+  PtrReferredDescr    pRefD;
+  LabelString         label;
+  LabelString         labelNul;
+  ThotBool            expansion;
 
-   labelNul [0] = 0;
-   /* ecrit le type de la reference */
-   expansion = FALSE;
-   if (pRef->RdElement != NULL)
-      expansion = pRef->RdElement->ElSource == pRef;
-   PutReferenceType (pivFile, pRef->RdTypeRef, expansion);
-   if (pRef->RdReferred == NULL)
-      /* la reference ne designe rien, on ecrit un label nul */
-      PutLabel (pivFile, labelNul);
-   else
-     {
-	pRefD = pRef->RdReferred;
-	/* l'objet designe' est dans le meme document */
-	if (pRefD->ReReferredElem == NULL)
-	  /* pas d'element reference' */
-	  label[0] = EOS;
-	else
-	  /* cherche si l'element reference' */
-	  /* est dans le buffer (a la suite d'un Couper). */
-	  if (IsASavedElement (pRefD->ReReferredElem))
-	    label[0] = EOS;
-	  else
-	    /* label: label de l'element designe' */
-	    strncpy (label, pRefD->ReReferredElem->ElLabel, MAX_LABEL_LEN);
-	/* ecrit le label de l'objet designe' */
-	PutLabel (pivFile, label);
-     }
+  labelNul [0] = 0;
+  /* ecrit le type de la reference */
+  expansion = FALSE;
+  if (pRef->RdElement != NULL)
+    expansion = pRef->RdElement->ElSource == pRef;
+  PutReferenceType (pivFile, pRef->RdTypeRef, expansion);
+  if (pRef->RdReferred == NULL)
+    /* la reference ne designe rien, on ecrit un label nul */
+    PutLabel (pivFile, labelNul);
+  else
+    {
+      pRefD = pRef->RdReferred;
+      /* l'objet designe' est dans le meme document */
+      if (pRefD->ReReferredElem == NULL)
+        /* pas d'element reference' */
+        label[0] = EOS;
+      else
+        /* cherche si l'element reference' */
+        /* est dans le buffer (a la suite d'un Couper). */
+        if (IsASavedElement (pRefD->ReReferredElem))
+          label[0] = EOS;
+        else
+          /* label: label de l'element designe' */
+          strncpy (label, pRefD->ReReferredElem->ElLabel, MAX_LABEL_LEN);
+      /* ecrit le label de l'objet designe' */
+      PutLabel (pivFile, label);
+    }
 }
 
 /*----------------------------------------------------------------------
-   PutAttribut ecrit dans le fichier pivFile l'attribut pointe' par  
-   pAttr.                                                  
+  PutAttribut ecrit dans le fichier pivFile l'attribut pointe' par  
+  pAttr.                                                  
   ----------------------------------------------------------------------*/
 void PutAttribut (BinFile pivFile, PtrAttribute pAttr, PtrDocument pDoc)
 {
-   ThotBool            attrOK;
-   ThotBool            stop;
-   int                 n, i;
-   PtrElement          pEl;
-   PtrTextBuffer       pBuf;
+  ThotBool            attrOK;
+  ThotBool            stop;
+  int                 n, i;
+  PtrElement          pEl;
+  PtrTextBuffer       pBuf;
 
-   attrOK = TRUE;
-   if (pAttr->AeDefAttr
-       && pAttr->AeAttrType != AtReferenceAttr)
-      /* on n'ecrit pas les attributs fixes, sauf les references */
-      attrOK = FALSE;
-   else if (pAttr->AeAttrType == AtReferenceAttr)
-      /* c'est un attribut reference, on n'ecrit pas */
-      /* les attributs references qui pointent sur rien. */
-     {
+  attrOK = TRUE;
+  if (pAttr->AeDefAttr
+      && pAttr->AeAttrType != AtReferenceAttr)
+    /* on n'ecrit pas les attributs fixes, sauf les references */
+    attrOK = FALSE;
+  else if (pAttr->AeAttrType == AtReferenceAttr)
+    /* c'est un attribut reference, on n'ecrit pas */
+    /* les attributs references qui pointent sur rien. */
+    {
       if (pAttr->AeAttrReference == NULL)
-	 attrOK = FALSE;
+        attrOK = FALSE;
       else if (pAttr->AeAttrReference->RdReferred == NULL)
-	 attrOK = FALSE;
+        attrOK = FALSE;
       else
-	{
-	   pEl = ReferredElement (pAttr->AeAttrReference);
-	   if (pEl == NULL)
-	      attrOK = FALSE;
-	   else if (IsASavedElement (pEl))
-	      attrOK = FALSE;
-	}
-     }
-   if (attrOK)
-      /* cherche le schema de structure ou est defini l'attribut */
-     {
-	n = 0;
-	stop = FALSE;
-	do
-	   if (strcmp (pAttr->AeAttrSSchema->SsName,
-			pDoc->DocNatureName[n]) == 0)
-	      stop = TRUE;
-	   else if (n < pDoc->DocNNatures - 1)
-	      n++;
-	   else
-	     {
-		n = 0;
-		stop = TRUE;
-	     }
-	while (!stop);
-	TtaWriteByte (pivFile, C_PIV_ATTR);
-	PutShort (pivFile, n);
-	/* numero de la nature de l'attribut */
-	PutShort (pivFile, pAttr->AeAttrNum);
-	/* numero de l'attribut */
-	switch (pAttr->AeAttrType)
-	  {
-	  case AtEnumAttr:
-	    PutShort (pivFile, pAttr->AeAttrValue);
-	    /* valeur de cet attribut */
-	    break;
-	  case AtNumAttr:
-	    PutShort (pivFile, abs (pAttr->AeAttrValue));
-	    PutSign (pivFile, (ThotBool)(pAttr->AeAttrValue >= 0));
-	    break;
-	  case AtReferenceAttr:
-	    PutReference (pivFile, pAttr->AeAttrReference);
-	    break;
-	  case AtTextAttr:
-	    pBuf = pAttr->AeAttrText;
-	    while (pBuf != NULL)
-	      {
-		i = 0;
-		while (pBuf->BuContent[i] != EOS)
-		  TtaWriteWideChar (pivFile, pBuf->BuContent[i++]);
-		pBuf = pBuf->BuNext;
-	      }
-	    TtaWriteByte (pivFile, EOS);
-	    break;
-	  default:
-	    break;
-	  }
-     }
+        {
+          pEl = ReferredElement (pAttr->AeAttrReference);
+          if (pEl == NULL)
+            attrOK = FALSE;
+          else if (IsASavedElement (pEl))
+            attrOK = FALSE;
+        }
+    }
+  if (attrOK)
+    /* cherche le schema de structure ou est defini l'attribut */
+    {
+      n = 0;
+      stop = FALSE;
+      do
+        if (strcmp (pAttr->AeAttrSSchema->SsName,
+                    pDoc->DocNatureName[n]) == 0)
+          stop = TRUE;
+        else if (n < pDoc->DocNNatures - 1)
+          n++;
+        else
+          {
+            n = 0;
+            stop = TRUE;
+          }
+      while (!stop);
+      TtaWriteByte (pivFile, C_PIV_ATTR);
+      PutShort (pivFile, n);
+      /* numero de la nature de l'attribut */
+      PutShort (pivFile, pAttr->AeAttrNum);
+      /* numero de l'attribut */
+      switch (pAttr->AeAttrType)
+        {
+        case AtEnumAttr:
+          PutShort (pivFile, pAttr->AeAttrValue);
+          /* valeur de cet attribut */
+          break;
+        case AtNumAttr:
+          PutShort (pivFile, abs (pAttr->AeAttrValue));
+          PutSign (pivFile, (ThotBool)(pAttr->AeAttrValue >= 0));
+          break;
+        case AtReferenceAttr:
+          PutReference (pivFile, pAttr->AeAttrReference);
+          break;
+        case AtTextAttr:
+          pBuf = pAttr->AeAttrText;
+          while (pBuf != NULL)
+            {
+              i = 0;
+              while (pBuf->BuContent[i] != EOS)
+                TtaWriteWideChar (pivFile, pBuf->BuContent[i++]);
+              pBuf = pBuf->BuNext;
+            }
+          TtaWriteByte (pivFile, EOS);
+          break;
+        default:
+          break;
+        }
+    }
 }
 
 /*----------------------------------------------------------------------
-   PutPresRule writes in file pivFile the specific presentation rule pPRule.
-   The parameter isPicture is True if the element is a picture element.
+  PutPresRule writes in file pivFile the specific presentation rule pPRule.
+  The parameter isPicture is True if the element is a picture element.
   ----------------------------------------------------------------------*/
 static void   PutPresRule (BinFile pivFile, PtrPRule pPRule)
 {
@@ -417,64 +417,65 @@ static void   PutPresRule (BinFile pivFile, PtrPRule pPRule)
      de pourcentage du parent */
   if ((pPRule->PrPresMode == PresImmediate &&
        (rType == PtHeight || rType == PtWidth ||
-	rType == PtVertPos || rType == PtHorizPos ||
-	rType == PtMarginTop || rType == PtMarginRight ||
-	rType == PtMarginBottom || rType == PtMarginLeft ||
-	rType == PtPaddingTop || rType == PtPaddingRight ||
-	rType == PtPaddingBottom || rType == PtPaddingLeft ||
-	rType == PtBorderTopWidth ||
-	rType == PtBorderRightWidth ||
-	rType == PtBorderBottomWidth ||
-	rType == PtBorderLeftWidth ||
-	rType == PtXRadius || rType == PtYRadius ||
+        rType == PtVertPos || rType == PtHorizPos ||
+        rType == PtMarginTop || rType == PtMarginRight ||
+        rType == PtMarginBottom || rType == PtMarginLeft ||
+        rType == PtPaddingTop || rType == PtPaddingRight ||
+        rType == PtPaddingBottom || rType == PtPaddingLeft ||
+        rType == PtBorderTopWidth ||
+        rType == PtBorderRightWidth ||
+        rType == PtBorderBottomWidth ||
+        rType == PtBorderLeftWidth ||
+        rType == PtXRadius || rType == PtYRadius ||
         rType == PtTop || rType == PtRight || rType == PtBottom ||
-	rType == PtLeft ||
-	rType == PtBorderTopColor ||
-	rType == PtBorderRightColor ||
-	rType == PtBorderBottomColor ||
-	rType == PtBorderLeftColor ||
-	rType == PtBorderTopStyle ||
-	rType == PtBorderRightStyle ||
-	rType == PtBorderBottomStyle ||
-	rType == PtBorderLeftStyle ||
-	rType == PtDisplay ||
-	rType == PtListStyleType ||
-	rType == PtListStyleImage ||
-	rType == PtListStylePosition ||
-	rType == PtFloat ||
-	rType == PtClear ||
-	rType == PtPosition ||
-	rType == PtVisibility ||
-	rType == PtSize || rType == PtStyle ||
-	rType == PtWeight || rType == PtFont ||
-	rType == PtUnderline || rType == PtThickness ||
-	rType == PtIndent || rType == PtLineSpacing ||
-	rType == PtDepth ||
-	rType == PtAdjust ||
-	rType == PtDirection || rType == PtUnicodeBidi ||
-	rType == PtLineStyle || rType == PtLineWeight ||
-	rType == PtFillPattern || rType == PtOpacity || 
-	rType == PtFillOpacity || rType == PtStrokeOpacity ||
-	rType == PtBackground || rType == PtForeground ||
-	rType == PtHyphenate ||
-	rType == PtBreak1 || rType == PtBreak2 ||
-	rType == PtPictInfo)) ||
+        rType == PtLeft ||
+        rType == PtBorderTopColor ||
+        rType == PtBorderRightColor ||
+        rType == PtBorderBottomColor ||
+        rType == PtBorderLeftColor ||
+        rType == PtBorderTopStyle ||
+        rType == PtBorderRightStyle ||
+        rType == PtBorderBottomStyle ||
+        rType == PtBorderLeftStyle ||
+        rType == PtDisplay ||
+        rType == PtListStyleType ||
+        rType == PtListStyleImage ||
+        rType == PtListStylePosition ||
+        rType == PtFloat ||
+        rType == PtClear ||
+        rType == PtPosition ||
+        rType == PtVisibility ||
+        rType == PtVis ||
+        rType == PtSize || rType == PtStyle ||
+        rType == PtWeight || rType == PtFont ||
+        rType == PtUnderline || rType == PtThickness ||
+        rType == PtIndent || rType == PtLineSpacing ||
+        rType == PtDepth ||
+        rType == PtAdjust ||
+        rType == PtDirection || rType == PtUnicodeBidi ||
+        rType == PtLineStyle || rType == PtLineWeight ||
+        rType == PtFillPattern || rType == PtOpacity || 
+        rType == PtFillOpacity || rType == PtStrokeOpacity ||
+        rType == PtBackground || rType == PtForeground ||
+        rType == PtHyphenate ||
+        rType == PtBreak1 || rType == PtBreak2 ||
+        rType == PtPictInfo)) ||
       (pPRule->PrPresMode == PresInherit &&
        pPRule->PrInheritMode == InheritParent &&
        pPRule->PrInhPercent && !pPRule->PrInhAttr &&
        pPRule->PrInhMinOrMax == 0 &&
        (rType == PtBreak1 || rType == PtBreak2 ||
-	rType == PtIndent || rType == PtSize ||
-	rType == PtLineSpacing || rType == PtLineWeight ||
-	rType == PtMarginTop || rType == PtMarginRight ||
-	rType == PtMarginBottom || rType == PtMarginLeft ||
-	rType == PtPaddingTop || rType == PtPaddingRight ||
-	rType == PtPaddingBottom || rType == PtPaddingLeft ||
-	rType == PtBorderTopWidth || rType == PtBorderRightWidth ||
-	rType == PtBorderBottomWidth || rType == PtBorderLeftWidth ||
-	rType == PtXRadius || rType == PtYRadius ||
-	rType == PtTop || rType == PtRight || rType == PtBottom ||
-	rType == PtLeft)))
+        rType == PtIndent || rType == PtSize ||
+        rType == PtLineSpacing || rType == PtLineWeight ||
+        rType == PtMarginTop || rType == PtMarginRight ||
+        rType == PtMarginBottom || rType == PtMarginLeft ||
+        rType == PtPaddingTop || rType == PtPaddingRight ||
+        rType == PtPaddingBottom || rType == PtPaddingLeft ||
+        rType == PtBorderTopWidth || rType == PtBorderRightWidth ||
+        rType == PtBorderBottomWidth || rType == PtBorderLeftWidth ||
+        rType == PtXRadius || rType == PtYRadius ||
+        rType == PtTop || rType == PtRight || rType == PtBottom ||
+        rType == PtLeft)))
     {
       /* ecrit la marque de regle */
       TtaWriteByte (pivFile, (char) C_PIV_PRESENT);
@@ -487,248 +488,251 @@ static void   PutPresRule (BinFile pivFile, PtrPRule pPRule)
       PutShort (pivFile, 0);
       /* ecrit le type de la regle */
       switch (rType)
-	{
-	case PtAdjust:
-	  /* mode de mise en ligne */
-	  TtaWriteByte (pivFile, C_PR_ADJUST);
-	  break;
-	case PtHeight:
-	case PtWidth:
-	  if (pPRule->PrDimRule.DrPosition)
-	    {
-	      if (pPRule->PrType == PtHeight)
-		TtaWriteByte (pivFile, C_PR_HEIGHTPOS);
-	      else
-		TtaWriteByte (pivFile, C_PR_WIDTHPOS);
-	    }
-	  else
-	    {
-	      if (pPRule->PrType == PtHeight)
-		TtaWriteByte (pivFile, C_PR_HEIGHT);
-	      else
-		TtaWriteByte (pivFile, C_PR_WIDTH);
-	    }
-	  break;
-	case PtVertPos:
-	  TtaWriteByte (pivFile, C_PR_VPOS);
-	  break;
-	case PtHorizPos:
-	  TtaWriteByte (pivFile, C_PR_HPOS);
-	  break;
-	case PtFont:
-	  TtaWriteByte (pivFile, C_PR_FONT);
-	  break;
-	case PtStyle:
-	  TtaWriteByte (pivFile, C_PR_STYLE);
-	  break;
-	case PtWeight:
-	  TtaWriteByte (pivFile, C_PR_WEIGHT);
-	  break;
-	case PtUnderline:
-	  TtaWriteByte (pivFile, C_PR_UNDERLINE);
-	  break;
-	case PtThickness:
-	  TtaWriteByte (pivFile, C_PR_UNDER_THICK);
-	  break;
-	case PtDirection:
-	  TtaWriteByte (pivFile, C_PR_DIRECTION);
-	  break;
-	case PtUnicodeBidi:
-	  TtaWriteByte (pivFile, C_PR_UNICODEBIDI);
-	  break;
-	case PtLineStyle:
-	  TtaWriteByte (pivFile, C_PR_LINESTYLE);
-	  break;
-	case PtDisplay:
-	  TtaWriteByte (pivFile, C_PR_DISPLAY);
-	  break;
-	case PtListStyleType:
-	  TtaWriteByte (pivFile, C_PR_LISTSTYLETYPE);
-	  break;
-	case PtListStyleImage:
-	  TtaWriteByte (pivFile, C_PR_LISTSTYLEIMAGE);
-	  break;
-	case PtListStylePosition:
-	  TtaWriteByte (pivFile, C_PR_LISTSTYLEPOSITION);
-	  break;
-	case PtFloat:
-	  TtaWriteByte (pivFile, C_PR_FLOAT);
-	  break;
-	case PtClear:
-	  TtaWriteByte (pivFile, C_PR_CLEAR);
-	  break;
-	case PtPosition:
-	  TtaWriteByte (pivFile, C_PR_POSITION);
-	  break;
-	case PtVisibility:
-	  TtaWriteByte (pivFile, C_PR_VISIBILITY);
-	  break;
+        {
+        case PtAdjust:
+          /* mode de mise en ligne */
+          TtaWriteByte (pivFile, C_PR_ADJUST);
+          break;
+        case PtHeight:
+        case PtWidth:
+          if (pPRule->PrDimRule.DrPosition)
+            {
+              if (pPRule->PrType == PtHeight)
+                TtaWriteByte (pivFile, C_PR_HEIGHTPOS);
+              else
+                TtaWriteByte (pivFile, C_PR_WIDTHPOS);
+            }
+          else
+            {
+              if (pPRule->PrType == PtHeight)
+                TtaWriteByte (pivFile, C_PR_HEIGHT);
+              else
+                TtaWriteByte (pivFile, C_PR_WIDTH);
+            }
+          break;
+        case PtVertPos:
+          TtaWriteByte (pivFile, C_PR_VPOS);
+          break;
+        case PtHorizPos:
+          TtaWriteByte (pivFile, C_PR_HPOS);
+          break;
+        case PtFont:
+          TtaWriteByte (pivFile, C_PR_FONT);
+          break;
+        case PtStyle:
+          TtaWriteByte (pivFile, C_PR_STYLE);
+          break;
+        case PtWeight:
+          TtaWriteByte (pivFile, C_PR_WEIGHT);
+          break;
+        case PtUnderline:
+          TtaWriteByte (pivFile, C_PR_UNDERLINE);
+          break;
+        case PtThickness:
+          TtaWriteByte (pivFile, C_PR_UNDER_THICK);
+          break;
+        case PtDirection:
+          TtaWriteByte (pivFile, C_PR_DIRECTION);
+          break;
+        case PtUnicodeBidi:
+          TtaWriteByte (pivFile, C_PR_UNICODEBIDI);
+          break;
+        case PtLineStyle:
+          TtaWriteByte (pivFile, C_PR_LINESTYLE);
+          break;
+        case PtDisplay:
+          TtaWriteByte (pivFile, C_PR_DISPLAY);
+          break;
+        case PtListStyleType:
+          TtaWriteByte (pivFile, C_PR_LISTSTYLETYPE);
+          break;
+        case PtListStyleImage:
+          TtaWriteByte (pivFile, C_PR_LISTSTYLEIMAGE);
+          break;
+        case PtListStylePosition:
+          TtaWriteByte (pivFile, C_PR_LISTSTYLEPOSITION);
+          break;
+        case PtFloat:
+          TtaWriteByte (pivFile, C_PR_FLOAT);
+          break;
+        case PtClear:
+          TtaWriteByte (pivFile, C_PR_CLEAR);
+          break;
+        case PtPosition:
+          TtaWriteByte (pivFile, C_PR_POSITION);
+          break;
+        case PtVisibility:
+          TtaWriteByte (pivFile, C_PR_VISIBILITY);
+          break;
+        case PtVis:
+          TtaWriteByte (pivFile, C_PR_VIS);
+          break;
         case PtBorderTopStyle:
-	  TtaWriteByte (pivFile, C_PR_BORDERTOPSTYLE);
-	  break;
+          TtaWriteByte (pivFile, C_PR_BORDERTOPSTYLE);
+          break;
         case PtBorderRightStyle:
-	  TtaWriteByte (pivFile, C_PR_BORDERRIGHTSTYLE);
-	  break;
+          TtaWriteByte (pivFile, C_PR_BORDERRIGHTSTYLE);
+          break;
         case PtBorderBottomStyle:
-	  TtaWriteByte (pivFile, C_PR_BORDERBOTTOMSTYLE);
-	  break;
+          TtaWriteByte (pivFile, C_PR_BORDERBOTTOMSTYLE);
+          break;
         case PtBorderLeftStyle:
-	  TtaWriteByte (pivFile, C_PR_BORDERLEFTSTYLE);
-	  break;
-	case PtBreak1:
-	  TtaWriteByte (pivFile, C_PR_BREAK1);
-	  break;
-	case PtBreak2:
-	  TtaWriteByte (pivFile, C_PR_BREAK2);
-	  break;
-	case PtIndent:
-	  TtaWriteByte (pivFile, C_PR_INDENT);
-	  break;
-	case PtSize:
-	  TtaWriteByte (pivFile, C_PR_SIZE);
-	  break;
-	case PtLineSpacing:
-	  TtaWriteByte (pivFile, C_PR_LINESPACING);
-	  break;
-	case PtLineWeight:
-	  TtaWriteByte (pivFile, C_PR_LINEWEIGHT);
-	  break;
+          TtaWriteByte (pivFile, C_PR_BORDERLEFTSTYLE);
+          break;
+        case PtBreak1:
+          TtaWriteByte (pivFile, C_PR_BREAK1);
+          break;
+        case PtBreak2:
+          TtaWriteByte (pivFile, C_PR_BREAK2);
+          break;
+        case PtIndent:
+          TtaWriteByte (pivFile, C_PR_INDENT);
+          break;
+        case PtSize:
+          TtaWriteByte (pivFile, C_PR_SIZE);
+          break;
+        case PtLineSpacing:
+          TtaWriteByte (pivFile, C_PR_LINESPACING);
+          break;
+        case PtLineWeight:
+          TtaWriteByte (pivFile, C_PR_LINEWEIGHT);
+          break;
         case PtMarginTop:
-	  TtaWriteByte (pivFile, C_PR_MARGINTOP);
-	  break;
+          TtaWriteByte (pivFile, C_PR_MARGINTOP);
+          break;
         case PtMarginRight:
-	  TtaWriteByte (pivFile, C_PR_MARGINRIGHT);
-	  break;
+          TtaWriteByte (pivFile, C_PR_MARGINRIGHT);
+          break;
         case PtMarginBottom:
-	  TtaWriteByte (pivFile, C_PR_MARGINBOTTOM);
-	  break;
+          TtaWriteByte (pivFile, C_PR_MARGINBOTTOM);
+          break;
         case PtMarginLeft:
-	  TtaWriteByte (pivFile, C_PR_MARGINLEFT);
-	  break;
+          TtaWriteByte (pivFile, C_PR_MARGINLEFT);
+          break;
         case PtPaddingTop:
-	  TtaWriteByte (pivFile, C_PR_PADDINGTOP);
-	  break;
+          TtaWriteByte (pivFile, C_PR_PADDINGTOP);
+          break;
         case PtPaddingRight:
-	  TtaWriteByte (pivFile, C_PR_PADDINGRIGHT);
-	  break;
+          TtaWriteByte (pivFile, C_PR_PADDINGRIGHT);
+          break;
         case PtPaddingBottom:
-	  TtaWriteByte (pivFile, C_PR_PADDINGBOTTOM);
-	  break;
+          TtaWriteByte (pivFile, C_PR_PADDINGBOTTOM);
+          break;
         case PtPaddingLeft:
-	  TtaWriteByte (pivFile, C_PR_PADDINGLEFT);
-	  break;
+          TtaWriteByte (pivFile, C_PR_PADDINGLEFT);
+          break;
         case PtBorderTopWidth:
-	  TtaWriteByte (pivFile, C_PR_BORDERTOPWIDTH);
-	  break;
+          TtaWriteByte (pivFile, C_PR_BORDERTOPWIDTH);
+          break;
         case PtBorderRightWidth:
-	  TtaWriteByte (pivFile, C_PR_BORDERRIGHTWIDTH);
-	  break;
+          TtaWriteByte (pivFile, C_PR_BORDERRIGHTWIDTH);
+          break;
         case PtBorderBottomWidth:
-	  TtaWriteByte (pivFile, C_PR_BORDERBOTTOMWIDTH);
-	  break;
+          TtaWriteByte (pivFile, C_PR_BORDERBOTTOMWIDTH);
+          break;
         case PtBorderLeftWidth:
-	  TtaWriteByte (pivFile, C_PR_BORDERLEFTWIDTH);
-	  break;
+          TtaWriteByte (pivFile, C_PR_BORDERLEFTWIDTH);
+          break;
         case PtXRadius:
-	  TtaWriteByte (pivFile, C_PR_XRADIUS);
-	  break;
+          TtaWriteByte (pivFile, C_PR_XRADIUS);
+          break;
         case PtYRadius:
-	  TtaWriteByte (pivFile, C_PR_YRADIUS);
-	  break;
+          TtaWriteByte (pivFile, C_PR_YRADIUS);
+          break;
         case PtTop:
-	  TtaWriteByte (pivFile, C_PR_TOP);
-	  break;
+          TtaWriteByte (pivFile, C_PR_TOP);
+          break;
         case PtRight:
-	  TtaWriteByte (pivFile, C_PR_RIGHT);
-	  break;
+          TtaWriteByte (pivFile, C_PR_RIGHT);
+          break;
         case PtBottom:
-	  TtaWriteByte (pivFile, C_PR_BOTTOM);
-	  break;
+          TtaWriteByte (pivFile, C_PR_BOTTOM);
+          break;
         case PtLeft:
-	  TtaWriteByte (pivFile, C_PR_LEFT);
-	  break;
-	case PtHyphenate:
-	  TtaWriteByte (pivFile, C_PR_HYPHENATE);
-	  break;
-	case PtDepth:
-	  TtaWriteByte (pivFile, C_PR_DEPTH);
-	  break;
-	case PtFillPattern:
-	  TtaWriteByte (pivFile, C_PR_FILLPATTERN);
-	  break;
-	case PtOpacity:
-	  TtaWriteByte (pivFile, C_PR_OPACITY);
-	  break;
-	case PtFillOpacity:
-	  TtaWriteByte (pivFile, C_PR_FILL_OPACITY);
-	  break;
-	case PtStrokeOpacity:
-	  TtaWriteByte (pivFile, C_PR_STROKE_OPACITY);
-	  break;
-	case PtBackground:
-	  TtaWriteByte (pivFile, C_PR_BACKGROUND);
-	  break;
-	case PtForeground:
-	  TtaWriteByte (pivFile, C_PR_FOREGROUND);
-	  break;
+          TtaWriteByte (pivFile, C_PR_LEFT);
+          break;
+        case PtHyphenate:
+          TtaWriteByte (pivFile, C_PR_HYPHENATE);
+          break;
+        case PtDepth:
+          TtaWriteByte (pivFile, C_PR_DEPTH);
+          break;
+        case PtFillPattern:
+          TtaWriteByte (pivFile, C_PR_FILLPATTERN);
+          break;
+        case PtOpacity:
+          TtaWriteByte (pivFile, C_PR_OPACITY);
+          break;
+        case PtFillOpacity:
+          TtaWriteByte (pivFile, C_PR_FILL_OPACITY);
+          break;
+        case PtStrokeOpacity:
+          TtaWriteByte (pivFile, C_PR_STROKE_OPACITY);
+          break;
+        case PtBackground:
+          TtaWriteByte (pivFile, C_PR_BACKGROUND);
+          break;
+        case PtForeground:
+          TtaWriteByte (pivFile, C_PR_FOREGROUND);
+          break;
         case PtBorderTopColor:
-	  TtaWriteByte (pivFile, C_PR_BORDERTOPCOLOR);
-	  break;
+          TtaWriteByte (pivFile, C_PR_BORDERTOPCOLOR);
+          break;
         case PtBorderRightColor:
-	  TtaWriteByte (pivFile, C_PR_BORDERRIGHTCOLOR);
-	  break;
+          TtaWriteByte (pivFile, C_PR_BORDERRIGHTCOLOR);
+          break;
         case PtBorderBottomColor:
-	  TtaWriteByte (pivFile, C_PR_BORDERBOTTOMCOLOR);
-	  break;
+          TtaWriteByte (pivFile, C_PR_BORDERBOTTOMCOLOR);
+          break;
         case PtBorderLeftColor:
-	  TtaWriteByte (pivFile, C_PR_BORDERLEFTCOLOR);
-	  break;
-	default:
+          TtaWriteByte (pivFile, C_PR_BORDERLEFTCOLOR);
+          break;
+        default:
           printf ("\nERROR: wrong pres rule *****\n");
-	  break;
-	}
+          break;
+        }
       /* ecrit les parametres de la regle */
       switch (rType)
-	{
-	case PtAdjust:
-	  /* mode de mise en ligne */
-	  PutAlignment (pivFile, pPRule->PrAdjust);
-	  break;
-	case PtHeight:
-	case PtWidth:
-	  if (pPRule->PrDimRule.DrPosition)
-	    {
-	      PutShort (pivFile, pPRule->PrDimRule.DrPosRule.PoPosDef);
-	      PutShort (pivFile, pPRule->PrDimRule.DrPosRule.PoPosRef);
-	      PutShort (pivFile, pPRule->PrDimRule.DrPosRule.PoRelation);
-	      PutShort (pivFile, abs (pPRule->PrDimRule.DrPosRule.PoDistance));
-	      PutUnit (pivFile, pPRule->PrDimRule.DrPosRule.PoDistUnit);
-	      PutSign (pivFile, (ThotBool)(pPRule->PrDimRule.DrPosRule.PoDistance >= 0));
-	    }
-	  else
-	    PutDimension (pivFile, pPRule);
-	  break;
-	case PtVertPos:
-	case PtHorizPos:
-	  PutShort (pivFile, pPRule->PrPosRule.PoPosDef);
-	  PutShort (pivFile, pPRule->PrPosRule.PoPosRef);
-	  PutBoolean (pivFile, pPRule->PrPosRule.PoDistAttr);
-	  PutShort (pivFile, pPRule->PrPosRule.PoRelation);
-	  PutBoolean (pivFile, pPRule->PrPosRule.PoNotRel);
-	  PutShort (pivFile, pPRule->PrPosRule.PoRefKind);
-	  PutShort (pivFile, pPRule->PrPosRule.PoRefIdent);
-	  PutShort (pivFile, abs (pPRule->PrPosRule.PoDistDelta));
-	  PutUnit (pivFile, pPRule->PrPosRule.PoDeltaUnit);
-	  PutSign (pivFile, (ThotBool)(pPRule->PrPosRule.PoDistDelta >= 0));
-	  PutShort (pivFile, abs (pPRule->PrPosRule.PoDistance));
-	  PutUnit (pivFile, pPRule->PrPosRule.PoDistUnit);
-	  PutSign (pivFile, (ThotBool)(pPRule->PrPosRule.PoDistance >= 0));
-	  break;
-	case PtBreak1:
-	case PtBreak2:
-	case PtSize:
-	case PtLineSpacing:
-	case PtLineWeight:
+        {
+        case PtAdjust:
+          /* mode de mise en ligne */
+          PutAlignment (pivFile, pPRule->PrAdjust);
+          break;
+        case PtHeight:
+        case PtWidth:
+          if (pPRule->PrDimRule.DrPosition)
+            {
+              PutShort (pivFile, pPRule->PrDimRule.DrPosRule.PoPosDef);
+              PutShort (pivFile, pPRule->PrDimRule.DrPosRule.PoPosRef);
+              PutShort (pivFile, pPRule->PrDimRule.DrPosRule.PoRelation);
+              PutShort (pivFile, abs (pPRule->PrDimRule.DrPosRule.PoDistance));
+              PutUnit (pivFile, pPRule->PrDimRule.DrPosRule.PoDistUnit);
+              PutSign (pivFile, (ThotBool)(pPRule->PrDimRule.DrPosRule.PoDistance >= 0));
+            }
+          else
+            PutDimension (pivFile, pPRule);
+          break;
+        case PtVertPos:
+        case PtHorizPos:
+          PutShort (pivFile, pPRule->PrPosRule.PoPosDef);
+          PutShort (pivFile, pPRule->PrPosRule.PoPosRef);
+          PutBoolean (pivFile, pPRule->PrPosRule.PoDistAttr);
+          PutShort (pivFile, pPRule->PrPosRule.PoRelation);
+          PutBoolean (pivFile, pPRule->PrPosRule.PoNotRel);
+          PutShort (pivFile, pPRule->PrPosRule.PoRefKind);
+          PutShort (pivFile, pPRule->PrPosRule.PoRefIdent);
+          PutShort (pivFile, abs (pPRule->PrPosRule.PoDistDelta));
+          PutUnit (pivFile, pPRule->PrPosRule.PoDeltaUnit);
+          PutSign (pivFile, (ThotBool)(pPRule->PrPosRule.PoDistDelta >= 0));
+          PutShort (pivFile, abs (pPRule->PrPosRule.PoDistance));
+          PutUnit (pivFile, pPRule->PrPosRule.PoDistUnit);
+          PutSign (pivFile, (ThotBool)(pPRule->PrPosRule.PoDistance >= 0));
+          break;
+        case PtBreak1:
+        case PtBreak2:
+        case PtSize:
+        case PtLineSpacing:
+        case PtLineWeight:
         case PtPaddingTop:
         case PtPaddingRight:
         case PtPaddingBottom:
@@ -739,114 +743,115 @@ static void   PutPresRule (BinFile pivFile, PtrPRule pPRule)
         case PtBorderLeftWidth:
         case PtXRadius:
         case PtYRadius:
-	case PtTop:
-	case PtRight:
-	case PtBottom:
-	case PtLeft:
-	  PutBoolean (pivFile, (pPRule->PrPresMode == PresImmediate));
-	  if (pPRule->PrPresMode == PresImmediate)
-	    {
-	      PutShort (pivFile, pPRule->PrMinValue);
-	      PutUnit (pivFile, pPRule->PrMinUnit);
-	    }
-	  else
-	    {
-	      PutShort (pivFile, pPRule->PrInhDelta);
-	      PutUnit (pivFile, pPRule->PrInhUnit);
-	    }
-	  break;
-	case PtIndent:
+        case PtTop:
+        case PtRight:
+        case PtBottom:
+        case PtLeft:
+          PutBoolean (pivFile, (pPRule->PrPresMode == PresImmediate));
+          if (pPRule->PrPresMode == PresImmediate)
+            {
+              PutShort (pivFile, pPRule->PrMinValue);
+              PutUnit (pivFile, pPRule->PrMinUnit);
+            }
+          else
+            {
+              PutShort (pivFile, pPRule->PrInhDelta);
+              PutUnit (pivFile, pPRule->PrInhUnit);
+            }
+          break;
+        case PtIndent:
         case PtMarginTop:
         case PtMarginRight:
         case PtMarginBottom:
         case PtMarginLeft:
-	  PutBoolean (pivFile, (pPRule->PrPresMode == PresImmediate));
-	  if (pPRule->PrPresMode == PresImmediate)
-	    {
-	      PutShort (pivFile, abs (pPRule->PrMinValue));
-	      PutUnit (pivFile, pPRule->PrMinUnit);
-	      PutSign (pivFile, (ThotBool)(pPRule->PrMinValue >= 0));
-	    }
-	  else
-	    {
-	      PutShort (pivFile, abs (pPRule->PrInhDelta));
-	      PutUnit (pivFile, pPRule->PrInhUnit);
-	      PutSign (pivFile, (ThotBool)(pPRule->PrInhDelta >= 0));
-	    }
-	  break;
-	case PtDepth:
-	case PtOpacity:
-	case PtFillOpacity:
-	case PtStrokeOpacity:
-	case PtFillPattern:
-	case PtListStyleImage:
-	  PutShort (pivFile, pPRule->PrIntValue);
-	  break;
-	case PtBackground:
-	case PtForeground:
+          PutBoolean (pivFile, (pPRule->PrPresMode == PresImmediate));
+          if (pPRule->PrPresMode == PresImmediate)
+            {
+              PutShort (pivFile, abs (pPRule->PrMinValue));
+              PutUnit (pivFile, pPRule->PrMinUnit);
+              PutSign (pivFile, (ThotBool)(pPRule->PrMinValue >= 0));
+            }
+          else
+            {
+              PutShort (pivFile, abs (pPRule->PrInhDelta));
+              PutUnit (pivFile, pPRule->PrInhUnit);
+              PutSign (pivFile, (ThotBool)(pPRule->PrInhDelta >= 0));
+            }
+          break;
+        case PtDepth:
+        case PtOpacity:
+        case PtFillOpacity:
+        case PtStrokeOpacity:
+        case PtFillPattern:
+        case PtListStyleImage:
+          PutShort (pivFile, pPRule->PrIntValue);
+          break;
+        case PtBackground:
+        case PtForeground:
         case PtBorderTopColor:
         case PtBorderRightColor:
         case PtBorderBottomColor:
         case PtBorderLeftColor:
-	  if (pPRule->PrIntValue >= 0)
-	    /* positive value */
-	    PutShort (pivFile, 0);
-	  else
-	    /* negative value */
-	    PutShort (pivFile, 1);
+          if (pPRule->PrIntValue >= 0)
+            /* positive value */
+            PutShort (pivFile, 0);
+          else
+            /* negative value */
+            PutShort (pivFile, 1);
 #ifdef NODISPLAY
-	  red = green = blue = 0;
+          red = green = blue = 0;
 #else /* NODISPLAY */
-	  TtaGiveThotRGB (pPRule->PrIntValue, &red, &green, &blue);
+          TtaGiveThotRGB (pPRule->PrIntValue, &red, &green, &blue);
 #endif /* NODISPLAY */
-	  PutShort (pivFile, red);
-	  PutShort (pivFile, green);
-	  PutShort (pivFile, blue);
-	  break;
-	case PtFont:
-	case PtStyle:
-	case PtWeight:
-	case PtUnderline:
-	case PtThickness:
-	case PtDirection:
-	case PtUnicodeBidi:
-	case PtVisibility:
-	case PtLineStyle:
-	case PtDisplay:
-	case PtListStyleType:
-	case PtListStylePosition:
-	case PtFloat:
-	case PtClear:
-	case PtPosition:
+          PutShort (pivFile, red);
+          PutShort (pivFile, green);
+          PutShort (pivFile, blue);
+          break;
+        case PtVis:
+        case PtFont:
+        case PtStyle:
+        case PtWeight:
+        case PtUnderline:
+        case PtThickness:
+        case PtDirection:
+        case PtUnicodeBidi:
+        case PtVisibility:
+        case PtLineStyle:
+        case PtDisplay:
+        case PtListStyleType:
+        case PtListStylePosition:
+        case PtFloat:
+        case PtClear:
+        case PtPosition:
         case PtBorderTopStyle:
         case PtBorderRightStyle:
         case PtBorderBottomStyle:
         case PtBorderLeftStyle:
-	  TtaWriteByte (pivFile, pPRule->PrChrValue);
-	  break;
-	case PtHyphenate:
-	  PutBoolean (pivFile, pPRule->PrBoolValue);
-	  break;
-	default:
-	  break;
-	}
+          TtaWriteByte (pivFile, pPRule->PrChrValue);
+          break;
+        case PtHyphenate:
+          PutBoolean (pivFile, pPRule->PrBoolValue);
+          break;
+        default:
+          break;
+        }
     }
 }
 
 /*----------------------------------------------------------------------
-   Externalise effectue la traduction sous forme pivot du sous-arbre  
-   ou de l'element pointe par pEl.                                 
-   subTree indique si on veut ecrire le sous-arbre ou l'element    
-   seul.                                                           
-   Le fichier 'pivFile' ou est ecrit la representation pivot doit  
-   deja etre ouvert a l'appel et il n'est pas ferme au retour.     
-   Si l'element externalise est une feuille texte suivie d'autres  
-   feuilles de texte ayant les m^emes attributs, ces elements sont 
-   externalise's sous la forme d'un seul element, et au retour,    
-   pEl pointe sur le dernier de ces elements successifs.           
+  Externalise effectue la traduction sous forme pivot du sous-arbre  
+  ou de l'element pointe par pEl.                                 
+  subTree indique si on veut ecrire le sous-arbre ou l'element    
+  seul.                                                           
+  Le fichier 'pivFile' ou est ecrit la representation pivot doit  
+  deja etre ouvert a l'appel et il n'est pas ferme au retour.     
+  Si l'element externalise est une feuille texte suivie d'autres  
+  feuilles de texte ayant les m^emes attributs, ces elements sont 
+  externalise's sous la forme d'un seul element, et au retour,    
+  pEl pointe sur le dernier de ces elements successifs.           
   ----------------------------------------------------------------------*/
 void Externalise (BinFile pivFile, PtrElement *pEl, PtrDocument pDoc,
-		  ThotBool subTree)
+                  ThotBool subTree)
 {
   PtrElement          pChild, pEl1;
   PtrTextBuffer       pBuf;
@@ -901,20 +906,20 @@ void Externalise (BinFile pivFile, PtrElement *pEl, PtrDocument pDoc,
       notifyAttr.attributeType.AttrTypeNum = pAttr->AeAttrNum;
       notifyAttr.attributeType.AttrSSchema = (SSchema) (pAttr->AeAttrSSchema);
       if (!CallEventAttribute (&notifyAttr, TRUE))
-	/* l'application laisse l'editeur ecrire l'attribut */
-	{
-	  /* ecrit l'attribut */
-	  PutAttribut (pivFile, pAttr, pDoc);
-	  /* prepare et envoie l'evenement AttrSave.Post s'il est demande' */
-	  notifyAttr.event = TteAttrSave;
-	  notifyAttr.document = (Document) IdentDocument (pDoc);
-	  notifyAttr.element = (Element) pEl1;
-	  notifyAttr.info = 0; /* not sent by undo */
-	  notifyAttr.attribute = (Attribute) pAttr;
-	  notifyAttr.attributeType.AttrTypeNum = pAttr->AeAttrNum;
-	  notifyAttr.attributeType.AttrSSchema = (SSchema) (pAttr->AeAttrSSchema);
-	  CallEventAttribute (&notifyAttr, FALSE);
-	}
+        /* l'application laisse l'editeur ecrire l'attribut */
+        {
+          /* ecrit l'attribut */
+          PutAttribut (pivFile, pAttr, pDoc);
+          /* prepare et envoie l'evenement AttrSave.Post s'il est demande' */
+          notifyAttr.event = TteAttrSave;
+          notifyAttr.document = (Document) IdentDocument (pDoc);
+          notifyAttr.element = (Element) pEl1;
+          notifyAttr.info = 0; /* not sent by undo */
+          notifyAttr.attribute = (Attribute) pAttr;
+          notifyAttr.attributeType.AttrTypeNum = pAttr->AeAttrNum;
+          notifyAttr.attributeType.AttrSSchema = (SSchema) (pAttr->AeAttrSSchema);
+          CallEventAttribute (&notifyAttr, FALSE);
+        }
       /* passe a l'attribut suivant de l'element */
       pAttr = pAttr->AeNext;
     }
@@ -938,26 +943,26 @@ void Externalise (BinFile pivFile, PtrElement *pEl, PtrDocument pDoc,
       PutShort (pivFile, 0);
       PutShort (pivFile, 0);
       switch (((ThotPictInfo *)(pEl1->ElPictInfo))->PicPresent)
-	{
-	case RealSize:
-	  TtaWriteByte (pivFile, C_PIV_REALSIZE);
-	  break;
-	case ReScale:
-	  TtaWriteByte (pivFile, C_PIV_RESCALE);
-	  break;
-	case FillFrame:
-	  TtaWriteByte (pivFile, C_PIV_FILLFRAME);
-	  break;
-	case XRepeat:
-	  TtaWriteByte (pivFile, C_PIV_XREPEAT);
-	  break;
-	case YRepeat:
-	  TtaWriteByte (pivFile, C_PIV_YREPEAT);
-	  break;
-	default:
-	  TtaWriteByte (pivFile, ' ');
-	  break;
-	}
+        {
+        case RealSize:
+          TtaWriteByte (pivFile, C_PIV_REALSIZE);
+          break;
+        case ReScale:
+          TtaWriteByte (pivFile, C_PIV_RESCALE);
+          break;
+        case FillFrame:
+          TtaWriteByte (pivFile, C_PIV_FILLFRAME);
+          break;
+        case XRepeat:
+          TtaWriteByte (pivFile, C_PIV_XREPEAT);
+          break;
+        case YRepeat:
+          TtaWriteByte (pivFile, C_PIV_YREPEAT);
+          break;
+        default:
+          TtaWriteByte (pivFile, ' ');
+          break;
+        }
       PutShort (pivFile, ((ThotPictInfo *)(pEl1->ElPictInfo))->PicType);
     }
 
@@ -974,447 +979,447 @@ void Externalise (BinFile pivFile, PtrElement *pEl, PtrDocument pDoc,
     {
       pSS = pEl1->ElStructSchema;
       if (pEl1->ElTerminal)
-	{
-	  /* feuille terminale: on ecrit son contenu entre C_PIV_BEGIN et
-	     C_PIV_END */
-	  if (pSS->SsRule->SrElem[pEl1->ElTypeNumber - 1]->SrConstruct != CsConstant)
-	    /* on n'ecrit pas le texte des constantes, puisqu'il est cree
-	       automatiquement */
-	    {
-	      if (pEl1->ElTypeNumber == CharString + 1)
-		/* ecrit le numero de langue de la feuille de texte, si ce */
-		/* n'est pas la premiere langue de la table du document */
-		{
-		  i = 0;
-		  /* cherche le rang de la langue dans la table du document */
-		  while (pDoc->DocLanguages[i] != pEl1->ElLanguage &&
-			 i < pDoc->DocNLanguages)
-		    i++;
-		  if (i > 0)
-		    {
-		      TtaWriteByte (pivFile, C_PIV_LANG);
-		      TtaWriteByte (pivFile, (char) i);
-		    }
-		}
-	      if (pEl1->ElLeafType != LtReference)
-		TtaWriteByte (pivFile, (char) C_PIV_BEGIN);
-	      switch (pEl1->ElLeafType)
-		{
-		case LtPicture:
-		case LtText:
-		  /* ecrit dans le fichier le texte des buffers de l'element */
-		  /* ou le nom de l'image */
-		  do
-		    {
-		      c = 0;
-		      pBuf = pEl1->ElText;
-		      while (c < pEl1->ElTextLength && pBuf != NULL)
-			{
-			  i = 0;
-			  while (pBuf->BuContent[i] != EOS && i < pBuf->BuLength)
-			    TtaWriteWideChar (pivFile, pBuf->BuContent[i++]);
-			  c = c + i;
-			  /* buffer suivant du meme element */
-			  pBuf = pBuf->BuNext;
-			}
-		      /* peut-on concatener l'element suivant ? */
-		      stop = TRUE;
+        {
+          /* feuille terminale: on ecrit son contenu entre C_PIV_BEGIN et
+             C_PIV_END */
+          if (pSS->SsRule->SrElem[pEl1->ElTypeNumber - 1]->SrConstruct != CsConstant)
+            /* on n'ecrit pas le texte des constantes, puisqu'il est cree
+               automatiquement */
+            {
+              if (pEl1->ElTypeNumber == CharString + 1)
+                /* ecrit le numero de langue de la feuille de texte, si ce */
+                /* n'est pas la premiere langue de la table du document */
+                {
+                  i = 0;
+                  /* cherche le rang de la langue dans la table du document */
+                  while (pDoc->DocLanguages[i] != pEl1->ElLanguage &&
+                         i < pDoc->DocNLanguages)
+                    i++;
+                  if (i > 0)
+                    {
+                      TtaWriteByte (pivFile, C_PIV_LANG);
+                      TtaWriteByte (pivFile, (char) i);
+                    }
+                }
+              if (pEl1->ElLeafType != LtReference)
+                TtaWriteByte (pivFile, (char) C_PIV_BEGIN);
+              switch (pEl1->ElLeafType)
+                {
+                case LtPicture:
+                case LtText:
+                  /* ecrit dans le fichier le texte des buffers de l'element */
+                  /* ou le nom de l'image */
+                  do
+                    {
+                      c = 0;
+                      pBuf = pEl1->ElText;
+                      while (c < pEl1->ElTextLength && pBuf != NULL)
+                        {
+                          i = 0;
+                          while (pBuf->BuContent[i] != EOS && i < pBuf->BuLength)
+                            TtaWriteWideChar (pivFile, pBuf->BuContent[i++]);
+                          c = c + i;
+                          /* buffer suivant du meme element */
+                          pBuf = pBuf->BuNext;
+                        }
+                      /* peut-on concatener l'element suivant ? */
+                      stop = TRUE;
 #ifndef NODISPLAY
-		      if (pEl1->ElLeafType == LtText && pEl1->ElNext != NULL &&
-			  /* c'est du texte, il y a un suivant.. */
-			  pEl1->ElNext->ElTerminal &&
-			  pEl1->ElNext->ElLeafType == LtText &&
-			  /* qui est une feuille de text */
-			  pEl1->ElNext->ElLanguage == pEl1->ElLanguage &&
-			  pEl1->ElNext->ElSource == NULL &&
-			  /* le suivant n'est pas une inclusion */
-			  pEl1->ElStructSchema->SsRule->SrElem[pEl1->ElTypeNumber - 1]->SrConstruct != CsConstant &&
-			  pEl1->ElNext->ElStructSchema->SsRule->SrElem[pEl1->ElNext->ElTypeNumber - 1]->SrConstruct != CsConstant &&
-			  SameAttributes (*pEl, pEl1->ElNext))
-			/* il a les memes attributs */
-			if (BothHaveNoSpecRules (*pEl, pEl1->ElNext))
-			  /* il a les memes regles de presentation specifique  */
-			  /* on concatene */
-			  {
-			    stop = FALSE;
-			    pEl1 = pEl1->ElNext;
-			  }
+                      if (pEl1->ElLeafType == LtText && pEl1->ElNext != NULL &&
+                          /* c'est du texte, il y a un suivant.. */
+                          pEl1->ElNext->ElTerminal &&
+                          pEl1->ElNext->ElLeafType == LtText &&
+                          /* qui est une feuille de text */
+                          pEl1->ElNext->ElLanguage == pEl1->ElLanguage &&
+                          pEl1->ElNext->ElSource == NULL &&
+                          /* le suivant n'est pas une inclusion */
+                          pEl1->ElStructSchema->SsRule->SrElem[pEl1->ElTypeNumber - 1]->SrConstruct != CsConstant &&
+                          pEl1->ElNext->ElStructSchema->SsRule->SrElem[pEl1->ElNext->ElTypeNumber - 1]->SrConstruct != CsConstant &&
+                          SameAttributes (*pEl, pEl1->ElNext))
+                        /* il a les memes attributs */
+                        if (BothHaveNoSpecRules (*pEl, pEl1->ElNext))
+                          /* il a les memes regles de presentation specifique  */
+                          /* on concatene */
+                          {
+                            stop = FALSE;
+                            pEl1 = pEl1->ElNext;
+                          }
 #endif /* NODISPLAY */
-		    }
-		  while (!stop);
-		  /* update pEl value */
-		  *pEl = pEl1;
-		  TtaWriteByte (pivFile, EOS);
-		  break;
-		case LtReference:
-		  /* ecrit une marque de reference et le label de */
-		  /* l'element qui est reference' */
-		  TtaWriteByte (pivFile, (char) C_PIV_REFERENCE);
-		  PutReference (pivFile, pEl1->ElReference);
-		  break;
-		case LtSymbol:
-		case LtGraphics:
-		  /* ecrit le code du symbole ou du graphique */
-		  TtaWriteByte (pivFile, pEl1->ElGraph);
-		  break;
-		case LtPageColBreak:
-		  /* ecrit le numero de page et le type de page */
-		  PutShort (pivFile, pEl1->ElPageNumber);
-		  PutShort (pivFile, pEl1->ElViewPSchema);
-		  PutPageType (pivFile, pEl1->ElPageType);
-		  PutBoolean (pivFile, pEl1->ElPageModified);
-		  break;
-		case LtPairedElem:
-		  PutInteger (pivFile, pEl1->ElPairIdent);
-		  break;
-		case LtPolyLine:
-		  /* ecrit le code representant la forme de la ligne */
-		  TtaWriteByte (pivFile, pEl1->ElPolyLineType);
-		  /* ecrit une marque indiquant que c'est une Polyline */
-		  TtaWriteByte (pivFile, (char) C_PIV_POLYLINE);
-		  /* ecrit le nombre de points de la ligne */
-		  PutShort (pivFile, pEl1->ElNPoints);
-		  /* ecrit tous les points */
-		  c = 0;
-		  pBuf = pEl1->ElPolyLineBuffer;
-		  while (c < pEl1->ElNPoints && pBuf != NULL)
-		    {
-		      for (i = 0; i < pBuf->BuLength; i++)
-			{
-			  PutInteger (pivFile, pBuf->BuPoints[i].XCoord);
-			  PutInteger (pivFile, pBuf->BuPoints[i].YCoord);
-			}
-		      c += pBuf->BuLength;
-		      pBuf = pBuf->BuNext; /* buffer suivant du meme element */
-		    }
-		  break;
-		case LtPath:
-		  /* ecrit un caractere pour faciliter la lecture */
-		  TtaWriteByte (pivFile, ' ');
-		  /* ecrit une marque indiquant que c'est un Path */
-		  TtaWriteByte (pivFile, (char) C_PIV_PATH);
-		  pPa = pEl1->ElFirstPathSeg;
-		  while (pPa)
-		    {
-		      switch (pPa->PaShape)
-			{
-			case PtLine:
-			   TtaWriteByte (pivFile, 'L');
-			   break;
-			case PtCubicBezier:
-		           TtaWriteByte (pivFile, 'C');
-			   break;
-			case PtQuadraticBezier:
-		           TtaWriteByte (pivFile, 'Q');
-			   break;
-			case PtEllipticalArc:
-		           TtaWriteByte (pivFile, 'A');
-			   break;
-			}
-		      PutBoolean (pivFile, pPa->PaNewSubpath);
-		      PutSign (pivFile, (ThotBool)(pPa->XStart >= 0));
-		      PutInteger (pivFile, abs (pPa->XStart));
-		      PutSign (pivFile, (ThotBool)(pPa->YStart >= 0));
-		      PutInteger (pivFile, abs (pPa->YStart));
-		      PutSign (pivFile, (ThotBool)(pPa->XEnd >= 0));
-		      PutInteger (pivFile, abs (pPa->XEnd));
-		      PutSign (pivFile, (ThotBool)(pPa->YEnd >= 0));
-		      PutInteger (pivFile, abs (pPa->YEnd));
-		      switch (pPa->PaShape)
-			{
-			case PtLine:
-			   break;
-			case PtCubicBezier:
-			   PutSign (pivFile, (ThotBool)(pPa->XCtrlStart >= 0));
-			   PutInteger (pivFile, abs (pPa->XCtrlStart));
-			   PutSign (pivFile, (ThotBool)(pPa->YCtrlStart >= 0));
-			   PutInteger (pivFile, abs (pPa->YCtrlStart));
-			   PutSign (pivFile, (ThotBool)(pPa->XCtrlEnd >= 0));
-			   PutInteger (pivFile, abs (pPa->XCtrlEnd));
-			   PutSign (pivFile, (ThotBool)(pPa->YCtrlEnd >= 0));
-			   PutInteger (pivFile, abs (pPa->YCtrlEnd));
-			   break;
-			case PtQuadraticBezier:
-			   PutSign (pivFile, (ThotBool)(pPa->XCtrlStart >= 0));
-			   PutInteger (pivFile, abs (pPa->XCtrlStart));
-			   PutSign (pivFile, (ThotBool)(pPa->YCtrlStart >= 0));
-			   PutInteger (pivFile, abs (pPa->YCtrlStart));
-			   break;
-			case PtEllipticalArc:
-			   PutInteger (pivFile, pPa->XRadius);
-			   PutInteger (pivFile, pPa->YRadius);
-			   PutSign (pivFile, (ThotBool)(pPa->XAxisRotation >= 0));
-			   PutShort (pivFile, abs (pPa->XAxisRotation));
-			   PutBoolean (pivFile, pPa->LargeArc);
-			   PutBoolean (pivFile, pPa->Sweep);
-			   break;
-			}
+                    }
+                  while (!stop);
+                  /* update pEl value */
+                  *pEl = pEl1;
+                  TtaWriteByte (pivFile, EOS);
+                  break;
+                case LtReference:
+                  /* ecrit une marque de reference et le label de */
+                  /* l'element qui est reference' */
+                  TtaWriteByte (pivFile, (char) C_PIV_REFERENCE);
+                  PutReference (pivFile, pEl1->ElReference);
+                  break;
+                case LtSymbol:
+                case LtGraphics:
+                  /* ecrit le code du symbole ou du graphique */
+                  TtaWriteByte (pivFile, pEl1->ElGraph);
+                  break;
+                case LtPageColBreak:
+                  /* ecrit le numero de page et le type de page */
+                  PutShort (pivFile, pEl1->ElPageNumber);
+                  PutShort (pivFile, pEl1->ElViewPSchema);
+                  PutPageType (pivFile, pEl1->ElPageType);
+                  PutBoolean (pivFile, pEl1->ElPageModified);
+                  break;
+                case LtPairedElem:
+                  PutInteger (pivFile, pEl1->ElPairIdent);
+                  break;
+                case LtPolyLine:
+                  /* ecrit le code representant la forme de la ligne */
+                  TtaWriteByte (pivFile, pEl1->ElPolyLineType);
+                  /* ecrit une marque indiquant que c'est une Polyline */
+                  TtaWriteByte (pivFile, (char) C_PIV_POLYLINE);
+                  /* ecrit le nombre de points de la ligne */
+                  PutShort (pivFile, pEl1->ElNPoints);
+                  /* ecrit tous les points */
+                  c = 0;
+                  pBuf = pEl1->ElPolyLineBuffer;
+                  while (c < pEl1->ElNPoints && pBuf != NULL)
+                    {
+                      for (i = 0; i < pBuf->BuLength; i++)
+                        {
+                          PutInteger (pivFile, pBuf->BuPoints[i].XCoord);
+                          PutInteger (pivFile, pBuf->BuPoints[i].YCoord);
+                        }
+                      c += pBuf->BuLength;
+                      pBuf = pBuf->BuNext; /* buffer suivant du meme element */
+                    }
+                  break;
+                case LtPath:
+                  /* ecrit un caractere pour faciliter la lecture */
+                  TtaWriteByte (pivFile, ' ');
+                  /* ecrit une marque indiquant que c'est un Path */
+                  TtaWriteByte (pivFile, (char) C_PIV_PATH);
+                  pPa = pEl1->ElFirstPathSeg;
+                  while (pPa)
+                    {
+                      switch (pPa->PaShape)
+                        {
+                        case PtLine:
+                          TtaWriteByte (pivFile, 'L');
+                          break;
+                        case PtCubicBezier:
+                          TtaWriteByte (pivFile, 'C');
+                          break;
+                        case PtQuadraticBezier:
+                          TtaWriteByte (pivFile, 'Q');
+                          break;
+                        case PtEllipticalArc:
+                          TtaWriteByte (pivFile, 'A');
+                          break;
+                        }
+                      PutBoolean (pivFile, pPa->PaNewSubpath);
+                      PutSign (pivFile, (ThotBool)(pPa->XStart >= 0));
+                      PutInteger (pivFile, abs (pPa->XStart));
+                      PutSign (pivFile, (ThotBool)(pPa->YStart >= 0));
+                      PutInteger (pivFile, abs (pPa->YStart));
+                      PutSign (pivFile, (ThotBool)(pPa->XEnd >= 0));
+                      PutInteger (pivFile, abs (pPa->XEnd));
+                      PutSign (pivFile, (ThotBool)(pPa->YEnd >= 0));
+                      PutInteger (pivFile, abs (pPa->YEnd));
+                      switch (pPa->PaShape)
+                        {
+                        case PtLine:
+                          break;
+                        case PtCubicBezier:
+                          PutSign (pivFile, (ThotBool)(pPa->XCtrlStart >= 0));
+                          PutInteger (pivFile, abs (pPa->XCtrlStart));
+                          PutSign (pivFile, (ThotBool)(pPa->YCtrlStart >= 0));
+                          PutInteger (pivFile, abs (pPa->YCtrlStart));
+                          PutSign (pivFile, (ThotBool)(pPa->XCtrlEnd >= 0));
+                          PutInteger (pivFile, abs (pPa->XCtrlEnd));
+                          PutSign (pivFile, (ThotBool)(pPa->YCtrlEnd >= 0));
+                          PutInteger (pivFile, abs (pPa->YCtrlEnd));
+                          break;
+                        case PtQuadraticBezier:
+                          PutSign (pivFile, (ThotBool)(pPa->XCtrlStart >= 0));
+                          PutInteger (pivFile, abs (pPa->XCtrlStart));
+                          PutSign (pivFile, (ThotBool)(pPa->YCtrlStart >= 0));
+                          PutInteger (pivFile, abs (pPa->YCtrlStart));
+                          break;
+                        case PtEllipticalArc:
+                          PutInteger (pivFile, pPa->XRadius);
+                          PutInteger (pivFile, pPa->YRadius);
+                          PutSign (pivFile, (ThotBool)(pPa->XAxisRotation >= 0));
+                          PutShort (pivFile, abs (pPa->XAxisRotation));
+                          PutBoolean (pivFile, pPa->LargeArc);
+                          PutBoolean (pivFile, pPa->Sweep);
+                          break;
+                        }
                       pPa = pPa->PaNext; 
-		    } 
-		  break;
-		default:
-		  break;
-		}
-	      /*Add transformation informations in pivot file*/
-	      if (pEl1->ElParent && pEl1->ElParent->ElTransform)
-		{
-		  Trans = pEl1->ElParent->ElTransform;
-		  while (Trans)
-		    {
-		      TtaWriteByte (pivFile, (char) C_PIV_TRANS_START);
-		      PutInteger (pivFile, Trans->TransType);
-		      switch (Trans->TransType)
-			{
-			case PtElBoxTranslate:
-			case PtElviewboxScale:
-			case PtElviewboxTranslate:
-			case PtElScale:
-			case PtElAnimTranslate:
-			case PtElTranslate:
-			  PutFloat (pivFile, Trans->XScale);  
-			  PutFloat (pivFile, Trans->YScale); 		
-			  break;
-			case PtElAnimRotate:
-			case PtElRotate:
-			  PutFloat (pivFile, Trans->XRotate);
-			  PutFloat (pivFile, Trans->YRotate);
-			  PutFloat (pivFile, Trans->TrAngle);	    
-			  break;
-			case PtElMatrix:
-			  PutFloat (pivFile, Trans->AMatrix);
-			  PutFloat (pivFile, Trans->BMatrix);
-			  PutFloat (pivFile, Trans->CMatrix);
-			  PutFloat (pivFile, Trans->DMatrix);
-			  PutFloat (pivFile, Trans->EMatrix);
-			  PutFloat (pivFile, Trans->FMatrix);
-			  break;
-			case PtElSkewX:
-			case PtElSkewY:
-			  PutFloat (pivFile, Trans->TrFactor);
-			  break;	  
-			default:
-			  break;	  
-			}
-		      Trans = Trans->Next;
-		    }
-		  TtaWriteByte (pivFile, (char) C_PIV_TRANS_END);
-		}
+                    } 
+                  break;
+                default:
+                  break;
+                }
+              /*Add transformation informations in pivot file*/
+              if (pEl1->ElParent && pEl1->ElParent->ElTransform)
+                {
+                  Trans = pEl1->ElParent->ElTransform;
+                  while (Trans)
+                    {
+                      TtaWriteByte (pivFile, (char) C_PIV_TRANS_START);
+                      PutInteger (pivFile, Trans->TransType);
+                      switch (Trans->TransType)
+                        {
+                        case PtElBoxTranslate:
+                        case PtElviewboxScale:
+                        case PtElviewboxTranslate:
+                        case PtElScale:
+                        case PtElAnimTranslate:
+                        case PtElTranslate:
+                          PutFloat (pivFile, Trans->XScale);  
+                          PutFloat (pivFile, Trans->YScale); 		
+                          break;
+                        case PtElAnimRotate:
+                        case PtElRotate:
+                          PutFloat (pivFile, Trans->XRotate);
+                          PutFloat (pivFile, Trans->YRotate);
+                          PutFloat (pivFile, Trans->TrAngle);	    
+                          break;
+                        case PtElMatrix:
+                          PutFloat (pivFile, Trans->AMatrix);
+                          PutFloat (pivFile, Trans->BMatrix);
+                          PutFloat (pivFile, Trans->CMatrix);
+                          PutFloat (pivFile, Trans->DMatrix);
+                          PutFloat (pivFile, Trans->EMatrix);
+                          PutFloat (pivFile, Trans->FMatrix);
+                          break;
+                        case PtElSkewX:
+                        case PtElSkewY:
+                          PutFloat (pivFile, Trans->TrFactor);
+                          break;	  
+                        default:
+                          break;	  
+                        }
+                      Trans = Trans->Next;
+                    }
+                  TtaWriteByte (pivFile, (char) C_PIV_TRANS_END);
+                }
 
-	      if (pEl1->ElLeafType != LtReference)
-		TtaWriteByte (pivFile, (char) C_PIV_END);
-	    }
-	}
+              if (pEl1->ElLeafType != LtReference)
+                TtaWriteByte (pivFile, (char) C_PIV_END);
+            }
+        }
       else
-	/* ce n'est pas un element terminal */
-	if (subTree)
-	  /* on veut ecrire les fils de l'element */
-	  {
-	    /* ecrit une marque de debut */
-	    TtaWriteByte (pivFile, (char) C_PIV_BEGIN);
-	    pChild = pEl1->ElFirstChild;
-	    /* ecrit successivement la representation pivot de tous */
-	    /* les fils de l'element */
-	    while (pChild != NULL)
-	      {
-		/* envoie l'evenement ElemSave.Pre a l'application, si */
-		/* elle le demande */
-		notifyEl.event = TteElemSave;
-		notifyEl.document = (Document) IdentDocument (pDoc);
-		notifyEl.element = (Element) pChild;
-		notifyEl.info = 0; /* not sent by undo */
-		notifyEl.elementType.ElTypeNum = pChild->ElTypeNumber;
-		notifyEl.elementType.ElSSchema = (SSchema) (pChild->ElStructSchema);
-		notifyEl.position = 0;
-		if (!CallEventType ((NotifyEvent *) & notifyEl, TRUE))
-		  /* l'application accepte que Thot sauve l'element */
-		  {
-		    /* Ecrit d'abord le numero de la structure generique */
-		    /* s'il y a changement de schema de structure par */
-		    /* rapport au pere */
-		    if (pEl1->ElStructSchema != pChild->ElStructSchema)
-		      WriteNatureNumber (pChild->ElStructSchema, pivFile,pDoc);
-		    /* Ecrit un element fils */
-		    Externalise (pivFile, &pChild, pDoc, subTree);
-		    /* envoie l'evenement ElemSave.Post a l'application, si*/
-		    /* elle le demande */
-		    notifyEl.event = TteElemSave;
-		    notifyEl.document = (Document) IdentDocument (pDoc);
-		    notifyEl.element = (Element) pChild;
-		    notifyEl.info = 0; /* not sent by undo */
-		    notifyEl.elementType.ElTypeNum = pChild->ElTypeNumber;
-		    notifyEl.elementType.ElSSchema = (SSchema) (pChild->ElStructSchema);
-		    notifyEl.position = 0;
-		    CallEventType ((NotifyEvent *) & notifyEl, FALSE);
-		  }
-		/* passe au fils suivant */
-		pChild = pChild->ElNext;
-	      }
-	    /* ecrit une marque de fin */
-	    TtaWriteByte (pivFile, (char) C_PIV_END);
-	  }
+        /* ce n'est pas un element terminal */
+        if (subTree)
+          /* on veut ecrire les fils de l'element */
+          {
+            /* ecrit une marque de debut */
+            TtaWriteByte (pivFile, (char) C_PIV_BEGIN);
+            pChild = pEl1->ElFirstChild;
+            /* ecrit successivement la representation pivot de tous */
+            /* les fils de l'element */
+            while (pChild != NULL)
+              {
+                /* envoie l'evenement ElemSave.Pre a l'application, si */
+                /* elle le demande */
+                notifyEl.event = TteElemSave;
+                notifyEl.document = (Document) IdentDocument (pDoc);
+                notifyEl.element = (Element) pChild;
+                notifyEl.info = 0; /* not sent by undo */
+                notifyEl.elementType.ElTypeNum = pChild->ElTypeNumber;
+                notifyEl.elementType.ElSSchema = (SSchema) (pChild->ElStructSchema);
+                notifyEl.position = 0;
+                if (!CallEventType ((NotifyEvent *) & notifyEl, TRUE))
+                  /* l'application accepte que Thot sauve l'element */
+                  {
+                    /* Ecrit d'abord le numero de la structure generique */
+                    /* s'il y a changement de schema de structure par */
+                    /* rapport au pere */
+                    if (pEl1->ElStructSchema != pChild->ElStructSchema)
+                      WriteNatureNumber (pChild->ElStructSchema, pivFile,pDoc);
+                    /* Ecrit un element fils */
+                    Externalise (pivFile, &pChild, pDoc, subTree);
+                    /* envoie l'evenement ElemSave.Post a l'application, si*/
+                    /* elle le demande */
+                    notifyEl.event = TteElemSave;
+                    notifyEl.document = (Document) IdentDocument (pDoc);
+                    notifyEl.element = (Element) pChild;
+                    notifyEl.info = 0; /* not sent by undo */
+                    notifyEl.elementType.ElTypeNum = pChild->ElTypeNumber;
+                    notifyEl.elementType.ElSSchema = (SSchema) (pChild->ElStructSchema);
+                    notifyEl.position = 0;
+                    CallEventType ((NotifyEvent *) & notifyEl, FALSE);
+                  }
+                /* passe au fils suivant */
+                pChild = pChild->ElNext;
+              }
+            /* ecrit une marque de fin */
+            TtaWriteByte (pivFile, (char) C_PIV_END);
+          }
     }
 }
 
 /*----------------------------------------------------------------------
-   	PutString								  ----------------------------------------------------------------------*/
+  PutString								  ----------------------------------------------------------------------*/
 static void PutString (BinFile pivFile, char* s)
 {
-   int                 j;
+  int                 j;
 
-   for (j = 0; s[j] != EOS; j++)
-      TtaWriteByte (pivFile, s[j]);
-   TtaWriteByte (pivFile, EOS);
+  for (j = 0; s[j] != EOS; j++)
+    TtaWriteByte (pivFile, s[j]);
+  TtaWriteByte (pivFile, EOS);
 }
 
 /*----------------------------------------------------------------------
-   WriteSchemaNamesOfDoc ecrit dans le fichier pivFile les noms de tous 
-   les schemas de structure et de presentation utilises par le     
-   document pDoc.                                                  
+  WriteSchemaNamesOfDoc ecrit dans le fichier pivFile les noms de tous 
+  les schemas de structure et de presentation utilises par le     
+  document pDoc.                                                  
   ----------------------------------------------------------------------*/
 void WriteSchemaNamesOfDoc (BinFile pivFile, PtrDocument pDoc)
 {
 #ifndef NODISPLAY
-   int                 nat;
+  int                 nat;
 
-   BuildDocNatureTable (pDoc);
-   /* ecrit les noms des natures utilisees dans le document. */
-   for (nat = 0; nat < pDoc->DocNNatures; nat++)
-     {
-	/* ecrit la marque de classe ou d'extension */
-	if (pDoc->DocNatureSSchema[nat]->SsExtension)
-	   TtaWriteByte (pivFile, (char) C_PIV_SSCHEMA_EXT);
-	else
-	   TtaWriteByte (pivFile, (char) C_PIV_NATURE);
-	/* ecrit le nom de schema de structure dans le fichier */
-	PutString (pivFile, pDoc->DocNatureSSchema[nat]->SsName);
-	/* ecrit le code du schema de structure */
-	PutShort (pivFile, pDoc->DocNatureSSchema[nat]->SsCode);
-	/* ecrit le nom du schema de presentation associe' */
-	PutString (pivFile, pDoc->DocNatureSSchema[nat]->SsDefaultPSchema);
-     }
+  BuildDocNatureTable (pDoc);
+  /* ecrit les noms des natures utilisees dans le document. */
+  for (nat = 0; nat < pDoc->DocNNatures; nat++)
+    {
+      /* ecrit la marque de classe ou d'extension */
+      if (pDoc->DocNatureSSchema[nat]->SsExtension)
+        TtaWriteByte (pivFile, (char) C_PIV_SSCHEMA_EXT);
+      else
+        TtaWriteByte (pivFile, (char) C_PIV_NATURE);
+      /* ecrit le nom de schema de structure dans le fichier */
+      PutString (pivFile, pDoc->DocNatureSSchema[nat]->SsName);
+      /* ecrit le code du schema de structure */
+      PutShort (pivFile, pDoc->DocNatureSSchema[nat]->SsCode);
+      /* ecrit le nom du schema de presentation associe' */
+      PutString (pivFile, pDoc->DocNatureSSchema[nat]->SsDefaultPSchema);
+    }
 #endif /* NODISPLAY */
 }
 
 /*----------------------------------------------------------------------
-   UpdateLanguageTable met dans la table des langues du document pDoc 
-   toutes les langues utilisees dans l'arbre de racine pEl et qui  
-   ne sont pas encore dans la table.				
+  UpdateLanguageTable met dans la table des langues du document pDoc 
+  toutes les langues utilisees dans l'arbre de racine pEl et qui  
+  ne sont pas encore dans la table.				
   ----------------------------------------------------------------------*/
 static void UpdateLanguageTable (PtrDocument pDoc, PtrElement pEl)
 {
-   int                 i;
-   ThotBool            found;
+  int                 i;
+  ThotBool            found;
 
-   while (pEl != NULL)
-     {
-	pEl = FwdSearchTypedElem (pEl, CharString + 1, NULL, NULL);
-	if (pEl != NULL)
-	  {
-	     found = FALSE;
-	     for (i = 0; i < pDoc->DocNLanguages && !found; i++)
-		if (pEl->ElLanguage == pDoc->DocLanguages[i])
-		   found = TRUE;
-	     if (!found)
-		if (pDoc->DocNLanguages < MAX_LANGUAGES_DOC - 1)
-		   pDoc->DocLanguages[pDoc->DocNLanguages++] = pEl->ElLanguage;
-	  }
-     }
+  while (pEl != NULL)
+    {
+      pEl = FwdSearchTypedElem (pEl, CharString + 1, NULL, NULL);
+      if (pEl != NULL)
+        {
+          found = FALSE;
+          for (i = 0; i < pDoc->DocNLanguages && !found; i++)
+            if (pEl->ElLanguage == pDoc->DocLanguages[i])
+              found = TRUE;
+          if (!found)
+            if (pDoc->DocNLanguages < MAX_LANGUAGES_DOC - 1)
+              pDoc->DocLanguages[pDoc->DocNLanguages++] = pEl->ElLanguage;
+        }
+    }
 }
 
 /*----------------------------------------------------------------------
-   WriteTableLangues	ecrit dans le fichier pivFile la table des	
-   		langues utilisees par le document pDoc.			
+  WriteTableLangues	ecrit dans le fichier pivFile la table des	
+  langues utilisees par le document pDoc.			
   ----------------------------------------------------------------------*/
 void WriteTableLangues (BinFile pivFile, PtrDocument pDoc)
 {
-   int                 i;
+  int                 i;
 
-   pDoc->DocNLanguages = 0;
-   UpdateLanguageTable (pDoc, pDoc->DocDocElement);
-   for (i = 0; i < pDoc->DocNLanguages; i++)
-     {
-	TtaWriteByte (pivFile, (char) C_PIV_LANG);
-	PutString (pivFile, TtaGetLanguageCode (pDoc->DocLanguages[i]));
-     }
+  pDoc->DocNLanguages = 0;
+  UpdateLanguageTable (pDoc, pDoc->DocDocElement);
+  for (i = 0; i < pDoc->DocNLanguages; i++)
+    {
+      TtaWriteByte (pivFile, (char) C_PIV_LANG);
+      PutString (pivFile, TtaGetLanguageCode (pDoc->DocLanguages[i]));
+    }
 }
 
 
 /*----------------------------------------------------------------------
-   WritePivotHeader ecrit l'entete d'un fichier pivot                 
+  WritePivotHeader ecrit l'entete d'un fichier pivot                 
   ----------------------------------------------------------------------*/
 void WritePivotHeader (BinFile pivFile, PtrDocument pDoc)
 {
-   LabelString         label;
+  LabelString         label;
 
-   /* ecrit le numero de version */
-   WriteVersionNumber (pivFile);
-   /* ecrit la valeur max. des labels */
-   ConvertIntToLabel (GetCurrentLabel (pDoc), label);
-   PutLabel (pivFile, label);
-   /* ecrit la table des langues utilisees par le document */
-   WriteTableLangues (pivFile, pDoc);
+  /* ecrit le numero de version */
+  WriteVersionNumber (pivFile);
+  /* ecrit la valeur max. des labels */
+  ConvertIntToLabel (GetCurrentLabel (pDoc), label);
+  PutLabel (pivFile, label);
+  /* ecrit la table des langues utilisees par le document */
+  WriteTableLangues (pivFile, pDoc);
 }
 
 
 /*----------------------------------------------------------------------
-   SauveDoc	sauve le document pDoc dans le fichier pivFile, sous	
-   la forme pivot. Le fichier doit etre ouvert avant l'appel et est	
-   toujours ouvert au retour.						
+  SauveDoc	sauve le document pDoc dans le fichier pivFile, sous	
+  la forme pivot. Le fichier doit etre ouvert avant l'appel et est	
+  toujours ouvert au retour.						
   ----------------------------------------------------------------------*/
 void SauveDoc (BinFile pivFile, PtrDocument pDoc)
 {
-   PtrElement          pEl;
-   NotifyElement       notifyEl;
+  PtrElement          pEl;
+  NotifyElement       notifyEl;
 
-   /* ecrit l'entete du fichier pivot */
-   WritePivotHeader (pivFile, pDoc);
-   /* ecrit les noms de tous les schemas de structure et de presentation */
-   /* utilises par le document */
-   WriteSchemaNamesOfDoc (pivFile, pDoc);
+  /* ecrit l'entete du fichier pivot */
+  WritePivotHeader (pivFile, pDoc);
+  /* ecrit les noms de tous les schemas de structure et de presentation */
+  /* utilises par le document */
+  WriteSchemaNamesOfDoc (pivFile, pDoc);
 
-   /* ecrit la representation pivot de tout le corps du document */
-   pEl = pDoc->DocDocElement;
-   if (pEl != NULL)
-     {
-	/* envoie l'evenement ElemSave.Pre a l'application, si */
-	/* elle le demande */
-	notifyEl.event = TteElemSave;
-	notifyEl.document = (Document) IdentDocument (pDoc);
-	notifyEl.element = (Element) pEl;
-	notifyEl.info = 0; /* not sent by undo */
-	notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
-	notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
-	notifyEl.position = 0;
-	if (!CallEventType ((NotifyEvent *) & notifyEl, TRUE))
-	   /* l'application accepte que Thot sauve l'element */
-	  {
-	     TtaWriteByte (pivFile, (char) C_PIV_STRUCTURE);
-	     /* ecrit la forme pivot de tout l'arbre */
-	     Externalise (pivFile, &pEl, pDoc, TRUE);
-	     /* envoie l'evenement ElemSave.Post a l'application, si */
-	     /* elle le demande */
-	     notifyEl.event = TteElemSave;
-	     notifyEl.document = (Document) IdentDocument (pDoc);
-	     notifyEl.element = (Element) pEl;
-	     notifyEl.info = 0; /* not sent by undo */
-	     notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
-	     notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
-	     notifyEl.position = 0;
-	     CallEventType ((NotifyEvent *) & notifyEl, FALSE);
-	  }
-     }
-   TtaWriteByte (pivFile, (char) C_PIV_DOC_END);
+  /* ecrit la representation pivot de tout le corps du document */
+  pEl = pDoc->DocDocElement;
+  if (pEl != NULL)
+    {
+      /* envoie l'evenement ElemSave.Pre a l'application, si */
+      /* elle le demande */
+      notifyEl.event = TteElemSave;
+      notifyEl.document = (Document) IdentDocument (pDoc);
+      notifyEl.element = (Element) pEl;
+      notifyEl.info = 0; /* not sent by undo */
+      notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
+      notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
+      notifyEl.position = 0;
+      if (!CallEventType ((NotifyEvent *) & notifyEl, TRUE))
+        /* l'application accepte que Thot sauve l'element */
+        {
+          TtaWriteByte (pivFile, (char) C_PIV_STRUCTURE);
+          /* ecrit la forme pivot de tout l'arbre */
+          Externalise (pivFile, &pEl, pDoc, TRUE);
+          /* envoie l'evenement ElemSave.Post a l'application, si */
+          /* elle le demande */
+          notifyEl.event = TteElemSave;
+          notifyEl.document = (Document) IdentDocument (pDoc);
+          notifyEl.element = (Element) pEl;
+          notifyEl.info = 0; /* not sent by undo */
+          notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
+          notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
+          notifyEl.position = 0;
+          CallEventType ((NotifyEvent *) & notifyEl, FALSE);
+        }
+    }
+  TtaWriteByte (pivFile, (char) C_PIV_DOC_END);
 }
 
 /*----------------------------------------------------------------------
-   TtaRemoveDocument
+  TtaRemoveDocument
 
-   Closes a document, releases all ressources allocated to that document,
-   removes all files related to the document and updates all links connecting
-   the removed document with other documents.
+  Closes a document, releases all ressources allocated to that document,
+  removes all files related to the document and updates all links connecting
+  the removed document with other documents.
 
-   Parameter:
-   document: the document to be removed.
+  Parameter:
+  document: the document to be removed.
   ----------------------------------------------------------------------*/
 void TtaRemoveDocument (Document document)
 {

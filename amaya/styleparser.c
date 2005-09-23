@@ -297,7 +297,6 @@ static char *SkipProperty (char *ptr, ThotBool reportError)
       strncasecmp (deb, "quotes", 6) &&
       strncasecmp (deb, "table-layout", 12) &&
       strncasecmp (deb, "text-shadow", 11) &&
-      strncasecmp (deb, "visibility", 10) &&
       strncasecmp (deb, "widows", 6))
     CSSPrintError ("CSS property ignored:", deb);
   *ptr = c;
@@ -1570,6 +1569,52 @@ static char *ParseCSSClear (Element element, PSchema tsch,
     }
   return (cssRule);
 }
+
+/*----------------------------------------------------------------------
+  ParseCSSVisibility: parse a CSS visibility attribute string        
+  ----------------------------------------------------------------------*/
+static char *ParseCSSVisibility(Element element, PSchema tsch,
+                                PresentationContext context, char *cssRule,
+                                CSSInfoPtr css, ThotBool isHTML)
+{
+  PresentationValue   pval;
+  char               *ptr = cssRule;
+
+  pval.typed_data.unit = UNIT_REL;
+  pval.typed_data.real = FALSE;
+  cssRule = SkipBlanksAndComments (cssRule);
+  if (!strncasecmp (cssRule, "hidden", 6))
+    {
+      cssRule += 6;
+      pval.typed_data.value = VsHidden;
+    }
+  else if (!strncasecmp (cssRule, "visible", 7))
+    {
+      cssRule += 7;
+      pval.typed_data.value = VsVisible;
+    }
+  else if (!strncasecmp (cssRule, "collapse", 8))
+    {
+      cssRule += 8;
+      pval.typed_data.value = VsCollapse;
+    }
+  else if (!strncasecmp (cssRule, "inherit", 7))
+    {
+      cssRule += 7;
+      pval.typed_data.value = VsInherit;
+    }
+  else
+    {
+      cssRule = SkipValue ("Invalid visibility value", cssRule);
+      return (cssRule);
+    }
+  cssRule = CheckImportantRule (cssRule, context);
+  if (DoApply)
+    TtaSetStylePresentation (PRVis, element, tsch, context, pval);
+  cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid visibility value");
+  return (cssRule);
+}
+
 
 /*----------------------------------------------------------------------
   ParseCSSDisplay: parse a CSS display attribute string        
@@ -5130,6 +5175,7 @@ static CSSProperty CSSProperties[] =
     {"vertical-align", ParseCSSVerticalAlign},
     {"white-space", ParseCSSWhiteSpace},
     {"width", ParseCSSWidth},
+    {"visibility", ParseCSSVisibility},
     {"word-spacing", ParseCSSWordSpacing},
     {"z-index", ParseCSSZIndex},
 

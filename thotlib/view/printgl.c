@@ -447,7 +447,8 @@ void ComputeBoundingBox (PtrBox box, int frame, int xmin, int xmax,
   Modify Bounding Box according to opengl feedback mechanism
   (after transformation, coordinates may have changed)			    
   ----------------------------------------------------------------------*/
-void ComputeFilledBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
+void ComputeFilledBox (PtrBox box, int frame, int xmin, int xmax,
+                       int ymin, int ymax, ThotBool show_bgimage)
 {
   return;
 }

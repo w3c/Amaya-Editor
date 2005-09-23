@@ -3290,7 +3290,7 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
             }
           if (appl && pAb->AbVisibility == 0)
             pAb->AbDead = TRUE;
-          break;
+           break;
         case PtFunction:
           switch (pPRule->PrPresFunction)
             {
@@ -4121,6 +4121,23 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
               pAb->AbPositioning->PnLeftUnit = unit;
             }
           break;
+        case PtVis:
+          // CSS visibility
+          pAb->AbVis = CharRule (pPRule, pAb->AbElement, pAb->AbDocView, &appl);
+          if (pAb->AbVis == 'I')
+            {
+              if (pAb->AbEnclosing)
+                pAb->AbVis = pAb->AbEnclosing->AbVis;
+              else
+                pAb->AbVis = 'V';
+            }
+          if (pAb->AbVis == 'C' &&
+              !TypeHasException (ExcIsColHead,pAb->AbElement->ElTypeNumber,
+                                 pAb->AbElement->ElStructSchema) &&
+              !TypeHasException (ExcIsRow, pAb->AbElement->ElTypeNumber,
+                                 pAb->AbElement->ElStructSchema))
+            pAb->AbVis = 'V';
+           break;
         case PtDisplay:
           pAb->AbDisplay = CharRule (pPRule, pAb->AbElement, pAb->AbDocView,
                                      &appl);

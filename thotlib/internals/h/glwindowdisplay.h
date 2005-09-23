@@ -86,7 +86,8 @@ void DisplayTransformation (int frame, PtrTransform Trans, int Width, int Height
 void DisplayTransformationExit ();
 
 void ComputeBoundingBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax);
-void ComputeFilledBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax);
+void ComputeFilledBox (PtrBox box, int frame, int xmin, int xmax, int ymin,
+                       int ymax, ThotBool show_bgimage);
 
 /*Text rendering*/
 /*void TranslateChars (CHAR_T *text);*/

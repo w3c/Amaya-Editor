@@ -1644,6 +1644,7 @@ void ListAbsBoxes (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
           fprintf (fileDescriptor, "Line:");
           wrThotBool (pAb->AbInLine, fileDescriptor);
           fprintf (fileDescriptor, " Display:%c", pAb->AbDisplay);
+          fprintf (fileDescriptor, " CSS_visibilty:%c", pAb->AbVis);
           /* display TruncatedHead and TruncatedTail */
           /* even if it's a lines block */
           fprintf (fileDescriptor, " TruncatedHead:");

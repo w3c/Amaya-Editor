@@ -846,9 +846,11 @@ void ComputeBoundingBox (PtrBox box, int frame, int xmin, int xmax,
 /*----------------------------------------------------------------------
   ComputeFilledBox :
   Modify Bounding Box according to opengl feedback mechanism
-  (after transformation, coordinates may have changed)			    
+  (after transformation, coordinates may have changed)
+  
   ----------------------------------------------------------------------*/
-void ComputeFilledBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
+void ComputeFilledBox (PtrBox box, int frame, int xmin, int xmax,
+                       int ymin, int ymax, ThotBool show_bgimage)
 {
   GLfloat feedBuffer[4096];
   GLint size;
@@ -860,7 +862,7 @@ void ComputeFilledBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int 
       NotFeedBackMode = FALSE;
       glRenderMode (GL_FEEDBACK);
       DrawFilledBox (box, box->BxAbstractBox, frame, NULL,
-		     xmin, xmax, ymin, ymax, FALSE, TRUE, TRUE, TRUE);
+		     xmin, xmax, ymin, ymax, FALSE, TRUE, TRUE, TRUE, show_bgimage);
       size = glRenderMode (GL_RENDER);
       NotFeedBackMode = TRUE;
       if (size > 0)

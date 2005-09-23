@@ -524,6 +524,7 @@ typedef struct _AbstractBox
   char            AbUnicodeBidi;      /* Unicode Bidi */
   char            AbLineStyle;        /* Line style */
   char            AbDisplay;          /* Display mode */
+  char            AbVis;              /* CSS visibility */
   char            AbListStyleType;    /* type of the list item marker */
   char            AbListStylePosition;/* position of the list item marker */
   char            AbListStyleImage;   /* 'Y' = display an image instead of the

@@ -1463,6 +1463,25 @@ static void PresentationValueToPRule (PresentationValue val, int type,
       rule->PrAttrValue = FALSE;
       rule->PrIntValue = value;
       break;
+   case PtVis:
+      switch (value)
+        {
+        case VsHidden:
+          rule->PrChrValue = 'H';
+          break;
+        case VsVisible:
+          rule->PrChrValue = 'V';
+          break;
+        case VsCollapse:
+          rule->PrChrValue = 'C';
+          break;
+        case VsInherit:
+          rule->PrChrValue = 'I';
+          break;
+        default:
+          break;
+        }
+      break;
     case PtFont:
       switch (value)
         {
@@ -2135,6 +2154,23 @@ static PresentationValue PRuleToPresentationValue (PtrPRule rule)
     case PtBorderLeftColor:
       value = rule->PrIntValue;
       break;
+    case PtVis:
+      switch (rule->PrChrValue)
+        {
+        case 'H':
+          value = VsHidden;
+          break;
+        case 'V':
+          value = VsVisible;
+          break;
+        case 'C':
+          value = VsCollapse;
+          break;
+        default:
+          value = VsInherit;
+          break;
+        }
+        break;
     case PtOpacity:
     case PtFillOpacity:
     case PtStrokeOpacity:
@@ -2654,6 +2690,9 @@ static void TypeToPresentation (unsigned int type, PRuleType *intRule,
     case PRVisibility:
       *intRule = PtVisibility;
       break;
+    case PRVis:
+      *intRule = PtVis;
+      break;
     case PRFunction:
       *intRule = PtFunction;
       break;
@@ -3118,6 +3157,9 @@ void PRuleToPresentationSetting (PtrPRule rule, PresentationSetting setting,
     case PtVisibility:
       setting->type = PRVisibility;
       break;
+    case PtVis:
+      setting->type = PRVis;
+      break;
     case PtDepth:
       setting->type = PRDepth;
       break;
@@ -3495,6 +3537,25 @@ void TtaPToCss (PresentationSetting settings, char *buffer, int len,
   switch (settings->type)
     {
     case PRVisibility:
+      break;
+    case PRVis:
+      switch (settings->value.typed_data.value)
+        {
+        case VsHidden:
+          strcpy (buffer, "visibility: hidden");
+          break;
+        case VsVisible:
+          strcpy (buffer, "visibility: visible");
+          break;
+        case VsCollapse:
+          strcpy (buffer, "visibility: collapse");
+          break;
+        case VsInherit:
+          strcpy (buffer, "visibility: inherit");
+          break;
+        default:
+          break;
+        }
       break;
     case PRListStyleType:
       switch (settings->value.typed_data.value)

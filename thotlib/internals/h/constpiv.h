@@ -110,6 +110,7 @@
 #define C_PR_DISPLAY 'z'
 #define C_PR_CLEAR '|'
 #define C_PR_FLOAT '~'
+#define C_PR_VIS '*'
 #define C_PR_
 /* more presentation rule types are defined in constprs.h */
 
