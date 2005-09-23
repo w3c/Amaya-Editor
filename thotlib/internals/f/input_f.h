@@ -24,6 +24,7 @@ extern void TtaRemoveDocAccessKeys ( Document doc );
 extern void TtaRemoveAccessKey ( Document doc,
                                  unsigned int key );
 extern void TtaCloseShortcutSequence ( void );
+extern ThotBool TtaInShortcutSequence ( void );
 extern void TtaListShortcuts ( Document doc,
                                FILE *fileDescriptor );
 extern void InitTranslations ( char *appliname );
@@ -48,6 +49,7 @@ extern void TtaRemoveDocAccessKeys ( Document doc );
 extern void TtaRemoveAccessKey ( Document doc,
                                    unsigned int key );
 extern void TtaCloseShortcutSequence ( void );
+extern ThotBool TtaInShortcutSequence ( void );
 extern void TtaListShortcuts ( Document doc,
                                  FILE *fileDescriptor );
 extern void InitTranslations ( char *appliname );

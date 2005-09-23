@@ -2074,12 +2074,10 @@ ThotBool TtaHandleShortcutKey( wxKeyEvent& event )
 
 #ifndef _MACOS
   // on windows, CTRL+ALT is equivalent to ALTGR key
-  if (((event.CmdDown() && !event.AltDown()) ||
-       (event.AltDown() && !event.CmdDown())) &&
-       !TtaIsSpecialKey(thot_keysym) &&
-       // this is for the Windows menu shortcuts, 
-       // ALT+F => should open File menu
-       (thot_keysym < 'A' || thot_keysym > 'Z' || event.CmdDown()) )
+  if (!TtaIsSpecialKey(thot_keysym) &&
+      ((event.CmdDown() && !event.AltDown()) ||
+       (event.AltDown() && !event.CmdDown() && (thot_keysym < 'A' || thot_keysym > 'Z'))))
+       // this is for the Windows menu shortcuts, ALT+F => should open File menu
     {
       // le code suivant permet de convertir les majuscules
       // en minuscules pour les racourcis clavier specifiques a amaya.

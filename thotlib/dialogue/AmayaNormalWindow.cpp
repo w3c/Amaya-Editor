@@ -39,6 +39,7 @@
 #include "appdialogue_wx_f.h"
 #include "displayview_f.h"
 #include "appdialogue_wx.h"
+#include "input_f.h"
 
 #include "AmayaNormalWindow.h"
 #include "AmayaPanel.h"
@@ -355,8 +356,6 @@ void AmayaNormalWindow::OnMenuItem( wxCommandEvent& event )
   int action_id   = -1;
 
   action_id = FindMenuActionFromMenuItemID (DocumentMenuList, id);
-  // Todo: tester si on fait ttcCopy ttcpaste ttccut sur un widget
-  //#if defined(_WINDOWS) || defined(_UNIX)
   /* do not allow CTRL-C CTRL-X CTRL-V in "text" widgets */
   wxWindow *       p_win_focus         = wxWindow::FindFocus();
   wxTextCtrl *     p_text_ctrl         = wxDynamicCast(p_win_focus, wxTextCtrl);
@@ -427,7 +426,6 @@ void AmayaNormalWindow::OnMenuItem( wxCommandEvent& event )
              return;
          }
     }
-  //#endif /* _WINDOWS */
 
   TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaNormalWindow::OnMenuItem id=%d action_id=%d"), id, action_id );
   
