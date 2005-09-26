@@ -1953,6 +1953,7 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
               /*====> The left is fixed */
               /* Move the middle and the right */
               orgTrans = 0;
+              //middleTrans = (pBox->BxW + delta) / 2 - pBox->BxW / 2;
               middleTrans = (pBox->BxWidth + delta + diff) / 2 - pBox->BxWidth / 2;
               endTrans = delta + diff;
             }
@@ -1961,6 +1962,7 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
             {
               /*====> The middle is fixed */
               /* Move the left and the right */
+              //orgTrans = pBox->BxW / 2 - (pBox->BxW + delta) / 2;
               orgTrans = pBox->BxWidth / 2 - (pBox->BxWidth + delta + diff) / 2;
               /* adjust */
               endTrans = delta + diff + orgTrans;
@@ -1971,6 +1973,7 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
               /*====> The right is fixed */
               /* Move the left and the middle */
               orgTrans = -delta - diff;
+              //middleTrans = pBox->BxW / 2 - (pBox->BxW + delta) / 2;
               middleTrans = pBox->BxWidth / 2 - (pBox->BxWidth + delta + diff) / 2;
               endTrans = 0;
             }

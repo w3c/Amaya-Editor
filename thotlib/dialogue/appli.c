@@ -1629,8 +1629,12 @@ void DisplaySelMessage (char *text, PtrDocument pDoc)
     {
       /* recupere le document concerne */
       doc = IdentDocument(pDoc);
+#ifdef _WX
+        TtaSetStatus ((Document) doc, 1, text, NULL);
+#else /* _WX */
       for (view = 1; view <= MAX_VIEW_DOC; view++)
         TtaSetStatus ((Document) doc, view, text, NULL);
+#endif /* _WX */
       /* sel old message */
       strncpy (OldMsgSelect, text, MAX_TXT_LEN);
       OldDocMsgSelect = pDoc;     
@@ -1707,7 +1711,8 @@ void TtaSetStatus (Document document, View view, char *text, char *name)
              * do not use the FrameTable[frame].WdStatus field because it's simplier
              * to update only the frame's parent window
              */
-            FrameTable[frame].WdFrame->SetStatusBarText( TtaConvMessageToWX( s ) );
+            if (FrameTable[frame].WdFrame)
+              FrameTable[frame].WdFrame->SetStatusBarText( TtaConvMessageToWX( s ) );
 #endif /* _WX */
             
             TtaFreeMemory (s);
