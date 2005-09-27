@@ -444,7 +444,7 @@ void UpdateStyleSheet (char *url, char *tempdoc)
 				  if (ParsedCSS)
 				    {
 				      TtaWriteClose (CSSErrFile);
-				      ErrFile = NULL;
+				      CSSErrFile = NULL;
 				      TtaSetItemOn (ParsedCSS, 1, File, BShowLogFile);
 				    }
 				  CSSErrorsFound = FALSE;

@@ -7322,6 +7322,8 @@ void InitAmaya (NotifyEvent * event)
   if (AmayaInitialized)
     return;
   AmayaInitialized = 1;
+  ErrFile = NULL;
+  CSSErrFile = NULL;
   W3Loading = 0;
   BackupDocument = 0;
   /* the first window should be open in a new window */
