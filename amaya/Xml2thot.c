@@ -5392,19 +5392,12 @@ ThotBool ParseXmlBuffer (char *xmlBuffer, Element el, ThotBool isclosed,
   be null
   Return TRUE if the parsing of the sub-tree has no error.
   ----------------------------------------------------------------------*/
-ThotBool ParseIncludedXml (FILE     *infile,
-                           char     *infileBuffer,
-                           int       infileBufferLength,
-                           ThotBool *infileEnd,
-                           ThotBool *infileNotToRead,
-                           char     *infilePreviousBuffer,
-                           int      *infileLastChar,
-                           char     *htmlBuffer,
-                           int      *index,
-                           int      *nbLineRead,
-                           int      *nbCharRead,
-                           char     *typeName,
-                           Document  doc,
+ThotBool ParseIncludedXml (FILE *infile, char **infileBuffer, int infileBufferLength,
+                           ThotBool *infileEnd, ThotBool *infileNotToRead,
+                           char *infilePreviousBuffer, int *infileLastChar,
+                           char *htmlBuffer, int *index,
+                           int *nbLineRead, int *nbCharRead,
+                           char *typeName, Document doc,
                            Element  *el,
                            ThotBool *isclosed,
                            Language  lang)
@@ -5416,7 +5409,7 @@ ThotBool ParseIncludedXml (FILE     *infile,
   int          offset = 0;
   int          i;
   ElementType  elType;
-  char        *schemaName;
+  char        *schemaName, *buffer;
   char        *tmpBuffer = NULL;
   CHARSET      charset;
 
@@ -5501,7 +5494,7 @@ ThotBool ParseIncludedXml (FILE     *infile,
                 *infileNotToRead = FALSE;
               else
                 {
-                  res = gzread (infile, infileBuffer, infileBufferLength);
+                  res = gzread (infile, *infileBuffer, infileBufferLength);
                   if (res < infileBufferLength)
                     endOfParsing = TRUE;
                   if (res <= 0)
@@ -5510,7 +5503,31 @@ ThotBool ParseIncludedXml (FILE     *infile,
                       *infileLastChar = 0;
                     }
                   else
-                    *infileLastChar = res - 1;
+                    {
+                      *infileBuffer[res] = EOS;
+                      *infileLastChar = res - 1;
+                      if (charset == ISO_8859_2   || charset == ISO_8859_3   ||
+                          charset == ISO_8859_4   || charset == ISO_8859_5   ||
+                          charset == ISO_8859_6   || charset == ISO_8859_7   ||
+                          charset == ISO_8859_8   || charset == ISO_8859_9   ||
+                          charset == ISO_8859_15  || charset == KOI8_R       ||
+                          charset == WINDOWS_1250 || charset == WINDOWS_1251 ||
+                          charset == WINDOWS_1252 || charset == WINDOWS_1253 ||
+                          charset == WINDOWS_1254 || charset == WINDOWS_1255 ||
+                          charset == WINDOWS_1256 || charset == WINDOWS_1257 ||
+                          charset == ISO_2022_JP  || charset == EUC_JP       ||
+                          charset == SHIFT_JIS    || charset == GB_2312)
+                        {
+                          /* convert the original stream into UTF-8 */
+                          buffer = (char *)TtaConvertByteToMbs ((unsigned char *)(*infileBuffer), charset);
+                          if (buffer)
+                            {
+                              TtaFreeMemory (*infileBuffer);
+                              *infileBuffer = buffer;
+                              *infileLastChar = strlen (buffer) - 1;
+                            }
+                        }
+                    }
                 }
             }
 
@@ -5528,10 +5545,10 @@ ThotBool ParseIncludedXml (FILE     *infile,
               if (endOfParsing)
                 tmpLen = res  - *index;
               else
-                tmpLen = strlen ((char *)infileBuffer) - *index;
+                tmpLen = strlen ((char *)(*infileBuffer)) - *index;
               tmpBuffer = (char *)TtaGetMemory (tmpLen);
               for (i = 0; i < tmpLen; i++)
-                tmpBuffer[i] = infileBuffer[*index + i];	  
+                tmpBuffer[i] = (*infileBuffer)[*index + i];	  
             }
           if (!XML_Parse (Parser, tmpBuffer, tmpLen, endOfParsing))
             {

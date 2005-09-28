@@ -405,12 +405,13 @@ static int          StackLevel = 0;	     /* first free element on the
                                             stack */
 /* information about the input file */
 #define INPUT_FILE_BUFFER_SIZE 2000
-static char         FileBuffer[INPUT_FILE_BUFFER_SIZE+1];
-static char         PreviousFileBuffer[INPUT_FILE_BUFFER_SIZE+1];
-static int	    LastCharInFileBuffer = 0; /* last char. in the buffer */
+static char        *FileBuffer = NULL;
+static char        *PreviousFileBuffer = NULL;
+static int	        LastCharInFileBuffer = 0; /* last char. in the buffer */
+static int	        LastCharInPreviousFileBuffer = 0;
 static int          CurrentBufChar;           /* current character read */
 static int          StartOfTagIndx;           /* last "<" read */
-static char	    PreviousBufChar = EOS;    /* previous character read */
+static char	        PreviousBufChar = EOS;    /* previous character read */
 static char*        InputText;
 static gzFile       stream = 0;
 static int          NumberOfLinesRead = 0;/* number of lines read in the
@@ -422,11 +423,10 @@ static ThotBool     EmptyLine = TRUE;	  /* no printable character encountered
 static ThotBool     StartOfFile = TRUE;	  /* no printable character encountered
                                              yet in the file */
 static ThotBool     AfterTagPRE = FALSE;  /* <PRE> has just been read */
-static char*      docURL = NULL;	  /* path or URL of the document */
+static char*        docURL = NULL;	  /* path or URL of the document */
 
 /* Static variables used for the call to the XML parser */
 static ThotBool     NotToReadFile = FALSE;
-static int	    LastCharInPreviousFileBuffer = 0;
 static int          PreviousNumberOfLinesRead = 0;
 static int          PreviousNumberOfCharRead = 0;
 
@@ -2527,7 +2527,7 @@ static void     EndOfStartGI (char c)
           else
             strcpy ((char *)schemaName, (char *)"SVG");
           /* Parse the corresponding element with the XML parser */
-          if (!ParseIncludedXml ((FILE *)stream, FileBuffer, INPUT_FILE_BUFFER_SIZE,
+          if (!ParseIncludedXml ((FILE *)stream, &FileBuffer, sizeof (FileBuffer),
                                  &EndOfHtmlFile, &NotToReadFile,
                                  PreviousFileBuffer, &LastCharInFileBuffer,
                                  InputText, &CurrentBufChar,
@@ -4054,7 +4054,9 @@ static char GetNextChar (FILE *infile, char* buffer, int *index,
   unsigned char  charRead;
   unsigned char  fallback[5];
   unsigned char *ptr;
+  char          *buff;
   int            res = 0;
+  CHARSET      charset = HTMLcontext.encoding;
 
   charRead = EOS;
   *endOfFile = FALSE;
@@ -4106,10 +4108,15 @@ static char GetNextChar (FILE *infile, char* buffer, int *index,
             NotToReadFile = FALSE;
           else
             {
-              strcpy ((char *)PreviousFileBuffer, (char *)FileBuffer);
-              LastCharInPreviousFileBuffer = LastCharInFileBuffer;
-              res = gzread (infile, FileBuffer, INPUT_FILE_BUFFER_SIZE);
-              if (res <= 0)
+              TtaFreeMemory (PreviousFileBuffer);
+               LastCharInPreviousFileBuffer = LastCharInFileBuffer;
+              if (LastCharInFileBuffer > 0)
+                PreviousFileBuffer = FileBuffer;
+              else
+                PreviousFileBuffer = NULL;
+              FileBuffer = (char *)TtaGetMemory (INPUT_FILE_BUFFER_SIZE + 1);
+              LastCharInFileBuffer = gzread (infile, FileBuffer, INPUT_FILE_BUFFER_SIZE);
+              if (LastCharInFileBuffer <= 0)
                 {
                   /* error or end of file */
                   *endOfFile = TRUE;
@@ -4117,7 +4124,32 @@ static char GetNextChar (FILE *infile, char* buffer, int *index,
                   LastCharInFileBuffer = 0;
                 }
               else
-                LastCharInFileBuffer = res - 1;
+                {
+                  FileBuffer[LastCharInFileBuffer] = EOS;
+                  LastCharInFileBuffer--;
+                  if (charset == ISO_8859_2   || charset == ISO_8859_3   ||
+                      charset == ISO_8859_4   || charset == ISO_8859_5   ||
+                      charset == ISO_8859_6   || charset == ISO_8859_7   ||
+                      charset == ISO_8859_8   || charset == ISO_8859_9   ||
+                      charset == ISO_8859_15  || charset == KOI8_R       ||
+                      charset == WINDOWS_1250 || charset == WINDOWS_1251 ||
+                      charset == WINDOWS_1252 || charset == WINDOWS_1253 ||
+                      charset == WINDOWS_1254 || charset == WINDOWS_1255 ||
+                      charset == WINDOWS_1256 || charset == WINDOWS_1257 ||
+                      charset == ISO_2022_JP  || charset == EUC_JP       ||
+                      charset == SHIFT_JIS    || charset == GB_2312)
+                    {
+                      /* convert the original stream into UTF-8 */
+                      buff = (char *)TtaConvertByteToMbs ((unsigned char *)FileBuffer, charset);
+                      HTMLcontext.encoding = UTF_8;
+                      if (buff)
+                        {
+                          TtaFreeMemory (FileBuffer);
+                          FileBuffer = buff;
+                          LastCharInFileBuffer = strlen (buff) - 1;
+                        }
+                    }
+                }
             }
         }
 	
@@ -4147,7 +4179,7 @@ static char GetNextChar (FILE *infile, char* buffer, int *index,
                     {
                       /* Search for an UTF-8 BOM character (EF BB BF) */
                       /* Laurent Carcone 7/11/2002 */
-                      if (*index == 1 && res > 3 &&
+                      if (*index == 1 && LastCharInFileBuffer > 2 &&
                           (unsigned char) FileBuffer[0] == 0xEF &&
                           (unsigned char) FileBuffer[1] == 0xBB &&
                           (unsigned char) FileBuffer[2] == 0xBF &&
@@ -4942,6 +4974,7 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
 {
   gzFile      stream;
   char       *ptr, *beg, *end, *ptrns;
+  char        buffer[INPUT_FILE_BUFFER_SIZE+1];
   int         res, i, j, k;
   ThotBool    endOfSniffedFile, beginning;
   ThotBool    found;
@@ -4962,14 +4995,14 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
       beginning = TRUE;
       while (!endOfSniffedFile)
         {
-          res = gzread (stream, FileBuffer, INPUT_FILE_BUFFER_SIZE);
+          res = gzread (stream, buffer, INPUT_FILE_BUFFER_SIZE);
           if (res < 0)
             {
               TtaGZClose (stream);
               return;
             }
           if (res >= 5)
-            FileBuffer[res] = EOS;
+            buffer[res] = EOS;
           /* check if the file contains "<?xml ..." */
           i = 0;
           endOfSniffedFile = (res < INPUT_FILE_BUFFER_SIZE);
@@ -4980,15 +5013,15 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
                 {
                   /* looks for the first tag */
                   while (i < res &&
-                         (FileBuffer[i] == SPACE  ||
-                          FileBuffer[i] == EOL    ||
-                          FileBuffer[i] == TAB    ||
-                          FileBuffer[i] == __CR__ ||
-                          (unsigned char) FileBuffer[i] == 0xEF ||
-                          (unsigned char) FileBuffer[i] == 0xBB ||
-                          (unsigned char) FileBuffer[i] == 0xBF ))
+                         (buffer[i] == SPACE  ||
+                          buffer[i] == EOL    ||
+                          buffer[i] == TAB    ||
+                          buffer[i] == __CR__ ||
+                          (unsigned char) buffer[i] == 0xEF ||
+                          (unsigned char) buffer[i] == 0xBB ||
+                          (unsigned char) buffer[i] == 0xBF ))
                     i++;
-                  if (FileBuffer[i] == '<')
+                  if (buffer[i] == '<')
                     found = TRUE;
                   else
                     found = FALSE;
@@ -4998,7 +5031,7 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
                   /* looks for the next tag */
                   found = FALSE;
                   while (!found && i < res)
-                    if (FileBuffer[i] == '<')
+                    if (buffer[i] == '<')
                       found = TRUE;
                     else
                       i++;
@@ -5006,7 +5039,7 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
               /* if the declaration is present it's the first element */
               if (found)
                 {
-                  if (beginning && !strncmp (&FileBuffer[i], "<?xml ", 6))
+                  if (beginning && !strncmp (&buffer[i], "<?xml ", 6))
                     {
                       /* we've found <?xml */
                       i += 6;
@@ -5015,9 +5048,9 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
 #ifdef XML_GENERIC
                       *thotType = docXml;
 #endif /* XML_GENERIC */
-                      end = strstr (&FileBuffer[i], "?>");
+                      end = strstr (&buffer[i], "?>");
                       /* check whether there is an encoding */
-                      ptr = strstr (&FileBuffer[i], "encoding");
+                      ptr = strstr (&buffer[i], "encoding");
                       if (ptr && ptr < end)
                         {
                           beg = strstr (ptr, "\"");
@@ -5040,7 +5073,7 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
                             }
                         }
                     }
-                  else if (!strncasecmp ((char *)&FileBuffer[i], "<!DOCTYPE", 9))
+                  else if (!strncasecmp ((char *)&buffer[i], "<!DOCTYPE", 9))
                     {
                       /* the doctype is found */
                       i += 9;
@@ -5048,26 +5081,26 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
                       /* it's not necessary to continue */
                       found = FALSE;
                       endOfSniffedFile = TRUE;
-                      end = strstr (&FileBuffer[i], ">");
+                      end = strstr (&buffer[i], ">");
                       /* check the current DOCTYPE */
-                      ptr = strstr (&FileBuffer[i], "HTML");
+                      ptr = strstr (&buffer[i], "HTML");
                       if (!ptr || (ptr && ptr > end))
-                        ptr = strstr (&FileBuffer[i], "html");
+                        ptr = strstr (&buffer[i], "html");
                       if (ptr && ptr < end)
                         {
                           *thotType = docHTML;
-                          ptr = strstr (&FileBuffer[i], "XHTML");
+                          ptr = strstr (&buffer[i], "XHTML");
                           if (!ptr || (ptr && ptr > end))
-                            ptr = strstr (&FileBuffer[i], "xhtml");
+                            ptr = strstr (&buffer[i], "xhtml");
                           if (ptr && ptr < end)
                             {
                               /* XHTML has been found */
                               /* Does Amaya support this doctype */
                               *isXML = TRUE;
                               *thotType = docXml;
-                              ptr = strstr (&FileBuffer[i], "Basic 1.0");
+                              ptr = strstr (&buffer[i], "Basic 1.0");
                               if (!ptr || (ptr && ptr > end))
-                                ptr = strstr (&FileBuffer[i], "basic 1.0");
+                                ptr = strstr (&buffer[i], "basic 1.0");
                               if (ptr && ptr < end)
                                 {
                                   *thotType = docHTML;
@@ -5076,33 +5109,33 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
                                 }
                               else
                                 {
-                                  ptr = strstr (&FileBuffer[i], "XHTML 1.0");
+                                  ptr = strstr (&buffer[i], "XHTML 1.0");
                                   if (!ptr || (ptr && ptr > end))
-                                    ptr = strstr (&FileBuffer[i], "xhtml 1.0");
+                                    ptr = strstr (&buffer[i], "xhtml 1.0");
                                   if (!ptr || (ptr && ptr > end))
-                                    ptr = strstr (&FileBuffer[i], "XHTML 1.1");
+                                    ptr = strstr (&buffer[i], "XHTML 1.1");
                                   if (!ptr || (ptr && ptr > end))
-                                    ptr = strstr (&FileBuffer[i], "xhtml 1.1");
+                                    ptr = strstr (&buffer[i], "xhtml 1.1");
                                   if (ptr && ptr < end)
                                     {
                                       /* A supported XHTML doctype has been found */
                                       *thotType = docHTML;
                                       *isknown = TRUE;
-                                      ptr = strstr (&FileBuffer[i], "Strict");
+                                      ptr = strstr (&buffer[i], "Strict");
                                       if (!ptr || (ptr && ptr > end))
-                                        ptr = strstr (&FileBuffer[i], "strict");
+                                        ptr = strstr (&buffer[i], "strict");
                                       if (ptr && ptr < end)
                                         *docProfile = L_Strict;
                                       else
                                         {
-                                          ptr = strstr (&FileBuffer[i], "Transitional");
+                                          ptr = strstr (&buffer[i], "Transitional");
                                           if (!ptr || (ptr && ptr > end))
-                                            ptr = strstr (&FileBuffer[i], "transitional");
+                                            ptr = strstr (&buffer[i], "transitional");
                                           if (ptr && ptr < end)
                                             *docProfile = L_Transitional;
                                           else
                                             {
-                                              ptr = strstr (&FileBuffer[i], "1.1");
+                                              ptr = strstr (&buffer[i], "1.1");
                                               if (ptr && ptr < end)
                                                 *docProfile = L_Xhtml11;
                                             }
@@ -5110,9 +5143,9 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
                                     }
                                   else
                                     {
-                                      ptr = strstr (&FileBuffer[i], "xhtml-math11");
+                                      ptr = strstr (&buffer[i], "xhtml-math11");
                                       if (!ptr || (ptr && ptr > end))
-                                        ptr = strstr (&FileBuffer[i], "XHTML-MATH11");
+                                        ptr = strstr (&buffer[i], "XHTML-MATH11");
                                       if (ptr && ptr < end)
                                         {
                                           *thotType = docHTML;
@@ -5124,16 +5157,16 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
                             }
                           else
                             {
-                              ptr = strstr (&FileBuffer[i], "Strict");
+                              ptr = strstr (&buffer[i], "Strict");
                               if (!ptr || (ptr && ptr > end))
-                                ptr = strstr (&FileBuffer[i], "strict");
+                                ptr = strstr (&buffer[i], "strict");
                               if (ptr && ptr < end)
                                 *docProfile = L_Strict;
                               else
                                 {
-                                  ptr = strstr (&FileBuffer[i], "Transitional");
+                                  ptr = strstr (&buffer[i], "Transitional");
                                   if (!ptr || (ptr && ptr > end))
-                                    ptr = strstr (&FileBuffer[i], "transitional");
+                                    ptr = strstr (&buffer[i], "transitional");
                                   if (ptr && ptr < end)
                                     *docProfile = L_Transitional;
                                 }
@@ -5142,9 +5175,9 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
                       else
                         {
                           /* Look for svg tag */
-                          ptr = strstr (&FileBuffer[i], "SVG");
+                          ptr = strstr (&buffer[i], "SVG");
                           if (!ptr || (ptr && ptr > end))
-                            ptr = strstr (&FileBuffer[i], "svg");
+                            ptr = strstr (&buffer[i], "svg");
                           if (ptr && ptr < end)
                             {
                               *thotType = docSVG;
@@ -5154,9 +5187,9 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
                           else
                             {
                               /* Look for math tag */
-                              ptr = strstr (&FileBuffer[i], "MATH");
+                              ptr = strstr (&buffer[i], "MATH");
                               if (!ptr || (ptr && ptr > end))
-                                ptr = strstr (&FileBuffer[i], "math");
+                                ptr = strstr (&buffer[i], "math");
                               if (ptr && ptr < end)
                                 {
                                   *isXML = TRUE;
@@ -5167,16 +5200,16 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
                             }
                         }
                     }
-                  else if (!strncmp (&FileBuffer[i], "<!", 2) ||
-                           !strncmp (&FileBuffer[i], "<?", 2))
+                  else if (!strncmp (&buffer[i], "<!", 2) ||
+                           !strncmp (&buffer[i], "<?", 2))
                     {
                       /* it's a comment or a PI */
-                      if (!strncmp (&FileBuffer[i], "<!", 2))
+                      if (!strncmp (&buffer[i], "<!", 2))
                         {
                           /* look for the end of the comment */
                           found = FALSE;
                           while (!found && i < res-2)
-                            if (!strncmp (&FileBuffer[i], "-->", 3))
+                            if (!strncmp (&buffer[i], "-->", 3))
                               found = TRUE;
                             else
                               i++;
@@ -5186,7 +5219,7 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
                           /* look for the end of the PI */
                           found = FALSE;
                           while (!found && i < res-1)
-                            if (!strncmp (&FileBuffer[i], "?>", 2))
+                            if (!strncmp (&buffer[i], "?>", 2))
                               found = TRUE;
                             else
                               i++;
@@ -5196,31 +5229,31 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
                         /* it's not necessary to continue */
                         endOfSniffedFile = TRUE;			
                     }
-                  else if (FileBuffer[i] == '<')
+                  else if (buffer[i] == '<')
                     {
                       /* it's most probably a start tag. Is there a
                          namespace prefix? */
                       i++;
                       j = i;
                       while (j < res &&
-                             (FileBuffer[j] != SPACE  &&
-                              FileBuffer[j] != EOL    &&
-                              FileBuffer[j] != TAB    &&
-                              FileBuffer[j] != __CR__ &&
-                              FileBuffer[j] != ':'))
+                             (buffer[j] != SPACE  &&
+                              buffer[j] != EOL    &&
+                              buffer[j] != TAB    &&
+                              buffer[j] != __CR__ &&
+                              buffer[j] != ':'))
                         j++;
-                      if (FileBuffer[j] == ':')
+                      if (buffer[j] == ':')
                         /* there is a prefix, skip it */
                         i = j + 1;
-                      if (!strncasecmp ((char *)&FileBuffer[i], "html", 4))
+                      if (!strncasecmp ((char *)&buffer[i], "html", 4))
                         {
                           /* the html tag is found */
                           i += 4;
                           /* it's not necessary to continue */
                           found = FALSE;
                           endOfSniffedFile = TRUE;
-                          end = strstr (&FileBuffer[i], ">");
-                          ptrns = strstr (&FileBuffer[i], "xmlns");
+                          end = strstr (&buffer[i], ">");
+                          ptrns = strstr (&buffer[i], "xmlns");
                           if (ptrns && ptrns < end)
                             {
                               ptr = strstr (ptrns,  XHTML_URI);
@@ -5236,7 +5269,7 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
                             /* No namespace, we consider the document as an html one */
                             *thotType = docHTML;
                         }
-                      else if (!strncasecmp ((char *)&FileBuffer[i], "svg", 3))
+                      else if (!strncasecmp ((char *)&buffer[i], "svg", 3))
                         {
                           /* the svg tag is found */
                           i += 3;
@@ -5246,8 +5279,8 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
                           /* We consider the document as a svg one */
                           *thotType = docSVG;
                           *docProfile = L_Other;
-                          end = strstr (&FileBuffer[i], ">");
-                          ptrns = strstr (&FileBuffer[i], "xmlns");
+                          end = strstr (&buffer[i], ">");
+                          ptrns = strstr (&buffer[i], "xmlns");
                           if (ptrns && ptrns < end)
                             {
                               ptr = strstr (ptrns, "svg");
@@ -5259,7 +5292,7 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
                                 }
                             }
                         }
-                      else if (!strncasecmp ((char *)&FileBuffer[i], "math", 4))
+                      else if (!strncasecmp ((char *)&buffer[i], "math", 4))
                         {
                           /* the math tag is found */
                           i += 4;
@@ -5269,8 +5302,8 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
                           /* We consider the document as a mathml one */
                           *thotType = docMath;
                           *docProfile = L_MathML;
-                          end = strstr (&FileBuffer[i], ">");
-                          ptrns = strstr (&FileBuffer[i], "xmlns");
+                          end = strstr (&buffer[i], ">");
+                          ptrns = strstr (&buffer[i], "xmlns");
                           if (ptrns && ptrns < end)
                             {
                               ptr = strstr (ptrns, "MathML");
@@ -5317,6 +5350,7 @@ void CheckCharsetInMeta (char *fileName, CHARSET *charset, char *charsetname)
 {
   gzFile     stream;
   char      *ptr, *end, *end2, *meta, *endmeta, *content, *body, *http;
+  char       buffer[INPUT_FILE_BUFFER_SIZE+1];
   int        res, i, j, k;
   ThotBool   endOfSniffedFile;
 
@@ -5329,19 +5363,19 @@ void CheckCharsetInMeta (char *fileName, CHARSET *charset, char *charsetname)
       endOfSniffedFile = FALSE;
       while (!endOfSniffedFile)
         {
-          res = gzread (stream, FileBuffer, INPUT_FILE_BUFFER_SIZE);
+          res = gzread (stream, buffer, INPUT_FILE_BUFFER_SIZE);
           if (res < 0)
             {
               TtaGZClose (stream);
               return;
             }
           if (res >= 5)
-            FileBuffer[res] = EOS;
+            buffer[res] = EOS;
           i = 0;
           endOfSniffedFile = (res < INPUT_FILE_BUFFER_SIZE);
 	  
           /* looks for the first <meta> element */
-          meta = StrCaseStr (&FileBuffer[i], "<meta");
+          meta = StrCaseStr (&buffer[i], "<meta");
           if (meta)
             {
               endmeta = strstr (meta, ">");
@@ -5405,7 +5439,7 @@ void CheckCharsetInMeta (char *fileName, CHARSET *charset, char *charsetname)
           /* looks for the <body> element */
           if (!endOfSniffedFile)
             {
-              body = StrCaseStr (&FileBuffer[i], "<body");
+              body = StrCaseStr (&buffer[i], "<body");
               if (body)
                 endOfSniffedFile = TRUE;
             }
@@ -6702,7 +6736,9 @@ void ParseExternalHTMLDoc (Document doc, FILE * infile,
   CharRank = 0;
   HTMLcontext.encoding = TtaGetDocumentCharset (doc);
   HTMLcontext.withinTable = 0;
-  FileBuffer[0] = EOS;
+  TtaFreeMemory (FileBuffer);
+  FileBuffer = NULL;
+  LastCharInFileBuffer = 0;
   HTMLcontext.language = TtaGetDefaultLanguage ();
   DocumentSSchema = TtaGetDocumentSSchema (doc);
 
@@ -6759,9 +6795,12 @@ void ParseExternalHTMLDoc (Document doc, FILE * infile,
       docURL = NULL;
     }
   DocumentSSchema = NULL;
-  
   HTMLcontext.doc = 0;
-
+  TtaFreeMemory (FileBuffer);
+  FileBuffer = NULL;
+  TtaFreeMemory (PreviousFileBuffer);
+  PreviousFileBuffer = NULL;
+  LastCharInFileBuffer = 0;
   return;
 }
 
@@ -6808,7 +6847,9 @@ void StartParser (Document doc, char *fileName,
   stream = TtaGZOpen (fileName);
   if (stream != 0)
     {
-      FileBuffer[0] = EOS;
+      TtaFreeMemory (FileBuffer);
+      FileBuffer = NULL;
+      LastCharInFileBuffer = 0;
       HTMLcontext.withinTable = 0;
       if (documentName[0] == EOS && !TtaCheckDirectory (documentDirectory))
         {
@@ -7008,6 +7049,11 @@ void StartParser (Document doc, char *fileName,
       DocumentSSchema = NULL;
     }
 
+  TtaFreeMemory (FileBuffer);
+  FileBuffer = NULL;
+  TtaFreeMemory (PreviousFileBuffer);
+  PreviousFileBuffer = NULL;
+  LastCharInFileBuffer = 0;
   TtaSetDocumentUnmodified (doc);
   HTMLcontext.doc = 0;
 }
