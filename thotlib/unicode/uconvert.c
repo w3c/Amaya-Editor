@@ -766,14 +766,12 @@ wchar_t TtaGetWCFromJisChar (unsigned char *c, CHARSET encoding)
     {
       b[0] = c[0] - 0x80;
       b[1] = c[1] - 0x80;
-printf ("TtaConvertJisToWC b1=0x%x b2=0x%x ->", b[0], b[1]);
       if (encoding == EUC_JP)
         wc = TtaConvertJisToWC(b[0], b[1], JIS_X_0208);
       else if (encoding == SHIFT_JIS)
         wc = TtaConvertSjisToWC(b[0], b[1]);
       else
         wc = TtaConvertJisToWC (b[0], b[1], encoding);
-printf (" wc=0x%x\n", wc);
     }
   else
     wc = (wchar_t)b[0];
