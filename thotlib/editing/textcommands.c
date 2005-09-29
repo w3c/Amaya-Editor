@@ -1316,14 +1316,33 @@ static int CopyXClipboard (unsigned char **buffer, View view)
         /* if it's an image firstChar is not significant here. Set it to 0 */
         firstChar = 1;
 
-      /* Calcule la longueur du buffer a produire */
+      /* Compute the length of the buffer */
       if (pFirstEl == pLastEl && pFirstEl->ElTerminal)
-        /* only one element */
-        maxLength = lastChar - firstChar;
+        {
+          /* only one element */
+          if (pFirstEl->ElLeafType == LtText)
+            maxLength = lastChar - firstChar;
+          else if (pFirstEl->ElLeafType == LtPicture)
+            maxLength = 5;
+          else if (pFirstEl->ElLeafType == LtSymbol)
+            maxLength = 6;
+          else
+            maxLength = 7;
+        }
       else
         {
           if (pFirstEl->ElTerminal)
-            maxLength = pFirstEl->ElVolume - firstChar;    /* volume 1er element */
+            {
+              /* volume of the first element */
+              if (pFirstEl->ElLeafType == LtText)
+                maxLength = pFirstEl->ElVolume - firstChar;
+              else if (pFirstEl->ElLeafType == LtPicture)
+                maxLength = 5;
+              else if (pFirstEl->ElLeafType == LtSymbol)
+                maxLength = 6;
+              else
+                maxLength = 7;
+            }
           pEl = pFirstEl;
           while (pEl)
             {
@@ -1334,7 +1353,7 @@ static int CopyXClipboard (unsigned char **buffer, View view)
                 pEl = NULL;
 
               /* On ajoute le volume de l'element */
-              if (pEl != NULL)
+              if (pEl)
                 {
                   if (pEl == pLastEl)
                     maxLength += lastChar;
@@ -1380,6 +1399,24 @@ static int CopyXClipboard (unsigned char **buffer, View view)
           clipboard = clipboard->BuNext;
         }
     }
+  else if (pFirstEl->ElTerminal)
+    {
+      if (pFirstEl->ElLeafType == LtPicture)
+        {
+          ustrcpy (&text[i], TEXT("<img>"));
+          i += 5;
+        }
+      else if (pFirstEl->ElLeafType == LtSymbol)
+        {
+          ustrcpy (&text[i], TEXT("<symb>"));
+          i += 6;
+        }
+      else
+        {
+          ustrcpy (&text[i], TEXT("<graph>"));
+          i += 7;
+        }
+    }
 
   /* copy the text of following elements */
   pOldBlock = NULL;
@@ -1407,6 +1444,8 @@ static int CopyXClipboard (unsigned char **buffer, View view)
               /* Recopie le texte de l'element */
               pOldBlock = pBlock;
               clipboard = pEl->ElText;
+              if (pEl == pLastEl && maxLength > lastChar)
+                maxLength = lastChar;
               while (clipboard && i < max && maxLength)
                 {
                   lg = clipboard->BuLength;
@@ -1445,6 +1484,8 @@ void TtcClearClipboard ()
     TtaFreeMemory (Xbuffer);
   Xbuffer = NULL;
   ClipboardLength = 0;
+#ifdef _WX
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -1453,28 +1494,27 @@ void TtcClearClipboard ()
 void TtcCopyToClipboard (Document doc, View view)
 {
 #ifdef _WX
-  // Write some text to the clipboard
-  if (wxTheClipboard->Open())
+  // Don't change the clipboard buffer when a single click is done
+  if (!SelPosition && wxTheClipboard->Open())
     {
       unsigned char *  buffer = NULL;
       int              len;
       
       /* Must get the selection */
       len = CopyXClipboard (&buffer, view);
+      TtcClearClipboard ();
       if (len)
         {
-          TtcClearClipboard ();
+          // Write some text to the clipboard
           ClipboardLength = len;
           Xbuffer = buffer;	  
           // This data objects are held by the clipboard, 
           // so do not delete them in the app.
           wxTheClipboard->AddData( new wxTextDataObject( TtaConvMessageToWX((char *)buffer) ) );
          }
-#ifdef IV
-      // Don't clear the buffer when a single click is done
       else
-        TtcClearClipboard ();
-#endif
+        // flush the clipboard in order to keep current text for further use in other applications
+        wxTheClipboard->Flush();
       wxTheClipboard->Close();
     }
 #endif /* _WX */

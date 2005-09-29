@@ -3703,13 +3703,7 @@ void TtcCutSelection (Document doc, View view)
     }
 
 #ifdef _WX
-#if !defined(_WINDOWS) && !defined(_MACOS)
-  wxTheClipboard->UsePrimarySelection (true);
-#endif /* !defined(_WINDOWS) && !defined(_MACOS) */
   TtcCopyToClipboard (doc, view);
-#if !defined(_WINDOWS) && !defined(_MACOS)
-  wxTheClipboard->UsePrimarySelection (false);
-#endif /* !defined(_WINDOWS) && !defined(_MACOS) */
 #endif /* _WX */
 #ifdef _WINGUI
   TtcCopyToClipboard (doc, view);
@@ -4045,13 +4039,7 @@ void TtcCopySelection (Document doc, View view)
     }
 
 #ifdef _WX
-#if !defined(_WINDOWS) && !defined(_MACOS)
-  wxTheClipboard->UsePrimarySelection (true);
-#endif /* !defined(_WINDOWS) && !defined(_MACOS) */
   TtcCopyToClipboard (doc, view);
-#if !defined(_WINDOWS) && !defined(_MACOS)
-  wxTheClipboard->UsePrimarySelection (false);
-#endif /* !defined(_WINDOWS) && !defined(_MACOS) */
 #endif /* _WX */
 #ifdef _WINGUI
   activeWnd = GetFocus ();
@@ -4177,9 +4165,6 @@ void TtcPaste (Document doc, View view)
 #endif /* _WINGUI */
 
 #ifdef _WX
-#if !defined (_WINDOWS) && !defined(_MACOS)
-  wxTheClipboard->UsePrimarySelection (true);
-#endif /* !defined (_WINDOWS) && !defined(_MACOS) */
           if (wxTheClipboard->Open())
             {
               wxTextDataObject data;
@@ -4222,9 +4207,6 @@ void TtcPaste (Document doc, View view)
               TTALOGDEBUG_0( TTA_LOG_CLIPBOARD, _T("Can't open clipboard.") );
               ContentEditing (TEXT_PASTE);
             }
-#if !defined (_WINDOWS) && !defined(_MACOS)
-  wxTheClipboard->UsePrimarySelection (true);
-#endif /* !defined (_WINDOWS) && !defined(_MACOS) */
 #endif /* _WX */
 
 #ifdef _GTK
