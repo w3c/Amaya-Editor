@@ -3,9 +3,10 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <title>Sélectionner</title>
-  <meta name="GENERATOR" content="amaya 9.1, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 9.2.2, see http://www.w3.org/Amaya/"
+  />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -101,37 +102,34 @@ cliquez sur le mot structure, puis pressez <code>F2</code>) donne :</p>
     la fenêtre du document, ces touches en mettent un en haut à gauche de la
     fenêtre.</li>
   <li>Pour déplacer le point d'insertion au début ou à la fin de la ligne où
-    il se trouve, utilisez les touches <strong>Home</strong> et
-    <strong>End</strong>.</li>
+    il se trouve, utilisez les touches <kbd>Home</kbd> et <kbd>End</kbd>.</li>
   <li>Pour déplacer le point d'insertion sur le début du mot qui précède ou
-    qui suit, utilisez les touches <strong>Control-Left</strong> et
-    <strong>Control-Right</strong>.</li>
+    qui suit, utilisez les touches <kbd>Control-Left</kbd> et
+    <kbd>Control-Right</kbd>.</li>
 </ul>
 
 <p class="ProcedureCaption">Étendre/réduire la sélection</p>
 <ul>
   <li>Pour étendre ou réduire la sélection courante dans une des quatre
     directions, utilisez la combinaison de la touche Shift avec une des
-    quatre touches de direction (<strong>Shift-Left</strong>,
-    <strong>Shift-Right</strong>, <strong>Shift-Up</strong>, et
-    <strong>Shift-Down</strong>).</li>
+    quatre touches de direction (<kbd>Shift-Left</kbd>,
+    <kbd>Shift-Right</kbd>, <kbd>Shift-Up</kbd>, et
+  <kbd>Shift-Down</kbd>).</li>
   <li>Pour étendre la sélection au mot courant, utilisez la commande
-    <strong>Alt-Enter</strong>. Si la sélection est dans un lien, cette
-    commande <a href="Browsing.html.fr#Activating">activera le lien</a> au
-    lieu de sélectionner le mot courant.</li>
+    <kbd>Alt-Enter</kbd>. Si la sélection est dans un lien, cette commande <a
+    href="Browsing.html.fr#Activating">activera le lien</a> au lieu de
+    sélectionner le mot courant.</li>
   <li>Pour étendre la sélection courante jusqu'au début du mot qui précède ou
-    jusqu'à la fin du mot qui suit, utilisez
-    <strong>Shift-Control-Left</strong>ou<strong><strong>Shift-Control-Right</strong></strong>.</li>
+    jusqu'à la fin du mot qui suit, utilisez <kbd>Shift-Control-Left</kbd> ou
+    <kbd>Shift-Control-Right</kbd>.</li>
 </ul>
 
 <p class="ProcedureCaption">Déplacer le document</p>
 <ul>
   <li>Pour faire défiler le document d'une ligne vers le haut ou vers le bas,
-    utilisez <strong>Control-Up</strong> et
-  <strong>Control-Down</strong>.</li>
+    utilisez <kbd>Control-Up</kbd> et <kbd>Control-Down</kbd>.</li>
   <li>Pour sauter au début ou à la fin du document, utilisez
-    <strong>Control-Home</strong> et
-    <strong><strong>Control-End</strong></strong>.</li>
+    <kbd>Control-Home</kbd> et <kbd>Control-End</kbd>.</li>
 </ul>
 
 <h3 id="L227"><a name="Selecting2" id="Selecting2">Sélectionner des

@@ -3,11 +3,12 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <title>Einen Tabellenkörper hinzufügen</title>
   <style type="text/css">
   </style>
-  <meta name="generator" content="amaya 8.5, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 9.2.2, see http://www.w3.org/Amaya/"
+  />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -45,10 +46,9 @@
 
 <p>Ein neuer Tabellenkörper kann auch einfach mit Hilfe der
 <strong>Enter</strong> Taste hinzugefügt werden. Wenn ein vollständiger
-Tabellenkörper ausgewählt ist (mit <code>F2</code>), wird durch Drücken
-der <strong>Enter</strong>
-Taste ein neuer Tabellenkörper hinter dem ausgewählten Tabellenkörper
-erzeugt.</p>
+Tabellenkörper ausgewählt ist (mit <kbd>F2</kbd>), wird durch Drücken der
+<strong>Enter</strong> Taste ein neuer Tabellenkörper hinter dem ausgewählten
+Tabellenkörper erzeugt.</p>
 </div>
 </body>
 </html>

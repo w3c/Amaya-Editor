@@ -26,7 +26,7 @@ body {padding-left: 2em}</style>
 <h1 id="Amaya">Amaya - Guide utilisateur</h1>
 
 <p class="head"><span class="author">Irène Vatton</span> <br />
-Dernière mise à jour : <!--$date=-->mercredi 08 dÃ©cembre 2004 - 12:59:45<!--$-->
+Dernière mise à jour : <!--$date=-->29-09-2005 - 16:50<!--$-->
 </p>
 </div>
 
@@ -452,7 +452,7 @@ l'élément &lt;body&gt; et lui appliquer l'attribut lang=fr.</p>
 <h4>Première méthode</h4>
 
 <p>On pose la sélection n'importe où dans le document et on utilise la touche
-<code>F2</code> pour remonter la sélection sur l'élément
+<kbd>F2</kbd> pour remonter la sélection sur l'élément
 &lt;body&gt;. La barre de statut affiche l'élément sélectionné. A ce moment
 là on sélectionne l'entrée du menu <strong>Attributs/Langue</strong> pour
 afficher le formulaire de choix de la langue.</p>
@@ -477,8 +477,8 @@ opérations, Amaya tient compte des images.</p>
 <h4><a id="L1517">La commande Sauver</a></h4>
 
 <p>La commande sauver peut être invoquée soit en choisissant
-<strong>Sauver</strong> depuis le menu <strong>Fichier</strong> (<code>Ctrl
-s</code> pour Windows, <code>Ctrl x Ctrl s</code> pour Unix) ou bien en
+<strong>Sauver</strong> depuis le menu <strong>Fichier</strong> (<kbd>Ctrl
+s</kbd> pour Windows, <kbd>Ctrl x Ctrl s</kbd> pour Unix) ou bien en
 cliquant sur le bouton <img alt="floppy" src="../images/floppy.gif" />.</p>
 
 <h4><a id="L1518">La commande Sauver comme</a></h4>
@@ -496,12 +496,12 @@ src="../images/SaveAs-fr.gif" alt="SaveAs" /></p>
 divisions)</h2>
 
 <p>Par défaut, Amaya crée un nouveau paragraphe chaque fois que l'on active
-la touche <code>Enter</code>. Une fois le paragraphe et son contenu créé, on
+la touche <kbd>Enter</kbd>. Une fois le paragraphe et son contenu créé, on
 peut insérer un en-tête de section, avant, après, ou au milieu du
 paragraphe,</p>
 <ul>
   <li>en activant un des boutons Hn,</li>
-  <li>ou en tapant <code>Ctrl n</code> (n allant de 1 à 6),</li>
+  <li>ou en tapant <kbd>Ctrl n</kbd> (n allant de 1 à 6),</li>
   <li>ou en sélectionnant, l'entrée correspondante du menu
     <strong>XHTML</strong>.</li>
 </ul>
@@ -515,7 +515,7 @@ paragraphe existant en deux et insère l'en-tête au milieu.</p>
 l'en-tête, ce texte sera supprimé dans le paragraphe et inséré dans l'en-tête
 créé.</p>
 
-<p>On peut aussi sélectionner le paragraphe (touche <code>F2</code>)
+<p>On peut aussi sélectionner le paragraphe (touche <kbd>F2</kbd>)
 et transformer ainsi le paragraphe en en-tête. Un ou
 plusieurs paragraphes peuvent en fait se transformer en liste, table,
 préformaté en fonction de l'élément cible choisi. L'entrée de menu
@@ -529,15 +529,15 @@ tous les caractères : espace, fin de ligne.</p>
 
 <p>Pour transformer un paragraphe en préformaté, on sélectionne le paragraphe
 en entier et on active l'entrée de menu <strong>XHTML/Préformaté</strong> (ou
-<code>Ctrl h Ctrl p</code>).</p>
+<kbd>Ctrl h Ctrl p</kbd>).</p>
 
 <p>Pour transformer un préformaté en paragraphe, on sélectionne le préformaté
 en entier et on active l'entrée de menu <strong>XHTML/Paragraphe</strong>.</p>
 
 <p>Quand la sélection se trouve à la fin d'un &lt;pre&gt;, la touche
-<code>Enter</code> crée une nouvelle ligne du &lt;pre&gt;. Pour créer un
+<kbd>Enter</kbd> crée une nouvelle ligne du &lt;pre&gt;. Pour créer un
 paragraphe après le &lt;pre&gt;, il faut sélectionner le &lt;pre&gt; en
-utilisant la touche <code>F2</code> puis <code>Enter</code>.</p>
+utilisant la touche <kbd>F2</kbd> puis <kbd>Enter</kbd>.</p>
 
 <h3>Division</h3>
 
@@ -547,20 +547,20 @@ l'entrée DIV dans le menu XHTML.</p>
 
 <h3>La touche Enter</h3>
 
-<p>La touche <code>Enter</code> (ou Return) joue un rôle particulier. En
+<p>La touche <kbd>Enter</kbd> (ou Return) joue un rôle particulier. En
 général elle clôt l'élément courant et crée un paragraphe juste après. Si un
-élément complet est sélectionné, la touche <code>Enter</code> crée une autre
+élément complet est sélectionné, la touche <kbd>Enter</kbd> crée une autre
 instance de cet élément. Par exemple si on sélectionne un en-tête, la touche
-<code>Enter</code> va créer un en-tête vide après.</p>
+<kbd>Enter</kbd> va créer un en-tête vide après.</p>
 
 <h3><a id="Back">Les touches Back Space et Delete</a></h3>
 
 <p>Des éléments consécutifs peuvent être fusionnés, même s'ils ne sont pas au
 même niveau dans la structure du document. La fusion s'effectue à l'aide des
-touches <code>Back Space</code> et <code>Delete</code>. Quand le point
+touches <kbd>Back Space</kbd> et <kbd>Delete</kbd>. Quand le point
 d'insertion est à la fin d'un élément, utilisez la touche
-<code>Delete</code>. Quand il est au début, utilisez la touche <code>Back
-Space</code>. Dans les deux cas, ces touches n'effacent aucun caractère.
+<kbd>Delete</kbd>. Quand il est au début, utilisez la touche <kbd>Back
+Space</kbd>. Dans les deux cas, ces touches n'effacent aucun caractère.
 Elles fusionnent des éléments séparés par une limite de structure.</p>
 
 <p>Quand le point d'insertion est à l'intérieur d'un élément, ces deux
@@ -576,19 +576,19 @@ système.</p>
 <p>Amaya fournit aussi des raccourcis pour certains caractères non
 disponibles au clavier comme :</p>
 <ul>
-  <li>Pour obtenir un espace non sécable, vous devez taper <code>Ctrl -
-    espace</code>. Ce caractère sera sauvé comme une entité
-    (<code>&amp;nbsp;</code>).</li>
-  <li>Pour obtenir un &euro; (euro), vous devez taper <code>Alt e</code>.</li>
-  <li>Pour obtenir un «, vous devez taper <code>Ctrl &lt;</code> (ou
-    <code>Shift</code> <code>Ctrl &lt;</code> selon le clavier).</li>
-  <li>Pour obtenir un », vous devez taper <code>Shift Ctrl &gt;</code>.</li>
+  <li>Pour obtenir un espace non sécable, vous devez taper <kbd>Ctrl -
+    espace</kbd>. Ce caractère sera sauvé comme une entité
+    (<kbd>&amp;nbsp;</kbd>).</li>
+  <li>Pour obtenir un &euro; (euro), vous devez taper <kbd>Alt e</kbd>.</li>
+  <li>Pour obtenir un «, vous devez taper <kbd>Ctrl &lt;</kbd> (ou
+    <kbd>Shift</kbd> <kbd>Ctrl &lt;</kbd> selon le clavier).</li>
+  <li>Pour obtenir un », vous devez taper <kbd>Shift Ctrl &gt;</kbd>.</li>
 </ul>
 
 <h3>Insérer une image</h3>
 
 <p>Pour insérer une image, on choisit l'entrée <strong>Image</strong> dans le
-menu <strong>XHTML</strong> (raccourci <code>Ctrl h Ctrl i</code>) ou on
+menu <strong>XHTML</strong> (raccourci <kbd>Ctrl h Ctrl i</kbd>) ou on
 clique sur le bouton <img alt="Image " src="../images/Image.gif"
 longdesc="longdesc.htm" />. Une boîte de dialogue s'affiche qui permet de
 rentrer le nom du fichier et le <a href="ImageMaps.html.fr#Alternative">texte
@@ -643,54 +643,54 @@ paragraphes, des en-têtes, des divisions.</p>
 <h4>Première méthode</h4>
 
 <p>En cliquant sur <img alt="(Liste)" src="../images/OList.gif" /> (ou
-<code>Ctrl h Ctrl l</code>) on crée une liste à puces et un premier item de
+<kbd>Ctrl h Ctrl l</kbd>) on crée une liste à puces et un premier item de
 liste à l'intérieur.</p>
 <ul>
   <li>Il ne reste plus qu'à taper le texte de l'item.
-    <p>La touche <code>Enter</code> en fin d'item va créer un paragraphe vide
+    <p>La touche <kbd>Enter</kbd> en fin d'item va créer un paragraphe vide
     dans l'item et on peut immédiatement saisir le contenu de ce nouveau
     paragraphe.</p>
   </li>
   <li>Si on ne veut pas insérer de paragraphe mais passer à l'item suivant,
-    on double la touche <code>Enter</code>.
+    on double la touche <kbd>Enter</kbd>.
     <p>Attention en cliquant sur <img alt="(Liste)" src="../images/OList.gif"
-    /> (ou <code>Ctrl h Ctrl l</code>) on crée une nouvelle liste à puces à
+    /> (ou <kbd>Ctrl h Ctrl l</kbd>) on crée une nouvelle liste à puces à
     l'intérieur de l'item courant.</p>
   </li>
   <li>Si on veut terminer la liste, on triple la touche
-  <code>Enter</code>.</li>
+  <kbd>Enter</kbd>.</li>
 </ul>
 
 <p>En cliquant sur <img alt="(Liste numérotée)" src="../images/NumList.gif"
-/> (ou <code>Ctrl h Ctrl n</code>) on crée une liste numérotée et un item de
+/> (ou <kbd>Ctrl h Ctrl n</kbd>) on crée une liste numérotée et un item de
 liste à l'intérieur.</p>
 
 <h4>Deuxième méthode</h4>
 
 <p>On peut saisir du texte sans définir au préalable de type d'élément. Par
 défaut, Amaya crée un nouveau paragraphe chaque fois que l'on active la
-touche <code>Enter</code>. On peut ensuite sélectionner plusieurs paragraphes
-et cliquer sur <img alt="(Liste)" src="../images/OList.gif" /> (ou <code>Ctrl
-h Ctrl l</code>) pour créer une liste à puces.</p>
+touche <kbd>Enter</kbd>. On peut ensuite sélectionner plusieurs paragraphes
+et cliquer sur <img alt="(Liste)" src="../images/OList.gif" /> (ou <kbd>Ctrl
+h Ctrl l</kbd>) pour créer une liste à puces.</p>
 
 <p>Pour sélectionner tout le contenu d'une suite de paragraphes, on utilise
-la touche <code>F2</code>.</p>
+la touche <kbd>F2</kbd>.</p>
 
 <h4>Transformation d'une liste à puces et en liste numérotée</h4>
 
 <p>On pose la sélection dans un item de liste, puis en doublant la touche
-<code>F2</code> on sélectionne la
+<kbd>F2</kbd> on sélectionne la
 liste complète. En cliquant sur <img alt="(Liste numérotée)"
-src="../images/NumList.gif" /> (ou <code>Ctrl h Ctrl n</code>) on crée une
+src="../images/NumList.gif" /> (ou <kbd>Ctrl h Ctrl n</kbd>) on crée une
 liste numérotée à la place. On peut bien sûr passer de la même façon d'une
 liste numérotée à une liste à puces.</p>
 
 <h3 id="edit-dl">Editer les listes de définitions (dl/dt/dd)</h3>
 
 <p>En cliquant sur <img alt="(Liste de définitions)" src="../images/DL.gif"
-/> (ou <code>Ctrl h Ctrl d</code>) on crée une liste de définitions.</p>
+/> (ou <kbd>Ctrl h Ctrl d</kbd>) on crée une liste de définitions.</p>
 
-<p>La touche <code>Enter</code> est également utile pour éditer des listes de
+<p>La touche <kbd>Enter</kbd> est également utile pour éditer des listes de
 définitions. Considérez l'exemple suivant :</p>
 
 <blockquote>
@@ -705,23 +705,23 @@ définitions. Considérez l'exemple suivant :</p>
 (<code>dt</code>) suivis par une définition (<code>dd</code>). Pour ajouter
 un nouveau paragraphe à l'intérieur de la définition (<code>dd</code>),
 placez le point d'insertion à la fin (après le mot "termes") et appuyez sur
-la touche <code>Enter</code>. Si vous pressez <code>Enter</code> deux fois,
+la touche <kbd>Enter</kbd>. Si vous pressez <kbd>Enter</kbd> deux fois,
 vous sortez de la définition en cours (<code>dd</code>) et vous créez un
 nouveau terme (<code>dt</code>). A la fin de ce nouveau terme, presser une
-fois la touche <code>Enter</code> vous permet de créer encore un nouveau
+fois la touche <kbd>Enter</kbd> vous permet de créer encore un nouveau
 terme (<code>dt</code>). La presser deux fois crée une nouvelle définition
 (<code>dd</code>).</p>
 
 <p>Si vous voulez créer un nouveau terme avec sa définition <em>avant</em> le
 Terme 1, mettez le point d'insertion au début du terme 1 et appuyez sur
-<code>Enter</code>. Tapez le nouveau terme (<code>dt</code>), puis pressez
-<code>Enter</code> deux fois : une nouvelle définition (<code>dd</code>) est
+<kbd>Enter</kbd>. Tapez le nouveau terme (<code>dt</code>), puis pressez
+<kbd>Enter</kbd> deux fois : une nouvelle définition (<code>dd</code>) est
 créée directement après le nouveau terme.</p>
 </div>
 
-<p>De façon générale on utilise la touche <code>Enter</code> pour insérer des
+<p>De façon générale on utilise la touche <kbd>Enter</kbd> pour insérer des
 éléments de structure avant ou après des listes ou des items de liste, et les
-touches <code>Back Space</code> et <code>Delete</code> pour fusionner des
+touches <kbd>Back Space</kbd> et <kbd>Delete</kbd> pour fusionner des
 listes ou des items de listes.</p>
 
 <p class="exercice"><em>Exercice 2 :</em> Créer et transformer des listes.</p>
@@ -743,7 +743,7 @@ entre-elles ou des documents entre-eux.</p>
 
 <p>Pour créer une cible dans un document, il suffit de sélectionner le
 passage désiré et d'activer l'entrée de menu <strong>Créer cible</strong>
-(<code>Ctrl l Ctrl t</code>) dans le menu <strong>Liens</strong>. Si la
+(<kbd>Ctrl l Ctrl t</kbd>) dans le menu <strong>Liens</strong>. Si la
 sélection porte sur un élément HTML entier, Amaya va lui associer un
 identificateur unique. Sinon, Amaya va englober le contenu de la sélection
 dans une ancre cible.</p>
@@ -773,7 +773,7 @@ entier ou une cible.</p>
   <li>On sélectionne le passage choisi.</li>
   <li>On choisit <strong>Créer/changer lien</strong> du <a
     href="Browsing.html.fr"></a>menu <strong>Liens</strong> (raccourci
-    <code>Ctrl l Ctrl l</code>) pour afficher le formulaire de création de
+    <kbd>Ctrl l Ctrl l</kbd>) pour afficher le formulaire de création de
     lien.
     <p><img alt="(Création de lien)" src="../images/create_link-fr.png" /></p>
   </li>
@@ -817,7 +817,7 @@ la vue des liens (entrée <strong>Montrer les liens</strong> du menu
 <ol>
   <li>On sélectionne le passage choisi.</li>
   <li>On choisit <strong>Créer/changer lien</strong> du menu
-    <strong>Liens</strong> (raccourci <code>Ctrl l Ctrl l</code>)</li>
+    <strong>Liens</strong> (raccourci <kbd>Ctrl l Ctrl l</kbd>)</li>
   <li>On saisit l'URL du document cible et on confirme.</li>
 </ol>
 
@@ -906,7 +906,7 @@ src="../images/create_table-fr.png" /></p>
 
 <p>L'espace au dessus de la table est réservé à la légende. Le point
 d'insertion est automatiquement placé dans cette légende pour en saisir le
-contenu. La touche <code>Delete</code> supprime la légende.</p>
+contenu. La touche <kbd>Delete</kbd> supprime la légende.</p>
 
 <p>La nouvelle table contient des cellules vides. On peut cliquer sur l'une
 d'entre elles au hasard et y insérer du texte, des images et autre. On peut
@@ -919,28 +919,28 @@ l'intermédiaire des flèches du clavier.</p>
 colonne :</p>
 <ul>
   <li><strong>Insérer une colonne</strong> dans le sous-menu
-    <strong>Table</strong> (<code>Ctrl t Ctrl b</code>) ajoute une nouvelle
+    <strong>Table</strong> (<kbd>Ctrl t Ctrl b</kbd>) ajoute une nouvelle
     colonne avant la colonne sélectionnée.</li>
   <li><strong>Ajouter une colonne</strong> dans le sous-menu
-    <strong>Table</strong> (<code>Ctrl t Ctrl a</code>)ajoute une nouvelle
+    <strong>Table</strong> (<kbd>Ctrl t Ctrl a</kbd>)ajoute une nouvelle
     colonne après la colonne sélectionnée.</li>
 </ul>
 
-<p>Si on a sélectionné une cellule complète par <code>F2</code>
-la touche <code>Enter</code> crée une nouvelle cellule après et la
+<p>Si on a sélectionné une cellule complète par <kbd>F2</kbd>
+la touche <kbd>Enter</kbd> crée une nouvelle cellule après et la
 colonne correspondante.</p>
 
 <h3>Détruire une colonne</h3>
 
 <p>Pour détruire une colonne de table, il faut sélectionner la colonne et
-utiliser la commande <code>Delete</code>. Il y a deux méthodes pour
+utiliser la commande <kbd>Delete</kbd>. Il y a deux méthodes pour
 sélectionner une colonne :</p>
 <ol>
   <li>Soit l'entrée <strong>Sélectionner la colonne</strong> dans le
-    sous-menu <strong>Table</strong> (<code>Ctrl t Ctrl c</code>).</li>
+    sous-menu <strong>Table</strong> (<kbd>Ctrl t Ctrl c</kbd>).</li>
   <li>Soit étendre la sélection sur au moins deux cellules dans la même
     colonne (Cell 1.1 à Cell 2.1 dans l'exemple ci-dessous) puis deux fois
-    <code>F2</code> pour sélectionner la colonne.</li>
+    <kbd>F2</kbd> pour sélectionner la colonne.</li>
 </ol>
 
 <table border="1" summary="table">
@@ -966,25 +966,25 @@ sélectionner une colonne :</p>
 <p>Pour déplacer ou copier/coller une colonne de table :</p>
 <ol>
   <li>Il faut sélectionner la colonne comme dans le cas de <strong>Détruire
-    une colonne</strong> et copier (<code>Ctrl c</code>) ou couper
-    (<code>Ctrl x</code> pour Windows, <code>Ctrl w</code> pour Unix) son
+    une colonne</strong> et copier (<kbd>Ctrl c</kbd>) ou couper
+    (<kbd>Ctrl x</kbd> pour Windows, <kbd>Ctrl w</kbd> pour Unix) son
     contenu.</li>
   <li>Pour coller la colonne avant une autre colonne
     <ul>
       <li>soit on sélectionne le début d'une cellule de colonne et on active
-        la commande coller (<code>Ctrl v</code> pour Windows, <code>Ctrl
-        y</code> pour Unix),</li>
+        la commande coller (<kbd>Ctrl v</kbd> pour Windows, <kbd>Ctrl
+        y</kbd> pour Unix),</li>
       <li>soit on utilise l'entrée de menu <strong>Coller avant</strong> dans
-        le sous-menu <strong>Table</strong> (<code>Ctrl t Ctrl p</code>).</li>
+        le sous-menu <strong>Table</strong> (<kbd>Ctrl t Ctrl p</kbd>).</li>
     </ul>
   </li>
   <li>Pour coller la colonne après une autre colonne
     <ul>
       <li>soit on sélectionne la fin d'une cellule de colonne et on active la
-        commande coller (<code>Ctrl v</code> pour Windows, <code>Ctrl
-        y</code> pour Unix),</li>
+        commande coller (<kbd>Ctrl v</kbd> pour Windows, <kbd>Ctrl
+        y</kbd> pour Unix),</li>
       <li>soit on utilise l'entrée de menu <strong>Coller après</strong> dans
-        le sous-menu <strong>Table</strong> (<code>Ctrl t Ctrl v</code>).</li>
+        le sous-menu <strong>Table</strong> (<kbd>Ctrl t Ctrl v</kbd>).</li>
     </ul>
   </li>
 </ol>
@@ -994,26 +994,26 @@ sélectionner une colonne :</p>
 <p>Il n'existe deux commandes spécifiques pour créer une nouvelle ligne :</p>
 <ul>
   <li><strong>Insérer une ligne</strong> dans le sous-menu
-    <strong>Table</strong> (<code>Ctrl t Ctrl i</code>) ajoute une nouvelle
+    <strong>Table</strong> (<kbd>Ctrl t Ctrl i</kbd>) ajoute une nouvelle
     ligne avant la ligne sélectionnée.</li>
   <li><strong>Ajouter une ligne</strong> dans le sous-menu
-    <strong>Table</strong> (<code>Ctrl t Ctrl n</code>)ajoute une nouvelle
+    <strong>Table</strong> (<kbd>Ctrl t Ctrl n</kbd>)ajoute une nouvelle
     ligne après la ligne sélectionnée.</li>
 </ul>
 
-<p>Si on a sélectionné une ligne complète par <code>F2</code>
+<p>Si on a sélectionné une ligne complète par <kbd>F2</kbd>
 la touche Enter crée une nouvelle ligne après.</p>
 
 <h3>Détruire une ligne</h3>
 
 <p>Pour détruire une ligne de table, il faut sélectionner la ligne et
-utiliser la commande <code>Delete</code>. Il y a deux méthodes pour
+utiliser la commande <kbd>Delete</kbd>. Il y a deux méthodes pour
 sélectionner une ligne :</p>
 <ol>
   <li>Soit l'entrée <strong>Sélectionner la ligne</strong> dans le sous-menu
-    <strong>Table</strong> (<code>Ctrl t Ctrl r</code>).</li>
+    <strong>Table</strong> (<kbd>Ctrl t Ctrl r</kbd>).</li>
   <li>Soit poser la sélection sur une cellule de la ligne (Cell 1.1 dans
-    l'exemple ci-dessous) puis deux fois <code>F2</code> pour sélectionner la ligne.</li>
+    l'exemple ci-dessous) puis deux fois <kbd>F2</kbd> pour sélectionner la ligne.</li>
 </ol>
 
 <h3>Copier/Coller ou Déplacer une ligne</h3>
@@ -1021,24 +1021,23 @@ sélectionner une ligne :</p>
 <p>Pour déplacer ou copier/coller une ligne de table :</p>
 <ol>
   <li>Il faut sélectionner la ligne comme dans le cas de <strong>Détruire une
-    ligne</strong> et copier (<code>Ctrl c</code>) ou couper (<code>Ctrl
-    x</code> pour Windows, <code>Ctrl w</code> pour Unix) son contenu.</li>
+    ligne</strong> et copier (<kbd>Ctrl c</kbd>) ou couper (<kbd>Ctrl
+    x</kbd> son contenu.</li>
   <li>Pour coller la ligne avant une autre ligne
     <ul>
       <li>soit on sélectionne le début d'une ligne et on active la commande
-        coller (<code>Ctrl v</code> pour Windows, <code>Ctrl y</code> pour
-        Unix),</li>
+        coller (<kbd>Ctrl v</kbd>,</li>
       <li>soit on utilise l'entrée de menu <strong>Coller avant</strong> dans
-        le sous-menu <strong>Table</strong> (<code>Ctrl t Ctrl p</code>).</li>
+        le sous-menu <strong>Table</strong> (<kbd>Ctrl t Ctrl p</kbd>).</li>
     </ul>
   </li>
   <li>Pour coller la colonne après une autre colonne
     <ul>
       <li>soit on sélectionne la fin d'une ligne et on active la commande
-        coller (<code>Ctrl v</code> pour Windows, <code>Ctrl y</code> pour
+        coller (<kbd>Ctrl v</kbd> pour Windows, <kbd>Ctrl y</kbd> pour
         Unix),</li>
       <li>soit on utilise l'entrée de menu <strong>Coller après</strong> dans
-        le sous-menu <strong>Table</strong> (<code>Ctrl t Ctrl v</code>).</li>
+        le sous-menu <strong>Table</strong> (<kbd>Ctrl t Ctrl v</kbd>).</li>
     </ul>
   </li>
 </ol>
@@ -1049,16 +1048,16 @@ sélectionner une ligne :</p>
 l'extension de cellules :</p>
 <ul>
   <li><strong>Joindre avec la cellule à droite</strong> dans le sous-menu
-    <strong>Table</strong> (<code>Ctrl t Ctrl e</code>) étend la cellule
+    <strong>Table</strong> (<kbd>Ctrl t Ctrl e</kbd>) étend la cellule
     d'une position à droite et colle le contenu des deux cellules.</li>
   <li><strong>Joindre avec la cellule au-dessous</strong> dans le sous-menu
-    <strong>Table</strong> (<code>Ctrl t Ctrl j</code>)étend la cellule d'une
+    <strong>Table</strong> (<kbd>Ctrl t Ctrl j</kbd>)étend la cellule d'une
     position vers le bas et colle le contenu des deux cellules.</li>
-  <li><strong>Réduire extension horizontale</strong> (<code>Ctrl t Ctrl
-    s</code>) réduit l'extension horizontale de la cellule d'une position et
+  <li><strong>Réduire extension horizontale</strong> (<kbd>Ctrl t Ctrl
+    s</kbd>) réduit l'extension horizontale de la cellule d'une position et
     engendre une cellule vide.</li>
-  <li><strong>Réduire extension verticale</strong> (<code>Ctrl t Ctrl
-    m</code>) réduit l'extension verticale de la cellule d'une position et
+  <li><strong>Réduire extension verticale</strong> (<kbd>Ctrl t Ctrl
+    m</kbd>) réduit l'extension verticale de la cellule d'une position et
     engendre une cellule vide.</li>
 </ul>
 
@@ -1079,8 +1078,8 @@ cellule.</p>
 
 <p>De nouveaux corps de table peuvent être créés efficacement avec la touche
 <a href="Creating.html.fr#L906">Enter</a>. Quand le corps de table entier est
-sélectionné (il faut utiliser la touche <code>F2</code>), en tapant
-la touche <code>Enter</code>
+sélectionné (il faut utiliser la touche <kbd>F2</kbd>), en tapant
+la touche <kbd>Enter</kbd>
 vous créez une nouveau corps de table après le corps de table sélectionné.</p>
 
 <h3><a id="Adding21">Ajouter quelque chose après une table</a></h3>
@@ -1093,11 +1092,11 @@ pendant qu'un composant de la table est sélectionné.</p>
 
 <h3>Création d'un paragraphe après une table</h3>
 
-<p>Quand la sélection se trouve dans une table, la touche <code>Enter</code>
+<p>Quand la sélection se trouve dans une table, la touche <kbd>Enter</kbd>
 crée un nouveau paragraphe dans la table.</p>
 
 <p>Pour créer un paragraphe après la table, il faut sélectionner la table
-entière en utilisant la touche <code>F2</code> puis <code>Enter</code>.</p>
+entière en utilisant la touche <kbd>F2</kbd> puis <kbd>Enter</kbd>.</p>
 
 <p>Ce nouveau paragraphe peut être modifié si besoin est.</p>
 
@@ -1197,7 +1196,7 @@ effacer un attribut.</p>
 <p>Pour éditer un attribut, sélectionnez d'abord l'élément approprié. Vous
 devez sélectionner l'élément entier et pas seulement un caractère à
 l'intérieur de l'élément. Pour cela, il faut utiliser la touche
-<code>F2</code>. Quand l'élément est
+<kbd>F2</kbd>. Quand l'élément est
 sélectionné, le menu <strong>Attributs</strong> affiche la liste des
 attributs applicables. On peut voir rapidement si l'attribut a une valeur ou
 non</p>
@@ -1212,9 +1211,9 @@ changer à l'aide du menu <strong>Attributs</strong>. Ceci assure que seules
 des valeurs correctes soient choisies.</p>
 
 <p>Quand la sélection se trouve dans une valeur d'attribut, la touche
-<code>F2</code> sélectionne la valeur
-complète. La touche <code>Delete</code> détruit alors la valeur, et un
-deuxième <code>Delete</code> supprimera l'attribut.</p>
+<kbd>F2</kbd> sélectionne la valeur
+complète. La touche <kbd>Delete</kbd> détruit alors la valeur, et un
+deuxième <kbd>Delete</kbd> supprimera l'attribut.</p>
 </div>
 
 <div>
@@ -1295,7 +1294,7 @@ double (ou simple) cliquant sur la propriété. Aussi longtemps que la fenêtre
 est ouverte, Amaya met à jour le contenu de la fenêtre quand la sélection
 change.</p>
 
-<p>En appuyant sur la touche <code>F2</code> sur les, l'utilisateur peut
+<p>En appuyant sur la touche <kbd>F2</kbd> sur les, l'utilisateur peut
 voir les propriétés CSS appliquées aux éléments englobants.</p>
 
 <h3>Créer des propriétés CSS</h3>

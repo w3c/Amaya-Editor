@@ -43,7 +43,7 @@ src="../../resources/icons/misc/right.png" /></a></p>
 <p>Pour insérer une image, choisissez l'entrée <strong>Image</strong> depuis
 le menu <strong>XHTML</strong> ou cliquez sur le bouton <img alt="Image "
 src="../../resources/icons/22x22/XHTML_Image.png" longdesc="longdesc.htm" />
-(ou encore utilisez le raccourci clavier <code>Ctrl h Ctrl i</code>). Ceci
+(ou encore utilisez le raccourci clavier <kbd>Ctrl h Ctrl i</kbd>). Ceci
 fait apparaître une boîte de dialogue qui vous permet de rentrer le nom du
 fichier et le <a href="#Alternative">texte de remplacement</a> (Attribut
 <strong>Alt</strong>) de l'image désirée.</p>
@@ -123,9 +123,8 @@ actives :</p>
     <strong>Vues</strong>.<br />
 
     <p class="Note"><strong>Note</strong> : Vous pouvez aussi visualiser les
-    zones actives depuis le clavier par la séquence <code>Ctrl v Ctrl
-    t</code> (<code>Ctrl u</code><code>Ctrl t</code> sur les plates-formes
-    Windows).</p>
+    zones actives depuis le clavier par la séquence <kbd>Ctrl v Ctrl
+    t</kbd>.</p>
   </li>
 </ul>
 </div>

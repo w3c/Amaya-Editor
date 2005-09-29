@@ -5,7 +5,7 @@
 <head>
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <title>Vues</title>
-  <meta name="GENERATOR" content="amaya 9.1.4, see http://www.w3.org/Amaya/"
+  <meta name="GENERATOR" content="amaya 9.2.2, see http://www.w3.org/Amaya/"
   />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -110,7 +110,7 @@ premier plan la fenêtre correspondante quand elle est en arrière plan.</p>
       </td>
       <td
       style="border:none; border-bottom:solid .5pt; padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText"><code>Ctrl v Ctrl s</code></p>
+        class="TableText"><kbd>Ctrl u Ctrl s</kbd></p>
       </td>
     </tr>
     <tr>
@@ -120,7 +120,7 @@ premier plan la fenêtre correspondante quand elle est en arrière plan.</p>
       </td>
       <td
       style="border:none; border-bottom:solid .5pt; padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText"><code>Ctrl v Ctrl a</code></p>
+        class="TableText"><kbd>Ctrl u Ctrl a</kbd></p>
       </td>
     </tr>
     <tr>
@@ -130,7 +130,7 @@ premier plan la fenêtre correspondante quand elle est en arrière plan.</p>
       </td>
       <td
       style="border:none; border-bottom:solid .5pt; padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText"><code>Ctrl v Ctrl l</code></p>
+        class="TableText"><kbd>Ctrl u Ctrl l</kbd></p>
       </td>
     </tr>
     <tr>
@@ -140,7 +140,7 @@ premier plan la fenêtre correspondante quand elle est en arrière plan.</p>
       </td>
       <td
       style="border:none; border-bottom:solid .5pt; padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText"><code>Ctrl v Ctrl c</code></p>
+        class="TableText"><kbd>Ctrl u Ctrl c</kbd></p>
       </td>
     </tr>
     <tr>
@@ -150,15 +150,11 @@ premier plan la fenêtre correspondante quand elle est en arrière plan.</p>
       </td>
       <td
       style="border:none; border-bottom:solid 1.5pt; padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText"><code>Ctrl v Ctrl o</code></p>
+        class="TableText"><kbd>Ctrl u Ctrl o</kbd></p>
       </td>
     </tr>
   </tbody>
 </table>
-
-<p><strong>Note :</strong> <code>Ctrl v</code> est remplacé par <code>Ctrl
-u</code> sous Windows parce que <code>Ctrl v</code> est utilisé pour la
-commande <strong>Copier</strong>.</p>
 
 <h3><a name="Closing">Fermer une vue</a></h3>
 

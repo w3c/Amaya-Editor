@@ -3,8 +3,9 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="generator" content="amaya 8.2+, see http://www.w3.org/Amaya/" />
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+  <meta name="generator" content="amaya 9.2.2, see http://www.w3.org/Amaya/"
+  />
   <title>Über Anker</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -42,11 +43,9 @@ versteckt werden:</p>
 <ul>
   <li>Mit <strong>Anker anzeigen</strong> im Menü
   <strong>Ansichten</strong>.</li>
-  <li>Mit den Tastenkürzel <kbd>Strg v Strg t</kbd> (Unix) oder <kbd>Strg u
-    Strg t</kbd> (Windows).</li>
+  <li>Mit den Tastenkürzel <kbd>Strg u Strg t</kbd>.Weitere Informationen
+    über das Arbeiten mit Anker findet man unter:</li>
 </ul>
-
-<p>Weitere Informationen über das Arbeiten mit Anker findet man unter:</p>
 <ul>
   <li><a href="../linking/creating_a_target_anchor.html.de">Einen Anker
     erzeugen</a></li>

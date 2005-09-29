@@ -39,16 +39,16 @@ gibt es einige zusätzliche Befehle speziell für Tabellen.</p>
 <ol>
   <li>Ausdehnen einer Tabellenzelle in die nächste Zelle nach rechts:
     Menüpunkt <strong>Zusammenfügen mit rechter Zelle</strong> im Untermenü
-    <strong>Tabelle</strong> (<code>Ctrl t Ctrl e</code>).</li>
+    <strong>Tabelle</strong> (<kbd>Ctrl t Ctrl e</kbd>).</li>
   <li>Ausdehnen einer Tabellenzelle in die nächste Zelle nach unten:
     Menüpunkt <strong>Zusammenfügen mit der Zelle darunter</strong> im
-    Untermenü <strong>Tabelle</strong> (<code>Ctrl t Ctrl j</code>).</li>
+    Untermenü <strong>Tabelle</strong> (<kbd>Ctrl t Ctrl j</kbd>).</li>
   <li>Horizontale Ausdehnung einer Tabellenzelle verkleinern: Menüpunkt
     <strong>Horizontale Ausdehnung verkleinern</strong> im Untermenü
-    <strong>Tabelle</strong> (<code>Ctrl t Ctrl s</code>).</li>
+    <strong>Tabelle</strong> (<kbd>Ctrl t Ctrl s</kbd>).</li>
   <li>Vertikale Ausdehnung einer Tabellenzelle verkleinern: Menüpunkt
     <strong>Vertikale Ausdehnung verkleinern</strong> im Untermenü
-    <strong>Tabelle</strong> (<code>Ctrl t Ctrl m</code>).</li>
+    <strong>Tabelle</strong> (<kbd>Ctrl t Ctrl m</kbd>).</li>
 </ol>
 
 <p>Die Ausdehnung einer Tabellenzelle kann auch durch Bearbeiten der <a
@@ -58,7 +58,7 @@ rowspan geändert werden.</p>
 <p class="ProcedureCaption">Einfügen von Elementen hinter einer Tabelle:</p>
 
 <p>Um Elemente hinter einer Tabelle einzufügen muss die Tabelle verlassen
-werden. Dazu wählt man das table Element (mit <code>F2</code>) und drückt
+werden. Dazu wählt man das table Element (mit <kbd>F2</kbd>) und drückt
 die <strong>Enter</strong>
 Taste. Amaya fügt dann einen neuen Absatz hinter der ausgewählten Tabelle
 ein. Dieser kann dann durch ein anderes Element ersetzt werden.</p>

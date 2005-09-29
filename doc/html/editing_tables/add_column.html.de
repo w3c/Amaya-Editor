@@ -36,15 +36,15 @@ hinzuzufügen:</p>
 <ol>
   <li>Um eine neue Spalte links von einer existierenden Spalte zu erzeugen,
     wählt man den Eintrag <strong>Spalte einfügen (davor)</strong> im
-    Untermenü <strong>Tabelle</strong> (<code>Ctrl t Ctrl b</code>).</li>
+    Untermenü <strong>Tabelle</strong> (<kbd>Ctrl t Ctrl b</kbd>).</li>
   <li>Um eine neue Spalte rechts von einer existierenden Spalte zu erzeugen,
     wählt man den Eintrag <strong>Spalte einfügen (danach)</strong> im
-    Untermenü <strong>Tabelle</strong> (<code>Ctrl t Ctrl a</code>).</li>
+    Untermenü <strong>Tabelle</strong> (<kbd>Ctrl t Ctrl a</kbd>).</li>
 </ol>
 
 <p>Neue Spalten können auch einfach mit Hilfe der <strong>Enter</strong>
 Taste zu einer Tabelle hinzugefügt werden. Wenn eine vollständige Zelle
-ausgewählt ist (mit <code>F2</code>), wird durch Drücken der
+ausgewählt ist (mit <kbd>F2</kbd>), wird durch Drücken der
 <strong>Enter</strong> Taste eine neue
 Tabellenzelle und die zugehörige Spalte rechts von der ausgewählten Zelle
 erzeugt.</p>

@@ -5,7 +5,7 @@
 <head>
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <title>Abrir una Vista</title>
-  <meta name="GENERATOR" content="amaya 9.1.4, see http://www.w3.org/Amaya/"
+  <meta name="GENERATOR" content="amaya 9.2.2, see http://www.w3.org/Amaya/"
   />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -55,38 +55,36 @@ disponibles desde la vista de navegador normal (vista Formateada).</p>
         <tr>
           <td><p class="TableText">Estructura</p>
           </td>
-          <td><p class="TableText"><kbd>Ctrl v Ctrl s </kbd></p>
+          <td><p class="TableText"><kbd>Ctrl u Ctrl s </kbd></p>
           </td>
         </tr>
         <tr>
           <td><p class="TableText">Alternativo</p>
           </td>
-          <td><p class="TableText"><kbd>Ctrl v Ctrl a</kbd></p>
+          <td><p class="TableText"><kbd>Ctrl u Ctrl a</kbd></p>
           </td>
         </tr>
         <tr>
           <td><p class="TableText">Enlaces</p>
           </td>
-          <td><p class="TableText"><kbd>Ctrl v Ctrl l</kbd></p>
+          <td><p class="TableText"><kbd>Ctrl u Ctrl l</kbd></p>
           </td>
         </tr>
         <tr>
           <td><p class="TableText">Tabla de contenidos</p>
           </td>
-          <td><p class="TableText"><kbd>Ctrl v Ctrl c</kbd></p>
+          <td><p class="TableText"><kbd>Ctrl u Ctrl c</kbd></p>
           </td>
         </tr>
         <tr>
           <td><p class="TableText">Fuente</p>
           </td>
-          <td><p class="TableText"><kbd>Ctrl v Ctrl o</kbd></p>
+          <td><p class="TableText"><kbd>Ctrl u Ctrl o</kbd></p>
           </td>
         </tr>
       </tbody>
     </table>
-    <p class="Note"> <strong>Nota</strong>: En Windows debes utilizar
-    <kbd>Ctrl u</kbd> en vez de <kbd>Ctrl v</kbd>, ya que <kbd>Ctrl v</kbd>
-    corresponde a la orden <strong>Pegar</strong>.</p>
+    <p></p>
     <p class="Note"><strong>Nota:</strong> También puedes emplear el comando
     de menú <strong>Ver &gt; ...</strong> para mostrar en primer plano la
     ventana correspondiente si esta ventana ya estaba abierta, pero

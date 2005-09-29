@@ -3,14 +3,12 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
-  <title>&#xc4;&#xee;&#xe1;&#xe0;&#xe2;&#xeb;&#xe5;&#xed;&#xe8;&#xe5;
-  &#xed;&#xee;&#xe2;&#xfb;&#xf5;
-  &#xf1;&#xf2;&#xee;&#xeb;&#xe1;&#xf6;&#xee;&#xe2; &#xe2;
-  &#xf2;&#xe0;&#xe1;&#xeb;&#xe8;&#xf6;&#xf3;</title>
+  <meta http-equiv="content-type" content="text/html; charset=windows-1251" />
+  <title>Добавление новых столбцов в таблицу</title>
   <style type="text/css">
   </style>
-  <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 9.2.2, see http://www.w3.org/Amaya/"
+  />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -39,19 +37,14 @@
 <ol>
   <li>Для создания нового столбца слева от существующей ячейки, выберите
     пункт <strong>Вставить столбец перед</strong> в подменю
-    <strong>Таблица</strong> (<code>Ctrl t Ctrl b</code>).</li>
+    <strong>Таблица</strong> (<kbd>Ctrl t Ctrl b</kbd>).</li>
   <li>Для создания нового столбца справа от существующей ячейки, выберите
     пункт <strong>Вставить столбец после</strong> в подменю
-    <strong>Таблица</strong> (<code>Ctrl t Ctrl a</code>).</li>
+    <strong>Таблица</strong> (<kbd>Ctrl t Ctrl a</kbd>).</li>
 </ol>
 
 <p>Также, новые столбцы в таблицу могут быть добавлены с использованием
-кнопки <strong>Enter</strong>. Когда выбрана вся ячейка (для этого
-используйте кнопки <code>F2</code>),
-нажмите кнопку <strong>Enter</strong> для создания новой ячейки и связанного
-с ней столбца справа от выбранной ячейки.</p>
-
-<p></p>
+кнопки <strong>Enter</strong>.</p>
 </div>
 </body>
 </html>

@@ -3,8 +3,9 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="generator" content="amaya 8.2+, see http://www.w3.org/Amaya/" />
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+  <meta name="generator" content="amaya 9.2.2, see http://www.w3.org/Amaya/"
+  />
   <title>Ein Dokument aktualisieren</title>
   <style type="text/css">
  </style>
@@ -34,8 +35,7 @@
 <p>Dokumente können aktualisiert werden durch:</p>
 <ul>
   <li><strong>Aktualisieren</strong> im Menü <strong>Datei.</strong></li>
-  <li>Das Tastenkürzel <kbd>Alt r</kbd> (Unix) oder <kbd>Strg r</kbd>
-    (Windows).</li>
+  <li>Das Tastenkürzel  <kbd>Strg r</kbd>.</li>
   <li>Klick auf den Knopf <strong>Aktualisieren</strong> <img
     alt="Reload button" src="../../images/Reload.gif" /> in der
   Knopfleiste.</li>

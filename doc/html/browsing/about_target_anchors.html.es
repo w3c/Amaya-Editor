@@ -3,8 +3,9 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 8.2+, see http://www.w3.org/Amaya/" />
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 9.2.2, see http://www.w3.org/Amaya/"
+  />
   <title>Acerca de Destinos</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -38,15 +39,11 @@ visualización de los iconos de destino <img src="../../images/target.gif"
 alt="Icono destino" />. Estos iconos no forman parte del documento y se
 pueden mostrar u ocultar de dos maneras:</p>
 <ul>
-  <li>Eligiendo el comando de menú <strong>Ver &gt; Destinos</strong>
-    
-  </li>
-  <li>Utilizando atajos de teclado (por omisión, <kbd>Ctrl v Ctrl t</kbd> en
-    Unix, <kbd>Ctrl u Ctrl t</kbd> en Windows).</li>
+  <li>Eligiendo el comando de menú <strong>Ver &gt; Destinos</strong></li>
+  <li>Utilizando atajos de teclado (por omisión <kbd>Ctrl u Ctrl
+    t</kbd>).Para obtener información sobre la forma de trabajar con
+    Destinos, consulta:</li>
 </ul>
-
-<p>Para obtener información sobre la forma de trabajar con Destinos,
-consulta:</p>
 <ul>
   <li><a href="../linking/creating_a_target_anchor.html.es">Crear un
     Destino</a></li>
@@ -58,8 +55,6 @@ consulta:</p>
   <li><a href="../elements/exiting_anchors.html.es">Salir de anclas, cadenas
     con estilo, etc</a></li>
 </ul>
-
-
 </div>
 </body>
 </html>

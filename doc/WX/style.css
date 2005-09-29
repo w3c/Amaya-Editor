@@ -20,7 +20,9 @@ body  {
 small {
   font-size:  .92em;
   }
-
+kbd {
+  color: #A020F0; 
+  }
 pre {
   font-family:  'Monotype.com', monospace;
   }

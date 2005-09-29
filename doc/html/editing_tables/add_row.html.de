@@ -36,16 +36,16 @@
   <li>Um eine neue Tabellenzeile oberhalb einer existierenden Zeile zu
     erzeugen, klickt man an den Anfang der ersten Zelle in der Zeile und
     wählt den Eintrag <strong>Zeile einfügen (darüber)</strong> im Untermenü
-    <strong>Tabelle</strong> (<code>Ctrl t Ctrl i</code>).</li>
+    <strong>Tabelle</strong> (<kbd>Ctrl t Ctrl i</kbd>).</li>
   <li>Um eine neue Tabellenzeile unterhalb einer existierenden Zelle zu
     erzeugen, setzt man den Cursor an das Ende der letzten Zelle in der Zeile
     und wählt den Eintrag <strong>Zeile einfügen (dahinter)</strong> im
-    Untermenü <strong>Tabelle</strong> (<code>Ctrl t Ctrl n</code>).</li>
+    Untermenü <strong>Tabelle</strong> (<kbd>Ctrl t Ctrl n</kbd>).</li>
 </ol>
 
 <p>Neue Tabellenzeilen können auch einfach mit Hilfe der
 <strong>Enter</strong> Taste eingefügt werden. Wenn eine vollständige
-Tabellenzeile ausgewählt ist (mit <code>F2</code>), wird durch Drücken
+Tabellenzeile ausgewählt ist (mit <kbd>F2</kbd>), wird durch Drücken
 der <strong>Enter</strong>
 Taste eine neue Tabellenzeile unterhalb der ausgewählten Zeile erzeugt.</p>
 
@@ -59,10 +59,10 @@ Tabellenzeile einfügen.</p>
 <p class="ProcedureCaption">Um eine Tabellenzeile auszuwählen:</p>
 <ol>
   <li>Dies geht mit dem Eintrag <strong>Zeile auswählen</strong> im Untermenü
-    <strong>Tabelle</strong> (<code>Ctrl t Ctrl r</code>).</li>
+    <strong>Tabelle</strong> (<kbd>Ctrl t Ctrl r</kbd>).</li>
   <li>Alternativ kann man auch den Cursor in eine Zelle der gewünschten
     Tabellenzeile setzen und durch (gegebenenfalls mehrfaches) Drücken der
-    <code>F2</code>) die Auswahl auf die ganze Tabellenzeile erweitern.</li>
+    <kbd>F2</kbd>) die Auswahl auf die ganze Tabellenzeile erweitern.</li>
 </ol>
 
 <p>Wenn eine vollständige Tabellenzeile ausgewählt ist, kann man diese
@@ -73,12 +73,12 @@ einfügen.</p>
     man an den Anfang der existierenden Zeile und fügt die kopierte oder
     ausgeschnittene Zeile ein, oder man verwendet den Eintrag
     <strong>Einfügen (davor)</strong> im Untermenü <strong>Tabelle</strong>
-    (<code>Ctrl t Ctrl p</code>).</li>
+    (<kbd>Ctrl t Ctrl p</kbd>).</li>
   <li>Um eine Tabellenzeile hinter einer existierenden Zeile einzufügen,
     setzt man den Cursor an das Ende der existierenden Zeile und fügt die
     kopierte oder ausgeschnittene Zeile ein, oder man verwendet den Eintrag
     <strong>Einfügen (danach)</strong> im Untermenü <strong>Tabelle</strong>
-    (<code>Ctrl t Ctrl v</code>).</li>
+    (<kbd>Ctrl t Ctrl v</kbd>).</li>
 </ol>
 
 <p></p>

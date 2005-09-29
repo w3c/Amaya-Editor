@@ -3,11 +3,12 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <title>Eine Tabelle erzeugen</title>
   <style type="text/css">
   </style>
-  <meta name="generator" content="amaya 8.5, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 9.2.2, see http://www.w3.org/Amaya/"
+  />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -38,8 +39,8 @@
   <li>Den Knopf <strong>Tabelle</strong> <img alt="Icon Tabelle"
     src="../../images/table.gif" /> in der Knopfleiste anklicken oder im Menü
     <strong>XHTML</strong>, Untermenü <strong>Tabelle</strong> den Befehl
-    <strong>Neue Tabelle (table)</strong> wählen (<code>Ctrl t Ctrl
-    t</code>). Der Dialog <strong>NeueTabelle</strong> wird angezeigt.</li>
+    <strong>Neue Tabelle (table)</strong> wählen (<kbd>Ctrl t Ctrl t</kbd>).
+    Der Dialog <strong>NeueTabelle</strong> wird angezeigt.</li>
   <li>Hier die Anzahl der Zeilen und Spalten sowie die Breite des Rahmens
     eingeben.</li>
   <li>Den Knopf <strong>OK</strong> anklicken. Amaya generiert eine grafische

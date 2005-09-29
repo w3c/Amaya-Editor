@@ -3,11 +3,12 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <title>Vorwärts und rückwärts blättern</title>
   <style type="text/css">
   </style>
-  <meta name="generator" content="amaya 8.2+, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 9.2.2, see http://www.w3.org/Amaya/"
+  />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -41,7 +42,6 @@ Weisen vor- und rückwärts bewegen:</p>
   <tbody>
     <tr>
       <td>Menü Datei</td>
-      <td></td>
       <td><strong>Zurück</strong> wählen, um das vorhergehende Dokument
         anzuzeigen
 
@@ -51,25 +51,15 @@ Weisen vor- und rückwärts bewegen:</p>
     </tr>
     <tr>
       <td>Tastenkürzel</td>
-      <td style="text-align: right">Unix:</td>
-      <td><kbd>Alt b</kbd> drücken, um das vorhergehende Dokument anzuzeigen
-
-        <p><kbd>Alt f</kbd> drücken, um das nächste Dokument anzuzeigen</p>
-      </td>
-    </tr>
-    <tr>
-      <td></td>
-      <td>Windows:</td>
-      <td><kbd>Strg b Strg b</kbd> drücken, um das vorhergehende Dokument
+      <td><kbd>Alt &lt;-</kbd> drücken, um das vorhergehende Dokument
         anzuzeigen
 
-        <p><kbd>Strg b Strg f</kbd> drücken, um das nächste Dokument
+        <p><kbd>Alt -&gt;</kbd> drücken, um das nächste Dokument
         anzuzeigen</p>
       </td>
     </tr>
     <tr>
       <td>Knopfleiste</td>
-      <td></td>
       <td><img alt="zurück" src="../../images/Back.gif" /> anklicken, um das
         vorhergehende Dokument anzuzeigen
 

@@ -3,9 +3,10 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <title>Acerca de Ir Adelante o Atrás</title>
-  <meta name="GENERATOR" content="amaya 8.2+, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 9.2.2, see http://www.w3.org/Amaya/"
+  />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -48,20 +49,10 @@ adelante o atrás en esa lista de varias maneras:</p>
     <tr>
       <td><p>Atajos de teclado</p>
       </td>
-      <td><p><b>Unix</b>:</p>
-
-        <p>Pulsa <kbd>Alt b</kbd> para ver la página visitada
+      <td><p>Pulsa <kbd>Alt &lt;-</kbd> para ver la página visitada
         anteriormente</p>
 
-        <p>Pulsa <kbd>Alt f</kbd> para ver la página visitada
-        posteriormente.</p>
-
-        <p><b>Windows</b>:</p>
-
-        <p>Pulsa <kbd>Ctrl b Ctrl b</kbd> para ver la página visitada
-        anteriormente</p>
-
-        <p>Pulsa <kbd>Ctrl b Ctrl f</kbd> para ver la página visitada
+        <p>Pulsa <kbd>Alt -&gt;</kbd> para ver la página visitada
         posteriormente.</p>
       </td>
     </tr>
@@ -80,7 +71,7 @@ adelante o atrás en esa lista de varias maneras:</p>
   </tbody>
 </table>
 
-<p>&nbsp;</p>
+<p> </p>
 </div>
 </body>
 </html>

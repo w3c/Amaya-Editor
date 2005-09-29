@@ -133,8 +133,8 @@ autre document :</p>
   <li>Cliquez sur le bouton <img alt="Link "
     src="../../resources/icons/22x22/XHTML_Link.png" />, choisissez
     <strong>Créer/changer lien</strong> du menu <strong>Liens</strong>, ou
-    encore utilisez le raccourci clavier (par défaut <code>Ctrl l Ctrl
-    l</code>).
+    encore utilisez le raccourci clavier (par défaut <kbd>Ctrl l Ctrl
+    l</kbd>).
     <ul>
       <li>Si le document cible est visualisé dans une autre fenêtre d'Amaya ,
         cliquez sur le bouton <strong>Clic</strong> puis n'importe où dans le
@@ -161,8 +161,8 @@ un élément cible dans le même document :</p>
   <li>Cliquez sur le bouton <img alt="Link "
     src="../../resources/icons/22x22/XHTML_Link.png" />, choisissez
     <strong>Créer/changer lien</strong> du menu <strong>Liens</strong>, ou
-    encore utilisez le raccourci clavier (par défaut <code>Ctrl l Ctrl
-    l</code>).
+    encore utilisez le raccourci clavier (par défaut <kbd>Ctrl l Ctrl
+    l</kbd>).
     <ul>
       <li>Si la cible est visualisée (vous pouvez scroller pour la
         visualiser), cliquez sur le bouton <strong>Clic</strong> puis cliquez
@@ -186,8 +186,8 @@ changer l'ancre</p>
   <li>Cliquez sur le bouton <img alt="Link "
     src="../../resources/icons/22x22/XHTML_Link.png" /> , choisissez
     <strong>Créer/changer lien</strong> du menu <strong>Liens</strong>, ou
-    encore utilisez le raccourci clavier (par défaut <code>Ctrl l Ctrl
-    l</code>).</li>
+    encore utilisez le raccourci clavier (par défaut <kbd>Ctrl l Ctrl
+    l</kbd>).</li>
   <li>Désignez ensuite la nouvelle cible de l'ancre comme ci dessus.</li>
 </ol>
 

@@ -36,14 +36,14 @@ Spalte einfügen.</p>
 <p class="ProcedureCaption">Um eine Tabellenspalte auszuwählen:</p>
 <ol>
   <li>Dies geschieht mit dem Eintrag <strong>Spalte auswählen</strong> im
-    Untermenü <strong>Tabelle</strong> (<code>Ctrl t Ctrl c</code>).</li>
+    Untermenü <strong>Tabelle</strong> (<kbd>Ctrl t Ctrl c</kbd>).</li>
   <li>Alternativ kann man auch in eine beliebige Zelle der gewünschten Spalte
     klicken und mit der Maus die Auswahl bis zu einer anderen Zelle derselben
     Spalte erweitern. Dies bewirkt, dass Amaya in den Spaltenauswahlmodus
-    wechselt. Durch Drücken der <code>F2</code>) wird die Auswahl auf die gesamte
+    wechselt. Durch Drücken der <kbd>F2</kbd>) wird die Auswahl auf die gesamte
     Spalte, welche die beiden Zellen enthält, erweitert. Beispiel: Um in der
     folgenden Tabelle die mittlere Spalte auszuwählen, klickt man in Zelle
-    1.2 und zieht den Cursor in Zelle 2.2 und drückt zweimal <code>F2</code>:</li>
+    1.2 und zieht den Cursor in Zelle 2.2 und drückt zweimal <kbd>F2</kbd>:</li>
 </ol>
 
 <table border="1" summary="table">
@@ -74,12 +74,12 @@ einfügen.</p>
     klickt man an den Anfang einer Zelle in der existierenden Spalte und fügt
     die kopierte oder ausgeschnittene Spalte ein, oder man verwendet den
     Eintrag <strong>Einfügen (davor)</strong> im Untermenü
-    <strong>Tabelle</strong> (<code>Ctrl t Ctrl p</code>).</li>
+    <strong>Tabelle</strong> (<kbd>Ctrl t Ctrl p</kbd>).</li>
   <li>Um eine Tabellenspalte hinter einer existierenden Spalte einzufügen,
     setzt man den Cursor an das Ende einer Zelle in der existierenden Spalte
     und fügt die kopierte oder ausgeschnittene Spalte ein, oder man verwendet
     den Eintrag <strong>Einfügen (danach)</strong> im Untermenü
-    <strong>Tabelle</strong> (<code>Ctrl t Ctrl v</code>).</li>
+    <strong>Tabelle</strong> (<kbd>Ctrl t Ctrl v</kbd>).</li>
 </ol>
 
 <p></p>

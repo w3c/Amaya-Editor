@@ -3,9 +3,10 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <title>Liens et Ancres</title>
-  <meta name="GENERATOR" content="amaya 8.2+, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 9.2.2, see http://www.w3.org/Amaya/"
+  />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -17,11 +18,11 @@
       <td><p><img alt="W3C" src="../images/w3c_home" /> c<img alt="Amaya"
         src="../images/amaya.gif" /></p>
       </td>
-      <td><p><a href="Changing.html.fr" accesskey="p"><img
-        alt="previous" src="../images/left.gif" /></a> <a
-        href="Manual.html.fr" accesskey="t"><img alt="top"
-        src="../images/up.gif" /></a> <a href="Tables.html.fr"
-        accesskey="n"><img alt="next" src="../images/right.gif" /></a></p>
+      <td><p><a href="Changing.html.fr" accesskey="p"><img alt="previous"
+        src="../images/left.gif" /></a> <a href="Manual.html.fr"
+        accesskey="t"><img alt="top" src="../images/up.gif" /></a> <a
+        href="Tables.html.fr" accesskey="n"><img alt="next"
+        src="../images/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
@@ -49,9 +50,9 @@ valeur NAME à l'attribut :</p>
 <ul>
   <li><p>En extrayant un mot de plus de 3 caractères depuis le contenu de
     l'ancre</p>
-    <p>&nbsp;</p>
+    <p> </p>
     <p>OU</p>
-    <p>&nbsp;</p>
+    <p> </p>
   </li>
   <li><p>En générant un numéro.</p>
   </li>
@@ -69,8 +70,8 @@ référencé par un lien (une ancre source). Avant de créer un lien à un tel
 
 <p>Vous pouvez créer un élément cible de la même manière que vous créez une
 ancre cible. Vous avez juste à sélectionner une chaîne de caractère dans
-l'élément, d'utiliser la touche <kbd>F2</kbd> afin de sélectionner
-l'élément lui même et de choisir <strong>Créer cible</strong> depuis le menu
+l'élément, d'utiliser la touche <kbd>F2</kbd> afin de sélectionner l'élément
+lui même et de choisir <strong>Créer cible</strong> depuis le menu
 <strong>Liens</strong>. L'élément sélectionné a maintenant un attribut ID,
 qui l'identifie comme un élément cible. Amaya génère automatiquement cette
 valeur ID unique.</p>
@@ -112,7 +113,7 @@ alt="The Add/Remove ID menu" /></p>
   <li>Cliquez sur le bouton <img alt="Link " src="../images/Link.gif" />
     (premier cas), ou choisir <strong>Créer/changer lien</strong> du menu
     <strong>Liens</strong>, ou encore utiliser le raccourci clavier (par
-    défaut Ctrl Shift L)
+    défaut <kbd>Ctrl Shift L</kbd>)
     <ul>
       <li>Dans le premier cas, s'offre à vous plusieurs solutions :
         <ul>
@@ -123,11 +124,10 @@ alt="The Add/Remove ID menu" /></p>
           </li>
           <li>Si vous n'êtes pas à l'aise avec la souris :
             <ul>
-              <li>Tapez sur la touche <code>F2</code> ou
-                <code>Delete</code>. Cela fera surgir une boîte de dialogue :
-                entrez l'URI du document cible et taper sur la touche
-                <strong>Enter ou Return</strong> pour confirmer. Le lien est
-                créé.</li>
+              <li>Tapez sur la touche <kbd>F2</kbd> ou <kbd>Delete</kbd>.
+                Cela fera surgir une boîte de dialogue : entrez l'URI du
+                document cible et taper sur la touche <strong>Enter ou
+                Return</strong> pour confirmer. Le lien est créé.</li>
             </ul>
           </li>
           <li>Si l'élément cible n'est pas visualisé :

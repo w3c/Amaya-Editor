@@ -7,7 +7,7 @@
   <title>Eine Ansicht öffnen</title>
   <style type="text/css">
   </style>
-  <meta name="generator" content="amaya 9.1.4, see http://www.w3.org/Amaya/"
+  <meta name="generator" content="amaya 9.2.2, see http://www.w3.org/Amaya/"
   />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -45,11 +45,11 @@ können nur aus der Browseransicht heraus aktiviert werden.</p>
   <li>Im Menü <strong>Ansicht</strong> die gewünschte Ansicht auswählen.</li>
   <li>Das entsprechende Tastenkürzel benutzen:
     <ul>
-      <li><strong>Struktur</strong>: <kbd>Ctrl v Ctrl s</kbd></li>
-      <li><strong>Textbrowser</strong>: <kbd>Ctrl v Ctrl a</kbd></li>
-      <li><strong>Verweise</strong>: <kbd>Ctrl v Ctrl l</kbd></li>
-      <li><strong>Inhaltsverzeichnis</strong>: <kbd>Ctrl v Ctrl c</kbd></li>
-      <li><strong>Quelltext</strong>: <kbd>Ctrl v Ctrl o</kbd></li>
+      <li><strong>Struktur</strong>: <kbd>Ctrl u Ctrl s</kbd></li>
+      <li><strong>Textbrowser</strong>: <kbd>Ctrl u Ctrl a</kbd></li>
+      <li><strong>Verweise</strong>: <kbd>Ctrl u Ctrl l</kbd></li>
+      <li><strong>Inhaltsverzeichnis</strong>: <kbd>Ctrl u Ctrl c</kbd></li>
+      <li><strong>Quelltext</strong>: <kbd>Ctrl u Ctrl o</kbd></li>
     </ul>
     <p class="ProcedureNote"><strong>Anmerkung:</strong> Diese Befehle können
     auch dazu benutzt werden um ein verstecktes Fenster einer Ansicht in den

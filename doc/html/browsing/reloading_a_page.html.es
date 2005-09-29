@@ -3,8 +3,9 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR"
-  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 9.2.2, see http://www.w3.org/Amaya/"
+  />
   <title>Recargar una página</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -33,12 +34,13 @@
 
 <p>Puedes recargar documentos:</p>
 <ul>
-  <li>Eligiendo el comando de menú <strong>Archivo &gt; Actualizar</strong>.</li>
-  <li>Usando el atajo de teclado <kbd>Alt-r</kbd> en Unix y
-    <kbd>Control-r</kbd> en Windows.</li>
-  <li>Haciendo clic en el botón <strong>Recargar</strong> (<img
+  <li>Eligiendo el comando de menú <strong>Archivo &gt;
+  Actualizar</strong>.</li>
+  <li>Usando el atajo de teclado <kbd>Control-r</kbd>.
+    <p>Haciendo clic en el botón <strong>Recargar</strong> (<img
     alt="Recargar" src="../../images/Reload.gif" />) de la barra de
-  botones.</li>
+    botones.</p>
+  </li>
 </ul>
 </div>
 </body>

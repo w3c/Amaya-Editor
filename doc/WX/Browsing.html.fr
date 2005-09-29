@@ -3,9 +3,10 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <title>Naviguer avec Amaya</title>
-  <meta name="GENERATOR" content="amaya 9.1, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 9.2.2, see http://www.w3.org/Amaya/"
+  />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -82,7 +83,7 @@ sélection étendue soit déplacer le point d'insertion à l'intérieur des liens
 et les activer. La touche <kbd>Tab</kbd>, vous permet de trouver le prochain
 lien ou élément de formulaire HTML dans le document. La commande <kbd>Shift
 Tab</kbd>, vous permet de trouver le lien ou élément de formulaire HTML qui
-précède dans le document. La commande <kbd>Alt Enter</kbd> vous permet
+précède dans le document. La commande <kbd>Alt &#x2193;</kbd> vous permet
 d'activer le lien courant. Vous pouvez <a href="ShortCuts.html.fr">choisir
 d'autres touches</a> ou combinaisons de touches pour toutes ces commandes.</p>
 
@@ -138,8 +139,8 @@ de cible <a name="target"><img src="../images/target.gif" alt=" target "
 /></a>. Ces icônes ne font pas partie du document et peuvent être soit
 visualisées soit cachées juste en modifiant le statut <strong>Montrer les
 cibles</strong> de l'onglet courant, qui est une option du menu
-<strong>Vues</strong>. Par défaut la commande au clavier est <kbd>Ctrl v Ctrl
-t</kbd> sur Unix, <kbd>Ctrl u Ctrl t</kbd> sur Windows.</p>
+<strong>Vues</strong>. Par défaut la commande au clavier est <kbd>Ctrl u Ctrl
+t</kbd>.</p>
 
 <p>Ces icônes sont associées aux <em>éléments cibles</em>, c'est-à-dire aux
 éléments, quel que soit leur type, qui ont un attribut <code>ID</code> , ou
@@ -227,8 +228,7 @@ chargées :</p>
     <dd>Il y a des entrées dans le menu <strong>Fichier</strong> pour avancer
       (<strong>Suivant</strong>) ou reculer (<strong>Précédent</strong>) dans
       l'historique. Les raccourcis clavier sont par défaut respectivement
-      <kbd>Alt b</kbd> et <kbd>Alt f</kbd> sur Unix, <kbd>Ctrl b Ctrl b</kbd>
-      et <kbd>Ctrl b Ctrl f</kbd> sur Windows.</dd>
+      <kbd>Alt &lt;-</kbd> et <kbd>Alt -&gt;</kbd>.</dd>
   <dt>Barre des boutons</dt>
     <dd>Deux boutons : <img alt="Back "
       src="../../resources/icons/22x22/back.png" align="middle" /> et <img
@@ -243,9 +243,9 @@ chargées :</p>
 
 <p>Les documents peuvent être rechargés en utilisant l'option
 <strong>Recharger le document</strong> du menu <strong>Fichier</strong>, le
-raccourci clavier <kbd>F5</kbd> sur Unix et <kbd>Ctrl r</kbd> sur Windows, ou
-le bouton <img src="../../resources/icons/22x22/reload.png" alt="reload"
-align="middle" /> de la barre des boutons.</p>
+raccourci clavier <kbd>Ctrl r</kbd>, ou le bouton <img
+src="../../resources/icons/22x22/reload.png" alt="reload" align="middle" />
+de la barre des boutons.</p>
 
 <h3 id="Contr"><a name="Keyboard">Commandes au clavier</a></h3>
 

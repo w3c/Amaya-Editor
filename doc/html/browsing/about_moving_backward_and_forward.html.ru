@@ -3,18 +3,16 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
-  <title>&#xce;
-  &#xef;&#xe5;&#xf0;&#xe5;&#xec;&#xe5;&#xf9;&#xe5;&#xed;&#xe8;&#xe8;
-  &#xcd;&#xe0;&#xe7;&#xe0;&#xe4; &#xe8;
-  &#xc2;&#xef;&#xe5;&#xf0;&#xb8;&#xe4;</title>
+  <meta http-equiv="content-type" content="text/html; charset=windows-1251" />
+  <title>О перемещении Назад и Вперёд</title>
   <style type="text/css">
   </style>
-  <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 9.2.2, see http://www.w3.org/Amaya/"
+  />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="кг" lang="кг">
+<body xml:lang="ru" lang="ru">
 
 <table border="0" width="100%" summary="toc">
   <tbody>
@@ -54,36 +52,29 @@
     <tr>
       <td><p>Ярлыки комбинаций кнопок</p>
       </td>
-      <td><p><b>Unix</b>:</p>
-
-        <p>Нажмите <kbd>Alt b</kbd> для просмотра предыдущей страницы.</p>
-
-        <p>Нажмите <kbd>Alt f</kbd> для просмотра следующей страницы.</p>
-
-        <p><b>Windows</b>:</p>
-
-        <p>Нажмите <kbd>Ctrl b Ctrl b</kbd> для просмотра предыдущей
+      <td><p>Нажмите <kbd>Alt &lt;-</kbd> для просмотра предыдущей
         страницы.</p>
 
-        <p>Нажмите <kbd>Ctrl b Ctrl f</kbd> для просмотра следующей
-        страницы.</p>
+        <p>Нажмите <kbd>Alt -&gt;</kbd> &#x5b3f;
+        ???&#xc9a4;?&#x7871;?&#x9dfb;.</p>
       </td>
     </tr>
     <tr>
-      <td><p>Панель кнопок</p>
+      <td><p>&#x3a6;#xe9ab;? &#xbbae;?</p>
       </td>
-      <td><p>Щёлкните по кнопке <img alt="Back" src="../../images/Back.gif"
-        /> для просмотра предыдущей страницы.</p>
+      <td><p>&#x678;&#xcaed;&#x9ce5; ?&#xbbae;? <img alt="Back"
+        src="../../images/Back.gif" /> &#x5b3f;
+        ????&#x5d39;&#x69e0;?&#xea76;?.</p>
 
-        <p>Щёлкните по кнопке <img alt="Forward"
-        src="../../images/Forward.gif" /> для просмотра следующей
-        страницы.</p>
+        <p>&#x678;&#xcaed;&#x9ce5; ?&#xbbae;? <img alt="Forward"
+        src="../../images/Forward.gif" /> &#x5b3f; ???&#xc9a4;?&#x6fa2;
+        ?&#xea76;?.</p>
       </td>
     </tr>
   </tbody>
 </table>
 
-<p>&nbsp;</p>
+<p>?</p>
 </div>
 </body>
 </html>

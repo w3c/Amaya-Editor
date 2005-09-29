@@ -3,10 +3,10 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
-  <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
-  <title>&#xce; &#xff;&#xea;&#xee;&#xf0;&#xff;&#xf5;
-  &#xf6;&#xe5;&#xeb;&#xe8;</title>
+  <meta http-equiv="content-type" content="text/html; charset=windows-1251" />
+  <meta name="GENERATOR" content="amaya 9.2.2, see http://www.w3.org/Amaya/"
+  />
+  <title>О якорях цели</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -44,10 +44,9 @@ alt="Target icon" />. Эти иконки не являются частью документа и могут быть
     <p></p>
   </li>
   <li>Используйте принятые по умолчанию нажатия комбинации кнопок (<kbd>Ctrl
-    v Ctrl t</kbd> в Unix, <kbd>Ctrl u Ctrl t</kbd> в Windows).</li>
+    u Ctrl t</kbd>).Для получения более подробной информации о работе якорей
+    цели смотрите:</li>
 </ul>
-
-<p>Для получения более подробной информации о работе якорей цели смотрите:</p>
 <ul>
   <li><a href="../linking/creating_a_target_anchor.html.ru">Создание якоря
     цели</a></li>

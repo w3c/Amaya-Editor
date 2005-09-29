@@ -3,9 +3,10 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <title>Naviguer avec Amaya</title>
-  <meta name="GENERATOR" content="amaya 8.6, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 9.2.2, see http://www.w3.org/Amaya/"
+  />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -87,8 +88,8 @@ pas mettre aisément le point d'insertion à l'intérieur des liens : vous devez
 soit utiliser une sélection étendue soit déplacer le point d'insertion à
 l'intérieur des liens à l'aide des flèches. Il est également possible
 d'utiliser le clavier pour activer les liens, ainsi que les formulaires de
-contrôles. La commande au clavier est <kbd>Alt Enter</kbd> par défaut, mais
-la commande <em>DoAction</em> peut être associée à un autre <a
+contrôles. La commande au clavier est <kbd>Alt &#x2193;</kbd> par défaut,
+mais la commande <em>DoAction</em> peut être associée à un autre <a
 href="ShortCuts.html.fr">raccourci clavier</a>. La commande
 <em>NextLinkOrFormElement</em>, associée par défaut au raccourci clavier
 <kbd>Tab</kbd>, vous permet de trouver le prochain (ou le premier) lien ou
@@ -123,7 +124,7 @@ accesskey</strong> donne le focus à cet élément (le suivant dans le cas de
 LABEL et LEGEND).</p>
 
 <p>Les accès rapides supplantent les raccourcis clavier de Amaya. Par exemple
-les pages d'Aide déclarent des accès rapides&nbsp;: "n" pour aller à la page
+les pages d'Aide déclarent des accès rapides : "n" pour aller à la page
 suivante, "p" pour aller à la page précédente, "t" pour la table des
 matières. Si l'utilisateur a associé un raccourci clavier <kbd>Alt p</kbd> à
 une commande d'édition de Amaya, ce raccourci clavier ne sera pas accessible
@@ -141,8 +142,8 @@ de cible <a name="target"><img src="../images/target.gif" alt=" target "
 /></a>. Ces icônes ne font pas partie du document et peuvent donc être soit
 visualisées soit cachées juste en modifiant le statut <strong>Montrer les
 cibles</strong> de la fenêtre courante, qui est une option du menu
-<strong>Vues</strong>. Par défaut la commande au clavier est <kbd>Ctrl v Ctrl
-t</kbd> sur Unix, <kbd>Ctrl u Ctrl t</kbd> sur Windows.</p>
+<strong>Vues</strong>. Par défaut la commande au clavier est <kbd>Ctrl u Ctrl
+t</kbd>.</p>
 
 <p>Ces icônes sont associées aux <em>éléments cibles</em>, i.e. éléments avec
 un attribut <code>ID</code> , ou aux <em>ancres cibles</em>, i.e. ancres avec
@@ -192,9 +193,8 @@ chargées :</p>
 <dl>
   <dt>Menu Fichier</dt>
     <dd>Il y a des entrées dans le menu Fichier pour avancer ou reculer. Les
-      raccourcis clavier sont par défaut respectivement <kbd>Alt b</kbd> et
-      <kbd>Alt f</kbd> sur Unix, <kbd>Ctrl b Ctrl b</kbd> et <kbd>Ctrl b Ctrl
-      f</kbd> sur Windows.</dd>
+      raccourcis clavier sont par défaut respectivement <kbd>Alt &lt;-</kbd>
+      et <kbd>Alt -&gt;</kbd> .</dd>
   <dt>Barre des boutons</dt>
     <dd>Deux boutons : <img alt="Back " src="../images/Back.gif" /> et <img
       alt="Forward " src="../images/Forward.gif" /> vous permettent de
@@ -205,9 +205,8 @@ chargées :</p>
 
 <p>Les documents peuvent être rechargés en utilisant l'option
 <strong>Recharger le document</strong> du menu <strong>Fichier</strong>, le
-raccourci clavier <kbd>Alt r</kbd> sur Unix et <kbd>Ctrl r</kbd> sur Windows,
-ou le bouton <img src="../images/Reload.gif" alt="reload" /> de la barre des
-boutons.</p>
+raccourci clavier <kbd>Ctrl r</kbd>, ou le bouton <img
+src="../images/Reload.gif" alt="reload" /> de la barre des boutons.</p>
 
 <h3><a name="Keyboard">Contrôle du clavier</a></h3>
 
@@ -224,7 +223,7 @@ créer un lien depuis son espace privé
 <code>$HOME/.amaya/amaya.keyboard</code> vers ce fichier s'il veut disposer
 des raccourcis clavier à la Emacs.</p>
 
-<p>Quelques touche du clavier sont pré-affectée, comme&nbsp;:</p>
+<p>Quelques touche du clavier sont pré-affectée, comme :</p>
 <ul>
   <li>La touche <strong>Enter</strong> dans un élément de formulaire
     <code>input</code> (de type <code>text</code> ou <code>password</code>)
@@ -252,8 +251,8 @@ est ensuite utilisable soit avec le clavier, soit avec la souris.</p>
 touches flèches puis valider avec la touche <strong>Entrée</strong>. Les
 touches <strong>PageUp</strong> et <strong>PageDown</strong> permettent de
 faire défiler plus rapidement la liste des entrées. Vous pouvez annuler
-l'action de ce popup en appuyant sur la touche <code>F2</code> à
-n'importe quel moment.</p>
+l'action de ce popup en appuyant sur la touche <code>F2</code> à n'importe
+quel moment.</p>
 
 <p>Avec la souris, il y a deux types de comportement. Un simple clic permet à
 l'utilisateur de selectionner une entrée tandis qu'un double clic sur une
@@ -275,6 +274,5 @@ pouvez annuler l'action de ce widget soit en utilisant la touche
 uniquement).</p>
 
 <p></p>
-
 </body>
 </html>

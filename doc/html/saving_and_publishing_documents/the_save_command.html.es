@@ -3,8 +3,9 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR"
-  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 9.2.2, see http://www.w3.org/Amaya/"
+  />
   <title>El comando Guardar</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -34,8 +35,7 @@
 original. Puedes efectuar el comando <strong>Guardar</strong> eligiendo el
 comando de menú <strong>Archivo &gt; Guardar</strong>, haciendo clic en el
 botón <strong>Guardar</strong> de la barra de botones o utilizando el atajo
-de teclado (<code>Control+s</code> en Windows; <code>Control+x,
-Control+s</code> en Unix). La imágenes añadidas se guardan en la misma
+de teclado (<kbd>Ctrl s</kbd>). La imágenes añadidas se guardan en la misma
 carpeta automáticamente, tan sólo se pide confirmación cuando el nombre del
 documento es desconocido.</p>
 

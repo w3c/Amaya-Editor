@@ -4,8 +4,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Rechercher et remplacer</title>
-  <meta name="GENERATOR" content="amaya 9.1, see http://www.w3.org/Amaya/" />
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 9.2.2, see http://www.w3.org/Amaya/"
+  />
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -30,7 +31,7 @@ boîte de dialogue <strong>Rechercher</strong>. On appelle cette boîte soit en
 choisissant <strong>Rechercher</strong> dans le menu
 <strong>Édition</strong>, soit en cliquant sur le bouton correspondant <img
 src="../../resources/icons/22x22/find.png" alt="find " />, ou encore en
-utilisant le raccourci clavier (Ctrl-f)</p>
+utilisant le raccourci clavier <kbd>Ctrl f</kbd>.</p>
 
 <p>Cette procédure vous permet de rechercher ou de remplacer du texte selon
 différents critères :</p>
@@ -98,8 +99,8 @@ dialogue "Pas trouvé" apparaît .</p>
 quel moment en cliquant sur le bouton <strong>Annuler</strong>.</p>
 
 <p>Les opérations de remplacement peuvent être annulées à l'aide de la
-fonction Défaire (dans le menu Édition, ou par le raccourci clavier
-Ctrl-z).</p>
+fonction Défaire (dans le menu Édition, ou par le raccourci clavier <kbd>Ctrl
+z</kbd>).</p>
 </div>
 </body>
 </html>

@@ -1,51 +1,51 @@
-# These functions are loosely based on emacs keys.
+# Keyboard configuration file for Windows
+# Be careful when using Alt key to define short cuts. 
+# Alt key, referenced by Windows API as VK_MENU is
+# usually used by Windows for some particular purposes
+# and especially default short cuts. Amaya also uses this
+# particular key to introduce its own short cuts without using
+# the Windows standard accelerator table.
 # You have to distinguish between <Alt/Control><Key> sequences and
 # <Shift><Alt/Control><Key> sequences.
 # For example:
-# Alt <Key>+:		ZoomIn()	## is wrong
-# Shift Alt <Key>+:	ZoomIn()	## is correct
-# Alt <Key>=:	    ZoomIn()	## is correct
+# Ctrl <Key>O:		ZoomIn()	## is wrong
+# Shift  <Key>O:	ZoomIn()	## is correct
+# Alt <Key>=:	        ZoomIn()	## is correct
 #
-# Alt is used, with b,f,Home,r (for reload) and Return (for DoAction),
-#             for navigating from page to page                     
-# Alt-t is used for information types (Types that are in the Style menus)
+# On Windows platforms Shift Alt is reserved by the system and
+# cannot be used to define shortcuts
 #
-# Ctrl- 1, 2, 3, 4, 5, 6 are used for headings.
-# Ctrl- a, e, j, k are used for moving around
-# Ctrl- c, d, w, y are used for cut, delete, copy, paste
+# Ctrl-x, c, v are used for cut, copy, paste
+# Ctrl-z and Ctrl-y are used for Undo/Redo
+#
+# Ctrl-a, e are used for moving around
+# Ctrl-k is used for the spellcheck
+# Ctrl-r, b, F are used for reload, back and forward
+# Ctrl-1, 2, 3, 4, 5, 6 are used for headings.
+#
 # Ctrl-m is used for Math functions
-# Ctrl-p is used for print
-#
-# ctrl-s is used for Style items
-#
+# Alt-f is used for Forms functions
+# Alt-s is used for Style functions
+# Ctrl-n is used for New functions (n, t, c) and Annotation functions
 # Ctrl-t is used for Types in the types menu, and some table actions
-# Ctrl-u is used for useful functions (currently only spellcheck,
-#           but maybe also config and special functions later).
-# Ctrl-v is used for view menus
-# Ctrl-x is used for file functions
-# Ctrl-z and Shift Ctrl-z are used for Undo/Redo
+# Alt-t is used for style types
+# Alt-v is used for view menus
 #
-# Shift Ctrl- L, T, D and Shift-Alt-L are used for linking
-# Shift Ctrl- B, I are used for strong and emphasis
-# Shift Ctrl- N is for changing the title (Name...)
-# Shift Ctrl- ! and S are used in the structure menu.
+# Ctrl-L, T, D and Shift-Alt-L are used for linking
+# Ctrl-B, I are used for strong and emphasis
+# Ctrl-N is for changing the title (Name...)
+# Ctrl-! and S are used in the structure menu.
 #
-# Ctrl- Return, Space are used for BR and &nbsp;
-#
-# Ctrl-minus key is used for child element
-#
-# Ctrl- b, g, h, i, n, o, q, r are not used.
-#
+# Ctrl-Return, Space are used for BR and &nbsp;
 
 # personal keyboard file for Amaya
-
 #moving around 
 <Key>Delete:        TtcDeleteSelection() 
 <Key>Backspace:     TtcDeletePreviousChar() 
-<Key>F2:            TtcParentElement() 
+<Key>F2:            TtcParentElement()
 <Key>Return:        TtcCreateElement() 
-<Key>Home:          TtcStartOfLine() 
 <Key>End:           TtcEndOfLine()
+<Key>Home:          TtcStartOfLine() 
 #Following commented out to remember default actions
 #<Key>Up:           TtcPreviousLine() 
 #<Key>Down:         TtcNextLine() 
@@ -53,10 +53,6 @@
 #<Key>Left:         TtcPreviousChar() 
 #Ctrl <Key>Up:      TtcLineUp()
 #Ctrl <Key>Down:    TtcLineDown()
-<Key>L6:            TtcCopyToClipboard() 
-<Key>L8:            TtcPasteFromClipboard() 
-<Key>F6:            TtcCopyToClipboard() 
-<Key>F8:            TtcPasteFromClipboard()
 <Key>Tab:           NextLinkOrFormElement()
 Shift <Key>Tab:     PreviousLinkOrFormElement()
 Ctrl <Key>a:        TtcStartOfLine() 
@@ -68,36 +64,34 @@ Ctrl <Key>k:        TtcNextElement()
 Ctrl <Key>-:        TtcChildElement()
 Ctrl <Key>Home:     TtcPageTop() 
 Ctrl <Key>End:      TtcPageEnd() 
-Alt <Key>Return:    DoAction()
+Alt <Key>Down:      DoAction() 
 Alt <Key>Home:      GoToHome()
-Ctrl <Key><:                                TtcInsertChar("\253")
-Shift Ctrl <Key><:                          TtcInsertChar("\253")
-Shift Ctrl <Key>>:                          TtcInsertChar("\273")
-Alt <Key>e:                                 TtcInsertChar("&#8364;")
+Alt <Key>[:                            TtcInsertChar("\253")
+Alt <Key>]:                            TtcInsertChar("\273")
+Alt <Key>\:                            TtcInsertChar("&#8364;")
 
-#File menu 
-Ctrl <Key>p:                       PrintAs() 
-Shift Ctrl <Key>P:                 SetupAndPrint() 
-Ctrl <Key>x , Ctrl <Key>c:         AmayaClose()
-Ctrl <Key>x , Ctrl <Key>k:         AmayaCloseWindow() 
-Ctrl <Key>x , Ctrl <Key>t:         AmayaCloseTab() 
-Ctrl <Key>x , Ctrl <Key>s:         SaveDocument() 
-Ctrl <Key>x , Ctrl <Key>w:         SaveDocumentAs() 
-Ctrl <Key>x , Ctrl <Key>z:         Synchronize()
-Alt <Key>b:                        GotoPreviousHTML() 
-Alt <Key>f:                        GotoNextHTML() 
-<Key>F5:			   Reload() 
+#File menu Shift Ctrl <Key>P:                 PrintAs()
+Ctrl <Key>p:                       SetupAndPrint()
+Ctrl <Key>s:                       SaveDocument()
+Shift Ctrl <Key>S:                 SaveDocumentAs()
+Alt <Key>Left:                     GotoPreviousHTML()
+Alt <Key>Right:                    GotoNextHTML()
+Ctrl <Key>r:			                 Reload() 
+Ctrl <Key>w:                       AmayaCloseTab() 
+Ctrl <Key>q:                       AmayaClose()
+Ctrl <Key>b , Ctrl <Key>y:         Synchronize()
 
 #edit menu 
-Ctrl <Key>w:                       TtcCutSelection() 
-Ctrl <Key>y:                       PasteBuffer() 
-Ctrl <Key>z:                       TtcUndo() 
-Shift Ctrl <Key>Z:                 TtcRedo() 
-Ctrl <Key>f:                       TtcSearchText() 
 Ctrl <Key>c:                       TtcCopySelection() 
 Ctrl <Key>d:                       TtcDeleteSelection() 
-#Shift Ctrl <Key>*:                SetBrowserEditor() 
+Alt <Key>F3:	                   TtcSearchText()
+Ctrl <Key>f:	                   TtcSearchText()
 <Key>F7:			   SpellCheck()
+Ctrl <Key>v:	                   PasteBuffer()
+Ctrl <Key>x:	                   TtcCutSelection()
+Shift Ctrl <Key>z:                       TtcRedo() 
+Ctrl <Key>z:                       TtcUndo() 
+#Shift Ctrl <Key>*:                 SetBrowserEditor() 
 
 #Headings sbmenu
 Shift Ctrl <Key>1:                 CreateHeading1() 
@@ -171,7 +165,7 @@ Ctrl <Key>l , Ctrl <Key>s:	   ShowLibrary()
 Ctrl <Key>l , Ctrl <Key>t:         CreateTarget()
 
 #Math (types submenu)
-Ctrl <Key>m , Ctrl <Key>Space:     CreateMSPACE() 
+Ctrl <Key>m , Ctrl <Key>Space:     CreateMSPACE()
 Ctrl <Key>m , Ctrl <Key>6:         CreateMSUP() 
 Ctrl <Key>m , Ctrl <Key>a:         CreateApplyFunction()
 Ctrl <Key>m , Ctrl <Key>b:         CreateMSUBSUP() 
@@ -189,17 +183,18 @@ Ctrl <Key>m , Ctrl <Key>p:         CreateMROW()
 Ctrl <Key>m , Ctrl <Key>q:         CreateMSQRT() 
 Ctrl <Key>m , Ctrl <Key>r:         CreateMROOT() 
 Ctrl <Key>m , Ctrl <Key>s:         CreateMMULTISCRIPTS()
-Ctrl <Key>m , Ctrl <Key>t:         CreateMTABLE() 
+Ctrl <Key>m , Ctrl <Key>h:         CreateMTABLE() 
 Ctrl <Key>m , Ctrl <Key>u:         CreateMUNDER() 
 Ctrl <Key>m , Ctrl <Key>v:         CreateMSUB() 
 Ctrl <Key>m , Ctrl <Key>x:         CreateMTEXT()
 
+
 #Annotations, Bookmarks and New
 Ctrl <Key>n , Ctrl <Key>a:	   AnnotateDocument()
-Ctrl <Key>n , Ctrl <Key>b:	   BookmarkFile()
+#Ctrl <Key>n , Ctrl <Key>b:	   BookmarkFile()
 Ctrl <Key>n , Ctrl <Key>c:         NewCss() 
 Ctrl <Key>n , Ctrl <Key>d:	   DeleteAnnotation()
-Ctrl <Key>n , Ctrl <Key>e:	   AddSeparator()
+#Ctrl <Key>n , Ctrl <Key>e:	   AddSeparator()
 Ctrl <Key>n , Ctrl <Key>f:	   FilterAnnot()
 Ctrl <Key>n , Ctrl <Key>g:         NewSVG() 
 Ctrl <Key>n , Ctrl <Key>h:         NewXHTML() 
@@ -211,37 +206,37 @@ Ctrl <Key>n , Ctrl <Key>o:	   ConfigAnnot()
 Ctrl <Key>n , Ctrl <Key>p:	   PostAnnotation()
 Ctrl <Key>n , Ctrl <Key>r:	   ReplyToAnnotation()
 Ctrl <Key>n , Ctrl <Key>s:	   AnnotateSelection()
-Ctrl <Key>n , Ctrl <Key>t:	   EditTopics()
+#Ctrl <Key>n , Ctrl <Key>t:	   EditTopics()
 Ctrl <Key>n , Ctrl <Key>u:         NewXHTMLStrict() 
-Ctrl <Key>n , Ctrl <Key>v:	   ViewBookmarks()
+#Ctrl <Key>n , Ctrl <Key>v:	   ViewBookmarks()
 Ctrl <Key>n , Ctrl <Key>x:         NewXHTML11() 
 
-#Forms (types submenu)
-Ctrl <Key>o , Ctrl <Key>a:         CreateTextArea()
-Ctrl <Key>o , Ctrl <Key>b:         CreatePushButton()
-Ctrl <Key>o , Ctrl <Key>c:         CreateFieldset()
-Ctrl <Key>o , Ctrl <Key>e:        	    TtcInsertChar("&#339;")
-Ctrl <Key>o , Ctrl <Key>f:         CreateForm()
-Ctrl <Key>o , Ctrl <Key>g:         CreateOptGroup()
-Ctrl <Key>o , Ctrl <Key>h:         CreateHiddenInput()
-Ctrl <Key>o , Ctrl <Key>i:         CreateTextInput()
-Ctrl <Key>o , Ctrl <Key>l:         CreateLabel()
+#Forms and Open
+Ctrl <Key>o , Ctrl <Key>a:         CreateTextArea() 
+Ctrl <Key>o , Ctrl <Key>b:         CreatePushButton() 
+Ctrl <Key>o , Ctrl <Key>c:         CreateFieldset() 
+Ctrl <Key>o , Ctrl <Key>e:        	   TtcInsertChar("&#339;")
+Ctrl <Key>o , Ctrl <Key>f:         CreateForm() 
+Ctrl <Key>o , Ctrl <Key>g:         CreateOptGroup() 
+Ctrl <Key>o , Ctrl <Key>h:         CreateHiddenInput() 
+Ctrl <Key>o , Ctrl <Key>i:         CreateTextInput() 
+Ctrl <Key>o , Ctrl <Key>l:         CreateLabel() 
 Ctrl <Key>o , Ctrl <Key>m:         CreateImageInput()
-Ctrl <Key>o , Ctrl <Key>n:         CreateOption()
+Ctrl <Key>o , Ctrl <Key>n:         CreateOption() 
 Ctrl <Key>o , Ctrl <Key>o:         OpenDoc() 
-Ctrl <Key>o , Ctrl <Key>p:         CreatePasswordInput()
-Ctrl <Key>o , Ctrl <Key>r:         CreateRadio()
-Ctrl <Key>o , Ctrl <Key>s:         CreateSubmit()
-Ctrl <Key>o , Ctrl <Key>t:         CreateToggle()
-Ctrl <Key>o , Ctrl <Key>u:         CreateFileInput()
+Ctrl <Key>o , Ctrl <Key>p:         CreatePasswordInput() 
+Ctrl <Key>o , Ctrl <Key>r:         CreateRadio() 
+Ctrl <Key>o , Ctrl <Key>s:         CreateSubmit() 
+Ctrl <Key>o , Ctrl <Key>t:         CreateToggle() 
+Ctrl <Key>o , Ctrl <Key>u:         CreateFileInput() 
 Ctrl <Key>o , Ctrl <Key>w:         OpenDocInNewWindow() 
-Ctrl <Key>o , Ctrl <Key>x:         CreateReset()
-Shift Ctrl <Key>O , Shift Ctrl <Key>E:      TtcInsertChar("&#338;")
+Ctrl <Key>o , Ctrl <Key>x:         CreateReset() 
+Shift Ctrl <Key>O , Shift Ctrl <Key>E: TtcInsertChar("&#338;")
 
-#Transform and tables submenu
-Ctrl <Key>t , Ctrl <Key>a:         CreateColumnAfter()
-Ctrl <Key>t , Ctrl <Key>b:         CreateColumnBefore()
-Ctrl <Key>t , Ctrl <Key>c:         SelectColumn()
+#Transform and Tables
+Ctrl <Key>t , Ctrl <Key>a:         CreateColumnAfter() 
+Ctrl <Key>t , Ctrl <Key>b:         CreateColumnBefore() 
+Ctrl <Key>t , Ctrl <Key>c:         SelectColumn() 
 Ctrl <Key>t , Ctrl <Key>d:         ChangeToDataCell()
 Ctrl <Key>t , Ctrl <Key>e:         CellHorizExtend()
 Ctrl <Key>t , Ctrl <Key>h:         ChangeToHeadingCell()
@@ -252,7 +247,7 @@ Ctrl <Key>t , Ctrl <Key>m:         CellVertShrink()
 Ctrl <Key>t , Ctrl <Key>n:         CreateRowAfter() 
 Ctrl <Key>t , Ctrl <Key>p:         PasteBefore() 
 Ctrl <Key>t , Ctrl <Key>r:         SelectRow() 
-Ctrl <Key>t , Ctrl <Key>s:         CellHorizShrink()
+Ctrl <Key>t , Ctrl <Key>s:         CellHorizShrink() 
 Ctrl <Key>t , Ctrl <Key>t:         CreateTable() 
 Ctrl <Key>t , Ctrl <Key>v:         PasteAfter() 
 Ctrl <Key>t , Ctrl <Key>x:         TransformType()
@@ -260,23 +255,22 @@ Ctrl <Key>t , Ctrl <Key>x:         TransformType()
 #View Menu
 <Key>F11:                          FullScreen()
 <Key>F12:                          ShowPanel()
-Ctrl <Key>v , Ctrl <Key>a:         ShowAddress()
-Ctrl <Key>v , Ctrl <Key>b:         ShowButtons()
-Ctrl <Key>v , Ctrl <Key>c:         ShowToC() 
-Ctrl <Key>v , Ctrl <Key>f:         ShowFormatted()
-Ctrl <Key>v , Ctrl <Key>h:         SplitHorizontally()
-Ctrl <Key>v , Ctrl <Key>i:         ShowAlternate() 
-Ctrl <Key>v , Ctrl <Key>l:         ShowLinks() 
-Ctrl <Key>v , Ctrl <Key>m:         ShowMapAreas() 
-Ctrl <Key>v , Ctrl <Key>o:         ShowSource()
-Ctrl <Key>v , Ctrl <Key>s:         ShowStructure()
-Ctrl <Key>v , Ctrl <Key>t:         ShowTargets() 
-Ctrl <Key>v , Ctrl <Key>v:         SplitVertically()
-Alt <Key>=:        ZoomIn() 
-Alt <Key>-:        ZoomOut()
-#Alt <Key>+:        ZoomIn()
-#Alt <Key>1:        ZoomIn()
-
+Ctrl <Key>u , Ctrl <Key>a:         ShowAlternate()
+Ctrl <Key>u , Ctrl <Key>b:         ShowButtons() 
+Ctrl <Key>u , Ctrl <Key>c:         ShowToC() 
+Ctrl <Key>u , Ctrl <Key>f:         ShowFormatted()
+Ctrl <Key>u , Ctrl <Key>h:         SplitHorizontally()
+Ctrl <Key>u , Ctrl <Key>l:         ShowLinks() 
+Ctrl <Key>u , Ctrl <Key>m:         ShowMapAreas() 
+Ctrl <Key>u , Ctrl <Key>o:         ShowSource()
+Ctrl <Key>u , Ctrl <Key>s:         ShowStructure()
+Ctrl <Key>u , Ctrl <Key>t:         ShowTargets() 
+Ctrl <Key>u , Ctrl <Key>v:         SplitVertically()
+Alt <Key>-:       ZoomOut()
+Alt <Key>=:       ZoomIn()
+#Alt <Key>+:      ZoomIn()
+#Alt <Key>1:      ZoomIn()                  
 #Try to override bizzare behaviour
 Shift <Key>End:     TtcSelEndOfLine()
 Shift <Key>Home:    TtcSelStartOfLine()
+
