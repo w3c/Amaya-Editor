@@ -36,6 +36,10 @@ extern void GetFallbackCharacter ( int code,
                                    Language *lang );
 extern void InitAutomaton ( void );
 extern void FreeHTMLParser ( void );
+extern void GetNextHTMLbuffer ( FILE *infile,
+                                ThotBool *endOfFile,
+                                char **buff,
+                                int *lastchar );
 extern void SetElemLineNumber ( Element el );
 extern char GetNextInputChar ( FILE *infile,
                                int *index,
@@ -105,6 +109,10 @@ extern void GetFallbackCharacter ( int code,
                                      Language *lang );
 extern void InitAutomaton ( void );
 extern void FreeHTMLParser ( void );
+extern void GetNextHTMLbuffer ( FILE *infile,
+                                  ThotBool *endOfFile,
+                                  char **buff,
+                                  int *lastchar );
 extern void SetElemLineNumber ( Element el );
 extern char GetNextInputChar ( FILE *infile,
                                  int *index,

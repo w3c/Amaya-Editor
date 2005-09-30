@@ -405,14 +405,17 @@ static int          StackLevel = 0;	     /* first free element on the
                                             stack */
 /* information about the input file */
 #define INPUT_FILE_BUFFER_SIZE 2000
-static char        *FileBuffer = NULL;
-static char        *PreviousFileBuffer = NULL;
-static int	        LastCharInFileBuffer = 0; /* last char. in the buffer */
-static int	        LastCharInPreviousFileBuffer = 0;
-static int          CurrentBufChar;           /* current character read */
-static int          StartOfTagIndx;           /* last "<" read */
+#define PREV_READ_CHARS 30
+static char         FileBuffer[INPUT_FILE_BUFFER_SIZE+1];
+static char         PreviousRead[PREV_READ_CHARS+1];
+static char        *WorkBuffer = FileBuffer;
+static int	        LastCharInWorkBuffer = 0; /* last char. in the buffer */
+static int	        LastCharInPreviousRead = 0;
+static int          CurrentBufChar = 0;           /* current character read */
+static int          StartOfTagIndx = 0;           /* last "<" read */
+static int          StartOfRead = 0;
 static char	        PreviousBufChar = EOS;    /* previous character read */
-static char*        InputText;
+static char        *InputText = NULL;
 static gzFile       stream = 0;
 static int          NumberOfLinesRead = 0;/* number of lines read in the
                                              file */
@@ -2509,13 +2512,14 @@ static void     EndOfStartGI (char c)
           /* previous input buffer */	
           /* That case happens when the "<" and ">" characters for that */
           /* tag have not been read in the same input buffer */
-          if (StartOfTagIndx <= 0 || (StartOfTagIndx > CurrentBufChar && CurrentBufChar != 0))
+          if (StartOfTagIndx <= 0 ||
+              (StartOfTagIndx > CurrentBufChar && CurrentBufChar != 0))
             {
               NumberOfCharRead = PreviousNumberOfCharRead;
               NumberOfLinesRead = PreviousNumberOfLinesRead;
               NotToReadFile = TRUE;
               if (StartOfTagIndx < 0)
-                CurrentBufChar = LastCharInPreviousFileBuffer;
+                CurrentBufChar = LastCharInPreviousRead;
               else
                 CurrentBufChar = StartOfTagIndx;
             }
@@ -2527,9 +2531,9 @@ static void     EndOfStartGI (char c)
           else
             strcpy ((char *)schemaName, (char *)"SVG");
           /* Parse the corresponding element with the XML parser */
-          if (!ParseIncludedXml ((FILE *)stream, &FileBuffer, sizeof (FileBuffer),
+          if (!ParseIncludedXml ((FILE *)stream, &WorkBuffer, INPUT_FILE_BUFFER_SIZE,
                                  &EndOfHtmlFile, &NotToReadFile,
-                                 PreviousFileBuffer, &LastCharInFileBuffer,
+                                 PreviousRead, &LastCharInWorkBuffer,
                                  InputText, &CurrentBufChar,
                                  &NumberOfLinesRead, &NumberOfCharRead,
                                  schemaName, HTMLcontext.doc,
@@ -4043,6 +4047,87 @@ void FreeHTMLParser (void)
   FirstClosedElem = NULL;
 }
 
+
+
+/*----------------------------------------------------------------------
+  GetNextHTMLbuffer returns the next buffer to be parsed and update
+  global variables.
+  ----------------------------------------------------------------------*/
+void GetNextHTMLbuffer (FILE *infile, ThotBool *endOfFile,
+                        char **buff, int *lastchar)
+{
+  CHARSET      charset =  TtaGetDocumentCharset (HTMLcontext.doc);
+  int          res;
+
+  // copy last treated characters
+  if (StartOfTagIndx > 0)
+    {
+      strncpy (PreviousRead, &WorkBuffer[StartOfTagIndx], PREV_READ_CHARS);
+      LastCharInPreviousRead = LastCharInWorkBuffer - StartOfTagIndx;
+      StartOfTagIndx = 0;
+    }
+  else
+    {
+      PreviousRead[0] = EOS;
+      LastCharInPreviousRead = 0;
+    }
+
+  *buff = NULL;
+  // free previous translation buffer
+  if (WorkBuffer !=  FileBuffer)
+    {
+      TtaFreeMemory (WorkBuffer);
+      WorkBuffer = FileBuffer;
+    }
+  // need to read a new set of characters
+  LastCharInWorkBuffer = gzread (infile, &FileBuffer[StartOfRead],
+                                 INPUT_FILE_BUFFER_SIZE - StartOfRead);
+  // add previous read characters not managed yet
+  LastCharInWorkBuffer += StartOfRead;
+  StartOfRead = 0;
+  if (LastCharInWorkBuffer <= 0)
+    {
+      /* error or end of file */
+      *endOfFile = TRUE;
+      LastCharInWorkBuffer = 0;
+    }
+  else
+    {
+      FileBuffer[LastCharInWorkBuffer] = EOS;
+      LastCharInWorkBuffer--;
+      if (charset == ISO_8859_2   || charset == ISO_8859_3   ||
+          charset == ISO_8859_4   || charset == ISO_8859_5   ||
+          charset == ISO_8859_6   || charset == ISO_8859_7   ||
+          charset == ISO_8859_8   || charset == ISO_8859_9   ||
+          charset == ISO_8859_15  || charset == KOI8_R       ||
+          charset == WINDOWS_1250 || charset == WINDOWS_1251 ||
+          charset == WINDOWS_1252 || charset == WINDOWS_1253 ||
+          charset == WINDOWS_1254 || charset == WINDOWS_1255 ||
+          charset == WINDOWS_1256 || charset == WINDOWS_1257 ||
+          charset == ISO_2022_JP  || charset == EUC_JP       ||
+          charset == SHIFT_JIS    || charset == GB_2312)
+        {
+          /* convert the original stream into UTF-8 */
+          *buff = (char *)TtaConvertByteToMbsWithCheck ((unsigned char *)FileBuffer,
+                                                        charset, &res);
+          HTMLcontext.encoding = UTF_8;
+          if (*buff)
+            {
+              WorkBuffer = *buff;
+              if (res > 0 && res < INPUT_FILE_BUFFER_SIZE)
+                {
+                  // keep last characters for the next read
+                  StartOfRead = INPUT_FILE_BUFFER_SIZE - res;
+                  strcpy (FileBuffer, &FileBuffer[res]);
+                }
+              LastCharInWorkBuffer = strlen (*buff) - 1;
+            }
+        }
+    }
+  *lastchar = LastCharInWorkBuffer;
+}
+
+
 /*----------------------------------------------------------------------
   GetNextChar returns the next character in the imput file or buffer,
   whatever it is.
@@ -4056,7 +4141,6 @@ static char GetNextChar (FILE *infile, char* buffer, int *index,
   unsigned char *ptr;
   char          *buff;
   int            res = 0;
-  CHARSET      charset = HTMLcontext.encoding;
 
   charRead = EOS;
   *endOfFile = FALSE;
@@ -4108,55 +4192,18 @@ static char GetNextChar (FILE *infile, char* buffer, int *index,
             NotToReadFile = FALSE;
           else
             {
-              TtaFreeMemory (PreviousFileBuffer);
-               LastCharInPreviousFileBuffer = LastCharInFileBuffer;
-              if (LastCharInFileBuffer > 0)
-                PreviousFileBuffer = FileBuffer;
-              else
-                PreviousFileBuffer = NULL;
-              FileBuffer = (char *)TtaGetMemory (INPUT_FILE_BUFFER_SIZE + 1);
-              LastCharInFileBuffer = gzread (infile, FileBuffer, INPUT_FILE_BUFFER_SIZE);
-              if (LastCharInFileBuffer <= 0)
-                {
-                  /* error or end of file */
-                  *endOfFile = TRUE;
-                  charRead = EOS;
-                  LastCharInFileBuffer = 0;
-                }
-              else
-                {
-                  FileBuffer[LastCharInFileBuffer] = EOS;
-                  LastCharInFileBuffer--;
-                  if (charset == ISO_8859_2   || charset == ISO_8859_3   ||
-                      charset == ISO_8859_4   || charset == ISO_8859_5   ||
-                      charset == ISO_8859_6   || charset == ISO_8859_7   ||
-                      charset == ISO_8859_8   || charset == ISO_8859_9   ||
-                      charset == ISO_8859_15  || charset == KOI8_R       ||
-                      charset == WINDOWS_1250 || charset == WINDOWS_1251 ||
-                      charset == WINDOWS_1252 || charset == WINDOWS_1253 ||
-                      charset == WINDOWS_1254 || charset == WINDOWS_1255 ||
-                      charset == WINDOWS_1256 || charset == WINDOWS_1257 ||
-                      charset == ISO_2022_JP  || charset == EUC_JP       ||
-                      charset == SHIFT_JIS    || charset == GB_2312)
-                    {
-                      /* convert the original stream into UTF-8 */
-                      buff = (char *)TtaConvertByteToMbs ((unsigned char *)FileBuffer, charset);
-                      HTMLcontext.encoding = UTF_8;
-                      if (buff)
-                        {
-                          TtaFreeMemory (FileBuffer);
-                          FileBuffer = buff;
-                          LastCharInFileBuffer = strlen (buff) - 1;
-                        }
-                    }
-                }
+              // read next characters
+              GetNextHTMLbuffer (infile, endOfFile, &buff, &res);
+              if (*endOfFile)
+                /* error or end of file */
+                charRead = EOS;
             }
         }
 	
       if (NotToReadFile)
         {
-          charRead = PreviousFileBuffer[(*index)++];
-          if (*index > LastCharInPreviousFileBuffer)
+          charRead = PreviousRead[(*index)++];
+          if (*index > LastCharInPreviousRead)
             *index = 0;
         }
       else if (*endOfFile == FALSE)
@@ -4170,7 +4217,7 @@ static char GetNextChar (FILE *infile, char* buffer, int *index,
             }
           else
             {
-              charRead = FileBuffer[(*index)++];
+              charRead = WorkBuffer[(*index)++];
               if (charRead == EOS)
                 *endOfFile = TRUE;
               else
@@ -4179,15 +4226,15 @@ static char GetNextChar (FILE *infile, char* buffer, int *index,
                     {
                       /* Search for an UTF-8 BOM character (EF BB BF) */
                       /* Laurent Carcone 7/11/2002 */
-                      if (*index == 1 && LastCharInFileBuffer > 2 &&
-                          (unsigned char) FileBuffer[0] == 0xEF &&
-                          (unsigned char) FileBuffer[1] == 0xBB &&
-                          (unsigned char) FileBuffer[2] == 0xBF &&
-                          PreviousFileBuffer[0] == EOS)
+                      if (*index == 1 && LastCharInWorkBuffer > 2 &&
+                          (unsigned char) WorkBuffer[0] == 0xEF &&
+                          (unsigned char) WorkBuffer[1] == 0xBB &&
+                          (unsigned char) WorkBuffer[2] == 0xBF &&
+                          PreviousRead[0] == EOS)
                         {
-                          charRead = FileBuffer[(*index)++];
-                          charRead = FileBuffer[(*index)++];
-                          charRead = FileBuffer[(*index)++];
+                          charRead = WorkBuffer[(*index)++];
+                          charRead = WorkBuffer[(*index)++];
+                          charRead = WorkBuffer[(*index)++];
                         }
                     }
                   else
@@ -4210,7 +4257,7 @@ static char GetNextChar (FILE *infile, char* buffer, int *index,
                 }
             }
 	  
-          if (*index > LastCharInFileBuffer)
+          if (*index > LastCharInWorkBuffer)
             *index = 0;
         }
     }
@@ -4974,7 +5021,7 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
 {
   gzFile      stream;
   char       *ptr, *beg, *end, *ptrns;
-  char        buffer[INPUT_FILE_BUFFER_SIZE+1];
+  char       *buffer = FileBuffer;
   int         res, i, j, k;
   ThotBool    endOfSniffedFile, beginning;
   ThotBool    found;
@@ -5350,7 +5397,7 @@ void CheckCharsetInMeta (char *fileName, CHARSET *charset, char *charsetname)
 {
   gzFile     stream;
   char      *ptr, *end, *end2, *meta, *endmeta, *content, *body, *http;
-  char       buffer[INPUT_FILE_BUFFER_SIZE+1];
+  char      *buffer = FileBuffer;
   int        res, i, j, k;
   ThotBool   endOfSniffedFile;
 
@@ -6710,8 +6757,7 @@ void ParseSubTree (char* HTMLbuf, Element lastelem, Language language,
   ParseExternalHTMLDoc
   Parse an external HTML document called from an other document
   ------------------------------------------------------------------------------*/
-void ParseExternalHTMLDoc (Document doc, FILE * infile,
-                           CHARSET charset, char *extDocURL)
+void ParseExternalHTMLDoc (Document doc, FILE * infile, CHARSET charset, char *extDocURL)
 {
   Element         el, oldel;
   int             error;
@@ -6736,9 +6782,8 @@ void ParseExternalHTMLDoc (Document doc, FILE * infile,
   CharRank = 0;
   HTMLcontext.encoding = TtaGetDocumentCharset (doc);
   HTMLcontext.withinTable = 0;
-  TtaFreeMemory (FileBuffer);
-  FileBuffer = NULL;
-  LastCharInFileBuffer = 0;
+  LastCharInWorkBuffer = 0;
+  FileBuffer[0] = EOS;
   HTMLcontext.language = TtaGetDefaultLanguage ();
   DocumentSSchema = TtaGetDocumentSSchema (doc);
 
@@ -6796,11 +6841,6 @@ void ParseExternalHTMLDoc (Document doc, FILE * infile,
     }
   DocumentSSchema = NULL;
   HTMLcontext.doc = 0;
-  TtaFreeMemory (FileBuffer);
-  FileBuffer = NULL;
-  TtaFreeMemory (PreviousFileBuffer);
-  PreviousFileBuffer = NULL;
-  LastCharInFileBuffer = 0;
   return;
 }
 
@@ -6839,6 +6879,9 @@ void StartParser (Document doc, char *fileName,
   CommentText = NULL;
   UnknownTag = FALSE;
   HTMLcontext.mergeText = FALSE;
+  HTMLcontext.withinTable = 0;
+  LastCharInWorkBuffer = 0;
+  FileBuffer[0] = EOS;
   LgEntityName = 0;
   EntityTableEntry = 0;
   CharRank = 0;
@@ -6847,10 +6890,6 @@ void StartParser (Document doc, char *fileName,
   stream = TtaGZOpen (fileName);
   if (stream != 0)
     {
-      TtaFreeMemory (FileBuffer);
-      FileBuffer = NULL;
-      LastCharInFileBuffer = 0;
-      HTMLcontext.withinTable = 0;
       if (documentName[0] == EOS && !TtaCheckDirectory (documentDirectory))
         {
           strcpy ((char *)documentName, (char *)documentDirectory);
@@ -7049,11 +7088,6 @@ void StartParser (Document doc, char *fileName,
       DocumentSSchema = NULL;
     }
 
-  TtaFreeMemory (FileBuffer);
-  FileBuffer = NULL;
-  TtaFreeMemory (PreviousFileBuffer);
-  PreviousFileBuffer = NULL;
-  LastCharInFileBuffer = 0;
   TtaSetDocumentUnmodified (doc);
   HTMLcontext.doc = 0;
 }

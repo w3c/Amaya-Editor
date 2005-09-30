@@ -5402,16 +5402,15 @@ ThotBool ParseIncludedXml (FILE *infile, char **infileBuffer, int infileBufferLe
                            ThotBool *isclosed,
                            Language  lang)
 {
-  ThotBool     endOfParsing = FALSE;
-  ThotBool     found;
-  int          res = 0;
   int          tmpLen = 0;
   int          offset = 0;
   int          i;
   ElementType  elType;
-  char        *schemaName, *buffer;
+  char        *schemaName;
   char        *tmpBuffer = NULL;
   CHARSET      charset;
+  ThotBool     endOfParsing = FALSE;
+  ThotBool     found;
 
   if (infile == NULL && htmlBuffer == NULL)
     return TRUE;
@@ -5469,70 +5468,39 @@ ThotBool ParseIncludedXml (FILE *infile, char **infileBuffer, int infileBufferLe
 
   /* If htmlBuffer isn't null, we are parsing a XML sub-tree */
   /* included in a transformation */
-  if (htmlBuffer != NULL)
+  if (htmlBuffer)
     {
       /* parse the HTML buffer */
-      tmpLen = strlen ((char *)htmlBuffer) - *index;
-      tmpBuffer = (char *)TtaGetMemory (tmpLen);
-      for (i = 0; i < tmpLen; i++)
-        tmpBuffer[i] = htmlBuffer[*index + i];	  
+      tmpBuffer = TtaStrdup (&htmlBuffer[*index]);
+      tmpLen = strlen ((char *)tmpBuffer);
       if (!XML_Parse (Parser, tmpBuffer, tmpLen, 1))
-        {
-          if (!XMLrootClosed)
-            XmlParseError (errorNotWellFormed,
-                           (unsigned char *) XML_ErrorString (XML_GetErrorCode (Parser)), 0);
-        }
+        if (!XMLrootClosed)
+          XmlParseError (errorNotWellFormed,
+                         (unsigned char *) XML_ErrorString (XML_GetErrorCode (Parser)), 0);
     }
   else
     {
       /* read and parse the HTML file sequentialy */
       while (!endOfParsing && !XMLNotWellFormed)
         {
+          if (tmpBuffer)
+            {
+              TtaFreeMemory (tmpBuffer);
+              tmpBuffer = NULL;
+            }
           if (*index == 0)
             {
               if (*infileNotToRead)
+                // work on the previous buffer
                 *infileNotToRead = FALSE;
               else
                 {
-                  res = gzread (infile, *infileBuffer, infileBufferLength);
-                  if (res < infileBufferLength)
+                  GetNextHTMLbuffer (infile, infileEnd, infileBuffer, infileLastChar);
+                  if (*infileEnd)
                     endOfParsing = TRUE;
-                  if (res <= 0)
-                    {
-                      *infileEnd = TRUE;
-                      *infileLastChar = 0;
-                    }
-                  else
-                    {
-                      *infileBuffer[res] = EOS;
-                      *infileLastChar = res - 1;
-                      if (charset == ISO_8859_2   || charset == ISO_8859_3   ||
-                          charset == ISO_8859_4   || charset == ISO_8859_5   ||
-                          charset == ISO_8859_6   || charset == ISO_8859_7   ||
-                          charset == ISO_8859_8   || charset == ISO_8859_9   ||
-                          charset == ISO_8859_15  || charset == KOI8_R       ||
-                          charset == WINDOWS_1250 || charset == WINDOWS_1251 ||
-                          charset == WINDOWS_1252 || charset == WINDOWS_1253 ||
-                          charset == WINDOWS_1254 || charset == WINDOWS_1255 ||
-                          charset == WINDOWS_1256 || charset == WINDOWS_1257 ||
-                          charset == ISO_2022_JP  || charset == EUC_JP       ||
-                          charset == SHIFT_JIS    || charset == GB_2312)
-                        {
-                          /* convert the original stream into UTF-8 */
-                          buffer = (char *)TtaConvertByteToMbs ((unsigned char *)(*infileBuffer), charset);
-                          if (buffer)
-                            {
-                              TtaFreeMemory (*infileBuffer);
-                              *infileBuffer = buffer;
-                              *infileLastChar = strlen (buffer) - 1;
-                            }
-                        }
-                    }
                 }
             }
 
-          if (tmpBuffer != NULL)   
-            TtaFreeMemory (tmpBuffer);   
           if (*infileNotToRead)
             {
               tmpLen = strlen ((char *)infilePreviousBuffer) - *index;
@@ -5543,12 +5511,10 @@ ThotBool ParseIncludedXml (FILE *infile, char **infileBuffer, int infileBufferLe
           else
             {
               if (endOfParsing)
-                tmpLen = res  - *index;
+                tmpLen = *infileLastChar  - *index;
               else
                 tmpLen = strlen ((char *)(*infileBuffer)) - *index;
-              tmpBuffer = (char *)TtaGetMemory (tmpLen);
-              for (i = 0; i < tmpLen; i++)
-                tmpBuffer[i] = (*infileBuffer)[*index + i];	  
+              tmpBuffer = TtaStrdup (&(*infileBuffer)[*index]);
             }
           if (!XML_Parse (Parser, tmpBuffer, tmpLen, endOfParsing))
             {

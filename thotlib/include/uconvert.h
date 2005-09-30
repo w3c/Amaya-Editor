@@ -59,18 +59,28 @@ extern int TtaGetNumberOfBytesToRead (unsigned char **txt, CHARSET encoding);
 extern unsigned char *TtaConvertWCToByte (wchar_t *src, CHARSET encoding);
 
 /*-------------------------------------------------------------
-  TtaConvertByteToWC converts the src (8-bit) into a wide character
-  string (16-bit).
+  TtaConvertByteToWC converts the src (1 byte or 2 byte character for
+  JIS) into a wide character.
   The returned string should be freed by the caller.
   -------------------------------------------------------------*/
 extern wchar_t *TtaConvertByteToWC (unsigned char *src, CHARSET encoding);
 
 /*-------------------------------------------------------------
-  TtaConvertByteToMbs converts the src (8-bit) into a UTF-8
-  string (8-bit).
+  TtaConvertByteToMbs converts the src (1 or 2 bytes) into a UTF-8
+  string (1 byte).
   The returned string should be freed by the caller.
   -------------------------------------------------------------*/
 extern unsigned char *TtaConvertByteToMbs (unsigned char *src, CHARSET encoding);
+
+
+/*----------------------------------------------------------------------
+  TtaConvertByteToMbsWithCheck converts the src (1 or 2 bytes) into a UTF-8
+  string (1 byte).
+  Returns the length of the treated source string.
+  The returned string should be freed by the caller.
+  ----------------------------------------------------------------------*/
+extern unsigned char *TtaConvertByteToMbsWithCheck (unsigned char *src,
+                                                    CHARSET encoding, int *length);
 
 /*-------------------------------------------------------------
   TtaConvertMbsToByte converts a UTF-8 string (8-bit) into an

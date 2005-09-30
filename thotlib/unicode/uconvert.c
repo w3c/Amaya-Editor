@@ -481,7 +481,7 @@ wchar_t MACROMANCP [] = {
 #define MACROMANCP_length sizeof(MACROMANCP) / sizeof(wchar_t);
 
 #include "memory_f.h"
-
+static unsigned char *StopTranslation = NULL;
 
 /*----------------------------------------------------------------------
   TtaGetCharFromWC returns the ISO or Windows character code
@@ -1205,6 +1205,7 @@ wchar_t *TtaConvertByteToWC (unsigned char *src, CHARSET encoding)
   wchar_t           wc;
 
   dest = NULL;
+  StopTranslation = NULL;
   if (src)
     {
       if (encoding == UTF_8)
@@ -1226,8 +1227,15 @@ wchar_t *TtaConvertByteToWC (unsigned char *src, CHARSET encoding)
                       dest[i++] = wc;
                       if (wc > 0x80)
                         src++;
+                      src ++;
                     }
-                  src ++;
+                  else
+                    {
+                      // stop the translation before the end of the string
+                      StopTranslation = src;
+                      dest[i] = EOS;
+                      return dest;
+                    }
                 }
             }
           else
@@ -1264,6 +1272,39 @@ unsigned char *TtaConvertByteToMbs (unsigned char *src, CHARSET encoding)
         {
           /* generate the WC string */
           tmp = TtaConvertByteToWC (src, encoding);
+          dest = TtaConvertWCToByte (tmp, UTF_8);
+          TtaFreeMemory (tmp);
+        }
+    }
+  return dest;
+}
+
+/*----------------------------------------------------------------------
+  TtaConvertByteToMbsWithCheck converts the src (1 or 2 bytes) into a UTF-8
+  string (1 byte).
+  Returns the length of the treated source string.
+  The returned string should be freed by the caller.
+  ----------------------------------------------------------------------*/
+unsigned char *TtaConvertByteToMbsWithCheck (unsigned char *src,
+                                             CHARSET encoding, int *length)
+{
+  wchar_t         *tmp;
+  unsigned char   *dest;
+
+  dest = NULL;
+  *length = strlen ((char *)src);
+  if (src)
+    {
+      if (encoding == UTF_8)
+        dest = (unsigned char *)TtaStrdup ((char *)src);
+      else
+        {
+          /* generate the WC string */
+          tmp = TtaConvertByteToWC (src, encoding);
+          if (StopTranslation)
+            {
+            *length = StopTranslation - src;
+            }
           dest = TtaConvertWCToByte (tmp, UTF_8);
           TtaFreeMemory (tmp);
         }
