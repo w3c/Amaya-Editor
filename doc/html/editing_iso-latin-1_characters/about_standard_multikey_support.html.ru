@@ -4,10 +4,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
-  <title>&#xd1;&#xf2;&#xe0;&#xed;&#xe4;&#xe0;&#xf0;&#xf2;&#xed;&#xfb;&#xe5;
-  &#xea;&#xee;&#xec;&#xe1;&#xe8;&#xed;&#xe0;&#xf6;&#xe8;&#xe8;
-  &#xea;&#xed;&#xee;&#xef;&#xee;&#xea; &#xe4;&#xeb;&#xff;
-  &#xe2;&#xe5;&#xf0;&#xf1;&#xe8;&#xe9; Motif &#xe8; GTK</title>
+  <title>Стандартные комбинации кнопок для версий GTK
+</title>
   <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -32,17 +30,17 @@
 </table>
 
 <div id="page_body">
-<h1>Стандартные комбинации кнопок для версий Motif и GTK</h1>
+<h1>Стандартные комбинации кнопок для версий GTK</h1>
 
 <p>Если ISO-Latin символ отсутствует на клавиатуре, вы можете вставить его
-нажав специальный композиционный <code>Compose</code> ключ (кнопку),
+нажав специальный композиционный <kbd>Compose</kbd> ключ (кнопку),
 состоящий из последовательности двух других ключей. Смотрите нижеприведённую
 таблицу, использующуюся для ввода различных ISO-Latin символов. Заметьте что
 в Amaya, вы можете переключать позицию первого и второго ключа.</p>
 
-<p>Если ваша клавиатура не содержит композиционного <code>Compose</code>
+<p>Если ваша клавиатура не содержит композиционного <kbd>Compose</kbd>
 ключа (кнопки), вы можете прикрепить его к существующему ключу, такому как
-<code>Alt-Gr</code> с помощью команды <code>xmodmap</code>:</p>
+<kbd>Alt-Gr</kbd> с помощью команды <code>xmodmap</code>:</p>
 
 <p><code>keycode 113 = Multi_key</code></p>
 

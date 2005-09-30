@@ -5,11 +5,8 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
   <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
-  <title>&#xd0;&#xe0;&#xe1;&#xee;&#xf2;&#xe0; &#xf1;&#xee;
-  &#xf1;&#xf2;&#xe8;&#xeb;&#xff;&#xec;&#xe8;</title>
-  <style type="text/css">
-
- </style>
+  <title>Работа со стилями
+</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 

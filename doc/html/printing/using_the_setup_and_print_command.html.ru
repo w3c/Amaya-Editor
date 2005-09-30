@@ -5,13 +5,8 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
   <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
-  <title>&#xc8;&#xf1;&#xef;&#xee;&#xeb;&#xfc;&#xe7;&#xee;&#xe2;&#xe0;&#xed;&#xe8;&#xe5;
-  &#xea;&#xee;&#xec;&#xe0;&#xed;&#xe4;&#xfb;
-  &#xcd;&#xe0;&#xf1;&#xf2;&#xf0;&#xee;&#xe8;&#xf2;&#xfc; &#xe8;
-  &#xef;&#xe5;&#xf7;&#xe0;&#xf2;&#xe0;&#xf2;&#xfc;</title>
-  <style type="text/css">
-
-  </style>
+  <title>Использование команды Настроить и печатать
+</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 

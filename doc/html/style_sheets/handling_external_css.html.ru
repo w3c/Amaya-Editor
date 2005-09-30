@@ -5,10 +5,8 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
   <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
-  <title>&#xce;&#xe1;&#xf0;&#xe0;&#xe1;&#xee;&#xf2;&#xea;&#xe0;
-  &#xe2;&#xed;&#xe5;&#xf8;&#xed;&#xe8;&#xf5; CSS</title>
-  <style type="text/css">
-  </style>
+  <title>Обработка внешних CSS
+</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
   <link />
 </head>
@@ -85,7 +83,7 @@ CSS.</p>
 пользователь может вывести исходный код таблицы стиля, который может
 генерировать каждое свойство двойным (или одинарным) щелчком по свойству.
 Пока окно открыто, при изменении выбранного, Amaya обновляет содержание окна.
-Нажав <code>F2</code>,
+Нажав <kbd>F2</kbd>,
 пользователь может просматривать свойства таблицы стиля, применённые к
 вложенным элементам.</p>
 </div>

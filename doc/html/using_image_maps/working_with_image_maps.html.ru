@@ -5,9 +5,8 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
   <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
-  <title>&#xd0;&#xe0;&#xe1;&#xee;&#xf2;&#xe0; &#xf1;
-  &#xe8;&#xe7;&#xee;&#xe1;&#xf0;&#xe0;&#xe6;&#xe5;&#xed;&#xe8;&#xe5;&#xec;
-  &#xea;&#xe0;&#xf0;&#xf2;&#xfb;</title>
+  <title>Работа с изображением карты
+</title>
   <style type="text/css">
 
   </style>

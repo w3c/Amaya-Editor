@@ -2,9 +2,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
-  <title>&#xd0;&#xe5;&#xe4;&#xe0;&#xea;&#xf2;&#xe8;&#xf0;&#xee;&#xe2;&#xe0;&#xed;&#xe8;&#xe5;
-  &#xec;&#xe0;&#xf2;&#xe5;&#xec;&#xe0;&#xf2;&#xe8;&#xea;&#xe8; &#xe2;
-  Amaya</title>
+  <title>Редактирование математики в Amaya
+</title>
   <link href="style.css" rel="stylesheet" type="text/css" />
   <style type="text/css">
 

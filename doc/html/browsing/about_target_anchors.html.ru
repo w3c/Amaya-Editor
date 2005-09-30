@@ -6,7 +6,8 @@
   <meta http-equiv="content-type" content="text/html; charset=windows-1251" />
   <meta name="GENERATOR" content="amaya 9.2.2, see http://www.w3.org/Amaya/"
   />
-  <title>О якорях цели</title>
+  <title>О якорях цели
+</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -44,9 +45,10 @@ alt="Target icon" />. Эти иконки не являются частью документа и могут быть
     <p></p>
   </li>
   <li>Используйте принятые по умолчанию нажатия комбинации кнопок (<kbd>Ctrl
-    u Ctrl t</kbd>).Для получения более подробной информации о работе якорей
-    цели смотрите:</li>
+    u Ctrl t</kbd>).</li>
 </ul>
+
+<p>Для получения более подробной информации о работе якорей цели смотрите:</p>
 <ul>
   <li><a href="../linking/creating_a_target_anchor.html.ru">Создание якоря
     цели</a></li>

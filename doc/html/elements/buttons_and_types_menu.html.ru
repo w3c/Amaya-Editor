@@ -4,11 +4,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
-  <title>&#xca;&#xed;&#xee;&#xef;&#xea;&#xe8; &#xe8; &#xec;&#xe5;&#xed;&#xfe;
-  &#xd2;&#xe8;&#xef;
-  &#xe8;&#xed;&#xf4;&#xee;&#xf0;&#xec;&#xe0;&#xf6;&#xe8;&#xe8;</title>
-  <style type="text/css">
-  </style>
+  <title>Кнопки и меню Тип информации
+</title>
   <meta name="generator" content="amaya 8.5, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>

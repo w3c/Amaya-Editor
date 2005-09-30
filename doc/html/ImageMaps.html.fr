@@ -4,8 +4,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
 <head>
   <title>Images et Zones actives</title>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 9.0.1, see http://www.w3.org/Amaya/"
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 9.2.2, see http://www.w3.org/Amaya/"
   />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -36,8 +36,8 @@
 <p>Pour insérer une image, choisissez l'entrée <strong>Image</strong> depuis
 le menu <strong>XHTML</strong> ou cliquez sur le bouton <img alt="Image "
 src="../images/Image.gif" longdesc="longdesc.htm" /> (ou encore utilisez le
-raccourci clavier control-h, control-i pour Unix). Ceci fait apparaître une
-boîte de dialogue qui vous permet de rentrer le nom du fichier et le <a
+raccourci clavier <kbd>Ctrl h Ctrl i</kbd>). Ceci fait apparaître une boîte
+de dialogue qui vous permet de rentrer le nom du fichier et le <a
 href="#Alternative">texte de remplacement</a> ('ALT' texte) de l'image
 désirée. Si vous souhaitez fournir une longue description (par exemple si
 votre image présente une information complexe) vous devriez la faire dans un

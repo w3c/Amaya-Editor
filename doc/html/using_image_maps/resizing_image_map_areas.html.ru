@@ -3,15 +3,10 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
-  <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
-  <title>&#xc8;&#xe7;&#xec;&#xe5;&#xed;&#xe5;&#xed;&#xe8;&#xe5;
-  &#xf0;&#xe0;&#xe7;&#xec;&#xe5;&#xf0;&#xee;&#xe2;
-  &#xee;&#xe1;&#xeb;&#xe0;&#xf1;&#xf2;&#xe5;&#xe9;
-  &#xe8;&#xe7;&#xee;&#xe1;&#xf0;&#xe0;&#xe6;&#xe5;&#xed;&#xe8;&#xff;
-  &#xea;&#xe0;&#xf0;&#xf2;&#xfb;</title>
-  <style type="text/css">
- </style>
+  <meta http-equiv="content-type" content="text/html; charset=windows-1251" />
+  <meta name="GENERATOR" content="amaya 9.2.2, see http://www.w3.org/Amaya/"
+  />
+  <title>Изменение размеров областей изображения карты</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -46,19 +41,18 @@ href="creating_clientside_image_maps.html.ru">определите область</a> в
 непосредственно с помощью клавиатуры</p>
 <ol>
   <li>Переместите курсор в область изображения карты.</li>
-  <li>Нажмите кнопку <code>Control</code> и правую кнопку мыши, что вызовет
+  <li>Нажмите кнопку <kbd>Control</kbd> и правую кнопку мыши, что вызовет
     подсветку области изображения карты.</li>
-  <li>Отпустите кнопку Control, продолжая удерживать нажатой правую кнопку
-    мыши. Используйте мышь для изменения размера области изображения путём
-    перетаскивания до нужного вам размера.</li>
+  <li>Отпустите кнопку <kbd>Control</kbd>, продолжая удерживать нажатой
+    правую кнопку мыши. Используйте мышь для изменения размера области
+    изображения путём перетаскивания до нужного вам размера.</li>
 </ol>
 
 <p class="ProcedureCaption">Для изменения размера с помощью вида Структура</p>
 <ol>
   <li>Выберите пункт <strong>Показать структуру</strong> из меню
-    <strong>Вид</strong> (или нажмите <code>Alt + v</code>, а затем <code>Alt
-    + s</code>). В другом окне откроется структурный вид вашего
-  документа.</li>
+    <strong>Вид</strong> (или нажмите <code>Ctrl u Ctrl s</code>). В другом
+    окне откроется структурный вид вашего документа.</li>
   <li>Отредактируйте атрибут <code>coords</code> вручную. Например,
     <code>coords=25,29,16</code> мог бы стать
   <code>coords=25,28,24.</code></li>

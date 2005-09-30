@@ -3,14 +3,10 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
-  <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
-  <title>&#xc8;&#xf1;&#xef;&#xee;&#xeb;&#xfc;&#xe7;&#xee;&#xe2;&#xe0;&#xed;&#xe8;&#xe5;
-  &#xea;&#xeb;&#xe8;&#xe5;&#xed;&#xf2;&#xf1;&#xea;&#xee;&#xe3;&#xee;
-  &#xe8;&#xe7;&#xee;&#xe1;&#xf0;&#xe0;&#xe6;&#xe5;&#xed;&#xe8;&#xff;
-  &#xea;&#xe0;&#xf0;&#xf2;&#xfb;</title>
-  <style type="text/css">
-  </style>
+  <meta http-equiv="content-type" content="text/html; charset=windows-1251" />
+  <meta name="GENERATOR" content="amaya 9.2.2, see http://www.w3.org/Amaya/"
+  />
+  <title>Использование клиентского изображения карты</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -51,9 +47,9 @@
   <li>Выберите пункт <strong>Показать области карты</strong> из меню
     <strong>Вид</strong>.
     <p></p>
-    <p class="Note"><strong>Примечание:</strong>&nbsp;&nbsp; Также, вы можете
-    показать существующие области непосредственно с помощью клавиатуры,
-    сначала нажав <code>Alt + V</code>, а затем <code>Alt + M</code>.</p>
+    <p class="Note"><strong>Примечание:</strong>   Также, вы можете показать
+    существующие области непосредственно с помощью клавиатуры, сначала нажав
+    <kbd>Ctrl u Ctrl m</kbd>.</p>
   </li>
 </ul>
 </div>

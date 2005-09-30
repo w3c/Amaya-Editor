@@ -5,10 +5,8 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
   <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
-  <title>&#xce; &#xea;&#xeb;&#xfe;&#xf7;&#xe0;&#xf5;
-  &#xe4;&#xee;&#xf1;&#xf2;&#xf3;&#xef;&#xe0;</title>
-  <style type="text/css">
- </style>
+  <title>О ключах доступа
+</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 

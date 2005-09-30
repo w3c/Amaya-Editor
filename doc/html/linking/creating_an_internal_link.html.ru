@@ -5,11 +5,8 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
   <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
-  <title>&#xd1;&#xee;&#xe7;&#xe4;&#xe0;&#xed;&#xe8;&#xe5;
-  &#xe2;&#xed;&#xf3;&#xf2;&#xf0;&#xe5;&#xed;&#xed;&#xe5;&#xe9;
-  &#xf1;&#xf1;&#xfb;&#xeb;&#xea;&#xe8;</title>
-  <style type="text/css">
- </style>
+  <title>Создание внутренней ссылки
+</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -50,8 +47,8 @@
         <ul>
           <li>Если включён показ цели, (вы можете выполнить прокрутку для
             перехода на неё), для создания ссылки щёлкните по цели.</li>
-          <li>Если вы нажмёте кнопки <code>F2</code> или
-            <code>Delete</code>, или щёлкните по той части документа, которая
+          <li>Если вы нажмёте кнопки <kbd>F2</kbd> или
+            <kbd>Delete</kbd>, или щёлкните по той части документа, которая
             не может быть правильной целью, диалоговое окно выведет запрос
             относительно расположения целевого документа. Для создания
             ссылки, введите URI цели и нажмите кнопку

@@ -4,10 +4,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
-  <title>&#xd1;&#xee;&#xe7;&#xe4;&#xe0;&#xed;&#xe8;&#xe5;
-  &#xf2;&#xe0;&#xe1;&#xeb;&#xe8;&#xf6;&#xfb;</title>
-  <style type="text/css">
-  </style>
+  <title>Создание таблицы
+</title>
   <meta name="generator" content="amaya 8.5, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>

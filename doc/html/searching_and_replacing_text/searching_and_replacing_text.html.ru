@@ -5,11 +5,8 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
   <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
-  <title>&#xcf;&#xee;&#xe8;&#xf1;&#xea; &#xe8;
-  &#xe7;&#xe0;&#xec;&#xe5;&#xf9;&#xe5;&#xed;&#xe8;&#xe5;
-  &#xf2;&#xe5;&#xea;&#xf1;&#xf2;&#xe0;</title>
-  <style type="text/css">
-  </style>
+  <title>Поиск и замещение текста
+</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 

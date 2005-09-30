@@ -3,13 +3,10 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
-  <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
-  <title>&#xce;&#xe1;&#xed;&#xee;&#xe2;&#xeb;&#xe5;&#xed;&#xe8;&#xe5;
-  (&#xef;&#xe5;&#xf0;&#xe5;&#xe7;&#xe0;&#xe3;&#xf0;&#xf3;&#xe7;&#xea;&#xe0;)
-  &#xf1;&#xf2;&#xf0;&#xe0;&#xed;&#xe8;&#xf6;&#xfb;</title>
-  <style type="text/css">
- </style>
+  <meta http-equiv="content-type" content="text/html; charset=windows-1251" />
+  <meta name="GENERATOR" content="amaya 9.2.2, see http://www.w3.org/Amaya/"
+  />
+  <title>Обновление (перезагрузка) страницы</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -39,8 +36,7 @@
 <ul>
   <li>Выбрав пункт <strong>Перезагрузить документ</strong> из меню
     <strong>Файл</strong>.</li>
-  <li>Используя ярлык <kbd>Alt r</kbd> в Unix и <kbd>Ctrl r</kbd> в
-  Windows.</li>
+  <li>Используя ярлык <kbd>Ctrl r</kbd> .</li>
   <li>Щёлкнув по кнопке <strong>Обновить</strong> <img
     src="../../images/Reload.gif" alt="reload" />, находящейся на панели
     кнопок.</li>

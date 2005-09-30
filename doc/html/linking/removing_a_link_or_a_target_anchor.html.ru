@@ -5,12 +5,8 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
   <meta name="generator" content="amaya 8.5, see http://www.w3.org/Amaya/" />
-  <title>&#xd3;&#xe4;&#xe0;&#xeb;&#xe5;&#xed;&#xe8;&#xe5;
-  &#xf1;&#xf1;&#xfb;&#xeb;&#xea;&#xe8; &#xe8;&#xeb;&#xe8;
-  &#xff;&#xea;&#xee;&#xf0;&#xff; &#xf6;&#xe5;&#xeb;&#xe8;</title>
-  <style type="text/css">
-
-  </style>
+  <title>Удаление ссылки или якоря цели
+</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 

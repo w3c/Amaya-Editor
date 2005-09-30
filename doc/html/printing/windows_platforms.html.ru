@@ -5,8 +5,8 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
   <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
-  <title>&#xcf;&#xe5;&#xf7;&#xe0;&#xf2;&#xfc; &#xed;&#xe0;
-  &#xef;&#xeb;&#xe0;&#xf2;&#xf4;&#xee;&#xf0;&#xec;&#xe0;&#xf5; Windows</title>
+  <title>Печать на платформах Windows
+</title>
   <style type="text/css">
 
  </style>

@@ -4,13 +4,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
-  <title>&#xd0;&#xe5;&#xe4;&#xe0;&#xea;&#xf2;&#xe8;&#xf0;&#xee;&#xe2;&#xe0;&#xed;&#xe8;&#xe5;
-  &#xe0;&#xf2;&#xf0;&#xe8;&#xe1;&#xf3;&#xf2;&#xee;&#xe2;
-  &#xf7;&#xe5;&#xf0;&#xe5;&#xe7; &#xec;&#xe5;&#xed;&#xfe;
-  &#xc0;&#xf2;&#xf0;&#xe8;&#xe1;&#xf3;&#xf2;&#xfb;</title>
-  <style type="text/css">
-
-  </style>
+  <title>Редактирование атрибутов через меню Атрибуты
+</title>
   <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>

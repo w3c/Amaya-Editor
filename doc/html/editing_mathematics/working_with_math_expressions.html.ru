@@ -5,12 +5,8 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
   <meta name="generator" content="amaya 8.5, see http://www.w3.org/Amaya/">
-  <title>&#xd0;&#xe0;&#xe1;&#xee;&#xf2;&#xe0; &#xf1;
-  &#xec;&#xe0;&#xf2;&#xe5;&#xec;&#xe0;&#xf2;&#xe8;&#xf7;&#xe5;&#xf1;&#xea;&#xe8;&#xec;&#xe8;
-  &#xe2;&#xfb;&#xf0;&#xe0;&#xe6;&#xe5;&#xed;&#xe8;&#xff;&#xec;&#xe8;</title>
-  <style type="text/css">
-
-  </style>
+  <title>Работа с математическими выражениями
+</title>
   <link href="../style.css" rel="stylesheet" type="text/css">
 </head>
 

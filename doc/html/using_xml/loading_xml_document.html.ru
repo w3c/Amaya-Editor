@@ -3,8 +3,8 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
   <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
-  <title>&#xc7;&#xe0;&#xe3;&#xf0;&#xf3;&#xe7;&#xea;&#xe0; Xml
-  &#xe4;&#xee;&#xea;&#xf3;&#xec;&#xe5;&#xed;&#xf2;&#xee;&#xe2;</title>
+  <title>Загрузка XML документов
+</title>
   <style type="text/css">
 
   </style>

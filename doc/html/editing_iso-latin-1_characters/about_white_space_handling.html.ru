@@ -5,12 +5,8 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
   <meta name="generator" content="amaya 8.5, see http://www.w3.org/Amaya/" />
-  <title>&#xce;&#xe1; &#xee;&#xe1;&#xf0;&#xe0;&#xe1;&#xee;&#xf2;&#xea;&#xe5;
-  &#xef;&#xf0;&#xee;&#xe1;&#xe5;&#xeb;&#xfc;&#xed;&#xfb;&#xf5;
-  &#xf1;&#xe8;&#xec;&#xe2;&#xee;&#xeb;&#xee;&#xe2;</title>
-  <style type="text/css">
-
-  </style>
+  <title>Об обработке пробельных символов
+</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 

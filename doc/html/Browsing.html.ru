@@ -4,8 +4,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
-  <title>&#xcf;&#xf0;&#xee;&#xf1;&#xec;&#xee;&#xf2;&#xf0; &#xf1;
-  &#xef;&#xee;&#xec;&#xee;&#xf9;&#xfc;&#xfe; Amaya</title>
+  <title>Просмотр с помощью Amaya
+</title>
   <style type="text/css">
   </style>
   <link href="style.css" rel="stylesheet" type="text/css" />

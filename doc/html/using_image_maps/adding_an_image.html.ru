@@ -3,14 +3,10 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
-  <title>&#xc4;&#xee;&#xe1;&#xe0;&#xe2;&#xeb;&#xe5;&#xed;&#xe8;&#xe5;
-  &#xe8;&#xeb;&#xe8; &#xe7;&#xe0;&#xec;&#xe5;&#xf9;&#xe5;&#xed;&#xe8;&#xe5;
-  &#xe8;&#xe7;&#xee;&#xe1;&#xf0;&#xe0;&#xe6;&#xe5;&#xed;&#xe8;&#xff;</title>
-  <style type="text/css">
-
-  </style>
-  <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
+  <meta http-equiv="content-type" content="text/html; charset=windows-1251" />
+  <title>Добавление или замещение изображения</title>
+  <meta name="GENERATOR" content="amaya 9.2.2, see http://www.w3.org/Amaya/"
+  />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -39,11 +35,10 @@
 (img)</strong> в меню <strong>Xhtml</strong>, или щёлкните по кнопке
 <strong>Вставить изображение</strong> <img src="../../images/Image.gif"
 alt="Image button" /> в панели инструментов, или используйте комбинацию
-кнопок (<code>Control-t</code> в Windows, <code>Control-i</code> в Unix).
-Диалоговое окно предложит вам ввести имя файла и альтернативный текст ('ALT'
-text) для выбранного вами изображения. Будьте внимательны: альтернативный
-текст обязателен. Вы должны, в соответствующем поле, ввести некоторый
-текст.</p>
+кнопок (<kbd>Ctrl h Ctrl i</kbd>). Диалоговое окно предложит вам ввести имя
+файла и альтернативный текст ('ALT' text) для выбранного вами изображения.
+Будьте внимательны: альтернативный текст обязателен. Вы должны, в
+соответствующем поле, ввести некоторый текст.</p>
 
 <p>Если изображение уже выбрано (выполните это путём перетаскивания по нему)
 при открытии диалогового окна изображения, выбранное изображение будет

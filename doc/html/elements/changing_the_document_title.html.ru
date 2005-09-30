@@ -5,11 +5,8 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
   <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
-  <title>&#xc8;&#xe7;&#xec;&#xe5;&#xed;&#xe5;&#xed;&#xe8;&#xe5;
-  &#xe7;&#xe0;&#xe3;&#xee;&#xeb;&#xee;&#xe2;&#xea;&#xe0;
-  &#xe4;&#xee;&#xea;&#xf3;&#xec;&#xe5;&#xed;&#xf2;&#xe0;</title>
-  <style type="text/css">
-  </style>
+  <title>Изменение заголовка документа
+</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 

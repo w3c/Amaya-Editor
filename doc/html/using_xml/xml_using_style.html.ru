@@ -3,12 +3,8 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
   <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
-  <title>&#xc8;&#xf1;&#xef;&#xee;&#xeb;&#xfc;&#xe7;&#xee;&#xe2;&#xe0;&#xed;&#xe8;&#xe5;
-  &#xf2;&#xe0;&#xe1;&#xeb;&#xe8;&#xf6;&#xfb;
-  &#xf1;&#xf2;&#xe8;&#xeb;&#xe5;&#xe9; &#xe2; Xml</title>
-  <style type="text/css">
-
-  </style>
+  <title>Использование таблицы стилей в Xml
+</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 

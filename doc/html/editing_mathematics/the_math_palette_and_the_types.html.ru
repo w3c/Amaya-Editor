@@ -1,12 +1,8 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
-  <title>&#xca;&#xed;&#xee;&#xef;&#xea;&#xe0;
-  &#xcc;&#xe0;&#xf2;&#xe5;&#xec;&#xe0;&#xf2;&#xe8;&#xea;&#xe0; &#xe8;
-  &#xec;&#xe5;&#xed;&#xfe;
-  &#xcc;&#xe0;&#xf2;&#xe5;&#xec;&#xe0;&#xf2;&#xe8;&#xea;&#xe0;</title>
-  <style type="text/css">
-  </style>
+  <title>Кнопка Математика и меню Математика
+</title>
   <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/">
   <link href="../style.css" rel="stylesheet" type="text/css">
 </head>
@@ -224,12 +220,6 @@ MathML элемента.</p>
     </math></li>
 </ul>
 
-<p>&#xca;&#xed;&#xee;&#xef;&#xea;&#xe0; &#xe2;
-&#xef;&#xf0;&#xe0;&#xe2;&#xee;&#xec; &#xed;&#xe8;&#xe6;&#xed;&#xe5;&#xec;
-&#xf3;&#xe3;&#xeb;&#xf3; таблицы <strong>Математика</strong> выводит другую
-таблицу из которой вы можете вставлять &#xe2;
-&#xe4;&#xee;&#xea;&#xf3;&#xec;&#xe5;&#xed;&#xf2; математические и греческие
-символы.</p>
 
 <h2>Смотрите также:</h2>
 <ul>

@@ -3,7 +3,7 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <title>Entrer des caracteres ISO-Latin-1 et Unicode dans Amaya</title>
   <style type="text/css">
 .name { background-color : #FFF6C1}</style>
@@ -38,23 +38,18 @@ système.</p>
 <p>Amaya fournit <a href="ShortCuts.html.fr">des raccourcis clavier</a> pour
 certains caractères non disponibles au clavier comme :</p>
 <ul>
-  <li>Pour obtenir un espace non sécable, vous devez taper <code>Control -
-    espace</code>.
+  <li>Pour obtenir un espace non sécable, vous devez taper <kbd>Ctrl
+    espace</kbd>.
     <p>Ce caractère sera <a href="Browsing.html.fr#entite">sauvé comme une
     entité</a> (<code>&amp;nbsp;</code>) et est visualisé dans la vue source
     avec le caractère coloré suivant : <span
     style="color: #008BB2">~</span></p>
   </li>
-  <li>Pour obtenir un &euro; (euro), vous devez taper <code>Alt -
-  e</code>.</li>
-  <li>Pour obtenir un &#x153; (oelig), vous devez taper <code>Control -
-    o</code> puis <code>Control - e</code>.</li>
-  <li>Pour obtenir un &#x152; (OElig), vous devez taper <code>Shift - Control
-    - o</code> puis <code>Shift - Control - e</code>.</li>
-  <li>Pour obtenir un «, vous devez taper <code>Control - &lt;</code> ou
-    <code>Shift</code> - <code>Control - &lt;</code> (cela dépend de votre
-    clavier).</li>
-  <li>Pour obtenir un », vous devez taper <code>Shift - Control - &gt;</code>.
+  <li>Pour obtenir un &euro; (euro), vous devez taper <kbd>Alt \</kbd>
+  .</li>
+  <li>Pour obtenir un «, vous devez taper <kbd>Alt [</kbd> (cela dépend de
+    votre clavier).</li>
+  <li>Pour obtenir un », vous devez taper <kbd>Alt ]</kbd> .
     <p></p>
   </li>
 </ul>

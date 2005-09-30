@@ -5,13 +5,8 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
   <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
-  <title>&#xd3;&#xef;&#xf0;&#xe0;&#xe2;&#xeb;&#xe5;&#xed;&#xe8;&#xe5; SVG
-  &#xe1;&#xe8;&#xe1;&#xeb;&#xe8;&#xee;&#xf2;&#xe5;&#xea;&#xee;&#xe9;</title>
-  <style type="text/css">
-
-
-
-  </style>
+  <title>Управление SVG библиотекой
+</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 

@@ -3,8 +3,9 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 8.3-, see http://www.w3.org/Amaya/" />
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 9.2.2, see http://www.w3.org/Amaya/"
+  />
   <title>Mover áreas de mapas de imagen</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -47,8 +48,8 @@ un mapa de imagen, puedes mover el área a otro lugar de la imagen.</p>
 Estructura</p>
 <ol>
   <li>Elige el comando de menú <strong>Ver &gt; Estructura</strong> (o pulsa
-    <kbd>Alt v</kbd> y a continuación <kbd>Alt s</kbd>). La vista Estructura
-    del documento se mostrará en una nueva ventana.</li>
+    <kbd>Ctrl u Ctrl s</kbd>). La vista Estructura del documento se mostrará
+    en una nueva ventana.</li>
   <li>Edita el atributo <code>coords</code> manualmente. Por ejemplo,
     <code>coords="28,5,55,33"</code>.</li>
   <li>El mapa de imagen se desplazará al valor indicado en la ventana del

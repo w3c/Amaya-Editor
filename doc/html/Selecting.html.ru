@@ -5,7 +5,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
   <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
-  <title>&#xc2;&#xfb;&#xe1;&#xee;&#xf0;</title>
+  <title>Выбор</title>
   <style type="text/css">
 
   </style>

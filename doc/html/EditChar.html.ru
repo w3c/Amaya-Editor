@@ -4,9 +4,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
-  <title>&#xd0;&#xe5;&#xe4;&#xe0;&#xea;&#xf2;&#xe8;&#xf0;&#xee;&#xe2;&#xe0;&#xed;&#xe8;&#xe5;
-  ISO-Latin &#xe8; Unicode
-  &#xf1;&#xe8;&#xec;&#xe2;&#xee;&#xeb;&#xee;&#xe2;</title>
+  <title>Редактирование ISO-Latin и Unicode символов
+</title>
   <style type="text/css">
   </style>
   <link href="style.css" rel="stylesheet" type="text/css" />

@@ -3,9 +3,10 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <title>Insertar imágenes</title>
-  <meta name="GENERATOR"
-  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 9.2.2, see http://www.w3.org/Amaya/"
+  />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -33,11 +34,10 @@
 <p>Para <em>insertar</em> una imagen, elige el comando de menú <strong>XHTML
 &gt; Imagen</strong>, haz clic en el botón <strong>Gráficos</strong> <img
 src="../../images/Image.gif" alt="Botón Gráficos" />, o utiliza el atajo de
-teclado (<code>Control-t</code> en Windows, <code>Control-i</code> en Unix).
-La caja de diálogo que se abre te permite escribir el nombre del archivo y su
-texto aternativo (ALT) de la imagen que quieres insertar. Ten en cuenta que
-el texto alternativo es obligatorio. Debes escribir algo en en campo
-correspondiente.</p>
+teclado (<kbd>Ctrl h Ctrl i</kbd>). La caja de diálogo que se abre te permite
+escribir el nombre del archivo y su texto aternativo (ALT) de la imagen que
+quieres insertar. Ten en cuenta que el texto alternativo es obligatorio.
+Debes escribir algo en en campo correspondiente.</p>
 
 <p>Si está seleccionada una imagen (para seleccionar una imagen, haz clic y
 arrastra el ratón sobre ella), al abrir la caja de diálogo de imagen, la

@@ -4,12 +4,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
-  <title>&#xce; &#xe2;&#xf1;&#xf2;&#xe0;&#xe2;&#xea;&#xe5;
-  &#xfd;&#xeb;&#xe5;&#xec;&#xe5;&#xed;&#xf2;&#xe0;
-  &#xe3;&#xf0;&#xf3;&#xef;&#xef;&#xe8;&#xf0;&#xee;&#xe2;&#xe0;&#xed;&#xe8;&#xff;</title>
-  <style type="text/css">
-
-  </style>
+  <title>О вставке элемента группирования
+</title>
   <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>

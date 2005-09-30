@@ -4,11 +4,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
-  <title>&#xce; &#xf1;&#xeb;&#xe8;&#xff;&#xed;&#xe8;&#xe8;
-  &#xfd;&#xeb;&#xe5;&#xec;&#xe5;&#xed;&#xf2;&#xee;&#xe2;</title>
-  <style type="text/css">
-
-  </style>
+  <title>О слиянии элементов
+</title>
   <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>

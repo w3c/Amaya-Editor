@@ -56,7 +56,7 @@ sélection :</p>
 le corps (<code>body</code>) du document <code>html</code>.</p>
 
 <p>La sélection de <strong>cet élément de structure</strong> (par exemple
-cliquez sur le mot structure, puis pressez <code>F2</code>) donne :</p>
+cliquez sur le mot structure, puis pressez <kbd>F2</kbd>) donne :</p>
 
 <p><samp style="color: #B20000">strong \ p \ div \ body \ html</samp></p>
 
@@ -82,17 +82,16 @@ cliquez sur le mot structure, puis pressez <code>F2</code>) donne :</p>
 
 <p class="ProcedureCaption">Sélectionner un élément de structure</p>
 <ul>
-  <li>Pressez la touche <code>F2</code> pour sélectionner l'élément parent
-    dans la structure du document. Presser cette touche plusieurs fois pour
+  <li>Pressez la touche <kbd>F2</kbd> pour sélectionner l'élément parent dans
+    la structure du document. Presser cette touche plusieurs fois pour
     sélectionner les elements ascendants, et ce jusqu'à la racine.</li>
-  <li>Pressez <code>Control -</code> (touche moins) pour sélectionner le
-    premier élément fils.</li>
-  <li>Pressez <code>Control k</code> pour sélectionner l'élément suivant au
-    même niveau, ou au niveau du parent s'il n'y a pas d'élément suivant pour
+  <li>Pressez <kbd>F5</kbd> pour sélectionner le premier élément fils.</li>
+  <li>Pressez <kbd>F3</kbd> pour sélectionner l'élément suivant au même
+    niveau, ou au niveau du parent s'il n'y a pas d'élément suivant pour
     l'élément courant.</li>
-  <li>Pressez <code>Control j</code> pour sélectionner l'élément précédent au
-    même niveau, ou au niveau du parent s'il n'y a pas d'élément précédent
-    pour l'élément courant.</li>
+  <li>Pressez <kbd>F1</kbd> pour sélectionner l'élément précédent au même
+    niveau, ou au niveau du parent s'il n'y a pas d'élément précédent pour
+    l'élément courant.</li>
 </ul>
 
 <p class="ProcedureCaption">Déplacer le point d'insertion</p>

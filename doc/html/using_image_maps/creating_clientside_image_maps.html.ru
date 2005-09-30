@@ -3,15 +3,11 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
-  <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
-  <title>&#xd1;&#xee;&#xe7;&#xe4;&#xe0;&#xed;&#xe8;&#xe5;
-  &#xea;&#xeb;&#xe8;&#xe5;&#xed;&#xf2;&#xf1;&#xea;&#xee;&#xe3;&#xee;
-  &#xe8;&#xe7;&#xee;&#xe1;&#xf0;&#xe0;&#xe6;&#xe5;&#xed;&#xe8;&#xff;
-  &#xea;&#xe0;&#xf0;&#xf2;&#xfb;</title>
-  <style type="text/css">
-
-  </style>
+  <meta http-equiv="content-type" content="text/html; charset=windows-1251" />
+  <meta name="GENERATOR" content="amaya 9.2.2, see http://www.w3.org/Amaya/"
+  />
+  <title>оздание клиентского изображения карты
+</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -47,8 +43,7 @@
     <p class="ProcedureNote"><strong>Примечание:</strong> Также, вы можете
     вставить изображение, щёлкнув по иконке <img src="../../images/Image.gif"
     alt="Image Button" /> в панели инструментов, или с клавиатуры, используя
-    комбинации кнопок <code>Control + t</code> в Windows или <code>Control +
-    i</code> в Unix.</p>
+    комбинации кнопок <kbd>Ctrl h Ctrl i</kbd> .</p>
     <p></p>
   </li>
   <li>Выберите пункт <strong>Область карты</strong> из меню
@@ -57,8 +52,7 @@
     зависимости от формы области в изображении, которое вы хотите создать.
     Следующая таблица указывает, как определена область в зависимости от
     выбранной вами формы.
-    <p class="ProcedureStep"
-    style="margin-left:.75in;text-indent:0in;">&nbsp;</p>
+    <p class="ProcedureStep" style="margin-left:.75in;text-indent:0in;"> </p>
     <p class="TableTitle" style="margin-left:0in"><strong>Таблица 1:
     Определяемые формы</strong></p>
 
@@ -112,9 +106,9 @@
     на изображение. Введите цель ссылки, связанную с определенной областью,
     или выполните для неё <strong>Просмотр</strong>.
     <p></p>
-    <p><b>Совет:</b>&nbsp;&nbsp;&nbsp;&nbsp; Для просмотра контура каждой
-    существующей области в изображении карты, выберите пункт <strong>Показать
-    области карты</strong> из меню <strong>Вид</strong>.</p>
+    <p><b>Совет:</b>     Для просмотра контура каждой существующей области в
+    изображении карты, выберите пункт <strong>Показать области карты</strong>
+    из меню <strong>Вид</strong>.</p>
   </li>
 </ol>
 </div>

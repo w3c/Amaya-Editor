@@ -5,12 +5,8 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
   <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
-  <title>&#xd1;&#xee;&#xe7;&#xe4;&#xe0;&#xed;&#xe8;&#xe5;
-  &#xee;&#xe1;&#xf9;&#xe5;&#xe3;&#xee; &#xf1;&#xf2;&#xe8;&#xeb;&#xff;
-  &#xe4;&#xeb;&#xff; &#xfd;&#xeb;&#xe5;&#xec;&#xe5;&#xed;&#xf2;&#xe0;
-  &#xe8;&#xeb;&#xe8; &#xea;&#xeb;&#xe0;&#xf1;&#xf1;&#xe0;</title>
-  <style type="text/css">
- </style>
+  <title>Создание общего стиля для элемента или класса
+</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -47,7 +43,7 @@
 <ol>
   <li>Выберите элемент который вы хотите использовать в качестве шаблона. По
     умолчанию, выбрана символьная строка, для выбора вложенного элемента
-    нажмите кнопку <code>F2</code>.
+    нажмите кнопку <kbd>F2</kbd>.
     <p class="StepNote"><strong>Примечание:</strong> Вы должны выбрать только
     один элемент и этот элемент должен иметь атрибут стиля.</p>
   </li>

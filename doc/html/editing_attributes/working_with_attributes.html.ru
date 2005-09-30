@@ -4,10 +4,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
-  <title>&#xd0;&#xe0;&#xe1;&#xee;&#xf2;&#xe0; &#xf1;
-  &#xe0;&#xf2;&#xf0;&#xe8;&#xe1;&#xf3;&#xf2;&#xe0;&#xec;&#xe8;</title>
-  <style type="text/css">
-  </style>
+  <title>Работа с атрибутами
+</title>
   <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>

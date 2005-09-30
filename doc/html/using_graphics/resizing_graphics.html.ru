@@ -3,14 +3,10 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
-  <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
-  <title>&#xc8;&#xe7;&#xec;&#xe5;&#xed;&#xe5;&#xed;&#xe8;&#xe5;
-  &#xf0;&#xe0;&#xe7;&#xec;&#xe5;&#xf0;&#xee;&#xe2;
-  &#xe3;&#xf0;&#xe0;&#xf4;&#xe8;&#xea;&#xe8;</title>
-  <style type="text/css">
-
-  </style>
+  <meta http-equiv="content-type" content="text/html; charset=windows-1251" />
+  <meta name="GENERATOR" content="amaya 9.2.2, see http://www.w3.org/Amaya/"
+  />
+  <title>Изменение размеров графики</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -43,9 +39,9 @@ href="creating_graphics_with_the_palette.html.ru">вновь созданную SVG
 помощью клавиатуры</p>
 <ol>
   <li>Переместите курсор в область графики.</li>
-  <li>Нажмите кнопку <code>Control</code> и правую кнопку мыши. Это вызовет
+  <li>Нажмите кнопку <kbd>Control</kbd> и правую кнопку мыши. Это вызовет
     подсветку области изображения карты.</li>
-  <li>Отпустите кнопку <code>Control</code>, продолжая удерживать нажатой
+  <li>Отпустите кнопку <kbd>Control</kbd>, продолжая удерживать нажатой
     кнопку мыши. Используйте мышь для изменения размеров подсвеченной
   графики.</li>
 </ol>

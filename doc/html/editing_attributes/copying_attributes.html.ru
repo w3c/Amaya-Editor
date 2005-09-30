@@ -5,10 +5,8 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
   <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
-  <title>&#xca;&#xee;&#xef;&#xe8;&#xf0;&#xee;&#xe2;&#xe0;&#xed;&#xe8;&#xe5;
-  &#xe0;&#xf2;&#xf0;&#xe8;&#xe1;&#xf3;&#xf2;&#xee;&#xe2;</title>
-  <style type="text/css">
-  </style>
+  <title>Копирование атрибутов
+</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 

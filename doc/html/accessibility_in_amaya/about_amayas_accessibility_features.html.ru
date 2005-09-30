@@ -4,13 +4,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
-  <title>&#xce;
-  &#xe2;&#xee;&#xe7;&#xec;&#xee;&#xe6;&#xed;&#xee;&#xf1;&#xf2;&#xff;&#xf5;
-  &#xe4;&#xee;&#xf1;&#xf2;&#xf3;&#xef;&#xed;&#xee;&#xf1;&#xf2;&#xe8; &#xe2;
-  Amaya&rsquo;s Accessibility Features</title>
-  <style type="text/css">
-
-  </style>
+  <title>О возможностях доступности в Amaya
+</title>
   <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>

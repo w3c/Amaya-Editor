@@ -4,10 +4,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
-  <title>&#xc4;&#xee;&#xe1;&#xe0;&#xe2;&#xeb;&#xe5;&#xed;&#xe8;&#xe5;
-  &#xed;&#xee;&#xe2;&#xee;&#xe9; &#xf1;&#xf2;&#xf0;&#xee;&#xea;&#xe8;</title>
-  <style type="text/css">
-  </style>
+  <title>Добавление новой строки
+</title>
   <meta name="generator" content="amaya 8.5, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -37,16 +35,16 @@
 <ol>
   <li>Для создания новой строки выше существующей, щёлкните по началу первой
     ячейки в строке и выберите пункт <strong>Вставить строку перед</strong> в
-    подменю <strong>Таблица</strong> (<code>Ctrl t Ctrl i</code>).</li>
+    подменю <strong>Таблица</strong> (<kbd>Ctrl t Ctrl i</kbd>).</li>
   <li>Для создания новой строки ниже существующей, щёлкните по концу
     последней ячейки в строке и выберите пункт <strong>Вставить строку
-    после</strong> в подменю <strong>Таблица</strong> (<code>Ctrl t Ctrl
-    n</code>).</li>
+    после</strong> в подменю <strong>Таблица</strong> (<kbd>Ctrl t Ctrl
+    n</kbd>).</li>
 </ol>
 
 <p>Также, новые строки могут быть добавлены с использованием кнопки
 <strong>Enter</strong>. Когда выбрана вся строка (для этого используйте
-<code>F2</code>), нажмите кнопку
+<kbd>F2</kbd>), нажмите кнопку
 <strong>Enter</strong> для создания новой строки, находящейся после выбранной
 строки.</p>
 
@@ -58,8 +56,8 @@
 <p class="ProcedureCaption">Для выбора строки:</p>
 <ol>
   <li>Используйте пункт <strong>Выбрать строку</strong> в подменю
-    <strong>Таблица</strong> (<code>Ctrl t Ctrl r</code>).</li>
-  <li>Вы можете начать выделение в ячейке. Нажав на кнопку <code>F2</code>)
+    <strong>Таблица</strong> (<kbd>Ctrl t Ctrl r</kbd>).</li>
+  <li>Вы можете начать выделение в ячейке. Нажав на кнопку <kbd>F2</kbd>)
     вы можете расширять выделение на
     окружающие строки.</li>
 </ol>
@@ -70,11 +68,11 @@
   <li>Для вставки строки перед существующей строкой, щёлкните по началу
     существующей строки и вставьте, скопируйте, или вырежьте строку, или
     используйте пункт <strong>Вставить перед</strong> в подменю
-    <strong>Таблица</strong> (<code>Ctrl t Ctrl p</code>).</li>
+    <strong>Таблица</strong> (<kbd>Ctrl t Ctrl p</kbd>).</li>
   <li>Для вставки строки после существующей строки, переместите курсор в
     конец существующей строки и вставьте, скопируйте, или вырежьте строку,
     или используйте пункт <strong>Вставить после</strong> в подменю
-    <strong>Таблица</strong> (<code>Ctrl t Ctrl v</code>).</li>
+    <strong>Таблица</strong> (<kbd>Ctrl t Ctrl v</kbd>).</li>
 </ol>
 
 <p></p>

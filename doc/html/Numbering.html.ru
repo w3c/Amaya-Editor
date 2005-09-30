@@ -4,9 +4,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
-  <title>&#xcd;&#xf3;&#xec;&#xe5;&#xf0;&#xe0;&#xf6;&#xe8;&#xff;
-  &#xf0;&#xe0;&#xe7;&#xe4;&#xe5;&#xeb;&#xee;&#xe2; &#xe8;
-  &#xee;&#xe3;&#xeb;&#xe0;&#xe2;&#xeb;&#xe5;&#xed;&#xe8;&#xff;</title>
+  <title>Нумерация разделов
+</title>
   <style type="text/css">
  </style>
   <link href="style.css" rel="stylesheet" type="text/css" />

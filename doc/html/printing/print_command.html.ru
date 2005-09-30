@@ -5,11 +5,8 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
   <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
-  <title>&#xca;&#xee;&#xec;&#xe0;&#xed;&#xe4;&#xe0;
-  &#xcf;&#xe5;&#xf7;&#xe0;&#xf2;&#xfc;</title>
-  <style type="text/css">
-
-  </style>
+  <title>Команда Печать
+</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 

@@ -5,11 +5,8 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
   <meta name="generator" content="amaya 8.5, see http://www.w3.org/Amaya/" />
-  <title>&#xd1;&#xee;&#xe7;&#xe4;&#xe0;&#xed;&#xe8;&#xe5;
-  &#xe2;&#xed;&#xe5;&#xf8;&#xed;&#xe5;&#xe9;
-  &#xf1;&#xf1;&#xfb;&#xeb;&#xea;&#xe8;</title>
-  <style type="text/css">
-  </style>
+  <title>Создание внешней ссылки
+</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -51,7 +48,7 @@
           <li>Если целевой документ выводится в другом окне Amaya, для
             создания ссылки, щелкните где-нибудь в пределах этого окна.</li>
           <li>Если целевой документ не выводится в другом окне Amaya, нажмите
-            кнопку <code>F2</code> или <code>Delete</code>, или щелкните по
+            кнопку <kbd>F2</kbd> или <kbd>Delete</kbd>, или щелкните по
             той части документа, которая не может быть правильной
             целью.&nbsp; Диалоговое окно выведет запрос относительно
             расположения целевого документа. Для создания ссылки, введите URI

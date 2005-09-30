@@ -4,10 +4,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
-  <title>&#xd3;&#xe4;&#xe0;&#xeb;&#xe5;&#xed;&#xe8;&#xe5;/&#xca;&#xee;&#xef;&#xe8;&#xf0;&#xee;&#xe2;&#xe0;&#xed;&#xe8;&#xe5;/&#xc2;&#xf1;&#xf2;&#xe0;&#xe2;&#xea;&#xe0;
-  &#xf1;&#xf2;&#xee;&#xeb;&#xe1;&#xf6;&#xe0;</title>
-  <style type="text/css">
-  </style>
+  <title>Удаление/Копирование/Вставка столбца
+</title>
   <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -37,11 +35,11 @@
 <p class="ProcedureCaption">Для выбора столбца:</p>
 <ol>
   <li>Используйте пункт <strong>Выбрать столбец</strong> в подменю
-    <strong>Таблица</strong> (<code>Ctrl t Ctrl c</code>).</li>
+    <strong>Таблица</strong> (<kbd>Ctrl t Ctrl c</kbd>).</li>
   <li>Также, вы можете начать выделение начав его в ячейки и расширять его на
     другую ячейку в том же самом столбце (например начать в Ячейка 1.2 и
     закончить в Ячейка 3.2). Amaya переходит на режим выбора столбца. Нажав
-    на кнопку <code>F2</code>) расширяет выбор в столбце и присоединяет две
+    на кнопку <kbd>F2</kbd>) расширяет выбор в столбце и присоединяет две
     целых ячейки (Ячейка 1.2, Ячейка 2.2, Ячейка 3.2).</li>
 </ol>
 
@@ -71,11 +69,11 @@
   <li>Для вставки столбца перед существующим столбцом, щёлкните по началу
     ячейки в существующем столбце и вставьте, скопируйте или вырежьте столбец
     или используйте пункт <strong>Вставить перед</strong> в подменю
-    <strong>Таблица</strong> (<code>Ctrl t Ctrl p</code>).</li>
+    <strong>Таблица</strong> (<kbd>Ctrl t Ctrl p</kbd>).</li>
   <li>Для вставки столбца после существующего столбца, поместите курсор в
     конец ячейки в существующем столбце и вставьте, скопируйте или вырежьте
     столбец или используйте пункт <strong>Вставить после</strong> в подменю
-    <strong>Таблица</strong> (<code>Ctrl t Ctrl v</code>).</li>
+    <strong>Таблица</strong> (<kbd>Ctrl t Ctrl v</kbd>).</li>
 </ol>
 
 <p></p>

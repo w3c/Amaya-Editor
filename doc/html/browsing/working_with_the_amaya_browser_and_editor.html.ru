@@ -5,11 +5,8 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
   <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
-  <title>&#xd0;&#xe0;&#xe1;&#xee;&#xf2;&#xe0; &#xf1;
-  &#xe1;&#xf0;&#xe0;&#xf3;&#xe7;&#xe5;&#xf0;&#xee;&#xec; &#xe8;
-  &#xf0;&#xe5;&#xe4;&#xe0;&#xea;&#xf2;&#xee;&#xf0;&#xee;&#xec; Amaya</title>
-  <style type="text/css">
-  </style>
+  <title>Работа с браузером и редактором Amaya
+</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 

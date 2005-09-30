@@ -3,12 +3,10 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="content-type" content="text/html; charset=windows-1251" />
-  <title>Добавление новых столбцов в таблицу</title>
-  <style type="text/css">
-  </style>
-  <meta name="GENERATOR" content="amaya 9.2.2, see http://www.w3.org/Amaya/"
-  />
+  <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
+  <title>Добавление новых столбцов в таблицу
+</title>
+  <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -44,7 +42,12 @@
 </ol>
 
 <p>Также, новые столбцы в таблицу могут быть добавлены с использованием
-кнопки <strong>Enter</strong>.</p>
+кнопки <strong>Enter</strong>. Когда выбрана вся ячейка (для этого
+используйте кнопки <kbd>F2</kbd>),
+нажмите кнопку <strong>Enter</strong> для создания новой ячейки и связанного
+с ней столбца справа от выбранной ячейки.</p>
+
+<p></p>
 </div>
 </body>
 </html>

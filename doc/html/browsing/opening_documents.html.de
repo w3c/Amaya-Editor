@@ -3,8 +3,9 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="generator" content="amaya 8.2+, see http://www.w3.org/Amaya/" />
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+  <meta name="generator" content="amaya 9.2.2, see http://www.w3.org/Amaya/"
+  />
   <title>Ein Dokument öffnen</title>
   <style type="text/css">
  </style>
@@ -58,8 +59,7 @@ auf einem entfernten Server befinden, auf verschiedene Arten öffnen:</p>
 <ol>
   <li><strong>Öffnen (neues Fenster)</strong> im Menü <strong>Datei</strong>
     wählen. Alternativ kann man auch ein Tastenkürzel verwenden <kbd>Strg o
-    Strg o Str w</kbd> Es wird der Dialog <strong>Öffnen</strong>
-  angezeigt.</li>
+    Str w</kbd> Es wird der Dialog <strong>Öffnen</strong> angezeigt.</li>
   <li>Im Dialog <strong>Öffnen</strong> den vollen Pfadnamen oder den URI des
     gewünschten Dokuments eingeben oder <strong>Durchsuchen</strong> drücken
     um einen Dialog zur Auswahl einer lokalen Datei zu öffnen.</li>
@@ -71,7 +71,7 @@ auf einem entfernten Server befinden, auf verschiedene Arten öffnen:</p>
 <strong>Adresse</strong> zu öffnen:</p>
 <ol>
   <li>Den Dateinamen oder URI markieren.</li>
-  <li>Die Taste <strong>Entf</strong> drücken, den neuen Dateinamen oder URI
+  <li>Die Taste <kbd>Entf</kbd> drücken, den neuen Dateinamen oder URI
     eingeben und die <kbd>Eingabetaste</kbd> drücken.</li>
 </ol>
 </div>

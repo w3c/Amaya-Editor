@@ -5,10 +5,8 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
   <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
-  <title>&#xd3;&#xe4;&#xe0;&#xeb;&#xe5;&#xed;&#xe8;&#xe5;
-  &#xf1;&#xf2;&#xe8;&#xeb;&#xff;</title>
-  <style type="text/css">
-  </style>
+  <title>Удаление стиля
+</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -70,7 +68,7 @@
     <tr>
       <td width="147" valign="top"><p class="TableText">Акцент (em)</p>
       </td>
-      <td valign="top"><p class="TableText"><code>Ctrl i Ctrl e</code></p>
+      <td valign="top"><p class="TableText"><kbd>Ctrl i Ctrl e</kbd></p>
       </td>
       <td valign="top"><img src="../../images/Em.gif" alt="Emphasis button"
       /></td>
@@ -78,7 +76,7 @@
     <tr>
       <td width="147" valign="top"><p class="TableText">Строго</p>
       </td>
-      <td valign="top"><p class="TableText"><code>Ctrl i Ctrl s</code></p>
+      <td valign="top"><p class="TableText"><kbd>Ctrl i Ctrl s</kbd></p>
       </td>
       <td valign="top"><img src="../../images/Strong.gif" alt="Strong button"
         /></td>
@@ -86,14 +84,14 @@
     <tr>
       <td width="147" valign="top"><p class="TableText">Цитировать</p>
       </td>
-      <td valign="top"><p class="TableText"><code>Ctrl i Ctrl w</code></p>
+      <td valign="top"><p class="TableText"><kbd>Ctrl i Ctrl w</kbd></p>
       </td>
       <td></td>
     </tr>
     <tr>
       <td width="147" valign="top"><p class="TableText">Определение (dfn)</p>
       </td>
-      <td valign="top"><p class="TableText"><code>Ctrl i Ctrl x</code></p>
+      <td valign="top"><p class="TableText"><kbd>Ctrl i Ctrl x</kbd></p>
       </td>
       <td></td>
     </tr>
@@ -101,7 +99,7 @@
       <td width="147" valign="top"><p class="TableText">Исходный код
         (Code)</p>
       </td>
-      <td valign="top"><p class="TableText"><code>Ctrl i Ctrl t</code></p>
+      <td valign="top"><p class="TableText"><kbd>Ctrl i Ctrl t</kbd></p>
       </td>
       <td valign="top"><img src="../../images/code.gif" alt="Code button"
       /></td>
@@ -109,49 +107,49 @@
     <tr>
       <td width="147" valign="top"><p class="TableText">Переменная (var)</p>
       </td>
-      <td valign="top"><p class="TableText"><code>Ctrl i Ctrl v</code></p>
+      <td valign="top"><p class="TableText"><kbd>Ctrl i Ctrl v</kbd></p>
       </td>
       <td></td>
     </tr>
     <tr>
       <td width="147" valign="top"><p class="TableText">Пример (samp)</p>
       </td>
-      <td valign="top"><p class="TableText"><code>Ctrl i Ctrl m</code></p>
+      <td valign="top"><p class="TableText"><kbd>Ctrl i Ctrl m</kbd></p>
       </td>
       <td></td>
     </tr>
     <tr>
       <td width="147" valign="top"><p class="TableText">Клавиатура (kbd)</p>
       </td>
-      <td valign="top"><p class="TableText"><code>Ctrl i Ctrl k</code></p>
+      <td valign="top"><p class="TableText"><kbd>Ctrl i Ctrl k</kbd></p>
       </td>
       <td></td>
     </tr>
     <tr>
       <td width="147" valign="top"><p class="TableText">Абревиатура (abbr)</p>
       </td>
-      <td valign="top"><p class="TableText"><code>Ctrl i Ctrl u</code></p>
+      <td valign="top"><p class="TableText"><kbd>Ctrl i Ctrl u</kbd></p>
       </td>
       <td></td>
     </tr>
     <tr>
       <td width="147" valign="top"><p class="TableText">Акроним</p>
       </td>
-      <td valign="top"><p class="TableText"><code>Ctrl i Ctrl y</code></p>
+      <td valign="top"><p class="TableText"><kbd>Ctrl i Ctrl y</kbd></p>
       </td>
       <td></td>
     </tr>
     <tr>
       <td width="147" valign="top"><p class="TableText">Вставка (ins)</p>
       </td>
-      <td valign="top"><p class="TableText"><code>Ctrl i Ctrl i</code></p>
+      <td valign="top"><p class="TableText"><kbd>Ctrl i Ctrl i</kbd></p>
       </td>
       <td></td>
     </tr>
     <tr>
       <td width="147" valign="top"><p class="TableText">Удаление (del)</p>
       </td>
-      <td valign="top"><p class="TableText"><code>Ctrl i Ctrl d</code></p>
+      <td valign="top"><p class="TableText"><kbd>Ctrl i Ctrl d</kbd></p>
       </td>
       <td></td>
     </tr>

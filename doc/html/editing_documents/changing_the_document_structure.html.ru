@@ -4,12 +4,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
-  <title>&#xc8;&#xe7;&#xec;&#xe5;&#xed;&#xe5;&#xed;&#xe8;&#xe5;
-  &#xf1;&#xf2;&#xf0;&#xf3;&#xea;&#xf2;&#xf3;&#xf0;&#xfb;
-  &#xe4;&#xee;&#xea;&#xf3;&#xec;&#xe5;&#xed;&#xf2;&#xe0;</title>
-  <style type="text/css">
-
-  </style>
+  <title>Изменение структуры документа
+</title>
   <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>

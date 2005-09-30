@@ -4,11 +4,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
-  <title>&#xcc;&#xe5;&#xed;&#xfe; &#xd2;&#xe8;&#xef;&#xfb; &#xe8;
-  &#xea;&#xed;&#xee;&#xef;&#xea;&#xe8;</title>
-  <style type="text/css">
-
- </style>
+  <title>Просмотр форм
+</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 

@@ -4,11 +4,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
-  <title>&#xca;&#xee;&#xec;&#xe0;&#xed;&#xe4;&#xe0;
-  &#xcf;&#xf0;&#xe5;&#xee;&#xe1;&#xf0;&#xe0;&#xe7;&#xee;&#xe2;&#xe0;&#xf2;&#xfc;</title>
-  <style type="text/css">
-
-  </style>
+  <title>Команда Преобразовать
+</title>
   <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>

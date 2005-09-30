@@ -4,11 +4,8 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
-  <title>&#xce; &#xf1;&#xf1;&#xfb;&#xeb;&#xea;&#xe0;&#xf5; &#xe2;
-  MathML</title>
-  <style type="text/css">
-
-  </style>
+  <title>О ссылках в MathML
+</title>
   <meta name="generator" content="amaya 8.5, see http://www.w3.org/Amaya/">
   <link href="../style.css" rel="stylesheet" type="text/css">
 </head>

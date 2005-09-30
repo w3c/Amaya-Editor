@@ -3,10 +3,12 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <title>Sonderzeichen eingeben</title>
   <style type="text/css">
   </style>
-  <meta name="generator" content="amaya 8.0, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 9.2.2, see http://www.w3.org/Amaya/"
+  />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -42,11 +44,9 @@ Einige dieser Tastenkürzel sind bereits in der Datei <code>amaya.kb</code>
 <ul>
   <li><kbd>Strg Leertaste</kbd> erzeugt ein "non breaking space" (nbsp). Dies
     wird als Einheit gespeichert.</li>
-  <li><kbd>Alt e</kbd> erzeugt ein &euro; (euro).</li>
-  <li><kbd>Strg o Strg e</kbd> erzeugt ein &#x153; (oelig).</li>
-  <li><kbd>Umsch Strg o Umsch Strg e</kbd> erzeugt ein &#x152; (Oelig).</li>
-  <li><kbd>Alt &lt;</kbd> erzeugt ein « (laquo).</li>
-  <li><kbd>Alt &gt;</kbd> erzeugt ein » (raquo).</li>
+  <li><kbd>Alt \</kbd> erzeugt ein &euro; (euro).</li>
+  <li><kbd>Alt [</kbd> erzeugt ein « (laquo).</li>
+  <li><kbd>Alt ]</kbd> erzeugt ein » (raquo).</li>
 </ul>
 
 <p>Weitere Informationen erhält man in der Beschreibung der beiden Methoden

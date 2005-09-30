@@ -5,9 +5,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
   <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
-  <title>&#xc7;&#xe0;&#xea;&#xf0;&#xfb;&#xf2;&#xfc; &#xe2;&#xe8;&#xe4;</title>
-  <style type="text/css">
-  </style>
+  <title>Закрыть вид</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 

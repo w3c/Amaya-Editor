@@ -4,10 +4,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
-  <title>&#xd0;&#xe0;&#xe1;&#xee;&#xf2;&#xe0; &#xf1;
-  &#xf2;&#xe0;&#xe1;&#xeb;&#xe8;&#xf6;&#xe0;&#xec;&#xe8;</title>
-  <style type="text/css">
-  </style>
+  <title>Работа с таблицами
+</title>
   <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -40,16 +38,16 @@
 <ol>
   <li>Для расширения ячейки на следующую ячейку вправо, выберите пункт
     <strong>Объединить с ячейкой справа</strong> в подменю
-    <strong>Таблица</strong> (<code>Ctrl t Ctrl e</code>).</li>
+    <strong>Таблица</strong> (<kbd>Ctrl t Ctrl e</kbd>).</li>
   <li>Для расширения ячейки на следующую ячейку вниз, выберите пункт
     <strong>Объединить с ячейкой ниже</strong> в подменю
-    <strong>Таблица</strong> (<code>Ctrl t Ctrl j</code>).</li>
+    <strong>Таблица</strong> (<kbd>Ctrl t Ctrl j</kbd>).</li>
   <li>Для сокращения горизонтального расширения ячейки на одну позицию,
     выберите пункт <strong>Сжать горизонтальное расширение</strong> в подменю
-    <strong>Таблица</strong> (<code>Ctrl t Ctrl s</code>).</li>
+    <strong>Таблица</strong> (<kbd>Ctrl t Ctrl s</kbd>).</li>
   <li>Для сокращения вертикального расширения ячейки на одну позицию,
     выберите пункт <strong>Сжать вертикальное расширение</strong> в подменю
-    <strong>Таблица</strong> (<code>Ctrl t Ctrl m</code>).</li>
+    <strong>Таблица</strong> (<kbd>Ctrl t Ctrl m</kbd>).</li>
 </ol>
 
 <p>Расширение ячеек может быть изменено, редактированием <a
@@ -59,7 +57,7 @@ href="../Attributes.html.ru">атрибутов</a> colspan и rowspan.</p>
 
 <p>Многие типы элементов могут быть вставлены в пределах ячейки таблицы. Для
 выхода из таблицы и добавления любого элемент после таблицы, необходимо
-выбрать элемент таблицы (для этого используйте кнопки <code>F2</code>), а
+выбрать элемент таблицы (для этого используйте кнопки <kbd>F2</kbd>), а
 затем нажать кнопку
 <strong>Enter</strong>. Amaya создаст новый параграф после выбранной таблицы.
 Впоследствии, созданный параграф может быть замещён на другой элемент.</p>

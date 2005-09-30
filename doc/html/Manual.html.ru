@@ -3,12 +3,10 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
-  <title>&#xd1;&#xef;&#xf0;&#xe0;&#xe2;&#xee;&#xf7;&#xed;&#xee;&#xe5;
-  &#xf0;&#xf3;&#xea;&#xee;&#xe2;&#xee;&#xe4;&#xf1;&#xf2;&#xe2;&#xee;
-  &#xef;&#xee;&#xeb;&#xfc;&#xe7;&#xee;&#xe2;&#xe0;&#xf2;&#xe5;&#xeb;&#xff;
-  Amaya</title>
-  <meta name="GENERATOR" content="amaya 9.1, see http://www.w3.org/Amaya/" />
+  <meta http-equiv="content-type" content="text/html; charset=windows-1251" />
+  <title>Справочное руководство пользователя Amaya</title>
+  <meta name="GENERATOR" content="amaya 9.2.2, see http://www.w3.org/Amaya/"
+  />
   <link href="style.css" rel="stylesheet" type="text/css" />
   <style type="text/css">
   </style>
@@ -20,7 +18,7 @@
 <div id="page_body">
 <h1 style="text-align : center">Справочное руководство пользователя Amaya</h1>
 
-<h4 style="text-align:center">Версия 8.4 - Февраль 2004<br />
+<h4 style="text-align:center">Версия 8.8 - Февраль 2004<br />
 <img src="../images/amaya.gif" alt="Amaya" /></h4>
 <hr />
 <dl>

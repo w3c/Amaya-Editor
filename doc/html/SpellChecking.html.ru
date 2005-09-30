@@ -5,9 +5,8 @@
 <head>
   <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
-  <title>&#xcf;&#xf0;&#xee;&#xe2;&#xe5;&#xf0;&#xea;&#xe0;
-  &#xef;&#xf0;&#xe0;&#xe2;&#xee;&#xef;&#xe8;&#xf1;&#xe0;&#xed;&#xe8;&#xff;
-  &#xe2; Amaya</title>
+  <title>Проверка правописания в Amaya
+</title>
   <style type="text/css">
 
   </style>

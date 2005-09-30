@@ -4,9 +4,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
-  <title>&#xd1;&#xee;&#xf5;&#xf0;&#xe0;&#xed;&#xe5;&#xed;&#xe8;&#xe5;
-  &#xe4;&#xee;&#xea;&#xf3;&#xec;&#xe5;&#xed;&#xf2;&#xee;&#xe2;
-  &#xea;&#xe0;&#xea; &#xf2;&#xe5;&#xea;&#xf1;&#xf2;</title>
+  <title>Сохранение документов как текст
+</title>
   <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
   <style type="text/css">
 

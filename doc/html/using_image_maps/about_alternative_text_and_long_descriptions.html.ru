@@ -5,13 +5,8 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
   <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
-  <title>&#xce;&#xe1;
-  &#xe0;&#xeb;&#xfc;&#xf2;&#xe5;&#xf0;&#xed;&#xe0;&#xf2;&#xe8;&#xe2;&#xed;&#xee;&#xec;
-  &#xf2;&#xe5;&#xea;&#xf1;&#xf2;&#xe5; &#xe8;
-  &#xe4;&#xeb;&#xe8;&#xed;&#xed;&#xfb;&#xf5;
-  &#xee;&#xef;&#xe8;&#xf1;&#xe0;&#xed;&#xe8;&#xff;&#xf5;</title>
-  <style type="text/css">
-  </style>
+  <title>Об альтернативном тексте и длинных описаниях
+</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 

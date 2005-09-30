@@ -3,11 +3,8 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
   <meta content="amaya 8.5, see http://www.w3.org/Amaya/" />
-  <title>&#xd0;&#xe5;&#xe4;&#xe0;&#xea;&#xf2;&#xe8;&#xf0;&#xee;&#xe2;&#xe0;&#xed;&#xe8;&#xe5;
-  XML &#xe4;&#xee;&#xea;&#xf3;&#xec;&#xe5;&#xed;&#xf2;&#xee;&#xe2;</title>
-  <style type="text/css">
-
-  </style>
+  <title>Редактирование XML документов
+</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 

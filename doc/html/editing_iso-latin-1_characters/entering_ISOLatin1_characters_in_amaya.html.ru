@@ -3,12 +3,10 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
-  <title>&#xc2;&#xe2;&#xee;&#xe4;
-  &#xf1;&#xe8;&#xec;&#xe2;&#xee;&#xeb;&#xee;&#xe2; &#xe2; Amaya</title>
-  <style type="text/css">
-  </style>
-  <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
+  <meta http-equiv="content-type" content="text/html; charset=windows-1251" />
+  <title>Ввод символов в Amaya</title>
+  <meta name="GENERATOR" content="amaya 9.2.2, see http://www.w3.org/Amaya/"
+  />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -39,18 +37,13 @@
 href="../ShortCuts.html.ru">комбинации кнопок</a> к символам которые не могут
 быть введены напрямую с клавиатуры. Некоторые из них предопределены:</p>
 <ul>
-  <li>Для ввода непрерывающего пробела, нажмите <code>Control - space</code>.
-    Этот символ будет сохранён как компонент (<span class="code"><span
+  <li>Для ввода непрерывающего пробела, нажмите <kbd>Ctrl space</kbd>. Этот
+    символ будет сохранён как компонент (<span class="code"><span
     style="font-size: 11.0pt;font-family:&#34;Courier New&#34;;"><code>&amp;nbsp;</code></span></span>).</li>
-  <li>Для ввода символа &euro; (евро), нажмите <code>Alt - e</code>.</li>
-  <li>Для ввода символа &#x153; (oelig), нажмите <code>Control - o</code>
-    затем <code>Control - e</code>.</li>
-  <li>Для ввода символа &#x152; (OElig), нажмите <code>Shift - Control -
-    O</code> затем <code>Shift - Control - e</code>.</li>
-  <li>Для ввода символа «, нажмите также <code>Control - &lt;</code> или
-    <code>Shift - Control - &lt;</code> (это зависит от вашей
-  клавиатуры).</li>
-  <li>Для ввода символа », нажмите <code>Shift - Control - &gt;</code>.</li>
+  <li>Для ввода символа &euro; (евро), нажмите <kbd>Alt \</kbd> .</li>
+  <li>Для ввода символа «, нажмите также <kbd>Alt [</kbd> (это зависит от
+    вашей клавиатуры).</li>
+  <li>Для ввода символа », нажмите <kbd>Alt ]</kbd> .</li>
 </ul>
 
 <p>Смотрите описание стандартного метода ввода: <a

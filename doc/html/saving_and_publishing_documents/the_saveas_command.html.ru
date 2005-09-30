@@ -5,9 +5,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
   <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
-  <title>&#xca;&#xee;&#xec;&#xe0;&#xed;&#xe4;&#xe0;
-  &#xd1;&#xee;&#xf5;&#xf0;&#xe0;&#xed;&#xe8;&#xf2;&#xfc;
-  &#xea;&#xe0;&#xea;</title>
+  <title>Команда Сохранить как</title>
   <style type="text/css">
 
   </style>

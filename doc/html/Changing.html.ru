@@ -5,8 +5,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
   <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
-  <title>&#xd0;&#xe5;&#xf1;&#xf2;&#xf0;&#xf3;&#xea;&#xf2;&#xf3;&#xf0;&#xe8;&#xe7;&#xe0;&#xf6;&#xe8;&#xff;
-  &#xe4;&#xee;&#xea;&#xf3;&#xec;&#xe5;&#xed;&#xf2;&#xee;&#xe2;</title>
+  <title>Реструктуризация документов
 </title>
   <style type="text/css">
 

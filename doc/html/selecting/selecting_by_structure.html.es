@@ -1,9 +1,11 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 8.7, see http://www.w3.org/Amaya/" />
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 9.2.2, see http://www.w3.org/Amaya/"
+  />
   <title>Seleccionar por Estructura</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -62,12 +64,11 @@ utilizando el teclado:</p>
     estructura del documento. Pulsa la tecla varias veces para ir
     seleccionando los elementos de nivel superior (y todo su contenido) hasta
     llegar a la raíz.</li>
-  <li>Pulsa <kbd>Ctrl -</kbd> (tecla menos) para seleccionar un elemento
-  hijo.</li>
-  <li>Pulsa <kbd>Ctrl k</kbd> para seleccionar el siguiente elemento del
-    mismo nivel, o del nivel del elemento padre si no hay después o antes un
+  <li>Pulsa <kbd>F5 </kbd> para seleccionar un elemento hijo.</li>
+  <li>Pulsa <kbd>F3</kbd> para seleccionar el siguiente elemento del mismo
+    nivel, o del nivel del elemento padre si no hay después o antes un
     elemento hijo del nivel actual.</li>
-  <li>Pulsa <kbd>Ctrl j</kbd> para seleccionar el elemento anterior del mismo
+  <li>Pulsa <kbd>F1</kbd> para seleccionar el elemento anterior del mismo
     nivel, o del nivel del elemento padre si no hay antes un elemento hijo
     del nivel actual.</li>
 </ul>

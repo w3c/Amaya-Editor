@@ -1,12 +1,8 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
-  <title>&#xce; &#xe2;&#xe2;&#xee;&#xe4;&#xe5;
-  &#xec;&#xe0;&#xf2;&#xe5;&#xec;&#xe0;&#xf2;&#xe8;&#xf7;&#xe5;&#xf1;&#xea;&#xe8;&#xf5;
-  &#xf1;&#xe8;&#xec;&#xe2;&#xee;&#xeb;&#xee;&#xe2;</title>
-  <style type="text/css">
-
-  </style>
+  <title>О вводе математических символов
+</title>
   <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/">
   <link href="../style.css" rel="stylesheet" type="text/css">
 </head>
@@ -81,7 +77,7 @@ MathML</a>.</p>
 
 <p>При вводе скобок как в следующем выражении:</p>
 
-<p><When entering brackets as in the following expression:></p>
+<p>When entering brackets as in the following expression:</p>
 
 <p><math xmlns="http://www.w3.org/1998/Math/MathML">
   <mi>f</mi>
@@ -112,10 +108,6 @@ MathML</a>.</p>
   </mfrac>
 </math></p>
 
-<p>Вместо этого, выберите из &#xec;&#xe5;&#xed;&#xfe; <strong>XML</strong>,
-подменю <strong>Математика</strong> &#xe8; &#xe2; &#xed;&#xb8;&#xec; пункт
-<strong>Круглые скобки</strong> или выберите опцию Круглые скобки из панели
-Математика для ввода круглых скобок должным образом.</p>
 </div>
 </body>
 </html>

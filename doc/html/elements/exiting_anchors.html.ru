@@ -3,16 +3,10 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
-  <title>&#xc2;&#xfb;&#xf5;&#xee;&#xe4; &#xe8;&#xe7;
-  &#xff;&#xea;&#xee;&#xf0;&#xe5;&#xe9;,
-  &#xf1;&#xf2;&#xe8;&#xeb;&#xe8;&#xe7;&#xee;&#xe2;&#xe0;&#xed;&#xed;&#xfb;&#xf5;
-  &#xf1;&#xe8;&#xec;&#xe2;&#xee;&#xeb;&#xfc;&#xed;&#xfb;&#xf5;
-  &#xf1;&#xf2;&#xf0;&#xee;&#xea; &#xe8;
-  &#xef;&#xf0;&#xee;&#xf7;&#xe5;&#xe5;</title>
-  <style type="text/css">
-  </style>
-  <meta name="generator" content="amaya 8.5, see http://www.w3.org/Amaya/" />
+  <meta http-equiv="content-type" content="text/html; charset=windows-1251" />
+  <title>Выход из якорей, стилизованных символьных строк и прочее</title>
+  <meta name="generator" content="amaya 9.2.2, see http://www.w3.org/Amaya/"
+  />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -47,29 +41,29 @@
 текста:</p>
 <ol>
   <li>Переместите курсор в конец якоря или стилизованного элемента, нажмите
-    кнопку <b>Enter</b> и продолжайте вводить текст после элемента.</li>
+    кнопку <kbd>Enter</kbd> и продолжайте вводить текст после элемента.</li>
   <li>Этот метод может использоваться для ввода простого текста в начало
     блока, начинающего с якорного или стилизованного символа. Переместите
     курсор в начало якорного или стилизованного элемента, нажмите кнопку
-    <b>Enter</b> и продолжайте вводить текст перед элементом.</li>
+    <kbd>Enter</kbd> и продолжайте вводить текст перед элементом.</li>
 </ol>
 
 <p>Чтобы выйти из &lt;pre&gt; или таблицы:</p>
 <ul>
   <li>Когда курсор находится в конце <code>&lt;pre&gt;</code>
-    форматированного, нажатие кнопки <b>Enter</b> создаст новую линию
+    форматированного, нажатие кнопки <kbd>Enter</kbd> создаст новую линию
     <code>&lt;pre&gt;</code>. Для создания другого элемента, скажем
     параграфа, после <code>&lt;pre&gt;</code>, вы можете использовать меню
     <strong>XHTML</strong> и там выбрать тип элемента который вы хотите
     создать.</li>
   <li>Другой путь достижения этого результата: выбрать весь
-    <code>&lt;pre&gt;</code> элемент с помощью кнопки
-    <code>F2</code> и нажать кнопку <b>Enter</b>. Это создаст
-    новый параграф после <code>&lt;pre&gt;</code> элемента.</li>
+    <code>&lt;pre&gt;</code> элемент с помощью кнопки <kbd>F2</kbd> и нажать
+    кнопку <kbd>Enter</kbd>. Это создаст новый параграф после
+    <code>&lt;pre&gt;</code> элемента.</li>
 </ul>
 
 <p>Также, это работает и с таблицами: выберите всю таблицу и нажмите кнопку
-<b>Enter</b> после таблицы, будет создан новый параграф. Вы можете выйти из
+<kbd>Enter</kbd> после таблицы, будет создан новый параграф. Вы можете выйти из
 таблицы нажимая кнопку Enter до тех пор, пока не выйдите из таблицы.</p>
 
 <p></p>

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <title>Ein Bild einfügen</title>
   <style type="text/css">
   </style>
-  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 9.2.2, see http://www.w3.org/Amaya/"
+  />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -47,7 +47,7 @@ unterstützt zur Zeit folgende Bildformate:</p>
   <li>Aus dem Menü <strong>Elemente</strong> den Befehl <strong>Bild</strong>
     wählen, den Knopf <strong>Bild</strong> <img alt="Bild einf?gen"
     src="../../images/image_button.gif" /> der Knopfleiste drücken oder das
-    Tastenkürzel <kbd>Strg t Strg i</kbd> verwenden.</li>
+    Tastenkürzel <kbd>Strg h Strg i</kbd> verwenden.</li>
   <li>Im darauffolgenden Dialog muss der Dateiname und der alternative Text
     eingegeben werden. <strong>Durchsuchen</strong> öffnet einen Dialog um
     die Bilddatei zu suchen.</li>

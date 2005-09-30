@@ -5,12 +5,8 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
   <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
-  <title>&#xca;&#xe0;&#xea; &#xe8;&#xe7;&#xec;&#xe5;&#xed;&#xe8;&#xf2;&#xfc;
-  &#xef;&#xf0;&#xe5;&#xe4;&#xf1;&#xf2;&#xe0;&#xe2;&#xeb;&#xe5;&#xed;&#xe8;&#xe5;
-  SVG &#xe1;&#xe8;&#xe1;&#xeb;&#xe8;&#xee;&#xf2;&#xe5;&#xea;&#xe8;</title>
-  <style type="text/css">
-
-  </style>
+  <title>Как изменить представление SVG библиотеки
+</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 

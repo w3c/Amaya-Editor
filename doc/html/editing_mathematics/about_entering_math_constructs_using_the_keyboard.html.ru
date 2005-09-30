@@ -3,11 +3,8 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
-  <title>&#xce; &#xe2;&#xe2;&#xee;&#xe4;&#xe5;
-  &#xec;&#xe0;&#xf2;&#xe5;&#xec;&#xe0;&#xf2;&#xe8;&#xf7;&#xe5;&#xf1;&#xea;&#xe8;&#xf5;
-  &#xea;&#xee;&#xed;&#xf1;&#xf2;&#xf0;&#xf3;&#xea;&#xf6;&#xe8;&#xe9; &#xf1;
-  &#xef;&#xee;&#xec;&#xee;&#xf9;&#xfc;&#xfe;
-  &#xea;&#xeb;&#xe0;&#xe2;&#xe8;&#xe0;&#xf2;&#xf3;&#xf0;&#xfb;</title>
+  <title>О вводе математических конструкций с помощью клавиатуры
+</title>
   <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/">
   <link href="../style.css" rel="stylesheet" type="text/css">
 </head>

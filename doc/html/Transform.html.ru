@@ -5,10 +5,8 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
   <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
-  <title>&#xc8;&#xf1;&#xef;&#xee;&#xeb;&#xfc;&#xe7;&#xee;&#xe2;&#xe0;&#xed;&#xe8;&#xe5;
-  &#xf4;&#xe0;&#xe9;&#xeb;&#xe0; HTML.trans</title>
-  <style type="text/css">
-  </style>
+  <title>Использование файла HTML.trans
+</title>
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 

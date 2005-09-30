@@ -5,11 +5,8 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
   <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
-  <title>&#xce;
-  &#xf1;&#xe8;&#xed;&#xf5;&#xf0;&#xee;&#xed;&#xe8;&#xe7;&#xe0;&#xf6;&#xe8;&#xe8;
-  &#xe2;&#xe8;&#xe4;&#xee;&#xe2;</title>
-  <style type="text/css">
-  </style>
+  <title>О синхронизации видов
+</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 

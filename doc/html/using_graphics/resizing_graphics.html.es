@@ -3,8 +3,9 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR"
-  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 9.2.2, see http://www.w3.org/Amaya/"
+  />
   <title>Cambiar el tamaño de los gráficos</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -37,11 +38,11 @@ nuevo gráfico SVG</a>, puedes cambiar su tamaño.</p>
 ratón</p>
 <ol>
   <li>Sitúa el cursor en algún lugar del gráfico.</li>
-  <li>Mantén pulsada la tecla <code>Control</code> y haz clic con el botón
+  <li>Mantén pulsada la tecla <kbd>Control</kbd> y haz clic con el botón
     derecho del ratón. Esto seleccionará el gráfico.</li>
-  <li>Suelta la tecla <code>Control</code> pero mantén pulsado el botón
-    derecho del ratón. Utiliza el ratón para mover el gráfico seleccionado al
-    lugar deseado.</li>
+  <li>Suelta la tecla <kbd>Control</kbd> pero mantén pulsado el botón derecho
+    del ratón. Utiliza el ratón para mover el gráfico seleccionado al lugar
+    deseado.</li>
 </ol>
 
 <p class="ProcedureCaption">Para cambiar el tamaño del gráfico editando sus

@@ -3,9 +3,10 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <title>Escribir caracteres</title>
-  <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 9.2.2, see http://www.w3.org/Amaya/"
+  />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -38,17 +39,13 @@ href="../ShortCuts.html.es">Atajos de teclado</a> a los caracteres que no
 están disponibles directamente desde el teclado. Algunos están
 predefinidos:</p>
 <ul>
-  <li>Para escribir un carácter nulo, pulsa <kbd>Control space</kbd>. Este
+  <li>Para escribir un carácter nulo, pulsa <kbd>Ctrl space</kbd>. Este
     carácter se guarda como la entidad de carácter <code>&amp;nbsp;</code> y
     se muestra en la vista código fuente con el símbolo ~</li>
-  <li>Para escribir el símbolo de euro (&euro;), pulsa <kbd>Alt e</kbd>.</li>
-  <li>Para escribir &#x153; (oelig), pulsa <kbd>Control o Control
-  e</kbd>.</li>
-  <li>para escribir &#x152; (OElig), pulsa <kbd>Shift Control O Shift Control
-    e</kbd>.</li>
-  <li>Para escribir «, pulsa <kbd>Control &lt;</kbd> o <kbd>Shift Control
-    &lt;</kbd> (depende del teclado que tengas).</li>
-  <li>Para escribir », pulsa <kbd>Shift Control &gt;</kbd>.</li>
+  <li>Para escribir el símbolo de euro (&euro;), pulsa <kbd>Alt \</kbd>.</li>
+  <li>Para escribir «, pulsa <kbd>Alt [</kbd> (depende del teclado que
+    tengas).</li>
+  <li>Para escribir », pulsa <kbd>Alt ]</kbd>.</li>
 </ul>
 
 <p>Ver también la método de entrada de teclados múltiples: <a

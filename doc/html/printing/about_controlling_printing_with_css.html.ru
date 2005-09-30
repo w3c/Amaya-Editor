@@ -5,12 +5,8 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
   <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
-  <title>&#xce; &#xea;&#xee;&#xed;&#xf2;&#xf0;&#xee;&#xeb;&#xe5; &#xe7;&#xe0;
-  &#xef;&#xe5;&#xf7;&#xe0;&#xf2;&#xfc;&#xfe; &#xf1;
-  &#xef;&#xee;&#xec;&#xee;&#xf9;&#xfc;&#xfe; CSS</title>
-  <style type="text/css">
-
-  </style>
+  <title>О контроле за печатью с помощью CSS
+</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 

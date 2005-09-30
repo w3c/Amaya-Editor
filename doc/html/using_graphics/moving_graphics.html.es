@@ -3,8 +3,9 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR"
-  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 9.2.2, see http://www.w3.org/Amaya/"
+  />
   <title>Mover gráficos</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -39,9 +40,9 @@ documento.</p>
 ratón</p>
 <ol>
   <li>Sitúa el cursor en algún lugar del gráfico.</li>
-  <li>Mantén pulsada la tecla <code>Control</code> y haz clic con el ratón.
+  <li>Mantén pulsada la tecla <kbd>Control</kbd> y haz clic con el ratón.
     Esto seleccionará el gráfico.</li>
-  <li>Suelta la tecla <code>Control</code> pero mantén pulsado el botón del
+  <li>Suelta la tecla <kbd>Control</kbd> pero mantén pulsado el botón del
     ratón. Utiliza el ratón para mover el gráfico seleccionado al lugar
     deseado.</li>
 </ol>
@@ -52,7 +53,8 @@ ratón</p>
   <li>Abre el menú <strong>Atributos</strong> y elige el atributo el quieres
     editar.</li>
   <li>En la caja de diálogo, cambia el atributo, haz clic en
-    <strong>Aplicar</strong> y a continuación en <strong>Aceptar</strong>.</li>
+    <strong>Aplicar</strong> y a continuación en
+  <strong>Aceptar</strong>.</li>
 </ol>
 </div>
 </body>

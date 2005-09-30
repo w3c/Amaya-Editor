@@ -4,11 +4,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
-  <title>&#xc4;&#xee;&#xe1;&#xe0;&#xe2;&#xeb;&#xe5;&#xed;&#xe8;&#xe5;
-  &#xed;&#xee;&#xe2;&#xee;&#xe3;&#xee; &#xf2;&#xe5;&#xeb;&#xe0;
-  &#xf2;&#xe0;&#xe1;&#xeb;&#xe8;&#xf6;&#xfb;</title>
-  <style type="text/css">
-  </style>
+  <title>Добавление нового тела таблицы
+</title>
   <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -47,7 +44,7 @@
 
 <p>Также, новое тело таблицы может быть добавлено с использованием кнопки
 <strong>Enter</strong>. Когда выбрано всё тело таблицы (для этого используйте
-<code>F2</code> на Windows и <code>Esc</code> на Linux), нажмите кнопку
+<kbd>F2</kbd>), нажмите кнопку
 <strong>Enter</strong> для создания нового тела таблицы после выбранного тела
 таблицы.</p>
 </div>

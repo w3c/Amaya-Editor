@@ -4,13 +4,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
-  <title>&#xc8;&#xf1;&#xef;&#xee;&#xeb;&#xfc;&#xe7;&#xee;&#xe2;&#xe0;&#xed;&#xe8;&#xe5;
-  &#xf4;&#xf3;&#xed;&#xea;&#xf6;&#xe8;&#xe8;
-  &#xd1;&#xee;&#xe7;&#xe4;&#xe0;&#xf2;&#xfc;
-  &#xea;&#xed;&#xe8;&#xe3;&#xf3;</title>
-  <style type="text/css">
-
-  </style>
+  <title>Использование функции Создать книгу
+</title>
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 

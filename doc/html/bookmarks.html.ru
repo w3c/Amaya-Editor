@@ -4,10 +4,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
-  <title>&#xcf;&#xee;&#xe4;&#xe4;&#xe5;&#xf0;&#xe6;&#xea;&#xe0;
-  &#xe7;&#xe0;&#xea;&#xeb;&#xe0;&#xe4;&#xee;&#xea; &#xe2; Amaya</title>
-  <style type="text/css">
-  </style>
+  <title>Поддержка закладок в Amaya
+</title>
   <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>

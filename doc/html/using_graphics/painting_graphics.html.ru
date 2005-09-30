@@ -3,11 +3,8 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
   <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
-  <title>&#xd0;&#xe0;&#xf1;&#xea;&#xf0;&#xe0;&#xf1;&#xea;&#xe0;
-  &#xe3;&#xf0;&#xe0;&#xf4;&#xe8;&#xea;&#xe8;</title>
-  <style type="text/css">
-
-  </style>
+  <title>Раскраска графики
+</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 

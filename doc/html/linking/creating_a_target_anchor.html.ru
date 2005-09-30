@@ -5,11 +5,8 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
   <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
-  <title>&#xd1;&#xee;&#xe7;&#xe4;&#xe0;&#xed;&#xe8;&#xe5;
-  &#xff;&#xea;&#xee;&#xf0;&#xff; &#xf6;&#xe5;&#xeb;&#xe8;</title>
-  <style type="text/css">
-
-  </style>
+  <title>Создание якоря цели
+</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 

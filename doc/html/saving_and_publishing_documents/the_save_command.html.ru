@@ -3,10 +3,10 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
-  <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
-  <title>&#xca;&#xee;&#xec;&#xe0;&#xed;&#xe4;&#xe0;
-  &#xd1;&#xee;&#xf5;&#xf0;&#xe0;&#xed;&#xe8;&#xf2;&#xfc;</title>
+  <meta http-equiv="content-type" content="text/html; charset=windows-1251" />
+  <meta name="GENERATOR" content="amaya 9.2.2, see http://www.w3.org/Amaya/"
+  />
+  <title>Команда Сохранить</title>
   <style type="text/css">
 
   </style>
@@ -38,10 +38,9 @@
 оригинальное местоположение. Вы можете получить доступ к команде
 <strong>Сохранить</strong> выбрав пункт <strong>Сохранить</strong> из меню
 <strong>Файл</strong>, щёлкнув по кнопке <strong>Сохранить</strong> из панели
-кнопок, или использовать комбинацию кнопок (<code>Control-s</code> в Windows;
-<code>Control-x, Control-s</code> в Unix). Вновь добавленные изображения
-сохраняются в ту же самую директорию автоматически; подтверждение требуется
-только тогда, когда имя документа неизвестно.</p>
+кнопок, или использовать комбинацию кнопок (<kbd>Ctrl s</kbd>). Вновь
+добавленные изображения сохраняются в ту же самую директорию автоматически;
+подтверждение требуется только тогда, когда имя документа неизвестно.</p>
 
 <p>Также, вы можете выбирать документы на серверах, определив имя каталога
 сервера. Это очень полезно при просмотре, но при этом не поддерживается метод
@@ -49,8 +48,8 @@
 документа, он запрашивает вас, использовать ли заданное по умолчанию имя или
 завершить (выполнить) запрос.</p>
 
-<p class="Note"><strong>Примечание</strong>: &nbsp; Для сохранения документа
-в другое место используйте команду <strong>Сохранить как</strong>.</p>
+<p class="Note"><strong>Примечание</strong>:   Для сохранения документа в
+другое место используйте команду <strong>Сохранить как</strong>.</p>
 
 <h2>Смотрите также:</h2>
 <ul>

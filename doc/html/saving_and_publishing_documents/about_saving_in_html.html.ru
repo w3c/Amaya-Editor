@@ -4,8 +4,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
-  <title>&#xce; &#xf1;&#xee;&#xf5;&#xf0;&#xe0;&#xed;&#xe5;&#xed;&#xe8;&#xe8;
-  &#xe2; HTML</title>
+  <title>О сохранении в HTML
+</title>
   <style type="text/css">
 
  </style>

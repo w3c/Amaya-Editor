@@ -3,12 +3,8 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
   <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
-  <title>&#xd1;&#xee;&#xe7;&#xe4;&#xe0;&#xed;&#xe8;&#xe5;
-  &#xe3;&#xf0;&#xe0;&#xf4;&#xe8;&#xea;&#xe8; &#xf1;
-  &#xef;&#xee;&#xec;&#xee;&#xf9;&#xfc;&#xfe;
-  &#xf2;&#xe0;&#xe1;&#xeb;&#xe8;&#xf6;&#xfb;</title>
-  <style type="text/css">
-  </style>
+  <title>Создание графики с помощью таблицы
+</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -45,44 +41,44 @@ src="../../images/Graph.gif" alt="Graphics button" />) выводит таблицу,
   <li>Линия в SVG, <code>line</code>, <svg xmlns="http://www.w3.org/2000/svg"
          width="2cm" height="0.6cm">
       <line y1="3px" x1="0px" x2="17px" y2="20px" style="stroke: #B20000"
-            stroke="1"/>
+            stroke-width="1"/>
     </svg>
   </li>
   <li>Прямоугольник в SVG, <code>rec</code> без атрибутов <code>rx</code> или
     <code>ry</code>, <svg xmlns="http://www.w3.org/2000/svg" width="2cm"
          height="0.6cm">
       <rect x="6px" width="22px" height="18px"
-            style="fill: #FFCB69; stroke: #0071FF" stroke="1"/>
+            style="fill: #FFCB69; stroke: #0071FF" stroke-width="1"/>
     </svg>
   </li>
   <li>Прямоугольник с округленными углами в SVG, <code>rect</code>, <svg
          xmlns="http://www.w3.org/2000/svg" width="2cm" height="0.6cm">
-      <rect rx="6px" stroke="1" width="23px" height="18px"
+      <rect rx="6px" stroke-width="1" width="23px" height="18px"
             style="fill: #E5E500; stroke: #4C00E5"/>
     </svg>
   </li>
   <li>Круг в SVG, <code>circle</code>, <svg
          xmlns="http://www.w3.org/2000/svg" width="2cm" height="0.6cm">
       <circle cy="10px" cx="12px" r="10px"
-              style="fill: #C1FFE9; stroke: #FF0000" stroke="1"/>
+              style="fill: #C1FFE9; stroke: #FF0000" stroke-width="1"/>
     </svg>
   </li>
   <li>Эллипс в SVG, <code>ellipse</code>, <svg
          xmlns="http://www.w3.org/2000/svg" width="2cm" height="0.6cm">
       <ellipse cy="10px" cx="20px" rx="15px" ry="10px" style="fill: #B795FF"
-            stroke="1"/>
+            stroke-width="1"/>
     </svg>
   </li>
   <li>Ломаная линия в SVG, <code>polyline</code>,<svg
          xmlns="http://www.w3.org/2000/svg" width="2cm" height="0.6cm">
       <polyline points="0,16 19,0 33,16 51,6" transform="translate(4,0)"
-                stroke="1" style="stroke: #0000B2; fill: #FFA069"/>
+                stroke-width="1" style="stroke: #0000B2; fill: #FFA069"/>
     </svg>
   </li>
   <li>Многоугольник в SVG, <code>polygon</code>, <svg
          xmlns="http://www.w3.org/2000/svg" width="2cm" height="0.7cm">
       <polygon points="0,16 13,0 26,12 43,4 44,16 15,16 12,11"
-               transform="translate(2,0)" stroke="1"
+               transform="translate(2,0)" stroke-width="1"
                style="fill: #C8FF95; stroke: #000000"/>
     </svg>
   </li>
@@ -105,7 +101,7 @@ src="../../images/Graph.gif" alt="Graphics button" />) выводит таблицу,
   <li>Вложенный HTML фрагмент в SVG, <code>foreignObject</code>,<svg
          xmlns="http://www.w3.org/2000/svg" width="6cm" height="45px">
       <rect y="0" x="27px" width="140px" height="45px" style="fill: #C1FFFF"
-            stroke="1"/>
+            stroke-width="1"/>
       <foreignObject width="140px" y="0" x="20px">
 
         <div xmlns="http://www.w3.org/1999/xhtml">

@@ -3,13 +3,10 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
-  <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
-  <title>&#xcf;&#xe5;&#xf0;&#xe5;&#xec;&#xe5;&#xf9;&#xe5;&#xed;&#xe8;&#xe5;
-  &#xe3;&#xf0;&#xe0;&#xf4;&#xe8;&#xea;&#xe8;</title>
-  <style type="text/css">
-
- </style>
+  <meta http-equiv="content-type" content="text/html; charset=windows-1251" />
+  <meta name="GENERATOR" content="amaya 9.2.2, see http://www.w3.org/Amaya/"
+  />
+  <title>Перемещение графики</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -43,9 +40,9 @@ href="creating_graphics_with_the_palette.html.ru">вновь созданную SVG
 клавиатуры</p>
 <ol>
   <li>Переместите курсор в область графики.</li>
-  <li>Нажмите кнопку <code>Control</code> и левую кнопку мыши. Это вызовет
+  <li>Нажмите кнопку <kbd>Control</kbd> и левую кнопку мыши. Это вызовет
     подсветку области изображения карты.</li>
-  <li>Отпустите кнопку <code>Control</code>, продолжая удерживать нажатой
+  <li>Отпустите кнопку <kbd>Control</kbd>, продолжая удерживать нажатой
     кнопку мыши. Используйте мышь для перемещения подсвеченной графики в её
     новое местоположение.</li>
 </ol>

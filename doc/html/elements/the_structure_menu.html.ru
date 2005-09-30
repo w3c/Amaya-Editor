@@ -5,10 +5,8 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
   <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
-  <title>&#xcc;&#xe5;&#xed;&#xfe;
-  &#xd1;&#xf2;&#xf0;&#xf3;&#xea;&#xf2;&#xf3;&#xf0;&#xe0;</title>
-  <style type="text/css">
-  </style>
+  <title>Меню Структура
+</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 

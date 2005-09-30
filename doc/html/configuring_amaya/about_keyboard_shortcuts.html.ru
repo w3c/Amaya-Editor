@@ -4,14 +4,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
-  <title>&#xce; &#xff;&#xf0;&#xeb;&#xfb;&#xea;&#xe0;&#xf5;
-  &#xea;&#xee;&#xec;&#xe1;&#xe8;&#xed;&#xe0;&#xf6;&#xe8;&#xe9;
-  &#xea;&#xed;&#xee;&#xef;&#xee;&#xea;</title>
-  <style type="text/css">
-
-
-
-  </style>
+  <title>О ярлыках комбинаций кнопок
+</title>
   <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>

@@ -5,9 +5,8 @@
 <head>
   <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
-  <title>&#xca;&#xe0;&#xf1;&#xea;&#xe0;&#xe4;&#xed;&#xfb;&#xe5;
-  &#xf2;&#xe0;&#xe1;&#xeb;&#xe8;&#xf6;&#xfb;
-  &#xf1;&#xf2;&#xe8;&#xeb;&#xe5;&#xe9;</title>
+  <title>Каскадные таблицы стилей
+</title>
   <style type="text/css">
 
   </style>

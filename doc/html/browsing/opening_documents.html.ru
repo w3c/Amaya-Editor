@@ -3,12 +3,10 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
-  <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
-  <title>&#xce;&#xf2;&#xea;&#xf0;&#xfb;&#xf2;&#xe8;&#xe5;
-  &#xe4;&#xee;&#xea;&#xf3;&#xec;&#xe5;&#xed;&#xf2;&#xee;&#xe2;</title>
-  <style type="text/css">
- </style>
+  <meta http-equiv="content-type" content="text/html; charset=windows-1251" />
+  <meta name="GENERATOR" content="amaya 9.2.2, see http://www.w3.org/Amaya/"
+  />
+  <title>Открытие документов</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -87,7 +85,7 @@
     <p></p>
   </li>
   <li>Нажмите кнопку <strong>Удалить</strong>, или введите имя файла или URI
-    файла который вы хотите открыть и нажмите <strong>ENTER</strong>.</li>
+    файла который вы хотите открыть и нажмите <kbd>Enter</kbd>.</li>
 </ol>
 </div>
 </body>

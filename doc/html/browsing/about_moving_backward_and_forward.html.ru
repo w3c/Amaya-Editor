@@ -4,15 +4,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="content-type" content="text/html; charset=windows-1251" />
-  <title>О перемещении Назад и Вперёд</title>
-  <style type="text/css">
-  </style>
+  <title>О перемещении Назад и Вперёд
+</title>
   <meta name="GENERATOR" content="amaya 9.2.2, see http://www.w3.org/Amaya/"
   />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="ru" lang="ru">
+<body xml:lang="кг" lang="кг">
 
 <table border="0" width="100%" summary="toc">
   <tbody>
@@ -55,26 +54,24 @@
       <td><p>Нажмите <kbd>Alt &lt;-</kbd> для просмотра предыдущей
         страницы.</p>
 
-        <p>Нажмите <kbd>Alt -&gt;</kbd> &#x5b3f;
-        ???&#xc9a4;?&#x7871;?&#x9dfb;.</p>
+        <p>Нажмите <kbd>Alt -&gt;</kbd> для просмотра следующей страницы.</p>
       </td>
     </tr>
     <tr>
-      <td><p>&#x3a6;#xe9ab;? &#xbbae;?</p>
+      <td><p>Панель кнопок</p>
       </td>
-      <td><p>&#x678;&#xcaed;&#x9ce5; ?&#xbbae;? <img alt="Back"
-        src="../../images/Back.gif" /> &#x5b3f;
-        ????&#x5d39;&#x69e0;?&#xea76;?.</p>
+      <td><p>Щёлкните по кнопке <img alt="Back" src="../../images/Back.gif"
+        /> для просмотра предыдущей страницы.</p>
 
-        <p>&#x678;&#xcaed;&#x9ce5; ?&#xbbae;? <img alt="Forward"
-        src="../../images/Forward.gif" /> &#x5b3f; ???&#xc9a4;?&#x6fa2;
-        ?&#xea76;?.</p>
+        <p>Щёлкните по кнопке <img alt="Forward"
+        src="../../images/Forward.gif" /> для просмотра следующей
+        страницы.</p>
       </td>
     </tr>
   </tbody>
 </table>
 
-<p>?</p>
+<p> </p>
 </div>
 </body>
 </html>

@@ -5,8 +5,8 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
   <meta name="generator" content="amaya 8.5, see http://www.w3.org/Amaya/" />
-  <title>&#xca;&#xed;&#xee;&#xef;&#xea;&#xe0; Enter (&#xe8;&#xeb;&#xe8;
-  Return)</title>
+  <title>Кнопка Enter (или Return)
+</title>
   <style type="text/css">
 
 

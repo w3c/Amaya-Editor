@@ -4,8 +4,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="content-type" content="text/html; charset=windows-1251" />
-  <title>&#xce;&#xf2;&#xea;&#xf0;&#xfb;&#xf2;&#xfc; &#xe2;&#xe8;&#xe4;</title>
-  <meta name="GENERATOR" content="amaya 9.1.4, see http://www.w3.org/Amaya/"
+  <title>Открыть вид</title>
+  <meta name="GENERATOR" content="amaya 9.2.2, see http://www.w3.org/Amaya/"
   />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -65,7 +65,7 @@
           </td>
           <td
           style="border:none; border-bottom:solid .5pt; padding:0in 5.4pt 0in 5.4pt"><p
-            class="TableText"><code>Ctrl v Ctrl s</code></p>
+            class="TableText"><code>Ctrl u Ctrl s</code></p>
           </td>
         </tr>
         <tr>
@@ -75,7 +75,7 @@
           </td>
           <td
           style="border:none; border-bottom:solid .5pt; padding:0in 5.4pt 0in 5.4pt"><p
-            class="TableText"><code>Ctrl v Ctrl a</code></p>
+            class="TableText"><code>Ctrl u Ctrl a</code></p>
           </td>
         </tr>
         <tr>
@@ -85,7 +85,7 @@
           </td>
           <td
           style="border:none; border-bottom:solid .5pt; padding:0in 5.4pt 0in 5.4pt"><p
-            class="TableText"><code>Ctrl v Ctrl l</code></p>
+            class="TableText"><code>Ctrl u Ctrl l</code></p>
           </td>
         </tr>
         <tr>
@@ -95,7 +95,7 @@
           </td>
           <td
           style="border:none; border-bottom:solid .5pt; padding:0in 5.4pt 0in 5.4pt"><p
-            class="TableText"><code>Ctrl v Ctrl c</code></p>
+            class="TableText"><code>Ctrl u Ctrl c</code></p>
           </td>
         </tr>
         <tr>
@@ -105,14 +105,11 @@
           </td>
           <td
           style="border:none; border-bottom:solid 1.5pt; padding:0in 5.4pt 0in 5.4pt"><p
-            class="TableText"><code>Ctrl v Ctrl o</code></p>
+            class="TableText"><code>Ctrl u Ctrl o</code></p>
           </td>
         </tr>
       </tbody>
     </table>
-    <p><strong>Примечание:</strong> На Windows платформах <code>Ctrl v</code>
-    замещается на <code>Ctrl u</code> потому что <code>Ctrl v</code>
-    используется для команды <strong>Вставить</strong>.</p>
     <p> </p>
     <p class="Note"><strong>Примечание</strong>: Также, вы можете
     использовать <strong>Показать команды</strong> из меню

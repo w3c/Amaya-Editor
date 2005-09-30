@@ -5,11 +5,8 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
   <meta name="generator" content="amaya 8.5, see http://www.w3.org/Amaya/" />
-  <title>&#xd1;&#xee;&#xe7;&#xe4;&#xe0;&#xed;&#xe8;&#xe5;
-  &#xfd;&#xeb;&#xe5;&#xec;&#xe5;&#xed;&#xf2;&#xe0;
-  &#xd6;&#xe5;&#xeb;&#xfc;</title>
-  <style type="text/css">
-  </style>
+  <title>Создание элемента Цель
+</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 

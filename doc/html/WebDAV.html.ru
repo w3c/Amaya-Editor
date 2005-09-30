@@ -4,8 +4,8 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
-  <title>&#xd4;&#xf3;&#xed;&#xea;&#xf6;&#xe8;&#xff; WebDAV &#xe2;
-  Amaya</title>
+  <title>Фун:ция WebDAV в Amaya
+</title>
   <meta name="generator" content="amaya 8.5, see http://www.w3.org/Amaya/">
   <link href="style.css" rel="stylesheet" type="text/css">
 </head>

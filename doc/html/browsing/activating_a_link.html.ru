@@ -4,8 +4,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
-  <title>&#xc0;&#xea;&#xf2;&#xe8;&#xe2;&#xe0;&#xf6;&#xe8;&#xff;
-  &#xf1;&#xf1;&#xfb;&#xeb;&#xea;&#xe8;</title>
+  <title>Активация ссылки
+</title>
   <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
