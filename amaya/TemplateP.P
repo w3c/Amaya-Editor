@@ -10,6 +10,7 @@ VIEWS
 
 
 #define STRUCT_INDENT 1.5
+#define TAG_Color DarkIndigo1
 #define TAG_Weight Bold
 #define TAG_Visibility 7
 #define TAG_FONTSIZE 12 pt
@@ -21,15 +22,9 @@ VIEWS
 #define INVALID_Weight Normal
 #define INVALID_Visibility 7
 #define INVALID_Font Helvetica
-#ifdef BLACK_WHITE
-#define ATTR_Color Black
-#define ATTRVALUE_Color Black
-#define INVALID_Color Black
-#else
 #define ATTR_Color DarkIndigo1
 #define ATTRVALUE_Color DarkMagenta2
 #define INVALID_Color Red
-#endif
 
 DEFAULT
    BEGIN
