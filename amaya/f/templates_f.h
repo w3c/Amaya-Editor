@@ -13,12 +13,6 @@ extern void ReloadTemplateParams ( char **docURL,
                                    ClickEvent *method );
 extern void InitTemplateList ( void );
 extern void InsertInstanceMeta ( Document newdoc );
-extern void UnlockSubtree ( Document doc,
-                            Element el );
-extern void UnlockContentElements ( Document doc,
-                                    Element el );
-extern void LockFixedAreas ( Document doc,
-                             Element el );
 extern int CreateInstanceOfTemplate ( Document doc,
                                       char *templatename,
                                       char *docname,
@@ -35,12 +29,6 @@ extern void ReloadTemplateParams ( char **docURL,
                                      ClickEvent *method );
 extern void InitTemplateList ( void );
 extern void InsertInstanceMeta ( Document newdoc );
-extern void UnlockSubtree ( Document doc,
-                              Element el );
-extern void UnlockContentElements ( Document doc,
-                                      Element el );
-extern void LockFixedAreas ( Document doc,
-                               Element el );
 extern int CreateInstanceOfTemplate ( Document doc,
                                         char *templatename,
                                         char *docname,

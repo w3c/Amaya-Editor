@@ -21,23 +21,25 @@
 #include "css.h"
 #include "document.h"
 #include "view.h"
-#include "wxdialogapi_f.h"
-#include "appdialogue_wx.h"
-#include "init_f.h"
-#include "parser.h"
-#include "tree.h"
-#include "HTMLimage_f.h"
 #ifdef TEMPLATES
 #include "Template.h"
 #endif /* TEMPLATES */
+
+#include "AHTURLTools_f.h"
+#include "appdialogue_wx.h"
+#include "css_f.h"
+#include "init_f.h"
+#include "parser.h"
+#include "HTMLhistory_f.h"
+#include "HTMLimage_f.h"
 #include "HTMLsave_f.h"
+#include "tree.h"
+#include "wxdialogapi_f.h"
 
 /* content of the attr name of the meta tag defining the doc's destination URL */
 #define META_TEMPLATE_NAME "AMAYA_TEMPLATE"
 /* URL of the script providing templates (for reload) */
 static char   *script_URL;
-#include "init_f.h"
-#include "css_f.h"
 
 
 /*----------------------------------------------------------------------
@@ -51,7 +53,8 @@ void NewTemplate (Document doc, View view)
   templateDir = (char *) TtaGetMemory (MAX_LENGTH);
 
   // Amaya's templates directory (only french yet)
-  sprintf ((char *)templateDir, "%s%ctemplates%cfr%c", TtaGetEnvString ("THOTDIR"),DIR_SEP,DIR_SEP,DIR_SEP);
+  sprintf ((char *)templateDir, "%s%ctemplates%cfr%c",
+           TtaGetEnvString ("THOTDIR"),DIR_SEP,DIR_SEP,DIR_SEP);
   
   char s [MAX_LENGTH];
   
@@ -261,10 +264,9 @@ void InitTemplateList ()
 #endif /* TEMPLATES */
 }
 
-/*-------------------------------------------------
- Insert the meta element identifying the template's
- instance
-----------------------------------------------------*/
+/*----------------------------------------------------------------------
+ Insert the meta element identifying the template's instance
+  ----------------------------------------------------------------------*/
 void InsertInstanceMeta (Document newdoc)
 {
 #ifdef TEMPLATES
@@ -339,125 +341,133 @@ void InsertInstanceMeta (Document newdoc)
 #endif /*TEMPLATES*/
 }
 
-/*-----------------------------------------------
-void UnlockSubtree
-Set read/write access to an element and all his
-children
------------------------------------------------*/
 
-void UnlockSubtree (Document doc, Element el)
-{
-#ifdef TEMPLATES
-  TtaSetAccessRight (el, ReadWrite, doc);
-  TtaNextSibling (&el);
-  if (el != NULL)
-    /* The element has at least one sibling */
-    UnlockSubtree (doc, el);
-#endif /*TEMPLATES*/
-}
-
-void UnlockContentElements (Document doc, Element el)
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+static void UnlockContentElements (Document doc, Element el)
 {
 #ifdef TEMPLATES
   ElementType elType;
 
-  if (el != NULL) 
+  if (el) 
     {
       elType = TtaGetElementType (el);
       if (TtaIsLeaf (elType))
-        {
-          /* It's a content element */
-          TtaSetAccessRight(el, ReadWrite, doc);
-        }
+        /* It's a content element */
+        TtaSetAccessRight (el, ReadWrite, doc);
       else
         {
-          TtaSetAccessRight(el, ReadOnly, doc);
-          UnlockContentElements(doc,TtaGetFirstChild(el));
-        }
-      TtaNextSibling(&el);
-      if (el != NULL)
-        {
-          UnlockContentElements(doc,el);
+          el = TtaGetFirstChild(el);
+          while (el)
+            {
+              UnlockContentElements (doc,el);
+              TtaNextSibling (&el);
+            }
         }
     }
 #endif /*TEMPLATES*/
 }
 
-/*-----------------------------------------------
-void LockFixedAreas
-Parse the subtree from el, set read-only access to
-the element and his child when it's not a free_struct
-element.
-------------------------------------------------*/
-
-void LockFixedAreas (Document doc, Element el)
+/*----------------------------------------------------------------------
+  CheckFreeAreas
+  Parse the subtree from el, set read-write access to the child elements
+  of  free_struct elements.
+  ----------------------------------------------------------------------*/
+static void CheckFreeAreas (Document doc, Element el)
 {
 #ifdef TEMPLATES
-  ElementType elType;
-  char *s;
+  ElementType  elType;
+  char        *s;
   
-  TtaSetAccessRight (el, ReadOnly, doc);
-  elType = TtaGetElementType(el);
-  s = TtaGetSSchemaName (elType.ElSSchema);
-  if (TtaGetFirstChild(el)!=NULL)
+  el = TtaGetFirstChild(el);
+  while (el)
     {
+      elType = TtaGetElementType (el);
+      s = TtaGetSSchemaName (elType.ElSSchema);
       /* The element is not a leaf */
-      if ((strcmp (s,"Template") == 0) &&
-          (elType.ElTypeNum == Template_EL_FREE_STRUCT))
-        {
-          /* The element has a free structure */
-          UnlockSubtree (doc, TtaGetFirstChild(el));
-        }
-      else if ((strcmp (s,"Template") == 0) &&
-               (elType.ElTypeNum == Template_EL_FREE_CONTENT))
-        {
-          /* The element has free content */
-          UnlockContentElements (doc, el);
-        }
-      else 	  
-        {
-          /* The element has a fixed structure */
-          /* So we look for a free structure in
-             the subtree */
-          LockFixedAreas (doc, TtaGetFirstChild (el));
-        }
+      if (!strcmp (s,"Template") &&
+          elType.ElTypeNum == Template_EL_FREE_STRUCT)
+        /* The element has a free structure */
+        TtaSetAccessRight (el, ReadWrite, doc);
+      else if (!strcmp (s,"Template") &&
+               elType.ElTypeNum == Template_EL_FREE_CONTENT)
+        /* The element has free content */
+        UnlockContentElements (doc, el);
+      else
+        /* The element has a fixed structure */
+        /* So we look for a free structure in
+           the subtree */
+        CheckFreeAreas(doc, el);
+      TtaNextSibling (&el);
     }
-  TtaNextSibling (&el);
-  if (el != NULL)
-    /* The element has at least one sibling */
-    LockFixedAreas (doc, el);
 #endif /* TEMPLATES */
 }
 
-/*---------------------------------------------------------------
+/*----------------------------------------------------------------------
   Load a template and create the instance file - update images and 
   stylesheets related to the template.
-  ---------------------------------------------------------------*/
-
+  ----------------------------------------------------------------------*/
 int CreateInstanceOfTemplate (Document doc, char *templatename, char *docname,
-			      DocumentType docType)
+                              DocumentType docType)
 {
 #ifdef TEMPLATES
   Element       el;
+  char                *s;
   int           newdoc, len;
   ThotBool      stopped_flag;
 
-  W3Loading = doc;
-  BackupDocument = doc;
-  TtaExtractName (templatename, DirectoryName, DocumentName);
-  AddURLInCombobox (docname, NULL, TRUE);
-  //  doc = TtaInitDocument("HTML", templatename, 0);
-  newdoc = InitDocAndView (doc,
-                           !DontReplaceOldDoc /* replaceOldDoc */,
-                           InNewWindow, /* inNewWindow */
-                           DocumentName, (DocumentType)docType, 0, FALSE,
-                           L_Other, (ClickEvent)CE_ABSOLUTE); 
+  if (!IsW3Path (docname) && TtaFileExist (docname))
+    {
+      s = (char *)TtaGetMemory (strlen (docname) +
+                                strlen (TtaGetMessage (AMAYA, AM_OVERWRITE_CHECK)) + 2);
+      sprintf (s, TtaGetMessage (AMAYA, AM_OVERWRITE_CHECK), docname);
+      InitConfirm (0, 0, s);
+      TtaFreeMemory (s);
+      if (!UserAnswer)
+        return 0;
+    }
+
+  if (InNewWindow || DontReplaceOldDoc)
+    {
+      newdoc = InitDocAndView (doc,
+                               !DontReplaceOldDoc /* replaceOldDoc */,
+                               InNewWindow, /* inNewWindow */
+                               DocumentName, (DocumentType)docType, 0, FALSE,
+                               L_Other, (ClickEvent)CE_ABSOLUTE);
+      DontReplaceOldDoc = FALSE;
+    }
+  else
+    {
+      /* record the current position in the history */
+      AddDocHistory (doc, DocumentURLs[doc], 
+                     DocumentMeta[doc]->initial_url,
+                     DocumentMeta[doc]->form_data,
+                     DocumentMeta[doc]->method);
+      newdoc = InitDocAndView (doc,
+                               !DontReplaceOldDoc /* replaceOldDoc */,
+                               InNewWindow, /* inNewWindow */
+                               DocumentName, (DocumentType)docType, 0, FALSE,
+                               L_Other, (ClickEvent)CE_ABSOLUTE);
+    }
+
+  //W3Loading = doc;
+  //BackupDocument = doc;
   if (newdoc != 0)
     {
+      TtaExtractName (templatename, DirectoryName, DocumentName);
+      //AddURLInCombobox (docname, NULL, TRUE);
+      //TtaSetTextZone (newdoc, 1, URL_list);
+#ifdef IV
+        if (DocumentMeta[newdoc]->xmlformat && !plainText)
+          StartXmlParser (newdoc,	localdoc, documentname, tempdir,
+                          pathname, xmlDec, withDoctype, FALSE);
+        else
+          StartParser (newdoc, localdoc, documentname, tempdir,
+                       pathname, plainText, FALSE);
+#endif
       LoadDocument (newdoc, templatename, NULL, NULL, CE_ABSOLUTE,
                     "", DocumentName, NULL, FALSE, &DontReplaceOldDoc);
-
-      InsertInstanceMeta(newdoc);
+      InsertInstanceMeta (newdoc);
       
       /* Update URLs of linked documents */
       SetRelativeURLs (newdoc, docname);
@@ -486,24 +496,23 @@ int CreateInstanceOfTemplate (Document doc, char *templatename, char *docname,
         }
       /* check parsing errors */
       CheckParsingErrors (newdoc);
-      
-      /* Set elements access rights
-         according to free_* elements */
+      /* Set elements access rights according to free_* elements */
       el = TtaGetMainRoot (newdoc);
-      LockFixedAreas (newdoc, el);
-
-
+      if (el)
+        {
+          TtaSetAccessRight (el, ReadOnly, newdoc);
+          CheckFreeAreas (newdoc, el);
+        }
     }
    BackupDocument = 0;
    return (newdoc);
 #endif /* TEMPLATES */
 }
 
-/*---------------------------------------------------------------
+/*----------------------------------------------------------------------
   Here we put all the actions to performs when we know a document 
   is an instance
- ---------------------------------------------------------------*/
-
+  ----------------------------------------------------------------------*/
 void LoadInstanceOfTemplate (Document doc)
 {
 #ifdef TEMPLATES
@@ -513,7 +522,9 @@ void LoadInstanceOfTemplate (Document doc)
   PInfoPtr            pInfo;
   CSSInfoPtr css;
 
-  LockFixedAreas (doc, el);
+  el = TtaGetMainRoot (doc);
+  TtaSetAccessRight (el, ReadOnly, doc);
+  CheckFreeAreas (doc, el);
   TtaGetEnvBoolean ("SHOW_TEMPLATES", &show);
   css_url = (char *) TtaGetMemory (MAX_LENGTH);
   sprintf (css_url, "%s%camaya%chide_template.css", TtaGetEnvString ("THOTDIR"),DIR_SEP,DIR_SEP);
@@ -536,11 +547,10 @@ void LoadInstanceOfTemplate (Document doc)
 }
 
 
-/*---------------------------------------------------------------
+/*----------------------------------------------------------------------
   ThotBool isTemplateInstance (Document doc) 
   Return true if the document is an instance 
- ---------------------------------------------------------------*/
-
+  ----------------------------------------------------------------------*/
 ThotBool IsTemplateInstance (Document doc)
 {
 #ifdef TEMPLATES

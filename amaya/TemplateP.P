@@ -8,6 +8,10 @@ VIEWS
    Formatted_view,
    Structure_view merge with Structure_view;
 
+
+#define STRUCT_INDENT 1.5
+#define TAG_Weight Bold
+#define TAG_Visibility 7
 #define TAG_FONTSIZE 12 pt
 #define ATTR_Font Helvetica
 #define ATTR_Style Roman
@@ -28,7 +32,6 @@ VIEWS
 #endif
 
 DEFAULT
-
    BEGIN
    Visibility: Enclosing =;
    VertRef: * . Left ;
@@ -54,68 +57,79 @@ DEFAULT
    Foreground: Enclosing =;
    FillPattern: Enclosing =;
    IN Structure_view BEGIN
-	VertPos: Top = Previous . Bottom;
-	HorizPos: Left = Enclosing . Left;
-	END;
+	    VertPos: Top = Previous . Bottom;
+	    HorizPos: Left = Enclosing . Left;
+	    END;
    END;
 
 BOXES
   AttrName: BEGIN
-        Content: (Text ' ' AttributeName Text '=');
-        Visibility: 0;
-        IN Structure_view BEGIN
-                HorizPos: Left = Previous . Right;
-                VertPos: HRef = Previous . HRef;
-                Size: TAG_FONTSIZE;
-                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
-                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-                END;
-        END;
+    Content: (Text ' ' AttributeName Text '=');
+    Visibility: 0;
+    IN Structure_view BEGIN
+      HorizPos: Left = Previous . Right;
+      VertPos: HRef = Previous . HRef;
+      Size: TAG_FONTSIZE;
+      Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+      Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+ 	    END;
+   END;
 
   AttrValue: BEGIN
-        Content: (AttributeValue);
-        Visibility: 0;
-        IN Structure_view BEGIN
-                HorizPos: Left = Previous . Right;
-                VertPos: HRef = Previous . HRef;
-                Size: TAG_FONTSIZE;
-                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
-                Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
-                END;
-        END;
+    Content: (AttributeValue);
+    Visibility: 0;
+    IN Structure_view BEGIN
+      HorizPos: Left = Previous . Right;
+      VertPos: HRef = Previous . HRef;
+      Size: TAG_FONTSIZE;
+      Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+      Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+      END;
+   END;
 
   AttrNameAndValue: BEGIN
-        Content: (Text ' ' AttributeName Text '=' AttributeValue);
-        Visibility: 0;
-        IN Structure_view BEGIN
-                HorizPos: Left = Previous . Right;
-                VertPos: HRef = Previous . HRef;
-                Size: TAG_FONTSIZE;
-                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
-                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-                END;
-        END;
+    Content: (Text ' ' AttributeName Text '=' AttributeValue);
+    Visibility: 0;
+    IN Structure_view BEGIN
+      HorizPos: Left = Previous . Right;
+      VertPos: HRef = Previous . HRef;
+      Size: TAG_FONTSIZE;
+      Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+      Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+      END;
+    END;
   
  ElementName: BEGIN
-        Content: (ElemName);
-      	Visibility: 0;
-	END;
+   Content: (ElemName);
+   Visibility: 0;
+	 IN Structure_view BEGIN
+		 Size: TAG_FONTSIZE;
+		 Font: TAG_Font;
+		 Weight: TAG_Weight;
+		 Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		 END;
+	 END;
 
  VerticalLine: BEGIN
-	Content: Graphics 'W';
-	Visibility: 0;
-	END;
+	 Content: Graphics 'W';
+	 Visibility: 0;
+	 IN Structure_view BEGIN
+		 VertPos: Top = Creator . Top;
+		 Height: Creator . Height;
+		 Width: 1.1;
+		 LineWeight: 1 px;
+		 Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		 END;
+	 END;
 
-
-
-  UnknownAttrValue: BEGIN
+ UnknownAttrValue: BEGIN
 	Content: (AttributeValue);
 	Visibility: 0;
 	IN Structure_view BEGIN
-                HorizPos: Left = Previous . Right;
-                VertPos: HRef = Previous . HRef;
+    HorizPos: Left = Previous . Right;
+    VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-                Font: INVALID_Font;
+    Font: INVALID_Font;
 		Style: INVALID_Style;
 		Visibility: INVALID_Visibility;
 		Foreground: INVALID_Color;
@@ -142,59 +156,85 @@ RULES
 		Visibility: Enclosing =;
 		END;
 
-
  FREE_STRUCT:	
 		BEGIN	
-    	CreateBefore(ElementName);
-  	  CreateWith(VerticalLine);
-     	Width: auto{Enclosing . Width};
-    	Display: Block;
-    	VertPos: Top = Previous . Bottom;
-        MarginTop: 0;
-    	HorizPos: Left = Enclosing . Left; 
-			BorderTopWidth: 1 pt;
-			BorderLeftWidth: 1 pt;
-			BorderBottomWidth: 1 pt;
-			BorderRightWidth: 1 pt;
-			BorderTopStyle: Dotted;
-			BorderLeftStyle: Dotted;
-			BorderBottomStyle: Dotted;
-			BorderRightStyle: Dotted;
-			BorderTopColor: Red;
-			BorderLeftColor: Red;
-			BorderBottomColor: Red;
-			BorderRightColor: Red;
-
-		END;
+    CreateBefore(ElementName);
+  	CreateWith(VerticalLine);
+    Width: auto{Enclosing . Width};
+    Display: Block;
+    VertPos: Top = Previous . Bottom;
+    MarginTop: 0;
+    HorizPos: Left = Enclosing . Left; 
+		BorderTopWidth: 1 pt;
+		BorderLeftWidth: 1 pt;
+		BorderBottomWidth: 1 pt;
+		BorderRightWidth: 1 pt;
+		BorderTopStyle: Dotted;
+		BorderLeftStyle: Dotted;
+		BorderBottomStyle: Dotted;
+		BorderRightStyle: Dotted;
+		BorderTopColor: Red;
+		BorderLeftColor: Red;
+		BorderBottomColor: Red;
+		BorderRightColor: Red;
+  	IN Structure_view BEGIN
+			BorderTopWidth: 0;
+			BorderLeftWidth: 0;
+			BorderBottomWidth: 0;
+		  BorderRightWidth: 0;
+		  HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	    Width: Enclosing . Width - STRUCT_INDENT;
+		  VertPos: Top = Previous . Bottom;
+		  END;
+	 END;
 
  FREE_CONTENT:	
 		BEGIN	
-			BorderTopWidth: 1 pt;
-			BorderLeftWidth: 1 pt;
-			BorderBottomWidth: 1 pt;
-			BorderRightWidth: 1 pt;
-			BorderTopStyle: Dotted;
-			BorderLeftStyle: Dotted;
-			BorderBottomStyle: Dotted;
-			BorderRightStyle: Dotted;
-			BorderTopColor: Red;
-			BorderLeftColor: Red;
-			BorderBottomColor: Red;
-			BorderRightColor: Red;
+    CreateBefore(ElementName);
+  	CreateWith(VerticalLine);
+    Width: auto{Enclosing . Width};
+    VertPos: Top = Previous . Bottom;
+		BorderTopWidth: 1 pt;
+		BorderLeftWidth: 1 pt;
+		BorderBottomWidth: 1 pt;
+		BorderRightWidth: 1 pt;
+		BorderTopStyle: Dotted;
+		BorderLeftStyle: Dotted;
+		BorderBottomStyle: Dotted;
+		BorderRightStyle: Dotted;
+		BorderTopColor: Red;
+		BorderLeftColor: Red;
+		BorderBottomColor: Red;
+		BorderRightColor: Red;
+  	IN Structure_view BEGIN
+		  BorderTopWidth: 0;
+		  BorderLeftWidth: 0;
+		  BorderBottomWidth: 0;
+		  BorderRightWidth: 0;
+		  HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		  Width: Enclosing . Width - STRUCT_INDENT;
+		  VertPos: Top = Previous . Bottom;
+		  END;
 		END;
 
- PICTURE_UNIT: BEGIN
- 	{Visibility: 0;}
-	Depth: Enclosing - 1;
-        HorizRef: * . Bottom;
-	HorizPos: Left = Enclosing . Left;
-	VertPos: Top = Enclosing . Top;
-	Width: 16 px;
-	Height: 16 px;
-	END;
+ PICTURE_UNIT:
+   BEGIN
+ 	 {Visibility: 0;}
+	 Depth: Enclosing - 1;
+   HorizRef: * . Bottom;
+	 HorizPos: Left = Enclosing . Left;
+	 VertPos: Top = Enclosing . Top;
+	 Width: 16 px;
+	 Height: 16 px;
+	 END;
 
 ATTRIBUTES
 
+  Language:
+	BEGIN
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
+	END;
   xmlid:
 	BEGIN
 	CreateBefore(AttrName);

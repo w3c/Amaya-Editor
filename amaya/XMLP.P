@@ -333,7 +333,7 @@ RULES
 		VertPos: Top = Previous . Bottom;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-	        END;
+	  END;
 	END;
 
    xmlcomment:
