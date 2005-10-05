@@ -3023,11 +3023,15 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
    	               TRUE, (Proc)TextURL, URL_list );
 #endif /* _WX */
 
-  if (DocumentTypes[doc] == docHTML ||
+  if ((DocumentTypes[doc] == docHTML ||
       DocumentTypes[doc] == docSVG ||
       DocumentTypes[doc] == docXml ||
       DocumentTypes[doc] == docMath ||
       DocumentTypes[doc] == docLibrary)
+#ifndef _WX
+      && !replaceOldDoc
+#endif /* _WX */
+      )
     {
       /* init show target menu item */
       TtaGetEnvBoolean ("SHOW_TARGET", &show);
