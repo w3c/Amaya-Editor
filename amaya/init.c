@@ -2857,82 +2857,8 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
         /* if isOpen is true, it means that a new window has been opened for this document 
          * we must initialize each things that must be initialized once for the window */
         {
-#ifdef _WX
-#if 0
-          /* Init panels */
-
-          /* XHTML */
-          TtaSetupPanel( WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_EMPH, TtaGetMessage(AMAYA,AM_BUTTON_ITALICS), (Proc)SetOnOffEmphasis );
-          TtaSetupPanel( WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_STRONG, TtaGetMessage(AMAYA,AM_BUTTON_BOLD), (Proc)SetOnOffStrong );
-          TtaSetupPanel( WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_CODE, TtaGetMessage(AMAYA,AM_BUTTON_CODE), (Proc)SetOnOffCode );
-          TtaSetupPanel( WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_H1, TtaGetMessage(AMAYA,AM_BUTTON_H1), (Proc)CreateHeading1 );
-          TtaSetupPanel( WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_H2, TtaGetMessage(AMAYA,AM_BUTTON_H2), (Proc)CreateHeading2 );
-          TtaSetupPanel( WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_H3, TtaGetMessage(AMAYA,AM_BUTTON_H3), (Proc)CreateHeading3 );
-          TtaSetupPanel( WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_BULLET, TtaGetMessage(AMAYA,AM_BUTTON_UL), (Proc)CreateList );
-          TtaSetupPanel( WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_NL, TtaGetMessage(AMAYA,AM_BUTTON_OL), (Proc)CreateNumberedList );
-          TtaSetupPanel( WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_DL, TtaGetMessage(AMAYA,AM_BUTTON_DL), (Proc)CreateDefinitionList );
-          TtaSetupPanel( WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_IMG, TtaGetMessage(AMAYA,AM_BUTTON_IMG), (Proc)CreateImage );
-          TtaSetupPanel( WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_LINK, TtaGetMessage(AMAYA,AM_BUTTON_LINK), (Proc)CreateOrChangeLink );
-          TtaSetupPanel( WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_TABLE, TtaGetMessage(AMAYA,AM_BUTTON_TABLE), (Proc)CreateTable);
-          TtaRefreshPanelTooltips( window_id );
-#endif /* 0 */
-#endif /* _WX */
-
           /* create the  button bar */
-#ifdef _WX
-#if 0
-          iBack = TtaAddToolBarButton( window_id,
-                                       iconBack,
-                                       TtaGetMessage (AMAYA, AM_BUTTON_PREVIOUS),
-                                       "GotoPreviousHTML",
-                                       (Proc)GotoPreviousHTML,
-                                       FALSE );
-          iForward = TtaAddToolBarButton( window_id,
-                                          iconForward,
-                                          TtaGetMessage (AMAYA, AM_BUTTON_NEXT),
-                                          "GotoNextHTML",
-                                          (Proc)GotoNextHTML,
-                                          FALSE );
-          iReload = TtaAddToolBarButton( window_id,
-                                         iconReload,
-                                         TtaGetMessage (AMAYA, AM_BUTTON_RELOAD),
-                                         "Reload",
-                                         (Proc)Reload,
-                                         TRUE );
-          iStop = TtaAddToolBarButton( window_id,
-                                       stopR,
-                                       TtaGetMessage (AMAYA, AM_BUTTON_INTERRUPT),
-                                       "StopTransfer",
-                                       (Proc)StopTransfer,
-                                       FALSE );
-          iHome = TtaAddToolBarButton( window_id,
-                                       iconHome,
-                                       TtaGetMessage (AMAYA, AM_BUTTON_HOME),
-                                       "GoToHome",
-                                       (Proc)GoToHome,
-                                       TRUE );
-          /* SEPARATOR */
-          TtaAddToolBarButton( window_id, NULL, NULL, NULL, NULL, FALSE );
-          iSave = TtaAddToolBarButton( window_id,
-                                       iconSave,
-                                       TtaGetMessage (AMAYA, AM_BUTTON_SAVE),
-                                       "SaveDocument",
-                                       (Proc)SaveDocument,
-                                       FALSE );
-          iPrint = TtaAddToolBarButton( window_id,
-                                        iconPrint,
-                                        TtaGetMessage (AMAYA, AM_BUTTON_PRINT),
-                                        "SetupAndPrint",
-                                        (Proc)SetupAndPrint,
-                                        TRUE );
-          iFind = TtaAddToolBarButton( window_id,
-                                       iconFind,
-                                       TtaGetMessage (AMAYA, AM_BUTTON_SEARCH),
-                                       "TtcSearchText",
-                                       (Proc)TtcSearchText,
-                                       TRUE );
-#endif /* 0 */
-#else /* _WX */
+#ifndef _WX
           /* use a new window: Create all buttons */
           iStop =TtaAddButton (doc, 1, stopN, (Proc)StopTransfer,"StopTransfer",
                                TtaGetMessage (LIB,TMSG_BUTTON_INTERRUPT),
@@ -3052,13 +2978,6 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 
           /* MapArea menu item */
           TtaSetToggleItem (doc, 1, Views, TShowMapAreas, MapAreas[doc]);
-
-          /* ShowTarget menu item */
-          TtaGetEnvBoolean ("SHOW_TARGET", &show);
-          if (show)
-            ShowTargets (doc, 1);
-          else
-            TtaSetToggleItem (doc, 1, Views, TShowTargets, FALSE);
           TtaSetMenuOff (doc, 1, Attributes_);
 
           /* if we open the new document in a new view, control */
@@ -3079,7 +2998,6 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
             TtaSetMenuOff (doc, 1, Bookmarks_);
 #endif /* BOOKMARKS */   
         } /* isOpen */
-	 
     }
 
   if (!replaceOldDoc || !isOpen)
@@ -3094,53 +3012,30 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 
       /* init MapAreas menu item */
       TtaSetToggleItem (doc, 1, Views, TShowMapAreas, MapAreas[doc]);
+#endif /* _WX */
+    }
+
+  /* store the new document type */
+  DocumentTypes[doc] = docType;
+#if _WX
+  /* now be sure that the urlbar is setup */
+  TtaAddTextZone ( doc, 1, TtaGetMessage (AMAYA,  AM_OPEN_URL),
+   	               TRUE, (Proc)TextURL, URL_list );
+#endif /* _WX */
+
+  if (DocumentTypes[doc] == docHTML ||
+      DocumentTypes[doc] == docSVG ||
+      DocumentTypes[doc] == docXml ||
+      DocumentTypes[doc] == docMath ||
+      DocumentTypes[doc] == docLibrary)
+    {
       /* init show target menu item */
       TtaGetEnvBoolean ("SHOW_TARGET", &show);
       if (show)
         ShowTargets (doc, 1);
       else
         TtaSetToggleItem (doc, 1, Views, TShowTargets, FALSE);
-#endif /* _WX */
     }
-
-#if _WX
-#if 0
-  /* only if it's the first document open in this frame */
-  if (!replaceOldDoc)
-    {
-      /* initialize the enable/disable buttons states */
-      TtaChangeButton (doc, 1, iBack,    iconBackNo,    FALSE);
-      TtaChangeButton (doc, 1, iForward, iconForwardNo, FALSE);
-      TtaChangeButton (doc, 1, iReload,  iconReload,    TRUE);
-      TtaChangeButton (doc, 1, iStop,    stopN,         FALSE);
-      TtaChangeButton (doc, 1, iHome,    iconHome,      TRUE);
-      TtaChangeButton (doc, 1, iSave,    iconSaveNo,    FALSE);
-      TtaChangeButton (doc, 1, iPrint,   iconPrint,     TRUE);
-      TtaChangeButton (doc, 1, iFind,    iconFind,      TRUE);
-    }
-#endif /* 0 */
-  
-  /* now be sure that the urlbar is setup */
-  TtaAddTextZone ( doc, 1, TtaGetMessage (AMAYA,  AM_OPEN_URL),
-   	               TRUE, (Proc)TextURL, URL_list );
-
-#if 0
-  if (!isOpen) /* only if this page is not already open */
-    {
-      /* add the amaya logo after the url bar */
-      strcpy (buffer, "Amaya ");
-      strcat (buffer, TtaGetAppVersion());
-      iLogo = TtaAddToolBarButton( window_id, iconLogo, buffer,
-                                   "HelpLocal", (Proc)HelpLocal, TRUE );
-    }
-  /* force the logo to be enable */
-  TtaChangeButton (doc, 1, iLogo, iconLogo, TRUE);
-#endif /* 0 */
-
-#endif /* _WX */
-
-  /* store the new document type */
-  DocumentTypes[doc] = docType;
   if (reinitialized || !isOpen)
     {
       /* now update menus and buttons according to the document status */
