@@ -151,6 +151,13 @@
                           <flag>wxALL|wxEXPAND</flag>
                         </object>
                         <object class="sizeritem">
+                          <object class="wxCheckBox" name="wxID_CHECK_SHOWSHORTCUTS">
+                            <label>*Show all shortcuts*</label>
+                          </object>
+                          <option>1</option>
+                          <flag>wxALL|wxEXPAND</flag>
+                        </object>
+                        <object class="sizeritem">
                           <object class="wxCheckBox" name="wxID_CHECK_SHOWTEMPLATES">
                             <label>*Show template's presentation*</label>
                           </object>
@@ -200,7 +207,7 @@
                       <object class="wxRadioBox" name="wxID_RADIO_OPENLOC">
                         <label>*Ouvrir les nouveaux documents dans*</label>
                         <content>
-                          <item>*A la place</item>
+                          <item>*In current display</item>
                           <item>*Nouvel onglet (pas encode disponible sous Mac)</item>
                           <item>*Nouvelle fenetre*</item>
                         </content>
@@ -396,13 +403,36 @@
                 </object>
                 <object class="sizeritem">
                   <object class="wxBoxSizer">
+                    <orient>wxHORIZONTAL</orient>
+                    <object class="sizeritem">
+                      <object class="wxStaticText" name="wxID_LABEL_EXPORTLENGTH">
+                        <label>*Longueur des lignes exportees (0 est mis pour la valeur par defaut)*</label>
+                      </object>
+                      <option>0</option>
+                      <flag>wxALIGN_CENTRE_VERTICAL</flag>
+                    </object>
+                    <object class="spacer">
+                      <size>10,0</size>
+                    </object>
+                    <object class="sizeritem">
+                      <object class="wxSpinCtrl" name="wxID_EXPORTLENGTH">
+                        <min>50</min>
+                      </object>
+                    </object>
+                  </object>
+                  <option>0</option>
+                  <flag>wxALL|wxEXPAND</flag>
+                  <border>10</border>
+                </object>
+                <object class="sizeritem">
+                  <object class="wxBoxSizer">
                     <orient>wxVERTICAL</orient>
                     <object class="sizeritem">
                       <object class="wxStaticText" name="wxID_LABEL_DEFAULTNAME">
                         <label>*Nom par defaut pour les URLs finissant par un /*</label>
                       </object>
                       <option>0</option>
-                      <flag>wxALL|wxEXPAND</flag>
+                      <flag>wxALL</flag>
                     </object>
                     <object class="sizeritem">
                       <object class="wxTextCtrl" name="wxID_VALUE_DEFAULTNAME">

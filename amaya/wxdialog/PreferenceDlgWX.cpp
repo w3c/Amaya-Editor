@@ -77,9 +77,9 @@ PreferenceDlgWX::PreferenceDlgWX( int ref,
 {
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("PreferenceDlgWX"));
   m_UrlList = url_list;
-  wxNotebook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxNotebook);
 
 #ifndef DAV
+  wxNotebook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxNotebook);
   // invalid WebDAV Page
   int page_id = GetPagePosFromXMLID( _T("wxID_PAGE_DAV") );
   if (page_id)
@@ -227,6 +227,7 @@ void PreferenceDlgWX::SetupLabelDialog_General()
   XRCCTRL(*this, "wxID_CHECK_NOALIASING", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_NOALIASING)) );
   XRCCTRL(*this, "wxID_CHECK_DATE", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_DATE)) );
   XRCCTRL(*this, "wxID_CHECK_SHOWTARGETS", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_SHOW_TARGETS)) );
+  XRCCTRL(*this, "wxID_CHECK_SHOWSHORTCUTS", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_SHOWSHORTCUTS)));
   XRCCTRL(*this, "wxID_CHECK_SHOWTEMPLATES", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_SHOW_TEMPLATES)));
 
   XRCCTRL(*this, "wxID_RADIO_QUICKAXX", wxRadioBox)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_ACCESSKEY)) );
@@ -257,10 +258,10 @@ void PreferenceDlgWX::SetupDialog_General( const Prop_General & prop )
   XRCCTRL(*this, "wxID_CHECK_NOALIASING", wxCheckBox)->SetValue( prop.S_NoAliasing );
   XRCCTRL(*this, "wxID_CHECK_DATE", wxCheckBox)->SetValue( prop.S_DATE );
   XRCCTRL(*this, "wxID_CHECK_SHOWTARGETS", wxCheckBox)->SetValue( prop.S_Targets );
+  XRCCTRL(*this, "wxID_CHECK_SHOWSHORTCUTS", wxCheckBox)->SetValue( prop.S_Shortcuts );
   XRCCTRL(*this, "wxID_CHECK_SHOWTEMPLATES", wxCheckBox)->SetValue( prop.S_Templates );
 
   XRCCTRL(*this, "wxID_RADIO_QUICKAXX",    wxRadioBox)->SetSelection( prop.AccesskeyMod );
-  
   XRCCTRL(*this, "wxID_CHOICE_LG", wxChoice)->SetStringSelection( TtaConvMessageToWX(prop.DialogueLang) );
 }
 
@@ -280,19 +281,14 @@ Prop_General PreferenceDlgWX::GetValueDialog_General()
   strcpy( prop.HomePage, (const char*)value.mb_str(wxConvUTF8) );
 
   prop.Zoom = XRCCTRL(*this, "wxID_CHARZOOM_VALUE",     wxSpinCtrl)->GetValue();
-#if 0
-  prop.FontMenuSize = 0 /* TODO ? */;
-#endif
-
-
   prop.PasteLineByLine = XRCCTRL(*this, "wxID_CHECK_CCLINE", wxCheckBox)->GetValue();
   prop.S_AutoSave = XRCCTRL(*this, "wxID_CHECK_BACKUP", wxCheckBox)->GetValue();
   prop.S_Geometry = XRCCTRL(*this, "wxID_CHECK_SAVEGEO", wxCheckBox)->GetValue();
   prop.S_NoAliasing = XRCCTRL(*this, "wxID_CHECK_NOALIASING", wxCheckBox)->GetValue();
   prop.S_DATE = XRCCTRL(*this, "wxID_CHECK_DATE", wxCheckBox)->GetValue();
   prop.S_Targets = XRCCTRL(*this, "wxID_CHECK_SHOWTARGETS", wxCheckBox)->GetValue();
+  prop.S_Shortcuts = XRCCTRL(*this, "wxID_CHECK_SHOWSHORTCUTS", wxCheckBox)->GetValue();
   prop.S_Templates = XRCCTRL(*this, "wxID_CHECK_SHOWTEMPLATES", wxCheckBox)->GetValue();
-
   prop.AccesskeyMod = XRCCTRL(*this, "wxID_RADIO_QUICKAXX", wxRadioBox)->GetSelection();
 
   value = XRCCTRL(*this, "wxID_CHOICE_LG", wxChoice)->GetStringSelection();
@@ -420,6 +416,8 @@ void PreferenceDlgWX::SetupLabelDialog_Publish()
   XRCCTRL(*this, "wxID_CHECK_ETAGS", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_USE_ETAGS)) );
   XRCCTRL(*this, "wxID_CHECK_PUTGET", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_VERIFY_PUT)) );
   XRCCTRL(*this, "wxID_CHECK_CRLF", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_EXPORT_CRLF)) );
+  XRCCTRL(*this, "wxID_LABEL_EXPORTLENGTH", wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_EXPORT_LENGTH)) );
+  XRCCTRL(*this, "wxID_EXPORTLENGTH", wxSpinCtrl)->SetRange( 0, 1000 );
 }
 
 /*----------------------------------------------------------------------
@@ -436,6 +434,7 @@ void PreferenceDlgWX::SetupDialog_Publish( const Prop_Publish & prop )
   XRCCTRL(*this, "wxID_CHECK_ETAGS", wxCheckBox)->SetValue( prop.LostUpdateCheck );
   XRCCTRL(*this, "wxID_CHECK_PUTGET", wxCheckBox)->SetValue( prop.VerifyPublish );
   XRCCTRL(*this, "wxID_CHECK_CRLF", wxCheckBox)->SetValue( prop.ExportCRLF );
+  XRCCTRL(*this, "wxID_EXPORTLENGTH", wxSpinCtrl)->SetValue( prop.ExportLength );
 
   XRCCTRL(*this, "wxID_VALUE_DEFAULTNAME", wxTextCtrl)->SetValue( TtaConvMessageToWX(prop.DefaultName) );
   XRCCTRL(*this, "wxID_VALUE_REDIRECT", wxTextCtrl)->SetValue( TtaConvMessageToWX(prop.SafePutRedirect) );
@@ -460,6 +459,7 @@ Prop_Publish PreferenceDlgWX::GetValueDialog_Publish()
   prop.LostUpdateCheck  = XRCCTRL(*this, "wxID_CHECK_ETAGS", wxCheckBox)->GetValue();
   prop.VerifyPublish    = XRCCTRL(*this, "wxID_CHECK_PUTGET", wxCheckBox)->GetValue();
   prop.ExportCRLF       = XRCCTRL(*this, "wxID_CHECK_CRLF", wxCheckBox)->GetValue();
+  prop.ExportLength     = XRCCTRL(*this, "wxID_EXPORTLENGTH", wxSpinCtrl)->GetValue();
 
   value = XRCCTRL(*this, "wxID_VALUE_DEFAULTNAME", wxTextCtrl)->GetValue();
   strcpy( prop.DefaultName, (const char*)value.mb_str(wxConvUTF8) );

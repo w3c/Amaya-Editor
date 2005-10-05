@@ -1569,6 +1569,7 @@ void GetGeneralConf (void)
   TtaGetEnvBoolean ("ISO_DATE", &(GProp_General.S_DATE));
   TtaGetEnvBoolean ("SHOW_TARGET", &(GProp_General.S_Targets));
   TtaGetEnvBoolean ("SAVE_GEOMETRY", &(GProp_General.S_Geometry));
+  TtaGetEnvBoolean ("SHOW_SEQUENCES", &(GProp_General.S_Shortcuts));
   TtaGetEnvBoolean ("SHOW_TEMPLATES", &(GProp_General.S_Templates));
   GetEnvString ("HOME_PAGE", GProp_General.HomePage);
   GetEnvString ("LANG", GProp_General.DialogueLang);
@@ -1870,6 +1871,8 @@ void SetGeneralConf (void)
   if (old != GProp_General.S_Targets)
     UpdateShowTargets ();
 
+  TtaSetEnvBoolean ("SHOW_SEQUENCES", GProp_General.S_Shortcuts, TRUE);
+
   TtaGetEnvBoolean ("SHOW_TEMPLATES", &old);
   TtaSetEnvBoolean ("SHOW_TEMPLATES", GProp_General.S_Templates, TRUE);
   if (old != GProp_General.S_Templates)
@@ -1931,8 +1934,12 @@ void GetDefaultGeneralConf ()
                    GeneralBase + mToggleGeneral, 6);
   GetDefEnvToggle ("FONT_ALIASING", &(GProp_General.S_NoAliasing),
                    GeneralBase + mToggleGeneral, 7);
-  GetDefEnvToggle ("SHOW_TEMPLATES", &(GProp_General.S_Templates),
-                   GeneralBase + mToggleGeneral, 8);
+#ifdef _MACOS
+  GProp_General.S_Shortcuts = FALSE;
+#else /* _MACOS */
+  GProp_General.S_Shortcuts = TRUE;
+#endif /* _MACOS */
+  GProp_General.S_Templates = TRUE;
 #endif /* _WX */
   GetDefEnvString ("HOME_PAGE", GProp_General.HomePage);
   GetDefEnvString ("LANG", GProp_General.DialogueLang);
@@ -2122,7 +2129,8 @@ static void RefreshGeneralMenu ()
 #ifdef _WX
   TtaSetToggleMenu (GeneralBase + mToggleGeneral, 6, GProp_General.S_DATE);
   TtaSetToggleMenu (GeneralBase + mToggleGeneral, 7, GProp_General.S_NoAliasing);
-  TtaSetToggleMenu (GeneralBase + mToggleGeneral, 8, GProp_General.S_Templates);
+  TtaSetToggleMenu (GeneralBase + mToggleGeneral, 8, GProp_General.S_Shortcuts);
+  TtaSetToggleMenu (GeneralBase + mToggleGeneral, 9, GProp_General.S_Templates);
 #endif /* _WX */
   TtaSetTextForm (GeneralBase + mHomePage, GProp_General.HomePage);
   TtaSetTextForm (GeneralBase + mDialogueLang, GProp_General.DialogueLang);
@@ -2214,6 +2222,9 @@ static void GeneralCallbackDialog (int ref, int typedata, char *data)
               GProp_General.S_NoAliasing = !(GProp_General.S_NoAliasing);
               break;
             case 8:
+              GProp_General.S_Shortcuts = !(GProp_General.S_Shortcuts);
+              break;
+            case 9:
               GProp_General.S_Templates = !(GProp_General.S_Templates);
             }
           break;
@@ -2361,6 +2372,7 @@ static void GetPublishConf (void)
   TtaGetEnvBoolean ("ENABLE_LOST_UPDATE_CHECK", &(GProp_Publish.LostUpdateCheck));
   TtaGetEnvBoolean ("VERIFY_PUBLISH", &(GProp_Publish.VerifyPublish));
   TtaGetEnvBoolean ("EXPORT_CRLF", &(GProp_Publish.ExportCRLF));
+  TtaGetEnvInt ("EXPORT_LENGHT", &(GProp_Publish.ExportLength));
   GetEnvString ("DEFAULTNAME", GProp_Publish.DefaultName);
   GetEnvString ("SAFE_PUT_REDIRECT", GProp_Publish.SafePutRedirect);
   GetEnvString ("DOCUMENT_CHARSET", GProp_Publish.CharsetType);
@@ -2377,6 +2389,7 @@ static void SetPublishConf (void)
   TtaSetEnvBoolean ("ENABLE_LOST_UPDATE_CHECK", GProp_Publish.LostUpdateCheck, TRUE);
   TtaSetEnvBoolean ("VERIFY_PUBLISH", GProp_Publish.VerifyPublish, TRUE);
   TtaSetEnvBoolean ("EXPORT_CRLF", GProp_Publish.ExportCRLF, TRUE);
+  TtaSetEnvInt ("EXPORT_LENGHT", GProp_Publish.ExportLength, TRUE);
   TtaSetEnvString ("DEFAULTNAME", GProp_Publish.DefaultName, TRUE);
   TtaSetEnvString ("SAFE_PUT_REDIRECT", GProp_Publish.SafePutRedirect, TRUE);
   TtaSetEnvString ("DOCUMENT_CHARSET", GProp_Publish.CharsetType, TRUE);
@@ -2398,6 +2411,7 @@ static void GetDefaultPublishConf ()
                    PublishBase + mTogglePublish, 2);
   GetDefEnvToggle ("EXPORT_CRLF", &(GProp_Publish.ExportCRLF),
                    PublishBase + mTogglePublish, 3);
+  TtaGetDefEnvInt ("EXPORT_LENGHT", &(GProp_Publish.ExportLength));
   GetDefEnvString ("DEFAULTNAME", GProp_Publish.DefaultName);
   GetDefEnvString ("SAFE_PUT_REDIRECT", GProp_Publish.SafePutRedirect);
   GetDefEnvString ("DOCUMENT_CHARSET", GProp_Publish.CharsetType);
@@ -2567,6 +2581,8 @@ static void RefreshPublishMenu ()
   TtaSetToggleMenu (PublishBase + mTogglePublish, 0, GProp_Publish.UseXHTMLMimeType);
   TtaSetToggleMenu (PublishBase + mTogglePublish, 1, GProp_Publish.LostUpdateCheck);
   TtaSetToggleMenu (PublishBase + mTogglePublish, 2, GProp_Publish.VerifyPublish);
+  if (GProp_Publish.ExportLength != 0)
+    TtaSetNumberForm (PublishBase + mExportLength, GProp_Publish.ExportLength);
   TtaSetTextForm (PublishBase + mDefaultName, GProp_Publish.DefaultName);
   TtaSetTextForm (PublishBase + mSafePutRedirect, GProp_Publish.SafePutRedirect);
 #endif /* _GTK */
@@ -2680,6 +2696,10 @@ static void PublishCallbackDialog (int ref, int typedata, char *data)
               GProp_Publish.VerifyPublish = !(GProp_Publish.VerifyPublish);
               break;
             }
+          break;
+
+        case mExportLength:
+          GProp_Publish.ExportLength = val;
           break;
 
         case mDefaultName:

@@ -1687,11 +1687,16 @@ void InitTranslations (char *appliname)
   int                 mod1, mod2; /* 1er/ 2eme modifieurs : voir THOT_MOD_xx */
   int                 len, max, value;
   FILE               *file;
-  ThotBool            isSpecialKey1, isSpecialKey2, no_sequence = FALSE;
+  ThotBool            isSpecialKey1, isSpecialKey2, show_sequence = FALSE;
 
   /* clean up the access key table */
   memset(DocAccessKey, 0, sizeof(KEY *) * MAX_DOCUMENTS);
-
+#ifdef _MACOS
+  TtaSetEnvBoolean ("SHOW_SEQUENCES", FALSE, FALSE);
+#else /* _MACOS */
+  TtaSetEnvBoolean ("SHOW_SEQUENCES", TRUE, FALSE);
+#endif /* _MACOS */
+  TtaGetEnvBoolean ("SHOW_SEQUENCES", &show_sequence);
   appHome = TtaGetEnvString ("APP_HOME");
   strcpy (name, appliname);
 
@@ -1769,50 +1774,63 @@ void InitTranslations (char *appliname)
               ch[0] = EOS;
               fscanf (file, "%80s", ch);
 
-#ifdef _WX
-#ifdef _MACOS
               /* Register the equiv string */
-              if (no_sequence || ch[0] != ',')
+#ifdef _WX
+              if (show_sequence || ch[0] != ',')
+                {
+#ifdef _MACOS
+                  if (ch[0] != ',')
                   /* it's not a sequence */
                     strcpy (equiv, "\t");
-              if ((mod1 & THOT_MOD_CTRL) && (mod1 & THOT_MOD_ALT))
-                /* specific to MacOS */
-                strcat (equiv, "Ctrl-Alt");
-              else
+                  if ((mod1 & THOT_MOD_CTRL) && (mod1 & THOT_MOD_ALT))
+                    /* specific to MacOS */
+                    strcat (equiv, "Ctrl-Alt");
+                  else
 #else /* _MACOS */
-              /* Register the equiv string */
-              if (!(mod1 & THOT_MOD_CTRL))
-                /* it's not a sequence */
-                strcpy (equiv, "\t");
+                    if (!(mod1 & THOT_MOD_CTRL))
+                      /* it's not a sequence */
+                      strcpy (equiv, "\t");
 #endif /* _MACOS */
-#endif /* _WX */
-                if (mod1 & THOT_MOD_CTRL)
-                  strcat (equiv, "Ctrl");
-                else if (mod1 & THOT_MOD_ALT)
-                  strcat (equiv, "Alt");
+                  if (mod1 & THOT_MOD_CTRL)
+                    strcat (equiv, "Ctrl");
+                  else if (mod1 & THOT_MOD_ALT)
+                    strcat (equiv, "Alt");
+                  if (mod1 & THOT_MOD_SHIFT)
+                    {
+                      if (ch[0] != ',')
+                        strcat (equiv, "-");
+                      else
+                        strcat (equiv, sep);
+                      strcat (equiv, "Shift");
+                    }
+                  if (mod1 != THOT_NO_MOD)
+                    if (ch[0] != ',')
+                      strcat (equiv, "-");
+                    else
+                      strcat (equiv, sep);
+                  
+                  if (transText[0] >= 'a' && transText[0] <= 'z')
+                    SetCapital (transText);
+                  strcat (equiv, transText);
+                }
+#else /* _WX */
+              if (mod1 & THOT_MOD_CTRL)
+                strcat (equiv, "Ctrl");
+              else if (mod1 & THOT_MOD_ALT)
+                strcat (equiv, "Alt");
               if (mod1 & THOT_MOD_SHIFT)
                 {
-#ifdef _WX
-                  if (no_sequence || ch[0] != ',')
-                    strcat (equiv, "-");
-                  else
-#endif /* _WX */
-                    strcat (equiv, sep);
+                  strcat (equiv, sep);
                   strcat (equiv, "Shift");
                 }
               if (mod1 != THOT_NO_MOD)
-#ifdef _WX
-                if (no_sequence || ch[0] != ',')
-                  strcat (equiv, "-");
-                else
-#endif /* _WX */
-                  strcat (equiv, sep);
-
+                strcat (equiv, sep);
               if (transText[0] >= 'a' && transText[0] <= 'z')
                 SetCapital (transText);
               strcat (equiv, transText);
+#endif /* _WX */
 
-              if (!no_sequence && ch[0] == ',')
+              if (ch[0] == ',')
                 {
                   /* the shortcut is a sequence */
                   ch[0] = EOS;
@@ -1841,23 +1859,27 @@ void InitTranslations (char *appliname)
                         transText[i] = EOS;
                     }
                   key2 = SpecialKey (transText, (mod2 & THOT_MOD_SHIFT) != 0, &isSpecialKey2);
-                  /* register the equiv string */
-                  strcat (equiv, " ");
-                  if (mod2 & THOT_MOD_CTRL)
-                    strcat (equiv, "Ctrl");
-                  else if (mod2 & THOT_MOD_ALT)
-                    strcat (equiv, "Alt");
-                  if (mod2 & THOT_MOD_SHIFT)
+                  /* register the second part of the equiv string */
+#ifdef _WX
+                  if (show_sequence)
+#endif /* _WX */
                     {
-                      strcat (equiv, sep);
-                      strcat (equiv, "Shift");
+                      strcat (equiv, " ");
+                      if (mod2 & THOT_MOD_CTRL)
+                        strcat (equiv, "Ctrl");
+                      else if (mod2 & THOT_MOD_ALT)
+                        strcat (equiv, "Alt");
+                      if (mod2 & THOT_MOD_SHIFT)
+                        {
+                          strcat (equiv, sep);
+                          strcat (equiv, "Shift");
+                        }
+                      if (mod2 != THOT_NO_MOD)
+                        strcat (equiv, sep);
+                      if (transText[0] >= 'a' && transText[0] <= 'z')
+                        SetCapital (transText);
+                      strcat (equiv, transText);
                     }
-                  if (mod2 != THOT_NO_MOD)
-                    strcat (equiv, sep);
-                  if (transText[0] >= 'a' && transText[0] <= 'z')
-                    SetCapital (transText);
-                  strcat (equiv, transText);
-
                   /* Get the next word in the line */
                   fscanf (file, "%80s", ch);
                 }
@@ -1918,8 +1940,6 @@ void InitTranslations (char *appliname)
             {
               /* comment line */
               fscanf (file, "%80s", ch);
-              if (!strcasecmp (ch, "no-sequence"))
-                no_sequence = TRUE;
               /* skip this line */
               do
                 i = fgetc (file);

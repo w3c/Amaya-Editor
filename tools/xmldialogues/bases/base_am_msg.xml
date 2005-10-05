@@ -54,8 +54,7 @@
 <message xml:lang="pt">Novo documento XHTML 1.0 Transitional</message>
 <message xml:lang="fi">Uusi XHTML 1.0 Transitional document</message>
 <message xml:lang="tr">Yeni XHTML 1.0 Transitional dosyası</message>
-<message xml:lang="ru">Новый XHTML 1.0 Transitional
-документ...</message>
+<message xml:lang="ru">Новый XHTML 1.0 Transitional документ...</message>
 <message xml:lang="hu">Új XHTML 1.0 átmeneti dokumentum...</message></label>
 <label define="AM_NEW_HTML_STRICT">
 <message xml:lang="en">New XHTML 1.0 Strict document</message>
@@ -66,8 +65,7 @@
 <message xml:lang="pt">Novo documento XHTML 1.0 Strict</message>
 <message xml:lang="fi">Uusi XHTML 1.0 Strict document</message>
 <message xml:lang="tr">Yeni XHTML 1.0 Strict dosyası</message>
-<message xml:lang="ru">Новый XHTML 1.0 Strict
-документ...</message>
+<message xml:lang="ru">Новый XHTML 1.0 Strict документ...</message>
 <message xml:lang="hu">Új XHTML 1.0 kötött dokumentum...</message></label>
 <label define="AM_NEW_HTML_BASIC">
 <message xml:lang="en">New XHTML 1.0 Basic document</message>
@@ -78,8 +76,7 @@
 <message xml:lang="pt">Novo documento XHTML 1.0 Basic</message>
 <message xml:lang="fi">Uusi XHTML 1.0 Basic dokumentti</message>
 <message xml:lang="tr">Yeni XHTML 1.0 Basic dosyası</message>
-<message xml:lang="ru">Новый XHTML 1.0 Basic
-документ...</message>
+<message xml:lang="ru">Новый XHTML 1.0 Basic документ...</message>
 <message xml:lang="hu">Új XHTML 1.0 alap dokumentum...</message></label>
 <label define="AM_NEW_MATHML">
 <message xml:lang="en">New MathML document</message>
@@ -316,8 +313,7 @@
 <message xml:lang="es">Escriba el URI o pulse el botón Buscar:</message>
 <message xml:lang="pt">Inserir a URI ou procurar</message>
 <message xml:lang="fi">Syötä URL tai selaa</message>
-<message xml:lang="ru">Введите URI или выполните
-просмотр</message>
+<message xml:lang="ru">Введите URI или выполните просмотр</message>
 <message xml:lang="hu">Adja meg az URI-t vagy tallózzon oda</message></label>
 <label define="AM_TITLE">
 <message xml:lang="en">Title</message>
@@ -347,10 +343,8 @@
 <message xml:lang="it">Documento modificato - salvare?</message>
 <message xml:lang="de">Möchten Sie die Änderungen speichern?</message>
 <message xml:lang="es">Documento modificado. ¿Quiere guardarlo?</message>
-<message xml:lang="ru">Документ изменён - Хотите
-сохранить его?</message>
-<message xml:lang="hu">A dokumentum megváltozott - Kívánja
-menteni?</message></label>
+<message xml:lang="ru">Документ изменён - Хотите сохранить его?</message>
+<message xml:lang="hu">A dokumentum megváltozott - Kívánja menteni?</message></label>
 <label define="AM_RED_FETCHING">
 <message xml:lang="en">Redirection fetching of %s</message>
 <message xml:lang="fr">Recherche de %s</message>
@@ -360,8 +354,7 @@ menteni?</message></label>
 <message xml:lang="es">Redirección recuperación de %s</message>
 <message xml:lang="pt">Redirecionando busca de %s</message>
 <message xml:lang="fi">Noudetaan välitetysti %s</message>
-<message xml:lang="ru">Переадресации выборки на
-%s</message>
+<message xml:lang="ru">Переадресации выборки на %s</message>
 <message xml:lang="hu">Redirection fetching of %s</message></label>
 <label define="AM_REDIRECTIONS_LIMIT">
 <message xml:lang="en">Too many redirections detected</message>
@@ -372,8 +365,7 @@ menteni?</message></label>
 <message xml:lang="es">Demasiadas redirecciones detectadas</message>
 <message xml:lang="pt">Demasiados redirecionamentos detetados</message>
 <message xml:lang="fi">Havaittu liian monta välitystä</message>
-<message xml:lang="ru">Обнаружено слишком много
-перенаправлений</message>
+<message xml:lang="ru">Обнаружено слишком много перенаправлений</message>
 <message xml:lang="hu">Túl sok átirányítás</message></label>
 <label define="AM_CANNOT_CREATE_FILE">
 <message xml:lang="en">Cannot create local file %s</message>
@@ -384,8 +376,7 @@ menteni?</message></label>
 <message xml:lang="es">No puedo crear archivo local %s</message>
 <message xml:lang="pt">Não é possível criar arquivo local %s</message>
 <message xml:lang="fi">Ei voida luoda paikallista tiedostoa %s</message>
-<message xml:lang="ru">Невозможно создать локальный
-файл %s</message>
+<message xml:lang="ru">Невозможно создать локальный файл %s</message>
 <message xml:lang="hu">Nem létrehozható helyi fájl: %s</message></label>
 <label define="AM_CANNOT_CREATE_DIRECTORY">
 <message xml:lang="en">Cannot create directory %s</message>
@@ -396,8 +387,7 @@ menteni?</message></label>
 <message xml:lang="es">No puedo crear directorio %s</message>
 <message xml:lang="pt">Não é possível criar diretorio %s</message>
 <message xml:lang="fi">Ei voida luoda hakemistoa %s</message>
-<message xml:lang="ru">Невозможно создать
-директорию %s</message>
+<message xml:lang="ru">Невозможно создать директорию %s</message>
 <message xml:lang="hu">Nem létrehozható mappa: %s</message></label>
 <label define="AM_WAITING_FOR_SOCKET">
 <message xml:lang="en">Waiting for a free socket</message>
@@ -409,8 +399,7 @@ menteni?</message></label>
 <message xml:lang="pt">Esperando por soquete livre</message>
 <message xml:lang="fi">Odotetaan vapaata rajapintaa</message>
 <message xml:lang="ru">Ожидание свободного socket</message>
-<message xml:lang="hu">Várakozás szabad
-szoftvercsatornára</message></label>
+<message xml:lang="hu">Várakozás szabad szoftvercsatornára</message></label>
 <label define="AM_PROG_READ">
 <message xml:lang="en">Reading %s</message>
 <message xml:lang="fr">Lecture %s</message>
@@ -486,8 +475,7 @@ szoftvercsatornára</message></label>
 <message xml:lang="es">Diálogo de autentificación</message>
 <message xml:lang="pt">Diálogo de Autenticação</message>
 <message xml:lang="fi">Tunnistus ikkuna</message>
-<message xml:lang="ru">Диалоговое окно
-идентификации</message>
+<message xml:lang="ru">Диалоговое окно идентификации</message>
 <message xml:lang="hu">Hitelesítés</message></label>
 <label define="AM_GET_AUTHENTICATION_MSG">
 <message xml:lang="en">Please authenticate for</message>
@@ -498,8 +486,7 @@ szoftvercsatornára</message></label>
 <message xml:lang="pt">Por favor autenticar para</message>
 <message xml:lang="fi">Syöttäkää tunnistetiedot</message>
 <message xml:lang="tr">Kendinizi tanıtın</message>
-<message xml:lang="ru">Пройдите идентификацию
-для</message>
+<message xml:lang="ru">Пройдите идентификацию для</message>
 <message xml:lang="hu">Kérjük, hitelesítsen</message></label>
 <label define="AM_AUTHENTICATION_FAILURE">
 <message xml:lang="en">Authorization failure for %s</message>
@@ -510,8 +497,7 @@ szoftvercsatornára</message></label>
 <message xml:lang="es">Fallo de autorización para %s</message>
 <message xml:lang="pt">Falha de autorização para %s</message>
 <message xml:lang="fi">Tunnistus epäonnistui %s</message>
-<message xml:lang="ru">Процесс авторизации для %s
-прерван</message>
+<message xml:lang="ru">Процесс авторизации для %s прерван</message>
 <message xml:lang="hu">Hitelesítési hiba: %s</message></label>
 <label define="AM_LOADED_NO_DATA">
 <message xml:lang="en">%s loaded but no data is available</message>
@@ -522,8 +508,7 @@ szoftvercsatornára</message></label>
 <message xml:lang="es">%s cargado pero no hay datos disponibles</message>
 <message xml:lang="pt">%s carregado mas não há dados disponíveis</message>
 <message xml:lang="fi">%s ladattu, mutta ei luettavissa</message>
-<message xml:lang="ru">%s загружен, но данные
-недоступны</message>
+<message xml:lang="ru">%s загружен, но данные недоступны</message>
 <message xml:lang="hu">%s betöltve, de nincs adat</message></label>
 <label define="AM_LOAD_ABORT">
 <message xml:lang="en">Transfer interrupted!</message>
@@ -534,30 +519,19 @@ szoftvercsatornára</message></label>
 <message xml:lang="es">¡Transferencia interrumpida!</message>
 <message xml:lang="pt">Transferência interrompida!</message>
 <message xml:lang="fi">Tiedonsiirto keskeytetty!</message>
-<message xml:lang="ru">Передача данных
-прервана!</message>
+<message xml:lang="ru">Передача данных прервана!</message>
 <message xml:lang="hu">Az átvitel megszakadt!</message></label>
 <label define="AM_NOT_AVAILABLE_RETRY">
-<message xml:lang="en">%s is not available at the moment. Please retry
-later</message>
-<message xml:lang="fr">Indisponibilité momentanée de %s. Réessayez plus
-tard</message>
-<message xml:lang="de">%s ist im Moment nicht verfügbar. Bitte später
-nochmal versuchen!</message>
-<message xml:lang="it">%s è indisponibile al momento. Riprova piú
-tardi</message>
-<message xml:lang="tr">%s: şu anda erişilemiyor, başka bir zaman
-deneyin</message>
-<message xml:lang="es">%s no está disponible en este momento. Por favor,
-inténtelo en otro momento</message>
-<message xml:lang="pt">%s Não está disponível no momento. Por favor tente
-novamente mais tarde.</message>
-<message xml:lang="fi">%s yhteyttä ei voi muodostaa. Yrittäkää myöhemmin
-uudelleen.</message>
-<message xml:lang="ru">%s на данный момент
-недоступен. Попробуйте позже.</message>
-<message xml:lang="hu">%s jelenleg nem elérhető. Kérjük, próbálja
-később</message></label>
+<message xml:lang="en">%s is not available at the moment. Please retry later</message>
+<message xml:lang="fr">Indisponibilité momentanée de %s. Réessayez plus tard</message>
+<message xml:lang="de">%s ist im Moment nicht verfügbar. Bitte später nochmal versuchen!</message>
+<message xml:lang="it">%s è indisponibile al momento. Riprova piú tardi</message>
+<message xml:lang="tr">%s: şu anda erişilemiyor, başka bir zaman deneyin</message>
+<message xml:lang="es">%s no está disponible en este momento. Por favor, inténtelo en otro momento</message>
+<message xml:lang="pt">%s Não está disponível no momento. Por favor tente novamente mais tarde.</message>
+<message xml:lang="fi">%s yhteyttä ei voi muodostaa. Yrittäkää myöhemmin uudelleen.</message>
+<message xml:lang="ru">%s на данный момент недоступен. Попробуйте позже.</message>
+<message xml:lang="hu">%s jelenleg nem elérhető. Kérjük, próbálja később</message></label>
 <label define="AM_ELEMENT_LOADED">
 <message xml:lang="en">%s loaded</message>
 <message xml:lang="fr">%s chargé</message>
@@ -589,8 +563,7 @@ később</message></label>
 <message xml:lang="es">No puedo guardar en: %s</message>
 <message xml:lang="pt">Não é possível salvar em: %s</message>
 <message xml:lang="fi">Ei voida tallentaa: %s</message>
-<message xml:lang="ru">Невозможно сохранить в:
-%s</message>
+<message xml:lang="ru">Невозможно сохранить в: %s</message>
 <message xml:lang="hu">Nem menthető ide: %s</message></label>
 <label define="AM_SYSTEM_ERROR">
 <message xml:lang="en">English system errors messages</message>
@@ -601,100 +574,63 @@ később</message></label>
 <message xml:lang="es">Mensajes de errores de sistema en castellano</message>
 <message xml:lang="pt">Mensagens de erro do sistema em português</message>
 <message xml:lang="fi">Englantilaisen järjestelmän virhesanomat.</message>
-<message xml:lang="ru">Английские системные
-сообщения об ошибках</message>
+<message xml:lang="ru">Английские системные сообщения об ошибках</message>
 <message xml:lang="hu">Angol nyelvű rendszerhiba üzenetek</message></label>
 <label define="AM_INVALID_ANCHOR1">
 <message xml:lang="en">An anchor cannot contain these elements</message>
 <message xml:lang="fr">Une ancre ne peut pas contenir ces éléments</message>
 <message xml:lang="de">Ein Anker kann dieses Element nicht enthalten</message>
 <message xml:lang="it">Un ancora non può contenere questi elementi</message>
-<message xml:lang="tr">&lt;a&gt; tanımlaması bu unsurları
-içeremez</message>
+<message xml:lang="tr">&lt;a&gt; tanımlaması bu unsurları içeremez</message>
 <message xml:lang="es">Un ancla no puede contener estos elementos</message>
 <message xml:lang="pt">Uma âncora não pode conter esses elementos</message>
-<message xml:lang="fi">Linkin kohde ei voi sisältää näitä
-elementtejä</message>
-<message xml:lang="ru">Якорь не может содержать эти
-элементы</message>
-<message xml:lang="hu">Egy horgony nem tartalmazhatja ezeket az
-elemeket</message></label>
+<message xml:lang="fi">Linkin kohde ei voi sisältää näitä elementtejä</message>
+<message xml:lang="ru">Якорь не может содержать эти элементы</message>
+<message xml:lang="hu">Egy horgony nem tartalmazhatja ezeket az elemeket</message></label>
 <label define="AM_INVALID_ANCHOR2">
 <message xml:lang="en">Cannot create an anchor within an anchor</message>
 <message xml:lang="fr">Impossible de créer une ancre dans une ancre</message>
-<message xml:lang="de">Innerhalb eines Ankers kann kein Anker erstellt
-werden</message>
-<message xml:lang="it">Non posso creare un'ancora all'interno di
-un'ancora</message>
-<message xml:lang="tr">&lt;a&gt; tanımlaması içinde bir başka &lt;a&gt;
-tanımı yer alamaz</message>
+<message xml:lang="de">Innerhalb eines Ankers kann kein Anker erstellt werden</message>
+<message xml:lang="it">Non posso creare un'ancora all'interno di un'ancora</message>
+<message xml:lang="tr">&lt;a&gt; tanımlaması içinde bir başka &lt;a&gt; tanımı yer alamaz</message>
 <message xml:lang="es">No puedo crear un ancla en un ancla</message>
-<message xml:lang="pt">Não é possível criar uma âncora dentro de outra
-âncora</message>
+<message xml:lang="pt">Não é possível criar uma âncora dentro de outra âncora</message>
 <message xml:lang="fi">Ei voida luoda kohdetta kohteen sisälle</message>
-<message xml:lang="ru">Невозможно создать якорь в
-пределах якоря</message>
-<message xml:lang="hu">Horgonyon belül nem létesíthető
-horgony</message></label>
+<message xml:lang="ru">Невозможно создать якорь в пределах якоря</message>
+<message xml:lang="hu">Horgonyon belül nem létesíthető horgony</message></label>
 <label define="AM_GET_UNSUPPORTED_PROTOCOL">
-<message xml:lang="en">Sorry, no GET support yet for URLs of this type:
-%s</message>
+<message xml:lang="en">Sorry, no GET support yet for URLs of this type: %s</message>
 <message xml:lang="fr">Pas de support GET pour cette URL : %s</message>
-<message xml:lang="de">GET wird für URIs vom Typ %s noch nicht
-unterstützt</message>
-<message xml:lang="it">Il GET di URL di tipo %s non è ancora
-supportato</message>
-<message xml:lang="tr">%s tipi URL\'ler için GET desteği henüz yok,
-üzgünüm</message>
-<message xml:lang="es">Lo siento, aún no hay soporte GET para URL de este
-tipo: %s</message>
-<message xml:lang="pt">Sinto muito, não há ainda suporte GET para URLs
-deste tipo: %s</message>
+<message xml:lang="de">GET wird für URIs vom Typ %s noch nicht unterstützt</message>
+<message xml:lang="it">Il GET di URL di tipo %s non è ancora supportato</message>
+<message xml:lang="tr">%s tipi URL\'ler için GET desteği henüz yok, üzgünüm</message>
+<message xml:lang="es">Lo siento, aún no hay soporte GET para URL de este tipo: %s</message>
+<message xml:lang="pt">Sinto muito, não há ainda suporte GET para URLs deste tipo: %s</message>
 <message xml:lang="fi">Tälle URL:lle ei ole vielä GET-tukea: %s</message>
-<message xml:lang="ru">Для URLs типа: %s GET не
-поддерживается</message>
-<message xml:lang="hu">Az ilyen típusú URL-ekhez még nincs GET
-támogatás: %s</message></label>
+<message xml:lang="ru">Для URLs типа: %s GET не поддерживается</message>
+<message xml:lang="hu">Az ilyen típusú URL-ekhez még nincs GET támogatás: %s</message></label>
 <label define="AM_PUT_UNSUPPORTED_PROTOCOL">
-<message xml:lang="en">Sorry, no PUT support yet for URLs of this type:
-%s</message>
+<message xml:lang="en">Sorry, no PUT support yet for URLs of this type: %s</message>
 <message xml:lang="fr">Pas de support PUT pour cette URL : %s</message>
-<message xml:lang="de">PUT wird für URIs vom Typ %s noch nicht
-unterstützt</message>
-<message xml:lang="it">Il PUT di URL di tipo %s non è ancora
-supportato</message>
-<message xml:lang="tr">%s tipi URL\'ler için PUT desteği henüz yok,
-üzgünüm</message>
-<message xml:lang="es">Lo siento, aún no hay soporte PUT para URL de este
-tipo: %s</message>
-<message xml:lang="pt">Sinto muito, não há ainda suporte PUT para URLs
-deste tipo: %s</message>
+<message xml:lang="de">PUT wird für URIs vom Typ %s noch nicht unterstützt</message>
+<message xml:lang="it">Il PUT di URL di tipo %s non è ancora supportato</message>
+<message xml:lang="tr">%s tipi URL\'ler için PUT desteği henüz yok, üzgünüm</message>
+<message xml:lang="es">Lo siento, aún no hay soporte PUT para URL de este tipo: %s</message>
+<message xml:lang="pt">Sinto muito, não há ainda suporte PUT para URLs deste tipo: %s</message>
 <message xml:lang="fi">Tälle URL:lle ei ole vielä PUT-tukea:: %s</message>
-<message xml:lang="ru">Для URLs типа: %s PUT не
-поддерживается</message>
-<message xml:lang="hu">Az ilyen típusú URL-ekhez még nincs PUT
-támogatás: %s</message></label>
+<message xml:lang="ru">Для URLs типа: %s PUT не поддерживается</message>
+<message xml:lang="hu">Az ilyen típusú URL-ekhez még nincs PUT támogatás: %s</message></label>
 <label define="AM_UNSUPPORTED_FEATURE">
-<message xml:lang="en">This version of Amaya does not support this
-feature</message>
-<message xml:lang="fr">Cette version d'Amaya ne supporte pas cette
-option</message>
-<message xml:lang="de">Diese Funktion wird in dieser Version nicht
-unterstützt</message>
-<message xml:lang="it">La presente versione di Amaya non supporta questa
-funzionalità</message>
-<message xml:lang="tr">Amaya\'nın bu sürümü, bu özelliği
-desteklemiyor</message>
-<message xml:lang="es">Esta versión de Amaya no soporta esta
-característica</message>
-<message xml:lang="pt">Esta versão de Amaya não suporta esta
-facilidade</message>
-<message xml:lang="fi">Amayan tämä versio ei tue vielä tätä
-ominaisuutta</message>
-<message xml:lang="ru">Текущая версия Amaya не
-поддерживает эту возможность</message>
-<message xml:lang="hu">Az Amaya jelen változata nem támogatja
-ezt</message></label>
+<message xml:lang="en">This version of Amaya does not support this feature</message>
+<message xml:lang="fr">Cette version d'Amaya ne supporte pas cette option</message>
+<message xml:lang="de">Diese Funktion wird in dieser Version nicht unterstützt</message>
+<message xml:lang="it">La presente versione di Amaya non supporta questa funzionalità</message>
+<message xml:lang="tr">Amaya\'nın bu sürümü, bu özelliği desteklemiyor</message>
+<message xml:lang="es">Esta versión de Amaya no soporta esta característica</message>
+<message xml:lang="pt">Esta versão de Amaya não suporta esta facilidade</message>
+<message xml:lang="fi">Amayan tämä versio ei tue vielä tätä ominaisuutta</message>
+<message xml:lang="ru">Текущая версия Amaya не поддерживает эту возможность</message>
+<message xml:lang="hu">Az Amaya jelen változata nem támogatja ezt</message></label>
 <label define="AM_WROTE_OBJECT">
 <message xml:lang="en">Finished writing %s</message>
 <message xml:lang="fr">Fin d'écriture de %s</message>
@@ -715,45 +651,30 @@ ezt</message></label>
 <message xml:lang="es">No pude normalizar %s</message>
 <message xml:lang="pt">Não foi possível normalizar %s</message>
 <message xml:lang="fi">Ei voinut normalisoida %s</message>
-<message xml:lang="ru">Невозможно нормализовать
-%s</message>
+<message xml:lang="ru">Невозможно нормализовать %s</message>
 <message xml:lang="hu">Normalizálás nem lehetséges: %s</message></label>
 <label define="AM_CACHE_ERROR">
 <message xml:lang="en">Could not create temporary file directory %s</message>
-<message xml:lang="fr">Impossible de créer le répertoire temporaire
-%s</message>
-<message xml:lang="de">Temporäres Verzeichnis %s konnte nicht angelegt
-werden</message>
-<message xml:lang="it">Impossibile creare la directory dei file temporanei
-%s</message>
+<message xml:lang="fr">Impossible de créer le répertoire temporaire %s</message>
+<message xml:lang="de">Temporäres Verzeichnis %s konnte nicht angelegt werden</message>
+<message xml:lang="it">Impossibile creare la directory dei file temporanei %s</message>
 <message xml:lang="tr">%s geçici dosya dizini yaratılamadı</message>
-<message xml:lang="es">No pude crear directorio de archivos temporales
-%s</message>
-<message xml:lang="pt">Não foi possível criar o diretório de arquivos
-temporários %s</message>
+<message xml:lang="es">No pude crear directorio de archivos temporales %s</message>
+<message xml:lang="pt">Não foi possível criar o diretório de arquivos temporários %s</message>
 <message xml:lang="fi">Ei voinut luoda väliaikaista hakemistoa %s</message>
-<message xml:lang="ru">Невозможно создать временную
-файловую директорию %s</message>
-<message xml:lang="hu">Az ideiglenes mappa nem hozható létre:
-%s</message></label>
+<message xml:lang="ru">Невозможно создать временную файловую директорию %s</message>
+<message xml:lang="hu">Az ideiglenes mappa nem hozható létre: %s</message></label>
 <label define="AM_NO_TRANS">
 <message xml:lang="en">No transformation applicable to the selection</message>
 <message xml:lang="fr">Aucune transformation possible</message>
-<message xml:lang="de">Für die Markierung ist keine Transformation
-anwendbar</message>
-<message xml:lang="it">Alla selezione non è applicabile alcuna
-trasformazione</message>
-<message xml:lang="tr">Seçili bölge için hiç bir dönüşüm
-kullanılamaz</message>
-<message xml:lang="es">No hay transformación aplicable a la
-selección</message>
-<message xml:lang="pt">Não há transformação aplicável à
-seleção</message>
+<message xml:lang="de">Für die Markierung ist keine Transformation anwendbar</message>
+<message xml:lang="it">Alla selezione non è applicabile alcuna trasformazione</message>
+<message xml:lang="tr">Seçili bölge için hiç bir dönüşüm kullanılamaz</message>
+<message xml:lang="es">No hay transformación aplicable a la selección</message>
+<message xml:lang="pt">Não há transformação aplicável à seleção</message>
 <message xml:lang="fi">Valintaa ei voi muuntaa</message>
-<message xml:lang="ru">К выбранному не применимо
-никакое преобразование</message>
-<message xml:lang="hu">A kijelölésre nem alkalmazható
-átalakítás</message></label>
+<message xml:lang="ru">К выбранному не применимо никакое преобразование</message>
+<message xml:lang="hu">A kijelölésre nem alkalmazható átalakítás</message></label>
 <label define="AM_TRANS_FAILED">
 <message xml:lang="en">Transformation failed</message>
 <message xml:lang="fr">La transformation a echoué</message>
@@ -768,21 +689,14 @@ seleção</message>
 <label define="AM_TRANS_PARSE_ERROR">
 <message xml:lang="en">syntax error in file HTML.trans line %s</message>
 <message xml:lang="fr">HTML.trans erreur de syntaxe ligne %s</message>
-<message xml:lang="de">Syntaxfehler in der Datei HTML.trans, Zeile
-%s</message>
-<message xml:lang="it">errore di sintassi nel file HTML.trans alla linea
-%s</message>
-<message xml:lang="tr">HTML.trans dosyası, %s satırında yazım
-hatası</message>
-<message xml:lang="es">error de sintaxis en archivo HTML.trans línea
-%s</message>
-<message xml:lang="pt">Erro de sintaxe no arquivo HTML.trans linha
-%s</message>
+<message xml:lang="de">Syntaxfehler in der Datei HTML.trans, Zeile %s</message>
+<message xml:lang="it">errore di sintassi nel file HTML.trans alla linea %s</message>
+<message xml:lang="tr">HTML.trans dosyası, %s satırında yazım hatası</message>
+<message xml:lang="es">error de sintaxis en archivo HTML.trans línea %s</message>
+<message xml:lang="pt">Erro de sintaxe no arquivo HTML.trans linha %s</message>
 <message xml:lang="fi">ohjelmavirhe HTML.trans rivillä %s</message>
-<message xml:lang="ru">синтаксическая ошибка в
-файле HTML.trans линия %s</message>
-<message xml:lang="hu">Szintaktikai hiba a HTML.trans fájl alábbi sorában:
-%s</message></label>
+<message xml:lang="ru">синтаксическая ошибка в файле HTML.trans линия %s</message>
+<message xml:lang="hu">Szintaktikai hiba a HTML.trans fájl alábbi sorában: %s</message></label>
 <label define="AM_BUTTON_MATH">
 <message xml:lang="en">Maths</message>
 <message xml:lang="fr">Maths</message>
@@ -817,26 +731,16 @@ hatası</message>
 <message xml:lang="ru">Сохранить как</message>
 <message xml:lang="hu">Mentés másként</message></label>
 <label define="AM_AUTHENTICATION_REALM_SERVER">
-<message xml:lang="en">Please authenticate for realm \'%s\' at server
-\'%s\'</message>
-<message xml:lang="fr">Authentification requise pour le domaine \'%s\' du
-serveur \'%s\'</message>
-<message xml:lang="de">Bitte auf der Domäne \'%s\', Server \'%s\'
-einloggen:</message>
-<message xml:lang="it">Autenticazione per il dominio \'%s\' sul server
-\'%s\'</message>
-<message xml:lang="es">Necesita autentificar el dominio \'%s\' en el servidor
-\'%s\'</message>
-<message xml:lang="pt">Por favor autenticar para o domínio \'%s\' no
-servidor \'%s\'</message>
-<message xml:lang="fi">Anna tunnistetiedot alueelle \'%s\' palvelimella
-\'%s\'</message>
-<message xml:lang="tr">Lütfen kendinizi \'%s\' alanı, \'%s\'servör için
-resmileştirin</message>
-<message xml:lang="ru">Пройдите идентификацию для
-области \'%s\' на сервере \'%s\'</message>
-<message xml:lang="hu">Kérjük, hitelesítsen a(z) \'%s\' tartomány \'%s\
-kiszolgálóján'</message></label>
+<message xml:lang="en">Please authenticate for realm \'%s\' at server \'%s\'</message>
+<message xml:lang="fr">Authentification requise pour le domaine \'%s\' du serveur \'%s\'</message>
+<message xml:lang="de">Bitte auf der Domäne \'%s\', Server \'%s\' einloggen:</message>
+<message xml:lang="it">Autenticazione per il dominio \'%s\' sul server \'%s\'</message>
+<message xml:lang="es">Necesita autentificar el dominio \'%s\' en el servidor \'%s\'</message>
+<message xml:lang="pt">Por favor autenticar para o domínio \'%s\' no servidor \'%s\'</message>
+<message xml:lang="fi">Anna tunnistetiedot alueelle \'%s\' palvelimella \'%s\'</message>
+<message xml:lang="tr">Lütfen kendinizi \'%s\' alanı, \'%s\'servör için resmileştirin</message>
+<message xml:lang="ru">Пройдите идентификацию для области \'%s\' на сервере \'%s\'</message>
+<message xml:lang="hu">Kérjük, hitelesítsen a(z) \'%s\' tartomány \'%s\ kiszolgálóján'</message></label>
 <label define="AM_AUTHENTICATION_REALM">
 <message xml:lang="en">Realm: %s</message>
 <message xml:lang="fr">Domaine: %s</message>
@@ -876,14 +780,11 @@ kiszolgálóján'</message></label>
 <message xml:lang="de">Timeout - Server antwortet nicht</message>
 <message xml:lang="it">Richiesta scaduta - il server non ha risposto</message>
 <message xml:lang="es">Petición caducada - el servidor no responde</message>
-<message xml:lang="pt">Temporização de requisição expirou - o servidor
-não respondeu</message>
+<message xml:lang="pt">Temporização de requisição expirou - o servidor não respondeu</message>
 <message xml:lang="fi">Pyynnön aikakatkaisu - Palvelin ei vastaa.</message>
 <message xml:lang="tr">Zaman dolmuştur - servör cevap vermedi</message>
-<message xml:lang="ru">Время ожидания истекло -
-сервер не ответил</message>
-<message xml:lang="hu">Kérés időtúllépés - a kiszolgáló nem
-válaszolt</message></label>
+<message xml:lang="ru">Время ожидания истекло - сервер не ответил</message>
+<message xml:lang="hu">Kérés időtúllépés - a kiszolgáló nem válaszolt</message></label>
 <label define="AM_OVERWRITE_CHECK">
 <message xml:lang="en">%s already exists. Overwrite it?</message>
 <message xml:lang="fr">%s existe déjà. Forcer l'écriture ?</message>
@@ -893,8 +794,7 @@ válaszolt</message></label>
 <message xml:lang="pt">%s já existe. Gravar por cima?</message>
 <message xml:lang="fi">%s on jo olemassa. Korvataanko?</message>
 <message xml:lang="tr">%s mevcuttur. Yazıyı zorlayalımmı?</message>
-<message xml:lang="ru">%s уже существует.
-Перезаписать его?</message>
+<message xml:lang="ru">%s уже существует. Перезаписать его?</message>
 <message xml:lang="hu">%s már létezik. Felülírjuk?</message></label>
 <label define="AM_ETAG_CHANGED">
 <message xml:lang="en">%s has changed. Overwrite it?</message>
@@ -905,8 +805,7 @@ válaszolt</message></label>
 <message xml:lang="pt">%s mudou. gravar por cima?</message>
 <message xml:lang="fi">%s on muuttunut. Korvataanko?</message>
 <message xml:lang="tr">%s değişti. Yazıyı zorlayalımmı?</message>
-<message xml:lang="ru">%s был изменён. Перезаписать
-его?</message>
+<message xml:lang="ru">%s был изменён. Перезаписать его?</message>
 <message xml:lang="hu">%s megváltozott. Felülírjuk?</message></label>
 <label define="AM_BACKGROUND_IMAGE">
 <message xml:lang="en">Background image</message>
@@ -923,14 +822,12 @@ válaszolt</message></label>
 <message xml:lang="en">Background image not allowed here</message>
 <message xml:lang="fr">Image de fond interdite ici</message>
 <message xml:lang="de">Hintergrundbild hier nicht zulässig</message>
-<message xml:lang="it">L'immagine di background non è consentita
-qui</message>
+<message xml:lang="it">L'immagine di background non è consentita qui</message>
 <message xml:lang="es">Imagen de fondo no permitida aquí</message>
 <message xml:lang="pt">Imagem de fundo não é permitida aqui</message>
 <message xml:lang="fi">Taustakuvaa ei sallita tässä</message>
 <message xml:lang="tr">Burda arka plan yasaktır</message>
-<message xml:lang="ru">Здесь не разрешено
-использовать фоновое изображение</message>
+<message xml:lang="ru">Здесь не разрешено использовать фоновое изображение</message>
 <message xml:lang="hu">Háttérkép itt nem engedélyezett</message></label>
 <label define="AM_CSS">
 <message xml:lang="en">CSS</message>
@@ -945,18 +842,13 @@ qui</message>
 <message xml:lang="hu">CSS</message></label>
 <label define="AM_WARNING_SAVE_OVERWRITE">
 <message xml:lang="en">Saving will save following images too?</message>
-<message xml:lang="fr">La sauvegarde sauvera aussi les images suivantes
-?</message>
-<message xml:lang="it">Il salvataggio salverà anche le immagini
-successive?</message>
-<message xml:lang="es">¿Guardar también las imágenes siguientes al
-guardar?</message>
+<message xml:lang="fr">La sauvegarde sauvera aussi les images suivantes?</message>
+<message xml:lang="it">Il salvataggio salverà anche le immagini successive?</message>
+<message xml:lang="es">¿Guardar también las imágenes siguientes al guardar?</message>
 <message xml:lang="de">Folgende Bilder ebenfalls speichern?</message>
 <message xml:lang="tr">Bi sonraki görüntülerde kayıt edilecektir</message>
-<message xml:lang="ru">Сохранять также следующие
-изображения при сохранении?</message>
-<message xml:lang="hu">A mentés az alábbi képeket is
-menti?</message></label>
+<message xml:lang="ru">Сохранять также следующие изображения при сохранении?</message>
+<message xml:lang="hu">A mentés az alábbi képeket is menti?</message></label>
 <label define="AM_URL_SAVE_FAILED">
 <message xml:lang="en">Failed to save to URL</message>
 <message xml:lang="fr">Erreur de sauvegarde de l'URL</message>
@@ -966,8 +858,7 @@ menti?</message></label>
 <message xml:lang="es">Fallo al guardar en URL</message>
 <message xml:lang="pt">Falha ao salvar na URL</message>
 <message xml:lang="fi">URL:n tallennus epäonnistui</message>
-<message xml:lang="ru">Прервано сохранение на
-URL</message>
+<message xml:lang="ru">Прервано сохранение на URL</message>
 <message xml:lang="hu">Az URL-be mentés nem sikerült</message></label>
 <label define="AM_SAVE_DISK">
 <message xml:lang="en">Save to disk ?</message>
@@ -1011,8 +902,7 @@ URL</message>
 <message xml:lang="es">Ubicación de documento:</message>
 <message xml:lang="pt">Localização do documento</message>
 <message xml:lang="fi">Dokumentin sijainti</message>
-<message xml:lang="ru">Местоположение
-документа</message>
+<message xml:lang="ru">Местоположение документа</message>
 <message xml:lang="hu">Dokumentum helye</message></label>
 <label define="AM_IMAGES_LOCATION">
 <message xml:lang="en">Images directory</message>
@@ -1100,44 +990,30 @@ URL</message>
 <message xml:lang="es">Editor/Navegador web del W3C</message>
 <message xml:lang="pt">Editor/navegador do W3C para a Web</message>
 <message xml:lang="fi">W3C:n Internetin muokkain/selain</message>
-<message xml:lang="ru">W3C's редактор/броузер для
-Web</message>
+<message xml:lang="ru">W3C's редактор/броузер для Web</message>
 <message xml:lang="hu">W3C Web szerkesztő/böngészője</message></label>
 <label define="AM_ABOUT2">
 <message xml:lang="en">(mail issues to www-amaya@w3.org)</message>
 <message xml:lang="fr">(envoyez vos questions à www-amaya@w3.org)</message>
 <message xml:lang="de">(Probleme an www-amaya@w3.org senden)</message>
-<message xml:lang="it">(scrivere a www-amaya@w3.org per
-informazioni)</message>
+<message xml:lang="it">(scrivere a www-amaya@w3.org per informazioni)</message>
 <message xml:lang="es">(enviar sugerencias a www-amaya@w3.org)</message>
 <message xml:lang="pt">(envie questões para www-amaya@w3.org)</message>
 <message xml:lang="fi">(ilmoita virheistä www-amaya@w3.org)</message>
-<message xml:lang="tr">Sorularınızı www-amaya@w3.org adreine
-gönderin</message>
-<message xml:lang="ru">(письма отправляйте на
-www-amaya@w3.org)</message>
-<message xml:lang="hu">(küldje el emailben a www-amaya@w3.org
-címre)</message></label>
+<message xml:lang="tr">Sorularınızı www-amaya@w3.org adreine gönderin</message>
+<message xml:lang="ru">(письма отправляйте на www-amaya@w3.org)</message>
+<message xml:lang="hu">(küldje el emailben a www-amaya@w3.org címre)</message></label>
 <label define="AM_TOO_LONG_URL">
 <message xml:lang="en">Can't handle URLs having more than %s chars</message>
-<message xml:lang="fr">Erreur interne : URL de longueur supérieure à %s
-caractères</message>
-<message xml:lang="de">URI länger als %s Zeichen werden zur Zeit nicht
-unterstützt</message>
-<message xml:lang="it">Impossibile gestire URL composti da piú di %s
-caratteri</message>
-<message xml:lang="tr">%s karakterden uzun URL\'ler şimdilik
-işlenemiyor</message>
-<message xml:lang="es">No puedo gestionar URL con más de %s
-caracteres</message>
-<message xml:lang="pt">Não é possível tratar URLs com mais de %s
-caracteres</message>
-<message xml:lang="fi">Ei voi käsitellä osoitteita joissa on enemmän kuin
-%s merkkiä</message>
-<message xml:lang="ru">Невозможно обработать URLs
-имеющие более чем %s символов</message>
-<message xml:lang="hu">%s karakternél hosszabb URL-ek nem
-kezelhetők</message></label>
+<message xml:lang="fr">Erreur interne : URL de longueur supérieure à %s caractères</message>
+<message xml:lang="de">URI länger als %s Zeichen werden zur Zeit nicht unterstützt</message>
+<message xml:lang="it">Impossibile gestire URL composti da piú di %s caratteri</message>
+<message xml:lang="tr">%s karakterden uzun URL\'ler şimdilik işlenemiyor</message>
+<message xml:lang="es">No puedo gestionar URL con más de %s caracteres</message>
+<message xml:lang="pt">Não é possível tratar URLs com mais de %s caracteres</message>
+<message xml:lang="fi">Ei voi käsitellä osoitteita joissa on enemmän kuin %s merkkiä</message>
+<message xml:lang="ru">Невозможно обработать URLs имеющие более чем %s символов</message>
+<message xml:lang="hu">%s karakternél hosszabb URL-ek nem kezelhetők</message></label>
 <label define="AM_INVALID_TYPE">
 <message xml:lang="en">Only default type is allowed</message>
 <message xml:lang="fr">Seul le type par défaut est autorisé</message>
@@ -1147,21 +1023,18 @@ kezelhetők</message></label>
 <message xml:lang="es">Sólo se permite el tipo por omisión</message>
 <message xml:lang="pt">Somente o tipo padrão é permitido</message>
 <message xml:lang="fi">Vain oletus sallittu</message>
-<message xml:lang="ru">Разрешён только тип принятый
-по умолчанию</message>
+<message xml:lang="ru">Разрешён только тип принятый по умолчанию</message>
 <message xml:lang="hu">Csak az alaptípus támogatott</message></label>
 <label define="AM_UPDATED_LINK">
 <message xml:lang="en">Links update: %s%% has been done</message>
 <message xml:lang="fr">Mise à jour des liens : %s%% a été traité</message>
 <message xml:lang="de">Aktualisierung der Verweise %s%% erfolgreich</message>
-<message xml:lang="it">Aggiornamento dei collegamenti: %s%% è stato
-fatto</message>
+<message xml:lang="it">Aggiornamento dei collegamenti: %s%% è stato fatto</message>
 <message xml:lang="tr">Bağlantı güncellemesi: %s%% tamamlandı</message>
 <message xml:lang="es">Actualización de enlace: %s%% realizada</message>
 <message xml:lang="pt">Atualização de enlaces: %s%% foi tratado</message>
 <message xml:lang="fi">Linkkien päivitys: %s%% onnistui</message>
-<message xml:lang="ru">Обновление ссылок: было
-выполнено %s%%</message>
+<message xml:lang="ru">Обновление ссылок: было выполнено %s%%</message>
 <message xml:lang="hu">Kapcsok frissítése: %s%% kész</message></label>
 <label define="AM_NOTHING_TO_SAVE">
 <message xml:lang="en">Nothing new to be saved</message>
@@ -1172,8 +1045,7 @@ fatto</message>
 <message xml:lang="es">Nada nuevo que guardar</message>
 <message xml:lang="pt">Nada novo a ser salvo</message>
 <message xml:lang="fi">Ei mitään tallennettavaa</message>
-<message xml:lang="ru">Ничего нет нового для
-сохранения</message>
+<message xml:lang="ru">Ничего нет нового для сохранения</message>
 <message xml:lang="hu">Nincs menteni való</message></label>
 <label define="AM_REPEAT_Y">
 <message xml:lang="en">repeat-y</message>
@@ -1195,8 +1067,7 @@ fatto</message>
 <message xml:lang="es">Por favor, escriba un nombre de usuario:</message>
 <message xml:lang="pt">Por favor insira nome de usuário:</message>
 <message xml:lang="fi">Syöttäkää kayttäjätunnus:</message>
-<message xml:lang="ru">Введите имя
-пользователя:</message>
+<message xml:lang="ru">Введите имя пользователя:</message>
 <message xml:lang="hu">Adja meg a felhasználónevet:</message></label>
 <label define="AM_WAITING_REQUESTS">
 <message xml:lang="en">%d outstanding requests</message>
@@ -1244,16 +1115,12 @@ fatto</message>
 <message xml:lang="fr">Le document n'a pas de nom. Sauvé en :</message>
 <message xml:lang="de">Das Dokument ist unbenannt. Speichere unter</message>
 <message xml:lang="it">Il documento non ha nome. Salva come:</message>
-<message xml:lang="tr">Belgenin bir ismi yok. Şu isimle
-kaydediyorum:</message>
+<message xml:lang="tr">Belgenin bir ismi yok. Şu isimle kaydediyorum:</message>
 <message xml:lang="es">El documento no tiene nombre. Guardar en:</message>
 <message xml:lang="pt">O documento não tem nome. Salvando em:</message>
-<message xml:lang="fi">Dokumentilla ei ole nimeä. Tallennetaan
-nimellä:</message>
-<message xml:lang="ru">Документ не имеет имени.
-Сохранить в:</message>
-<message xml:lang="hu">A dokumentumnak nincs neve. Mentés az következő
-néven:</message></label>
+<message xml:lang="fi">Dokumentilla ei ole nimeä. Tallennetaan nimellä:</message>
+<message xml:lang="ru">Документ не имеет имени. Сохранить в:</message>
+<message xml:lang="hu">A dokumentumnak nincs neve. Mentés az következő néven:</message></label>
 <label define="AM_BUTTON_PLUGIN">
 <message xml:lang="en">Plugins</message>
 <message xml:lang="fr">Plugins</message>
@@ -1269,46 +1136,35 @@ néven:</message></label>
 <message xml:lang="en">Unknown error while saving URL %s</message>
 <message xml:lang="fr">Erreur inconnue lors de la sauvegarde de %s</message>
 <message xml:lang="de">Unbekannter Fehler beim Speichern auf %s</message>
-<message xml:lang="it">Errore sconosciuto durante il salvataggio dell'URL
-%s</message>
+<message xml:lang="it">Errore sconosciuto durante il salvataggio dell'URL %s</message>
 <message xml:lang="tr">%s URL\'ini kaydederken, belirsiz hata</message>
 <message xml:lang="es">Error desconocido al guardar URL %s</message>
 <message xml:lang="pt">Erro desconhecido ao salvar a URL %s</message>
 <message xml:lang="fi">Tuntematon virhe tallennettaessa URL:ää %s</message>
-<message xml:lang="ru">При сохранении URL произошла
-неизвестная ошибка %s</message>
-<message xml:lang="hu">Ismeretlen hiba az URL mentése közben:
-%s</message></label>
+<message xml:lang="ru">При сохранении URL произошла неизвестная ошибка %s</message>
+<message xml:lang="hu">Ismeretlen hiba az URL mentése közben: %s</message></label>
 <label define="AM_CANT_CONNECT_TO_HOST">
 <message xml:lang="en">Cannot make a connection to the server</message>
-<message xml:lang="fr">Impossible d'ouvrir une connexion vers le
-serveur</message>
+<message xml:lang="fr">Impossible d'ouvrir une connexion vers le serveur</message>
 <message xml:lang="de">Keine Verbindung zum Server</message>
 <message xml:lang="it">Impossibile connettersi al server</message>
 <message xml:lang="tr">Sunucuya bağlantı yapılamıyor</message>
 <message xml:lang="es">No puedo establecer conexión con el servidor</message>
-<message xml:lang="pt">Não é possível criar uma conexão ao
-servidor</message>
+<message xml:lang="pt">Não é possível criar uma conexão ao servidor</message>
 <message xml:lang="fi">Palvelinyhteyden muodostus epäonnistui</message>
-<message xml:lang="ru">Невозможно создать
-соединение с сервером</message>
-<message xml:lang="hu">A kiszolgálóval nem létesíthető
-kapcsolat</message></label>
+<message xml:lang="ru">Невозможно создать соединение с сервером</message>
+<message xml:lang="hu">A kiszolgálóval nem létesíthető kapcsolat</message></label>
 <label define="AM_FORBIDDEN_ACCESS">
 <message xml:lang="en">Access to %s is forbidden by the server</message>
 <message xml:lang="fr">Accès interdit à %s</message>
 <message xml:lang="de">Zugriff auf %s vom Server abgelehnt</message>
 <message xml:lang="it">L'accesso a %s è proibito dal server</message>
 <message xml:lang="tr">%s erişimi kural gereği engellenmiş</message>
-<message xml:lang="es">El acceso a %s está prohibido por el
-servidor</message>
+<message xml:lang="es">El acceso a %s está prohibido por el servidor</message>
 <message xml:lang="pt">O acesso a %s é proibido pelo servidor</message>
-<message xml:lang="fi">Pääsy tietoon %s on kielletty palvelimen
-toimesta</message>
-<message xml:lang="ru">Доступ к %s запрещён
-сервером</message>
-<message xml:lang="hu">A hozzáférést a kiszolgáló megtagadta:
-%s</message></label>
+<message xml:lang="fi">Pääsy tietoon %s on kielletty palvelimen toimesta</message>
+<message xml:lang="ru">Доступ к %s запрещён сервером</message>
+<message xml:lang="hu">A hozzáférést a kiszolgáló megtagadta: %s</message></label>
 <label define="AM_REQUEST_SUCCEEDED">
 <message xml:lang="en">Operation succeeded for %s</message>
 <message xml:lang="fr">Opération réussie pour %s</message>
@@ -1348,49 +1204,33 @@ toimesta</message>
 <message xml:lang="de">Operation wurde beendet mit Code %s</message>
 <message xml:lang="it">Operazione completata con codice %s</message>
 <message xml:lang="tr">İşlem %s durum kodu ile tamamlandı</message>
-<message xml:lang="es">Operación completada con un código de estado
-%s</message>
-<message xml:lang="pt">Operação completada com código de estado
-%s</message>
+<message xml:lang="es">Operación completada con un código de estado %s</message>
+<message xml:lang="pt">Operação completada com código de estado %s</message>
 <message xml:lang="fi">Toiminto suoritettu %s palautteella</message>
-<message xml:lang="ru">Операция выполнена с кодом
-состояния %s</message>
+<message xml:lang="ru">Операция выполнена с кодом состояния %s</message>
 <message xml:lang="hu">A művelet sikeres, állapotkód: %s</message></label>
 <label define="AM_SERVER_DID_NOT_UNDERSTAND_REQ_SYNTAX">
 <message xml:lang="en">Server did not understand the request syntax</message>
-<message xml:lang="fr">Le serveur n'a pas compris la syntaxe de la
-requête</message>
-<message xml:lang="de">Der Server konnte die Anfragesyntax nicht
-verstehen</message>
-<message xml:lang="it">Il server non ha compreso la sintassi della
-richiesta</message>
+<message xml:lang="fr">Le serveur n'a pas compris la syntaxe de la requête</message>
+<message xml:lang="de">Der Server konnte die Anfragesyntax nicht verstehen</message>
+<message xml:lang="it">Il server non ha compreso la sintassi della richiesta</message>
 <message xml:lang="tr">Sunucu istem yazımını anlamadı</message>
-<message xml:lang="es">El servidor no entendió la sintaxis de la
-petición</message>
-<message xml:lang="pt">O servidor não entendeu a sintaxe da
-requisição</message>
+<message xml:lang="es">El servidor no entendió la sintaxis de la petición</message>
+<message xml:lang="pt">O servidor não entendeu a sintaxe da requisição</message>
 <message xml:lang="fi">Palvelin ei ymmärrä pyyntöä</message>
-<message xml:lang="ru">Сервер не понимает синтаксис
-запроса</message>
-<message xml:lang="hu">A kiszolgáló nem tudja értelmezni a kérés
-szintakszisát</message></label>
+<message xml:lang="ru">Сервер не понимает синтаксис запроса</message>
+<message xml:lang="hu">A kiszolgáló nem tudja értelmezni a kérés szintakszisát</message></label>
 <label define="AM_NO_DATA">
 <message xml:lang="en">Server has no new information to send back</message>
 <message xml:lang="fr">La réponse du serveur n'a pas de corps</message>
-<message xml:lang="de">Der Server hat keine neue Informationen
-zurückzusenden</message>
-<message xml:lang="it">Il server non ha nuove informazioni da
-inviare</message>
+<message xml:lang="de">Der Server hat keine neue Informationen zurückzusenden</message>
+<message xml:lang="it">Il server non ha nuove informazioni da inviare</message>
 <message xml:lang="tr">Sunucunun gönderecek yeni bilgisi</message>
-<message xml:lang="es">El servidor no tiene información nueva para
-devolver</message>
-<message xml:lang="pt">O servidor não tem informação nova para
-devolver</message>
+<message xml:lang="es">El servidor no tiene información nueva para devolver</message>
+<message xml:lang="pt">O servidor não tem informação nova para devolver</message>
 <message xml:lang="fi">Palvelimella ei ole uudempaa tietoa</message>
-<message xml:lang="ru">Сервер не имеет никакой новой
-информации, для ответа</message>
-<message xml:lang="hu">A kiszolgálónak nincs új visszaküldhető
-adata</message></label>
+<message xml:lang="ru">Сервер не имеет никакой новой информации, для ответа</message>
+<message xml:lang="hu">A kiszolgálónak nincs új visszaküldhető adata</message></label>
 <label define="AM_METHOD_NOT_ALLOWED">
 <message xml:lang="en">This method is not allowed</message>
 <message xml:lang="fr">Cette opération n'est pas permise</message>
@@ -1404,16 +1244,14 @@ adata</message></label>
 <message xml:lang="hu">Ez a mód tiltott</message></label>
 <label define="AM_PLEASE_AUTHENTICATE">
 <message xml:lang="en">Please authenticate to access %s</message>
-<message xml:lang="fr">L'accès à %s requiert votre
-authentification</message>
+<message xml:lang="fr">L'accès à %s requiert votre authentification</message>
 <message xml:lang="de">Bitte für den Zugriff auf %s einloggen</message>
 <message xml:lang="it">Identificazione richiesta per accedere a %s</message>
 <message xml:lang="tr">%s erişimi için lütfen kendinizi tanıtın</message>
 <message xml:lang="es">Por favor, identifíquese para acceder a %s</message>
 <message xml:lang="pt">Por favor autenticar para acessar %s</message>
 <message xml:lang="fi">Tunnistus vaaditaan %s käsittelyyn</message>
-<message xml:lang="ru">Пройдите идентификацию для
-доступа к %s</message>
+<message xml:lang="ru">Пройдите идентификацию для доступа к %s</message>
 <message xml:lang="hu">Kérjük, hitelesítsen: %s</message></label>
 <label define="AM_VERIFYING">
 <message xml:lang="en">Verifying ...</message>
@@ -1428,54 +1266,37 @@ authentification</message>
 <message xml:lang="hu">Ellenőrzés ...</message></label>
 <label define="AM_SAVING_FAILED">
 <message xml:lang="en">Saving to %s failed, Save to disk?</message>
-<message xml:lang="fr">La sauvegarde distante de %s a échouée, sauvegarder
-sur disque ?</message>
-<message xml:lang="de">Speichern unter %s fehlerhaft, Speichern auf
-Festplatte?</message>
-<message xml:lang="it">Il salvataggio su %s è fallito, salvo su
-disco?</message>
+<message xml:lang="fr">La sauvegarde distante de %s a échouée, sauvegarder sur disque ?</message>
+<message xml:lang="de">Speichern unter %s fehlerhaft, Speichern auf Festplatte?</message>
+<message xml:lang="it">Il salvataggio su %s è fallito, salvo su disco?</message>
 <message xml:lang="tr">%s\'e kaydedilemedi, Diske kaydedeyim mi?</message>
-<message xml:lang="es">El guardado en %s ha fallado, ¿guardar en
-disco?</message>
+<message xml:lang="es">El guardado en %s ha fallado, ¿guardar en disco?</message>
 <message xml:lang="pt">A salvação em %s falhou. Salvar no disco?</message>
-<message xml:lang="fi">Tallennus %s epäonnistui, Tallenetaanko
-levylle?</message>
-<message xml:lang="ru">Сохранение в %s прервано,
-Сохранить на диск?</message>
-<message xml:lang="hu">A mentés (%s) sikertelen, Mentsük
-lemezre?</message></label>
+<message xml:lang="fi">Tallennus %s epäonnistui, Tallenetaanko levylle?</message>
+<message xml:lang="ru">Сохранение в %s прервано, Сохранить на диск?</message>
+<message xml:lang="hu">A mentés (%s) sikertelen, Mentsük lemezre?</message></label>
 <label define="AM_SAVE_COMPARE_FAILED">
 <message xml:lang="en">Saving to %s seems corrupted, ignore?</message>
-<message xml:lang="fr">La sauvegarde distante de %s semble corrompue, ignorer
-?</message>
-<message xml:lang="de">Speichern unter %s scheint fehlerhaft zu sein,
-Ignorieren?</message>
-<message xml:lang="it">Il salvataggio su %s sembra non funzionare,
-ignora?</message>
+<message xml:lang="fr">La sauvegarde distante de %s semble corrompue, ignorer ?</message>
+<message xml:lang="de">Speichern unter %s scheint fehlerhaft zu sein, Ignorieren?</message>
+<message xml:lang="it">Il salvataggio su %s sembra non funzionare, ignora?</message>
 <message xml:lang="tr">%s bozuk görünüyor, devam edeyim mi?</message>
 <message xml:lang="es">Guardar en %s parece corrompido, ¿ignorar?</message>
-<message xml:lang="pt">A salvação em %s parece corrompida.
-Ignorar?</message>
+<message xml:lang="pt">A salvação em %s parece corrompida. Ignorar?</message>
 <message xml:lang="fi">Tallenne %s vaikuttaa virheelliseltä, ohita?</message>
-<message xml:lang="ru">Сохранение в %s вероятно
-выполнено с повреждениями,
-игнорировать?</message>
-<message xml:lang="hu">A mentés (%s) hibásnak mutatkozik, hagyjuk figyelmen
-kívül?</message></label>
+<message xml:lang="ru">Сохранение в %s вероятно выполнено с повреждениями, игнорировать?</message>
+<message xml:lang="hu">A mentés (%s) hibásnak mutatkozik, hagyjuk figyelmen kívül?</message></label>
 <label define="AM_SAVE_REDIRECTED">
 <message xml:lang="en">URL %s redirected to %s, ignore?</message>
 <message xml:lang="fr">URL %s redirigée sur %s, ignorer ?</message>
 <message xml:lang="de">URI %s nach %s weitergeleitet, ignorieren?</message>
 <message xml:lang="it">L'URL %s è rediretto su %s, ignora ?</message>
-<message xml:lang="tr">URL %s %s e yönlendirilmiş, devam edeyim
-mi?</message>
+<message xml:lang="tr">URL %s %s e yönlendirilmiş, devam edeyim mi?</message>
 <message xml:lang="es">URL %s redirigida a %s, ¿ignorar?</message>
 <message xml:lang="pt">URL %s redirecionada para %s. Ignorar?</message>
 <message xml:lang="fi">URL %s välitetään edelleen %s, ohita?</message>
-<message xml:lang="ru">URL %s перенаправлен в %s,
-игнорировать?</message>
-<message xml:lang="hu">Az URL (%s) átirányítva ide: %s, hagyjuk figyelmen
-kívül?</message></label>
+<message xml:lang="ru">URL %s перенаправлен в %s, игнорировать?</message>
+<message xml:lang="hu">Az URL (%s) átirányítva ide: %s, hagyjuk figyelmen kívül?</message></label>
 <label define="AM_SAVE_RELOAD_FAILED">
 <message xml:lang="en">Reload of %s failed, ignore?</message>
 <message xml:lang="fr">Le relecture de %s a échouée, ignorer ?</message>
@@ -1485,10 +1306,8 @@ kívül?</message></label>
 <message xml:lang="es">La recarga de %s ha fallado, ¿ignorar?</message>
 <message xml:lang="pt">A recarga de %s falhou. Ignorar?</message>
 <message xml:lang="fi">%s päivitys epäonnistui, ohita?</message>
-<message xml:lang="ru">Перезагрузка из %s прервана,
-игнорировать?</message>
-<message xml:lang="hu">A(z) %s újratültése sikertelen, hagyjuk figyelmen
-kívül?</message></label>
+<message xml:lang="ru">Перезагрузка из %s прервана, игнорировать?</message>
+<message xml:lang="hu">A(z) %s újratültése sikertelen, hagyjuk figyelmen kívül?</message></label>
 <label define="AM_SERVER_INTERNAL_ERROR_500_CAUSE">
 <message xml:lang="en">Server reports a 501 error: %s</message>
 <message xml:lang="fr">Le serveur rapporte une erreur 501:</message>
@@ -1498,10 +1317,8 @@ kívül?</message></label>
 <message xml:lang="es">El servidor responde con un error 501: %s</message>
 <message xml:lang="pt">O servidor responde com um erro 501: %s</message>
 <message xml:lang="fi">Palvelinvirhe 501: %s</message>
-<message xml:lang="ru">Сервер сообщает об ошибке 501:
-%s</message>
-<message xml:lang="hu">A kiszolgáló 501-es hibát jelzett:
-%s</message></label>
+<message xml:lang="ru">Сервер сообщает об ошибке 501: %s</message>
+<message xml:lang="hu">A kiszolgáló 501-es hibát jelzett: %s</message></label>
 <label define="AM_SERVER_INTERNAL_ERROR_500_NO_CAUSE">
 <message xml:lang="en">Server reports a 501 error</message>
 <message xml:lang="fr">Le serveur rapporte une erreur 501</message>
@@ -1511,27 +1328,19 @@ kívül?</message></label>
 <message xml:lang="es">El servidor responde con un error 501</message>
 <message xml:lang="pt">O servidor responde com um erro 501</message>
 <message xml:lang="fi">Palvelinvirhe 501</message>
-<message xml:lang="ru">Сервер сообщает об ошибке
-501</message>
+<message xml:lang="ru">Сервер сообщает об ошибке 501</message>
 <message xml:lang="hu">A kiszolgáló 501-es hibát jelzett</message></label>
 <label define="AM_SERVER_NOT_IMPLEMENTED_501_ERROR">
 <message xml:lang="en">Server does not support this request method</message>
-<message xml:lang="fr">Le serveur ne supporte pas cette méthode
-d'accès</message>
-<message xml:lang="de">Der Server unterstützt diese Anforderungsmethode
-nicht</message>
-<message xml:lang="it">Il server non supporta questo metodo di
-richiesta</message>
+<message xml:lang="fr">Le serveur ne supporte pas cette méthode d'accès</message>
+<message xml:lang="de">Der Server unterstützt diese Anforderungsmethode nicht</message>
+<message xml:lang="it">Il server non supporta questo metodo di richiesta</message>
 <message xml:lang="tr">Sunucu bu istem yöntemini kabul etmiyor</message>
-<message xml:lang="es">El servidor no soporta este método de
-petición</message>
-<message xml:lang="pt">O servidor não suporta este método de
-requisição</message>
+<message xml:lang="es">El servidor no soporta este método de petición</message>
+<message xml:lang="pt">O servidor não suporta este método de requisição</message>
 <message xml:lang="fi">Palvelin ei tue tätä pyyntöä</message>
-<message xml:lang="ru">Сервер не поддерживает этот
-метод запроса</message>
-<message xml:lang="hu">A kiszolgáló nem támogatja ezt a kérési
-módot</message></label>
+<message xml:lang="ru">Сервер не поддерживает этот метод запроса</message>
+<message xml:lang="hu">A kiszolgáló nem támogatja ezt a kérési módot</message></label>
 <label define="AM_PARSE">
 <message xml:lang="en">Filter</message>
 <message xml:lang="fr">Filtrer</message>
@@ -1563,8 +1372,7 @@ módot</message></label>
 <message xml:lang="es">transferencias en cola</message>
 <message xml:lang="pt">Transferências enfileiradas</message>
 <message xml:lang="fi">jonottavat tiedonsiirrot</message>
-<message xml:lang="ru">поставленных в очередь
-передач</message>
+<message xml:lang="ru">поставленных в очередь передач</message>
 <message xml:lang="hu">sorban álló átvitel</message></label>
 <label define="AM_PRINT_TOC">
 <message xml:lang="en">Table of contents</message>
@@ -1622,56 +1430,38 @@ módot</message></label>
 <message xml:lang="ru">повторить по оси-x</message>
 <message xml:lang="hu">ismétlés-x</message></label>
 <label define="AM_RELOAD_FILES">
-<message xml:lang="en">Your previous Amaya session failed. Do you want to
-reload backup documents?</message>
-<message xml:lang="fr">La précédente session Amaya s'est mal terminée.
-Voulez-vous recharger les documents modifiés ?</message>
-<message xml:lang="de">Ihr letzter Amaya-Prozeß wurde abgebrochen. Möchten
-Sie Sicherungskopien laden?</message>
-<message xml:lang="it">La precedente sessione con Amaya non è terminata
-correttamente. Vuoi ricaricare i documenti di backup?</message>
-<message xml:lang="es">Su sesión anterior de Amaya falló. ¿Quiere recargar
-la copia de seguridad de los documentos?</message>
-<message xml:lang="pt">Sua sessão Amaya precedente falhou. Quer recarregar
-as cópias de segurança dos documentos?</message>
-<message xml:lang="fi">Amayan sammuttaminen epäonnistui. Haluatko palauttaa
-varmuuskopioidut dokumentit?</message>
-<message xml:lang="tr">Son Amaya oturumu kötü bitmiştir. Değiştirilen
-dosyaları yüklemek istiyormusunuz?</message>
-<message xml:lang="ru">Ваша предыдущая сессия Amaya
-прервана. Хотите перезагрузить
-сохранённые копии документов?</message>
-<message xml:lang="hu">Az Amaya előző futása hibával végződött.
-Betöltsük a dokumentumok biztonsági mentését?</message></label>
+<message xml:lang="en">Your previous Amaya session failed. Do you want to reload backup documents?</message>
+<message xml:lang="fr">La précédente session Amaya s'est mal terminée. Voulez-vous recharger les documents modifiés ?</message>
+<message xml:lang="de">Ihr letzter Amaya-Prozeß wurde abgebrochen. Möchten Sie Sicherungskopien laden?</message>
+<message xml:lang="it">La precedente sessione con Amaya non è terminata correttamente. Vuoi ricaricare i documenti di backup?</message>
+<message xml:lang="es">Su sesión anterior de Amaya falló. ¿Quiere recargar la copia de seguridad de los documentos?</message>
+<message xml:lang="pt">Sua sessão Amaya precedente falhou. Quer recarregar as cópias de segurança dos documentos?</message>
+<message xml:lang="fi">Amayan sammuttaminen epäonnistui. Haluatko palauttaa varmuuskopioidut dokumentit?</message>
+<message xml:lang="tr">Son Amaya oturumu kötü bitmiştir. Değiştirilen dosyaları yüklemek istiyormusunuz?</message>
+<message xml:lang="ru">Ваша предыдущая сессия Amaya прервана. Хотите перезагрузить сохранённые копии документов?</message>
+<message xml:lang="hu">Az Amaya előző futása hibával végződött. Betöltsük a dokumentumok biztonsági mentését?</message></label>
 <label define="AM_AUTHENTICATION_CONFIRM">
 <message xml:lang="en">Authentication failed. Retry?</message>
-<message xml:lang="fr">Echec de l'authentification. Voulez-vous réessayer
-?</message>
+<message xml:lang="fr">Echec de l'authentification. Voulez-vous réessayer ?</message>
 <message xml:lang="de">Login gescheitert. Wiederholen?</message>
 <message xml:lang="it">Autenticazione fallita. Vuoi riprovare?</message>
 <message xml:lang="es">Fallo de autentificación. ¿Reintentar?</message>
 <message xml:lang="pt">A autenticação falhou. Tentar novamente?</message>
 <message xml:lang="fi">Tunnistus epäonnistui, Yritä uudelleen?</message>
 <message xml:lang="tr">Resmileştirme hatasi. Tekrar?</message>
-<message xml:lang="ru">Идентификация прервана.
-Повторить?</message>
-<message xml:lang="hu">A hitelesítés sikertelen. Próbáljuk
-újra?</message></label>
+<message xml:lang="ru">Идентификация прервана. Повторить?</message>
+<message xml:lang="hu">A hitelesítés sikertelen. Próbáljuk újra?</message></label>
 <label define="AM_REDIRECTION_CONFIRM">
 <message xml:lang="en">Operation will be redirected. Continue?</message>
-<message xml:lang="fr">L'opération sera redirigée. Voulez-vous continuer
-?</message>
+<message xml:lang="fr">L'opération sera redirigée. Voulez-vous continuer ?</message>
 <message xml:lang="de">Umleitung folgen?</message>
-<message xml:lang="it">L'operazione sarà rediretta. Vuoi
-continuare?</message>
+<message xml:lang="it">L'operazione sarà rediretta. Vuoi continuare?</message>
 <message xml:lang="es">La operación será redirigida. ¿Continuar?</message>
 <message xml:lang="pt">A operação será redirecionada. Continuar?</message>
 <message xml:lang="fi">Toiminto välitetään. Haluatko jatkaa?</message>
 <message xml:lang="tr">Operasion yönlendirilecek. Devam?</message>
-<message xml:lang="ru">Операция будет
-перенаправлена. Продолжить?</message>
-<message xml:lang="hu">A művelet át lesz irányítva.
-Folytassuk?</message></label>
+<message xml:lang="ru">Операция будет перенаправлена. Продолжить?</message>
+<message xml:lang="hu">A művelet át lesz irányítva. Folytassuk?</message></label>
 <label define="AM_ROWS">
 <message xml:lang="en">Number of Rows</message>
 <message xml:lang="fr">Nombre de lignes</message>
@@ -1725,8 +1515,7 @@ Folytassuk?</message></label>
 <message xml:lang="pt">O texto alternativo é mandatório</message>
 <message xml:lang="fi">Vuorottainen teksti on välttämätön</message>
 <message xml:lang="tr">Yeniden yerleştirme metini mecburdur</message>
-<message xml:lang="ru">Вы обязаны ввести
-альтернативный текст</message>
+<message xml:lang="ru">Вы обязаны ввести альтернативный текст</message>
 <message xml:lang="hu">A szövegváltozat is kötelező</message></label>
 <label define="AM_PRINT_URL">
 <message xml:lang="en">Print URL</message>
@@ -1796,19 +1585,15 @@ Folytassuk?</message></label>
 <message xml:lang="hu">Gyorstár engedélyezése</message></label>
 <label define="AM_CACHE_PROT_DOCS">
 <message xml:lang="en">Cache protected documents</message>
-<message xml:lang="fr">Stocker dans le cache les documents
-protégés</message>
+<message xml:lang="fr">Stocker dans le cache les documents protégés</message>
 <message xml:lang="de">Geschützte Dokumente cachen</message>
 <message xml:lang="it">Proteggi i documenti nella cache</message>
 <message xml:lang="es">Documentos protegidos en la caché</message>
 <message xml:lang="pt">Documentos protegidos em cache</message>
 <message xml:lang="fi">Aseta suojatut tiedostot välimuistiin</message>
-<message xml:lang="tr">Korunması gereken belgeleri gizli bölüme kayıt
-edin</message>
-<message xml:lang="ru">Кэшировать защищённые
-документы</message>
-<message xml:lang="hu">A védett dokumentumok
-gyorstárazása</message></label>
+<message xml:lang="tr">Korunması gereken belgeleri gizli bölüme kayıt edin</message>
+<message xml:lang="ru">Кэшировать защищённые документы</message>
+<message xml:lang="hu">A védett dokumentumok gyorstárazása</message></label>
 <label define="AM_DISCONNECTED_MODE">
 <message xml:lang="en">Disconnected mode</message>
 <message xml:lang="fr">Mode déconnecté</message>
@@ -1829,10 +1614,8 @@ gyorstárazása</message></label>
 <message xml:lang="pt">Ignorar fim de validade (Expires): cabeçalho</message>
 <message xml:lang="fi">Ohita vanhentumiset: header</message>
 <message xml:lang="tr">Expires yazıyı önemsemeyin</message>
-<message xml:lang="ru">Игнорировать Expires:
-заголовок</message>
-<message xml:lang="hu">A lejárat figyelmen kívül hagyása:
-header</message></label>
+<message xml:lang="ru">Игнорировать Expires: заголовок</message>
+<message xml:lang="hu">A lejárat figyelmen kívül hagyása: header</message></label>
 <label define="AM_CACHE_DIR">
 <message xml:lang="en">Cache directory</message>
 <message xml:lang="fr">Répertoire du cache</message>
@@ -1862,13 +1645,10 @@ header</message></label>
 <message xml:lang="it">Dimensione dell'indice della cache (Mb)</message>
 <message xml:lang="es">Tamaño máx. de entrada de caché (MB):</message>
 <message xml:lang="pt">Tamanho limite de entrada de cache (MB)</message>
-<message xml:lang="fi">Välimuistiin tallennettavan tiedoston kokorajoitus
-(Mb)</message>
+<message xml:lang="fi">Välimuistiin tallennettavan tiedoston kokorajoitus (Mb)</message>
 <message xml:lang="tr">Gizli bölümün maksimum kapasitesi (Mb)</message>
-<message xml:lang="ru">Лимит на элемент кэша
-(Мб)</message>
-<message xml:lang="hu">Gyorstár bejegyzés méretkorlátja
-(Mb)</message></label>
+<message xml:lang="ru">Лимит на элемент кэша (Мб)</message>
+<message xml:lang="hu">Gyorstár bejegyzés méretkorlátja (Mb)</message></label>
 <label define="AM_PROXY_MENU">
 <message xml:lang="en">Proxy</message>
 <message xml:lang="fr">Proxy</message>
@@ -1893,20 +1673,15 @@ header</message></label>
 <message xml:lang="hu">HTTP proxy (pl., www.w3.org:1234)</message></label>
 <label define="AM_PROXY_DOMAIN">
 <message xml:lang="en">Proxy domain list (e.g., lists.w3.org)</message>
-<message xml:lang="fr">Liste des domaines du proxy (e.g.,
-lists.w3.org)</message>
+<message xml:lang="fr">Liste des domaines du proxy (e.g., lists.w3.org)</message>
 <message xml:lang="de">Proxy-Domänen</message>
 <message xml:lang="it">Domini di proxy (es., www.w3.org)</message>
 <message xml:lang="es">Lista de dominios proxy (p.e., lists.w3.org):</message>
-<message xml:lang="pt">Lista de domínios proxy (por exemplo
-lists.w3.org)</message>
-<message xml:lang="fi">Välityspalvelimen domain luettelo (e.g.,
-lists.w3.org)</message>
+<message xml:lang="pt">Lista de domínios proxy (por exemplo lists.w3.org)</message>
+<message xml:lang="fi">Välityspalvelimen domain luettelo (e.g., lists.w3.org)</message>
 <message xml:lang="tr">Proxy\'nin alan listesi (e.g., lists.w3.org)</message>
-<message xml:lang="ru">Доменный список proxy (т.е.,
-lists.w3.org)</message>
-<message xml:lang="hu">Proxy tartomány lista (pl.,
-lists.w3.org)</message></label>
+<message xml:lang="ru">Доменный список proxy (т.е., lists.w3.org)</message>
+<message xml:lang="hu">Proxy tartomány lista (pl., lists.w3.org)</message></label>
 <label define="AM_GENERAL_MENU">
 <message xml:lang="en">General</message>
 <message xml:lang="fr">Générale</message>
@@ -1949,8 +1724,7 @@ lists.w3.org)</message></label>
 <message xml:lang="pt">Retardo de duplo clique (ms)</message>
 <message xml:lang="fi">Kaksoisnapautuksen viive (ms)</message>
 <message xml:lang="tr">Iki kere tıklama süresi(ms)</message>
-<message xml:lang="ru">Задержка двойного щелчка
-(мс)</message>
+<message xml:lang="ru">Задержка двойного щелчка (мс)</message>
 <message xml:lang="hu">Duplakattintás késleltetése (emp)</message></label>
 <label define="AM_MENU_FONT_SIZE">
 <message xml:lang="en">Menu font size</message>
@@ -1991,18 +1765,15 @@ lists.w3.org)</message></label>
 <message xml:lang="it">Incolla mantenendo le righe originali</message>
 <message xml:lang="de">Zeilenweises Einfügen aktivieren</message>
 <message xml:lang="es">Activar pegado línea a línea</message>
-<message xml:lang="ru">Включить построчную
-вставку</message>
-<message xml:lang="hu">Soronkénti beillesztés
-engedélyezése</message></label>
+<message xml:lang="ru">Включить построчную вставку</message>
+<message xml:lang="hu">Soronkénti beillesztés engedélyezése</message></label>
 <label define="AM_AUTO_SAVE">
 <message xml:lang="en">Generate backup files</message>
 <message xml:lang="fr">Produire des fichiers de sauvegarde</message>
 <message xml:lang="it">Crea copie di salvataggio</message>
 <message xml:lang="es">Generar copias de seguridad</message>
 <message xml:lang="de">Backupdateien anlegen</message>
-<message xml:lang="ru">Создавать резервные копии
-файлов</message>
+<message xml:lang="ru">Создавать резервные копии файлов</message>
 <message xml:lang="hu">Biztonsági mentések haszánlata</message></label>
 <label define="AM_SAVE_GEOMETRY_ON_EXIT">
 <message xml:lang="en">Save geometry on exit</message>
@@ -2010,8 +1781,7 @@ engedélyezése</message></label>
 <message xml:lang="it">Salvare la geometria all'uscita</message>
 <message xml:lang="de">Fenstereinstellungen beim Beenden speichern</message>
 <message xml:lang="es">Guardar geometría al salir</message>
-<message xml:lang="ru">Сохранять геометрию при
-выходе</message>
+<message xml:lang="ru">Сохранять геометрию при выходе</message>
 <message xml:lang="hu">Elhelyezkedés mentése kilépéskor</message></label>
 <label define="AM_SHOW_BG_IMAGES">
 <message xml:lang="en">Show background images</message>
@@ -2022,8 +1792,7 @@ engedélyezése</message></label>
 <message xml:lang="pt">Exibir imagens de fundo</message>
 <message xml:lang="fi">Näytä taustakuvat</message>
 <message xml:lang="tr">Arka görüntülerini göster</message>
-<message xml:lang="ru">Показывать изображения
-фона</message>
+<message xml:lang="ru">Показывать изображения фона</message>
 <message xml:lang="hu">Háttésképek mentése</message></label>
 <label define="AM_SHOW_BUTTONBAR">
 <message xml:lang="en">Show button bar</message>
@@ -2034,8 +1803,7 @@ engedélyezése</message></label>
 <message xml:lang="es">Mostar barra de botones</message>
 <message xml:lang="pt">Exibir barra de ferramentas</message>
 <message xml:lang="fi">Näytä painikerivi</message>
-<message xml:lang="ru">Показывать панель
-кнопок</message>
+<message xml:lang="ru">Показывать панель кнопок</message>
 <message xml:lang="hu">Gombsor mutatása</message></label>
 <label define="AM_SHOW_TEXTZONE">
 <message xml:lang="en">Show address</message>
@@ -2088,8 +1856,7 @@ engedélyezése</message></label>
 <message xml:lang="it">Caricare immagini (img)</message>
 <message xml:lang="es">Cargar imágenes (img)</message>
 <message xml:lang="tr">Görüntüyü yükle (img)</message>
-<message xml:lang="ru">Загружать изображения
-(img)</message>
+<message xml:lang="ru">Загружать изображения (img)</message>
 <message xml:lang="hu">Képek betöltése (img)</message></label>
 <label define="AM_ENABLE_DOUBLECLICK">
 <message xml:lang="en">Double click activates link</message>
@@ -2099,10 +1866,8 @@ engedélyezése</message></label>
 <message xml:lang="es">Activar enlaces con un doble clic</message>
 <message xml:lang="pt">Duplo clique ativa enlace</message>
 <message xml:lang="fi">Kaksoisklikkaus aktivoi linkin</message>
-<message xml:lang="tr">Bağlantıyı izlemek için iki kere
-tuşlayın</message>
-<message xml:lang="ru">Двойной щелчок активирует
-ссылку</message>
+<message xml:lang="tr">Bağlantıyı izlemek için iki kere tuşlayın</message>
+<message xml:lang="ru">Двойной щелчок активирует ссылку</message>
 <message xml:lang="hu">Kapcsokra ugrás duplakattintással</message></label>
 <label define="AM_PUBLISH_MENU">
 <message xml:lang="en">Publishing</message>
@@ -2124,8 +1889,7 @@ tuşlayın</message>
 <message xml:lang="pt">Usar ETAGS e pré-condições</message>
 <message xml:lang="fi">Käytä ETAGS:ia ja ennakkoehtoja</message>
 <message xml:lang="tr">ETAGS\'ları ve ön-şartları kullanının</message>
-<message xml:lang="ru">Использовать ETAGS и
-предварительные условия</message>
+<message xml:lang="ru">Использовать ETAGS и предварительные условия</message>
 <message xml:lang="hu">ETAGS és előfeltételek használata</message></label>
 <label define="AM_VERIFY_PUT">
 <message xml:lang="en">Verify each PUT with a GET</message>
@@ -2140,17 +1904,14 @@ tuşlayın</message>
 <message xml:lang="hu">Minden PUT és GET ellenőrzése</message></label>
 <label define="AM_DEFAULT_NAME">
 <message xml:lang="en">Default name for URLs finishing in '/'</message>
-<message xml:lang="fr">Nom par défaut pour les URLs finissant par un
-'/'</message>
+<message xml:lang="fr">Nom par défaut pour les URLs finissant par un '/'</message>
 <message xml:lang="de">Dateiname, falls URI mit '/' endet</message>
-<message xml:lang="it">Nome di default per gli URL che terminano con
-'/'</message>
+<message xml:lang="it">Nome di default per gli URL che terminano con '/'</message>
 <message xml:lang="es">El nombre por omisión de URL termina en '/':</message>
 <message xml:lang="pt">Nome padrão para URLs terminadas em '/'</message>
 <message xml:lang="fi">Oletus nimi URL:lle jotka päättyvät '/'</message>
 <message xml:lang="tr">'/'\'le biten URL\'leri öntanımlı isim</message>
-<message xml:lang="ru">Имя по умолчанию для URLs
-заканчивающихся на '/'</message>
+<message xml:lang="ru">Имя по умолчанию для URLs заканчивающихся на '/'</message>
 <message xml:lang="hu">Az URL-ek neve '/' jellel végződik</message></label>
 <label define="AM_GEOMETRY_MENU">
 <message xml:lang="en">Geometry</message>
@@ -2172,8 +1933,7 @@ tuşlayın</message>
 <message xml:lang="pt">Salvar geometria atual</message>
 <message xml:lang="fi">Tallenna nykyinen geometria</message>
 <message xml:lang="tr">Yakın geometriyi kaydet</message>
-<message xml:lang="ru">Сохранить текущие
-размеры</message>
+<message xml:lang="ru">Сохранить текущие размеры</message>
 <message xml:lang="hu">Jelenlegi elhelyezkedés mentése</message></label>
 <label define="AM_RESTORE_GEOMETRY">
 <message xml:lang="en">Restore default geometry</message>
@@ -2184,29 +1944,19 @@ tuşlayın</message>
 <message xml:lang="pt">restaurar geometria padrão</message>
 <message xml:lang="fi">Palauta oletus geometria</message>
 <message xml:lang="tr">Öntanımlı geometriye yeniden biçim ver</message>
-<message xml:lang="ru">Восстановить размеры по
-умолчанию</message>
+<message xml:lang="ru">Восстановить размеры по умолчанию</message>
 <message xml:lang="hu">Alap elhelyezkedés visszaállítása</message></label>
 <label define="AM_GEOMETRY_CHANGE">
-<message xml:lang="en">The change will be effective when you open a new
-window.</message>
-<message xml:lang="fr">Ces changements seront effectifs lors de l'ouverture
-d'une fenêtre</message>
-<message xml:lang="de">Änderungen werden erst beim Öffnen eines neuen
-Fensters wirksam.</message>
-<message xml:lang="it">La modifica sarà effettiva quando aprirai una nuova
-finestra.</message>
-<message xml:lang="es">Los cambios serán efectivos cuando abra una nueva
-ventana.</message>
-<message xml:lang="pt">As mudanças serão efetivadas quando uma nova janela
-abrir.</message>
+<message xml:lang="en">The change will be effective when you open a new window.</message>
+<message xml:lang="fr">Ces changements seront effectifs lors de l'ouverture d'une fenêtre</message>
+<message xml:lang="de">Änderungen werden erst beim Öffnen eines neuen Fensters wirksam.</message>
+<message xml:lang="it">La modifica sarà effettiva quando aprirai una nuova finestra.</message>
+<message xml:lang="es">Los cambios serán efectivos cuando abra una nueva ventana.</message>
+<message xml:lang="pt">As mudanças serão efetivadas quando uma nova janela abrir.</message>
 <message xml:lang="fi">Muutos tulee voimaan avatessasi uuden ikkunan</message>
-<message xml:lang="tr">Bu değişiklikler yeniden pencere açtığınızda
-gerçerli olurlar</message>
-<message xml:lang="ru">Изменения вступят в силу
-после открытия нового окна.</message>
-<message xml:lang="hu">A változások új ablak nyitásakor lépnek
-életbe</message></label>
+<message xml:lang="tr">Bu değişiklikler yeniden pencere açtığınızda gerçerli olurlar</message>
+<message xml:lang="ru">Изменения вступят в силу после открытия нового окна.</message>
+<message xml:lang="hu">A változások új ablak nyitásakor lépnek életbe</message></label>
 <label define="AM_COLOR_MENU">
 <message xml:lang="en">Colors</message>
 <message xml:lang="fr">Couleurs</message>
@@ -2263,95 +2013,49 @@ gerçerli olurlar</message>
 <message xml:lang="ru">Меню цвет фона</message>
 <message xml:lang="hu">Menu háttérszíne</message></label>
 <label define="AM_CANT_CREATE_CACHE">
-<message xml:lang="en">Couldn't start the cache. You may have specified an
-invalid cache directory or another Amaya is using the cache.</message>
-<message xml:lang="fr">Impossible d'initialiser le cache. Vous avez
-peut-être specifié un répertoire invalide ou vous exécutez un autre Amaya
-en méme-temps.</message>
-<message xml:lang="de">Kann den Cache nicht starten. Möglicherweise ist das
-Cacheverzeichnis ungültig, oder ein anderer Prozeß verwendet den
-Cache.</message>
-<message xml:lang="it">Impossibile attivare la cache. Puoi avere specificato
-una directory di cache non valida, oppure un'altra istanza di Amaya sta
-usando la cache.</message>
-<message xml:lang="es">No pude iniciar la caché. Puede haber especificado un
-directorio de caché inválido u otro Amaya está usando el caché.</message>
-<message xml:lang="pt">Não foi possível inicializar o cache. Você pode ter
-especificado um diretório de cache inválido ou tem outro Amaya usando o
-cache.</message>
-<message xml:lang="fi">Välimuistin käynnistys epäonnistui.Välimuistin
-hakemisto on viallinen tai toinen Amaya-prosessi käyttää
-välimuistia.</message>
-<message xml:lang="tr">Gizli bölümü sıfırlama imkansızdır. Belkide
-geçersiz bir repertuar kullandınız veya aynı zamanda başka bir amaya
-kullandınız</message>
-<message xml:lang="ru">Невозможно запустить кэш.
-Вероятно неправильно задана директория
-кэша или другой Amaya использует кэш.</message>
-<message xml:lang="hu">A gyorstár nem indítható. Érvénytelen gyorstár
-mappát adott meg, vagy az Amaya egy másik példánya használja a
-gyorstárat.</message></label>
+<message xml:lang="en">Couldn't start the cache. You may have specified an invalid cache directory or another Amaya is using the cache.</message>
+<message xml:lang="fr">Impossible d'initialiser le cache. Vous avez peut-être specifié un répertoire invalide ou vous exécutez un autre Amaya en même-temps.</message>
+<message xml:lang="de">Kann den Cache nicht starten. Möglicherweise ist das Cacheverzeichnis ungültig, oder ein anderer Prozeß verwendet den Cache.</message>
+<message xml:lang="it">Impossibile attivare la cache. Puoi avere specificato una directory di cache non valida, oppure un'altra istanza di Amaya sta usando la cache.</message>
+<message xml:lang="es">No pude iniciar la caché. Puede haber especificado un directorio de caché inválido u otro Amaya está usando el caché.</message>
+<message xml:lang="pt">Não foi possível inicializar o cache. Você pode ter especificado um diretório de cache inválido ou tem outro Amaya usando o cache.</message>
+<message xml:lang="fi">Välimuistin käynnistys epäonnistui.Välimuistin hakemisto on viallinen tai toinen Amaya-prosessi käyttää välimuistia.</message>
+<message xml:lang="tr">Gizli bölümü sıfırlama imkansızdır. Belkide geçersiz bir repertuar kullandınız veya aynı zamanda başka bir amaya kullandınız</message>
+<message xml:lang="ru">Невозможно запустить кэш. Вероятно неправильно задана директория кэша или другой Amaya использует кэш.</message>
+<message xml:lang="hu">A gyorstár nem indítható. Érvénytelen gyorstár mappát adott meg, vagy az Amaya egy másik példánya használja a gyorstárat.</message></label>
 <label define="AM_LANG_NEGOTIATION">
-<message xml:lang="en">List of preferred languages like &quot;en,
-fr&quot;:</message>
-<message xml:lang="fr">Liste des langues préférées comme &quot;fr,
-en&quot; :</message>
+<message xml:lang="en">List of preferred languages like &quot;en, fr&quot;:</message>
+<message xml:lang="fr">Liste des langues préférées comme &quot;fr, en&quot; :</message>
 <message xml:lang="de">Bevorzugte Sprachen</message>
-<message xml:lang="it">Lista delle lingue preferite, come &quot;it, en,
-fr&quot;:</message>
-<message xml:lang="es">Lista de idiomas preferidos (p.e. &quot;es, en,
-fr&quot;):</message>
-<message xml:lang="pt">Lista de idiomas preferidos como &quot;pt,
-en&quot;:</message>
-<message xml:lang="fi">Luettelo valituista kielistä &quot;fi,
-en&quot;:</message>
-<message xml:lang="tr">Istenilen dillerin listesi (mesela &quot;en,
-fr&quot;):</message>
-<message xml:lang="ru">Список предпочитаемых языков
-&quot;ru, en, fr&quot;:</message>
-<message xml:lang="hu">Kedvenc nyelvek listája, például &quot;hu, en,
-fr&quot;:</message></label>
+<message xml:lang="it">Lista delle lingue preferite, come &quot;it, en, fr&quot;:</message>
+<message xml:lang="es">Lista de idiomas preferidos (p.e. &quot;es, en, fr&quot;):</message>
+<message xml:lang="pt">Lista de idiomas preferidos como &quot;pt, en&quot;:</message>
+<message xml:lang="fi">Luettelo valituista kielistä &quot;fi, en&quot;:</message>
+<message xml:lang="tr">Istenilen dillerin listesi (mesela &quot;en, fr&quot;):</message>
+<message xml:lang="ru">Список предпочитаемых языков &quot;ru, en, fr&quot;:</message>
+<message xml:lang="hu">Kedvenc nyelvek listája, például &quot;hu, en, fr&quot;:</message></label>
 <label define="AM_PROFILE_CHANGE">
-<message xml:lang="en">These changes won't be effective until Amaya is
-restarted</message>
-<message xml:lang="fr">Ces changements seront effectifs lors du prochain
-démarrage.</message>
-<message xml:lang="de">Änderungen werden erst bei einem Neustart
-wirksam</message>
-<message xml:lang="it">Queste modifiche saranno effettive alla prossima
-esecuzione</message>
-<message xml:lang="es">Estos cambios no serán efectivos hasta que se
-reinicie Amaya.</message>
-<message xml:lang="pt">Estas modificações não serão modificadas até que
-se reinicialize Amaya.</message>
-<message xml:lang="fi">Muutokset tulevat voimaan Amayan
-uudelleenkäynnistämisen jälkeen.</message>
-<message xml:lang="tr">Bu değişiklikler yeniden Amaya\'yı açtığınız
-taktirde geçerli olurlar</message>
-<message xml:lang="ru">Изменения вступят в силу
-только после перезапуска Amaya</message>
-<message xml:lang="hu">Ezek a változások nem lépnek életbe, míg újra
-nem indítja az Amayát</message></label>
+<message xml:lang="en">These changes won't be effective until Amaya is restarted</message>
+<message xml:lang="fr">Ces changements seront effectifs lors du prochain démarrage.</message>
+<message xml:lang="de">Änderungen werden erst bei einem Neustart wirksam</message>
+<message xml:lang="it">Queste modifiche saranno effettive alla prossima esecuzione</message>
+<message xml:lang="es">Estos cambios no serán efectivos hasta que se reinicie Amaya.</message>
+<message xml:lang="pt">Estas modificações não serão modificadas até que se reinicialize Amaya.</message>
+<message xml:lang="fi">Muutokset tulevat voimaan Amayan uudelleenkäynnistämisen jälkeen.</message>
+<message xml:lang="tr">Bu değişiklikler yeniden Amaya\'yı açtığınız taktirde geçerli olurlar</message>
+<message xml:lang="ru">Изменения вступят в силу только после перезапуска Amaya</message>
+<message xml:lang="hu">Ezek a változások nem lépnek életbe, míg újra nem indítja az Amayát</message></label>
 <label define="AM_SAFE_PUT_REDIRECT">
-<message xml:lang="en">Allow automatic PUT redirections to these
-domains</message>
-<message xml:lang="fr">Autoriser la redirection automatique du PUT vers ces
-domaines</message>
+<message xml:lang="en">Allow automatic PUT redirections to these domains</message>
+<message xml:lang="fr">Autoriser la redirection automatique du PUT vers ces domaines</message>
 <message xml:lang="de">PUT automatisch an diese Domäne umleiten</message>
-<message xml:lang="it">Consenti la redirezione automatica dei PUT su questi
-domini</message>
-<message xml:lang="es">Permitir redirecciones PUT automáticas a estos
-dominios:</message>
-<message xml:lang="pt">Permitir redirecionamentos PUT automáticos nestes
-domínios</message>
-<message xml:lang="fi">Salli automaattinen PUT-komentojen välitys näissä
-domaineissa</message>
-<message xml:lang="tr">Bu alanlarda PUT otomatik olarak yeniden
-yönlerdirmesini kabul edin</message>
-<message xml:lang="ru">Разрешить автоматические PUT
-перенаправления на эти домены</message>
-<message xml:lang="hu">Önműködő PUT átirányítások engedélyezése
-ehhez a tartományhoz</message></label>
+<message xml:lang="it">Consenti la redirezione automatica dei PUT su questi domini</message>
+<message xml:lang="es">Permitir redirecciones PUT automáticas a estos dominios:</message>
+<message xml:lang="pt">Permitir redirecionamentos PUT automáticos nestes domínios</message>
+<message xml:lang="fi">Salli automaattinen PUT-komentojen välitys näissä domaineissa</message>
+<message xml:lang="tr">Bu alanlarda PUT otomatik olarak yeniden yönlerdirmesini kabul edin</message>
+<message xml:lang="ru">Разрешить автоматические PUT перенаправления на эти домены</message>
+<message xml:lang="hu">Önműködő PUT átirányítások engedélyezése ehhez a tartományhoz</message></label>
 <label define="AM_WITH_CSS">
 <message xml:lang="en">Ignore style sheets</message>
 <message xml:lang="fr">Sans feuilles de style</message>
@@ -2361,10 +2065,8 @@ ehhez a tartományhoz</message></label>
 <message xml:lang="pt">Ignorar folhas de estilo</message>
 <message xml:lang="fi">Ohita tyylitiedostot</message>
 <message xml:lang="tr">Sayfasız</message>
-<message xml:lang="ru">Игнорировать таблицы
-стилей</message>
-<message xml:lang="hu">Stíluslapok figyelmen kívül
-hagyása</message></label>
+<message xml:lang="ru">Игнорировать таблицы стилей</message>
+<message xml:lang="hu">Stíluslapok figyelmen kívül hagyása</message></label>
 <label define="AM_TRANS">
 <message xml:lang="en">Transform type</message>
 <message xml:lang="fr">Transformer en</message>
@@ -2385,10 +2087,8 @@ hagyása</message></label>
 <message xml:lang="pt">(separar cada entrada com um espaço)</message>
 <message xml:lang="fi">(erota syötteet välilyönnein)</message>
 <message xml:lang="tr">Her Enter\'ü boşlukla değiştirin</message>
-<message xml:lang="ru">(записи разделяются
-пробелом)</message>
-<message xml:lang="hu">(az egyes tételeket szóközzel válasszuk
-el)</message></label>
+<message xml:lang="ru">(записи разделяются пробелом)</message>
+<message xml:lang="hu">(az egyes tételeket szóközzel válasszuk el)</message></label>
 <label define="AM_DONT_PROXY_DOMAIN">
 <message xml:lang="en">No proxy on these domains</message>
 <message xml:lang="fr">Ne pas utiliser le proxy dans ces domaines</message>
@@ -2396,27 +2096,21 @@ el)</message></label>
 <message xml:lang="it">Escludi l'utilizzo del proxy su questi domini</message>
 <message xml:lang="es">No usar proxy en estos dominios</message>
 <message xml:lang="pt">Não há proxy nestes domínios</message>
-<message xml:lang="fi">Älä käytä välityspalvelinta näihin
-domaineihin</message>
+<message xml:lang="fi">Älä käytä välityspalvelinta näihin domaineihin</message>
 <message xml:lang="tr">Bu alanlarda Proxy\'yi kullanmayın</message>
-<message xml:lang="ru">Не использовать proxy для этих
-доменов</message>
+<message xml:lang="ru">Не использовать proxy для этих доменов</message>
 <message xml:lang="hu">Nincs proxy ezekhez a tartományokhoz</message></label>
 <label define="AM_ONLY_PROXY_DOMAIN">
 <message xml:lang="en">Only proxy these domains</message>
-<message xml:lang="fr">Utiliser le proxy uniquement dans ces
-domaines</message>
+<message xml:lang="fr">Utiliser le proxy uniquement dans ces domaines</message>
 <message xml:lang="de">Zulassen</message>
 <message xml:lang="it">Utilizza il proxy solo su questi domini</message>
 <message xml:lang="es">Usar proxy sólo en estos dominios</message>
 <message xml:lang="pt">Somente com proxy estes domínios</message>
-<message xml:lang="fi">Käytä vain välityspalvelinta näihin
-domaineihin</message>
+<message xml:lang="fi">Käytä vain välityspalvelinta näihin domaineihin</message>
 <message xml:lang="tr">Bu alanlarda sadece Proxy\'yi kullanın</message>
-<message xml:lang="ru">Использовать proxy только для
-этих доменов</message>
-<message xml:lang="hu">Csak ezekhez a tartományokhoz van
-proxy</message></label>
+<message xml:lang="ru">Использовать proxy только для этих доменов</message>
+<message xml:lang="hu">Csak ezekhez a tartományokhoz van proxy</message></label>
 <label define="AM_MATH_ENTITY_NAME">
 <message xml:lang="en">Character name</message>
 <message xml:lang="fr">Nom du caractère</message>
@@ -2437,8 +2131,7 @@ proxy</message></label>
 <message xml:lang="pt">Diretório de usuário Amaya</message>
 <message xml:lang="fi">Amaya käyttäjän hakemisto</message>
 <message xml:lang="tr">Kullanıyıcı repertuarı</message>
-<message xml:lang="ru">Директория пользователя
-Amaya</message>
+<message xml:lang="ru">Директория пользователя Amaya</message>
 <message xml:lang="hu">Amaya felhasználói mappa</message></label>
 <label define="AM_TMP_DIR">
 <message xml:lang="en">Temporary directory</message>
@@ -2493,8 +2186,7 @@ Amaya</message>
 <message xml:lang="pt">Usuário anotador</message>
 <message xml:lang="fi">Käyttäjän huomautukset</message>
 <message xml:lang="tr">Kullanıyıcı ismi</message>
-<message xml:lang="ru">Автор аннотации и
-закладки</message>
+<message xml:lang="ru">Автор аннотации и закладки</message>
 <message xml:lang="hu">Annotation and bookmark user</message></label>
 <label define="AM_ANNOT_POST_SERVER">
 <message xml:lang="en">Annotation post server</message>
@@ -2505,8 +2197,7 @@ Amaya</message>
 <message xml:lang="pt">Servidor de publicação de anotações</message>
 <message xml:lang="fi">Postipalvelimen huomautukset</message>
 <message xml:lang="tr">Dağıtım servörü</message>
-<message xml:lang="ru">Сервер публикации (post)
-аннотации</message>
+<message xml:lang="ru">Сервер публикации (post) аннотации</message>
 <message xml:lang="hu">Annotation post server</message></label>
 <label define="AM_ANNOT_SERVERS">
 <message xml:lang="en">Annotation servers</message>
@@ -2521,55 +2212,37 @@ Amaya</message>
 <message xml:lang="hu">Annotation servers</message></label>
 <label define="AM_ANNOT_LAUTOLOAD">
 <message xml:lang="en">Autoload local annotations</message>
-<message xml:lang="fr">Charger automatiquement les annotations
-locales</message>
+<message xml:lang="fr">Charger automatiquement les annotations locales</message>
 <message xml:lang="de">Lokale Anmerkungen automatisch laden</message>
-<message xml:lang="it">Caricamento automatico delle annotazioni
-local</message>
+<message xml:lang="it">Caricamento automatico delle annotazioni local</message>
 <message xml:lang="es">Autocargar anotaciones locales</message>
 <message xml:lang="pt">Autocarregar anotações locais</message>
 <message xml:lang="fi">Lataa paikalliset merkinnät automaattisesti</message>
 <message xml:lang="tr">Lokal notları otomatik olarak yükleyin</message>
-<message xml:lang="ru">Автозагрузка локальных
-аннотаций</message>
-<message xml:lang="hu">Helyi jegyzetek önműködő
-betöltése</message></label>
+<message xml:lang="ru">Автозагрузка локальных аннотаций</message>
+<message xml:lang="hu">Helyi jegyzetek önműködő betöltése</message></label>
 <label define="AM_ANNOT_RAUTOLOAD">
 <message xml:lang="en">Autoload remote annotations</message>
-<message xml:lang="fr">Charger automatiquement les annotations
-distantes</message>
+<message xml:lang="fr">Charger automatiquement les annotations distantes</message>
 <message xml:lang="de">Entfernte Anmerkungen automatisch laden</message>
-<message xml:lang="it">Caricamento automatico delle annotazioni
-remote</message>
+<message xml:lang="it">Caricamento automatico delle annotazioni remote</message>
 <message xml:lang="es">Autocargar anotaciones remotas</message>
 <message xml:lang="pt">Autocarregar anotações remotas</message>
 <message xml:lang="fi">Lataa etämerkinnät automaattisesti</message>
 <message xml:lang="tr">Dıştan notları otomatik olarak yükleyin</message>
-<message xml:lang="ru">Автозагрузка удалённых
-аннотаций</message>
-<message xml:lang="hu">Távoli jegyzetek önműködő
-betöltése</message></label>
+<message xml:lang="ru">Автозагрузка удалённых аннотаций</message>
+<message xml:lang="hu">Távoli jegyzetek önműködő betöltése</message></label>
 <label define="AM_ANNOT_RAUTOLOAD_RST">
-<message xml:lang="en">Disable remote autoload at each startup (for off-line
-work)</message>
-<message xml:lang="fr">Désactiver le chargement automatique des annotations
-distantes au démarrage</message>
-<message xml:lang="es">Deshabilitar la recarga automática remota en cada
-inicio (para trabajo sin conexión)</message>
-<message xml:lang="it">Disabilita il caricamento remoto automatico alla
-partenza (per lavorare offline)</message>
+<message xml:lang="en">Disable remote autoload at each startup (for off-line work)</message>
+<message xml:lang="fr">Désactiver le chargement automatique des annotations distantes au démarrage</message>
+<message xml:lang="es">Deshabilitar la recarga automática remota en cada inicio (para trabajo sin conexión)</message>
+<message xml:lang="it">Disabilita il caricamento remoto automatico alla partenza (per lavorare offline)</message>
 <message xml:lang="de">Offline-Modus</message>
-<message xml:lang="pt">Desabilitar autocarga remota em cada partida (para
-trabalho off-line)</message>
-<message xml:lang="fi">Poista etälataus käytöstä käynnistyksen
-yhteydessä (etätyötä varten)</message>
-<message xml:lang="tr">Amaya\'nın başlangıcında otomatik dıştan
-notları yüklemesini durdurun</message>
-<message xml:lang="ru">Отключить удалённую
-автозагрузку при каждом запуске (для
-автономной работы)</message>
-<message xml:lang="hu">Minden indításkor a távoli jegyzetek önműködő
-betöltésének tiltása (szétkapcsolt munkához)</message></label>
+<message xml:lang="pt">Desabilitar autocarga remota em cada partida (para trabalho off-line)</message>
+<message xml:lang="fi">Poista etälataus käytöstä käynnistyksen yhteydessä (etätyötä varten)</message>
+<message xml:lang="tr">Amaya\'nın başlangıcında otomatik dıştan notları yüklemesini durdurun</message>
+<message xml:lang="ru">Отключить удалённую автозагрузку при каждом запуске (для автономной работы)</message>
+<message xml:lang="hu">Minden indításkor a távoli jegyzetek önműködő betöltésének tiltása (szétkapcsolt munkához)</message></label>
 <label define="AM_FG_SEL_COLOR">
 <message xml:lang="en">Selection color</message>
 <message xml:lang="fr">Couleur de sélection</message>
@@ -2634,60 +2307,35 @@ betöltésének tiltása (szétkapcsolt munkához)</message></label>
 <message xml:lang="ru">Поддерживать FTP ссылки</message>
 <message xml:lang="hu">FTP engedélyezése</message></label>
 <label define="AM_XML_RETRY">
-<message xml:lang="en">Not Well-Formed XML document - Reload as HTML or show
-parsing errors?</message>
-<message xml:lang="fr">Document XML mal formé - Recharger pour corriger ou
-montrer les erreurs ?</message>
-<message xml:lang="it">XML non valido - Ricarico come HTML o mostro gli
-errori di parsificazione?</message>
-<message xml:lang="de">XML-Dokument nicht wohlgeformt - als HTML laden oder
-Parserfehler anzeigen?</message>
-<message xml:lang="es">XML inválido - ¿Recargar como HTML o mostrar
-análisis de errores?</message>
-<message xml:lang="pt">XML inválido - recarregar como HTML ou mostrar erros
-sintáticos?</message>
-<message xml:lang="fi">Huonosti muotoiltu XML-dokumentti - Ladataanko
-HTML:nä vai näytetään virheellisenä?</message>
-<message xml:lang="tr">XML belgesinde hata - Hataları düzeltmek için
-yeniden yükle veya hataları göster?</message>
-<message xml:lang="ru">Неправильно построенный XML
-документ - Перезагрузить как HTML или
-показать разбор ошибок?</message>
-<message xml:lang="hu">Nem jólformázott XML dokumentum - töltsük be újra
-HTML-ként, vagy elemzési hibák megtekintése?</message></label>
+<message xml:lang="en">Not Well-Formed XML document - Reload as HTML or show parsing errors?</message>
+<message xml:lang="fr">Document XML mal formé - Recharger pour corriger ou montrer les erreurs ?</message>
+<message xml:lang="it">XML non valido - Ricarico come HTML o mostro gli errori di parsificazione?</message>
+<message xml:lang="de">XML-Dokument nicht wohlgeformt - als HTML laden oder Parserfehler anzeigen?</message>
+<message xml:lang="es">XML inválido - ¿Recargar como HTML o mostrar análisis de errores?</message>
+<message xml:lang="pt">XML inválido - recarregar como HTML ou mostrar erros sintáticos?</message>
+<message xml:lang="fi">Huonosti muotoiltu XML-dokumentti - Ladataanko HTML:nä vai näytetään virheellisenä?</message>
+<message xml:lang="tr">XML belgesinde hata - Hataları düzeltmek için yeniden yükle veya hataları göster?</message>
+<message xml:lang="ru">Неправильно построенный XML документ - Перезагрузить как HTML или показать разбор ошибок?</message>
+<message xml:lang="hu">Nem jólformázott XML dokumentum - töltsük be újra HTML-ként, vagy elemzési hibák megtekintése?</message></label>
 <label define="AM_XML_ERROR">
-<message xml:lang="en">Not Well-Formed XML document - Show parsing
-errors?</message>
-<message xml:lang="fr">Document XML mal formé - Montrer les erreurs
-?</message>
-<message xml:lang="it">XML non valido - Mostro gli errori di
-parsificazione?</message>
-<message xml:lang="de">XML-Dokument nicht wohlgeformt - Parsefehler
-anzeigen?</message>
-<message xml:lang="es">XML inválido - ¿Mostrar análisis de
-errores?</message>
+<message xml:lang="en">Not Well-Formed XML document - Show parsing errors?</message>
+<message xml:lang="fr">Document XML mal formé - Montrer les erreurs ?</message>
+<message xml:lang="it">XML non valido - Mostro gli errori di parsificazione?</message>
+<message xml:lang="de">XML-Dokument nicht wohlgeformt - Parsefehler anzeigen?</message>
+<message xml:lang="es">XML inválido - ¿Mostrar análisis de errores?</message>
 <message xml:lang="pt">XML inválido - mostrar erros na leitura?</message>
-<message xml:lang="fi">Huonosti muotoiltu XML-dokumentti - Näytetäänkö
-virheet?</message>
+<message xml:lang="fi">Huonosti muotoiltu XML-dokumentti - Näytetäänkö virheet?</message>
 <message xml:lang="tr">XML belgesinde hata - Hataları göster?</message>
-<message xml:lang="ru">Неправильно построенный XML
-документ - Показать разбор ошибок?</message>
-<message xml:lang="hu">Nem jólformázott XML dokumentum - elemzési hibák
-megtekintése?</message></label>
+<message xml:lang="ru">Неправильно построенный XML документ - Показать разбор ошибок?</message>
+<message xml:lang="hu">Nem jólformázott XML dokumentum - elemzési hibák megtekintése?</message></label>
 <label define="AM_XML_CHARACTER_RETRY">
 <message xml:lang="en">Try the 'File/Force a Character Coding' entry</message>
-<message xml:lang="fr">Essayer l'entrée &quot;Fichier/Forcer un code
-caractère&quot;</message>
-<message xml:lang="es">Utiliza el menú 'Archivo &gt; Forzar codificación de
-caracteres'</message>
-<message xml:lang="de">Verwenden Sie 'Datei/Zeichenkodierung
-erzwingen'</message>
+<message xml:lang="fr">Essayer l'entrée &quot;Fichier/Forcer un code caractère&quot;</message>
+<message xml:lang="es">Utiliza el menú 'Archivo &gt; Forzar codificación de caracteres'</message>
+<message xml:lang="de">Verwenden Sie 'Datei/Zeichenkodierung erzwingen'</message>
 <message xml:lang="it">Prova la voce 'File/Forza codifica caratteri'</message>
-<message xml:lang="ru">Неправильные символы -
-Перезагрузить как HTML или показать разбор
-ошибок?</message>
-<message xml:lang="hu">Próbálja a 'Fájl/Kényszerített karakter
-kódolás' menüt</message></label>
+<message xml:lang="ru">Неправильные символы - Перезагрузить как HTML или показать разбор ошибок?</message>
+<message xml:lang="hu">Próbálja a 'Fájl/Kényszerített karakter kódolás' menüt</message></label>
 <label define="AM_XML_CHARACTER_ERROR">
 <message xml:lang="en">Invalid characters</message>
 <message xml:lang="fr">Caractères invalides</message>
@@ -2711,64 +2359,38 @@ kódolás' menüt</message></label>
 <message xml:lang="ru">Профиль документа:</message>
 <message xml:lang="hu">Dokumentum profile:</message></label>
 <label define="AM_XML_WARNING">
-<message xml:lang="en">Errors detected - see File/Show parsing
-errors</message>
-<message xml:lang="fr">Erreurs détectées - voir Fichier/Montrer les
-erreurs</message>
+<message xml:lang="en">Errors detected - see File/Show parsing errors</message>
+<message xml:lang="fr">Erreurs détectées - voir Fichier/Montrer les erreurs</message>
 <message xml:lang="it">Errore - vedi File/Mostra le errore</message>
 <message xml:lang="de">Anzeigen - siehe Datei/Parserfehler anzeigen</message>
-<message xml:lang="es">Eerrores - vea Archivo &gt; Mostrar errores
-sintácticos</message>
-<message xml:lang="pt">Erros - veja Vistas/Exibir erros de gramática
-(parsing)</message>
-<message xml:lang="fi">Virhe - katso Näytä/Näytä
-käännösvirheet</message>
+<message xml:lang="es">Eerrores - vea Archivo &gt; Mostrar errores sintácticos</message>
+<message xml:lang="pt">Erros - veja Vistas/Exibir erros de gramática (parsing)</message>
+<message xml:lang="fi">Virhe - katso Näytä/Näytä käännösvirheet</message>
 <message xml:lang="tr">Hata - Görünümler/Hataları göster bakın</message>
-<message xml:lang="ru">Ошибка - смотрите
-Вид/Показать разбор ошибок</message>
-<message xml:lang="hu">Néhány elem/attribútum figyelmen kívül hagyva -
-see Fájl/Elemzési hibák mutatása</message></label>
+<message xml:lang="ru">Ошибка - смотрите Вид/Показать разбор ошибок</message>
+<message xml:lang="hu">Néhány elem/attribútum figyelmen kívül hagyva - see Fájl/Elemzési hibák mutatása</message></label>
 <label define="AM_UNKNOWN_ENCODING">
-<message xml:lang="en">The encoding of this document is not supported by
-Amaya</message>
-<message xml:lang="fr">Le codage de ce document n'est pas supporté par
-Amaya</message>
-<message xml:lang="it">La codifica per questo documento non e` supportata da
-Amaya</message>
-<message xml:lang="de">Die Codierung dieses Dokuments wird von Amaya nicht
-unterstützt</message>
-<message xml:lang="es">La codificación de este documento no está soportada
-por Amaya</message>
-<message xml:lang="pt">A codificação deste documento não é suportada por
-Amaya</message>
+<message xml:lang="en">The encoding of this document is not supported by Amaya</message>
+<message xml:lang="fr">Le codage de ce document n'est pas supporté par Amaya</message>
+<message xml:lang="it">La codifica per questo documento non e` supportata da Amaya</message>
+<message xml:lang="de">Die Codierung dieses Dokuments wird von Amaya nicht unterstützt</message>
+<message xml:lang="es">La codificación de este documento no está soportada por Amaya</message>
+<message xml:lang="pt">A codificação deste documento não é suportada porAmaya</message>
 <message xml:lang="fi">Amaya ei tue dokumentin tyyppiä</message>
-<message xml:lang="tr">Bu belgenin kodlaması Amaya tarafından
-yapılamıyor</message>
-<message xml:lang="ru">Кодирование (сжатие) этого
-документа не поддерживается в Amaya</message>
-<message xml:lang="hu">Ezen dokumentum kódolását az Amaya nem
-támogatja</message></label>
+<message xml:lang="tr">Bu belgenin kodlaması Amaya tarafından yapılamıyor</message>
+<message xml:lang="ru">Кодирование (сжатие) этого документа не поддерживается в Amaya</message>
+<message xml:lang="hu">Ezen dokumentum kódolását az Amaya nem támogatja</message></label>
 <label define="AM_XML_MISMATCH_PROFILE">
-<message xml:lang="en">Editing and saving this document will change its
-type</message>
-<message xml:lang="fr">Editer et sauver ce document changera son
-type</message>
-<message xml:lang="it">Editando e salvando questo documento il suo tipo
-verrà cambiato</message>
-<message xml:lang="de">Durch das Bearbeiten und Speichern ändert sich der
-Dokumenttyp</message>
-<message xml:lang="es">Al editar y guardar este documento se cambiará su
-tipo</message>
-<message xml:lang="pt">Editar ou salvar este documento vai mudar seu
-tipo</message>
-<message xml:lang="fi">Muokkaus ja tallennus muuttavat dokumentin
-tyypin</message>
-<message xml:lang="tr">Yazmak ve kaydetmek bu belgenin tipini
-değiştirir</message>
-<message xml:lang="ru">Редактирование и сохранение
-этого документа изменит его тип</message>
-<message xml:lang="hu">Ezen dokumentum szerkesztése és mentés
-megváltoztatja a dokumentum típusát</message></label>
+<message xml:lang="en">Editing and saving this document will change its type</message>
+<message xml:lang="fr">Editer et sauver ce document changera son type</message>
+<message xml:lang="it">Editando e salvando questo documento il suo tipo verrà cambiato</message>
+<message xml:lang="de">Durch das Bearbeiten und Speichern ändert sich der Dokumenttyp</message>
+<message xml:lang="es">Al editar y guardar este documento se cambiará su tipo</message>
+<message xml:lang="pt">Editar ou salvar este documento vai mudar seu tipo</message>
+<message xml:lang="fi">Muokkaus ja tallennus muuttavat dokumentin tyypin</message>
+<message xml:lang="tr">Yazmak ve kaydetmek bu belgenin tipini değiştirir</message>
+<message xml:lang="ru">Редактирование и сохранение этого документа изменит его тип</message>
+<message xml:lang="hu">Ezen dokumentum szerkesztése és mentés megváltoztatja a dokumentum típusát</message></label>
 <label define="AM_NOT_AVAILABLE">
 <message xml:lang="en">Not available</message>
 <message xml:lang="fr">Non disponible</message>
@@ -2822,8 +2444,7 @@ megváltoztatja a dokumentum típusát</message></label>
 <message xml:lang="pt">Menu filtro local de anotações</message>
 <message xml:lang="fi">Merkintä paikallissuodatusvalikko</message>
 <message xml:lang="tr">Notların lokal filtresi</message>
-<message xml:lang="ru">Меню локального фильтра
-аннотации</message>
+<message xml:lang="ru">Меню локального фильтра аннотации</message>
 <message xml:lang="hu">Jegyzet helyi szűrő menü</message></label>
 <label define="AM_AFILTER_SHOW">
 <message xml:lang="en">Show</message>
@@ -2872,20 +2493,13 @@ megváltoztatja a dokumentum típusát</message></label>
 <label define="AM_AFILTER_HELP">
 <message xml:lang="en">* means hidden, - means partially hidden</message>
 <message xml:lang="de">* = verborgen, - = teilweise verborgen</message>
-<message xml:lang="fr">* signifie caché, - signifie partiellement
-caché</message>
-<message xml:lang="es">* significa oculto, - significa parcialmente
-oculto</message>
-<message xml:lang="it">* significa nascosto, - significa parzialmente
-nascosto</message>
-<message xml:lang="pt">* significa escondido, - significa parcialmente
-escondido</message>
-<message xml:lang="fi">* tarkoittaa piilotettua, - tarkoittaa osittain
-piilotettua</message>
-<message xml:lang="tr">* gizlemek anlamında, - süreli gizlemek
-anlamında</message>
-<message xml:lang="ru">* значит скрыты, - значит
-частично скрыты</message>
+<message xml:lang="fr">* signifie caché, - signifie partiellement caché</message>
+<message xml:lang="es">* significa oculto, - significa parcialmente oculto</message>
+<message xml:lang="it">* significa nascosto, - significa parzialmente nascosto</message>
+<message xml:lang="pt">* significa escondido, - significa parcialmente escondido</message>
+<message xml:lang="fi">* tarkoittaa piilotettua, - tarkoittaa osittain piilotettua</message>
+<message xml:lang="tr">* gizlemek anlamında, - süreli gizlemek anlamında</message>
+<message xml:lang="ru">* значит скрыты, - значит частично скрыты</message>
 <message xml:lang="hu">*: rejtett, -: részben rejtett</message></label>
 <label define="AM_AFILTER_OPTIONS">
 <message xml:lang="en">Filter options</message>
@@ -2976,146 +2590,82 @@ anlamında</message>
 <message xml:lang="ru">Невозможно создать XPointer</message>
 <message xml:lang="hu">XPointer nem hozható létre</message></label>
 <label define="AM_NO_SXPOINTER">
-<message xml:lang="en">Impossible to attach a start XPointer on an internal
-added element</message>
-<message xml:lang="fr">Impossible de débuter un XPointer sur un élément
-ajouté par Amaya</message>
-<message xml:lang="it">Impossibile attaccare uno start XPointer su un
-elemento aggiunto internamente</message>
-<message xml:lang="de">Anbringen eines Start XPointer an ein internes
-zusätzliches Element nicht möglich</message>
-<message xml:lang="es">Imposible adjuntar un XPointer inicial sobre un
-elemento interno agregado</message>
-<message xml:lang="pt">Impossível anexar um XPointer inicial a um elemento
-adicionado internamente</message>
-<message xml:lang="fi">Mahdotonta liittää aloittavaa XPointeria sisäisesti
-lisättyyn elementtiin</message>
-<message xml:lang="tr">Amaya tarafından eklenen XPointer
-başlanamıyor</message>
-<message xml:lang="ru">Невозможно прикрепить начало
-XPointer на внутренний добавленный
-элемент</message>
-<message xml:lang="hu">Belső hozzáadott elemhez nem társítható kezdő
-XPointer</message></label>
+<message xml:lang="en">Impossible to attach a start XPointer on an internal added element</message>
+<message xml:lang="fr">Impossible de débuter un XPointer sur un élément ajouté par Amaya</message>
+<message xml:lang="it">Impossibile attaccare uno start XPointer su un elemento aggiunto internamente</message>
+<message xml:lang="de">Anbringen eines Start XPointer an ein internes zusätzliches Element nicht möglich</message>
+<message xml:lang="es">Imposible adjuntar un XPointer inicial sobre un elemento interno agregado</message>
+<message xml:lang="pt">Impossível anexar um XPointer inicial a um elemento adicionado internamente</message>
+<message xml:lang="fi">Mahdotonta liittää aloittavaa XPointeria sisäisesti lisättyyn elementtiin</message>
+<message xml:lang="tr">Amaya tarafından eklenen XPointer başlanamıyor</message>
+<message xml:lang="ru">Невозможно прикрепить начало XPointer на внутренний добавленный элемент</message>
+<message xml:lang="hu">Belső hozzáadott elemhez nem társítható kezdő XPointer</message></label>
 <label define="AM_NO_EXPOINTER">
-<message xml:lang="en">Impossible to attach an end XPointer on an internal
-added element</message>
-<message xml:lang="fr">Impossible de terminer un XPointer sur un élément
-ajouté par Amaya</message>
-<message xml:lang="it">Impossibile attaccare uno end XPointer su un elemento
-aggiunto internamente</message>
-<message xml:lang="de">Anbringen eines End XPointer an ein internes
-zusätzliches Element nicht möglich</message>
-<message xml:lang="es">Imposible adjuntar un XPointer final sobre un elemento
-interno agregado</message>
-<message xml:lang="pt">Impossível anexar um XPointer final a um elemento
-adicionado internamente</message>
-<message xml:lang="fi">Mahdotonta liittää lopettavaa XPointeria sisäisesti
-lisättyyn elementtiin</message>
-<message xml:lang="tr">Amaya tarafından eklenen XPointer
-bitiremiyor</message>
-<message xml:lang="ru">Невозможно прикрепить конец
-XPointer на внутренний добавленный
-элемент</message>
-<message xml:lang="hu">Belső hozzáadott elemhez nem társítható vég
-XPointer</message></label>
+<message xml:lang="en">Impossible to attach an end XPointer on an internal added element</message>
+<message xml:lang="fr">Impossible de terminer un XPointer sur un élément ajouté par Amaya</message>
+<message xml:lang="it">Impossibile attaccare uno end XPointer su un elemento aggiunto internamente</message>
+<message xml:lang="de">Anbringen eines End XPointer an ein internes zusätzliches Element nicht möglich</message>
+<message xml:lang="es">Imposible adjuntar un XPointer final sobre un elemento interno agregado</message>
+<message xml:lang="pt">Impossível anexar um XPointer final a um elemento adicionado internamente</message>
+<message xml:lang="fi">Mahdotonta liittää lopettavaa XPointeria sisäisesti lisättyyn elementtiin</message>
+<message xml:lang="tr">Amaya tarafından eklenen XPointer bitiremiyor</message>
+<message xml:lang="ru">Невозможно прикрепить конец XPointer на внутренний добавленный элемент</message>
+<message xml:lang="hu">Belső hozzáadott elemhez nem társítható vég XPointer</message></label>
 <label define="AM_NO_ANNOT_MOVE">
 <message xml:lang="en">Cannot find where to move the annotation</message>
 <message xml:lang="fr">Je ne peux pas déplacer l'annotation là</message>
 <message xml:lang="es">No sé a dónde mover la anotación</message>
-<message xml:lang="de">Kein Ziel zum Verschieben der Anmerkung
-gefunden</message>
+<message xml:lang="de">Kein Ziel zum Verschieben der Anmerkung gefunden</message>
 <message xml:lang="it">Non trovo dove muovere l'annotazione</message>
-<message xml:lang="pt">Não é possível achar para onde mover a
-anotação</message>
+<message xml:lang="pt">Não é possível achar para onde mover a anotação</message>
 <message xml:lang="fi">Merkinnän kohdepaikkaa ei löydy</message>
 <message xml:lang="tr">Eklemeler yerinden oynatılamıyor</message>
-<message xml:lang="ru">Невозможно найти куда
-переместилась аннотация</message>
+<message xml:lang="ru">Невозможно найти куда переместилась аннотация</message>
 <message xml:lang="hu">A jegyzet új helye nem található</message></label>
 <label define="AM_NO_ANNOT_MOVE_OTHER">
-<message xml:lang="en">Cannot move the annotation to a different
-document</message>
-<message xml:lang="fr">Je ne peux pas bouger l'annotation vers un autre
-document</message>
+<message xml:lang="en">Cannot move the annotation to a different document</message>
+<message xml:lang="fr">Je ne peux pas bouger l'annotation vers un autre document</message>
 <message xml:lang="es">No puedo mover la anotación a otro documento</message>
-<message xml:lang="de">Die Anmerkung kann nicht in ein anderes Dokument
-verschoben werden</message>
-<message xml:lang="it">Non posso muovere l'annotazione su un diverso
-documento</message>
-<message xml:lang="pt">Não é possível mover a anotação para outro
-documento</message>
-<message xml:lang="fi">Merkintää ei voi siirtää toiseen
-dokumenttiin</message>
+<message xml:lang="de">Die Anmerkung kann nicht in ein anderes Dokument verschoben werden</message>
+<message xml:lang="it">Non posso muovere l'annotazione su un diverso documento</message>
+<message xml:lang="pt">Não é possível mover a anotação para outro documento</message>
+<message xml:lang="fi">Merkintää ei voi siirtää toiseen dokumenttiin</message>
 <message xml:lang="tr">Eklemeler başka bir belgeye konamıyor</message>
-<message xml:lang="ru">Невозможно переместить
-аннотацию в другой документ</message>
-<message xml:lang="hu">Másik dokumentumba nem helyezhető a
-jegyzet</message></label>
+<message xml:lang="ru">Невозможно переместить аннотацию в другой документ</message>
+<message xml:lang="hu">Másik dokumentumba nem helyezhető a jegyzet</message></label>
 <label define="AM_NO_ANNOT_MOD_DOC">
-<message xml:lang="en">You cannot annotate a modified document. Please save
-it first.</message>
-<message xml:lang="fr">Vous ne pouvez pas annoter un document modifié.
-Sauver le d'abord.</message>
-<message xml:lang="it">Non puoi annotare un documento modificato. Prima
-salvalo.</message>
-<message xml:lang="de">Anmerkung an geändertes Dokument ist nicht möglich,
-bitte erst speichern</message>
-<message xml:lang="es">No puede anotar un documento que está siendo
-modificado. Por favor, guárdelo primero.</message>
-<message xml:lang="pt">Você não pode fazer anotações em um documento
-modificado. Por favor salve-o antes.</message>
-<message xml:lang="fi">Et voi merkitä muutettua dokumenttia. Tallenna
-dokumentti ensin.</message>
-<message xml:lang="tr">Değişlikler gören bir belgeye ekleme imkansıdır.
-Önce kayıt edin.</message>
-<message xml:lang="ru">Вы не можете аннотировать
-изменённый документ. Сначала сохраните
-его.</message>
-<message xml:lang="hu">Módosított dokumentumhoz nem lehet jegyzetet adni.
-Kérjük, előbb mentse.</message></label>
+<message xml:lang="en">You cannot annotate a modified document. Please save it first.</message>
+<message xml:lang="fr">Vous ne pouvez pas annoter un document modifié. Sauver le d'abord.</message>
+<message xml:lang="it">Non puoi annotare un documento modificato. Prima salvalo.</message>
+<message xml:lang="de">Anmerkung an geändertes Dokument ist nicht möglich, bitte erst speichern</message>
+<message xml:lang="es">No puede anotar un documento que está siendo modificado. Por favor, guárdelo primero.</message>
+<message xml:lang="pt">Você não pode fazer anotações em um documento modificado. Por favor salve-o antes.</message>
+<message xml:lang="fi">Et voi merkitä muutettua dokumenttia. Tallenna dokumentti ensin.</message>
+<message xml:lang="tr">Değişlikler gören bir belgeye ekleme imkansıdır. Önce kayıt edin.</message>
+<message xml:lang="ru">Вы не можете аннотировать изменённый документ. Сначала сохраните его.</message>
+<message xml:lang="hu">Módosított dokumentumhoz nem lehet jegyzetet adni. Kérjük, előbb mentse.</message></label>
 <label define="AM_NO_ANNOT_USER">
-<message xml:lang="en">No annotation user declared. Please open the
-Annotations/Configure menu.</message>
-<message xml:lang="fr">Pas de nom d'utilisateur déclaré. Voir le menu
-Annotations/Configure.</message>
-<message xml:lang="it">Non sono state dichiarate annotazioni utente. Apri il
-menu Annotazioni/Configura.</message>
-<message xml:lang="de">Kein Ersteller für Anmerkung konfiguriert, bitte das
-Menü &quot;Anmerkungen/Konfiguration&quot; öffnen</message>
-<message xml:lang="es">No hay usuarios de anotaciones declarados. Por favor,
-abra el menú de configuración de Anotaciones</message>
-<message xml:lang="pt">Não foi declarado o usuário da anotação. Por favor
-abra o menu Anotações/Configurar</message>
-<message xml:lang="fi">Merkinnän käyttäjää ei valittu. Valitse
-käyttäjä Merkinnät/Määritä asetukset</message>
-<message xml:lang="tr">Kunlayıcı ismi verilmemiştir. Ekleme/Ayarlar
-menüsüne bakın</message>
-<message xml:lang="ru">Не определён автор аннотации.
-Откройте меню Аннотации/Выбрать
-конфигурацию.</message>
-<message xml:lang="hu">Nincs jegyzet felhasználó. Kérjük, nyissa meg a
-Jegyzet/Beállítások menüt.</message></label>
+<message xml:lang="en">No annotation user declared. Please open the Annotations/Configure menu.</message>
+<message xml:lang="fr">Pas de nom d'utilisateur déclaré. Voir le menu Annotations/Configure.</message>
+<message xml:lang="it">Non sono state dichiarate annotazioni utente. Apri il menu Annotazioni/Configura.</message>
+<message xml:lang="de">Kein Ersteller für Anmerkung konfiguriert, bitte das Menü &quot;Anmerkungen/Konfiguration&quot; öffnen</message>
+<message xml:lang="es">No hay usuarios de anotaciones declarados. Por favor, abra el menú de configuración de Anotaciones</message>
+<message xml:lang="pt">Não foi declarado o usuário da anotação. Por favor abra o menu Anotações/Configurar</message>
+<message xml:lang="fi">Merkinnän käyttäjää ei valittu. Valitse käyttäjä Merkinnät/Määritä asetukset</message>
+<message xml:lang="tr">Kunlayıcı ismi verilmemiştir. Ekleme/Ayarlar menüsüne bakın</message>
+<message xml:lang="ru">Не определён автор аннотации. Откройте меню Аннотации/Выбрать конфигурацию.</message>
+<message xml:lang="hu">Nincs jegyzet felhasználó. Kérjük, nyissa meg a Jegyzet/Beállítások menüt.</message></label>
 <label define="AM_CANNOT_ANNOTATE">
-<message xml:lang="en">Unable to build an XPointer for this
-annotation</message>
-<message xml:lang="fr">Impossible de construire un XPointer pour cette
-annotation</message>
-<message xml:lang="it">Non posso creare un XPointer per questa
-annotazione</message>
-<message xml:lang="de">Für diese Anmerkung kann kein XPointer erzeugt
-werden</message>
-<message xml:lang="es">No se puede crear un XPointer para esta
-anotación</message>
-<message xml:lang="pt">Incapaz de construir um XPointer para esta
-anotação</message>
-<message xml:lang="fi">XPointerin luonti merkintää varten
-epäonnistui</message>
+<message xml:lang="en">Unable to build an XPointer for this annotation</message>
+<message xml:lang="fr">Impossible de construire un XPointer pour cette annotation</message>
+<message xml:lang="it">Non posso creare un XPointer per questa annotazione</message>
+<message xml:lang="de">Für diese Anmerkung kann kein XPointer erzeugt werden</message>
+<message xml:lang="es">No se puede crear un XPointer para esta anotación</message>
+<message xml:lang="pt">Incapaz de construir um XPointer para esta anotação</message>
+<message xml:lang="fi">XPointerin luonti merkintää varten epäonnistui</message>
 <message xml:lang="tr">Bu not için XPointer yaratmak imkansızdır</message>
-<message xml:lang="ru">Невозможно создать XPointer для
-этой аннотации</message>
-<message xml:lang="hu">Ehhez a jegyzethez nem hozható létre
-XPointer</message></label>
+<message xml:lang="ru">Невозможно создать XPointer для этой аннотации</message>
+<message xml:lang="hu">Ehhez a jegyzethez nem hozható létre XPointer</message></label>
 <label define="AM_NEW_ANNOTATION">
 <message xml:lang="en">Make a new annotation</message>
 <message xml:lang="fr">Faire une nouvelle annotation</message>
@@ -3136,8 +2686,7 @@ XPointer</message></label>
 <message xml:lang="pt">A postagem da anotação falhou</message>
 <message xml:lang="fi">Merkinnän lähetys epäonnistui</message>
 <message xml:lang="tr">Notun yayın hatası</message>
-<message xml:lang="ru">Публикация (post) аннотации не
-удалась</message>
+<message xml:lang="ru">Публикация (post) аннотации не удалась</message>
 <message xml:lang="hu">A jegyzet elküldése sikertelen</message></label>
 <label define="AM_ANNOT_DELETE_FAILURE">
 <message xml:lang="en">Failed to delete the annotation</message>
@@ -3148,8 +2697,7 @@ XPointer</message></label>
 <message xml:lang="pt">A supressão da anotação falhou</message>
 <message xml:lang="fi">Merkinnän poisto epäonnistui</message>
 <message xml:lang="tr">Notun iptal hatası</message>
-<message xml:lang="ru">Удаление аннотации не
-удалось</message>
+<message xml:lang="ru">Удаление аннотации не удалось</message>
 <message xml:lang="hu">A jegyzet törlése sikertelen</message></label>
 <label define="AM_ANNOT_DELETED">
 <message xml:lang="en">Annotation deleted!</message>
@@ -3171,8 +2719,7 @@ XPointer</message></label>
 <message xml:lang="pt">Carregamento do índice de anotação falhou</message>
 <message xml:lang="fi">Merkintäluettelon lataus epäonnistui</message>
 <message xml:lang="tr">Notların içeriğini yüklemek imkansızdır</message>
-<message xml:lang="ru">Загрузка указателя аннотации
-не удалась</message>
+<message xml:lang="ru">Загрузка указателя аннотации не удалась</message>
 <message xml:lang="hu">A jegyzetindex betöltése sikertelen</message></label>
 <label define="AM_ERROR">
 <message xml:lang="en">Error</message>
@@ -3191,12 +2738,10 @@ XPointer</message></label>
 <message xml:lang="it">Seleziona un Character Coding</message>
 <message xml:lang="de">Zeichenkodierung wählen</message>
 <message xml:lang="es">Seleccionar un juego de caracteres</message>
-<message xml:lang="pt">Selecionar um conjunto de caracteres
-(charset)</message>
+<message xml:lang="pt">Selecionar um conjunto de caracteres (charset)</message>
 <message xml:lang="fi">Valitse Charset</message>
 <message xml:lang="tr">Charset seçin</message>
-<message xml:lang="ru">Выбрать кодировку
-символов</message>
+<message xml:lang="ru">Выбрать кодировку символов</message>
 <message xml:lang="hu">Adja meg a karakter kódolást</message></label>
 <label define="AM_SELECT_MIMETYPE">
 <message xml:lang="en">Select a MIME type</message>
@@ -3218,8 +2763,7 @@ XPointer</message></label>
 <message xml:lang="pt">Mudar conjunto de caracteres (Charset)</message>
 <message xml:lang="fi">Muuta Charset</message>
 <message xml:lang="tr">Charset\'i değiştir</message>
-<message xml:lang="ru">Изменить кодировку
-символов</message>
+<message xml:lang="ru">Изменить кодировку символов</message>
 <message xml:lang="hu">karakter kódolás megváltoztatása</message></label>
 <label define="AM_CHANGE_MIME_TYPE">
 <message xml:lang="en">Change MIME type</message>
@@ -3244,41 +2788,26 @@ XPointer</message></label>
 <message xml:lang="ru">Изменить</message>
 <message xml:lang="hu">Változtatás</message></label>
 <label define="AM_NOCHARSET_SUPPORT">
-<message xml:lang="en">This type of document doesn't support
-charsets</message>
+<message xml:lang="en">This type of document doesn't support charsets</message>
 <message xml:lang="fr">Ce type de document n'a pas de charset</message>
-<message xml:lang="it">Questo tipo di documento non supporta i
-charset</message>
-<message xml:lang="de">Dieser Dokumenttyp unterstützt keine
-Zeichensätze</message>
-<message xml:lang="es">Este tipo de documento no soporta juegos de
-caracteres</message>
-<message xml:lang="pt">este tipo de documento não suporta conjuntos de
-caracteres (charsets)</message>
+<message xml:lang="it">Questo tipo di documento non supporta i charset</message>
+<message xml:lang="de">Dieser Dokumenttyp unterstützt keine Zeichensätze</message>
+<message xml:lang="es">Este tipo de documento no soporta juegos de caracteres</message>
+<message xml:lang="pt">este tipo de documento não suporta conjuntos de caracteres (charsets)</message>
 <message xml:lang="fi">Tämä dokumenttityyppi ei tue charset:iä</message>
 <message xml:lang="tr">Bu tip belgenin Charset\'i yoktur</message>
-<message xml:lang="ru">Документы этого типа не
-поддерживают кодировку</message>
-<message xml:lang="hu">Ez a dokumentumtípus nem támogatja a
-karakterkészleteteket</message></label>
+<message xml:lang="ru">Документы этого типа не поддерживают кодировку</message>
+<message xml:lang="hu">Ez a dokumentumtípus nem támogatja a karakterkészleteteket</message></label>
 <label define="AM_NOMIMETYPE_SUPPORT">
-<message xml:lang="en">The target must be an HTTP URL to use this
-option</message>
+<message xml:lang="en">The target must be an HTTP URL to use this option</message>
 <message xml:lang="fr">L'URL doit être de type HTTP pour utiliser</message>
-<message xml:lang="it">Per usare questa opzione, il target deve essere un'URL
-HTTP</message>
-<message xml:lang="de">Diese Option kann nur mit einem HTTP URI Ziel
-verwendet werden</message>
-<message xml:lang="es">Para usar esta opción el destino tiene que ser una
-URL HTTP</message>
-<message xml:lang="pt">O destino deve ser uma URL HTTP para usar esta
-opção</message>
-<message xml:lang="fi">Kohteen täytyy olla HTTP URL tämän valinna
-kanssa</message>
-<message xml:lang="tr">URL\'i kullanmak için HTTP tipten olması
-gerekiyor</message>
-<message xml:lang="ru">Чтобы использовать эту опцию
-цель должна быть HTTP URL</message>
+<message xml:lang="it">Per usare questa opzione, il target deve essere un'URL HTTP</message>
+<message xml:lang="de">Diese Option kann nur mit einem HTTP URI Ziel verwendet werden</message>
+<message xml:lang="es">Para usar esta opción el destino tiene que ser una URL HTTP</message>
+<message xml:lang="pt">O destino deve ser uma URL HTTP para usar esta opção</message>
+<message xml:lang="fi">Kohteen täytyy olla HTTP URL tämän valinna kanssa</message>
+<message xml:lang="tr">URL\'i kullanmak için HTTP tipten olması gerekiyor</message>
+<message xml:lang="ru">Чтобы использовать эту опцию цель должна быть HTTP URL</message>
 <message xml:lang="hu">A célpont HTTP URL kell legyen</message></label>
 <label define="AM_INVALID_MIMETYPE">
 <message xml:lang="en">Error: invalid MIME type</message>
@@ -3289,8 +2818,7 @@ gerekiyor</message>
 <message xml:lang="pt">Erro: tipo MIME inválido</message>
 <message xml:lang="fi">Virhe: epäkelpo MIME tyyppi</message>
 <message xml:lang="tr">Hata: MIME tipi doğru değil</message>
-<message xml:lang="ru">Ошибка: неправильный тип
-MIME</message>
+<message xml:lang="ru">Ошибка: неправильный тип MIME</message>
 <message xml:lang="hu">Hiba: érvénytelen MIME típus</message></label>
 <label define="AM_UNKNOWN">
 <message xml:lang="en">Unknown</message>
@@ -3304,85 +2832,46 @@ MIME</message>
 <message xml:lang="ru">Неизвестно</message>
 <message xml:lang="hu">Ismeretlen</message></label>
 <label define="AM_CSS_ERROR">
-<message xml:lang="en">Styles are ignored - see Views/Show parsing
-errors</message>
-<message xml:lang="fr">Styles ignorés - voir Vues/Montrer les
-erreurs</message>
-<message xml:lang="it">I stili sono ignorati - vedi Viste/Mostra le
-errore</message>
-<message xml:lang="de">Formatvorlagen wurden ignoriert - siehe
-Ansicht/Parserfehler anzeigen</message>
-<message xml:lang="es">Se ignoran los estilos - vea Archivo &gt; Mostrar
-errores sintácticos</message>
-<message xml:lang="pt">Estilos ignorados -veja Vistas/Exibir erros de
-gramática (parsing)</message>
-<message xml:lang="fi">Tyylit ohitetaan - katso Näytä/Näytä
-käännösvirheet</message>
-<message xml:lang="tr">Dizayn bilinmiyor - Görünümler/Hataları göster
-bakın</message>
-<message xml:lang="ru">Стили проигнорированы -
-смотрите Вид/Показать разбор ошибок</message>
-<message xml:lang="hu">A stílusok figyelmen kívül hagyva - lásd:
-Nézet/Elemzési hibák mutatása</message></label>
+<message xml:lang="en">Styles are ignored - see Views/Show parsing errors</message>
+<message xml:lang="fr">Styles ignorés - voir Vues/Montrer les erreurs</message>
+<message xml:lang="it">I stili sono ignorati - vedi Viste/Mostra le errore</message>
+<message xml:lang="de">Formatvorlagen wurden ignoriert - siehe Ansicht/Parserfehler anzeigen</message>
+<message xml:lang="es">Se ignoran los estilos - vea Archivo &gt; Mostrar errores sintácticos</message>
+<message xml:lang="pt">Estilos ignorados -veja Vistas/Exibir erros de gramática (parsing)</message>
+<message xml:lang="fi">Tyylit ohitetaan - katso Näytä/Näytä käännösvirheet</message>
+<message xml:lang="tr">Dizayn bilinmiyor - Görünümler/Hataları göster bakın</message>
+<message xml:lang="ru">Стили проигнорированы - смотрите Вид/Показать разбор ошибок</message>
+<message xml:lang="hu">A stílusok figyelmen kívül hagyva - lásd: Nézet/Elemzési hibák mutatása</message></label>
 <label define="AM_DOUBLE_LOAD">
-<message xml:lang="en">This document is already loaded in another
-Window</message>
-<message xml:lang="fr">Ce document est déjà affiché dans une autre
-fenêtre.</message>
-<message xml:lang="es">Este documento ya está cargado en otra
-ventana</message>
-<message xml:lang="it">Questo documento è già caricato in un'altra
-finestra</message>
-<message xml:lang="de">Dieses Dokument wird bereits in einem anderen Fenster
-angezeigt</message>
-<message xml:lang="pt">Este documento já está carregado em outra
-Janela</message>
-<message xml:lang="fi">Tämä dokumentti on avattu jo toiseen
-ikkunaan</message>
+<message xml:lang="en">This document is already loaded in another Window</message>
+<message xml:lang="fr">Ce document est déjà affiché dans une autre fenêtre.</message>
+<message xml:lang="es">Este documento ya está cargado en otra ventana</message>
+<message xml:lang="it">Questo documento è già caricato in un'altra finestra</message>
+<message xml:lang="de">Dieses Dokument wird bereits in einem anderen Fenster angezeigt</message>
+<message xml:lang="pt">Este documento já está carregado em outra Janela</message>
+<message xml:lang="fi">Tämä dokumentti on avattu jo toiseen ikkunaan</message>
 <message xml:lang="tr">Bu belge başka bir pencerede açılmıştır</message>
-<message xml:lang="ru">Этот документ всегда
-загружается в другом окне</message>
-<message xml:lang="hu">Ez a dokumentum már be van töltve egy másik
-ablakban.</message></label>
+<message xml:lang="ru">Этот документ всегда загружается в другом окне</message>
+<message xml:lang="hu">Ez a dokumentum már be van töltve egy másik ablakban.</message></label>
 <label define="AM_UNSAVE">
-<message xml:lang="en">Saving that instance may cause a lost update
-problem</message>
-<message xml:lang="fr">Sauver cette instance peut provoquer des problèmes de
-mise à jour.</message>
-<message xml:lang="es">Guardar la copia puede originar un problema de
-pérdida de actualización</message>
-<message xml:lang="it">Salvare questa istanza può fare perdere degli
-aggiornamenti</message>
-<message xml:lang="de">Beim Speichern dieser Instanz des Dokuments können
-Änderungen in anderen Instanzen verloren gehen (lost update
-problem)</message>
-<message xml:lang="pt">Salvar esta instância pode causar um problema de
-perda de atualização</message>
-<message xml:lang="fi">Tämän instanssin tallennus saattaa aiheuttaa
-kadonneen päivityksen ongelman</message>
-<message xml:lang="tr">Bu belgeleri kayıt etmek güncelleştirme problemleri
-çıkara bilir</message>
-<message xml:lang="ru">Сохранение этого примера
-может привести к проблеме потери
-обновления</message>
-<message xml:lang="hu">Annak a példánynak a mentése frissítési
-problémákat okozhat</message></label>
+<message xml:lang="en">Saving that instance may cause a lost update problem</message>
+<message xml:lang="fr">Sauver cette instance peut provoquer des problèmes de mise à jour.</message>
+<message xml:lang="es">Guardar la copia puede originar un problema de pérdida de actualización</message>
+<message xml:lang="it">Salvare questa istanza può fare perdere degli aggiornamenti</message>
+<message xml:lang="de">Beim Speichern dieser Instanz des Dokuments können Änderungen in anderen Instanzen verloren gehen (lost update problem)</message>
+<message xml:lang="pt">Salvar esta instância pode causar um problema de perda de atualização</message>
+<message xml:lang="fi">Tämän instanssin tallennus saattaa aiheuttaa kadonneen päivityksen ongelman</message>
+<message xml:lang="tr">Bu belgeleri kayıt etmek güncelleştirme problemleri çıkara bilir</message>
+<message xml:lang="ru">Сохранение этого примера может привести к проблеме потери обновления</message>
+<message xml:lang="hu">Annak a példánynak a mentése frissítési problémákat okozhat</message></label>
 <label define="AM_CHANGE_DOCTYPE1">
-<message xml:lang="en">Adding or changing the doctype will remove some
-elements or attributes</message>
-<message xml:lang="fr">Ajouter ou modifier le doctype du document supprimera
-certains éléments ou attributs</message>
-<message xml:lang="it">Aggiungere o cambiare doctype eliminerà alcuni
-elementi o attributi</message>
-<message xml:lang="de">Durch das Hinzufügen oder Ändern des Dokumententyps
-gehen Elemente oder Attribute verloren</message>
-<message xml:lang="es">Al añadir o modificar el doctype se pueden eliminar
-algunos elementos o atributos</message>
-<message xml:lang="ru">Добавление или удаление типа
-документа удалит некоторые элементы или
-атрибуты</message>
-<message xml:lang="hu">A doctype hozzáadása vagy megváltoztatása néhány
-elem és attribútum elvesztésével jár</message></label>
+<message xml:lang="en">Adding or changing the doctype will remove some elements or attributes</message>
+<message xml:lang="fr">Ajouter ou modifier le doctype du document supprimera certains éléments ou attributs</message>
+<message xml:lang="it">Aggiungere o cambiare doctype eliminerà alcuni elementi o attributi</message>
+<message xml:lang="de">Durch das Hinzufügen oder Ändern des Dokumententyps gehen Elemente oder Attribute verloren</message>
+<message xml:lang="es">Al añadir o modificar el doctype se pueden eliminar algunos elementos o atributos</message>
+<message xml:lang="ru">Добавление или удаление типа документа удалит некоторые элементы или атрибуты</message>
+<message xml:lang="hu">A doctype hozzáadása vagy megváltoztatása néhány elem és attribútum elvesztésével jár</message></label>
 <label define="AM_CHANGE_DOCTYPE2">
 <message xml:lang="en">Please confirm operation</message>
 <message xml:lang="fr">Confirmez-vous l'opération ?</message>
@@ -3392,34 +2881,23 @@ elem és attribútum elvesztésével jár</message></label>
 <message xml:lang="ru">Подтвердите операцию</message>
 <message xml:lang="hu">Kérjük, erősítse meg a műveletet</message></label>
 <label define="AM_USE_XHTML_MIMETYPE">
-<message xml:lang="en">Use the application/xhtml+xml MIME type for XHTML
-documents</message>
-<message xml:lang="fr">Utiliser le type MIME application/xhtml+xml pour les
-documents XHTML</message>
-<message xml:lang="de">MIME-Typ application/xhtml+xml für XHTML-Dokumente
-verwenden</message>
-<message xml:lang="it">Per un documento XHTML, usa il MIME type
-application/xhtml+xml</message>
-<message xml:lang="es">En documentos XHTML usar tipo MIME
-application/xhtml+xml</message>
-<message xml:lang="pt">Utilise o tipo MIME application/xhtml+xml para
-documentos XHTML</message>
-<message xml:lang="fi">Käytä application/xhtml+xml MIME tyypiä XHTML
-dokumenttien yhteydessä</message>
-<message xml:lang="tr">XHTML belgeleri için MIME tipi uygulama/xhtml+xml
-\'li kullanın</message>
-<message xml:lang="ru">Использовать application/xhtml+xml тип
-MIME для XHTML документов</message>
-<message xml:lang="hu">Use the application/xhtml+xml MIME type for XHTML
-dokumentums</message></label>
+<message xml:lang="en">Use the application/xhtml+xml MIME type for XHTML documents</message>
+<message xml:lang="fr">Utiliser le type MIME application/xhtml+xml pour les documents XHTML</message>
+<message xml:lang="de">MIME-Typ application/xhtml+xml für XHTML-Dokumente verwenden</message>
+<message xml:lang="it">Per un documento XHTML, usa il MIME type application/xhtml+xml</message>
+<message xml:lang="es">En documentos XHTML usar tipo MIME application/xhtml+xml</message>
+<message xml:lang="pt">Utilise o tipo MIME application/xhtml+xml para documentos XHTML</message>
+<message xml:lang="fi">Käytä application/xhtml+xml MIME tyypiä XHTML dokumenttien yhteydessä</message>
+<message xml:lang="tr">XHTML belgeleri için MIME tipi uygulama/xhtml+xml \'li kullanın</message>
+<message xml:lang="ru">Использовать application/xhtml+xml тип MIME для XHTML документов</message>
+<message xml:lang="hu">Use the application/xhtml+xml MIME type for XHTML dokumentums</message></label>
 <label define="AM_DEFAULT_CHARSET">
 <message xml:lang="en">Charset for new documents</message>
 <message xml:lang="fr">Charset pour les nouveaux documents</message>
 <message xml:lang="it">Charset per i nuovi documenti</message>
 <message xml:lang="de">Standardzeichensatz für neue Dakumente</message>
 <message xml:lang="es">Juego de caracteres para nuevos documentos:</message>
-<message xml:lang="ru">Кодировка для новых
-документов</message>
+<message xml:lang="ru">Кодировка для новых документов</message>
 <message xml:lang="hu">Új dokumentumok karakterkészlete</message></label>
 <label define="AM_LOCK_SUCCEED">
 <message xml:lang="en">Lock succeed!</message>
@@ -3467,23 +2945,15 @@ dokumentums</message></label>
 <message xml:lang="hu">A dokumentum (%s) zárolva!</message></label>
 <label define="AM_LOCKED_BY_OTHER">
 <message xml:lang="en">Document %s is locked by %s (timeout %s)</message>
-<message xml:lang="fr">Document %s a été verrouillé par %s (temps
-d'expiration %s)</message>
-<message xml:lang="pt">Documento %s foi travado por %s (tempo restante
-%s)</message>
-<message xml:lang="de">Dokument %s wurde von %s gesperrt (timeout
-%s)</message>
-<message xml:lang="fi">Dokumentin %s on lukinnut %s (aikakatkaisu
-%s)</message>
+<message xml:lang="fr">Document %s a été verrouillé par %s (temps d'expiration %s)</message>
+<message xml:lang="pt">Documento %s foi travado por %s (tempo restante %s)</message>
+<message xml:lang="de">Dokument %s wurde von %s gesperrt (timeout %s)</message>
+<message xml:lang="fi">Dokumentin %s on lukinnut %s (aikakatkaisu %s)</message>
 <message xml:lang="it">Il documento %s ha un lock da %s (timeout %s)</message>
-<message xml:lang="es">El documento %s está bloqueado por % (timeout
-%s)</message>
-<message xml:lang="tr">%s belgesi %s tarafından kilitlenmiştir (son
-kullanma süresi %s)</message>
-<message xml:lang="ru">Документ %s блокирован на %s
-(время ожидания %s)</message>
-<message xml:lang="hu">A dokumentumot (%s) zárolta: %s (időtúllépés:
-%s)</message></label>
+<message xml:lang="es">El documento %s está bloqueado por % (timeout %s)</message>
+<message xml:lang="tr">%s belgesi %s tarafından kilitlenmiştir (son kullanma süresi %s)</message>
+<message xml:lang="ru">Документ %s блокирован на %s (время ожидания %s)</message>
+<message xml:lang="hu">A dokumentumot (%s) zárolta: %s (időtúllépés: %s)</message></label>
 <label define="AM_LOCK_OVERWRITE">
 <message xml:lang="en">Overwrite lock information?</message>
 <message xml:lang="fr">Surpasser le verrou?</message>
@@ -3493,8 +2963,7 @@ kullanma süresi %s)</message>
 <message xml:lang="it">Sovrascrivere l'informazione di lock?</message>
 <message xml:lang="es">¿Sobreescribir la información de bloqueo?</message>
 <message xml:lang="tr">Kilidi geçin?</message>
-<message xml:lang="ru">Перезаписать информацию
-блокировки?</message>
+<message xml:lang="ru">Перезаписать информацию блокировки?</message>
 <message xml:lang="hu">Felülírjuk a zárolási adatokat?</message></label>
 <label define="AM_COPY_LOCK">
 <message xml:lang="en">Copy the lock information?</message>
@@ -3505,8 +2974,7 @@ kullanma süresi %s)</message>
 <message xml:lang="it">Copiare l'informazione di lock?</message>
 <message xml:lang="es">¿Copiar la información de bloqueo?</message>
 <message xml:lang="tr">Kilit bilgilerini kaydet?</message>
-<message xml:lang="ru">Копировать информацию
-блокировки?</message>
+<message xml:lang="ru">Копировать информацию блокировки?</message>
 <message xml:lang="hu">Másoljuk a zárolási adatokat?</message></label>
 <label define="AM_UNLOCK_BEFORE">
 <message xml:lang="en">Try to unlock the document before...</message>
@@ -3514,14 +2982,11 @@ kullanma süresi %s)</message>
 <message xml:lang="pt">Tente destravar o documento...</message>
 <message xml:lang="de">Versuche Dokument zu entsperren...</message>
 <message xml:lang="fi">Yritä poistaa lukitus ensin...</message>
-<message xml:lang="it">Prova a togliere prima il lock dal
-documento...&quot;</message>
+<message xml:lang="it">Prova a togliere prima il lock dal documento...&quot;</message>
 <message xml:lang="es">Intenta desbloquear el documento antes...</message>
 <message xml:lang="tr">Belgenin kilidini açmayı deneyin...</message>
-<message xml:lang="ru">Сначала разблокируйте
-документ...</message>
-<message xml:lang="hu">Előbb próbálja meg felszabadítani a
-dokumentumot...</message></label>
+<message xml:lang="ru">Сначала разблокируйте документ...</message>
+<message xml:lang="hu">Előbb próbálja meg felszabadítani a dokumentumot...</message></label>
 <label define="AM_UNLOCK_SUCCEED">
 <message xml:lang="en">Unlock succeed!</message>
 <message xml:lang="fr">Déverrouillage a réussit!</message>
@@ -3531,21 +2996,18 @@ dokumentumot...</message></label>
 <message xml:lang="it">Lock tolto!</message>
 <message xml:lang="es">¡Desbloqueo conseguido!</message>
 <message xml:lang="tr">Kilit açma başarılı olmuştur!</message>
-<message xml:lang="ru">Разблокировка
-выполнена!</message>
+<message xml:lang="ru">Разблокировка выполнена!</message>
 <message xml:lang="hu">A felszabadítás sikeres!</message></label>
 <label define="AM_UNLOCK_FAILED">
 <message xml:lang="en">Unlock failed!</message>
 <message xml:lang="fr">Dérrouillage a échoué!</message>
-<message xml:lang="pt">Documento não pode ser destravado com
-sucesso!</message>
+<message xml:lang="pt">Documento não pode ser destravado com sucesso!</message>
 <message xml:lang="de">Entsperrung fehlgeschlagen</message>
 <message xml:lang="fi">Lukituksen poisto epäonnistui!</message>
 <message xml:lang="it">Lock non tolto!</message>
 <message xml:lang="es">¡Desbloqueo fallido!</message>
 <message xml:lang="tr">Kilit açma başarısız olmuştur!</message>
-<message xml:lang="ru">Разблокировка не
-удалась!</message>
+<message xml:lang="ru">Разблокировка не удалась!</message>
 <message xml:lang="hu">A felszabadítás sikertelen!</message></label>
 <label define="AM_UNLOCKING">
 <message xml:lang="en">Unlocking %s...</message>
@@ -3567,8 +3029,7 @@ sucesso!</message>
 <message xml:lang="it">Tolto il lock al documento %s!</message>
 <message xml:lang="es">El documento %s está desbloqueado!</message>
 <message xml:lang="tr">%s belgenin kilidi açıldı!</message>
-<message xml:lang="ru">Документ %s
-разблокирован!</message>
+<message xml:lang="ru">Документ %s разблокирован!</message>
 <message xml:lang="hu">A dokumentum (%s) felszabadítva!</message></label>
 <label define="AM_UNLOCK_DOCUMENT">
 <message xml:lang="en">Unlock the document?</message>
@@ -3579,8 +3040,7 @@ sucesso!</message>
 <message xml:lang="it">Tolgo il lock al documento?</message>
 <message xml:lang="es">¿Desbloquear el documento?</message>
 <message xml:lang="tr">Belgenin kilidini aç?</message>
-<message xml:lang="ru">Разблокировать
-документ?</message>
+<message xml:lang="ru">Разблокировать документ?</message>
 <message xml:lang="hu">Felszabadítsuk a dokumentumot?</message></label>
 <label define="AM_DAV_PROPERTIES">
 <message xml:lang="en">Document properties</message>
@@ -3595,42 +3055,26 @@ sucesso!</message>
 <message xml:lang="hu">A dokumentum tulajdonságai</message></label>
 <label define="AM_PROPFIND_FAILED">
 <message xml:lang="en">Document properties are not available</message>
-<message xml:lang="fr">Propriétes du document ne sont pas
-disponibles</message>
-<message xml:lang="pt">Propriedades do documento não estão
-disponíveis</message>
+<message xml:lang="fr">Propriétes du document ne sont pas disponibles</message>
+<message xml:lang="pt">Propriedades do documento não estão disponíveis</message>
 <message xml:lang="de">Dokumenteigenschaften nicht verfügbar</message>
 <message xml:lang="fi">Dokumentin ominaisuuksia ei saatavilla</message>
-<message xml:lang="it">Le proprietà del documento non sono
-disponibili</message>
-<message xml:lang="es">Las propiedades del documento no están
-disponibles</message>
+<message xml:lang="it">Le proprietà del documento non sono disponibili</message>
+<message xml:lang="es">Las propiedades del documento no están disponibles</message>
 <message xml:lang="tr">Belgenin özellikleri kullanamazsınız</message>
-<message xml:lang="ru">Свойства документа
-недоступны</message>
-<message xml:lang="hu">A dokumentum tulajdonságai nem
-elérhetők</message></label>
+<message xml:lang="ru">Свойства документа недоступны</message>
+<message xml:lang="hu">A dokumentum tulajdonságai nem elérhetők</message></label>
 <label define="AM_PROPFIND_FAILED_TEMP">
-<message xml:lang="en">Document properties are temporarily unavailable. Try
-again later...</message>
-<message xml:lang="fr">Propriétes du document ne sont pas disponibles pour
-l'instant. Essayez de nouveau plus tard...</message>
-<message xml:lang="pt">Propriedades do documento estão temporariamente
-indisponíveis. Tente de novo mais tarde...</message>
-<message xml:lang="de">Dokumenteigenschaften momentan nicht verfügbar.
-Versuchen Sie es später...</message>
-<message xml:lang="fi">Dokumentin ominaisuuksia ei ole väliaikaisesti
-saatavilla. Yritä myöhemmin uudelleen...</message>
-<message xml:lang="it">Le proprietà del documento non sono al momento
-disponibili. Riprova più tardi...</message>
-<message xml:lang="es">Las propiedades del documento no están disponibles
-temporalmente. Inténtelo de nuevo más tarde...</message>
-<message xml:lang="tr">Belgenin özellikleri şu an kullanamazsınız. Biraz
-sonra yeniden deneyin...</message>
-<message xml:lang="ru">Свойства документа врменно
-недоступны. Попробуйте позже...</message>
-<message xml:lang="hu">A dokumentum tulajdonságai jelenleg nem elérhetők.
-Próbálja később...</message></label>
+<message xml:lang="en">Document properties are temporarily unavailable. Try again later...</message>
+<message xml:lang="fr">Propriétes du document ne sont pas disponibles pour l'instant. Essayez de nouveau plus tard...</message>
+<message xml:lang="pt">Propriedades do documento estão temporariamente indisponíveis. Tente de novo mais tarde...</message>
+<message xml:lang="de">Dokumenteigenschaften momentan nicht verfügbar. Versuchen Sie es später...</message>
+<message xml:lang="fi">Dokumentin ominaisuuksia ei ole väliaikaisesti saatavilla. Yritä myöhemmin uudelleen...</message>
+<message xml:lang="it">Le proprietà del documento non sono al momento disponibili. Riprova più tardi...</message>
+<message xml:lang="es">Las propiedades del documento no están disponibles temporalmente. Inténtelo de nuevo más tarde...</message>
+<message xml:lang="tr">Belgenin özellikleri şu an kullanamazsınız. Biraz sonra yeniden deneyin...</message>
+<message xml:lang="ru">Свойства документа врменно недоступны. Попробуйте позже...</message>
+<message xml:lang="hu">A dokumentum tulajdonságai jelenleg nem elérhetők. Próbálja később...</message></label>
 <label define="AM_FINDING_PROPERTIES">
 <message xml:lang="en">Looking for document properties...</message>
 <message xml:lang="fr">En attente des propriétes du document...</message>
@@ -3640,102 +3084,63 @@ Próbálja később...</message></label>
 <message xml:lang="it">Cerco le proprietà del documento...</message>
 <message xml:lang="es">Buscando las propiedades del documento...</message>
 <message xml:lang="tr">Belgenin özellikleri bekleniyor...</message>
-<message xml:lang="ru">Просмотр свойств
-документа...</message>
-<message xml:lang="hu">A dokumentum tulajdonságainak
-keresése...</message></label>
+<message xml:lang="ru">Просмотр свойств документа...</message>
+<message xml:lang="hu">A dokumentum tulajdonságainak keresése...</message></label>
 <label define="AM_DAV_UNSUPPORTED_PROTOCOL">
-<message xml:lang="en">Sorry, no WebDAV support for URLs of this type
-%s</message>
+<message xml:lang="en">Sorry, no WebDAV support for URLs of this type %s</message>
 <message xml:lang="fr">Désolé, WebDAV ne support pas URLs comme %s</message>
 <message xml:lang="pt">Lamento, WebDAV não supporta URLs como %s</message>
-<message xml:lang="de">Keine WebDAV-Unterstützung für URLs vom Typ
-%s</message>
+<message xml:lang="de">Keine WebDAV-Unterstützung für URLs vom Typ %s</message>
 <message xml:lang="fi">Tälle URL:lle ei ole WebDav-tukea %s</message>
-<message xml:lang="it">Mi spiace, non c'è supporto WebDAV per URL di questo
-tipo %s</message>
-<message xml:lang="es">Lo siento, WebDAV no soporta URLs de este tipo
-%s</message>
-<message xml:lang="tr">Malesef, WebDav URL\'leri %s gibi
-desteklemiyor</message>
-<message xml:lang="ru">Для URLs типа %s WebDAV не
-поддерживается</message>
-<message xml:lang="hu">Az ilyen típusú (%s) URL-ekhez nincs WebDAV
-támogatás</message></label>
+<message xml:lang="it">Mi spiace, non c'è supporto WebDAV per URL di questo tipo %s</message>
+<message xml:lang="es">Lo siento, WebDAV no soporta URLs de este tipo %s</message>
+<message xml:lang="tr">Malesef, WebDav URL\'leri %s gibi desteklemiyor</message>
+<message xml:lang="ru">Для URLs типа %s WebDAV не поддерживается</message>
+<message xml:lang="hu">Az ilyen típusú (%s) URL-ekhez nincs WebDAV támogatás</message></label>
 <label define="AM_SAVE_LOCKBASE_FAILED">
 <message xml:lang="en">Failed to save lock info in the local base</message>
-<message xml:lang="fr">Sauvegarde du verrou dans la base local a
-échué</message>
-<message xml:lang="pt">Impossível salvar informação de trava
-localmente</message>
+<message xml:lang="fr">Sauvegarde du verrou dans la base local a échué</message>
+<message xml:lang="pt">Impossível salvar informação de trava localmente</message>
 <message xml:lang="de">Konnte Sperrinformation lokal nicht speichern</message>
-<message xml:lang="fi">Lukitustietojen tallennus paikallisesti
-epäonnistui</message>
-<message xml:lang="it">Impossibile salvare le informazioni di lock sulla base
-locale</message>
-<message xml:lang="es">Fallo al guardar la información de bloqueo en la base
-local</message>
-<message xml:lang="tr">Kilidin lokal temelde kayıtı başarısız
-olmuştur</message>
-<message xml:lang="ru">Не удалось сохранить
-информацию блокировки в локальную базу
-данных</message>
-<message xml:lang="hu">A zárolási adatok helyi mentése
-sikertelen</message></label>
+<message xml:lang="fi">Lukitustietojen tallennus paikallisesti epäonnistui</message>
+<message xml:lang="it">Impossibile salvare le informazioni di lock sulla base locale</message>
+<message xml:lang="es">Fallo al guardar la información de bloqueo en la base local</message>
+<message xml:lang="tr">Kilidin lokal temelde kayıtı başarısız olmuştur</message>
+<message xml:lang="ru">Не удалось сохранить информацию блокировки в локальную базу данных</message>
+<message xml:lang="hu">A zárolási adatok helyi mentése sikertelen</message></label>
 <label define="AM_REMOVE_LOCKBASE_FAILED">
 <message xml:lang="en">Failed to remove lok info from local base</message>
 <message xml:lang="fr">Impossible éffacer verrou de la base local</message>
-<message xml:lang="pt">Impossível remover informação de trava
-local</message>
+<message xml:lang="pt">Impossível remover informação de trava local</message>
 <message xml:lang="de">Konnte Sperrinformation lokal nicht entfernen</message>
-<message xml:lang="fi">Lukitustietojen poisto paikallisesti
-epäonnistui</message>
-<message xml:lang="it">Impossibile togliere le informazioni di lock dalla
-base locale</message>
-<message xml:lang="es">Fallo al eliminar la información de bloqueo en la
-base local</message>
+<message xml:lang="fi">Lukitustietojen poisto paikallisesti epäonnistui</message>
+<message xml:lang="it">Impossibile togliere le informazioni di lock dalla base locale</message>
+<message xml:lang="es">Fallo al eliminar la información de bloqueo en la base local</message>
 <message xml:lang="tr">Kilidin lokal temelde silinmesi imkansızdır</message>
-<message xml:lang="ru">Не удалось удалить
-информацию блокировки из локальной базы
-данных</message>
-<message xml:lang="hu">A zárolási adatok helyi visszaállítása
-sikertelen</message></label>
+<message xml:lang="ru">Не удалось удалить информацию блокировки из локальной базы данных</message>
+<message xml:lang="hu">A zárolási adatok helyi visszaállítása sikertelen</message></label>
 <label define="AM_DAV_NOT_ALLOWED">
 <message xml:lang="en">Sorry, this operation is not allowed for %s</message>
-<message xml:lang="fr">Désolé, cette opération est interdit pour
-%s</message>
-<message xml:lang="pt">Lamento, esta operação não é permitida para
-%s</message>
+<message xml:lang="fr">Désolé, cette opération est interdit pour %s</message>
+<message xml:lang="pt">Lamento, esta operação não é permitida para %s</message>
 <message xml:lang="de">Operation nicht erlaubt für %s</message>
 <message xml:lang="fi">Tämä toiminto ei ole käytettävissä %s</message>
-<message xml:lang="it">Mi spiace, questa operazione non è permessa per
-%s</message>
-<message xml:lang="es">Lo siento, esta operación no está permitida para
-%s</message>
+<message xml:lang="it">Mi spiace, questa operazione non è permessa per %s</message>
+<message xml:lang="es">Lo siento, esta operación no está permitida para %s</message>
 <message xml:lang="tr">Malesef bu operasion %s için yasaktır</message>
-<message xml:lang="ru">Для %s операция не
-разрешена</message>
+<message xml:lang="ru">Для %s операция не разрешена</message>
 <message xml:lang="hu">Ez a művelet nem tiltott (%s)</message></label>
 <label define="AM_FAILED_DEPENDENCY">
 <message xml:lang="en">Request failed! Reason: Failed Dependency</message>
-<message xml:lang="fr">Opération a échué! Cause: Faute de
-dépendence</message>
-<message xml:lang="pt">Operação falhou! Causa: Falha de
-dependência</message>
-<message xml:lang="de">Anforderung fehlgeschlagen: keine
-Abhängigkeit</message>
-<message xml:lang="fi">Pyyntö epäonnistui! Syy: Viallinen
-riippuvuus</message>
-<message xml:lang="it">Richiesta fallita! Motivo: Dipendenza non
-riuscita</message>
-<message xml:lang="es">¡Solicitud suspendida! Razón: Dependencia
-suspendida</message>
-<message xml:lang="tr">Operasion başarısız olmuştur! Neden:
-bağımlılık hatası</message>
-<message xml:lang="ru">Запрос не выполнен! Причина:
-Неудавшаяся зависимость (Failed Dependency)</message>
-<message xml:lang="hu">A kérés sikertelen! Ok: sikertelen
-függőség</message></label>
+<message xml:lang="fr">Opération a échué! Cause: Faute de dépendence</message>
+<message xml:lang="pt">Operação falhou! Causa: Falha de dependência</message>
+<message xml:lang="de">Anforderung fehlgeschlagen: keine Abhängigkeit</message>
+<message xml:lang="fi">Pyyntö epäonnistui! Syy: Viallinen riippuvuus</message>
+<message xml:lang="it">Richiesta fallita! Motivo: Dipendenza non riuscita</message>
+<message xml:lang="es">¡Solicitud suspendida! Razón: Dependencia suspendida</message>
+<message xml:lang="tr">Operasion başarısız olmuştur! Neden: bağımlılık hatası</message>
+<message xml:lang="ru">Запрос не выполнен! Причина: Неудавшаяся зависимость (Failed Dependency)</message>
+<message xml:lang="hu">A kérés sikertelen! Ok: sikertelen függőség</message></label>
 <label define="AM_MULTI_STATUS_FAIL">
 <message xml:lang="en">Request failed! Reason: %s</message>
 <message xml:lang="fr">Opération a échué! Cause: %s</message>
@@ -3745,8 +3150,7 @@ függőség</message></label>
 <message xml:lang="it">Richiesta fallita! Motivo: %s</message>
 <message xml:lang="es">¡Solicitud suspendida! Razón: %s</message>
 <message xml:lang="tr">Operasion başarısız olmuştur! Neden: %s</message>
-<message xml:lang="ru">Запрос не выполнен! Причина:
-%s</message>
+<message xml:lang="ru">Запрос не выполнен! Причина: %s</message>
 <message xml:lang="hu">A kérés sikertelen! Ok: %s</message></label>
 <label define="AM_DAV_TRY_AGAIN">
 <message xml:lang="en">Try again?</message>
@@ -3772,33 +3176,26 @@ függőség</message></label>
 <message xml:lang="hu">WebDAV</message></label>
 <label define="AM_DAV_USER_URL">
 <message xml:lang="en">User's Personal Reference (URL)</message>
-<message xml:lang="fr">Référence Personnelle de l'utilisateur
-(URL)</message>
+<message xml:lang="fr">Référence Personnelle de l'utilisateur (URL)</message>
 <message xml:lang="pt">Referência Pessoal do Usuário (URL)</message>
 <message xml:lang="de">Persönliche Benutzerreferenzen (URL)</message>
 <message xml:lang="fi">Käyttäjän henkilökohtainen linkki (URL)</message>
 <message xml:lang="it">Riferimento personale utente (URL)</message>
 <message xml:lang="es">Referencia Personal del Usuario (URL):</message>
 <message xml:lang="tr">Kullanıyıcının özel referansı (URL)</message>
-<message xml:lang="ru">Персональная
-пользовательская ссылка (URL)</message>
+<message xml:lang="ru">Персональная пользовательская ссылка (URL)</message>
 <message xml:lang="hu">User's Personal Reference (URL)</message></label>
 <label define="AM_DAV_USER_RESOURCES">
 <message xml:lang="en">User's WebDAV Resource List (URL URL)</message>
-<message xml:lang="fr">List des Ressources de l'utilisateur (URL
-URL)</message>
-<message xml:lang="pt">Lista de Recursos WebDAV do Usuário (URL
-URL)</message>
+<message xml:lang="fr">List des Ressources de l'utilisateur (URL URL)</message>
+<message xml:lang="pt">Lista de Recursos WebDAV do Usuário (URL URL)</message>
 <message xml:lang="de">WebDAV Resourcenliste des Benutzers (URL)</message>
-<message xml:lang="fi">Käyttäjän WebDAV resurssi luettelo (URL
-URL)</message>
+<message xml:lang="fi">Käyttäjän WebDAV resurssi luettelo (URL URL)</message>
 <message xml:lang="it">Resource List WebDAV per l'utente(URL URL)</message>
 <message xml:lang="es">Lista de Recursos WebDAV del Usuario:</message>
 <message xml:lang="tr">Kullanıyıcının referans listesi (URL URL)</message>
-<message xml:lang="ru">Пользовательский список
-ресурсов WebDAV (URL URL)</message>
-<message xml:lang="hu">User's WebDAV erőforrás listája (URL
-URL)</message></label>
+<message xml:lang="ru">Пользовательский список ресурсов WebDAV (URL URL)</message>
+<message xml:lang="hu">User's WebDAV erőforrás listája (URL URL)</message></label>
 <label define="AM_DAV_DEPTH">
 <message xml:lang="en">Lock Depth</message>
 <message xml:lang="fr">Profondeur du Verrou</message>
@@ -3830,8 +3227,7 @@ URL)</message></label>
 <message xml:lang="it">Timeout per il lock</message>
 <message xml:lang="es">Bloqueo terminado</message>
 <message xml:lang="tr">Bitiş süresi</message>
-<message xml:lang="ru">Время ожидания для
-блокировки</message>
+<message xml:lang="ru">Время ожидания для блокировки</message>
 <message xml:lang="hu">Zárolás időkorlát</message></label>
 <label define="AM_DAV_TIMEOUT_INFINITE">
 <message xml:lang="en">Infinite</message>
@@ -3979,10 +3375,8 @@ URL)</message></label>
 <message xml:lang="it">Aggiungi un nuovo modello alla libreria</message>
 <message xml:lang="es">Añadir nuevo modelo a la bibloteca</message>
 <message xml:lang="tr">Kütüphanede yeni model ekle</message>
-<message xml:lang="ru">Добавить новую модель в
-библиотеку</message>
-<message xml:lang="hu">Új model hozzáadása a
-könyvtárhoz</message></label>
+<message xml:lang="ru">Добавить новую модель в библиотеку</message>
+<message xml:lang="hu">Új model hozzáadása a könyvtárhoz</message></label>
 <label define="AM_SVGLIB_CREATE_NEW_SVG_FILE">
 <message xml:lang="en">URL of the new SVG file ...</message>
 <message xml:lang="fr">URL du nouveau fichier SVG ...</message>
@@ -4041,113 +3435,68 @@ könyvtárhoz</message></label>
 <message xml:lang="it">Crea o cerca libreria</message>
 <message xml:lang="es">Crear o buscar en la biblioteca</message>
 <message xml:lang="tr">Kütüphane yarat veya ara</message>
-<message xml:lang="ru">Создать или найти
-библиотеку</message>
-<message xml:lang="hu">Könyvtár létrehozása vagy
-keresése</message></label>
+<message xml:lang="ru">Создать или найти библиотеку</message>
+<message xml:lang="hu">Könyvtár létrehozása vagy keresése</message></label>
 <label define="AM_SVGLIB_NO_SVG_SELECTION">
-<message xml:lang="en">The selection includes no SVG elements. Please
-reselect</message>
-<message xml:lang="fr">La sélection contient des éléments non SVG.
-Effectuer une autre sélection SVP</message>
-<message xml:lang="de">Die Markierung enthält nicht nur SVG-Elemente. Bitte
-neu markieren</message>
-<message xml:lang="fi">Nykyinen valinta ei sisällä pelkästään SVG
-elementtejä. Valitse uudelleen.</message>
-<message xml:lang="it">La selezione non contiene solo elementi SVG. Per
-favore riseleziona.</message>
-<message xml:lang="es">La selección no contiene sólo elementos SVG. Por
-favor, vuelva a seleccionar</message>
-<message xml:lang="tr">Vu seçimde SVG olmayan veriler içeriyor. Lütfen
-başka seçim yapın</message>
-<message xml:lang="ru">Выбранное вами включает в
-себя не SVG элементы. Выберите заново</message>
+<message xml:lang="en">The selection includes no SVG elements. Please reselect</message>
+<message xml:lang="fr">La sélection contient des éléments non SVG. Effectuer une autre sélection SVP</message>
+<message xml:lang="de">Die Markierung enthält nicht nur SVG-Elemente. Bitte neu markieren</message>
+<message xml:lang="fi">Nykyinen valinta ei sisällä pelkästään SVG elementtejä. Valitse uudelleen.</message>
+<message xml:lang="it">La selezione non contiene solo elementi SVG. Per favore riseleziona.</message>
+<message xml:lang="es">La selección no contiene sólo elementos SVG. Por favor, vuelva a seleccionar</message>
+<message xml:lang="tr">Vu seçimde SVG olmayan veriler içeriyor. Lütfen başka seçim yapın</message>
+<message xml:lang="ru">Выбранное вами включает в себя не SVG элементы. Выберите заново</message>
 <message xml:lang="hu">A kijelölésben nincs SVG elem.</message></label>
 <label define="AM_SVGLIB_MISSING_TITLE">
 <message xml:lang="en">The library title is mandatory</message>
 <message xml:lang="fr">Le titre de la librairie est obligatoire</message>
-<message xml:lang="de">Der Titel der Bibliothek muss angegeben
-werden</message>
+<message xml:lang="de">Der Titel der Bibliothek muss angegeben werden</message>
 <message xml:lang="fi">Kirjaston otsikko on pakollinen</message>
 <message xml:lang="it">Il titolo della libreria è obbligatorio</message>
 <message xml:lang="es">El título de la biblioteca es obligatorio</message>
 <message xml:lang="tr">Kütüphane başlıgı mecburdur</message>
-<message xml:lang="ru">Обязательный заголовок
-библиотеки</message>
+<message xml:lang="ru">Обязательный заголовок библиотеки</message>
 <message xml:lang="hu">A könyvtár cím kötelező</message></label>
 <label define="AM_SVGANIM_MOTION_HINT1">
-<message xml:lang="en">Move the position cursor in edited document to define
-a new key position...</message>
-<message xml:lang="fr">Déplacer le curseur de position dans le document
-édité pour définir une nouvelle position clé...</message>
-<message xml:lang="de">Den Cursor an die neue Schlüsselposition
-bewegen...</message>
-<message xml:lang="fi">Siirrä kursoria dokumentissa määrittääksesi uuden
-avainkohdan...</message>
-<message xml:lang="it">Muovi il cursore nel documento editato per definire la
-nuova posizione chiave...</message>
-<message xml:lang="es">Desplace la posición del cursor en el documento
-editado para definir una nueva posición clave...</message>
-<message xml:lang="tr">Açılan belgede yeni anahtar durum tanımlamak için
-durum kürsörünü oynatın ...</message>
-<message xml:lang="ru">Переместите курсор в
-редактируемом документе в новую позицию
-для определения новой ключевой
-позиции...</message>
-<message xml:lang="hu">Helyezze el az egérmutatót a szerkesztett
-dokumentumban az új kulcs megadásához...</message></label>
+<message xml:lang="en">Move the position cursor in edited document to define a new key position...</message>
+<message xml:lang="fr">Déplacer le curseur de position dans le document édité pour définir une nouvelle position clé...</message>
+<message xml:lang="de">Den Cursor an die neue Schlüsselposition bewegen...</message>
+<message xml:lang="fi">Siirrä kursoria dokumentissa määrittääksesi uuden avainkohdan...</message>
+<message xml:lang="it">Muovi il cursore nel documento editato per definire la nuova posizione chiave...</message>
+<message xml:lang="es">Desplace la posición del cursor en el documento editado para definir una nueva posición clave...</message>
+<message xml:lang="tr">Açılan belgede yeni anahtar durum tanımlamak için durum kürsörünü oynatın ...</message>
+<message xml:lang="ru">Переместите курсор в редактируемом документе в новую позицию для определения новой ключевой позиции...</message>
+<message xml:lang="hu">Helyezze el az egérmutatót a szerkesztett dokumentumban az új kulcs megadásához...</message></label>
 <label define="AM_SVGANIM_MOTION_HINT2">
-<message xml:lang="en">Key position defined. Move the slider to define
-animation duration...</message>
-<message xml:lang="fr">Position clé définie. Déplacer le curseur de temps
-pour définir la durée de l'animation...</message>
-<message xml:lang="de">Schlüsselposition definiert. Schieber bewegen um die
-Dauer der Animation festzulegen...</message>
-<message xml:lang="fi">Avainkohta määritelty. Siirrä liukukytkintä
-määrittääksesi animaation keston...</message>
-<message xml:lang="it">Posizione chiave definta. Sposta il cursore per
-definire la durata dell'animazione...</message>
-<message xml:lang="es">Posición clave definida. Desplace el marcador para
-definir la duración de la animación...</message>
-<message xml:lang="tr">Anahtar durum tanımlaştı. Hareket zamanını
-tanımlamak için zaman kürsörünü oynatın...</message>
-<message xml:lang="ru">Ключевая позиция определена.
-Передвигайте бегунок для определения
-длительности анимации...</message>
-<message xml:lang="hu">A kulcshelyzet megadva. Mozgassa a csúszkát az
-animáció hosszának megadásához...</message></label>
+<message xml:lang="en">Key position defined. Move the slider to define animation duration...</message>
+<message xml:lang="fr">Position clé définie. Déplacer le curseur de temps pour définir la durée de l'animation...</message>
+<message xml:lang="de">Schlüsselposition definiert. Schieber bewegen um die Dauer der Animation festzulegen...</message>
+<message xml:lang="fi">Avainkohta määritelty. Siirrä liukukytkintä määrittääksesi animaation keston...</message>
+<message xml:lang="it">Posizione chiave definta. Sposta il cursore per definire la durata dell'animazione...</message>
+<message xml:lang="es">Posición clave definida. Desplace el marcador para definir la duración de la animación...</message>
+<message xml:lang="tr">Anahtar durum tanımlaştı. Hareket zamanını tanımlamak için zaman kürsörünü oynatın...</message>
+<message xml:lang="ru">Ключевая позиция определена. Передвигайте бегунок для определения длительности анимации...</message>
+<message xml:lang="hu">A kulcshelyzet megadva. Mozgassa a csúszkát az animáció hosszának megadásához...</message></label>
 <label define="AM_SVGANIM_COLOR_HINT1">
 <message xml:lang="en">Select starting color of element...</message>
-<message xml:lang="fr">Sélectionner la couleur de départ de
-l'élément...</message>
+<message xml:lang="fr">Sélectionner la couleur de départ de l'élément...</message>
 <message xml:lang="de">Anfangsfarbe des Elements wählen...</message>
 <message xml:lang="fi">Valitse elementin alkuväri...</message>
 <message xml:lang="it">Scegli il colore iniziale dell'elemento...</message>
 <message xml:lang="es">Seleccione el color inicial del elemento...</message>
 <message xml:lang="tr">Elemanın başlangıç rengini seçin</message>
-<message xml:lang="ru">Выберите начальный цвет
-элемента...</message>
+<message xml:lang="ru">Выберите начальный цвет элемента...</message>
 <message xml:lang="hu">Jelölje ki az elem kezdőszínét...</message></label>
 <label define="AM_SVGANIM_COLOR_HINT2">
-<message xml:lang="en">Starting color defined. Move the slider to define
-animation duration...</message>
-<message xml:lang="fr">Couleur de départ définie. Déplacer le curseur de
-temps pour définir la durée de l'animation...</message>
-<message xml:lang="de">Anfangsfarbe definiert. Schieber bewegen um die Dauer
-der Animation festzulegen...</message>
-<message xml:lang="fi">Alkuväri määritelty. Siirrä liukukytkintä
-määrittääksesi animaation keston...</message>
-<message xml:lang="it">Colore iniziale definito. Sposta il cursore per
-definire la durata dell'animazione...</message>
-<message xml:lang="es">Color inicial definido. Desplace el marcador para
-definir la duración de la animación...</message>
-<message xml:lang="tr">Başlangıç rengini seçin. Hareket zamanını
-tanımlamak için zaman kürsörünü oynatın...</message>
-<message xml:lang="ru">Начальный цвет определён.
-Передвигайте бегунок для определения
-длительности анимации...</message>
-<message xml:lang="hu">A kezdőszín megadva. Mozgassa a csúszkát az
-animáció hosszának megadásához...</message></label>
+<message xml:lang="en">Starting color defined. Move the slider to define animation duration...</message>
+<message xml:lang="fr">Couleur de départ définie. Déplacer le curseur de temps pour définir la durée de l'animation...</message>
+<message xml:lang="de">Anfangsfarbe definiert. Schieber bewegen um die Dauer der Animation festzulegen...</message>
+<message xml:lang="fi">Alkuväri määritelty. Siirrä liukukytkintä määrittääksesi animaation keston...</message>
+<message xml:lang="it">Colore iniziale definito. Sposta il cursore per definire la durata dell'animazione...</message>
+<message xml:lang="es">Color inicial definido. Desplace el marcador para definir la duración de la animación...</message>
+<message xml:lang="tr">Başlangıç rengini seçin. Hareket zamanını tanımlamak için zaman kürsörünü oynatın...</message>
+<message xml:lang="ru">Начальный цвет определён. Передвигайте бегунок для определения длительности анимации...</message>
+<message xml:lang="hu">A kezdőszín megadva. Mozgassa a csúszkát az animáció hosszának megadásához...</message></label>
 <label define="AM_SVGANIM_COLOR_HINT3">
 <message xml:lang="en">Select ending color...</message>
 <message xml:lang="fr">Sélectionner la couleur de fin...</message>
@@ -4224,7 +3573,7 @@ animáció hosszának megadásához...</message></label>
 <message xml:lang="en">Enter an element name</message>
 <message xml:lang="fr">Entrer le nom d'un élément</message>
 <message xml:lang="it">Inserisci un nome di elemento</message>
-<message xml:lang="es">Escribe un nombre de elemento:</message>
+<message xml:lang="es">Escribe un nombre de elemento</message>
 <message xml:lang="de">Elementname eingeben</message>
 <message xml:lang="ru">Ввести имя элемента</message>
 <message xml:lang="hu">Adja meg az elem nevét</message></label>
@@ -4240,7 +3589,7 @@ animáció hosszának megadásához...</message></label>
 <message xml:lang="en">Current screen type</message>
 <message xml:lang="fr">Type d'écran courant</message>
 <message xml:lang="it">Output corrente</message>
-<message xml:lang="es">Tipo de pantalla actual:</message>
+<message xml:lang="es">Tipo de pantalla actual</message>
 <message xml:lang="de">Aktueller Bildschirmtyp</message>
 <message xml:lang="ru">Текущий тип экрана</message>
 <message xml:lang="hu">Jelenlegi képernyőtípus</message></label>
@@ -4346,70 +3695,45 @@ animáció hosszának megadásához...</message></label>
 <message xml:lang="ru">Все CSS</message>
 <message xml:lang="hu">Minden CSS</message></label>
 <label define="AM_STYLE_APPLIED">
-<message xml:lang="en">CSS style rules applied to the &lt;%s&gt;
-element\n</message>
-<message xml:lang="fr">Règles de style CSS appliqué l'élément &lt;%s&gt;
-\n</message>
-<message xml:lang="it">Regole di stile CSS applicate all'elemento
-&lt;%s&gt;\n</message>
-<message xml:lang="es">Reglas de estilo aplicadas al elemento
-&lt;%s&gt;\n</message>
+<message xml:lang="en">CSS style rules applied to the &lt;%s&gt; element\n</message>
+<message xml:lang="fr">Règles de style CSS appliqué l'élément &lt;%s&gt; \n</message>
+<message xml:lang="it">Regole di stile CSS applicate all'elemento &lt;%s&gt;\n</message>
+<message xml:lang="es">Reglas de estilo aplicadas al elemento &lt;%s&gt;\n</message>
 <message xml:lang="de">CSS-Regeln, die für &lt;%s&gt; gelten\n</message>
-<message xml:lang="ru">Правила стиля CSS применены к
-&lt;%s&gt; элементу\n</message>
-<message xml:lang="hu">CSS stílus szabályok alkalmazása a(z) &lt;%s&gt;
-elemre\n</message></label>
+<message xml:lang="ru">Правила стиля CSS применены к &lt;%s&gt; элементу\n</message>
+<message xml:lang="hu">CSS stílus szabályok alkalmazása a(z) &lt;%s&gt; elemre\n</message></label>
 <label define="AM_LINK_LINE">
-<message xml:lang="en">Blue lines are links activated by a double (or a
-single) click\n</message>
-<message xml:lang="fr">Les lignes bleues sont des liens activés par un
-double (ou simple) click\n</message>
-<message xml:lang="it">Le righe in blu sono collegamenti attivati con un
-doppio (o semplice) clic\n</message>
-<message xml:lang="es">Cada línea de código (en color azul) es un enlace al
-correspondiente código fuente. Para editarlo, active el enlace.\n</message>
-<message xml:lang="de">Blaue Linien sind Verweise, die durch einen Doppel-
-(oder Einfach-)klick aktiviert wurden.\n</message>
-<message xml:lang="ru">Голубые линии являются
-ссылками и активируются при двойном (или
-одинарном) щелчке\n</message>
-<message xml:lang="hu">A kék sorok dupla (vagy egyszeres) kattintással
-aktiválható kapcsok\n</message></label>
+<message xml:lang="en">Blue lines are links activated by a double (or a single) click\n</message>
+<message xml:lang="fr">Les lignes bleues sont des liens activés par un double (ou simple) click\n</message>
+<message xml:lang="it">Le righe in blu sono collegamenti attivati con un doppio (o semplice) clic\n</message>
+<message xml:lang="es">Cada línea de código (en color azul) es un enlace al correspondiente código fuente. Para editarlo, active el enlace.\n</message>
+<message xml:lang="de">Blaue Linien sind Verweise, die durch einen Doppel- (oder Einfach-)klick aktiviert wurden.\n</message>
+<message xml:lang="ru">Голубые линии являются ссылками и активируются при двойном (или одинарном) щелчке\n</message>
+<message xml:lang="hu">A kék sorok dupla (vagy egyszeres) kattintással aktiválható kapcsok\n</message></label>
 <label define="AM_LOAD_OBJECTS">
 <message xml:lang="en">Load objects (object, embed, iframe)</message>
 <message xml:lang="fr">Charger les objets (object, embed, iframe)</message>
 <message xml:lang="it">Carica oggetti (object, embed, iframe)</message>
 <message xml:lang="es">Cargar objetos (object, embed, iframe)</message>
 <message xml:lang="de">Objekte laden (object, embed, iframe)</message>
-<message xml:lang="ru">Загружать объекты (object,
-embed)</message>
-<message xml:lang="hu">Objektumok betöltése (object, embed,
-iframe)</message></label>
+<message xml:lang="ru">Загружать объекты (object, embed)</message>
+<message xml:lang="hu">Objektumok betöltése (object, embed, iframe)</message></label>
 <label define="AM_NO_STYLE_FOR_ELEM">
 <message xml:lang="en">No style rule for this element</message>
 <message xml:lang="fr">Pas de règle de style pour cet élément</message>
 <message xml:lang="it">Nessuna regola di stile per questo elemento</message>
 <message xml:lang="es">No hay regla de estilo para este elemento</message>
-<message xml:lang="de">Für dieses Element gibt es keine
-Formatvorlage</message>
-<message xml:lang="ru">К этому элементу не
-применяются никакие правила стиля</message>
-<message xml:lang="hu">Ehhez az elemhez nem tartokzik stílus
-szabály</message></label>
+<message xml:lang="de">Für dieses Element gibt es keine Formatvorlage</message>
+<message xml:lang="ru">К этому элементу не применяются никакие правила стиля</message>
+<message xml:lang="hu">Ehhez az elemhez nem tartokzik stílus szabály</message></label>
 <label define="AM_NO_INSERT_POINT">
-<message xml:lang="en">No insert position defined. Please select
-first</message>
-<message xml:lang="fr">Pas de position d'insertion définie. Sélectionnez
-d'abord</message>
-<message xml:lang="es">El punto de inserción no está definido. Por favor,
-seleccionelo antes.</message>
+<message xml:lang="en">No insert position defined. Please select first</message>
+<message xml:lang="fr">Pas de position d'insertion définie. Sélectionnez d'abord</message>
+<message xml:lang="es">El punto de inserción no está definido. Por favor, seleccionelo antes.</message>
 <message xml:lang="ru">Не определена</message>
-<message xml:lang="de">Keine Einfügeposition definiert. Bitte zuerst
-auswählen</message>
-<message xml:lang="it">Nessuna posizione di inserimenti definita. Selezionala
-prima</message>
-<message xml:lang="hu">Nincs beillesztési hely megadva. Jelöljn ki
-egyet</message></label>
+<message xml:lang="de">Keine Einfügeposition definiert. Bitte zuerst auswählen</message>
+<message xml:lang="it">Nessuna posizione di inserimenti definita. Selezionala prima</message>
+<message xml:lang="hu">Nincs beillesztési hely megadva. Jelöljn ki egyet</message></label>
 <label define="AM_DOCINFO_TITLE">
 <message xml:lang="en">Document information</message>
 <message xml:lang="fr">Informations du document</message>
@@ -4456,8 +3780,7 @@ egyet</message></label>
 <message xml:lang="es">Ubicación del contenido:</message>
 <message xml:lang="de">Content Location</message>
 <message xml:lang="it">Content Location</message>
-<message xml:lang="ru">лЕЯРНОНКНФЕМХЕ
-ЯНДЕПФЮМХЪ</message>
+<message xml:lang="ru">лЕЯРНОНКНФЕМХЕ ЯНДЕПФЮМХЪ</message>
 <message xml:lang="hu">Tartalom helye</message></label>
 <label define="AM_DLGPREFERENCE_TITLE">
 <message xml:lang="en">Preferences</message>
@@ -4519,14 +3842,10 @@ egyet</message></label>
 <message xml:lang="hu">Új lapon</message></label>
 <label define="AM_INNEWTAB_MACOS">
 <message xml:lang="en">In new tab (not yet available on Mac OSX)</message>
-<message xml:lang="fr">Dans un nouvel onglet (pas encore disponible sous Mac
-OSX)</message>
-<message xml:lang="es">En nueva pestañas (aũn no disponible para Mac
-OSX)</message>
-<message xml:lang="de">In neuer Seite (noch nicht verfügbar in Mac
-OSX)</message>
-<message xml:lang="it">n un nuovo tab (non ancora disponibile su Mac
-OSX)</message>
+<message xml:lang="fr">Dans un nouvel onglet (pas encore disponible sous Mac OSX)</message>
+<message xml:lang="es">En nueva pestañas (aũn no disponible para Mac OSX)</message>
+<message xml:lang="de">In neuer Seite (noch nicht verfügbar in Mac OSX)</message>
+<message xml:lang="it">n un nuovo tab (non ancora disponibile su Mac OSX)</message>
 <message xml:lang="hu">Új lapon</message></label>
 <label define="AM_INNEWWINDOW">
 <message xml:lang="en">In new Window</message>
@@ -4571,22 +3890,26 @@ OSX)</message>
 <message xml:lang="en">Warn when closing multiple tabs</message>
 <message xml:lang="fr">Avertir avant de fermer plusieurs onglets</message>
 <message xml:lang="es">Avisar cuando se cierren mútiples pestañas</message>
-<message xml:lang="de">Warnen, wenn mehrere Seiten geschlossen
-werden</message>
+<message xml:lang="de">Warnen, wenn mehrere Seiten geschlossen werden</message>
 <message xml:lang="it">Avviso quando si chiudono pi tab</message></label>
 <label define="AM_MAXURLLIST">
 <message xml:lang="en">Max url number in history</message>
 <message xml:lang="fr">Nombre max d'url dans l'historique</message>
 <message xml:lang="es">Número máximo de URLs en el historial</message>
-<message xml:lang="de">Die maximale Anzahl an URLs in der History ist
-erreicht</message>
-<message xml:lang="it">Numero max di url nella cronologia</message></label>
+<message xml:lang="de">Die maximale Anzahl an URLs in der History ist erreicht</message>
+<message xml:lang="it">Numero massimo di URL storicizzati</message></label>
 <label define="AM_CLEARURLLIST">
 <message xml:lang="en">Clear url list</message>
 <message xml:lang="fr">Vider la liste des urls</message>
 <message xml:lang="es">Borrar historial</message>
 <message xml:lang="de">URL-Liste löschen</message>
-<message xml:lang="it">Cancella l'elenco degli url</message></label>
+<message xml:lang="it">Vuota la lista degli URL</message></label>
+<label define="AM_SHOWSHORTCUTS">
+<message xml:lang="en">Display all shortcuts</message>
+<message xml:lang="fr">Montrer tous les raccourcis</message></label>
+<label define="AM_EXPORT_LENGTH">
+<message xml:lang="en">Fixed line length (0 = default value)</message>
+<message xml:lang="fr">Longueur de ligne fixée (0 = valeur par défaut)</message></label>
 <label define="AM_TEMPLATE">
 <message xml:lang="en">Template</message>
 <message xml:lang="fr">Modèle</message></label>
@@ -4595,10 +3918,8 @@ erreicht</message>
 <message xml:lang="fr">Enregistrer le document sous...</message></label>
 <label define="AM_BAD_TEMPLATE">
 <message xml:lang="en">Template not found</message>
-<message xml:lang="fr">Le modèle n'existe pas</message>
-</label>
+<message xml:lang="fr">Le modèle n'existe pas</message></label>
 <label define="AM_SHOW_TEMPLATES">
 <message xml:lang="en">Show template's boxes</message>
-<message xml:lang="fr">Montrer les cadres des modèles</message>
-</label>
+<message xml:lang="fr">Montrer les cadres des modèles</message></label>
 <label define="AMAYA_MSG_MAX"></label></messages></base>

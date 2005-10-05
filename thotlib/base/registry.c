@@ -343,7 +343,7 @@ static int NewRegisterEntry (char *appli, char *name, char *value,
 static int AddRegisterEntry (char *appli, char *name, char *value,
                              RegistryLevel level, int overwrite)
 {
-  char        resu[2000];
+  char          resu[2000];
   RegistryEntry cour;
 
   if (AppRegistryInitialized == 0)
@@ -371,10 +371,10 @@ static int AddRegisterEntry (char *appli, char *name, char *value,
       cour = cour->next;
     }
 
-  if (cour != NULL)
+  if (cour)
     {
       /* there is aleady an entry */
-      if (!overwrite)
+      if (cour->value && !overwrite)
         return (0);
 
       DoVariableSubstitution (value, strlen (value), resu, sizeof (resu) / sizeof (char));
@@ -395,7 +395,7 @@ static int AddRegisterEntry (char *appli, char *name, char *value,
       if (!overwrite && (value == NULL || *value == EOS))
         {
           cour = AppRegistryEntry;
-          while (cour != NULL)
+          while (cour)
             {
               if ((!strcasecmp (cour->appli, THOT_LIB_DEFAULTNAME)) &&
                   (!strcmp (cour->name, name)))

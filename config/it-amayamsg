@@ -46,26 +46,26 @@
 44 Autorizzazione fallita per %s
 45 %s caricato, ma non è disponibile alcun dato
 46 Trasferimento interrotto!
-47 %s è indisponibile al momento. Riprova piútardi
+47 %s è indisponibile al momento. Riprova piú tardi
 48 %s caricato
 49 Salvataggio di %s
 50 Non posso salvare su %s
 51 italian system errors messages
 52 Un ancora non può contenere questi elementi
-53 Non posso creare un'ancora all'interno diun'ancora
-54 Il GET di URL di tipo %s non è ancorasupportato
-55 Il PUT di URL di tipo %s non è ancorasupportato
-56 La presente versione di Amaya non supporta questafunzionalità
+53 Non posso creare un'ancora all'interno di un'ancora
+54 Il GET di URL di tipo %s non è ancora supportato
+55 Il PUT di URL di tipo %s non è ancora supportato
+56 La presente versione di Amaya non supporta questa funzionalità
 57 Scrittura di %s terminata
 58 Impossibile normalizzare %s
-59 Impossibile creare la directory dei file temporanei%s
-60 Alla selezione non è applicabile alcunatrasformazione
+59 Impossibile creare la directory dei file temporanei %s
+60 Alla selezione non è applicabile alcuna trasformazione
 61 Trasformazione fallita
-62 errore di sintassi nel file HTML.trans alla linea%s
+62 errore di sintassi nel file HTML.trans alla linea %s
 63 Formule matematiche
 64 Grafica
 65 Salva con nome
-66 Autenticazione per il dominio \'%s\' sul server\'%s\'
+66 Autenticazione per il dominio \'%s\' sul server \'%s\'
 67 Dominio: %s
 68 Server: %s
 69 Editor/Browser
@@ -73,9 +73,9 @@
 71 %s esiste già. Vuoi sovrascriverlo?
 72 %s è cambiato. Vuoi sovrascriverlo?
 73 Immagine di sfondo
-74 L'immagine di background non è consentitaqui
+74 L'immagine di background non è consentita qui
 75 CSS
-76 Il salvataggio salverà anche le immaginisuccessive?
+76 Il salvataggio salverà anche le immagini successive?
 77 Il salvataggio sull'URL è fallito
 78 Salvo su disco ?
 79 Copia immagini
@@ -89,10 +89,10 @@
 87 Abilita CSS
 88 Rimuovi CSS
 89 il editor/browser del W3C
-90 (scrivere a www-amaya@w3.org perinformazioni)
-91 Impossibile gestire URL composti da piú di %scaratteri
+90 (scrivere a www-amaya@w3.org per informazioni)
+91 Impossibile gestire URL composti da piú di %s caratteri
 92 consentito il solo tipo di default
-93 Aggiornamento dei collegamenti: %s%% è statofatto
+93 Aggiornamento dei collegamenti: %s%% è stato fatto
 94 Niente di nuovo da salvare
 95 repeat-y
 96 Digita lo username:
@@ -102,25 +102,25 @@
 100 no-repeat
 101 Il documento non ha nome. Salva come:
 102 Plugin
-103 Errore sconosciuto durante il salvataggio dell'URL%s
+103 Errore sconosciuto durante il salvataggio dell'URL %s
 104 Impossibile connettersi al server
 105 L'accesso a %s è proibito dal server
 106 L'operazione ha avuto successo per %s
 107 %s è stato creato
 108 %s è stato aggiornato
 109 Operazione completata con codice %s
-110 Il server non ha compreso la sintassi dellarichiesta
-111 Il server non ha nuove informazioni dainviare
+110 Il server non ha compreso la sintassi della richiesta
+111 Il server non ha nuove informazioni da inviare
 112 Questo metodo non è consentito
 113 Identificazione richiesta per accedere a %s
 114 Verifica in corso ...
-115 Il salvataggio su %s è fallito, salvo sudisco?
-116 Il salvataggio su %s sembra non funzionare,ignora?
+115 Il salvataggio su %s è fallito, salvo su disco?
+116 Il salvataggio su %s sembra non funzionare, ignora?
 117 L'URL %s è rediretto su %s, ignora ?
 118 Ricaricamento di %s fallito, ignora ?
 119 Il server riporta un errore 501: %s
 120 Il server riporta un errore 501
-121 Il server non supporta questo metodo dirichiesta
+121 Il server non supporta questo metodo di richiesta
 122 Filtro
 123 trasferimenti attivi
 124 trasferimenti in coda
@@ -129,9 +129,9 @@
 127 Repeat Mode
 128 repeat
 129 repeat-x
-130 La precedente sessione con Amaya non è terminatacorrettamente. Vuoi ricaricare i documenti di backup?
+130 La precedente sessione con Amaya non è terminata correttamente. Vuoi ricaricare i documenti di backup?
 131 Autenticazione fallita. Vuoi riprovare?
-132 L'operazione sarà rediretta. Vuoicontinuare?
+132 L'operazione sarà rediretta. Vuoi continuare?
 133 Numero di righe
 134 Numero di colonne
 135 Bordo
@@ -173,20 +173,20 @@
 171 Pubblicazione
 172 Usa gli ETAGS e le precondizioni
 173 Verifica ogni PUT con un GET
-174 Nome di default per gli URL che terminano con'/'
+174 Nome di default per gli URL che terminano con '/'
 175 Geometria
 176 Salva la geometria corrente
 177 Ripristina la geometria di default
-178 La modifica sarà effettiva quando aprirai una nuovafinestra.
+178 La modifica sarà effettiva quando aprirai una nuova finestra.
 179 Colori
 180 Colore in primo piano nei documenti
 181 Colore dello sfondo nei documenti
 182 Colore in primo piano nei menu
 183 Colore dello sfondo nei menu
-184 Impossibile attivare la cache. Puoi avere specificatouna directory di cache non valida, oppure un'altra istanza di Amaya stausando la cache.
-185 Lista delle lingue preferite, come "it, en,fr":
-186 Queste modifiche saranno effettive alla prossimaesecuzione
-187 Consenti la redirezione automatica dei PUT su questidomini
+184 Impossibile attivare la cache. Puoi avere specificato una directory di cache non valida, oppure un'altra istanza di Amaya sta usando la cache.
+185 Lista delle lingue preferite, come "it, en, fr":
+186 Queste modifiche saranno effettive alla prossima esecuzione
+187 Consenti la redirezione automatica dei PUT su questi domini
 188 Ignora gli stili CSS
 189 Trasforma tipo
 190 (separa ogni campo con uno spazio)
@@ -201,23 +201,23 @@
 199 Nome utente
 200 Server per la pubblicazione
 201 Server per le annotazioni
-202 Caricamento automatico delle annotazionilocal
-203 Caricamento automatico delle annotazioniremote
-204 Disabilita il caricamento remoto automatico allapartenza (per lavorare offline)
+202 Caricamento automatico delle annotazioni local
+203 Caricamento automatico delle annotazioni remote
+204 Disabilita il caricamento remoto automatico alla partenza (per lavorare offline)
 205 Colore della selezione
 206 Selezione colore di sfondo
 207 Orientamento
 208 Ritratto
 209 Paesaggio
 210 Abilita FTP
-211 XML non valido - Ricarico come HTML o mostro glierrori di parsificazione?
-212 XML non valido - Mostro gli errori diparsificazione?
+211 XML non valido - Ricarico come HTML o mostro gli errori di parsificazione?
+212 XML non valido - Mostro gli errori di parsificazione?
 213 Prova la voce 'File/Forza codifica caratteri'
 214 Caratteri non validi
 215 Profilo di documento:
 216 Errore - vedi File/Mostra le errore
-217 La codifica per questo documento non e` supportata daAmaya
-218 Editando e salvando questo documento il suo tipoverrà cambiato
+217 La codifica per questo documento non e` supportata da Amaya
+218 Editando e salvando questo documento il suo tipo verrà cambiato
 219 Non disponibile
 220 Scorri
 221 File Browser
@@ -227,7 +227,7 @@
 225 Nascondi
 226 Mostra tutto
 227 Nascondi tutto
-228 * significa nascosto, - significa parzialmentenascosto
+228 * significa nascosto, - significa parzialmente nascosto
 229 Opzioni per i filtri
 230 Per autore
 231 Per tipo
@@ -236,13 +236,13 @@
 234 Ignora
 235 Elemento si stile
 236 No posso create un XPointer
-237 Impossibile attaccare uno start XPointer su unelemento aggiunto internamente
-238 Impossibile attaccare uno end XPointer su un elementoaggiunto internamente
+237 Impossibile attaccare uno start XPointer su un elemento aggiunto internamente
+238 Impossibile attaccare uno end XPointer su un elemento aggiunto internamente
 239 Non trovo dove muovere l'annotazione
-240 Non posso muovere l'annotazione su un diversodocumento
-241 Non puoi annotare un documento modificato. Primasalvalo.
-242 Non sono state dichiarate annotazioni utente. Apri ilmenu Annotazioni/Configura.
-243 Non posso creare un XPointer per questaannotazione
+240 Non posso muovere l'annotazione su un diverso documento
+241 Non puoi annotare un documento modificato. Prima salvalo.
+242 Non sono state dichiarate annotazioni utente. Apri il menu Annotazioni/Configura.
+243 Non posso creare un XPointer per questa annotazione
 244 Aggiungi una nuova annotazione
 245 Non posso postare l'annotazione
 246 Non posso cancellare l'annotazione
@@ -254,16 +254,16 @@
 252 Cambia Character Coding
 253 Cambia tipo MIME
 254 Cambia
-255 Questo tipo di documento non supporta icharset
-256 Per usare questa opzione, il target deve essere un'URLHTTP
+255 Questo tipo di documento non supporta i charset
+256 Per usare questa opzione, il target deve essere un'URL HTTP
 257 Errore: MIME type non valido
 258 Sconosciuto
-259 I stili sono ignorati - vedi Viste/Mostra leerrore
-260 Questo documento è già caricato in un'altrafinestra
-261 Salvare questa istanza può fare perdere degliaggiornamenti
-262 Aggiungere o cambiare doctype eliminerà alcunielementi o attributi
+259 I stili sono ignorati - vedi Viste/Mostra le errore
+260 Questo documento è già caricato in un'altra finestra
+261 Salvare questa istanza può fare perdere degli aggiornamenti
+262 Aggiungere o cambiare doctype eliminerà alcuni elementi o attributi
 263 Confermi l'operazione?
-264 Per un documento XHTML, usa il MIME typeapplication/xhtml+xml
+264 Per un documento XHTML, usa il MIME type application/xhtml+xml
 265 Charset per i nuovi documenti
 266 Lock riuscito!
 267 Lock fallito!
@@ -272,21 +272,21 @@
 270 Il documento %s ha un lock da %s (timeout %s)
 271 Sovrascrivere l'informazione di lock?
 272 Copiare l'informazione di lock?
-273 Prova a togliere prima il lock daldocumento..."
+273 Prova a togliere prima il lock dal documento..."
 274 Lock tolto!
 275 Lock non tolto!
 276 Tolgo il lock su %s...
 277 Tolto il lock al documento %s!
 278 Tolgo il lock al documento?
 279 Proprietà del documento
-280 Le proprietà del documento non sonodisponibili
-281 Le proprietà del documento non sono al momentodisponibili. Riprova più tardi...
+280 Le proprietà del documento non sono disponibili
+281 Le proprietà del documento non sono al momento disponibili. Riprova più tardi...
 282 Cerco le proprietà del documento...
-283 Mi spiace, non c'è supporto WebDAV per URL di questotipo %s
-284 Impossibile salvare le informazioni di lock sulla baselocale
-285 Impossibile togliere le informazioni di lock dallabase locale
-286 Mi spiace, questa operazione non è permessa per%s
-287 Richiesta fallita! Motivo: Dipendenza nonriuscita
+283 Mi spiace, non c'è supporto WebDAV per URL di questo tipo %s
+284 Impossibile salvare le informazioni di lock sulla base locale
+285 Impossibile togliere le informazioni di lock dalla base locale
+286 Mi spiace, questa operazione non è permessa per %s
+287 Richiesta fallita! Motivo: Dipendenza non riuscita
 288 Richiesta fallita! Motivo: %s
 289 Riprovo?
 290 WebDAV
@@ -315,12 +315,12 @@
 313 Crea libreria
 314 Scorri la libreria
 315 Crea o cerca libreria
-316 La selezione non contiene solo elementi SVG. Perfavore riseleziona.
+316 La selezione non contiene solo elementi SVG. Per favore riseleziona.
 317 Il titolo della libreria è obbligatorio
-318 Muovi il cursore nel documento editato per definire lanuova posizione chiave...
-319 Posizione chiave definta. Sposta il cursore perdefinire la durata dell'animazione...
+318 Muovi il cursore nel documento editato per definire la nuova posizione chiave...
+319 Posizione chiave definta. Sposta il cursore per definire la durata dell'animazione...
 320 Scegli il colore iniziale dell'elemento...
-321 Colore iniziale definito. Sposta il cursore perdefinire la durata dell'animazione...
+321 Colore iniziale definito. Sposta il cursore per definire la durata dell'animazione...
 322 Scegli il colore finale...
 323 Animazione definita.
 324 Attributo animato
@@ -344,11 +344,11 @@
 342 Descrizione :
 343 Selezionare un elemento
 344 Tutti i CSS
-345 Regole di stile CSS applicate all'elemento<%s>\n
-346 Le righe in blu sono collegamenti attivati con undoppio (o semplice) clic\n
+345 Regole di stile CSS applicate all'elemento <%s>\n
+346 Le righe in blu sono collegamenti attivati con un doppio (o semplice) clic\n
 347 Carica oggetti (object, embed, iframe)
 348 Nessuna regola di stile per questo elemento
-349 Nessuna posizione di inserimenti definita. Selezionalaprima
+349 Nessuna posizione di inserimenti definita. Selezionala prima
 350 Informazioni sul documento
 351 Tipo di documento
 352 MIME Type
@@ -362,16 +362,18 @@
 360 File
 361 Sostituisci l'attuale
 362 In un nuovo tab
-363 n un nuovo tab (non ancora disponibile su MacOSX)
+363 n un nuovo tab (non ancora disponibile su Mac OSX)
 364 In una nuova finestra
 365 Anti-aliasing
 366 Formato ISO per la data
 367 Locazione per i nuovi documenti
 368 Locazione per aprire documenti
 369 Avviso quando si chiudono pi tab
-370 Numero max di url nella cronologia
-371 Cancella l'elenco degli url
-372 **Template
-373 **Save the document as...
-374 **Template not found
-375 **Show template's boxes
+370 Numero massimo di URL storicizzati
+371 Vuota la lista degli URL
+372 **Display all shortcuts
+373 **Fixed line length (0 = default value)
+374 **Template
+375 **Save the document as...
+376 **Template not found
+377 **Show template's boxes

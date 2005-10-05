@@ -46,26 +46,26 @@
 44 Fallo de autorización para %s
 45 %s cargado pero no hay datos disponibles
 46 ¡Transferencia interrumpida!
-47 %s no está disponible en este momento. Por favor,inténtelo en otro momento
+47 %s no está disponible en este momento. Por favor, inténtelo en otro momento
 48 %s cargado
 49 Guardando %s
 50 No puedo guardar en: %s
 51 Mensajes de errores de sistema en castellano
 52 Un ancla no puede contener estos elementos
 53 No puedo crear un ancla en un ancla
-54 Lo siento, aún no hay soporte GET para URL de estetipo: %s
-55 Lo siento, aún no hay soporte PUT para URL de estetipo: %s
-56 Esta versión de Amaya no soporta estacaracterística
+54 Lo siento, aún no hay soporte GET para URL de este tipo: %s
+55 Lo siento, aún no hay soporte PUT para URL de este tipo: %s
+56 Esta versión de Amaya no soporta esta característica
 57 Finalizada escritura de %s
 58 No pude normalizar %s
-59 No pude crear directorio de archivos temporales%s
-60 No hay transformación aplicable a laselección
+59 No pude crear directorio de archivos temporales %s
+60 No hay transformación aplicable a la selección
 61 Falló la transformación
-62 error de sintaxis en archivo HTML.trans línea%s
+62 error de sintaxis en archivo HTML.trans línea %s
 63 MathML
 64 SVG
 65 Guardar como
-66 Necesita autentificar el dominio \'%s\' en el servidor\'%s\'
+66 Necesita autentificar el dominio \'%s\' en el servidor \'%s\'
 67 Dominio: %s
 68 Servidor: %s
 69 Edición
@@ -75,7 +75,7 @@
 73 Imagen de fondo
 74 Imagen de fondo no permitida aquí
 75 CSS
-76 ¿Guardar también las imágenes siguientes alguardar?
+76 ¿Guardar también las imágenes siguientes al guardar?
 77 Fallo al guardar en URL
 78 ¿Guardar en disco?
 79 Copiar imágenes
@@ -90,7 +90,7 @@
 88 Borrar enlace a hoja de estilo
 89 Editor/Navegador web del W3C
 90 (enviar sugerencias a www-amaya@w3.org)
-91 No puedo gestionar URL con más de %scaracteres
+91 No puedo gestionar URL con más de %s caracteres
 92 Sólo se permite el tipo por omisión
 93 Actualización de enlace: %s%% realizada
 94 Nada nuevo que guardar
@@ -104,23 +104,23 @@
 102 Plugins
 103 Error desconocido al guardar URL %s
 104 No puedo establecer conexión con el servidor
-105 El acceso a %s está prohibido por elservidor
+105 El acceso a %s está prohibido por el servidor
 106 Operación correcta para %s
 107 %s se ha creado
 108 %s se ha actualizado
-109 Operación completada con un código de estado%s
-110 El servidor no entendió la sintaxis de lapetición
-111 El servidor no tiene información nueva paradevolver
+109 Operación completada con un código de estado %s
+110 El servidor no entendió la sintaxis de la petición
+111 El servidor no tiene información nueva para devolver
 112 Ese método no está permitido
 113 Por favor, identifíquese para acceder a %s
 114 Verificando ...
-115 El guardado en %s ha fallado, ¿guardar endisco?
+115 El guardado en %s ha fallado, ¿guardar en disco?
 116 Guardar en %s parece corrompido, ¿ignorar?
 117 URL %s redirigida a %s, ¿ignorar?
 118 La recarga de %s ha fallado, ¿ignorar?
 119 El servidor responde con un error 501: %s
 120 El servidor responde con un error 501
-121 El servidor no soporta este método depetición
+121 El servidor no soporta este método de petición
 122 Filtro
 123 transferencias activas
 124 transferencias en cola
@@ -129,7 +129,7 @@
 127 Modo de repetición
 128 Repetir (repeat)
 129 Repetir-x (repeat-x)
-130 Su sesión anterior de Amaya falló. ¿Quiere recargarla copia de seguridad de los documentos?
+130 Su sesión anterior de Amaya falló. ¿Quiere recargar la copia de seguridad de los documentos?
 131 Fallo de autentificación. ¿Reintentar?
 132 La operación será redirigida. ¿Continuar?
 133 Número de filas:
@@ -177,16 +177,16 @@
 175 Geometría
 176 Guardar la geometría actual
 177 Restaurar la geometría por omisión
-178 Los cambios serán efectivos cuando abra una nuevaventana.
+178 Los cambios serán efectivos cuando abra una nueva ventana.
 179 Colores
 180 Color del texto del documento:
 181 Color de fondo del documento:
 182 Color del menú
 183 Color de fondo del menú
-184 No pude iniciar la caché. Puede haber especificado undirectorio de caché inválido u otro Amaya está usando el caché.
-185 Lista de idiomas preferidos (p.e. "es, en,fr"):
-186 Estos cambios no serán efectivos hasta que sereinicie Amaya.
-187 Permitir redirecciones PUT automáticas a estosdominios:
+184 No pude iniciar la caché. Puede haber especificado un directorio de caché inválido u otro Amaya está usando el caché.
+185 Lista de idiomas preferidos (p.e. "es, en, fr"):
+186 Estos cambios no serán efectivos hasta que se reinicie Amaya.
+187 Permitir redirecciones PUT automáticas a estos dominios:
 188 Ignorar hojas de estilo
 189 Tipo de transformación
 190 (separar los dominios con un espacio)
@@ -203,21 +203,21 @@
 201 Servidores de anotaciones:
 202 Autocargar anotaciones locales
 203 Autocargar anotaciones remotas
-204 Deshabilitar la recarga automática remota en cadainicio (para trabajo sin conexión)
+204 Deshabilitar la recarga automática remota en cada inicio (para trabajo sin conexión)
 205 Color del texto seleccionado:
 206 Color de fondo texto selecc.:
 207 Orientación
 208 Vertical
 209 Apaisado
 210 Activar FTP
-211 XML inválido - ¿Recargar como HTML o mostraranálisis de errores?
-212 XML inválido - ¿Mostrar análisis deerrores?
-213 Utiliza el menú 'Archivo > Forzar codificación decaracteres'
+211 XML inválido - ¿Recargar como HTML o mostrar análisis de errores?
+212 XML inválido - ¿Mostrar análisis de errores?
+213 Utiliza el menú 'Archivo > Forzar codificación de caracteres'
 214 Caracteres inválidos
 215 Perfil de este documento:
-216 Eerrores - vea Archivo > Mostrar erroressintácticos
-217 La codificación de este documento no está soportadapor Amaya
-218 Al editar y guardar este documento se cambiará sutipo
+216 Eerrores - vea Archivo > Mostrar errores sintácticos
+217 La codificación de este documento no está soportada por Amaya
+218 Al editar y guardar este documento se cambiará su tipo
 219 No disponible
 220 Buscar
 221 Buscador de archivos
@@ -227,7 +227,7 @@
 225 Ocultar
 226 Mostrar todo
 227 Ocultar todo
-228 * significa oculto, - significa parcialmenteoculto
+228 * significa oculto, - significa parcialmente oculto
 229 Opciones de filtrado
 230 Por autor
 231 Por tipo
@@ -236,13 +236,13 @@
 234 Ignorar
 235 Elemento de estilo
 236 No puedo crear un XPointer
-237 Imposible adjuntar un XPointer inicial sobre unelemento interno agregado
-238 Imposible adjuntar un XPointer final sobre un elementointerno agregado
+237 Imposible adjuntar un XPointer inicial sobre un elemento interno agregado
+238 Imposible adjuntar un XPointer final sobre un elemento interno agregado
 239 No sé a dónde mover la anotación
 240 No puedo mover la anotación a otro documento
-241 No puede anotar un documento que está siendomodificado. Por favor, guárdelo primero.
-242 No hay usuarios de anotaciones declarados. Por favor,abra el menú de configuración de Anotaciones
-243 No se puede crear un XPointer para estaanotación
+241 No puede anotar un documento que está siendo modificado. Por favor, guárdelo primero.
+242 No hay usuarios de anotaciones declarados. Por favor, abra el menú de configuración de Anotaciones
+243 No se puede crear un XPointer para esta anotación
 244 Crear una nueva anotación
 245 Fallo al enviar la anotación
 246 Fallo al borrar la anotación
@@ -254,22 +254,22 @@
 252 Cambiar juego de caracteres
 253 Cambiar tipo MIME
 254 Cambiar
-255 Este tipo de documento no soporta juegos decaracteres
-256 Para usar esta opción el destino tiene que ser unaURL HTTP
+255 Este tipo de documento no soporta juegos de caracteres
+256 Para usar esta opción el destino tiene que ser una URL HTTP
 257 Error: tipo MIME inválido
 258 Desconocido
-259 Se ignoran los estilos - vea Archivo > Mostrarerrores sintácticos
-260 Este documento ya está cargado en otraventana
-261 Guardar la copia puede originar un problema depérdida de actualización
-262 Al añadir o modificar el doctype se pueden eliminaralgunos elementos o atributos
+259 Se ignoran los estilos - vea Archivo > Mostrar errores sintácticos
+260 Este documento ya está cargado en otra ventana
+261 Guardar la copia puede originar un problema de pérdida de actualización
+262 Al añadir o modificar el doctype se pueden eliminar algunos elementos o atributos
 263 Por favor, confirme la operación
-264 En documentos XHTML usar tipo MIMEapplication/xhtml+xml
+264 En documentos XHTML usar tipo MIME application/xhtml+xml
 265 Juego de caracteres para nuevos documentos:
 266 ¡Bloqueo conseguido!
 267 ¡Bloqueo fallido!
 268 Bloqueando %s...
 269 El documento %s bloqueado!
-270 El documento %s está bloqueado por % (timeout%s)
+270 El documento %s está bloqueado por % (timeout %s)
 271 ¿Sobreescribir la información de bloqueo?
 272 ¿Copiar la información de bloqueo?
 273 Intenta desbloquear el documento antes...
@@ -279,14 +279,14 @@
 277 El documento %s está desbloqueado!
 278 ¿Desbloquear el documento?
 279 Propiedades del documento
-280 Las propiedades del documento no estándisponibles
-281 Las propiedades del documento no están disponiblestemporalmente. Inténtelo de nuevo más tarde...
+280 Las propiedades del documento no están disponibles
+281 Las propiedades del documento no están disponibles temporalmente. Inténtelo de nuevo más tarde...
 282 Buscando las propiedades del documento...
-283 Lo siento, WebDAV no soporta URLs de este tipo%s
-284 Fallo al guardar la información de bloqueo en la baselocal
-285 Fallo al eliminar la información de bloqueo en labase local
-286 Lo siento, esta operación no está permitida para%s
-287 ¡Solicitud suspendida! Razón: Dependenciasuspendida
+283 Lo siento, WebDAV no soporta URLs de este tipo %s
+284 Fallo al guardar la información de bloqueo en la base local
+285 Fallo al eliminar la información de bloqueo en la base local
+286 Lo siento, esta operación no está permitida para %s
+287 ¡Solicitud suspendida! Razón: Dependencia suspendida
 288 ¡Solicitud suspendida! Razón: %s
 289 ¿Intentar de nuevo?
 290 WebDAV
@@ -315,12 +315,12 @@
 313 Crear biblioteca
 314 Ojear la biblioteca
 315 Crear o buscar en la biblioteca
-316 La selección no contiene sólo elementos SVG. Porfavor, vuelva a seleccionar
+316 La selección no contiene sólo elementos SVG. Por favor, vuelva a seleccionar
 317 El título de la biblioteca es obligatorio
-318 Desplace la posición del cursor en el documentoeditado para definir una nueva posición clave...
-319 Posición clave definida. Desplace el marcador paradefinir la duración de la animación...
+318 Desplace la posición del cursor en el documento editado para definir una nueva posición clave...
+319 Posición clave definida. Desplace el marcador para definir la duración de la animación...
 320 Seleccione el color inicial del elemento...
-321 Color inicial definido. Desplace el marcador paradefinir la duración de la animación...
+321 Color inicial definido. Desplace el marcador para definir la duración de la animación...
 322 Seleccione color final...
 323 Animación definida.
 324 Atributo animado
@@ -329,9 +329,9 @@
 327 Borrar atributos id
 328 Crear/Borrar atributos id
 329 Aplicar operación
-330 Escribe un nombre de elemento:
+330 Escribe un nombre de elemento
 331 Aplicar hojas de estilo
-332 Tipo de pantalla actual:
+332 Tipo de pantalla actual
 333 Nuevo Tema
 334 Propiedades de marcador
 335 Propiedades de tema
@@ -344,11 +344,11 @@
 342 Descripción:
 343 Por favor, seleccione un elemento
 344 Todos las hojas de estilo
-345 Reglas de estilo aplicadas al elemento<%s>\n
-346 Cada línea de código (en color azul) es un enlace alcorrespondiente código fuente. Para editarlo, active el enlace.\n
+345 Reglas de estilo aplicadas al elemento <%s>\n
+346 Cada línea de código (en color azul) es un enlace al correspondiente código fuente. Para editarlo, active el enlace.\n
 347 Cargar objetos (object, embed, iframe)
 348 No hay regla de estilo para este elemento
-349 El punto de inserción no está definido. Por favor,seleccionelo antes.
+349 El punto de inserción no está definido. Por favor, seleccionelo antes.
 350 Propiedades del documento
 351 Tipo de documento:
 352 Tipo MIME:
@@ -362,7 +362,7 @@
 360 Archivo
 361 Reemplazar actual
 362 En nueva pestañas
-363 En nueva pestañas (an no disponible para MacOSX)
+363 En nueva pestañas (an no disponible para Mac OSX)
 364 En nueva ventana
 365 Anti-aliasing
 366 Formato de fecha ISO
@@ -371,7 +371,9 @@
 369 Avisar cuando se cierren mútiples pestañas
 370 Número máximo de URLs en el historial
 371 Borrar historial
-372 **Template
-373 **Save the document as...
-374 **Template not found
-375 **Show template's boxes
+372 **Display all shortcuts
+373 **Fixed line length (0 = default value)
+374 **Template
+375 **Save the document as...
+376 **Template not found
+377 **Show template's boxes
