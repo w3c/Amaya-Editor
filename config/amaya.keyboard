@@ -89,7 +89,7 @@ Ctrl <Key>f:	                   TtcSearchText()
 <Key>F7:			   SpellCheck()
 Ctrl <Key>v:	                   PasteBuffer()
 Ctrl <Key>x:	                   TtcCutSelection()
-Shift Ctrl <Key>z:                       TtcRedo() 
+Shift Ctrl <Key>Z:                       TtcRedo() 
 Ctrl <Key>z:                       TtcUndo() 
 #Shift Ctrl <Key>*:                 SetBrowserEditor() 
 
