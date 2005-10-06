@@ -1785,31 +1785,27 @@ void InitTranslations (char *appliname)
                   if ((mod1 & THOT_MOD_CTRL) && (mod1 & THOT_MOD_ALT))
                     /* specific to MacOS */
                     strcat (equiv, "Ctrl-Alt");
-                  else
 #else /* _MACOS */
-                    if (!(mod1 & THOT_MOD_CTRL))
-                      /* it's not a sequence */
-                      strcpy (equiv, "\t");
+                  if (!(mod1 & THOT_MOD_CTRL))
+                    /* it's not a sequence */
+                    strcpy (equiv, "\t");
 #endif /* _MACOS */
+                  if (ch[0] == ',')
+                     strcpy (equiv, "(");
                   if (mod1 & THOT_MOD_CTRL)
                     strcat (equiv, "Ctrl");
                   else if (mod1 & THOT_MOD_ALT)
                     strcat (equiv, "Alt");
                   if (mod1 & THOT_MOD_SHIFT)
                     {
-                      if (ch[0] != ',')
-                        strcat (equiv, "-");
-                      else
-                        strcat (equiv, sep);
-                      strcat (equiv, "Shift");
+                         strcat (equiv, "-");
+                       strcat (equiv, "Shift");
                     }
                   if (mod1 != THOT_NO_MOD)
-                    if (ch[0] != ',')
-                      strcat (equiv, "-");
-                    else
-                      strcat (equiv, sep);
-                  
-                  if (transText[0] >= 'a' && transText[0] <= 'z')
+                    {
+                       strcat (equiv, "-");
+                     }
+                  if (ch[0] != ',' && transText[0] >= 'a' && transText[0] <= 'z')
                     SetCapital (transText);
                   strcat (equiv, transText);
                 }
@@ -1865,20 +1861,8 @@ void InitTranslations (char *appliname)
 #endif /* _WX */
                     {
                       strcat (equiv, " ");
-                      if (mod2 & THOT_MOD_CTRL)
-                        strcat (equiv, "Ctrl");
-                      else if (mod2 & THOT_MOD_ALT)
-                        strcat (equiv, "Alt");
-                      if (mod2 & THOT_MOD_SHIFT)
-                        {
-                          strcat (equiv, sep);
-                          strcat (equiv, "Shift");
-                        }
-                      if (mod2 != THOT_NO_MOD)
-                        strcat (equiv, sep);
-                      if (transText[0] >= 'a' && transText[0] <= 'z')
-                        SetCapital (transText);
                       strcat (equiv, transText);
+                      strcat (equiv, ")");
                     }
                   /* Get the next word in the line */
                   fscanf (file, "%80s", ch);

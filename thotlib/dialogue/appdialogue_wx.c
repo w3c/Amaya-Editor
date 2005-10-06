@@ -2000,7 +2000,7 @@ ThotBool TtaHandleUnicodeKey (wxKeyEvent& event)
                 (p_button || p_check_listbox)))
             {
               int thotMask = 0;
-              if (event.CmdDown())
+              if (event.CmdDown() || event.ControlDown())
                 thotMask |= THOT_MOD_CTRL;
               if (event.AltDown())
                 thotMask |= THOT_MOD_ALT;
@@ -2047,7 +2047,7 @@ ThotBool TtaHandleShortcutKey( wxKeyEvent& event )
   wxChar thot_keysym = event.GetKeyCode();  
   
   int thotMask = 0;
-  if (event.CmdDown())
+  if (event.CmdDown() || event.ControlDown())
     thotMask |= THOT_MOD_CTRL;
   if (event.AltDown())
     thotMask |= THOT_MOD_ALT;
@@ -2072,12 +2072,19 @@ ThotBool TtaHandleShortcutKey( wxKeyEvent& event )
       return true;      
     }
 
-#ifndef _MACOS
+#ifdef _MACOS
+  // on windows, CTRL+ALT is equivalent to ALTGR key
+  if (!TtaIsSpecialKey(thot_keysym) &&
+      ((event.ControlDown() && !event.AltDown()) ||
+       (event.AltDown() && !event.CmdDown() && (thot_keysym < 'A' || thot_keysym > 'Z'))))
+       // this is for the Windows menu shortcuts, ALT+F => should open File menu
+#else /* _MACOS */
   // on windows, CTRL+ALT is equivalent to ALTGR key
   if (!TtaIsSpecialKey(thot_keysym) &&
       ((event.CmdDown() && !event.AltDown()) ||
        (event.AltDown() && !event.CmdDown() && (thot_keysym < 'A' || thot_keysym > 'Z'))))
        // this is for the Windows menu shortcuts, ALT+F => should open File menu
+#endif /* _MACOS */
     {
       // le code suivant permet de convertir les majuscules
       // en minuscules pour les racourcis clavier specifiques a amaya.
@@ -2104,10 +2111,7 @@ ThotBool TtaHandleShortcutKey( wxKeyEvent& event )
       
       return true;
     }
-  else
-#endif /* _MACOS */
-  /* it is now the turn of special key shortcuts : CTRL+RIGHT, CTRL+ENTER ...*/
-  if ((event.CmdDown() || event.AltDown()) &&
+  else if ((event.CmdDown() || event.AltDown()) &&
            (thot_keysym == (int) WXK_RIGHT ||
             thot_keysym == (int) WXK_LEFT ||
             thot_keysym == (int) WXK_RETURN ||
@@ -2117,6 +2121,7 @@ ThotBool TtaHandleShortcutKey( wxKeyEvent& event )
             /*thot_keysym == (int) WXK_INSERT ||*/
             thot_keysym == (int) WXK_END))
     {
+      /* it is now the turn of special key shortcuts : CTRL+RIGHT, CTRL+ENTER ...*/
       TTALOGDEBUG_1( TTA_LOG_KEYINPUT, _T("TtaHandleShortcutKey : special shortcut thot_keysym=%x"), thot_keysym );
       ThotInput (TtaGiveActiveFrame(), thot_keysym, 0, thotMask, thot_keysym);
       
