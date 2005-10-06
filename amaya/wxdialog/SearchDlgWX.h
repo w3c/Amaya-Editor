@@ -25,7 +25,6 @@ public:
 	       const wxString & replace,
 	       bool do_replace,
 	       bool searchAfter);
-  
   // Destructor.                  
   virtual ~SearchDlgWX();
 
@@ -40,7 +39,7 @@ private:
 
   // Any class wishing to process wxWindows events must use this macro
   DECLARE_EVENT_TABLE()
-    
+
 private:
   int   m_iarea;
   int   m_ireplace;

@@ -171,15 +171,6 @@ ELEMENTS
 	ElemExport.Pre -> CheckGenerator;
 	END;
 
-   SVG:
-	BEGIN
-	ElemExport.Pre -> CheckValidProfile;
-	END;
-
-   MathML:
-	BEGIN
-	ElemExport.Pre -> CheckValidProfile;
-	END;
 
 ATTRIBUTES
 

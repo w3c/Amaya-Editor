@@ -8,11 +8,14 @@
 #ifndef _DIALOG_H_
 #define _DIALOG_H_
 
+#ifdef _WX
+extern int WX_SearchResult; /* 0 if ok, 1 if no replace, 2 if not found */
+#endif /* _WX */
+
 
 #if defined(_GTK)
   #include <X11/Intrinsic.h>
 #endif /* #if defined(_GTK) */
-
 #include "typebase.h"
 #include "tree.h"
 
@@ -23,6 +26,7 @@ enum DButtons
   {
      D_CANCEL, D_DONE
   };
+
 
 #ifndef __CEXTRACT__
 #ifdef _GTK 
