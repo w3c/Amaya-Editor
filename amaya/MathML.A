@@ -19,6 +19,12 @@ DEFAULT
 
 ELEMENTS
 
+
+   MathML:
+	BEGIN
+	ElemExport.Pre -> CheckValidProfile;
+	END;
+
    DOCTYPE:
 	ElemMenu.Pre -> MathMLElementTypeInMenu;
    BevelledMFRAC:

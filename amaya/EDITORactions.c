@@ -652,14 +652,15 @@ static void CreateOrChangeDoctype (Document doc, View view, int new_doctype,
   
   /* The document has to be parsed with the new doctype */
   tempdoc = GetLocalPath (doc, DocumentURLs[doc]);
-  if (TtaIsDocumentUpdated (doc))
+  if (TtaIsDocumentUpdated (doc) ||
+      (!DocumentMeta[doc]->xmlformat && xmlDoctype))
     {
       /* save the current state of the document */
       if (DocumentTypes[doc] == docLibrary || DocumentTypes[doc] == docHTML)
         {
           if (TtaGetDocumentProfile (doc) == L_Xhtml11)
             TtaExportDocumentWithNewLineNumbers (doc, tempdoc, "HTMLT11");
-          else if (DocumentMeta[doc]->xmlformat)
+          else if (DocumentMeta[doc]->xmlformat || xmlDoctype)
             TtaExportDocumentWithNewLineNumbers (doc, tempdoc, "HTMLTX");
           else
             TtaExportDocumentWithNewLineNumbers (doc, tempdoc, "HTMLT");

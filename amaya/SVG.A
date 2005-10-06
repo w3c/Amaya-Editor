@@ -30,6 +30,7 @@ ELEMENTS
 	BEGIN
 	ElemNew.Post ->         SVGCreated;
 	ElemDelete.Pre ->       SVGWillBeDeleted;
+	ElemExport.Pre ->       CheckValidProfile;
 	END;
    title:
 	ElemTextModify.Post ->  TitleModified;

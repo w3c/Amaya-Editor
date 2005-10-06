@@ -185,7 +185,22 @@ void CreateGetSaveDlgWindow (HWND parent, char *path_name)
 #endif /* _WINGUI */
 
 /*----------------------------------------------------------------------
-  CheckGenerator                                                 
+  CheckValidProfile doesn't export elements (SVG/MathML) not allowed by
+  the document profile.
+  ----------------------------------------------------------------------*/
+ThotBool CheckValidProfile (NotifyElement *event)
+{
+  int       profile;
+
+  profile = TtaGetDocumentProfile(event->document);
+  if (profile == L_Other || profile == L_Xhtml11 || profile == L_Transitional)
+    return FALSE;  /* let Thot perform normal operation */
+  else
+    return TRUE;
+}
+
+/*----------------------------------------------------------------------
+  CheckGenerator
   ----------------------------------------------------------------------*/
 ThotBool CheckGenerator (NotifyElement *event)
 {

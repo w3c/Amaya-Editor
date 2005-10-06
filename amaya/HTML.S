@@ -163,11 +163,11 @@ STRUCT
 		{ hspace            vspace }
 	Object;							{ OBJECT }
 	Applet;							{ APPLET }
-	MathML;						        { MATH }
-        SVG;			                                { SVG }
+	MathML;						  { MATH }
+  SVG;			          { SVG }
 	map; MAP;						{ MAP }
 	XLink;							{ Annotations }
-	External_Object						{ IMG type=svg}
+	External_Object		  { IMG type=svg}
 	    (ATTR SRC;
 		{ src }
 		  Height_; Width__;
