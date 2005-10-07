@@ -47,15 +47,11 @@ IMPLEMENT_DYNAMIC_CLASS(AmayaSimpleWindow, AmayaWindow)
  * Description:  create a new AmayaSimpleWindow
  *--------------------------------------------------------------------------------------
  */
-AmayaSimpleWindow::AmayaSimpleWindow (  int             window_id
-					,wxWindow *     p_parent_window
-					,const wxPoint& pos
-					,const wxSize&  size
-					) : 
+  AmayaSimpleWindow::AmayaSimpleWindow ( int window_id, wxWindow *p_parent_window,
+                                         const wxPoint& pos,const wxSize&  size) : 
   AmayaWindow( window_id, p_parent_window, pos, size, WXAMAYAWINDOW_SIMPLE, wxDEFAULT_FRAME_STYLE | wxFRAME_FLOAT_ON_PARENT ),
   m_pFrame( NULL )
 {
-
   // Creation of the top sizer to contain simple frame
   m_pTopSizer = new wxBoxSizer ( wxVERTICAL );
   SetSizer(m_pTopSizer);
@@ -67,9 +63,7 @@ AmayaSimpleWindow::AmayaSimpleWindow (  int             window_id
 #endif /* 0 */
 
   SetAutoLayout(TRUE);
-
   CenterOnParent();
-
   // NOTICE : the menu bar is created for each AmayaFrame, 
   //          the menu bar is not managed by the window
 }
