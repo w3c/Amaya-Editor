@@ -2480,7 +2480,7 @@ void DisplayFrame (int frame)
   int                 w, h;
 
   if (frame > 0 &&
-      documentDisplayMode[frame - 1] == DisplayImmediately)
+      documentDisplayMode[FrameTable[frame].FrDoc - 1] == DisplayImmediately)
     {     
       /* Check that the frame exists */
       pFrame = &ViewFrameTable[frame - 1];
