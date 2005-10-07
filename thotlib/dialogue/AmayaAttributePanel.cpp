@@ -38,14 +38,12 @@
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaAttributePanel, AmayaSubPanel)
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaAttributePanel
  *      Method:  AmayaAttributePanel
  * Description:  construct a panel (bookmarks, elements, attributes ...)
  *               TODO
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 AmayaAttributePanel::AmayaAttributePanel( wxWindow * p_parent_window, AmayaNormalWindow * p_parent_nwindow )
   : AmayaSubPanel( p_parent_window, p_parent_nwindow, _T("wxID_PANEL_ATTRIBUTE") )
   ,m_pRBEnum(NULL)
@@ -80,14 +78,12 @@ AmayaAttributePanel::AmayaAttributePanel( wxWindow * p_parent_window, AmayaNorma
   m_pManager->RegisterSubPanel( this );
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaAttributePanel
  *      Method:  ~AmayaAttributePanel
  * Description:  destructor
  *               TODO
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 AmayaAttributePanel::~AmayaAttributePanel()
 {
   // unregister myself to the manager, so nothing should be asked to me in future
@@ -95,13 +91,11 @@ AmayaAttributePanel::~AmayaAttributePanel()
 }
 
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaAttributePanel
  *      Method:  GetPanelType
  * Description:  
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 int AmayaAttributePanel::GetPanelType()
 {
   return WXAMAYA_PANEL_ATTRIBUTE;
@@ -669,38 +663,32 @@ void AmayaAttributePanel::ForceAttributeUpdate()
     UpdateAttrMenu( pDoc );
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaAttributePanel
  *      Method:  DoUpdate
  * Description:  force a refresh when the user expand or detach this panel
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaAttributePanel::DoUpdate()
 {
   AmayaSubPanel::DoUpdate();
   ForceAttributeUpdate();  
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaAttributePanel
  *      Method:  IsActive
  * Description:  
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 bool AmayaAttributePanel::IsActive()
 {
   return (AmayaSubPanel::IsActive() && !IsFreezed());
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaAttributePanel
  *      Method:  SetMandatoryState
  * Description:  
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaAttributePanel::SetMandatoryState( bool is_mandatory )
 {
   m_CurrentAttMandatory = is_mandatory;

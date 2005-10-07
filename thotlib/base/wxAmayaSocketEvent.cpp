@@ -33,16 +33,14 @@ int                  wxAmayaSocketEvent::m_UsedSocket[MAX_SOCKET];
 wxAmayaSocketEventLoop * wxAmayaSocketEvent::m_pEventLoop = NULL;
 
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  wxAmayaSocketEvent
  *      Method:  InitSocketEvent
  * Description:  used to init the socket eventloop
  *               when the eventloop is known, it's possible to optimize the polling
  *               if a socket is active, the polling is enabled
  *               if nothing is active, the polling is disabled
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void wxAmayaSocketEvent::InitSocketEvent( wxAmayaSocketEventLoop * p_eventloop )
 {
   TTALOGDEBUG_0( TTA_LOG_SOCKET | TTA_LOG_INIT, _T("wxAmayaSocketEvent::InitSocketEvent") );
@@ -52,14 +50,12 @@ void wxAmayaSocketEvent::InitSocketEvent( wxAmayaSocketEventLoop * p_eventloop )
     m_pEventLoop->Start();
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  wxAmayaSocketEvent
  *      Method:  RegisterSocket
  * Description:  register a socket for a given condition
  *               if the condition occure, the given callback is called
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 int wxAmayaSocketEvent::RegisterSocket( int socket,
                                         wxAmayaSocketCondition condition,
                                         wxAmayaSocketCallback  callback )
@@ -95,15 +91,13 @@ int wxAmayaSocketEvent::RegisterSocket( int socket,
   return new_entry;
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  wxAmayaSocketEvent
  *      Method:  UnregisterSocket
  * Description:  unregister a socket 
  *               this methode free an entry 
  *               and stop the pooling if nomore socket si active
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 bool wxAmayaSocketEvent::UnregisterSocket( int register_id )
 {
   /* the socket array must be initialized before do something */
@@ -131,15 +125,13 @@ bool wxAmayaSocketEvent::UnregisterSocket( int register_id )
   return removed;
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  wxAmayaSocketEvent
  *      Method:  CheckSocketStatus
  * Description:  used to check periodicaly if something happend on a socket
  *               use the system call "select()" to know if something is comming or not
  *               int bloking_time is the time to wait for (by default 0)
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 bool wxAmayaSocketEvent::CheckSocketStatus( int bloking_time )
 {
   if (m_NbRegistredSocket <= 0)
@@ -232,13 +224,11 @@ bool wxAmayaSocketEvent::CheckSocketStatus( int bloking_time )
 }
 
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  wxAmayaSocketEvent
  *      Method:  SocketExists
  * Description:  private methode used to detect if a given socket is allready registred
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 bool wxAmayaSocketEvent::SocketExists( int socket )
 {
   int id_entry = 0;
@@ -251,13 +241,11 @@ bool wxAmayaSocketEvent::SocketExists( int socket )
   return false;
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  wxAmayaSocketEvent
  *      Method:  AddSocketEntry
  * Description:  private methode used to reserve a socket slot
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 int wxAmayaSocketEvent::AddSocketEntry()
 {
   /* look for a free place */
@@ -291,13 +279,11 @@ int wxAmayaSocketEvent::AddSocketEntry()
   return entry+1;
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  wxAmayaSocketEvent
  *      Method:  RemoveSocketEntry
  * Description:  private methode used to remove a socket slot
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 bool wxAmayaSocketEvent::RemoveSocketEntry( int entry )
 {
   /* entry-- because the entry 0 is invalide for the interface */
@@ -328,13 +314,11 @@ bool wxAmayaSocketEvent::RemoveSocketEntry( int entry )
   return true;
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  wxAmayaSocketEvent
  *      Method:  Initialize
  * Description:  private methode used to init the socket's arrays
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void wxAmayaSocketEvent::Initialize()
 {
   if (!m_IsInitialized)

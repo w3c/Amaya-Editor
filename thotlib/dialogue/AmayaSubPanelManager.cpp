@@ -41,23 +41,23 @@ WX_DEFINE_LIST(SubPanelList);
 
 AmayaSubPanelManager * AmayaSubPanelManager::m_pInstance = 0;
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 AmayaSubPanelManager::AmayaSubPanelManager()
 {
-
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 AmayaSubPanelManager::~AmayaSubPanelManager()
 {
-
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaSubPanelManager
  *      Method:  GetInstance
  * Description:  implemente a singleton
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 AmayaSubPanelManager * AmayaSubPanelManager::GetInstance()
 {
   if (!m_pInstance)
@@ -66,13 +66,11 @@ AmayaSubPanelManager * AmayaSubPanelManager::GetInstance()
 }
 
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaSubPanelManager
  *      Method:  RegisterSubPanel
  * Description:  
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 bool AmayaSubPanelManager::RegisterSubPanel( AmayaSubPanel * p_panel )
 {
   TTALOGDEBUG_0( TTA_LOG_PANELS, _T("AmayaSubPanelManager::RegisterSubPanel"));
@@ -113,13 +111,11 @@ bool AmayaSubPanelManager::RegisterSubPanel( AmayaSubPanel * p_panel )
   return ret;
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaSubPanelManager
  *      Method:  UnregisterSubPanel
  * Description:  
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 bool AmayaSubPanelManager::UnregisterSubPanel( AmayaSubPanel * p_panel )
 {
   // take care to not delete an existing node
@@ -143,15 +139,13 @@ bool AmayaSubPanelManager::UnregisterSubPanel( AmayaSubPanel * p_panel )
   return ret;
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaSubPanelManager
  *      Method:  CanChangeState
  * Description:  return yes if the given panel is allowed to change his state
  *               if no maybe do something because it means that the user can't do an action
  *               so maybe a warning message, or just raise the blocking floating panel if it exists.
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 bool AmayaSubPanelManager::CanChangeState( AmayaSubPanel * p_panel, unsigned int new_state )
 {
   unsigned int old_state    = p_panel->GetState();
@@ -219,13 +213,11 @@ bool AmayaSubPanelManager::CanChangeState( AmayaSubPanel * p_panel, unsigned int
   return false;
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaSubPanelManager
  *      Method:  DebugSubPanelList
  * Description:  
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaSubPanelManager::DebugSubPanelList()
 {
   // let's iterate over the list
@@ -239,13 +231,11 @@ void AmayaSubPanelManager::DebugSubPanelList()
 }
 
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaSubPanelManager
  *      Method:  UnExpand
  * Description:  
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaSubPanelManager::UnExpand( AmayaSubPanel * p_panel )
 {
   TTALOGDEBUG_1( TTA_LOG_PANELS, _T("AmayaSubPanelManager::UnExpand [%x]"), p_panel );  
@@ -263,13 +253,11 @@ void AmayaSubPanelManager::UnExpand( AmayaSubPanel * p_panel )
   SaveSubPanelState(p_panel);
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaSubPanelManager
  *      Method:  Expand
  * Description:  
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaSubPanelManager::Expand( AmayaSubPanel * p_panel )
 {
   TTALOGDEBUG_1( TTA_LOG_PANELS, _T("AmayaSubPanelManager::Expand [%x]"), p_panel );  
@@ -287,13 +275,11 @@ void AmayaSubPanelManager::Expand( AmayaSubPanel * p_panel )
   SaveSubPanelState(p_panel);
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaSubPanelManager
  *      Method:  DoFloat
  * Description:  
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaSubPanelManager::DoFloat( AmayaSubPanel * p_panel )
 {
   TTALOGDEBUG_1( TTA_LOG_PANELS, _T("AmayaSubPanelManager::DoFloat [%x]"), p_panel );  
@@ -324,13 +310,11 @@ void AmayaSubPanelManager::DoFloat( AmayaSubPanel * p_panel )
   p_panel->Refresh();
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaSubPanelManager
  *      Method:  DoUnfloat
  * Description:  
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaSubPanelManager::DoUnfloat( AmayaSubPanel * p_panel )
 {
   TTALOGDEBUG_2( TTA_LOG_PANELS, _T("AmayaSubPanelManager::DoUnfloat [%x][%d]"), p_panel, p_panel->GetPanelType() );  
@@ -366,13 +350,11 @@ void AmayaSubPanelManager::DoUnfloat( AmayaSubPanel * p_panel )
   p_panel->Refresh();
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaSubPanelManager
  *      Method:  SendDataToPanel
  * Description:  distribute new values to the given panel and all its brothers
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaSubPanelManager::SendDataToPanel( int panel_type, AmayaParams& params )
 {
   // Get the active window
@@ -388,13 +370,11 @@ void AmayaSubPanelManager::SendDataToPanel( int panel_type, AmayaParams& params 
     }
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaSubPanelManager
  *      Method:  IsActive
  * Description:  returns true if one or more panel of the given type is active (=visible)
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 bool AmayaSubPanelManager::IsActive( int panel_type )
 {
   bool is_active = false;
@@ -408,13 +388,11 @@ bool AmayaSubPanelManager::IsActive( int panel_type )
   return is_active;
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaSubPanelManager
  *      Method:  ShouldBeUpdated
  * Description:  call this function to switch on/off list update
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaSubPanelManager::ShouldBeUpdated( int panel_type, bool should_update )
 {
   // warn each panel to update its content when it can
@@ -426,14 +404,12 @@ void AmayaSubPanelManager::ShouldBeUpdated( int panel_type, bool should_update )
     }
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaSubPanelManager
  *      Method:  CheckForDoUpdate
  * Description:  verify if panels should be updated or not, update it if necessary
  *               if pannel_type == WXAMAYA_PANEL_UNKNOWN then check for every panels
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaSubPanelManager::CheckForDoUpdate( int panel_type )
 {
   // warn each panel to update its content when it can
@@ -445,13 +421,11 @@ void AmayaSubPanelManager::CheckForDoUpdate( int panel_type )
     }
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaSubPanelManager
  *      Method:  SaveSubPanelState
  * Description:  save into registry subpanel expanded state
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaSubPanelManager::SaveSubPanelState( AmayaSubPanel * p_panel )
 {
   ThotBool value = p_panel->IsExpanded();

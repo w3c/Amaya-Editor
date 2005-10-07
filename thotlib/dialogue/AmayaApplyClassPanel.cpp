@@ -38,13 +38,11 @@
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaApplyClassPanel, AmayaSubPanel)
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaApplyClassPanel
  *      Method:  AmayaApplyClassPanel
  * Description:  construct a panel (bookmarks, elements, attributes, colors ...)
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 AmayaApplyClassPanel::AmayaApplyClassPanel( wxWindow * p_parent_window, AmayaNormalWindow * p_parent_nwindow )
   : AmayaSubPanel( p_parent_window, p_parent_nwindow, _T("wxID_PANEL_APPLYCLASS") )
     ,m_ApplyClassRef(0)
@@ -76,38 +74,32 @@ AmayaApplyClassPanel::AmayaApplyClassPanel( wxWindow * p_parent_window, AmayaNor
   RefreshApplyClassPanel();
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaApplyClassPanel
  *      Method:  ~AmayaApplyClassPanel
  * Description:  destructor
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 AmayaApplyClassPanel::~AmayaApplyClassPanel()
 {  
   // unregister myself to the manager, so nothing should be asked to me in future
   m_pManager->UnregisterSubPanel( this );
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaApplyClassPanel
  *      Method:  GetPanelType
  * Description:  
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 int AmayaApplyClassPanel::GetPanelType()
 {
   return WXAMAYA_PANEL_APPLYCLASS;
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaApplyClassPanel
  *      Method:  RefreshToolTips
  * Description:  reassign the tooltips values
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaApplyClassPanel::RefreshToolTips()
 {  
   XRCCTRL(*m_pPanelContentDetach,"wxID_LIST_APPLYCLASS",wxListBox)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_SEL_CLASS)));
@@ -115,13 +107,11 @@ void AmayaApplyClassPanel::RefreshToolTips()
   XRCCTRL(*m_pPanelContentDetach,"wxID_APPLY",wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_APPLY)));
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaApplyClassPanel
  *      Method:  SendDataToPanel
  * Description:  refresh the button widgets of the frame's panel
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaApplyClassPanel::SendDataToPanel( AmayaParams& p )
 {
   int nb_class              = (long int)p.param1;
@@ -152,49 +142,41 @@ void AmayaApplyClassPanel::SendDataToPanel( AmayaParams& p )
   m_pPanelContentDetach->Layout();
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaApplyClassPanel
  *      Method:  DoUpdate
  * Description:  force a refresh when the user expand or detach this panel
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaApplyClassPanel::DoUpdate()
 {
   AmayaSubPanel::DoUpdate();
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaApplyClassPanel
  *      Method:  IsActive
  * Description:  
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 bool AmayaApplyClassPanel::IsActive()
 {
   return AmayaSubPanel::IsActive();
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaApplyClassPanel
  *      Method:  OnApply
  * Description:  
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaApplyClassPanel::OnApply( wxCommandEvent& event )
 {
   ThotCallback(m_ApplyClassRef, INTEGER_DATA, (char*) 1);
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaApplyClassPanel
  *      Method:  OnSelected
  * Description:  
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaApplyClassPanel::OnSelected( wxCommandEvent& event )
 {
   wxString s_selected = XRCCTRL(*this, "wxID_LIST_APPLYCLASS", wxListBox)->GetStringSelection();
@@ -210,25 +192,21 @@ void AmayaApplyClassPanel::OnSelected( wxCommandEvent& event )
 
 
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaApplyClassPanel
  *      Method:  OnRefresh
  * Description:  refresh the panel from current selection
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaApplyClassPanel::OnRefresh( wxCommandEvent& event )
 {
   RefreshApplyClassPanel();
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaApplyClassPanel
  *      Method:  RefreshApplyClassPanel
  * Description:  refresh the panel from current selection
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaApplyClassPanel::RefreshApplyClassPanel()
 {
   Document doc;

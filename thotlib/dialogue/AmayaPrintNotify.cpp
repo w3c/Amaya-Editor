@@ -21,13 +21,11 @@ IMPLEMENT_DYNAMIC_CLASS(AmayaPrintNotify, wxDialog)
 /* this function is the callback for cancel button : implementation is into print.c */
 extern void wx_print_cancel();
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaPrintNotify
  *      Method:  AmayaPrintNotify
  * Description:  create a new AmayaPrintNotify
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 AmayaPrintNotify::AmayaPrintNotify() : 
   wxDialog( NULL, -1,
 	    _T(""),
@@ -58,37 +56,31 @@ AmayaPrintNotify::AmayaPrintNotify() :
   SetAutoLayout(TRUE);
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaPrintNotify
  *      Method:  ~AmayaPrintNotify
  * Description:  destructor
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 AmayaPrintNotify::~AmayaPrintNotify()
 {
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaPrintNotify
  *      Method:  OnButton
  * Description:  called when the cancel button is pressed
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaPrintNotify::OnButton(wxCommandEvent & event)
 {
   Close();
   event.Skip();
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaPrintNotify
  *      Method:  SetMessage
  * Description:  used to change the label of the dialog
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaPrintNotify::SetMessage( const char * p_message )
 {
   m_pLabel->SetLabel( TtaConvMessageToWX(p_message) );
@@ -97,13 +89,11 @@ void AmayaPrintNotify::SetMessage( const char * p_message )
   Layout();
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaPrintNotify
  *      Method:  OnClose
  * Description:  called when closing the dialog
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaPrintNotify::OnClose(wxCloseEvent & event)
 {
   wx_print_cancel();

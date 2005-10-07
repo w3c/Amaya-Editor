@@ -35,14 +35,12 @@
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaXHTMLPanel, AmayaSubPanel)
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaXHTMLPanel
  *      Method:  AmayaXHTMLPanel
  * Description:  construct a panel (bookmarks, elements, attributes ...)
  *               TODO
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 AmayaXHTMLPanel::AmayaXHTMLPanel( wxWindow * p_parent_window, AmayaNormalWindow * p_parent_nwindow )
   : AmayaSubPanel( p_parent_window, p_parent_nwindow, _T("wxID_PANEL_XHTML") )
 {
@@ -57,39 +55,33 @@ AmayaXHTMLPanel::AmayaXHTMLPanel( wxWindow * p_parent_window, AmayaNormalWindow 
   m_pManager->RegisterSubPanel( this );
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaXHTMLPanel
  *      Method:  ~AmayaXHTMLPanel
  * Description:  destructor
  *               TODO
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 AmayaXHTMLPanel::~AmayaXHTMLPanel()
 {
   // unregister myself to the manager, so nothing should be asked to me in future
   m_pManager->UnregisterSubPanel( this );  
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaXHTMLPanel
  *      Method:  GetPanelType
  * Description:  
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 int AmayaXHTMLPanel::GetPanelType()
 {
   return WXAMAYA_PANEL_XHTML;
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaXHTMLPanel
  *      Method:  RefreshToolTips
  * Description:  reassign the tooltips values
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaXHTMLPanel::RefreshToolTips()
 {
   XRCCTRL(*this,"wxID_PANEL_XHTML_STRONG", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BUTTON_BOLD)));
@@ -106,13 +98,11 @@ void AmayaXHTMLPanel::RefreshToolTips()
   XRCCTRL(*this,"wxID_PANEL_XHTML_TABLE",  wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BUTTON_TABLE)));
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaPanel
  *      Method:  OnButton
  * Description:  this method is called when the user click on a tool
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaXHTMLPanel::OnButton( wxCommandEvent& event )
 {
   int id = event.GetId();
@@ -147,13 +137,11 @@ void AmayaXHTMLPanel::OnButton( wxCommandEvent& event )
     TtaExecuteMenuAction ("CreateTable", doc, view, FALSE);
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaXHTMLPanel
  *      Method:  SendDataToPanel
  * Description:  refresh the button widgets of the frame's panel
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaXHTMLPanel::SendDataToPanel( AmayaParams& p )
 {
   bool * p_checked_array = (bool *)p.param1;
@@ -177,13 +165,11 @@ void AmayaXHTMLPanel::SendDataToPanel( AmayaParams& p )
   Layout();
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaXHTMLPanel
  *      Method:  DoUpdate
  * Description:  force a refresh when the user expand or detach this panel
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaXHTMLPanel::DoUpdate()
 {
   AmayaSubPanel::DoUpdate();
@@ -196,13 +182,11 @@ void AmayaXHTMLPanel::DoUpdate()
 }
 
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaXHTMLPanel
  *      Method:  IsActive
  * Description:  
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 bool AmayaXHTMLPanel::IsActive()
 {
   return AmayaSubPanel::IsActive();

@@ -59,14 +59,19 @@ BEGIN_EVENT_TABLE(AmayaAddPointEvtHandler, wxEvtHandler)
   EVT_MOUSEWHEEL(	AmayaAddPointEvtHandler::OnMouseWheel) // Process a wxEVT_MOUSEWHEEL event. 
 END_EVENT_TABLE()
 
+/*----------------------------------------------------------------------
+ *----------------------------------------------------------------------*/
 AmayaAddPointEvtHandler::AmayaAddPointEvtHandler() : wxEvtHandler()
 {
 }
 
-AmayaAddPointEvtHandler::AmayaAddPointEvtHandler( AmayaFrame * p_frame, int x, int y, int x1, int y1, int x3,
-						  int y3, int lastx, int lasty, int point,
-						  int *nbpoints, int maxPoints, int width, int height,
-						  PtrTextBuffer Pbuffer, PtrTextBuffer Bbuffer )
+/*----------------------------------------------------------------------
+ *----------------------------------------------------------------------*/
+AmayaAddPointEvtHandler::AmayaAddPointEvtHandler( AmayaFrame *p_frame,
+                                                  int x, int y, int x1, int y1, int x3,
+                                                  int y3, int lastx, int lasty, int point,
+                                                  int *nbpoints, int maxPoints, int width, int height,
+                                                  PtrTextBuffer Pbuffer, PtrTextBuffer Bbuffer )
   : wxEvtHandler()
     ,m_IsFinish(false)
     ,m_pFrame(p_frame)
@@ -108,6 +113,8 @@ AmayaAddPointEvtHandler::AmayaAddPointEvtHandler( AmayaFrame * p_frame, int x, i
    }
 }
 
+/*----------------------------------------------------------------------
+ *----------------------------------------------------------------------*/
 AmayaAddPointEvtHandler::~AmayaAddPointEvtHandler()
 {
   TTALOGDEBUG_0( TTA_LOG_SVGEDIT, _T("AmayaAddPointEvtHandler::~AmayaAddPointEvtHandler") );
@@ -125,36 +132,36 @@ AmayaAddPointEvtHandler::~AmayaAddPointEvtHandler()
     }
 }
 
+/*----------------------------------------------------------------------
+ *----------------------------------------------------------------------*/
 bool AmayaAddPointEvtHandler::IsFinish()
 {
   return m_IsFinish;
 }
 
+/*----------------------------------------------------------------------
+ *----------------------------------------------------------------------*/
 void AmayaAddPointEvtHandler::OnChar( wxKeyEvent& event )
 {
   m_IsFinish = true;
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaAddPointEvtHandler
  *      Method:  OnMouseDown
  * Description:  handle mouse button down events
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaAddPointEvtHandler::OnMouseDown( wxMouseEvent& event )
 {
   //  TTALOGDEBUG_0( TTA_LOG_SVGEDIT, _T("AmayaAddPointEvtHandler::OnMouseDown") );
   //  event.Skip();
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaAddPointEvtHandler
  *      Method:  OnMouseUp
  * Description:  handle mouse button up events
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaAddPointEvtHandler::OnMouseUp( wxMouseEvent& event )
 {
   if (IsFinish())
@@ -197,25 +204,21 @@ void AmayaAddPointEvtHandler::OnMouseUp( wxMouseEvent& event )
     m_IsFinish = true;
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaAddPointEvtHandler
  *      Method:  OnMouseDbClick
  * Description:  handle mouse dbclick events
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaAddPointEvtHandler::OnMouseDbClick( wxMouseEvent& event )
 {
   m_IsFinish = true;
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaAddPointEvtHandler
  *      Method:  OnMouseMove
  * Description:  handle mouse move events
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaAddPointEvtHandler::OnMouseMove( wxMouseEvent& event )
 {
   int newx, newy;
@@ -294,13 +297,11 @@ void AmayaAddPointEvtHandler::OnMouseMove( wxMouseEvent& event )
   m_pFrame->GetCanvas()->Refresh();
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaAddPointEvtHandler
  *      Method:  OnMouseWheel
  * Description:  handle mouse wheel events
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaAddPointEvtHandler::OnMouseWheel( wxMouseEvent& event )
 {
   //  TTALOGDEBUG_0( TTA_LOG_SVGEDIT, _T("AmayaAddPointEvtHandler::OnMouseWheel") );
@@ -308,13 +309,11 @@ void AmayaAddPointEvtHandler::OnMouseWheel( wxMouseEvent& event )
 }
 
 #if 0
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaAddPointEvtHandler
  *      Method:  OnPaint
  * Description:  
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaAddPointEvtHandler::OnPaint( wxPaintEvent& event )
 {
   /*

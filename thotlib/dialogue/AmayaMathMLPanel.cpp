@@ -34,14 +34,12 @@
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaMathMLPanel, AmayaSubPanel)
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaMathMLPanel
  *      Method:  AmayaMathMLPanel
  * Description:  construct a panel (bookmarks, elements, attributes ...)
  *               TODO
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 AmayaMathMLPanel::AmayaMathMLPanel( wxWindow * p_parent_window, AmayaNormalWindow * p_parent_nwindow )
   : AmayaSubPanel( p_parent_window, p_parent_nwindow, _T("wxID_PANEL_MATHML") )
 {
@@ -53,50 +51,42 @@ AmayaMathMLPanel::AmayaMathMLPanel( wxWindow * p_parent_window, AmayaNormalWindo
   m_pManager->RegisterSubPanel( this );
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaMathMLPanel
  *      Method:  ~AmayaMathMLPanel
  * Description:  destructor
  *               TODO
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 AmayaMathMLPanel::~AmayaMathMLPanel()
 {
   // unregister myself to the manager, so nothing should be asked to me in future
   m_pManager->UnregisterSubPanel( this );  
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaMathMLPanel
  *      Method:  GetPanelType
  * Description:  
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 int AmayaMathMLPanel::GetPanelType()
 {
   return WXAMAYA_PANEL_MATHML;
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaMathMLPanel
  *      Method:  RefreshToolTips
  * Description:  reassign the tooltips values
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaMathMLPanel::RefreshToolTips()
 {  
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaPanel
  *      Method:  OnButton
  * Description:  this method is called when the user click on a tool
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaMathMLPanel::OnButton( wxCommandEvent& event )
 {
   Document doc;
@@ -133,13 +123,11 @@ void AmayaMathMLPanel::OnButton( wxCommandEvent& event )
     TtaExecuteMenuAction ("CreateMSUBSUP", doc, view, FALSE);
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaMathMLPanel
  *      Method:  SendDataToPanel
  * Description:  refresh the button widgets of the frame's panel
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaMathMLPanel::SendDataToPanel( AmayaParams& p )
 {
   int action = (long int)p.param1;
@@ -151,26 +139,22 @@ void AmayaMathMLPanel::SendDataToPanel( AmayaParams& p )
     }
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaMathMLPanel
  *      Method:  DoUpdate
  * Description:  force a refresh when the user expand or detach this panel
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaMathMLPanel::DoUpdate()
 {
   AmayaSubPanel::DoUpdate();
 }
 
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaMathMLPanel
  *      Method:  IsActive
  * Description:  
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 bool AmayaMathMLPanel::IsActive()
 {
   return AmayaSubPanel::IsActive();

@@ -34,13 +34,11 @@
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaToolBar, wxPanel)
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaToolBar
  *      Method:  AmayaToolBar
  * Description:  create a new toolbar
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 AmayaToolBar::AmayaToolBar( wxWindow * p_parent, AmayaWindow * p_amaya_window_parent ) : 
   wxPanel()
 {
@@ -76,27 +74,23 @@ AmayaToolBar::AmayaToolBar( wxWindow * p_parent, AmayaWindow * p_amaya_window_pa
   SetAutoLayout(TRUE);
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaToolBar
  *      Method:  ~AmayaToolBar
  * Description:  destructor
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 AmayaToolBar::~AmayaToolBar()
 {
 }
 
 
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaToolBar
  *      Method:  OnURLText
  * Description:  the user has typed ENTER with his keyboard or clicked on validate button =>
  *               simply activate the callback
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaToolBar::OnURLTextEnter( wxCommandEvent& event )
 {
   GotoSelectedURL();
@@ -105,13 +99,11 @@ void AmayaToolBar::OnURLTextEnter( wxCommandEvent& event )
   //  event.Skip();
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaToolBar
  *      Method:  GotoSelectedURL
  * Description:  validate the selection
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaToolBar::GotoSelectedURL()
 {
   Document doc;
@@ -131,37 +123,31 @@ void AmayaToolBar::GotoSelectedURL()
     }
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaToolBar
  *      Method:  Clear
  * Description:  Removes all items from the control.
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaToolBar::ClearURL()
 {
   m_pComboBox->Clear();
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaToolBar
  *      Method:  Append
  * Description:  Adds the item to the end of the combobox.
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaToolBar::AppendURL( const wxString & newurl )
 {
   m_pComboBox->Append( newurl );
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaToolBar
  *      Method:  SetValue
  * Description:  Sets the text for the combobox text field.
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaToolBar::SetURLValue( const wxString & newurl )
 {
   if (m_pComboBox->FindString(newurl) == wxNOT_FOUND)
@@ -170,41 +156,35 @@ void AmayaToolBar::SetURLValue( const wxString & newurl )
   m_pComboBox->SetStringSelection( newurl );
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaToolBar
  *      Method:  GetValue
  * Description:  Returns the current value in the combobox text field.
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 wxString AmayaToolBar::GetURLValue()
 {
   return m_pComboBox->GetValue( );
 }
 
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaToolBar
  *      Method:  OnURLSelected
  * Description:  Called when the user select a new url
  *               there is a bug in wxWidgets on GTK version, this event is 
  *               called to often : each times user move the mouse with button pressed.
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaToolBar::OnURLSelected( wxCommandEvent& event )
 {
   GotoSelectedURL();
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaToolBar
  *      Method:  OnURLText
  * Description:  Called when the url text is changed
  *               Just update the current frame internal url variable
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaToolBar::OnURLText( wxCommandEvent& event )
 {
   AmayaFrame * p_frame = m_pAmayaWindowParent->GetActiveFrame();
@@ -214,13 +194,11 @@ void AmayaToolBar::OnURLText( wxCommandEvent& event )
   event.Skip();
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaToolBar
  *      Method:  OnButton_Back
  * Description:  
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaToolBar::OnButton_Back( wxCommandEvent& event )
 {
   Document doc;
@@ -229,13 +207,11 @@ void AmayaToolBar::OnButton_Back( wxCommandEvent& event )
   TtaExecuteMenuAction ("GotoPreviousHTML", doc, view, FALSE);
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaToolBar
  *      Method:  OnButton_Forward
  * Description:  
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaToolBar::OnButton_Forward( wxCommandEvent& event )
 {
   Document doc;
@@ -244,13 +220,11 @@ void AmayaToolBar::OnButton_Forward( wxCommandEvent& event )
   TtaExecuteMenuAction ("GotoNextHTML", doc, view, FALSE);
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaToolBar
  *      Method:  OnButton_Reload
  * Description:  
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaToolBar::OnButton_Reload( wxCommandEvent& event )
 {
   Document doc;
@@ -259,13 +233,11 @@ void AmayaToolBar::OnButton_Reload( wxCommandEvent& event )
   TtaExecuteMenuAction ("Reload", doc, view, FALSE);
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaToolBar
  *      Method:  OnButton_Stop
  * Description:  
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaToolBar::OnButton_Stop( wxCommandEvent& event )
 {
   Document doc;
@@ -274,13 +246,11 @@ void AmayaToolBar::OnButton_Stop( wxCommandEvent& event )
   TtaExecuteMenuAction ("StopTransfer", doc, view, FALSE);
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaToolBar
  *      Method:  OnButton_Home
  * Description:  
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaToolBar::OnButton_Home( wxCommandEvent& event )
 {
   Document doc;
@@ -289,13 +259,11 @@ void AmayaToolBar::OnButton_Home( wxCommandEvent& event )
   TtaExecuteMenuAction ("GoToHome", doc, view, FALSE);
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaToolBar
  *      Method:  OnButton_Save
  * Description:  
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaToolBar::OnButton_Save( wxCommandEvent& event )
 {
   Document doc;
@@ -304,13 +272,11 @@ void AmayaToolBar::OnButton_Save( wxCommandEvent& event )
   TtaExecuteMenuAction ("SaveDocument", doc, view, FALSE);
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaToolBar
  *      Method:  OnButton_Print
  * Description:  
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaToolBar::OnButton_Print( wxCommandEvent& event )
 {
   Document doc;
@@ -319,13 +285,11 @@ void AmayaToolBar::OnButton_Print( wxCommandEvent& event )
   TtaExecuteMenuAction ("SetupAndPrint", doc, view, FALSE);
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaToolBar
  *      Method:  OnButton_Find
  * Description:  
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaToolBar::OnButton_Find( wxCommandEvent& event )
 {
   Document doc;
@@ -334,13 +298,11 @@ void AmayaToolBar::OnButton_Find( wxCommandEvent& event )
   TtaExecuteMenuAction ("TtcSearchText", doc, view, FALSE);
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaToolBar
  *      Method:  OnButton_Logo
  * Description:  
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaToolBar::OnButton_Logo( wxCommandEvent& event )
 {
   Document doc;
@@ -349,13 +311,11 @@ void AmayaToolBar::OnButton_Logo( wxCommandEvent& event )
   TtaExecuteMenuAction ("HelpLocal", doc, view, FALSE);
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaToolBar
  *      Method:  EnableTool
  * Description:  enable/disable toolbar tools
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaToolBar::EnableTool( const wxString & xrc_id, bool enable )
 {
   wxWindow * p_window = FindWindow(wxXmlResource::GetXRCID(xrc_id));

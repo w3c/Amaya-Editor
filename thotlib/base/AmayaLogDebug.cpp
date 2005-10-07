@@ -32,13 +32,11 @@ enum
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaLogDebug, wxDialog)
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaLogDebug
  *      Method:  AmayaLogDebug
  * Description:  create a new AmayaLogDebug
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 AmayaLogDebug::AmayaLogDebug( wxWindow * p_parent ) : 
   wxDialog( NULL, -1,
 	    _T(""),
@@ -89,24 +87,20 @@ AmayaLogDebug::AmayaLogDebug( wxWindow * p_parent ) :
   SetAutoLayout(TRUE);
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaLogDebug
  *      Method:  ~AmayaLogDebug
  * Description:  destructor
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 AmayaLogDebug::~AmayaLogDebug()
 {
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaLogDebug
  *      Method:  OnCheckButton
  * Description:  
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaLogDebug::OnCheckButton(wxCommandEvent& event)
 {
   TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaLogDebug::OnCheckButton id=%d checked=%s"),
@@ -115,13 +109,11 @@ void AmayaLogDebug::OnCheckButton(wxCommandEvent& event)
   DoCheck( event.GetId(), event.IsChecked() );
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaLogDebug
  *      Method:  DoCheck
  * Description:  
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaLogDebug::DoCheck(int id, bool checked)
 {
   int filter_value = (1 << id);
@@ -138,13 +130,11 @@ void AmayaLogDebug::DoCheck(int id, bool checked)
 }
 
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaLogDebug
  *      Method:  OnTestCaseButton
  * Description:  
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaLogDebug::OnTestCaseButton(wxCommandEvent& event)
 {
   TTALOGDEBUG_0( TTA_LOG_DIALOG, _T("AmayaLogDebug::OnTestCase") );

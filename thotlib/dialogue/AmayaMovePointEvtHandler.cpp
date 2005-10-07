@@ -59,10 +59,14 @@ BEGIN_EVENT_TABLE(AmayaMovePointEvtHandler, wxEvtHandler)
   EVT_MOUSEWHEEL(	AmayaMovePointEvtHandler::OnMouseWheel) // Process a wxEVT_MOUSEWHEEL event. 
 END_EVENT_TABLE()
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 AmayaMovePointEvtHandler::AmayaMovePointEvtHandler() : wxEvtHandler()
 {
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 AmayaMovePointEvtHandler::AmayaMovePointEvtHandler(AmayaFrame * p_frame,
                                                    PtrBox box,
                                                    int firstx, int firsty,
@@ -136,6 +140,8 @@ AmayaMovePointEvtHandler::AmayaMovePointEvtHandler(AmayaFrame * p_frame,
     }
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 AmayaMovePointEvtHandler::~AmayaMovePointEvtHandler()
 {
   TTALOGDEBUG_0( TTA_LOG_SVGEDIT, _T("AmayaMovePointEvtHandler::~AmayaMovePointEvtHandler") );
@@ -153,36 +159,36 @@ AmayaMovePointEvtHandler::~AmayaMovePointEvtHandler()
     }
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 bool AmayaMovePointEvtHandler::IsFinish()
 {
   return m_IsFinish;
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void AmayaMovePointEvtHandler::OnChar( wxKeyEvent& event )
 {
   m_IsFinish = true;
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaMovePointEvtHandler
  *      Method:  OnMouseDown
  * Description:  handle mouse button down events
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaMovePointEvtHandler::OnMouseDown( wxMouseEvent& event )
 {
   //  TTALOGDEBUG_0( TTA_LOG_SVGEDIT, _T("AmayaMovePointEvtHandler::OnMouseDown") );
   //  event.Skip();
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaMovePointEvtHandler
  *      Method:  OnMouseUp
  * Description:  handle mouse button up events
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaMovePointEvtHandler::OnMouseUp( wxMouseEvent& event )
 {
   if (IsFinish())
@@ -202,25 +208,21 @@ void AmayaMovePointEvtHandler::OnMouseUp( wxMouseEvent& event )
   m_IsFinish = true;
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaMovePointEvtHandler
  *      Method:  OnMouseDbClick
  * Description:  handle mouse dbclick events
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaMovePointEvtHandler::OnMouseDbClick( wxMouseEvent& event )
 {
   m_IsFinish = true;
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaMovePointEvtHandler
  *      Method:  OnMouseMove
  * Description:  handle mouse move events
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaMovePointEvtHandler::OnMouseMove( wxMouseEvent& event )
 {
   int newx, newy, newx1, newy1;
@@ -269,13 +271,11 @@ void AmayaMovePointEvtHandler::OnMouseMove( wxMouseEvent& event )
   m_pFrame->GetCanvas()->Refresh();
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaMovePointEvtHandler
  *      Method:  OnMouseWheel
  * Description:  handle mouse wheel events
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaMovePointEvtHandler::OnMouseWheel( wxMouseEvent& event )
 {
   //  TTALOGDEBUG_0( TTA_LOG_SVGEDIT, _T("AmayaMovePointEvtHandler::OnMouseWheel") );

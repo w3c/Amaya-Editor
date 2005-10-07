@@ -1,17 +1,14 @@
 #ifdef _WX
 
 #include "wx/wx.h"
-
 #include "AmayaQuickSplitButton.h"
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaQuickSplitButton, wxButton)
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaQuickSplitButton
  *      Method:  AmayaQuickSplitButton
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 AmayaQuickSplitButton::AmayaQuickSplitButton( wxWindow * p_parent_window, wxAmayaQuickSplitMode mode, int width )
   :  wxPanel( p_parent_window/*, -1, _T(""), wxDefaultPosition*/ )
      ,m_Width(width)
@@ -28,24 +25,20 @@ AmayaQuickSplitButton::AmayaQuickSplitButton( wxWindow * p_parent_window, wxAmay
 }
 
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class: AmayaQuickSplitButton 
  *      Method: ~AmayaQuickSplitButton 
  * Description: destructor of AmayaQuickSplitButton (do nothing)
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 AmayaQuickSplitButton::~AmayaQuickSplitButton()
 {
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaQuickSplitButton
  *      Method:  OnLeaveWindow
  * Description:  change the color when mouse enter the button
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaQuickSplitButton::OnEnterWindow( wxMouseEvent& event )
 {
   m_OldColour = GetBackgroundColour();
@@ -55,13 +48,11 @@ void AmayaQuickSplitButton::OnEnterWindow( wxMouseEvent& event )
   event.Skip();
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaQuickSplitButton
  *      Method:  OnLeaveWindow
  * Description:  change the color when mouse leave the button
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaQuickSplitButton::OnLeaveWindow( wxMouseEvent& event )
 {
   SetBackgroundColour(m_OldColour);
@@ -71,13 +62,11 @@ void AmayaQuickSplitButton::OnLeaveWindow( wxMouseEvent& event )
 }
 
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaQuickSplitButton
  *      Method:  OnActivate
  * Description:  simulate a button activate event
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaQuickSplitButton::OnActivate( wxMouseEvent& event )
 {
   // now just simulate a wxButton event : this event will be catch by its parent.
@@ -88,13 +77,11 @@ void AmayaQuickSplitButton::OnActivate( wxMouseEvent& event )
   event.Skip();
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaQuickSplitButton
  *      Method:  ShowQuickSplitButton
  * Description:  this function will show/hide the quick splitbar button
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaQuickSplitButton::ShowQuickSplitButton( bool show )
 {
   wxSize new_size;

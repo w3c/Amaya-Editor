@@ -38,13 +38,11 @@
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaFormatPanel, AmayaSubPanel)
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaFormatPanel
  *      Method:  AmayaFormatPanel
  * Description:  construct a panel (bookmarks, elements, attributes, colors ...)
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 AmayaFormatPanel::AmayaFormatPanel( wxWindow * p_parent_window, AmayaNormalWindow * p_parent_nwindow )
   : AmayaSubPanel( p_parent_window, p_parent_nwindow, _T("wxID_PANEL_FORMAT") )
 {
@@ -68,38 +66,32 @@ AmayaFormatPanel::AmayaFormatPanel( wxWindow * p_parent_window, AmayaNormalWindo
   RefreshFormatPanel();
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaFormatPanel
  *      Method:  ~AmayaFormatPanel
  * Description:  destructor
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 AmayaFormatPanel::~AmayaFormatPanel()
 {  
   // unregister myself to the manager, so nothing should be asked to me in future
   m_pManager->UnregisterSubPanel( this );
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaFormatPanel
  *      Method:  GetPanelType
  * Description:  
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 int AmayaFormatPanel::GetPanelType()
 {
   return WXAMAYA_PANEL_FORMAT;
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaFormatPanel
  *      Method:  RefreshToolTips
  * Description:  reassign the tooltips values
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaFormatPanel::RefreshToolTips()
 {  
   XRCCTRL(*m_pPanelContentDetach,"wxID_DEFAULT_FORMAT",wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_UNCHANGED)));
@@ -120,13 +112,11 @@ void AmayaFormatPanel::RefreshToolTips()
 }
 
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaFormatPanel
  *      Method:  SendDataToPanel
  * Description:  refresh the button widgets of the frame's panel
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaFormatPanel::SendDataToPanel( AmayaParams& p )
 {
   int modif_type       = (int)p.param1;
@@ -164,62 +154,52 @@ void AmayaFormatPanel::SendDataToPanel( AmayaParams& p )
     XRCCTRL(*m_pPanelContentDetach,"wxID_SPIN_FORMATLINESPACE",wxSpinCtrl)->SetValue(line_space_value);
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaFormatPanel
  *      Method:  DoUpdate
  * Description:  force a refresh when the user expand or detach this panel
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaFormatPanel::DoUpdate()
 {
   AmayaSubPanel::DoUpdate();
   //  ThotUpdatePalette();
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaFormatPanel
  *      Method:  IsActive
  * Description:  
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 bool AmayaFormatPanel::IsActive()
 {
   return AmayaSubPanel::IsActive();
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaFormatPanel
  *      Method:  OnApply
  * Description:  
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaFormatPanel::OnApply( wxCommandEvent& event )
 {
   ThotCallback (NumFormPresFormat, INTEGER_DATA, (char*) 1);
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaFormatPanel
  *      Method:  OnRefresh
  * Description:  refresh the panel from current selection
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaFormatPanel::OnRefresh( wxCommandEvent& event )
 {
   RefreshFormatPanel();
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaFormatPanel
  *      Method:  RefreshFormatPanel
  * Description:  refresh the panel from current selection
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaFormatPanel::RefreshFormatPanel()
 {
   Document doc;
@@ -234,13 +214,11 @@ void AmayaFormatPanel::RefreshFormatPanel()
   XRCCTRL(*m_pPanelContentDetach,"wxID_DEFAULT_LINESPACE",wxBitmapButton)->SetBackgroundColour(m_OffColour);
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaFormatPanel
  *      Method:  OnFormatLeftChanged
  * Description:  when a format button is pressed (left,right,center,justify)
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaFormatPanel::OnFormatLeftChanged( wxCommandEvent& event )
 {
   XRCCTRL(*m_pPanelContentDetach, "wxID_BMPBUTTON_FORMATLEFT", wxBitmapButton)->SetBackgroundColour( m_OnColour );
@@ -252,13 +230,11 @@ void AmayaFormatPanel::OnFormatLeftChanged( wxCommandEvent& event )
   //ThotCallback (NumFormPresFormat, INTEGER_DATA, (char*) 1); /* Apply */
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaFormatPanel
  *      Method:  OnFormatRightChanged
  * Description:  when a format button is pressed (left,right,center,justify)
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaFormatPanel::OnFormatRightChanged( wxCommandEvent& event )
 {
   XRCCTRL(*m_pPanelContentDetach, "wxID_BMPBUTTON_FORMATLEFT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
@@ -270,13 +246,11 @@ void AmayaFormatPanel::OnFormatRightChanged( wxCommandEvent& event )
   //ThotCallback (NumFormPresFormat, INTEGER_DATA, (char*) 1); /* Apply */
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaFormatPanel
  *      Method:  OnFormatCenterChanged
  * Description:  when a format button is pressed (left,right,center,justify)
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaFormatPanel::OnFormatCenterChanged( wxCommandEvent& event )
 {
   XRCCTRL(*m_pPanelContentDetach, "wxID_BMPBUTTON_FORMATLEFT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
@@ -288,13 +262,11 @@ void AmayaFormatPanel::OnFormatCenterChanged( wxCommandEvent& event )
   //ThotCallback (NumFormPresFormat, INTEGER_DATA, (char*) 1); /* Apply */
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaFormatPanel
  *      Method:  OnFormatJustifyChanged
  * Description:  when a format button is pressed (left,right,center,justify)
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaFormatPanel::OnFormatJustifyChanged( wxCommandEvent& event )
 {
   XRCCTRL(*m_pPanelContentDetach, "wxID_BMPBUTTON_FORMATLEFT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
@@ -306,25 +278,21 @@ void AmayaFormatPanel::OnFormatJustifyChanged( wxCommandEvent& event )
   //ThotCallback (NumFormPresFormat, INTEGER_DATA, (char*) 1); /* Apply */
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaFormatPanel
  *      Method:  OnAlignChangedButton
  * Description:  
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaFormatPanel::OnAlignChangedButton( wxCommandEvent& event )
 {
   ThotCallback (NumFormPresFormat, INTEGER_DATA, (char*) 1); /* Apply */
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaFormatPanel
  *      Method:  IndentChanged
  * Description:  when the indent spin ctrl value is changed
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaFormatPanel::IndentChanged()
 {
   XRCCTRL(*m_pPanelContentDetach,"wxID_DEFAULT_INDENT",wxBitmapButton)->SetBackgroundColour(m_OffColour);
@@ -332,38 +300,32 @@ void AmayaFormatPanel::IndentChanged()
   ThotCallback (NumZoneRecess, INTEGER_DATA, (char*)indent_value);
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaFormatPanel
  *      Method:  OnIndentChanged
  * Description:  when the indent spin ctrl value is changed
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaFormatPanel::OnIndentChanged( wxSpinEvent& event )
 {
   IndentChanged();
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaFormatPanel
  *      Method:  OnIndentChangedButton
  * Description:  
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaFormatPanel::OnIndentChangedButton( wxCommandEvent& event )
 {
   IndentChanged();
   ThotCallback (NumFormPresFormat, INTEGER_DATA, (char*) 1); /* Apply */
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaFormatPanel
  *      Method:  LineSpaceChanged
  * Description:  when the line space spin ctrl value is changed
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaFormatPanel::LineSpaceChanged()
 {
   XRCCTRL(*m_pPanelContentDetach,"wxID_DEFAULT_LINESPACE",wxBitmapButton)->SetBackgroundColour(m_OffColour);
@@ -371,38 +333,32 @@ void AmayaFormatPanel::LineSpaceChanged()
   ThotCallback (NumZoneLineSpacing, INTEGER_DATA, (char*)linespace_value);
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaFormatPanel
  *      Method:  OnLineSpaceChanged
  * Description:  when the line space spin ctrl value is changed
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaFormatPanel::OnLineSpaceChanged( wxSpinEvent& event )
 {
   LineSpaceChanged();
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaFormatPanel
  *      Method:  OnLineSpaceChangedButton
  * Description:  
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaFormatPanel::OnLineSpaceChangedButton( wxCommandEvent& event )
 {
   LineSpaceChanged();
   ThotCallback (NumFormPresFormat, INTEGER_DATA, (char*) 1); /* Apply */
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaFormatPanel
  *      Method:  OnDefaultFormat
  * Description:  when the default button is pressed
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaFormatPanel::OnDefaultFormat( wxCommandEvent& event )
 {
   XRCCTRL(*m_pPanelContentDetach, "wxID_BMPBUTTON_FORMATLEFT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
@@ -414,13 +370,11 @@ void AmayaFormatPanel::OnDefaultFormat( wxCommandEvent& event )
   //ThotCallback (NumFormPresFormat, INTEGER_DATA, (char*) 1); /* Apply */
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaFormatPanel
  *      Method:  OnDefaultIndent
  * Description:  when the default button is pressed
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaFormatPanel::OnDefaultIndent( wxCommandEvent& event )
 {
   XRCCTRL(*m_pPanelContentDetach,"wxID_DEFAULT_INDENT",wxBitmapButton)->SetBackgroundColour(m_OnColour);
@@ -429,13 +383,11 @@ void AmayaFormatPanel::OnDefaultIndent( wxCommandEvent& event )
   //ThotCallback (NumFormPresFormat, INTEGER_DATA, (char*) 1); /* Apply */
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaFormatPanel
  *      Method:  OnDefaultLineSpace
  * Description:  when the default button is pressed
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaFormatPanel::OnDefaultLineSpace( wxCommandEvent& event )
 {
   XRCCTRL(*m_pPanelContentDetach,"wxID_DEFAULT_LINESPACE",wxBitmapButton)->SetBackgroundColour(m_OnColour);

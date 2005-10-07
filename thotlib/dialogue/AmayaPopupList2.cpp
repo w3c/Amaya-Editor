@@ -43,13 +43,11 @@ BEGIN_EVENT_TABLE(AmayaPopupList, wxPopupTransientWindow)
   EVT_LISTBOX(-1, AmayaPopupList::OnActivateItem)
 END_EVENT_TABLE()
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaPopupList
  *      Method:  AmayaPopupList
  * Description:  
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 AmayaPopupList::AmayaPopupList ( wxWindow * p_parent, int ref ) :
   wxPopupTransientWindow( p_parent )
  ,m_Ref(ref)
@@ -64,24 +62,20 @@ AmayaPopupList::AmayaPopupList ( wxWindow * p_parent, int ref ) :
   topSizer->Fit(this);
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaPopupList
  *      Method:  ~AmayaPopupList
  * Description:  
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 AmayaPopupList::~AmayaPopupList()
 {
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaPopupList
  *      Method:  OnMenuItem
  * Description:  
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaPopupList::OnActivateItem( wxCommandEvent& event )
 {
   int id = (int)event.GetClientData();
@@ -93,38 +87,32 @@ void AmayaPopupList::OnActivateItem( wxCommandEvent& event )
   DismissAndNotify();
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaPopupList
  *      Method:  Append
  * Description:  append an item to the list
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaPopupList::Append( int i, const wxString & label )
 {
   TTALOGDEBUG_1( TTA_LOG_DIALOG, _T("AmayaPopupList::Append - id=%d label=")+label, i );
   m_pListBox->Append(label, (void *)i);
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaPopupList
  *      Method:  OnDismiss
  * Description:  called when the popup is closed
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaPopupList::OnDismiss()
 {
   TtaDestroyDialogue( m_Ref );
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaPopupList
  *      Method:  Popup
  * Description:  resize the list before poping it up
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaPopupList::Popup(wxWindow *focus)
 {
   /*

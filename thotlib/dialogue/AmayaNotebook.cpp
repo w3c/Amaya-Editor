@@ -29,6 +29,8 @@
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaNotebook, wxNotebook)
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 AmayaNotebook::AmayaNotebook( wxWindow * p_parent_window,
 			      AmayaWindow * p_amaya_window )
 	:  wxNotebook( wxDynamicCast(p_parent_window, wxWindow),
@@ -47,18 +49,18 @@ AmayaNotebook::AmayaNotebook( wxWindow * p_parent_window,
   SetImageList( AmayaApp::GetDocumentIconList() );
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 AmayaNotebook::~AmayaNotebook()
 {
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaNotebook
  *      Method:  DoClose
  * Description:  called when the AmayaNotebook is closed.
  *               just forward close event to each AmayaPage
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaNotebook::DoClose(bool & veto)
 {
   /* if this boolean is set to false, the window must not be closed */
@@ -110,14 +112,12 @@ void AmayaNotebook::DoClose(bool & veto)
     veto = TRUE; /* still an opened page => keep the window open */
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaNotebook
  *      Method:  UpdatePageId
  * Description:  this function is called to update the page id and document's pageid
  *               when a page has been removed or moved ... 
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaNotebook::UpdatePageId()
 {
   /* update page_id for each page */
@@ -137,15 +137,13 @@ void AmayaNotebook::UpdatePageId()
     }
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaNotebook
  *      Method:  OnPageChanging
  * Description:  The page selection is about to be changed.
  *               Processes a wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGING event.
  *               This event can be vetoed.
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaNotebook::OnPageChanging(wxNotebookEvent& event)
 {
   TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaNotebook::OnPageChanging : old=%d, new=%d"),
@@ -154,13 +152,11 @@ void AmayaNotebook::OnPageChanging(wxNotebookEvent& event)
   event.Skip();
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaNotebook
  *      Method:  OnPageChanged
  * Description:  called when a new page has been selected
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaNotebook::OnPageChanged(wxNotebookEvent& event)
 {
   TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaNotebook::OnPageChanged : old=%d, new=%d"),
@@ -199,13 +195,11 @@ void AmayaNotebook::OnPageChanged(wxNotebookEvent& event)
   event.Skip();
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaNotebook
  *      Method:  GetPageId
  * Description:  used to get the page Id when only the page @ is known
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 int AmayaNotebook::GetPageId( const AmayaPage * p_page )
 {
   unsigned int page_id = 0;
@@ -244,33 +238,20 @@ void AmayaNotebook::OnContextMenu( wxContextMenuEvent & event )
 //  event.Skip();
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaNotebook
  *      Method:  GetMContextFrame
  * Description:  return the aimed frame by the last context menu
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 int AmayaNotebook::GetMContextFrame()
 {
   return m_MContextFrameId;
 }
 
-#if 0
-/*
- *--------------------------------------------------------------------------------------
- *       Class:  AmayaNotebook
- *      Method:  OnChar
- * Description:  manage keyboard events
- *--------------------------------------------------------------------------------------
- */
-void AmayaNotebook::OnChar(wxKeyEvent& event)
-{
-  event.Skip();
-}
-#endif /* 0 */
 
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 BEGIN_EVENT_TABLE(AmayaNotebook, wxNotebook)
   //  EVT_CLOSE(	                  AmayaNotebook::OnClose )
   EVT_NOTEBOOK_PAGE_CHANGED(  -1, AmayaNotebook::OnPageChanged )

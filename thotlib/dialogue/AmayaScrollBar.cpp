@@ -39,13 +39,11 @@
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaScrollBar, wxScrollBar)
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaScrollBar
  *      Method:  AmayaScrollBar
  * Description:  
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 AmayaScrollBar::AmayaScrollBar( wxWindow* p_parent_window,
 				int parent_frame_id,
 				long style )
@@ -55,24 +53,20 @@ AmayaScrollBar::AmayaScrollBar( wxWindow* p_parent_window,
 {
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaScrollBar
  *      Method:  ~AmayaScrollBar
  * Description:  destructor do nothing for the moment
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 AmayaScrollBar::~AmayaScrollBar()
 {
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaScrollBar
  *      Method:  OnSetFocus
  * Description:  just refuse to get the focus because on windows, the scrollbar is blinking
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaScrollBar::OnSetFocus( wxFocusEvent & event )
 {
   TtaRedirectFocus();
@@ -80,26 +74,22 @@ void AmayaScrollBar::OnSetFocus( wxFocusEvent & event )
   //event.Skip();
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaScrollBar
  *      Method:  OnKillFocus
  * Description:  just refuse to get the focus because on windows, the scrollbar is blinking
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaScrollBar::OnKillFocus( wxFocusEvent & event )
 {
   // do not skip this event because we want stop focus
   event.Skip();
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaScrollBar
  *      Method:  OnTop
  * Description:  
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaScrollBar::OnTop( wxScrollEvent& event )
 {
   TTALOGDEBUG_0( TTA_LOG_DIALOG, _T("AmayaScrollBar::OnTop") );
@@ -110,13 +100,11 @@ void AmayaScrollBar::OnTop( wxScrollEvent& event )
     }
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaScrollBar
  *      Method:  OnBottom
  * Description:  
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaScrollBar::OnBottom( wxScrollEvent& event )
 {
   TTALOGDEBUG_0( TTA_LOG_DIALOG, _T("AmayaScrollBar::OnBottom") );
@@ -127,13 +115,11 @@ void AmayaScrollBar::OnBottom( wxScrollEvent& event )
     }
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaScrollBar
  *      Method:  OnLineUp
  * Description:  
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaScrollBar::OnLineUp( wxScrollEvent& event )
 {
   Document doc; 
@@ -157,13 +143,11 @@ void AmayaScrollBar::OnLineUp( wxScrollEvent& event )
   m_IgnoreNextScrollEvent = TRUE;
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaScrollBar
  *      Method:  OnLineDown
  * Description:  
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaScrollBar::OnLineDown( wxScrollEvent& event )
 {
   Document doc; 
@@ -187,13 +171,11 @@ void AmayaScrollBar::OnLineDown( wxScrollEvent& event )
   m_IgnoreNextScrollEvent = TRUE;
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaScrollBar
  *      Method:  OnScroll
  * Description:  
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaScrollBar::OnScroll( wxScrollEvent& event )
 {
   // this flag is necessary because 2 events occure when up/down button is pressed (it's an optimisation)

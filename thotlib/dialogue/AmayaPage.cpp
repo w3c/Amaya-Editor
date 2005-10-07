@@ -46,8 +46,7 @@
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaPage, wxPanel)
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaPage
  *      Method:  AmayaPage
  * Description:  constructor of the page :
@@ -59,8 +58,7 @@ IMPLEMENT_DYNAMIC_CLASS(AmayaPage, wxPanel)
  *           AmayaFrame
  *       ]
  *   ]
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 AmayaPage::AmayaPage( wxWindow * p_parent_window, AmayaWindow * p_amaya_parent_window )
   :  wxPanel( p_parent_window, -1 )
   ,m_pNoteBookParent( NULL )
@@ -122,24 +120,20 @@ AmayaPage::AmayaPage( wxWindow * p_parent_window, AmayaWindow * p_amaya_parent_w
 }
 
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class: AmayaPage 
  *      Method: ~AmayaPage 
  * Description: destructor of AmayaPage (do nothing)
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 AmayaPage::~AmayaPage()
 {
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class: AmayaPage 
  *      Method: GetQuickSplitButton
  * Description: destructor of AmayaPage (do nothing)
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 AmayaQuickSplitButton * AmayaPage::GetQuickSplitButton (ThotBool horizontal)
 {
   if (horizontal)
@@ -148,8 +142,7 @@ AmayaQuickSplitButton * AmayaPage::GetQuickSplitButton (ThotBool horizontal)
      return m_pSplitButtonRight;
 }
 
- /*
- *--------------------------------------------------------------------------------------
+ /*----------------------------------------------------------------------
  *       Class: AmayaPage 
  *      Method: AttachFrame
  * Description: attache a AmayaFrame to the page (top or bottom)
@@ -158,8 +151,7 @@ AmayaQuickSplitButton * AmayaPage::GetQuickSplitButton (ThotBool horizontal)
  *        + int position : the position identifier - top (1) or bottom (2)
  *      return:
  *        + AmayaFrame * : the old frame or NULL if there was no old frame at this place
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 AmayaFrame * AmayaPage::AttachFrame( AmayaFrame * p_frame, int position )
 {
   // check if this is the first frame or not
@@ -249,8 +241,7 @@ AmayaFrame * AmayaPage::AttachFrame( AmayaFrame * p_frame, int position )
   return oldframe;
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaPage
  *      Method:  DetachFrame
  * Description:  detache the frame (hide it but don't delete it)
@@ -259,8 +250,7 @@ AmayaFrame * AmayaPage::AttachFrame( AmayaFrame * p_frame, int position )
  *        + 2 the bottom frame 
  *      return:
  *        + AmayaFrame* : the detached frame
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 AmayaFrame * AmayaPage::DetachFrame( int position )
 {
   // Select the right frame : top or bottom
@@ -353,13 +343,11 @@ AmayaFrame * AmayaPage::DetachFrame( int position )
   return oldframe;
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaPage
  *      Method:  DoBottomSplitButtonAction
  * Description:  
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaPage::DoBottomSplitButtonAction()
 {
   // check if we must switch the split orientation
@@ -377,13 +365,11 @@ void AmayaPage::DoBottomSplitButtonAction()
     }
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaPage
  *      Method:  DoRightSplitButtonAction
  * Description:  
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaPage::DoRightSplitButtonAction()
 {
   // check if we must switch the split orientation
@@ -401,13 +387,11 @@ void AmayaPage::DoRightSplitButtonAction()
     }
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaPage
  *      Method:  OnSplitButton
  * Description:  this method is called when the button for quickly split is pushed
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaPage::OnSplitButton( wxCommandEvent& event )
 {
   // do nothing if the button is not a quicksplit one
@@ -423,37 +407,31 @@ void AmayaPage::OnSplitButton( wxCommandEvent& event )
 }
 
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaPage
  *      Method:  SetSplitMode
  * Description:  used to control the split orientation (call it just before DoSplitUnsplit())
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaPage::SetSplitMode( int mode )
 {
   m_pSplitterWindow->SetSplitMode(mode);
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaPage
  *      Method:  GetSplitterWindow
  * Description:  return the page's splitter window pointer 
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 wxSplitterWindow * AmayaPage::GetSplitterWindow()
 {
   return m_pSplitterWindow;
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaPage
  *      Method:  DoSplitUnsplit
  * Description:  toggle split/unsplit state
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaPage::DoSplitUnsplit()
 {
   if (!m_pSplitterWindow->IsSplit())
@@ -481,13 +459,11 @@ void AmayaPage::DoSplitUnsplit()
     }
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaPage
  *      Method:  DoSwitchHoriVert
  * Description:  switch horizontal/vertical split direction
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaPage::DoSwitchHoriVert()
 {
   if (m_pSplitterWindow->IsSplit())
@@ -505,26 +481,22 @@ void AmayaPage::DoSwitchHoriVert()
 }
 
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaPage
  *      Method:  OnSplitterPosChanging
  * Description:  this method is called when the splitter position start to change its position
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaPage::OnSplitterPosChanging( wxSplitterEvent& event )
 {
   event.Skip();
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaPage
  *      Method:  OnSplitterPosChanged
  * Description:  this method is called when the splitter position has changed
  *               this method calculate the new ratio (m_SlashRatio)
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaPage::OnSplitterPosChanged( wxSplitterEvent& event )
 {
     // calculate the new ratio (depending of window size)
@@ -543,27 +515,23 @@ void AmayaPage::OnSplitterPosChanged( wxSplitterEvent& event )
     //    event.Skip();
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaPage
  *      Method:  OnSplitterDClick
  * Description:  called when a double click is done on the splitbar
  *               detach the bottom frame
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaPage::OnSplitterDClick( wxSplitterEvent& event )
 {
   DoSplitUnsplit();
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaPage
  *      Method:  OnSplitterUnsplit
  * Description:  called when the splitbar is unsplited
  *               TODO
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaPage::OnSplitterUnsplit( wxSplitterEvent& event )
 {
   // the frame has been maybe unsplited manualy
@@ -582,15 +550,13 @@ void AmayaPage::OnSplitterUnsplit( wxSplitterEvent& event )
   event.Skip();
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaPage
  *      Method:  OnSize
  * Description:  called when the AmayaPage is resized.
  *               assign a right value to the splitbar position
  *               depending of m_SlashRatio position
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaPage::OnSize( wxSizeEvent& event )
 {
   // do not update the size if the page is not selected
@@ -605,14 +571,12 @@ void AmayaPage::OnSize( wxSizeEvent& event )
   event.Skip();
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaPage
  *      Method:  AdjustSplitterPos
  * Description:  adjust the splitbar position,
  *               the split bar pos could be horizontal or vertical
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaPage::AdjustSplitterPos( int height, int width )
 {
   if ( height == -1 )
@@ -641,14 +605,12 @@ void AmayaPage::AdjustSplitterPos( int height, int width )
     m_pSplitterWindow->SetSashPosition( (int)new_slash_pos );
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaPage
  *      Method:  DoClose
  * Description:  called when the AmayaPage is closed.
  *               just call generic callbacks to close top frame and bottom frame
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaPage::DoClose(bool & veto)
 {
   TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaPage::DoClose topframe=%d bottomframe=%d"),
@@ -698,25 +660,21 @@ void AmayaPage::DoClose(bool & veto)
     }
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaPage
  *      Method:  OnPaint
  * Description:  nothing is done
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaPage::OnPaint( wxPaintEvent& event )
 {
   event.Skip(FALSE);
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaPage
  *      Method:  SetNotebookParent
  * Description:  update the notebook page's parent
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaPage::SetNotebookParent( AmayaNotebook * p_notebook )
 {
   m_pNoteBookParent = p_notebook;
@@ -725,25 +683,21 @@ void AmayaPage::SetNotebookParent( AmayaNotebook * p_notebook )
     SetWindowParent( m_pNoteBookParent->GetWindowParent() );
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaPage
  *      Method:  GetNotebookParent
  * Description:  what is the parent of this page ?
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 AmayaNotebook * AmayaPage::GetNotebookParent()
 {
   return m_pNoteBookParent;
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaPage
  *      Method:  SetWindowParent / GetWindowParent
  * Description:  set/get the top window parent
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 AmayaWindow * AmayaPage::GetWindowParent()
 {
   return m_pWindowParent;
@@ -753,38 +707,32 @@ void AmayaPage::SetWindowParent( AmayaWindow * p_window )
   m_pWindowParent = p_window;
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaPage
  *      Method:  IsClosed
  * Description:  to know if this page is going do die
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 bool AmayaPage::IsClosed()
 {
   return m_IsClosed;
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaPage
  *      Method:  IsSelected
  * Description:  to know if this page is currently selected
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 bool AmayaPage::IsSelected()
 {
   return m_IsSelected;
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaPage
  *      Method:  SetSelected
  * Description:  the notebook has a new selected page then it calls SetSelected(TRUE)
  *               on the selected page and SetSelected(FALSE) on the other one
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaPage::SetSelected( bool isSelected )
 {
   m_IsSelected = isSelected;
@@ -817,13 +765,11 @@ void AmayaPage::SetSelected( bool isSelected )
     }
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaPage
  *      Method:  SetPageId
  * Description:  update the page id (page position in the notebook)
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaPage::SetPageId( int page_id )
 {
   // update each owned frames
@@ -844,25 +790,21 @@ void AmayaPage::SetPageId( int page_id )
   // update the internal page_id with the new one
   m_PageId = page_id;
 }
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaPage
  *      Method:  GetPageId
  * Description:  return the page position relatively to other window pages
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 int AmayaPage::GetPageId()
 {
   return m_PageId;
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaPage
  *      Method:  GetFrame
  * Description:  return the first or second page frame
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 AmayaFrame * AmayaPage::GetFrame( int frame_position ) const
 {
   if (frame_position == 1)
@@ -877,13 +819,11 @@ AmayaFrame * AmayaPage::GetFrame( int frame_position ) const
     return NULL;
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaPage
  *      Method:  GetFramePosition
  * Description:  return the frame position if it exist in the current page
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 int AmayaPage::GetFramePosition( const AmayaFrame * p_frame ) const
 {
   if ( p_frame == GetFrame(1) )
@@ -894,13 +834,11 @@ int AmayaPage::GetFramePosition( const AmayaFrame * p_frame ) const
     return 0;
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaPage
  *      Method:  
  * Description:  
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaPage::SetActiveFrame( const AmayaFrame * p_frame )
 {
   if ( p_frame == GetFrame(1) )
@@ -911,25 +849,21 @@ void AmayaPage::SetActiveFrame( const AmayaFrame * p_frame )
     m_ActiveFrame = 0;
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaPage
  *      Method:  
  * Description:  
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 AmayaFrame * AmayaPage::GetActiveFrame() const
 {
   return GetFrame( m_ActiveFrame );
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaPage
  *      Method:  RaisePage
  * Description:  raise the page and the window if necessary
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaPage::RaisePage()
 {
   AmayaNotebook * p_notebook = GetNotebookParent();
@@ -940,32 +874,29 @@ void AmayaPage::RaisePage()
       
       SetSelected( TRUE );
     }
-  // force the window's parent to raises to the top of the window hierarchy if it is a managed window (dialog or frame).
+  // force the window's parent to raises to the top of the window hierarchy 
+  // if it is a managed window (dialog or frame).
   if ( GetWindowParent() )
     GetWindowParent()->Raise();
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaPage
  *      Method:  
  * Description:  
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaPage::OnContextMenu( wxContextMenuEvent & event )
 {
   event.Skip();
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaPage
  *      Method:  RefreshSplitToggleMenu()
  * Description:  is called to toggle on/off the "Show/Hide panel" menu item depeding on
  *               the panel showing state.
  *               Just forward the request to the parent window.
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaPage::RefreshShowPanelToggleMenu()
 {
   wxASSERT(GetWindowParent());
@@ -974,13 +905,11 @@ void AmayaPage::RefreshShowPanelToggleMenu()
     GetWindowParent()->RefreshShowPanelToggleMenu();
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaPage
  *      Method:  GetMasterFrameId
  * Description:  the master frame is the on which control the urlbar, buttons (TODO : and menus)
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 int AmayaPage::GetMasterFrameId()
 {
   return m_MasterFrameId;

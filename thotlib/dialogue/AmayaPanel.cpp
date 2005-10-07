@@ -45,14 +45,12 @@
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaPanel, wxPanel)
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaPanel
  *      Method:  AmayaPanel
  * Description:  construct a panel (bookmarks, elements, attributes ...)
  *               TODO
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 AmayaPanel::AmayaPanel( wxWindow *      p_parent_window
 			,AmayaNormalWindow * p_parent_nwindow
 			,wxWindowID     id
@@ -106,26 +104,22 @@ AmayaPanel::AmayaPanel( wxWindow *      p_parent_window
   SetAutoLayout(TRUE);
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaPanel
  *      Method:  ~AmayaPanel
  * Description:  destructor
  *               TODO
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 AmayaPanel::~AmayaPanel()
 {
   
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaPanel
  *      Method:  HideWhenUnsplit
  * Description:  must hide the panel & his childs
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaPanel::ShowWhenUnsplit( bool show )
 {
   TTALOGDEBUG_0( TTA_LOG_PANELS, _T("AmayaPanel::ShowWhenUnsplit"));
@@ -139,13 +133,11 @@ void AmayaPanel::ShowWhenUnsplit( bool show )
     }
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaPanel
  *      Method:  OnClose
  * Description:  this method is called when the button for quick split is pushed
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaPanel::OnClose( wxCommandEvent& event )
 {
   if ( event.GetId() != XRCCTRL(*this, "wxID_BUTTON_CLOSE", wxBitmapButton)->GetId() )
@@ -156,60 +148,50 @@ void AmayaPanel::OnClose( wxCommandEvent& event )
   m_pParentNWindow->ClosePanel();  
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaPanel
  *      Method:  GetXHTMLPanel
  * Description:  
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 AmayaXHTMLPanel * AmayaPanel::GetXHTMLPanel() const
 {
   return (AmayaXHTMLPanel *)m_aPanelList[WXAMAYA_PANEL_XHTML];
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaPanel
  *      Method:  GetAttributePanel
  * Description:  
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 AmayaAttributePanel * AmayaPanel::GetAttributePanel() const
 {
   return (AmayaAttributePanel *)m_aPanelList[WXAMAYA_PANEL_ATTRIBUTE];
 }
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaPanel
  *      Method:  GetApplyClassPanel
  * Description:  
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 AmayaApplyClassPanel * AmayaPanel::GetApplyClassPanel() const
 {
   return (AmayaApplyClassPanel *)m_aPanelList[WXAMAYA_PANEL_APPLYCLASS];
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaPanel
  *      Method:  RefreshToolTips
  * Description:  reassign the tooltips values
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaPanel::RefreshToolTips()
 {
   m_aPanelList[WXAMAYA_PANEL_XHTML]->RefreshToolTips();
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaPanel
  *      Method:  OpenSubPanel
  * Description:  expand the subpanel
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaPanel::OpenSubPanel( int panel_type )
 {
   if (panel_type >= WXAMAYA_PANEL_TYPE_NB || panel_type < 0 || m_aPanelList[panel_type] == NULL )
@@ -217,13 +199,11 @@ void AmayaPanel::OpenSubPanel( int panel_type )
   AmayaSubPanelManager::GetInstance()->Expand( m_aPanelList[panel_type] );
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaPanel
  *      Method:  CloseSubPanel
  * Description:  unexpand the subpanel
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaPanel::CloseSubPanel( int panel_type )
 {
   if (panel_type >= WXAMAYA_PANEL_TYPE_NB || panel_type < 0 || m_aPanelList[panel_type] == NULL )

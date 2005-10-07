@@ -61,17 +61,15 @@ IMPLEMENT_DYNAMIC_CLASS(AmayaWindow, wxFrame)
 DECLARE_EVENT_TYPE(wxEVT_AMAYA_ACTION_EVENT, -1)
   DEFINE_EVENT_TYPE(wxEVT_AMAYA_ACTION_EVENT)
 
-  /*
-   *--------------------------------------------------------------------------------------
-   *       Class:  AmayaWindow
-   *      Method:  AmayaWindow
-   * Description:  create a new AmayaWindow
-   *--------------------------------------------------------------------------------------
-   */
-  AmayaWindow::AmayaWindow (  int            window_id
-                              ,wxWindow *     p_parent_window
-                              ,const wxPoint& pos
-                              ,const wxSize&  size
+/*----------------------------------------------------------------------
+ *       Class:  AmayaWindow
+ *      Method:  AmayaWindow
+ * Description:  create a new AmayaWindow
+  -----------------------------------------------------------------------*/
+AmayaWindow::AmayaWindow (  int window_id
+                              ,wxWindow *p_parent_window
+                              ,const wxPoint &pos
+                              ,const wxSize &size
                               ,int kind
                               ,long style
                               ) : 
@@ -97,13 +95,11 @@ DECLARE_EVENT_TYPE(wxEVT_AMAYA_ACTION_EVENT, -1)
 #endif /* __WXDEBUG__ */
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaWindow
  *      Method:  ~AmayaWindow
  * Description:  destructor
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 AmayaWindow::~AmayaWindow()
 {
   TTALOGDEBUG_1( TTA_LOG_DIALOG, _T("AmayaWindow::~AmayaWindow: window_id=%d"), m_WindowId );
@@ -115,183 +111,153 @@ AmayaWindow::~AmayaWindow()
 #endif /* __WXDEBUG__ */
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaWindow
  *      Method:  CreatePage
  * Description:  create a new AmayaPage, the notebook will be the parent page
  *               it's possible to attach automaticaly this page to the window or not
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 AmayaPage * AmayaWindow::CreatePage( bool attach, int position )
 {
   return NULL;
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaWindow
  *      Method:  AttachPage
  * Description:  really attach a page to the current window
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 bool AmayaWindow::AttachPage( int position, AmayaPage * p_page )
 {
   return false;
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaWindow
  *      Method:  DetachPage
  * Description:  
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 bool AmayaWindow::DetachPage( int position )
 {
   return false;
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaWindow
  *      Method:  ClosePage
  * Description:  ferme une page
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 bool AmayaWindow::ClosePage( int position )
 {
   return false;
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaWindow
  *      Method:  GetPage
  * Description:  search the page at given position
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 AmayaPage * AmayaWindow::GetPage( int position ) const
 {
   return NULL;
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaWindow
  *      Method:  GetPage
  * Description:  how many page into the window
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 int AmayaWindow::GetPageCount() const
 {
   return 0;
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaWindow
  *      Method:  GetActiveWindow
  * Description:  return the current selected window
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 AmayaWindow * AmayaWindow::GetActiveWindow()
 {
   return TtaGetWindowFromId(m_ActiveWindowId);
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaWindow
  *      Method:  GetActivePage
  * Description:  return the current selected page
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 AmayaPage * AmayaWindow::GetActivePage() const
 {
   TTALOGDEBUG_0( TTA_LOG_DIALOG, _T("AmayaWindow::GetActivePage") );
   return NULL;
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaWindow
  *      Method:  GetActiveFrame
  * Description:  return the current selected frame
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 AmayaFrame * AmayaWindow::GetActiveFrame() const
 {
   TTALOGDEBUG_0( TTA_LOG_DIALOG, _T("AmayaWindow::GetActiveFrame") );
   return NULL;
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaWindow
  *      Method:  SetURL
  * Description:  set the current url value
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaWindow::SetURL ( const wxString & new_url )
 {
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaWindow
  *      Method:  GetURL
  * Description:  get the current url value
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 wxString AmayaWindow::GetURL( )
 {
   return wxString(_T(""));
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaWindow
  *      Method:  AppendURL
  * Description:  TODO
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaWindow::AppendURL ( const wxString & new_url )
 {
   return;
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaWindow
  *      Method:  EmptyURLBar
  * Description:  remove all items in the url bar
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaWindow::EmptyURLBar()
 {
   return;
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaWindow
  *      Method:  IsClosing
  * Description:  return true if the window is going to be closed
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 bool AmayaWindow::IsClosing()
 {
   return m_IsClosing;
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaWindow
  *      Method:  SetMenuBar
  * Description:  override the wxFrame::SetMenuBar methode to remember the menubar for fullscreen mode
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaWindow::SetMenuBar( wxMenuBar * p_menu_bar )
 {
   m_pMenuBar = p_menu_bar;
@@ -299,14 +265,12 @@ void AmayaWindow::SetMenuBar( wxMenuBar * p_menu_bar )
 }
 
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaWindow
  *      Method:  OnSize
  * Description:  the window is resized, we must recalculate by hand the new urlbar size
  *               (wxWidgets is not able to do that itself ...)
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaWindow::OnSize( wxSizeEvent& event )
 {
   TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaWindow::OnSize - ")+
@@ -321,72 +285,60 @@ void AmayaWindow::OnSize( wxSizeEvent& event )
   event.Skip();
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaWindow
  *      Method:  GetAmayaToolBar
  * Description:  return the current toolbar
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 AmayaToolBar * AmayaWindow::GetAmayaToolBar()
 {
   return NULL;
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaWindow
  *      Method:  GetAmayaStatusBar
  * Description:  
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 AmayaStatusBar * AmayaWindow::GetAmayaStatusBar()
 {
   return NULL;
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaWindow
  *      Method:  AttachFrame
  * Description:  for a SIMPLE window type, attach directly a frame to the window
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 bool AmayaWindow::AttachFrame( AmayaFrame * p_frame )
 {
   return false;
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaWindow
  *      Method:  DetachFrame
  * Description:  for a SIMPLE window type, detach directly a frame from the window
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 AmayaFrame * AmayaWindow::DetachFrame()
 {
   return NULL;
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaWindow
  *      Method:  CleanUp
  * Description:  check that there is no empty pages
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaWindow::CleanUp()
 {
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaWindow
  *      Method:  OnIdle
  * Description:  not used
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaWindow::OnIdle( wxIdleEvent& event )
 {
   if (m_ShouldCleanUp)
@@ -419,15 +371,13 @@ void AmayaWindow::OnIdle( wxIdleEvent& event )
 }
 
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaWindow
  *      Method:  OnActivate
  * Description:  this is used to keep udated a internal window_id to know what is the
  *               last activated window.
  *               activated = highlighted
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaWindow::OnActivate( wxActivateEvent & event )
 {  
   if (event.GetActive())
@@ -450,72 +400,60 @@ void AmayaWindow::OnActivate( wxActivateEvent & event )
   event.Skip();
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaWindow
  *      Method:  GetAmayaPanel
  * Description:  return the window's panel (exist only on AmayaNormalWindow)
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 AmayaPanel * AmayaWindow::GetAmayaPanel() const
 {
   return NULL;
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaWindow
  *      Method:  ClosePanel
  * Description:  close the side panel
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaWindow::ClosePanel()
 {
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaWindow
  *      Method:  OpenPanel
  * Description:  open the side panel
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaWindow::OpenPanel()
 {
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaWindow
  *      Method:  IsPanelOpened
  * Description:  returns true if the side panel is opened
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 bool AmayaWindow::IsPanelOpened()
 {
   return false;
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaWindow
  *      Method:  RefreshShowPanelToggleMenu
  * Description:  is called to toggle on/off the "Show/Hide panel" menu item depeding on
  *               the panel showing state.
  *               Only used by AmayaNormalWindow
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaWindow::RefreshShowPanelToggleMenu()
 {
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaWindow
  *      Method:  ToggleFullScreen
  * Description:  switch on/off fullscreen state
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaWindow::ToggleFullScreen()
 {
   // SG: on gtk (maybe on other plateforms) it should be possible to hide the notebook tabs
@@ -542,13 +480,11 @@ void AmayaWindow::ToggleFullScreen()
     }
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaWindow
  *      Method:  OnChar
  * Description:  manage keyboard events comming from somewhere in this window
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaWindow::OnChar(wxKeyEvent& event)
 {
   TTALOGDEBUG_0( TTA_LOG_KEYINPUT, _T("AmayaWindow::OnChar key=")+wxString(event.GetUnicodeKey()) );
@@ -559,13 +495,11 @@ void AmayaWindow::OnChar(wxKeyEvent& event)
 }
 
 #if 0
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaWindow
  *      Method:  CheckUnicodeKey
  * Description:  proceed the unicode charactere if it is one
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 bool AmayaWindow::CheckUnicodeKey( wxKeyEvent& event )
 {
   if ((event.GetUnicodeKey()!=0) && !IsSpecialKey(event.GetKeyCode()) && !event.ControlDown() && !event.AltDown())
@@ -602,13 +536,11 @@ bool AmayaWindow::CheckUnicodeKey( wxKeyEvent& event )
   return false;
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaWindow
  *      Method:  CheckSpecialKey
  * Description:  proceed the special charactere ( F2, TAB ...) if it is one
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 bool AmayaWindow::CheckSpecialKey( wxKeyEvent& event )
 {
   if ( !event.ControlDown() && !event.AltDown() && IsSpecialKey(event.GetKeyCode()))
@@ -686,13 +618,11 @@ bool AmayaWindow::CheckSpecialKey( wxKeyEvent& event )
     return false;
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaWindow
  *      Method:  CheckShortcutKey
  * Description:  proceed shortkey combinaisons if it is one
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 bool AmayaWindow::CheckShortcutKey( wxKeyEvent& event )
 {
   wxChar thot_keysym = event.GetKeyCode();  
@@ -752,13 +682,11 @@ bool AmayaWindow::CheckShortcutKey( wxKeyEvent& event )
     return false;
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaWindow
  *      Method:  IsSpecialKey
  * Description:  proceed the unicode charactere if it is one
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 bool AmayaWindow::IsSpecialKey( int wx_keycode )
 {
   return ( wx_keycode == WXK_BACK ||
@@ -773,13 +701,11 @@ bool AmayaWindow::IsSpecialKey( int wx_keycode )
 #endif /* 0 */
 
 #if 0
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaWindow
  *      Method:  SetWindowEnableToolBarButtons
  * Description:  setup the enable/disable state of the toolbar buttons
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaWindow::SetWindowEnableToolBarButtons( int frame_id )
 {
   int button_id    = 1;
@@ -800,24 +726,20 @@ void AmayaWindow::SetWindowEnableToolBarButtons( int frame_id )
 }
 #endif /* 0 */
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaWindow
  *      Method:  DoClose
  * Description:  basic abstract implementation to override
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaWindow::DoClose( bool & veto )
 {
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaWindow
  *      Method:  OnClose
  * Description:  just close the window
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaWindow::OnClose(wxCloseEvent& event)
 {
   bool veto = false;
@@ -828,16 +750,14 @@ void AmayaWindow::OnClose(wxCloseEvent& event)
     event.Skip();
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaWindow
  *      Method:  DnAmayaAction
  * Description:  will add the wanted action on the window's eventhandler stack,
  *               this event will be treated durring next idle event (see wxWidgets doc)
  *               Using a differed action will prevent Amaya to
  *               delete widgets when it should not be.
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaWindow::DoAmayaAction( int command, int doc, int view )
 {
   int frame_id = GetWindowNumber(doc, view);
@@ -855,14 +775,12 @@ void AmayaWindow::DoAmayaAction( int command, int doc, int view )
     }
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaWindow
  *      Method:  OnAmayaAction
  * Description:  catch a previously generated event by DoAmayaAction
  *               it will really execute the action
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaWindow::OnAmayaAction( wxCommandEvent& event )
 {
   TTALOGDEBUG_0( TTA_LOG_DIALOG, _T("AmayaWindow::OnAmayaAction : text=")+event.GetString() );

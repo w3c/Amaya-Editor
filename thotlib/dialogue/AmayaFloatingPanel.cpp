@@ -18,13 +18,11 @@
 #include "AmayaXMLPanel.h"
 #include "AmayaSpeCharPanel.h"
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaFloatingPanel
  *      Method:  AmayaFloatingPanel
  * Description:  construct a floating panel (bookmarks, elements, attributes ...)
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 AmayaFloatingPanel::AmayaFloatingPanel( wxWindow * p_parent
 					,AmayaSubPanel * p_subpanel
 					,wxWindowID     id
@@ -103,25 +101,21 @@ AmayaFloatingPanel::AmayaFloatingPanel( wxWindow * p_parent
   SetPosition(wxGetMousePosition());
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaFloatingPanel
  *      Method:  ~AmayaFloatingPanel
  * Description:  destructor
  *               TODO
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 AmayaFloatingPanel::~AmayaFloatingPanel()
 {
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaFloatingPanel
  *      Method:  OnClose
  * Description:  reattach the subpanel to the sidepanel, reparent it
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaFloatingPanel::OnClose( wxCloseEvent& event )
 {
   AmayaSubPanelManager::GetInstance()->DoUnfloat( m_pParentSubPanel );
@@ -129,32 +123,17 @@ void AmayaFloatingPanel::OnClose( wxCloseEvent& event )
   event.Skip();
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaFloatingPanel
  *      Method:  Raise
  * Description:  override the top wxWindows::Raise methode. just show and raise the panel
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaFloatingPanel::Raise()
 {
   Show();
   wxWindow::Raise();
 }
 
-#if 0
-/*
- *--------------------------------------------------------------------------------------
- *       Class:  AmayaFloatingPanel
- *      Method:  GetPanelContent
- * Description:  returns the panel content detachable, this content depends on owner panel type
- *--------------------------------------------------------------------------------------
- */
-wxPanel * AmayaFloatingPanel::GetPanelContentDetach()
-{
-  return m_pPanelContentDetach;
-}
-#endif /* 0 */
 
 /*----------------------------------------------------------------------
  *  this is where the event table is declared

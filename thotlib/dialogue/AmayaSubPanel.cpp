@@ -38,14 +38,12 @@
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaSubPanel, wxPanel)
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaSubPanel
  *      Method:  AmayaSubPanel
  * Description:  construct a panel (bookmarks, elements, attributes ...)
  *               TODO
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 AmayaSubPanel::AmayaSubPanel( wxWindow *      p_parent_window
                               ,AmayaNormalWindow * p_parent_nwindow
                               ,const wxString& panel_xrcid
@@ -85,14 +83,12 @@ AmayaSubPanel::AmayaSubPanel( wxWindow *      p_parent_window
   XRCCTRL(*this, "wxID_BUTTON_DETACH", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_ATTACHDETACH)));
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaSubPanel
  *      Method:  ~AmayaSubPanel
  * Description:  destructor
  *               TODO
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 AmayaSubPanel::~AmayaSubPanel()
 {
 }
@@ -201,86 +197,72 @@ void AmayaSubPanel::OnDetach( wxCommandEvent& event )
     }
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaSubPanel
  *      Method:  SetTopAmayaWindow
  * Description:  setup the top AmayaWindow parent of this panel, used to know the 
  *               current active frame in order to actiavte the right callbacks 
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaSubPanel::SetTopAmayaWindow( AmayaNormalWindow * p_parent_window )
 {
   m_pParentNWindow = p_parent_window;
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaSubPanel
  *      Method:  GetTopAmayaWindow
  * Description:  
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 AmayaNormalWindow * AmayaSubPanel::GetTopAmayaWindow()
 {
   return m_pParentNWindow;
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaSubPanel
  *      Method:  RefreshToolTips
  * Description:  reassign the tooltips values
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaSubPanel::RefreshToolTips()
 {
 }
 
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaSubPanel
  *      Method:  IsExpanded
  * Description:  
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 bool AmayaSubPanel::IsExpanded()
 {
   return (m_State & wxAMAYA_SPANEL_EXPANDED) != 0;
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaSubPanel
  *      Method:  IsFloating
  * Description:  
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 bool AmayaSubPanel::IsFloating()
 {
   return (m_State & wxAMAYA_SPANEL_FLOATING) != 0;
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaSubPanel
  *      Method:  GetState
  * Description:  
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 unsigned int AmayaSubPanel::GetState()
 {
   return m_State;
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaSubPanel
  *      Method:  ChangeState
  * Description:  
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaSubPanel::ChangeState( unsigned int new_state )
 {
   m_State = new_state;
@@ -318,52 +300,44 @@ void AmayaSubPanel::ChangeState( unsigned int new_state )
   Refresh();
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaSubPanel
  *      Method:  GetPanelType
  * Description:  
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 int AmayaSubPanel::GetPanelType()
 {
   return WXAMAYA_PANEL_UNKNOWN;
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaSubPanel
  *      Method:  IsVisible
  * Description:  used to know if the panel should be updated or not
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 bool AmayaSubPanel::IsVisible()
 {
   return (IsFloating() || IsExpanded());
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaSubPanel
  *      Method:  ShouldBeUpdated
  * Description:  call this method to setup a flag used to force DoUpdate call when the
  *               sub panel is ready to be updated (when it is visible)
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaSubPanel::ShouldBeUpdated( bool should_update )
 {
   m_ShouldBeUpdated = should_update;
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaSubPanel
  *      Method:  DoUpdate
  * Description:  this method is called when the sub-panel is ready to be updated
  *               it should be redefined into inherited classes but do not forget to call
  *               AmayaSubPanel::DoUpdate() in order to update the flags
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaSubPanel::DoUpdate()
 {
   if (m_ShouldBeUpdated)
@@ -373,14 +347,12 @@ void AmayaSubPanel::DoUpdate()
     }
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaSubPanel
  *      Method:  Raise
  * Description:  override the top wxWindows::Raise methode. this must raise the floating panel if it exists
  *               or raise the current panel window and give focus to this panel
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaSubPanel::Raise()
 {
   if (IsFloating())
@@ -389,37 +361,31 @@ void AmayaSubPanel::Raise()
     wxWindow::Raise();
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaSubPanel
  *      Method:  GetPanelContent
  * Description:  returns the panel content detachable, this content depends on owner panel type
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 wxPanel * AmayaSubPanel::GetPanelContentDetach()
 {
   return m_pPanelContentDetach;
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaSubPanel
  *      Method:  SendDataToPanel
  * Description:  refresh the button widgets of the frame's panel, should be override in inherited class
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 void AmayaSubPanel::SendDataToPanel( AmayaParams& p )
 {
   TTALOGDEBUG_0( TTA_LOG_PANELS, _T("AmayaSubPanel::SendDataToPanel"));
 }
 
-/*
- *--------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  *       Class:  AmayaSubPanel
  *      Method:  IsActive
  * Description:  
- *--------------------------------------------------------------------------------------
- */
+  -----------------------------------------------------------------------*/
 bool AmayaSubPanel::IsActive()
 {
   return ((!m_pParentNWindow || (m_pParentNWindow && m_pParentNWindow->IsPanelOpened())) && (IsExpanded() || IsFloating()));
