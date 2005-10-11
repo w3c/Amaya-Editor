@@ -1368,7 +1368,12 @@ void NextLinkOrFormElement (Document doc, View view)
   ElementType         elType1, elType2;
   Element             el2;
 
-  if (!DocumentMeta[doc]->template_version)
+  if (DocumentTypes[doc] == docText ||
+      DocumentTypes[doc] == docCSS ||
+      DocumentTypes[doc] == docSource)
+    // insert a tab
+    TtcInsertChar (doc, view, 0x9);
+  else if (!DocumentMeta[doc]->template_version)
     {
 #endif /* TEMPLATES */    
       schema = TtaGetSSchema ("HTML", doc);
@@ -1549,6 +1554,11 @@ void PreviousLinkOrFormElement (Document doc, View view)
   Element             el2;
 #endif /* TEMPLATES */    
 
+  if (DocumentTypes[doc] == docText ||
+      DocumentTypes[doc] == docCSS ||
+      DocumentTypes[doc] == docSource)
+    // do nothing
+    return;
   schema = TtaGetSSchema ("HTML", doc);
   attrType1.AttrTypeNum = HTML_ATTR_NAME;
   attrType1.AttrSSchema = schema;
