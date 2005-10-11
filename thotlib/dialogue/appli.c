@@ -1620,7 +1620,9 @@ void TtaRaiseView (Document document, View view)
 void DisplaySelMessage (char *text, PtrDocument pDoc)
 {
   int                 doc;
+#ifndef _WX
   int                 view;
+#endif /* _WX */
 
   if (ActiveFrame &&
       pDoc && pDoc->DocSSchema &&
@@ -2548,10 +2550,10 @@ ThotBool FrameButtonDownCallback(
                                  int x, int y )
 {
 #ifdef _WX
-#ifndef _WINDOWS
+#if !defined (_WINDOWS) && !defined (_MACOS)
   Document   document;
   View       view;
-#endif /* _WINDOWS */
+#endif /* !_WINDOWS && ! _MACOS */
   
   /* Amaya is waiting for a click selection ? */
   if (ClickIsDone == 1)
@@ -2673,10 +2675,10 @@ ThotBool FrameButtonUpCallback( int frame, int thot_button_id,
       }
       else */
 
-#ifndef _WINDOWS
+#if !defined (_WINDOWS) && !defined (_MACOS)
   Document   document;
   View       view;
-#endif /* _WINDOWS */
+#endif /* !_WINDOWS && !_MACOS*/
 
   if ( Selecting )
     {
@@ -2720,10 +2722,10 @@ ThotBool FrameButtonDClickCallback( int frame, int thot_button_id,
                                    int thot_mod_mask, int x, int y )
 {
 #ifdef _WX
-#ifndef _WINDOWS
+#if !defined (_WINDOWS) && !defined (_MACOS)
   Document   document;
   View       view;
-#endif /* _WINDOWS */
+#endif /* !_WINDOWS && !_MACOS*/
 
   switch (thot_button_id)
     {
