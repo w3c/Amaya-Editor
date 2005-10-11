@@ -2814,10 +2814,6 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 #ifndef TEMPLATES
       TtaSetItemOff (doc, 1, File, BTemplate);
 #endif /* TEMPLATES */
-#ifndef BOOKMARKS
-      /* if bookmarks are not enabled, disable the menu */
-      TtaSetMenuOff (doc, 1, Bookmarks_);
-#endif /* BOOKMARKS */
 
 #ifndef DAV    /* don't active the WebDAV menu if flag is off */
       TtaSetMenuOff (doc, 1, Cooperation_);
@@ -2992,11 +2988,6 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 #endif /* _GTK || _WINGUI */
 
 
-#ifdef BOOKMARKS
-          /* if there are multiple instances of Amaya, disable the bookmark menu */
-          if (!GetBookmarksEnabled ())
-            TtaSetMenuOff (doc, 1, Bookmarks_);
-#endif /* BOOKMARKS */   
         } /* isOpen */
     }
 
@@ -3047,15 +3038,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
           DocumentTypes[doc] == docLibrary ||
           DocumentTypes[doc] == docBookmark)
         {
-          if (DocumentTypes[doc] == docBookmark)
-            {
-#ifdef BOOKMARKS
-              TtaSetItemOn (doc, 1, Bookmarks_, BMoveItem);
-              TtaSetItemOff (doc, 1, Bookmarks_, BViewBookmarks);
-              TtaSetItemOn (doc, 1, Bookmarks_, BAddSeparator);
-#endif /* BOOKMARKS */
-            }
-          else
+          if (DocumentTypes[doc] != docBookmark)
             {
               TtaSetItemOff (doc, 1, File, BHtmlBasic);
               TtaSetItemOff (doc, 1, File, BHtmlStrict);
@@ -3073,9 +3056,6 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
               TtaSetMenuOff (doc, 1, Annotations_);
               TtaSetItemOff (doc, 1, Edit_, BConfigAnnotations);
 #endif /* ANNOTATIONS */
-#ifdef BOOKMARKS
-              TtaSetMenuOff (doc, 1, Bookmarks_);
-#endif /* BOOKMARKS */
             }
           TtaSetItemOff (doc, 1, File, BSave);
           TtaSetItemOff (doc, 1, File, BSynchro);
@@ -3156,9 +3136,6 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
               TtaSetMenuOff (doc, 1, XMLTypes);
               TtaSetMenuOff (doc, 1, Style);
               TtaSetMenuOff (doc, 1, Attributes_);
-#ifdef BOOKMARKS
-              TtaSetMenuOff (doc, 1, Bookmarks_);
-#endif /* BOOKMARKS */
 #ifdef ANNOTATIONS
               TtaSetMenuOff (doc, 1, Annotations_);
 #endif /* ANNOTATIONS */
@@ -3173,17 +3150,9 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
           TtaSetItemOff (doc, 1, Views, BShowToC);
           TtaSetItemOff (doc, 1, Views, BShowSource);
           TtaSetItemOff (doc, 1, Views, BShowTimeLine);
-#ifdef BOOKMARKS
-          TtaSetMenuOff (doc, 1, Bookmarks_);
-#endif /* BOOKMARKS */
         }
       else
         {
-#ifdef BOOKMARKS
-          TtaSetItemOff (doc, 1, Bookmarks_, BMoveItem);
-          TtaSetItemOn (doc, 1, Bookmarks_, BViewBookmarks);
-          TtaSetItemOff (doc, 1, Bookmarks_, BAddSeparator);
-#endif /* BOOKMARKS */
           TtaSetMenuOn (doc, 1, Views);
           TtaSetItemOn (doc, 1, Views, TShowTargets);
           TtaSetItemOn (doc, 1, Views, BShowLinks);

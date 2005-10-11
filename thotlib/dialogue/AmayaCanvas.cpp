@@ -81,11 +81,11 @@ AmayaCanvas::AmayaCanvas( wxWindow * p_parent_window,
   p_panel->SetSize( p_button->GetSize() );
 #endif /* FORUMLARY_WIDGET_DEMO */
 
-  // we want this class receives timer events
-  m_MouseMoveTimer.SetOwner(this);
-  
   SetAutoLayout(TRUE);
   Layout();
+
+  // we want this class receives timer events
+  m_MouseMoveTimer.SetOwner(this);
 }
 
 /*----------------------------------------------------------------------

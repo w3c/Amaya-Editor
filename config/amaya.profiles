@@ -237,10 +237,6 @@ PostAnnotation
 &InsertBefore
 &InsertAfter
 
-################# Bookmarks
-{Bookmarks}
-AddSeparator
-MoveItem
 
 #-------------------- Modules ---------------------------------------------
 # shorter list of functions
@@ -258,7 +254,6 @@ DAVLockDocument
 ######### BROWSING
 [browsing]
 +annot
-+bookmarks
 +views
 +print
 AmayaClose
@@ -311,7 +306,6 @@ TtcSearchText
 
 [browsing_WX]
 +annot
-+bookmarks
 +views_WX
 +print
 AmayaClose
@@ -369,7 +363,6 @@ TtcSearchText
 +clientside-module
 +css-style
 +davbase
-+edit-bookmarks
 +hypertext-module
 +image-module
 +list-module
@@ -434,7 +427,6 @@ HelpXml
 +clientside-module
 +css-style
 +davbase
-+edit-bookmarks
 +hypertext-module
 +image-module
 +list-module
@@ -784,15 +776,5 @@ MoveAnnotationXPtr
 PostAnnotation
 ReplyToAnnotation
 XPointer_bufferStore
-
-[bookmarks]
-HelpBookmarks
-BookmarkFile
-ViewBookmarks
-
-[edit-bookmarks]
-EditTopics
-AddSeparator
-MoveItem
 
 

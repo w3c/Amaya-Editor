@@ -345,19 +345,12 @@ MENUS
 	Annotations_ button:BCustomQuery -> CustomQuery;
 	Annotations_ button:BFilterAnnotations -> FilterAnnot;
 
-	Bookmarks_ button:BViewBookmarks -> ViewBookmarks;
-	Bookmarks_ button:BBookmarkFile -> BookmarkFile;
-	Bookmarks_ button:BEditTopics -> EditTopics;
-        Bookmarks_ Separator;
-	Bookmarks_ button:BAddSeparator -> AddSeparator;
-	Bookmarks_ button:BMoveItem -> MoveItem;
-
 	Cooperation_ button:BLock -> LockDocument;
 	Cooperation_ button:BUnlock -> UnlockDocument;
 	Cooperation_ button:BProp -> PropDocument;
 	Cooperation_ button:BCopyLock -> CopyLockInformation;
 	Cooperation_ Separator;
-        Cooperation_ toggle:BLockIndicator -> LockIndicator;
+  Cooperation_ toggle:BLockIndicator -> LockIndicator;
 
 	Help_ button:BInformation -> HelpAmaya icon:about.png;
 	Help_ button:BAtW3C -> HelpAtW3C;
@@ -386,7 +379,6 @@ MENUS
 	Help_ button:BHelpNumbering -> HelpNumbering;
 	Help_ button:BHelpMakeBook -> HelpMakeBook;
 	Help_ button:BHelpAnnotation -> HelpAnnotation;
-	Help_ button:BHelpBookmarks -> HelpBookmarks;
 	Help_ button:BHelpConfigure -> HelpConfigure;
 	Help_ button:BHelpShortCuts -> HelpShortCuts;
 	Help_ button:BHelpAccess -> HelpAccess;

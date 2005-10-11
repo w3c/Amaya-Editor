@@ -133,16 +133,6 @@
 	<message xml:lang="ru">Анно&amp;тации</message>
 	<message xml:lang="hu">&amp;Jegyzetek</message>
 </label>
-<label define="Bookmarks_">
-	<message xml:lang="en">&amp;Bookmarks</message>
-	<message xml:lang="fr">&amp;Signets</message>
-	<message xml:lang="de">&amp;Lesezeichen</message>
-	<message xml:lang="it">F&amp;avorites</message>
-	<message xml:lang="tr">&amp;Birlikte çalışmak</message>
-	<message xml:lang="es">&amp;Marcadores</message>
-	<message xml:lang="ru">Закладк&amp;и</message>
-	<message xml:lang="hu">&amp;Könyvjelzők</message>
-</label>
 <label define="Cooperation_">
 	<message xml:lang="en">C&amp;ooperation</message>
 	<message xml:lang="fr">C&amp;oopération</message>
@@ -3338,50 +3328,6 @@
 	<message xml:lang="ru">Локальный фильтр...</message>
 	<message xml:lang="hu">&amp;Helyi szűrő...</message>
 </label>
-<label define="BViewBookmarks">
-	<message xml:lang="en">View Bookmarks</message>
-	<message xml:lang="fr">Visualiser les signets</message>
-	<message xml:lang="it">Visualizza favorites</message>
-	<message xml:lang="de">Lesezeichen ansehen</message>
-	<message xml:lang="tr">kilitli bilgileri kopyala</message>
-	<message xml:lang="es">Ver marcadores</message>
-	<message xml:lang="ru">Просмотр закладок</message>
-	<message xml:lang="hu">&amp;Könyvjelzők megtekintése</message>
-</label>
-<label define="BBookmarkFile">
-	<message xml:lang="en">New Bookmark</message>
-	<message xml:lang="fr">Nouveau signet</message>
-	<message xml:lang="it">Nuovo bookmark</message>
-	<message xml:lang="es">Nuevo marcador</message>
-	<message xml:lang="de">Neues Lesezeichen</message>
-	<message xml:lang="ru">Новая закладка</message>
-	<message xml:lang="hu">Új &amp;könyvjelző</message>
-</label>
-<label define="BEditTopics">
-	<message xml:lang="en">New Topic</message>
-	<message xml:lang="fr">Nouvelle rubrique</message>
-	<message xml:lang="it">Nuova rubrica</message>
-	<message xml:lang="es">Nuevo tema</message>
-	<message xml:lang="de">Neue Überschrift</message>
-	<message xml:lang="ru">Новая тема</message>
-	<message xml:lang="hu">Új &amp;téma</message>
-</label>
-<label define="BAddSeparator">
-	<message xml:lang="en">New Separator</message>
-	<message xml:lang="es">Nuevo separador</message>
-	<message xml:lang="de">Neues Trennelement</message>
-	<message xml:lang="it">Nuovo separatore</message>
-	<message xml:lang="ru">Новый разделитель</message>
-	<message xml:lang="hu">Új &amp;elválasztó</message>
-</label>
-<label define="BMoveItem">
-	<message xml:lang="en">Move Item</message>
-	<message xml:lang="es">Mover elemento</message>
-	<message xml:lang="de">Item verschieben</message>
-	<message xml:lang="it">Sposta elemento</message>
-	<message xml:lang="ru">Перемещение пункта</message>
-	<message xml:lang="hu">Tétel &amp;áthelyezáse</message>
-</label>
 <label define="BLock">
 	<message xml:lang="en">Lock resource...</message>
 	<message xml:lang="fr">Verrouiller la ressource...</message>
@@ -3753,16 +3699,6 @@
 	<message xml:lang="tr">Not ekleme</message>
 	<message xml:lang="ru">Аннотации</message>
 	<message xml:lang="hu">&amp;Jegyzetek</message>
-</label>
-<label define="BHelpBookmarks">
-	<message xml:lang="en">&amp;Bookmarks</message>
-	<message xml:lang="fr">&amp;Signets</message>
-	<message xml:lang="de">&amp;Lesezeichen</message>
-	<message xml:lang="it">F&amp;avorites</message>
-	<message xml:lang="tr">&amp;Birlikte çalışmak</message>
-	<message xml:lang="es">&amp;Marcadores</message>
-	<message xml:lang="ru">Закладк&amp;и</message>
-	<message xml:lang="hu">&amp;Könyvjelzők</message>
 </label>
 <label define="BHelpConfigure">
 	<message xml:lang="en">Configuring Amaya</message>

@@ -43,7 +43,6 @@ static char *Manual[] = {
 "Configure.html",
 "ShortCuts.html",
 "Access.html",
-"bookmarks.html",
 "WebDAV.html"
 };
 
@@ -74,8 +73,7 @@ static char *Manual[] = {
 #define CONFIGURE     23
 #define SHORTCUTS     24
 #define ACCESS        25
-#define BOOK_MARKS    26
-#define WEBDAV        27
+#define WEBDAV        26
 
 #endif /* AMAYA_HELP_H */
 
