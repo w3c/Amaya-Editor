@@ -43,53 +43,57 @@ static char   *script_URL;
 
 
 /*----------------------------------------------------------------------
-   NewTemplate: Create the "new document from template's" dialog
+  NewTemplate: Create the "new document from template's" dialog
   ----------------------------------------------------------------------*/
 void NewTemplate (Document doc, View view)
 {
 #ifdef TEMPLATES
-  char *templateDir ;
+  char  *templateDir, *lang;
+  char   s[MAX_LENGTH];
+  ThotBool useAmayaDir = FALSE;
 
-  templateDir = (char *) TtaGetMemory (MAX_LENGTH);
-
-  // Amaya's templates directory (only french yet)
-  sprintf ((char *)templateDir, "%s%ctemplates%cfr%c",
-           TtaGetEnvString ("THOTDIR"),DIR_SEP,DIR_SEP,DIR_SEP);
-  
-  char s [MAX_LENGTH];
-  
+  templateDir = TtaGetEnvString ("TEMPLATES_DIRECTORY");
+  if (templateDir == NULL || IsW3Path (templateDir))
+    {
+      useAmayaDir = TRUE;
+      templateDir = (char *) TtaGetMemory (MAX_LENGTH);
+      lang = TtaGetVarLANG ();
+      // Amaya's templates directory
+      sprintf (templateDir, "%s%ctemplates%c%s%c",
+               TtaGetEnvString ("THOTDIR"), DIR_SEP, DIR_SEP, lang, DIR_SEP);
+      if (!TtaDirExists (templateDir))
+        // By default use the English templates directory
+        sprintf (templateDir, "%s%ctemplates%cen%c",
+                 TtaGetEnvString ("THOTDIR"), DIR_SEP, DIR_SEP, DIR_SEP);
+    }
   TtaExtractName (DocumentURLs[doc], s, DocumentName);
   strcpy (DirectoryName, s);
 
   int window_id  = TtaGetDocumentWindowId( doc, view );
   ThotWindow p_window = (ThotWindow) TtaGetWindowFromId(window_id);
-
-  
   ThotBool created = CreateNewTemplateDocDlgWX(BaseDialog + OpenTemplate,
-					       p_window,
-					       doc,
-					       TtaGetMessage (AMAYA, AM_NEW_TEMPLATE),
-					       templateDir,
-					       s);
-  
+                                               p_window,
+                                               doc,
+                                               TtaGetMessage (AMAYA, AM_NEW_TEMPLATE),
+                                               templateDir,
+                                               s);
+  if (useAmayaDir)
+    TtaFreeMemory (templateDir);
+
   if (created)
     {
       TtaSetDialoguePosition ();
       TtaShowDialogue (BaseDialog + OpenTemplate, TRUE);
     }
-
 #endif // TEMPLATES
 }
 
 
-
-
 /*----------------------------------------------------------------------
-   OpenTemplateDocument: Process the meta of a template document,
-     changes the URL, try to save it and warn the user if it cannot be
-     saved.
+  OpenTemplateDocument: Process the meta of a template document,
+  changes the URL, try to save it and warn the user if it cannot be
+  saved.
   ----------------------------------------------------------------------*/
-
 void OpenTemplateDocument (Document doc)
 {
 #ifdef TEMPLATES
@@ -117,16 +121,16 @@ void OpenTemplateDocument (Document doc)
           metaAttr = TtaGetAttribute (metaEl, metaAttrType); 
           if (metaAttr != NULL)
             {
-	      length = TtaGetTextAttributeLength (metaAttr) + 1;
-	      utf8path = (char *) TtaGetMemory (length);
- 	      TtaGiveTextAttributeValue (metaAttr, utf8path, &length);
-	      path = (char *)TtaConvertMbsToByte ((unsigned char *)utf8path,
-						  TtaGetDefaultCharset ());
-	      TtaFreeMemory (utf8path);
+              length = TtaGetTextAttributeLength (metaAttr) + 1;
+              utf8path = (char *) TtaGetMemory (length);
+              TtaGiveTextAttributeValue (metaAttr, utf8path, &length);
+              path = (char *)TtaConvertMbsToByte ((unsigned char *)utf8path,
+                                                  TtaGetDefaultCharset ());
+              TtaFreeMemory (utf8path);
               found = !strcmp (path, META_TEMPLATE_NAME);
-	      /* free previous path if necessary */
-          TtaFreeMemory (path);
-		  path = NULL;
+              /* free previous path if necessary */
+              TtaFreeMemory (path);
+              path = NULL;
             }
         }
     }
@@ -138,19 +142,19 @@ void OpenTemplateDocument (Document doc)
       metaAttrType.AttrTypeNum = HTML_ATTR_meta_content; 
       metaAttr = TtaGetAttribute (metaEl, metaAttrType);
       if (metaAttr != NULL)
-	{
-	  length = TtaGetTextAttributeLength (metaAttr) + 1;
-	  utf8path = (char *) TtaGetMemory (length);
-	  TtaGiveTextAttributeValue (metaAttr, utf8path, &length);
-	  path = (char *)TtaConvertMbsToByte ((unsigned char *)utf8path,
-					      TtaGetDefaultCharset ());
-	  TtaFreeMemory (utf8path);
-	}
+        {
+          length = TtaGetTextAttributeLength (metaAttr) + 1;
+          utf8path = (char *) TtaGetMemory (length);
+          TtaGiveTextAttributeValue (metaAttr, utf8path, &length);
+          path = (char *)TtaConvertMbsToByte ((unsigned char *)utf8path,
+                                              TtaGetDefaultCharset ());
+          TtaFreeMemory (utf8path);
+        }
 
       /* Delete the meta element */
       TtaDeleteTree (metaEl, doc);  
       if (script_URL == NULL)
-	script_URL = TtaStrdup (DocumentURLs[doc]);
+        script_URL = TtaStrdup (DocumentURLs[doc]);
       TtaFreeMemory (DocumentURLs[doc]);
       DocumentURLs[doc] = TtaStrdup (path);
       DocumentMeta[doc]->method = CE_TEMPLATE;
@@ -161,19 +165,19 @@ void OpenTemplateDocument (Document doc)
       /* set the document name and dir */
       URLname = strrchr (path, URL_SEP);
       if (URLname)
-	{
-	  URLname[0] = EOS;
-	  URLname++;
-	  URLdir = path;
-	  TtaSetDocumentDirectory (doc, URLdir);
-	  TtaSetDocumentName (doc, URLname);
-	  /* SetBrowserEditor(doc); */ 
-	}
+        {
+          URLname[0] = EOS;
+          URLname++;
+          URLdir = path;
+          TtaSetDocumentDirectory (doc, URLdir);
+          TtaSetDocumentName (doc, URLname);
+          /* SetBrowserEditor(doc); */ 
+        }
       else
-	{
-	  TtaSetDocumentDirectory (doc, "");
-	  TtaSetDocumentName (doc, path);
-	}
+        {
+          TtaSetDocumentDirectory (doc, "");
+          TtaSetDocumentName (doc, path);
+        }
       SetWindowTitle (doc, doc, 0);
     }
   TtaFreeMemory (path);
@@ -186,9 +190,9 @@ void OpenTemplateDocument (Document doc)
   ----------------------------------------------------------------------*/
 void ReloadTemplateParams (char **docURL, ClickEvent *method)
 {
-   *method = CE_FORM_GET;
-   TtaFreeMemory (*docURL);
-   *docURL = TtaStrdup (script_URL); 
+  *method = CE_FORM_GET;
+  TtaFreeMemory (*docURL);
+  *docURL = TtaStrdup (script_URL); 
 }
 
 
@@ -265,7 +269,7 @@ void InitTemplateList ()
 }
 
 /*----------------------------------------------------------------------
- Insert the meta element identifying the template's instance
+  Insert the meta element identifying the template's instance
   ----------------------------------------------------------------------*/
 void InsertInstanceMeta (Document newdoc)
 {
@@ -450,21 +454,11 @@ int CreateInstanceOfTemplate (Document doc, char *templatename, char *docname,
                                L_Other, (ClickEvent)CE_ABSOLUTE);
     }
 
-  //W3Loading = doc;
-  //BackupDocument = doc;
   if (newdoc != 0)
     {
       TtaExtractName (templatename, DirectoryName, DocumentName);
-      //AddURLInCombobox (docname, NULL, TRUE);
-      //TtaSetTextZone (newdoc, 1, URL_list);
-#ifdef IV
-        if (DocumentMeta[newdoc]->xmlformat && !plainText)
-          StartXmlParser (newdoc,	localdoc, documentname, tempdir,
-                          pathname, xmlDec, withDoctype, FALSE);
-        else
-          StartParser (newdoc, localdoc, documentname, tempdir,
-                       pathname, plainText, FALSE);
-#endif
+      /* Register the last used template directory */
+      TtaSetEnvString ("TEMPLATES_DIRECTORY", DirectoryName, TRUE);
       LoadDocument (newdoc, templatename, NULL, NULL, CE_ABSOLUTE,
                     "", DocumentName, NULL, FALSE, &DontReplaceOldDoc);
       InsertInstanceMeta (newdoc);
@@ -492,7 +486,7 @@ int CreateInstanceOfTemplate (Document doc, char *templatename, char *docname,
           DocNetworkStatus[newdoc] = AMAYA_NET_INACTIVE;
           /* almost one file is restored */
           TtaSetStatus (newdoc, 1, TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED),
-                          NULL);
+                        NULL);
         }
       /* check parsing errors */
       CheckParsingErrors (newdoc);
@@ -504,8 +498,8 @@ int CreateInstanceOfTemplate (Document doc, char *templatename, char *docname,
           CheckFreeAreas (newdoc, el);
         }
     }
-   BackupDocument = 0;
-   return (newdoc);
+  BackupDocument = 0;
+  return (newdoc);
 #endif /* TEMPLATES */
 }
 

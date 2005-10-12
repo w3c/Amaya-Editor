@@ -38,35 +38,34 @@ BEGIN_EVENT_TABLE(NewTemplateDocDlgWX, AmayaDialog)
   
   EVT_TEXT( XRCID("wxID_TEMPLATEDIRNAME"),   NewTemplateDocDlgWX::OnText_TemplateDirName )
   EVT_TEXT( XRCID("wxID_INSTANCEFILENAME"),              NewTemplateDocDlgWX::OnText_InstanceFilename )
-END_EVENT_TABLE()
+  END_EVENT_TABLE()
 
 /*----------------------------------------------------------------------
   NewTemplateDocDlgWX create the dialog used to select a template and select
   the path where the instance will be saved.
   notice: the combobox is not filled in the constructor, it's filled in wxdialogapi.c
   params:
-    + parent : parent window
-    + title : dialog title
-    + docName : ??? not used
+  + parent : parent window
+  + title : dialog title
+  + docName : ??? not used
   returns:
   ----------------------------------------------------------------------*/
-  NewTemplateDocDlgWX::NewTemplateDocDlgWX ( int ref,
-					     wxWindow* parent,
-					     int doc,
-					     const wxString & title,
-					     const wxString & docName,
-					     const wxString & templateDir,
-					     const wxString & filter,
-					     int * p_last_used_filter
-                                             ) :
-    AmayaDialog( parent, ref )
-    ,m_Filter(filter)
-    ,m_LockUpdateFlag(false)
-    ,m_pLastUsedFilter(p_last_used_filter)
-    ,m_doc(doc)
+NewTemplateDocDlgWX::NewTemplateDocDlgWX ( int ref,
+                                           wxWindow* parent,
+                                           int doc,
+                                           const wxString & title,
+                                           const wxString & docName,
+                                           const wxString & templateDir,
+                                           const wxString & filter,
+                                           int * p_last_used_filter
+                                           ) :
+  AmayaDialog( parent, ref )
+                                             ,m_Filter(filter)
+                                             ,m_LockUpdateFlag(false)
+                                             ,m_pLastUsedFilter(p_last_used_filter)
+                                             ,m_doc(doc)
 {
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("NewTemplateDocDlgWX"));
-  
   // update dialog labels with given ones
   SetTitle( title );
 
@@ -108,10 +107,6 @@ END_EVENT_TABLE()
   wxString homedir = TtaGetHomeDir();
   wxString filename = TtaConvMessageToWX("New.html");
   XRCCTRL(*this, "wxID_INSTANCEFILENAME", wxTextCtrl)->SetValue(homedir + m_DirSep + filename);
-  
-  
-
-
   SetAutoLayout( TRUE );
 }
 
@@ -133,28 +128,18 @@ void NewTemplateDocDlgWX::OnInstanceFilenameButton( wxCommandEvent& event )
 {
   // Create a generic filedialog
   wxFileDialog * p_dlg = new wxFileDialog
-    (
-     this,
+    (this,
      TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_OPEN_URL) ),
-     _T(""),
-     _T(""), 
-     m_Filter,
-     wxSAVE | wxOVERWRITE_PROMPT | wxCHANGE_DIR /* wxCHANGE_DIR -> remember the last directory used. */
-     );
+     _T(""), _T(""), m_Filter,
+     wxSAVE | wxOVERWRITE_PROMPT | wxCHANGE_DIR);
   p_dlg->SetFilterIndex(*m_pLastUsedFilter);
-  
   p_dlg->SetPath(XRCCTRL(*this, "wxID_INSTANCEFILENAME", wxTextCtrl)->GetValue());
-
   if (p_dlg->ShowModal() == wxID_OK)
     {
       *m_pLastUsedFilter = p_dlg->GetFilterIndex();
       UpdateInstanceFilenameFromString( p_dlg->GetPath() );
-      p_dlg->Destroy();
     }
-  else
-    {
-      p_dlg->Destroy();
-    }
+  p_dlg->Destroy();
 }
 
 /*----------------------------------------------------------------------
@@ -181,7 +166,6 @@ void NewTemplateDocDlgWX::UpdateTemplateFromDir ()
       wxDir::GetAllFiles(dir_value, &templateList, _T("*.html"), wxDIR_FILES);
       XRCCTRL(*this, "wxID_TEMPLATEFILENAME", wxComboBox)->Clear();
       XRCCTRL(*this, "wxID_TEMPLATEFILENAME", wxComboBox)->Append( templateList );
-      
     }
 }
 
@@ -196,20 +180,19 @@ void NewTemplateDocDlgWX::UpdateInstanceFilenameFromString( const wxString & ful
     {
       m_LockUpdateFlag = true;
       if (!full_path.StartsWith(_T("http")))
-	{
-	  int end_slash_pos = full_path.Find(DIR_SEP, true);
-	  wxString dir_value = full_path.SubString(0, end_slash_pos);
-	  wxString filename_value = full_path.SubString(end_slash_pos+1, full_path.Length());
-	  XRCCTRL(*this, "wxID_INSTANCEFILENAME", wxTextCtrl)->SetValue(dir_value + filename_value);
-	}
+        {
+          int end_slash_pos = full_path.Find(DIR_SEP, true);
+          wxString dir_value = full_path.SubString(0, end_slash_pos);
+          wxString filename_value = full_path.SubString(end_slash_pos+1, full_path.Length());
+          XRCCTRL(*this, "wxID_INSTANCEFILENAME", wxTextCtrl)->SetValue(dir_value + filename_value);
+        }
       else
-	{
-	  XRCCTRL(*this, "wxID_INSTANCEFILENAME", wxTextCtrl)->Clear();
-	}
+        {
+          XRCCTRL(*this, "wxID_INSTANCEFILENAME", wxTextCtrl)->Clear();
+        }
       m_LockUpdateFlag = false;
     }
 }
-
 
 /*----------------------------------------------------------------------
   OnCreateButton called when the user validate his selection
@@ -218,42 +201,37 @@ void NewTemplateDocDlgWX::UpdateInstanceFilenameFromString( const wxString & ful
   ----------------------------------------------------------------------*/
 void NewTemplateDocDlgWX::OnCreateButton( wxCommandEvent& event )
 {
+  char temp[512], docname[512];
+
+  // get the template path
   wxString templateUrl = XRCCTRL(*this, "wxID_TEMPLATEFILENAME", wxComboBox)->GetValue( );
-
-  wxString instanceUrl = XRCCTRL (*this, "wxID_INSTANCEFILENAME", wxTextCtrl)->GetValue();
-
-
-  // allocate a temporary buffer to copy the 'const char *' template and instance url buffer   
-  char bufferTemplate[512];
   wxASSERT( templateUrl.Len() < 512 );
-  strcpy( bufferTemplate, (const char*)templateUrl.mb_str(wxConvUTF8) );
-
-  char bufferInstance[512];
-  wxASSERT( instanceUrl.Len() < 512 );
-  strcpy( bufferInstance, (const char*)instanceUrl.mb_str(wxConvUTF8) );
-  
-  if (TtaFileExist(bufferTemplate))
+  strcpy( temp, (const char*)templateUrl.mb_str(wxConvUTF8) );
+  if (TtaFileExist(temp))
     {
+      // get the doc instance path
+      wxString instanceUrl = XRCCTRL (*this, "wxID_INSTANCEFILENAME", wxTextCtrl)->GetValue();
+      wxASSERT( instanceUrl.Len() < 512 );
+      strcpy( docname, (const char*)instanceUrl.mb_str(wxConvUTF8) );
       // get the "where to open" indicator
       int where_id = XRCCTRL(*this, "wxID_RADIOBOX", wxRadioBox)->GetSelection();
       ThotCallback (BaseDialog + OpenLocation , INTEGER_DATA, (char*)where_id);
   
       // give the new url to amaya (to do url completion)
-      ThotCallback (BaseDialog + URLName,  STRING_DATA, (char *)bufferInstance );
-  
+      ThotCallback (BaseDialog + URLName,  STRING_DATA, (char *)docname );  
       Close();      
-      CreateInstanceOfTemplate (m_doc, bufferTemplate, bufferInstance,
-                                docHTML);
+      CreateInstanceOfTemplate (m_doc, temp, docname, docHTML);
     }
   else
     {
       wxMessageDialog msgdlg (this, 
-                      TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_BAD_TEMPLATE)),
-                      TtaConvMessageToWX(""),
-                      (long) wxOK | wxICON_EXCLAMATION);
+                              TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_BAD_TEMPLATE)),
+                              TtaConvMessageToWX(""),
+                              (long) wxOK | wxICON_EXCLAMATION);
       msgdlg.ShowModal();
     }
 }
+
 /*----------------------------------------------------------------------
   OnClearButton called when the user wants to clear each fields
   params:
