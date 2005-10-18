@@ -362,18 +362,17 @@
 360 File
 361 Replace current
 362 In new tab
-363 In new tab (not yet available on Mac OSX)
-364 In new Window
-365 Anti-aliasing
-366 ISO format for date
-367 New documents location
-368 Opening location
-369 Warn when closing multiple tabs
-370 Max url number in history
-371 Clear url list
-372 Display all shortcuts
-373 Fixed line length (0 = default value)
-374 Template
-375 Save the document as...
-376 Template not found
-377 Show template's boxes
+363 In new Window
+364 Anti-aliasing
+365 ISO format for date
+366 New documents location
+367 Opening location
+368 Warn when closing multiple tabs
+369 Max url number in history
+370 Clear url list
+371 Display all shortcuts
+372 Fixed line length (0 = default value)
+373 Template
+374 Save the document as...
+375 Template not found
+376 Show template's boxes

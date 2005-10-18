@@ -362,18 +362,17 @@
 360 Archivo
 361 Reemplazar actual
 362 En nueva pestañas
-363 En nueva pestañas (an no disponible para Mac OSX)
-364 En nueva ventana
-365 Anti-aliasing
-366 Formato de fecha ISO
-367 Ubicación de nuevos documentos
-368 Abrir localización
-369 Avisar cuando se cierren mútiples pestañas
-370 Número máximo de URLs en el historial
-371 Borrar historial
-372 **Display all shortcuts
-373 **Fixed line length (0 = default value)
-374 **Template
-375 **Save the document as...
-376 **Template not found
-377 **Show template's boxes
+363 En nueva ventana
+364 Anti-aliasing
+365 Formato de fecha ISO
+366 Ubicación de nuevos documentos
+367 Abrir localización
+368 Avisar cuando se cierren mútiples pestañas
+369 Número máximo de URLs en el historial
+370 Borrar historial
+371 **Display all shortcuts
+372 **Fixed line length (0 = default value)
+373 **Template
+374 **Save the document as...
+375 **Template not found
+376 **Show template's boxes

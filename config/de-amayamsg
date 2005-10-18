@@ -362,18 +362,17 @@
 360 Datei
 361 Aktuelle Seite ersetzen
 362 In neuer Seite
-363 In neuer Seite (noch nicht verfügbar in Mac OSX)
-364 In neuem Fenster
-365 Anti-aliasing
-366 ISO-Datumsformat
-367 Ort für neue Dokumente
-368 Ort zum Öffnen
-369 Warnen, wenn mehrere Seiten geschlossen werden
-370 Die maximale Anzahl an URLs in der History ist erreicht
-371 URL-Liste löschen
-372 **Display all shortcuts
-373 **Fixed line length (0 = default value)
-374 **Template
-375 **Save the document as...
-376 **Template not found
-377 **Show template's boxes
+363 In neuem Fenster
+364 Anti-aliasing
+365 ISO-Datumsformat
+366 Ort für neue Dokumente
+367 Ort zum Öffnen
+368 Warnen, wenn mehrere Seiten geschlossen werden
+369 Die maximale Anzahl an URLs in der History ist erreicht
+370 URL-Liste löschen
+371 **Display all shortcuts
+372 **Fixed line length (0 = default value)
+373 **Template
+374 **Save the document as...
+375 **Template not found
+376 **Show template's boxes

@@ -3840,13 +3840,6 @@
 <message xml:lang="de">In neuer Seite</message>
 <message xml:lang="it">In un nuovo tab</message>
 <message xml:lang="hu">Új lapon</message></label>
-<label define="AM_INNEWTAB_MACOS">
-<message xml:lang="en">In new tab (not yet available on Mac OSX)</message>
-<message xml:lang="fr">Dans un nouvel onglet (pas encore disponible sous Mac OSX)</message>
-<message xml:lang="es">En nueva pestañas (aũn no disponible para Mac OSX)</message>
-<message xml:lang="de">In neuer Seite (noch nicht verfügbar in Mac OSX)</message>
-<message xml:lang="it">n un nuovo tab (non ancora disponibile su Mac OSX)</message>
-<message xml:lang="hu">Új lapon</message></label>
 <label define="AM_INNEWWINDOW">
 <message xml:lang="en">In new Window</message>
 <message xml:lang="fr">Dans une nouvelle fenêtre</message>
