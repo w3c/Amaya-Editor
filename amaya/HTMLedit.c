@@ -1223,6 +1223,7 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
                       elType.ElTypeNum != HTML_EL_Superscript &&
                       elType.ElTypeNum != HTML_EL_Span &&
                       elType.ElTypeNum != HTML_EL_BDO &&
+                      elType.ElTypeNum != HTML_EL_BR &&
                       elType.ElTypeNum != HTML_EL_simple_ruby &&
                       elType.ElTypeNum != HTML_EL_complex_ruby &&
                       elType.ElTypeNum != HTML_EL_IFRAME)
