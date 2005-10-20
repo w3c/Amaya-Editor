@@ -62,6 +62,12 @@ BEGIN_EVENT_TABLE(StyleDlgWX, AmayaDialog)
   XRCCTRL(*this, "wxID_CANCEL", wxButton)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_DONE)));
   XRCCTRL(*this, "wxID_DEFAULT", wxButton)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_DEFAULT_BUTTON)));
 
+  wxNotebook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxNotebook);
+  p_notebook->SetPageText( 0, TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_CHAR)) );
+  p_notebook->SetPageText( 1, TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_COLORS)) );
+  p_notebook->SetPageText( 2, TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_LIB_BOXES)) );
+  p_notebook->SetPageText( 3, TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_FORMAT)) );
+
   // give focus to ...
   //  XRCCTRL(*this, "wxID_COMBOBOX_FAMILY", wxComboBox)->SetFocus();
 
@@ -104,7 +110,11 @@ void StyleDlgWX::GetValueDialog_Text()
 {
   wxString        value;
   value = XRCCTRL(*this, "wxID_COMBOBOX_FAMILY", wxComboBox)->GetValue();
-  strcpy( Buffer, (const char*)value.mb_str(wxConvUTF8) );
+  if (value.Len() > 0)
+    {
+      strcpy (Buffer, "font-family:");
+      strcpy (Buffer, (const char*)value.mb_str(wxConvUTF8));
+    }
 }
 
 /************************************************************************/

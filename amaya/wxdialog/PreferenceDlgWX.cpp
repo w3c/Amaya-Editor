@@ -58,22 +58,22 @@ BEGIN_EVENT_TABLE(PreferenceDlgWX, AmayaDialog)
   
 
   EVT_CLOSE( PreferenceDlgWX::OnClose )
-END_EVENT_TABLE()
+  END_EVENT_TABLE()
 
-/*----------------------------------------------------------------------
-  PreferenceDlgWX create the dialog used to 
+  /*----------------------------------------------------------------------
+    PreferenceDlgWX create the dialog used to 
     - Change amaya preferences
-  params:
+    params:
     + parent : parent window
     + title : dialog title
     + ...
-  returns:
-  ----------------------------------------------------------------------*/
-PreferenceDlgWX::PreferenceDlgWX( int ref,
-				  wxWindow* parent,
-				  const wxArrayString & url_list ) :
-  AmayaDialog( parent, ref )
-  ,m_IsInitialized(false) // this flag is used to know when events can be proceed
+    returns:
+    ----------------------------------------------------------------------*/
+  PreferenceDlgWX::PreferenceDlgWX( int ref,
+                                    wxWindow* parent,
+                                    const wxArrayString & url_list ) :
+    AmayaDialog( parent, ref )
+                 ,m_IsInitialized(false) // this flag is used to know when events can be proceed
 {
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("PreferenceDlgWX"));
   m_UrlList = url_list;
@@ -104,8 +104,8 @@ PreferenceDlgWX::PreferenceDlgWX( int ref,
   SetupLabelDialog_DAV();
 #endif /* DAV */
 
-  XRCCTRL(*this, "wxID_OK",      wxButton)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_APPLY_BUTTON)));
-  XRCCTRL(*this, "wxID_CANCEL",  wxButton)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_DONE)));
+  XRCCTRL(*this, "wxID_OK", wxButton)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_APPLY_BUTTON)));
+  XRCCTRL(*this, "wxID_CANCEL", wxButton)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_DONE)));
   XRCCTRL(*this, "wxID_DEFAULT", wxButton)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_DEFAULT_BUTTON)));
 
   // load current values and send it to the dialog
@@ -157,9 +157,9 @@ int PreferenceDlgWX::GetPagePosFromXMLID( const wxString & xml_id )
   while (!found && page_id < (int) p_notebook->GetPageCount() )
     {
       if ( p_page == p_notebook->GetPage(page_id))
-	found = true;
+        found = true;
       else
-	page_id++;
+        page_id++;
     }
 
   if (found)
@@ -176,10 +176,10 @@ void PreferenceDlgWX::OnPageChanged( wxNotebookEvent& event )
   wxPanel *    p_new_page = (wxPanel *)((event.GetSelection()>=0 && p_notebook)?p_notebook->GetPage(event.GetSelection()):NULL);
 
   if(!m_IsInitialized || !p_new_page || !XRCCTRL(*this,"wxID_OK",wxButton) || !XRCCTRL(*this,"wxID_DEFAULT",wxButton))
-  {
-    event.Skip();
-    return;
-  }
+    {
+      event.Skip();
+      return;
+    }
 
   int page_id_geom = wxXmlResource::GetXRCID(_T("wxID_PAGE_GEOMETRY"));
 
@@ -243,7 +243,7 @@ void PreferenceDlgWX::SetupLabelDialog_General()
 /*----------------------------------------------------------------------
   SetupDialog_General send init value to dialog 
   params:
-    + const PropTab_General & prop : the values to setup into the dialog
+  + const PropTab_General & prop : the values to setup into the dialog
   returns:
   ----------------------------------------------------------------------*/
 void PreferenceDlgWX::SetupDialog_General( const Prop_General & prop )
@@ -269,7 +269,7 @@ void PreferenceDlgWX::SetupDialog_General( const Prop_General & prop )
   GetValueDialog_General get dialog values
   params:
   returns:
-    + PropTab_General prop : the dialog values
+  + PropTab_General prop : the dialog values
   ----------------------------------------------------------------------*/
 Prop_General PreferenceDlgWX::GetValueDialog_General()
 {
@@ -336,7 +336,7 @@ void PreferenceDlgWX::SetupLabelDialog_Browse()
 /*----------------------------------------------------------------------
   SetupDialog_Browse send init value to dialog 
   params:
-    + const PropTab_Browse & prop : the values to setup into the dialog
+  + const PropTab_Browse & prop : the values to setup into the dialog
   returns:
   ----------------------------------------------------------------------*/
 void PreferenceDlgWX::SetupDialog_Browse( const Prop_Browse & prop )
@@ -358,7 +358,7 @@ void PreferenceDlgWX::SetupDialog_Browse( const Prop_Browse & prop )
   GetValueDialog_Browse get dialog values
   params:
   returns:
-    + PropTab_Browse prop : the dialog values
+  + PropTab_Browse prop : the dialog values
   ----------------------------------------------------------------------*/
 Prop_Browse PreferenceDlgWX::GetValueDialog_Browse()
 {
@@ -419,7 +419,7 @@ void PreferenceDlgWX::SetupLabelDialog_Publish()
 /*----------------------------------------------------------------------
   SetupDialog_Publish send init value to dialog 
   params:
-    + const PropTab_Publish & prop : the values to setup into the dialog
+  + const PropTab_Publish & prop : the values to setup into the dialog
   returns:
   ----------------------------------------------------------------------*/
 void PreferenceDlgWX::SetupDialog_Publish( const Prop_Publish & prop )
@@ -440,7 +440,7 @@ void PreferenceDlgWX::SetupDialog_Publish( const Prop_Publish & prop )
   GetValueDialog_Publish get dialog values
   params:
   returns:
-    + Prop_Publish prop : the dialog values
+  + Prop_Publish prop : the dialog values
   ----------------------------------------------------------------------*/
 Prop_Publish PreferenceDlgWX::GetValueDialog_Publish()
 {
@@ -503,7 +503,7 @@ void PreferenceDlgWX::SetupLabelDialog_Cache()
 /*----------------------------------------------------------------------
   SetupDialog_Cache send init value to dialog 
   params:
-    + const Prop_Cache & prop : the values to setup into the dialog
+  + const Prop_Cache & prop : the values to setup into the dialog
   returns:
   ----------------------------------------------------------------------*/
 void PreferenceDlgWX::SetupDialog_Cache( const Prop_Cache & prop )
@@ -523,7 +523,7 @@ void PreferenceDlgWX::SetupDialog_Cache( const Prop_Cache & prop )
   GetValueDialog_Cache get dialog values
   params:
   returns:
-    + Prop_Cache prop : the dialog values
+  + Prop_Cache prop : the dialog values
   ----------------------------------------------------------------------*/
 Prop_Cache PreferenceDlgWX::GetValueDialog_Cache()
 {
@@ -595,7 +595,7 @@ void PreferenceDlgWX::SetupLabelDialog_Proxy()
 /*----------------------------------------------------------------------
   SetupDialog_Proxy send init value to dialog 
   params:
-    + const Prop_Proxy & prop : the values to setup into the dialog
+  + const Prop_Proxy & prop : the values to setup into the dialog
   returns:
   ----------------------------------------------------------------------*/
 void PreferenceDlgWX::SetupDialog_Proxy( const Prop_Proxy & prop )
@@ -611,7 +611,7 @@ void PreferenceDlgWX::SetupDialog_Proxy( const Prop_Proxy & prop )
   GetValueDialog_Proxy get dialog values
   params:
   returns:
-    + Prop_Proxy prop : the dialog values
+  + Prop_Proxy prop : the dialog values
   ----------------------------------------------------------------------*/
 Prop_Proxy PreferenceDlgWX::GetValueDialog_Proxy()
 {
@@ -674,7 +674,7 @@ void PreferenceDlgWX::SetupLabelDialog_Color()
 /*----------------------------------------------------------------------
   SetupDialog_Color send init value to dialog 
   params:
-    + const Prop_Color & prop : the values to setup into the dialog
+  + const Prop_Color & prop : the values to setup into the dialog
   returns:
   ----------------------------------------------------------------------*/
 void PreferenceDlgWX::SetupDialog_Color( const Prop_Color & prop )
@@ -706,7 +706,7 @@ void PreferenceDlgWX::SetupDialog_Color( const Prop_Color & prop )
   GetValueDialog_Color get dialog values
   params:
   returns:
-    + Prop_Color prop : the dialog values
+  + Prop_Color prop : the dialog values
   ----------------------------------------------------------------------*/
 Prop_Color PreferenceDlgWX::GetValueDialog_Color()
 {
@@ -921,7 +921,7 @@ void PreferenceDlgWX::SetupLabelDialog_Annot()
 /*----------------------------------------------------------------------
   SetupDialog_Annot send init value to dialog 
   params:
-    + const Prop_Annot & prop : the values to setup into the dialog
+  + const Prop_Annot & prop : the values to setup into the dialog
   returns:
   ----------------------------------------------------------------------*/
 void PreferenceDlgWX::SetupDialog_Annot( const Prop_Annot & prop )
@@ -939,7 +939,7 @@ void PreferenceDlgWX::SetupDialog_Annot( const Prop_Annot & prop )
   GetValueDialog_Annot get dialog values
   params:
   returns:
-    + Prop_Annot prop : the dialog values
+  + Prop_Annot prop : the dialog values
   ----------------------------------------------------------------------*/
 Prop_Annot PreferenceDlgWX::GetValueDialog_Annot()
 {
@@ -978,7 +978,7 @@ void PreferenceDlgWX::SetupLabelDialog_DAV()
   wxNotebook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxNotebook);
   page_id = GetPagePosFromXMLID( _T("wxID_PAGE_DAV") );
   if (page_id >= 0)
-   p_notebook->SetPageText( page_id, TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_DAV_PREFERENCES)) );
+    p_notebook->SetPageText( page_id, TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_DAV_PREFERENCES)) );
 
   // update dialog WebDAV tab labels with given ones
   XRCCTRL(*this, "wxID_LABEL_USER_REF", wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_DAV_USER_URL)) );
@@ -1027,7 +1027,7 @@ void PreferenceDlgWX::SetupDialog_DAV( const Prop_DAV & prop)
     val = 0;
   XRCCTRL(*this, "wxID_RADIO_TIMEOUT", wxRadioBox)->SetSelection( val );
   if (prop.numberTimeout < 300)
-  XRCCTRL(*this, "wxID_TIMEOUT_VALUE", wxSpinCtrl)->SetValue( 300 );
+    XRCCTRL(*this, "wxID_TIMEOUT_VALUE", wxSpinCtrl)->SetValue( 300 );
   else
     XRCCTRL(*this, "wxID_TIMEOUT_VALUE", wxSpinCtrl)->SetValue( prop.numberTimeout );
 

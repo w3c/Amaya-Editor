@@ -2482,6 +2482,10 @@
 	<message xml:lang="ru">Показать разбор ошибок</message>
 	<message xml:lang="hu">Elemzési hibák mutatása</message>
 </label>
+<label define="TMSG_LIB_BOXES">
+	<message xml:lang="en">Boxes</message>
+	<message xml:lang="fr">Boîtes</message>
+</label>
 <label define="TMSG_LIB_MSG_MAX">
 </label>
 </messages>
