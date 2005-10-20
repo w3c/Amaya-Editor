@@ -17,6 +17,7 @@
 #include "StyleDlgWX.h"
 
 static char Buffer[100];
+static int  Index = 0;
 
 //-----------------------------------------------------------------------------
 // Event table: connect the events to the handler functions to process them
@@ -98,8 +99,6 @@ void StyleDlgWX::OnPageChanged( wxNotebookEvent& event )
 /************************************************************************/
 /* Text tab                                                             */
 /************************************************************************/
-
-
 /*----------------------------------------------------------------------
   GetValueDialog_Text get dialog values
   params:
@@ -109,18 +108,49 @@ void StyleDlgWX::OnPageChanged( wxNotebookEvent& event )
 void StyleDlgWX::GetValueDialog_Text()
 {
   wxString        value;
+  char            text[10];
+  int             i;
+
   value = XRCCTRL(*this, "wxID_COMBOBOX_FAMILY", wxComboBox)->GetValue();
   if (value.Len() > 0)
     {
-      strcpy (Buffer, "font-family:");
-      strcpy (Buffer, (const char*)value.mb_str(wxConvUTF8));
+      strcpy (&Buffer[Index], "font-family:");
+      strcat (&Buffer[Index], (const char*)value.mb_str(wxConvUTF8));
+      strcat (&Buffer[Index], "; ");
+      Index += strlen (&Buffer[Index]);
+    }
+
+  value = XRCCTRL(*this, "wxID_CHOICE_SIZE", wxComboBox)->GetValue();
+  if (value.Len() > 0)
+    {
+      strcpy (&Buffer[Index], "font-size:");
+      strcat (&Buffer[Index], (const char*)value.mb_str(wxConvUTF8));
+      strcat (&Buffer[Index], "; ");
+      Index += strlen (&Buffer[Index]);
+    }
+  else
+    {
+      // spin value ?
+      i = XRCCTRL(*this, "wxID_SPIN_SIZE", wxSpinCtrl)->GetValue();
+      if (i > 0)
+        {
+          sprintf (text, "%d", i);
+          strcpy (&Buffer[Index], "font-size:");
+          strcat (&Buffer[Index], text);
+          value = XRCCTRL(*this, "wxID_SIZE_UNIT", wxComboBox)->GetValue();
+          if (value.Len() > 0)
+            strcat (&Buffer[Index], (const char*)value.mb_str(wxConvUTF8));
+          else
+            strcat (&Buffer[Index], "px");
+          strcat (&Buffer[Index], "; ");
+          Index += strlen (&Buffer[Index]);
+        }
     }
 }
 
 /************************************************************************/
 /* Color tab                                                            */
 /************************************************************************/
-
 /*----------------------------------------------------------------------
   GetValueDialog_Color get dialog values
   params:
@@ -130,17 +160,17 @@ void StyleDlgWX::GetValueDialog_Text()
 void StyleDlgWX::GetValueDialog_Color()
 {
   wxString        value;
-  value = XRCCTRL(*this, "wxID_COMBO_SELBACKCOLOR", wxComboBox)->GetValue();
-  strcpy( Buffer, (const char*)value.mb_str(wxConvUTF8) );
-
-  value = XRCCTRL(*this, "wxID_COMBO_SELCOLOR", wxComboBox)->GetValue();
-  strcpy( Buffer, (const char*)value.mb_str(wxConvUTF8) );
-
-  value = XRCCTRL(*this, "wxID_COMBO_BACKCOLOR", wxComboBox)->GetValue();
-  strcpy( Buffer, (const char*)value.mb_str(wxConvUTF8) );
+  char            text[10];
+  int             i;
 
   value = XRCCTRL(*this, "wxID_COMBO_TEXTCOLOR", wxComboBox)->GetValue();
-  strcpy( Buffer, (const char*)value.mb_str(wxConvUTF8) );
+  if (value.Len() > 0)
+    {
+      strcpy (&Buffer[Index], "color:");
+      strcat (&Buffer[Index], (const char*)value.mb_str(wxConvUTF8));
+      strcat (&Buffer[Index], "; ");
+      Index += strlen (&Buffer[Index]);
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -225,40 +255,32 @@ void StyleDlgWX::OnColorChanged( wxCommandEvent& event )
 void StyleDlgWX::OnColorTextChanged( wxCommandEvent& event )
 {
   // get the combobox values and convert the string to a wxColour object
-  wxString value1;
-  wxString value2;
-  wxString value3;
-  wxString value4;
+  wxString            value1;
+  wxString            value2;
   unsigned short      red;
   unsigned short      green;
   unsigned short      blue;
-  char buffer[512];
+  char                buffer[512];
+
   value1 = XRCCTRL(*this, "wxID_COMBO_TEXTCOLOR", wxComboBox)->GetValue();
   value2 = XRCCTRL(*this, "wxID_COMBO_BACKCOLOR", wxComboBox)->GetValue();
-  value3 = XRCCTRL(*this, "wxID_COMBO_SELCOLOR", wxComboBox)->GetValue();
-  value4 = XRCCTRL(*this, "wxID_COMBO_SELBACKCOLOR", wxComboBox)->GetValue();
-  strcpy(buffer, (const char*)value1.mb_str(wxConvUTF8) );
+  strcpy (buffer, (const char*)value1.mb_str(wxConvUTF8) );
   TtaGiveRGB (buffer, &red, &green, &blue);
   wxColour col1( red, green, blue );
-  strcpy(buffer, (const char*)value2.mb_str(wxConvUTF8) );
+  strcpy (buffer, (const char*)value2.mb_str(wxConvUTF8) );
   TtaGiveRGB (buffer, &red, &green, &blue);
   wxColour col2( red, green, blue );
-  strcpy(buffer, (const char*)value3.mb_str(wxConvUTF8) );
-  TtaGiveRGB (buffer, &red, &green, &blue);
-  wxColour col3( red, green, blue );
-  strcpy(buffer, (const char*)value4.mb_str(wxConvUTF8) );
-  TtaGiveRGB (buffer, &red, &green, &blue);
-  wxColour col4( red, green, blue );
 
   // setup background colours
-  XRCCTRL(*this, "wxID_BUTTON_SELBACKCOLOR", wxBitmapButton)->SetBackgroundColour( col4 );
-  XRCCTRL(*this, "wxID_BUTTON_SELCOLOR", wxBitmapButton)->SetBackgroundColour( col3 );
   XRCCTRL(*this, "wxID_BUTTON_BACKCOLOR", wxBitmapButton)->SetBackgroundColour( col2 );
   XRCCTRL(*this, "wxID_BUTTON_TEXTCOLOR", wxBitmapButton)->SetBackgroundColour( col1 );
 
   event.Skip();
 }
 
+/************************************************************************/
+/* Box tab                                                            */
+/************************************************************************/
 /*----------------------------------------------------------------------
   GetValueDialog_Box get dialog values
   params:
@@ -267,13 +289,61 @@ void StyleDlgWX::OnColorTextChanged( wxCommandEvent& event )
 void StyleDlgWX::GetValueDialog_Box()
 {
   wxString        value;
+  char            text[10];
+  int             i;
+
   value = XRCCTRL(*this, "wxID_COMBOBOX_FAMILY", wxComboBox)->GetValue();
-  strcpy( Buffer, (const char*)value.mb_str(wxConvUTF8) );
+  if (value.Len() > 0)
+    {
+      strcpy (&Buffer[Index], "font-family:");
+      strcat (&Buffer[Index], (const char*)value.mb_str(wxConvUTF8));
+      strcat (&Buffer[Index], "; ");
+      Index += strlen (&Buffer[Index]);
+    }
 }
 
 /************************************************************************/
-/* Box tab                                                              */
+/* Format tab                                                            */
 /************************************************************************/
+/*----------------------------------------------------------------------
+  GetValueDialog_Format get dialog values
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+void StyleDlgWX::GetValueDialog_Format()
+{
+  wxString        value;
+  char            text[10];
+  int             i;
+
+  value = XRCCTRL(*this, "wxID_CHOICE_MTOP", wxComboBox)->GetValue();
+  if (value.Len() > 0)
+    {
+      strcpy (&Buffer[Index], "margin-top:");
+      strcat (&Buffer[Index], (const char*)value.mb_str(wxConvUTF8));
+      strcat (&Buffer[Index], "; ");
+      Index += strlen (&Buffer[Index]);
+    }
+  else
+    {
+      // spin value ?
+      i = XRCCTRL(*this, "wxID_SPIN_MTOP", wxSpinCtrl)->GetValue();
+      if (i > 0)
+        {
+          sprintf (text, "%d", i);
+          strcpy (&Buffer[Index], "margin-top:");
+          strcat (&Buffer[Index], text);
+          value = XRCCTRL(*this, "wxID_MTOP_UNIT", wxComboBox)->GetValue();
+          if (value.Len() > 0)
+            strcat (&Buffer[Index], (const char*)value.mb_str(wxConvUTF8));
+          else
+            strcat (&Buffer[Index], "px");
+          strcat (&Buffer[Index], "; ");
+          Index += strlen (&Buffer[Index]);
+        }
+    }
+}
+
 
 
 /*----------------------------------------------------------------------
@@ -284,6 +354,11 @@ void StyleDlgWX::GetValueDialog_Box()
 void StyleDlgWX::OnOk( wxCommandEvent& event )
 {
   Buffer[0] = EOS;
+  Index = 0;
+  GetValueDialog_Text();
+  GetValueDialog_Color();
+  GetValueDialog_Box();
+  GetValueDialog_Format();
   ThotCallback (m_ref, STRING_DATA, Buffer);
 }
 

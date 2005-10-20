@@ -29,6 +29,7 @@ private:
   void GetValueDialog_Text();
   void GetValueDialog_Color();
   void GetValueDialog_Box();
+  void GetValueDialog_Format();
 
   void OnOk( wxCommandEvent& event );
   void OnCancel( wxCommandEvent& event );

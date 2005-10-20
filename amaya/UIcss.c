@@ -794,7 +794,10 @@ static void CallbackCSS (int ref, int typedata, char *data)
       strcpy (CSSpath, data);      
       break;
     case CSSValue:
-      TtaDestroyDialogue (ref);
+      if (data == NULL)
+        TtaDestroyDialogue (ref);
+      else
+        printf ("%s\n", data);
       break;
     default:
       break;
