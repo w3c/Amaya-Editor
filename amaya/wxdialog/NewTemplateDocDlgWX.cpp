@@ -23,21 +23,21 @@
 //-----------------------------------------------------------------------------
 
 BEGIN_EVENT_TABLE(NewTemplateDocDlgWX, AmayaDialog)
-  EVT_BUTTON(     XRCID("wxID_OK"),              NewTemplateDocDlgWX::OnCreateButton )
-  EVT_BUTTON(     XRCID("wxID_CLEAR"),           NewTemplateDocDlgWX::OnClearButton )
-  EVT_BUTTON(     XRCID("wxID_CANCEL"),          NewTemplateDocDlgWX::OnCancelButton )
+  EVT_BUTTON( XRCID("wxID_OK"), NewTemplateDocDlgWX::OnCreateButton )
+  EVT_BUTTON( XRCID("wxID_CLEAR"), NewTemplateDocDlgWX::OnClearButton )
+  EVT_BUTTON( XRCID("wxID_CANCEL"), NewTemplateDocDlgWX::OnCancelButton )
 
-  EVT_BUTTON(     XRCID("wxID_BUTTON_INSTANCEFILENAME"), NewTemplateDocDlgWX::OnInstanceFilenameButton )
+  EVT_BUTTON( XRCID("wxID_BUTTON_INSTANCEFILENAME"), NewTemplateDocDlgWX::OnInstanceFilenameButton )
   EVT_BUTTON( XRCID("wxID_BUTTON_TEMPLATEDIRNAME"), NewTemplateDocDlgWX::OnTemplateDirNameButton )
 
-  EVT_TEXT_ENTER( XRCID("wxID_FILENAME"),        NewTemplateDocDlgWX::OnCreateButton )
+  EVT_TEXT_ENTER( XRCID("wxID_FILENAME"), NewTemplateDocDlgWX::OnCreateButton )
 
-  EVT_TEXT_ENTER( XRCID("wxID_TEMPLATEDIRNAME"),    NewTemplateDocDlgWX::OnCreateButton )
-  EVT_COMBOBOX( XRCID("wxID_TEMPLATEFILENAME"),      NewTemplateDocDlgWX::OnTemplatenameSelected )
+  EVT_TEXT_ENTER( XRCID("wxID_TEMPLATEDIRNAME"), NewTemplateDocDlgWX::OnCreateButton )
+  EVT_COMBOBOX( XRCID("wxID_TEMPLATEFILENAME"), NewTemplateDocDlgWX::OnTemplatenameSelected )
   
   
-  EVT_TEXT( XRCID("wxID_TEMPLATEDIRNAME"),   NewTemplateDocDlgWX::OnText_TemplateDirName )
-  EVT_TEXT( XRCID("wxID_INSTANCEFILENAME"),              NewTemplateDocDlgWX::OnText_InstanceFilename )
+  EVT_TEXT( XRCID("wxID_TEMPLATEDIRNAME"), NewTemplateDocDlgWX::OnText_TemplateDirName )
+  EVT_TEXT( XRCID("wxID_INSTANCEFILENAME"), NewTemplateDocDlgWX::OnText_InstanceFilename )
   END_EVENT_TABLE()
 
 /*----------------------------------------------------------------------

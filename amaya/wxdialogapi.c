@@ -31,6 +31,7 @@
   #include "wxdialog/SaveAsDlgWX.h"
   #include "wxdialog/SearchDlgWX.h"
   #include "wxdialog/SpellCheckDlgWX.h"
+  #include "wxdialog/StyleDlgWX.h"
   #include "wxdialog/TextDlgWX.h"
   #include "wxdialog/TitleDlgWX.h"
 
@@ -952,13 +953,39 @@ ThotBool CreateSpellCheckDlgWX ( int ref, int base, ThotWindow parent,
 				 int checkingArea)
 {
 #ifdef _WX
-
   /* check if the dialog is alredy open */
   if (TtaRaiseDialogue (ref))
     return FALSE;
 
   SpellCheckDlgWX * p_dlg = new SpellCheckDlgWX( ref, base, parent,
 						 checkingArea);
+  if ( TtaRegisterWidgetWX( ref, p_dlg ) )
+      /* the dialog has been sucesfully registred */
+      return TRUE;
+  else
+    {
+      /* an error occured durring registration */
+      p_dlg->Destroy();
+      return FALSE;
+    }
+#else /* _WX */
+  return FALSE;
+#endif /* _WX */
+}
+
+/*-----------------------------------------------------------------------
+ CreateStyleDlgWX
+ Used to :
+  - Create the Style Amaya dialog
+ ------------------------------------------------------------------------*/
+ThotBool CreateStyleDlgWX ( int ref, ThotWindow parent)
+{
+#ifdef _WX
+  /* check if the dialog is alredy open */
+  if (TtaRaiseDialogue (ref))
+    return FALSE;
+
+  StyleDlgWX * p_dlg = new StyleDlgWX( ref, parent);
   if ( TtaRegisterWidgetWX( ref, p_dlg ) )
       /* the dialog has been sucesfully registred */
       return TRUE;
@@ -980,7 +1007,8 @@ ThotBool CreateSpellCheckDlgWX ( int ref, int base, ThotWindow parent,
     + title : dialog title
   returns:
   ----------------------------------------------------------------------*/
-ThotBool CreateBgImageDlgWX ( int ref, ThotWindow parent, const char * urlToOpen, int RepeatValue )
+ThotBool CreateBgImageDlgWX ( int ref, ThotWindow parent, const char *urlToOpen,
+                              int RepeatValue )
 {
 #ifdef _WX
   /* check if the dialog is already open */

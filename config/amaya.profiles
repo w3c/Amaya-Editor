@@ -717,6 +717,7 @@ HelpSVG
 &CreateStyle
 &CreateClass
 &ChangeBackgroundImage
+&SetCSSStyle
 
 [css-browsing]
 OpenCSS

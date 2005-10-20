@@ -268,58 +268,59 @@
 266 **Split view vertically
 267 Karakter tarzı...
 268 Renkler...
-269 Biçim...
-270 Arkaplan görüntüsü...
-271 Kural yarat...
-272 \'class\' uygula...
-273 **Show applied style...
-274 Bağlantı
-275 Aç
-276 Olumsuzla
-277 Olumla
-278 Sil
-279 Seçili alan ekleme
-280 Doküman eklemek
-281 Seçili alanı taşı
-282 seçilen alanı XPointer gibi kaydet
-283 Xpointer\'daki birikenleri taşı
-284 Tekrar ekle
-285 Server\'e kaydet
-286 Sil
-287 Yükle
-288 Kişisel ayarlama...
-289 Sabit filitre...
-290 Tekrar okumayı kitle...
-291 Tekrar okumayı kilidi aç...
-292 Tekrar okuma ayarlarını göster...
-293 kilitli bilgileri kopyala...
-294 kitli mi?
-295 Amaya hakkında
-296 W3C deki Amaya hakkında
-297 Içerik
-298 Tarama
-299 Görünümler
-300 Seç
-301 Döküman
-302 Yarat
-303 Tarz tanımları
-304 karakterler
-305 Yeniden yapılandırma
-306 Bağlantılar
-307 Tablolar
-308 Aktif alan
-309 Matematik
-310 Grafik
-311 XML desteği
-312 Görüntü haritaları
-313 Yazı hataları arama
-314 Yazı hataları düzeltmek
-315 Bastırma
-316 WebDAV
-317 Sayfa yerleştirme
-318 Numaralandır
-319 Kitap oluşturma
-320 Not ekleme
-321 Amaya yapılandırması
-322 Kısalmalar
-323 Amaya\'ya ulaşmak
+269 **CSS &Style...
+270 Biçim...
+271 Arkaplan görüntüsü...
+272 Kural yarat...
+273 \'class\' uygula...
+274 **Show applied style...
+275 Bağlantı
+276 Aç
+277 Olumsuzla
+278 Olumla
+279 Sil
+280 Seçili alan ekleme
+281 Doküman eklemek
+282 Seçili alanı taşı
+283 seçilen alanı XPointer gibi kaydet
+284 Xpointer\'daki birikenleri taşı
+285 Tekrar ekle
+286 Server\'e kaydet
+287 Sil
+288 Yükle
+289 Kişisel ayarlama...
+290 Sabit filitre...
+291 Tekrar okumayı kitle...
+292 Tekrar okumayı kilidi aç...
+293 Tekrar okuma ayarlarını göster...
+294 kilitli bilgileri kopyala...
+295 kitli mi?
+296 Amaya hakkında
+297 W3C deki Amaya hakkında
+298 Içerik
+299 Tarama
+300 Görünümler
+301 Seç
+302 Döküman
+303 Yarat
+304 Tarz tanımları
+305 karakterler
+306 Yeniden yapılandırma
+307 Bağlantılar
+308 Tablolar
+309 Aktif alan
+310 Matematik
+311 Grafik
+312 XML desteği
+313 Görüntü haritaları
+314 Yazı hataları arama
+315 Yazı hataları düzeltmek
+316 Bastırma
+317 WebDAV
+318 Sayfa yerleştirme
+319 Numaralandır
+320 Kitap oluşturma
+321 Not ekleme
+322 Amaya yapılandırması
+323 Kısalmalar
+324 Amaya\'ya ulaşmak

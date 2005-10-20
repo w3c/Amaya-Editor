@@ -3079,6 +3079,10 @@
 	<message xml:lang="ru">Цвет...</message>
 	<message xml:lang="hu">&amp;Színek...</message>
 </label>
+<label define="BCSSStyle">
+	<message xml:lang="en">CSS &amp;Style...</message>
+	<message xml:lang="fr">&amp;Style CSS...</message>
+</label>
 <label define="BFormat">
 	<message xml:lang="en">&amp;Format...</message>
 	<message xml:lang="fr">&amp;Format...</message>

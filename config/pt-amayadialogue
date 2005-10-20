@@ -268,58 +268,59 @@
 266 **Split view vertically
 267 Estilo de carácter...
 268 Cores...
-269 Formato...
-270 Imagem de fundo...
-271 Criar regra...
-272 Aplicar classe...
-273 **Show applied style...
-274 Ligar...
-275 Abrir...
-276 Desabilitar...
-277 Habilitar...
-278 Remover...
-279 Anotar seleção
-280 Anotar documento
-281 Mover até a seleção
-282 Salvar seleção como XPointer
-283 Mover para o XPointer memorizado
-284 Responder à anotação
-285 Registrar
-286 Apagar
-287 Carregar
-288 Personalizar consulta...
-289 Filtro local...
-290 Travar o recurso
-291 Destravar o recurso
-292 Exibir as propriedades do recurso
-293 Copiar a informação da trava...
-294 Travado?
-295 Sobre Amaya
-296 Sobre Amaya no W3C
-297 Índice
-298 Navegar
-299 Vistas
-300 Selecionar
-301 Documento
-302 Criar elementos
-303 Atributos
-304 Caracteres
-305 Reestruturar
-306 Enlaces (links)
-307 Tabelas
-308 Mapas de Imagem
-309 Matemática
-310 Gráficos
-311 Suporte à XML
-312 Folhas de estilo
-313 Achar...
-314 Verificar ortografia
-315 Publicar
-316 WebDAV
-317 Imprimir
-318 Numberar
-319 Criar livros
-320 Anotações
-321 Configurar Amaya
-322 Atalhos
-323 Accessibilidade em Amaya
+269 **CSS &Style...
+270 Formato...
+271 Imagem de fundo...
+272 Criar regra...
+273 Aplicar classe...
+274 **Show applied style...
+275 Ligar...
+276 Abrir...
+277 Desabilitar...
+278 Habilitar...
+279 Remover...
+280 Anotar seleção
+281 Anotar documento
+282 Mover até a seleção
+283 Salvar seleção como XPointer
+284 Mover para o XPointer memorizado
+285 Responder à anotação
+286 Registrar
+287 Apagar
+288 Carregar
+289 Personalizar consulta...
+290 Filtro local...
+291 Travar o recurso
+292 Destravar o recurso
+293 Exibir as propriedades do recurso
+294 Copiar a informação da trava...
+295 Travado?
+296 Sobre Amaya
+297 Sobre Amaya no W3C
+298 Índice
+299 Navegar
+300 Vistas
+301 Selecionar
+302 Documento
+303 Criar elementos
+304 Atributos
+305 Caracteres
+306 Reestruturar
+307 Enlaces (links)
+308 Tabelas
+309 Mapas de Imagem
+310 Matemática
+311 Gráficos
+312 Suporte à XML
+313 Folhas de estilo
+314 Achar...
+315 Verificar ortografia
+316 Publicar
+317 WebDAV
+318 Imprimir
+319 Numberar
+320 Criar livros
+321 Anotações
+322 Configurar Amaya
+323 Atalhos
+324 Accessibilidade em Amaya

@@ -232,6 +232,7 @@ AMAYA_OBJ = \
 	wxdialog/SaveAsDlgWX.o \
 	wxdialog/SearchDlgWX.o \
 	wxdialog/SpellCheckDlgWX.o \
+	wxdialog/StyleDlgWX.o \
 	wxdialog/TextDlgWX.o \
 	wxdialog/TitleDlgWX.o \
 	wxdialogapi.o \

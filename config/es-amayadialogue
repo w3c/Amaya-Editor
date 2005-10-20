@@ -268,58 +268,59 @@
 266 Dividir vista verticalmente
 267 &Carácter...
 268 C&olores...
-269 &Párrafo...
-270 &Imagen de fondo...
-271 Crear &regla...
-272 A&plicar clase...
-273 &Mostrar estilo aplicado...
-274 &Enlazar hoja de estilo...
-275 &Abrir hoja de estilo enlazada...
-276 &Desactivar hoja de estilo enlazada...
-277 Acti&var hoja de estilo enlazada...
-278 &Borrar enlace a hoja de estilo...
-279 Anotar &selección
-280 Anotar &documento
-281 &Mover a selección
-282 Guardar selección como &XPointer
-283 Mover a &XPointer guardado
-284 &Responder a anotación
-285 &Enviar al servidor
-286 &Borrar
-287 &Cargar
-288 &Personalizar consulta...
-289 &Filtro local...
-290 Bloquear recurso
-291 Desbloquear recurso...
-292 Ver propiedades del recurso...
-293 Copiar información de bloqueo
-294 ¿Bloqueado?
-295 Acerca de Amaya
-296 Página web de Amaya en el W3C
-297 Índice
-298 Navegar
-299 Vistas
-300 Seleccionar
-301 Documentos
-302 Crear elementos
-303 Atributos
-304 Caracteres
-305 Reestructurar
-306 Enlaces
-307 Tablas
-308 Mapas de imagen
-309 MathML
-310 Gráficos
-311 Soporte XML
-312 Hojas de estilo
-313 Buscar
-314 Revisar ortografía
-315 Publicar
-316 WebDAV
-317 Imprimir
-318 Numerar
-319 Hacer libros
-320 Anotaciones
-321 Configurar
-322 Atajos de teclado
-323 Accesibilidad
+269 **CSS &Style...
+270 &Párrafo...
+271 &Imagen de fondo...
+272 Crear &regla...
+273 A&plicar clase...
+274 &Mostrar estilo aplicado...
+275 &Enlazar hoja de estilo...
+276 &Abrir hoja de estilo enlazada...
+277 &Desactivar hoja de estilo enlazada...
+278 Acti&var hoja de estilo enlazada...
+279 &Borrar enlace a hoja de estilo...
+280 Anotar &selección
+281 Anotar &documento
+282 &Mover a selección
+283 Guardar selección como &XPointer
+284 Mover a &XPointer guardado
+285 &Responder a anotación
+286 &Enviar al servidor
+287 &Borrar
+288 &Cargar
+289 &Personalizar consulta...
+290 &Filtro local...
+291 Bloquear recurso
+292 Desbloquear recurso...
+293 Ver propiedades del recurso...
+294 Copiar información de bloqueo
+295 ¿Bloqueado?
+296 Acerca de Amaya
+297 Página web de Amaya en el W3C
+298 Índice
+299 Navegar
+300 Vistas
+301 Seleccionar
+302 Documentos
+303 Crear elementos
+304 Atributos
+305 Caracteres
+306 Reestructurar
+307 Enlaces
+308 Tablas
+309 Mapas de imagen
+310 MathML
+311 Gráficos
+312 Soporte XML
+313 Hojas de estilo
+314 Buscar
+315 Revisar ortografía
+316 Publicar
+317 WebDAV
+318 Imprimir
+319 Numerar
+320 Hacer libros
+321 Anotaciones
+322 Configurar
+323 Atajos de teclado
+324 Accesibilidad

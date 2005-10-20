@@ -313,6 +313,7 @@ MENUS
 
   Style button:BCharacterStyle -> TtcChangeCharacters;
   Style button:BColors -> TtcChangeColors;
+  Style button:BCSSStyle -> SetCSSStyle;
   Style button:BFormat -> TtcChangeFormat;
 	Style button:BBackgroundImage -> ChangeBackgroundImage icon:BG_repeat.png;
 	Style Separator;

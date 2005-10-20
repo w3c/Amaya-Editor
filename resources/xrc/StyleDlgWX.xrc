@@ -68,6 +68,8 @@
                             </object>
                             <object class="spacer">
                               <size>10,0</size>
+                              <option>1</option>
+                              <flag>wxEXPAND</flag>
                             </object>
                             <object class="sizeritem">
                               <object class="wxChoice" name="wxID_CHOICE_SIZE">
@@ -82,6 +84,7 @@
                                   <item>x-large</item>
                                   <item>xx-large</item>
                                   <item>inherit</item></content>
+                                <size>200,-1</size>
                                 <focused>1</focused>
                               </object>
                             </object>
@@ -119,6 +122,7 @@
                                       <item>ex</item>
                                       <item>%</item>
                                     </content>
+                                    <size>50,-1</size>
                                     <focused>1</focused>
                                   </object>
                                 </object>
@@ -153,6 +157,7 @@
                                   <item>italic</item>
                                   <item>oblique</item>
                                   <item>inherit</item></content>
+                                <size>200,-1</size>
                                 <focused>1</focused>
                               </object>
                               <flag>wxLEFT</flag>
@@ -196,6 +201,7 @@
                                   <item>lighter</item>
                                   <item>bolder</item>
                                   <item>inherit</item></content>
+                                <size>200,-1</size>
                                 <focused>1</focused>
                               </object>
                             </object>
@@ -227,6 +233,7 @@
                                   <item>normal</item>
                                   <item>small-caps</item>
                                   <item>inherit</item></content>
+                                <size>200,-1</size>
                                 <focused>1</focused>
                               </object>
                             </object>
@@ -267,6 +274,8 @@
                             </object>
                             <object class="spacer">
                               <size>10,0</size>
+                              <option>1</option>
+                              <flag>wxEXPAND</flag>
                             </object>
                             <object class="sizeritem">
                               <object class="wxChoice" name="wxID_COMBOBOX_LINE">
@@ -274,6 +283,7 @@
                                   <item/>
                                   <item>normal</item>
                                   <item>inherit</item></content>
+                                <size>200,-1</size>
                                 <focused>1</focused>
                               </object>
                             </object>
@@ -309,6 +319,7 @@
                                   <item>em</item>
                                   <item>ex</item>
                                   <item>%</item></content>
+                                <size>50,-1</size>
                                 <focused>1</focused>
                               </object>
                             </object>
@@ -367,6 +378,7 @@
                                   <item>ex</item>
                                   <item>%</item>
                                 </content>
+                                <size>50,-1</size>
                                 <focused>1</focused>
                               </object>
                             </object>
@@ -397,6 +409,8 @@
                             </object>
                             <object class="spacer">
                               <size>10,0</size>
+                              <option>1</option>
+                              <flag>wxEXPAND</flag>
                             </object>
                             <object class="sizeritem">
                               <object class="wxChoice" name="wxID_CHOICE_VALIGN">
@@ -410,6 +424,7 @@
                                   <item>middle</item>
                                   <item>bottom</item>
                                   <item>text-bottom</item></content>
+                                <size>200,-1</size>
                                 <focused>1</focused>
                               </object>
                             </object>
@@ -437,6 +452,7 @@
                                 <content>
                                   <item>%</item>
                                 </content>
+                                <size>50,-1</size>
                                 <focused>1</focused>
                               </object>
                             </object>
@@ -478,6 +494,7 @@
                                   <item>right</item>
                                   <item>center</item>
                                   <item>inherit</item></content>
+                                <size>200,-1</size>
                                 <focused>1</focused>
                               </object>
                             </object>
@@ -520,6 +537,7 @@
                                   <item>overline</item>
                                   <item>line-through</item>
                                   <item>blink</item></content>
+                                <size>200,-1</size>
                                 <focused>1</focused>
                               </object>
                             </object>
@@ -550,6 +568,8 @@
                             </object>
                             <object class="spacer">
                               <size>10,0</size>
+                              <option>1</option>
+                              <flag>wxEXPAND</flag>
                             </object>
                             <object class="sizeritem">
                               <object class="wxChoice" name="wxID_CHOICE_WORD">
@@ -557,6 +577,7 @@
                                   <item/>
                                   <item>normal</item>
                                   <item>inherit</item></content>
+                                <size>200,-1</size>
                                 <focused>1</focused>
                               </object>
                             </object>
@@ -592,6 +613,7 @@
                                   <item>em</item>
                                   <item>ex</item>
                                   <item>%</item></content>
+                                <size>50,-1</size>
                                 <focused>1</focused>
                               </object>
                             </object>
@@ -622,6 +644,8 @@
                             </object>
                             <object class="spacer">
                               <size>10,0</size>
+                              <option>1</option>
+                              <flag>wxEXPAND</flag>
                             </object>
                             <object class="sizeritem">
                               <object class="wxChoice" name="wxID_CHOICE_LETTER">
@@ -629,6 +653,7 @@
                                   <item/>
                                   <item>normal</item>
                                   <item>inherit</item></content>
+                                <size>200,-1</size>
                                 <focused>1</focused>
                               </object>
                             </object>
@@ -664,6 +689,7 @@
                                   <item>em</item>
                                   <item>ex</item>
                                   <item>%</item></content>
+                                <size>50,-1</size>
                                 <focused>1</focused>
                               </object>
                             </object>
@@ -990,6 +1016,7 @@
                               <item>ex</item>
                               <item>%</item>
                             </content>
+                            <size>50,-1</size>
                             <focused>1</focused>
                           </object>
                           <flag>wxALL|wxALIGN_CENTRE_VERTICAL</flag>
@@ -1126,6 +1153,7 @@
                               <item>ex</item>
                               <item>%</item>
                             </content>
+                            <size>50,-1</size>
                             <focused>1</focused>
                           </object>
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
@@ -1262,6 +1290,7 @@
                               <item>ex</item>
                               <item>%</item>
                             </content>
+                            <size>50,-1</size>
                             <focused>1</focused>
                           </object>
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
@@ -1398,6 +1427,7 @@
                               <item>ex</item>
                               <item>%</item>
                             </content>
+                            <size>50,-1</size>
                             <focused>1</focused>
                           </object>
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
@@ -1550,6 +1580,7 @@
                                       <item>ex</item>
                                       <item>%</item>
                                     </content>
+                                    <size>50,-1</size>
                                     <focused>1</focused>
                                   </object>
                                 </object>
@@ -1617,6 +1648,7 @@
                                       <item>ex</item>
                                       <item>%</item>
                                     </content>
+                                    <size>50,-1</size>
                                     <focused>1</focused>
                                   </object>
                                 </object>
@@ -1684,6 +1716,7 @@
                                       <item>ex</item>
                                       <item>%</item>
                                     </content>
+                                    <size>50,-1</size>
                                     <focused>1</focused>
                                   </object>
                                 </object>
@@ -1751,6 +1784,7 @@
                                       <item>ex</item>
                                       <item>%</item>
                                     </content>
+                                    <size>50,-1</size>
                                     <focused>1</focused>
                                   </object>
                                 </object>
@@ -1818,6 +1852,7 @@
                                       <item>ex</item>
                                       <item>%</item>
                                     </content>
+                                    <size>50,-1</size>
                                     <focused>1</focused>
                                   </object>
                                 </object>
@@ -1896,6 +1931,7 @@
                                       <item>ex</item>
                                       <item>%</item>
                                     </content>
+                                    <size>50,-1</size>
                                     <focused>1</focused>
                                   </object>
                                 </object>
@@ -1973,6 +2009,7 @@
                                       <item>ex</item>
                                       <item>%</item>
                                     </content>
+                                    <size>50,-1</size>
                                     <focused>1</focused>
                                   </object>
                                 </object>
@@ -2039,6 +2076,7 @@
                                       <item>ex</item>
                                       <item>%</item>
                                     </content>
+                                    <size>50,-1</size>
                                     <focused>1</focused>
                                   </object>
                                 </object>
@@ -2106,6 +2144,7 @@
                                       <item>ex</item>
                                       <item>%</item>
                                     </content>
+                                    <size>50,-1</size>
                                     <focused>1</focused>
                                   </object>
                                 </object>
@@ -2173,6 +2212,7 @@
                                       <item>ex</item>
                                       <item>%</item>
                                     </content>
+                                    <size>50,-1</size>
                                     <focused>1</focused>
                                   </object>
                                 </object>
@@ -2240,6 +2280,7 @@
                                       <item>ex</item>
                                       <item>%</item>
                                     </content>
+                                    <size>50,-1</size>
                                     <focused>1</focused>
                                   </object>
                                 </object>
@@ -2318,6 +2359,7 @@
                                       <item>ex</item>
                                       <item>%</item>
                                     </content>
+                                    <size>50,-1</size>
                                     <focused>1</focused>
                                   </object>
                                 </object>

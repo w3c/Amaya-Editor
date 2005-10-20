@@ -6,6 +6,7 @@ extern ThotBool CreateSearchDlgWX (int ref, ThotWindow parent, char *caption,
 				   ThotBool withReplace, ThotBool searchAfter);
 extern ThotBool CreateSpellCheckDlgWX (int ref, int base, ThotWindow parent,
 				       int checkingArea);
+extern ThotBool CreateStyleDlgWX ( int ref, ThotWindow parent);
 extern ThotBool CreateTextDlgWX ( int ref, int subref, ThotWindow parent,
 				  const char *title, const char *label,
 				  const char *value );

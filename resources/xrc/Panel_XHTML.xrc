@@ -25,6 +25,13 @@
                         <object class="wxStaticText" name="wxID_LABEL_TITLE">
                           <label>*XHTML*</label>
                           <style>wxALIGN_CENTRE</style>
+                          <font>
+                            <size>10</size>
+                            <style>default</style>
+                            <weight>normal</weight>
+                            <family>normal</family>
+                            <underlined>0</underlined>
+                          </font>
                         </object>
                         <option>1</option>
                         <flag>wxALIGN_CENTRE</flag>
@@ -37,7 +44,7 @@
                         <flag>wxALIGN_CENTRE</flag>
                       </object>
                     </object>
-                    <style>wxTAB_TRAVERSAL|wxSIMPLE_BORDER</style>
+                    <style>wxTAB_TRAVERSAL|wxSIMPLE_BORDER|wxNO_BORDER</style>
                   </object>
                   <flag>wxEXPAND</flag>
                 </object>
@@ -80,13 +87,6 @@
                                       <flag>wxALL</flag>
                                       <border>2</border>
                                     </object>
-                                  </object>
-                                  <option>1</option>
-                                  <flag>wxALL</flag>
-                                </object>
-                                <object class="sizeritem">
-                                  <object class="wxBoxSizer">
-                                    <orient>wxHORIZONTAL</orient>
                                     <object class="sizeritem">
                                       <object class="wxBitmapButton" name="wxID_PANEL_XHTML_H1">
                                         <bitmap>../icons/16x16/XHTML_H1.png</bitmap>
@@ -136,13 +136,6 @@
                                       <flag>wxALL</flag>
                                       <border>2</border>
                                     </object>
-                                  </object>
-                                  <option>1</option>
-                                  <flag>wxALL</flag>
-                                </object>
-                                <object class="sizeritem">
-                                  <object class="wxBoxSizer">
-                                    <orient>wxHORIZONTAL</orient>
                                     <object class="sizeritem">
                                       <object class="wxBitmapButton" name="wxID_PANEL_XHTML_IMG">
                                         <bitmap>../icons/16x16/XHTML_Image.png</bitmap>

@@ -118,9 +118,11 @@ extern ThotBool CreateSpellCheckDlgWX ( int ref,
                                         int base,
                                         ThotWindow parent,
                                         int checkingArea );
+extern ThotBool CreateStyleDlgWX ( int ref,
+                                   ThotWindow parent );
 extern ThotBool CreateBgImageDlgWX ( int ref,
                                      ThotWindow parent,
-                                     const char * urlToOpen,
+                                     const char *urlToOpen,
                                      int RepeatValue );
 extern ThotBool CreateListEditDlgWX ( int ref,
                                       ThotWindow parent,
@@ -258,9 +260,11 @@ extern ThotBool CreateSpellCheckDlgWX ( int ref,
                                           int base,
                                           ThotWindow parent,
                                           int checkingArea );
+extern ThotBool CreateStyleDlgWX ( int ref,
+                                     ThotWindow parent );
 extern ThotBool CreateBgImageDlgWX ( int ref,
                                        ThotWindow parent,
-                                       const char * urlToOpen,
+                                       const char *urlToOpen,
                                        int RepeatValue );
 extern ThotBool CreateListEditDlgWX ( int ref,
                                         ThotWindow parent,

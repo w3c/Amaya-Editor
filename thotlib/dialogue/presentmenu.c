@@ -43,6 +43,7 @@
 #include "AmayaFormatPanel.h"
 #include "AmayaCharStylePanel.h"
 #include "AmayaSubPanelManager.h"
+#include "wxinclude.h"
 #endif /* _WX */
 
 #include "actions_f.h"
@@ -2373,7 +2374,6 @@ void TtcChangeGraphics (Document document, View view)
   wxASSERT_MSG(false, _T("TODO: TtcChangeGraphics"));
 #endif /* _WX */
 }
-
 
 /*----------------------------------------------------------------------
   ModPresentFormat    

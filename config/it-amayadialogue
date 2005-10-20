@@ -268,58 +268,59 @@
 266 Dividi la vista in verticale
 267 Stile dei caratteri...
 268 Colori...
-269 Formattazione...
-270 Immagine di sfondo...
-271 Crea una regola...
-272 Applica una classe...
-273 Mostra lo stile applicato...
-274 Collegamento...
-275 Apri...
-276 Disabilita...
-277 Abilita...
-278 Rimuovi...
-279 Annota la selezione
-280 Annota il documento
-281 Muovi sulla selezione
-282 Salva la selezione come XPointer
-283 Muovi sull'Xpointer memorizzato
-284 Rispondi all'annotazione
-285 Registra
-286 Elimina
-287 Carica
-288 Personalizza la richiesta
-289 Filtro locale...
-290 Lock resource...
-291 Unlock resource...
-292 Informazioni per il lock...
-293 Copia delle informazioni per il lock...
-294 Lock?
-295 Informazioni su Amaya
-296 Informazioni su Amaya al W3C
-297 Indice
-298 Navigazione
-299 Viste
-300 Selezione
-301 Documento
-302 Creazione elementi
-303 Attributi
-304 Caratteri
-305 Ristrutturazione
-306 Collegamenti
-307 Tabelle
-308 Zone attive
-309 Matematica
-310 Graphics
-311 Supporto XML
-312 Fogli di stile
-313 Ricerca
-314 Controllo ortografico
-315 Pubblicazione
-316 WebDAV
-317 Stampa
-318 Numerazione
-319 Creare un libro
-320 Annotazioni
-321 Configurazione di Amaya
-322 Scelte rapide
-323 Accessibilità in Amaya
+269 **CSS &Style...
+270 Formattazione...
+271 Immagine di sfondo...
+272 Crea una regola...
+273 Applica una classe...
+274 Mostra lo stile applicato...
+275 Collegamento...
+276 Apri...
+277 Disabilita...
+278 Abilita...
+279 Rimuovi...
+280 Annota la selezione
+281 Annota il documento
+282 Muovi sulla selezione
+283 Salva la selezione come XPointer
+284 Muovi sull'Xpointer memorizzato
+285 Rispondi all'annotazione
+286 Registra
+287 Elimina
+288 Carica
+289 Personalizza la richiesta
+290 Filtro locale...
+291 Lock resource...
+292 Unlock resource...
+293 Informazioni per il lock...
+294 Copia delle informazioni per il lock...
+295 Lock?
+296 Informazioni su Amaya
+297 Informazioni su Amaya al W3C
+298 Indice
+299 Navigazione
+300 Viste
+301 Selezione
+302 Documento
+303 Creazione elementi
+304 Attributi
+305 Caratteri
+306 Ristrutturazione
+307 Collegamenti
+308 Tabelle
+309 Zone attive
+310 Matematica
+311 Graphics
+312 Supporto XML
+313 Fogli di stile
+314 Ricerca
+315 Controllo ortografico
+316 Pubblicazione
+317 WebDAV
+318 Stampa
+319 Numerazione
+320 Creare un libro
+321 Annotazioni
+322 Configurazione di Amaya
+323 Scelte rapide
+324 Accessibilità in Amaya

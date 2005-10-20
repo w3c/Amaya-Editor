@@ -38,6 +38,8 @@ extern void EnableCSS ( Document doc,
                         View view );
 extern void RemoveCSS ( Document doc,
                         View view );
+extern void SetCSSStyle ( Document doc,
+                          View view );
 
 #else /* __STDC__ */
 
@@ -73,6 +75,8 @@ extern void EnableCSS ( Document doc,
                           View view );
 extern void RemoveCSS ( Document doc,
                           View view );
+extern void SetCSSStyle ( Document doc,
+                            View view );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
