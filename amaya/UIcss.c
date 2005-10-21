@@ -1260,15 +1260,16 @@ void RemoveCSS (Document doc, View view)
   InitCSSDialog (doc, TtaGetMessage (AMAYA, AM_REMOVE_CSS));
 }
 
-
 /*----------------------------------------------------------------------
   SetCSSStyle   
   ----------------------------------------------------------------------*/
 void SetCSSStyle (Document doc, View view)
 {
+#ifdef _WX
   ThotBool created;
 
   created = CreateStyleDlgWX (BaseCSS + CSSValue, TtaGetViewFrame (doc, view));
   if (created)
     TtaShowDialogue (BaseCSS + CSSValue, FALSE);
+#endif /* _WX */
 }
