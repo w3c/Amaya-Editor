@@ -540,9 +540,9 @@ STRUCT
 	Basic_Set;
 
   Input = CASE OF					{ formctrl }
-	Text_Input					{ INPUT / TEXT }
-	   (ATTR  NAME; Value_; disabled; readonly;
-	        { name  value   disabled  readonly }
+    Text_Input					{ INPUT / TEXT }
+	   (ATTR  NAME; Value_; disabled; readonly; ALT;
+	  { name  value   disabled  readonly alt }
 		  Area_Size = Integer; MaxLength = Integer;
 		{ size                 maxlength }
 		  IntAreaSize = Integer;
@@ -552,9 +552,10 @@ STRUCT
 		{ onfocus  onblur  onselect  onchange }
 		  Default_Value) =
 		Input_Text - (Input);
-	Password_Input					{ INPUT / PASSWORD }
-	   (ATTR  NAME; Value_; disabled; readonly;
-		{ name  value   disabled  readonly }
+
+    Password_Input					{ INPUT / PASSWORD }
+	   (ATTR  NAME; Value_; disabled; readonly; ALT;
+		{ name  value   disabled  readonly alt}
 		  Area_Size; IntAreaSize; MaxLength;
 		{ size                    maxlength }
 		  tabindex; accesskey;
@@ -563,9 +564,10 @@ STRUCT
 		{ onfocus  onblur  onselect  onchange }
 		  Default_Value) =
 		Input_Text  - (Input);
-	File_Input					{ INPUT / FILE }
-	   (ATTR  NAME; Value_; disabled; readonly;
-		{ name  value   disabled  readonly }
+
+    File_Input					{ INPUT / FILE }
+	   (ATTR  NAME; Value_; disabled; readonly; ALT;
+		{ name  value   disabled  readonly alt }
 		  Area_Size; IntAreaSize; MaxLength;
 		{ size                    maxlength }
 		  tabindex; accesskey;
@@ -574,18 +576,20 @@ STRUCT
 		{ onfocus  onblur }
 		  Default_Value) =
 		Input_Text - (Input);
-	Checkbox_Input					{ INPUT / CHECKBOX }
-	   (ATTR  NAME; Value_; Checked = Yes_, No_;
-		{ name  value   checked }
+
+    Checkbox_Input					{ INPUT / CHECKBOX }
+	   (ATTR  NAME; Value_; Checked = Yes_, No_; ALT;
+		{ name  value   checked alt }
 		  disabled; readonly;
 		{ disabled  readonly }
 		  tabindex; accesskey; onfocus; onblur;
 		{ tabindex  accesskey  onfocus  onblur }
 		  DefaultChecked = Yes_, No_) =
 		CONSTANT C_Empty with Checked ?= No_;
-	Radio_Input					{ INPUT / RADIO }
-	   (ATTR  NAME; Value_; Checked; disabled;
-		{ name  value   checked  disabled }
+
+    Radio_Input					{ INPUT / RADIO }
+	   (ATTR  NAME; Value_; Checked; disabled; ALT;
+		{ name  value   checked  disabled alt }
 		  readonly; tabindex; accesskey;
 		{ readonly  tabindex  accesskey }
 		  onfocus; onblur;
@@ -593,19 +597,21 @@ STRUCT
 		  DefaultChecked) =
 		CONSTANT C_Empty with Checked ?= No_,
 				      NAME ?= 'radio';
-	Submit_Input					{ INPUT / SUBMIT }
-	   (ATTR  NAME; Value_; disabled; readonly;
-		{ name  value   disabled; readonly }
+
+    Submit_Input					{ INPUT / SUBMIT }
+	   (ATTR  NAME; Value_; disabled; readonly; ALT;
+		{ name  value   disabled; readonly alt }
 		  tabindex; accesskey;
 		{ tabindex  accesskey }
 		  onfocus; onblur) =
 		{ onfocus  onblur }
-		BEGIN
-		CONSTANT C_Empty;
-		END with Value_ ?= 'Submit';
-	Reset_Input					{ INPUT / RESET }
-	   (ATTR  NAME; Value_; disabled; readonly;
-		{ name  value   disabled  readonly }
+    BEGIN
+    CONSTANT C_Empty;
+    END with Value_ ?= 'Submit';
+
+    Reset_Input					{ INPUT / RESET }
+	   (ATTR  NAME; Value_; disabled; readonly; ALT;
+		{ name  value   disabled  readonly alt }
 		  tabindex; accesskey;
 		{ tabindex  accesskey }
 		  onfocus; onblur) =
@@ -614,9 +620,10 @@ STRUCT
 		CONSTANT C_Empty;
 		END  - (Input) with NAME ?= 'Reset',
 				    Value_ ?= 'Reset';
-        Button_Input					{ INPUT / BUTTON }
-	   (ATTR  NAME; Value_; disabled; readonly;
-		{ name  value   disabled  readonly }
+
+    Button_Input					{ INPUT / BUTTON }
+	   (ATTR  NAME; Value_; disabled; readonly; ALT;
+		{ name  value   disabled  readonly alt }
 		  tabindex; accesskey;
 		{ tabindex  accesskey }
 		  onfocus; onblur) =
@@ -625,16 +632,16 @@ STRUCT
 		CONSTANT C_Empty;
 		END;
 
-	Hidden_Input					{ INPUT / HIDDEN }
-	   (ATTR  NAME; Value_; disabled;
-		{ name  value   disabled }
+    Hidden_Input					{ INPUT / HIDDEN }
+	   (ATTR  NAME; Value_; disabled; ALT;
+		{ name  value   disabled alt }
 		  tabindex; accesskey;
 		{ tabindex  accesskey }
 		  onfocus; onblur) =
 		{ onfocus  onblur }
 		CONSTANT C_Empty;
 
-        BUTTON_						{ BUTTON }
+    BUTTON_						{ BUTTON }
 	   (ATTR  NAME; Value_;
 		{ name  value }
 		  Button_type = button, submit, reset;
@@ -650,12 +657,13 @@ STRUCT
 		  accesskey; onfocus; onblur) =
 		{ accesskey  onfocus  onblur }
 		Basic_Set;
-	Option_Menu;					{ SELECT }
-	Text_Area;					{ TEXTAREA }
+
+    Option_Menu;					{ SELECT }
+    Text_Area;					{ TEXTAREA }
 	END;
 
   Input_Text = BEGIN
-	Inserted_Text = TEXT;
+  Inserted_Text = TEXT;
 	END;
 
   Table_							{ TABLE }
