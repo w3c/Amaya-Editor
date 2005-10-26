@@ -1927,7 +1927,7 @@ void InitTranslations (char *appliname)
           else
             {
               /* comment line */
-              fscanf (file, "%80s", ch);
+              //fscanf (file, "%80s", ch);
               /* skip this line */
               do
                 i = fgetc (file);

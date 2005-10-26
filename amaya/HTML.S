@@ -541,8 +541,8 @@ STRUCT
 
   Input = CASE OF					{ formctrl }
     Text_Input					{ INPUT / TEXT }
-	   (ATTR  NAME; Value_; disabled; readonly; ALT;
-	  { name  value   disabled  readonly alt }
+	   (ATTR  NAME; Value_; disabled; readonly;
+	  { name  value   disabled  readonly }
 		  Area_Size = Integer; MaxLength = Integer;
 		{ size                 maxlength }
 		  IntAreaSize = Integer;
