@@ -1584,12 +1584,12 @@ ThotBool TtaInShortcutSequence ()
 void TtaListShortcuts (Document doc, FILE *fileDescriptor)
 {
   KEY                *next, *ptr;
-  char               *s, *k1, sk1[50], *k2, sk2[50];
+  char               *s, *k1, sk1[10], *k2;
   int                 i;
 
   s = TtaGetEnvString ("ACCESSKEY_MOD");
   k1 = &sk1[0];
-  k2 = &sk2[0];
+  k2 = k1;
   if (doc)
     {
       /* display current access keys table */
@@ -1640,13 +1640,13 @@ void TtaListShortcuts (Document doc, FILE *fileDescriptor)
 
           while (next)
             {
-              strcpy (k1, KeyName (next->K_EntryCode));
+              strcpy (sk1, KeyName (next->K_EntryCode));
               ptr = next->K_Next;
               if (ptr == NULL)
                 {
                   /* display the shortcut */
                   if (MenuActionList[next->K_Command].ActionName)
-                    fprintf (fileDescriptor, " %s%s -> %s\n", s, k1,
+                    fprintf (fileDescriptor, " %s%s -> %s\n", s, sk1,
                              MenuActionList[next->K_Command].ActionName);
                 }
               else
@@ -1656,8 +1656,8 @@ void TtaListShortcuts (Document doc, FILE *fileDescriptor)
                     /* display the shortcut sequence */
                     if (MenuActionList[ptr->K_Command].ActionName)
                       {
-                        strcpy (k2, KeyName (ptr->K_EntryCode));
-                        fprintf (fileDescriptor, " %s%s %s%s -> %s\n", s, k1,
+                        k2 = KeyName (ptr->K_EntryCode);
+                        fprintf (fileDescriptor, " %s%s %s%s -> %s\n", s, sk1,
                                  s, k2,
                                  MenuActionList[ptr->K_Command].ActionName);
                       }
@@ -1879,7 +1879,11 @@ void InitTranslations (char *appliname)
                   i = fgetc (file);
                 while (i != ')');
 
-              /* Selection de la bonne commande */
+              /* Locate the action name */
+#ifndef _WX
+              if (!strcmp (ch, "AmayaCloseTab"))
+                strcpy (ch, "AmayaCloseWindow");
+#endif /* _WX */
               for (i = 0; i < max; i++)
                 if (!strcmp (ch, MenuActionList[i].ActionName))
                   break;
@@ -1912,10 +1916,10 @@ void InitTranslations (char *appliname)
                 }
               else if (i < max)
                 {
-                  /* C'est une autre action Thot */
+                  /* another action */
                   MemoKey (mod1, key1, isSpecialKey1,
                            mod2, key2, isSpecialKey2, /*255+i */ 0, i);
-                  /* On met a jour l'equivalent clavier */
+                  /* display the equiv shortcut */
                   TtaFreeMemory (MenuActionList[i].ActionEquiv);
                   MenuActionList[i].ActionEquiv = TtaStrdup (equiv);
                 }
