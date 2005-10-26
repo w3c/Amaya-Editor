@@ -1269,7 +1269,7 @@ void  ApplyAGenericStyleRule (Document doc, PtrSSchema pSS, int elType,
         pAb = pDoc->DocViewRootAb[view];
         /* the schema view associated with the current view */
         viewSch = pDoc->DocView[view].DvPSchemaView;
-        while (pAb != NULL)
+        while (pAb)
           {
             /* there is probably a problem with visibility rules: pAb doesn't
                exist */
@@ -1343,10 +1343,10 @@ void  ApplyAGenericStyleRule (Document doc, PtrSSchema pSS, int elType,
               }
             /* get the next abstract box */
             pAb = NextAbstractBox (pAb);
-            if (pAb != NULL)
-              if ((presBox == 0 && pAb->AbPresentationBox) ||
-                  (presBox > 0  && !pAb->AbPresentationBox) ||
-                  pAb->AbDead)
+            while (pAb &&
+                   ((presBox == 0 && pAb->AbPresentationBox) ||
+                    (presBox > 0  && !pAb->AbPresentationBox) ||
+                    pAb->AbDead))
                 pAb = NextAbstractBox (pAb);
             /* redisplay the element if needed */
             if (found)
