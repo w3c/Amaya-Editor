@@ -47,6 +47,7 @@
 #include "font_tv.h"
 #include "edit_tv.h"
 #include "modif_tv.h"
+#include "select_tv.h"
 #include "frame_tv.h"
 #include "units_tv.h"
 #include "appdialogue_tv.h"
@@ -768,51 +769,12 @@ int FindMenuActionFromMenuItemID (Menu_Ctl * ptrmenu, int item_id)
 
 
 /*----------------------------------------------------------------------
-  TtaExecuteMenuAction execute the corresponding menu action.
-  ----------------------------------------------------------------------*/
-void TtaExecuteMenuAction (const char *actionName, Document doc, View view, ThotBool force)
-{
-  int                 i, frame;
-
-  // prevent recursive call
-  if (g_DoingAction)
-    return;
-  g_DoingAction = TRUE;
-  
-  UserErrorCode = 0;
-  /* verifie le parametre document */
-  if (doc == 0 || view == 0 || actionName == NULL)
-    TtaError (ERR_invalid_parameter);
-  else
-    {
-      i = FindMenuAction (actionName);
-      frame = GetWindowNumber (doc, view);
-      CloseTextInsertion ();
-#ifdef _WX
-      TtaRedirectFocus();
-      if (i > 0 && i < MaxMenuAction &&
-          (MenuActionList[i].ActionActive[doc] || force)&&
-          MenuActionList[i].Call_Action)
-        (*(Proc2)MenuActionList[i].Call_Action) ((void *)doc, (void *)view);
-      
-      // redirect focus to the canvas because when an action is done 
-      // it's more probable that the user wants to type some characteres after executing the action
-#else /* _WX */
-      if (i > 0 && i < MaxMenuAction &&
-          (MenuActionList[i].ActionActive[frame] || force)&&
-          MenuActionList[i].Call_Action)
-        (*(Proc2)MenuActionList[i].Call_Action) ((void *)doc, (void *)view);
-#endif /* _WX */
-    }
-  g_DoingAction = FALSE;
-}
-
-/*----------------------------------------------------------------------
   TtaExecuteMenuActionFromActionId execute the corresponding menu action.
   ----------------------------------------------------------------------*/
-void TtaExecuteMenuActionFromActionId (int action_id, Document doc, View view, ThotBool force)
+void TtaExecuteMenuActionFromActionId (int action_id, Document doc,
+                                       View view, ThotBool force)
 {
-  int frame_id;
+  int                 frame_id, ref;
   
   // prevent recursive call
   if (g_DoingAction)
@@ -825,25 +787,51 @@ void TtaExecuteMenuActionFromActionId (int action_id, Document doc, View view, T
   else
     {
       frame_id = GetWindowNumber (doc, view);
-      CloseTextInsertion ();
 #ifdef _WX
-      TtaRedirectFocus();
-      if (action_id > 0 && action_id < MaxMenuAction &&
-          (MenuActionList[action_id].ActionActive[doc] || force)&&
-          MenuActionList[action_id].Call_Action)
-        (*(Proc2)MenuActionList[action_id].Call_Action) ((void *)doc, (void *)view);
-
-      // redirect focus to the canvas because when an action is done 
-      // it's more probable that the user wants to type some characteres after executing the action
+      ref = doc;
 #else /* _WX */
-      if (action_id > 0 && action_id < MaxMenuAction &&
-          (MenuActionList[action_id].ActionActive[frame_id] || force)&&
-          MenuActionList[action_id].Call_Action)
-        (*(Proc2)MenuActionList[action_id].Call_Action) ((void *)doc, (void *)view);
+      ref = frame_id;
 #endif /* _WX */
+
+     if (action_id > 0 && action_id < MaxMenuAction &&
+         (MenuActionList[action_id].ActionActive[ref] || force) &&
+         MenuActionList[action_id].Call_Action)
+       {
+         if (!SelPosition ||
+             (strcmp (MenuActionList[action_id].ActionName, "TtcDeletePreviousChar") &&
+              strcmp (MenuActionList[action_id].ActionName, "TtcDeleteSelection")))
+           CloseTextInsertion ();
+#ifdef _WX
+         // redirect focus to the canvas because when an action is done 
+         // it's more probable that the user wants to type some characteres after executing the action
+         TtaRedirectFocus();
+#endif /* _WX */
+         (*(Proc2)MenuActionList[action_id].Call_Action) ((void *)doc, (void *)view);
+       }
+     else
+       TtaRedirectFocus();
     }
   g_DoingAction = FALSE;
 }
+
+/*----------------------------------------------------------------------
+  TtaExecuteMenuAction execute the corresponding menu action.
+  ----------------------------------------------------------------------*/
+void TtaExecuteMenuAction (const char *actionName, Document doc, View view,
+                           ThotBool force)
+{
+  int                 action_id;
+
+  /* verifie le parametre document */
+  if (doc == 0 || view == 0 || actionName == NULL)
+    TtaError (ERR_invalid_parameter);
+  else
+    {
+      action_id = FindMenuAction (actionName);
+      TtaExecuteMenuActionFromActionId (action_id, doc, view, force);
+    }
+}
+
 
 /*----------------------------------------------------------------------
   TteZeroMenu signale qu'il n'y a pas de menu dans ce type de        

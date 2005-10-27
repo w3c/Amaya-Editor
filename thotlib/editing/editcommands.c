@@ -2030,15 +2030,14 @@ void ContentEditing (int editType)
         {
           if (editType == TEXT_PASTE || editType == TEXT_X_PASTE)
             CloseTextInsertionWithControl (FALSE);
-          else
-            {
-              if ((editType != TEXT_DEL && editType != TEXT_SUP) ||
-                  !ViewFrameTable[frame - 1].FrSelectOnePosition)
-                /* close the current text insertion */
-                CloseTextInsertion ();
-            }
-          pBox = ViewFrameTable[frame - 1].FrSelectionBegin.VsBox;
+          else if ((editType != TEXT_DEL && editType != TEXT_SUP) ||
+                   !ViewFrameTable[frame - 1].FrSelectOnePosition ||
+                   FirstSelectedElement->ElVolume == 0)
+            /* close the current text insertion */
+            CloseTextInsertion ();
+
           /* verifie qu'une selection courante est visualisee */
+          pBox = ViewFrameTable[frame - 1].FrSelectionBegin.VsBox;
           if (pBox == NULL)
             {
               TtaSetFocus ();
@@ -2076,17 +2075,19 @@ void ContentEditing (int editType)
                        Don't delete anything*/
                     return;
                   else if (ElementIsReadOnly (FirstSelectedElement))
-                    /* the parent is not read-only */
-                    /* the selected element itself is read-only */
-                    if (FirstSelectedElement == LastSelectedElement &&
-                        FirstSelectedElement->ElTerminal &&
-                        FirstSelectedElement->ElLeafType == LtText)
-                      /* selection is within a single text element */
-                      if (FirstSelectedChar > 1 ||
-                          (LastSelectedChar > 0 &&
-                           LastSelectedChar < LastSelectedElement->ElVolume))
-                        /* the text element is not completely selected */
-                        return;
+                    {
+                      /* the parent is not read-only */
+                      /* the selected element itself is read-only */
+                      if (FirstSelectedElement == LastSelectedElement &&
+                          FirstSelectedElement->ElTerminal &&
+                          FirstSelectedElement->ElLeafType == LtText)
+                        /* selection is within a single text element */
+                        if (FirstSelectedChar > 1 ||
+                            (LastSelectedChar > 0 &&
+                             LastSelectedChar < LastSelectedElement->ElVolume))
+                          /* the text element is not completely selected */
+                          return;
+                    }
                 }
             }
         }
@@ -2282,7 +2283,7 @@ void ContentEditing (int editType)
                 }
               else if ((editType == TEXT_CUT || editType == TEXT_DEL) &&
                        pAb->AbLeafType == LtText &&
-                       pAb->AbVolume == 1 &&
+                       pAb->AbVolume == 1 && FirstSelectedChar < 1 &&
                        strcmp (pAb->AbPSchema->PsStructName, "TextFile") == 0)
                 /* we are deleting the last character of a text leaf in a
                    text file. Do not leave an empty text leaf, but remove it
@@ -2878,11 +2879,12 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
                                   pSelBox->BxNChars == 1)
                                 {
                                   /* the box becomes empty */
-                                  /* update selection marks */
-                                  if (!strcmp (pAb->AbPSchema->PsStructName,
-                                               "TextFile"))
+                                  if ((pAb->AbNext || pAb->AbPrevious) &&
+                                      !strcmp (pAb->AbPSchema->PsStructName, "TextFile"))
                                     {
-                                      /* remove the current element */
+                                      ThotBool selprev = pAb->AbPrevious;
+                                       /* remove the current element if it's not
+                                         the last element in the line*/
                                       FirstSelectedChar = 1;
                                       NewContent (pAb);
                                       CutCommand (FALSE, FALSE);
@@ -2891,11 +2893,19 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
                                          previous element */
                                       if (FirstSelectedElement &&
                                           FirstSelectedChar <= FirstSelectedElement->ElVolume)
-                                        /* it doesn't point at the end of the
-                                           previous text */
-                                        TtcPreviousChar (FrameTable[frame].FrDoc, FrameTable[frame].FrView);
+                                        {
+                                          /* it doesn't point at the end of the
+                                             previous text */
+                                          if (selprev)
+                                            TtcPreviousChar (FrameTable[frame].FrDoc,
+                                                           FrameTable[frame].FrView);
+                                          else
+                                            TtcNextChar (FrameTable[frame].FrDoc,
+                                                         FrameTable[frame].FrView);
+                                        }
                                       return;
                                     }
+                                  /* update selection marks */
                                   xDelta = BoxCharacterWidth (109, font);
                                   pViewSel->VsXPos = 0;
                                   pViewSel->VsIndBox = 0;

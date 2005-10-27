@@ -1798,6 +1798,7 @@ void InitTranslations (char *appliname)
                     strcat (equiv, "Alt");
                   if (mod1 & THOT_MOD_SHIFT)
                     {
+                      if (mod1 != THOT_MOD_SHIFT)
                          strcat (equiv, "-");
                        strcat (equiv, "Shift");
                     }
