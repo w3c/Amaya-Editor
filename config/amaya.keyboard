@@ -18,24 +18,6 @@
 # Ctrl-x, c, v are used for cut, copy, paste
 # Ctrl-z and Ctrl-y are used for Undo/Redo
 #
-# Ctrl-a, e are used for moving around
-# Ctrl-k is used for the spellcheck
-# Ctrl-r, b, F are used for reload, back and forward
-# Ctrl-1, 2, 3, 4, 5, 6 are used for headings.
-#
-# Ctrl-m is used for Math functions
-# Alt-f is used for Forms functions
-# Alt-s is used for Style functions
-# Ctrl-n is used for New functions (n, t, c) and Annotation functions
-# Ctrl-t is used for Types in the types menu, and some table actions
-# Alt-t is used for style types
-# Alt-v is used for view menus
-#
-# Ctrl-L, T, D and Shift-Alt-L are used for linking
-# Ctrl-B, I are used for strong and emphasis
-# Ctrl-N is for changing the title (Name...)
-# Ctrl-! and S are used in the structure menu.
-#
 # Ctrl-Return, Space are used for BR and &nbsp;
 
 # personal keyboard file for Amaya
@@ -134,10 +116,9 @@ Ctrl <Key>i , Ctrl <Key>a:         ApplyClass()
 Ctrl <Key>i , Ctrl <Key>b:         ChangeBackgroundImage() 
 Ctrl <Key>i , Ctrl <Key>c:         CreateClass() 
 Ctrl <Key>i , Ctrl <Key>d:                 SetOnOffDEL()
-#Ctrl <Key>i , Ctrl <Key>d:         DisableCSS()
-#Ctrl <Key>i , Ctrl <Key>e:         EnableCSS()
 Ctrl <Key>i , Ctrl <Key>e:                 SetOnOffEmphasis() 
 Ctrl <Key>i , Ctrl <Key>f:         TtcChangeFormat() 
+Ctrl <Key>i , Ctrl <Key>g:         ShowAppliedStyle() 
 Ctrl <Key>i , Ctrl <Key>h:         TtcChangeCharacters() 
 Ctrl <Key>i , Ctrl <Key>i:                 SetOnOffINS() 
 Ctrl <Key>i , Ctrl <Key>k:                 SetOnOffKeyboard() 
