@@ -2644,7 +2644,7 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
   ThotBool            toSplit, toSplitForScript = FALSE;
   ThotBool            saveinsert, rtl;
   ThotBool            notification = FALSE;
-  ThotBool            status;
+  ThotBool            status, selprev;
 
   toDelete = (c == 127);
   script  = ' ';
@@ -2882,7 +2882,7 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
                                   if ((pAb->AbNext || pAb->AbPrevious) &&
                                       !strcmp (pAb->AbPSchema->PsStructName, "TextFile"))
                                     {
-                                      ThotBool selprev = pAb->AbPrevious;
+                                      selprev = (pAb->AbPrevious != NULL);
                                        /* remove the current element if it's not
                                          the last element in the line*/
                                       FirstSelectedChar = 1;
