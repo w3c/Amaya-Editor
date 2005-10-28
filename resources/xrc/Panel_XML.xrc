@@ -16,29 +16,40 @@
                       <orient>wxHORIZONTAL</orient>
                       <object class="sizeritem">
                         <object class="wxBitmapButton" name="wxID_BUTTON_EXPAND">
+                          
                           <bitmap>../icons/misc/expand_on.png</bitmap>
+                          
                           <style platform="unix|win">wxNO_BORDER</style>
                         </object>
+                        
                         <flag>wxALIGN_CENTRE</flag>
                       </object>
                       <object class="sizeritem">
                         <object class="wxStaticText" name="wxID_LABEL_TITLE">
+                          
                           <label>*XML element*</label>
+                          
                           <style>wxALIGN_CENTRE</style>
                         </object>
+                        
                         <option>1</option>
+                        
                         <flag>wxALIGN_CENTRE</flag>
                       </object>
                       <object class="sizeritem">
                         <object class="wxBitmapButton" name="wxID_BUTTON_DETACH">
+                          
                           <bitmap>../icons/misc/detach.png</bitmap>
+                          
                           <style platform="unix|win">wxNO_BORDER</style>
                         </object>
+                        
                         <flag>wxALIGN_CENTRE</flag>
                       </object>
                     </object>
-                    <style>wxTAB_TRAVERSAL|wxSIMPLE_BORDER</style>
+                    <style>wxNO_BORDER|wxTAB_TRAVERSAL</style>
                   </object>
+                  
                   <flag>wxEXPAND</flag>
                 </object>
                 <object class="sizeritem">
@@ -49,6 +60,7 @@
                         <object class="wxBoxSizer">
                           <orient>wxVERTICAL</orient>
                           <object class="spacer">
+                            
                             <size>0,5</size>
                           </object>
                           <object class="sizeritem">
@@ -61,10 +73,14 @@
                                     <orient>wxVERTICAL</orient>
                                     <object class="sizeritem">
                                       <object class="wxListBox" name="wxID_LIST_XML">
+                                        
                                         <content/>
+                                        
                                         <size>-1,100</size>
                                       </object>
+                                      
                                       <option>1</option>
+                                      
                                       <flag>wxEXPAND</flag>
                                     </object>
                                     <object class="sizeritem">
@@ -72,58 +88,85 @@
                                         <orient>wxHORIZONTAL</orient>
                                         <object class="sizeritem">
                                           <object class="wxBitmapButton" name="wxID_APPLY">
+                                            
                                             <bitmap>../icons/16x16/ok.png</bitmap>
+                                            
                                             <focused>1</focused>
+                                            
                                             <tooltip>*Apply*</tooltip>
                                           </object>
+                                          
                                           <option>1</option>
+                                          
                                           <flag>wxRIGHT|wxEXPAND|wxALIGN_CENTRE_VERTICAL</flag>
+                                          
                                           <border>4</border>
                                         </object>
                                         <object class="sizeritem">
                                           <object class="wxBitmapButton" name="wxID_REFRESH">
+                                            
                                             <bitmap>../icons/16x16/refresh.png</bitmap>
+                                            
                                             <tooltip>*ReFresh*</tooltip>
                                           </object>
+                                          
                                           <option>1</option>
+                                          
                                           <flag>wxEXPAND|wxALIGN_CENTRE_VERTICAL</flag>
                                         </object>
                                       </object>
+                                      
                                       <option>0</option>
+                                      
                                       <flag>wxTOP|wxEXPAND</flag>
+                                      
                                       <border>2</border>
                                     </object>
                                   </object>
+                                  
                                   <option>1</option>
+                                  
                                   <flag>wxALL|wxEXPAND</flag>
+                                  
                                   <border>4</border>
                                 </object>
                               </object>
                             </object>
+                            
                             <option>1</option>
+                            
                             <flag>wxEXPAND</flag>
                           </object>
                           <object class="spacer">
+                            
                             <size>0,2</size>
                           </object>
                         </object>
                         <style>wxTAB_TRAVERSAL</style>
                       </object>
+                      
                       <option>1</option>
+                      
                       <flag>wxEXPAND</flag>
                     </object>
                   </object>
+                  
                   <option>1</option>
+                  
                   <flag>wxEXPAND</flag>
                 </object>
               </object>
+              
               <option>1</option>
+              
               <flag>wxALL|wxEXPAND</flag>
             </object>
           </object>
           <style>wxTAB_TRAVERSAL</style>
         </object>
+        
         <option>1</option>
+        
         <flag>wxEXPAND</flag>
       </object>
     </object>
