@@ -12,7 +12,7 @@
  */
 
 #ifdef _WX
-  #include "wx/wx.h"
+#include "wx/wx.h"
 #endif /* _WX */
  
 #define THOT_EXPORT extern
@@ -29,8 +29,8 @@
 #include "init_f.h"
 
 #ifdef _WX
-  #include "wx/msgdlg.h"
-  #include "message_wx.h"
+#include "wx/msgdlg.h"
+#include "message_wx.h"
 #endif /* _WX */
 
 #define DOC_HISTORY_SIZE 32
@@ -43,9 +43,9 @@ typedef struct _HistElement
   char    *form_data;      /* data associated with forms */
   int      method;         /* method used to request this URL */
   int      HistPosition;   /* volume preceding the first element to be
-			      made visible in the main window */
+                              made visible in the main window */
   int      HistDistance;   /* distance from the  top of the window to the
-			      top of this element (% of the window height) */
+                              top of this element (% of the window height) */
 } HistElement;
 
 /* the history of a window */
@@ -69,12 +69,12 @@ static int          DocHistoryIndex[DocumentTableLength];
 static ThotBool     Back_Forward = FALSE;
 
 /*----------------------------------------------------------------------
-   InitDocHistory
-   Reset history for document doc
+  InitDocHistory
+  Reset history for document doc
   ----------------------------------------------------------------------*/
 void InitDocHistory (Document doc)
 {
-   DocHistoryIndex[doc] = -1;
+  DocHistoryIndex[doc] = -1;
 }
 
 /*----------------------------------------------------------------------
@@ -86,13 +86,13 @@ void FreeDocHistory ()
   for (doc = 0; doc < DocumentTableLength; doc++)
     {
       if (DocHistoryIndex[doc] > 0)
-	for (i = 0; i < DOC_HISTORY_SIZE; i++)
-	  {
-	    if (DocHistory[doc][i].HistUrl != NULL)
-	      TtaFreeMemory (DocHistory[doc][i].HistUrl);
-	    if (DocHistory[doc][i].form_data != NULL)
-	      TtaFreeMemory (DocHistory[doc][i].form_data);
-	  }
+        for (i = 0; i < DOC_HISTORY_SIZE; i++)
+          {
+            if (DocHistory[doc][i].HistUrl != NULL)
+              TtaFreeMemory (DocHistory[doc][i].HistUrl);
+            if (DocHistory[doc][i].form_data != NULL)
+              TtaFreeMemory (DocHistory[doc][i].form_data);
+          }
     }
 }
 /*----------------------------------------------------------------------
@@ -101,60 +101,60 @@ void FreeDocHistory ()
   ----------------------------------------------------------------------*/
 Element ElementAtPosition (Document doc, int pos)
 {
-   Element	el, result, child, next;
-   int		sum, vol;
-   ThotBool	stop;
+  Element	el, result, child, next;
+  int		sum, vol;
+  ThotBool	stop;
 
-   sum = 0;
-   result = NULL;
-   el = TtaGetMainRoot (doc);
-   while (el != NULL && !result)
-      {
+  sum = 0;
+  result = NULL;
+  el = TtaGetMainRoot (doc);
+  while (el != NULL && !result)
+    {
       if (sum >= pos)
-	result = el;
+        result = el;
       else
-	{
-        child = TtaGetFirstChild (el);
-	if (child == NULL)
-	   result = el;
-	else
-	   {
-	   el = child;
-	   stop = FALSE;
-	   do
-	     {
-	     vol = TtaGetElementVolume (el);
-	     if (sum + vol <= pos)
-	        {
-		next = el;
-	        TtaNextSibling (&next);
-		if (next == NULL)
-		  stop = TRUE;
-		else
-		  {
-		  el = next;
-	          sum += vol;
-		  }
-	        }
-	     else
-	        stop = TRUE;
-	     }
-           while (el != NULL && !stop);
-	  }
+        {
+          child = TtaGetFirstChild (el);
+          if (child == NULL)
+            result = el;
+          else
+            {
+              el = child;
+              stop = FALSE;
+              do
+                {
+                  vol = TtaGetElementVolume (el);
+                  if (sum + vol <= pos)
+                    {
+                      next = el;
+                      TtaNextSibling (&next);
+                      if (next == NULL)
+                        stop = TRUE;
+                      else
+                        {
+                          el = next;
+                          sum += vol;
+                        }
+                    }
+                  else
+                    stop = TRUE;
+                }
+              while (el != NULL && !stop);
+            }
         }
-      }
-   if (result)
-      /* return the first leaf in the element found */
-      {
+    }
+  if (result)
+    /* return the first leaf in the element found */
+    {
       do
-	{
-	child = TtaGetFirstChild (result);
-	if (child != NULL)
-	   result = child;
-	}
+        {
+          child = TtaGetFirstChild (result);
+          if (child != NULL)
+            result = child;
+        }
       while (child != NULL);
-      }
-   return result;
+    }
+  return result;
 }
 
 /*----------------------------------------------------------------------
@@ -164,25 +164,25 @@ Element ElementAtPosition (Document doc, int pos)
   ----------------------------------------------------------------------*/
 int RelativePosition (Document doc, int *distance)
 {
-   int		sum;
-   Element	el, sibling, ancestor;
+  int		sum;
+  Element	el, sibling, ancestor;
 
-   sum = 0;
-   el = TtaGetFirstElementShown (doc, 1, distance);
-   ancestor = el;
-   while (ancestor != NULL)
-      {
+  sum = 0;
+  el = TtaGetFirstElementShown (doc, 1, distance);
+  ancestor = el;
+  while (ancestor != NULL)
+    {
       sibling = ancestor;
       do
-	 {
-         TtaPreviousSibling (&sibling);
-	 if (sibling != NULL)
-	    sum += TtaGetElementVolume (sibling);
-	 }
+        {
+          TtaPreviousSibling (&sibling);
+          if (sibling != NULL)
+            sum += TtaGetElementVolume (sibling);
+        }
       while (sibling != NULL);
       ancestor = TtaGetParent (ancestor);
-      }
-   return sum;
+    }
+  return sum;
 }
 
 /*----------------------------------------------------------------------
@@ -191,7 +191,7 @@ int RelativePosition (Document doc, int *distance)
   being displayed in another window. 
   ----------------------------------------------------------------------*/
 static ThotBool IsNextDocLoaded (const Document baseDoc, const char *url,
-				 const char *form_data, const ClickEvent CE_event)
+                                 const char *form_data, const ClickEvent CE_event)
 {
   char              *tempdocument;
   char              *target;
@@ -221,23 +221,23 @@ static ThotBool IsNextDocLoaded (const Document baseDoc, const char *url,
   else
     NormalizeURL (tempdocument, 0, pathname, documentname, NULL);
 
-   /* check if the user is already browsing the document in another window */
-   if (CE_event == CE_FORM_GET || CE_event == CE_FORM_POST)
-     {
-       loaded = IsDocumentLoaded (pathname, (char *) form_data);
-       /* we don't concatenate the new parameters as we give preference
-	  to the form data */
-     }
-   else
-     {
-       /* concatenate the parameters before making the test */
-       if (parameters[0] != EOS)
-	 {
-	   strcat (pathname, "?");
-	   strcat (pathname, parameters);
-	 }
-       loaded = IsDocumentLoaded (pathname, NULL);
-     }
+  /* check if the user is already browsing the document in another window */
+  if (CE_event == CE_FORM_GET || CE_event == CE_FORM_POST)
+    {
+      loaded = IsDocumentLoaded (pathname, (char *) form_data);
+      /* we don't concatenate the new parameters as we give preference
+         to the form data */
+    }
+  else
+    {
+      /* concatenate the parameters before making the test */
+      if (parameters[0] != EOS)
+        {
+          strcat (pathname, "?");
+          strcat (pathname, parameters);
+        }
+      loaded = IsDocumentLoaded (pathname, NULL);
+    }
 
   TtaFreeMemory (pathname);
   TtaFreeMemory (tempdocument);
@@ -249,8 +249,8 @@ static ThotBool IsNextDocLoaded (const Document baseDoc, const char *url,
 }
 
 /*----------------------------------------------------------------------
-   HasPreviousDoc
-   This function returns TRUE if there is a previous document
+  HasPreviousDoc
+  This function returns TRUE if there is a previous document
   ----------------------------------------------------------------------*/
 ThotBool HasPreviousDoc (Document doc)
 {
@@ -270,8 +270,8 @@ ThotBool HasPreviousDoc (Document doc)
 }
 
 /*----------------------------------------------------------------------
-   HasNextDoc
-   This function returns TRUE if there is a next document
+  HasNextDoc
+  This function returns TRUE if there is a next document
   ----------------------------------------------------------------------*/
 ThotBool HasNextDoc (Document doc)
 {
@@ -288,12 +288,12 @@ ThotBool HasNextDoc (Document doc)
 }
 
 /*----------------------------------------------------------------------
-   GotoPreviousHTML_callback
-   This function is called when the document is loaded
+  GotoPreviousHTML_callback
+  This function is called when the document is loaded
   ----------------------------------------------------------------------*/
 void GotoPreviousHTML_callback (int newdoc, int status, char *urlName,
-				char *outputfile, AHTHeaders *http_headers,
-				void * context)
+                                char *outputfile, AHTHeaders *http_headers,
+                                void * context)
 {
   Document             doc;
   Element	       el;
@@ -318,7 +318,7 @@ void GotoPreviousHTML_callback (int newdoc, int status, char *urlName,
 
       /* set the Forward button on if it was the last document in the history */
       if (ctx->last)
-	SetArrowButton (doc, FALSE, TRUE);
+        SetArrowButton (doc, FALSE, TRUE);
     }
   if (!DocumentMeta[doc]->initial_url)
     DocumentMeta[doc]->initial_url = ctx->initial_url;
@@ -330,8 +330,8 @@ void GotoPreviousHTML_callback (int newdoc, int status, char *urlName,
 }
 
 /*----------------------------------------------------------------------
-   GotoPreviousHTML
-   This function is called when the user presses the Previous button
+  GotoPreviousHTML
+  This function is called when the user presses the Previous button
   ----------------------------------------------------------------------*/
 void GotoPreviousHTML (Document doc, View view)
 {
@@ -386,7 +386,7 @@ void GotoPreviousHTML (Document doc, View view)
   if (!form_data && (!DocumentMeta[doc]  || !DocumentMeta[doc]->form_data))
     same_form_data = TRUE;
   else if (form_data && DocumentMeta[doc] && DocumentMeta[doc]->form_data 
-	   && (!strcmp (form_data, DocumentMeta[doc]->form_data)))
+           && (!strcmp (form_data, DocumentMeta[doc]->form_data)))
     same_form_data = TRUE;
   else
     same_form_data = FALSE;
@@ -399,52 +399,52 @@ void GotoPreviousHTML (Document doc, View view)
       /* is the next document already loaded? */
       next_doc_loaded = IsNextDocLoaded (doc, url, form_data, (ClickEvent)method);
       if (!next_doc_loaded && !CanReplaceCurrentDocument (doc, view))
-	{
-	  /* out of the critic section */
-	  Back_Forward = FALSE;
-	  return;
-	}
+        {
+          /* out of the critic section */
+          Back_Forward = FALSE;
+          return;
+        }
     }
 
   if (!next_doc_loaded)
     {
       /* the current document must be put in the history if it's the last
-	 one */
+         one */
       if (DocHistory[doc][DocHistoryIndex[doc]].HistUrl == NULL)
-	{
-	  if ((DocumentURLs[doc] &&
-	       !IsW3Path (DocumentURLs[doc]) &&
-	       !TtaFileExist (DocumentURLs[doc])) ||
-	      (DocumentURLs[doc] == NULL))
-	    {
-	      /* cannot store the current document in the history */
-	      last = FALSE;
-	      hist = FALSE;
-	    }
-	  else
-	    {
-	      last = TRUE;
-	      hist = TRUE;
-	    }
-	}
+        {
+          if ((DocumentURLs[doc] &&
+               !IsW3Path (DocumentURLs[doc]) &&
+               !TtaFileExist (DocumentURLs[doc])) ||
+              (DocumentURLs[doc] == NULL))
+            {
+              /* cannot store the current document in the history */
+              last = FALSE;
+              hist = FALSE;
+            }
+          else
+            {
+              last = TRUE;
+              hist = TRUE;
+            }
+        }
       else
-	{
-	  i = DocHistoryIndex[doc];
-	  i++;
-	  i %= DOC_HISTORY_SIZE;
-	  if (DocHistory[doc][i].HistUrl == NULL)
-	    last = TRUE;
-	}
+        {
+          i = DocHistoryIndex[doc];
+          i++;
+          i %= DOC_HISTORY_SIZE;
+          if (DocHistory[doc][i].HistUrl == NULL)
+            last = TRUE;
+        }
       
       /* set the Back button off if there is no previous document in history */
       i = prev;
       if (i ==  0)
-	i = DOC_HISTORY_SIZE - 1;
+        i = DOC_HISTORY_SIZE - 1;
       else
-	i--;
+        i--;
       if (DocHistory[doc][i].HistUrl == NULL)
-	/* there is no previous document, set the Back button OFF */
-	SetArrowButton (doc, TRUE, FALSE);
+        /* there is no previous document, set the Back button OFF */
+        SetArrowButton (doc, TRUE, FALSE);
     }
 
   /* save the context */
@@ -461,9 +461,9 @@ void GotoPreviousHTML (Document doc, View view)
   if (!next_doc_loaded)
     {
       if (hist)
-	/* record the current position in the history */
-	AddDocHistory (doc, DocumentURLs[doc], DocumentMeta[doc]->initial_url,
-		       DocumentMeta[doc]->form_data, DocumentMeta[doc]->method);
+        /* record the current position in the history */
+        AddDocHistory (doc, DocumentURLs[doc], DocumentMeta[doc]->initial_url,
+                       DocumentMeta[doc]->form_data, DocumentMeta[doc]->method);
       
       DocHistoryIndex[doc] = prev;
     }
@@ -476,20 +476,20 @@ void GotoPreviousHTML (Document doc, View view)
     {
       StopTransfer (doc, 1);
       GetAmayaDoc (url, form_data, doc, doc, (ClickEvent)method, FALSE,
-		   (void (*)(int, int, char*, char*, const AHTHeaders*, void*))
-		   GotoPreviousHTML_callback,(void *) ctx);
+                   (void (*)(int, int, char*, char*, const AHTHeaders*, void*))
+                   GotoPreviousHTML_callback,(void *) ctx);
       /* out of the critic section */
       Back_Forward = FALSE;
     }
 }
 
 /*----------------------------------------------------------------------
-   GotoNextHTML_callback
-   This function is called when the document is loaded
+  GotoNextHTML_callback
+  This function is called when the document is loaded
   ----------------------------------------------------------------------*/
 void GotoNextHTML_callback (int newdoc, int status, char *urlName,
-			    char *outputfile, AHTHeaders *http_headers,
-			    void * context)
+                            char *outputfile, AHTHeaders *http_headers,
+                            void * context)
 {
   Element	       el;
   Document             doc;
@@ -524,8 +524,8 @@ void GotoNextHTML_callback (int newdoc, int status, char *urlName,
 }
 
 /*----------------------------------------------------------------------
-   GotoNextHTML
-   This function is called when the user presses the Next button
+  GotoNextHTML
+  This function is called when the user presses the Next button
   ----------------------------------------------------------------------*/
 void GotoNextHTML (Document doc, View view)
 {
@@ -576,7 +576,7 @@ void GotoNextHTML (Document doc, View view)
   if (!form_data && (!DocumentMeta[doc] || !DocumentMeta[doc]->form_data))
     same_form_data = TRUE;
   else if (form_data && DocumentMeta[doc] && DocumentMeta[doc]->form_data 
-	   && (!strcmp (form_data, DocumentMeta[doc]->form_data)))
+           && (!strcmp (form_data, DocumentMeta[doc]->form_data)))
     same_form_data = TRUE;
   else
     same_form_data = FALSE;
@@ -590,11 +590,11 @@ void GotoNextHTML (Document doc, View view)
       /* is the next document already loaded? */
       next_doc_loaded = IsNextDocLoaded (doc, url, form_data, (ClickEvent)method);
       if (!CanReplaceCurrentDocument (doc, view))
-	{
-	  /* out of the critic section */
-	  Back_Forward = FALSE;
-	  return;
-	}
+        {
+          /* out of the critic section */
+          Back_Forward = FALSE;
+          return;
+        }
     }
 
   if (!next_doc_loaded)
@@ -602,22 +602,22 @@ void GotoNextHTML (Document doc, View view)
       /* set the Back button on if it's off */
       i = DocHistoryIndex[doc];
       if (i ==  0)
-	i = DOC_HISTORY_SIZE - 1;
+        i = DOC_HISTORY_SIZE - 1;
       else
-	i--;
+        i--;
       if (DocHistory[doc][i].HistUrl == NULL)
-	/* there is no document before the current one. The Back button is
-	   normally OFF */
-	/* set the Back button ON */
-	SetArrowButton (doc, TRUE, TRUE);
+        /* there is no document before the current one. The Back button is
+           normally OFF */
+        /* set the Back button ON */
+        SetArrowButton (doc, TRUE, TRUE);
 
       /* set the Forward button off if the next document is the last one
-	 in the history */
+         in the history */
       i = next;
       i++;
       i %= DOC_HISTORY_SIZE;
       if (DocHistory[doc][i].HistUrl == NULL)
-	SetArrowButton (doc, FALSE, FALSE);
+        SetArrowButton (doc, FALSE, FALSE);
     }
    
   /*
@@ -641,255 +641,255 @@ void GotoNextHTML (Document doc, View view)
     {
       StopTransfer (doc, 1);
       GetAmayaDoc (url, form_data, doc, doc, (ClickEvent)method, FALSE,
-		   (void (*)(int, int, char*, char*, const AHTHeaders*, void*)) GotoNextHTML_callback, (void *) ctx);
+                   (void (*)(int, int, char*, char*, const AHTHeaders*, void*)) GotoNextHTML_callback, (void *) ctx);
       /* out of the critic section */
       Back_Forward = FALSE;
     }
 }
 
 /*----------------------------------------------------------------------
-   AddDocHistory
-   Add a new URL in the history associated with the window of document doc.
+  AddDocHistory
+  Add a new URL in the history associated with the window of document doc.
   ----------------------------------------------------------------------*/
 void AddDocHistory (Document doc, char *url, char *initial_url,
-		    char *form_data, ClickEvent method)
+                    char *form_data, ClickEvent method)
 {
-   int                 i, position, distance;
+  int                 i, position, distance;
 
-   if (!url || *url == EOS)
-      return;
-   /* avoid storing POST forms */
-   if (method == CE_FORM_POST)
-     return;
-   /* don't register a new document not saved */
-   if (!IsW3Path (url) && !TtaFileExist (url))
-     return;
-   else if (method == CE_RELATIVE || method == CE_HELP)
-     /* All registered URLs are absolute */
-     method = CE_ABSOLUTE;
+  if (!url || *url == EOS)
+    return;
+  /* avoid storing POST forms */
+  if (method == CE_FORM_POST)
+    return;
+  /* don't register a new document not saved */
+  if (!IsW3Path (url) && !TtaFileExist (url))
+    return;
+  else if (method == CE_RELATIVE || method == CE_HELP)
+    /* All registered URLs are absolute */
+    method = CE_ABSOLUTE;
 
-   /* initialize the history if it has not been done yet */
-   if (DocHistoryIndex[doc] < 0 || DocHistoryIndex[doc] >= DOC_HISTORY_SIZE)
-     {
-	for (i = 0; i < DOC_HISTORY_SIZE; i++)
-	  {
-	    DocHistory[doc][i].HistUrl = NULL;
-	    DocHistory[doc][i].form_data = NULL;
-	  }
-	DocHistoryIndex[doc] = 0;
-     }
+  /* initialize the history if it has not been done yet */
+  if (DocHistoryIndex[doc] < 0 || DocHistoryIndex[doc] >= DOC_HISTORY_SIZE)
+    {
+      for (i = 0; i < DOC_HISTORY_SIZE; i++)
+        {
+          DocHistory[doc][i].HistUrl = NULL;
+          DocHistory[doc][i].form_data = NULL;
+        }
+      DocHistoryIndex[doc] = 0;
+    }
 
-   /* set the Back button on if necessary */
-   i = DocHistoryIndex[doc];
-   if (i ==  0)
-      i = DOC_HISTORY_SIZE - 1;
-   else
-      i--;
-   if (DocHistory[doc][i].HistUrl == NULL)
-      /* there is no document before in the history */
-      /* The Back button is normally OFF set it ON */
-      SetArrowButton (doc, TRUE, TRUE);
+  /* set the Back button on if necessary */
+  i = DocHistoryIndex[doc];
+  if (i ==  0)
+    i = DOC_HISTORY_SIZE - 1;
+  else
+    i--;
+  if (DocHistory[doc][i].HistUrl == NULL)
+    /* there is no document before in the history */
+    /* The Back button is normally OFF set it ON */
+    SetArrowButton (doc, TRUE, TRUE);
      
-   /* store the URL and the associated form data */
-   if (DocHistory[doc][DocHistoryIndex[doc]].HistUrl)
-     TtaFreeMemory (DocHistory[doc][DocHistoryIndex[doc]].HistUrl);
-   if (DocHistory[doc][DocHistoryIndex[doc]].HistInitialUrl)
-     TtaFreeMemory (DocHistory[doc][DocHistoryIndex[doc]].HistInitialUrl);
-   if (DocHistory[doc][DocHistoryIndex[doc]].form_data)
-     TtaFreeMemory (DocHistory[doc][DocHistoryIndex[doc]].form_data);
+  /* store the URL and the associated form data */
+  if (DocHistory[doc][DocHistoryIndex[doc]].HistUrl)
+    TtaFreeMemory (DocHistory[doc][DocHistoryIndex[doc]].HistUrl);
+  if (DocHistory[doc][DocHistoryIndex[doc]].HistInitialUrl)
+    TtaFreeMemory (DocHistory[doc][DocHistoryIndex[doc]].HistInitialUrl);
+  if (DocHistory[doc][DocHistoryIndex[doc]].form_data)
+    TtaFreeMemory (DocHistory[doc][DocHistoryIndex[doc]].form_data);
    
-   DocHistory[doc][DocHistoryIndex[doc]].HistUrl = TtaStrdup (url);
-   DocHistory[doc][DocHistoryIndex[doc]].HistInitialUrl = TtaStrdup (initial_url);
-   DocHistory[doc][DocHistoryIndex[doc]].form_data = TtaStrdup (form_data);
-   DocHistory[doc][DocHistoryIndex[doc]].method = method;
+  DocHistory[doc][DocHistoryIndex[doc]].HistUrl = TtaStrdup (url);
+  DocHistory[doc][DocHistoryIndex[doc]].HistInitialUrl = TtaStrdup (initial_url);
+  DocHistory[doc][DocHistoryIndex[doc]].form_data = TtaStrdup (form_data);
+  DocHistory[doc][DocHistoryIndex[doc]].method = method;
 
-   position = RelativePosition (doc, &distance);
-   DocHistory[doc][DocHistoryIndex[doc]].HistDistance = distance;
-   DocHistory[doc][DocHistoryIndex[doc]].HistPosition = position;
+  position = RelativePosition (doc, &distance);
+  DocHistory[doc][DocHistoryIndex[doc]].HistDistance = distance;
+  DocHistory[doc][DocHistoryIndex[doc]].HistPosition = position;
 
-   DocHistoryIndex[doc]++;
-   DocHistoryIndex[doc] %= DOC_HISTORY_SIZE; 
+  DocHistoryIndex[doc]++;
+  DocHistoryIndex[doc] %= DOC_HISTORY_SIZE; 
 
-   /* delete the next entry in the history */
-   if (DocHistory[doc][DocHistoryIndex[doc]].HistUrl)
-       TtaFreeMemory (DocHistory[doc][DocHistoryIndex[doc]].HistUrl);
-   if (DocHistory[doc][DocHistoryIndex[doc]].HistInitialUrl)
-       TtaFreeMemory (DocHistory[doc][DocHistoryIndex[doc]].HistInitialUrl);
+  /* delete the next entry in the history */
+  if (DocHistory[doc][DocHistoryIndex[doc]].HistUrl)
+    TtaFreeMemory (DocHistory[doc][DocHistoryIndex[doc]].HistUrl);
+  if (DocHistory[doc][DocHistoryIndex[doc]].HistInitialUrl)
+    TtaFreeMemory (DocHistory[doc][DocHistoryIndex[doc]].HistInitialUrl);
 
-   if (DocHistory[doc][DocHistoryIndex[doc]].form_data)
-       TtaFreeMemory (DocHistory[doc][DocHistoryIndex[doc]].form_data);
+  if (DocHistory[doc][DocHistoryIndex[doc]].form_data)
+    TtaFreeMemory (DocHistory[doc][DocHistoryIndex[doc]].form_data);
 
-   DocHistory[doc][DocHistoryIndex[doc]].HistUrl = NULL;
-   DocHistory[doc][DocHistoryIndex[doc]].HistInitialUrl = NULL;
-   DocHistory[doc][DocHistoryIndex[doc]].form_data = NULL;
-   DocHistory[doc][DocHistoryIndex[doc]].method = CE_ABSOLUTE;
+  DocHistory[doc][DocHistoryIndex[doc]].HistUrl = NULL;
+  DocHistory[doc][DocHistoryIndex[doc]].HistInitialUrl = NULL;
+  DocHistory[doc][DocHistoryIndex[doc]].form_data = NULL;
+  DocHistory[doc][DocHistoryIndex[doc]].method = CE_ABSOLUTE;
 
-   /* set the Forward button off */
-   SetArrowButton (doc, FALSE, FALSE);
+  /* set the Forward button off */
+  SetArrowButton (doc, FALSE, FALSE);
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void HelpAmaya (Document document, View view)
 {
-   char                  localname[MAX_LENGTH];
+  char                  localname[MAX_LENGTH];
 #ifdef AMAYA_CRASH
-   /* force amaya to crash : activate AMAYA_CRASH flag only for debug */
-   memset(0,0,10);
+  /* force amaya to crash : activate AMAYA_CRASH flag only for debug */
+  memset(0,0,10);
 #endif /* AMAYA_CRASH */
 #ifdef AMAYA_DEBUG
-   Element             el;
-   View                structView, altView, linksView, tocView;
-   int                 n;
-   FILE               *list;
+  Element             el;
+  View                structView, altView, linksView, tocView;
+  int                 n;
+  FILE               *list;
 
   /* get the root element */
-   strcpy (localname, TempFileDirectory);
-   strcat (localname, DIR_STR);
-   strcat (localname, "tree.debug");
-   list = TtaWriteOpen (localname);
-   el = TtaGetMainRoot (document);
-   TtaListAbstractTree (el, list);
-   TtaWriteClose (list);
-   strcpy (localname, TempFileDirectory);
-   strcat (localname, DIR_STR);
-   strcat (localname, "view.debug");
-   list = TtaWriteOpen (localname);
-   TtaListView (document, 1, list);
-   TtaWriteClose (list);
-   strcpy (localname, TempFileDirectory);
-   strcat (localname, DIR_STR);
-   strcat (localname, "boxes.debug");
-   list = TtaWriteOpen (localname);
-   TtaListBoxes (document, 1, list);
-   TtaWriteClose (list);
-   structView = TtaGetViewFromName (document, "Structure_view");
-   if (structView != 0 && TtaIsViewOpen (document, structView))
-     {
-       strcpy (localname, TempFileDirectory);
-       strcat (localname, DIR_STR);
-       strcat (localname, "structview.debug");
-       list = TtaWriteOpen (localname);
-       TtaListView (document, structView, list);
-       TtaWriteClose (list);
-       strcpy (localname, TempFileDirectory);
-       strcat (localname, DIR_STR);
-       strcat (localname, "structboxes.debug");
-       list = TtaWriteOpen (localname);
-       TtaListBoxes (document, structView, list);
-       TtaWriteClose (list);
-     }
-   altView = TtaGetViewFromName (document, "Alternate_view");
-   if (altView != 0 && TtaIsViewOpen (document, altView))
-     {
-       strcpy (localname, TempFileDirectory);
-       strcat (localname, DIR_STR);
-       strcat (localname, "altview.debug");
-       list = TtaWriteOpen (localname);
-       TtaListView (document, altView, list);
-       TtaWriteClose (list);
-       strcpy (localname, TempFileDirectory);
-       strcat (localname, DIR_STR);
-       strcat (localname, "altboxes.debug");
-       list = TtaWriteOpen (localname);
-       TtaListBoxes (document, altView, list);
-       TtaWriteClose (list);
-     }
-   linksView = TtaGetViewFromName (document, "Links_view");
-   if (linksView != 0 && TtaIsViewOpen (document, linksView))
-     {
-       strcpy (localname, TempFileDirectory);
-       strcat (localname, DIR_STR);
-       strcat (localname, "linksview.debug");
-       list = TtaWriteOpen (localname);
-       TtaListView (document, linksView, list);
-       TtaWriteClose (list);
-       strcpy (localname, TempFileDirectory);
-       strcat (localname, DIR_STR);
-       strcat (localname, "linksboxes.debug");
-       list = TtaWriteOpen (localname);
-       TtaListBoxes (document, linksView, list);
-       TtaWriteClose (list);
-     }
-   tocView = TtaGetViewFromName (document, "Table_of_contents");
-   if (tocView != 0 && TtaIsViewOpen (document, tocView))
-     {
-       strcpy (localname, TempFileDirectory);
-       strcat (localname, DIR_STR);
-       strcat (localname, "tocview.debug");
-       list = TtaWriteOpen (localname);
-       TtaListView (document, tocView, list);
-       TtaWriteClose (list);
-       strcpy (localname, TempFileDirectory);
-       strcat (localname, DIR_STR);
-       strcat (localname, "tocboxes.debug");
-       list = TtaWriteOpen (localname);
-       TtaListBoxes (document, tocView, list);
-       TtaWriteClose (list);
-     }
-   /* list now CSS rules */
-   strcpy (localname, TempFileDirectory);
-   strcat (localname, DIR_STR);
-   strcat (localname, "style.debug");
-   list = TtaWriteOpen (localname);
-   TtaListStyleSchemas (document, list);
-   TtaWriteClose (list);
-   /* list CSS rules applied to the current selection */
-   strcpy (localname, TempFileDirectory);
-   strcat (localname, DIR_STR);
-   strcat (localname, "style_element.debug");
-   list = TtaWriteOpen (localname);
-   n = TtaListStyleOfCurrentElement (document, list);
-   if (n == 0)
-     {
-       fprintf (list, TtaGetMessage (AMAYA, AM_NO_STYLE_FOR_ELEM));
-       fprintf (list, "\n");
-     }
-   TtaWriteClose (list);
-   /* list now shortcuts */
-   strcpy (localname, TempFileDirectory);
-   strcat (localname, DIR_STR);
-   strcat (localname, "shortcuts.debug");
-   list = TtaWriteOpen (localname);
-   TtaListShortcuts (document, list);
-   TtaWriteClose (list);
+  strcpy (localname, TempFileDirectory);
+  strcat (localname, DIR_STR);
+  strcat (localname, "tree.debug");
+  list = TtaWriteOpen (localname);
+  el = TtaGetMainRoot (document);
+  TtaListAbstractTree (el, list);
+  TtaWriteClose (list);
+  strcpy (localname, TempFileDirectory);
+  strcat (localname, DIR_STR);
+  strcat (localname, "view.debug");
+  list = TtaWriteOpen (localname);
+  TtaListView (document, 1, list);
+  TtaWriteClose (list);
+  strcpy (localname, TempFileDirectory);
+  strcat (localname, DIR_STR);
+  strcat (localname, "boxes.debug");
+  list = TtaWriteOpen (localname);
+  TtaListBoxes (document, 1, list);
+  TtaWriteClose (list);
+  structView = TtaGetViewFromName (document, "Structure_view");
+  if (structView != 0 && TtaIsViewOpen (document, structView))
+    {
+      strcpy (localname, TempFileDirectory);
+      strcat (localname, DIR_STR);
+      strcat (localname, "structview.debug");
+      list = TtaWriteOpen (localname);
+      TtaListView (document, structView, list);
+      TtaWriteClose (list);
+      strcpy (localname, TempFileDirectory);
+      strcat (localname, DIR_STR);
+      strcat (localname, "structboxes.debug");
+      list = TtaWriteOpen (localname);
+      TtaListBoxes (document, structView, list);
+      TtaWriteClose (list);
+    }
+  altView = TtaGetViewFromName (document, "Alternate_view");
+  if (altView != 0 && TtaIsViewOpen (document, altView))
+    {
+      strcpy (localname, TempFileDirectory);
+      strcat (localname, DIR_STR);
+      strcat (localname, "altview.debug");
+      list = TtaWriteOpen (localname);
+      TtaListView (document, altView, list);
+      TtaWriteClose (list);
+      strcpy (localname, TempFileDirectory);
+      strcat (localname, DIR_STR);
+      strcat (localname, "altboxes.debug");
+      list = TtaWriteOpen (localname);
+      TtaListBoxes (document, altView, list);
+      TtaWriteClose (list);
+    }
+  linksView = TtaGetViewFromName (document, "Links_view");
+  if (linksView != 0 && TtaIsViewOpen (document, linksView))
+    {
+      strcpy (localname, TempFileDirectory);
+      strcat (localname, DIR_STR);
+      strcat (localname, "linksview.debug");
+      list = TtaWriteOpen (localname);
+      TtaListView (document, linksView, list);
+      TtaWriteClose (list);
+      strcpy (localname, TempFileDirectory);
+      strcat (localname, DIR_STR);
+      strcat (localname, "linksboxes.debug");
+      list = TtaWriteOpen (localname);
+      TtaListBoxes (document, linksView, list);
+      TtaWriteClose (list);
+    }
+  tocView = TtaGetViewFromName (document, "Table_of_contents");
+  if (tocView != 0 && TtaIsViewOpen (document, tocView))
+    {
+      strcpy (localname, TempFileDirectory);
+      strcat (localname, DIR_STR);
+      strcat (localname, "tocview.debug");
+      list = TtaWriteOpen (localname);
+      TtaListView (document, tocView, list);
+      TtaWriteClose (list);
+      strcpy (localname, TempFileDirectory);
+      strcat (localname, DIR_STR);
+      strcat (localname, "tocboxes.debug");
+      list = TtaWriteOpen (localname);
+      TtaListBoxes (document, tocView, list);
+      TtaWriteClose (list);
+    }
+  /* list now CSS rules */
+  strcpy (localname, TempFileDirectory);
+  strcat (localname, DIR_STR);
+  strcat (localname, "style.debug");
+  list = TtaWriteOpen (localname);
+  TtaListStyleSchemas (document, list);
+  TtaWriteClose (list);
+  /* list CSS rules applied to the current selection */
+  strcpy (localname, TempFileDirectory);
+  strcat (localname, DIR_STR);
+  strcat (localname, "style_element.debug");
+  list = TtaWriteOpen (localname);
+  n = TtaListStyleOfCurrentElement (document, list);
+  if (n == 0)
+    {
+      fprintf (list, TtaGetMessage (AMAYA, AM_NO_STYLE_FOR_ELEM));
+      fprintf (list, "\n");
+    }
+  TtaWriteClose (list);
+  /* list now shortcuts */
+  strcpy (localname, TempFileDirectory);
+  strcat (localname, DIR_STR);
+  strcat (localname, "shortcuts.debug");
+  list = TtaWriteOpen (localname);
+  TtaListShortcuts (document, list);
+  TtaWriteClose (list);
 #endif /* AMAYA_DEBUG */
 
 #if defined(_GTK)
-   TtaNewDialogSheet (BaseDialog + AboutForm, TtaGetViewFrame (document, view),
-		      (char *)TtaGetAppName(), 1, TtaGetMessage(LIB, TMSG_LIB_CONFIRM), TRUE, 1,'L');
+  TtaNewDialogSheet (BaseDialog + AboutForm, TtaGetViewFrame (document, view),
+                     (char *)TtaGetAppName(), 1, TtaGetMessage(LIB, TMSG_LIB_CONFIRM), TRUE, 1,'L');
 #endif  /* #if defined(_GTK) */
    
-   strcpy (localname, TtaGetAppName());
-   strcat (localname, " - ");
-   strcat (localname, TtaGetAppVersion());
-   strcat (localname, "     ");
-   strcat (localname, TtaGetAppDate());
+  strcpy (localname, TtaGetAppName());
+  strcat (localname, " - ");
+  strcat (localname, TtaGetAppVersion());
+  strcat (localname, "     ");
+  strcat (localname, TtaGetAppDate());
    
 #if defined(_GTK)
-   TtaNewLabel(BaseDialog + Version, BaseDialog + AboutForm, localname);
-   TtaNewLabel(BaseDialog + About1, BaseDialog + AboutForm,
-	       TtaGetMessage(AMAYA, AM_ABOUT1));
-   TtaNewLabel(BaseDialog + About2, BaseDialog + AboutForm,
-	       TtaGetMessage(AMAYA, AM_ABOUT2));
-   TtaShowDialogue (BaseDialog + AboutForm, FALSE);
+  TtaNewLabel(BaseDialog + Version, BaseDialog + AboutForm, localname);
+  TtaNewLabel(BaseDialog + About1, BaseDialog + AboutForm,
+              TtaGetMessage(AMAYA, AM_ABOUT1));
+  TtaNewLabel(BaseDialog + About2, BaseDialog + AboutForm,
+              TtaGetMessage(AMAYA, AM_ABOUT2));
+  TtaShowDialogue (BaseDialog + AboutForm, FALSE);
 #endif /* #if defined(_GTK) */
 
 #ifdef _WINGUI
-   CreateHelpDlgWindow (TtaGetViewFrame (document, view), localname,
-			TtaGetMessage(AMAYA, AM_ABOUT1),
-			TtaGetMessage(AMAYA, AM_ABOUT2));
+  CreateHelpDlgWindow (TtaGetViewFrame (document, view), localname,
+                       TtaGetMessage(AMAYA, AM_ABOUT1),
+                       TtaGetMessage(AMAYA, AM_ABOUT2));
 #endif /* _WINGUI */
 
 #ifdef _WX
-   wxMessageDialog dlg( TtaGetViewFrame(document,view),
-			TtaConvMessageToWX(localname)+_T("\n")+
-			TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_ABOUT1))+_T("\n")+
-			TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_ABOUT2)),
-			_T(""), /* dialog title */
-			wxOK | wxICON_INFORMATION | wxSTAY_ON_TOP,
-			wxDefaultPosition );
-   dlg.ShowModal();
+  wxMessageDialog dlg( TtaGetViewFrame(document,view),
+                       TtaConvMessageToWX(localname)+_T("\n")+
+                       TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_ABOUT1))+_T("\n")+
+                       TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_ABOUT2)),
+                       _T(""), /* dialog title */
+                       wxOK | wxICON_INFORMATION | wxSTAY_ON_TOP,
+                       wxDefaultPosition );
+  dlg.ShowModal();
 #endif /* _WX */
 }
 
@@ -912,7 +912,7 @@ void HelpAtW3C (Document document, View view)
                           FALSE, NULL, NULL);
 #else /* _WX */
   document = GetAmayaDoc (localname, NULL, 0, 0, (ClickEvent)CE_HELP,
-			  FALSE, NULL, NULL);
+                          FALSE, NULL, NULL);
 #endif /* _WX */
   InitDocHistory (document);
 }
@@ -933,23 +933,23 @@ void HelpLocal (Document doc, View view)
       /* get the welcome in the current language */
       sprintf (localname, "%s%camaya%c%s.%s", s, DIR_SEP, DIR_SEP,AMAYA_PAGE, lang);
       if (!TtaFileExist (localname))
-	/* get the standard english documentation */
-	sprintf (localname, "%s%camaya%c%s", s, DIR_SEP, DIR_SEP, AMAYA_PAGE);
+        /* get the standard english documentation */
+        sprintf (localname, "%s%camaya%c%s", s, DIR_SEP, DIR_SEP, AMAYA_PAGE);
     }
 #ifdef _WX
   LoadDefaultOpeningLocation (TRUE); // in new frame
   document = GetAmayaDoc (localname, NULL, doc, doc, (ClickEvent)CE_HELP,
-			  FALSE, NULL, NULL);
+                          FALSE, NULL, NULL);
 #else /* _WX */
   document = GetAmayaDoc (localname, NULL, 0, 0, (ClickEvent)CE_HELP,
-			  FALSE, NULL, NULL);
+                          FALSE, NULL, NULL);
 #endif /* _WX */
   InitDocHistory (document);
 }
 
 
 /*----------------------------------------------------------------------
- -----------------------------------------------------------------------*/
+  -----------------------------------------------------------------------*/
 static void DisplayHelp (int doc, int index)
 {
   Document    document;
@@ -969,20 +969,20 @@ static void DisplayHelp (int doc, int index)
     {
       /* get the documentation in the current language */
       sprintf (localname, "%s%cdoc%c%s%c%s.%s", s, DIR_SEP, DIR_SEP,
-		helpdir, DIR_SEP, Manual[index], lang);
+               helpdir, DIR_SEP, Manual[index], lang);
 
       if (!TtaFileExist (localname))
-      /* get the standard english documentation */
-	sprintf (localname, "%s%cdoc%c%s%c%s", s, DIR_SEP, DIR_SEP,
-		  helpdir, DIR_SEP, Manual[index]);
+        /* get the standard english documentation */
+        sprintf (localname, "%s%cdoc%c%s%c%s", s, DIR_SEP, DIR_SEP,
+                 helpdir, DIR_SEP, Manual[index]);
     }
 #ifdef _WX
   LoadDefaultOpeningLocation (TRUE); //in new frame
   document = GetAmayaDoc (localname, NULL, doc, doc, (ClickEvent)CE_HELP,
-			  FALSE, NULL, NULL);
+                          FALSE, NULL, NULL);
 #else /* _WX */
   document = GetAmayaDoc (localname, NULL, 0, 0, (ClickEvent)CE_HELP,
-			  FALSE, NULL, NULL);
+                          FALSE, NULL, NULL);
 #endif /* _WX */
   /* Set the Help document in ReadOnly mode */
   root = TtaGetMainRoot (document);
@@ -992,14 +992,14 @@ static void DisplayHelp (int doc, int index)
 }
 
 /*----------------------------------------------------------------------
- -----------------------------------------------------------------------*/
+  -----------------------------------------------------------------------*/
 void HelpIndex (Document document, View view)
 {
   DisplayHelp (document, INDEX);
 }
 
 /*----------------------------------------------------------------------
- -----------------------------------------------------------------------*/
+  -----------------------------------------------------------------------*/
 void HelpBrowsing (Document document, View view)
 {
   DisplayHelp (document, BROWSING);
@@ -1007,7 +1007,7 @@ void HelpBrowsing (Document document, View view)
 
 
 /*----------------------------------------------------------------------
- -----------------------------------------------------------------------*/
+  -----------------------------------------------------------------------*/
 void HelpSelecting (Document document, View view)
 {
   DisplayHelp (document, SELECTING);
@@ -1015,7 +1015,7 @@ void HelpSelecting (Document document, View view)
 
 
 /*----------------------------------------------------------------------
- -----------------------------------------------------------------------*/
+  -----------------------------------------------------------------------*/
 void HelpSearching (Document document, View view)
 {
   DisplayHelp (document, SEARCHING);
@@ -1023,14 +1023,14 @@ void HelpSearching (Document document, View view)
 
 
 /*----------------------------------------------------------------------
- -----------------------------------------------------------------------*/
+  -----------------------------------------------------------------------*/
 void HelpViews (Document document, View view)
 {
   DisplayHelp (document, VIEWS);
 }
 
 /*----------------------------------------------------------------------
- -----------------------------------------------------------------------*/
+  -----------------------------------------------------------------------*/
 void HelpDocument (Document document, View view)
 {
   DisplayHelp (document, DOCUMENT);
@@ -1038,7 +1038,7 @@ void HelpDocument (Document document, View view)
 
 
 /*----------------------------------------------------------------------
- -----------------------------------------------------------------------*/
+  -----------------------------------------------------------------------*/
 void HelpCreating (Document document, View view)
 {
   DisplayHelp (document, CREATING);
@@ -1046,7 +1046,7 @@ void HelpCreating (Document document, View view)
 
 
 /*----------------------------------------------------------------------
- -----------------------------------------------------------------------*/
+  -----------------------------------------------------------------------*/
 void HelpLinks (Document document, View view)
 {
   DisplayHelp (document, LINKS);
@@ -1054,7 +1054,7 @@ void HelpLinks (Document document, View view)
 
 
 /*----------------------------------------------------------------------
- -----------------------------------------------------------------------*/
+  -----------------------------------------------------------------------*/
 void HelpChanging (Document document, View view)
 {
   DisplayHelp (document, CHANGING);
@@ -1062,7 +1062,7 @@ void HelpChanging (Document document, View view)
 
 
 /*----------------------------------------------------------------------
- -----------------------------------------------------------------------*/
+  -----------------------------------------------------------------------*/
 void HelpTables (Document document, View view)
 {
   DisplayHelp (document, TABLES);
@@ -1070,7 +1070,7 @@ void HelpTables (Document document, View view)
 
 
 /*----------------------------------------------------------------------
- -----------------------------------------------------------------------*/
+  -----------------------------------------------------------------------*/
 void HelpMath (Document document, View view)
 {
   DisplayHelp (document, MATH);
@@ -1078,7 +1078,7 @@ void HelpMath (Document document, View view)
 
 
 /*----------------------------------------------------------------------
- -----------------------------------------------------------------------*/
+  -----------------------------------------------------------------------*/
 void HelpSVG (Document document, View view)
 {
   DisplayHelp (document, SVG);
@@ -1086,7 +1086,7 @@ void HelpSVG (Document document, View view)
 
 
 /*----------------------------------------------------------------------
- -----------------------------------------------------------------------*/
+  -----------------------------------------------------------------------*/
 void HelpEditChar (Document document, View view)
 {
   DisplayHelp (document, EDITCHAR);
@@ -1094,7 +1094,7 @@ void HelpEditChar (Document document, View view)
 
 
 /*----------------------------------------------------------------------
- -----------------------------------------------------------------------*/
+  -----------------------------------------------------------------------*/
 void HelpXml (Document document, View view)
 {
   DisplayHelp (document, XML);
@@ -1102,7 +1102,7 @@ void HelpXml (Document document, View view)
 
 
 /*----------------------------------------------------------------------
- -----------------------------------------------------------------------*/
+  -----------------------------------------------------------------------*/
 void HelpImageMaps (Document document, View view)
 {
   DisplayHelp (document, IMAGEMAPS);
@@ -1110,7 +1110,7 @@ void HelpImageMaps (Document document, View view)
 
 
 /*----------------------------------------------------------------------
- -----------------------------------------------------------------------*/
+  -----------------------------------------------------------------------*/
 void HelpStyleSheets (Document document, View view)
 {
   DisplayHelp (document, CSS);
@@ -1118,14 +1118,14 @@ void HelpStyleSheets (Document document, View view)
 
 
 /*----------------------------------------------------------------------
- -----------------------------------------------------------------------*/
+  -----------------------------------------------------------------------*/
 void HelpAttributes (Document document, View view)
 {
   DisplayHelp (document, ATTRIBUTES);
 }
 
 /*----------------------------------------------------------------------
- -----------------------------------------------------------------------*/
+  -----------------------------------------------------------------------*/
 void HelpSpellChecking (Document document, View view)
 {
   DisplayHelp (document, SPELLCHECKING);
@@ -1133,14 +1133,14 @@ void HelpSpellChecking (Document document, View view)
 
 
 /*----------------------------------------------------------------------
- -----------------------------------------------------------------------*/
+  -----------------------------------------------------------------------*/
 void HelpPublishing (Document document, View view)
 {
   DisplayHelp (document, PUBLISHING);
 }
 
 /*----------------------------------------------------------------------
- -----------------------------------------------------------------------*/
+  -----------------------------------------------------------------------*/
 void HelpWebDAV (Document document, View view)
 {
   DisplayHelp (document, WEBDAV);
@@ -1148,7 +1148,7 @@ void HelpWebDAV (Document document, View view)
 
 
 /*----------------------------------------------------------------------
- -----------------------------------------------------------------------*/
+  -----------------------------------------------------------------------*/
 void HelpPrinting (Document document, View view)
 {
   DisplayHelp (document, PRINTING);
@@ -1156,7 +1156,7 @@ void HelpPrinting (Document document, View view)
 
 
 /*----------------------------------------------------------------------
- -----------------------------------------------------------------------*/
+  -----------------------------------------------------------------------*/
 void HelpNumbering (Document document, View view)
 {
   DisplayHelp (document, NUMBERING);
@@ -1164,7 +1164,7 @@ void HelpNumbering (Document document, View view)
 
 
 /*----------------------------------------------------------------------
- -----------------------------------------------------------------------*/
+  -----------------------------------------------------------------------*/
 void HelpMakeBook (Document document, View view)
 {
   DisplayHelp (document, MAKEBOOK);
@@ -1172,7 +1172,7 @@ void HelpMakeBook (Document document, View view)
 
 
 /*----------------------------------------------------------------------
- -----------------------------------------------------------------------*/
+  -----------------------------------------------------------------------*/
 void HelpAnnotation (Document document, View view)
 {
   DisplayHelp (document, ANNOTATE);
@@ -1180,7 +1180,7 @@ void HelpAnnotation (Document document, View view)
 
 
 /*----------------------------------------------------------------------
- -----------------------------------------------------------------------*/
+  -----------------------------------------------------------------------*/
 void HelpConfigure (Document document, View view)
 {
   DisplayHelp (document, CONFIGURE);
@@ -1188,15 +1188,15 @@ void HelpConfigure (Document document, View view)
 
 
 /*----------------------------------------------------------------------
- -----------------------------------------------------------------------*/
+  -----------------------------------------------------------------------*/
 void HelpShortCuts (Document document, View view)
 {
   DisplayHelp (document, SHORTCUTS);
 }
 
 /*----------------------------------------------------------------------
-Accessibility help page. Added by Charles McCN oct 99
- -----------------------------------------------------------------------*/
+  Accessibility help page. Added by Charles McCN oct 99
+  -----------------------------------------------------------------------*/
 void HelpAccess (Document document, View view)
 {
   DisplayHelp (document, ACCESS);

@@ -48,15 +48,15 @@ static char bufferName[ELEM_NAME_LENGTH];
 
 
 /*----------------------------------------------------------------------
-   AttachMandatoryAttrSRule verifie que l'element pEl possede les  
-   attributs requis indique's dans la regle pSRule du schema de    
-   structure pSS et, si certains attributs requis manquent, force  
-   l'utilisateur a leur donner une valeur et met ces attributs sur 
-   l'element pEl.                                                  
+  AttachMandatoryAttrSRule verifie que l'element pEl possede les  
+  attributs requis indique's dans la regle pSRule du schema de    
+  structure pSS et, si certains attributs requis manquent, force  
+  l'utilisateur a leur donner une valeur et met ces attributs sur 
+  l'element pEl.                                                  
   ----------------------------------------------------------------------*/
 static void AttachMandatoryAttrSRule (PtrElement pEl, PtrDocument
-				      pDoc, SRule *pSRule,
-				      PtrSSchema pSS)
+                                      pDoc, SRule *pSRule,
+                                      PtrSSchema pSS)
 {
 #ifndef NODISPLAY
   int                 len;
@@ -73,159 +73,159 @@ static void AttachMandatoryAttrSRule (PtrElement pEl, PtrDocument
     if (pSRule->SrRequiredAttr->Bln[i])
       /* cet attribut local est obligatoire */
       if (pDoc->DocSSchema != NULL)
-	/* le document n'a pas ete ferme' entre-temps */
-	{
-	  att = pSRule->SrLocalAttr->Num[i];
-	  /* cherche si l'element possede cet attribut */
-	  pAttr = pEl->ElFirstAttr;
-	  found = FALSE;
-	  while (pAttr != NULL && !found)
-	    if (pAttr->AeAttrNum == att &&
-		(att == 1 ||
-		 !strcmp (pAttr->AeAttrSSchema->SsName, pSS->SsName)))
-	      /* att = 1: Langue, quel que soit le schema de structure */
-	      found = TRUE;
-	    else
-	      pAttr = pAttr->AeNext;
-	  if (!found)
-	    /* l'element ne possede pas cet attribut requis */
-	    {
-	      /* envoie l'evenement AttrCreate.Pre */
-	      notifyAttr.event = TteAttrCreate;
-	      notifyAttr.document = (Document) IdentDocument (pDoc);
-	      notifyAttr.element = (Element) pEl;
-	      notifyAttr.info = 0; /* not sent by undo */
-	      notifyAttr.attribute = NULL;
-	      notifyAttr.attributeType.AttrSSchema = (SSchema) pSS;
-	      notifyAttr.attributeType.AttrTypeNum = att;
-	      CallEventAttribute (&notifyAttr, TRUE);
-	      /* cree un nouvel attribut pour l'element */
-	      GetAttribute (&pAttr);
-	      pAttr->AeAttrSSchema = pSS;
-	      pAttr->AeAttrNum = att;
-	      pAttr->AeDefAttr = FALSE;
-	      pAttr->AeAttrType = pSS->SsAttribute->TtAttr[att - 1]->AttrType;
-	      switch (pAttr->AeAttrType)
-		{
-		case AtNumAttr:
-		case AtEnumAttr:
-		  pAttr->AeAttrValue = 0;
-		  break;
-		case AtReferenceAttr:
-		  /* attache un bloc reference a l'attribut */
-		  GetReference (&pRef);
-		  pAttr->AeAttrReference = pRef;
-		  pRef->RdElement = pEl;
-		  pRef->RdAttribute = pAttr;
-		  break;
-		case AtTextAttr:
-		  pAttr->AeAttrText = NULL;
-		  break;
-		default:
-		  break;
-		}
-	      /* attache l'attribut a l'element */
-	      if (pEl->ElFirstAttr == NULL)
-		/* c'est le 1er attribut de l'element */
-		pEl->ElFirstAttr = pAttr;
-	      else
-		{
-		  pA = pEl->ElFirstAttr;	/* 1er attribut de l'element */
-		  while (pA->AeNext != NULL)
-		    /* cherche le dernier attribut de l'element */
-		    pA = pA->AeNext;
-		  /* chaine le nouvel attribut */
-		  pA->AeNext = pAttr;
-		}
-	      /* c'est le dernier attribut de l'element */
-	      pAttr->AeNext = NULL;
-	      /* envoie l'evenement AttrModify.Pre */
-	      notifyAttr.event = TteAttrModify;
-	      notifyAttr.document = (Document) IdentDocument (pDoc);
-	      notifyAttr.element = (Element) pEl;
-	      notifyAttr.info = 0; /* not sent by undo */
-	      notifyAttr.attribute = (Attribute) pAttr;
-	      notifyAttr.attributeType.AttrSSchema = (SSchema) pSS;
-	      notifyAttr.attributeType.AttrTypeNum = att;
-	      if (!CallEventAttribute (&notifyAttr, TRUE))
-		/* l'application laisse l'editeur saisir la valeur de */
-		/* l'attribut requis */
-		{
+        /* le document n'a pas ete ferme' entre-temps */
+        {
+          att = pSRule->SrLocalAttr->Num[i];
+          /* cherche si l'element possede cet attribut */
+          pAttr = pEl->ElFirstAttr;
+          found = FALSE;
+          while (pAttr != NULL && !found)
+            if (pAttr->AeAttrNum == att &&
+                (att == 1 ||
+                 !strcmp (pAttr->AeAttrSSchema->SsName, pSS->SsName)))
+              /* att = 1: Langue, quel que soit le schema de structure */
+              found = TRUE;
+            else
+              pAttr = pAttr->AeNext;
+          if (!found)
+            /* l'element ne possede pas cet attribut requis */
+            {
+              /* envoie l'evenement AttrCreate.Pre */
+              notifyAttr.event = TteAttrCreate;
+              notifyAttr.document = (Document) IdentDocument (pDoc);
+              notifyAttr.element = (Element) pEl;
+              notifyAttr.info = 0; /* not sent by undo */
+              notifyAttr.attribute = NULL;
+              notifyAttr.attributeType.AttrSSchema = (SSchema) pSS;
+              notifyAttr.attributeType.AttrTypeNum = att;
+              CallEventAttribute (&notifyAttr, TRUE);
+              /* cree un nouvel attribut pour l'element */
+              GetAttribute (&pAttr);
+              pAttr->AeAttrSSchema = pSS;
+              pAttr->AeAttrNum = att;
+              pAttr->AeDefAttr = FALSE;
+              pAttr->AeAttrType = pSS->SsAttribute->TtAttr[att - 1]->AttrType;
+              switch (pAttr->AeAttrType)
+                {
+                case AtNumAttr:
+                case AtEnumAttr:
+                  pAttr->AeAttrValue = 0;
+                  break;
+                case AtReferenceAttr:
+                  /* attache un bloc reference a l'attribut */
+                  GetReference (&pRef);
+                  pAttr->AeAttrReference = pRef;
+                  pRef->RdElement = pEl;
+                  pRef->RdAttribute = pAttr;
+                  break;
+                case AtTextAttr:
+                  pAttr->AeAttrText = NULL;
+                  break;
+                default:
+                  break;
+                }
+              /* attache l'attribut a l'element */
+              if (pEl->ElFirstAttr == NULL)
+                /* c'est le 1er attribut de l'element */
+                pEl->ElFirstAttr = pAttr;
+              else
+                {
+                  pA = pEl->ElFirstAttr;	/* 1er attribut de l'element */
+                  while (pA->AeNext != NULL)
+                    /* cherche le dernier attribut de l'element */
+                    pA = pA->AeNext;
+                  /* chaine le nouvel attribut */
+                  pA->AeNext = pAttr;
+                }
+              /* c'est le dernier attribut de l'element */
+              pAttr->AeNext = NULL;
+              /* envoie l'evenement AttrModify.Pre */
+              notifyAttr.event = TteAttrModify;
+              notifyAttr.document = (Document) IdentDocument (pDoc);
+              notifyAttr.element = (Element) pEl;
+              notifyAttr.info = 0; /* not sent by undo */
+              notifyAttr.attribute = (Attribute) pAttr;
+              notifyAttr.attributeType.AttrSSchema = (SSchema) pSS;
+              notifyAttr.attributeType.AttrTypeNum = att;
+              if (!CallEventAttribute (&notifyAttr, TRUE))
+                /* l'application laisse l'editeur saisir la valeur de */
+                /* l'attribut requis */
+                {
 #ifndef NODISPLAY
-		  MandatoryAttrOK = FALSE;
-		  do
-		    {
-		      /* demande a l'utilisateur d'entrer une valeur */
-		      /* pour l'attribut */
-		      if (pAttr->AeAttrType == AtReferenceAttr)
-			/* demande a l'utilisateur l'element reference' */
-			MandatoryAttrOK = LinkReference (pEl, pAttr, pDoc);
-		      else
-			{
-			  if (ThotLocalActions[T_attrreq] != NULL)
-			    (*(Proc2)ThotLocalActions[T_attrreq]) (
-				(void *)pAttr,
-				(void *)pDoc);
-			  else
-			    switch (pAttr->AeAttrType)
-			      {
-			      case AtNumAttr:
-				/* attribut a valeur numerique */
-				pAttr->AeAttrValue = 0;
-				break;
+                  MandatoryAttrOK = FALSE;
+                  do
+                    {
+                      /* demande a l'utilisateur d'entrer une valeur */
+                      /* pour l'attribut */
+                      if (pAttr->AeAttrType == AtReferenceAttr)
+                        /* demande a l'utilisateur l'element reference' */
+                        MandatoryAttrOK = LinkReference (pEl, pAttr, pDoc);
+                      else
+                        {
+                          if (ThotLocalActions[T_attrreq] != NULL)
+                            (*(Proc2)ThotLocalActions[T_attrreq]) (
+                                                                   (void *)pAttr,
+                                                                   (void *)pDoc);
+                          else
+                            switch (pAttr->AeAttrType)
+                              {
+                              case AtNumAttr:
+                                /* attribut a valeur numerique */
+                                pAttr->AeAttrValue = 0;
+                                break;
 				
-			      case AtTextAttr:
-				/* attribut a valeur textuelle */
-				CopyStringToBuffer ((unsigned char *)" ", pAttr->AeAttrText, &len);
-				break;
+                              case AtTextAttr:
+                                /* attribut a valeur textuelle */
+                                CopyStringToBuffer ((unsigned char *)" ", pAttr->AeAttrText, &len);
+                                break;
 				
-			      case AtEnumAttr:
-				/* attribut a valeurs enumerees */
-				pAttr->AeAttrValue = 1;
-				break;
+                              case AtEnumAttr:
+                                /* attribut a valeurs enumerees */
+                                pAttr->AeAttrValue = 1;
+                                break;
 				
-			      default:
-				break;
-			      }
-			  MandatoryAttrOK = TRUE;
-			}
-		    }
-		  while (!MandatoryAttrOK && pDoc->DocSSchema != NULL);
+                              default:
+                                break;
+                              }
+                          MandatoryAttrOK = TRUE;
+                        }
+                    }
+                  while (!MandatoryAttrOK && pDoc->DocSSchema != NULL);
 #endif /* NODISPLAY */
-		  if (MandatoryAttrOK && pDoc->DocSSchema != NULL)
-		    {
-		      /* envoie l'evenement AttrModify.Post */
-		      notifyAttr.event = TteAttrModify;
-		      notifyAttr.document = (Document) IdentDocument (pDoc);
-		      notifyAttr.element = (Element) pEl;
-		      notifyAttr.info = 0; /* not sent by undo */
-		      notifyAttr.attribute = (Attribute) pAttr;
-		      notifyAttr.attributeType.AttrSSchema = (SSchema) pSS;
-		      notifyAttr.attributeType.AttrTypeNum = att;
-		      CallEventAttribute (&notifyAttr, FALSE);
-		    }
-		}
-	      if (pDoc->DocSSchema)
-		{
-		  /* envoie l'evenement AttrCreate.Post */
-		  notifyAttr.event = TteAttrCreate;
-		  notifyAttr.document = (Document) IdentDocument (pDoc);
-		  notifyAttr.element = (Element) pEl;
-		  notifyAttr.info = 0; /* not sent by undo */
-		  notifyAttr.attribute = (Attribute) pAttr;
-		  notifyAttr.attributeType.AttrSSchema = (SSchema) pSS;
-		  notifyAttr.attributeType.AttrTypeNum = att;
-		  CallEventAttribute (&notifyAttr, FALSE);
-		}
-	    }
-	}
+                  if (MandatoryAttrOK && pDoc->DocSSchema != NULL)
+                    {
+                      /* envoie l'evenement AttrModify.Post */
+                      notifyAttr.event = TteAttrModify;
+                      notifyAttr.document = (Document) IdentDocument (pDoc);
+                      notifyAttr.element = (Element) pEl;
+                      notifyAttr.info = 0; /* not sent by undo */
+                      notifyAttr.attribute = (Attribute) pAttr;
+                      notifyAttr.attributeType.AttrSSchema = (SSchema) pSS;
+                      notifyAttr.attributeType.AttrTypeNum = att;
+                      CallEventAttribute (&notifyAttr, FALSE);
+                    }
+                }
+              if (pDoc->DocSSchema)
+                {
+                  /* envoie l'evenement AttrCreate.Post */
+                  notifyAttr.event = TteAttrCreate;
+                  notifyAttr.document = (Document) IdentDocument (pDoc);
+                  notifyAttr.element = (Element) pEl;
+                  notifyAttr.info = 0; /* not sent by undo */
+                  notifyAttr.attribute = (Attribute) pAttr;
+                  notifyAttr.attributeType.AttrSSchema = (SSchema) pSS;
+                  notifyAttr.attributeType.AttrTypeNum = att;
+                  CallEventAttribute (&notifyAttr, FALSE);
+                }
+            }
+        }
 }
 
 /*----------------------------------------------------------------------
-   Verifie que tous les elements du sous-arbre de racine pEl       
-   possedent les attributs requis et, si certains attributs requis 
-   manquent, force l'utilisateur a leur donner une valeur et met   
-   ces attributs sur les elements qui les requierent.              
+  Verifie que tous les elements du sous-arbre de racine pEl       
+  possedent les attributs requis et, si certains attributs requis 
+  manquent, force l'utilisateur a leur donner une valeur et met   
+  ces attributs sur les elements qui les requierent.              
   ----------------------------------------------------------------------*/
 void AttachMandatoryAttributes (PtrElement pEl, PtrDocument pDoc)
 {
@@ -243,42 +243,42 @@ void AttachMandatoryAttributes (PtrElement pEl, PtrDocument pDoc)
       /* traite toutes les regles d'extension de ce type d'element */
       pSS = pDoc->DocSSchema;
       if (pSS != NULL)
-	{
-	  pSS = pSS->SsNextExtens;
-	  /* parcourt tous les schemas d'extension du document */
-	  while (pSS != NULL)
-	    {
-	      /* cherche dans ce schema d'extension la regle qui concerne */
-	      /* le type de l'element */
-	      pSRule = ExtensionRule (pEl->ElStructSchema, pEl->ElTypeNumber,
-				      pSS);
-	      if (pSRule != NULL)
-		/* il y a une regle d'extension, on la traite */
-		AttachMandatoryAttrSRule (pEl, pDoc, pSRule, pSS);
-	      if (pDoc->DocSSchema == NULL)
-		/* le document a ete ferme' entre-temps */
-		pSS = NULL;
-	      else
-		/* passe au schema d'extension suivant */
-		pSS = pSS->SsNextExtens;
-	    }
-	}
+        {
+          pSS = pSS->SsNextExtens;
+          /* parcourt tous les schemas d'extension du document */
+          while (pSS != NULL)
+            {
+              /* cherche dans ce schema d'extension la regle qui concerne */
+              /* le type de l'element */
+              pSRule = ExtensionRule (pEl->ElStructSchema, pEl->ElTypeNumber,
+                                      pSS);
+              if (pSRule != NULL)
+                /* il y a une regle d'extension, on la traite */
+                AttachMandatoryAttrSRule (pEl, pDoc, pSRule, pSS);
+              if (pDoc->DocSSchema == NULL)
+                /* le document a ete ferme' entre-temps */
+                pSS = NULL;
+              else
+                /* passe au schema d'extension suivant */
+                pSS = pSS->SsNextExtens;
+            }
+        }
       /* applique le meme traitement a tous les descendants de pEl */
       if (pDoc->DocSSchema != NULL)
-	/* le document n'a pas ete ferme' entre-temps */
-	if (!pEl->ElTerminal)
-	  {
-	    pChild = pEl->ElFirstChild;
-	    while (pChild != NULL)
-	      {
-		AttachMandatoryAttributes (pChild, pDoc);
-		if (pDoc->DocSSchema == NULL)
-		  /* le document n'existe plus */
-		  pChild = NULL;
-		else
-		  pChild = pChild->ElNext;
-	      }
-	  }
+        /* le document n'a pas ete ferme' entre-temps */
+        if (!pEl->ElTerminal)
+          {
+            pChild = pEl->ElFirstChild;
+            while (pChild != NULL)
+              {
+                AttachMandatoryAttributes (pChild, pDoc);
+                if (pDoc->DocSSchema == NULL)
+                  /* le document n'existe plus */
+                  pChild = NULL;
+                else
+                  pChild = pChild->ElNext;
+              }
+          }
     }
 }
 
@@ -300,7 +300,7 @@ Attribute           TtaNewAttribute (AttributeType attType)
   if (attType.AttrSSchema == NULL)
     TtaError (ERR_invalid_attribute_type);
   else if (attType.AttrTypeNum < 1 ||
-	   attType.AttrTypeNum > ((PtrSSchema) (attType.AttrSSchema))->SsNAttributes)
+           attType.AttrTypeNum > ((PtrSSchema) (attType.AttrSSchema))->SsNAttributes)
     TtaError (ERR_invalid_attribute_type);
   else
     {
@@ -310,20 +310,20 @@ Attribute           TtaNewAttribute (AttributeType attType)
       pAttr->AeAttrNum = attType.AttrTypeNum;
       pAttr->AeDefAttr = FALSE;
       pAttr->AeAttrType =
-              pAttr->AeAttrSSchema->SsAttribute->TtAttr[pAttr->AeAttrNum - 1]->AttrType;
+        pAttr->AeAttrSSchema->SsAttribute->TtAttr[pAttr->AeAttrNum - 1]->AttrType;
       switch (pAttr->AeAttrType)
-	{
-	case AtEnumAttr:
-	case AtNumAttr:
-	  pAttr->AeAttrValue = 0;
-	  break;
-	case AtTextAttr:
-	  pAttr->AeAttrText = NULL;
-	  break;
-	case AtReferenceAttr:
-	  pAttr->AeAttrReference = NULL;
-	  break;
-	}
+        {
+        case AtEnumAttr:
+        case AtNumAttr:
+          pAttr->AeAttrValue = 0;
+          break;
+        case AtTextAttr:
+          pAttr->AeAttrText = NULL;
+          break;
+        case AtReferenceAttr:
+          pAttr->AeAttrReference = NULL;
+          break;
+        }
     }
   return ((Attribute) pAttr);
 }
@@ -353,51 +353,51 @@ void TtaAttachAttribute (Element element, Attribute attribute, Document document
     {
       pDoc = LoadedDocument[document - 1];
       if (pDoc == NULL)
-	TtaError (ERR_invalid_document_parameter);
+        TtaError (ERR_invalid_document_parameter);
       else if (AttributeValue ((PtrElement) element,
-			       (PtrAttribute) attribute) != NULL)
-	/* parameter document is correct */
-	/* has the element an attribute of the same type ? */
-	/* yes, error */ 
-	TtaError (ERR_duplicate_attribute);
+                               (PtrAttribute) attribute) != NULL)
+        /* parameter document is correct */
+        /* has the element an attribute of the same type ? */
+        /* yes, error */ 
+        TtaError (ERR_duplicate_attribute);
       else if ((pDoc)->DocCheckingMode & STR_CHECK_MASK &&
-	       !CanAssociateAttr ((PtrElement) element, NULL, 
-				  (PtrAttribute) attribute, &obligatory))
-	/* can wa apply the attribute to the element ? */
-	/* no, error */
-	TtaError (ERR_attribute_element_mismatch);
+               !CanAssociateAttr ((PtrElement) element, NULL, 
+                                  (PtrAttribute) attribute, &obligatory))
+        /* can wa apply the attribute to the element ? */
+        /* no, error */
+        TtaError (ERR_attribute_element_mismatch);
       else
-	{
+        {
 #ifndef NODISPLAY
-	  UndisplayInheritedAttributes ((PtrElement) element,
-				   (PtrAttribute) attribute, document, FALSE);
+          UndisplayInheritedAttributes ((PtrElement) element,
+                                        (PtrAttribute) attribute, document, FALSE);
 #endif
-	  if (((PtrElement) element)->ElFirstAttr == NULL)
-	    ((PtrElement) element)->ElFirstAttr = (PtrAttribute) attribute;
-	  else
-	    {
-	      pAttr = ((PtrElement) element)->ElFirstAttr;
-	      while (pAttr->AeNext != NULL)
-		pAttr = pAttr->AeNext;
-	      pAttr->AeNext = (PtrAttribute) attribute;
-	    }
-	  /* update the menu attributes */
-	  if (pDoc == SelectedDocument &&
-	      (PtrElement) element == FirstSelectedElement)
-	    if (ThotLocalActions[T_chattr] != NULL)
-	      (*(Proc1)ThotLocalActions[T_chattr]) ((void *)pDoc);
+          if (((PtrElement) element)->ElFirstAttr == NULL)
+            ((PtrElement) element)->ElFirstAttr = (PtrAttribute) attribute;
+          else
+            {
+              pAttr = ((PtrElement) element)->ElFirstAttr;
+              while (pAttr->AeNext != NULL)
+                pAttr = pAttr->AeNext;
+              pAttr->AeNext = (PtrAttribute) attribute;
+            }
+          /* update the menu attributes */
+          if (pDoc == SelectedDocument &&
+              (PtrElement) element == FirstSelectedElement)
+            if (ThotLocalActions[T_chattr] != NULL)
+              (*(Proc1)ThotLocalActions[T_chattr]) ((void *)pDoc);
 	   
-	  pAttr = (PtrAttribute) attribute;
-	  pAttr->AeNext = NULL;
-	  pAttr->AeDefAttr = FALSE;
-	  if (pAttr->AeAttrType == AtReferenceAttr)
-	    if (pAttr->AeAttrReference != NULL)
-	      pAttr->AeAttrReference->RdElement = (PtrElement) element;
+          pAttr = (PtrAttribute) attribute;
+          pAttr->AeNext = NULL;
+          pAttr->AeDefAttr = FALSE;
+          if (pAttr->AeAttrType == AtReferenceAttr)
+            if (pAttr->AeAttrReference != NULL)
+              pAttr->AeAttrReference->RdElement = (PtrElement) element;
 #ifndef NODISPLAY
-	  DisplayAttribute ((PtrElement) element, pAttr, document);
+          DisplayAttribute ((PtrElement) element, pAttr, document);
 #endif
-	 }
-     }
+        }
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -415,15 +415,15 @@ static ThotBool     AttrOfElement (Attribute attribute, Element element)
       pAttr = ((PtrElement) element)->ElFirstAttr;
       ok = FALSE;
       while (pAttr != NULL)
-	if (pAttr == (PtrAttribute) attribute)
-	  {
-	    ok = TRUE;
-	    pAttr = NULL;
-	  }
-	else
-	  pAttr = pAttr->AeNext;
+        if (pAttr == (PtrAttribute) attribute)
+          {
+            ok = TRUE;
+            pAttr = NULL;
+          }
+        else
+          pAttr = pAttr->AeNext;
       if (!ok)
-	TtaError (ERR_attribute_element_mismatch);
+        TtaError (ERR_attribute_element_mismatch);
     }
   return ok;
 }
@@ -447,49 +447,49 @@ void TtaRemoveAttribute (Element element, Attribute attribute, Document document
   if (element == NULL || attribute == NULL)
     TtaError (ERR_invalid_parameter);
   else if (((PtrAttribute) attribute)->AeAttrSSchema == NULL ||
-	   ((PtrElement) element)->ElStructSchema == NULL)
+           ((PtrElement) element)->ElStructSchema == NULL)
     TtaError (ERR_invalid_parameter);
   else
     {
       pAttr = ((PtrElement) element)->ElFirstAttr;
       found = FALSE;
       while (pAttr != NULL && !found)
-	{
-	  if (pAttr->AeAttrNum == ((PtrAttribute) attribute)->AeAttrNum &&
-	      !strcmp (pAttr->AeAttrSSchema->SsName,
-			((PtrAttribute) attribute)->AeAttrSSchema->SsName))
-	    found = TRUE;
-	  if (!found)
-	    pAttr = pAttr->AeNext;
-	}
+        {
+          if (pAttr->AeAttrNum == ((PtrAttribute) attribute)->AeAttrNum &&
+              !strcmp (pAttr->AeAttrSSchema->SsName,
+                       ((PtrAttribute) attribute)->AeAttrSSchema->SsName))
+            found = TRUE;
+          if (!found)
+            pAttr = pAttr->AeNext;
+        }
       if (!found)
-	TtaError (ERR_attribute_element_mismatch);
+        TtaError (ERR_attribute_element_mismatch);
       else
-	{
-	  (void) CanAssociateAttr ((PtrElement) element, pAttr, pAttr,
-				   &mandatory);
-	  if (!mandatory)
-	    /* We prohibit to suppress the attbibute language of an element */
-	    /* which is the root of an abstract tree */
-	    if (((PtrElement) element)->ElParent == NULL)
-	      if (pAttr->AeAttrNum == 1)
-		mandatory = TRUE;
-	  if (mandatory &&
-	      (LoadedDocument[document - 1])->DocCheckingMode & STR_CHECK_MASK)
-	    /* The attribute is required for this kind of element */
-	    TtaError (ERR_mandatory_attribute);
-	  else
-	    {
-	      RemoveAttribute ((PtrElement) element, pAttr);
+        {
+          (void) CanAssociateAttr ((PtrElement) element, pAttr, pAttr,
+                                   &mandatory);
+          if (!mandatory)
+            /* We prohibit to suppress the attbibute language of an element */
+            /* which is the root of an abstract tree */
+            if (((PtrElement) element)->ElParent == NULL)
+              if (pAttr->AeAttrNum == 1)
+                mandatory = TRUE;
+          if (mandatory &&
+              (LoadedDocument[document - 1])->DocCheckingMode & STR_CHECK_MASK)
+            /* The attribute is required for this kind of element */
+            TtaError (ERR_mandatory_attribute);
+          else
+            {
+              RemoveAttribute ((PtrElement) element, pAttr);
 #ifndef NODISPLAY
-	      UndisplayInheritedAttributes ((PtrElement) element, pAttr,
-					    document, TRUE);
-	      UndisplayAttribute ((PtrElement) element, 
-				  (PtrAttribute) attribute, document);
+              UndisplayInheritedAttributes ((PtrElement) element, pAttr,
+                                            document, TRUE);
+              UndisplayAttribute ((PtrElement) element, 
+                                  (PtrAttribute) attribute, document);
 #endif
-	      DeleteAttribute ((PtrElement) element, pAttr);
-	    }
-	}
+              DeleteAttribute ((PtrElement) element, pAttr);
+            }
+        }
     }
 }
 
@@ -507,7 +507,7 @@ void TtaRemoveAttribute (Element element, Attribute attribute, Document document
    Must be 0 if element is NULL.
    ---------------------------------------------------------------------- */
 void TtaSetAttributeValue (Attribute attribute, int value,
-			   Element element, Document document)
+                           Element element, Document document)
 {
   PtrAttribute        pAttr;
   ThotBool            ok;
@@ -522,38 +522,38 @@ void TtaSetAttributeValue (Attribute attribute, int value,
   else if (pAttr->AeAttrValue == 0 || AttrOfElement (attribute, element))
     {
       if (pAttr->AeAttrType == AtNumAttr)
-	{
-	  if (abs (value) > 65535)
-	    /* the pivot form represents integers coded on two bytes */
-	    TtaError (ERR_invalid_attribute_value);
-	  else
-	    if (value != pAttr->AeAttrValue)
-	      ok = TRUE;
-	}
+        {
+          if (abs (value) > 65535)
+            /* the pivot form represents integers coded on two bytes */
+            TtaError (ERR_invalid_attribute_value);
+          else
+            if (value != pAttr->AeAttrValue)
+              ok = TRUE;
+        }
       else
-	{
-	  if (pAttr->AeAttrSSchema == NULL)
-	    TtaError (ERR_invalid_attribute_type);
-	  else if (value < 1)
-	    TtaError (ERR_invalid_attribute_value);
-	  else if (value > pAttr->AeAttrSSchema->SsAttribute->TtAttr[pAttr->AeAttrNum - 1]->AttrNEnumValues)
-	    TtaError (ERR_invalid_attribute_value);
-	  else if (value != pAttr->AeAttrValue)
-	    ok = TRUE;
-	}
+        {
+          if (pAttr->AeAttrSSchema == NULL)
+            TtaError (ERR_invalid_attribute_type);
+          else if (value < 1)
+            TtaError (ERR_invalid_attribute_value);
+          else if (value > pAttr->AeAttrSSchema->SsAttribute->TtAttr[pAttr->AeAttrNum - 1]->AttrNEnumValues)
+            TtaError (ERR_invalid_attribute_value);
+          else if (value != pAttr->AeAttrValue)
+            ok = TRUE;
+        }
       if (ok)
-	{
+        {
 #ifndef NODISPLAY
-	  if (element != NULL)
-	    UndisplayInheritedAttributes ((PtrElement) element, pAttr,
-					  document, FALSE);
+          if (element != NULL)
+            UndisplayInheritedAttributes ((PtrElement) element, pAttr,
+                                          document, FALSE);
 #endif
-	  pAttr->AeAttrValue = value;
+          pAttr->AeAttrValue = value;
 #ifndef NODISPLAY
-	  if (element != NULL)
-	    DisplayAttribute ((PtrElement) element, pAttr, document);
+          if (element != NULL)
+            DisplayAttribute ((PtrElement) element, pAttr, document);
 #endif
-	}
+        }
     }
 }
 
@@ -570,7 +570,7 @@ void TtaSetAttributeValue (Attribute attribute, int value,
    Must be 0 if element is NULL.
    ---------------------------------------------------------------------- */
 void TtaSetAttributeText (Attribute attribute, char* buffer,
-			  Element element, Document document)
+                          Element element, Document document)
 {
   int                 lg;
   PtrAttribute        pAttr;
@@ -589,55 +589,55 @@ void TtaSetAttributeText (Attribute attribute, char* buffer,
     {
 #ifndef NODISPLAY
       if (element != NULL)
-	{
-	  /* detach temporarily attribute from element */
-	  pPrevAttr = NULL;
+        {
+          /* detach temporarily attribute from element */
+          pPrevAttr = NULL;
           pA = ((PtrElement) element)->ElFirstAttr;
-	  while (pA && pA != pAttr)
-	    {
-	      pPrevAttr = pA;
-	      pA = pA->AeNext;
-	    }
-	  if (pA)
-	    {
-	      if (pPrevAttr)
-		pPrevAttr->AeNext = pA->AeNext;
-	      else
-		((PtrElement) element)->ElFirstAttr = pA->AeNext;
-	    }
+          while (pA && pA != pAttr)
+            {
+              pPrevAttr = pA;
+              pA = pA->AeNext;
+            }
+          if (pA)
+            {
+              if (pPrevAttr)
+                pPrevAttr->AeNext = pA->AeNext;
+              else
+                ((PtrElement) element)->ElFirstAttr = pA->AeNext;
+            }
           /* de-apply all presentation rules related to the attribute */
-	  UndisplayInheritedAttributes ((PtrElement) element, pAttr, document,
-					TRUE);
-	  /* reattach attribute to element */
-	  if (pA)
-	    {
-	      if (pPrevAttr)
-		pPrevAttr->AeNext = pAttr;
-	      else
-		((PtrElement) element)->ElFirstAttr = pAttr;
-	    }
-	}
+          UndisplayInheritedAttributes ((PtrElement) element, pAttr, document,
+                                        TRUE);
+          /* reattach attribute to element */
+          if (pA)
+            {
+              if (pPrevAttr)
+                pPrevAttr->AeNext = pAttr;
+              else
+                ((PtrElement) element)->ElFirstAttr = pAttr;
+            }
+        }
 #endif
       if (pAttr->AeAttrText == NULL)
-	GetTextBuffer (&pAttr->AeAttrText);
+        GetTextBuffer (&pAttr->AeAttrText);
       else
-	ClearText (pAttr->AeAttrText);
+        ClearText (pAttr->AeAttrText);
       /* Sets the new value */
       CopyStringToBuffer ((unsigned char *)buffer, pAttr->AeAttrText, &lg);
       if (pAttr->AeAttrNum == 1)
-	/* language attribute */
-	{
-	  lang = TtaGetLanguageIdFromName (buffer);
+        /* language attribute */
+        {
+          lang = TtaGetLanguageIdFromName (buffer);
 #ifdef NODISPLAY
-	  ChangeLanguageLeaves((PtrElement) element, lang);
+          ChangeLanguageLeaves((PtrElement) element, lang);
 #else
-	  ChangeLanguage (LoadedDocument[document - 1],
-			  (PtrElement) element, lang, FALSE);
+          ChangeLanguage (LoadedDocument[document - 1],
+                          (PtrElement) element, lang, FALSE);
 #endif
-	}
+        }
 #ifndef NODISPLAY
       if (element != NULL)
-	DisplayAttribute ((PtrElement) element, pAttr, document);
+        DisplayAttribute ((PtrElement) element, pAttr, document);
 #endif
     }
 }
@@ -657,17 +657,17 @@ void TtaSetAttributeText (Attribute attribute, char* buffer,
    ---------------------------------------------------------------------- */
 void TtaNextAttribute (Element element, Attribute *attribute)
 {
-   PtrAttribute        nextAttribute;
+  PtrAttribute        nextAttribute;
 
-   UserErrorCode = 0;
-   nextAttribute = NULL;
-   if (element == NULL)
-      TtaError (ERR_invalid_parameter);
-   else if (*attribute == NULL)
-      nextAttribute = ((PtrElement) element)->ElFirstAttr;
-   else
-      nextAttribute = ((PtrAttribute) (*attribute))->AeNext;
-   *attribute = (Attribute) nextAttribute;
+  UserErrorCode = 0;
+  nextAttribute = NULL;
+  if (element == NULL)
+    TtaError (ERR_invalid_parameter);
+  else if (*attribute == NULL)
+    nextAttribute = ((PtrElement) element)->ElFirstAttr;
+  else
+    nextAttribute = ((PtrAttribute) (*attribute))->AeNext;
+  *attribute = (Attribute) nextAttribute;
 }
 
 
@@ -683,7 +683,7 @@ void TtaNextAttribute (Element element, Attribute *attribute)
    3 = CsReference
    ---------------------------------------------------------------------- */
 void TtaGiveAttributeType (Attribute attribute,
-			   AttributeType *attType, int *attrKind)
+                           AttributeType *attType, int *attrKind)
 {
   UserErrorCode = 0;
   if (attribute == NULL)
@@ -698,23 +698,23 @@ void TtaGiveAttributeType (Attribute attribute,
       (*attType).AttrSSchema = (SSchema)((PtrAttribute) attribute)->AeAttrSSchema;
       (*attType).AttrTypeNum = ((PtrAttribute) attribute)->AeAttrNum;
       switch (((PtrAttribute) attribute)->AeAttrType)
-	{
-	case AtEnumAttr:
-	  *attrKind = 0;
-	  break;
-	case AtNumAttr:
-	  *attrKind = 1;
-	  break;
-	case AtTextAttr:
-	  *attrKind = 2;
-	  break;
-	case AtReferenceAttr:
-	  *attrKind = 3;
-	  break;
-	default:
-	  TtaError (ERR_invalid_attribute_type);
-	  break;
-	}
+        {
+        case AtEnumAttr:
+          *attrKind = 0;
+          break;
+        case AtNumAttr:
+          *attrKind = 1;
+          break;
+        case AtTextAttr:
+          *attrKind = 2;
+          break;
+        case AtReferenceAttr:
+          *attrKind = 3;
+          break;
+        default:
+          TtaError (ERR_invalid_attribute_type);
+          break;
+        }
     }
 }
 
@@ -731,7 +731,7 @@ void TtaGiveAttributeType (Attribute attribute,
    3 = CsReference
    ---------------------------------------------------------------------- */
 void TtaGiveAttributeTypeFromName (char *name, Element element,
-				   AttributeType *attType, int *attrKind)
+                                   AttributeType *attType, int *attrKind)
 {
   PtrSSchema          pSS;
 
@@ -744,33 +744,33 @@ void TtaGiveAttributeTypeFromName (char *name, Element element,
   else
     {
       GetAttrRuleFromName (&((*attType).AttrTypeNum),
-			   (PtrSSchema *)&((*attType).AttrSSchema),
-			   (PtrElement) element, name, USER_NAME);
+                           (PtrSSchema *)&((*attType).AttrSSchema),
+                           (PtrElement) element, name, USER_NAME);
       if ((*attType).AttrTypeNum == 0)
-	TtaError (ERR_invalid_parameter);
+        TtaError (ERR_invalid_parameter);
       else
-	{
-	  pSS = (PtrSSchema)((*attType).AttrSSchema);
-	  switch (pSS->SsAttribute->TtAttr[(*attType).AttrTypeNum - 1]->AttrType)
-	    {
-	     case AtEnumAttr:
-	       *attrKind = 0;
-	       break;
-	     case AtNumAttr:
-	       *attrKind = 1;
-	       break;
-	     case AtTextAttr:
-	       *attrKind = 2;
-	       break;
-	     case AtReferenceAttr:
-	       *attrKind = 3;
-	       break;
-	     default:
-	       TtaError (ERR_invalid_attribute_type);
-	       break;
-	     }
-	 }
-     }
+        {
+          pSS = (PtrSSchema)((*attType).AttrSSchema);
+          switch (pSS->SsAttribute->TtAttr[(*attType).AttrTypeNum - 1]->AttrType)
+            {
+            case AtEnumAttr:
+              *attrKind = 0;
+              break;
+            case AtNumAttr:
+              *attrKind = 1;
+              break;
+            case AtTextAttr:
+              *attrKind = 2;
+              break;
+            case AtReferenceAttr:
+              *attrKind = 3;
+              break;
+            default:
+              TtaError (ERR_invalid_attribute_type);
+              break;
+            }
+        }
+    }
 }
 
 /* ----------------------------------------------------------------------
@@ -786,7 +786,7 @@ void TtaGiveAttributeTypeFromName (char *name, Element element,
    3 = CsReference
    ---------------------------------------------------------------------- */
 void TtaGiveAttributeTypeFromOriginalName (char *name, Element element,
-					   AttributeType *attType, int *attrKind)
+                                           AttributeType *attType, int *attrKind)
 {
   PtrSSchema          pSS;
 
@@ -799,32 +799,32 @@ void TtaGiveAttributeTypeFromOriginalName (char *name, Element element,
   else
     {
       GetAttrRuleFromName (&((*attType).AttrTypeNum),
-			   (PtrSSchema *)&((*attType).AttrSSchema),
-			   (PtrElement) element, name, SCHEMA_NAME);
+                           (PtrSSchema *)&((*attType).AttrSSchema),
+                           (PtrElement) element, name, SCHEMA_NAME);
       if ((*attType).AttrTypeNum == 0)
-	TtaError (ERR_invalid_parameter);
+        TtaError (ERR_invalid_parameter);
       else
-	{
-	  pSS = (PtrSSchema)((*attType).AttrSSchema);
-	  switch (pSS->SsAttribute->TtAttr[(*attType).AttrTypeNum - 1]->AttrType)
-	    {
-	    case AtEnumAttr:
-	      *attrKind = 0;
-	      break;
-	    case AtNumAttr:
-	      *attrKind = 1;
-	      break;
-	    case AtTextAttr:
-	      *attrKind = 2;
-	      break;
-	    case AtReferenceAttr:
-	      *attrKind = 3;
-	      break;
-	    default:
-	      TtaError (ERR_invalid_attribute_type);
-	      break;
-	    }
-	}
+        {
+          pSS = (PtrSSchema)((*attType).AttrSSchema);
+          switch (pSS->SsAttribute->TtAttr[(*attType).AttrTypeNum - 1]->AttrType)
+            {
+            case AtEnumAttr:
+              *attrKind = 0;
+              break;
+            case AtNumAttr:
+              *attrKind = 1;
+              break;
+            case AtTextAttr:
+              *attrKind = 2;
+              break;
+            case AtReferenceAttr:
+              *attrKind = 3;
+              break;
+            default:
+              TtaError (ERR_invalid_attribute_type);
+              break;
+            }
+        }
     }
 }
 
@@ -844,7 +844,7 @@ char *TtaGetAttributeName (AttributeType attType)
   if (attType.AttrSSchema == NULL)
     TtaError (ERR_invalid_attribute_type);
   else if (attType.AttrTypeNum < 1 ||
-	   attType.AttrTypeNum > ((PtrSSchema) (attType.AttrSSchema))->SsNAttributes)
+           attType.AttrTypeNum > ((PtrSSchema) (attType.AttrSSchema))->SsNAttributes)
     TtaError (ERR_invalid_attribute_type);
   else
     strncpy (bufferName, ((PtrSSchema) (attType.AttrSSchema))->SsAttribute->TtAttr[attType.AttrTypeNum - 1]->AttrName, ELEM_NAME_LENGTH);
@@ -867,7 +867,7 @@ char *TtaGetAttributeOriginalName (AttributeType attType)
   if (attType.AttrSSchema == NULL)
     TtaError (ERR_invalid_attribute_type);
   else if (attType.AttrTypeNum < 1 ||
-	   attType.AttrTypeNum > ((PtrSSchema) (attType.AttrSSchema))->SsNAttributes)
+           attType.AttrTypeNum > ((PtrSSchema) (attType.AttrSSchema))->SsNAttributes)
     TtaError (ERR_invalid_attribute_type);
   else
     strncpy (bufferName, ((PtrSSchema) (attType.AttrSSchema))->SsAttribute->TtAttr[attType.AttrTypeNum - 1]->AttrOrigName, ELEM_NAME_LENGTH);
@@ -896,16 +896,16 @@ int TtaSameAttributeTypes (AttributeType type1, AttributeType type2)
     else
       result = 0;
   else if (type1.AttrTypeNum < 1 ||
-	   type2.AttrTypeNum < 1 ||
-	   type1.AttrTypeNum > ((PtrSSchema) (type1.AttrSSchema))->SsNAttributes ||
-	   type2.AttrTypeNum > ((PtrSSchema) (type2.AttrSSchema))->SsNAttributes)
+           type2.AttrTypeNum < 1 ||
+           type1.AttrTypeNum > ((PtrSSchema) (type1.AttrSSchema))->SsNAttributes ||
+           type2.AttrTypeNum > ((PtrSSchema) (type2.AttrSSchema))->SsNAttributes)
     TtaError (ERR_invalid_attribute_type);
   else
     {
       if (type1.AttrTypeNum == type2.AttrTypeNum &&
-	  !strcmp (((PtrSSchema) (type1.AttrSSchema))->SsName,
-		    ((PtrSSchema) (type2.AttrSSchema))->SsName))
-	result = 1;
+          !strcmp (((PtrSSchema) (type1.AttrSSchema))->SsName,
+                   ((PtrSSchema) (type2.AttrSSchema))->SsName))
+        result = 1;
     }
   return result;
 }
@@ -929,7 +929,7 @@ int TtaGetAttributeValue (Attribute attribute)
   if (attribute == NULL)
     TtaError (ERR_invalid_attribute_type);
   else if (((PtrAttribute) attribute)->AeAttrType != AtEnumAttr &&
-	   ((PtrAttribute) attribute)->AeAttrType != AtNumAttr)
+           ((PtrAttribute) attribute)->AeAttrType != AtNumAttr)
     TtaError (ERR_invalid_attribute_type);
   else
     value = ((PtrAttribute) attribute)->AeAttrValue;
@@ -955,7 +955,7 @@ char *TtaGetAttributeValueOriginalName (AttributeType attType, int value)
   if (attType.AttrSSchema == NULL)
     TtaError (ERR_invalid_attribute_type);
   else if (attType.AttrTypeNum < 1 ||
-	   attType.AttrTypeNum > ((PtrSSchema) (attType.AttrSSchema))->SsNAttributes)
+           attType.AttrTypeNum > ((PtrSSchema) (attType.AttrSSchema))->SsNAttributes)
     TtaError (ERR_invalid_attribute_type);
   else if (((PtrSSchema) (attType.AttrSSchema))->SsAttribute->TtAttr[attType.AttrTypeNum - 1]->AttrType != AtEnumAttr )
     TtaError (ERR_invalid_attribute_type);
@@ -967,9 +967,9 @@ char *TtaGetAttributeValueOriginalName (AttributeType attType, int value)
 }
 
 /*----------------------------------------------------------------------
-   TtaIsValidID
-   Returns TRUE if the attribute value is valid for an ID
-   else if the parameter update is TRUE updates the string name.
+  TtaIsValidID
+  Returns TRUE if the attribute value is valid for an ID
+  else if the parameter update is TRUE updates the string name.
   ----------------------------------------------------------------------*/
 ThotBool TtaIsValidID (Attribute attr, ThotBool update)
 {
@@ -988,42 +988,42 @@ ThotBool TtaIsValidID (Attribute attr, ThotBool update)
       ok  = TRUE;
       s = pAttr->AeAttrText->BuContent;
       while (s[i] != EOS)
-	{
-	  if (s[i] == ':' || s[i] == '_' ||
-	      (s[i] >= 'A' && s[i] <= 'Z') ||
-	      (s[i] >= 'a' && s[i] <= 'z') ||
-	      (s[i] >= 0xC0 && s[i] <= 0xD6) ||
-	      (s[i] >= 0xD8 && s[i] <= 0xF6) ||
-	      (s[i] >= 0xF8 && s[i] <= 0x2FF) ||
-	      (s[i] >= 0x370 && s[i] <= 0x37D) ||
-	      (s[i] >= 0x37F && s[i] <= 0x1FFF) ||
-	      (s[i] >= 0x200C && s[i] <= 0x200D) ||
-	      (s[i] >= 0x2070 && s[i] <= 0x218F) ||
-	      (s[i] >= 0x2C00 && s[i] <= 0x2FEF) ||
-	      (s[i] >= 0x3001 && s[i] <= 0xD7FF) ||
-	      (s[i] >= 0xF900 && s[i] <= 0xFDCF) ||
-	      (s[i] >= 0xFDF0 && s[i] <= 0xFFFD) ||
-	      (s[i] >= 0x10000 && s[i] <= 0xEFFFF) ||
-	      (i > 0 &&
-	       (s[i] == '-' || s[i] == '.' || s[i] == 0xB7 ||
-		(s[i] >= '0' && s[i] <= '9') ||
-		(s[i] >= 0x0300 && s[i] <= 0x036F) ||
-		(s[i] >= 0x203F && s[i] <= 0x2040))))
-	    i++;
-	  else
-	    {
-	      /* fix the invalid ID */
-	      ok = FALSE;
-	      if (update)
-		{
-		  if (i == 0)
-		    s[i] = 'L';
-		  else
-		    s[i] = '_';
-		}
-	      i++;
-	    }
-	}
+        {
+          if (s[i] == ':' || s[i] == '_' ||
+              (s[i] >= 'A' && s[i] <= 'Z') ||
+              (s[i] >= 'a' && s[i] <= 'z') ||
+              (s[i] >= 0xC0 && s[i] <= 0xD6) ||
+              (s[i] >= 0xD8 && s[i] <= 0xF6) ||
+              (s[i] >= 0xF8 && s[i] <= 0x2FF) ||
+              (s[i] >= 0x370 && s[i] <= 0x37D) ||
+              (s[i] >= 0x37F && s[i] <= 0x1FFF) ||
+              (s[i] >= 0x200C && s[i] <= 0x200D) ||
+              (s[i] >= 0x2070 && s[i] <= 0x218F) ||
+              (s[i] >= 0x2C00 && s[i] <= 0x2FEF) ||
+              (s[i] >= 0x3001 && s[i] <= 0xD7FF) ||
+              (s[i] >= 0xF900 && s[i] <= 0xFDCF) ||
+              (s[i] >= 0xFDF0 && s[i] <= 0xFFFD) ||
+              (s[i] >= 0x10000 && s[i] <= 0xEFFFF) ||
+              (i > 0 &&
+               (s[i] == '-' || s[i] == '.' || s[i] == 0xB7 ||
+                (s[i] >= '0' && s[i] <= '9') ||
+                (s[i] >= 0x0300 && s[i] <= 0x036F) ||
+                (s[i] >= 0x203F && s[i] <= 0x2040))))
+            i++;
+          else
+            {
+              /* fix the invalid ID */
+              ok = FALSE;
+              if (update)
+                {
+                  if (i == 0)
+                    s[i] = 'L';
+                  else
+                    s[i] = '_';
+                }
+              i++;
+            }
+        }
       return ok;
     }
 }
@@ -1045,7 +1045,7 @@ char *TtaGetAttributeValueName (AttributeType attType, int value)
   if (attType.AttrSSchema == NULL)
     TtaError (ERR_invalid_attribute_type);
   else if (attType.AttrTypeNum < 1 ||
-	   attType.AttrTypeNum > ((PtrSSchema) (attType.AttrSSchema))->SsNAttributes)
+           attType.AttrTypeNum > ((PtrSSchema) (attType.AttrSSchema))->SsNAttributes)
     TtaError (ERR_invalid_attribute_type);
   else if (((PtrSSchema) (attType.AttrSSchema))->SsAttribute->TtAttr[attType.AttrTypeNum - 1]->AttrType != AtEnumAttr )
     TtaError (ERR_invalid_attribute_type);
@@ -1068,7 +1068,7 @@ char *TtaGetAttributeValueName (AttributeType attType, int value)
    the corresponding int value, or 0 if error.
    ---------------------------------------------------------------------- */
 int TtaGetAttributeValueFromOriginalName (char *name,
-					  AttributeType attType)
+                                          AttributeType attType)
 {
   PtrTtAttribute       attr;
   int		       value, i;
@@ -1080,7 +1080,7 @@ int TtaGetAttributeValueFromOriginalName (char *name,
   if (attType.AttrSSchema == NULL)
     TtaError (ERR_invalid_attribute_type);
   else if (attType.AttrTypeNum < 1 ||
-	   attType.AttrTypeNum > ((PtrSSchema) (attType.AttrSSchema))->SsNAttributes)
+           attType.AttrTypeNum > ((PtrSSchema) (attType.AttrSSchema))->SsNAttributes)
     TtaError (ERR_invalid_attribute_type);
   else if (((PtrSSchema) (attType.AttrSSchema))->SsAttribute->TtAttr[attType.AttrTypeNum - 1]->AttrType != AtEnumAttr )
     TtaError (ERR_invalid_attribute_type);
@@ -1088,8 +1088,8 @@ int TtaGetAttributeValueFromOriginalName (char *name,
     {
       attr = ((PtrSSchema) (attType.AttrSSchema))->SsAttribute->TtAttr[attType.AttrTypeNum - 1];
       for (i = 0; value == 0 && i < attr->AttrNEnumValues; i++)
-	if (strncmp (attr->AttrEnumOrigValue[i], name, MAX_NAME_LENGTH) == 0)
-	  value = i+1;
+        if (strncmp (attr->AttrEnumOrigValue[i], name, MAX_NAME_LENGTH) == 0)
+          value = i+1;
     }
   return value;
 }
@@ -1116,7 +1116,7 @@ int TtaGetAttributeValueFromName (char *name, AttributeType attType)
   if (attType.AttrSSchema == NULL)
     TtaError (ERR_invalid_attribute_type);
   else if (attType.AttrTypeNum < 1 ||
-	   attType.AttrTypeNum > ((PtrSSchema) (attType.AttrSSchema))->SsNAttributes)
+           attType.AttrTypeNum > ((PtrSSchema) (attType.AttrSSchema))->SsNAttributes)
     TtaError (ERR_invalid_attribute_type);
   else if (((PtrSSchema) (attType.AttrSSchema))->SsAttribute->TtAttr[attType.AttrTypeNum - 1]->AttrType != AtEnumAttr )
     TtaError (ERR_invalid_attribute_type);
@@ -1124,8 +1124,8 @@ int TtaGetAttributeValueFromName (char *name, AttributeType attType)
     {
       attr = ((PtrSSchema) (attType.AttrSSchema))->SsAttribute->TtAttr[attType.AttrTypeNum - 1];
       for (i = 0; value == 0 && i < attr->AttrNEnumValues; i++)
-	if (strncmp(attr->AttrEnumValue[i], name, MAX_NAME_LENGTH) == 0)
-	  value = i+1;
+        if (strncmp(attr->AttrEnumValue[i], name, MAX_NAME_LENGTH) == 0)
+          value = i+1;
     }
   return value;
 }
@@ -1149,9 +1149,9 @@ int TtaGetAttributeValueFromName (char *name, AttributeType attType)
    attributeFound: the searched attribute, or NULL if not 
    ---------------------------------------------------------------------- */
 void TtaSearchAttribute (AttributeType searchedAttribute,
-			 SearchDomain scope, Element element,
-			 Element *elementFound,
-			 Attribute *attributeFound)
+                         SearchDomain scope, Element element,
+                         Element *elementFound,
+                         Attribute *attributeFound)
 {
   PtrElement          pEl;
   PtrAttribute        pAttr;
@@ -1174,44 +1174,44 @@ void TtaSearchAttribute (AttributeType searchedAttribute,
   else if (searchedAttribute.AttrSSchema == NULL)
     searchedAttribute.AttrTypeNum = 0;
   else if (searchedAttribute.AttrTypeNum < 1 ||
-	   searchedAttribute.AttrTypeNum >
-	   ((PtrSSchema) (searchedAttribute.AttrSSchema))->SsNAttributes)
+           searchedAttribute.AttrTypeNum >
+           ((PtrSSchema) (searchedAttribute.AttrSSchema))->SsNAttributes)
     {
       TtaError (ERR_invalid_attribute_type);
       ok = FALSE;
     }
   if (ok)
     {
-    if (scope == SearchBackward)
-      pEl = BackSearch2Attributes ((PtrElement) element, 0, "",
-				   searchedAttribute.AttrTypeNum, 0,
-				   (PtrSSchema) (searchedAttribute.AttrSSchema), NULL);
-    else
-      pEl = FwdSearch2Attributes ((PtrElement) element, 0, "",
-				  searchedAttribute.AttrTypeNum, 0,
-				  (PtrSSchema) (searchedAttribute.AttrSSchema), NULL);
-    if (pEl != NULL && scope == SearchInTree &&
-	!ElemIsWithinSubtree (pEl, (PtrElement) element))
-      pEl = NULL;
-    if (pEl != NULL)
-      {
-	*elementFound = (Element) pEl;
-	pAttr = pEl->ElFirstAttr;
-	if (pAttr != NULL &&
-	    searchedAttribute.AttrSSchema != NULL)
-	  /* if we look at any attribute, we find the first attribut of the
-	     given element, else we go over the attributs of the element
-	     until we find the right one */
-	  do
-	    if (pAttr->AeAttrNum == searchedAttribute.AttrTypeNum &&
-		!strcmp (pAttr->AeAttrSSchema->SsName,
-		       ((PtrSSchema) (searchedAttribute.AttrSSchema))->SsName))
-	      /* the expected attribute */
-	      *attributeFound = (Attribute) pAttr;
-	    else
-	      pAttr = pAttr->AeNext;
-	  while (pAttr != NULL && *attributeFound == NULL);
-      }
+      if (scope == SearchBackward)
+        pEl = BackSearch2Attributes ((PtrElement) element, 0, "",
+                                     searchedAttribute.AttrTypeNum, 0,
+                                     (PtrSSchema) (searchedAttribute.AttrSSchema), NULL);
+      else
+        pEl = FwdSearch2Attributes ((PtrElement) element, 0, "",
+                                    searchedAttribute.AttrTypeNum, 0,
+                                    (PtrSSchema) (searchedAttribute.AttrSSchema), NULL);
+      if (pEl != NULL && scope == SearchInTree &&
+          !ElemIsWithinSubtree (pEl, (PtrElement) element))
+        pEl = NULL;
+      if (pEl != NULL)
+        {
+          *elementFound = (Element) pEl;
+          pAttr = pEl->ElFirstAttr;
+          if (pAttr != NULL &&
+              searchedAttribute.AttrSSchema != NULL)
+            /* if we look at any attribute, we find the first attribut of the
+               given element, else we go over the attributs of the element
+               until we find the right one */
+            do
+              if (pAttr->AeAttrNum == searchedAttribute.AttrTypeNum &&
+                  !strcmp (pAttr->AeAttrSSchema->SsName,
+                           ((PtrSSchema) (searchedAttribute.AttrSSchema))->SsName))
+                /* the expected attribute */
+                *attributeFound = (Attribute) pAttr;
+              else
+                pAttr = pAttr->AeNext;
+            while (pAttr != NULL && *attributeFound == NULL);
+        }
     }
 }
 
@@ -1235,9 +1235,9 @@ void TtaSearchAttribute (AttributeType searchedAttribute,
    attributeFound: the searched attribute, or NULL if not 
    ---------------------------------------------------------------------- */
 void TtaSearchAttributes (AttributeType searchedAtt1, AttributeType searchedAtt2,
-			 SearchDomain scope, Element element,
-			 Element *elementFound,
-			 Attribute *attributeFound)
+                          SearchDomain scope, Element element,
+                          Element *elementFound,
+                          Attribute *attributeFound)
 {
   PtrElement          pEl;
   PtrAttribute        pAttr;
@@ -1258,15 +1258,15 @@ void TtaSearchAttributes (AttributeType searchedAtt1, AttributeType searchedAtt2
       ok = FALSE;
     }
   else if (searchedAtt1.AttrSSchema == NULL ||
-	   searchedAtt1.AttrTypeNum < 1 ||
-	   searchedAtt1.AttrTypeNum > ((PtrSSchema) (searchedAtt1.AttrSSchema))->SsNAttributes)
+           searchedAtt1.AttrTypeNum < 1 ||
+           searchedAtt1.AttrTypeNum > ((PtrSSchema) (searchedAtt1.AttrSSchema))->SsNAttributes)
     {
       TtaError (ERR_invalid_attribute_type);
       ok = FALSE;
     }
   else if (searchedAtt2.AttrSSchema == NULL ||
-	   searchedAtt2.AttrTypeNum < 1 ||
-	   searchedAtt2.AttrTypeNum > ((PtrSSchema) (searchedAtt2.AttrSSchema))->SsNAttributes)
+           searchedAtt2.AttrTypeNum < 1 ||
+           searchedAtt2.AttrTypeNum > ((PtrSSchema) (searchedAtt2.AttrSSchema))->SsNAttributes)
     {
       TtaError (ERR_invalid_attribute_type);
       ok = FALSE;
@@ -1274,55 +1274,55 @@ void TtaSearchAttributes (AttributeType searchedAtt1, AttributeType searchedAtt2
 
   if (ok)
     {
-    if (scope == SearchBackward)
-      pEl = BackSearch2Attributes ((PtrElement) element, 0, "",
-				   searchedAtt1.AttrTypeNum,
-				   searchedAtt2.AttrTypeNum,
-				   (PtrSSchema) (searchedAtt1.AttrSSchema),
-				   (PtrSSchema) (searchedAtt2.AttrSSchema));
-    else
-      pEl = FwdSearch2Attributes ((PtrElement) element, 0, "",
-				  searchedAtt1.AttrTypeNum,
-				  searchedAtt2.AttrTypeNum,
-				  (PtrSSchema) (searchedAtt1.AttrSSchema),
-				  (PtrSSchema) (searchedAtt2.AttrSSchema));
-    if (pEl != NULL && scope == SearchInTree &&
-	!ElemIsWithinSubtree (pEl, (PtrElement) element))
-      pEl = NULL;
-    if (pEl != NULL)
-      {
-	*elementFound = (Element) pEl;
-	pAttr = pEl->ElFirstAttr;
-	if (pAttr != NULL)
-	  /* if we look at any attribute, we find the first attribut of the
-	     given element, else we go over the attributs of the element
-	     until we find the right one */
-	  do
-	    if ((pAttr->AeAttrNum == searchedAtt1.AttrTypeNum &&
-		 !strcmp (pAttr->AeAttrSSchema->SsName,
-			  ((PtrSSchema) (searchedAtt1.AttrSSchema))->SsName)) ||
-		(pAttr->AeAttrNum == searchedAtt2.AttrTypeNum &&
-		 !strcmp (pAttr->AeAttrSSchema->SsName,
-			  ((PtrSSchema) (searchedAtt2.AttrSSchema))->SsName)))
-	      /* the expected attribute */
-	      *attributeFound = (Attribute) pAttr;
-	    else
-	      pAttr = pAttr->AeNext;
-	  while (pAttr != NULL && *attributeFound == NULL);
-      }
+      if (scope == SearchBackward)
+        pEl = BackSearch2Attributes ((PtrElement) element, 0, "",
+                                     searchedAtt1.AttrTypeNum,
+                                     searchedAtt2.AttrTypeNum,
+                                     (PtrSSchema) (searchedAtt1.AttrSSchema),
+                                     (PtrSSchema) (searchedAtt2.AttrSSchema));
+      else
+        pEl = FwdSearch2Attributes ((PtrElement) element, 0, "",
+                                    searchedAtt1.AttrTypeNum,
+                                    searchedAtt2.AttrTypeNum,
+                                    (PtrSSchema) (searchedAtt1.AttrSSchema),
+                                    (PtrSSchema) (searchedAtt2.AttrSSchema));
+      if (pEl != NULL && scope == SearchInTree &&
+          !ElemIsWithinSubtree (pEl, (PtrElement) element))
+        pEl = NULL;
+      if (pEl != NULL)
+        {
+          *elementFound = (Element) pEl;
+          pAttr = pEl->ElFirstAttr;
+          if (pAttr != NULL)
+            /* if we look at any attribute, we find the first attribut of the
+               given element, else we go over the attributs of the element
+               until we find the right one */
+            do
+              if ((pAttr->AeAttrNum == searchedAtt1.AttrTypeNum &&
+                   !strcmp (pAttr->AeAttrSSchema->SsName,
+                            ((PtrSSchema) (searchedAtt1.AttrSSchema))->SsName)) ||
+                  (pAttr->AeAttrNum == searchedAtt2.AttrTypeNum &&
+                   !strcmp (pAttr->AeAttrSSchema->SsName,
+                            ((PtrSSchema) (searchedAtt2.AttrSSchema))->SsName)))
+                /* the expected attribute */
+                *attributeFound = (Attribute) pAttr;
+              else
+                pAttr = pAttr->AeNext;
+            while (pAttr != NULL && *attributeFound == NULL);
+        }
     }
 }
 
 /*----------------------------------------------------------------------
-   TtaGetTypedAttrAncestor
+  TtaGetTypedAttrAncestor
 
-   returns a pointer to the attribute of the first
-   element which encloses pEl and that has an attribute
-   of type attNum. The function returns pElAttr if
-   the search is succesful, NULL otherwise.
+  returns a pointer to the attribute of the first
+  element which encloses pEl and that has an attribute
+  of type attNum. The function returns pElAttr if
+  the search is succesful, NULL otherwise.
   ----------------------------------------------------------------------*/
 Attribute  TtaGetTypedAttrAncestor (Element pEl, int attNum,
-				    SSchema pSSattr, Element *pElAttr)
+                                    SSchema pSSattr, Element *pElAttr)
 {
   PtrAttribute    pAttr;
 
@@ -1330,10 +1330,10 @@ Attribute  TtaGetTypedAttrAncestor (Element pEl, int attNum,
   pAttr = NULL;
   if (pEl == NULL)
     TtaError (ERR_invalid_parameter);
-   else if (attNum == 0)
+  else if (attNum == 0)
     TtaError (ERR_invalid_attribute_type);
   else
     pAttr = GetTypedAttrAncestor ((PtrElement) pEl, attNum,
-				  (PtrSSchema) pSSattr, (PtrElement *) pElAttr);
+                                  (PtrSSchema) pSSattr, (PtrElement *) pElAttr);
   return ((Attribute) pAttr);
 }

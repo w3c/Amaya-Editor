@@ -3445,6 +3445,11 @@ static ThotBool ApplyPresRuleAb (PtrPRule pRule, PtrPSchema pSchP,
   ThotBool            ret;
 
   /* applique la regle a` appliquer */
+  if (pAb == NULL || pRule == NULL ||
+      (pRule->PrBoxType == BtBefore && !pAb->AbPseudoElBefore ) ||
+      (pRule->PrBoxType == BtAfter && !pAb->AbPseudoElAfter ))
+    return FALSE;
+
   ret = ApplyRule (pRule, pSchP, pAb, pDoc, pAttr, pAb);
   /* verifie si c'est une regle de dimension ou de position */
   /* qui s'applique a un pave' elastique dont la boite a ete */
