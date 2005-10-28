@@ -181,13 +181,16 @@ int TtaMakeWindow( int x, int y, int w, int h, int kind, int parent_window_id )
                                         p_parent_window,
                                         window_pos,
                                         window_size );
-      // setup the maximized state (only for normal windows)
-      ThotBool maximized;
-      TtaGetEnvBoolean("WINDOW_MAXIMIZED", &maximized);
+      if (parent_window_id == 0)
+        {
+          // setup the maximized state (only for normal windows)
+          ThotBool maximized;
+          TtaGetEnvBoolean("WINDOW_MAXIMIZED", &maximized);
 #ifndef _MACOS
-      if (maximized)
-        p_window->Maximize(maximized);
+          if (maximized)
+            p_window->Maximize(maximized);
 #endif /* !_MACOS */
+        }
       break;
     case WXAMAYAWINDOW_SIMPLE:
       p_window = new AmayaSimpleWindow( window_id,
