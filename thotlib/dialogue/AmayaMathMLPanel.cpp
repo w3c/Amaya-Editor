@@ -130,7 +130,7 @@ void AmayaMathMLPanel::OnButton( wxCommandEvent& event )
   -----------------------------------------------------------------------*/
 void AmayaMathMLPanel::SendDataToPanel( AmayaParams& p )
 {
-  int action = (long int)p.param1;
+  int action = p.param1;
   if (action == wxMATHML_ACTION_INIT)
     {
     }

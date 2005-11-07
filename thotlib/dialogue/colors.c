@@ -135,8 +135,8 @@ void ThotSelectPalette (int bground, int fground)
    FgColor = fground;
    /* refresh color panels */
    AmayaParams p;
-   p.param1 = (void*)BgColor;
-   p.param2 = (void*)FgColor;
+   p.param1 = BgColor;
+   p.param8 = FgColor;
    AmayaSubPanelManager::GetInstance()->SendDataToPanel( WXAMAYA_PANEL_COLORS, p );
 #endif /* _WX */
 }

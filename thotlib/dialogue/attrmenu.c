@@ -137,8 +137,7 @@ extern UINT      subMenuID[MAX_FRAME];
   InitFormLangue
   initializes a form for capturing the values of the Language attribute.
   ----------------------------------------------------------------------*/
-static void InitFormLanguage (Document doc, View view,
-                              PtrElement firstSel,
+static void InitFormLanguage (Document doc, View view, PtrElement firstSel,
                               PtrAttribute currAttr)
 {
   Language            language;
@@ -214,13 +213,13 @@ static void InitFormLanguage (Document doc, View view,
 #ifdef _WX
   ptr = GetListOfLanguages (bufMenu, MAX_TXT_LEN, languageCode, &nbItem, &defItem);
   AmayaParams p;
-  p.param1 = (void*)AmayaAttributePanel::wxATTR_ACTION_SETUPLANG;
-  p.param2 = (void*)FALSE;
+  p.param1 = (int)AmayaAttributePanel::wxATTR_ACTION_SETUPLANG;
+  p.param2 = NULL;
   p.param3 = (void*)ptr;
   p.param4 = (void*)label;
   p.param5 = (void*)bufMenu;
-  p.param6 = (void*)nbItem;
-  p.param7 = (void*)defItem;
+  p.param7 = nbItem;
+  p.param8 = defItem;
   AmayaSubPanelManager::GetInstance()->SendDataToPanel( WXAMAYA_PANEL_ATTRIBUTE, p );
 #endif /* _WX */
 
@@ -614,9 +613,9 @@ static void MenuValues (TtAttribute * pAttr, ThotBool required,
         if (!isRequiredDlg)
           {
             AmayaParams p;
-            p.param1 = (void*)AmayaAttributePanel::wxATTR_ACTION_SETUPNUM;
+            p.param1 = (int)AmayaAttributePanel::wxATTR_ACTION_SETUPNUM;
             p.param2 = (void*)(required ? 0xFFFFFF : 0x000000);
-            p.param3 = (void*)i;
+            p.param8 = i;
             AmayaSubPanelManager::GetInstance()->SendDataToPanel( WXAMAYA_PANEL_ATTRIBUTE, p );
           }
         else
@@ -654,7 +653,7 @@ static void MenuValues (TtAttribute * pAttr, ThotBool required,
         if (!isRequiredDlg)
           {
             AmayaParams p;
-            p.param1 = (void*)AmayaAttributePanel::wxATTR_ACTION_SETUPTEXT;
+            p.param1 = (int)AmayaAttributePanel::wxATTR_ACTION_SETUPTEXT;
             p.param2 = (void*)(required ? 0xFFFFFF : 0x000000);
             p.param3 = (void*)TextAttrValue;
             AmayaSubPanelManager::GetInstance()->SendDataToPanel( WXAMAYA_PANEL_ATTRIBUTE, p );
@@ -742,11 +741,11 @@ static void MenuValues (TtAttribute * pAttr, ThotBool required,
         if (!isRequiredDlg)
           {
             AmayaParams p;
-            p.param1 = (void*)AmayaAttributePanel::wxATTR_ACTION_SETUPENUM;
+            p.param1 = (int)AmayaAttributePanel::wxATTR_ACTION_SETUPENUM;
             p.param2 = (void*)(required ? 0xFFFFFF : 0x000000);
             p.param3 = (void*)bufMenu; /* list data */
-            p.param4 = (void*)val; /* nb items */
-            p.param5 = (void*)i; /* selected item */
+            p.param7 = i; /* selected item */
+            p.param8 = val; /* nb items */
             AmayaSubPanelManager::GetInstance()->SendDataToPanel( WXAMAYA_PANEL_ATTRIBUTE, p );
           }
         else
@@ -1211,13 +1210,13 @@ void UpdateAttrMenu (PtrDocument pDoc)
 #ifdef _WX
   /* update the attribute dialog */
   AmayaParams p;
-  p.param1 = (void*)AmayaAttributePanel::wxATTR_ACTION_LISTUPDATE;
+  p.param1 = (int)AmayaAttributePanel::wxATTR_ACTION_LISTUPDATE;
   p.param2 = (void*)bufMenuAttr;
-  p.param3 = (void*)nbItemAttr;
   p.param4 = (void*)ActiveAttr;
   p.param5 = (void*)bufEventAttr;
-  p.param6 = (void*)nbEvent;
-  p.param7 = (void*)ActiveEventAttr;
+  p.param6 = ActiveEventAttr;
+  p.param7 = nbEvent;
+  p.param8 = nbItemAttr;
   AmayaSubPanelManager::GetInstance()->SendDataToPanel( WXAMAYA_PANEL_ATTRIBUTE, p );
 #endif /* _WX */
 

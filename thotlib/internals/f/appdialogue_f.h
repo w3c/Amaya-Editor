@@ -18,14 +18,14 @@ extern int FindMenuItemIDFromMenuAction ( Menu_Ctl * ptrmenu,
                                           int action_id );
 extern int FindMenuActionFromMenuItemID ( Menu_Ctl * ptrmenu,
                                           int item_id );
-extern void TtaExecuteMenuAction ( const char *actionName,
-                                   Document doc,
-                                   View view,
-                                   ThotBool force );
 extern void TtaExecuteMenuActionFromActionId ( int action_id,
                                                Document doc,
                                                View view,
                                                ThotBool force );
+extern void TtaExecuteMenuAction ( const char *actionName,
+                                   Document doc,
+                                   View view,
+                                   ThotBool force );
 extern void TteZeroMenu ( void );
 extern void TteAddMenu ( int view,
                          int menuID,
@@ -154,14 +154,14 @@ extern int FindMenuItemIDFromMenuAction ( Menu_Ctl * ptrmenu,
                                             int action_id );
 extern int FindMenuActionFromMenuItemID ( Menu_Ctl * ptrmenu,
                                             int item_id );
-extern void TtaExecuteMenuAction ( const char *actionName,
-                                     Document doc,
-                                     View view,
-                                     ThotBool force );
 extern void TtaExecuteMenuActionFromActionId ( int action_id,
                                                  Document doc,
                                                  View view,
                                                  ThotBool force );
+extern void TtaExecuteMenuAction ( const char *actionName,
+                                     Document doc,
+                                     View view,
+                                     ThotBool force );
 extern void TteZeroMenu ( void );
 extern void TteAddMenu ( int view,
                            int menuID,

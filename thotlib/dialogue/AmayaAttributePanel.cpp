@@ -119,18 +119,20 @@ bool AmayaAttributePanel::IsFreezed()
   ----------------------------------------------------------------------*/
 void AmayaAttributePanel::SendDataToPanel( AmayaParams& p )
 {
-  int action_id = (int)p.param1;
+  int action_id = p.param1;
   switch ( action_id )
     {
     case wxATTR_ACTION_LISTUPDATE:
       ShowAttributValue( wxATTR_TYPE_NONE );
-      SetupListValue( (const char *)p.param2, (int)p.param3, (const int *)p.param4, (const char *)p.param5, (int)p.param6, (const int *)p.param7 );
+      SetupListValue( (const char *)p.param2, p.param8, (const int *)p.param4,
+                      (const char *)p.param5, p.param7, (const int *)p.param6 );
       break;
     case wxATTR_ACTION_SETUPLANG:
       m_CurrentAttType = wxATTR_TYPE_LANG;
       ShowAttributValue( wxATTR_TYPE_LANG );
       SetMandatoryState( p.param2 != NULL );
-      SetupLangValue( (const char *)p.param3,(const char *)p.param4, (const char *)p.param5, (int)p.param6, (int)p.param7 );
+      SetupLangValue( (const char *)p.param3,(const char *)p.param4,
+                      (const char *)p.param5, p.param7, p.param8 );
       break;
     case wxATTR_ACTION_SETUPTEXT:
       m_CurrentAttType = wxATTR_TYPE_TEXT;
@@ -142,13 +144,13 @@ void AmayaAttributePanel::SendDataToPanel( AmayaParams& p )
       m_CurrentAttType = wxATTR_TYPE_ENUM;
       ShowAttributValue( wxATTR_TYPE_ENUM );
       SetMandatoryState( p.param2 != NULL );
-      SetupEnumValue( (const char *)p.param3, (int)p.param4, (int)p.param5 );
+      SetupEnumValue( (const char *)p.param3, p.param8, p.param7 );
       break;
     case wxATTR_ACTION_SETUPNUM:
       m_CurrentAttType = wxATTR_TYPE_NUM;
       ShowAttributValue( wxATTR_TYPE_NUM );
       SetMandatoryState( p.param2 != NULL );
-      SetupNumValue( (int)p.param3 );
+      SetupNumValue( p.param8 );
       break;
     }
 }
@@ -366,8 +368,10 @@ void AmayaAttributePanel::ShowAttributValue( wxATTR_TYPE type )
   params:
   returns:
   ----------------------------------------------------------------------*/
-void AmayaAttributePanel::SetupListValue( const char * p_attr_list, int nb_attr, const int * p_active_attr,
-					  const char * p_attr_evt_list, int nb_attr_evt, const int * p_active_attr_evt )
+void AmayaAttributePanel::SetupListValue( const char * p_attr_list,
+                                          int nb_attr, const int * p_active_attr,
+                                          const char * p_attr_evt_list, int nb_attr_evt,
+                                          const int * p_active_attr_evt )
 {
   /* remember the selected entry */
   wxString last_entry = m_pAttrList->GetStringSelection();
@@ -452,10 +456,10 @@ void AmayaAttributePanel::SetupListValue( const char * p_attr_list, int nb_attr,
   returns:
   ----------------------------------------------------------------------*/
 void AmayaAttributePanel::SetupLangValue( const char * selected_lang, 
-					  const char * inherited_lang,
-					  const char * lang_list,
-					  int lang_list_nb,
-					  int default_lang_id )
+                                          const char * inherited_lang,
+                                          const char * lang_list,
+                                          int lang_list_nb,
+                                          int default_lang_id )
 {
   /* setup the inherited langage label */
   wxStaticText * p_stext = XRCCTRL(*m_pPanel_Lang, "wxID_ATTR_LABEL_LANG_INHER", wxStaticText);

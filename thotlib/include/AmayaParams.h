@@ -3,19 +3,20 @@
 #ifndef __AMAYAPARAMS_H__
 #define __AMAYAPARAMS_H__
 
-// this class is used to pass untyped multipl parameters
+// this class is used to pass typed multiple parameters
 class AmayaParams
 {
  public:
-  void * param1;
-  void * param2;
-  void * param3;
-  void * param4;
-  void * param5;
-  void * param6;
-  void * param7;
-  void * param8;
-  void * param9;
+  int   param1;
+  void *param2;
+  void *param3;
+  void *param4;
+  void *param5;
+  void *param6;
+  int   param7;
+  int   param8;
+  int   param9;
+  int   param10;
 };
 
 #endif /* __AMAYASUBPANELMANAGER_H__ */

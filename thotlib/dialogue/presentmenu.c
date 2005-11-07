@@ -2181,16 +2181,16 @@ void TtcChangeCharacters (Document document, View view)
           FontSize = pAb->AbSize;
 #ifdef _WX
           AmayaParams p;
-          p.param1 = (void*)(FontFamily-1);
-          p.param2 = (void*)FontStyle;
-          p.param3 = (void*)FontWeight;
-          p.param4 = (void*)UnderlineStyle;
+          p.param1 = FontFamily - 1;
+          p.param7 = UnderlineStyle;
+          p.param8 = FontStyle;
+          p.param9 = FontWeight;
           if (pAb->AbSizeUnit == UnPoint)
             /* convertit la taille */
             i = pAb->AbSize;
           else
             i = ThotFontPointSize (pAb->AbSize);
-          p.param5 = (void*)i; /* font size */
+          p.param10 = i; /* font size */
           AmayaSubPanelManager::GetInstance()->SendDataToPanel( WXAMAYA_PANEL_CHARSTYLE, p );
 #else /* _WX */
           if (pAb->AbSizeUnit == UnPoint)
@@ -2574,10 +2574,10 @@ void TtcChangeFormat (Document document, View view)
 #endif /* _GTK */     
 #ifdef _WX
           AmayaParams p;
-          p.param1 = (void*)AmayaFormatPanel::wxFORMAT_MODIF_ALL;
-          p.param2 = (void*)alignNum;
-          p.param3 = (void*)IndentValue;
-          p.param4 = (void*)OldLineSp;
+          p.param1 = (int)AmayaFormatPanel::wxFORMAT_MODIF_ALL;
+          p.param7 = OldLineSp;
+          p.param8 = alignNum;
+          p.param9 = IndentValue;
           AmayaSubPanelManager::GetInstance()->SendDataToPanel( WXAMAYA_PANEL_FORMAT, p );
 #endif /* _WX */  
         }

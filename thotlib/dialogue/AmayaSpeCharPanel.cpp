@@ -123,7 +123,7 @@ void AmayaSpeCharPanel::OnButtonFiltre1( wxCommandEvent& event )
   DoFilter( filtre_greek );
 
   AmayaParams p;
-  p.param1 = (void*)AmayaSpeCharPanel::wxSPECHAR_ACTION_REFRESH;
+  p.param1 = (int)AmayaSpeCharPanel::wxSPECHAR_ACTION_REFRESH;
   AmayaSubPanelManager::GetInstance()->SendDataToPanel( WXAMAYA_PANEL_SPECHAR, p );
 }
 
@@ -138,7 +138,7 @@ void AmayaSpeCharPanel::OnButtonFiltre2( wxCommandEvent& event )
   DoFilter( filtre_greek_maj );
 
   AmayaParams p;
-  p.param1 = (void*)AmayaSpeCharPanel::wxSPECHAR_ACTION_REFRESH;
+  p.param1 = (int)AmayaSpeCharPanel::wxSPECHAR_ACTION_REFRESH;
   AmayaSubPanelManager::GetInstance()->SendDataToPanel( WXAMAYA_PANEL_SPECHAR, p );
 }
 
@@ -153,7 +153,7 @@ void AmayaSpeCharPanel::OnButtonFiltre3( wxCommandEvent& event )
   DoFilter( filtre_maths );
 
   AmayaParams p;
-  p.param1 = (void*)AmayaSpeCharPanel::wxSPECHAR_ACTION_REFRESH;
+  p.param1 = (int)AmayaSpeCharPanel::wxSPECHAR_ACTION_REFRESH;
   AmayaSubPanelManager::GetInstance()->SendDataToPanel( WXAMAYA_PANEL_SPECHAR, p );
 }
 
@@ -168,7 +168,7 @@ void AmayaSpeCharPanel::OnButtonFiltre4( wxCommandEvent& event )
   DoFilter( filtre_operateurs );
 
   AmayaParams p;
-  p.param1 = (void*)AmayaSpeCharPanel::wxSPECHAR_ACTION_REFRESH;
+  p.param1 = (int)AmayaSpeCharPanel::wxSPECHAR_ACTION_REFRESH;
   AmayaSubPanelManager::GetInstance()->SendDataToPanel( WXAMAYA_PANEL_SPECHAR, p );
 }
 
@@ -183,7 +183,7 @@ void AmayaSpeCharPanel::OnButtonFiltre5( wxCommandEvent& event )
   DoFilter( filtre_relations_binaires );
 
   AmayaParams p;
-  p.param1 = (void*)AmayaSpeCharPanel::wxSPECHAR_ACTION_REFRESH;
+  p.param1 = (int)AmayaSpeCharPanel::wxSPECHAR_ACTION_REFRESH;
   AmayaSubPanelManager::GetInstance()->SendDataToPanel( WXAMAYA_PANEL_SPECHAR, p );
 }
 
@@ -198,7 +198,7 @@ void AmayaSpeCharPanel::OnButtonFiltre6( wxCommandEvent& event )
   DoFilter( filtre_relations_binaires_negation );
 
   AmayaParams p;
-  p.param1 = (void*)AmayaSpeCharPanel::wxSPECHAR_ACTION_REFRESH;
+  p.param1 = (int)AmayaSpeCharPanel::wxSPECHAR_ACTION_REFRESH;
   AmayaSubPanelManager::GetInstance()->SendDataToPanel( WXAMAYA_PANEL_SPECHAR, p );
 }
 
@@ -213,7 +213,7 @@ void AmayaSpeCharPanel::OnButtonFiltre7( wxCommandEvent& event )
   DoFilter( filtre_divers );
   
   AmayaParams p;
-  p.param1 = (void*)AmayaSpeCharPanel::wxSPECHAR_ACTION_REFRESH;
+  p.param1 = (int)AmayaSpeCharPanel::wxSPECHAR_ACTION_REFRESH;
   AmayaSubPanelManager::GetInstance()->SendDataToPanel( WXAMAYA_PANEL_SPECHAR, p );
 }
 
@@ -228,7 +228,7 @@ void AmayaSpeCharPanel::OnButtonFiltre8( wxCommandEvent& event )
   DoFilter( filtre_fleches );
   
   AmayaParams p;
-  p.param1 = (void*)AmayaSpeCharPanel::wxSPECHAR_ACTION_REFRESH;
+  p.param1 = (int)AmayaSpeCharPanel::wxSPECHAR_ACTION_REFRESH;
   AmayaSubPanelManager::GetInstance()->SendDataToPanel( WXAMAYA_PANEL_SPECHAR, p );
 }
 

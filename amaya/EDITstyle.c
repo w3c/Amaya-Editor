@@ -1865,7 +1865,7 @@ void ApplyClass (Document doc, View view)
 
 #ifdef _WX  
   AmayaParams p;
-  p.param1 = (void*)NbClass;
+  p.param1 = NbClass;
   p.param2 = (void*)ListBuffer;
   p.param3 = (void*)CurrentClass;
   p.param4 = (void*)(BaseDialog+AClassForm); /* the dialog reference used to call the right callback in thotlib */

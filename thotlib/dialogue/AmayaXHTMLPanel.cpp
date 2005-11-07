@@ -144,7 +144,7 @@ void AmayaXHTMLPanel::OnButton( wxCommandEvent& event )
   -----------------------------------------------------------------------*/
 void AmayaXHTMLPanel::SendDataToPanel( AmayaParams& p )
 {
-  bool * p_checked_array = (bool *)p.param1;
+  bool * p_checked_array = (bool *)p.param2;
 
   if (p_checked_array[WXAMAYA_PANEL_XHTML_STRONG])
     XRCCTRL(*this, "wxID_PANEL_XHTML_STRONG", wxBitmapButton)->SetBackgroundColour( m_OnColour );

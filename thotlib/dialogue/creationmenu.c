@@ -146,7 +146,7 @@ void TtaShowElementMenu (Document doc, View view)
 	{
 	  AmayaParams p;
 	  int         typeNum;
-	  p.param1 = (void*)nbItem;
+	  p.param1 = nbItem;
 	  p.param2 = (void*)menuBuf;
 	  if (firstSel)
 	    {
@@ -233,7 +233,7 @@ void TtaRefreshElementMenu (Document doc, View view)
 	{
 	  AmayaParams p;
 	  int         typeNum;
-	  p.param1 = (void*)nbItem;
+	  p.param1 = nbItem;
 	  p.param2 = (void*)menuBuf;
 	  if (firstSel)
 	    {

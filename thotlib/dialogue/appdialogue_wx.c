@@ -1618,7 +1618,7 @@ void TtaRefreshPanelButton( Document doc, View view, int panel_type )
           
           /* get the subpanel depending on panel_type */
           AmayaSubPanel * p_subpanel = NULL;
-          bool * p_checked_array     = NULL;
+          bool * p_checked_array = NULL;
           switch (panel_type)
             {
             case WXAMAYA_PANEL_XHTML:
@@ -1632,7 +1632,7 @@ void TtaRefreshPanelButton( Document doc, View view, int panel_type )
           
           /* refresh the subpanel with button stats */
           AmayaParams p;
-          p.param1 = (void*)p_checked_array;
+          p.param2 = (void*)p_checked_array;
           AmayaSubPanelManager::GetInstance()->SendDataToPanel( p_subpanel->GetPanelType(), p );
         }
     }

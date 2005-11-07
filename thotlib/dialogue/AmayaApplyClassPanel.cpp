@@ -114,10 +114,10 @@ void AmayaApplyClassPanel::RefreshToolTips()
   -----------------------------------------------------------------------*/
 void AmayaApplyClassPanel::SendDataToPanel( AmayaParams& p )
 {
-  int nb_class              = (long int)p.param1;
-  const char * listBuffer   = (char *)p.param2;
-  const char * currentClass = (char *)p.param3;
-  int ref                   = (int)p.param4;;
+  int          nb_class = p.param1;
+  const char  *listBuffer = (char *)p.param2;
+  const char  *currentClass = (char *)p.param3;
+  int          ref = (long int)p.param4;
   
   m_ApplyClassRef = ref;
   
