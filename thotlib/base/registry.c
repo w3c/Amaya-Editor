@@ -1204,7 +1204,7 @@ void TtaInitializeAppRegistry (char *appArgv0)
 #endif /* _MACOS */
   int         execname_len;
   int         len, round;
-  ThotBool    found, ok;
+  ThotBool    found, ok, amaya_exe;
   
 #ifdef _WINDOWS
   _fmode = _O_BINARY;
@@ -1309,7 +1309,8 @@ void TtaInitializeAppRegistry (char *appArgv0)
    */
   /* IV june 2004: force the appName to use the amaya temporary directory
      with thot compilers */
-  appName = "amaya";
+  /* amaya_exe is FALSE when running a compiler */
+  amaya_exe = (strlen (execname) > 4 && !strcasecmp (&execname[strlen (execname)-5], "amaya"));  appName = "amaya";
   AppRegistryEntryAppli = TtaStrdup (appName);
   AppNameW = TtaStrdup (appName);
 #ifdef HAVE_LSTAT
@@ -1481,7 +1482,7 @@ void TtaInitializeAppRegistry (char *appArgv0)
   if (ptr && TtaDirExists (ptr))
     strncpy (app_home, ptr, MAX_PATH);
 
-  if (app_home[0] == EOS)
+  if (app_home[0] == EOS && amaya_exe)
     {
 #ifdef _WINGUI
       /* compute the default app_home value from the username and thotdir */
@@ -1613,7 +1614,7 @@ void TtaInitializeAppRegistry (char *appArgv0)
   /* get the app_home again from the registry, as the user may have
      overriden it using the global configuration files */
   ptr = TtaGetEnvString ("APP_HOME");
-  if (ptr)
+  if (ptr && TtaDirExists (ptr))
     strcpy (app_home, ptr);
   else
     app_home[0] = EOS;
