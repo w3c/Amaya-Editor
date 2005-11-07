@@ -2599,6 +2599,7 @@ void ThotFreeAllFonts (void)
       gdk_font_unref (DefaultFont);
       DefaultFont = NULL;
     }
+  system ("xset fp");
 #endif /* _GTK */
 #ifdef _GL
   if (DefaultGLFont)
