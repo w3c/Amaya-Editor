@@ -43,6 +43,10 @@ extern void CreateMMULTISCRIPTS ( Document document,
                                   View view );
 extern void CreateMTABLE ( Document document,
                            View view );
+extern void CreateMIntegral ( Document doc,
+                              View view );
+extern void CreateMSum ( Document doc,
+                         View view );
 extern void CreateMTEXT ( Document document,
                           View view );
 extern void CreateMI ( Document document,
@@ -167,6 +171,10 @@ extern void CreateMMULTISCRIPTS ( Document document,
                                     View view );
 extern void CreateMTABLE ( Document document,
                              View view );
+extern void CreateMIntegral ( Document doc,
+                                View view );
+extern void CreateMSum ( Document doc,
+                           View view );
 extern void CreateMTEXT ( Document document,
                             View view );
 extern void CreateMI ( Document document,

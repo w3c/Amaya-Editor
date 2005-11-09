@@ -71,6 +71,7 @@
                                         <object class="sizeritem">
                                           <object class="wxBitmapButton" name="wxID_PANEL_MATH_FENCE">
                                             <bitmap>../icons/16x16/MATHML_fence.png</bitmap>
+                                            <tooltip>mrow</tooltip>
                                           </object>
                                           <flag>wxALL</flag>
                                           <border>1</border>
@@ -78,6 +79,7 @@
                                         <object class="sizeritem">
                                           <object class="wxBitmapButton" name="wxID_PANEL_MATH_SQRT">
                                             <bitmap>../icons/16x16/MATHML_sqrt.png</bitmap>
+                                            <tooltip>msqrt</tooltip>
                                           </object>
                                           <flag>wxALL</flag>
                                           <border>1</border>
@@ -85,6 +87,7 @@
                                         <object class="sizeritem">
                                           <object class="wxBitmapButton" name="wxID_PANEL_MATH_ROOT">
                                             <bitmap>../icons/16x16/MATHML_root.png</bitmap>
+                                            <tooltip>mroot</tooltip>
                                           </object>
                                           <flag>wxALL</flag>
                                           <border>1</border>
@@ -92,6 +95,7 @@
                                         <object class="sizeritem">
                                           <object class="wxBitmapButton" name="wxID_PANEL_MATH_FRAC">
                                             <bitmap>../icons/16x16/MATHML_frac.png</bitmap>
+                                            <tooltip>mfrac</tooltip>
                                           </object>
                                           <flag>wxALL</flag>
                                           <border>1</border>
@@ -99,6 +103,7 @@
                                         <object class="sizeritem">
                                           <object class="wxBitmapButton" name="wxID_PANEL_MATH_MATRIX">
                                             <bitmap>../icons/16x16/MATHML_matrix.png</bitmap>
+                                            <tooltip>mtable</tooltip>
                                           </object>
                                           <flag>wxALL</flag>
                                           <border>1</border>
@@ -106,6 +111,15 @@
                                         <object class="sizeritem">
                                           <object class="wxBitmapButton" name="wxID_PANEL_MATH_UNDER">
                                             <bitmap>../icons/16x16/MATHML_under.png</bitmap>
+                                            <tooltip>munder</tooltip>
+                                          </object>
+                                          <flag>wxALL</flag>
+                                          <border>1</border>
+                                        </object>
+                                        <object class="sizeritem">
+                                          <object class="wxBitmapButton" name="wxID_PANEL_MATH_INTEGRAL">
+                                            <bitmap>../icons/16x16/MATHML_int.png</bitmap>
+                                            <tooltip>integral</tooltip>
                                           </object>
                                           <flag>wxALL</flag>
                                           <border>1</border>
@@ -118,6 +132,7 @@
                                         <object class="sizeritem">
                                           <object class="wxBitmapButton" name="wxID_PANEL_MATH_OVER">
                                             <bitmap>../icons/16x16/MATHML_over.png</bitmap>
+                                            <tooltip>mover</tooltip>
                                           </object>
                                           <flag>wxALL</flag>
                                           <border>1</border>
@@ -125,6 +140,7 @@
                                         <object class="sizeritem">
                                           <object class="wxBitmapButton" name="wxID_PANEL_MATH_OVERUNDER">
                                             <bitmap>../icons/16x16/MATHML_overunder.png</bitmap>
+                                            <tooltip>munderover</tooltip>
                                           </object>
                                           <flag>wxALL</flag>
                                           <border>1</border>
@@ -132,6 +148,7 @@
                                         <object class="sizeritem">
                                           <object class="wxBitmapButton" name="wxID_PANEL_MATH_MSCRIPT">
                                             <bitmap>../icons/16x16/MATHML_mscript.png</bitmap>
+                                            <tooltip>mmultiscripts</tooltip>
                                           </object>
                                           <flag>wxALL</flag>
                                           <border>1</border>
@@ -139,6 +156,7 @@
                                         <object class="sizeritem">
                                           <object class="wxBitmapButton" name="wxID_PANEL_MATH_SUB">
                                             <bitmap>../icons/16x16/MATHML_sub.png</bitmap>
+                                            <tooltip>msub</tooltip>
                                           </object>
                                           <flag>wxALL</flag>
                                           <border>1</border>
@@ -146,6 +164,7 @@
                                         <object class="sizeritem">
                                           <object class="wxBitmapButton" name="wxID_PANEL_MATH_SUP">
                                             <bitmap>../icons/16x16/MATHML_sup.png</bitmap>
+                                            <tooltip>msup</tooltip>
                                           </object>
                                           <flag>wxALL</flag>
                                           <border>1</border>
@@ -153,6 +172,15 @@
                                         <object class="sizeritem">
                                           <object class="wxBitmapButton" name="wxID_PANEL_MATH_SUBSUP">
                                             <bitmap>../icons/16x16/MATHML_subsup.png</bitmap>
+                                            <tooltip>msubsup</tooltip>
+                                          </object>
+                                          <flag>wxALL</flag>
+                                          <border>1</border>
+                                        </object>
+                                        <object class="sizeritem">
+                                          <object class="wxBitmapButton" name="wxID_PANEL_MATH_SUM">
+                                            <bitmap>../icons/16x16/MATHML_sum.png</bitmap>
+                                            <tooltip>sum</tooltip>
                                           </object>
                                           <flag>wxALL</flag>
                                           <border>1</border>

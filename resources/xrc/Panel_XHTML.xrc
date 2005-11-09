@@ -88,6 +88,14 @@
                                       <border>1</border>
                                     </object>
                                     <object class="sizeritem">
+                                      <object class="wxBitmapButton" name="wxID_PANEL_XHTML_DIV">
+                                        <bitmap>../icons/16x16/XHTML_Div.png</bitmap>
+                                        <tooltip>Division</tooltip>
+                                      </object>
+                                      <flag>wxALL</flag>
+                                      <border>1</border>
+                                    </object>
+                                    <object class="sizeritem">
                                       <object class="wxBitmapButton" name="wxID_PANEL_XHTML_H1">
                                         <bitmap>../icons/16x16/XHTML_H1.png</bitmap>
                                       </object>
@@ -139,6 +147,13 @@
                                     <object class="sizeritem">
                                       <object class="wxBitmapButton" name="wxID_PANEL_XHTML_IMG">
                                         <bitmap>../icons/16x16/XHTML_Image.png</bitmap>
+                                      </object>
+                                      <flag>wxALL</flag>
+                                      <border>1</border>
+                                    </object>
+                                    <object class="sizeritem">
+                                      <object class="wxBitmapButton" name="wxID_PANEL_XHTML_TARGET">
+                                        <bitmap>../icons/16x16/XHTML_Target.png</bitmap>
                                       </object>
                                       <flag>wxALL</flag>
                                       <border>1</border>

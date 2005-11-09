@@ -87,6 +87,7 @@ void AmayaXHTMLPanel::RefreshToolTips()
   XRCCTRL(*this,"wxID_PANEL_XHTML_STRONG", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BUTTON_BOLD)));
   XRCCTRL(*this,"wxID_PANEL_XHTML_EMPH",   wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BUTTON_ITALICS))); 
   XRCCTRL(*this,"wxID_PANEL_XHTML_CODE",   wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BUTTON_CODE)));
+  XRCCTRL(*this,"wxID_PANEL_XHTML_DIV",   wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BUTTON_DIV)));
   XRCCTRL(*this,"wxID_PANEL_XHTML_H1",     wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BUTTON_H1)));
   XRCCTRL(*this,"wxID_PANEL_XHTML_H2",     wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BUTTON_H2)));
   XRCCTRL(*this,"wxID_PANEL_XHTML_H3",     wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BUTTON_H3)));
@@ -94,6 +95,7 @@ void AmayaXHTMLPanel::RefreshToolTips()
   XRCCTRL(*this,"wxID_PANEL_XHTML_NL",     wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BUTTON_OL)));
   XRCCTRL(*this,"wxID_PANEL_XHTML_DL",     wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BUTTON_DL)));
   XRCCTRL(*this,"wxID_PANEL_XHTML_IMG",    wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BUTTON_IMG)));
+  XRCCTRL(*this,"wxID_PANEL_XHTML_TARGET",   wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BUTTON_TARGET)));
   XRCCTRL(*this,"wxID_PANEL_XHTML_LINK",   wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BUTTON_LINK)));
   XRCCTRL(*this,"wxID_PANEL_XHTML_TABLE",  wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BUTTON_TABLE)));
 }
@@ -117,6 +119,8 @@ void AmayaXHTMLPanel::OnButton( wxCommandEvent& event )
     TtaExecuteMenuAction ("SetOnOffEmphasis", doc, view, FALSE);
   else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_XHTML_CODE")) )
     TtaExecuteMenuAction ("SetOnOffCode", doc, view, FALSE);
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_XHTML_DIV")) )
+    TtaExecuteMenuAction ("CreateDivision", doc, view, FALSE);
   else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_XHTML_H1")) )
     TtaExecuteMenuAction ("CreateHeading1", doc, view, FALSE);
   else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_XHTML_H2")) )
@@ -135,6 +139,8 @@ void AmayaXHTMLPanel::OnButton( wxCommandEvent& event )
     TtaExecuteMenuAction ("CreateOrChangeLink", doc, view, FALSE);
   else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_XHTML_TABLE")) )
     TtaExecuteMenuAction ("CreateTable", doc, view, FALSE);
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_XHTML_TARGET")) )
+    TtaExecuteMenuAction ("CreateTarget", doc, view, FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -209,6 +215,8 @@ BEGIN_EVENT_TABLE(AmayaXHTMLPanel, AmayaSubPanel)
   EVT_BUTTON( XRCID("wxID_PANEL_XHTML_IMG"),    AmayaXHTMLPanel::OnButton ) 
   EVT_BUTTON( XRCID("wxID_PANEL_XHTML_LINK"),   AmayaXHTMLPanel::OnButton ) 
   EVT_BUTTON( XRCID("wxID_PANEL_XHTML_TABLE"),  AmayaXHTMLPanel::OnButton ) 
+  EVT_BUTTON( XRCID("wxID_PANEL_XHTML_DIV"),  AmayaXHTMLPanel::OnButton ) 
+  EVT_BUTTON( XRCID("wxID_PANEL_XHTML_TARGET"),  AmayaXHTMLPanel::OnButton ) 
 END_EVENT_TABLE()
 
 #endif /* #ifdef _WX */

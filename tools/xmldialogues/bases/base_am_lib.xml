@@ -2486,6 +2486,30 @@
 	<message xml:lang="en">Boxes</message>
 	<message xml:lang="fr">Boîtes</message>
 </label>
+<label define="TMSG_BUTTON_DIV">
+	<message xml:lang="en">Division</message>
+	<message xml:lang="fr">Division</message>
+	<message xml:lang="de">Ábschnitt</message>
+	<message xml:lang="it">Divisione</message>
+	<message xml:lang="tr">Bölme</message>
+	<message xml:lang="es">División</message>
+	<message xml:lang="pt">Divisão</message>
+	<message xml:lang="fi">Tyhjä rivi</message>
+	<message xml:lang="ru">Раздел</message>
+	<message xml:lang="hu">Felosztás</message>
+</label>
+<label define="TMSG_BUTTON_TARGET">
+	<message xml:lang="en">Target</message>
+	<message xml:lang="fr">Cible</message>
+	<message xml:lang="de">Erzeugen</message>
+	<message xml:lang="it">Obiettivo</message>
+	<message xml:lang="tr">Yarat</message>
+	<message xml:lang="es">Destino</message>
+	<message xml:lang="pt">Destino</message>
+	<message xml:lang="fi">Kohde</message>
+	<message xml:lang="ru">цель</message>
+	<message xml:lang="hu">Létrehozása</message>
+</label>
 <label define="TMSG_LIB_MSG_MAX">
 </label>
 </messages>

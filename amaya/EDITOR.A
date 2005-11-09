@@ -244,29 +244,29 @@ MENUS
     Types.Font toggle:TQuotation -> SetOnOffQuotation;
     Types.Font toggle:TBDO -> SetOnOffBDO;
 
-	XMLTypes button:BDisplayMath -> CreateMath icon:MATHML_Bmath.png;
-	XMLTypes.MathElement button:BMText -> CreateMTEXT;
-	XMLTypes.MathElement button:BMIdentifier -> CreateMI;
-	XMLTypes.MathElement button:BMNumber -> CreateMN;
-	XMLTypes.MathElement button:BMOperator -> CreateMO;
-	XMLTypes.MathElement button:BMSpace -> CreateMSPACE;
-	XMLTypes.MathElement button:BMEntity -> CreateMathEntity icon:MATHML_greek.png;
-	XMLTypes.MathElement button:BMInvisibleTimes -> CreateInvisibleTimes;
-	XMLTypes.MathElement button:BMApplyFunction -> CreateApplyFunction;
-        XMLTypes.MathConstruct button:BNthRoot -> CreateMROOT icon:MATHML_root.png;
-        XMLTypes.MathConstruct button:BSquareRoot -> CreateMSQRT icon:MATHML_sqrt.png;
-        XMLTypes.MathConstruct button:BEnclose -> CreateMENCLOSE;
-        XMLTypes.MathConstruct button:BFraction -> CreateMFRAC icon:MATHML_frac.png;
-        XMLTypes.MathConstruct button:BSubscriptAndSuperscript -> CreateMSUBSUP icon:MATHML_subsup.png;
-        XMLTypes.MathConstruct button:BSubscript -> CreateMSUB icon:MATHML_sub.png;
-        XMLTypes.MathConstruct button:BSuperscript -> CreateMSUP icon:MATHML_sup.png;
-        XMLTypes.MathConstruct button:BUnderAndOver -> CreateMUNDEROVER icon:MATHML_overunder.png;
-        XMLTypes.MathConstruct button:BUnder -> CreateMUNDER icon:MATHML_under.png;
-        XMLTypes.MathConstruct button:BOver -> CreateMOVER icon:MATHML_over.png;
-        XMLTypes.MathConstruct button:BParentheses -> CreateMROW icon:MATHML_fence.png;
-        XMLTypes.MathConstruct button:BMultiscripts -> CreateMMULTISCRIPTS icon:MATHML_mscript.png;
-        XMLTypes.MathMatrics button:BMatrix -> CreateMTABLE icon:MATHML_matrix.png;
-	XMLTypes.MathMatrics Separator;
+    XMLTypes button:BDisplayMath -> CreateMath icon:MATHML_Bmath.png;
+    XMLTypes.MathElement button:BMText -> CreateMTEXT;
+    XMLTypes.MathElement button:BMIdentifier -> CreateMI;
+    XMLTypes.MathElement button:BMNumber -> CreateMN;
+    XMLTypes.MathElement button:BMOperator -> CreateMO;
+    XMLTypes.MathElement button:BMSpace -> CreateMSPACE;
+    XMLTypes.MathElement button:BMEntity -> CreateMathEntity icon:MATHML_greek.png;
+    XMLTypes.MathElement button:BMInvisibleTimes -> CreateInvisibleTimes;
+    XMLTypes.MathElement button:BMApplyFunction -> CreateApplyFunction;
+    XMLTypes.MathConstruct button:BNthRoot -> CreateMROOT icon:MATHML_root.png;
+    XMLTypes.MathConstruct button:BSquareRoot -> CreateMSQRT icon:MATHML_sqrt.png;
+    XMLTypes.MathConstruct button:BEnclose -> CreateMENCLOSE;
+    XMLTypes.MathConstruct button:BFraction -> CreateMFRAC icon:MATHML_frac.png;
+    XMLTypes.MathConstruct button:BSubscriptAndSuperscript -> CreateMSUBSUP icon:MATHML_subsup.png;
+    XMLTypes.MathConstruct button:BSubscript -> CreateMSUB icon:MATHML_sub.png;
+    XMLTypes.MathConstruct button:BSuperscript -> CreateMSUP icon:MATHML_sup.png;
+    XMLTypes.MathConstruct button:BUnderAndOver -> CreateMUNDEROVER icon:MATHML_overunder.png;
+    XMLTypes.MathConstruct button:BUnder -> CreateMUNDER icon:MATHML_under.png;
+    XMLTypes.MathConstruct button:BOver -> CreateMOVER icon:MATHML_over.png;
+    XMLTypes.MathConstruct button:BParentheses -> CreateMROW icon:MATHML_fence.png;
+    XMLTypes.MathConstruct button:BMultiscripts -> CreateMMULTISCRIPTS icon:MATHML_mscript.png;
+    XMLTypes.MathMatrics button:BMatrix -> CreateMTABLE icon:MATHML_matrix.png;
+  XMLTypes.MathMatrics Separator;
 	XMLTypes.MathMatrics button:BMCellHExtend -> CellHorizExtend;
 	XMLTypes.MathMatrics button:BMCellVExtend -> CellVertExtend;
 	XMLTypes.MathMatrics button:BMCellHShrink -> CellHorizShrink;
@@ -313,7 +313,7 @@ MENUS
 
   Style button:BCharacterStyle -> TtcChangeCharacters;
   Style button:BColors -> TtcChangeColors;
-  Style button:BCSSStyle -> SetCSSStyle;
+  Style button:BCSSStyle -> SetCSSStyle icon:css.png;
   Style button:BFormat -> TtcChangeFormat;
 	Style button:BBackgroundImage -> ChangeBackgroundImage icon:BG_repeat.png;
 	Style Separator;
@@ -397,5 +397,7 @@ FUNCTIONS
   DoLeftAlign,
   DoCenter,
   DoRightAlign,
-  DoJustify;
+  DoJustify,
+  CreateMIntegral,
+  CreateMSum;
 END

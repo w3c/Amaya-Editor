@@ -121,6 +121,10 @@ void AmayaMathMLPanel::OnButton( wxCommandEvent& event )
     TtaExecuteMenuAction ("CreateMSUP", doc, view, FALSE);
   else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_SUBSUP")) )
     TtaExecuteMenuAction ("CreateMSUBSUP", doc, view, FALSE);
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_INTEGRAL")) )
+    TtaExecuteMenuAction ("CreateMIntegral", doc, view, FALSE);
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_SUM")) )
+    TtaExecuteMenuAction ("CreateMSum", doc, view, FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -178,6 +182,8 @@ BEGIN_EVENT_TABLE(AmayaMathMLPanel, AmayaSubPanel)
     EVT_BUTTON( XRCID("wxID_PANEL_MATH_SUB"), AmayaMathMLPanel::OnButton ) 
     EVT_BUTTON( XRCID("wxID_PANEL_MATH_SUP"), AmayaMathMLPanel::OnButton ) 
     EVT_BUTTON( XRCID("wxID_PANEL_MATH_SUBSUP"), AmayaMathMLPanel::OnButton ) 
+    EVT_BUTTON( XRCID("wxID_PANEL_MATH_INTEGRAL"), AmayaMathMLPanel::OnButton ) 
+    EVT_BUTTON( XRCID("wxID_PANEL_MATH_SUM"), AmayaMathMLPanel::OnButton ) 
 END_EVENT_TABLE()
 
 #endif /* #ifdef _WX */
