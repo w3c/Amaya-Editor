@@ -1204,7 +1204,7 @@ void TtaInitializeAppRegistry (char *appArgv0)
 #endif /* _MACOS */
   int         execname_len;
   int         len, round;
-  ThotBool    found, ok, amaya_exe;
+  ThotBool    found, ok, amaya_exe = TRUE;
   
 #ifdef _WINDOWS
   _fmode = _O_BINARY;
@@ -1309,8 +1309,13 @@ void TtaInitializeAppRegistry (char *appArgv0)
    */
   /* IV june 2004: force the appName to use the amaya temporary directory
      with thot compilers */
+#ifdef _UNIX
   /* amaya_exe is FALSE when running a compiler */
-  amaya_exe = (strlen (execname) > 4 && !strcasecmp (&execname[strlen (execname)-5], "amaya"));  appName = "amaya";
+  amaya_exe = (strlen (execname) > 4 &&
+               (!strcasecmp (&execname[strlen (execname)-5], "amaya") ||
+                !strcasecmp (&execname[strlen (execname)-5], "print")));
+#endif /* _UNIX */
+  appName = "amaya";
   AppRegistryEntryAppli = TtaStrdup (appName);
   AppNameW = TtaStrdup (appName);
 #ifdef HAVE_LSTAT
