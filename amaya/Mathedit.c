@@ -2016,63 +2016,7 @@ void CreateMTABLE (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMIntegral (Document doc, View view)
 {
-  Element       el, child, newEl;
-  ElementType	  elType;
-  AttributeType attrType;
-  Attribute     attr;
-  int           firstChar, lastChar;
-  ThotBool      oldStructureChecking;
-
   CreateMathConstruct (20);
-#ifdef IV
-  TtaExtendUndoSequence (doc);
-  oldStructureChecking = TtaGetStructureChecking (doc);
-  TtaSetStructureChecking (FALSE, doc);
-  /* insert the symbol */
-  TtaGiveFirstSelectedElement (doc, &el, &firstChar, &lastChar);
-  TtaSetDisplayMode (doc, NoComputedDisplay);
-  elType = TtaGetElementType (el);
-  TtaChangeTypeOfElement (el, doc, MathML_EL_MO);
-  TtaRegisterElementTypeChange (el, elType.ElTypeNum, doc);
-  elType.ElTypeNum = MathML_EL_SYMBOL_UNIT;
-  child = TtaNewElement (doc, elType);
-  TtaSetGraphicsShape (child, 'i', doc);
-  TtaInsertFirstChild (&child, el, doc);
-  TtaRegisterElementCreate (child, doc);
-
-  /* go up to the MSUBSUP element */
-  el = TtaGetParent (el);
-  el = TtaGetParent (el);
-  /* attach IntVertStretch attribute */
-  attrType.AttrSSchema = elType.ElSSchema;
-  attrType.AttrTypeNum = MathML_ATTR_IntVertStretch;
-  attr = TtaGetAttribute (el, attrType);
-  if (!attr)
-    {
-      /* attach a IntVertStretch attribute to the MSUBSUP element */
-      attrType.AttrTypeNum = MathML_ATTR_IntVertStretch;
-      attr = TtaNewAttribute (attrType);
-      TtaAttachAttribute (el, attr, doc);
-      TtaSetAttributeValue (attr, MathML_ATTR_IntVertStretch_VAL_yes_, el, doc);
-      TtaRegisterAttributeCreate (attr, el, doc);
-    }
-
-  /* add a MROW after */
-  elType.ElTypeNum = MathML_EL_MROW;
-  newEl = TtaNewElement (doc, elType);
-  TtaInsertSibling (newEl, el, FALSE, doc);
-  elType.ElTypeNum = MathML_EL_Construct;
-  child = TtaNewElement (doc, elType);
-  TtaInsertFirstChild (&child, newEl, doc);
-  TtaRegisterElementCreate (newEl, doc);
-
-  TtaSetStructureChecking (oldStructureChecking, doc);
-  TtaCloseUndoSequence (doc);
-  TtaSetDisplayMode (doc, DisplayImmediately);
-  el = TtaGetFirstChild (el);
-  TtaNextSibling (&el);
-  TtaSelectElement (doc, el);
-#endif
 }
 
 /*----------------------------------------------------------------------
@@ -2080,61 +2024,7 @@ void CreateMIntegral (Document doc, View view)
   ----------------------------------------------------------------------*/
 void CreateMSum (Document doc, View view)
 {
-  Element       el, child, newEl;
-  ElementType	  elType;
-  AttributeType attrType;
-  Attribute     attr;
-  int           firstChar, lastChar;
-  ThotBool      oldStructureChecking;
-
   CreateMathConstruct (21);
-#ifdef IV
-  TtaExtendUndoSequence (doc);
-  oldStructureChecking = TtaGetStructureChecking (doc);
-  TtaSetStructureChecking (FALSE, doc);
-  /* insert the symbol */
-  TtaGiveFirstSelectedElement (doc, &el, &firstChar, &lastChar);
-  TtaSetDisplayMode (doc, NoComputedDisplay);
-  elType = TtaGetElementType (el);
-  TtaChangeTypeOfElement (el, doc, MathML_EL_MO);
-  TtaRegisterElementTypeChange (el, elType.ElTypeNum, doc);
-  elType.ElTypeNum = MathML_EL_SYMBOL_UNIT;
-  child = TtaNewElement (doc, elType);
-  TtaSetGraphicsShape (child, 'S', doc);
-  TtaInsertFirstChild (&child, el, doc);
-  TtaRegisterElementCreate (child, doc);
-  /* go up to the MSUBSUP element */
-  el = TtaGetParent (el);
-  el = TtaGetParent (el);
-  /* add a constructor after */
-  elType.ElTypeNum = MathML_EL_MROW;
-  newEl = TtaNewElement (doc, elType);
-  TtaInsertSibling (newEl, el, FALSE, doc);
-  elType.ElTypeNum = MathML_EL_Construct;
-  child = TtaNewElement (doc, elType);
-  TtaInsertFirstChild (&child, newEl, doc);
-  TtaRegisterElementCreate (newEl, doc);
-
-  /* attach IntVertStretch attribute */
-  attrType.AttrSSchema = elType.ElSSchema;
-  attrType.AttrTypeNum = MathML_ATTR_IntVertStretch;
-  attr = TtaGetAttribute (el, attrType);
-  if (!attr)
-    {
-      /* attach a IntVertStretch attribute to the MSUBSUP element */
-      attrType.AttrTypeNum = MathML_ATTR_IntVertStretch;
-      attr = TtaNewAttribute (attrType);
-      TtaAttachAttribute (el, attr, doc);
-      TtaSetAttributeValue (attr, MathML_ATTR_IntVertStretch_VAL_yes_, el, doc);
-      TtaRegisterAttributeCreate (attr, el, doc);
-    }
-  TtaSetStructureChecking (oldStructureChecking, doc);
-  TtaCloseUndoSequence (doc);
-  TtaSetDisplayMode (doc, DisplayImmediately);
-  el = TtaGetFirstChild (el);
-  TtaNextSibling (&el);
-  TtaSelectElement (doc, el);
-#endif
 }
 
 /*----------------------------------------------------------------------
