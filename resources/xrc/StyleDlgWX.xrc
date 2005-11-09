@@ -145,7 +145,7 @@
                               <flag>wxEXPAND</flag>
                             </object>
                             <object class="sizeritem">
-                              <object class="wxChoice" name="wxID_CHOICE_SYLE">
+                              <object class="wxChoice" name="wxID_CHOICE_STYLE">
                                 <content>
                                   <item/>
                                   <item>normal</item>
@@ -253,7 +253,7 @@
                               <flag>wxEXPAND</flag>
                             </object>
                             <object class="sizeritem">
-                              <object class="wxChoice" name="wxID_COMBOBOX_LINE">
+                              <object class="wxChoice" name="wxID_CHOICE_LINE">
                                 <content>
                                   <item/>
                                   <item>normal</item>
@@ -761,7 +761,7 @@
                           <size>10,0</size>
                         </object>
                         <object class="sizeritem">
-                          <object class="wxBitmapButton">
+                          <object class="wxBitmapButton" name="wxID_BUTTON_NOREPEAT">
                             <bitmap>../icons/16x16/BG_norepeat.png</bitmap>
                             <tooltip>no-repeat</tooltip>
                           </object>
@@ -770,7 +770,7 @@
                           <size>10,0</size>
                         </object>
                         <object class="sizeritem">
-                          <object class="wxBitmapButton">
+                          <object class="wxBitmapButton" name="wxID_BUTTON_REPEAT">
                             <bitmap>../icons/16x16/BG_repeat.png</bitmap>
                             <tooltip>repeat</tooltip>
                           </object>
@@ -779,7 +779,7 @@
                           <size>10,0</size>
                         </object>
                         <object class="sizeritem">
-                          <object class="wxBitmapButton">
+                          <object class="wxBitmapButton" name="wxID_BUTTON_XREPEAT">
                             <bitmap>../icons/16x16/BG_repeat_x.png</bitmap>
                             <tooltip>repeat-x</tooltip>
                           </object>
@@ -788,7 +788,7 @@
                           <size>10,0</size>
                         </object>
                         <object class="sizeritem">
-                          <object class="wxBitmapButton">
+                          <object class="wxBitmapButton" name="wxID_BUTTON_YREPEAT">
                             <bitmap>../icons/16x16/BG_repeat_y.png</bitmap>
                             <tooltip>repeat-y</tooltip>
                           </object>
@@ -934,7 +934,7 @@
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
                         </object>
                         <object class="sizeritem">
-                          <object class="wxChoice" name="wxID_CHOICE_BTOP">
+                          <object class="wxChoice" name="wxID_CHOICE_T_STYLE">
                             <content>
                               <item/>
                               <item>none</item>
@@ -2309,14 +2309,13 @@
                     <object class="sizeritem">
                       <object class="wxChoice" name="wxID_CHOICE_DISPLAY">
                         <content>
-                          <item></item>
+                          <item/>
                           <item>block</item>
                           <item>inline</item>
                           <item>inline-block</item>
                           <item>list-item</item>
                           <item>none</item>
-                          <item>inherit</item>
-                        </content>
+                          <item>inherit</item></content>
                         <size>150,-1</size>
                         <focused>1</focused>
                       </object>
@@ -2335,12 +2334,11 @@
                     <object class="sizeritem">
                       <object class="wxChoice" name="wxID_CHOICE_VISIBILITY">
                         <content>
-                          <item></item>
+                          <item/>
                           <item>visible</item>
                           <item>hidden</item>
                           <item>collapse</item>
-                          <item>inherit</item>
-                        </content>
+                          <item>inherit</item></content>
                         <size>150,-1</size>
                         <focused>1</focused>
                       </object>
@@ -2364,11 +2362,10 @@
                     <object class="sizeritem">
                       <object class="wxChoice" name="wxID_CHOICE_POSITION">
                         <content>
-                          <item></item>
+                          <item/>
                           <item>absolute</item>
                           <item>fixed</item>
-                          <item>relative</item>
-                        </content>
+                          <item>relative</item></content>
                         <size>150,-1</size>
                         <focused>1</focused>
                       </object>

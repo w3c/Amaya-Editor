@@ -112,7 +112,7 @@ void AmayaXHTMLPanel::OnButton( wxCommandEvent& event )
   Document doc;
   View view;
   FrameToView (TtaGiveActiveFrame(), &doc, &view);
-
+  
   if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_XHTML_STRONG")) )
     TtaExecuteMenuAction ("SetOnOffStrong", doc, view, FALSE);
   else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_XHTML_EMPH")) )

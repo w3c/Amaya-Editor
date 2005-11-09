@@ -740,20 +740,21 @@ void PreferenceDlgWX::OnColorPalette( wxCommandEvent& event )
   int backcolor_id = wxXmlResource::GetXRCID(_T("wxID_BUTTON_BACKCOLOR"));
   int selcolor_id = wxXmlResource::GetXRCID(_T("wxID_BUTTON_SELCOLOR"));
   int selbackcolor_id = wxXmlResource::GetXRCID(_T("wxID_BUTTON_SELBACKCOLOR"));
-
+  int id = event.GetId();
   // First of all setup the dialog with the combobox color
   wxString value;
   unsigned short      red;
   unsigned short      green;
   unsigned short      blue;
   char buffer[512];
-  if (event.GetId() == textcolor_id)
+
+  if (id == textcolor_id)
     value = XRCCTRL(*this, "wxID_COMBO_TEXTCOLOR", wxComboBox)->GetValue();
-  else if (event.GetId() == backcolor_id)
+  else if (id == backcolor_id)
     value = XRCCTRL(*this, "wxID_COMBO_BACKCOLOR", wxComboBox)->GetValue();
-  else if (event.GetId() == selcolor_id)
+  else if (id == selcolor_id)
     value = XRCCTRL(*this, "wxID_COMBO_SELCOLOR", wxComboBox)->GetValue();
-  else if (event.GetId() == selbackcolor_id)
+  else if (id == selbackcolor_id)
     value = XRCCTRL(*this, "wxID_COMBO_SELBACKCOLOR", wxComboBox)->GetValue();
   strcpy(buffer, (const char*)value.mb_str(wxConvUTF8) );
   TtaGiveRGB (buffer, &red, &green, &blue);
@@ -769,13 +770,13 @@ void PreferenceDlgWX::OnColorPalette( wxCommandEvent& event )
       char color_string[7];
       sprintf( color_string, "#%02x%02x%02x", col.Red(), col.Green(), col.Blue() );
       wxComboBox *     p_combo  = NULL;
-      if (event.GetId() == textcolor_id)
+      if (id == textcolor_id)
         p_combo = XRCCTRL(*this, "wxID_COMBO_TEXTCOLOR", wxComboBox);
-      else if (event.GetId() == backcolor_id)
+      else if (id == backcolor_id)
         p_combo = XRCCTRL(*this, "wxID_COMBO_BACKCOLOR", wxComboBox);
-      else if (event.GetId() == selcolor_id)
+      else if (id == selcolor_id)
         p_combo = XRCCTRL(*this, "wxID_COMBO_SELCOLOR", wxComboBox);
-      else if (event.GetId() == selbackcolor_id)
+      else if (id == selbackcolor_id)
         p_combo = XRCCTRL(*this, "wxID_COMBO_SELBACKCOLOR", wxComboBox);    
       if (p_combo)
         {

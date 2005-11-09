@@ -34,6 +34,7 @@ private:
   void OnOk( wxCommandEvent& event );
   void OnCancel( wxCommandEvent& event );
   void OnDefault( wxCommandEvent& event );
+  void OnButton( wxCommandEvent& event );
   void OnPageChanged( wxNotebookEvent& event );
 
   void OnColorPalette( wxCommandEvent& event );
