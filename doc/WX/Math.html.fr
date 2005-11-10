@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1 plus MathML 2.0//EN"
-      "http://www.w3.org/Math/DTD/mathml2/xhtml-math11-f.dtd">
+<?xml-stylesheet type="text/xsl" href="pmathml.xsl"?>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Editer des mathématiques</title>
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 9.1.4, see http://www.w3.org/Amaya/"
+  <meta name="GENERATOR" content="amaya 9.2.2, see http://www.w3.org/Amaya/"
   />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="fr">
+<body xml:lang="fr" lang="fr">
 
 <div>
 <img alt="Amaya" src="../../resources/icons/22x22/logo.png" class="logo" />
@@ -22,29 +21,27 @@ accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a>
 src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
+<div id="Math">
+
 <div class="toc">
 <ul>
-  <li><a href="#Editer">Editer des mathématiques</a>
+  <li><a href="#L65">Créer une expression mathématique</a>
     <ul>
-      <li><a href="#L65">Créer une expression mathématique</a>
-        <ul>
-          <li><a href="#palette">La palette Math et le menu XML</a></li>
-          <li><a href="#Entrer">Entrer des constructions à partir du
-            clavier</a></li>
-        </ul>
-      </li>
-      <li><a href="#Entrer1">Entrer des caractères</a></li>
-      <li><a href="#Caract1">Caractères spéciaux</a></li>
-      <li><a href="#Editer1">Editer la structure</a></li>
-      <li><a href="#Structure1">Vue Structure</a></li>
-      <li><a href="#liens">Les liens dans MathML</a></li>
-      <li><a href="#Limites">Limites courantes</a></li>
+      <li><a href="#palette">La palette Math et le menu XML</a></li>
+      <li><a href="#Entrer">Entrer des constructions à partir du
+      clavier</a></li>
     </ul>
   </li>
+  <li><a href="#Entrer1">Entrer des caractères</a></li>
+  <li><a href="#Caract1">Caractères spéciaux</a></li>
+  <li><a href="#Editer1">Editer la structure</a></li>
+  <li><a href="#Structure1">Vue Structure</a></li>
+  <li><a href="#liens">Les liens dans MathML</a></li>
+  <li><a href="#Compatibil">Compatibilité avec Firefox et IE</a></li>
+  <li><a href="#Limites">Limites courantes</a></li>
 </ul>
 </div>
 
-<div id="Math">
 <h2 id="Editer">Editer des mathématiques</h2>
 
 <p>Amaya permet d'inclure des expressions mathématiques dans les pages web,
@@ -148,9 +145,9 @@ construction. Les constructions disponibles sont :</p>
     </math> ou <math xmlns="http://www.w3.org/1998/Math/MathML">
       <mrow>
         <msubsup>
-          <mo>&#x222b;</mo>
+          <mo>&int;</mo>
           <mn>0</mn>
-          <mo>&infin;</mo>
+          <mo>&#x221e;</mo>
         </msubsup>
       </mrow>
     </math></li>
@@ -171,7 +168,7 @@ construction. Les constructions disponibles sont :</p>
   <li>Dessous et dessus (<code>munderover)</code>: <math
     xmlns="http://www.w3.org/1998/Math/MathML">
       <munderover>
-        <mo movablelimits="false">&Sum;</mo>
+        <mo movablelimits="false">&#x2211;</mo>
         <mrow>
           <mi>i</mi>
           <mo>=</mo>
@@ -184,7 +181,7 @@ construction. Les constructions disponibles sont :</p>
     xmlns="http://www.w3.org/1998/Math/MathML">
       <munder>
         <mi>x</mi>
-        <mo>¯</mo>
+        <mo>&OverBar;</mo>
       </munder>
     </math></li>
   <li>Dessus (<code>mover)</code>: <math
@@ -192,7 +189,7 @@ construction. Les constructions disponibles sont :</p>
       <mrow>
         <mi>x</mi>
         <mover>
-          <mo>&#x2192;</mo>
+          <mo>&RightArrow;</mo>
           <mtext>maps to</mtext>
         </mover>
         <mi>y</mi>
@@ -270,7 +267,104 @@ touches de direction du clavier (flèches) pour faire passer le point
 d'insertion d'une construction à une autre. En particulier, les deux flèches
 horizontales permettent de se déplacer selon la structure de l'expression
 mathématique. Par exemple, en fin de numérateur d'une fraction, la touche
-&rarr; fait passer au début du dénominateur.</p>
+&#x2192; fait passer au début du dénominateur.</p>
+
+<table border="1">
+  <tbody>
+    <tr>
+      <th>Action</th>
+      <th>Raccourci</th>
+    </tr>
+    <tr>
+      <td>Nouvelle formule (math)</td>
+      <td>Ctrl-m Ctrl-m</td>
+    </tr>
+    <tr>
+      <td>Plein texte (mtext)</td>
+      <td>Ctrl-m Ctrl-x</td>
+    </tr>
+    <tr>
+      <td>Identificateur (mi)</td>
+      <td>Ctrl-m Ctrl-d</td>
+    </tr>
+    <tr>
+      <td>Nombre (mn)</td>
+      <td>Ctrl-m Ctrl-n</td>
+    </tr>
+    <tr>
+      <td>Operateur (mo)</td>
+      <td>Ctrl-m Ctrl-g</td>
+    </tr>
+    <tr>
+      <td>Espace (mspace)</td>
+      <td>Ctrl-m Ctrl-Space</td>
+    </tr>
+    <tr>
+      <td>Caractère (&amp;xxx;)</td>
+      <td>Ctrl-m Ctrl-e</td>
+    </tr>
+    <tr>
+      <td>Séparateur invisible</td>
+      <td>Ctrl-m Ctrl-i</td>
+    </tr>
+    <tr>
+      <td>Application de fonction</td>
+      <td>Ctrl-m Ctrl-a</td>
+    </tr>
+    <tr>
+      <td>Racine (mroot)</td>
+      <td>Ctrl-m Ctrl-r</td>
+    </tr>
+    <tr>
+      <td>Racine carrée (msqrt)</td>
+      <td>Ctrl-m Ctrl-q</td>
+    </tr>
+    <tr>
+      <td>Englobement (menclose)</td>
+      <td>Ctrl-m Ctrl-c</td>
+    </tr>
+    <tr>
+      <td>Fraction (mfrac)</td>
+      <td>Ctrl-m Ctrl-f</td>
+    </tr>
+    <tr>
+      <td>Subscript et superscript (msubsup)</td>
+      <td>Ctrl-m Ctrl-b</td>
+    </tr>
+    <tr>
+      <td>Subscript (msub)</td>
+      <td>Ctrl-m Ctrl-v</td>
+    </tr>
+    <tr>
+      <td>Superscript (msup)</td>
+      <td>Ctrl-m Ctrl-6</td>
+    </tr>
+    <tr>
+      <td>Bas et haut (munderover)</td>
+      <td>Ctrl-m Ctrl-k</td>
+    </tr>
+    <tr>
+      <td>Bas (munder)</td>
+      <td>Ctrl-m Ctrl-u</td>
+    </tr>
+    <tr>
+      <td>Haut (mover)</td>
+      <td>Ctrl-m Ctrl-o</td>
+    </tr>
+    <tr>
+      <td>Parenthèses (mrow)</td>
+      <td>Ctrl-m Ctrl-p</td>
+    </tr>
+    <tr>
+      <td>Multiscripts (mmultiscripts)</td>
+      <td>Ctrl-m Ctrl-s</td>
+    </tr>
+    <tr>
+      <td>Matrice (mtable)</td>
+      <td>Ctrl-m Ctrl-t</td>
+    </tr>
+  </tbody>
+</table>
 
 <h3 id="Entrer1"><a id="Entering1">Entrer des caractères</a></h3>
 
@@ -445,6 +539,37 @@ Liens), et de cliquer sur la cible désirée. Si la cible est une expression
 dans une formule, vous devez d'abord faire de cette expression une cible. Il
 suffit de sélectionner l'expression ainsi que l'entrée "Créer cible" du menu
 Liens. Ceci crée un attribut <code>id</code> pour l'expression cible.</p>
+
+<h3 id="Compatibil">Compatibilité avec Firefox et IE</h3>
+
+<p>Il faut utiliser le suffixe <code>.xml</code> pour être sûr que tous les
+browsers traitent les documents XHTML comme du XML et donc affichent
+correctement les documents incluant des formules mathématiques.</p>
+
+<p>Il est aussi recommandé d'utiliser le charset <strong>utf-8</strong> pour
+les documents XML.</p>
+
+<p>Par défaut Amaya ajoute le doctype <code>XHTML 1.1 plus MathML 2.0</code>
+en tête du document. Ce doctype n'est pas obligatoire mais il est utile :</p>
+<ul>
+  <li>pour valider le document,</li>
+  <li>pour engendrer des entités alphanumériques (<strong>&amp;int;</strong>
+    par exemple) pour les symboles mathématiques, dans le code source. Sinon
+    les symboles mathématiques seront codés comme tout autre caractère
+    unicode.</li>
+</ul>
+
+<p>Malheureusement, ce doctype n'est pas supporté par beaucoup de browsers.
+Il peut donc être nécessaire de le supprimer avec la commande
+<strong>Fichier&gt;Changer le type du document&gt;Supprimer le
+doctype</strong>.</p>
+
+<p>IE ne sait pas traiter le MathML. Il utilise la feuille de transformation
+<code>pmathml.xsl</code> et un plugin pour afficher le code MathML inclus.
+Amaya ajoute automatiquement le lien vers la feuille de transformation, mais
+il faut penser à déposer une copie de cette feuille de transformation (<a
+href="http://www.w3.org/Math/XSL/pmathml.xsl">pmathml.xsl</a>) dans le
+répertoire local du document.</p>
 
 <h3 id="Limites"><a id="Current">Limites courantes</a></h3>
 
