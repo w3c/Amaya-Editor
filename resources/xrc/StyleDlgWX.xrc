@@ -711,8 +711,7 @@
                         <object class="sizeritem">
                           <object class="wxComboBox" name="wxID_BGIMAGE">
                             <content>
-                              <item/>
-                            </content>
+                              <item/></content>
                             <size>200,-1</size>
                             <focused>1</focused>
                           </object>
@@ -2753,6 +2752,14 @@
         </object>
         <option>1</option>
         <flag>wxALL|wxEXPAND</flag>
+        <border>5</border>
+      </object>
+      <object class="sizeritem">
+        <object class="wxStaticText" name="wxID_NO_SELECTION">
+          <label>Please select a destination to apply</label>
+          <fg>#7A1919</fg>
+        </object>
+        <flag>wxLEFT</flag>
         <border>5</border>
       </object>
       <object class="sizeritem">

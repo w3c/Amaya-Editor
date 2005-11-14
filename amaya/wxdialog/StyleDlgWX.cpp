@@ -15,11 +15,13 @@
 #include "appdialogue_wx.h"
 #include "message_wx.h"
 #include "StyleDlgWX.h"
+#include "AHTURLTools_f.h"
 
 static char Buffer[2000];
 static int  Index = 0;
 static int  BG_repeat = 0;
 static char End_rule[10];
+static int  CurrentDoc = 0;
 bool StyleDlgWX::m_OnApplyLock = FALSE;
 
 //-----------------------------------------------------------------------------
@@ -79,7 +81,7 @@ BEGIN_EVENT_TABLE(StyleDlgWX, AmayaDialog)
   XRCCTRL(*this, "wxID_OK", wxButton)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_APPLY_BUTTON)));
   XRCCTRL(*this, "wxID_CANCEL", wxButton)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_DONE)));
   XRCCTRL(*this, "wxID_DEFAULT", wxButton)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_DEFAULT_BUTTON)));
-
+  XRCCTRL(*this, "wxID_NO_SELECTION", wxStaticText)->SetLabel(TtaConvMessageToWX(""));
   wxNotebook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxNotebook);
   p_notebook->SetPageText( 0, TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_CHAR)) );
   p_notebook->SetPageText( 1, TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_COLORS)) );
@@ -401,6 +403,7 @@ void StyleDlgWX::GetValueDialog_Color()
 {
   wxString        value, svalue, cvalue;
   char            text[10];
+  char            pathimage[MAX_LENGTH], *s;
   int             i;
 
   value = XRCCTRL(*this, "wxID_COMBO_TEXTCOLOR", wxComboBox)->GetValue();
@@ -425,9 +428,25 @@ void StyleDlgWX::GetValueDialog_Color()
   value = XRCCTRL(*this, "wxID_BGIMAGE", wxComboBox)->GetValue();
   if (value.Len() > 0)
     {
-      // @@@@@@@@@@@@@@@@
       strcpy (&Buffer[Index], "background-image: url(");
-      strcat (&Buffer[Index], (const char*)value.mb_str(wxConvUTF8));
+      strcpy (pathimage, (const char*)value.mb_str(wxConvUTF8));
+      // @@@@@@@@@@@@@@@@
+      if ((IsHTTPPath (DocumentURLs[CurrentDoc]) &&
+           !strncmp (pathimage, "http:", 5)) ||
+          (!IsHTTPPath (DocumentURLs[CurrentDoc]) &&
+           (!strncmp (pathimage, "file:", 5) ||
+            pathimage[0] == '/' || pathimage[1] == ':')))
+        {
+          /* make a relative path */
+          s = MakeRelativeURL (pathimage, DocumentURLs[CurrentDoc]);
+          if (s)
+            {
+              strcat (&Buffer[Index], s);
+              TtaFreeMemory (s);
+            }
+        }
+      else
+        strcat (&Buffer[Index], pathimage);
       strcat (&Buffer[Index], ")");
       if (BG_repeat == 1)
         strcpy (&Buffer[Index], "; background-repeat: no-repeat");
@@ -1384,14 +1403,37 @@ void StyleDlgWX::OnOk( wxCommandEvent& event )
     return;
 
   m_OnApplyLock = TRUE;
-  strcpy (Buffer, "  ");
-  Index = 0;
-  strcpy (End_rule, ";\n  ");
-  GetValueDialog_Text();
-  GetValueDialog_Color();
-  GetValueDialog_Box();
-  GetValueDialog_Format();
-  ThotCallback (m_ref, STRING_DATA, Buffer);
+  CurrentDoc = TtaGetSelectedDocument();
+  if (CurrentDoc &&
+      DocumentTypes[CurrentDoc] != docLog &&
+      DocumentTypes[CurrentDoc] != docLibrary &&
+      DocumentTypes[CurrentDoc] != docBookmark)
+    {
+      if (DocumentTypes[CurrentDoc] == docText ||
+       DocumentTypes[CurrentDoc] == docCSS ||
+       DocumentTypes[CurrentDoc] == docSource)
+        {
+          strcpy (Buffer, "  ");
+          Index = 2;
+          strcpy (End_rule, ";\n  ");
+        }
+      else
+        {
+          Buffer[0] = EOS;
+          Index = 0;
+          strcpy (End_rule, "; ");
+        }
+      GetValueDialog_Text();
+      GetValueDialog_Color();
+      GetValueDialog_Box();
+      GetValueDialog_Format();
+      while (Index > 0 && Buffer[Index - 1] != ';')
+        Index--;
+      Buffer[Index] = EOS;
+      ThotCallback (m_ref, STRING_DATA, Buffer);
+    }
+  else
+    XRCCTRL(*this, "wxID_NO_SELECTION", wxStaticText)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_NO_INSERT_POINT)));
   m_OnApplyLock = FALSE;
 }
 
@@ -1402,6 +1444,8 @@ void StyleDlgWX::OnOk( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void StyleDlgWX::OnDefault( wxCommandEvent& event )
 {
+  XRCCTRL(*this, "wxID_NO_SELECTION", wxStaticText)->SetLabel(TtaConvMessageToWX(""));
+
  XRCCTRL(*this, "wxID_COMBOBOX_FAMILY", wxComboBox)->SetValue(TtaConvMessageToWX( "" ));
  XRCCTRL(*this, "wxID_COMBO_TEXTCOLOR", wxComboBox)->SetValue(TtaConvMessageToWX( "" ));
  XRCCTRL(*this, "wxID_COMBO_BACKCOLOR", wxComboBox)->SetValue(TtaConvMessageToWX( "" ));
