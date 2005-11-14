@@ -663,6 +663,12 @@ extern int TtaGetPageNumber (Element pageElement);
   ----------------------------------------------------------------------*/
 extern int TtaGetPageView (Element pageElement);
 
+/*----------------------------------------------------------------------
+  TtcPasteFormBuffer pastes at the current insert position the content
+  of the buffer.
+  ----------------------------------------------------------------------*/
+extern void TtaPasteFromBuffer (unsigned char *src, int length, CHARSET charset);
+
 #endif /* __CEXTRACT__ */
 
 #endif

@@ -3932,7 +3932,16 @@ void TtcInclude (Document doc, View view)
 }
 
 /*----------------------------------------------------------------------
-  TtcPastefromX
+  TtcPasteFormBuffer pastes at the current insert position the content
+  of the buffer.
+  ----------------------------------------------------------------------*/
+void TtaPasteFromBuffer (unsigned char *src, int length, CHARSET charset)
+{
+  PasteXClipboard (src, length, charset);
+}
+
+/*----------------------------------------------------------------------
+  TtcPasteFromClipboard
   ----------------------------------------------------------------------*/
 void TtcPasteFromClipboard (Document doc, View view)
 {

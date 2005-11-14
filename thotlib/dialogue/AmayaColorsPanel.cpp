@@ -54,9 +54,9 @@ AmayaColorsPanel::AmayaColorsPanel( wxWindow * p_parent_window, AmayaNormalWindo
   RefreshToolTips();
   m_pTitleText->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_COLORS)));
 
-  m_Bitmap_Empty        = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON_MISC, "empty.png" ), wxBITMAP_TYPE_PNG );
+  m_Bitmap_Empty = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON_MISC, "empty.png" ), wxBITMAP_TYPE_PNG );
   m_Bitmap_DefaultColor = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON_16X16, "default.png" ), wxBITMAP_TYPE_PNG );
-  m_Color_ButtonBG      = XRCCTRL(*m_pPanelContentDetach, "wxID_BUTTON_FGCOLOR", wxBitmapButton)->GetBackgroundColour();
+  m_Color_ButtonBG = XRCCTRL(*m_pPanelContentDetach, "wxID_BUTTON_FGCOLOR", wxBitmapButton)->GetBackgroundColour();
 
   XRCCTRL(*this, "wxID_BUTTON_BGCOLOR", wxBitmapButton)->SetBitmapLabel(m_Bitmap_DefaultColor);
   XRCCTRL(*this, "wxID_BUTTON_FGCOLOR", wxBitmapButton)->SetBitmapLabel(m_Bitmap_DefaultColor);

@@ -3093,7 +3093,33 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
                DocumentTypes[doc] == docCSS ||
                DocumentTypes[doc] == docMath)
         {
-#ifndef _WX
+#ifdef _WX
+          TtaSetMenuOn (doc, 1, Style);
+          if (DocumentTypes[doc] == docMath)
+            {
+              TtaSetItemOn (doc, 1, Style, BCreateClass);
+              TtaSetItemOn (doc, 1, Style, BShowAppliedStyle);
+              TtaSetItemOn (doc, 1, Style, BLinkCSS);
+              TtaSetItemOn (doc, 1, Style, BOpenCSS);
+              TtaSetItemOn (doc, 1, Style, BDisableCSS);
+              TtaSetItemOn (doc, 1, Style, BEnableCSS);
+              TtaSetItemOn (doc, 1, Style, BRemoveCSS);
+            }
+          else
+            {
+              TtaSetItemOff (doc, 1, Style, BCreateClass);
+              TtaSetItemOff (doc, 1, Style, BShowAppliedStyle);
+              TtaSetItemOff (doc, 1, Style, BLinkCSS);
+              TtaSetItemOff (doc, 1, Style, BOpenCSS);
+              TtaSetItemOff (doc, 1, Style, BDisableCSS);
+              TtaSetItemOff (doc, 1, Style, BEnableCSS);
+              TtaSetItemOff (doc, 1, Style, BRemoveCSS);
+            }
+#else /* _WX */
+          if (DocumentTypes[doc] == docMath)
+            TtaSetMenuOn (doc, 1, Style);
+          else
+              TtaSetMenuOff (doc, 1, Style);
           TtaChangeButton (doc, 1, iI, iconINo, FALSE);
           TtaChangeButton (doc, 1, iB, iconBNo, FALSE);
           TtaChangeButton (doc, 1, iT, iconTNo, FALSE);
@@ -3118,7 +3144,6 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
               TtaSetItemOff (doc, 1, XMLTypes, BAddNewModel);
               TtaSetMenuOn (doc, 1, XMLTypes);
               TtaSetMenuOn (doc, 1, Views);
-              TtaSetMenuOn (doc, 1, Style);
               TtaSetMenuOn (doc, 1, Attributes_);
 #ifdef _SVG
               SwitchIconGraph (doc, 1, FALSE);
@@ -3134,7 +3159,6 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
               TtaSetItemOff (doc, 1, Edit_, BTransform);
               SwitchIconMath (doc, 1, FALSE);
               TtaSetMenuOff (doc, 1, XMLTypes);
-              TtaSetMenuOff (doc, 1, Style);
               TtaSetMenuOff (doc, 1, Attributes_);
 #ifdef ANNOTATIONS
               TtaSetMenuOff (doc, 1, Annotations_);

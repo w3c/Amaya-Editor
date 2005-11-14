@@ -83,7 +83,8 @@ extern void TtaSelectView (Document document, View view);
    to be selected.
 
   ----------------------------------------------------------------------*/
-extern void TtaSelectString (Document document, Element textElement, int firstCharacter, int lastCharacter);
+extern void TtaSelectString (Document document, Element textElement,
+                             int firstCharacter, int lastCharacter);
 
 /*----------------------------------------------------------------------
    TtaExtendSelection
@@ -173,7 +174,10 @@ extern ThotBool TtaIsSelectionEmpty ();
    lastCharacter: rank of the last character in the selection, or 0 if the
    whole element is in the selection.
   ----------------------------------------------------------------------*/
-extern void TtaGiveFirstSelectedElement (Document document, /*OUT*/ Element * selectedElement, /*OUT*/ int *firstCharacter, /*OUT*/ int *lastCharacter);
+extern void TtaGiveFirstSelectedElement (Document document,
+                                         /*OUT*/ Element *selectedElement,
+                                         /*OUT*/ int *firstCharacter,
+                                         /*OUT*/ int *lastCharacter);
 
 /*----------------------------------------------------------------------
    TtaGiveNextSelectedElement
@@ -193,7 +197,10 @@ extern void TtaGiveFirstSelectedElement (Document document, /*OUT*/ Element * se
    lastCharacter: rank of the last character in the selection, or 0 if the
    whole element is in the selection.
   ----------------------------------------------------------------------*/
-extern void TtaGiveNextSelectedElement (Document document, /*OUT*/ Element * selectedElement, /*OUT*/ int *firstCharacter, /*OUT*/ int *lastCharacter);
+extern void TtaGiveNextSelectedElement (Document document,
+                                        /*OUT*/ Element *selectedElement,
+                                        /*OUT*/ int *firstCharacter,
+                                        /*OUT*/ int *lastCharacter);
 
 /*----------------------------------------------------------------------
    TtaGiveNextElement
@@ -206,7 +213,7 @@ extern void TtaGiveNextSelectedElement (Document document, /*OUT*/ Element * sel
    Return parameters:
    element: the next element in the selection order. NULL if not found.
   ----------------------------------------------------------------------*/
-extern void TtaGiveNextElement (Document document, /*OUT*/ Element * element, Element last);
+extern void TtaGiveNextElement (Document document, /*OUT*/ Element *element, Element last);
 
 /*----------------------------------------------------------------------
    TtaGiveLastSelectedElement
@@ -224,7 +231,10 @@ extern void TtaGiveNextElement (Document document, /*OUT*/ Element * element, El
    lastCharacter: rank of the last character in the selection, or 0 if the
    whole element is in the selection.
   ----------------------------------------------------------------------*/
-extern void TtaGiveLastSelectedElement (Document document, /*OUT*/ Element * selectedElement, /*OUT*/ int *firstCharacter, /*OUT*/ int *lastCharacter);
+extern void TtaGiveLastSelectedElement (Document document,
+                                        /*OUT*/ Element *selectedElement,
+                                        /*OUT*/ int *firstCharacter,
+                                        /*OUT*/ int *lastCharacter);
 
 /*----------------------------------------------------------------------
    TtaSetMoveForwardCallback permet de connecter une fonction de
@@ -249,6 +259,12 @@ extern Element TtaGetColumn (Element el);
    Select the enclosing column of the element.
   ----------------------------------------------------------------------*/
 extern void TtaSelectEnclosingColumn (Element el);
+
+/*----------------------------------------------------------------------
+   TtaGetSelectedAttribute
+   Return the selected attribute or NULL
+  ----------------------------------------------------------------------*/
+extern Attribute TtaGetSelectedAttribute ();
 #endif /* __CEXTRACT__ */
 
 #endif

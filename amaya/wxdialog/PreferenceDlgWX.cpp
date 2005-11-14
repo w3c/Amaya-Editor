@@ -172,10 +172,11 @@ int PreferenceDlgWX::GetPagePosFromXMLID( const wxString & xml_id )
   ----------------------------------------------------------------------*/
 void PreferenceDlgWX::OnPageChanged( wxNotebookEvent& event )
 {
-  wxNotebook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxNotebook);
-  wxPanel *    p_new_page = (wxPanel *)((event.GetSelection()>=0 && p_notebook)?p_notebook->GetPage(event.GetSelection()):NULL);
+  wxNotebook *p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxNotebook);
+  wxPanel *p_new_page = (wxPanel *)((event.GetSelection()>=0 && p_notebook)?p_notebook->GetPage(event.GetSelection()):NULL);
 
-  if(!m_IsInitialized || !p_new_page || !XRCCTRL(*this,"wxID_OK",wxButton) || !XRCCTRL(*this,"wxID_DEFAULT",wxButton))
+  if(!m_IsInitialized || !p_new_page || !XRCCTRL(*this,"wxID_OK",wxButton) ||
+     !XRCCTRL(*this,"wxID_DEFAULT",wxButton))
     {
       event.Skip();
       return;
@@ -233,6 +234,12 @@ void PreferenceDlgWX::SetupLabelDialog_General()
   XRCCTRL(*this, "wxID_RADIO_QUICKAXX", wxRadioBox)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_ACCESSKEY)) );
   XRCCTRL(*this, "wxID_RADIO_QUICKAXX", wxRadioBox)->SetString(2,TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_NONE)) );
 
+  /* tooltip of color buttons */
+  XRCCTRL(*this, "wxID_BUTTON_TEXTCOLOR", wxBitmapButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_FG_SEL_COLOR) ));
+  XRCCTRL(*this, "wxID_BUTTON_BACKCOLOR", wxBitmapButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_FG_SEL_COLOR) ));
+  XRCCTRL(*this, "wxID_BUTTON_SELCOLOR", wxBitmapButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_FG_SEL_COLOR) ));
+  XRCCTRL(*this, "wxID_BUTTON_SELBACKCOLOR", wxBitmapButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_FG_SEL_COLOR) ));
+
   // setup range of zoom
   XRCCTRL(*this, "wxID_CHARZOOM_VALUE", wxSpinCtrl)->SetRange( 10, 1000 );
 
@@ -261,7 +268,7 @@ void PreferenceDlgWX::SetupDialog_General( const Prop_General & prop )
   XRCCTRL(*this, "wxID_CHECK_SHOWSHORTCUTS", wxCheckBox)->SetValue( prop.S_Shortcuts );
   XRCCTRL(*this, "wxID_CHECK_SHOWTEMPLATES", wxCheckBox)->SetValue( prop.S_Templates );
 
-  XRCCTRL(*this, "wxID_RADIO_QUICKAXX",    wxRadioBox)->SetSelection( prop.AccesskeyMod );
+  XRCCTRL(*this, "wxID_RADIO_QUICKAXX", wxRadioBox)->SetSelection( prop.AccesskeyMod );
   XRCCTRL(*this, "wxID_CHOICE_LG", wxChoice)->SetStringSelection( TtaConvMessageToWX(prop.DialogueLang) );
 }
 
@@ -1087,6 +1094,9 @@ Prop_DAV PreferenceDlgWX::GetValueDialog_DAV()
   ----------------------------------------------------------------------*/
 void PreferenceDlgWX::OnOk( wxCommandEvent& event )
 {
+  if (m_OnApplyLock)
+    return;
+
   m_OnApplyLock = TRUE;
   XRCCTRL(*this, "wxID_CANCEL", wxButton)->Disable();
   
@@ -1210,6 +1220,7 @@ void PreferenceDlgWX::OnCancel( wxCommandEvent& event )
   if (m_OnApplyLock)
     return;
 
+  m_OnApplyLock = TRUE;
   ThotCallback (GetPrefGeneralBase() + GeneralMenu, INTEGER_DATA, (char*) 0);
   ThotCallback (GetPrefBrowseBase() + BrowseMenu, INTEGER_DATA, (char*) 0);
   ThotCallback (GetPrefPublishBase() + PublishMenu, INTEGER_DATA, (char*) 0);
@@ -1224,6 +1235,7 @@ void PreferenceDlgWX::OnCancel( wxCommandEvent& event )
   ThotCallback (GetPrefDAVBase() + DAVMenu, INTEGER_DATA, (char*) 0);
 #endif /* DAV */
   ThotCallback (m_Ref, INTEGER_DATA, (char*) 0);
+  m_OnApplyLock = FALSE;
 }
 
 /*----------------------------------------------------------------------

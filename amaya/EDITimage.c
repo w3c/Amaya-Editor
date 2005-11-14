@@ -888,17 +888,6 @@ void ChangeBackgroundImage (Document document, View view)
 #endif /* _GTK */
 
 #ifdef _WX
-   if (LastURLImage[0] != EOS)
-      strcpy (s, LastURLImage);
-   else {
-      strcpy (s, DirectoryImage);
-      strcat (s, DIR_STR);
-      strcat (s, ImageName);
-   }
-   ImgDocument = document;
-   CreateBgImageDlgWX( BaseImage+FormBackground, TtaGetViewFrame(document, view), s, RepeatValue );
-   TtaSetDialoguePosition ();
-   TtaShowDialogue ( BaseImage+FormBackground, TRUE);
 #endif /* _WX */
 
 #ifdef _WINGUI

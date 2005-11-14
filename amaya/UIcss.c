@@ -794,10 +794,10 @@ static void CallbackCSS (int ref, int typedata, char *data)
       strcpy (CSSpath, data);      
       break;
     case CSSValue:
-      if (data == NULL)
-        TtaDestroyDialogue (ref);
-      else
-        printf ("%s\n", data);
+      TtaDestroyDialogue (ref);
+      if (data)
+        TtaPasteFromBuffer ((unsigned char*)data, strlen(data),
+                            TtaGetDefaultCharset ());
       break;
     default:
       break;
@@ -1227,7 +1227,7 @@ void LinkCSS (Document doc, View view)
 /*----------------------------------------------------------------------
   OpenCSS lists downloaded CSS files
   ----------------------------------------------------------------------*/
-void                OpenCSS (Document doc, View view)
+void OpenCSS (Document doc, View view)
 {
   CSScase = 1;
   InitCSSDialog (doc, TtaGetMessage (AMAYA, AM_OPEN_CSS));

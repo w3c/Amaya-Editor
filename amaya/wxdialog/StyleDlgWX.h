@@ -40,6 +40,7 @@ private:
   void OnColorPalette( wxCommandEvent& event );
   void OnColorChanged( wxCommandEvent& event );
   void OnColorTextChanged( wxCommandEvent& event );
+  void OnBrowseButton( wxCommandEvent& event );
 
   // Any class wishing to process wxWindows events must use this macro
   DECLARE_EVENT_TABLE()
@@ -48,7 +49,7 @@ private:
   // "Color" tab
   wxColourData colour_data;
   int          m_ref;
-  bool         m_IsInitialized;
+  static bool  m_OnApplyLock;
 };
 
 #endif  // __STYLEDLGWX_H__

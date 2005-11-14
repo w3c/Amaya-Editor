@@ -48,6 +48,18 @@ ThotBool TtaIsDocumentSelected (Document document)
 }
 
 /*----------------------------------------------------------------------
+   TtaGetSelectedAttribute
+   Return the selected attribute or NULL
+  ----------------------------------------------------------------------*/
+Attribute TtaGetSelectedAttribute ()
+{
+  if (AbsBoxSelectedAttr)
+    return (Attribute)(AbsBoxSelectedAttr->AbCreatorAttr);
+  else
+    return NULL;
+}
+
+/*----------------------------------------------------------------------
   TtaIsColumnRowSaved answers TRUE if there is a column or a row in
   the Thot Clicboard.
   ----------------------------------------------------------------------*/

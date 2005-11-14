@@ -450,6 +450,7 @@ HelpXml
 &CreateBase
 &CreateMath
 &CreateXMLElementMenu
+&SetCSSStyle
 HelpDocument
 HelpAttributes
 HelpChanging
@@ -716,8 +717,6 @@ HelpSVG
 [attr-style_WX]
 &CreateStyle
 &CreateClass
-&ChangeBackgroundImage
-&SetCSSStyle
 
 [css-browsing]
 OpenCSS

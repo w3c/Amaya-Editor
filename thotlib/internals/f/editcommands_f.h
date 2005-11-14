@@ -31,6 +31,9 @@ extern void TtcDeleteSelection ( Document doc,
                                  View view );
 extern void TtcInclude ( Document doc,
                          View view );
+extern void TtaPasteFromBuffer ( unsigned char *src,
+                                 int length,
+                                 CHARSET charset );
 extern void TtcPasteFromClipboard ( Document doc,
                                     View view );
 extern void TtcInsert ( Document doc,
@@ -68,6 +71,9 @@ extern void TtcDeleteSelection ( Document doc,
                                    View view );
 extern void TtcInclude ( Document doc,
                            View view );
+extern void TtaPasteFromBuffer ( unsigned char *src,
+                                   int length,
+                                   CHARSET charset );
 extern void TtcPasteFromClipboard ( Document doc,
                                       View view );
 extern void TtcInsert ( Document doc,
