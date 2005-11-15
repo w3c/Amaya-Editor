@@ -1043,7 +1043,7 @@ static ThotBool IsEmptyElement (Element el)
   IsCharacterLevelElement return TRUE if element el is a
   character level element, FALSE if not.
   ----------------------------------------------------------------------*/
-ThotBool            IsCharacterLevelElement (Element el)
+ThotBool IsCharacterLevelElement (Element el)
 {
   ElementType      elType;
   int              i;

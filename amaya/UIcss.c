@@ -50,6 +50,7 @@ static char       *DisplayCategory[]={
 #include "EDITORactions_f.h"
 #include "HTMLactions_f.h"
 #include "HTMLhistory_f.h"
+#include "HTMLpresentation_f.h"
 #include "HTMLedit_f.h"
 #include "UIcss_f.h"
 #include "css_f.h"
@@ -657,6 +658,305 @@ char *CssToPrint (Document doc, char *printdir)
   return ptr;
 }
 
+/*----------------------------------------------------------------------
+  GenerateStyle
+  if element elem is a text string that is not the single child of a
+  Span element, create a span element that contains that text string
+  and return TRUE; span contains then the created Span element.
+  if the parameter presRule is not NULL and a span is generated, the
+  the presRule should be moved to the new span.
+  -----------------------------------------------------------------------*/
+static void GenerateStyle (char * data)
+{
+  Element         el, firstSel, lastSel, next, span, sibling;
+  ElementType	    elType, parentType;
+  AttributeType   attrType;
+  Attribute       styleAttr;
+  Document        doc;
+  int             i, j, firstchar, lastchar, lg, min, max;
+  char           *name;
+  Language        lang;
+  CHAR_T         *buffer;
+  DisplayMode   dispMode;
+  ThotBool	      doit, split, before, charlevel;
+
+  doc = TtaGetSelectedDocument();
+  if (doc)
+    {
+      if (DocumentTypes[doc] != docText &&
+          DocumentTypes[doc] != docCSS &&
+          DocumentTypes[doc] != docSource)
+        {
+          /* give current position */
+          TtaGiveFirstSelectedElement (doc, &firstSel, &firstchar, &i);
+          TtaGiveLastSelectedElement (doc, &lastSel, &j, &lastchar);
+          /* register this element in the editing history */
+          elType = TtaGetElementType (firstSel);
+          name = TtaGetSSchemaName (elType.ElSSchema);
+          el = NULL;
+          if (TtaGetConstruct (firstSel) == ConstructBasicType)
+            {
+              // check if it's within a style element
+              parentType.ElSSchema = elType.ElSSchema;
+#ifdef _SVG
+              if (!strcmp(name, "SVG"))
+                {
+                  parentType.ElTypeNum = SVG_EL_style__;
+                  el = TtaGetTypedAncestor (firstSel, parentType);
+                }
+              else
+#endif /* _SVG */
+                if (!strcmp(name, "HTML"))
+                  {
+                    parentType.ElTypeNum = HTML_EL_STYLE_;
+                    el = TtaGetTypedAncestor (firstSel, parentType);
+                  }
+              if (el)
+                TtaPasteFromBuffer ((unsigned char*)data, strlen(data),
+                                    TtaGetDefaultCharset ());
+           }
+          
+          if (el == NULL)
+            {
+              TtaOpenUndoSequence (doc, firstSel, lastSel, firstchar, lastchar);
+              /* Need to force a redisplay */
+              dispMode = TtaGetDisplayMode (doc);
+              TtaSetDisplayMode (doc, NoComputedDisplay);
+              span = NULL;
+              el = firstSel;
+              while (el)
+                {
+                  elType = TtaGetElementType (el);
+                  name = TtaGetSSchemaName (elType.ElSSchema);
+                  lg =  TtaGetElementVolume (el);
+                  split = ((el == firstSel || el == lastSel) && !strcmp(name, "HTML") &&
+                           elType.ElTypeNum == HTML_EL_TEXT_UNIT &&
+                           (firstchar > 1 || (i != 0 && i < lg)));
+                  next = el;
+                  TtaGiveNextSelectedElement (doc, &next, &j, &lastchar);
+                  if (!strcmp(name, "HTML"))
+                    charlevel = IsCharacterLevelElement (el);
+                  else
+                    charlevel = TtaIsLeaf (elType);
+                  if (split && span == NULL)
+                    doit = TRUE;
+                  else if (span == NULL && next && !strcmp(name, "HTML"))
+                    doit = charlevel && IsCharacterLevelElement (next);
+                  else
+                    doit = FALSE;
+
+                    // generate a first span
+                  if (doit)
+                    {
+                      /* create a span element */
+                      elType.ElTypeNum = HTML_EL_Span;
+                      span = TtaNewElement (doc, elType);
+                    }
+
+                  if (split)
+                    {
+                      /* enclose the split text leaf within a span element */
+                      sibling = el;
+                      before = FALSE;
+                      /* exclude trailing spaces from the span */
+                      if (lg > 0 )
+                        {
+                          lg++;
+                          buffer = (CHAR_T *)TtaGetMemory (lg * sizeof(CHAR_T));
+                          TtaGiveBufferContent (el, buffer, lg, &lang);
+                          if (i == 0)
+                            i = lg;
+                          if (el == lastSel && i < lg)
+                            {
+                              min = firstchar;
+                              while (i > min && buffer[i - 2] == SPACE)
+                                i--;
+                              if (i > 1)
+                                {
+                                  TtaRegisterElementReplace (el, doc);
+                                  TtaSplitText (el, i, doc);
+                                  sibling = el;
+                                  TtaNextSibling (&sibling);
+                                  TtaRegisterElementCreate (sibling, doc);
+                                  // the first piece of el element should be moved
+                                  before = TRUE;
+                                }
+                            }
+                          if (el == firstSel && firstchar > 1)
+                            {
+                              max = i;
+                              while (firstchar < max &&
+                                     buffer[firstchar - 1] == SPACE)
+                                firstchar++;
+                              if (firstchar <= i)
+                                /* split the first string */
+                                {
+                                  // prepare the future selection
+                                  if (el == firstSel)
+                                    firstSel = span;
+                                  if (el == lastSel)
+                                    lastSel = span;
+                                  TtaRegisterElementReplace (el, doc);
+                                  TtaSplitText (el, firstchar, doc);
+                                  TtaNextSibling (&el);
+                                  TtaRemoveTree (el, doc);
+                                  if (doit)
+                                    // insert into the new created span
+                                    TtaInsertFirstChild (&el, span, doc);
+                                  else
+                                    {
+                                      // ad at the end of the span
+                                      sibling = TtaGetLastChild (span);
+                                      TtaInsertSibling (el, sibling, FALSE, doc);
+                                    }
+                                }
+                            }
+                          else if (before)
+                            {
+                              // prepare the future selection
+                              if (el == firstSel)
+                                firstSel = span;
+                              if (el == lastSel)
+                                lastSel = span;
+                              TtaRemoveTree (el, doc);
+                              if (doit)
+                                // insert into the new created span
+                                TtaInsertFirstChild (&el, span, doc);
+                              else
+                                {
+                                  // ad at the end of the span
+                                  sibling = TtaGetLastChild (span);
+                                  TtaInsertSibling (el, sibling, FALSE, doc);
+                                }
+                            }
+                          TtaFreeMemory (buffer);
+                        }
+                    }
+                  else if (doit)
+                    {
+                      // add the element into the new span
+                      TtaPreviousSibling (&sibling);
+                      if (sibling == NULL)
+                        {
+                          sibling = el;
+                          TtaNextSibling (&sibling);
+                          before = TRUE;
+                        }
+                      if (sibling == NULL)
+                        TtaInsertSibling (span, el, TRUE, doc);
+                      TtaRegisterElementDelete (el, doc);
+                      TtaRemoveTree (el, doc);
+                      TtaInsertFirstChild (&el, span, doc);
+                      TtaRegisterElementCreate (el, doc);
+                      if (el == lastSel)
+                        lastSel = span;
+                    }
+
+                  if (doit)
+                    {
+                      if (sibling)
+                        TtaInsertSibling (span, sibling, before, doc);
+                      /* generate the style attribute */
+                      attrType.AttrSSchema = elType.ElSSchema;
+                      attrType.AttrTypeNum = HTML_ATTR_Style_;
+                      styleAttr = TtaNewAttribute (attrType);
+                      TtaAttachAttribute (span, styleAttr, doc);
+                      TtaSetAttributeText (styleAttr, data, span, doc);
+                      TtaRegisterElementCreate (span, doc);
+                      // apply CSS properties
+                      ParseHTMLSpecificStyle (span, data, doc, 200, FALSE);
+                    }
+                  else if (span && charlevel)
+                    {
+                      TtaRegisterElementDelete (el, doc);
+                      TtaRemoveTree (el, doc);
+                      sibling = TtaGetLastChild (span);
+                      TtaInsertSibling (el, sibling, FALSE, doc);
+                      TtaRegisterElementCreate (el, doc);
+                    }
+                  else
+                    {
+                      if (charlevel)
+                        {
+                          span = TtaGetParent(el);
+                          // prepare the future selection
+                          if (el == firstSel)
+                            firstSel = span;
+                          if (el == lastSel)
+                            lastSel = span;
+                          // apply the style to the enclosing element
+                          el = span;
+                        }
+
+                      if (strcmp (name, "MathML") == 0)
+                        {
+                          attrType.AttrSSchema = elType.ElSSchema;
+                          attrType.AttrTypeNum = MathML_ATTR_style_;
+                        }
+#ifdef _SVG
+                      else if (strcmp (name, "SVG") == 0)
+                        {
+                          attrType.AttrSSchema = elType.ElSSchema;
+                          attrType.AttrTypeNum = SVG_ATTR_style_;
+                        }
+#endif /* _SVG */
+                      else
+                        {
+                          attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
+                          attrType.AttrTypeNum = HTML_ATTR_Style_;
+                        }
+                      styleAttr = TtaGetAttribute (el, attrType);
+                      if (styleAttr == NULL)
+                        {
+                          styleAttr = TtaNewAttribute (attrType);
+                          TtaAttachAttribute (el, styleAttr, doc);
+                          TtaSetAttributeText (styleAttr, data, el, doc);
+                          TtaRegisterAttributeCreate (styleAttr, el, doc);
+                          // apply CSS properties
+                          ParseHTMLSpecificStyle (el, data, doc, 200, FALSE);
+                         }
+                      else
+                        {
+                          TtaRegisterAttributeReplace (styleAttr, el, doc);
+                          lg = TtaGetTextAttributeLength (styleAttr);
+                          name = (char *)TtaGetMemory (lg + strlen (data) + 1);
+                          TtaGiveTextAttributeValue (styleAttr, name, &lg);
+                          strcat (name, data);
+                          TtaSetAttributeText (styleAttr, name, el, doc);
+                          // apply CSS properties
+                          ParseHTMLSpecificStyle (el, name, doc, 200, FALSE);
+                          TtaFreeMemory (name);
+                        }
+                      span = NULL;
+                    }
+
+                  // check the next element
+                  if (span)
+                    {
+                      sibling = span;
+                      TtaNextSibling (&sibling);
+                      if (sibling != next)
+                        // cannot extent the span to the next element
+                        span = NULL;
+                    }
+                  el = next;
+                  firstchar = j;
+                  i = lastchar;
+                }
+              TtaSetDisplayMode (doc, dispMode);
+              TtaSelectElement (doc, firstSel);
+              if (lastSel != firstSel)
+                 TtaExtendSelection (doc, lastSel, TtaGetElementVolume (lastSel) + 1);
+              /* mark the document as modified */
+              TtaSetDocumentModified (doc);
+              TtaCloseUndoSequence (doc);
+            }
+        }
+      else
+        TtaPasteFromBuffer ((unsigned char*)data, strlen(data), TtaGetDefaultCharset ());
+    }
+}
+
 
 /*----------------------------------------------------------------------
   Callback procedure for dialogue events.                            
@@ -665,8 +965,7 @@ static void CallbackCSS (int ref, int typedata, char *data)
 {
   CSSInfoPtr      css, cssNext;
   PInfoPtr        pInfo, pInfoNext;
-  Element         el;
-  Element         firstSel, lastSel;
+  Element         el, firstSel, lastSel;
   char           *ptr = NULL, *localname = NULL;
   int             j, firstChar, lastChar;
   long int        val;
@@ -796,8 +1095,7 @@ static void CallbackCSS (int ref, int typedata, char *data)
     case CSSValue:
       TtaDestroyDialogue (ref);
       if (data)
-        TtaPasteFromBuffer ((unsigned char*)data, strlen(data),
-                            TtaGetDefaultCharset ());
+        GenerateStyle (data);
       break;
     default:
       break;

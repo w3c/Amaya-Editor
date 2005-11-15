@@ -40,18 +40,18 @@
   if the parameter presRule is not NULL and a span is generated, the
   the presRule should be moved to the new span.
   -----------------------------------------------------------------------*/
-ThotBool MakeASpan (Element elem, Element *span, Document doc,
-                    PRule presRule)
+ThotBool MakeASpan (Element elem, Element *span, Document doc, PRule presRule)
 {
   ElementType	elType;
-  Element	parent, sibling;
-  ThotBool	ret, doit;
+  Element	    parent, sibling;
+  char       *name;
+  ThotBool	  ret, doit;
 
   ret = FALSE;
   *span = NULL;
   elType = TtaGetElementType (elem);
-  if (!strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") ||
-      !strcmp(TtaGetSSchemaName (elType.ElSSchema), "SVG"))
+  name = TtaGetSSchemaName (elType.ElSSchema);
+  if (!strcmp(name, "HTML") || !strcmp(name, "SVG"))
     /* it's an HTML or SVG element */
     if (elType.ElTypeNum == HTML_EL_TEXT_UNIT ||
         elType.ElTypeNum == HTML_EL_Basic_Elem)
@@ -62,10 +62,12 @@ ThotBool MakeASpan (Element elem, Element *span, Document doc,
           {
             doit = TRUE;
             elType = TtaGetElementType (parent);
-            if ((elType.ElTypeNum == HTML_EL_Span &&
-                 !strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML")) ||
-                (elType.ElTypeNum == SVG_EL_tspan &&
-                 !strcmp(TtaGetSSchemaName (elType.ElSSchema), "SVG")))
+            name = TtaGetSSchemaName (elType.ElSSchema);
+            if ((elType.ElTypeNum == HTML_EL_Span && !strcmp(name, "HTML"))
+#ifdef _SVG
+                || (elType.ElTypeNum == SVG_EL_tspan && !strcmp (name, "SVG"))
+#endif /* _SVG */
+                )
               /* element parent is a span element */
               {
                 sibling = elem;
@@ -89,10 +91,12 @@ ThotBool MakeASpan (Element elem, Element *span, Document doc,
             if (doit)
               /* enclose the text leaf within a span element */
               {
-                if (!strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML"))
-                  elType.ElTypeNum = HTML_EL_Span;
-                else
+#ifdef _SVG
+                if (!strcmp (name, "SVG"))
                   elType.ElTypeNum = SVG_EL_tspan;
+                else
+#endif /* _SVG */
+                  elType.ElTypeNum = HTML_EL_Span;
                 *span = TtaNewElement (doc, elType);
                 TtaInsertSibling (*span, elem, FALSE, doc);
                 TtaRegisterElementCreate (*span, doc);
@@ -111,6 +115,7 @@ ThotBool MakeASpan (Element elem, Element *span, Document doc,
   return ret;
 }
 
+
 /*----------------------------------------------------------------------
   DeleteSpanIfNoAttr
   An attribute has been removed from element el in document doc.
@@ -123,8 +128,8 @@ void DeleteSpanIfNoAttr (Element el, Document doc, Element *firstChild,
                          Element *lastChild)
 {
   ElementType	elType;
-  Element	span, child, next;
-  Attribute	attr;
+  Element	    span, child, next;
+  Attribute	  attr;
 
   /* if the element is a SPAN without any other attribute, remove the SPAN
      element */
@@ -341,7 +346,7 @@ void SetStyleAttribute (Document doc, Element elem)
   AttributeType       attrType;
   Attribute           styleAttr;
   ElementType         elType;
-  Element	       firstChild, lastChild;
+  Element	            firstChild, lastChild;
   char               *schName;
   char               *style;
   int                 len;
