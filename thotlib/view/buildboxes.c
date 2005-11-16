@@ -4973,7 +4973,8 @@ void CheckScrollingWidth (int frame)
                     {
                       if (pBox->BxClipX + pBox->BxClipW > max)
                         max = pBox->BxClipX + pBox->BxClipW;
-                      if (pBox->BxClipX < org)
+                      if (pBox->BxClipX < org &&
+                          pBox->BxAbstractBox && pBox->BxAbstractBox->AbIndent >= 0)
                         org = pBox->BxClipX;
                     }
                   else
@@ -4981,10 +4982,12 @@ void CheckScrollingWidth (int frame)
                     {
                       if (pBox->BxXOrg + pBox->BxWidth > max)
                         max = pBox->BxXOrg + pBox->BxWidth;
-                      if (pBox->BxXOrg < org)
+                      if (pBox->BxXOrg < org &&
+                          pBox->BxAbstractBox && pBox->BxAbstractBox->AbIndent >= 0)
                         org = pBox->BxXOrg;
-                      if (pBox->BxXOrg + pBox->BxLMargin < org)
-                        org = pBox->BxXOrg + pBox->BxLMargin;
+                      if (pBox->BxXOrg + pBox->BxLMargin < org &&
+                          pBox->BxAbstractBox && pBox->BxAbstractBox->AbIndent >= 0)
+                      org = pBox->BxXOrg + pBox->BxLMargin;
                     }
                   if (pBox->BxNext == box)
                     printf ("Cycle\n");
