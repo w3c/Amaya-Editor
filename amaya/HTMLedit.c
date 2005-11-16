@@ -1134,8 +1134,7 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
   Attribute           attr;
   DisplayMode         dispMode;
   char               *s;
-  int                 firstChar, lastChar, lg, i, levelFirst, levelLast, min,
-    max;
+  int                 firstChar, lastChar, lg, i, levelFirst, levelLast, min, max;
   Language            lang;
   CHAR_T              *buffer;
   ThotBool            noAnchor, ok;

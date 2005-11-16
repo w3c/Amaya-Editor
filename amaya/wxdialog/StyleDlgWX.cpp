@@ -17,7 +17,7 @@
 #include "StyleDlgWX.h"
 #include "AHTURLTools_f.h"
 
-static char Buffer[2000];
+static char *Buffer;
 static int  Index = 0;
 static int  BG_repeat = 0;
 static char End_rule[10];
@@ -58,6 +58,7 @@ BEGIN_EVENT_TABLE(StyleDlgWX, AmayaDialog)
   EVT_TEXT( XRCID("wxID_COMBO_BORDER_COLOR"),    StyleDlgWX::OnColorTextChanged )
 
   EVT_BUTTON( XRCID("wxID_BUTTON_BGIMAGE"),      StyleDlgWX::OnBrowseButton )
+  EVT_BUTTON( XRCID("wxID_BUTTON_LISTIMAGE"),    StyleDlgWX::OnBrowseButton )
   EVT_BUTTON( XRCID("wxID_BUTTON_NOREPEAT"),     StyleDlgWX::OnButton ) 
   EVT_BUTTON( XRCID("wxID_BUTTON_REPEAT"),       StyleDlgWX::OnButton ) 
   EVT_BUTTON( XRCID("wxID_BUTTON_XREPEAT"),      StyleDlgWX::OnButton ) 
@@ -128,6 +129,7 @@ BEGIN_EVENT_TABLE(StyleDlgWX, AmayaDialog)
 
   /* tooltip of browse buttons */
   XRCCTRL(*this, "wxID_BUTTON_BGIMAGE", wxBitmapButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_BROWSE) ));
+  XRCCTRL(*this, "wxID_BUTTON_LISTIMAGE", wxBitmapButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_BROWSE) ));
   BG_repeat = 0;
 
   // give focus to ...
@@ -335,6 +337,24 @@ void StyleDlgWX::GetValueDialog_Text()
       Index += strlen (&Buffer[Index]);
     }
 
+  value = XRCCTRL(*this, "wxID_CHOICE_TRANSFORM", wxChoice)->GetStringSelection();
+  if (value.Len() > 0)
+    {
+      strcpy (&Buffer[Index], "text-transform: ");
+      strcat (&Buffer[Index], (const char*)value.mb_str(wxConvUTF8));
+      strcat (&Buffer[Index], End_rule);
+      Index += strlen (&Buffer[Index]);
+    }
+
+  value = XRCCTRL(*this, "wxID_CHOICE_WHITESPACE", wxChoice)->GetStringSelection();
+  if (value.Len() > 0)
+    {
+      strcpy (&Buffer[Index], "white-space: ");
+      strcat (&Buffer[Index], (const char*)value.mb_str(wxConvUTF8));
+      strcat (&Buffer[Index], End_rule);
+      Index += strlen (&Buffer[Index]);
+    }
+
   value = XRCCTRL(*this, "wxID_CHOICE_WORD", wxChoice)->GetStringSelection();
   if (value.Len() > 0)
     {
@@ -431,11 +451,11 @@ void StyleDlgWX::GetValueDialog_Color()
       strcpy (&Buffer[Index], "background-image: url(");
       strcpy (pathimage, (const char*)value.mb_str(wxConvUTF8));
       // @@@@@@@@@@@@@@@@
-      if ((IsHTTPPath (DocumentURLs[CurrentDoc]) &&
-           !strncmp (pathimage, "http:", 5)) ||
-          (!IsHTTPPath (DocumentURLs[CurrentDoc]) &&
-           (!strncmp (pathimage, "file:", 5) ||
-            pathimage[0] == '/' || pathimage[1] == ':')))
+      if (!strcmp (pathimage, "none"))
+        strcat (&Buffer[Index], pathimage);
+      else if ((IsHTTPPath (DocumentURLs[CurrentDoc]) &&
+           !strncmp (pathimage, "http:", 5)) || (!IsHTTPPath (DocumentURLs[CurrentDoc]) &&
+           (!strncmp (pathimage, "file:", 5) || pathimage[0] == '/' || pathimage[1] == ':')))
         {
           /* make a relative path */
           s = MakeRelativeURL (pathimage, DocumentURLs[CurrentDoc]);
@@ -503,7 +523,7 @@ void StyleDlgWX::GetValueDialog_Color()
       XRCCTRL(*this, "wx_BTOP_DONE", wxCheckBox)->IsChecked() ||
       svalue.Len() > 0 || cvalue.Len() > 0)
     {
-      strcpy (&Buffer[Index], "border-top:");
+      strcpy (&Buffer[Index], "border-top: ");
       if (value.Len() > 0)
         {
           strcat (&Buffer[Index], " ");
@@ -545,7 +565,7 @@ void StyleDlgWX::GetValueDialog_Color()
       XRCCTRL(*this, "wx_BBOTTOM_DONE", wxCheckBox)->IsChecked() ||
       svalue.Len() > 0 || cvalue.Len() > 0)
     {
-      strcpy (&Buffer[Index], "border-bottom:");
+      strcpy (&Buffer[Index], "border-bottom: ");
       if (value.Len() > 0)
         {
           strcat (&Buffer[Index], " ");
@@ -587,7 +607,7 @@ void StyleDlgWX::GetValueDialog_Color()
       XRCCTRL(*this, "wx_BLEFT_DONE", wxCheckBox)->IsChecked() ||
       svalue.Len() > 0 || cvalue.Len() > 0)
     {
-      strcpy (&Buffer[Index], "border-left:");
+      strcpy (&Buffer[Index], "border-left: ");
       if (value.Len() > 0)
         {
           strcat (&Buffer[Index], " ");
@@ -629,7 +649,7 @@ void StyleDlgWX::GetValueDialog_Color()
       XRCCTRL(*this, "wx_BRIGHT_DONE", wxCheckBox)->IsChecked() ||
       svalue.Len() > 0 || cvalue.Len() > 0)
     {
-      strcpy (&Buffer[Index], "border-right:");
+      strcpy (&Buffer[Index], "border-right: ");
       if (value.Len() > 0)
         {
           strcat (&Buffer[Index], " ");
@@ -671,7 +691,7 @@ void StyleDlgWX::GetValueDialog_Color()
       XRCCTRL(*this, "wx_BORDER_DONE", wxCheckBox)->IsChecked() ||
       svalue.Len() > 0 || cvalue.Len() > 0)
     {
-      strcpy (&Buffer[Index], "border:");
+      strcpy (&Buffer[Index], "border: ");
       if (value.Len() > 0)
         {
           strcat (&Buffer[Index], " ");
@@ -893,8 +913,10 @@ void StyleDlgWX::OnColorTextChanged( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void StyleDlgWX::OnBrowseButton( wxCommandEvent& event )
 {
+  int            id = event.GetId();
+  int            list_id = wxXmlResource::GetXRCID(_T("wxID_BUTTON_LISTIMAGE"));
   // Create a generic filedialog
-  wxFileDialog * p_dlg = new wxFileDialog
+  wxFileDialog  *p_dlg = new wxFileDialog
     (
      this,
      TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_OPEN_URL) ),
@@ -909,7 +931,10 @@ void StyleDlgWX::OnBrowseButton( wxCommandEvent& event )
   
   if (p_dlg->ShowModal() == wxID_OK)
     {
-      XRCCTRL(*this, "wxID_BGIMAGE", wxComboBox)->SetValue( p_dlg->GetPath() );
+      if (id == list_id)
+        XRCCTRL(*this, "wxID_LIST_IMAGE", wxComboBox)->SetValue( p_dlg->GetPath() );
+      else
+        XRCCTRL(*this, "wxID_BGIMAGE", wxComboBox)->SetValue( p_dlg->GetPath() );
       // destroy the dlg before calling thotcallback because it's a child of this
       // dialog and thotcallback will delete the dialog...
       // so if I do not delete it manualy here it will be deleted twice
@@ -939,7 +964,7 @@ void StyleDlgWX::GetValueDialog_Box()
   value = XRCCTRL(*this, "wxID_CHOICE_MTOP", wxChoice)->GetStringSelection();
   if (value.Len() > 0)
     {
-      strcpy (&Buffer[Index], "margin-top-width:");
+      strcpy (&Buffer[Index], "margin-top-width: ");
       strcat (&Buffer[Index], (const char*)value.mb_str(wxConvUTF8));
       strcat (&Buffer[Index], End_rule);
       Index += strlen (&Buffer[Index]);
@@ -951,7 +976,7 @@ void StyleDlgWX::GetValueDialog_Box()
       if (XRCCTRL(*this, "wx_MTOP_DONE", wxCheckBox)->IsChecked())
         {
           sprintf (text, "%d", i);
-          strcpy (&Buffer[Index], "margin-top:");
+          strcpy (&Buffer[Index], "margin-top: ");
           strcat (&Buffer[Index], text);
           value = XRCCTRL(*this, "wxID_MTOP_UNIT", wxChoice)->GetStringSelection();
           if (value.Len() > 0)
@@ -967,7 +992,7 @@ void StyleDlgWX::GetValueDialog_Box()
   value = XRCCTRL(*this, "wxID_CHOICE_MBOTTOM", wxChoice)->GetStringSelection();
   if (value.Len() > 0)
     {
-      strcpy (&Buffer[Index], "margin-bottom:");
+      strcpy (&Buffer[Index], "margin-bottom: ");
       strcat (&Buffer[Index], (const char*)value.mb_str(wxConvUTF8));
       strcat (&Buffer[Index], End_rule);
       Index += strlen (&Buffer[Index]);
@@ -979,7 +1004,7 @@ void StyleDlgWX::GetValueDialog_Box()
       if (XRCCTRL(*this, "wx_MBOTTOM_DONE", wxCheckBox)->IsChecked())
         {
           sprintf (text, "%d", i);
-          strcpy (&Buffer[Index], "margin-bottom:");
+          strcpy (&Buffer[Index], "margin-bottom: ");
           strcat (&Buffer[Index], text);
           value = XRCCTRL(*this, "wxID_MBOTTOM_UNIT", wxChoice)->GetStringSelection();
           if (value.Len() > 0)
@@ -995,7 +1020,7 @@ void StyleDlgWX::GetValueDialog_Box()
   value = XRCCTRL(*this, "wxID_CHOICE_MLEFT", wxChoice)->GetStringSelection();
   if (value.Len() > 0)
     {
-      strcpy (&Buffer[Index], "margin-left:");
+      strcpy (&Buffer[Index], "margin-left: ");
       strcat (&Buffer[Index], (const char*)value.mb_str(wxConvUTF8));
       strcat (&Buffer[Index], End_rule);
       Index += strlen (&Buffer[Index]);
@@ -1007,7 +1032,7 @@ void StyleDlgWX::GetValueDialog_Box()
       if (XRCCTRL(*this, "wx_MLEFT_DONE", wxCheckBox)->IsChecked())
         {
           sprintf (text, "%d", i);
-          strcpy (&Buffer[Index], "margin-left:");
+          strcpy (&Buffer[Index], "margin-left: ");
           strcat (&Buffer[Index], text);
           value = XRCCTRL(*this, "wxID_MLEFT_UNIT", wxChoice)->GetStringSelection();
           if (value.Len() > 0)
@@ -1023,7 +1048,7 @@ void StyleDlgWX::GetValueDialog_Box()
   value = XRCCTRL(*this, "wxID_CHOICE_MRIGHT", wxChoice)->GetStringSelection();
   if (value.Len() > 0)
     {
-      strcpy (&Buffer[Index], "margin-right:");
+      strcpy (&Buffer[Index], "margin-right: ");
       strcat (&Buffer[Index], (const char*)value.mb_str(wxConvUTF8));
       strcat (&Buffer[Index], End_rule);
       Index += strlen (&Buffer[Index]);
@@ -1035,7 +1060,7 @@ void StyleDlgWX::GetValueDialog_Box()
       if (XRCCTRL(*this, "wx_MRIGHT_DONE", wxCheckBox)->IsChecked())
         {
           sprintf (text, "%d", i);
-          strcpy (&Buffer[Index], "margin-right:");
+          strcpy (&Buffer[Index], "margin-right: ");
           strcat (&Buffer[Index], text);
           value = XRCCTRL(*this, "wxID_MRIGHT_UNIT", wxChoice)->GetStringSelection();
           if (value.Len() > 0)
@@ -1051,7 +1076,7 @@ void StyleDlgWX::GetValueDialog_Box()
   value = XRCCTRL(*this, "wxID_CHOICE_PTOP", wxChoice)->GetStringSelection();
   if (value.Len() > 0)
     {
-      strcpy (&Buffer[Index], "padding-top:");
+      strcpy (&Buffer[Index], "padding-top: ");
       strcat (&Buffer[Index], (const char*)value.mb_str(wxConvUTF8));
       strcat (&Buffer[Index], End_rule);
       Index += strlen (&Buffer[Index]);
@@ -1063,7 +1088,7 @@ void StyleDlgWX::GetValueDialog_Box()
       if (XRCCTRL(*this, "wx_PTOP_DONE", wxCheckBox)->IsChecked())
         {
           sprintf (text, "%d", i);
-          strcpy (&Buffer[Index], "padding-top:");
+          strcpy (&Buffer[Index], "padding-top: ");
           strcat (&Buffer[Index], text);
           value = XRCCTRL(*this, "wxID_PTOP_UNIT", wxChoice)->GetStringSelection();
           if (value.Len() > 0)
@@ -1079,7 +1104,7 @@ void StyleDlgWX::GetValueDialog_Box()
   value = XRCCTRL(*this, "wxID_CHOICE_PBOTTOM", wxChoice)->GetStringSelection();
   if (value.Len() > 0)
     {
-      strcpy (&Buffer[Index], "padding-bottom:");
+      strcpy (&Buffer[Index], "padding-bottom: ");
       strcat (&Buffer[Index], (const char*)value.mb_str(wxConvUTF8));
       strcat (&Buffer[Index], End_rule);
       Index += strlen (&Buffer[Index]);
@@ -1091,7 +1116,7 @@ void StyleDlgWX::GetValueDialog_Box()
       if (XRCCTRL(*this, "wx_PBOTTOM_DONE", wxCheckBox)->IsChecked())
         {
           sprintf (text, "%d", i);
-          strcpy (&Buffer[Index], "padding-bottom:");
+          strcpy (&Buffer[Index], "padding-bottom: ");
           strcat (&Buffer[Index], text);
           value = XRCCTRL(*this, "wxID_PBOTTOM_UNIT", wxChoice)->GetStringSelection();
           if (value.Len() > 0)
@@ -1107,7 +1132,7 @@ void StyleDlgWX::GetValueDialog_Box()
   value = XRCCTRL(*this, "wxID_CHOICE_PLEFT", wxChoice)->GetStringSelection();
   if (value.Len() > 0)
     {
-      strcpy (&Buffer[Index], "padding-left:");
+      strcpy (&Buffer[Index], "padding-left: ");
       strcat (&Buffer[Index], (const char*)value.mb_str(wxConvUTF8));
       strcat (&Buffer[Index], End_rule);
       Index += strlen (&Buffer[Index]);
@@ -1119,7 +1144,7 @@ void StyleDlgWX::GetValueDialog_Box()
       if (XRCCTRL(*this, "wx_PLEFT_DONE", wxCheckBox)->IsChecked())
         {
           sprintf (text, "%d", i);
-          strcpy (&Buffer[Index], "padding-left:");
+          strcpy (&Buffer[Index], "padding-left: ");
           strcat (&Buffer[Index], text);
           value = XRCCTRL(*this, "wxID_PLEFT_UNIT", wxChoice)->GetStringSelection();
           if (value.Len() > 0)
@@ -1135,7 +1160,7 @@ void StyleDlgWX::GetValueDialog_Box()
   value = XRCCTRL(*this, "wxID_CHOICE_PRIGHT", wxChoice)->GetStringSelection();
   if (value.Len() > 0)
     {
-      strcpy (&Buffer[Index], "padding-right:");
+      strcpy (&Buffer[Index], "padding-right: ");
       strcat (&Buffer[Index], (const char*)value.mb_str(wxConvUTF8));
       strcat (&Buffer[Index], End_rule);
       Index += strlen (&Buffer[Index]);
@@ -1147,7 +1172,7 @@ void StyleDlgWX::GetValueDialog_Box()
       if (XRCCTRL(*this, "wx_PRIGHT_DONE", wxCheckBox)->IsChecked())
         {
           sprintf (text, "%d", i);
-          strcpy (&Buffer[Index], "padding-right:");
+          strcpy (&Buffer[Index], "padding-right: ");
           strcat (&Buffer[Index], text);
           value = XRCCTRL(*this, "wxID_PRIGHT_UNIT", wxChoice)->GetStringSelection();
           if (value.Len() > 0)
@@ -1163,7 +1188,7 @@ void StyleDlgWX::GetValueDialog_Box()
   value = XRCCTRL(*this, "wxID_CHOICE_MARGIN", wxChoice)->GetStringSelection();
   if (value.Len() > 0)
     {
-      strcpy (&Buffer[Index], "margin:");
+      strcpy (&Buffer[Index], "margin: ");
       strcat (&Buffer[Index], (const char*)value.mb_str(wxConvUTF8));
       strcat (&Buffer[Index], End_rule);
       Index += strlen (&Buffer[Index]);
@@ -1175,7 +1200,7 @@ void StyleDlgWX::GetValueDialog_Box()
       if (XRCCTRL(*this, "wx_MARGIN_DONE", wxCheckBox)->IsChecked())
         {
           sprintf (text, "%d", i);
-          strcpy (&Buffer[Index], "margin:");
+          strcpy (&Buffer[Index], "margin: ");
           strcat (&Buffer[Index], text);
           value = XRCCTRL(*this, "wxID_MARGIN_UNIT", wxChoice)->GetStringSelection();
           if (value.Len() > 0)
@@ -1191,7 +1216,7 @@ void StyleDlgWX::GetValueDialog_Box()
   value = XRCCTRL(*this, "wxID_CHOICE_PADDING", wxChoice)->GetStringSelection();
   if (value.Len() > 0)
     {
-      strcpy (&Buffer[Index], "padding:");
+      strcpy (&Buffer[Index], "padding: ");
       strcat (&Buffer[Index], (const char*)value.mb_str(wxConvUTF8));
       strcat (&Buffer[Index], End_rule);
       Index += strlen (&Buffer[Index]);
@@ -1203,7 +1228,7 @@ void StyleDlgWX::GetValueDialog_Box()
       if (XRCCTRL(*this, "wx_PADDING_DONE", wxCheckBox)->IsChecked())
         {
           sprintf (text, "%d", i);
-          strcpy (&Buffer[Index], "padding:");
+          strcpy (&Buffer[Index], "padding: ");
           strcat (&Buffer[Index], text);
           value = XRCCTRL(*this, "wxID_PADDING_UNIT", wxChoice)->GetStringSelection();
           if (value.Len() > 0)
@@ -1219,7 +1244,7 @@ void StyleDlgWX::GetValueDialog_Box()
   value = XRCCTRL(*this, "wxID_CHOICE_WIDTH", wxChoice)->GetStringSelection();
   if (value.Len() > 0)
     {
-      strcpy (&Buffer[Index], "width:");
+      strcpy (&Buffer[Index], "width: ");
       strcat (&Buffer[Index], (const char*)value.mb_str(wxConvUTF8));
       strcat (&Buffer[Index], End_rule);
       Index += strlen (&Buffer[Index]);
@@ -1231,7 +1256,7 @@ void StyleDlgWX::GetValueDialog_Box()
       if (XRCCTRL(*this, "wx_WIDTH_DONE", wxCheckBox)->IsChecked())
         {
           sprintf (text, "%d", i);
-          strcpy (&Buffer[Index], "width:");
+          strcpy (&Buffer[Index], "width: ");
           strcat (&Buffer[Index], text);
           value = XRCCTRL(*this, "wxID_WIDTH_UNIT", wxChoice)->GetStringSelection();
           if (value.Len() > 0)
@@ -1247,7 +1272,7 @@ void StyleDlgWX::GetValueDialog_Box()
   value = XRCCTRL(*this, "wxID_CHOICE_HEIGHT", wxChoice)->GetStringSelection();
   if (value.Len() > 0)
     {
-      strcpy (&Buffer[Index], "height:");
+      strcpy (&Buffer[Index], "height: ");
       strcat (&Buffer[Index], (const char*)value.mb_str(wxConvUTF8));
       strcat (&Buffer[Index], End_rule);
       Index += strlen (&Buffer[Index]);
@@ -1259,7 +1284,7 @@ void StyleDlgWX::GetValueDialog_Box()
       if (XRCCTRL(*this, "wx_HEIGHT_DONE", wxCheckBox)->IsChecked())
         {
           sprintf (text, "%d", i);
-          strcpy (&Buffer[Index], "height:");
+          strcpy (&Buffer[Index], "height: ");
           strcat (&Buffer[Index], text);
           value = XRCCTRL(*this, "wxID_HEIGHT_UNIT", wxChoice)->GetStringSelection();
           if (value.Len() > 0)
@@ -1284,13 +1309,14 @@ void StyleDlgWX::GetValueDialog_Format()
 {
   wxString        value;
   char            text[10];
+  char            pathimage[MAX_LENGTH], *s;
   int             i;
 
   //Display
   value = XRCCTRL(*this, "wxID_CHOICE_DISPLAY", wxChoice)->GetStringSelection();
   if (value.Len() > 0)
     {
-      strcpy (&Buffer[Index], "display:");
+      strcpy (&Buffer[Index], "display: ");
       strcat (&Buffer[Index], (const char*)value.mb_str(wxConvUTF8));
       strcat (&Buffer[Index], End_rule);
       Index += strlen (&Buffer[Index]);
@@ -1300,7 +1326,7 @@ void StyleDlgWX::GetValueDialog_Format()
   value = XRCCTRL(*this, "wxID_CHOICE_VISIBILITY", wxChoice)->GetStringSelection();
   if (value.Len() > 0)
     {
-      strcpy (&Buffer[Index], "visibility:");
+      strcpy (&Buffer[Index], "visibility: ");
       strcat (&Buffer[Index], (const char*)value.mb_str(wxConvUTF8));
       strcat (&Buffer[Index], End_rule);
       Index += strlen (&Buffer[Index]);
@@ -1310,7 +1336,7 @@ void StyleDlgWX::GetValueDialog_Format()
   value = XRCCTRL(*this, "wxID_CHOICE_FLOAT", wxChoice)->GetStringSelection();
   if (value.Len() > 0)
     {
-      strcpy (&Buffer[Index], "float:");
+      strcpy (&Buffer[Index], "float: ");
       strcat (&Buffer[Index], (const char*)value.mb_str(wxConvUTF8));
       strcat (&Buffer[Index], End_rule);
       Index += strlen (&Buffer[Index]);
@@ -1320,10 +1346,54 @@ void StyleDlgWX::GetValueDialog_Format()
   value = XRCCTRL(*this, "wxID_CHOICE_CLEAR", wxChoice)->GetStringSelection();
   if (value.Len() > 0)
     {
-      strcpy (&Buffer[Index], "clear:");
+      strcpy (&Buffer[Index], "clear: ");
       strcat (&Buffer[Index], (const char*)value.mb_str(wxConvUTF8));
       strcat (&Buffer[Index], End_rule);
       Index += strlen (&Buffer[Index]);
+    }
+
+  //List-style
+  value = XRCCTRL(*this, "wxID_CHOICE_LISTSTYLE", wxChoice)->GetStringSelection();
+  if (value.Len() > 0)
+    {
+      strcpy (&Buffer[Index], "list-style: ");
+      strcat (&Buffer[Index], (const char*)value.mb_str(wxConvUTF8));
+      strcat (&Buffer[Index], End_rule);
+      Index += strlen (&Buffer[Index]);
+    }
+
+  //List-position
+  value = XRCCTRL(*this, "wxID_CHOICE_LISTPOSITION", wxChoice)->GetStringSelection();
+  if (value.Len() > 0)
+    {
+      strcpy (&Buffer[Index], "list-position: ");
+      strcat (&Buffer[Index], (const char*)value.mb_str(wxConvUTF8));
+      strcat (&Buffer[Index], End_rule);
+      Index += strlen (&Buffer[Index]);
+    }
+
+  //Background image
+  value = XRCCTRL(*this, "wxID_LIST_IMAGE", wxComboBox)->GetValue();
+  if (value.Len() > 0)
+    {
+      strcpy (&Buffer[Index], "list-style-image: url(");
+      strcpy (pathimage, (const char*)value.mb_str(wxConvUTF8));
+      if (!strcmp (pathimage, "none"))
+        strcat (&Buffer[Index], pathimage);
+      else if ((IsHTTPPath (DocumentURLs[CurrentDoc]) &&
+           !strncmp (pathimage, "http:", 5)) || (!IsHTTPPath (DocumentURLs[CurrentDoc]) &&
+           (!strncmp (pathimage, "file:", 5) || pathimage[0] == '/' || pathimage[1] == ':')))
+        {
+          /* make a relative path */
+          s = MakeRelativeURL (pathimage, DocumentURLs[CurrentDoc]);
+          if (s)
+            {
+              strcat (&Buffer[Index], s);
+              TtaFreeMemory (s);
+            }
+        }
+      else
+        strcat (&Buffer[Index], pathimage);
     }
 
   //Top
@@ -1331,7 +1401,7 @@ void StyleDlgWX::GetValueDialog_Format()
   if (XRCCTRL(*this, "wx_TOP_DONE", wxCheckBox)->IsChecked())
     {
       sprintf (text, "%d", i);
-      strcpy (&Buffer[Index], "top:");
+      strcpy (&Buffer[Index], "top: ");
       strcat (&Buffer[Index], text);
       value = XRCCTRL(*this, "wxID_TOP_UNIT", wxChoice)->GetStringSelection();
       if (value.Len() > 0)
@@ -1347,7 +1417,7 @@ void StyleDlgWX::GetValueDialog_Format()
   if (XRCCTRL(*this, "wx_BOTTOM_DONE", wxCheckBox)->IsChecked())
     {
       sprintf (text, "%d", i);
-      strcpy (&Buffer[Index], "bottom:");
+      strcpy (&Buffer[Index], "bottom: ");
       strcat (&Buffer[Index], text);
       value = XRCCTRL(*this, "wxID_BOTTOM_UNIT", wxChoice)->GetStringSelection();
       if (value.Len() > 0)
@@ -1363,7 +1433,7 @@ void StyleDlgWX::GetValueDialog_Format()
   if (XRCCTRL(*this, "wx_LEFT_DONE", wxCheckBox)->IsChecked())
     {
       sprintf (text, "%d", i);
-      strcpy (&Buffer[Index], "left:");
+      strcpy (&Buffer[Index], "left: ");
       strcat (&Buffer[Index], text);
       value = XRCCTRL(*this, "wxID_LEFT_UNIT", wxChoice)->GetStringSelection();
       if (value.Len() > 0)
@@ -1379,7 +1449,7 @@ void StyleDlgWX::GetValueDialog_Format()
   if (XRCCTRL(*this, "wx_RIGHT_DONE", wxCheckBox)->IsChecked())
     {
       sprintf (text, "%d", i);
-      strcpy (&Buffer[Index], "right:");
+      strcpy (&Buffer[Index], "right: ");
       strcat (&Buffer[Index], text);
       value = XRCCTRL(*this, "wxID_RIGHT_UNIT", wxChoice)->GetStringSelection();
       if (value.Len() > 0)
@@ -1409,6 +1479,7 @@ void StyleDlgWX::OnOk( wxCommandEvent& event )
       DocumentTypes[CurrentDoc] != docLibrary &&
       DocumentTypes[CurrentDoc] != docBookmark)
     {
+      Buffer = (char *)TtaGetMemory (2500);
       if (DocumentTypes[CurrentDoc] == docText ||
        DocumentTypes[CurrentDoc] == docCSS ||
        DocumentTypes[CurrentDoc] == docSource)
@@ -1427,10 +1498,12 @@ void StyleDlgWX::OnOk( wxCommandEvent& event )
       GetValueDialog_Color();
       GetValueDialog_Box();
       GetValueDialog_Format();
+      // remove extra spaces
       while (Index > 0 && Buffer[Index - 1] != ';')
         Index--;
       Buffer[Index] = EOS;
       ThotCallback (m_ref, STRING_DATA, Buffer);
+      TtaFreeMemory (Buffer);
     }
   else
     XRCCTRL(*this, "wxID_NO_SELECTION", wxStaticText)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_NO_INSERT_POINT)));
@@ -1450,6 +1523,7 @@ void StyleDlgWX::OnDefault( wxCommandEvent& event )
  XRCCTRL(*this, "wxID_COMBO_TEXTCOLOR", wxComboBox)->SetValue(TtaConvMessageToWX( "" ));
  XRCCTRL(*this, "wxID_COMBO_BACKCOLOR", wxComboBox)->SetValue(TtaConvMessageToWX( "" ));
  XRCCTRL(*this, "wxID_BGIMAGE", wxComboBox)->SetValue(TtaConvMessageToWX( "" ));
+ XRCCTRL(*this, "wxID_LIST_IMAGE", wxComboBox)->SetValue(TtaConvMessageToWX( "" ));
  XRCCTRL(*this, "wxID_COMBO_T_COLOR", wxComboBox)->SetValue(TtaConvMessageToWX( "" ));
  XRCCTRL(*this, "wxID_COMBO_B_COLOR", wxComboBox)->SetValue(TtaConvMessageToWX( "" ));
  XRCCTRL(*this, "wxID_COMBO_L_COLOR", wxComboBox)->SetValue(TtaConvMessageToWX( "" ));
@@ -1468,6 +1542,7 @@ void StyleDlgWX::OnDefault( wxCommandEvent& event )
  XRCCTRL(*this, "wxID_VALIGN_UNIT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
  XRCCTRL(*this, "wxID_CHOICE_ALIGN", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
  XRCCTRL(*this, "wxID_CHOICE_DECORATION", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
+ XRCCTRL(*this, "wxID_CHOICE_TRANSFORM", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
  XRCCTRL(*this, "wxID_CHOICE_WORD", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
  XRCCTRL(*this, "wxID_WORD_UNIT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
  XRCCTRL(*this, "wxID_CHOICE_LETTER", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
@@ -1518,6 +1593,8 @@ void StyleDlgWX::OnDefault( wxCommandEvent& event )
  XRCCTRL(*this, "wxID_CHOICE_VISIBILITY", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
  XRCCTRL(*this, "wxID_CHOICE_FLOAT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
  XRCCTRL(*this, "wxID_CHOICE_CLEAR", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
+ XRCCTRL(*this, "wxID_CHOICE_LISTSTYLE", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
+ XRCCTRL(*this, "wxID_CHOICE_LISTPOSITION", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
  XRCCTRL(*this, "wxID_TOP_UNIT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "px" ));
  XRCCTRL(*this, "wxID_BOTTOM_UNIT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "px" ));
  XRCCTRL(*this, "wxID_LEFT_UNIT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "px" ));

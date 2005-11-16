@@ -761,8 +761,7 @@ static void GenerateStyle (char * data)
                       /* exclude trailing spaces from the span */
                       if (lg > 0 )
                         {
-                          lg++;
-                          buffer = (CHAR_T *)TtaGetMemory (lg * sizeof(CHAR_T));
+                          buffer = (CHAR_T *)TtaGetMemory ((lg+1) * sizeof(CHAR_T) );
                           TtaGiveBufferContent (el, buffer, lg, &lang);
                           if (i == 0)
                             i = lg;
@@ -788,14 +787,14 @@ static void GenerateStyle (char * data)
                               while (firstchar < max &&
                                      buffer[firstchar - 1] == SPACE)
                                 firstchar++;
+                              // prepare the future selection
+                              if (el == firstSel)
+                                firstSel = span;
+                              if (el == lastSel)
+                                lastSel = span;
                               if (firstchar <= i)
                                 /* split the first string */
                                 {
-                                  // prepare the future selection
-                                  if (el == firstSel)
-                                    firstSel = span;
-                                  if (el == lastSel)
-                                    lastSel = span;
                                   TtaRegisterElementReplace (el, doc);
                                   TtaSplitText (el, firstchar, doc);
                                   TtaNextSibling (&el);
@@ -1093,9 +1092,10 @@ static void CallbackCSS (int ref, int typedata, char *data)
       strcpy (CSSpath, data);      
       break;
     case CSSValue:
-      TtaDestroyDialogue (ref);
       if (data)
         GenerateStyle (data);
+      else
+        TtaDestroyDialogue (ref);
       break;
     default:
       break;
