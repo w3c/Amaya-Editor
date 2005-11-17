@@ -79,7 +79,8 @@ BEGIN_EVENT_TABLE(StyleDlgWX, AmayaDialog)
 {
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("StyleDlgWX"));
   m_ref = ref;
-  XRCCTRL(*this, "wxID_OK", wxButton)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_APPLY_BUTTON)));
+  wxString ptr = TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_APPLY_BUTTON));
+  XRCCTRL(*this, "wxID_OK", wxButton)->SetLabel(ptr);
   XRCCTRL(*this, "wxID_CANCEL", wxButton)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_DONE)));
   XRCCTRL(*this, "wxID_DEFAULT", wxButton)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_DEFAULT_BUTTON)));
   XRCCTRL(*this, "wxID_NO_SELECTION", wxStaticText)->SetLabel(TtaConvMessageToWX(""));
@@ -90,42 +91,43 @@ BEGIN_EVENT_TABLE(StyleDlgWX, AmayaDialog)
   p_notebook->SetPageText( 3, TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_FORMAT)) );
 
   /* tooltip of checked values */
-  XRCCTRL(*this, "wx_SIZE_DONE", wxBitmapButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_APPLY_BUTTON) ));
-  XRCCTRL(*this, "wx_LINE_DONE", wxBitmapButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_APPLY_BUTTON) ));
-  XRCCTRL(*this, "wx_INDENT_DONE", wxBitmapButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_APPLY_BUTTON) ));
-  XRCCTRL(*this, "wx_VALIGN_DONE", wxBitmapButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_APPLY_BUTTON) ));
-  XRCCTRL(*this, "wx_WORD_DONE", wxBitmapButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_APPLY_BUTTON) ));
-  XRCCTRL(*this, "wx_LETTER_DONE", wxBitmapButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_APPLY_BUTTON) ));
-  XRCCTRL(*this, "wx_BTOP_DONE", wxBitmapButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_APPLY_BUTTON) ));
-  XRCCTRL(*this, "wx_BBOTTOM_DONE", wxBitmapButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_APPLY_BUTTON) ));
-  XRCCTRL(*this, "wx_BLEFT_DONE", wxBitmapButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_APPLY_BUTTON) ));
-  XRCCTRL(*this, "wx_BRIGHT_DONE", wxBitmapButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_APPLY_BUTTON) ));
-  XRCCTRL(*this, "wx_BORDER_DONE", wxBitmapButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_APPLY_BUTTON) ));
-  XRCCTRL(*this, "wx_MTOP_DONE", wxBitmapButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_APPLY_BUTTON) ));
-  XRCCTRL(*this, "wx_PTOP_DONE", wxBitmapButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_APPLY_BUTTON) ));
-  XRCCTRL(*this, "wx_MBOTTOM_DONE", wxBitmapButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_APPLY_BUTTON) ));
-  XRCCTRL(*this, "wx_PBOTTOM_DONE", wxBitmapButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_APPLY_BUTTON) ));
-  XRCCTRL(*this, "wx_MLEFT_DONE", wxBitmapButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_APPLY_BUTTON) ));
-  XRCCTRL(*this, "wx_PLEFT_DONE", wxBitmapButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_APPLY_BUTTON) ));
-  XRCCTRL(*this, "wx_MRIGHT_DONE", wxBitmapButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_APPLY_BUTTON) ));
-  XRCCTRL(*this, "wx_PRIGHT_DONE", wxBitmapButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_APPLY_BUTTON) ));
-  XRCCTRL(*this, "wx_MARGIN_DONE", wxBitmapButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_APPLY_BUTTON) ));
-  XRCCTRL(*this, "wx_PADDING_DONE", wxBitmapButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_APPLY_BUTTON) ));
-  XRCCTRL(*this, "wx_WIDTH_DONE", wxBitmapButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_APPLY_BUTTON) ));
-  XRCCTRL(*this, "wx_HEIGHT_DONE", wxBitmapButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_APPLY_BUTTON) ));
-  XRCCTRL(*this, "wx_TOP_DONE", wxBitmapButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_APPLY_BUTTON) ));
-  XRCCTRL(*this, "wx_BOTTOM_DONE", wxBitmapButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_APPLY_BUTTON) ));
-  XRCCTRL(*this, "wx_LEFT_DONE", wxBitmapButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_APPLY_BUTTON) ));
-  XRCCTRL(*this, "wx_RIGHT_DONE", wxBitmapButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_APPLY_BUTTON) ));
+  XRCCTRL(*this, "wx_SIZE_DONE", wxCheckBox)->SetToolTip( ptr);
+  XRCCTRL(*this, "wx_LINE_DONE", wxCheckBox)->SetToolTip( ptr);
+  XRCCTRL(*this, "wx_INDENT_DONE", wxCheckBox)->SetToolTip( ptr);
+  XRCCTRL(*this, "wx_VALIGN_DONE", wxCheckBox)->SetToolTip( ptr);
+  XRCCTRL(*this, "wx_WORD_DONE", wxCheckBox)->SetToolTip( ptr);
+  XRCCTRL(*this, "wx_LETTER_DONE", wxCheckBox)->SetToolTip( ptr);
+  XRCCTRL(*this, "wx_BTOP_DONE", wxCheckBox)->SetToolTip( ptr);
+  XRCCTRL(*this, "wx_BBOTTOM_DONE", wxCheckBox)->SetToolTip( ptr);
+  XRCCTRL(*this, "wx_BLEFT_DONE", wxCheckBox)->SetToolTip( ptr);
+  XRCCTRL(*this, "wx_BRIGHT_DONE", wxCheckBox)->SetToolTip( ptr);
+  XRCCTRL(*this, "wx_BORDER_DONE", wxCheckBox)->SetToolTip( ptr);
+  XRCCTRL(*this, "wx_MTOP_DONE", wxCheckBox)->SetToolTip( ptr);
+  XRCCTRL(*this, "wx_PTOP_DONE", wxCheckBox)->SetToolTip( ptr);
+  XRCCTRL(*this, "wx_MBOTTOM_DONE", wxCheckBox)->SetToolTip( ptr);
+  XRCCTRL(*this, "wx_PBOTTOM_DONE", wxCheckBox)->SetToolTip( ptr);
+  XRCCTRL(*this, "wx_MLEFT_DONE", wxCheckBox)->SetToolTip( ptr);
+  XRCCTRL(*this, "wx_PLEFT_DONE", wxCheckBox)->SetToolTip( ptr);
+  XRCCTRL(*this, "wx_MRIGHT_DONE", wxCheckBox)->SetToolTip( ptr);
+  XRCCTRL(*this, "wx_PRIGHT_DONE", wxCheckBox)->SetToolTip( ptr);
+  XRCCTRL(*this, "wx_MARGIN_DONE", wxCheckBox)->SetToolTip( ptr);
+  XRCCTRL(*this, "wx_PADDING_DONE", wxCheckBox)->SetToolTip( ptr);
+  XRCCTRL(*this, "wx_WIDTH_DONE", wxCheckBox)->SetToolTip( ptr);
+  XRCCTRL(*this, "wx_HEIGHT_DONE", wxCheckBox)->SetToolTip( ptr);
+  XRCCTRL(*this, "wx_TOP_DONE", wxCheckBox)->SetToolTip( ptr);
+  XRCCTRL(*this, "wx_BOTTOM_DONE", wxCheckBox)->SetToolTip( ptr);
+  XRCCTRL(*this, "wx_LEFT_DONE", wxCheckBox)->SetToolTip( ptr);
+  XRCCTRL(*this, "wx_RIGHT_DONE", wxCheckBox)->SetToolTip( ptr);
 
   /* tooltip of color buttons */
-  XRCCTRL(*this, "wxID_BUTTON_TEXTCOLOR", wxBitmapButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_FG_SEL_COLOR) ));
-  XRCCTRL(*this, "wxID_BUTTON_BACKCOLOR", wxBitmapButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_FG_SEL_COLOR) ));
-  XRCCTRL(*this, "wxID_BUTTON_T_COLOR", wxBitmapButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_FG_SEL_COLOR) ));
-  XRCCTRL(*this, "wxID_BUTTON_B_COLOR", wxBitmapButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_FG_SEL_COLOR) ));
-  XRCCTRL(*this, "wxID_BUTTON_L_COLOR", wxBitmapButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_FG_SEL_COLOR) ));
-  XRCCTRL(*this, "wxID_BUTTON_R_COLOR", wxBitmapButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_FG_SEL_COLOR) ));
-  XRCCTRL(*this, "wxID_BUTTON_BORDER_COLOR", wxBitmapButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_FG_SEL_COLOR) ));
+  ptr = TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_FG_SEL_COLOR));
+  XRCCTRL(*this, "wxID_BUTTON_TEXTCOLOR", wxBitmapButton)->SetToolTip( ptr);
+  XRCCTRL(*this, "wxID_BUTTON_BACKCOLOR", wxBitmapButton)->SetToolTip( ptr);
+  XRCCTRL(*this, "wxID_BUTTON_T_COLOR", wxBitmapButton)->SetToolTip( ptr);
+  XRCCTRL(*this, "wxID_BUTTON_B_COLOR", wxBitmapButton)->SetToolTip( ptr);
+  XRCCTRL(*this, "wxID_BUTTON_L_COLOR", wxBitmapButton)->SetToolTip( ptr);
+  XRCCTRL(*this, "wxID_BUTTON_R_COLOR", wxBitmapButton)->SetToolTip( ptr);
+  XRCCTRL(*this, "wxID_BUTTON_BORDER_COLOR", wxBitmapButton)->SetToolTip( ptr);
 
   /* tooltip of browse buttons */
   XRCCTRL(*this, "wxID_BUTTON_BGIMAGE", wxBitmapButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_BROWSE) ));
