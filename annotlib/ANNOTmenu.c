@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 2000.
+ *  (c) COPYRIGHT MIT and INRIA, 2000-2005
  *  Please first read the full copyright statement in file COPYRIGHT.
  * 
  */
@@ -97,66 +97,66 @@ static void CustomQueryCallbackDialog (int ref, int typedata, char *data)
       /* has the user changed the options? */
       val = (int) data;
       switch (ref - CustomQueryBase)
-	{
-	case CustomQueryMenu:
-	  switch (val) 
-	    {
-	    case 0:
-	      TtaDestroyDialogue (ref);
-	      break;
-	    case 1:
-	      /* apply */
-	      SetAnnotCustomQuery (CustomQueryFlag);
-	      SetAnnotAlgaeText (AlgaeText);
-	      TtaFreeMemory (AlgaeText);
-	      TtaDestroyDialogue (ref);
-	      break;
-	    case 2:
-	      /* get default */
-	      CustomQueryFlag = FALSE;
-	      TtaFreeMemory (AlgaeText);
-	      AlgaeText = NULL;
-	      TtaSetTextForm (CustomQueryBase + mFreeText, "");
-	      TtaSetMenuForm (CustomQueryBase + mExpertMode, 0);
-	      break;
+        {
+        case CustomQueryMenu:
+          switch (val) 
+            {
+            case 0:
+              TtaDestroyDialogue (ref);
+              break;
+            case 1:
+              /* apply */
+              SetAnnotCustomQuery (CustomQueryFlag);
+              SetAnnotAlgaeText (AlgaeText);
+              TtaFreeMemory (AlgaeText);
+              TtaDestroyDialogue (ref);
+              break;
+            case 2:
+              /* get default */
+              CustomQueryFlag = FALSE;
+              TtaFreeMemory (AlgaeText);
+              AlgaeText = NULL;
+              TtaSetTextForm (CustomQueryBase + mFreeText, "");
+              TtaSetMenuForm (CustomQueryBase + mExpertMode, 0);
+              break;
 
-	    default:
-	      break;
-	    }
-	  break;
+            default:
+              break;
+            }
+          break;
 
-	case mUser1 :
-	  break;
+        case mUser1 :
+          break;
 	
-	case mUser2 :
-	  break;
+        case mUser2 :
+          break;
 
-	case mBtime :
-	  break;
+        case mBtime :
+          break;
 
-	case mEtime :
-	  break;
+        case mEtime :
+          break;
 
-	case mExpertMode :
-	  if (val == 0)
-	    CustomQueryFlag = FALSE;
-	  else
-	    CustomQueryFlag = TRUE;
-	  break;
+        case mExpertMode :
+          if (val == 0)
+            CustomQueryFlag = FALSE;
+          else
+            CustomQueryFlag = TRUE;
+          break;
 
-	case mFreeText :
-	  if (data)
-	    AlgaeText = TtaStrdup (data);
-	  else
-	    {
-	      TtaFreeMemory (AlgaeText);
-	      AlgaeText = NULL;
-	    }
-	  break;
+        case mFreeText :
+          if (data)
+            AlgaeText = TtaStrdup (data);
+          else
+            {
+              TtaFreeMemory (AlgaeText);
+              AlgaeText = NULL;
+            }
+          break;
 	  
-	default:
-	  break;
-	}
+        default:
+          break;
+        }
     }
 }
 #endif /* !_WINGUI */
@@ -168,24 +168,24 @@ static void CustomQueryCallbackDialog (int ref, int typedata, char *data)
 void CustomQueryMenuInit (Document document, View view)
 {
 #ifdef _GTK
-   int              i;
-   char          *ptr;
+  int              i;
+  char          *ptr;
 
-   /* initialize the base if it hasn't yet been done */
-   if (!CustomQueryBase)
-     CustomQueryBase = TtaSetCallback ((Proc)CustomQueryCallbackDialog, 
-				       MAX_QUERYCONFMENU_DLG);
+  /* initialize the base if it hasn't yet been done */
+  if (!CustomQueryBase)
+    CustomQueryBase = TtaSetCallback ((Proc)CustomQueryCallbackDialog, 
+                                      MAX_QUERYCONFMENU_DLG);
 
-   /* Create the dialogue form */
-   i = 0;
-   strcpy (&s[i], TtaGetMessage (AMAYA, AM_APPLY_BUTTON));
-   i += strlen (&s[i]) + 1;
-   strcpy (&s[i], TtaGetMessage (AMAYA, AM_DEFAULT_BUTTON));
+  /* Create the dialogue form */
+  i = 0;
+  strcpy (&s[i], TtaGetMessage (AMAYA, AM_APPLY_BUTTON));
+  i += strlen (&s[i]) + 1;
+  strcpy (&s[i], TtaGetMessage (AMAYA, AM_DEFAULT_BUTTON));
 
-   TtaNewSheet (CustomQueryBase + CustomQueryMenu,
-		TtaGetViewFrame (document, view),
-		"Query Customization Menu",
-		2, s, FALSE, 10, 'L', D_DONE);
+  TtaNewSheet (CustomQueryBase + CustomQueryMenu,
+               TtaGetViewFrame (document, view),
+               "Query Customization Menu",
+               2, s, FALSE, 10, 'L', D_DONE);
 
   /* create the radio buttons for choosing a selector */
   i = 0;
@@ -194,40 +194,40 @@ void CustomQueryMenuInit (Document document, View view)
   strcpy (&s[i], "BUse free algae query with the following text");
 
   TtaNewSubmenu (CustomQueryBase + mExpertMode,
-		 CustomQueryBase + CustomQueryMenu,
-		 0,
-		 "Query type",
-		 2,
-		 s,
-		 NULL,
-		 0,
-		 TRUE);
-   TtaNewTextForm (CustomQueryBase + mFreeText,
-		   CustomQueryBase + CustomQueryMenu,
-		   "(%u stands for the URL of the document that's being browsed)",
-		   70,
-		   5,
-		   TRUE);
+                 CustomQueryBase + CustomQueryMenu,
+                 0,
+                 "Query type",
+                 2,
+                 s,
+                 NULL,
+                 0,
+                 TRUE);
+  TtaNewTextForm (CustomQueryBase + mFreeText,
+                  CustomQueryBase + CustomQueryMenu,
+                  "(%u stands for the URL of the document that's being browsed)",
+                  70,
+                  5,
+                  TRUE);
 
-   /* initialize the menu */
-   ptr = GetAnnotAlgaeText ();
-   if (ptr)
-     {
-       AlgaeText = TtaStrdup (ptr);
-       TtaSetTextForm (CustomQueryBase + mFreeText, AlgaeText);
-     }
-   else
-     AlgaeText = NULL;
+  /* initialize the menu */
+  ptr = GetAnnotAlgaeText ();
+  if (ptr)
+    {
+      AlgaeText = TtaStrdup (ptr);
+      TtaSetTextForm (CustomQueryBase + mFreeText, AlgaeText);
+    }
+  else
+    AlgaeText = NULL;
    
-   CustomQueryFlag = GetAnnotCustomQuery ();
-   TtaSetMenuForm (CustomQueryBase + mExpertMode, (CustomQueryFlag) ? 1 : 0);
+  CustomQueryFlag = GetAnnotCustomQuery ();
+  TtaSetMenuForm (CustomQueryBase + mExpertMode, (CustomQueryFlag) ? 1 : 0);
 
-   /* display the menu */
-   TtaSetDialoguePosition ();
-   TtaShowDialogue (CustomQueryBase + CustomQueryMenu, TRUE);
+  /* display the menu */
+  TtaSetDialoguePosition ();
+  TtaShowDialogue (CustomQueryBase + CustomQueryMenu, TRUE);
 #else /* _GTK */
-   /* function not implemented yet */
-   InitInfo ("", TtaGetMessage(LIB, TMSG_NOT_AVAILABLE));
+  /* function not implemented yet */
+  InitInfo ("", TtaGetMessage(LIB, TMSG_NOT_AVAILABLE));
 #endif /* _GTK */
 }
 
@@ -244,7 +244,7 @@ void CustomQueryMenuInit (Document document, View view)
   ------------------------------------------------------------------*/
 #ifdef _WINGUI
 static void WIN_AnnotFilterNewSelector (Document doc, char *entries,
-					int nb_entries)
+                                        int nb_entries)
 {
   int index = 0;
   int i = 0;
@@ -255,7 +255,7 @@ static void WIN_AnnotFilterNewSelector (Document doc, char *entries,
   while (i < nb_entries && entries[index] != '\0')
     {
       SendDlgItemMessage (FilterHwnd, IDC_FILTERSEL, LB_INSERTSTRING,
-		  i, (LPARAM) &entries[index]); 
+                          i, (LPARAM) &entries[index]); 
       /* @@ JK: what does this mean? Longueur de l'intitule ?? */
       index += strlen (&entries[index]) + 1;
       i++;
@@ -265,7 +265,7 @@ static void WIN_AnnotFilterNewSelector (Document doc, char *entries,
 
 /*---------------------------------------------------------------
   BuildAnnotFilterSelector builds the list allowing to select a profile
-------------------------------------------------------------------*/
+  ------------------------------------------------------------------*/
 static void BuildAnnotFilterSelector (Document doc, SelType selector)
 {
   int                   nb_entries;
@@ -277,7 +277,7 @@ static void BuildAnnotFilterSelector (Document doc, SelType selector)
   int                    status;
 	   
 
-   /* count and copy the entries that we're interested in */
+  /* count and copy the entries that we're interested in */
   switch (selector)
     {
     case BY_AUTHOR:
@@ -298,41 +298,41 @@ static void BuildAnnotFilterSelector (Document doc, SelType selector)
   strcpy (s, "");
   i = 0;
   while (list_item)
-     {
-       filter = (AnnotFilterData *) list_item->object;
-       if (filter)
-	 {
-	   /* do we need to show it? */
-	   /* we have a type (or name)... now search all the
-	      annotations for this type and see if it must be shown */
-	   status = AnnotFilter_status (doc, selector, filter->object);
+    {
+      filter = (AnnotFilterData *) list_item->object;
+      if (filter)
+        {
+          /* do we need to show it? */
+          /* we have a type (or name)... now search all the
+             annotations for this type and see if it must be shown */
+          status = AnnotFilter_status (doc, selector, filter->object);
 	   
-	   switch (status)
-	     {
-	     case 2: /* partial */
-	       status_char = '-';
-	       break;
+          switch (status)
+            {
+            case 2: /* partial */
+              status_char = '-';
+              break;
 
-	     default:
-	     case 1: /* show */
-	       status_char = ' ';
-	       break;
+            default:
+            case 1: /* show */
+              status_char = ' ';
+              break;
 
-	     case 0: /* hide */
-	       status_char = '*';
-	       break;
-	     }
-	   if (selector == BY_TYPE)
-	     name = ANNOT_GetLabel (&annot_schema_list,
-				    (RDFResourceP) filter->object);
-	   else
-	     name = (char *) filter->object;
-	   sprintf (&s[i], "%c%s", status_char, name);
-	   i += strlen (&s[i]) + 1;
-	   nb_entries++;
-	 }
-       list_item = list_item->next;
-     }
+            case 0: /* hide */
+              status_char = '*';
+              break;
+            }
+          if (selector == BY_TYPE)
+            name = ANNOT_GetLabel (&annot_schema_list,
+                                   (RDFResourceP) filter->object);
+          else
+            name = (char *) filter->object;
+          sprintf (&s[i], "%c%s", status_char, name);
+          i += strlen (&s[i]) + 1;
+          nb_entries++;
+        }
+      list_item = list_item->next;
+    }
 
 #ifdef _WINGUI
   WIN_AnnotFilterNewSelector (doc, s, nb_entries);
@@ -340,22 +340,24 @@ static void BuildAnnotFilterSelector (Document doc, SelType selector)
 #ifdef _WX
   /* function not implemented yet */
   InitInfo ("", TtaGetMessage(LIB, TMSG_NOT_AVAILABLE));
+  TtaNewScrollPopup (AnnotFilterBase + AnnotFilterMenu, TtaGetViewFrame (doc, 1),
+                     NULL, nb_entries, s, NULL, FALSE, 'L');
 #endif /* _WX */
 #ifdef _GTK
   /* Fill in the form  */
   TtaNewSelector (AnnotFilterBase + mFilterSelector, 
-		  AnnotFilterBase + AnnotFilterMenu,
-		  NULL,
-		  nb_entries, s, 5,
-		  NULL, TRUE, TRUE);
+                  AnnotFilterBase + AnnotFilterMenu,
+                  NULL,
+                  nb_entries, s, 5,
+                  NULL, TRUE, TRUE);
 #endif /* _GTK */
 }
 
 /*---------------------------------------------------------------
   ChangeAnnotVisibility
-------------------------------------------------------------------*/
+  ------------------------------------------------------------------*/
 static void ChangeAnnotVisibility (Document doc, SelType selector,
-				   char *object, ThotBool show)
+                                   char *object, ThotBool show)
 {
   List               *list_item;
   AnnotFilterData    *filter;
@@ -409,16 +411,16 @@ static void ChangeAnnotVisibility (Document doc, SelType selector,
       filter = (AnnotFilterData *) list_item->object;
 
       if (selector == BY_TYPE)
-	name = ANNOT_GetLabel (&annot_schema_list,
-			       (RDFResourceP) filter->object);
+        name = ANNOT_GetLabel (&annot_schema_list,
+                               (RDFResourceP) filter->object);
       else
-	name = (char *) filter->object;
+        name = (char *) filter->object;
 
       if (filter && !strcasecmp (name, object + 1))
-	{
-	  filter->show = show;
-	  break;
-	}
+        {
+          filter->show = show;
+          break;
+        }
       list_item = list_item->next;
     }
 
@@ -447,64 +449,64 @@ static void ChangeAnnotVisibility (Document doc, SelType selector,
       attrType.AttrTypeNum = XLink_ATTR_href_;
       attr = TtaGetAttribute (el, attrType);
       if (!attr)
-	/* this looks like an error! */
-	continue;
+        /* this looks like an error! */
+        continue;
       length = TtaGetTextAttributeLength (attr) + 1;
       annot_url = (char *)TtaGetMemory (length);
       TtaGiveTextAttributeValue (attr, annot_url, &length);
       
       /* now look in the filters to see if we need to hide it or not */
       annot = AnnotList_searchAnnot (AnnotMetaData[doc].annotations, 
-				     annot_url, AM_BODY_URL);
+                                     annot_url, AM_BODY_URL);
       TtaFreeMemory (annot_url);
       if (!annot || !(annot->is_visible) || annot->is_orphan)
-	continue;
+        continue;
 
 #ifdef ANNOT_ON_ANNOT
       /* skip the reply annotations */
       if (annot->inReplyTo)
-	continue;
+        continue;
 #endif /* ANNOT_ON_ANNOT */
       
       switch (selector) 
-	{
-	case BY_AUTHOR:
-	  if (annot->author)
-	    annot_show = AnnotFilter_showAuthor (AnnotMetaData[doc].authors, 
-						 annot->author, 
-						 annot->annot_url);
-	  break;
-	case BY_TYPE:
-	  annot_show = AnnotFilter_show (AnnotMetaData[doc].types, 
-					 (void *) annot->type);
-	  break;
-	case BY_SERVER:
-	  annot_show = AnnotFilter_showServer (AnnotMetaData[doc].servers, 
-					       annot->annot_url);
-	  break;
-	}
+        {
+        case BY_AUTHOR:
+          if (annot->author)
+            annot_show = AnnotFilter_showAuthor (AnnotMetaData[doc].authors, 
+                                                 annot->author, 
+                                                 annot->annot_url);
+          break;
+        case BY_TYPE:
+          annot_show = AnnotFilter_show (AnnotMetaData[doc].types, 
+                                         (void *) annot->type);
+          break;
+        case BY_SERVER:
+          annot_show = AnnotFilter_showServer (AnnotMetaData[doc].servers, 
+                                               annot->annot_url);
+          break;
+        }
 
       attrType.AttrTypeNum = XLink_ATTR_AnnotIsHidden;
       attr = TtaGetAttribute (el, attrType);
       if (annot_show)
-	{
-	  /* erase the attribute */
-	  if (attr)
-	    {
-	      TtaRemoveAttribute (el, attr, doc);  
-	      annot->show = TRUE;
-	    }
-	}
+        {
+          /* erase the attribute */
+          if (attr)
+            {
+              TtaRemoveAttribute (el, attr, doc);  
+              annot->show = TRUE;
+            }
+        }
       else
-	{
-	  /* add the attribute if it doesn't exist */
-	  if (!attr)
-	    {
-	      attr = TtaNewAttribute (attrType);
-	      TtaAttachAttribute (el, attr, doc);  
-	      annot->show = FALSE;
-	    }
-	}
+        {
+          /* add the attribute if it doesn't exist */
+          if (!attr)
+            {
+              attr = TtaNewAttribute (attrType);
+              TtaAttachAttribute (el, attr, doc);  
+              annot->show = FALSE;
+            }
+        }
     }
 
   /* display the document */
@@ -564,7 +566,7 @@ static void DocAnnotVisibility (Document document, View view, ThotBool show)
     {
       AnnotMeta *annot = (AnnotMeta *)list_item->object;
       if (annot && annot->is_visible && !(annot->is_orphan))
-	annot->show = show;
+        annot->show = show;
     }
 
   /*
@@ -591,20 +593,20 @@ static void DocAnnotVisibility (Document document, View view, ThotBool show)
     {
       attr = TtaGetAttribute (el, attrType);
       if (show)
-	{
-	  /* erase the attribute */
-	  if (attr)
-	      TtaRemoveAttribute (el, attr, document);  
-	}
+        {
+          /* erase the attribute */
+          if (attr)
+            TtaRemoveAttribute (el, attr, document);  
+        }
       else
-	{
-	  /* add the attribute if it doesn't exist */
-	  if (!attr)
-	    {
-	      attr = TtaNewAttribute (attrType);
-	      TtaAttachAttribute (el, attr, document);  
-	    }
-	}
+        {
+          /* add the attribute if it doesn't exist */
+          if (!attr)
+            {
+              attr = TtaNewAttribute (attrType);
+              TtaAttachAttribute (el, attr, document);  
+            }
+        }
     }
 
   /* display the document */
@@ -627,10 +629,10 @@ static void DocAnnotVisibility (Document document, View view, ThotBool show)
 
 #ifdef _WINGUI
 /*-----------------------------------------------------------------------
- AnnotFilterDlgProc
- ------------------------------------------------------------------------*/
+  AnnotFilterDlgProc
+  ------------------------------------------------------------------------*/
 LRESULT CALLBACK WIN_AnnotFilterDlgProc (ThotWindow hwnDlg, UINT msg,
-					 WPARAM wParam, LPARAM lParam)
+                                         WPARAM wParam, LPARAM lParam)
 {
   int  index = 0;
   int itemIndex;
@@ -639,34 +641,34 @@ LRESULT CALLBACK WIN_AnnotFilterDlgProc (ThotWindow hwnDlg, UINT msg,
   switch (msg)
     {
     case WM_INITDIALOG:
-	  FilterHwnd = hwnDlg;
-	  /* 
-	  ** write the dialogue text
-	  */
-	  /* window title */
+      FilterHwnd = hwnDlg;
+      /* 
+      ** write the dialogue text
+      */
+      /* window title */
       SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_AFILTER));
-	  /* buttons */
+      /* buttons */
       SetWindowText (GetDlgItem (hwnDlg, ID_ANNOTSHOW), 
-		     TtaGetMessage (AMAYA, AM_AFILTER_SHOW));
+                     TtaGetMessage (AMAYA, AM_AFILTER_SHOW));
       SetWindowText (GetDlgItem (hwnDlg, ID_ANNOTHIDE), 
-		     TtaGetMessage (AMAYA, AM_AFILTER_HIDE));
+                     TtaGetMessage (AMAYA, AM_AFILTER_HIDE));
       SetWindowText (GetDlgItem (hwnDlg, ID_ANNOTSHOWALL), 
-		     TtaGetMessage (AMAYA, AM_AFILTER_SHOW_ALL));
+                     TtaGetMessage (AMAYA, AM_AFILTER_SHOW_ALL));
       SetWindowText (GetDlgItem (hwnDlg, ID_ANNOTHIDEALL), 
-		     TtaGetMessage (AMAYA, AM_AFILTER_HIDE_ALL));
+                     TtaGetMessage (AMAYA, AM_AFILTER_HIDE_ALL));
       SetWindowText (GetDlgItem (hwnDlg, ID_DONE), TtaGetMessage (LIB, TMSG_DONE));
       /* filter options */
       SetWindowText (GetDlgItem (hwnDlg, IDC_TFILTEROPTIONS), 
-		     TtaGetMessage (AMAYA, AM_AFILTER_OPTIONS));
+                     TtaGetMessage (AMAYA, AM_AFILTER_OPTIONS));
       SetWindowText (GetDlgItem (hwnDlg, IDC_FILTERBYAUTHOR), 
-		     TtaGetMessage (AMAYA, AM_AFILTER_BYAUTHOR));
+                     TtaGetMessage (AMAYA, AM_AFILTER_BYAUTHOR));
       SetWindowText (GetDlgItem (hwnDlg, IDC_FILTERBYTYPE), 
-		     TtaGetMessage (AMAYA, AM_AFILTER_BYTYPE));
+                     TtaGetMessage (AMAYA, AM_AFILTER_BYTYPE));
       SetWindowText (GetDlgItem (hwnDlg, IDC_FILTERBYSERVER), 
-		     TtaGetMessage (AMAYA, AM_AFILTER_BYSERVER));
-	  /* help label */
-	  SetWindowText (GetDlgItem (hwnDlg, IDC_TFILTERHELP), 
-		     TtaGetMessage (AMAYA, AM_AFILTER_HELP));
+                     TtaGetMessage (AMAYA, AM_AFILTER_BYSERVER));
+      /* help label */
+      SetWindowText (GetDlgItem (hwnDlg, IDC_TFILTERHELP), 
+                     TtaGetMessage (AMAYA, AM_AFILTER_HELP));
 
       /* display the by author items */
       BuildAnnotFilterSelector (AnnotFilterDoc, AnnotSelType);
@@ -678,92 +680,92 @@ LRESULT CALLBACK WIN_AnnotFilterDlgProc (ThotWindow hwnDlg, UINT msg,
     case WM_DESTROY:
       FilterHwnd = NULL;
       /* the filter select window is destroyed automatically when we kill
-	 the parent window */
+         the parent window */
       EndDialog (hwnDlg, ID_DONE);
       break;
 
     case WM_COMMAND:
 
-    switch (LOWORD (wParam))
-      {
-	/* list box (filter select) */
-      case IDC_FILTERSEL:
-	if (HIWORD (wParam) == LBN_SELCHANGE)
-	  {
-	    /* get the index of the selected item */
-	    itemIndex = SendDlgItemMessage (FilterHwnd, IDC_FILTERSEL,
-					    LB_GETCURSEL, 0, 0);
-	    /* get the text of this item */
-	    SendDlgItemMessage (FilterHwnd, IDC_FILTERSEL,
-				LB_GETTEXT, itemIndex, (LPARAM) AnnotSelItem);
-	    break;
-	  }
-	break;
+      switch (LOWORD (wParam))
+        {
+          /* list box (filter select) */
+        case IDC_FILTERSEL:
+          if (HIWORD (wParam) == LBN_SELCHANGE)
+            {
+              /* get the index of the selected item */
+              itemIndex = SendDlgItemMessage (FilterHwnd, IDC_FILTERSEL,
+                                              LB_GETCURSEL, 0, 0);
+              /* get the text of this item */
+              SendDlgItemMessage (FilterHwnd, IDC_FILTERSEL,
+                                  LB_GETTEXT, itemIndex, (LPARAM) AnnotSelItem);
+              break;
+            }
+          break;
 	
-	/* radio buttons */
-      case IDC_FILTERBYAUTHOR:
-	if (AnnotSelType != 0)
-	  {
-	    AnnotSelType = 0;
-	    CheckRadioButton (hwnDlg, IDC_FILTERBYAUTHOR, IDC_FILTERBYSERVER, IDC_FILTERBYAUTHOR);
-	    BuildAnnotFilterSelector (AnnotFilterDoc, AnnotSelType);
-	  }
-	break;
+          /* radio buttons */
+        case IDC_FILTERBYAUTHOR:
+          if (AnnotSelType != 0)
+            {
+              AnnotSelType = 0;
+              CheckRadioButton (hwnDlg, IDC_FILTERBYAUTHOR, IDC_FILTERBYSERVER, IDC_FILTERBYAUTHOR);
+              BuildAnnotFilterSelector (AnnotFilterDoc, AnnotSelType);
+            }
+          break;
 	
-      case IDC_FILTERBYTYPE:
-	if (AnnotSelType != 1)
-	  {
-	    AnnotSelType = 1;
-	    CheckRadioButton (hwnDlg, IDC_FILTERBYAUTHOR, IDC_FILTERBYSERVER, IDC_FILTERBYTYPE);
-	    BuildAnnotFilterSelector (AnnotFilterDoc, AnnotSelType);
-	  }
-	break;
+        case IDC_FILTERBYTYPE:
+          if (AnnotSelType != 1)
+            {
+              AnnotSelType = 1;
+              CheckRadioButton (hwnDlg, IDC_FILTERBYAUTHOR, IDC_FILTERBYSERVER, IDC_FILTERBYTYPE);
+              BuildAnnotFilterSelector (AnnotFilterDoc, AnnotSelType);
+            }
+          break;
 	
-      case IDC_FILTERBYSERVER:
-	if (AnnotSelType != 2)
-	  {
-	    AnnotSelType = 2;
-	    CheckRadioButton (hwnDlg, IDC_FILTERBYAUTHOR, IDC_FILTERBYSERVER, IDC_FILTERBYSERVER);
-	    BuildAnnotFilterSelector (AnnotFilterDoc, AnnotSelType);
-	  }
-	break;
+        case IDC_FILTERBYSERVER:
+          if (AnnotSelType != 2)
+            {
+              AnnotSelType = 2;
+              CheckRadioButton (hwnDlg, IDC_FILTERBYAUTHOR, IDC_FILTERBYSERVER, IDC_FILTERBYSERVER);
+              BuildAnnotFilterSelector (AnnotFilterDoc, AnnotSelType);
+            }
+          break;
 	
-	/* action buttons */
-      case ID_ANNOTSHOW:
-	/* memorize the last selection */
-	itemIndex = SendDlgItemMessage (FilterHwnd, IDC_FILTERSEL,
-					LB_GETCURSEL, 0, 0);
-	ChangeAnnotVisibility (AnnotFilterDoc, AnnotSelType, 
-			       AnnotSelItem, TRUE);
-	/* select it again (as the selection gets deselected automatically */
-	SendDlgItemMessage (FilterHwnd, IDC_FILTERSEL,
-			    LB_SETCURSEL, itemIndex, 0);
-	break;
+          /* action buttons */
+        case ID_ANNOTSHOW:
+          /* memorize the last selection */
+          itemIndex = SendDlgItemMessage (FilterHwnd, IDC_FILTERSEL,
+                                          LB_GETCURSEL, 0, 0);
+          ChangeAnnotVisibility (AnnotFilterDoc, AnnotSelType, 
+                                 AnnotSelItem, TRUE);
+          /* select it again (as the selection gets deselected automatically */
+          SendDlgItemMessage (FilterHwnd, IDC_FILTERSEL,
+                              LB_SETCURSEL, itemIndex, 0);
+          break;
 	
-      case ID_ANNOTHIDE:
-	/* memorize the last selection */
-	itemIndex = SendDlgItemMessage (FilterHwnd, IDC_FILTERSEL,
-					LB_GETCURSEL, 0, 0);
-	ChangeAnnotVisibility (AnnotFilterDoc, AnnotSelType, 
-			       AnnotSelItem, FALSE);
-	/* select it again (as the selection gets deselected automatically */
-	SendDlgItemMessage (FilterHwnd, IDC_FILTERSEL,
-			    LB_SETCURSEL, itemIndex, 0);
-	break;
+        case ID_ANNOTHIDE:
+          /* memorize the last selection */
+          itemIndex = SendDlgItemMessage (FilterHwnd, IDC_FILTERSEL,
+                                          LB_GETCURSEL, 0, 0);
+          ChangeAnnotVisibility (AnnotFilterDoc, AnnotSelType, 
+                                 AnnotSelItem, FALSE);
+          /* select it again (as the selection gets deselected automatically */
+          SendDlgItemMessage (FilterHwnd, IDC_FILTERSEL,
+                              LB_SETCURSEL, itemIndex, 0);
+          break;
 
-      case ID_ANNOTSHOWALL:
-	DocAnnotVisibility (AnnotFilterDoc, AnnotFilterView, TRUE);
-	break;
+        case ID_ANNOTSHOWALL:
+          DocAnnotVisibility (AnnotFilterDoc, AnnotFilterView, TRUE);
+          break;
 	
-      case ID_ANNOTHIDEALL:
-	DocAnnotVisibility (AnnotFilterDoc, AnnotFilterView, FALSE);
-	break;
+        case ID_ANNOTHIDEALL:
+          DocAnnotVisibility (AnnotFilterDoc, AnnotFilterView, FALSE);
+          break;
 	
-      case ID_DONE:
-	EndDialog (hwnDlg, ID_DONE);
-	break;
-      }
-    break;	     
+        case ID_DONE:
+          EndDialog (hwnDlg, ID_DONE);
+          break;
+        }
+      break;	     
     default: return FALSE;
     }
   return TRUE;
@@ -771,7 +773,7 @@ LRESULT CALLBACK WIN_AnnotFilterDlgProc (ThotWindow hwnDlg, UINT msg,
 #else /* _WINGUI */
 
 /*----------------------------------------------------------------------
-   callback of the AnnotFilter menu
+  callback of the AnnotFilter menu
   ----------------------------------------------------------------------*/
 static void AnnotFilterCallbackDialog (int ref, int typedata, char * data)
 {
@@ -787,61 +789,61 @@ static void AnnotFilterCallbackDialog (int ref, int typedata, char * data)
       /* has the user changed the options? */
       val = (int) data;
       switch (ref - AnnotFilterBase)
-	{
-	case AnnotFilterMenu:
-	  switch (val) 
-	    {
-	    case 0:
-	      TtaDestroyDialogue (ref);
-	      break;
-	    case 1:
-	      ChangeAnnotVisibility (AnnotFilterDoc, AnnotSelType, 
-				     AnnotSelItem, TRUE);
-	      /* maybe refresh the dialogue */
-	      break;
-	    case 2:
-	      ChangeAnnotVisibility (AnnotFilterDoc, AnnotSelType, 
-				     AnnotSelItem, FALSE);
-	      /* maybe refresh the dialogue */
-	      break;
-	    case 3:
-	      DocAnnotVisibility (AnnotFilterDoc, AnnotFilterView, TRUE);
-	      /* maybe refresh the dialogue and reset the selection */
-	      break;
-	    case 4:
-	      DocAnnotVisibility (AnnotFilterDoc, AnnotFilterView, FALSE);
-	      /* maybe refresh the dialogue and reset the selection */
-	      break;
-	    default:
-	      break;
-	    }
-	  break;
+        {
+        case AnnotFilterMenu:
+          switch (val) 
+            {
+            case 0:
+              TtaDestroyDialogue (ref);
+              break;
+            case 1:
+              ChangeAnnotVisibility (AnnotFilterDoc, AnnotSelType, 
+                                     AnnotSelItem, TRUE);
+              /* maybe refresh the dialogue */
+              break;
+            case 2:
+              ChangeAnnotVisibility (AnnotFilterDoc, AnnotSelType, 
+                                     AnnotSelItem, FALSE);
+              /* maybe refresh the dialogue */
+              break;
+            case 3:
+              DocAnnotVisibility (AnnotFilterDoc, AnnotFilterView, TRUE);
+              /* maybe refresh the dialogue and reset the selection */
+              break;
+            case 4:
+              DocAnnotVisibility (AnnotFilterDoc, AnnotFilterView, FALSE);
+              /* maybe refresh the dialogue and reset the selection */
+              break;
+            default:
+              break;
+            }
+          break;
 
-	case mFilterSelector:
-	  /* copy what was selected */
-	  if (data)
-	    strcpy (AnnotSelItem, data);
-	  else
-	    AnnotSelItem[0] = EOS;
-	  break;
+        case mFilterSelector:
+          /* copy what was selected */
+          if (data)
+            strcpy (AnnotSelItem, data);
+          else
+            AnnotSelItem[0] = EOS;
+          break;
 	  
-	case mSelectFilter:
-	  /* change the content of the selector */
-	  /* @@ here I need to have a pointer in memory to the
-	     annotation document... means I'll only be able to have
-	     one such annotation dialogue at the time */
-	  if (AnnotSelType != (SelType) val)
-	    {
-	      AnnotSelType = (SelType) val;
-	      AnnotSelItem[0] = EOS;
-	      BuildAnnotFilterSelector (AnnotFilterDoc, (SelType)val);
-	      TtaSetSelector (AnnotFilterBase + mFilterSelector, -1, "");
-	    }
-	  break;
+        case mSelectFilter:
+          /* change the content of the selector */
+          /* @@ here I need to have a pointer in memory to the
+             annotation document... means I'll only be able to have
+             one such annotation dialogue at the time */
+          if (AnnotSelType != (SelType) val)
+            {
+              AnnotSelType = (SelType) val;
+              AnnotSelItem[0] = EOS;
+              BuildAnnotFilterSelector (AnnotFilterDoc, (SelType)val);
+              TtaSetSelector (AnnotFilterBase + mFilterSelector, -1, "");
+            }
+          break;
 
-	default:
-	  break;
-	}
+        default:
+          break;
+        }
     }
 }
 #endif /* !_WINGUI */
@@ -865,7 +867,7 @@ void AnnotFilter (Document document, View view)
   /* initialize the base if it hasn't yet been done */
   if (AnnotFilterBase == 0)
     AnnotFilterBase =  TtaSetCallback ((Proc)AnnotFilterCallbackDialog,
-					 MAX_ANNOTFILTER_DLG);
+                                       MAX_ANNOTFILTER_DLG);
 #endif /* !_WINGUI */
 
   /* make a copy of the current document and view, so that we can
@@ -888,19 +890,19 @@ void AnnotFilter (Document document, View view)
   strcpy (&s[i], TtaGetMessage (AMAYA, AM_AFILTER_HIDE_ALL));
 
   TtaNewSheet (AnnotFilterBase + AnnotFilterMenu, 
-	       TtaGetViewFrame (document, view),
-	       TtaGetMessage (AMAYA, AM_AFILTER), 4, s, TRUE, 2, 'L', 
-	       D_DONE);
+               TtaGetViewFrame (document, view),
+               TtaGetMessage (AMAYA, AM_AFILTER), 4, s, TRUE, 2, 'L', 
+               D_DONE);
   
   /* an empty text */
   TtaNewLabel (AnnotFilterBase + mAnnotFilterEmpty1,
-	       AnnotFilterBase + AnnotFilterMenu,
-	       "                 ");
+               AnnotFilterBase + AnnotFilterMenu,
+               "                 ");
 
   /* the * = filter message */
   TtaNewLabel (AnnotFilterBase + mAnnotFilterLabelStars,
-	       AnnotFilterBase + AnnotFilterMenu,
-	       TtaGetMessage (AMAYA, AM_AFILTER_HELP));
+               AnnotFilterBase + AnnotFilterMenu,
+               TtaGetMessage (AMAYA, AM_AFILTER_HELP));
 	       
   /* create the radio buttons for choosing a selector */
   s[0] = 'B';
@@ -916,14 +918,14 @@ void AnnotFilter (Document document, View view)
   strcpy (&s[i], TtaGetMessage (AMAYA, AM_AFILTER_BYSERVER));
 
   TtaNewSubmenu (AnnotFilterBase + mSelectFilter, 
-		 AnnotFilterBase + AnnotFilterMenu,
-		 0,
-		 TtaGetMessage (AMAYA, AM_AFILTER_OPTIONS),
-		 3,
-		 s,
-		 NULL,
-		 0,
-		 TRUE);
+                 AnnotFilterBase + AnnotFilterMenu,
+                 0,
+                 TtaGetMessage (AMAYA, AM_AFILTER_OPTIONS),
+                 3,
+                 s,
+                 NULL,
+                 0,
+                 TRUE);
 
   /* display the selectors */
   BuildAnnotFilterSelector (document, BY_AUTHOR);
@@ -939,9 +941,9 @@ void AnnotFilter (Document document, View view)
 #else /* !_WINGUI */
   if (!FilterHwnd)
     /* only activate the menu if it isn't active already */
-     DialogBox (hInstance, MAKEINTRESOURCE (ANNOTFILTERMENU), NULL, (DLGPROC) WIN_AnnotFilterDlgProc);
+    DialogBox (hInstance, MAKEINTRESOURCE (ANNOTFILTERMENU), NULL, (DLGPROC) WIN_AnnotFilterDlgProc);
   else
-     SetFocus (FilterHwnd);
+    SetFocus (FilterHwnd);
 #endif /* !_WINGUI */
 }
 
@@ -953,7 +955,7 @@ void AnnotFilter (Document document, View view)
   BuildAnnotTypesSelector
   builds the list showing the different annotation types.
   Returns the number of entries in the menu.
-------------------------------------------------------------------*/
+  ------------------------------------------------------------------*/
 static int BuildAnnotTypesSelector (Document doc)
 {
   int                   nb_entries;
@@ -978,39 +980,44 @@ static int BuildAnnotTypesSelector (Document doc)
       List *item;
 
       for (item=annotClass->class_->subClasses; item; item=item->next)
-	{
-	  RDFClassP subType = (RDFClassP) item->object;
-	  TypeSelector *t = (TypeSelector *) TtaGetMemory (sizeof(TypeSelector));
+        {
+          RDFClassP subType = (RDFClassP) item->object;
+          TypeSelector *t = (TypeSelector *) TtaGetMemory (sizeof(TypeSelector));
 
-	  t->type = subType;
-	  t->name = ANNOT_GetLabel(&annot_schema_list, subType);
-	  List_add (&typesList, (void *) t);
+          t->type = subType;
+          t->name = ANNOT_GetLabel(&annot_schema_list, subType);
+          List_add (&typesList, (void *) t);
 
-	  sprintf (&s[i], "B%s", t->name);
-	  i += strlen (&s[i]);
-	  s[i] = EOS;
-	  i++;
-	  nb_entries++;
-	}
+          sprintf (&s[i], "B%s", t->name);
+          i += strlen (&s[i]);
+          s[i] = EOS;
+          i++;
+          nb_entries++;
+        }
     }
   else
     if (annotClass)
       {
-	TypeSelector *t = (TypeSelector*)TtaGetMemory (sizeof(TypeSelector));
+        TypeSelector *t = (TypeSelector*)TtaGetMemory (sizeof(TypeSelector));
 
-	t->type = annotClass;
-	t->name = ANNOT_GetLabel(&annot_schema_list, annotClass);
-	List_add (&typesList, (void *) t);
+        t->type = annotClass;
+        t->name = ANNOT_GetLabel(&annot_schema_list, annotClass);
+        List_add (&typesList, (void *) t);
 
-	strcpy (s, t->name);
-	i = strlen (s);
-	s[i] = EOS;
-	nb_entries = 1;
+        strcpy (s, t->name);
+        i = strlen (s);
+        s[i] = EOS;
+        nb_entries = 1;
       }
 
   /* create the main menu */
+#ifdef _WX
+  TtaNewScrollPopup (BaseDialog + OptionMenu, TtaGetViewFrame (doc, 1),
+                     NULL, nb_entries, s, NULL, FALSE, 'L');
+#else /* _WX */
   TtaNewPopup (BaseDialog + OptionMenu, TtaGetViewFrame (doc, 1),
-	       NULL, nb_entries, s, NULL, 'L');
+               NULL, nb_entries, s, NULL, 'L');
+#endif /* _WX */
   
   return nb_entries;
 }
@@ -1043,16 +1050,16 @@ RDFResourceP AnnotTypes (Document document, View view)
     {
       /* make the returned option selected */
       if (ReturnOptionMenu == 0)
-	{ /* an item in the main (SELECT) menu */
-	  List *item;
-	  int entry;
+        { /* an item in the main (SELECT) menu */
+          List *item;
+          int entry;
 
-	  /* typesList is sorted in opposite order of the dialogue */
-	  entry = nb_entries - ReturnOption - 1;
-	  for (item = typesList; item && (entry-- > 0); item=item->next);
-	  if (item->object)
-	    result = ((TypeSelector *) item->object)->type;
-	}
+          /* typesList is sorted in opposite order of the dialogue */
+          entry = nb_entries - ReturnOption - 1;
+          for (item = typesList; item && (entry-- > 0); item=item->next);
+          if (item->object)
+            result = ((TypeSelector *) item->object)->type;
+        }
     }
   List_delAll (&typesList, List_delCharObj);
   return result;
