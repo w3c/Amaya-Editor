@@ -13,7 +13,6 @@
 #ifdef _WX
   #include "wxdialog/NewTemplateDocDlgWX.h"
   #include "wxdialog/AuthentDlgWX.h"
-  #include "wxdialog/BgImageDlgWX.h"
   #include "wxdialog/CheckedListDlgWX.h"
   #include "wxdialog/CreateTableDlgWX.h"
   #include "wxdialog/DocInfoDlgWX.h"
