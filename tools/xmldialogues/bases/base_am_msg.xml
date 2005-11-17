@@ -3915,4 +3915,7 @@
 <label define="AM_SHOW_TEMPLATES">
 <message xml:lang="en">Show template's boxes</message>
 <message xml:lang="fr">Montrer les cadres des modèles</message></label>
+<label define="AM_CLOSE_WHEN_APPLY">
+<message xml:lang="en">Apply closes the dialogue</message>
+<message xml:lang="fr">Appliquer ferme le dialogue</message></label>
 <label define="AMAYA_MSG_MAX"></label></messages></base>

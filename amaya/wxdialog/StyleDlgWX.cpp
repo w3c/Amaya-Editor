@@ -249,6 +249,8 @@ void StyleDlgWX::InitValues ()
 StyleDlgWX::StyleDlgWX( int ref, wxWindow* parent ) :
   AmayaDialog( parent, ref )
 {
+  bool check;
+
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("StyleDlgWX"));
   m_ref = ref;
   wxString ptr = TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_APPLY_BUTTON));
@@ -256,6 +258,7 @@ StyleDlgWX::StyleDlgWX( int ref, wxWindow* parent ) :
   XRCCTRL(*this, "wxID_CANCEL", wxButton)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_DONE)));
   XRCCTRL(*this, "wxID_DEFAULT", wxButton)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_DEFAULT_BUTTON)));
   XRCCTRL(*this, "wxID_NO_SELECTION", wxStaticText)->SetLabel(TtaConvMessageToWX(""));
+  XRCCTRL(*this, "wxID_LABEL_CLOSE", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_CLOSE_WHEN_APPLY)));
   wxNotebook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxNotebook);
   p_notebook->SetPageText( 0, TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_CHAR)) );
   p_notebook->SetPageText( 1, TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_COLORS)) );
@@ -304,6 +307,10 @@ StyleDlgWX::StyleDlgWX( int ref, wxWindow* parent ) :
   /* tooltip of browse buttons */
   XRCCTRL(*this, "wxID_BUTTON_BGIMAGE", wxBitmapButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_BROWSE) ));
   XRCCTRL(*this, "wxID_BUTTON_LISTIMAGE", wxBitmapButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_BROWSE) ));
+
+  // init the close check entry
+  TtaGetEnvBoolean ("CLOSE_WHEN_APPLY", &check);
+  XRCCTRL(*this, "wx_CHECK_CLOSE", wxCheckBox)->SetValue(check);
   InitValues ();
 
   // on windows, the color selector dialog must be complete.
@@ -1700,6 +1707,8 @@ void StyleDlgWX::GetValueDialog_Format()
   ----------------------------------------------------------------------*/
 void StyleDlgWX::OnOk( wxCommandEvent& event )
 {
+  bool check;
+
   if (m_OnApplyLock)
     return;
 
@@ -1735,6 +1744,18 @@ void StyleDlgWX::OnOk( wxCommandEvent& event )
       Buffer[Index] = EOS;
       ThotCallback (m_ref, STRING_DATA, Buffer);
       TtaFreeMemory (Buffer);
+
+      // test if the form should be closed when apply
+      TtaGetEnvBoolean ("CLOSE_WHEN_APPLY", &check);
+      if (XRCCTRL(*this, "wx_CHECK_CLOSE", wxCheckBox)->IsChecked())
+        {
+          if (!check)
+            TtaSetEnvBoolean ("CLOSE_WHEN_APPLY", TRUE, TRUE);
+          // yes -> close
+          ThotCallback (m_ref, STRING_DATA, NULL);
+        }
+      else if (check)
+        TtaSetEnvBoolean ("CLOSE_WHEN_APPLY", FALSE, TRUE);
     }
   else
     XRCCTRL(*this, "wxID_NO_SELECTION", wxStaticText)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_NO_INSERT_POINT)));
@@ -1758,9 +1779,22 @@ void StyleDlgWX::OnDefault( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void StyleDlgWX::OnCancel( wxCommandEvent& event )
 {
+  bool check;
+
   if (m_OnApplyLock)
     return;
   m_OnApplyLock = TRUE;
+
+  // test if the form should be closed when apply
+  TtaGetEnvBoolean ("CLOSE_WHEN_APPLY", &check);
+  if (XRCCTRL(*this, "wx_CHECK_CLOSE", wxCheckBox)->IsChecked())
+    {
+      if (!check)
+        TtaSetEnvBoolean ("CLOSE_WHEN_APPLY", TRUE, TRUE);
+    }
+  else if (check)
+    TtaSetEnvBoolean ("CLOSE_WHEN_APPLY", FALSE, TRUE);
+
   ThotCallback (m_ref, STRING_DATA, NULL);
   m_OnApplyLock = FALSE;
 }

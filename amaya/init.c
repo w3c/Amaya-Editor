@@ -7403,6 +7403,9 @@ void InitAmaya (NotifyEvent * event)
   TtaSetEnvBoolean ("LOAD_OBJECTS", TRUE, FALSE);
   TtaSetEnvBoolean ("LOAD_CSS", TRUE, FALSE);
   TtaSetEnvBoolean ("SEND_REFERER", FALSE, FALSE);
+#ifdef _WX
+  TtaSetEnvBoolean ("CLOSE_WHEN_APPLY", TRUE, FALSE);
+#endif /* _WX */
   /* get current value */
   TtaGetEnvBoolean ("SHOW_BUTTONS", &bt);
   TtaGetEnvBoolean ("SHOW_ADDRESS", &add);
