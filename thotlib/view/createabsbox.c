@@ -211,8 +211,8 @@ PtrPRule GetRule (PtrPRule *pRSpecif, PtrPRule * pRDefault,
           do
             {
               if ((*pRSpecif)->PrCond == NULL ||
-                  CondPresentation ((*pRSpecif)->PrCond, pEl, pAttr, pEl, 1, pSS,
-                                    pDoc))
+                  CondPresentation ((*pRSpecif)->PrCond, pEl, pAttr, pEl,
+				    *pRSpecif, 1, pSS, pDoc))
                 /* conditions d'application satisfaites */
                 {
                   pPR = *pRSpecif;
@@ -254,7 +254,7 @@ PtrPRule GetRule (PtrPRule *pRSpecif, PtrPRule * pRDefault,
                   /* on n'a pas encore trouve' la bonne regle */
                   if ((*pRSpecif)->PrCond == NULL ||
                       CondPresentation ((*pRSpecif)->PrCond, pEl,
-                                        pAttr, pEl, 1, pSS, pDoc))
+                                        pAttr, pEl, *pRSpecif, 1, pSS, pDoc))
                     /* les conditions d'application sont satisfaites,
                        on prend cette regle */
                     pPR = *pRSpecif;
@@ -313,7 +313,7 @@ PtrPRule GetRuleView (PtrPRule *pRSpecif, PtrPRule *pRDefault,
               /* on n'a pas encore trouve' la regle qui s'applique */
               if ((*pRSpecif)->PrCond == NULL ||
                   CondPresentation ((*pRSpecif)->PrCond, pEl, pAttr, pEl,
-                                    Vue, pSS, pDoc))
+                                    *pRSpecif, Vue, pSS, pDoc))
                 /* les conditions d'application de la regle sont satisfaites,
                    on prend cette regle */
                 pPR = *pRSpecif;
@@ -922,7 +922,7 @@ void ApplDelayedRule (PtrElement pEl, PtrDocument pDoc)
   ----------------------------------------------------------------------*/
 ThotBool CondPresentation (PtrCondition pCond, PtrElement pEl,
                            PtrAttribute pAttr, PtrElement pElAttr,
-                           int view, PtrSSchema pSS,
+			   PtrPRule pRule, int view, PtrSSchema pSS,
                            PtrDocument pDoc)
 {
   PtrPSchema          pSchP = NULL;
@@ -1187,7 +1187,8 @@ ThotBool CondPresentation (PtrCondition pCond, PtrElement pEl,
                   /* on compte les ancetres successifs de ce type */
                   while (pAsc != NULL)
                     {
-                      if (TypeHasException (ExcHidden, pAsc->ElTypeNumber,
+                      if (pRule->PrCSSURL &&
+			  TypeHasException (ExcHidden, pAsc->ElTypeNumber,
                                             pAsc->ElStructSchema))
                         /* this ancestor is hidden. it does not count */
                         pAsc = pAsc->ElParent;
@@ -2139,8 +2140,8 @@ PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
         ok = TRUE;
       else
         /* On verifie les conditions d'application de la regle de creation */
-        ok = CondPresentation (pRCre->PrCond, pEl, pAttr, pEl, viewSch, pSS,
-                               pDoc);
+        ok = CondPresentation (pRCre->PrCond, pEl, pAttr, pEl, pRCre, viewSch,
+			       pSS, pDoc);
     }
   /* on ne cree un pave de presentation que si le pave de l'element qui */
   /* provoque la creation existe dans la vue. */
@@ -3892,7 +3893,8 @@ static PtrPRule GetNextAttrPresRule (PtrPRule *pR, PtrSSchema pSS,
     {
       /* la regle pour la vue 1 */
       if ((*pR)->PrCond == NULL ||
-          CondPresentation ((*pR)->PrCond, pEl, pAttr, pElAttr, 1, pSS, pDoc))
+          CondPresentation ((*pR)->PrCond, pEl, pAttr, pElAttr, *pR, 1, pSS,
+			    pDoc))
         /* la condition d'application est satisfaite */
         {
           /* On la conserve au cas ou on ne trouve pas mieux */
@@ -3912,7 +3914,7 @@ static PtrPRule GetNextAttrPresRule (PtrPRule *pR, PtrSSchema pSS,
                   if ((*pR)->PrViewNum == view)
                     if ((*pR)->PrCond == NULL ||
                         CondPresentation ((*pR)->PrCond, pEl, pAttr, pElAttr,
-                                          view, pSS, pDoc))
+                                          *pR, view, pSS, pDoc))
                       pRule = *pR;
                 }
               if (pRule == NULL)
@@ -3927,7 +3929,8 @@ static PtrPRule GetNextAttrPresRule (PtrPRule *pR, PtrSSchema pSS,
     /* ne s'applique que si le numero de vue correspond */
     if (view == (*pR)->PrViewNum)
       if ((*pR)->PrCond == NULL ||
-          CondPresentation ((*pR)->PrCond, pEl, pAttr, pElAttr, view, pSS, pDoc))
+          CondPresentation ((*pR)->PrCond, pEl, pAttr, pElAttr, *pR, view,
+			    pSS, pDoc))
         pRule = *pR;
 
   return pRule;
@@ -3984,7 +3987,7 @@ static void ApplyVisibRuleAttr (PtrElement pEl, PtrAttribute pAttr,
                       if (pR->PrViewNum == 1)
                         if (pR->PrCond == NULL ||
                             CondPresentation (pR->PrCond, pEl, pAttr, pElAttr,
-                                              1, pAttr->AeAttrSSchema, pDoc))
+                                              pR, 1, pAttr->AeAttrSSchema, pDoc))
                           {
                             pRuleView1 = pR;
                             if (view == 1)
@@ -4001,7 +4004,7 @@ static void ApplyVisibRuleAttr (PtrElement pEl, PtrAttribute pAttr,
                         {
                           if (pR->PrViewNum == view &&
                               CondPresentation (pR->PrCond, pEl, pAttr, pElAttr,
-                                                view, pAttr->AeAttrSSchema, pDoc))
+                                                pR, view, pAttr->AeAttrSSchema, pDoc))
                             {
                               /* regle trouvee, on l'evalue */
                               *vis = IntegerRule (pR, pEl, viewNb, ok, &unit,
@@ -4033,7 +4036,7 @@ static void ApplyVisibRuleAttr (PtrElement pEl, PtrAttribute pAttr,
                 {
                   if (pR->PrViewNum == view &&
                       CondPresentation (pR->PrCond, pEl, pAttr, pElAttr,
-                                        view, pAttr->AeAttrSSchema, pDoc))
+                                        pR, view, pAttr->AeAttrSSchema, pDoc))
                     if (CharRule (pR, pEl, viewNb, ok) == 'N')
                       /* display: none */
                       *vis = 0;
@@ -4764,7 +4767,7 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
           while (pRule != NULL)
             {
               if (pRule->PrCond == NULL ||
-                  CondPresentation (pRule->PrCond, pEl, NULL, NULL, 1,
+                  CondPresentation (pRule->PrCond, pEl, NULL, NULL, pRule, 1,
                                     pEl->ElStructSchema, pDoc))
                 /* conditions are ok */
                 {
@@ -4815,7 +4818,7 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
           while (pRule != NULL)
             {
               if (pRule->PrCond == NULL ||
-                  CondPresentation (pRule->PrCond, pEl, NULL, NULL, 1,
+                  CondPresentation (pRule->PrCond, pEl, NULL, NULL, pRule, 1,
                                     pEl->ElStructSchema, pDoc))
                 /* conditions are ok */
                 {

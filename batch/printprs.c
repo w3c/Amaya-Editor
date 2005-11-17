@@ -19,6 +19,7 @@
 #include "libmsg.h"
 #include "prsmsg.h"
 #include "registry.h"
+#include "zlib.h"
 #include "fileaccess.h"
 #include "message.h"
 
@@ -137,6 +138,9 @@ static void         wrdistunit (TypeUnit u)
 	       break;
 	    case UnAuto:
 	       printf (" auto");
+	       break;
+	    case UnUndefined:
+	       printf (" ???");
 	       break;
 	 }
 }
@@ -963,9 +967,12 @@ static void         wrFonctPres (PtrPRule pR)
 	    case FnNotInLine:
 	       printf ("InLine: No");
 	       break;
-	   case FnAny:
+	    case FnAny:
 	       printf ("??????");
-	       break;		    
+	       break;
+	    case FnContent:
+	       printf ("Content");
+	       break;
 	 }
    if (pR->PrPresFunction != FnLine &&
             pR->PrPresFunction != FnContentRef &&
@@ -1118,6 +1125,15 @@ static void         wrsuiteregles (PtrPRule RP)
 		    break;
 		 case PtFunction:
 		    wrFonctPres (RP);
+		    break;
+                 case PtListStyleType:
+		    printf ("ListStyleType: @@@");
+		    break;
+	         case PtListStyleImage:
+		    printf ("ListStyleImagee: @@@");
+		    break;
+	         case PtListStylePosition:
+		    printf ("ListStylePosition: @@@");
 		    break;
 		 case PtVertOverflow:
 		    printf ("VertOverflow: ");
@@ -1319,15 +1335,15 @@ static void         wrsuiteregles (PtrPRule RP)
 		    printf ("FillPattern: ");
 		    wrnbherit (RP);
 		    break;
-		 case PtOpacity;
+	         case PtOpacity:
 		    printf ("Opacity: ");
 		    wrnbherit (RP);
 		    break;
-		 case PtFillOpacity;
+	         case PtFillOpacity:
 		    printf ("FillOpacity: ");
 		    wrnbherit (RP);
 		    break;
-		  case PtStrokeOpacity;
+	         case PtStrokeOpacity:
 		    printf ("StrokeOpacity: ");
 		    wrnbherit (RP);
 		    break; 
@@ -1363,9 +1379,33 @@ static void         wrsuiteregles (PtrPRule RP)
 		    printf ("YRadius: ");
 		    wrboolean (RP);
 		    break;
+		 case PtPosition:
+		    printf ("Position: @@@");
+		    break;
+		 case PtTop:
+		    printf ("Top: @@@");
+		    break;
+	         case PtRight:
+		    printf ("Right: @@@");
+		    break;
+	         case PtBottom:
+		    printf ("Bottom: @@@");
+		    break;
+	         case PtLeft:
+		    printf ("Left: @@@");
+		    break;
+	         case PtFloat:
+		    printf ("Float: @@@");
+		    break;
+	      case PtClear:
+		    printf ("Clear: @@@");
+		    break;
 	         case PtDisplay:
 		    printf ("Display: ");
 		    wrfontstyle (RP);
+		    break;
+	         case PtVis:
+		    printf ("Visibility: @@@");
 		    break;
 		 case PtBreak1:
 		    printf ("NoBreak1: ");
@@ -1593,7 +1633,7 @@ int                 main (int argc, char **argv)
 			   case Symbol:
 			      printf ("Symbol ");
 			      break;
-			   case Picture:
+			   case tt_Picture:
 			      printf ("Picture ");
 			      /* ecrit la valeur de la constante */
 			      break;
@@ -1676,6 +1716,9 @@ int                 main (int argc, char **argv)
 				   printf (")");
 				   WriteCounterStyle (pVa1->ViStyle);
 				   break;
+			        case VarNamedAttrValue:
+			           printf ("  NamedAttributeValue");
+			           break;
 			     }
 
 		    }
@@ -1845,7 +1888,8 @@ int                 main (int argc, char **argv)
 					     wrnomregle (pRP1->ApElemType);
 					     printf (")");
 					  }
-					if (pRP1->ApString[0] != '\0')
+					if (pRP1->ApString &&
+					    pRP1->ApString[0] != '\0')
 					  {
 					     printf ("=\'");
 					     wrnom (pRP1->ApString);

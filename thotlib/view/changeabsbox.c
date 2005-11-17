@@ -153,7 +153,7 @@ static void SimpleSearchRulepEl (PtrPRule * pRuleView1, PtrElement pEl,
           /* that's the type of rule we are looking for */
           if (pR->PrViewNum == view &&	    /* right view */
               (pR->PrCond == NULL ||
-               CondPresentation (pR->PrCond, pEl, NULL, NULL, view,
+               CondPresentation (pR->PrCond, pEl, NULL, NULL, pR, view,
                                  pEl->ElStructSchema, pDoc)))
             /* conditions for that rule are satisfied */
             /* this rule applies, but let's look further */
@@ -161,7 +161,7 @@ static void SimpleSearchRulepEl (PtrPRule * pRuleView1, PtrElement pEl,
           else if (pR->PrViewNum == 1 && *pRuleView1 == NULL &&
                    /* rule for the main view */
                    (pR->PrCond == NULL ||
-                    CondPresentation (pR->PrCond, pEl, NULL, NULL, view,
+                    CondPresentation (pR->PrCond, pEl, NULL, NULL, pR, view,
                                       pEl->ElStructSchema, pDoc)))
             /* conditions for that rule are satisfied */
             /* this rule applies unless we find a better one later */
@@ -233,7 +233,7 @@ static void GetInheritedPRule (PtrPRule *pRule, PtrElement pEl,
                              pR->PrPresFunction == typeFunc) &&
                             pR->PrViewNum == view)
                           if (pR->PrCond == NULL ||
-                              CondPresentation (pR->PrCond, pEl, pA, pElAttr,
+                              CondPresentation (pR->PrCond, pEl, pA, pElAttr,pR,
                                                 view, pA->AeAttrSSchema, pDoc))
                             if (RuleHasHigherPriority (pR, pSP, attrBlock,
                                                        *pRule, *pSPR, *prevAttrBlock))
@@ -498,8 +498,8 @@ PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc,
                                    pR->PrPresFunction == typeFunc) &&
                                   pR->PrViewNum == view)
                                 if (pR->PrCond == NULL ||
-                                    CondPresentation (pR->PrCond, pEl, pA,
-                                                      pEl, view, pA->AeAttrSSchema, pDoc))
+                                    CondPresentation (pR->PrCond, pEl, pA, pEl,
+                                                      pR, view, pA->AeAttrSSchema, pDoc))
                                   if (RuleHasHigherPriority (pR, pSPattr,
                                                              attrBlock, pRule, *pSPR, prevAttrBlock))
                                     {
@@ -2617,7 +2617,7 @@ static void ComputeCrPresBoxes (int boxType, int nv, PtrPSchema pSchP,
           if (found)
             /* reevalue les conditions d'application de la regle */
             if (!CondPresentation (pRCre->PrCond, pAb->AbElement, NULL,
-                                   NULL, viewSch,
+                                   NULL, pRCre, viewSch,
                                    pAb->AbElement->ElStructSchema, pDoc))
               /* On va detruire le pave, on cherche d'abord le pave de */
               /* presentation suivant de meme type */
@@ -2758,7 +2758,7 @@ static void ComputeCreation (int boxType, ThotBool presBox, int counter,
                     if (depend)
                       /* reevalue les conditions d'application de la regle */
                       if (CondPresentation (pRCre->PrCond, pAb->AbElement,
-                                            NULL, NULL, viewSch, pAb->AbElement->ElStructSchema, pDoc))
+                                            NULL, NULL, pRCre, viewSch, pAb->AbElement->ElStructSchema, pDoc))
                         /* cherche si le pave est deja cree' */
                         {
                           isCreated = FALSE;
@@ -3773,7 +3773,7 @@ void UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
                               else if (pR->PrViewNum == viewSch &&
                                        (!pR->PrCond ||
                                         CondPresentation (pR->PrCond, pEl, pAttr,
-                                                          pElAttr, viewSch,
+                                                          pElAttr, pR, viewSch,
                                                           pAttr->AeAttrSSchema, pDoc)))
                                 /* and conditions match too */
                                 stop = TRUE;
@@ -3787,7 +3787,7 @@ void UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
                         }
                       /*if (pR && pR->PrCond &&
                         !CondPresentation (pR->PrCond, pEl, pAttr, pElAttr,
-                        viewSch, pAttr->AeAttrSSchema, pDoc))
+                        pR, viewSch, pAttr->AeAttrSSchema, pDoc))
                         pR = NULL;*/
                     }
                   else
@@ -4161,7 +4161,7 @@ void UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
                                              and if other conditions are ok */
                                           if ((!pAb || pAb->AbDead) &&
                                               CondPresentation (pR->PrCond, pEl, pAttr,
-                                                                pEl, viewSch, elSSch, pDoc))
+                                                                pEl, pR, viewSch, elSSch, pDoc))
                                             {
                                               pDoc->DocViewFreeVolume[view - 1] = THOT_MAXINT;
                                               pAb = CrAbsBoxesPres (pEl, pDoc, pR,
