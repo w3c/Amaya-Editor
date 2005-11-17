@@ -29,8 +29,6 @@ bool StyleDlgWX::m_OnApplyLock = FALSE;
 //-----------------------------------------------------------------------------
 BEGIN_EVENT_TABLE(StyleDlgWX, AmayaDialog)
 
-  EVT_NOTEBOOK_PAGE_CHANGED( XRCID("wxID_NOTEBOOK"), StyleDlgWX::OnPageChanged )
-
   EVT_BUTTON(     XRCID("wxID_OK"),           StyleDlgWX::OnOk )
   EVT_BUTTON(     XRCID("wxID_DEFAULT"),      StyleDlgWX::OnDefault )
   EVT_BUTTON(     XRCID("wxID_CANCEL"),       StyleDlgWX::OnCancel )
@@ -62,20 +60,194 @@ BEGIN_EVENT_TABLE(StyleDlgWX, AmayaDialog)
   EVT_BUTTON( XRCID("wxID_BUTTON_NOREPEAT"),     StyleDlgWX::OnButton ) 
   EVT_BUTTON( XRCID("wxID_BUTTON_REPEAT"),       StyleDlgWX::OnButton ) 
   EVT_BUTTON( XRCID("wxID_BUTTON_XREPEAT"),      StyleDlgWX::OnButton ) 
-  EVT_BUTTON( XRCID("wxID_BUTTON_YREPEAT"),      StyleDlgWX::OnButton ) 
+  EVT_BUTTON( XRCID("wxID_BUTTON_YREPEAT"),      StyleDlgWX::OnButton )
+
+  EVT_SPINCTRL( XRCID("wxID_SPIN_SIZE"),     StyleDlgWX::OnValueChanged ) 
+  EVT_SPINCTRL( XRCID("wxID_SPIN_LINE"),     StyleDlgWX::OnValueChanged ) 
+  EVT_SPINCTRL( XRCID("wxID_SPIN_INDENT"),     StyleDlgWX::OnValueChanged ) 
+  EVT_SPINCTRL( XRCID("wxID_SPIN_VALIGN"),     StyleDlgWX::OnValueChanged ) 
+  EVT_SPINCTRL( XRCID("wxID_SPIN_WORD"),     StyleDlgWX::OnValueChanged ) 
+  EVT_SPINCTRL( XRCID("wxID_SPIN_LETTER"),     StyleDlgWX::OnValueChanged ) 
+  EVT_SPINCTRL( XRCID("wxID_SPIN_BTOP"),     StyleDlgWX::OnValueChanged ) 
+  EVT_SPINCTRL( XRCID("wxID_SPIN_BBOTTOM"),     StyleDlgWX::OnValueChanged ) 
+  EVT_SPINCTRL( XRCID("wxID_SPIN_BLEFT"),     StyleDlgWX::OnValueChanged ) 
+  EVT_SPINCTRL( XRCID("wxID_SPIN_BRIGHT"),     StyleDlgWX::OnValueChanged ) 
+  EVT_SPINCTRL( XRCID("wxID_SPIN_B"),     StyleDlgWX::OnValueChanged ) 
+  EVT_SPINCTRL( XRCID("wxID_SPIN_MTOP"),     StyleDlgWX::OnValueChanged ) 
+  EVT_SPINCTRL( XRCID("wxID_SPIN_MBOTTOM"),     StyleDlgWX::OnValueChanged ) 
+  EVT_SPINCTRL( XRCID("wxID_SPIN_MLEFT"),     StyleDlgWX::OnValueChanged ) 
+  EVT_SPINCTRL( XRCID("wxID_SPIN_MRIGHT"),     StyleDlgWX::OnValueChanged ) 
+  EVT_SPINCTRL( XRCID("wxID_SPIN_PTOP"),     StyleDlgWX::OnValueChanged ) 
+  EVT_SPINCTRL( XRCID("wxID_SPIN_PBOTTOM"),     StyleDlgWX::OnValueChanged ) 
+  EVT_SPINCTRL( XRCID("wxID_SPIN_PLEFT"),     StyleDlgWX::OnValueChanged ) 
+  EVT_SPINCTRL( XRCID("wxID_SPIN_PRIGHT"),     StyleDlgWX::OnValueChanged ) 
+  EVT_SPINCTRL( XRCID("wxID_SPIN_MARGIN"),     StyleDlgWX::OnValueChanged ) 
+  EVT_SPINCTRL( XRCID("wxID_SPIN_PADDING"),     StyleDlgWX::OnValueChanged ) 
+  EVT_SPINCTRL( XRCID("wxID_SPIN_WIDTH"),     StyleDlgWX::OnValueChanged ) 
+  EVT_SPINCTRL( XRCID("wxID_SPIN_HEIGHT"),     StyleDlgWX::OnValueChanged ) 
+  EVT_SPINCTRL( XRCID("wxID_SPIN_TOP"),     StyleDlgWX::OnValueChanged ) 
+  EVT_SPINCTRL( XRCID("wxID_SPIN_BOTTOM"),     StyleDlgWX::OnValueChanged ) 
+  EVT_SPINCTRL( XRCID("wxID_SPIN_LEFT"),     StyleDlgWX::OnValueChanged ) 
+  EVT_SPINCTRL( XRCID("wxID_SPIN_RIGHT"),     StyleDlgWX::OnValueChanged ) 
   END_EVENT_TABLE()
 
-  /*----------------------------------------------------------------------
-    StyleDlgWX create the dialog used to 
-    - Change amaya Styles
-    params:
-    + parent : parent window
-    + title : dialog title
-    + ...
-    returns:
-    ----------------------------------------------------------------------*/
-  StyleDlgWX::StyleDlgWX( int ref, wxWindow* parent ) :
-    AmayaDialog( parent, ref )
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void StyleDlgWX::InitValues ()
+{
+  XRCCTRL(*this, "wxID_NO_SELECTION", wxStaticText)->SetLabel(TtaConvMessageToWX(""));
+
+ XRCCTRL(*this, "wxID_COMBOBOX_FAMILY", wxComboBox)->SetValue(TtaConvMessageToWX( "" ));
+ XRCCTRL(*this, "wxID_COMBO_TEXTCOLOR", wxComboBox)->SetValue(TtaConvMessageToWX( "" ));
+ XRCCTRL(*this, "wxID_COMBO_BACKCOLOR", wxComboBox)->SetValue(TtaConvMessageToWX( "" ));
+ XRCCTRL(*this, "wxID_BGIMAGE", wxComboBox)->SetValue(TtaConvMessageToWX( "" ));
+ XRCCTRL(*this, "wxID_LIST_IMAGE", wxComboBox)->SetValue(TtaConvMessageToWX( "" ));
+ XRCCTRL(*this, "wxID_COMBO_T_COLOR", wxComboBox)->SetValue(TtaConvMessageToWX( "" ));
+ XRCCTRL(*this, "wxID_COMBO_B_COLOR", wxComboBox)->SetValue(TtaConvMessageToWX( "" ));
+ XRCCTRL(*this, "wxID_COMBO_L_COLOR", wxComboBox)->SetValue(TtaConvMessageToWX( "" ));
+ XRCCTRL(*this, "wxID_COMBO_R_COLOR", wxComboBox)->SetValue(TtaConvMessageToWX( "" ));
+ XRCCTRL(*this, "wxID_COMBO_BORDER_COLOR", wxComboBox)->SetValue(TtaConvMessageToWX( "" ));
+
+ XRCCTRL(*this, "wxID_CHOICE_SIZE", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
+ XRCCTRL(*this, "wxID_SIZE_UNIT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "px" ));
+ XRCCTRL(*this, "wxID_CHOICE_STYLE", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
+ XRCCTRL(*this, "wxID_CHOICE_WEIGHT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
+ XRCCTRL(*this, "wxID_CHOICE_VARIANT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
+ XRCCTRL(*this, "wxID_CHOICE_LINE", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
+ XRCCTRL(*this, "wxID_LINE_UNIT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
+ XRCCTRL(*this, "wxID_INDENT_UNIT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
+ XRCCTRL(*this, "wxID_CHOICE_VALIGN", wxChoice)->SetStringSelection(TtaConvMessageToWX( "%" ));
+ XRCCTRL(*this, "wxID_VALIGN_UNIT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
+ XRCCTRL(*this, "wxID_CHOICE_ALIGN", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
+ XRCCTRL(*this, "wxID_CHOICE_DECORATION", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
+ XRCCTRL(*this, "wxID_CHOICE_TRANSFORM", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
+ XRCCTRL(*this, "wxID_CHOICE_WORD", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
+ XRCCTRL(*this, "wxID_WORD_UNIT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
+ XRCCTRL(*this, "wxID_CHOICE_LETTER", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
+ XRCCTRL(*this, "wxID_LETTER_UNIT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
+ XRCCTRL(*this, "wxID_CHOICE_BGATTACH", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
+ XRCCTRL(*this, "wxID_CHOICE_BG_VPOSITION", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
+ XRCCTRL(*this, "wxID_CHOICE_BG_HPOSITION", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
+ XRCCTRL(*this, "wxID_CHOICE_BTOP", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
+ XRCCTRL(*this, "wxID_CHOICE_T_STYLE", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
+ XRCCTRL(*this, "wxID_BTOP_UNIT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "px" ));
+ XRCCTRL(*this, "wxID_CHOICE_BBOTTOM", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
+ XRCCTRL(*this, "wxID_CHOICE_B_STYLE", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
+ XRCCTRL(*this, "wxID_BBOTTOM_UNIT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "px" ));
+ XRCCTRL(*this, "wxID_CHOICE_BLEFT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
+ XRCCTRL(*this, "wxID_CHOICE_L_STYLE", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
+ XRCCTRL(*this, "wxID_BLEFT_UNIT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
+ XRCCTRL(*this, "wxID_CHOICE_BRIGHT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
+ XRCCTRL(*this, "wxID_CHOICE_R_STYLE", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
+ XRCCTRL(*this, "wxID_BRIGHT_UNIT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "px" ));
+ XRCCTRL(*this, "wxID_CHOICE_B", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
+ XRCCTRL(*this, "wxID_CHOICE_BORDER_STYLE", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
+ XRCCTRL(*this, "wxID_B_UNIT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "px" ));
+ XRCCTRL(*this, "wxID_CHOICE_MTOP", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
+ XRCCTRL(*this, "wxID_MTOP_UNIT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "px" ));
+ XRCCTRL(*this, "wxID_CHOICE_MBOTTOM", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
+ XRCCTRL(*this, "wxID_MBOTTOM_UNIT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "px" ));
+ XRCCTRL(*this, "wxID_CHOICE_MLEFT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
+ XRCCTRL(*this, "wxID_MLEFT_UNIT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "px" ));
+ XRCCTRL(*this, "wxID_CHOICE_MRIGHT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
+ XRCCTRL(*this, "wxID_MRIGHT_UNIT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "px" ));
+ XRCCTRL(*this, "wxID_CHOICE_PTOP", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
+ XRCCTRL(*this, "wxID_PTOP_UNIT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "px" ));
+ XRCCTRL(*this, "wxID_CHOICE_PBOTTOM", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
+ XRCCTRL(*this, "wxID_PBOTTOM_UNIT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "px" ));
+ XRCCTRL(*this, "wxID_CHOICE_PLEFT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
+ XRCCTRL(*this, "wxID_PLEFT_UNIT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "px" ));
+ XRCCTRL(*this, "wxID_CHOICE_PRIGHT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
+ XRCCTRL(*this, "wxID_PRIGHT_UNIT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "px" ));
+ XRCCTRL(*this, "wxID_CHOICE_MARGIN", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
+ XRCCTRL(*this, "wxID_MARGIN_UNIT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "px" ));
+ XRCCTRL(*this, "wxID_CHOICE_PADDING", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
+ XRCCTRL(*this, "wxID_PADDING_UNIT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "px" ));
+ XRCCTRL(*this, "wxID_CHOICE_WIDTH", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
+ XRCCTRL(*this, "wxID_WIDTH_UNIT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "px" ));
+ XRCCTRL(*this, "wxID_CHOICE_HEIGHT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
+ XRCCTRL(*this, "wxID_HEIGHT_UNIT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "px" ));
+ XRCCTRL(*this, "wxID_CHOICE_DISPLAY", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
+ XRCCTRL(*this, "wxID_CHOICE_VISIBILITY", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
+ XRCCTRL(*this, "wxID_CHOICE_FLOAT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
+ XRCCTRL(*this, "wxID_CHOICE_CLEAR", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
+ XRCCTRL(*this, "wxID_CHOICE_LISTSTYLE", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
+ XRCCTRL(*this, "wxID_CHOICE_LISTPOSITION", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
+ XRCCTRL(*this, "wxID_TOP_UNIT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "px" ));
+ XRCCTRL(*this, "wxID_BOTTOM_UNIT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "px" ));
+ XRCCTRL(*this, "wxID_LEFT_UNIT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "px" ));
+ XRCCTRL(*this, "wxID_RIGHT_UNIT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "px" ));
+
+ XRCCTRL(*this, "wx_SIZE_DONE", wxCheckBox)->SetValue(FALSE);
+ XRCCTRL(*this, "wx_LINE_DONE", wxCheckBox)->SetValue(FALSE);
+ XRCCTRL(*this, "wx_INDENT_DONE", wxCheckBox)->SetValue(FALSE);
+ XRCCTRL(*this, "wx_VALIGN_DONE", wxCheckBox)->SetValue(FALSE);
+ XRCCTRL(*this, "wx_WORD_DONE", wxCheckBox)->SetValue(FALSE);
+ XRCCTRL(*this, "wx_LETTER_DONE", wxCheckBox)->SetValue(FALSE);
+ XRCCTRL(*this, "wx_BTOP_DONE", wxCheckBox)->SetValue(FALSE);
+ XRCCTRL(*this, "wx_BBOTTOM_DONE", wxCheckBox)->SetValue(FALSE);
+ XRCCTRL(*this, "wx_BLEFT_DONE", wxCheckBox)->SetValue(FALSE);
+ XRCCTRL(*this, "wx_BRIGHT_DONE", wxCheckBox)->SetValue(FALSE);
+ XRCCTRL(*this, "wx_BORDER_DONE", wxCheckBox)->SetValue(FALSE);
+ XRCCTRL(*this, "wx_MTOP_DONE", wxCheckBox)->SetValue(FALSE);
+ XRCCTRL(*this, "wx_PTOP_DONE", wxCheckBox)->SetValue(FALSE);
+ XRCCTRL(*this, "wx_MBOTTOM_DONE", wxCheckBox)->SetValue(FALSE);
+ XRCCTRL(*this, "wx_PBOTTOM_DONE", wxCheckBox)->SetValue(FALSE);
+ XRCCTRL(*this, "wx_MLEFT_DONE", wxCheckBox)->SetValue(FALSE);
+ XRCCTRL(*this, "wx_PLEFT_DONE", wxCheckBox)->SetValue(FALSE);
+ XRCCTRL(*this, "wx_MRIGHT_DONE", wxCheckBox)->SetValue(FALSE);
+ XRCCTRL(*this, "wx_PRIGHT_DONE", wxCheckBox)->SetValue(FALSE);
+ XRCCTRL(*this, "wx_MARGIN_DONE", wxCheckBox)->SetValue(FALSE);
+ XRCCTRL(*this, "wx_PADDING_DONE", wxCheckBox)->SetValue(FALSE);
+ XRCCTRL(*this, "wx_WIDTH_DONE", wxCheckBox)->SetValue(FALSE);
+ XRCCTRL(*this, "wx_HEIGHT_DONE", wxCheckBox)->SetValue(FALSE);
+ XRCCTRL(*this, "wx_TOP_DONE", wxCheckBox)->SetValue(FALSE);
+ XRCCTRL(*this, "wx_BOTTOM_DONE", wxCheckBox)->SetValue(FALSE);
+ XRCCTRL(*this, "wx_LEFT_DONE", wxCheckBox)->SetValue(FALSE);
+ XRCCTRL(*this, "wx_RIGHT_DONE", wxCheckBox)->SetValue(FALSE);
+
+ XRCCTRL(*this, "wxID_SPIN_SIZE", wxSpinCtrl)->SetValue(0);
+ XRCCTRL(*this, "wxID_SPIN_LINE", wxSpinCtrl)->SetValue(0);
+ XRCCTRL(*this, "wxID_SPIN_INDENT", wxSpinCtrl)->SetValue(0);
+ XRCCTRL(*this, "wxID_SPIN_VALIGN", wxSpinCtrl)->SetValue(0);
+ XRCCTRL(*this, "wxID_SPIN_WORD", wxSpinCtrl)->SetValue(0);
+ XRCCTRL(*this, "wxID_SPIN_LETTER", wxSpinCtrl)->SetValue(0);
+ XRCCTRL(*this, "wxID_SPIN_BTOP", wxSpinCtrl)->SetValue(0);
+ XRCCTRL(*this, "wxID_SPIN_BBOTTOM", wxSpinCtrl)->SetValue(0);
+ XRCCTRL(*this, "wxID_SPIN_BLEFT", wxSpinCtrl)->SetValue(0);
+ XRCCTRL(*this, "wxID_SPIN_BRIGHT", wxSpinCtrl)->SetValue(0);
+ XRCCTRL(*this, "wxID_SPIN_B", wxSpinCtrl)->SetValue(0);
+ XRCCTRL(*this, "wxID_SPIN_MTOP", wxSpinCtrl)->SetValue(0);
+ XRCCTRL(*this, "wxID_SPIN_PTOP", wxSpinCtrl)->SetValue(0);
+ XRCCTRL(*this, "wxID_SPIN_MBOTTOM", wxSpinCtrl)->SetValue(0);
+ XRCCTRL(*this, "wxID_SPIN_PBOTTOM", wxSpinCtrl)->SetValue(0);
+ XRCCTRL(*this, "wxID_SPIN_MLEFT", wxSpinCtrl)->SetValue(0);
+ XRCCTRL(*this, "wxID_SPIN_PLEFT", wxSpinCtrl)->SetValue(0);
+ XRCCTRL(*this, "wxID_SPIN_MRIGHT", wxSpinCtrl)->SetValue(0);
+ XRCCTRL(*this, "wxID_SPIN_PRIGHT", wxSpinCtrl)->SetValue(0);
+ XRCCTRL(*this, "wxID_SPIN_MARGIN", wxSpinCtrl)->SetValue(0);
+ XRCCTRL(*this, "wxID_SPIN_PADDING", wxSpinCtrl)->SetValue(0);
+ XRCCTRL(*this, "wxID_SPIN_WIDTH", wxSpinCtrl)->SetValue(0);
+ XRCCTRL(*this, "wxID_SPIN_HEIGHT", wxSpinCtrl)->SetValue(0);
+ XRCCTRL(*this, "wxID_SPIN_TOP", wxSpinCtrl)->SetValue(0);
+ XRCCTRL(*this, "wxID_SPIN_BOTTOM", wxSpinCtrl)->SetValue(0);
+ XRCCTRL(*this, "wxID_SPIN_LEFT", wxSpinCtrl)->SetValue(0);
+ XRCCTRL(*this, "wxID_SPIN_RIGHT", wxSpinCtrl)->SetValue(0);
+  BG_repeat = 0;
+}
+
+/*----------------------------------------------------------------------
+  StyleDlgWX create the dialog used to 
+  - Change amaya Styles
+  params:
+  + parent : parent window
+  + title : dialog title
+  + ...
+  returns:
+  ----------------------------------------------------------------------*/
+StyleDlgWX::StyleDlgWX( int ref, wxWindow* parent ) :
+  AmayaDialog( parent, ref )
 {
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("StyleDlgWX"));
   m_ref = ref;
@@ -132,10 +304,7 @@ BEGIN_EVENT_TABLE(StyleDlgWX, AmayaDialog)
   /* tooltip of browse buttons */
   XRCCTRL(*this, "wxID_BUTTON_BGIMAGE", wxBitmapButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_BROWSE) ));
   XRCCTRL(*this, "wxID_BUTTON_LISTIMAGE", wxBitmapButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_BROWSE) ));
-  BG_repeat = 0;
-
-  // give focus to ...
-  //  XRCCTRL(*this, "wxID_COMBOBOX_FAMILY", wxComboBox)->SetFocus();
+  InitValues ();
 
   // on windows, the color selector dialog must be complete.
   colour_data.SetChooseFull(true);
@@ -155,9 +324,9 @@ StyleDlgWX::~StyleDlgWX()
 
 
 /*----------------------------------------------------------------------
-  Class:  Style
+  Class:  StyleDlgWX
   Method:  OnButton
-  *Description:  this method is called when the user click on a tool
+  Description:  this method is called when the user click on a tool
   -----------------------------------------------------------------------*/
 void StyleDlgWX::OnButton( wxCommandEvent& event )
 {
@@ -173,12 +342,72 @@ void StyleDlgWX::OnButton( wxCommandEvent& event )
     BG_repeat = 4;
 }
 
+
 /*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-void StyleDlgWX::OnPageChanged( wxNotebookEvent& event )
+  Class:  StyleDlgWX
+  Method:  OnValueButton
+  Description:  
+  -----------------------------------------------------------------------*/
+void StyleDlgWX::OnValueChanged( wxSpinEvent& event )
 {
-  event.Skip();
+  int id = event.GetId();
+
+  if (id == wxXmlResource::GetXRCID(_T("wxID_SPIN_SIZE")))
+    XRCCTRL(*this, "wx_SIZE_DONE", wxCheckBox)->SetValue(TRUE);
+  else if (id == wxXmlResource::GetXRCID(_T("wxID_SPIN_LINE")))
+    XRCCTRL(*this, "wx_LINE_DONE", wxCheckBox)->SetValue(TRUE);
+  else if (id == wxXmlResource::GetXRCID(_T("wxID_SPIN_INDENT")))
+    XRCCTRL(*this, "wx_INDENT_DONE", wxCheckBox)->SetValue(TRUE);
+  else if (id == wxXmlResource::GetXRCID(_T("wxID_SPIN_VALIGN")))
+    XRCCTRL(*this, "wx_VALIGN_DONE", wxCheckBox)->SetValue(TRUE);
+  else if (id == wxXmlResource::GetXRCID(_T("wxID_SPIN_WORD")))
+    XRCCTRL(*this, "wx_WORD_DONE", wxCheckBox)->SetValue(TRUE);
+  else if (id == wxXmlResource::GetXRCID(_T("wxID_SPIN_LETTER")))
+    XRCCTRL(*this, "wx_LETTER_DONE", wxCheckBox)->SetValue(TRUE);
+  else if (id == wxXmlResource::GetXRCID(_T("wxID_SPIN_BTOP")))
+    XRCCTRL(*this, "wx_BTOP_DONE", wxCheckBox)->SetValue(TRUE);
+  else if (id == wxXmlResource::GetXRCID(_T("wxID_SPIN_BBOTTOM")))
+    XRCCTRL(*this, "wx_BBOTTOM_DONE", wxCheckBox)->SetValue(TRUE);
+  else if (id == wxXmlResource::GetXRCID(_T("wxID_SPIN_BLEFT")))
+    XRCCTRL(*this, "wx_BLEFT_DONE", wxCheckBox)->SetValue(TRUE);
+  else if (id == wxXmlResource::GetXRCID(_T("wxID_SPIN_BRIGHT")))
+    XRCCTRL(*this, "wx_BRIGHT_DONE", wxCheckBox)->SetValue(TRUE);
+  else if (id == wxXmlResource::GetXRCID(_T("wxID_SPIN_B")))
+    XRCCTRL(*this, "wx_BORDER_DONE", wxCheckBox)->SetValue(TRUE);
+  else if (id == wxXmlResource::GetXRCID(_T("wxID_SPIN_MTOP")))
+    XRCCTRL(*this, "wx_MTOP_DONE", wxCheckBox)->SetValue(TRUE);
+  else if (id == wxXmlResource::GetXRCID(_T("wxID_SPIN_MBOTTOM")))
+    XRCCTRL(*this, "wx_PTOP_DONE", wxCheckBox)->SetValue(TRUE);
+  else if (id == wxXmlResource::GetXRCID(_T("wxID_SPIN_MLEFT")))
+    XRCCTRL(*this, "wx_MBOTTOM_DONE", wxCheckBox)->SetValue(TRUE);
+  else if (id == wxXmlResource::GetXRCID(_T("wxID_SPIN_MRIGHT")))
+    XRCCTRL(*this, "wx_PBOTTOM_DONE", wxCheckBox)->SetValue(TRUE);
+  else if (id == wxXmlResource::GetXRCID(_T("wxID_SPIN_PTOP")))
+    XRCCTRL(*this, "wx_MLEFT_DONE", wxCheckBox)->SetValue(TRUE);
+  else if (id == wxXmlResource::GetXRCID(_T("wxID_SPIN_PBOTTOM")))
+    XRCCTRL(*this, "wx_PLEFT_DONE", wxCheckBox)->SetValue(TRUE);
+  else if (id == wxXmlResource::GetXRCID(_T("wxID_SPIN_PLEFT")))
+    XRCCTRL(*this, "wx_MRIGHT_DONE", wxCheckBox)->SetValue(TRUE);
+  else if (id == wxXmlResource::GetXRCID(_T("wxID_SPIN_PRIGHT")))
+    XRCCTRL(*this, "wx_PRIGHT_DONE", wxCheckBox)->SetValue(TRUE);
+  else if (id == wxXmlResource::GetXRCID(_T("wxID_SPIN_MARGIN")))
+    XRCCTRL(*this, "wx_MARGIN_DONE", wxCheckBox)->SetValue(TRUE);
+  else if (id == wxXmlResource::GetXRCID(_T("wxID_SPIN_PADDING")))
+    XRCCTRL(*this, "wx_PADDING_DONE", wxCheckBox)->SetValue(TRUE);
+  else if (id == wxXmlResource::GetXRCID(_T("wxID_SPIN_WIDTH")))
+    XRCCTRL(*this, "wx_WIDTH_DONE", wxCheckBox)->SetValue(TRUE);
+  else if (id == wxXmlResource::GetXRCID(_T("wxID_SPIN_HEIGHT")))
+    XRCCTRL(*this, "wx_HEIGHT_DONE", wxCheckBox)->SetValue(TRUE);
+  else if (id == wxXmlResource::GetXRCID(_T("wxID_SPIN_TOP")))
+    XRCCTRL(*this, "wx_TOP_DONE", wxCheckBox)->SetValue(TRUE);
+  else if (id == wxXmlResource::GetXRCID(_T("wxID_SPIN_BOTTOM")))
+    XRCCTRL(*this, "wx_BOTTOM_DONE", wxCheckBox)->SetValue(TRUE);
+  else if (id == wxXmlResource::GetXRCID(_T("wxID_SPIN_LEFT")))
+    XRCCTRL(*this, "wx_LEFT_DONE", wxCheckBox)->SetValue(TRUE);
+  else if (id == wxXmlResource::GetXRCID(_T("wxID_SPIN_RIGHT")))
+    XRCCTRL(*this, "wx_RIGHT_DONE", wxCheckBox)->SetValue(TRUE);    
 }
+
 
 /************************************************************************/
 /* Text tab                                                             */
@@ -216,7 +445,7 @@ void StyleDlgWX::GetValueDialog_Text()
     {
       // spin value ?
       i = XRCCTRL(*this, "wxID_SPIN_SIZE", wxSpinCtrl)->GetValue();
-      if (XRCCTRL(*this, "wx_SIZE_DONE", wxCheckBox)->IsChecked())
+      if (XRCCTRL(*this, "wx_SIZE_DONE", wxCheckBox)->IsChecked() && i >= 0)
         {
           sprintf (text, "%d", i);
           strcpy (&Buffer[Index], "font-size: ");
@@ -268,7 +497,7 @@ void StyleDlgWX::GetValueDialog_Text()
     {
       // spin value ?
       i = XRCCTRL(*this, "wxID_SPIN_LINE", wxSpinCtrl)->GetValue();
-      if (XRCCTRL(*this, "wx_LINE_DONE", wxCheckBox)->IsChecked())
+      if (XRCCTRL(*this, "wx_LINE_DONE", wxCheckBox)->IsChecked() && i >= 0)
         {
           sprintf (text, "%d", i);
           strcpy (&Buffer[Index], "line-height: ");
@@ -282,7 +511,7 @@ void StyleDlgWX::GetValueDialog_Text()
     }
 
   i = XRCCTRL(*this, "wxID_SPIN_INDENT", wxSpinCtrl)->GetValue();
-  if (XRCCTRL(*this, "wx_INDENT_DONE", wxCheckBox)->IsChecked())
+  if (XRCCTRL(*this, "wx_INDENT_DONE", wxCheckBox)->IsChecked() && i >= 0)
     {
       sprintf (text, "%d", i);
       strcpy (&Buffer[Index], "text-indent: ");
@@ -306,7 +535,7 @@ void StyleDlgWX::GetValueDialog_Text()
     {
       // spin value ?
       i = XRCCTRL(*this, "wxID_SPIN_VALIGN", wxSpinCtrl)->GetValue();
-      if (XRCCTRL(*this, "wx_VALIGN_DONE", wxCheckBox)->IsChecked())
+      if (XRCCTRL(*this, "wx_VALIGN_DONE", wxCheckBox)->IsChecked() && i >= 0)
         {
           sprintf (text, "%d", i);
           strcpy (&Buffer[Index], "vertical-align: ");
@@ -369,7 +598,7 @@ void StyleDlgWX::GetValueDialog_Text()
     {
       // spin value ?
       i = XRCCTRL(*this, "wxID_SPIN_WORD", wxSpinCtrl)->GetValue();
-      if (XRCCTRL(*this, "wx_WORD_DONE", wxCheckBox)->IsChecked())
+      if (XRCCTRL(*this, "wx_WORD_DONE", wxCheckBox)->IsChecked() && i >= 0)
         {
           sprintf (text, "%d", i);
           strcpy (&Buffer[Index], "word-spacing: ");
@@ -396,7 +625,7 @@ void StyleDlgWX::GetValueDialog_Text()
     {
       // spin value ?
       i = XRCCTRL(*this, "wxID_SPIN_LETTER", wxSpinCtrl)->GetValue();
-      if (XRCCTRL(*this, "wx_LETTER_DONE", wxCheckBox)->IsChecked())
+      if (XRCCTRL(*this, "wx_LETTER_DONE", wxCheckBox)->IsChecked()  && i >= 0)
         {
           sprintf (text, "%d", i);
           strcpy (&Buffer[Index], "letter-spacing: ");
@@ -522,7 +751,7 @@ void StyleDlgWX::GetValueDialog_Color()
   svalue = XRCCTRL(*this, "wxID_CHOICE_T_STYLE", wxChoice)->GetStringSelection();
   cvalue = XRCCTRL(*this, "wxID_COMBO_T_COLOR", wxComboBox)->GetValue();
   if (value.Len() > 0 ||
-      XRCCTRL(*this, "wx_BTOP_DONE", wxCheckBox)->IsChecked() ||
+      (XRCCTRL(*this, "wx_BTOP_DONE", wxCheckBox)->IsChecked()  && i >= 0) ||
       svalue.Len() > 0 || cvalue.Len() > 0)
     {
       strcpy (&Buffer[Index], "border-top: ");
@@ -534,7 +763,7 @@ void StyleDlgWX::GetValueDialog_Color()
       else
         {
           // spin value ?
-          if (XRCCTRL(*this, "wx_BTOP_DONE", wxCheckBox)->IsChecked())
+          if (XRCCTRL(*this, "wx_BTOP_DONE", wxCheckBox)->IsChecked()  && i >= 0)
             {
               sprintf (text, "%d", i);
               strcat (&Buffer[Index], " ");
@@ -564,7 +793,7 @@ void StyleDlgWX::GetValueDialog_Color()
   svalue = XRCCTRL(*this, "wxID_CHOICE_B_STYLE", wxChoice)->GetStringSelection();
   cvalue = XRCCTRL(*this, "wxID_COMBO_B_COLOR", wxComboBox)->GetValue();
   if (value.Len() > 0 ||
-      XRCCTRL(*this, "wx_BBOTTOM_DONE", wxCheckBox)->IsChecked() ||
+      (XRCCTRL(*this, "wx_BBOTTOM_DONE", wxCheckBox)->IsChecked()  && i >= 0)  ||
       svalue.Len() > 0 || cvalue.Len() > 0)
     {
       strcpy (&Buffer[Index], "border-bottom: ");
@@ -576,7 +805,7 @@ void StyleDlgWX::GetValueDialog_Color()
       else
         {
           // spin value ?
-          if (XRCCTRL(*this, "wx_BBOTTOM_DONE", wxCheckBox)->IsChecked())
+          if (XRCCTRL(*this, "wx_BBOTTOM_DONE", wxCheckBox)->IsChecked()  && i >= 0)
             {
               sprintf (text, "%d", i);
               strcat (&Buffer[Index], " ");
@@ -606,7 +835,7 @@ void StyleDlgWX::GetValueDialog_Color()
   svalue = XRCCTRL(*this, "wxID_CHOICE_L_STYLE", wxChoice)->GetStringSelection();
   cvalue = XRCCTRL(*this, "wxID_COMBO_L_COLOR", wxComboBox)->GetValue();
   if (value.Len() > 0 ||
-      XRCCTRL(*this, "wx_BLEFT_DONE", wxCheckBox)->IsChecked() ||
+      (XRCCTRL(*this, "wx_BLEFT_DONE", wxCheckBox)->IsChecked()  && i >= 0)  ||
       svalue.Len() > 0 || cvalue.Len() > 0)
     {
       strcpy (&Buffer[Index], "border-left: ");
@@ -618,7 +847,7 @@ void StyleDlgWX::GetValueDialog_Color()
       else
         {
           // spin value ?
-          if (XRCCTRL(*this, "wx_BLEFT_DONE", wxCheckBox)->IsChecked())
+          if (XRCCTRL(*this, "wx_BLEFT_DONE", wxCheckBox)->IsChecked()  && i >= 0)
             {
               sprintf (text, "%d", i);
               strcat (&Buffer[Index], " ");
@@ -648,7 +877,7 @@ void StyleDlgWX::GetValueDialog_Color()
   svalue = XRCCTRL(*this, "wxID_CHOICE_R_STYLE", wxChoice)->GetStringSelection();
   cvalue = XRCCTRL(*this, "wxID_COMBO_R_COLOR", wxComboBox)->GetValue();
   if (value.Len() > 0 ||
-      XRCCTRL(*this, "wx_BRIGHT_DONE", wxCheckBox)->IsChecked() ||
+      (XRCCTRL(*this, "wx_BRIGHT_DONE", wxCheckBox)->IsChecked()  && i >= 0)  ||
       svalue.Len() > 0 || cvalue.Len() > 0)
     {
       strcpy (&Buffer[Index], "border-right: ");
@@ -660,7 +889,7 @@ void StyleDlgWX::GetValueDialog_Color()
       else
         {
           // spin value ?
-          if (XRCCTRL(*this, "wx_BRIGHT_DONE", wxCheckBox)->IsChecked())
+          if (XRCCTRL(*this, "wx_BRIGHT_DONE", wxCheckBox)->IsChecked()  && i >= 0)
             {
               sprintf (text, "%d", i);
               strcat (&Buffer[Index], " ");
@@ -690,7 +919,7 @@ void StyleDlgWX::GetValueDialog_Color()
   svalue = XRCCTRL(*this, "wxID_CHOICE_BORDER_STYLE", wxChoice)->GetStringSelection();
   cvalue = XRCCTRL(*this, "wxID_COMBO_BORDER_COLOR", wxComboBox)->GetValue();
   if (value.Len() > 0 ||
-      XRCCTRL(*this, "wx_BORDER_DONE", wxCheckBox)->IsChecked() ||
+      (XRCCTRL(*this, "wx_BORDER_DONE", wxCheckBox)->IsChecked()  && i >= 0)  ||
       svalue.Len() > 0 || cvalue.Len() > 0)
     {
       strcpy (&Buffer[Index], "border: ");
@@ -702,7 +931,7 @@ void StyleDlgWX::GetValueDialog_Color()
       else
         {
           // spin value ?
-          if (XRCCTRL(*this, "wx_BORDER_DONE", wxCheckBox)->IsChecked())
+          if (XRCCTRL(*this, "wx_BORDER_DONE", wxCheckBox)->IsChecked()  && i >= 0)
             {
               sprintf (text, "%d", i);
               strcat (&Buffer[Index], " ");
@@ -975,7 +1204,7 @@ void StyleDlgWX::GetValueDialog_Box()
     {
       // spin value ?
       i = XRCCTRL(*this, "wxID_SPIN_MTOP", wxSpinCtrl)->GetValue();
-      if (XRCCTRL(*this, "wx_MTOP_DONE", wxCheckBox)->IsChecked())
+      if (XRCCTRL(*this, "wx_MTOP_DONE", wxCheckBox)->IsChecked()  && i >= 0)
         {
           sprintf (text, "%d", i);
           strcpy (&Buffer[Index], "margin-top: ");
@@ -1003,7 +1232,7 @@ void StyleDlgWX::GetValueDialog_Box()
     {
       // spin value ?
       i = XRCCTRL(*this, "wxID_SPIN_MBOTTOM", wxSpinCtrl)->GetValue();
-      if (XRCCTRL(*this, "wx_MBOTTOM_DONE", wxCheckBox)->IsChecked())
+      if (XRCCTRL(*this, "wx_MBOTTOM_DONE", wxCheckBox)->IsChecked()  && i >= 0)
         {
           sprintf (text, "%d", i);
           strcpy (&Buffer[Index], "margin-bottom: ");
@@ -1031,7 +1260,7 @@ void StyleDlgWX::GetValueDialog_Box()
     {
       // spin value ?
       i = XRCCTRL(*this, "wxID_SPIN_MLEFT", wxSpinCtrl)->GetValue();
-      if (XRCCTRL(*this, "wx_MLEFT_DONE", wxCheckBox)->IsChecked())
+      if (XRCCTRL(*this, "wx_MLEFT_DONE", wxCheckBox)->IsChecked()  && i >= 0)
         {
           sprintf (text, "%d", i);
           strcpy (&Buffer[Index], "margin-left: ");
@@ -1059,7 +1288,7 @@ void StyleDlgWX::GetValueDialog_Box()
     {
       // spin value ?
       i = XRCCTRL(*this, "wxID_SPIN_MRIGHT", wxSpinCtrl)->GetValue();
-      if (XRCCTRL(*this, "wx_MRIGHT_DONE", wxCheckBox)->IsChecked())
+      if (XRCCTRL(*this, "wx_MRIGHT_DONE", wxCheckBox)->IsChecked()  && i >= 0)
         {
           sprintf (text, "%d", i);
           strcpy (&Buffer[Index], "margin-right: ");
@@ -1087,7 +1316,7 @@ void StyleDlgWX::GetValueDialog_Box()
     {
       // spin value ?
       i = XRCCTRL(*this, "wxID_SPIN_PTOP", wxSpinCtrl)->GetValue();
-      if (XRCCTRL(*this, "wx_PTOP_DONE", wxCheckBox)->IsChecked())
+      if (XRCCTRL(*this, "wx_PTOP_DONE", wxCheckBox)->IsChecked()  && i >= 0)
         {
           sprintf (text, "%d", i);
           strcpy (&Buffer[Index], "padding-top: ");
@@ -1115,7 +1344,7 @@ void StyleDlgWX::GetValueDialog_Box()
     {
       // spin value ?
       i = XRCCTRL(*this, "wxID_SPIN_PBOTTOM", wxSpinCtrl)->GetValue();
-      if (XRCCTRL(*this, "wx_PBOTTOM_DONE", wxCheckBox)->IsChecked())
+      if (XRCCTRL(*this, "wx_PBOTTOM_DONE", wxCheckBox)->IsChecked()  && i >= 0)
         {
           sprintf (text, "%d", i);
           strcpy (&Buffer[Index], "padding-bottom: ");
@@ -1143,7 +1372,7 @@ void StyleDlgWX::GetValueDialog_Box()
     {
       // spin value ?
       i = XRCCTRL(*this, "wxID_SPIN_PLEFT", wxSpinCtrl)->GetValue();
-      if (XRCCTRL(*this, "wx_PLEFT_DONE", wxCheckBox)->IsChecked())
+      if (XRCCTRL(*this, "wx_PLEFT_DONE", wxCheckBox)->IsChecked()  && i >= 0)
         {
           sprintf (text, "%d", i);
           strcpy (&Buffer[Index], "padding-left: ");
@@ -1171,7 +1400,7 @@ void StyleDlgWX::GetValueDialog_Box()
     {
       // spin value ?
       i = XRCCTRL(*this, "wxID_SPIN_PRIGHT", wxSpinCtrl)->GetValue();
-      if (XRCCTRL(*this, "wx_PRIGHT_DONE", wxCheckBox)->IsChecked())
+      if (XRCCTRL(*this, "wx_PRIGHT_DONE", wxCheckBox)->IsChecked()  && i >= 0)
         {
           sprintf (text, "%d", i);
           strcpy (&Buffer[Index], "padding-right: ");
@@ -1199,7 +1428,7 @@ void StyleDlgWX::GetValueDialog_Box()
     {
       // spin value ?
       i = XRCCTRL(*this, "wxID_SPIN_MARGIN", wxSpinCtrl)->GetValue();
-      if (XRCCTRL(*this, "wx_MARGIN_DONE", wxCheckBox)->IsChecked())
+      if (XRCCTRL(*this, "wx_MARGIN_DONE", wxCheckBox)->IsChecked()  && i >= 0)
         {
           sprintf (text, "%d", i);
           strcpy (&Buffer[Index], "margin: ");
@@ -1227,7 +1456,7 @@ void StyleDlgWX::GetValueDialog_Box()
     {
       // spin value ?
       i = XRCCTRL(*this, "wxID_SPIN_PADDING", wxSpinCtrl)->GetValue();
-      if (XRCCTRL(*this, "wx_PADDING_DONE", wxCheckBox)->IsChecked())
+      if (XRCCTRL(*this, "wx_PADDING_DONE", wxCheckBox)->IsChecked()  && i >= 0)
         {
           sprintf (text, "%d", i);
           strcpy (&Buffer[Index], "padding: ");
@@ -1255,7 +1484,7 @@ void StyleDlgWX::GetValueDialog_Box()
     {
       // spin value ?
       i = XRCCTRL(*this, "wxID_SPIN_WIDTH", wxSpinCtrl)->GetValue();
-      if (XRCCTRL(*this, "wx_WIDTH_DONE", wxCheckBox)->IsChecked())
+      if (XRCCTRL(*this, "wx_WIDTH_DONE", wxCheckBox)->IsChecked()  && i >= 0)
         {
           sprintf (text, "%d", i);
           strcpy (&Buffer[Index], "width: ");
@@ -1283,7 +1512,7 @@ void StyleDlgWX::GetValueDialog_Box()
     {
       // spin value ?
       i = XRCCTRL(*this, "wxID_SPIN_HEIGHT", wxSpinCtrl)->GetValue();
-      if (XRCCTRL(*this, "wx_HEIGHT_DONE", wxCheckBox)->IsChecked())
+      if (XRCCTRL(*this, "wx_HEIGHT_DONE", wxCheckBox)->IsChecked()  && i >= 0)
         {
           sprintf (text, "%d", i);
           strcpy (&Buffer[Index], "height: ");
@@ -1400,7 +1629,7 @@ void StyleDlgWX::GetValueDialog_Format()
 
   //Top
   i = XRCCTRL(*this, "wxID_SPIN_TOP", wxSpinCtrl)->GetValue();
-  if (XRCCTRL(*this, "wx_TOP_DONE", wxCheckBox)->IsChecked())
+  if (XRCCTRL(*this, "wx_TOP_DONE", wxCheckBox)->IsChecked()  && i >= 0)
     {
       sprintf (text, "%d", i);
       strcpy (&Buffer[Index], "top: ");
@@ -1416,7 +1645,7 @@ void StyleDlgWX::GetValueDialog_Format()
 
   //Bottom
   i = XRCCTRL(*this, "wxID_SPIN_BOTTOM", wxSpinCtrl)->GetValue();
-  if (XRCCTRL(*this, "wx_BOTTOM_DONE", wxCheckBox)->IsChecked())
+  if (XRCCTRL(*this, "wx_BOTTOM_DONE", wxCheckBox)->IsChecked()  && i >= 0)
     {
       sprintf (text, "%d", i);
       strcpy (&Buffer[Index], "bottom: ");
@@ -1432,7 +1661,7 @@ void StyleDlgWX::GetValueDialog_Format()
 
   //Left
   i = XRCCTRL(*this, "wxID_SPIN_LEFT", wxSpinCtrl)->GetValue();
-  if (XRCCTRL(*this, "wx_LEFT_DONE", wxCheckBox)->IsChecked())
+  if (XRCCTRL(*this, "wx_LEFT_DONE", wxCheckBox)->IsChecked()  && i >= 0)
     {
       sprintf (text, "%d", i);
       strcpy (&Buffer[Index], "left: ");
@@ -1448,7 +1677,7 @@ void StyleDlgWX::GetValueDialog_Format()
 
   //Right
   i = XRCCTRL(*this, "wxID_SPIN_RIGHT", wxSpinCtrl)->GetValue();
-  if (XRCCTRL(*this, "wx_RIGHT_DONE", wxCheckBox)->IsChecked())
+  if (XRCCTRL(*this, "wx_RIGHT_DONE", wxCheckBox)->IsChecked()  && i >= 0)
     {
       sprintf (text, "%d", i);
       strcpy (&Buffer[Index], "right: ");
@@ -1519,145 +1748,7 @@ void StyleDlgWX::OnOk( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void StyleDlgWX::OnDefault( wxCommandEvent& event )
 {
-  XRCCTRL(*this, "wxID_NO_SELECTION", wxStaticText)->SetLabel(TtaConvMessageToWX(""));
-
- XRCCTRL(*this, "wxID_COMBOBOX_FAMILY", wxComboBox)->SetValue(TtaConvMessageToWX( "" ));
- XRCCTRL(*this, "wxID_COMBO_TEXTCOLOR", wxComboBox)->SetValue(TtaConvMessageToWX( "" ));
- XRCCTRL(*this, "wxID_COMBO_BACKCOLOR", wxComboBox)->SetValue(TtaConvMessageToWX( "" ));
- XRCCTRL(*this, "wxID_BGIMAGE", wxComboBox)->SetValue(TtaConvMessageToWX( "" ));
- XRCCTRL(*this, "wxID_LIST_IMAGE", wxComboBox)->SetValue(TtaConvMessageToWX( "" ));
- XRCCTRL(*this, "wxID_COMBO_T_COLOR", wxComboBox)->SetValue(TtaConvMessageToWX( "" ));
- XRCCTRL(*this, "wxID_COMBO_B_COLOR", wxComboBox)->SetValue(TtaConvMessageToWX( "" ));
- XRCCTRL(*this, "wxID_COMBO_L_COLOR", wxComboBox)->SetValue(TtaConvMessageToWX( "" ));
- XRCCTRL(*this, "wxID_COMBO_R_COLOR", wxComboBox)->SetValue(TtaConvMessageToWX( "" ));
- XRCCTRL(*this, "wxID_COMBO_BORDER_COLOR", wxComboBox)->SetValue(TtaConvMessageToWX( "" ));
-
- XRCCTRL(*this, "wxID_CHOICE_SIZE", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
- XRCCTRL(*this, "wxID_SIZE_UNIT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "px" ));
- XRCCTRL(*this, "wxID_CHOICE_STYLE", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
- XRCCTRL(*this, "wxID_CHOICE_WEIGHT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
- XRCCTRL(*this, "wxID_CHOICE_VARIANT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
- XRCCTRL(*this, "wxID_CHOICE_LINE", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
- XRCCTRL(*this, "wxID_LINE_UNIT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
- XRCCTRL(*this, "wxID_INDENT_UNIT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
- XRCCTRL(*this, "wxID_CHOICE_VALIGN", wxChoice)->SetStringSelection(TtaConvMessageToWX( "%" ));
- XRCCTRL(*this, "wxID_VALIGN_UNIT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
- XRCCTRL(*this, "wxID_CHOICE_ALIGN", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
- XRCCTRL(*this, "wxID_CHOICE_DECORATION", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
- XRCCTRL(*this, "wxID_CHOICE_TRANSFORM", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
- XRCCTRL(*this, "wxID_CHOICE_WORD", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
- XRCCTRL(*this, "wxID_WORD_UNIT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
- XRCCTRL(*this, "wxID_CHOICE_LETTER", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
- XRCCTRL(*this, "wxID_LETTER_UNIT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
- XRCCTRL(*this, "wxID_CHOICE_BGATTACH", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
- XRCCTRL(*this, "wxID_CHOICE_BG_VPOSITION", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
- XRCCTRL(*this, "wxID_CHOICE_BG_HPOSITION", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
- XRCCTRL(*this, "wxID_CHOICE_BTOP", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
- XRCCTRL(*this, "wxID_CHOICE_T_STYLE", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
- XRCCTRL(*this, "wxID_BTOP_UNIT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "px" ));
- XRCCTRL(*this, "wxID_CHOICE_BBOTTOM", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
- XRCCTRL(*this, "wxID_CHOICE_B_STYLE", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
- XRCCTRL(*this, "wxID_BBOTTOM_UNIT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "px" ));
- XRCCTRL(*this, "wxID_CHOICE_BLEFT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
- XRCCTRL(*this, "wxID_CHOICE_L_STYLE", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
- XRCCTRL(*this, "wxID_BLEFT_UNIT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
- XRCCTRL(*this, "wxID_CHOICE_BRIGHT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
- XRCCTRL(*this, "wxID_CHOICE_R_STYLE", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
- XRCCTRL(*this, "wxID_BRIGHT_UNIT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "px" ));
- XRCCTRL(*this, "wxID_CHOICE_B", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
- XRCCTRL(*this, "wxID_CHOICE_BORDER_STYLE", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
- XRCCTRL(*this, "wxID_B_UNIT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "px" ));
- XRCCTRL(*this, "wxID_CHOICE_MTOP", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
- XRCCTRL(*this, "wxID_MTOP_UNIT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "px" ));
- XRCCTRL(*this, "wxID_CHOICE_MBOTTOM", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
- XRCCTRL(*this, "wxID_MBOTTOM_UNIT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "px" ));
- XRCCTRL(*this, "wxID_CHOICE_MLEFT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
- XRCCTRL(*this, "wxID_MLEFT_UNIT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "px" ));
- XRCCTRL(*this, "wxID_CHOICE_MRIGHT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
- XRCCTRL(*this, "wxID_MRIGHT_UNIT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "px" ));
- XRCCTRL(*this, "wxID_CHOICE_PTOP", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
- XRCCTRL(*this, "wxID_PTOP_UNIT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "px" ));
- XRCCTRL(*this, "wxID_CHOICE_PBOTTOM", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
- XRCCTRL(*this, "wxID_PBOTTOM_UNIT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "px" ));
- XRCCTRL(*this, "wxID_CHOICE_PLEFT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
- XRCCTRL(*this, "wxID_PLEFT_UNIT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "px" ));
- XRCCTRL(*this, "wxID_CHOICE_PRIGHT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
- XRCCTRL(*this, "wxID_PRIGHT_UNIT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "px" ));
- XRCCTRL(*this, "wxID_CHOICE_MARGIN", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
- XRCCTRL(*this, "wxID_MARGIN_UNIT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "px" ));
- XRCCTRL(*this, "wxID_CHOICE_PADDING", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
- XRCCTRL(*this, "wxID_PADDING_UNIT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "px" ));
- XRCCTRL(*this, "wxID_CHOICE_WIDTH", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
- XRCCTRL(*this, "wxID_WIDTH_UNIT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "px" ));
- XRCCTRL(*this, "wxID_CHOICE_HEIGHT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
- XRCCTRL(*this, "wxID_HEIGHT_UNIT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "px" ));
- XRCCTRL(*this, "wxID_CHOICE_DISPLAY", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
- XRCCTRL(*this, "wxID_CHOICE_VISIBILITY", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
- XRCCTRL(*this, "wxID_CHOICE_FLOAT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
- XRCCTRL(*this, "wxID_CHOICE_CLEAR", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
- XRCCTRL(*this, "wxID_CHOICE_LISTSTYLE", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
- XRCCTRL(*this, "wxID_CHOICE_LISTPOSITION", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
- XRCCTRL(*this, "wxID_TOP_UNIT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "px" ));
- XRCCTRL(*this, "wxID_BOTTOM_UNIT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "px" ));
- XRCCTRL(*this, "wxID_LEFT_UNIT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "px" ));
- XRCCTRL(*this, "wxID_RIGHT_UNIT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "px" ));
-
- XRCCTRL(*this, "wx_SIZE_DONE", wxCheckBox)->SetValue(FALSE);
- XRCCTRL(*this, "wx_LINE_DONE", wxCheckBox)->SetValue(FALSE);
- XRCCTRL(*this, "wx_INDENT_DONE", wxCheckBox)->SetValue(FALSE);
- XRCCTRL(*this, "wx_VALIGN_DONE", wxCheckBox)->SetValue(FALSE);
- XRCCTRL(*this, "wx_WORD_DONE", wxCheckBox)->SetValue(FALSE);
- XRCCTRL(*this, "wx_LETTER_DONE", wxCheckBox)->SetValue(FALSE);
- XRCCTRL(*this, "wx_BTOP_DONE", wxCheckBox)->SetValue(FALSE);
- XRCCTRL(*this, "wx_BBOTTOM_DONE", wxCheckBox)->SetValue(FALSE);
- XRCCTRL(*this, "wx_BLEFT_DONE", wxCheckBox)->SetValue(FALSE);
- XRCCTRL(*this, "wx_BRIGHT_DONE", wxCheckBox)->SetValue(FALSE);
- XRCCTRL(*this, "wx_BORDER_DONE", wxCheckBox)->SetValue(FALSE);
- XRCCTRL(*this, "wx_MTOP_DONE", wxCheckBox)->SetValue(FALSE);
- XRCCTRL(*this, "wx_PTOP_DONE", wxCheckBox)->SetValue(FALSE);
- XRCCTRL(*this, "wx_MBOTTOM_DONE", wxCheckBox)->SetValue(FALSE);
- XRCCTRL(*this, "wx_PBOTTOM_DONE", wxCheckBox)->SetValue(FALSE);
- XRCCTRL(*this, "wx_MLEFT_DONE", wxCheckBox)->SetValue(FALSE);
- XRCCTRL(*this, "wx_PLEFT_DONE", wxCheckBox)->SetValue(FALSE);
- XRCCTRL(*this, "wx_MRIGHT_DONE", wxCheckBox)->SetValue(FALSE);
- XRCCTRL(*this, "wx_PRIGHT_DONE", wxCheckBox)->SetValue(FALSE);
- XRCCTRL(*this, "wx_MARGIN_DONE", wxCheckBox)->SetValue(FALSE);
- XRCCTRL(*this, "wx_PADDING_DONE", wxCheckBox)->SetValue(FALSE);
- XRCCTRL(*this, "wx_WIDTH_DONE", wxCheckBox)->SetValue(FALSE);
- XRCCTRL(*this, "wx_HEIGHT_DONE", wxCheckBox)->SetValue(FALSE);
- XRCCTRL(*this, "wx_TOP_DONE", wxCheckBox)->SetValue(FALSE);
- XRCCTRL(*this, "wx_BOTTOM_DONE", wxCheckBox)->SetValue(FALSE);
- XRCCTRL(*this, "wx_LEFT_DONE", wxCheckBox)->SetValue(FALSE);
- XRCCTRL(*this, "wx_RIGHT_DONE", wxCheckBox)->SetValue(FALSE);
-
- XRCCTRL(*this, "wxID_SPIN_SIZE", wxSpinCtrl)->SetValue(0);
- XRCCTRL(*this, "wxID_SPIN_LINE", wxSpinCtrl)->SetValue(0);
- XRCCTRL(*this, "wxID_SPIN_INDENT", wxSpinCtrl)->SetValue(0);
- XRCCTRL(*this, "wxID_SPIN_VALIGN", wxSpinCtrl)->SetValue(0);
- XRCCTRL(*this, "wxID_SPIN_WORD", wxSpinCtrl)->SetValue(0);
- XRCCTRL(*this, "wxID_SPIN_LETTER", wxSpinCtrl)->SetValue(0);
- XRCCTRL(*this, "wxID_SPIN_BTOP", wxSpinCtrl)->SetValue(0);
- XRCCTRL(*this, "wxID_SPIN_BBOTTOM", wxSpinCtrl)->SetValue(0);
- XRCCTRL(*this, "wxID_SPIN_BLEFT", wxSpinCtrl)->SetValue(0);
- XRCCTRL(*this, "wxID_SPIN_BRIGHT", wxSpinCtrl)->SetValue(0);
- XRCCTRL(*this, "wxID_SPIN_B", wxSpinCtrl)->SetValue(0);
- XRCCTRL(*this, "wxID_SPIN_MTOP", wxSpinCtrl)->SetValue(0);
- XRCCTRL(*this, "wxID_SPIN_PTOP", wxSpinCtrl)->SetValue(0);
- XRCCTRL(*this, "wxID_SPIN_MBOTTOM", wxSpinCtrl)->SetValue(0);
- XRCCTRL(*this, "wxID_SPIN_PBOTTOM", wxSpinCtrl)->SetValue(0);
- XRCCTRL(*this, "wxID_SPIN_MLEFT", wxSpinCtrl)->SetValue(0);
- XRCCTRL(*this, "wxID_SPIN_PLEFT", wxSpinCtrl)->SetValue(0);
- XRCCTRL(*this, "wxID_SPIN_MRIGHT", wxSpinCtrl)->SetValue(0);
- XRCCTRL(*this, "wxID_SPIN_PRIGHT", wxSpinCtrl)->SetValue(0);
- XRCCTRL(*this, "wxID_SPIN_MARGIN", wxSpinCtrl)->SetValue(0);
- XRCCTRL(*this, "wxID_SPIN_PADDING", wxSpinCtrl)->SetValue(0);
- XRCCTRL(*this, "wxID_SPIN_WIDTH", wxSpinCtrl)->SetValue(0);
- XRCCTRL(*this, "wxID_SPIN_HEIGHT", wxSpinCtrl)->SetValue(0);
- XRCCTRL(*this, "wxID_SPIN_TOP", wxSpinCtrl)->SetValue(0);
- XRCCTRL(*this, "wxID_SPIN_BOTTOM", wxSpinCtrl)->SetValue(0);
- XRCCTRL(*this, "wxID_SPIN_LEFT", wxSpinCtrl)->SetValue(0);
- XRCCTRL(*this, "wxID_SPIN_RIGHT", wxSpinCtrl)->SetValue(0);
-  BG_repeat = 0;
+  InitValues ();
 }
 
 /*----------------------------------------------------------------------

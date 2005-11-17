@@ -98,7 +98,7 @@
                                 </object>
                                 <object class="sizeritem">
                                   <object class="wxSpinCtrl" name="wxID_SPIN_SIZE">
-                                    <max>100</max>
+                                    <min>0</min>
                                     <size>70,-1</size>
                                     <focused>1</focused>
                                   </object>
@@ -331,6 +331,7 @@
                             </object>
                             <object class="sizeritem">
                               <object class="wxSpinCtrl" name="wxID_SPIN_LINE">
+                                <min>0</min>
                                 <size>70,-1</size>
                                 <focused>1</focused>
                               </object>
@@ -382,6 +383,7 @@
                             </object>
                             <object class="sizeritem">
                               <object class="wxSpinCtrl" name="wxID_SPIN_INDENT">
+                                <min>0</min>
                                 <size>70,-1</size>
                                 <focused>1</focused>
                               </object>
@@ -449,6 +451,7 @@
                             </object>
                             <object class="sizeritem">
                               <object class="wxSpinCtrl" name="wxID_SPIN_VALIGN">
+                                <min>0</min>
                                 <max>100</max>
                                 <size>70,-1</size>
                                 <focused>1</focused>
@@ -562,7 +565,7 @@
                             </object>
                             <object class="sizeritem">
                               <object class="wxSpinCtrl" name="wxID_SPIN_WORD">
-                                <max>100</max>
+                                <min>0</min>
                                 <size>70,-1</size>
                                 <focused>1</focused>
                               </object>
@@ -624,6 +627,7 @@
                             </object>
                             <object class="sizeritem">
                               <object class="wxSpinCtrl" name="wxID_SPIN_LETTER">
+                                <min>0</min>
                                 <size>70,-1</size>
                                 <focused>1</focused>
                               </object>
@@ -953,6 +957,7 @@
                         </object>
                         <object class="sizeritem">
                           <object class="wxSpinCtrl" name="wxID_SPIN_BTOP">
+                            <min>0</min>
                             <size>70,-1</size>
                             <focused>1</focused>
                           </object>
@@ -1082,6 +1087,7 @@
                         </object>
                         <object class="sizeritem">
                           <object class="wxSpinCtrl" name="wxID_SPIN_BBOTTOM">
+                            <min>0</min>
                             <size>70,-1</size>
                             <focused>1</focused>
                           </object>
@@ -1214,6 +1220,7 @@
                         </object>
                         <object class="sizeritem">
                           <object class="wxSpinCtrl" name="wxID_SPIN_BLEFT">
+                            <min>0</min>
                             <size>70,-1</size>
                             <focused>1</focused>
                           </object>
@@ -1346,6 +1353,7 @@
                         </object>
                         <object class="sizeritem">
                           <object class="wxSpinCtrl" name="wxID_SPIN_BRIGHT">
+                            <min>0</min>
                             <size>70,-1</size>
                             <focused>1</focused>
                           </object>
@@ -1477,6 +1485,7 @@
                         </object>
                         <object class="sizeritem">
                           <object class="wxSpinCtrl" name="wxID_SPIN_B">
+                            <min>0</min>
                             <size>70,-1</size>
                             <focused>1</focused>
                           </object>
@@ -1695,6 +1704,7 @@
                                     </object>
                                     <object class="sizeritem">
                                       <object class="wxSpinCtrl" name="wxID_SPIN_PTOP">
+                                        <min>0</min>
                                         <size>70,-1</size>
                                         <focused>1</focused>
                                       </object>
@@ -1831,6 +1841,7 @@
                                     </object>
                                     <object class="sizeritem">
                                       <object class="wxSpinCtrl" name="wxID_SPIN_PBOTTOM">
+                                        <min>0</min>
                                         <size>70,-1</size>
                                         <focused>1</focused>
                                       </object>
@@ -1966,6 +1977,7 @@
                                     </object>
                                     <object class="sizeritem">
                                       <object class="wxSpinCtrl" name="wxID_SPIN_PLEFT">
+                                        <min>0</min>
                                         <size>70,-1</size>
                                         <focused>1</focused>
                                       </object>
@@ -2102,6 +2114,7 @@
                                     </object>
                                     <object class="sizeritem">
                                       <object class="wxSpinCtrl" name="wxID_SPIN_PRIGHT">
+                                        <min>0</min>
                                         <size>70,-1</size>
                                         <focused>1</focused>
                                       </object>
@@ -2318,6 +2331,7 @@
                                 </object>
                                 <object class="sizeritem">
                                   <object class="wxSpinCtrl" name="wxID_SPIN_WIDTH">
+                                    <min>0</min>
                                     <size>70,-1</size>
                                     <focused>1</focused>
                                   </object>
@@ -2381,6 +2395,7 @@
                                     </object>
                                     <object class="sizeritem">
                                       <object class="wxSpinCtrl" name="wxID_SPIN_HEIGHT">
+                                        <min>0</min>
                                         <size>70,-1</size>
                                         <focused>1</focused>
                                       </object>

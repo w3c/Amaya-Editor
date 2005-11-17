@@ -26,6 +26,7 @@ public:
   virtual ~StyleDlgWX();
 
 private:
+  void InitValues ();
   void GetValueDialog_Text();
   void GetValueDialog_Color();
   void GetValueDialog_Box();
@@ -35,7 +36,7 @@ private:
   void OnCancel( wxCommandEvent& event );
   void OnDefault( wxCommandEvent& event );
   void OnButton( wxCommandEvent& event );
-  void OnPageChanged( wxNotebookEvent& event );
+  void OnValueChanged( wxSpinEvent& event );
 
   void OnColorPalette( wxCommandEvent& event );
   void OnColorChanged( wxCommandEvent& event );
