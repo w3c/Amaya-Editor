@@ -675,13 +675,16 @@ static void  CheckIntDisplaystyle (Element el, Document doc)
   ElementType  elType;
 
   elType = TtaGetElementType (el);
-  if (elType.ElTypeNum == MathML_EL_Index ||
+  if (elType.ElTypeNum == MathML_EL_Numerator ||
+      elType.ElTypeNum == MathML_EL_Denominator ||
+      elType.ElTypeNum == MathML_EL_Index ||
       elType.ElTypeNum == MathML_EL_Subscript ||
       elType.ElTypeNum == MathML_EL_Superscript ||
       elType.ElTypeNum == MathML_EL_Underscript ||
       elType.ElTypeNum == MathML_EL_Overscript ||
       elType.ElTypeNum == MathML_EL_PostscriptPairs ||
-      elType.ElTypeNum == MathML_EL_PrescriptPairs)
+      elType.ElTypeNum == MathML_EL_PrescriptPairs ||
+      elType.ElTypeNum == MathML_EL_MTable_body)
     {
       ApplyDisplaystyle (el, doc);
     }

@@ -965,7 +965,7 @@ static void CreateMathConstruct (int construct)
 {
   Document           doc;
   Element            sibling, el, row, child, leaf, new_, next, foreignObj,
-    altText, selected;
+                     altText, selected, op;
   ElementType        newType, elType, parentType;
   Attribute          attr;
   AttributeType      attrType;
@@ -975,9 +975,10 @@ static void CreateMathConstruct (int construct)
   Language           lang;
   DisplayMode        dispMode;
   int                c1, i, len;
+  CHAR_T             text[2];
   ThotBool           oldStructureChecking;
   ThotBool	     before, ParBlock, emptySel, ok, insertSibling,
-    selectFirstChild, displayTableForm, registered;
+                     selectFirstChild, displayTableForm, registered;
 
   doc = TtaGetSelectedDocument ();
   if (doc == 0 || !TtaGetDocumentAccessMode (doc))
@@ -1581,28 +1582,14 @@ static void CreateMathConstruct (int construct)
           leaf = TtaGetFirstChild (child);
           TtaRemoveTree (leaf, doc);
           newType.ElTypeNum = MathML_EL_MO;
+          op = TtaNewElement (doc, newType);
+          TtaInsertFirstChild (&op, child, doc);
+          newType.ElTypeNum = MathML_EL_TEXT_UNIT;
           new_ = TtaNewElement (doc, newType);
-          TtaInsertFirstChild (&new_, child, doc);
-          child = new_;
-          newType.ElTypeNum = MathML_EL_SYMBOL_UNIT;
-          new_ = TtaNewElement (doc, newType);
-          TtaSetGraphicsShape (new_, 'S', doc);
-          TtaSetStructureChecking (FALSE, doc);
-          TtaInsertFirstChild (&new_, child, doc);
-          /* restore structure checking mode */
-          TtaSetStructureChecking (oldStructureChecking, doc);
-          /* attach IntVertStretch attribute */
-          attrType.AttrSSchema = elType.ElSSchema;
-          attrType.AttrTypeNum = MathML_ATTR_IntVertStretch;
-          attr = TtaGetAttribute (el, attrType);
-          if (!attr)
-            {
-              /* attach a IntVertStretch attribute to the MSUBSUP element */
-              attrType.AttrTypeNum = MathML_ATTR_IntVertStretch;
-              attr = TtaNewAttribute (attrType);
-              TtaAttachAttribute (el, attr, doc);
-              TtaSetAttributeValue (attr, MathML_ATTR_IntVertStretch_VAL_yes_, el, doc);
-            }
+          TtaInsertFirstChild (&new_, op, doc);
+	  lang = TtaGetLanguageIdFromScript('L');
+	  text[0] = 0x2211; text[1] = EOS; /* the Sum symbol */
+	  TtaSetBufferContent (new_, text, lang, doc);
         }
 
       /* do not check the Thot abstract tree against the structure */
@@ -1697,7 +1684,15 @@ static void CreateMathConstruct (int construct)
           child = TtaNewElement (doc, elType);
           TtaInsertFirstChild (&child, row, doc);
           TtaRegisterElementCreate (row, doc);
-        }
+	  if (construct == 21)
+	    {
+	      /* move the limits of the MSUBSUP element if it's appropriate */
+	      SetIntMovelimitsAttr (el, doc);
+	      /* enlarge the Sum symbol according to the context */
+	      if (op)
+		CheckLargeOp (op, doc);
+	    }
+	}
       else if (ParBlock)
         /* the user wants to create a parenthesized block */
         /* create two MF elements, as the first and last child of the new
