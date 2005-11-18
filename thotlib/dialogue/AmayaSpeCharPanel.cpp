@@ -312,6 +312,7 @@ void AmayaSpeCharPanel::OnButtonInsert( wxCommandEvent& event )
       int charactere = m_pActiveFiltre[m_pList->GetSelection()];
       InsertChar (TtaGiveActiveFrame(), charactere, -1);
       CloseTextInsertion ();
+      TtaRedirectFocus();
     }
 }
 
