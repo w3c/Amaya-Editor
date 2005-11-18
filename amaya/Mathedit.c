@@ -989,6 +989,7 @@ static void CreateMathConstruct (int construct)
     }
   if (!TtaGetDocumentAccessMode (doc))
     return;
+  op = NULL;
   selected = NULL;
   docSchema = TtaGetDocumentSSchema (doc);
   TtaGiveFirstSelectedElement (doc, &sibling, &c1, &i); 
@@ -1610,7 +1611,7 @@ static void CreateMathConstruct (int construct)
           if (sibling == NULL && construct != 20 && construct != 21)
             {
               if (elType.ElTypeNum == MathML_EL_MathML)
-                /* empty MATH element. Isert the new element as a child */
+                /* empty MATH element. Insert the new element as a child */
                 {
                   TtaInsertFirstChild (&el, row, doc);
                   if (!registered)
@@ -1674,24 +1675,13 @@ static void CreateMathConstruct (int construct)
       
       TtaSetDocumentModified (doc);
 
-      if (construct == 20 || construct == 21)
-        {
-          /* add a MROW after */
-          newType.ElTypeNum = MathML_EL_MROW;
-          row = TtaNewElement (doc, newType);
-          TtaInsertSibling (row, el, FALSE, doc);
-          elType.ElTypeNum = MathML_EL_Construct;
-          child = TtaNewElement (doc, elType);
-          TtaInsertFirstChild (&child, row, doc);
-          TtaRegisterElementCreate (row, doc);
-	  if (construct == 21)
-	    {
-	      /* move the limits of the MSUBSUP element if it's appropriate */
-	      SetIntMovelimitsAttr (el, doc);
-	      /* enlarge the Sum symbol according to the context */
-	      if (op)
-		CheckLargeOp (op, doc);
-	    }
+      if (construct == 21)
+	{
+	  /* move the limits of the MSUBSUP element if it's appropriate */
+	  SetIntMovelimitsAttr (el, doc);
+	  /* enlarge the Sum symbol according to the context */
+	  if (op)
+	    CheckLargeOp (op, doc);
 	}
       else if (ParBlock)
         /* the user wants to create a parenthesized block */
@@ -1709,6 +1699,7 @@ static void CreateMathConstruct (int construct)
         {
           el = TtaGetFirstChild (el);
           TtaNextSibling (&el);
+          el = TtaGetFirstChild (el);
           TtaSelectElement (doc, el);
         }
       else if (newType.ElTypeNum == MathML_EL_MSPACE ||
