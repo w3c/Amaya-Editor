@@ -1804,25 +1804,38 @@ void InitTranslations (char *appliname)
                     }
                   if (mod1 != THOT_NO_MOD)
                     {
+                      if (ch[0] == ',')
+                       strcat (equiv, " ");
+                      else
                        strcat (equiv, "-");
-                     }
+                    }
                   if (ch[0] != ',' && transText[0] >= 'a' && transText[0] <= 'z')
                     SetCapital (transText);
                   strcat (equiv, transText);
                 }
 #else /* _WX */
+              if (ch[0] == ',')
+                strcpy (equiv, "(");
               if (mod1 & THOT_MOD_CTRL)
                 strcat (equiv, "Ctrl");
               else if (mod1 & THOT_MOD_ALT)
                 strcat (equiv, "Alt");
               if (mod1 & THOT_MOD_SHIFT)
                 {
-                  strcat (equiv, sep);
+                   if (ch[0] == ',')
+                    strcat (equiv, " ");
+                  else
+                    strcat (equiv, sep);
                   strcat (equiv, "Shift");
                 }
               if (mod1 != THOT_NO_MOD)
-                strcat (equiv, sep);
-              if (transText[0] >= 'a' && transText[0] <= 'z')
+                {
+                  if (ch[0] == ',')
+                    strcat (equiv, " ");
+                  else
+                    strcat (equiv, sep);
+                }
+              if (ch[0] != ',' && transText[0] >= 'a' && transText[0] <= 'z')
                 SetCapital (transText);
               strcat (equiv, transText);
 #endif /* _WX */
