@@ -249,7 +249,7 @@ void StyleDlgWX::InitValues ()
 StyleDlgWX::StyleDlgWX( int ref, wxWindow* parent ) :
   AmayaDialog( parent, ref )
 {
-  bool check;
+  ThotBool check;
 
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("StyleDlgWX"));
   m_ref = ref;
@@ -1707,7 +1707,7 @@ void StyleDlgWX::GetValueDialog_Format()
   ----------------------------------------------------------------------*/
 void StyleDlgWX::OnOk( wxCommandEvent& event )
 {
-  bool check;
+  ThotBool check;
 
   if (m_OnApplyLock)
     return;
@@ -1779,7 +1779,7 @@ void StyleDlgWX::OnDefault( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void StyleDlgWX::OnCancel( wxCommandEvent& event )
 {
-  bool check;
+  ThotBool check;
 
   if (m_OnApplyLock)
     return;
