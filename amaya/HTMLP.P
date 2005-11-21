@@ -3992,14 +3992,23 @@ RULES
 		Visibility: 0;
 	END;
 
-
  Anchor: BEGIN
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
-	Width: auto;
 #ifdef PAGE
 	CreateAfter(LinkPageNumber);
 #endif
+	Width: auto;
+        if within Superscript
+	   BEGIN
+	   VertPos: HRef = Previous . HRef;
+	   HorizPos: Left = Previous . Right;
+	   END;
+        if within Subscript
+	   BEGIN
+	   VertPos: HRef = Previous . HRef;
+	   HorizPos: Left = Previous . Right;
+	   END;
 	IN Structure_view BEGIN
 		Foreground: Enclosing =;
 		Underline: Enclosing =;
