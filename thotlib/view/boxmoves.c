@@ -1047,6 +1047,8 @@ void XMoveAllEnclosed (PtrBox pBox, int delta, int frame)
         /* change the hierarchy */
         PackBoxRoot = pBox;
 
+      //if (!strcmp(pBox->BxAbstractBox->AbElement->ElLabel, "L36"))
+      //printf ("XMove x=%d delta=%d\n", pBox->BxXOrg, delta);
       if (pBox->BxType == BoSplit ||
           pBox->BxType == BoMulScript)
         {
@@ -2230,7 +2232,15 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
                       if (pDimRel->DimROp[i] == OpSame)
                         {
                           /* Changing the width */
-                          if (pAb->AbWidth.DimUnit == UnPercent)
+                          if (box->BxType == BoCell)
+                            // transmit the column width to table cells
+                            val = pBox->BxW - box->BxW
+                              - box->BxLMargin - box->BxLBorder - box->BxLPadding
+                              - box->BxRMargin - box->BxRBorder - box->BxRPadding;
+                          else if (pBox->BxType == BoCell && pAb->AbPresentationBox)
+                            // transmit the cell width to cellframe
+                            val = pBox->BxW + pBox->BxLPadding + pBox->BxRPadding - box->BxW;
+                          else if (pAb->AbWidth.DimUnit == UnPercent)
                             {
                               if (pAb->AbEnclosing == pCurrentAb)
                                 /* refer the inside width */
@@ -2240,11 +2250,6 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
                                 val = pBox->BxWidth;
                               val = val * pAb->AbWidth.DimValue / 100;
                               val = val - box->BxW;
-                              if (pAb->AbWidth.DimValue == 100 ||
-                                  pBox->BxType == BoCell)
-                                /* remove margins borders and paddings in that case */
-                                val = val - box->BxLMargin - box->BxLBorder - box->BxLPadding
-                                  - box->BxLMargin  - box->BxRBorder - box->BxRPadding;
                             }
                           else
                             {

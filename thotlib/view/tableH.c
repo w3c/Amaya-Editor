@@ -782,7 +782,9 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
   max = max;
   /* take into account the cell spacing */
   if (colBox[0] && colBox[0]->AbEnclosing && colBox[0]->AbEnclosing->AbBox)
-    cellspacing = colBox[0]->AbEnclosing->AbBox->BxLPadding * (cNumber + 1);
+    {
+      cellspacing = colBox[0]->AbEnclosing->AbBox->BxLPadding * (cNumber + 1);
+    }
   else
     cellspacing = 0;
   width -= cellspacing;
@@ -824,7 +826,7 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
       width = max + sum + sumPercent;
       /* the table width is not constrained by the enclosing box */
       table->AbWidth.DimAbRef = NULL;
-      if (width - pBox->BxW)
+      if (width + cellspacing - pBox->BxW != 0)
         /* we will have to recheck scrollbars */
         AnyWidthUpdate = TRUE;
       /*if (width != pBox->BxW)*/
@@ -836,7 +838,7 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
         {
           box = colBox[cRef]->AbBox;
           if (colPercent[cRef] > 0)
-            delta = ((width - mbp) * colPercent[cRef] / 100);
+            delta = (width * colPercent[cRef] / 100);
           else if (colPercent[cRef] < 0)
             delta = - colPercent[cRef];
           else if (colWidth[cRef] > 0)
@@ -844,7 +846,7 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
           else
             delta = box->BxMaxWidth;
           /* update the new inside width */
-          delta = delta - box->BxWidth;
+          delta = delta - box->BxW;
           ResizeWidth (box, box, NULL, delta, 0, 0, 0, frame);
 #ifdef TAB_DEBUG
           printf ("Width[%d]=%d\n", cRef, box->BxWidth);
@@ -860,7 +862,7 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
       width = min + sum + sumPercent;
       /* the table width is constrained by the enclosing box */
       table->AbWidth.DimAbRef = table->AbEnclosing;
-      if (width - pBox->BxW && pCell == NULL)
+      if (width + cellspacing - pBox->BxW != 0 && pCell == NULL)
         /* we will have to recheck scrollbars */
         AnyWidthUpdate = TRUE;
       /*if (width != pBox->BxW)*/
@@ -872,7 +874,7 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
         {
           box = colBox[cRef]->AbBox;
           if (colPercent[cRef] > 0)
-            delta = ((width - mbp) * colPercent[cRef] / 100);
+            delta = (width * colPercent[cRef] / 100);
           else if (colPercent[cRef] < 0)
             delta = - colPercent[cRef];
           else if (colWidth[cRef] > 0)
@@ -880,7 +882,7 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
           else
             delta = box->BxMinWidth;
           /* update the new inside width */
-          delta = delta - box->BxWidth;
+          delta = delta - box->BxW;
           ResizeWidth (box, box, NULL, delta, 0, 0, 0, frame);
 #ifdef TAB_DEBUG
           printf ("Width[%d]=%d\n", cRef, box->BxWidth);
@@ -893,7 +895,7 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
       printf ("Specific Widths ...\n");
 #endif
       /* assign the specific width to the table */
-      if (width - pBox->BxW != 0 && pCell == NULL)
+      if (width + cellspacing - pBox->BxW != 0 && pCell == NULL)
         /* we will have to recheck scrollbars */
         AnyWidthUpdate = TRUE;
       /* the table width is constrained by the enclosing box */
@@ -1021,7 +1023,7 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
                   pixels = 0;
                 }
             }
-          i = i - box->BxWidth;
+          i = i - box->BxW;
           ResizeWidth (box, box, NULL, i, 0, 0, 0, frame);
 #ifdef TAB_DEBUG
           printf ("Width[%d]=%d\n", cRef, box->BxWidth);

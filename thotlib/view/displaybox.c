@@ -2072,19 +2072,19 @@ void DisplayBorders (PtrBox box, PtrAbstractBox pFrom, int frame,
             dim -= r;
           /* bottom line */
           DrawHorizontalLine (frame, 1, 5,
-                              pos, yFrame + box->BxHeight - eb - from->BxBBorder,
+                              pos, yFrame + box->BxHeight - eb - from->BxBBorder - from->BxBMargin,
                               dim, 1,
                               0, color);
           /* bottom line */
           if (b < h)
             DrawHorizontalLine (frame, 1, 5,
-                                x, yFrame + box->BxHeight - eb,
+                                x, yFrame + box->BxHeight - eb - from->BxBMargin,
                                 w, 1,
                                 2, color);
           break;
         default:
           DrawHorizontalLine (frame, b, pFrom->AbBottomStyle,
-                              x, yFrame + box->BxHeight - eb - from->BxBBorder,
+                              x, yFrame + box->BxHeight - eb - from->BxBBorder - from->BxBMargin,
                               w, b,
                               2, color);
           break;
@@ -2118,18 +2118,18 @@ void DisplayBorders (PtrBox box, PtrAbstractBox pFrom, int frame,
             dim -= b;
           /* left line */
           DrawVerticalLine (frame, 1, 5,
-                            xFrame + box->BxWidth - er - from->BxRBorder,
+                            xFrame + box->BxWidth - er - from->BxRBorder - from->BxRMargin,
                             pos, 1, dim,
                             0, color);
           /* rigth line */
           DrawVerticalLine (frame, 1, 5,
-                            xFrame + box->BxWidth - er, y,
+                            xFrame + box->BxWidth - er - from->BxRMargin, y,
                             1, h,
                             2, color);
           break;
         default:
           DrawVerticalLine (frame, r, pFrom->AbRightStyle,
-                            xFrame + box->BxWidth - er - from->BxRBorder, y,
+                            xFrame + box->BxWidth - er - from->BxRBorder - from->BxRMargin, y,
                             r, h,
                             2, color);
           break;

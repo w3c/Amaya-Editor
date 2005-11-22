@@ -967,7 +967,7 @@ void SetTableMenuOff (Document doc, View view)
 }
 
 /*----------------------------------------------------------------------
-  SetTableMenuOff sets On the table menu in the current view.
+  SetTableMenuOn sets On the table menu in the current view.
   ----------------------------------------------------------------------*/
 void SetTableMenuOn (Document doc, View view)
 {
@@ -1159,6 +1159,7 @@ void UpdateEditorMenus (Document doc)
           TtaUpdateMenus (doc, view, FALSE);
           TtaSetItemOff (doc, view, File, BShowLogFile);
           TtaSetItemOff (doc, view, File, BSynchro);
+          SetTableMenuOff (doc, view); /* no table commands */
 #endif /* _WX */
           TtaSetItemOn (doc, view, Edit_, BCut);
           TtaSetItemOn (doc, view, Edit_, BPaste);
@@ -1171,7 +1172,6 @@ void UpdateEditorMenus (Document doc)
               if (DocumentTypes[doc] != docHTML || isXhtml11)
                 TtaSetMenuOn (doc, view, XMLTypes);
             }
-          SetTableMenuOff (doc, view); /* no table commands */
         }
       view = TtaGetViewFromName (doc, "Alternate_view");
       if (view != 0 && TtaIsViewOpen (doc, view))
@@ -1190,6 +1190,8 @@ void UpdateEditorMenus (Document doc)
           TtaSetItemOff (doc, view, Types, BScript);
           TtaSetItemOff (doc, view, Types, BNoScript);
           TtaSetItemOff (doc, view, XMLTypes, BXMLComment);
+          SetTableMenuOff (doc, view); /* no table commands */
+          SetCharsetMenuOff (doc, view); /* no charset commands */
 #endif /* _WX */
           TtaSetItemOn (doc, view, Edit_, BCut);
           TtaSetItemOn (doc, view, Edit_, BPaste);
@@ -1197,8 +1199,6 @@ void UpdateEditorMenus (Document doc)
           TtaSetItemOn (doc, view, Edit_, BSpellCheck);
           if (isXhtml11)
             TtaSetMenuOn (doc, view, XMLTypes);
-          SetTableMenuOff (doc, view); /* no table commands */
-          SetCharsetMenuOff (doc, view); /* no charset commands */
         }
       view = TtaGetViewFromName (doc, "Links_view");
       if (view != 0 && TtaIsViewOpen (doc, view))
@@ -1217,6 +1217,7 @@ void UpdateEditorMenus (Document doc)
           TtaSetItemOff (doc, view, Types, BScript);
           TtaSetItemOff (doc, view, Types, BNoScript);
           TtaSetItemOff (doc, view, XMLTypes, BXMLComment);
+          SetTableMenuOff (doc, view); /* no table commands */
 #endif /* _WX */
           TtaSetItemOn (doc, view, Edit_, BCut);
           TtaSetItemOn (doc, view, Edit_, BPaste);
@@ -1229,7 +1230,6 @@ void UpdateEditorMenus (Document doc)
               if (DocumentTypes[doc] != docHTML || isXhtml11)
                 TtaSetMenuOn (doc, view, XMLTypes);
             }
-          SetTableMenuOff (doc, view); /* no table commands */
         }
       view = TtaGetViewFromName (doc, "Table_of_contents");
       if (view != 0 && TtaIsViewOpen (doc, view))
@@ -1248,6 +1248,7 @@ void UpdateEditorMenus (Document doc)
           TtaSetItemOff (doc, view, Types, BScript);
           TtaSetItemOff (doc, view, Types, BNoScript);
           TtaSetItemOff (doc, view, XMLTypes, BXMLComment);
+          SetTableMenuOff (doc, view); /* no table commands */
 #endif /* _WX */
           TtaSetItemOn (doc, view, Edit_, BCut);
           TtaSetItemOn (doc, view, Edit_, BPaste);
@@ -1256,7 +1257,6 @@ void UpdateEditorMenus (Document doc)
           TtaSetItemOn (doc, view, Edit_, BTransform);
           if (isXhtml11)
             TtaSetMenuOn (doc, view, XMLTypes);
-          SetTableMenuOff (doc, view); /* no table commands */
         }
     }
 }
