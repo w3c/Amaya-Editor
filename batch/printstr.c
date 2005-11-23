@@ -395,6 +395,9 @@ static void         wrNumExcept (int Num)
 	    case ExcIsCell:
 	       printf ("IsCell");
 	       break;
+	    case ExcIsCaption:
+	       printf ("IsCaption");
+	       break;
 	    case ExcShadow:
 	       printf ("Shadow");
 	       break;

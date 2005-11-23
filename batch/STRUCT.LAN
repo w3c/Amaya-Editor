@@ -126,7 +126,7 @@ ExceptVal =	 'NoCut' / 'CanCut' / 'NoCreate' / 'NoReplicate' /
 		 'ReturnCreateNL' / 'ReturnCreateWithin' / 'NoBreakByReturn' /
      'ImportLine' / 'ImportParagraph' /
 		 'GraphCreation' / 'IsDraw' / 'IsGroup' / 'EmptyGraphic' /
-		 'IsTable' / 'IsRow' / 'IsColHead' / 'IsCell' /
+		 'IsTable' / 'IsRow' / 'IsColHead' / 'IsCell' / 'IsCaption' /
 		 'ColRef' / 'ColSpan' / 'RowSpan' /
 		 'CssBackground' / 'CssClass' / 'CssId' / 'CssPseudoClass' /
 		 'NoShowBox' / 'SetWindowBackground' /

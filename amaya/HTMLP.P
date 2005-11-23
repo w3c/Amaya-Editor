@@ -4202,6 +4202,10 @@ RULES
 	BorderLeftColor: Grey;
 	BorderBottomColor: DarkGrey1;
 	BorderRightColor: DarkGrey1;
+	BorderTopStyle: Solid;
+	BorderLeftStyle: Solid;
+	BorderBottomStyle: Solid;
+	BorderRightStyle: Solid;
 	Gather: Yes;
 	LineBreak: No;
 	Adjust: Left;
@@ -4332,6 +4336,10 @@ RULES
 	BEGIN
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
+	BorderTopColor: Grey;
+	BorderLeftColor: Grey;
+	BorderBottomColor: DarkGrey1;
+	BorderRightColor: DarkGrey1;
 	BorderTopStyle: Solid;
 	BorderLeftStyle: Solid;
 	BorderRightStyle: Solid;
@@ -4359,7 +4367,11 @@ RULES
 #ifdef PAGE
 	PageBreak: No;
 #endif
-	VertPos: Top = Previous . Bottom + 0.1;
+	VertPos: Top = Previous . Bottom;
+	BorderTopColor: Grey;
+	BorderLeftColor: Grey;
+	BorderBottomColor: DarkGrey1;
+	BorderRightColor: DarkGrey1;
 	BorderTopStyle: Solid;
 	BorderLeftStyle: Solid;
 	BorderRightStyle: Solid;
@@ -4458,6 +4470,10 @@ RULES
 	PaddingRight: 0;
 	PaddingBottom: 0;
 	PaddingLeft: 0;
+	BorderTopColor: Grey;
+	BorderLeftColor: Grey;
+	BorderBottomColor: DarkGrey1;
+	BorderRightColor: DarkGrey1;
 	BorderTopStyle: Solid;
 	BorderLeftStyle: Solid;
 	BorderRightStyle: Solid;
@@ -4498,6 +4514,10 @@ RULES
 	PaddingLeft: 0;
 	PaddingBottom: 0;
 	PaddingRight: 0;
+	BorderTopColor: Grey;
+	BorderLeftColor: Grey;
+	BorderBottomColor: DarkGrey1;
+	BorderRightColor: DarkGrey1;
 	BorderTopStyle: Solid;
 	BorderLeftStyle: Solid;
 	BorderRightStyle: Solid;
@@ -6300,7 +6320,6 @@ ATTRIBUTES
 	BEGIN
 	PaddingLeft: cellspacing px;	
 	PaddingRight: cellspacing px;
-	BorderRightWidth: 1 px;
 	END;
  cellspacing (Column_head):
 	BEGIN
@@ -6308,19 +6327,13 @@ ATTRIBUTES
 	IN Structure_view
 	   VertPos: Top = Previous . Bottom;
 	END;
- {cellspacing (Column_head) > 0:
-	BorderRightWidth: 1 px;}
  cellspacing (thead) > 0:
 	BEGIN
 	VertPos: Top = Previous . Bottom + cellspacing px;
-	BorderTopWidth: 1 px;
-	BorderRightWidth: 1 px;
 	PaddingTop: cellspacing px;
 	PaddingBottom: cellspacing px;
 	IN Structure_view BEGIN
 		VertPos: Top = Previous . Bottom;
-		BorderTopWidth: 0;
-		BorderRightWidth: 0;
 		PaddingTop: 0;
 		PaddingRight: 0;
 		PaddingBottom: 0;
@@ -6328,38 +6341,19 @@ ATTRIBUTES
 		END;
 	IN  Alternate_view BEGIN
 		VertPos: Top = Previous . Bottom;
-		BorderTopWidth: 0;
-		BorderRightWidth: 0;
 		PaddingTop: 0;
 		PaddingRight: 0;
 		PaddingBottom: 0;
 		PaddingLeft: 0;
-		END;
-	END;
- cellspacing (Table_body):
-	BEGIN
-	IN Structure_view BEGIN
-		VertPos: Top = Previous . Bottom;
-		BorderTopWidth: 0;
-		BorderRightWidth: 0;
-		END;
-	IN  Alternate_view BEGIN
-		VertPos: Top = Previous . Bottom;
-		BorderTopWidth: 0;
-		BorderRightWidth: 0;
 		END;
 	END;
  cellspacing (tbody) > 0:
 	BEGIN
 	VertPos: Top = Previous tbody . Bottom + cellspacing px;
-	{BorderTopWidth: 1 px;
-	BorderRightWidth: 1 px;}
 	PaddingTop: cellspacing px;
 	PaddingBottom: cellspacing px;
 	IN Structure_view BEGIN
 		VertPos: Top = Previous . Bottom;
-		BorderTopWidth: 0;
-		BorderRightWidth: 0;
 		PaddingTop: 0;
 		PaddingRight: 0;
 		PaddingBottom: 0;
@@ -6367,8 +6361,6 @@ ATTRIBUTES
 		END;
 	IN  Alternate_view BEGIN
 		VertPos: Top = Previous . Bottom;
-		BorderTopWidth: 0;
-		BorderRightWidth: 0;
 		PaddingTop: 0;
 		PaddingRight: 0;
 		PaddingBottom: 0;
@@ -6378,14 +6370,10 @@ ATTRIBUTES
  cellspacing (tfoot) > 0:
 	BEGIN
 	VertPos: Top = Previous . Bottom + cellspacing px;
-	{BorderTopWidth: 1 px;
-	BorderRightWidth: 1 px;}
 	PaddingTop: cellspacing px;
 	PaddingBottom: cellspacing px;
 	IN Structure_view BEGIN
 		VertPos: Top = Previous . Bottom;
-		BorderTopWidth: 0;
-		BorderRightWidth: 0;
 		PaddingTop: 0;
 		PaddingRight: 0;
 		PaddingBottom: 0;
@@ -6393,8 +6381,6 @@ ATTRIBUTES
 		END;
 	IN  Alternate_view BEGIN
 		VertPos: Top = Previous . Bottom;
-		BorderTopWidth: 0;
-		BorderRightWidth: 0;
 		PaddingTop: 0;
 		PaddingRight: 0;
 		PaddingBottom: 0;
@@ -6408,32 +6394,6 @@ ATTRIBUTES
 	   VertPos: Top = Previous . Bottom;
 	IN Alternate_view
 	   VertPos: Top = Previous . Bottom;
-	END;
- cellspacing (Heading_cell) > 0:
-	BEGIN
-	BorderBottomWidth: 1 px;
-	BorderLeftWidth: 1 px;
-	IN Structure_view BEGIN
-		BorderBottomWidth: 0;
-		BorderLeftWidth: 0;
-		END;
-	IN Alternate_view BEGIN
-		BorderBottomWidth: 0;
-		BorderLeftWidth: 0;
-		END;
-	END;
- cellspacing (Data_cell) > 0:
-	BEGIN
-	BorderBottomWidth: 1 px;
-	BorderLeftWidth: 1 px;
-	IN Structure_view BEGIN
-		BorderBottomWidth: 0;
-		BorderLeftWidth: 0;
-		END;
-	IN Alternate_view BEGIN
-		BorderBottomWidth: 0;
-		BorderLeftWidth: 0;
-		END;
 	END;
  cellspacing:
 	BEGIN
@@ -6486,81 +6446,42 @@ ATTRIBUTES
 	CreateBefore(AttrValue);
 	END;
 
- Border (Table_head)> 0:
-	BEGIN
-	{MarginLeft: 1 px;}
-	IN Structure_view 
-		MarginLeft: 0;
-	END;
- Border (Column_head)> 0:
-	BEGIN
-	{MarginRight: 1 px;}
-	IN Structure_view 
-		MarginRight: 0;
-	END;
- Border (thead)> 0:
-	BEGIN
-	{BorderBottomWidth: 1 px;
-	BorderLeftWidth: 1 px;}
-	IN Structure_view BEGIN
-		BorderBottomWidth: 0;
-		BorderLeftWidth: 0;
-		END;
-	IN Alternate_view BEGIN
-		BorderBottomWidth: 0;
-		BorderLeftWidth: 0;
-		END;
-	END;
- Border (tbody) > 0:
-	BEGIN
-	{BorderBottomWidth: 1 px;
-	BorderLeftWidth: 1 px;}
-	IN Structure_view BEGIN
-		BorderBottomWidth: 0;
-		BorderLeftWidth: 0;
-		END;
-	IN Alternate_view BEGIN
-		BorderBottomWidth: 0;
-		BorderLeftWidth: 0;
-		END;
-	END;
- Border (tfoot) > 0:
-	BEGIN
-	{BorderBottomWidth: 1 px;
-	BorderLeftWidth: 1 px;}
-	IN Structure_view BEGIN
-		BorderBottomWidth: 0;
-		BorderLeftWidth: 0;
-		END;
-	IN Alternate_view BEGIN
-		BorderBottomWidth: 0;
-		BorderLeftWidth: 0;
-		END;
-	END;
  Border (Heading_cell) > 0:
 	BEGIN
 	BorderTopWidth: 1 px;
 	BorderRightWidth: 1 px;
+	BorderBottomWidth: 1 px;
+	BorderLeftWidth: 1 px;
 	IN Structure_view BEGIN
 		BorderTopWidth: 0;
 		BorderRightWidth: 0;
+		BorderBottomWidth: 0;
+		BorderLeftWidth: 0;
 		END;
 	IN Alternate_view BEGIN
 		BorderTopWidth: 0;
 		BorderRightWidth: 0;
+		BorderBottomWidth: 0;
+		BorderLeftWidth: 0;
 		END;
 	END;
  Border (Data_cell) > 0:
 	BEGIN
 	BorderTopWidth: 1 px;
 	BorderRightWidth: 1 px;
+	BorderBottomWidth: 1 px;
+	BorderLeftWidth: 1 px;
 	IN Structure_view BEGIN
 		BorderTopWidth: 0;
 		BorderRightWidth: 0;
+		BorderBottomWidth: 0;
+		BorderLeftWidth: 0;
 		END;
 	IN Alternate_view BEGIN
 		BorderTopWidth: 0;
 		BorderRightWidth: 0;
+		BorderBottomWidth: 0;
+		BorderLeftWidth: 0;
 		END;
 	END;
  Border:
@@ -6568,13 +6489,9 @@ ATTRIBUTES
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
 	BorderTopWidth: Border px;
-	BorderLeftWidth: Border px;
-	BorderBottomWidth: Border px;
 	BorderRightWidth: Border px;
-	BorderTopStyle: Solid;
-	BorderLeftStyle: Solid;
-	BorderBottomStyle: Solid;
-	BorderRightStyle: Solid;
+	BorderBottomWidth: Border px;
+  BorderLeftWidth: Border px;
 	IN Structure_view BEGIN
 	   BorderTopWidth: 0;
 	   BorderLeftWidth: 0;

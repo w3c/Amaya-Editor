@@ -678,7 +678,6 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
     }
   if (cNumber == 0)
     return;
-
   mbp = pBox->BxLPadding + pBox->BxRPadding + pBox->BxLBorder + pBox->BxRBorder;
   if (table->AbLeftMarginUnit != UnAuto)
     mbp += pBox->BxLMargin;
@@ -782,11 +781,11 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
   max = max;
   /* take into account the cell spacing */
   if (colBox[0] && colBox[0]->AbEnclosing && colBox[0]->AbEnclosing->AbBox)
-    {
-      cellspacing = colBox[0]->AbEnclosing->AbBox->BxLPadding * (cNumber + 1);
-    }
+    // padding-left of the Table_head gives the cellspacing
+    cellspacing = colBox[0]->AbEnclosing->AbBox->BxLPadding * (cNumber + 1);
   else
     cellspacing = 0;
+  
   width -= cellspacing;
   if (sumPercent > 0)
     {

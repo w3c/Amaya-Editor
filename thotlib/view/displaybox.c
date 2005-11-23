@@ -37,6 +37,7 @@
 #include "displaybox_f.h"
 #include "displayselect_f.h"
 #include "font_f.h"
+#include "exceptions_f.h"
 #include "memory_f.h"
 #include "picture_f.h"
 #include "registry_f.h"
@@ -1926,9 +1927,10 @@ void DisplayBorders (PtrBox box, PtrAbstractBox pFrom, int frame,
                      ThotBool topdown, ThotBool first, ThotBool last) 
 {
   PtrBox              from;
+  PtrAbstractBox      child;
   int                 color;
   int                 t, b, l, r, pos, dim;
-  int                 xFrame, yFrame;
+  int                 xFrame, yFrame, height;
 
   if (pFrom == NULL || pFrom->AbBox == NULL ||
       pFrom->AbBox->BxType == BoCell)
@@ -1938,10 +1940,40 @@ void DisplayBorders (PtrBox box, PtrAbstractBox pFrom, int frame,
   /* position in the frame */
   xFrame = box->BxXOrg - ViewFrameTable[frame - 1].FrXOrg;
   yFrame = box->BxYOrg - ViewFrameTable[frame - 1].FrYOrg;
+  height = box->BxHeight;
+  if (from->BxType == BoTable)
+    {
+      // no border around the caption
+      child = pFrom->AbFirstEnclosed;
+      while (child && child->AbPresentationBox)
+        child = child->AbNext;
+      if (child && child->AbElement && child->AbBox &&
+          TypeHasException (ExcIsCaption, child->AbElement->ElTypeNumber,
+                            child->AbElement->ElStructSchema))
+        {
+          /* there is a caption */
+          if (child->AbVertPos.PosEdge == Bottom)
+            {
+              // displayed on the top of the table
+              pos = child->AbBox->BxYOrg + child->AbBox->BxHeight - from->BxYOrg;
+              yFrame += pos;
+              y += pos;
+              h -= pos;
+              height -= pos;
+            }
+          else
+            {
+              // displayed on the bottom of the table
+              pos = height + from->BxYOrg - child->AbBox->BxYOrg;
+              h -= pos;
+              height -= pos;
+            }
+        }
+    }
   /* part of the top, left, bottom and right border which are visible */
   t = yFrame + et + from->BxTBorder - y;
   l = xFrame + el + from->BxLBorder - x;
-  b = y + h - yFrame - box->BxHeight + eb + from->BxBBorder;
+  b = y + h - yFrame - height + eb + from->BxBBorder;
   r = x + w - xFrame - box->BxWidth + er + from->BxRBorder;
   if (topdown && !first)
     t = 0; /* no top border */
@@ -2072,19 +2104,19 @@ void DisplayBorders (PtrBox box, PtrAbstractBox pFrom, int frame,
             dim -= r;
           /* bottom line */
           DrawHorizontalLine (frame, 1, 5,
-                              pos, yFrame + box->BxHeight - eb - from->BxBBorder - from->BxBMargin,
+                              pos, yFrame + height - eb - from->BxBBorder,
                               dim, 1,
                               0, color);
           /* bottom line */
           if (b < h)
             DrawHorizontalLine (frame, 1, 5,
-                                x, yFrame + box->BxHeight - eb - from->BxBMargin,
+                                x, yFrame + height - eb,
                                 w, 1,
                                 2, color);
           break;
         default:
           DrawHorizontalLine (frame, b, pFrom->AbBottomStyle,
-                              x, yFrame + box->BxHeight - eb - from->BxBBorder - from->BxBMargin,
+                              x, yFrame + height - eb - from->BxBBorder,
                               w, b,
                               2, color);
           break;
@@ -2118,18 +2150,18 @@ void DisplayBorders (PtrBox box, PtrAbstractBox pFrom, int frame,
             dim -= b;
           /* left line */
           DrawVerticalLine (frame, 1, 5,
-                            xFrame + box->BxWidth - er - from->BxRBorder - from->BxRMargin,
+                            xFrame + box->BxWidth - er - from->BxRBorder,
                             pos, 1, dim,
                             0, color);
           /* rigth line */
           DrawVerticalLine (frame, 1, 5,
-                            xFrame + box->BxWidth - er - from->BxRMargin, y,
+                            xFrame + box->BxWidth - er, y,
                             1, h,
                             2, color);
           break;
         default:
           DrawVerticalLine (frame, r, pFrom->AbRightStyle,
-                            xFrame + box->BxWidth - er - from->BxRBorder - from->BxRMargin, y,
+                            xFrame + box->BxWidth - er - from->BxRBorder, y,
                             r, h,
                             2, color);
           break;

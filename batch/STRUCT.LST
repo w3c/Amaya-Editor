@@ -132,7 +132,7 @@ number
 			 'ReturnCreateNL' / 'ReturnCreateWithin' / 'NoBreakByReturn' /
 	     'ImportLine' / 'ImportParagraph' /
 			 'GraphCreation' / 'IsDraw' / 'IsGroup' / 'EmptyGraphic' /
-			 'IsTable' / 'IsRow' / 'IsColHead' / 'IsCell' /
+			 'IsTable' / 'IsRow' / 'IsColHead' / 'IsCell' / 'IsCaption' /
 			 'ColRef' / 'ColSpan' / 'RowSpan' /
 			 'CssBackground' / 'CssClass' / 'CssId' / 'CssPseudoClass' /
 			 'NoShowBox' / 'SetWindowBackground' /
@@ -256,23 +256,24 @@ code  key-word      numbers of rules using the key-word
 1177  IsRow                51
 1178  IsColHead            51
 1179  IsCell               51
-1180  ColRef               51
-1181  ColSpan              51
-1182  RowSpan              51
-1183  CssBackground        51
-1184  CssClass             51
-1185  CssId                51
-1186  CssPseudoClass       51
-1187  NoShowBox            51
-1188  SetWindowBackground  51
-1189  Shadow               51
-1190  EventAttr            51
-1191  SpacePreserve        51
-1192  IsPlaceholder        51
-1193  StartCounter         51
-1194  SetCounter           51
-1195  MarkupPreserve       51
-1196  Root                 54
+1180  IsCaption            51
+1181  ColRef               51
+1182  ColSpan              51
+1183  RowSpan              51
+1184  CssBackground        51
+1185  CssClass             51
+1186  CssId                51
+1187  CssPseudoClass       51
+1188  NoShowBox            51
+1189  SetWindowBackground  51
+1190  Shadow               51
+1191  EventAttr            51
+1192  SpacePreserve        51
+1193  IsPlaceholder        51
+1194  StartCounter         51
+1195  SetCounter           51
+1196  MarkupPreserve       51
+1197  Root                 54
 
 
 

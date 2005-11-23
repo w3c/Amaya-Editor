@@ -476,7 +476,7 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
   int                 x, y, xd = 0, yd = 0;
   int                 xbg, ybg, shiftx, shifty;
   int                 width = 0, height = 0;
-  int                 wbg, hbg;
+  int                 wbg, hbg, pos;
   int                 w, h, view;
   int                 t, b, l, r;
   ThotBool            setWindow, isLast;
@@ -711,6 +711,37 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
         }
       else if (!selected)
         {
+          // skip the table caption
+          if (from->BxType == BoTable)
+            {
+              // no border around the caption
+              pChild = pFrom->AbFirstEnclosed;
+              while (pChild && pChild->AbPresentationBox)
+                pChild = pChild->AbNext;
+              if (pChild && pChild->AbElement && pChild->AbBox &&
+                  TypeHasException (ExcIsCaption, pChild->AbElement->ElTypeNumber,
+                                    pChild->AbElement->ElStructSchema))
+                {
+                  /* there is a caption */
+                  if (pChild->AbVertPos.PosEdge == Bottom)
+                    {
+                      // displayed on the top of the table
+                      pos = pChild->AbBox->BxYOrg + pChild->AbBox->BxHeight - from->BxYOrg;
+                      yd += pos;
+                      ybg += pos;
+                      height -= pos;
+                      hbg -= pos;
+                    }
+                  else
+                    {
+                      // displayed on the bottom of the table
+                      pos = pBox->BxHeight + from->BxYOrg - pChild->AbBox->BxYOrg;
+                      height -= pos;
+                      hbg -= pos;
+                    }
+                }
+            }
+
           /* don't fill the background when an enclosing box is selected */
           if (!setWindow && pFrom->AbFillBox && pFrom->AbFillPattern)
             /* draw the box background */

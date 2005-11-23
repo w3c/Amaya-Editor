@@ -92,6 +92,7 @@
 #define ExcRowSpan 327
 #define ExcShadow 328
 #define ExcEventAttr 329
+#define ExcIsCaption 330
 
 /* CSS exceptions */
 #define ExcCssBackground 340

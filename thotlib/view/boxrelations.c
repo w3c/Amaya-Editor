@@ -1171,7 +1171,7 @@ void ComputePosRelation (AbPosition *rule, PtrBox pBox, int frame,
                          ThotBool horizRef)
 {
   PtrAbstractBox      pRefAb;
-  PtrAbstractBox      pAb, child;
+  PtrAbstractBox      pAb, child, parent;
   PtrBox              pRefBox, box;
   BoxEdge             refEdge, localEdge;
   OpRelation          op;
@@ -1777,6 +1777,17 @@ void ComputePosRelation (AbPosition *rule, PtrBox pBox, int frame,
       if (!pBox->BxVertFlex)
         {
           y = y + dist - pBox->BxYOrg;
+          if (TypeHasException (ExcIsCaption, pAb->AbElement->ElTypeNumber,
+                                pAb->AbElement->ElStructSchema))
+            {
+              // don't take into account the table border to display the caption
+              parent = pAb->AbEnclosing;
+              if (parent && parent->AbBox)
+                if (localEdge == Bottom && parent->AbBox->BxTBorder)
+                  y -= parent->AbBox->BxTBorder;
+                else if (parent->AbBox->BxBBorder)
+                  y += parent->AbBox->BxTBorder;
+            }
           ClearBoxMoved (pBox);
           if (pBox->BxYToCompute)
             /* Force le placement des boites filles */

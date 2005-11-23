@@ -961,6 +961,7 @@ EXCEPT
 	Heading_cell:	IsCell, NoMove, NoResize, NoBreakByReturn;
 	Table_cell:	IsCell, NoMove, NoResize, NoBreakByReturn;
 	Table_:		IsTable, PageBreak, NoReplicate, NoBreakByReturn;
+  CAPTION:  IsCaption;
 	Column_head:	IsColHead, NoCut, Hidden, NoBreakByReturn;
 	Table_head:	NoCut, Hidden, NoSelect, NoBreakByReturn;
 	C_Head:		Hidden, NoSelect;
