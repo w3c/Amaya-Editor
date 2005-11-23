@@ -50,69 +50,68 @@ CSSmedia CheckMediaCSS (char *buff)
       media = CSS_OTHER;
       screentype = TtaGetEnvString ("SCREEN_TYPE");
       while (*ptr != EOS)
-	{
-	  while (*ptr != EOS && *ptr == ' ')
-	    ptr++;
-	  if (!strncasecmp (ptr, "all", 3))
-	    media = CSS_ALL;
-	  else if (screentype)
-	    {
-	      /* a specific screen type is defined */
-	      if ((!strncasecmp (screentype, "handheld", 8) &&
-		   !strncasecmp (ptr, "handheld", 8)) ||
-		  (!strncasecmp (screentype, "print", 5) &&
-		   !strncasecmp (ptr, "print", 5)) ||
-		  (!strncasecmp (screentype, "projection", 10) &&
-		   !strncasecmp (ptr, "projection", 10)) ||
-		  (!strncasecmp (screentype, "screen", 6) &&
-		   !strncasecmp (ptr, "screen", 6)) ||
-		  (!strncasecmp (screentype, "tty", 3) &&
-		   !strncasecmp (ptr, "tty", 3)) ||
-		  (!strncasecmp (screentype, "tv", 2) &&
-		   !strncasecmp (ptr, "tv", 2)))
-		{
-		  /* the current screen type matches */
-		  if (media == CSS_PRINT)
-		    media = CSS_ALL;
-		  else if (media == CSS_OTHER)
-		    media = CSS_SCREEN;
-		}
-	      else if (!strncasecmp (screentype, "print", 5) &&
-		       !strncasecmp (ptr, "print", 5))
-		{
-		  /* the current screen type matches */
-		  if (media == CSS_SCREEN)
-		    media = CSS_ALL;
-		  else if (media == CSS_OTHER)
-		    media = CSS_PRINT;
-		}
-	    }
-	  else if (!strncasecmp (ptr, "screen", 6))
-	    {
-	      /* no screen type and media type equals screen */
-	      if (media == CSS_PRINT)
-		media = CSS_ALL;
-	      else if (media == CSS_OTHER)
-		media = CSS_SCREEN;
-	    }
-	  else if (!strncasecmp (ptr, "print", 5))
-	    {
-	      /* no screen type and media type equals screen */
-	      if (media == CSS_SCREEN)
-		media = CSS_ALL;
-	      else if (media == CSS_OTHER)
-		media = CSS_PRINT;
-	    }
-	  /* look for a separator */
-	  while (*ptr != EOS && *ptr != ',')
-	    {
-	      if (*ptr == ';' || *ptr == '{')
-		return media;
-	      ptr++;
-	    }
-	  if (*ptr == ',')
-	    ptr++;
-	}
+        {
+          while (*ptr != EOS && *ptr == ' ')
+            ptr++;
+          if (!strncasecmp (ptr, "all", 3))
+            media = CSS_ALL;
+          else if (screentype)
+            {
+              /* a specific screen type is defined */
+              if ((!strncasecmp (screentype, "handheld", 8) &&
+                   !strncasecmp (ptr, "handheld", 8)) ||
+                  (!strncasecmp (screentype, "print", 5) &&
+                   !strncasecmp (ptr, "print", 5)) ||
+                  (!strncasecmp (screentype, "projection", 10) &&
+                   !strncasecmp (ptr, "projection", 10)) ||
+                  (!strncasecmp (screentype, "screen", 6) &&
+                   !strncasecmp (ptr, "screen", 6)) ||
+                  (!strncasecmp (screentype, "tty", 3) &&
+                   !strncasecmp (ptr, "tty", 3)) ||
+                  (!strncasecmp (screentype, "tv", 2) &&
+                   !strncasecmp (ptr, "tv", 2)))
+                {
+                  /* the current screen type matches */
+                  if (media == CSS_PRINT)
+                    media = CSS_ALL;
+                  else if (media == CSS_OTHER)
+                    media = CSS_SCREEN;
+                }
+              else if (!strncasecmp (ptr, "print", 5))
+                {
+                  /* the current screen type matches */
+                  if (media == CSS_SCREEN)
+                    media = CSS_ALL;
+                  else if (media == CSS_OTHER)
+                    media = CSS_PRINT;
+                }
+            }
+          else if (!strncasecmp (ptr, "screen", 6))
+            {
+              /* no screen type and media type equals screen */
+              if (media == CSS_PRINT)
+                media = CSS_ALL;
+              else if (media == CSS_OTHER)
+                media = CSS_SCREEN;
+            }
+          else if (!strncasecmp (ptr, "print", 5))
+            {
+              /* no screen type and media type equals screen */
+              if (media == CSS_SCREEN)
+                media = CSS_ALL;
+              else if (media == CSS_OTHER)
+                media = CSS_PRINT;
+            }
+          /* look for a separator */
+          while (*ptr != EOS && *ptr != ',')
+            {
+              if (*ptr == ';' || *ptr == '{')
+                return media;
+              ptr++;
+            }
+          if (*ptr == ',')
+            ptr++;
+        }
       return media;
     }
   else
@@ -176,29 +175,29 @@ void AttrMediaChanged (NotifyAttribute *event)
       dispMode = TtaGetDisplayMode (doc);
       /* something changed and we are not printing */
       if (media == CSS_ALL || media == CSS_SCREEN)
-	{
-	  if (dispMode != NoComputedDisplay)
-	    TtaSetDisplayMode (doc, NoComputedDisplay);
-	  LoadStyleSheet (completeURL, doc, el, NULL, NULL, media,
-			  pInfo->PiCategory == CSS_USER_STYLE);
-	  /* restore the display mode */
-	  if (dispMode != NoComputedDisplay)
-	    TtaSetDisplayMode (doc, dispMode);
-	}
+        {
+          if (dispMode != NoComputedDisplay)
+            TtaSetDisplayMode (doc, NoComputedDisplay);
+          LoadStyleSheet (completeURL, doc, el, NULL, NULL, media,
+                          pInfo->PiCategory == CSS_USER_STYLE);
+          /* restore the display mode */
+          if (dispMode != NoComputedDisplay)
+            TtaSetDisplayMode (doc, dispMode);
+        }
       else
-	{
-	  if (media == CSS_PRINT || media == CSS_OTHER)
-	    {
-	      if (dispMode != NoComputedDisplay)
-		TtaSetDisplayMode (doc, NoComputedDisplay);
-	      UnlinkCSS (css, doc, el, TRUE, FALSE);
-	      /* restore the display mode */
-	      if (dispMode != NoComputedDisplay)
-		TtaSetDisplayMode (doc, dispMode);
-	    }
-	  /* only update the CSS media info */
-	  pInfo->PiMedia = media;
-	}
+        {
+          if (media == CSS_PRINT || media == CSS_OTHER)
+            {
+              if (dispMode != NoComputedDisplay)
+                TtaSetDisplayMode (doc, NoComputedDisplay);
+              UnlinkCSS (css, doc, el, TRUE, FALSE);
+              /* restore the display mode */
+              if (dispMode != NoComputedDisplay)
+                TtaSetDisplayMode (doc, dispMode);
+            }
+          /* only update the CSS media info */
+          pInfo->PiMedia = media;
+        }
     }
 }
 
@@ -209,7 +208,7 @@ void AttrMediaChanged (NotifyAttribute *event)
   At the same time, this funciton updates the css context.
   ----------------------------------------------------------------------*/
 PSchema GetPExtension (Document doc, SSchema sSchema, CSSInfoPtr css,
-		       Element link)
+                       Element link)
 {
   CSSInfoPtr          oldcss;
   PInfoPtr            pInfo, oldInfo;
@@ -235,12 +234,12 @@ PSchema GetPExtension (Document doc, SSchema sSchema, CSSInfoPtr css,
     {
       length = strlen (css->url);
       if (length > 29)
-	{
-	  strcpy (pname, "...");
-	  strcat (pname, &css->url[length-26]);
-	}
+        {
+          strcpy (pname, "...");
+          strcat (pname, &css->url[length-26]);
+        }
       else
-	strcpy (pname, css->url);
+        strcpy (pname, css->url);
     }
   else
     pname[0] = EOS;
@@ -250,25 +249,25 @@ PSchema GetPExtension (Document doc, SSchema sSchema, CSSInfoPtr css,
   while (pInfo && !found)
     {
       if (pInfo->PiLink == link)
-	{
-	  /* look for the list of document schemas */
-	  pIS = pInfo->PiSchemas;
-	  while (pIS && !found)
-	    {
-	      if (sSchema == pIS->PiSSchema)
-		{
-		  if (pIS->PiPSchema)
-		    /* the pschema is already known */
-		    return (pIS->PiPSchema);
-		}
-	      else
-		pIS = pIS->PiSNext;
-	    }
-	  found = TRUE;
-	}
+        {
+          /* look for the list of document schemas */
+          pIS = pInfo->PiSchemas;
+          while (pIS && !found)
+            {
+              if (sSchema == pIS->PiSSchema)
+                {
+                  if (pIS->PiPSchema)
+                    /* the pschema is already known */
+                    return (pIS->PiPSchema);
+                }
+              else
+                pIS = pIS->PiSNext;
+            }
+          found = TRUE;
+        }
       if (!found)
-	/* next info context */
-	pInfo = pInfo->PiNext;
+        /* next info context */
+        pInfo = pInfo->PiNext;
     }
 
   if (pInfo == NULL)
@@ -277,7 +276,7 @@ PSchema GetPExtension (Document doc, SSchema sSchema, CSSInfoPtr css,
       pInfo = AddInfoCSS (doc, css, CSS_DOCUMENT_STYLE, CSS_ALL, link);
       pIS = NULL;
       if (pInfo == NULL)
-	return NULL;
+        return NULL;
     }
 
   if (pIS == NULL)
@@ -304,75 +303,75 @@ PSchema GetPExtension (Document doc, SSchema sSchema, CSSInfoPtr css,
       TtaAddPSchema (nSchema, pSchema, TRUE, doc, sSchema, pname);
     }
   else if (pInfo->PiCategory == CSS_DOCUMENT_STYLE ||
-	   pInfo->PiCategory == CSS_EXTERNAL_STYLE)
+           pInfo->PiCategory == CSS_EXTERNAL_STYLE)
     {
       /* check the order among its external style sheets */
       if (pInfo->PiLink)
-	{
-	  /* look for the previous link with rel="STYLESHEET" */
-	  prevEl = pInfo->PiLink;
-	  nextEl = pInfo->PiLink;
-	  elType = TtaGetElementType (prevEl);
-	  name = TtaGetSSchemaName (elType.ElSSchema);
-	  styleType.ElSSchema = elType.ElSSchema;
-	  linkType.ElSSchema = elType.ElSSchema;
-	  piType.ElSSchema = elType.ElSSchema;
-	  attrType.AttrSSchema = elType.ElSSchema;
-	  if (!strcmp (name, "MathML"))
-	    {
-	      linkType.ElTypeNum = MathML_EL_XMLPI;
-	      styleType.ElTypeNum = MathML_EL_XMLPI;
-	      piType.ElTypeNum = MathML_EL_XMLPI;
-	      attrType.AttrTypeNum = HTML_ATTR_REL;
-	    }
+        {
+          /* look for the previous link with rel="STYLESHEET" */
+          prevEl = pInfo->PiLink;
+          nextEl = pInfo->PiLink;
+          elType = TtaGetElementType (prevEl);
+          name = TtaGetSSchemaName (elType.ElSSchema);
+          styleType.ElSSchema = elType.ElSSchema;
+          linkType.ElSSchema = elType.ElSSchema;
+          piType.ElSSchema = elType.ElSSchema;
+          attrType.AttrSSchema = elType.ElSSchema;
+          if (!strcmp (name, "MathML"))
+            {
+              linkType.ElTypeNum = MathML_EL_XMLPI;
+              styleType.ElTypeNum = MathML_EL_XMLPI;
+              piType.ElTypeNum = MathML_EL_XMLPI;
+              attrType.AttrTypeNum = HTML_ATTR_REL;
+            }
 #ifdef _SVG
-	  /* if it's a SVG document, remove the style defined in the SVG DTD */
-	  else if (!strcmp (name, "SVG"))
-	    {
-	      linkType.ElTypeNum = SVG_EL_XMLPI;
-	      styleType.ElTypeNum = SVG_EL_style__;
-	      piType.ElTypeNum = SVG_EL_XMLPI;
-	      attrType.AttrTypeNum = 0;
-	    }
+          /* if it's a SVG document, remove the style defined in the SVG DTD */
+          else if (!strcmp (name, "SVG"))
+            {
+              linkType.ElTypeNum = SVG_EL_XMLPI;
+              styleType.ElTypeNum = SVG_EL_style__;
+              piType.ElTypeNum = SVG_EL_XMLPI;
+              attrType.AttrTypeNum = 0;
+            }
 #endif /* _SVG */
-	  else
-	    {
-	      linkType.ElTypeNum = HTML_EL_LINK;
-	      styleType.ElTypeNum = HTML_EL_STYLE_;
-	      piType.ElTypeNum = HTML_EL_XMLPI;
-	      attrType.AttrTypeNum = HTML_ATTR_REL;
-	    }
+          else
+            {
+              linkType.ElTypeNum = HTML_EL_LINK;
+              styleType.ElTypeNum = HTML_EL_STYLE_;
+              piType.ElTypeNum = HTML_EL_XMLPI;
+              attrType.AttrTypeNum = HTML_ATTR_REL;
+            }
 
-	  /* look for a previous style item (link, style, PI) */
-	  found = FALSE;
-	  while (!found && prevEl)
-	    {
-	      prevEl = TtaSearchElementAmong5Types (linkType, styleType, piType,
-						    linkType, styleType,
-						    SearchBackward, prevEl);
-	      if (prevEl)
-		{
-		  if (attrType.AttrTypeNum == 0)
-		    found = TRUE;
-		  else
-		    {
-		      elType = TtaGetElementType (prevEl);
-		      if (elType.ElTypeNum == linkType.ElTypeNum)
-			{
-			  attr = TtaGetAttribute (prevEl, attrType);
-			  if (attr)
-			    {
-			      /* get a buffer for the attribute value */
-			      length = MAX_LENGTH;
-			      TtaGiveTextAttributeValue (attr, buffer, &length);
-			      found = (!strcasecmp (buffer, "STYLESHEET") ||
-				       !strcasecmp (buffer, "STYLE"));
-			    }
-			}
-		      else
-			found = TRUE;
-		    }
-		}
+          /* look for a previous style item (link, style, PI) */
+          found = FALSE;
+          while (!found && prevEl)
+            {
+              prevEl = TtaSearchElementAmong5Types (linkType, styleType, piType,
+                                                    linkType, styleType,
+                                                    SearchBackward, prevEl);
+              if (prevEl)
+                {
+                  if (attrType.AttrTypeNum == 0)
+                    found = TRUE;
+                  else
+                    {
+                      elType = TtaGetElementType (prevEl);
+                      if (elType.ElTypeNum == linkType.ElTypeNum)
+                        {
+                          attr = TtaGetAttribute (prevEl, attrType);
+                          if (attr)
+                            {
+                              /* get a buffer for the attribute value */
+                              length = MAX_LENGTH;
+                              TtaGiveTextAttributeValue (attr, buffer, &length);
+                              found = (!strcasecmp (buffer, "STYLESHEET") ||
+                                       !strcasecmp (buffer, "STYLE"));
+                            }
+                        }
+                      else
+                        found = TRUE;
+                    }
+                }
               if (found)
                 {
                   /* there is another linked CSS style sheet before */
@@ -404,38 +403,38 @@ PSchema GetPExtension (Document doc, SSchema sSchema, CSSInfoPtr css,
                         /* it's not the the previous style sheet */
                         oldcss = oldcss->NextCSS;
                     }
-		}
-	    }
+                }
+            }
 
-	  /* look for a next style item (link, style, PI) */
-	  while (!found && nextEl)
-	    {
-	      nextEl = TtaSearchElementAmong5Types (linkType, styleType, piType,
-						    linkType, styleType,
-						    SearchForward, nextEl);
-	      if (nextEl)
-		{
-		  if (attrType.AttrTypeNum == 0)
-		    found = TRUE;
-		  else
-		    {
-		      elType = TtaGetElementType (nextEl);
-		      if (elType.ElTypeNum == linkType.ElTypeNum)
-			{
-			  attr = TtaGetAttribute (nextEl, attrType);
-			  if (attr)
-			    {
-			      /* get a buffer for the attribute value */
-			      length = MAX_LENGTH;
-			      TtaGiveTextAttributeValue (attr, buffer, &length);
-			      found = (!strcasecmp (buffer, "STYLESHEET") ||
-				       !strcasecmp (buffer, "STYLE"));
-			    }
-			}
-		      else
-			found = TRUE;
-		    }
-		}
+          /* look for a next style item (link, style, PI) */
+          while (!found && nextEl)
+            {
+              nextEl = TtaSearchElementAmong5Types (linkType, styleType, piType,
+                                                    linkType, styleType,
+                                                    SearchForward, nextEl);
+              if (nextEl)
+                {
+                  if (attrType.AttrTypeNum == 0)
+                    found = TRUE;
+                  else
+                    {
+                      elType = TtaGetElementType (nextEl);
+                      if (elType.ElTypeNum == linkType.ElTypeNum)
+                        {
+                          attr = TtaGetAttribute (nextEl, attrType);
+                          if (attr)
+                            {
+                              /* get a buffer for the attribute value */
+                              length = MAX_LENGTH;
+                              TtaGiveTextAttributeValue (attr, buffer, &length);
+                              found = (!strcasecmp (buffer, "STYLESHEET") ||
+                                       !strcasecmp (buffer, "STYLE"));
+                            }
+                        }
+                      else
+                        found = TRUE;
+                    }
+                }
               if (found)
                 {
                   /* there is another linked CSS style sheet before */
@@ -467,51 +466,51 @@ PSchema GetPExtension (Document doc, SSchema sSchema, CSSInfoPtr css,
                         /* it's not the the previous style sheet */
                         oldcss = oldcss->NextCSS;
                     }
-		}
-	    }
+                }
+            }
 	 
-	  if (!found)
-	    {
-	      /* look for CSS_USER_STYLE */
-	      oldcss = CSSList;
-	      while (oldcss && !found)
-		{
-		  oldInfo = oldcss->infos[doc];
-		  while (oldInfo && !found)
-		    {
-		      if (oldInfo != pInfo &&
-			  oldInfo->PiCategory == CSS_USER_STYLE)
-			{
-			  oldIS = oldInfo->PiSchemas;
-			  while (oldIS && oldIS->PiSSchema != sSchema)
-			    oldIS = oldIS->PiSNext;
-			  if (oldIS && oldIS->PiPSchema)
-			    {
-				/* add after that schema with a higher priority */
-			      prevS = oldIS->PiPSchema;
-			      before = FALSE;
-			      found = TRUE;
-			    }
-			}
-		      if (!found)
-			oldInfo = oldInfo->PiNext;
-		    }
-		  if (!found)
-		    /* it's not the the previous style sheet */
-		    oldcss = oldcss->NextCSS;
-		}
-	    }
-	  if (found)
-	    /* link the new presentation schema */
-	    TtaAddPSchema (nSchema, prevS, before, doc, sSchema, pname);
-	  else
-	    TtaAddPSchema (nSchema, pSchema, TRUE, doc, sSchema, pname);
-	}
+          if (!found)
+            {
+              /* look for CSS_USER_STYLE */
+              oldcss = CSSList;
+              while (oldcss && !found)
+                {
+                  oldInfo = oldcss->infos[doc];
+                  while (oldInfo && !found)
+                    {
+                      if (oldInfo != pInfo &&
+                          oldInfo->PiCategory == CSS_USER_STYLE)
+                        {
+                          oldIS = oldInfo->PiSchemas;
+                          while (oldIS && oldIS->PiSSchema != sSchema)
+                            oldIS = oldIS->PiSNext;
+                          if (oldIS && oldIS->PiPSchema)
+                            {
+                              /* add after that schema with a higher priority */
+                              prevS = oldIS->PiPSchema;
+                              before = FALSE;
+                              found = TRUE;
+                            }
+                        }
+                      if (!found)
+                        oldInfo = oldInfo->PiNext;
+                    }
+                  if (!found)
+                    /* it's not the the previous style sheet */
+                    oldcss = oldcss->NextCSS;
+                }
+            }
+          if (found)
+            /* link the new presentation schema */
+            TtaAddPSchema (nSchema, prevS, before, doc, sSchema, pname);
+          else
+            TtaAddPSchema (nSchema, pSchema, TRUE, doc, sSchema, pname);
+        }
       else
-	{
-	  /* link the new presentation schema */
-	  TtaAddPSchema (nSchema, pSchema, TRUE, doc, sSchema, pname);
-	}
+        {
+          /* link the new presentation schema */
+          TtaAddPSchema (nSchema, pSchema, TRUE, doc, sSchema, pname);
+        }
     }
   return (nSchema);
 }
@@ -523,7 +522,7 @@ PSchema GetPExtension (Document doc, SSchema sSchema, CSSInfoPtr css,
   imported style sheets.
   ----------------------------------------------------------------------*/
 PInfoPtr AddInfoCSS (Document doc, CSSInfoPtr css, CSSCategory category,
-		     CSSmedia media,  Element link)
+                     CSSmedia media,  Element link)
 {
   PInfoPtr            pInfo;
 
@@ -543,13 +542,13 @@ PInfoPtr AddInfoCSS (Document doc, CSSInfoPtr css, CSSCategory category,
       pInfo->PiEnabled = TRUE;
 #ifdef CSS_DEBUG
       if (pInfo->PiCategory == CSS_USER_STYLE)
-	printf ("AddInfoCSS CSS_USER_STYLE\n");
+        printf ("AddInfoCSS CSS_USER_STYLE\n");
       else if (pInfo->PiCategory == CSS_DOCUMENT_STYLE)
-	printf ("AddInfoCSS CSS_DOCUMENT_STYLE\n");
+        printf ("AddInfoCSS CSS_DOCUMENT_STYLE\n");
       else if (pInfo->PiCategory == CSS_IMPORT)
-	printf ("AddInfoCSS CSS_IMPORT %s\n", css->url);
+        printf ("AddInfoCSS CSS_IMPORT %s\n", css->url);
       else
-	printf ("AddInfoCSS %s\n", css->url);
+        printf ("AddInfoCSS %s\n", css->url);
 #endif /* CSS_DEBUG */
     }
   return pInfo;
@@ -562,8 +561,8 @@ PInfoPtr AddInfoCSS (Document doc, CSSInfoPtr css, CSSCategory category,
   imported style sheets.
   ----------------------------------------------------------------------*/
 CSSInfoPtr AddCSS (Document doc, Document docRef, CSSCategory category,
-		   CSSmedia media, char *url, char *localName,
-		   Element link)
+                   CSSmedia media, char *url, char *localName,
+                   Element link)
 {
   CSSInfoPtr          css, prev;
   int                 i;
@@ -578,35 +577,35 @@ CSSInfoPtr AddCSS (Document doc, Document docRef, CSSCategory category,
       css ->import = (category == CSS_IMPORT);
       /* that CSS is only used by the document docRef */
       for (i = 0; i < DocumentTableLength; i++)
-	css->infos[i] = NULL;
+        css->infos[i] = NULL;
       AddInfoCSS (docRef, css, category, media, link);
       /* chain to the CSS list */
       if (CSSList == NULL)
-	CSSList = css;
+        CSSList = css;
       else if (category == CSS_IMPORT && link)
-	{
-	  prev = CSSList;
-	  if (prev == (CSSInfoPtr) link)
-	    {
-	      /* that CSS becomes the first entry */
-	      css->NextCSS = prev;
-	      CSSList = css;
-	    }
-	  else
-	    {
-	      while (prev->NextCSS && prev->NextCSS != (CSSInfoPtr) link)
-		prev = prev->NextCSS;
-	      css->NextCSS = prev->NextCSS;
-	      prev->NextCSS = css;
-	    }
-	}
+        {
+          prev = CSSList;
+          if (prev == (CSSInfoPtr) link)
+            {
+              /* that CSS becomes the first entry */
+              css->NextCSS = prev;
+              CSSList = css;
+            }
+          else
+            {
+              while (prev->NextCSS && prev->NextCSS != (CSSInfoPtr) link)
+                prev = prev->NextCSS;
+              css->NextCSS = prev->NextCSS;
+              prev->NextCSS = css;
+            }
+        }
       else
-	{
-	  prev = CSSList;
-	  while (prev->NextCSS)
-	    prev = prev->NextCSS;
-	  prev->NextCSS = css;
-	}
+        {
+          prev = CSSList;
+          while (prev->NextCSS)
+            prev = prev->NextCSS;
+          prev->NextCSS = css;
+        }
     }
   return css;
 }
@@ -631,39 +630,39 @@ CSSInfoPtr SearchCSS (Document doc, char *url, Element link, PInfoPtr *info)
   while (css)
     {
       if ((url &&
-	  ((css->url && !strcmp (url, css->url)) ||
-	   (css->localName && !strcmp (url, css->localName)))) ||
-	  (url == NULL && doc && css->doc == doc))
-	{
-	  if (doc == 0)
-	    /* no specific document is requested */
-	    return css;
-	  else
-	    {
-	      /* look for an entry with the right link */
-	      pInfo = css->infos[doc];
-	      while (pInfo)
-		{
-		  if (pInfo->PiLink == link)
-		    {
-		      *info = pInfo;
-		      return css;
-		    }
-		  else
-		    pInfo = pInfo->PiNext;
-		}
-	      /* check if the CSS is already used by another document */
-	      if (css->import)
-		{
-		  for (i = 0; i < DocumentTableLength; i++)
-		    if (css->infos[i] && css->infos[i]->PiLink == link)
-		      return css;
-		}
-	      else if (url)
-		/* it could be the right entry */
-		match = css;
-	    }
-	}
+           ((css->url && !strcmp (url, css->url)) ||
+            (css->localName && !strcmp (url, css->localName)))) ||
+          (url == NULL && doc && css->doc == doc))
+        {
+          if (doc == 0)
+            /* no specific document is requested */
+            return css;
+          else
+            {
+              /* look for an entry with the right link */
+              pInfo = css->infos[doc];
+              while (pInfo)
+                {
+                  if (pInfo->PiLink == link)
+                    {
+                      *info = pInfo;
+                      return css;
+                    }
+                  else
+                    pInfo = pInfo->PiNext;
+                }
+              /* check if the CSS is already used by another document */
+              if (css->import)
+                {
+                  for (i = 0; i < DocumentTableLength; i++)
+                    if (css->infos[i] && css->infos[i]->PiLink == link)
+                      return css;
+                }
+              else if (url)
+                /* it could be the right entry */
+                match = css;
+            }
+        }
       css = css->NextCSS;
     }
   return match;
@@ -679,7 +678,7 @@ CSSInfoPtr SearchCSS (Document doc, char *url, Element link, PInfoPtr *info)
   Return FALSE when the css context is freed.
   ----------------------------------------------------------------------*/
 ThotBool UnlinkCSS (CSSInfoPtr css, Document doc, Element link,
-		    ThotBool disabled, ThotBool removed)
+                    ThotBool disabled, ThotBool removed)
 {
   CSSInfoPtr          prev;
   PInfoPtr            pInfo, prevInfo;
@@ -695,106 +694,106 @@ ThotBool UnlinkCSS (CSSInfoPtr css, Document doc, Element link,
       pInfo = css->infos[doc];
       prevInfo = NULL;
       if (css->doc == doc && (pInfo == NULL || removed))
-	/* the document displays the CSS file itself */
-	/* or it includes a style element */
-	css->doc = 0;
+        /* the document displays the CSS file itself */
+        /* or it includes a style element */
+        css->doc = 0;
       else
-	/* look for the right entry */
-	while (pInfo && pInfo->PiLink != link)
-	  {
-	    prevInfo = pInfo;
-	    pInfo = pInfo->PiNext;
-	  }
+        /* look for the right entry */
+        while (pInfo && pInfo->PiLink != link)
+          {
+            prevInfo = pInfo;
+            pInfo = pInfo->PiNext;
+          }
       if (pInfo)
-	{
-	  pIS = pInfo->PiSchemas;
-	  if (pInfo->PiCategory == CSS_EMBED)
-	    {
+        {
+          pIS = pInfo->PiSchemas;
+          if (pInfo->PiCategory == CSS_EMBED)
+            {
 #ifdef CSS_DEBUG
-	      printf ("Skip CSS_EMBED\n");
+              printf ("Skip CSS_EMBED\n");
 #endif /* CSS_DEBUG */
-	      pInfo->PiSchemas = NULL;
-	      TtaFreeMemory (pIS);
-	    }
-	  else if (pInfo->PiEnabled || removed)
-	    {
-	      /* disapply the CSS */
+              pInfo->PiSchemas = NULL;
+              TtaFreeMemory (pIS);
+            }
+          else if (pInfo->PiEnabled || removed)
+            {
+              /* disapply the CSS */
 #ifdef CSS_DEBUG
-	      if (pInfo->PiCategory == CSS_USER_STYLE)
-		printf ("UnlinkCSS CSS_USER_STYLE\n");
-	      else if (pInfo->PiCategory == CSS_DOCUMENT_STYLE)
-		printf ("UnlinkCSS CSS_DOCUMENT_STYLE\n");
-	      else if (pInfo->PiCategory == CSS_IMPORT)
-		{
-		  if (pIS)
-		    printf ("UnlinkCSS CSS_IMPORT");
-		  else
-		    printf ("Skip CSS_IMPORT");
-		    printf (" %s\n", css->url);
-		}
-	      else
-		printf ("UnlinkCSS %s\n", css->url);
+              if (pInfo->PiCategory == CSS_USER_STYLE)
+                printf ("UnlinkCSS CSS_USER_STYLE\n");
+              else if (pInfo->PiCategory == CSS_DOCUMENT_STYLE)
+                printf ("UnlinkCSS CSS_DOCUMENT_STYLE\n");
+              else if (pInfo->PiCategory == CSS_IMPORT)
+                {
+                  if (pIS)
+                    printf ("UnlinkCSS CSS_IMPORT");
+                  else
+                    printf ("Skip CSS_IMPORT");
+                  printf (" %s\n", css->url);
+                }
+              else
+                printf ("UnlinkCSS %s\n", css->url);
 #endif /* CSS_DEBUG */
-	      while (pIS)
-		{
-		  if (pIS->PiPSchema)
-		    TtaUnlinkPSchema (pIS->PiPSchema, doc,
-				      pIS->PiSSchema);
-		  pInfo->PiSchemas = pIS->PiSNext;
-		  TtaFreeMemory (pIS);
-		  pIS = pInfo->PiSchemas;
-		}
-	    }
-	  /* the CSS is no longer applied */
-	  if (disabled)
-	    pInfo->PiEnabled = FALSE;
-	  if (removed)
-	    {
-	      /* unlink the context from the list */
-	      if (prevInfo == NULL)
-		css->infos[doc] = pInfo->PiNext;
-	      else
-		prevInfo->PiNext = pInfo->PiNext;
-	      /* free the context */
-	      TtaFreeMemory (pInfo);
-	    }
-	}
+              while (pIS)
+                {
+                  if (pIS->PiPSchema)
+                    TtaUnlinkPSchema (pIS->PiPSchema, doc,
+                                      pIS->PiSSchema);
+                  pInfo->PiSchemas = pIS->PiSNext;
+                  TtaFreeMemory (pIS);
+                  pIS = pInfo->PiSchemas;
+                }
+            }
+          /* the CSS is no longer applied */
+          if (disabled)
+            pInfo->PiEnabled = FALSE;
+          if (removed)
+            {
+              /* unlink the context from the list */
+              if (prevInfo == NULL)
+                css->infos[doc] = pInfo->PiNext;
+              else
+                prevInfo->PiNext = pInfo->PiNext;
+              /* free the context */
+              TtaFreeMemory (pInfo);
+            }
+        }
 
       /* look at if this css is alway used */
       used = (css->doc != 0);
       i = 1;
       while (!used && i < DocumentTableLength)
-	{
-	  used = (css->infos[i] != NULL);
-	  i++;
-	}
+        {
+          used = (css->infos[i] != NULL);
+          i++;
+        }
       if (!used)
-	{
-	  /* remove the local copy of the CSS file */
-	  if (!TtaIsPrinting ())
-	    TtaFileUnlink (css->localName);
-	  TtaFreeMemory (css->localName);
-	  TtaFreeMemory (css->url);
-	  if (CSSList == css)
-	    CSSList = css->NextCSS;
-	  else
-	    {
-	      prev = CSSList;
-	      while (prev && prev->NextCSS != css)
-		prev = prev->NextCSS;
-	      if (prev)
-		prev->NextCSS = css->NextCSS;
-	    }
-	  TtaFreeMemory (css);
-	  return FALSE;
-	}
+        {
+          /* remove the local copy of the CSS file */
+          if (!TtaIsPrinting ())
+            TtaFileUnlink (css->localName);
+          TtaFreeMemory (css->localName);
+          TtaFreeMemory (css->url);
+          if (CSSList == css)
+            CSSList = css->NextCSS;
+          else
+            {
+              prev = CSSList;
+              while (prev && prev->NextCSS != css)
+                prev = prev->NextCSS;
+              if (prev)
+                prev->NextCSS = css->NextCSS;
+            }
+          TtaFreeMemory (css);
+          return FALSE;
+        }
     }
   /* there is still a CSS context */
   return TRUE;
 }
 
 /*----------------------------------------------------------------------
-   RemoveDocCSSs removes all CSS information linked with the document.
+  RemoveDocCSSs removes all CSS information linked with the document.
   ----------------------------------------------------------------------*/
 void RemoveDocCSSs (Document doc)
 {
@@ -805,28 +804,28 @@ void RemoveDocCSSs (Document doc)
     {
       next = css->NextCSS;
       while (css && css->infos[doc])
-	{
-	  if (!UnlinkCSS (css, doc, css->infos[doc]->PiLink, TRUE, TRUE))
-	    css = NULL;
-	}
+        {
+          if (!UnlinkCSS (css, doc, css->infos[doc]->PiLink, TRUE, TRUE))
+            css = NULL;
+        }
       if (css && css->doc == doc)
-	/* the document displays the CSS file itself */
-	UnlinkCSS (css, doc, NULL, TRUE, TRUE);
+        /* the document displays the CSS file itself */
+        UnlinkCSS (css, doc, NULL, TRUE, TRUE);
       /* look at the next CSS context */
       css = next;
     }
 }
 
 /*----------------------------------------------------------------------
-   RemoveStyle removes a style.
-   It could be an external CSS file, the User Stylesheet or a
-   document Style element.
-   disabled is TRUE when the CSS style sheet is disabled.
-   removed is TRUE when the CSS style sheet is removed.
-   category specifies the CSS category.
+  RemoveStyle removes a style.
+  It could be an external CSS file, the User Stylesheet or a
+  document Style element.
+  disabled is TRUE when the CSS style sheet is disabled.
+  removed is TRUE when the CSS style sheet is removed.
+  category specifies the CSS category.
   ----------------------------------------------------------------------*/
 void RemoveStyle (char *url, Document doc, ThotBool disabled,
-		  ThotBool removed, Element link, CSSCategory category)
+                  ThotBool removed, Element link, CSSCategory category)
 {
   CSSInfoPtr      css, match;
   PInfoPtr        pInfo;
@@ -838,42 +837,42 @@ void RemoveStyle (char *url, Document doc, ThotBool disabled,
   while (css)
     {
       if ((url &&
-	  ((css->url && !strcmp (url, css->url)) ||
-	   (css->localName && !strcmp (url, css->localName)))) ||
-	  (url == NULL && doc && css->doc == doc))
-	{
-	  if (doc == 0)
-	    {
-	      /* no specific document is requested */
-	      match = css;
-	      css = NULL;
-	    }
-	  else
-	    {
-	      /* look for an entry with the right link */
-	      pInfo = css->infos[doc];
-	      while (!match && pInfo)
-		{
-		  if (pInfo->PiLink == link &&
-		      pInfo->PiCategory == category)
-		    {
-		      match = css;
-		      css = NULL;
-		    }
-		  else if (pInfo->PiCategory == category &&
-			   category != CSS_DOCUMENT_STYLE &&
-			   category != CSS_USER_STYLE)
-		    {
-		      match = css;
-		      css = NULL;
-		    }
-		  else
-		    pInfo = pInfo->PiNext;
-		}
-	    }
-	}
+           ((css->url && !strcmp (url, css->url)) ||
+            (css->localName && !strcmp (url, css->localName)))) ||
+          (url == NULL && doc && css->doc == doc))
+        {
+          if (doc == 0)
+            {
+              /* no specific document is requested */
+              match = css;
+              css = NULL;
+            }
+          else
+            {
+              /* look for an entry with the right link */
+              pInfo = css->infos[doc];
+              while (!match && pInfo)
+                {
+                  if (pInfo->PiLink == link &&
+                      pInfo->PiCategory == category)
+                    {
+                      match = css;
+                      css = NULL;
+                    }
+                  else if (pInfo->PiCategory == category &&
+                           category != CSS_DOCUMENT_STYLE &&
+                           category != CSS_USER_STYLE)
+                    {
+                      match = css;
+                      css = NULL;
+                    }
+                  else
+                    pInfo = pInfo->PiNext;
+                }
+            }
+        }
       if (css)
-	css = css->NextCSS;
+        css = css->NextCSS;
     }
 
   css = match;
@@ -882,13 +881,13 @@ void RemoveStyle (char *url, Document doc, ThotBool disabled,
       /* Change the Display Mode to take into account the new presentation */
       dispMode = TtaGetDisplayMode (doc);
       if (dispMode != NoComputedDisplay)
-	TtaSetDisplayMode (doc, NoComputedDisplay);
+        TtaSetDisplayMode (doc, NoComputedDisplay);
       if (pInfo)
-	link = pInfo->PiLink;
+        link = pInfo->PiLink;
       UnlinkCSS (css, doc, link, disabled, removed);
       /* Restore the display mode */
       if (dispMode != NoComputedDisplay)
-	TtaSetDisplayMode (doc, dispMode);
+        TtaSetDisplayMode (doc, dispMode);
     }
 }
 
@@ -921,44 +920,44 @@ char *GetStyleContents (Element el)
       attrType.AttrSSchema = elType.ElSSchema;
       name = TtaGetSSchemaName (attrType.AttrSSchema);
       if (!strcmp (name, "HTML"))
-	attrType.AttrTypeNum = HTML_ATTR_media;
+        attrType.AttrTypeNum = HTML_ATTR_media;
 #ifdef _SVG
       else if (!strcmp (name, "HTML"))
-	attrType.AttrTypeNum = SVG_ATTR_media;
+        attrType.AttrTypeNum = SVG_ATTR_media;
 #endif /* _SVG */
       else
-	attrType.AttrTypeNum = 0;
+        attrType.AttrTypeNum = 0;
       if (attrType.AttrTypeNum)
-	{
-	  attr = TtaGetAttribute (el, attrType);
-	  if (attr)
-	    {
-	      length = TtaGetTextAttributeLength (attr);
-	      name = (char *)TtaGetMemory (length + 1);
-	      TtaGiveTextAttributeValue (attr, name, &length);
-	      media = CheckMediaCSS (name);
-	      TtaFreeMemory (name);
-	    }
-	}
+        {
+          attr = TtaGetAttribute (el, attrType);
+          if (attr)
+            {
+              length = TtaGetTextAttributeLength (attr);
+              name = (char *)TtaGetMemory (length + 1);
+              TtaGiveTextAttributeValue (attr, name, &length);
+              media = CheckMediaCSS (name);
+              TtaFreeMemory (name);
+            }
+        }
       /* get enough space to store UTF-8 characters */
       length = TtaGetElementVolume (el) * 6 + 1;
       if ((media == CSS_ALL || media == CSS_SCREEN) && length > 1)
-	{
-	  /* get the length of the included text */
-	  buffer = (char *)TtaGetMemory (length);
-	  /* fill the buffer */
-	  elType.ElTypeNum = 1 /* 1 = TEXT_UNIT element */;
-	  text = TtaSearchTypedElementInTree (elType, SearchForward, el, el);
-	  i = 0;
-	  while (text != NULL)
-	    {
-	      j = length - i;
-	      TtaGiveTextContent (text, (unsigned char *)&buffer[i], &j, &lang);
-	      i += TtaGetTextLength (text);
-	      text = TtaSearchTypedElementInTree (elType, SearchForward, el, text);
-	    }
-	  buffer[i] = EOS;
-	}
+        {
+          /* get the length of the included text */
+          buffer = (char *)TtaGetMemory (length);
+          /* fill the buffer */
+          elType.ElTypeNum = 1 /* 1 = TEXT_UNIT element */;
+          text = TtaSearchTypedElementInTree (elType, SearchForward, el, el);
+          i = 0;
+          while (text != NULL)
+            {
+              j = length - i;
+              TtaGiveTextContent (text, (unsigned char *)&buffer[i], &j, &lang);
+              i += TtaGetTextLength (text);
+              text = TtaSearchTypedElementInTree (elType, SearchForward, el, text);
+            }
+          buffer[i] = EOS;
+        }
     }
   return (buffer);
 }
@@ -974,7 +973,7 @@ char *GetStyleContents (Element el)
   when it's an author style sheet
   ----------------------------------------------------------------------*/
 void LoadStyleSheet (char *url, Document doc, Element link, CSSInfoPtr css,
-		     char *urlRef, CSSmedia media, ThotBool user)
+                     char *urlRef, CSSmedia media, ThotBool user)
 {
   CSSInfoPtr          refcss = NULL;
   PInfoPtr            pInfo;
@@ -991,8 +990,6 @@ void LoadStyleSheet (char *url, Document doc, Element link, CSSInfoPtr css,
   /* check if we have to load CSS */
   TtaGetEnvBoolean ("LOAD_CSS", &loadcss);
   printing = TtaIsPrinting ();
-  if (!printing && media == CSS_PRINT)
-    printing = TRUE;
 
   if (!loadcss && !printing)
     return;
@@ -1009,9 +1006,9 @@ void LoadStyleSheet (char *url, Document doc, Element link, CSSInfoPtr css,
   if (import && urlRef == NULL)
     {
       if (css->url)
-	urlRef = css->url;
+        urlRef = css->url;
       else
-	urlRef = css->localName;
+        urlRef = css->localName;
     }
   LoadRemoteStyleSheet (url, doc, link, urlRef, tempURL, tempfile);
   css = SearchCSS (doc, tempURL, link, &pInfo);
@@ -1026,20 +1023,20 @@ void LoadStyleSheet (char *url, Document doc, Element link, CSSInfoPtr css,
   else
     {
       if (pInfo && pInfo->PiCategory != category)
-	/* this entry doesn't match */
-	pInfo = NULL;
+        /* this entry doesn't match */
+        pInfo = NULL;
       if (pInfo == NULL)
-	/* add a new entry at the end */
-	pInfo = AddInfoCSS (doc, css, category, media, link);
+        /* add a new entry at the end */
+        pInfo = AddInfoCSS (doc, css, category, media, link);
     }
 
   /* look for the CSS descriptor that points to the extension schema */
   if (import)
     {
       while (refcss && refcss->import)
-	refcss = refcss->NextCSS;
+        refcss = refcss->NextCSS;
       if (refcss->infos[doc])
-	link = refcss->infos[doc]->PiLink;
+        link = refcss->infos[doc]->PiLink;
     }
   else
     refcss = css;
@@ -1049,9 +1046,9 @@ void LoadStyleSheet (char *url, Document doc, Element link, CSSInfoPtr css,
     /* cannot do more */
     return;
   else if (media == CSS_OTHER || css == NULL ||
-	   (!printing && media == CSS_PRINT) ||
-	   (printing && media == CSS_SCREEN) ||
-	   !pInfo->PiEnabled)
+           (!printing && media == CSS_PRINT) ||
+           (printing && media == CSS_SCREEN) ||
+           !pInfo->PiEnabled)
     /* nothing more to do */
     return;
 
@@ -1061,40 +1058,40 @@ void LoadStyleSheet (char *url, Document doc, Element link, CSSInfoPtr css,
       /* load the resulting file in memory */
       res = TtaReadOpen (tempfile);
       if (res == NULL)
-	{
-	  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempURL);
-	  return;
-	}
+        {
+          TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempURL);
+          return;
+        }
 #ifdef _WINGUI
       if (fstat (_fileno (res), &buf))
 #else  /* _WINGUI */
-	if (fstat (fileno (res), &buf))
+        if (fstat (fileno (res), &buf))
 #endif /* _WINGUI */
-	  {
-	    TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempURL);
-	    TtaReadClose (res);
-	    return;
-	  }
+          {
+            TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempURL);
+            TtaReadClose (res);
+            return;
+          }
       tmpBuff = (char *)TtaGetMemory (buf.st_size + 1000);
       if (tmpBuff == NULL)
-	{
-	  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempURL);
-	  TtaReadClose (res);
-	  return;
-	}
+        {
+          TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempURL);
+          TtaReadClose (res);
+          return;
+        }
       len = fread (tmpBuff, buf.st_size, 1, res);
       if (len != 1)
-	{
-	  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempURL);
-	  TtaReadClose (res);
-	  ReadCSSRules (doc, refcss, tmpBuff, tempURL, 0, FALSE, NULL);
-	  TtaFreeMemory (tmpBuff);
-	  return;
-	}
+        {
+          TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempURL);
+          TtaReadClose (res);
+          ReadCSSRules (doc, refcss, tmpBuff, tempURL, 0, FALSE, NULL);
+          TtaFreeMemory (tmpBuff);
+          return;
+        }
       tmpBuff[buf.st_size] = 0;
       TtaReadClose (res);
       if (css)
-	urlRef = css->url;
+        urlRef = css->url;
       ReadCSSRules (doc, refcss, tmpBuff, urlRef, 0, FALSE, link);
       TtaFreeMemory (tmpBuff);
 #ifdef _WX

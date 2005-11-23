@@ -4417,7 +4417,7 @@ RULES
 #ifdef PAGE
 	PageBreak: Yes;
 #endif
-	VertPos: Top = Previous . Bottom + 0.1;
+	VertPos: Top = Previous . Bottom;
 	BorderTopStyle: Solid;
 	BorderLeftStyle: Solid;
 	BorderRightStyle: Solid;
@@ -6452,17 +6452,23 @@ ATTRIBUTES
 	BorderRightWidth: 1 px;
 	BorderBottomWidth: 1 px;
 	BorderLeftWidth: 1 px;
+  MarginTop: -1 px;
+  MarginLeft: -1 px;
 	IN Structure_view BEGIN
 		BorderTopWidth: 0;
 		BorderRightWidth: 0;
 		BorderBottomWidth: 0;
 		BorderLeftWidth: 0;
+    MarginTop: 0;
+    MarginLeft: 0;
 		END;
 	IN Alternate_view BEGIN
 		BorderTopWidth: 0;
 		BorderRightWidth: 0;
 		BorderBottomWidth: 0;
 		BorderLeftWidth: 0;
+    MarginTop: 0;
+    MarginLeft: 0;
 		END;
 	END;
  Border (Data_cell) > 0:
@@ -6471,17 +6477,23 @@ ATTRIBUTES
 	BorderRightWidth: 1 px;
 	BorderBottomWidth: 1 px;
 	BorderLeftWidth: 1 px;
+  MarginTop: -1 px;
+  MarginLeft: -1 px;
 	IN Structure_view BEGIN
 		BorderTopWidth: 0;
 		BorderRightWidth: 0;
 		BorderBottomWidth: 0;
 		BorderLeftWidth: 0;
+    MarginTop: 0;
+    MarginLeft: 0;
 		END;
 	IN Alternate_view BEGIN
 		BorderTopWidth: 0;
 		BorderRightWidth: 0;
 		BorderBottomWidth: 0;
 		BorderLeftWidth: 0;
+    MarginTop: 0;
+    MarginLeft: 0;
 		END;
 	END;
  Border:

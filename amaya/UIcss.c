@@ -510,7 +510,8 @@ char *CssToPrint (Document doc, char *printdir)
               pInfo = css->infos[doc];
               while (pInfo)
                 {
-                  if (pInfo->PiEnabled)
+                  if (pInfo->PiEnabled &&
+                      (pInfo->PiMedia == CSS_ALL || pInfo->PiMedia == CSS_PRINT))
                     {
                       if (pInfo->PiCategory == CSS_DOCUMENT_STYLE)
                         /* there is an internal style in the document */
@@ -543,6 +544,7 @@ char *CssToPrint (Document doc, char *printdir)
                   while (pInfo)
                     {
                       if (pInfo->PiEnabled &&
+                          (pInfo->PiMedia == CSS_ALL || pInfo->PiMedia == CSS_PRINT) &&
                           pInfo->PiCategory == CSS_USER_STYLE &&
                           css->localName)
                         {
@@ -569,6 +571,7 @@ char *CssToPrint (Document doc, char *printdir)
                   while (pInfo)
                     {
                       if (pInfo->PiEnabled &&
+                          (pInfo->PiMedia == CSS_ALL || pInfo->PiMedia == CSS_PRINT) &&
                           css->localName &&
                           (pInfo->PiCategory == CSS_EXTERNAL_STYLE ||
                            pInfo->PiCategory == CSS_IMPORT))
