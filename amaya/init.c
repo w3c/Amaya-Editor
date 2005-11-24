@@ -1558,15 +1558,38 @@ void StopTransfer (Document document, View view)
   ----------------------------------------------------------------------*/
 static ThotBool  CompleteUrl(char **url)
 {
-  char *s;
+  char *s, *ptr;
 
-  if (**url != DIR_SEP 
+  if (IsFilePath (*url))
+    {
+      // remove file:
+      ptr = &((*(url))[5]);
+      s = (char *)TtaGetMemory (MAX_LENGTH);
+        s[0] = EOS;
+      if (ptr[0] == '/' && ptr[1] == '/' && ptr[2] == '/')
+        ptr = &ptr[2];
+#ifdef _WINDOWS
+      if (ptr[1] != ':')
+        {
+          char    *ptr2;
+          // add a default device
+          ptr2 = getenv ("HOMEDRIVE");
+          if (ptr2)
+            strcpy (s, ptr2);
+          else
+            strcpy (s, "c:");
+        }
+#endif /* _WINDOWS */
+      strcat (s, ptr);
+      *url = s;
+      return TRUE;
+    }
+  else if (**url != DIR_SEP 
       && **url != '~'
 #ifdef _WINDOWS
       && (*(url))[1] != ':'
 #endif /* _WINDOWS */
       && !IsW3Path (*url) 
-      && !IsFilePath (*url)
       && (strlen (*url) + 8) < MAX_LENGTH)
     {
       if (!TtaFileExist(*url))
