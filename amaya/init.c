@@ -1568,6 +1568,7 @@ static ThotBool  CompleteUrl(char **url)
         s[0] = EOS;
       if (ptr[0] == '/' && ptr[1] == '/' && ptr[2] == '/')
         ptr = &ptr[2];
+      *url = s;
 #ifdef _WINDOWS
       if (ptr[1] != ':')
         {
@@ -1578,10 +1579,19 @@ static ThotBool  CompleteUrl(char **url)
             strcpy (s, ptr2);
           else
             strcpy (s, "c:");
+		  s= &s[2];
         }
 #endif /* _WINDOWS */
-      strcat (s, ptr);
-      *url = s;
+	  while (*ptr != EOS)
+	  {
+		if (*ptr == '/')
+	      *s = DIR_SEP;
+		else
+          *s = *ptr;
+	    s++;
+		ptr++;
+	  }
+      *s = EOS;
       return TRUE;
     }
   else if (**url != DIR_SEP 
