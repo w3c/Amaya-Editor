@@ -31,7 +31,7 @@
 #include "AmayaNormalWindow.h"
 #include "AmayaFloatingPanel.h"
 #include "AmayaSubPanelManager.h"
-
+#include "displayview_f.h"
 #include "mathml_filtres.h"
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaSpeCharPanel, AmayaSubPanel)
@@ -307,10 +307,15 @@ void AmayaSpeCharPanel::RefreshButtonState()
  -----------------------------------------------------------------------*/
 void AmayaSpeCharPanel::OnButtonInsert( wxCommandEvent& event )
 {
+  Document doc;
+  int      view;
+
   if (m_pList->GetSelection() != wxNOT_FOUND)
     {
       int charactere = m_pActiveFiltre[m_pList->GetSelection()];
-      InsertChar (TtaGiveActiveFrame(), charactere, -1);
+      //InsertChar (TtaGiveActiveFrame(), charactere, -1);
+      FrameToView (TtaGiveActiveFrame(), &doc, &view);
+      TtcInsertChar (doc, view, charactere);
       CloseTextInsertion ();
       TtaRedirectFocus();
     }
