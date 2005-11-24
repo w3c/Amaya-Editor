@@ -3,8 +3,9 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR" content="amaya 9.1, see http://www.w3.org/Amaya/" />
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 9.2.2, see http://www.w3.org/Amaya/"
+  />
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <title>Style Sheets</title>
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -21,204 +22,71 @@ accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a>
 src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
+<div id="page_body">
+
 <div class="toc">
 <ul>
-  <li><a href="#Cascading">Cascading Style Sheets (CSS)</a>
+  <li><a href="#Creating3">Creating CSS properties</a></li>
+  <li><a href="#Creating">Creating and Updating a Style Attribute with
+    Tools</a>
     <ul>
-      <li><a href="#About">About Linking External and User Style Sheets</a>
-        <ul>
-          <li><a href="#Handling">Handling External CSS Style Sheets</a></li>
-          <li><a href="#Creating3">Creating and Updating some CSS
-            properties</a></li>
-        </ul>
-      </li>
-      <li><a href="#Showing">Showing Applied Style</a></li>
-      <li><a href="#Associatin">Associating a Class to an Element</a></li>
-      <li><a href="#Creating">Creating and Updating a Style Attribute</a>
-        <ul>
-          <li><a href="#Colors">Colors</a></li>
-          <li><a href="#Characters">Characters</a></li>
-          <li><a href="#Format">Format</a></li>
-          <li><a href="#Background">Background image</a></li>
-          <li><a href="#Creating1">Creating a Generic Style for an Element or
-            Class</a></li>
-        </ul>
-      </li>
-      <li><a href="#About1">About Applying Style Using HTML Elements</a>
-        <ul>
-          <li><a href="#Creating2">Creating HTML Style Elements</a></li>
-          <li><a href="#Informatio">Information Types</a></li>
-          <li><a href="#Character">Character Elements</a></li>
-          <li><a href="#Removing">Removing Style Elements</a></li>
-        </ul>
-      </li>
+      <li><a href="#Colors">Colors</a></li>
+      <li><a href="#Characters">Characters</a></li>
+      <li><a href="#Format">Format</a></li>
+    </ul>
+  </li>
+  <li><a href="#About">About Linking External and User Style Sheets</a>
+    <ul>
+      <li><a href="#Handling">Handling External CSS Style Sheets</a></li>
+    </ul>
+  </li>
+  <li><a href="#Showing">Showing Applied Style</a></li>
+  <li><a href="#Associatin">Associating a Class to an Element</a>
+    <ul>
+      <li><a href="#Creating1">Creating a Generic Style for an Element or
+        Class</a></li>
+    </ul>
+  </li>
+  <li><a href="#About1">About Applying Style Using HTML Elements</a>
+    <ul>
+      <li><a href="#Creating2">Creating HTML Style Elements</a></li>
+      <li><a href="#Informatio">Information Types</a></li>
+      <li><a href="#Character">Character Elements</a></li>
+      <li><a href="#Removing">Removing Style Elements</a></li>
     </ul>
   </li>
 </ul>
 </div>
 
-<div id="page_body">
 <h2 id="Cascading">Cascading Style Sheets (CSS)</h2>
 
 <p>The <strong>Style</strong> menu enables you to change the appearance of
 your documents using Cascading Style Sheets (CSS)</p>
 
-<h3 id="About">About Linking External and User Style Sheets</h3>
+<h3 id="Creating3">Creating CSS properties</h3>
 
-<p>A document can link to several external style sheets that are downloaded
-with the document and applied to it.</p>
+<p>The <strong>CSS Style</strong> entry in the <strong>Style</strong> menu
+enables you to generate a list of CSS properties. This entry menu displays a
+dialog box with 4 different tabs: Characters, Colors, Boxes, Format.</p>
 
-<p>An external style sheet can apply to multiple documents. When the same
-style sheet applies to several displayed documents, Amaya loads only one
-instance of the style sheet.</p>
-
-<p>Any user can define a specific style sheet that applies to all documents
-loaded on their system. This style sheet is called the <b>user's</b> style
-sheet. It is stored in the user's local environment, in the <span
-class="Link0"><code><a href="Configure.html#AmayaHome">AmayaHome</a></code>
-directory</span> as the local file
-<code><strong>amaya.css</strong></code>.</p>
-
-<p>For example, if you prefer to display documents in Helvetica on your
-screen and print them in small size, you can create a user's style sheet with
-following CSS rules:</p>
-
-<p><code>@media print {<br />
-body {font-size: 10pt}<br />
-}<br />
-@media screen {<br />
-body {font-family: Helvetica}<br />
-}</code></p>
-
-<h4 id="Handling">Handling External CSS Style Sheets</h4>
-
-<p>The <strong>Style</strong> menu provides a set of commands which enable
-you to control external and user's CSS style sheets.</p>
+<p>When a set of properties are set, the user can <strong>apply</strong> them
+to the current selection:</p>
 <ul>
-  <li>Select <strong>Link</strong> to link a new CSS style sheet to the
-    current document. Amaya displays a pointing hand cursor.
-    <p>This command shows a dialog box.</p>
-    <ul>
-      <li>If the target CSS style sheet is displayed in another Amaya window
-        and you want to select it by click, click the <strong>Click</strong>
-        button then click anywhere within that window to create the link.</li>
-      <li>If the target CSS style sheet is displayed in another tab and you
-        want to select it by click, click the <strong>Click</strong> button
-        then change the current tab and click anywhere within the target CSS
-        style sheet to create the link.</li>
-      <li>If the target CSS style sheet is a local file you can use the
-        <strong>Browse</strong> button to select it.</li>
-      <li>Else type the URI (like http://www.w3.org/file.css) of the target
-        CSS style sheet and then <strong>Confirm</strong> to create the
-      link.</li>
-    </ul>
-    <p></p>
-  </li>
-  <li>Select <strong>Open</strong> to open a CSS style sheet applied to the
-    current document.
-    <p></p>
-  </li>
-  <li>Select <strong>Disable</strong> to remove the effect of an enabled CSS
-    style sheet from the current document. This command does not affect the
-    CSS link in the document.
-    <p></p>
-  </li>
-  <li>Select <strong>Enable</strong> to reapply the effects of a disabled CSS
-    style sheet to the current document. This command does not affect the CSS
-    link in the document.
-    <p></p>
-  </li>
-  <li>Select <strong>Remove</strong> to remove an external CSS style sheet.
-    This command is similar to the Disable command, but it also removes the
-    element link that attaches the external CSS style sheet.</li>
+  <li>If the selection is within a formatted view, Amaya will generate
+    <code>span</code> elements with a <code>style</code> attribute or a
+    <code>style</code> attribute on the current element.</li>
+  <li>If the selection is within the source view, or a within a CSS file,
+    Amaya will generate a string at the current position.</li>
 </ul>
 
-<p>The <strong>Open</strong>, <strong>Disable</strong> and
-<strong>Enable</strong> commands can be applied to the user's preference
-style sheet, but the <strong>Link</strong> and <strong>Remove</strong>
-commands apply to only external CSS style sheets.</p>
+<p>In any case image paths included in the list of properties
+(background-image, list-style-image) are transformed into relative paths to
+the selected document.</p>
 
-<h4 id="Creating3">Creating and Updating some CSS properties</h4>
-<ul>
-  <li><a href="#Colors">Colors</a></li>
-  <li><a href="#Characters">Characters</a></li>
-  <li><a href="#Format">Format</a></li>
-</ul>
+<h3 id="Creating">Creating and Updating a Style Attribute with Tools</h3>
 
-<p>Following <a href="#Colors">Colors</a>, <a
-href="#Characters">Characters</a>, and <a href="#Format">Format</a> tools
-enable you to directly generate CSS properties into a style sheet file.</p>
-
-<p>When the style property is applied and the selection is within a style
-sheet, Amaya inserts the CSS property at the current position.</p>
-
-<h3 id="Showing">Showing Applied Style</h3>
-
-<p>If there are a lot of style sheets attached to a document, it's difficult
-to understand why an element is displayed with that color or these margins,
-etc. To help the user, Amaya provides a <strong>Show applied style</strong>
-command that displays into an external window CSS style properties applied to
-the first current selected element.</p>
-
-<p>The user can then display the CSS source that generates each property by
-double (or simple) click on the property. As long as the window is open,
-Amaya updates the window content when the selection changes. Hitting
-<code>F2</code>, the user can so see CSS properties applied to enclosing
-elements.</p>
-
-<h3 id="Associatin">Associating a Class to an Element</h3>
-
-<p>All classes available for the document are listed in the <strong>Apply
-Class</strong> tool.</p>
-
-<p class="ProcedureCaption">To apply a class to an element:</p>
-<ol>
-  <li>Choose the right entry within the <strong>Apply Class</strong>
-  tool.</li>
-  <li>If you want to select the class applied to another element, you have to
-    select this element, then click the <img alt="Refresh"
-    src="../../resources/icons/16x16/refresh.png" /> button. The
-    <strong>Apply Class</strong> list is refreshed and the current applied
-    class is selected.</li>
-  <li>Select a piece of text or an element.<br />
-    To select an element, you have to click within the element, then use the
-    <code>F2</code> key until the bottom line of the window displays its type
-    in first position. You can also use the Structure view to select it.</li>
-  <li>Click the <img alt="ok" src="../../resources/icons/16x16/ok.png" />
-    button to apply the class to the current selection.<br />
-    If a piece of text is selected, Amaya will generate a
-    <strong>span</strong> element to enclose the current text and the
-    <strong>class</strong> attribute will be attached to this new
-    <strong>span</strong> element.</li>
-</ol>
-
-<p>To associate a <strong>class</strong> with an element, you can also use
-the <strong>Attributes</strong> tool. This <a
-href="Attributes.html">Attributes</a> tool also enables you to delete a
-<strong>class</strong> attribute from an element or to change it (the class
-attribute is handled like any other attribute).</p>
-
-<p class="ProcedureCaption">To remove the class of an element:</p>
-<ul>
-  <li>You can edit the <strong>class</strong> attribute in the
-    <strong>Attributes</strong> tool.
-    <p>When the element is selected, you click on the [X] of the entry to
-    remove the class attribute, or you click on the entry and edit its value
-    then confirm with the apply (<img alt="ok"
-    src="../../resources/icons/16x16/ok.png" />) button.</p>
-  </li>
-  <li>You can also remove or edit the <strong>class</strong> attribute in the
-    structure view.
-    <p>To remove the <strong>class</strong> attribute, you click in the
-    value, <code>F2</code> lets you select the whole value, then hit the
-    <code>Delete</code> key twice.</p>
-  </li>
-</ul>
-
-<h3 id="Creating">Creating and Updating a Style Attribute</h3>
-
-<p>Amaya provides tools that let you associate a style attribute with the
-currently selected elements:</p>
+<p>Amaya provides also tools that let you associate a style attribute with
+the currently selected elements:</p>
 
 <h4 id="Colors">Colors</h4>
 
@@ -325,48 +193,141 @@ indentation, justification, and line spacing.</p>
 information for the selected elements. Selected values are not immediately
 applied to the current selection. The apply button must be clicked.</p>
 
-<h4 id="Background">Background image</h4>
+<h3 id="About">About Linking External and User Style Sheets</h3>
 
-<p>This entry in the <strong>Style</strong> menu enables you to choose a
-background image and its repeat mode.</p>
+<p>A document can link to several external style sheets that are downloaded
+with the document and applied to it.</p>
 
-<p class="ProcedureCaption">To add a background image:</p>
+<p>An external style sheet can apply to multiple documents. When the same
+style sheet applies to several displayed documents, Amaya loads only one
+instance of the style sheet.</p>
+
+<p>Any user can define a specific style sheet that applies to all documents
+loaded on their system. This style sheet is called the <b>user's</b> style
+sheet. It is stored in the user's local environment, in the <span
+class="Link0"><code><a href="Configure.html#AmayaHome">AmayaHome</a></code>
+directory</span> as the local file
+<code><strong>amaya.css</strong></code>.</p>
+
+<p>For example, if you prefer to display documents in Helvetica on your
+screen and print them in small size, you can create a user's style sheet with
+following CSS rules:</p>
+
+<p><code>@media print {<br />
+body {font-size: 10pt}<br />
+}<br />
+@media screen {<br />
+body {font-family: Helvetica}<br />
+}</code></p>
+
+<h4 id="Handling">Handling External CSS Style Sheets</h4>
+
+<p>The <strong>Style</strong> menu provides a set of commands which enable
+you to control external and user's CSS style sheets.</p>
+<ul>
+  <li>Select <strong>Link</strong> to link a new CSS style sheet to the
+    current document. Amaya displays a pointing hand cursor.
+    <p>This command shows a dialog box.</p>
+    <ul>
+      <li>If the target CSS style sheet is displayed in another Amaya window
+        and you want to select it by click, click the <strong>Click</strong>
+        button then click anywhere within that window to create the link.</li>
+      <li>If the target CSS style sheet is displayed in another tab and you
+        want to select it by click, click the <strong>Click</strong> button
+        then change the current tab and click anywhere within the target CSS
+        style sheet to create the link.</li>
+      <li>If the target CSS style sheet is a local file you can use the
+        <strong>Browse</strong> button to select it.</li>
+      <li>Else type the URI (like http://www.w3.org/file.css) of the target
+        CSS style sheet and then <strong>Confirm</strong> to create the
+      link.</li>
+    </ul>
+    <p></p>
+  </li>
+  <li>Select <strong>Open</strong> to open a CSS style sheet applied to the
+    current document.
+    <p></p>
+  </li>
+  <li>Select <strong>Disable</strong> to remove the effect of an enabled CSS
+    style sheet from the current document. This command does not affect the
+    CSS link in the document.
+    <p></p>
+  </li>
+  <li>Select <strong>Enable</strong> to reapply the effects of a disabled CSS
+    style sheet to the current document. This command does not affect the CSS
+    link in the document.
+    <p></p>
+  </li>
+  <li>Select <strong>Remove</strong> to remove an external CSS style sheet.
+    This command is similar to the Disable command, but it also removes the
+    element link that attaches the external CSS style sheet.</li>
+</ul>
+
+<p>The <strong>Open</strong>, <strong>Disable</strong> and
+<strong>Enable</strong> commands can be applied to the user's preference
+style sheet, but the <strong>Link</strong> and <strong>Remove</strong>
+commands apply to only external CSS style sheets.</p>
+
+<h3 id="Showing">Showing Applied Style</h3>
+
+<p>If there are a lot of style sheets attached to a document, it's difficult
+to understand why an element is displayed with that color or these margins,
+etc. To help the user, Amaya provides a <strong>Show applied style</strong>
+command that displays into an external window CSS style properties applied to
+the first current selected element.</p>
+
+<p>The user can then display the CSS source that generates each property by
+double (or simple) click on the property. As long as the window is open,
+Amaya updates the window content when the selection changes. Hitting
+<code>F2</code>, the user can so see CSS properties applied to enclosing
+elements.</p>
+
+<h3 id="Associatin">Associating a Class to an Element</h3>
+
+<p>All classes available for the document are listed in the <strong>Apply
+Class</strong> tool.</p>
+
+<p class="ProcedureCaption">To apply a class to an element:</p>
 <ol>
-  <li>Select an element.<br />
+  <li>Choose the right entry within the <strong>Apply Class</strong>
+  tool.</li>
+  <li>If you want to select the class applied to another element, you have to
+    select this element, then click the <img alt="Refresh"
+    src="../../resources/icons/16x16/refresh.png" /> button. The
+    <strong>Apply Class</strong> list is refreshed and the current applied
+    class is selected.</li>
+  <li>Select a piece of text or an element.<br />
     To select an element, you have to click within the element, then use the
     <code>F2</code> key until the bottom line of the window displays its type
     in first position. You can also use the Structure view to select it.</li>
-  <li>Click the <strong>Background image</strong> entry in the Style menu to
-    open the dialogue box which enables you to:
-    <ul>
-      <li>Enter the Image URI or browse.<br />
-      </li>
-      <li>Select the repeat mode: repeat (<img alt="repeat"
-        src="../../resources/icons/16x16/BG_repeat.png" />), x-repeat ( <img
-        alt="x-repeat" src="../../resources/icons/16x16/BG_repeat_x.png" />),
-        y-repeat (<img alt="y-repeat"
-        src="../../resources/icons/16x16/BG_repeat_y.png" />), or no-repeat
-        (<img alt="no-repeat"
-        src="../../resources/icons/16x16/BG_norepeat.png" />).</li>
-    </ul>
-  </li>
+  <li>Click the <img alt="ok" src="../../resources/icons/16x16/ok.png" />
+    button to apply the class to the current selection.<br />
+    If a piece of text is selected, Amaya will generate a
+    <strong>span</strong> element to enclose the current text and the
+    <strong>class</strong> attribute will be attached to this new
+    <strong>span</strong> element.</li>
 </ol>
 
-<p class="ProcedureCaption">To remove a background image:</p>
+<p>To associate a <strong>class</strong> with an element, you can also use
+the <strong>Attributes</strong> tool. This <a
+href="Attributes.html">Attributes</a> tool also enables you to delete a
+<strong>class</strong> attribute from an element or to change it (the class
+attribute is handled like any other attribute).</p>
+
+<p class="ProcedureCaption">To remove the class of an element:</p>
 <ul>
-  <li>Edit the <strong>style</strong> attribute in the
+  <li>You can edit the <strong>class</strong> attribute in the
     <strong>Attributes</strong> tool.
-    <p>When the element is selected, you click on the [X] before the entry to
-    remove the style attribute, or you click on the entry and edit its value
+    <p>When the element is selected, you click on the [X] of the entry to
+    remove the class attribute, or you click on the entry and edit its value
     then confirm with the apply (<img alt="ok"
     src="../../resources/icons/16x16/ok.png" />) button.</p>
   </li>
-  <li>Or Remove or edit the <strong>style</strong> Attribute in the structure
-    view.
-    <p>You select directly the <strong>style</strong> attribute content and
-    remove the background-image rule. To remove the <strong>style</strong>
-    attribute you click within the value, <code>F2</code> to select the whole
-    value, then hit the <code>Delete</code> key twice.</p>
+  <li>You can also remove or edit the <strong>class</strong> attribute in the
+    structure view.
+    <p>To remove the <strong>class</strong> attribute, you click in the
+    value, <code>F2</code> lets you select the whole value, then hit the
+    <code>Delete</code> key twice.</p>
   </li>
 </ul>
 
