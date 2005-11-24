@@ -2370,7 +2370,7 @@ void UpdateDoctypeMenu (Document doc)
   DocumentType    docType;
   SSchema         nature;
   char           *ptr;
-  ThotBool	  useMathML, useSVG, useHTML;
+  ThotBool	      useMathML, useSVG, useHTML, isMath;
  
   docType = DocumentTypes[doc];
   if (docType != docText && docType != docCSS &&
@@ -2394,7 +2394,7 @@ void UpdateDoctypeMenu (Document doc)
         }
       while (nature);
 
-      if (HasADoctype (doc))
+      if (HasADoctype (doc, &isMath))
         {
           /* there is a Doctype */
           TtaSetItemOn  (doc, 1, File, BRemoveDoctype);

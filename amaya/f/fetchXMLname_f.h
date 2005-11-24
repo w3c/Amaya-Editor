@@ -43,7 +43,8 @@ extern int MapXMLAttribute ( int XMLtype,
 extern char *GetXMLAttributeName ( AttributeType attrType,
                                    ElementType elType,
                                    Document doc );
-extern ThotBool HasADoctype ( Document doc );
+extern ThotBool HasADoctype ( Document doc,
+                              ThotBool *isMath );
 extern ThotBool MapXMLEntity ( int XMLtype,
                                char *entityName,
                                int *entityValue );
@@ -90,7 +91,8 @@ extern int MapXMLAttribute ( int XMLtype,
 extern char *GetXMLAttributeName ( AttributeType attrType,
                                      ElementType elType,
                                      Document doc );
-extern ThotBool HasADoctype ( Document doc );
+extern ThotBool HasADoctype ( Document doc,
+                                ThotBool *isMath );
 extern ThotBool MapXMLEntity ( int XMLtype,
                                  char *entityName,
                                  int *entityValue );

@@ -1063,7 +1063,8 @@ static void TranslateLeaf (PtrElement pEl, ThotBool transChar,
           markupPreserve = TypeHasException (ExcMarkupPreserve,
                                              pParent->ElTypeNumber,
                                              pParent->ElStructSchema);
-          entityName = !strcmp (pEl->ElStructSchema->SsName, "MathML");
+          entityName = (!strcmp (pEl->ElStructSchema->SsName, "MathML") ||
+                        LoadedDocument[doc - 1]->DocCharset == US_ASCII);
           if (!pTransAlph || !transChar)
             /* on ne traduit pas quand la table de traduction est vide */
             /* parcourt les buffers de l'element */

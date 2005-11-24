@@ -265,11 +265,12 @@ ThotBool CheckValidEntity (NotifyAttribute *event)
   AttributeType     attrType;
   Attribute         attr;
   CHAR_T            c[3];
-  Language	    lang;
+  Language	        lang;
   char              mbc[20], *s;
   int               length;
+  ThotBool          isMath;
 
-  if (HasADoctype (event->document))
+  if (HasADoctype (event->document, &isMath))
     /* the document has a DocType */
     return FALSE;  /* let Thot perform normal operation */
 
