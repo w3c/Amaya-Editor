@@ -1940,7 +1940,20 @@ void DisplayBorders (PtrBox box, PtrAbstractBox pFrom, int frame,
   /* position in the frame */
   xFrame = box->BxXOrg - ViewFrameTable[frame - 1].FrXOrg;
   yFrame = box->BxYOrg - ViewFrameTable[frame - 1].FrYOrg;
-  height = box->BxHeight;
+  /* part of the top, left, bottom and right border which are visible */
+  t = yFrame + et + from->BxTBorder - y;
+  if (t > from->BxTBorder)
+    t = from->BxTBorder;
+  l = xFrame + el + from->BxLBorder - x;
+  if (l > from->BxLBorder)
+    l = from->BxLBorder;
+  height = box->BxHeight - box->BxBMargin;
+  b = y + h - yFrame - height + eb + from->BxBBorder;
+  if (b > from->BxBBorder)
+    b = from->BxBBorder;
+  r = x + w - xFrame - box->BxWidth + er + from->BxRBorder;
+  if (r > from->BxRBorder)
+    r = from->BxRBorder;
   if (from->BxType == BoTable)
     {
       // no border around the caption
@@ -1955,7 +1968,7 @@ void DisplayBorders (PtrBox box, PtrAbstractBox pFrom, int frame,
           if (child->AbVertPos.PosEdge == Bottom)
             {
               // displayed on the top of the table
-              pos = child->AbBox->BxYOrg + child->AbBox->BxHeight - from->BxYOrg;
+              pos = child->AbBox->BxYOrg + child->AbBox->BxHeight - from->BxYOrg;               
               yFrame += pos;
               y += pos;
               h -= pos;
@@ -1964,17 +1977,16 @@ void DisplayBorders (PtrBox box, PtrAbstractBox pFrom, int frame,
           else
             {
               // displayed on the bottom of the table
-              pos = height + from->BxYOrg - child->AbBox->BxYOrg;
-              h -= pos;
+              pos = child->AbBox->BxHeight + from->BxBBorder + from->BxBPadding;
               height -= pos;
+              if (h > height)
+                h = height;
+              b += pos;
+              if (b > from->BxBBorder)
+                b = from->BxBBorder;
             }
         }
     }
-  /* part of the top, left, bottom and right border which are visible */
-  t = yFrame + et + from->BxTBorder - y;
-  l = xFrame + el + from->BxLBorder - x;
-  b = y + h - yFrame - height + eb + from->BxBBorder;
-  r = x + w - xFrame - box->BxWidth + er + from->BxRBorder;
   if (topdown && !first)
     t = 0; /* no top border */
   if (topdown && !last)
