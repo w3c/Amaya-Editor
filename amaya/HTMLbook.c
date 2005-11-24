@@ -13,7 +13,7 @@
  */
 
 #ifdef _WX
-  #include "wx/wx.h"
+#include "wx/wx.h"
 #endif /* _WX */
 
 /* Included headerfiles */
@@ -29,11 +29,11 @@
 
 /* structure to register sub-documents in MakeBook function*/
 typedef struct _SubDoc
-  {
-     struct _SubDoc  *SDnext;
-     Element          SDel;
-     char            *SDname;
-  }SubDoc;
+{
+  struct _SubDoc  *SDnext;
+  Element          SDel;
+  char            *SDname;
+}SubDoc;
 
 /* the structure used for the GetIncludedDocuments_callback function */
 typedef struct _IncludeCtxt
@@ -75,11 +75,11 @@ static int              PagePerSheet;
 #endif /* _WINGUI */
 
 #ifdef _WX
-  #include "wxdialogapi_f.h"
+#include "wxdialogapi_f.h"
 #endif /* _WX */
 
 static ThotBool GetIncludedDocuments (Element el, Element link,
-				      Document doc, IncludeCtxt *prev);
+                                      Document doc, IncludeCtxt *prev);
 /*----------------------------------------------------------------------
   RedisplayDocument redisplays a view of a document
   ----------------------------------------------------------------------*/
@@ -120,7 +120,7 @@ static void RegisterSubDoc (Element el, char *url)
     {
       last = SubDocs;
       while (last->SDnext != NULL)
-	last = last->SDnext;
+        last = last->SDnext;
       last->SDnext = entry;
     }
 }
@@ -147,10 +147,10 @@ static Element SearchSubDoc (char *url)
     {
       docFound = (strcmp (url, entry->SDname) == 0);
       if (!docFound)
-	entry = entry->SDnext;
+        entry = entry->SDnext;
       else
-	/* document found -> return the DIV element */
-	el = entry->SDel;
+        /* document found -> return the DIV element */
+        el = entry->SDel;
     }
   return (el);
 }
@@ -210,162 +210,162 @@ void SetInternalLinks (Document document)
       el = link;
       position = 0;
       while (el != NULL)
-	{
-	  sibling = el;
-	  do
-	    {
-	      /* add volume of each previous element */
-	      TtaPreviousSibling (&sibling);
-	      if (sibling != NULL)
-		position += TtaGetElementVolume (sibling);
-	    }
-	  while (sibling != NULL);
-	  el = TtaGetParent (el);
-	}
+        {
+          sibling = el;
+          do
+            {
+              /* add volume of each previous element */
+              TtaPreviousSibling (&sibling);
+              if (sibling != NULL)
+                position += TtaGetElementVolume (sibling);
+            }
+          while (sibling != NULL);
+          el = TtaGetParent (el);
+        }
       sprintf (number, "%d", position*100/volume);
       TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_UPDATED_LINK), number);
       TtaHandlePendingEvents ();
       link = TtaSearchTypedElement (elType, SearchForward, link);
       if (link != NULL)
-	/* a link has been found */
-	{
-	  linkType = TtaGetElementType (link);
-	  if (linkType.ElTypeNum == HTML_EL_Anchor)
-	     attrType.AttrTypeNum = HTML_ATTR_HREF_;
-	  else
-	     attrType.AttrTypeNum = HTML_ATTR_cite;
-	  HrefAttr = TtaGetAttribute (link, attrType);
-	  attrType.AttrTypeNum = HTML_ATTR_InternalLink;
-	  IntLinkAttr = TtaGetAttribute (link, attrType);
-	  attrType.AttrTypeNum = HTML_ATTR_ExternalLink;
-	  ExtLinkAttr = TtaGetAttribute (link, attrType);
-	  if (HrefAttr == NULL)
-	    /* this element is not a link (no href or cite attribute) */
-	    /* remove attributes InternalLink and ExternalLink if they
-	       are present */
-	    {
-	      if (IntLinkAttr != NULL)
-		TtaRemoveAttribute (link, IntLinkAttr, document);
-	      if (ExtLinkAttr != NULL)
-		TtaRemoveAttribute (link, ExtLinkAttr, document);	   
-	    }
-	  else
-	    /* this element has an HREF or cite attribute */
-	    {
-	      length = TtaGetTextAttributeLength (HrefAttr);
-	      text = (char *)TtaGetMemory (length + 1);
-	      TtaGiveTextAttributeValue (HrefAttr, text, &length);
+        /* a link has been found */
+        {
+          linkType = TtaGetElementType (link);
+          if (linkType.ElTypeNum == HTML_EL_Anchor)
+            attrType.AttrTypeNum = HTML_ATTR_HREF_;
+          else
+            attrType.AttrTypeNum = HTML_ATTR_cite;
+          HrefAttr = TtaGetAttribute (link, attrType);
+          attrType.AttrTypeNum = HTML_ATTR_InternalLink;
+          IntLinkAttr = TtaGetAttribute (link, attrType);
+          attrType.AttrTypeNum = HTML_ATTR_ExternalLink;
+          ExtLinkAttr = TtaGetAttribute (link, attrType);
+          if (HrefAttr == NULL)
+            /* this element is not a link (no href or cite attribute) */
+            /* remove attributes InternalLink and ExternalLink if they
+               are present */
+            {
+              if (IntLinkAttr != NULL)
+                TtaRemoveAttribute (link, IntLinkAttr, document);
+              if (ExtLinkAttr != NULL)
+                TtaRemoveAttribute (link, ExtLinkAttr, document);	   
+            }
+          else
+            /* this element has an HREF or cite attribute */
+            {
+              length = TtaGetTextAttributeLength (HrefAttr);
+              text = (char *)TtaGetMemory (length + 1);
+              TtaGiveTextAttributeValue (HrefAttr, text, &length);
 
-	      /* does an external link become an internal link ? */
-	      if (document == DocBook && SubDocs != NULL)
-		{
-		  ptr = strrchr (text, '#');
-		  url = text;
-		  split = FALSE;
-		  if (ptr == text)
-		      /* a local link */
-		      url = NULL;
-		  else if (ptr != NULL)
-		    {
-		      /* split url and name part */
-		      ptr[0] = EOS;
-		      split = TRUE;
-		    }
+              /* does an external link become an internal link ? */
+              if (document == DocBook && SubDocs != NULL)
+                {
+                  ptr = strrchr (text, '#');
+                  url = text;
+                  split = FALSE;
+                  if (ptr == text)
+                    /* a local link */
+                    url = NULL;
+                  else if (ptr != NULL)
+                    {
+                      /* split url and name part */
+                      ptr[0] = EOS;
+                      split = TRUE;
+                    }
 
-		  /* Is it a sub-document */
-		  div = SearchSubDoc (url);
-		  if (split)
-		    /* retore the mark */
-		    ptr[0] = '#';
+                  /* Is it a sub-document */
+                  div = SearchSubDoc (url);
+                  if (split)
+                    /* retore the mark */
+                    ptr[0] = '#';
 
-		  if (div == NULL)
-		    {
-		      /* it's not a sub-document */
-		      if (url == NULL)
-			/* a local link */
-			ptr = &text[1];
-		      else
-			/* still an externa; link */
-			ptr = NULL;
-		    }
-		  else
-		    {
-		      /* this link becomes internal */
-		      if (ptr != NULL)
-			{
-			  /* get the target name */
-			  strcpy (value, ptr);
-			  length = strlen (value);
-			  /* check whether the name changed */
-			  i = 0;
-			  target = SearchNAMEattribute (document, &value[1], NULL, NULL);
-			  while (target != NULL)
-			    {
-			      /* is it the right NAME */
-			      if (TtaIsAncestor (target, div))
-				target = NULL;
-			      else
-				{
-				  /* continue the search */
-				  i++;
-				  sprintf (&value[length], "%d", i);
-				  target = SearchNAMEattribute (document,
-							&value[1], NULL, NULL);
-				}
-			    }
-			}
-		      else
-			{
-			  /* get the DIV name */
-			  attrType.AttrTypeNum = HTML_ATTR_ID;
-			  attr = TtaGetAttribute (div, attrType);
-			  length = 200;
-			  value[0] = '#';
-			  TtaGiveTextAttributeValue (attr, &value[1], &length);
-			}
-		      ptr = &value[1];
-		      TtaSetAttributeText (HrefAttr, value, link, document);
-		    }
-		}
-	      else if (text[0] == '#')
-		  ptr = &text[1];
-	      else
-		ptr = NULL;
+                  if (div == NULL)
+                    {
+                      /* it's not a sub-document */
+                      if (url == NULL)
+                        /* a local link */
+                        ptr = &text[1];
+                      else
+                        /* still an externa; link */
+                        ptr = NULL;
+                    }
+                  else
+                    {
+                      /* this link becomes internal */
+                      if (ptr != NULL)
+                        {
+                          /* get the target name */
+                          strcpy (value, ptr);
+                          length = strlen (value);
+                          /* check whether the name changed */
+                          i = 0;
+                          target = SearchNAMEattribute (document, &value[1], NULL, NULL);
+                          while (target != NULL)
+                            {
+                              /* is it the right NAME */
+                              if (TtaIsAncestor (target, div))
+                                target = NULL;
+                              else
+                                {
+                                  /* continue the search */
+                                  i++;
+                                  sprintf (&value[length], "%d", i);
+                                  target = SearchNAMEattribute (document,
+                                                                &value[1], NULL, NULL);
+                                }
+                            }
+                        }
+                      else
+                        {
+                          /* get the DIV name */
+                          attrType.AttrTypeNum = HTML_ATTR_ID;
+                          attr = TtaGetAttribute (div, attrType);
+                          length = 200;
+                          value[0] = '#';
+                          TtaGiveTextAttributeValue (attr, &value[1], &length);
+                        }
+                      ptr = &value[1];
+                      TtaSetAttributeText (HrefAttr, value, link, document);
+                    }
+                }
+              else if (text[0] == '#')
+                ptr = &text[1];
+              else
+                ptr = NULL;
 
-	      if (ptr != NULL)
-		/* it's an internal link. Attach an attribute InternalLink */
-		/* to the link, if this attribute does not exist yet */
-		{
-		  if (IntLinkAttr == NULL)
-		    {
-		      attrType.AttrTypeNum = HTML_ATTR_InternalLink;
-		      IntLinkAttr = TtaNewAttribute (attrType);
-		      TtaAttachAttribute (link, IntLinkAttr, document);
-		    }
-		  /* looks for the target element */
-		  target = SearchNAMEattribute (document, ptr, NULL, NULL);
-		  if (target != NULL)
-		    /* set the Thot link */
-		    TtaSetAttributeReference (IntLinkAttr, link, document,
-					      target);
-		}
-	      else
-		/* it's an external link */
-		{
-		  /* Remove the InternalLink attribute if it is present */
-		  if (IntLinkAttr != NULL)
-		    TtaRemoveAttribute (link, IntLinkAttr, document);
-		  /* create an ExternalLink attribute if there is none */
-		  if (ExtLinkAttr == NULL)
-		    {
-		      attrType.AttrTypeNum = HTML_ATTR_ExternalLink;
-		      ExtLinkAttr = TtaNewAttribute (attrType);
-		      TtaAttachAttribute (link, ExtLinkAttr, document);
-		    }
-		}
-	      TtaFreeMemory (text);
-	    }
-	}
+              if (ptr != NULL)
+                /* it's an internal link. Attach an attribute InternalLink */
+                /* to the link, if this attribute does not exist yet */
+                {
+                  if (IntLinkAttr == NULL)
+                    {
+                      attrType.AttrTypeNum = HTML_ATTR_InternalLink;
+                      IntLinkAttr = TtaNewAttribute (attrType);
+                      TtaAttachAttribute (link, IntLinkAttr, document);
+                    }
+                  /* looks for the target element */
+                  target = SearchNAMEattribute (document, ptr, NULL, NULL);
+                  if (target != NULL)
+                    /* set the Thot link */
+                    TtaSetAttributeReference (IntLinkAttr, link, document,
+                                              target);
+                }
+              else
+                /* it's an external link */
+                {
+                  /* Remove the InternalLink attribute if it is present */
+                  if (IntLinkAttr != NULL)
+                    TtaRemoveAttribute (link, IntLinkAttr, document);
+                  /* create an ExternalLink attribute if there is none */
+                  if (ExtLinkAttr == NULL)
+                    {
+                      attrType.AttrTypeNum = HTML_ATTR_ExternalLink;
+                      ExtLinkAttr = TtaNewAttribute (attrType);
+                      TtaAttachAttribute (link, ExtLinkAttr, document);
+                    }
+                }
+              TtaFreeMemory (text);
+            }
+        }
     }
   /* Reset document status */
   if (!status)
@@ -394,12 +394,12 @@ static void CheckPrintingDocument (Document document)
       /* define the new default PS file */
       ptr = TtaGetEnvString ("APP_TMPDIR");
       if (ptr != NULL && TtaCheckDirectory (ptr))
-	strcpy (PSfile, ptr);
+        strcpy (PSfile, ptr);
       else
-	strcpy (PSfile, TtaGetDefEnvString ("APP_TMPDIR"));
+        strcpy (PSfile, TtaGetDefEnvString ("APP_TMPDIR"));
       lg = strlen (PSfile);
       if (PSfile[lg - 1] == DIR_SEP)
-	PSfile[--lg] = EOS;
+        PSfile[--lg] = EOS;
       strcpy (docName, TtaGetDocumentName (document));
       TtaExtractSuffix (docName, suffix);
       sprintf (&PSfile[lg], "%c%s.ps", DIR_SEP, docName);
@@ -408,16 +408,16 @@ static void CheckPrintingDocument (Document document)
 }
 
 /*----------------------------------------------------------------------
-   PrintDocument prints the document using predefined parameters.
-   ----------------------------------------------------------------------*/  
+  PrintDocument prints the document using predefined parameters.
+  ----------------------------------------------------------------------*/  
 static void PrintDocument (Document doc, View view)
 {
 #if defined(_WINDOWS) && defined(_WX) && defined(IV)
   /* On windows and with wxWidgets, disable printing for the moment */
   wxMessageDialog messagedialog( NULL,
-				 TtaConvMessageToWX("Not implemented yet"), 
-				 _T("Warning"),
-				 (long) wxOK | wxICON_EXCLAMATION | wxSTAY_ON_TOP);
+                                 TtaConvMessageToWX("Not implemented yet"), 
+                                 _T("Warning"),
+                                 (long) wxOK | wxICON_EXCLAMATION | wxSTAY_ON_TOP);
   messagedialog.ShowModal();
 #else /* defined(_WINDOWS) && defined(_WX) */
   AttributeType      attrType;
@@ -430,7 +430,7 @@ static void PrintDocument (Document doc, View view)
 
   textFile = (DocumentTypes[doc] == docText ||
               DocumentTypes[doc] == docSource ||
-	      DocumentTypes[doc] == docCSS);
+              DocumentTypes[doc] == docCSS);
 
   /* initialize printing information */
   CheckPrintingDocument (doc);
@@ -441,19 +441,19 @@ static void PrintDocument (Document doc, View view)
   if (textFile)
     {
       if (PageSize == PP_A4)
-	{
-	  if (Orientation == PP_Landscape)
-	    TtaSetPrintSchema ("TextFilePL");
-	  else
-	    TtaSetPrintSchema ("TextFilePP");
-	}
+        {
+          if (Orientation == PP_Landscape)
+            TtaSetPrintSchema ("TextFilePL");
+          else
+            TtaSetPrintSchema ("TextFilePP");
+        }
       else
-	{
-	  if (Orientation == PP_Landscape)
-	    TtaSetPrintSchema ("TextFileUSL");
-	  else
-	    TtaSetPrintSchema ("TextFilePPUS");
-	}
+        {
+          if (Orientation == PP_Landscape)
+            TtaSetPrintSchema ("TextFileUSL");
+          else
+            TtaSetPrintSchema ("TextFilePPUS");
+        }
     }
   else if (DocumentTypes[doc] == docSVG)
     TtaSetPrintSchema ("SVGP");
@@ -464,42 +464,42 @@ static void PrintDocument (Document doc, View view)
   else if (DocumentTypes[doc] == docHTML)
     {
       if (NumberLinks)
-	/* display numbered links */
-	{
-	  /* associate an attribute InternalLink with all anchors refering
-	     a target in the same document.  This allows P schemas to work
-	     properly */
-	  SetInternalLinks (DocPrint);
-	  if (PageSize == PP_A4)
-	    {
-	      if (Orientation == PP_Landscape)
-		TtaSetPrintSchema ("HTMLPLL");
-	      else
-		TtaSetPrintSchema ("HTMLPLP");
-	    }
-	  else
-	    {
-	      if (Orientation == PP_Landscape)
-		TtaSetPrintSchema ("HTMLUSLL");
-	      else
-		TtaSetPrintSchema ("HTMLPLPUS");
-	    }
-	  strcat (viewsToPrint, "Links_view ");
-	}
+        /* display numbered links */
+        {
+          /* associate an attribute InternalLink with all anchors refering
+             a target in the same document.  This allows P schemas to work
+             properly */
+          SetInternalLinks (DocPrint);
+          if (PageSize == PP_A4)
+            {
+              if (Orientation == PP_Landscape)
+                TtaSetPrintSchema ("HTMLPLL");
+              else
+                TtaSetPrintSchema ("HTMLPLP");
+            }
+          else
+            {
+              if (Orientation == PP_Landscape)
+                TtaSetPrintSchema ("HTMLUSLL");
+              else
+                TtaSetPrintSchema ("HTMLPLPUS");
+            }
+          strcat (viewsToPrint, "Links_view ");
+        }
       else if (PageSize == PP_A4)
-	{
-	  if (Orientation == PP_Landscape)
-	    TtaSetPrintSchema ("HTMLPL");
-	  else
-	    TtaSetPrintSchema ("HTMLPP");
-	}
+        {
+          if (Orientation == PP_Landscape)
+            TtaSetPrintSchema ("HTMLPL");
+          else
+            TtaSetPrintSchema ("HTMLPP");
+        }
       else
-	{
-	  if (Orientation == PP_Landscape)
-	    TtaSetPrintSchema ("HTMLUSL");
-	  else
-	    TtaSetPrintSchema ("HTMLPPUS");
-	}    
+        {
+          if (Orientation == PP_Landscape)
+            TtaSetPrintSchema ("HTMLUSL");
+          else
+            TtaSetPrintSchema ("HTMLPPUS");
+        }    
     }
   status = TtaIsDocumentModified (doc);
 
@@ -510,25 +510,25 @@ static void PrintDocument (Document doc, View view)
       attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
       elType.ElSSchema = attrType.AttrSSchema;
       if (textFile)
-	{
-	  elType. ElTypeNum = TextFile_EL_TextFile;
-	  attrType.AttrTypeNum = TextFile_ATTR_PrintURL;
-	}
+        {
+          elType. ElTypeNum = TextFile_EL_TextFile;
+          attrType.AttrTypeNum = TextFile_ATTR_PrintURL;
+        }
       else
-	{
-	  elType. ElTypeNum = HTML_EL_HTML;
-	  attrType.AttrTypeNum = HTML_ATTR_PrintURL;
-	}
+        {
+          elType. ElTypeNum = HTML_EL_HTML;
+          attrType.AttrTypeNum = HTML_ATTR_PrintURL;
+        }
       docEl = TtaGetMainRoot (doc);
       el = TtaSearchTypedElement (elType, SearchForward, docEl);
       attr = TtaGetAttribute (el, attrType);
       if (!attr && PrintURL)
-	{
-	  attr = TtaNewAttribute (attrType);
-	  TtaAttachAttribute (el, attr, doc);
-	}
+        {
+          attr = TtaNewAttribute (attrType);
+          TtaAttachAttribute (el, attr, doc);
+        }
       if (attr && !PrintURL)
-	TtaRemoveAttribute (el, attr, doc);
+        TtaRemoveAttribute (el, attr, doc);
     }
   
   /* get the path dir where css files have to be stored */
@@ -551,8 +551,8 @@ static void PrintDocument (Document doc, View view)
 }
 
 /*----------------------------------------------------------------------
-   PrintAs prints the document using predefined parameters.
-   ----------------------------------------------------------------------*/  
+  PrintAs prints the document using predefined parameters.
+  ----------------------------------------------------------------------*/  
 void PrintAs (Document doc, View view)
 {
 #ifdef _WINGUI
@@ -564,7 +564,7 @@ void PrintAs (Document doc, View view)
 }
 
 /*----------------------------------------------------------------------
-   CallbackImage handle return of Print form.                   
+  CallbackImage handle return of Print form.                   
   ----------------------------------------------------------------------*/
 void CallbackPrint (int ref, int typedata, char *data)
 {
@@ -576,58 +576,58 @@ void CallbackPrint (int ref, int typedata, char *data)
     case FormPrint:
       TtaDestroyDialogue (BasePrint + FormPrint);
       switch (val)
-	{
-	case 1:
-	  TtaSetPrintCommand (PPrinter);
-	  TtaSetPsFile (PSfile);
-	  /* update the environment variable */
-	  TtaSetEnvString ("THOTPRINT", PPrinter, TRUE);
-	  TtaSaveAppRegistry ();
-	  PrintDocument (DocPrint, 1);
-	  break;
-	default:
-	  break;
-	}
+        {
+        case 1:
+          TtaSetPrintCommand (PPrinter);
+          TtaSetPsFile (PSfile);
+          /* update the environment variable */
+          TtaSetEnvString ("THOTPRINT", PPrinter, TRUE);
+          TtaSaveAppRegistry ();
+          PrintDocument (DocPrint, 1);
+          break;
+        default:
+          break;
+        }
       break;
     case PrintOptions:
       switch (val)
-	{
-	case 0:
-	  /* Manual feed option */
-	  if (ManualFeed == PP_ON)
-	    ManualFeed = PP_OFF;
-	  else
-	    ManualFeed = PP_ON;
-	  TtaSetPrintParameter (PP_ManualFeed, ManualFeed);
-	  break;
-	case 1:
-	  /* Toc option */
-	  WithToC = !WithToC;
-	  break;
-	case 2:
-	  /* NumberLinks option */
-	  NumberLinks = !NumberLinks;
-	case 3:
-	  /* URL option */
-	  PrintURL = !PrintURL;
-	  break;
-	case 4:
-	  /* CSS option */
-	  IgnoreCSS = !IgnoreCSS;
-	  break;
-	}
+        {
+        case 0:
+          /* Manual feed option */
+          if (ManualFeed == PP_ON)
+            ManualFeed = PP_OFF;
+          else
+            ManualFeed = PP_ON;
+          TtaSetPrintParameter (PP_ManualFeed, ManualFeed);
+          break;
+        case 1:
+          /* Toc option */
+          WithToC = !WithToC;
+          break;
+        case 2:
+          /* NumberLinks option */
+          NumberLinks = !NumberLinks;
+        case 3:
+          /* URL option */
+          PrintURL = !PrintURL;
+          break;
+        case 4:
+          /* CSS option */
+          IgnoreCSS = !IgnoreCSS;
+          break;
+        }
       break;
     case PaperFormat:
       /* page size submenu */
       switch (val)
-	{
-	case 0:
-	  PageSize = PP_A4;
-	  break;
-	case 1:
-	  PageSize = PP_US;
-	  break;
-	}
+        {
+        case 0:
+          PageSize = PP_A4;
+          break;
+        case 1:
+          PageSize = PP_US;
+          break;
+        }
       TtaSetPrintParameter (PP_PaperSize, PageSize);
       break;
     case PaperOrientation:
@@ -638,55 +638,55 @@ void CallbackPrint (int ref, int typedata, char *data)
     case PPagesPerSheet:
       /* pages per sheet submenu */
       switch (val)
-	{
-	case 0:
-	  PagePerSheet = 1;
-	  break;
-	case 1:
-	  PagePerSheet = 2;
-	  break;
-	case 2:
-	  PagePerSheet = 4;
-	  break;
-	}
+        {
+        case 0:
+          PagePerSheet = 1;
+          break;
+        case 1:
+          PagePerSheet = 2;
+          break;
+        case 2:
+          PagePerSheet = 4;
+          break;
+        }
       TtaSetPrintParameter (PP_PagesPerSheet, PagePerSheet);
       break;
     case PrintSupport:
       /* paper print/save PostScript submenu */
       switch (val)
-	{
-	case 0:
-	  if (PaperPrint == PP_PS)
-	    {
-	      PaperPrint = PP_PRINTER;
+        {
+        case 0:
+          if (PaperPrint == PP_PS)
+            {
+              PaperPrint = PP_PRINTER;
 #ifdef _GTK
-	      TtaSetTextForm (BasePrint + PPrinterName, PPrinter);
+              TtaSetTextForm (BasePrint + PPrinterName, PPrinter);
 #endif /* _GTK */
-	      TtaSetPrintParameter (PP_Destination, PaperPrint);
-	    }
-	  break;
-	case 1:
-	  if (PaperPrint == PP_PRINTER)
-	    {
-	      PaperPrint = PP_PS;
+              TtaSetPrintParameter (PP_Destination, PaperPrint);
+            }
+          break;
+        case 1:
+          if (PaperPrint == PP_PRINTER)
+            {
+              PaperPrint = PP_PS;
 #ifdef _GTK
-	      TtaSetTextForm (BasePrint + PPrinterName, PSfile);
+              TtaSetTextForm (BasePrint + PPrinterName, PSfile);
 #endif /* _GTK */
-	      TtaSetPrintParameter (PP_Destination, PaperPrint);
-	    }
-	  break;
-	}
+              TtaSetPrintParameter (PP_Destination, PaperPrint);
+            }
+          break;
+        }
       break;
     case PPrinterName:
       if (data[0] != EOS)
-	{
-	if (PaperPrint == PP_PRINTER)
-	    /* text capture zone for the printer name */
-	    strncpy (PPrinter, data, MAX_PATH);
-	else
-	  /* text capture zone for the name of the PostScript file */
-	  strncpy (PSfile, data, MAX_PATH);
-	}
+        {
+          if (PaperPrint == PP_PRINTER)
+            /* text capture zone for the printer name */
+            strncpy (PPrinter, data, MAX_PATH);
+          else
+            /* text capture zone for the name of the PostScript file */
+            strncpy (PSfile, data, MAX_PATH);
+        }
       break;
     }
 }
@@ -697,32 +697,32 @@ void InitPrint (void)
 {
   char* ptr;
 
-   BasePrint = TtaSetCallback ((Proc)CallbackPrint, PRINT_MAX_REF);
-   DocPrint = 0;
-   DocPrintURL = NULL;
+  BasePrint = TtaSetCallback ((Proc)CallbackPrint, PRINT_MAX_REF);
+  DocPrint = 0;
+  DocPrintURL = NULL;
 
-   /* read default printer variable */
-   ptr = TtaGetEnvString ("THOTPRINT");
-   if (ptr == NULL)
-     strcpy (PPrinter, "");
-   else
-     strcpy (PPrinter, ptr);
-   TtaSetPrintCommand (PPrinter);
-   PaperPrint = PP_PRINTER;
-   TtaSetPrintParameter (PP_Destination, PaperPrint);
+  /* read default printer variable */
+  ptr = TtaGetEnvString ("THOTPRINT");
+  if (ptr == NULL)
+    strcpy (PPrinter, "");
+  else
+    strcpy (PPrinter, ptr);
+  TtaSetPrintCommand (PPrinter);
+  PaperPrint = PP_PRINTER;
+  TtaSetPrintParameter (PP_Destination, PaperPrint);
 
-   /* define the new default PrintSchema */
-   NumberLinks = FALSE;
-   WithToC = FALSE;
-   IgnoreCSS = FALSE;
-   PrintURL = TRUE;
-   PageSize = TtaGetPrintParameter (PP_PaperSize);	  
-   TtaSetPrintSchema ("");
-   /* no manual feed */
-   ManualFeed = PP_OFF;
-   TtaSetPrintParameter (PP_ManualFeed, ManualFeed);
-   PagePerSheet = 1;
-   TtaSetPrintParameter (PP_PagesPerSheet, PagePerSheet);
+  /* define the new default PrintSchema */
+  NumberLinks = FALSE;
+  WithToC = FALSE;
+  IgnoreCSS = FALSE;
+  PrintURL = TRUE;
+  PageSize = TtaGetPrintParameter (PP_PaperSize);	  
+  TtaSetPrintSchema ("");
+  /* no manual feed */
+  ManualFeed = PP_OFF;
+  TtaSetPrintParameter (PP_ManualFeed, ManualFeed);
+  PagePerSheet = 1;
+  TtaSetPrintParameter (PP_PagesPerSheet, PagePerSheet);
 }
 
 /*----------------------------------------------------------------------
@@ -742,8 +742,8 @@ void SetupAndPrint (Document doc, View view)
 
 #ifdef _GTK
   TtaNewSheet (BasePrint + FormPrint, TtaGetViewFrame (doc, view), 
-	       TtaGetMessage (LIB, TMSG_LIB_PRINT), 1,
-	       TtaGetMessage (LIB, TMSG_BUTTON_PRINT), FALSE, 3, 'L', D_CANCEL);
+               TtaGetMessage (LIB, TMSG_LIB_PRINT), 1,
+               TtaGetMessage (LIB, TMSG_BUTTON_PRINT), FALSE, 3, 'L', D_CANCEL);
 
   /* Paper format submenu */
   i = 0;
@@ -751,7 +751,7 @@ void SetupAndPrint (Document doc, View view)
   i += strlen (&bufMenu[i]) + 1;
   sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_US));
   TtaNewSubmenu (BasePrint + PaperFormat, BasePrint + FormPrint, 0,
-		 TtaGetMessage (LIB, TMSG_PAPER_SIZE), 2, bufMenu, NULL, 0, TRUE);
+                 TtaGetMessage (LIB, TMSG_PAPER_SIZE), 2, bufMenu, NULL, 0, TRUE);
   if (PageSize == PP_US)
     TtaSetMenuForm (BasePrint + PaperFormat, 1);
   else
@@ -763,7 +763,7 @@ void SetupAndPrint (Document doc, View view)
   i += strlen (&bufMenu[i]) + 1;
   sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (AMAYA, AM_LANDSCAPE));
   TtaNewSubmenu (BasePrint + PaperOrientation, BasePrint + FormPrint, 0,
-		 TtaGetMessage (AMAYA, AM_ORIENTATION), 2, bufMenu, NULL, 0, TRUE);
+                 TtaGetMessage (AMAYA, AM_ORIENTATION), 2, bufMenu, NULL, 0, TRUE);
   if (Orientation == PP_Landscape)
     TtaSetMenuForm (BasePrint + PaperOrientation, 1);
   else
@@ -776,7 +776,7 @@ void SetupAndPrint (Document doc, View view)
   i += strlen (&bufMenu[i]) + 1;
   sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_4_PAGE_SHEET));
   TtaNewSubmenu (BasePrint + PPagesPerSheet, BasePrint + FormPrint, 0,
-		 TtaGetMessage (LIB, TMSG_REDUCTION), 3, bufMenu, NULL, 0, TRUE);
+                 TtaGetMessage (LIB, TMSG_REDUCTION), 3, bufMenu, NULL, 0, TRUE);
   if (PagePerSheet == 1)
     TtaSetMenuForm (BasePrint + PPagesPerSheet, 0);
   else if (PagePerSheet == 2)
@@ -790,7 +790,7 @@ void SetupAndPrint (Document doc, View view)
   i += strlen (&bufMenu[i]) + 1;
   sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_PS_FILE));
   TtaNewSubmenu (BasePrint + PrintSupport, BasePrint + FormPrint, 0,
-		 TtaGetMessage (LIB, TMSG_OUTPUT), 2, bufMenu, NULL, 0, TRUE);
+                 TtaGetMessage (LIB, TMSG_OUTPUT), 2, bufMenu, NULL, 0, TRUE);
 
   /* PaperPrint selector */
   TtaNewTextForm (BasePrint + PPrinterName, BasePrint + FormPrint, NULL, 30, 1, TRUE);
@@ -817,7 +817,7 @@ void SetupAndPrint (Document doc, View view)
   i += strlen (&bufMenu[i]) + 1;
   sprintf (&bufMenu[i], "%s%s", "T", TtaGetMessage (AMAYA, AM_WITH_CSS));
   TtaNewToggleMenu (BasePrint + PrintOptions, BasePrint + FormPrint,
-		    TtaGetMessage (LIB, TMSG_OPTIONS), 5, bufMenu, NULL, FALSE);
+                    TtaGetMessage (LIB, TMSG_OPTIONS), 5, bufMenu, NULL, FALSE);
   if (ManualFeed == PP_ON)
     TtaSetToggleMenu (BasePrint + PrintOptions, 0, TRUE);
   else
@@ -887,20 +887,20 @@ void SetupAndPrint (Document doc, View view)
     /* The dialog creation */
     ThotBool created;
     created = CreatePrintDlgWX (BasePrint + FormPrint, TtaGetViewFrame (doc, view),
-				PPrinter,
-				PSfile, 
-				paper_format,
-				orientation,
-				disposition,
-				paper_print,
-				manual_feed,
-				with_toc,
-				with_links,
-				with_url,
-				ignore_css);
+                                PPrinter,
+                                PSfile, 
+                                paper_format,
+                                orientation,
+                                disposition,
+                                paper_print,
+                                manual_feed,
+                                with_toc,
+                                with_links,
+                                with_url,
+                                ignore_css);
     if (created)
       {
-	TtaShowDialogue (BasePrint+FormPrint, FALSE);
+        TtaShowDialogue (BasePrint+FormPrint, FALSE);
       }
   }
   
@@ -928,31 +928,31 @@ void UpdateURLsInSubtree (NotifyElement *event, Element el)
     {
       elType.ElSSchema = HTMLschema;
       while (nextEl != NULL)
-	{
-	  event->element = nextEl;
-	  ElementPasted (event);
+        {
+          event->element = nextEl;
+          ElementPasted (event);
 	  
-	  /* manage included links and anchors */
-	  elType.ElTypeNum = HTML_EL_Anchor;
-	  child = TtaSearchTypedElement (elType, SearchInTree, nextEl);
-	  while (child)
-	    {
-	      event->element = child;
-	      ElementPasted (event);
-	      child = TtaSearchTypedElementInTree (elType, SearchForward, nextEl, child);
-	    }
+          /* manage included links and anchors */
+          elType.ElTypeNum = HTML_EL_Anchor;
+          child = TtaSearchTypedElement (elType, SearchInTree, nextEl);
+          while (child)
+            {
+              event->element = child;
+              ElementPasted (event);
+              child = TtaSearchTypedElementInTree (elType, SearchForward, nextEl, child);
+            }
 	  
-	  /* manage included links and anchors */
-	  elType.ElTypeNum = HTML_EL_PICTURE_UNIT;
-	  child = TtaSearchTypedElement (elType, SearchInTree, nextEl);
-	  while (child)
-	    {
-	      event->element = child;
-	      ElementPasted (event);
-	      child = TtaSearchTypedElementInTree (elType, SearchForward, nextEl, child);
-	    }
-	  TtaNextSibling (&nextEl);
-	}
+          /* manage included links and anchors */
+          elType.ElTypeNum = HTML_EL_PICTURE_UNIT;
+          child = TtaSearchTypedElement (elType, SearchInTree, nextEl);
+          while (child)
+            {
+              event->element = child;
+              ElementPasted (event);
+              child = TtaSearchTypedElementInTree (elType, SearchForward, nextEl, child);
+            }
+          TtaNextSibling (&nextEl);
+        }
     }
 }
 
@@ -967,8 +967,8 @@ void UpdateURLsInSubtree (NotifyElement *event, Element el)
   Return the root element that delimits the new inserted part (a div).
   ----------------------------------------------------------------------*/
 static Element MoveDocumentBody (Element el, Document destDoc,
-				 Document sourceDoc, char *target,
-				 char *url, ThotBool deleteTree)
+                                 Document sourceDoc, char *target,
+                                 char *url, ThotBool deleteTree)
 {
   Element	   root, ancestor, elem, firstInserted, div;
   Element          lastInserted, srce, copy, old, parent, sibling;
@@ -984,7 +984,7 @@ static Element MoveDocumentBody (Element el, Document destDoc,
       root = SearchNAMEattribute (sourceDoc, target, NULL, NULL);
       elType = TtaGetElementType (root);
       isID = (elType.ElTypeNum != HTML_EL_Anchor &&
-	      elType.ElTypeNum != HTML_EL_MAP);
+              elType.ElTypeNum != HTML_EL_MAP);
     }
   else
     {
@@ -1002,22 +1002,22 @@ static Element MoveDocumentBody (Element el, Document destDoc,
       checkingMode = TtaGetStructureChecking (destDoc);
       TtaSetStructureChecking (FALSE, destDoc);
       /* get elem, the ancestor of el which is a child of a DIV or BODY
-	 element in the destination document. The copied elements will be
-	 inserted just before this element. */
+         element in the destination document. The copied elements will be
+         inserted just before this element. */
       elem = el;
       do
-	{
-	  ancestor = TtaGetParent (elem);
-	  if (ancestor != NULL)
-	    {
-	      elType = TtaGetElementType (ancestor);
-	      if (elType.ElTypeNum == HTML_EL_BODY ||
-		  elType.ElTypeNum == HTML_EL_Division)
-		ancestor = NULL;
-	      else
-		elem = ancestor;
-	    }
-	}
+        {
+          ancestor = TtaGetParent (elem);
+          if (ancestor != NULL)
+            {
+              elType = TtaGetElementType (ancestor);
+              if (elType.ElTypeNum == HTML_EL_BODY ||
+                  elType.ElTypeNum == HTML_EL_Division)
+                ancestor = NULL;
+              else
+                elem = ancestor;
+            }
+        }
       while (ancestor != NULL);
       parent = TtaGetParent (elem);
 
@@ -1033,59 +1033,59 @@ static Element MoveDocumentBody (Element el, Document destDoc,
       /* do copy */
       firstInserted = NULL;
       if (isID)
-	srce = root;
+        srce = root;
       else
-	srce = TtaGetFirstChild (root);
+        srce = TtaGetFirstChild (root);
       while (srce != NULL)
-	{
-	  copy = TtaCopyTree (srce, sourceDoc, destDoc, parent);
-	  if (copy != NULL)
-	    {
-	      if (firstInserted == NULL)
-		/* this is the first copied element. Insert it before elem */
-		{
-		  TtaInsertFirstChild (&copy, lastInserted, destDoc);
-		  firstInserted = copy;
-		}
-	      else
-		/* insert the new copied element after the element previously
-		   copied */
-		TtaInsertSibling (copy, lastInserted, FALSE, destDoc);
-	      lastInserted = copy;
-	      /* update the NAMEs and URLs in the copied element */
-	      event.event = TteElemPaste;
-	      event.document = destDoc;
-	      event.element = copy;
-	      event.elementType = TtaGetElementType (copy);
-	      event.position = sourceDoc;
-	      event.info = 0;
-	      UpdateURLsInSubtree(&event, copy);
-	    }
-	  /* get the next element in the source document */
-	  old = srce;
-	  TtaNextSibling (&srce);
-	  if (deleteTree)
-	    TtaDeleteTree (old, sourceDoc);
-	  /* Stop here if the target points to a specific element with an ID */
-	  if (isID)
-	    srce = NULL;
-	}
+        {
+          copy = TtaCopyTree (srce, sourceDoc, destDoc, parent);
+          if (copy != NULL)
+            {
+              if (firstInserted == NULL)
+                /* this is the first copied element. Insert it before elem */
+                {
+                  TtaInsertFirstChild (&copy, lastInserted, destDoc);
+                  firstInserted = copy;
+                }
+              else
+                /* insert the new copied element after the element previously
+                   copied */
+                TtaInsertSibling (copy, lastInserted, FALSE, destDoc);
+              lastInserted = copy;
+              /* update the NAMEs and URLs in the copied element */
+              event.event = TteElemPaste;
+              event.document = destDoc;
+              event.element = copy;
+              event.elementType = TtaGetElementType (copy);
+              event.position = sourceDoc;
+              event.info = 0;
+              UpdateURLsInSubtree(&event, copy);
+            }
+          /* get the next element in the source document */
+          old = srce;
+          TtaNextSibling (&srce);
+          if (deleteTree)
+            TtaDeleteTree (old, sourceDoc);
+          /* Stop here if the target points to a specific element with an ID */
+          if (isID)
+            srce = NULL;
+        }
       
       /* delete the element(s) containing the link to the copied document */
       /* delete the parent element of el and all empty ancestors */
       elem = TtaGetParent (el);
       do
-	{
-	  sibling = elem;
-	  TtaNextSibling (&sibling);
-	  if (sibling == NULL)
-	    {
-	      sibling = elem;
-	      TtaPreviousSibling (&sibling);
-	      if (sibling == NULL)
-		elem = TtaGetParent (elem);
-	    }
-	}
+        {
+          sibling = elem;
+          TtaNextSibling (&sibling);
+          if (sibling == NULL)
+            {
+              sibling = elem;
+              TtaPreviousSibling (&sibling);
+              if (sibling == NULL)
+                elem = TtaGetParent (elem);
+            }
+        }
       while (sibling == NULL);
       TtaDeleteTree (elem, destDoc);
       /* restore previous chacking mode */
@@ -1118,10 +1118,10 @@ static void CloseMakeBook (Document document)
   GetIncludedDocuments_callback finishes the GetIncludedDocuments procedure
   ----------------------------------------------------------------------*/
 void   GetIncludedDocuments_callback (int newdoc, int status, 
-				      char *urlName,
-				      char *outputfile, 
-				      AHTHeaders *http_headers,
-				      void * context)
+                                      char *urlName,
+                                      char *outputfile, 
+                                      AHTHeaders *http_headers,
+                                      void * context)
 {
   Element		link, div;
   IncludeCtxt          *ctx, *prev;
@@ -1140,13 +1140,13 @@ void   GetIncludedDocuments_callback (int newdoc, int status,
   if (utf8path)
     {
       if (newdoc && newdoc != DocBook)
-	{
-	  /* it's not the DocBook itself */
-	  /* copy the target document at the position of the link */
-	  TtaSetDocumentModified (DocBook);
-	  div = MoveDocumentBody (link, DocBook, newdoc, ptr, utf8path,
-				  (ThotBool)(newdoc == IncludedDocument));
-	}
+        {
+          /* it's not the DocBook itself */
+          /* copy the target document at the position of the link */
+          TtaSetDocumentModified (DocBook);
+          div = MoveDocumentBody (link, DocBook, newdoc, ptr, utf8path,
+                                  (ThotBool)(newdoc == IncludedDocument));
+        }
       /* global variables */
       FreeDocumentResource (IncludedDocument);
       TtaCloseDocument (IncludedDocument);
@@ -1185,7 +1185,7 @@ void   GetIncludedDocuments_callback (int newdoc, int status,
   Return TRUE if one inclusion is launched.
   ----------------------------------------------------------------------*/
 static ThotBool GetIncludedDocuments (Element el, Element link,
-				      Document doc, IncludeCtxt *prev)
+                                      Document doc, IncludeCtxt *prev)
 {
   ElementType           elType;
   Attribute		attr;
@@ -1207,77 +1207,77 @@ static ThotBool GetIncludedDocuments (Element el, Element link,
     {
       link = TtaSearchTypedElementInTree (elType, SearchForward, el, link);
       if (link)
-	{
-	  attrType.AttrTypeNum = HTML_ATTR_REL;
-	  attr = TtaGetAttribute (link, attrType);
-	}
+        {
+          attrType.AttrTypeNum = HTML_ATTR_REL;
+          attr = TtaGetAttribute (link, attrType);
+        }
       if (attr)
-	{
-	  length = TtaGetTextAttributeLength (attr);
-	  utf8path = (char *)TtaGetMemory (length + 1);
-	  TtaGiveTextAttributeValue (attr, utf8path, &length);
-	  /* Valid rel values are rel="chapter" or rel="subdocument" */
-	  if (strcasecmp (utf8path, "chapter") &&
-	      strcasecmp (utf8path, "subdocument"))
-	    attr = NULL;
-	  TtaFreeMemory (utf8path);
-	}
+        {
+          length = TtaGetTextAttributeLength (attr);
+          utf8path = (char *)TtaGetMemory (length + 1);
+          TtaGiveTextAttributeValue (attr, utf8path, &length);
+          /* Valid rel values are rel="chapter" or rel="subdocument" */
+          if (strcasecmp (utf8path, "chapter") &&
+              strcasecmp (utf8path, "subdocument"))
+            attr = NULL;
+          TtaFreeMemory (utf8path);
+        }
   
       if (attr)
-	{
-	  /* a link with attribute rel="Chapter" has been found */
-	  attrType.AttrTypeNum = HTML_ATTR_HREF_;
-	  attr = TtaGetAttribute (link, attrType);
-	}
+        {
+          /* a link with attribute rel="Chapter" has been found */
+          attrType.AttrTypeNum = HTML_ATTR_HREF_;
+          attr = TtaGetAttribute (link, attrType);
+        }
       if (attr)
-	/* this link has an attribute HREF */
-	{
-	  length = TtaGetTextAttributeLength (attr);
-	  utf8path = (char *)TtaGetMemory (length + 1);
-	  TtaGiveTextAttributeValue (attr, utf8path, &length);
-	  ptr = strrchr (utf8path, '#');
-	  if (ptr)
-	    {
-	      /* link to a particular position within a document */
-	      if (ptr == utf8path)
-		{
-		  /* local link */
-		  TtaFreeMemory (utf8path);
-		  utf8path = NULL;
-		}
-	      else
-		{
-		  ptr[0] = EOS;
-		  ptr = &ptr[1];
-		}
-	    }
+        /* this link has an attribute HREF */
+        {
+          length = TtaGetTextAttributeLength (attr);
+          utf8path = (char *)TtaGetMemory (length + 1);
+          TtaGiveTextAttributeValue (attr, utf8path, &length);
+          ptr = strrchr (utf8path, '#');
+          if (ptr)
+            {
+              /* link to a particular position within a document */
+              if (ptr == utf8path)
+                {
+                  /* local link */
+                  TtaFreeMemory (utf8path);
+                  utf8path = NULL;
+                }
+              else
+                {
+                  ptr[0] = EOS;
+                  ptr = &ptr[1];
+                }
+            }
 		  
-	  if (utf8path)
-	    /* this link designates an external document */
-	    {
-	      /* create a new document and loads the target document */
-	      IncludedDocument = TtaNewDocument ("HTML", "tmp");
-	      if (IncludedDocument != 0)
-		{
-		  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_FETCHING), utf8path);
-		  ctx = (IncludeCtxt *)TtaGetMemory (sizeof (IncludeCtxt));
-		  ctx->div =  el;
-		  ctx->link = link;
-		  ctx->utf8path = utf8path; /* the URL of the document */
-		  ctx->name = ptr;
-		  ctx->ctxt = prev; /* previous context */
-		  /* Get the reference of the calling document */
-		  SetStopButton (doc);
-		  newdoc = GetAmayaDoc (utf8path, NULL, IncludedDocument,
-					doc, CE_MAKEBOOK, FALSE, 
-					(void (*)(int, int, char*, char*, const AHTHeaders*, void*)) GetIncludedDocuments_callback,
-					(void *) ctx);
-		  found = TRUE;
-		}
-	    }
-	  else
-	    TtaFreeMemory (utf8path);
-	}
+          if (utf8path)
+            /* this link designates an external document */
+            {
+              /* create a new document and loads the target document */
+              IncludedDocument = TtaNewDocument ("HTML", "tmp");
+              if (IncludedDocument != 0)
+                {
+                  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_FETCHING), utf8path);
+                  ctx = (IncludeCtxt *)TtaGetMemory (sizeof (IncludeCtxt));
+                  ctx->div =  el;
+                  ctx->link = link;
+                  ctx->utf8path = utf8path; /* the URL of the document */
+                  ctx->name = ptr;
+                  ctx->ctxt = prev; /* previous context */
+                  /* Get the reference of the calling document */
+                  SetStopButton (doc);
+                  newdoc = GetAmayaDoc (utf8path, NULL, IncludedDocument,
+                                        doc, CE_MAKEBOOK, FALSE, 
+                                        (void (*)(int, int, char*, char*, const AHTHeaders*, void*)) GetIncludedDocuments_callback,
+                                        (void *) ctx);
+                  found = TRUE;
+                }
+            }
+          else
+            TtaFreeMemory (utf8path);
+        }
     }
   return (found);
 }
@@ -1492,7 +1492,7 @@ void SectionNumbering (Document doc, View view)
   ThotBool            closeUndo, change = FALSE;
 
   /* check if there is HTML Hi elements and if the current position is
-   within a HTML Body element */
+     within a HTML Body element */
   dispMode = TtaGetDisplayMode (doc);
 
   /* check if there is any HTML element within the document */
@@ -1502,7 +1502,7 @@ void SectionNumbering (Document doc, View view)
     return;
 
   if (TtaPrepareUndo (doc))
-      closeUndo = FALSE;
+    closeUndo = FALSE;
   else
     {
       closeUndo = TRUE;
@@ -1524,130 +1524,130 @@ void SectionNumbering (Document doc, View view)
   while (el)
     {
       el = TtaSearchElementAmong5Types (searchedType1, searchedType2,
-					searchedType3, searchedType4,
-					searchedType5, SearchForward, el);
+                                        searchedType3, searchedType4,
+                                        searchedType5, SearchForward, el);
       if (el)
-	{
-	  /* generate the text number */
-	  elType = TtaGetElementType (el);
-	  s[0] = EOS;
-	  switch (elType.ElTypeNum)
-	    {
-	    case HTML_EL_H2:
-	      nH2++;
-	      nH3 = nH4 = nH5 = nH6 = 0;
-	      sprintf (s, "%d.", nH2);
-	      break;
-	    case HTML_EL_H3:
-	      nH3++;
-	      nH4 = nH5 = nH6 = 0;
-	      if (nH2)
-		sprintf (s, "%d.", nH2);
-	      sprintf (n, "%d.", nH3);
-	      strcat (s, n);
-	      break;
-	    case HTML_EL_H4:
-	      nH4++;
-	      nH5 = nH6 = 0;
-	      if (nH2)
-		sprintf (s, "%d.", nH2);
-	      if (nH3)
-		{
-		  sprintf (n, "%d.", nH3);
-		  strcat (s, n);
-		}
-	      sprintf (n, "%d.", nH4);
-	      strcat (s, n);
-	      break;
-	    case HTML_EL_H5:
-	      nH5++;
-	      nH6 = 0;
-	      if (nH2)
-		sprintf (s, "%d.", nH2);
-	      if (nH3)
-		{
-		  sprintf (n, "%d.", nH3);
-		  strcat (s, n);
-		}
-	      if (nH4)
-		{
-		  sprintf (n, "%d.", nH4);
-		  strcat (s, n);
-		}
-	      sprintf (n, "%d.", nH5);
-	      strcat (s, n);
-	      break;
-	    case HTML_EL_H6:
-	      nH6++;
-	      if (nH2)
-		sprintf (s, "%d.", nH2);
-	      if (nH3)
-		{
-		  sprintf (n, "%d.", nH3);
-		  strcat (s, n);
-		}
-	      if (nH4)
-		{
-		  sprintf (n, "%d.", nH4);
-		  strcat (s, n);
-		}
-	      if (nH5)
-		{
-		  sprintf (n, "%d.", nH5);
-		  strcat (s, n);
-		}
-	      sprintf (n, "%d.", nH6);
-	      strcat (s, n);
-	      break;
-	    default: break;
-	    }
-	  strcat (s, " ");
+        {
+          /* generate the text number */
+          elType = TtaGetElementType (el);
+          s[0] = EOS;
+          switch (elType.ElTypeNum)
+            {
+            case HTML_EL_H2:
+              nH2++;
+              nH3 = nH4 = nH5 = nH6 = 0;
+              sprintf (s, "%d.", nH2);
+              break;
+            case HTML_EL_H3:
+              nH3++;
+              nH4 = nH5 = nH6 = 0;
+              if (nH2)
+                sprintf (s, "%d.", nH2);
+              sprintf (n, "%d.", nH3);
+              strcat (s, n);
+              break;
+            case HTML_EL_H4:
+              nH4++;
+              nH5 = nH6 = 0;
+              if (nH2)
+                sprintf (s, "%d.", nH2);
+              if (nH3)
+                {
+                  sprintf (n, "%d.", nH3);
+                  strcat (s, n);
+                }
+              sprintf (n, "%d.", nH4);
+              strcat (s, n);
+              break;
+            case HTML_EL_H5:
+              nH5++;
+              nH6 = 0;
+              if (nH2)
+                sprintf (s, "%d.", nH2);
+              if (nH3)
+                {
+                  sprintf (n, "%d.", nH3);
+                  strcat (s, n);
+                }
+              if (nH4)
+                {
+                  sprintf (n, "%d.", nH4);
+                  strcat (s, n);
+                }
+              sprintf (n, "%d.", nH5);
+              strcat (s, n);
+              break;
+            case HTML_EL_H6:
+              nH6++;
+              if (nH2)
+                sprintf (s, "%d.", nH2);
+              if (nH3)
+                {
+                  sprintf (n, "%d.", nH3);
+                  strcat (s, n);
+                }
+              if (nH4)
+                {
+                  sprintf (n, "%d.", nH4);
+                  strcat (s, n);
+                }
+              if (nH5)
+                {
+                  sprintf (n, "%d.", nH5);
+                  strcat (s, n);
+                }
+              sprintf (n, "%d.", nH6);
+              strcat (s, n);
+              break;
+            default: break;
+            }
+          strcat (s, " ");
 
-	  /* look for the first leaf child */
-	  child = el;
-	  if (child)
-	    {
-	      do
-		{
-		  child = TtaGetFirstChild (child);
-		  childType = TtaGetElementType (child);
-		}
-	      while (!TtaIsLeaf (childType) && childType.ElSSchema == HTMLschema);
-	    }
-	  if (child && childType.ElSSchema == HTMLschema &&
-	      childType.ElTypeNum == HTML_EL_TEXT_UNIT)
-	    {
-	      /* the first leaf child is a text unit */
-	      new_ = NULL;
-	      /* check the text contents */
-	      length = TtaGetTextLength (child) + 1;
-	      text = (char *)TtaGetMemory (length);
-	      TtaGiveTextContent (child, (unsigned char *)text, &length, &lang);
-	      /* remove the old number */
-	      i = 0;
-	      while (isdigit (text[i]) || text[i] == '.')
-		i++;
-	      TtaRegisterElementReplace (child, doc);
-	      TtaSetTextContent (child, (unsigned char *)s, Latin_Script, doc);
-	      TtaAppendTextContent (child, (unsigned char *)&text[i], doc);
-	      TtaFreeMemory (text);
-	      change = TRUE;
-	    }
-	  else
-	    {
-	      /* add a new text element */
-	      elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-	      new_ = TtaNewElement (doc, elType);
-	      if (child)
-		/* insert before */
-		TtaInsertSibling (new_, child, TRUE, doc);
-	      else
-		TtaInsertFirstChild (&new_, el, doc);
-	      TtaSetTextContent (new_, (unsigned char *)s, Latin_Script, doc);
-	      TtaRegisterElementCreate (new_, doc);
-	      change = TRUE;
-	    }
-	}
+          /* look for the first leaf child */
+          child = el;
+          if (child)
+            {
+              do
+                {
+                  child = TtaGetFirstChild (child);
+                  childType = TtaGetElementType (child);
+                }
+              while (!TtaIsLeaf (childType) && childType.ElSSchema == HTMLschema);
+            }
+          if (child && childType.ElSSchema == HTMLschema &&
+              childType.ElTypeNum == HTML_EL_TEXT_UNIT)
+            {
+              /* the first leaf child is a text unit */
+              new_ = NULL;
+              /* check the text contents */
+              length = TtaGetTextLength (child) + 1;
+              text = (char *)TtaGetMemory (length);
+              TtaGiveTextContent (child, (unsigned char *)text, &length, &lang);
+              /* remove the old number */
+              i = 0;
+              while (isdigit (text[i]) || text[i] == '.')
+                i++;
+              TtaRegisterElementReplace (child, doc);
+              TtaSetTextContent (child, (unsigned char *)s, Latin_Script, doc);
+              TtaAppendTextContent (child, (unsigned char *)&text[i], doc);
+              TtaFreeMemory (text);
+              change = TRUE;
+            }
+          else
+            {
+              /* add a new text element */
+              elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+              new_ = TtaNewElement (doc, elType);
+              if (child)
+                /* insert before */
+                TtaInsertSibling (new_, child, TRUE, doc);
+              else
+                TtaInsertFirstChild (&new_, el, doc);
+              TtaSetTextContent (new_, (unsigned char *)s, Latin_Script, doc);
+              TtaRegisterElementCreate (new_, doc);
+              change = TRUE;
+            }
+        }
     }
 
   if (closeUndo)
@@ -1677,7 +1677,7 @@ void MakeToc (Document doc, View view)
   ThotBool            closeUndo;
 
   /* check if there is HTML Hi elements and if the current position is
-   within a HTML Body element */
+     within a HTML Body element */
   dispMode = TtaGetDisplayMode (doc);
 
   /* get the insert point */
@@ -1686,7 +1686,7 @@ void MakeToc (Document doc, View view)
     {
       /* no selection */
       TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NO_INSERT_POINT);
-    return;
+      return;
     }
   elType = TtaGetElementType (el);
   s = TtaGetSSchemaName (elType.ElSSchema);
@@ -1701,7 +1701,7 @@ void MakeToc (Document doc, View view)
     TtaSetDisplayMode (doc, SuspendDisplay);
 
   if (TtaPrepareUndo (doc))
-      closeUndo = FALSE;
+    closeUndo = FALSE;
   else
     {
       closeUndo = TRUE;
@@ -1726,183 +1726,185 @@ void MakeToc (Document doc, View view)
   while (el)
     {
       el = TtaSearchElementAmong5Types (searchedType1, searchedType2,
-					searchedType3, searchedType4,
-					searchedType5, SearchForward, el);
+                                        searchedType3, searchedType4,
+                                        searchedType5, SearchForward, el);
       if (el)
-	{
-	  if (toc == NULL)
-	    {
-	      /* genetate the enclosing division */
-	      elType.ElTypeNum = HTML_EL_Division;
-	      TtaCreateElement (elType, doc);
-	      TtaGiveFirstSelectedElement (doc, &child, &firstChar, &i);
-	      toc = TtaGetTypedAncestor (child, elType);
-	      TtaRegisterElementDelete (child, doc);
-	      TtaRemoveTree (child, doc);
-	      if (toc)
-		{
-		  /* it's the last created element */
-		  attrType.AttrTypeNum = HTML_ATTR_Class;
-		  attr = TtaNewAttribute (attrType);
-		  TtaAttachAttribute (toc, attr, doc);
-		  TtaSetAttributeText (attr, "toc", toc, doc);
-		  TtaRegisterAttributeCreate (attr, toc, doc);
-		}
-	    }
-	  if (toc == NULL)
-	    el = NULL;
-	  else
-	    {
-	      /* does the element have an ID attribute already? */
-	      attrType.AttrTypeNum = HTML_ATTR_ID;
-	      attr = TtaGetAttribute (el, attrType);
-	      if (!attr)
-		{
-		  /* generate the ID if it does't exist */
-		  CreateTargetAnchor (doc, el, TRUE, TRUE);
-		  attr = TtaGetAttribute (el, attrType);
-		}
-	      i = TtaGetTextAttributeLength (attr) + 1;
-	      id = (char *)TtaGetMemory (i + 1);
-	      id[0] = '#';
-	      TtaGiveTextAttributeValue (attr, &id[1], &i);
+        {
+          if (toc == NULL)
+            {
+              /* genetate the enclosing division */
+              elType.ElTypeNum = HTML_EL_Division;
+              TtaCreateElement (elType, doc);
+              TtaGiveFirstSelectedElement (doc, &child, &firstChar, &i);
+              toc = TtaGetTypedAncestor (child, elType);
+              TtaRegisterElementDelete (child, doc);
+              TtaRemoveTree (child, doc);
+              if (toc)
+                {
+                  /* it's the last created element */
+                  attrType.AttrTypeNum = HTML_ATTR_Class;
+                  attr = TtaNewAttribute (attrType);
+                  TtaAttachAttribute (toc, attr, doc);
+                  TtaSetAttributeText (attr, "toc", toc, doc);
+                  TtaRegisterAttributeCreate (attr, toc, doc);
+                }
+            }
+          if (toc == NULL)
+            el = NULL;
+          else
+            {
+              /* does the element have an ID attribute already? */
+              attrType.AttrTypeNum = HTML_ATTR_ID;
+              attr = TtaGetAttribute (el, attrType);
+              if (!attr)
+                {
+                  /* generate the ID if it does't exist */
+                  CreateTargetAnchor (doc, el, TRUE, TRUE);
+                  attr = TtaGetAttribute (el, attrType);
+                }
+              i = TtaGetTextAttributeLength (attr) + 1;
+              id = (char *)TtaGetMemory (i + 1);
+              id[0] = '#';
+              TtaGiveTextAttributeValue (attr, &id[1], &i);
 	      
-	      /* locate or generate the list */
-	      elType = TtaGetElementType (el);
-	      if (elType.ElTypeNum == HTML_EL_H2)
-		{
-		  parent = toc;
-		  lH3 = lH4 = lH5 = lH6 = NULL;
-		  list = &lH2;
-		}
-	      else if (elType.ElTypeNum == HTML_EL_H3)
-		{
-		  if (lH2)
-		    parent = TtaGetLastChild (lH2);
-		  else
-		    parent = toc;
-		  lH4 = lH5 = lH6 = NULL;
-		  list = &lH3;
-		}
-	      else if (elType.ElTypeNum == HTML_EL_H4)
-		{
-		  if (lH3)
-		    parent =  TtaGetLastChild (lH3);
-		  else if (lH2)
-		    parent =  TtaGetLastChild (lH2);
-		  else
-		    parent = toc;
-		  lH5 = lH6 = NULL;
-		  list = &lH4;
-		}
-	      else if (elType.ElTypeNum == HTML_EL_H5)
-		{
-		  if (lH4)
-		    parent =  TtaGetLastChild (lH4);
-		  else if (lH3)
-		    parent =  TtaGetLastChild (lH3);
-		  else if (lH2)
-		    parent =  TtaGetLastChild (lH2);
-		  else
-		    parent = toc;
-		  lH6 = NULL;
-		  list = &lH5;
-		}
-	      else if (elType.ElTypeNum == HTML_EL_H6)
-		{
-		  if (lH5)
-		    parent =  TtaGetLastChild (lH5);
-		  else if (lH4)
-		    parent =  TtaGetLastChild (lH4);
-		  else if (lH3)
-		    parent =  TtaGetLastChild (lH3);
-		  else if (lH2)
-		    parent =  TtaGetLastChild (lH2);
-		  else
-		    parent = toc;
-		  list = &lH6;
-		}
+              /* locate or generate the list */
+              elType = TtaGetElementType (el);
+              if (elType.ElTypeNum == HTML_EL_H2)
+                {
+                  parent = toc;
+                  lH3 = lH4 = lH5 = lH6 = NULL;
+                  list = &lH2;
+                }
+              else if (elType.ElTypeNum == HTML_EL_H3)
+                {
+                  if (lH2)
+                    parent = TtaGetLastChild (lH2);
+                  else
+                    parent = toc;
+                  lH4 = lH5 = lH6 = NULL;
+                  list = &lH3;
+                }
+              else if (elType.ElTypeNum == HTML_EL_H4)
+                {
+                  if (lH3)
+                    parent =  TtaGetLastChild (lH3);
+                  else if (lH2)
+                    parent =  TtaGetLastChild (lH2);
+                  else
+                    parent = toc;
+                  lH5 = lH6 = NULL;
+                  list = &lH4;
+                }
+              else if (elType.ElTypeNum == HTML_EL_H5)
+                {
+                  if (lH4)
+                    parent =  TtaGetLastChild (lH4);
+                  else if (lH3)
+                    parent =  TtaGetLastChild (lH3);
+                  else if (lH2)
+                    parent =  TtaGetLastChild (lH2);
+                  else
+                    parent = toc;
+                  lH6 = NULL;
+                  list = &lH5;
+                }
+              else if (elType.ElTypeNum == HTML_EL_H6)
+                {
+                  if (lH5)
+                    parent =  TtaGetLastChild (lH5);
+                  else if (lH4)
+                    parent =  TtaGetLastChild (lH4);
+                  else if (lH3)
+                    parent =  TtaGetLastChild (lH3);
+                  else if (lH2)
+                    parent =  TtaGetLastChild (lH2);
+                  else
+                    parent = toc;
+                  list = &lH6;
+                }
 
-	      if (*list == NULL)
-		{
-		  /* generate the list */
-		  *list = TtaNewElement (doc, ulType);
-		  child = TtaGetLastChild (parent);
-		  if (child)
-		    TtaInsertSibling (*list, child, FALSE, doc);
-		  else
-		    TtaInsertFirstChild (list, parent, doc);
-		  TtaRegisterElementCreate (*list, doc);
-		}
-	      /* generate the list item */
-	      elType.ElTypeNum = HTML_EL_List_Item;
-	      item = TtaNewElement (doc, elType);
-	      /* generate the HTML_EL_Pseudo_paragraph */
-	      elType.ElTypeNum =  HTML_EL_Pseudo_paragraph;
-	      parent = TtaNewElement (doc, elType);
-	      TtaInsertFirstChild (&parent, item, doc);
-	      /* generate the link anchor */
-	      elType.ElTypeNum = HTML_EL_Anchor;
-	      new_ = TtaNewElement (doc, elType);
-	      TtaInsertFirstChild (&new_, parent, doc);
-	      attrType.AttrTypeNum = HTML_ATTR_HREF_;
-	      attr = TtaNewAttribute (attrType);
-	      TtaAttachAttribute (new_, attr, doc);
-	      TtaSetAttributeText (attr, id, new_, doc);
-	      TtaFreeMemory (id);
-	      id = NULL;
-	      /* get a copy of the Hi contents */
-	      srce = TtaGetFirstChild (el);
-	      prev = NULL;
-	      parent = NULL;
-	      while (srce)
-		{
-		  copyType = TtaGetElementType (srce);
-		  if (copyType.ElTypeNum == HTML_EL_Anchor &&
-		      copyType.ElSSchema == elType.ElSSchema)
-		    {
-		      /* copy the anchor contents instead of the anchor */
-		      parent = srce;
-		      srce = TtaGetFirstChild (parent);
-		    }
-		  if (srce)
-		    {
-		      /* copy children of the next source */
-		      copy = TtaCopyTree (srce, doc, doc, new_);
-		      if (copy)
-			{
-			  if (prev == NULL)
-			    /* this is the first copied element. Insert it before elem */
-			    TtaInsertFirstChild (&copy, new_, doc);
-			  else
-			    /* insert the new copied element after the element previously
-			       copied */
-			    TtaInsertSibling (copy, prev, FALSE, doc);
-			  prev = copy;
-			}
-		      TtaNextSibling (&srce);
-		    }
-		  if (srce == NULL && parent)
-		    {
-		      /* copy children of an anchor */
-		      srce = parent;
-		      parent = NULL;
-		      if (srce)
-			TtaNextSibling (&srce);
-		    }
-		}
-	      child = TtaGetLastChild (*list);
-	      if (child)
-		TtaInsertSibling (item, child, FALSE, doc);
-	      else
-		TtaInsertFirstChild (&item, *list, doc);
-	      TtaRegisterElementCreate (item, doc);
-	    }
-	}
+              if (*list == NULL)
+                {
+                  /* generate the list */
+                  *list = TtaNewElement (doc, ulType);
+                  child = TtaGetLastChild (parent);
+                  if (child)
+                    TtaInsertSibling (*list, child, FALSE, doc);
+                  else
+                    TtaInsertFirstChild (list, parent, doc);
+                  TtaRegisterElementCreate (*list, doc);
+                }
+              /* generate the list item */
+              elType.ElTypeNum = HTML_EL_List_Item;
+              item = TtaNewElement (doc, elType);
+              /* generate the HTML_EL_Pseudo_paragraph */
+              elType.ElTypeNum =  HTML_EL_Pseudo_paragraph;
+              parent = TtaNewElement (doc, elType);
+              TtaInsertFirstChild (&parent, item, doc);
+              /* generate the link anchor */
+              elType.ElTypeNum = HTML_EL_Anchor;
+              new_ = TtaNewElement (doc, elType);
+              TtaInsertFirstChild (&new_, parent, doc);
+              attrType.AttrTypeNum = HTML_ATTR_HREF_;
+              attr = TtaNewAttribute (attrType);
+              TtaAttachAttribute (new_, attr, doc);
+              TtaSetAttributeText (attr, id, new_, doc);
+              TtaFreeMemory (id);
+              id = NULL;
+              /* get a copy of the Hi contents */
+              srce = TtaGetFirstChild (el);
+              prev = NULL;
+              parent = NULL;
+              while (srce)
+                {
+                  copyType = TtaGetElementType (srce);
+                  if (copyType.ElTypeNum == HTML_EL_Anchor &&
+                      copyType.ElSSchema == elType.ElSSchema)
+                    {
+                      /* copy the anchor contents instead of the anchor */
+                      parent = srce;
+                      srce = TtaGetFirstChild (parent);
+                    }
+                  if (srce)
+                    {
+                      /* copy children of the next source */
+                      copy = TtaCopyTree (srce, doc, doc, new_);
+                      if (copy)
+                        {
+                          if (prev == NULL)
+                            /* this is the first copied element. Insert it before elem */
+                            TtaInsertFirstChild (&copy, new_, doc);
+                          else
+                            /* insert the new copied element after the element previously
+                               copied */
+                            TtaInsertSibling (copy, prev, FALSE, doc);
+                          prev = copy;
+                        }
+                      TtaNextSibling (&srce);
+                    }
+                  if (srce == NULL && parent)
+                    {
+                      /* copy children of an anchor */
+                      srce = parent;
+                      parent = NULL;
+                      if (srce)
+                        TtaNextSibling (&srce);
+                    }
+                }
+              child = TtaGetLastChild (*list);
+              if (child)
+                TtaInsertSibling (item, child, FALSE, doc);
+              else
+                TtaInsertFirstChild (&item, *list, doc);
+              TtaRegisterElementCreate (item, doc);
+            }
+        }
     }
 
   if (closeUndo)
     TtaCloseUndoSequence (doc);
+  /* force a complete redisplay to apply CSS */
+  TtaSetDisplayMode (doc, NoComputedDisplay);
   if (dispMode == DisplayImmediately)
     TtaSetDisplayMode (doc, dispMode);
   /* select the end of the toc */
@@ -1910,18 +1912,18 @@ void MakeToc (Document doc, View view)
     {
       child = prev;
       while (child)
-	{
-	  child = TtaGetLastChild (prev);
-	  if (child)
-	    prev = child;
-	}
+        {
+          child = TtaGetLastChild (prev);
+          if (child)
+            prev = child;
+        }
       elType = TtaGetElementType (prev);
       if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
-	{
-	  i = TtaGetElementVolume (prev);
-	  TtaSelectString (doc, prev, i+1, i);
-	}
+        {
+          i = TtaGetElementVolume (prev);
+          TtaSelectString (doc, prev, i+1, i);
+        }
       else
-	TtaSelectElement (doc, prev);
+        TtaSelectElement (doc, prev);
     }
 }
