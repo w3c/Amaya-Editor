@@ -54,8 +54,8 @@ typedef struct _AttSearch
 
 #ifdef _WINGUI
 #include "resource.h"
-static char       currentDocToSave[MAX_LENGTH];
-static char       currentPathName[MAX_LENGTH];
+static char       CurrentDocToSave[MAX_LENGTH];
+static char       CurrentPathName[MAX_LENGTH];
 extern HINSTANCE    hInstance;
 #endif /* _WINGUI */
 
@@ -68,6 +68,7 @@ extern HINSTANCE    hInstance;
 static char        *DefaultName;
 static char         tempSavedObject[MAX_LENGTH];
 static ThotBool     TextFormat;
+static ThotBool     SavingWithDoctype = FALSE;
 /* list attributes checked for updating URLs */
 static AttSearch    URL_attr_tab[] = {
   {HTML_ATTR_HREF_, XHTML_TYPE},
@@ -132,15 +133,15 @@ LRESULT CALLBACK GetSaveDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
       SetWindowText (GetDlgItem (hwnDlg, IDC_BROWSE), "Browse");
       SetWindowText (GetDlgItem (hwnDlg, IDCANCEL),
                      TtaGetMessage (LIB, TMSG_CANCEL));
-      SetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, currentPathName);
+      SetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, CurrentPathName);
       break;
       
     case WM_COMMAND:
       if (HIWORD (wParam) == EN_UPDATE)
         {
           if (LOWORD (wParam) == IDC_EDITDOCSAVE)
-            GetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, currentDocToSave,
-                            sizeof (currentDocToSave) - 1);
+            GetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, CurrentDocToSave,
+                            sizeof (CurrentDocToSave) - 1);
         }
       switch (LOWORD (wParam))
         {
@@ -148,10 +149,10 @@ LRESULT CALLBACK GetSaveDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
           /* by default keep the same document name */
           WIN_ListSaveDirectory (hwnDlg,
                                  TtaGetMessage (AMAYA, AM_SAVE_AS),
-                                 currentDocToSave);
-          SetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, currentDocToSave);
-          TtaExtractName (currentDocToSave, SavePath, ObjectName);
-          ThotCallback (BaseDialog + NameSave, STRING_DATA, currentDocToSave);
+                                 CurrentDocToSave);
+          SetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, CurrentDocToSave);
+          TtaExtractName (CurrentDocToSave, SavePath, ObjectName);
+          ThotCallback (BaseDialog + NameSave, STRING_DATA, CurrentDocToSave);
           break;
 
         case IDCANCEL:
@@ -162,7 +163,7 @@ LRESULT CALLBACK GetSaveDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
         case ID_CONFIRM:
           /* TODO: Extract directory and file name from urlToOpen */
           EndDialog (hwnDlg, ID_CONFIRM);
-          strcpy (LastURLName, currentDocToSave);
+          strcpy (LastURLName, CurrentDocToSave);
           ThotCallback (BaseDialog + SaveForm, INTEGER_DATA, (char *) 1);
           break;
         }
@@ -178,7 +179,7 @@ LRESULT CALLBACK GetSaveDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
   ------------------------------------------------------------------------*/
 void CreateGetSaveDlgWindow (HWND parent, char *path_name)
 {  
-  strcpy (currentPathName, path_name);
+  strcpy (CurrentPathName, path_name);
   DialogBox (hInstance, MAKEINTRESOURCE (GETSAVEDIALOG), parent,
              (DLGPROC) GetSaveDlgProc);
 }
@@ -268,9 +269,10 @@ ThotBool CheckValidEntity (NotifyAttribute *event)
   Language	        lang;
   char              mbc[20], *s;
   int               length;
-  ThotBool          isMath;
+  ThotBool          withDocType;
 
-  if (HasADoctype (event->document, &isMath))
+  HasADoctype (event->document, &withDocType);
+  if (withDocType)
     /* the document has a DocType */
     return FALSE;  /* let Thot perform normal operation */
 
@@ -812,6 +814,7 @@ void SaveDocumentAs (Document doc, View view)
   if (SavingDocument == 0)
     {
       SavingDocument = doc;
+      SavingWithDoctype = FALSE;
       strcpy (tempname, DocumentURLs[doc]);
       /* suppress compress suffixes from tempname */
       i = strlen (tempname) - 1;

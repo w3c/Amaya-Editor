@@ -2370,7 +2370,7 @@ void UpdateDoctypeMenu (Document doc)
   DocumentType    docType;
   SSchema         nature;
   char           *ptr;
-  ThotBool	      useMathML, useSVG, useHTML, isMath;
+  ThotBool	      useMathML, useSVG, useHTML, withDocType;
  
   docType = DocumentTypes[doc];
   if (docType != docText && docType != docCSS &&
@@ -2394,7 +2394,8 @@ void UpdateDoctypeMenu (Document doc)
         }
       while (nature);
 
-      if (HasADoctype (doc, &isMath))
+      HasADoctype (doc, &withDocType);
+      if (withDocType)
         {
           /* there is a Doctype */
           TtaSetItemOn  (doc, 1, File, BRemoveDoctype);
@@ -7362,7 +7363,8 @@ void InitAmaya (NotifyEvent * event)
   TtaSetTransformCallback ((Func) TransformIntoType);
   TargetName = NULL;
   TtaSetAccessKeyFunction ((Proc) AccessKeyHandler);
-  TtaSetEntityFunction ((Proc3) MapEntityByCode);
+  TtaSetEntityFunction ((Proc4) MapEntityByCode);
+  TtaSetDoctypeFunction ((Proc2) HasADoctype);
   TtaSetCopyAndCutFunction ((Proc) RegisterURLSavedElements);
   TtaSetCopyCellFunction ((Proc3) CopyCell);
   TtaSetCopyRowFunction ((Proc3) CopyRow);

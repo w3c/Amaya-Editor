@@ -75,9 +75,11 @@ static char         fileDirectory[MAX_PATH];
 static char         fileName[MAX_PATH];
 /* file extension */
 static char         fileExtension[MAX_PATH];
-static Proc3         GetEntityFunction = NULL;
+static Proc4        GetEntityFunction = NULL;
+static Proc2        GetDoctypeFunction = NULL;
 static int          ExportLength = 0;
 static ThotBool     ExportCRLF = FALSE;
+static ThotBool     DocumentHasDocType = FALSE;
 
 #include "absboxes_f.h"
 #include "applicationapi_f.h"
@@ -117,11 +119,21 @@ static void TranslateTree (PtrElement pEl, Document doc,
 
 /*----------------------------------------------------------------------
   TtaSetEntityFunction registers the function that gives entity names:
-  procedure (int entityValue, char **entityName)
+  procedure (int entityValue, Document doc, ThotBool withMath, char **entityName)
   ----------------------------------------------------------------------*/
-void TtaSetEntityFunction (Proc3 procedure)
+void TtaSetEntityFunction (Proc4 procedure)
 {
   GetEntityFunction = procedure;
+}
+
+/*----------------------------------------------------------------------
+  TtaSetDoctypeFunction registers the function that say if the document
+  has a doctype declaration.
+  procedure (Document doc, ThotBool *found);
+  ----------------------------------------------------------------------*/
+void TtaSetDoctypeFunction (Proc2 procedure)
+{
+  GetDoctypeFunction = procedure;
 }
 
 /*----------------------------------------------------------------------
@@ -256,7 +268,8 @@ static void ExportChar (wchar_t c, int fnum, char *outBuf, Document doc,
             {
               if (GetEntityFunction)
                 /* check if there is a DOCTYPE */
-                (*(Proc3)GetEntityFunction) ((void *)c, (void *)doc, (void *)&entity);
+                (*(Proc4)GetEntityFunction) ((void *)c, (void *)doc,
+                                             (void *)entityName, (void *)&entity);
               else
                 entity = NULL;
               if (entity)
@@ -277,8 +290,9 @@ static void ExportChar (wchar_t c, int fnum, char *outBuf, Document doc,
                (c > 255 && pDoc->DocCharset == ISO_8859_1))
         {
           /* generate an entity into an ASCII or ISO_8859_1 file */
-          if (entityName && GetEntityFunction)
-            (*(Proc3)GetEntityFunction) ((void *)c, (void *)doc, (void *)&entity);
+          if (DocumentHasDocType && GetEntityFunction)
+            (*(Proc4)GetEntityFunction) ((void *)c, (void *)doc,
+                                         (void *)entityName,(void *)&entity);
           else
             entity = NULL;
           mbc[0] = '&';
@@ -310,8 +324,9 @@ static void ExportChar (wchar_t c, int fnum, char *outBuf, Document doc,
           if (mbc[0] == EOS && c != EOS)
             {
               /* generate an entity */
-              if (entityName && GetEntityFunction)
-                (*(Proc3)GetEntityFunction) ((void *)c, (void *)doc, (void *)&entity);
+              if (DocumentHasDocType && GetEntityFunction)
+                (*(Proc4)GetEntityFunction) ((void *)c, (void *)doc,
+                                             (void *)entityName, (void *)&entity);
               else
                 entity = NULL;
               mbc[0] = '&';
@@ -1063,8 +1078,7 @@ static void TranslateLeaf (PtrElement pEl, ThotBool transChar,
           markupPreserve = TypeHasException (ExcMarkupPreserve,
                                              pParent->ElTypeNumber,
                                              pParent->ElStructSchema);
-          entityName = (!strcmp (pEl->ElStructSchema->SsName, "MathML") ||
-                        LoadedDocument[doc - 1]->DocCharset == US_ASCII);
+          entityName = !strcmp (pEl->ElStructSchema->SsName, "MathML");
           if (!pTransAlph || !transChar)
             /* on ne traduit pas quand la table de traduction est vide */
             /* parcourt les buffers de l'element */
@@ -3938,6 +3952,13 @@ ThotBool ExportDocument (Document doc, char *fName, char *tschema,
   else
     // Keep lines as they are for text files
     ExportLength = 0;
+
+  /* check if the document has a doctype */
+  if (GetDoctypeFunction)
+    /* check if there is a DOCTYPE */
+    (*(Proc2)GetDoctypeFunction) ((void *)doc, (void *)&DocumentHasDocType);
+  else
+    DocumentHasDocType = FALSE;
   /* create the main output file */
   outputFile = TtaWriteOpen (fName);
   if (outputFile == NULL)

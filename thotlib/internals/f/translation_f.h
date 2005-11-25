@@ -6,7 +6,8 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void TtaSetEntityFunction ( Proc3 procedure );
+extern void TtaSetEntityFunction ( Proc4 procedure );
+extern void TtaSetDoctypeFunction ( Proc2 procedure );
 extern void TtaGetTime ( char *s,
                          CHARSET charset );
 extern ThotBool ExportDocument ( Document doc,
@@ -29,7 +30,8 @@ extern ThotBool TtaExportDocumentWithNewLineNumbers ( Document document,
 
 #else /* __STDC__ */
 
-extern void TtaSetEntityFunction ( Proc3 procedure );
+extern void TtaSetEntityFunction ( Proc4 procedure );
+extern void TtaSetDoctypeFunction ( Proc2 procedure );
 extern void TtaGetTime ( char *s,
                            CHARSET charset );
 extern ThotBool ExportDocument ( Document doc,

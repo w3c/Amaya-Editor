@@ -602,9 +602,8 @@ char *GetXMLAttributeName (AttributeType attrType, ElementType elType,
 
 /*----------------------------------------------------------------------
   HasADoctype returns TRUE if the document includes a DocType
-  isMath returns TRUE if math entities are accepted.
   ----------------------------------------------------------------------*/
-ThotBool HasADoctype (Document doc, ThotBool *isMath)
+void HasADoctype (Document doc, ThotBool *found)
 {
   Element         el_doc, el_doctype;
   ElementType     elType;
@@ -613,7 +612,6 @@ ThotBool HasADoctype (Document doc, ThotBool *isMath)
   /* Look for a doctype */
   el_doc = TtaGetMainRoot (doc);
   elType = TtaGetElementType (el_doc);
-  *isMath = FALSE;
   /* Search the doctype declaration according to the main schema */
   s = TtaGetSSchemaName (elType.ElSSchema);
   if (strcmp (s, "HTML") == 0)
@@ -621,18 +619,11 @@ ThotBool HasADoctype (Document doc, ThotBool *isMath)
   else if (strcmp (s, "SVG") == 0)
     elType.ElTypeNum = SVG_EL_DOCTYPE;
   else if (strcmp (s, "MathML") == 0)
-    {
-      elType.ElTypeNum = MathML_EL_DOCTYPE;
-      *isMath = TRUE;
-    }
+    elType.ElTypeNum = MathML_EL_DOCTYPE;
   else
     elType.ElTypeNum = XML_EL_doctype;
   el_doctype = TtaSearchTypedElement (elType, SearchInTree, el_doc);
-  if (strcmp (s, "HTML") == 0)
-    {
-      // check the doctype
-    }
-  return (el_doctype != NULL);
+  *found = (el_doctype != NULL);
 }
 
 
@@ -700,20 +691,18 @@ ThotBool MapXMLEntity (int XMLtype, char *entityName, int *entityValue)
   MapEntityByCode
   Generic function which searchs in the Entity Mapping Table (table)
   the entry with code entityValue and give the corresponding name.
+  withMath is TRUE when MathML entities are accepted.
   Returns FALSE if entityValue is not found.
   ----------------------------------------------------------------------*/
-void MapEntityByCode (int entityValue, Document doc, char **entityName)
+void MapEntityByCode (int entityValue, Document doc, ThotBool withMath,
+                      char **entityName)
 {
   XmlEntity  *ptr;
-  ThotBool    found, isMath;
+  ThotBool    found;
   int         i;
 
-  if (!HasADoctype (doc, &isMath))
-    ptr = NULL;
-  else
-    /* Select the right table */
-    ptr = XhtmlEntityTable;
-
+  /* Select the right table */
+  ptr = XhtmlEntityTable;
   if (ptr)
     {
       /* look for in the HTML entities table */
@@ -729,7 +718,7 @@ void MapEntityByCode (int entityValue, Document doc, char **entityName)
               i--;
               *entityName = (char *) (ptr[i].charName);
             }
-          else if (isMath && ptr != MathEntityTable)
+          else if (withMath && ptr != MathEntityTable)
             /* look for in the Math entities table */
             ptr = MathEntityTable;
           else

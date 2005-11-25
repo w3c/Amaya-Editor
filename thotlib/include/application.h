@@ -101,10 +101,17 @@ extern void TtaInitialize (char *applicationName);
 extern void TtaSetApplicationQuit (Proc procedure);
 
 /*----------------------------------------------------------------------
-  TtaSetEntityFunction registers the function that gives entity names.
-  procedure (int entityValue, int doc, char **entityName)
+  TtaSetEntityFunction registers the function that gives entity names:
+  procedure (int entityValue, Document doc, ThotBool withMath, char **entityName)
   ----------------------------------------------------------------------*/
-void TtaSetEntityFunction (Proc3 procedure);
+extern void TtaSetEntityFunction (Proc4 procedure);
+
+/*----------------------------------------------------------------------
+  TtaSetDoctypeFunction registers the function that say if the document
+  has a doctype declaration.
+  procedure (Document doc, ThotBool *found);
+  ----------------------------------------------------------------------*/
+extern void TtaSetDoctypeFunction (Proc2 procedure);
 
 /*----------------------------------------------------------------------
    TtaQuit
