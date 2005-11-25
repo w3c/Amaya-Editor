@@ -54,7 +54,7 @@ SaveAsDlgWX::SaveAsDlgWX( int ref,
   SetTitle( wx_title );
 
   // Document format radio box
-  if ( doc_type == docCSS ||  doc_type == docText)
+  if ( doc_type == docSource || doc_type == docCSS ||  doc_type == docText)
     {
       // now hide unused field
       wxWindow * p_obj;
@@ -72,6 +72,13 @@ SaveAsDlgWX::SaveAsDlgWX( int ref,
       p_obj->GetContainingSizer()->Show(p_obj, FALSE);
       p_obj = XRCCTRL(*this, "wxID_STATICLINE", wxStaticLine);
       p_obj->GetContainingSizer()->Show(p_obj, FALSE);
+      if ( doc_type == docSource)
+        {
+          p_obj = XRCCTRL(*this, "wxID_CHARSET", wxStaticText);
+          p_obj->GetContainingSizer()->Show(p_obj, FALSE);
+          p_obj = XRCCTRL(*this, "wxID_CHARSET_CB", wxComboBox);
+          p_obj->GetContainingSizer()->Show(p_obj, FALSE);
+        }
       GetSizer()->SetSizeHints( this );
     }
   else
