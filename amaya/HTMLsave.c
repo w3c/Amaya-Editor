@@ -68,7 +68,6 @@ extern HINSTANCE    hInstance;
 static char        *DefaultName;
 static char         tempSavedObject[MAX_LENGTH];
 static ThotBool     TextFormat;
-static ThotBool     SavingWithDoctype = FALSE;
 /* list attributes checked for updating URLs */
 static AttSearch    URL_attr_tab[] = {
   {HTML_ATTR_HREF_, XHTML_TYPE},
@@ -814,7 +813,6 @@ void SaveDocumentAs (Document doc, View view)
   if (SavingDocument == 0)
     {
       SavingDocument = doc;
-      SavingWithDoctype = FALSE;
       strcpy (tempname, DocumentURLs[doc]);
       /* suppress compress suffixes from tempname */
       i = strlen (tempname) - 1;
