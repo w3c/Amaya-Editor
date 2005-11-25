@@ -3,7 +3,8 @@
 <head>
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <title>Bienvenue à Amaya</title>
-  <meta name="generator" content="amaya 9.2, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 9.2.2, see http://www.w3.org/Amaya/"
+  />
   <link href="amaya.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -77,8 +78,7 @@
 <h1>Bienvenue à Amaya 9.2</h1>
 
 <p>Amaya est un client Web qui sert à la fois de navigateur et d'outil
-d'édition. Il a été conçu par le <a onclick=""
-href="http://www.w3.org/">W3C</a> et l'<a onclick=""
+d'édition. Il a été conçu par le <a href="http://www.w3.org/">W3C</a> et l'<a
 href="http://www.inria.fr/">INRIA</a> avec pour but essentiel la
 démonstration des nouvelles technologies Web et aider les utilisateurs à
 créer des pages Web valides.<br />

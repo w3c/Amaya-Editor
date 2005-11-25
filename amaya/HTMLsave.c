@@ -954,19 +954,19 @@ char *UpdateDocumentCharset (Document doc)
   ----------------------------------------------------------------------*/
 void SetNamespacesAndDTD (Document doc)
 {
-  Element		root, el, head, meta, docEl, doctype, elFound, text;
+  Element		    root, el, head, meta, docEl, doctype, elFound, text, elDecl;
   ElementType		elType;
-  Attribute		attr;
+  Attribute		  attr;
   AttributeType	attrType;
-  SSchema              nature;
-  Language              lang;
-  char                *ptr, *s;
-  char                *charsetname = NULL;
-  char		        buffer[300];
-  char                *attrText;
-  int                  length, profile, pi_type;
-  ThotBool		useMathML, useSVG, useHTML, useXML, mathPI;
-  ThotBool             xmlDecl, xhtml_mimetype, insertMeta;
+  SSchema       nature;
+  Language      lang;
+  char         *ptr, *s;
+  char         *charsetname = NULL;
+  char		      buffer[300];
+  char         *attrText;
+  int           length, profile, pi_type;
+  ThotBool		  useMathML, useSVG, useHTML, useXML, mathPI;
+  ThotBool      xmlDecl, xhtml_mimetype, insertMeta;
 
   insertMeta = FALSE;
   useMathML = FALSE;
@@ -975,6 +975,7 @@ void SetNamespacesAndDTD (Document doc)
   useXML = FALSE;
   nature = NULL;
   doctype = NULL; /* no DOCTYPE */
+  elDecl = NULL;
 #ifdef ANNOTATIONS
   if (DocumentTypes[doc] == docAnnot)
     /* in an annotation, the body of the annotation corresponds to the
@@ -1100,20 +1101,23 @@ void SetNamespacesAndDTD (Document doc)
                 text = elFound;
               length = 300;
               TtaGiveTextContent (text, (unsigned char *)buffer, &length, &lang);
-              if (strstr (buffer, "pmathml.xsl"))
+              if (strstr (buffer, "xml version="))
                 {
-                  /* it's not necessary to generate the math PI */
-                  mathPI = FALSE;
+                  if (strstr (buffer, charsetname))
+                    {
+                      /* it's not necessary to generate the XML declaration */
+                      xmlDecl = FALSE;
+                      elDecl = elFound;
+                    }
+                  else
+                    {
+                      // the charset changed -> regenerate the declaration
+                      xmlDecl = TRUE;
+                      elDecl = NULL;
+                      TtaDeleteTree (elFound, doc);
+                    }
                   elFound = NULL;
-                }
-              else
-                {
-                  if (strstr (buffer, "xml version="))
-                    /* it's not necessary to generate the XML declaration */
-                    xmlDecl = FALSE;
-
                   /* check next PI ? */
-                  elFound = NULL;
                   TtaNextSibling (&el);
                   if (el)
                     {
@@ -1123,25 +1127,15 @@ void SetNamespacesAndDTD (Document doc)
                         elFound = TtaGetFirstChild (el);
                     }
                 }
+              else if (strstr (buffer, "pmathml.xsl"))
+                {
+                  /* it's not necessary to generate the math PI */
+                  mathPI = FALSE;
+                  elFound = NULL;
+                }
             }
         }
 
-      if (mathPI)
-        {
-          /* generate the David Carliste's xsl stylesheet for MathML */
-          /* Check the Thot abstract tree against the structure schema. */
-          TtaSetStructureChecking (FALSE, doc);
-          elType.ElTypeNum = HTML_EL_XMLPI;
-          el = TtaNewTree (doc, elType, "");
-          TtaInsertFirstChild (&el, docEl, doc);
-          elFound = TtaGetFirstChild (el);
-          text = TtaGetFirstChild (elFound);
-          strcpy (buffer, MATHML_XSLT_URI);
-          strcat (buffer, MATHML_XSLT_NAME);
-          strcat (buffer, "\"");
-          TtaSetTextContent (text, (unsigned char*)buffer,  Latin_Script, doc);
-          TtaSetStructureChecking (TRUE, doc);
-        }
       if (xmlDecl)
         {
           /* generate the XML declaration */
@@ -1149,11 +1143,31 @@ void SetNamespacesAndDTD (Document doc)
           TtaSetStructureChecking (FALSE, doc);
           elType.ElTypeNum = HTML_EL_XMLPI;
           el = TtaNewTree (doc, elType, "");
+          elDecl = el;
           TtaInsertFirstChild (&el, docEl, doc);
           elFound = TtaGetFirstChild (el);
           text = TtaGetFirstChild (elFound);
           strcpy (buffer, "xml version=\"1.0\" encoding=\"");
           strcat (buffer, charsetname);
+          strcat (buffer, "\"");
+          TtaSetTextContent (text, (unsigned char*)buffer,  Latin_Script, doc);
+          TtaSetStructureChecking (TRUE, doc);
+        }
+      if (mathPI)
+        {
+          /* generate the David Carliste's xsl stylesheet for MathML */
+          /* Check the Thot abstract tree against the structure schema. */
+          TtaSetStructureChecking (FALSE, doc);
+          elType.ElTypeNum = HTML_EL_XMLPI;
+          el = TtaNewTree (doc, elType, "");
+          if (elDecl)
+            TtaInsertSibling(el,elDecl, FALSE, doc );
+          else
+            TtaInsertFirstChild (&el, docEl, doc);
+          elFound = TtaGetFirstChild (el);
+          text = TtaGetFirstChild (elFound);
+          strcpy (buffer, MATHML_XSLT_URI);
+          strcat (buffer, MATHML_XSLT_NAME);
           strcat (buffer, "\"");
           TtaSetTextContent (text, (unsigned char*)buffer,  Latin_Script, doc);
           TtaSetStructureChecking (TRUE, doc);
@@ -3457,7 +3471,7 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
   DisplayMode         dispMode;
   ThotBool            src_is_local;
   ThotBool            dst_is_local, ok;
-  ThotBool	      docModified, toUndo;
+  ThotBool	          docModified, toUndo;
   ThotBool            new_put_def_name;
   char               *old_charset = NULL;
   char               *old_mimetype = NULL;
@@ -3831,9 +3845,14 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
               SynchronizeSourceView (&event);
             }
           else
-            /* if it's a HTML document and the source view is open, redisplay
-               the source. */
-            RedisplaySourceFile (doc);
+            {
+              /* if it's a HTML document and the source view is open, redisplay
+                 the source. */
+              if (DocumentSource[doc])
+                // update the source charset
+                TtaSetDocumentCharset (DocumentSource[doc], charset, FALSE);
+              RedisplaySourceFile (doc);
+            }
           /* Sucess of the operation */
           TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_SAVED), documentFile);
           /* remove the previous temporary file */
