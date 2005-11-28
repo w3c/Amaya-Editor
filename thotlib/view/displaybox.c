@@ -1947,7 +1947,7 @@ void DisplayBorders (PtrBox box, PtrAbstractBox pFrom, int frame,
   l = xFrame + el + from->BxLBorder - x;
   if (l > from->BxLBorder)
     l = from->BxLBorder;
-  height = box->BxHeight - box->BxBMargin;
+  height = box->BxHeight;
   b = y + h - yFrame - height + eb + from->BxBBorder;
   if (b > from->BxBBorder)
     b = from->BxBBorder;
