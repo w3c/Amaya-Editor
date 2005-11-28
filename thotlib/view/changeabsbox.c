@@ -401,7 +401,8 @@ PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc,
                     pR = pSP->PsPresentBox->PresBox[presNum - 1]->PbFirstPRule;
                 }
               else
-                pR = pSP->PsElemPRule->ElemPres[index - 1];
+                if (pSP->PsElemPRule)
+                  pR = pSP->PsElemPRule->ElemPres[index - 1];
 
               if (presBox && pSP->PsPresentBox && presNum == 0 &&
                   pHd == NULL && view == 1)

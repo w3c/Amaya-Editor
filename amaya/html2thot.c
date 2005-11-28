@@ -5109,7 +5109,7 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
                               if (beg && beg < end)
                                 end = strstr (&beg[1], "\'");
                             }
-                          if (end && end != beg)
+                          if (end && beg && end != beg)
                             {
                               /* get the document charset */
                               k = 0; j = 1;
