@@ -3715,7 +3715,7 @@ static void EndOfDoctypeDecl (char c)
                       /* get the position of the Doctype text */
                       TtaInsertFirstChild (&text, doctypeLine, HTMLcontext.doc);
 
-                      /* We use the Latin_Script language to avoid the spell_chekcer */
+                      /* We use the Latin_Script language to avoid the spell_checker */
                       /* the spell_chekcer to check the doctype */
                       TtaSetTextContent (text, (unsigned char *)buffer, Latin_Script, HTMLcontext.doc);
                     }
@@ -5016,8 +5016,9 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
   A boolean that indicates if an XML DTD is supported by Amaya
   ----------------------------------------------------------------------*/
 void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
-                     ThotBool *isXML, ThotBool *isknown, int *docProfile,
-                     CHARSET *charset, char *charsetname, DocumentType *thotType)
+                     ThotBool *isXML, ThotBool *useMath, ThotBool *isknown,
+                     int *docProfile, CHARSET *charset, char *charsetname,
+                     DocumentType *thotType)
 {
   gzFile      stream;
   char       *ptr, *beg, *end, *ptrns;
@@ -5030,6 +5031,7 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
   *docType = FALSE;
   *isXML = FALSE;
   *isknown = FALSE;
+  *useMath = FALSE;
   *docProfile = L_Other;
   *charset = UNDEFINED_CHARSET;
   *thotType = docText;
@@ -5185,6 +5187,9 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
                                               ptr = strstr (&buffer[i], "1.1");
                                               if (ptr && ptr < end)
                                                 *docProfile = L_Xhtml11;
+                                              ptr = strstr (&buffer[i], "plus MathML");
+                                              if (ptr && ptr < end)
+                                                *useMath = TRUE;
                                             }
                                         }
                                     }

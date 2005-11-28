@@ -396,37 +396,37 @@ static void    InitXmlParserContexts (void)
   prevCtxt = ctxt;
 
 #ifdef TEMPLATES
-   /* create and initialize a context for Templates */
-   ctxt = (XMLparserContext*)TtaGetMemory (sizeof (XMLparserContext));
-   if (prevCtxt == NULL)
-      firstParserCtxt = ctxt;
-   else
-      prevCtxt->NextParserCtxt = ctxt;
-   ctxt->NextParserCtxt = NULL;
-   ctxt->SSchemaName = (char *)TtaGetMemory (NAME_LENGTH);
-   strcpy ((char *)ctxt->SSchemaName, "Template");
-   ctxt->UriName = (char *)TtaGetMemory (MAX_URI_NAME_LENGTH);
-   strcpy ((char *)ctxt->UriName, (char *)Template_URI);
-   ctxt->XMLSSchema = NULL;
-   ctxt->XMLtype = Template_TYPE;
-   ctxt->MapAttribute = (Proc) MapTemplateAttribute;
-   ctxt->MapAttributeValue = (Proc) MapTemplateAttributeValue;
-   ctxt->CheckContext = (Proc) XmlCheckContext;
-   ctxt->CheckInsert = (Proc) XmlCheckInsert;
-   ctxt->ElementCreated = NULL;
-   ctxt->ElementComplete = (Proc) TemplateElementComplete;
-   ctxt->AttributeComplete = (Proc) TemplateAttributeComplete;
-   ctxt->GetDTDName = (Proc) TemplateGetDTDName;
-   ctxt->UnknownNameSpace = (Proc)UnknownTemplateNameSpace;
-   ctxt->DefaultLineBreak = TRUE;
-   ctxt->DefaultLeadingSpace = TRUE;   
-   ctxt->DefaultTrailingSpace = TRUE;  
-   ctxt->DefaultContiguousSpace = TRUE;
-   ctxt->PreserveLineBreak = TRUE;    
-   ctxt->PreserveLeadingSpace = FALSE;   
-   ctxt->PreserveTrailingSpace = FALSE;  
-   ctxt->PreserveContiguousSpace = FALSE;
-   prevCtxt = ctxt;
+  /* create and initialize a context for Templates */
+  ctxt = (XMLparserContext*)TtaGetMemory (sizeof (XMLparserContext));
+  if (prevCtxt == NULL)
+    firstParserCtxt = ctxt;
+  else
+    prevCtxt->NextParserCtxt = ctxt;
+  ctxt->NextParserCtxt = NULL;
+  ctxt->SSchemaName = (char *)TtaGetMemory (NAME_LENGTH);
+  strcpy ((char *)ctxt->SSchemaName, "Template");
+  ctxt->UriName = (char *)TtaGetMemory (MAX_URI_NAME_LENGTH);
+  strcpy ((char *)ctxt->UriName, (char *)Template_URI);
+  ctxt->XMLSSchema = NULL;
+  ctxt->XMLtype = Template_TYPE;
+  ctxt->MapAttribute = (Proc) MapTemplateAttribute;
+  ctxt->MapAttributeValue = (Proc) MapTemplateAttributeValue;
+  ctxt->CheckContext = (Proc) XmlCheckContext;
+  ctxt->CheckInsert = (Proc) XmlCheckInsert;
+  ctxt->ElementCreated = NULL;
+  ctxt->ElementComplete = (Proc) TemplateElementComplete;
+  ctxt->AttributeComplete = (Proc) TemplateAttributeComplete;
+  ctxt->GetDTDName = (Proc) TemplateGetDTDName;
+  ctxt->UnknownNameSpace = (Proc)UnknownTemplateNameSpace;
+  ctxt->DefaultLineBreak = TRUE;
+  ctxt->DefaultLeadingSpace = TRUE;   
+  ctxt->DefaultTrailingSpace = TRUE;  
+  ctxt->DefaultContiguousSpace = TRUE;
+  ctxt->PreserveLineBreak = TRUE;    
+  ctxt->PreserveLeadingSpace = FALSE;   
+  ctxt->PreserveTrailingSpace = FALSE;  
+  ctxt->PreserveContiguousSpace = FALSE;
+  prevCtxt = ctxt;
 #endif /* TEMPLATES */
 
   /* create and initialize a context for XLink */
@@ -1853,7 +1853,7 @@ static void   GetXmlElType (char *ns_uri, char *elementName,
       else
         {
           /* Search the element inside a supported DTD */	  
-	  elType->ElSSchema = currentParserCtxt->XMLSSchema;
+          elType->ElSSchema = currentParserCtxt->XMLSSchema;
           MapXMLElementType (currentParserCtxt->XMLtype, elementName, elType,
                              mappedName, content, level, XMLcontext.doc);
         }
@@ -4973,15 +4973,10 @@ static Element  SetExternalElementType (Element el, Document doc,
   into the main document
   Return TRUE if the parsing of the external document doesn't detect errors.
   ---------------------------------------------------------------------------*/
-void ParseExternalDocument (char     *fileName,
-                            char     *originalName,
-                            Element   el,
-                            ThotBool  isclosed,
-                            Document  doc,
-                            Language  lang,
-                            char     *typeName)
+void ParseExternalDocument (char *fileName, char *originalName, Element el,
+                            ThotBool isclosed, Document doc, Language lang,
+                            char *typeName)
 {
-  char         *schemaName = NULL, *tempName = NULL, *ptr = NULL;
   ElementType   elType;
   Element       parent, oldel;
   Element       copy = NULL;
@@ -4990,17 +4985,18 @@ void ParseExternalDocument (char     *fileName,
   DocumentType  thotType;
   Document      externalDoc = 0;
   CHARSET       charset;
+  NotifyElement event;
   DisplayMode   dispMode;
   gzFile        infile;
   int           parsingLevel;
-  ThotBool      xmlDec, docType, isXML, isKnown;
-  ThotBool      savParsingError;
-  ThotBool      use_ref = FALSE;
-  ThotBool      oldStructureChecking;
   char          charsetname[MAX_LENGTH];
   char          type[NAME_LENGTH];
   char         *extUseUri = NULL, *extUseId = NULL, *s = NULL, *htmlURL = NULL;
-  NotifyElement event;
+  char         *schemaName = NULL, *tempName = NULL, *ptr = NULL;
+  ThotBool      xmlDec, docType, isXML, useMath, isKnown;
+  ThotBool      savParsingError;
+  ThotBool      use_ref = FALSE;
+  ThotBool      oldStructureChecking;
 
   if (fileName == NULL)
     return;
@@ -5120,7 +5116,7 @@ void ParseExternalDocument (char     *fileName,
         {
           /* Check if there is an xml declaration with a charset declaration */
           if (tempName != EOS)
-            CheckDocHeader (tempName, &xmlDec, &docType, &isXML, &isKnown,
+            CheckDocHeader (tempName, &xmlDec, &docType, &isXML, &useMath, &isKnown,
                             &parsingLevel, &charset, charsetname, &thotType);
 	  
           /* Parse the external file */
@@ -5715,7 +5711,7 @@ static void   XmlParse (FILE *infile, CHARSET charset, ThotBool *xmlDec,
 void StartXmlParser (Document doc, char *fileName,
                      char *documentName, char *documentDirectory,
                      char *pathURL, ThotBool withDec,
-                     ThotBool withDoctype, ThotBool externalDoc)
+                     ThotBool withDoctype, ThotBool useMath, ThotBool externalDoc)
 {
   Element         el, oldel;
   CHARSET         charset;  
@@ -5829,6 +5825,9 @@ void StartXmlParser (Document doc, char *fileName,
       charset = TtaGetDocumentCharset (doc);
       /* Specific initialization for Expat */
       InitializeExpatParser (charset);
+      /* load the MathML nature if it's declared plus MathML */
+      if (useMath)
+        TtaNewNature (doc, DocumentSSchema,  NULL, "MathML", "MathMLP");
       /* Parse the input file and build the Thot tree */
       XmlParse ((FILE*)stream, charset, &xmlDec, &xmlDoctype);
 

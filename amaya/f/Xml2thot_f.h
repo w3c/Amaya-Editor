@@ -59,6 +59,7 @@ extern void StartXmlParser ( Document doc,
                              char *pathURL,
                              ThotBool withDec,
                              ThotBool withDoctype,
+                             ThotBool useMath,
                              ThotBool externalDoc );
 
 #else /* __STDC__ */
@@ -116,6 +117,7 @@ extern void StartXmlParser ( Document doc,
                                char *pathURL,
                                ThotBool withDec,
                                ThotBool withDoctype,
+                               ThotBool useMath,
                                ThotBool externalDoc );
 
 #endif /* __STDC__ */

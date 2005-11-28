@@ -922,6 +922,7 @@ static void SetCharsetMenuOff (Document doc, View view)
   TtaSetItemOff (doc, view, File, BWINDOWS_1255);
   TtaSetItemOff (doc, view, File, BISO_8859_9);
   TtaSetItemOff (doc, view, File, BWINDOWS_1254);
+  TtaSetItemOff (doc, view, File, BGB_2312);
   TtaSetItemOff (doc, view, File, BISO_2022_JP);
   TtaSetItemOff (doc, view, File, BEUC_JP);
   TtaSetItemOff (doc, view, File, BSHIFT_JIS);
@@ -2370,7 +2371,7 @@ void UpdateDoctypeMenu (Document doc)
   DocumentType    docType;
   SSchema         nature;
   char           *ptr;
-  ThotBool	      useMathML, useSVG, useHTML, withDocType;
+  ThotBool	      useMathML, useSVG, useHTML, useMath, withDocType;
  
   docType = DocumentTypes[doc];
   if (docType != docText && docType != docCSS &&
@@ -2394,7 +2395,7 @@ void UpdateDoctypeMenu (Document doc)
         }
       while (nature);
 
-      HasADoctype (doc, &withDocType);
+      HasADoctype (doc, &withDocType, &useMath);
       if (withDocType)
         {
           /* there is a Doctype */
@@ -3357,7 +3358,7 @@ void ReparseAs (Document doc, View view, ThotBool asHTML,
   char            s[MAX_LENGTH], charsetname[MAX_LENGTH];
   int             i, parsingLevel;
   ThotBool        plaintext;
-  ThotBool        xmlDec, withDoctype, isXML, isKnown;
+  ThotBool        xmlDec, withDoctype, isXML, useMath, isKnown;
 
   if (DocumentURLs[doc] == NULL ||
       (asHTML && !DocumentMeta[doc]->xmlformat))
@@ -3411,10 +3412,10 @@ void ReparseAs (Document doc, View view, ThotBool asHTML,
     {
       /* check if there is an XML declaration with a charset declaration */
       charsetname[0] = EOS;
-      CheckDocHeader (localFile, &xmlDec, &withDoctype, &isXML, &isKnown,
+      CheckDocHeader (localFile, &xmlDec, &withDoctype, &isXML, &useMath, &isKnown,
                       &parsingLevel, &doc_charset, charsetname, &thotType);
       StartXmlParser (doc, localFile, documentname, s,
-                      localFile, xmlDec, withDoctype, FALSE);
+                      localFile, xmlDec, withDoctype, useMath, FALSE);
     }
   else
     {
@@ -3516,7 +3517,7 @@ Document LoadDocument (Document doc, char *pathname,
   ThotBool            unknown;
   ThotBool            contentImage, contentText, contentApplication;
   ThotBool            plainText;
-  ThotBool            xmlDec, withDoctype, isXML, isknown;
+  ThotBool            xmlDec, withDoctype, useMath, isXML, isknown;
   ThotBool            isRDF;
 
   isRDF = FALSE;
@@ -3543,7 +3544,7 @@ Document LoadDocument (Document doc, char *pathname,
   else
     s = pathname;
 
-  CheckDocHeader (s, &xmlDec, &withDoctype, &isXML, &isknown,
+  CheckDocHeader (s, &xmlDec, &withDoctype, &isXML, &useMath, &isknown,
                   &docProfile, &charset, charsetname, &thotType);
 
   /* Check charset information in a meta */
@@ -4172,7 +4173,7 @@ Document LoadDocument (Document doc, char *pathname,
         /* Calls the corresponding parser */
         if (DocumentMeta[newdoc]->xmlformat && !plainText)
           StartXmlParser (newdoc,	localdoc, documentname, tempdir,
-                          pathname, xmlDec, withDoctype, FALSE);
+                          pathname, xmlDec, withDoctype, useMath, FALSE);
         else
           StartParser (newdoc, localdoc, documentname, tempdir,
                        pathname, plainText, FALSE);
@@ -7364,7 +7365,7 @@ void InitAmaya (NotifyEvent * event)
   TargetName = NULL;
   TtaSetAccessKeyFunction ((Proc) AccessKeyHandler);
   TtaSetEntityFunction ((Proc4) MapEntityByCode);
-  TtaSetDoctypeFunction ((Proc2) HasADoctype);
+  TtaSetDoctypeFunction ((Proc3) HasADoctype);
   TtaSetCopyAndCutFunction ((Proc) RegisterURLSavedElements);
   TtaSetCopyCellFunction ((Proc3) CopyCell);
   TtaSetCopyRowFunction ((Proc3) CopyRow);

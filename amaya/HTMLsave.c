@@ -268,9 +268,9 @@ ThotBool CheckValidEntity (NotifyAttribute *event)
   Language	        lang;
   char              mbc[20], *s;
   int               length;
-  ThotBool          withDocType;
+  ThotBool          withDocType, useMath;
 
-  HasADoctype (event->document, &withDocType);
+  HasADoctype (event->document, &withDocType, &useMath);
   if (withDocType)
     /* the document has a DocType */
     return FALSE;  /* let Thot perform normal operation */
@@ -1316,7 +1316,7 @@ ThotBool ParseWithNewDoctype (Document doc, char *localFile, char *tempdir,
   char          tempdoc2 [100];
   char          err_doc [100];
   char          err_extdoc [100];
-  ThotBool      xmlDec, withDoctype, isXML, isKnown;
+  ThotBool      xmlDec, withDoctype, isXML, useMath, isKnown;
   ThotBool      ok = FALSE;
 
   /* Clean up previous Parsing errors file */
@@ -1361,7 +1361,7 @@ ThotBool ParseWithNewDoctype (Document doc, char *localFile, char *tempdir,
   
   /* Check if there is a doctype declaration */
   charsetname[0] = EOS;
-  CheckDocHeader (localFile, &xmlDec, &withDoctype, &isXML, &isKnown,
+  CheckDocHeader (localFile, &xmlDec, &withDoctype, &isXML, &useMath, &isKnown,
                   &parsingLevel, &charset, charsetname, &thotType);
   
   /* Store the new document type */
@@ -1370,7 +1370,7 @@ ThotBool ParseWithNewDoctype (Document doc, char *localFile, char *tempdir,
   /* Calls the right parser */
   if (DocumentMeta[ext_doc]->xmlformat)       
     StartXmlParser (ext_doc, localFile, documentname, tempdir,
-                    localFile, xmlDec, withDoctype, TRUE);
+                    localFile, xmlDec, withDoctype, useMath, TRUE);
   else
     StartParser (ext_doc, localFile, documentname, tempdir, localFile, FALSE, TRUE);
   
@@ -1461,7 +1461,7 @@ void RestartParser (Document doc, char *localFile,
   DocumentType  thotType;
   char          charsetname[MAX_LENGTH];
   int           profile, parsingLevel;
-  ThotBool      xmlDec, withDoctype, isXML, isKnown;
+  ThotBool      xmlDec, withDoctype, isXML, useMath, isKnown;
 
   if (doc == 0)
     return;
@@ -1475,7 +1475,7 @@ void RestartParser (Document doc, char *localFile,
 
   /* check if there is an XML declaration with a charset declaration */
   charsetname[0] = EOS;
-  CheckDocHeader (localFile, &xmlDec, &withDoctype, &isXML, &isKnown,
+  CheckDocHeader (localFile, &xmlDec, &withDoctype, &isXML, &useMath, &isKnown,
                   &parsingLevel, &charset, charsetname, &thotType);
   /* Check charset information in a meta */
   if (charset == UNDEFINED_CHARSET)
@@ -1520,7 +1520,7 @@ void RestartParser (Document doc, char *localFile,
   /* Calls the corresponding parser */
   if (DocumentMeta[doc]->xmlformat)       
     StartXmlParser (doc, localFile, documentname, tempdir,
-                    localFile, xmlDec, withDoctype, FALSE);
+                    localFile, xmlDec, withDoctype, useMath, FALSE);
   else
     StartParser (doc, localFile, documentname, tempdir, localFile, FALSE, FALSE);
 

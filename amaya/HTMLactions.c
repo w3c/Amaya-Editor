@@ -3359,6 +3359,8 @@ void CheckSynchronize (NotifyElement *event)
               else if (event->document == HighlightDocument)
                 SynchronizeSourceView (event);
             }
+          // update menus with the new selection
+          UpdateEditorMenus (event->document);
         }
       else
         {

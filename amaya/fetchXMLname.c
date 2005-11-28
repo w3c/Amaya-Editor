@@ -190,6 +190,34 @@ SSchema GetXMLSSchema (int XMLtype, Document doc)
     return NULL;
 }
 
+/*--------------------------------------------------------------------------
+  HasNatures
+  Check if there are MathML and/or SVG natures
+  --------------------------------------------------------------------------*/
+void HasNatures (Document document, ThotBool *useMathML, ThotBool *useSVG)
+{
+  SSchema         nature;
+  char           *ptr;
+
+  /* look for a MathML or SVG nature within the document */
+  nature = NULL;
+  *useMathML = FALSE;
+  *useSVG = FALSE;
+  do
+    {
+      TtaNextNature (document, &nature);
+      if (nature)
+        {
+          ptr = TtaGetSSchemaName (nature);
+          if (!strcmp (ptr, "MathML"))
+            *useMathML = TRUE;
+          if (!strcmp (ptr, "SVG"))
+            *useSVG = TRUE;
+        }
+    }
+  while (nature);
+}
+
 /*----------------------------------------------------------------------
   MapXMLElementType
   Generic function which searchs in the Element Mapping table, selected
@@ -603,11 +631,12 @@ char *GetXMLAttributeName (AttributeType attrType, ElementType elType,
 /*----------------------------------------------------------------------
   HasADoctype returns TRUE if the document includes a DocType
   ----------------------------------------------------------------------*/
-void HasADoctype (Document doc, ThotBool *found)
+void HasADoctype (Document doc, ThotBool *found, ThotBool *useMath)
 {
   Element         el_doc, el_doctype;
   ElementType     elType;
   char           *s;
+  ThotBool        useSVG;
 
   /* Look for a doctype */
   el_doc = TtaGetMainRoot (doc);
@@ -624,6 +653,7 @@ void HasADoctype (Document doc, ThotBool *found)
     elType.ElTypeNum = XML_EL_doctype;
   el_doctype = TtaSearchTypedElement (elType, SearchInTree, el_doc);
   *found = (el_doctype != NULL);
+  HasNatures (doc, useMath, &useSVG);
 }
 
 
@@ -684,6 +714,9 @@ ThotBool MapXMLEntity (int XMLtype, char *entityName, int *entityValue)
             }
         }
     }
+  if (!found && ptr == XhtmlEntityTable)
+    // check MathML entities
+    return MapXMLEntity (MATH_TYPE, entityName, entityValue);
   return found;
 }
 
@@ -709,7 +742,7 @@ void MapEntityByCode (int entityValue, Document doc, ThotBool withMath,
       found = FALSE;
       while (ptr && !found)
         {
-          for (i = 0; ptr[i].charCode >= 0 && !found; i++)
+          for (i = 0; ptr[i].charCode != 0 && !found; i++)
             found = (ptr[i].charCode == entityValue);
   
           if (found)

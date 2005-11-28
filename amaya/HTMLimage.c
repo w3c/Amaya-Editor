@@ -571,7 +571,7 @@ void DisplayImage (Document doc, Element el, LoadedImageDesc *desc,
   ThotBool            modified;
   int                 i;
   ThotBool            is_svg, is_mml, is_html, htmlok;
-  ThotBool            xmlDec, withDoctype, isXML, isKnown;
+  ThotBool            xmlDec, withDoctype, isXML, useMath, isKnown;
   DocumentType        thotType;
   PicType             picType;
   int                 parsingLevel;
@@ -649,8 +649,8 @@ void DisplayImage (Document doc, Element el, LoadedImageDesc *desc,
                 is_html = TRUE;
               else /* try sniffing */
                 {
-                  CheckDocHeader (tempfile, &xmlDec, &withDoctype, &isXML, &isKnown,
-                                  &parsingLevel, &charset, charsetname, &thotType);
+                  CheckDocHeader (tempfile, &xmlDec, &withDoctype, &isXML, &useMath,
+                                  &isKnown, &parsingLevel, &charset, charsetname, &thotType);
                   if (isXML && thotType == docSVG)
                     is_svg = TRUE;
                   if (isXML && thotType == docMath)

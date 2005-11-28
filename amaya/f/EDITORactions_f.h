@@ -34,9 +34,6 @@ extern void InitializeNewDoc ( char *url,
                                ThotBool isXML );
 extern void RemoveDoctype ( Document document,
                             View view );
-extern void HasNatures ( Document document,
-                         ThotBool *useMathML,
-                         ThotBool *useSVG );
 extern void AddDoctype ( Document document,
                          View view );
 extern void CreateDoctypeXhtml11 ( Document document,
@@ -301,9 +298,6 @@ extern void InitializeNewDoc ( char *url,
                                  ThotBool isXML );
 extern void RemoveDoctype ( Document document,
                               View view );
-extern void HasNatures ( Document document,
-                           ThotBool *useMathML,
-                           ThotBool *useSVG );
 extern void AddDoctype ( Document document,
                            View view );
 extern void CreateDoctypeXhtml11 ( Document document,

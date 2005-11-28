@@ -46,6 +46,7 @@
 #include "AHTURLTools_f.h"
 #include "EDITORactions_f.h"
 #include "EDITimage_f.h"
+#include "fetchXMLname_f.h"
 #include "HTMLactions_f.h"
 #include "HTMLedit_f.h"
 #include "HTMLhistory_f.h"
@@ -736,34 +737,6 @@ void RemoveDoctype (Document document, View view)
     }
   /* Synchronize the document */
   Synchronize (document, view);
-}
-
-/*--------------------------------------------------------------------------
-  HasNatures
-  Check if there are MathML and/or SVG natures
-  --------------------------------------------------------------------------*/
-void HasNatures (Document document, ThotBool *useMathML, ThotBool *useSVG)
-{
-  SSchema         nature;
-  char           *ptr;
-
-  /* look for a MathML or SVG nature within the document */
-  nature = NULL;
-  *useMathML = FALSE;
-  *useSVG = FALSE;
-  do
-    {
-      TtaNextNature (document, &nature);
-      if (nature)
-        {
-          ptr = TtaGetSSchemaName (nature);
-          if (!strcmp (ptr, "MathML"))
-            *useMathML = TRUE;
-          if (!strcmp (ptr, "SVG"))
-            *useSVG = TRUE;
-        }
-    }
-  while (nature);
 }
 
 /*--------------------------------------------------------------------------

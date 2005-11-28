@@ -19,6 +19,9 @@ extern SSchema GetGenericXMLSSchemaByUri ( char *uriName,
                                            ThotBool *isnew );
 extern SSchema GetXMLSSchema ( int XMLtype,
                                Document doc );
+extern void HasNatures ( Document document,
+                         ThotBool *useMathML,
+                         ThotBool *useSVG );
 extern void MapXMLElementType ( int XMLtype,
                                 char *XMLname,
                                 ElementType *elType,
@@ -44,7 +47,8 @@ extern char *GetXMLAttributeName ( AttributeType attrType,
                                    ElementType elType,
                                    Document doc );
 extern void HasADoctype ( Document doc,
-                          ThotBool *found );
+                          ThotBool *found,
+                          ThotBool *useMath );
 extern ThotBool MapXMLEntity ( int XMLtype,
                                char *entityName,
                                int *entityValue );
@@ -68,6 +72,9 @@ extern SSchema GetGenericXMLSSchemaByUri ( char *uriName,
                                              ThotBool *isnew );
 extern SSchema GetXMLSSchema ( int XMLtype,
                                  Document doc );
+extern void HasNatures ( Document document,
+                           ThotBool *useMathML,
+                           ThotBool *useSVG );
 extern void MapXMLElementType ( int XMLtype,
                                   char *XMLname,
                                   ElementType *elType,
@@ -93,7 +100,8 @@ extern char *GetXMLAttributeName ( AttributeType attrType,
                                      ElementType elType,
                                      Document doc );
 extern void HasADoctype ( Document doc,
-                            ThotBool *found );
+                            ThotBool *found,
+                            ThotBool *useMath );
 extern ThotBool MapXMLEntity ( int XMLtype,
                                  char *entityName,
                                  int *entityValue );

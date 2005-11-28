@@ -109,9 +109,9 @@ extern void TtaSetEntityFunction (Proc4 procedure);
 /*----------------------------------------------------------------------
   TtaSetDoctypeFunction registers the function that say if the document
   has a doctype declaration.
-  procedure (Document doc, ThotBool *found);
+  procedure (Document doc, ThotBool *found, ThotBool *useMath);
   ----------------------------------------------------------------------*/
-extern void TtaSetDoctypeFunction (Proc2 procedure);
+extern void TtaSetDoctypeFunction (Proc3 procedure);
 
 /*----------------------------------------------------------------------
    TtaQuit
