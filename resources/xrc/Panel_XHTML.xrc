@@ -17,7 +17,7 @@
                       <object class="sizeritem">
                         <object class="wxBitmapButton" name="wxID_BUTTON_EXPAND">
                           <bitmap>../icons/misc/expand_on.png</bitmap>
-                          <style>wxNO_BORDER</style>
+                          <style platform="unix|win">wxNO_BORDER</style>
                         </object>
                         <flag>wxALIGN_CENTRE</flag>
                       </object>
@@ -25,13 +25,6 @@
                         <object class="wxStaticText" name="wxID_LABEL_TITLE">
                           <label>*XHTML*</label>
                           <style>wxALIGN_LEFT</style>
-                          <font>
-                            <size>10</size>
-                            <style>default</style>
-                            <weight>normal</weight>
-                            <family>normal</family>
-                            <underlined>0</underlined>
-                          </font>
                         </object>
                         <option>1</option>
                         <flag>wxALIGN_CENTRE</flag>
@@ -39,7 +32,7 @@
                       <object class="sizeritem">
                         <object class="wxBitmapButton" name="wxID_BUTTON_DETACH">
                           <bitmap>../icons/misc/detach.png</bitmap>
-                          <style>wxNO_BORDER</style>
+                          <style platform="unix|win">wxNO_BORDER</style>
                         </object>
                         <flag>wxALIGN_CENTRE</flag>
                       </object>
