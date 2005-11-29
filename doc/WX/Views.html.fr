@@ -5,7 +5,7 @@
 <head>
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <title>Vues d'un document</title>
-  <meta name="GENERATOR" content="amaya 9.1.4, see http://www.w3.org/Amaya/"
+  <meta name="GENERATOR" content="amaya 9.2.2, see http://www.w3.org/Amaya/"
   />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -68,7 +68,7 @@ travers un document.</p>
       contenu). Vous pouvez vous focaliser dessus pour travailler sur les
       liens hypertextes.</dd>
   <dt>Vue table des matières</dt>
-    <dd>Cette vue visualise tous les titres (éléments <code>Hn</code>) et
+    <dd>Cette vue visualise tous les titres (éléments <kbd>Hn</kbd>) et
       uniquement ces éléments. Si le document est bien structuré, elle
       visualise une vue synthétique du document.</dd>
   <dt>Vue source</dt>
@@ -105,7 +105,7 @@ correspondante :</p>
       </td>
       <td
       style="border:none; border-bottom:solid .5pt; padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText"><code>Ctrl v Ctrl f</code></p>
+        class="TableText"><kbd>Ctrl u Ctrl f</kbd></p>
       </td>
     </tr>
     <tr>
@@ -115,7 +115,7 @@ correspondante :</p>
       </td>
       <td
       style="border:none; border-bottom:solid .5pt; padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText"><code>Ctrl v Ctrl s</code></p>
+        class="TableText"><kbd>Ctrl u Ctrl s</kbd></p>
       </td>
     </tr>
     <tr>
@@ -125,7 +125,7 @@ correspondante :</p>
       </td>
       <td
       style="border:none; border-bottom:solid .5pt; padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText"><code>Ctrl v Ctrl a</code></p>
+        class="TableText"><kbd>Ctrl u Ctrl a</kbd></p>
       </td>
     </tr>
     <tr>
@@ -135,7 +135,7 @@ correspondante :</p>
       </td>
       <td
       style="border:none; border-bottom:solid .5pt; padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText"><code>Ctrl v Ctrl l</code></p>
+        class="TableText"><kbd>Ctrl u Ctrl l</kbd></p>
       </td>
     </tr>
     <tr>
@@ -145,7 +145,7 @@ correspondante :</p>
       </td>
       <td
       style="border:none; border-bottom:solid .5pt; padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText"><code>Ctrl v Ctrl c</code></p>
+        class="TableText"><kbd>Ctrl u Ctrl c</kbd></p>
       </td>
     </tr>
     <tr>
@@ -155,15 +155,11 @@ correspondante :</p>
       </td>
       <td
       style="border:none; border-bottom:solid 1.5pt; padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText"><code>Ctrl v Ctrl o</code></p>
+        class="TableText"><kbd>Ctrl u Ctrl o</kbd></p>
       </td>
     </tr>
   </tbody>
 </table>
-
-<p class="Note"><strong>Note :</strong> <code>Ctrl v</code> est remplacé par
-<code>Ctrl u</code> sous Windows car <code>Ctrl v</code> est déjà utilisé
-pour la commande <strong>Copier</strong>.</p>
 
 <p class="Note"><strong>Astuce 1 :</strong> vous pouvez ouvrir rapidement la
 vue source (ou la dernière vue active) en cliquant à la souris sur le boutton

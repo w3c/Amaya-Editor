@@ -25,6 +25,20 @@ src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
 <div id="page_body">
+
+<div class="toc">
+<ul>
+  <li><a href="#Save">The Save Command</a></li>
+  <li><a href="#Save1">The Save As Command</a>
+    <ul>
+      <li><a href="#Save2">The Save As Dialog</a></li>
+    </ul>
+  </li>
+  <li><a href="#Saving">Saving and characters encoding (charset)</a></li>
+  <li><a href="#Saving1">Saving Documents as Text</a></li>
+</ul>
+</div>
+
 <h2>Saving and Publishing Amaya</h2>
 
 <p>Amaya enables you to save (X)HTML documents either in <span
@@ -45,7 +59,7 @@ save local files, using the <span class="Link"><strong>Save</strong></span>
 and <span class="link"><strong>Save As</strong></span> commands. During these
 operations, Amaya also saves any newly added images.</p>
 
-<h3>The Save Command</h3>
+<h3 id="Save">The Save Command</h3>
 
 <p>The <strong>Save</strong> command saves the current document to the
 original location. You can access the <strong>Save</strong> command by
@@ -60,11 +74,10 @@ directory name. This is very useful when browsing, but is not supported by
 the put method. In this case, Amaya detects that the document name is missing
 and asks you either to use a default name or to complete the request.</p>
 
-<p class="Note"><strong>Note</strong>:    <br />
-Use the <strong>Save As</strong> command to save your document to a different
-location.</p>
+<p class="Note"><strong>Note</strong>:    Use the <strong>Save As</strong>
+command to save your document to a different location.</p>
 
-<h3>The Save As Command</h3>
+<h3 id="Save1">The Save As Command</h3>
 
 <p>Choosing <strong>Save As</strong> from the <strong>File</strong> menu
 opens the <strong>Save As</strong> dialog, where you can: save the document
@@ -72,7 +85,7 @@ as XML, HTML, or as a text file to a local disk or a remote URI; save
 embedded images into the same document directory or a different location; and
 transform embedded URIs.</p>
 
-<h4>The Save As Dialog</h4>
+<h4 id="Save2">The Save As Dialog</h4>
 
 <p>The items in the dialog box, from top to bottom, left to right are used as
 follows:</p>
@@ -196,7 +209,69 @@ follows:</p>
   <li>The <strong>Cancel</strong> button terminates the command.</li>
 </ul>
 
-<h3>Saving Documents as Text</h3>
+<h3 id="Saving">Saving and characters encoding (charset)</h3>
+
+<p>Three standard encodings are considered:</p>
+<ul>
+  <li><code>us-ascii</code> is a 7-bit code that represents 96 printable
+    characters (positions 32 through 127 decimal).</li>
+  <li><code>iso-8859-1</code> is a 8-bit code that represents the same
+    characters as <code>us-ascii</code>, at the same positions, plus 95
+    additional printable characters.</li>
+  <li><code>utf-8</code> is a variable length encoding scheme for the
+    Universal Character Set - UCS (ISO10646 aka Unicode). UCS represents
+    thousands of characters. Note that the 96 first characters have the same
+    positions in UCS as in <code>us-ascii</code> (and then as in
+    <code>iso-8859-1</code>).</li>
+</ul>
+
+<p>If an XML or HTML document contains a character that is not available in
+the character set (charset) available with the encoding, a special
+representation is required. XML offers two such representations of
+characters:</p>
+<ol>
+  <li>Character references represent the position (in decimal or hexadecimal)
+    of the character in the UCS. For example, the greek letter <em>alpha</em>
+    is represented as <code>&amp;#x3b1;</code> (hexadecimal) or
+    <code>&amp;#945;</code> (decimal)</li>
+  <li>Entity references use a name to represent a content (in that case a
+    character). For example the greek letter <em>alpha</em> may be
+    represented as <code>&amp;alpha;</code></li>
+</ol>
+
+<p>Character references may be used in any XML or HTML document, but entity
+references are allowed only if the document itself contains a means to
+resolve the name.</p>
+
+<p>Entity name resolution is provided by the Document type definition which
+refers to the DTD where names and their associated contents are defined.
+Practically, this means that you can use entity references only if the
+<code>&lt;!DOCTYPE ...&gt;</code> is present and refers to a DTD that defines
+the names you use.</p>
+
+<p>With that in mind, it is easier to understand how Amaya works. By default,
+Amaya preserves the initial encoding of the document, that is the encoding
+that was associated with the document at loading time. You can check this
+encoding with command <strong>File/Document Information</strong> (Charset
+field). The <strong>Save</strong> command saves the document with that
+encoding, while the <strong>Save As</strong> command allows you to choose
+another encoding (Charset field).</p>
+
+<p>When saving a document (<strong>Save</strong> or <strong>Save As</strong>
+commands), all characters that are available in the charset of the encoding
+are just written using the encoding. Only the other characters are written
+using character or entity references. The choice between these two options is
+made according to the <code>doctype</code>. If there is a
+<code>doctype</code> that refers to a DTD that defines a name for the
+character, an entity reference is used (i.e. a name), otherwise Amaya
+generates a character reference in hexadecimal.</p>
+
+<p class="Note">Note: the <strong>File/Change The Document Type</strong>
+command allows you to associate, to change or to remove the
+<code>doctype</code> of a document at any time. This allows you to generate
+either character references or entity references.</p>
+
+<h3 id="Saving1">Saving Documents as Text</h3>
 
 <p>You san save your document as text using the <strong>Save As</strong>
 command from the <strong>File</strong> menu. HTML mark-up is replaced by

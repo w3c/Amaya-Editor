@@ -4,8 +4,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Publication</title>
-  <meta name="GENERATOR" content="amaya 9.1, see http://www.w3.org/Amaya/" />
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 9.2.2, see http://www.w3.org/Amaya/"
+  />
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -23,10 +24,24 @@ accesskey="n"><img alt="next" src="../../resources/icons/misc/right.png"
 </div>
 
 <div id="Saving">
+
+<div class="toc">
+<ul>
+  <li><a href="#Sauver">Sauver des documents en (X)HTML</a>
+    <ul>
+      <li><a href="#commande">La commande sauver</a></li>
+      <li><a href="#commande1">La commande Sauver comme</a></li>
+    </ul>
+  </li>
+  <li><a href="#Saving1">Sauver et encodage de caractères (charset)</a></li>
+  <li><a href="#Sauver1">Sauver des documents en tant que textes</a></li>
+</ul>
+</div>
+
 <h2><a name="L1052">Sauver et Publier des documents</a></h2>
 
-<p>Amaya permet de sauver les documents (X)HTML soit en format d'origne, soit
-en format texte. Les documents MathML et SVG sont sauvegardés dans leur
+<p>Amaya permet de sauver les documents (X)HTML soit en format d'origine,
+soit en format texte. Les documents MathML et SVG sont sauvegardés dans leur
 format d'origine.</p>
 
 <p>Les sauvegardes distantes et locales peuvent être accéder de deux façons,
@@ -37,7 +52,7 @@ comme</strong>.</p>
 nombre d'options de configuration que vous pouvez changer par l'intermédiaire
 du <a href="Configure.html.fr#Publishing">menu de configuration</a>.</p>
 
-<h3><a name="L1104">Sauver des documents en (X)HTML</a></h3>
+<h3 id="Sauver"><a name="L1104">Sauver des documents en (X)HTML</a></h3>
 
 <p><b>Amaya</b> ne fournit aucune vue d'ensemble de série de pages installées
 sur le serveur. Cependant il est possible de sauver des fichiers d'un serveur
@@ -45,25 +60,24 @@ comme des fichiers locaux grâce aux commandes <strong>Sauver</strong> et
 <strong>Sauver comme</strong>. Pendant ces opérations, Amaya tient compte des
 images présentes dans le document.</p>
 
-<h4><a name="L1517">La commande sauver</a></h4>
+<h4 id="commande"><a name="L1517">La commande sauver</a></h4>
 
 <p>La commande sauver peut être invoquée soit en choisissant
-<strong>Sauver</strong> depuis le menu <strong>Fichier</strong> (Ctrl-s pour
-Windows, Ctrl-x, Ctrl-s pour Unix) ou bien en cliquant sur le bouton <img
-alt="floppy" src="../../resources/icons/22x22/save.png" />. Cette commande
-sauve le document courant à son adresse d'origine. Si la réponse du serveur
-inclut l'en-tête HTTP <code>Content-Location</code>, la cible de la
-sauvegarde sera l'URL précisée par cet en-tête. Ceci est utile pour enlever
-les ambiguïtés induites par la négociation du contenu. Soient par exemple
-"report.html.fr" et "report.html.en" deux versions d'un même document, une
-écrite en français, l'autre en anglais. On utilisera l'URL virtuelle
-report.html pour référencer ce document. En fonction de la configuration du
-client, le serveur retournera soit l'un ou l'autre document lors de la
-consultation de l'URL report.html. Si le serveur supporte l'en-tête
-<code>Content-Location</code>, il indiquera dans celle-ci l'URL du document
-qu'il a actuellement servi, par exemple, report.html.fr. Dans ce cas, la
-sauvegarde du document sera faite vers cette URL en préférence de l'URL
-virtuel report.html.</p>
+<strong>Sauver</strong> depuis le menu <strong>Fichier</strong> (<kbd>Ctrl
+s</kbd>) ou bien en cliquant sur le bouton <img alt="floppy"
+src="../../resources/icons/22x22/save.png" />. Cette commande sauve le
+document courant à son adresse d'origine. Si la réponse du serveur inclut
+l'en-tête HTTP <code>Content-Location</code>, la cible de la sauvegarde sera
+l'URL précisée par cet en-tête. Ceci est utile pour enlever les ambiguïtés
+induites par la négociation du contenu. Soient par exemple "report.html.fr"
+et "report.html.en" deux versions d'un même document, une écrite en français,
+l'autre en anglais. On utilisera l'URL virtuelle report.html pour référencer
+ce document. En fonction de la configuration du client, le serveur retournera
+soit l'un ou l'autre document lors de la consultation de l'URL report.html.
+Si le serveur supporte l'en-tête <code>Content-Location</code>, il indiquera
+dans celle-ci l'URL du document qu'il a actuellement servi, par exemple,
+report.html.fr. Dans ce cas, la sauvegarde du document sera faite vers cette
+URL en préférence de l'URL virtuel report.html.</p>
 
 <p>Les images nouvellement ajoutées sont sauvées dans le même répertoire que
 celui du document et aucune confirmation n'est demandée, excepté si le nom du
@@ -79,7 +93,7 @@ s'affranchir de ce problème.</p>
 autre endroit, la commande <strong>Sauver comme</strong> devra être utilisée
 à la place.</p>
 
-<h4><a name="L1518">La commande Sauver comme</a></h4>
+<h4 id="commande1"><a name="L1518">La commande Sauver comme</a></h4>
 
 <p>Le fait de sélectionner l'entrée <strong>Sauver comme</strong> dans le
 menu <strong>Fichier</strong> ouvre une boîte de dialogue qui vous permet de
@@ -136,11 +150,11 @@ fichier local.</p>
   </li>
   <li>Le <strong>Format de document</strong> propose le choix entre
     <strong>HTML</strong>, <strong>XML</strong> (XHTML) et
-    <strong>Text</strong> pour les documents HTML. Ce sous-menu n'est pas
+    <strong>Texte</strong> pour les documents HTML. Ce sous-menu n'est pas
     proposé quand on sauve un document SVG, MathML, CSS ou tout autre type.
-    Par défaut Amaya conserve le format d'origine du document. Le format Text
-    (<a href="#L1105">voir plus bas</a>) supprime les balises HTML et les
-    remplace par des espaces, sauts de lignes, etc.</li>
+    Par défaut Amaya conserve le format d'origine du document. Le format
+    Texte (<a href="#L1105">voir plus bas</a>) supprime les balises HTML et
+    les remplace par des espaces, sauts de lignes, etc.</li>
   <li>Le choix <strong>Copier les Images</strong> indique que les images
     importées dans le document courant doivent être copiées avec le document
     à une nouvelle adresse. Il vaut mieux généralement garder ce bouton
@@ -160,10 +174,10 @@ fichier local.</p>
     l'intention de les déplacer vers une adresse lointaine, la désactivation
     de la conversion en URI est nécessaire afin d'éviter le référencement des
     adresses initiales.</li>
-  <li>Le champ <strong>Charset</strong> permet de changer le charset du
+  <li>Le champ <strong>Charset</strong> permet de changer l'encodage du
     document. En activant ce bouton, un dialogue apparaîtra dans l'écran vous
-    proposant une liste des charsets disponibles. Notez que cette option
-    n'est valable que pour les documents supportant la notion de charset,
+    proposant une liste des encodages disponibles. Notez que cette option
+    n'est valable que pour les documents supportant la notion d'encodage,
     tels que les fichiers HTML ou XML. Cette option est valable pour la
     sauvegarde locale et distante d'un document.</li>
   <li>Le champ <strong>Type MIME</strong> permet de changer le type MIME d'un
@@ -202,15 +216,78 @@ fichier local.</p>
   <li>Le bouton <strong>Annuler</strong> arrête la commande.</li>
 </ul>
 
-<h3><a name="L1105">Sauver des documents en tant que textes</a></h3>
+<h3 id="Saving1">Sauver et encodage de caractères (charset)</h3>
+
+<p>Trois encodages standard sont considérés :</p>
+<ul>
+  <li><code>us-ascii</code> est un code 7-bit qui représente les 96
+    caractères imprimables (positions 32 à 127 en décimal).</li>
+  <li><code>iso-8859-1</code> est un code 8-bit qui représente les mêmes
+    caractères <code>us-ascii</code>, aux mêmes positions, plus 95 autres
+    caractères imprimables.</li>
+  <li><code>utf-8</code> est un encodage de longueur variable pour un jeu de
+    caractères universel (Universal Character Set - UCS ou ISO10646). UCS
+    représente des milliers de caractères. A noter que les 96 premiers
+    caractères ont la même position dans UCS que dans <code>us-ascii</code>
+    (et aussi dans <code>iso-8859-1</code>).</li>
+</ul>
+
+<p>Si un document XML ou HTML contient un caractère non disponible dans le
+jeu de caractères (charset) fourni avec l'encodage, une représentation est
+nécessaire. XML offre deux telles représentations des caractères :</p>
+<ol>
+  <li>Une référence caractère représente la position (en décimal ou
+    hexadécimal) du caractère dans UCS. Par exemple, la lettre grecque
+    <em>alpha</em> est représentée comme <code>&amp;#x3b1;</code>
+    (hexadécimal) ou <code>&amp;#945;</code> (décimal)</li>
+  <li>Une référence entité utilise un nom pour représenter un contenu (dans
+    ce cas un caractère). Par exemple la lettre grecque <em>alpha</em> peut
+    être représentée comme <code>&amp;alpha;</code></li>
+</ol>
+
+<p>Les références caractère peuvent être utilisées dans n'importe quel
+document XML ou HTML, mais les références entité sont autorisées seulement
+dans un document si lui-même contient un moyen de résoudre ces références.</p>
+
+<p>La résolution des références entité est fournie par la définition du type
+qui se réfère à une DTD où les noms et les contenus associés sont définis.
+Pratiquement. cela signifie que vous pouvez utiliser des références entité
+seulement si <code>le &lt;!DOCTYPE ...&gt;</code> est présent et référence
+une DTD qui définit les noms utilisés.</p>
+
+<p>Avec ceci en tête, il est plus facile de comprendre comment Amaya
+travaille. Par défaut, Amaya préserve l'encodage initial du document, c'est
+l'encodage associé au document au chargement. Vous pouvez vérifier cet
+encodage avec la commande <strong>Fichier/Informations sur le
+document</strong> (champ Code de caractère). La commande Sauver sauve le
+document avec cet encodage, tandis que la commande <strong>Sauver
+comme</strong> vous permet de choisir un autre encodage (champ Charset).</p>
+
+<p>Quand un document est sauvé (commandes <strong>Sauve</strong>r ou
+<strong>Sauver comme</strong>) tous les caractères qui sont disponibles dans
+le jeu de caractères de l'encodage sont juste écrits en utilisant cet
+encodage. Seulement les autres caractères sont écrits en utilisant les
+références caractère ou entité. Le choix entre ces deux options est fait en
+accord avec le <code>doctype</code>. S'il y a un <code>doctype</code> qui
+référence une DTD qui définit un nom pour le caractère, une référence entité
+est utilisée (i.e. un nom), sinon Amaya engendre une référence caractère en
+hexadécimal.</p>
+
+<p class="Note">Note : la commande <strong>Fichier/Changer le type du
+document</strong> vous permet d'associer, de changer ou retirer le
+<code>doctype</code> à tout moment. Ceci vous permet d'engendrer soit des
+références caractère soit des références entité.</p>
+
+<h3 id="Sauver1"><a name="L1105">Sauver des documents en tant que
+textes</a></h3>
 
 <p>La commande <strong>Sauver comme</strong> du menu <strong>Fichier</strong>
 visualise une boîte de dialogue permettant de sauver le document courant dans
-des formats différents.Le bouton <strong>Text</strong> du menu <strong>Format
-de document</strong> sauve le document sous forme de texte, dans un fichier
-local. Les balises HTML sont remplacées par des espaces, sauts de lignes,
-etc. La liste de toutes les URIs utilisées dans le document est listée dans
-ce fichier.</p>
+des formats différents.Le bouton <strong>Texte</strong> du menu
+<strong>Format de document</strong> sauve le document sous forme de texte,
+dans un fichier local. Les balises HTML sont remplacées par des espaces,
+sauts de lignes, etc. La liste de toutes les URIs utilisées dans le document
+est listée dans ce fichier.</p>
 </div>
 </body>
 </html>

@@ -4,8 +4,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Publication</title>
-  <meta name="GENERATOR" content="amaya 8.2, see http://www.w3.org/Amaya/" />
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 9.2.2, see http://www.w3.org/Amaya/"
+  />
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -98,8 +99,6 @@ ou un fichier local.</p>
     différente,</li>
   <li>transformer les URIs dans le document,</li>
 </ul>
-
-<p><img src="../images/SaveAs-fr.gif" alt="SaveAs" /></p>
 
 <p>Les choix dans la boîte de dialogue, de haut en bas, de gauche à droite
 sont utilisés comme suit :</p>
@@ -194,7 +193,7 @@ sont utilisés comme suit :</p>
     </ul>
   </li>
   <li>En cliquant sur <strong>Butiner</strong> l'utilisateur peur choisir le
-    répertoire et le fichier de sauvegarde&nbsp;:
+    répertoire et le fichier de sauvegarde :
     <ul>
       <li>Le sélecteur <strong>Répertoires</strong> montre les répertoires
         contenus dans le répertoire courant. Il devrait être utilisé pour

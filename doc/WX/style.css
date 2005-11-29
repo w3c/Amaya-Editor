@@ -128,12 +128,10 @@ hr  {
   }
 
 em  {
-  font-style: normal;
-  font-weight:  bold;
+  font-style: italic;
   }
 
 strong  {
-  /*font-style: italic;*/
   font-weight:  bold;
   }
 

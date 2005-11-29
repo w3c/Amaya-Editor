@@ -65,7 +65,7 @@
           </td>
           <td
           style="border:none; border-bottom:solid .5pt; padding:0in 5.4pt 0in 5.4pt"><p
-            class="TableText"><code>Ctrl u Ctrl s</code></p>
+            class="TableText"><kbd>Ctrl u Ctrl s</kbd></p>
           </td>
         </tr>
         <tr>
@@ -75,7 +75,7 @@
           </td>
           <td
           style="border:none; border-bottom:solid .5pt; padding:0in 5.4pt 0in 5.4pt"><p
-            class="TableText"><code>Ctrl u Ctrl a</code></p>
+            class="TableText"><kbd>Ctrl u Ctrl a</kbd></p>
           </td>
         </tr>
         <tr>
@@ -85,7 +85,7 @@
           </td>
           <td
           style="border:none; border-bottom:solid .5pt; padding:0in 5.4pt 0in 5.4pt"><p
-            class="TableText"><code>Ctrl u Ctrl l</code></p>
+            class="TableText"><kbd>Ctrl u Ctrl l</kbd></p>
           </td>
         </tr>
         <tr>
@@ -95,7 +95,7 @@
           </td>
           <td
           style="border:none; border-bottom:solid .5pt; padding:0in 5.4pt 0in 5.4pt"><p
-            class="TableText"><code>Ctrl u Ctrl c</code></p>
+            class="TableText"><kbd>Ctrl u Ctrl c</kbd></p>
           </td>
         </tr>
         <tr>
@@ -105,7 +105,7 @@
           </td>
           <td
           style="border:none; border-bottom:solid 1.5pt; padding:0in 5.4pt 0in 5.4pt"><p
-            class="TableText"><code>Ctrl u Ctrl o</code></p>
+            class="TableText"><kbd>Ctrl u Ctrl o</kbd></p>
           </td>
         </tr>
       </tbody>
