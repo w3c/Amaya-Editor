@@ -11,16 +11,17 @@
 2;1=c:\winnt\fonts\arial.ttf;2=c:\winnt\fonts\arialbd.ttf;3=c:\winnt\fonts\ariali.ttf;4=c:\winnt\fonts\arialbi.ttf;
 3;1=c:\winnt\fonts\cour.ttf;2=c:\winnt\fonts\courbd.ttf;3=c:\winnt\fonts\couri.ttf;4=c:\winnt\fonts\courbi.ttf;
 
+
 2;#Latin2 (East European)
 1;1=c:\winnt\fonts\times.ttf;2=c:\winnt\fonts\timesbd.ttf;3=c:\winnt\fonts\timesi.ttf;4=c:\winnt\fonts\timesbi.ttf;
 2;1=c:\winnt\fonts\arial.ttf;2=c:\winnt\fonts\arialbd.ttf;3=c:\winnt\fonts\ariali.ttf;4=c:\winnt\fonts\arialbi.ttf;
 3;1=c:\winnt\fonts\cour.ttf;2=c:\winnt\fonts\courbd.ttf;3=c:\winnt\fonts\couri.ttf;4=c:\winnt\fonts\courbi.ttf;
 
+
 3;#Latin3 (South European)
 1;1=c:\winnt\fonts\times.ttf;2=c:\winnt\fonts\timesbd.ttf;3=c:\winnt\fonts\timesi.ttf;4=c:\winnt\fonts\timesbi.ttf;
 2;1=c:\winnt\fonts\arial.ttf;2=c:\winnt\fonts\arialbd.ttf;3=c:\winnt\fonts\ariali.ttf;4=c:\winnt\fonts\arialbi.ttf;
 3;1=c:\winnt\fonts\cour.ttf;2=c:\winnt\fonts\courbd.ttf;3=c:\winnt\fonts\couri.ttf;4=c:\winnt\fonts\courbi.ttf;
-
 
 
 4;#Latin4 (North European)
@@ -29,12 +30,10 @@
 3;1=c:\winnt\fonts\cour.ttf;2=c:\winnt\fonts\courbd.ttf;3=c:\winnt\fonts\couri.ttf;4=c:\winnt\fonts\courbi.ttf;
 
 
-
 5;#Cyrillic
 1;1=c:\winnt\fonts\times.ttf;2=c:\winnt\fonts\timesbd.ttf;3=c:\winnt\fonts\timesi.ttf;4=c:\winnt\fonts\timesbi.ttf;
 2;1=c:\winnt\fonts\arial.ttf;2=c:\winnt\fonts\arialbd.ttf;3=c:\winnt\fonts\ariali.ttf;4=c:\winnt\fonts\arialbi.ttf;
 3;1=c:\winnt\fonts\cour.ttf;2=c:\winnt\fonts\courbd.ttf;3=c:\winnt\fonts\couri.ttf;4=c:\winnt\fonts\courbi.ttf;
-
 
 
 6;#Arabic
@@ -55,19 +54,16 @@
 3;1=c:\winnt\fonts\cour.ttf;2=c:\winnt\fonts\courbd.ttf;3=c:\winnt\fonts\couri.ttf;4=c:\winnt\fonts\courbi.ttf;
 
 
-
 9;#Latin9 (Turkish)
 1;1=c:\winnt\fonts\times.ttf;2=c:\winnt\fonts\timesbd.ttf;3=c:\winnt\fonts\timesi.ttf;4=c:\winnt\fonts\timesbi.ttf;
 2;1=c:\winnt\fonts\arial.ttf;2=c:\winnt\fonts\arialbd.ttf;3=c:\winnt\fonts\ariali.ttf;4=c:\winnt\fonts\arialbi.ttf;
 3;1=c:\winnt\fonts\cour.ttf;2=c:\winnt\fonts\courbd.ttf;3=c:\winnt\fonts\couri.ttf;4=c:\winnt\fonts\courbi.ttf;
 
 
-
 10;#Latin6 (Nordic)
 1;1=c:\winnt\fonts\times.ttf;2=c:\winnt\fonts\timesbd.ttf;3=c:\winnt\fonts\timesi.ttf;4=c:\winnt\fonts\timesbi.ttf;
 2;1=c:\winnt\fonts\arial.ttf;2=c:\winnt\fonts\arialbd.ttf;3=c:\winnt\fonts\ariali.ttf;4=c:\winnt\fonts\arialbi.ttf;
 3;1=c:\winnt\fonts\cour.ttf;2=c:\winnt\fonts\courbd.ttf;3=c:\winnt\fonts\couri.ttf;4=c:\winnt\fonts\courbi.ttf;
-
 
 
 20;#Symbols (...)
@@ -80,10 +76,8 @@
 3;1=$THOTDIR\fonts\ESSTIX11.TTF;2=$THOTDIR\fonts\ESSTIX12.TTF;3=$THOTDIR\fonts\ESSTIX13.TTF;4=$THOTDIR\fonts\ESSTIX14.TTF;5=$THOTDIR\fonts\ESSTIX15.TTF;
 4;1=$THOTDIR\fonts\ESSTIX16.TTF;2=$THOTDIR\fonts\ESSTIX17.TTF;3=$THOTDIR\fonts\ESSTIX16.TTF;4=$THOTDIR\fonts\ESSTIX17.TTF;
 
-
-
 0;#Unicode (.or ... JAPANESe)
-1;1=c:\winnt\fonts\msmincho.ttc;2=c:\winnt\fonts\msmincho.ttc;3=c:\winnt\fonts\msmincho.ttc;
-2;1=c:\winnt\fonts\msmincho.ttc;2=c:\winnt\fonts\msmincho.ttc;3=c:\winnt\fonts\msmincho.ttc;
-3;1=c:\winnt\fonts\msmincho.ttc;2=c:\winnt\fonts\msmincho.ttc;3=c:\winnt\fonts\msmincho.ttc;
-
+1;1=$THOTDIR/fonts/Cyberbit.ttf;2=$THOTDIR/fonts/Cyberbit.ttf;3=$THOTDIR/fonts/Cyberbit.ttf;4=$THOTDIR/fonts/Cyberbit.ttf;5=$THOTDIR/fonts/Cyberbit.ttf;
+2;1=$THOTDIR/fonts/Cyberbit.ttf;2=$THOTDIR/fonts/Cyberbit.ttf;3=$THOTDIR/fonts/Cyberbit.ttf;4=$THOTDIR/fonts/Cyberbit.ttf;5=$THOTDIR/fonts/Cyberbit.ttf;
+3;1=$THOTDIR/fonts/Cyberbit.ttf;2=$THOTDIR/fonts/Cyberbit.ttf;3=$THOTDIR/fonts/Cyberbit.ttf;4=$THOTDIR/fonts/Cyberbit.ttf;5=$THOTDIR/fonts/Cyberbit.ttf;
+4;1=$THOTDIR/fonts/Cyberbit.ttf;2=$THOTDIR/fonts/Cyberbit.ttf;3=$THOTDIR/fonts/Cyberbit.ttf;4=$THOTDIR/fonts/Cyberbit.ttf;5=$THOTDIR/fonts/Cyberbit.ttf;

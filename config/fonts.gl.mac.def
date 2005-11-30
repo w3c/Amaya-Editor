@@ -19,12 +19,10 @@
 3;1=$THOTDIR/fonts/FreeMono.ttf;2=$THOTDIR/fonts/FreeMonoBold.ttf;3=$THOTDIR/fonts/FreeMonoOblique.ttf;4=$THOTDIR/fonts/FreeMonoBoldOblique.ttf;
 
 
-
 3;#Latin3 (South European)
 1;1=$THOTDIR/fonts/FreeSerif.ttf;2=$THOTDIR/fonts/FreeSerifBold.ttf;3=$THOTDIR/fonts/FreeSerifItalic.ttf;4=$THOTDIR/fonts/FreeSerifBoldItalic.ttf;
 2;1=$THOTDIR/fonts/FreeSans.ttf;2=$THOTDIR/fonts/FreeSansBold.ttf;3=$THOTDIR/fonts/FreeSansOblique.ttf;4=$THOTDIR/fonts/FreeSansBoldOblique.ttf;
 3;1=$THOTDIR/fonts/FreeMono.ttf;2=$THOTDIR/fonts/FreeMonoBold.ttf;3=$THOTDIR/fonts/FreeMonoOblique.ttf;4=$THOTDIR/fonts/FreeMonoBoldOblique.ttf;
-
 
 
 4;#Latin4 (North European)
@@ -33,12 +31,10 @@
 3;1=$THOTDIR/fonts/FreeMono.ttf;2=$THOTDIR/fonts/FreeMonoBold.ttf;3=$THOTDIR/fonts/FreeMonoOblique.ttf;4=$THOTDIR/fonts/FreeMonoBoldOblique.ttf;
 
 
-
 5;#Cyrillic
 1;1=$THOTDIR/fonts/FreeSerif.ttf;2=$THOTDIR/fonts/FreeSerifBold.ttf;3=$THOTDIR/fonts/FreeSerifItalic.ttf;4=$THOTDIR/fonts/FreeSerifBoldItalic.ttf;
 2;1=$THOTDIR/fonts/FreeSans.ttf;2=$THOTDIR/fonts/FreeSansBold.ttf;3=$THOTDIR/fonts/FreeSansOblique.ttf;4=$THOTDIR/fonts/FreeSansBoldOblique.ttf;
 3;1=$THOTDIR/fonts/FreeMono.ttf;2=$THOTDIR/fonts/FreeMonoBold.ttf;3=$THOTDIR/fonts/FreeMonoOblique.ttf;4=$THOTDIR/fonts/FreeMonoBoldOblique.ttf;
-
 
 
 6;#Arabic
@@ -56,12 +52,10 @@
 3;1=$THOTDIR/fonts/FreeMono.ttf;2=$THOTDIR/fonts/FreeMonoBold.ttf;3=$THOTDIR/fonts/FreeMonoOblique.ttf;4=$THOTDIR/fonts/FreeMonoBoldOblique.ttf;
 
 
-
 8;#Hebrew
 1;1=$THOTDIR/fonts/FreeSerif.ttf;2=$THOTDIR/fonts/FreeSerifBold.ttf;3=$THOTDIR/fonts/FreeSerifItalic.ttf;4=$THOTDIR/fonts/FreeSerifBoldItalic.ttf;
 2;1=$THOTDIR/fonts/FreeSans.ttf;2=$THOTDIR/fonts/FreeSansBold.ttf;3=$THOTDIR/fonts/FreeSansOblique.ttf;4=$THOTDIR/fonts/FreeSansBoldOblique.ttf;
 3;1=$THOTDIR/fonts/FreeMono.ttf;2=$THOTDIR/fonts/FreeMonoBold.ttf;3=$THOTDIR/fonts/FreeMonoOblique.ttf;4=$THOTDIR/fonts/FreeMonoBoldOblique.ttf;
-
 
 
 9;#Latin5 (Turkish)
@@ -70,17 +64,14 @@
 3;1=$THOTDIR/fonts/FreeMono.ttf;2=$THOTDIR/fonts/FreeMonoBold.ttf;3=$THOTDIR/fonts/FreeMonoOblique.ttf;4=$THOTDIR/fonts/FreeMonoBoldOblique.ttf;
 
 
-
 10;#Latin6 (Nordic)
 1;1=$THOTDIR/fonts/FreeSerif.ttf;2=$THOTDIR/fonts/FreeSerifBold.ttf;3=$THOTDIR/fonts/FreeSerifItalic.ttf;4=$THOTDIR/fonts/FreeSerifBoldItalic.ttf;
 2;1=$THOTDIR/fonts/FreeSans.ttf;2=$THOTDIR/fonts/FreeSansBold.ttf;3=$THOTDIR/fonts/FreeSansOblique.ttf;4=$THOTDIR/fonts/FreeSansBoldOblique.ttf;
 3;1=$THOTDIR/fonts/FreeMono.ttf;2=$THOTDIR/fonts/FreeMonoBold.ttf;3=$THOTDIR/fonts/FreeMonoOblique.ttf;4=$THOTDIR/fonts/FreeMonoBoldOblique.ttf;
 
 
-
 20;#Symbols (...)
 1;1=/usr/X11R6/lib/X11/fonts/Type1/s050000l.pfb;2=/usr/X11R6/lib/X11/fonts/Type1/s050000l.pfb;
-
 
 
 21;#esstix (...)
@@ -90,10 +81,8 @@
 4;1=$THOTDIR/fonts/ESSTIX16.TTF;2=$THOTDIR/fonts/ESSTIX17.TTF;3=$THOTDIR/fonts/ESSTIX16.TTF;4=$THOTDIR/fonts/ESSTIX17.TTF;
 
 
-
 0;#Unicode (.or ... JAPANESe)
-1;1=/usr/local/share/fonts/japanese/msminch.ttc;2=/usr/local/share/fonts/japanese/msminch.ttc;3=/usr/local/share/fonts/japanese/msminch.ttc;
-2;1=/usr/local/share/fonts/japanese/msminch.ttc;2=/usr/local/share/fonts/japanese/msminch.ttc;3=/usr/local/share/fonts/japanese/msminch.ttc;
-3;1=/usr/local/share/fonts/japanese/msminch.ttc;2=/usr/local/share/fonts/japanese/msminch.ttc;3=/usr/local/share/fonts/japanese/msminch.ttc;
-
-
+1;1=$THOTDIR/fonts/Cyberbit.ttf;2=$THOTDIR/fonts/Cyberbit.ttf;3=$THOTDIR/fonts/Cyberbit.ttf;4=$THOTDIR/fonts/Cyberbit.ttf;5=$THOTDIR/fonts/Cyberbit.ttf;
+2;1=$THOTDIR/fonts/Cyberbit.ttf;2=$THOTDIR/fonts/Cyberbit.ttf;3=$THOTDIR/fonts/Cyberbit.ttf;4=$THOTDIR/fonts/Cyberbit.ttf;5=$THOTDIR/fonts/Cyberbit.ttf;
+3;1=$THOTDIR/fonts/Cyberbit.ttf;2=$THOTDIR/fonts/Cyberbit.ttf;3=$THOTDIR/fonts/Cyberbit.ttf;4=$THOTDIR/fonts/Cyberbit.ttf;5=$THOTDIR/fonts/Cyberbit.ttf;
+4;1=$THOTDIR/fonts/Cyberbit.ttf;2=$THOTDIR/fonts/Cyberbit.ttf;3=$THOTDIR/fonts/Cyberbit.ttf;4=$THOTDIR/fonts/Cyberbit.ttf;5=$THOTDIR/fonts/Cyberbit.ttf;
