@@ -219,17 +219,35 @@ if test "$with_gl" = "" ; then
   else
     with_gl="no"
   fi
-fi  
+fi 
 
 # check if gtk gui should be used
 AC_ARG_WITH(gtk, [  --with-gtk              use GTK GUI toolkit ])
 if test "$with_gtk" = "yes" -o "$enable_gtk" = "yes" ; then
   if test "$withval" = "no" ; then
     with_gtk="no"
+    with_wx="yes"
   else
     with_gtk="yes"
     with_wx="no"
   fi
+fi
+
+# check if wxWidgets gui should be used
+AC_ARG_WITH(wx, [  --with-wx               use wxWidgets GUI toolkit])
+if test "$with_wx" = "yes" -o "$enable_wx" = "yes" ; then
+  if test "$withval" = "no" ; then
+    with_wx="no"
+  else
+    with_wx="yes"
+    with_gtk="no"
+  fi
+fi
+
+if test "$with_gtk" = "" -o "$with_wx=" = "" ; then
+  # Nothing is enable so force the default GUI toolkit (WX)
+  with_gtk="no"
+  with_wx="yes"
 fi
 
 # check for mesa library (OpenGL)
@@ -243,27 +261,18 @@ if test "$with_mesa" = "" ; then
   fi
 fi
 
-# check if wxWidgets gui should be used
-AC_ARG_WITH(wx, [  --with-wx               use wxWidgets GUI toolkit (experimental)])
-if test "$with_wx" = "yes" -o "$enable_wx" = "yes" ; then
-  if test "$withval" = "no" ; then
-    with_wx="no"
-  else
-    with_wx="yes"
-  fi
-fi
 
 # Check if at least one GUI toolkit is enabled
-if test "$with_wx" = "no" -o "$with_wx" = "" ; then
-  if test "$with_gtk" = "no" -o "$with_gtk" = "" ; then
-    # Nothing is enable so force the default GUI toolkit (GTK)
-    with_wx="no"
-    with_gtk="yes"
+if test "$with_wx" = "no" ; then
+  if test "$with_gtk" = "no" ; then
+    # Nothing is enable so force the default GUI toolkit (WX)
+    with_wx="yes"
+    with_gtk="no"
   fi
 fi
 
 # mesa (software) gl implementation is default with wx (hardware gl implem can be choosen with --with-gl option)
-if test "$with_wx" = "yes" ; then
+if test "$with_wx" = "yes" -o "$with_wx" = "" ; then
  if test "$AMAYAOS" = "MACOSX" ; then
     with_mesa="no"
     with_gl="yes"
@@ -607,13 +616,13 @@ fi # with_wx = no
 
 # the wx version
 AMAYAWX_MAJVER=9
-AMAYAWX_MINVER=2
-AMAYAWX_SUBVER=2
+AMAYAWX_MINVER=3
+AMAYAWX_SUBVER=0
 
 #the old version (to remove when switching on wx)
 AMAYA_MAJVER=8
 AMAYA_MINVER=8
-AMAYA_SUBVER=2
+AMAYA_SUBVER=3
 
 if test "$with_wx" = "yes" ; then
   APP_MAJVER=$AMAYAWX_MAJVER
@@ -1086,20 +1095,19 @@ fi
 dnl
 dnl The templates support is enabled by default
 dnl
-if test "$with_templates" = "" ; then
-   if test "$enable_templates" = "no" ; then
-      with_templates="no"
-   else
-      with_templates="yes"
-   fi
-fi 
-if test "$with_templates" = "yes" ; then
+if test "$with_templates" = "yes" -o "$enable_templates" = "yes" ; then
   if test "$with_wx" = "no"; then
       AC_MSG_WARN(Templates are only available in WX version !!)
       AC_MSG_WARN(Disabling templates)
       with_templates="no"
+   else
+      with_templates="yes"
    fi
 fi
+if test "$with_templates" = "no " -o "$enable_templates" = "no"; then
+      with_templates="no"
+fi 
+
 if test "$with_templates" = "yes" ; then
     TEMPLATES_OPTIONS="-DTEMPLATES"
 else

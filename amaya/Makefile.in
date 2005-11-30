@@ -86,9 +86,9 @@ force :
 ../tools/mkdep/mkdep : 
 	@(cd ../tools/mkdep ; $(MAKE) CC="$(CC)" CFLAGS="-O -x c")
 
-../libraptor/.libs/libraptor.a \
-amaya_comp_libraptor: @MAKERAPTOR@ force
-	@(cd .. ; $(MAKE) libraptor CC="$(CC)" CFLAGS="-O2 -x c")
+#../libraptor/.libs/libraptor.a \
+#amaya_comp_libraptor: @MAKERAPTOR@ force
+#	@(cd .. ; $(MAKE) libraptor CC="$(CC)" CFLAGS="-O2 -x c")
 
 ../redland/librdf/.libs/librdf.a \
 ../redland/raptor/.libs/libraptor.a \
