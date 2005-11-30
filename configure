@@ -14616,7 +14616,9 @@ else
     with_bookmarks="no"
 fi
 
-if test "$with_templates" = "yes" -o "$enable_templates" = "yes" ; then
+if test "$with_templates" = "no " -o "$enable_templates" = "no"; then
+      with_templates="no"
+else
   if test "$with_wx" = "no"; then
       { echo "$as_me:$LINENO: WARNING: Templates are only available in WX version !!" >&5
 echo "$as_me: WARNING: Templates are only available in WX version !!" >&2;}
@@ -14627,11 +14629,8 @@ echo "$as_me: WARNING: Disabling templates" >&2;}
       with_templates="yes"
    fi
 fi
-if test "$with_templates" = "no " -o "$enable_templates" = "no"; then
-      with_templates="no"
-fi
 
-if test "$with_templates" = "yes" ; then
+if test "$with_templates" = "yes" -o "$with_templates" = "" ; then
     TEMPLATES_OPTIONS="-DTEMPLATES"
 else
     TEMPLATES_OPTIONS=""

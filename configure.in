@@ -1095,7 +1095,9 @@ fi
 dnl
 dnl The templates support is enabled by default
 dnl
-if test "$with_templates" = "yes" -o "$enable_templates" = "yes" ; then
+if test "$with_templates" = "no " -o "$enable_templates" = "no"; then
+      with_templates="no"
+else
   if test "$with_wx" = "no"; then
       AC_MSG_WARN(Templates are only available in WX version !!)
       AC_MSG_WARN(Disabling templates)
@@ -1103,12 +1105,9 @@ if test "$with_templates" = "yes" -o "$enable_templates" = "yes" ; then
    else
       with_templates="yes"
    fi
-fi
-if test "$with_templates" = "no " -o "$enable_templates" = "no"; then
-      with_templates="no"
 fi 
 
-if test "$with_templates" = "yes" ; then
+if test "$with_templates" = "yes" -o "$with_templates" = "" ; then
     TEMPLATES_OPTIONS="-DTEMPLATES"
 else
     TEMPLATES_OPTIONS=""
