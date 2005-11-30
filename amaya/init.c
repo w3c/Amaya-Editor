@@ -4378,7 +4378,14 @@ void Reload (Document doc, View view)
 
   /* if it is a source document, reload its corresponding document */
   if (DocumentTypes[doc] == docSource)
+#ifdef _WX
+    {
+      Synchronize (doc, 1);
+      doc = GetDocFromSource (doc);
+    }
+#else /* _WX */
     doc = GetDocFromSource (doc);
+#endif /* _WX */
 
   if (DocumentURLs[doc] == NULL)
     /* the document has not been loaded yet */
