@@ -3577,20 +3577,29 @@ ThotBool ElemWithinImage (PtrElement pEl, int view, PtrAbstractBox pAbbRoot,
     {
       pAsc = pEl->ElParent;
       found = FALSE;
-      while (pAsc != NULL && !found)
+      while (pAsc != NULL && !found && !finished)
         if (pAsc->ElAbstractBox[view - 1] == NULL)
-          pAsc = pAsc->ElParent;
+          {
+            if (pAsc->ElParent)
+              pAsc = pAsc->ElParent;
+            else if (pAsc != pDoc->DocDocElement)
+              {
+                // this element is not linked to the document root
+                result = FALSE;
+                finished = TRUE;
+              }
+          }
         else
           found = TRUE;
-      if (found)
-        if (pAsc->ElAbstractBox[view - 1]->AbInLine ||
-            ((!pAsc->ElAbstractBox[view - 1]->AbTruncatedHead) &&
-             (!pAsc->ElAbstractBox[view - 1]->AbTruncatedTail)))
+      if (found &&
+          (pAsc->ElAbstractBox[view - 1]->AbInLine ||
+          ((!pAsc->ElAbstractBox[view - 1]->AbTruncatedHead) &&
+           (!pAsc->ElAbstractBox[view - 1]->AbTruncatedTail))))
           /* le premier pave englobant est complet */
-          {
-            result = TRUE;
-            finished = TRUE;
-          }
+        {
+          result = TRUE;
+          finished = TRUE;
+        }
     }
   if (!finished && pEl->ElParent == NULL)
     /* c'est un element racine. Il s'agit donc d'une vue qu'on cree */

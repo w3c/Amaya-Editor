@@ -5071,11 +5071,19 @@ ThotBool ChangeConcreteImage (int frame, int *pageHeight, PtrAbstractBox pAb)
           if (pAb == pFrame->FrAbstractBox)
             ClearConcreteImage (frame);
           else
+            {
+#ifdef THOT_DEBUG
             TtaDisplaySimpleMessage (INFO, LIB, TMSG_VIEW_MODIFIED_BEFORE_CREATION);
+#endif /* THOT_DEBUG */
+            }
         }
       else if (pFrame->FrAbstractBox && pAb->AbEnclosing == NULL && pAb->AbNew)
-        /* The view is already created */
-        TtaDisplaySimpleMessage (INFO, LIB, TMSG_OLD_VIEW_NOT_REPLACED);
+        {
+          /* The view is already created */
+#ifdef THOT_DEBUG
+          TtaDisplaySimpleMessage (INFO, LIB, TMSG_OLD_VIEW_NOT_REPLACED);
+#endif /* THOT_DEBUG */
+        }
       else if (documentDisplayMode[doc - 1] != NoComputedDisplay)
         {
           /* Other cases without NoComputedDisplay mode */

@@ -506,7 +506,7 @@ void  CloseDocumentView (PtrDocument pDoc, int view, ThotBool closeDoc)
           Closing_doc = pDoc;
           Closing_view = view;
           TCloseDocument (pDoc);
-      }
+        }
     }
   if (Closing_doc == pDoc && Closing_view == view)
     {
