@@ -4488,6 +4488,8 @@ void MathElementPasted (NotifyElement *event)
      operators */
   if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
     {
+      /* remove all attributes attached to the pasted MathML_EL_TEXT_UNIT */
+      RemoveTextAttributes (event->element, event->document);
       if ((elTypeParent.ElTypeNum == MathML_EL_MI ||
            elTypeParent.ElTypeNum == MathML_EL_MO ||
            elTypeParent.ElTypeNum == MathML_EL_MN) &&

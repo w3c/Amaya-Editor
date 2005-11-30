@@ -2,17 +2,17 @@ APPLICATION SVG;
 
 DEFAULT
    BEGIN
-	ElemActivate.Pre -> DoubleClick;
-	ElemClick.Pre -> SimpleClick;
-	ElemRClick.Pre -> SimpleRClick;
-	ElemPaste.Post -> GraphElemPasted;
-        AttrMenu.Pre -> GlobalSVGAttrInMenu;
-	PRuleCreate.Pre -> GraphicsPRuleChange;
-	PRuleModify.Pre -> GraphicsPRuleChange;
-	PRuleDelete.Post -> GraphicsPRuleDeleted;
-        ElemSelect.Post -> GraphicsSelectionChanged;
-	ElemExtendSelect.Pre -> ExtendSelectSVGElement;
-	ElemExtendSelect.Post -> SelectionChanged;
+   ElemActivate.Pre -> DoubleClick;
+   ElemClick.Pre -> SimpleClick;
+   ElemRClick.Pre -> SimpleRClick;
+   ElemPaste.Post -> GraphElemPasted;
+   AttrMenu.Pre -> GlobalSVGAttrInMenu;
+   PRuleCreate.Pre -> GraphicsPRuleChange;
+   PRuleModify.Pre -> GraphicsPRuleChange;
+   PRuleDelete.Post -> GraphicsPRuleDeleted;
+   ElemSelect.Post -> GraphicsSelectionChanged;
+   ElemExtendSelect.Pre -> ExtendSelectSVGElement;
+   ElemExtendSelect.Post -> SelectionChanged;
    END;
 
 ELEMENTS

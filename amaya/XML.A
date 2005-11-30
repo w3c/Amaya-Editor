@@ -2,11 +2,12 @@ APPLICATION XML;
 
 DEFAULT
    BEGIN
-        ElemSelect.Post -> XmlSelectionChanged;
-	ElemExtendSelect.Post -> XmlSelectionChanged;
-        ElemActivate.Pre -> DoubleClick;
-        ElemClick.Pre -> SimpleClick;
-        ElemRClick.Pre -> SimpleRClick;
+   ElemSelect.Post -> XmlSelectionChanged;
+   ElemExtendSelect.Post -> XmlSelectionChanged;
+   ElemPaste.Post -> XmlElementPasted;
+   ElemActivate.Pre -> DoubleClick;
+   ElemClick.Pre -> SimpleClick;
+   ElemRClick.Pre -> SimpleRClick;
    END;
 
 ELEMENTS

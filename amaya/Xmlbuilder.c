@@ -501,6 +501,20 @@ void XmlStyleSheetPasted (NotifyElement *event)
 }
 
 /*----------------------------------------------------------------------
+  XmlElementPasted
+  ----------------------------------------------------------------------*/
+void XmlElementPasted (NotifyElement * event)
+{
+  ElementType         elType;
+
+  elType = TtaGetElementType (event->element);
+  if (elType.ElTypeNum == XML_EL_TEXT_UNIT)
+    /* remove all attributes attached to the pasted XML_EL_TEXT_UNIT */
+    RemoveTextAttributes (event->element, event->document);
+}
+
+
+/*----------------------------------------------------------------------
   CreateXMLElementMenu
   Create an XML element
   ----------------------------------------------------------------------*/

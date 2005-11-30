@@ -60,6 +60,8 @@ extern void ChangeURI ( Element el,
                         Document doc );
 extern ThotBool ElementOKforProfile ( Element el,
                                       Document doc );
+extern void RemoveTextAttributes ( Element el,
+                                   Document doc );
 extern void ElementPasted ( NotifyElement * event );
 extern void CheckNewLines ( NotifyOnTarget *event );
 extern void CreateTarget ( Document doc,
@@ -186,6 +188,8 @@ extern void ChangeURI ( Element el,
                           Document doc );
 extern ThotBool ElementOKforProfile ( Element el,
                                         Document doc );
+extern void RemoveTextAttributes ( Element el,
+                                     Document doc );
 extern void ElementPasted ( NotifyElement * event );
 extern void CheckNewLines ( NotifyOnTarget *event );
 extern void CreateTarget ( Document doc,

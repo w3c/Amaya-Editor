@@ -2,19 +2,19 @@ APPLICATION MathML;
 
 DEFAULT
    BEGIN
-	ElemActivate.Pre -> DoubleClick;
-	ElemClick.Pre -> SimpleClick;
-	ElemRClick.Pre -> SimpleRClick;
-        ElemNew.Post -> MathElementCreated;
-	ElemPaste.Post -> MathElementPasted;
-	ElemDelete.Pre -> MathElementWillBeDeleted;
-	ElemDelete.Post -> MathElementDeleted;
-	ElemSelect.Post -> MathSelectionChanged;
-	ElemExtendSelect.Post -> MathSelectionChanged;
-	AttrMenu.Pre -> GlobalMathAttrInMenu;
-	PRuleCreate.Pre -> ChangePRule;
-	PRuleModify.Pre -> ChangePRule;
-	PRuleDelete.Post -> PRuleDeleted;
+   ElemActivate.Pre -> DoubleClick;
+   ElemClick.Pre -> SimpleClick;
+   ElemRClick.Pre -> SimpleRClick;
+   ElemNew.Post -> MathElementCreated;
+   ElemPaste.Post -> MathElementPasted;
+   ElemDelete.Pre -> MathElementWillBeDeleted;
+   ElemDelete.Post -> MathElementDeleted;
+   ElemSelect.Post -> MathSelectionChanged;
+   ElemExtendSelect.Post -> MathSelectionChanged;
+   AttrMenu.Pre -> GlobalMathAttrInMenu;
+   PRuleCreate.Pre -> ChangePRule;
+   PRuleModify.Pre -> ChangePRule;
+   PRuleDelete.Post -> PRuleDeleted;
    END;
 
 ELEMENTS

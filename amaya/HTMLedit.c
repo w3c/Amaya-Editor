@@ -2533,6 +2533,24 @@ static void CheckDescendants (Element el, Document doc)
 }
 
 /*----------------------------------------------------------------------
+  RemoveTextAttributes
+  removes all attributes attached to a TEXT_UNIT
+  ----------------------------------------------------------------------*/
+void RemoveTextAttributes (Element el, Document doc)
+{
+  Attribute           attr;
+
+  do
+    {
+      attr = NULL;
+      TtaNextAttribute (el, &attr);
+      if (attr)
+        TtaRemoveAttribute (el, attr, doc);
+    }
+  while (attr);
+}
+
+/*----------------------------------------------------------------------
   ElementPasted
   This function is called for each element pasted by the user, and for
   each element within the pasted element.
@@ -2590,7 +2608,10 @@ void ElementPasted (NotifyElement * event)
         EnableStyleElement (doc, el);
       else if (elType.ElTypeNum == HTML_EL_TEXT_UNIT ||
                elType.ElTypeNum == HTML_EL_Inserted_Text)
-        {  
+        {
+          if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+            /* remove all attributes attached to the pasted HTML_EL_TEXT_UNIT */
+            RemoveTextAttributes (el, doc);
           parent = TtaGetParent (el);
           elType = TtaGetElementType (parent);
           if (elType.ElTypeNum == HTML_EL_TITLE)
