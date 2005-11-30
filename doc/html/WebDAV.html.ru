@@ -104,7 +104,7 @@ href="http://andrew2.andrew.cmu.edu/rfc/rfc2518.html">RFC 2518</a>, а также
 изменения.</p>
 
 <p><a id="L654"><img alt="Меню Совместная работа"
-src="../images/CooperationMenu-ru.gif"></a></p>
+src="../images/CooperationMenu.gif"></a></p>
 
 <p>Поэтому, если вы хотите знать, блокировал ли ваш коллега веб страницу, для
 этого вы можете использовать пункт <em>Просмотр свойств ресурса</em> из меню

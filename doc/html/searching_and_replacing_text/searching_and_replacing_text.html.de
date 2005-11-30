@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+  <meta name="generator" content="amaya 9.3, see http://www.w3.org/Amaya/" />
   <title>Text suchen und ersetzen</title>
   <style type="text/css">
   </style>
@@ -31,11 +30,8 @@
 <p>Der Dialog <strong>Suchen und Ersetzen</strong> wird über das Menü
 <strong>Bearbeiten</strong>, den Knopf <img src="../../images/find.gif"
 alt="Knopf Suchen/Ersetzen" /> in der Knopfleiste oder das Tastenkürzel
-<kbd>Strg Umsch %</kbd> (Unix) oder <kbd>Strg f</kbd> (Windows)
-aufgerufen. Es wird folgender Dialog angezeigt:</p>
-
-<p><img alt="Dialog Suchen und ersetzen"
-src="../../images/search_and_replace-de.png" /></p>
+<kbd>Strg Umsch %</kbd> (Unix) oder <kbd>Strg f</kbd> (Windows) aufgerufen.
+Es wird folgender Dialog angezeigt:</p>
 
 <p>Hier kann man Text nach verschiedenen Kriterien suchen und ersetzen:</p>
 <ul type="disc">

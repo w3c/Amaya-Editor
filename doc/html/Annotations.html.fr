@@ -4,9 +4,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Annotations</title>
-  <meta name="GENERATOR" content="amaya 9.0.1, see http://www.w3.org/Amaya/"
-  />
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 9.3, see http://www.w3.org/Amaya/" />
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -125,10 +124,7 @@ d'annotations sur lequel les annotations distantes sont enregistrées.</p>
 <h3 id="Annotation">Menu des annotations</h3>
 
 <p>La plupart des commandes utilisées pour la gestion des annotations se
-trouvent dans le menu d'annotations représenté ci dessous.</p>
-
-<p style="text-align: center"><img src="../images/annotationsmenu-fr.png"
-alt="Annotations menu" /></p>
+trouvent dans le menu d'annotations.</p>
 
 <h3 id="Configurat">Menu de configuration pour les annotations</h3>
 
@@ -292,12 +288,8 @@ terminer et le rappeler pour voir le nouvel état.</p>
 
 <p>Pour chaque annotation, le nom de l'utilisateur est obtenu en concaténant
 le nom de l'auteur et le nom du serveur d'annotations sur lequel celle-ci est
-enregistrée, comme montré dans la figure suivante.</p>
+enregistrée.</p>
 
-<p></p>
-
-<p style="text-align: center"><img src="../images/localfilter.png"
-alt="local filter dialog box" /></p>
 
 <h3 id="Navigating">Activer des annotations</h3>
 
