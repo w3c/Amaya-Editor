@@ -4605,6 +4605,8 @@ static char *ParseCSSBackground (Element element, PSchema tsch,
       /* perhaps a Background Image */
       if (!strncasecmp (cssRule, "url", 3) || !strncasecmp (cssRule, "none", 4))
         {
+          if (!strncasecmp (cssRule, "none", 4))
+            repeat = TRUE;
           cssRule = ParseCSSBackgroundImage (element, tsch, ctxt, cssRule,
                                              css, isHTML);
           img = TRUE;
