@@ -3899,23 +3899,37 @@
 <message xml:lang="it">Vuota la lista degli URL</message></label>
 <label define="AM_SHOWSHORTCUTS">
 <message xml:lang="en">Display all shortcuts</message>
-<message xml:lang="fr">Montrer tous les raccourcis</message></label>
+<message xml:lang="fr">Montrer tous les raccourcis</message>
+<message xml:lang="it">Mostra tutti gli shortcut</message>
+<message xml:lang="es">Mostrar todos los atajos</message></label>
 <label define="AM_EXPORT_LENGTH">
 <message xml:lang="en">Fixed line length (0 = default value)</message>
-<message xml:lang="fr">Longueur de ligne fixée (0 = valeur par défaut)</message></label>
+<message xml:lang="fr">Longueur de ligne fixée (0 = valeur par défaut)</message>
+<message xml:lang="it">Lunghezza riga fissata (0 = valore di default)</message>
+<message xml:lang="es">Longitud de línea fijada (0 = default value)</message></label>
 <label define="AM_TEMPLATE">
 <message xml:lang="en">Template</message>
-<message xml:lang="fr">Modèle</message></label>
+<message xml:lang="fr">Modèle</message>
+<message xml:lang="it">Modello</message>
+<message xml:lang="es">Plantilla</message></label>
 <label define="AM_TEMPLATE_INSTANCE">
 <message xml:lang="en">Save the document as...</message>
-<message xml:lang="fr">Enregistrer le document sous...</message></label>
+<message xml:lang="fr">Enregistrer le document sous...</message>
+<message xml:lang="it">Salva il documento come...</message>
+<message xml:lang="es">Guardar como...</message></label>
 <label define="AM_BAD_TEMPLATE">
 <message xml:lang="en">Template not found</message>
-<message xml:lang="fr">Le modèle n'existe pas</message></label>
+<message xml:lang="fr">Le modèle n'existe pas</message>
+<message xml:lang="it">Modello non trovato</message>
+<message xml:lang="es">No se encuentra la plantilla</message></label>
 <label define="AM_SHOW_TEMPLATES">
 <message xml:lang="en">Show template's boxes</message>
-<message xml:lang="fr">Montrer les cadres des modèles</message></label>
+<message xml:lang="fr">Montrer les cadres des modèles</message>
+<message xml:lang="it">Mostra i box per il modello</message>
+<message xml:lang="es">Mostrar cajas de plantilla</message></label>
 <label define="AM_CLOSE_WHEN_APPLY">
 <message xml:lang="en">Apply closes the dialogue</message>
-<message xml:lang="fr">Appliquer ferme le dialogue</message></label>
+<message xml:lang="fr">Appliquer ferme le dialogue</message>
+<message xml:lang="it">Applica chiude questo dialogo</message>
+<message xml:lang="es">Aplicar cierra el diálogo</message></label>
 <label define="AMAYA_MSG_MAX"></label></messages></base>

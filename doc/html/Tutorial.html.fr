@@ -25,7 +25,7 @@ body {padding-left: 2em}</style>
 <h1 id="Amaya">Amaya - Guide utilisateur</h1>
 
 <p class="head"><span class="author">Irène Vatton</span> <br />
-Dernière mise à jour : <!--$date=-->30-11-2005 - 17:09<!--$-->
+Dernière mise à jour : <!--$date=-->01-12-2005 - 11:43<!--$-->
 </p>
 </div>
 

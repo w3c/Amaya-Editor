@@ -2485,6 +2485,8 @@
 <label define="TMSG_LIB_BOXES">
 	<message xml:lang="en">Boxes</message>
 	<message xml:lang="fr">Boîtes</message>
+	<message xml:lang="it">Box</message>
+	<message xml:lang="es">Cajas</message>
 </label>
 <label define="TMSG_BUTTON_DIV">
 	<message xml:lang="en">Division</message>

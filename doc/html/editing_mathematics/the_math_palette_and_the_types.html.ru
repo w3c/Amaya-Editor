@@ -1,9 +1,8 @@
 <html>
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
-  <title>Кнопка Математика и меню Математика
-</title>
-  <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/">
+  <meta http-equiv="content-type" content="text/html; charset=windows-1251">
+  <title>Кнопка Математика и меню Математика </title>
+  <meta name="GENERATOR" content="amaya 9.3, see http://www.w3.org/Amaya/">
   <link href="../style.css" rel="stylesheet" type="text/css">
 </head>
 
@@ -122,11 +121,11 @@ MathML элемента.</p>
     </math>или <math xmlns="http://www.w3.org/1998/Math/MathML">
       <mrow>
         <msubsup>
-          <mo largeop="true">&Integral;</mo>
+          <mo largeop="true">&#x222b;</mo>
           <mn>0</mn>
-          <mo>&infin;</mo>
+          <mo>&#x221e;</mo>
         </msubsup>
-        <mo>&nbsp;</mo>
+        <mo> </mo>
       </mrow>
     </math></li>
   <li>Выражение с нижним индексом, <code>msub</code>: <math
@@ -146,7 +145,7 @@ MathML элемента.</p>
   <li>Выражение с подсимвольным и надсимвольным индексом,
     <code>munderover</code>: <math xmlns="http://www.w3.org/1998/Math/MathML">
       <munderover>
-        <mo movablelimits="false">&Sum;</mo>
+        <mo movablelimits="false">&#x2211;</mo>
         <mrow>
           <mi>i</mi>
           <mo>=</mo>
@@ -159,7 +158,7 @@ MathML элемента.</p>
     xmlns="http://www.w3.org/1998/Math/MathML">
       <munder>
         <mi>x</mi>
-        <mo>&OverBar;</mo>
+        <mo>&#xaf;</mo>
       </munder>
     </math></li>
   <li>Выражение с надсимвольным индексом, <code>mover</code>: <math
@@ -167,7 +166,7 @@ MathML элемента.</p>
       <mrow>
         <mi>x</mi>
         <mover>
-          <mo>&RightArrow;</mo>
+          <mo>&#x2192;</mo>
           <mtext>maps to</mtext>
         </mover>
         <mi>y</mi>
@@ -219,7 +218,6 @@ MathML элемента.</p>
       </mtable>
     </math></li>
 </ul>
-
 
 <h2>Смотрите также:</h2>
 <ul>

@@ -370,10 +370,10 @@
 368 Avisar cuando se cierren mútiples pestañas
 369 Número máximo de URLs en el historial
 370 Borrar historial
-371 **Display all shortcuts
-372 **Fixed line length (0 = default value)
-373 **Template
-374 **Save the document as...
-375 **Template not found
-376 **Show template's boxes
-377 **Apply closes the dialogue
+371 Mostrar todos los atajos
+372 Longitud de línea fijada (0 = default value)
+373 Plantilla
+374 Guardar como...
+375 No se encuentra la plantilla
+376 Mostrar cajas de plantilla
+377 Aplicar cierra el diálogo

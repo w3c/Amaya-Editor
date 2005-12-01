@@ -1,8 +1,8 @@
 <html>
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1">
   <title>La paleta Matemáticas y el menú XML</title>
-  <meta name="GENERATOR" content="amaya 8.3-, see http://www.w3.org/Amaya/">
+  <meta name="GENERATOR" content="amaya 9.3, see http://www.w3.org/Amaya/">
   <link href="../style.css" rel="stylesheet" type="text/css">
 </head>
 
@@ -121,11 +121,11 @@ que acepte la expresión. Las expresiones disponibles son:</p>
     </math>or <math xmlns="http://www.w3.org/1998/Math/MathML">
       <mrow>
         <msubsup>
-          <mo largeop="true">&Integral;</mo>
+          <mo largeop="true">&#x222b;</mo>
           <mn>0</mn>
-          <mo>&infin;</mo>
+          <mo>&#x221e;</mo>
         </msubsup>
-        <mo>&nbsp;</mo>
+        <mo> </mo>
       </mrow>
     </math></li>
   <li>Expresión con subíndice, <code>msub</code>: <math
@@ -145,7 +145,7 @@ que acepte la expresión. Las expresiones disponibles son:</p>
   <li>Expresión con expresión encima o abajo, <code>munderover</code>: <math
     xmlns="http://www.w3.org/1998/Math/MathML">
       <munderover>
-        <mo movablelimits="false">&Sum;</mo>
+        <mo movablelimits="false">&#x2211;</mo>
         <mrow>
           <mi>i</mi>
           <mo>=</mo>
@@ -158,7 +158,7 @@ que acepte la expresión. Las expresiones disponibles son:</p>
     xmlns="http://www.w3.org/1998/Math/MathML">
       <munder>
         <mi>x</mi>
-        <mo>&OverBar;</mo>
+        <mo>¯</mo>
       </munder>
     </math></li>
   <li>Expresión con expresión encima, <code>mover</code>: <math
@@ -166,7 +166,7 @@ que acepte la expresión. Las expresiones disponibles son:</p>
       <mrow>
         <mi>x</mi>
         <mover>
-          <mo>&RightArrow;</mo>
+          <mo>&#x2192;</mo>
           <mtext>mapsto</mtext>
         </mover>
         <mi>y</mi>
@@ -220,7 +220,7 @@ que acepte la expresión. Las expresiones disponibles son:</p>
 
 <p>El último elemento de la paleta <strong>MathML</strong> (<math
 xmlns="http://www.w3.org/1998/Math/MathML">
-  <mi>&alpha;&beta;&gamma;</mi>
+  <mi>&#x3b1;&#x3b2;&#x3b3;</mi>
 </math>) abre otra paleta de la que puedes extraer símbolos matemáticos y
 caracteres griegos.</p>
 

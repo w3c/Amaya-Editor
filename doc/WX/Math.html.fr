@@ -4,8 +4,7 @@
 <head>
   <title>Editer des mathématiques</title>
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 9.2.2, see http://www.w3.org/Amaya/"
-  />
+  <meta name="GENERATOR" content="amaya 9.3, see http://www.w3.org/Amaya/" />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -145,7 +144,7 @@ construction. Les constructions disponibles sont :</p>
     </math> ou <math xmlns="http://www.w3.org/1998/Math/MathML">
       <mrow>
         <msubsup>
-          <mo>&int;</mo>
+          <mo>&#x222b;</mo>
           <mn>0</mn>
           <mo>&#x221e;</mo>
         </msubsup>
@@ -181,7 +180,7 @@ construction. Les constructions disponibles sont :</p>
     xmlns="http://www.w3.org/1998/Math/MathML">
       <munder>
         <mi>x</mi>
-        <mo>&OverBar;</mo>
+        <mo>¯</mo>
       </munder>
     </math></li>
   <li>Dessus (<code>mover)</code>: <math
@@ -189,7 +188,7 @@ construction. Les constructions disponibles sont :</p>
       <mrow>
         <mi>x</mi>
         <mover>
-          <mo>&RightArrow;</mo>
+          <mo>&#x2192;</mo>
           <mtext>maps to</mtext>
         </mover>
         <mi>y</mi>
