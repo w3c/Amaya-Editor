@@ -431,15 +431,9 @@ void AmayaApp::SetupDocumentIconList()
   int i = 0;
   while ( icon_array[i][0] != '\0' )
     {
-      char gif_filename[128];
       char png_filename[128];
-      sprintf(gif_filename, "document_%s.gif", icon_array[i] );
       sprintf(png_filename, "document_%s.png", icon_array[i] );
-#ifdef _WINDOWS
-      wxBitmap icon( TtaGetResourcePathWX( WX_RESOURCES_ICON_16X16, gif_filename), wxBITMAP_TYPE_GIF );
-#else /* _WINDOWS */
       wxBitmap icon( TtaGetResourcePathWX( WX_RESOURCES_ICON_16X16, png_filename), wxBITMAP_TYPE_PNG );
-#endif /* _WINDOWS */
       m_pDocImageList->Add( icon );
       i++;
     }
