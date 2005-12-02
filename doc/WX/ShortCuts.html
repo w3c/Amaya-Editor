@@ -4,8 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 9.1.4, see http://www.w3.org/Amaya/"
-  />
+  <meta name="GENERATOR" content="amaya 9.3, see http://www.w3.org/Amaya/" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Keyboard Shortcuts in Amaya</title>
   <style type="text/css">
@@ -28,12 +27,17 @@ src="../../resources/icons/misc/right.png" /></a></p>
 <div id="page_body">
 <h2>Keyboard Shortcuts in Amaya</h2>
 
-<p>It is useful to invoke menu commands directly from the keyboard. The Thot
-toolkit enables you accomplish this using an application keyboard shortcuts
-file. This file defines a list of associations between an invoked command and
-a keyboard sequence.</p>
+<p>Keyboard shortcuts are useful to invoke menu commands directly from the
+keyboard. The Thot toolkit enables you accomplish this using application
+keyboard shortcuts files (one per paltform). These files define a list of
+associations between an invoked command and a keyboard sequence. They are
+located in the Amaya/config directory: <code>amaya.keyboard</code> (Linux),
+<code>amaya.kb</code> (Windows) and <code>amaya.kb-mac</code> (<a
+href="ShortCuts-MacOSX.html">See the standard keyboard shortcuts for Mac
+OS X</a>).</p>
 
-<p>The syntax used to define an association is:</p>
+<p>These files can be modified to define you own shortcuts. The syntax used
+to define an association is:</p>
 
 <p><code>Directive = KeySeq ':' IdentCommand ;<br />
  KeysSeq = KeySet [ ',' KeySet ] ;<br />
@@ -50,10 +54,6 @@ OctalValue = '\' NUMBER ;<br />
 Entity = DecEntity / HexaEntity ; <br />
 DecEntity = '&amp;' '#' NUMBER ';' ; <br />
 HexaEntity = '&amp;' '#' 'x' HEXADECIMAL ';' ;</code></p>
-
-<p>To view an example, see the standard files amaya.keyboard (for Unix
-platforms) and amaya.kb (for Windows platforms), which are located in the
-<span class="Link0">Amaya/config directory</span>.</p>
 
 <p>The list of available commands is (a more up to date list can be found in
 <a href="http://www.w3.org/Amaya/User/SourceDist.html">Amaya's sources</a> :
