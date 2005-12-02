@@ -3906,7 +3906,7 @@
 <message xml:lang="en">Fixed line length (0 = default value)</message>
 <message xml:lang="fr">Longueur de ligne fixée (0 = valeur par défaut)</message>
 <message xml:lang="it">Lunghezza riga fissata (0 = valore di default)</message>
-<message xml:lang="es">Longitud de línea fijada (0 = default value)</message></label>
+<message xml:lang="es">Longitud de línea (0 = valor predeterminado)</message></label>
 <label define="AM_TEMPLATE">
 <message xml:lang="en">Template</message>
 <message xml:lang="fr">Modèle</message>
