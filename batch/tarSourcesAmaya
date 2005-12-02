@@ -12,7 +12,7 @@
 #
 
 # default parameters
-AMAYAVERSION="9.2"
+AMAYAVERSION="9.3"
 DEST=$HOME
 
 # Check argument number on the command line
@@ -326,6 +326,7 @@ ${AMAYADIR}/batch/comp_toolbar.bmp \
 ${AMAYADIR}/batch/*.c \
 ${AMAYADIR}/batch/f/*.h \
 ${AMAYADIR}/config/amaya.kb \
+${AMAYADIR}/config/amaya.kb-mac \
 ${AMAYADIR}/config/amaya.keyboard \
 ${AMAYADIR}/config/amaya.emacs \
 ${AMAYADIR}/config/amaya.profiles \
