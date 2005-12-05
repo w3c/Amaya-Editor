@@ -1441,10 +1441,10 @@ static void UpdateClass (Document doc)
 static void PutClassName (Attribute attr, char *className, char *buf,
                           int *index, int *free, int *nb)
 {
-  int		len, cur, i;
-  unsigned char selector[200];
-  unsigned char *ptr, *name;
-  ThotBool      found;
+  int		         len, cur, i, k;
+  unsigned char  selector[200];
+  char          *ptr, *name;
+  ThotBool       found, previous;
 
   if (attr)
     {
@@ -1452,11 +1452,11 @@ static void PutClassName (Attribute attr, char *className, char *buf,
       TtaGiveTextAttributeValue (attr, (char *)selector, &len);
       selector[len+1] = EOS;
       /* get the first name contained in the attribute */
-      ptr = selector;
-      ptr = (unsigned char *)TtaSkipBlanks ((char *)ptr);
+      ptr = (char *)selector;
+      ptr = TtaSkipBlanks (ptr);
     }
   else
-    ptr = (unsigned char *)className;
+    ptr = className;
 
   while (ptr && *ptr != EOS)
     {
@@ -1469,30 +1469,54 @@ static void PutClassName (Attribute attr, char *className, char *buf,
       /* compare that name with all class names already known */
       cur = 0;
       found = FALSE;
-      for (i = 0; i < *nb && !found; i++)
+      previous = FALSE;
+      for (i = 0; i < *nb && !found && !previous; i++)
         {
           if (buf[cur] == '.')
             cur++;
           len = strlen (&buf[cur]) + 1;
-          found = !strcmp ((char *)name, (char *)&buf[cur]);
-          cur += len;
+          found = !strcmp (name, &buf[cur]);
+          previous = (cur != 0 && name[0] < buf[cur]);
+          if (!found && !previous && cur != 0)
+            {
+              k = 0;
+              while (name[k] == buf[cur+k])
+                k++;
+              previous = (name[k] < buf[cur+ k]);
+            }
+          if (!previous)
+            cur += len;
         }
+
       if (!found)
         /* this class name is not known, append it */
         {
-          len = strlen ((char *)name);
+          len = strlen (name);
+          len++; /* add the \0 */
           if (len > *free)
             return;
-          /* add this new class name with a dot */
-          buf[(*index)++] = '.';
-          strcpy ((char *)&buf[*index], (char *)name);
-          len++; /* add the \0 */
+          if (i  < *nb)
+            {
+              // move the tail of the current list
+              cur--;
+              for (k = *index; k >= cur; k--)
+                buf[k+len+1] = buf[k];
+            /* add this new class name with a dot at the current position */
+              buf[cur++] = '.';
+              strcpy (&buf[cur], name);
+            }
+          else
+            {
+            /* add this new class name with a dot at the end */
+              buf[(*index)++] = '.';
+              strcpy (&buf[*index], name);
+            }
           *free -= len;
           *index += len;
           (*nb)++;
         }
       /* skip spaces after the name that has just been processed */
-      ptr = (unsigned char *)TtaSkipBlanks ((char *)ptr);
+      ptr = TtaSkipBlanks (ptr);
       /* and process the next name, if any */
     }
 }
