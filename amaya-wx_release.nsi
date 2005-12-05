@@ -8,7 +8,7 @@
 ;General
 
   ;Name and file
-  !define VERSION "9.2.2"
+  !define VERSION "9.3"
   Name "Amaya ${VERSION}"
   OutFile "amaya-WinXP-${VERSION}.exe"
   
@@ -76,13 +76,13 @@
 ;  !insertmacro MUI_LANGUAGE "TradChinese"
 ;  !insertmacro MUI_LANGUAGE "Japanese"
 ;  !insertmacro MUI_LANGUAGE "Korean"
-;  !insertmacro MUI_LANGUAGE "Italian"
+  !insertmacro MUI_LANGUAGE "Italian"
 ;  !insertmacro MUI_LANGUAGE "Dutch"
 ;  !insertmacro MUI_LANGUAGE "Danish"
 ;  !insertmacro MUI_LANGUAGE "Swedish"
 ;  !insertmacro MUI_LANGUAGE "Norwegian"
-;  !insertmacro MUI_LANGUAGE "Finnish"
-;  !insertmacro MUI_LANGUAGE "Greek"
+  !insertmacro MUI_LANGUAGE "Finnish"
+  !insertmacro MUI_LANGUAGE "Greek"
   !insertmacro MUI_LANGUAGE "Russian"
   !insertmacro MUI_LANGUAGE "Portuguese"
 ;  !insertmacro MUI_LANGUAGE "PortugueseBR"
@@ -92,7 +92,7 @@
 ;  !insertmacro MUI_LANGUAGE "Slovak"
 ;  !insertmacro MUI_LANGUAGE "Croatian"
 ;  !insertmacro MUI_LANGUAGE "Bulgarian"
-;  !insertmacro MUI_LANGUAGE "Hungarian"
+  !insertmacro MUI_LANGUAGE "Hungarian"
 ;  !insertmacro MUI_LANGUAGE "Thai"
 ;  !insertmacro MUI_LANGUAGE "Romanian"
 ;  !insertmacro MUI_LANGUAGE "Latvian"
@@ -221,12 +221,9 @@ Section "Amaya" SecAmaya
   File resources\icons\misc\*.ico
   SetOutPath "$INSTDIR\resources\icons\16x16"
   File resources\icons\16x16\*.png
-  File resources\icons\16x16\*.gif
   File resources\icons\16x16\*.ico
   SetOutPath "$INSTDIR\resources\icons\22x22"
   File resources\icons\22x22\*.png
-  File resources\icons\22x22\*.gif
-  File resources\icons\22x22\*.ico
   SetOutPath "$INSTDIR\resources\xrc"
   File resources\xrc\*.xrc
 
@@ -315,54 +312,6 @@ Section "Amaya" SecAmaya
   File doc\WX\*
   SetOutPath "$INSTDIR\doc\WX\HTML-elements"
   File doc\WX\HTML-elements\*
-  SetOutPath "$INSTDIR\doc\html"
-  File doc\html\*
-  SetOutPath "$INSTDIR\doc\html\accessibility_in_amaya"
-  File doc\html\accessibility_in_amaya\*
-  SetOutPath "$INSTDIR\doc\html\attaching_annotations"
-  File doc\html\attaching_annotations\*
-  SetOutPath "$INSTDIR\doc\html\browsing"
-  File doc\html\browsing\*
-  SetOutPath "$INSTDIR\doc\html\configuring_amaya"
-  File doc\html\configuring_amaya\*
-  SetOutPath "$INSTDIR\doc\html\editing_attributes"
-  File doc\html\editing_attributes\*
-  SetOutPath "$INSTDIR\doc\html\editing_documents"
-  File doc\html\editing_documents\*
-  SetOutPath "$INSTDIR\doc\html\editing_iso-latin-1_characters"
-  File doc\html\editing_iso-latin-1_characters\*
-  SetOutPath "$INSTDIR\doc\html\editing_mathematics"
-  File doc\html\editing_mathematics\*
-  SetOutPath "$INSTDIR\doc\html\editing_tables"
-  File doc\html\editing_tables\*
-  SetOutPath "$INSTDIR\doc\html\elements"
-  File doc\html\elements\*
-  SetOutPath "$INSTDIR\doc\html\HTML-elements"
-  File doc\html\HTML-elements\*
-  SetOutPath "$INSTDIR\doc\html\linking"
-  File doc\html\linking\*
-  SetOutPath "$INSTDIR\doc\html\printing"
-  File doc\html\printing\*
-  SetOutPath "$INSTDIR\doc\html\saving_and_publishing_documents"
-  File doc\html\saving_and_publishing_documents\*
-  SetOutPath "$INSTDIR\doc\html\searching_and_replacing_text"
-  File doc\html\searching_and_replacing_text\*
-  SetOutPath "$INSTDIR\doc\html\selecting"
-  File doc\html\selecting\*
-  SetOutPath "$INSTDIR\doc\html\spell_checking"
-  File doc\html\spell_checking\*
-  SetOutPath "$INSTDIR\doc\html\style_sheets"
-  File doc\html\style_sheets\*
-  SetOutPath "$INSTDIR\doc\html\using_graphics"
-  File doc\html\using_graphics\*
-  SetOutPath "$INSTDIR\doc\html\using_image_maps"
-  File doc\html\using_image_maps\*
-  SetOutPath "$INSTDIR\doc\html\using_the_makebook_function"
-  File doc\html\using_the_makebook_function\*
-  SetOutPath "$INSTDIR\doc\html\using_xml"
-  File doc\html\using_xml\*
-  SetOutPath "$INSTDIR\doc\html\viewing"
-  File doc\html\viewing\*
   SetOutPath "$INSTDIR\doc\images"
   File doc\images\*
 
