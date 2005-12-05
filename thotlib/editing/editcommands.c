@@ -2018,7 +2018,7 @@ void ContentEditing (int editType)
       /* paste a structured element */
       PasteCommand ();
     }
-  /* Traitement des Commandes INSERT, CUT, PASTE, COPY, OOPS */
+  /* Traitement des Commandes INSERT, CUT, TEXT_DEL, COPY */
   else
     {
       /* recupere la fenetre active pour la selection */
@@ -2032,7 +2032,7 @@ void ContentEditing (int editType)
             CloseTextInsertionWithControl (FALSE);
           else if ((editType != TEXT_DEL && editType != TEXT_SUP) ||
                    !ViewFrameTable[frame - 1].FrSelectOnePosition ||
-                   FirstSelectedElement->ElVolume == 0)
+                   (FirstSelectedElement && FirstSelectedElement->ElVolume == 0))
             /* close the current text insertion */
             CloseTextInsertion ();
 
@@ -2070,7 +2070,8 @@ void ContentEditing (int editType)
                 }
               else
                 {
-                  if (ElementIsReadOnly (FirstSelectedElement->ElParent))
+                  if (FirstSelectedElement == NULL ||
+                      ElementIsReadOnly (FirstSelectedElement->ElParent))
                     /* the parent element is read-only.
                        Don't delete anything*/
                     return;
