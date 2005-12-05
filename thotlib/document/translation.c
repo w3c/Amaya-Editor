@@ -397,20 +397,7 @@ static void ExportChar (wchar_t c, int fnum, char *outBuf, Document doc,
       fileDesc = OutFile[fnum].OfFileDesc;
       if (fileDesc)
         {
-          if (lineLen == 0)
-            {
-              /* no line length, write into the file directly */
-              for (index = 0; index < nb_bytes2write; index++)
-                putc (mbc[index], fileDesc);
-              if (c == NEW_LINE)
-                {
-                  OutFile[fnum].OfLineNumber++;
-                  if (ExportCRLF)
-                    /* generate a CR */
-                    putc (__CR__, fileDesc);
-               }
-            }
-          else if (c == NEW_LINE)
+          if (c == NEW_LINE)
             {
               /* end of line, write the buffer into the file */
               for (i = 0; i < OutFile[fnum].OfBufferLen; i++)
@@ -426,6 +413,19 @@ static void ExportChar (wchar_t c, int fnum, char *outBuf, Document doc,
               OutFile[fnum].OfLineLen = 0;
               OutFile[fnum].OfLineNumber++;
               OutFile[fnum].OfStartOfLine = TRUE;
+            }
+          else if (lineLen == 0)
+            {
+              /* no line length, write into the file directly */
+              for (index = 0; index < nb_bytes2write; index++)
+                putc (mbc[index], fileDesc);
+              if (c == NEW_LINE)
+                {
+                  OutFile[fnum].OfLineNumber++;
+                  if (ExportCRLF)
+                    /* generate a CR */
+                    putc (__CR__, fileDesc);
+               }
             }
           else
             {
