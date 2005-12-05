@@ -216,20 +216,13 @@ ThotBool CreateOpenDocDlgWX ( int ref, ThotWindow parent,
     + templateToOpen : user defined template
     + docName : place to store the template's instance
 
-
   returns:
   ----------------------------------------------------------------------*/
-
-
-ThotBool CreateNewTemplateDocDlgWX ( int ref, 
-				     ThotWindow parent,
-				     Document doc,
-				     const char *title,
-				     const char *templateDir,
-				     const char *docName
-				   )
+ThotBool CreateNewTemplateDocDlgWX (int ref,  ThotWindow parent, Document doc,
+                                    const char *title, const char *templateDir,
+                                    const char *docName)
 {
-#ifdef TEMPLATES
+#if defined(TEMPLATES) && defined(_WX)
   /* check if the dialog is alredy open */
   if (TtaRaiseDialogue (ref))
     return FALSE;

@@ -47,7 +47,7 @@ static char   *script_URL;
   ----------------------------------------------------------------------*/
 void NewTemplate (Document doc, View view)
 {
-#ifdef TEMPLATES
+#if defined(TEMPLATES) && defined(_WX)
   char  *templateDir, *lang;
   char   s[MAX_LENGTH];
   ThotBool useAmayaDir = FALSE;
@@ -85,7 +85,7 @@ void NewTemplate (Document doc, View view)
       TtaSetDialoguePosition ();
       TtaShowDialogue (BaseDialog + OpenTemplate, TRUE);
     }
-#endif // TEMPLATES
+#endif /* TEMPLATES */
 }
 
 
