@@ -81,11 +81,11 @@
 79 &Keresés...
 80 Szó&elemző...
 81 &Átalakítás...
-82 **Goto
-83 **Parent element
-84 **First child
-85 **Previous element
-86 **Next element
+82 Ugrás
+83 Elődelem
+84 Első utód
+85 Előző elem
+86 Következő elem
 87 &Beállítások
 88 &Beállítások
 89 &Általános...
@@ -226,7 +226,7 @@
 224 &Fölé (mover)
 225 &Zárójel (mrow)
 226 &Multiscripts (mmultiscripts)
-227 **&Matrices
+227 &Mátrixok
 228 Új &mátrix (mtable)
 229 Egyesítés a &jobbra lévő cellával
 230 Egyesítés az &alatta lévő cellával
@@ -264,8 +264,8 @@
 262 &Szöveges böngészőnézet
 263 &Tartalomjegyzék mutatása
 264 Idővonal mutatása
-265 **Split view horizontally
-266 **Split view vertically
+265 Vízszintes felosztás
+266 Függőleges felosztás
 267 &Karakter stílus...
 268 &Színek...
 269 CSS &Stílus...

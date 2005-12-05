@@ -990,6 +990,7 @@
 	<message xml:lang="de">Gehe zu</message>
 	<message xml:lang="it">Vai a</message>
 	<message xml:lang="es">Ir a</message>
+	<message xml:lang="hu">Ugrás</message>
 </label>
 <label define="BParentElement">
 	<message xml:lang="en">Parent element</message>
@@ -997,6 +998,7 @@
 	<message xml:lang="de">Vorfahrenelement</message>
 	<message xml:lang="it">Elemento padre</message>
 	<message xml:lang="es">Elemento padre</message>
+	<message xml:lang="hu">Elődelem</message>
 </label>
 <label define="BChildElement">
 	<message xml:lang="en">First child</message>
@@ -1004,6 +1006,7 @@
 	<message xml:lang="de">Erster Nachfahre</message>
 	<message xml:lang="it">Primo figlio</message>
 	<message xml:lang="es">Primer hijo</message>
+	<message xml:lang="hu">Első utód</message>
 </label>
 <label define="BPreviousElement">
 	<message xml:lang="en">Previous element</message>
@@ -1011,6 +1014,7 @@
 	<message xml:lang="de">Vorhergehendes Element</message>
 	<message xml:lang="it">Elemento precedente</message>
 	<message xml:lang="es">Elemento anterior</message>
+	<message xml:lang="hu">Előző elem</message>
 </label>
 <label define="BNextElement">
 	<message xml:lang="en">Next element</message>
@@ -1018,6 +1022,7 @@
 	<message xml:lang="de">Nächstes Element</message>
 	<message xml:lang="it">Elemento successivo</message>
 	<message xml:lang="es">Siguiente elemento</message>
+	<message xml:lang="hu">Következő elem</message>
 </label>
 <label define="BConfigure">
 	<message xml:lang="en">&amp;Preferences</message>
@@ -2648,7 +2653,7 @@
 	<message xml:lang="pt">&amp;Matrices</message>
 	<message xml:lang="fi">&amp;Matriisi</message>
 	<message xml:lang="ru">Matrices</message>
-	<message xml:lang="ru">&amp;Mátrixok</message>
+	<message xml:lang="hu">&amp;Mátrixok</message>
 </label>
 <label define="BMatrix">
 	<message xml:lang="en">New matrix (mtable)</message>
@@ -3047,6 +3052,7 @@
 <message xml:lang="es">Dividir vista horizontalmente</message>
 	<message xml:lang="de">Ansicht horizontal teilen</message>
 	<message xml:lang="it">Dividi la vista in orizzontale</message>
+	<message xml:lang="hu">Vízszintes felosztás</message>
 </label>
 <label define="BSplitVertically">
 	<message xml:lang="en">Split view vertically</message>
@@ -3054,6 +3060,7 @@
 	<message xml:lang="es">Dividir vista verticalmente</message>
 	<message xml:lang="de">Ansicht vertikal teilen</message>
 	<message xml:lang="it">Dividi la vista in verticale</message>
+	<message xml:lang="hu">Függőleges felosztás</message>
 </label>
 <label define="BCharacterStyle">
 	<message xml:lang="en">C&amp;haracter style...</message>

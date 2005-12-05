@@ -367,9 +367,9 @@
 365 Dátum ISO formátuma
 366 Dokumentumok új helye
 367 Hely megnyitása
-368 **Warn when closing multiple tabs
-369 **Max url number in history
-370 **Clear url list
+368 Több lap bezárásakor figyelmeztetés
+369 URL-ek legnagyobb száma az előzménylistában
+370 URL lista törlése
 371 Minden gyorsbillentyű mutatása
 372 Rögzített sorhossz (0 = alapérték)
 373 Sablon

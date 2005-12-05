@@ -2448,6 +2448,7 @@
 	<message xml:lang="es">Va a cerrar %d pestañas abiertas. ¿Seguro que desea continuar?</message>
 	<message xml:lang="de">Sie sind dabei, %d geöffnete Seiten zu schließen. Sind Sie sicher, dass Sie fortfahren möchten?</message>
 	<message xml:lang="it">Stai per chiudere %d tab aperti. Vuoi proprio proseguire?</message>
+	<message xml:lang="hu">%d lap bezárására készül. Valóban folytatni kívánja?</message>
 </label>
 <label define="TMSG_LIB_WARNCTAB_CHECK">
 	<message xml:lang="en">Warn me when I attempt to close multiple tabs</message>
@@ -2455,6 +2456,7 @@
 	<message xml:lang="es">Avisarme cuando intente cerrar múltiples pestañas</message>
 	<message xml:lang="de">Warnung anzeigen, wenn mehrere Seiten geschlossen werden sollen</message>
 	<message xml:lang="it">Avvisami quando cerco di chiudere pi tab</message>
+	<message xml:lang="hu">Figyelmeztessen több lap bezárásakor</message>
 </label>
 <label define="TMSG_LIB_CLOSETABS">
 	<message xml:lang="en">Close tabs</message>
@@ -2462,6 +2464,7 @@
 	<message xml:lang="es">Cerrar pestañas</message>
 	<message xml:lang="de">Seiten schließen</message>
 	<message xml:lang="it">Chiudi tab</message>
+	<message xml:lang="hu">Lapok bezárása</message>
 </label>
 <label define="TMSG_LIB_NOERROR_DOC">
 	<message xml:lang="en">No error detected</message>
@@ -2469,6 +2472,7 @@
 	<message xml:lang="es">Ningún error detectado</message>
 	<message xml:lang="de">Kein Fehler gefunden</message>
 	<message xml:lang="it">Nessun errore trovato</message>
+	<message xml:lang="hu">Nincs hiba</message>
 </label>
 <label define="TMSG_LIB_ERROR_DOC">
 	<message xml:lang="en">Show parsing errors</message>

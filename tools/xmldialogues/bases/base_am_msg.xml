@@ -3889,6 +3889,7 @@
 <message xml:lang="es">Avisar cuando se cierren mútiples pestañas</message>
 <message xml:lang="de">Warnen, wenn mehrere Seiten geschlossen werden</message>
 <message xml:lang="it">Avviso quando si chiudono pi tab</message>
+<message xml:lang="hu">Több lap bezárásakor figyelmeztetés</message>
 </label>
 <label define="AM_MAXURLLIST">
 <message xml:lang="en">Max url number in history</message>
@@ -3896,6 +3897,7 @@
 <message xml:lang="es">Número máximo de URLs en el historial</message>
 <message xml:lang="de">Die maximale Anzahl an URLs in der History ist erreicht</message>
 <message xml:lang="it">Numero massimo di URL storicizzati</message>
+<message xml:lang="hu">URL-ek legnagyobb száma az előzménylistában</message>
 </label>
 <label define="AM_CLEARURLLIST">
 <message xml:lang="en">Clear url list</message>
@@ -3903,6 +3905,7 @@
 <message xml:lang="es">Borrar historial</message>
 <message xml:lang="de">URL-Liste löschen</message>
 <message xml:lang="it">Vuota la lista degli URL</message>
+<message xml:lang="hu">URL lista törlése</message>
 </label>
 <label define="AM_SHOWSHORTCUTS">
 <message xml:lang="en">Display all shortcuts</message>
