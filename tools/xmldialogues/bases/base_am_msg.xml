@@ -3857,79 +3857,102 @@
 <message xml:lang="tr">Anti-aliasing</message>
 <message xml:lang="fi">Anti-aliasing</message>
 <message xml:lang="ru">Anti-aliasing</message>
-<message xml:lang="hu">Élsimítás</message></label>
+<message xml:lang="hu">Élsimítás</message>
+</label>
 <label define="AM_DATE">
 <message xml:lang="en">ISO format for date</message>
 <message xml:lang="fr">Date au format ISO</message>
 <message xml:lang="es">Formato de fecha ISO</message>
 <message xml:lang="de">ISO-Datumsformat</message>
 <message xml:lang="it">Formato ISO per la data</message>
-<message xml:lang="hu">Dátum ISO formátuma</message></label>
+<message xml:lang="hu">Dátum ISO formátuma</message>
+</label>
 <label define="AM_NEWDOCLOC">
 <message xml:lang="en">New documents location</message>
 <message xml:lang="fr">Ouvrir les nouveaux documents dans</message>
 <message xml:lang="es">Ubicación de nuevos documentos</message>
 <message xml:lang="de">Ort für neue Dokumente</message>
 <message xml:lang="it">Locazione per i nuovi documenti</message>
-<message xml:lang="hu">Dokumentumok új helye</message></label>
+<message xml:lang="hu">Dokumentumok új helye</message>
+</label>
 <label define="AM_OPENLOC">
 <message xml:lang="en">Opening location</message>
 <message xml:lang="fr">Endroit d'ouverture</message>
 <message xml:lang="es">Abrir localización</message>
 <message xml:lang="de">Ort zum Öffnen</message>
 <message xml:lang="it">Locazione per aprire documenti</message>
-<message xml:lang="hu">Hely megnyitása</message></label>
+<message xml:lang="hu">Hely megnyitása</message>
+</label>
 <label define="AM_WARNCTAB">
 <message xml:lang="en">Warn when closing multiple tabs</message>
 <message xml:lang="fr">Avertir avant de fermer plusieurs onglets</message>
 <message xml:lang="es">Avisar cuando se cierren mútiples pestañas</message>
 <message xml:lang="de">Warnen, wenn mehrere Seiten geschlossen werden</message>
-<message xml:lang="it">Avviso quando si chiudono pi tab</message></label>
+<message xml:lang="it">Avviso quando si chiudono pi tab</message>
+</label>
 <label define="AM_MAXURLLIST">
 <message xml:lang="en">Max url number in history</message>
 <message xml:lang="fr">Nombre max d'url dans l'historique</message>
 <message xml:lang="es">Número máximo de URLs en el historial</message>
 <message xml:lang="de">Die maximale Anzahl an URLs in der History ist erreicht</message>
-<message xml:lang="it">Numero massimo di URL storicizzati</message></label>
+<message xml:lang="it">Numero massimo di URL storicizzati</message>
+</label>
 <label define="AM_CLEARURLLIST">
 <message xml:lang="en">Clear url list</message>
 <message xml:lang="fr">Vider la liste des urls</message>
 <message xml:lang="es">Borrar historial</message>
 <message xml:lang="de">URL-Liste löschen</message>
-<message xml:lang="it">Vuota la lista degli URL</message></label>
+<message xml:lang="it">Vuota la lista degli URL</message>
+</label>
 <label define="AM_SHOWSHORTCUTS">
 <message xml:lang="en">Display all shortcuts</message>
 <message xml:lang="fr">Montrer tous les raccourcis</message>
 <message xml:lang="it">Mostra tutti gli shortcut</message>
-<message xml:lang="es">Mostrar todos los atajos</message></label>
+<message xml:lang="es">Mostrar todos los atajos</message>
+<message xml:lang="it">Locazione per aprire documenti</message>
+<message xml:lang="hu">Minden gyorsbillentyű mutatása</message>
+</label>
 <label define="AM_EXPORT_LENGTH">
 <message xml:lang="en">Fixed line length (0 = default value)</message>
 <message xml:lang="fr">Longueur de ligne fixée (0 = valeur par défaut)</message>
 <message xml:lang="it">Lunghezza riga fissata (0 = valore di default)</message>
-<message xml:lang="es">Longitud de línea (0 = valor predeterminado)</message></label>
+<message xml:lang="es">Longitud de línea (0 = valor predeterminado)</message>
+<message xml:lang="hu">Rögzített sorhossz (0 = alapérték)</message>
+</label>
 <label define="AM_TEMPLATE">
 <message xml:lang="en">Template</message>
 <message xml:lang="fr">Modèle</message>
 <message xml:lang="it">Modello</message>
-<message xml:lang="es">Plantilla</message></label>
+<message xml:lang="es">Plantilla</message>
+<message xml:lang="hu">Sablon</message>
+</label>
 <label define="AM_TEMPLATE_INSTANCE">
 <message xml:lang="en">Save the document as...</message>
 <message xml:lang="fr">Enregistrer le document sous...</message>
 <message xml:lang="it">Salva il documento come...</message>
-<message xml:lang="es">Guardar como...</message></label>
+<message xml:lang="es">Guardar como...</message>
+<message xml:lang="hu">Dokumentum mentése másként...</message>
+</label>
 <label define="AM_BAD_TEMPLATE">
 <message xml:lang="en">Template not found</message>
 <message xml:lang="fr">Le modèle n'existe pas</message>
 <message xml:lang="it">Modello non trovato</message>
-<message xml:lang="es">No se encuentra la plantilla</message></label>
+<message xml:lang="es">No se encuentra la plantilla</message>
+<message xml:lang="hu">A sablon nem található</message>
+</label>
 <label define="AM_SHOW_TEMPLATES">
 <message xml:lang="en">Show template's boxes</message>
 <message xml:lang="fr">Montrer les cadres des modèles</message>
 <message xml:lang="it">Mostra i box per il modello</message>
-<message xml:lang="es">Mostrar cajas de plantilla</message></label>
+<message xml:lang="es">Mostrar cajas de plantilla</message>
+<message xml:lang="hu">A sablon dobozainak mutatása</message>
+</label>
 <label define="AM_CLOSE_WHEN_APPLY">
 <message xml:lang="en">Apply closes the dialogue</message>
 <message xml:lang="fr">Appliquer ferme le dialogue</message>
 <message xml:lang="it">Applica chiude questo dialogo</message>
-<message xml:lang="es">Aplicar cierra el diálogo</message></label>
-<label define="AMAYA_MSG_MAX"></label></messages></base>
+<message xml:lang="es">Aplicar cierra el diálogo</message>
+<message xml:lang="hu">Az Alkalmaz gomb bezárja a párbeszédablakot</message>
+</label>
+<label define="AMAYA_MSG_MAX"></label>
+</messages></base>
