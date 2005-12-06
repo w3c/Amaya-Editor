@@ -11,6 +11,7 @@
 	<language encoding="latin1">fi</language>
 	<language encoding="utf8">ru</language>
 	<language encoding="utf8">hu</language>
+	<language encoding="utf8">ka</language>
 </control>
 <messages>
 <label define="File">
@@ -3512,7 +3513,7 @@
 </label>
 <label define="BHelpText">
 	<message xml:lang="en">Characters</message>
-	<message xml:lang="fr">Caratères</message>
+	<message xml:lang="fr">Caractères</message>
 	<message xml:lang="de">Zeichen</message>
 	<message xml:lang="it">Caratteri</message>
 	<message xml:lang="es">Caracteres</message>

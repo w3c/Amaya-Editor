@@ -41,9 +41,9 @@ certains caractères non disponibles au clavier comme :</p>
   </li>
   <li>Pour obtenir un &euro; (euro), vous devez taper <code>Alt -
   e</code>.</li>
-  <li>Pour obtenir un &#x153; (oelig), vous devez taper <code>Control -
+  <li>Pour obtenir un &oelig; (oelig), vous devez taper <code>Control -
     o</code> puis <code>Control - e</code>.</li>
-  <li>Pour obtenir un &#x152; (OElig), vous devez taper <code>Shift - Control
+  <li>Pour obtenir un &OElig; (OElig), vous devez taper <code>Shift - Control
     - o</code> puis <code>Shift - Control - e</code>.</li>
   <li>Pour obtenir un «, vous devez taper <code>Control - &lt;</code> ou
     <code>Shift</code> - <code>Control - &lt;</code> (cela dépend de votre
@@ -65,7 +65,7 @@ deux caractères disponibles précédés par la touche spéciale
 <strong>Composer</strong>. Sur Amaya il est possible d'inverser la première
 touche et la deuxième.</p>
 
-<p>Si la touche <strong>Composer</strong>n'existe pas vous pouvez l'attacher
+<p>Si la touche <strong>Composer</strong> n'existe pas vous pouvez l'attacher
 à une touche existante comme <strong>Alt-Gr</strong> par la commande
 <code>xmodmap</code> suivante :</p>
 <pre>keycode 113 = Multi_key</pre>
