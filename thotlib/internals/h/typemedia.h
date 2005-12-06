@@ -40,6 +40,7 @@ typedef struct _FontSet {
   ThotFont      Font_15;
   ThotFont      Font_16; /* Symbol */
   ThotFont      Font_17; /* Arabic or JIS */
+  ThotFont      Font_18; /* Georgian */
   ThotFont      SFont_1; /* STIX fonts */
   ThotFont      SFont_2;
   ThotFont      SFont_3;

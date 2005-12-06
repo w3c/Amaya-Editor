@@ -518,6 +518,9 @@ char *FontLoadFromConfig (char script, int face, int style)
     case 'D':
       intscript = 15;      
       break;
+    case 'X':
+      intscript = 18;      
+      break;
     case 'E':
       /* ESSTIX FONTS ???*/
       intscript = 21;

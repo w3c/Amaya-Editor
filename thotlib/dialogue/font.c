@@ -1109,6 +1109,8 @@ static void FontIdentifier (char script, int family, int highlight, int size,
             strcpy (encoding, "15");
           else if (script == 'D')
             strcpy (encoding, "13");
+          else if (script == 'X')
+            strcpy (encoding, "18");
           else
             sprintf (encoding, "%c", script);
           ffamily = "-*-*";
@@ -2014,6 +2016,13 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
                   encoding = UNICODE_1_1;
                 }
             }
+          else if (c <= 0x10FF && c >= 0x10A0)
+            {
+              // Georgian
+              code = 'X'; /* Unicode */
+              pfont = &(fontset->Font_18);
+              encoding = UNICODE_1_1;
+            }
 #endif /* GL */
           else
             {
@@ -2511,7 +2520,7 @@ void ThotFreeFont (int frame)
       /* free all attached fonts */
       while (i < FirstFreeFont)
         {
-          if (TtFontMask[i] == mask)
+          if (TtFontMask[i] == mask || TtFontMask[i] == 0)
             {
               /* free the entry */
               //@@@@@@@@@@@@@@@@@@@@
