@@ -64,6 +64,12 @@
 3;1=$OSDIR\fonts\cour.ttf;2=$OSDIR\fonts\courbd.ttf;3=$OSDIR\fonts\couri.ttf;4=$OSDIR\fonts\courbi.ttf;
 
 
+18;#Georgian
+1;1=$OSDIR\fonts\times.ttf;2=$OSDIR\fonts\timesbd.ttf;3=$OSDIR\fonts\timesi.ttf;4=$OSDIR\fonts\timesbi.ttf;
+2;1=$OSDIR\fonts\arial.ttf;2=$OSDIR\fonts\arialbd.ttf;3=$OSDIR\fonts\ariali.ttf;4=$OSDIR\fonts\arialbi.ttf;
+3;1=$OSDIR\fonts\cour.ttf;2=$OSDIR\fonts\courbd.ttf;3=$OSDIR\fonts\couri.ttf;4=$OSDIR\fonts\courbi.ttf;
+
+
 20;#Symbols (...)
 1;1=$OSDIR\fonts\symbol.ttf;2=$OSDIR\fonts\symbol.ttf;
 

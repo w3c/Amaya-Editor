@@ -14,36 +14,73 @@
 
 
 2;#Latin2 (East European)
+1;1=/usr/share/fonts/truetype/msttcorefonts/Times_New_Roman.ttf;2=/usr/share/fonts/truetype/msttcorefonts/Times_New_Roman_Bold.ttf;3=/usr/share/fonts/truetype/msttcorefonts/Times_New_Roman_Italic.ttf;
+2;1=/usr/share/fonts/truetype/msttcorefonts/Arial.ttf;2=/usr/share/fonts/truetype/msttcorefonts/Arial_Bold.ttf;3=/usr/share/fonts/truetype/msttcorefonts/Arial_Italic.ttf;
+3;1=/usr/share/fonts/truetype/msttcorefonts/Courier_New.ttf;2=/usr/share/fonts/truetype/msttcorefonts/Courier_New_Bold.ttf;3=/usr/share/fonts/truetype/msttcorefonts/Courier_New_Italic.ttf;
 
 
 3;#Latin3 (South European)
+1;1=/usr/share/fonts/truetype/msttcorefonts/Times_New_Roman.ttf;2=/usr/share/fonts/truetype/msttcorefonts/Times_New_Roman_Bold.ttf;3=/usr/share/fonts/truetype/msttcorefonts/Times_New_Roman_Italic.ttf;
+2;1=/usr/share/fonts/truetype/msttcorefonts/Arial.ttf;2=/usr/share/fonts/truetype/msttcorefonts/Arial_Bold.ttf;3=/usr/share/fonts/truetype/msttcorefonts/Arial_Italic.ttf;
+3;1=/usr/share/fonts/truetype/msttcorefonts/Courier_New.ttf;2=/usr/share/fonts/truetype/msttcorefonts/Courier_New_Bold.ttf;3=/usr/share/fonts/truetype/msttcorefonts/Courier_New_Italic.ttf;
 
 
 4;#Latin4 (North European)
+1;1=/usr/share/fonts/truetype/msttcorefonts/Times_New_Roman.ttf;2=/usr/share/fonts/truetype/msttcorefonts/Times_New_Roman_Bold.ttf;3=/usr/share/fonts/truetype/msttcorefonts/Times_New_Roman_Italic.ttf;
+2;1=/usr/share/fonts/truetype/msttcorefonts/Arial.ttf;2=/usr/share/fonts/truetype/msttcorefonts/Arial_Bold.ttf;3=/usr/share/fonts/truetype/msttcorefonts/Arial_Italic.ttf;
+3;1=/usr/share/fonts/truetype/msttcorefonts/Courier_New.ttf;2=/usr/share/fonts/truetype/msttcorefonts/Courier_New_Bold.ttf;3=/usr/share/fonts/truetype/msttcorefonts/Courier_New_Italic.ttf;
 
 
 5;#Cyrillic
+1;1=/usr/share/fonts/truetype/msttcorefonts/Times_New_Roman.ttf;2=/usr/share/fonts/truetype/msttcorefonts/Times_New_Roman_Bold.ttf;3=/usr/share/fonts/truetype/msttcorefonts/Times_New_Roman_Italic.ttf;
+2;1=/usr/share/fonts/truetype/msttcorefonts/Arial.ttf;2=/usr/share/fonts/truetype/msttcorefonts/Arial_Bold.ttf;3=/usr/share/fonts/truetype/msttcorefonts/Arial_Italic.ttf;
+3;1=/usr/share/fonts/truetype/msttcorefonts/Courier_New.ttf;2=/usr/share/fonts/truetype/msttcorefonts/Courier_New_Bold.ttf;3=/usr/share/fonts/truetype/msttcorefonts/Courier_New_Italic.ttf;
 
 
 6;#Arabic
+1;1=/usr/share/fonts/truetype/msttcorefonts/Times_New_Roman.ttf;2=/usr/share/fonts/truetype/msttcorefonts/Times_New_Roman_Bold.ttf;3=/usr/share/fonts/truetype/msttcorefonts/Times_New_Roman_Italic.ttf;
+2;1=/usr/share/fonts/truetype/msttcorefonts/Arial.ttf;2=/usr/share/fonts/truetype/msttcorefonts/Arial_Bold.ttf;3=/usr/share/fonts/truetype/msttcorefonts/Arial_Italic.ttf;
+3;1=/usr/share/fonts/truetype/msttcorefonts/Courier_New.ttf;2=/usr/share/fonts/truetype/msttcorefonts/Courier_New_Bold.ttf;3=/usr/share/fonts/truetype/msttcorefonts/Courier_New_Italic.ttf;
 
 
 7;#Greek
+1;1=/usr/share/fonts/truetype/msttcorefonts/Times_New_Roman.ttf;2=/usr/share/fonts/truetype/msttcorefonts/Times_New_Roman_Bold.ttf;3=/usr/share/fonts/truetype/msttcorefonts/Times_New_Roman_Italic.ttf;
+2;1=/usr/share/fonts/truetype/msttcorefonts/Arial.ttf;2=/usr/share/fonts/truetype/msttcorefonts/Arial_Bold.ttf;3=/usr/share/fonts/truetype/msttcorefonts/Arial_Italic.ttf;
+3;1=/usr/share/fonts/truetype/msttcorefonts/Courier_New.ttf;2=/usr/share/fonts/truetype/msttcorefonts/Courier_New_Bold.ttf;3=/usr/share/fonts/truetype/msttcorefonts/Courier_New_Italic.ttf;
 
 
 8;#Hebrew
+1;1=/usr/share/fonts/truetype/msttcorefonts/Times_New_Roman.ttf;2=/usr/share/fonts/truetype/msttcorefonts/Times_New_Roman_Bold.ttf;3=/usr/share/fonts/truetype/msttcorefonts/Times_New_Roman_Italic.ttf;
+2;1=/usr/share/fonts/truetype/msttcorefonts/Arial.ttf;2=/usr/share/fonts/truetype/msttcorefonts/Arial_Bold.ttf;3=/usr/share/fonts/truetype/msttcorefonts/Arial_Italic.ttf;
+3;1=/usr/share/fonts/truetype/msttcorefonts/Courier_New.ttf;2=/usr/share/fonts/truetype/msttcorefonts/Courier_New_Bold.ttf;3=/usr/share/fonts/truetype/msttcorefonts/Courier_New_Italic.ttf;
 
 
 9;#Latin5 (Turkish)
+1;1=/usr/share/fonts/truetype/msttcorefonts/Times_New_Roman.ttf;2=/usr/share/fonts/truetype/msttcorefonts/Times_New_Roman_Bold.ttf;3=/usr/share/fonts/truetype/msttcorefonts/Times_New_Roman_Italic.ttf;
+2;1=/usr/share/fonts/truetype/msttcorefonts/Arial.ttf;2=/usr/share/fonts/truetype/msttcorefonts/Arial_Bold.ttf;3=/usr/share/fonts/truetype/msttcorefonts/Arial_Italic.ttf;
+3;1=/usr/share/fonts/truetype/msttcorefonts/Courier_New.ttf;2=/usr/share/fonts/truetype/msttcorefonts/Courier_New_Bold.ttf;3=/usr/share/fonts/truetype/msttcorefonts/Courier_New_Italic.ttf;
 
 
 10;#Latin6 (Nordic)
+1;1=/usr/share/fonts/truetype/msttcorefonts/Times_New_Roman.ttf;2=/usr/share/fonts/truetype/msttcorefonts/Times_New_Roman_Bold.ttf;3=/usr/share/fonts/truetype/msttcorefonts/Times_New_Roman_Italic.ttf;
+2;1=/usr/share/fonts/truetype/msttcorefonts/Arial.ttf;2=/usr/share/fonts/truetype/msttcorefonts/Arial_Bold.ttf;3=/usr/share/fonts/truetype/msttcorefonts/Arial_Italic.ttf;
+3;1=/usr/share/fonts/truetype/msttcorefonts/Courier_New.ttf;2=/usr/share/fonts/truetype/msttcorefonts/Courier_New_Bold.ttf;3=/usr/share/fonts/truetype/msttcorefonts/Courier_New_Italic.ttf;
+
+
+18;#Georgian
+1;1=/usr/share/fonts/truetype/msttcorefonts/Times_New_Roman.ttf;2=/usr/share/fonts/truetype/msttcorefonts/Times_New_Roman_Bold.ttf;3=/usr/share/fonts/truetype/msttcorefonts/Times_New_Roman_Italic.ttf;
+2;1=/usr/share/fonts/truetype/msttcorefonts/Arial.ttf;2=/usr/share/fonts/truetype/msttcorefonts/Arial_Bold.ttf;3=/usr/share/fonts/truetype/msttcorefonts/Arial_Italic.ttf;
+3;1=/usr/share/fonts/truetype/msttcorefonts/Courier_New.ttf;2=/usr/share/fonts/truetype/msttcorefonts/Courier_New_Bold.ttf;3=/usr/share/fonts/truetype/msttcorefonts/Courier_New_Italic.ttf;
 
 
 20;#Symbols (...)
 
 
 21;#esstix (...)
+1;1=$THOTDIR/fonts/ESSTIX1_.TTF;2=$THOTDIR/fonts/ESSTIX2_.TTF;3=$THOTDIR/fonts/ESSTIX3_.TTF;4=$THOTDIR/fonts/ESSTIX4_.TTF;5=$THOTDIR/fonts/ESSTIX5_.TTF;
+2;1=$THOTDIR/fonts/ESSTIX6_.TTF;2=$THOTDIR/fonts/ESSTIX7_.TTF;3=$THOTDIR/fonts/ESSTIX8_.TTF;4=$THOTDIR/fonts/ESSTIX9_.TTF;5=$THOTDIR/fonts/ESSTIX10.TTF;
+3;1=$THOTDIR/fonts/ESSTIX11.TTF;2=$THOTDIR/fonts/ESSTIX12.TTF;3=$THOTDIR/fonts/ESSTIX13.TTF;4=$THOTDIR/fonts/ESSTIX14.TTF;5=$THOTDIR/fonts/ESSTIX15.TTF;
+4;1=$THOTDIR/fonts/ESSTIX16.TTF;2=$THOTDIR/fonts/ESSTIX17.TTF;3=$THOTDIR/fonts/ESSTIX16.TTF;4=$THOTDIR/fonts/ESSTIX17.TTF;
 
 
 0;#Unicode (.or ... JAPANESe)
