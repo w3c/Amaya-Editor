@@ -1,0 +1,707 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 9.3, see http://www.w3.org/Amaya/" />
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <title>Raccourcis clavier pour Mac OS X</title>
+  <style type="text/css">
+table      { margin-top: 10px; }
+td         { margin-left: 5px; padding-left: 5px; margin-right: 15px; padding-right: 15px; }
+tr.title   { background-color: #CCCCCC; font-weight: bold; }
+td.title   { width: 250 px; text-align: center; margin-left: 0px; padding-left: 0px; }
+tr.menu    { font-weight: bold; margin-top: 10px; }</style>
+  <style type="text/css">
+  </style>
+  <link href="style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="fr" lang="fr">
+
+<div>
+<img alt="Amaya" src="../../resources/icons/22x22/logo.png" class="logo"
+/></div>
+
+<div id="page_body">
+<h2>Raccourcis clavier d'Amaya pour Windows</h2>
+
+<p>Amaya définit deux types de raccourcis clavier: les raccourcis clavier
+utilisant les touches standard de Windows (ex. Ctrl+C pour copier la
+sélection) et des raccourcis utilisant des séquences (ex. Ctrl-t Ctrl-t pour
+créer une table).</p>
+
+<h3>Raccourcis standard</h3>
+</div>
+
+<table border="1">
+  <caption></caption>
+  <tbody>
+    <tr class="title">
+      <td class="title">Commande</td>
+      <td class="title">Raccourci</td>
+    </tr>
+    <tr class="menu">
+      <td colspan="2">Navigation</td>
+    </tr>
+    <tr>
+      <td>Page de démarrage</td>
+      <td>Alt+Home</td>
+    </tr>
+    <tr>
+      <td>Début du document</td>
+      <td>Ctrl+Home</td>
+    </tr>
+    <tr>
+      <td>Fin du document</td>
+      <td>Ctrl+End</td>
+    </tr>
+    <tr>
+      <td>Début de ligne</td>
+      <td>Home</td>
+    </tr>
+    <tr>
+      <td>Fin de ligne</td>
+      <td>End</td>
+    </tr>
+    <tr>
+      <td>Défilement vers le bas</td>
+      <td>Ctrl+Down Arrow</td>
+    </tr>
+    <tr>
+      <td>Défilement vers le haut</td>
+      <td>Ctrl+Up Arrow</td>
+    </tr>
+    <tr class="menu">
+      <td colspan="2">Menu Fichier</td>
+    </tr>
+    <tr>
+      <td>Ouvrir</td>
+      <td>Ctrl+O</td>
+    </tr>
+    <tr>
+      <td>Recharger</td>
+      <td>Ctrl+R</td>
+    </tr>
+    <tr>
+      <td>Précédent</td>
+      <td>Alt+Left Arrow</td>
+    </tr>
+    <tr>
+      <td>Suivant</td>
+      <td>Alt+Right Arrow</td>
+    </tr>
+    <tr>
+      <td>Sauver</td>
+      <td>Ctrl+S</td>
+    </tr>
+    <tr>
+      <td>Sauver comme</td>
+      <td>Ctrl+Shift+S</td>
+    </tr>
+    <tr>
+      <td>Synchroniser</td>
+      <td>Ctrl+Y</td>
+    </tr>
+    <tr>
+      <td>Paramétrer et imprimer</td>
+      <td>Ctrl+P</td>
+    </tr>
+    <tr>
+      <td>Imprimer</td>
+      <td>Ctrl+Shift+P</td>
+    </tr>
+    <tr>
+      <td>Fermer l'onglet</td>
+      <td>Ctrl+Shift+W</td>
+    </tr>
+    <tr>
+      <td>Fermer la fenêtre</td>
+      <td>Ctrl+W</td>
+    </tr>
+    <tr class="menu">
+      <td colspan="2">Menu Édition</td>
+    </tr>
+    <tr>
+      <td>Défaire</td>
+      <td>Ctrl+Z</td>
+    </tr>
+    <tr>
+      <td>Refaire</td>
+      <td>Ctrl+Shift+Z</td>
+    </tr>
+    <tr>
+      <td>Couper</td>
+      <td>Ctrl+X</td>
+    </tr>
+    <tr>
+      <td>Copier</td>
+      <td>Ctrl+C</td>
+    </tr>
+    <tr>
+      <td>Coller</td>
+      <td>Ctrl+V</td>
+    </tr>
+    <tr>
+      <td>Détruire</td>
+      <td>Delete</td>
+    </tr>
+    <tr>
+      <td>Rechercher</td>
+      <td>Ctrl+F</td>
+    </tr>
+    <tr>
+      <td>Vérifier orthographe</td>
+      <td>Ctrl+Shift+F</td>
+    </tr>
+    <tr class="menu">
+      <td colspan="2">Navigation dans la structure</td>
+    </tr>
+    <tr>
+      <td>Elément parent</td>
+      <td>F2  (or Fn+F2)</td>
+    </tr>
+    <tr>
+      <td>Premier fils</td>
+      <td>Shift+F2  (or Shift+Fn+F2)</td>
+    </tr>
+    <tr>
+      <td>Elément suivant</td>
+      <td>F4  (or Fn+F4)</td>
+    </tr>
+    <tr>
+      <td>Elément précédent</td>
+      <td>Shift+F4   (or Shift+Fn+F4)</td>
+    </tr>
+    <tr class="menu">
+      <td colspan="2">Menu XHTML</td>
+    </tr>
+    <tr>
+      <td>Paragraphe</td>
+      <td>Ctrl+Shift+Return</td>
+    </tr>
+    <tr>
+      <td>Saut de ligne</td>
+      <td>Ctrl+Return</td>
+    </tr>
+    <tr class="menu">
+      <td colspan="2">Menu En-tête</td>
+    </tr>
+    <tr>
+      <td>Titre niveau 1</td>
+      <td>Ctrl+1</td>
+    </tr>
+    <tr>
+      <td>Titre niveau 2</td>
+      <td>Ctrl+2</td>
+    </tr>
+    <tr>
+      <td>Titre niveau 3</td>
+      <td>Ctrl+3</td>
+    </tr>
+    <tr>
+      <td>Titre niveau 4</td>
+      <td>Ctrl+4</td>
+    </tr>
+    <tr>
+      <td>Titre niveau 5</td>
+      <td>Ctrl+5</td>
+    </tr>
+    <tr>
+      <td>Titre niveau 6</td>
+      <td>Ctrl+6</td>
+    </tr>
+    <tr class="menu">
+      <td colspan="2">Menu Vues</td>
+    </tr>
+    <tr>
+      <td>Montrer outils</td>
+      <td>F8</td>
+    </tr>
+    <tr>
+      <td>Grossir</td>
+      <td>Ctrl+=</td>
+    </tr>
+    <tr>
+      <td>Réduire</td>
+      <td>Ctrl+-</td>
+    </tr>
+    <tr>
+      <td>Montrer les zones active</td>
+      <td>Shift+Ctrl+M</td>
+    </tr>
+    <tr>
+      <td>Montrer les cibles</td>
+      <td>Shift+Ctrl+G</td>
+    </tr>
+    <tr>
+      <td>Montrer la structure</td>
+      <td>Shift+Ctrl+R</td>
+    </tr>
+    <tr>
+      <td>Montrer le source</td>
+      <td>Shift+Ctrl+U</td>
+    </tr>
+    <tr>
+      <td>Montrer les liens</td>
+      <td>Shift+Ctrl+L</td>
+    </tr>
+    <tr>
+      <td>Montrer la vue alternée</td>
+      <td>Shift+Ctrl+A</td>
+    </tr>
+    <tr>
+      <td>Montrer la table des matières</td>
+      <td>Shift+Ctrl+T</td>
+    </tr>
+    <tr>
+      <td>Partager la vue horizontalement</td>
+      <td>Shift+Ctrl+H</td>
+    </tr>
+    <tr>
+      <td>Partager la vue verticalement</td>
+      <td>Shift+Ctrl+V</td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body1">
+<h3>Séquences de raccourcis</h3>
+
+<table border="1">
+  <caption></caption>
+  <tbody>
+    <tr class="title">
+      <td class="title">Commande</td>
+      <td class="title">Raccourci</td>
+    </tr>
+    <tr class="menu">
+      <td colspan="2">Menu Edition</td>
+    </tr>
+    <tr>
+      <td>Transformer</td>
+      <td>Ctrl-t Ctrl-x</td>
+    </tr>
+    <tr class="menu">
+      <td colspan="2">Menu XHTML</td>
+    </tr>
+    <tr>
+      <td>Changer les titres</td>
+      <td>Ctrl-h Ctrl-t</td>
+    </tr>
+    <tr>
+      <td>Plan</td>
+      <td>Ctrl-h Ctrl-m</td>
+    </tr>
+    <tr>
+      <td>Préformaté</td>
+      <td>Ctrl-h Ctrl-p</td>
+    </tr>
+    <tr>
+      <td>Adresse</td>
+      <td>Ctrl-h Ctrl-a</td>
+    </tr>
+    <tr>
+      <td>Trait horizontal</td>
+      <td>Ctrl-h Ctrl-h</td>
+    </tr>
+    <tr>
+      <td>Image</td>
+      <td>Ctrl-h Ctrl-i</td>
+    </tr>
+    <tr>
+      <td>Division</td>
+      <td>Ctrl-h Ctrl-v</td>
+    </tr>
+    <tr>
+      <td>Citation</td>
+      <td>Ctrl-h Ctrl-q</td>
+    </tr>
+    <tr>
+      <td>Ruby</td>
+      <td>Ctrl-h Ctrl-r</td>
+    </tr>
+    <tr>
+      <td>Engendrer la table des matières</td>
+      <td>Ctrl-h Ctrl-g</td>
+    </tr>
+    <tr>
+      <td>Commentaire</td>
+      <td>Ctrl-h Ctrl-c</td>
+    </tr>
+    <tr class="menu">
+      <td colspan="2">Menu Liste</td>
+    </tr>
+    <tr>
+      <td>Liste a` puce</td>
+      <td>Ctrl-h Ctrl-l</td>
+    </tr>
+    <tr>
+      <td>Liste numérotée</td>
+      <td>Ctrl-h Ctrl-n</td>
+    </tr>
+    <tr>
+      <td>Liste de définitions</td>
+      <td>Ctrl-h Ctrl-d</td>
+    </tr>
+    <tr class="menu">
+      <td colspan="2">Menu Formulaire</td>
+    </tr>
+    <tr>
+      <td>Insérer un formulaire</td>
+      <td>Ctrl-o Ctrl-f</td>
+    </tr>
+    <tr>
+      <td>Bouton</td>
+      <td>Ctrl-o Ctrl-b</td>
+    </tr>
+    <tr>
+      <td>Bouton bascule</td>
+      <td>Ctrl-o Ctrl-t</td>
+    </tr>
+    <tr>
+      <td>Sélecteur fichier</td>
+      <td>Ctrl-o Ctrl-u</td>
+    </tr>
+    <tr>
+      <td>Contrôle caché</td>
+      <td>Ctrl-o Ctrl-h</td>
+    </tr>
+    <tr>
+      <td>Image</td>
+      <td>Ctrl-o Ctrl-m</td>
+    </tr>
+    <tr>
+      <td>Mot de passe</td>
+      <td>Ctrl-o Ctrl-p</td>
+    </tr>
+    <tr>
+      <td>Bouton radio</td>
+      <td>Ctrl-o Ctrl-r</td>
+    </tr>
+    <tr>
+      <td>Réinitialisation</td>
+      <td>Ctrl-o Ctrl-x</td>
+    </tr>
+    <tr>
+      <td>Soumission</td>
+      <td>Ctrl-o Ctrl-s</td>
+    </tr>
+    <tr>
+      <td>Saisie de texte</td>
+      <td>Ctrl-o Ctrl-i</td>
+    </tr>
+    <tr>
+      <td>Groupe de champs</td>
+      <td>Ctrl-o Ctrl-c</td>
+    </tr>
+    <tr>
+      <td>Etiquette</td>
+      <td>Ctrl-o Ctrl-l</td>
+    </tr>
+    <tr>
+      <td>Menu</td>
+      <td>Ctrl-o Ctrl-n</td>
+    </tr>
+    <tr>
+      <td>Sous-menu</td>
+      <td>Ctrl-o Ctrl-g</td>
+    </tr>
+    <tr>
+      <td>Zone de texte</td>
+      <td>Ctrl-o Ctrl-a</td>
+    </tr>
+    <tr class="menu">
+      <td colspan="2">Menu Objet</td>
+    </tr>
+    <tr>
+      <td>Objet</td>
+      <td>Ctrl-h Ctrl-o</td>
+    </tr>
+    <tr>
+      <td>Paramètre</td>
+      <td>Ctrl-h Ctrl-w</td>
+    </tr>
+    <tr class="menu">
+      <td colspan="2">Menu Table</td>
+    </tr>
+    <tr>
+      <td>Table</td>
+      <td>Ctrl-t Ctrl-t</td>
+    </tr>
+    <tr>
+      <td>Légende</td>
+      <td>Ctrl-t Ctrl-l</td>
+    </tr>
+    <tr>
+      <td>Changer en cellule</td>
+      <td>Ctrl-t Ctrl-d</td>
+    </tr>
+    <tr>
+      <td>Changer en cellule titre</td>
+      <td>Ctrl-t Ctrl-h</td>
+    </tr>
+    <tr>
+      <td>Joindre avec la cellule de droite</td>
+      <td>Ctrl-t Ctrl-e</td>
+    </tr>
+    <tr>
+      <td>Joindre avec la cellule au-dessous</td>
+      <td>Ctrl-t Ctrl-j</td>
+    </tr>
+    <tr>
+      <td>Réduire extension horizontale</td>
+      <td>Ctrl-t Ctrl-s</td>
+    </tr>
+    <tr>
+      <td>Réduire extension verticale</td>
+      <td>Ctrl-t Ctrl-m</td>
+    </tr>
+    <tr>
+      <td>Sélectionner la ligne</td>
+      <td>Ctrl-t Ctrl-r</td>
+    </tr>
+    <tr>
+      <td>Insérer une ligne</td>
+      <td>Ctrl-t Ctrl-i</td>
+    </tr>
+    <tr>
+      <td>Ajouter une ligne</td>
+      <td>Ctrl-t Ctrl-n</td>
+    </tr>
+    <tr>
+      <td>Sélectionner la colonne</td>
+      <td>Ctrl-t Ctrl-c</td>
+    </tr>
+    <tr>
+      <td>Insérer une colonne</td>
+      <td>Ctrl-t Ctrl-b</td>
+    </tr>
+    <tr>
+      <td>Ajouter une colonne</td>
+      <td>Ctrl-t Ctrl-a</td>
+    </tr>
+    <tr>
+      <td>Coller avant</td>
+      <td>Ctrl-t Ctrl-p</td>
+    </tr>
+    <tr>
+      <td>Coller après</td>
+      <td>Ctrl-t Ctrl-v</td>
+    </tr>
+    <tr class="menu">
+      <td colspan="2">Menu Type d'information</td>
+    </tr>
+    <tr>
+      <td>Accent</td>
+      <td>Ctrl-i Ctrl-e</td>
+    </tr>
+    <tr>
+      <td>Force</td>
+      <td>Ctrl-i Ctrl-s</td>
+    </tr>
+    <tr>
+      <td>Citation</td>
+      <td>Ctrl-i Ctrl-w</td>
+    </tr>
+    <tr>
+      <td>Définition</td>
+      <td>Ctrl-i Ctrl-x</td>
+    </tr>
+    <tr>
+      <td>Code</td>
+      <td>Ctrl-i Ctrl-t</td>
+    </tr>
+    <tr>
+      <td>Variable</td>
+      <td>Ctrl-i Ctrl-v</td>
+    </tr>
+    <tr>
+      <td>Exemple</td>
+      <td>Ctrl-i Ctrl-m</td>
+    </tr>
+    <tr>
+      <td>Clavier</td>
+      <td>Ctrl-i Ctrl-k</td>
+    </tr>
+    <tr>
+      <td>Abréviation</td>
+      <td>Ctrl-i Ctrl-u</td>
+    </tr>
+    <tr>
+      <td>Acronyme</td>
+      <td>Ctrl-i Ctrl-y</td>
+    </tr>
+    <tr>
+      <td>Insertion</td>
+      <td>Ctrl-i Ctrl-i</td>
+    </tr>
+    <tr>
+      <td>Suppression</td>
+      <td>Ctrl-i Ctrl-d</td>
+    </tr>
+    <tr class="menu">
+      <td colspan="2">Menu Eléments caractères</td>
+    </tr>
+    <tr>
+      <td>Citation</td>
+      <td>Ctrl-i Ctrl-q</td>
+    </tr>
+    <tr>
+      <td>BiDi</td>
+      <td>Ctrl-i Ctrl-z</td>
+    </tr>
+    <tr class="menu">
+      <td colspan="2">Menu XML</td>
+    </tr>
+    <tr>
+      <td>Montrer la librairie graphique</td>
+      <td>Ctrl-l Ctrl-s</td>
+    </tr>
+    <tr>
+      <td>Ajouter le graphique sélectionné dans la librairie</td>
+      <td>Ctrl-l Ctrl-f</td>
+    </tr>
+    <tr>
+      <td>Commentaire</td>
+      <td>Ctrl-h Ctrl-c</td>
+    </tr>
+    <tr class="menu">
+      <td colspan="2">Menu Math</td>
+    </tr>
+    <tr>
+      <td>Nouvelle formule</td>
+      <td>Ctrl-m Ctrl-m</td>
+    </tr>
+    <tr>
+      <td>Nouvelle matrice</td>
+      <td>Ctrl-m Ctrl-h</td>
+    </tr>
+    <tr>
+      <td>Texte</td>
+      <td>Ctrl-m Ctrl-x</td>
+    </tr>
+    <tr>
+      <td>Identificateur</td>
+      <td>Ctrl-m Ctrl-d</td>
+    </tr>
+    <tr>
+      <td>Nombre</td>
+      <td>Ctrl-m Ctrl-n</td>
+    </tr>
+    <tr>
+      <td>Opérateur</td>
+      <td>Ctrl-m Ctrl-g</td>
+    </tr>
+    <tr>
+      <td>Espace</td>
+      <td>Ctrl-m Ctrl-Space</td>
+    </tr>
+    <tr>
+      <td>Caractère</td>
+      <td>Ctrl-m Ctrl-e</td>
+    </tr>
+    <tr>
+      <td>InvisibleTimes</td>
+      <td>Ctrl-m Ctrl-i</td>
+    </tr>
+    <tr>
+      <td>ApplyFunction</td>
+      <td>Ctrl-m Ctrl-a</td>
+    </tr>
+    <tr>
+      <td>Racine</td>
+      <td>Ctrl-m Ctrl-r</td>
+    </tr>
+    <tr>
+      <td>Racine carrée</td>
+      <td>Ctrl-m Ctrl-q</td>
+    </tr>
+    <tr>
+      <td>Englobe</td>
+      <td>Ctrl-m Ctrl-c</td>
+    </tr>
+    <tr>
+      <td>Fraction</td>
+      <td>Ctrl-m Ctrl-f</td>
+    </tr>
+    <tr>
+      <td>Indice et exposant</td>
+      <td>Ctrl-m Ctrl-b</td>
+    </tr>
+    <tr>
+      <td>Indice</td>
+      <td>Ctrl-m Ctrl-v</td>
+    </tr>
+    <tr>
+      <td>Exposant</td>
+      <td>Ctrl-m Ctrl-6</td>
+    </tr>
+    <tr>
+      <td>Dessous et dessus</td>
+      <td>Ctrl-m Ctrl-k</td>
+    </tr>
+    <tr>
+      <td>Dessous</td>
+      <td>Ctrl-m Ctrl-u</td>
+    </tr>
+    <tr>
+      <td>Dessus</td>
+      <td>Ctrl-m Ctrl-o</td>
+    </tr>
+    <tr>
+      <td>Parenthèses</td>
+      <td>Ctrl-m Ctrl-p</td>
+    </tr>
+    <tr>
+      <td>Multiscripts</td>
+      <td>Ctrl-m Ctrl-s</td>
+    </tr>
+    <tr class="menu">
+      <td colspan="2">Menu Liens</td>
+    </tr>
+    <tr>
+      <td>Lier la cible créée</td>
+      <td>Ctrl-l Ctrl-p</td>
+    </tr>
+    <tr>
+      <td>Créer/changer lien</td>
+      <td>Ctrl-l Ctrl-l</td>
+    </tr>
+    <tr>
+      <td>Créer cible</td>
+      <td>Ctrl-l Ctrl-t</td>
+    </tr>
+    <tr>
+      <td>Détruire ancre</td>
+      <td>Ctrl-l Ctrl-d</td>
+    </tr>
+    <tr class="menu">
+      <td colspan="2">Menu</td>
+    </tr>
+    <tr>
+      <td>Créer une règle</td>
+      <td>Ctrl-i Ctrl-c</td>
+    </tr>
+    <tr>
+      <td>Montrer le style appliqué</td>
+      <td>Ctrl-i Ctrl-g</td>
+    </tr>
+    <tr>
+      <td>Ajouter</td>
+      <td>Ctrl-i Ctrl-l</td>
+    </tr>
+    <tr>
+      <td>Ouvrir</td>
+      <td>Ctrl-i Ctrl-o</td>
+    </tr>
+    <tr>
+      <td>Retirer</td>
+      <td>Ctrl-i Ctrl-r</td>
+    </tr>
+  </tbody>
+</table>
+
+<p></p>
+</div>
+</body>
+</html>
