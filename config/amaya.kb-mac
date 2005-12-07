@@ -41,8 +41,8 @@ Shift <Key>Tab:                    PreviousLinkOrFormElement()
 #Structure navigation
 <Key>F2:                           TtcParentElement()
 <Key>F4:                           TtcNextElement()
-Alt <Key>F2:                       TtcChildElement()
-Alt <Key>F4:                       TtcPreviousElement() 
+Shift <Key>F2:                       TtcChildElement()
+Shift <Key>F4:                       TtcPreviousElement() 
 
 #Following commented out to remember default actions
 #<Key>Right:                       TtcNextChar() 
