@@ -5,8 +5,7 @@
 <head>
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <title>Sélectionner</title>
-  <meta name="GENERATOR" content="amaya 8.8.3, see http://www.w3.org/Amaya/"
-  />
+  <meta name="GENERATOR" content="amaya 9.3, see http://www.w3.org/Amaya/" />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -82,15 +81,14 @@ cliquez sur le mot structure, puis pressez <kbd>F2</kbd> donne :</p>
             parent dans la structure du document. Presser la touche plusieurs
             fois pour sélectionner le conteneur au dessus (et tout ce qu'il
             englobe) et ce jusqu'à la racine.</li>
-          <li>Pressez <kbd>Alt-F2 (ou Fn-Alt-F2 sur certains
-            claviers)</kbd>pour sélectionner le premier élément fils.</li>
+          <li>Pressez <kbd>Shift-F2</kbd> pour sélectionner le premier
+            élément fils.</li>
           <li>Pressez <kbd>F4</kbd> pour sélectionner l'élément suivant au
             même niveau, ou au niveau du parent s'il n'y a pas d'élément
             suivant pour l'élément courant.</li>
-          <li>Pressez <kbd>Alt-F4 (ou Fn-Alt-F4 sur certains claviers)</kbd>
-            pour sélectionner l'élément précédent au même niveau, ou au
-            niveau du parent s'il n'y a pas d'élément précédent pour
-            l'élément courant.</li>
+          <li>Pressez <kbd>Shift-F4</kbd> pour sélectionner l'élément
+            précédent au même niveau, ou au niveau du parent s'il n'y a pas
+            d'élément précédent pour l'élément courant.</li>
         </ul>
       </li>
       <li>Les quatre touches de direction du clavier <kbd>Left</kbd>,
@@ -147,9 +145,9 @@ sélectionner l'élément "parent" dans la structure du document. Pressez la
 touche <kbd>F2</kbd> plusieurs fois pour augmenter d'un niveau la structure
 sélectionnée jusqu'à sélectionner la racine du document. Il est encore
 possible de sélectionner des éléments "fils" : la touche "raccourci clavier
-par défaut" est <kbd>Alt-F2 (ou Fn-Alt-F2)</kbd>. Pour sélectionner l'élément
-suivant ou l'élément précédent au même niveau, utilisez <kbd>F4</kbd> (pour
-le suivant) et <kbd>Alt-F4 (ou Fn-Alt-F4)</kbd> (pour le précédent).</p>
+par défaut" est <kbd>Shift-F2</kbd>. Pour sélectionner l'élément suivant ou
+l'élément précédent au même niveau, utilisez <kbd>F4</kbd> (pour le suivant)
+et <kbd>Shift-F4</kbd> (pour le précédent).</p>
 
 <h3><a name="Selecting2">Sélectionner des images</a></h3>
 

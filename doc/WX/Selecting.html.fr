@@ -84,14 +84,14 @@ cliquez sur le mot structure, puis pressez <kbd>F2</kbd>) donne :</p>
   <li>Pressez la touche <kbd>F2</kbd> pour sélectionner l'élément parent dans
     la structure du document. Presser cette touche plusieurs fois pour
     sélectionner les elements ascendants, et ce jusqu'à la racine.</li>
-  <li>Pressez <kbd>Alt-F2 (ou Fn-Alt-F2 sur certains claviers)</kbd> pour
-    sélectionner le premier élément fils.</li>
+  <li>Pressez <kbd>Shift-F2</kbd> pour sélectionner le premier élément
+  fils.</li>
   <li>Pressez <kbd>F4</kbd> pour sélectionner l'élément suivant au même
     niveau, ou au niveau du parent s'il n'y a pas d'élément suivant pour
     l'élément courant.</li>
-  <li>Pressez <kbd>Alt-F4 (ou Fn-Alt-F4 sur certains claviers)</kbd> pour
-    sélectionner l'élément précédent au même niveau, ou au niveau du parent
-    s'il n'y a pas d'élément précédent pour l'élément courant.</li>
+  <li>Pressez <kbd>Shift-F4</kbd> pour sélectionner l'élément précédent au
+    même niveau, ou au niveau du parent s'il n'y a pas d'élément précédent
+    pour l'élément courant.</li>
 </ul>
 
 <p class="ProcedureCaption">Déplacer le point d'insertion</p>

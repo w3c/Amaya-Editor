@@ -4,8 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="content-type" content="text/html; charset=windows-1251" />
-  <meta name="GENERATOR" content="amaya 8.8.3, see http://www.w3.org/Amaya/"
-  />
+  <meta name="GENERATOR" content="amaya 9.3, see http://www.w3.org/Amaya/" />
   <title>Выбор по структуре</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -66,8 +65,7 @@
     что они содержат) в структуре по отношению к корню.
     <p></p>
   </li>
-  <li>Нажмите кнопку <kbd>Alt-F2 (Fn-Alt-F2)</kbd> для выбора дочернего
-    элемента.
+  <li>Нажмите кнопку <kbd>Shift-F2</kbd> для выбора дочернего элемента.
     <p></p>
   </li>
   <li>Нажмите кнопку <kbd>F4</kbd> для выбора следующего элемента на том же
@@ -75,9 +73,9 @@
     предыдущего потомка из текущего уровня.
     <p></p>
   </li>
-  <li>Нажмите кнопку <kbd>Alt-F4 (Fn-Alt-F4)</kbd> для выбора предыдущего
-    элемента на том же уровне, или на уровне родительского элемента, если нет
-    предыдущего потомка из текущего уровня.</li>
+  <li>Нажмите кнопку <kbd>Shift-F4</kbd> для выбора предыдущего элемента на
+    том же уровне, или на уровне родительского элемента, если нет предыдущего
+    потомка из текущего уровня.</li>
 </ul>
 </div>
 </body>

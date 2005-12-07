@@ -4,8 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
-  <meta name="generator" content="amaya 8.8.3, see http://www.w3.org/Amaya/"
-  />
+  <meta name="generator" content="amaya 9.3, see http://www.w3.org/Amaya/" />
   <title>In der Strukturansicht markieren</title>
   <style type="text/css">
  </style>
@@ -56,13 +55,13 @@ schnell große Elemente oder Gruppen von Elementen markieren.</span></p>
   <li>Ein Element wird mit <kbd>F2</kbd> markiert. Drückt man diese Taste
     mehrmals, dann werden auch dessen übergeordneten Elemente (und deren
     Inhalt) markiert.</li>
-  <li><kbd>Alt-F2 (Fn-Alt-F2)</kbd> markiert ein Kindelement.</li>
+  <li><kbd>Shift-F2</kbd> markiert ein Kindelement.</li>
   <li><kbd>F4</kbd> markiert das nächste Element auf der gleichen Ebene oder
     das übergeordnete Element wenn es kein Element auf der gleichen Ebene
     gibt.</li>
-  <li><kbd>Alt-F4 (Fn-Alt-F4)</kbd> markiert das vorhergehende Element auf
-    der gleichen Ebene oder das übergeordnete Element wenn es kein Element
-    auf der gleichen Ebene gibt.</li>
+  <li><kbd>Shift-F4</kbd> markiert das vorhergehende Element auf der gleichen
+    Ebene oder das übergeordnete Element wenn es kein Element auf der
+    gleichen Ebene gibt.</li>
 </ul>
 </div>
 </body>
