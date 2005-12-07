@@ -2192,20 +2192,31 @@ ThotBool TtaHandleSpecialKey( wxKeyEvent& event )
     {
       int thot_keysym = event.GetKeyCode();  
       
-      bool proceed_key = ( thot_keysym == WXK_INSERT ||
-                           thot_keysym == WXK_DELETE ||
-                           thot_keysym == WXK_HOME   ||
-                           thot_keysym == WXK_PRIOR  ||
-                           thot_keysym == WXK_NEXT   ||
-                           thot_keysym == WXK_END    ||
-                           thot_keysym == WXK_LEFT   ||
-                           thot_keysym == WXK_RIGHT  ||
-                           thot_keysym == WXK_UP     ||
-                           thot_keysym == WXK_DOWN   ||
-                           thot_keysym == WXK_ESCAPE ||
-                           thot_keysym == WXK_BACK   ||
-                           thot_keysym == WXK_RETURN ||
+      bool proceed_key = ( thot_keysym == WXK_INSERT   ||
+                           thot_keysym == WXK_DELETE   ||
+                           thot_keysym == WXK_HOME     ||
+                           thot_keysym == WXK_PRIOR    ||
+                           thot_keysym == WXK_NEXT     ||
+#ifdef _MACOS
+                           thot_keysym == WXK_PAGEUP   ||
+                           thot_keysym == WXK_PAGEDOWN ||
+#endif /* _MACOS */
+                           thot_keysym == WXK_END      ||
+                           thot_keysym == WXK_LEFT     ||
+                           thot_keysym == WXK_RIGHT    ||
+                           thot_keysym == WXK_UP       ||
+                           thot_keysym == WXK_DOWN     ||
+                           thot_keysym == WXK_ESCAPE   ||
+                           thot_keysym == WXK_BACK     ||
+                           thot_keysym == WXK_RETURN   ||
                            thot_keysym == WXK_TAB );
+
+#ifdef _MACOS
+      if (proceed_key && thot_keysym == WXK_PAGEUP)
+	    thot_keysym = WXK_PRIOR;
+      if (proceed_key && thot_keysym == WXK_PAGEDOWN)
+	    thot_keysym = WXK_NEXT;
+#endif /* _MACOS */
       
       wxWindow *       p_win_focus         = wxWindow::FindFocus();
       wxGLCanvas *     p_gl_canvas         = wxDynamicCast(p_win_focus, wxGLCanvas);
