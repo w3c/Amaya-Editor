@@ -687,7 +687,7 @@ créer une table).</p>
       <td>Ctrl-u Ctrl-v</td>
     </tr>
     <tr class="menu">
-      <td colspan="2">Menu</td>
+      <td colspan="2">Menu Style</td>
     </tr>
     <tr>
       <td>Créer une règle</td>
@@ -708,6 +708,33 @@ créer une table).</p>
     <tr>
       <td>Retirer</td>
       <td>Ctrl-i Ctrl-r</td>
+    </tr>
+    <tr class="menu">
+      <td colspan="2">Menu Annotations</td>
+    </tr>
+    <tr>
+      <td>Annoter la sélection</td>
+      <td>Ctrl-n Ctrl-s</td>
+    </tr>
+    <tr>
+      <td>Annoter le document</td>
+      <td>Ctrl-n Ctrl-a</td>
+    </tr>
+    <tr>
+      <td>Répondre à l'annotation</td>
+      <td>Ctrl-n Ctrl-r</td>
+    </tr>
+    <tr>
+      <td>Enregister sur le serveur</td>
+      <td>Ctrl-n Ctrl-p</td>
+    </tr>
+    <tr>
+      <td>Détruire</td>
+      <td>Ctrl-n Ctrl-d</td>
+    </tr>
+    <tr>
+      <td>Charger annotations</td>
+      <td>Ctrl-n Ctrl-l</td>
     </tr>
   </tbody>
 </table>

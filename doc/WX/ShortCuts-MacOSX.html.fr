@@ -680,7 +680,7 @@ affichés par défaut. Pour afficher, vous devez sélectionner l'option
       <td>Ctrl-l Ctrl-d</td>
     </tr>
     <tr class="menu">
-      <td colspan="2">Menu</td>
+      <td colspan="2">Menu Style</td>
     </tr>
     <tr>
       <td>Créer une règle</td>
