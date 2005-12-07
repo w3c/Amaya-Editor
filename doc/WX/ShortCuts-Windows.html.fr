@@ -27,7 +27,7 @@ tr.menu    { font-weight: bold; margin-top: 10px; }</style>
 
 <p>Amaya définit deux types de raccourcis clavier: les raccourcis clavier
 utilisant les touches standard de Windows (ex. Ctrl+C pour copier la
-sélection) et des raccourcis utilisant des séquences (ex. Ctrl-t Ctrl-t pour
+sélection), et des raccourcis utilisant des séquences (ex. Ctrl-t Ctrl-t pour
 créer une table).</p>
 
 <h3>Raccourcis standard</h3>
@@ -75,10 +75,6 @@ créer une table).</p>
       <td colspan="2">Menu Fichier</td>
     </tr>
     <tr>
-      <td>Ouvrir</td>
-      <td>Ctrl+O</td>
-    </tr>
-    <tr>
       <td>Recharger</td>
       <td>Ctrl+R</td>
     </tr>
@@ -99,24 +95,16 @@ créer une table).</p>
       <td>Ctrl+Shift+S</td>
     </tr>
     <tr>
-      <td>Synchroniser</td>
-      <td>Ctrl+Y</td>
-    </tr>
-    <tr>
       <td>Paramétrer et imprimer</td>
       <td>Ctrl+P</td>
     </tr>
     <tr>
-      <td>Imprimer</td>
-      <td>Ctrl+Shift+P</td>
-    </tr>
-    <tr>
       <td>Fermer l'onglet</td>
-      <td>Ctrl+Shift+W</td>
+      <td>Ctrl+W</td>
     </tr>
     <tr>
-      <td>Fermer la fenêtre</td>
-      <td>Ctrl+W</td>
+      <td>Quitter</td>
+      <td>Ctrl+Q</td>
     </tr>
     <tr class="menu">
       <td colspan="2">Menu Édition</td>
@@ -143,7 +131,7 @@ créer une table).</p>
     </tr>
     <tr>
       <td>Détruire</td>
-      <td>Delete</td>
+      <td>Ctrl+D</td>
     </tr>
     <tr>
       <td>Rechercher</td>
@@ -151,37 +139,37 @@ créer une table).</p>
     </tr>
     <tr>
       <td>Vérifier orthographe</td>
-      <td>Ctrl+Shift+F</td>
+      <td>F7</td>
     </tr>
     <tr class="menu">
       <td colspan="2">Navigation dans la structure</td>
     </tr>
     <tr>
       <td>Elément parent</td>
-      <td>F2  (or Fn+F2)</td>
+      <td>F2</td>
     </tr>
     <tr>
       <td>Premier fils</td>
-      <td>Shift+F2  (or Shift+Fn+F2)</td>
+      <td>Shift+F2</td>
     </tr>
     <tr>
       <td>Elément suivant</td>
-      <td>F4  (or Fn+F4)</td>
+      <td>F4</td>
     </tr>
     <tr>
       <td>Elément précédent</td>
-      <td>Shift+F4   (or Shift+Fn+F4)</td>
+      <td>Shift+F4</td>
     </tr>
     <tr class="menu">
       <td colspan="2">Menu XHTML</td>
     </tr>
     <tr>
       <td>Paragraphe</td>
-      <td>Ctrl+Shift+Return</td>
+      <td>Shift+Enter</td>
     </tr>
     <tr>
       <td>Saut de ligne</td>
-      <td>Ctrl+Return</td>
+      <td>Ctrl+Enter</td>
     </tr>
     <tr class="menu">
       <td colspan="2">Menu En-tête</td>
@@ -215,51 +203,19 @@ créer une table).</p>
     </tr>
     <tr>
       <td>Montrer outils</td>
-      <td>F8</td>
+      <td>F12</td>
+    </tr>
+    <tr>
+      <td>Mode Plein Ecran</td>
+      <td>F11</td>
     </tr>
     <tr>
       <td>Grossir</td>
-      <td>Ctrl+=</td>
+      <td>Alt+=</td>
     </tr>
     <tr>
       <td>Réduire</td>
-      <td>Ctrl+-</td>
-    </tr>
-    <tr>
-      <td>Montrer les zones active</td>
-      <td>Shift+Ctrl+M</td>
-    </tr>
-    <tr>
-      <td>Montrer les cibles</td>
-      <td>Shift+Ctrl+G</td>
-    </tr>
-    <tr>
-      <td>Montrer la structure</td>
-      <td>Shift+Ctrl+R</td>
-    </tr>
-    <tr>
-      <td>Montrer le source</td>
-      <td>Shift+Ctrl+U</td>
-    </tr>
-    <tr>
-      <td>Montrer les liens</td>
-      <td>Shift+Ctrl+L</td>
-    </tr>
-    <tr>
-      <td>Montrer la vue alternée</td>
-      <td>Shift+Ctrl+A</td>
-    </tr>
-    <tr>
-      <td>Montrer la table des matières</td>
-      <td>Shift+Ctrl+T</td>
-    </tr>
-    <tr>
-      <td>Partager la vue horizontalement</td>
-      <td>Shift+Ctrl+H</td>
-    </tr>
-    <tr>
-      <td>Partager la vue verticalement</td>
-      <td>Shift+Ctrl+V</td>
+      <td>Alt+-</td>
     </tr>
   </tbody>
 </table>
@@ -275,7 +231,19 @@ créer une table).</p>
       <td class="title">Raccourci</td>
     </tr>
     <tr class="menu">
-      <td colspan="2">Menu Edition</td>
+      <td colspan="2">Menu Fichier</td>
+    </tr>
+    <tr>
+      <td>Ouvrir</td>
+      <td>Ctrl-o Ctrl-o</td>
+    </tr>
+    <tr>
+      <td>Synchroniser</td>
+      <td>Ctrl-b Ctrl-y</td>
+    </tr>
+    <tr class="menu">
+      <td>Menu Edition</td>
+      <td></td>
     </tr>
     <tr>
       <td>Transformer</td>
@@ -674,6 +642,45 @@ créer une table).</p>
     <tr>
       <td>Détruire ancre</td>
       <td>Ctrl-l Ctrl-d</td>
+    </tr>
+    <tr class="menu">
+      <td colspan="2">Menu Vues</td>
+    </tr>
+    <tr>
+      <td>Montrer les zones active</td>
+      <td>Ctrl-u Ctrl-m</td>
+    </tr>
+    <tr>
+      <td>Montrer les cibles</td>
+      <td>Ctrl-u Ctrl-t</td>
+    </tr>
+    <tr>
+      <td>Montrer la structure</td>
+      <td>Ctrl-u Ctrl-s</td>
+    </tr>
+    <tr>
+      <td>Montrer le source</td>
+      <td>Ctrl-u Ctrl-o</td>
+    </tr>
+    <tr>
+      <td>Montrer les liens</td>
+      <td>Ctrl-u Ctrl-l</td>
+    </tr>
+    <tr>
+      <td>Montrer la vue alternée</td>
+      <td>Ctrl-u Ctrl-a</td>
+    </tr>
+    <tr>
+      <td>Montrer la table des matières</td>
+      <td>Ctrl-u Ctrl-c</td>
+    </tr>
+    <tr>
+      <td>Partager la vue horizontalement</td>
+      <td>Ctrl-u Ctrl-h</td>
+    </tr>
+    <tr>
+      <td>Partager la vue verticalement</td>
+      <td>Ctrl-u Ctrl-v</td>
     </tr>
     <tr class="menu">
       <td colspan="2">Menu</td>
