@@ -99,6 +99,10 @@ créer une table).</p>
       <td>Ctrl+P</td>
     </tr>
     <tr>
+      <td>Imprimer</td>
+      <td>Ctrl+Shift+P</td>
+    </tr>
+    <tr>
       <td>Fermer l'onglet</td>
       <td>Ctrl+W</td>
     </tr>
@@ -115,7 +119,7 @@ créer une table).</p>
     </tr>
     <tr>
       <td>Refaire</td>
-      <td>Ctrl+Shift+Z</td>
+      <td>Ctrl+Y</td>
     </tr>
     <tr>
       <td>Couper</td>
@@ -203,7 +207,7 @@ créer une table).</p>
     </tr>
     <tr>
       <td>Montrer outils</td>
-      <td>F12</td>
+      <td>F8</td>
     </tr>
     <tr>
       <td>Mode Plein Ecran</td>
