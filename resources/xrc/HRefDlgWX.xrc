@@ -21,7 +21,7 @@
               <orient>wxHORIZONTAL</orient>
               <object class="sizeritem">
                 <object class="wxStaticBitmap">
-                  <bitmap>../icons/22x22/XHTML_Link.png</bitmap>
+                  <bitmap>../icons/16x16/XHTML_Link.png</bitmap>
                 </object>
                 <flag>wxRIGHT|wxALIGN_CENTRE_VERTICAL</flag>
                 <border>5</border>
