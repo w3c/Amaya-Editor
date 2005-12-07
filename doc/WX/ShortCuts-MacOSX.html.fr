@@ -45,6 +45,37 @@ affichés par défaut. Pour afficher, vous devez sélectionner l'option
       <td class="title">Raccourci</td>
     </tr>
     <tr class="menu">
+      <td colspan="2">Navigation</td>
+    </tr>
+    <tr>
+      <td>Page de démarrage</td>
+      <td>Alt+Home</td>
+    </tr>
+    <tr>
+      <td>Début du document</td>
+      <td>Cmd+Home</td>
+    </tr>
+    <tr>
+      <td>Fin du document</td>
+      <td>Cmd+End</td>
+    </tr>
+    <tr>
+      <td>Début de ligne</td>
+      <td>Home</td>
+    </tr>
+    <tr>
+      <td>Fin de ligne</td>
+      <td>End</td>
+    </tr>
+    <tr>
+      <td>Défilement vers le bas</td>
+      <td>Cmd+Down Arrow</td>
+    </tr>
+    <tr>
+      <td>Défilement vers le haut</td>
+      <td>Cmd+Up Arrow</td>
+    </tr>
+    <tr class="menu">
       <td colspan="2">Menu Fichier</td>
     </tr>
     <tr>
