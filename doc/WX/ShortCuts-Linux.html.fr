@@ -23,16 +23,9 @@ tr.menu    { font-weight: bold; margin-top: 10px; }</style>
 /></div>
 
 <div id="page_body">
-<h2>Raccourcis clavier d'Amaya pour Mac OS X</h2>
+<h2>Raccourcis clavier d'Amaya pour Linux</h2>
 
-<p>Amaya définit deux types de raccourcis clavier : les raccourcis clavier
-utilisant les modifieurs standard d'Apple (ex. Cmd+C pour copier la
-sélection) et des raccourcis utilisant des séquences (ex. Ctrl-t Ctrl-t pour
-créer une table). Comme les utilisateurs Mac OS X ne sont pas familiers avec
-des séquences de raccourcis dans les menus, seul les raccourcis standard sont
-affichés par défaut. Pour afficher, vous devez sélectionner l'option
-<strong>Montrer tous les raccourcis</strong> dans le dialogue
-<strong>Préférences &gt; Général</strong> et relancer Amaya.</p>
+<p></p>
 
 <h3>Raccourcis standard</h3>
 </div>
@@ -53,11 +46,11 @@ affichés par défaut. Pour afficher, vous devez sélectionner l'option
     </tr>
     <tr>
       <td>Début du document</td>
-      <td>Cmd+Home</td>
+      <td>Ctrl+Home</td>
     </tr>
     <tr>
       <td>Fin du document</td>
-      <td>Cmd+End</td>
+      <td>Ctrl+End</td>
     </tr>
     <tr>
       <td>Début de ligne</td>
@@ -69,22 +62,18 @@ affichés par défaut. Pour afficher, vous devez sélectionner l'option
     </tr>
     <tr>
       <td>Défilement vers le bas</td>
-      <td>Cmd+Down Arrow</td>
+      <td>Ctrl+Down Arrow</td>
     </tr>
     <tr>
       <td>Défilement vers le haut</td>
-      <td>Cmd+Up Arrow</td>
+      <td>Ctrl+Up Arrow</td>
     </tr>
     <tr class="menu">
       <td colspan="2">Menu Fichier</td>
     </tr>
     <tr>
-      <td>Ouvrir</td>
-      <td>Cmd+O</td>
-    </tr>
-    <tr>
       <td>Recharger</td>
-      <td>Cmd+R</td>
+      <td>Ctrl+R</td>
     </tr>
     <tr>
       <td>Précédent</td>
@@ -96,174 +85,134 @@ affichés par défaut. Pour afficher, vous devez sélectionner l'option
     </tr>
     <tr>
       <td>Sauver</td>
-      <td>Cmd+S</td>
+      <td>Ctrl+S</td>
     </tr>
     <tr>
       <td>Sauver comme</td>
-      <td>Cmd+Shift+S</td>
-    </tr>
-    <tr>
-      <td>Synchroniser</td>
-      <td>Cmd+Y</td>
+      <td>Ctrl+Shift+S</td>
     </tr>
     <tr>
       <td>Paramétrer et imprimer</td>
-      <td>Cmd+P</td>
-    </tr>
-    <tr>
-      <td>Imprimer</td>
-      <td>Cmd+Shift+P</td>
+      <td>Ctrl+P</td>
     </tr>
     <tr>
       <td>Fermer l'onglet</td>
-      <td>Cmd+Shift+W</td>
+      <td>Ctrl+W</td>
     </tr>
     <tr>
-      <td>Fermer la fenêtre</td>
-      <td>Cmd+W</td>
+      <td>Quitter</td>
+      <td>Ctrl+Q</td>
     </tr>
     <tr class="menu">
       <td colspan="2">Menu Édition</td>
     </tr>
     <tr>
       <td>Défaire</td>
-      <td>Cmd+Z</td>
+      <td>Ctrl+Z</td>
     </tr>
     <tr>
       <td>Refaire</td>
-      <td>Cmd+Shift+Z</td>
+      <td>Ctrl+Shift+Z</td>
     </tr>
     <tr>
       <td>Couper</td>
-      <td>Cmd+X</td>
+      <td>Ctrl+X</td>
     </tr>
     <tr>
       <td>Copier</td>
-      <td>Cmd+C</td>
+      <td>Ctrl+C</td>
     </tr>
     <tr>
       <td>Coller</td>
-      <td>Cmd+V</td>
+      <td>Ctrl+V</td>
     </tr>
     <tr>
       <td>Détruire</td>
-      <td>Delete</td>
+      <td>Ctrl+D</td>
     </tr>
     <tr>
       <td>Rechercher</td>
-      <td>Cmd+F</td>
+      <td>Ctrl+F</td>
     </tr>
     <tr>
       <td>Vérifier orthographe</td>
-      <td>Cmd+Shift+F</td>
+      <td>F7</td>
     </tr>
     <tr class="menu">
       <td colspan="2">Navigation dans la structure</td>
     </tr>
     <tr>
       <td>Elément parent</td>
-      <td>F2  (or Fn+F2)</td>
+      <td>F2</td>
     </tr>
     <tr>
       <td>Premier fils</td>
-      <td>Shift+F2  (or Shift+Fn+F2)</td>
+      <td>Shift+F2</td>
     </tr>
     <tr>
       <td>Elément suivant</td>
-      <td>F4  (or Fn+F4)</td>
+      <td>F4</td>
     </tr>
     <tr>
       <td>Elément précédent</td>
-      <td>Shift+F4   (or Shift+Fn+F4)</td>
+      <td>Shift+F4</td>
     </tr>
     <tr class="menu">
       <td colspan="2">Menu XHTML</td>
     </tr>
     <tr>
       <td>Paragraphe</td>
-      <td>Cmd+Shift+Return</td>
+      <td>Shift+Enter</td>
     </tr>
     <tr>
       <td>Saut de ligne</td>
-      <td>Cmd+Return</td>
+      <td>Ctrl+Enter</td>
     </tr>
     <tr class="menu">
       <td colspan="2">Menu En-tête</td>
     </tr>
     <tr>
       <td>Titre niveau 1</td>
-      <td>Cmd+1</td>
+      <td>Ctrl+1</td>
     </tr>
     <tr>
       <td>Titre niveau 2</td>
-      <td>Cmd+2</td>
+      <td>Ctrl+2</td>
     </tr>
     <tr>
       <td>Titre niveau 3</td>
-      <td>Cmd+3</td>
+      <td>Ctrl+3</td>
     </tr>
     <tr>
       <td>Titre niveau 4</td>
-      <td>Cmd+4</td>
+      <td>Ctrl+4</td>
     </tr>
     <tr>
       <td>Titre niveau 5</td>
-      <td>Cmd+5</td>
+      <td>Ctrl+5</td>
     </tr>
     <tr>
       <td>Titre niveau 6</td>
-      <td>Cmd+6</td>
+      <td>Ctrl+6</td>
     </tr>
     <tr class="menu">
       <td colspan="2">Menu Vues</td>
     </tr>
     <tr>
       <td>Montrer outils</td>
-      <td>F8</td>
+      <td>F12</td>
+    </tr>
+    <tr>
+      <td>Mode Plein Ecran</td>
+      <td>F11</td>
     </tr>
     <tr>
       <td>Grossir</td>
-      <td>Cmd+=</td>
+      <td>Alt+=</td>
     </tr>
     <tr>
       <td>Réduire</td>
-      <td>Cmd+-</td>
-    </tr>
-    <tr>
-      <td>Montrer les zones active</td>
-      <td>Shift+Cmd+M</td>
-    </tr>
-    <tr>
-      <td>Montrer les cibles</td>
-      <td>Shift+Cmd+G</td>
-    </tr>
-    <tr>
-      <td>Montrer la structure</td>
-      <td>Shift+Cmd+R</td>
-    </tr>
-    <tr>
-      <td>Montrer le source</td>
-      <td>Shift+Cmd+U</td>
-    </tr>
-    <tr>
-      <td>Montrer les liens</td>
-      <td>Shift+Cmd+L</td>
-    </tr>
-    <tr>
-      <td>Montrer la vue alternée</td>
-      <td>Shift+Cmd+A</td>
-    </tr>
-    <tr>
-      <td>Montrer la table des matières</td>
-      <td>Shift+Cmd+T</td>
-    </tr>
-    <tr>
-      <td>Partager la vue horizontalement</td>
-      <td>Shift+Cmd+H</td>
-    </tr>
-    <tr>
-      <td>Partager la vue verticalement</td>
-      <td>Shift+Cmd+V</td>
+      <td>Alt+-</td>
     </tr>
   </tbody>
 </table>
@@ -279,7 +228,19 @@ affichés par défaut. Pour afficher, vous devez sélectionner l'option
       <td class="title">Raccourci</td>
     </tr>
     <tr class="menu">
-      <td colspan="2">Menu Edition</td>
+      <td colspan="2">Menu Fichier</td>
+    </tr>
+    <tr>
+      <td>Ouvrir</td>
+      <td>Ctrl-o Ctrl-o</td>
+    </tr>
+    <tr>
+      <td>Synchroniser</td>
+      <td>Ctrl-b Ctrl-y</td>
+    </tr>
+    <tr class="menu">
+      <td>Menu Edition</td>
+      <td></td>
     </tr>
     <tr>
       <td>Transformer</td>
@@ -678,6 +639,45 @@ affichés par défaut. Pour afficher, vous devez sélectionner l'option
     <tr>
       <td>Détruire ancre</td>
       <td>Ctrl-l Ctrl-d</td>
+    </tr>
+    <tr class="menu">
+      <td colspan="2">Menu Vues</td>
+    </tr>
+    <tr>
+      <td>Montrer les zones active</td>
+      <td>Ctrl-u Ctrl-m</td>
+    </tr>
+    <tr>
+      <td>Montrer les cibles</td>
+      <td>Ctrl-u Ctrl-t</td>
+    </tr>
+    <tr>
+      <td>Montrer la structure</td>
+      <td>Ctrl-u Ctrl-s</td>
+    </tr>
+    <tr>
+      <td>Montrer le source</td>
+      <td>Ctrl-u Ctrl-o</td>
+    </tr>
+    <tr>
+      <td>Montrer les liens</td>
+      <td>Ctrl-u Ctrl-l</td>
+    </tr>
+    <tr>
+      <td>Montrer la vue alternée</td>
+      <td>Ctrl-u Ctrl-a</td>
+    </tr>
+    <tr>
+      <td>Montrer la table des matières</td>
+      <td>Ctrl-u Ctrl-c</td>
+    </tr>
+    <tr>
+      <td>Partager la vue horizontalement</td>
+      <td>Ctrl-u Ctrl-h</td>
+    </tr>
+    <tr>
+      <td>Partager la vue verticalement</td>
+      <td>Ctrl-u Ctrl-v</td>
     </tr>
     <tr class="menu">
       <td colspan="2">Menu</td>

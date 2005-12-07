@@ -31,8 +31,15 @@ l'utilisateur accomplir ceci par le biais d'un fichier de raccourcis clavier
 d'associations entre une séquence au clavier et la commande correspondante
 invoquée. Ils sont stockés dans le répertoire <code>Amaya/config</code> :
 <code>amaya.keyboard</code> (Linux), <code>amaya.kb</code> (Windows) and
-amaya.kb-mac (<a href="ShortCuts-MacOSX.html.fr">raccourcis claviers standard
-pour la version Mac OS X</a>)</p>
+amaya.kb-mac.</p>
+<ul>
+  <li><a href="ShortCuts-Linux.html.fr">Liste des raccoucis clavier par
+    défaut pour Linux</a></li>
+  <li><a href="ShortCuts-Windows.html.fr">Liste des raccoucis clavier par
+    défaut pour Windows</a></li>
+  <li><a href="ShortCuts-MacOSX.html.fr">Liste des raccoucis clavier par
+    défaut pour Mac OS X</a></li>
+</ul>
 
 <p>Ces fichiers peuvent être modifiés pour définir vos propres raccourcis
 clavier. La syntaxe utilisée pour définir une association est :</p>
