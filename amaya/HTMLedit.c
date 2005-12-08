@@ -3237,7 +3237,12 @@ void CreateTarget (Document doc, View view)
   ----------------------------------------------------------------------*/
 void UpdateAttrNAME (NotifyAttribute * event)
 {
-  MakeUniqueName (event->element, event->document, TRUE);
+  if (DocumentMeta[event->document] &&
+      DocumentMeta[event->document]->xmlformat)
+    // check valid value
+    TtaIsValidID (event->attribute, TRUE);
+  else
+    MakeUniqueName (event->element, event->document, TRUE);
 }
 
 /*----------------------------------------------------------------------

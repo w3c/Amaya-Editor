@@ -1549,7 +1549,28 @@ void CreateHeading6 (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMap (Document doc, View view)
 {
+  ElementType         elType;
+  Element             el, new_;
+  int                 i, j;
+
   CreateHTMLelement (HTML_EL_map, doc);
+  // it should include a link
+  TtaGiveFirstSelectedElement (doc, &el, &i, &j);
+  elType = TtaGetElementType (el);
+  if (!strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") &&
+      elType.ElTypeNum == HTML_EL_Element)
+    {
+      TtaExtendUndoSequence (doc);
+      elType.ElTypeNum = HTML_EL_Pseudo_paragraph;
+      new_ = TtaNewElement (doc, elType);
+      TtaInsertFirstChild (&new_, el, doc);
+      elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+      el =  TtaNewElement (doc, elType);
+      TtaInsertFirstChild (&el, new_, doc);
+      TtaRegisterElementCreate (new_, doc);
+      TtaSelectElement (doc, el);
+      CreateOrChangeLink (doc, view);
+    }
 }
 
 /*----------------------------------------------------------------------
