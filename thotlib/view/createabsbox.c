@@ -5543,7 +5543,7 @@ PtrAbstractBox AbsBoxesCreate (PtrElement pEl, PtrDocument pDoc,
                   /* chaine le nouveau pave dans l'arbre de l'image abstraite */
                   Attach (pNewAbbox, pEl, viewNb, pDoc);
                   pAbReturn = pNewAbbox;
-                }
+                  /*****                } ****/
               if (descent)	/* on va creer les paves inclus */
                 {
                   pAb = pNewAbbox;
@@ -5561,6 +5561,7 @@ PtrAbstractBox AbsBoxesCreate (PtrElement pEl, PtrDocument pDoc,
                   else
                     /* pave feuille, on cree tout */
                     *complete = TRUE;
+                } /******/
                 }
             }
         }
