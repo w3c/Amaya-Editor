@@ -1134,7 +1134,7 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
   Attribute           attr;
   DisplayMode         dispMode;
   char               *s;
-  int                 firstChar, lastChar, lg, i, levelFirst, levelLast, min, max;
+  int                 firstChar, lastChar, lg, i, min, max;
   Language            lang;
   CHAR_T              *buffer;
   ThotBool            noAnchor, ok;
@@ -1365,51 +1365,9 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
                       TtaRegisterElementCreate (next, doc);
                     }
                 }
-            }
-          if (last != first)
-            {
-              levelFirst = TtaGetElementLevel (first);
-              levelLast = TtaGetElementLevel (last);
-              if (levelLast > levelFirst)
-                /* the last selected element is deeper in the tree than the
-                   first one. Split the ancestor of the last element up
-                   to the level of the first selected element */
-                {
-                  ancestor = TtaGetParent (last);
-                  while (ancestor)
-                    {
-                      levelLast = TtaGetElementLevel (ancestor);
-                      if (levelLast < levelFirst)
-                        ancestor = NULL;
-                      else
-                        {
-                          next = last;
-                          TtaNextSibling (&next);
-                          if (next)
-                            {
-                              TtaRegisterElementReplace (ancestor, doc);
-                              elType = TtaGetElementType (ancestor);
-                              duplicate = TtaNewElement (doc, elType);
-                              TtaInsertSibling (duplicate, ancestor,FALSE,doc);
-                              prev = NULL;
-                              while (next)
-                                {
-                                  child = next;
-                                  TtaNextSibling (&next);
-                                  TtaRemoveTree (child, doc);
-                                  if (prev == NULL)
-                                    TtaInsertFirstChild (&child,duplicate,doc);
-                                  else
-                                    TtaInsertSibling (child, prev, FALSE, doc);
-                                  prev = child;
-                                } 
-                              TtaRegisterElementCreate (duplicate, doc);
-                            }
-                          last = ancestor;
-                          ancestor = TtaGetParent (ancestor);
-                        }
-                    }
-                }
+              else if (first != last)
+                // the whole last element is included
+                last = TtaGetParent (last);
             }
 
           /* process the first selected element */
@@ -1457,52 +1415,77 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
                    was split */
                 last = first;
             }
-          if (last != first)
+          else if (first != last)
+            // the whole last element is included
+            first = TtaGetParent (first);
+
+         if (last != first)
             {
-              levelFirst = TtaGetElementLevel (first);
-              levelLast = TtaGetElementLevel (last);
-              if (levelFirst > levelLast)
-                /* the first selected element is deeper in the tree than the
-                   last one. Split the ancestor of the first element up
-                   to the level of the last selected element */
+              ancestor = TtaGetParent (first);
+              while (!TtaIsAncestor (last, ancestor))
                 {
-                  ancestor = TtaGetParent (first);
-                  while (ancestor)
+                  /* Split the ancestor of the first element up
+                     to the level of the last selected element */
+                  prev = first;
+                  TtaPreviousSibling (&prev);
+                  if (prev)
                     {
-                      levelFirst = TtaGetElementLevel (ancestor);
-                      if (levelFirst < levelLast)
-                        ancestor = NULL;
-                      else
+                      TtaRegisterElementReplace (ancestor, doc);
+                      //elType = TtaGetElementType (ancestor);
+                      //duplicate = TtaNewElement (doc, elType);
+                      duplicate = TtaCopyElement (ancestor, doc, doc,
+                                                  TtaGetParent (ancestor));
+                      TtaInsertSibling (duplicate, ancestor, TRUE, doc);
+                      next = NULL;
+                      while (prev)
                         {
-                          prev = first;
+                          child = prev;
                           TtaPreviousSibling (&prev);
-                          if (prev)
-                            {
-                              TtaRegisterElementReplace (ancestor, doc);
-                              elType = TtaGetElementType (ancestor);
-                              duplicate = TtaNewElement (doc, elType);
-                              TtaInsertSibling (duplicate, ancestor, TRUE,doc);
-                              next = NULL;
-                              while (prev)
-                                {
-                                  child = prev;
-                                  TtaPreviousSibling (&prev);
-                                  TtaRemoveTree (child, doc);
-                                  if (next == NULL)
-                                    TtaInsertFirstChild (&child,duplicate,doc);
-                                  else
-                                    TtaInsertSibling (child, next, TRUE, doc);
-                                  next = child;
-                                } 
-                              TtaRegisterElementCreate (duplicate, doc);
-                            }
-                          first = ancestor;
-                          ancestor = TtaGetParent (ancestor);
-                        }
+                          TtaRemoveTree (child, doc);
+                          if (next == NULL)
+                            TtaInsertFirstChild (&child, duplicate, doc);
+                          else
+                            TtaInsertSibling (child, next, TRUE, doc);
+                          next = child;
+                        } 
+                      TtaRegisterElementCreate (duplicate, doc);
                     }
+                  first = ancestor;
+                  ancestor = TtaGetParent (ancestor);
+                }
+              parent = TtaGetParent (last);
+               while (parent != ancestor)
+                {
+                  /* Split the parent of the last element up
+                     to the level of the first selected element */
+                  next = last;
+                  TtaNextSibling (&next);
+                  if (next)
+                    {
+                      TtaRegisterElementReplace (parent, doc);
+                      //elType = TtaGetElementType (parent);
+                      //duplicate = TtaNewElement (doc, elType);
+                      duplicate = TtaCopyElement (parent, doc, doc,
+                                                  TtaGetParent (parent));
+                      TtaInsertSibling (duplicate, parent, FALSE, doc);
+                      prev = NULL;
+                      while (next)
+                        {
+                          child = next;
+                          TtaNextSibling (&next);
+                          TtaRemoveTree (child, doc);
+                          if (prev == NULL)
+                            TtaInsertFirstChild (&child, duplicate, doc);
+                          else
+                            TtaInsertSibling (child, prev, FALSE, doc);
+                          prev = child;
+                        } 
+                      TtaRegisterElementCreate (duplicate, doc);
+                    }
+                  last = parent;
+                  parent = TtaGetParent (last);
                 }
             }
-
           /* Create the corresponding anchor */
           s = TtaGetSSchemaName (elType.ElSSchema);
 #ifdef _SVG

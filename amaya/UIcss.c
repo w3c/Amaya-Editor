@@ -681,7 +681,7 @@ static void GenerateStyle (char * data)
   Language        lang;
   CHAR_T         *buffer;
   DisplayMode   dispMode;
-  ThotBool	      doit, split, before, charlevel;
+  ThotBool	      doit, split, before, charlevel, lastChanged;
 
   doc = TtaGetSelectedDocument();
   if (doc)
@@ -727,6 +727,21 @@ static void GenerateStyle (char * data)
               TtaSetDisplayMode (doc, NoComputedDisplay);
               span = NULL;
               el = firstSel;
+
+              // check the last selected element first
+              elType = TtaGetElementType (lastSel);
+              name = TtaGetSSchemaName (elType.ElSSchema);
+              lg =  TtaGetElementVolume (lastSel);
+              if (firstSel != lastSel &&
+                  elType.ElTypeNum == HTML_EL_TEXT_UNIT &&
+                  (lastchar == 0 || lastchar >= lg))
+                {
+                  // the whole first element is included
+                  lastSel = TtaGetParent (lastSel);
+                  lastChanged = TRUE;
+                }
+              else
+                lastChanged = FALSE;
               while (el)
                 {
                   elType = TtaGetElementType (el);
@@ -735,8 +750,21 @@ static void GenerateStyle (char * data)
                   split = ((el == firstSel || el == lastSel) && !strcmp(name, "HTML") &&
                            elType.ElTypeNum == HTML_EL_TEXT_UNIT &&
                            (firstchar > 1 || (i != 0 && i < lg)));
-                  next = el;
-                  TtaGiveNextSelectedElement (doc, &next, &j, &lastchar);
+                  // check the next selected element
+                  if (el == lastSel)
+                    next = NULL;
+                  else
+                    {
+                      next = el;
+                      TtaGiveNextSelectedElement (doc, &next, &j, &lastchar);
+                      if (lastChanged && TtaIsAncestor (next, lastSel))
+                        next = lastSel;
+                    }
+                  if (!split && el == firstSel && firstSel != lastSel &&
+                           elType.ElTypeNum == HTML_EL_TEXT_UNIT &&
+                           firstchar <= 1)
+                      // the whole first element is included
+                      el = TtaGetParent (firstSel);
                   if (!strcmp(name, "HTML"))
                     charlevel = IsCharacterLevelElement (el);
                   else
@@ -762,7 +790,7 @@ static void GenerateStyle (char * data)
                       sibling = el;
                       before = FALSE;
                       /* exclude trailing spaces from the span */
-                      if (lg > 0 )
+                      if (lg > 0)
                         {
                           buffer = (CHAR_T *)TtaGetMemory ((lg+1) * sizeof(CHAR_T) );
                           TtaGiveBufferContent (el, buffer, lg, &lang);
@@ -784,7 +812,8 @@ static void GenerateStyle (char * data)
                                   before = TRUE;
                                 }
                             }
-                          if (el == firstSel && firstchar > 1)
+
+                         if (el == firstSel && firstchar > 1)
                             {
                               max = i;
                               while (firstchar < max &&
@@ -813,25 +842,25 @@ static void GenerateStyle (char * data)
                                     }
                                 }
                             }
-                          else if (before)
-                            {
-                              // prepare the future selection
-                              if (el == firstSel)
-                                firstSel = span;
-                              if (el == lastSel)
-                                lastSel = span;
-                              TtaRemoveTree (el, doc);
-                              if (doit)
-                                // insert into the new created span
-                                TtaInsertFirstChild (&el, span, doc);
-                              else
-                                {
-                                  // ad at the end of the span
-                                  sibling = TtaGetLastChild (span);
-                                  TtaInsertSibling (el, sibling, FALSE, doc);
-                                }
-                            }
-                          TtaFreeMemory (buffer);
+                         else if (before)
+                           {
+                             // prepare the future selection
+                             if (el == firstSel)
+                               firstSel = span;
+                             if (el == lastSel)
+                               lastSel = span;
+                             TtaRemoveTree (el, doc);
+                             if (doit)
+                               // insert into the new created span
+                               TtaInsertFirstChild (&el, span, doc);
+                             else
+                               {
+                                 // ad at the end of the span
+                                 sibling = TtaGetLastChild (span);
+                                 TtaInsertSibling (el, sibling, FALSE, doc);
+                               }
+                           }
+                         TtaFreeMemory (buffer);
                         }
                     }
                   else if (doit)
