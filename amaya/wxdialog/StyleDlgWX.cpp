@@ -214,34 +214,49 @@ void StyleDlgWX::InitValues ()
  XRCCTRL(*this, "wx_RIGHT_DONE", wxCheckBox)->SetValue(FALSE);
 
  XRCCTRL(*this, "wxID_SPIN_SIZE", wxSpinCtrl)->SetValue(0);
+ XRCCTRL(*this, "wxID_SPIN_SIZE", wxSpinCtrl)->SetRange(0, 400);
  XRCCTRL(*this, "wxID_SPIN_LINE", wxSpinCtrl)->SetValue(0);
  XRCCTRL(*this, "wxID_SPIN_INDENT", wxSpinCtrl)->SetValue(0);
+ XRCCTRL(*this, "wxID_SPIN_INDENT", wxSpinCtrl)->SetRange(-400, 400);
  XRCCTRL(*this, "wxID_SPIN_VALIGN", wxSpinCtrl)->SetValue(0);
  XRCCTRL(*this, "wxID_SPIN_WORD", wxSpinCtrl)->SetValue(0);
  XRCCTRL(*this, "wxID_SPIN_LETTER", wxSpinCtrl)->SetValue(0);
  XRCCTRL(*this, "wxID_SPIN_BGHPOS", wxSpinCtrl)->SetValue(0);
+ XRCCTRL(*this, "wxID_SPIN_BGHPOS", wxSpinCtrl)->SetRange(0, 400);
  XRCCTRL(*this, "wxID_SPIN_BGVPOS", wxSpinCtrl)->SetValue(0);
+ XRCCTRL(*this, "wxID_SPIN_BGVPOS", wxSpinCtrl)->SetRange(0, 400);
  XRCCTRL(*this, "wxID_SPIN_BTOP", wxSpinCtrl)->SetValue(0);
  XRCCTRL(*this, "wxID_SPIN_BBOTTOM", wxSpinCtrl)->SetValue(0);
  XRCCTRL(*this, "wxID_SPIN_BLEFT", wxSpinCtrl)->SetValue(0);
  XRCCTRL(*this, "wxID_SPIN_BRIGHT", wxSpinCtrl)->SetValue(0);
  XRCCTRL(*this, "wxID_SPIN_B", wxSpinCtrl)->SetValue(0);
  XRCCTRL(*this, "wxID_SPIN_MTOP", wxSpinCtrl)->SetValue(0);
+ XRCCTRL(*this, "wxID_SPIN_MTOP", wxSpinCtrl)->SetRange(-400, 400);
  XRCCTRL(*this, "wxID_SPIN_PTOP", wxSpinCtrl)->SetValue(0);
  XRCCTRL(*this, "wxID_SPIN_MBOTTOM", wxSpinCtrl)->SetValue(0);
+ XRCCTRL(*this, "wxID_SPIN_MBOTTOM", wxSpinCtrl)->SetRange(-400, 400);
  XRCCTRL(*this, "wxID_SPIN_PBOTTOM", wxSpinCtrl)->SetValue(0);
  XRCCTRL(*this, "wxID_SPIN_MLEFT", wxSpinCtrl)->SetValue(0);
+ XRCCTRL(*this, "wxID_SPIN_MLEFT", wxSpinCtrl)->SetRange(-400, 400);
  XRCCTRL(*this, "wxID_SPIN_PLEFT", wxSpinCtrl)->SetValue(0);
  XRCCTRL(*this, "wxID_SPIN_MRIGHT", wxSpinCtrl)->SetValue(0);
+ XRCCTRL(*this, "wxID_SPIN_MRIGHT", wxSpinCtrl)->SetRange(-400, 400);
  XRCCTRL(*this, "wxID_SPIN_PRIGHT", wxSpinCtrl)->SetValue(0);
  XRCCTRL(*this, "wxID_SPIN_MARGIN", wxSpinCtrl)->SetValue(0);
+ XRCCTRL(*this, "wxID_SPIN_MARGIN", wxSpinCtrl)->SetRange(-400, 400);
  XRCCTRL(*this, "wxID_SPIN_PADDING", wxSpinCtrl)->SetValue(0);
  XRCCTRL(*this, "wxID_SPIN_WIDTH", wxSpinCtrl)->SetValue(0);
+ XRCCTRL(*this, "wxID_SPIN_WIDTH", wxSpinCtrl)->SetRange(0, 2000);
  XRCCTRL(*this, "wxID_SPIN_HEIGHT", wxSpinCtrl)->SetValue(0);
+ XRCCTRL(*this, "wxID_SPIN_HEIGHT", wxSpinCtrl)->SetRange(0, 2000);
  XRCCTRL(*this, "wxID_SPIN_TOP", wxSpinCtrl)->SetValue(0);
+ XRCCTRL(*this, "wxID_SPIN_TOP", wxSpinCtrl)->SetRange(-400, 400);
  XRCCTRL(*this, "wxID_SPIN_BOTTOM", wxSpinCtrl)->SetValue(0);
+ XRCCTRL(*this, "wxID_SPIN_BOTTOM", wxSpinCtrl)->SetRange(-400, 400);
  XRCCTRL(*this, "wxID_SPIN_LEFT", wxSpinCtrl)->SetValue(0);
+ XRCCTRL(*this, "wxID_SPIN_LEFT", wxSpinCtrl)->SetRange(-400, 400);
  XRCCTRL(*this, "wxID_SPIN_RIGHT", wxSpinCtrl)->SetValue(0);
+ XRCCTRL(*this, "wxID_SPIN_RIGHT", wxSpinCtrl)->SetRange(-400, 400);
   BG_repeat = 0;
 }
 
@@ -532,7 +547,7 @@ void StyleDlgWX::GetValueDialog_Text()
     }
 
   i = XRCCTRL(*this, "wxID_SPIN_INDENT", wxSpinCtrl)->GetValue();
-  if (XRCCTRL(*this, "wx_INDENT_DONE", wxCheckBox)->IsChecked() && i >= 0)
+  if (XRCCTRL(*this, "wx_INDENT_DONE", wxCheckBox)->IsChecked())
     {
       sprintf (text, "%d", i);
       strcpy (&Buffer[Index], "text-indent: ");
@@ -556,7 +571,7 @@ void StyleDlgWX::GetValueDialog_Text()
     {
       // spin value ?
       i = XRCCTRL(*this, "wxID_SPIN_VALIGN", wxSpinCtrl)->GetValue();
-      if (XRCCTRL(*this, "wx_VALIGN_DONE", wxCheckBox)->IsChecked() && i >= 0)
+      if (XRCCTRL(*this, "wx_VALIGN_DONE", wxCheckBox)->IsChecked())
         {
           sprintf (text, "%d", i);
           strcpy (&Buffer[Index], "vertical-align: ");
@@ -1248,7 +1263,7 @@ void StyleDlgWX::GetValueDialog_Box()
     {
       // spin value ?
       i = XRCCTRL(*this, "wxID_SPIN_MTOP", wxSpinCtrl)->GetValue();
-      if (XRCCTRL(*this, "wx_MTOP_DONE", wxCheckBox)->IsChecked()  && i >= 0)
+      if (XRCCTRL(*this, "wx_MTOP_DONE", wxCheckBox)->IsChecked())
         {
           sprintf (text, "%d", i);
           strcpy (&Buffer[Index], "margin-top: ");
@@ -1276,7 +1291,7 @@ void StyleDlgWX::GetValueDialog_Box()
     {
       // spin value ?
       i = XRCCTRL(*this, "wxID_SPIN_MBOTTOM", wxSpinCtrl)->GetValue();
-      if (XRCCTRL(*this, "wx_MBOTTOM_DONE", wxCheckBox)->IsChecked()  && i >= 0)
+      if (XRCCTRL(*this, "wx_MBOTTOM_DONE", wxCheckBox)->IsChecked())
         {
           sprintf (text, "%d", i);
           strcpy (&Buffer[Index], "margin-bottom: ");
@@ -1304,7 +1319,7 @@ void StyleDlgWX::GetValueDialog_Box()
     {
       // spin value ?
       i = XRCCTRL(*this, "wxID_SPIN_MLEFT", wxSpinCtrl)->GetValue();
-      if (XRCCTRL(*this, "wx_MLEFT_DONE", wxCheckBox)->IsChecked()  && i >= 0)
+      if (XRCCTRL(*this, "wx_MLEFT_DONE", wxCheckBox)->IsChecked())
         {
           sprintf (text, "%d", i);
           strcpy (&Buffer[Index], "margin-left: ");
@@ -1332,7 +1347,7 @@ void StyleDlgWX::GetValueDialog_Box()
     {
       // spin value ?
       i = XRCCTRL(*this, "wxID_SPIN_MRIGHT", wxSpinCtrl)->GetValue();
-      if (XRCCTRL(*this, "wx_MRIGHT_DONE", wxCheckBox)->IsChecked()  && i >= 0)
+      if (XRCCTRL(*this, "wx_MRIGHT_DONE", wxCheckBox)->IsChecked())
         {
           sprintf (text, "%d", i);
           strcpy (&Buffer[Index], "margin-right: ");
@@ -1472,7 +1487,7 @@ void StyleDlgWX::GetValueDialog_Box()
     {
       // spin value ?
       i = XRCCTRL(*this, "wxID_SPIN_MARGIN", wxSpinCtrl)->GetValue();
-      if (XRCCTRL(*this, "wx_MARGIN_DONE", wxCheckBox)->IsChecked()  && i >= 0)
+      if (XRCCTRL(*this, "wx_MARGIN_DONE", wxCheckBox)->IsChecked())
         {
           sprintf (text, "%d", i);
           strcpy (&Buffer[Index], "margin: ");
@@ -1692,7 +1707,7 @@ void StyleDlgWX::GetValueDialog_Format()
 
   //Top
   i = XRCCTRL(*this, "wxID_SPIN_TOP", wxSpinCtrl)->GetValue();
-  if (XRCCTRL(*this, "wx_TOP_DONE", wxCheckBox)->IsChecked()  && i >= 0)
+  if (XRCCTRL(*this, "wx_TOP_DONE", wxCheckBox)->IsChecked())
     {
       sprintf (text, "%d", i);
       strcpy (&Buffer[Index], "top: ");
@@ -1708,7 +1723,7 @@ void StyleDlgWX::GetValueDialog_Format()
 
   //Bottom
   i = XRCCTRL(*this, "wxID_SPIN_BOTTOM", wxSpinCtrl)->GetValue();
-  if (XRCCTRL(*this, "wx_BOTTOM_DONE", wxCheckBox)->IsChecked()  && i >= 0)
+  if (XRCCTRL(*this, "wx_BOTTOM_DONE", wxCheckBox)->IsChecked())
     {
       sprintf (text, "%d", i);
       strcpy (&Buffer[Index], "bottom: ");
@@ -1724,7 +1739,7 @@ void StyleDlgWX::GetValueDialog_Format()
 
   //Left
   i = XRCCTRL(*this, "wxID_SPIN_LEFT", wxSpinCtrl)->GetValue();
-  if (XRCCTRL(*this, "wx_LEFT_DONE", wxCheckBox)->IsChecked()  && i >= 0)
+  if (XRCCTRL(*this, "wx_LEFT_DONE", wxCheckBox)->IsChecked())
     {
       sprintf (text, "%d", i);
       strcpy (&Buffer[Index], "left: ");
@@ -1740,7 +1755,7 @@ void StyleDlgWX::GetValueDialog_Format()
 
   //Right
   i = XRCCTRL(*this, "wxID_SPIN_RIGHT", wxSpinCtrl)->GetValue();
-  if (XRCCTRL(*this, "wx_RIGHT_DONE", wxCheckBox)->IsChecked()  && i >= 0)
+  if (XRCCTRL(*this, "wx_RIGHT_DONE", wxCheckBox)->IsChecked())
     {
       sprintf (text, "%d", i);
       strcpy (&Buffer[Index], "right: ");
