@@ -70,6 +70,7 @@ static PtrDocument  pDocSel;
 #include "message_f.h"
 #include "spellchecker_f.h"
 #include "structselect_f.h"
+#include "tree_f.h"
 #include "views_f.h"
 #include "word_f.h"
 
@@ -725,7 +726,8 @@ static void ApplyCommand (int val)
           /* ToReplace */
           if (ToReplace)	/* CorrectWord est rempli */
             {		/* et ce n'est pas 1er lancement */
-              if (ChkrElement != NULL && BadWord[0] != EOS)
+              if (ChkrElement && BadWord[0] != EOS &&
+                  !document->DocReadOnly && !ElementIsReadOnly(ChkrElement))
                 WordReplace ((unsigned char*)BadWord,
                              (unsigned char*)CorrectWord);
               ToReplace = FALSE;
@@ -735,7 +737,8 @@ static void ApplyCommand (int val)
           /* ToReplace et maj dictionnaire */
           if (ToReplace)	/* CorrectWord est rempli */
             {		/* et ce n'est pas 1er lancement */
-              if (ChkrElement != NULL && BadWord[0] != EOS)
+              if (ChkrElement && BadWord[0] != EOS &&
+                  !document->DocReadOnly && !ElementIsReadOnly(ChkrElement))
                 {
                   WordReplace ((unsigned char*)BadWord,
                                (unsigned char*)CorrectWord);
