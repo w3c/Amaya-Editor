@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <base version="83">
 <control>
-<language>en</language>
+<language encoding="latin1">en</language>
 <language encoding="latin1">fr</language>
 <language encoding="latin1">de</language>
 <language encoding="latin1">it</language>
@@ -4279,6 +4279,7 @@
 <message xml:lang="es">Mostrar todos los atajos</message>
 <message xml:lang="it">Locazione per aprire documenti</message>
 <message xml:lang="hu">Minden gyorsbillentyű mutatása</message>
+<message xml:lang="de">Alle Tastaturkürzel anzeigen</message>
 <message xml:lang="ka"></message></label>
 <label define="AM_EXPORT_LENGTH">
 <message xml:lang="en">Fixed line length (0 = default value)</message>
@@ -4286,6 +4287,7 @@
 <message xml:lang="it">Lunghezza riga fissata (0 = valore di default)</message>
 <message xml:lang="es">Longitud de línea (0 = valor predeterminado)</message>
 <message xml:lang="hu">Rögzített sorhossz (0 = alapérték)</message>
+<message xml:lang="de">Feste Zeilenlänge (0 = Standardwert)</message>
 <message xml:lang="ka"></message></label>
 <label define="AM_TEMPLATE">
 <message xml:lang="en">Template</message>
@@ -4293,6 +4295,7 @@
 <message xml:lang="it">Modello</message>
 <message xml:lang="es">Plantilla</message>
 <message xml:lang="hu">Sablon</message>
+<message xml:lang="de">Vorlage</message>
 <message xml:lang="ka"></message></label>
 <label define="AM_TEMPLATE_INSTANCE">
 <message xml:lang="en">Save the document as...</message>
@@ -4300,6 +4303,7 @@
 <message xml:lang="it">Salva il documento come...</message>
 <message xml:lang="es">Guardar como...</message>
 <message xml:lang="hu">Dokumentum mentése másként...</message>
+<message xml:lang="de">Dokument speichern als...</message>
 <message xml:lang="ka"></message></label>
 <label define="AM_BAD_TEMPLATE">
 <message xml:lang="en">Template not found</message>
@@ -4307,6 +4311,7 @@
 <message xml:lang="it">Modello non trovato</message>
 <message xml:lang="es">No se encuentra la plantilla</message>
 <message xml:lang="hu">A sablon nem található</message>
+<message xml:lang="de">Vorlage konnte nicht gefunden werden</message>
 <message xml:lang="ka"></message></label>
 <label define="AM_SHOW_TEMPLATES">
 <message xml:lang="en">Show template's boxes</message>
@@ -4314,6 +4319,7 @@
 <message xml:lang="it">Mostra i box per il modello</message>
 <message xml:lang="es">Mostrar cajas de plantilla</message>
 <message xml:lang="hu">A sablon dobozainak mutatása</message>
+<message xml:lang="de">Vorlagenumrisse anzeigen</message>
 <message xml:lang="ka"></message></label>
 <label define="AM_CLOSE_WHEN_APPLY">
 <message xml:lang="en">Apply closes the dialogue</message>
@@ -4321,5 +4327,6 @@
 <message xml:lang="it">Applica chiude questo dialogo</message>
 <message xml:lang="es">Aplicar cierra el diálogo</message>
 <message xml:lang="hu">Az Alkalmaz gomb bezárja a párbeszédablakot</message>
+<message xml:lang="de">Mit "Anwenden" wird der Dialog geschlossen</message>
 <message xml:lang="ka"></message></label>
 <label define="AMAYA_MSG_MAX"></label></messages></base>

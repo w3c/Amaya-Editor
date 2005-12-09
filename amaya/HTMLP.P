@@ -4099,6 +4099,7 @@ RULES
   Height: 0;
 	Gather: Yes;
 	InLine: No;
+  VertOverflow: Yes;
 	IN Structure_view BEGIN
 		Visibility: Enclosing =;
 	        Gather: No;
@@ -4108,6 +4109,7 @@ RULES
 		VertPos: Top = Previous . Bottom;
 		Height: Enclosed . Height;
 		Depth: 0;
+    VertOverflow: No;
 		END;
 	IN Alternate_view BEGIN
 		Visibility: 10;
@@ -4118,6 +4120,7 @@ RULES
 		HorizPos: Left = Enclosing . Left;
 		Depth: 0;
 		Line;
+    VertOverflow: No;
 		END;
 	END;
 

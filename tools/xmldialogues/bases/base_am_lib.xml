@@ -2493,6 +2493,7 @@
 	<message xml:lang="it">Box</message>
 	<message xml:lang="es">Cajas</message>
 	<message xml:lang="hu">Dobozok</message>
+	<message xml:lang="de">Umrisse</message>
 </label>
 <label define="TMSG_BUTTON_DIV">
 	<message xml:lang="en">Division</message>

@@ -3093,6 +3093,7 @@
 	<message xml:lang="it">CSS &amp;Style...</message>
 	<message xml:lang="es">&amp;Estilo CSS...</message>
 	<message xml:lang="hu">CSS &amp;Stílus...</message>
+	<message xml:lang="de">CSS &amp;Stil</message>
 </label>
 <label define="BFormat">
 	<message xml:lang="en">&amp;Format...</message>
