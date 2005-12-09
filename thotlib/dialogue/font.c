@@ -2485,11 +2485,13 @@ void ThotFreeFont (int frame)
   SpecFont            prevset, fontset, nextset;
   int                 i;
   unsigned int        mask;
+  ThotBool            doIt;
 
   if (frame > 0)
     {
       /* compute the frame mask */
       mask = 1 << (frame - 1);
+      //printf ("ThotFreeFont frame=%d\n", frame);
       /* free all attached fontsets */
       fontset = FirstFontSel;
       prevset = NULL;
@@ -2518,9 +2520,14 @@ void ThotFreeFont (int frame)
       /* keep default fonts */
       i = 0;
       /* free all attached fonts */
+      doIt = TRUE;
       while (i < FirstFreeFont)
         {
+#ifdef _GL
           if (TtFontMask[i] == mask || TtFontMask[i] == 0)
+#else /* _GL */
+          if (TtFontMask[i] == mask)
+#endif /* _GL */
             {
               /* free the entry */
               //@@@@@@@@@@@@@@@@@@@@
@@ -2529,7 +2536,12 @@ void ThotFreeFont (int frame)
               while (fontset)
                 {
                   if (fontset->Font_1 == TtFonts[i])
-                    fontset->Font_1 = NULL;
+                    {
+                      if (TtFontMask[i] == mask)
+                          fontset->Font_1 = NULL;
+                      else
+                        doIt = FALSE;
+                    }
                   else if (fontset->SFont_1 == TtFonts[i])
                     fontset->SFont_1 = NULL;
                   else if (fontset->SFont_2 == TtFonts[i])
@@ -2567,9 +2579,11 @@ void ThotFreeFont (int frame)
                   fontset = fontset->NextFontSet;
                 }
 #endif /* _GL */
-              //@@@@@@@@@@@@@@@
-              FreeAFont (i);
-              TtFontMask[i] = 0;
+              if (doIt)
+                {
+                  FreeAFont (i);
+                  TtFontMask[i] = 0;
+                }
             }
           else
             /* unlink this frame */

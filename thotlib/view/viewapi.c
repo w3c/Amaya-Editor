@@ -400,7 +400,7 @@ void TtaSetZoom (Document document, View view, int value)
       GetFrameParams (frame, &valvisib, &valzoom);
       if (valzoom < -10 || valzoom > 10)
         TtaError (ERR_invalid_parameter);
-      else
+      else if (valzoom != value)
         {
           /* Translation of the sensibility into threshold */
           valzoom = value;
