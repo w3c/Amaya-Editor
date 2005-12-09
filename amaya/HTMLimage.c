@@ -388,7 +388,7 @@ void UpdateImageMap (Element image, Document doc, int oldWidth, int oldHeight)
       if (text[0] == '#')
         el = SearchNAMEattribute (doc, &text[1], NULL, NULL);
       else
-        el = NULL;
+        el = SearchNAMEattribute (doc, &text[0], NULL, NULL);
       TtaFreeMemory (text);
       if (el == NULL)
         return;

@@ -4095,7 +4095,8 @@ RULES
 	CreateAfter(MAP_dummy);
 	Depth: Enclosing + 8;
 	LineBreak: No;
-	Visibility: 0;
+	Visibility: 10;
+  Height: 0;
 	Gather: Yes;
 	InLine: No;
 	IN Structure_view BEGIN
@@ -4105,6 +4106,7 @@ RULES
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
+		Height: Enclosed . Height;
 		Depth: 0;
 		END;
 	IN Alternate_view BEGIN

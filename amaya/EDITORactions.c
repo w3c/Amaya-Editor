@@ -1549,28 +1549,39 @@ void CreateHeading6 (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMap (Document doc, View view)
 {
-  ElementType         elType;
-  Element             el, new_;
-  int                 i, j;
+  ElementType    elType;
+  Element        el, div, map, p;
+  int            i, j;
+  ThotBool       oldStructureChecking;
 
-  CreateHTMLelement (HTML_EL_map, doc);
-  // it should include a link
+  CreateHTMLelement (HTML_EL_Division, doc);
+  TtaExtendUndoSequence (doc);
   TtaGiveFirstSelectedElement (doc, &el, &i, &j);
+  oldStructureChecking = TtaGetStructureChecking (doc);
+  TtaSetStructureChecking (FALSE, doc);
   elType = TtaGetElementType (el);
-  if (!strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") &&
-      elType.ElTypeNum == HTML_EL_Element)
-    {
-      TtaExtendUndoSequence (doc);
-      elType.ElTypeNum = HTML_EL_Pseudo_paragraph;
-      new_ = TtaNewElement (doc, elType);
-      TtaInsertFirstChild (&new_, el, doc);
-      elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-      el =  TtaNewElement (doc, elType);
-      TtaInsertFirstChild (&el, new_, doc);
-      TtaRegisterElementCreate (new_, doc);
-      TtaSelectElement (doc, el);
-      CreateOrChangeLink (doc, view);
-    }
+  elType.ElTypeNum = HTML_EL_map;
+  div = TtaGetParent (el);
+  map = TtaNewElement (doc, elType);
+  TtaInsertFirstChild (&map, div, doc);
+  TtaDeleteTree (el, doc);
+  // generate the id and or name attribute
+  CreateTargetAnchor (doc, map, FALSE, TRUE);
+  // generate a division
+  elType.ElTypeNum = HTML_EL_Division;
+  div = TtaNewElement (doc, elType);
+  TtaInsertFirstChild (&div, map, doc);
+  elType.ElTypeNum = HTML_EL_Pseudo_paragraph;
+  p =  TtaNewElement (doc, elType);
+  TtaInsertFirstChild (&p, div, doc);
+  elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+  el =  TtaNewElement (doc, elType);
+  TtaInsertFirstChild (&el, p, doc);
+  TtaRegisterElementCreate (map, doc);
+  TtaSelectElement (doc, el);
+  TtaSetStructureChecking (oldStructureChecking, doc);
+  // it should include a link
+  CreateOrChangeLink (doc, view);
 }
 
 /*----------------------------------------------------------------------

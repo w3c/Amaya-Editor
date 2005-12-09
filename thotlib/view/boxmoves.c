@@ -3728,7 +3728,7 @@ void HeightPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
                   else if (pChildBox->BxHOutOfStruct)
                     {
                       /* which itself inherits form the enclosing? */
-                      if (IsParentBox (pRefAb->AbBox, pBox)
+                      if (pRefAb && IsParentBox (pRefAb->AbBox, pBox)
                           && pRefAb->AbHeight.DimAbRef == NULL
                           && pRefAb->AbHeight.DimValue < 0
                           && pRefAb->AbBox->BxHeight == pBox->BxHeight)

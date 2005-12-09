@@ -32,6 +32,7 @@ static ThotBool   CreateNewImage;
 #include "HTMLactions_f.h"
 #include "HTMLedit_f.h"
 #include "EDITimage_f.h"
+#include "EDITORactions_f.h"
 #include "EDITstyle_f.h"
 #include "HTMLimage_f.h"
 #include "HTMLpresentation_f.h"
@@ -413,7 +414,7 @@ static void GetAlt (Document document, View view)
   ----------------------------------------------------------------------*/
 static void CreateAreaMap (Document doc, View view, char *shape)
 {
-  Element             el, map, parent, image, child;
+  Element             el, map, parent, image, child, div;
   Element             newMap, newElem;
   ElementType         elType;
   AttributeType       attrType;
@@ -480,8 +481,8 @@ static void CreateAreaMap (Document doc, View view, char *shape)
           /* Search the MAP element associated with IMG element */
           length = TtaGetTextAttributeLength (attr) + 1;
           TtaGiveTextAttributeValue (attr, url, &length);
-          if (url[0] == '#')
-            map = SearchNAMEattribute (doc, &url[1], NULL, NULL);
+          //if (url[0] == '#')
+          map = SearchNAMEattribute (doc, &url[1], NULL, NULL);
         }
       if (map == NULL)
         {
@@ -500,15 +501,23 @@ static void CreateAreaMap (Document doc, View view, char *shape)
             }
           while (parent && elType.ElTypeNum != HTML_EL_BODY &&
                  elType.ElTypeNum != HTML_EL_Division );
-          TtaInsertSibling (map, el, FALSE, doc);
+          // create a division
+          elType.ElTypeNum = HTML_EL_Division;
+          div = TtaNewElement (doc, elType);
+          TtaInsertSibling (div, el, FALSE, doc);
+          TtaInsertFirstChild (&map, div, doc);
           CreateTargetAnchor (doc, map, FALSE, FALSE);
           attrType.AttrTypeNum = HTML_ATTR_NAME;
           attr = TtaGetAttribute (map, attrType);
-	  
+          if (attr == NULL)
+            {
+          attrType.AttrTypeNum = HTML_ATTR_ID;
+          attr = TtaGetAttribute (map, attrType);
+            }
           /* create the USEMAP attribute for the image */
           length = TtaGetTextAttributeLength (attr) + 1;
-          url[0] = '#';
-          TtaGiveTextAttributeValue (attr, &url[1], &length);
+          url[0] = EOS;//'#';
+          TtaGiveTextAttributeValue (attr, &url[0], &length);
           attrType.AttrTypeNum = HTML_ATTR_USEMAP;
           attr = TtaGetAttribute (image, attrType);
           if (attr == NULL)

@@ -1783,11 +1783,11 @@ ThotBool MakeUniqueName (Element el, Document doc, ThotBool doIt)
                           i = MAX_LENGTH;
                           TtaGiveTextAttributeValue (attr, url, &i);
                           if (i == length+1 &&
-                              !strncmp (&url[1], value, length))
+                              !strncmp (&url[0], value, length))
                             {
                               /* Change the USEMAP attribute of the image */
                               attr = TtaGetAttribute (image, attrType);
-                              strcpy (&url[1], value);
+                              strcpy (&url[0], value);
                               TtaSetAttributeText (attr, url, image, doc);
                             }
                         }

@@ -165,8 +165,7 @@ STRUCT
 	Applet;							{ APPLET }
 	MathML;						  { MATH }
   SVG;			          { SVG }
-	map; MAP;						{ MAP }
-	XLink;							{ Annotations }
+  XLink;							{ Annotations }
 	External_Object		  { IMG type=svg}
 	    (ATTR SRC;
 		{ src }
@@ -292,6 +291,7 @@ STRUCT
 	Subscript = Basic_Set;					{ SUB }
 	Superscript = Basic_Set;				{ SUP }
 	Span = Basic_Set;					{ SPAN }
+  map; MAP;						{ MAP }
 	BDO (ATTR !dir) = Basic_Set;				{ BDO }
 	Object;							{ OBJECT }
 	Embed_;							{ EMBED }
@@ -778,12 +778,12 @@ STRUCT
 	LIST OF (Element);
 
   MAP								{ MAP }
-     (ATTR !NAME; Ref_IMG = REFERENCE(Any)) =
+     (ATTR NAME; Ref_IMG = REFERENCE(Any)) =
 	 { name linked to an image}
 	LIST OF (ElemOrArea = CASE OF Element; AREA; END);
 
   map								{ MAP }
-     (ATTR !NAME) =
+     (ATTR NAME) =
 	 { name }
 	LIST OF (Element);
 
