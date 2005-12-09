@@ -28,6 +28,8 @@
 <Key>F4:            TtcNextElement()
 Shift <Key>F2:        TtcChildElement()
 Shift <Key>F4:        TtcPreviousElement() 
+<Key>F8:                          ShowPanel()
+<Key>F11:                          FullScreen()
 <Key>Return:        TtcCreateElement() 
 <Key>End:           TtcEndOfLine()
 <Key>Home:          TtcStartOfLine() 
@@ -235,8 +237,6 @@ Ctrl <Key>t , Ctrl <Key>v:         PasteAfter()
 Ctrl <Key>t , Ctrl <Key>x:         TransformType()
 
 #View Menu
-<Key>F11:                          FullScreen()
-<Key>F12:                          ShowPanel()
 Ctrl <Key>u , Ctrl <Key>a:         ShowAlternate()
 Ctrl <Key>u , Ctrl <Key>b:         ShowButtons() 
 Ctrl <Key>u , Ctrl <Key>c:         ShowToC() 
