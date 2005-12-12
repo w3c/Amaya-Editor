@@ -1309,12 +1309,6 @@ void TtaInitializeAppRegistry (char *appArgv0)
    */
   /* IV june 2004: force the appName to use the amaya temporary directory
      with thot compilers */
-#ifdef _UNIX
-  /* amaya_exe is FALSE when running a compiler */
-  amaya_exe = (strlen (execname) > 4 &&
-               (!strcasecmp (&execname[strlen (execname)-5], "amaya") ||
-                !strcasecmp (&execname[strlen (execname)-5], "print")));
-#endif /* _UNIX */
   appName = "amaya";
   AppRegistryEntryAppli = TtaStrdup (appName);
   AppNameW = TtaStrdup (appName);
@@ -1353,6 +1347,12 @@ void TtaInitializeAppRegistry (char *appArgv0)
     }
   strcpy (execname, c_execname);
 #endif /* HAVE_LSTAT */
+#ifdef _UNIX
+  /* amaya_exe is FALSE when running a compiler */
+  amaya_exe = (strlen (execname) > 4 &&
+               (!strcasecmp (&execname[strlen (execname)-5], "amaya") ||
+                !strcasecmp (&execname[strlen (execname)-5], "print")));
+#endif /* _UNIX */
    
 #ifdef DEBUG_REGISTRY
   fprintf (stderr, "path to binary %s : %s\n", appName, execname);
@@ -1621,7 +1621,7 @@ void TtaInitializeAppRegistry (char *appArgv0)
   ptr = TtaGetEnvString ("APP_HOME");
   if (ptr && TtaDirExists (ptr))
     strcpy (app_home, ptr);
-  else
+  if (!TtaDirExists (app_home) && !TtaMakeDirectory (app_home))
     app_home[0] = EOS;
 
   /* read the user's preferences (if they exist) */
