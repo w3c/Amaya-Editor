@@ -2589,8 +2589,12 @@ void SaveDocument (Document doc, View view)
         RemoveAutoSavedDoc (doc);
     }
   else
-    /* cannot save */
-    TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_SAVE), DocumentURLs[doc]);
+    {
+      char msg[200];
+      /* cannot save */
+      sprintf (msg, TtaGetMessage (AMAYA, AM_CANNOT_SAVE), DocumentURLs[doc]);
+      InitConfirm (0, 0, msg);
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -3457,26 +3461,27 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
   AttributeType       attrType;
   ElementType         elType;
   Element             el, root, doc_url;
+  DisplayMode         dispMode;
+  CHARSET             charset;
   char               *documentFile;
   char               *tempname, *oldLocal, *newLocal = NULL;
   char               *imagePath, *base;
   char                imgbase[MAX_LENGTH];
   char                documentname[MAX_LENGTH];
   char                tempdir[MAX_LENGTH];
+  char                msg[200];
   char                url_sep;
   int                 res;
   int                 len, xmlDoc;
-  DisplayMode         dispMode;
-  ThotBool            src_is_local;
-  ThotBool            dst_is_local, ok;
-  ThotBool	          docModified, toUndo;
-  ThotBool            new_put_def_name;
   char               *old_charset = NULL;
   char               *old_mimetype = NULL;
   char               *old_content_location = NULL;
   char               *old_full_content_location = NULL;
   char               *ptr;
-  CHARSET             charset;
+  ThotBool            src_is_local;
+  ThotBool            dst_is_local, ok;
+  ThotBool	          docModified, toUndo;
+  ThotBool            new_put_def_name;
 
   if (SavingDocument == 0)
     return;
@@ -3535,9 +3540,11 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
         }
       else if (!ok)
         {
-          /* save into the temporary document file */
+          /* cannot save */
           doc = SavingDocument;
-          TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_SAVE), DocumentURLs[doc]);
+          sprintf (msg, TtaGetMessage (AMAYA, AM_CANNOT_SAVE), DocumentURLs[doc]);
+          InitConfirm (0, 0, msg);
+          //TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_SAVE), DocumentURLs[doc]);
           SavingDocument = 0;
           /* display the dialog box */
           InitSaveForm (doc, 1, documentFile);
@@ -3552,7 +3559,9 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
       /* verify that the directory exists */
       if (!TtaCheckDirectory (SavePath))
         {
-          TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_SAVE), SavePath);
+          sprintf (msg, TtaGetMessage (AMAYA, AM_CANNOT_SAVE), SavePath);
+          InitConfirm (0, 0, msg);
+          //TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_SAVE), SavePath);
           /* the user has to change the name of the images directory */
           /* display the dialog box */
           InitSaveForm (doc, 1, documentFile);

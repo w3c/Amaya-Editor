@@ -1612,17 +1612,19 @@ void TtaInitializeAppRegistry (char *appArgv0)
 #endif /* _UNIX */
 #endif /*_WINGUI */
     }
-  /* store the value of APP_HOME in the registry */
-  AddRegisterEntry (AppRegistryEntryAppli, "APP_HOME", app_home,
-                    REGISTRY_SYSTEM, FALSE);
 
   /* get the app_home again from the registry, as the user may have
      overriden it using the global configuration files */
   ptr = TtaGetEnvString ("APP_HOME");
   if (ptr && TtaDirExists (ptr))
     strcpy (app_home, ptr);
-  if (!TtaDirExists (app_home) && !TtaMakeDirectory (app_home))
+  if (app_home[0] != EOS && !TtaDirExists (app_home) && !TtaMakeDirectory (app_home))
     app_home[0] = EOS;
+
+  /* store the value of APP_HOME in the registry */
+  if (amaya_exe)
+    AddRegisterEntry (AppRegistryEntryAppli, "APP_HOME", app_home,
+                      REGISTRY_SYSTEM, FALSE);
 
   /* read the user's preferences (if they exist) */
   if (app_home && *app_home != EOS)
