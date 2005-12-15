@@ -447,37 +447,18 @@ static FontScript **FontConfigLoad ()
   TtaReadClose (file);
   if (!complete)
     {
-#ifdef _UNIX
-#if defined (_MACOS) && defined (_GL) 
-      /* try a default font file */
-      strcpy (word1, word);
-      strcat (word1, ".def");
-      strcpy (fname1, fname);
-      strcat (fname1, ".def");
-#else /* _MACOS && _GL */
+#if defined(_UNIX) && !defined(_MACOS)
       /* try a redhat font file */
       strcpy (word1, word);
       strcat (word1, ".rd");
       strcpy (fname1, fname);
       strcat (fname1, ".rd");
-#endif /* _MACOS */  
-#endif /* _UNIX */
-#if defined(_WINDOWS) && defined (_GL) 
-      /* try a redhat font file */
-      strcpy (word1, word);
-      strcat (word1, ".nt");
-      strcpy (fname1, fname);
-      strcat (fname1, ".nt");
-#endif /* _WINDOWS && _GL */
       if (!SearchFile (fname1, 0, name))
         SearchFile (word1, 2, name);
       /* open the fonts definition file */
       file = TtaReadOpen (name);
       if (file)
         complete = FontLoadFile (file, fontsscript_tab);
-
-      //Not complete yet
-#if defined (_UNIX) && !defined (_MACOS) 
       if (!complete)
         {
           /* try a debian font file */
@@ -493,6 +474,19 @@ static FontScript **FontConfigLoad ()
             complete = FontLoadFile (file, fontsscript_tab);
         }
 #endif /* _UNIX && !_MACOS*/
+#if defined(_WINDOWS) && defined (_GL) 
+      /* try a redhat font file */
+      strcpy (word1, word);
+      strcat (word1, ".nt");
+      strcpy (fname1, fname);
+      strcat (fname1, ".nt");
+      if (!SearchFile (fname1, 0, name))
+        SearchFile (word1, 2, name);
+      /* open the fonts definition file */
+      file = TtaReadOpen (name);
+      if (file)
+        complete = FontLoadFile (file, fontsscript_tab);
+#endif /* _WINDOWS && _GL */
     }
   return fontsscript_tab;
 }

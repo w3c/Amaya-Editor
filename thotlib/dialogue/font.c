@@ -102,7 +102,10 @@ static void *GL_LoadFont (char alphabet, int family, int highlight, int size)
   char filename[2048];
 
   if (GetFontFilename (alphabet, family, highlight, size, filename))
-    return (gl_font_init (filename, alphabet, size)); 
+    {
+      //  printf ("load %s size=%d font=%d\n",filename, size, FirstFreeFont);
+      return (gl_font_init (filename, alphabet, size));
+    }
   return NULL;
 }
 #endif /* _GL */
@@ -1001,7 +1004,8 @@ int CharRelSize (int height, unsigned char symb, int n)
 
   j = 0;
   while (j < MaxNumberOfSizes &&
-         height > CharacterHeight ((char)symb, (ThotFont)LoadStixFont (n, j+1)))
+         height >  LogicalPointsSizes[j+1])
+    //height > CharacterHeight ((char)symb, (ThotFont)LoadStixFont (n,  LogicalPointsSizes[j+1])))
     j++;
 
   return (j);
@@ -1398,7 +1402,7 @@ ThotFont LoadNearestFont (char script, int family, int highlight,
                           int size, int requestedsize, int frame,
                           ThotBool increase, ThotBool decrease)
 {
-  int                 i, j, deb;
+  int                 i, j, deb, free_entry;
   int                 val;
   unsigned int		    mask;
   char                text[10], PsName[10], textX[100];
@@ -1418,11 +1422,12 @@ ThotFont LoadNearestFont (char script, int family, int highlight,
   i = 0;
   deb = 0;
   ptfont = NULL;
+  free_entry = FirstFreeFont;
   while (ptfont == NULL && i < FirstFreeFont)
     {
       if (TtFonts[i] == NULL)
-        /* check if we forgot to update FirstFreeFont */
-        FirstFreeFont = i;
+        /* a free entry is found */
+        free_entry = i;
       if (strcmp (&TtFontName[deb], text) == 0)
         /* Font cache lookup succeeded */
         ptfont = TtFonts[i];
@@ -1436,10 +1441,11 @@ ThotFont LoadNearestFont (char script, int family, int highlight,
   if (ptfont == NULL)
     {
       /* Load a new font */
-      if (FirstFreeFont < MAX_FONT)
+      if (free_entry < MAX_FONT)
         {
           /* No table overflow: load the new font */
 #ifdef _GL
+          //printf("tex=%s ", text);
           ptfont = (ThotFont)GL_LoadFont (script, family, highlight, size);
 #else /*_GL*/
 #ifdef _WINGUI
@@ -1541,7 +1547,7 @@ ThotFont LoadNearestFont (char script, int family, int highlight,
       
       if (ptfont == NULL && script != 'E')
         {
-          if (FirstFreeFont < MAX_FONT &&
+          if (free_entry < MAX_FONT &&
               script != '1' && script != 'L' && script != 'G' && size != -1)
             /* try without highlight and no specific size */
             ptfont = LoadNearestFont (script, family, 0,
@@ -1555,12 +1561,13 @@ ThotFont LoadNearestFont (char script, int family, int highlight,
                     {
                       i = j;
                       ptfont = TtFonts[i];
+                      // stop now
                       j = FirstFreeFont;
                     }
                 }
             }
           
-          if (ptfont == NULL && script == '7' && FirstFreeFont < MAX_FONT)
+          if (ptfont == NULL && script == '7' && free_entry < MAX_FONT)
             {
               /* look for a font Symbol */
               ptfont = LoadNearestFont ('G', family, 0, -1, requestedsize,
@@ -1597,9 +1604,10 @@ ThotFont LoadNearestFont (char script, int family, int highlight,
         printf ("Too many fonts\n");
       if ((i == FirstFreeFont && FirstFreeFont < MAX_FONT) ||
           TtFonts[i] == NULL)
+          FirstFreeFont = i + 1;
+      if (i < MAX_FONT && TtFonts[i] == NULL)
         {
           /* initialize a new entry */
-          FirstFreeFont = i + 1;
           strcpy (&TtFontName[deb], text);
           strcpy (&TtPsFontName[i * 8], PsName);
           TtFonts[i] = ptfont;
@@ -2491,7 +2499,6 @@ void ThotFreeFont (int frame)
     {
       /* compute the frame mask */
       mask = 1 << (frame - 1);
-      //printf ("ThotFreeFont frame=%d\n", frame);
       /* free all attached fontsets */
       fontset = FirstFontSel;
       prevset = NULL;
@@ -2581,6 +2588,7 @@ void ThotFreeFont (int frame)
 #endif /* _GL */
               if (doIt)
                 {
+                  //printf ("ThotFreeFont frame=%d font=%d\n", frame, i);
                   FreeAFont (i);
                   TtFontMask[i] = 0;
                 }
