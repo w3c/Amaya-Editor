@@ -1403,7 +1403,7 @@ ThotBool HTMLelementAllowed (Document doc)
       TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NO_INSERT_POINT);
       return FALSE;
     }
-         
+  
   elType = TtaGetElementType (el);
   s = TtaGetSSchemaName (elType.ElSSchema);
   if (strcmp (s, "HTML") == 0)
@@ -2113,6 +2113,8 @@ void CreateCaption (Document document, View view)
             }
         }
     }
+  else
+    TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NO_INSERT_POINT);
 }
 
 /*----------------------------------------------------------------------
@@ -2185,6 +2187,8 @@ void CreateColgroup (Document document, View view)
             }
         }
     }
+  else
+    TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NO_INSERT_POINT);
 }
 
 /*----------------------------------------------------------------------
@@ -2260,6 +2264,8 @@ void CreateCol (Document document, View view)
             }
         }
     }
+  else
+    TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NO_INSERT_POINT);
 }
 
 /*----------------------------------------------------------------------
@@ -2370,6 +2376,8 @@ static void ChangeCell (Document doc, View view, int typeCell)
       if (open)
         TtaCloseUndoSequence (doc);
     }
+  else
+    TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NO_INSERT_POINT);
 }
 
 /*----------------------------------------------------------------------
@@ -3904,6 +3912,8 @@ void  CreateOrChangeLink (Document doc, View view)
           SelectDestination (doc, el, TRUE, FALSE);
         }
     }
+  else
+    TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NO_INSERT_POINT);
 }
 
 /*----------------------------------------------------------------------
@@ -3926,8 +3936,11 @@ void DeleteAnchor (Document doc, View view)
   TtaGiveFirstSelectedElement (doc, &firstSelectedElement,
                                &firstSelectedChar, &lastSelectedChar);
   if (firstSelectedElement == NULL)
-    /* no selection. Do nothing */
-    return;
+    {
+      /* no selection. Do nothing */
+      TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NO_INSERT_POINT);
+      return;
+    }
   if (TtaIsReadOnly (firstSelectedElement))
     /* the selected element is read-only */
     return;

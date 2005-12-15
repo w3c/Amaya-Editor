@@ -3420,8 +3420,11 @@ void SetCharFontOrPhrase (int document, int elemtype)
   TtaGiveFirstSelectedElement (document, &selectedEl, &firstSelectedChar,
                                &lastSelectedChar);
   if (selectedEl == NULL)
-    /* no selection available */
-    return;
+    {
+      /* no selection available */
+      TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NO_INSERT_POINT);
+      return;
+    }
 
   toset = TRUE;
   TtaClearViewSelections ();

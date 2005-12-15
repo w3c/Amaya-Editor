@@ -3224,6 +3224,12 @@ void CheckNewLines (NotifyOnTarget *event)
   ----------------------------------------------------------------------*/
 void CreateTarget (Document doc, View view)
 {
+  Element             el;
+  int                 firstSelectedChar, i;
+
+  TtaGiveFirstSelectedElement (doc, &el, &firstSelectedChar, &i);
+  if (el == NULL)
+    TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NO_INSERT_POINT);
   CreateAnchor (doc, view, FALSE);
 }
 
@@ -3877,6 +3883,8 @@ void SetOnOffEmphasis (Document document, View view)
         /* it's a MathML element */
         SetMathCharFont (document, MathML_ATTR_fontstyle);
     }
+  else
+    TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NO_INSERT_POINT);
 }
 
 /*----------------------------------------------------------------------
@@ -3901,6 +3909,8 @@ void SetOnOffStrong (Document document, View view)
         /* it's a MathML element */
         SetMathCharFont (document, MathML_ATTR_fontweight);
     }
+  else
+    TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NO_INSERT_POINT);
 }
 
 /*----------------------------------------------------------------------
@@ -3943,6 +3953,8 @@ void SetOnOffCode (Document document, View view)
         /* it's a MathML element */
         SetMathCharFont (document, MathML_ATTR_fontfamily);
     }
+  else
+    TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NO_INSERT_POINT);
 }
 
 
