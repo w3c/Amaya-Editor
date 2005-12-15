@@ -3643,7 +3643,6 @@ PtrAbstractBox TruncateOrCompleteAbsBox (PtrAbstractBox pAb, ThotBool truncate,
                                     pSchS, pSchP, &pRSpec, &pRDef, &pAbbReturn,
                                     !head, &lqueue, &rQueue, pAb, NULL, NULL, TRUE);
                     pAbbCreated = pAbbReturn;
-                    /***********/;
                   }
               }
             if (head)
@@ -5543,25 +5542,24 @@ PtrAbstractBox AbsBoxesCreate (PtrElement pEl, PtrDocument pDoc,
                   /* chaine le nouveau pave dans l'arbre de l'image abstraite */
                   Attach (pNewAbbox, pEl, viewNb, pDoc);
                   pAbReturn = pNewAbbox;
-                  /*****                } ****/
-              if (descent)	/* on va creer les paves inclus */
-                {
-                  pAb = pNewAbbox;
-                  if (pAb->AbLeafType == LtCompound)
-                    if (!pAb->AbInLine)
-                      if (forward)
-                        /* on creera au moins le 1er pave inclus */
-                        pAb->AbTruncatedHead = FALSE;
+                  if (descent)	/* on va creer les paves inclus */
+                    {
+                      pAb = pNewAbbox;
+                      if (pAb->AbLeafType == LtCompound)
+                        if (!pAb->AbInLine)
+                          if (forward)
+                            /* on creera au moins le 1er pave inclus */
+                            pAb->AbTruncatedHead = FALSE;
+                          else
+                            /* on creera au moins le dernier pave inclus */
+                            pAb->AbTruncatedTail = FALSE;
+                        else
+                          /* pave mis en ligne, on cree tout */
+                          *complete = TRUE;
                       else
-                        /* on creera au moins le dernier pave inclus */
-                        pAb->AbTruncatedTail = FALSE;
-                    else
-                      /* pave mis en ligne, on cree tout */
-                      *complete = TRUE;
-                  else
-                    /* pave feuille, on cree tout */
-                    *complete = TRUE;
-                } /******/
+                        /* pave feuille, on cree tout */
+                        *complete = TRUE;
+                    }
                 }
             }
         }
@@ -5822,12 +5820,18 @@ PtrAbstractBox AbsBoxesCreate (PtrElement pEl, PtrDocument pDoc,
                     if (forward)
                       {
                         PcLast = (pElChild->ElNext == NULL);
-                        PcFirst = FALSE;
+                        if (ApplyRules)
+                          PcFirst = (pElChild->ElPrevious == NULL);
+                        else
+                          PcFirst = FALSE;
                       }
                     else
                       {
                         PcFirst = (pElChild->ElPrevious == NULL);
-                        PcLast = FALSE;
+                        if (ApplyRules)
+                          PcLast = (pElChild->ElNext == NULL);
+                        else
+                          PcLast = FALSE;
                       }
                     pAsc = pElChild->ElParent;
                     while (pAsc != pEl)
@@ -5958,8 +5962,10 @@ PtrAbstractBox AbsBoxesCreate (PtrElement pEl, PtrDocument pDoc,
                                         if (pAbChild->AbDead)
                                           truncate = TRUE;
                                         else
-                                          truncate = !completeChild;
-					   
+                                          if (forward)
+                                            truncate = !completeChild;
+                                          else
+                                            truncate = pAbChild->AbTruncatedTail;
                                       }
                                     pAbPres = TruncateOrCompleteAbsBox (pAb, truncate, FALSE, pDoc);
                                     if (forward && !truncate)
@@ -5981,7 +5987,10 @@ PtrAbstractBox AbsBoxesCreate (PtrElement pEl, PtrDocument pDoc,
                                         if (pAbChild->AbDead)
                                           truncate = TRUE;
                                         else
-                                          truncate = !completeChild;
+                                          if (!forward)
+                                            truncate = !completeChild;
+                                          else
+                                            truncate = pAbChild->AbTruncatedHead;
                                       }
                                     pAbPres = TruncateOrCompleteAbsBox (pAb, truncate, TRUE, pDoc);
                                     if (!forward && !truncate)
