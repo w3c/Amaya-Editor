@@ -15,7 +15,6 @@
 
 #ifdef _WX
 #include "wx/wx.h"
-int WX_SearchResult = 0;
 #endif /* _WX */
 
 #include "thot_gui.h"

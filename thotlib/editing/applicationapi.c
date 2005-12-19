@@ -16,6 +16,7 @@
   /* uneable debug because strange variables are declared in wx/memory.h header (maybe a wxwidgets bug) */
   #undef __WXDEBUG__
   #include "wx/app.h"
+int WX_SearchResult = 0;
 #endif /* _WX */
 
 #include "thot_gui.h"
@@ -33,8 +34,8 @@
 #include "typetra.h"
 #include "appaction.h"
 #include "appstruct.h"
-#include "dialog.h"
 #ifndef NODISPLAY
+#include "dialog.h"
 #include "thotpattern.h"
 #endif /* NODISPLAY */
 #include "appdialogue.h"

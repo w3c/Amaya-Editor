@@ -41,7 +41,6 @@ TabMsg;
 static PtrTabMsg       FirstTableMsg = NULL;
 static unsigned char * EmptyMsg = (unsigned char *)"";
 static unsigned char   result[MAX_TXT_LEN];
-
 #include "dialogapi_f.h"
 #include "memory_f.h"
 #include "message_f.h"

@@ -8,7 +8,7 @@
 #ifndef _DIALOG_H_
 #define _DIALOG_H_
 
-#ifdef _WX
+#if defined(_WX) && !defined(NODISPLAY)
 extern int WX_SearchResult; /* 0 if ok, 1 if no replace, 2 if not found */
 #endif /* _WX */
 
