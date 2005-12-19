@@ -700,7 +700,7 @@ void ComputeMBP (PtrAbstractBox pAb, int frame, ThotBool horizRef,
         {
           /* percent and auto refer the enclosing box */
           if (pBox->BxType == BoGhost || pBox->BxType == BoFloatGhost)
-            dim = GetGhostSize (pBox, horizRef, pBlock);
+            dim = GetGhostSize (pBox, TRUE, pBlock);
           else
             {
               //#ifdef POSITIONING
@@ -837,7 +837,7 @@ void ComputeMBP (PtrAbstractBox pAb, int frame, ThotBool horizRef,
           pAb->AbBottomBorderUnit == UnPercent)
         {
           if (pBox->BxType == BoGhost || pBox->BxType == BoFloatGhost)
-            dim = GetGhostSize (pBox, horizRef, pBlock);
+            dim = GetGhostSize (pBox, TRUE, pBlock);
           else
             {
               //#ifdef POSITIONING
@@ -851,20 +851,20 @@ void ComputeMBP (PtrAbstractBox pAb, int frame, ThotBool horizRef,
                   if (pRefAb && pRefAb->AbBox)
                     {
                       pParent = NULL;
-                      dim = pRefAb->AbBox->BxH;
+                      dim = pRefAb->AbBox->BxW;
                     }
                   else
-                    dim = pBox->BxH;
+                    dim = pBox->BxW;
                 }
               //#endif /* POSITIONING */
               else if (pParent)
-                dim = pParent->BxH;
+                dim = pParent->BxW;
               else
-                dim = pBox->BxH;
+                dim = pBox->BxW;
             }
         }
       else
-        dim = pBox->BxH;
+        dim = pBox->BxW;
 
       /* top margin */
       if (pAb->AbTopMarginUnit == UnPercent)
