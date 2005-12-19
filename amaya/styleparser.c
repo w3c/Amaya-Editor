@@ -4536,7 +4536,7 @@ static char *ParseACSSBackgroundPosition (Element element, PSchema tsch,
   else
     ok = FALSE;
 
-  if (ok && DoApply)
+  if (ok)
     {
       /* check if it's an important rule */
       cssRule = CheckImportantRule (cssRule, ctxt);
@@ -4560,9 +4560,6 @@ static char *ParseCSSBackgroundPosition (Element element, PSchema tsch,
   cssRule = ParseACSSBackgroundPosition (element, tsch, ctxt,
                                          cssRule, css, isHTML);
   if (ptr == cssRule)
-    cssRule = ParseACSSBackgroundPosition (element, tsch, ctxt,
-                                           cssRule, css, isHTML);
-  if (ptr == cssRule)
     {
       cssRule = SkipValue ("Invalid background-position value", cssRule);
       /* check if it's an important rule */
@@ -4574,9 +4571,6 @@ static char *ParseCSSBackgroundPosition (Element element, PSchema tsch,
       ptr = cssRule;
       cssRule = ParseACSSBackgroundPosition (element, tsch, ctxt,
                                              cssRule, css, isHTML);
-      if (ptr == cssRule)
-        cssRule = ParseACSSBackgroundPosition (element, tsch, ctxt,
-                                               cssRule, css, isHTML);
       if (ptr == cssRule)
         {
           cssRule = SkipValue ("Invalid background-position value", cssRule);
