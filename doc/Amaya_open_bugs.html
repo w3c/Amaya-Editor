@@ -21,7 +21,7 @@ h2         {  font-size: 12; }
 .fixed {background-color: #E5E5E5; color: #7F7F7F}</style>
 </head>
 
-<body>
+<body xml:lang="en" lang="en">
 <h1>List of open bugs in Amaya</h1>
 <br />
 
@@ -50,73 +50,26 @@ h2         {  font-size: 12; }
         B. Bos</td>
       <td></td>
     </tr>
-    <tr class="fixed">
-      <td>In some cases, a background-image with the option 'no-repeat' is
-        repeated the first time the document is loaded</td>
-      <td>2005-07-21</td>
-      <td>A. Kotok</td>
-      <td>2005-08-24</td>
-    </tr>
-    <tr class="fixed">
-      <td>The problem with CSS 'width' and positioning in
-        http://homepage.mac.com/d3n15/attributes or similar.</td>
-      <td>2005-08-17</td>
-      <td>Deins Combs</td>
-      <td>2005-09-14</td>
-    </tr>
     <tr>
       <td>The 'background-position' doesn't work at all, but seems like it is
-        recognized.
-
-        <p>Works:<br />
-        background: url(bkg_img.png) left top repeat-y;<br />
-        Doesn't work:<br />
-        background: url(bkg_img.png) repeat-y left top;</p>
-
-        <p>Works:<br />
-        background-image: url(bkg_img.png); <br />
-        background-position: left top;<br />
-        background-repeat: repeat-y;<br />
-        Doesn't work:<br />
-        background-image: url(bkg_img.png);<br />
-        background-repeat: repeat-y;<br />
-        background-position: left top;</p>
-      </td>
+        recognized.</td>
       <td>2005-08-17</td>
       <td><p>Stanimir Stamenkov</p>
       </td>
       <td></td>
-    </tr>
-    <tr class="fixed">
-      <td>When cell padding is specified using CSS, cells always overlap, no
-        matter if there's cell spacing specified (see
-        http://stanio.info/table_cell_spacing.html).
-
-        <p>When border spacing and cell padding specified &gt; 0, cells
-        overlap and the overall table width is not calculated properly
-        (http://stanio.info/cell_padding.html)</p>
-      </td>
-      <td>2005-08-26</td>
-      <td>Stanimir Stamenkov</td>
-      <td>2005-11-23</td>
-    </tr>
-    <tr class="fixed">
-      <td>Amaya 9.2.1 doesn't determine the containing block for absolutely
-        positioned elements correctly. Seems a containing block is
-        established only if its 'position' property is 'absolute' or 'fixed'.
-
-        <p>Example: http://stanio.info/containing_block.html
-        (http://stanio.info/containing_block.png)</p>
-      </td>
-      <td>2005-08-31</td>
-      <td>Stanimir Stamenkov</td>
-      <td>2005-08-31</td>
     </tr>
     <tr>
       <td>Problem with blocks that are not positioned absolutely to their
         containing block.</td>
       <td>2005-10-19</td>
       <td>Kevin Watts</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Amaya changes charset=us-ascii into charset=iso-8859-1 when
+        inserting a iso-8859-1 character.</td>
+      <td>2005-12-20</td>
+      <td>Pascal</td>
       <td></td>
     </tr>
   </tbody>
@@ -145,19 +98,6 @@ h2         {  font-size: 12; }
       <td>2005-02-15</td>
       <td>L. Carcone</td>
       <td></td>
-    </tr>
-    <tr class="fixed">
-      <td>Attributes from an 'external' namespace are removed at save</td>
-      <td>2005-08-04</td>
-      <td>I. Herman</td>
-      <td>2005-08-31</td>
-    </tr>
-    <tr class="fixed">
-      <td>The content is deleted when Changing the Document Type from [HTML
-        4.01 Strict] to [XHTML 1.0].</td>
-      <td>2005-10-04</td>
-      <td>Thomas Jedenfelt</td>
-      <td>2005-10-07</td>
     </tr>
     <tr>
       <td>The creation of an image map doesn't work with WX versions</td>
@@ -232,29 +172,6 @@ h2         {  font-size: 12; }
       <td>Alan Kotok</td>
       <td></td>
     </tr>
-    <tr class="fixed">
-      <td>Font problems in Amaya 9.2.1 on WinXP: Asian characters are nor
-        rendered (althought they were in Amaya 9.1) and some latin2
-        characteres can't be typed.</td>
-      <td>2005-07-17<br />
-        2005-07-21</td>
-      <td>Mimasa<br />
-        J. Holy</td>
-      <td>2005-07-25</td>
-    </tr>
-    <tr class="fixed">
-      <td>Amaya cannot found fonts when the working Windows in D:\windows</td>
-      <td>2005-09-07</td>
-      <td>Gianni Pagani</td>
-      <td>2005-09-14</td>
-    </tr>
-    <tr class="fixed">
-      <td>When the search dialog pops up, the focus is not set into the
-        dialog box.</td>
-      <td>2005-09-08</td>
-      <td>George Herson</td>
-      <td>2005-09-14</td>
-    </tr>
     <tr>
       <td>Weird rendering with some slidy documents<br />
         <a
@@ -276,13 +193,6 @@ h2         {  font-size: 12; }
       <td>J. Quint</td>
       <td></td>
     </tr>
-    <tr class="fixed">
-      <td>Open a document in a new tab crashes the application (wxWidgets
-      bug)</td>
-      <td>2005-06</td>
-      <td>L. Carcone</td>
-      <td>2005-10</td>
-    </tr>
     <tr>
       <td>The document is not scrolled when the selection is extended with
         the mouse</td>
@@ -290,53 +200,23 @@ h2         {  font-size: 12; }
       <td></td>
       <td></td>
     </tr>
-    <tr class="fixed">
-      <td>It's impossible to insert special characters available with the Alt
-        key.</td>
-      <td>2005-09-14</td>
-      <td>M. Mangeot</td>
-      <td>2005-09-16</td>
+    <tr>
+      <td>Suggestion of new shortcuts:
+
+        <p>&lt;cmd&gt;: for "Check spelling"<br />
+        &lt;cmd&gt;E for "Checking within the selection"<br />
+         &lt;cmd&gt;G for "Checking after the selection"<br />
+        &lt;shift&gt;&lt;cmd&gt;G for "Checking before the selection"</p>
+      </td>
+      <td>2005-12-20</td>
+      <td>Pascal</td>
+      <td></td>
     </tr>
-    <tr class="fixed">
-      <td>There is a mix of linux/mac philosophy in the Copy/Cut/Paste
-        commands <br />
-        (the selection shouldn't copy in the clipboard in Mac)</td>
-      <td>2005-07-20</td>
-      <td>A. Kotok</td>
-      <td>2005-07-25</td>
-    </tr>
-    <tr class="fixed">
-      <td>The structured Copy/Paste doesn't work (related to previous
-      bug)</td>
-      <td>2005-07-21</td>
-      <td>A. Kotok</td>
-      <td>2005-07-25</td>
-    </tr>
-    <tr class="fixed">
-      <td>It is impossible to insert a table or an image.</td>
-      <td>2005-08-17</td>
-      <td>T. Marble</td>
-      <td>2005-08-24</td>
-    </tr>
-    <tr class="fixed">
-      <td>The 'Preferences - Browsing' widget doesn't match the choices of
-        the 'Open document menu'</td>
-      <td>2005-08-17</td>
-      <td>L. Granstrom</td>
-      <td>2005-08-24</td>
-    </tr>
-    <tr class="fixed">
-      <td>The 'Preferences' widget is cut off</td>
-      <td>2005-08-17</td>
-      <td>L. Granstrom</td>
-      <td>2005-09-02</td>
-    </tr>
-    <tr class="fixed">
-      <td>It is impossible to insert iso-latin characters with a qwerty
-        keyboard</td>
-      <td>2005-09-08</td>
-      <td>C. Mercier</td>
-      <td>2005-09-13</td>
+    <tr>
+      <td>Don't close the application when closing the last window</td>
+      <td>2005-12-20</td>
+      <td>Pascal</td>
+      <td></td>
     </tr>
   </tbody>
 </table>
