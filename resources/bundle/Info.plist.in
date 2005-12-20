@@ -13,7 +13,7 @@
 	<key>CFBundleIconFile</key>
 	<string>amaya.icns</string>
 	<key>CFBundleName</key>
-	<string>EXECUTABLE</string>
+	<string>Amaya</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleSignature</key>
