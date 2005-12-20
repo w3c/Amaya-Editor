@@ -1009,7 +1009,7 @@ void GiveStixSize (ThotFont pfont, PtrAbstractBox pAb, int *width,
       break;
     case '<':
     case '>':
-      *width = StixPointyBracketWidth (*width);	
+      *width = StixPointyBracketWidth (*height);	
       *width = *width + *width/2;
       break;
     case 'o':       /* overbrace */

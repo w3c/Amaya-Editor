@@ -46,17 +46,15 @@
 #define DEF_PAGE_HEIGHT   800	/* hauteur de page par defaut, en points */
 #define DEF_PAGE_WIDTH    482	/* largeur de page par defaut, en points */
 
+#define THOT_EXPORT 
+#include "dialogapi_tv.h" // just because some modules import this file
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
-
 #include "boxes_tv.h"
 #include "font_tv.h"
 #include "platform_tv.h"
 #include "thotcolor.h"
 #include "thotcolor_tv.h"
-
-#undef THOT_EXPORT
-#define THOT_EXPORT extern	/* to avoid redefinitions */
 
 #ifdef _WINDOWS
 #include "thotprinter_f.h"
@@ -74,7 +72,6 @@
 int          PRINT;	/* Identification des messages */
 ThotFont     PostscriptFont;
 int          ColorPs;
-int          ShowReturn = 0;
 
 static PtrDocument  TheDoc;	/* le document en cours de traitement */
 static PathBuffer   DocumentDir;   /* le directory d'origine du document */
@@ -2483,7 +2480,7 @@ int main (int argc, char **argv)
   /* In order to get a "." even in a localised unix (ie: french becomes ",") */
   setlocale (LC_NUMERIC, "C");
 #endif /* _WX */
-
+  ShowReturn = 0;
   thotWindow       = 0;
   removeDirectory = FALSE;
   Repaginate     = 0;

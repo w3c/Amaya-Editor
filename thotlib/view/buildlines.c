@@ -963,7 +963,7 @@ static int SearchBreak (PtrLine pLine, PtrBox pBox, int max, SpecFont font,
                   *newIndex = charIndex + 1;
                 }
             }
-          else if ( pBox->BxScript == 'Z' || spaceCount == 0)
+          else if (/*pBox->BxScript == 'Z' || */spaceCount == 0)
             {
               /* no space found */
               (*boxLength) = i;

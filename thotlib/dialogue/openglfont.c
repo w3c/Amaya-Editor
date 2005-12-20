@@ -836,6 +836,8 @@ static void MakeBitmapGlyph (GL_font *font, unsigned int g,
       // to indicate the caractere is not available in amaya's fonts
       w = 7;     
       h = font->height;
+      if (h < 2)
+        h = 2;
       p = w * h;		  
       data = (unsigned char *)TtaGetMemory (p);
       if (data)

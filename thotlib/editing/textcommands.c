@@ -1358,7 +1358,13 @@ static int CopyXClipboard (unsigned char **buffer, View view)
               /* On ajoute le volume de l'element */
               if (pEl)
                 {
-                  if (pEl == pLastEl)
+                  if (pEl->ElLeafType == LtPicture)
+                    maxLength += 5;
+                  else if (pEl->ElLeafType == LtSymbol)
+                    maxLength += 6;
+                  else if (pEl->ElLeafType == LtGraphics)
+                    maxLength += 7;
+                  else if (pEl == pLastEl)
                     maxLength += lastChar;
                   else
                     maxLength += pEl->ElVolume;
@@ -1442,9 +1448,6 @@ static int CopyXClipboard (unsigned char **buffer, View view)
                 {
                   /* Add new lines */
                   text[i++] = EOL;
-#ifdef IV /*_WINGUI*/
-                  text[i++] = __CR__;
-#endif /* _WINGUI */
                   text[i] = EOS;
                 }
               /* Recopie le texte de l'element */
