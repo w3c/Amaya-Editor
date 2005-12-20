@@ -1062,7 +1062,7 @@ void StyleDlgWX::OnColorPalette( wxCommandEvent& event )
       colour_data = dialog.GetColourData();
       wxColour col = colour_data.GetColour();
       
-      char color_string[7];
+      char color_string[20];
       sprintf( color_string, "#%02x%02x%02x", col.Red(), col.Green(), col.Blue() );
       wxComboBox *     p_combo  = NULL;
       if (id == textcolor_id)

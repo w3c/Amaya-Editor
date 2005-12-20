@@ -8,13 +8,13 @@
 
 # neededforbuild  autoconf automake mmcore mmbase mmslib xpm libz libpng libjpeg
 
-%define version 8.8.1
+%define version 8.8.3
 
 Vendor:       W3C World Wide Web Consortium
 Distribution: W3C
 Name:         amaya_gtk
 Release:      1
-Copyright:    Copyright 1995-2004 (MIT) (INRIA), (L)GPL compatible
+Copyright:    Copyright 1995-2005 (MIT) (INRIA), (L)GPL compatible
 Group:        X11/Applications/Networking
 URL:          http://www.w3.org/Amaya/
 Autoreqprov:  on
@@ -24,7 +24,7 @@ BuildRoot:    /var/tmp/%{name}-buildroot
 
 Summary:      Web Browser/Editor from the World Wide Web Consortium
 Version:      %{version}
-Source: ftp://ftp.w3.org/pub/amaya/amaya-fullsrc-9.2.1.tgz
+Source: ftp://ftp.w3.org/pub/amaya/amaya-fullsrc-9.3.tgz
 # Patch: amaya-src-%{version}.diff
 %description
 
@@ -90,8 +90,8 @@ make install prefix=$RPM_BUILD_ROOT/usr/share
 %doc README.amaya
 /usr/share/Amaya-%{version}/
 %post 
-/bin/ln -s /usr/share/Amaya-%{version}/gtk/bin/amaya /usr/bin/amaya_gtk
-/bin/ln -s /usr/bin/amaya_gtk /usr/bin/amaya
+/bin/ln -f -s /usr/share/Amaya-%{version}/gtk/bin/amaya /usr/bin/amaya_gtk
+/bin/ln -f -s /usr/bin/amaya_gtk /usr/bin/amaya
 %postun
 rm -f /usr/bin/amaya
 

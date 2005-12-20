@@ -3452,6 +3452,33 @@ void SetCharFontOrPhrase (int document, int elemtype)
   remove = (TtaGetTypedAncestor (elem, elType) != NULL);
 
   TtaGiveLastSelectedElement (document, &lastEl, &i, &lastSelectedChar);
+#ifdef IV
+  
+  TtaOpenUndoSequence (document, selectedEl, lastEl, firstSelectedChar,
+                       lastSelectedChar);
+  lastSelectedElem = lastEl;
+  /* split the last selected elements if it's a text leaf in a HTML element */
+  selType = TtaGetElementType (lastEl);
+  if (selType.ElTypeNum == HTML_EL_TEXT_UNIT &&
+      !strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+    /* the last selected element is a text leaf */
+    {
+      /* is this element within an element of the requested type? */
+      done = FALSE;
+      elFont = TtaGetTypedAncestor (lastEl, elType);
+      if (remove)
+        /* the element has to be removed from an element of type elType */
+        /* If it is not within such an element, nothing to do */
+        done = (elFont == NULL);
+      else
+        /* the element should be within an element of type elType */
+        /* If it is already within such an element, nothing to do */
+        done = (elFont != NULL);
+      if (!done)
+          GenerateInlineElement (elemtype, 0, "");
+    }
+#endif
+#ifndef IV
   TtaUnselect (document);
 
   TtaOpenUndoSequence (document, selectedEl, lastEl, firstSelectedChar,
@@ -3672,12 +3699,17 @@ void SetCharFontOrPhrase (int document, int elemtype)
       /* next selected element */
       selectedEl = next;
     }
+#endif
 
   TtaCloseUndoSequence (document);
 
   /* retore the display mode */
   if (dispMode == DisplayImmediately)
     TtaSetDisplayMode (document, dispMode);
+#ifdef IV
+  if (done)
+    {
+#endif
   if (firstSelectedElem == lastSelectedElem)
     if (firstSelectedChar > 1 || lastSelectedChar > 0)
       TtaSelectString (document, firstSelectedElem, firstSelectedChar,
@@ -3692,6 +3724,9 @@ void SetCharFontOrPhrase (int document, int elemtype)
         TtaSelectElement (document, firstSelectedElem);
       TtaExtendSelection (document, lastSelectedElem, lastSelectedChar);
     }
+#ifdef IV
+    }
+#endif
 
   UpdateContextSensitiveMenus (document);
   if (toset)

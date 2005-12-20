@@ -4715,6 +4715,7 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
             {
               TtaAppendTextContent (el, (unsigned char *)inputBuffer, doc);
               LgBuffer = 0;
+              attrType.AttrTypeNum = 0;
               if (withinMarkup)
                 {
                   /* attach the markup attribute */
@@ -4733,13 +4734,15 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
                   attrType.AttrTypeNum = TextFile_ATTR_IsString;
                   val = TextFile_ATTR_IsString_VAL_Yes_;
                 }
-              attr = TtaGetAttribute (el, attrType);
-              if ((withinMarkup || withinComment || withinString) &&
-                  attr == NULL)
+              if (withinMarkup || withinComment || withinString)
                 {
-                  attr = TtaNewAttribute (attrType);
-                  TtaAttachAttribute (el, attr, doc);
-                  TtaSetAttributeValue (attr, val, el, doc);
+                  attr = TtaGetAttribute (el, attrType);
+                  if (attr == NULL)
+                    {
+                      attr = TtaNewAttribute (attrType);
+                      TtaAttachAttribute (el, attr, doc);
+                      TtaSetAttributeValue (attr, val, el, doc);
+                    }
                 }
             }
           el = NULL; /* generate a new line */

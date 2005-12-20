@@ -1070,7 +1070,21 @@ void UpdateEditorMenus (Document doc)
 
   /* Update the doctype menu */
   UpdateDoctypeMenu (doc);
-#ifndef _WX
+#ifdef _WX
+  /* structure information is active only in the structure view */
+  if (profile == L_Basic)
+    {
+      TtaSetItemOff (doc, 1, Types, BStyle);
+      TtaSetItemOff (doc, 1, Types, BScript);
+      TtaSetItemOff (doc, 1, Types, BNoScript);
+    }
+  else
+    {
+      TtaSetItemOn (doc, 1, Types, BStyle);
+      TtaSetItemOn (doc, 1, Types, BScript);
+      TtaSetItemOn (doc, 1, Types, BNoScript);
+    }
+#else /* _WX */
   /* structure information is active only in the structure view */
   TtaSetItemOff (doc, 1, Types, BStyle);
   TtaSetItemOff (doc, 1, Types, BComment);

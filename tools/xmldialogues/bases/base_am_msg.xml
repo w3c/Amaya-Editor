@@ -4328,5 +4328,14 @@
 <message xml:lang="es">Aplicar cierra el diálogo</message>
 <message xml:lang="hu">Az Alkalmaz gomb bezárja a párbeszédablakot</message>
 <message xml:lang="de">Mit "Anwenden" wird der Dialog geschlossen</message>
-<message xml:lang="ka"></message></label>
+<message xml:lang="ka"></message>
+</label>
+<label define="AM_NOT_ALLOWED">
+<message xml:lang="en">Not allowed in this document</message>
+<message xml:lang="fr">Non autorisé dans ce document</message>
+</label>
+<label define="AM_READONLY">
+<message xml:lang="en">Protected element</message>
+<message xml:lang="fr">Element protégé</message>
+</label>
 <label define="AMAYA_MSG_MAX"></label></messages></base>

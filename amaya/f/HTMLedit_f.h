@@ -20,6 +20,9 @@ extern void RemoveLink ( Element el,
                          Document doc );
 extern ThotBool DeleteLink ( NotifyElement *event );
 extern ThotBool CheckMandatory ( NotifyAttribute *event );
+extern void GenerateInlineElement ( int eType,
+                                    int aType,
+                                    char * data );
 extern void SetREFattribute ( Element element,
                               Document doc,
                               char *targetURL,
@@ -148,6 +151,9 @@ extern void RemoveLink ( Element el,
                            Document doc );
 extern ThotBool DeleteLink ( NotifyElement *event );
 extern ThotBool CheckMandatory ( NotifyAttribute *event );
+extern void GenerateInlineElement ( int eType,
+                                      int aType,
+                                      char * data );
 extern void SetREFattribute ( Element element,
                                 Document doc,
                                 char *targetURL,
