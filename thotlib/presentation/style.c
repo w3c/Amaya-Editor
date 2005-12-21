@@ -778,7 +778,7 @@ char *TtaGetStyledAttributeValues (PSchema tsch, int attrType)
   int                 i, len;
 
   i = 0;
-  ListOfValues[i] = EOS;
+  memset (ListOfValues, 0, MAX_LENGTH);
   attrs = ((PtrPSchema) tsch)->PsAttrPRule->AttrPres[attrType - 1];
   while (attrs)
     {

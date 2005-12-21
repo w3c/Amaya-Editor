@@ -1358,7 +1358,7 @@ static int BuildClassList (Document doc, char *buf, int size, char *first)
   int                 index;
 
   /* add the first element if specified */
-  buf[0] = EOS;
+  memset (buf, 0, size);
   nb = 0;
   index = 0;
   free = size;
@@ -1596,7 +1596,7 @@ void ApplyClass (Document doc, View view)
 {
   Attribute           attr = NULL;
   AttributeType       attrType;
-  Element             firstSelectedEl, ancestor;
+  Element             el, ancestor;
   ElementType	      elType;
 #ifdef _WX
   char                a_class_with_dot[51];
@@ -1611,20 +1611,17 @@ void ApplyClass (Document doc, View view)
   if (!TtaGetDocumentAccessMode (doc))
     /* the document is in ReadOnly mode */
     return;
-  TtaGiveFirstSelectedElement (doc, &firstSelectedEl,
-                               &firstSelectedChar, &lastSelectedChar);
-  if (firstSelectedEl)
+  TtaGiveFirstSelectedElement (doc, &el, &firstSelectedChar, &lastSelectedChar);
+  if (el)
     {
       /* if the selected element is read-only, do nothing */
-      if (TtaIsReadOnly (firstSelectedEl))
+      if (TtaIsReadOnly (el))
         return;
-      elType = TtaGetElementType (firstSelectedEl);
     }
   else
-    {
-      elType.ElTypeNum = 0;
-    }
+    el = TtaGetRootElement (doc);
 
+  elType = TtaGetElementType (el);
   CurrentClass[0] = EOS;
   ApplyClassDoc = doc;
   /* updating the class name selector. */
@@ -1641,7 +1638,7 @@ void ApplyClass (Document doc, View view)
                   NbClass, ListBuffer, 5, NULL, FALSE, TRUE);
 #endif /* _GTK */
 
-  if (firstSelectedEl)
+  if (el)
     {
       /* preselect the entry corresponding to the class of the first selected
          element. */
@@ -1662,7 +1659,7 @@ void ApplyClass (Document doc, View view)
           attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
           attrType.AttrTypeNum = HTML_ATTR_Class;
         }
-      ancestor = firstSelectedEl;
+      ancestor = el;
       do
         {
           attr = TtaGetAttribute (ancestor, attrType);
