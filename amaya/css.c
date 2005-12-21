@@ -1059,7 +1059,6 @@ void LoadStyleSheet (char *url, Document doc, Element link, CSSInfoPtr css,
   if ( pInfo->PiSchemas == NULL || import)
     {
       /* load the resulting file in memory */
-      /* res = TtaReadOpen (tempfile); */
       res = TtaGZOpen (tempfile);
       if (res == NULL)
         {
@@ -1070,9 +1069,7 @@ void LoadStyleSheet (char *url, Document doc, Element link, CSSInfoPtr css,
 	{
 	  len = gzread (res, bufferRead, COPY_BUFFER_SIZE);
 	  if (len < COPY_BUFFER_SIZE)
-	    {
-	      endOfFile = TRUE;
-	    }
+	    endOfFile = TRUE;
 	  lenBuff += len;
 	}
       len = 0;
@@ -1087,10 +1084,11 @@ void LoadStyleSheet (char *url, Document doc, Element link, CSSInfoPtr css,
       if (res == NULL)
         {
           TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempURL);
+          TtaFreeMemory (tmpBuff);
           return;
         }
       len = gzread (res, tmpBuff, lenBuff);
-      if (len != 1)
+      if (len < 0)
         {
           TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempURL);
 	  TtaGZClose (res);
