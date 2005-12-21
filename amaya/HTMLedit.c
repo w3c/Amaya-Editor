@@ -544,8 +544,12 @@ void GenerateInlineElement (int eType, int aType, char * data)
                                 }
                               if (selpos)
                                 {
-                                  firstSel = in_line;
-                                  lastSel = in_line;
+                                  // empty selection -> generate a text
+                                  elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+                                  child = TtaNewElement (doc, elType);
+                                  TtaInsertFirstChild (&child, in_line, doc);
+                                  firstSel = child;
+                                  lastSel = child;
                                 }
                               else if (el == firstSel && firstchar > 1)
                                 {
@@ -1553,10 +1557,12 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
   /* get the first and last selected element */
   TtaGiveFirstSelectedElement (doc, &first, &firstChar, &i);
   if (TtaIsReadOnly (first))
-    /* the selected element is read-only */
-    return;
-  TtaGiveLastSelectedElement (doc, &last, &i, &lastChar);
+    {
+      /* the selected element is read-only */
+      return;
+    }
 
+  TtaGiveLastSelectedElement (doc, &last, &i, &lastChar);
   noAnchor = FALSE;
   /* Check whether the selected elements are a valid content for an anchor */
   elType = TtaGetElementType (first);

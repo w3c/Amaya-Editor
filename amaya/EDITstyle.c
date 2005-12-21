@@ -27,6 +27,7 @@
 #include "fetchHTMLname.h"
 
 #include "AHTURLTools_f.h"
+#include "HTMLedit_f.h"
 #include "HTMLimage_f.h"
 #include "HTMLpresentation_f.h"
 #include "UIcss_f.h"
@@ -573,17 +574,14 @@ void UpdateStylePost (NotifyAttribute * event)
   ----------------------------------------------------------------------*/
 static void DoApplyClass (Document doc)
 {
-  Element             firstSelectedEl, lastSelectedEl, curEl, el, span, next,
-    firstChild, lastChild, parent, child;
-  ElementType	        elType;
+  Element             firstSelectedEl, lastSelectedEl, el;
+  Element             next, firstChild, lastChild;
+  ElementType	        elType, lastType;
   Attribute           attr;
   AttributeType       attrType;
   char               *a_class = CurrentClass, *s;
-  int		              firstSelectedChar, lastSelectedChar, i, lg, min, max;
-  Language            lang;
-  CHAR_T              *buffer;
+  int		              firstSelectedChar, lastSelectedChar, i, lg;
   DisplayMode         dispMode;
-  ThotBool	          setClassAttr, empty;
 
   if (!a_class)
     return;
@@ -594,251 +592,70 @@ static void DoApplyClass (Document doc)
   if (*a_class == EOS)
     return;
 
-#ifdef _WX
   /* work with the current selected document */
   doc = TtaGetSelectedDocument ();
+  if (doc == 0)
+    {
+      TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NO_INSERT_POINT);
+      return;
+    }
   if (DocumentTypes[doc] == docSource || DocumentTypes[doc] == docText ||
       DocumentTypes[doc] == docCSS)
     return;
-#endif /* _WX */
   TtaGiveFirstSelectedElement (doc, &firstSelectedEl, &firstSelectedChar, &i);
-  if (firstSelectedEl == NULL)
-    return;
-  TtaClearViewSelections ();
-  /* stop displaying changes that will be made in the document */
-  dispMode = TtaGetDisplayMode (doc);
-  if (dispMode == DisplayImmediately)
-    TtaSetDisplayMode (doc, DeferredDisplay);
+  if (TtaIsReadOnly (firstSelectedEl))
+    {
+      /* the selected element is read-only */
+      TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_READONLY);
+      return;
+    }
 
-  if (strcmp (CurrentClass, "default") &&
+  if (strcmp (CurrentClass, "(no_class)") &&
       !IsImplicitClassName (CurrentClass, doc))
-    setClassAttr = TRUE;
+    GenerateInlineElement (HTML_EL_Span, HTML_ATTR_Class, a_class);
   else
-    setClassAttr = FALSE;
-
-  TtaGiveLastSelectedElement (doc, &lastSelectedEl, &i, &lastSelectedChar);
-  TtaUnselect (doc);
-  TtaOpenUndoSequence (doc, firstSelectedEl, lastSelectedEl, 0, 0);
-
-  /* process the last selected element */
-  empty = FALSE;
-  elType = TtaGetElementType (lastSelectedEl);
-  if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
-    /* it's a text element */
     {
-      if (lastSelectedChar < firstSelectedChar &&
-          firstSelectedEl == lastSelectedEl)
-        /* it's a caret */
-        {
-          empty = TRUE;
-          lastSelectedChar = firstSelectedChar;
-        }
+      /* remove class attributes */
+      TtaGiveLastSelectedElement (doc, &lastSelectedEl, &i, &lastSelectedChar);
+      elType = TtaGetElementType (firstSelectedEl);
+      lastType = TtaGetElementType (lastSelectedEl);
+      if (elType.ElTypeNum == HTML_EL_TEXT_UNIT && firstSelectedChar > 1)
+        // no class attribute
+        return;
       lg = TtaGetElementVolume (lastSelectedEl);
-      if (lastSelectedChar <= lg && lastSelectedChar > 1)
-        /* the last selected element is only partly selected. Split it */
-        {
-          /* exclude trailing spaces from the anchor */
-          if (lg > 0)
-            {
-              lg++;
-              buffer = (CHAR_T *)TtaGetMemory (lg * sizeof(CHAR_T));
-              TtaGiveBufferContent (lastSelectedEl, buffer, lg, &lang);
-              if (lastSelectedEl == firstSelectedEl)
-                min = firstSelectedChar;
-              else
-                min = 1;
-              while (lastSelectedChar > min &&
-                     buffer[lastSelectedChar - 2] == SPACE)
-                lastSelectedChar--;
-              TtaFreeMemory (buffer);
-            }
-          if (lastSelectedChar > 1)
-            {
-              TtaRegisterElementReplace (lastSelectedEl, doc);
-              TtaSplitText (lastSelectedEl, lastSelectedChar, doc);
-              next = lastSelectedEl;
-              TtaNextSibling (&next);
-              TtaRegisterElementCreate (next, doc);
-            }
-        }
-      else if (lastSelectedEl != firstSelectedEl ||
-               /* selection ends at the end of the text element */
-               (lastSelectedEl == firstSelectedEl && firstSelectedChar <= 1))
-        /* this text element is entirely selected */
-        {
-          parent = TtaGetParent (lastSelectedEl);
-          elType = TtaGetElementType (parent);
-          if (elType.ElTypeNum == HTML_EL_Span &&
-              !strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
-            /* the parent element is a SPAN */
-            if (lastSelectedEl == TtaGetFirstChild (parent) &&
-                lastSelectedEl == TtaGetLastChild (parent))
-              /* this text element is the only child of the SPAN */
-              /* Process the SPAN instead of the text element */
-              {
-                lastSelectedEl = parent;
-                if (firstSelectedEl == lastSelectedEl)
-                  firstSelectedEl = parent;
-              }
-        }
-    }
-  
-  /* process the first selected element */
-  elType = TtaGetElementType (firstSelectedEl);
-  if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
-    {
-      /* it's a text element */
-      if (firstSelectedChar <= 1)
-        /* selection starts at the beginning of the element */
-        /* this text element is then entirely selected */
-        {
-          parent = TtaGetParent (firstSelectedEl);
-          elType = TtaGetElementType (parent);
-          if (elType.ElTypeNum == HTML_EL_Span &&
-              !strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
-            /* parent is a SPAN element */
-            if (firstSelectedEl == TtaGetFirstChild (parent) &&
-                firstSelectedEl == TtaGetLastChild (parent))
-              /* this text element is the only child of the SPAN */
-              /* Process the SPAN instead of the text element */
-              {
-                firstSelectedEl = parent;
-                if (lastSelectedEl == firstSelectedEl)
-                  lastSelectedEl = parent;
-              }
-        }
-      else
-        /* that element is only partly selected. Split it */
-        {
-          el = firstSelectedEl;
-          lg = TtaGetElementVolume (firstSelectedEl);
-          if (firstSelectedChar > lg)
-            {
-              /* insert an empty box */
-              child = TtaNewTree (doc, elType, "");
-              TtaInsertSibling (child, firstSelectedEl, FALSE, doc);
-              TtaRegisterElementCreate (child, doc);
-              firstSelectedChar = 0;
-              lastSelectedChar = 0;
-              firstSelectedEl = child;
-              lastSelectedEl = child;
-            }
-          else
-            {
-              /* exclude leading spaces from the selection */
-              if (lg > 0)
-                {
-                  lg++;
-                  buffer = (CHAR_T *)TtaGetMemory (lg * sizeof(CHAR_T));
-                  TtaGiveBufferContent (firstSelectedEl, buffer, lg, &lang);
-                  if (lastSelectedEl == firstSelectedEl)
-                    max = lastSelectedChar;
-                  else
-                    max = lg;
-                  while (firstSelectedChar < max &&
-                         buffer[firstSelectedChar - 1] == SPACE)
-                    firstSelectedChar++;
-                  TtaFreeMemory (buffer);
-                }
-              if (firstSelectedChar <= lg)
-                {
-                  TtaRegisterElementReplace (firstSelectedEl, doc);
-                  TtaSplitText (firstSelectedEl, firstSelectedChar, doc);
-                  TtaNextSibling (&firstSelectedEl);
-                  if (lastSelectedEl == el)
-                    {
-                      /* we have to change the end of selection because the last
-                         selected element was split */
-                      lastSelectedEl = firstSelectedEl;
-                    }
-                }
-            }
-        }
-    }
+      if (lastType.ElTypeNum == HTML_EL_TEXT_UNIT &&
+          (lastSelectedChar == 0 || lastSelectedChar > lg))
+        return;
+      if (TtaIsLeaf (elType))
+        firstSelectedEl = TtaGetParent (firstSelectedEl);
+       if (TtaIsLeaf (lastType))
+        lastSelectedEl = TtaGetParent (lastSelectedEl);
 
-  /* process all selected elements */
-  curEl = firstSelectedEl;
-  while (curEl != NULL)
-    {
-      /* The current element may be deleted by DeleteSpanIfNoAttr. So, get
-         first the next element to be processed */
-      if (curEl == lastSelectedEl)
-        next = NULL;
-      else
+      TtaClearViewSelections ();
+      /* stop displaying changes that will be made in the document */
+      dispMode = TtaGetDisplayMode (doc);
+      if (dispMode == DisplayImmediately)
+        TtaSetDisplayMode (doc, DeferredDisplay);
+      TtaUnselect (doc);
+      TtaOpenUndoSequence (doc, firstSelectedEl, lastSelectedEl, 0, 0);
+
+      /* process all selected elements */
+      el = firstSelectedEl;
+      while (el)
         {
-          next = curEl;
-          TtaGiveNextElement (doc, &next, lastSelectedEl);
-        }
-       
-      if (!setClassAttr)
-        {
-          DeleteSpanIfNoAttr (curEl, doc, &firstChild, &lastChild);
-          if (firstChild)
-            {
-              if (curEl == firstSelectedEl)
-                firstSelectedEl = firstChild;
-              if (curEl == lastSelectedEl)
-                lastSelectedEl = lastChild;
-            }
+          /* The current element may be deleted by DeleteSpanIfNoAttr. So, get
+             first the next element to be processed */
+          if (el == lastSelectedEl)
+            next = NULL;
           else
             {
-              elType = TtaGetElementType (curEl);
-              s = TtaGetSSchemaName (elType.ElSSchema);
-              /* remove the current class attribute */
-              attrType.AttrSSchema = elType.ElSSchema;
-              if (!strcmp (s, "MathML"))
-                attrType.AttrTypeNum = MathML_ATTR_class;
-#ifdef _SVG
-              else if (!strcmp (s, "SVG"))
-                attrType.AttrTypeNum = SVG_ATTR_class;
-#endif
-              else
-                {
-                  attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
-                  attrType.AttrTypeNum = HTML_ATTR_Class;
-                }
-              /* set the Class attribute of the element */
-              attr = TtaGetAttribute (curEl, attrType);
-              if (attr)
-                {
-                  TtaRegisterAttributeDelete (attr, curEl, doc);
-                  TtaRemoveAttribute (curEl, attr, doc);
-                }
+              next = el;
+              TtaGiveNextElement (doc, &next, lastSelectedEl);
             }
-        }
-      else
-        {
-          elType = TtaGetElementType (curEl);
+          
+          elType = TtaGetElementType (el);
           s = TtaGetSSchemaName (elType.ElSSchema);
-          if (elType.ElTypeNum == HTML_EL_TEXT_UNIT ||
-              elType.ElTypeNum == HTML_EL_Basic_Elem)
-            {
-              /* that's a text element */
-              if (strcmp (s, "HTML"))
-                /* not a HTML element, move to the parent element */
-                curEl = TtaGetParent (curEl);
-              else
-                /* we are in a HTML element. Create an enclosing SPAN element*/
-                {
-                  MakeASpan (curEl, &span, doc, NULL);
-                  if (span)
-                    /* a SPAN element was created */
-                    {
-                      if (!empty)
-                        {
-                          if (curEl == firstSelectedEl)
-                            {
-                              firstSelectedEl = span;
-                              if (firstSelectedEl == lastSelectedEl)
-                                lastSelectedEl = span;
-                            }
-                          else if (curEl == lastSelectedEl)
-                            lastSelectedEl = span;
-                        }
-                      curEl = span;
-                    }
-                }
-            }
+          /* remove the current class attribute */
           attrType.AttrSSchema = elType.ElSSchema;
           if (!strcmp (s, "MathML"))
             attrType.AttrTypeNum = MathML_ATTR_class;
@@ -852,31 +669,32 @@ static void DoApplyClass (Document doc)
               attrType.AttrTypeNum = HTML_ATTR_Class;
             }
           /* set the Class attribute of the element */
-          attr = TtaGetAttribute (curEl, attrType);
-          if (!attr)
+          attr = TtaGetAttribute (el, attrType);
+          if (attr)
             {
-              attr = TtaNewAttribute (attrType);
-              TtaAttachAttribute (curEl, attr, doc);
-              TtaSetAttributeText (attr, a_class, curEl, doc);
-              TtaRegisterAttributeCreate (attr, curEl, doc);
+              TtaRegisterAttributeDelete (attr, el, doc);
+              TtaRemoveAttribute (el, attr, doc);
+              TtaSetDocumentModified (doc);
             }
-          else
+          DeleteSpanIfNoAttr (el, doc, &firstChild, &lastChild);
+          if (firstChild)
             {
-              TtaRegisterAttributeReplace (attr, curEl, doc);
-              TtaSetAttributeText (attr, a_class, curEl, doc);
+              if (el == firstSelectedEl)
+                firstSelectedEl = firstChild;
+              if (el == lastSelectedEl)
+                lastSelectedEl = lastChild;
             }
-          TtaSetDocumentModified (doc);
+          /* jump to the next element */
+          el = next;
         }
-      /* jump to the next element */
-      curEl = next;
+      
+      TtaCloseUndoSequence (doc);
+      /* ask Thot to display changes made in the document */
+      TtaSetDisplayMode (doc, dispMode);
+      TtaSelectElement (doc, firstSelectedEl);
+      if (lastSelectedEl != firstSelectedEl)
+        TtaExtendSelection (doc, lastSelectedEl, 0);
     }
-  TtaCloseUndoSequence (doc);
-
-  /* ask Thot to display changes made in the document */
-  TtaSetDisplayMode (doc, dispMode);
-  TtaSelectElement (doc, firstSelectedEl);
-  if (lastSelectedEl != firstSelectedEl)
-    TtaExtendSelection (doc, lastSelectedEl, 0);
 }
 
 /*----------------------------------------------------------------------
@@ -1816,7 +1634,7 @@ void ApplyClass (Document doc, View view)
                TtaGetMessage (LIB, TMSG_APPLY_CLASS), 1,
                bufMenu, FALSE, 2, 'L', D_DONE);
 #endif /* _GTK */
-  NbClass = BuildClassList (doc, ListBuffer, MAX_CSS_LENGTH, "default");
+  NbClass = BuildClassList (doc, ListBuffer, MAX_CSS_LENGTH, "(no_class)");
 #ifdef _GTK
   TtaNewSelector (BaseDialog + AClassSelect, BaseDialog + AClassForm,
                   TtaGetMessage (LIB, TMSG_SEL_CLASS),
@@ -1875,7 +1693,7 @@ void ApplyClass (Document doc, View view)
 #ifdef _GTK
       TtaSetSelector (BaseDialog + AClassSelect, 0, NULL);
 #endif /* _GTK */
-      strcpy (CurrentClass, "default");
+      strcpy (CurrentClass, "(no_class)");
     }
 
   /* pop-up the dialogue box. */
