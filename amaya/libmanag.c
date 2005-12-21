@@ -2128,7 +2128,7 @@ Element PasteLibraryGraphicElement (Element sourceEl, Document sourceDoc, int Me
 		{
 		  TtaInsertFirstChild (&copiedElement, parent, destDoc);
 		  /* check that id attribute is unique */
-		  MakeUniqueName (copiedElement, destDoc, TRUE);
+		  MakeUniqueName (copiedElement, destDoc, TRUE, FALSE);
 		  sibling = copiedElement;
 		}
 	    }
@@ -2139,7 +2139,7 @@ Element PasteLibraryGraphicElement (Element sourceEl, Document sourceDoc, int Me
 		{
 		  TtaInsertSibling (copiedElement, sibling, FALSE, destDoc);
 		  /* check that id attribute is unique */
-		  MakeUniqueName (copiedElement, destDoc, TRUE);
+		  MakeUniqueName (copiedElement, destDoc, TRUE, FALSE);
 		  sibling = copiedElement;
 		}
 	    }
@@ -2413,7 +2413,7 @@ Document CreateNewSVGFileofSVGSelected (char *url)
             }
           /* initialize id attribute text content of the groupe element*/
           TtaSetAttributeText (newAttr, "object", newEl, newSVGDoc);
-          MakeUniqueName (newEl, newSVGDoc, TRUE);
+          MakeUniqueName (newEl, newSVGDoc, TRUE, FALSE);
         }
 
       TtaSetStructureChecking (oldStructureChecking, newSVGDoc);

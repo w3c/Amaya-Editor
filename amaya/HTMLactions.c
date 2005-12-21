@@ -619,7 +619,7 @@ void CheckUniqueName (Element el, Document doc, Attribute attr,
         }
 #ifdef IV
       // this function should be optional because it increases the loading time
-      else if (MakeUniqueName (el, doc, FALSE))
+      else if (MakeUniqueName (el, doc, FALSE, FALSE))
         {
           sprintf (msgBuffer, "Duplicate attribute value %s", name);
           lineNum = TtaGetElementLineNumber(el);

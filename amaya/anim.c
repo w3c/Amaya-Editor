@@ -3161,7 +3161,7 @@ void TimelineTextPostModify (NotifyOnTarget *event)
 	}
       /* Check attribute ID in order to make sure that its value */
       /* is unique in the document */
-      MakeUniqueName (pmapping->animated_elem, basedoc, TRUE);
+      MakeUniqueName (pmapping->animated_elem, basedoc, TRUE, TRUE);
       Get_id_of (pmapping->animated_elem, buffer);
       TtaSetTextContent (event->element, (unsigned char *)buffer, SPACE,
 			 dt[basedoc].timelinedoc);

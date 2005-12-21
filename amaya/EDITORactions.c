@@ -3614,7 +3614,7 @@ void CreateImageInput (Document doc, View view)
                   TtaFreeMemory (value);
                   /* Check attribute NAME or ID in order to make sure that its
                      value unique in the document */
-                  MakeUniqueName (input, doc, TRUE);
+                  MakeUniqueName (input, doc, TRUE, FALSE);
                 }
               /* add a text before if needed */
               elType.ElTypeNum = HTML_EL_TEXT_UNIT;

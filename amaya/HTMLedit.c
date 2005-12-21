@@ -633,8 +633,11 @@ void GenerateInlineElement (int eType, int aType, char * data)
                           if (attrType.AttrTypeNum != 0)
                             {
                               if (aType == HTML_ATTR_ID)
-                                // generate id and/or name
-                                CreateTargetAnchor (doc, in_line, FALSE, TRUE);
+                                /* generate id and/or name, but do not register
+                                   these attributes in the undo queue, as the
+                                   in_line element itself will be registered
+                                   with its attributes */
+                                CreateTargetAnchor (doc, in_line, FALSE, FALSE);
                               else
                                 {
                                   newAttr = TtaNewAttribute (attrType);
@@ -1523,7 +1526,7 @@ void CreateTargetAnchor (Document doc, Element el, ThotBool forceID,
   TtaSetDocumentModified (doc);
   /* Check the attribute value to make sure that it's unique within */
   /* the document */
-  MakeUniqueName (el, doc, TRUE);
+  MakeUniqueName (el, doc, TRUE, withUndo);
   /* set this new end-anchor as the new target */
   SetTargetContent (doc, attr);
   if (withUndo && new_)
@@ -1804,9 +1807,11 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
   in the document.
   If doIt and the NAME or ID is already used, the function adds a number
   at the end of the value.
+  If withUndo, register changes in the undo queue.
   Return TRUE if the initial value was changed or needs to be changed.
   ----------------------------------------------------------------------*/
-ThotBool MakeUniqueName (Element el, Document doc, ThotBool doIt)
+ThotBool MakeUniqueName (Element el, Document doc, ThotBool doIt,
+                         ThotBool withUndo)
 {
   ElementType	    elType, foundType;
   AttributeType     attrType, attrIDType;
@@ -1981,16 +1986,16 @@ ThotBool MakeUniqueName (Element el, Document doc, ThotBool doIt)
                 {
                   attr = TtaNewAttribute (attrType);
                   TtaAttachAttribute (el, attr, doc);
-                  change = FALSE;
+                  TtaSetAttributeText (attr, value, el, doc);
+                  if (withUndo)
+                    TtaRegisterAttributeCreate (attr, el, doc);
                 }
               else
                 {
-                  change = TRUE;
-                  TtaRegisterAttributeReplace (attr, el, doc);
+                  if (withUndo && change)
+                    TtaRegisterAttributeReplace (attr, el, doc);
+                  TtaSetAttributeText (attr, value, el, doc);
                 }
-              TtaSetAttributeText (attr, value, el, doc);
-              if (!change)
-                TtaRegisterAttributeCreate (attr, el, doc);
             }
           else if (checkNAME && doIt)
             {
@@ -2001,21 +2006,22 @@ ThotBool MakeUniqueName (Element el, Document doc, ThotBool doIt)
                 {
                   attr = TtaNewAttribute (attrType);
                   TtaAttachAttribute (el, attr, doc);
-                  change = FALSE;
+                  TtaSetAttributeText (attr, value, el, doc);
+                  if (withUndo)
+                    TtaRegisterAttributeCreate (attr, el, doc);
                 }
               else
                 {
-                  change = TRUE;
-                  TtaRegisterAttributeReplace (attr, el, doc);
+                  if (withUndo && change)
+                    TtaRegisterAttributeReplace (attr, el, doc);
+                  TtaSetAttributeText (attr, value, el, doc);
                 }
-              TtaSetAttributeText (attr, value, el, doc);
-              if (!change)
-                TtaRegisterAttributeCreate (attr, el, doc);
             }
           if (checkXMLID && doIt)
             {
               /* Change or insert an ID attribute accordingly */
-              TtaRegisterAttributeReplace (attrID, el, doc);
+              if (withUndo)
+                TtaRegisterAttributeReplace (attrID, el, doc);
               TtaSetAttributeText (attrID, value, el, doc);
             }
           TtaFreeMemory (value);
@@ -2748,7 +2754,7 @@ void ElementPasted (NotifyElement * event)
      is no need to check IDs as the included document will never be changed
      nor saved */
   if (event->elementType.ElTypeNum > 0)
-    MakeUniqueName (el, doc, TRUE);
+    MakeUniqueName (el, doc, TRUE, TRUE);
 
   elType = TtaGetElementType (el);
   name = TtaGetSSchemaName (elType.ElSSchema);
@@ -3426,7 +3432,7 @@ void UpdateAttrNAME (NotifyAttribute * event)
     // check valid value
     TtaIsValidID (event->attribute, TRUE);
   else
-    MakeUniqueName (event->element, event->document, TRUE);
+    MakeUniqueName (event->element, event->document, TRUE, TRUE);
 }
 
 /*----------------------------------------------------------------------
@@ -3448,7 +3454,7 @@ void UpdateAttrID (NotifyAttribute * event)
                         &lastChild);
   else
     {
-      MakeUniqueName (event->element, event->document, TRUE);
+      MakeUniqueName (event->element, event->document, TRUE, TRUE);
       if (event->event == TteAttrCreate)
         /* if the ID attribute is on a text string, create a SPAN element that
            encloses this text string and move the ID attribute to that SPAN
