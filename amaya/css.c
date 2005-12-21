@@ -977,15 +977,18 @@ void LoadStyleSheet (char *url, Document doc, Element link, CSSInfoPtr css,
 {
   CSSInfoPtr          refcss = NULL;
   PInfoPtr            pInfo;
-  struct stat         buf;
-  FILE               *res;
+  gzFile              res;
   char                tempfile[MAX_LENGTH];
   char                tempURL[MAX_LENGTH];
   char               *tmpBuff;
+  int                 lenBuff = 0;
   CSSCategory         category;
   int                 len;
   ThotBool            import, printing;
   ThotBool            loadcss;
+#define	              COPY_BUFFER_SIZE	1024
+  char                bufferRead[COPY_BUFFER_SIZE + 1];
+  ThotBool            endOfFile = FALSE;
 
   /* check if we have to load CSS */
   TtaGetEnvBoolean ("LOAD_CSS", &loadcss);
@@ -1056,40 +1059,47 @@ void LoadStyleSheet (char *url, Document doc, Element link, CSSInfoPtr css,
   if ( pInfo->PiSchemas == NULL || import)
     {
       /* load the resulting file in memory */
-      res = TtaReadOpen (tempfile);
+      /* res = TtaReadOpen (tempfile); */
+      res = TtaGZOpen (tempfile);
       if (res == NULL)
         {
           TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempURL);
           return;
         }
-#ifdef _WINGUI
-      if (fstat (_fileno (res), &buf))
-#else  /* _WINGUI */
-        if (fstat (fileno (res), &buf))
-#endif /* _WINGUI */
-          {
-            TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempURL);
-            TtaReadClose (res);
-            return;
-          }
-      tmpBuff = (char *)TtaGetMemory (buf.st_size + 1000);
+      while (!endOfFile)
+	{
+	  len = gzread (res, bufferRead, COPY_BUFFER_SIZE);
+	  if (len < COPY_BUFFER_SIZE)
+	    {
+	      endOfFile = TRUE;
+	    }
+	  lenBuff += len;
+	}
+      len = 0;
+      TtaGZClose (res);
+      tmpBuff = (char *)TtaGetMemory (lenBuff + 1);
       if (tmpBuff == NULL)
         {
           TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempURL);
-          TtaReadClose (res);
           return;
         }
-      len = fread (tmpBuff, buf.st_size, 1, res);
+      res = TtaGZOpen (tempfile);
+      if (res == NULL)
+        {
+          TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempURL);
+          return;
+        }
+      len = gzread (res, tmpBuff, lenBuff);
       if (len != 1)
         {
           TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempURL);
-          TtaReadClose (res);
-          ReadCSSRules (doc, refcss, tmpBuff, tempURL, 0, FALSE, NULL);
+	  TtaGZClose (res);
+	  ReadCSSRules (doc, refcss, tmpBuff, tempURL, 0, FALSE, NULL);
           TtaFreeMemory (tmpBuff);
           return;
         }
-      tmpBuff[buf.st_size] = 0;
-      TtaReadClose (res);
+      tmpBuff[lenBuff] = 0;
+      TtaGZClose (res);
       if (css)
         urlRef = css->url;
       ReadCSSRules (doc, refcss, tmpBuff, urlRef, 0, FALSE, link);
