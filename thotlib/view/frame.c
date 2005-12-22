@@ -1727,10 +1727,10 @@ PtrBox DisplayAllBoxes (int frame, PtrFlow pFlow,
                         }
                       if (bb < winTop)
                         /* the box is not visible */
-                        *tVol = *tVol + pBox->BxAbstractBox->AbVolume;
+                        *tVol = *tVol + pAb->AbVolume;
                       else if (bt > winBottom)
                         /* the box is not visible */
-                        *bVol = *bVol + pBox->BxAbstractBox->AbVolume;
+                        *bVol = *bVol + pAb->AbVolume;
                       else
                         {
                           if (pBox->BxType == BoSplit || pBox->BxType == BoMulScript)
