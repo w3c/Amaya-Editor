@@ -158,7 +158,7 @@ void LoadUserStyleSheet (Document doc)
   FILE               *res;
   char               *buffer, *ptr;
   int                 len;
-  ThotBool            loadcss;
+  ThotBool            loadcss, doit;
 
   /* check if we have to load CSS */
   TtaGetEnvBoolean ("LOAD_CSS", &loadcss);
@@ -176,13 +176,21 @@ void LoadUserStyleSheet (Document doc)
           /* allocate a new Presentation structure */ 
           css = AddCSS (0, doc, CSS_USER_STYLE, CSS_ALL, UserCSS, ptr, NULL);
           TtaFreeMemory (ptr);
+          doit = TRUE;
         }
-      else if (pInfo == NULL || pInfo->PiSchemas == NULL)
+      else if (pInfo == NULL)
+        /* not already applied */
         {
-          /* not already applied */
-          if (pInfo == NULL)
-            AddInfoCSS (doc, css, CSS_USER_STYLE, CSS_ALL, NULL);
+          AddInfoCSS (doc, css, CSS_USER_STYLE, CSS_ALL, NULL);
+          doit = TRUE;
+        }
+      else if (pInfo->PiSchemas == NULL)
+        doit = TRUE;
+      else
+        doit = FALSE;
 
+      if (doit)
+        {
           ptr = css->localName;
           if (ptr[0] != EOS  && TtaFileExist (ptr))
             {
