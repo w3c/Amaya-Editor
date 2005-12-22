@@ -1003,12 +1003,10 @@ int CharRelSize (int height, unsigned char symb, int n)
   int                 j;
 
   j = 0;
-  while (j < MaxNumberOfSizes &&
-         height >  LogicalPointsSizes[j+1])
-    //height > CharacterHeight ((char)symb, (ThotFont)LoadStixFont (n,  LogicalPointsSizes[j+1])))
+  while (j < MaxNumberOfSizes && height > LogicalPointsSizes[j+1])
     j++;
 
-  return (j);
+  return (LogicalPointsSizes[j]);
 }
 
 /*----------------------------------------------------------------------
