@@ -3660,13 +3660,6 @@ void TtcInsertChar (Document doc, View view, CHAR_T c)
 
           /* just manage differed enclosing rules */
           ComputeEnclosing (frame);
-          /* compare the document encoding and the character value */
-          if (pDoc->DocCharset == US_ASCII && c > 127)
-            {
-              /* force the ISO-latin-1 */
-              pDoc->DocCharset = ISO_8859_1;
-              pDoc->DocDefaultCharset = FALSE;
-            }
           if (dispMode == DisplayImmediately)
             TtaSetDisplayMode (doc, dispMode);
         }
