@@ -3533,7 +3533,6 @@ void ChangeSelFrame (int frame)
   Document            doc;
   View                view;
 #endif /* _WX */
-
   if (ActiveFrame != frame)
     {
       CloseTextInsertion ();

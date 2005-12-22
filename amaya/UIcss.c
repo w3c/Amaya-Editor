@@ -162,73 +162,76 @@ void LoadUserStyleSheet (Document doc)
 
   /* check if we have to load CSS */
   TtaGetEnvBoolean ("LOAD_CSS", &loadcss);
-  if (!loadcss)
-    return;
-  /* look for the User preferences */
-  if (!UserCSS || !TtaFileExist (UserCSS))
-    return;
-
-  buffer = NULL;
-  ptr = UserCSS;
-  css = SearchCSS (doc, ptr, NULL, &pInfo);
-  if (css == NULL)
+  if (loadcss && UserCSS && TtaFileExist (UserCSS))
     {
-      /* store a copy of the local CSS in .amaya/0 */
-      ptr = GetLocalPath (0, UserCSS);
-      TtaFileCopy (UserCSS, ptr);
-      /* allocate a new Presentation structure */ 
-      css = AddCSS (0, doc, CSS_USER_STYLE, CSS_ALL, UserCSS, ptr, NULL);
-      TtaFreeMemory (ptr);
-    }
-  else if (pInfo == NULL)
-    AddInfoCSS (doc, css, CSS_USER_STYLE, CSS_ALL, NULL);
-  else if (pInfo->PiSchemas)
-    /* already applied */
-    return;
-
-  ptr = css->localName;
-  if (ptr[0] != EOS  && TtaFileExist (ptr))
-    {
-      /* read User preferences */
-      res = TtaReadOpen (ptr);
-      if (res != NULL)
+      // there is a User stylesheet
+      buffer = NULL;
+      ptr = UserCSS;
+      css = SearchCSS (doc, ptr, NULL, &pInfo);
+      if (css == NULL)
         {
+          /* store a copy of the local CSS in .amaya/0 */
+          ptr = GetLocalPath (0, UserCSS);
+          TtaFileCopy (UserCSS, ptr);
+          /* allocate a new Presentation structure */ 
+          css = AddCSS (0, doc, CSS_USER_STYLE, CSS_ALL, UserCSS, ptr, NULL);
+          TtaFreeMemory (ptr);
+        }
+      else if (pInfo == NULL || pInfo->PiSchemas == NULL)
+        {
+          /* not already applied */
+          if (pInfo == NULL)
+            AddInfoCSS (doc, css, CSS_USER_STYLE, CSS_ALL, NULL);
+
+          ptr = css->localName;
+          if (ptr[0] != EOS  && TtaFileExist (ptr))
+            {
+              /* read User preferences */
+              res = TtaReadOpen (ptr);
+              if (res != NULL)
+                {
 #ifdef _WINGUI
-          if (fstat (_fileno (res), &buf))
+                  if (fstat (_fileno (res), &buf))
 #else  /* !_WINGUI */
-            if (fstat (fileno (res), &buf))
+                    if (fstat (fileno (res), &buf))
 #endif /* !_WINGUI */
-              TtaReadClose (res);
-            else
-              {
-                buffer = (char *)TtaGetMemory (buf.st_size + 1000);
-                if (buffer == NULL)
-                  TtaReadClose (res);
-                else
-                  {
-                    len = fread (buffer, buf.st_size, 1, res);
-                    if (len != 1)
-                      {
-                        TtaFreeMemory (buffer);
-                        buffer = NULL;
-                        TtaReadClose (res);
-                      }
+                      TtaReadClose (res);
                     else
                       {
-                        buffer[buf.st_size] = 0;
-                        TtaReadClose (res);
+                        buffer = (char *)TtaGetMemory (buf.st_size + 1000);
+                        if (buffer == NULL)
+                          TtaReadClose (res);
+                        else
+                          {
+                            len = fread (buffer, buf.st_size, 1, res);
+                            if (len != 1)
+                              {
+                                TtaFreeMemory (buffer);
+                                buffer = NULL;
+                                TtaReadClose (res);
+                              }
+                            else
+                              {
+                                buffer[buf.st_size] = 0;
+                                TtaReadClose (res);
+                              }
+                          }
                       }
-                  }
-              }
-        }
+                }
 
-      /* parse the whole thing and free the buffer */
-      if (buffer != NULL)
-        {
-          ReadCSSRules (doc, css, buffer, css->url, 0, FALSE, NULL);
-          TtaFreeMemory (buffer);
+              /* parse the whole thing and free the buffer */
+              if (buffer != NULL)
+                {
+                  ReadCSSRules (doc, css, buffer, css->url, 0, FALSE, NULL);
+                  TtaFreeMemory (buffer);
+                }
+            }
         }
     }
+#ifdef _WX
+  /* Update the list of classes */
+  TtaExecuteMenuAction ("ApplyClass", doc, 1, FALSE);
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------

@@ -1313,12 +1313,13 @@ static void PutClassName (Attribute attr, char *className, char *buf,
           len++; /* add the \0 */
           if (len > *free)
             return;
-          if (i  < *nb)
+          if (i > 1 && i  <= *nb)
             {
               // move the tail of the current list
               cur--;
+              len++;
               for (k = *index; k >= cur; k--)
-                buf[k+len+1] = buf[k];
+                buf[k+len] = buf[k];
             /* add this new class name with a dot at the current position */
               buf[cur++] = '.';
               strcpy (&buf[cur], name);
