@@ -2728,19 +2728,19 @@ static char *ParseACSSFontSize (Element element, PSchema tsch,
   else if (!strncasecmp (cssRule, "xx-small", 8))
     {
       pval.typed_data.unit = UNIT_PT;
-      pval.typed_data.value = 8;
+      pval.typed_data.value = 6;
       cssRule += 8;
     }
   else if (!strncasecmp (cssRule, "x-small", 7))
     {
       pval.typed_data.unit = UNIT_PT;
-      pval.typed_data.value = 10;
+      pval.typed_data.value = 8;
       cssRule += 7;
     }
   else if (!strncasecmp (cssRule, "small", 5))
     {
       pval.typed_data.unit = UNIT_PT;
-      pval.typed_data.value = 11;
+      pval.typed_data.value = 10;
       cssRule += 5;
     }
   else if (!strncasecmp (cssRule, "medium", 6))
