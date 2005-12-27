@@ -164,13 +164,12 @@ done ;
 cd - > /dev/null
 
 $ECHO "--> Installing data in $PREFIX/$AMAYA_INSTALLDIR/doc/..."
-$CP -r $AMAYA_SOURCEBINDIR/../../templates/en $PREFIX/$AMAYA_INSTALLDIR/templates/
-$CP -r $AMAYA_SOURCEBINDIR/../../templates/fr $PREFIX/$AMAYA_INSTALLDIR/templates/
-cd - > /dev/null
-
-$ECHO "--> Installing data in $PREFIX/$AMAYA_INSTALLDIR/templates/..."
 $CP -r $AMAYA_SOURCEBINDIR/../../doc/images $PREFIX/$AMAYA_INSTALLDIR/doc/
 $CP -r $AMAYA_SOURCEBINDIR/../../doc/html $PREFIX/$AMAYA_INSTALLDIR/doc/
 $CP -r $AMAYA_SOURCEBINDIR/../../doc/WX $PREFIX/$AMAYA_INSTALLDIR/doc/
+
+$ECHO "--> Installing data in $PREFIX/$AMAYA_INSTALLDIR/templates/..."
+$CP -r $AMAYA_SOURCEBINDIR/../../templates/en $PREFIX/$AMAYA_INSTALLDIR/templates/
+$CP -r $AMAYA_SOURCEBINDIR/../../templates/fr $PREFIX/$AMAYA_INSTALLDIR/templates/
 
 $ECHO "-- Installing $AMAYA_INSTALLDIR done --"
