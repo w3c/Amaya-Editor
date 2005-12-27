@@ -1272,7 +1272,10 @@ static char *ParseCSSBorderTop (Element element, PSchema tsch,
 
   cssRule = SkipBlanksAndComments (cssRule);
   /* register given values */
-  style = width = FALSE;
+  if (!strncmp (cssRule, "none", 4))
+    style = width = TRUE;
+  else
+    style = width = FALSE;
   while (*cssRule != ';' && *cssRule != '}' && *cssRule != EOS && *cssRule != ',')
     {
       ptr = cssRule;
@@ -1318,7 +1321,10 @@ static char *ParseCSSBorderLeft (Element element, PSchema tsch,
 
   cssRule = SkipBlanksAndComments (cssRule);
   /* register given values */
-  style = width = FALSE;
+  if (!strncmp (cssRule, "none", 4))
+    style = width = TRUE;
+  else
+    style = width = FALSE;
   while (*cssRule != ';' && *cssRule != '}' && *cssRule != EOS && *cssRule != ',')
     {
       ptr = cssRule;
@@ -1364,7 +1370,10 @@ static char *ParseCSSBorderBottom (Element element, PSchema tsch,
 
   cssRule = SkipBlanksAndComments (cssRule);
   /* register given values */
-  style = width = FALSE;
+  if (!strncmp (cssRule, "none", 4))
+    style = width = TRUE;
+  else
+    style = width = FALSE;
   while (*cssRule != ';' && *cssRule != '}' && *cssRule != EOS && *cssRule != ',')
     {
       ptr = cssRule;
@@ -1410,7 +1419,10 @@ static char *ParseCSSBorderRight (Element element, PSchema tsch,
 
   cssRule = SkipBlanksAndComments (cssRule);
   /* register given values */
-  style = width = FALSE;
+  if (!strncmp (cssRule, "none", 4))
+    style = width = TRUE;
+  else
+    style = width = FALSE;
   while (*cssRule != ';' && *cssRule != '}' && *cssRule != EOS && *cssRule != ',')
     {
       ptr = cssRule;
@@ -4863,15 +4875,30 @@ static char *ParseCSSPosition (Element element, PSchema tsch,
   cssRule = SkipBlanksAndComments (cssRule);
   ptr = cssRule;
   if (!strncasecmp (cssRule, "static", 6))
-    pval.typed_data.value = PositionStatic;
-  else if (!strncasecmp (cssRule, "relative", 7))
-    pval.typed_data.value = PositionRelative;
+    {
+      pval.typed_data.value = PositionStatic;
+      cssRule += 6;
+    }
+  else if (!strncasecmp (cssRule, "relative", 8))
+    {
+      pval.typed_data.value = PositionRelative;
+      cssRule += 8;
+    }
   else if (!strncasecmp (cssRule, "absolute", 8))
-    pval.typed_data.value = PositionAbsolute;
+    {
+      pval.typed_data.value = PositionAbsolute;
+      cssRule += 8;
+    }
   else if (!strncasecmp (cssRule, "fixed", 5))
-    pval.typed_data.value = PositionFixed;
+    {
+      pval.typed_data.value = PositionFixed;
+      cssRule += 5;
+    }
   else if (!strncasecmp (cssRule, "inherit", 7))
-    pval.typed_data.unit = VALUE_INHERIT;
+    {
+      pval.typed_data.unit = VALUE_INHERIT;
+      cssRule += 7;
+    }
 
   if (pval.typed_data.value == 0 && pval.typed_data.unit != VALUE_INHERIT)
     {
@@ -4881,9 +4908,11 @@ static char *ParseCSSPosition (Element element, PSchema tsch,
     }
   else
     {
-      cssRule = SkipValue (NULL, cssRule);
       cssRule = CheckImportantRule (cssRule, ctxt);
-      if (DoApply)
+      cssRule = SkipBlanksAndComments (cssRule);
+      if (*cssRule != EOS && *cssRule != ';')
+        SkipValue ("Invalid position value", ptr);
+      else if (DoApply)
         TtaSetStylePresentation (PRPosition, element, tsch, ctxt, pval);
     }
   return (cssRule);
@@ -5648,7 +5677,12 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
                   attrmatch[0] = Txtsubstring;
                   selector++;
                 }
-              else
+               else if (*selector == '^')
+                {
+                  attrmatch[0] = Txtsubstring; //should be initial substring
+                  selector++;
+                }
+             else
                 attrmatch[0] = Txtmatch;
               /* close the word */
               *cur++ = EOS;
