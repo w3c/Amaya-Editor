@@ -350,7 +350,7 @@ ThotBool CheckMandatory (NotifyAttribute *event)
   -----------------------------------------------------------------------*/
 void GenerateInlineElement (int eType, int aType, char * data)
 {
-  Element         el, firstSel, lastSel, next, in_line, sibling, child, last;
+  Element         el, firstSel, lastSel, next, in_line, sibling, child, last, parent;
   ElementType	    elType, parentType, newType;
   Attribute       newAttr;
   AttributeType   attrType;
@@ -455,16 +455,24 @@ void GenerateInlineElement (int eType, int aType, char * data)
               elType = TtaGetElementType (lastSel);
               name = TtaGetSSchemaName (elType.ElSSchema);
               lg =  TtaGetElementVolume (lastSel);
+              lastChanged = FALSE;
               if (firstSel != lastSel &&
                   elType.ElTypeNum == HTML_EL_TEXT_UNIT &&
                   (lastchar == 0 || lastchar >= lg))
                 {
                   // the whole first element is included
-                  lastSel = TtaGetParent (lastSel);
-                  lastChanged = TRUE;
+                  parent = TtaGetParent (lastSel);
+                  parentType = TtaGetElementType (parent);
+                  if (!strcmp (name, "HTML") &&
+                      IsCharacterLevelElement (parent) &&
+                      lastSel == TtaGetFirstChild (parent) &&
+                      lastSel == TtaGetLastChild (parent))
+                    {
+                      lastSel = parent;
+                      lastChanged = TRUE;
+                    }
                 }
-              else
-                lastChanged = FALSE;
+
               while (el)
                 {
                   elType = TtaGetElementType (el);
@@ -475,6 +483,7 @@ void GenerateInlineElement (int eType, int aType, char * data)
                            (firstchar > 1 || (i != 0 && i < lg)));
                   // check the next selected element
                   if (el == lastSel)
+                    // only one element selected
                     next = NULL;
                   else
                     {
@@ -482,7 +491,23 @@ void GenerateInlineElement (int eType, int aType, char * data)
                       TtaGiveNextSelectedElement (doc, &next, &j, &lastchar);
                       if (lastChanged && TtaIsAncestor (next, lastSel))
                         next = lastSel;
+                      // adjust the first selection
+                      if (el == firstSel && TtaIsLeaf (elType))
+                        {
+                          parent = TtaGetParent (el);
+                          parentType = TtaGetElementType (parent);
+                          if (!strcmp (name, "HTML") &&
+                              IsCharacterLevelElement (parent) &&
+                              el == TtaGetFirstChild (parent) &&
+                              el == TtaGetLastChild (parent))
+                            {
+                              el = parent;
+                              firstSel = el;
+                              elType.ElTypeNum = parentType.ElTypeNum;
+                            }
+                        }
                     }
+
                   if (!TtaIsReadOnly (el))
                     {
                       /* the selected element is not read-only */
@@ -497,8 +522,8 @@ void GenerateInlineElement (int eType, int aType, char * data)
                         charlevel = TtaIsLeaf (elType);
                       if (split && in_line == NULL)
                         doit = TRUE;
-                      else if (in_line == NULL && next && !strcmp(name, "HTML"))
-                        doit = charlevel && IsCharacterLevelElement (next);
+                      else if (in_line == NULL && !strcmp(name, "HTML"))
+                        doit = charlevel;
                       else
                         doit = FALSE;
 
@@ -507,12 +532,12 @@ void GenerateInlineElement (int eType, int aType, char * data)
                         /* create a in_line element */
                         in_line = TtaNewElement (doc, newType);
                       
+                      sibling = el;
+                      before = FALSE;
                       if (split)
                         {
                           /* enclose the split text leaf within a in_line element */
-                          sibling = el;
-                          before = FALSE;
-                          selpos = (firstSel == lastSel && i < firstchar);
+                           selpos = (firstSel == lastSel && i < firstchar);
                           /* exclude trailing spaces from the in_line */
                           if (lg > 0)
                             {
@@ -541,6 +566,14 @@ void GenerateInlineElement (int eType, int aType, char * data)
                                       // the first piece of el element should be moved
                                       before = TRUE;
                                     }
+                                  else
+                                    {
+                                      // don't manage this element
+                                      charlevel = FALSE;
+                                      if (el == lastSel)
+                                        lastSel = in_line;
+                                      el = NULL;
+                                    }
                                 }
                               if (selpos)
                                 {
@@ -557,18 +590,18 @@ void GenerateInlineElement (int eType, int aType, char * data)
                                   if (firstSel != lastSel || i >= firstchar)
                                     {
                                       // not a position
-                                      while (firstchar < max &&
+                                      while (firstchar <= max &&
                                              buffer[firstchar - 1] == SPACE)
                                         firstchar++;
                                     }
-                                  // prepare the future selection
-                                  if (el == firstSel && in_line)
-                                    firstSel = in_line;
-                                  if (el == lastSel && in_line)
-                                    lastSel = in_line;
                                   if (firstchar <= i && in_line)
                                     /* split the first string */
                                     {
+                                      // prepare the future selection
+                                      if (el == firstSel && in_line)
+                                        firstSel = in_line;
+                                      if (el == lastSel && in_line)
+                                        lastSel = in_line;
                                       TtaRegisterElementReplace (el, doc);
                                       TtaSplitText (el, firstchar, doc);
                                       TtaNextSibling (&el);
@@ -583,7 +616,29 @@ void GenerateInlineElement (int eType, int aType, char * data)
                                           TtaInsertSibling (el, sibling, FALSE, doc);
                                         }
                                     }
-                                }
+                                 else
+                                    {
+                                      // don't manage this element
+                                      charlevel = FALSE;
+                                      if (el == firstSel && next)
+                                        {
+                                          // the selection starts with the next element
+                                          firstSel = next;
+                                          TtaRemoveTree (in_line, doc);
+                                          in_line = NULL;
+                                        }
+                                      else
+                                        {
+                                          // become an empty selection -> generate a text
+                                          elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+                                          child = TtaNewElement (doc, elType);
+                                          TtaInsertFirstChild (&child, in_line, doc);
+                                          firstSel = child;
+                                          lastSel = child;
+                                        }
+                                      el = in_line;
+                                   }
+                                 }
                               else if (before && in_line)
                                 {
                                   // prepare the future selection
@@ -616,13 +671,14 @@ void GenerateInlineElement (int eType, int aType, char * data)
                               before = TRUE;
                             }
                           if (sibling == NULL)
-                            TtaInsertSibling (in_line, el, TRUE, doc);
+                            TtaInsertSibling (in_line, el, FALSE, doc);
                           TtaRegisterElementDelete (el, doc);
                           TtaRemoveTree (el, doc);
                           TtaInsertFirstChild (&el, in_line, doc);
-                          TtaRegisterElementCreate (el, doc);
                           if (el == lastSel)
                             lastSel = in_line;
+                          if (el == firstSel)
+                            firstSel = in_line;
                         }
 
                       if (doit && in_line)
@@ -657,6 +713,8 @@ void GenerateInlineElement (int eType, int aType, char * data)
                           sibling = TtaGetLastChild (in_line);
                           TtaInsertSibling (el, sibling, FALSE, doc);
                           TtaRegisterElementCreate (el, doc);
+                          if (el == lastSel)
+                            lastSel = in_line;
                         }
                       else
                         {
@@ -671,7 +729,7 @@ void GenerateInlineElement (int eType, int aType, char * data)
                               // apply the style to the enclosing element
                               el = in_line;
                             }
-                          if (attrType.AttrTypeNum != 0)
+                          if (el && attrType.AttrTypeNum != 0)
                             {
                               // generate an attribute to element or its children
                               child = last = el;
@@ -720,7 +778,6 @@ void GenerateInlineElement (int eType, int aType, char * data)
                                     TtaNextSibling (&child);
                                 }
                             }
-                          in_line = NULL;
                         }
 
                       // check the next element
@@ -1582,13 +1639,29 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
        elType.ElTypeNum == HTML_EL_map) &&
       !strcmp (s, "HTML") &&
       first == last)
-    /* add an attribute on the current anchor */
-    anchor = first;
+    {
+      /* add an attribute on the current anchor */
+      anchor = first;
+      if (!createLink)
+        {
+          TtaOpenUndoSequence (doc, first, last, firstChar, lastChar);
+          CreateTargetAnchor (doc, anchor, FALSE, TRUE);
+          TtaCloseUndoSequence (doc);
+        }
+    }
 #ifdef _SVG
   else if (elType.ElTypeNum == SVG_EL_a && !strcmp (s, "SVG") &&
            first == last)
-    /* add an attribute on the current anchor */
-    anchor = first;
+    {
+      /* add an attribute on the current anchor */
+      anchor = first;
+      if (!createLink)
+        {
+          TtaOpenUndoSequence (doc, first, last, firstChar, lastChar);
+          CreateTargetAnchor (doc, anchor, FALSE, TRUE);
+          TtaCloseUndoSequence (doc);
+        }
+    }
 #endif /* _SVG */
   else
     {
@@ -1598,8 +1671,16 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
       else
         el = NULL;
       if (el)
-        /* add an attribute on this anchor */
-        anchor = el;
+        {
+          /* add an attribute on this anchor */
+          anchor = el;
+          if (!createLink)
+            {
+              TtaOpenUndoSequence (doc, first, last, firstChar, lastChar);
+              CreateTargetAnchor (doc, anchor, FALSE, TRUE);
+              TtaCloseUndoSequence (doc);
+            }
+        }
       else
         {
           el = first;
@@ -1746,16 +1827,11 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
           TtaOpenUndoSequence (doc, first, last, firstChar, lastChar);
           if (createLink)
             {
-            GenerateInlineElement (HTML_EL_Anchor, HTML_ATTR_HREF_, "");
-            TtaGiveFirstSelectedElement (doc, &anchor, &firstChar, &i);
+              GenerateInlineElement (HTML_EL_Anchor, HTML_ATTR_HREF_, "");
+              TtaGiveFirstSelectedElement (doc, &anchor, &firstChar, &i);
             }
           else
-            {
-              //if (DocumentMeta[doc] && DocumentMeta[doc]->xmlformat)
-              GenerateInlineElement (HTML_EL_Anchor, HTML_ATTR_ID, "");
-              //else
-              //  GenerateInlineElement (HTML_EL_Anchor, HTML_ATTR_NAME, "");
-            }
+            GenerateInlineElement (HTML_EL_Anchor, HTML_ATTR_ID, "");
         }
     }
 

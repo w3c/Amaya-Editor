@@ -314,7 +314,7 @@ static char *SkipValue (char *msg, char *ptr)
   char        c;
 
   deb = ptr;
-  while (*ptr != EOS && *ptr != ';' && *ptr != '}' && *ptr != '}')
+  while (*ptr != EOS && *ptr != ';' && *ptr != '}' && *ptr != '}' && *ptr != '\n')
     {
       if (*ptr == '"' && (ptr == deb || ptr[-1] != '\\'))
         {
