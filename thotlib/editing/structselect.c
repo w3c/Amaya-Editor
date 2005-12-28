@@ -309,13 +309,24 @@ ThotBool GetCurrentSelection (PtrDocument *pDoc, PtrElement *firstEl,
       if (pEl->ElTerminal &&
           (pEl->ElLeafType == LtPolyLine || pEl->ElLeafType == LtPath))
         {
-          *firstChar = SelectedPointInPolyline;
-          *lastChar = SelectedPointInPolyline;
+          if (LastSelectedElement == FirstSelectedElement)
+            {
+              *firstChar = SelectedPointInPolyline;
+              *lastChar = SelectedPointInPolyline;
+            }
+          else
+            {
+              *firstChar = 0;
+              *lastChar = LastSelectedChar;
+            }
         }
       else if (pEl->ElTerminal && pEl->ElLeafType == LtPicture)
         {
           *firstChar = SelectedPictureEdge;
-          *lastChar = 0;
+          if (LastSelectedElement == FirstSelectedElement)
+           *lastChar = 0;
+          else
+            *lastChar = LastSelectedChar;
         }
       else
         {
