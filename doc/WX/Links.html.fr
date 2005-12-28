@@ -3,9 +3,9 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <title>Liens et Ancres</title>
-  <meta name="GENERATOR" content="amaya 9.1, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 9.3, see http://www.w3.org/Amaya/" />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -74,6 +74,11 @@ vous devez tout d'abord la transformer en ancre cible.</p>
   </li>
 </ol>
 
+<p class="ProcedureNote"><strong>Note:</strong>   Si vous voulez ensuite
+créer un lien vers cette ancre cible, choisissez <strong>Lier la cible
+créée</strong> dans le menu <strong>Liens</strong> après avoir sélectionné
+l'origine du lien à créer.</p>
+
 <h3 id="L1188"><a name="target1">Créer un élément cible</a></h3>
 
 <p>En HTML 4.0, un élément peut être utilisé comme une cible de liens. Un
@@ -123,6 +128,11 @@ est sélectionné, soit dans la vue liens soit dans la vue structure. Quand la
 valeur a été entrée, Amaya vérifie la valeur et la change si elle est déjà
 utilisée pour un autre attribut NAME ou ID dans le même document.</p>
 
+<p class="ProcedureNote"><strong>Note:</strong>   Si vous voulez ensuite
+créer un lien vers cet élément cible, choisissez <strong>Lier la cible
+créée</strong> dans le menu <strong>Liens</strong> après avoir sélectionné
+l'origine du lien à créer.</p>
+
 <h3 id="L1247"><a name="L245" id="L245">Créer un lien externe</a></h3>
 
 <p class="ProcedureCaption">Pour créer une ancre qui est un lien vers un
@@ -131,7 +141,7 @@ autre document :</p>
   <li>Sélectionnez (par clic et drag ou au clavier) le contenu de l'ancre à
     créer.</li>
   <li>Cliquez sur le bouton <img alt="Link "
-    src="../../resources/icons/22x22/XHTML_Link.png" />, choisissez
+    src="../../resources/icons/16x16/XHTML_Link.png" />, choisissez
     <strong>Créer/changer lien</strong> du menu <strong>Liens</strong>, ou
     encore utilisez le raccourci clavier (par défaut <kbd>Ctrl l Ctrl
     l</kbd>).
@@ -159,7 +169,7 @@ un élément cible dans le même document :</p>
   <li>Sélectionnez (par clic et drag ou au clavier) le contenu de l'ancre à
     créer.</li>
   <li>Cliquez sur le bouton <img alt="Link "
-    src="../../resources/icons/22x22/XHTML_Link.png" />, choisissez
+    src="../../resources/icons/16x16/XHTML_Link.png" />, choisissez
     <strong>Créer/changer lien</strong> du menu <strong>Liens</strong>, ou
     encore utilisez le raccourci clavier (par défaut <kbd>Ctrl l Ctrl
     l</kbd>).
@@ -175,6 +185,11 @@ un élément cible dans le même document :</p>
   </li>
 </ol>
 
+<p class="ProcedureNote"><strong>Note:</strong>   Si vous avez créé l'ancre
+ou l'élément cible récemment, inutile d'effectuer l'étape 2. Chosissez plutôt
+<strong>Lier la cible créée</strong> dans le menu <strong>Liens</strong> : la
+cible du nouveau lien sera la dernière cible que vous avez créée.</p>
+
 <h3 id="Changer"><a name="Changing" id="Changing">Changer un lien</a></h3>
 
 <p>Utilisez cette procédure si vous voulez changer la cible du lien sans
@@ -184,7 +199,7 @@ changer l'ancre</p>
 <ol>
   <li>Sélectionnez dans l'ancre.</li>
   <li>Cliquez sur le bouton <img alt="Link "
-    src="../../resources/icons/22x22/XHTML_Link.png" /> , choisissez
+    src="../../resources/icons/16x16/XHTML_Link.png" /> , choisissez
     <strong>Créer/changer lien</strong> du menu <strong>Liens</strong>, ou
     encore utilisez le raccourci clavier (par défaut <kbd>Ctrl l Ctrl
     l</kbd>).</li>

@@ -3,7 +3,7 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <title>Manuel d'utilisation d'Amaya</title>
   <style type="text/css">
 .name { background-color: #FFF6C1}
@@ -32,9 +32,9 @@ livre. Vous pouvez utiliser la commande "<a
 href="MakeBook.html.fr#L1065">XHTML &gt; Construire un livre</a>" pour
 assembler et imprimer la totalité du manuel.</p>
 
-<p>Beaucoup de commandes <strong>Amaya</strong> sont identiques à celles
+<p>Beaucoup de commandes d'<strong>Amaya</strong> sont identiques à celles
 fournies par les éditeurs et les outils classiques. Elles ne sont pas
-présentées ici. Seuls les aspects spécifiques d' <strong>Amaya</strong> sont
+présentées ici. Seuls les aspects spécifiques d'<strong>Amaya</strong> sont
 décrits.</p>
 
 <h2><a name="L9201" id="L9201">Démarrer Amaya</a></h2>
