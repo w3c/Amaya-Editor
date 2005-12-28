@@ -1871,9 +1871,18 @@ static void PresentationValueToPRule (PresentationValue val, int type,
         }
       break;
     case PtVertRef:
+      rule->PrPosRule.PoDistUnit = int_unit;
+      rule->PrPosRule.PoDistance = value;
+      rule->PrPosRule.PoRelation = RlSelf;
+      rule->PrPosRule.PoPosDef = VertRef;
+      rule->PrPosRule.PoPosRef = VertRef;
+      break;
     case PtHorizRef:
       rule->PrPosRule.PoDistUnit = int_unit;
       rule->PrPosRule.PoDistance = value;
+      rule->PrPosRule.PoRelation = RlSelf;
+      rule->PrPosRule.PoPosDef = HorizRef;
+      rule->PrPosRule.PoPosRef = HorizRef;
       break;
     case PtVertPos:
       if (funcType == 0)
