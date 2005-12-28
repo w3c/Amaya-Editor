@@ -137,8 +137,8 @@ href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-ins"><code>ins</code
 </ol>
 
 <p>Оба типа акцентирования могут быть применены из панели инструментов с
-помощью кнопок <img src="../../../resources/icons/22x22/XHTML_I.png"
-alt="Акцент" /> и <img src="../../../resources/icons/22x22/XHTML_B.png"
+помощью кнопок <img src="../../../resources/icons/16x16/XHTML_I.png"
+alt="Акцент" /> и <img src="../../../resources/icons/16x16/XHTML_B.png"
 alt="Строгий" /> , или в подменю <strong>Информационный тип</strong> из меню
 <strong>XHTML</strong>. Существуют стандартные комбинации кнопок - <kbd>Ctrl
 i Ctrl e</kbd> для ввода обычного акцентирования (потому что комбинация
@@ -154,7 +154,7 @@ s</kbd> для строгого акцентирования (потому что комбинация кнопок
 <code>STRONG</code>, используйте кнопки <kbd>F2</kbd> (Windows) или
 <kbd>Escape</kbd> (Unix) для выбора элемента, и затем используйте комбинации
 кнопок, пункт меню, или кнопку <img
-src="../../../resources/icons/22x22/XHTML_B.png" alt="Строгий" /> - для
+src="../../../resources/icons/16x16/XHTML_B.png" alt="Строгий" /> - для
 удаления элемента <code>STRONG</code>.</p>
 
 <p><a href="../StyleSheets.html.ru">Таблица стилей</a> может использоваться

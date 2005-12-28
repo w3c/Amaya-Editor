@@ -133,8 +133,8 @@ die Darstellung dieser Elemente zu ändern.</p>
 </ol>
 
 <p>Beide können über die Knöpfe <img
-src="../../../resources/icons/22x22/XHTML_I.png" alt="Emphasis" /> und <img
-src="../../../resources/icons/22x22/XHTML_B.png" alt="Strong" /> der
+src="../../../resources/icons/16x16/XHTML_I.png" alt="Emphasis" /> und <img
+src="../../../resources/icons/16x16/XHTML_B.png" alt="Strong" /> der
 Knopfleiste oder das Untermenü <strong>Inhaltsorientiert</strong> des Menüs
 <strong>XHTML</strong> angewendet werden. Außerdem stehen als Tastenkürzel
 <kbd>Strg i</kbd> <kbd>Strg e</kbd> zur Verfügung. Besteht eine Markierung,
@@ -144,7 +144,7 @@ Kind des bestehenden Elementes erzeugt.</p>
 <p>Die Elemente zur Betonung werden unter Amaya wie ein Umschalter behandelt.
 Plaziert man den Cursor beispielsweise innerhalb des Elements
 <code>strong</code>, markiert das Ganze mit <kbd>F2</kbd> und klickt den
-Knopf <img src="../../../resources/icons/22x22/XHTML_B.png" alt="Strong" />
+Knopf <img src="../../../resources/icons/16x16/XHTML_B.png" alt="Strong" />
 in der Knopfleiste, dann wird das Element <code>strong</code> entfernt.</p>
 
 <p>Man kann <a href="../StyleSheets.html.de">Formatvorlagen</a> verwenden um

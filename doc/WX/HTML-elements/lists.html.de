@@ -71,11 +71,11 @@ Listen enthalten sein.</p>
 </dl>
 
 <p>Die drei Typen von Listen können durch die Knöpfe <img
-src="../../../resources/icons/22x22/XHTML_Bullet.png"
+src="../../../resources/icons/16x16/XHTML_Bullet.png"
 alt="Knopf ungeordnete Liste" />, <img
-src="../../../resources/icons/22x22/XHTML_Num.png"
+src="../../../resources/icons/16x16/XHTML_Num.png"
 alt="Knopf geordnete Liste" /> und <img
-src="../../../resources/icons/22x22/XHTML_DL.png"
+src="../../../resources/icons/16x16/XHTML_DL.png"
 alt="Knopf Definitionsliste" /> der Knopfleiste, über das Menü
 <strong>XHTML</strong>, Untermenü <strong>Listen</strong> oder über
 Tastenkürzel <kbd>Strg l Strg o</kbd> (geordnete Liste), <kbd>Strg l Strg

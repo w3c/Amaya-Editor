@@ -3,9 +3,9 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <title>Créer des éléments</title>
-  <meta name="GENERATOR" content="amaya 9.1, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 9.3, see http://www.w3.org/Amaya/" />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -79,14 +79,14 @@ position choisie à cause des contraintes imposées par les langages HTML, SVG
 ou MathML. Amaya tente alors de créer l'élément à l'endroit le plus proche
 possible. Par exemple, si le point d'insertion se trouve à la fin de la
 dernière ligne d'un paragraphe quand vous cliquez sur le bouton <img
-src="../../resources/icons/22x22/XHTML_H2.png" alt="H2" /> , Amaya ne crée
-pas la nouvelle en-tête à cette position (elle serait invalide) mais après le
+src="../../resources/icons/16x16/XHTML_H2.png" alt="H2" />, Amaya ne crée pas
+la nouvelle en-tête à cette position (elle serait invalide) mais après le
 paragraphe, à la position valide la plus proche.</p>
 
 <p>Dans d'autres cas, Amaya modifie la structure existante pour créer
 l'élément désiré tout en respectant les contraintes du langage. Si le point
 d'insertion est quelque part dans un item de liste (li) quand vous créez une
-en-tête (avec le bouton <img src="../../resources/icons/22x22/XHTML_H2.png"
+en-tête (avec le bouton <img src="../../resources/icons/16x16/XHTML_H2.png"
 alt="H2" /> de la palette ou à partir du menu), l'item et la liste à laquelle
 il appartient sont automatiquement divisés afin de créer l'en-tête demandé et
 de se conformer aux contraintes du langage HTML.</p>
@@ -183,7 +183,7 @@ rapidement des structures complexes emboîtées.</p>
 <ol>
   <li>Créez d'abord une liste numérotée avec un premier item, par exemple en
     cliquant sur le bouton <img alt="Numbered List "
-    src="../../resources/icons/22x22/XHTML_Num.png" align="middle" />.</li>
+    src="../../resources/icons/16x16/XHTML_Num.png" />.</li>
   <li>Tapez le contenu de la première ligne et pressez la touche
     <kbd>Enter</kbd> : cela crée un nouveau paragraphe dans l'item de
   liste.</li>
@@ -193,8 +193,8 @@ rapidement des structures complexes emboîtées.</p>
   <li>Entrez le contenu de la première ligne du second item.</li>
   <li>A la fin de la première ligne de l'item 2, créez une liste nouvelle
     avec son premier item (cliquez par exemple sur le bouton <img
-    alt="Numbered List " src="../../resources/icons/22x22/XHTML_Num.png"
-    align="middle" />). La nouvelle liste sera automatiquement emboîtée.</li>
+    alt="Numbered List " src="../../resources/icons/16x16/XHTML_Num.png"
+     />). La nouvelle liste sera automatiquement emboîtée.</li>
   <li>Entrez le contenu du premier item de la nouvelle liste et créez l'item
     b en appuyant deux fois sur la touche <kbd>Enter</kbd> à la fin de l'item
     a.</li>

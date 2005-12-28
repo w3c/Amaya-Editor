@@ -38,9 +38,9 @@ H2, H3, H4, H5, и H6</code></a>. Они должны использоваться для маркировки
 
 <p>Первые три уровня заголовка могут быть созданы из панели инструментов,
 используя для этого кнопки изображения <img
-src="../../../resources/icons/22x22/XHTML_H1.png" alt="H1 button" />, <img
-src="../../../resources/icons/22x22/XHTML_H2.png" alt="H2 button" />, <img
-src="../../../resources/icons/22x22/XHTML_H3.png" alt="H3 button" />. Все
+src="../../../resources/icons/16x16/XHTML_H1.png" alt="H1 button" />, <img
+src="../../../resources/icons/16x16/XHTML_H2.png" alt="H2 button" />, <img
+src="../../../resources/icons/16x16/XHTML_H3.png" alt="H3 button" />. Все
 уровни заголовка могут быть созданы из меню <strong>XHTML</strong>, или
 используя комбинации кнопок. Принятыми по умолчанию комбинациями кнопок
 являются <kbd>Ctrl 1</kbd> для <code>H1</code>, <kbd>Ctrl 2</kbd> для

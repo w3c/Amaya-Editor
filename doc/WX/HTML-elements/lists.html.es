@@ -64,10 +64,10 @@ bloque, pero pueden crearse en el interior de otras listas.</p>
 
 <p>Los tres tipos de lista pueden crearse con la barra de botones mediante
 los botones de lista <img
-src="../../../resources/icons/22x22/XHTML_Bullet.png" alt="Lista con boliche"
-/>, <img src="../../../resources/icons/22x22/XHTML_Num.png"
+src="../../../resources/icons/16x16/XHTML_Bullet.png" alt="Lista con boliche"
+/>, <img src="../../../resources/icons/16x16/XHTML_Num.png"
 alt="Lista numerada" />, <img
-src="../../../resources/icons/22x22/XHTML_DL.png" alt="Lista de definición"
+src="../../../resources/icons/16x16/XHTML_DL.png" alt="Lista de definición"
 />. Todos los tipos de lista pueden crearse desde el menú <strong>XHTML &gt;
 Lista</strong> o mediante atajos de teclado. Los atajos de teclado por
 omisión son <kbd>Ctrl h Ctrl l</kbd> para crear una lista ordenada, <kbd>Ctrl

@@ -42,7 +42,7 @@ src="../../resources/icons/misc/right.png" /></a></p>
 
 <p>Pour insérer une image, choisissez l'entrée <strong>Image</strong> depuis
 le menu <strong>XHTML</strong> ou cliquez sur le bouton <img alt="Image "
-src="../../resources/icons/22x22/XHTML_Image.png" longdesc="longdesc.htm" />
+src="../../resources/icons/16x16/XHTML_Image.png" longdesc="longdesc.htm" />
 (ou encore utilisez le raccourci clavier <kbd>Ctrl h Ctrl i</kbd>). Ceci
 fait apparaître une boîte de dialogue qui vous permet de rentrer le nom du
 fichier et le <a href="#Alternative">texte de remplacement</a> (Attribut

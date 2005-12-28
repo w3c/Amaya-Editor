@@ -153,7 +153,7 @@ et comment les utiliser.</a></p>
     rel="Chapter">Définitions en ligne, citations, sample code, insertions et
     suppressions, abréviations, etc</a></li>
   <li><a href="HTML-elements/40styling.html.fr#Character"
-    rel="Chapter">Éléments style de HTML ( ce qu'il ne faut pas faire et ce
+    rel="Chapter">Éléments style de HTML (ce qu'il ne faut pas faire et ce
     qui doit être fait...)</a></li>
 </ul>
 <hr />

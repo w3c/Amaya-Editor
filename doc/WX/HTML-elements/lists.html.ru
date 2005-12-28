@@ -68,10 +68,10 @@ src="../../../resources/icons/misc/right.png" /></a></p>
 </dl>
 
 <p>Все три типа списков могут быть созданы из панели инструментов используя
-кнопки списков <img src="../../../resources/icons/22x22/XHTML_Bullet.png"
+кнопки списков <img src="../../../resources/icons/16x16/XHTML_Bullet.png"
 alt="Маркированный список" />, <img
-src="../../../resources/icons/22x22/XHTML_Num.png" alt="Нумерованный список"
-/>, <img src="../../../resources/icons/22x22/XHTML_DL.png"
+src="../../../resources/icons/16x16/XHTML_Num.png" alt="Нумерованный список"
+/>, <img src="../../../resources/icons/16x16/XHTML_DL.png"
 alt="Список определения" />. Все типы списков могут быть созданы из меню
 <strong>XHTML</strong>, или используя комбинации кнопок. Принятыми по
 умолчанию комбинациями кнопок для unix систем является <kbd>Ctrl h Ctrl

@@ -26,7 +26,7 @@ body {padding-left: 2em}</style>
 <h1 id="Amaya">Amaya - Guide utilisateur</h1>
 
 <p class="head"><span class="author">Irène Vatton</span> <br />
-Dernière mise à jour : <!--$date=-->29-09-2005 - 17:53<!--$-->
+Dernière mise à jour : <!--$date=-->28-12-2005 - 14:43<!--$-->
 </p>
 </div>
 
@@ -272,41 +272,41 @@ l'activer.</p>
 raccourcis pour créer des éléments HTML.</p>
 <ul>
   <li>Mise en évidence <img alt="(Evidence)"
-    src="../../resources/icons/22x22/XHTML_I.png" /> : permet de
+    src="../../resources/icons/16x16/XHTML_I.png" /> : permet de
     créer/supprimer un élément "mise en évidence"
   (&lt;em&gt;...&lt;/em&gt;)</li>
   <li>Important <img alt="(Important)"
-    src="../../resources/icons/22x22/XHTML_B.png" /> : permet de créer un
+    src="../../resources/icons/16x16/XHTML_B.png" /> : permet de créer un
     élément "important" (&lt;strong&gt;...&lt;/strong&gt;)</li>
   <li>Fonte fixe <img alt="(Code)"
-    src="../../resources/icons/22x22/XHTML_T.png" /> : permet de créer un
+    src="../../resources/icons/16x16/XHTML_T.png" /> : permet de créer un
     élément "fonte fixe" (&lt;code&gt;...&lt;/code&gt;)</li>
   <li>Ajout d'une image <img alt="(Image)"
-    src="../../resources/icons/22x22/XHTML_Image.png" /> : permet de créer un
+    src="../../resources/icons/16x16/XHTML_Image.png" /> : permet de créer un
     élément "image" (&lt;img/&gt;)</li>
   <li>Titre niveau 1 <img alt="(H1)"
-    src="../../resources/icons/22x22/XHTML_H1.png" /> : permet de créer un
+    src="../../resources/icons/16x16/XHTML_H1.png" /> : permet de créer un
     élément "titre niveau 1" (&lt;h1&gt;...&lt;/h1&gt;)</li>
   <li>Titre niveau 2 <img alt="(H2)"
-    src="../../resources/icons/22x22/XHTML_H2.png" /> : permet de créer un
+    src="../../resources/icons/16x16/XHTML_H2.png" /> : permet de créer un
     élément "titre niveau 2" (&lt;h2&gt;...&lt;/h2&gt;)</li>
   <li>Titre niveau 3 <img alt="(H3)"
-    src="../../resources/icons/22x22/XHTML_H3.png" /> : permet de créer un
+    src="../../resources/icons/16x16/XHTML_H3.png" /> : permet de créer un
     élément "titre niveau 3" (&lt;h3&gt;...&lt;/h3&gt;)</li>
   <li>Liste <img alt="(Liste)"
-    src="../../resources/icons/22x22/XHTML_Bullet.png" /> : permet de créer
+    src="../../resources/icons/16x16/XHTML_Bullet.png" /> : permet de créer
     un élément "liste à puces" (&lt;ul&gt;...&lt;/ul&gt;)</li>
   <li>Liste numérotée <img alt="(Liste num)"
-    src="../../resources/icons/22x22/XHTML_Num.png" /> : permet de créer un
+    src="../../resources/icons/16x16/XHTML_Num.png" /> : permet de créer un
     élément "liste numérotée" (&lt;ol&gt;...&lt;/ol&gt;)</li>
   <li>Liste de définitions <img alt="(Définitions)"
-    src="../../resources/icons/22x22/XHTML_DL.png" /> : permet de créer un
+    src="../../resources/icons/16x16/XHTML_DL.png" /> : permet de créer un
     élément "liste de définition" (&lt;dl&gt;...&lt;/dl&gt;)</li>
-  <li>Lien <img alt="(Lien)" src="../../resources/icons/22x22/XHTML_Link.png"
+  <li>Lien <img alt="(Lien)" src="../../resources/icons/16x16/XHTML_Link.png"
     /> : permet de créer un élément "titre niveau 1" (&lt;a
     href="..."&gt;...&lt;/a&gt;)</li>
   <li>Table <img alt="(Table)"
-    src="../../resources/icons/22x22/XHTML_Table.png" /> : permet de créer un
+    src="../../resources/icons/16x16/XHTML_Table.png" /> : permet de créer un
     élément "titre niveau 1" (&lt;table&gt;...&lt;/table&gt;)</li>
 </ul>
 
@@ -575,7 +575,7 @@ disponibles au clavier comme :</p>
 <p>Pour insérer une image, on choisit l'entrée <strong>Image</strong> dans le
 menu <strong>XHTML</strong> (raccourci <kbd>Ctrl h Ctrl i</kbd>) ou on
 clique sur le bouton <img alt="Image "
-src="../../resources/icons/22x22/XHTML_Image.png" longdesc="longdesc.htm" />.
+src="../../resources/icons/16x16/XHTML_Image.png" longdesc="longdesc.htm" />.
 Une boîte de dialogue s'affiche qui permet de rentrer le nom du fichier et le
 <a href="ImageMaps.html.fr#Alternative">texte de remplacement</a> ('ALT'
 texte) de l'image. L'insertion n'est prise en compte que lorsque le texte de
@@ -618,7 +618,7 @@ modifications opérées dans le document.</p>
 <h4>Première méthode</h4>
 
 <p>En cliquant sur <img alt="(Liste)"
-src="../../resources/icons/22x22/XHTML_Bullet.png" /> (ou <kbd>Ctrl h Ctrl
+src="../../resources/icons/16x16/XHTML_Bullet.png" /> (ou <kbd>Ctrl h Ctrl
 l</kbd>) on crée une liste à puces et un premier item de liste à
 l'intérieur.</p>
 <ul>
@@ -630,7 +630,7 @@ l'intérieur.</p>
   <li>Si on ne veut pas insérer de paragraphe mais passer à l'item suivant,
     on double la touche <kbd>Enter</kbd>.
     <p>Attention en cliquant sur <img alt="(Liste)"
-    src="../../resources/icons/22x22/XHTML_Bullet.png" /> (ou <kbd>Ctrl h
+    src="../../resources/icons/16x16/XHTML_Bullet.png" /> (ou <kbd>Ctrl h
     Ctrl l</kbd>) on crée une nouvelle liste à puces à l'intérieur de l'item
     courant.</p>
   </li>
@@ -639,7 +639,7 @@ l'intérieur.</p>
 </ul>
 
 <p>En cliquant sur <img alt="(Liste numérotée)"
-src="../../resources/icons/22x22/XHTML_Num.png" /> (ou <kbd>Ctrl h Ctrl
+src="../../resources/icons/16x16/XHTML_Num.png" /> (ou <kbd>Ctrl h Ctrl
 n</kbd>) on crée une liste numérotée et un item de liste à l'intérieur.</p>
 
 <h4>Deuxième méthode</h4>
@@ -648,7 +648,7 @@ n</kbd>) on crée une liste numérotée et un item de liste à l'intérieur.</p>
 défaut, Amaya crée un nouveau paragraphe chaque fois que l'on active la
 touche <kbd>Enter</kbd>. On peut ensuite sélectionner plusieurs paragraphes
 et cliquer sur <img alt="(Liste)"
-src="../../resources/icons/22x22/XHTML_Bullet.png" /> (ou <kbd>Ctrl h Ctrl
+src="../../resources/icons/16x16/XHTML_Bullet.png" /> (ou <kbd>Ctrl h Ctrl
 l</kbd>) pour créer une liste à puces.</p>
 
 <p>Pour sélectionner tout le contenu d'une suite de paragraphes, on utilise
@@ -658,7 +658,7 @@ la touche <kbd>F2</kbd>.</p>
 
 <p>On pose la sélection dans un item de liste, puis en doublant la touche
 <kbd>F2</kbd> on sélectionne la liste complète. En cliquant sur <img
-alt="(Liste numérotée)" src="../../resources/icons/22x22/XHTML_Num.png" />
+alt="(Liste numérotée)" src="../../resources/icons/16x16/XHTML_Num.png" />
 (ou <kbd>Ctrl h Ctrl n</kbd>) on crée une liste numérotée à la place. On
 peut bien sûr passer de la même façon d'une liste numérotée à une liste à
 puces.</p>
@@ -666,7 +666,7 @@ puces.</p>
 <h3 id="edit-dl">Editer les listes de définitions (dl/dt/dd)</h3>
 
 <p>En cliquant sur <img alt="(Liste de définitions)"
-src="../../resources/icons/22x22/XHTML_DL.png" /> (ou <kbd>Ctrl h Ctrl
+src="../../resources/icons/16x16/XHTML_DL.png" /> (ou <kbd>Ctrl h Ctrl
 d</kbd>) on crée une liste de définitions.</p>
 
 <p>La touche <kbd>Enter</kbd> est également utile pour éditer des listes de
@@ -735,7 +735,7 @@ entier ou une cible.</p>
 <ol>
   <li>On sélectionne le passage choisi.</li>
   <li>On clique sur le bouton <img alt="Link "
-    src="../../resources/icons/22x22/XHTML_Link.png" /></li>
+    src="../../resources/icons/16x16/XHTML_Link.png" /></li>
   <li>On clique sur le document cible affiché.</li>
 </ol>
 
@@ -766,7 +766,7 @@ la vue des liens (entrée <strong>Montrer les liens</strong> du menu
 <ol>
   <li>On sélectionne le passage choisi.</li>
   <li>On clique sur le bouton <img alt="Link "
-    src="../../resources/icons/22x22/XHTML_Link.png" /></li>
+    src="../../resources/icons/16x16/XHTML_Link.png" /></li>
   <li>On clique sur la cible choisie.</li>
 </ol>
 
@@ -776,7 +776,7 @@ la vue des liens (entrée <strong>Montrer les liens</strong> du menu
 <ol>
   <li>On sélectionne le passage choisi.</li>
   <li>On clique sur le bouton <img alt="Link "
-    src="../../resources/icons/22x22/XHTML_Link.png" /></li>
+    src="../../resources/icons/16x16/XHTML_Link.png" /></li>
   <li>On clique sur une zone du document qui ne peut pas être une cible pour
     afficher le formulaire de saisie de l'URL. Si le document est local, on
     peut utiliser le browser de fichier pour sélectionner le fichier.</li>
@@ -794,7 +794,7 @@ la vue des liens (entrée <strong>Montrer les liens</strong> du menu
 
 <p>Pour garder une ancre mais changer la cible du lien correspondant, on
 place la sélection dans l'ancre et on procède comme pour la création de lien
-(bouton <img alt="Link " src="../../resources/icons/22x22/XHTML_Link.png" />
+(bouton <img alt="Link " src="../../resources/icons/16x16/XHTML_Link.png" />
 ou l'entrée <strong>Créer/changer Lien</strong> du menu
 <strong>Liens</strong>). On peut alors désigner la nouvelle cible ou éditer
 l'URI.</p>
@@ -846,7 +846,7 @@ considérés comme non significatifs et sont donc supprimés.</p>
 <h3><a id="Creating1">Créer une nouvelle table</a></h3>
 
 <p>Quand on active le bouton table <img
-src="../../resources/icons/22x22/XHTML_Table.png" alt="Table button" /> ou
+src="../../resources/icons/16x16/XHTML_Table.png" alt="Table button" /> ou
 quand on sélectionne l'entrée <strong>Table</strong> depuis le menu
 <strong>XHTML</strong>, Amaya visualise une boîte de dialogue qui permet de
 spécifier le nombre initial de lignes, de colonnes, ainsi que la bordure en

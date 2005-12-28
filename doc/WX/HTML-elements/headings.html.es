@@ -35,9 +35,9 @@ que las tablas tienen elementos especiales para marcar los encabezados.</p>
 
 <p>Los tres primeros niveles de encabezado pueden crearse con la barra de
 botones mediante los botones <img
-src="../../../resources/icons/22x22/XHTML_H1.png" alt="Botón h1" />, <img
-src="../../../resources/icons/22x22/XHTML_H2.png" alt="Botón h2" />, <img
-src="../../../resources/icons/22x22/XHTML_H3.png" alt="Botón h3" />. Desde el
+src="../../../resources/icons/16x16/XHTML_H1.png" alt="Botón h1" />, <img
+src="../../../resources/icons/16x16/XHTML_H2.png" alt="Botón h2" />, <img
+src="../../../resources/icons/16x16/XHTML_H3.png" alt="Botón h3" />. Desde el
 menú <strong>XHTML</strong>, o mediante atajos de teclado, puede crearse
 cualquier nivel de encabezado. Los atajos de teclado por omisión son
 <kbd>Ctrl 1</kbd> para <code>h1</code>, <kbd>Ctrl 2</kbd> para

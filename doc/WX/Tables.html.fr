@@ -53,8 +53,8 @@ ajoutées pour une manipulation plus confortable.</p>
   <li>Déplacez le point d'insertion à l'endroit du document où vous voulez
     créer une table.</li>
   <li>Cliquez sur le bouton table <img
-    src="../../resources/icons/22x22/XHTML_Table.png" alt="Table button"
-    align="middle" /> ou sélectionnez l'entrée <strong>Table</strong> du menu
+    src="../../resources/icons/16x16/XHTML_Table.png" alt="Table button"
+     /> ou sélectionnez l'entrée <strong>Table</strong> du menu
     <strong>XHTML</strong>, Amaya affiche une boîte de dialogue.</li>
   <li>Spécifiez le nombre initial de lignes et de colonnes pour la nouvelle
     table, ainsi que l'épaisseur de sa bordure.</li>

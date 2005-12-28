@@ -64,9 +64,9 @@ l'intérieur d'autres listes.</p>
 
 <p>Les trois types de liste peuvent tous les trois être créés avec la barre
 d'outil en utilisant les boutons <img
-src="../../../resources/icons/22x22/XHTML_Bullet.png" alt="Bulleted List" />,
-<img src="../../../resources/icons/22x22/XHTML_Num.png" alt="Numbered List"
-/>, <img src="../../../resources/icons/22x22/XHTML_DL.png"
+src="../../../resources/icons/16x16/XHTML_Bullet.png" alt="Bulleted List" />,
+<img src="../../../resources/icons/16x16/XHTML_Num.png" alt="Numbered List"
+/>, <img src="../../../resources/icons/16x16/XHTML_DL.png"
 alt="Definition List" />. Tous les types de liste peuvent être créés à partir
 du menu <strong>XHTML,</strong> ou en utilisant les raccourcis clavier. Les
 raccourcis clavier par défaut dans les systèmes Unix sont <kbd>Ctrl h Ctrl
