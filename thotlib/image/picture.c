@@ -707,8 +707,16 @@ static void GetRelativeBoundingBox (PtrAbstractBox pAb, int *x, int *y,
                     *y = yprime;
                   }
             }
-          w = box->BxXOrg + box->BxWidth - box->BxLMargin - box->BxRMargin;
-          h = box->BxYOrg + box->BxHeight - box->BxTMargin - box->BxBMargin;
+          w = box->BxXOrg + box->BxWidth;
+          if (box->BxLMargin > 0)
+            w -= box->BxLMargin;
+          if (box->BxRMargin > 0)
+            w -= box->BxRMargin;
+          h = box->BxYOrg + box->BxHeight;
+          if (box->BxTMargin > 0)
+            h -= box->BxTMargin;
+          if (box->BxBMargin > 0)
+            h -= box->BxBMargin;
           if ((*x + *width) < w)
             *width = w - *x;
           if ((*y + *height) < h)

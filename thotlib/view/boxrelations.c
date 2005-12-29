@@ -959,26 +959,40 @@ ThotBool ComputePositioning (PtrBox pBox, int frame)
           else
             x = y = 0;
           
+          lr = tr = rr = br = 0;
           if (pRefAb == NULL)
             {
               pRefAb = ViewFrameTable[frame -1].FrAbstractBox;
               pRefBox = pRefAb->AbBox;
-              lr = tr = rr = br = 0;
             }
           else if (pRefAb->AbBox)
             {
               // refer another box
               pRefBox = pRefAb->AbBox;
-              lr = pRefBox->BxLMargin + pRefBox->BxLBorder;
-              tr =  pRefBox->BxTMargin + pRefBox->BxTBorder;
-              rr = pRefBox->BxRMargin + pRefBox->BxRBorder;
-              br =  pRefBox->BxBMargin + pRefBox->BxBBorder;
-              w = pRefBox->BxLPadding + pRefBox->BxRPadding + pRefBox->BxW;
-              h = pRefBox->BxTPadding + pRefBox->BxBPadding + pRefBox->BxH;
-              x = pRefBox->BxXOrg;
-              y = pRefBox->BxYOrg;
+              while (pRefBox &&
+                     (pRefBox->BxType == BoGhost ||
+                      pRefBox->BxType == BoFloatGhost))
+                {
+                  /* ignore ghosts */
+                  pRefAb = pRefAb->AbFirstEnclosed;
+                  pRefBox = pRefAb->AbBox;
+                }
+              if (pRefBox &&
+                  (pRefBox->BxType == BoSplit ||
+                   pRefBox->BxType == BoMulScript))
+                pRefBox = pRefBox->BxNexChild;
+              if (pRefBox)
+                {
+                  lr = pRefBox->BxLMargin + pRefBox->BxLBorder;
+                  tr =  pRefBox->BxTMargin + pRefBox->BxTBorder;
+                  rr = pRefBox->BxRMargin + pRefBox->BxRBorder;
+                  br =  pRefBox->BxBMargin + pRefBox->BxBBorder;
+                  w = pRefBox->BxLPadding + pRefBox->BxRPadding + pRefBox->BxW;
+                  h = pRefBox->BxTPadding + pRefBox->BxBPadding + pRefBox->BxH;
+                  x = pRefBox->BxXOrg;
+                  y = pRefBox->BxYOrg;
+                }
             }
-          
           /* negative values don't apply */
           appl = appt = appr = appb = FALSE;
           l = t = r = b = 0;
@@ -1136,20 +1150,7 @@ ThotBool ComputePositioning (PtrBox pBox, int frame)
           return TRUE;
         }
       else
-        {
-          if (pos->PnAlgorithm == PnRelative &&
-              (pos->PnTopUnit == UnAuto ||
-               pos->PnTopUnit == UnUndefined) &&
-              (pos->PnBottomUnit == UnAuto ||
-               pos->PnBottomUnit == UnUndefined) &&
-              (pos->PnLeftUnit == UnAuto ||
-               pos->PnLeftUnit == UnUndefined) &&
-              (pos->PnRightUnit == UnAuto ||
-               pos->PnRightUnit == UnUndefined))
-            /* ignore this relative position */
-            pos->PnAlgorithm = PnStatic;
-          return FALSE;
-        }
+        return FALSE;
     }
   else
     //#endif /* POSITIONING */
@@ -1604,12 +1605,8 @@ void ComputePosRelation (AbPosition *rule, PtrBox pBox, int frame,
             }
           else
             {
-              /*GetSystemOrigins (pRefBox->BxAbstractBox, &sgx, &sgy);*/
-              x = pRefBox->BxXOrg/* - sgx*/;
-              y = pRefBox->BxYOrg/* - sgy*/;
-              /*GetSystemOrigins (pBox->BxAbstractBox, &sgx, &sgy);
-                x += sgx;
-                y += sgy;*/
+              x = pRefBox->BxXOrg;
+              y = pRefBox->BxYOrg;
             }
 #else /* _GL */
           x = pRefBox->BxXOrg;
@@ -1643,57 +1640,63 @@ void ComputePosRelation (AbPosition *rule, PtrBox pBox, int frame,
       switch (refEdge)
         {
         case Top:
-          if (t)
+          y += t;
+          if (!sibling && pBox->BxTMargin > 0 && pRefBox->BxTMargin > 0)
             {
-              if (pRefBox->BxTBorder + pRefBox->BxTPadding > 0)
-                y += t;
-              else if (t > pBox->BxTMargin)
-                /* collapsing margins */
-                y = y + t - pBox->BxTMargin;
+              /* ignore the smaller margin */
+              if (pBox->BxTMargin > pRefBox->BxTMargin)
+                y -= pRefBox->BxTMargin;
+              else
+                y -= pBox->BxTMargin;
+            }
+          else if (sibling && localEdge == Bottom && pBox->BxBMargin > 0)
+            {
+              /* t = 0, take the larger margin into account */
+              if (pBox->BxBMargin > pRefBox->BxTMargin)
+                y = y + pBox->BxBMargin - pRefBox->BxTMargin;
+              else
+                y = y - pBox->BxBMargin + pRefBox->BxTMargin;
             }
           break;
         case Left:
           x += l;
-          if (sibling && localEdge == Right)
+          if (sibling && localEdge == Right && pBox->BxRMargin > 0)
             {
-              /* only take the larger margin into account */
-              if (pBox->BxRMargin < pRefBox->BxLMargin)
-                x -= pBox->BxRMargin;
+              /* l = 0, take the larger margin into account */
+              if (pBox->BxRMargin > pRefBox->BxLMargin)
+                x = x + pBox->BxRMargin - pRefBox->BxLMargin;
               else
-                x -= pRefBox->BxLMargin;
+                x = x - pBox->BxRMargin + pRefBox->BxLMargin;
             }
           break;
         case Bottom:
           y = y + pRefBox->BxHeight - b;
-          if (sibling && localEdge == Top)
+          if (!sibling && pBox->BxBMargin > 0 && pRefBox->BxBMargin > 0)
             {
-              /* normally b = 0 */
-              /* only take the larger margin into account */
-              if (pBox->BxTMargin > 0 && pRefBox->BxBMargin > 0)
-                {
-                  if (pBox->BxTMargin < pRefBox->BxBMargin)
-                    y = y - pBox->BxTMargin;
-                  else
-                    y = y - pRefBox->BxBMargin;
-                }
-              else if (pBox->BxTMargin < 0 && pRefBox->BxBMargin < 0)
-                {
-                  if (pBox->BxTMargin < pRefBox->BxBMargin)
-                    y = y - pRefBox->BxBMargin;
-                  else
-                    y = y - pBox->BxTMargin;
-                }
+              /* ignore the smaller margin */
+              if (pBox->BxBMargin > pRefBox->BxBMargin)
+                y -= pRefBox->BxBMargin;
+              else
+                y -= pBox->BxBMargin;
+            }
+          else if (sibling && localEdge == Top && pBox->BxTMargin > 0)
+            {
+              /* b = 0, take the larger margin into account */
+              if (pBox->BxTMargin > pRefBox->BxBMargin)
+                y = y - pRefBox->BxBMargin;
+              else
+                y = y - pBox->BxTMargin;
             }
           break;
         case Right:
           x = x + pRefBox->BxWidth - r;
-          if (sibling && localEdge == Left)
+          if (sibling && localEdge == Left && pBox->BxLMargin > 0)
             {
-              /* only take the larger margin into account */
-              if (pBox->BxLMargin < pRefBox->BxRMargin)
-                x -= pBox->BxLMargin;
+              /* l = 0, take the larger margin into account */
+              if (pBox->BxLMargin > pRefBox->BxRMargin)
+                x = x - pRefBox->BxRMargin;
               else
-                x -= pRefBox->BxRMargin;
+                x = x - pBox->BxLMargin;
             }
           break;
         case HorizRef:
@@ -2139,29 +2142,13 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                   pParentAb = GetEnclosingViewport (pAb);
                   if (pParentAb == NULL)
                     pParentAb = ViewFrameTable[frame -1].FrAbstractBox;
-#ifdef IV
-                  if (pAb->AbPositioning->PnLeftUnit != UnAuto &&
-                      pAb->AbPositioning->PnLeftUnit != UnUndefined &&
-                      pAb->AbPositioning->PnLeftDistance != 0)
-                    {
-                      pAb->AbWidth.DimIsPosition = FALSE;
-                      pAb->AbWidth.DimAbRef = pParentAb;
-                      pAb->AbWidth.DimValue = 0;
-                      pAb->AbWidth.DimSameDimension = TRUE;
-                      pAb->AbWidth.DimUserSpecified = FALSE;
-                      return FALSE;
-                    }
-                  else
-#endif
-                    {
-                      pAb->AbWidth.DimAbRef = pParentAb;
-                      pAb->AbWidth.DimIsPosition = FALSE;
-                      pAb->AbWidth.DimValue = 0;
-                      if (pAb->AbPositioning->PnAlgorithm == PnAbsolute ||
-                          pAb->AbPositioning->PnAlgorithm == PnFixed)
-                        /* shrink does apply */
-                        pBox->BxShrink = TRUE;
-                    }
+                  pAb->AbWidth.DimAbRef = pParentAb;
+                  pAb->AbWidth.DimIsPosition = FALSE;
+                  pAb->AbWidth.DimValue = 0;
+                  if (pAb->AbPositioning->PnAlgorithm == PnAbsolute ||
+                      pAb->AbPositioning->PnAlgorithm == PnFixed)
+                    /* shrink does apply */
+                    pBox->BxShrink = TRUE;
                 }
             }
           if (!horizRef)
@@ -2416,12 +2403,21 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                   pDimAb->DimUnit = UnRelative;
                 }
             }
-
+          /* Compute the delta width that must be substract to 100% width or enclosing width */
           GetExtraMargins (pBox, NULL, &t, &b, &l, &r);
-          dx = pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding
-            + pBox->BxRMargin + pBox->BxRBorder + pBox->BxRPadding + l + r;
-          dy = pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding
-            + pBox->BxBMargin + pBox->BxBBorder + pBox->BxBPadding + t + b;
+          dx = l + r;
+          if (pBox->BxLMargin > 0)
+            dx += pBox->BxLMargin;
+          dx += pBox->BxLBorder + pBox->BxLPadding + pBox->BxRBorder + pBox->BxRPadding;
+          if (pBox->BxRMargin > 0)
+            dx += pBox->BxRMargin;
+          /* Compute the delta height that must be substract to 100% height or enclosing height */
+          dy = t + b;
+          if (pBox->BxTMargin > 0)
+            dy += pBox->BxTMargin;
+          dy += pBox->BxTBorder + pBox->BxTPadding + pBox->BxBBorder + pBox->BxBPadding;
+          if (pBox->BxBMargin > 0)
+            dy += pBox->BxBMargin;
           if (pParentAb == NULL)
             {
               /* It's the root box */

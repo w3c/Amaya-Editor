@@ -1930,7 +1930,7 @@ void DisplayBorders (PtrBox box, PtrAbstractBox pFrom, int frame,
   PtrAbstractBox      child;
   int                 color;
   int                 t, b, l, r, pos, dim;
-  int                 xFrame, yFrame, height;
+  int                 xFrame, yFrame, height, width;
 
   if (pFrom == NULL || pFrom->AbBox == NULL ||
       pFrom->AbBox->BxType == BoCell)
@@ -1951,7 +1951,12 @@ void DisplayBorders (PtrBox box, PtrAbstractBox pFrom, int frame,
   b = y + h - yFrame - height + eb + from->BxBBorder;
   if (b > from->BxBBorder)
     b = from->BxBBorder;
-  r = x + w - xFrame - box->BxWidth + er + from->BxRBorder;
+  width = box->BxWidth;
+  if (box->BxLMargin < 0)
+    width += box->BxLMargin;
+  if (box->BxRMargin < 0)
+    width -= box->BxRMargin;
+  r = x + w - xFrame - width + er + from->BxRBorder;
   if (r > from->BxRBorder)
     r = from->BxRBorder;
   if (from->BxType == BoTable)
@@ -2162,18 +2167,18 @@ void DisplayBorders (PtrBox box, PtrAbstractBox pFrom, int frame,
             dim -= b;
           /* left line */
           DrawVerticalLine (frame, 1, 5,
-                            xFrame + box->BxWidth - er - from->BxRBorder,
+                            xFrame + width - er - from->BxRBorder,
                             pos, 1, dim,
                             0, color);
           /* rigth line */
           DrawVerticalLine (frame, 1, 5,
-                            xFrame + box->BxWidth - er, y,
+                            xFrame + width - er, y,
                             1, h,
                             2, color);
           break;
         default:
           DrawVerticalLine (frame, r, pFrom->AbRightStyle,
-                            xFrame + box->BxWidth - er - from->BxRBorder, y,
+                            xFrame + width - er - from->BxRBorder, y,
                             r, h,
                             2, color);
           break;
@@ -2215,8 +2220,16 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin,
   y = ViewFrameTable[frame - 1].FrYOrg;
   xd = box->BxXOrg + box->BxLMargin + l + shiftx;
   yd = box->BxYOrg + box->BxTMargin + t + shifty;
-  width = box->BxWidth - box->BxLMargin - box->BxRMargin - l - r;
-  height = box->BxHeight - box->BxTMargin - box->BxBMargin - t - b;
+  width = box->BxWidth - l - r;
+  if (box->BxLMargin > 0)
+    width -= box->BxLMargin;
+  if (box->BxRMargin > 0)
+    width -= box->BxRMargin;
+  height = box->BxHeight - t - b;
+  if (box->BxTMargin > 0)
+    height -= box->BxTMargin;
+  if (box->BxBMargin > 0)
+    height -= box->BxBMargin;
   if (Printing)
     {
       /* clipping on the origin */

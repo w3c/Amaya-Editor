@@ -631,7 +631,9 @@ static void ManageBreakLine (PtrBox pBox, int width, int breakWidth,
 
       /* transmit width, margins, borders, and paddings */
       ibox2->BxW = pBox->BxW - width - breakWidth;
-      ibox2->BxWidth = ibox2->BxW + pBox->BxRMargin + r + pBox->BxRBorder + pBox->BxRPadding;
+      ibox2->BxWidth = ibox2->BxW + r + pBox->BxRBorder + pBox->BxRPadding;
+      if (pBox->BxRMargin > 0)
+        ibox2->BxWidth += pBox->BxRMargin;
       ibox2->BxTMargin = pBox->BxTMargin;
       ibox2->BxTBorder = pBox->BxTBorder;
       ibox2->BxTPadding = pBox->BxTPadding;
@@ -666,7 +668,9 @@ static void ManageBreakLine (PtrBox pBox, int width, int breakWidth,
 
           /* transmit widths, margins, borders, and paddings */
           ibox1->BxW = width;
-          ibox1->BxWidth = width + pBox->BxLMargin + l + pBox->BxLBorder + pBox->BxLPadding;
+          ibox1->BxWidth = width + l + pBox->BxLBorder + pBox->BxLPadding;
+          if (pBox->BxLMargin > 0)
+            ibox1->BxWidth += pBox->BxLMargin;
           ibox1->BxTMargin = pBox->BxTMargin;
           ibox1->BxTBorder = pBox->BxTBorder;
           ibox1->BxTPadding = pBox->BxTPadding;
@@ -887,7 +891,9 @@ static int SearchBreak (PtrLine pLine, PtrBox pBox, int max, SpecFont font,
   pBuffer = pBox->BxBuffer;
   /* newWidth is the width used to build lines */
   /* width is the real width of the text       */
-  newWidth = pBox->BxLMargin + l + pBox->BxLBorder + pBox->BxLPadding;
+  newWidth = l + pBox->BxLBorder + pBox->BxLPadding;
+  if (pBox->BxLMargin > 0)
+    newWidth += pBox->BxLMargin;
   width = 0;
   carWidth = 0;
   wordLength = 0;
@@ -1473,7 +1479,9 @@ static ThotBool BreakMainBox (PtrLine pLine, PtrBox pBox, int max, int l,
 
       /* transmit widths, margins, borders, and paddings */
       ibox1->BxW = width;
-      ibox1->BxWidth = width + l + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
+      ibox1->BxWidth = width + l + pBox->BxLBorder + pBox->BxLPadding;
+      if (pBox->BxLMargin > 0)
+        ibox1->BxWidth += pBox->BxLMargin;
       ibox1->BxTMargin = pBox->BxTMargin;
       ibox1->BxTBorder = pBox->BxTBorder;
       ibox1->BxTPadding = pBox->BxTPadding;
@@ -1527,7 +1535,9 @@ static ThotBool BreakMainBox (PtrLine pLine, PtrBox pBox, int max, int l,
         }
       else
         ibox2->BxW = pBox->BxW - width - lostPixels * spaceWidth;      
-      ibox2->BxWidth = ibox2->BxW + r + pBox->BxRMargin + pBox->BxRBorder + pBox->BxRPadding;
+      ibox2->BxWidth = ibox2->BxW + r + pBox->BxRBorder + pBox->BxRPadding;
+      if (pBox->BxRMargin > 0)
+        ibox2->BxWidth += pBox->BxRMargin;
       ibox2->BxTMargin = pBox->BxTMargin;
       ibox2->BxTBorder = pBox->BxTBorder;
       ibox2->BxTPadding = pBox->BxTPadding;
@@ -2810,13 +2820,17 @@ static void UpdateBlockWithFloat (int frame, PtrBox pBlock,
   else
     x = 0;
   GetExtraMargins (pBlock, NULL, &t, &b, &l, &r);
-  x += l + pBlock->BxLMargin + pBlock->BxLBorder + pBlock->BxLPadding;
+  x += l + pBlock->BxLBorder + pBlock->BxLPadding;
+  if (pBlock->BxLMargin > 0)
+    x += pBlock->BxLMargin;
   x1 = x2 = 0;
   if (yAbs)
     y = pBlock->BxYOrg;
   else
     y = 0;
-  y += t + pBlock->BxTMargin + pBlock->BxTBorder + pBlock->BxTPadding;
+  y += t + pBlock->BxTBorder + pBlock->BxTPadding;
+  if (pBlock->BxTMargin > 0)
+    y += pBlock->BxTMargin;
   extensibleblock =  pBlock->BxContentWidth;
  
   pfloat = pBlock->BxLeftFloat;
@@ -2941,20 +2955,14 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
   if (box->BxAbstractBox->AbFloat == 'L')
     {
       /* left float */
-      if (left > box->BxLMargin)
-        left -= box->BxLMargin;
-      else
-        left = -left + box->BxLMargin;
       x = left + orgX;
     }
   else
     {
       /* right float */
-      if (right > box->BxRMargin)
-        right -= box->BxRMargin;
-      else
-        right = -right + box->BxRMargin;
       x = pBlock->BxWidth - right - box->BxWidth + orgX;
+      if (box->BxLMargin < 0)
+        x -= box->BxLMargin;
     }
   if  (boxPrevL && y < boxPrevL->BxYOrg + boxPrevL->BxHeight &&
        y + box->BxHeight > boxPrevL->BxYOrg)
@@ -3251,7 +3259,12 @@ static void RemoveBreaks (PtrBox pBox, int frame, ThotBool removed,
                       pBox->BxNChars += nchar;
                       pBox->BxW = width;
                       GetExtraMargins (pBox, NULL, &t, &b, &l, &r);
-                      pBox->BxWidth = width + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding + pBox->BxRMargin + pBox->BxRBorder + pBox->BxRPadding + l + r;
+                      pBox->BxWidth = width + pBox->BxLBorder + pBox->BxLPadding
+                                      + pBox->BxRBorder + pBox->BxRPadding + l + r;
+                      if (pBox->BxLMargin > 0)
+                        pBox->BxWidth += pBox->BxLMargin;
+                      if (pBox->BxRMargin > 0)
+                        pBox->BxWidth += pBox->BxRMargin;
                       pBox->BxNSpaces += nspace;
                     }
                   /* Update the chain of leaf boxes */
@@ -3716,6 +3729,10 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
     }
 
   /* now add margins, borders and paddings to min and max widths */
+  if (pBox->BxLMargin < 0)
+    left -= pBox->BxLMargin;
+  if (pBox->BxRMargin < 0)
+    right -= pBox->BxRMargin;
   pBox->BxMinWidth += left + right;
   pBox->BxMaxWidth += left + right;
   UpdateBlockWithFloat (frame, pBox, xAbs, yAbs, TRUE, height);

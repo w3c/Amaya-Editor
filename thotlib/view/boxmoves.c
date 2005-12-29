@@ -931,8 +931,12 @@ void MoveBoxEdge (PtrBox pBox, PtrBox pSourceBox, OpRelation op, int delta,
             }
           /* Resize the box */
           GetExtraMargins (pBox, NULL, &t, &b, &l, &r);
-          l += pBox->BxLMargin +  pBox->BxLBorder +  pBox->BxLPadding;
-          r += pBox->BxRMargin + pBox->BxRBorder + pBox->BxRPadding;
+          if (pBox->BxLMargin > 0)
+            l += pBox->BxLMargin;
+          l +=  pBox->BxLBorder +  pBox->BxLPadding;
+          if (pBox->BxRMargin > 0)
+            r += pBox->BxRMargin;
+          r += pBox->BxRBorder + pBox->BxRPadding;
           delta = delta + pBox->BxWidth - pBox->BxW - l - r;
           ResizeWidth (pBox, pSourceBox, NULL, delta, 0, 0, 0, frame);
           /* restore the fixed edge */
@@ -988,8 +992,12 @@ void MoveBoxEdge (PtrBox pBox, PtrBox pSourceBox, OpRelation op, int delta,
             }
           /* Resize the box */
           GetExtraMargins (pBox, NULL, &t, &b, &l, &r);
-          t += pBox->BxTMargin +  pBox->BxTBorder +  pBox->BxTPadding;
-          b += pBox->BxBMargin + pBox->BxBBorder + pBox->BxBPadding;
+          if (pBox->BxTMargin > 0)
+            t += pBox->BxTMargin;
+          t +=  pBox->BxTBorder +  pBox->BxTPadding;
+          if (pBox->BxBMargin > 0)
+            b += pBox->BxBMargin;
+          b += pBox->BxBBorder + pBox->BxBPadding;
           delta = delta + pBox->BxHeight - pBox->BxH - t - b;
           ResizeHeight (pBox, pSourceBox, NULL, delta, 0, 0, frame);
           /* restore the fixed edge */
@@ -1017,8 +1025,7 @@ void CoordinateSystemUpdate (PtrAbstractBox pAb, int frame, int x, int y)
   /* est-ce un systeme de coordonnee ?*/
   doc = FrameTable[frame].FrDoc;
   TtaReplaceTransform ((Element) pAb->AbElement, 
-                       TtaNewBoxTransformTranslate ((float) x, 
-                                                    (float) y),
+                       TtaNewBoxTransformTranslate ((float) x, (float) y),
                        doc);
 #endif /* _GL */
 }
@@ -1047,8 +1054,6 @@ void XMoveAllEnclosed (PtrBox pBox, int delta, int frame)
         /* change the hierarchy */
         PackBoxRoot = pBox;
 
-      //if (!strcmp(pBox->BxAbstractBox->AbElement->ElLabel, "L36"))
-      //printf ("XMove x=%d delta=%d\n", pBox->BxXOrg, delta);
       if (pBox->BxType == BoSplit ||
           pBox->BxType == BoMulScript)
         {
@@ -1906,8 +1911,12 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
   GetExtraMargins (pBox, NULL, &i, &j, &extraL, &extraR);
   if (!pCurrentAb->AbMBPChange && delta)
     {
-      extraL += pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
-      extraR += pBox->BxRMargin + pBox->BxRBorder + pBox->BxRPadding;
+      if (pBox->BxLMargin > 0)
+        extraL += pBox->BxLMargin;
+      extraL += pBox->BxLBorder + pBox->BxLPadding;
+      if (pBox->BxRMargin > 0)
+        extraR += pBox->BxRMargin;
+      extraR += pBox->BxRBorder + pBox->BxRPadding;
       diff = pBox->BxW + extraL + extraR - pBox->BxWidth;
     }
   else
@@ -1946,6 +1955,9 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
                       pCurrentAb->AbEnclosing->AbBox->BxType != BoBlock &&
                       pCurrentAb->AbEnclosing->AbBox->BxType != BoFloatBlock);
 	  
+          //if (pCurrentAb->AbWidth.DimUnit == UnPercent)
+          //  printf("ResizeWidth %s %d + %d\n", pCurrentAb->AbElement->ElLabel, pBox->BxW, delta);
+
           /* check positionning constraints */
           if (!toMove ||
               pCurrentAb->AbFloat == 'L' ||
@@ -2232,11 +2244,17 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
                       if (pDimRel->DimROp[i] == OpSame)
                         {
                           /* Changing the width */
-                          if (box->BxType == BoCell)
-                            // transmit the column width to table cells
-                            val = pBox->BxW - box->BxW
-                              - box->BxLMargin - box->BxLBorder - box->BxLPadding
-                              - box->BxRMargin - box->BxRBorder - box->BxRPadding;
+                          if (box->BxType == BoCell ||
+                              (pAb->AbWidth.DimUnit == UnPercent && pAb->AbWidth.DimValue == 100))
+                            {
+                              // transmit the column width to table cells
+                              val = pBox->BxW - box->BxW;
+                              if (box->BxLMargin > 0)
+                                val -= box->BxLMargin;
+                              if (box->BxRMargin > 0)
+                                val -= box->BxRMargin;
+                              val = val - box->BxLBorder - box->BxLPadding - box->BxRBorder - box->BxRPadding;
+                            }
                           else if (pBox->BxType == BoCell && pAb->AbPresentationBox)
                             // transmit the cell width to cellframe
                             val = pBox->BxW + pBox->BxLPadding + pBox->BxRPadding - box->BxW;
@@ -2431,8 +2449,12 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
   GetExtraMargins (pBox, NULL, &extraT, &extraB, &i, &j);
   if (!pCurrentAb->AbMBPChange && delta)
     {
-      extraT += pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding;
-      extraB += pBox->BxBMargin + pBox->BxBBorder + pBox->BxBPadding;
+      if (pBox->BxTMargin > 0)
+        extraT += pBox->BxTMargin;
+      extraT += pBox->BxTBorder + pBox->BxTPadding;
+      if (pBox->BxBMargin > 0)
+        extraB += pBox->BxBMargin;
+      extraB += pBox->BxBBorder + pBox->BxBPadding;
       diff = pBox->BxH + extraT + extraB - pBox->BxHeight;
     }
   else
@@ -2965,7 +2987,8 @@ void XMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
     return;
   else
     pCurrentAb = pBox->BxAbstractBox;
-  if (delta != 0 && pCurrentAb && !IsDead (pCurrentAb))
+
+ if (delta != 0 && pCurrentAb && !IsDead (pCurrentAb))
     {
       /* check if the box is in the history of moved boxes */
       if (pFromBox != NULL)
@@ -3421,6 +3444,7 @@ void WidthPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
   pBox = pAb->AbBox;
   if (pBox == NULL)
     return;
+
   pDimAb = &pAb->AbWidth;
   if (pBox->BxType == BoBlock || pBox->BxType == BoFloatBlock)
     /* don't pack a block or a cell but transmit to enclosing box */

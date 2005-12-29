@@ -247,8 +247,7 @@ void DefBoxRegion (int frame, PtrBox pBox, int xstart, int xstop,
           if (pBox->BxLMargin < 0)
             x1 += pBox->BxLMargin;
           x2 += pBox->BxWidth;
-          if (pBox->BxAbstractBox &&
-              pBox->BxAbstractBox->AbLeafType == LtText)
+          if (pBox->BxAbstractBox && pBox->BxAbstractBox->AbLeafType == LtText)
             x2 += 2;
         }
       else
@@ -576,7 +575,15 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
           xd = pParent->AbBox->BxXOrg + l;
           yd = pParent->AbBox->BxYOrg + t;
           width = pParent->AbBox->BxWidth - l - r;
+          if (pParent->AbBox->BxLMargin < 0)
+            width -= pParent->AbBox->BxLMargin;
+          if (pParent->AbBox->BxRMargin < 0)
+            width -= pParent->AbBox->BxRMargin;
           height = pParent->AbBox->BxHeight - t - b;
+          if (pParent->AbBox->BxTMargin < 0)
+            height -= pParent->AbBox->BxTMargin;
+          if (pParent->AbBox->BxBMargin < 0)
+            height -= pParent->AbBox->BxBMargin;
         }
     }
   else
@@ -594,9 +601,18 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
       /* the default area to be painted with the background */
       xd = pBox->BxXOrg + l;
       yd = pBox->BxYOrg + t;
-      width = pBox->BxWidth - l - r;
-      height = pBox->BxHeight - t - b;
+      width = pBox->BxWidth;
+      if (l > 0)
+        width -= l;
+      if (r > 0)
+        width -= r;
+      height = pBox->BxHeight;
+      if (t > 0)
+        height -= t;
+      if (b > 0)
+        height -= b;
     }
+
   /* clipping on the origin */
   if (xd < x)
     {
@@ -679,6 +695,10 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
           yd = pBox->BxYOrg + t;
           width = pBox->BxWidth - l - r;
           height = pBox->BxHeight - t - b;
+          if (pBox->BxLMargin < 0)
+            xd += pBox->BxLMargin;
+          if (pBox->BxTMargin < 0)
+            yd += pBox->BxTMargin;
           /* clipping on the origin */
           if (xd < x)
             {
@@ -697,7 +717,7 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
           if (yd + height > ymax)
             height = ymax - yd + 1;
         }
-      
+
       imageDesc = (ThotPictInfo *) pFrom->AbPictBackground;
       if (pFrom->AbSelected)
         {

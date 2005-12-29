@@ -946,8 +946,14 @@ PtrBox SplitForScript (PtrBox box, PtrAbstractBox pAb, char script, int lg,
   pMainBox = ViewFrameTable[frame - 1].FrAbstractBox->AbBox;
   if (box->BxType == BoComplete)
     {
-      l = box->BxLMargin + box->BxLBorder + box->BxLPadding;
-      v = box->BxTMargin + box->BxTBorder + box->BxTPadding + box->BxBMargin + box->BxBBorder + box->BxBPadding;
+      l = box->BxLBorder + box->BxLPadding;
+      if (box->BxLMargin > 0)
+        l += box->BxLMargin;
+      v = box->BxTBorder + box->BxTPadding + box->BxBBorder + box->BxBPadding;
+      if (box->BxLMargin > 0)
+        v += box->BxTMargin;
+      if (box->BxBMargin > 0)
+        v += box->BxBMargin;
       /* Update the main box */
       box->BxType = BoMulScript;
       ibox1 = GetBox (pAb);
@@ -1041,8 +1047,14 @@ PtrBox SplitForScript (PtrBox box, PtrAbstractBox pAb, char script, int lg,
   else
     {
       ibox1 = pAb->AbBox;
-      l = ibox1->BxLMargin + ibox1->BxLBorder + ibox1->BxLPadding;
-      v = ibox1->BxTMargin + ibox1->BxTBorder + ibox1->BxTPadding + ibox1->BxBMargin + ibox1->BxBBorder + ibox1->BxBPadding;
+      l = ibox1->BxLBorder + ibox1->BxLPadding;
+      if (ibox1->BxLMargin > 0)
+        l += ibox1->BxLMargin;
+      v = ibox1->BxTBorder + ibox1->BxTPadding + ibox1->BxBBorder + ibox1->BxBPadding;
+      if (ibox1->BxLMargin > 0)
+        v += ibox1->BxTMargin;
+      if (ibox1->BxBMargin > 0)
+        v += ibox1->BxBMargin;
       /* Initialize the second piece */
       ibox2 = GetBox (pAb);
       ibox2->BxType = BoScript;
@@ -1204,13 +1216,20 @@ static void GiveTextSize (PtrAbstractBox pAb, int frame, int *width,
           else if (box->BxType == BoScript)
             {
               box->BxW = bwidth;
-              l = box->BxLMargin + box->BxLBorder + box->BxLPadding;
+              l = box->BxLBorder + box->BxLPadding;
+              if (box->BxLMargin > 0)
+                l += box->BxLMargin;
               box->BxWidth = bwidth + l;
               box->BxNChars = lg;
               box->BxNSpaces = spaces;
               box->BxScript = script;
               box->BxH = BoxFontHeight (font, script);
-              box->BxHeight = box->BxH + box->BxTMargin + box->BxTBorder + box->BxTPadding + box->BxBMargin + box->BxBBorder + box->BxBPadding;
+              box->BxHeight = box->BxH + box->BxTBorder + box->BxTPadding
+                              + box->BxBBorder + box->BxBPadding;
+              if (box->BxTMargin > 0)
+                box->BxHeight += box->BxTMargin;
+              if (box->BxBMargin > 0)
+                box->BxHeight += box->BxBMargin;
             }
         }
     }
@@ -1285,8 +1304,12 @@ void GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width,
               /* it's an extensible line */
               pBox->BxW = pBox->BxMaxWidth;
               GetExtraMargins (pBox, NULL, &t, &b, &l, &r);
-              l += pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
-              r += pBox->BxRMargin + pBox->BxRBorder + pBox->BxRPadding;
+              l += pBox->BxLBorder + pBox->BxLPadding;
+              if (pBox->BxLMargin > 0)
+                l += pBox->BxLMargin;
+              r += pBox->BxRBorder + pBox->BxRPadding;
+              if (pBox->BxRMargin > 0)
+                r += pBox->BxRMargin;
               pBox->BxWidth = pBox->BxW + l + r;
               /* make sure this update is taken into account */
               DefBoxRegion (frame, pBox, -1, -1, -1, -1);
@@ -1298,8 +1321,7 @@ void GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width,
     {
       /* It's a geometrical composition */
       /* Initially the inside left and the inside right are the equal */
-      x = pBox->BxXOrg + pBox->BxLMargin +
-        pBox->BxLBorder + pBox->BxLPadding;
+      x = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
       *width = x;
       /* Initially the inside top and the inside bottom are the equal */
       y = pBox->BxYOrg + pBox->BxTMargin +
@@ -1737,7 +1759,7 @@ static void TransmitMBP (PtrBox pBox, PtrBox pRefBox, int frame,
 ThotBool CheckMBP (PtrAbstractBox pAb, PtrBox pBox, int frame, ThotBool evalAuto)
 {
   PtrAbstractBox      pParent;
-  int                 lt, rb;
+  int                 lt, rb, delta;
   ThotBool            inLine, inLineFloat;
 
   /* update vertical margins, borders and paddings */
@@ -1765,8 +1787,15 @@ ThotBool CheckMBP (PtrAbstractBox pAb, PtrBox pBox, int frame, ThotBool evalAuto
   else if (lt != 0 || rb != 0)
     {
       if (pAb->AbHeight.DimIsPosition || pAb->AbHeight.DimAbRef)
-        /* the outside height is constrained */
-        ResizeHeight (pBox, pBox, NULL, -lt -rb, lt, rb, frame);
+        {
+          /* the outside height is constrained */
+          delta = -lt -rb;
+          if (pBox->BxTMargin < 0)
+            delta -= pBox->BxTMargin;
+          if (pBox->BxBMargin < 0)
+            delta -= pBox->BxBMargin;
+          ResizeHeight (pBox, pBox, NULL, delta, lt, rb, frame);
+        }
       else
         /* the inside height is constrained */
         ResizeHeight (pBox, pBox, NULL, 0, lt, rb, frame);
@@ -1787,8 +1816,15 @@ ThotBool CheckMBP (PtrAbstractBox pAb, PtrBox pBox, int frame, ThotBool evalAuto
       /* not already updated by the table formatter */
       if (pAb->AbWidth.DimIsPosition || pAb->AbWidth.DimAbRef ||
           (pAb->AbWidth.DimValue == 100 && pAb->AbWidth.DimUnit == UnPercent))
-        /* the outside width is constrained */
-        ResizeWidth (pBox, pBox, NULL, -lt -rb, lt, rb, 0, frame);
+        {
+          /* the outside width is constrained */
+          delta = -lt -rb;
+          if (pBox->BxLMargin < 0)
+            delta -= pBox->BxLMargin;
+          if (pBox->BxRMargin < 0)
+            delta -= pBox->BxRMargin;
+          ResizeWidth (pBox, pBox, NULL, delta, lt, rb, 0, frame);
+        }
       else
         /* the inside width is constrained */
         ResizeWidth (pBox, pBox, NULL, 0, lt, rb, 0, frame);
@@ -2613,10 +2649,8 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
         UpdateColumnWidth (pAb, NULL, frame);
     }
 #ifdef _GL
-  pBox->BxClipX = pBox->BxXOrg + pBox->BxLMargin 
-    + pBox->BxLBorder + pBox->BxLPadding;
-  pBox->BxClipY = pBox->BxYOrg + pBox->BxTMargin 
-    + pBox->BxTBorder + pBox->BxTPadding;
+  pBox->BxClipX = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
+  pBox->BxClipY = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding;
   pBox->BxClipW = pBox->BxWidth;
   pBox->BxClipH = pBox->BxHeight;
 #endif /* _GL */
@@ -4958,8 +4992,6 @@ void CheckScrollingWidth (int frame)
           pBox = pAb->AbBox;
           max = pBox->BxWidth;
           org = pBox->BxXOrg;
-          if (pBox->BxLMargin < 0)
-            org += pBox->BxLMargin;
           if (!pBox->BxContentWidth)
             {
               /* take the first leaf box */
@@ -4973,21 +5005,12 @@ void CheckScrollingWidth (int frame)
                     {
                       if (pBox->BxClipX + pBox->BxClipW > max)
                         max = pBox->BxClipX + pBox->BxClipW;
-                      if (pBox->BxClipX < org &&
-                          pBox->BxAbstractBox && pBox->BxAbstractBox->AbIndent >= 0)
-                        org = pBox->BxClipX;
                     }
                   else
 #endif /*  _GL */
                     {
                       if (pBox->BxXOrg + pBox->BxWidth > max)
                         max = pBox->BxXOrg + pBox->BxWidth;
-                      if (pBox->BxXOrg < org &&
-                          pBox->BxAbstractBox && pBox->BxAbstractBox->AbIndent >= 0)
-                        org = pBox->BxXOrg;
-                      if (pBox->BxXOrg + pBox->BxLMargin < org &&
-                          pBox->BxAbstractBox && pBox->BxAbstractBox->AbIndent >= 0)
-                      org = pBox->BxXOrg + pBox->BxLMargin;
                     }
                   if (pBox->BxNext == box)
                     printf ("Cycle\n");
