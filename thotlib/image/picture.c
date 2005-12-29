@@ -1369,7 +1369,7 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
     }
   
   if ((picPresent == ReScale || picPresent == RealSize) &&
-      pAb->AbLeafType != LtCompound)
+      pAb->AbLeafType == LtPicture && imageDesc == (ThotPictInfo *)(pAb->AbPictInfo))
     {
 #ifdef _GL
       GL_TextureMap (imageDesc, xFrame, yFrame, w, h, frame);
@@ -2473,7 +2473,7 @@ void LoadPicture (int frame, PtrBox box, ThotPictInfo *imageDesc)
     return;
   pres = DefaultPres;
   GetPictureFileName (imageDesc->PicFileName, fileName);
-  zoom = ViewFrameTable[frame - 1].FrMagnification;
+  zoom = 0/*ViewFrameTable[frame - 1].FrMagnification*/;
 
 #ifdef _NOSHARELIST
   /* For the Sync Image*/
@@ -2783,7 +2783,7 @@ void LoadPicture (int frame, PtrBox box, ThotPictInfo *imageDesc)
     return;
 
   GetPictureFileName (imageDesc->PicFileName, fileName);
-  zoom = ViewFrameTable[frame - 1].FrMagnification;
+  zoom = 0/*ViewFrameTable[frame - 1].FrMagnification*/;
   typeImage = imageDesc->PicType;
   if (typeImage >= InlineHandlers)
     return;
@@ -2886,7 +2886,7 @@ void LoadPicture (int frame, PtrBox box, ThotPictInfo *imageDesc)
                                                                  (void *)Bgcolor,
                                                                  (void *)&width,
                                                                  (void *)&height,
-                                                                 (void *)ViewFrameTable[frame - 1].FrMagnification);
+                                                                 NULL/*ViewFrameTable[frame - 1].FrMagnification*/);
 #endif /* _WINGUI */
 #ifdef _GTK
       if (typeImage == eps_type)
@@ -2900,7 +2900,7 @@ void LoadPicture (int frame, PtrBox box, ThotPictInfo *imageDesc)
                                                                                 (void *)Bgcolor,
                                                                                 (void *)&width,
                                                                                 (void *)&height,
-                                                                                (void *)ViewFrameTable[frame - 1].FrMagnification);
+                                                                                NULL/*ViewFrameTable[frame - 1].FrMagnification*/);
       else
         {
           /* load the picture using ImLib */
