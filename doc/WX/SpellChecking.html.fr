@@ -4,8 +4,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Vérifier l'orthographe</title>
-  <meta name="GENERATOR" content="amaya 9.1, see http://www.w3.org/Amaya/" />
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 9.3, see http://www.w3.org/Amaya/" />
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -78,10 +78,18 @@ choisir les paramètres de correction :</p>
 
 <h3>Corriger un document</h3>
 
+<p>Avant de lancer la correction orthographique, assurez-vous que la
+sélection courante est dans le document que vous voulez corriger. Le
+correcteur distingue la vue source de la vue formatée. Si la sélection est
+dans la vue source, tout le balisage sera pris en compte dans la correction.
+Si la sélection est dans la vue formatée, seul le contenu du document sera
+traité.</p>
+
 <p>Pour démarrer la correction, cliquez sur le bouton
 <strong>Chercher/Suivant</strong> en bas de la boîte de dialogue. Si une
 erreur est trouvée, le mot incorrect est sélectionné dans le document. Si
-aucune erreur n'est détectée, le message "Fin de correction" s'affiche.</p>
+aucune erreur n'est détectée, le message "Fin de correction" s'affiche dans
+la boîte de dialogue.</p>
 
 <p>Lorsqu'un mot incorrect est détecté, vous pouvez utiliser un des boutons
 placés en bas de la boîte de dialogue afin d'exécuter l'une des opérations
