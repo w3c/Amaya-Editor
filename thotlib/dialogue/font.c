@@ -103,7 +103,7 @@ static void *GL_LoadFont (char alphabet, int family, int highlight, int size)
 
   if (GetFontFilename (alphabet, family, highlight, size, filename))
     {
-      printf ("load %s size=%d font=%d\n",filename, size, FirstFreeFont);
+      //  printf ("load %s size=%d font=%d\n",filename, size, FirstFreeFont);
       return (gl_font_init (filename, alphabet, size));
     }
   return NULL;
@@ -2586,7 +2586,7 @@ void ThotFreeFont (int frame)
 #endif /* _GL */
               if (doIt)
                 {
-                  printf ("ThotFreeFont frame=%d font=%d\n", frame, i);
+                  //printf ("ThotFreeFont frame=%d font=%d\n", frame, i);
                   FreeAFont (i);
                   TtFontMask[i] = 0;
                 }
