@@ -6108,9 +6108,14 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
           /* it's an attribute */
           if (xmlType == XML_TYPE)
             {
-              attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
+              if (ctxt->schema)
+                attrType.AttrSSchema = ctxt->schema;
+              else
+                attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
               TtaGetXmlAttributeType (attrs[i], &attrType, doc);
               att = attrType.AttrTypeNum;
+              if (ctxt->schema == NULL)
+                ctxt->schema = attrType.AttrSSchema;
             }
           else
             {
@@ -6118,13 +6123,15 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
               if (ctxt->schema == NULL && att != 0)
                 ctxt->schema = TtaGetDocumentSSchema (doc);
             }
-          if (att == 0)
-            /* Attribute name not found: Search in the list of all loaded
-               schemas */
+          if (att == 0 && ctxt->schema == NULL)
+            /* Attribute name not found: Search in the list of all schemas
+               loaded for this document */
             {
               attrType.AttrSSchema = NULL;
               TtaGetXmlAttributeType (attrs[i], &attrType, doc);
               att = attrType.AttrTypeNum;
+              if (att)
+                ctxt->schema = attrType.AttrSSchema;
             }
           if (att == DummyAttribute && !strcmp (schemaName, "HTML"))
             /* it's the "type" attribute for an "input" element. In the tree
