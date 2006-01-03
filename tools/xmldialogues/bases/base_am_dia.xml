@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base version="96">
+<base version="98">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
@@ -36,7 +36,7 @@
 	<message xml:lang="es">Context</message>
 	<message xml:lang="pt">Context</message>
 	<message xml:lang="fi">Context</message>
-	<message xml:lang="ru">Context</message>
+	<message xml:lang="ru">«Контекст»</message>
 	<message xml:lang="hu">Context</message>
 	<message xml:lang="ka">კონტექსტი</message>
 </label>
@@ -796,7 +796,7 @@
 	<message xml:lang="fi">Chinese (GB-2312)</message>
 	<message xml:lang="tr">Chinese (GB-2312)</message>
 	<message xml:lang="de">Chinese vereinfacht (GB-2312)</message>
-	<message xml:lang="ru">Упрощанный китаец (GB-2312)</message>
+	<message xml:lang="ru">Chinese (GB-2312)</message>
 	<message xml:lang="hu">Chinese (GB-2312)</message>
 	<message xml:lang="ka">Chinese (GB-2312)</message>
 </label>
@@ -1075,6 +1075,7 @@
 	<message xml:lang="es">Ir a</message>
 	<message xml:lang="hu">Ugrás</message>
 	<message xml:lang="ka">გადასვლა</message>
+	<message xml:lang="ru">Переход</message>
 </label>
 <label define="BParentElement">
 	<message xml:lang="en">Parent element</message>
@@ -1084,6 +1085,7 @@
 	<message xml:lang="es">Elemento padre</message>
 	<message xml:lang="hu">Elődelem</message>
 	<message xml:lang="ka">ძირეული ელემენტზე</message>
+	<message xml:lang="ru">Родительский элемент</message>
 </label>
 <label define="BChildElement">
 	<message xml:lang="en">First child</message>
@@ -1093,6 +1095,7 @@
 	<message xml:lang="es">Primer hijo</message>
 	<message xml:lang="hu">Első utód</message>
 	<message xml:lang="ka">პირველ ქვეელემენტზე</message>
+	<message xml:lang="ru">Первый потомок</message>
 </label>
 <label define="BPreviousElement">
 	<message xml:lang="en">Previous element</message>
@@ -1102,6 +1105,7 @@
 	<message xml:lang="es">Elemento anterior</message>
 	<message xml:lang="hu">Előző elem</message>
 	<message xml:lang="ka">წინა ელემენტზე</message>
+	<message xml:lang="ru">Предыдущий элемент</message>
 </label>
 <label define="BNextElement">
 	<message xml:lang="en">Next element</message>
@@ -1111,6 +1115,7 @@
 	<message xml:lang="es">Siguiente elemento</message>
 	<message xml:lang="hu">Következő elem</message>
 	<message xml:lang="ka">შემდეგ ელემენტზე</message>
+	<message xml:lang="ru">Следующий элемент</message>
 </label>
 <label define="BConfigure">
 	<message xml:lang="en">&amp;Preferences</message>
@@ -1379,7 +1384,7 @@
 	<message xml:lang="es">Lista no ordenada (ul)</message>
 	<message xml:lang="pt">Lista com bolinhas (ul)</message>
 	<message xml:lang="fi">Pistein erotettu luettelo (ul)</message>
-	<message xml:lang="ru">Маркированный список (ul)</message>
+	<message xml:lang="ru">Маркированный список &lt;ul></message>
 	<message xml:lang="hu">Listajeles lista (ul)</message>
 	<message xml:lang="ka">ნიშნებით (ul)</message>
 </label>
@@ -1392,7 +1397,7 @@
 	<message xml:lang="es">Lista ordenada (ol)</message>
 	<message xml:lang="pt">Lista numerada (ol)</message>
 	<message xml:lang="fi">Numeroitu luettelo (ol)</message>
-	<message xml:lang="ru">Нумерованный список (ol)</message>
+	<message xml:lang="ru">Нумерованный список &lt;ol></message>
 	<message xml:lang="hu">Számozott lista (ol)</message>
 	<message xml:lang="ka">გადანომვრა (ol)</message>
 </label>
@@ -1405,7 +1410,7 @@
 	<message xml:lang="es">Lista de definición (dl)</message>
 	<message xml:lang="pt">Lista de Definição (dl)</message>
 	<message xml:lang="fi">Määrittelyluettelo (dl)</message>
-	<message xml:lang="ru">Список определения (dl)</message>
+	<message xml:lang="ru">Список определений &lt;dl></message>
 	<message xml:lang="hu">Meghatározás lista (dl)</message>
 	<message xml:lang="ka">განსაზღვრებებით (dl)</message>
 </label>
@@ -1418,7 +1423,7 @@
 	<message xml:lang="es">Término (dt)</message>
 	<message xml:lang="pt">Termo (dt)</message>
 	<message xml:lang="fi">Lopetus (dt)</message>
-	<message xml:lang="ru">Термин определения (dt)</message>
+	<message xml:lang="ru">Термин &lt;dt></message>
 	<message xml:lang="hu">Szócikk (dt)</message>
 	<message xml:lang="ka">ტერმინი (dt)</message>
 </label>
@@ -1431,7 +1436,7 @@
 	<message xml:lang="es">Definición (dd)</message>
 	<message xml:lang="pt">Definição (dd)</message>
 	<message xml:lang="fi">Määrittely (dd)</message>
-	<message xml:lang="ru">Описание определения (dd)</message>
+	<message xml:lang="ru">Определение &lt;dd></message>
 	<message xml:lang="hu">Meghatározás (dd)</message>
 	<message xml:lang="ka">განსაზღვრება (dd)</message>
 </label>
@@ -1444,7 +1449,7 @@
 	<message xml:lang="es">Formulario</message>
 	<message xml:lang="pt">Formulário</message>
 	<message xml:lang="fi">Lomake</message>
-	<message xml:lang="ru">Форма-Form</message>
+	<message xml:lang="ru">Форма &lt;form></message>
 	<message xml:lang="hu">&amp;Űrlap</message>
 	<message xml:lang="ka">ფორმა</message>
 </label>
@@ -1470,7 +1475,7 @@
 	<message xml:lang="pt">Botão (input)</message>
 	<message xml:lang="fi">Painike (input)</message>
 	<message xml:lang="tr">Düğme (giriş = input)</message>
-	<message xml:lang="ru">Кнопка-Button (input)</message>
+	<message xml:lang="ru">Кнопка &lt;input type="button"></message>
 	<message xml:lang="hu">Gomb (input)</message>
 	<message xml:lang="ka">ღილაკი (input)</message>
 </label>
@@ -1483,7 +1488,7 @@
 	<message xml:lang="es">Casilla de verificación (checkbox input)</message>
 	<message xml:lang="pt">Caixa de verificação (Checkbox) (input)</message>
 	<message xml:lang="fi">Valintalaatikko (input)</message>
-	<message xml:lang="ru">Переключатель-Checkbox (input)</message>
+	<message xml:lang="ru">Переключатель &lt;input type="checkbox"></message>
 	<message xml:lang="hu">Jelölőnégyzet (input)</message>
 	<message xml:lang="ka">ჩამრთველი (input)</message>
 </label>
@@ -1496,7 +1501,7 @@
 	<message xml:lang="pt">Seletor de arquivo (input)</message>
 	<message xml:lang="fi">Tiedosto valikko (input)</message>
 	<message xml:lang="tr">Dosya seçili (input)</message>
-	<message xml:lang="ru">Переключатель файлов (input)</message>
+	<message xml:lang="ru">Выбор файла &lt;input type="file"></message>
 	<message xml:lang="hu">Fájlválasztó (input)</message>
 	<message xml:lang="ka">ფაილების არჩევა (input)</message>
 </label>
@@ -1509,7 +1514,7 @@
 	<message xml:lang="pt">Oculto (input)</message>
 	<message xml:lang="fi">Piilotettu (input)</message>
 	<message xml:lang="tr">Gizli (input)</message>
-	<message xml:lang="ru">Скрытый-Hidden (input)</message>
+	<message xml:lang="ru">Скрытый &lt;input type="hidden"></message>
 	<message xml:lang="hu">Rejtett (input)</message>
 	<message xml:lang="ka">ფარული (input)</message>
 </label>
@@ -1522,7 +1527,7 @@
 	<message xml:lang="es">Imagen (image input)...</message>
 	<message xml:lang="pt">Imagem (input)...</message>
 	<message xml:lang="fi">Kuva (input)...</message>
-	<message xml:lang="ru">Изображение (input)...</message>
+	<message xml:lang="ru">Изображение &lt;input type="img">...</message>
 	<message xml:lang="hu">Kép (input)...</message>
 	<message xml:lang="ka">გამოსახულება (input)...</message>
 </label>
@@ -1535,7 +1540,7 @@
 	<message xml:lang="pt">Senha (password) (input)</message>
 	<message xml:lang="fi">Salasana (input)</message>
 	<message xml:lang="tr">şifre(input)(sifre)</message>
-	<message xml:lang="ru">Пароль (input)</message>
+	<message xml:lang="ru">Пароль &lt;input type="password"></message>
 	<message xml:lang="hu">Jelszó (input)</message>
 	<message xml:lang="ka">პაროლი (input)</message>
 </label>
@@ -1548,7 +1553,7 @@
 	<message xml:lang="es">Radio (radio input)</message>
 	<message xml:lang="pt">Botão Rádio (input)</message>
 	<message xml:lang="fi">Pyöreä valintalaatikko (input)</message>
-	<message xml:lang="ru">Переключатель-Radio (input)</message>
+	<message xml:lang="ru">Переключатель &lt;input type="radio"></message>
 	<message xml:lang="hu">Választógomb (input)</message>
 	<message xml:lang="ka">გადამრთველი (input)</message>
 </label>
@@ -1561,7 +1566,7 @@
 	<message xml:lang="es">Reset (reset input)</message>
 	<message xml:lang="pt">Reinicialização (reset) (input)</message>
 	<message xml:lang="fi">Tyhjennä (input)</message>
-	<message xml:lang="ru">Сбросить-Reset (input)</message>
+	<message xml:lang="ru">Сброс &lt;input type="Reset"></message>
 	<message xml:lang="hu">Alaphelyzet (input)</message>
 	<message xml:lang="ka">აღდგენა (input)</message>
 </label>
@@ -1574,7 +1579,7 @@
 	<message xml:lang="es">Enviar (submit input)</message>
 	<message xml:lang="pt">Submeter (input)</message>
 	<message xml:lang="fi">Lähetä (input)</message>
-	<message xml:lang="ru">Подтвердить-Submit (input)</message>
+	<message xml:lang="ru">Подтверждение &lt;input type="Submit"></message>
 	<message xml:lang="hu">Küldés (input)</message>
 	<message xml:lang="ka">დასტური (input)</message>
 </label>
@@ -1587,7 +1592,7 @@
 	<message xml:lang="es">Texto (text input)</message>
 	<message xml:lang="pt">Texto (input)</message>
 	<message xml:lang="fi">Teksti (input)</message>
-	<message xml:lang="ru">Текст (input)</message>
+	<message xml:lang="ru">Текст &lt;input></message>
 	<message xml:lang="hu">Szöveg (input)</message>
 	<message xml:lang="ka">ტექსტი (input)</message>
 </label>
@@ -1600,7 +1605,7 @@
 	<message xml:lang="es">Campos (fieldset)</message>
 	<message xml:lang="pt">Grupo de campos (fieldset)</message>
 	<message xml:lang="fi">kenttäasetus</message>
-	<message xml:lang="ru">Набор полей (fieldset)</message>
+	<message xml:lang="ru">Набор полей &lt;fieldset></message>
 	<message xml:lang="hu">Mező (fieldset)</message>
 	<message xml:lang="ka">ველების ნაკრები (fieldset)</message>
 </label>
@@ -1613,7 +1618,7 @@
 	<message xml:lang="es">Etiqueta (label)</message>
 	<message xml:lang="pt">Etiqueta (label)</message>
 	<message xml:lang="fi">nimike</message>
-	<message xml:lang="ru">Метка (label)</message>
+	<message xml:lang="ru">Метка &lt;label></message>
 	<message xml:lang="hu">Címke (label)</message>
 	<message xml:lang="ka">წარწერა (label)</message>
 </label>
@@ -1626,7 +1631,7 @@
 	<message xml:lang="es">Menú (select)</message>
 	<message xml:lang="pt">Menu (option)</message>
 	<message xml:lang="fi">Valikko (option)</message>
-	<message xml:lang="ru">Меню (option)</message>
+	<message xml:lang="ru">Меню &lt;option></message>
 	<message xml:lang="hu">Menü (option)</message>
 	<message xml:lang="ka">მენიუ (option)</message>
 </label>
@@ -1639,7 +1644,7 @@
 	<message xml:lang="pt">Submenu (optgroup)</message>
 	<message xml:lang="fi">Alavalikko (optgroup)</message>
 	<message xml:lang="tr">Alt-menü</message>
-	<message xml:lang="ru">Подменю (optgroup)</message>
+	<message xml:lang="ru">Подменю &lt;optgroup></message>
 	<message xml:lang="hu">Almenü (optgroup)</message>
 	<message xml:lang="ka">ქვემენიუ (optgroup)</message>
 </label>
@@ -1652,7 +1657,7 @@
 	<message xml:lang="es">Área de texto (textarea)</message>
 	<message xml:lang="pt">Área de texto (textarea)</message>
 	<message xml:lang="fi">tekstialue</message>
-	<message xml:lang="ru">Область ввода текста (textarea)</message>
+	<message xml:lang="ru">Область ввода текста &lt;textarea></message>
 	<message xml:lang="hu">Szövegmező (textarea)</message>
 	<message xml:lang="ka">ტექსტური არე (textarea)</message>
 </label>
@@ -1678,7 +1683,7 @@
 	<message xml:lang="es">Objeto (objet)</message>
 	<message xml:lang="pt">objeto</message>
 	<message xml:lang="fi">objekti</message>
-	<message xml:lang="ru">объект (object)</message>
+	<message xml:lang="ru">Объект &lt;object></message>
 	<message xml:lang="hu">Objektum (object)</message>
 	<message xml:lang="ka">ობიექტი (object)</message>
 </label>
@@ -1691,7 +1696,7 @@
 	<message xml:lang="es">Parámetro (param)</message>
 	<message xml:lang="pt">Parâmetro (param)</message>
 	<message xml:lang="fi">Parametri (param)</message>
-	<message xml:lang="ru">Параметр (param)</message>
+	<message xml:lang="ru">Параметр &lt;param></message>
 	<message xml:lang="hu">Paraméter (param)</message>
 	<message xml:lang="ka">პარამეტრი (param)</message>
 </label>
@@ -1717,7 +1722,7 @@
 	<message xml:lang="es">Insertar tabla (table)</message>
 	<message xml:lang="pt">tabela</message>
 	<message xml:lang="fi">taulukko</message>
-	<message xml:lang="ru">таблица (table)</message>
+	<message xml:lang="ru">Таблица &lt;table></message>
 	<message xml:lang="hu">&amp;Táblázat (table)</message>
 	<message xml:lang="ka">ცხრილი (table)</message>
 </label>
@@ -1730,7 +1735,7 @@
 	<message xml:lang="es">Leyenda (caption)</message>
 	<message xml:lang="pt">Legenda (caption)</message>
 	<message xml:lang="fi">nimike</message>
-	<message xml:lang="ru">заголовок (title)</message>
+	<message xml:lang="ru">Заголовок &lt;title></message>
 	<message xml:lang="hu">Táblázat&amp;név (caption)</message>
 	<message xml:lang="ka">სათაური (title)</message>
 </label>
@@ -1743,7 +1748,7 @@
 	<message xml:lang="es">Grupo de columnas (colgroup)</message>
 	<message xml:lang="pt">Grupo de colunas (colgroup)</message>
 	<message xml:lang="fi">pystyriviryhmä</message>
-	<message xml:lang="ru">группа столбцов (colgroup)</message>
+	<message xml:lang="ru">Группа столбцов &lt;colgroup></message>
 	<message xml:lang="hu">Oszlop&amp;csoport (colgroup)</message>
 	<message xml:lang="ka">სვეტები (colgroup)</message>
 </label>
@@ -1756,7 +1761,7 @@
 	<message xml:lang="es">Columna (col)</message>
 	<message xml:lang="pt">Coluna (col)</message>
 	<message xml:lang="fi">pystyrivi</message>
-	<message xml:lang="ru">столбец (col)</message>
+	<message xml:lang="ru">Столбец &lt;col></message>
 	<message xml:lang="hu">&amp;Oszlop (col)</message>
 	<message xml:lang="ka">სვეტი (col)</message>
 </label>
@@ -1769,7 +1774,7 @@
 	<message xml:lang="es">thead</message>
 	<message xml:lang="pt">Cabeçalho (thead)</message>
 	<message xml:lang="fi">Taulukon otsikko</message>
-	<message xml:lang="ru">голова (thead)</message>
+	<message xml:lang="ru">Верхний колонтитул &lt;thead></message>
 	<message xml:lang="hu">Táblázat&amp;fejléc (thead)</message>
 	<message xml:lang="ka">თავსართი (thead)</message>
 </label>
@@ -1782,7 +1787,7 @@
 	<message xml:lang="es">tbody</message>
 	<message xml:lang="pt">Corpo (tbody)</message>
 	<message xml:lang="fi">Taulukon sisältö</message>
-	<message xml:lang="ru">тело (tbody)</message>
+	<message xml:lang="ru">Тело таблицы &lt;tbody></message>
 	<message xml:lang="hu">Táblázat &amp;szöveg (tbody)</message>
 	<message xml:lang="ka">შიგთავსი (tbody)</message>
 </label>
@@ -1795,7 +1800,7 @@
 	<message xml:lang="es">tfoot</message>
 	<message xml:lang="pt">Rodapé (tfoot)</message>
 	<message xml:lang="fi">Taulukon alaotsikko</message>
-	<message xml:lang="ru">нижний колонтитул таблицы (tfoot)</message>
+	<message xml:lang="ru">Нижний колонтитул &lt;tfoot></message>
 	<message xml:lang="hu">Táblázat&amp;lábléc (tfoot)</message>
 	<message xml:lang="ka">ქვესართი (tfoot)</message>
 </label>
@@ -1805,7 +1810,7 @@
 	<message xml:lang="it">Cambia la cella a Data (td)</message>
 	<message xml:lang="de">Umwandeln in Datenzelle (td)</message>
 	<message xml:lang="es">Cambiar a celda de datos (td)</message>
-	<message xml:lang="ru">Изменить на ячейку данных (td)</message>
+	<message xml:lang="ru">Изменить на ячейку данных &lt;td></message>
 	<message xml:lang="hu">&amp;Adatcellává tétel (td)</message>
 	<message xml:lang="ka">შეცვლა მონაცემების უჯრით (td)</message>
 </label>
@@ -1815,7 +1820,7 @@
 	<message xml:lang="it">Cambia la cella a Intestazione (th)</message>
 	<message xml:lang="de">Umwandeln in Titelzelle (th)</message>
 	<message xml:lang="es">Cambiar a celda de cabecera (th)</message>
-	<message xml:lang="ru">Изменить на заголовок ячейки (th)</message>
+	<message xml:lang="ru">Изменить на заголовок ячейки &lt;th></message>
 	<message xml:lang="hu">&amp;Fejléccé tétel (th)</message>
 	<message xml:lang="ka">შეცვლა სათაურის უჯრით (th)</message>
 </label>
@@ -1945,7 +1950,7 @@
 	<message xml:lang="it">Area mappabile</message>
 	<message xml:lang="de">Bildbereich</message>
 	<message xml:lang="es">Área de mapa</message>
-	<message xml:lang="ru">Область карты</message>
+	<message xml:lang="ru">Область карты &lt;map></message>
 	<message xml:lang="hu">T&amp;érkép terület</message>
 	<message xml:lang="ka">რუკის არე</message>
 </label>
@@ -1955,7 +1960,7 @@
 	<message xml:lang="it">Inserisci una mappa</message>
 	<message xml:lang="de">Abbildung einfügen</message>
 	<message xml:lang="es">Insertar mapa</message>
-	<message xml:lang="ru">Вставить карту</message>
+	<message xml:lang="ru">Вставить карту &lt;map></message>
 	<message xml:lang="hu">Térkép &amp;beillesztése</message>
 	<message xml:lang="ka">რუკის ჩამატება</message>
 </label>
@@ -2007,7 +2012,7 @@
 	<message xml:lang="es">Es&amp;tructura</message>
 	<message xml:lang="pt">&amp;Estrutura</message>
 	<message xml:lang="fi">&amp;Rakenne</message>
-	<message xml:lang="ru">Структура</message>
+	<message xml:lang="ru">Структура &lt;head></message>
 	<message xml:lang="hu">&amp;Szerkezet</message>
 	<message xml:lang="ka">სტრუქტურა</message>
 </label>
@@ -2020,7 +2025,7 @@
 	<message xml:lang="es">Estilo (style)</message>
 	<message xml:lang="pt">estilo</message>
 	<message xml:lang="fi">tyyli</message>
-	<message xml:lang="ru">стиль</message>
+	<message xml:lang="ru">Стиль &lt;style></message>
 	<message xml:lang="hu">&amp;Stílus (style)</message>
 	<message xml:lang="ka">სტილი</message>
 </label>
@@ -2046,7 +2051,7 @@
 	<message xml:lang="es">base</message>
 	<message xml:lang="pt">base</message>
 	<message xml:lang="fi">perus</message>
-	<message xml:lang="ru">основа (base)</message>
+	<message xml:lang="ru">Базовый каталог &lt;base></message>
 	<message xml:lang="hu">&amp;Alap (base)</message>
 	<message xml:lang="ka">ბაზა (base)</message>
 </label>
@@ -2059,7 +2064,7 @@
 	<message xml:lang="es">meta</message>
 	<message xml:lang="pt">meta</message>
 	<message xml:lang="fi">meta</message>
-	<message xml:lang="ru">мета (meta)</message>
+	<message xml:lang="ru">Мета-информация &lt;meta></message>
 	<message xml:lang="hu">&amp;meta</message>
 	<message xml:lang="ka">მეტა (meta)</message>
 </label>
@@ -2072,7 +2077,7 @@
 	<message xml:lang="es">Enlace (link)</message>
 	<message xml:lang="pt">enlace (link)</message>
 	<message xml:lang="fi">linkki</message>
-	<message xml:lang="ru">ссылка (link)</message>
+	<message xml:lang="ru">Привязка &lt;link></message>
 	<message xml:lang="hu">&amp;Kapocs (link)</message>
 	<message xml:lang="ka">ბმა (link)</message>
 </label>
@@ -2085,7 +2090,7 @@
 	<message xml:lang="es">script</message>
 	<message xml:lang="pt">script</message>
 	<message xml:lang="fi">skripti</message>
-	<message xml:lang="ru">сценарий (script)</message>
+	<message xml:lang="ru">Сценарий &lt;script></message>
 	<message xml:lang="hu">&amp;script</message>
 	<message xml:lang="ka">სცენარი (script)</message>
 </label>
@@ -2098,7 +2103,7 @@
 	<message xml:lang="es">noscript</message>
 	<message xml:lang="pt">noscript</message>
 	<message xml:lang="fi">ei skriptiä</message>
-	<message xml:lang="ru">без сценария (noscript)</message>
+	<message xml:lang="ru">Без сценариев &lt;noscript></message>
 	<message xml:lang="hu">&amp;noscript</message>
 	<message xml:lang="ka">უსცენაროდ (noscript)</message>
 </label>
@@ -2111,7 +2116,7 @@
 	<message xml:lang="es">Párrafo (p)</message>
 	<message xml:lang="pt">Parágrafo (p)</message>
 	<message xml:lang="fi">Pykälä (p)</message>
-	<message xml:lang="ru">Параграф (p)</message>
+	<message xml:lang="ru">Параграф &lt;p></message>
 	<message xml:lang="hu">&amp;Bekezdés (p)</message>
 	<message xml:lang="ka">პარაგრაფი (p)</message>
 </label>
@@ -2124,7 +2129,7 @@
 	<message xml:lang="es">Pre-formateado (pre)</message>
 	<message xml:lang="pt">Preformatado (pre)</message>
 	<message xml:lang="fi">Valmiiksi muotoiltu (pre)</message>
-	<message xml:lang="ru">Предварительно отформатированный (pre)</message>
+	<message xml:lang="ru">Преформатированный &lt;pre></message>
 	<message xml:lang="hu">&amp;Előformázott (pre)</message>
 	<message xml:lang="ka">წინასწარ დაფორმატებული (pre)</message>
 </label>
@@ -2137,7 +2142,7 @@
 	<message xml:lang="es">Dirección (address)</message>
 	<message xml:lang="pt">endereço</message>
 	<message xml:lang="fi">osoite</message>
-	<message xml:lang="ru">адрес (address)</message>
+	<message xml:lang="ru">Адрес &lt;address></message>
 	<message xml:lang="hu">&amp;Cím (address)</message>
 	<message xml:lang="ka">მისამართი (address)</message>
 </label>
@@ -2150,7 +2155,7 @@
 	<message xml:lang="es">Línea Horizontal (hr)</message>
 	<message xml:lang="pt">Linha horizontal (hr)</message>
 	<message xml:lang="fi">Vaakaviiva (hr)</message>
-	<message xml:lang="ru">Горизонтальная линия (hr)</message>
+	<message xml:lang="ru">Горизонтальная линия &lt;hr></message>
 	<message xml:lang="hu">&amp;Vízszintes vonal (hr)</message>
 	<message xml:lang="ka">განივი ხაზი (hr)</message>
 </label>
@@ -2163,7 +2168,7 @@
 	<message xml:lang="es">Imagen (img)...</message>
 	<message xml:lang="pt">Imagem (img)...</message>
 	<message xml:lang="fi">Kuva (img)...</message>
-	<message xml:lang="ru">Изображение (img)...</message>
+	<message xml:lang="ru">Изображение &lt;img>...</message>
 	<message xml:lang="hu">&amp;Kép (img)...</message>
 	<message xml:lang="ka">გამოსახულება (img)...</message>
 </label>
@@ -2176,7 +2181,7 @@
 	<message xml:lang="es">Salto de línea (br)</message>
 	<message xml:lang="pt">Quebra de linha (br)</message>
 	<message xml:lang="fi">Rivinvaihto (br)</message>
-	<message xml:lang="ru">Разрыв (br)</message>
+	<message xml:lang="ru">Разрыв &lt;br></message>
 	<message xml:lang="hu">&amp;Sortörés (br)</message>
 	<message xml:lang="ka">წყვეტა (br)</message>
 </label>
@@ -2189,7 +2194,7 @@
 	<message xml:lang="es">División (div)</message>
 	<message xml:lang="pt">Divisão (div)</message>
 	<message xml:lang="fi">Tyhjä rivi (div)</message>
-	<message xml:lang="ru">Раздел (div)</message>
+	<message xml:lang="ru">Раздел &lt;div></message>
 	<message xml:lang="hu">Fel&amp;osztás (div)</message>
 	<message xml:lang="ka">განყოფილება (div)</message>
 </label>
@@ -2202,7 +2207,7 @@
 	<message xml:lang="es">blockquote</message>
 	<message xml:lang="pt">Citação (blockquote)</message>
 	<message xml:lang="fi">sisennetty kappale</message>
-	<message xml:lang="ru">Длинная цитата (blockquote)</message>
+	<message xml:lang="ru">Длинная цитата &lt;blockquote></message>
 	<message xml:lang="hu">&amp;Blokkidézet (blockquote)</message>
 	<message xml:lang="ka">გრძელი ციტატა (blockquote)</message>
 </label>
@@ -2215,7 +2220,7 @@
 	<message xml:lang="pt">Quadro em linha (iframe)</message>
 	<message xml:lang="fi">Sisäinen lomake (iframe)</message>
 	<message xml:lang="tr">çizgili çerçeve (iframe)</message>
-	<message xml:lang="ru">Встроенный фрейм (iframe)</message>
+	<message xml:lang="ru">Встроенный фрейм &lt;iframe></message>
 	<message xml:lang="hu">&amp;Sorbeli keret (iframe)</message>
 	<message xml:lang="ka">ჩადგმული ბლოკი (iframe)</message>
 </label>
@@ -2228,7 +2233,7 @@
 	<message xml:lang="es">ruby</message>
 	<message xml:lang="pt">rubi</message>
 	<message xml:lang="fi">ruby</message>
-	<message xml:lang="ru">рубин (ruby)</message>
+	<message xml:lang="ru">??? Рубин ??? &lt;ruby></message>
 	<message xml:lang="hu">&amp;Ruby</message>
 	<message xml:lang="ka">ლალი (ruby)</message>
 </label>
@@ -2287,7 +2292,7 @@
 	<message xml:lang="es">Tipo de Información</message>
 	<message xml:lang="pt">tipo de Informação</message>
 	<message xml:lang="fi">Tiedon tyyppi</message>
-	<message xml:lang="ru">Информационный тип</message>
+	<message xml:lang="ru">Логическое форматирование</message>
 	<message xml:lang="hu">Adat &amp;fajtája</message>
 	<message xml:lang="ka">ინფორმაციის ტიპი</message>
 </label>
@@ -2300,7 +2305,7 @@
 	<message xml:lang="es">Énfasis (em)</message>
 	<message xml:lang="pt">Ênfase (em)</message>
 	<message xml:lang="fi">Korostus (em)</message>
-	<message xml:lang="ru">Акцентирование (em)</message>
+	<message xml:lang="ru">Выделение &lt;em></message>
 	<message xml:lang="hu">&amp;Hangsúlyos (em)</message>
 	<message xml:lang="ka">აქცენტირება (em)</message>
 </label>
@@ -2313,7 +2318,7 @@
 	<message xml:lang="es">Enérgico (strong)</message>
 	<message xml:lang="pt">Forte (strong)</message>
 	<message xml:lang="fi">voimakas</message>
-	<message xml:lang="ru">строгое акцентирование (strong)</message>
+	<message xml:lang="ru">Усиление &lt;strong></message>
 	<message xml:lang="hu">&amp;Vastag (strong)</message>
 	<message xml:lang="ka">მკვეთრი აქცენტირება (strong)</message>
 </label>
@@ -2326,7 +2331,7 @@
 	<message xml:lang="es">Cita (cite)</message>
 	<message xml:lang="pt">Citação (cite)</message>
 	<message xml:lang="fi">siteeraus</message>
-	<message xml:lang="ru">цитирование (cite)</message>
+	<message xml:lang="ru">Цитата &lt;cite></message>
 	<message xml:lang="hu">&amp;Idézet (cite)</message>
 	<message xml:lang="ka">ციტირება (cite)</message>
 </label>
@@ -2339,7 +2344,7 @@
 	<message xml:lang="es">Definición (dfn)</message>
 	<message xml:lang="pt">Definição (dfn)</message>
 	<message xml:lang="fi">Määrittely (dfn)</message>
-	<message xml:lang="ru">Определение (dfn)</message>
+	<message xml:lang="ru">Определение &lt;dfn></message>
 	<message xml:lang="hu">&amp;Definíció (dfn)</message>
 	<message xml:lang="ka">განსაზღვრება (dfn)</message>
 </label>
@@ -2352,7 +2357,7 @@
 	<message xml:lang="es">Código (code)</message>
 	<message xml:lang="pt">Código (code)</message>
 	<message xml:lang="fi">koodi</message>
-	<message xml:lang="ru">код (code)</message>
+	<message xml:lang="ru">Код &lt;code></message>
 	<message xml:lang="hu">&amp;Kód (code)</message>
 	<message xml:lang="ka">კოდი (code)</message>
 </label>
@@ -2365,7 +2370,7 @@
 	<message xml:lang="es">Variable (var)</message>
 	<message xml:lang="pt">Variável (var)</message>
 	<message xml:lang="fi">Muuttuja (var)</message>
-	<message xml:lang="ru">Переменная (var)</message>
+	<message xml:lang="ru">Переменная &lt;var></message>
 	<message xml:lang="hu">&amp;Változó (var)</message>
 	<message xml:lang="ka">ცვლადი (var)</message>
 </label>
@@ -2378,7 +2383,7 @@
 	<message xml:lang="es">Ejemplo (samp)</message>
 	<message xml:lang="pt">Exemplo (samp)</message>
 	<message xml:lang="fi">Malli (samp)</message>
-	<message xml:lang="ru">Пример-шаблон (samp)</message>
+	<message xml:lang="ru">Пример вывода &lt;samp></message>
 	<message xml:lang="hu">&amp;Minta (samp)</message>
 	<message xml:lang="ka">ნიმუში (samp)</message>
 </label>
@@ -2391,7 +2396,7 @@
 	<message xml:lang="es">Teclado (kbd)</message>
 	<message xml:lang="pt">Teclado (kbd)</message>
 	<message xml:lang="fi">Näppäimistä (kbd)</message>
-	<message xml:lang="ru">Клавиатура (kbd)</message>
+	<message xml:lang="ru">Пример ввода &lt;kbd></message>
 	<message xml:lang="hu">&amp;Billentyű (kbd)</message>
 	<message xml:lang="ka">კლავიატურა (kbd)</message>
 </label>
@@ -2404,7 +2409,7 @@
 	<message xml:lang="pt">Abreviação (abbr)</message>
 	<message xml:lang="fi">Lyhenne (abbr)</message>
 	<message xml:lang="tr">kısaltmak (abbr)</message>
-	<message xml:lang="ru">Абревиатура (abbr)</message>
+	<message xml:lang="ru">Сокращение &lt;abbr></message>
 	<message xml:lang="hu">&amp;Rövidítés (abbr)</message>
 	<message xml:lang="ka">შემოკლება (abbr)</message>
 </label>
@@ -2417,7 +2422,7 @@
 	<message xml:lang="pt">Acrônimo (acronym)</message>
 	<message xml:lang="fi">kirjainsana</message>
 	<message xml:lang="tr">acronym</message>
-	<message xml:lang="ru">акроним (acronym)</message>
+	<message xml:lang="ru">Сокращение &lt;acronym></message>
 	<message xml:lang="hu">&amp;Betűszó (acronym)</message>
 	<message xml:lang="ka">აკრონიმი (acronym)</message>
 </label>
@@ -2430,7 +2435,7 @@
 	<message xml:lang="pt">Inserção (ins)</message>
 	<message xml:lang="fi">Lisäys (ins)</message>
 	<message xml:lang="tr">Araya Koy (ins)</message>
-	<message xml:lang="ru">Вставка (ins)</message>
+	<message xml:lang="ru">Добавленный текст &lt;ins></message>
 	<message xml:lang="hu">&amp;Beillesztés (ins)</message>
 	<message xml:lang="ka">ჩამატება (ins)</message>
 </label>
@@ -2443,7 +2448,7 @@
 	<message xml:lang="pt">Supressão (del)</message>
 	<message xml:lang="fi">Poisto (del)</message>
 	<message xml:lang="tr">Sil (del)</message>
-	<message xml:lang="ru">Удаление (del)</message>
+	<message xml:lang="ru">Удалённый текст &lt;del></message>
 	<message xml:lang="hu">&amp;Törlés (del)</message>
 	<message xml:lang="ka">წაშლა (del)</message>
 </label>
@@ -2456,7 +2461,7 @@
 	<message xml:lang="es">Elemento carácter</message>
 	<message xml:lang="pt">Elemento carácter</message>
 	<message xml:lang="fi">Kirjainmerkki</message>
-	<message xml:lang="ru">Символьный элемент</message>
+	<message xml:lang="ru">Физическое форматирование</message>
 	<message xml:lang="hu">&amp;Karakter &amp;elem</message>
 	<message xml:lang="ka">ასო-ნიშანი</message>
 </label>
@@ -2469,7 +2474,7 @@
 	<message xml:lang="es">Itálica (i)</message>
 	<message xml:lang="pt">Itálico (i)</message>
 	<message xml:lang="fi">Kursivoitu (i)</message>
-	<message xml:lang="ru">Курсив (i)</message>
+	<message xml:lang="ru">Курсив &lt;i></message>
 	<message xml:lang="hu">&amp;Dőlt (i)</message>
 	<message xml:lang="ka">კურსივი (i)</message>
 </label>
@@ -2482,7 +2487,7 @@
 	<message xml:lang="es">Negrita (b)</message>
 	<message xml:lang="pt">Negrito (b)</message>
 	<message xml:lang="fi">Lihavoitu (b)</message>
-	<message xml:lang="ru">Полужирный (b)</message>
+	<message xml:lang="ru">Полужирный &lt;b></message>
 	<message xml:lang="hu">&amp;Félkövér (b)</message>
 	<message xml:lang="ka">მუქი (b)</message>
 </label>
@@ -2495,7 +2500,7 @@
 	<message xml:lang="es">Teletipo (tt)</message>
 	<message xml:lang="pt">Teletipo (tt)</message>
 	<message xml:lang="fi">Teletyyppi (tt)</message>
-	<message xml:lang="ru">Телетайп (tt)</message>
+	<message xml:lang="ru">Телетайп &lt;tt></message>
 	<message xml:lang="hu">&amp;Írógép (tt)</message>
 	<message xml:lang="ka">ტელეტაიპი (tt)</message>
 </label>
@@ -2508,7 +2513,7 @@
 	<message xml:lang="es">Grande (big)</message>
 	<message xml:lang="pt">Grande (big)</message>
 	<message xml:lang="fi">iso</message>
-	<message xml:lang="ru">большой текст (big)</message>
+	<message xml:lang="ru">Увеличить &lt;big></message>
 	<message xml:lang="hu">&amp;Nagy (big)</message>
 	<message xml:lang="ka">დიდი ტექსტი (big)</message>
 </label>
@@ -2521,7 +2526,7 @@
 	<message xml:lang="es">Pequeña (small)</message>
 	<message xml:lang="pt">Pequeno (small)</message>
 	<message xml:lang="fi">pieni</message>
-	<message xml:lang="ru">малый текст (small)</message>
+	<message xml:lang="ru">Уменьшить &lt;small></message>
 	<message xml:lang="hu">&amp;Kicsi (small)</message>
 	<message xml:lang="ka">მცირე ტექსტი (small)</message>
 </label>
@@ -2534,7 +2539,7 @@
 	<message xml:lang="es">Subíndice (sub)</message>
 	<message xml:lang="pt">Índice (sub)</message>
 	<message xml:lang="fi">Alaindeksi (sub)</message>
-	<message xml:lang="ru">Нижний индекс (sub)</message>
+	<message xml:lang="ru">Нижний индекс &lt;sub></message>
 	<message xml:lang="hu">&amp;Alsó index (sub)</message>
 	<message xml:lang="ka">ქვედა ინდექსი (sub)</message>
 </label>
@@ -2547,7 +2552,7 @@
 	<message xml:lang="es">Superíndice (sup)</message>
 	<message xml:lang="pt">Expoente (sup)</message>
 	<message xml:lang="fi">Yläindeksi (sup)</message>
-	<message xml:lang="ru">Верхний индекс (sup)</message>
+	<message xml:lang="ru">Верхний индекс &lt;sup></message>
 	<message xml:lang="hu">&amp;Felső index (sup)</message>
 	<message xml:lang="ka">ზედა ინდექსი (sup)</message>
 </label>
@@ -2560,7 +2565,7 @@
 	<message xml:lang="pt">Citação (q)</message>
 	<message xml:lang="fi">Lainaus/Siteeraus (q)</message>
 	<message xml:lang="tr">Alıntılama (q)</message>
-	<message xml:lang="ru">Цитата (q)</message>
+	<message xml:lang="ru">Цитата &lt;q></message>
 	<message xml:lang="hu">&amp;Idézet (q)</message>
 	<message xml:lang="ka">ციტატა (q)</message>
 </label>
@@ -2573,7 +2578,7 @@
 	<message xml:lang="pt">Sobrepor BiDi (bdo)</message>
 	<message xml:lang="fi">BiDi syrjäyttävänä (bdo)</message>
 	<message xml:lang="tr">BiDi (bdo)</message>
-	<message xml:lang="ru">Отмена двунаправленного текста (bdo)</message>
+	<message xml:lang="ru">Отмена двунаправленного текста &lt;bdo></message>
 	<message xml:lang="hu">&amp;Kétirányúság felülbírálása (bdo)</message>
 	<message xml:lang="ka">ბუსტროფედონის გაუქმება (bdo)</message>
 </label>
@@ -2586,7 +2591,7 @@
 	<message xml:lang="es">&amp;Nueva fórmula (math)</message>
 	<message xml:lang="pt">Nova fórmula (math)</message>
 	<message xml:lang="fi">Uusi kaava (math)</message>
-	<message xml:lang="ru">Новая формула (math)</message>
+	<message xml:lang="ru">Новая формула &lt;math></message>
 	<message xml:lang="hu">Új &amp;képlet (math)</message>
 	<message xml:lang="ka">ახალი ფორმულა (math)</message>
 </label>
@@ -2609,7 +2614,7 @@
 	<message xml:lang="pt">Texto puro (mtext)</message>
 	<message xml:lang="fi">Teksti (mtext)</message>
 	<message xml:lang="tr">Düz yazı (mtext)</message>
-	<message xml:lang="ru">Простой текст (mtext)</message>
+	<message xml:lang="ru">Простой текст &lt;mtext></message>
 	<message xml:lang="hu">&amp;Közönséges szöveg (mtext)</message>
 	<message xml:lang="ka">უბრალო ტექსტი (mtext)</message>
 </label>
@@ -2622,7 +2627,7 @@
 	<message xml:lang="pt">Identificador (mi)</message>
 	<message xml:lang="fi">Tunniste (mi)</message>
 	<message xml:lang="tr">Teşhis eden (mi)</message>
-	<message xml:lang="ru">Идентификатор (mi)</message>
+	<message xml:lang="ru">Идентификатор &lt;mi></message>
 	<message xml:lang="hu">&amp;Azonosító (mi)</message>
 	<message xml:lang="ka">იდენტიფიკატორი (mi)</message>
 </label>
@@ -2635,7 +2640,7 @@
 	<message xml:lang="pt">Número (mn)</message>
 	<message xml:lang="fi">Numero (mn)</message>
 	<message xml:lang="tr">Numara (mn)</message>
-	<message xml:lang="ru">Число (mn)</message>
+	<message xml:lang="ru">Число &lt;mn></message>
 	<message xml:lang="hu">&amp;Szám (mn)</message>
 	<message xml:lang="ka">რიცხვი (mn)</message>
 </label>
@@ -2648,7 +2653,7 @@
 	<message xml:lang="pt">Operador (mo)</message>
 	<message xml:lang="fi">Operaattori (mo)</message>
 	<message xml:lang="tr">Oparatör (mo)</message>
-	<message xml:lang="ru">Оператор (mo)</message>
+	<message xml:lang="ru">Оператор &lt;mo></message>
 	<message xml:lang="hu">&amp;Műveleti jel (mo)</message>
 	<message xml:lang="ka">ოპერატორი (mo)</message>
 </label>
@@ -2661,7 +2666,7 @@
 	<message xml:lang="pt">Espaço (mspace)</message>
 	<message xml:lang="fi">Välilyönti (mspace)</message>
 	<message xml:lang="tr">Boşluk (mspace)</message>
-	<message xml:lang="ru">Пространство (mspace)</message>
+	<message xml:lang="ru">Пространство &lt;mspace></message>
 	<message xml:lang="hu">&amp;Szóköz (mspace)</message>
 	<message xml:lang="ka">სივრცე (mspace)</message>
 </label>
@@ -2674,7 +2679,7 @@
 	<message xml:lang="pt">Carácter (&amp;&amp;xxx;)</message>
 	<message xml:lang="fi">Merkki (&amp;&amp;xxx;)</message>
 	<message xml:lang="tr">Karakter (&amp;&amp;xxx;)</message>
-	<message xml:lang="ru">Символ (&amp;&amp;xxx;)</message>
+	<message xml:lang="ru">Символ &lt;&amp;&amp;xxx;></message>
 	<message xml:lang="hu">&amp;Karakter (&amp;&amp;xxx;)</message>
 	<message xml:lang="ka">სიმბოლო (&amp;&amp;xxx;)</message>
 </label>
@@ -2687,7 +2692,7 @@
 	<message xml:lang="pt">Multiplicação Invisível (InvisibleTimes)</message>
 	<message xml:lang="fi">InvisibleTimes</message>
 	<message xml:lang="tr">Kayip zaman</message>
-	<message xml:lang="ru">Невидимое время (InvisibleTimes)</message>
+	<message xml:lang="ru">Невидимое время &lt;InvisibleTimes></message>
 	<message xml:lang="hu">&amp;InvisibleTimes</message>
 	<message xml:lang="ka">უხილავი დრო (InvisibleTimes)</message>
 </label>
@@ -2700,7 +2705,7 @@
 	<message xml:lang="pt">Aplicar função (ApplyFunction)</message>
 	<message xml:lang="fi">Käytä funktiota</message>
 	<message xml:lang="tr">Fonksiyonu onayla</message>
-	<message xml:lang="ru">Применить функцию (ApplyFunction)</message>
+	<message xml:lang="ru">Применить функцию &lt;ApplyFunction></message>
 	<message xml:lang="hu">&amp;ApplyFunction</message>
 	<message xml:lang="ka">ფუნქციის გამოყენება (ApplyFunction)</message>
 </label>
@@ -2723,7 +2728,7 @@
 	<message xml:lang="es">Raíz (mroot)</message>
 	<message xml:lang="pt">Raiz (mroot)</message>
 	<message xml:lang="fi">Juuri (mroot)</message>
-	<message xml:lang="ru">Корень (mroot)</message>
+	<message xml:lang="ru">Корень &lt;mroot></message>
 	<message xml:lang="hu">&amp;Gyök (mroot)</message>
 	<message xml:lang="ka">ფესვი (mroot)</message>
 </label>
@@ -2736,7 +2741,7 @@
 	<message xml:lang="es">Raíz cuadrada (msqrt)</message>
 	<message xml:lang="pt">Raiz quadrada (msqrt)</message>
 	<message xml:lang="fi">Neliöjuuri (msqrt)</message>
-	<message xml:lang="ru">Квадратный корень (msqrt)</message>
+	<message xml:lang="ru">Квадратный корень &lt;msqrt></message>
 	<message xml:lang="hu">&amp;Négyzetgyök (msqrt)</message>
 	<message xml:lang="ka">კვადრატული ფესვი (msqrt)</message>
 </label>
@@ -2749,7 +2754,7 @@
 	<message xml:lang="pt">Englobar (menclose)</message>
 	<message xml:lang="fi">Sisällytä (menclose)</message>
 	<message xml:lang="tr">Kapsamak (menclose)</message>
-	<message xml:lang="ru">Вложение-Enclose (menclose)</message>
+	<message xml:lang="ru">Вложение &lt;menclose></message>
 	<message xml:lang="hu">&amp;Enclose (menclose)</message>
 	<message xml:lang="ka">ჩარჩო-ჩანართი (menclose)</message>
 </label>
@@ -2762,7 +2767,7 @@
 	<message xml:lang="es">Fracción (mfrac)</message>
 	<message xml:lang="pt">Fração (mfrac)</message>
 	<message xml:lang="fi">Murtoluku (mfrac)</message>
-	<message xml:lang="ru">Дробь (mfrac)</message>
+	<message xml:lang="ru">Дробь &lt;mfrac></message>
 	<message xml:lang="hu">&amp;Tört (mfrac)</message>
 	<message xml:lang="ka">წილადი (mfrac)</message>
 </label>
@@ -2775,7 +2780,7 @@
 	<message xml:lang="es">Subíndice y superíndice (msubsup)</message>
 	<message xml:lang="pt">Índice e Expoente (msubsup)</message>
 	<message xml:lang="fi">Ala- ja yläindeksi (msubsup)</message>
-	<message xml:lang="ru">Нижний и верхний индекс (msubsup)</message>
+	<message xml:lang="ru">Нижний и верхний индекс &lt;msubsup></message>
 	<message xml:lang="hu">Alsó és felső &amp;index (msubsup)</message>
 	<message xml:lang="ka">ზედა და ქვედა ინდექსები (msubsup)</message>
 </label>
@@ -2788,7 +2793,7 @@
 	<message xml:lang="es">Subíndice (msub)</message>
 	<message xml:lang="pt">Índice (msub)</message>
 	<message xml:lang="fi">Alaindeksi (msub)</message>
-	<message xml:lang="ru">Нижний индекс (msub)</message>
+	<message xml:lang="ru">Нижний индекс &lt;msub></message>
 	<message xml:lang="hu">&amp;Alsó index (msub)</message>
 	<message xml:lang="ka">ქვედა ინდექსი (msub)</message>
 </label>
@@ -2801,7 +2806,7 @@
 	<message xml:lang="es">Superíndice (msup)</message>
 	<message xml:lang="pt">Expoente (msup)</message>
 	<message xml:lang="fi">Yläindeksi (msup)</message>
-	<message xml:lang="ru">Верхний индекс (msup)</message>
+	<message xml:lang="ru">Верхний индекс &lt;msup></message>
 	<message xml:lang="hu">&amp;Felső index (msup)</message>
 	<message xml:lang="ka">ზედა ინდექსი (msup)</message>
 </label>
@@ -2814,7 +2819,7 @@
 	<message xml:lang="es">Bajo y sobre (munderover)</message>
 	<message xml:lang="pt">Sob e sobre (munderover)</message>
 	<message xml:lang="fi">Ylle ja alle (munderover)</message>
-	<message xml:lang="ru">Под и над (munderover)</message>
+	<message xml:lang="ru">Под и над &lt;munderover></message>
 	<message xml:lang="hu">&amp;Alá és fölé (munderover)</message>
 	<message xml:lang="ka">ქვევიდან და ზემოდან (munderover)</message>
 </label>
@@ -2827,7 +2832,7 @@
 	<message xml:lang="es">Bajo (munder)</message>
 	<message xml:lang="pt">Sob (munder)</message>
 	<message xml:lang="fi">Alle (munder)</message>
-	<message xml:lang="ru">Под (munder)</message>
+	<message xml:lang="ru">Под &lt;munder></message>
 	<message xml:lang="hu">&amp;Alá (munder)</message>
 	<message xml:lang="ka">ქვევიდან (munder)</message>
 </label>
@@ -2840,7 +2845,7 @@
 	<message xml:lang="es">Sobre (mover)</message>
 	<message xml:lang="pt">Sobre (mover)</message>
 	<message xml:lang="fi">Yli (mover)</message>
-	<message xml:lang="ru">Над (mover)</message>
+	<message xml:lang="ru">Над &lt;mover></message>
 	<message xml:lang="hu">&amp;Fölé (mover)</message>
 	<message xml:lang="ka">ზემოდან (mover)</message>
 </label>
@@ -2853,7 +2858,7 @@
 	<message xml:lang="es">Paréntesis (mrow)</message>
 	<message xml:lang="pt">Parêntesis (mrow)</message>
 	<message xml:lang="fi">Sulkeet (mrow)</message>
-	<message xml:lang="ru">Круглые скобки (mrow)</message>
+	<message xml:lang="ru">Круглые скобки &lt;mrow></message>
 	<message xml:lang="hu">&amp;Zárójel (mrow)</message>
 	<message xml:lang="ka">(მრგვალი) ფრჩხილები (mrow)</message>
 </label>
@@ -2866,7 +2871,7 @@
 	<message xml:lang="es">Multiscripts (mmultiscripts)</message>
 	<message xml:lang="pt">Multiscripts (mmultiscripts)</message>
 	<message xml:lang="fi">Multiscript (mmultiscripts)</message>
-	<message xml:lang="ru">Пред(после)символьный индекс (mmultiscripts)</message>
+	<message xml:lang="ru">Пред&lt;после>символьный индекс &lt;mmultiscripts></message>
 	<message xml:lang="hu">&amp;Multiscripts (mmultiscripts)</message>
 	<message xml:lang="ka">მრავალინდექსი (mmultiscripts)</message>
 </label>
@@ -2891,7 +2896,7 @@
 	<message xml:lang="es">Matriz (mtable)</message>
 	<message xml:lang="pt">Matriz (mtable)</message>
 	<message xml:lang="fi">Matriisi (mtable)</message>
-	<message xml:lang="ru">Новая матрица (mtable)</message>
+	<message xml:lang="ru">Новая матрица &lt;mtable></message>
 	<message xml:lang="hu">Új &amp;mátrix (mtable)</message>
 	<message xml:lang="ka">ახალი მატრიცა (mtable)</message>
 </label>
@@ -3132,7 +3137,7 @@
 	<message xml:lang="es">Ventana de &amp;herramientas</message>
 	<message xml:lang="de">&amp;Hilfsmittel anzeigen</message>
 	<message xml:lang="it">Mostra strumenti</message>
-	<message xml:lang="ru">оНЙЮГЮРЭ ХМЯРПСЛ&amp;ЕМРШ</message>
+	<message xml:lang="ru">Показать инструм&amp;енты</message>
 	<message xml:lang="hu">&amp;Eszközsor mutatása</message>
 	<message xml:lang="ka">ხელსაწყოების ჩვენება</message>
 </label>
@@ -3142,7 +3147,7 @@
 	<message xml:lang="es">&amp;Pantalla completa</message>
 	<message xml:lang="de">&amp;Vollbildanzeige</message>
 	<message xml:lang="it">Schermo intero</message>
-	<message xml:lang="ru">оНКМШИ ЩЙП&amp;ЮМ</message>
+	<message xml:lang="ru">Полный экр&amp;ан</message>
 	<message xml:lang="hu">&amp;Teljes képenyő</message>
 	<message xml:lang="ka">სრულ ეკრანზე</message>
 </label>
@@ -3232,6 +3237,7 @@
 	<message xml:lang="it">Mostra la vista formattata</message>
 	<message xml:lang="hu">&amp;Formázott nézet</message>
 	<message xml:lang="ka">ფორმატირებული ჩვენება</message>
+	<message xml:lang="ru">Показать в &amp;форматированном виде</message>
 </label>
 <label define="BShowStructure">
 	<message xml:lang="en">Show &amp;structure</message>
@@ -3318,6 +3324,7 @@
 	<message xml:lang="it">Dividi la vista in orizzontale</message>
 	<message xml:lang="hu">Vízszintes felosztás</message>
 	<message xml:lang="ka">ხედის ჰორიზონტალური გაყოფა</message>
+	<message xml:lang="ru">Разделить по горизонтали</message>
 </label>
 <label define="BSplitVertically">
 	<message xml:lang="en">Split view vertically</message>
@@ -3327,6 +3334,7 @@
 	<message xml:lang="it">Dividi la vista in verticale</message>
 	<message xml:lang="hu">Függőleges felosztás</message>
 	<message xml:lang="ka">ხედის ვერტიკალური გაყოფა</message>
+	<message xml:lang="ru">Разделить по вертикали</message>
 </label>
 <label define="BCharacterStyle">
 	<message xml:lang="en">C&amp;haracter style...</message>
@@ -3362,6 +3370,7 @@
 	<message xml:lang="hu">CSS &amp;Stílus...</message>
 	<message xml:lang="de">CSS &amp;Stil</message>
 	<message xml:lang="ka">CSS style...</message>
+	<message xml:lang="ru">CSS style...</message>
 </label>
 <label define="BFormat">
 	<message xml:lang="en">&amp;Format...</message>

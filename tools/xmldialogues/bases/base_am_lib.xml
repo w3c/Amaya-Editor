@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base version="46">
+<base version="48">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
@@ -12,6 +12,7 @@
 	<language encoding="utf8">ru</language>
 	<language encoding="utf8">hu</language>
 	<language encoding="utf8">hu</language>
+	<language encoding="utf8">ka</language>
 </control>
 <messages>
 <label define="TMSG_LIB_X11_ERR">
@@ -25,6 +26,7 @@
 	<message xml:lang="fi">X11 Virhe : %s\n</message>
 	<message xml:lang="ru">X11 ошибка : %s\n</message>
 	<message xml:lang="hu">X11 hiba: %s\n</message>
+	<message xml:lang="ka">X11 შეცდომა : %s\n</message>
 </label>
 <label define="TMSG_LIB_CONFIRM">
 	<message xml:lang="en">Confirm</message>
@@ -37,6 +39,7 @@
 	<message xml:lang="fi">Hyväksy</message>
 	<message xml:lang="ru">Подтвердить</message>
 	<message xml:lang="hu">Megerősítés</message>
+	<message xml:lang="ka">დასტური</message>
 </label>
 <label define="TMSG_MISSING_ALPHABET">
 	<message xml:lang="en">No alphabet file</message>
@@ -47,8 +50,9 @@
 	<message xml:lang="es">No hay archivo de alfabeto</message>
 	<message xml:lang="pt">Não há arquivo de alfabeto</message>
 	<message xml:lang="fi">Ei aakkostiedostoa</message>
-	<message xml:lang="ru">Никакой файл алфавита</message>
+	<message xml:lang="ru">Не алфавитный файл</message>
 	<message xml:lang="hu">Nincs ábécéfájl</message>
+	<message xml:lang="ka">ანბანის ფაილის გარეშე</message>
 </label>
 <label define="TMSG_OLD_VIEW_NOT_REPLACED">
 	<message xml:lang="en">New view cannot replace the old one</message>
@@ -61,6 +65,7 @@
 	<message xml:lang="fi">Uusi näkymä ei voi korvata vanhaa</message>
 	<message xml:lang="ru">Новый вид не может заменить старый</message>
 	<message xml:lang="hu">Az új nézet nem válthatja fel a régit</message>
+	<message xml:lang="ka">ახალი ხედით ძველის შეცვლა ვერ ხერხდება</message>
 </label>
 <label define="TMSG_OLD_SCH_TO_RECOMP">
 	<message xml:lang="en">Incompatible schemas. Recompile %s</message>
@@ -73,6 +78,7 @@
 	<message xml:lang="fi">Ei-yhteensopivia malleja. Koosta uudelleen %s</message>
 	<message xml:lang="ru">Несовместимые схемы. Перекомпилируйте %s</message>
 	<message xml:lang="hu">Összegyeztethetetlen leírók. %s újrafordítása</message>
+	<message xml:lang="ka">შეუთავსებელი სქემები. გადააკომპილეთ %s</message>
 </label>
 <label define="TMSG_MISSING_FONT">
 	<message xml:lang="en">Fatal Error: fonts not found</message>
@@ -85,6 +91,7 @@
 	<message xml:lang="fi">Virhe: fontteja ei löydetty</message>
 	<message xml:lang="ru">Неисправимая ошибка: Шрифты, не найдены</message>
 	<message xml:lang="hu">Végzetes huba: a betűkészlet nem található</message>
+	<message xml:lang="ka">კრიტიკული შეცდომა: შრიფტები ვერ მოიძებნა</message>
 </label>
 <label define="TMSG_NO_MEMORY">
 	<message xml:lang="en">Memory exhausted</message>
@@ -97,6 +104,7 @@
 	<message xml:lang="fi">Muisti loppunut</message>
 	<message xml:lang="ru">Память исчерпана</message>
 	<message xml:lang="hu">A memória megtelt</message>
+	<message xml:lang="ka">მახსიერება გადაივსო</message>
 </label>
 <label define="TMSG_UNABLE_TO_CONNECT_TO_X">
 	<message xml:lang="en">Fatal Error: Unable to connect to X</message>
@@ -109,6 +117,7 @@
 	<message xml:lang="fi">Virhe: Ei voida yhdistää X:ään</message>
 	<message xml:lang="ru">Неисправимая ошибка: Невозможно соединиться с X</message>
 	<message xml:lang="hu">Végzetes hiba: Nem lehet csatlakozni X-hez</message>
+	<message xml:lang="ka">კრიტიკული შეცდომა: X-თან დაკავშირება ვერ ხერხდება</message>
 </label>
 <label define="TMSG_VIEW_MODIFIED_BEFORE_CREATION">
 	<message xml:lang="en">View is modified before creation</message>
@@ -121,6 +130,7 @@
 	<message xml:lang="fi">Näkymää muutettu ennen luontia</message>
 	<message xml:lang="ru">Вид изменён перед созданием</message>
 	<message xml:lang="hu">A nézet módosult létrehozása előtt</message>
+	<message xml:lang="ka">შექმნამდე ხედი შეიცვალა</message>
 </label>
 <label define="TMSG_LIB_RULES_TABLE_FULL">
 	<message xml:lang="en">Rules table full.</message>
@@ -133,6 +143,7 @@
 	<message xml:lang="fi">Rules-taulukko täynnä.</message>
 	<message xml:lang="ru">Таблица правил заполнена.</message>
 	<message xml:lang="hu">Szabályok tábla megtelt.</message>
+	<message xml:lang="ka">წესების ცხრილი შევსებულია.</message>
 </label>
 <label define="TMSG_INCORRECT_STR_FILE">
 	<message xml:lang="en">Incorrect file: %s.STR</message>
@@ -145,6 +156,7 @@
 	<message xml:lang="fi">Virheellinen tiedosto: %s.STR</message>
 	<message xml:lang="ru">Неправильный файл: %s.STR</message>
 	<message xml:lang="hu">Érvénytelen fájl: %s.STR</message>
+	<message xml:lang="ka">მცდარი ფაილი: %s.STR</message>
 </label>
 <label define="TMSG_INCORRECT_PRS_FILE">
 	<message xml:lang="en">Incorrect file: %s.PRS</message>
@@ -157,6 +169,7 @@
 	<message xml:lang="fi">Virheellinen tiedosto: %s.PRS</message>
 	<message xml:lang="ru">Неправильный файл: %s.PRS</message>
 	<message xml:lang="hu">Érvénytelen fájl: %s.PRS</message>
+	<message xml:lang="ka">მცდარი ფაილი: %s.PRS</message>
 </label>
 <label define="TMSG_DOC_PRINTED">
 	<message xml:lang="en">Document %s printed</message>
@@ -169,6 +182,7 @@
 	<message xml:lang="fi">Dokumentti %s tulostettu</message>
 	<message xml:lang="ru">Печатается документ %s</message>
 	<message xml:lang="hu">Dokumentum %s nyomtatása</message>
+	<message xml:lang="ka">იბეჭდება დოკუმენტი %s</message>
 </label>
 <label define="TMSG_REDUCTION">
 	<message xml:lang="en">Disposition</message>
@@ -181,6 +195,7 @@
 	<message xml:lang="fi">Jäsentely</message>
 	<message xml:lang="ru">Расположение</message>
 	<message xml:lang="hu">Disposition</message>
+	<message xml:lang="ka">განთავსება</message>
 </label>
 <label define="TMSG_1_PAGE_SHEET">
 	<message xml:lang="en">1 page/sheet</message>
@@ -193,6 +208,7 @@
 	<message xml:lang="fi">1 sivu/arkille</message>
 	<message xml:lang="ru">1 страница/лист</message>
 	<message xml:lang="hu">1 oldal/lap</message>
+	<message xml:lang="ka">1 გვერდი/ფურცელი</message>
 </label>
 <label define="TMSG_2_PAGE_SHEET">
 	<message xml:lang="en">2 pages/sheet</message>
@@ -205,6 +221,7 @@
 	<message xml:lang="fi">2 sivua/arkille</message>
 	<message xml:lang="ru">2 страницы/лист</message>
 	<message xml:lang="hu">2 oldal/lap</message>
+	<message xml:lang="ka">2 გვერდი/ფურცელი</message>
 </label>
 <label define="TMSG_4_PAGE_SHEET">
 	<message xml:lang="en">4 pages/sheet</message>
@@ -217,6 +234,7 @@
 	<message xml:lang="fi">4 sivua/arkille</message>
 	<message xml:lang="ru">4 страницы/лист</message>
 	<message xml:lang="hu">4 oldal/lap</message>
+	<message xml:lang="ka">4 გვერდი/ფურცელი</message>
 </label>
 <label define="TMSG_LIB_STRING">
 	<message xml:lang="en">%s</message>
@@ -229,6 +247,7 @@
 	<message xml:lang="fi">%s</message>
 	<message xml:lang="ru">%s</message>
 	<message xml:lang="hu">%s</message>
+	<message xml:lang="ka">%s</message>
 </label>
 <label define="TMSG_NOT_ENOUGH_MEMORY">
 	<message xml:lang="en">Not enough memory</message>
@@ -241,6 +260,7 @@
 	<message xml:lang="fi">Ei ole tarpeeksi muistia</message>
 	<message xml:lang="ru">Недостаточно памяти</message>
 	<message xml:lang="hu">kevés a memória</message>
+	<message xml:lang="ka">მეხსიერების უკმარისობა</message>
 </label>
 <label define="TMSG_DEBUG_ERROR">
 	<message xml:lang="en">*** Amaya: Irrecoverable error ***</message>
@@ -253,6 +273,7 @@
 	<message xml:lang="fi">*** Amaya: Peruuttamaton virhe ***</message>
 	<message xml:lang="ru">*** Amaya: Неисправимая ошибка ***</message>
 	<message xml:lang="hu">*** Amaya: helyreállíthatatlan hiba ***</message>
+	<message xml:lang="ka">*** Amaya: კრიტიკული შეცდომა ***</message>
 </label>
 <label define="TMSG_DEBUG_SAV_FILES">
 	<message xml:lang="en">modified documents, if any, will be saved</message>
@@ -265,6 +286,7 @@
 	<message xml:lang="fi">muokatut dokumentit, jos on, tallennetaan</message>
 	<message xml:lang="ru">если имеются изменённые документы, то они будут сохранены</message>
 	<message xml:lang="hu">A mádosult dokumentums, ha van, mentése</message>
+	<message xml:lang="ka">თუ შეცვლილი დოკუმენტები არსებობს, ისინი შეინახება</message>
 </label>
 <label define="TMSG_TRA_FILE_INCORRECT">
 	<message xml:lang="en">Incorrect .TRA file: %s</message>
@@ -277,6 +299,7 @@
 	<message xml:lang="fi">Virheellinen .TRA file: %s</message>
 	<message xml:lang="ru">Неправильный .TRA файл: %s</message>
 	<message xml:lang="hu">Érvénytelen .TRA fájl: %s</message>
+	<message xml:lang="ka">მცდარი .TRA ფაილი: %s</message>
 </label>
 <label define="TMSG_INVALID_SIBLING">
 	<message xml:lang="en">%s is not a valid sibling for %s (%s)</message>
@@ -289,6 +312,7 @@
 	<message xml:lang="fi">%s ei ole käypä sisarus tälle: %s (%s)</message>
 	<message xml:lang="ru">%s не является правильным дочерним элементом для %s (%s)</message>
 	<message xml:lang="hu">%s érvénytelen testvére ennek: %s (%s)</message>
+	<message xml:lang="ka">%s მცდარი ქვეელემემტია %s (%s) ელემენტისთვის</message>
 </label>
 <label define="TMSG_INVALID_CHILD">
 	<message xml:lang="en">%s is not a valid child for %s (%s)</message>
@@ -301,6 +325,7 @@
 	<message xml:lang="fi">%s ei ole käypä lapsi tälle:%s (%s)</message>
 	<message xml:lang="ru">%s не является правильным потомком для %s (%s)</message>
 	<message xml:lang="hu">%s érvénytelen utóda ennek az elődnek: %s (%s)</message>
+	<message xml:lang="ka">%s არ გახლავთ %s (%s) ელემენტის ქვეელემენტი</message>
 </label>
 <label define="TMSG_PAGE">
 	<message xml:lang="en">%s, page %d</message>
@@ -313,6 +338,7 @@
 	<message xml:lang="fi">%s, sivu %d</message>
 	<message xml:lang="ru">%s, страница %d</message>
 	<message xml:lang="hu">%s, oldal %d</message>
+	<message xml:lang="ka">%s, გვერდი %d</message>
 </label>
 <label define="TMSG_LANGUAGE">
 	<message xml:lang="en">Language</message>
@@ -325,6 +351,7 @@
 	<message xml:lang="fi">Kieli</message>
 	<message xml:lang="ru">Язык</message>
 	<message xml:lang="hu">Nyelv</message>
+	<message xml:lang="ka">ენა</message>
 </label>
 <label define="TMSG_ATTR">
 	<message xml:lang="en">Attributes</message>
@@ -337,6 +364,7 @@
 	<message xml:lang="fi">Määritykset</message>
 	<message xml:lang="ru">Атрибуты</message>
 	<message xml:lang="hu">Attribútumok</message>
+	<message xml:lang="ka">ატრიბუტები</message>
 </label>
 <label define="TMSG_STD_PRES">
 	<message xml:lang="en">Standard presentation</message>
@@ -349,6 +377,7 @@
 	<message xml:lang="fi">Vakio esitys</message>
 	<message xml:lang="ru">Стандартное представление</message>
 	<message xml:lang="hu">Szabványos bemutató</message>
+	<message xml:lang="ka">სტანდარტული წარმოდეგნა</message>
 </label>
 <label define="TMSG_APPLY">
 	<message xml:lang="en">Apply</message>
@@ -361,6 +390,7 @@
 	<message xml:lang="fi">Käytä</message>
 	<message xml:lang="ru">Применить</message>
 	<message xml:lang="hu">Alkalmaz</message>
+	<message xml:lang="ka">გამოყენება</message>
 </label>
 <label define="TMSG_CHAR">
 	<message xml:lang="en">Characters</message>
@@ -373,6 +403,7 @@
 	<message xml:lang="fi">Merkit</message>
 	<message xml:lang="ru">Символы</message>
 	<message xml:lang="hu">Karakterek</message>
+	<message xml:lang="ka">სიმბოლოები</message>
 </label>
 <label define="TMSG_LINE">
 	<message xml:lang="en">Underline</message>
@@ -385,6 +416,7 @@
 	<message xml:lang="fi">Alleviivaa</message>
 	<message xml:lang="ru">Подчеркивание</message>
 	<message xml:lang="hu">Aláhúzás</message>
+	<message xml:lang="ka">ხაზგასმა</message>
 </label>
 <label define="TMSG_GRAPHICS_PRES">
 	<message xml:lang="en">Graphics</message>
@@ -397,6 +429,7 @@
 	<message xml:lang="fi">Grafiikka</message>
 	<message xml:lang="ru">Графика</message>
 	<message xml:lang="hu">Grafika</message>
+	<message xml:lang="ka">გრაფიკა</message>
 </label>
 <label define="TMSG_FORMAT">
 	<message xml:lang="en">Format</message>
@@ -409,6 +442,7 @@
 	<message xml:lang="fi">Muotoilu</message>
 	<message xml:lang="ru">Формат</message>
 	<message xml:lang="hu">Formátum</message>
+	<message xml:lang="ka">ფორმატი</message>
 </label>
 <label define="TMSG_UNCHANGED">
 	<message xml:lang="en">Default</message>
@@ -421,6 +455,7 @@
 	<message xml:lang="fi">Oletus</message>
 	<message xml:lang="ru">По умолчанию</message>
 	<message xml:lang="hu">Alap</message>
+	<message xml:lang="ka">ნაგულისხმები</message>
 </label>
 <label define="TMSG_ALIGN">
 	<message xml:lang="en">Align</message>
@@ -433,6 +468,7 @@
 	<message xml:lang="fi">Kohdistus</message>
 	<message xml:lang="ru">Выравнивание</message>
 	<message xml:lang="hu">Igazítás</message>
+	<message xml:lang="ka">სწორება</message>
 </label>
 <label define="TMSG_INDENT">
 	<message xml:lang="en">Indent</message>
@@ -445,6 +481,7 @@
 	<message xml:lang="fi">Sisennys</message>
 	<message xml:lang="ru">Отступ</message>
 	<message xml:lang="hu">Behúzás</message>
+	<message xml:lang="ka">აბზაცი</message>
 </label>
 <label define="TMSG_LIB_PRINTING_IN_PROGRESS">
 	<message xml:lang="en">Printing in progress</message>
@@ -454,6 +491,7 @@
 	<message xml:lang="de">Druckvorgang läuft</message>
 	<message xml:lang="it">Stampa in corso</message>
 	<message xml:lang="hu">Nyomtatás folyamatban</message>
+	<message xml:lang="ka">მიმდინარეობს ბეჭდვა</message>
 </label>
 <label define="TMSG_LIB_PRINT">
 	<message xml:lang="en">Print</message>
@@ -464,8 +502,9 @@
 	<message xml:lang="es">Configurar e imprimir</message>
 	<message xml:lang="pt">Imprimir</message>
 	<message xml:lang="fi">Tulostus</message>
-	<message xml:lang="ru">Ручная подача</message>
+	<message xml:lang="ru">Печать</message>
 	<message xml:lang="hu">Nyomtatás</message>
+	<message xml:lang="ka">ბეჭდვა</message>
 </label>
 <label define="TMSG_MANUAL_FEED">
 	<message xml:lang="en">Manual feed</message>
@@ -476,8 +515,9 @@
 	<message xml:lang="es">Alimentación manual</message>
 	<message xml:lang="pt">Alimentação manual</message>
 	<message xml:lang="fi">Käsinsyöttö</message>
-	<message xml:lang="ru">Дополнительно</message>
+	<message xml:lang="ru">Ручная подача</message>
 	<message xml:lang="hu">Kézi lapadagolás</message>
+	<message xml:lang="ka">ხელით მიწოდება</message>
 </label>
 <label define="TMSG_OPTIONS">
 	<message xml:lang="en">Options</message>
@@ -488,8 +528,9 @@
 	<message xml:lang="es">Opciones</message>
 	<message xml:lang="pt">Opções</message>
 	<message xml:lang="fi">Asetukset</message>
-	<message xml:lang="ru">A4</message>
+	<message xml:lang="ru">Дополнительно</message>
 	<message xml:lang="hu">Beállítások</message>
+	<message xml:lang="ka">პარამეტრები</message>
 </label>
 <label define="TMSG_A4">
 	<message xml:lang="en">A4</message>
@@ -500,8 +541,9 @@
 	<message xml:lang="es">A4</message>
 	<message xml:lang="pt">A4</message>
 	<message xml:lang="fi">A4</message>
-	<message xml:lang="ru">US</message>
+	<message xml:lang="ru">A4</message>
 	<message xml:lang="hu">A4</message>
+	<message xml:lang="ka">A4</message>
 </label>
 <label define="TMSG_US">
 	<message xml:lang="en">US</message>
@@ -512,8 +554,9 @@
 	<message xml:lang="es">US</message>
 	<message xml:lang="pt">US</message>
 	<message xml:lang="fi">US</message>
-	<message xml:lang="ru">Формат бумаги</message>
+	<message xml:lang="ru">US</message>
 	<message xml:lang="hu">US</message>
+	<message xml:lang="ka">US</message>
 </label>
 <label define="TMSG_PAPER_SIZE">
 	<message xml:lang="en">Paper format</message>
@@ -524,8 +567,9 @@
 	<message xml:lang="es">Formato de papel</message>
 	<message xml:lang="pt">Formato de papel</message>
 	<message xml:lang="fi">Paperikoko</message>
-	<message xml:lang="ru">Выйти</message>
+	<message xml:lang="ru">Формат бумаги</message>
 	<message xml:lang="hu">Papírfajta</message>
+	<message xml:lang="ka">ქაღალდის ფორმატი</message>
 </label>
 <label define="TMSG_DONE">
 	<message xml:lang="en">Close</message>
@@ -536,8 +580,9 @@
 	<message xml:lang="es">Cerrar</message>
 	<message xml:lang="pt">Feito</message>
 	<message xml:lang="fi">Valmis</message>
-	<message xml:lang="ru">Директории</message>
+	<message xml:lang="ru">Выйти</message>
 	<message xml:lang="hu">Bezár</message>
+	<message xml:lang="ka">დახურვა</message>
 </label>
 <label define="TMSG_DOC_DIR">
 	<message xml:lang="en">Directories</message>
@@ -548,8 +593,9 @@
 	<message xml:lang="es">Directorios</message>
 	<message xml:lang="pt">Diretórios</message>
 	<message xml:lang="fi">Hakemistot</message>
-	<message xml:lang="ru">Документ %s уже существует. Хотите перезаписать его?</message>
+	<message xml:lang="ru">Директории</message>
 	<message xml:lang="hu">Mappák</message>
+	<message xml:lang="ka">დასტები</message>
 </label>
 <label define="TMSG_FILE_EXIST">
 	<message xml:lang="en">The document %s already exists. Do you want to overwrite it?</message>
@@ -560,8 +606,9 @@
 	<message xml:lang="es">El documento %s ya existe. ¿Quiere sobreescribirlo?</message>
 	<message xml:lang="pt">O documento %s já exist. Quer gravar por cima dele?</message>
 	<message xml:lang="fi">Dokumentti %s on jo olemassa. Korvataanko?</message>
-	<message xml:lang="ru">Левая кнопка устанавливает цвет текста</message>
+	<message xml:lang="ru">Документ %s уже существует. Хотите перезаписать его?</message>
 	<message xml:lang="hu">A dokumentum (%s) már létezik. Felülírjuk?</message>
+	<message xml:lang="ka">დოკუმენტი %s უკვე არსებობს. გნებავთ მისი ჩანაცვლება?</message>
 </label>
 <label define="TMSG_BUTTON_1">
 	<message xml:lang="en">Left button sets the text color</message>
@@ -572,8 +619,9 @@
 	<message xml:lang="es">El botón izquierdo fija el color del texto</message>
 	<message xml:lang="pt">O botão esquerdo fixa a cor do texto</message>
 	<message xml:lang="fi">Vasen näppäin asettaa tekstin värin</message>
-	<message xml:lang="ru">Средняя или правая кнопка устанавливает цвет фона</message>
+	<message xml:lang="ru">Левая кнопка устанавливает цвет текста</message>
 	<message xml:lang="hu">A bal egérgomb a szöveg színét adja meg</message>
+	<message xml:lang="ka">მარცხენა ღილაკით ტექსტის ფერი მიეთითება</message>
 </label>
 <label define="TMSG_BUTTON_2">
 	<message xml:lang="en">Middle or Right button sets the background color</message>
@@ -584,8 +632,9 @@
 	<message xml:lang="es">El botón derecho o el central fijan el color del fondo</message>
 	<message xml:lang="pt">O botão do meio ou da direita fixa a cor de fundo</message>
 	<message xml:lang="fi">Keskimmäinen tai oikea näppäin asettaa taustavärin</message>
-	<message xml:lang="ru">Шрифты</message>
+	<message xml:lang="ru">Средняя или правая кнопка устанавливает цвет фона</message>
 	<message xml:lang="hu">A középső vagy jobb egérgomb a háttérszínt adja meg</message>
+	<message xml:lang="ka">შუა და მარჯვენა ღილაკით ფონის ფერი მიეთითება</message>
 </label>
 <label define="TMSG_FONT_FAMILY">
 	<message xml:lang="en">Font family</message>
@@ -596,8 +645,9 @@
 	<message xml:lang="es">Familia de fuente</message>
 	<message xml:lang="pt">Família de tipos (fonts)</message>
 	<message xml:lang="fi">Fonttiperhe</message>
-	<message xml:lang="ru">Нормальный</message>
+	<message xml:lang="ru">Шрифты</message>
 	<message xml:lang="hu">Betűkészlet</message>
+	<message xml:lang="ka">შრიფტები</message>
 </label>
 <label define="TMSG_ROMAN">
 	<message xml:lang="en">Normal</message>
@@ -608,8 +658,9 @@
 	<message xml:lang="es">Normal</message>
 	<message xml:lang="pt">Normal</message>
 	<message xml:lang="fi">Normaali</message>
-	<message xml:lang="ru">Полужирный</message>
+	<message xml:lang="ru">Нормальный</message>
 	<message xml:lang="hu">Normál</message>
+	<message xml:lang="ka">ჩვეულებრივი</message>
 </label>
 <label define="TMSG_BOLD">
 	<message xml:lang="en">Bold</message>
@@ -620,8 +671,9 @@
 	<message xml:lang="es">Negrita</message>
 	<message xml:lang="pt">Negrito</message>
 	<message xml:lang="fi">Lihavoitu</message>
-	<message xml:lang="ru">Курсив</message>
+	<message xml:lang="ru">Полужирный</message>
 	<message xml:lang="hu">Félkövér</message>
+	<message xml:lang="ka">მუქი</message>
 </label>
 <label define="TMSG_ITALIC">
 	<message xml:lang="en">Italic</message>
@@ -632,8 +684,9 @@
 	<message xml:lang="es">Cursiva</message>
 	<message xml:lang="pt">Itálico</message>
 	<message xml:lang="fi">Kursivoitu</message>
-	<message xml:lang="ru">Наклонный</message>
+	<message xml:lang="ru">Курсив</message>
 	<message xml:lang="hu">Dőlt</message>
+	<message xml:lang="ka">კურსივი</message>
 </label>
 <label define="TMSG_OBLIQUE">
 	<message xml:lang="en">Oblique</message>
@@ -644,8 +697,9 @@
 	<message xml:lang="es">Oblicua</message>
 	<message xml:lang="pt">Oblíquo</message>
 	<message xml:lang="fi">Viisto</message>
-	<message xml:lang="ru">Нормальный</message>
+	<message xml:lang="ru">Наклонный</message>
 	<message xml:lang="hu">Kurzív</message>
+	<message xml:lang="ka">დახრილი</message>
 </label>
 <label define="TMSG_NOT_BOLD">
 	<message xml:lang="en">Normal</message>
@@ -656,8 +710,9 @@
 	<message xml:lang="es">Normal</message>
 	<message xml:lang="pt">Normal</message>
 	<message xml:lang="fi">Normaali</message>
-	<message xml:lang="ru">Толщина шрифта</message>
+	<message xml:lang="ru">Нормальный</message>
 	<message xml:lang="hu">Normál</message>
+	<message xml:lang="ka">ჩვეულებრივი</message>
 </label>
 <label define="TMSG_BOLDNESS">
 	<message xml:lang="en">Boldness</message>
@@ -668,8 +723,9 @@
 	<message xml:lang="es">Grosor</message>
 	<message xml:lang="pt">Negritude (boldness)</message>
 	<message xml:lang="fi">Lihavointi</message>
-	<message xml:lang="ru">Нормальный</message>
+	<message xml:lang="ru">Толщина шрифта</message>
 	<message xml:lang="hu">Vastagság</message>
+	<message xml:lang="ka">სიმუქეа</message>
 </label>
 <label define="TMSG_NORMAL">
 	<message xml:lang="en">Normal</message>
@@ -680,8 +736,9 @@
 	<message xml:lang="es">Normal</message>
 	<message xml:lang="pt">Normal</message>
 	<message xml:lang="fi">Normaali</message>
-	<message xml:lang="ru">Подстрочное</message>
+	<message xml:lang="ru">Нормальный</message>
 	<message xml:lang="hu">Normál</message>
+	<message xml:lang="ka">ჩვეულებრივი</message>
 </label>
 <label define="TMSG_UNDERLINE">
 	<message xml:lang="en">Underline</message>
@@ -692,8 +749,9 @@
 	<message xml:lang="es">Subrayado</message>
 	<message xml:lang="pt">Sublinhado</message>
 	<message xml:lang="fi">Alleviivaa</message>
-	<message xml:lang="ru">Зачёркивание</message>
+	<message xml:lang="ru">Подстрочное</message>
 	<message xml:lang="hu">Aláhúzott</message>
+	<message xml:lang="ka">ხაზგასმული</message>
 </label>
 <label define="TMSG_CROSS_OUT">
 	<message xml:lang="en">Cross out</message>
@@ -704,8 +762,9 @@
 	<message xml:lang="es">Tachado</message>
 	<message xml:lang="pt">Cortado (cross out)</message>
 	<message xml:lang="fi">Vedä yli</message>
-	<message xml:lang="ru">Размер шрифта (pt)</message>
+	<message xml:lang="ru">Зачёркивание</message>
 	<message xml:lang="hu">Áthúzott</message>
+	<message xml:lang="ka">გადახაზული</message>
 </label>
 <label define="TMSG_BODY_SIZE_PTS">
 	<message xml:lang="en">Body size (pt)</message>
@@ -716,8 +775,9 @@
 	<message xml:lang="es">Tamaño del cuerpo (pt)</message>
 	<message xml:lang="pt">Tamanho do corpo (pt)</message>
 	<message xml:lang="fi">Kappalekoko (pt)</message>
-	<message xml:lang="ru">Отступ (pt)</message>
+	<message xml:lang="ru">Размер шрифта (pt)</message>
 	<message xml:lang="hu">Betáméret (pt)</message>
+	<message xml:lang="ka">შრიფტის ზომა (pt)</message>
 </label>
 <label define="TMSG_INDENT_PTS">
 	<message xml:lang="en">Indent (pt)</message>
@@ -728,8 +788,9 @@
 	<message xml:lang="es">Sangría (pt):</message>
 	<message xml:lang="pt">Indentação (pt)</message>
 	<message xml:lang="fi">Sisennä (pt)</message>
-	<message xml:lang="ru">Межстрочный интервал (pt)</message>
+	<message xml:lang="ru">Отступ (pt)</message>
 	<message xml:lang="hu">Behúzás (pt)</message>
+	<message xml:lang="ka">აბზაცი (pt)</message>
 </label>
 <label define="TMSG_LINE_SPACING_PTS">
 	<message xml:lang="en">Line spacing (pt)</message>
@@ -740,8 +801,9 @@
 	<message xml:lang="es">Interlineado (pt):</message>
 	<message xml:lang="pt">Espaçamento entre linhas (pt)</message>
 	<message xml:lang="fi">Riviväli (pt)</message>
-	<message xml:lang="ru">Межстрочный интервал</message>
+	<message xml:lang="ru">Межстрочный интервал (pt)</message>
 	<message xml:lang="hu">Sortávolság (pt)</message>
+	<message xml:lang="ka">ინტერვალი (pt)</message>
 </label>
 <label define="TMSG_LINE_SPACING">
 	<message xml:lang="en">Line spacing</message>
@@ -752,8 +814,9 @@
 	<message xml:lang="es">Interlineado</message>
 	<message xml:lang="pt">Espaçamento entre linhas</message>
 	<message xml:lang="fi">Riviväli</message>
-	<message xml:lang="ru">Сохранить документ</message>
+	<message xml:lang="ru">Межстрочный интервал</message>
 	<message xml:lang="hu">Sortávolság</message>
+	<message xml:lang="ka">ინტერვალი</message>
 </label>
 <label define="TMSG_SAVE_DOC">
 	<message xml:lang="en">Save document</message>
@@ -764,8 +827,9 @@
 	<message xml:lang="es">Guardar documento</message>
 	<message xml:lang="pt">Salvar documento</message>
 	<message xml:lang="fi">Tallenna dokumentti</message>
-	<message xml:lang="ru">Закрыть, не сохранять</message>
+	<message xml:lang="ru">Сохранить документ</message>
 	<message xml:lang="hu">Dokumentum mentése</message>
+	<message xml:lang="ka">დოკუმენტის შენახვა</message>
 </label>
 <label define="TMSG_CLOSE_DON_T_SAVE">
 	<message xml:lang="en">Close, don't save</message>
@@ -776,8 +840,9 @@
 	<message xml:lang="es">Cerrar, no guardar</message>
 	<message xml:lang="pt">Fechar sem salvar</message>
 	<message xml:lang="fi">Sulje, älä tallenna</message>
-	<message xml:lang="ru">Тип символов</message>
+	<message xml:lang="ru">Закрыть, не сохранять</message>
 	<message xml:lang="hu">Bezárás mentés nélkül</message>
+	<message xml:lang="ka">დახურვა შენახვის გარეშე</message>
 </label>
 <label define="TMSG_STYLE">
 	<message xml:lang="en">Character style</message>
@@ -788,8 +853,9 @@
 	<message xml:lang="es">Estilo de carácter</message>
 	<message xml:lang="pt">Estilo de carácter</message>
 	<message xml:lang="fi">Merkkityyli</message>
-	<message xml:lang="ru">Цвет</message>
+	<message xml:lang="ru">Тип символов</message>
 	<message xml:lang="hu">Karakter stílus</message>
+	<message xml:lang="ka">სიმბოლოს სტილი</message>
 </label>
 <label define="TMSG_COLORS">
 	<message xml:lang="en">Colors</message>
@@ -800,8 +866,9 @@
 	<message xml:lang="es">Colores</message>
 	<message xml:lang="pt">Cores</message>
 	<message xml:lang="fi">Värit</message>
-	<message xml:lang="ru">Удалить</message>
+	<message xml:lang="ru">Цвет</message>
 	<message xml:lang="hu">Színek</message>
+	<message xml:lang="ka">ფერი</message>
 </label>
 <label define="TMSG_XHTML">
 	<message xml:lang="en">XHTML</message>
@@ -812,8 +879,9 @@
 	<message xml:lang="es">XHTML</message>
 	<message xml:lang="pt">XHTML</message>
 	<message xml:lang="fi">XHTML</message>
-	<message xml:lang="ru">XHTML</message>
+	<message xml:lang="ru">Удалить</message>
 	<message xml:lang="hu">XHTML</message>
+	<message xml:lang="ka">XHTML</message>
 </label>
 <label define="TMSG_DEL">
 	<message xml:lang="en">Delete</message>
@@ -824,8 +892,9 @@
 	<message xml:lang="es">Borrar</message>
 	<message xml:lang="pt">Suprimir</message>
 	<message xml:lang="fi">Poista</message>
-	<message xml:lang="ru">Вывод</message>
+	<message xml:lang="ru">XHTML</message>
 	<message xml:lang="hu">Törlés</message>
+	<message xml:lang="ka">წაშლა</message>
 </label>
 <label define="TMSG_OUTPUT">
 	<message xml:lang="en">Output</message>
@@ -836,8 +905,9 @@
 	<message xml:lang="es">Salida</message>
 	<message xml:lang="pt">Destino (Output)</message>
 	<message xml:lang="fi">Tuloste</message>
-	<message xml:lang="ru">PostScript файл</message>
+	<message xml:lang="ru">Вывод</message>
 	<message xml:lang="hu">Kimenet</message>
+	<message xml:lang="ka">გამოტანა</message>
 </label>
 <label define="TMSG_PS_FILE">
 	<message xml:lang="en">PostScript file</message>
@@ -848,8 +918,9 @@
 	<message xml:lang="es">Archivo PostScript</message>
 	<message xml:lang="pt">Arquivo PostScript</message>
 	<message xml:lang="fi">PostScript tiedosto</message>
-	<message xml:lang="ru">Принтер</message>
+	<message xml:lang="ru">PostScript файл</message>
 	<message xml:lang="hu">PostScript fájl</message>
+	<message xml:lang="ka">PostScript ფაილი</message>
 </label>
 <label define="TMSG_PRINTER">
 	<message xml:lang="en">Printer</message>
@@ -860,8 +931,9 @@
 	<message xml:lang="es">Impresora</message>
 	<message xml:lang="pt">Impressora</message>
 	<message xml:lang="fi">Tulostin</message>
-	<message xml:lang="ru">Найти</message>
+	<message xml:lang="ru">Принтер</message>
 	<message xml:lang="hu">Nyomtató</message>
+	<message xml:lang="ka">საბეჭდი</message>
 </label>
 <label define="TMSG_SEARCH_FOR">
 	<message xml:lang="en">Search for</message>
@@ -872,8 +944,9 @@
 	<message xml:lang="es">Buscar:</message>
 	<message xml:lang="pt">Buscar</message>
 	<message xml:lang="fi">Etsi</message>
-	<message xml:lang="ru">ВЕРХНИЙ РЕГИСТР = нижний регистр</message>
+	<message xml:lang="ru">Найти</message>
 	<message xml:lang="hu">Keresés</message>
+	<message xml:lang="ka">ძიება</message>
 </label>
 <label define="TMSG_UPPERCASE_EQ_LOWERCASE">
 	<message xml:lang="en">Ignore case</message>
@@ -884,8 +957,9 @@
 	<message xml:lang="tr">BÜYÜK HARF = küçük harf</message>
 	<message xml:lang="pt">Ignore o caso </message>
 	<message xml:lang="fi">ISOLLA = pienellä</message>
-	<message xml:lang="ru">Заместить на</message>
+	<message xml:lang="ru">ВЕРХНИЙ РЕГИСТР = нижний регистр</message>
 	<message xml:lang="hu">Ignore case</message>
+	<message xml:lang="ka">მთავრულის გაუთვალისწინებლად</message>
 </label>
 <label define="TMSG_REPLACE_BY">
 	<message xml:lang="en">Replace by</message>
@@ -896,8 +970,9 @@
 	<message xml:lang="es">Reemplazar por:</message>
 	<message xml:lang="pt">Substituir por</message>
 	<message xml:lang="fi">Korvaa tällä</message>
-	<message xml:lang="ru">Замещение</message>
+	<message xml:lang="ru">Заместить на</message>
 	<message xml:lang="hu">Csere</message>
+	<message xml:lang="ka">ჩანაცვლება</message>
 </label>
 <label define="TMSG_REPLACE">
 	<message xml:lang="en">Replace</message>
@@ -908,8 +983,9 @@
 	<message xml:lang="es">Reemplazar</message>
 	<message xml:lang="pt">Substituir</message>
 	<message xml:lang="fi">Korvaa</message>
-	<message xml:lang="ru">Не замещать</message>
+	<message xml:lang="ru">Замещение</message>
 	<message xml:lang="hu">Csere</message>
+	<message xml:lang="ka">ჩანაცვლება</message>
 </label>
 <label define="TMSG_NO_REPLACE">
 	<message xml:lang="en">No replace</message>
@@ -920,8 +996,9 @@
 	<message xml:lang="es">No reemplazar</message>
 	<message xml:lang="pt">Não substituir</message>
 	<message xml:lang="fi">Älä korvaa</message>
-	<message xml:lang="ru">Замещать по запросу</message>
+	<message xml:lang="ru">Не замещать</message>
 	<message xml:lang="hu">Nincs csere</message>
+	<message xml:lang="ka">ჩანაცვლების გარეშე</message>
 </label>
 <label define="TMSG_REPLACE_ON_REQU">
 	<message xml:lang="en">Replace on request</message>
@@ -932,8 +1009,9 @@
 	<message xml:lang="es">Solicitar confirmación</message>
 	<message xml:lang="pt">Substituir sob demanda</message>
 	<message xml:lang="fi">Korvaa pyynnöstä</message>
-	<message xml:lang="ru">Автоматическое замещение</message>
+	<message xml:lang="ru">Замещать по запросу</message>
 	<message xml:lang="hu">Csere kérésre</message>
+	<message xml:lang="ka">ჩანაცვლება მოთხოვნით</message>
 </label>
 <label define="TMSG_AUTO_REPLACE">
 	<message xml:lang="en">Automatic replace</message>
@@ -944,8 +1022,9 @@
 	<message xml:lang="es">Reemplazar automáticamente</message>
 	<message xml:lang="pt">Substituição Automática</message>
 	<message xml:lang="fi">Automaattinen korvus</message>
-	<message xml:lang="ru">Место поиска</message>
+	<message xml:lang="ru">Автоматическое замещение</message>
 	<message xml:lang="hu">Automatikus csere</message>
+	<message xml:lang="ka">ავტომატური ჩანაცვლება</message>
 </label>
 <label define="TMSG_SEARCH_WHERE">
 	<message xml:lang="en">Search where</message>
@@ -956,8 +1035,9 @@
 	<message xml:lang="es">Dónde buscar</message>
 	<message xml:lang="pt">Onde buscar</message>
 	<message xml:lang="fi">Etsi missä</message>
-	<message xml:lang="ru">Перед выбранным</message>
+	<message xml:lang="ru">Место поиска</message>
 	<message xml:lang="hu">Keresés helye</message>
+	<message xml:lang="ka">ძიების არე</message>
 </label>
 <label define="TMSG_BEFORE_SEL">
 	<message xml:lang="en">Before selection</message>
@@ -968,8 +1048,9 @@
 	<message xml:lang="es">Antes de la selección</message>
 	<message xml:lang="pt">Antes da seleção</message>
 	<message xml:lang="fi">Ennen valintaa</message>
-	<message xml:lang="ru">В пределах выбранного</message>
+	<message xml:lang="ru">Перед выбранным</message>
 	<message xml:lang="hu">Kijelölés előtt</message>
+	<message xml:lang="ka">მონიშნულის წინ</message>
 </label>
 <label define="TMSG_WITHIN_SEL">
 	<message xml:lang="en">Within selection</message>
@@ -980,8 +1061,9 @@
 	<message xml:lang="es">En la selección</message>
 	<message xml:lang="pt">Dentro da seleção</message>
 	<message xml:lang="fi">Valinnan sisällä</message>
-	<message xml:lang="ru">После выбранного</message>
+	<message xml:lang="ru">В пределах выбранного</message>
 	<message xml:lang="hu">Kijelölésben</message>
+	<message xml:lang="ka">მონიშნულში</message>
 </label>
 <label define="TMSG_AFTER_SEL">
 	<message xml:lang="en">After selection</message>
@@ -992,8 +1074,9 @@
 	<message xml:lang="es">Tras la selección</message>
 	<message xml:lang="pt">Depois da seleção</message>
 	<message xml:lang="fi">Valinnan jälkeen</message>
-	<message xml:lang="ru">Во всём документе</message>
+	<message xml:lang="ru">После выбранного</message>
 	<message xml:lang="hu">Kijelölés után</message>
+	<message xml:lang="ka">მონიშნულის შემდეგ</message>
 </label>
 <label define="TMSG_IN_WHOLE_DOC">
 	<message xml:lang="en">In the whole document</message>
@@ -1004,8 +1087,9 @@
 	<message xml:lang="es">En todo el documento</message>
 	<message xml:lang="pt">No documento todo</message>
 	<message xml:lang="fi">Koko dokumentissa</message>
-	<message xml:lang="ru">Не замещать</message>
+	<message xml:lang="ru">Во всём документе</message>
 	<message xml:lang="hu">A teljes dokumentumban</message>
+	<message xml:lang="ka">მთელს დოკუმენტში</message>
 </label>
 <label define="TMSG_DO_NOT_REPLACE">
 	<message xml:lang="en">Do not replace</message>
@@ -1016,8 +1100,9 @@
 	<message xml:lang="es">No reemplazar</message>
 	<message xml:lang="pt">Não substituir</message>
 	<message xml:lang="fi">Älä korvaa</message>
-	<message xml:lang="ru">Цвета, принятые по умолчанию</message>
+	<message xml:lang="ru">Не замещать</message>
 	<message xml:lang="hu">Ne cseréljen</message>
+	<message xml:lang="ka">უცვლელად დატოვება</message>
 </label>
 <label define="TMSG_STD_COLORS">
 	<message xml:lang="en">Default colors</message>
@@ -1028,8 +1113,9 @@
 	<message xml:lang="es">Colores por omisión</message>
 	<message xml:lang="pt">Cores padrão</message>
 	<message xml:lang="fi">Oletusvärit</message>
-	<message xml:lang="ru">перед его закрытием</message>
+	<message xml:lang="ru">Цвета, принятые по умолчанию</message>
 	<message xml:lang="hu">Alapszínek</message>
+	<message xml:lang="ka">საწყისი ფერები</message>
 </label>
 <label define="TMSG_BEFORE_CLOSING">
 	<message xml:lang="en">before closing it</message>
@@ -1040,8 +1126,9 @@
 	<message xml:lang="es">antes de cerrarlo</message>
 	<message xml:lang="pt">antes de fechá-lo</message>
 	<message xml:lang="fi">ennen sen sulkemista</message>
-	<message xml:lang="ru">Закрыть документ</message>
+	<message xml:lang="ru">перед его закрытием</message>
 	<message xml:lang="hu">bezárás előtt</message>
+	<message xml:lang="ka">დახურვამდე</message>
 </label>
 <label define="TMSG_CLOSE_DOC">
 	<message xml:lang="en">Close a document</message>
@@ -1052,8 +1139,9 @@
 	<message xml:lang="es">Cerrar un documento</message>
 	<message xml:lang="pt">Fechar um documento</message>
 	<message xml:lang="fi">Sulje dokumentti</message>
-	<message xml:lang="ru">Математические символы</message>
+	<message xml:lang="ru">Закрыть документ</message>
 	<message xml:lang="hu">Dokumentum bezárása</message>
+	<message xml:lang="ka">დოკუმენტის დახურვა</message>
 </label>
 <label define="TMSG_MATH_SYMBOLS">
 	<message xml:lang="en">Math symbols</message>
@@ -1064,8 +1152,9 @@
 	<message xml:lang="es">Símbolos matemáticos</message>
 	<message xml:lang="pt">Símbolos matemáticos</message>
 	<message xml:lang="fi">Matemaattiset symbolit</message>
-	<message xml:lang="ru">Графика</message>
+	<message xml:lang="ru">Математические символы</message>
 	<message xml:lang="hu">Matematikai szimbólumok</message>
+	<message xml:lang="ka">მათემატიკური სიმბოლოები</message>
 </label>
 <label define="TMSG_GRAPHICS">
 	<message xml:lang="en">Graphics</message>
@@ -1076,8 +1165,9 @@
 	<message xml:lang="es">Gráficos</message>
 	<message xml:lang="pt">Gráficos</message>
 	<message xml:lang="fi">Grafiikka</message>
-	<message xml:lang="ru">Латинский алфавит</message>
+	<message xml:lang="ru">Графика</message>
 	<message xml:lang="hu">Grafika</message>
+	<message xml:lang="ka">გრაფიკა</message>
 </label>
 <label define="TMSG_LATIN_ALPHABET">
 	<message xml:lang="en">Latin alphabet</message>
@@ -1088,8 +1178,9 @@
 	<message xml:lang="es">Alfabeto latino</message>
 	<message xml:lang="pt">Alfabeto Latino</message>
 	<message xml:lang="fi">Latinalaiset aakkoset</message>
-	<message xml:lang="ru">Греческий алфавит</message>
+	<message xml:lang="ru">Латинский алфавит</message>
 	<message xml:lang="hu">Latin ábécé</message>
+	<message xml:lang="ka">ლათინური ანბანი</message>
 </label>
 <label define="TMSG_GREEK_ALPHABET">
 	<message xml:lang="en">Greek alphabet</message>
@@ -1100,8 +1191,9 @@
 	<message xml:lang="es">Alfabeto griego</message>
 	<message xml:lang="pt">Alfabeto Grego</message>
 	<message xml:lang="fi">Kreikkalaiset aakkoset</message>
-	<message xml:lang="ru">Сохранить</message>
+	<message xml:lang="ru">Греческий алфавит</message>
 	<message xml:lang="hu">Görög ábécé</message>
+	<message xml:lang="ka">ბერძნული ანბანი</message>
 </label>
 <label define="TMSG_SAVE">
 	<message xml:lang="en">Save</message>
@@ -1112,8 +1204,9 @@
 	<message xml:lang="es">Guardar</message>
 	<message xml:lang="pt">Salvar</message>
 	<message xml:lang="fi">Tallenna</message>
-	<message xml:lang="ru">Текст</message>
+	<message xml:lang="ru">Сохранить</message>
 	<message xml:lang="hu">Mentés</message>
+	<message xml:lang="ka">შენახვა</message>
 </label>
 <label define="TMSG_TEXT">
 	<message xml:lang="en">Text</message>
@@ -1124,8 +1217,9 @@
 	<message xml:lang="es">Texto</message>
 	<message xml:lang="pt">Texto</message>
 	<message xml:lang="fi">Tekstiä</message>
-	<message xml:lang="ru">Графика</message>
+	<message xml:lang="ru">Текст</message>
 	<message xml:lang="hu">Szöveg</message>
+	<message xml:lang="ka">ტექსტი</message>
 </label>
 <label define="TMSG_GRAPHIC">
 	<message xml:lang="en">Graphic</message>
@@ -1136,8 +1230,9 @@
 	<message xml:lang="es">Gráfico</message>
 	<message xml:lang="pt">Gráfico</message>
 	<message xml:lang="fi">Grafiikkaa</message>
-	<message xml:lang="ru">Символ</message>
+	<message xml:lang="ru">Графика</message>
 	<message xml:lang="hu">Grafika</message>
+	<message xml:lang="ka">გრაფიკა</message>
 </label>
 <label define="TMSG_SYMBOL">
 	<message xml:lang="en">Symbol</message>
@@ -1148,8 +1243,9 @@
 	<message xml:lang="es">Símbolo</message>
 	<message xml:lang="pt">Símbolo</message>
 	<message xml:lang="fi">Symboli</message>
-	<message xml:lang="ru">Изображение</message>
+	<message xml:lang="ru">Символ</message>
 	<message xml:lang="hu">szimbólum</message>
+	<message xml:lang="ka">სიმბოლო</message>
 </label>
 <label define="TMSG_PICTURE">
 	<message xml:lang="en">Image</message>
@@ -1160,8 +1256,9 @@
 	<message xml:lang="es">Imagen</message>
 	<message xml:lang="pt">Imagem</message>
 	<message xml:lang="fi">Kuva</message>
-	<message xml:lang="ru">Тип элемента</message>
+	<message xml:lang="ru">Изображение</message>
 	<message xml:lang="hu">Kép</message>
+	<message xml:lang="ka">ნახატი</message>
 </label>
 <label define="TMSG_EL_TYPE">
 	<message xml:lang="en">XML Element type</message>
@@ -1172,8 +1269,9 @@
 	<message xml:lang="es">Tipo de elemento XML</message>
 	<message xml:lang="pt">Tipo de elemento XML</message>
 	<message xml:lang="fi">XML Elementin tyyppi</message>
-	<message xml:lang="ru">после</message>
+	<message xml:lang="ru">Тип элемента</message>
 	<message xml:lang="hu">XML elem típus</message>
+	<message xml:lang="ka">XML ელემენტის ტიპი</message>
 </label>
 <label define="TMSG_AFTER">
 	<message xml:lang="en">after</message>
@@ -1184,8 +1282,9 @@
 	<message xml:lang="es">después</message>
 	<message xml:lang="pt">depois</message>
 	<message xml:lang="fi">jälkeen</message>
-	<message xml:lang="ru">перед</message>
+	<message xml:lang="ru">после</message>
 	<message xml:lang="hu">után</message>
+	<message xml:lang="ka">შემდეგ</message>
 </label>
 <label define="TMSG_BEFORE">
 	<message xml:lang="en">before</message>
@@ -1196,8 +1295,9 @@
 	<message xml:lang="es">antes</message>
 	<message xml:lang="pt">antes</message>
 	<message xml:lang="fi">ennen</message>
-	<message xml:lang="ru">вокруг</message>
+	<message xml:lang="ru">перед</message>
 	<message xml:lang="hu">előtt</message>
+	<message xml:lang="ka">წინ</message>
 </label>
 <label define="TMSG_AROUND">
 	<message xml:lang="en">around</message>
@@ -1208,8 +1308,9 @@
 	<message xml:lang="es">alrededor</message>
 	<message xml:lang="pt">em torno de</message>
 	<message xml:lang="fi">ympärillä</message>
-	<message xml:lang="ru">Включить</message>
+	<message xml:lang="ru">вокруг</message>
 	<message xml:lang="hu">körül</message>
+	<message xml:lang="ka">გარშემო</message>
 </label>
 <label define="TMSG_INCLUDE">
 	<message xml:lang="en">Include</message>
@@ -1220,8 +1321,9 @@
 	<message xml:lang="es">Incluir</message>
 	<message xml:lang="pt">Incluir</message>
 	<message xml:lang="fi">Sisällytä</message>
-	<message xml:lang="ru">Вставить</message>
+	<message xml:lang="ru">Включить</message>
 	<message xml:lang="hu">Include</message>
+	<message xml:lang="ka">თანდართვა</message>
 </label>
 <label define="TMSG_PASTE">
 	<message xml:lang="en">Paste</message>
@@ -1232,8 +1334,9 @@
 	<message xml:lang="es">Pegar</message>
 	<message xml:lang="pt">Colar</message>
 	<message xml:lang="fi">Liitä</message>
-	<message xml:lang="ru">создавать</message>
+	<message xml:lang="ru">Вставить</message>
 	<message xml:lang="hu">Beilleszt</message>
+	<message xml:lang="ka">ჩასმა</message>
 </label>
 <label define="TMSG_TO_CREATE">
 	<message xml:lang="en">to create</message>
@@ -1244,8 +1347,9 @@
 	<message xml:lang="es">para crear</message>
 	<message xml:lang="pt">criar</message>
 	<message xml:lang="fi">luoda</message>
-	<message xml:lang="ru">Вставка</message>
+	<message xml:lang="ru">создавать</message>
 	<message xml:lang="hu">létrehozni</message>
+	<message xml:lang="ka">შექმნა</message>
 </label>
 <label define="TMSG_INSERT">
 	<message xml:lang="en">Insert</message>
@@ -1256,8 +1360,9 @@
 	<message xml:lang="es">Insertar</message>
 	<message xml:lang="pt">Inserir</message>
 	<message xml:lang="fi">Sisällytä</message>
-	<message xml:lang="ru">Конец страницы</message>
+	<message xml:lang="ru">Вставка</message>
 	<message xml:lang="hu">Beilleszt</message>
+	<message xml:lang="ka">ჩამატება</message>
 </label>
 <label define="TMSG_PAGE_BRK">
 	<message xml:lang="en">Page break</message>
@@ -1268,8 +1373,9 @@
 	<message xml:lang="es">Salto de página</message>
 	<message xml:lang="pt">Quebra de página</message>
 	<message xml:lang="fi">Katkaise sivu</message>
-	<message xml:lang="ru">Язык элемента</message>
+	<message xml:lang="ru">Конец страницы</message>
 	<message xml:lang="hu">Lapdobás</message>
+	<message xml:lang="ka">გვერდის წყვეტა</message>
 </label>
 <label define="TMSG_LANG_OF_EL">
 	<message xml:lang="en">Language of element</message>
@@ -1280,8 +1386,9 @@
 	<message xml:lang="es">Idioma del elemento</message>
 	<message xml:lang="pt">Idioma do elemento</message>
 	<message xml:lang="fi">Elementin kieli</message>
-	<message xml:lang="ru">Наследуемый язык:</message>
+	<message xml:lang="ru">Язык элемента</message>
 	<message xml:lang="hu">Nyelvi elem</message>
+	<message xml:lang="ka">ელემენტის ენა</message>
 </label>
 <label define="TMSG_INHERITED_LANG">
 	<message xml:lang="en">Inherited language:</message>
@@ -1292,8 +1399,9 @@
 	<message xml:lang="es">Idioma heredado:</message>
 	<message xml:lang="pt">Idioma herdado:</message>
 	<message xml:lang="fi">Peritty kieli:</message>
-	<message xml:lang="ru">Не найдено</message>
+	<message xml:lang="ru">Наследуемый язык:</message>
 	<message xml:lang="hu">Örökölt nyelv:</message>
+	<message xml:lang="ka">თანდართული ენა:</message>
 </label>
 <label define="TMSG_NOT_FOUND">
 	<message xml:lang="en">Not found</message>
@@ -1304,8 +1412,9 @@
 	<message xml:lang="es">No encontrado</message>
 	<message xml:lang="pt">Não encontrado</message>
 	<message xml:lang="fi">Ei löydy</message>
-	<message xml:lang="ru">Поиск в</message>
+	<message xml:lang="ru">Не найдено</message>
 	<message xml:lang="hu">nem található</message>
+	<message xml:lang="ka">ვერ მოიძებნა</message>
 </label>
 <label define="TMSG_SEARCH_IN">
 	<message xml:lang="en">Search in</message>
@@ -1316,8 +1425,9 @@
 	<message xml:lang="es">Buscar en</message>
 	<message xml:lang="pt">Buscar em</message>
 	<message xml:lang="fi">Etsi tässä</message>
-	<message xml:lang="ru">Поиск</message>
+	<message xml:lang="ru">Поиск в</message>
 	<message xml:lang="hu">Keresés helye</message>
+	<message xml:lang="ka">ძიება</message>
 </label>
 <label define="TMSG_SEARCH">
 	<message xml:lang="en">Search</message>
@@ -1328,8 +1438,9 @@
 	<message xml:lang="es">Buscar</message>
 	<message xml:lang="pt">Buscar</message>
 	<message xml:lang="fi">Etsi</message>
-	<message xml:lang="ru">Элемент Только для чтения</message>
+	<message xml:lang="ru">Поиск</message>
 	<message xml:lang="hu">Keresés</message>
+	<message xml:lang="ka">ძიება</message>
 </label>
 <label define="TMSG_EL_RO">
 	<message xml:lang="en">Read only element</message>
@@ -1340,8 +1451,9 @@
 	<message xml:lang="es">Elemento de sólo lectura</message>
 	<message xml:lang="pt">elemento somente de leitura</message>
 	<message xml:lang="fi">Vain lukuelementti</message>
-	<message xml:lang="ru">Ничего не замещено</message>
+	<message xml:lang="ru">Элемент Только для чтения</message>
 	<message xml:lang="hu">Csak olvasható elem</message>
+	<message xml:lang="ka">მხოლოდ კითხვადი ელემენტი</message>
 </label>
 <label define="TMSG_NOTHING_TO_REPLACE">
 	<message xml:lang="en">Nothing to replace</message>
@@ -1352,8 +1464,9 @@
 	<message xml:lang="es">Nada que sustituir</message>
 	<message xml:lang="pt">Nada a substituir</message>
 	<message xml:lang="fi">Ei korvattavaa</message>
-	<message xml:lang="ru">Стандартные символы</message>
+	<message xml:lang="ru">Ничего не замещено</message>
 	<message xml:lang="hu">Nincs mit cserélni</message>
+	<message xml:lang="ka">არაფერია შესაცვლელი</message>
 </label>
 <label define="TMSG_STD_CHAR">
 	<message xml:lang="en">Standard characters</message>
@@ -1364,8 +1477,9 @@
 	<message xml:lang="es">Caracteres estándar</message>
 	<message xml:lang="pt">Caracteres padrão</message>
 	<message xml:lang="fi">Vakiomerkit</message>
-	<message xml:lang="ru">Стандартная графика</message>
+	<message xml:lang="ru">Стандартные символы</message>
 	<message xml:lang="hu">Szabványos karakterek</message>
+	<message xml:lang="ka">სტანდარტული სიმბოლოები</message>
 </label>
 <label define="TMSG_STD_GRAPHICS">
 	<message xml:lang="en">Standard graphics</message>
@@ -1376,8 +1490,9 @@
 	<message xml:lang="es">Gráficos estándar</message>
 	<message xml:lang="pt">Gráficos padrão</message>
 	<message xml:lang="fi">Vakiografiikka</message>
-	<message xml:lang="ru">Стандартный формат</message>
+	<message xml:lang="ru">Стандартная графика</message>
 	<message xml:lang="hu">Szabványos grafika</message>
+	<message xml:lang="ka">სტანდარტული გრაფიკა</message>
 </label>
 <label define="TMSG_STD_FORMAT">
 	<message xml:lang="en">Standard format</message>
@@ -1388,8 +1503,9 @@
 	<message xml:lang="es">Formato estándar</message>
 	<message xml:lang="pt">Formato padrão</message>
 	<message xml:lang="fi">Vakiomuoto</message>
-	<message xml:lang="ru">Стандартная геометрия</message>
+	<message xml:lang="ru">Стандартный формат</message>
 	<message xml:lang="hu">Szabványos formátum</message>
+	<message xml:lang="ka">სტანდარტული ფორმატი</message>
 </label>
 <label define="TMSG_STD_GEOMETRY">
 	<message xml:lang="en">Standard geometry</message>
@@ -1400,8 +1516,9 @@
 	<message xml:lang="es">Geometría estándar</message>
 	<message xml:lang="pt">Geometria padrão</message>
 	<message xml:lang="fi">Vakiogeometria</message>
-	<message xml:lang="ru">pt</message>
+	<message xml:lang="ru">Стандартная геометрия</message>
 	<message xml:lang="hu">Szabványos elhelyezkedés</message>
+	<message xml:lang="ka">სტანდარტული გეომეტრია</message>
 </label>
 <label define="TMSG_TYPOGRAPHIC_POINTS">
 	<message xml:lang="en">pt</message>
@@ -1412,8 +1529,9 @@
 	<message xml:lang="es">pt</message>
 	<message xml:lang="pt">pt</message>
 	<message xml:lang="fi">pt</message>
-	<message xml:lang="ru">Тип линии</message>
+	<message xml:lang="ru">pt</message>
 	<message xml:lang="hu">pt</message>
+	<message xml:lang="ka">pt</message>
 </label>
 <label define="TMSG_LINE_STYLE">
 	<message xml:lang="en">Line style</message>
@@ -1424,8 +1542,9 @@
 	<message xml:lang="es">Estilo de línea</message>
 	<message xml:lang="pt">Estilo de linha</message>
 	<message xml:lang="fi">Viivatyyli</message>
-	<message xml:lang="ru">Ширина линии</message>
+	<message xml:lang="ru">Тип линии</message>
 	<message xml:lang="hu">Sor stílus</message>
+	<message xml:lang="ka">ხაზის სტილი</message>
 </label>
 <label define="TMSG_LINE_WEIGHT">
 	<message xml:lang="en">Line weight</message>
@@ -1436,8 +1555,9 @@
 	<message xml:lang="es">Grosor de línea</message>
 	<message xml:lang="pt">espessura da linha</message>
 	<message xml:lang="fi">Viivapaksuus</message>
-	<message xml:lang="ru">Образец заполнения</message>
+	<message xml:lang="ru">Ширина линии</message>
 	<message xml:lang="hu">Sor magasság</message>
+	<message xml:lang="ka">ხაზის სისქეა</message>
 </label>
 <label define="TMSG_FILL_PATTERN">
 	<message xml:lang="en">Fill pattern</message>
@@ -1448,8 +1568,9 @@
 	<message xml:lang="es">Patrón de relleno</message>
 	<message xml:lang="pt">Padrão de preenchimento</message>
 	<message xml:lang="fi">Täyttökuvio</message>
-	<message xml:lang="ru">Разбивка</message>
+	<message xml:lang="ru">Образец заполнения</message>
 	<message xml:lang="hu">Kitöltési mintázat</message>
+	<message xml:lang="ka">დაშტრიხვა</message>
 </label>
 <label define="TMSG_SPLIT">
 	<message xml:lang="en">Split</message>
@@ -1460,8 +1581,9 @@
 	<message xml:lang="es">Dividir</message>
 	<message xml:lang="pt">Dividir</message>
 	<message xml:lang="fi">Jaa</message>
-	<message xml:lang="ru">Тип объекта</message>
+	<message xml:lang="ru">Разбивка</message>
 	<message xml:lang="hu">Osztás</message>
+	<message xml:lang="ka">გახლეჩა</message>
 </label>
 <label define="TMSG_OBJECT_TYPE">
 	<message xml:lang="en">Object type</message>
@@ -1472,8 +1594,9 @@
 	<message xml:lang="es">Tipo de objeto</message>
 	<message xml:lang="pt">Tipo de objeto</message>
 	<message xml:lang="fi">Elementtityyppi</message>
-	<message xml:lang="ru">Перейти на страницу номер:</message>
+	<message xml:lang="ru">Тип объекта</message>
 	<message xml:lang="hu">Objektum típus</message>
+	<message xml:lang="ka">ობიექტის ტიპი</message>
 </label>
 <label define="TMSG_GOTO_PAGE">
 	<message xml:lang="en">Goto page number:</message>
@@ -1484,8 +1607,9 @@
 	<message xml:lang="es">Ir a página número:</message>
 	<message xml:lang="pt">Ir à página número:</message>
 	<message xml:lang="fi">Siirry sivulle:</message>
-	<message xml:lang="ru">Любой</message>
+	<message xml:lang="ru">Перейти на страницу номер:</message>
 	<message xml:lang="hu">Ugrás oldalszámra:</message>
+	<message xml:lang="ka">გადასვლა გვერდზე:</message>
 </label>
 <label define="TMSG_ANY">
 	<message xml:lang="en">Any</message>
@@ -1496,8 +1620,9 @@
 	<message xml:lang="es">Cualquiera</message>
 	<message xml:lang="pt">Qualquer</message>
 	<message xml:lang="fi">Mikä tahansa</message>
-	<message xml:lang="ru">Атрибут для поиска</message>
+	<message xml:lang="ru">Любой</message>
 	<message xml:lang="hu">Bármely</message>
+	<message xml:lang="ka">ნებისმიერი</message>
 </label>
 <label define="TMSG_ATTR_TO_SEARCH">
 	<message xml:lang="en">Attribute to search</message>
@@ -1508,8 +1633,9 @@
 	<message xml:lang="es">Atributo a buscar</message>
 	<message xml:lang="pt">Atributo a buscar</message>
 	<message xml:lang="fi">Määre etsintään</message>
-	<message xml:lang="ru">Введите для поиска</message>
+	<message xml:lang="ru">Атрибут для поиска</message>
 	<message xml:lang="hu">Keresendő attribútum</message>
+	<message xml:lang="ka">საძიებელი ატრიბუტი</message>
 </label>
 <label define="TMSG_TYPE_TO_SEARCH">
 	<message xml:lang="en">Type to search</message>
@@ -1520,8 +1646,9 @@
 	<message xml:lang="es">Tipo a buscar</message>
 	<message xml:lang="pt">Tipo a buscar</message>
 	<message xml:lang="fi">Tyyppi etsintään</message>
-	<message xml:lang="ru">Природа</message>
+	<message xml:lang="ru">Введите для поиска</message>
 	<message xml:lang="hu">Keresendő típus</message>
+	<message xml:lang="ka">მიუთითეთ საძიებლად</message>
 </label>
 <label define="TMSG_NATURES">
 	<message xml:lang="en">Natures</message>
@@ -1532,8 +1659,9 @@
 	<message xml:lang="es">Natures</message>
 	<message xml:lang="pt">Naturezas</message>
 	<message xml:lang="fi">Luonteet</message>
-	<message xml:lang="ru">Величина атрибута:</message>
+	<message xml:lang="ru">Природа</message>
 	<message xml:lang="hu">Natures</message>
+	<message xml:lang="ka">ბუნება</message>
 </label>
 <label define="TMSG_VALUE_OF_ATTR">
 	<message xml:lang="en">Attribute value</message>
@@ -1544,8 +1672,9 @@
 	<message xml:lang="es">Valores de atributo</message>
 	<message xml:lang="pt">Valor do atributo</message>
 	<message xml:lang="fi">Määreen arvo</message>
-	<message xml:lang="ru">Неизвестный атрибут</message>
+	<message xml:lang="ru">Величина атрибута:</message>
 	<message xml:lang="hu">Attribútum érték</message>
+	<message xml:lang="ka">ატრიბუტის მნიშვნელობა</message>
 </label>
 <label define="TMSG_UNKNOWN_ATTR">
 	<message xml:lang="en">Unknown attribute</message>
@@ -1556,8 +1685,9 @@
 	<message xml:lang="es">Atributo desconocido</message>
 	<message xml:lang="pt">Atributo desconhecido</message>
 	<message xml:lang="fi">Tuntematon määre</message>
-	<message xml:lang="ru">Отмена</message>
+	<message xml:lang="ru">Неизвестный атрибут</message>
 	<message xml:lang="hu">Ismeretlen attribútum</message>
+	<message xml:lang="ka">უცნობი ატრიბუტი</message>
 </label>
 <label define="TMSG_CANCEL">
 	<message xml:lang="en">Cancel</message>
@@ -1568,8 +1698,9 @@
 	<message xml:lang="es">Cancelar</message>
 	<message xml:lang="pt">Cancelar</message>
 	<message xml:lang="fi">Peruuta</message>
-	<message xml:lang="ru">Ошибка при PostScript трансляции</message>
+	<message xml:lang="ru">Отмена</message>
 	<message xml:lang="hu">Mégsem</message>
+	<message xml:lang="ka">გაუქმება</message>
 </label>
 <label define="TMSG_ERROR_PS_TRANSLATION">
 	<message xml:lang="en">Error in PostScript translation</message>
@@ -1580,8 +1711,9 @@
 	<message xml:lang="es">Error en traducción PostScript</message>
 	<message xml:lang="pt">Erro em tradução PostScript</message>
 	<message xml:lang="fi">Virhe PostScript käännöksessä</message>
-	<message xml:lang="ru">Команда "%s" отвергнута спулером</message>
+	<message xml:lang="ru">Ошибка при PostScript трансляции</message>
 	<message xml:lang="hu">HIba a PostScript fordításban</message>
+	<message xml:lang="ka">შეცდომა PostScript გარდაქმნაში</message>
 </label>
 <label define="TMSG_UNKNOWN_PRINTER">
 	<message xml:lang="en">Command refused by the spooler "%s"</message>
@@ -1592,8 +1724,9 @@
 	<message xml:lang="es">Orden rechazada por el spooler "%s"</message>
 	<message xml:lang="pt">Comando recusado pelo spooler "%s"</message>
 	<message xml:lang="fi">Kirjoitinajuri hylkäsi komennon "%s"</message>
-	<message xml:lang="ru">Невозможно создать "%s"</message>
+	<message xml:lang="ru">Команда "%s" отвергнута спулером</message>
 	<message xml:lang="hu">A parancsot visszautasította a sorkezelő "%s"</message>
+	<message xml:lang="ka">ბრძანება უარყოფილია ბუფერის მიერ "%s"</message>
 </label>
 <label define="TMSG_CANNOT_CREATE_PS">
 	<message xml:lang="en">Cannot create "%s"</message>
@@ -1604,8 +1737,9 @@
 	<message xml:lang="es">No puedo crear "%s"</message>
 	<message xml:lang="pt">Não é possível criar "%s"</message>
 	<message xml:lang="fi">Ei voi luoda "%s"</message>
-	<message xml:lang="ru">Надстрочное</message>
+	<message xml:lang="ru">Невозможно создать "%s"</message>
 	<message xml:lang="hu">"%s" nem hozható létre</message>
+	<message xml:lang="ka">ვერ იქმნება "%s"</message>
 </label>
 <label define="TMSG_OVERLINE">
 	<message xml:lang="en">Overline</message>
@@ -1616,8 +1750,9 @@
 	<message xml:lang="es">Suprarayado</message>
 	<message xml:lang="pt">Sobrelinhado (Overline)</message>
 	<message xml:lang="fi">Yliviivaa</message>
-	<message xml:lang="ru">Формат документа</message>
+	<message xml:lang="ru">Надстрочное</message>
 	<message xml:lang="hu">Felülvonás</message>
+	<message xml:lang="ka">ზედა ხაზი</message>
 </label>
 <label define="TMSG_DOCUMENT_FORMAT">
 	<message xml:lang="en">Document format</message>
@@ -1628,8 +1763,9 @@
 	<message xml:lang="es">Formato de documento</message>
 	<message xml:lang="pt">Formato de documento</message>
 	<message xml:lang="fi">Dokumentin muoto</message>
-	<message xml:lang="ru">События</message>
+	<message xml:lang="ru">Формат документа</message>
 	<message xml:lang="hu">Dokumentum formátum</message>
+	<message xml:lang="ka">დოკუმენტის ფორმატი</message>
 </label>
 <label define="TMSG_EVENTS">
 	<message xml:lang="en">Events</message>
@@ -1640,8 +1776,9 @@
 	<message xml:lang="pt">Eventos</message>
 	<message xml:lang="fi">Tapahtumat</message>
 	<message xml:lang="tr">Olaylar</message>
-	<message xml:lang="ru">Удалить атрибут</message>
+	<message xml:lang="ru">События</message>
 	<message xml:lang="hu">Események</message>
+	<message xml:lang="ka">მოვლენები</message>
 </label>
 <label define="TMSG_DEL_ATTR">
 	<message xml:lang="en">Remove attribute</message>
@@ -1652,8 +1789,9 @@
 	<message xml:lang="pt">Remover atributo</message>
 	<message xml:lang="fi">Poista määritys</message>
 	<message xml:lang="tr">Özeliği sil</message>
-	<message xml:lang="ru">Левая кнопка устанавливает выбранный цвет</message>
+	<message xml:lang="ru">Удалить атрибут</message>
 	<message xml:lang="hu">Attribútum eltávolítása</message>
+	<message xml:lang="ka">ატრიბუტის ამოღება</message>
 </label>
 <label define="TMSG_CPBUTTON_1">
 	<message xml:lang="en">Left button sets the selection color</message>
@@ -1664,8 +1802,9 @@
 	<message xml:lang="pt">Botão esquerdo fixa a cor da seleção</message>
 	<message xml:lang="fi">Hiiren vasen näppäin asettaa valintavärin</message>
 	<message xml:lang="tr">Sol düğme seçilin rengini değiştiriyor</message>
-	<message xml:lang="ru">Средняя и правая кнопка устанавливает цвет символа " ^ "</message>
+	<message xml:lang="ru">Левая кнопка устанавливает выбранный цвет</message>
 	<message xml:lang="hu">A bal egérgomb a kijelölés színét adja meg</message>
+	<message xml:lang="ka">მარცხენა ღილაკით მონიშნულის ფერი მიეთითება</message>
 </label>
 <label define="TMSG_CPBUTTON_2">
 	<message xml:lang="en">Middle or Right button sets the caret color</message>
@@ -1676,8 +1815,9 @@
 	<message xml:lang="pt">Botão do meio ou da direita fixa a cor do cursor</message>
 	<message xml:lang="fi">Hiiren keskimmäinen tai oikea näppäin asettaa caret värin</message>
 	<message xml:lang="tr">Orta ve sağ düğme kürsör\'ün rengini değiştiriyor</message>
-	<message xml:lang="ru">Больше ...</message>
+	<message xml:lang="ru">Средняя и правая кнопка устанавливает цвет символа " ^ "</message>
 	<message xml:lang="hu">A középső vagy jobb egérgomb a caret adja meg</message>
+	<message xml:lang="ka">შუა ან მარჯვენა ღილაკით " ^ " სიმბოლოს ფერი მიეთითება</message>
 </label>
 <label define="TMSG_CPMOREBUTTON">
 	<message xml:lang="en">More ...</message>
@@ -1688,8 +1828,9 @@
 	<message xml:lang="pt">Mais ...</message>
 	<message xml:lang="fi">Lisää ...</message>
 	<message xml:lang="tr">Diğer...</message>
-	<message xml:lang="ru">Получить</message>
+	<message xml:lang="ru">Больше ...</message>
 	<message xml:lang="hu">Egyéb...</message>
+	<message xml:lang="ka">დამატებით ...</message>
 </label>
 <label define="TMSG_CPGETBUTTON">
 	<message xml:lang="en">Get</message>
@@ -1700,8 +1841,9 @@
 	<message xml:lang="pt">Comece</message>
 	<message xml:lang="fi">Hae</message>
 	<message xml:lang="tr">Yenilendir</message>
-	<message xml:lang="ru">Цвет</message>
+	<message xml:lang="ru">Получить</message>
 	<message xml:lang="hu">Get</message>
+	<message xml:lang="ka">მიღება</message>
 </label>
 <label define="TMSG_CPCOLORBUTTON">
 	<message xml:lang="en">Color</message>
@@ -1714,6 +1856,7 @@
 	<message xml:lang="tr">Renk</message>
 	<message xml:lang="ru">Цвет</message>
 	<message xml:lang="hu">Szín</message>
+	<message xml:lang="ka">ფერი</message>
 </label>
 <label define="TMSG_CPCOLORBG">
 	<message xml:lang="en">Background color</message>
@@ -1721,8 +1864,9 @@
 	<message xml:lang="es">Color del fondo</message>
 	<message xml:lang="de">Hintergrundfarbe</message>
 	<message xml:lang="it">Colore di sfondo</message>
-	<message xml:lang="ru">жБЕР ТНМЮ</message>
+	<message xml:lang="ru">Цвет фона</message>
 	<message xml:lang="hu">Háttérszín</message>
+	<message xml:lang="ka">ფონის ფერი</message>
 </label>
 <label define="TMSG_CPCOLORFG">
 	<message xml:lang="en">Foreground color</message>
@@ -1730,8 +1874,9 @@
 	<message xml:lang="es">Color del texto</message>
 	<message xml:lang="de">Vordergrundfarbe</message>
 	<message xml:lang="it">Colore per il testo</message>
-	<message xml:lang="ru">жБЕР НЯМНБМШУ ЯХЛБНКНБ</message>
+	<message xml:lang="ru">Цвет символов</message>
 	<message xml:lang="hu">Szín</message>
+	<message xml:lang="ka">ტექსტის ფერი</message>
 </label>
 <label define="TMSG_CPCOLORSWITCH">
 	<message xml:lang="en">Switch colors</message>
@@ -1739,8 +1884,9 @@
 	<message xml:lang="es">Intercambiar colores</message>
 	<message xml:lang="de">Farben wechseln</message>
 	<message xml:lang="it">Scambia colori</message>
-	<message xml:lang="ru">жБЕР БШЙКЧВЮРЕКЪ</message>
+	<message xml:lang="ru">Переключение цвета</message>
 	<message xml:lang="hu">Színek cseréje</message>
+	<message xml:lang="ka">ფერების გადართვა</message>
 </label>
 <label define="TMSG_NO_ELEMENT">
 	<message xml:lang="en">Select a generic XML structure</message>
@@ -1748,8 +1894,9 @@
 	<message xml:lang="es">Seleccione una estructura genérica</message>
 	<message xml:lang="de">Wählen Sie eine generische XML-Struktur</message>
 	<message xml:lang="it">Scegli una struttura XML generica</message>
-	<message xml:lang="ru">бШАПЮРЭ ПНДЯРБЕММСЧ ЯРПСЙРСПС XML</message>
+	<message xml:lang="ru">Выбрать родственную структуру XML</message>
 	<message xml:lang="hu">Adjon meg egy általános XML szerkezetet</message>
+	<message xml:lang="ka">საზოგადო XML სტრუქტურის შექმნა</message>
 </label>
 <label define="TMSG_What">
 	<message xml:lang="en">Checking</message>
@@ -1762,6 +1909,7 @@
 	<message xml:lang="fi">Tarkistetaan</message>
 	<message xml:lang="ru">Место проверки</message>
 	<message xml:lang="hu">Ellenőrzés</message>
+	<message xml:lang="ka">შემოწმება</message>
 </label>
 <label define="TMSG_Pass_Without">
 	<message xml:lang="en">Search/Skip</message>
@@ -1774,6 +1922,7 @@
 	<message xml:lang="fi">Etsi/Hylkää</message>
 	<message xml:lang="ru">Найти/Пропустить</message>
 	<message xml:lang="hu">Keresés/Kihagyás</message>
+	<message xml:lang="ka">ძიება/გამოტოვება</message>
 </label>
 <label define="TMSG_Replace_With">
 	<message xml:lang="en">Replace (+ dic)</message>
@@ -1786,6 +1935,7 @@
 	<message xml:lang="fi">Korvaa (+ dic)</message>
 	<message xml:lang="ru">Заместить (+словарь)</message>
 	<message xml:lang="hu">Csere (+ dic)</message>
+	<message xml:lang="ka">ჩანაცვლება (+ სიტყვარი)</message>
 </label>
 <label define="TMSG_Replace_Without">
 	<message xml:lang="en">Replace and next</message>
@@ -1798,6 +1948,7 @@
 	<message xml:lang="fi">Korvaa ja seuraava</message>
 	<message xml:lang="ru">Заместить и следующий</message>
 	<message xml:lang="hu">Csere és következő</message>
+	<message xml:lang="ka">ჩანაცვლება და შემდეგზე გადასვლა</message>
 </label>
 <label define="TMSG_Keep_Unknown">
 	<message xml:lang="en">Other language</message>
@@ -1810,6 +1961,7 @@
 	<message xml:lang="fi">Toinen kieli</message>
 	<message xml:lang="ru">Другой язык</message>
 	<message xml:lang="hu">Másik nyelv</message>
+	<message xml:lang="ka">სხვა ენა</message>
 </label>
 <label define="TMSG_Pass_With">
 	<message xml:lang="en">Skip (+ dic)</message>
@@ -1822,6 +1974,7 @@
 	<message xml:lang="fi">Hylkää (+ dic)</message>
 	<message xml:lang="ru">Пропустить (+словарь)</message>
 	<message xml:lang="hu">Kihagyás (+ dic)</message>
+	<message xml:lang="ka">გამოტოვება (+ სიტყვარი)</message>
 </label>
 <label define="TMSG_Specials">
 	<message xml:lang="en">words containing:</message>
@@ -1834,6 +1987,7 @@
 	<message xml:lang="fi">sanat, joissa:</message>
 	<message xml:lang="ru">слова содержащие:</message>
 	<message xml:lang="hu">words containing:</message>
+	<message xml:lang="ka">სიტყვები, რომლებიც შეიცავენ:</message>
 </label>
 <label define="TMSG_Correct">
 	<message xml:lang="en">Spell checking ...</message>
@@ -1846,6 +2000,7 @@
 	<message xml:lang="fi">Oikeinkirjoituksen tarkistus ...</message>
 	<message xml:lang="ru">Проверка правописания...</message>
 	<message xml:lang="hu">Szóellenőrző...</message>
+	<message xml:lang="ka">მართლწერის შემოწმება ...</message>
 </label>
 <label define="TMSG_Romans">
 	<message xml:lang="en">Roman numerals</message>
@@ -1858,6 +2013,7 @@
 	<message xml:lang="fi">Roomalaiset numerot</message>
 	<message xml:lang="ru">римские цифры</message>
 	<message xml:lang="hu">Római számok</message>
+	<message xml:lang="ka">რომაული ციფრები</message>
 </label>
 <label define="TMSG_Ignore">
 	<message xml:lang="en">Ignore</message>
@@ -1870,6 +2026,7 @@
 	<message xml:lang="fi">Ohita</message>
 	<message xml:lang="ru">Игнорировать</message>
 	<message xml:lang="hu">Kihagy</message>
+	<message xml:lang="ka">იგნორირება</message>
 </label>
 <label define="TMSG_Capitals">
 	<message xml:lang="en">words that are all caps</message>
@@ -1882,6 +2039,7 @@
 	<message xml:lang="fi">sanat, joissa kaikki isolla</message>
 	<message xml:lang="ru">слова из заглавных букв</message>
 	<message xml:lang="hu">csupa nagybetűs szavak</message>
+	<message xml:lang="ka">სიტყვები მთავრულით</message>
 </label>
 <label define="TMSG_Arabics">
 	<message xml:lang="en">words with digits</message>
@@ -1894,6 +2052,7 @@
 	<message xml:lang="fi">sanat, joissa numeroita</message>
 	<message xml:lang="ru">слова с цифрами</message>
 	<message xml:lang="hu">számokat tartalmazó szavak</message>
+	<message xml:lang="ka">სიტყვები ციფრებით</message>
 </label>
 <label define="TMSG_NO_PARAM">
 	<message xml:lang="en">Parameter file error</message>
@@ -1906,6 +2065,7 @@
 	<message xml:lang="fi">Parametritiedosto virhe</message>
 	<message xml:lang="ru">Ошибка файла параметра</message>
 	<message xml:lang="hu">Parameter fájl hiba</message>
+	<message xml:lang="ka">პარამეტრის ფაილის შეცდომა</message>
 </label>
 <label define="TMSG_NO_KEYBOARD">
 	<message xml:lang="en">No keyboard file</message>
@@ -1918,6 +2078,7 @@
 	<message xml:lang="fi">Ei näppäimistötiedostoa</message>
 	<message xml:lang="ru">Файл не является файлом введённым с клавиатуры</message>
 	<message xml:lang="hu">Nincs billentyűzet fájl</message>
+	<message xml:lang="ka">კლავიატურის ფაილი არაა</message>
 </label>
 <label define="TMSG_NO_SAVE">
 	<message xml:lang="en">Cannot save the document dictionary</message>
@@ -1930,6 +2091,7 @@
 	<message xml:lang="fi">Dokumentin sanastoa ei voi tallentaa</message>
 	<message xml:lang="ru">Невозможно сохранить словарь</message>
 	<message xml:lang="hu">A dokumentum szótár nem menthető</message>
+	<message xml:lang="ka">დოკუმენტის სიტყვარის შენახვა ვერ ხერხდება</message>
 </label>
 <label define="TMSG_REFUSE_WORD">
 	<message xml:lang="en">Incorrect word "%s" refused in this dictionary</message>
@@ -1942,6 +2104,7 @@
 	<message xml:lang="fi">Kelpaamaton sana "%s", ei ole hyväksytty tässä sanastossa</message>
 	<message xml:lang="ru">Неправильному слову "%s" отказано в добавлении его в этот словарь</message>
 	<message xml:lang="hu">Ezt az érvénytelen szót (%s) elutasította a szótár</message>
+	<message xml:lang="ka">მცდარი სიტყვა "%s" ამ სიტყვარში უარყოფილია</message>
 </label>
 <label define="TMSG_ADD_WORD">
 	<message xml:lang="en">Word "%s" added in the document dictionary</message>
@@ -1954,6 +2117,7 @@
 	<message xml:lang="fi">Sana "%s" lisätty dokumentin sanastoon</message>
 	<message xml:lang="ru">Слово "%s" добавлено в словарь</message>
 	<message xml:lang="hu">Szó (%s) hozzáadva a dokumentum szótárhoz</message>
+	<message xml:lang="ka">სიტყვა "%s" დოკუმენტის სიტყვარს დაემატა</message>
 </label>
 <label define="TMSG_END_CHECK">
 	<message xml:lang="en">End of spell checking</message>
@@ -1966,6 +2130,7 @@
 	<message xml:lang="fi">Oikeinkirjoitustarkistus valmis!</message>
 	<message xml:lang="ru">Конец проверки правописания</message>
 	<message xml:lang="hu">Szóellenőrzés vége</message>
+	<message xml:lang="ka">მართლწერის შემოწმების დასრულება</message>
 </label>
 <label define="TMSG_STOP_CHECK">
 	<message xml:lang="en">Spell checking aborted</message>
@@ -1978,6 +2143,7 @@
 	<message xml:lang="fi">Oikeinkirjoitustarkistus keskeytetty!</message>
 	<message xml:lang="ru">Проверка правописания прервана</message>
 	<message xml:lang="hu">Szóellenőrzés megszakadt</message>
+	<message xml:lang="ka">მართლწერის შემოწმება შეწყდა</message>
 </label>
 <label define="TMSG_NO_SELECT">
 	<message xml:lang="en">Please select a document</message>
@@ -1990,6 +2156,7 @@
 	<message xml:lang="fi">Valitse dokumentti</message>
 	<message xml:lang="ru">Выберите документ</message>
 	<message xml:lang="hu">Adjon meg egy dokumentumot</message>
+	<message xml:lang="ka">გთხოვთ შეარჩიოთ დოკუმენტი</message>
 </label>
 <label define="TMSG_OK_SAVE">
 	<message xml:lang="en">Document dictionary saved: %s</message>
@@ -2002,6 +2169,7 @@
 	<message xml:lang="fi">Dokumentin sanasto tallennettu: %s</message>
 	<message xml:lang="ru">Словарь сохранён в: %s</message>
 	<message xml:lang="hu">Dokumentum szótár mentve: %s</message>
+	<message xml:lang="ka">დოკუმენტის სიტყვარი შენახულია: %s</message>
 </label>
 <label define="TMSG_NOT_AVAILABLE">
 	<message xml:lang="en">Not available in this version</message>
@@ -2009,8 +2177,9 @@
 	<message xml:lang="es">No disponible en esta versión</message>
 	<message xml:lang="de">In dieser Version nicht verfügbar</message>
 	<message xml:lang="it">Non disponibile in questa versione</message>
-	<message xml:lang="ru">мЕДНЯРСОМН Б ЩРНИ БЕПЯХХ</message>
+	<message xml:lang="ru">Недоступно в этой версии</message>
 	<message xml:lang="hu">Ebben a változatban nem elérhető</message>
+	<message xml:lang="ka">ამ ვერსიაში მიუწვდომელია</message>
 </label>
 <label define="TMSG_ATTACHDETACH">
 	<message xml:lang="en">Enable/Disable palette</message>
@@ -2018,8 +2187,9 @@
 	<message xml:lang="es">Activar/Desactivar paleta</message>
 	<message xml:lang="de">Palette aktivieren/deaktivieren</message>
 	<message xml:lang="it">Abilita/Disabilita la paletta colori</message>
-	<message xml:lang="ru">бЙКЧВХРЭ/бШЙКЧВХРЭ ОЮКХРПС</message>
+	<message xml:lang="ru">Включить/Выключить палитру</message>
 	<message xml:lang="hu">Dokkoló rögzítése/úsztatása</message>
+	<message xml:lang="ka">პალიტრის ჩართვა/ამორთვა</message>
 </label>
 <label define="TMSG_TOOLS">
 	<message xml:lang="en">Tools</message>
@@ -2027,8 +2197,9 @@
 	<message xml:lang="es">Herramientas</message>
 	<message xml:lang="de">Hilfsmittel</message>
 	<message xml:lang="it">Strumenti</message>
-	<message xml:lang="ru">хМЯРПСЛЕМРШ</message>
+	<message xml:lang="ru">Инструменты</message>
 	<message xml:lang="hu">Eszközök</message>
+	<message xml:lang="ka">ხელსაწყოები</message>
 </label>
 <label define="TMSG_ATTR_MANDATORY">
 	<message xml:lang="en">Mandatory attribute, it can't be removed</message>
@@ -2036,8 +2207,9 @@
 	<message xml:lang="es">Atributo obligatorio, no puede eliminarse</message>
 	<message xml:lang="de">Obligatorisches Attribut, kann nicht entfernt werden</message>
 	<message xml:lang="it">Attributo obbligatorio, non si pu rimuovere</message>
-	<message xml:lang="ru">щРН НАЪГЮРЕКЭМШИ ЮРПХАСР, НМ МЕ ЛНФЕР АШРЭ СДЮК╦М</message>
+	<message xml:lang="ru">Это обязательный атрибут, он не может быть удалён</message>
 	<message xml:lang="hu">Kötelező attribútum, nem távolítható el</message>
+	<message xml:lang="ka">აუცილებელი ატრიბუტი, მისი ამოღება შესაძლებელია</message>
 </label>
 <label define="TMSG_REFRESH">
 	<message xml:lang="en">Refresh</message>
@@ -2045,8 +2217,9 @@
 	<message xml:lang="es">Actualizar</message>
 	<message xml:lang="de">Erneuern</message>
 	<message xml:lang="it">Aggiorna</message>
-	<message xml:lang="ru">нАМНБХРЭ</message>
+	<message xml:lang="ru">Обновить</message>
 	<message xml:lang="hu">Frissítés</message>
+	<message xml:lang="ka">განახლება</message>
 </label>
 <label define="TMSG_FORMATLEFT">
 	<message xml:lang="en">Left</message>
@@ -2054,8 +2227,9 @@
 	<message xml:lang="es">Izquierda</message>
 	<message xml:lang="de">Links</message>
 	<message xml:lang="it">Sinistra</message>
-	<message xml:lang="ru">оН КЕБНЛС ЙПЮЧ</message>
+	<message xml:lang="ru">По левому краю</message>
 	<message xml:lang="hu">Balra zárt</message>
+	<message xml:lang="ka">მარცხნივ</message>
 </label>
 <label define="TMSG_FORMATRIGHT">
 	<message xml:lang="en">Right</message>
@@ -2063,8 +2237,9 @@
 	<message xml:lang="es">Derecha</message>
 	<message xml:lang="de">Rechts</message>
 	<message xml:lang="it">Destra</message>
-	<message xml:lang="ru">оН ОПЮБНЛС ЙПЮЧ</message>
+	<message xml:lang="ru">По правому краю</message>
 	<message xml:lang="hu">Jobbra zárt</message>
+	<message xml:lang="ka">მარჯვნივ</message>
 </label>
 <label define="TMSG_FORMATCENTER">
 	<message xml:lang="en">Center</message>
@@ -2072,8 +2247,9 @@
 	<message xml:lang="es">Centrado</message>
 	<message xml:lang="de">Zentrieren</message>
 	<message xml:lang="it">Centro</message>
-	<message xml:lang="ru">оН ЖЕМРПС</message>
+	<message xml:lang="ru">По центру</message>
 	<message xml:lang="hu">Középre zárt</message>
+	<message xml:lang="ka">ცენტრში</message>
 </label>
 <label define="TMSG_FORMATJUSTIFY">
 	<message xml:lang="en">Justify</message>
@@ -2081,8 +2257,9 @@
 	<message xml:lang="es">Justificado</message>
 	<message xml:lang="de">Ausrichten</message>
 	<message xml:lang="it">Giustifica</message>
-	<message xml:lang="ru">бШПНБМЪРЭ</message>
+	<message xml:lang="ru">Выровнять</message>
 	<message xml:lang="hu">Sorkizárt</message>
+	<message xml:lang="ka">სწორება</message>
 </label>
 <label define="TMSG_APPLY_CLASS">
 	<message xml:lang="en">Apply class</message>
@@ -2095,6 +2272,7 @@
 	<message xml:lang="fi">Käytä luokkaa</message>
 	<message xml:lang="ru">Применить класс</message>
 	<message xml:lang="hu">Osztály alkalmazása</message>
+	<message xml:lang="ka">კლასის გამოყენება</message>
 </label>
 <label define="TMSG_SEL_CLASS">
 	<message xml:lang="en">Select a class or a pseudo-class</message>
@@ -2107,6 +2285,7 @@
 	<message xml:lang="fi">Valitse luokka tai valeluokka</message>
 	<message xml:lang="ru">Выбрать класс или псевдо-класс</message>
 	<message xml:lang="hu">Adja meg az osztályt vagy álosztályt</message>
+	<message xml:lang="ka">კლასის ან ფსევდოკლასის შერჩევა</message>
 </label>
 <label define="TMSG_SEL">
 	<message xml:lang="en">Select</message>
@@ -2119,6 +2298,7 @@
 	<message xml:lang="fi">Valitse</message>
 	<message xml:lang="ru">Выбрать</message>
 	<message xml:lang="hu">Kijelöl</message>
+	<message xml:lang="ka">შერჩევა</message>
 </label>
 <label define="TMSG_USE_F2">
 	<message xml:lang="en">Use F2 key to select the parent element</message>
@@ -2126,8 +2306,9 @@
 	<message xml:lang="es">Utilice la tecla F2 para seleccionar el elemento padre</message>
 	<message xml:lang="de">Verwenden Sie die F2 Taste, um das Elternelement auszuwählen</message>
 	<message xml:lang="it">Usa il tasto F2 per selezionare l'elemento padre</message>
-	<message xml:lang="ru">дКЪ БШАНПЮ ПНДХРЕКЭЯЙНЦН ЩКЕЛЕМРЮ ХЯОНКЭГСИРЕ F2</message>
+	<message xml:lang="ru">Для выбора родительского элемента используйте F2</message>
 	<message xml:lang="hu">Az F2 billentyűvel jelölhető ki az elődelem</message>
+	<message xml:lang="ka">ძირეული ელემენტის შესარჩევად F2 კლავიში გამოიყენეთ</message>
 </label>
 <label define="TMSG_MATHML">
 	<message xml:lang="en">Maths</message>
@@ -2140,6 +2321,7 @@
 	<message xml:lang="fi">Matematiikka</message>
 	<message xml:lang="ru">Математика</message>
 	<message xml:lang="hu">Matematika</message>
+	<message xml:lang="ka">მათემატიკა</message>
 </label>
 <label define="TMSG_MISC">
 	<message xml:lang="en">Misc</message>
@@ -2147,8 +2329,9 @@
 	<message xml:lang="es">Miscelánea</message>
 	<message xml:lang="de">Verschiedene</message>
 	<message xml:lang="it">Varie</message>
-	<message xml:lang="ru">оПНВЕЕ</message>
+	<message xml:lang="ru">Прочее</message>
 	<message xml:lang="hu">Egyéb</message>
+	<message xml:lang="ka">სხვადასხვა</message>
 </label>
 <label define="TMSG_BINARY_REL">
 	<message xml:lang="en">Binary relations</message>
@@ -2156,8 +2339,9 @@
 	<message xml:lang="es">Relaciones binarias</message>
 	<message xml:lang="de">Binäre Relationen</message>
 	<message xml:lang="it">Relazioni binarie</message>
-	<message xml:lang="ru">дБНХВМШЕ ЯБЪГХ</message>
+	<message xml:lang="ru">Двоичные связи</message>
 	<message xml:lang="hu">Bináris műveletek</message>
+	<message xml:lang="ka">ორობითი კავშირები</message>
 </label>
 <label define="TMSG_BINARY_REL_NEG">
 	<message xml:lang="en">Binary relations of negation</message>
@@ -2165,8 +2349,9 @@
 	<message xml:lang="es">Relaciones de negación binarias</message>
 	<message xml:lang="de">Binäre negierte Relationen</message>
 	<message xml:lang="it">Relazioni binarie di negazione</message>
-	<message xml:lang="ru">дБНХВМШЕ ЯБЪГХ НРПХЖЮМХЪ</message>
+	<message xml:lang="ru">Двоичные связи отрицания</message>
 	<message xml:lang="hu">Bináris műveletek vagy negálás</message>
+	<message xml:lang="ka">გამოკლების ორობითი კავშირები</message>
 </label>
 <label define="TMSG_OPERATOR">
 	<message xml:lang="en">Operators</message>
@@ -2174,8 +2359,9 @@
 	<message xml:lang="es">Operadores</message>
 	<message xml:lang="de">Operatoren</message>
 	<message xml:lang="it">Operatori</message>
-	<message xml:lang="ru">гМЮЙХ НОЕПЮЖХИ</message>
+	<message xml:lang="ru">Знаки операций</message>
 	<message xml:lang="hu">Máveletek</message>
+	<message xml:lang="ka">ოპერატორები</message>
 </label>
 <label define="TMSG_GREEK_CAP">
 	<message xml:lang="en">Greek alphabet (capital)</message>
@@ -2183,8 +2369,9 @@
 	<message xml:lang="es">Alfabeto griego (mayúsculas)</message>
 	<message xml:lang="de">Griechisches Alphabet (Großbuchstaben)</message>
 	<message xml:lang="it">Alfabeto greco (maiuscolo)</message>
-	<message xml:lang="ru">цПЕВЕЯЙХИ ЮКТЮБХР (ОПНОХЯМНИ)</message>
+	<message xml:lang="ru">Греческий алфавит (прописной)</message>
 	<message xml:lang="hu">Görög ábécé (nagybetűs)</message>
+	<message xml:lang="ka">ბერძნული ანბანი (მთავრული)</message>
 </label>
 <label define="TMSG_ARROW">
 	<message xml:lang="en">Arrows</message>
@@ -2192,8 +2379,9 @@
 	<message xml:lang="es">Flechas</message>
 	<message xml:lang="de">Pfeile</message>
 	<message xml:lang="it">Frecce</message>
-	<message xml:lang="ru">яРПЕКЙХ</message>
+	<message xml:lang="ru">Стрелки</message>
 	<message xml:lang="hu">Nyilak</message>
+	<message xml:lang="ka">ისრები</message>
 </label>
 <label define="TMSG_SPECHAR">
 	<message xml:lang="en">Special characters</message>
@@ -2202,6 +2390,8 @@
 	<message xml:lang="de">Sonderzeichen</message>
 	<message xml:lang="it">Caratteri speciali</message>
 	<message xml:lang="hu">Különleges karakterek</message>
+	<message xml:lang="ru">Математические символы</message>
+	<message xml:lang="ka">სპეციალური სიმბოლოები</message>
 </label>
 <label define="TMSG_BUTTON_INTERRUPT">
 	<message xml:lang="en">Interrupt transfer</message>
@@ -2214,6 +2404,7 @@
 	<message xml:lang="fi">Keskeytä tiedonsiirto</message>
 	<message xml:lang="ru">Прервать передачу</message>
 	<message xml:lang="hu">Átvitel megszakítása</message>
+	<message xml:lang="ka">გადაცემის შეწყვეტა</message>
 </label>
 <label define="TMSG_BUTTON_PREVIOUS">
 	<message xml:lang="en">Previous document</message>
@@ -2226,6 +2417,7 @@
 	<message xml:lang="fi">Edellinen dokumentti</message>
 	<message xml:lang="ru">Предыдущий документ</message>
 	<message xml:lang="hu">Előző dokumentum</message>
+	<message xml:lang="ka">წინა დოკუმენტი</message>
 </label>
 <label define="TMSG_BUTTON_NEXT">
 	<message xml:lang="en">Next document</message>
@@ -2238,6 +2430,7 @@
 	<message xml:lang="fi">Seuraava dokumentti</message>
 	<message xml:lang="ru">Следующий документ</message>
 	<message xml:lang="hu">Következő dokumentum</message>
+	<message xml:lang="ka">შემდეგი დოკუმენტი</message>
 </label>
 <label define="TMSG_BUTTON_RELOAD">
 	<message xml:lang="en">Reload</message>
@@ -2250,6 +2443,7 @@
 	<message xml:lang="fi">Päivitä</message>
 	<message xml:lang="ru">Обновить</message>
 	<message xml:lang="hu">Újratöltés</message>
+	<message xml:lang="ka">ხელახლა ჩატვირთვა</message>
 </label>
 <label define="TMSG_BUTTON_SAVE">
 	<message xml:lang="en">Save</message>
@@ -2262,6 +2456,7 @@
 	<message xml:lang="fi">Tallenna</message>
 	<message xml:lang="ru">Сохранить</message>
 	<message xml:lang="hu">Mentés</message>
+	<message xml:lang="ka">შენახვა</message>
 </label>
 <label define="TMSG_BUTTON_PRINT">
 	<message xml:lang="en">Print</message>
@@ -2274,6 +2469,7 @@
 	<message xml:lang="fi">Tulosta</message>
 	<message xml:lang="ru">Печать</message>
 	<message xml:lang="hu">Nyomtatás</message>
+	<message xml:lang="ka">ბეჭდვა</message>
 </label>
 <label define="TMSG_BUTTON_SEARCH">
 	<message xml:lang="en">Search</message>
@@ -2286,6 +2482,7 @@
 	<message xml:lang="fi">Etsi</message>
 	<message xml:lang="ru">Поиск</message>
 	<message xml:lang="hu">Keresés</message>
+	<message xml:lang="ka">ძიება</message>
 </label>
 <label define="TMSG_BUTTON_HOME">
 	<message xml:lang="en">Home</message>
@@ -2298,6 +2495,7 @@
 	<message xml:lang="tr">Özel sayfa</message>
 	<message xml:lang="ru">Домашняя страница</message>
 	<message xml:lang="hu">Kezdőlap</message>
+	<message xml:lang="ka">თავფურცელი</message>
 </label>
 <label define="TMSG_BUTTON_ITALICS">
 	<message xml:lang="en">Emphasis</message>
@@ -2310,6 +2508,7 @@
 	<message xml:lang="fi">Korosta</message>
 	<message xml:lang="ru">Акцент</message>
 	<message xml:lang="hu">Hangsúlyozott</message>
+	<message xml:lang="ka">აქცენტირება</message>
 </label>
 <label define="TMSG_BUTTON_BOLD">
 	<message xml:lang="en">Strong</message>
@@ -2322,6 +2521,7 @@
 	<message xml:lang="fi">Lihavoi</message>
 	<message xml:lang="ru">Строго</message>
 	<message xml:lang="hu">Vastag</message>
+	<message xml:lang="ka">გაძლიერება</message>
 </label>
 <label define="TMSG_BUTTON_CODE">
 	<message xml:lang="en">Fixed font</message>
@@ -2334,6 +2534,7 @@
 	<message xml:lang="fi">Vakio fontti</message>
 	<message xml:lang="ru">Код</message>
 	<message xml:lang="hu">Adott betűkészlet</message>
+	<message xml:lang="ka">მონოსიგანის შრიფტი</message>
 </label>
 <label define="TMSG_BUTTON_IMG">
 	<message xml:lang="en">Insert image</message>
@@ -2346,6 +2547,7 @@
 	<message xml:lang="fi">Syötä kuva</message>
 	<message xml:lang="ru">Вставить изображение</message>
 	<message xml:lang="hu">Kép beillesztése</message>
+	<message xml:lang="ka">ნახატის ჩამატება</message>
 </label>
 <label define="TMSG_BUTTON_H1">
 	<message xml:lang="en">Heading level 1</message>
@@ -2356,8 +2558,9 @@
 	<message xml:lang="es">Cabecera nivel 1 (h1)</message>
 	<message xml:lang="pt">Cabeçalho nível 1</message>
 	<message xml:lang="fi">Otsikkokoko 1</message>
-	<message xml:lang="ru">Заголовк уровень 1</message>
+	<message xml:lang="ru">Заголовок уровень 1</message>
 	<message xml:lang="hu">1. szint</message>
+	<message xml:lang="ka">სათაურის დონე 1</message>
 </label>
 <label define="TMSG_BUTTON_H2">
 	<message xml:lang="en">Heading level 2</message>
@@ -2368,8 +2571,9 @@
 	<message xml:lang="es">Cabecera nivel 2 (h2)</message>
 	<message xml:lang="pt">Cabeçalho nível 2</message>
 	<message xml:lang="fi">Otsikkokoko 2</message>
-	<message xml:lang="ru">Заголовк уровень 2</message>
+	<message xml:lang="ru">Заголовок уровень 2</message>
 	<message xml:lang="hu">2. szint</message>
+	<message xml:lang="ka">სათაურის დონე 2</message>
 </label>
 <label define="TMSG_BUTTON_H3">
 	<message xml:lang="en">Heading level 3</message>
@@ -2380,8 +2584,9 @@
 	<message xml:lang="es">Cabecera nivel 3 (h3)</message>
 	<message xml:lang="pt">Cabeçalho nível 3</message>
 	<message xml:lang="fi">Otsikkokoko 3</message>
-	<message xml:lang="ru">Заголовк уровень 3</message>
+	<message xml:lang="ru">Заголовок уровень 3</message>
 	<message xml:lang="hu">3. szint</message>
+	<message xml:lang="ka">სათაურის დონე 3</message>
 </label>
 <label define="TMSG_BUTTON_UL">
 	<message xml:lang="en">Bulleted list</message>
@@ -2394,6 +2599,7 @@
 	<message xml:lang="fi">Pisteellinen luettelo</message>
 	<message xml:lang="ru">Маркированный список</message>
 	<message xml:lang="hu">Listajeles lista</message>
+	<message xml:lang="ka">ჩამონათვალი</message>
 </label>
 <label define="TMSG_BUTTON_OL">
 	<message xml:lang="en">Numbered list</message>
@@ -2406,6 +2612,7 @@
 	<message xml:lang="fi">Numeroituluettelo</message>
 	<message xml:lang="ru">Нумерованный список</message>
 	<message xml:lang="hu">Számozott lista</message>
+	<message xml:lang="ka">ნუმერაცია</message>
 </label>
 <label define="TMSG_BUTTON_DL">
 	<message xml:lang="en">Definition list</message>
@@ -2418,6 +2625,7 @@
 	<message xml:lang="fi">Määrittelyluettelo</message>
 	<message xml:lang="ru">Список определений</message>
 	<message xml:lang="hu">Meghatározás lista</message>
+	<message xml:lang="ka">განსაზღვრებათა სია</message>
 </label>
 <label define="TMSG_BUTTON_LINK">
 	<message xml:lang="en">Link</message>
@@ -2430,6 +2638,7 @@
 	<message xml:lang="fi">Linkki</message>
 	<message xml:lang="ru">Ссылка</message>
 	<message xml:lang="hu">Kapocs</message>
+	<message xml:lang="ka">ბმა</message>
 </label>
 <label define="TMSG_BUTTON_TABLE">
 	<message xml:lang="en">Table</message>
@@ -2442,6 +2651,7 @@
 	<message xml:lang="fi">Taulukko</message>
 	<message xml:lang="ru">Таблица</message>
 	<message xml:lang="hu">Táblázat</message>
+	<message xml:lang="ka">ცხრილი</message>
 </label>
 <label define="TMSG_LIB_WARNCTAB_INFO">
 	<message xml:lang="en">You are about to close %d open tabs. Are you sure you want to continue?</message>
@@ -2450,6 +2660,8 @@
 	<message xml:lang="de">Sie sind dabei, %d geöffnete Seiten zu schließen. Sind Sie sicher, dass Sie fortfahren möchten?</message>
 	<message xml:lang="it">Stai per chiudere %d tab aperti. Vuoi proprio proseguire?</message>
 	<message xml:lang="hu">%d lap bezárására készül. Valóban folytatni kívánja?</message>
+	<message xml:lang="ru">Подтверждаете одновременное закрытие %d вкладок?</message>
+	<message xml:lang="ka">თქვენ აპირებთ დახუროთ %d გახსნილი დაფა. ნამდვილად გსურთ გაგრძელება?</message>
 </label>
 <label define="TMSG_LIB_WARNCTAB_CHECK">
 	<message xml:lang="en">Warn me when I attempt to close multiple tabs</message>
@@ -2458,6 +2670,8 @@
 	<message xml:lang="de">Warnung anzeigen, wenn mehrere Seiten geschlossen werden sollen</message>
 	<message xml:lang="it">Avvisami quando cerco di chiudere pi tab</message>
 	<message xml:lang="hu">Figyelmeztessen több lap bezárásakor</message>
+	<message xml:lang="ru">Предупреждать при одновременном закрытии нескольких вкладок</message>
+	<message xml:lang="ka">გაფრთხილება რამდენიმე დაფის ერთდროულად დახურვისას</message>
 </label>
 <label define="TMSG_LIB_CLOSETABS">
 	<message xml:lang="en">Close tabs</message>
@@ -2466,6 +2680,8 @@
 	<message xml:lang="de">Seiten schließen</message>
 	<message xml:lang="it">Chiudi tab</message>
 	<message xml:lang="hu">Lapok bezárása</message>
+	<message xml:lang="ru">Закрыть вкладки</message>
+	<message xml:lang="ka">დაფების დახურვა</message>
 </label>
 <label define="TMSG_LIB_NOERROR_DOC">
 	<message xml:lang="en">No error detected</message>
@@ -2474,10 +2690,12 @@
 	<message xml:lang="de">Kein Fehler gefunden</message>
 	<message xml:lang="it">Nessun errore trovato</message>
 	<message xml:lang="hu">Nincs hiba</message>
+	<message xml:lang="ru">Ошибок не обнаружено</message>
+	<message xml:lang="ka">შეცდომების გარეშე</message>
 </label>
 <label define="TMSG_LIB_ERROR_DOC">
 	<message xml:lang="en">Show parsing errors</message>
-  <message xml:lang="fr">Montrer les erreurs</message>
+	<message xml:lang="fr">Montrer les erreurs</message>
 	<message xml:lang="de">Parserfehler anzeigen</message>
 	<message xml:lang="it">Mostra le errore</message>
 	<message xml:lang="es">Mostrar errores sintácticos</message>
@@ -2486,6 +2704,7 @@
 	<message xml:lang="tr">Pars hatalarını göster</message>
 	<message xml:lang="ru">Показать разбор ошибок</message>
 	<message xml:lang="hu">Elemzési hibák mutatása</message>
+	<message xml:lang="ka">დამუშავების შეცდომების ჩვენება</message>
 </label>
 <label define="TMSG_LIB_BOXES">
 	<message xml:lang="en">Boxes</message>
