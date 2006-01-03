@@ -214,7 +214,8 @@ void AmayaApplyClassPanel::RefreshApplyClassPanel()
 
   TtaGiveActiveView( &doc, &view );
   /* force the refresh */
-  TtaExecuteMenuAction ("ApplyClass", doc, view, TRUE);
+  if (doc > 0)
+    TtaExecuteMenuAction ("ApplyClass", doc, view, TRUE);
 }
 
 /*----------------------------------------------------------------------

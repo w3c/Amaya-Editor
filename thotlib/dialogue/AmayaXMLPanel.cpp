@@ -146,7 +146,8 @@ void AmayaXMLPanel::DoUpdate()
   Document doc;
   View view;
   TtaGetActiveView( &doc, &view );
-  TtaRefreshElementMenu( doc, view );
+  if (doc > 0)
+    TtaRefreshElementMenu( doc, view );
 }
 
 /*----------------------------------------------------------------------
@@ -209,7 +210,8 @@ void AmayaXMLPanel::RefreshXMLPanel()
   Document doc;
   View view;
   TtaGetActiveView( &doc, &view );
-  TtaShowElementMenu (doc, view);
+  if (doc > 0)
+    TtaRefreshElementMenu (doc, view);
 }
 
 /*----------------------------------------------------------------------

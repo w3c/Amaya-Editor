@@ -369,6 +369,10 @@ void AddStyle (char *url, Document doc, Element link, CSSCategory category)
           /* Restore the display mode */
           if (dispMode != NoComputedDisplay)
             TtaSetDisplayMode (doc, dispMode);
+#ifdef _WX
+          /* Update the list of classes */
+          TtaExecuteMenuAction ("ApplyClass", doc, 1, FALSE);
+#endif /* _WX */
         }
     }
 }
@@ -444,9 +448,15 @@ void UpdateStyleSheet (char *url, char *tempdoc)
                               else if (UserCSS && !strcmp (refcss->url, UserCSS))
                                 LoadUserStyleSheet (doc);
                               else
+                                {
                                 LoadStyleSheet (refcss->url, doc, refInfo->PiLink, NULL,
                                                 NULL, (CSSmedia)refInfo->PiMedia,
                                                 refInfo->PiCategory == CSS_USER_STYLE);
+ #ifdef _WX
+                                /* Update the list of classes */
+                                TtaExecuteMenuAction ("ApplyClass", doc, 1, FALSE);
+#endif /* _WX */
+                               }
                               if (CSSErrorsFound)
                                 {
                                   /* the CSS parser detected an error */

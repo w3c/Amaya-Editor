@@ -207,7 +207,8 @@ void AmayaFormatPanel::RefreshFormatPanel()
 
   TtaGetActiveView( &doc, &view );
   /* force the refresh */
-  TtaExecuteMenuAction ("TtcChangeFormat", doc, view, TRUE);
+  if (doc > 0)
+    TtaExecuteMenuAction ("TtcChangeFormat", doc, view, TRUE);
 
   XRCCTRL(*m_pPanelContentDetach,"wxID_DEFAULT_FORMAT",wxBitmapButton)->SetBackgroundColour(m_OffColour);
   XRCCTRL(*m_pPanelContentDetach,"wxID_DEFAULT_INDENT",wxBitmapButton)->SetBackgroundColour(m_OffColour);

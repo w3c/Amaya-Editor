@@ -805,6 +805,7 @@ void TtaExecuteMenuActionFromActionId (int action_id, Document doc,
          // redirect focus to the canvas because when an action is done 
          // it's more probable that the user wants to type some characteres after executing the action
          TtaRedirectFocus();
+         g_DoingAction = FALSE;
 #endif /* _WX */
          (*(Proc2)MenuActionList[action_id].Call_Action) ((void *)doc, (void *)view);
        }

@@ -4220,6 +4220,10 @@ Document LoadDocument (Document doc, char *pathname,
         ANNOT_bodyType_set (newdoc, annotBodyType);
 #endif /* ANNOTATIONS */
     }
+#ifdef _WX
+  // refresh the XML panel
+  TtaRefreshElementMenu (newdoc, 1);
+#endif /* _WX */
   TtaFreeMemory (content_type);
   TtaFreeMemory (localdoc);
   return (newdoc);

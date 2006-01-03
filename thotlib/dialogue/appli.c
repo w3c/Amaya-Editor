@@ -3541,6 +3541,7 @@ void ChangeSelFrame (int frame)
       FrameToView (frame, &doc, &view);
       /* update the class list */
       TtaExecuteMenuAction ("ApplyClass", doc, 1, FALSE);
+      TtaRefreshElementMenu (doc, 1);
 #endif /* _WX */
       /* the active frame changed so update the application focus */
       TtaRedirectFocus();

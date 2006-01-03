@@ -1102,9 +1102,5 @@ void LoadStyleSheet (char *url, Document doc, Element link, CSSInfoPtr css,
         urlRef = css->url;
       ReadCSSRules (doc, refcss, tmpBuff, urlRef, 0, FALSE, link);
       TtaFreeMemory (tmpBuff);
-#ifdef _WX
-      /* Update the list of classes */
-      TtaExecuteMenuAction ("ApplyClass", doc, 1, FALSE);
-#endif /* _WX */
     }
 }
