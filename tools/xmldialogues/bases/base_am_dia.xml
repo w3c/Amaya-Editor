@@ -155,7 +155,7 @@
 	<message xml:lang="tr">&amp;Birlikte çalışmak</message>
 	<message xml:lang="ru">Совместная работа</message>
 	<message xml:lang="hu">&amp;Együttműködés</message>
-	<message xml:lang="ka">თანამშრომლობა</message>
+	<message xml:lang="ka">ანოტაციები</message>
 </label>
 <label define="Help_">
 	<message xml:lang="en">&amp;Help</message>
@@ -2886,6 +2886,7 @@
 	<message xml:lang="fi">&amp;Matriisi</message>
 	<message xml:lang="ru">Matrices</message>
 	<message xml:lang="hu">&amp;Mátrixok</message>
+	<message xml:lang="ka">მატრიცები</message>
 </label>
 <label define="BMatrix">
 	<message xml:lang="en">New matrix (mtable)</message>
