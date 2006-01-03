@@ -576,14 +576,14 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
           yd = pParent->AbBox->BxYOrg + t;
           width = pParent->AbBox->BxWidth - l - r;
           if (pParent->AbBox->BxLMargin < 0)
-            width -= pParent->AbBox->BxLMargin;
+            width += pParent->AbBox->BxLMargin;
           if (pParent->AbBox->BxRMargin < 0)
-            width -= pParent->AbBox->BxRMargin;
+            width += pParent->AbBox->BxRMargin;
           height = pParent->AbBox->BxHeight - t - b;
           if (pParent->AbBox->BxTMargin < 0)
-            height -= pParent->AbBox->BxTMargin;
+            height += pParent->AbBox->BxTMargin;
           if (pParent->AbBox->BxBMargin < 0)
-            height -= pParent->AbBox->BxBMargin;
+            height += pParent->AbBox->BxBMargin;
         }
     }
   else
@@ -696,11 +696,11 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
           width = pBox->BxWidth - l - r;
           height = pBox->BxHeight - t - b;
           if (pBox->BxLMargin < 0)
-            xd += pBox->BxLMargin;
+            width += pBox->BxLMargin;
           if (pBox->BxRMargin < 0)
             width += pBox->BxRMargin;
           if (pBox->BxTMargin < 0)
-            yd += pBox->BxTMargin;
+            height += pBox->BxTMargin;
           if (pBox->BxBMargin < 0)
             height += pBox->BxBMargin;
           /* clipping on the origin */

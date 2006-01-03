@@ -793,8 +793,10 @@ void ComputeMBP (PtrAbstractBox pAb, int frame, ThotBool horizRef,
                 dim = 0;
               else
                 /* box size depends on its contents */
-                dim = - dim + pParent->BxW - pBox->BxLPadding - pBox->BxRPadding
+                dim = dim - pBox->BxW - pBox->BxLPadding - pBox->BxRPadding
                   - pBox->BxLBorder - pBox->BxRBorder;
+              if (dim < 0)
+                dim = 0;
               if (pAb->AbLeftMarginUnit == UnAuto && pAb->AbRightMarginUnit == UnAuto)
                 {
                   pBox->BxLMargin = dim / 2;

@@ -2222,7 +2222,13 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
                     val = pBlock->BxW;
                   if (pNextBox->BxAbstractBox->AbWidth.DimUnit == UnPercent)
                     {
+                      // compute the external width
                       val = pBlock->BxW * pNextBox->BxAbstractBox->AbWidth.DimValue / 100;
+                      val += pNextBox->BxLBorder + pNextBox->BxLPadding + pNextBox->BxRBorder + pNextBox->BxRPadding;
+                     if (pNextBox->BxLMargin > 0)
+                        val += pNextBox->BxLMargin;
+                      if (pNextBox->BxRMargin > 0)
+                        val += pNextBox->BxRMargin;
                       if (setinline && val > pLine->LiXMax)
                         /* reduce the box width to the current line width */
                         val = pLine->LiXMax;
