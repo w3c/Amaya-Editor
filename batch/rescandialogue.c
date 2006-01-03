@@ -22,7 +22,7 @@ int main(int argc, char **argv)
     {
       strcpy(name, argv[1]);
       strcat(name, ".old");
-      if (!rename (argv[1], name))
+      if (rename (argv[1], name) < 0)
 	{
 	  printf("cannot rename %s into %s.old\n", argv[1], argv[1]);
 	  exit (-1);

@@ -129,7 +129,8 @@ sub import_a_language {
 	
 	
 #to load the messages and their references into %texts
-	my $total = 0;		
+	my $total = 0;
+print	  'encoding ==> '. "$encodage". "\n";
 	if ($encodage) {
 		($_, $total, %texts) = Read_text::init_text ("$in_textfile", $encodage);
 	}
@@ -345,15 +346,15 @@ sub end_hndl { #	do the modification if necessary
 		    else {
 			#no problem they are the same or it's a new translation
 			#print "label->$current_label val->$labels{$current_label} . "\n";
-			#print "Text:    \"$text\"\n";
-#print "Correct: \"$texts{$labels{$current_label}}\"\n";
+print "Text:    \"$text\"\n";
+print "Correct: \"$texts{$labels{$current_label}}\"\n";
 		    }
 		}
 		else {
 #print '==> ' . "SKIP-- $current_language". "\n";
                 }
 		#always
-		recopy ( $text );
+		recopy ( $text);
 		$current_language = $current_tag = undef;
 	}	
 #\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -377,11 +378,12 @@ sub end_hndl { #	do the modification if necessary
 
 #--------------------------------------------------------------------
 sub recopy {
-my $data = $_[0];	
+my $data = Unicode::String->new( shift ) ;
+#my $data = $_[0];	
 my $test;
 
-	if ($data ne "\n" && $data ne "\t") {
-		print OUT $data;
+	if ($data->utf8 ne "\n" && $data->utf8 ne "\t") {
+		print OUT $data->utf8;
 	}
 }	#End recopy
 #--------------------------------------------------------------------

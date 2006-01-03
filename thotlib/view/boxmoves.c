@@ -1955,8 +1955,8 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
                       pCurrentAb->AbEnclosing->AbBox->BxType != BoBlock &&
                       pCurrentAb->AbEnclosing->AbBox->BxType != BoFloatBlock);
 	  
-          //if (pCurrentAb->AbWidth.DimUnit == UnPercent)
-          //  printf("ResizeWidth %s %d + %d\n", pCurrentAb->AbElement->ElLabel, pBox->BxW, delta);
+if (pCurrentAb->AbWidth.DimUnit == UnPercent)
+  printf("ResizeWidth %s %d + %d\n", pCurrentAb->AbElement->ElLabel, pBox->BxW, delta);
 
           /* check positionning constraints */
           if (!toMove ||

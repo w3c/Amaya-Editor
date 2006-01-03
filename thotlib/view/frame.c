@@ -697,8 +697,12 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
           height = pBox->BxHeight - t - b;
           if (pBox->BxLMargin < 0)
             xd += pBox->BxLMargin;
+          if (pBox->BxRMargin < 0)
+            width += pBox->BxRMargin;
           if (pBox->BxTMargin < 0)
             yd += pBox->BxTMargin;
+          if (pBox->BxBMargin < 0)
+            height += pBox->BxBMargin;
           /* clipping on the origin */
           if (xd < x)
             {
