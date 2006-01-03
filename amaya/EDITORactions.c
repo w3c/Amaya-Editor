@@ -879,8 +879,6 @@ void PasteBuffer (Document document, View view)
   ----------------------------------------------------------------------*/
 void SpellCheck (Document document, View view)
 {
-  AttributeType       attrType;
-  Attribute           attr;
   Element             docEl, el, body;
   ElementType         elType;
   int                 firstchar, lastchar;
@@ -893,17 +891,6 @@ void SpellCheck (Document document, View view)
       body = TtaSearchTypedElement (elType, SearchInTree, docEl);
       if (body == NULL)
         return;
-      /* if there is no Language attribute on the BODY, create one */
-      attrType.AttrSSchema = elType.ElSSchema;
-      attrType.AttrTypeNum = HTML_ATTR_Language;
-      attr = TtaGetAttribute (body, attrType);
-      if (attr == NULL)
-        {
-          /* create the Language attribute */
-          attr = TtaNewAttribute (attrType);
-          TtaAttachAttribute (body, attr, document);
-          TtaSetAttributeText (attr, "en", body, document);
-        }
       /* get the current selection */
       TtaGiveFirstSelectedElement (document, &el, &firstchar, &lastchar);
       if (el == NULL)
