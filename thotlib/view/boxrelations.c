@@ -2358,6 +2358,8 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
           else if (horizRef && pDimAb->DimAbRef &&
                    pDimAb->DimUnit != UnAuto &&
                    pDimAb->DimAbRef == pParentAb &&
+                   (!pParentAb->AbWidthChange ||
+                    pParentAb->AbWidth.DimUnit != UnAuto) &&
                    pParentAb->AbWidth.DimAbRef == NULL &&
                    pParentAb->AbWidth.DimValue == -1)
             {
