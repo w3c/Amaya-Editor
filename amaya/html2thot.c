@@ -427,6 +427,7 @@ static ThotBool     StartOfFile = TRUE;	  /* no printable character encountered
                                              yet in the file */
 static ThotBool     AfterTagPRE = FALSE;  /* <PRE> has just been read */
 static char*        docURL = NULL;	  /* path or URL of the document */
+static char        *docURL2 = NULL;       /* save the docURL for some cases of parsing errors */
 
 /* Static variables used for the call to the XML parser */
 static ThotBool     NotToReadFile = FALSE;
@@ -966,10 +967,20 @@ void HTMLParseError (Document doc, char* msg, int lineNumber)
       if (docURL != NULL)
         {
           if (!XMLErrorsFound)
-            fprintf (ErrFile, "*** Errors/warnings in %s\n", docURL);
+            fprintf (ErrFile, "\n*** Errors/warnings in %s\n", docURL);
           TtaFreeMemory (docURL);
           docURL = NULL;
         }
+      else
+	{
+	  if (CSSErrorsFound && docURL2)
+	    {
+	      fprintf (ErrFile, "\n*** Errors/warnings in %s\n", docURL2);
+	      TtaFreeMemory (docURL2);
+	      docURL2 = NULL;
+	    }
+	}
+
       if (lineNumber <= 0)
         /* print the line number and character number before the message */
         fprintf (ErrFile, "@   line %d, char %d: %s\n", NumberOfLinesRead,
@@ -6733,6 +6744,7 @@ void ParseSubTree (char* HTMLbuf, Element lastelem, Language language,
   char        *schemaName;
 
   docURL = NULL;
+  docURL2 = NULL;
   elType = TtaGetElementType (lastelem);
   schemaName = TtaGetSSchemaName(elType.ElSSchema);
   if (strcmp (schemaName, "HTML") == 0)
@@ -6922,6 +6934,13 @@ void StartParser (Document doc, char *fileName,
           docURL = (char*)TtaGetMemory (strlen ((char *)pathURL) + 1);
           strcpy ((char *)docURL, (char *)pathURL);
         }
+      /* Set document URL2 */
+      if (docURL)
+        {
+          docURL2 = (char *)TtaGetMemory (strlen ((char *)docURL) + 1);
+          strcpy ((char *)docURL2, (char *)docURL);
+        }
+
 
       /* do not check the Thot abstract tree against the structure */
       /* schema while building the Thot document. */
@@ -7081,6 +7100,11 @@ void StartParser (Document doc, char *fileName,
         {
           TtaFreeMemory (docURL);
           docURL = NULL;
+        }
+      if (docURL2)
+        {
+          TtaFreeMemory (docURL2);
+          docURL2 = NULL;
         }
 
       /* an HTML document could be a template */

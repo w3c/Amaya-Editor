@@ -162,6 +162,8 @@ static int           stackLevel = 1;
 static gzFile        stream = 0;
 /* path or URL of the document */
 static char         *docURL = NULL;
+/* save the docURL for some cases of parsing errors */
+static char         *docURL2 = NULL;
 
 /* information about the Thot document under construction */
 /* Document structure schema */
@@ -541,9 +543,18 @@ void  XmlParseError (ErrorType type, unsigned char *msg, int line)
   
   if (docURL)
     {
-      fprintf (ErrFile, "*** Errors/warnings in %s\n", docURL);
+      fprintf (ErrFile, "\n*** Errors/warnings in %s\n", docURL);
       TtaFreeMemory (docURL);
       docURL = NULL;
+    }
+  else
+    {
+      if (CSSErrorsFound && docURL2)
+	{
+	  fprintf (ErrFile, "\n*** Errors/warnings in %s\n", docURL2);
+	  TtaFreeMemory (docURL2);
+	  docURL2 = NULL;
+	}
     }
   
   switch (type)
@@ -5772,6 +5783,13 @@ void StartXmlParser (Document doc, char *fileName,
           docURL = (char *)TtaGetMemory (strlen ((char *)pathURL) + 1);
           strcpy ((char *)docURL, (char *)pathURL);
         }
+      /* Set document URL2 */
+      if (docURL)
+        {
+          docURL2 = (char *)TtaGetMemory (strlen ((char *)docURL) + 1);
+          strcpy ((char *)docURL2, (char *)docURL);
+        }
+
 
       /* Do not check the Thot abstract tree against the structure */
       /* schema while building the Thot document. */
@@ -5863,6 +5881,11 @@ void StartXmlParser (Document doc, char *fileName,
         {
           TtaFreeMemory (docURL);
           docURL = NULL;
+        }
+      if (docURL2)
+        {
+          TtaFreeMemory (docURL2);
+          docURL2 = NULL;
         }
       
       /* Display the document */
