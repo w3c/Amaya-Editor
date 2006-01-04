@@ -1398,30 +1398,6 @@ static ThotBool EmptyOrConstants (PtrElement pEl)
 }
 
 /*----------------------------------------------------------------------
-  NoSignificantSibling
-  Returns TRUE if the next (or previous, depending on before) sibling of
-  element pEl is absent or contains only constants
-  ----------------------------------------------------------------------*/
-static ThotBool NoSignificantSibling (PtrElement pEl, ThotBool before)
-{
-  PtrElement          pSibling;
-  ThotBool	           ret;
-
-  ret = FALSE;
-  if (before)
-    pSibling = pEl->ElPrevious;
-  else
-    pSibling = pEl->ElNext;
-
-  if (pSibling == NULL)
-    ret = TRUE;
-  else
-    if (EmptyOrConstants (pSibling))
-      ret = TRUE;
-  return ret;
-}
-
-/*----------------------------------------------------------------------
   TtcInsertLineBreak handles the key "Control Return".
   ----------------------------------------------------------------------*/
 void TtcInsertLineBreak (Document doc, View view)
@@ -1662,8 +1638,7 @@ void TtcCreateElement (Document doc, View view)
                   }
                 if (list && pListEl != NULL)
                   {
-                    if (pElem->ElPrevious != NULL &&
-                        NoSignificantSibling (pElem, FALSE))
+                    if (pElem->ElPrevious && !pElem->ElNext)
                       {
                         if (!TypeHasException (ExcNoCreate,
                                                pParent->ElTypeNumber,
@@ -1679,8 +1654,7 @@ void TtcCreateElement (Document doc, View view)
                               pElReplicate = pElReplicate->ElParent;
                           }
                       }
-                    else if (pElem->ElNext != NULL &&
-                             NoSignificantSibling (pElem, TRUE) &&
+                    else if (pElem->ElNext && !pElem->ElPrevious &&
                              !TypeHasException (ExcNoCreate,
                                                 pParent->ElTypeNumber,
                                                 pParent->ElStructSchema))
