@@ -456,6 +456,7 @@ void GenerateInlineElement (int eType, int aType, char * data)
               name = TtaGetSSchemaName (elType.ElSSchema);
               lg =  TtaGetElementVolume (lastSel);
               lastChanged = FALSE;
+              selpos = TtaIsSelectionEmpty ();
               if (firstSel != lastSel &&
                   elType.ElTypeNum == HTML_EL_TEXT_UNIT &&
                   (lastchar == 0 || lastchar >= lg))
@@ -514,8 +515,19 @@ void GenerateInlineElement (int eType, int aType, char * data)
                       if (!split && el == firstSel && firstSel != lastSel &&
                           elType.ElTypeNum == HTML_EL_TEXT_UNIT &&
                           firstchar <= 1)
-                        // the whole first element is included
-                        el = TtaGetParent (firstSel);
+                        {
+                          // the whole first element is included
+                          parent = TtaGetParent (el);
+                          parentType = TtaGetElementType (parent);
+                          if (!strcmp (name, "HTML") &&
+                              el == TtaGetFirstChild (parent) &&
+                              el == TtaGetLastChild (parent))
+                            {
+                              el = parent;
+                              firstSel = el;
+                              elType.ElTypeNum = parentType.ElTypeNum;
+                            }
+                        }
                       if (!strcmp(name, "HTML"))
                         charlevel = IsCharacterLevelElement (el);
                       else
@@ -536,8 +548,6 @@ void GenerateInlineElement (int eType, int aType, char * data)
                       before = FALSE;
                       if (split)
                         {
-                          /* enclose the split text leaf within a in_line element */
-                           selpos = (firstSel == lastSel && i < firstchar);
                           /* exclude trailing spaces from the in_line */
                           if (lg > 0)
                             {
@@ -662,19 +672,36 @@ void GenerateInlineElement (int eType, int aType, char * data)
                         }
                       else if (doit && in_line)
                         {
-                          // add the element into the new in_line
-                          TtaPreviousSibling (&sibling);
-                          if (sibling == NULL)
+                          if (selpos)
                             {
+                              // empty selection -> generate a text
                               sibling = el;
-                              TtaNextSibling (&sibling);
-                              before = TRUE;
+                              if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
+                                before = (firstchar == 0);
+                              else if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+                                before = (firstchar <= 1);
+                              elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+                              child = TtaNewElement (doc, elType);
+                              TtaInsertFirstChild (&child, in_line, doc);
+                              firstSel = child;
+                              lastSel = child;
                             }
-                          if (sibling == NULL)
-                            TtaInsertSibling (in_line, el, FALSE, doc);
-                          TtaRegisterElementDelete (el, doc);
-                          TtaRemoveTree (el, doc);
-                          TtaInsertFirstChild (&el, in_line, doc);
+                          else
+                            {
+                              // add the element into the new in_line
+                              TtaPreviousSibling (&sibling);
+                              if (sibling == NULL)
+                                {
+                                  sibling = el;
+                                  TtaNextSibling (&sibling);
+                                  before = TRUE;
+                                }
+                              if (sibling == NULL)
+                                TtaInsertSibling (in_line, el, FALSE, doc);
+                              TtaRegisterElementDelete (el, doc);
+                              TtaRemoveTree (el, doc);
+                              TtaInsertFirstChild (&el, in_line, doc);
+                            }
                           if (el == lastSel)
                             lastSel = in_line;
                           if (el == firstSel)
