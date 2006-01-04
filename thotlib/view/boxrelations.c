@@ -704,7 +704,8 @@ void ComputeMBP (PtrAbstractBox pAb, int frame, ThotBool horizRef,
           else
             {
               //#ifdef POSITIONING
-              if (pAb->AbPositioning &&
+              if (pAb->AbLeafType == LtCompound &&
+                  pAb->AbPositioning &&
                   (pAb->AbPositioning->PnAlgorithm == PnAbsolute ||
                    pAb->AbPositioning->PnAlgorithm == PnFixed))
                 {
@@ -843,7 +844,8 @@ void ComputeMBP (PtrAbstractBox pAb, int frame, ThotBool horizRef,
           else
             {
               //#ifdef POSITIONING
-              if (pAb->AbPositioning &&
+              if (pAb->AbLeafType == LtCompound &&
+                  pAb->AbPositioning &&
                   (pAb->AbPositioning->PnAlgorithm == PnAbsolute ||
                    pAb->AbPositioning->PnAlgorithm == PnFixed))
                 {
@@ -1097,6 +1099,13 @@ ThotBool ComputePositioning (PtrBox pBox, int frame)
                   MoveBoxEdge (pBox, pRefBox, OpWidth, x + lr + w + rr - r, frame, TRUE);
                 }
               XMoveAllEnclosed (pBox, x + l, frame);
+              // register as a pos rule
+              pPosAb = &pAb->AbHorizPos;
+              pPosAb->PosAbRef = pRefAb;
+              pPosAb->PosUnit = pos->PnLeftUnit;
+              pPosAb->PosDistance = -pos->PnLeftDistance;
+              pPosAb->PosRefEdge = Left;
+              pPosAb->PosEdge = Left;
               if (pRefBox)
                 InsertPosRelation (pBox, pRefBox, OpHorizDep, Left, Left);
             }
@@ -1108,6 +1117,13 @@ ThotBool ComputePositioning (PtrBox pBox, int frame)
               pBox->BxXOutOfStruct = TRUE;
               pBox->BxHorizEdge = Right;
               XMoveAllEnclosed (pBox, x + lr + w + rr - r - pBox->BxWidth, frame);
+              // register as a pos rule
+              pPosAb = &pAb->AbHorizPos;
+              pPosAb->PosAbRef = pRefAb;
+              pPosAb->PosUnit = pos->PnRightUnit;
+              pPosAb->PosDistance = -pos->PnRightDistance;
+              pPosAb->PosRefEdge = Right;
+              pPosAb->PosEdge = Right;
               if (pRefBox)
                 InsertPosRelation (pBox, pRefBox, OpHorizDep, Right, Right);
               pBox->BxHorizEdge = Right;
@@ -1122,13 +1138,19 @@ ThotBool ComputePositioning (PtrBox pBox, int frame)
               pAb->AbVertEnclosing = FALSE;
               pBox->BxYOutOfStruct = TRUE;
               YMoveAllEnclosed (pBox, y + t, frame);
+              // register as a pos rule
+              pPosAb = &pAb->AbVertPos;
+              pPosAb->PosAbRef = pRefAb;
+              pPosAb->PosUnit = pos->PnTopUnit;
+              pPosAb->PosDistance = -pos->PnTopDistance;
+              pPosAb->PosRefEdge = Top;
+              pPosAb->PosEdge = Top;
               if (pRefBox)
                 InsertPosRelation (pBox, pRefBox, OpVertDep, Top, Top);
               if (appb)
                 {
                   /* stretchable height */
                   pAb->AbHeightChange = FALSE;
-                  //b += pBox->BxBMargin + pBox->BxBPadding + pBox->BxBBorder;
                   if (pBox->BxContentHeight)
                     pBox->BxContentHeight = FALSE;
                   ResizeHeight (pBox, pBox, NULL, tr + h + br - b - pBox->BxH, 0, 0, frame);
@@ -1141,8 +1163,14 @@ ThotBool ComputePositioning (PtrBox pBox, int frame)
               pAb->AbVertEnclosing = FALSE;
               pBox->BxYOutOfStruct = TRUE;
               pBox->BxVertEdge = Bottom;
-              //b += pBox->BxBMargin + pBox->BxBPadding + pBox->BxBBorder;
               YMoveAllEnclosed (pBox, y + tr + h + br - b - pBox->BxHeight, frame);
+              // register as a pos rule
+              pPosAb = &pAb->AbVertPos;
+              pPosAb->PosAbRef = pRefAb;
+              pPosAb->PosUnit = pos->PnBottomUnit;
+              pPosAb->PosDistance = -pos->PnBottomDistance;
+              pPosAb->PosRefEdge = Bottom;
+              pPosAb->PosEdge = Bottom;
               if (pRefBox)
                 InsertPosRelation (pBox, pRefBox, OpVertDep, Bottom, Bottom);
               pBox->BxVertEdge = Bottom;

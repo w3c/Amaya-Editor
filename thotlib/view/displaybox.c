@@ -1954,8 +1954,8 @@ void DisplayBorders (PtrBox box, PtrAbstractBox pFrom, int frame,
   width = box->BxWidth;
   if (box->BxLMargin < 0)
     width += box->BxLMargin;
-  if (box->BxRMargin < 0)
-    width -= box->BxRMargin;
+  if (er < 0)
+    er = 0;
   r = x + w - xFrame - width + er + from->BxRBorder;
   if (r > from->BxRBorder)
     r = from->BxRBorder;
