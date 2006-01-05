@@ -58,18 +58,8 @@ ThotBool ExtraFlow (PtrBox pBox, int frame)
       pBox->BxAbstractBox->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility &&
       pBox->BxAbstractBox->AbLeafType == LtCompound &&
       pBox->BxAbstractBox->AbPositioning &&
-#ifdef IV
-      pBox->BxAbstractBox->AbPositioning->PnAlgorithm != PnStatic &&
-      pBox->BxAbstractBox->AbPositioning->PnAlgorithm != PnRelative &&
-      (pBox->BxAbstractBox->AbPositioning->PnLeftUnit != UnUndefined ||
-       pBox->BxAbstractBox->AbPositioning->PnRightUnit != UnUndefined ||
-       pBox->BxAbstractBox->AbPositioning->PnTopUnit != UnUndefined ||
-       pBox->BxAbstractBox->AbPositioning->PnBottomUnit != UnUndefined ||
-       pBox->BxAbstractBox->AbPositioning->PnAlgorithm == PnFixed))
-#else
       (pBox->BxAbstractBox->AbPositioning->PnAlgorithm == PnAbsolute ||
        pBox->BxAbstractBox->AbPositioning->PnAlgorithm == PnFixed))
-#endif
     return TRUE;
   else
     //#endif /* POSITIONING */

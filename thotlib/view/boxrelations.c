@@ -632,7 +632,7 @@ void CleanAutoMargins (PtrAbstractBox pAb)
   GetEnclosingViewport returns the enclosing abstractbox that defines
   the viewport.
   ----------------------------------------------------------------------*/
-static PtrAbstractBox GetEnclosingViewport (PtrAbstractBox pAb)
+PtrAbstractBox GetEnclosingViewport (PtrAbstractBox pAb)
 {
   if (pAb)
     {

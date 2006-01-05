@@ -13,6 +13,7 @@ extern void ComputeRadius ( PtrAbstractBox pAb,
                             int frame,
                             ThotBool horizRef );
 extern void CleanAutoMargins ( PtrAbstractBox pAb );
+extern PtrAbstractBox GetEnclosingViewport ( PtrAbstractBox pAb );
 extern void ComputeMBP ( PtrAbstractBox pAb,
                          int frame,
                          ThotBool horizRef,
@@ -54,6 +55,7 @@ extern void ComputeRadius ( PtrAbstractBox pAb,
                               int frame,
                               ThotBool horizRef );
 extern void CleanAutoMargins ( PtrAbstractBox pAb );
+extern PtrAbstractBox GetEnclosingViewport ( PtrAbstractBox pAb );
 extern void ComputeMBP ( PtrAbstractBox pAb,
                            int frame,
                            ThotBool horizRef,

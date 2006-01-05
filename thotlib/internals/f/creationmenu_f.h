@@ -6,10 +6,10 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void TtaShowElementMenu ( Document doc,
-                                 View view );
 extern void TtaRefreshElementMenu ( Document doc,
                                     View view );
+extern void TtaShowElementMenu ( Document doc,
+                                 View view );
 extern void CallbackElemToBeCreated ( int ref,
                                       int val,
                                       char *txt );
@@ -29,10 +29,10 @@ extern void BuildPasteMenu ( int RefMenu,
 
 #else /* __STDC__ */
 
-extern void TtaShowElementMenu ( Document doc,
-                                   View view );
 extern void TtaRefreshElementMenu ( Document doc,
                                       View view );
+extern void TtaShowElementMenu ( Document doc,
+                                   View view );
 extern void CallbackElemToBeCreated ( int ref,
                                         int val,
                                         char *txt );

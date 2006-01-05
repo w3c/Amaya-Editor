@@ -5004,13 +5004,25 @@ void CheckScrollingWidth (int frame)
                   if (pBox->BxBoundinBoxComputed)
                     {
                       if (pBox->BxClipX + pBox->BxClipW > max)
-                        max = pBox->BxClipX + pBox->BxClipW;
+                        {
+                           /* ignoge boxes with absolute or fixed positions */
+                          pAb = GetEnclosingViewport (pBox->BxAbstractBox);
+                          if (pAb == NULL ||
+                              pAb->AbPositioning->PnAlgorithm == PnRelative)
+                            max = pBox->BxClipX + pBox->BxClipW;
+                        }
                     }
                   else
 #endif /*  _GL */
                     {
                       if (pBox->BxXOrg + pBox->BxWidth > max)
-                        max = pBox->BxXOrg + pBox->BxWidth;
+                        {
+                          /* ignoge boxes with absolute or fixed positions */
+                          pAb = GetEnclosingViewport (pBox->BxAbstractBox);
+                          if (pAb == NULL ||
+                              pAb->AbPositioning->PnAlgorithm == PnRelative)
+                            max = pBox->BxXOrg + pBox->BxWidth;
+                        }
                     }
                   if (pBox->BxNext == box)
                     printf ("Cycle\n");
