@@ -32,19 +32,16 @@ IMPLEMENT_DYNAMIC_CLASS(AmayaNotebook, wxNotebook)
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 AmayaNotebook::AmayaNotebook( wxWindow * p_parent_window,
-			      AmayaWindow * p_amaya_window )
-	:  wxNotebook( wxDynamicCast(p_parent_window, wxWindow),
-		       -1,
-		       wxDefaultPosition, wxDefaultSize,
-			   wxTAB_TRAVERSAL |
-
-			   wxCLIP_CHILDREN |
-
-			   wxFULL_REPAINT_ON_RESIZE |
-
-			   wxNB_MULTILINE /* only windows */ )
-	   ,m_pAmayaWindow( p_amaya_window )
-	   ,m_MContextFrameId(0)
+                              AmayaWindow * p_amaya_window )
+  :  wxNotebook( wxDynamicCast(p_parent_window, wxWindow),
+                 -1,
+                 wxDefaultPosition, wxDefaultSize,
+                 wxTAB_TRAVERSAL |
+                 wxCLIP_CHILDREN |
+                 wxFULL_REPAINT_ON_RESIZE |
+                 wxNB_MULTILINE /* only windows */ )
+     ,m_pAmayaWindow( p_amaya_window )
+     ,m_MContextFrameId(0)
 {
   SetImageList( AmayaApp::GetDocumentIconList() );
 }
@@ -56,11 +53,11 @@ AmayaNotebook::~AmayaNotebook()
 }
 
 /*----------------------------------------------------------------------
- *       Class:  AmayaNotebook
- *      Method:  DoClose
- * Description:  called when the AmayaNotebook is closed.
- *               just forward close event to each AmayaPage
-  -----------------------------------------------------------------------*/
+  Class:  AmayaNotebook
+  Method:  DoClose
+  Description:  called when the AmayaNotebook is closed.
+  just forward close event to each AmayaPage
+ -----------------------------------------------------------------------*/
 void AmayaNotebook::DoClose(bool & veto)
 {
   /* if this boolean is set to false, the window must not be closed */
@@ -113,11 +110,11 @@ void AmayaNotebook::DoClose(bool & veto)
 }
 
 /*----------------------------------------------------------------------
- *       Class:  AmayaNotebook
- *      Method:  UpdatePageId
- * Description:  this function is called to update the page id and document's pageid
- *               when a page has been removed or moved ... 
-  -----------------------------------------------------------------------*/
+  Class:  AmayaNotebook
+  Method:  UpdatePageId
+  Description:  this function is called to update the page id and document's pageid
+  when a page has been removed or moved ... 
+ -----------------------------------------------------------------------*/
 void AmayaNotebook::UpdatePageId()
 {
   /* update page_id for each page */
@@ -126,13 +123,13 @@ void AmayaNotebook::UpdatePageId()
     {
       AmayaPage * p_page = (AmayaPage *)GetPage(page_id);
       if (!p_page->IsClosed())
-	{
-	  p_page->SetPageId( page_id );
-	}
+        {
+          p_page->SetPageId( page_id );
+        }
       else
-	{
-	  wxASSERT_MSG(FALSE, _T("y a un problem, on essaye de mettre a jour une page qui est deja fermee") );
-	}
+        {
+          wxASSERT_MSG(FALSE, _T("y a un problem, on essaye de mettre a jour une page qui est deja fermee") );
+        }
       page_id++;
     }
 }
@@ -143,7 +140,7 @@ void AmayaNotebook::UpdatePageId()
  * Description:  The page selection is about to be changed.
  *               Processes a wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGING event.
  *               This event can be vetoed.
-  -----------------------------------------------------------------------*/
+ -----------------------------------------------------------------------*/
 void AmayaNotebook::OnPageChanging(wxNotebookEvent& event)
 {
   TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaNotebook::OnPageChanging : old=%d, new=%d"),
@@ -156,12 +153,12 @@ void AmayaNotebook::OnPageChanging(wxNotebookEvent& event)
  *       Class:  AmayaNotebook
  *      Method:  OnPageChanged
  * Description:  called when a new page has been selected
-  -----------------------------------------------------------------------*/
+ -----------------------------------------------------------------------*/
 void AmayaNotebook::OnPageChanged(wxNotebookEvent& event)
 {
   TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaNotebook::OnPageChanged : old=%d, new=%d"),
-		 event.GetOldSelection(),
-		 event.GetSelection() );
+                 event.GetOldSelection(),
+                 event.GetSelection() );
 
   // do not change the page if this is the same as old one
   // this case can occure when notebook's pages are deleted ...
@@ -179,36 +176,36 @@ void AmayaNotebook::OnPageChanged(wxNotebookEvent& event)
   // + window title is updated in order to match current selected page
   unsigned int page_id = 0;
   while ( page_id < GetPageCount() )
-  {
-    AmayaPage * p_page = (AmayaPage *)GetPage(page_id);
-    if ( !p_page->IsClosed() && p_page == p_selected_page )
     {
-      p_page->SetSelected( TRUE );
+      AmayaPage * p_page = (AmayaPage *)GetPage(page_id);
+      if ( !p_page->IsClosed() && p_page == p_selected_page )
+        {
+          p_page->SetSelected( TRUE );
+        }
+      else
+        {
+          p_page->SetSelected( FALSE );
+        }
+      page_id++;
     }
-    else
-    {
-      p_page->SetSelected( FALSE );
-    }
-    page_id++;
-  }
   
   event.Skip();
 }
 
 /*----------------------------------------------------------------------
- *       Class:  AmayaNotebook
- *      Method:  GetPageId
- * Description:  used to get the page Id when only the page @ is known
-  -----------------------------------------------------------------------*/
+  Class:  AmayaNotebook
+  Method:  GetPageId
+  Description:  used to get the page Id when only the page @ is known
+ -----------------------------------------------------------------------*/
 int AmayaNotebook::GetPageId( const AmayaPage * p_page )
 {
   unsigned int page_id = 0;
   bool found = false;
   while ( !found && page_id < GetPageCount() )
-  {
-    found = ( GetPage(page_id) == wxDynamicCast(p_page,wxWindow) );
-    page_id++;
-  }
+    {
+      found = ( GetPage(page_id) == wxDynamicCast(p_page,wxWindow) );
+      page_id++;
+    }
 
   if (found)
     return page_id-1;
@@ -216,11 +213,13 @@ int AmayaNotebook::GetPageId( const AmayaPage * p_page )
     return -1;
 }
 
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
 void AmayaNotebook::OnContextMenu( wxContextMenuEvent & event )
 {
   TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaNotebook::OnContextMenu - (x,y)=(%d,%d)"),
-		 event.GetPosition().x,
-		 event.GetPosition().y );
+                 event.GetPosition().x,
+                 event.GetPosition().y );
 
   int window_id = m_pAmayaWindow->GetWindowId();
   long flags    = 0;
@@ -230,19 +229,19 @@ void AmayaNotebook::OnContextMenu( wxContextMenuEvent & event )
   // store the aimed frame, it's possible that it is not the current active one
   if (page_id >= 0)
     {
-      m_MContextFrameId = TtaGetFrameId( window_id, page_id, 1 );
-      wxMenu * p_menu = TtaGetContextMenu( window_id );
-      PopupMenu(p_menu, ScreenToClient(event.GetPosition()));
+      m_MContextFrameId = TtaGetFrameId ( window_id, page_id, 1 );
+      wxMenu * p_menu = TtaGetContextMenu ( window_id );
+      PopupMenu (p_menu, ScreenToClient(event.GetPosition()));
     }
 
-//  event.Skip();
+  //  event.Skip();
 }
 
 /*----------------------------------------------------------------------
- *       Class:  AmayaNotebook
- *      Method:  GetMContextFrame
- * Description:  return the aimed frame by the last context menu
-  -----------------------------------------------------------------------*/
+  Class:  AmayaNotebook
+  Method:  GetMContextFrame
+  Description:  return the aimed frame by the last context menu
+ -----------------------------------------------------------------------*/
 int AmayaNotebook::GetMContextFrame()
 {
   return m_MContextFrameId;
@@ -257,6 +256,6 @@ BEGIN_EVENT_TABLE(AmayaNotebook, wxNotebook)
   EVT_NOTEBOOK_PAGE_CHANGED(  -1, AmayaNotebook::OnPageChanged )
   EVT_NOTEBOOK_PAGE_CHANGING( -1, AmayaNotebook::OnPageChanging )
   EVT_CONTEXT_MENU(               AmayaNotebook::OnContextMenu )
-END_EVENT_TABLE()
+  END_EVENT_TABLE()
   
 #endif /* #ifdef _WX */
