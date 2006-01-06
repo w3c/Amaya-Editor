@@ -2543,11 +2543,8 @@ gboolean GtkLiningSelection (gpointer data)
  *   + TRUE : if the event must be forwarded to other widgets
  *   + FALSE : if the event is cought
  ----------------------------------------------------------------------*/
-ThotBool FrameButtonDownCallback( 
-                                 int frame,
-                                 int thot_button_id,
-                                 int thot_mod_mask,
-                                 int x, int y )
+ThotBool FrameButtonDownCallback (int frame, int thot_button_id,
+                                 int thot_mod_mask, int x, int y )
 {
 #ifdef _WX
 #if !defined (_WINDOWS) && !defined (_MACOS)
@@ -2569,9 +2566,8 @@ ThotBool FrameButtonDownCallback(
     {
     case THOT_LEFT_BUTTON:
       {
-        /* stop any current insertion of text */
+        /* Stop any current insertion of text */
         CloseTextInsertion ();
-        
         /* Est-ce que la touche modifieur de geometrie est active ? */
         if ((thot_mod_mask & THOT_MOD_CTRL) == THOT_MOD_CTRL)
           {

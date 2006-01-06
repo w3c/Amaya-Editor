@@ -371,6 +371,8 @@ void AmayaCanvas::OnMouseUp( wxMouseEvent& event )
   -----------------------------------------------------------------------*/
 void AmayaCanvas::OnMouseDown( wxMouseEvent& event )
 {
+  int thot_mod_mask = THOT_NO_MOD;
+
   // Do not treat this event if the canvas is not active (hiden)
   if (!IsParentFrameActive())
     {
@@ -386,8 +388,9 @@ void AmayaCanvas::OnMouseDown( wxMouseEvent& event )
   int frame = m_pAmayaFrame->GetFrameId();
 
   TTALOGDEBUG_1( TTA_LOG_DIALOG, _T("AmayaCanvas::OnMouseDown : frame=%d"), frame );
-  
-  int thot_mod_mask = THOT_NO_MOD;
+#ifdef _MACOS
+  if (!event.CmdDown())
+#endif /* _MACOS */
   if (event.ControlDown())
     thot_mod_mask |= THOT_MOD_CTRL;
   if (event.AltDown())
@@ -397,6 +400,14 @@ void AmayaCanvas::OnMouseDown( wxMouseEvent& event )
 
   m_pAmayaFrame->SetActive( TRUE );
 
+#ifdef _MACOS
+  if (event.CmdDown() && event.GetButton() == THOT_LEFT_BUTTON)
+     FrameButtonDownCallback( frame,
+                              THOT_RIGHT_BUTTON,
+                              thot_mod_mask,
+                              event.GetX(), event.GetY() );
+   else
+#endif /* _MACOS */
   FrameButtonDownCallback( frame,
                            event.GetButton(),
                            thot_mod_mask,
