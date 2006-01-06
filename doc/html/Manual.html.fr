@@ -3,7 +3,7 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <title>Manuel d'utilisation d'Amaya</title>
   <style type="text/css">
 .name { background-color: #FFF6C1}
@@ -16,7 +16,7 @@ body {background-color: #FFFFFF}</style>
 
 <h1 style="text-align : center">Manuel d'utilisation d'Amaya</h1>
 
-<h4 style="text-align: center">Version 8.7, septembre 2004<br />
+<h4 style="text-align: center">Version 8.8<br />
 <img src="../images/amaya.gif" alt="Amaya" /></h4>
 <dl>
   <dt><strong>Auteurs :</strong></dt>
