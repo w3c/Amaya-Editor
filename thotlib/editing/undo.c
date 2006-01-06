@@ -1079,9 +1079,12 @@ static void UndoOperation (ThotBool undo, Document doc, ThotBool reverse)
             TtaSelectEnclosingColumn ((Element)(editOp->EoFirstSelectedEl));
         }
       if (editOp->EoInitialSequence)
-        /* That's the first sequence registered since the document was loaded
-           or saved. The document is no longer modified */
-        SetDocumentModified (LoadedDocument[doc - 1], FALSE, 0);
+	{
+	  /* That's the first sequence registered since the document was loaded
+	     or saved. The document is no longer modified */
+	  SetDocumentModified (LoadedDocument[doc - 1], FALSE, 0);
+	  LoadedDocument[doc - 1]->DocUpdated = TRUE;
+	}
     }
   else if (editOp->EoType == EtAttribute)
     {

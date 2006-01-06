@@ -3356,6 +3356,8 @@ void CheckSynchronize (NotifyElement *event)
                 DoSynchronize (event->document, 1, event);
               else if (TtaIsDocumentModified (SelectionDoc))
                 DoSynchronize (SelectionDoc, 1, event);
+              else if (TtaIsDocumentUpdated (SelectionDoc))
+                DoSynchronize (SelectionDoc, 1, event);
               else if (event->document == HighlightDocument)
                 SynchronizeSourceView (event);
             }

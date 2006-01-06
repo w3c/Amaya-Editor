@@ -888,12 +888,26 @@ void DocStatusUpdate (Document doc, ThotBool modified)
             otherDoc = GetDocFromSource (doc);
           if (otherDoc)
             {
+              TtaSetItemOn (doc, 1, File, BSynchro);
+              TtaSetItemOn (otherDoc, 1, File, BSynchro);
+            }
+          else if (DocumentTypes[doc] == docCSS)
+            TtaSetItemOn (doc, 1, File, BSynchro);
+        }
+      else
+        {
+          /* if we have a pair source/structured document allow synchronization */
+          otherDoc = DocumentSource[doc];
+          if (!otherDoc)
+            otherDoc = GetDocFromSource (doc);
+          if (otherDoc)
+            {
               TtaSetItemOff (doc, 1, File, BSynchro);
               TtaSetItemOff (otherDoc, 1, File, BSynchro);
             }
           else if (DocumentTypes[doc] == docCSS)
             TtaSetItemOff (doc, 1, File, BSynchro);
-        }
+	}
     }
 }
 
