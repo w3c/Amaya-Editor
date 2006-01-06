@@ -18,12 +18,12 @@
  */
 
 #if defined(_GTK)
-  #include <glib.h>
+#include <glib.h>
 #endif /* _GTK */
 
 #ifdef _WX
-  #include "wxAmayaTimer.h"
-  #include "wxAmayaSocketEvent.h"
+#include "wxAmayaTimer.h"
+#include "wxAmayaSocketEvent.h"
 #endif /* _WX */
 
 #define THOT_EXPORT extern
@@ -40,13 +40,13 @@
 #endif
 
 #if defined(_GTK) || defined(_WX) || defined(_NOGUI)
-  /* Private functions */
-  static void         RequestRegisterReadXtevent (SOCKET);
-  static void         RequestKillReadXtevent (SOCKET);
-  static void         RequestRegisterWriteXtevent ( SOCKET);
-  static void         RequestKillWriteXtevent (SOCKET);
-  static void         RequestRegisterExceptXtevent ( SOCKET);
-  static void         RequestKillExceptXtevent (SOCKET);
+/* Private functions */
+static void         RequestRegisterReadXtevent (SOCKET);
+static void         RequestKillReadXtevent (SOCKET);
+static void         RequestRegisterWriteXtevent ( SOCKET);
+static void         RequestKillWriteXtevent (SOCKET);
+static void         RequestRegisterExceptXtevent ( SOCKET);
+static void         RequestKillExceptXtevent (SOCKET);
 #endif /* #if defined(_GTK) */
 
 /* Private variables */
@@ -65,11 +65,11 @@ static const HTEventType WriteBits = (HTEventType)(HTEvent_WRITE | HTEvent_CONNE
 static const HTEventType ExceptBits = (HTEventType)HTEvent_OOB;
 
 #if defined(_GTK)
-  typedef struct sStatus {
-    gint read;             /* the different GTK Id's */
-    gint write;
-    gint except;
-  } SocketStatus;
+typedef struct sStatus {
+  gint read;             /* the different GTK Id's */
+  gint write;
+  gint except;
+} SocketStatus;
 #endif /* _GTK */
 #if defined(_WX)
 typedef struct sStatus {
@@ -79,16 +79,16 @@ typedef struct sStatus {
 } SocketStatus;
 #endif /* _WX */
 #if defined(_NOGUI)
-  typedef struct sStatus {
-    int read;
-    int write;
-    int except;
-  } SocketStatus;
+typedef struct sStatus {
+  int read;
+  int write;
+  int except;
+} SocketStatus;
 #endif /* #ifdef _NOGUI */
 #if defined(_GTK) || defined(_WX) || defined(_NOGUI)
-  #define SOCK_TABLE_SIZE 67
-  #define HASH(s) ((s) % SOCK_TABLE_SIZE)
-  static SocketStatus persSockets[SOCK_TABLE_SIZE];
+#define SOCK_TABLE_SIZE 67
+#define HASH(s) ((s) % SOCK_TABLE_SIZE)
+static SocketStatus persSockets[SOCK_TABLE_SIZE];
 #endif /* #if defined(_GTK) || defined(_WX) || defined(_NOGUI) */
 
 /*--------------------------------------------------------------------
@@ -115,45 +115,45 @@ void *AHTCallback_bridge (caddr_t cd, int *s, XtInputId * id)
 #if defined(_GTK)
 static void AHTCallback_bridgeGTK (gpointer data,  gint source, GdkInputCondition condition)
 {
-   int                 status;  /* the status result of the libwwww call */
-   HTEventType         type  = HTEvent_ALL;	
-   int                 v;
-   int 		       socket;
-   ms_t                now = HTGetTimeInMillis();
+  int                 status;  /* the status result of the libwwww call */
+  HTEventType         type  = HTEvent_ALL;	
+  int                 v;
+  int 		       socket;
+  ms_t                now = HTGetTimeInMillis();
    
-   socket = (SOCKET) ((intptr_t) data);
-   v = HASH (socket);
+  socket = (SOCKET) ((intptr_t) data);
+  v = HASH (socket);
 
-   /* convert the FD into an HTEventType which will allow us to find the
-      request associated with the socket */
+  /* convert the FD into an HTEventType which will allow us to find the
+     request associated with the socket */
 
-   /* I could send some other data here, like the event itself, right */
-   switch (condition) 
-     {
-     case GDK_INPUT_READ:
-       type = HTEvent_READ;
-       break;
-     case GDK_INPUT_WRITE:
-       type = HTEvent_WRITE;
-       break;
-     case GDK_INPUT_EXCEPTION:
-       type = HTEvent_OOB;
-       break;
-     default:
-       type = HTEvent_ALL; 
-       break;
-     } /* switch */
+  /* I could send some other data here, like the event itself, right */
+  switch (condition) 
+    {
+    case GDK_INPUT_READ:
+      type = HTEvent_READ;
+      break;
+    case GDK_INPUT_WRITE:
+      type = HTEvent_WRITE;
+      break;
+    case GDK_INPUT_EXCEPTION:
+      type = HTEvent_OOB;
+      break;
+    default:
+      type = HTEvent_ALL; 
+      break;
+    } /* switch */
    
-   /* Invokes the callback associated to the requests */
+  /* Invokes the callback associated to the requests */
    
-   /**   CanDoStop_set (FALSE); **/
-   if ((status = HTEventList_dispatch (socket, type, now)) != HT_OK)
-     {
+  /**   CanDoStop_set (FALSE); **/
+  if ((status = HTEventList_dispatch (socket, type, now)) != HT_OK)
+    {
 #ifdef DEBUG_LIBWWW
-     HTTrace ("Callback.... returned a value != HT_OK");
+      HTTrace ("Callback.... returned a value != HT_OK");
 #endif
-     }
-   /***   CanDoStop_set (TRUE); **/
+    }
+  /***   CanDoStop_set (TRUE); **/
 }
 #endif /* _GTK  */
 
@@ -188,16 +188,16 @@ static void AHTCallback_bridgeWX ( int register_id,  int socket, wxAmayaSocketCo
       break;
     } /* switch */
    
-   /* Invokes the callback associated to the requests */
+  /* Invokes the callback associated to the requests */
    
-   /**   CanDoStop_set (FALSE); **/
-   if ((status = HTEventList_dispatch (socket, type, now)) != HT_OK)
-     {
+  /**   CanDoStop_set (FALSE); **/
+  if ((status = HTEventList_dispatch (socket, type, now)) != HT_OK)
+    {
 #ifdef DEBUG_LIBWWW
-     HTTrace ("Callback.... returned a value != HT_OK");
+      HTTrace ("Callback.... returned a value != HT_OK");
 #endif
-     }
-   /***   CanDoStop_set (TRUE); **/
+    }
+  /***   CanDoStop_set (TRUE); **/
 }
 #endif /* _WX  */
 
@@ -208,7 +208,7 @@ static void AHTCallback_bridgeWX ( int register_id,  int socket, wxAmayaSocketCo
   request. Otherwise, it will just mark the request as over.
   -------------------------------------------------------------------*/
 void  ProcessTerminateRequest (HTRequest *request, HTResponse *response,
-			       void *param, int status)
+                               void *param, int status)
 {   
   AHTReqContext *me = (AHTReqContext *)HTRequest_context (request);
 
@@ -224,8 +224,8 @@ void  ProcessTerminateRequest (HTRequest *request, HTResponse *response,
   if (me->reqStatus == HT_END)
     {
       if (AmayaIsAlive ()  && me->terminate_cbf)
-	(*me->terminate_cbf) (me->docid, 0, me->urlName, me->outputfile,
-			      &(me->http_headers), me->context_tcbf);
+        (*me->terminate_cbf) (me->docid, 0, me->urlName, me->outputfile,
+                              &(me->http_headers), me->context_tcbf);
 
     }
   else if (me->reqStatus == HT_ABORT)
@@ -233,29 +233,29 @@ void  ProcessTerminateRequest (HTRequest *request, HTResponse *response,
        button. We erase the incoming file, if it exists */
     {
       if (AmayaIsAlive () && me->terminate_cbf)
-	(*me->terminate_cbf) (me->docid, -1, me->urlName, me->outputfile,
-			      &(me->http_headers), me->context_tcbf);
+        (*me->terminate_cbf) (me->docid, -1, me->urlName, me->outputfile,
+                              &(me->http_headers), me->context_tcbf);
       if (me->outputfile && me->outputfile[0] != EOS)
-	{
-	  TtaFileUnlink (me->outputfile);
-	  me->outputfile[0] = EOS; 
-	} 
+        {
+          TtaFileUnlink (me->outputfile);
+          me->outputfile[0] = EOS; 
+        } 
     }
   else if (me->reqStatus == HT_ERR)
     {
       /* there was an error */
       if (AmayaIsAlive () && me->terminate_cbf)
-	(*me->terminate_cbf) (me->docid, -2, me->urlName, me->outputfile,
-			      &(me->http_headers), me->context_tcbf);
+        (*me->terminate_cbf) (me->docid, -2, me->urlName, me->outputfile,
+                              &(me->http_headers), me->context_tcbf);
       
       if (me->outputfile && me->outputfile[0] != EOS)
-	{
-	  TtaFileUnlink (me->outputfile);
-	  me->outputfile[0] = EOS;
-	}
+        {
+          TtaFileUnlink (me->outputfile);
+          me->outputfile[0] = EOS;
+        }
     }
 
-   /* we erase the context if we're dealing with an asynchronous request */
+  /* we erase the context if we're dealing with an asynchronous request */
   if ((me->mode & AMAYA_ASYNC)
       || (me->mode & AMAYA_IASYNC))
     {
@@ -282,53 +282,53 @@ void  ProcessTerminateRequest (HTRequest *request, HTResponse *response,
   of this function.
   ----------------------------------------------------------------*/
 int WIN_Activate_Request (HTRequest * request, HTAlertOpcode op,
-			  int msgnum, const char *dfault, void *input,
-			  HTAlertPar * reply)
+                          int msgnum, const char *dfault, void *input,
+                          HTAlertPar * reply)
 {
-   AHTReqContext      *me = (AHTReqContext *)HTRequest_context (request);
+  AHTReqContext      *me = (AHTReqContext *)HTRequest_context (request);
 
-   if (me->reqStatus == HT_NEW) 
-     {
-       if (!(me->output)
-	   && (me->output != stdout) 
-	   && me->outputfile
-	   &&  ((me->output = TtaWriteOpen (me->outputfile)) == NULL))
-       {
-	 /* the request is associated with a file */
-	 me->outputfile[0] = EOS;	/* file could not be opened */
-	 TtaSetStatus (me->docid, 1,
-		       TtaGetMessage (AMAYA, AM_CANNOT_CREATE_FILE), me->outputfile);
-	 me->reqStatus = HT_ERR;
+  if (me->reqStatus == HT_NEW) 
+    {
+      if (!(me->output)
+          && (me->output != stdout) 
+          && me->outputfile
+          &&  ((me->output = TtaWriteOpen (me->outputfile)) == NULL))
+        {
+          /* the request is associated with a file */
+          me->outputfile[0] = EOS;	/* file could not be opened */
+          TtaSetStatus (me->docid, 1,
+                        TtaGetMessage (AMAYA, AM_CANNOT_CREATE_FILE), me->outputfile);
+          me->reqStatus = HT_ERR;
 
-	 if (me->error_html)
-	   /* so we can show the error message */
-	   DocNetworkStatus[me->docid] |= AMAYA_NET_ERROR;
-       } 
-       else
-	 {
+          if (me->error_html)
+            /* so we can show the error message */
+            DocNetworkStatus[me->docid] |= AMAYA_NET_ERROR;
+        } 
+      else
+        {
 #ifdef DEBUG_LIBWWW
-	   if (THD_TRACE)
-	     fprintf (stderr, "WIN_Activate_Request: Activating pending %s. "
-		      "Open fd %d\n", me->urlName, (int) me->output);
+          if (THD_TRACE)
+            fprintf (stderr, "WIN_Activate_Request: Activating pending %s. "
+                     "Open fd %d\n", me->urlName, (int) me->output);
 #endif /* DEBUG_LIBWWW */
-	   HTRequest_setOutputStream (me->request,
-				      AHTFWriter_new (me->request, me->output, YES));    
-	   /*change the status of the request */
-	   me->reqStatus = HT_WAITING;
-	 }
-     } 
-   else if (me->reqStatus == HT_WAITING)
-     {
-       /*change the status of the request */
-       rewind (me->output);
-       if (HTRequest_outputStream (me->request) == NULL)
-	 HTRequest_setOutputStream (me->request, AHTFWriter_new (me->request, me->output, YES));
-     } 
-   else {
-     me->reqStatus = HT_ERR;
-   }
+          HTRequest_setOutputStream (me->request,
+                                     AHTFWriter_new (me->request, me->output, YES));    
+          /*change the status of the request */
+          me->reqStatus = HT_WAITING;
+        }
+    } 
+  else if (me->reqStatus == HT_WAITING)
+    {
+      /*change the status of the request */
+      rewind (me->output);
+      if (HTRequest_outputStream (me->request) == NULL)
+        HTRequest_setOutputStream (me->request, AHTFWriter_new (me->request, me->output, YES));
+    } 
+  else {
+    me->reqStatus = HT_ERR;
+  }
    
-   return ((me->reqStatus != HT_ERR) ? HT_OK : HT_ERROR);
+  return ((me->reqStatus != HT_ERR) ? HT_OK : HT_ERROR);
 }
 
 #endif /* _WINDOWS */
@@ -351,30 +351,30 @@ int AHTEvent_register (SOCKET sock, HTEventType type, HTEvent *event)
 #endif /* DEBUG_LIBWWW */
       return (0);
     }
-   else
-   {
+  else
+    {
 #if defined(_GTK) || defined(_WX)
-  /* need something special for HTEvent_CLOSE */
-  if (type & ReadBits)
-    RequestRegisterReadXtevent (sock);
+      /* need something special for HTEvent_CLOSE */
+      if (type & ReadBits)
+        RequestRegisterReadXtevent (sock);
   
-  if (type & WriteBits)
-    RequestRegisterWriteXtevent (sock);
+      if (type & WriteBits)
+        RequestRegisterWriteXtevent (sock);
   
-  if (type & ExceptBits)
-    RequestRegisterExceptXtevent (sock);
+      if (type & ExceptBits)
+        RequestRegisterExceptXtevent (sock);
 #endif	 /* defined(_GTK) || defined(_WX) */
 #ifdef _WINDOWS
-  /* under windows, libwww requires an explicit FD_CLOSE registration 
-     to detect HTTP responses not having a Content-Length header */
-  status = HTEventList_register (sock, (HTEventType)(type | HTEvent_CLOSE) , event);
+      /* under windows, libwww requires an explicit FD_CLOSE registration 
+         to detect HTTP responses not having a Content-Length header */
+      status = HTEventList_register (sock, (HTEventType)(type | HTEvent_CLOSE) , event);
 #endif /* _WINDOWS */
 #if defined(_UNIX)
-  status = HTEventList_register (sock, type, event);
+      status = HTEventList_register (sock, type, event);
 #endif /* #if defined(_UNIX) */
 
-  return (status);
-   }
+      return (status);
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -392,22 +392,22 @@ int AHTEvent_unregister (SOCKET sock, HTEventType type)
     return HT_OK;
 
 #if defined(_GTK) || defined(_WX)
-   /* remove the Xt event hooks */
-   if (type & ReadBits) 
-     RequestKillReadXtevent (sock);
+  /* remove the Xt event hooks */
+  if (type & ReadBits) 
+    RequestKillReadXtevent (sock);
    
-   if (type & WriteBits)
-     RequestKillWriteXtevent (sock);
+  if (type & WriteBits)
+    RequestKillWriteXtevent (sock);
    
-   if (type & ExceptBits) 
-     RequestKillExceptXtevent (sock);
+  if (type & ExceptBits) 
+    RequestKillExceptXtevent (sock);
 #endif /* #if defined(_GTK) || defined(_WX) */
 
-   /* @@@ if this is the default for windows, no need to have AHTEvent_..
-      in windows!! */
-   /* call libwww's default routine */
-   status = HTEventList_unregister (sock, type);
-   return (status);
+  /* @@@ if this is the default for windows, no need to have AHTEvent_..
+     in windows!! */
+  /* call libwww's default routine */
+  status = HTEventList_unregister (sock, type);
+  return (status);
 }
 
 /* Private functions */
@@ -428,19 +428,19 @@ void RequestKillAllXtevents (AHTReqContext * me)
     sock = me->read_sock;
   else
     if (me->write_sock != INVSOC)
-          sock = me->write_sock;
-  else
-    if (me->except_sock != INVSOC)
-          sock = me->except_sock;
+      sock = me->write_sock;
+    else
+      if (me->except_sock != INVSOC)
+        sock = me->except_sock;
 
 #ifdef DEBUG_LIBWWW
-   if (THD_TRACE)
-      fprintf (stderr, "RequestKillAllXtEvents: Clearing XtInputs\n");
+  if (THD_TRACE)
+    fprintf (stderr, "RequestKillAllXtEvents: Clearing XtInputs\n");
 #endif /* DEBUG_LIBWWW */
 
-   RequestKillReadXtevent (sock);
-   RequestKillWriteXtevent (sock);
-   RequestKillExceptXtevent (sock);
+  RequestKillReadXtevent (sock);
+  RequestKillWriteXtevent (sock);
+  RequestKillExceptXtevent (sock);
 #endif /* #if defined(_GTK) || defined(_WX) || defined(_NOGUI) */   
 }
 
@@ -457,21 +457,21 @@ static void RequestRegisterReadXtevent (SOCKET sock)
   if (!persSockets[v].read)
     {
 #if defined(_GTK)
-     persSockets[v].read  = gdk_input_add ((gint) sock,
-					   GDK_INPUT_READ,
-					   AHTCallback_bridgeGTK,
-					   (gpointer) sock);
+      persSockets[v].read  = gdk_input_add ((gint) sock,
+                                            GDK_INPUT_READ,
+                                            AHTCallback_bridgeGTK,
+                                            (gpointer) sock);
 #endif /* _GTK */
 #if defined(_WX)
-     persSockets[v].read  = wxAmayaSocketEvent::RegisterSocket( sock,
-					   WXAMAYASOCKET_READ,
-					   AHTCallback_bridgeWX );
+      persSockets[v].read  = wxAmayaSocketEvent::RegisterSocket( sock,
+                                                                 WXAMAYASOCKET_READ,
+                                                                 AHTCallback_bridgeWX );
 #endif /* _WX */
 
 #ifdef DEBUG_LIBWWW
       if (THD_TRACE)
-	fprintf (stderr, "RegisterReadXtEvent: adding XtInput %lu Socket %d\n",
-		 persSockets[v].read, sock);
+        fprintf (stderr, "RegisterReadXtEvent: adding XtInput %lu Socket %d\n",
+                 persSockets[v].read, sock);
 #endif /* DEBUG_LIBWWW */
     }
 #endif /* #if defined(_GTK) || defined(_WX) || defined(_NOGUI) */
@@ -491,8 +491,8 @@ static void RequestKillReadXtevent (SOCKET sock)
     {
 #ifdef DEBUG_LIBWWW
       if (THD_TRACE)
-	fprintf (stderr, "UnregisterReadXtEvent: Clearing XtInput %lu\n",
-		 persSockets[v].read);
+        fprintf (stderr, "UnregisterReadXtEvent: Clearing XtInput %lu\n",
+                 persSockets[v].read);
 #endif /* DEBUG_LIBWWW */
       
 #if defined(_GTK)
@@ -521,21 +521,21 @@ static void RequestRegisterWriteXtevent (SOCKET sock)
   if (!persSockets[v].write)
     {   
 #if defined(_GTK) 
-     persSockets[v].write  = gdk_input_add ((gint) sock,
-					    GDK_INPUT_WRITE,
-					    AHTCallback_bridgeGTK,
-					    (gpointer) sock);
+      persSockets[v].write  = gdk_input_add ((gint) sock,
+                                             GDK_INPUT_WRITE,
+                                             AHTCallback_bridgeGTK,
+                                             (gpointer) sock);
 #endif /* _GTK  */
 #if defined(_WX)
-     persSockets[v].write  = wxAmayaSocketEvent::RegisterSocket( sock,
-					   WXAMAYASOCKET_WRITE,
-					   AHTCallback_bridgeWX );
+      persSockets[v].write  = wxAmayaSocketEvent::RegisterSocket( sock,
+                                                                  WXAMAYASOCKET_WRITE,
+                                                                  AHTCallback_bridgeWX );
 #endif /* _WX */
 
 #ifdef DEBUG_LIBWWW   
-  if (THD_TRACE)
-    fprintf (stderr, "RegisterWriteXtEvent: Adding XtInput %lu Socket %d\n",
-	     persSockets[v].write, sock);
+      if (THD_TRACE)
+        fprintf (stderr, "RegisterWriteXtEvent: Adding XtInput %lu Socket %d\n",
+                 persSockets[v].write, sock);
 #endif /* DEBUG_LIBWWW */
   
     }
@@ -557,9 +557,9 @@ static void RequestKillWriteXtevent (SOCKET sock)
     {
 #ifdef DEBUG_LIBWWW   
       if (THD_TRACE)
-	fprintf (stderr, "UnRegisterWriteXtEvent: Clearing Write XtInputs "
-		 "%lu\n",
-		 persSockets[v].write);
+        fprintf (stderr, "UnRegisterWriteXtEvent: Clearing Write XtInputs "
+                 "%lu\n",
+                 persSockets[v].write);
 #endif /* DEBUG_LIBWWW */
       
 #if defined(_GTK)
@@ -585,27 +585,27 @@ static void RequestRegisterExceptXtevent (SOCKET sock)
   int v;
 
   v = HASH (sock);
-   if (!persSockets[v].except)
-     {
+  if (!persSockets[v].except)
+    {
 #if defined(_GTK)
-     persSockets[v].except  = gdk_input_add ((gint) sock,
-					     GDK_INPUT_EXCEPTION,
-					     AHTCallback_bridgeGTK,
-					     (gpointer) sock);
+      persSockets[v].except  = gdk_input_add ((gint) sock,
+                                              GDK_INPUT_EXCEPTION,
+                                              AHTCallback_bridgeGTK,
+                                              (gpointer) sock);
 #endif /* _GTK */
 #if defined(_WX)
-     persSockets[v].except =
-       wxAmayaSocketEvent::RegisterSocket( sock,
-					   WXAMAYASOCKET_EXCEPTION,
-					   AHTCallback_bridgeWX );
+      persSockets[v].except =
+        wxAmayaSocketEvent::RegisterSocket( sock,
+                                            WXAMAYASOCKET_EXCEPTION,
+                                            AHTCallback_bridgeWX );
 #endif /* _WX */
 
 #ifdef DEBUG_LIBWWW
-   if (THD_TRACE)
-     fprintf (stderr, "RegisterExceptXtEvent: adding XtInput %lu Socket %d\n",
-	      persSockets[v].except, sock);
+      if (THD_TRACE)
+        fprintf (stderr, "RegisterExceptXtEvent: adding XtInput %lu Socket %d\n",
+                 persSockets[v].except, sock);
 #endif /* DEBUG_LIBWWW */
-     }
+    }
 #endif /* #if defined(_GTK) || defined(_WX) || defined(_NOGUI) */   
 }
 
@@ -624,8 +624,8 @@ static void RequestKillExceptXtevent (SOCKET sock)
     {
 #ifdef DEBUG_LIBWWW   
       if (THD_TRACE)
-	fprintf (stderr, "UnregisterExceptXtEvent: Clearing Except XtInputs "
-		 "%lu\n", persSockets[v].except);
+        fprintf (stderr, "UnregisterExceptXtEvent: Clearing Except XtInputs "
+                 "%lu\n", persSockets[v].except);
 #endif /* DEBUG_LIBWWW */
 
 #if defined(_GTK)
@@ -702,7 +702,7 @@ gboolean TimerCallbackGTK (gpointer id)
   while ((me = (AmayaTimer * ) HTList_nextObject (cur)))
     {
       if (me == data)
-	break;
+        break;
       last = cur;
     }
 
@@ -741,7 +741,7 @@ void TimerCallbackWX( void * p_context )
   while ((me = (AmayaTimer * ) HTList_nextObject (cur)))
     {
       if (me == data)
-	break;
+        break;
       last = cur;
     }
 
@@ -752,7 +752,7 @@ void TimerCallbackWX( void * p_context )
       HTList_quickRemoveElement(cur, last);
 
       /* delete explicitely the AmayaTimer */
-	  wxDynamicCast(me->xt_timer, wxAmayaTimer)->Stop();
+      wxDynamicCast(me->xt_timer, wxAmayaTimer)->Stop();
       delete wxDynamicCast(me->xt_timer, wxAmayaTimer);
 
       TtaFreeMemory (me);
@@ -775,8 +775,8 @@ void KillAllTimers (void)
 }
 
 /*----------------------------------------------------------------------
- AMAYA_SetTimer
- ----------------------------------------------------------------------*/
+  AMAYA_SetTimer
+  ----------------------------------------------------------------------*/
 void AMAYA_SetTimer (HTTimer *libwww_timer)
 {
 #if defined(_GTK) || defined(_WX) || defined(_NOGUI)
@@ -796,25 +796,25 @@ void AMAYA_SetTimer (HTTimer *libwww_timer)
   while ((me = (AmayaTimer * ) HTList_nextObject (cur)))
     {
       if (me->libwww_timer == libwww_timer)
-	break;
+        break;
       last = cur;
     }
 
   if (me)
     {
-    /* remove the old timer */
+      /* remove the old timer */
       if (me->xt_timer) 
-	{
+        {
 #ifdef _GTK
-	  gtk_timeout_remove (me->xt_timer);
-	  me->xt_timer = (guint) 0;
+          gtk_timeout_remove (me->xt_timer);
+          me->xt_timer = (guint) 0;
 #endif /* !_GTK */
 #ifdef _WX
-	  wxDynamicCast(me->xt_timer, wxTimer)->Stop();
-	  delete wxDynamicCast(me->xt_timer, wxTimer);
-	  me->xt_timer = NULL;
+          wxDynamicCast(me->xt_timer, wxTimer)->Stop();
+          delete wxDynamicCast(me->xt_timer, wxTimer);
+          me->xt_timer = NULL;
 #endif /* _WX */
-	}
+        }
     }
   else
     {
@@ -828,8 +828,8 @@ void AMAYA_SetTimer (HTTimer *libwww_timer)
   /* add a new time out */
 #ifdef _GTK
   me->xt_timer = gtk_timeout_add ((guint32) me->libwww_timer->millis,
-				  (GtkFunction) TimerCallbackGTK,
-				  (gpointer) me);
+                                  (GtkFunction) TimerCallbackGTK,
+                                  (gpointer) me);
 #endif /* _GTK */
 #ifdef _WX
   me->xt_timer = new wxAmayaTimer( TimerCallbackWX, me);
@@ -857,7 +857,7 @@ void AMAYA_DeleteTimer (HTTimer *libwww_timer)
   while ((me = (AmayaTimer * ) HTList_nextObject (cur)))
     {
       if (me->libwww_timer == libwww_timer)
-	break;
+        break;
       last = cur;
     }
 
@@ -868,7 +868,7 @@ void AMAYA_DeleteTimer (HTTimer *libwww_timer)
       gtk_timeout_remove (me->xt_timer);
 #endif /* _GTK */
 #ifdef _WX
-	  wxDynamicCast(me->xt_timer, wxTimer)->Stop();
+      wxDynamicCast(me->xt_timer, wxTimer)->Stop();
       delete wxDynamicCast(me->xt_timer, wxTimer);
 #endif /* _WX */
 

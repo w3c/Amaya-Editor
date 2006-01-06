@@ -81,7 +81,7 @@ CreateTableDlgWX::~CreateTableDlgWX()
 {
   /* when the dialog is destroyed, It's important to cleanup context */
   if (Waiting)
-  // no return done
+    // no return done
     ThotCallback (MyRef, INTEGER_DATA, (char*) 0); 
 }
 

@@ -12,6 +12,7 @@
 #include "appdialogue_wx.h"
 #include "message_wx.h"
 #include "thot_sys.h"
+static int      Waiting = 0;
 
 //-----------------------------------------------------------------------------
 // Event table: connect the events to the handler functions to process them
@@ -57,6 +58,8 @@ OpenDocDlgWX::OpenDocDlgWX( int ref,
   ,m_pLastUsedFilter(p_last_used_filter)
 {
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("OpenDocDlgWX"));
+  // waiting for a return
+  Waiting = 1;
 
   // update dialog labels with given ones
   SetTitle( title );
@@ -110,7 +113,10 @@ OpenDocDlgWX::OpenDocDlgWX( int ref,
   ----------------------------------------------------------------------*/
 OpenDocDlgWX::~OpenDocDlgWX()
 {
-  ThotCallback (m_Ref, INTEGER_DATA, (char*) 0);
+  /* when the dialog is destroyed, It's important to cleanup context */
+  if (Waiting)
+    // no return done
+    ThotCallback (m_Ref, INTEGER_DATA, (char*) 0);
 }
 
 /*----------------------------------------------------------------------
@@ -221,6 +227,9 @@ void OpenDocDlgWX::UpdateDirAndFilenameFromString( const wxString & full_path )
   ----------------------------------------------------------------------*/
 void OpenDocDlgWX::OnOpenButton( wxCommandEvent& event )
 {
+  if (!Waiting)
+    // no return done
+    return;
   // get the "where to open" indicator
   int where_id = XRCCTRL(*this, "wxID_RADIOBOX", wxRadioBox)->GetSelection();
   ThotCallback (BaseDialog + OpenLocation , INTEGER_DATA, (char*)where_id);
@@ -242,6 +251,8 @@ void OpenDocDlgWX::OnOpenButton( wxCommandEvent& event )
       // give the profile to amaya
       ThotCallback (BaseDialog + DocInfoDocType,  STRING_DATA, (char *)buffer );
     }
+  // return done
+  Waiting = 0;
   // create or load the new document
   ThotCallback (m_Ref, INTEGER_DATA, (char*)1);
 }
@@ -265,6 +276,8 @@ void OpenDocDlgWX::OnClearButton( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void OpenDocDlgWX::OnCancelButton( wxCommandEvent& event )
 {
+  // return done
+  Waiting = 0;
   ThotCallback (m_Ref, INTEGER_DATA, (char*) 0);
 }
 
