@@ -111,6 +111,8 @@ void AmayaXMLPanel::SendDataToPanel( AmayaParams& p )
   int i = 0;
   int index = 0;
   int sel = 0;
+  if (nb_el == 0)
+	return;
   while (i < nb_el && listBuffer[index] != EOS)
     {
       m_pXMLList->Append( TtaConvMessageToWX( &listBuffer[index] ) );
