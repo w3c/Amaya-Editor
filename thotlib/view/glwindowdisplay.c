@@ -1259,31 +1259,29 @@ void TtaRegisterTimeEvent(void (*pfunc) (Document doc, double current_time))
   ----------------------------------------------------------------------*/
 AnimTime ComputeThotCurrentTime (int frame)
 {
-#if defined _GTK || defined(_WX)
+#ifdef _WX
+#ifdef _WINDOWS
   /* draw and calculate draw time bench that helps finding bottlenecks...*/
-  //struct timeb	after;
+  struct timeb	after;
+#else /* _WINDOWS */
   struct timeval tv;
   struct timezone tz;
-#endif /* #if defined _GTK || defined(_WX) */
-  AnimTime current_time; 
+#endif /* _WINDOWS */
+#endif /* _WX */
+  AnimTime current_time = 0; 
   int      i;
 
   if (FrameTable[frame].Anim_play) 
     {   
-
-#if defined _GTK || defined(_WX)
-#if defined (_MACOS) && defined (_WX)
-      /* TODO: trouver une fonction equivalente sous macosx, ftime n'existe pas sur mac */
-      /* gettimeofday (&after);*/
-#else /* _MACOS */
-      //ftime (&after);
-#endif /* _MACOS */
+#ifdef _WX
+#ifdef _WINDOWS
+      ftime (&after);
+      current_time = (double)after.time + (((double)after.millitm)/1000.);
+#else /* _WINDOWS */
       gettimeofday (&tv, &tz);
-
-      //current_time = after.time + (((double)after.millitm)/1000);
-      current_time = tv.tv_sec + (((double)tv.tv_usec)/1000000);
-#endif /* _GTK || defined(_WX) */
-      
+      current_time = (double)tv.tv_sec + (((double)tv.tv_usec)/1000000.);
+#endif /* _WINDOWS */
+#endif /* _WX */
 #ifdef _WINGUI
       current_time = ((double) GetTickCount ()) / 1000; 
 #endif /*_WINGUI*/	
