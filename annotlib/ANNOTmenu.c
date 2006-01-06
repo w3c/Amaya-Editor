@@ -85,7 +85,7 @@ typedef struct _typeSelector
   ----------------------------------------------------------------------*/
 static void CustomQueryCallbackDialog (int ref, int typedata, char *data)
 {
-  int                 val;
+  long int                 val;
 
   if (ref == -1)
     {
@@ -95,7 +95,7 @@ static void CustomQueryCallbackDialog (int ref, int typedata, char *data)
   else
     {
       /* has the user changed the options? */
-      val = (int) data;
+      val = (long int) data;
       switch (ref - CustomQueryBase)
         {
         case CustomQueryMenu:

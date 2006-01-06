@@ -4117,7 +4117,7 @@ LRESULT CALLBACK WIN_AnnotDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
   ----------------------------------------------------------------------*/
 static void AnnotCallbackDialog (int ref, int typedata, char *data)
 {
-  int                 val;
+  long int                 val;
 
   if (ref == -1)
     {
@@ -4127,7 +4127,7 @@ static void AnnotCallbackDialog (int ref, int typedata, char *data)
   else
     {
       /* has the user changed the options? */
-      val = (int) data;
+      val = (long int) data;
       switch (ref - AnnotBase)
         {
         case AnnotMenu:
