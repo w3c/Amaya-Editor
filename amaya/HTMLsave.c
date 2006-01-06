@@ -2215,7 +2215,7 @@ void DoSynchronize (Document doc, View view, NotifyElement *event)
   saveBefore = TtaIsDocumentUpdated (doc);
   if (DocumentTypes[doc] == docCSS)
     {
-      if (!TtaIsDocumentModified (doc))
+      if (!TtaIsDocumentModified (doc) && !TtaIsDocumentUpdated (doc))
         return;
     }
   else if (!saveBefore)
@@ -2323,6 +2323,11 @@ void DoSynchronize (Document doc, View view, NotifyElement *event)
     }
 
   /* disable the Synchronize command for both documents */
+  if (DocumentTypes[doc] == docCSS)
+    {
+      TtaSetItemOff (doc, 1, File, BSynchro);
+      TtaSetDocumentUnupdated (doc);
+    }
   if (otherDoc)
     {
       if (DocumentTypes[doc] != docCSS)
@@ -2339,6 +2344,7 @@ void DoSynchronize (Document doc, View view, NotifyElement *event)
         TtaGetClickedElement (&(event->document), &(event->element));
       SynchronizeSourceView (event);
     }
+  
   TtaFreeMemory (tempdoc);
   Synchronizing = FALSE;
 }
