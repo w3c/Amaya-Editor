@@ -42,6 +42,7 @@
 #include "AmayaFrame.h"
 #include "AmayaCanvas.h"
 #include "AmayaResizingBoxEvtHandler.h"
+static int      Waiting = 0;
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaResizingBoxEvtHandler, wxEvtHandler)
 
@@ -105,8 +106,11 @@ AmayaResizingBoxEvtHandler::AmayaResizingBoxEvtHandler( AmayaFrame * p_frame,
       
       // assign a cross mouse cursor
       m_pFrame->GetCanvas()->SetCursor( wxCursor(wxCURSOR_CROSS) );
-      
+#ifndef _MACOS
       m_pFrame->GetCanvas()->CaptureMouse();
+#endif /* _MACOS */
+      // waiting for a release
+      Waiting = 1;
     }
 
   // check if this box contains an ellipse
@@ -200,8 +204,14 @@ AmayaResizingBoxEvtHandler::~AmayaResizingBoxEvtHandler()
       
       // restore the default cursor
       m_pFrame->GetCanvas()->SetCursor( wxNullCursor );
-      
-      m_pFrame->GetCanvas()->ReleaseMouse();
+      if (Waiting)
+        {
+          // should we release
+#ifndef _MACOS
+          m_pFrame->GetCanvas()->ReleaseMouse();
+#endif /* _MACOS */
+          Waiting = 0;
+        }
     }
 }
 
