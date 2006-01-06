@@ -960,8 +960,8 @@ PUBLIC BOOL removeFromBase (char *filename, LockLine *line)
             if ((TtaFileUnlink(path)<0) || (list && !HTList_isEmpty (list))) 
                 fp = fopen (path,"w");
 
-            if (fp)
-                fprintf (fp,"");    
+            //if (fp)
+              //  fprintf (fp,"");    
          }      
 	
 

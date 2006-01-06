@@ -15,7 +15,12 @@
 ** $Id$
 ** $Date$
 ** $Log$
-** Revision 1.25  2005-08-31 07:30:34  vatton
+** Revision 1.26  2006-01-06 14:01:52  vatton
+** Prevent compiling troubles.
+**
+** Irene
+**
+** Revision 1.25  2005/08/31 07:30:34  vatton
 ** Fixing a warning.
 ** Irene
 **
@@ -1185,7 +1190,7 @@ void DAVPreferencesDlg_callback (int ref, int typedata, char *data)
           break;
 	  
         case DAVnumberTimeout :
-          GProp_DAV.numberTimeout = (int)data;
+          GProp_DAV.numberTimeout = (long int)data;
           break;                   
 	  
         case DAVradioLockScope :
