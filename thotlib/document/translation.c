@@ -541,9 +541,9 @@ void TtaGetTime (char *s, CHARSET charset)
     {
       tmptr = gmtime (&tp);
       if (set_isodate)
-        strftime (s, DATESTRLEN, "%d-%m-%Y - %H:%M", tmptr);
+        strftime (s, DATESTRLEN, "%Y-%m-%d", tmptr);
       else
-        strftime(s, DATESTRLEN, "%Y/%m/%d %H:%M", tmptr);
+        strftime(s, DATESTRLEN, "%d-%m-%Y", tmptr);
     }
   else
     {
@@ -551,16 +551,16 @@ void TtaGetTime (char *s, CHARSET charset)
       if (set_isodate)
         {
 #ifdef _WINDOWS
-          wcsftime(ws, DATESTRLEN, L"%d-%m-%Y - %H:%M", tmptr);
+          wcsftime(ws, DATESTRLEN, L"%Y-%m-%d", tmptr);
           ptr = TtaConvertWCToByte (ws, charset);
           strncpy (s, (char *)ptr, DATESTRLEN);
           TtaFreeMemory (ptr);
 #else /* _WINDOWS */
-          strftime(s, DATESTRLEN, "%d-%m-%Y - %H:%M", tmptr);
+          strftime(s, DATESTRLEN, "%Y-%m-%d", tmptr);
 #endif /* _WINDOWS */
         }
       else
-        strftime(s, DATESTRLEN, "%Y/%m/%d %H:%M", tmptr);
+        strftime(s, DATESTRLEN, "%d-%m-%Y", tmptr);
     }
 }
 
