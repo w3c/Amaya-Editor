@@ -5,8 +5,7 @@
 <head>
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <title>Changer la structure</title>
-  <meta name="GENERATOR" content="amaya 9.2.2, see http://www.w3.org/Amaya/"
-  />
+  <meta name="GENERATOR" content="amaya 9.3, see http://www.w3.org/Amaya/" />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -56,7 +55,7 @@ pré-défini.</p>
 
 <p class="ProcedureCaption">Pour créer un document à partir d'un modèle :</p>
 <ol>
-  <li>Choisissez l'entrée <strong>Nouveau </strong>du menu
+  <li>Choisissez l'entrée <strong>Nouveau</strong> du menu
     <strong>Fichier</strong> et selectionnez <strong>À partir du
     modèle.</strong></li>
   <li>Amaya vous demande de choisir un modèle. Vous pouvez choisir l'un des

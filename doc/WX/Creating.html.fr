@@ -21,33 +21,29 @@ accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a>
 src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
+<div id="Creating">
+
 <div class="toc">
 <ul>
-  <li><a href="#L1103">Créer de nouveaux <span xml:lang="fr"
-    lang="fr">éléments</span></a>
+  <li><a href="#Boutons">Boutons et menus</a></li>
+  <li><a href="#Point">Point d'insertion</a></li>
+  <li><a href="#Sous-menu">Sous-menu Structure</a></li>
+  <li><a href="#L1179">Eléments créés automatiquement</a></li>
+  <li><a href="#touche">La touche Enter (ou Return)</a>
     <ul>
-      <li><a href="#Boutons">Boutons et menus</a></li>
-      <li><a href="#Point">Point d'insertion</a></li>
-      <li><a href="#Sous-menu">Sous-menu Structure</a></li>
-      <li><a href="#L1179">Eléments créés automatiquement</a></li>
-      <li><a href="#touche">La touche Enter (ou Return)</a>
-        <ul>
-          <li><a href="#end-anchor">Sortir des ancres ou des chaînes
-            d'éléments de style</a></li>
-          <li><a href="#multi-enter">Création de structures
-          imbriquées</a></li>
-          <li><a href="#edit-dl">Editer les listes de définitions
-            (dl/dt/dd)</a></li>
-        </ul>
-      </li>
-      <li><a href="#Changer">Changer le titre du document</a></li>
-      <li><a href="#Traitement">Traitement des blancs</a></li>
+      <li><a href="#end-anchor">Sortir des ancres ou des chaînes d'éléments
+        de style</a></li>
+      <li><a href="#multi-enter">Création de structures imbriquées</a></li>
+      <li><a href="#edit-dl">Editer les listes de définitions
+      (dl/dt/dd)</a></li>
     </ul>
   </li>
+  <li><a href="#Changer">Changer le titre du document</a></li>
+  <li><a href="#date">Insérer la date de mise à jour</a></li>
+  <li><a href="#Traitement">Traitement des blancs</a></li>
 </ul>
 </div>
 
-<div id="Creating">
 <h2 id="L1103">Créer de nouveaux <span xml:lang="fr"
 lang="fr">éléments</span></h2>
 
@@ -193,8 +189,8 @@ rapidement des structures complexes emboîtées.</p>
   <li>Entrez le contenu de la première ligne du second item.</li>
   <li>A la fin de la première ligne de l'item 2, créez une liste nouvelle
     avec son premier item (cliquez par exemple sur le bouton <img
-    alt="Numbered List " src="../../resources/icons/16x16/XHTML_Num.png"
-     />). La nouvelle liste sera automatiquement emboîtée.</li>
+    alt="Numbered List " src="../../resources/icons/16x16/XHTML_Num.png" />).
+    La nouvelle liste sera automatiquement emboîtée.</li>
   <li>Entrez le contenu du premier item de la nouvelle liste et créez l'item
     b en appuyant deux fois sur la touche <kbd>Enter</kbd> à la fin de l'item
     a.</li>
@@ -260,6 +256,17 @@ structure</a>.</p>
 </div>
 
 <div id="Creating1">
+<h3 id="date">Insérer la date de mise à jour</h3>
+
+<p>L'entrée de menu <strong>XHTML/Insérer date de mise à jour</strong> vous
+permet d'insérer la date courante soit au format ISO (YYY-MM-DD) soit au
+format européen (DD-MM-YYYY). Le format de la date est fixé par le menu des
+Préférences.</p>
+
+<p>Une fois cette date insérée, Amaya la met automatiquement à jour chaque
+fois que le document est sauvé et maintenir ainsi la dernière date de mise à
+jour.</p>
+
 <h3 id="Traitement"><a>Traitement des blancs</a></h3>
 
 <p>Pour les documents XHTML, <a href="Math.html.fr#Math">MathML</a>, <a

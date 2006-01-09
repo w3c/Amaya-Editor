@@ -29,11 +29,13 @@
     border-bottom: thin solid;
     }
 
-  .nav { float: right;
-    display: inline;
+  .nav {
+    text-align: right;
+    display: block;
     }
 
   .logo { margin-top: 0.8em;
+   float: left;
     }
 
   .characters td { border: thin solid black;

@@ -5,8 +5,7 @@
 <head>
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <title>Naviguer avec Amaya</title>
-  <meta name="GENERATOR" content="amaya 9.2.2, see http://www.w3.org/Amaya/"
-  />
+  <meta name="GENERATOR" content="amaya 9.3, see http://www.w3.org/Amaya/" />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -63,12 +62,24 @@ sont disponibles.</p>
 <h3 id="Activer"><a name="Activating">Activer un lien, parcourir les
 liens</a></h3>
 
-<p>Les liens sont habituellement présentés en bleu. Comme
-<strong>Amaya</strong> est un éditeur, vous devez effectuer un double-clic
-sur un lien pour l'activer. Un simple-clic place seulement le point
-d'insertion à l'intérieur du lien, pour que vous puissiez modifier le texte,
-et il affiche l'URI complète du lien dans la barre d'état en bas de la
-fenêtre.</p>
+<p>Les liens sont par défaut présentés en bleu. Comme <strong>Amaya</strong>
+est un éditeur, vous obtiendrez un résultat différent avec un simple-clic, un
+double-clic, ou un clic-droit sur un lien.</p>
+<ul>
+  <li>Un <kbd>simple-clic</kbd> place seulement le point d'insertion à
+    l'intérieur du lien, pour que vous puissiez modifier le texte, et il
+    affiche l'URI complète du lien dans la barre d'état en bas de la
+  fenêtre.</li>
+  <li>Un <kbd>double-clic</kbd> active le lien et se place sur la cible. Le
+    document cible remplace le document courant dans le même onglet.</li>
+  <li>Un <kbd>clic-droit</kbd> (ou <kbd>Cmd + simple-clic</kbd> sur MacOS X)
+    active le lien et ouvre le document cible dans un nouvel onglet ou une
+    nouvelle fenêtre. Le document origine reste ouvert dans le premier
+    onglet. Vous pouvez choisir d'ouvrir le document cible dans un nouvel
+    onglet ou une nouvelle fenêtre en mettant l'option correspondante dans
+    les Préférences de Navigation (voir le menu <strong>Editer &gt;
+    Préférences</strong>).</li>
+</ul>
 
 <p>Ce comportement par défaut peut être modifié, ainsi que d'autres
 paramètres, par l'intermédiaire du menu
@@ -83,7 +94,7 @@ sélection étendue soit déplacer le point d'insertion à l'intérieur des liens
 et les activer. La touche <kbd>Tab</kbd>, vous permet de trouver le prochain
 lien ou élément de formulaire HTML dans le document. La commande <kbd>Shift
 Tab</kbd>, vous permet de trouver le lien ou élément de formulaire HTML qui
-précède dans le document. La commande <kbd>Alt &#x2193;</kbd> vous permet
+précède dans le document. La commande <kbd>Alt &darr;</kbd> vous permet
 d'activer le lien courant. Vous pouvez <a href="ShortCuts.html.fr">choisir
 d'autres touches</a> ou combinaisons de touches pour toutes ces commandes.</p>
 
