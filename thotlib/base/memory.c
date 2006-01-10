@@ -263,7 +263,9 @@ void TtaFreeAnimation (void *void_a_list)
   else
     TtaFreeMemory (a_list->from);  
   TtaFreeMemory (a_list->to);
-  TtaFreeMemory (a_list->AttrName);
+  // pay attention: transformation store a value instead of a string
+  if (a_list->AnimType != Transformation)
+    TtaFreeMemory (a_list->AttrName);
   TtaFreeMemory (a_list);
 }
 

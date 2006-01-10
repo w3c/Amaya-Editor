@@ -37,7 +37,7 @@
 #include "anim_f.h"
 
 #ifdef _WINDOWS
-	#include <commctrl.h>
+#include <commctrl.h>
 #endif /* _WINDOWS */
 
 #ifdef _GL
@@ -75,7 +75,7 @@ void SwitchIconAnimPlay (Document doc, View view, ThotBool state)
   ----------------------------------------------------------------------*/
 void Anim_Play (Document document, View view)
 {
- TtaPlay (document, view);
+  TtaPlay (document, view);
 }
 #endif /*_GL*/
 
@@ -90,12 +90,12 @@ void AddAnimPlayButton (Document doc, View view)
   iconAnimNo = TtaCreatePixmapLogo (animstop_xpm);
 #endif /* _WINGUI */
   AnimButton = TtaAddButton (doc,
- 			     1,  
-			     (ThotIcon)iconAnim,
-			     (Proc)Anim_Play,
-			     "Anim_Play",
-			     TtaGetMessage (AMAYA, AM_BUTTON_ANIM),
-			     TBSTYLE_BUTTON, TRUE);
+                             1,  
+                             (ThotIcon)iconAnim,
+                             (Proc)Anim_Play,
+                             "Anim_Play",
+                             TtaGetMessage (AMAYA, AM_BUTTON_ANIM),
+                             TBSTYLE_BUTTON, TRUE);
 #endif /*_GL*/
 }
 
@@ -114,9 +114,7 @@ static int get_int_attribute_from_el (Element el, int Attribut_Type)
   attrType.AttrTypeNum = Attribut_Type;  
   attr = TtaGetAttribute (el, attrType);
   result = TtaGetAttributeValue (attr);
-  
   return result;
-
 #endif /* _SVG */
 }
 /*----------------------------------------------------------------------
@@ -132,9 +130,7 @@ static Attribute get_attribute_from_el (Element el, int Attribut_Type)
   attrType.AttrSSchema = elType.ElSSchema;
   attrType.AttrTypeNum = Attribut_Type;  
   attr = TtaGetAttribute (el, attrType);
-  
   return attr;
-
 #endif /* _SVG */
 }
 /*----------------------------------------------------------------------
@@ -153,10 +149,8 @@ static int *get_intptr_attribute_from_el (Element el, int Attribut_Type)
   attrType.AttrSSchema = elType.ElSSchema;
   attrType.AttrTypeNum = Attribut_Type;  
   attr = TtaGetAttribute (el, attrType);
-  *result = TtaGetAttributeValue (attr);
-  
+  result = (int *) TtaGetAttributeValue (attr);
   return result;
-
 #endif /* _SVG */
 }
 
@@ -185,7 +179,7 @@ char *get_char_attribute_from_el (Element el, int Attribut_Type)
       /* get the value of the x attribute */
       TtaGiveTextAttributeValue (attr, text, &length);
       /* Parse the attribute value 
-	 (a number followed by a unit) */
+         (a number followed by a unit) */
       ptr = text;
       /*TtaFreeMemory (text);*/
     }
@@ -200,11 +194,12 @@ char *get_char_attribute_from_el (Element el, int Attribut_Type)
 void register_animated_element (Element animated, Document doc)
 {
 #ifdef _SVG
-  void *anim_info;
+  void       *anim_info;
   ElementType elType;
-  double start, duration;
-  char *repeatcount;  
-  int repeat;
+  double      start, duration;
+  char       *repeatcount;  
+  int         repeat;
+  long int    val;
 
   start = duration = 0;
   anim_info = TtaNewAnimation ();
@@ -243,11 +238,11 @@ void register_animated_element (Element animated, Document doc)
     {    
       repeat = atoi (repeatcount);      
       if (repeat)
-	TtaAddAnimRepeatCount (repeat, anim_info);
+        TtaAddAnimRepeatCount (repeat, anim_info);
       else
-	if (strlen (repeatcount) == 10 && 
-	    strcasecmp ("indefinite", repeatcount) == 0)
-	  TtaAddAnimRepeatCount (-1, anim_info);
+        if (strlen (repeatcount) == 10 && 
+            strcasecmp ("indefinite", repeatcount) == 0)
+          TtaAddAnimRepeatCount (-1, anim_info);
       TtaFreeMemory (repeatcount);
     }
   
@@ -255,70 +250,70 @@ void register_animated_element (Element animated, Document doc)
     {      
     case SVG_EL_animateMotion :      
       if (get_attribute_from_el (animated, SVG_ATTR_values))
-	{
-	  TtaAddAnimMotionValues ((void *) ParseValuesDataAttribute (get_attribute_from_el (animated, 
-										    SVG_ATTR_values),
-							     animated, 
-							     doc),
-			  anim_info);
-	}
+        {
+          TtaAddAnimMotionValues ((void *) ParseValuesDataAttribute (get_attribute_from_el (animated, 
+                                                                                            SVG_ATTR_values),
+                                                                     animated, 
+                                                                     doc),
+                                  anim_info);
+        }
       else if (get_attribute_from_el (animated, SVG_ATTR_from) &&
-	       get_attribute_from_el (animated, SVG_ATTR_to_))
-	{
-	  TtaAddAnimMotionFromTo ((void *) ParseFromToDataAttribute (get_attribute_from_el (animated, 
-										    SVG_ATTR_from), 
-							     get_attribute_from_el (animated, 
-										    SVG_ATTR_to_), 
-							     animated,
-							     doc),
-			  anim_info);
-	}
+               get_attribute_from_el (animated, SVG_ATTR_to_))
+        {
+          TtaAddAnimMotionFromTo ((void *) ParseFromToDataAttribute (get_attribute_from_el (animated, 
+                                                                                            SVG_ATTR_from), 
+                                                                     get_attribute_from_el (animated, 
+                                                                                            SVG_ATTR_to_), 
+                                                                     animated,
+                                                                     doc),
+                                  anim_info);
+        }
       else if (get_attribute_from_el (animated, SVG_ATTR_path_))
-	{
-	  TtaAddAnimMotionPath ((void *) ParsePathDataAttribute (get_attribute_from_el (animated, 
-										  SVG_ATTR_path_), 
-							   animated, 
-							   doc, 
-							   FALSE),
-			  anim_info);
-	}
+        {
+          TtaAddAnimMotionPath ((void *) ParsePathDataAttribute (get_attribute_from_el (animated, 
+                                                                                        SVG_ATTR_path_), 
+                                                                 animated, 
+                                                                 doc, 
+                                                                 FALSE),
+                                anim_info);
+        }
       TtaSetAnimTypetoMotion (anim_info);
       break;      
 
-    case SVG_EL_animateColor : 
-      TtaAddAnimAttrName ((void *) get_char_attribute_from_el (animated, SVG_ATTR_attributeName_), 
-			  anim_info);
+    case SVG_EL_animateColor :
+      TtaAddAnimAttrName ((void *) get_char_attribute_from_el (animated, SVG_ATTR_attributeName_),
+                          anim_info);
       TtaAddAnimFrom ((void *) get_char_attribute_from_el (animated, SVG_ATTR_from), 
-		      anim_info);
+                      anim_info);
       TtaAddAnimTo ((void *) get_char_attribute_from_el (animated, SVG_ATTR_to_), 
-		    anim_info);
+                    anim_info);
       TtaSetAnimTypetoColor (anim_info);
       break;      
 
     case SVG_EL_animateTransform :
-      TtaAddAnimAttrName ((void *) get_intptr_attribute_from_el (animated, SVG_ATTR_type_), 
-			  anim_info);
+      val = (long int) get_intptr_attribute_from_el (animated, SVG_ATTR_type_);
+      TtaAddAnimAttrName ((void *) val, anim_info);
       TtaAddAnimFrom ((void *) get_char_attribute_from_el (animated, SVG_ATTR_from), 
-		      anim_info);
+                      anim_info);
       TtaAddAnimTo ((void *) get_char_attribute_from_el (animated, SVG_ATTR_to_), 
-		    anim_info);
+                    anim_info);
       TtaSetAnimTypetoTransform (anim_info);
       break;
 
     case SVG_EL_animate : 
       TtaAddAnimAttrName ((void *) get_char_attribute_from_el (animated, SVG_ATTR_attributeName_), 
-			  anim_info);
+                          anim_info);
       TtaAddAnimFrom ((void *) get_char_attribute_from_el (animated, SVG_ATTR_from), 
-		      anim_info);
+                      anim_info);
       TtaAddAnimTo ((void *) get_char_attribute_from_el (animated, SVG_ATTR_to_), 
-		    anim_info);
+                    anim_info);
       TtaSetAnimTypetoAnimate (anim_info);
       break;
     case SVG_EL_set_ : 	
       TtaAddAnimAttrName ((void *) get_char_attribute_from_el (animated, SVG_ATTR_attributeName_), 
-			  anim_info);
+                          anim_info);
       TtaAddAnimTo ((void *) get_char_attribute_from_el (animated, SVG_ATTR_to_), 
-		    anim_info);
+                    anim_info);
       TtaSetAnimTypetoSet (anim_info);
       break;
     default:

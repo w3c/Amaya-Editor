@@ -17,18 +17,18 @@
 #ifdef _GL
 
 #ifdef _WINGUI
-  #include <windows.h>
+#include <windows.h>
 #endif /* _WINGUI*/
 
 #ifdef _GTK
-  #include <gtkgl/gtkglarea.h>
+#include <gtkgl/gtkglarea.h>
 #endif /* _GTK */
 
 #ifdef _WX
-  #include "wx/wx.h"
-  #include "wx/glcanvas.h"
+#include "wx/wx.h"
+#include "wx/glcanvas.h"
 #else
-  #include <GL/gl.h>
+#include <GL/gl.h>
 #endif /* _WX */
 
 #include "thot_gui.h"
@@ -40,9 +40,9 @@
 #include "frame.h"
 
 #ifdef _WX
-  #include "AmayaPage.h"
-  #include "AmayaFrame.h"
-  #include "wxAmayaTimer.h"
+#include "AmayaPage.h"
+#include "AmayaFrame.h"
+#include "wxAmayaTimer.h"
 #endif /* _WX */
 
 #undef THOT_EXPORT
@@ -70,14 +70,14 @@
 #include "animbox_f.h"
 #include "frame_f.h"
 /*
-One Timer To Rule Them All 
-(ie : all animation, frame, and windows are using the same timer, 
-using start value substract to get their own time)
+  One Timer To Rule Them All 
+  (ie : all animation, frame, and windows are using the same timer, 
+  using start value substract to get their own time)
 */
 #ifdef _WX
-  static wxAmayaTimer * AnimTimer = 0; 
+static wxAmayaTimer * AnimTimer = 0; 
 #else /* _WX */
-  static int      AnimTimer = 0; 
+static int      AnimTimer = 0; 
 #endif /* _WX */
 static ThotBool BadGLCard = FALSE;
 /* Animation Smoothness*/
@@ -111,9 +111,9 @@ void TtaNoPlay (int frame)
   if (frame && frame < MAX_FRAME)
     if (FrameTable[frame].Anim_play)
       {
-	TtaChangePlay (frame);
-	FrameTable[frame].BeginTime = 0;
-	FrameTable[frame].LastTime = 0;
+        TtaChangePlay (frame);
+        FrameTable[frame].BeginTime = 0;
+        FrameTable[frame].LastTime = 0;
       }
 }
 
@@ -125,9 +125,9 @@ void TtaPause (int frame)
   if (frame && frame < MAX_FRAME)
     if (FrameTable[frame].Anim_play)
       {
-	TtaChangePlay (frame);
-	FrameTable[frame].BeginTime = 0;
-	FrameTable[frame].LastTime = 0;
+        TtaChangePlay (frame);
+        FrameTable[frame].BeginTime = 0;
+        FrameTable[frame].LastTime = 0;
       }
 }
 /*----------------------------------------------------------------------
@@ -143,7 +143,7 @@ void TtaSetFrameCurrentTime (AnimTime current_time, int frame)
   ----------------------------------------------------------------------*/
 VOID CALLBACK MyTimerProc (HWND hwnd, UINT message, UINT idTimer, DWORD dwTime)     
 { 
- GL_DrawAll ();   
+  GL_DrawAll ();   
 } 
 #endif /*_WINGUI*/
 
@@ -153,7 +153,7 @@ VOID CALLBACK MyTimerProc (HWND hwnd, UINT message, UINT idTimer, DWORD dwTime)
   ----------------------------------------------------------------------*/
 void MyAnimTimerProcWX( void * data )     
 { 
- GL_DrawAll ();
+  GL_DrawAll ();
 } 
 #endif /* _WX */
 
@@ -168,34 +168,34 @@ static void TtaDestroyAnimTimer( ThotBool check_other_animation )
   ThotBool other_animation;
 
   if (AnimTimer)
-  {
-    other_animation = FALSE;
-	if (check_other_animation)
-	{
-	  for (frame = 0; frame < MAX_FRAME; frame++)
-	  {
-	    if (FrameTable[frame].Anim_play)
-	      other_animation = TRUE;
-	  }
-	}
-	if (!other_animation)
-	{
+    {
+      other_animation = FALSE;
+      if (check_other_animation)
+        {
+          for (frame = 0; frame < MAX_FRAME; frame++)
+            {
+              if (FrameTable[frame].Anim_play)
+                other_animation = TRUE;
+            }
+        }
+      if (!other_animation)
+        {
 #ifdef _GTK
-		gtk_timeout_remove (AnimTimer); 	
+          gtk_timeout_remove (AnimTimer); 	
 #endif /* #ifdef _GTK */
       
 #ifdef _WINGUI
-		KillTimer (NULL, AnimTimer);
+          KillTimer (NULL, AnimTimer);
 #endif /*_WINGUI*/
 
 #ifdef _WX
-		AnimTimer->Stop();
-		delete AnimTimer;
+          AnimTimer->Stop();
+          delete AnimTimer;
 #endif /* _WX */
 
-		AnimTimer = 0; 
-	}
-  }
+          AnimTimer = 0; 
+        }
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -204,48 +204,48 @@ static void TtaDestroyAnimTimer( ThotBool check_other_animation )
 void TtaChangePlay (int frame)
 {
   if (frame && frame <= MAX_FRAME && FrameTable[frame].Animated_Boxes)
-      {
-	FrameTable[frame].Anim_play = (FrameTable[frame].Anim_play ? FALSE : TRUE);
-	if (FrameTable[frame].Anim_play)
-	  {
-	    if (AnimTimer == 0)
+    {
+      FrameTable[frame].Anim_play = (FrameTable[frame].Anim_play ? FALSE : TRUE);
+      if (FrameTable[frame].Anim_play)
+        {
+          if (AnimTimer == 0)
 
 #ifdef _GTK
-	      AnimTimer = gtk_timeout_add (FRAME_TIME,
-					   (GtkFunction) GL_DrawAll, 
-					   (gpointer)   NULL); 
+            AnimTimer = gtk_timeout_add (FRAME_TIME,
+                                         (GtkFunction) GL_DrawAll, 
+                                         (gpointer)   NULL); 
 	   	      
 #endif /* #ifdef _GTK */
 
 #ifdef _WINGUI
-	    {
-	      /* SetTimer(FrMainRef[frame],                
-		 frame,               
-		 FRAME_TIME,                     
-		 (TIMERPROC) MyTimerProc); 
+          {
+            /* SetTimer(FrMainRef[frame],                
+               frame,               
+               FRAME_TIME,                     
+               (TIMERPROC) MyTimerProc); 
 
-		 AnimTimer = frame;*/
-	      AnimTimer = SetTimer (NULL,                
-				    frame,               
-				    FRAME_TIME,                     
-				    (TIMERPROC) MyTimerProc);
-	    }    
+               AnimTimer = frame;*/
+            AnimTimer = SetTimer (NULL,                
+                                  frame,               
+                                  FRAME_TIME,                     
+                                  (TIMERPROC) MyTimerProc);
+          }    
 #endif /*_WINGUI*/
 
 #ifdef _WX
-	    {
-	      AnimTimer = new wxAmayaTimer( MyAnimTimerProcWX, NULL );
-	      /* start a one shot timer */
-	      AnimTimer->Start( FRAME_TIME , FALSE );
-	    }
+          {
+            AnimTimer = new wxAmayaTimer( MyAnimTimerProcWX, NULL );
+            /* start a one shot timer */
+            AnimTimer->Start( FRAME_TIME , FALSE );
+          }
 #endif /* _WX */
 
-	    FrameTable[frame].BeginTime = 0;
-	    FrameTable[frame].LastTime = 0;
-	  }
-	else
-		TtaDestroyAnimTimer( TRUE );
-      }  
+          FrameTable[frame].BeginTime = 0;
+          FrameTable[frame].LastTime = 0;
+        }
+      else
+        TtaDestroyAnimTimer( TRUE );
+    }  
 }
 
 
@@ -302,89 +302,90 @@ ThotBool GL_DrawAll ()
     {
       FrameUpdating = TRUE;     
       if (!frame_animating)
-	{	  
-	  frame_animating = TRUE; 
-	  for (frame = 0 ; frame < MAX_FRAME; frame++)
-	    {
+        {	  
+          frame_animating = TRUE; 
+          for (frame = 0 ; frame < MAX_FRAME; frame++)
+            {
 #ifndef _WX
-	      if (FrRef[frame] != 0)
+              if (FrRef[frame] != 0)
 #else /* _WX */
-	      if (FrameTable[frame].WdFrame != 0)
+                if (FrameTable[frame].WdFrame != 0)
 #endif /* _WX */
-		{
-		  if ( FrameTable[frame].Animated_Boxes
-               && FrameTable[frame].Anim_play )
-		    {
-			  nb_animated_frame++;
-		      current_time = ComputeThotCurrentTime (frame);  
-		      if ((current_time + 1) > 0.0001)
-			{
-			  glDisable (GL_SCISSOR_TEST);
-			  if (Animate_boxes (frame, current_time))
-			    TtaPause (frame);
-			  else
-			    was_animation = TRUE;
-			  FrameTable[frame].LastTime = current_time;
-			  glEnable (GL_SCISSOR_TEST);
-			}
-		      else
-			current_time = FrameTable[frame].LastTime;
-		    }
-		  else
-		    current_time = FrameTable[frame].LastTime;
+                  {
+                    if ( FrameTable[frame].Animated_Boxes
+                         && FrameTable[frame].Anim_play )
+                      {
+                        nb_animated_frame++;
+                        current_time = ComputeThotCurrentTime (frame);
+                        if ((current_time + 1) > 0.0001)
+                          {
+                            glDisable (GL_SCISSOR_TEST);
+                            if (Animate_boxes (frame, current_time))
+                              TtaPause (frame);
+                            else
+                              was_animation = TRUE;
+                            FrameTable[frame].LastTime = current_time;
+                            glEnable (GL_SCISSOR_TEST);
+                          }
+                        else
+                          current_time = FrameTable[frame].LastTime;
+                      }
+                    else
+                      current_time = FrameTable[frame].LastTime;
 
-		  if (FrameTable[frame].DblBuffNeedSwap &&
-		      FrameTable[frame].FrDoc &&
-		      documentDisplayMode[FrameTable[frame].FrDoc - 1] != NoComputedDisplay)
-		    {
+                    if (FrameTable[frame].DblBuffNeedSwap &&
+                        FrameTable[frame].FrDoc &&
+                        documentDisplayMode[FrameTable[frame].FrDoc - 1] != NoComputedDisplay)
+                      {
 #ifdef _WX
-           // do not draw anything if the animated canvas page is not raidsed
-		   if (FrameTable[frame].WdFrame->GetPageParent()->IsSelected())
+                        // do not draw anything if the animated canvas page is not raidsed
+                        if (FrameTable[frame].WdFrame->GetPageParent()->IsSelected())
 #endif /* _WX */
-		      if (GL_prepare (frame))
-			{
-			  if (BadGLCard)
-			    DefClip (frame, -1, -1, -1, -1);
-			  
-			  RedrawFrameBottom (frame, 0, NULL); 
-			  if (was_animation)
-			    {
-			      lastime = current_time - lastime;
-			      if (IS_ZERO(lastime))
-				{
-				  sprintf (out, "t: %2.3f s - %2.0f fps", 
-					   current_time, 
-					   (double) 1 / lastime);
+                          if (GL_prepare (frame))
+                            {
+                              if (BadGLCard)
+                                DefClip (frame, -1, -1, -1, -1);
+                              RedrawFrameBottom (frame, 0, NULL); 
+                              if (was_animation)
+                                {
+                                  lastime = current_time - lastime;
+                                  if (IS_ZERO(lastime))
+                                    {
+                                      sprintf (out, "t: %2.3f s - %2.0f fps", 
+                                               current_time, 
+                                               (double) 1 / lastime);
 				  
-				  i = 0;
-				  TtaSetStatus (FrameTable[frame].FrDoc, 
-						FrameTable[frame].FrView, 
-						out, NULL);
-				  lastime = current_time;
-				}
-			    }
-			  GL_Swap (frame);  
-			}
-		      GL_Err ();
-		    }
-		}
-	    }
+                                      i = 0;
+                                      TtaSetStatus (FrameTable[frame].FrDoc, 
+                                                    FrameTable[frame].FrView, 
+                                                    out, NULL);
+                                      lastime = current_time;
+                                    }
+                                }
+                              GL_Swap (frame);  
+                            }
+                        GL_Err ();
+                      }
+                  }
+            }
 #ifdef _WX
-	  if (was_animation)
-	    TtaHandlePendingEvents();
+#ifndef _MACOS
+          if (was_animation)
+            TtaHandlePendingEvents();
+#endif
 #endif /* _WX */
 #ifdef _GTK
-	  if (was_animation)
-	    while (gtk_events_pending ())
-	      gtk_main_iteration ();
+          if (was_animation)
+            while (gtk_events_pending ())
+              gtk_main_iteration ();
 #endif /*_GTK*/
 
-      /* stop the animation timer if there is no animated frame */
-	  if (nb_animated_frame == 0)
-		TtaDestroyAnimTimer( FALSE );
+          /* stop the animation timer if there is no animated frame */
+          if (nb_animated_frame == 0)
+            TtaDestroyAnimTimer( FALSE );
 
-	  frame_animating  = FALSE;      
-	}  
+          frame_animating  = FALSE;      
+        }  
       FrameUpdating = FALSE;     
     }
   return TRUE;
