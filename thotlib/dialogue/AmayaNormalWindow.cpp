@@ -454,6 +454,10 @@ AmayaFrame * AmayaNormalWindow::GetActiveFrame() const
   -----------------------------------------------------------------------*/
 void AmayaNormalWindow::SetURL ( const wxString & new_url )
 {
+  // do not update window url if the url is empty
+  if (new_url.IsEmpty() )
+    return;
+
   if (m_pToolBar)
     m_pToolBar->SetURLValue( new_url );
 }

@@ -17,6 +17,7 @@
 #include "document.h"
 #include "message.h"
 #include "libmsg.h"
+#include "logdebug.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -31,6 +32,11 @@
 #include "AmayaToolBar.h"
 #include "AmayaWindow.h"
 #include "AmayaFrame.h"
+
+#ifdef _MACOS
+/* Wrap-up to prevent an event when the tabs are switched on Mac */
+static ThotBool  UpdateFrameUrl = TRUE;
+#endif /* _MACOS */
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaToolBar, wxPanel)
 
@@ -82,8 +88,6 @@ AmayaToolBar::AmayaToolBar( wxWindow * p_parent, AmayaWindow * p_amaya_window_pa
 AmayaToolBar::~AmayaToolBar()
 {
 }
-
-
 
 /*----------------------------------------------------------------------
  *       Class:  AmayaToolBar
@@ -150,10 +154,17 @@ void AmayaToolBar::AppendURL( const wxString & newurl )
   -----------------------------------------------------------------------*/
 void AmayaToolBar::SetURLValue( const wxString & newurl )
 {
+  TTALOGDEBUG_0( TTA_LOG_DIALOG, _T("** AmayaToolBar::SetURLValue - ")+newurl);
+#ifdef _MACOS
+  UpdateFrameUrl = FALSE;
+#endif /* _MACOS */
   if (m_pComboBox->FindString(newurl) == wxNOT_FOUND)
     m_pComboBox->Append(newurl);
   // new url should exists into combobox items so just select it.
   m_pComboBox->SetStringSelection( newurl );
+#ifdef _MACOS
+  UpdateFrameUrl = TRUE;
+#endif /* _MACOS */
 }
 
 /*----------------------------------------------------------------------
@@ -187,11 +198,20 @@ void AmayaToolBar::OnURLSelected( wxCommandEvent& event )
   -----------------------------------------------------------------------*/
 void AmayaToolBar::OnURLText( wxCommandEvent& event )
 {
-  AmayaFrame * p_frame = m_pAmayaWindowParent->GetActiveFrame();
-  if (p_frame)
-    p_frame->UpdateFrameURL(m_pComboBox->GetValue());
-  
-  event.Skip();
+#ifdef _MACOS
+  if (UpdateFrameUrl)
+  {
+    AmayaFrame * p_frame = m_pAmayaWindowParent->GetActiveFrame();
+    if (p_frame)
+      p_frame->UpdateFrameURL(m_pComboBox->GetValue());
+    event.Skip();
+  }
+#else /* _MACOS */
+    AmayaFrame * p_frame = m_pAmayaWindowParent->GetActiveFrame();
+    if (p_frame)
+      p_frame->UpdateFrameURL(m_pComboBox->GetValue());
+    event.Skip();
+#endif /* _MACOS */
 }
 
 /*----------------------------------------------------------------------

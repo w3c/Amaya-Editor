@@ -394,6 +394,7 @@ void AmayaFrame::OnSize( wxSizeEvent& event )
   -----------------------------------------------------------------------*/
 void AmayaFrame::SetFrameTitle(const wxString & frame_name)
 {
+  TTALOGDEBUG_1( TTA_LOG_DIALOG, _T("AmayaFrame::SetFrameTitle - frameid=%d title=")+frame_name, GetFrameId() );
   m_FrameTitle = frame_name;
 
   // do not update window title if the title is empty
@@ -459,6 +460,7 @@ void AmayaFrame::UpdateFrameIcon()
   -----------------------------------------------------------------------*/
 wxString AmayaFrame::GetFrameTitle()
 {
+  TTALOGDEBUG_1( TTA_LOG_DIALOG, _T("AmayaFrame::GetFrameTitle - frameid=%d title=")+m_FrameTitle, GetFrameId() );
   if (GetMasterFrameId() == GetFrameId())
     return m_FrameTitle;
   else
@@ -515,6 +517,9 @@ wxString AmayaFrame::GetWindowTitle()
   -----------------------------------------------------------------------*/
 void AmayaFrame::UpdateFrameURL( const wxString & new_url )
 {
+  TTALOGDEBUG_1( TTA_LOG_DIALOG, _T("AmayaFrame::UpdateFrameURL - frame=%d")+
+                 wxString(_T(" url="))+new_url, GetFrameId() );
+
   if (GetMasterFrameId() == GetFrameId())
     m_FrameUrl = new_url;
   else
@@ -538,6 +543,10 @@ void AmayaFrame::SetFrameURL( const wxString & new_url )
                  wxString(_T(" url="))+new_url, GetFrameId() );
   m_FrameUrl = new_url;
   
+  // do not update window url if the url is empty
+  if ( m_FrameUrl.IsEmpty() && new_url.IsEmpty() )
+    return;
+
   // update the window url if the frame is active
   if ( IsActive() && GetWindowParent() )
     GetWindowParent()->SetURL( m_FrameUrl );
@@ -551,6 +560,7 @@ void AmayaFrame::SetFrameURL( const wxString & new_url )
 wxString AmayaFrame::GetFrameURL()
 {
   TTALOGDEBUG_1( TTA_LOG_DIALOG, _T("AmayaFrame::GetFrameURL - frameid=%d url=")+m_FrameUrl, GetFrameId() );
+
   if (GetMasterFrameId() == GetFrameId())
     return m_FrameUrl;
   else
