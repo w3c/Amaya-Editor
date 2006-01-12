@@ -2594,10 +2594,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
       /* Positioning of the created box */
       i = 0;
       positioning = ComputePositioning (pBox, frame);
-      if (positioning ||
-          (pAb->AbLeafType == LtCompound &&
-           pAb->AbPositioning &&
-           pAb->AbPositioning->PnAlgorithm == PnRelative))
+      if (IsFlow (pBox, frame))
         AddFlow (pAb, frame);
       if (!positioning)
         {
@@ -5003,7 +5000,8 @@ void CheckScrollingWidth (int frame)
 #ifdef _GL
                   if (pBox->BxBoundinBoxComputed)
                     {
-                      if (pBox->BxClipX + pBox->BxClipW > max)
+                      if (pBox->BxClipX + pBox->BxClipW > max &&
+                          (pBox->BxType != BoPiece || pBox->BxNChars > 0))
                         {
                            /* ignoge boxes with absolute or fixed positions */
                           pAb = GetEnclosingViewport (pBox->BxAbstractBox);
@@ -5015,7 +5013,8 @@ void CheckScrollingWidth (int frame)
                   else
 #endif /*  _GL */
                     {
-                      if (pBox->BxXOrg + pBox->BxWidth > max)
+                      if (pBox->BxXOrg + pBox->BxWidth > max &&
+                          (pBox->BxType != BoPiece || pBox->BxNChars > 0))
                         {
                           /* ignoge boxes with absolute or fixed positions */
                           pAb = GetEnclosingViewport (pBox->BxAbstractBox);

@@ -68,8 +68,6 @@ static void IfPushMatrix (PtrAbstractBox pAb)
 {
   if (pAb->AbElement->ElSystemOrigin || pAb->AbElement->ElTransform)
     {
-      //      if (!strcmp(pAb->AbElement->ElLabel,"L25"))
-      //        printf ("%s glPushMatrix %d\n", pAb->AbElement->ElLabel, ++counter);
       glPushMatrix ();
     }
 }
@@ -80,8 +78,6 @@ static void IfPopMatrix (PtrAbstractBox pAb)
 {
   if (pAb->AbElement->ElSystemOrigin || pAb->AbElement->ElTransform)
     {
-      //      if (!strcmp(pAb->AbElement->ElLabel,"L25"))
-      //        printf ("%s glPopMatrix %d\n", pAb->AbElement->ElLabel, counter--);
       glPopMatrix ();
     }
 }
@@ -768,10 +764,12 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
 
           /* don't fill the background when an enclosing box is selected */
           if (!setWindow && pFrom->AbFillBox && pFrom->AbFillPattern)
+            {
             /* draw the box background */
             DrawRectangle (frame, 0, 0, xd - x, yd - y, width, height,
                            pFrom->AbForeground, pFrom->AbBackground,
                            pFrom->AbFillPattern);
+            }
           if (imageDesc && show_bgimage)
             {
               /* draw the background image the default presentation is repeat */
@@ -1086,7 +1084,7 @@ void GetBoxTransformedCoord (PtrAbstractBox pAbSeeked, int frame,
 #ifdef _GL
 /*----------------------------------------------------------------------
   SyncBoundingboxesReal : sync Bounding box of a group according to openGL 
-  Compued values
+  Computed values
   ----------------------------------------------------------------------*/
 static void SyncBoundingboxesReal (PtrAbstractBox pInitAb, 
                                    int XFrame, int YFrame, int frame)

@@ -1086,7 +1086,7 @@ ThotBool ComputePositioning (PtrBox pBox, int frame)
                   pAb->AbWidth.DimIsPosition = TRUE;
                   pPosAb->PosAbRef = pRefAb;
                   pPosAb->PosUnit = pos->PnRightUnit;
-                  pPosAb->PosDistance = -pos->PnRightDistance;
+                  pPosAb->PosDistance =-pos->PnRightDistance;
                   pPosAb->PosRefEdge = Right;
                   pPosAb->PosEdge = Right;
                   pBox->BxWOutOfStruct = TRUE;
@@ -1103,7 +1103,7 @@ ThotBool ComputePositioning (PtrBox pBox, int frame)
               pPosAb = &pAb->AbHorizPos;
               pPosAb->PosAbRef = pRefAb;
               pPosAb->PosUnit = pos->PnLeftUnit;
-              pPosAb->PosDistance = -pos->PnLeftDistance;
+              pPosAb->PosDistance = pos->PnLeftDistance;
               pPosAb->PosRefEdge = Left;
               pPosAb->PosEdge = Left;
               if (pRefBox)
@@ -1142,7 +1142,7 @@ ThotBool ComputePositioning (PtrBox pBox, int frame)
               pPosAb = &pAb->AbVertPos;
               pPosAb->PosAbRef = pRefAb;
               pPosAb->PosUnit = pos->PnTopUnit;
-              pPosAb->PosDistance = -pos->PnTopDistance;
+              pPosAb->PosDistance = pos->PnTopDistance;
               pPosAb->PosRefEdge = Top;
               pPosAb->PosEdge = Top;
               if (pRefBox)

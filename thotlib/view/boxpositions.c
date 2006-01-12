@@ -67,25 +67,41 @@ ThotBool ExtraFlow (PtrBox pBox, int frame)
 }
 
 /*----------------------------------------------------------------------
-  IsFlow returns TRUE if the box is an extra flow or a relative flow.
+  IsFlow says if the box is displayed in a different flow.
+  Return TRUE for PnAbsolute PnFixed and PnRelative (if shifted)
   ----------------------------------------------------------------------*/
 ThotBool IsFlow (PtrBox pBox, int frame)
 {
-  //#ifdef POSITIONING
+  Positioning        *pos;
+
   if (pBox && pBox->BxAbstractBox && frame > 0 &&
       pBox->BxAbstractBox->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility &&
       pBox->BxAbstractBox->AbLeafType == LtCompound &&
-      pBox->BxAbstractBox->AbPositioning &&
-      (pBox->BxAbstractBox->AbPositioning->PnLeftUnit != UnUndefined ||
-       pBox->BxAbstractBox->AbPositioning->PnRightUnit != UnUndefined ||
-       pBox->BxAbstractBox->AbPositioning->PnTopUnit != UnUndefined ||
-       pBox->BxAbstractBox->AbPositioning->PnBottomUnit != UnUndefined) &&
-      (pBox->BxAbstractBox->AbPositioning->PnAlgorithm == PnAbsolute ||
-       pBox->BxAbstractBox->AbPositioning->PnAlgorithm == PnFixed ||
-       pBox->BxAbstractBox->AbPositioning->PnAlgorithm == PnRelative))
-    return TRUE;
+      pBox->BxAbstractBox->AbPositioning)
+    {
+      pos = pBox->BxAbstractBox->AbPositioning;
+      if (pos->PnAlgorithm == PnRelative &&
+          (pos->PnTopUnit == UnAuto ||
+           pos->PnTopUnit == UnUndefined) &&
+          (pos->PnBottomUnit == UnAuto ||
+           pos->PnBottomUnit == UnUndefined) &&
+          (pos->PnLeftUnit == UnAuto ||
+           pos->PnLeftUnit == UnUndefined) &&
+          (pos->PnRightUnit == UnAuto ||
+           pos->PnRightUnit == UnUndefined))
+        return FALSE;
+      else if ((pos->PnLeftUnit != UnUndefined ||
+                pos->PnRightUnit != UnUndefined ||
+                pos->PnTopUnit != UnUndefined ||
+                pos->PnBottomUnit != UnUndefined) &&
+               (pos->PnAlgorithm == PnAbsolute ||
+                pos->PnAlgorithm == PnFixed ||
+                pos->PnAlgorithm == PnRelative))
+        return TRUE;
+      else
+        return FALSE;
+    }
   else
-    //#endif /* POSITIONING */
     return FALSE;
 }
 
@@ -837,10 +853,10 @@ void AddBoxTranslations (PtrAbstractBox pAb, int visibility, int frame,
         if (pChildBox)
           {
             /*if no transformation, make clipx, clipy OK*/
-            pChildBox->BxClipX = pChildBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder +
-              pBox->BxLPadding;
-            pChildBox->BxClipY = pChildBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder +
-              pBox->BxTPadding;
+            pChildBox->BxClipX = pChildBox->BxXOrg + pChildBox->BxLMargin + pChildBox->BxLBorder +
+              pChildBox->BxLPadding;
+            pChildBox->BxClipY = pChildBox->BxYOrg + pChildBox->BxTMargin + pChildBox->BxTBorder +
+              pChildBox->BxTPadding;
             pChildBox->BxClipW = pChildBox->BxW;
             pChildBox->BxClipH = pChildBox->BxH;
           }
