@@ -546,7 +546,7 @@ static void MenuValues (TtAttribute * pAttr, ThotBool required,
   char             *tmp;
   char              bufMenu[MAX_TXT_LEN];
   char             *title = NULL;
-  int               i, lgmenu, val, buttons;
+  int               i, lgmenu, val, buttons, begin, end;
   int               form, subform;
 
 #ifdef _WINGUI
@@ -598,6 +598,23 @@ static void MenuValues (TtAttribute * pAttr, ThotBool required,
           i = 0;
         else
           i = currAttr->AeAttrValue;
+        if (SchCurrentAttr &&
+            !strcmp (SchCurrentAttr->SsName, "HTML") &&
+            (!strcmp (title, "rowspan") ||
+             !strcmp (title, "colspan") ||
+             !strcmp (title, "rows") ||
+             !strcmp (title, "cols")))
+          {
+            if (i < 1)
+              i = 1;
+            begin = 1;
+            end = 1000;
+          }
+        else
+          {
+            begin = 0;
+            end = 1000;
+          }
 #ifdef _GTK
         /* initialize the input area only when an attribute already exists */
         if (currAttr)
@@ -616,6 +633,8 @@ static void MenuValues (TtAttribute * pAttr, ThotBool required,
             p.param1 = (int)AmayaAttributePanel::wxATTR_ACTION_SETUPNUM;
             p.param2 = (void*)(required ? 0xFFFFFF : 0x000000);
             p.param8 = i;
+            p.param9 = begin;
+            p.param10 = end;
             AmayaSubPanelManager::GetInstance()->SendDataToPanel( WXAMAYA_PANEL_ATTRIBUTE, p );
           }
         else

@@ -83,7 +83,7 @@ public:
 		       int default_lang_id );
   void SetupTextValue( const char * text );
   void SetupEnumValue( const char * enums, int nb_enum, int selected );
-  void SetupNumValue( int num );
+  void SetupNumValue( int num, int begin, int end );
 
   void SetMandatoryState( bool is_mandatory );
 

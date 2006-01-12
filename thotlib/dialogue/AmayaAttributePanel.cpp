@@ -150,7 +150,7 @@ void AmayaAttributePanel::SendDataToPanel( AmayaParams& p )
       m_CurrentAttType = wxATTR_TYPE_NUM;
       ShowAttributValue( wxATTR_TYPE_NUM );
       SetMandatoryState( p.param2 != NULL );
-      SetupNumValue( p.param8 );
+      SetupNumValue( p.param8, p.param9, p.param10 );
       break;
     }
 }
@@ -550,9 +550,10 @@ void AmayaAttributePanel::SetupEnumValue( const char * enums, int nb_enum, int s
   params:
   returns:
   ----------------------------------------------------------------------*/
-void AmayaAttributePanel::SetupNumValue( int num )
+void AmayaAttributePanel::SetupNumValue( int num, int begin, int end )
 {
   wxSpinCtrl * p_spin_ctrl = XRCCTRL(*m_pPanel_Num, "wxID_ATTR_NUM_VALUE", wxSpinCtrl);
+  p_spin_ctrl->SetRange(begin, end);
   p_spin_ctrl->SetValue( num );
   m_pPanel_Num->Refresh();
 }
