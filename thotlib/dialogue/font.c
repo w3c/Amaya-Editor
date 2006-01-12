@@ -1096,7 +1096,7 @@ static void FontIdentifier (char script, int family, int highlight, int size,
       slant="r";
       size = 24;
       highlight=4;
-      sprintf (r_nameX, "%s-%s-%s-normal-*-%d-173-100-100-p-106-iso10646-1",
+      sprintf (r_nameX, "%s-%s-%s-normal-*-%d-*-100-100-p-106-iso10646-1",
                ffamily, wght, slant, size);
       GeneratePostscriptFont (r_name, script, family, highlight, size);
 #ifdef _GTK
@@ -1128,19 +1128,19 @@ static void FontIdentifier (char script, int family, int highlight, int size,
             slant = "o";
           if (size < 0)
             {
-              sprintf (r_nameX, "%s-%s-%s-*-*-13-*-*-*-*-*-iso8859-%s",
+              sprintf (r_nameX, "%s-%s-%s-*-*-*-120-*-*-*-*-iso8859-%s",
                        ffamily, wght, slant, encoding);
               size = 12;
             }
           else
-            sprintf (r_nameX, "%s-%s-%s-*-*-%d-*-*-*-*-*-iso8859-%s",
-                     ffamily, wght, slant, size, encoding);
+            sprintf (r_nameX, "%s-%s-%s-*-*-*-%d-*-*-*-*-iso8859-%s",
+                     ffamily, wght, slant, size * 10, encoding);
         }
       else if (script == 'G' || family == 0)
         {
           family = 0;
           highlight = 0;
-          sprintf (r_nameX, "-*-symbol-medium-r-*-*-%d-*-*-*-*-*-*-fontspecific", size);
+          sprintf (r_nameX, "-*-symbol-medium-r-*-*-*-%d-*-*-*-*-*-fontspecific", size * 10);
         }
       else if (script == 'E')
         {
@@ -1236,8 +1236,8 @@ static void FontIdentifier (char script, int family, int highlight, int size,
               slant = "r";
               break;
             }
-          sprintf (r_nameX, "%s-%s-%s-*-*-%d-*-75-75-*-*-iso8859-1",
-                   ffamily, wght, slant, size);
+          sprintf (r_nameX, "%s-%s-%s-*-*-*-%d-*-*-*-*-iso8859-1",
+                   ffamily, wght, slant, size*10);
         }
       GeneratePostscriptFont (r_name, script, family, highlight, size);
     }
@@ -1251,9 +1251,10 @@ static void FontIdentifier (char script, int family, int highlight, int size,
 void GetFontIdentifier (char script, int family, int highlight, int size,
                         TypeUnit unit, char text[10], char textX[100])
 {
-  char *result = NULL;
+  char     *result = NULL;
 #if (defined(_GTK) || defined(_WX)) && !defined(_GL)
-  int i, j, k, internalsize;
+  char      format[100];
+  int       i, j, k, end, internalsize;
 
   if (!Printing)
     result = FontLoadFromConfig (script, family, highlight);
@@ -1280,25 +1281,31 @@ void GetFontIdentifier (char script, int family, int highlight, int size,
         {
           if (result[i] == '-') 
             {
-              k++;	  
+              k++;
               if (k == 7)
                 {
+                  /* pixel font size information */
                   i++;
-                  break;	  
+                  end = i;
+                  while (result[end] != '-')
+                   end++;
+                  /* point font size information */
+                  end++;
+                  while (result[end] != '-')
+                    end++;                  
+                  break;
                 }
-            }      
-          i++;      
+            }
+          i++;
         }
       if (i == j)
         result = NULL;
       else
         {
-          strncpy  (textX, result, i);
-          strcpy  (&textX[i], "%d\0");
-          sprintf (textX, textX, internalsize);  
-          while (i < j && result[i] != '-')
-            i++;
-          strcat (textX, result + i);  
+          strncpy (format, result, i);
+          strcpy (&format[i], "*-%d");
+          sprintf (textX, format, internalsize * 10);  
+          strcat (textX, &result[end]);  
           GeneratePostscriptFont (text, script, family, highlight, internalsize);
         }
     }

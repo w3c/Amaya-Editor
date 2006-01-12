@@ -42,6 +42,7 @@
 #include "input_f.h"
 
 #include "AmayaNormalWindow.h"
+#include "AmayaSubPanelManager.h"
 #include "AmayaPanel.h"
 #include "AmayaNotebook.h"
 #include "AmayaPage.h"
@@ -49,7 +50,7 @@
 #include "AmayaCallback.h"
 #include "AmayaToolBar.h"
 #include "AmayaQuickSplitButton.h"
-#include "AmayaSubPanelManager.h"
+/*#include "AmayaSubPanelManager.h"*/
 #include "AmayaStatusBar.h"
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaNormalWindow, AmayaWindow)
