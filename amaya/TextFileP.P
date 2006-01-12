@@ -178,7 +178,7 @@ RULES
 	Size: 10 pt;
 	Width: Enclosing . Width;
 #else
-	Size: 12 pt;
+	Size: 11 pt;
 	Width: Enclosed . Width;
         PaddingBottom: 3 cm;
 #endif

@@ -11,8 +11,8 @@ VIEWS
    Links_view merge with Links_view;
 
 #define STRUCT_INDENT 1.5
-#define TAG_FONTSIZE 12 pt
-#define DOC_FONTSIZE 12 pt
+#define TAG_FONTSIZE 11 pt
+#define DOC_FONTSIZE 11 pt
 #define TAG_Style Roman
 #define TAG_Weight Bold
 #define TAG_Visibility 7

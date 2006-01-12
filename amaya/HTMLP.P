@@ -21,8 +21,8 @@ PRINT
 #endif
 
 #define STRUCT_INDENT 1.5
-#define TAG_FONTSIZE 12 pt
-#define DOC_FONTSIZE 12 pt
+#define TAG_FONTSIZE 11 pt
+#define DOC_FONTSIZE 11 pt
 #define TAG_Weight Bold
 #define TAG_Visibility 7
 
@@ -1681,18 +1681,16 @@ RULES
 	Weight: Normal;
 	LineWeight: 0;
 	Width: Enclosing . Width;
+	Size: DOC_FONTSIZE;
 #ifdef PAGE
-	Size: 11 pt;
 	{HorizPos: VMiddle = Enclosing.VMiddle;}
 	Page(ThePage);
 #else
 	Height: Enclosing . Height min;
-	Size: DOC_FONTSIZE;
 #endif
 	HorizPos: Left = Enclosing . Left;
 	VertPos: Top = Enclosing . Top;
 	IN Structure_view BEGIN
-		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width;
 		Height: Enclosed . Height;
 		HorizPos: Left = Enclosing . Left;

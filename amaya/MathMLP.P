@@ -15,8 +15,8 @@ VIEWS
 #define OPERATOR_SPACE 0.20
 #define ROOT_OFFSET 0.6
 #define STRUCT_INDENT 1.5
-#define TAG_FONTSIZE 12 pt
-#define DOC_FONTSIZE 12 pt
+#define TAG_FONTSIZE 11 pt
+#define DOC_FONTSIZE 11 pt
 #define TAG_Style Roman
 #define TAG_Weight Bold
 #define TAG_Visibility 7

@@ -10,8 +10,8 @@ PRINT
    Formatted_view;
 #endif
 
-#define DOC_FONTSIZE 12 pt
-#define RDF_FONTSIZE 12 pt
+#define DOC_FONTSIZE 11 pt
+#define RDF_FONTSIZE 11 pt
 #define STRUCT_INDENT 0.5 cm
 #define MARGIN 1.2
 #define RDF_FgColor Black
