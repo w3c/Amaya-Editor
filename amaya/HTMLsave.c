@@ -2193,9 +2193,8 @@ void DoSynchronize (Document doc, View view, NotifyElement *event)
   char              docname[MAX_LENGTH];
   char              tempdir[MAX_LENGTH];
   int               line, index;
-  int		     position;
-  int		     distance;
-  ThotBool          saveBefore;
+  int		            position, distance;
+  ThotBool          saveBefore, modified;
 
   if (!DocumentURLs[doc])
     /* the document is not loaded yet */
@@ -2213,9 +2212,10 @@ void DoSynchronize (Document doc, View view, NotifyElement *event)
     otherDoc = 0;
 
   saveBefore = TtaIsDocumentUpdated (doc);
+  modified = TtaIsDocumentModified (doc);
   if (DocumentTypes[doc] == docCSS)
     {
-      if (!TtaIsDocumentModified (doc) && !TtaIsDocumentUpdated (doc))
+      if (!modified && !saveBefore)
         return;
     }
   else if (!saveBefore)
@@ -2269,7 +2269,9 @@ void DoSynchronize (Document doc, View view, NotifyElement *event)
           otherDoc = DocumentSource[doc];
           /* the other document is now different from the original file. It can
              be saved */
-          TtaSetItemOn (otherDoc, 1, File, BSave);
+          if (modified)
+            //TtaSetItemOn (otherDoc, 1, File, BSave);
+            TtaSetDocumentModified (otherDoc);
 #ifdef ANNOTATIONS
           ANNOT_Reload (otherDoc, 1);
 #endif /* ANNOTATIONS */
@@ -2294,9 +2296,8 @@ void DoSynchronize (Document doc, View view, NotifyElement *event)
           RestartParser (otherDoc, tempdoc, tempdir, docname, TRUE);
           /* the other document is now different from the original file. It can
              be saved */
-          TtaSetDocumentModified (otherDoc);
-          /* the source can be closed without save */
-          TtaSetDocumentUnmodified (doc);
+          if (modified)
+            TtaSetDocumentModified (otherDoc);
 
           /* restore original display mode */
           TtaSetDisplayMode (doc, dispMode);
@@ -2319,6 +2320,12 @@ void DoSynchronize (Document doc, View view, NotifyElement *event)
           TtaExtractName (tempdoc, tempdir, docname);
           /* reapply the CSS to relative documents */
           UpdateStyleSheet (DocumentURLs[doc], tempdoc);
+          if (otherDoc)
+            if (modified)
+              TtaSetDocumentModified (otherDoc);
+            else
+              /* the source can be closed without save */
+              TtaSetDocumentUnmodified (otherDoc);
         }
     }
 
@@ -2333,9 +2340,11 @@ void DoSynchronize (Document doc, View view, NotifyElement *event)
       if (DocumentTypes[doc] != docCSS)
         {
           TtaSetItemOff (otherDoc, 1, File, BSynchro);
+          /* updates are now done */
           TtaSetDocumentUnupdated (otherDoc);
         }
       TtaSetItemOff (doc, 1, File, BSynchro);
+      /* updates are now done */
       TtaSetDocumentUnupdated (doc);
        
       /* Synchronize selections */
@@ -2613,9 +2622,11 @@ ThotBool CanReplaceCurrentDocument (Document doc, View view)
   ThotBool	ret, always_replace;
 
   ret = TRUE;
-  if (TtaIsDocumentModified (doc) ||
+  if (DocumentTypes[doc] == docLog || DocumentTypes[doc] == docSource)
+    ret = TRUE;
+  else if (TtaIsDocumentModified (doc) ||
       (!Synchronizing &&
-       DocumentTypes[doc] != docLog && DocumentSource[doc] &&
+       DocumentSource[doc] &&
        TtaIsDocumentModified (DocumentSource[doc])))
     {
       TtaGetEnvBoolean ("IGNORE_UPDATES", &always_replace);
