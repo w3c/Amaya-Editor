@@ -2942,7 +2942,22 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
     orgX += pBlock->BxXOrg;
   if (yAbs)
     orgY += pBlock->BxYOrg;
+
   /* initial position */
+
+  if (box->BxAbstractBox->AbFloat == 'L')
+    {
+      /* left float */
+      x = left + orgX;
+    }
+  else
+    {
+      /* right float */
+      x = pBlock->BxWidth - right - box->BxWidth + orgX;
+      if (box->BxLMargin < 0)
+        x -= box->BxLMargin;
+    }
+
   if (pLine)
     {
       y = orgY;
@@ -2958,31 +2973,28 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
       w = 0;
     }
 
-  if (box->BxAbstractBox->AbFloat == 'L')
-    {
-      /* left float */
-      x = left + orgX;
-    }
-  else
-    {
-      /* right float */
-      x = pBlock->BxWidth - right - box->BxWidth + orgX;
-      if (box->BxLMargin < 0)
-        x -= box->BxLMargin;
-    }
-  if  (boxPrevL && y < boxPrevL->BxYOrg + boxPrevL->BxHeight &&
-       y + box->BxHeight > boxPrevL->BxYOrg)
-    /* can be inserted next to this previous float ? */
-    w -= boxPrevL->BxWidth;
   if  (boxPrevR && y < boxPrevR->BxYOrg + boxPrevR->BxHeight &&
        y + box->BxHeight >= boxPrevR->BxYOrg)
     /* can be inserted next to this previous float ? */
-    w -= boxPrevR->BxWidth;
+    w = w + x - boxPrevR->BxXOrg;
+  if  (boxPrevL && y < boxPrevL->BxYOrg + boxPrevL->BxHeight &&
+       y + box->BxHeight > boxPrevL->BxYOrg)
+    /* can be inserted next to this previous float ? */
+    w -= (boxPrevL->BxXOrg + boxPrevL->BxWidth - x);
 
+  //if (!strcmp(box->BxAbstractBox->AbElement->ElLabel, "L122"))
+  // printf ("SetFloat L122 x=%d y=%d w=%d\n", x, y, w);
   if ((boxPrevL && y < boxPrevL->BxYOrg + boxPrevL->BxHeight) ||
       (boxPrevR && y < boxPrevR->BxYOrg + boxPrevR->BxHeight))
     {
       if (box->BxWidth <= w)
+#ifdef IV
+ ||
+          (boxPrevL && box->BxAbstractBox->AbFloat == 'L' &&
+           box->BxXOrg + box->BxLMargin + box->BxW <= boxPrevL->BxXOrg + boxPrevL->BxLMargin) ||
+          (boxPrevR && box->BxAbstractBox->AbFloat == 'R' &&
+          box->BxXOrg + box->BxLMargin >= boxPrevR->BxXOrg + boxPrevR->BxLMargin+ boxPrevR->BxW))
+#endif
         {
           /* it's possible to display the floating box at the current position */
           if (boxPrevL && y < boxPrevL->BxYOrg + boxPrevL->BxHeight &&
