@@ -2119,6 +2119,8 @@ void FreeDocumentResource (Document doc)
           if (!Synchronizing && DocumentSource[doc])
             {
               sourceDoc = DocumentSource[doc];
+              // set the source unmodified before closing it
+              TtaSetDocumentUnmodified (sourceDoc);
               TtcCloseDocument (sourceDoc, 1);
               FreeDocumentResource (sourceDoc);
               DocumentSource[doc] = 0;
