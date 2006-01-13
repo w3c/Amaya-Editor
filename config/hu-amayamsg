@@ -215,7 +215,7 @@
 213 Próbálja a 'Fájl/Kényszerített karakter kódolás' menüt
 214 Érvénytelen karakterek
 215 Dokumentum profile:
-216 Néhány elem/attribútum figyelmen kívül hagyva - see Fájl/Elemzési hibák mutatása
+216 Néhány elem/attribútum figyelmen kívül hagyva - see Fájl > Elemzési hibák mutatása
 217 Ezen dokumentum kódolását az Amaya nem támogatja
 218 Ezen dokumentum szerkesztése és mentés megváltoztatja a dokumentum típusát
 219 Nem elérhető
@@ -258,7 +258,7 @@
 256 A célpont HTTP URL kell legyen
 257 Hiba: érvénytelen MIME típus
 258 Ismeretlen
-259 A stílusok figyelmen kívül hagyva - lásd: Nézet/Elemzési hibák mutatása
+259 A stílusok figyelmen kívül hagyva - lásd: Fájl > Elemzési hibák mutatása
 260 Ez a dokumentum már be van töltve egy másik ablakban.
 261 Annak a példánynak a mentése frissítési problémákat okozhat
 262 A doctype hozzáadása vagy megváltoztatása néhány elem és attribútum elvesztésével jár

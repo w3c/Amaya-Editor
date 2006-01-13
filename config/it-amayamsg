@@ -215,7 +215,7 @@
 213 Prova la voce 'File/Forza codifica caratteri'
 214 Caratteri non validi
 215 Profilo di documento:
-216 Errore - vedi File/Mostra le errore
+216 Errore - vedi File > Mostra le errore
 217 La codifica per questo documento non e` supportata da Amaya
 218 Editando e salvando questo documento il suo tipo verrà cambiato
 219 Non disponibile
@@ -258,7 +258,7 @@
 256 Per usare questa opzione, il target deve essere un'URL HTTP
 257 Errore: MIME type non valido
 258 Sconosciuto
-259 I stili sono ignorati - vedi Viste/Mostra le errore
+259 I stili sono ignorati - vedi File > Mostra le errore
 260 Questo documento è già caricato in un'altra finestra
 261 Salvare questa istanza può fare perdere degli aggiornamenti
 262 Aggiungere o cambiare doctype eliminerà alcuni elementi o attributi

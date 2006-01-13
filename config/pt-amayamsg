@@ -215,7 +215,7 @@
 213 **Try the 'File/Force a Character Coding' entry
 214 Caracteres inválidos
 215 Perfil del documento:
-216 Erros - veja Vistas/Exibir erros de gramática (parsing)
+216 Erros - veja Arquivo > Exibir erros de gramática (parsing)
 217 A codificação deste documento não é suportada porAmaya
 218 Editar ou salvar este documento vai mudar seu tipo
 219 Indisponível
@@ -258,7 +258,7 @@
 256 O destino deve ser uma URL HTTP para usar esta opção
 257 Erro: tipo MIME inválido
 258 Desconhecido
-259 Estilos ignorados -veja Vistas/Exibir erros de gramática (parsing)
+259 Estilos ignorados -veja Arquivo > Exibir erros de gramática (parsing)
 260 Este documento já está carregado em outra Janela
 261 Salvar esta instância pode causar um problema de perda de atualização
 262 **Adding or changing the doctype will remove some elements or attributes

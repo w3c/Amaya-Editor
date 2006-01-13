@@ -215,7 +215,7 @@
 213 **Try the 'File/Force a Character Coding' entry
 214 Yanlış karakter
 215 Belgenin profili:
-216 Hata - Görünümler/Hataları göster bakın
+216 Hata - Dosya > Hataları göster bakın
 217 Bu belgenin kodlaması Amaya tarafından yapılamıyor
 218 Yazmak ve kaydetmek bu belgenin tipini değiştirir
 219 Kullanıma hazır değil
@@ -258,7 +258,7 @@
 256 URL\'i kullanmak için HTTP tipten olması gerekiyor
 257 Hata: MIME tipi doğru değil
 258 Yabancı
-259 Dizayn bilinmiyor - Görünümler/Hataları göster bakın
+259 Dizayn bilinmiyor - Görünümler > Hataları göster bakın
 260 Bu belge başka bir pencerede açılmıştır
 261 Bu belgeleri kayıt etmek güncelleştirme problemleri çıkara bilir
 262 **Adding or changing the doctype will remove some elements or attributes

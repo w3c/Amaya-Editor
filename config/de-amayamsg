@@ -215,7 +215,7 @@
 213 Verwenden Sie 'Datei/Zeichenkodierung erzwingen'
 214 Ungültige Zeichen
 215 Dokumenttyp:
-216 Anzeigen - siehe Datei/Parserfehler anzeigen
+216 Anzeigen - siehe Datei > Parserfehler anzeigen
 217 Die Codierung dieses Dokuments wird von Amaya nicht unterstützt
 218 Durch das Bearbeiten und Speichern ändert sich der Dokumenttyp
 219 Nicht verfügbar
@@ -258,7 +258,7 @@
 256 Diese Option kann nur mit einem HTTP URI Ziel verwendet werden
 257 Fehler: ungültiger MIME-Typ
 258 Unbekannt
-259 Formatvorlagen wurden ignoriert - siehe Ansicht/Parserfehler anzeigen
+259 Formatvorlagen wurden ignoriert - siehe Datei > Parserfehler anzeigen
 260 Dieses Dokument wird bereits in einem anderen Fenster angezeigt
 261 Beim Speichern dieser Instanz des Dokuments können Änderungen in anderen Instanzen verloren gehen (lost update problem)
 262 Durch das Hinzufügen oder Ändern des Dokumententyps gehen Elemente oder Attribute verloren

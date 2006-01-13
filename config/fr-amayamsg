@@ -215,7 +215,7 @@
 213 Essayer l'entrée "Fichier/Forcer un code caractère"
 214 Caractères invalides
 215 Profil du document :
-216 Erreurs détectées - voir Fichier/Montrer les erreurs
+216 Erreurs détectées - voir Fichier > Montrer les erreurs
 217 Le codage de ce document n'est pas supporté par Amaya
 218 Editer et sauver ce document changera son type
 219 Non disponible
@@ -258,7 +258,7 @@
 256 L'URL doit être de type HTTP pour utiliser
 257 Erreur: type MIME incorrect
 258 Inconnu
-259 Styles ignorés - voir Vues/Montrer les erreurs
+259 Styles ignorés - voir Fichier > Montrer les erreurs
 260 Ce document est déjà affiché dans une autre fenêtre.
 261 Sauver cette instance peut provoquer des problèmes de mise à jour.
 262 Ajouter ou modifier le doctype du document supprimera certains éléments ou attributs

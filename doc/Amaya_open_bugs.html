@@ -56,6 +56,77 @@ h2         {  font-size: 12; }
       <td>Pascal "Blady"</td>
       <td>2006-01-03</td>
     </tr>
+    <tr>
+      <td>When two areas overlap, the common area links in Amaya to the
+        target of the last created area, but in Internet Explorer and
+        Mozilla, it links to the target of the first. Of course, I do not
+        think it is a bug (I do not know if W3C recommendation states the
+        expected behaviour), but it would better if the behaviour of the
+        three programs is the same.</td>
+      <td>2004-11-17</td>
+      <td>Bartolomé Sintes</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>The MakeBook function doesn't manage the namespace declarations of
+        collected documents. Moreover, the new generated document is not
+        opened in read-only mode.</td>
+      <td>2005-02-15</td>
+      <td>L. Carcone</td>
+      <td></td>
+    </tr>
+    <tr class="fixed">
+      <td>When applying a class, Amaya doesn't generate an enclosing span
+        element. So the class of span elements included in the selection are
+        lost.</td>
+      <td>2005-12-04</td>
+      <td>Bartolomé Sintes Marco</td>
+      <td>2005-12-21</td>
+    </tr>
+    <tr>
+      <td>I notice that when one is entering preformatted text with Amaya 9.3
+        a weird behavior results when pressing the enter key.
+        <ul>
+          <li>select some text and convert it to &lt;pre&gt; &lt;\pre&gt;</li>
+          <li>position the cursor at the end of that line</li>
+          <li>press enter (a new line is created, but isn't displayed)</li>
+          <li>Omove the mouse pointer to just below this line and click the
+            left button</li>
+        </ul>
+
+        <p>(a new line appears in the view of the document)</p>
+      </td>
+      <td>2006-01-10</td>
+      <td>Jeff Jill</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>I cut and paste an image, the usemap attribute (if present) is
+      lost</td>
+      <td>2006-01-10</td>
+      <td>Bartolomé Sintes</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>If I create an empty fieldset (with a legend), save the document
+        and reload, I can not write inside the fieldset</td>
+      <td>2006-01-10</td>
+      <td>Bartolomé Sintes</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Internet Explorer expects a # character in the usemap attribute of
+        the img element (usemap="#map" instead of usemap="map"). If the # is
+        added in the source view, the image maps work in Internet Explorer.
+
+        <p>According to the W3C validator, both (with or without the #) are
+        XHTML Strict 1.0 correct and both work in Firefox 1.5 and Amaya 9.3,
+        so I would suggest Amaya should create the #.</p>
+      </td>
+      <td>2006-01-10</td>
+      <td>Bartolomé Sintes</td>
+      <td></td>
+    </tr>
     <tr class="title">
       <th class="summary">CSS</th>
       <th>Submission</th>
@@ -81,8 +152,7 @@ h2         {  font-size: 12; }
       <td>The 'background-position' doesn't work at all, but seems like it is
         recognized.</td>
       <td>2005-08-17</td>
-      <td><p>Stanimir Stamenkov</p>
-      </td>
+      <td>Stanimir Stamenkov</td>
       <td></td>
     </tr>
     <tr class="fixed">
@@ -91,41 +161,6 @@ h2         {  font-size: 12; }
       <td>2005-10-19</td>
       <td>Kevin Watts</td>
       <td>2006-01-04</td>
-    </tr>
-  </tbody>
-  <tbody>
-    <tr class="title">
-      <th class="summary">HTML</th>
-      <th>Submission</th>
-      <th>Submitted By</th>
-      <th>Fixed</th>
-    </tr>
-    <tr>
-      <td>When two areas overlap, the common area links in Amaya to the
-        target of the last created area, but in Internet Explorer and
-        Mozilla, it links to the target of the first. Of course, I do not
-        think it is a bug (I do not know if W3C recommendation states the
-        expected behaviour), but it would better if the behaviour of the
-        three programs is the same.</td>
-      <td>2004-11-17</td>
-      <td>Bartolomé Sintes Marco</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>The MakeBook function doesn't manage the namespace declarations of
-        collected documents. Moreover, the new generated document is not
-        opened in read-only mode.</td>
-      <td>2005-02-15</td>
-      <td>L. Carcone</td>
-      <td></td>
-    </tr>
-    <tr class="fixed">
-      <td>When applying a class, Amaya doesn't generate an enclosing span
-        element. So the class of span elements included in the selection are
-        lost.</td>
-      <td>2005-12-04</td>
-      <td>Bartolomé Sintes Marco</td>
-      <td>2005-12-21</td>
     </tr>
   </tbody>
   <tbody>
@@ -168,6 +203,18 @@ h2         {  font-size: 12; }
       </td>
       <td>2004-04-28</td>
       <td>Stephane Bonhomme</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Both Amaya or Mozilla display the SVG image if the MIME type is
+        image/svg+xml or image/x-bitmap, but Internet Explorer only displays
+        the image/svg+xml type object (tested with Adobe SVGViewer 6.0
+        plug-in in Mozilla and Internet Explorer).
+
+        <p>This MIME type is not shown in the create object dialog</p>
+      </td>
+      <td>2006-01-10</td>
+      <td>Bartolomé Sintes</td>
       <td></td>
     </tr>
     <tr>
@@ -250,7 +297,6 @@ h2         {  font-size: 12; }
   </tbody>
 </table>
 <br />
-
 
 <p>$Date$</p>
 </body>

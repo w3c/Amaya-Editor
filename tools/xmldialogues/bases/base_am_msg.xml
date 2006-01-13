@@ -2793,16 +2793,16 @@
 	<message xml:lang="ka">დოკუმენტის პროფილი:</message>
 </label>
 <label define="AM_XML_WARNING">
-	<message xml:lang="en">Errors detected - see File/Show parsing errors</message>
-	<message xml:lang="fr">Erreurs détectées - voir Fichier/Montrer les erreurs</message>
-	<message xml:lang="it">Errore - vedi File/Mostra le errore</message>
-	<message xml:lang="de">Anzeigen - siehe Datei/Parserfehler anzeigen</message>
+	<message xml:lang="en">Errors detected - see File &gt; Show parsing errors</message>
+	<message xml:lang="fr">Erreurs détectées - voir Fichier &gt; Montrer les erreurs</message>
+	<message xml:lang="it">Errore - vedi File &gt; Mostra le errore</message>
+	<message xml:lang="de">Anzeigen - siehe Datei &gt; Parserfehler anzeigen</message>
 	<message xml:lang="es">Eerrores - vea Archivo &gt; Mostrar errores sintácticos</message>
-	<message xml:lang="pt">Erros - veja Vistas/Exibir erros de gramática (parsing)</message>
-	<message xml:lang="fi">Virhe - katso Näytä/Näytä käännösvirheet</message>
-	<message xml:lang="tr">Hata - Görünümler/Hataları göster bakın</message>
-	<message xml:lang="ru">Ошибка. Смотрите Вид/Показать разбор ошибок</message>
-	<message xml:lang="hu">Néhány elem/attribútum figyelmen kívül hagyva - see Fájl/Elemzési hibák mutatása</message>
+	<message xml:lang="pt">Erros - veja Arquivo &gt; Exibir erros de gramática (parsing)</message>
+	<message xml:lang="fi">Virhe - katso Tiedosto &gt; Näytä käännösvirheet</message>
+	<message xml:lang="tr">Hata - Dosya &gt; Hataları göster bakın</message>
+	<message xml:lang="ru">Ошибка. Смотрите айл &gt; Показать разбор ошибок</message>
+	<message xml:lang="hu">Néhány elem/attribútum figyelmen kívül hagyva - see Fájl &gt; Elemzési hibák mutatása</message>
 	<message xml:lang="ka">შეცდომა - მენიუდან ნახეთ "ფაილი'-'დამუშავებული შეცდომების ჩვენება'</message>
 </label>
 <label define="AM_UNKNOWN_ENCODING">
@@ -3352,17 +3352,17 @@
 	<message xml:lang="ka">უცნობია</message>
 </label>
 <label define="AM_CSS_ERROR">
-	<message xml:lang="en">Styles are ignored - see Views/Show parsing errors</message>
-	<message xml:lang="fr">Styles ignorés - voir Vues/Montrer les erreurs</message>
-	<message xml:lang="it">I stili sono ignorati - vedi Viste/Mostra le errore</message>
-	<message xml:lang="de">Formatvorlagen wurden ignoriert - siehe Ansicht/Parserfehler anzeigen</message>
+	<message xml:lang="en">Styles are ignored - see File &gt; Show parsing errors</message>
+	<message xml:lang="fr">Styles ignorés - voir Fichier &gt; Montrer les erreurs</message>
+	<message xml:lang="it">I stili sono ignorati - vedi File &gt; Mostra le errore</message>
+	<message xml:lang="de">Formatvorlagen wurden ignoriert - siehe Datei &gt; Parserfehler anzeigen</message>
 	<message xml:lang="es">Se ignoran los estilos - vea Archivo &gt; Mostrar errores sintácticos</message>
-	<message xml:lang="pt">Estilos ignorados -veja Vistas/Exibir erros de gramática (parsing)</message>
-	<message xml:lang="fi">Tyylit ohitetaan - katso Näytä/Näytä käännösvirheet</message>
-	<message xml:lang="tr">Dizayn bilinmiyor - Görünümler/Hataları göster bakın</message>
-	<message xml:lang="ru">Стили проигнорированы. Смотрите Вид/Показать разбор ошибок</message>
-	<message xml:lang="hu">A stílusok figyelmen kívül hagyva - lásd: Nézet/Elemzési hibák mutatása</message>
-	<message xml:lang="ka">სტილები იგნორირებულია - იხილეთ ხედები/გაცრილი შეცდომების ჩვენება</message>
+	<message xml:lang="pt">Estilos ignorados -veja Arquivo &gt; Exibir erros de gramática (parsing)</message>
+	<message xml:lang="fi">Tyylit ohitetaan - katso Tiedosto &gt; Näytä käännösvirheet</message>
+	<message xml:lang="tr">Dizayn bilinmiyor - Görünümler &gt; Hataları göster bakın</message>
+	<message xml:lang="ru">Стили проигнорированы. Смотрите айл &gt; Показать разбор ошибок</message>
+	<message xml:lang="hu">A stílusok figyelmen kívül hagyva - lásd: Fájl &gt; Elemzési hibák mutatása</message>
+	<message xml:lang="ka">სტილები იგნორირებულია - იხილეთ ხედები &gt; გაცრილი შეცდომების ჩვენება</message>
 </label>
 <label define="AM_DOUBLE_LOAD">
 	<message xml:lang="en">This document is already loaded in another Window</message>

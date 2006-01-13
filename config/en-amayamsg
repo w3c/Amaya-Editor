@@ -215,7 +215,7 @@
 213 Try the 'File/Force a Character Coding' entry
 214 Invalid characters
 215 Document profile:
-216 Errors detected - see File/Show parsing errors
+216 Errors detected - see File > Show parsing errors
 217 The encoding of this document is not supported by Amaya
 218 Editing and saving this document will change its type
 219 Not available
@@ -258,7 +258,7 @@
 256 The target must be an HTTP URL to use this option
 257 Error: invalid MIME type
 258 Unknown
-259 Styles are ignored - see Views/Show parsing errors
+259 Styles are ignored - see File > Show parsing errors
 260 This document is already loaded in another Window
 261 Saving that instance may cause a lost update problem
 262 Adding or changing the doctype will remove some elements or attributes

@@ -215,7 +215,7 @@
 213 **Try the 'File/Force a Character Coding' entry
 214 Virheellisiä merkkejä
 215 Dokumentin profiili:
-216 Virhe - katso Näytä/Näytä käännösvirheet
+216 Virhe - katso Tiedosto > Näytä käännösvirheet
 217 Amaya ei tue dokumentin tyyppiä
 218 Muokkaus ja tallennus muuttavat dokumentin tyypin
 219 Ei saatavilla
@@ -258,7 +258,7 @@
 256 Kohteen täytyy olla HTTP URL tämän valinna kanssa
 257 Virhe: epäkelpo MIME tyyppi
 258 Tuntematon
-259 Tyylit ohitetaan - katso Näytä/Näytä käännösvirheet
+259 Tyylit ohitetaan - katso Tiedosto > Näytä käännösvirheet
 260 Tämä dokumentti on avattu jo toiseen ikkunaan
 261 Tämän instanssin tallennus saattaa aiheuttaa kadonneen päivityksen ongelman
 262 **Adding or changing the doctype will remove some elements or attributes
