@@ -8,7 +8,7 @@
 #define APPSVGNAMEFILTER _T("SVG files (*.svg)|*.svg|All files (*)|*")
 #define APPMATHNAMEFILTER _T("MathML files (*.mml)|*.mml|All files (*)|*")
 #define APPHTMLNAMEFILTER _T("HTML files (*.html)|*.html|HTML files (*.htm)|*.htm|All files (*)|*")
-#define APPIMAGENAMEFILTER _T("All files (*)|*|Image files (*.png)|*.png|Image files (*.jpg)|*.jpg|Image files (*.gif)|*.gif|Image files (*.bmp)|*.bmp")
+#define APPIMAGENAMEFILTER _T("All files (*)|*|Image files (*.png)|*.png|Image files (*.jpg)|*.jpg|Image files (*.gif)|*.gif")
 #define APPLIBRARYNAMEFILTER _T("Library files (*.lhtml)|*.lhtml|All files (*)|*")
 #define APPALLFILESFILTER _T("All files (*)|*")
 #endif /* __FILE_FILTERS_H__ */
