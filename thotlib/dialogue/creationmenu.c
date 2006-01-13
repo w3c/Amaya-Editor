@@ -133,7 +133,11 @@ static ThotBool UpdateXMLMenu (Document doc, View view)
           pSelDoc == pDoc)
         pSS = firstSel->ElStructSchema;
       else
-        pSS = pDoc->DocSSchema;
+        {
+          // the selection is not within this document
+          pSS = pDoc->DocSSchema;
+          firstSel = NULL;
+        }
 
       menuBuf[0] = EOS;
       withTextInput =  (strcmp (pSS->SsName, "HTML") &&
