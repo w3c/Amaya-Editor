@@ -91,6 +91,7 @@ static Element	    HighlightElement = NULL;
 static Attribute    HighLightAttribute = NULL;
 static ThotBool     Follow_exclusive = FALSE;
 static ThotBool     Refresh_exclusive = FALSE;
+static ThotBool     SelectionChanging = FALSE;
 
 /*----------------------------------------------------------------------
   ResetFontOrPhraseOnText: The text element elem should
@@ -3354,8 +3355,6 @@ void CheckSynchronize (NotifyElement *event)
               if (event->info == 1)
                 /* an undo operation was done in event->document */
                 DoSynchronize (event->document, 1, event);
-              else if (TtaIsDocumentModified (SelectionDoc))
-                DoSynchronize (SelectionDoc, 1, event);
               else if (TtaIsDocumentUpdated (SelectionDoc))
                 DoSynchronize (SelectionDoc, 1, event);
               else if (event->document == HighlightDocument)
@@ -3385,11 +3384,15 @@ void CheckSynchronize (NotifyElement *event)
   ----------------------------------------------------------------------*/
 void SelectionChanged (NotifyElement *event)
 {
+  if (SelectionChanging)
+    return;
+  SelectionChanging = TRUE;
   CheckSynchronize (event);
   TtaSelectView (SelectionDoc, 1);
   /* update the displayed style information */
   SynchronizeAppliedStyle (event);
   UnFrameMath ();
+  SelectionChanging = FALSE;
 }
 
 /*----------------------------------------------------------------------

@@ -7038,8 +7038,6 @@ void StartParser (Document doc, char *fileName,
                 }
               isHTML = TRUE;
             }
-          if (!external_doc )
-            LoadUserStyleSheet (doc);
 #ifdef ANNOTATIONS
           if (DocumentTypes[doc] == docAnnot)
             rootElement = ANNOT_GetHTMLRoot (doc, FALSE); 
@@ -7093,6 +7091,9 @@ void StartParser (Document doc, char *fileName,
             }
           /* check the Thot abstract tree */
           CheckAbstractTree (HTMLcontext.doc);
+          // now load the user style sheet
+          if (!external_doc)
+            LoadUserStyleSheet (doc);
         }
 
       TtaGZClose (stream);

@@ -2567,10 +2567,7 @@ void SaveDocument (Document doc, View view)
           Synchronize (doc, view);
           /* save a local copy of the current document */
           if (xmlDoc)
-            {
-              ptr = GetLocalPath (xmlDoc, tempname);
-              TtaSetDocumentUnmodified (xmlDoc);
-            }
+            ptr = GetLocalPath (xmlDoc, tempname);
           else
             ptr = GetLocalPath (doc, tempname);
           ok = TtaFileCopy (ptr, tempname);
@@ -2591,7 +2588,13 @@ void SaveDocument (Document doc, View view)
           DocumentMeta[doc]->method = CE_ABSOLUTE;
           DocumentMetaClear (DocumentMeta[doc]);
         }
+      /* the document is now saved */
       TtaSetDocumentUnmodified (doc);
+      if (xmlDoc)
+        TtaSetDocumentUnmodified (xmlDoc);
+      else if (DocumentSource[doc])
+        TtaSetDocumentUnmodified (DocumentSource[doc]);
+        
       /* switch Amaya buttons and menus */
       DocStatusUpdate (doc, FALSE);
       TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_SAVED), DocumentURLs[doc]);
