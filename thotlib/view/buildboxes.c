@@ -1175,28 +1175,34 @@ static void GiveTextSize (PtrAbstractBox pAb, int frame, int *width,
   *height = BoxFontHeight (font, box->BxScript);
   /* Est-ce que le pave est vide ? */
   nChars = pAb->AbVolume;
-  if (nChars == 0)
+  pBuffer = pAb->AbText;
+  ind = box->BxIndChar;
+  *nSpaces = 0;
+  *width = 0;
+  pos = 1;
+  if (pAb->AbPrevious &&
+      (pAb->AbPrevious->AbFloat != 'N' ||
+       (pAb->AbPrevious->AbBox && pAb->AbPrevious->AbBox->BxType == BoFloatGhost)) &&
+      ind == 0 && pBuffer && pBuffer->BuContent[0] == SPACE)
     {
-      *width = 2;
-      *nSpaces = 0;
+      /* ignore the space that follows a floated box */
+      ind++;
+      nChars--;
     }
-  else
+  else if (nChars == 0)
+    *width = 2;
+
+  if (nChars > 0)
     {
       /*
         There is a current text:
         generate one complete box or several boxes if several scripts are used
       */
       /* first character to be handled */
-      pBuffer = pAb->AbText;
-      ind = box->BxIndChar;
-      *nSpaces = 0;
-      *width = 0;
-      pos = 1;
       dir = pAb->AbDirection;
       if (box->BxType == BoMulScript)
         /* remove multi script boxes */
         UnsplitBox (box);
-
       while (nChars > 0)
         {
           bwidth = 0;

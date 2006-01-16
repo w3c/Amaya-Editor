@@ -1302,9 +1302,19 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
   adbuff = NULL;
   indbuff = 0;
   restbl = 0;
+  pAb = pBox->BxAbstractBox;
+  if (pAb->AbPrevious &&
+      (pAb->AbPrevious->AbFloat != 'N' ||
+       (pAb->AbPrevious->AbBox && pAb->AbPrevious->AbBox->BxType == BoFloatGhost)) &&
+      pBox->BxIndChar == 0 && pAb->AbText && pAb->AbText->BuContent[0] == SPACE)
+    {
+      /* ignore the space that follows a floated box */
+      indbuff++;
+      if (pBox->BxNChars <= 1)
+        return;
+    }
   if (pBox->BxNChars < 0)
     return;
-  pAb = pBox->BxAbstractBox;
   if (pAb->AbElement && pAb->AbElement->ElStructSchema &&
       !strcmp (pAb->AbElement->ElStructSchema->SsName, "TextFile"))
     /* only for TextFile documents */

@@ -2511,10 +2511,11 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
               /* it's not the root box */
               inLine = (!pAb->AbNotInLine &&
                         (pAb->AbDisplay == 'I' ||
-                         pParentAb->AbBox->BxType == BoBlock ||
-                         pParentAb->AbBox->BxType == BoFloatBlock ||
-                         pParentAb->AbBox->BxType == BoGhost ||
-                         pParentAb->AbBox->BxType == BoFloatGhost));
+                         (pParentAb->AbBox &&
+                          (pParentAb->AbBox->BxType == BoBlock ||
+                           pParentAb->AbBox->BxType == BoFloatBlock ||
+                           pParentAb->AbBox->BxType == BoGhost ||
+                           pParentAb->AbBox->BxType == BoFloatGhost))));
               if (horizRef)
                 {
                   if (pBox->BxType == BoCell)

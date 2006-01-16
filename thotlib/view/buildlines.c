@@ -2987,7 +2987,7 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
   if ((boxPrevL && y < boxPrevL->BxYOrg + boxPrevL->BxHeight) ||
       (boxPrevR && y < boxPrevR->BxYOrg + boxPrevR->BxHeight))
     {
-      if (box->BxWidth <= w)
+      if (box->BxWidth <= w + 1)
 #ifdef IV
  ||
           (boxPrevL && box->BxAbstractBox->AbFloat == 'L' &&
