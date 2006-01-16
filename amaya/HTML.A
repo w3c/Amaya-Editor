@@ -469,4 +469,9 @@ ATTRIBUTES
 	BEGIN
 	AttrExport.Pre ->  CheckValidEntity;
 	END;
+
+  USEMAP:
+	BEGIN
+	AttrExport.Pre ->  CheckUSEMAP;
+	END;
 END

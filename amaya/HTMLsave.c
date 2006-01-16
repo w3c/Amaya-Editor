@@ -256,6 +256,34 @@ ThotBool CheckGenerator (NotifyElement *event)
 
 
 /*----------------------------------------------------------------------
+  CheckUSEMAP
+  Usemap starts with # except for XHTML 1.1 document.
+  ----------------------------------------------------------------------*/
+ThotBool CheckUSEMAP (NotifyAttribute *event)
+{
+  int                  length, profile, doc;
+  char                *url;
+
+  length = TtaGetTextAttributeLength (event->attribute) + 3;
+  url = (char *)TtaGetMemory (length);
+  doc = event->document;
+  TtaGiveTextAttributeValue (event->attribute, &url[1], &length);
+  profile = TtaGetDocumentProfile (doc);
+  if (profile == L_Xhtml11 && url[1] == '#')
+    // remove the #
+    TtaSetAttributeText (event->attribute, &url[2], event->element, doc);
+  else if (profile != L_Xhtml11 && url[1] != '#')
+    {
+      // add a #
+      url[0] = '#';
+      TtaSetAttributeText (event->attribute, &url[0], event->element, doc);
+    }
+  TtaFreeMemory (url);
+  /* the document has a DocType */
+  return FALSE;  /* let Thot perform normal operation */
+}
+
+/*----------------------------------------------------------------------
   CheckValidEntity
   An Entity name attribute is about to be saved. If the document doesn't
   have a DocType, replace the entity name by an entity value.

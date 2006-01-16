@@ -425,7 +425,7 @@ static void CreateAreaMap (Document doc, View view, char *shape)
 #endif /* _WX */
   int                 length, w, h;
   int                 firstchar, lastchar;
-  int                 docModified;
+  int                 docModified, profile;
   DisplayMode         dispMode;
   ThotBool            oldStructureChecking;
   ThotBool            lock = TRUE;
@@ -480,8 +480,9 @@ static void CreateAreaMap (Document doc, View view, char *shape)
         {
           /* Search the MAP element associated with IMG element */
           length = TtaGetTextAttributeLength (attr) + 1;
+          if (length > MAX_LENGTH)
+            length = MAX_LENGTH;
           TtaGiveTextAttributeValue (attr, url, &length);
-          //if (url[0] == '#')
           map = SearchNAMEattribute (doc, &url[1], NULL, NULL);
         }
       if (map == NULL)
@@ -511,13 +512,24 @@ static void CreateAreaMap (Document doc, View view, char *shape)
           attr = TtaGetAttribute (map, attrType);
           if (attr == NULL)
             {
-          attrType.AttrTypeNum = HTML_ATTR_ID;
-          attr = TtaGetAttribute (map, attrType);
+              attrType.AttrTypeNum = HTML_ATTR_ID;
+              attr = TtaGetAttribute (map, attrType);
             }
           /* create the USEMAP attribute for the image */
-          length = TtaGetTextAttributeLength (attr) + 1;
-          url[0] = EOS;//'#';
-          TtaGiveTextAttributeValue (attr, &url[0], &length);
+          length = TtaGetTextAttributeLength (attr) + 2;
+          if (length > MAX_LENGTH)
+            length = MAX_LENGTH;
+          profile = TtaGetDocumentProfile (doc);
+          if (profile == L_Xhtml11)
+            {
+              url[0] = EOS;
+              TtaGiveTextAttributeValue (attr, &url[0], &length);
+            }
+          else
+            {
+              url[0] = '#';
+              TtaGiveTextAttributeValue (attr, &url[1], &length);
+            }
           attrType.AttrTypeNum = HTML_ATTR_USEMAP;
           attr = TtaGetAttribute (image, attrType);
           if (attr == NULL)
