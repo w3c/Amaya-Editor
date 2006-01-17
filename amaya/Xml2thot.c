@@ -670,6 +670,16 @@ void  SetParsingTextArea (ThotBool value)
 }
 
 /*----------------------------------------------------------------------
+  SetParsingScript
+  Sets the value of ParsingScript boolean.
+  ----------------------------------------------------------------------*/
+void  SetParsingScript (ThotBool value)
+
+{
+  XMLcontext.parsingScript = value;
+}
+
+/*----------------------------------------------------------------------
   SetLanguagInXmlStack
   Sets the value of the language.
   ----------------------------------------------------------------------*/

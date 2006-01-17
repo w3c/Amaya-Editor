@@ -730,6 +730,15 @@ void  SetHtmlParsingTextArea (ThotBool value)
 }
 
 /*----------------------------------------------------------------------
+  SetHtmlParsingScript
+  Sets the value of ParsingScript boolean.
+  ----------------------------------------------------------------------*/
+void  SetHtmlParsingScript (ThotBool value)
+{
+  HTMLcontext.parsingScript = value;
+}
+
+/*----------------------------------------------------------------------
   SetHtmlElemLineNumber
   Assigns the current line number
   ----------------------------------------------------------------------*/
@@ -2126,10 +2135,11 @@ static void EndOfStartTag (char c)
             }
         }
       else if (elType.ElTypeNum == HTML_EL_Text_Area)
-        {
-          /* we have to read the content as a simple text unit */
-          HTMLcontext.parsingTextArea = TRUE;
-        }
+        /* we have to read the content as a simple text unit */
+        HTMLcontext.parsingTextArea = TRUE;
+      else if (elType.ElTypeNum == HTML_EL_SCRIPT_)
+        /* we have to read the content as a simple text unit */
+        HTMLcontext.parsingScript = TRUE;
     }
 
   if (c == '<')
@@ -2478,8 +2488,8 @@ static void     EndOfStartGI (char c)
   char        theGI[MaxMsgLength];
   int	      i;
 
-  if (HTMLcontext.parsingTextArea)
-    /* We are parsing the contents of a TEXTAREA element. If a start
+  if (HTMLcontext.parsingTextArea || HTMLcontext.parsingScript)
+    /* We are parsing the contents of a TEXTAREA or SCRIPT element. If a start
        tag appears, consider it as plain text */
     {
       /* next state is state 0, not the state computed by the automaton */
@@ -2678,10 +2688,12 @@ static void EndOfEndTag (char c)
   ThotBool        ok, removed;
 
   CloseBuffer ();
-  if (HTMLcontext.parsingTextArea &&
-      strcasecmp ((char *)inputBuffer, "textarea") != 0)
-    /* We are parsing the contents of a textarea element. The end
-       tag is not the one closing the current textarea, consider it
+  if ((HTMLcontext.parsingTextArea &&
+       strcasecmp ((char *)inputBuffer, "textarea")) ||
+      (HTMLcontext.parsingScript &&
+       strcasecmp ((char *)inputBuffer, "script")))
+    /* We are parsing the contents of a textarea or script element. The end
+       tag is not the one closing the current textarea or script, consider it
        as plain text */
     {
       /* next state is state 0, not the state computed by the automaton */
@@ -4519,26 +4531,6 @@ static void HTMLparse (FILE * infile, char* HTMLbuf)
                     /* transition found. Activate the transition */
                     {
                       NormalTransition = TRUE;
-                      
-                      /* Special case: '<' within a SCRIPT element */
-                      if (currentState == 1)
-                        /* the previous character was '<' in a text */
-                        if (trans->newState == 2)
-                          /* the current character is not '/', '!', '<'
-                             or space */
-                          if (Within (HTML_EL_SCRIPT_, DocumentSSchema))
-                            /* we are within a SCRIPT element */
-                            {
-                              /* put '<' and the character read in the
-                                 text buffer */
-                              PutInBuffer ('<');
-                              PutInBuffer (charRead);
-                              charRead = EOS;
-                              /* and return to state 0: reading text */
-                              currentState = 0;
-                              NormalTransition = FALSE;
-                            }
-                      
                       /* call the procedure associated with the transition */
                       CharProcessed = FALSE;
                       if (trans->action != NULL)
@@ -6637,6 +6629,7 @@ static void InitializeHTMLParser (Element lastelem, ThotBool isclosed,
   StackLevel = 1;
   HTMLcontext.language = TtaGetDefaultLanguage ();
   HTMLcontext.parsingTextArea = FALSE;
+  HTMLcontext.parsingScript = FALSE;
   if (lastelem != NULL && doc != 0)
     {
       /* initialize the stack with ancestors of lastelem */

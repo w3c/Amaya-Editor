@@ -79,7 +79,8 @@ typedef struct _ParserData
   ThotBool   lastElementClosed;     /* last element is complete */
   ThotBool   mergeText;	            /* character data should be catenated */
   ThotBool   parsingCSS;            /* reading the content of a STYLE element */
-  ThotBool   parsingTextArea;       /* reading the content of a text area element */
+  ThotBool   parsingTextArea;       /* reading the content of a textarea element */
+  ThotBool   parsingScript;         /* reading the content of a script element */
   ThotBool   readingAnAttrValue;
 }
 ParserData;

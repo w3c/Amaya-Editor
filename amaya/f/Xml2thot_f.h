@@ -13,6 +13,7 @@ extern void XmlParseError ( ErrorType type,
 extern ThotBool IsXmlParsingCSS ( void );
 extern void SetXmlParsingCSS ( ThotBool value );
 extern void SetParsingTextArea ( ThotBool value );
+extern void SetParsingScript ( ThotBool value );
 extern void SetLanguagInXmlStack ( Language lang );
 extern int IsWithinXmlTable ( void );
 extern void SubWithinTable ( void );
@@ -71,6 +72,7 @@ extern void XmlParseError ( ErrorType type,
 extern ThotBool IsXmlParsingCSS ( void );
 extern void SetXmlParsingCSS ( ThotBool value );
 extern void SetParsingTextArea ( ThotBool value );
+extern void SetParsingScript ( ThotBool value );
 extern void SetLanguagInXmlStack ( Language lang );
 extern int IsWithinXmlTable ( void );
 extern void SubWithinTable ( void );

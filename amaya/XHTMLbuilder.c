@@ -746,6 +746,12 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
     case HTML_EL_STYLE_:	/* it's a STYLE element */
     case HTML_EL_SCRIPT_:	/* it's a SCRIPT element */
     case HTML_EL_Preformatted:	/* it's a PRE */
+      if (elType.ElTypeNum == HTML_EL_SCRIPT_)
+        if (DocumentMeta[doc]->xmlformat)
+          SetParsingScript (FALSE);
+        else
+          SetHtmlParsingScript (FALSE);
+
       /* if the last line of the Preformatted is empty, remove it */
       leaf = XmlLastLeafInElement (el);
       if (leaf != NULL)
