@@ -627,6 +627,9 @@ void DisplayImage (Document doc, Element el, LoadedImageDesc *desc,
               if (!strncmp (mime_type, "image/svg", 9) ||
                   !strcmp (mime_type, AM_SVG_MIME_TYPE))
                 is_svg = TRUE;
+              else if (!strncmp (mime_type, "application/mathml+xml", 22) ||
+                       !strcmp (mime_type, AM_MATHML_MIME_TYPE))
+                is_mml = TRUE;
               else if (!strncmp (mime_type, "text/mathml", 11) ||
                        !strcmp (mime_type, AM_MATHML_MIME_TYPE))
                 is_mml = TRUE;

@@ -1943,6 +1943,13 @@ static void StartOfXmlStartElement (char *name)
         }
       /* Look for the context associated with that namespace */
       ChangeXmlParserContextByUri (nsURI);
+      // it's a compound document
+      if (savParserCtxt != currentParserCtxt &&
+          (!strcmp (currentParserCtxt->SSchemaName, "SVG") ||
+           !strcmp (currentParserCtxt->SSchemaName, "MathML")) &&
+          DocumentMeta[XMLcontext.doc])
+        DocumentMeta[XMLcontext.doc]->compound = TRUE;
+        
       elementName = (char *)TtaGetMemory ((strlen ((char *)ptr) + 1));
       strcpy ((char *)elementName, (char *)ptr);
     }
@@ -5131,6 +5138,7 @@ void ParseExternalDocument (char *fileName, char *originalName, Element el,
                             &parsingLevel, &charset, charsetname, &thotType);
 	  
           /* Parse the external file */
+          DocumentMeta[externalDoc]->compound = FALSE;
           if (!strcmp ((char *)typeName, "HTML") && !isXML)
             {
               DocumentMeta[externalDoc]->xmlformat = FALSE;
@@ -5434,6 +5442,9 @@ ThotBool ParseIncludedXml (FILE *infile, char **infileBuffer, int infileBufferLe
   /* specific Initialization */
   XMLcontext.language = lang;
   DocumentSSchema = TtaGetDocumentSSchema (doc);
+  // it's a compound document
+  if (DocumentMeta[doc])
+    DocumentMeta[doc]->compound = TRUE;
 
   /* Initialize  counters */
   ExtraLineRead = 0;

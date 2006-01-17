@@ -5,7 +5,9 @@ DEFAULT
    ElemActivate.Pre -> DoubleClick;
    ElemClick.Pre -> SimpleClick;
    ElemRClick.Pre -> SimpleRClick;
+   ElemNew.Pre -> NewMathElement;
    ElemNew.Post -> MathElementCreated;
+   ElemPaste.Pre -> NewMathElement;
    ElemPaste.Post -> MathElementPasted;
    ElemDelete.Pre -> MathElementWillBeDeleted;
    ElemDelete.Post -> MathElementDeleted;
@@ -19,10 +21,10 @@ DEFAULT
 
 ELEMENTS
 
-
    MathML:
 	BEGIN
-	ElemExport.Pre -> CheckValidProfile;
+  ElemExport.Pre -> CheckValidProfile;
+  ElemPaste.Post -> ElementPasted;
 	END;
 
    DOCTYPE:

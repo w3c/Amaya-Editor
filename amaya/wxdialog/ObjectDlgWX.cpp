@@ -35,11 +35,8 @@ END_EVENT_TABLE()
     + type: the suggested type
   returns:
   ----------------------------------------------------------------------*/
-ObjectDlgWX::ObjectDlgWX( int ref,
-			    wxWindow* parent,
-			    const wxString & title,
-			    const wxString & urlToOpen,
-			    const wxString & mime_type,
+ObjectDlgWX::ObjectDlgWX( int ref, wxWindow* parent, const wxString & title,
+			    const wxString & urlToOpen, const wxString & mime_type,
 			    const wxString & filter ) :
   AmayaDialog( NULL, ref ),
   m_Filter(filter)
@@ -68,12 +65,18 @@ ObjectDlgWX::ObjectDlgWX( int ref,
   if (strcmp (UserMimeType, "image/gif"))
     XRCCTRL(*this, "wxID_MIME_TYPE_CB",
 	    wxComboBox)->Append( TtaConvMessageToWX( "image/gif" ) );
-  if (strcmp (UserMimeType, "image/x-bitmap"))
+  if (strcmp (UserMimeType, "image/svg+xml"))
     XRCCTRL(*this, "wxID_MIME_TYPE_CB",
-	    wxComboBox)->Append( TtaConvMessageToWX( "image/x-bitmap" ) );
-  if (strcmp (UserMimeType, "image/x-xpicmap"))
+	    wxComboBox)->Append( TtaConvMessageToWX( "image/svg+xml" ) );
+  if (strcmp (UserMimeType, "application/mathml+xml"))
     XRCCTRL(*this, "wxID_MIME_TYPE_CB",
-	    wxComboBox)->Append( TtaConvMessageToWX( "image/x-xpicmap" ) );
+	    wxComboBox)->Append( TtaConvMessageToWX( "application/mathml+xml" ) );
+  if (strcmp (UserMimeType, "text/mathml"))
+    XRCCTRL(*this, "wxID_MIME_TYPE_CB",
+	    wxComboBox)->Append( TtaConvMessageToWX( "text/mathml" ) );
+  if (strcmp (UserMimeType, "text/html"))
+    XRCCTRL(*this, "wxID_MIME_TYPE_CB",
+	    wxComboBox)->Append( TtaConvMessageToWX( "text/html" ) );
   XRCCTRL(*this, "wxID_MIME_TYPE_CB", wxComboBox)->SetValue( mime_type );
 
   SetAutoLayout( TRUE );
@@ -146,7 +149,7 @@ void ObjectDlgWX::OnBrowseButton( wxCommandEvent& event )
       // so if I do not delete it manualy here it will be deleted twice
       p_dlg->Destroy();
       // simulate the open command
-      OnOpenButton( event );
+      //OnOpenButton( event );
     }
   else
     {

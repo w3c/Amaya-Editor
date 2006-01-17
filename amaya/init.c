@@ -3426,7 +3426,10 @@ void ReparseAs (Document doc, View view, ThotBool asHTML,
   /* Free access keys table */
   TtaRemoveDocAccessKeys (doc);
   if (asHTML)
-    DocumentMeta[doc]->xmlformat = FALSE;
+    {
+      DocumentMeta[doc]->xmlformat = FALSE;
+      DocumentMeta[doc]->compound = FALSE;
+    }
   if (charset != UNDEFINED_CHARSET &&
       charset != TtaGetDocumentCharset (doc))
     {
@@ -4100,6 +4103,7 @@ Document LoadDocument (Document doc, char *pathname,
       DocumentMeta[newdoc]->method = (ClickEvent) method;
       DocumentSource[newdoc] = 0;
       DocumentMeta[newdoc]->xmlformat = isXML;
+      DocumentMeta[newdoc]->compound = FALSE;
 
       /* Set character encoding */
       DocumentMeta[newdoc]->charset = NULL;
@@ -4677,6 +4681,7 @@ void ShowSource (Document doc, View view)
           DocumentMeta[sourceDoc]->initial_url = NULL;
           DocumentMeta[sourceDoc]->method = CE_ABSOLUTE;
           DocumentMeta[sourceDoc]->xmlformat = FALSE;
+          DocumentMeta[sourceDoc]->compound = FALSE;
           /* copy the MIME type, charset, and content location */
           if (DocumentMeta[doc]->content_type)
             DocumentMeta[sourceDoc]->content_type = TtaStrdup (DocumentMeta[doc]->content_type);
@@ -4703,7 +4708,13 @@ void ShowSource (Document doc, View view)
           SetWindowTitle (doc, sourceDoc, 0);
           /* Switch the synchronization entry */
           if (TtaIsDocumentModified (doc))
-            DocStatusUpdate (doc, TRUE);
+            {
+              // views are synchronized
+              TtaSetDocumentModified (sourceDoc);
+              TtaSetDocumentUnupdated (sourceDoc);
+              TtaSetDocumentUnupdated (doc);
+              //DocStatusUpdate (doc, TRUE);
+            }
           /* Synchronize selections */
           event.document = doc;
           event.element = NULL;
@@ -5132,6 +5143,7 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName,
                 DocumentMeta[newdoc]->initial_url = NULL;
               DocumentMeta[newdoc]->method = method;
               DocumentMeta[newdoc]->xmlformat = FALSE;
+              DocumentMeta[newdoc]->compound = FALSE;
               DocumentSource[newdoc] = 0;
               ResetStop(newdoc);
             }

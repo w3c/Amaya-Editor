@@ -147,6 +147,8 @@ void ParseCharsetAndContentType (Element el, Document doc)
 }
 
 #ifdef TEMPLATES
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void ParseTemplateMeta (Element el, Document doc)
 {
   AttributeType attrType;

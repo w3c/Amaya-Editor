@@ -12,7 +12,7 @@
  *
  */
 #ifdef _WX
-  #include "wx/wx.h"
+#include "wx/wx.h"
 #endif /* _WX */ 
 
 #include "thot_gui.h"
@@ -25,12 +25,12 @@
 
 
 #ifdef _GTK
-  #include <gdk/gdkx.h>
-  #include "gtk-functions.h" /* GTK prototype */
+#include <gdk/gdkx.h>
+#include "gtk-functions.h" /* GTK prototype */
 #endif /*_GTK */
 
 #ifdef _WINGUI
-  #include "wininclude.h"
+#include "wininclude.h"
 #endif /* _WINGUI */
 
 #undef THOT_EXPORT
@@ -52,159 +52,159 @@
   ----------------------------------------------------------------------*/
 ThotBool  ElementHasAction (PtrElement pEl, APPevent event, ThotBool pre)
 {
-   PtrActionEvent	pActEvent;
-   ThotBool		hasAction;
+  PtrActionEvent	pActEvent;
+  ThotBool		hasAction;
 
-   hasAction = FALSE;
+  hasAction = FALSE;
 
-   if (pEl->ElStructSchema != NULL)
-     if (pEl->ElStructSchema->SsActionList != NULL)
-	{
-	/* take the concerned actions list */
-	pActEvent = pEl->ElStructSchema->SsActionList->EvSList[event];
-	while (pActEvent != NULL && !hasAction)
-	    if (pActEvent->AEvPre == pre &&
-	        pActEvent->AEvType == pEl->ElTypeNumber)
-		hasAction = TRUE;
-	    else
-		pActEvent = pActEvent->AEvNext;
-	}
-   return hasAction;
+  if (pEl->ElStructSchema != NULL)
+    if (pEl->ElStructSchema->SsActionList != NULL)
+      {
+        /* take the concerned actions list */
+        pActEvent = pEl->ElStructSchema->SsActionList->EvSList[event];
+        while (pActEvent != NULL && !hasAction)
+          if (pActEvent->AEvPre == pre &&
+              pActEvent->AEvType == pEl->ElTypeNumber)
+            hasAction = TRUE;
+          else
+            pActEvent = pActEvent->AEvNext;
+      }
+  return hasAction;
 }
 
 /*----------------------------------------------------------------------
-   CallAction looks for the concerned action in event list.
-   It returns TRUE if the event action takes place of the editor action
-   else it returns FALSE.
+  CallAction looks for the concerned action in event list.
+  It returns TRUE if the event action takes place of the editor action
+  else it returns FALSE.
   ----------------------------------------------------------------------*/
 static ThotBool CallAction (NotifyEvent * notifyEvent, APPevent event,
-			    ThotBool pre, int type, Element element,
-			    PtrSSchema schStruct, ThotBool attr)
+                            ThotBool pre, int type, Element element,
+                            PtrSSchema schStruct, ThotBool attr)
 {
-   PtrActionEvent      pActEvent;
-   PtrEventsSet        eventsSet;
-   ThotBool            status;
-   Proc                procEvent;
-   Func                funcEvent;
+  PtrActionEvent      pActEvent;
+  PtrEventsSet        eventsSet;
+  ThotBool            status;
+  Proc                procEvent;
+  Func                funcEvent;
 
-   procEvent = NULL;
-   funcEvent = NULL;
+  procEvent = NULL;
+  funcEvent = NULL;
 
-   /* See all actions linked with this event in different event lists */
-   while (schStruct != NULL && procEvent == NULL && funcEvent == NULL)
-     {
-       eventsSet = schStruct->SsActionList;
-       if (eventsSet != NULL)
-	 {
-	   /* take the concerned actions list */
-	   pActEvent = eventsSet->EvSList[event];
-	   while (pActEvent != NULL)
-	     {
-	       if (pActEvent->AEvPre == pre && (pActEvent->AEvType == 0 || pActEvent->AEvType == type))
-		 {
-		   if (pre)
-		     funcEvent = (Func) pActEvent->AEvAction->ActAction;
-		   else
-		     procEvent = pActEvent->AEvAction->ActAction;
-		   pActEvent = NULL;	/* end of research */
-		 }
-	       else
-		 pActEvent = pActEvent->AEvNext;	/* continue */
-	     }
-	 }
+  /* See all actions linked with this event in different event lists */
+  while (schStruct != NULL && procEvent == NULL && funcEvent == NULL)
+    {
+      eventsSet = schStruct->SsActionList;
+      if (eventsSet != NULL)
+        {
+          /* take the concerned actions list */
+          pActEvent = eventsSet->EvSList[event];
+          while (pActEvent != NULL)
+            {
+              if (pActEvent->AEvPre == pre && (pActEvent->AEvType == 0 || pActEvent->AEvType == type))
+                {
+                  if (pre)
+                    funcEvent = (Func) pActEvent->AEvAction->ActAction;
+                  else
+                    procEvent = pActEvent->AEvAction->ActAction;
+                  pActEvent = NULL;	/* end of research */
+                }
+              else
+                pActEvent = pActEvent->AEvNext;	/* continue */
+            }
+        }
 
-       /* See in the parent schema, except for attributes */
-       if (attr)
-           schStruct = NULL;
-       else if (procEvent == NULL && funcEvent == NULL)
-	 {
-	   status = TRUE;	/* still in the same schema */
-	   /*if (element != 0)
-	     element = (Element) ((PtrElement) element)->ElParent;*/
-	   while (status && element != 0)
-	     {
-	       status = (schStruct == ((PtrElement) element)->ElStructSchema);
-	       if (!status)
-		 {
-		   /* a new schema */
-		   schStruct = ((PtrElement) element)->ElStructSchema;
-		   /* do not consider specific types of the previous schema */
-		   if (type > MAX_BASIC_TYPE)
-		     type = 0;
-		 }
-	       else
-		 element = (Element) ((PtrElement) element)->ElParent;
-	       }
+      /* See in the parent schema, except for attributes */
+      if (attr)
+        schStruct = NULL;
+      else if (procEvent == NULL && funcEvent == NULL)
+        {
+          status = TRUE;	/* still in the same schema */
+          /*if (element != 0)
+            element = (Element) ((PtrElement) element)->ElParent;*/
+          while (status && element != 0)
+            {
+              status = (schStruct == ((PtrElement) element)->ElStructSchema);
+              if (!status)
+                {
+                  /* a new schema */
+                  schStruct = ((PtrElement) element)->ElStructSchema;
+                  /* do not consider specific types of the previous schema */
+                  if (type > MAX_BASIC_TYPE)
+                    type = 0;
+                }
+              else
+                element = (Element) ((PtrElement) element)->ElParent;
+            }
 	   
-	   if (element == 0)
-	     schStruct = NULL;	/* no more schema */
-	 }
-     }
+          if (element == 0)
+            schStruct = NULL;	/* no more schema */
+        }
+    }
 
-   /* See all actions linked with this event in EDITOR application */
-   if (procEvent == NULL && funcEvent == NULL)
-     {
-       eventsSet = EditorEvents;
-       if (eventsSet != NULL)
-	 {
-	   /* take the concerned actions list */
-	   pActEvent = eventsSet->EvSList[event];
-	   while (pActEvent != NULL)
-	     {
-	       if (pActEvent->AEvPre == pre && (pActEvent->AEvType == 0 || pActEvent->AEvType == type))
-		 {
-		   if (pre)
-		     funcEvent = (Func) pActEvent->AEvAction->ActAction;
-		   else
-		     procEvent = pActEvent->AEvAction->ActAction;
-		   pActEvent = NULL;	/* end of research */
-		 }
-	       else
-		 pActEvent = pActEvent->AEvNext;
-	     }
-	 }
-     }
+  /* See all actions linked with this event in EDITOR application */
+  if (procEvent == NULL && funcEvent == NULL)
+    {
+      eventsSet = EditorEvents;
+      if (eventsSet != NULL)
+        {
+          /* take the concerned actions list */
+          pActEvent = eventsSet->EvSList[event];
+          while (pActEvent != NULL)
+            {
+              if (pActEvent->AEvPre == pre && (pActEvent->AEvType == 0 || pActEvent->AEvType == type))
+                {
+                  if (pre)
+                    funcEvent = (Func) pActEvent->AEvAction->ActAction;
+                  else
+                    procEvent = pActEvent->AEvAction->ActAction;
+                  pActEvent = NULL;	/* end of research */
+                }
+              else
+                pActEvent = pActEvent->AEvNext;
+            }
+        }
+    }
 
-   status = FALSE;
-   if (funcEvent != NULL || procEvent != NULL)
-     {
-       if (funcEvent != NULL)
-	 status = (*(Func1)funcEvent) ((void *)notifyEvent);
-       else
-	 (*(Proc1)procEvent) ((void *)notifyEvent);
-     }
-   return status;
+  status = FALSE;
+  if (funcEvent != NULL || procEvent != NULL)
+    {
+      if (funcEvent != NULL)
+        status = (*(Func1)funcEvent) ((void *)notifyEvent);
+      else
+        (*(Proc1)procEvent) ((void *)notifyEvent);
+    }
+  return status;
 }
 
 /*----------------------------------------------------------------------
-   CallEventAttribute notifies the possible application that     
-   an attribute has been created, deleted, modified, read  
-   or saved.                                               
-   It returns TRUE if it executed an action,               
-   else it returns FALSE.                                  
+  CallEventAttribute notifies the possible application that     
+  an attribute has been created, deleted, modified, read  
+  or saved.                                               
+  It returns TRUE if it executed an action,               
+  else it returns FALSE.                                  
   ----------------------------------------------------------------------*/
 ThotBool CallEventAttribute (NotifyAttribute * notifyAttr, ThotBool pre)
 {
-   Element             element;
-   PtrSSchema          schStruct;
+  Element             element;
+  PtrSSchema          schStruct;
 
-   if (notifyAttr != NULL)
-     {
-	element = notifyAttr->element;
-	schStruct = (PtrSSchema) ((notifyAttr->attributeType).AttrSSchema);
-	return CallAction ((NotifyEvent *) notifyAttr, notifyAttr->event, pre,
-	      notifyAttr->attributeType.AttrTypeNum, element, schStruct, TRUE);
-     }
-   else
-      return FALSE;
+  if (notifyAttr != NULL)
+    {
+      element = notifyAttr->element;
+      schStruct = (PtrSSchema) ((notifyAttr->attributeType).AttrSSchema);
+      return CallAction ((NotifyEvent *) notifyAttr, notifyAttr->event, pre,
+                         notifyAttr->attributeType.AttrTypeNum, element, schStruct, TRUE);
+    }
+  else
+    return FALSE;
 }
 
 /*----------------------------------------------------------------------
-   CallEventType sends a pointer to a actionstruct               
-   and a structure-element and executes the                
-   corresponding action (if any). If an action was         
-   executed the function returns 'TRUE' else it returns    
-   'FALSE'.                                                
+  CallEventType sends a pointer to a actionstruct               
+  and a structure-element and executes the                
+  corresponding action (if any). If an action was         
+  executed the function returns 'TRUE' else it returns    
+  'FALSE'.                                                
   ----------------------------------------------------------------------*/
 ThotBool CallEventType (NotifyEvent * notifyEvent, ThotBool pre)
 {
@@ -226,31 +226,31 @@ ThotBool CallEventType (NotifyEvent * notifyEvent, ThotBool pre)
     case TteElemInclude:
     case TteElemMenu:
       if (pre)
-	{
-	  elType = ((NotifyElement *) notifyEvent)->elementType.ElTypeNum;
-	  element = ((NotifyElement *) notifyEvent)->element;
-	  schStruct = (PtrSSchema) (((NotifyElement *) notifyEvent)->elementType.ElSSchema);
-	}
+        {
+          elType = ((NotifyElement *) notifyEvent)->elementType.ElTypeNum;
+          element = ((NotifyElement *) notifyEvent)->element;
+          schStruct = (PtrSSchema) (((NotifyElement *) notifyEvent)->elementType.ElSSchema);
+        }
       else
-	{
-	  element = ((NotifyElement *) notifyEvent)->element;
-	  elType = ((PtrElement) element)->ElTypeNumber;
-	  schStruct = ((PtrElement) element)->ElStructSchema;
-	}
+        {
+          element = ((NotifyElement *) notifyEvent)->element;
+          elType = ((PtrElement) element)->ElTypeNumber;
+          schStruct = ((PtrElement) element)->ElStructSchema;
+        }
       break;
     case TteElemDelete:
       if (pre)
-	{
-	  element = ((NotifyElement *) notifyEvent)->element;
-	  elType = ((PtrElement) element)->ElTypeNumber;
-	  schStruct = ((PtrElement) element)->ElStructSchema;
-	}
+        {
+          element = ((NotifyElement *) notifyEvent)->element;
+          elType = ((PtrElement) element)->ElTypeNumber;
+          schStruct = ((PtrElement) element)->ElStructSchema;
+        }
       else
-	{
-	  element = ((NotifyElement *) notifyEvent)->element;
-	  elType = ((NotifyElement *) notifyEvent)->elementType.ElTypeNum;
-	  schStruct = (PtrSSchema) (((NotifyElement *) notifyEvent)->elementType.ElSSchema);
-	}
+        {
+          element = ((NotifyElement *) notifyEvent)->element;
+          elType = ((NotifyElement *) notifyEvent)->elementType.ElTypeNum;
+          schStruct = (PtrSSchema) (((NotifyElement *) notifyEvent)->elementType.ElSSchema);
+        }
       break;
     case TteElemSave:
     case TteElemExport:
@@ -281,17 +281,17 @@ ThotBool CallEventType (NotifyEvent * notifyEvent, ThotBool pre)
       break;
     case TteElemPaste:
       if (pre)
-	{
-	  element = ((NotifyOnValue *) notifyEvent)->target;
-	  elType = ((PtrElement) element)->ElTypeNumber;
-	  schStruct = ((PtrElement) element)->ElStructSchema;
-	}
+        {
+          element = ((NotifyOnValue *) notifyEvent)->target;
+          elType = ((PtrElement) element)->ElTypeNumber;
+          schStruct = ((PtrElement) element)->ElStructSchema;
+        }
       else
-	{
-	  element = ((NotifyElement *) notifyEvent)->element;
-	  elType = ((PtrElement) element)->ElTypeNumber;
-	  schStruct = ((PtrElement) element)->ElStructSchema;
-	}
+        {
+          element = ((NotifyElement *) notifyEvent)->element;
+          elType = ((PtrElement) element)->ElTypeNumber;
+          schStruct = ((PtrElement) element)->ElStructSchema;
+        }
       break;
     case TteElemGraphModify:
       element = ((NotifyOnValue *) notifyEvent)->element;
@@ -319,17 +319,17 @@ ThotBool CallEventType (NotifyEvent * notifyEvent, ThotBool pre)
       element = NULL;
       doc = ((NotifyDialog *) notifyEvent)->document;
       if (doc && LoadedDocument[doc - 1])
-	{
-	  schStruct = LoadedDocument[doc - 1]->DocSSchema;
-	  if (schStruct)
-	    elType = schStruct->SsRootElem;
-	}
+        {
+          schStruct = LoadedDocument[doc - 1]->DocSSchema;
+          if (schStruct)
+            elType = schStruct->SsRootElem;
+        }
       break;
     case TteInit:
     case TteExit:
       break;
     default:
-	return FALSE;
+      return FALSE;
       break;
     }
   return CallAction (notifyEvent, notifyEvent->event, pre, elType, element, schStruct, FALSE);
@@ -341,7 +341,7 @@ ThotBool CallEventType (NotifyEvent * notifyEvent, ThotBool pre)
 #ifdef _WINGUI
 /*-----------------------------------------------------------------------
   ThotDlgProc
- ------------------------------------------------------------------------*/
+  ------------------------------------------------------------------------*/
 LRESULT CALLBACK ThotDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
 {
   int        ndx;
@@ -350,21 +350,21 @@ LRESULT CALLBACK ThotDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM lPara
     {
     case WM_CREATE:
       {
-	for (ndx = 0; ndx < bIndex; ndx ++)
-	  {
-	    SetParent (formulary.Buttons[ndx], hwnDlg);
-	    ShowWindow (formulary.Buttons[ndx], SW_SHOW);
-	  }
-	return 0;
+        for (ndx = 0; ndx < bIndex; ndx ++)
+          {
+            SetParent (formulary.Buttons[ndx], hwnDlg);
+            ShowWindow (formulary.Buttons[ndx], SW_SHOW);
+          }
+        return 0;
       }
     case WM_COMMAND:
       switch (LOWORD (wParam))
-	{
-	case IDCANCEL: DestroyWindow (hwnDlg);
-	  return 0;
-	default:       WIN_ThotCallBack (GetParent (hwnDlg), wParam , lParam);
-	  return 0;
-	}
+        {
+        case IDCANCEL: DestroyWindow (hwnDlg);
+          return 0;
+        default:       WIN_ThotCallBack (GetParent (hwnDlg), wParam , lParam);
+          return 0;
+        }
     default: return (DefWindowProc (hwnDlg, msg, wParam, lParam));
     }
 }
@@ -406,49 +406,49 @@ ThotBool CallMenu (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
   if (catalogue->Cat_Widget)
     {
       if ((long int) catalogue->Cat_Widget == -1)
-	/*** back to a simple button ***/
-	(*(Proc3)CallbackDialogueProc) (
-		(void *)catalogue->Cat_Ref,
-		(void *)INTEGER_DATA,
-		(void *)0);
+        /*** back to a simple button ***/
+        (*(Proc3)CallbackDialogueProc) (
+                                        (void *)catalogue->Cat_Ref,
+                                        (void *)INTEGER_DATA,
+                                        (void *)0);
       else
-	{
-	  adbloc = catalogue->Cat_Entries;
-	  entry = -1;
-	  index = 0;
-	  i = 2;		/* decalage de 2 pour le widget titre */
-	  while (entry == -1 && adbloc)
-	    {
-	      while (entry == -1 && i < C_NUMBER)
-		{
+        {
+          adbloc = catalogue->Cat_Entries;
+          entry = -1;
+          index = 0;
+          i = 2;		/* decalage de 2 pour le widget titre */
+          while (entry == -1 && adbloc)
+            {
+              while (entry == -1 && i < C_NUMBER)
+                {
 #ifdef _WINGUI
-		  if (IsMenu ((ThotMenu) (adbloc->E_ThotWidget[i])))
-		    {
-		      nbMenuItem = GetMenuItemCount ((ThotMenu) (adbloc->E_ThotWidget[i]));
-		      for (ndx = 0; ndx < nbMenuItem; ndx++)
-			{
-			  menuEntry = GetMenuItemID ((ThotMenu) (adbloc->E_ThotWidget[i]), ndx);
-			  if (menuEntry == (catalogue->Cat_Ref + (UINT)w))
-			    entry = ndx;
-			}
-		    }
-		  else
+                  if (IsMenu ((ThotMenu) (adbloc->E_ThotWidget[i])))
+                    {
+                      nbMenuItem = GetMenuItemCount ((ThotMenu) (adbloc->E_ThotWidget[i]));
+                      for (ndx = 0; ndx < nbMenuItem; ndx++)
+                        {
+                          menuEntry = GetMenuItemID ((ThotMenu) (adbloc->E_ThotWidget[i]), ndx);
+                          if (menuEntry == (catalogue->Cat_Ref + (UINT)w))
+                            entry = ndx;
+                        }
+                    }
+                  else
 #endif /* _WINGUI */
-		    if (adbloc->E_ThotWidget[i] == w)
-		      entry = index;
-		  i++;
-		  index++;
-		}
-	      /* Passe au bloc suivant */
-	      adbloc = adbloc->E_Next;
-	      i = 0;
-	  }
-	  /*** Retour de l'entree du menu choisie vers l'application ***/
-	  (*(Proc3)CallbackDialogueProc) (
-		(void *)catalogue->Cat_Ref,
-		(void *)INTEGER_DATA,
-		(void *)entry);
-	}
+                    if (adbloc->E_ThotWidget[i] == w)
+                      entry = index;
+                  i++;
+                  index++;
+                }
+              /* Passe au bloc suivant */
+              adbloc = adbloc->E_Next;
+              i = 0;
+            }
+          /*** Retour de l'entree du menu choisie vers l'application ***/
+          (*(Proc3)CallbackDialogueProc) (
+                                          (void *)catalogue->Cat_Ref,
+                                          (void *)INTEGER_DATA,
+                                          (void *)entry);
+        }
     }
   return TRUE;
 #endif /* #if defined(_WINGUI) || defined(_GTK) || defined(_WX) */
@@ -487,10 +487,10 @@ ThotBool CallMenuGTK (ThotWidget w, struct Cat_Context *catalogue)
 ThotBool CallToggle (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
 #endif /* _WINGUI */
 #ifdef _GTK
-ThotBool CallToggleGTK (ThotWidget w, struct Cat_Context *catalogue)
+     ThotBool CallToggleGTK (ThotWidget w, struct Cat_Context *catalogue)
 #endif /* _GTK */
 #if defined(_WX)
-ThotBool CallToggleWX (ThotWidget w, struct Cat_Context *catalogue)
+     ThotBool CallToggleWX (ThotWidget w, struct Cat_Context *catalogue)
 #endif /* _WX */
 {
   register int        i;
@@ -508,28 +508,28 @@ ThotBool CallToggleWX (ThotWidget w, struct Cat_Context *catalogue)
       max = catalogue->Cat_Data;	/* nombre d'entrees definies */
       i = 2;			/* decalage de 2 pour le widget titre */
       while (entry == -1 && adbloc && ent <= max)
-	{
-	  while (entry == -1 && i < C_NUMBER && ent <= max)
-	    {
-	      if (adbloc->E_ThotWidget[i] == w)
-		{
-		  entry = 0;
-		  /* Bascule la valeur du bouton correspondant a l'entree */
-		  adbloc->E_Free[i] = 'Y';
-		  /* signale que l'entree est basculee si le menu est reactif */
-		  if (catalogue->Cat_React)
-		    (*(Proc3)CallbackDialogueProc) (
-			(void *)catalogue->Cat_Ref,
-			(void *)INTEGER_DATA,
-			(void *)ent);
-		}
-	      i++;
-	      ent++;
-	    }
-	  /* Passe au bloc suivant */
-	  adbloc = adbloc->E_Next;
-	  i = 0;
-	}
+        {
+          while (entry == -1 && i < C_NUMBER && ent <= max)
+            {
+              if (adbloc->E_ThotWidget[i] == w)
+                {
+                  entry = 0;
+                  /* Bascule la valeur du bouton correspondant a l'entree */
+                  adbloc->E_Free[i] = 'Y';
+                  /* signale que l'entree est basculee si le menu est reactif */
+                  if (catalogue->Cat_React)
+                    (*(Proc3)CallbackDialogueProc) (
+                                                    (void *)catalogue->Cat_Ref,
+                                                    (void *)INTEGER_DATA,
+                                                    (void *)ent);
+                }
+              i++;
+              ent++;
+            }
+          /* Passe au bloc suivant */
+          adbloc = adbloc->E_Next;
+          i = 0;
+        }
     }
   return TRUE;  
 }
@@ -555,26 +555,26 @@ ThotBool CallRadio (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
       index = 0;
       i = 2;  /* shift of 2 positions for the title widget */
       while (entry == -1 && adbloc)
-	{
-	  while (i < C_NUMBER && adbloc->E_ThotWidget[i])
-	    {
-	      if (adbloc->E_ThotWidget[i] == w)
-		entry = index;
-	      i++;
-	      index++;
-	    }
-	  /* Passe au bloc suivant */
-	  adbloc = adbloc->E_Next;
-	  i = 0;
-	}
+        {
+          while (i < C_NUMBER && adbloc->E_ThotWidget[i])
+            {
+              if (adbloc->E_ThotWidget[i] == w)
+                entry = index;
+              i++;
+              index++;
+            }
+          /* Passe au bloc suivant */
+          adbloc = adbloc->E_Next;
+          i = 0;
+        }
       /*** Sauve la valeur de la derniere selection ***/
       catalogue->Cat_Data = entry;
       /* retourne la valeur si le menu est reactif */
       if (catalogue->Cat_React)
-	(*(Proc3)CallbackDialogueProc) (
-		(void *)catalogue->Cat_Ref,
-		(void *)INTEGER_DATA,
-		(void *)entry);
+        (*(Proc3)CallbackDialogueProc) (
+                                        (void *)catalogue->Cat_Ref,
+                                        (void *)INTEGER_DATA,
+                                        (void *)entry);
     }
   return TRUE;  
 }
@@ -598,7 +598,7 @@ ThotBool CallRadioGTK (ThotWidget w, struct Cat_Context *catalogue)
   if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (w)) == FALSE)
     {
       /* Prevent to unselect an element directly...
-	 you must select another one to unselect others  */
+         you must select another one to unselect others  */
       index = (intptr_t) gtk_object_get_data (GTK_OBJECT (w), "toggled");
       gtk_signal_handler_block (GTK_OBJECT(w), index);
       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (w), TRUE);
@@ -614,49 +614,49 @@ ThotBool CallRadioGTK (ThotWidget w, struct Cat_Context *catalogue)
       index = 0;
       i = 2;			/* decalage de 2 pour le widget titre */
       while (entry == -1 && adbloc)
-	{
-	  while (entry == -1 && i < C_NUMBER)
-	    {
-	      if (adbloc->E_ThotWidget[i] == w)
-		entry = index;
-	      i++;
-	      index++;
-	    }
-	  /* Passe au bloc suivant */
-	  adbloc = adbloc->E_Next;
-	  i = 0;
-	}
+        {
+          while (entry == -1 && i < C_NUMBER)
+            {
+              if (adbloc->E_ThotWidget[i] == w)
+                entry = index;
+              i++;
+              index++;
+            }
+          /* Passe au bloc suivant */
+          adbloc = adbloc->E_Next;
+          i = 0;
+        }
       /*Deactivate All other Radio Button*/
       adbloc = catalogue->Cat_Entries;
       i = 2;
       while (adbloc)
-	{
-	  while (i < C_NUMBER &&  adbloc->E_ThotWidget[i])
-	    {
-	      if (adbloc->E_ThotWidget[i] != w) 
-		{
-		  index = (intptr_t) gtk_object_get_data (GTK_OBJECT (adbloc->E_ThotWidget[i]), "toggled");
-		  gtk_signal_handler_block (GTK_OBJECT(adbloc->E_ThotWidget[i]), index);
+        {
+          while (i < C_NUMBER &&  adbloc->E_ThotWidget[i])
+            {
+              if (adbloc->E_ThotWidget[i] != w) 
+                {
+                  index = (intptr_t) gtk_object_get_data (GTK_OBJECT (adbloc->E_ThotWidget[i]), "toggled");
+                  gtk_signal_handler_block (GTK_OBJECT(adbloc->E_ThotWidget[i]), index);
 		  
-		  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (adbloc->E_ThotWidget[i]), FALSE);
+                  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (adbloc->E_ThotWidget[i]), FALSE);
 		  
-		  gtk_signal_handler_unblock (GTK_OBJECT(adbloc->E_ThotWidget[i]), index); 
-		}
-	      i++;	       
-	    }
-	  /* Go to next block */
-	  adbloc = adbloc->E_Next;
-	  i = 0;
-	}
+                  gtk_signal_handler_unblock (GTK_OBJECT(adbloc->E_ThotWidget[i]), index); 
+                }
+              i++;	       
+            }
+          /* Go to next block */
+          adbloc = adbloc->E_Next;
+          i = 0;
+        }
       
       /*** Sauve la valeur de la derniere selection ***/
       catalogue->Cat_Data = entry;
       /* retourne la valeur si le menu est reactif */
       if (catalogue->Cat_React)
-	(*(Proc3)CallbackDialogueProc) (
-		(void *)catalogue->Cat_Ref,
-		(void *)INTEGER_DATA,
-		(void *)entry);
+        (*(Proc3)CallbackDialogueProc) (
+                                        (void *)catalogue->Cat_Ref,
+                                        (void *)INTEGER_DATA,
+                                        (void *)entry);
     }
   return TRUE;  
 }
@@ -683,26 +683,26 @@ ThotBool CallIconButtonGTK (ThotWidget w, struct Cat_Context *catalogue)
       index = 0;
       i = 2;  /* shift of 2 positions for the title widget */
       while (entry == -1 && adbloc)
-	{
-	  while (i < C_NUMBER && adbloc->E_ThotWidget[i])
-	    {
-	      if (adbloc->E_ThotWidget[i] == w)
-		entry = index;
-	      i++;
-	      index++;
-	    }
-	  /* Passe au bloc suivant */
-	  adbloc = adbloc->E_Next;
-	  i = 0;
-	}
+        {
+          while (i < C_NUMBER && adbloc->E_ThotWidget[i])
+            {
+              if (adbloc->E_ThotWidget[i] == w)
+                entry = index;
+              i++;
+              index++;
+            }
+          /* Passe au bloc suivant */
+          adbloc = adbloc->E_Next;
+          i = 0;
+        }
       /*** Sauve la valeur de la derniere selection ***/
       catalogue->Cat_Data = entry;
       /* retourne la valeur si le menu est reactif */
       if (catalogue->Cat_React)
-	(*(Proc3)CallbackDialogueProc) (
-		(void *)catalogue->Cat_Ref,
-		(void *)INTEGER_DATA,
-		(void *)entry);
+        (*(Proc3)CallbackDialogueProc) (
+                                        (void *)catalogue->Cat_Ref,
+                                        (void *)INTEGER_DATA,
+                                        (void *)entry);
     }
   return TRUE;  
 }
@@ -712,13 +712,13 @@ ThotBool CallIconButtonGTK (ThotWidget w, struct Cat_Context *catalogue)
 
 /*-----------------------------------------------------------------------
   Win_ScrPopupProc The callback handler for the Scroll popup widget
- ------------------------------------------------------------------------*/
+  ------------------------------------------------------------------------*/
 LRESULT CALLBACK WIN_ScrPopupProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
 {
- static HWND scrPopupWin;
- HWND   listBox;
- struct Cat_Context *catalogue;
- int    itemIndex, ref;
+  static HWND scrPopupWin;
+  HWND   listBox;
+  struct Cat_Context *catalogue;
+  int    itemIndex, ref;
 
   switch (msg)
     {
@@ -728,46 +728,46 @@ LRESULT CALLBACK WIN_ScrPopupProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM 
         HWND   listBox;
         DWORD  dwStyle;
         RECT   rect;
-	HDC    display;
-	TEXTMETRIC  textMetric;
-	int    width;
-	int    height;
+        HDC    display;
+        TEXTMETRIC  textMetric;
+        int    width;
+        int    height;
 
-	/* get the rectangle size according to the font metrics (hack) */
-	WIN_SetDialogfont (hwnDlg);
-	GetWindowRect (hwnDlg, &rect);
-	width = rect.right - rect.left;
-	height = rect.bottom - rect.top;
+        /* get the rectangle size according to the font metrics (hack) */
+        WIN_SetDialogfont (hwnDlg);
+        GetWindowRect (hwnDlg, &rect);
+        width = rect.right - rect.left;
+        height = rect.bottom - rect.top;
 
-	display = GetDC (hwnDlg);
-	if (GetTextMetrics (display, &textMetric))
-	  {
-	    height = height * textMetric.tmHeight;
-	    width = width * (textMetric.tmAveCharWidth);
-	  }
-	else 
-	  {
-	    /* try to give it some value */
-	    height = height * 14;
-	    width = width * 14;
-	  }
-	ReleaseDC (hwnDlg, display);
-	/* we change the settings of the current window too */
-	SetWindowPos (hwnDlg, NULL, rect.left, rect.top, width, height, SWP_NOZORDER);
+        display = GetDC (hwnDlg);
+        if (GetTextMetrics (display, &textMetric))
+          {
+            height = height * textMetric.tmHeight;
+            width = width * (textMetric.tmAveCharWidth);
+          }
+        else 
+          {
+            /* try to give it some value */
+            height = height * 14;
+            width = width * 14;
+          }
+        ReleaseDC (hwnDlg, display);
+        /* we change the settings of the current window too */
+        SetWindowPos (hwnDlg, NULL, rect.left, rect.top, width, height, SWP_NOZORDER);
 
-	/* create a list box inside the container window */
-	scrPopupWin = hwnDlg;
-	dwStyle = WS_BORDER | WS_CHILD | WS_VISIBLE | WS_VSCROLL | WS_HSCROLL 
-	  | LBS_HASSTRINGS | LBS_NOTIFY | LBS_WANTKEYBOARDINPUT;
-	/* give it the same size as that of the container */
+        /* create a list box inside the container window */
+        scrPopupWin = hwnDlg;
+        dwStyle = WS_BORDER | WS_CHILD | WS_VISIBLE | WS_VSCROLL | WS_HSCROLL 
+          | LBS_HASSTRINGS | LBS_NOTIFY | LBS_WANTKEYBOARDINPUT;
+        /* give it the same size as that of the container */
 
-	listBox = CreateWindowEx (WS_EX_CLIENTEDGE, "LISTBOX", NULL, dwStyle, 0, 0,
-				  width, height,
-				  hwnDlg, (HMENU) 1, hInstance, NULL);
-	/* set the font of the window */
-	WIN_SetDialogfont (listBox);
-	SetFocus (listBox);
-	return 0;
+        listBox = CreateWindowEx (WS_EX_CLIENTEDGE, "LISTBOX", NULL, dwStyle, 0, 0,
+                                  width, height,
+                                  hwnDlg, (HMENU) 1, hInstance, NULL);
+        /* set the font of the window */
+        WIN_SetDialogfont (listBox);
+        SetFocus (listBox);
+        return 0;
       }
       break;
       /* destroy the widget */
@@ -776,125 +776,125 @@ LRESULT CALLBACK WIN_ScrPopupProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM 
       RemoveProp (hwnDlg, "ref");
       scrPopupWin = NULL;
       if (msg == WM_DESTROY)
-	PostQuitMessage (0);
+        PostQuitMessage (0);
       return 0;
       break;
     case WM_VKEYTOITEM:
       ref = (int) wParam;
       switch ((TCHAR) wParam)
-	{
-	case VK_RETURN:  /* activate an entry */
-	  SendMessage (hwnDlg, WM_COMMAND, MAKEWPARAM (1, LBN_DBLCLK), MAKELPARAM(FALSE, 0));
-	  return -2;
-	  break;
-	case VK_ESCAPE:  /* cancel */
-	  DestroyWindow (hwnDlg);
-	  return -2;
-	  break;
-	}
+        {
+        case VK_RETURN:  /* activate an entry */
+          SendMessage (hwnDlg, WM_COMMAND, MAKEWPARAM (1, LBN_DBLCLK), MAKELPARAM(FALSE, 0));
+          return -2;
+          break;
+        case VK_ESCAPE:  /* cancel */
+          DestroyWindow (hwnDlg);
+          return -2;
+          break;
+        }
       break;
     case WM_COMMAND:
       if (LOWORD (wParam) == 1)
-	{
-	  switch (HIWORD (wParam))
-	    {
-	    case LBN_DBLCLK:  /* activate an entry */
-	      {
-		listBox = GetDlgItem (hwnDlg, 1);
-		itemIndex = SendMessage (listBox, LB_GETCURSEL, 0, 0);
-		ref = (int) GetProp (hwnDlg, "ref");
-		catalogue = CatEntry (ref);
-		CallMenu ((ThotWidget) itemIndex, catalogue, NULL);
-		scrPopupWin = NULL;
-		DestroyWindow (hwnDlg);
-		return 0;
-	      }
-	      break;
-	    case LBN_KILLFOCUS:   /* destroy the window if we click elsewhere */
-	      if (scrPopupWin)
-		{
-		  HWND win;
-		  win = GetFocus ();
+        {
+          switch (HIWORD (wParam))
+            {
+            case LBN_DBLCLK:  /* activate an entry */
+              {
+                listBox = GetDlgItem (hwnDlg, 1);
+                itemIndex = SendMessage (listBox, LB_GETCURSEL, 0, 0);
+                ref = (int) GetProp (hwnDlg, "ref");
+                catalogue = CatEntry (ref);
+                CallMenu ((ThotWidget) itemIndex, catalogue, NULL);
+                scrPopupWin = NULL;
+                DestroyWindow (hwnDlg);
+                return 0;
+              }
+              break;
+            case LBN_KILLFOCUS:   /* destroy the window if we click elsewhere */
+              if (scrPopupWin)
+                {
+                  HWND win;
+                  win = GetFocus ();
 		  
-		  if (win != scrPopupWin && GetParent (win) != scrPopupWin)
-		    {
-		      scrPopupWin = NULL;
-		      DestroyWindow (hwnDlg);
-		      return 0;
-		    }
-		}
-	      break;
-	    }
-	}
+                  if (win != scrPopupWin && GetParent (win) != scrPopupWin)
+                    {
+                      scrPopupWin = NULL;
+                      DestroyWindow (hwnDlg);
+                      return 0;
+                    }
+                }
+              break;
+            }
+        }
       break;
     }
   return (DefWindowProc (hwnDlg, msg, wParam, lParam));
 }
 
 /*----------------------------------------------------------------------
-   Callback for menu buttons (Windows)
+  Callback for menu buttons (Windows)
   ----------------------------------------------------------------------*/
 void WIN_ThotCallBack (HWND hWnd, WPARAM wParam, LPARAM lParam)
 {
-   struct Cat_Context *catalogue;
-   struct Cat_Context *nearest;
-   int                 i;
-   int                 frame;
-   int                 ref;
-   ThotBool            found;
+  struct Cat_Context *catalogue;
+  struct Cat_Context *nearest;
+  int                 i;
+  int                 frame;
+  int                 ref;
+  ThotBool            found;
 
 #ifdef AMAYA_DEBUG
-   fprintf (stderr, "Got WIN_ThotCallBack(%X, %X(%d:%d), %X(%d))\n",
-	    hWnd, wParam, HIWORD (wParam), LOWORD (wParam), lParam, lParam);
+  fprintf (stderr, "Got WIN_ThotCallBack(%X, %X(%d:%d), %X(%d))\n",
+           hWnd, wParam, HIWORD (wParam), LOWORD (wParam), lParam, lParam);
 #endif /* AMAYA_DEBUG */
-   frame = GetMainFrameNumber (hWnd);
-   if (frame > 0 && frame <= MAX_FRAME)
-   {
-     nearest = NULL;
-     ref = LOWORD (wParam);
-     if (ref == 0)
-       return;
-     i = 0;
-     found = FALSE;
-     while (!found && i < MAX_FRAMECAT && FrameCatList[frame].Cat_Table[i])
-       {
-	 catalogue = FrameCatList[frame].Cat_Table[i];
-	 if (catalogue)
-	   {
-	     if (catalogue->Cat_Ref == ref)
-	       found = TRUE;
-	     else if (nearest == NULL)
-	       nearest = catalogue;
-	     else if (ref >= catalogue->Cat_Ref &&
-		      ref - catalogue->Cat_Ref < ref - nearest->Cat_Ref)
-	       nearest = catalogue;
-	   }
-	 i++;
-       }
-     if (!found)
-       catalogue = nearest;
-     if (catalogue == NULL)
-       return;
-     ref = ref - catalogue->Cat_Ref;
-     switch (catalogue->Cat_Type)
-       {
-       case CAT_PULL:
-       case CAT_MENU:
-       case CAT_POPUP:
-       case CAT_SCRPOPUP:
-	 CallMenu ((ThotWidget)ref, catalogue, NULL);
-	 break;
-       case CAT_TMENU:
-	 CallToggle ((ThotWidget)ref, catalogue, NULL);
-	 break;
-       case CAT_SHEET:
-       case CAT_FMENU:
-	 CallRadio ((ThotWidget)ref, catalogue, NULL);
-	 break;
-       default:
-	 break;
-       }
-   }
+  frame = GetMainFrameNumber (hWnd);
+  if (frame > 0 && frame <= MAX_FRAME)
+    {
+      nearest = NULL;
+      ref = LOWORD (wParam);
+      if (ref == 0)
+        return;
+      i = 0;
+      found = FALSE;
+      while (!found && i < MAX_FRAMECAT && FrameCatList[frame].Cat_Table[i])
+        {
+          catalogue = FrameCatList[frame].Cat_Table[i];
+          if (catalogue)
+            {
+              if (catalogue->Cat_Ref == ref)
+                found = TRUE;
+              else if (nearest == NULL)
+                nearest = catalogue;
+              else if (ref >= catalogue->Cat_Ref &&
+                       ref - catalogue->Cat_Ref < ref - nearest->Cat_Ref)
+                nearest = catalogue;
+            }
+          i++;
+        }
+      if (!found)
+        catalogue = nearest;
+      if (catalogue == NULL)
+        return;
+      ref = ref - catalogue->Cat_Ref;
+      switch (catalogue->Cat_Type)
+        {
+        case CAT_PULL:
+        case CAT_MENU:
+        case CAT_POPUP:
+        case CAT_SCRPOPUP:
+          CallMenu ((ThotWidget)ref, catalogue, NULL);
+          break;
+        case CAT_TMENU:
+          CallToggle ((ThotWidget)ref, catalogue, NULL);
+          break;
+        case CAT_SHEET:
+        case CAT_FMENU:
+          CallRadio ((ThotWidget)ref, catalogue, NULL);
+          break;
+        default:
+          break;
+        }
+    }
 }
 #endif /* _WINGUI */
 
@@ -938,7 +938,7 @@ ThotBool CallPopGTK (GtkWidget *w, struct Cat_Context *catalogue)
   Callback for a scrolled window (button press)
   ----------------------------------------------------------------------*/
 ThotBool scr_popup_button_press (GtkWidget *w, GdkEventButton *ev, 
-				 struct Cat_Context *catalogue)
+                                 struct Cat_Context *catalogue)
 { 
   return CallPopGTK (w, catalogue);
 }
@@ -947,7 +947,7 @@ ThotBool scr_popup_button_press (GtkWidget *w, GdkEventButton *ev,
   Callback for a scrolled window (keypress)
   ----------------------------------------------------------------------*/
 ThotBool scr_popup_key_press (GtkWidget *w, GdkEventKey *ev,
-			      struct Cat_Context *catalogue)
+                              struct Cat_Context *catalogue)
 {
   if (ev->keyval == GDK_Escape) 
     {
@@ -965,7 +965,7 @@ ThotBool scr_popup_key_press (GtkWidget *w, GdkEventKey *ev,
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 ThotBool ListEventGTK (GtkWidget *w, GdkEventButton *ev, 
-		       struct Cat_Context *catalogue)
+                       struct Cat_Context *catalogue)
 {
   int x,y;
 
@@ -973,13 +973,13 @@ ThotBool ListEventGTK (GtkWidget *w, GdkEventButton *ev,
     {
     case GDK_BUTTON_RELEASE:
       {
-	x = (int) ev->x;
-	y = (int) ev->y;
-	if (x < w->allocation.x || 
-	      x > w->allocation.x + w->allocation.width ||
-	      y > w->allocation.y + w->allocation.height ||
-	      y < w->allocation.y)
-	  formKillGTK (w, NULL, catalogue);
+        x = (int) ev->x;
+        y = (int) ev->y;
+        if (x < w->allocation.x || 
+            x > w->allocation.x + w->allocation.width ||
+            y > w->allocation.y + w->allocation.height ||
+            y < w->allocation.y)
+          formKillGTK (w, NULL, catalogue);
       }
       return TRUE;
     case GDK_LEAVE_NOTIFY:
@@ -992,7 +992,7 @@ ThotBool ListEventGTK (GtkWidget *w, GdkEventButton *ev,
 }
 
 /*----------------------------------------------------------------------
- New input value.
+  New input value.
   ----------------------------------------------------------------------*/
 void CallValueSet (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
 {
@@ -1008,41 +1008,41 @@ void CallValueSet (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
       strncpy (text, gtk_entry_get_text (GTK_ENTRY (wtext)), 10);
       text[10] = EOS;
       if (text[0] != EOS)
-	{
-	  if (text[0] == '-' && text[1] == EOS)
-	    /* cas ou le caractere - a ete tape, on met val a 0 */
-	    val = 0;
-	  else
-	    sscanf (text, "%ld", &val);
-	  /* Est-ce une valeur valide ? */
-	  if (val < (intptr_t) catalogue->Cat_Entries->E_ThotWidget[2])
-	    val1 = (intptr_t) catalogue->Cat_Entries->E_ThotWidget[2];
-	  else if (val > (intptr_t) catalogue->Cat_Entries->E_ThotWidget[3])
-	    val1 = (intptr_t) catalogue->Cat_Entries->E_ThotWidget[3];
-	  else
-	    val1 = val;	/* valeur inchangee */
+        {
+          if (text[0] == '-' && text[1] == EOS)
+            /* cas ou le caractere - a ete tape, on met val a 0 */
+            val = 0;
+          else
+            sscanf (text, "%ld", &val);
+          /* Est-ce une valeur valide ? */
+          if (val < (intptr_t) catalogue->Cat_Entries->E_ThotWidget[2])
+            val1 = (intptr_t) catalogue->Cat_Entries->E_ThotWidget[2];
+          else if (val > (intptr_t) catalogue->Cat_Entries->E_ThotWidget[3])
+            val1 = (intptr_t) catalogue->Cat_Entries->E_ThotWidget[3];
+          else
+            val1 = val;	/* valeur inchangee */
 	  
-	  /* Est-ce qu'il faut changer le contenu du widget ? */
-	  if (val != val1)
-	    {
-	      sprintf (text, "%ld", val1);
-	      /* Desactive la procedure de Callback */
-	      if (catalogue->Cat_React)
-		RemoveSignalGTK (GTK_OBJECT(wtext), "changed"); 
-	      gtk_entry_set_text (GTK_ENTRY (wtext), text);
-	      val = strlen (text);
-	      /* Reactive la procedure de Callback */
-	      if (catalogue->Cat_React)
-		ConnectSignalGTK (GTK_OBJECT(wtext), "changed",
-				  GTK_SIGNAL_FUNC(CallValueSet), (gpointer)catalogue);
-	    }
-	  /* retourne la valeur saisie si la feuille de saisie est reactive */
-	  if (catalogue->Cat_React)
-	    (*(Proc3)CallbackDialogueProc) (
-			(void *)catalogue->Cat_Ref,
-			(void *)INTEGER_DATA,
-			(void *)val);
-	}
+          /* Est-ce qu'il faut changer le contenu du widget ? */
+          if (val != val1)
+            {
+              sprintf (text, "%ld", val1);
+              /* Desactive la procedure de Callback */
+              if (catalogue->Cat_React)
+                RemoveSignalGTK (GTK_OBJECT(wtext), "changed"); 
+              gtk_entry_set_text (GTK_ENTRY (wtext), text);
+              val = strlen (text);
+              /* Reactive la procedure de Callback */
+              if (catalogue->Cat_React)
+                ConnectSignalGTK (GTK_OBJECT(wtext), "changed",
+                                  GTK_SIGNAL_FUNC(CallValueSet), (gpointer)catalogue);
+            }
+          /* retourne la valeur saisie si la feuille de saisie est reactive */
+          if (catalogue->Cat_React)
+            (*(Proc3)CallbackDialogueProc) (
+                                            (void *)catalogue->Cat_Ref,
+                                            (void *)INTEGER_DATA,
+                                            (void *)val);
+        }
     }
 }
 
@@ -1066,26 +1066,26 @@ void ReturnTogglevalues (struct Cat_Context *catalogue)
       max = catalogue->Cat_Data;	/* nombre d'entrees definies */
       i = 2;			/* decalage de 2 pour le widget titre */
       while (adbloc)
-	{
-	  while (i < C_NUMBER && ent < max)
-	    {
-	      /*** Retour les entrees selectionnees vers l'application ***/
-	      if (adbloc->E_Free[i] == 'Y')
-		{
-		  (*(Proc3)CallbackDialogueProc) (
-			(void *)catalogue->Cat_Ref,
-			(void *)INTEGER_DATA,
-			(void *)index);
-		  adbloc->E_Free[i] = 'N';
-		}
-	      i++;
-	      ent++;
-	      index++;
-	    }
-	  /* next block */
-	  adbloc = adbloc->E_Next;
-	  i = 0;
-	}
+        {
+          while (i < C_NUMBER && ent < max)
+            {
+              /*** Retour les entrees selectionnees vers l'application ***/
+              if (adbloc->E_Free[i] == 'Y')
+                {
+                  (*(Proc3)CallbackDialogueProc) (
+                                                  (void *)catalogue->Cat_Ref,
+                                                  (void *)INTEGER_DATA,
+                                                  (void *)index);
+                  adbloc->E_Free[i] = 'N';
+                }
+              i++;
+              ent++;
+              index++;
+            }
+          /* next block */
+          adbloc = adbloc->E_Next;
+          i = 0;
+        }
     }
 }
 
@@ -1093,7 +1093,7 @@ void ReturnTogglevalues (struct Cat_Context *catalogue)
   ReturnSheet handles a sheet callback.          
   ----------------------------------------------------------------------*/
 void ReturnSheet (struct Cat_Context *parentCatalogue, int entry,
-		  struct E_List *adbloc)
+                  struct E_List *adbloc)
 {
   ThotWidget          tmpw;
   gchar              *wtext;
@@ -1112,86 +1112,86 @@ void ReturnSheet (struct Cat_Context *parentCatalogue, int entry,
     {
       /* Il faut sauter les widgets des RowColumns */
       if (adbloc->E_Free[ent] == 'N')
-	{
-	  catalogue = (struct Cat_Context *) adbloc->E_ThotWidget[ent];
-	  if (catalogue->Cat_Widget)
-	    {
-	      if (entry == 0)
-		  gtk_widget_hide (GTK_WIDGET(catalogue->Cat_Widget));
-	      /* Sinon il faut retourner la valeur du sous-catalogue */
-	      else
-		{
-		  if (catalogue->Cat_React)
-		    ; /* value already returned */
-		  else if (catalogue->Cat_Type == CAT_FMENU)
-		    {
-		      i = catalogue->Cat_Data; /* a sub-menu */
-		      (*(Proc3)CallbackDialogueProc) (
-				(void *)catalogue->Cat_Ref,
-				(void *)INTEGER_DATA,
-				(void *)i);
-		    }
-		  else if (catalogue->Cat_Type == CAT_TMENU)
-		    ReturnTogglevalues (catalogue); /* a toggle */
-		  else if (catalogue->Cat_Type == CAT_INT) /* a number */
-		    {
-		      CallValueSet (catalogue->Cat_Entries->E_ThotWidget[1], catalogue, NULL);
-		      strncpy (text, gtk_entry_get_text(GTK_ENTRY(catalogue->Cat_Entries->E_ThotWidget[1])), 10);
-		      text[10] = EOS;
-		      if (text[0] != EOS)
-			sscanf (text, "%d", &i);
-		      else
-			i = 0;
-		      (*(Proc3)CallbackDialogueProc) (
-				(void *)catalogue->Cat_Ref,
-			       	(void *)INTEGER_DATA,
-				(void *)i);
-		    }
-		  else if (catalogue->Cat_Type == CAT_TEXT)
-		    {
-		      (*(Proc3)CallbackDialogueProc) (
-				(void *)catalogue->Cat_Ref,
-				(void *)STRING_DATA,
-				(void *)gtk_entry_get_text(GTK_ENTRY(catalogue->Cat_Entries)));
-		    }
-		  else if (catalogue->Cat_Type == CAT_SELECT)
-		    {
-		      if (catalogue->Cat_SelectList)
-			{
-			  tmpw = GTK_WIDGET(catalogue->Cat_Entries);
-			  if(GTK_LIST(tmpw)->selection)
-			    {
-			      gtk_label_get(GTK_LABEL(gtk_object_get_data(GTK_OBJECT(GTK_LIST(tmpw)->selection->data), "ListElementLabel")),&ptr);
-			      (*(Proc3)CallbackDialogueProc) (
-					(void *)catalogue->Cat_Ref,
-				       	(void *)STRING_DATA,
-					(void *)ptr);
-			    }
-			}
-		      else
-			{
-			  tmpw = GTK_WIDGET(catalogue->Cat_Entries);
-			  tmpw = GTK_WIDGET (gtk_object_get_data (GTK_OBJECT (tmpw), "EntryZone"));
-			  wtext = gtk_entry_get_text (GTK_ENTRY (tmpw));
-			  (*(Proc3)CallbackDialogueProc) (
-				(void *)catalogue->Cat_Ref,
-				(void *)STRING_DATA,
-				(void *)wtext);
-			}
-		    }
-		}
-	    }
-	}
+        {
+          catalogue = (struct Cat_Context *) adbloc->E_ThotWidget[ent];
+          if (catalogue->Cat_Widget)
+            {
+              if (entry == 0)
+                gtk_widget_hide (GTK_WIDGET(catalogue->Cat_Widget));
+              /* Sinon il faut retourner la valeur du sous-catalogue */
+              else
+                {
+                  if (catalogue->Cat_React)
+                    ; /* value already returned */
+                  else if (catalogue->Cat_Type == CAT_FMENU)
+                    {
+                      i = catalogue->Cat_Data; /* a sub-menu */
+                      (*(Proc3)CallbackDialogueProc) (
+                                                      (void *)catalogue->Cat_Ref,
+                                                      (void *)INTEGER_DATA,
+                                                      (void *)i);
+                    }
+                  else if (catalogue->Cat_Type == CAT_TMENU)
+                    ReturnTogglevalues (catalogue); /* a toggle */
+                  else if (catalogue->Cat_Type == CAT_INT) /* a number */
+                    {
+                      CallValueSet (catalogue->Cat_Entries->E_ThotWidget[1], catalogue, NULL);
+                      strncpy (text, gtk_entry_get_text(GTK_ENTRY(catalogue->Cat_Entries->E_ThotWidget[1])), 10);
+                      text[10] = EOS;
+                      if (text[0] != EOS)
+                        sscanf (text, "%d", &i);
+                      else
+                        i = 0;
+                      (*(Proc3)CallbackDialogueProc) (
+                                                      (void *)catalogue->Cat_Ref,
+                                                      (void *)INTEGER_DATA,
+                                                      (void *)i);
+                    }
+                  else if (catalogue->Cat_Type == CAT_TEXT)
+                    {
+                      (*(Proc3)CallbackDialogueProc) (
+                                                      (void *)catalogue->Cat_Ref,
+                                                      (void *)STRING_DATA,
+                                                      (void *)gtk_entry_get_text(GTK_ENTRY(catalogue->Cat_Entries)));
+                    }
+                  else if (catalogue->Cat_Type == CAT_SELECT)
+                    {
+                      if (catalogue->Cat_SelectList)
+                        {
+                          tmpw = GTK_WIDGET(catalogue->Cat_Entries);
+                          if(GTK_LIST(tmpw)->selection)
+                            {
+                              gtk_label_get(GTK_LABEL(gtk_object_get_data(GTK_OBJECT(GTK_LIST(tmpw)->selection->data), "ListElementLabel")),&ptr);
+                              (*(Proc3)CallbackDialogueProc) (
+                                                              (void *)catalogue->Cat_Ref,
+                                                              (void *)STRING_DATA,
+                                                              (void *)ptr);
+                            }
+                        }
+                      else
+                        {
+                          tmpw = GTK_WIDGET(catalogue->Cat_Entries);
+                          tmpw = GTK_WIDGET (gtk_object_get_data (GTK_OBJECT (tmpw), "EntryZone"));
+                          wtext = gtk_entry_get_text (GTK_ENTRY (tmpw));
+                          (*(Proc3)CallbackDialogueProc) (
+                                                          (void *)catalogue->Cat_Ref,
+                                                          (void *)STRING_DATA,
+                                                          (void *)wtext);
+                        }
+                    }
+                }
+            }
+        }
       ent++;
       if (ent >= C_NUMBER)
-	{
-	  /* next block */
-	  ent = 0;
-	  if (adbloc->E_Next == NULL)
-	    break;
-	  else
-	    adbloc = adbloc->E_Next;
-	}
+        {
+          /* next block */
+          ent = 0;
+          if (adbloc->E_Next == NULL)
+            break;
+          else
+            adbloc = adbloc->E_Next;
+        }
     }
   /*** On fait disparaitre le formulaire ***/
   if (entry == 0 || parentCatalogue->Cat_Type == CAT_DIALOG || parentCatalogue->Cat_Type == CAT_FORM)
@@ -1200,18 +1200,18 @@ void ReturnSheet (struct Cat_Context *parentCatalogue, int entry,
       /* Si on en a fini avec la feuille de dialogue */
       catalogue = parentCatalogue;
       while (catalogue->Cat_PtParent)
-	catalogue = catalogue->Cat_PtParent;
+        catalogue = catalogue->Cat_PtParent;
       if (catalogue == ShowCat && ShowReturn == 1)
-	ShowReturn = 0;
+        ShowReturn = 0;
     }
   (*(Proc3)CallbackDialogueProc) (
-		(void *)parentCatalogue->Cat_Ref,
-		(void *)INTEGER_DATA,
-		(void *)entry);
+                                  (void *)parentCatalogue->Cat_Ref,
+                                  (void *)INTEGER_DATA,
+                                  (void *)entry);
 }
 
 /*----------------------------------------------------------------------
-   CallbackSheet: a button was clicked.                                              
+  CallbackSheet: a button was clicked.                                              
   ----------------------------------------------------------------------*/
 gboolean CallSheetGTK (ThotWidget w, struct Cat_Context *catalogue)
 {
@@ -1226,19 +1226,19 @@ gboolean CallSheetGTK (ThotWidget w, struct Cat_Context *catalogue)
       entry = -1;
       i = 0;
       while (entry == -1 && i < C_NUMBER)
-	{
-	  if (adbloc->E_ThotWidget[i] == w)
-	    entry = i;
-	  i++;
-	}
+        {
+          if (adbloc->E_ThotWidget[i] == w)
+            entry = i;
+          i++;
+        }
       /* Si la feuille de dialogue est detruite cela force l'abandon */
       if (entry == -1)
-	entry = catalogue->Cat_Default;
+        entry = catalogue->Cat_Default;
       if (entry != -1)
-	{
-	  ReturnSheet (catalogue, entry, adbloc);
-	  return TRUE;
-	}
+        {
+          ReturnSheet (catalogue, entry, adbloc);
+          return TRUE;
+        }
     }
   return FALSE;
 }
@@ -1248,38 +1248,38 @@ gboolean CallSheetGTK (ThotWidget w, struct Cat_Context *catalogue)
   ----------------------------------------------------------------------*/
 ThotBool CallListGTK (ThotWidget w, struct Cat_Context *catalogue)
 {
-   gchar              *text = NULL;
-   ThotWidget         tmpw;
+  gchar              *text = NULL;
+  ThotWidget         tmpw;
 
-   if (catalogue->Cat_Widget && catalogue->Cat_Type == CAT_SELECT)
-     {
-       /* when you select an element in a selector box */
-       tmpw = GTK_WIDGET (catalogue->Cat_Entries);
-       if (catalogue->Cat_SelectList)
-	 {
-	   /* just a simple list */
-	   if (GTK_LIST(tmpw)->selection)
-	     {
-	       gtk_label_get(GTK_LABEL(gtk_object_get_data (GTK_OBJECT (GTK_LIST(tmpw)->selection->data), "ListElementLabel")),&text);
-	       (*(Proc3)CallbackDialogueProc) (
-			(void *)catalogue->Cat_Ref,
-			(void *)STRING_DATA,
-			(void *)text);
-	     }
-	 }
-       else
-	 {
-	   /* a list and a text zone */
-	   /* just get the selected text and assigne it to the text zone data */
-	   if (GTK_LIST(tmpw)->selection)
-	     {
-	       gtk_label_get(GTK_LABEL(gtk_object_get_data(GTK_OBJECT(GTK_LIST(tmpw)->selection->data), "ListElementLabel")), &text);
-	       tmpw = GTK_WIDGET(gtk_object_get_data (GTK_OBJECT (tmpw), "EntryZone"));
-	       gtk_entry_set_text (GTK_ENTRY (tmpw), text);
-	     }	      
-	 }
-     }
-   return TRUE;   
+  if (catalogue->Cat_Widget && catalogue->Cat_Type == CAT_SELECT)
+    {
+      /* when you select an element in a selector box */
+      tmpw = GTK_WIDGET (catalogue->Cat_Entries);
+      if (catalogue->Cat_SelectList)
+        {
+          /* just a simple list */
+          if (GTK_LIST(tmpw)->selection)
+            {
+              gtk_label_get(GTK_LABEL(gtk_object_get_data (GTK_OBJECT (GTK_LIST(tmpw)->selection->data), "ListElementLabel")),&text);
+              (*(Proc3)CallbackDialogueProc) (
+                                              (void *)catalogue->Cat_Ref,
+                                              (void *)STRING_DATA,
+                                              (void *)text);
+            }
+        }
+      else
+        {
+          /* a list and a text zone */
+          /* just get the selected text and assigne it to the text zone data */
+          if (GTK_LIST(tmpw)->selection)
+            {
+              gtk_label_get(GTK_LABEL(gtk_object_get_data(GTK_OBJECT(GTK_LIST(tmpw)->selection->data), "ListElementLabel")), &text);
+              tmpw = GTK_WIDGET(gtk_object_get_data (GTK_OBJECT (tmpw), "EntryZone"));
+              gtk_entry_set_text (GTK_ENTRY (tmpw), text);
+            }	      
+        }
+    }
+  return TRUE;   
 }
 
 /*----------------------------------------------------------------------
@@ -1301,16 +1301,16 @@ gboolean CallTextEnterGTK (ThotWidget w, GdkEventButton *bu, gpointer data)
   if (bu->button == 1) 
     {
       if (bu->type == GDK_2BUTTON_PRESS) 
-	{ 
-	  while (catalogue->Cat_PtParent)
-	    catalogue = catalogue->Cat_PtParent;
-	  i = catalogue->Cat_Default;
-	  (*(Proc3)CallbackDialogueProc) (
-		(void *)catalogue->Cat_Ref,
-		(void *)INTEGER_DATA,
-		(void *)((char *)i));
-	  return TRUE;
-	}
+        { 
+          while (catalogue->Cat_PtParent)
+            catalogue = catalogue->Cat_PtParent;
+          i = catalogue->Cat_Default;
+          (*(Proc3)CallbackDialogueProc) (
+                                          (void *)catalogue->Cat_Ref,
+                                          (void *)INTEGER_DATA,
+                                          (void *)((char *)i));
+          return TRUE;
+        }
     }
   return FALSE;
 }
@@ -1320,32 +1320,32 @@ gboolean CallTextEnterGTK (ThotWidget w, GdkEventButton *bu, gpointer data)
   ----------------------------------------------------------------------*/
 ThotBool CallTextChangeGTK (ThotWidget w, struct Cat_Context *catalogue)
 {
-   char              *text = NULL;
+  char              *text = NULL;
     
-   if (catalogue->Cat_Widget)
-     {
+  if (catalogue->Cat_Widget)
+    {
       if (catalogue->Cat_Type == CAT_TEXT)
-	{
-	  if (GTK_IS_ENTRY (catalogue->Cat_Entries))
-	    text = gtk_entry_get_text (GTK_ENTRY (catalogue->Cat_Entries));
-	  else
-	    text = gtk_editable_get_chars (GTK_EDITABLE(catalogue->Cat_Entries), 0, -1);
-	  (*(Proc3)CallbackDialogueProc) (
-		(void *)catalogue->Cat_Ref,
-		(void *)STRING_DATA,
-		(void *)text);
-	}
+        {
+          if (GTK_IS_ENTRY (catalogue->Cat_Entries))
+            text = gtk_entry_get_text (GTK_ENTRY (catalogue->Cat_Entries));
+          else
+            text = gtk_editable_get_chars (GTK_EDITABLE(catalogue->Cat_Entries), 0, -1);
+          (*(Proc3)CallbackDialogueProc) (
+                                          (void *)catalogue->Cat_Ref,
+                                          (void *)STRING_DATA,
+                                          (void *)text);
+        }
       else if (catalogue->Cat_Type == CAT_SELECT)
-	{
-	  text = gtk_entry_get_text (GTK_ENTRY (w));
-	  (*(Proc3)CallbackDialogueProc) (
-		(void *)catalogue->Cat_Ref,
-		(void *)STRING_DATA,
-		(void *)text);
+        {
+          text = gtk_entry_get_text (GTK_ENTRY (w));
+          (*(Proc3)CallbackDialogueProc) (
+                                          (void *)catalogue->Cat_Ref,
+                                          (void *)STRING_DATA,
+                                          (void *)text);
 
-	}
-     }
-   return TRUE;
+        }
+    }
+  return TRUE;
 }
 
 /*----------------------------------------------------------------------
@@ -1353,17 +1353,17 @@ ThotBool CallTextChangeGTK (ThotWidget w, struct Cat_Context *catalogue)
   ----------------------------------------------------------------------*/
 ThotBool CallLabel (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
 {
-   gchar *str;
+  gchar *str;
 
-   if (catalogue->Cat_Widget)
-     {
-       gtk_label_get(GTK_LABEL(gtk_object_get_data (GTK_OBJECT(w),"ButtonLabel")),&str);
-       (*(Proc3)CallbackDialogueProc) (
-		(void *)catalogue->Cat_Ref,
-		(void *)STRING_DATA,
-		(void *)str);
-     }
-   return TRUE;
+  if (catalogue->Cat_Widget)
+    {
+      gtk_label_get(GTK_LABEL(gtk_object_get_data (GTK_OBJECT(w),"ButtonLabel")),&str);
+      (*(Proc3)CallbackDialogueProc) (
+                                      (void *)catalogue->Cat_Ref,
+                                      (void *)STRING_DATA,
+                                      (void *)str);
+    }
+  return TRUE;
 }
 
 /*----------------------------------------------------------------------
@@ -1371,7 +1371,7 @@ ThotBool CallLabel (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
   Callback function for the combo box
   ----------------------------------------------------------------------*/
 ThotBool ComboBoxGTK (ThotWidget w, struct Cat_Context *catalogue, 
-		      caddr_t call_d)
+                      caddr_t call_d)
 {
   char *val;
 
@@ -1382,18 +1382,18 @@ ThotBool ComboBoxGTK (ThotWidget w, struct Cat_Context *catalogue,
   
   if (catalogue->Cat_React)
     (*(Proc3)CallbackDialogueProc) (
-	(void *)catalogue->Cat_Ref,
-	(void *)STRING_DATA,
-	(void *)val);
+                                    (void *)catalogue->Cat_Ref,
+                                    (void *)STRING_DATA,
+                                    (void *)val);
   return FALSE;
 }
 #endif /* _GTK */
 
 /*----------------------------------------------------------------------
-   DefineCallbackDialog de'finit la proce'dure de traitement des      
-   retoursde catalogues dans l'application.                           
+  DefineCallbackDialog de'finit la proce'dure de traitement des      
+  retoursde catalogues dans l'application.                           
   ----------------------------------------------------------------------*/
 void TtaDefineDialogueCallback ( Proc procedure )
 {
-   CallbackDialogueProc = procedure;
+  CallbackDialogueProc = procedure;
 }

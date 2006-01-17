@@ -1265,7 +1265,6 @@ void SelectDestination (Document doc, Element el, ThotBool withUndo,
           TtaDestroyDialogue (BaseDialog + AttrHREFForm);
           TtaDestroyDialogue (BaseDialog + FileBrowserForm);
         }
-     
     }
    
   AttrHREFelement = el;
@@ -2710,7 +2709,7 @@ ThotBool ElementOKforProfile (Element el, Document doc)
   ElementType    elType;
   char           *name;
   AttributeType  attrType;
-  int            kind;
+  int            kind, profile;
   Attribute      attr, nextAttr;
   Element        child;
   ThotBool       ok, record;
@@ -2718,34 +2717,44 @@ ThotBool ElementOKforProfile (Element el, Document doc)
   ok = TRUE;
   /* handle only HTML elements */
   elType = TtaGetElementType (el);
+  profile = TtaGetDocumentProfile (doc);
   if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
-    /* it's an element from the HTML namespace */
-    if (TtaGetDocumentProfile (doc) != L_Other)
-      /* the document profile accepts only certain elements and attributes */
-      {
-        name = GetXMLElementName (elType, doc);
-        if (name == NULL || name[0] == EOS)
-          /* this element type is not acceptend in the document profile */
-          ok = FALSE;
-        else
-          /* the element type is OK for the profile */
-          {
-            /* check all attributes of the element */
-            attr = 0;
-            TtaNextAttribute (el, &attr);
-            while (attr)
-              {
-                nextAttr = attr;  TtaNextAttribute (el, &nextAttr);
-                TtaGiveAttributeType (attr, &attrType, &kind);
-                name = GetXMLAttributeName (attrType, elType, doc);
-                if (name == NULL || name[0] == EOS)
-                  /* this attribute is not valid for this element in the
-                     document profile. Delete it */
-                  TtaRemoveAttribute (el, attr, doc);
-                attr = nextAttr;
-              }
-          }
-      }
+    {
+      /* it's an element from the HTML namespace */
+      if (profile != L_Other)
+        /* the document profile accepts only certain elements and attributes */
+        {
+          name = GetXMLElementName (elType, doc);
+          if (name == NULL || name[0] == EOS)
+            /* this element type is not accepted in the document profile */
+            ok = FALSE;
+          else
+            /* the element type is OK for the profile */
+            {
+              /* check all attributes of the element */
+              attr = 0;
+              TtaNextAttribute (el, &attr);
+              while (attr)
+                {
+                  nextAttr = attr;  TtaNextAttribute (el, &nextAttr);
+                  TtaGiveAttributeType (attr, &attrType, &kind);
+                  name = GetXMLAttributeName (attrType, elType, doc);
+                  if (name == NULL || name[0] == EOS)
+                    /* this attribute is not valid for this element in the
+                       document profile. Delete it */
+                    TtaRemoveAttribute (el, attr, doc);
+                  attr = nextAttr;
+                }
+            }
+        }
+    }
+  else if (profile == L_Strict || profile == L_Basic)
+    {
+      /* cannot insert here */
+      ok =  FALSE;
+      TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_NOT_ALLOWED), NULL);
+    }
+
   if (!ok)
     /* The element type is not acceptend in the document profile.
        Delete the element but keep its children if they are allowed */
@@ -2820,8 +2829,9 @@ void RemoveTextAttributes (Element el, Document doc)
   while (attr);
 }
 
+
 /*----------------------------------------------------------------------
-  ElementPasted
+  CheckPastedElement
   This function is called for each element pasted by the user, and for
   each element within the pasted element.
   Check Pseudo paragraphs.
@@ -2829,11 +2839,13 @@ void RemoveTextAttributes (Element el, Document doc)
   NAME is already used in the document.
   If it's within the TITLE element, update the corresponding field in
   the Formatted window.
+  by_ref is TRUE if the pasted element comes from an inclusion reference
   ----------------------------------------------------------------------*/
-void ElementPasted (NotifyElement * event)
+void CheckPastedElement (Element el, Document doc, int info, int position,
+                         ThotBool by_ref)
 {
-  Document            originDocument, doc;
-  Element             el, anchor, child, previous, nextchild, parent, ancestor,
+  Document            originDocument;
+  Element             anchor, child, previous, nextchild, parent, ancestor,
     sibling;
   ElementType         elType;
   AttributeType       attrType;
@@ -2843,9 +2855,7 @@ void ElementPasted (NotifyElement * event)
   ThotBool            oldStructureChecking, ok;
   DisplayMode         dispMode;
 
-  el = event->element;
-  doc = event->document;
-  if (!ElementOKforProfile (el, doc))
+  if (!by_ref && !ElementOKforProfile (el, doc))
     return;
 
   /* Check pseudo-paragraphs */
@@ -2856,16 +2866,15 @@ void ElementPasted (NotifyElement * event)
      document referred by an <object> or <embed> element. In this case, there
      is no need to check IDs as the included document will never be changed
      nor saved */
-  if (event->elementType.ElTypeNum > 0)
+  elType = TtaGetElementType (el);
+  if (elType.ElTypeNum > 0)
     MakeUniqueName (el, doc, TRUE, TRUE);
 
-  elType = TtaGetElementType (el);
   name = TtaGetSSchemaName (elType.ElSSchema);
   anchor = NULL;
   if (!strcmp (name, "HTML"))
     {
-      if (event->info == 0 &&
-          elType.ElTypeNum == HTML_EL_Anchor)
+      if (info == 0 && elType.ElTypeNum == HTML_EL_Anchor)
         anchor = el;
       else if (elType.ElTypeNum == HTML_EL_LINK)
         {
@@ -2896,14 +2905,14 @@ void ElementPasted (NotifyElement * event)
                    !Document_state)
             {
               // The paste could come from undo of an input element
-              TtaSetDocumentUnmodified (event->document);
+              TtaSetDocumentUnmodified (doc);
               /* switch Amaya buttons and menus */
-              DocStatusUpdate (event->document, Document_state);
+              DocStatusUpdate (doc, Document_state);
             }
         }
       else if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
         {
-          originDocument = (Document) event->position;
+          originDocument = (Document) position;
           if (originDocument > 0)
             {
               /* remove USEMAP attribute */
@@ -3015,7 +3024,7 @@ void ElementPasted (NotifyElement * event)
           /* the anchor element is allowed here */
           /* Change attributes HREF if the element comes from another */
           /* document */
-          originDocument = (Document) event->position;
+          originDocument = (Document) position;
           if (originDocument >= 0 && originDocument != doc)
             {
               /* the anchor has moved from one document to another */
@@ -3033,6 +3042,23 @@ void ElementPasted (NotifyElement * event)
         TtaSetDisplayMode (doc, dispMode);
     }
 }
+
+/*----------------------------------------------------------------------
+  ElementPasted
+  This function is called for each element pasted by the user, and for
+  each element within the pasted element.
+  Check Pseudo paragraphs.
+  If the pasted element has a NAME attribute, change its value if this
+  NAME is already used in the document.
+  If it's within the TITLE element, update the corresponding field in
+  the Formatted window.
+  ----------------------------------------------------------------------*/
+void ElementPasted (NotifyElement * event)
+{
+  CheckPastedElement (event->element, event->document, event->info,
+                      event->position, FALSE);
+}
+
 
 /*----------------------------------------------------------------------
   CheckNewLines

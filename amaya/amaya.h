@@ -504,6 +504,7 @@ typedef struct _DocumentMetaDataElement
 
   ClickEvent method;           /* method used to send this data */
   ThotBool   xmlformat;        /* the document should be exported in xml format */
+  ThotBool   compound;        /* the document is a compound document */
 #ifdef ANNOTATIONS
   Document   source_doc;       /* if the document is an annotation,
 				  this variable giveso the annoted document

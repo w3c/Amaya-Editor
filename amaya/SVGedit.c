@@ -1027,6 +1027,22 @@ void CheckSVGRoot (Document doc, Element el)
 
 #ifdef _SVG
 /*----------------------------------------------------------------------
+  NewGraphElement
+  An element will be pasted
+  -----------------------------------------------------------------------*/
+ThotBool NewGraphElem (NotifyOnValue *event)
+{
+  int           profile;
+
+  // is it a compound document?
+  profile = TtaGetDocumentProfile (event->document);
+  if (profile == L_Strict || profile == L_Basic)
+    return TRUE;
+  else
+    return FALSE; /* let Thot perform normal operation */
+}
+
+/*----------------------------------------------------------------------
   GraphElemPasted
   An element has been pasted.
   If the element is an XLink, update the link.
@@ -1034,15 +1050,25 @@ void CheckSVGRoot (Document doc, Element el)
 void GraphElemPasted (NotifyElement *event)
 {
   ElementType    elType;
-  SSchema	 SvgSchema;
+  SSchema	       SvgSchema;
   AttributeType  attrType;
   Attribute      attr;
   Element        parent;
+  int            profile;
 
   XLinkPasted (event);
   /* check that the svg element includes that element */
   /*****  CheckSVGRoot (event->document, event->element); ****/
   SetGraphicDepths (event->document, event->element);
+
+  // it's a compound document
+  profile = TtaGetDocumentProfile (event->document);
+  if (DocumentTypes[event->document] == docMath ||
+      profile == L_Strict || profile == L_Basic)
+    return;
+  else if (DocumentTypes[event->document] != docSVG &&
+           DocumentMeta[event->document])
+    DocumentMeta[event->document]->compound = TRUE;
 
   /* Set the namespace declaration if it's an <svg> element that is not
      within an element belonging to the SVG namespace */
@@ -2061,6 +2087,7 @@ static void CallbackGraph (int ref, int typedata, char *data)
 {
   Document           doc;
   long int           val = (long int) data;
+  int                profile;
 
   ref -= GraphDialogue;
   if (ref == MenuGraph1)
@@ -2081,6 +2108,16 @@ static void CallbackGraph (int ref, int typedata, char *data)
       doc = TtaGetSelectedDocument ();
       if (doc > 0)
         {
+          // is it a compound document
+          profile = TtaGetDocumentProfile (doc);
+          if (profile == L_Strict || profile == L_Basic)
+            {
+              /* no selection. Nothing to do */
+              TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NOT_ALLOWED);
+              return;
+            }
+          else if (DocumentTypes[doc] != docSVG && DocumentMeta[doc])
+            DocumentMeta[doc]->compound = TRUE;
           /* there is a selection */
           if (val == 11)
             CreateGroup ();
@@ -2095,15 +2132,16 @@ static void CallbackGraph (int ref, int typedata, char *data)
 }
 
 #ifdef _GTK
-gboolean CloseSvgPalette (GtkWidget *widget,
-                          GdkEvent  *event,
-                          gpointer   data )
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+gboolean CloseSvgPalette (GtkWidget *widget, GdkEvent *event, gpointer data)
 {
   PaletteDisplayed = FALSE;
   TtaDestroyDialogue ((long int) data);
   return TRUE;
 }
 #endif /* _GTK */
+
 /*----------------------------------------------------------------------
   ShowGraphicsPalette displays the Graphics palette
   ----------------------------------------------------------------------*/

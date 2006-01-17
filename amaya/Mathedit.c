@@ -974,7 +974,7 @@ static void CreateMathConstruct (int construct)
   char              *name;
   Language           lang;
   DisplayMode        dispMode;
-  int                c1, i, len;
+  int                c1, i, len, profile;
   CHAR_T             text[2];
   ThotBool           oldStructureChecking;
   ThotBool	     before, ParBlock, emptySel, ok, insertSibling,
@@ -989,6 +989,15 @@ static void CreateMathConstruct (int construct)
     }
   if (!TtaGetDocumentAccessMode (doc))
     return;
+  profile = TtaGetDocumentProfile (doc);
+  if (profile == L_Strict || profile == L_Basic)
+    {
+      /* cannot insert here */
+      TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NOT_ALLOWED);
+      return;
+    }
+  else if (DocumentTypes[doc] != docMath && DocumentMeta[doc])
+    DocumentMeta[doc]->compound = TRUE;
   op = NULL;
   selected = NULL;
   docSchema = TtaGetDocumentSSchema (doc);
@@ -1749,6 +1758,9 @@ static void CreateMathConstruct (int construct)
 void MathElementCreated (NotifyElement *event)
 {
   InitializeNewConstruct (event->element, 2, 2, TRUE, event->document);
+  // it's a compound document
+  if (DocumentMeta[event->document])
+    DocumentMeta[event->document]->compound = TRUE;
 }
 
 /*----------------------------------------------------------------------
@@ -4423,6 +4435,26 @@ void NewMathString (NotifyElement *event)
 }
 
 /*----------------------------------------------------------------------
+  NewMathElement
+  An element will be pasted
+  -----------------------------------------------------------------------*/
+ThotBool NewMathElement (NotifyOnValue *event)
+{
+  int           profile;
+
+  // is it a compound document?
+  profile = TtaGetDocumentProfile (event->document);
+  if (profile == L_Strict || profile == L_Basic)
+    {
+      /* cannot insert here */
+      TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NOT_ALLOWED);
+      return TRUE;
+    }
+  else
+    return FALSE; /* let Thot perform normal operation */
+}
+
+/*----------------------------------------------------------------------
   MathElementPasted
   An element has been pasted in a MathML structure.
   Create placeholders before and after the pasted elements if necessary.
@@ -4431,49 +4463,58 @@ void NewMathString (NotifyElement *event)
   -----------------------------------------------------------------------*/
 void MathElementPasted (NotifyElement *event)
 {
-  Element	 placeholderEl, parent, prev, leaf;
-  ElementType	 elType, elTypeParent;
+  Element	      placeholderEl, parent, prev, leaf;
+  ElementType	  elType, elTypeParent;
   Attribute     attr;
   AttributeType attrType;
+  Document      doc;
+  int           profile;
   ThotBool      oldStructureChecking;
 
   /* if the pasted element is an XLink, update the link */
   XLinkPasted (event);
+  doc = event->document;
+  if (DocumentTypes[doc] != docMath)
+    {
+      profile = TtaGetDocumentProfile (doc);
+      if (DocumentMeta[doc])
+        DocumentMeta[doc]->compound = TRUE;
+    }
 
   elType = TtaGetElementType (event->element);
   if (elType.ElTypeNum == MathML_EL_MathML)
     {
       /* It is the <math> element */
       /* Set the IntDisplaystyle attribute according to the context */     
-      SetDisplaystyleMathElement (event->element, event->document);
-      leaf = AppendEmptyText (event->element, event->document);
+      SetDisplaystyleMathElement (event->element, doc);
+      leaf = AppendEmptyText (event->element, doc);
       if (leaf)
-        TtaRegisterElementCreate (leaf, event->document);
+        TtaRegisterElementCreate (leaf, doc);
       /* Set the MathML namespace declaration */
       TtaSetUriSSchema (elType.ElSSchema, MathML_URI);
-      TtaSetANamespaceDeclaration (event->document, event->element, NULL, MathML_URI);
+      TtaSetANamespaceDeclaration (doc, event->element, NULL, MathML_URI);
     }
 
   if (elType.ElTypeNum == MathML_EL_MUNDER ||
       elType.ElTypeNum == MathML_EL_MOVER ||
       elType.ElTypeNum == MathML_EL_MUNDEROVER)
     /* move the limits if it's appropriate */
-    SetIntMovelimitsAttr (event->element, event->document);
+    SetIntMovelimitsAttr (event->element, doc);
 
   if (elType.ElTypeNum == MathML_EL_MO)
     /* it's a mo element. It may be a fence separator or a largeop */
     {
-      CheckFence (event->element, event->document);
-      CheckLargeOp (event->element, event->document);
+      CheckFence (event->element, doc);
+      CheckLargeOp (event->element, doc);
     }
 
-  oldStructureChecking = TtaGetStructureChecking (event->document);
-  TtaSetStructureChecking (FALSE, event->document);
+  oldStructureChecking = TtaGetStructureChecking (doc);
+  TtaSetStructureChecking (FALSE, doc);
 
   /* if an enclosing MROW element is needed create it, except if it's a
      call from Undo command */
   if (event->info != 1)
-    CreateParentMROW (event->element, event->document);
+    CreateParentMROW (event->element, doc);
 
   /* if the pasted element is a child of a FencedExpression element,
      create the associated FencedSeparator elements */
@@ -4481,7 +4522,7 @@ void MathElementPasted (NotifyElement *event)
   elTypeParent = TtaGetElementType (parent);
   if (elTypeParent.ElTypeNum == MathML_EL_FencedExpression &&
       strcmp (TtaGetSSchemaName (elTypeParent.ElSSchema), "MathML") == 0)
-    RegenerateFencedSeparators (parent, event->document, FALSE/******/);
+    RegenerateFencedSeparators (parent, doc, FALSE/******/);
 
   /* if the pasted element is a character string within a MI, MN, or MO
      element, parse the new content to isolate identifiers, numbers and
@@ -4489,21 +4530,21 @@ void MathElementPasted (NotifyElement *event)
   if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
     {
       /* remove all attributes attached to the pasted MathML_EL_TEXT_UNIT */
-      RemoveTextAttributes (event->element, event->document);
+      RemoveTextAttributes (event->element, doc);
       if ((elTypeParent.ElTypeNum == MathML_EL_MI ||
            elTypeParent.ElTypeNum == MathML_EL_MO ||
            elTypeParent.ElTypeNum == MathML_EL_MN) &&
           strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0)
         /* if it's a call from Undo command, don't do anything */
         if (event->info != 1)
-          ParseMathString (event->element, parent, event->document);
+          ParseMathString (event->element, parent, doc);
     }
   else
     {
       /* create placeholders before and/or after the new element */
-      placeholderEl = InsertPlaceholder (event->element, TRUE, event->document,
+      placeholderEl = InsertPlaceholder (event->element, TRUE, doc,
                                          FALSE/****/);
-      placeholderEl = InsertPlaceholder (event->element, FALSE, event->document,
+      placeholderEl = InsertPlaceholder (event->element, FALSE, doc,
                                          FALSE/****/);
       /* if the previous sibling is a Construct1, turn it into and
          ordinary placeholder */
@@ -4516,20 +4557,20 @@ void MathElementPasted (NotifyElement *event)
               attrType.AttrSSchema = elType.ElSSchema;
               attrType.AttrTypeNum = MathML_ATTR_IntPlaceholder;
               attr = TtaNewAttribute (attrType);
-              TtaAttachAttribute (prev, attr, event->document);
+              TtaAttachAttribute (prev, attr, doc);
               TtaSetAttributeValue (attr, MathML_ATTR_IntPlaceholder_VAL_yes_,
-                                    prev, event->document);
-              /*TtaRegisterElementReplace (prev, event->document);*/
-              TtaChangeTypeOfElement (prev, event->document, MathML_EL_Construct);
-              TtaRegisterElementTypeChange (prev, elType.ElTypeNum, event->document);
+                                    prev, doc);
+              /*TtaRegisterElementReplace (prev, doc);*/
+              TtaChangeTypeOfElement (prev, doc, MathML_EL_Construct);
+              TtaRegisterElementTypeChange (prev, elType.ElTypeNum, doc);
             }
         }
     }
 
-  TtaSetStructureChecking (oldStructureChecking, event->document);
+  TtaSetStructureChecking (oldStructureChecking, doc);
   /* Check attribute NAME or ID in order to make sure that its value */
   /* is unique in the document */
-  MakeUniqueName (event->element, event->document, TRUE, FALSE);
+  MakeUniqueName (event->element, doc, TRUE, FALSE);
 }
 
 

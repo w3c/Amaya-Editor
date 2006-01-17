@@ -374,6 +374,7 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile,
   DocumentMeta[doc]->initial_url = NULL;
   DocumentMeta[doc]->method = CE_ABSOLUTE;
   DocumentMeta[doc]->xmlformat = FALSE;
+  DocumentMeta[doc]->compound = FALSE;
   DocumentSource[doc] = 0;
 
   /* store the document profile */
@@ -404,6 +405,7 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile,
       /*-------------  New XHTML document ------------*/
       /* force the XML parsing */
       DocumentMeta[doc]->xmlformat = isXML;
+      DocumentMeta[doc]->compound = FALSE;
       TtaGetEnvBoolean ("ENABLE_XHTML_MIMETYPE", &xhtml_mimetype);
       if (xhtml_mimetype)
         DocumentMeta[doc]->content_type = TtaStrdup (AM_XHTML_MIME_TYPE);
@@ -527,6 +529,7 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile,
 
       /* force the XML parsing */
       DocumentMeta[doc]->xmlformat = TRUE;
+      DocumentMeta[doc]->compound = FALSE;
       /* Search the first Construct to set the initial selection */
       elType.ElTypeNum = MathML_EL_Construct;
       el = TtaSearchTypedElement (elType, SearchInTree, docEl);
@@ -576,6 +579,7 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile,
 
       /* force the XML parsing */
       DocumentMeta[doc]->xmlformat = TRUE;
+      DocumentMeta[doc]->compound = FALSE;
       /* Search the last element to set the initial selection */
       el = TtaGetLastLeaf (docEl);
       /* set the initial selection */
@@ -693,6 +697,7 @@ static void CreateOrChangeDoctype (Document doc, View view, int new_doctype,
           RestartParser (doc, tempdoc, tempdir, documentname, FALSE);
           TtaSetDocumentModified (doc);
         }
+      TtaSetDocumentUnupdated (doc);
     }
   else
     /* restore the document profile */
@@ -748,7 +753,7 @@ void AddDoctype (Document document, View view)
 
   DocumentType    docType;
   int             profile;
-  ThotBool	  useMathML, useSVG;
+  ThotBool	      useMathML, useSVG;
  
   HasNatures (document, &useMathML, &useSVG);
   profile =  L_Other;

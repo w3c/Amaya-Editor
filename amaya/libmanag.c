@@ -1144,6 +1144,7 @@ Document CreateNewLibraryFile (char *libUrl, char *libtitle)
   DocumentMeta[newLibraryDoc]->initial_url = NULL;
   DocumentMeta[newLibraryDoc]->method = CE_ABSOLUTE;
   DocumentMeta[newLibraryDoc]->xmlformat = FALSE;
+  DocumentMeta[newLibraryDoc]->compound = FALSE;
   DocumentSource[newLibraryDoc] = 0;
 
   /*
@@ -1165,6 +1166,7 @@ Document CreateNewLibraryFile (char *libUrl, char *libtitle)
   /* create the DOCTYPE element corresponding to the document's profile */
   /* force the XML parsing */
   DocumentMeta[newLibraryDoc]->xmlformat = TRUE;
+  DocumentMeta[newLibraryDoc]->compound = FALSE;
 
   elType = TtaGetElementType (docEl);
   attrType.AttrSSchema = elType.ElSSchema;
@@ -2329,6 +2331,7 @@ Document CreateNewSVGFileofSVGSelected (char *url)
       DocumentMeta[newSVGDoc]->method = CE_ABSOLUTE;
       /* force the XML parsing */
       DocumentMeta[newSVGDoc]->xmlformat = TRUE;
+      DocumentMeta[newSVGDoc]->xmlformat = FALSE;
 
       /* Set the document charset */
       TtaSetDocumentCharset (newSVGDoc, ISO_8859_1, FALSE);

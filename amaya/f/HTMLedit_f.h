@@ -66,6 +66,11 @@ extern ThotBool ElementOKforProfile ( Element el,
                                       Document doc );
 extern void RemoveTextAttributes ( Element el,
                                    Document doc );
+extern void CheckPastedElement ( Element el,
+                                 Document doc,
+                                 int info,
+                                 int position,
+                                 ThotBool by_ref );
 extern void ElementPasted ( NotifyElement * event );
 extern void CheckNewLines ( NotifyOnTarget *event );
 extern void CreateTarget ( Document doc,
@@ -198,6 +203,11 @@ extern ThotBool ElementOKforProfile ( Element el,
                                         Document doc );
 extern void RemoveTextAttributes ( Element el,
                                      Document doc );
+extern void CheckPastedElement ( Element el,
+                                   Document doc,
+                                   int info,
+                                   int position,
+                                   ThotBool by_ref );
 extern void ElementPasted ( NotifyElement * event );
 extern void CheckNewLines ( NotifyOnTarget *event );
 extern void CreateTarget ( Document doc,

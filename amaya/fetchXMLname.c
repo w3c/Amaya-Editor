@@ -203,19 +203,20 @@ void HasNatures (Document document, ThotBool *useMathML, ThotBool *useSVG)
   nature = NULL;
   *useMathML = FALSE;
   *useSVG = FALSE;
-  do
-    {
-      TtaNextNature (document, &nature);
-      if (nature)
-        {
-          ptr = TtaGetSSchemaName (nature);
-          if (!strcmp (ptr, "MathML"))
-            *useMathML = TRUE;
-          if (!strcmp (ptr, "SVG"))
-            *useSVG = TRUE;
-        }
-    }
-  while (nature);
+  if (DocumentMeta[document] && DocumentMeta[document]->compound)
+    do
+      {
+        TtaNextNature (document, &nature);
+        if (nature)
+          {
+            ptr = TtaGetSSchemaName (nature);
+            if (!strcmp (ptr, "MathML"))
+              *useMathML = TRUE;
+            if (!strcmp (ptr, "SVG"))
+              *useSVG = TRUE;
+          }
+      }
+    while (nature);
 }
 
 /*----------------------------------------------------------------------

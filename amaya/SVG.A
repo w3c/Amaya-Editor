@@ -5,6 +5,8 @@ DEFAULT
    ElemActivate.Pre -> DoubleClick;
    ElemClick.Pre -> SimpleClick;
    ElemRClick.Pre -> SimpleRClick;
+   ElemNew.Pre -> NewGraphElem;
+   ElemPaste.Pre -> NewGraphElem;
    ElemPaste.Post -> GraphElemPasted;
    AttrMenu.Pre -> GlobalSVGAttrInMenu;
    PRuleCreate.Pre -> GraphicsPRuleChange;
@@ -31,6 +33,7 @@ ELEMENTS
 	ElemNew.Post ->         SVGCreated;
 	ElemDelete.Pre ->       SVGWillBeDeleted;
 	ElemExport.Pre ->       CheckValidProfile;
+  ElemPaste.Post ->       ElementPasted;
 	END;
    title:
 	ElemTextModify.Post ->  TitleModified;

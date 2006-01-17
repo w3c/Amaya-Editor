@@ -2888,7 +2888,7 @@ void ShowSourceOfTimeline (Document document, View view)
           DocumentMeta[sourceDoc]->initial_url = NULL;
           DocumentMeta[sourceDoc]->method = CE_ABSOLUTE;
           DocumentMeta[sourceDoc]->xmlformat = FALSE;
-	
+          DocumentMeta[sourceDoc]->compound = FALSE;	
           if (non_sav)
             {
               DocumentMeta[document] = DocumentMetaDataAlloc ();
@@ -2896,6 +2896,7 @@ void ShowSourceOfTimeline (Document document, View view)
               DocumentMeta[document]->initial_url = NULL;
               DocumentMeta[document]->method = CE_ABSOLUTE;
               DocumentMeta[document]->xmlformat = FALSE;
+              DocumentMeta[document]->compound = FALSE;
             }
 	 
           if (DocumentMeta[document]->content_type)

@@ -927,18 +927,15 @@ void UpdateURLsInSubtree (NotifyElement *event, Element el)
   if (HTMLschema)
     {
       elType.ElSSchema = HTMLschema;
-      while (nextEl != NULL)
+      while (nextEl)
         {
-          event->element = nextEl;
-          ElementPasted (event);
-	  
+          CheckPastedElement (nextEl, event->document, 0, event->position, TRUE);
           /* manage included links and anchors */
           elType.ElTypeNum = HTML_EL_Anchor;
           child = TtaSearchTypedElement (elType, SearchInTree, nextEl);
           while (child)
             {
-              event->element = child;
-              ElementPasted (event);
+              CheckPastedElement (child, event->document, 0, event->position, TRUE);
               child = TtaSearchTypedElementInTree (elType, SearchForward, nextEl, child);
             }
 	  
@@ -947,8 +944,7 @@ void UpdateURLsInSubtree (NotifyElement *event, Element el)
           child = TtaSearchTypedElement (elType, SearchInTree, nextEl);
           while (child)
             {
-              event->element = child;
-              ElementPasted (event);
+              CheckPastedElement (child, event->document, 0, event->position, TRUE);
               child = TtaSearchTypedElementInTree (elType, SearchForward, nextEl, child);
             }
           TtaNextSibling (&nextEl);

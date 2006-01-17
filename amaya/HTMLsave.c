@@ -1017,28 +1017,29 @@ void SetNamespacesAndDTD (Document doc)
       root = TtaGetRootElement (doc);
    
   /* Look for all natures used in the document */
-  do
-    {
-      TtaNextNature (doc, &nature);
-      if (nature)
-        {
-          /* A nature is found, is it used ? */
-          elFound = TtaSearchElementBySchema (nature, root);
-          if (elFound != NULL)
-            {
-              ptr = TtaGetSSchemaName (nature);
-              if (!strcmp (ptr, "MathML"))
-                useMathML = TRUE;
-              else if (!strcmp (ptr, "SVG"))
-                useSVG = TRUE;
-              else if (!strcmp (ptr, "XML"))
-                useXML = TRUE;
-              else if (!strcmp (ptr, "HTML"))
-                useHTML = TRUE;
-            }
-        }
-    }
-  while (nature);
+  if (DocumentMeta[doc] && DocumentMeta[doc]->compound)
+    do
+      {
+        TtaNextNature (doc, &nature);
+        if (nature)
+          {
+            /* A nature is found, is it used ? */
+            elFound = TtaSearchElementBySchema (nature, root);
+            if (elFound != NULL)
+              {
+                ptr = TtaGetSSchemaName (nature);
+                if (!strcmp (ptr, "MathML"))
+                  useMathML = TRUE;
+                else if (!strcmp (ptr, "SVG"))
+                  useSVG = TRUE;
+                else if (!strcmp (ptr, "XML"))
+                  useXML = TRUE;
+                else if (!strcmp (ptr, "HTML"))
+                  useHTML = TRUE;
+              }
+          }
+      }
+    while (nature);
    
   docEl = TtaGetMainRoot (doc);
   /* a PI is generated when the XHTML document includes math elements and
@@ -1522,6 +1523,7 @@ void RestartParser (Document doc, char *localFile,
         DocumentMeta[doc]->charset = TtaStrdup (charsetname);
     }
   
+  DocumentMeta[doc]->compound = FALSE;
   if (isXML || IsMathMLName (localFile) ||
       IsSVGName (localFile) || IsXMLName (localFile) ||
       DocumentTypes[doc] == docXml)
@@ -2298,8 +2300,11 @@ void DoSynchronize (Document doc, View view, NotifyElement *event)
           /* the other document is now different from the original file. It can
              be saved */
           if (modified)
-            //TtaSetItemOn (otherDoc, 1, File, BSave);
-            TtaSetDocumentModified (otherDoc);
+            {
+              TtaSetDocumentModified (otherDoc);
+              // but updated
+              TtaSetDocumentUnupdated (otherDoc);
+            }
 #ifdef ANNOTATIONS
           ANNOT_Reload (otherDoc, 1);
 #endif /* ANNOTATIONS */

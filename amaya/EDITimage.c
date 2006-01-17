@@ -1201,10 +1201,15 @@ void UpdateSRCattribute (NotifyOnTarget *event)
 #endif /* _WX */
   if (!CreateNewImage)
     {
-      if (newAttr)
-        TtaRegisterAttributeCreate (attr, elSRC, doc);
-      else
-        TtaRegisterAttributeReplace (attr, elSRC, doc);
+      attr = TtaGetAttribute (elSRC, attrType);
+      if (attr)
+        {
+          // check if the attribute is still there
+          if (newAttr)
+            TtaRegisterAttributeCreate (attr, elSRC, doc);
+          else
+            TtaRegisterAttributeReplace (attr, elSRC, doc);
+        }
     }
 }
 
