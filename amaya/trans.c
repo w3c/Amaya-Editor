@@ -862,6 +862,7 @@ static ThotBool StartFragmentParser (strMatchChildren * sMatch, Document doc)
    Language            language;
    char               *attrValue;
    int                 l;
+   DisplayMode         dispMode;
 
    res = TRUE;
    prevMatch = NULL;
@@ -937,6 +938,9 @@ static ThotBool StartFragmentParser (strMatchChildren * sMatch, Document doc)
 	  }
 	else
 	  language = TtaGetDefaultLanguage();
+  /* suspend abstract box construction */
+  dispMode = TtaGetDisplayMode (doc);
+  TtaSetDisplayMode (doc, SuspendDisplay);
 	/* Calling of the appropriate parser */
 	if (DocumentMeta[doc]->xmlformat)
 	  ParseXmlBuffer (bufHTML, myFirstSelect, isClosed, doc, language, NULL);
@@ -955,12 +959,13 @@ static ThotBool StartFragmentParser (strMatchChildren * sMatch, Document doc)
 	  }
 	TtaCloseUndoSequence (doc);
 	TtaSetStructureChecking (TRUE, doc);
-	typeEl.ElSSchema = TtaGetDocumentSSchema (doc);
-	typeEl.ElTypeNum = HTML_EL_Invalid_element;
-	invEl = NULL;
+  TtaSetDisplayMode (doc, dispMode);
 
 	/* checks if invalid elements have been generated */
 	/* (invalid transformation) */
+	typeEl.ElSSchema = TtaGetDocumentSSchema (doc);
+	typeEl.ElTypeNum = HTML_EL_Invalid_element;
+	invEl = NULL;
 	if (isClosed)
 	  {
 	     courEl = myFirstSelect;

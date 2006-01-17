@@ -942,215 +942,220 @@ static void         WritePosRule (PosRule posRule)
   ----------------------------------------------------------------------*/
 void                WritePRules (PtrPRule pPRule, PtrSSchema pSS)
 {
-   PtrPRule            currentRule;
-   PtrCondition        pCond;
-   DimensionRule      *pDim;
-   int                 i;
+  PtrPRule            currentRule;
+  PtrCondition        pCond;
+  DimensionRule      *pDim;
+  int                 i;
 
-   currentRule = pPRule;
-   while (currentRule != NULL)
-     {
-	WritePRuleType (currentRule->PrType);
-	WriteRulePtr (currentRule->PrNextPRule);
-	pCond = currentRule->PrCond;
-	while (pCond != NULL)
-	  {
-	     WritePresCondition (pCond->CoCondition);
-	     WriteBoolean (pCond->CoNotNegative);
-	     WriteBoolean (pCond->CoTarget);
-	     switch (pCond->CoCondition)
-		   {
-		      case PcEven:
-		      case PcOdd:
-		      case PcOne:
-			 WriteShort (pCond->CoCounter);
-			 break;
-		      case PcInterval:
-			 WriteShort (pCond->CoCounter);
-			 WriteSignedShort (pCond->CoMinCounter);
-			 WriteSignedShort (pCond->CoMaxCounter);
-			 WriteCounterValue (pCond->CoValCounter);
-			 break;
-		      case PcWithin:
-			 WriteBoolean (pCond->CoImmediate);
-			 WriteShort (pCond->CoRelation);
-			 WriteArithRel (pCond->CoAncestorRel);
-			 WriteSignedShort (pCond->CoTypeAncestor);
-			 if (pCond->CoTypeAncestor == 0)
-			   {
-			      WriteName (pCond->CoAncestorName);
-			      WriteName (pCond->CoSSchemaName);
-			   }
-			 break;
-		      case PcElemType:
-			 WriteSignedShort (pCond->CoTypeElem);
-			 break;
-		      case PcAttribute:
-		      case PcInheritAttribute:
-			 WriteSignedShort (pCond->CoTypeAttr);
-			 WriteBoolean (pCond->CoTestAttrValue);
-			 if (pCond->CoTestAttrValue)
-			   {
-			     if (pSS->SsAttribute->TtAttr[pCond->CoTypeAttr - 1]->AttrType == AtTextAttr)
-			       WriteName (pCond->CoAttrTextValue);
-			     else
-			       WriteSignedShort (pCond->CoAttrValue);
-			   }
-			 break;
-		      default:
-			 break;
-		   }
+  currentRule = pPRule;
+  while (currentRule != NULL)
+    {
+      WritePRuleType (currentRule->PrType);
+      WriteRulePtr (currentRule->PrNextPRule);
+      pCond = currentRule->PrCond;
+      while (pCond != NULL)
+        {
+          WritePresCondition (pCond->CoCondition);
+          WriteBoolean (pCond->CoNotNegative);
+          WriteBoolean (pCond->CoTarget);
+          switch (pCond->CoCondition)
+            {
+            case PcEven:
+            case PcOdd:
+            case PcOne:
+              WriteShort (pCond->CoCounter);
+              break;
+            case PcInterval:
+              WriteShort (pCond->CoCounter);
+              WriteSignedShort (pCond->CoMinCounter);
+              WriteSignedShort (pCond->CoMaxCounter);
+              WriteCounterValue (pCond->CoValCounter);
+              break;
+            case PcWithin:
+              WriteBoolean (pCond->CoImmediate);
+              WriteShort (pCond->CoRelation);
+              WriteArithRel (pCond->CoAncestorRel);
+              WriteSignedShort (pCond->CoTypeAncestor);
+              if (pCond->CoTypeAncestor == 0)
+                {
+                  WriteName (pCond->CoAncestorName);
+                  WriteName (pCond->CoSSchemaName);
+                }
+              break;
+            case PcElemType:
+              WriteSignedShort (pCond->CoTypeElem);
+              break;
+            case PcAttribute:
+            case PcInheritAttribute:
+              WriteSignedShort (pCond->CoTypeAttr);
+              WriteBoolean (pCond->CoTestAttrValue);
+              if (pCond->CoTestAttrValue)
+                {
+                  if (pSS->SsAttribute->TtAttr[pCond->CoTypeAttr - 1]->AttrType == AtTextAttr)
+                    WriteName (pCond->CoAttrTextValue);
+                  else
+                    WriteSignedShort (pCond->CoAttrValue);
+                }
+              break;
+            default:
+              break;
+            }
 	     pCond = pCond->CoNextCondition;
-	  }
-	WritePresCondition (PcNoCondition);
-	WriteShort (currentRule->PrViewNum);
-	WriteBoolean (currentRule->PrDuplicate);
-	WritePresMode (currentRule->PrPresMode);
-	switch (currentRule->PrPresMode)
+        }
+      WritePresCondition (PcNoCondition);
+      WriteShort (currentRule->PrViewNum);
+      WriteBoolean (currentRule->PrDuplicate);
+      WritePresMode (currentRule->PrPresMode);
+      switch (currentRule->PrPresMode)
 	      {
-		 case PresInherit:
-		    WriteInheritMode (currentRule->PrInheritMode);
-		    WriteBoolean (currentRule->PrInhPercent);
-		    WriteBoolean (currentRule->PrInhAttr);
-		    WriteSignedShort (currentRule->PrInhDelta);
-		    WriteBoolean (currentRule->PrMinMaxAttr);
-		    WriteSignedShort (currentRule->PrInhMinOrMax);
-		    WriteUnit (currentRule->PrInhUnit);
-		    break;
-		 case PresFunction:
-		    WriteFunctionType (currentRule->PrPresFunction,
-				       currentRule->PrPresBoxRepeat);
-		    if (currentRule->PrPresFunction != FnLine
-			&& currentRule->PrPresFunction != FnNoLine
-			&& currentRule->PrPresFunction != FnShowBox
-			&& currentRule->PrPresFunction != FnNotInLine)
-		      {
-			 WriteBoolean (currentRule->PrExternal);
-			 WriteBoolean (currentRule->PrElement);
-			 WriteShort (currentRule->PrNPresBoxes);
-			 if (currentRule->PrNPresBoxes == 0)
-			    WriteName (currentRule->PrPresBoxName);
-			 else
-			    for (i = 0; i < currentRule->PrNPresBoxes; i++)
-			       WriteShort (currentRule->PrPresBox[i]);
-		      }
-		    break;
-		 case PresImmediate:
-		    switch (currentRule->PrType)
-			  {
-			     case PtFunction:
-			     case PtVisibility:
-			     case PtDepth:
-			     case PtFillPattern:
-			     case PtBackground:
-			     case PtForeground:
-                             case PtBorderTopColor:
-                             case PtBorderRightColor:
-                             case PtBorderBottomColor:
-			     case PtBorderLeftColor:
-			     case PtOpacity:
-         		     case PtFillOpacity:
-			     case PtStrokeOpacity:
-			     case PtListStyleImage:
-				WriteBoolean (currentRule->PrAttrValue);
-				WriteSignedShort (currentRule->PrIntValue);
-				break;
-			     case PtFont:
-			     case PtStyle:
-			     case PtWeight:
-			     case PtUnderline:
-			     case PtThickness:
-			     case PtDirection:
-			     case PtUnicodeBidi:
-			     case PtLineStyle:
-			     case PtDisplay:
-			     case PtListStyleType:
-			     case PtListStylePosition:
-			     case PtFloat:
-			     case PtClear:
-			     case PtBorderTopStyle:
-			     case PtBorderRightStyle:
-			     case PtBorderBottomStyle:
-			     case PtBorderLeftStyle:
-				TtaWriteByte (outfile, currentRule->PrChrValue);
-				break;
-			     case PtBreak1:
-			     case PtBreak2:
-			     case PtIndent:
-			     case PtSize:
-			     case PtLineSpacing:
-			     case PtLineWeight:
-			     case PtMarginTop:
-			     case PtMarginRight:
-			     case PtMarginBottom:
-			     case PtMarginLeft:
-			     case PtPaddingTop:
-			     case PtPaddingRight:
-			     case PtPaddingBottom:
-			     case PtPaddingLeft:
-			     case PtBorderTopWidth:
-			     case PtBorderRightWidth:
-			     case PtBorderBottomWidth:
-			     case PtBorderLeftWidth:
-				WriteUnit (currentRule->PrMinUnit);
-				WriteBoolean (currentRule->PrMinAttr);
-				WriteSignedShort (currentRule->PrMinValue);
-				break;
-			     case PtVertRef:
-			     case PtHorizRef:
-			     case PtVertPos:
-			     case PtHorizPos:
-				WritePosRule (currentRule->PrPosRule);
-				break;
-			     case PtHeight:
-			     case PtWidth:
-				pDim = &currentRule->PrDimRule;
-				WriteBoolean (pDim->DrPosition);
-				if (pDim->DrPosition)
-				   WritePosRule (pDim->DrPosRule);
-				else
-				  {
-				     WriteBoolean (pDim->DrAbsolute);
-				     WriteBoolean (pDim->DrSameDimens);
-				     WriteUnit (pDim->DrUnit);
-				     WriteBoolean (pDim->DrAttr);
-				     WriteBoolean (pDim->DrMin);
-				     WriteBoolean (pDim->DrUserSpecified);
-				     WriteSignedShort (pDim->DrValue);
-				     WriteLevel (pDim->DrRelation);
-				     WriteBoolean (pDim->DrNotRelat);
-				     WriteRefKind (pDim->DrRefKind);
-				     WriteShort (pDim->DrRefIdent);
-				  }
-				break;
-			     case PtAdjust:
-				WriteAlignment (currentRule->PrAdjust);
-				break;
-			     case PtHyphenate:
-			     case PtVertOverflow:
-			     case PtHorizOverflow:
-			     case PtGather:
-			     case PtPageBreak:
-			     case PtLineBreak:
-				WriteBoolean (currentRule->PrBoolValue);
-				break;
-			     case PtPictInfo:
-			     case PtXRadius:
-			     case PtYRadius:
-				break;
-			  }
-
-		    break;
+        case PresInherit:
+          WriteInheritMode (currentRule->PrInheritMode);
+          WriteBoolean (currentRule->PrInhPercent);
+          WriteBoolean (currentRule->PrInhAttr);
+          WriteSignedShort (currentRule->PrInhDelta);
+          WriteBoolean (currentRule->PrMinMaxAttr);
+          WriteSignedShort (currentRule->PrInhMinOrMax);
+          WriteUnit (currentRule->PrInhUnit);
+          break;
+        case PresFunction:
+          WriteFunctionType (currentRule->PrPresFunction,
+                             currentRule->PrPresBoxRepeat);
+          if (currentRule->PrPresFunction != FnLine
+              && currentRule->PrPresFunction != FnNoLine
+              && currentRule->PrPresFunction != FnShowBox
+              && currentRule->PrPresFunction != FnNotInLine)
+            {
+              WriteBoolean (currentRule->PrExternal);
+              WriteBoolean (currentRule->PrElement);
+              WriteShort (currentRule->PrNPresBoxes);
+              if (currentRule->PrNPresBoxes == 0)
+                WriteName (currentRule->PrPresBoxName);
+              else
+                for (i = 0; i < currentRule->PrNPresBoxes; i++)
+                  WriteShort (currentRule->PrPresBox[i]);
+            }
+          break;
+        case PresImmediate:
+          switch (currentRule->PrType)
+            {
+            case PtFunction:
+            case PtVisibility:
+            case PtDepth:
+            case PtFillPattern:
+            case PtBackground:
+            case PtForeground:
+            case PtBorderTopColor:
+            case PtBorderRightColor:
+            case PtBorderBottomColor:
+            case PtBorderLeftColor:
+            case PtOpacity:
+            case PtFillOpacity:
+            case PtStrokeOpacity:
+            case PtListStyleImage:
+              WriteBoolean (currentRule->PrAttrValue);
+              WriteSignedShort (currentRule->PrIntValue);
+              break;
+            case PtFont:
+            case PtStyle:
+            case PtWeight:
+            case PtUnderline:
+            case PtThickness:
+            case PtDirection:
+            case PtUnicodeBidi:
+            case PtLineStyle:
+            case PtDisplay:
+            case PtListStyleType:
+            case PtListStylePosition:
+            case PtFloat:
+            case PtClear:
+            case PtBorderTopStyle:
+            case PtBorderRightStyle:
+            case PtBorderBottomStyle:
+            case PtBorderLeftStyle:
+              TtaWriteByte (outfile, currentRule->PrChrValue);
+              break;
+            case PtBreak1:
+            case PtBreak2:
+            case PtIndent:
+            case PtSize:
+            case PtLineSpacing:
+            case PtLineWeight:
+            case PtMarginTop:
+            case PtMarginRight:
+            case PtMarginBottom:
+            case PtMarginLeft:
+            case PtPaddingTop:
+            case PtPaddingRight:
+            case PtPaddingBottom:
+            case PtPaddingLeft:
+            case PtBorderTopWidth:
+            case PtBorderRightWidth:
+            case PtBorderBottomWidth:
+            case PtBorderLeftWidth:
+              WriteUnit (currentRule->PrMinUnit);
+              WriteBoolean (currentRule->PrMinAttr);
+              WriteSignedShort (currentRule->PrMinValue);
+              break;
+            case PtVertRef:
+            case PtHorizRef:
+            case PtVertPos:
+            case PtHorizPos:
+              WritePosRule (currentRule->PrPosRule);
+              break;
+            case PtHeight:
+            case PtWidth:
+              pDim = &currentRule->PrDimRule;
+              WriteBoolean (pDim->DrPosition);
+              if (pDim->DrPosition)
+                WritePosRule (pDim->DrPosRule);
+              else
+                {
+                  WriteBoolean (pDim->DrAbsolute);
+                  WriteBoolean (pDim->DrSameDimens);
+                  WriteUnit (pDim->DrUnit);
+                  WriteBoolean (pDim->DrAttr);
+                  WriteBoolean (pDim->DrMin);
+                  WriteBoolean (pDim->DrUserSpecified);
+                  WriteSignedShort (pDim->DrValue);
+                  WriteLevel (pDim->DrRelation);
+                  WriteBoolean (pDim->DrNotRelat);
+                  WriteRefKind (pDim->DrRefKind);
+                  WriteShort (pDim->DrRefIdent);
+                }
+              break;
+            case PtAdjust:
+              WriteAlignment (currentRule->PrAdjust);
+              break;
+            case PtHyphenate:
+            case PtVertOverflow:
+            case PtHorizOverflow:
+            case PtGather:
+            case PtPageBreak:
+            case PtLineBreak:
+              WriteBoolean (currentRule->PrBoolValue);
+              break;
+            case PtPictInfo:
+            case PtXRadius:
+            case PtYRadius:
+            case PtPosition:
+            case PtTop:
+            case PtRight:
+            case PtBottom:
+            case PtLeft:
+            case PtVis:
+              break;
+            }
+          
+          break;
 	      }
-        /* DO NOT free the poresentation rule that has just been written! */
-        /* It may point at condition that is shared with other rules */
-	/* This condition would be freed several times!!! */
-
-        /* get next presentation rule */
-	currentRule = currentRule->PrNextPRule;
-     }
+      /* DO NOT free the poresentation rule that has just been written! */
+      /* It may point at condition that is shared with other rules */
+      /* This condition would be freed several times!!! */
+      
+      /* get next presentation rule */
+      currentRule = currentRule->PrNextPRule;
+    }
 }
-
 
 /*----------------------------------------------------------------------
    WritePresentationSchema    cree le fichier de sortie et y ecrit	

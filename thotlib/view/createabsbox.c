@@ -175,9 +175,12 @@ void SetAccessMode (PtrDocument pDoc, int accessMode)
         if (pDoc->DocView[view].DvPSchemaView > 0)
           {
             pAb = pDoc->DocDocElement->ElAbstractBox[view];
-            SetAbsBoxAccessMode (pAb, accessMode);
-            h = 0;
-            ChangeConcreteImage (pDoc->DocViewFrame[view], &h, pAb);
+            if (pAb)
+              {
+                SetAbsBoxAccessMode (pAb, accessMode);
+                h = 0;
+                ChangeConcreteImage (pDoc->DocViewFrame[view], &h, pAb);
+              }
           }
       /* Redisplay views */
       RedisplayDocViews (pDoc);
@@ -929,6 +932,7 @@ ThotBool CondPresentation (PtrCondition pCond, PtrElement pEl,
   PtrElement          pElSibling, pAsc, pElem, pRoot;
   PtrReference        pRef;
   PtrAttribute        pA;
+  PtrCondition        firstCondLevel;
   unsigned char       attrVal[MAX_TXT_LEN];
   int                 valcompt, valmaxi, valmini;
   int                 i = 0, j;
@@ -936,6 +940,7 @@ ThotBool CondPresentation (PtrCondition pCond, PtrElement pEl,
   ThotBool            ok, found, stop, equal;
 
   /* a priori les conditions sont satisfaites */
+  firstCondLevel = NULL;
   ok = TRUE;
   found = FALSE;
   /* on examine toutes les conditions de la chaine */
@@ -1171,35 +1176,51 @@ ThotBool CondPresentation (PtrCondition pCond, PtrElement pEl,
             break;
 
           case PcWithin:
+          case PcSibling:
             /* condition sur le nombre d'ancetres d'un type donne' */
-            pAsc = pElem->ElParent;
+            if (pCond->CoCondition == PcWithin)
+              pAsc = pElem->ElParent;
+            else
+              pAsc = pElem->ElPrevious;
             if (pAsc == NULL)
               /* aucun ancetre, condition non satisfaite */
               found = FALSE;
+            else if (pAsc->ElTypeNumber == pAsc->ElStructSchema->SsDocument)
+              /* this ancestor is the meta-root. It does not count */
+              {
+                found = FALSE;
+                pAsc = NULL;
+              }
             else
               {
                 i = 0;
+                found = FALSE;
                 if (pCond->CoImmediate)
                   /* Condition: If immediately within n element-type */
                   /* Les n premiers ancetres successifs doivent etre du */
                   /* type CoTypeAncestor, sans comporter d'elements */
                   /* d'autres type */
-                  /* on compte les ancetres successifs de ce type */
-                  while (pAsc != NULL)
+                  /* on compte les ancetres ou freres successifs de ce type */
+                  while (pAsc && !found)
                     {
                       if (pRule->PrCSSURL &&
-			  TypeHasException (ExcHidden, pAsc->ElTypeNumber,
+                          TypeHasException (ExcHidden, pAsc->ElTypeNumber,
                                             pAsc->ElStructSchema))
-                        /* this ancestor is hidden. it does not count */
-                        pAsc = pAsc->ElParent;
+                        /* this ancestor is hidden. Skip it */
+                        if (pCond->CoCondition == PcWithin)
+                          pAsc = pAsc->ElParent;
+                        else
+                          pAsc = pElem->ElPrevious;
                       else
                         {
                           if (pCond->CoTypeAncestor != 0)
+                            /* compare type numbers */
                             equal = ((pCond->CoTypeAncestor == AnyType+1 ||
                                       pAsc->ElTypeNumber == pCond->CoTypeAncestor) &&
                                      !strcmp (pAsc->ElStructSchema->SsName,
                                               pSS->SsName));
                           else
+                            /* compare type names */
                             equal = (pCond->CoAncestorName &&
                                      pAsc->ElStructSchema->SsRule->SrElem[pAsc->ElTypeNumber - 1]->SrName &&
                                      !strcmp (pCond->CoAncestorName,
@@ -1207,39 +1228,74 @@ ThotBool CondPresentation (PtrCondition pCond, PtrElement pEl,
                                      !strcmp (pCond->CoSSchemaName,
                                               pAsc->ElStructSchema->SsName));
                           if (equal)
+                            /* same types */
                             {
                               i++;
-                              pAsc = pAsc->ElParent;
+                              if (pCond->CoAncestorRel == CondGreater &&
+                                  pCond->CoRelation == 0 &&
+                                  pCond->CoChangeElem)
+                                found = TRUE;
+                              else
+                                {
+                                  if (pCond->CoCondition == PcWithin)
+                                    pAsc = pAsc->ElParent;
+                                  else
+                                    pAsc = pAsc->ElPrevious;
+                                }
                             }
                           else
                             pAsc = NULL;
                         }
                     }
                 else
-                  /* Condition: If within n element-type */
-                  /* on compte tous les ancetres de ce type */
-                  while (pAsc != NULL)
+                  /* Condition: If within (or after) n elements */
+                  /* count all ancestors (or previous siblings) of that type */
+                  while (pAsc && !found)
                     {
                       if (pCond->CoTypeAncestor != 0)
+                        /* compare type numbers */
                         equal = ((pCond->CoTypeAncestor == AnyType+1 ||
                                   pAsc->ElTypeNumber == pCond->CoTypeAncestor) &&
-                                 !strcmp (pAsc->ElStructSchema->SsName, pSS->SsName));
+                                 !strcmp (pAsc->ElStructSchema->SsName,
+                                          pSS->SsName));
                       else
+                        /* compare type names */
                         equal = (pCond->CoAncestorName &&
+                                 pAsc->ElStructSchema->SsRule->SrElem[pAsc->ElTypeNumber - 1]->SrName &&
                                  !strcmp (pCond->CoAncestorName,
                                           pAsc->ElStructSchema->SsRule->SrElem[pAsc->ElTypeNumber - 1]->SrName) &&
                                  !strcmp (pCond->CoSSchemaName,
                                           pAsc->ElStructSchema->SsName)); 
                       if (equal)
-                        i++;
-                      pAsc = pAsc->ElParent;  /* passe a l'element ascendant */
+                        {
+                          i++;
+                          if (pCond->CoAncestorRel == CondGreater &&
+                              pCond->CoRelation == 0 &&
+                              pCond->CoChangeElem)
+                            found = TRUE;
+                        }
+                      if (!found)
+                        {
+                          if (pCond->CoCondition == PcWithin)
+                            pAsc = pAsc->ElParent;
+                          else
+                            pAsc = pAsc->ElPrevious;
+                        }
                     }
-                if (pCond->CoAncestorRel == CondEquals)
-                  found = i == pCond->CoRelation;
-                else if (pCond->CoAncestorRel == CondGreater)
-                  found = i > pCond->CoRelation;
-                else if (pCond->CoAncestorRel == CondLess)
-                  found = i < pCond->CoRelation;
+                if (found)
+                  {
+                    if (pCond->CoChangeElem)
+                      pEl = pAsc;
+                  }
+                else
+                  {
+                    if (pCond->CoAncestorRel == CondEquals)
+                      found = i == pCond->CoRelation;
+                    else if (pCond->CoAncestorRel == CondGreater)
+                      found = i > pCond->CoRelation;
+                    else if (pCond->CoAncestorRel == CondLess)
+                      found = i < pCond->CoRelation;
+                  }
               }
             break;
 
@@ -1476,7 +1532,27 @@ ThotBool CondPresentation (PtrCondition pCond, PtrElement pEl,
       if (!pCond->CoNotNegative)
         found = !found;
       ok = ok && found;
-      pCond = pCond->CoNextCondition;
+
+      if (pCond->CoCondition == PcWithin || pCond->CoCondition == PcSibling)
+        if (!pCond->CoImmediate && pCond->CoChangeElem && pAsc)
+          /* The condition we have just processed is the first at its level
+             in the CSS selector. Remember it */
+          firstCondLevel = pCond;
+        else
+          firstCondLevel = NULL;
+
+      if (ok)
+        pCond = pCond->CoNextCondition;
+      else
+        /* the current condition is not satisfied */
+        if (firstCondLevel)
+          /* it is part of a series of conditions starting with PcWithin
+             or PcSibling (not immediate). Try to apply this series of
+             condition with the next ancestor or sibling */
+          {
+            pCond = firstCondLevel;
+            ok = TRUE;
+          }
     }
 
   return ok;

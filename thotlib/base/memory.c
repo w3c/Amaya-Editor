@@ -1675,26 +1675,27 @@ void GetPresentRule (PtrPRule * pRP)
   ----------------------------------------------------------------------*/
 void FreePresentRule (PtrPRule pRP, PtrSSchema pSS)
 {
-   PtrCondition        pCond, nextCond;
+  PtrCondition        pCond, nextCond;
 
-   pCond = pRP->PrCond;
-   while (pCond)
-     {
-       nextCond = pCond->CoNextCondition;
-       if ((pCond->CoCondition == PcAttribute ||
-	    pCond->CoCondition == PcInheritAttribute) &&
-	   pSS &&
-	   pSS->SsAttribute->TtAttr[pCond->CoTypeAttr - 1]->AttrType == AtTextAttr)
-	 TtaFreeMemory (pCond->CoAttrTextValue);
-       else if (pCond->CoCondition == PcWithin)
-	 TtaFreeMemory (pCond->CoAncestorName);
-       FreePresentRuleCond (pCond);
-       pCond = nextCond;
-     }
-   pRP->PrCSSLine = 0;
-   pRP->PrCSSURL = NULL;
-   TtaFreeMemory (pRP);
-   NbUsed_PresRule--;
+  pCond = pRP->PrCond;
+  while (pCond)
+    {
+      nextCond = pCond->CoNextCondition;
+      if ((pCond->CoCondition == PcAttribute ||
+           pCond->CoCondition == PcInheritAttribute) &&
+          pSS &&
+          pSS->SsAttribute->TtAttr[pCond->CoTypeAttr - 1]->AttrType == AtTextAttr)
+        TtaFreeMemory (pCond->CoAttrTextValue);
+      else if (pCond->CoCondition == PcWithin ||
+               pCond->CoCondition == PcSibling)
+        TtaFreeMemory (pCond->CoAncestorName);
+      FreePresentRuleCond (pCond);
+      pCond = nextCond;
+    }
+  pRP->PrCSSLine = 0;
+  pRP->PrCSSURL = NULL;
+  TtaFreeMemory (pRP);
+  NbUsed_PresRule--;
 }
 
 /*----------------------------------------------------------------------

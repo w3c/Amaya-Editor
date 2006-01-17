@@ -5116,11 +5116,11 @@ static char *ParseCSSZIndex (Element element, PSchema tsch,
   return (cssRule);
 }
 
-/************************************************************************
- *									*  
- *	FUNCTIONS STYLE DECLARATIONS             			*
- *									*  
- ************************************************************************/
+/*----------------------------------------------------------------------
+ *
+ *	FUNCTIONS STYLE DECLARATIONS
+ *
+ *----------------------------------------------------------------------*/
 /*
  * NOTE: Long attribute name MUST be placed before shortened ones !
  *        e.g. "FONT-SIZE" must be placed before "FONT"
@@ -5262,8 +5262,8 @@ static void  ParseCSSRule (Element element, PSchema tsch,
               !strcasecmp (CSSProperties[i].name, "content") &&
               ((GenericContext)ctxt)->pseudo != PbBefore &&
               ((GenericContext)ctxt)->pseudo != PbAfter)
-            /* property content is allowed only for pseudo-elements before and
-               after */
+            /* property content is allowed only for pseudo-elements :before and
+               :after */
             {
               end = cssRule;
               end = SkipProperty (end, TRUE);
@@ -5441,19 +5441,22 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
   char              *deb, *cur, *sel, *next, c;
   char              *schemaName, *mappedName, *saveURL;
   char              *names[MAX_ANCESTORS];
-  char              *ids[MAX_ANCESTORS];
-  char              *classes[MAX_ANCESTORS];
-  char              *pseudoclasses[MAX_ANCESTORS];
-  char              *attrs[MAX_ANCESTORS];
+  ElemRel            rel[MAX_ANCESTORS];
+  char              *attrnames[MAX_ANCESTORS];
+  int                attrnums[MAX_ANCESTORS];
+  int                attrlevels[MAX_ANCESTORS];
   char              *attrvals[MAX_ANCESTORS];
   AttrMatch          attrmatch[MAX_ANCESTORS];
-  ElemRel            rel[MAX_ANCESTORS];
-  int                i, j, k, max;
+  int                nbnames, nbattrs;
+  int                i, j;
   int                att, kind;
   int                specificity, xmlType;
   int                skippedNL;
   ThotBool           isHTML;
   ThotBool           level, quoted;
+#define ATTR_ID 1
+#define ATTR_CLASS 2
+#define ATTR_PSEUDO 3
 
   sel = ctxt->sel;
   sel[0] = EOS;
@@ -5461,15 +5464,13 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
   for (i = 0; i < MAX_ANCESTORS; i++)
     {
       names[i] = NULL;
-      ids[i] = NULL;
-      classes[i] = NULL;
-      pseudoclasses[i] = NULL;
-      attrs[i] = NULL;
+      rel[i] = RelAncestor;
+      attrnames[i] = NULL;
+      attrnums[i] = 0;
+      attrlevels[i] = 0;
       attrvals[i] = NULL;
       attrmatch[i] = Txtmatch;
-      rel[i] = RelAncestor;
       ctxt->name[i] = 0;
-      ctxt->names_nb[i] = 0;
       ctxt->attrType[i] = 0;
       ctxt->attrLevel[i] = 0;
       ctxt->attrText[i] = NULL;
@@ -5489,7 +5490,8 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
   selector = SkipBlanksAndComments (selector);
   NewLineSkipped = skippedNL;
   cur = &sel[0];
-  max = 0; /* number of loops */
+  nbnames = 0;
+  nbattrs = 0;
   while (1)
     {
       /* point to the following word in sel[] */
@@ -5504,6 +5506,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
         *cur++ = *selector++;
       *cur++ = EOS; /* close the first string  in sel[] */
       if (deb[0] != EOS)
+        /* the selector starts with an element name */
         {
           if (deb[0] <= 64 && deb[0] != '*')
             {
@@ -5523,28 +5526,25 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
             }
         }
       else
-        names[0] = NULL;
+        names[0] = NULL; /* no element name */
 
-      classes[0] = NULL;
-      pseudoclasses[0] = NULL;
-      ids[0] = NULL;
-      attrs[0] = NULL;
-      attrvals[0] = NULL;
-      attrmatch[0] = Txtmatch;
-      rel[0] = RelAncestor;
+      rel[0] = RelVoid;
 
       /* now names[0] points to the beginning of the parsed item
-         and cur to the next chain to be parsed */
+         and cur to the next string to be parsed */
       while (*selector == '.' || *selector == ':' ||
              *selector == '#' || *selector == '[')
         {
           /* point to the following word in sel[] */
           deb = cur;
           if (*selector == '.')
+            /* class */
             {
               selector++;
-              while (*selector != EOS && *selector != ',' &&
-                     *selector != '.' && *selector != ':' &&
+              while (*selector != '.' && *selector != ':' &&
+                     *selector != '#' && *selector != '[' &&
+                     *selector != EOS && *selector != ',' &&
+                     *selector != '+' && *selector != '>' &&
                      !TtaIsBlank (selector))
                 {
                   if (*selector == '\\')
@@ -5558,7 +5558,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
                 }
               /* close the word */
               *cur++ = EOS;
-              /* point to the class in sel[] if it's valid name */
+              /* point to the class in sel[] if it's a valid name */
               if (deb[0] <= 64)
                 {
                   CSSPrintError ("Invalid class", deb);
@@ -5566,25 +5566,47 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
                 }
               else
                 {
-                  classes[0] = deb;
+                  /* simulate selector [class ~= "xxx"] */
+                  nbattrs++;
+                  if (nbattrs == MAX_ANCESTORS)
+                    /* abort parsing */
+                    {
+                      CSSPrintError ("Selector too long", deb);
+                      return (selector);
+                    }
+                  for (i = nbattrs; i > 0; i--)
+                    {
+                      attrnames[i] = attrnames[i - 1];
+                      attrnums[i] = attrnums[i - 1];
+                      attrlevels[i] = attrlevels[i - 1];
+                      attrvals[i] = attrvals[i - 1];
+                      attrmatch[i] = attrmatch[i - 1];
+                    }
+                  attrnames[0] = NULL;
+                  attrnums[0] = ATTR_CLASS;
+                  attrlevels[0] = 0;
+                  attrmatch[0] = Txtword;
+                  attrvals[0] = deb;
                   specificity += 10;
-                  if (names[0] && !strcmp (names[0], "*"))
-                    names[0] = NULL;
                 }
             }
           else if (*selector == ':')
+            /* pseudo-class or pseudo-element */
             {
               selector++;
-              while (*selector != EOS && *selector != ',' &&
-                     *selector != '.' && *selector != ':' &&
+              while (*selector != '.' && *selector != ':' &&
+                     *selector != '#' && *selector != '[' &&
+                     *selector != EOS && *selector != ',' &&
+                     *selector != '+' && *selector != '>' &&
                      !TtaIsBlank (selector))
                 *cur++ = *selector++;
               /* close the word */
               *cur++ = EOS;
-              /* point to the pseudoclass in sel[] if it's a valid name */
+              /* point to the pseudo-class or pseudo-element in sel[] if it's
+                 a valid name */
               if (deb[0] <= 64)
                 {
-                  CSSPrintError ("Invalid pseudoclass", deb);
+                  CSSPrintError ("Invalid pseudo-element", deb);
                   DoApply = FALSE;
                 }
               else
@@ -5597,41 +5619,81 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
                     DoApply = FALSE;
                   else
                     specificity += 10;
-                  if (!strncmp (deb, "before", 6) || !strncmp (deb, "after", 5))
-                    pseudoclasses[0] = deb;
+                  if (!strncmp (deb, "before", 6))
+                    ctxt->pseudo = PbBefore;
+                  else if (!strncmp (deb, "after", 5))
+                    ctxt->pseudo = PbAfter;
                   else if (!strncmp (deb, "lang", 4))
                     /* it's the lang pseudo-class */
                     {
                       if (deb[4] != '(' || deb[strlen(deb)-1] != ')')
-                        /* at least one paranthesis is missing. Error */
+                        /* at least one parenthesis is missing. Error */
                         {
-                          CSSPrintError ("Invalid :lang pseudoclass", deb);
+                          CSSPrintError ("Invalid :lang pseudo-class", deb);
                           DoApply = FALSE;
                         }
                       else
-                        /* simulate selector [lang|="xxx"] if there is no
-                           attribute yet in the selector */
-                        if (!attrs[0])
-                          {
-                            deb[strlen(deb)-1] = EOS;
-                            deb[4] = EOS;
-                            attrmatch[0] = Txtsubstring;
-                            attrs[0] = deb;
-                            attrvals[0] = &deb[5];
-                          }
+                        /* simulate selector [lang|="xxx"] */
+                        {
+                          nbattrs++;
+                          if (nbattrs == MAX_ANCESTORS)
+                            /* abort parsing */
+                            {
+                              CSSPrintError ("Selector too long", deb);
+                              return (selector);
+                            }
+                          deb[strlen(deb)-1] = EOS;
+                          deb[4] = EOS;
+                          for (i = nbattrs; i > 0; i--)
+                            {
+                              attrnames[i] = attrnames[i - 1];
+                              attrnums[i] = attrnums[i - 1];
+                              attrlevels[i] = attrlevels[i - 1];
+                              attrvals[i] = attrvals[i - 1];
+                              attrmatch[i] = attrmatch[i - 1];
+                            }
+                          attrnames[0] = deb;
+                          attrnums[0] = 0;
+                          attrlevels[0] = 0;
+                          attrmatch[0] = Txtsubstring;
+                          attrvals[0] = &deb[5];
+                        }
                     }
                   else
-                    pseudoclasses[0] = deb;
+                    {
+                      nbattrs++;
+                      if (nbattrs == MAX_ANCESTORS)
+                        /* abort parsing */
+                        {
+                          CSSPrintError ("Selector too long", deb);
+                          return (selector);
+                        }
+                      for (i = nbattrs; i > 0; i--)
+                        {
+                          attrnames[i] = attrnames[i - 1];
+                          attrnums[i] = attrnums[i - 1];
+                          attrlevels[i] = attrlevels[i - 1];
+                          attrvals[i] = attrvals[i - 1];
+                          attrmatch[i] = attrmatch[i - 1];
+                        }
+                      attrnames[0] = NULL;
+                      attrnums[0] = ATTR_PSEUDO;
+                      attrlevels[0] = 0;
+                      attrmatch[0] = Txtmatch;
+                      attrvals[0] = deb;
+                    }
                   if (names[0] && !strcmp (names[0], "*"))
                     names[0] = NULL;
                 }
             }
           else if (*selector == '#')
+            /* unique identifier */
             {
               selector++;
-              while (*selector != EOS && *selector != ',' &&
-                     *selector != '.' && *selector != ':' &&
-                     *selector != '#' &&
+              while (*selector != '.' && *selector != ':' &&
+                     *selector != '#' && *selector != '[' &&
+                     *selector != '+' && *selector != '>' &&
+                     *selector != EOS && *selector != ',' &&
                      !TtaIsBlank (selector))
                 *cur++ = *selector++;
               /* close the word */
@@ -5644,18 +5706,29 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
                 }
               else
                 {
-                  if (ids[0] && strcmp(ids[0], deb))
+                  nbattrs++;
+                  if (nbattrs == MAX_ANCESTORS)
+                    /* abort parsing */
                     {
-                      CSSPrintError ("Too many ids", deb);
-                      DoApply = FALSE;
-                    }		  
-                  else
-                    {
-                      ids[0] = deb;
-                      specificity += 100;
-                      if (names[0] && !strcmp (names[0], "*"))
-                        names[0] = NULL;
+                      CSSPrintError ("Selector too long", deb);
+                      return (selector);
                     }
+                  for (i = nbattrs; i > 0; i--)
+                    {
+                      attrnames[i] = attrnames[i - 1];
+                      attrnums[i] = attrnums[i - 1];
+                      attrlevels[i] = attrlevels[i - 1];
+                      attrvals[i] = attrvals[i - 1];
+                      attrmatch[i] = attrmatch[i - 1];
+                    }
+                  attrnames[0] = NULL;
+                  attrnums[0] = ATTR_ID;
+                  attrlevels[0] = 0;
+                  attrmatch[0] = Txtmatch;
+                  attrvals[0] = deb;
+                  specificity += 100;
+                  if (names[0] && !strcmp (names[0], "*"))
+                    names[0] = NULL;
                 }
             }
           else if (*selector == '[')
@@ -5663,27 +5736,8 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
               selector++;
               while (*selector != EOS && *selector != ']' &&
                      *selector != '=' && *selector != '~' &&
-                     *selector != '|' && *selector != '^' &&
-                     *selector != '!')
+                     *selector != '|')
                 *cur++ = *selector++;
-              /* check matching */
-              if (*selector == '~')
-                {
-                  attrmatch[0] = Txtword;
-                  selector++;
-                }
-              else if (*selector == '|')
-                {
-                  attrmatch[0] = Txtsubstring;
-                  selector++;
-                }
-               else if (*selector == '^')
-                {
-                  attrmatch[0] = Txtsubstring; //should be initial substring
-                  selector++;
-                }
-             else
-                attrmatch[0] = Txtmatch;
               /* close the word */
               *cur++ = EOS;
               /* point to the attribute in sel[] if it's valid name */
@@ -5694,8 +5748,38 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
                 }
               else
                 {
-                  attrs[0] = deb;
+                  nbattrs++;
+                  if (nbattrs == MAX_ANCESTORS)
+                    /* abort parsing */
+                    {
+                      CSSPrintError ("Selector too long", deb);
+                      return (selector);
+                    }
+                  for (i = nbattrs; i > 0; i--)
+                    {
+                      attrnames[i] = attrnames[i - 1];
+                      attrnums[i] = attrnums[i - 1];
+                      attrlevels[i] = attrlevels[i - 1];
+                      attrvals[i] = attrvals[i - 1];
+                      attrmatch[i] = attrmatch[i - 1];
+                    }
+                  attrnames[0] = deb;
+                  attrnums[0] = 0;
+                  attrlevels[0] = 0;
                   specificity += 10;
+                  /* check matching */
+                  if (*selector == '~')
+                    {
+                      attrmatch[0] = Txtword;
+                      selector++;
+                    }
+                  else if (*selector == '|')
+                    {
+                      attrmatch[0] = Txtsubstring;
+                      selector++;
+                    }
+                  else
+                    attrmatch[0] = Txtmatch;
                 }
               if (*selector == '=')
                 {
@@ -5767,8 +5851,10 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
           else
             {
               /* not supported selector */
-              while (*selector != EOS && *selector != ',' &&
-                     *selector != '.' && *selector != ':' &&
+              while (*selector != '.' && *selector != ':' &&
+                     *selector != '#' && *selector != '[' &&
+                     *selector != EOS && *selector != ',' &&
+                     *selector != '+' && *selector != '>' &&
                      !TtaIsBlank (selector))
                 *cur++ = *selector++;
               /* close the word */
@@ -5805,47 +5891,49 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
         {
           if (*selector == '>')
             {
-              /* handle immediat parent as a simple parent */
+              /* handle parent */
               selector++;
               skippedNL = NewLineSkipped;
               selector = SkipBlanksAndComments (selector);
               NewLineSkipped = skippedNL;
-              rel[0] = RelImmediat;
+              rel[0] = RelParent;
             }
           else if (*selector == '+')
             {
-              /* handle immediat parent as a simple parent */
+              /* handle immediate sibling */
               selector++;
               skippedNL = NewLineSkipped;
               selector = SkipBlanksAndComments (selector);
               NewLineSkipped = skippedNL;
               rel[0] = RelPrevious;
             }
-          /* shifts the list to make room for the new name */
-          max++; /* a new level in ancestor tables */
-          if (max == MAX_ANCESTORS)
-            /* abort the CSS parsing */
-            return (selector);
-          for (i = max; i > 0; i--)
+          else
+            rel[0] = RelAncestor;
+          nbnames++; /* a new level in ancestor tables */
+          if (nbnames == MAX_ANCESTORS)
+            /* abort parsing */
+            {
+              CSSPrintError ("Selector too long", deb);
+              return (selector);
+            }
+          /* shift the list to make room for the next part of the selector */
+          for (i = nbnames; i > 0; i--)
             {
               names[i] = names[i - 1];
-              ids[i] = ids[i - 1];
-              classes[i] = classes[i - 1];
-              pseudoclasses[i] = pseudoclasses[i - 1];
-              attrs[i] = attrs[i - 1];
-              attrvals[i] = attrvals[i - 1];
-              attrmatch[i] = attrmatch[i - 1];
               rel[i] = rel[i - 1];
             }
+          /* increase the level of all attributes */
+          for (i = 0; i < nbattrs; i++)
+              attrlevels[i]++;
         }
     }
 
   /* Now set up the context block */
   i = 0;
-  k = 0;
   j = 0;
   /* default schema name */
   ctxt->schema = NULL;
+  ctxt->nbElem = nbnames;
   elType.ElSSchema = NULL;
   schemaName = TtaGetSSchemaName(TtaGetDocumentSSchema (doc));
   if (!strcmp (schemaName, "HTML"))
@@ -5860,9 +5948,13 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
     xmlType = ANNOT_TYPE;
   else
     xmlType = XML_TYPE;
-  while (i <= max && j < MAX_ANCESTORS)
+  while (i <= nbnames)
     {
-      if (names[i])
+      ctxt->rel[i] = rel[i];
+      if (!names[i])
+        ctxt->name[i] = HTML_EL_ANY_TYPE;
+      else
+        /* store element information */
         {
           /* get the element type of this name in the current document */
           if (xmlType == XML_TYPE)
@@ -5890,10 +5982,11 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
                                    &level, doc);
             }
           if (i == 0)
+            /* rightmost part of the selector */
             {
               if (elType.ElSSchema == NULL)
                 {
-                  /* Selector not found: Search in the list of loaded schemas */
+                  /* element name not found. Search in all loaded schemas */
                   TtaGetXmlElementType (names[i], &elType, NULL, doc);
                   if (elType.ElSSchema)
                     {
@@ -5958,252 +6051,202 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
                 DoApply = FALSE;
               else
                 {
-                  /* Store the element type */
+                  /* Store the element type contained in the rightmost part of
+                     the selector */
+                  ctxt->schema = elType.ElSSchema;
                   ctxt->type = elType.ElTypeNum;
                   ctxt->name[0] = elType.ElTypeNum;
-                  ctxt->names_nb[0] = 0;
-                  ctxt->rel[0] = RelAncestor;
-                  ctxt->schema = elType.ElSSchema;
+                  ctxt->rel[0] = RelVoid;
                 }
             }
-          else if (elType.ElTypeNum != 0)
+          else
+            /* not the rightmost part of the selector */
             {
-              /* look at the current context to see if the type is already
-                 stored */
-              j = 1;
-              while (j < k &&
-                     (ctxt->name[j] != elType.ElTypeNum ||
-                      ctxt->rel[j] != RelAncestor))
-                j++;
-              if (j == k)
-                {
-                  ctxt->name[j] = elType.ElTypeNum;
-                  if (j != 0)
-                    {
-                      ctxt->names_nb[j] = 1;
-                      ctxt->rel[j] = rel[i];
-                    }
-                }
-              else
-                /* increment the number of ancestor levels */
-                ctxt->names_nb[j]++;
-            }
-#ifdef XML_GENERIC
-          else if (xmlType == XML_TYPE)
-            {
-              TtaGetXmlElementType (names[i], &elType, NULL, doc);
-              if (elType.ElTypeNum == 0)
-                {
-                  /* Creation of a new element type in the main schema */
-                  elType.ElSSchema = TtaGetDocumentSSchema (doc);
-                  TtaAppendXmlElement (names[i], &elType, &mappedName, doc);
-                }
               if (elType.ElTypeNum != 0)
-                {
-                  /* look at the current context to see if the type is already
-                     stored */
-                  j = 1;
-                  while (j < k &&
-                         (ctxt->name[j] != elType.ElTypeNum ||
-                          ctxt->rel[j] != RelAncestor))
-                    j++;
-                  if (j == k)
-                    {
-                      ctxt->name[j] = elType.ElTypeNum;
-                      if (j != 0)
-                        {
-                          ctxt->names_nb[j] = 1;
-                          ctxt->rel[j] = rel[i];
-                        }
-                      else
-                        ctxt->rel[j] = RelAncestor;
-                    }
-                  else
-                    /* increment the number of ancestor levels */
-                    ctxt->names_nb[j]++;
-                }
-            }
-#endif /* XML_GENERIC */
-          else
-            j = k;
-        }
-      else
-        j = k;
-
-      /* store attributes information */
-      if (classes[i])
-        {
-          ctxt->attrText[j] = classes[i];
-          if (xmlType == SVG_TYPE)
-            ctxt->attrType[j] = SVG_ATTR_class;
-          else if (xmlType == MATH_TYPE)
-            ctxt->attrType[j] = MathML_ATTR_class;
-          else if (xmlType == XHTML_TYPE)
-            ctxt->attrType[j] = HTML_ATTR_Class;
-          else
-#ifdef XML_GENERIC
-            ctxt->attrType[j] = XML_ATTR_class;
-#else /* XML_GENERIC */
-          ctxt->attrType[j] = HTML_ATTR_Class;
-#endif /* XML_GENERIC */
-          /* a "class" attribute on an element may contain several
-             words, one for each class it matches */
-          ctxt->attrMatch[j] = Txtword;
-          /* add a new entry */
-          /* update attrLevel */
-          ctxt->attrLevel[j] = i;
-          j++;
-        }
-      if (pseudoclasses[i])
-        {
-          ctxt->attrText[j] = pseudoclasses[i];
-          if (!strncmp (deb, "before", 6))
-            ctxt->pseudo = PbBefore;
-          else if (!strncmp (deb, "after", 5))
-            ctxt->pseudo = PbAfter;
-          else
-            {
-              if (xmlType == SVG_TYPE)
-                ctxt->attrType[j] = SVG_ATTR_PseudoClass;
-              else if (xmlType == MATH_TYPE)
-                ctxt->attrType[j] = MathML_ATTR_PseudoClass;
-              else if (xmlType == XHTML_TYPE)
-                ctxt->attrType[j] = HTML_ATTR_PseudoClass;
-              else
-#ifdef XML_GENERIC
-                ctxt->attrType[j] = XML_ATTR_PseudoClass;
-#else /* XML_GENERIC */
-              ctxt->attrType[j] = HTML_ATTR_PseudoClass;
-#endif /* XML_GENERIC */
-              ctxt->attrMatch[j] = Txtmatch;
-            }
-          /* add a new entry */
-          /* update attrLevel */
-          ctxt->attrLevel[j] = i;
-          j++;
-        }
-      if (ids[i])
-        {
-          ctxt->attrText[j] = ids[i];
-          if (xmlType == SVG_TYPE)
-            ctxt->attrType[j] = SVG_ATTR_id;
-          else if (xmlType == MATH_TYPE)
-            ctxt->attrType[j] = MathML_ATTR_id;
-          else if (xmlType == XHTML_TYPE)
-            ctxt->attrType[j] = HTML_ATTR_ID;
-          else
-#ifdef XML_GENERIC
-            ctxt->attrType[j] = XML_ATTR_xmlid;
-#else /* XML_GENERIC */
-          ctxt->attrType[j] = HTML_ATTR_ID;
-#endif /* XML_GENERIC */
-          ctxt->attrMatch[j] = Txtmatch;
-          /* add a new entry */
-          /* update attrLevel */
-          ctxt->attrLevel[j] = i;
-          j++;
-        }
-      if (attrs[i])
-        {
-          /* it's an attribute */
-          if (xmlType == XML_TYPE)
-            {
-              if (ctxt->schema)
-                attrType.AttrSSchema = ctxt->schema;
-              else
-                attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
-              TtaGetXmlAttributeType (attrs[i], &attrType, doc);
-              att = attrType.AttrTypeNum;
-              if (ctxt->schema == NULL)
-                ctxt->schema = attrType.AttrSSchema;
-            }
-          else
-            {
-              MapXMLAttribute (xmlType, attrs[i], names[i], &level, doc, &att);
-              if (ctxt->schema == NULL && att != 0)
-                ctxt->schema = TtaGetDocumentSSchema (doc);
-            }
-          if (att == 0 && ctxt->schema == NULL)
-            /* Attribute name not found: Search in the list of all schemas
-               loaded for this document */
-            {
-              attrType.AttrSSchema = NULL;
-              TtaGetXmlAttributeType (attrs[i], &attrType, doc);
-              att = attrType.AttrTypeNum;
-              if (att)
-                ctxt->schema = attrType.AttrSSchema;
-            }
-          if (att == DummyAttribute && !strcmp (schemaName, "HTML"))
-            /* it's the "type" attribute for an "input" element. In the tree
-               it's represented by the element type, not by an attribute */
-            att = 0;
-          ctxt->attrType[j] = att;
-          ctxt->attrMatch[j] = attrmatch[i];
-          attrType.AttrSSchema = ctxt->schema;
-          attrType.AttrTypeNum = att;
-          if (i == 0 && att == 0 && ctxt->schema == NULL)
-            {
-              /* Not found -> search in the list of loaded schemas */
-              attrType.AttrSSchema = NULL;
-              TtaGetXmlAttributeType (attrs[i], &attrType, doc);
-              ctxt->attrType[j] = attrType.AttrTypeNum;
-              if (attrType.AttrSSchema)
-                /* the element type concerns an imported nature */
-                schemaName = TtaGetSSchemaName(attrType.AttrSSchema);
+                ctxt->name[i] = elType.ElTypeNum;
 #ifdef XML_GENERIC
               else if (xmlType == XML_TYPE)
                 {
-                  /* The attribute is not yet present in the tree */
-                  /* Create a new global attribute */
-                  attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
-                  TtaAppendXmlAttribute (attrs[i], &attrType, doc);
+                  TtaGetXmlElementType (names[i], &elType, NULL, doc);
+                  if (elType.ElTypeNum == 0)
+                    {
+                      /* Creation of a new element type in the main schema */
+                      elType.ElSSchema = TtaGetDocumentSSchema (doc);
+                      TtaAppendXmlElement (names[i], &elType, &mappedName, doc);
+                    }
+                  if (elType.ElTypeNum != 0)
+                    ctxt->name[i] = elType.ElTypeNum;
                 }
 #endif /* XML_GENERIC */
-
-              if (attrType.AttrSSchema == NULL)
-                /* cannot apply these CSS rules */
-                DoApply = FALSE;
-              else if (elType.ElSSchema)
-                ctxt->schema = elType.ElSSchema;
-              else
-                ctxt->schema = attrType.AttrSSchema;
             }
-          /* check the attribute type */
-          if (!strcmp (schemaName, "HTML"))
-            xmlType = XHTML_TYPE;
-          else if (!strcmp (schemaName, "MathML"))
-            xmlType = MATH_TYPE;
-          else if (!strcmp (schemaName, "SVG"))
-            xmlType = SVG_TYPE;
-          else if (!strcmp (schemaName, "XLink"))
-            xmlType = XLINK_TYPE;
-          else if (!strcmp (schemaName, "Annot"))
-            xmlType = ANNOT_TYPE;
-          else
-            xmlType = XML_TYPE;
-          kind = TtaGetAttributeKind (attrType);
-          if (kind == 0 && attrvals[i])
-            {
-              /* enumerated value */
-              MapXMLAttributeValue (xmlType, attrvals[i], &attrType, &kind);
-              /* store the attribute value */
-              ctxt->attrText[j] = (char *) kind;
-            }
-          else
-            ctxt->attrText[j] = attrvals[i];
-          /* update attrLevel */
-          ctxt->attrLevel[j] = i;
-          j++;
         }
-      i++;
+
+      /* store attribute information for this element */
+      while (j < nbattrs && attrlevels[j] <= i)
+        {
+          if (attrnames[j] || attrnums[j])
+            {
+              if (attrnums[j] > 0)
+                {
+                  if (attrnums[j] == ATTR_CLASS)
+                    {
+                      if (xmlType == SVG_TYPE)
+                        ctxt->attrType[j] = SVG_ATTR_class;
+                      else if (xmlType == MATH_TYPE)
+                        ctxt->attrType[j] = MathML_ATTR_class;
+                      else if (xmlType == XHTML_TYPE)
+                        ctxt->attrType[j] = HTML_ATTR_Class;
+                      else
+#ifdef XML_GENERIC
+                        ctxt->attrType[j] = XML_ATTR_class;
+#else /* XML_GENERIC */
+                        ctxt->attrType[j] = HTML_ATTR_Class;
+#endif /* XML_GENERIC */
+                    }
+                  else if (attrnums[j] == ATTR_PSEUDO)
+                    {
+                      if (xmlType == SVG_TYPE)
+                        ctxt->attrType[j] = SVG_ATTR_PseudoClass;
+                      else if (xmlType == MATH_TYPE)
+                        ctxt->attrType[j] = MathML_ATTR_PseudoClass;
+                      else if (xmlType == XHTML_TYPE)
+                        ctxt->attrType[j] = HTML_ATTR_PseudoClass;
+                      else
+#ifdef XML_GENERIC
+                        ctxt->attrType[j] = XML_ATTR_PseudoClass;
+#else /* XML_GENERIC */
+                        ctxt->attrType[j] = HTML_ATTR_PseudoClass;
+#endif /* XML_GENERIC */
+                    }
+                  else if (attrnums[j] == ATTR_ID)
+                    {
+                      if (xmlType == SVG_TYPE)
+                        ctxt->attrType[j] = SVG_ATTR_id;
+                      else if (xmlType == MATH_TYPE)
+                        ctxt->attrType[j] = MathML_ATTR_id;
+                      else if (xmlType == XHTML_TYPE)
+                        ctxt->attrType[j] = HTML_ATTR_ID;
+                      else
+#ifdef XML_GENERIC
+                        ctxt->attrType[j] = XML_ATTR_xmlid;
+#else /* XML_GENERIC */
+                        ctxt->attrType[j] = HTML_ATTR_ID;
+#endif /* XML_GENERIC */
+                    }
+                  attrType.AttrTypeNum = ctxt->attrType[j];
+                  attrType.AttrSSchema =  ctxt->schema;
+                }
+              else if (attrnames[j])
+                {
+                  if (xmlType == XML_TYPE)
+                    {
+                      if (ctxt->schema)
+                        attrType.AttrSSchema = ctxt->schema;
+                      else
+                        attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
+                      TtaGetXmlAttributeType (attrnames[j], &attrType, doc);
+                      att = attrType.AttrTypeNum;
+                      if (ctxt->schema == NULL && att != 0)
+                        ctxt->schema = attrType.AttrSSchema;
+                    }
+                  else
+                    {
+                      MapXMLAttribute (xmlType, attrnames[j], names[i], &level,
+                                       doc, &att);
+                      if (ctxt->schema == NULL && att != 0)
+                        ctxt->schema = TtaGetDocumentSSchema (doc);
+                    }
+                  if (att == 0 && ctxt->schema == NULL)
+                    /* Attribute name not found: Search in the list of all
+                       schemas loaded for this document */
+                    {
+                      attrType.AttrSSchema = NULL;
+                      TtaGetXmlAttributeType (attrnames[j], &attrType, doc);
+                      att = attrType.AttrTypeNum;
+                      if (att != 0)
+                        ctxt->schema = attrType.AttrSSchema;
+                    }
+                  if (att == DummyAttribute && !strcmp (schemaName, "HTML"))
+                    /* it's the "type" attribute for an "input" element.
+                       In the tree it is represented by the element type, not
+                       by an attribute */
+                    att = 0;
+                  attrType.AttrSSchema = ctxt->schema;
+                  attrType.AttrTypeNum = att;
+                  if (i == 0 && att == 0 && ctxt->schema == NULL)
+                    {
+                      /* Not found -> search in the list of loaded schemas */
+                      attrType.AttrSSchema = NULL;
+                      TtaGetXmlAttributeType (attrnames[j], &attrType, doc);
+                      att = attrType.AttrTypeNum;
+                      if (attrType.AttrSSchema)
+                        /* the element type concerns an imported nature */
+                        schemaName = TtaGetSSchemaName(attrType.AttrSSchema);
+#ifdef XML_GENERIC
+                      else if (xmlType == XML_TYPE)
+                        {
+                          /* The attribute is not yet present in the tree */
+                          /* Create a new global attribute */
+                          attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
+                          TtaAppendXmlAttribute (attrnames[j], &attrType, doc);
+                        }
+#endif /* XML_GENERIC */
+                      if (attrType.AttrSSchema == NULL)
+                        /* cannot apply these CSS rules */
+                        DoApply = FALSE;
+                      else if (elType.ElSSchema)
+                        ctxt->schema = elType.ElSSchema;
+                      else
+                        ctxt->schema = attrType.AttrSSchema;
+                    }
+                  if (att == 0)
+                    {
+                      CSSPrintError ("Unknown attribute", attrnames[j]);
+                      DoApply = FALSE;	    
+                    }
+                  else
+                    ctxt->attrType[j] = att;
+                }
+              if (ctxt->attrType[j])
+                {
+                  /* check the attribute type */
+                  if (!strcmp (schemaName, "HTML"))
+                    xmlType = XHTML_TYPE;
+                  else if (!strcmp (schemaName, "MathML"))
+                    xmlType = MATH_TYPE;
+                  else if (!strcmp (schemaName, "SVG"))
+                    xmlType = SVG_TYPE;
+                  else if (!strcmp (schemaName, "XLink"))
+                    xmlType = XLINK_TYPE;
+                  else if (!strcmp (schemaName, "Annot"))
+                    xmlType = ANNOT_TYPE;
+                  else
+                    xmlType = XML_TYPE;
+                  kind = TtaGetAttributeKind (attrType);
+                  if (kind == 0 && attrvals[j])
+                    {
+                      /* enumerated value */
+                      MapXMLAttributeValue (xmlType, attrvals[j], &attrType,
+                                            &kind);
+                      /* store the attribute value */
+                      ctxt->attrText[j] = (char *) kind;
+                    }
+                  else
+                    ctxt->attrText[j] = attrvals[j];
+                  /* update attrLevel */
+                  ctxt->attrMatch[j] = attrmatch[j];
+                  ctxt->attrLevel[j] = attrlevels[j];
+                    }
+              j++;
+            }
+        }
       /* add a new entry */
-      k++;
-      if (k < j)
-        k = j;
+      i++;
       if (i == 1 && ctxt->schema == NULL)
         /* use the document schema */
         ctxt->schema = TtaGetDocumentSSchema (doc);
     }
+
   ctxt->important = FALSE;
   /* set the selector specificity */
   ctxt->cssSpecificity = specificity;

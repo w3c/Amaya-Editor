@@ -39,8 +39,9 @@ typedef enum
 typedef enum
 {
   RelAncestor,
-  RelImmediat,
-  RelPrevious
+  RelParent,
+  RelPrevious,
+  RelVoid
 } ElemRel;
 
 typedef enum
@@ -67,15 +68,15 @@ typedef struct struct_GenericContext
      */
     int           box;	                 /* specific presentation box if any */
     int           var;                      /* variable number for pseudo box*/
-    PseudoBox     pseudo;                   /* pseudo box in selector */
-    int           name[MAX_ANCESTORS];      /* ancestors type */
-    int           names_nb[MAX_ANCESTORS];  /* number of occurences    */
-    int           attrType[MAX_ANCESTORS];  /* type of the attribute   */
-    int           attrLevel[MAX_ANCESTORS]; /* level of the attribute  */
-    char         *attrText[MAX_ANCESTORS];  /* attr. or box name       */
-    AttrMatch     attrMatch[MAX_ANCESTORS]; /* how attr. values match  */
-    ElemRel       rel[MAX_ANCESTORS];       /* element relation        */
-    char          sel[MAX_ANCESTORS * 50];  /* include selected values */
+    PseudoBox     pseudo;                   /* pseudo box in selector    */
+    int           nbElem;                   /* number of elem. in name[] */
+    int           name[MAX_ANCESTORS];      /* ancestors type            */
+    int           attrType[MAX_ANCESTORS];  /* type of the attribute     */
+    int           attrLevel[MAX_ANCESTORS]; /* level of the attribute    */
+    char         *attrText[MAX_ANCESTORS];  /* attr. or box name         */
+    AttrMatch     attrMatch[MAX_ANCESTORS]; /* how attr. values match    */
+    ElemRel       rel[MAX_ANCESTORS];       /* element relation          */
+    char          sel[MAX_ANCESTORS * 50];  /* include selected values   */
   }
 GenericContextBlock, *GenericContext;
 
@@ -85,7 +86,7 @@ typedef struct struct_SpecificContext
     SSchema       schema;         /* associated structure */
     int           type;           /* type of element */
     int           cssSpecificity; /* For specific rules: > 0 when the rule
-				     translates a CSS style rule */
+                                     translates a CSS style rule */
     int           uses;           /* number of current uses */
     int           cssLine;        /* the line number of the CSS rule */
     char         *cssURL;         /* points to the current CSS URL */

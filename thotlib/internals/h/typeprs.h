@@ -33,99 +33,99 @@
 /* presentation mode of the pictures */
 #define UNKNOWN_FORMAT   -1
 typedef enum
-{
-  DefaultPres,
-  RealSize,
-  ReScale,
-  FillFrame,
-  XRepeat,
-  YRepeat
-} PictureScaling;
+  {
+    DefaultPres,
+    RealSize,
+    ReScale,
+    FillFrame,
+    XRepeat,
+    YRepeat
+  } PictureScaling;
 
 /* dimensions and axes of the boxes */
 typedef enum
-{
-  Top, Bottom, Left, Right, HorizRef, VertRef,
-  HorizMiddle, VertMiddle, NoEdge
-} BoxEdge;
+  {
+    Top, Bottom, Left, Right, HorizRef, VertRef,
+    HorizMiddle, VertMiddle, NoEdge
+  } BoxEdge;
 
 typedef struct _PresRule *PtrPRule;
 
 /* relative level */
 typedef enum
-{
-  RlEnclosing, RlSameLevel, RlEnclosed, RlPrevious, RlNext, RlSelf, 
-  RlContainsRef, RlRoot, RlReferred, RlCreator, RlLastSibling
-} Level;
+  {
+    RlEnclosing, RlSameLevel, RlEnclosed, RlPrevious, RlNext, RlSelf, 
+    RlContainsRef, RlRoot, RlReferred, RlCreator, RlLastSibling
+  } Level;
 
 /* Kind of object used as a reference in a relative position */
 typedef enum
-{
-  RkElType, RkPresBox, RkAttr, RkAnyElem, RkAnyBox
-} RefKind;
+  {
+    RkElType, RkPresBox, RkAttr, RkAnyElem, RkAnyBox
+  } RefKind;
 
 /* relative positionning rule for the dimensions or axes of two boxes */
 typedef struct _PosRule
 {
-  BoxEdge	PoPosDef;	/* side of the abstract box of which the
-				   position is defined */
-  BoxEdge	PoPosRef;	/* side of the abstract box from which the
-				   position is defined */
-  TypeUnit	PoDistUnit;	/* PoDistance is expressed in picas, 1/10 of
-				   a character, etc. */
-  TypeUnit      PoDeltaUnit;    /* units for PoDistDelta */
-  ThotBool	PoDistAttr;	/* PoDistance is a numerical attribute number
-				   or a numerical value */
-  int		PoDistance;	/* distance between those two sides */
-  int           PoDistDelta;    /* increment to the distance */
-  Level		PoRelation;	/* relative level of the reference element
-				   in the internal representation */
-  ThotBool	PoNotRel;	/* if 'false', PoRefIdent indicates the type of
-				   the reference element, if 'true', the
-				   excluded type. */
+  BoxEdge	  PoPosDef;	      /* side of the abstract box of which the
+                               position is defined */
+  BoxEdge	  PoPosRef;	      /* side of the abstract box from which the
+                               position is defined */
+  TypeUnit	PoDistUnit;   	/* PoDistance is expressed in picas, 1/10 of
+                               a character, etc. */
+  TypeUnit  PoDeltaUnit;    /* units for PoDistDelta */
+  ThotBool	PoDistAttr;	    /* PoDistance is a numerical attribute number
+                               or a numerical value */
+  int		    PoDistance;	    /* distance between those two sides */
+  int       PoDistDelta;    /* increment to the distance */
+  Level		  PoRelation;	    /* relative level of the reference element
+                               in the internal representation */
+  ThotBool	PoNotRel;	      /* if 'false', PoRefIdent indicates the type of
+                               the reference element, if 'true', the
+                               excluded type. */
   ThotBool	PoUserSpecified;/* the distance may be chosen by the user
-				   during the creation */
-  RefKind	PoRefKind;	/* the reference is the box of an element,
-				   a presentation box or the box of an element
-				   with an attribute */
-  int		PoRefIdent;	/* depending on PoRefKind, element type number,
-				   pres box number or attribute number */
+                               during the creation */
+  RefKind	  PoRefKind;	    /* the reference is the box of an element,
+                               a presentation box or the box of an element
+                               with an attribute */
+  int		    PoRefIdent;	    /* depending on PoRefKind, element type number,
+                               pres box number or attribute number */
 } PosRule;
 
 /* Box dimensionning rule */
 typedef struct _DimensionRule
 {
   ThotBool	 DrPosition;	/* the dimension is defined as a position
-				   (rubber band box) */
+                             (rubber band box) */
   union
   {
     struct			/* DrPosition = True */
     {
-      PosRule	_DrPosRule_;    /* the position rule that defines the
-				   dimension */
+      PosRule	_DrPosRule_;      /* the position rule that defines the
+                                   dimension */
     }   s0;
     struct			/* DrPosition = False */
     {
       ThotBool	_DrAbsolute_;   /* absolute value, relative otherwise */ 
       ThotBool	_DrSameDimens_; /* the dimension is defined in regard to
-				   the same dimension of another box */
+                                   the same dimension of another box */
       TypeUnit	_DrUnit_;       /* DrValue is expressed in picas, 1/10 of a
-				   character, etc. */ 
+                                   character, etc. */ 
       ThotBool	_DrAttr_;       /* DrValue is a numerical attribute or a
-				   numerical value attribute  number */ 
-      ThotBool	_DrMin_; 	/* minimum dimension */
+                                   numerical value attribute  number */ 
+      ThotBool	_DrMin_; 	      /* minimum dimension */
       ThotBool	_DrUserSpecified_; /* the distance may be chosen by the user */
-      int	_DrValue_;      /* value of the percentage, the increment or
-				   the absolute value */
-      Level	_DrRelation_;  	/* relative level of the reference element */
+      int	_DrValue_;            /* value of the percentage, the increment or
+                                   the absolute value */
+      Level	_DrRelation_;  	    /* relative level of the reference element */
       ThotBool	_DrNotRelat_;   /* if false, DrTypeRefElem or DrRefPresBox
-				  indicates the type of the reference elt.
-				  if false, the exclusive type. */
-      RefKind	_DrRefKind_;	/* the reference is the box of an element,
-				   a presentation box or the box of an element
-				   with an attribute */
-      int	_DrRefIdent_;	/* depending on DrRefKind, element type number,
-				   pres box number or attribute number */
+                                   indicates the type of the reference elt.
+                                   if false, the exclusive type. */
+      RefKind	_DrRefKind_;	    /* the reference is the box of an element,
+                                   a presentation box or the box of an element
+                                   with an attribute */
+      int	_DrRefIdent_;	        /* depending on DrRefKind, element type number,
+                                   pres box number or attribute number */
     } s1;
   } u;
 } DimensionRule;
@@ -145,36 +145,36 @@ typedef struct _DimensionRule
 
 /* type of the content of a presentation box */
 typedef enum
-{
+  {
     FreeContent, ContVariable, ContConst
-}	ContentType;
+  }	ContentType;
 
 /* a presentation box */
 typedef struct _PresentationBox
 {
-  Name         PbName;		 /* box name */	
+  Name         PbName;		     /* box name */	
   PtrPRule     PbFirstPRule;	 /* first presentation rule defining the box*/
   ThotBool     PbPageFooter;	 /* it is a page footer box */
   ThotBool     PbPageHeader;	 /* it is a page header box */
-  ThotBool     PbPageBox;	 /* it is a page box */
+  ThotBool     PbPageBox;	     /* it is a page box */
   int	       PbFooterHeight;	 /* if it is a page box, size of the footer
-				    in picas */
+                                  in picas */
   int	       PbHeaderHeight;	 /* if it is a page box, size of the header
 				    in picas */
-  int	       PbPageCounter;	 /* number of the page counter, only if
-				    PbPageBox is true */
-  ContentType  PbContent;	 /* compulsory box content */
+  int	       PbPageCounter;	   /* number of the page counter, only if
+                                  PbPageBox is true */
+  ContentType  PbContent;	     /* compulsory box content */
   union
   {
-    struct			 /* PbContent = ContVariable */
+    struct                			 /* PbContent = ContVariable */
     {
       int      _PbContVariable_; /* number of the variable */
     }   s0;
-    struct			 /* PbContent = ContConst */
+    struct			                 /* PbContent = ContConst */
     {
       int      _PbContConstant_; /* number of the constant */
     } s1;
-    struct			 /* PbContent = FreeContent */
+    struct			                 /* PbContent = FreeContent */
     {
       int      _PbContFree_;     /* to make the compiler happy */
     } s2;
@@ -194,10 +194,10 @@ typedef struct _PresBoxTable
 
 /* Alignment of the lines in an abstract box */
 typedef enum
-{
-  AlignLeft, AlignRight, AlignCenter, AlignJustify, AlignLeftDots
-} BAlignment;	/* AlignLeftDots = aligned to the left, the last
-		   line is filled with dots */
+  {
+    AlignLeft, AlignRight, AlignCenter, AlignJustify, AlignLeftDots
+  } BAlignment;	            /* AlignLeftDots = aligned to the left, the last
+                               line is filled with dots */
 
 /* Positioning algorithm */
 typedef enum
@@ -232,7 +232,7 @@ typedef enum
   PtPosition, PtTop, PtRight, PtBottom, PtLeft, PtFloat, PtClear,
   PtDisplay, /* PtDisplay must be at the end. If the value is ListItem, this
                 makes sure that the marker box can inherit properties from
-		the creator box (see function CreateListItemMarker). */
+                the creator box (see function CreateListItemMarker). */
   /* the three following types must be the last ones */
   PtVis, /* CSS visibility */
   PtBreak1, PtBreak2, PtPictInfo
@@ -240,53 +240,53 @@ typedef enum
 
 /* computing mode of the properties */
 typedef enum
-{
-  PresImmediate, PresInherit, PresFunction
-} PresMode;
+  {
+    PresImmediate, PresInherit, PresFunction
+  } PresMode;
 
 /* inherit mode */
 typedef enum
-{
-  InheritParent, InheritPrevious, InheritChild, InheritCreator, 
-  InheritGrandFather
-} InheritMode;
+  {
+    InheritParent, InheritPrevious, InheritChild, InheritCreator, 
+    InheritGrandFather
+  } InheritMode;
 
 /* functions */
 /* the order determines the order of the rules in the presentation schema */
 typedef enum
-{
-  FnLine, FnPage, FnCreateBefore, FnCreateWith, FnCreateFirst, FnCreateLast,
-  FnCreateAfter, FnContent, FnColumn, FnCopy, FnContentRef, FnSubColumn,
-  FnNoLine, FnCreateEnclosing, FnShowBox, FnBackgroundPicture, FnPictureMode,
-  FnNotInLine, FnAny
-} FunctionType;
+  {
+    FnLine, FnPage, FnCreateBefore, FnCreateWith, FnCreateFirst, FnCreateLast,
+    FnCreateAfter, FnContent, FnColumn, FnCopy, FnContentRef, FnSubColumn,
+    FnNoLine, FnCreateEnclosing, FnShowBox, FnBackgroundPicture, FnPictureMode,
+    FnNotInLine, FnAny
+  } FunctionType;
 
 /* counter styles */
 typedef enum
-{
-  CntDecimal, CntZLDecimal, CntURoman, CntLRoman, CntUppercase, CntLowercase,
-  CntLGreek, CntUGreek
-} CounterStyle;
+  {
+    CntDecimal, CntZLDecimal, CntURoman, CntLRoman, CntUppercase, CntLowercase,
+    CntLGreek, CntUGreek
+  } CounterStyle;
 
 /* types of a presentation variable */
 typedef enum
-{
-  VarText, VarCounter, VarDate, VarFDate, VarDirName, VarDocName, VarElemName,
-  VarAttrName, VarAttrValue, VarNamedAttrValue, VarPageNumber
-} VariableType;
+  {
+    VarText, VarCounter, VarDate, VarFDate, VarDirName, VarDocName,
+    VarElemName, VarAttrName, VarAttrValue, VarNamedAttrValue, VarPageNumber
+  } VariableType;
 
 /* to indicate the nature of the counter value */
 typedef enum
-{
-  CntMaxVal, CntMinVal, CntCurVal
-} CounterValue;
+  {
+    CntMaxVal, CntMinVal, CntCurVal
+  } CounterValue;
 
 /* a variable element */
 typedef struct _PresVarItem
 {
   VariableType     ViType;
-  CounterStyle  ViStyle;           /* digit style for VarCounter, VarAttrValue
-				      and VarPageNumber */
+  CounterStyle     ViStyle;  /* digit style for VarCounter, VarAttrValue
+                                and VarPageNumber */
   union
   {
     struct
@@ -297,21 +297,21 @@ typedef struct _PresVarItem
     {
       int	   _ViCounter_;    /* number of the counter */
       CounterValue _ViCounterVal_; /* indicates if we are interested in the
-				      maximum, minimum or current value of
-				      the counter */
+                                      maximum, minimum or current value of
+                                      the counter */
     } s1;
     struct
     {
-      int          _ViAttr_;  	   /* the attribute number */
+      int    _ViAttr_;       /* the attribute number */
     } s2;
     struct
     {
-      int          _ViDate_;       /* for the compiler */
+      int    _ViDate_;       /* for the compiler */
     } s3;
-    struct			   /* ViType = VarPageNumber */
+    struct			             /* ViType = VarPageNumber */
     {
-      int	   _ViView_;	   /* number of the view in which pages are
-				      counted */
+      int	   _ViView_;	     /* number of the view in which pages are
+                                counted */
     } s4;
   } u;
 } PresVarItem;
@@ -325,82 +325,82 @@ typedef struct _PresVarItem
 
 /* A box creation condition type */
 typedef enum
-{
-  PcFirst, PcLast, PcReferred, PcFirstRef, PcLastRef, PcExternalRef,
-  PcInternalRef, PcCopyRef, PcAnyAttributes, PcFirstAttr, PcLastAttr,
-  PcUserPage, PcStartPage, PcComputedPage, PcEmpty, PcRoot, PcEven,
-  PcOdd, PcOne, PcInterval, PcWithin, PcElemType, PcAttribute,
-  PcInheritAttribute, PcNoCondition, PcDefaultCond
-} PresCondition;
+  {
+    PcFirst, PcLast, PcReferred, PcFirstRef, PcLastRef, PcExternalRef,
+    PcInternalRef, PcCopyRef, PcAnyAttributes, PcFirstAttr, PcLastAttr,
+    PcUserPage, PcStartPage, PcComputedPage, PcEmpty, PcRoot, PcEven,
+    PcOdd, PcOne, PcInterval, PcWithin, PcSibling, PcElemType, PcAttribute,
+    PcInheritAttribute, PcNoCondition, PcDefaultCond
+  } PresCondition;
 
 /* To interpret the field CoRelation */
 typedef enum
-{
-  CondGreater, CondLess, CondEquals
-} ArithRel;
+  {
+    CondGreater, CondLess, CondEquals
+  } ArithRel;
 
 /* To interpret the field CoMatch */
 typedef enum
-{
-  CoMatch, CoSubstring, CoWord
-} CondMatch;
+  {
+    CoMatch, CoSubstring, CoWord
+  } CondMatch;
 
 typedef struct _Condition *PtrCondition;
 
 /* A presentation rule application condition */
 typedef struct _Condition
 {
-  PtrCondition    CoNextCondition; /* Next condition in the list
-				      IF cond AND cond AND cond ... */
-  PresCondition   CoCondition;	   /* type of the condition */	
+  PtrCondition    CoNextCondition; /* Next condition in the list */
+  PresCondition   CoCondition;	   /* type of the condition */
+  ThotBool        CoChangeElem;    /* this condition apply to the element
+                                      selected by the previous conditions */
   ThotBool        CoNotNegative;   /* the condition is not negative */
-  ThotBool	  CoTarget;	   /* the condition affects the target
-				      (for references only) */
+  ThotBool	      CoTarget;	       /* the condition affects the target
+                                      (for references only) */
   union
   {
-    struct			   /* CoCondition = PcInterval, PcEven, PcOdd,
-				      PcOne */
+    struct			   /* CoCondition = PcInterval, PcEven, PcOdd, PcOne */
     {
-      int	   _CoCounter_;    /* number of the counter on which the
-				      condition applies */
-      int	   _CoMinCounter_; /* minimum value of the counter so that
-				     the presentation rule may be applied */
-      int	   _CoMaxCounter_; /* maximum value of the counter so that
-				      the presentation rule may be applied */
+      int	   _CoCounter_;          /* number of the counter on which the
+                                      condition applies */
+      int	   _CoMinCounter_;       /* minimum value of the counter so that
+                                      the presentation rule may be applied */
+      int	   _CoMaxCounter_;       /* maximum value of the counter so that
+                                      the presentation rule may be applied */
       CounterValue _CoValCounter_; /* indicates if the minimum, maximum or
-				      current value of the counter is used */
+                                      current value of the counter is used */
     } s0;
     struct			   /* CoCondition = PcWithin */
     {
-      int       _CoRelation_;	   /* RelLevel */
+      int       _CoRelation_;	     /* RelLevel */
       int       _CoTypeAncestor_;  /* type of the ancestor */	
       ThotBool  _CoImmediate_;	   /* Immediately */
       ArithRel  _CoAncestorRel_;
       char     *_CoAncestorName_;  /* Ancestor type name, if defined in
-				      another schema */
+                                      another schema */
       Name      _CoSSchemaName_;   /* name of the schema where the ancestor is
-				      defined if CoTypeAncestor == 0 */
+                                      defined if CoTypeAncestor == 0 */
     } s1;
     struct			   /* CoCondition = PcElemType */
     {
-      int	_CoTypeElem_;	   /* type of the element to which the
-				      attribute is attached */
+      int	_CoTypeElem_;	           /* type of the element to which the
+                                      attribute is attached */
     } s2;
     struct			   /* CoCondition = PcAttribute */
     {
-      int	_CoTypeAttr_;	   /* attribute carried by the element */
+      int	_CoTypeAttr_;	           /* attribute carried by the element */
       ThotBool  _CoTestAttrValue_; /* the attribute value must be tested */
       union
       {
-	struct        /* numerical or enumerated attribute */
-	{
-	  int	_CoAttrValue_;     /* the value that satisfies the condition */
-	} s0;
-	struct        /* text attribute */
-	{
-	  char     *_CoAttrTextValue_; /* the value that satisfies the condition */
-	  CondMatch _CoTextMatch_;     /* matching condition: substring, word, ... */
-	} s1;
+        struct        /* numerical or enumerated attribute */
+        {
+          int	_CoAttrValue_;       /* the value that satisfies the condition */
+        } s0;
+        struct        /* text attribute */
+        {
+          char     *_CoAttrTextValue_; /* the value that satisfies the condition */
+          CondMatch _CoTextMatch_;     /* matching condition: substring, word, ... */
+        } s1;
       } u;
     } s3;
   } u;

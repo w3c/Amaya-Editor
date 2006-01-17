@@ -1094,6 +1094,7 @@ static void ReadPRules (BinFile file, PtrPRule *pPRule, PtrPRule *pNextPRule,
 	      pCond->CoNextCondition = pPR->PrCond;
 	      pPR->PrCond = pCond;
 	      pCond->CoCondition = typeCond;
+        pCond->CoChangeElem = FALSE;
 	      TtaReadBool (file, &pCond->CoNotNegative);
 	      TtaReadBool (file, &pCond->CoTarget);
 	      switch (typeCond)

@@ -3128,6 +3128,22 @@ static void wrCondition (PtrCondition pCond, FILE *fileDescriptor)
         wrrulename (pCond->CoTypeAncestor, fileDescriptor);
       fprintf (fileDescriptor, " ");
       break;
+    case PcSibling:
+      if (pCond->CoImmediate)
+        fprintf (fileDescriptor, "Immediately ");
+      fprintf (fileDescriptor, "After ");
+      if (pCond->CoTypeAncestor == 0)
+        {
+          if (pCond->CoAncestorName)
+            fprintf (fileDescriptor, pCond->CoAncestorName);
+          fprintf (fileDescriptor, "(");
+          fprintf (fileDescriptor, pCond->CoSSchemaName);
+          fprintf (fileDescriptor, ")");
+        }
+      else
+        wrrulename (pCond->CoTypeAncestor, fileDescriptor);
+      fprintf (fileDescriptor, " ");
+      break;
     case PcInterval:
       if (pCond->CoCounter > 0)
         {
@@ -3388,7 +3404,8 @@ static void wrprules (PtrPRule RP, FILE *fileDescriptor, PtrPSchema pPSch)
           pCond = pCond->CoNextCondition;
           while (pCond != NULL)
             {
-              fprintf (fileDescriptor, "AND ");
+              if (!pCond->CoChangeElem)
+                fprintf (fileDescriptor, "AND ");
               wrCondition (pCond, fileDescriptor);
               pCond = pCond->CoNextCondition;
             }
@@ -3695,6 +3712,27 @@ static void wrprules (PtrPRule RP, FILE *fileDescriptor, PtrPSchema pPSch)
         case PtPosition:
           fprintf (fileDescriptor, "Position: ");
           wrfontstyle (RP, fileDescriptor);
+          break;
+        case PtVis:
+          fprintf (fileDescriptor, "Visibility: ");
+          switch (RP->PrChrValue)
+            {
+            case 'H':
+              fprintf (fileDescriptor, "hidden");
+              break;
+            case 'V':
+              fprintf (fileDescriptor, "visible");
+              break;
+            case 'C':
+              fprintf (fileDescriptor, "collapse");
+              break;
+            case 'I':
+              fprintf (fileDescriptor, "inherit");
+              break;
+            default:
+              fprintf (fileDescriptor, "??");
+              break;
+            }
           break;
         case PtBreak1:
           fprintf (fileDescriptor, "NoBreak1: ");
