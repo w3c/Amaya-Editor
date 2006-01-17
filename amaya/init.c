@@ -4975,6 +4975,8 @@ ThotBool ViewToClose (NotifyDialog *event)
           TtaSetDocumentUnmodified (document);
         }
     }
+  else if (DocumentTypes[document] == docSource)
+    TtaSetDocumentUnmodified (document);
   else if (!CanReplaceCurrentDocument (document, view))
     /* abort the command and don't let Thot perform normal operation */
     return TRUE;
