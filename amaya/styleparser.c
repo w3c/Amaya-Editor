@@ -2031,7 +2031,7 @@ static char *SetCSSImage (Element element, PSchema tsch,
       image.pointer = NULL;
       TtaSetStylePresentation (ruleType, element, tsch, ctxt,image);
     }
-  else if (url)
+  else if (url && DoApply)
     {
       bg_image = TtaGetEnvString ("ENABLE_BG_IMAGES");
       if (bg_image == NULL || !strcasecmp (bg_image, "yes"))
@@ -5734,11 +5734,13 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
           else if (*selector == '[')
             {
               selector++;
+              selector = SkipBlanksAndComments (selector);
               while (*selector != EOS && *selector != ']' &&
                      *selector != '=' && *selector != '~' &&
-                     *selector != '|')
+                     *selector != '|' && *selector != '^' &&
+                     !TtaIsBlank (selector))
                 *cur++ = *selector++;
-              /* close the word */
+              /* close the word (attribute name) */
               *cur++ = EOS;
               /* point to the attribute in sel[] if it's valid name */
               if (deb[0] <= 64)
@@ -5768,12 +5770,18 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
                   attrlevels[0] = 0;
                   specificity += 10;
                   /* check matching */
+                  selector = SkipBlanksAndComments (selector);
                   if (*selector == '~')
                     {
                       attrmatch[0] = Txtword;
                       selector++;
                     }
                   else if (*selector == '|')
+                    {
+                      attrmatch[0] = Txtsubstring;
+                      selector++;
+                    }
+                  else if (*selector == '^')
                     {
                       attrmatch[0] = Txtsubstring;
                       selector++;
@@ -5785,6 +5793,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
                 {
                   /* look for a value "xxxx" */
                   selector++;
+                  selector = SkipBlanksAndComments (selector);
                   if (*selector != '"')
                     quoted = FALSE;
                   else
@@ -5821,6 +5830,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
                       selector++;
                       quoted = FALSE;
                     }
+                  selector = SkipBlanksAndComments (selector);
                   if (*selector != ']')
                     {
                       CSSPrintError ("Invalid attribute value", deb);
