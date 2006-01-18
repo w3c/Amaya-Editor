@@ -154,7 +154,7 @@ void AmayaToolBar::AppendURL( const wxString & newurl )
   -----------------------------------------------------------------------*/
 void AmayaToolBar::SetURLValue( const wxString & newurl )
 {
-  TTALOGDEBUG_0( TTA_LOG_DIALOG, _T("** AmayaToolBar::SetURLValue - ")+newurl);
+  TTALOGDEBUG_0( TTA_LOG_DIALOG, _T("AmayaToolBar::SetURLValue - ")+newurl);
 #ifdef _MACOS
   UpdateFrameUrl = FALSE;
 #endif /* _MACOS */
