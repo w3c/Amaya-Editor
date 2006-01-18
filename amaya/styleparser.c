@@ -221,6 +221,20 @@ static void CSSParseError (char *msg, char *value, char *endvalue)
 }
 
 /*----------------------------------------------------------------------
+  SkipString move to the end of the string
+  ----------------------------------------------------------------------*/
+static char *SkipString (char *ptr)
+{
+  char        c = *ptr;
+
+  ptr++;
+  while (*ptr != EOS &&
+         (*ptr != c || (*ptr == c && ptr[-1] == '\\')))
+    ptr++;
+  return ptr;
+}
+
+/*----------------------------------------------------------------------
   CSSCheckEndValue
   print an error message if another character is found
   ----------------------------------------------------------------------*/
@@ -234,7 +248,12 @@ static char *CSSCheckEndValue (char *cssRule, char *endvalue, char *msg)
       while (*endvalue != EOS && *endvalue != SPACE && *endvalue != '/' &&
              *endvalue != ';' && *endvalue != '}' && *endvalue != EOL &&
              *endvalue != TAB && *endvalue !=  __CR__)
-        endvalue++;
+        {
+          if (*endvalue == '"' || *endvalue == '\'')
+            endvalue = SkipString (endvalue);
+          if (*endvalue != EOS)
+            endvalue++;
+        }
       /* close the string here */
       c = *endvalue;
       *endvalue = EOS;
@@ -251,35 +270,32 @@ static char *CSSCheckEndValue (char *cssRule, char *endvalue, char *msg)
 static char *SkipProperty (char *ptr, ThotBool reportError)
 {
   char       *deb;
-#ifdef IV
   char        c;
-#endif
 
   deb = ptr;
   while (*ptr != EOS && *ptr != ';' && *ptr != '}' && *ptr != '}')
     {
-      if (*ptr == '"' && (ptr == deb || ptr[-1] != '\\'))
-        {
-          /* skip to the end of the string "..." */
-          ptr++;
-          while (*ptr != EOS &&
-                 (*ptr != '"' || (*ptr == '"' && ptr[-1] == '\\')))
-            ptr++;
-        }
-      ptr++;
+      if (*ptr == '"' || *ptr == '\'')
+        ptr = SkipString (ptr);
+      if (*ptr != EOS)
+        ptr++;
     }
-#ifdef IV
   /* print the skipped property */
   c = *ptr;
   *ptr = EOS;
   if (reportError && *deb != EOS &&
+      strncasecmp (deb, "azimuth", 7) &&
       strncasecmp (deb, "border-collapse", 15) &&
       strncasecmp (deb, "border-spacing", 14) &&
       strncasecmp (deb, "caption-side", 12) &&
       strncasecmp (deb, "clip", 4) &&
       strncasecmp (deb, "counter-increment", 16) &&
       strncasecmp (deb, "counter-reset", 13) &&
+      strncasecmp (deb, "cue-after", 9) &&
+      strncasecmp (deb, "cue-before", 10) &&
+      strncasecmp (deb, "cue", 3) &&
       strncasecmp (deb, "cursor", 6) &&
+      strncasecmp (deb, "elevation", 9) &&
       strncasecmp (deb, "empty-cells", 11) &&
       strncasecmp (deb, "font-strech", 11) &&
       strncasecmp (deb, "letter-spacing", 14) &&
@@ -294,13 +310,26 @@ static char *SkipProperty (char *ptr, ThotBool reportError)
       strncasecmp (deb, "outline-width", 13) &&
       strncasecmp (deb, "outline", 7) &&
       strncasecmp (deb, "overflow", 8) &&
+      strncasecmp (deb, "pause-after", 11) &&
+      strncasecmp (deb, "pause-before", 12) &&
+      strncasecmp (deb, "pause", 5) &&
       strncasecmp (deb, "quotes", 6) &&
+      strncasecmp (deb, "richness", 8) &&
+      strncasecmp (deb, "speech-rate", 11) &&
+      strncasecmp (deb, "speak-header", 12) &&
+      strncasecmp (deb, "speak-punctuation", 17) &&
+      strncasecmp (deb, "speak-numeral", 13) &&
+      strncasecmp (deb, "speak", 5) &&
+      strncasecmp (deb, "pitch-range", 11) &&
+      strncasecmp (deb, "pitch", 5) &&
+      strncasecmp (deb, "stress", 6) &&
       strncasecmp (deb, "table-layout", 12) &&
       strncasecmp (deb, "text-shadow", 11) &&
+      strncasecmp (deb, "voice-family", 12) &&
+      strncasecmp (deb, "volume", 6) &&
       strncasecmp (deb, "widows", 6))
     CSSPrintError ("CSS property ignored:", deb);
   *ptr = c;
-#endif /* IV */
   return (ptr);
 }
 
@@ -316,14 +345,10 @@ static char *SkipValue (char *msg, char *ptr)
   deb = ptr;
   while (*ptr != EOS && *ptr != ';' && *ptr != '}' && *ptr != '}' && *ptr != '\n')
     {
-      if (*ptr == '"' && (ptr == deb || ptr[-1] != '\\'))
-        {
-          /* skip to the end of the string "..." */
-          ptr++;
-          while (*ptr != '"' || (ptr[0] == '"' && ptr[-1] == '\\'))
-            ptr++;
-        }
-      ptr++;
+      if (*ptr == '"' || *ptr == '\'')
+        ptr = SkipString (ptr);
+      if (*ptr != EOS)
+        ptr++;
     }
   /* print the skipped property */
   c = *ptr;
@@ -619,8 +644,6 @@ static char *ParseBorderStyle (char *cssRule, PresentationValue *border)
       border->typed_data.unit = UNIT_INVALID;
       return (cssRule);
     }
-  /* the value is parsed now */
-  /*cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid border-style value");*/
   return (cssRule);
 }
 
@@ -6592,8 +6615,8 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
   int                 openRule;
   int                 newlines;
   ThotBool            HTMLcomment;
-  ThotBool            toParse, eof, quoted;
-  ThotBool            ignore, media, page;
+  ThotBool            toParse, eof, quoted, s_quoted;
+  ThotBool            ignore, media, page, lineComment;
   ThotBool            noRule, ignoreImport, fontface;
 
   CSScomment = MAX_CSS_LENGTH;
@@ -6603,9 +6626,9 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
   noRule = FALSE;
   media = FALSE;
   ignoreImport = FALSE;
-  ignore = FALSE;
+  ignore = lineComment = FALSE;
   page = FALSE;
-  quoted = FALSE;
+  quoted = s_quoted = FALSE;
   fontface = FALSE;
   eof = FALSE;
   openRule = 0;
@@ -6660,18 +6683,18 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
       c = buffer[index++];
       eof = (c == EOS);
       CSSbuffer[CSSindex] = c;
-      if (CSScomment == MAX_CSS_LENGTH ||
-          c == '*' || c == '/' || c == '<' || c == EOL)
+      if (!lineComment &&
+          (CSScomment == MAX_CSS_LENGTH || c == '*' || c == '/' || c == '<' || c == EOL))
         {
           /* we're not within a comment or we're parsing * or / */
           switch (c)
             {
             case '@': /* perhaps an import primitive */
-              if (!fontface && !page && !quoted)
+              if (!fontface && !page && !quoted && !s_quoted)
                 import = CSSindex;
               break;
             case ';':
-              if (!quoted && !media && import != MAX_CSS_LENGTH)
+              if (!quoted && !s_quoted && !media && import != MAX_CSS_LENGTH)
                 { 
                   if (strncasecmp (&CSSbuffer[import+1], "import", 6))
                     /* it's not an import */
@@ -6681,13 +6704,13 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
                 }
               break;
             case '*':
-              if (!quoted && CSScomment == MAX_CSS_LENGTH && CSSindex > 0 &&
+              if (!quoted && !s_quoted && CSScomment == MAX_CSS_LENGTH && CSSindex > 0 &&
                   CSSbuffer[CSSindex - 1] == '/')
                 /* start a comment */
                 CSScomment = CSSindex - 1;
               break;
             case '/':
-              if (!quoted && CSSindex > 1 && CSScomment != MAX_CSS_LENGTH &&
+              if (!quoted && !s_quoted && CSSindex > 1 && CSScomment != MAX_CSS_LENGTH &&
                   CSSbuffer[CSSindex - 1] == '*')
                 {
                   while (CSSindex > 0 && CSSindex >= CSScomment)
@@ -6718,17 +6741,26 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
                         CSSindex--;
                       }
                 }
-              else if (!fontface && !page && !quoted &&
+              else if (!fontface && !page && !quoted && !s_quoted &&
                        CSScomment == MAX_CSS_LENGTH && CSSindex > 0 &&
                        CSSbuffer[CSSindex - 1] ==  '<')
                 {
                   /* this is the closing tag ! */
                   CSSindex -= 2; /* remove </ from the CSS string */
                   noRule = TRUE;
-                } 
+                }
+              else if (!quoted && !s_quoted &&
+                       (CSSindex == 1 || (CSSindex > 1 && CSSbuffer[CSSindex - 2] == EOL))  &&
+                       CSScomment == MAX_CSS_LENGTH &&
+                       CSSbuffer[CSSindex - 1] == '/')
+                {
+                  CSSindex--;
+                  lineComment = TRUE;
+                }
+                
               break;
             case '<':
-              if (!fontface && !page && !quoted &&
+              if (!fontface && !page && !quoted && !s_quoted &&
                   CSScomment == MAX_CSS_LENGTH)
                 {
                   /* only if we're not parsing a comment */
@@ -6746,22 +6778,22 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
                 }
               break;
             case '-':
-              if (!fontface && !page && !quoted &&
+              if (!fontface && !page && !quoted && !s_quoted &&
                   CSSindex > 0 && CSSbuffer[CSSindex - 1] == '-' &&
                   HTMLcomment)
                 /* CSS within an HTML comment */
                 noRule = TRUE;
               break;
             case '>':
-              if (!fontface && !page && !quoted && HTMLcomment)
+              if (!fontface && !page && !quoted && !s_quoted && HTMLcomment)
                 noRule = TRUE;
               break;
             case ' ':
-              if (!quoted && import != MAX_CSS_LENGTH && openRule == 0)
+              if (!quoted && !s_quoted && import != MAX_CSS_LENGTH && openRule == 0)
                 media = !strncasecmp (&CSSbuffer[import+1], "media", 5);
               break;
             case '{':
-              if (!quoted)
+              if (!quoted && !s_quoted)
                 {
                   openRule++;
                   if (import != MAX_CSS_LENGTH)
@@ -6791,7 +6823,7 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
                 }
               break;
             case '}':
-              if (!quoted)
+              if (!quoted && !s_quoted)
                 {
                   openRule--;
                   if (page)
@@ -6818,13 +6850,22 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
             case '"':
               if (quoted)
                 {
-                  if (CSSbuffer[CSSindex - 1] != '\\')
+                  if (CSSindex > 0 && CSSbuffer[CSSindex - 1] != '\\')
                     quoted = FALSE;
                 }
-              else
+              else if (!s_quoted)
                 quoted = TRUE;
               break;
-            default:
+             case '\'':
+              if (s_quoted)
+                {
+                  if (CSSindex > 0 && CSSbuffer[CSSindex - 1] != '\\')
+                    s_quoted = FALSE;
+                }
+              else if (!quoted)
+                s_quoted = TRUE;
+              break;
+           default:
               if (c == EOL)
                 {
                   newlines++;
@@ -6835,10 +6876,11 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
       else if (c == EOL)
         {
           LineNumber++;
+          lineComment = FALSE;
           c = CR;
         }
 
-      if (c != CR)
+      if (!lineComment && c != CR)
         CSSindex++;
 
       if (CSSindex >= MAX_CSS_LENGTH && CSScomment < MAX_CSS_LENGTH)
