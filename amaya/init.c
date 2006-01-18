@@ -5809,9 +5809,11 @@ void CallbackDialogue (int ref, int typedata, char *data)
               (!DontReplaceOldDoc && CanReplaceCurrentDocument(CurrentDocument, 1)) /* wants to replace the current document */
                )
             {
-#endif /* _WX */
-              TtaDestroyDialogue (BaseDialog + OpenForm);
+#else /* _WX */
+	      /* Do not destroy this dialog on WX to prevent a crash on mac version */
+	      TtaDestroyDialogue (BaseDialog + OpenForm);
               TtaDestroyDialogue (BaseDialog + FileBrowserForm);
+#endif /* _WX */
               if (LastURLName[0] != EOS)
                 {
                   TtaSetStatus (CurrentDocument, 1,

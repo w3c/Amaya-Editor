@@ -255,6 +255,9 @@ void OpenDocDlgWX::OnOpenButton( wxCommandEvent& event )
   Waiting = 0;
   // create or load the new document
   ThotCallback (m_Ref, INTEGER_DATA, (char*)1);
+
+  /* The dialogue is no longer destroyed in the callback to prevent a crash on Mac */
+  TtaDestroyDialogue (m_Ref);
 }
 
 /*----------------------------------------------------------------------
