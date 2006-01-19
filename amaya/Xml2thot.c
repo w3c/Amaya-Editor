@@ -1954,7 +1954,7 @@ static void StartOfXmlStartElement (char *name)
       /* Look for the context associated with that namespace */
       ChangeXmlParserContextByUri (nsURI);
       // it's a compound document
-      if (savParserCtxt != currentParserCtxt &&
+      if (currentParserCtxt && savParserCtxt != currentParserCtxt &&
           (!strcmp (currentParserCtxt->SSchemaName, "SVG") ||
            !strcmp (currentParserCtxt->SSchemaName, "MathML")) &&
           DocumentMeta[XMLcontext.doc])
