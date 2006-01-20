@@ -803,7 +803,7 @@ ThotBool CreateHRefDlgWX ( int ref,
     wx_filter = APPFILENAMEFILTER;
   wxArrayString wx_items = BuildWX_URL_List(url_list);
 
-  /* check if the dialog is alredy open */
+  /* check if the dialog is already open */
   if (TtaRaiseDialogue (ref))
     return FALSE;
 

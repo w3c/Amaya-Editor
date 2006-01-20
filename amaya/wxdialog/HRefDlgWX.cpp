@@ -74,7 +74,10 @@ HRefDlgWX::~HRefDlgWX()
 {
   /* do not call this one because it cancel the link creation */
   if (Waiting)
-    ThotCallback (m_Ref, INTEGER_DATA, (char*) 0);
+    {
+      Waiting = 0;
+      ThotCallback (m_Ref, INTEGER_DATA, (char*) 0);
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -155,7 +158,12 @@ void HRefDlgWX::OnCancel( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void HRefDlgWX::OnClick( wxCommandEvent& event )
 {
-  ThotCallback (m_Ref, INTEGER_DATA, (char*) 3);
+  if (Waiting)
+    {
+      Waiting = 0;
+      ThotCallback (m_Ref, INTEGER_DATA, (char*) 3);
+      TtaDestroyDialogue( m_Ref );
+    }
 }
 
 /*----------------------------------------------------------------------
