@@ -1280,7 +1280,7 @@ static void PutClassName (Attribute attr, char *className, char *buf,
     {
       name = ptr;
       /* look for the end of the current name */
-      while (*ptr > ' ')
+      while (*ptr > ' ' && *ptr != '.' && *ptr != '#' && *ptr != '[')
         ptr++;
       *ptr = EOS;
       ptr++;
@@ -1313,7 +1313,7 @@ static void PutClassName (Attribute attr, char *className, char *buf,
           len++; /* add the \0 */
           if (len > *free)
             return;
-          if (i > 1 && i  <= *nb)
+          if (previous && i > 1 && i  <= *nb)
             {
               // move the tail of the current list
               cur--;
