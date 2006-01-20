@@ -341,6 +341,63 @@ ThotBool CheckMandatory (NotifyAttribute *event)
 }
 
 /*----------------------------------------------------------------------
+  GenerateInlinechildren generates the newType inline element as children
+  of block elements.
+  -----------------------------------------------------------------------*/
+static void GenerateInlinechildren (Element el, ElementType newType, Document doc)
+{
+  ElementType	    elType;
+  Element         child, added, next, last, in_line;
+
+  /* generate a strong, etc. into the block element? */
+  elType = TtaGetElementType (el);
+  if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+    {
+      child = TtaGetFirstChild (el);
+      elType = TtaGetElementType (child);
+      last = TtaGetLastChild (el);
+      if (child && IsCharacterLevelElement (child) &&
+          (last != child ||
+           elType.ElSSchema != newType.ElSSchema ||
+           elType.ElTypeNum != newType.ElTypeNum))
+        {
+          /* create a in_line element */
+          in_line = TtaNewElement (doc, newType);
+          added = NULL;
+          while (child)
+            {
+              next = child;
+              TtaNextSibling (&next);
+              TtaRegisterElementDelete (child, doc);
+              TtaRemoveTree (child, doc);
+              // add at the end of the in_line
+              if (added)
+                TtaInsertSibling (child, added, FALSE, doc);
+              else
+                {
+                  added = child;
+                  TtaInsertFirstChild (&added, in_line, doc);
+                }
+              added = child;
+              child = next;
+            }
+          // insert into the new created in_line
+          TtaInsertFirstChild (&in_line, el, doc);
+          TtaRegisterElementCreate (in_line, doc);
+          in_line = NULL;
+        }
+      else
+        {
+          while (child)
+            {
+              GenerateInlinechildren (child, newType, doc);
+              TtaNextSibling (&child);
+            }
+        }
+    }
+}
+
+/*----------------------------------------------------------------------
   GenerateInlineElement
   Generates the elType inline element around the selection with the
   attribute (if aType is not 0) and sets the value data to the attribute.
@@ -350,7 +407,8 @@ ThotBool CheckMandatory (NotifyAttribute *event)
   -----------------------------------------------------------------------*/
 void GenerateInlineElement (int eType, int aType, char * data)
 {
-  Element         el, firstSel, lastSel, next, in_line, sibling, child, last, parent;
+  Element         el, firstSel, lastSel, next, in_line, sibling, child;
+  Element         last, parent;
   ElementType	    elType, parentType, newType;
   Attribute       newAttr;
   AttributeType   attrType;
@@ -756,6 +814,9 @@ void GenerateInlineElement (int eType, int aType, char * data)
                               // apply the style to the enclosing element
                               el = in_line;
                             }
+                          else if (eType != HTML_EL_Anchor && eType != HTML_EL_Span)
+                            GenerateInlinechildren (el, newType, doc);
+
                           if (el && attrType.AttrTypeNum != 0)
                             {
                               // generate an attribute to element or its children
@@ -769,6 +830,10 @@ void GenerateInlineElement (int eType, int aType, char * data)
                                 }
                               while (child)
                                 {
+                                  elType = TtaGetElementType (child);
+                                  if (TtaHasHiddenException (elType))
+                                    // skip hidden elements
+                                    child = TtaGetFirstChild (child);
                                   if (aType == HTML_ATTR_ID)
                                     // generate id and/or name
                                      CreateTargetAnchor (doc, child, FALSE, TRUE);

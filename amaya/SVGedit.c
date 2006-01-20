@@ -1037,7 +1037,11 @@ ThotBool NewGraphElem (NotifyOnValue *event)
   // is it a compound document?
   profile = TtaGetDocumentProfile (event->document);
   if (profile == L_Strict || profile == L_Basic)
-    return TRUE;
+    {
+      /* cannot insert here */
+      TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NOT_ALLOWED);
+      return TRUE;
+    }
   else
     return FALSE; /* let Thot perform normal operation */
 }
