@@ -12,6 +12,7 @@
 #include "amaya.h"
 #include "appdialogue_wx.h"
 #include "message_wx.h"
+static int Waiting = 0;
 
 //-----------------------------------------------------------------------------
 // Event table: connect the events to the handler functions to process them
@@ -45,7 +46,7 @@ HRefDlgWX::HRefDlgWX( int ref,
   m_Filter(filter)
 {
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("HRefDlgWX"));
-
+  Waiting = 1;
   // update dialog labels with given ones
   SetTitle( title );
   XRCCTRL(*this, "wxID_LABEL",  wxStaticText)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_LOCATION) ));
@@ -72,7 +73,8 @@ HRefDlgWX::HRefDlgWX( int ref,
 HRefDlgWX::~HRefDlgWX()
 {
   /* do not call this one because it cancel the link creation */
-  /*  ThotCallback (m_Ref, INTEGER_DATA, (char*) 0);*/
+  if (Waiting)
+    ThotCallback (m_Ref, INTEGER_DATA, (char*) 0);
 }
 
 /*----------------------------------------------------------------------
@@ -84,12 +86,11 @@ void HRefDlgWX::OnOk( wxCommandEvent& event )
 {
   // get the combobox current url
   wxString url = XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->GetValue( );
-
+  Waiting = 0;
   // allocate a temporary buffer to copy the 'const char *' url buffer 
   char buffer[512];
   wxASSERT( url.Len() < 512 );
   strcpy( buffer, (const char*)url.mb_str(wxConvUTF8) );
-
   // give the new url to amaya (to do url completion)
   ThotCallback (BaseDialog + AttrHREFText, STRING_DATA, (char *)buffer);
   // create or load the new document
@@ -143,7 +144,8 @@ void HRefDlgWX::OnCancel( wxCommandEvent& event )
   // this callback is called into AmayaDialog::OnClose
   // usefull to cancel the link creation process
   //  ThotCallback (m_Ref, INTEGER_DATA, (char*) 0);
-  Close();
+  //Close();
+  TtaDestroyDialogue( m_Ref );
 }
 
 /*----------------------------------------------------------------------
