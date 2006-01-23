@@ -47,10 +47,6 @@ void SpellCheckDlgWX::Set_Proposals ( )
     XRCCTRL(*this, "wxID_SPELL_FINISHED", wxStaticText)->SetLabel( TtaConvMessageToWX (TtaGetMessage (LIB, TMSG_END_CHECK)));
   else
     {
-      // default correction
-      TtaGetProposal (&proposal, 1);
-      if (strcmp (proposal, "$") != 0)
-        XRCCTRL(*this, "wxID_FIRST_PROPOSAL", wxTextCtrl)->SetValue(TtaConvMessageToWX( proposal ) );
       // list of proposals
       for (i = 1; i <= m_max_proposals; i++)
         {
@@ -59,6 +55,10 @@ void SpellCheckDlgWX::Set_Proposals ( )
             XRCCTRL(*this, "wxID_PROPOSALS_LIST", wxListBox)->SetString (i-1, TtaConvMessageToWX( proposal ));
         }
       XRCCTRL(*this, "wxID_PROPOSALS_LIST", wxListBox)->SetSelection(0);
+      // default correction
+      TtaGetProposal (&proposal, 1);
+      if (strcmp (proposal, "$") != 0)
+        XRCCTRL(*this, "wxID_FIRST_PROPOSAL", wxTextCtrl)->SetValue(TtaConvMessageToWX( proposal ) );
       //checker language
       TtaGetChkrLanguageName (&lang);
       char buffer[100];
@@ -175,12 +175,14 @@ void SpellCheckDlgWX::OnSkipWithButton( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void SpellCheckDlgWX::OnReplaceWithoutButton( wxCommandEvent& event )
 {
-  wxString selected_item = 
-    XRCCTRL(*this, "wxID_PROPOSALS_LIST", wxListBox)->GetStringSelection();
+  char buffer[100];
+  wxString selected_item;
+
+  selected_item = XRCCTRL(*this, "wxID_FIRST_PROPOSAL", wxTextCtrl)->GetValue();
+  //selected_item = XRCCTRL(*this, "wxID_PROPOSALS_LIST", wxListBox)->GetStringSelection();
   if ( !selected_item.IsEmpty() )
     {  
       // allocate a temporary buffer
-      char buffer[100];
       wxASSERT( selected_item.Len() < 100 );
       strcpy( buffer, (const char*)selected_item.mb_str(wxConvUTF8) );
       ThotCallback (m_base + ChkrSelectProp, STRING_DATA, buffer);
@@ -194,12 +196,13 @@ void SpellCheckDlgWX::OnReplaceWithoutButton( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void SpellCheckDlgWX::OnReplaceWithButton( wxCommandEvent& event )
 {
-  wxString selected_item = 
-    XRCCTRL(*this, "wxID_PROPOSALS_LIST", wxListBox)->GetStringSelection();
+  char buffer[100];
+  wxString selected_item;
+
+  selected_item = XRCCTRL(*this, "wxID_FIRST_PROPOSAL", wxTextCtrl)->GetValue();
   if ( !selected_item.IsEmpty() )
     {  
       // allocate a temporary buffer
-      char buffer[100];
       wxASSERT( selected_item.Len() < 100 );
       strcpy( buffer, (const char*)selected_item.mb_str(wxConvUTF8) );
       ThotCallback (m_base + ChkrSelectProp, STRING_DATA, buffer);
