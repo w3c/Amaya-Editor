@@ -1615,7 +1615,7 @@ void ApplyClass (Document doc, View view)
   CurrentClass[0] = EOS;
   ApplyClassDoc = doc;
   name =  TtaGetSSchemaName (elType.ElSSchema);
-  if (!strcmp (name, "TextFile") ||
+  if ((strcmp (name, "HTML") && strcmp (name, "MathML") && strcmp (name, "SVG")) ||
       !TtaGetDocumentAccessMode (doc))
     {
 #ifdef _WX 

@@ -4342,14 +4342,31 @@
 <message xml:lang="it">Applica chiude questo dialogo</message>
 <message xml:lang="es">Aplicar cierra el diálogo</message>
 <message xml:lang="hu">Az Alkalmaz gomb bezárja a párbeszédablakot</message>
-<message xml:lang="de">Mit &quot;Anwenden&quot; wird der Dialog geschlossen</message></label>
+<message xml:lang="de">Mit &quot;Anwenden&quot; wird der Dialog geschlossen</message>
+</label>
 <label define="AM_NOT_ALLOWED">
 <message xml:lang="en">Not allowed in this document</message>
-<message xml:lang="fr">Non autorisé dans ce document</message></label>
+<message xml:lang="fr">Non autorisé dans ce document</message>
+<message xml:lang="es">No permitido en este documento</message>
+<message xml:lang="de">In diesem Dokument nicht möglich</message>
+<message xml:lang="hu">Ebben a dokumentumban nem engedélyezett</message>
+<message xml:lang="it">Non ammesso in questo documento</message>
+</label>
 <label define="AM_READONLY">
 <message xml:lang="en">Protected element</message>
-<message xml:lang="fr">Element protégé</message></label>
+<message xml:lang="fr">Element protégé</message>
+<message xml:lang="es">Elemento protegido</message>
+<message xml:lang="de">Geschütztes Element</message>
+<message xml:lang="hu">Védett elem</message>
+<message xml:lang="it">Elemento protetto</message>
+</label>
 <label define="AM_INVALID_INLINE">
-<message xml:lang="en">The selection should not cross the element of this type</message>
-<message xml:lang="fr">La sélection ne peut pas traverser un élément de ce type</message></label>
-<label define="AMAYA_MSG_MAX"></label></messages></base>
+<message xml:lang="en">The selection should not cross an element of this type</message>
+<message xml:lang="fr">La sélection ne peut pas traverser un élément de ce type</message>
+<message xml:lang="es">La selección no debe cruzar un elemento de este tipo</message>
+<message xml:lang="de">Die Auswahl darf ein solches Element nicht treffen</message>
+<message xml:lang="hu">A kijelölés nem érinthet ilyen típusú elemet</message>
+<message xml:lang="it">La selezione non può attraversare un elemento di questo tipo</message>
+</label>
+<label define="AMAYA_MSG_MAX">
+</label></messages></base>
