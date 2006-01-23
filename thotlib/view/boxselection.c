@@ -277,7 +277,9 @@ void TtaClearViewSelections ()
 
   /* manage all frames */
   for (frame = 1; frame <= MAX_FRAME; frame++)
-    if (ViewFrameTable[frame - 1].FrAbstractBox != NULL)
+    if (ViewFrameTable[frame - 1].FrAbstractBox &&
+        FrameTable[frame].FrDoc > 0 &&
+        documentDisplayMode[FrameTable[frame].FrDoc - 1] != NoComputedDisplay)
       {
         ClearViewSelection (frame);
         DisplayFrame (frame);
