@@ -3,10 +3,10 @@
 #ifdef _WX
 #define APP_MAJVER 9
 #define APP_MINVER 3
-#define APP_SUBVER 0
+#define APP_SUBVER 1
 #else /* _WX */
 #define APP_MAJVER 8
 #define APP_MINVER 8
-#define APP_SUBVER 3
+#define APP_SUBVER 4
 #endif /* _WX */
 #endif /* __APPVERSION_H__ */
