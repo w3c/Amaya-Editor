@@ -575,6 +575,7 @@ CSSInfoPtr AddCSS (Document doc, Document docRef, CSSCategory category,
       css->localName = TtaStrdup (localName);
       css->NextCSS = NULL;
       css ->import = (category == CSS_IMPORT);
+      css->class_list = NULL;
       /* that CSS is only used by the document docRef */
       for (i = 0; i < DocumentTableLength; i++)
         css->infos[i] = NULL;
@@ -774,6 +775,7 @@ ThotBool UnlinkCSS (CSSInfoPtr css, Document doc, Element link,
             TtaFileUnlink (css->localName);
           TtaFreeMemory (css->localName);
           TtaFreeMemory (css->url);
+          TtaFreeMemory (css->class_list);
           if (CSSList == css)
             CSSList = css->NextCSS;
           else

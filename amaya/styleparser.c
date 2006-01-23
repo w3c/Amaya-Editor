@@ -5442,6 +5442,106 @@ void  ParseHTMLSpecificStyle (Element el, char *cssRule, Document doc,
     TtaFreeMemory(ctxt);
 }
 
+/*----------------------------------------------------------------------
+  AddClassName adds the class name into the class list of css if it's
+  not already there.
+  ----------------------------------------------------------------------*/
+static void AddClassName (char *name, CSSInfoPtr css)
+{
+  int		         l, index, k, length, add, max;
+  char          *buf;
+  ThotBool       found, previous;
+
+  l = strlen (name);
+  if (l == 0 || css == NULL)
+    return;
+  if (css->class_list)
+    {
+      buf = css->class_list;
+      length = strlen (css->class_list);
+    }
+  else
+    {
+      if (l > 200)
+        length = l + 1;
+      else
+        length = 200;
+      buf = (char *)TtaGetMemory (length * sizeof (char));
+      memset (buf, 0, length);
+      css->class_list = buf;
+      css->lg_class_list = length;
+      length = 0;
+    }
+
+  /* compare that name with all class names already known */
+  index = 0;
+  found = FALSE;
+  previous = FALSE;
+  while (index < length && !found && !previous)
+    {
+      k = 0;
+      while (k < l && buf[index + k] != EOS && buf[index + k] != SPACE)
+        {
+          if (name[k] == buf[index+k])
+            k++;
+          else
+            {
+              previous = (name[k] < buf[index + k]);
+              break;
+            }
+        }
+      found = (k == l);
+      if (!previous)
+        {
+          index += k;
+          while (buf[index] != EOS && buf[index] != SPACE)
+            index++;
+          if (buf[index] == SPACE)
+            index++;
+        }
+    }
+  
+  if (!found)
+    /* this class name is not known, append it */
+    {
+      l++; /* add a space before */
+      if (css->lg_class_list <= length + l)
+        {
+          // increase the list size
+          if (l > 200)
+            add = l + 1;
+          else
+            add = 200 ;
+          buf = (char *)TtaRealloc (buf, css->lg_class_list + (add * sizeof (char)));
+          if (buf == NULL)
+            return;
+          else
+            {
+            css->class_list = buf;
+            memset (&buf[css->lg_class_list], 0, add);
+            css->lg_class_list += add;
+            }
+        }
+
+      if (previous)
+        {
+          // move the tail of the current list
+          for (k = length; k >= index; k--)
+            buf[k+l] = buf[k];
+          /* add this new class name at the current position */
+           strcpy (&buf[index], name);
+          buf[index + l - 1] = SPACE;
+        }
+      else
+        {
+          /* add this new class name at the end */
+          if (index != 0)
+            buf[index++] = SPACE;
+          strcpy (&buf[index], name);
+        }
+     }
+}
+
 
 /*----------------------------------------------------------------------
   ParseGenericSelector: Create a generic context for a given selector
@@ -5611,7 +5711,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
                   attrmatch[0] = Txtword;
                   attrvals[0] = deb;
                   specificity += 10;
-                }
+                 }
             }
           else if (*selector == ':')
             /* pseudo-class or pseudo-element */
@@ -5960,6 +6060,11 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
               attrlevels[i]++;
         }
     }
+
+  /* Now update the list of classes defined by the CSS */
+  for (i = 0; i < nbattrs; i++)
+    if (attrvals[i] && attrnums[i] == ATTR_CLASS)
+      AddClassName (attrvals[i], css);
 
   /* Now set up the context block */
   i = 0;
@@ -6599,8 +6704,7 @@ void ApplyCSSRules (Element el, char *cssRule, Document doc, ThotBool destroy)
   structure and content have to be registered in the Undo queue or not.
   ----------------------------------------------------------------------*/
 char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
-                   int numberOfLinesRead, ThotBool withUndo,
-                   Element link)
+                   int numberOfLinesRead, ThotBool withUndo, Element link)
 {
   DisplayMode         dispMode;
   CSSInfoPtr          refcss = NULL;
@@ -6668,8 +6772,11 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
         pInfo = refcss->infos[docRef];
     }
 
-  /* register parsed CSS file and the document to which CSS are to be applied*/
+  /* register parsed CSS file and the document to which CSS are to be applied */
   ParsedDoc = docRef;
+  /* clean up the list of classes */
+  TtaFreeMemory (refcss->class_list);
+  refcss->class_list = NULL;
   if (url)
     DocURL = url;
   else

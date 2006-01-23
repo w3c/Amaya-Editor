@@ -1251,9 +1251,8 @@ static void UpdateClass (Document doc)
 }
 
 /*----------------------------------------------------------------------
-  PutClassName
-  Put class names at the end of the buffer buff if they are not there
-  already.
+  PutClassName adds the class names into the buffer buff if they are
+  not already there.
   Class names are contained in attribute attr or in parameter className.
   ----------------------------------------------------------------------*/
 static void PutClassName (Attribute attr, char *className, char *buf,
@@ -1261,7 +1260,7 @@ static void PutClassName (Attribute attr, char *className, char *buf,
 {
   int		         len, cur, i, k;
   unsigned char  selector[200];
-  char          *ptr, *name;
+  char          *ptr, *name, c;
   ThotBool       found, previous;
 
   if (attr)
@@ -1280,10 +1279,10 @@ static void PutClassName (Attribute attr, char *className, char *buf,
     {
       name = ptr;
       /* look for the end of the current name */
-      while (*ptr > ' ' && *ptr != '.' && *ptr != '#' && *ptr != '[')
+      while (*ptr > ' ' && *ptr != EOS)
         ptr++;
+      c = *ptr;
       *ptr = EOS;
-      ptr++;
       /* compare that name with all class names already known */
       cur = 0;
       found = FALSE;
@@ -1335,7 +1334,12 @@ static void PutClassName (Attribute attr, char *className, char *buf,
           (*nb)++;
         }
       /* skip spaces after the name that has just been processed */
-      ptr = TtaSkipBlanks (ptr);
+      if (c != EOS)
+        {
+          *ptr = c; // restore the character
+          ptr++;
+          ptr = TtaSkipBlanks (ptr);
+        }
       /* and process the next name, if any */
     }
 }
@@ -1350,12 +1354,9 @@ static int BuildClassList (Document doc, char *buf, int size, char *first)
   Attribute           attr;
   AttributeType       attrType;
   CSSInfoPtr          css;
-  PInfoPtr            pInfo;
-  PISchemaPtr         pIS;
-  char               *ptr, *schName;
+  char               *ptr;
   int                 free;
   int                 len, nb;
-  int                 type;
   int                 index;
 
   /* add the first element if specified */
@@ -1372,84 +1373,75 @@ static int BuildClassList (Document doc, char *buf, int size, char *first)
       index += len;
       nb++;
     }
-  /* looks for the class attribute defined in the HTML DTD */
-  attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
-  if (attrType.AttrSSchema)
+  if (DocumentTypes[doc] == docHTML)
     {
-      /* this document contains HTML elements */
-      attrType.AttrTypeNum = HTML_ATTR_Class;
-      el = TtaGetMainRoot (doc);
-      while (el)
+      /* looks for the class attribute defined in the HTML DTD */
+      attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
+      if (attrType.AttrSSchema)
         {
-          TtaSearchAttribute (attrType, SearchForward, el, &el, &attr);
-          if (attr)
-            PutClassName (attr, NULL, buf, &index, &free, &nb);
+          /* this document contains HTML elements */
+          attrType.AttrTypeNum = HTML_ATTR_Class;
+          el = TtaGetMainRoot (doc);
+          while (el)
+            {
+              TtaSearchAttribute (attrType, SearchForward, el, &el, &attr);
+              if (attr)
+                PutClassName (attr, NULL, buf, &index, &free, &nb);
+            }
         }
     }
-  /* looks for the class attribute defined in the MathML DTD */
-  attrType.AttrSSchema = TtaGetSSchema ("MathML", doc);
-  if (attrType.AttrSSchema)
-    /* there are some MathML elements in this document */
+
+  if (DocumentTypes[doc] == docMath ||
+      (DocumentTypes[doc] == docHTML &&
+       DocumentMeta[doc] && DocumentMeta[doc]->compound))
     {
-      attrType.AttrTypeNum = MathML_ATTR_class;
-      el = TtaGetMainRoot (doc);
-      while (el)
+      /* looks for the class attribute defined in the MathML DTD */
+      attrType.AttrSSchema = TtaGetSSchema ("MathML", doc);
+      if (attrType.AttrSSchema)
+        /* there are some MathML elements in this document */
         {
-          TtaSearchAttribute (attrType, SearchForward, el, &el, &attr);
-          if (attr)
-            PutClassName (attr, NULL, buf, &index, &free, &nb);
+          attrType.AttrTypeNum = MathML_ATTR_class;
+          el = TtaGetMainRoot (doc);
+          while (el)
+            {
+              TtaSearchAttribute (attrType, SearchForward, el, &el, &attr);
+              if (attr)
+                PutClassName (attr, NULL, buf, &index, &free, &nb);
+            }
         }
     }
+
 #ifdef _SVG
-  /* looks for the class attribute defined in the SVG DTD */
-  attrType.AttrSSchema = TtaGetSSchema ("SVG", doc);
-  if (attrType.AttrSSchema)
-    /* there are some SVG elements in this document */
+ if (DocumentTypes[doc] == docSVG ||
+      (DocumentTypes[doc] == docHTML &&
+       DocumentMeta[doc] && DocumentMeta[doc]->compound))
     {
-      attrType.AttrTypeNum = SVG_ATTR_class;
-      el = TtaGetMainRoot (doc);
-      while (el)
+      /* looks for the class attribute defined in the SVG DTD */
+      attrType.AttrSSchema = TtaGetSSchema ("SVG", doc);
+      if (attrType.AttrSSchema)
+        /* there are some SVG elements in this document */
         {
-          TtaSearchAttribute (attrType, SearchForward, el, &el, &attr);
-          if (attr)
-            PutClassName (attr, NULL, buf, &index, &free, &nb);
+          attrType.AttrTypeNum = SVG_ATTR_class;
+          el = TtaGetMainRoot (doc);
+          while (el)
+            {
+              TtaSearchAttribute (attrType, SearchForward, el, &el, &attr);
+              if (attr)
+                PutClassName (attr, NULL, buf, &index, &free, &nb);
+            }
         }
     }
-#endif
+#endif /* _SVG */
+
   /* look for all class names that are used in the STYLE element and in
      all style sheets currently associated with the document */
   css = CSSList;
   while (css)
     {
-      if (css->infos[doc])
+      if (css->class_list)
         {
-          pInfo = css->infos[doc];
-          while (pInfo)
-            {
-              pIS = pInfo->PiSchemas;
-              while (pIS && pIS->PiSSchema)
-                {
-                  /* get the list of class names declared in that presentation schema */
-                  schName = TtaGetSSchemaName (pIS->PiSSchema);
-                  if (strcmp (schName, "MathML") == 0)
-                    type = MathML_ATTR_class;
-#ifdef _SVG
-                  else if (strcmp (schName, "SVG") == 0)
-                    type = SVG_ATTR_class;
-#endif
-                  else
-                    type = HTML_ATTR_Class;
-                  ptr = TtaGetStyledAttributeValues (pIS->PiPSchema, type);
-                  while (ptr && ptr[0] != EOS)
-                    {
-                      len = strlen (ptr) + 1;
-                      PutClassName (NULL, ptr, buf, &index, &free, &nb);
-                      ptr += len;
-                    }
-                  pIS = pIS->PiSNext;
-                }
-              pInfo = pInfo->PiNext;
-            }
+          //printf ("%s\n LIST=\n", css->class_list, ListBuffer);
+          PutClassName (NULL, css->class_list, buf, &index, &free, &nb);
         }
       css = css->NextCSS;
     }
@@ -1598,20 +1590,17 @@ void ApplyClass (Document doc, View view)
   Attribute           attr = NULL;
   AttributeType       attrType;
   Element             el, ancestor;
-  ElementType	      elType;
+  ElementType	        elType;
 #ifdef _WX
   char                a_class_with_dot[51];
 #endif /* _WX */
-  char                a_class[50];
+  char                a_class[50], *name;
   int                 len;
   int                 firstSelectedChar, lastSelectedChar;
 #ifdef _GTK
   char                bufMenu[MAX_TXT_LEN];
 #endif /* _GTK */
 
-  if (!TtaGetDocumentAccessMode (doc))
-    /* the document is in ReadOnly mode */
-    return;
   TtaGiveFirstSelectedElement (doc, &el, &firstSelectedChar, &lastSelectedChar);
   if (el)
     {
@@ -1625,6 +1614,21 @@ void ApplyClass (Document doc, View view)
   elType = TtaGetElementType (el);
   CurrentClass[0] = EOS;
   ApplyClassDoc = doc;
+  name =  TtaGetSSchemaName (elType.ElSSchema);
+  if (!strcmp (name, "TextFile") ||
+      !TtaGetDocumentAccessMode (doc))
+    {
+#ifdef _WX 
+      AmayaParams p;
+      p.param1 = 0;
+      p.param2 = NULL;
+      p.param3 = NULL;
+      p.param4 = (void*)(BaseDialog+AClassForm); /* the dialog reference used to call the right callback in thotlib */
+      TtaSendDataToPanel( WXAMAYA_PANEL_APPLYCLASS, p );
+#endif /* _WX */
+      return;
+    }
+
   /* updating the class name selector. */
 #ifdef _GTK
   strcpy (bufMenu, TtaGetMessage (LIB, TMSG_APPLY));

@@ -54,6 +54,8 @@ typedef struct _CSSInfo
   char               *url;
   char               *localName;
   PInfoPtr            infos[DocumentTableLength]; /* documents using this CSS */
+  char               *class_list; /* store the list of defined classes */
+  int                 lg_class_list;
   ThotBool            import; /* import entry */
 } CSSInfo , *CSSInfoPtr;
 
