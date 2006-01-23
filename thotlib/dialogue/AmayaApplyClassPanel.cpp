@@ -133,7 +133,8 @@ void AmayaApplyClassPanel::SendDataToPanel( AmayaParams& p )
     }
 
   /* select the wanted item */
-  m_pClassList->SetStringSelection(TtaConvMessageToWX(currentClass));
+  if (currentClass && currentClass[0] != EOS)
+    m_pClassList->SetStringSelection(TtaConvMessageToWX(currentClass));
 
   /* recalculate layout */
   GetParent()->GetParent()->Layout();

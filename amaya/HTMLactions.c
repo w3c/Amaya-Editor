@@ -3133,7 +3133,7 @@ static void ResetFontOrPhrase (Document doc, Element elem)
   ----------------------------------------------------------------------*/
 void SetCharFontOrPhrase (int doc, int elemtype)
 {
-  Element             firstSel, lastSel, el, child, parent;
+  Element             firstSel, lastSel, el, parent;
   ElementType         elType;
   DisplayMode         dispMode;
   int                 firstSelectedChar, lastSelectedChar, i;

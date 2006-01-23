@@ -5448,7 +5448,7 @@ void  ParseHTMLSpecificStyle (Element el, char *cssRule, Document doc,
   ----------------------------------------------------------------------*/
 static void AddClassName (char *name, CSSInfoPtr css)
 {
-  int		         l, index, k, length, add, max;
+  int		         l, index, k, length, add;
   char          *buf;
   ThotBool       found, previous;
 

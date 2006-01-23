@@ -1354,7 +1354,6 @@ static int BuildClassList (Document doc, char *buf, int size, char *first)
   Attribute           attr;
   AttributeType       attrType;
   CSSInfoPtr          css;
-  char               *ptr;
   int                 free;
   int                 len, nb;
   int                 index;
@@ -1438,7 +1437,7 @@ static int BuildClassList (Document doc, char *buf, int size, char *first)
   css = CSSList;
   while (css)
     {
-      if (css->class_list)
+      if (css->class_list && css->infos[doc])
         {
           //printf ("%s\n LIST=\n", css->class_list, ListBuffer);
           PutClassName (NULL, css->class_list, buf, &index, &free, &nb);
