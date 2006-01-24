@@ -349,7 +349,7 @@ static void GiveInsertPoint (PtrAbstractBox pAb, char script, int frame,
 
 /*----------------------------------------------------------------------
   CloseTextInsertionWithControl: finish the text insertion.
-  The parameter toNotify is TRUE when the fuction can notify changes
+  The parameter toNotify is TRUE when the function can notify changes
   to the external application.
   Return TRUE when current changes are notfied.
   ----------------------------------------------------------------------*/

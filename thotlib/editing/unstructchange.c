@@ -1485,9 +1485,12 @@ void TtcCreateElement (Document doc, View view)
         ActiveFrame = frame;
     }
   if (!ElementIsReadOnly (firstSel) && AscentReturnCreateNL (firstSel))
-    /* one of the ancestors of the first selected element says that the
-       Return key should generate a "new line" character */
-    InsertChar (GetWindowNumber (doc, view), '\n', -1);
+    {
+      /* one of the ancestors of the first selected element says that the
+         Return key should generate a "new line" character */
+      InsertChar (GetWindowNumber (doc, view), '\n', -1);
+      CloseTextInsertion ();
+    }
   else if (firstSel->ElParent && !ElementIsReadOnly (firstSel->ElParent))
     {
       /* lock the table formatting */
@@ -1970,6 +1973,2490 @@ void TtcCreateElement (Document doc, View view)
                   deleteEmpty = TRUE;
                   if (!histSeq)
                     {
+      if (!lock)
+        /* table formatting is not loked, lock it now */
+        TtaLockTableFormatting ();
+
+      pListEl = NULL;
+      pAggregEl = NULL;
+      createAfter = TRUE;
+      replicate = TRUE;
+      ready = FALSE;
+      empty = FALSE;
+      list = TRUE;
+      pElDelete = NULL;
+      pElReplicate = NULL;
+      typeNum = 0;
+      pSS = NULL;
+      deleteEmpty = FALSE;
+      histSeq = FALSE;	/* no history sequence open */
+      if (firstChar > 0 && firstChar == lastChar)
+        lastChar--;
+
+      /* si la selection ne comprend qu'un element vide ou un <br/>, on essaie
+         de remplacer cet element par un autre au niveau superieur */
+      if (firstSel == lastSel && (firstSel->ElVolume == 0 ||
+                                  TypeHasException (ExcIsBreak,
+                                                    firstSel->ElTypeNumber,
+                                                    firstSel->ElStructSchema)))
+        {
+          empty = TRUE;
+          pElem = firstSel;
+          while (pElem->ElParent && EmptyElement (pElem->ElParent) &&
+                 !TypeHasException (ExcNoBreakByReturn,
+                                    pElem->ElParent->ElTypeNumber,
+                                    pElem->ElParent->ElStructSchema))
+            pElem = pElem->ElParent;
+          if (pElem != NULL)
+            if (pElem->ElParent != NULL)
+              {
+                pParent = pElem->ElParent;
+                if (pParent->ElParent &&
+                    GetElementConstruct (pParent->ElParent, &nComp) == CsAny)
+                  pListEl = pParent->ElParent;
+                else
+                  pListEl = AncestorList (pParent);
+                if (TypeHasException (ExcNoBreakByReturn,pParent->ElTypeNumber,
+                                      pParent->ElStructSchema))
+                  /* the parent element can't be split with the Return key.
+                     Do not delete the empty element, but create a new copy
+                     of it right after. */
+                  {
+                    ready = TRUE;
+                    pElDelete = NULL;
+                    pListEl = NULL;
+                    createAfter = TRUE;
+                    pElReplicate = pElem;
+                  }
+                else if (pListEl == NULL)
+                  {
+                    if (GetElementConstruct (pParent->ElParent, &nComp) ==
+                        CsAggregate)
+                      {
+                        SRuleForSibling (pDoc, pParent, FALSE, 1, &typeNum,
+                                         &pSS, &list, &optional);
+                        if (typeNum > 0)
+                          if (TypeHasException (ExcNoCreate, typeNum,pSS))
+                            typeNum = 0;
+                        if (typeNum == 0)
+                          {
+                            list = TRUE;
+                            pListEl = NULL;
+                            /* try to split before element pElem */
+                            if (pElem->ElPrevious != NULL &&
+                                pElem->ElNext != NULL)
+                              {
+                                /* store the editing operation in the history*/
+                                if (!histSeq)
+                                  {
+                                    OpenHistorySequence (pDoc, firstSel, lastSel,
+                                                         NULL, firstChar, lastChar);
+                                    histSeq = TRUE;
+                                  }
+                                AddEditOpInHistory (pParent->ElParent, pDoc,
+                                                    TRUE, TRUE);
+                                if (!BreakElement (pParent->ElParent, pElem,
+                                                   0, FALSE, TRUE))
+                                  /* operation failed, remove it from history*/
+                                  CancelLastEditFromHistory (pDoc);
+                                else
+                                  /* element pParent has been split */
+                                  {
+                                    /* record the element that has been
+                                       created by BreakElement: it has to be
+                                       deleted when undoing the command */
+                                    AddEditOpInHistory (pParent->ElParent->ElNext, pDoc, FALSE, TRUE);
+                                    SRuleForSibling (pDoc, pParent, FALSE, 1,
+                                                     &typeNum, &pSS, &list, &optional);
+                                    if (typeNum > 0)
+                                      {
+                                        pAggregEl = pParent->ElParent;
+                                        ready = TRUE;
+                                        pElDelete = pElem;
+                                        pElReplicate = pParent;
+                                        createAfter = TRUE;
+                                        replicate = FALSE;
+                                        list = FALSE;
+                                      }
+                                  }
+                              }
+                          }
+                        else if (!list &&
+                                 !TypeHasException (ExcNoCreate,
+                                                    pParent->ElTypeNumber,
+                                                    pParent->ElStructSchema))
+                          {
+                            pAggregEl = pParent->ElParent;
+                            ready = TRUE;
+                            pElDelete = pElem;
+                            pElReplicate = pParent;
+                            replicate = FALSE;
+                            if (pElem->ElPrevious != NULL &&
+                                pElem->ElNext == NUL)
+                              createAfter = TRUE;
+                            else if (pElem->ElNext != NULL &&
+                                     pElem->ElPrevious == NULL)
+                              createAfter = FALSE;
+                            else
+                              {
+                                list = TRUE;
+                                pAggregEl = NULL;
+                              }
+                          }
+                      }
+                    if (pAggregEl == NULL)
+                      {
+                        pParent = pParent->ElParent;
+                        if (pParent != NULL)
+                          pListEl = AncestorList (pParent);
+                      }
+                    /* Specific treatment for xml */
+                    if (pListEl == NULL && pAggregEl == NULL)
+                      {
+                        pParent = pElem->ElParent;		
+                        pListEl = ParentAny (pElem);
+                      }
+                  }
+                if (list && pListEl != NULL)
+                  {
+                    if (pElem->ElPrevious && !pElem->ElNext)
+                      {
+                        if (!TypeHasException (ExcNoCreate,
+                                               pParent->ElTypeNumber,
+                                               pParent->ElStructSchema))
+                          {
+                            /* detruire pElem et creer un frere suivant
+                               a pParent */
+                            ready = TRUE;
+                            pElDelete = pElem;
+                            createAfter = TRUE;
+                            pElReplicate = pParent;
+                            while (pElReplicate->ElParent != pListEl)
+                              pElReplicate = pElReplicate->ElParent;
+                          }
+                      }
+                    else if (pElem->ElNext && !pElem->ElPrevious &&
+                             !TypeHasException (ExcNoCreate,
+                                                pParent->ElTypeNumber,
+                                                pParent->ElStructSchema))
+                      {
+                        /* detruire pElem et creer un frere precedent
+                           a pParent */
+                        ready = TRUE;
+                        pElDelete = pElem;
+                        createAfter = FALSE;
+                        pElReplicate = pParent;
+                        while (pElReplicate->ElParent != pListEl)
+                          pElReplicate = pElReplicate->ElParent;
+                      }
+                    else if (!TypeHasException (ExcNoCreate,
+                                                pParent->ElTypeNumber,
+                                                pParent->ElStructSchema))
+                      /* try to split element pParent before element pElem */
+                      {
+                        /* store the editing operation in the history */
+                        if (!histSeq)
+                          {
+                            OpenHistorySequence (pDoc, firstSel, lastSel, NULL,
+                                                 firstChar, lastChar);
+                            histSeq = TRUE;
+                          }
+                        AddEditOpInHistory (pParent, pDoc, TRUE, TRUE);
+			
+                        if (BreakElement (pParent, pElem, 0, FALSE, FALSE))
+                          /* element pParent has been split */
+                          {
+                            /* record the element that has been
+                               created by BreakElement: it has to be
+                               deleted when undoing the command */
+                            AddEditOpInHistory (pParent->ElNext, pDoc, FALSE,
+                                                TRUE);
+                            ready = TRUE;
+                            pElDelete = pElem;
+                            createAfter = TRUE;
+                            pElReplicate = pParent;
+                          }
+                        else
+                          /* cannot split element */
+                          {
+                            /* remove operation from history */
+                            CancelLastEditFromHistory (pDoc);
+                            pListEl = NULL;
+                          }
+                      }
+                  }
+                if (list && pListEl == NULL)
+                  {
+                    pListEl = AncestorList (pElem);
+                    if (pListEl != NULL)
+                      if (!TypeHasException (ExcNoCreate,
+                                             pElem->ElTypeNumber,
+                                             pElem->ElStructSchema))
+                        {
+                          ready = TRUE;
+                          pElDelete = NULL;
+                          createAfter = TRUE;
+                          pElReplicate = pElem;
+                        }
+                  }
+              }
+          if (ready && list && pListEl && pElReplicate)
+            {
+              replicate = FALSE;
+              ReturnCreateNewElem (pListEl, pElReplicate,
+                                   (ThotBool)!createAfter, pDoc,
+                                   &typeNum, &pSS);
+            }
+          else
+            pListEl = NULL;
+        }
+	
+      if (!ready && !empty)
+        {
+          /* La selection commence-t-elle en tete ou en queue d'element? */
+          selBegin = FALSE;
+          selEnd = FALSE;
+          if (firstSel == lastSel)
+            /* only one element selected */
+            {
+              if (firstSel->ElVolume > 0 && EmptyOrConstants (firstSel))
+                /* the element includes only constants */
+                {
+                  selBegin = TRUE;
+                  selEnd = TRUE;
+                }
+              else if (firstSel->ElTerminal)
+                {
+                  if (firstSel->ElLeafType == LtText)
+                    {
+                      if (firstSel->ElPrevious == NULL && firstChar <= 1)
+                        /* no previous and at the beginning */
+                        selBegin = TRUE;
+                      if (firstSel->ElNext == NULL &&
+                          firstChar > firstSel->ElTextLength)
+                        /* no next and at the end */
+                        selEnd = TRUE;
+                    }
+                  else if (firstSel->ElLeafType == LtPicture)
+                    {
+                      if (firstSel->ElPrevious == NULL && firstChar == 0)
+                        /* no previous and a selection at the left border */
+                        selBegin = TRUE;
+                      if (firstSel->ElNext == NULL && firstChar > 0)
+                        /* no next and a selection at the right border */
+                        selEnd = TRUE;
+                    }
+                  else
+                    {
+                      if ((firstSel->ElLeafType == LtGraphics ||
+                           firstSel->ElLeafType == LtPolyLine ||
+                           firstSel->ElLeafType == LtPath) &&
+                          firstChar == 0 &&
+                          firstSel->ElPrevious == NULL &&
+                          firstSel->ElNext == NULL &&
+                          firstSel->ElParent)
+                        /* select the enclosing element */
+                        firstSel = lastSel = firstSel->ElParent;
+                      selBegin = TRUE;
+                      selEnd = TRUE;
+                    }
+                }
+              else if (TypeHasException (ExcIsDraw, firstSel->ElTypeNumber,
+                                         firstSel->ElStructSchema))
+                {
+                  selBegin = TRUE;
+                  selEnd = TRUE;
+                }
+            }
+
+          /* Si la selection ne commence ni en tete ni en queue, on */
+          /* essaie de couper un paragraphe en deux */
+          if (!selBegin && !selEnd &&
+              CanSplitElement (firstSel, firstChar, TRUE, &pAncest, &pE,
+                               &pElReplicate))
+            {
+              /* register the operation in history */
+              if (!histSeq)
+                {
+                  OpenHistorySequence (pDoc, firstSel, lastSel, NULL,
+                                       firstChar, lastChar);
+                  histSeq = TRUE;
+                }
+              AddEditOpInHistory (pElReplicate, pDoc, TRUE, TRUE);
+	      
+              if (BreakElement (NULL, firstSel, firstChar, TRUE, TRUE))
+                {
+                  /* record the element that has been created by
+                     BreakElement: it has to be deleted when undoing the
+                     command */
+                  AddEditOpInHistory (pElReplicate->ElNext, pDoc, FALSE, TRUE);
+                  CloseHistorySequence (pDoc);
+                  if (!lock)
+                    /* unlock table formatting */
+                    TtaUnlockTableFormatting ();
+                  return;
+                }
+              else
+                /* remove operation from history */
+                CancelLastEditFromHistory (pDoc);
+            }
+
+          /* on cherche l'element CsList ascendant qui permet de creer un */
+          /* element voisin */
+          if (lastSel->ElTerminal && lastSel->ElLeafType == LtPageColBreak)
+            /* on ne duplique pas les sauts de pages */
+            pListEl = NULL;
+          else
+            {
+              if (lastSel->ElParent &&
+                  GetElementConstruct (lastSel->ElParent, &nComp) == CsAny)
+                pListEl = lastSel->ElParent;
+              else
+                pListEl = AncestorList (lastSel);
+              /* si c'est la fin d'une liste de Textes on remonte */
+              if (pListEl != NULL)
+                {
+                  if (lastSel->ElTerminal &&
+                      pListEl == lastSel->ElParent &&
+                      (lastSel->ElNext == NULL || selBegin) &&
+                      GetElementConstruct (lastSel->ElParent, &nComp) != CsAny &&
+                      !TypeHasException (ExcReturnCreateWithin,
+                                         pListEl->ElTypeNumber,
+                                         pListEl->ElStructSchema))
+                    {
+                      if (pListEl->ElParent &&
+                          GetElementConstruct (pListEl->ElParent, &nComp) == CsAny)
+                        pListEl = pListEl->ElParent;
+                      else
+                        pListEl = AncestorList (pListEl);
+                    }
+                }
+              else
+                {
+                  /* There is no List ancestor, search an Any parent */
+                  if (lastSel->ElTerminal)
+                    pListEl = ParentAny (lastSel->ElParent);
+                  else
+                    pListEl = ParentAny (lastSel);
+                  if (pListEl != NULL)
+                    {
+                      if (lastSel->ElTerminal &&
+                          pListEl == lastSel->ElParent &&
+                          (lastSel->ElNext == NULL || selBegin) &&
+                          !TypeHasException (ExcReturnCreateWithin,
+                                             pListEl->ElTypeNumber,
+                                             pListEl->ElStructSchema))
+                        pListEl = ParentAny (pListEl);
+                    }
+                }
+            }
+
+          /* verifie si les elements a doubler portent l'exception NoCreate */
+          if (pListEl != NULL)
+            {
+              pE = lastSel;
+              pElReplicate = NULL;
+              do
+                {
+                  if (TypeHasException (ExcNoCreate, pE->ElTypeNumber,
+                                        pE->ElStructSchema))
+                    /* abort */
+                    pListEl = NULL;
+                  else
+                    {
+                      pElReplicate = pE;
+                      pE = pE->ElParent;
+                    }
+                }
+              while (pE != pListEl && pListEl != NULL && pE != NULL);
+
+              /* a priori, on creera le meme type d'element */
+              if (pElReplicate)
+                {
+                  if (TypeHasException (ExcNoReplicate, pElReplicate->ElTypeNumber,
+                                        pElReplicate->ElStructSchema))
+                    selEnd = TRUE;
+                  else
+                    typeNum = pElReplicate->ElTypeNumber;
+                  pSS = pElReplicate->ElStructSchema;
+                }
+            }
+
+          if (pListEl != NULL)
+            {
+              /* verifie si la selection est en fin ou debut de paragraphe */
+              if (selEnd && pElReplicate)
+                /* verifie s'il faut creer le meme type d'element ou un type */
+                /* different */
+                {
+                  replicate = FALSE;
+                  createAfter = TRUE;
+                  ReturnCreateNewElem (pListEl, pElReplicate, FALSE, pDoc,
+                                       &typeNum, &pSS);
+                }
+              else if (selBegin && pElReplicate)
+                {
+                  replicate = FALSE;
+                  createAfter = FALSE;
+                  ReturnCreateNewElem (pListEl, pElReplicate, TRUE, pDoc,
+                                       &typeNum, &pSS);
+                }
+            }
+        }
+      /* verifie que la liste ne depasse pas deja la longueur maximum */
+      if (pListEl != NULL)
+        if (!CanChangeNumberOfElem (pListEl, 1))
+          pListEl = NULL;
+      if (pListEl != NULL || pAggregEl != NULL)
+        {
+          if (pListEl == NULL)
+            pListEl = pAggregEl;
+          /* demande a l'application si on peut creer ce type d'element */
+          notifyEl.event = TteElemNew;
+          notifyEl.document = (Document) IdentDocument (pDoc);
+          notifyEl.element = (Element) (pElReplicate->ElParent);
+          notifyEl.info = 0; /* not sent by undo */
+          notifyEl.elementType.ElTypeNum = typeNum;
+          notifyEl.elementType.ElSSchema = (SSchema) pSS;
+          pSibling = pElReplicate;
+          NSiblings = 0;
+          while (pSibling->ElPrevious != NULL)
+            {
+              NSiblings++;
+              pSibling = pSibling->ElPrevious;
+            }
+          if (createAfter)
+            NSiblings++;
+          notifyEl.position = NSiblings;
+          if (CallEventType ((NotifyEvent *) (&notifyEl), TRUE))
+            /* l'application refuse */
+            pListEl = NULL;
+        }
+      if (pListEl != NULL)
+        {
+          ok = !ElementIsReadOnly (pListEl);
+          if (ok && pElDelete != NULL)
+            /* on va detruire un sous arbre vide. */
+            /* envoie l'evenement ElemDelete.Pre */
+            ok = !SendEventSubTree (TteElemDelete, pDoc, pElDelete,
+                                    TTE_STANDARD_DELETE_LAST_ITEM, 0,
+                                    FALSE, FALSE);
+          if (ok)
+            {
+              /* annule d'abord la selection */
+              TtaClearViewSelections ();
+              if (pElDelete != NULL)
+                /* detruire le sous-arbre qu'on remplace */
+                {
+                  deleteEmpty = TRUE;
+                  if (!histSeq)
+                    {
+                      OpenHistorySequence (pDoc, firstSel, lastSel, NULL,
+                                           firstChar, lastChar);
+                      histSeq = TRUE;
+                    }
+                  AddEditOpInHistory (pElDelete, pDoc, TRUE, FALSE);
+		  
+                  pPrevious = PreviousNotPage (pElDelete, TRUE);
+                  pNext = NextNotPage (pElDelete, FALSE);
+                  DestroyAbsBoxes (pElDelete, pDoc, TRUE);
+                  AbstractImageUpdated (pDoc);
+                  /* prepare l'evenement ElemDelete.Post */
+                  notifyEl.event = TteElemDelete;
+                  notifyEl.document = (Document) IdentDocument (pDoc);
+                  notifyEl.element = (Element) (pElDelete->ElParent);
+                  notifyEl.info = 0; /* not sent by undo */
+                  notifyEl.elementType.ElTypeNum = pElDelete->ElTypeNumber;
+                  notifyEl.elementType.ElSSchema =
+                    (SSchema) (pElDelete->ElStructSchema);
+                  pSibling = pElDelete;
+                  NSiblings = 0;
+                  while (pSibling->ElPrevious != NULL)
+                    {
+                      NSiblings++;
+                      pSibling = pSibling->ElPrevious;
+                    }
+                  notifyEl.position = NSiblings;
+                  pClose = NextElement (pElDelete);
+
+                  /* retire l'element de l'arbre abstrait */
+                  RemoveElement (pElDelete);
+                  dispMode = TtaGetDisplayMode (doc);
+                  if (dispMode == DisplayImmediately)
+                    TtaSetDisplayMode (doc, DeferredDisplay);
+                  UpdateNumbers (pClose, pElDelete, pDoc, TRUE);
+                  if (dispMode == DisplayImmediately)
+                    TtaSetDisplayMode (doc, dispMode);
+
+                  RedisplayCopies (pElDelete, pDoc, TRUE);
+                  DeleteElement (&pElDelete, pDoc);
+                  /* envoie l'evenement ElemDelete.Post a l'application */
+                  CallEventType ((NotifyEvent *) (&notifyEl), FALSE);
+                  if (pNext != NULL)
+                    if (PreviousNotPage (pNext, TRUE) == NULL)
+                      /* l'element qui suit l'element detruit devient premier*/
+                      ChangeFirstLast (pNext, pDoc, TRUE, FALSE);
+                  if (pPrevious != NULL)
+                    if (NextNotPage (pPrevious, FALSE) == NULL)
+                      /* l'element qui precede l'element detruit devient
+                         dernier */
+                      ChangeFirstLast (pPrevious, pDoc, FALSE, FALSE);
+                }
+              if (!replicate)
+                {
+                  pE = pElReplicate;
+                  pNew = NewSubtree (typeNum, pSS, pDoc, TRUE, TRUE, TRUE,
+                                     TRUE);
+                }
+              else
+                {
+                  /* Reconstruction d'une structure parallele */
+                  pNew = NewSubtree (lastSel->ElTypeNumber,
+                                     lastSel->ElStructSchema, pDoc,
+                                     TRUE, TRUE, TRUE, TRUE);
+                  CopyClassAttr (pNew, lastSel);
+                  pE = lastSel;
+                  while (pE->ElParent != pListEl)
+                    {
+                      pE = pE->ElParent;
+                      pAncest = ReplicateElement (pE, pDoc);
+                      InsertFirstChild (pAncest, pNew);
+                      pNew = pAncest;
+                    }
+                }
+              /* Insertion du nouvel element */
+              if (createAfter)
+                {
+                  pClose = pE->ElNext;
+                  FwdSkipPageBreak (&pClose);
+                  InsertElementAfter (pE, pNew);
+                  if (pClose == NULL)
+                    /* l'element pE n'est plus le dernier fils de son pere */
+                    ChangeFirstLast (pE, pDoc, FALSE, TRUE);
+                }
+              else
+                {
+                  pClose = pE->ElPrevious;
+                  InsertElementBefore (pE, pNew);
+                  if (pClose == NULL)
+                    /* l'element pE n'est plus le premier fils de son pere */
+                    ChangeFirstLast (pE, pDoc, TRUE, TRUE);
+                }
+              if (!histSeq)
+                {
+                  OpenHistorySequence (pDoc, firstSel, lastSel, NULL,
+                                       firstChar, lastChar);
+                  histSeq = TRUE;
+                }
+              AddEditOpInHistory (pNew, pDoc, FALSE, TRUE);
+              /* traite les exclusions des elements crees */
+              RemoveExcludedElem (&pNew, pDoc);
+              /* traite les attributs requis des elements crees */
+              AttachMandatoryAttributes (pNew, pDoc);
+              if (pDoc->DocSSchema != NULL)
+                /* le document n'a pas ete ferme' entre temps */
+                {
+                  /* traitement des exceptions */
+                  CreationExceptions (pNew, pDoc);
+
+                  /* Avoid too many redisplay when updating a table */
+                  dispMode = TtaGetDisplayMode (doc);
+      if (!lock)
+        /* table formatting is not loked, lock it now */
+        TtaLockTableFormatting ();
+
+      pListEl = NULL;
+      pAggregEl = NULL;
+      createAfter = TRUE;
+      replicate = TRUE;
+      ready = FALSE;
+      empty = FALSE;
+      list = TRUE;
+      pElDelete = NULL;
+      pElReplicate = NULL;
+      typeNum = 0;
+      pSS = NULL;
+      deleteEmpty = FALSE;
+      histSeq = FALSE;	/* no history sequence open */
+      if (firstChar > 0 && firstChar == lastChar)
+        lastChar--;
+
+      /* si la selection ne comprend qu'un element vide ou un <br/>, on essaie
+         de remplacer cet element par un autre au niveau superieur */
+      if (firstSel == lastSel && (firstSel->ElVolume == 0 ||
+                                  TypeHasException (ExcIsBreak,
+                                                    firstSel->ElTypeNumber,
+                                                    firstSel->ElStructSchema)))
+        {
+          empty = TRUE;
+          pElem = firstSel;
+          while (pElem->ElParent && EmptyElement (pElem->ElParent) &&
+                 !TypeHasException (ExcNoBreakByReturn,
+                                    pElem->ElParent->ElTypeNumber,
+                                    pElem->ElParent->ElStructSchema))
+            pElem = pElem->ElParent;
+          if (pElem != NULL)
+            if (pElem->ElParent != NULL)
+              {
+                pParent = pElem->ElParent;
+                if (pParent->ElParent &&
+                    GetElementConstruct (pParent->ElParent, &nComp) == CsAny)
+                  pListEl = pParent->ElParent;
+                else
+                  pListEl = AncestorList (pParent);
+                if (TypeHasException (ExcNoBreakByReturn,pParent->ElTypeNumber,
+                                      pParent->ElStructSchema))
+                  /* the parent element can't be split with the Return key.
+                     Do not delete the empty element, but create a new copy
+                     of it right after. */
+                  {
+      if (!lock)
+        /* table formatting is not loked, lock it now */
+        TtaLockTableFormatting ();
+
+      pListEl = NULL;
+      pAggregEl = NULL;
+      createAfter = TRUE;
+      replicate = TRUE;
+      ready = FALSE;
+      empty = FALSE;
+      list = TRUE;
+      pElDelete = NULL;
+      pElReplicate = NULL;
+      typeNum = 0;
+      pSS = NULL;
+      deleteEmpty = FALSE;
+      histSeq = FALSE;	/* no history sequence open */
+      if (firstChar > 0 && firstChar == lastChar)
+        lastChar--;
+
+      /* si la selection ne comprend qu'un element vide ou un <br/>, on essaie
+         de remplacer cet element par un autre au niveau superieur */
+      if (firstSel == lastSel && (firstSel->ElVolume == 0 ||
+                                  TypeHasException (ExcIsBreak,
+                                                    firstSel->ElTypeNumber,
+                                                    firstSel->ElStructSchema)))
+        {
+          empty = TRUE;
+          pElem = firstSel;
+          while (pElem->ElParent && EmptyElement (pElem->ElParent) &&
+                 !TypeHasException (ExcNoBreakByReturn,
+                                    pElem->ElParent->ElTypeNumber,
+                                    pElem->ElParent->ElStructSchema))
+            pElem = pElem->ElParent;
+          if (pElem != NULL)
+            if (pElem->ElParent != NULL)
+              {
+                pParent = pElem->ElParent;
+                if (pParent->ElParent &&
+                    GetElementConstruct (pParent->ElParent, &nComp) == CsAny)
+                  pListEl = pParent->ElParent;
+                else
+                  pListEl = AncestorList (pParent);
+                if (TypeHasException (ExcNoBreakByReturn,pParent->ElTypeNumber,
+                                      pParent->ElStructSchema))
+                  /* the parent element can't be split with the Return key.
+                     Do not delete the empty element, but create a new copy
+                     of it right after. */
+                  {
+                    ready = TRUE;
+                    pElDelete = NULL;
+                    pListEl = NULL;
+                    createAfter = TRUE;
+                    pElReplicate = pElem;
+                  }
+                else if (pListEl == NULL)
+                  {
+                    if (GetElementConstruct (pParent->ElParent, &nComp) ==
+                        CsAggregate)
+                      {
+                        SRuleForSibling (pDoc, pParent, FALSE, 1, &typeNum,
+                                         &pSS, &list, &optional);
+                        if (typeNum > 0)
+                          if (TypeHasException (ExcNoCreate, typeNum,pSS))
+                            typeNum = 0;
+                        if (typeNum == 0)
+                          {
+                            list = TRUE;
+                            pListEl = NULL;
+                            /* try to split before element pElem */
+                            if (pElem->ElPrevious != NULL &&
+                                pElem->ElNext != NULL)
+                              {
+                                /* store the editing operation in the history*/
+                                if (!histSeq)
+                                  {
+                                    OpenHistorySequence (pDoc, firstSel, lastSel,
+                                                         NULL, firstChar, lastChar);
+                                    histSeq = TRUE;
+                                  }
+                                AddEditOpInHistory (pParent->ElParent, pDoc,
+                                                    TRUE, TRUE);
+                                if (!BreakElement (pParent->ElParent, pElem,
+                                                   0, FALSE, TRUE))
+                                  /* operation failed, remove it from history*/
+                                  CancelLastEditFromHistory (pDoc);
+                                else
+                                  /* element pParent has been split */
+                                  {
+                                    /* record the element that has been
+                                       created by BreakElement: it has to be
+                                       deleted when undoing the command */
+                                    AddEditOpInHistory (pParent->ElParent->ElNext, pDoc, FALSE, TRUE);
+                                    SRuleForSibling (pDoc, pParent, FALSE, 1,
+                                                     &typeNum, &pSS, &list, &optional);
+                                    if (typeNum > 0)
+                                      {
+                                        pAggregEl = pParent->ElParent;
+                                        ready = TRUE;
+                                        pElDelete = pElem;
+                                        pElReplicate = pParent;
+                                        createAfter = TRUE;
+                                        replicate = FALSE;
+                                        list = FALSE;
+                                      }
+                                  }
+                              }
+                          }
+                        else if (!list &&
+                                 !TypeHasException (ExcNoCreate,
+                                                    pParent->ElTypeNumber,
+                                                    pParent->ElStructSchema))
+                          {
+                            pAggregEl = pParent->ElParent;
+                            ready = TRUE;
+                            pElDelete = pElem;
+                            pElReplicate = pParent;
+                            replicate = FALSE;
+                            if (pElem->ElPrevious != NULL &&
+                                pElem->ElNext == NUL)
+                              createAfter = TRUE;
+                            else if (pElem->ElNext != NULL &&
+                                     pElem->ElPrevious == NULL)
+                              createAfter = FALSE;
+                            else
+                              {
+                                list = TRUE;
+                                pAggregEl = NULL;
+                              }
+                          }
+                      }
+                    if (pAggregEl == NULL)
+                      {
+                        pParent = pParent->ElParent;
+                        if (pParent != NULL)
+                          pListEl = AncestorList (pParent);
+                      }
+                    /* Specific treatment for xml */
+                    if (pListEl == NULL && pAggregEl == NULL)
+                      {
+                        pParent = pElem->ElParent;		
+                        pListEl = ParentAny (pElem);
+                      }
+                  }
+                if (list && pListEl != NULL)
+                  {
+                    if (pElem->ElPrevious && !pElem->ElNext)
+                      {
+                        if (!TypeHasException (ExcNoCreate,
+                                               pParent->ElTypeNumber,
+                                               pParent->ElStructSchema))
+                          {
+                            /* detruire pElem et creer un frere suivant
+                               a pParent */
+                            ready = TRUE;
+                            pElDelete = pElem;
+                            createAfter = TRUE;
+                            pElReplicate = pParent;
+                            while (pElReplicate->ElParent != pListEl)
+                              pElReplicate = pElReplicate->ElParent;
+                          }
+                      }
+                    else if (pElem->ElNext && !pElem->ElPrevious &&
+                             !TypeHasException (ExcNoCreate,
+                                                pParent->ElTypeNumber,
+                                                pParent->ElStructSchema))
+                      {
+                        /* detruire pElem et creer un frere precedent
+                           a pParent */
+                        ready = TRUE;
+                        pElDelete = pElem;
+                        createAfter = FALSE;
+                        pElReplicate = pParent;
+                        while (pElReplicate->ElParent != pListEl)
+                          pElReplicate = pElReplicate->ElParent;
+                      }
+                    else if (!TypeHasException (ExcNoCreate,
+                                                pParent->ElTypeNumber,
+                                                pParent->ElStructSchema))
+                      /* try to split element pParent before element pElem */
+                      {
+                        /* store the editing operation in the history */
+                        if (!histSeq)
+                          {
+                            OpenHistorySequence (pDoc, firstSel, lastSel, NULL,
+                                                 firstChar, lastChar);
+                            histSeq = TRUE;
+                          }
+                        AddEditOpInHistory (pParent, pDoc, TRUE, TRUE);
+			
+                        if (BreakElement (pParent, pElem, 0, FALSE, FALSE))
+                          /* element pParent has been split */
+                          {
+                            /* record the element that has been
+                               created by BreakElement: it has to be
+                               deleted when undoing the command */
+                            AddEditOpInHistory (pParent->ElNext, pDoc, FALSE,
+                                                TRUE);
+                            ready = TRUE;
+                            pElDelete = pElem;
+                            createAfter = TRUE;
+                            pElReplicate = pParent;
+                          }
+                        else
+                          /* cannot split element */
+                          {
+                            /* remove operation from history */
+                            CancelLastEditFromHistory (pDoc);
+                            pListEl = NULL;
+                          }
+                      }
+                  }
+                if (list && pListEl == NULL)
+                  {
+                    pListEl = AncestorList (pElem);
+                    if (pListEl != NULL)
+                      if (!TypeHasException (ExcNoCreate,
+                                             pElem->ElTypeNumber,
+                                             pElem->ElStructSchema))
+                        {
+                          ready = TRUE;
+                          pElDelete = NULL;
+                          createAfter = TRUE;
+                          pElReplicate = pElem;
+                        }
+                  }
+              }
+          if (ready && list && pListEl && pElReplicate)
+            {
+              replicate = FALSE;
+              ReturnCreateNewElem (pListEl, pElReplicate,
+                                   (ThotBool)!createAfter, pDoc,
+                                   &typeNum, &pSS);
+            }
+          else
+            pListEl = NULL;
+        }
+	
+      if (!ready && !empty)
+        {
+          /* La selection commence-t-elle en tete ou en queue d'element? */
+          selBegin = FALSE;
+          selEnd = FALSE;
+          if (firstSel == lastSel)
+            /* only one element selected */
+            {
+              if (firstSel->ElVolume > 0 && EmptyOrConstants (firstSel))
+                /* the element includes only constants */
+                {
+                  selBegin = TRUE;
+                  selEnd = TRUE;
+                }
+              else if (firstSel->ElTerminal)
+                {
+                  if (firstSel->ElLeafType == LtText)
+                    {
+                      if (firstSel->ElPrevious == NULL && firstChar <= 1)
+                        /* no previous and at the beginning */
+                        selBegin = TRUE;
+                      if (firstSel->ElNext == NULL &&
+                          firstChar > firstSel->ElTextLength)
+                        /* no next and at the end */
+                        selEnd = TRUE;
+                    }
+                  else if (firstSel->ElLeafType == LtPicture)
+                    {
+                      if (firstSel->ElPrevious == NULL && firstChar == 0)
+                        /* no previous and a selection at the left border */
+                        selBegin = TRUE;
+                      if (firstSel->ElNext == NULL && firstChar > 0)
+                        /* no next and a selection at the right border */
+                        selEnd = TRUE;
+                    }
+                  else
+                    {
+                      if ((firstSel->ElLeafType == LtGraphics ||
+                           firstSel->ElLeafType == LtPolyLine ||
+                           firstSel->ElLeafType == LtPath) &&
+                          firstChar == 0 &&
+                          firstSel->ElPrevious == NULL &&
+                          firstSel->ElNext == NULL &&
+                          firstSel->ElParent)
+                        /* select the enclosing element */
+                        firstSel = lastSel = firstSel->ElParent;
+                      selBegin = TRUE;
+                      selEnd = TRUE;
+                    }
+                }
+              else if (TypeHasException (ExcIsDraw, firstSel->ElTypeNumber,
+                                         firstSel->ElStructSchema))
+                {
+                  selBegin = TRUE;
+                  selEnd = TRUE;
+                }
+            }
+
+          /* Si la selection ne commence ni en tete ni en queue, on */
+          /* essaie de couper un paragraphe en deux */
+          if (!selBegin && !selEnd &&
+              CanSplitElement (firstSel, firstChar, TRUE, &pAncest, &pE,
+                               &pElReplicate))
+            {
+              /* register the operation in history */
+      if (!lock)
+        /* table formatting is not loked, lock it now */
+        TtaLockTableFormatting ();
+
+      pListEl = NULL;
+      pAggregEl = NULL;
+      createAfter = TRUE;
+      replicate = TRUE;
+      ready = FALSE;
+      empty = FALSE;
+      list = TRUE;
+      pElDelete = NULL;
+      pElReplicate = NULL;
+      typeNum = 0;
+      pSS = NULL;
+      deleteEmpty = FALSE;
+      histSeq = FALSE;	/* no history sequence open */
+      if (firstChar > 0 && firstChar == lastChar)
+        lastChar--;
+
+      /* si la selection ne comprend qu'un element vide ou un <br/>, on essaie
+         de remplacer cet element par un autre au niveau superieur */
+      if (firstSel == lastSel && (firstSel->ElVolume == 0 ||
+                                  TypeHasException (ExcIsBreak,
+                                                    firstSel->ElTypeNumber,
+                                                    firstSel->ElStructSchema)))
+        {
+          empty = TRUE;
+          pElem = firstSel;
+          while (pElem->ElParent && EmptyElement (pElem->ElParent) &&
+                 !TypeHasException (ExcNoBreakByReturn,
+                                    pElem->ElParent->ElTypeNumber,
+                                    pElem->ElParent->ElStructSchema))
+            pElem = pElem->ElParent;
+          if (pElem != NULL)
+            if (pElem->ElParent != NULL)
+              {
+                pParent = pElem->ElParent;
+                if (pParent->ElParent &&
+                    GetElementConstruct (pParent->ElParent, &nComp) == CsAny)
+                  pListEl = pParent->ElParent;
+                else
+                  pListEl = AncestorList (pParent);
+                if (TypeHasException (ExcNoBreakByReturn,pParent->ElTypeNumber,
+                                      pParent->ElStructSchema))
+                  /* the parent element can't be split with the Return key.
+                     Do not delete the empty element, but create a new copy
+                     of it right after. */
+                  {
+                    ready = TRUE;
+                    pElDelete = NULL;
+                    pListEl = NULL;
+                    createAfter = TRUE;
+                    pElReplicate = pElem;
+                  }
+                else if (pListEl == NULL)
+                  {
+                    if (GetElementConstruct (pParent->ElParent, &nComp) ==
+                        CsAggregate)
+                      {
+                        SRuleForSibling (pDoc, pParent, FALSE, 1, &typeNum,
+                                         &pSS, &list, &optional);
+                        if (typeNum > 0)
+                          if (TypeHasException (ExcNoCreate, typeNum,pSS))
+                            typeNum = 0;
+                        if (typeNum == 0)
+                          {
+                            list = TRUE;
+                            pListEl = NULL;
+                            /* try to split before element pElem */
+                            if (pElem->ElPrevious != NULL &&
+                                pElem->ElNext != NULL)
+                              {
+                                /* store the editing operation in the history*/
+                                if (!histSeq)
+                                  {
+                                    OpenHistorySequence (pDoc, firstSel, lastSel,
+                                                         NULL, firstChar, lastChar);
+                                    histSeq = TRUE;
+                                  }
+                                AddEditOpInHistory (pParent->ElParent, pDoc,
+                                                    TRUE, TRUE);
+                                if (!BreakElement (pParent->ElParent, pElem,
+                                                   0, FALSE, TRUE))
+                                  /* operation failed, remove it from history*/
+                                  CancelLastEditFromHistory (pDoc);
+                                else
+                                  /* element pParent has been split */
+                                  {
+                                    /* record the element that has been
+                                       created by BreakElement: it has to be
+                                       deleted when undoing the command */
+                                    AddEditOpInHistory (pParent->ElParent->ElNext, pDoc, FALSE, TRUE);
+                                    SRuleForSibling (pDoc, pParent, FALSE, 1,
+                                                     &typeNum, &pSS, &list, &optional);
+                                    if (typeNum > 0)
+                                      {
+                                        pAggregEl = pParent->ElParent;
+                                        ready = TRUE;
+                                        pElDelete = pElem;
+                                        pElReplicate = pParent;
+                                        createAfter = TRUE;
+                                        replicate = FALSE;
+                                        list = FALSE;
+                                      }
+                                  }
+                              }
+                          }
+                        else if (!list &&
+                                 !TypeHasException (ExcNoCreate,
+                                                    pParent->ElTypeNumber,
+                                                    pParent->ElStructSchema))
+                          {
+                            pAggregEl = pParent->ElParent;
+                            ready = TRUE;
+                            pElDelete = pElem;
+                            pElReplicate = pParent;
+                            replicate = FALSE;
+                            if (pElem->ElPrevious != NULL &&
+                                pElem->ElNext == NUL)
+                              createAfter = TRUE;
+                            else if (pElem->ElNext != NULL &&
+                                     pElem->ElPrevious == NULL)
+                              createAfter = FALSE;
+                            else
+                              {
+                                list = TRUE;
+                                pAggregEl = NULL;
+                              }
+                          }
+                      }
+                    if (pAggregEl == NULL)
+                      {
+                        pParent = pParent->ElParent;
+                        if (pParent != NULL)
+                          pListEl = AncestorList (pParent);
+                      }
+                    /* Specific treatment for xml */
+                    if (pListEl == NULL && pAggregEl == NULL)
+                      {
+                        pParent = pElem->ElParent;		
+                        pListEl = ParentAny (pElem);
+                      }
+                  }
+                if (list && pListEl != NULL)
+                  {
+                    if (pElem->ElPrevious && !pElem->ElNext)
+                      {
+                        if (!TypeHasException (ExcNoCreate,
+                                               pParent->ElTypeNumber,
+                                               pParent->ElStructSchema))
+                          {
+                            /* detruire pElem et creer un frere suivant
+                               a pParent */
+                            ready = TRUE;
+                            pElDelete = pElem;
+                            createAfter = TRUE;
+                            pElReplicate = pParent;
+                            while (pElReplicate->ElParent != pListEl)
+                              pElReplicate = pElReplicate->ElParent;
+                          }
+                      }
+                    else if (pElem->ElNext && !pElem->ElPrevious &&
+                             !TypeHasException (ExcNoCreate,
+                                                pParent->ElTypeNumber,
+                                                pParent->ElStructSchema))
+                      {
+                        /* detruire pElem et creer un frere precedent
+                           a pParent */
+                        ready = TRUE;
+                        pElDelete = pElem;
+                        createAfter = FALSE;
+                        pElReplicate = pParent;
+                        while (pElReplicate->ElParent != pListEl)
+                          pElReplicate = pElReplicate->ElParent;
+                      }
+                    else if (!TypeHasException (ExcNoCreate,
+                                                pParent->ElTypeNumber,
+                                                pParent->ElStructSchema))
+                      /* try to split element pParent before element pElem */
+                      {
+                        /* store the editing operation in the history */
+                        if (!histSeq)
+                          {
+                            OpenHistorySequence (pDoc, firstSel, lastSel, NULL,
+                                                 firstChar, lastChar);
+                            histSeq = TRUE;
+                          }
+                        AddEditOpInHistory (pParent, pDoc, TRUE, TRUE);
+			
+                        if (BreakElement (pParent, pElem, 0, FALSE, FALSE))
+                          /* element pParent has been split */
+                          {
+                            /* record the element that has been
+                               created by BreakElement: it has to be
+                               deleted when undoing the command */
+                            AddEditOpInHistory (pParent->ElNext, pDoc, FALSE,
+                                                TRUE);
+                            ready = TRUE;
+                            pElDelete = pElem;
+                            createAfter = TRUE;
+                            pElReplicate = pParent;
+                          }
+                        else
+                          /* cannot split element */
+                          {
+                            /* remove operation from history */
+                            CancelLastEditFromHistory (pDoc);
+                            pListEl = NULL;
+                          }
+                      }
+                  }
+                if (list && pListEl == NULL)
+                  {
+                    pListEl = AncestorList (pElem);
+                    if (pListEl != NULL)
+                      if (!TypeHasException (ExcNoCreate,
+                                             pElem->ElTypeNumber,
+                                             pElem->ElStructSchema))
+                        {
+                          ready = TRUE;
+                          pElDelete = NULL;
+                          createAfter = TRUE;
+                          pElReplicate = pElem;
+                        }
+                  }
+              }
+          if (ready && list && pListEl && pElReplicate)
+            {
+              replicate = FALSE;
+              ReturnCreateNewElem (pListEl, pElReplicate,
+                                   (ThotBool)!createAfter, pDoc,
+                                   &typeNum, &pSS);
+            }
+          else
+            pListEl = NULL;
+        }
+	
+      if (!ready && !empty)
+        {
+          /* La selection commence-t-elle en tete ou en queue d'element? */
+          selBegin = FALSE;
+          selEnd = FALSE;
+          if (firstSel == lastSel)
+            /* only one element selected */
+            {
+              if (firstSel->ElVolume > 0 && EmptyOrConstants (firstSel))
+                /* the element includes only constants */
+                {
+                  selBegin = TRUE;
+                  selEnd = TRUE;
+                }
+              else if (firstSel->ElTerminal)
+                {
+                  if (firstSel->ElLeafType == LtText)
+                    {
+                      if (firstSel->ElPrevious == NULL && firstChar <= 1)
+                        /* no previous and at the beginning */
+                        selBegin = TRUE;
+                      if (firstSel->ElNext == NULL &&
+                          firstChar > firstSel->ElTextLength)
+                        /* no next and at the end */
+                        selEnd = TRUE;
+                    }
+                  else if (firstSel->ElLeafType == LtPicture)
+                    {
+                      if (firstSel->ElPrevious == NULL && firstChar == 0)
+                        /* no previous and a selection at the left border */
+                        selBegin = TRUE;
+                      if (firstSel->ElNext == NULL && firstChar > 0)
+                        /* no next and a selection at the right border */
+                        selEnd = TRUE;
+                    }
+                  else
+                    {
+                      if ((firstSel->ElLeafType == LtGraphics ||
+                           firstSel->ElLeafType == LtPolyLine ||
+                           firstSel->ElLeafType == LtPath) &&
+                          firstChar == 0 &&
+                          firstSel->ElPrevious == NULL &&
+                          firstSel->ElNext == NULL &&
+                          firstSel->ElParent)
+                        /* select the enclosing element */
+                        firstSel = lastSel = firstSel->ElParent;
+                      selBegin = TRUE;
+                      selEnd = TRUE;
+                    }
+                }
+              else if (TypeHasException (ExcIsDraw, firstSel->ElTypeNumber,
+                                         firstSel->ElStructSchema))
+                {
+                  selBegin = TRUE;
+                  selEnd = TRUE;
+                }
+            }
+
+          /* Si la selection ne commence ni en tete ni en queue, on */
+          /* essaie de couper un paragraphe en deux */
+          if (!selBegin && !selEnd &&
+              CanSplitElement (firstSel, firstChar, TRUE, &pAncest, &pE,
+                               &pElReplicate))
+            {
+              /* register the operation in history */
+              if (!histSeq)
+                {
+                  OpenHistorySequence (pDoc, firstSel, lastSel, NULL,
+                                       firstChar, lastChar);
+                  histSeq = TRUE;
+                }
+              AddEditOpInHistory (pElReplicate, pDoc, TRUE, TRUE);
+	      
+              if (BreakElement (NULL, firstSel, firstChar, TRUE, TRUE))
+                {
+                  /* record the element that has been created by
+                     BreakElement: it has to be deleted when undoing the
+                     command */
+                  AddEditOpInHistory (pElReplicate->ElNext, pDoc, FALSE, TRUE);
+                  CloseHistorySequence (pDoc);
+                  if (!lock)
+                    /* unlock table formatting */
+                    TtaUnlockTableFormatting ();
+                  return;
+                }
+              else
+                /* remove operation from history */
+                CancelLastEditFromHistory (pDoc);
+            }
+
+          /* on cherche l'element CsList ascendant qui permet de creer un */
+          /* element voisin */
+          if (lastSel->ElTerminal && lastSel->ElLeafType == LtPageColBreak)
+            /* on ne duplique pas les sauts de pages */
+            pListEl = NULL;
+          else
+            {
+              if (lastSel->ElParent &&
+                  GetElementConstruct (lastSel->ElParent, &nComp) == CsAny)
+                pListEl = lastSel->ElParent;
+              else
+                pListEl = AncestorList (lastSel);
+              /* si c'est la fin d'une liste de Textes on remonte */
+              if (pListEl != NULL)
+                {
+                  if (lastSel->ElTerminal &&
+                      pListEl == lastSel->ElParent &&
+                      (lastSel->ElNext == NULL || selBegin) &&
+                      GetElementConstruct (lastSel->ElParent, &nComp) != CsAny &&
+                      !TypeHasException (ExcReturnCreateWithin,
+                                         pListEl->ElTypeNumber,
+                                         pListEl->ElStructSchema))
+                    {
+                      if (pListEl->ElParent &&
+                          GetElementConstruct (pListEl->ElParent, &nComp) == CsAny)
+                        pListEl = pListEl->ElParent;
+                      else
+                        pListEl = AncestorList (pListEl);
+                    }
+                }
+              else
+                {
+                  /* There is no List ancestor, search an Any parent */
+                  if (lastSel->ElTerminal)
+                    pListEl = ParentAny (lastSel->ElParent);
+                  else
+                    pListEl = ParentAny (lastSel);
+                  if (pListEl != NULL)
+                    {
+                      if (lastSel->ElTerminal &&
+                          pListEl == lastSel->ElParent &&
+                          (lastSel->ElNext == NULL || selBegin) &&
+                          !TypeHasException (ExcReturnCreateWithin,
+                                             pListEl->ElTypeNumber,
+                                             pListEl->ElStructSchema))
+                        pListEl = ParentAny (pListEl);
+                    }
+                }
+            }
+
+          /* verifie si les elements a doubler portent l'exception NoCreate */
+          if (pListEl != NULL)
+            {
+              pE = lastSel;
+              pElReplicate = NULL;
+              do
+                {
+                  if (TypeHasException (ExcNoCreate, pE->ElTypeNumber,
+                                        pE->ElStructSchema))
+                    /* abort */
+                    pListEl = NULL;
+                  else
+                    {
+                      pElReplicate = pE;
+                      pE = pE->ElParent;
+                    }
+                }
+              while (pE != pListEl && pListEl != NULL && pE != NULL);
+
+              /* a priori, on creera le meme type d'element */
+              if (pElReplicate)
+                {
+                  if (TypeHasException (ExcNoReplicate, pElReplicate->ElTypeNumber,
+                                        pElReplicate->ElStructSchema))
+                    selEnd = TRUE;
+                  else
+                    typeNum = pElReplicate->ElTypeNumber;
+                  pSS = pElReplicate->ElStructSchema;
+                }
+            }
+
+          if (pListEl != NULL)
+            {
+              /* verifie si la selection est en fin ou debut de paragraphe */
+              if (selEnd && pElReplicate)
+                /* verifie s'il faut creer le meme type d'element ou un type */
+                /* different */
+                {
+                  replicate = FALSE;
+                  createAfter = TRUE;
+                  ReturnCreateNewElem (pListEl, pElReplicate, FALSE, pDoc,
+                                       &typeNum, &pSS);
+                }
+              else if (selBegin && pElReplicate)
+                {
+                  replicate = FALSE;
+                  createAfter = FALSE;
+                  ReturnCreateNewElem (pListEl, pElReplicate, TRUE, pDoc,
+                                       &typeNum, &pSS);
+                }
+            }
+        }
+      /* verifie que la liste ne depasse pas deja la longueur maximum */
+      if (pListEl != NULL)
+        if (!CanChangeNumberOfElem (pListEl, 1))
+          pListEl = NULL;
+      if (pListEl != NULL || pAggregEl != NULL)
+        {
+          if (pListEl == NULL)
+            pListEl = pAggregEl;
+          /* demande a l'application si on peut creer ce type d'element */
+          notifyEl.event = TteElemNew;
+          notifyEl.document = (Document) IdentDocument (pDoc);
+          notifyEl.element = (Element) (pElReplicate->ElParent);
+          notifyEl.info = 0; /* not sent by undo */
+          notifyEl.elementType.ElTypeNum = typeNum;
+          notifyEl.elementType.ElSSchema = (SSchema) pSS;
+          pSibling = pElReplicate;
+          NSiblings = 0;
+          while (pSibling->ElPrevious != NULL)
+            {
+              NSiblings++;
+              pSibling = pSibling->ElPrevious;
+            }
+          if (createAfter)
+            NSiblings++;
+          notifyEl.position = NSiblings;
+          if (CallEventType ((NotifyEvent *) (&notifyEl), TRUE))
+            /* l'application refuse */
+            pListEl = NULL;
+        }
+      if (pListEl != NULL)
+        {
+          ok = !ElementIsReadOnly (pListEl);
+          if (ok && pElDelete != NULL)
+            /* on va detruire un sous arbre vide. */
+            /* envoie l'evenement ElemDelete.Pre */
+            ok = !SendEventSubTree (TteElemDelete, pDoc, pElDelete,
+                                    TTE_STANDARD_DELETE_LAST_ITEM, 0,
+                                    FALSE, FALSE);
+          if (ok)
+            {
+              /* annule d'abord la selection */
+              TtaClearViewSelections ();
+              if (pElDelete != NULL)
+                /* detruire le sous-arbre qu'on remplace */
+                {
+                  deleteEmpty = TRUE;
+                  if (!histSeq)
+                    {
+                      OpenHistorySequence (pDoc, firstSel, lastSel, NULL,
+                                           firstChar, lastChar);
+                      histSeq = TRUE;
+                    }
+                  AddEditOpInHistory (pElDelete, pDoc, TRUE, FALSE);
+		  
+                  pPrevious = PreviousNotPage (pElDelete, TRUE);
+                  pNext = NextNotPage (pElDelete, FALSE);
+                  DestroyAbsBoxes (pElDelete, pDoc, TRUE);
+                  AbstractImageUpdated (pDoc);
+                  /* prepare l'evenement ElemDelete.Post */
+                  notifyEl.event = TteElemDelete;
+                  notifyEl.document = (Document) IdentDocument (pDoc);
+                  notifyEl.element = (Element) (pElDelete->ElParent);
+                  notifyEl.info = 0; /* not sent by undo */
+                  notifyEl.elementType.ElTypeNum = pElDelete->ElTypeNumber;
+                  notifyEl.elementType.ElSSchema =
+                    (SSchema) (pElDelete->ElStructSchema);
+                  pSibling = pElDelete;
+                  NSiblings = 0;
+                  while (pSibling->ElPrevious != NULL)
+                    {
+                      NSiblings++;
+                      pSibling = pSibling->ElPrevious;
+                    }
+                  notifyEl.position = NSiblings;
+                  pClose = NextElement (pElDelete);
+
+                  /* retire l'element de l'arbre abstrait */
+                  RemoveElement (pElDelete);
+                  dispMode = TtaGetDisplayMode (doc);
+                  if (dispMode == DisplayImmediately)
+                    TtaSetDisplayMode (doc, DeferredDisplay);
+                  UpdateNumbers (pClose, pElDelete, pDoc, TRUE);
+                  if (dispMode == DisplayImmediately)
+                    TtaSetDisplayMode (doc, dispMode);
+
+                  RedisplayCopies (pElDelete, pDoc, TRUE);
+                  DeleteElement (&pElDelete, pDoc);
+                  /* envoie l'evenement ElemDelete.Post a l'application */
+                  CallEventType ((NotifyEvent *) (&notifyEl), FALSE);
+                  if (pNext != NULL)
+                    if (PreviousNotPage (pNext, TRUE) == NULL)
+                      /* l'element qui suit l'element detruit devient premier*/
+                      ChangeFirstLast (pNext, pDoc, TRUE, FALSE);
+                  if (pPrevious != NULL)
+                    if (NextNotPage (pPrevious, FALSE) == NULL)
+                      /* l'element qui precede l'element detruit devient
+                         dernier */
+                      ChangeFirstLast (pPrevious, pDoc, FALSE, FALSE);
+                }
+              if (!replicate)
+                {
+                  pE = pElReplicate;
+                  pNew = NewSubtree (typeNum, pSS, pDoc, TRUE, TRUE, TRUE,
+                                     TRUE);
+                }
+              else
+                {
+                  /* Reconstruction d'une structure parallele */
+                  pNew = NewSubtree (lastSel->ElTypeNumber,
+                                     lastSel->ElStructSchema, pDoc,
+                                     TRUE, TRUE, TRUE, TRUE);
+                  CopyClassAttr (pNew, lastSel);
+                  pE = lastSel;
+                  while (pE->ElParent != pListEl)
+                    {
+                      pE = pE->ElParent;
+                      pAncest = ReplicateElement (pE, pDoc);
+                      InsertFirstChild (pAncest, pNew);
+                      pNew = pAncest;
+                    }
+                }
+              /* Insertion du nouvel element */
+              if (createAfter)
+                {
+                  pClose = pE->ElNext;
+                  FwdSkipPageBreak (&pClose);
+                  InsertElementAfter (pE, pNew);
+                  if (pClose == NULL)
+                    /* l'element pE n'est plus le dernier fils de son pere */
+                    ChangeFirstLast (pE, pDoc, FALSE, TRUE);
+                }
+              else
+                {
+                  pClose = pE->ElPrevious;
+                  InsertElementBefore (pE, pNew);
+                  if (pClose == NULL)
+                    /* l'element pE n'est plus le premier fils de son pere */
+                    ChangeFirstLast (pE, pDoc, TRUE, TRUE);
+                }
+              if (!histSeq)
+                {
+                  OpenHistorySequence (pDoc, firstSel, lastSel, NULL,
+                                       firstChar, lastChar);
+                  histSeq = TRUE;
+                }
+              AddEditOpInHistory (pNew, pDoc, FALSE, TRUE);
+              /* traite les exclusions des elements crees */
+              RemoveExcludedElem (&pNew, pDoc);
+              /* traite les attributs requis des elements crees */
+              AttachMandatoryAttributes (pNew, pDoc);
+              if (pDoc->DocSSchema != NULL)
+                /* le document n'a pas ete ferme' entre temps */
+                {
+                  /* traitement des exceptions */
+                  CreationExceptions (pNew, pDoc);
+
+                  /* Avoid too many redisplay when updating a table */
+                  dispMode = TtaGetDisplayMode (doc);
+                  if (dispMode == DisplayImmediately)
+                    TtaSetDisplayMode (doc, DeferredDisplay);
+                  /* envoie un evenement ElemNew.Post a l'application */
+                  NotifySubTree (TteElemNew, pDoc, pNew, 0, 0, FALSE, FALSE);
+                  /* Mise a jour des images abstraites */
+                  CreateAllAbsBoxesOfEl (pNew, pDoc);
+                  /* generate abstract boxes */
+                  AbstractImageUpdated (pDoc);
+                  /* update boxes */
+                  RedisplayDocViews (pDoc);
+                  /* si on est dans un element copie' par inclusion, */
+                  /* on met a jour les copies de cet element. */
+                  RedisplayCopies (pNew, pDoc, TRUE);
+                  UpdateNumbers (NextElement (pNew), pNew, pDoc, TRUE);
+
+                  /* Set the document modified */
+                  SetDocumentModified (pDoc, TRUE, 30);
+                  if (!lock)
+                    {
+                      /* unlock table formatting */
+                      TtaUnlockTableFormatting ();
+                      lock = TRUE; /* unlock is done */
+                    }
+
+                  if (dispMode == DisplayImmediately)
+                    TtaSetDisplayMode (doc, dispMode);
+                  /* restore a selection */
+                  SelectElementWithEvent (pDoc, FirstLeaf (pNew), TRUE, TRUE);
+                }
+            }
+        }
+      if (!lock)
+        /* handle the remaining unlock of table formatting */
+              if (!histSeq)
+                {
+                  OpenHistorySequence (pDoc, firstSel, lastSel, NULL,
+                                       firstChar, lastChar);
+                  histSeq = TRUE;
+                }
+              AddEditOpInHistory (pElReplicate, pDoc, TRUE, TRUE);
+	      
+              if (BreakElement (NULL, firstSel, firstChar, TRUE, TRUE))
+                {
+                  /* record the element that has been created by
+                     BreakElement: it has to be deleted when undoing the
+                     command */
+                  AddEditOpInHistory (pElReplicate->ElNext, pDoc, FALSE, TRUE);
+                  CloseHistorySequence (pDoc);
+                  if (!lock)
+                    /* unlock table formatting */
+                    TtaUnlockTableFormatting ();
+                  return;
+                }
+              else
+                /* remove operation from history */
+                CancelLastEditFromHistory (pDoc);
+            }
+
+          /* on cherche l'element CsList ascendant qui permet de creer un */
+          /* element voisin */
+          if (lastSel->ElTerminal && lastSel->ElLeafType == LtPageColBreak)
+            /* on ne duplique pas les sauts de pages */
+            pListEl = NULL;
+          else
+            {
+              if (lastSel->ElParent &&
+                  GetElementConstruct (lastSel->ElParent, &nComp) == CsAny)
+                pListEl = lastSel->ElParent;
+              else
+                pListEl = AncestorList (lastSel);
+              /* si c'est la fin d'une liste de Textes on remonte */
+              if (pListEl != NULL)
+                {
+                  if (lastSel->ElTerminal &&
+                      pListEl == lastSel->ElParent &&
+                      (lastSel->ElNext == NULL || selBegin) &&
+                      GetElementConstruct (lastSel->ElParent, &nComp) != CsAny &&
+                      !TypeHasException (ExcReturnCreateWithin,
+                                         pListEl->ElTypeNumber,
+                                         pListEl->ElStructSchema))
+                    {
+                      if (pListEl->ElParent &&
+                          GetElementConstruct (pListEl->ElParent, &nComp) == CsAny)
+                        pListEl = pListEl->ElParent;
+                      else
+                        pListEl = AncestorList (pListEl);
+                    }
+                }
+              else
+                {
+                  /* There is no List ancestor, search an Any parent */
+                  if (lastSel->ElTerminal)
+                    pListEl = ParentAny (lastSel->ElParent);
+                  else
+                    pListEl = ParentAny (lastSel);
+                  if (pListEl != NULL)
+                    {
+                      if (lastSel->ElTerminal &&
+                          pListEl == lastSel->ElParent &&
+                          (lastSel->ElNext == NULL || selBegin) &&
+                          !TypeHasException (ExcReturnCreateWithin,
+                                             pListEl->ElTypeNumber,
+                                             pListEl->ElStructSchema))
+                        pListEl = ParentAny (pListEl);
+                    }
+                }
+            }
+
+          /* verifie si les elements a doubler portent l'exception NoCreate */
+          if (pListEl != NULL)
+            {
+              pE = lastSel;
+              pElReplicate = NULL;
+              do
+                {
+                  if (TypeHasException (ExcNoCreate, pE->ElTypeNumber,
+                                        pE->ElStructSchema))
+                    /* abort */
+                    pListEl = NULL;
+                  else
+                    {
+                      pElReplicate = pE;
+                      pE = pE->ElParent;
+                    }
+                }
+              while (pE != pListEl && pListEl != NULL && pE != NULL);
+
+              /* a priori, on creera le meme type d'element */
+              if (pElReplicate)
+                {
+                  if (TypeHasException (ExcNoReplicate, pElReplicate->ElTypeNumber,
+                                        pElReplicate->ElStructSchema))
+                    selEnd = TRUE;
+                  else
+                    typeNum = pElReplicate->ElTypeNumber;
+                  pSS = pElReplicate->ElStructSchema;
+                }
+            }
+
+          if (pListEl != NULL)
+            {
+              /* verifie si la selection est en fin ou debut de paragraphe */
+              if (selEnd && pElReplicate)
+                /* verifie s'il faut creer le meme type d'element ou un type */
+                /* different */
+                {
+                  replicate = FALSE;
+                  createAfter = TRUE;
+                  ReturnCreateNewElem (pListEl, pElReplicate, FALSE, pDoc,
+                                       &typeNum, &pSS);
+                }
+              else if (selBegin && pElReplicate)
+                {
+                  replicate = FALSE;
+                  createAfter = FALSE;
+                  ReturnCreateNewElem (pListEl, pElReplicate, TRUE, pDoc,
+                                       &typeNum, &pSS);
+                }
+            }
+        }
+      /* verifie que la liste ne depasse pas deja la longueur maximum */
+      if (pListEl != NULL)
+        if (!CanChangeNumberOfElem (pListEl, 1))
+          pListEl = NULL;
+      if (pListEl != NULL || pAggregEl != NULL)
+        {
+          if (pListEl == NULL)
+            pListEl = pAggregEl;
+          /* demande a l'application si on peut creer ce type d'element */
+          notifyEl.event = TteElemNew;
+          notifyEl.document = (Document) IdentDocument (pDoc);
+          notifyEl.element = (Element) (pElReplicate->ElParent);
+          notifyEl.info = 0; /* not sent by undo */
+          notifyEl.elementType.ElTypeNum = typeNum;
+          notifyEl.elementType.ElSSchema = (SSchema) pSS;
+          pSibling = pElReplicate;
+          NSiblings = 0;
+          while (pSibling->ElPrevious != NULL)
+            {
+              NSiblings++;
+              pSibling = pSibling->ElPrevious;
+            }
+          if (createAfter)
+            NSiblings++;
+          notifyEl.position = NSiblings;
+          if (CallEventType ((NotifyEvent *) (&notifyEl), TRUE))
+            /* l'application refuse */
+            pListEl = NULL;
+        }
+      if (pListEl != NULL)
+        {
+          ok = !ElementIsReadOnly (pListEl);
+          if (ok && pElDelete != NULL)
+            /* on va detruire un sous arbre vide. */
+            /* envoie l'evenement ElemDelete.Pre */
+            ok = !SendEventSubTree (TteElemDelete, pDoc, pElDelete,
+                                    TTE_STANDARD_DELETE_LAST_ITEM, 0,
+                                    FALSE, FALSE);
+          if (ok)
+            {
+              /* annule d'abord la selection */
+              TtaClearViewSelections ();
+              if (pElDelete != NULL)
+                /* detruire le sous-arbre qu'on remplace */
+                {
+                  deleteEmpty = TRUE;
+                  if (!histSeq)
+                    {
+                      OpenHistorySequence (pDoc, firstSel, lastSel, NULL,
+                                           firstChar, lastChar);
+                      histSeq = TRUE;
+                    }
+                  AddEditOpInHistory (pElDelete, pDoc, TRUE, FALSE);
+		  
+                  pPrevious = PreviousNotPage (pElDelete, TRUE);
+                  pNext = NextNotPage (pElDelete, FALSE);
+                  DestroyAbsBoxes (pElDelete, pDoc, TRUE);
+                  AbstractImageUpdated (pDoc);
+                  /* prepare l'evenement ElemDelete.Post */
+                  notifyEl.event = TteElemDelete;
+                  notifyEl.document = (Document) IdentDocument (pDoc);
+                  notifyEl.element = (Element) (pElDelete->ElParent);
+                  notifyEl.info = 0; /* not sent by undo */
+                  notifyEl.elementType.ElTypeNum = pElDelete->ElTypeNumber;
+                  notifyEl.elementType.ElSSchema =
+                    (SSchema) (pElDelete->ElStructSchema);
+                  pSibling = pElDelete;
+                  NSiblings = 0;
+                  while (pSibling->ElPrevious != NULL)
+                    {
+                      NSiblings++;
+                      pSibling = pSibling->ElPrevious;
+                    }
+                  notifyEl.position = NSiblings;
+                  pClose = NextElement (pElDelete);
+
+                  /* retire l'element de l'arbre abstrait */
+                  RemoveElement (pElDelete);
+                  dispMode = TtaGetDisplayMode (doc);
+                  if (dispMode == DisplayImmediately)
+                    TtaSetDisplayMode (doc, DeferredDisplay);
+                  UpdateNumbers (pClose, pElDelete, pDoc, TRUE);
+                  if (dispMode == DisplayImmediately)
+                    TtaSetDisplayMode (doc, dispMode);
+
+                  RedisplayCopies (pElDelete, pDoc, TRUE);
+                  DeleteElement (&pElDelete, pDoc);
+                  /* envoie l'evenement ElemDelete.Post a l'application */
+                  CallEventType ((NotifyEvent *) (&notifyEl), FALSE);
+                  if (pNext != NULL)
+                    if (PreviousNotPage (pNext, TRUE) == NULL)
+                      /* l'element qui suit l'element detruit devient premier*/
+                      ChangeFirstLast (pNext, pDoc, TRUE, FALSE);
+                  if (pPrevious != NULL)
+                    if (NextNotPage (pPrevious, FALSE) == NULL)
+                      /* l'element qui precede l'element detruit devient
+                         dernier */
+                      ChangeFirstLast (pPrevious, pDoc, FALSE, FALSE);
+                }
+              if (!replicate)
+                {
+                  pE = pElReplicate;
+                  pNew = NewSubtree (typeNum, pSS, pDoc, TRUE, TRUE, TRUE,
+                                     TRUE);
+                }
+              else
+                {
+                  /* Reconstruction d'une structure parallele */
+                  pNew = NewSubtree (lastSel->ElTypeNumber,
+                                     lastSel->ElStructSchema, pDoc,
+                                     TRUE, TRUE, TRUE, TRUE);
+                  CopyClassAttr (pNew, lastSel);
+                  pE = lastSel;
+                  while (pE->ElParent != pListEl)
+                    {
+                      pE = pE->ElParent;
+                      pAncest = ReplicateElement (pE, pDoc);
+                      InsertFirstChild (pAncest, pNew);
+                      pNew = pAncest;
+                    }
+                }
+              /* Insertion du nouvel element */
+              if (createAfter)
+                {
+                  pClose = pE->ElNext;
+                  FwdSkipPageBreak (&pClose);
+                  InsertElementAfter (pE, pNew);
+                  if (pClose == NULL)
+                    /* l'element pE n'est plus le dernier fils de son pere */
+                    ChangeFirstLast (pE, pDoc, FALSE, TRUE);
+                }
+              else
+                {
+                  pClose = pE->ElPrevious;
+                  InsertElementBefore (pE, pNew);
+                  if (pClose == NULL)
+                    /* l'element pE n'est plus le premier fils de son pere */
+                    ChangeFirstLast (pE, pDoc, TRUE, TRUE);
+                }
+              if (!histSeq)
+                {
+                  OpenHistorySequence (pDoc, firstSel, lastSel, NULL,
+                                       firstChar, lastChar);
+                  histSeq = TRUE;
+                }
+              AddEditOpInHistory (pNew, pDoc, FALSE, TRUE);
+              /* traite les exclusions des elements crees */
+              RemoveExcludedElem (&pNew, pDoc);
+              /* traite les attributs requis des elements crees */
+              AttachMandatoryAttributes (pNew, pDoc);
+              if (pDoc->DocSSchema != NULL)
+                /* le document n'a pas ete ferme' entre temps */
+                {
+                  /* traitement des exceptions */
+                  CreationExceptions (pNew, pDoc);
+
+                  /* Avoid too many redisplay when updating a table */
+                  dispMode = TtaGetDisplayMode (doc);
+                  if (dispMode == DisplayImmediately)
+                    TtaSetDisplayMode (doc, DeferredDisplay);
+                  /* envoie un evenement ElemNew.Post a l'application */
+                  NotifySubTree (TteElemNew, pDoc, pNew, 0, 0, FALSE, FALSE);
+                  /* Mise a jour des images abstraites */
+                  CreateAllAbsBoxesOfEl (pNew, pDoc);
+                  /* generate abstract boxes */
+                  AbstractImageUpdated (pDoc);
+                  /* update boxes */
+                  RedisplayDocViews (pDoc);
+                  /* si on est dans un element copie' par inclusion, */
+                  /* on met a jour les copies de cet element. */
+                  RedisplayCopies (pNew, pDoc, TRUE);
+                  UpdateNumbers (NextElement (pNew), pNew, pDoc, TRUE);
+
+                  /* Set the document modified */
+                  SetDocumentModified (pDoc, TRUE, 30);
+                  if (!lock)
+                    {
+                      /* unlock table formatting */
+                      TtaUnlockTableFormatting ();
+                      lock = TRUE; /* unlock is done */
+                    }
+
+                  if (dispMode == DisplayImmediately)
+                    TtaSetDisplayMode (doc, dispMode);
+                  /* restore a selection */
+                  SelectElementWithEvent (pDoc, FirstLeaf (pNew), TRUE, TRUE);
+                }
+            }
+        }
+      if (!lock)
+        /* handle the remaining unlock of table formatting */
+                    ready = TRUE;
+                    pElDelete = NULL;
+                    pListEl = NULL;
+                    createAfter = TRUE;
+                    pElReplicate = pElem;
+                  }
+                else if (pListEl == NULL)
+                  {
+                    if (GetElementConstruct (pParent->ElParent, &nComp) ==
+                        CsAggregate)
+                      {
+                        SRuleForSibling (pDoc, pParent, FALSE, 1, &typeNum,
+                                         &pSS, &list, &optional);
+                        if (typeNum > 0)
+                          if (TypeHasException (ExcNoCreate, typeNum,pSS))
+                            typeNum = 0;
+                        if (typeNum == 0)
+                          {
+                            list = TRUE;
+                            pListEl = NULL;
+                            /* try to split before element pElem */
+                            if (pElem->ElPrevious != NULL &&
+                                pElem->ElNext != NULL)
+                              {
+                                /* store the editing operation in the history*/
+                                if (!histSeq)
+                                  {
+                                    OpenHistorySequence (pDoc, firstSel, lastSel,
+                                                         NULL, firstChar, lastChar);
+                                    histSeq = TRUE;
+                                  }
+                                AddEditOpInHistory (pParent->ElParent, pDoc,
+                                                    TRUE, TRUE);
+                                if (!BreakElement (pParent->ElParent, pElem,
+                                                   0, FALSE, TRUE))
+                                  /* operation failed, remove it from history*/
+                                  CancelLastEditFromHistory (pDoc);
+                                else
+                                  /* element pParent has been split */
+                                  {
+                                    /* record the element that has been
+                                       created by BreakElement: it has to be
+                                       deleted when undoing the command */
+                                    AddEditOpInHistory (pParent->ElParent->ElNext, pDoc, FALSE, TRUE);
+                                    SRuleForSibling (pDoc, pParent, FALSE, 1,
+                                                     &typeNum, &pSS, &list, &optional);
+                                    if (typeNum > 0)
+                                      {
+                                        pAggregEl = pParent->ElParent;
+                                        ready = TRUE;
+                                        pElDelete = pElem;
+                                        pElReplicate = pParent;
+                                        createAfter = TRUE;
+                                        replicate = FALSE;
+                                        list = FALSE;
+                                      }
+                                  }
+                              }
+                          }
+                        else if (!list &&
+                                 !TypeHasException (ExcNoCreate,
+                                                    pParent->ElTypeNumber,
+                                                    pParent->ElStructSchema))
+                          {
+                            pAggregEl = pParent->ElParent;
+                            ready = TRUE;
+                            pElDelete = pElem;
+                            pElReplicate = pParent;
+                            replicate = FALSE;
+                            if (pElem->ElPrevious != NULL &&
+                                pElem->ElNext == NUL)
+                              createAfter = TRUE;
+                            else if (pElem->ElNext != NULL &&
+                                     pElem->ElPrevious == NULL)
+                              createAfter = FALSE;
+                            else
+                              {
+                                list = TRUE;
+                                pAggregEl = NULL;
+                              }
+                          }
+                      }
+                    if (pAggregEl == NULL)
+                      {
+                        pParent = pParent->ElParent;
+                        if (pParent != NULL)
+                          pListEl = AncestorList (pParent);
+                      }
+                    /* Specific treatment for xml */
+                    if (pListEl == NULL && pAggregEl == NULL)
+                      {
+                        pParent = pElem->ElParent;		
+                        pListEl = ParentAny (pElem);
+                      }
+                  }
+                if (list && pListEl != NULL)
+                  {
+                    if (pElem->ElPrevious && !pElem->ElNext)
+                      {
+                        if (!TypeHasException (ExcNoCreate,
+                                               pParent->ElTypeNumber,
+                                               pParent->ElStructSchema))
+                          {
+                            /* detruire pElem et creer un frere suivant
+                               a pParent */
+                            ready = TRUE;
+                            pElDelete = pElem;
+                            createAfter = TRUE;
+                            pElReplicate = pParent;
+                            while (pElReplicate->ElParent != pListEl)
+                              pElReplicate = pElReplicate->ElParent;
+                          }
+                      }
+                    else if (pElem->ElNext && !pElem->ElPrevious &&
+                             !TypeHasException (ExcNoCreate,
+                                                pParent->ElTypeNumber,
+                                                pParent->ElStructSchema))
+                      {
+                        /* detruire pElem et creer un frere precedent
+                           a pParent */
+                        ready = TRUE;
+                        pElDelete = pElem;
+                        createAfter = FALSE;
+                        pElReplicate = pParent;
+                        while (pElReplicate->ElParent != pListEl)
+                          pElReplicate = pElReplicate->ElParent;
+                      }
+                    else if (!TypeHasException (ExcNoCreate,
+                                                pParent->ElTypeNumber,
+                                                pParent->ElStructSchema))
+                      /* try to split element pParent before element pElem */
+                      {
+                        /* store the editing operation in the history */
+                        if (!histSeq)
+                          {
+                            OpenHistorySequence (pDoc, firstSel, lastSel, NULL,
+                                                 firstChar, lastChar);
+                            histSeq = TRUE;
+                          }
+                        AddEditOpInHistory (pParent, pDoc, TRUE, TRUE);
+			
+                        if (BreakElement (pParent, pElem, 0, FALSE, FALSE))
+                          /* element pParent has been split */
+                          {
+                            /* record the element that has been
+                               created by BreakElement: it has to be
+                               deleted when undoing the command */
+                            AddEditOpInHistory (pParent->ElNext, pDoc, FALSE,
+                                                TRUE);
+                            ready = TRUE;
+                            pElDelete = pElem;
+                            createAfter = TRUE;
+                            pElReplicate = pParent;
+                          }
+                        else
+                          /* cannot split element */
+                          {
+                            /* remove operation from history */
+                            CancelLastEditFromHistory (pDoc);
+                            pListEl = NULL;
+                          }
+                      }
+                  }
+                if (list && pListEl == NULL)
+                  {
+                    pListEl = AncestorList (pElem);
+                    if (pListEl != NULL)
+                      if (!TypeHasException (ExcNoCreate,
+                                             pElem->ElTypeNumber,
+                                             pElem->ElStructSchema))
+                        {
+                          ready = TRUE;
+                          pElDelete = NULL;
+                          createAfter = TRUE;
+                          pElReplicate = pElem;
+                        }
+                  }
+              }
+          if (ready && list && pListEl && pElReplicate)
+            {
+              replicate = FALSE;
+              ReturnCreateNewElem (pListEl, pElReplicate,
+                                   (ThotBool)!createAfter, pDoc,
+                                   &typeNum, &pSS);
+            }
+          else
+            pListEl = NULL;
+        }
+	
+      if (!ready && !empty)
+        {
+          /* La selection commence-t-elle en tete ou en queue d'element? */
+          selBegin = FALSE;
+          selEnd = FALSE;
+          if (firstSel == lastSel)
+            /* only one element selected */
+            {
+              if (firstSel->ElVolume > 0 && EmptyOrConstants (firstSel))
+                /* the element includes only constants */
+                {
+                  selBegin = TRUE;
+                  selEnd = TRUE;
+                }
+              else if (firstSel->ElTerminal)
+                {
+                  if (firstSel->ElLeafType == LtText)
+                    {
+                      if (firstSel->ElPrevious == NULL && firstChar <= 1)
+                        /* no previous and at the beginning */
+                        selBegin = TRUE;
+                      if (firstSel->ElNext == NULL &&
+                          firstChar > firstSel->ElTextLength)
+                        /* no next and at the end */
+                        selEnd = TRUE;
+                    }
+                  else if (firstSel->ElLeafType == LtPicture)
+                    {
+                      if (firstSel->ElPrevious == NULL && firstChar == 0)
+                        /* no previous and a selection at the left border */
+                        selBegin = TRUE;
+                      if (firstSel->ElNext == NULL && firstChar > 0)
+                        /* no next and a selection at the right border */
+                        selEnd = TRUE;
+                    }
+                  else
+                    {
+                      if ((firstSel->ElLeafType == LtGraphics ||
+                           firstSel->ElLeafType == LtPolyLine ||
+                           firstSel->ElLeafType == LtPath) &&
+                          firstChar == 0 &&
+                          firstSel->ElPrevious == NULL &&
+                          firstSel->ElNext == NULL &&
+                          firstSel->ElParent)
+                        /* select the enclosing element */
+                        firstSel = lastSel = firstSel->ElParent;
+                      selBegin = TRUE;
+                      selEnd = TRUE;
+                    }
+                }
+              else if (TypeHasException (ExcIsDraw, firstSel->ElTypeNumber,
+                                         firstSel->ElStructSchema))
+                {
+                  selBegin = TRUE;
+                  selEnd = TRUE;
+                }
+            }
+
+          /* Si la selection ne commence ni en tete ni en queue, on */
+          /* essaie de couper un paragraphe en deux */
+          if (!selBegin && !selEnd &&
+              CanSplitElement (firstSel, firstChar, TRUE, &pAncest, &pE,
+                               &pElReplicate))
+            {
+              /* register the operation in history */
+              if (!histSeq)
+                {
+                  OpenHistorySequence (pDoc, firstSel, lastSel, NULL,
+                                       firstChar, lastChar);
+                  histSeq = TRUE;
+                }
+              AddEditOpInHistory (pElReplicate, pDoc, TRUE, TRUE);
+	      
+              if (BreakElement (NULL, firstSel, firstChar, TRUE, TRUE))
+                {
+                  /* record the element that has been created by
+                     BreakElement: it has to be deleted when undoing the
+                     command */
+                  AddEditOpInHistory (pElReplicate->ElNext, pDoc, FALSE, TRUE);
+                  CloseHistorySequence (pDoc);
+                  if (!lock)
+                    /* unlock table formatting */
+                    TtaUnlockTableFormatting ();
+                  return;
+                }
+              else
+                /* remove operation from history */
+                CancelLastEditFromHistory (pDoc);
+            }
+
+          /* on cherche l'element CsList ascendant qui permet de creer un */
+          /* element voisin */
+          if (lastSel->ElTerminal && lastSel->ElLeafType == LtPageColBreak)
+            /* on ne duplique pas les sauts de pages */
+            pListEl = NULL;
+          else
+            {
+              if (lastSel->ElParent &&
+                  GetElementConstruct (lastSel->ElParent, &nComp) == CsAny)
+                pListEl = lastSel->ElParent;
+              else
+                pListEl = AncestorList (lastSel);
+              /* si c'est la fin d'une liste de Textes on remonte */
+              if (pListEl != NULL)
+                {
+                  if (lastSel->ElTerminal &&
+                      pListEl == lastSel->ElParent &&
+                      (lastSel->ElNext == NULL || selBegin) &&
+                      GetElementConstruct (lastSel->ElParent, &nComp) != CsAny &&
+                      !TypeHasException (ExcReturnCreateWithin,
+                                         pListEl->ElTypeNumber,
+                                         pListEl->ElStructSchema))
+                    {
+                      if (pListEl->ElParent &&
+                          GetElementConstruct (pListEl->ElParent, &nComp) == CsAny)
+                        pListEl = pListEl->ElParent;
+                      else
+                        pListEl = AncestorList (pListEl);
+                    }
+                }
+              else
+                {
+                  /* There is no List ancestor, search an Any parent */
+                  if (lastSel->ElTerminal)
+                    pListEl = ParentAny (lastSel->ElParent);
+                  else
+                    pListEl = ParentAny (lastSel);
+                  if (pListEl != NULL)
+                    {
+                      if (lastSel->ElTerminal &&
+                          pListEl == lastSel->ElParent &&
+                          (lastSel->ElNext == NULL || selBegin) &&
+                          !TypeHasException (ExcReturnCreateWithin,
+                                             pListEl->ElTypeNumber,
+                                             pListEl->ElStructSchema))
+                        pListEl = ParentAny (pListEl);
+                    }
+                }
+            }
+
+          /* verifie si les elements a doubler portent l'exception NoCreate */
+          if (pListEl != NULL)
+            {
+              pE = lastSel;
+              pElReplicate = NULL;
+              do
+                {
+                  if (TypeHasException (ExcNoCreate, pE->ElTypeNumber,
+                                        pE->ElStructSchema))
+                    /* abort */
+                    pListEl = NULL;
+                  else
+                    {
+                      pElReplicate = pE;
+                      pE = pE->ElParent;
+                    }
+                }
+              while (pE != pListEl && pListEl != NULL && pE != NULL);
+
+              /* a priori, on creera le meme type d'element */
+              if (pElReplicate)
+                {
+                  if (TypeHasException (ExcNoReplicate, pElReplicate->ElTypeNumber,
+                                        pElReplicate->ElStructSchema))
+                    selEnd = TRUE;
+                  else
+                    typeNum = pElReplicate->ElTypeNumber;
+                  pSS = pElReplicate->ElStructSchema;
+                }
+            }
+
+          if (pListEl != NULL)
+            {
+              /* verifie si la selection est en fin ou debut de paragraphe */
+              if (selEnd && pElReplicate)
+                /* verifie s'il faut creer le meme type d'element ou un type */
+                /* different */
+                {
+                  replicate = FALSE;
+                  createAfter = TRUE;
+                  ReturnCreateNewElem (pListEl, pElReplicate, FALSE, pDoc,
+                                       &typeNum, &pSS);
+                }
+              else if (selBegin && pElReplicate)
+                {
+                  replicate = FALSE;
+                  createAfter = FALSE;
+                  ReturnCreateNewElem (pListEl, pElReplicate, TRUE, pDoc,
+                                       &typeNum, &pSS);
+                }
+            }
+        }
+      /* verifie que la liste ne depasse pas deja la longueur maximum */
+      if (pListEl != NULL)
+        if (!CanChangeNumberOfElem (pListEl, 1))
+          pListEl = NULL;
+      if (pListEl != NULL || pAggregEl != NULL)
+        {
+          if (pListEl == NULL)
+            pListEl = pAggregEl;
+          /* demande a l'application si on peut creer ce type d'element */
+          notifyEl.event = TteElemNew;
+          notifyEl.document = (Document) IdentDocument (pDoc);
+          notifyEl.element = (Element) (pElReplicate->ElParent);
+          notifyEl.info = 0; /* not sent by undo */
+          notifyEl.elementType.ElTypeNum = typeNum;
+          notifyEl.elementType.ElSSchema = (SSchema) pSS;
+          pSibling = pElReplicate;
+          NSiblings = 0;
+          while (pSibling->ElPrevious != NULL)
+            {
+              NSiblings++;
+              pSibling = pSibling->ElPrevious;
+            }
+          if (createAfter)
+            NSiblings++;
+          notifyEl.position = NSiblings;
+          if (CallEventType ((NotifyEvent *) (&notifyEl), TRUE))
+            /* l'application refuse */
+            pListEl = NULL;
+        }
+      if (pListEl != NULL)
+        {
+          ok = !ElementIsReadOnly (pListEl);
+          if (ok && pElDelete != NULL)
+            /* on va detruire un sous arbre vide. */
+            /* envoie l'evenement ElemDelete.Pre */
+            ok = !SendEventSubTree (TteElemDelete, pDoc, pElDelete,
+                                    TTE_STANDARD_DELETE_LAST_ITEM, 0,
+                                    FALSE, FALSE);
+          if (ok)
+            {
+              /* annule d'abord la selection */
+              TtaClearViewSelections ();
+              if (pElDelete != NULL)
+                /* detruire le sous-arbre qu'on remplace */
+                {
+                  deleteEmpty = TRUE;
+                  if (!histSeq)
+                    {
+                      OpenHistorySequence (pDoc, firstSel, lastSel, NULL,
+                                           firstChar, lastChar);
+                      histSeq = TRUE;
+                    }
+                  AddEditOpInHistory (pElDelete, pDoc, TRUE, FALSE);
+		  
+                  pPrevious = PreviousNotPage (pElDelete, TRUE);
+                  pNext = NextNotPage (pElDelete, FALSE);
+                  DestroyAbsBoxes (pElDelete, pDoc, TRUE);
+                  AbstractImageUpdated (pDoc);
+                  /* prepare l'evenement ElemDelete.Post */
+                  notifyEl.event = TteElemDelete;
+                  notifyEl.document = (Document) IdentDocument (pDoc);
+                  notifyEl.element = (Element) (pElDelete->ElParent);
+                  notifyEl.info = 0; /* not sent by undo */
+                  notifyEl.elementType.ElTypeNum = pElDelete->ElTypeNumber;
+                  notifyEl.elementType.ElSSchema =
+                    (SSchema) (pElDelete->ElStructSchema);
+                  pSibling = pElDelete;
+                  NSiblings = 0;
+                  while (pSibling->ElPrevious != NULL)
+                    {
+                      NSiblings++;
+                      pSibling = pSibling->ElPrevious;
+                    }
+                  notifyEl.position = NSiblings;
+                  pClose = NextElement (pElDelete);
+
+                  /* retire l'element de l'arbre abstrait */
+                  RemoveElement (pElDelete);
+                  dispMode = TtaGetDisplayMode (doc);
+                  if (dispMode == DisplayImmediately)
+                    TtaSetDisplayMode (doc, DeferredDisplay);
+                  UpdateNumbers (pClose, pElDelete, pDoc, TRUE);
+                  if (dispMode == DisplayImmediately)
+                    TtaSetDisplayMode (doc, dispMode);
+
+                  RedisplayCopies (pElDelete, pDoc, TRUE);
+                  DeleteElement (&pElDelete, pDoc);
+                  /* envoie l'evenement ElemDelete.Post a l'application */
+                  CallEventType ((NotifyEvent *) (&notifyEl), FALSE);
+                  if (pNext != NULL)
+                    if (PreviousNotPage (pNext, TRUE) == NULL)
+                      /* l'element qui suit l'element detruit devient premier*/
+                      ChangeFirstLast (pNext, pDoc, TRUE, FALSE);
+                  if (pPrevious != NULL)
+                    if (NextNotPage (pPrevious, FALSE) == NULL)
+                      /* l'element qui precede l'element detruit devient
+                         dernier */
+                      ChangeFirstLast (pPrevious, pDoc, FALSE, FALSE);
+                }
+              if (!replicate)
+                {
+                  pE = pElReplicate;
+                  pNew = NewSubtree (typeNum, pSS, pDoc, TRUE, TRUE, TRUE,
+                                     TRUE);
+                }
+              else
+                {
+                  /* Reconstruction d'une structure parallele */
+                  pNew = NewSubtree (lastSel->ElTypeNumber,
+                                     lastSel->ElStructSchema, pDoc,
+                                     TRUE, TRUE, TRUE, TRUE);
+                  CopyClassAttr (pNew, lastSel);
+                  pE = lastSel;
+                  while (pE->ElParent != pListEl)
+                    {
+                      pE = pE->ElParent;
+                      pAncest = ReplicateElement (pE, pDoc);
+                      InsertFirstChild (pAncest, pNew);
+                      pNew = pAncest;
+                    }
+                }
+              /* Insertion du nouvel element */
+              if (createAfter)
+                {
+                  pClose = pE->ElNext;
+                  FwdSkipPageBreak (&pClose);
+                  InsertElementAfter (pE, pNew);
+                  if (pClose == NULL)
+                    /* l'element pE n'est plus le dernier fils de son pere */
+                    ChangeFirstLast (pE, pDoc, FALSE, TRUE);
+                }
+              else
+                {
+                  pClose = pE->ElPrevious;
+                  InsertElementBefore (pE, pNew);
+                  if (pClose == NULL)
+                    /* l'element pE n'est plus le premier fils de son pere */
+                    ChangeFirstLast (pE, pDoc, TRUE, TRUE);
+                }
+              if (!histSeq)
+                {
+                  OpenHistorySequence (pDoc, firstSel, lastSel, NULL,
+                                       firstChar, lastChar);
+                  histSeq = TRUE;
+                }
+              AddEditOpInHistory (pNew, pDoc, FALSE, TRUE);
+              /* traite les exclusions des elements crees */
+              RemoveExcludedElem (&pNew, pDoc);
+              /* traite les attributs requis des elements crees */
+              AttachMandatoryAttributes (pNew, pDoc);
+              if (pDoc->DocSSchema != NULL)
+                /* le document n'a pas ete ferme' entre temps */
+                {
+                  /* traitement des exceptions */
+                  CreationExceptions (pNew, pDoc);
+
+                  /* Avoid too many redisplay when updating a table */
+                  dispMode = TtaGetDisplayMode (doc);
+                  if (dispMode == DisplayImmediately)
+                    TtaSetDisplayMode (doc, DeferredDisplay);
+                  /* envoie un evenement ElemNew.Post a l'application */
+                  NotifySubTree (TteElemNew, pDoc, pNew, 0, 0, FALSE, FALSE);
+                  /* Mise a jour des images abstraites */
+                  CreateAllAbsBoxesOfEl (pNew, pDoc);
+                  /* generate abstract boxes */
+                  AbstractImageUpdated (pDoc);
+                  /* update boxes */
+                  RedisplayDocViews (pDoc);
+                  /* si on est dans un element copie' par inclusion, */
+                  /* on met a jour les copies de cet element. */
+                  RedisplayCopies (pNew, pDoc, TRUE);
+                  UpdateNumbers (NextElement (pNew), pNew, pDoc, TRUE);
+
+                  /* Set the document modified */
+                  SetDocumentModified (pDoc, TRUE, 30);
+                  if (!lock)
+                    {
+                      /* unlock table formatting */
+                      TtaUnlockTableFormatting ();
+                      lock = TRUE; /* unlock is done */
+                    }
+
+                  if (dispMode == DisplayImmediately)
+                    TtaSetDisplayMode (doc, dispMode);
+                  /* restore a selection */
+                  SelectElementWithEvent (pDoc, FirstLeaf (pNew), TRUE, TRUE);
+                }
+            }
+        }
+      if (!lock)
+        /* handle the remaining unlock of table formatting */
+                  if (dispMode == DisplayImmediately)
+                    TtaSetDisplayMode (doc, DeferredDisplay);
+                  /* envoie un evenement ElemNew.Post a l'application */
+                  NotifySubTree (TteElemNew, pDoc, pNew, 0, 0, FALSE, FALSE);
+                  /* Mise a jour des images abstraites */
+                  CreateAllAbsBoxesOfEl (pNew, pDoc);
+                  /* generate abstract boxes */
+                  AbstractImageUpdated (pDoc);
+                  /* update boxes */
+                  RedisplayDocViews (pDoc);
+                  /* si on est dans un element copie' par inclusion, */
+                  /* on met a jour les copies de cet element. */
+                  RedisplayCopies (pNew, pDoc, TRUE);
+                  UpdateNumbers (NextElement (pNew), pNew, pDoc, TRUE);
+
+                  /* Set the document modified */
+                  SetDocumentModified (pDoc, TRUE, 30);
+                  if (!lock)
+                    {
+                      /* unlock table formatting */
+                      TtaUnlockTableFormatting ();
+                      lock = TRUE; /* unlock is done */
+                    }
+
+                  if (dispMode == DisplayImmediately)
+                    TtaSetDisplayMode (doc, dispMode);
+                  /* restore a selection */
+                  SelectElementWithEvent (pDoc, FirstLeaf (pNew), TRUE, TRUE);
+                }
+            }
+        }
+      if (!lock)
+        /* handle the remaining unlock of table formatting */
                       OpenHistorySequence (pDoc, firstSel, lastSel, NULL,
                                            firstChar, lastChar);
                       histSeq = TRUE;
