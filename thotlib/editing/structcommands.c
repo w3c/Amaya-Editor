@@ -1121,6 +1121,8 @@ PtrElement NextNotPage (PtrElement pEl, ThotBool sibling)
   PtrElement          pNext;
   ThotBool            stop;
 
+  if (pEl == NULL)
+    return NULL;
   if (sibling)
     pNext = pEl->ElNext;
   else
@@ -1151,6 +1153,8 @@ PtrElement PreviousNotPage (PtrElement pEl, ThotBool sibling)
   PtrElement          pPrev;
   ThotBool            stop;
 
+  if (pEl == NULL)
+    return NULL;
   if (sibling)
     pPrev = pEl->ElPrevious;
   else
@@ -1183,7 +1187,7 @@ void ProcessFirstLast (PtrElement pPrev, PtrElement pNext, PtrDocument pDoc)
   PtrElement          pSibling;
   ThotBool            stop;
 
-  if (pNext != NULL)
+  if (pNext)
     {
       pSibling = pNext->ElPrevious;
       stop = FALSE;
