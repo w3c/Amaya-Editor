@@ -893,19 +893,17 @@ static PtrPRule *PresAttrChainInsert (PtrPSchema tsch, int attrType,
   *      second by View,
   *      and Last by conditions
   If pres is zero, we don't test on the kind of rule ...
-  If att is less than MAX_ANCESTORS we're testing conditions of an
-  attribute rule, otherwise we're testing conditions for element rules.
   Returns:
   * 0 if the rule has all needed condititons
   * -1 if the rule has less conditions than neeeded
   * 1 if the rule has more conditions than neeeded
   ----------------------------------------------------------------------*/
 static int TstRuleContext (PtrPRule rule, GenericContext ctxt,
-                           PRuleType pres, int att)
+                           PRuleType pres)
 {
   PtrCondition        firstCond, cond;
   int                 nbcond, nbCtxtCond, prevAttr;
-  int                 i;
+  int                 i, att;
 
   /* test the number and type of the rule */
   if (rule->PrViewNum != 1)
@@ -925,30 +923,23 @@ static int TstRuleContext (PtrPRule rule, GenericContext ctxt,
     }
   nbCtxtCond = 0;
   prevAttr = ctxt->attrType[0];
-  if (att < MAX_ANCESTORS)
+  if (prevAttr && ctxt->attrLevel[0] == 0)
     /* the rule is associated to an attribute */
     {
+      nbCtxtCond += ctxt->nbElem;
+      if (ctxt->name[0] > AnyType + 1)
+        nbCtxtCond++;
       /* count the number of conditions in the context */
-      for (i = 1; i <= ctxt->nbElem; i++)
-        {
-          if (ctxt->name[i])
-            nbCtxtCond++;
-          if (ctxt->attrType[i])
-            {
-              if (prevAttr)
-                nbCtxtCond++;
-              else
-                prevAttr = ctxt->attrType[i];
-            }
-        }
+      for (i = 1; i <= MAX_ANCESTORS && ctxt->attrType[i]; i++)
+        nbCtxtCond++;
     }
   else
     /* the rule is associated with an element */
     {
       /* count the number of conditions in the context */
-      for (i = 1; i <= ctxt->nbElem; i++)
-        if (ctxt->name[i])
-          nbCtxtCond++;
+      nbCtxtCond += ctxt->nbElem;
+      for (i = 0; i <= MAX_ANCESTORS && ctxt->attrType[i]; i++)
+        nbCtxtCond++;
     }
 
   if (nbCtxtCond < nbcond)
@@ -958,40 +949,60 @@ static int TstRuleContext (PtrPRule rule, GenericContext ctxt,
 
   /* same number of conditions */
   /* check if all ancestors are within the rule conditions */
-  i = 1;
+  cond = firstCond;
+  if (prevAttr && ctxt->attrLevel[0] == 0)
+    {
+      // associated to an attribute
+      i = 0;
+      att = 1;
+    }
+  else
+    {
+      // associated to an element
+      i = 1;
+      att = 0;
+    }
   while (i <= ctxt->nbElem)
     {
-      cond = firstCond;
-      while (cond &&
-             (cond->CoCondition != PcWithin ||
-              cond->CoTypeAncestor != ctxt->name[i] ||
-              cond->CoRelation > 0))
-        cond = cond->CoNextCondition;
-      if (cond == NULL)
-        /* the ancestor is not found */
-        return (1);
-      if (ctxt->attrType[i] && i != att)
+      if (i > 0 || ctxt->name[0] > AnyType + 1)
         {
-          cond = firstCond;
-          while (cond &&
-                 ((cond->CoCondition != PcInheritAttribute &&
-                   ctxt->attrLevel[i] != 0) ||
-                  (cond->CoCondition != PcAttribute &&
-                   ctxt->attrLevel[i] == 0) ||
-                  cond->CoTypeAttr != ctxt->attrType[i] ||
-                  cond->CoTestAttrValue != (ctxt->attrText != NULL) ||
-                  (cond->CoTestAttrValue &&
-                   (cond->CoTextMatch != (CondMatch)(ctxt->attrMatch[i]) ||
-                    (cond->CoAttrTextValue &&
-                     ctxt->attrText[i] &&
-                     strcasecmp (cond->CoAttrTextValue, ctxt->attrText[i]))))))
-            cond = cond->CoNextCondition;
-          if (cond == NULL)
-            /* conditions are different */
+          if ((cond->CoTypeElem == ctxt->name[i] &&
+               cond->CoCondition == PcElemType &&
+               ctxt->rel[i] == RelVoid) ||
+              (cond->CoTypeAncestor == ctxt->name[i] &&
+               cond->CoCondition == PcWithin &&
+               cond->CoImmediate &&
+               ctxt->rel[i] == RelParent) ||
+              (cond->CoTypeAncestor == ctxt->name[i] &&
+               cond->CoCondition == PcWithin &&
+               !cond->CoImmediate &&
+               ctxt->rel[i] == RelAncestor) ||
+              (cond->CoTypeAncestor == ctxt->name[i] &&
+               cond->CoCondition == PcSibling &&
+               cond->CoImmediate &&
+               ctxt->rel[i] == RelPrevious))
+            {
+              // check the next condition
+              cond = cond->CoNextCondition;
+              while (ctxt->attrType[att] && ctxt->attrLevel[att] == i)
+                {
+                  if (cond->CoCondition == PcAttribute &&
+                      cond->CoTypeAttr == ctxt->attrType[att])
+                    // check the next condition
+                    cond = cond->CoNextCondition;
+                  else
+                    /* the attribute is not found */
+                    return (1);
+                  att++;
+                }
+            }
+          else
+            /* the ancestor is not found */
             return (1);
+          i++;
         }
-      i++;
     }
+
   /* all conditions are the same. Compare the pseudo-elements */
   if (rule->PrBoxType == BtElement)
     {
@@ -1023,7 +1034,7 @@ static PtrPRule PresRuleSearch (PtrPSchema tsch, GenericContext ctxt,
 {
   PtrPRule            pRule;
   unsigned int        attrType;
-  int                 condCheck, att;
+  int                 condCheck;
   ThotBool            found;
 
   *chain = NULL;
@@ -1034,7 +1045,6 @@ static PtrPRule PresRuleSearch (PtrPSchema tsch, GenericContext ctxt,
     an attribute rule with conditions on the current element and/or
     ancestor elements.
   */
-  att = 0;
   if (ctxt->attrLevel[0] == 0 && ctxt->attrType[0])
     {
       attrType = ctxt->attrType[0];
@@ -1076,7 +1086,7 @@ static PtrPRule PresRuleSearch (PtrPSchema tsch, GenericContext ctxt,
         }
       else
         {
-          condCheck = TstRuleContext (pRule, ctxt, pres, att);
+          condCheck = TstRuleContext (pRule, ctxt, pres);
           if (condCheck == 0)
             /* there is already a rule of this type for this context */
             found = TRUE;
