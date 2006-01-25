@@ -902,8 +902,9 @@ static int TstRuleContext (PtrPRule rule, GenericContext ctxt,
                            PRuleType pres)
 {
   PtrCondition        firstCond, cond;
+  AttributeType       attType;
   int                 nbcond, nbCtxtCond, prevAttr;
-  int                 i, att;
+  int                 i, att, kind;
 
   /* test the number and type of the rule */
   if (rule->PrViewNum != 1)
@@ -986,11 +987,19 @@ static int TstRuleContext (PtrPRule rule, GenericContext ctxt,
               cond = cond->CoNextCondition;
               while (ctxt->attrType[att] && ctxt->attrLevel[att] == i)
                 {
+                  attType.AttrSSchema = ctxt->schema;
+                  attType.AttrTypeNum = ctxt->attrType[att];
+                  kind = TtaGetAttributeKind (attType);
                   if (cond->CoCondition == PcAttribute &&
-                      cond->CoTypeAttr == ctxt->attrType[att])
+                      cond->CoTypeAttr == ctxt->attrType[att] &&
+                      (((kind == 0 || kind == 1) &&
+                       cond->CoAttrValue == (long int)ctxt->attrText[att]) ||
+                       (kind == 2 &&
+                        cond->CoTextMatch == (CondMatch)ctxt->attrMatch[att] &&
+                        !strcmp (cond->CoAttrTextValue, ctxt->attrText[att]))))
                     // check the next condition
                     cond = cond->CoNextCondition;
-                  else
+                   else
                     /* the attribute is not found */
                     return (1);
                   att++;
@@ -999,8 +1008,8 @@ static int TstRuleContext (PtrPRule rule, GenericContext ctxt,
           else
             /* the ancestor is not found */
             return (1);
-          i++;
         }
+  i++;
     }
 
   /* all conditions are the same. Compare the pseudo-elements */
