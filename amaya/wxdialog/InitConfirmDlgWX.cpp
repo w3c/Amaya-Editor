@@ -10,6 +10,7 @@
 #include "message_wx.h"
 
 #include "InitConfirmDlgWX.h"
+static int      Waiting = 0;
 
 //-----------------------------------------------------------------------------
 // Event table: connect the events to the handler functions to process them
@@ -42,6 +43,9 @@ InitConfirmDlgWX::InitConfirmDlgWX( int ref,
   AmayaDialog( parent, ref )
 {
 wxString cancelbutton;
+
+  // waiting for a return
+  Waiting = 1;
 
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("InitConfirmDlgWX"));
   // update dialog labels with given ones
@@ -118,15 +122,18 @@ void InitConfirmDlgWX::OnExtraButton( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void InitConfirmDlgWX::OnConfirmButton( wxCommandEvent& event )
 {
-  ThotCallback (m_Ref, INTEGER_DATA, (char*) 1);
-}
+ if (Waiting)
+   ThotCallback (m_Ref, INTEGER_DATA, (char*) 1);
+ Waiting = 0;
+ }
 
 /*----------------------------------------------------------------------
   OnCancelButton called when clicking on cancelbutton
   ----------------------------------------------------------------------*/
 void InitConfirmDlgWX::OnCancelButton( wxCommandEvent& event )
 {
-  ThotCallback (m_Ref, INTEGER_DATA, (char*) 0); 
+ if (Waiting)
+   ThotCallback (m_Ref, INTEGER_DATA, (char*) 0); 
 }
 
 /*----------------------------------------------------------------------
@@ -137,7 +144,8 @@ void InitConfirmDlgWX::OnCancelButton( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void InitConfirmDlgWX::OnClose(wxCloseEvent& event)
 {
-  ThotCallback (m_Ref, INTEGER_DATA, (char*) 0); 
+ if (Waiting)
+   ThotCallback (m_Ref, INTEGER_DATA, (char*) 0); 
 }
 
 #endif /* _WX */
