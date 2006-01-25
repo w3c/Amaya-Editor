@@ -201,6 +201,9 @@ extern void CreateParameter ( Document document,
                               View view );
 extern void CreateOrChangeLink ( Document doc,
                                  View view );
+extern void DoDeleteAnchor ( Document doc,
+                             View view,
+                             ThotBool withFeedback );
 extern void DeleteAnchor ( Document doc,
                            View view );
 extern void FlushCache ( Document doc,
@@ -465,6 +468,9 @@ extern void CreateParameter ( Document document,
                                 View view );
 extern void CreateOrChangeLink ( Document doc,
                                    View view );
+extern void DoDeleteAnchor ( Document doc,
+                               View view,
+                               ThotBool withFeedback );
 extern void DeleteAnchor ( Document doc,
                              View view );
 extern void FlushCache ( Document doc,

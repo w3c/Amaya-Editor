@@ -3909,47 +3909,59 @@ void  CreateOrChangeLink (Document doc, View view)
 }
 
 /*----------------------------------------------------------------------
-  DeleteAnchor
-  Delete the surrounding anchor.                    
+  DoDeleteAnchor
+  Delete the surrounding anchor.
+  noCallback is TRUE when it's not a callback action
   ----------------------------------------------------------------------*/
-void DeleteAnchor (Document doc, View view)
+void DoDeleteAnchor (Document doc, View view, ThotBool noCallback)
 {
-  Element             firstSelectedElement, lastSelectedElement, anchor,
-    child, next, previous;
-  int                 firstSelectedChar, lastSelectedChar, i;
+  Element             firstSelectedElement, lastSelectedElement;
+  Element             anchor, child, next, previous;
   ElementType         elType;
   DisplayMode         dispMode;
+  int                 firstSelectedChar, lastSelectedChar, i;
 
   if (!TtaGetDocumentAccessMode (doc))
     /* the document is in ReadOnly mode */
     return;
 
-  /* get the first selected element */
-  TtaGiveFirstSelectedElement (doc, &firstSelectedElement,
-                               &firstSelectedChar, &lastSelectedChar);
-  if (firstSelectedElement == NULL)
+  if (noCallback)
     {
-      /* no selection. Do nothing */
-      TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NO_INSERT_POINT);
-      return;
+      /* get the first selected element */
+      TtaGiveFirstSelectedElement (doc, &firstSelectedElement,
+                                   &firstSelectedChar, &lastSelectedChar);
+      if (firstSelectedElement == NULL)
+        {
+          /* no selection. Do nothing */
+          TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NO_INSERT_POINT);
+          return;
+        }
+      if (TtaIsReadOnly (firstSelectedElement))
+        /* the selected element is read-only */
+        return;
+
+      elType = TtaGetElementType (firstSelectedElement);
+      if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") != 0)
+        /* the first selected element is not an HTML element. Do nothing */
+        return;
+
+      TtaGiveLastSelectedElement (doc, &lastSelectedElement, &i, 
+                                  &lastSelectedChar);
+      TtaOpenUndoSequence (doc, firstSelectedElement, lastSelectedElement,
+                           firstSelectedChar, lastSelectedChar);
+      anchor = firstSelectedElement;
     }
-  if (TtaIsReadOnly (firstSelectedElement))
-    /* the selected element is read-only */
-    return;
+  else
+    {
+      anchor = AttrHREFelement;
+      firstSelectedElement = lastSelectedElement = anchor;
+      elType = TtaGetElementType (anchor);
+      firstSelectedChar = 0;
+    }
 
-  elType = TtaGetElementType (firstSelectedElement);
-  if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") != 0)
-    /* the first selected element is not an HTML element. Do nothing */
-    return;
-
-  TtaGiveLastSelectedElement (doc, &lastSelectedElement, &i, 
-                              &lastSelectedChar);
-  TtaOpenUndoSequence (doc, firstSelectedElement, lastSelectedElement,
-                       firstSelectedChar, lastSelectedChar);
   if (elType.ElTypeNum == HTML_EL_Anchor)
     /* the first selected element is an anchor */
     {
-      anchor = firstSelectedElement;
       /* prepare the elements to be selected later */
       firstSelectedElement = TtaGetFirstChild (anchor);
       lastSelectedElement = TtaGetLastChild (anchor);
@@ -3958,7 +3970,6 @@ void DeleteAnchor (Document doc, View view)
     }
   else if (elType.ElTypeNum == HTML_EL_AREA)
     {
-      anchor = firstSelectedElement;
       /* prepare the elements to be selected later */
       firstSelectedElement = NULL;
       lastSelectedElement = NULL;
@@ -3967,17 +3978,18 @@ void DeleteAnchor (Document doc, View view)
     }
   else if (elType.ElTypeNum == HTML_EL_Cite)
     {
+      anchor = NULL;
       SetOnOffCite (doc, 1);
       return;
     }
-  else
+  else if (elType.ElTypeNum != HTML_EL_LINK)
     {
       /* search the surrounding Anchor element */
       elType.ElTypeNum = HTML_EL_Anchor;
       anchor = TtaGetTypedAncestor (firstSelectedElement, elType);
     }
 
-  if (anchor != NULL)
+  if (anchor)
     {
       /* ask Thot to stop displaying changes made in the document */
       dispMode = TtaGetDisplayMode (doc);
@@ -4007,12 +4019,16 @@ void DeleteAnchor (Document doc, View view)
         firstSelectedElement = TtaGetParent (anchor);
       /* delete the anchor element itself */
       TtaDeleteTree (anchor, doc);
-      TtaSetDocumentModified (doc);
       /* ask Thot to display changes made in the document */
       TtaSetDisplayMode (doc, dispMode);
     }
 
-  TtaCloseUndoSequence (doc);
+  if (noCallback)
+    {
+      TtaCloseUndoSequence (doc);
+      TtaSetDocumentModified (doc);
+    }
+
   /* set the selection */
   if (firstSelectedChar > 1)
     {
@@ -4026,6 +4042,15 @@ void DeleteAnchor (Document doc, View view)
     TtaSelectElement (doc, firstSelectedElement);
   if (firstSelectedElement != lastSelectedElement)
     TtaExtendSelection (doc, lastSelectedElement, lastSelectedChar);
+}
+
+/*----------------------------------------------------------------------
+  DeleteAnchor
+  Delete the surrounding anchor.                    
+  ----------------------------------------------------------------------*/
+void DeleteAnchor (Document doc, View view)
+{
+  DoDeleteAnchor (doc, view, TRUE);
 }
 
 /*----------------------------------------------------------------------

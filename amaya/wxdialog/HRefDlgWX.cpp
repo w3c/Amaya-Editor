@@ -13,6 +13,7 @@
 #include "appdialogue_wx.h"
 #include "message_wx.h"
 static int Waiting = 0;
+static int Clicked = 0;
 
 //-----------------------------------------------------------------------------
 // Event table: connect the events to the handler functions to process them
@@ -73,6 +74,7 @@ HRefDlgWX::HRefDlgWX( int ref,
 HRefDlgWX::~HRefDlgWX()
 {
   /* do not call this one because it cancel the link creation */
+  Clicked = 0;
   if (Waiting)
     {
       Waiting = 0;
@@ -158,8 +160,9 @@ void HRefDlgWX::OnCancel( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void HRefDlgWX::OnClick( wxCommandEvent& event )
 {
-  if (Waiting)
+  if (Waiting && Clicked == 0)
     {
+      Clicked = 1;
       Waiting = 0;
       ThotCallback (m_Ref, INTEGER_DATA, (char*) 3);
       TtaDestroyDialogue( m_Ref );

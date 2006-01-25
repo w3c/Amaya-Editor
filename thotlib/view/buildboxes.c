@@ -913,6 +913,7 @@ static void FreePath (PtrBox box)
       box->BxXRatio = 1;
       box->BxYRatio = 1;
       pPa = box->BxFirstPathSeg;
+      box->BxFirstPathSeg = NULL;
       while (pPa)
         {
           pPaNext = pPa->PaNext;

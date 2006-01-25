@@ -64,7 +64,7 @@ extern ThotBool RightClickInText ( NotifyElement *event );
 extern void CheckSynchronize ( NotifyElement *event );
 extern void SelectionChanged ( NotifyElement *event );
 extern ThotBool HTMLElementTypeInMenu ( NotifyElement *event );
-extern void SetCharFontOrPhrase ( int document,
+extern void SetCharFontOrPhrase ( int doc,
                                   int elemtype );
 
 #else /* __STDC__ */
@@ -127,7 +127,7 @@ extern ThotBool RightClickInText ( NotifyElement *event );
 extern void CheckSynchronize ( NotifyElement *event );
 extern void SelectionChanged ( NotifyElement *event );
 extern ThotBool HTMLElementTypeInMenu ( NotifyElement *event );
-extern void SetCharFontOrPhrase ( int document,
+extern void SetCharFontOrPhrase ( int doc,
                                     int elemtype );
 
 #endif /* __STDC__ */

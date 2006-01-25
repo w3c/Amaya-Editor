@@ -6431,8 +6431,8 @@ void CallbackDialogue (int ref, int typedata, char *data)
             LinkAsCSS = FALSE;
             LinkAsXmlCSS = FALSE;
             /* remove the link if it was just created */
-            TtaCancelLastRegisteredSequence (AttrHREFdocument);	   
-            DeleteAnchor (AttrHREFdocument, 1);
+            //TtaCancelLastRegisteredSequence (AttrHREFdocument);
+            DoDeleteAnchor (AttrHREFdocument, 1, FALSE);
             TtaCancelLastRegisteredSequence (AttrHREFdocument);	   
           }
       break;
