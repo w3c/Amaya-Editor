@@ -2319,8 +2319,8 @@ static void ProcessStartGI (char* GIname)
   int                 entry, i;
   char                msgBuffer[MaxMsgLength];
   PtrClosedElement    pClose;
-  ThotBool            sameLevel, removed;
-  SSchema	      schema;
+  ThotBool            sameLevel, removed, error;
+  SSchema	            schema;
 
   /* ignore tag <P> within PRE */
   if (Within (HTML_EL_Preformatted, DocumentSSchema))
@@ -2419,11 +2419,22 @@ static void ProcessStartGI (char* GIname)
             }
           /* process some special cases... */
           SpecialImplicitEnd (entry);
-          if (!ContextOK (entry))
+          error = !ContextOK (entry);
+          if (error)
             /* element not allowed in the current structural context */
             {
-              sprintf (msgBuffer, "Tag <%s> is not allowed here (removed when saving)", GIname);
+              /* send an error message */
+              sprintf (msgBuffer,
+                       "Tag <%s> is not allowed here (removed when saving)",
+                       GIname);
               HTMLParseError (HTMLcontext.doc, msgBuffer, 0);
+              /* if it's a <script> tag, process it normally to avoid its
+                 content to be considered as plain text */
+              if (!strcmp (pHTMLGIMapping[entry].XMLname, "script"))
+                error = FALSE;
+            }
+          if (error)
+            {
               UnknownTag = TRUE;
               /* create an Invalid_element */
               sprintf (msgBuffer, "<%s", GIname);
