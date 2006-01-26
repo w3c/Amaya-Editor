@@ -590,8 +590,17 @@ void GenerateInlineElement (int eType, int aType, char * data)
                         charlevel = IsCharacterLevelElement (el);
                       else
                         charlevel = TtaIsLeaf (elType);
+
                       if (split && in_line == NULL)
                         doit = TRUE;
+                      else if (elType.ElSSchema == newType.ElSSchema &&
+                               elType.ElTypeNum == newType.ElTypeNum &&
+                               firstSel == lastSel)
+                        {
+                          // just add style to this element
+                          doit = FALSE;
+                          charlevel = FALSE;
+                        }
                       else if (in_line == NULL && !strcmp(name, "HTML"))
                         doit = charlevel;
                       else
@@ -854,8 +863,17 @@ void GenerateInlineElement (int eType, int aType, char * data)
                                         {
                                           TtaRegisterAttributeReplace (newAttr, child, doc);
                                           lg = TtaGetTextAttributeLength (newAttr);
-                                          name = (char *)TtaGetMemory (lg + strlen (data) + 1);
+                                          name = (char *)TtaGetMemory (lg + strlen (data) + 3);
                                           TtaGiveTextAttributeValue (newAttr, name, &lg);
+                                          if (parse)
+                                            {
+                                              // CSS properties are closed by ;
+                                              lg--;
+                                              while (name[lg] == SPACE)
+                                                name[lg--] = EOS;
+                                              if (name[lg] != ';')
+                                                strcat (name, "; ");
+                                            }
                                           strcat (name, data);
                                           TtaSetAttributeText (newAttr, name, child, doc);
                                           if (parse)

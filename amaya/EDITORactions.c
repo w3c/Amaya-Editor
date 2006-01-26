@@ -3769,27 +3769,27 @@ void  CreateIFrame (Document document, View view)
 /*----------------------------------------------------------------------
   CreateObject
   ----------------------------------------------------------------------*/
-void  CreateObject (Document document, View view)
+void  CreateObject (Document doc, View view)
 {
   ElementType         elType;
-  Element             el, image;
+  Element             el, image, child;
   Attribute           attr;
   AttributeType       attrType;
   char               *text;
   int                 length, firstchar, lastchar;
 
-  if (HTMLelementAllowed (document))
+  if (HTMLelementAllowed (doc))
     {
       /* Don't check mandatory attributes */
-      TtaSetStructureChecking (FALSE, document);
-      elType.ElSSchema = TtaGetSSchema ("HTML", document);
+      TtaSetStructureChecking (FALSE, doc);
+      elType.ElSSchema = TtaGetSSchema ("HTML", doc);
       elType.ElTypeNum = HTML_EL_Object;
-      TtaInsertElement (elType, document);
+      TtaInsertElement (elType, doc);
       /* Check the Thot abstract tree against the structure schema. */
-      TtaSetStructureChecking (TRUE, document);
+      TtaSetStructureChecking (TRUE, doc);
 
       /* get the first selected element, i.e. the Object element */
-      TtaGiveFirstSelectedElement (document, &el, &firstchar, &lastchar);
+      TtaGiveFirstSelectedElement (doc, &el, &firstchar, &lastchar);
       
       elType = TtaGetElementType (el);
       while (el != NULL &&
@@ -3807,7 +3807,7 @@ void  CreateObject (Document document, View view)
       attrType.AttrSSchema = elType.ElSSchema;
       attrType.AttrTypeNum = HTML_ATTR_SRC;
       attr = TtaGetAttribute (image, attrType);
-      if (attr != NULL)
+      if (attr)
         {
           length = TtaGetTextAttributeLength (attr);
           if (length > 0)
@@ -3816,10 +3816,66 @@ void  CreateObject (Document document, View view)
               TtaGiveTextAttributeValue (attr, text, &length);
               attrType.AttrTypeNum = HTML_ATTR_data;
               attr = TtaNewAttribute (attrType);
-              TtaAttachAttribute (el, attr, document);
-              TtaSetAttributeText (attr, text, el, document);
+              TtaAttachAttribute (el, attr, doc);
+              TtaSetAttributeText (attr, text, el, doc);
               TtaFreeMemory (text);
             }
+        }
+      child = TtaGetFirstChild (image);
+      elType = TtaGetElementType (child);
+      if (elType.ElSSchema &&
+          !strcmp (TtaGetSSchemaName (elType.ElSSchema), "SVG"))
+        {
+#ifdef _SVG
+          // check if the SVG has a width attribute
+          attrType.AttrSSchema = elType.ElSSchema;
+          attrType.AttrTypeNum = SVG_ATTR_width_;
+          attr = TtaGetAttribute (child, attrType);
+          if (attr)
+            {
+              length = TtaGetTextAttributeLength (attr);
+              text = (char *)TtaGetMemory (length + 1);
+              TtaGiveTextAttributeValue (attr, text, &length);
+              if (strstr (text, "%"))
+                // a width attribute should be generated
+                attr = NULL;
+              TtaFreeMemory (text);
+            }
+          if (attr == NULL)
+            {
+              // attach a width to the object
+              elType = TtaGetElementType (el);
+              attrType.AttrSSchema = elType.ElSSchema;
+              attrType.AttrTypeNum = HTML_ATTR_Width__;
+              attr = TtaNewAttribute (attrType);
+              TtaAttachAttribute (el, attr, doc);
+              TtaSetAttributeText (attr, "50", el, doc);
+            }
+          // check if the SVG has a width attribute
+          attrType.AttrSSchema = elType.ElSSchema;
+          attrType.AttrTypeNum = SVG_ATTR_height_;
+          attr = TtaGetAttribute (child, attrType);
+          if (attr)
+            {
+              length = TtaGetTextAttributeLength (attr);
+              text = (char *)TtaGetMemory (length + 1);
+              TtaGiveTextAttributeValue (attr, text, &length);
+              if (strstr (text, "%"))
+                // a width attribute should be generated
+                attr = NULL;
+              TtaFreeMemory (text);
+            }
+          if (attr == NULL)
+            {
+              // attach a width to the object
+              elType = TtaGetElementType (el);
+              attrType.AttrSSchema = elType.ElSSchema;
+              attrType.AttrTypeNum = HTML_ATTR_Height_;
+              attr = TtaNewAttribute (attrType);
+              TtaAttachAttribute (el, attr, doc);
+              TtaSetAttributeText (attr, "50", el, doc);
+            }
+#endif /* _SVG */
         }
     }
 }
