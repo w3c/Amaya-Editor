@@ -3739,24 +3739,6 @@ void  CreateIFrame (Document document, View view)
       attr = TtaGetAttribute (el, attrType);
       if (attr == NULL)
         {
-#ifdef IV
-         CreateObjectDlgWX (RefFormImage, TtaGetViewFrame (document, view),
-			                      TtaGetMessage (AMAYA, AM_NEWOBJECT),
-			                      LastURLImage, UserMimeType);
-         TtaSetDialoguePosition ();
-         TtaShowDialogue (RefFormImage, FALSE);
-         TtaWaitShowDialogue ();
-         if (IsHTTPPath (DocumentURLs[document]) && !IsHTTPPath (LastURLImage))
-           {
-              TtaExtractName (LastURLImage, tempfile, s);
-              if (s[0] == EOS)
-	              strcpy (text, LastURLImage);
-              else
-                {
-	                NormalizeURL (s, document, tempfile, ImageName, NULL);
-                }
-            }
-#endif /* IV */
            attr = TtaNewAttribute (attrType);
            TtaAttachAttribute (el, attr, document);
            TtaSetAttributeText (attr, "source.html", el, document);

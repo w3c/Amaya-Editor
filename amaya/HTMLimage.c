@@ -568,10 +568,7 @@ void DisplayImage (Document doc, Element el, LoadedImageDesc *desc,
   ElementType         elType;
   ElementType         parentType;
   Element             parent;
-  ThotBool            modified;
   int                 i;
-  ThotBool            is_svg, is_mml, is_html, htmlok;
-  ThotBool            xmlDec, withDoctype, isXML, useMath, isKnown;
   DocumentType        thotType;
   PicType             picType;
   int                 parsingLevel;
@@ -580,6 +577,9 @@ void DisplayImage (Document doc, Element el, LoadedImageDesc *desc,
   char               *imageName;
   char               *tempfile;
   char               *originalName;
+  ThotBool            modified;
+  ThotBool            is_svg, is_mml, is_html, htmlok;
+  ThotBool            xmlDec, withDoctype, isXML, useMath, isKnown;
 
   picType = TtaGetPictureType (el);
   if (desc)
@@ -683,6 +683,7 @@ void DisplayImage (Document doc, Element el, LoadedImageDesc *desc,
 
       if (is_svg)
         {
+#ifdef _SVG
           TtaSetPictureType (el, AM_SVG_MIME_TYPE);
           if (desc)
             desc->imageType = svg_type;
@@ -690,6 +691,7 @@ void DisplayImage (Document doc, Element el, LoadedImageDesc *desc,
              position of the image element */
           ParseExternalDocument (tempfile, originalName, el, FALSE, doc, 
                                  TtaGetDefaultLanguage(), "SVG");
+#endif /* _SVG */
         }
       else if (is_mml)
         {

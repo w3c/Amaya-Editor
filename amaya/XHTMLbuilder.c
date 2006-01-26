@@ -1273,6 +1273,8 @@ void CreateAttrWidthPercentPxl (char *buffer, Element el,
   int             w, h;
   ThotBool        isImage;
 
+  if (buffer == NULL || buffer[0] == EOS)
+    return;
   origEl = el;
   elType = TtaGetElementType (el);
   isImage = (elType.ElTypeNum == HTML_EL_PICTURE_UNIT ||

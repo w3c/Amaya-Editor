@@ -5140,7 +5140,7 @@ void ParseExternalDocument (char *fileName, char *originalName, Element el,
     {
       /* Parse the file and build the external document */
       infile = TtaGZOpen (tempName);
-      if (infile != 0)
+      if (infile != NULL)
         {
           /* Check if there is an xml declaration with a charset declaration */
           if (tempName != EOS)
@@ -5245,8 +5245,8 @@ void ParseExternalDocument (char *fileName, char *originalName, Element el,
           event.event = TteElemPaste;
           event.document = doc;
           event.element = copy;
-          event.elementType.ElSSchema = 0;
-          event.elementType.ElTypeNum = 0; /* tell UpdateURLsInSubtree not to
+          event.elementType.ElSSchema = NULL;
+          event.elementType.ElTypeNum = NULL; /* tell UpdateURLsInSubtree not to
                                               change IDs through MaqueUniqueName */
           event.position = externalDoc;
           event.info = 0;

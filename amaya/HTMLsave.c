@@ -2295,6 +2295,7 @@ void DoSynchronize (Document doc, View view, NotifyElement *event)
             TtaExportDocumentWithNewLineNumbers (doc, tempdoc, "MathMLT");
           else
             TtaExportDocumentWithNewLineNumbers (doc, tempdoc, NULL);
+          ResetHighlightedElement ();
           RedisplaySourceFile (doc);
           otherDoc = DocumentSource[doc];
           /* the other document is now different from the original file. It can
@@ -2326,6 +2327,7 @@ void DoSynchronize (Document doc, View view, NotifyElement *event)
           tempdoc = GetLocalPath (otherDoc, DocumentURLs[otherDoc]);
           TtaExportDocumentWithNewLineNumbers (doc, tempdoc, "TextFileT");
           TtaExtractName (tempdoc, tempdir, docname);
+          ResetHighlightedElement ();
           RestartParser (otherDoc, tempdoc, tempdir, docname, TRUE);
           /* the other document is now different from the original file. It can
              be saved */
@@ -2354,11 +2356,13 @@ void DoSynchronize (Document doc, View view, NotifyElement *event)
           /* reapply the CSS to relative documents */
           UpdateStyleSheet (DocumentURLs[doc], tempdoc);
           if (otherDoc)
+            {
             if (modified)
               TtaSetDocumentModified (otherDoc);
             else
               /* the source can be closed without save */
               TtaSetDocumentUnmodified (otherDoc);
+            }
         }
     }
 
@@ -2382,8 +2386,10 @@ void DoSynchronize (Document doc, View view, NotifyElement *event)
        
       /* Synchronize selections */
       if (saveBefore)
+        {
         /* recheck the clicked element */
         TtaGetClickedElement (&(event->document), &(event->element));
+        }
       SynchronizeSourceView (event);
     }
   
