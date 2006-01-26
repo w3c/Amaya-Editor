@@ -3500,6 +3500,7 @@ void WidthPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
           pChildBox = pChildAb->AbBox;
           if (!pChildAb->AbDead && pChildBox &&
               pChildAb->AbHorizEnclosing &&
+              !ExtraFlow (pChildBox, frame) &&
               pChildAb->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility &&
               (pChildAb->AbWidth.DimAbRef != pAb ||
                pChildBox->BxContentWidth ||
@@ -3555,6 +3556,14 @@ void WidthPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
                       width = i;
                   }
             }
+          else if (pChildBox &&
+                   (pChildBox->BxType == BoBlock ||
+                    pChildBox->BxType == BoFloatBlock) &&
+                   !ExtraFlow (pChildBox, frame) &&
+                   width < pChildBox->BxXOrg + pChildBox->BxMinWidth)
+            // apply the rule ob minimum
+            width = pChildBox->BxXOrg + pChildBox->BxMinWidth;
+
           pChildAb = pChildAb->AbNext;
         }
       

@@ -22,7 +22,7 @@ PRINT
 
 #define STRUCT_INDENT 1.5
 #define TAG_FONTSIZE 11 pt
-#define DOC_FONTSIZE 11 pt
+#define DOC_FONTSIZE 12 pt
 #define TAG_Weight Bold
 #define TAG_Visibility 7
 
@@ -1691,6 +1691,7 @@ RULES
 	HorizPos: Left = Enclosing . Left;
 	VertPos: Top = Enclosing . Top;
 	IN Structure_view BEGIN
+    Size: TAG_FONTSIZE;
 		Width: Enclosing . Width;
 		Height: Enclosed . Height;
 		HorizPos: Left = Enclosing . Left;
@@ -1698,6 +1699,7 @@ RULES
 		Font: Helvetica;
 		END;
 	IN Links_view BEGIN
+    Size: TAG_FONTSIZE;
 #ifdef PAGE
 		Page(LinksPage);
 #endif

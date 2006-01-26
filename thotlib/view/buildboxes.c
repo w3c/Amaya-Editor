@@ -1410,6 +1410,12 @@ void GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width,
                   if (val > *width)
                     *width = val;
                 }
+              else if ((pChildBox->BxType == BoBlock ||
+                        pChildBox->BxType == BoFloatBlock) &&
+                       !ExtraFlow (pChildBox, frame) &&
+                      *width < pChildBox->BxXOrg + pChildBox->BxMinWidth)
+                    *width = pChildBox->BxXOrg + pChildBox->BxMinWidth;
+                
               if (pChildAb->AbVertEnclosing &&
                   (pChildAb->AbHeight.DimAbRef != pAb ||
                    pChildBox->BxContentHeight))

@@ -3480,6 +3480,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
       prevLine = NULL;
       /* height of the block box */
       *height = spacing;
+      pBox->BxMinWidth = 0;
     }
   else
     {
@@ -3490,6 +3491,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
       *height = prevLine->LiYOrg + prevLine->LiHeight - top;
       pBoxToBreak = prevLine->LiLastPiece;
       pNextBox = prevLine->LiLastBox;
+      pBox->BxMinWidth = pBox->BxMinWidth - left - right;
       if (pBoxToBreak && pBoxToBreak->BxNexChild)
         pBoxToBreak = pBoxToBreak->BxNexChild;
       else

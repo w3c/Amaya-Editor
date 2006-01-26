@@ -2557,6 +2557,14 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                               pDimAb->DimValue = -1;		  
                               pBox->BxContentWidth = TRUE;
                             }
+                          else if (pParentAb->AbFloat != 'N' &&
+                                   pParentAb->AbWidth.DimUnit == UnAuto)
+                            {
+                              /* witing a floated box -> content width */
+                              pDimAb->DimAbRef = NULL;
+                              pDimAb->DimValue = -1;		  
+                              pBox->BxContentWidth = TRUE;
+                            }
                           else if (dx > pParentAb->AbBox->BxW &&
                                    isExtraFlow)
                             {
@@ -2582,16 +2590,23 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                               PtrAbstractBox parent;
                               parent = pParentAb->AbEnclosing;
                               while (parent && parent->AbWidthChange &&
-                                     parent->AbWidth.DimUnit == UnAuto)
+                                     parent->AbWidth.DimUnit == UnAuto &&
+                                     parent->AbFloat == 'N')
                                 parent = parent->AbEnclosing;
-
-                              if (parent->AbBox &&
-                                  parent->AbBox->BxType != BoCell &&
-                                  ((parent->AbWidth.DimAbRef == NULL &&
-                                    parent->AbWidth.DimValue == -1) ||
-                                   (inLine &&
-                                    pAb->AbDisplay != 'B' &&
-                                    pAb->AbDisplay != 'L')))
+                              if (parent && parent->AbFloat != 'N')
+                                {
+                                  /* inherit from contents */
+                                  pDimAb->DimAbRef = NULL;
+                                  pDimAb->DimValue = -1;		  
+                                  pBox->BxContentWidth = TRUE;
+                               }
+                              else if (parent && parent->AbBox &&
+                                       parent->AbBox->BxType != BoCell &&
+                                       ((parent->AbWidth.DimAbRef == NULL &&
+                                         parent->AbWidth.DimValue == -1) ||
+                                        (inLine &&
+                                         pAb->AbDisplay != 'B' &&
+                                         pAb->AbDisplay != 'L')))
                                 {
                                   /* inherit from contents */
                                   pDimAb->DimAbRef = NULL;
