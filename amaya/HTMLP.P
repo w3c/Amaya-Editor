@@ -4510,7 +4510,8 @@ RULES
 	CreateWith(VerticalLine);
 	if not RowExt
 	  CreateBefore(CellFrame);
-	VertPos : Top = Enclosing . Top;
+	{ VertPos : Top = Enclosing . Top; }
+	VertPos : HMiddle = Previous AnyBox . HMiddle;
 	HorizPos: Left = Previous Table_cell . Right;
 	Width: Enclosed . Width{20 px};
 	Weight: Bold;
