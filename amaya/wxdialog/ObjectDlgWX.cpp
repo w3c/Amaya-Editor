@@ -13,6 +13,7 @@
 #include "message_wx.h"
 
 static int      MyRef;
+static int      Waiting = 0;
 
 
 //-----------------------------------------------------------------------------
@@ -43,14 +44,17 @@ ObjectDlgWX::ObjectDlgWX( int ref, wxWindow* parent, const wxString & title,
 {
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("ObjectDlgWX"));
   MyRef = ref;
+  // waiting for a return
+  Waiting = 1;
 
   // update dialog labels with given ones
   SetTitle( title );
   XRCCTRL(*this, "wxID_LABEL", wxStaticText)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_NEWOBJECT) ));
   XRCCTRL(*this, "wxID_TYPE_LABEL", wxStaticText)->SetLabel( TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_SELECT_MIMETYPE) ));
+  XRCCTRL(*this, "wxID_ALT_LABEL", wxStaticText)->SetLabel( TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_ALT) ));
   XRCCTRL(*this, "wxID_MANDATORY", wxStaticText)->SetLabel( TtaConvMessageToWX( "" ));
   XRCCTRL(*this, "wxID_OK", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_LIB_CONFIRM) ));
-  XRCCTRL(*this, "wxID_BROWSEBUTTON", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_BROWSE) ));
+  XRCCTRL(*this, "wxID_BROWSEBUTTON", wxBitmapButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_BROWSE) ));
   XRCCTRL(*this, "wxID_CANCEL", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_CANCEL) ));
 
   XRCCTRL(*this, "wxID_URL", wxTextCtrl)->SetValue(urlToOpen  );
@@ -87,7 +91,9 @@ ObjectDlgWX::ObjectDlgWX( int ref, wxWindow* parent, const wxString & title,
   ----------------------------------------------------------------------*/
 ObjectDlgWX::~ObjectDlgWX()
 {
-  ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
+  if (Waiting)
+  // no return done
+    ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
 }
 
 /*----------------------------------------------------------------------
@@ -109,6 +115,8 @@ void ObjectDlgWX::OnMimeTypeCbx( wxCommandEvent& event )
 void ObjectDlgWX::OnOpenButton( wxCommandEvent& event )
 {
   char     buffer[512];
+  char     Alt[512];
+
   // get the current url
   wxString url = XRCCTRL(*this, "wxID_URL", wxTextCtrl)->GetValue( );
   wxASSERT( url.Len() < 512 );
@@ -116,8 +124,22 @@ void ObjectDlgWX::OnOpenButton( wxCommandEvent& event )
   // give the new url to amaya (to do url completion)
   ThotCallback (BaseImage + ImageURL,  STRING_DATA, (char *)buffer );
 
-  // load the image
-  ThotCallback (MyRef, INTEGER_DATA, (char*)1);
+  // get the current alt
+  wxString alt = XRCCTRL(*this, "wxID_ALT", wxTextCtrl)->GetValue( );
+  wxASSERT( alt.Len() < 512 );
+  strcpy( Alt, (const char*)alt.mb_str(wxConvUTF8) );
+  // give the new url to amaya (to do url completion)
+  ThotCallback (BaseImage + ImageAlt,  STRING_DATA, (char *)Alt );
+
+  if (Alt[0] == EOS)
+    XRCCTRL(*this, "wxID_MANDATORY", wxStaticText)->SetLabel( TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_ALT_MISSING) ));
+  else
+     {
+       // load the image
+       // return done
+       Waiting = 0;
+       ThotCallback (MyRef, INTEGER_DATA, (char*)1);
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -164,6 +186,8 @@ void ObjectDlgWX::OnBrowseButton( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void ObjectDlgWX::OnCancelButton( wxCommandEvent& event )
 {
+  // return done
+  Waiting = 0;
   ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
 }
 

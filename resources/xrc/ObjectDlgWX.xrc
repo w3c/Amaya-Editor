@@ -11,59 +11,71 @@
           <orient>wxVERTICAL</orient>
           <object class="sizeritem">
             <object class="wxStaticText" name="wxID_LABEL">
-              
               <label>Get the Object name</label>
             </object>
-            
             <flag>wxALL|wxEXPAND</flag>
-            
-            <border>5</border>
           </object>
           <object class="sizeritem">
-            <object class="wxTextCtrl" name="wxID_URL"/>
-            
-            <flag>wxALL|wxEXPAND</flag>
+            <object class="wxBoxSizer">
+              <orient>wxHORIZONTAL</orient>
+              <object class="sizeritem">
+                <object class="wxTextCtrl" name="wxID_URL"/>
+                <flag>wxALL|wxEXPAND</flag>
+                <minsize>300,-1</minsize>
+              </object>
+              <object class="spacer">
+                <size>5,0</size>
+              </object>
+              <object class="sizeritem">
+                <object class="wxBitmapButton" name="wxID_BROWSEBUTTON">
+                  <bitmap stock_id="wxART_FOLDER"></bitmap>
+                </object>
+              </object>
+            </object>
           </object>
           <object class="sizeritem">
             <object class="wxStaticText" name="wxID_TYPE_LABEL">
-              
               <label>Get the MIME Type :</label>
             </object>
-            
             <flag>wxALL|wxEXPAND</flag>
-            
             <border>5</border>
           </object>
           <object class="sizeritem">
             <object class="wxComboBox" name="wxID_MIME_TYPE_CB">
-              
               <content/>
             </object>
-            
             <option>1</option>
-            
             <flag>wxALL|wxEXPAND</flag>
-            
+          </object>
+          <object class="spacer">
+            <size>0,10</size>
+          </object>
+          <object class="sizeritem">
+            <object class="wxStaticText" name="wxID_ALT_LABEL">
+              <label>Get alternate text</label>
+            </object>
+            <flag>wxALL|wxEXPAND</flag>
             <border>5</border>
           </object>
           <object class="sizeritem">
-            <object class="wxStaticText" name="wxID_MANDATORY">
-              
-              <label></label>
-            </object>
-            
+            <object class="wxTextCtrl" name="wxID_ALT"/>
             <flag>wxALL|wxEXPAND</flag>
-            
+            <minsize>300,-1</minsize>
+          </object>
+          <object class="sizeritem">
+            <object class="wxStaticText" name="wxID_MANDATORY">
+              <label>*Alt is mandatory</label>
+              <fg>#7A1919</fg>
+            </object>
+            <flag>wxALL|wxEXPAND</flag>
             <border>5</border>
           </object>
         </object>
-        
         <flag>wxALL|wxEXPAND</flag>
-        
         <border>5</border>
       </object>
       <object class="sizeritem">
-        <flag>wxALL|wxALIGN_CENTRE_VERTICAL|wxADJUST_MINSIZE</flag>
+        <flag>wxALL|wxALIGN_RIGHT|wxALIGN_CENTRE_VERTICAL|wxADJUST_MINSIZE</flag>
         <border>5</border>
         <object class="wxBoxSizer">
           <orient>wxHORIZONTAL</orient>
@@ -71,25 +83,14 @@
             <flag>wxALL</flag>
             <border>5</border>
             <object class="wxButton" name="wxID_OK">
-              
               <label>OPENBUTTON</label>
-              
               <default>1</default>
             </object>
           </object>
           <object class="sizeritem">
             <flag>wxALL</flag>
             <border>5</border>
-            <object class="wxButton" name="wxID_BROWSEBUTTON">
-              
-              <label>BROWSEBUTTON</label>
-            </object>
-          </object>
-          <object class="sizeritem">
-            <flag>wxALL</flag>
-            <border>5</border>
             <object class="wxButton" name="wxID_CANCEL">
-              
               <label>CANCELBUTTON</label>
             </object>
           </object>

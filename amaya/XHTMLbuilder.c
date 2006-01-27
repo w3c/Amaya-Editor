@@ -1268,10 +1268,10 @@ void CreateAttrWidthPercentPxl (char *buffer, Element el,
   Attribute       attrOld, attrNew;
   int             length, val;
   char            msgBuffer[MaxMsgLength];
-  ElementType	  elType, childType;
+  ElementType	    elType, childType;
   Element         origEl, child;
   int             w, h;
-  ThotBool        isImage;
+  ThotBool        isImage, isSVG = FALSE;
 
   if (buffer == NULL || buffer[0] == EOS)
     return;
@@ -1281,6 +1281,7 @@ void CreateAttrWidthPercentPxl (char *buffer, Element el,
              elType.ElTypeNum == HTML_EL_Data_cell ||
              elType.ElTypeNum == HTML_EL_Heading_cell ||
              elType.ElTypeNum == HTML_EL_Object);
+
   if (elType.ElTypeNum == HTML_EL_Object)
     /* the width attribute is attached to an Object element */
     {
@@ -1292,8 +1293,22 @@ void CreateAttrWidthPercentPxl (char *buffer, Element el,
             /* the Object element is of type image. apply the width
                attribute to the actual image element */
             el = child;
+#ifdef _SVG
+          else
+            {
+              el = child;
+              child = TtaGetFirstChild (el);
+              if (child)
+                {
+                  childType = TtaGetElementType (child);
+                  isSVG = (!strcmp (TtaGetSSchemaName (childType.ElSSchema), "SVG") &&
+                      childType.ElTypeNum == SVG_EL_SVG);
+                }
+            }
+#endif /* _SVG */
         }
     }
+
   /* remove trailing spaces */
   length = strlen (buffer) - 1;
   while (length > 0 && buffer[length] <= SPACE)
@@ -1358,6 +1373,16 @@ void CreateAttrWidthPercentPxl (char *buffer, Element el,
     }
   if (isImage)
     UpdateImageMap (origEl, doc, oldWidth, -1);
+  else if (isSVG && oldWidth != -1)
+    {
+      // force the redisplay of the SVG element
+      el = TtaGetParent (child);
+      if (el)
+        {
+          TtaRemoveTree (child, doc);
+          TtaInsertFirstChild (&child, el, doc);
+        }
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -1374,10 +1399,10 @@ void CreateAttrHeightPercentPxl (char *buffer, Element el,
   Attribute       attrOld, attrNew;
   int             length, val;
   char            msgBuffer[MaxMsgLength];
-  ElementType	  elType, childType;
+  ElementType	    elType, childType;
   Element         origEl, child;
   int             w, h;
-  ThotBool        isImage;
+  ThotBool        isImage, isSVG = FALSE;
 
   origEl = el;
   elType = TtaGetElementType (el);
@@ -1385,6 +1410,7 @@ void CreateAttrHeightPercentPxl (char *buffer, Element el,
              elType.ElTypeNum == HTML_EL_Data_cell ||
              elType.ElTypeNum == HTML_EL_Heading_cell ||
              elType.ElTypeNum == HTML_EL_Object);
+
   if (elType.ElTypeNum == HTML_EL_Object)
     /* the height attribute is attached to an Object element */
     {
@@ -1398,10 +1424,22 @@ void CreateAttrHeightPercentPxl (char *buffer, Element el,
             /* the Object element is of type image. apply the width
                attribute to the actual image element */
             el = child;
+#ifdef _SVG
           else
-            return;
+            {
+              el = child;
+              child = TtaGetFirstChild (el);
+              if (child)
+                {
+                  childType = TtaGetElementType (child);
+                  isSVG = (!strcmp (TtaGetSSchemaName (childType.ElSSchema), "SVG") &&
+                      childType.ElTypeNum == SVG_EL_SVG);
+                }
+            }
+#endif /* _SVG */
         }
     }
+
   /* remove trailing spaces */
   length = strlen (buffer) - 1;
   while (length > 0 && buffer[length] <= SPACE)
@@ -1466,6 +1504,16 @@ void CreateAttrHeightPercentPxl (char *buffer, Element el,
     }
   if (isImage)
     UpdateImageMap (origEl, doc, oldHeight, -1);
+  else if (isSVG && oldHeight != -1)
+    {
+      // force the redisplay of the SVG element
+      el = TtaGetParent (child);
+      if (el)
+        {
+          TtaRemoveTree (child, doc);
+          TtaInsertFirstChild (&child, el, doc);
+        }
+    }
 }
 
 /*----------------------------------------------------------------------

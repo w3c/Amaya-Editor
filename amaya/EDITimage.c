@@ -1038,9 +1038,10 @@ void UpdateSRCattribute (NotifyOnTarget *event)
 {
   AttributeType    attrType;
   Attribute        attr;
-  Element          elSRC, el;
+  Element          elSRC, el, child;
   ElementType      elType;
   Document         doc;
+  DisplayMode      dispMode;
   char            *text;
   char            *utf8value;
   int              length;
@@ -1060,6 +1061,10 @@ void UpdateSRCattribute (NotifyOnTarget *event)
       elType = TtaGetElementType (elSRC);
       isObject = (elType.ElTypeNum == HTML_EL_Object);
     }
+
+  ImgAlt[0] = EOS;
+  /* ask Thot to stop displaying changes made in the document */
+  dispMode = TtaGetDisplayMode (doc);
   if (isObject)
     {
       /* get the current mime-type */
@@ -1083,7 +1088,6 @@ void UpdateSRCattribute (NotifyOnTarget *event)
       /* get the current value of ALT */
       attrType.AttrTypeNum = HTML_ATTR_ALT;
       attr = TtaGetAttribute (el, attrType);
-      ImgAlt[0] = EOS;
       if (attr)
         {
           length = TtaGetTextAttributeLength (attr);
@@ -1142,10 +1146,12 @@ void UpdateSRCattribute (NotifyOnTarget *event)
                 TtaRegisterAttributeReplace (attr, elSRC, doc);
             }
         }
-      elSRC = el;
+      TtaSetDisplayMode (doc, NoComputedDisplay);
     }
   else
     {
+      if (dispMode == DisplayImmediately)
+        TtaSetDisplayMode (doc, DeferredDisplay);
       elSRC = el;
       /* add the ALT attribute */
       attrType.AttrTypeNum = HTML_ATTR_ALT;
@@ -1182,23 +1188,24 @@ void UpdateSRCattribute (NotifyOnTarget *event)
 
   /* search the SRC attribute */
   attrType.AttrTypeNum = HTML_ATTR_SRC;
-  attr = TtaGetAttribute (elSRC, attrType);
-  if (attr == 0)
+  attr = TtaGetAttribute (el, attrType);
+  if (attr == NULL)
     {
       newAttr = TRUE;
       attr = TtaNewAttribute (attrType);
-      TtaAttachAttribute (elSRC, attr, doc);
+      TtaAttachAttribute (el, attr, doc);
     }
   else
     newAttr = FALSE;
 #ifdef _WX
-  ComputeSRCattribute (elSRC, doc, 0, attr, text);
+  ComputeSRCattribute (el, doc, 0, attr, text);
 #else /* _WX */
   utf8value = (char *)TtaConvertByteToMbs ((unsigned char *)text,
                                            TtaGetDefaultCharset ());
-  ComputeSRCattribute (elSRC, doc, 0, attr, utf8value);
+  ComputeSRCattribute (el, doc, 0, attr, utf8value);
   TtaFreeMemory (utf8value);
 #endif /* _WX */
+
   if (!CreateNewImage)
     {
       attr = TtaGetAttribute (elSRC, attrType);
@@ -1211,6 +1218,124 @@ void UpdateSRCattribute (NotifyOnTarget *event)
             TtaRegisterAttributeReplace (attr, elSRC, doc);
         }
     }
+  /* generate an ALT content */
+  if (isObject)
+    {
+      // get the Object_content
+      el = TtaGetFirstChild (elSRC);
+      if (el)
+        child = TtaGetFirstChild (el);
+      else
+        child = NULL;
+      elType = TtaGetElementType (child);
+      if (child && elType.ElSSchema &&
+          !strcmp (TtaGetSSchemaName (elType.ElSSchema), "SVG"))
+        {
+#ifdef _SVG
+          AttributeType wType, hType;
+          Attribute     wAttr, hAttr;
+
+          // check if the SVG has a width attribute
+          wType.AttrSSchema = elType.ElSSchema;
+          wType.AttrTypeNum = SVG_ATTR_width_;
+          wAttr = TtaGetAttribute (child, wType);
+          if (wAttr)
+            {
+              length = TtaGetTextAttributeLength (wAttr);
+              text = (char *)TtaGetMemory (length + 1);
+              TtaGiveTextAttributeValue (wAttr, text, &length);
+              if (strstr (text, "%"))
+                // a width attribute should be generated
+                wAttr = NULL;
+              TtaFreeMemory (text);
+            }
+          if (wAttr == NULL)
+            {
+              // attach a width to the object
+              elType = TtaGetElementType (elSRC);
+              wType.AttrSSchema = elType.ElSSchema;
+              wType.AttrTypeNum = HTML_ATTR_Width__;
+              attr = TtaNewAttribute (wType);
+              TtaAttachAttribute (elSRC, attr, doc);
+              TtaSetAttributeText (attr, "50", elSRC, doc);
+            }
+          // check if the SVG has a width attribute
+          hType.AttrSSchema = elType.ElSSchema;
+          hType.AttrTypeNum = SVG_ATTR_height_;
+          hAttr = TtaGetAttribute (child, hType);
+          if (hAttr)
+            {
+              length = TtaGetTextAttributeLength (hAttr);
+              text = (char *)TtaGetMemory (length + 1);
+              TtaGiveTextAttributeValue (hAttr, text, &length);
+              if (strstr (text, "%"))
+                // a width attribute should be generated
+                hAttr = NULL;
+              TtaFreeMemory (text);
+            }
+          if (hAttr == NULL)
+            {
+              // attach a width to the object
+              elType = TtaGetElementType (elSRC);
+              hType.AttrSSchema = elType.ElSSchema;
+              hType.AttrTypeNum = HTML_ATTR_Height_;
+              attr = TtaNewAttribute (hType);
+              TtaAttachAttribute (elSRC, attr, doc);
+              TtaSetAttributeText (attr, "50", elSRC, doc);
+            }
+          if (hAttr == NULL)
+            {
+              if (wAttr == NULL)
+                {
+                  // update but not redisplay
+                  CreateAttrWidthPercentPxl ("50", elSRC, doc, 0);
+                  CreateAttrHeightPercentPxl ("50", elSRC, doc, -1);
+                }
+              else if (wAttr == NULL)
+                // update and redisplay
+                CreateAttrHeightPercentPxl ("50", elSRC, doc, 0);
+              TtaSelectElement (doc, elSRC);
+            }
+#endif /* _SVG */
+        }
+      if (ImgAlt[0] != EOS && el)
+        {
+          Element           next;
+          ThotBool          oldStructureChecking;
+
+          elType.ElTypeNum = HTML_EL_Object_Content;
+          next = TtaNewElement (doc, elType);
+          oldStructureChecking = TtaGetStructureChecking (doc);
+          TtaSetStructureChecking (FALSE, doc);
+          // generate the Alternate text
+          if (child)
+            TtaInsertSibling (child, next, FALSE, doc);
+          else
+            TtaInsertFirstChild (&next, el, doc);
+#ifdef IV
+          el = next;
+          elType.ElTypeNum = HTML_EL_ElemOrParam;
+          next = TtaNewElement (doc, elType);
+          TtaInsertFirstChild (&next, el, doc);
+          el = next;
+          elType.ElTypeNum = HTML_EL_Element;
+          next = TtaNewElement (doc, elType);
+          TtaInsertFirstChild (&next, el, doc);
+#endif
+          el = next;
+          elType.ElTypeNum = HTML_EL_Pseudo_paragraph;
+          next = TtaNewElement (doc, elType);
+          TtaInsertFirstChild (&next, el, doc);
+          elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+          child = TtaNewElement (doc, elType);
+          TtaInsertFirstChild (&child, next, doc);
+          TtaSetTextContent (child, (unsigned char*)ImgAlt,
+                             TtaGetDefaultCharset (), doc);
+          TtaSetStructureChecking (oldStructureChecking, doc);
+        }
+    }
+  /* ask Thot to display changes made in the document */
+  TtaSetDisplayMode (doc, dispMode);
 }
 
 
