@@ -5289,7 +5289,7 @@ static void  ParseCSSRule (Element element, PSchema tsch,
                :after */
             {
               end = cssRule;
-              end = SkipProperty (end, TRUE);
+              end = SkipProperty (end, FALSE);
               CSSParseError ("content is allowed only for pseudo-elements",
                              cssRule, end);
               i = NB_CSSSTYLEATTRIBUTE;
@@ -6304,11 +6304,6 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
                       if (att != 0)
                         ctxt->schema = attrType.AttrSSchema;
                     }
-                  if (att == DummyAttribute && !strcmp (schemaName, "HTML"))
-                    /* it's the "type" attribute for an "input" element.
-                       In the tree it is represented by the element type, not
-                       by an attribute */
-                    att = 0;
                   attrType.AttrSSchema = ctxt->schema;
                   attrType.AttrTypeNum = att;
                   if (i == 0 && att == 0 && ctxt->schema == NULL)
@@ -6343,7 +6338,27 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
                       DoApply = FALSE;	    
                     }
                   else
-                    ctxt->attrType[j] = att;
+                    {
+                      ctxt->attrType[j] = att;
+                      if (att == DummyAttribute && !strcmp (schemaName,"HTML"))
+                        /* it's the "type" attribute for an "input" element.
+                           In the tree, it is represented by the element type,
+                           not by an attribute */
+                        {
+                          ctxt->attrType[j] = 0;
+                          if (attrvals[j] && attrmatch[i] == Txtmatch)
+                            /* a value is specified for attribute type. This
+                               value provides the Thot element type */
+                            {
+                              MapXMLAttributeValue (xmlType, attrvals[j],
+                                                    &attrType, &kind);
+                              /* attrType contains the element type */
+                              if (i == 0)
+                                ctxt->type = kind;
+                              ctxt->name[i] = kind;
+                            } 
+                        }
+                    }
                 }
               if (ctxt->attrType[j])
                 {
