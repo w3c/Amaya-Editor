@@ -1429,6 +1429,9 @@ static void PresentationValueToPRule (PresentationValue val, int type,
     case PtUnderline:
       switch (value)
         {
+        case NoUnderline:
+          rule->PrChrValue ='N' ;
+          break;
         case Underline:
           rule->PrChrValue = 'U';
           break;
@@ -3775,6 +3778,9 @@ void TtaPToCss (PresentationSetting settings, char *buffer, int len,
     case PRUnderline:
       switch (settings->value.typed_data.value)
         {
+        case NoUnderline:
+          strcpy (buffer, "text-decoration: none");
+          break;
         case Underline:
           strcpy (buffer, "text-decoration: underline");
           break;

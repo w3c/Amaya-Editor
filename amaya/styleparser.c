@@ -4173,7 +4173,7 @@ static char *ParseSVGFill (Element element, PSchema tsch,
 }
 
 /*----------------------------------------------------------------------
-  ParseSVGOpacity: parse a SVG fill property
+  ParseSVGOpacity: parse a SVG opacity property
   ----------------------------------------------------------------------*/
 static char *ParseSVGOpacity (Element element, PSchema tsch,
                               PresentationContext context, char *cssRule,
@@ -4190,8 +4190,9 @@ static char *ParseSVGOpacity (Element element, PSchema tsch,
     TtaSetStylePresentation (PROpacity, element, tsch, context, best);
   return (cssRule);
 }
+
 /*----------------------------------------------------------------------
-  ParseSVGOpacity: parse a SVG fill property
+  ParseSVGStrokeOpacity: parse a SVG stroke-opacity property
   ----------------------------------------------------------------------*/
 static char *ParseSVGStrokeOpacity (Element element, PSchema tsch,
                                     PresentationContext context, char *cssRule,
@@ -4208,8 +4209,9 @@ static char *ParseSVGStrokeOpacity (Element element, PSchema tsch,
     TtaSetStylePresentation (PRStrokeOpacity, element, tsch, context, best);
   return (cssRule);
 }
+
 /*----------------------------------------------------------------------
-  ParseSVGOpacity: parse a SVG fill property
+  ParseSVGFillOpacity: parse a SVG fil-opacityl property
   ----------------------------------------------------------------------*/
 static char *ParseSVGFillOpacity (Element element, PSchema tsch,
                                   PresentationContext context, char *cssRule,
