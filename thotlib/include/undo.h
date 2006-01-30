@@ -50,6 +50,13 @@ extern void TtaExtendUndoSequence (Document document);
   ----------------------------------------------------------------------*/
 extern ThotBool TtaCloseUndoSequence (Document document);
 
+
+/*----------------------------------------------------------------------
+  TtaSetInitialSequence
+  Marks the current sequence as the initial sequence.
+  ----------------------------------------------------------------------*/
+extern void TtaSetInitialSequence (Document document);
+
 /* ----------------------------------------------------------------------
    TtaRegisterElementCreate
    

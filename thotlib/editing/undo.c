@@ -187,7 +187,16 @@ static void CancelAnEdit (PtrEditOperation editOp, PtrDocument pDoc,
     /* update the number of editing sequences remaining in the queue */
     {
       if (undo)
-        UpdateHistoryLength (-1, pDoc);
+        {
+          if (editOp->EoInitialSequence)
+            {
+              /* That's the first sequence registered since the document was loaded
+                 or saved. The document is no longer modified */
+              SetDocumentModified (pDoc, FALSE, 0);
+              pDoc->DocUpdated = TRUE;
+            }
+          UpdateHistoryLength (-1, pDoc);
+        }
       else
         UpdateRedoLength (-1, pDoc);
     }
@@ -1079,12 +1088,12 @@ static void UndoOperation (ThotBool undo, Document doc, ThotBool reverse)
             TtaSelectEnclosingColumn ((Element)(editOp->EoFirstSelectedEl));
         }
       if (editOp->EoInitialSequence)
-	{
-	  /* That's the first sequence registered since the document was loaded
-	     or saved. The document is no longer modified */
-	  SetDocumentModified (LoadedDocument[doc - 1], FALSE, 0);
-	  LoadedDocument[doc - 1]->DocUpdated = TRUE;
-	}
+        {
+          /* That's the first sequence registered since the document was loaded
+             or saved. The document is no longer modified */
+          SetDocumentModified (LoadedDocument[doc - 1], FALSE, 0);
+          LoadedDocument[doc - 1]->DocUpdated = TRUE;
+        }
     }
   else if (editOp->EoType == EtAttribute)
     {

@@ -2629,10 +2629,17 @@ void SaveDocument (Document doc, View view)
         }
       /* the document is now saved */
       TtaSetDocumentUnmodified (doc);
+      TtaSetInitialSequence (doc);
       if (xmlDoc)
-        TtaSetDocumentUnmodified (xmlDoc);
+        {
+          TtaSetDocumentUnmodified (xmlDoc);
+          TtaSetInitialSequence (xmlDoc);
+        }
       else if (DocumentSource[doc])
-        TtaSetDocumentUnmodified (DocumentSource[doc]);
+        {
+          TtaSetDocumentUnmodified (DocumentSource[doc]);
+      TtaSetInitialSequence (DocumentSource[doc]);
+        }
         
       /* switch Amaya buttons and menus */
       DocStatusUpdate (doc, FALSE);
@@ -2694,7 +2701,7 @@ ThotBool CanReplaceCurrentDocument (Document doc, View view)
           TtaSetDocumentUnmodified (doc);
           if (DocumentSource[doc])
             TtaSetDocumentUnmodified (DocumentSource[doc]);
-          /* remove the corrsponding auto saved doc */
+          /* remove the corresponding auto saved doc */
           RemoveAutoSavedDoc (doc);
         }
       else
@@ -3841,6 +3848,7 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
               TtaFreeMemory (DocumentURLs[doc]);
               DocumentURLs[doc] = TtaStrdup (documentFile);
               TtaSetDocumentUnmodified (doc);
+              TtaSetInitialSequence (doc);
               /* switch Amaya buttons and menus */
               DocStatusUpdate (doc, FALSE);
             }
@@ -3896,16 +3904,19 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
                   DocumentMetaClear (DocumentMeta[xmlDoc]);
                 }
               TtaSetDocumentUnmodified (xmlDoc);
+              TtaSetInitialSequence (xmlDoc);
 	      
               /* switch Amaya buttons and menus */
               DocStatusUpdate (xmlDoc, FALSE);
             }
+
           if (doc != xmlDoc)
             {
               /* It's a source document. Reparse the corresponding HTML document */
               TtaExtractName (documentFile, tempdir, documentname);
               RestartParser (xmlDoc, documentFile, tempdir, documentname, TRUE);
               TtaSetDocumentUnmodified (xmlDoc);
+              TtaSetInitialSequence (xmlDoc);
               /* Synchronize selections */
               event.document = doc;
               SynchronizeSourceView (&event);
@@ -3919,6 +3930,7 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
                 TtaSetDocumentCharset (DocumentSource[doc], charset, FALSE);
               RedisplaySourceFile (doc);
             }
+
           /* Sucess of the operation */
           TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_SAVED), documentFile);
           /* remove the previous temporary file */
@@ -3957,6 +3969,7 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
           if (!docModified)
             {
               TtaSetDocumentUnmodified (doc);
+              TtaSetInitialSequence (doc);
               /* switch Amaya buttons and menus */
               DocStatusUpdate (doc, docModified);
             }

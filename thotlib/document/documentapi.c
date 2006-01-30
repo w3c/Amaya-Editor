@@ -768,10 +768,6 @@ void  SetDocumentModified (PtrDocument pDoc, ThotBool status, int length)
             (*(Proc2)ThotLocalActions[T_docmodified]) ((void *)IdentDocument (pDoc), (void *)FALSE);
           pDoc->DocModified = FALSE;
           pDoc->DocUpdated = FALSE;
-#ifndef NODISPLAY
-          /* this is the new initial undo sequence */
-          NewInitialSequence (pDoc);
-#endif /* NODISPLAY */
         }
     }
 }

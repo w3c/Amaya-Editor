@@ -93,7 +93,6 @@ void TtaOpenUndoSequence (Document document, Element firstSel,
 
 /*----------------------------------------------------------------------
    TtaExtendUndoSequence
-
    Reopen the latest sequence of editing operations in the history.
   ----------------------------------------------------------------------*/
 void TtaExtendUndoSequence (Document document)
@@ -127,6 +126,20 @@ ThotBool TtaCloseUndoSequence (Document document)
   else 
       result = CloseHistorySequence (LoadedDocument [document - 1]);	     
   return result;
+}
+
+/*----------------------------------------------------------------------
+  TtaSetInitialSequence
+  Marks the current sequence as the initial sequence.
+  ----------------------------------------------------------------------*/
+void TtaSetInitialSequence (Document document)
+{
+  if (document < 1 || document > MAX_DOCUMENTS)
+      TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument [document - 1] == NULL)
+      TtaError (ERR_invalid_document_parameter);
+  else 
+    NewInitialSequence (LoadedDocument [document - 1]);
 }
 
 /* ----------------------------------------------------------------------
