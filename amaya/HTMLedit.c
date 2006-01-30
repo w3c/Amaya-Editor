@@ -1937,7 +1937,21 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
           if (createLink)
             {
               GenerateInlineElement (HTML_EL_Anchor, HTML_ATTR_HREF_, "");
+              // get the created anchor
               TtaGiveFirstSelectedElement (doc, &anchor, &firstChar, &i);
+              if (anchor)
+                {
+                  elType = TtaGetElementType (anchor);
+                  s = TtaGetSSchemaName (elType.ElSSchema);
+                  while (anchor &&
+                         (elType.ElTypeNum != HTML_EL_Anchor || strcmp (s, "HTML")) &&
+                         (elType.ElTypeNum != SVG_EL_a || strcmp (s, "SVG")))
+                  {
+                    anchor = TtaGetParent (anchor);
+                    elType = TtaGetElementType (anchor);
+                    s = TtaGetSSchemaName (elType.ElSSchema);
+                  }
+                }
             }
           else
             GenerateInlineElement (HTML_EL_Anchor, HTML_ATTR_ID, "");
