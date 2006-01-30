@@ -1315,11 +1315,15 @@ int ThotInput (int frame, unsigned int value, int command, int PicMask, int key)
           if (TtaGetFullScreenState(frame))
             TtaToggleOnOffFullScreen(frame);
           else
-            TtaDisplayMessage (CONFIRM, TtaGetMessage (LIB, TMSG_USE_F2));
-#else /* _WX */
-          TtaDisplayMessage (CONFIRM, TtaGetMessage (LIB, TMSG_USE_F2));
 #endif /* _WX */
-          return 0;
+          if (MenuActionList[CMD_ParentElement].Call_Action)
+            {
+              (*(Proc2)MenuActionList[CMD_ParentElement].Call_Action) ((void *)document,
+                                                                       (void *)view);
+              return 2;
+            }
+          else
+            return 0;
         }
       else if (value == 8 || value == 127)
         {
