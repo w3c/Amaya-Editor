@@ -1038,7 +1038,7 @@ void UpdateSRCattribute (NotifyOnTarget *event)
 {
   AttributeType    attrType;
   Attribute        attr;
-  Element          elSRC, el, child;
+  Element          elSRC, el, child, next;
   ElementType      elType;
   Document         doc;
   DisplayMode      dispMode;
@@ -1300,38 +1300,34 @@ void UpdateSRCattribute (NotifyOnTarget *event)
         }
       if (ImgAlt[0] != EOS && el)
         {
-          Element           next;
-          ThotBool          oldStructureChecking;
-
-          elType.ElTypeNum = HTML_EL_Object_Content;
-          next = TtaNewElement (doc, elType);
-          oldStructureChecking = TtaGetStructureChecking (doc);
-          TtaSetStructureChecking (FALSE, doc);
           // generate the Alternate text
-          if (child)
-            TtaInsertSibling (child, next, FALSE, doc);
+          next = el;
+          TtaNextSibling (&next);
+          if (next)
+            // there is an Object_Content
+            el = TtaGetFirstChild (next);
           else
-            TtaInsertFirstChild (&next, el, doc);
-#ifdef IV
-          el = next;
-          elType.ElTypeNum = HTML_EL_ElemOrParam;
-          next = TtaNewElement (doc, elType);
-          TtaInsertFirstChild (&next, el, doc);
-          el = next;
-          elType.ElTypeNum = HTML_EL_Element;
-          next = TtaNewElement (doc, elType);
-          TtaInsertFirstChild (&next, el, doc);
-#endif
-          el = next;
+            {
+              // create the Object_Content
+              elType.ElTypeNum = HTML_EL_Object_Content;
+              next = TtaNewElement (doc, elType);
+              TtaInsertSibling (el, next, FALSE, doc);
+              el = next;
+              elType.ElTypeNum = HTML_EL_ElemOrParam;
+              next = TtaNewElement (doc, elType);
+              TtaInsertFirstChild (&next, el, doc);
+              el = next;
+            }
+
+          // insert a pseudo paragraph
           elType.ElTypeNum = HTML_EL_Pseudo_paragraph;
-          next = TtaNewElement (doc, elType);
           TtaInsertFirstChild (&next, el, doc);
+          // insert the alternate text
           elType.ElTypeNum = HTML_EL_TEXT_UNIT;
           child = TtaNewElement (doc, elType);
           TtaInsertFirstChild (&child, next, doc);
           TtaSetTextContent (child, (unsigned char*)ImgAlt,
                              TtaGetDefaultCharset (), doc);
-          TtaSetStructureChecking (oldStructureChecking, doc);
         }
     }
   /* ask Thot to display changes made in the document */

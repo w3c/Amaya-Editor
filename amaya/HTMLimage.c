@@ -561,9 +561,11 @@ void SetAttrOnElement ( Document doc, Element el, int attrNum, int value )
 
 /*----------------------------------------------------------------------
   DisplayImage
+  Return TRUE if an external document is loaded (the picture element
+  can be lost)
   ----------------------------------------------------------------------*/
 void DisplayImage (Document doc, Element el, LoadedImageDesc *desc,
-                   char *localfile, char *mime_type)
+                       char *localfile, char *mime_type)
 {
   ElementType         elType;
   ElementType         parentType;
@@ -599,6 +601,9 @@ void DisplayImage (Document doc, Element el, LoadedImageDesc *desc,
 
   modified = TtaIsDocumentModified (doc);
   elType = TtaGetElementType (el);
+  is_svg = FALSE;
+  is_mml = FALSE;
+  is_html = FALSE;
   if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT ||
       ((elType.ElTypeNum == HTML_EL_Object ||
         elType.ElTypeNum == HTML_EL_IFRAME ||
@@ -606,10 +611,6 @@ void DisplayImage (Document doc, Element el, LoadedImageDesc *desc,
        (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)))
     {
       /* Determine the type of the external element */
-      is_svg = FALSE;
-      is_mml = FALSE;
-      is_html = FALSE;
-
       htmlok = TRUE;
       if (picType == unknown_type)
         {
@@ -725,6 +726,7 @@ void DisplayImage (Document doc, Element el, LoadedImageDesc *desc,
             elType.ElTypeNum == SVG_EL_tref) &&
            (strcmp(TtaGetSSchemaName (elType.ElSSchema), "SVG")  == 0))
     {
+      is_svg = TRUE;
       /* parse the SVG file and include the parsed sub-tree at the
          position of the use element */
       ParseExternalDocument (tempfile, originalName, el, FALSE, doc, 

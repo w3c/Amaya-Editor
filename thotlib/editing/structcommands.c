@@ -2831,7 +2831,7 @@ void CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
 {
   PtrElement          firstSel, lastSel, pNew, pF, pSibling, pEl, pSecond;
   PtrElement          pElem, pElSplit, pSplitEl, pNextEl, pParent;
-  ElementType	      elType;
+  ElementType	        elType;
   PtrDocument         pSelDoc;
   NotifyElement       notifyEl;
   int                 firstChar, lastChar, origFirstChar, origLastChar,
@@ -3311,10 +3311,32 @@ void CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
                         {
                           /* traitement des exceptions */
                           CreationExceptions (pNew, pSelDoc);
+                          pParent = pNew->ElParent;
+                          pSibling = pNew->ElPrevious;
                           /* cree les paves du nouvel element et */
                           /* send an event TteElemNew  Post to application */
                           NotifySubTree (TteElemNew, pSelDoc, pNew, 0, 0,
                                          FALSE, FALSE);
+                          // detect if the image is replaced by an external doc
+                          if (typeNum == LtPicture + 1)
+                            {
+                              if (pSibling)
+                                pF = pSibling->ElNext;
+                              else if (pParent)
+                                pF = pParent->ElFirstChild;
+                              else
+                                pF = pNew;
+                              if (pF != pNew)
+                                {
+                                  if (pNew == GetLastCreatedElemInHistory (pSelDoc))
+                                    {
+                                    CancelLastEditFromHistory (pSelDoc);
+                                    AddEditOpInHistory (pF, pSelDoc, FALSE, TRUE);
+                                    }
+                                  pNew = pF;
+                                }
+                            }
+
                           if (pNew && pNew->ElParent)
                             {
                               /* the element still exists */
