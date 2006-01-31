@@ -4046,7 +4046,8 @@ void TtcCopySelection (Document doc, View view)
         /* use the right frame */
         ActiveFrame = frame;
     }
-
+  if (SelPosition)
+    return;
 #ifdef _WINGUI
   activeWnd = GetFocus ();
   if (activeWnd == FrRef [frame])
