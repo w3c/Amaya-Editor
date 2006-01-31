@@ -120,9 +120,6 @@
     text-transform: none;
     font-style: normal;
     font-weight: bolder;
-    -moz-background-clip: initial;
-    -moz-background-origin: initial;
-    -moz-background-inline-policy: initial;
     color: black;
     }
 
@@ -130,16 +127,10 @@
 
   del { background: rgb(255, 102, 102) none repeat scroll 0%;
     text-decoration: line-through;
-    -moz-background-clip: initial;
-    -moz-background-origin: initial;
-    -moz-background-inline-policy: initial;
     }
 
   ins { background: yellow none repeat scroll 0%;
     text-decoration: none;
-    -moz-background-clip: initial;
-    -moz-background-origin: initial;
-    -moz-background-inline-policy: initial;
     }
 
   var, cite, dfn { font-style: italic;
@@ -170,26 +161,17 @@
     text-decoration: none;
     font-weight: bold;
     color: rgb(255, 51, 0);
-    -moz-background-clip: initial;
-    -moz-background-origin: initial;
-    -moz-background-inline-policy: initial;
     }
 
   a:hover { background: white none repeat scroll 0%;
     text-decoration: none;
     color: rgb(255, 51, 0);
-    -moz-background-clip: initial;
-    -moz-background-origin: initial;
-    -moz-background-inline-policy: initial;
     }
 
   a.offsite { background: white none repeat scroll 0%;
     text-decoration: none;
     font-weight: normal;
     color: rgb(204, 51, 0);
-    -moz-background-clip: initial;
-    -moz-background-origin: initial;
-    -moz-background-inline-policy: initial;
     }
 
   div > p:first-child, body > p:first-child, td > p:first-child { border-top: 0pt none;
