@@ -2517,7 +2517,7 @@ gboolean GtkLiningSelection (gpointer data)
       if (Selecting)
         {
           LocateSelectionInView (frame,  Motion_x, Motion_y, 0);
-          TtcCopyToClipboard (doc, view);
+          DoCopyToClipboard (doc, view, FALSE);
         }
       /* As this is a timeout function, return TRUE so that it
          continues to get called */
@@ -2581,7 +2581,7 @@ ThotBool FrameButtonDownCallback (int frame, int thot_button_id,
             LocateSelectionInView (frame, x, y, 1);
 #if !defined (_WINDOWS) && !defined (_MACOS)
             FrameToView (frame, &document, &view);
-            TtcCopyToClipboard (document, view);
+            DoCopyToClipboard (document, view, FALSE);
 #endif /* _WINDOWS */
           }
         else
@@ -2667,24 +2667,21 @@ ThotBool FrameButtonUpCallback( int frame, int thot_button_id,
       gtk_timeout_remove (timer);
       timer = None;
       FrameToView (frame, &document, &view);
-      TtcCopyToClipboard (document, view);
+      DoCopyToClipboard (document, view, FALSE);
       }
       else */
-
-#if !defined (_WINDOWS) && !defined (_MACOS)
+#if !defined(_WINDOWS) && !defined(_MACOS)
   Document   document;
   View       view;
 #endif /* !_WINDOWS && !_MACOS*/
-
-  if ( Selecting )
+  if (Selecting)
     {
       Selecting = FALSE;
-#if !defined (_WINDOWS) && !defined (_MACOS)
+#if !defined(_WINDOWS) && !defined(_MACOS)
       FrameToView (frame, &document, &view);
-      TtcCopyToClipboard (document, view);
-#endif /* _WINDOWS */
-    } 
-
+      DoCopyToClipboard (document, view, FALSE);
+#endif /* _WINDOWS && _MACOS */
+    }
   if (thot_button_id == THOT_LEFT_BUTTON)
     {
       ClickFrame = frame;
@@ -2734,7 +2731,7 @@ ThotBool FrameButtonDClickCallback( int frame, int thot_button_id,
 #if !defined (_WINDOWS) && !defined (_MACOS)
         /* a word is probably selected, copy it into clipboard */
         FrameToView (frame, &document, &view);
-        TtcCopyToClipboard (document, view);
+        DoCopyToClipboard (document, view, FALSE);
 #endif /* _WINDOWS */
       }
       break;
@@ -2997,7 +2994,7 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event,
               TtaAbortShowDialogue ();
               LocateSelectionInView (frame, (int)event->x, (int)event->y, 1);
               FrameToView (frame, &document, &view);
-              TtcCopyToClipboard (document, view);
+              DoCopyToClipboard (document, view, FALSE);
             }
           else
             {
@@ -3118,7 +3115,7 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event,
           gtk_timeout_remove (timer);
           timer = None;
           FrameToView (frame, &document, &view);
-          TtcCopyToClipboard (document, view);
+          DoCopyToClipboard (document, view, FALSE);
         } 
       else if (event->button == 1)
         {

@@ -3706,12 +3706,8 @@ void TtcCutSelection (Document doc, View view)
         ActiveFrame = frame;
     }
 
-#ifdef _WX
   TtcCopyToClipboard (doc, view);
-#endif /* _WX */
 #ifdef _WINGUI
-  TtcCopyToClipboard (doc, view);
-
   if (!OpenClipboard (FrRef[frame]))
     WinErrorBox (FrRef [frame], "TtcCutSelection (1)");
   else
@@ -4051,9 +4047,6 @@ void TtcCopySelection (Document doc, View view)
         ActiveFrame = frame;
     }
 
-#ifdef _WX
-  TtcCopyToClipboard (doc, view);
-#endif /* _WX */
 #ifdef _WINGUI
   activeWnd = GetFocus ();
   if (activeWnd == FrRef [frame])
@@ -4076,6 +4069,8 @@ void TtcCopySelection (Document doc, View view)
             }
         } 
     }
+#else /* _WINGUI */
+  TtcCopyToClipboard (doc, view);
 #endif /* _WINGUI */
   ContentEditing (TEXT_COPY);
 }

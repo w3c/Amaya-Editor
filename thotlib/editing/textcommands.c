@@ -1142,10 +1142,10 @@ static void MovingCommands (int code, Document doc, View view,
           break;
         }
       Moving = FALSE;
-#ifdef _UNIX
+#if !defined(_WINDOWS) && !defined(_MACOS)
       if (extendSel)
-        TtcCopyToClipboard (doc, view);
-#endif /* _UNIX */
+        DoCopyToClipboard (doc, view, FALSE);
+#endif /* _WINDOWS && _MACOS */
     }
 }
 
@@ -1516,9 +1516,9 @@ void TtcClearClipboard ()
 }
 
 /*----------------------------------------------------------------------
-  TtcCopyToClipboard
+  DoCopyToClipboard
   ----------------------------------------------------------------------*/
-void TtcCopyToClipboard (Document doc, View view)
+void DoCopyToClipboard (Document doc, View view, ThotBool force)
 {
 #ifdef _WX
   // Don't change the clipboard buffer when a single click is done
@@ -1529,9 +1529,9 @@ void TtcCopyToClipboard (Document doc, View view)
       
       /* Must get the selection */
       len = CopyXClipboard (&buffer, view);
-      TtcClearClipboard ();
       if (len)
         {
+          TtcClearClipboard ();
           // Write some text to the clipboard
           ClipboardLength = len;
           Xbuffer = buffer;	  
@@ -1539,13 +1539,19 @@ void TtcCopyToClipboard (Document doc, View view)
           // so do not delete them in the app.
           wxTheClipboard->AddData( new wxTextDataObject( TtaConvMessageToWX((char *)buffer) ) );
          }
-      else
-        // flush the clipboard in order to keep current text for further use in other applications
-        wxTheClipboard->Flush();
+      else if (force)
+        {
+          TtcClearClipboard ();
+          // Write fixed text to the clipboard
+          Xbuffer = (unsigned char *)TtaStrdup ("<internal_structure>");	  
+          ClipboardLength = strlen ((char *)Xbuffer);
+          // This data objects are held by the clipboard, 
+          // so do not delete them in the app.
+          wxTheClipboard->AddData( new wxTextDataObject( TtaConvMessageToWX((char *)buffer) ) );
+        }
       wxTheClipboard->Close();
     }
 #endif /* _WX */
-
 #ifdef _GTK
   unsigned char     *buffer = NULL;
   int                len;
@@ -1563,6 +1569,14 @@ void TtcCopyToClipboard (Document doc, View view)
   /* Store the current selection */
   ClipboardLength = CopyXClipboard (&Xbuffer, view);
 #endif /* _WINGUI */
+}
+
+/*----------------------------------------------------------------------
+  TtcCopyToClipboard
+  ----------------------------------------------------------------------*/
+void TtcCopyToClipboard (Document doc, View view)
+{
+  DoCopyToClipboard (doc, view, TRUE);
 }
 
 
