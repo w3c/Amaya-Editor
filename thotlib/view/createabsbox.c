@@ -1210,7 +1210,7 @@ ThotBool CondPresentation (PtrCondition pCond, PtrElement pEl,
                         if (pCond->CoCondition == PcWithin)
                           pAsc = pAsc->ElParent;
                         else
-                          pAsc = pElem->ElPrevious;
+                          pAsc = pAsc->ElPrevious;
                       else
                         {
                           if (pCond->CoTypeAncestor != 0)
