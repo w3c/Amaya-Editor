@@ -3,9 +3,10 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <title>Configurer Amaya</title>
-  <meta name="GENERATOR" content="amaya 9.1, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 9.3.1, see http://www.w3.org/Amaya/"
+  />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -113,16 +114,66 @@ c<strong>onfig</strong></a></h4>
 <p>Amaya enregistre la plupart des valeurs par défaut et tous les messages de
 dialogue dans le répertoire config. Le répertoire parent est celui où Amaya a
 été installé (par défaut <code>Amaya/config</code> sur Unix, voir le tableau
-ci-dessous pour Windows).</p>
+ci-dessous pour Windows et Mac OS X).</p>
 
-<h4 id="pertoire1"><a name="AmayaHome">Le répertoire d'AmayaHome</a></h4>
+<table border="1" cellspacing="0">
+  <tbody>
+    <tr>
+      <td valign="top"
+      style="border:solid .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableHead"><b>Architecture</b></p>
+      </td>
+      <td valign="top"
+      style="border:solid .5pt;   border-left:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableHead"><b>Config Directory Location</b></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+      style="border:solid .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Unix</p>
+      </td>
+      <td valign="top"
+      style="border-top:none;border-left:   none;border-bottom:solid .5pt;border-right:solid .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText"><code>Amaya-x.x/config where
+        Amaya-x.x=binary_path/../..</code></p>
+
+        <p>(e.g. /usr/lib/Amaya.x.x/config)</p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+      style="border:solid .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Windows NT/XP</p>
+      </td>
+      <td valign="top"
+      style="border-top:none;border-left:   none;border-bottom:solid .5pt;border-right:solid .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText"><code>$HOMEDRIVE:\$HOMEPATH\amaya</code><br />
+        by default <br />
+        C:\Documents and Settings\$user_name\Amaya-x.x\config</p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+      style="border:solid .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Mac OS X</p>
+      </td>
+      <td valign="top"
+      style="border-top:none;border-left:   none;border-bottom:solid .5pt;border-right:solid .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText"><code>/Applications/Amaya.app/Contents/MacOS/Amaya-x.x/config</code></p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="pertoire1"><a name="AmayaHome">Le répertoire AmayaHome</a></h4>
 
 <p>Amaya stocke les préférences de l'utilisateur ainsi que les autres
-fichiers de configuration de l'utilisateur que nous appellerons le répertoire
-<strong>AmayaHome</strong>. Un répertoire existant peut être sélectionné par
-l'utilisateur en utilisant la variable d'environnement
-<code>AMAYA_USER_HOME</code>. Sinon Amaya sélectionne un répertoire par
-défaut.</p>
+fichiers de configuration de l'utilisateur dans un répertoire que nous
+appellerons le répertoire <strong>AmayaHome</strong>. Un répertoire existant
+peut être sélectionné par l'utilisateur en utilisant la variable
+d'environnement <code>AMAYA_USER_HOME</code>. Sinon Amaya sélectionne un
+répertoire par défaut.</p>
 
 <p>La table suivante montre la position par défaut de ce répertoire dans les
 différentes architectures :</p>
@@ -157,7 +208,17 @@ différentes architectures :</p>
       <td valign="top"><p
         class="TableText"><code>$HOMEDRIVE:\$HOMEPATH\amaya</code><br />
         par défaut <br />
-        c:\Documents and Settings\$user_name\amaya</p>
+        c:\Documents and Settings\$user_name\amaya     </p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"
+      style="border:solid .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Mac OS X</p>
+      </td>
+      <td valign="top"
+      style="border-top:none;border-left:   none;border-bottom:solid .5pt;border-right:solid .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText"><code><code>~/.amaya</code></code></p>
       </td>
     </tr>
   </tbody>
@@ -168,9 +229,10 @@ de nouvelles versions d'Amaya. Il peut contenir les fichiers suivants :</p>
 <ul>
   <li><strong>thot.rc</strong> : les préférences de l'utilisateur, changées
     grâce au menu des préférences.</li>
-  <li><a name="keyboard"><strong>amaya.keyboard</strong></a> (Unix) ou
-    <strong>amaya.kb</strong> (Windows) : ce fichier définit les raccourcis
-    clavier d'Amaya.</li>
+  <li><a name="keyboard"><strong>amaya.keyboard</strong></a> (Unix),
+    <strong>amaya.kb</strong> (Windows) ou <strong>amaya.kb-mac</strong> : ce
+    fichier définit les raccourcis clavier d'Amaya pour la plate-forme
+    correspondante.</li>
   <li><strong>amaya.css</strong> : contient la feuille de style de
     l'utilisateur.</li>
   <li><strong>dictionary.DCT</strong> : Amaya fournit un vérificateur
@@ -218,6 +280,16 @@ stocké dans les différents architectures :</p>
         par défaut <br />
         c:\Documents and Settings\$user_name\Local Settings\Temp\amaya</td>
     </tr>
+    <tr>
+      <td valign="top"
+      style="border:solid .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Mac OS X</p>
+      </td>
+      <td valign="top"
+      style="border-top:none;border-left:   none;border-bottom:solid .5pt;border-right:solid .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText"><code><code>~/.amaya</code></code></p>
+      </td>
+    </tr>
   </tbody>
 </table>
 
@@ -227,8 +299,9 @@ L'utilisateur peut changer le répertoire cache par le biais du menu
 <strong>Préférences Cache</strong>.</p>
 
 <p>Amaya essaye toujours d'effacer tous les fichiers temporaires qu'il crée.
-Cependant, si Amaya plante, les fichiers temporaires ne seront pas effacés.
-Ceci n'aura pas d'impact sur les exécutions d'Amaya ultérieurement.</p>
+Cependant, si Amaya termine anormalement,, les fichiers temporaires ne seront
+pas effacés. Ceci n'aura pas d'impact sur les exécutions d'Amaya
+ultérieures.</p>
 
 <h2 id="Menus"><a name="preferences">Menus des Préférences</a></h2>
 

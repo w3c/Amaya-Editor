@@ -2,7 +2,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 9.3, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 9.3.1, see http://www.w3.org/Amaya/"
+  />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Raccourcis clavier pour Mac OS X</title>
   <style type="text/css">
@@ -116,11 +117,11 @@ affichés par défaut. Pour afficher, vous devez sélectionner l'option
     </tr>
     <tr>
       <td>Fermer l'onglet</td>
-      <td>Cmd+Shift+W</td>
+      <td>Cmd+W</td>
     </tr>
     <tr>
       <td>Fermer la fenêtre</td>
-      <td>Cmd+W</td>
+      <td>Cmd+Shift+W</td>
     </tr>
     <tr class="menu">
       <td colspan="2">Menu Édition</td>
@@ -155,7 +156,7 @@ affichés par défaut. Pour afficher, vous devez sélectionner l'option
     </tr>
     <tr>
       <td>Vérifier orthographe</td>
-      <td>Cmd+Shift+F</td>
+      <td>Cmd+:</td>
     </tr>
     <tr class="menu">
       <td colspan="2">Navigation dans la structure</td>
