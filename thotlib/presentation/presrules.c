@@ -2430,7 +2430,19 @@ static void ApplyDim (AbDimension *pdimAb, PtrAbstractBox pAb,
         }
       else
         /* take the value in the rule */
-        pdimAb->DimValue = pDRule->DrValue;
+        {
+          pdimAb->DimValue = pDRule->DrValue;
+          /* in HTML and MathML, interpret a fixed value as a minimum if it's
+           the height of a table, a table row or a table cell */
+          if (pPRule->PrType == PtHeight)
+            if (TypeHasException (ExcIsCell, pAb->AbElement->ElTypeNumber,
+                                  pAb->AbElement->ElStructSchema) ||
+                TypeHasException (ExcIsRow, pAb->AbElement->ElTypeNumber,
+                                  pAb->AbElement->ElStructSchema) ||
+                TypeHasException (ExcIsTable, pAb->AbElement->ElTypeNumber,
+                                  pAb->AbElement->ElStructSchema))
+              pdimAb->DimMinimum = TRUE;
+        }
       *appl = TRUE;
     }
   else if (pDRule->DrRelation == RlEnclosed)
