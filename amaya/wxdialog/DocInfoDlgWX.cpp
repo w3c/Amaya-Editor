@@ -11,6 +11,7 @@
 #include "appdialogue_wx.h"
 #include "message_wx.h"
 #include "init_f.h"
+static int My_ref = 0;
 
 //-----------------------------------------------------------------------------
 // Event table: connect the events to the handler functions to process them
@@ -22,18 +23,16 @@ END_EVENT_TABLE()
 /*----------------------------------------------------------------------
   DocInfoDlgWX create the Document Info dialog 
   params:
-    + parent : parent window
-    + doc : the document
-    ----------------------------------------------------------------------*/
-  DocInfoDlgWX::DocInfoDlgWX( int ref, 
-                              wxWindow* parent,
-                              int doc ) : 
+  + parent : parent window
+  + doc : the document
+  ----------------------------------------------------------------------*/
+DocInfoDlgWX::DocInfoDlgWX( int ref, wxWindow* parent, int doc ) : 
     AmayaDialog( parent, ref )
 {
   char         *content;
 
+  My_ref = ref;
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("DocInfoDlgWX"));
-
   wxString wx_title = TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_DOCINFO_TITLE));
   SetTitle( wx_title );
 
@@ -84,12 +83,10 @@ END_EVENT_TABLE()
   else
     content = TtaGetMessage (AMAYA, AM_UNKNOWN);
   XRCCTRL(*this, "wxID_LOCATION_CONTENT", wxTextCtrl)->SetValue(TtaConvMessageToWX(content));
-
   // update dialog labels
   XRCCTRL(*this, "wxID_CANCEL", wxButton)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_DONE)));
 
   Layout();
-  
   SetAutoLayout( TRUE );
 }
 
@@ -98,6 +95,8 @@ END_EVENT_TABLE()
   -----------------------------------------------------------------------------*/
 DocInfoDlgWX::~DocInfoDlgWX()
 {
+  if (My_ref)
+    TtaDestroyDialogue (My_ref);
 }
 
 /*----------------------------------------------------------------------
@@ -105,7 +104,8 @@ DocInfoDlgWX::~DocInfoDlgWX()
   ----------------------------------------------------------------------*/
 void DocInfoDlgWX::OnDoneButton( wxCommandEvent& event )
 {
-  Close ();
+  TtaDestroyDialogue (My_ref);
+  My_ref = 0;
 }
 
 #endif /* _WX */

@@ -188,18 +188,18 @@ void PrintDlgWX::OnOutputBox ( wxCommandEvent& event )
   if (m_output == 0)
     {
       if (m_print == 1)
-	{
-	  m_print = 0;
-	  XRCCTRL(*this, "wxID_FILE_TXT_CTRL", wxTextCtrl)->SetValue(m_Printer);
-	}
+        {
+          m_print = 0;
+          XRCCTRL(*this, "wxID_FILE_TXT_CTRL", wxTextCtrl)->SetValue(m_Printer);
+        }
     }
   else
     {
       if (m_print == 0)
-	{
-	  m_print = 1;
-	  XRCCTRL(*this, "wxID_FILE_TXT_CTRL", wxTextCtrl)->SetValue(m_PS);
-	}
+        {
+          m_print = 1;
+          XRCCTRL(*this, "wxID_FILE_TXT_CTRL", wxTextCtrl)->SetValue(m_PS);
+        }
     }
 #endif /* _WINDOWS */
 }

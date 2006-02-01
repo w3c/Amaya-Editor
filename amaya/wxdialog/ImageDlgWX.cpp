@@ -34,12 +34,8 @@ END_EVENT_TABLE()
     + alt: the suggested alt
   returns:
   ----------------------------------------------------------------------*/
-ImageDlgWX::ImageDlgWX( int ref,
-			    wxWindow* parent,
-			    const wxString & title,
-			    const wxString & urlToOpen,
-			    const wxString & alt,
-			    const wxString & filter ) :
+ImageDlgWX::ImageDlgWX( int ref, wxWindow* parent, const wxString & title,
+			    const wxString & urlToOpen, const wxString & alt, const wxString & filter ) :
   AmayaDialog( NULL, ref ),
   m_Filter(filter)
 {
@@ -140,9 +136,7 @@ void ImageDlgWX::OnBrowseButton( wxCommandEvent& event )
       OnOpenButton( event );
     }
   else
-    {
-      p_dlg->Destroy();
-    }
+    p_dlg->Destroy();
 }
 
 /*----------------------------------------------------------------------
