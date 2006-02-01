@@ -244,83 +244,86 @@
 242 Markierung in SVG-Bibliothek einfügen
 243 Kommentar
 244 Elemente XML...
-245 Auf vorherigen Anker
-246 Erzeugen/Ändern...
-247 Anker erzeugen
-248 Verweis/Anker löschen
-249 Id hinzufügen/entfernen...
-250 &Hilfsmittel anzeigen
-251 &Vollbildanzeige
-252 Symbolleiste anzeigen
-253 Adresszeile anzeigen
-254 Aktive Bildbereiche
-255 Anker anzeigen
-256 Schrift vergrößern
-257 Schrift verkleinern
-258 Layoutansicht
-259 Struktur
-260 Quelltext
-261 Verweise
-262 Textbrowser
-263 Inhaltsverzeichnis
-264 Zeitliche Reihenfolge
-265 Ansicht horizontal teilen
-266 Ansicht vertikal teilen
-267 Schrift...
-268 Farbe...
-269 CSS &Stil
-270 Ausrichtung...
-271 Hintergrundbild...
-272 Regel erzeugen...
-273 Klasse übernehmen...
-274 Zugewiesenes Format anzeigen...
-275 Verknüpfen...
-276 Öffnen...
-277 Deaktivieren...
-278 Aktivieren...
-279 Entfernen...
-280 Zur Markierung
-281 Zum Dokument
-282 Auf Markierung verschieben
-283 Als XPointer speichern
-284 Auf XPointer verschieben
-285 Beantworten
-286 Veröffentlichen
-287 Löschen
-288 Laden
-289 Abfrage bearbeiten...
-290 Filter...
-291 Resource sperren...
-292 Resource entsperren...
-293 Resourceeigenschaften anzeigen...
-294 Sperrinformation kopieren...
-295 Gesperrt?
-296 Info
-297 Über Amaya
-298 Index
-299 Browsen
-300 Ansichten
-301 Markieren
-302 Dokument
-303 Elemente
-304 Attribute
-305 Zeichen
-306 Transformieren
-307 Verweise
-308 Tabellen
-309 Aktive Bildbereiche
-310 Formeln
-311 SVG
-312 XML
-313 Formate/Formatvorlagen
-314 Suchen/Ersetzen
-315 Rechtschreibprüfung
-316 Speichern/Veröffentlichen
-317 WebDAV
-318 Drucken
-319 Abschnitte numerieren
-320 Buch erstellen
-321 Anmerkungen
-322 Konfiguration
-323 Tastenkürzel
-324 Benutzerfreundlichkeit
+245 **Copy location
+246 **Paste location
+247 **Copy link
+248 Auf vorherigen Anker
+249 Erzeugen/Ändern...
+250 Anker erzeugen
+251 Verweis/Anker löschen
+252 Id hinzufügen/entfernen...
+253 &Hilfsmittel anzeigen
+254 &Vollbildanzeige
+255 Symbolleiste anzeigen
+256 Adresszeile anzeigen
+257 Aktive Bildbereiche
+258 Anker anzeigen
+259 Schrift vergrößern
+260 Schrift verkleinern
+261 Layoutansicht
+262 Struktur
+263 Quelltext
+264 Verweise
+265 Textbrowser
+266 Inhaltsverzeichnis
+267 Zeitliche Reihenfolge
+268 Ansicht horizontal teilen
+269 Ansicht vertikal teilen
+270 Schrift...
+271 Farbe...
+272 CSS &Stil
+273 Ausrichtung...
+274 Hintergrundbild...
+275 Regel erzeugen...
+276 Klasse übernehmen...
+277 Zugewiesenes Format anzeigen...
+278 Verknüpfen...
+279 Öffnen...
+280 Deaktivieren...
+281 Aktivieren...
+282 Entfernen...
+283 Zur Markierung
+284 Zum Dokument
+285 Auf Markierung verschieben
+286 Als XPointer speichern
+287 Auf XPointer verschieben
+288 Beantworten
+289 Veröffentlichen
+290 Löschen
+291 Laden
+292 Abfrage bearbeiten...
+293 Filter...
+294 Resource sperren...
+295 Resource entsperren...
+296 Resourceeigenschaften anzeigen...
+297 Sperrinformation kopieren...
+298 Gesperrt?
+299 Info
+300 Über Amaya
+301 Index
+302 Browsen
+303 Ansichten
+304 Markieren
+305 Dokument
+306 Elemente
+307 Attribute
+308 Zeichen
+309 Transformieren
+310 Verweise
+311 Tabellen
+312 Aktive Bildbereiche
+313 Formeln
+314 SVG
+315 XML
+316 Formate/Formatvorlagen
+317 Suchen/Ersetzen
+318 Rechtschreibprüfung
+319 Speichern/Veröffentlichen
+320 WebDAV
+321 Drucken
+322 Abschnitte numerieren
+323 Buch erstellen
+324 Anmerkungen
+325 Konfiguration
+326 Tastenkürzel
+327 Benutzerfreundlichkeit

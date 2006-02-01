@@ -104,7 +104,7 @@ suivantes :</p>
   <li><strong>Remplacer</strong> : le mot erroné est remplacé par le mot
     correct (éventuellement changé ou modifié par l'utilisateur) et le
     vérificateur cherche l'erreur suivante.</li>
-  <li><strong>Annuler</strong> : la boîte de dialogue disparaît et la
+  <li><strong>Fermer</strong> : la boîte de dialogue disparaît et la
     vérification est abandonnée. Les corrections précédentes ne sont pas
     effacées.</li>
 </ul>

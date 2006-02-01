@@ -3067,6 +3067,24 @@
 	<message xml:lang="hu">XML &amp;elemek...</message>
 	<message xml:lang="ka">XML ელემენტები...</message>
 </label>
+<label define="BCopyLocation">
+	<message xml:lang="en">Copy location</message>
+	<message xml:lang="fr">Copier l'adresse</message>
+	<message xml:lang="es">Copiar localización</message>
+	<message xml:lang="it">Copia URL</message>
+</label>
+<label define="BPasteLocation">
+	<message xml:lang="en">Paste location</message>
+	<message xml:lang="fr">Coller l'adresse</message>
+	<message xml:lang="es">Pegar localización</message>
+	<message xml:lang="it">Incolla URL</message>
+</label>
+<label define="BCopyLink">
+	<message xml:lang="en">Copy link</message>
+	<message xml:lang="fr">Copier le lien</message>
+	<message xml:lang="es">Copiar localización del enlace</message>
+	<message xml:lang="it">Copia collegamento</message>
+</label>
 <label define="BLinkTarget">
 	<message xml:lang="en">&amp;Link to previous target</message>
 	<message xml:lang="fr">&amp;Lier la cible créée</message>

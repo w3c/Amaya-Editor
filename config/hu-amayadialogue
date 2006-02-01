@@ -244,83 +244,86 @@
 242 Kijelölt kép &beillesztése
 243 Meg&jegyzés
 244 XML &elemek...
-245 &Előző célponthoz kapcsolás
-246 &Kapocs létrehozása vagy megváltoztatása...
-247 &Célpont létrehozása
-248 &Horgony törlése
-249 &Azonosítók (id) hozzáadása/törlése...
-250 &Eszközsor mutatása
-251 &Teljes képenyő
-252 &Gombsor mutatása
-253 &Címek mutatása
-254 &Térképterületek mutatása
-255 &Célpontok mutatása
-256 Nagyítás
-257 Kicsinyítés
-258 &Formázott nézet
-259 &Szerkezet mutatása
-260 &Forrás mutatása
-261 &Kapcsok mutatása
-262 &Szöveges böngészőnézet
-263 &Tartalomjegyzék mutatása
-264 Idővonal mutatása
-265 Vízszintes felosztás
-266 Függőleges felosztás
-267 &Karakter stílus...
-268 &Színek...
-269 CSS &Stílus...
-270 &Formátum...
-271 &Háttérkép...
-272 &Szabály létrehozása...
-273 &Osztály alkalmazása...
-274 &Alkalmazott stílusok mutatása...
-275 &Kapocs...
-276 Meg&nyitás...
-277 &Tiltás...
-278 &Engedélyezés...
-279 Eltá&volítás...
-280 Jegyzet a &kijelöléshez
-281 Jegyzet a &dokumentumhoz
-282 &Ugrás a kijelöléshez
-283 Kijelölés tárolása &XPointerként
-284 &Tárolt XPointerhez ugrás
-285 Jegyzetre &válaszolás
-286 Küldés a &kiszolgálóra
-287 &Törlés
-288 &Betöltés
-289 &Lekérdezés testreszabása...
-290 &Helyi szűrő...
-291 Erőforrás &zárolása...
-292 Erőforrás &felszabadítása...
-293 Erőforrás &tulajdonságai...
-294 Zárolási adatok &másolása...
-295 &Zárolt?
-296 Amaya &névjegye
-297 Az Amaya a W3C &webhelyen
-298 &Betűrendes mutató
-299 &Böngészés
-300 &Nézetek
-301 &Kijelölés
-302 &Dokumentum
-303 &Elemek létrehozása
-304 &Attribútumok
-305 &Karakterek
-306 &Szerkezetátalakítás
-307 &Kapcsok
-308 &Táblázatok
-309 &Térképek
-310 &Matematika
-311 &Grafika
-312 &XML támogatás
-313 &Stíluslapok
-314 &Keresés
-315 &Szóellenőrzés
-316 &Kiadás
-317 &WebDAV
-318 &Nyomtatás
-319 &Számozás
-320 &Kötetek
-321 &Jegyzetek
-322 &Az Amaya beállítása
-323 &Gyorsbillentyűk
-324 &Kisegítő lehetőségek az Amayában
+245 **Copy location
+246 **Paste location
+247 **Copy link
+248 &Előző célponthoz kapcsolás
+249 &Kapocs létrehozása vagy megváltoztatása...
+250 &Célpont létrehozása
+251 &Horgony törlése
+252 &Azonosítók (id) hozzáadása/törlése...
+253 &Eszközsor mutatása
+254 &Teljes képenyő
+255 &Gombsor mutatása
+256 &Címek mutatása
+257 &Térképterületek mutatása
+258 &Célpontok mutatása
+259 Nagyítás
+260 Kicsinyítés
+261 &Formázott nézet
+262 &Szerkezet mutatása
+263 &Forrás mutatása
+264 &Kapcsok mutatása
+265 &Szöveges böngészőnézet
+266 &Tartalomjegyzék mutatása
+267 Idővonal mutatása
+268 Vízszintes felosztás
+269 Függőleges felosztás
+270 &Karakter stílus...
+271 &Színek...
+272 CSS &Stílus...
+273 &Formátum...
+274 &Háttérkép...
+275 &Szabály létrehozása...
+276 &Osztály alkalmazása...
+277 &Alkalmazott stílusok mutatása...
+278 &Kapocs...
+279 Meg&nyitás...
+280 &Tiltás...
+281 &Engedélyezés...
+282 Eltá&volítás...
+283 Jegyzet a &kijelöléshez
+284 Jegyzet a &dokumentumhoz
+285 &Ugrás a kijelöléshez
+286 Kijelölés tárolása &XPointerként
+287 &Tárolt XPointerhez ugrás
+288 Jegyzetre &válaszolás
+289 Küldés a &kiszolgálóra
+290 &Törlés
+291 &Betöltés
+292 &Lekérdezés testreszabása...
+293 &Helyi szűrő...
+294 Erőforrás &zárolása...
+295 Erőforrás &felszabadítása...
+296 Erőforrás &tulajdonságai...
+297 Zárolási adatok &másolása...
+298 &Zárolt?
+299 Amaya &névjegye
+300 Az Amaya a W3C &webhelyen
+301 &Betűrendes mutató
+302 &Böngészés
+303 &Nézetek
+304 &Kijelölés
+305 &Dokumentum
+306 &Elemek létrehozása
+307 &Attribútumok
+308 &Karakterek
+309 &Szerkezetátalakítás
+310 &Kapcsok
+311 &Táblázatok
+312 &Térképek
+313 &Matematika
+314 &Grafika
+315 &XML támogatás
+316 &Stíluslapok
+317 &Keresés
+318 &Szóellenőrzés
+319 &Kiadás
+320 &WebDAV
+321 &Nyomtatás
+322 &Számozás
+323 &Kötetek
+324 &Jegyzetek
+325 &Az Amaya beállítása
+326 &Gyorsbillentyűk
+327 &Kisegítő lehetőségek az Amayában

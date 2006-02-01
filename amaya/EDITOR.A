@@ -286,6 +286,9 @@ MENUS
 	XMLTypes button:BXMLComment -> CreateComment icon:XHTML_Comment.png;
 	XMLTypes button:BXMLElement -> CreateXMLElementMenu;
 
+	Links button:BCopyLocation -> CopyLocation;
+	Links button:BPasteLocation -> PasteLocation;
+	Links button:BCopyLink -> CopyLink;
 	Links button:BLinkTarget -> LinkToPreviousTarget;
 	Links button:BCreateLink -> CreateOrChangeLink icon:XHTML_Link.png;
 	Links button:BCreateTarget -> CreateTarget icon:XHTML_Target.png;

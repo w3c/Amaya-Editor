@@ -1965,11 +1965,11 @@
 </label>
 <label define="TMSG_Pass_With">
 	<message xml:lang="en">Learn</message>
-	<message xml:lang="de">Überspringen (PW)</message>
+	<message xml:lang="de">Lern</message>
 	<message xml:lang="fr">Apprend</message>
-	<message xml:lang="it">Salta (+ diz)</message>
+	<message xml:lang="it">Aggiungi</message>
 	<message xml:lang="tr">Atla (+ sözlük)</message>
-	<message xml:lang="es">Saltar (+ dic)</message>
+	<message xml:lang="es">Agregar</message>
 	<message xml:lang="pt">Pular (+ dic)</message>
 	<message xml:lang="fi">Hylkää (+ dic)</message>
 	<message xml:lang="ru">Пропустить (+словарь)</message>

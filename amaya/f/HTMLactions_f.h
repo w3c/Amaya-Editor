@@ -66,6 +66,12 @@ extern void SelectionChanged ( NotifyElement *event );
 extern ThotBool HTMLElementTypeInMenu ( NotifyElement *event );
 extern void SetCharFontOrPhrase ( int doc,
                                   int elemtype );
+extern void CopyLocation ( Document doc,
+                           View view );
+extern void PasteLocation ( Document doc,
+                            View view );
+extern void CopyLink ( Document doc,
+                       View view );
 
 #else /* __STDC__ */
 
@@ -129,6 +135,12 @@ extern void SelectionChanged ( NotifyElement *event );
 extern ThotBool HTMLElementTypeInMenu ( NotifyElement *event );
 extern void SetCharFontOrPhrase ( int doc,
                                     int elemtype );
+extern void CopyLocation ( Document doc,
+                             View view );
+extern void PasteLocation ( Document doc,
+                              View view );
+extern void CopyLink ( Document doc,
+                         View view );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

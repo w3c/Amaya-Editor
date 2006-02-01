@@ -867,14 +867,20 @@ void GenerateInlineElement (int eType, int aType, char * data)
                                           TtaGiveTextAttributeValue (newAttr, name, &lg);
                                           if (parse)
                                             {
-                                              // CSS properties are closed by ;
+                                              // CSS properties should be ended by ;
                                               lg--;
                                               while (name[lg] == SPACE)
                                                 name[lg--] = EOS;
                                               if (name[lg] != ';')
                                                 strcat (name, "; ");
+                                              strcat (name, data);
+                                           }
+                                          else //if (strcmp (name, data))
+                                            {
+                                              // several class names
+                                              strcat (name, " ");
+                                              strcat (name, data);
                                             }
-                                          strcat (name, data);
                                           TtaSetAttributeText (newAttr, name, child, doc);
                                           if (parse)
                                             // apply CSS properties

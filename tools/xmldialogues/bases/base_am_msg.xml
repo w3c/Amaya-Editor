@@ -4371,10 +4371,10 @@
 <label define="AM_NO_HEADING_FOUND">
 <message xml:lang="en">No heading found after the selection</message>
 <message xml:lang="fr">Pas d'en-tête trouvé après la sélection</message>
-<message xml:lang="es">No heading found after the selection</message>
+<message xml:lang="es">No hay encabezado tras la selección</message>
 <message xml:lang="de">No heading found after the selection</message>
 <message xml:lang="hu">No heading found after the selection</message>
-<message xml:lang="it">No heading found after the selection</message>
+<message xml:lang="it">Nessun titolo dopo la selezione</message>
 </label>
 <label define="AMAYA_MSG_MAX">
 </label></messages></base>

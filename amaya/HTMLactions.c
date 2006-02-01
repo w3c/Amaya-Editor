@@ -3208,3 +3208,28 @@ void SetCharFontOrPhrase (int doc, int elemtype)
   UpdateContextSensitiveMenus (doc);
 }
 
+
+/*----------------------------------------------------------------------
+  CopyLocation
+  Store the current URI (document URL + ID/name) into the clipboard
+  ----------------------------------------------------------------------*/
+void CopyLocation (Document doc, View view)
+{
+}
+
+/*----------------------------------------------------------------------
+  PasteLocation
+  Paste the clipboard value into the document address
+  ----------------------------------------------------------------------*/
+void PasteLocation (Document doc, View view)
+{
+}
+
+/*----------------------------------------------------------------------
+  CopyLink
+  If current selection is within an anchor, store the link value into the
+  clipboard.
+  ----------------------------------------------------------------------*/
+void CopyLink (Document doc, View view)
+{
+}

@@ -244,83 +244,86 @@
 242 **Add the selected graphics in the library
 243 Merkintä
 244 **XML elements...
-245 Linkki edelliseen kohteeseen
-246 Luo tai muuta linkki...
-247 Luo kohde
-248 Poista linkki
-249 Lisää/Poista elementti...
-250 **Show &tools
-251 **&Fullscreen
-252 Näytä painikerivi
-253 Näytä osoite
-254 Näytä kartta alueet
-255 Näytä kohteet
-256 Lähennä
-257 Loitonna
-258 **Show &formatted view
-259 Näytä rakenne
-260 Näytä lähdekoodi
-261 Näytä linkit
-262 Show alternate
-263 Näytä sisällysluettelo
-264 Aikajana
-265 **Split view horizontally
-266 **Split view vertically
-267 Fontin tyyli...
-268 Värit...
-269 **CSS &Style...
-270 Muoto...
-271 Taustakuva...
-272 Tee sääntö...
-273 Käytä luokkaa...
-274 **Show applied style...
-275 Linkki...
-276 Avaa...
-277 Poista käytöstä...
-278 Ota käyttöön...
-279 Poista...
-280 Valinnan lisätiedot
-281 Dokumentin lisätiedot
-282 Siirrä valintaan
-283 Tallenna valinta XPointer:iin
-284 Siirrä XPointer:iin
-285 Vastaa merkintään
-286 Lähetä palvelimelle
-287 Poista
-288 Lataa
-289 Mukauta tiedustelu...
-290 Paikalliset rajoitukset...
-291 Lukitse objekti...
-292 Vapauta objekti...
-293 Näytä objektin ominaisuudet...
-294 Kopioi lukitustiedot...
-295 Lukittu?
-296 Tietoja Amayasta
-297 Lisätietoa Amayasta W3C:ssä
-298 Hakemisto
-299 Selaaminen
-300 Näkymät
-301 Valinta
-302 Dokumentti
-303 Elementtien luominen
-304 Asetukset
-305 Fontit
-306 Rakenteen muunto
-307 Linkit
-308 Taulukot
-309 Kuvakartat
-310 Matematiikka
-311 Grafiikka
-312 XML-tuki
-313 Tyylitiedostot (CSS)
-314 Etsiminen
-315 Oikeinkirjoituksen tarkastus
-316 Julkaisu
-317 WebDAV
-318 Tulostus
-319 Numerointi
-320 Koosteen valmistus
-321 Merkinnät
-322 Asetuksien määritys
-323 Näppäinkomennot
-324 Amayan helppokäyttötoiminnot
+245 **Copy location
+246 **Paste location
+247 **Copy link
+248 Linkki edelliseen kohteeseen
+249 Luo tai muuta linkki...
+250 Luo kohde
+251 Poista linkki
+252 Lisää/Poista elementti...
+253 **Show &tools
+254 **&Fullscreen
+255 Näytä painikerivi
+256 Näytä osoite
+257 Näytä kartta alueet
+258 Näytä kohteet
+259 Lähennä
+260 Loitonna
+261 **Show &formatted view
+262 Näytä rakenne
+263 Näytä lähdekoodi
+264 Näytä linkit
+265 Show alternate
+266 Näytä sisällysluettelo
+267 Aikajana
+268 **Split view horizontally
+269 **Split view vertically
+270 Fontin tyyli...
+271 Värit...
+272 **CSS &Style...
+273 Muoto...
+274 Taustakuva...
+275 Tee sääntö...
+276 Käytä luokkaa...
+277 **Show applied style...
+278 Linkki...
+279 Avaa...
+280 Poista käytöstä...
+281 Ota käyttöön...
+282 Poista...
+283 Valinnan lisätiedot
+284 Dokumentin lisätiedot
+285 Siirrä valintaan
+286 Tallenna valinta XPointer:iin
+287 Siirrä XPointer:iin
+288 Vastaa merkintään
+289 Lähetä palvelimelle
+290 Poista
+291 Lataa
+292 Mukauta tiedustelu...
+293 Paikalliset rajoitukset...
+294 Lukitse objekti...
+295 Vapauta objekti...
+296 Näytä objektin ominaisuudet...
+297 Kopioi lukitustiedot...
+298 Lukittu?
+299 Tietoja Amayasta
+300 Lisätietoa Amayasta W3C:ssä
+301 Hakemisto
+302 Selaaminen
+303 Näkymät
+304 Valinta
+305 Dokumentti
+306 Elementtien luominen
+307 Asetukset
+308 Fontit
+309 Rakenteen muunto
+310 Linkit
+311 Taulukot
+312 Kuvakartat
+313 Matematiikka
+314 Grafiikka
+315 XML-tuki
+316 Tyylitiedostot (CSS)
+317 Etsiminen
+318 Oikeinkirjoituksen tarkastus
+319 Julkaisu
+320 WebDAV
+321 Tulostus
+322 Numerointi
+323 Koosteen valmistus
+324 Merkinnät
+325 Asetuksien määritys
+326 Näppäinkomennot
+327 Amayan helppokäyttötoiminnot
