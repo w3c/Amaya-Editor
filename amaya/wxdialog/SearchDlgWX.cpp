@@ -22,6 +22,7 @@ BEGIN_EVENT_TABLE(SearchDlgWX, AmayaDialog)
   EVT_RADIOBOX( XRCID("wxID_REPLACE_BOX"),     SearchDlgWX::OnReplaceBox )
   EVT_RADIOBOX( XRCID("wxID_SEARCH_AREA_BOX"), SearchDlgWX::OnSearchAreaBox )
   EVT_CHECKBOX( XRCID("wxID_CHECK_CASE"),      SearchDlgWX::OnCheckCaseBox )
+  EVT_TEXT( XRCID("wxID_REPLACE_BY_TXT"),      SearchDlgWX::OnTextChanged )
   EVT_TEXT_ENTER( XRCID("wxID_SEARCH_FOR_TXT"),SearchDlgWX::OnConfirmButton )
 END_EVENT_TABLE()
 
@@ -121,11 +122,6 @@ void SearchDlgWX::OnConfirmButton( wxCommandEvent& event )
   wxASSERT( newText.Len() < 512 );
   strcpy( buf_new_text, (const char*)newText.mb_str(wxConvUTF8) );
 
-  if (buf_new_text && buf_new_text[0] != '\0' && m_ireplace == 0)
-    {
-      m_ireplace = 1;
-      XRCCTRL(*this, "wxID_REPLACE_BOX", wxRadioBox)->SetSelection(1);
-    }
   if (m_ireplace == 1 || m_ireplace == 2) 
     ThotCallback (NumZoneTextReplace, STRING_DATA, buf_new_text);
 
@@ -184,8 +180,16 @@ void SearchDlgWX::OnCancelButton( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void SearchDlgWX::OnReplaceBox ( wxCommandEvent& event )
 {
-  m_ireplace = XRCCTRL(*this, "wxID_REPLACE_BOX",
-		       wxRadioBox)->GetSelection( );
+  m_ireplace = XRCCTRL(*this, "wxID_REPLACE_BOX", wxRadioBox)->GetSelection( );
+}
+
+/*----------------------------------------------------------------------
+  OnTextChanged called when changing the replace text
+  ----------------------------------------------------------------------*/
+void SearchDlgWX::OnTextChanged ( wxCommandEvent& event )
+{
+  m_ireplace = 1;
+  XRCCTRL(*this, "wxID_REPLACE_BOX", wxRadioBox)->SetSelection(1);
 }
 
 /*----------------------------------------------------------------------

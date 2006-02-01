@@ -34,6 +34,7 @@ private:
   void OnCancelButton( wxCommandEvent& event );
   void OnNoReplaceButton( wxCommandEvent& event );
   void OnReplaceBox( wxCommandEvent& event );
+  void OnTextChanged ( wxCommandEvent& event );
   void OnSearchAreaBox( wxCommandEvent& event );
   void OnCheckCaseBox( wxCommandEvent& event );
 

@@ -216,6 +216,7 @@ void StyleDlgWX::InitValues ()
  XRCCTRL(*this, "wxID_SPIN_SIZE", wxSpinCtrl)->SetValue(0);
  XRCCTRL(*this, "wxID_SPIN_SIZE", wxSpinCtrl)->SetRange(0, 400);
  XRCCTRL(*this, "wxID_SPIN_LINE", wxSpinCtrl)->SetValue(0);
+ XRCCTRL(*this, "wxID_SPIN_LINE", wxSpinCtrl)->SetRange(0, 400);
  XRCCTRL(*this, "wxID_SPIN_INDENT", wxSpinCtrl)->SetValue(0);
  XRCCTRL(*this, "wxID_SPIN_INDENT", wxSpinCtrl)->SetRange(-400, 400);
  XRCCTRL(*this, "wxID_SPIN_VALIGN", wxSpinCtrl)->SetValue(0);
