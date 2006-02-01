@@ -4368,5 +4368,13 @@
 <message xml:lang="hu">A kijelölés nem érinthet ilyen típusú elemet</message>
 <message xml:lang="it">La selezione non può attraversare un elemento di questo tipo</message>
 </label>
+<label define="AM_NO_HEADING_FOUND">
+<message xml:lang="en">No heading found after the selection</message>
+<message xml:lang="fr">Pas d'en-tête trouvé après la sélection</message>
+<message xml:lang="es">No heading found after the selection</message>
+<message xml:lang="de">No heading found after the selection</message>
+<message xml:lang="hu">No heading found after the selection</message>
+<message xml:lang="it">No heading found after the selection</message>
+</label>
 <label define="AMAYA_MSG_MAX">
 </label></messages></base>

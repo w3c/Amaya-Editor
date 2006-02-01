@@ -4,7 +4,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Vérifier l'orthographe</title>
-  <meta name="GENERATOR" content="amaya 9.3, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 9.3.1, see http://www.w3.org/Amaya/"
+  />
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -36,10 +37,9 @@ le bon dictionnaire. Vous pouvez associer cet attribut à n'importe quel
 <p>Le vérificateur d'orthographe vous permet d'avoir votre dictionnaire
 personnel qui se trouve dans <code>AmayaHome/dictionary.DCT.</code>Ce
 dictionnaire est utilisé pour tous les documents, en supplément des
-dictionnaires des différentes langues. Il est créé et automatiquement mis à
-jour par le vérificateur d'orthographe lorsque les commandes <strong>Suivant
-(+dic)</strong> et <strong>Remplacer (+dic)</strong> sont activées (voir plus
-bas).</p>
+dictionnaires des différentes langues. Il est créé, s'il n'existe pas déjà,
+et automatiquement mis à jour par le vérificateur d'orthographe lorsque la
+commande <strong>Apprend</strong> est activée (voir plus bas).</p>
 
 <h3>Le dialogue Corriger</h3>
 
@@ -53,8 +53,8 @@ choisir les paramètres de correction :</p>
     correction est sélectionnée. Pour sélectionner une autre proposition,
     cliquez simplement dessus. La proposition sélectionnée est affichée
     en-dessous du sélecteur. Cette proposition peut être éditée. La
-    correction se fait une fois que vous avez cliqué sur un des boutons
-    <strong>Remplacer</strong> ou <strong>Remplacer (+dic)</strong>.<br />
+    correction se fait une fois que vous avez cliqué sur le bouton
+    <strong>Remplacer</strong>.<br />
     Notez que vous pouvez effectuer une correction simplement en
     double-cliquant une des corrections proposées.</li>
   <li>La langue dans laquelle se fait la correction est spécifiée dans le
@@ -98,16 +98,13 @@ suivantes :</p>
   <li><strong>Chercher/suivant</strong> : le mot considéré incorrect est
     acceptable. Aucun changement n'est effectué, ni dans le texte, ni dans le
     dictionnaire. Le vérificateur cherche l'erreur suivante.</li>
-  <li><strong>Suivant (+dic)</strong> : même action que "Chercher/suivant"
-    sauf que le mot incorrect est ajouté au dictionnaire du document. Ainsi,
-    le vérificateur ignorera toute future occurrence à ce mot.</li>
+  <li><strong>Apprend</strong> : même action que "Chercher/suivant" sauf que
+    le mot incorrect est ajouté au dictionnaire du document. Ainsi, le
+    vérificateur ignorera toute future occurrence à ce mot.</li>
   <li><strong>Remplacer</strong> : le mot erroné est remplacé par le mot
     correct (éventuellement changé ou modifié par l'utilisateur) et le
     vérificateur cherche l'erreur suivante.</li>
-  <li><strong>Remplacer (+dic)</strong> : même action que "Remplacer", à la
-    différence que le mot de remplacement est ajouté au dictionnaire du
-    document.</li>
-  <li><strong>Fermer</strong> : la boîte de dialogue disparaît et la
+  <li><strong>Annuler</strong> : la boîte de dialogue disparaît et la
     vérification est abandonnée. Les corrections précédentes ne sont pas
     effacées.</li>
 </ul>

@@ -3587,6 +3587,11 @@ void TtcInsertChar (Document doc, View view, CHAR_T c)
 
   if (doc != 0)
     {
+      if (TtaGetDocumentAccessMode(doc) == 0)
+        {
+          //TtaDisplaySimpleMessage (CONFIRM, LIB, TMSG_EL_RO);
+          return;
+        }
       lock = TRUE;
       /* Check if we are changing the active frame */
       frame = GetWindowNumber (doc, view);
@@ -3684,6 +3689,11 @@ void TtcCutSelection (Document doc, View view)
 
   if (doc == 0)
     return;
+  else if (TtaGetDocumentAccessMode(doc) == 0)
+    {
+      TtaDisplaySimpleMessage (CONFIRM, LIB, TMSG_EL_RO);
+      return;
+    }
   /* avoid to redisplay step by step */
   dispMode = TtaGetDisplayMode (doc);
   if (dispMode == DisplayImmediately)
@@ -3754,6 +3764,11 @@ void TtcDeletePreviousChar (Document doc, View view)
 
   if (doc != 0)
     {
+      if (TtaGetDocumentAccessMode(doc) == 0)
+        {
+          //TtaDisplaySimpleMessage (CONFIRM, LIB, TMSG_EL_RO);
+          return;
+        }
       frame = GetWindowNumber (doc, view);
       if (frame != ActiveFrame)
         {
@@ -3858,6 +3873,11 @@ void TtcDeleteSelection (Document doc, View view)
 
   if (doc == 0)
     return;
+  else if (TtaGetDocumentAccessMode(doc) == 0)
+    {
+      TtaDisplaySimpleMessage (CONFIRM, LIB, TMSG_EL_RO);
+      return;
+    }
   /* avoid to redisplay step by step */
   dispMode = TtaGetDisplayMode (doc);
   if (dispMode == DisplayImmediately)
@@ -3894,6 +3914,11 @@ void TtcInclude (Document doc, View view)
 
   if (ThotLocalActions[T_insertpaste] != NULL && doc != 0)
     {
+      if (TtaGetDocumentAccessMode(doc) == 0)
+        {
+          TtaDisplaySimpleMessage (CONFIRM, LIB, TMSG_EL_RO);
+          return;
+        }
       /* avoid to redisplay step by step */
       dispMode = TtaGetDisplayMode (doc);
       if (dispMode == DisplayImmediately)
@@ -4096,6 +4121,11 @@ void TtcPaste (Document doc, View view)
 
   if (doc > 0)
     {
+      if (TtaGetDocumentAccessMode(doc) == 0)
+        {
+          TtaDisplaySimpleMessage (CONFIRM, LIB, TMSG_EL_RO);
+          return;
+        }
       frame = GetWindowNumber (doc, view);
       if (frame != ActiveFrame)
         {

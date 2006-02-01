@@ -3,7 +3,8 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR" content="amaya 9.3, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 9.3.1, see http://www.w3.org/Amaya/"
+  />
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <title>Checking Spelling in Amaya</title>
   <style type="text/css">
@@ -41,10 +42,10 @@ href="Attributes.html"><strong>Attributes</strong></a> tool.</p>
 <b>user's personal dictionary</b>. A user's personal dictionary is located in
 the <code>AmayaHome/dictionary.DCT</code> file. In read-write mode, the spell
 checker employs the user dictionary when reviewing all documents, in addition
-to the language-specific dictionaries. When you click the <strong>Skip
-(+dic)</strong> and <strong>Replace (+dic)</strong> buttons in the
-<strong>Spell checking</strong> dialog, the user dictionary is created if
-does not exists and automatically updated by the spelling checker.</p>
+to the language-specific dictionaries. When you click the
+<strong>Learn</strong> button in the <strong>Spell checking</strong> dialog,
+the user dictionary is created, if does not already exists, and automatically
+updated by the spelling checker.</p>
 
 <h3>The Spell Check Dialog</h3>
 
@@ -58,8 +59,7 @@ with the spell checker. These parameters are defined below.</p>
     correction. To select another correction, simply click it. The selected
     correction is displayed below the selector field. This correction can be
     directly edited on the dialog. The correction is made when you click the
-    <strong>Replace and next</strong> or <strong>Replace (+dic)</strong>
-    buttons.<br />
+    <strong>Replace and next</strong> button.<br />
     Note that you can perform the correction by double-clicking a proposed
     correction.</li>
   <li>The <strong>language</strong> in which the correction is made is
@@ -96,16 +96,13 @@ perform the following operations:</p>
   <li><strong>Search/Skip</strong>: Amaya considers the incorrect word as
     acceptable. No change is made in the text or in the dictionaries. The
     checker searches for the next error.</li>
-  <li><strong>Skip (+dic)</strong>: Performs the same action as the
-    <strong>Skip/Skip</strong> button, except that the word considered
+  <li><strong>Learn</strong>: Performs the same action as the
+    <strong>Search/Skip</strong> button, except that the word considered
     incorrect is added to the document dictionary, and the checker will
     ignore any subsequent occurrence of this word.</li>
   <li><strong>Replace and next</strong>: Amaya replaces the incorrect word
     with the correct word (optionally edited by the user) and the checker
     searches for the next error.</li>
-  <li><strong>Replace (+dic):</strong> Performs the same action as the
-    <strong>Replace and next</strong> button, except that the replacement
-    word is added to the document dictionary.</li>
   <li><strong>Cancel</strong>: Amaya closes the dialog and stops spell
     checking. Previous corrections are not canceled.</li>
 </ul>

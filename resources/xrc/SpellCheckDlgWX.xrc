@@ -181,15 +181,6 @@
                 <size>5,0</size>
               </object>
               <object class="sizeritem">
-                <object class="wxButton" name="wxID_REPLACE_DIC_BUTTON">
-                  <label>*Replace (+dic)*</label>
-                </object>
-                <flag>wxALL</flag>
-              </object>
-              <object class="spacer">
-                <size>5,0</size>
-              </object>
-              <object class="sizeritem">
                 <flag>wxALL</flag>
                 <object class="wxButton" name="wxID_CANCEL">
                   <label>*Cancel*</label>

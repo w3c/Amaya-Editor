@@ -32,7 +32,6 @@ private:
   void OnSkipWithoutButton( wxCommandEvent& event );
   void OnSkipWithButton( wxCommandEvent& event );
   void OnReplaceWithoutButton( wxCommandEvent& event );
-  void OnReplaceWithButton( wxCommandEvent& event );
   void OnIgnoreCapitalsChkBox ( wxCommandEvent& event );
   void OnIgnoreArabicsChkBox ( wxCommandEvent& event );
   void OnIgnoreRomansChkBox ( wxCommandEvent& event );

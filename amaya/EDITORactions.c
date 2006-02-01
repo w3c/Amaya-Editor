@@ -1187,6 +1187,9 @@ void CreateDate (Document doc, View view)
   if (el == NULL)
     /* no selection */
     TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NO_INSERT_POINT);
+  else if (TtaIsReadOnly (el))
+    /* no selection */
+    TtaDisplaySimpleMessage (CONFIRM, LIB, TMSG_EL_RO);
   else
     {
       elType = TtaGetElementType (el);

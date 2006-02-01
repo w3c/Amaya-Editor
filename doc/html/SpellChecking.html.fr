@@ -4,8 +4,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Vérifier l'orthographe</title>
-  <meta name="GENERATOR" content="amaya 8.6, see http://www.w3.org/Amaya/" />
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 9.3.1, see http://www.w3.org/Amaya/"
+  />
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -44,8 +45,8 @@ l'utilisateur". Par défaut, le "dictionnaire personnel de l'utilisateur" est
 <code>AmayaHome/dictionary.DCT.</code>Le vérificateur sera utilisé, en
 supplément du dictionnaire spécifique du langage. Ce dictionnaire (dans le
 mode lire-écrire) contrôle tous les documents. Il est créé et automatiquement
-mis à jour par le vérificateur d'orthographe lorsque les commandes``Suivant
-(+dic)" et ``Remplacer (+dic)'' sont actionnées (voir plus bas).</p>
+mis à jour par le vérificateur d'orthographe lorsque la commande
+<strong>Apprend</strong> est choisie (voir plus bas).</p>
 
 <p>La commande <strong>Vérifier l'orthographe</strong>dans le menu
 <strong>Edition</strong> affiche une boîte de dialogue qui vous permet de
@@ -75,7 +76,7 @@ vérificateur :</p>
     affichée en-dessous du sélecteur. Cette proposition peut être directement
     modifiée dans la boîte de dialogue. La correction se fait une fois que
     vous avez cliqué sur un des boutons <strong>Remplacer et
-    suivant</strong>ou <strong>Remplacer (+dic)</strong>.</li>
+  suivant</strong>.</li>
   <li>La langue dans laquelle se fait la correction est spécifiée dans le
     coin en haut à gauche de la boîte de dialogue. Pour modifier la langue,
     il suffit d'appliquer un attribut "Langue" au texte concerné en utilisant
@@ -93,27 +94,19 @@ dans le coin en bas à droite de la boîte de dialogue.</p>
 <p>L'utilisateur peut utiliser un des boutons placés en bas de la boîte de
 dialogue afin d'exécuter l'une des opérations suivantes :</p>
 <ul>
-  <li><strong>Terminer</strong> : la boîte de dialogue disparaît et la
+  <li><strong>Fermer</strong> : la boîte de dialogue disparaît et la
     vérification est abandonnée. Les corrections précédentes ne sont pas
     effacées.</li>
   <li><strong>Chercher/suivant</strong> : le mot considéré incorrect est
     acceptable. Aucun changement n'est effectué, ni dans le texte, ni dans le
     dictionnaire. Le vérificateur cherche l'erreur suivante.</li>
-  <li><strong>Suivant (+dic)</strong> : c'est le même que "Chercher/suivant"
-    sauf que le mot considéré incorrect est ajouté au dictionnaire spécifique
+  <li><strong>Apprend</strong> : c'est le même que "Chercher/suivant" sauf
+    que le mot considéré incorrect est ajouté au dictionnaire spécifique
     d'orthographe du document. Ainsi, le vérificateur ignorera toute future
     occurrence à ce mot.</li>
   <li><strong>Remplacer et suivant</strong> : le mot considéré comme erroné
     est remplacé par le mot correct (changé ou modifié par l'utilisateur,
     voir plus loin) et le vérificateur cherche l'erreur suivante.</li>
-  <li><p><strong>Remplacer (+dic)</strong> : c'est le même que "Remplacer et
-    suivant", à la différence que le mot de remplacement est ajouté au
-    dictionnaire du document.</p>
-    <p><a href="Searching.html.fr#Searching"><img alt="previous"
-    src="../images/left.gif" /></a> <a href="Manual.html.fr"><img alt="top"
-    src="../images/up.gif" /></a> <a href="Publishing.html.fr"><img
-    alt="next" src="../images/right.gif" /></a></p>
-  </li>
 </ul>
 </div>
 <hr />

@@ -1684,6 +1684,13 @@ void MakeToc (Document doc, View view)
       TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NO_INSERT_POINT);
       return;
     }
+  else if (TtaIsReadOnly (el))
+    {
+      /* read-only */
+      TtaDisplaySimpleMessage (CONFIRM, LIB, TMSG_EL_RO);
+      return;
+    }
+
   elType = TtaGetElementType (el);
   s = TtaGetSSchemaName (elType.ElSSchema);
   if (strcmp (s, "HTML"))
@@ -1899,27 +1906,33 @@ void MakeToc (Document doc, View view)
 
   if (closeUndo)
     TtaCloseUndoSequence (doc);
-  /* force a complete redisplay to apply CSS */
-  TtaSetDisplayMode (doc, NoComputedDisplay);
-  if (dispMode == DisplayImmediately)
-    TtaSetDisplayMode (doc, dispMode);
-  /* select the end of the toc */
-  if (prev)
+
+  if (toc == NULL)
+    TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NO_HEADING_FOUND);
+  else
     {
-      child = prev;
-      while (child)
+      /* force a complete redisplay to apply CSS */
+      TtaSetDisplayMode (doc, NoComputedDisplay);
+      if (dispMode == DisplayImmediately)
+        TtaSetDisplayMode (doc, dispMode);
+      /* select the end of the toc */
+      if (prev)
         {
-          child = TtaGetLastChild (prev);
-          if (child)
-            prev = child;
+          child = prev;
+          while (child)
+            {
+              child = TtaGetLastChild (prev);
+              if (child)
+                prev = child;
+            }
+          elType = TtaGetElementType (prev);
+          if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+            {
+              i = TtaGetElementVolume (prev);
+              TtaSelectString (doc, prev, i+1, i);
+            }
+          else
+            TtaSelectElement (doc, prev);
         }
-      elType = TtaGetElementType (prev);
-      if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
-        {
-          i = TtaGetElementVolume (prev);
-          TtaSelectString (doc, prev, i+1, i);
-        }
-      else
-        TtaSelectElement (doc, prev);
     }
 }

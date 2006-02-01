@@ -1393,7 +1393,8 @@ int TtaGetDocumentAccessMode (Document document)
   else if (LoadedDocument[document - 1] == NULL)
     TtaError (ERR_invalid_document_parameter);
   else if (LoadedDocument[document - 1]->DocReadOnly)
-    /* parameter document is correct */
+    result = 0;
+  else if (ElementIsReadOnly (LoadedDocument[document - 1]->DocDocElement))
     result = 0;
   else
     result = 1;

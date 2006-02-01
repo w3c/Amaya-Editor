@@ -19,7 +19,6 @@ BEGIN_EVENT_TABLE(SpellCheckDlgWX, AmayaDialog)
   EVT_BUTTON( XRCID("wxID_SEARCH_SKIP_BUTTON"), SpellCheckDlgWX::OnSkipWithoutButton )
   EVT_BUTTON( XRCID("wxID_SKIP_DIC_BUTTON"),    SpellCheckDlgWX::OnSkipWithButton )
   EVT_BUTTON( XRCID("wxID_REPLACE_NEXT_BUTTON"),SpellCheckDlgWX::OnReplaceWithoutButton )
-  EVT_BUTTON( XRCID("wxID_REPLACE_DIC_BUTTON"), SpellCheckDlgWX::OnReplaceWithButton )
   EVT_CHECKBOX( XRCID("wxID_IGNORE1_CHK"),      SpellCheckDlgWX::OnIgnoreCapitalsChkBox )
   EVT_CHECKBOX( XRCID("wxID_IGNORE2_CHK"),      SpellCheckDlgWX::OnIgnoreArabicsChkBox )
   EVT_CHECKBOX( XRCID("wxID_IGNORE3_CHK"),      SpellCheckDlgWX::OnIgnoreRomansChkBox )
@@ -121,11 +120,10 @@ SpellCheckDlgWX::SpellCheckDlgWX( int ref, int base, wxWindow* parent,
   XRCCTRL(*this, "wxID_SPELL_FINISHED", wxStaticText)->SetLabel(TtaConvMessageToWX( "" ));
 
   // buttons
-  XRCCTRL(*this, "wxID_CANCEL", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_CANCEL) ));
+  XRCCTRL(*this, "wxID_CANCEL", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_DONE) ));
   XRCCTRL(*this, "wxID_SEARCH_SKIP_BUTTON", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_Pass_Without) ));
   XRCCTRL(*this, "wxID_SKIP_DIC_BUTTON", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_Pass_With) ));
   XRCCTRL(*this, "wxID_REPLACE_NEXT_BUTTON", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_Replace_Without) ));
-  XRCCTRL(*this, "wxID_REPLACE_DIC_BUTTON", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_Replace_With) ));
 
   // Set focus - The winner is ...
   XRCCTRL(*this, "wxID_SEARCH_SKIP_BUTTON", wxButton)->SetFocus();
@@ -188,26 +186,6 @@ void SpellCheckDlgWX::OnReplaceWithoutButton( wxCommandEvent& event )
       ThotCallback (m_base + ChkrSelectProp, STRING_DATA, buffer);
     }
   ThotCallback (m_ref, INTEGER_DATA, (char*) 3);
-  SpellCheckDlgWX::Set_Proposals ();
-}
-
-/*----------------------------------------------------------------------
-  OnReplaceWithButton called when clicking on replace+dic button
-  ----------------------------------------------------------------------*/
-void SpellCheckDlgWX::OnReplaceWithButton( wxCommandEvent& event )
-{
-  char buffer[100];
-  wxString selected_item;
-
-  selected_item = XRCCTRL(*this, "wxID_FIRST_PROPOSAL", wxTextCtrl)->GetValue();
-  if ( !selected_item.IsEmpty() )
-    {  
-      // allocate a temporary buffer
-      wxASSERT( selected_item.Len() < 100 );
-      strcpy( buffer, (const char*)selected_item.mb_str(wxConvUTF8) );
-      ThotCallback (m_base + ChkrSelectProp, STRING_DATA, buffer);
-    }
-  ThotCallback (m_ref, INTEGER_DATA, (char*) 4);
   SpellCheckDlgWX::Set_Proposals ();
 }
 
