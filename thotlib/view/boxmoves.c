@@ -2055,7 +2055,7 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
                                        || pRelation->ReOp == OpWidth)
                                 MoveBoxEdge (pRelation->ReBox, pBox, pRelation->ReOp, orgTrans, frame, TRUE);
                               else if (pRelation->ReBox != pSourceBox)
-                                XMove (pRelation->ReBox, pBox, orgTrans - val, frame);
+                                XMove (pRelation->ReBox, pBox, orgTrans + val, frame);
                             }
                           break;
                         case VertMiddle:

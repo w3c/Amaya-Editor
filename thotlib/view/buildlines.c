@@ -1735,6 +1735,9 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
 
   /* clear values */
   newFloat = FALSE;
+  if (pBox && pBox->BxAbstractBox && pBox->BxAbstractBox->AbFloat != 'N')
+    // skip floated boxed
+    return;
   SetClear (pBox, &clearL, &clearR);
   /* relative line positions */
   orgX = 0;
@@ -1908,8 +1911,8 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
         {
           /* line extended to the left edge of the current right float */
           pLine->LiXMax = floatR->BxXOrg - pLine->LiXOrg - orgX;
-          if (pLine->LiYOrg + orgY < floatR->BxYOrg)
-            pLine->LiYOrg = floatR->BxYOrg - orgY;
+          //if (pLine->LiYOrg + orgY < floatR->BxYOrg)
+          //  pLine->LiYOrg = floatR->BxYOrg - orgY;
           bottomR = floatR->BxYOrg + floatR->BxHeight - orgY;
         }
       else if (floatR)
@@ -2931,6 +2934,7 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
   PtrBox              pNextBox;
   int                 x, y, w, minWidth, ret, h;
   int                 orgX, orgY;
+  ThotBool            clearl, clearr;
 
   boxPrevL = *floatL;
   boxPrevR = *floatR;
@@ -2982,8 +2986,17 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
     /* can be inserted next to this previous float ? */
     w -= (boxPrevL->BxXOrg + boxPrevL->BxWidth - x);
 
-  //if (!strcmp(box->BxAbstractBox->AbElement->ElLabel, "L122"))
-  // printf ("SetFloat L122 x=%d y=%d w=%d\n", x, y, w);
+  /* check if a clear is requested */
+  SetClear (box, &clearl, &clearr);
+  if (boxPrevL && clearl && y < boxPrevL->BxYOrg + boxPrevL->BxHeight)
+    {
+      y = boxPrevL->BxYOrg + boxPrevL->BxHeight;
+    }
+  if (boxPrevR && clearr && y < boxPrevR->BxYOrg + boxPrevR->BxHeight)
+    {
+      y = boxPrevR->BxYOrg + boxPrevR->BxHeight;
+    }
+
   if ((boxPrevL && y < boxPrevL->BxYOrg + boxPrevL->BxHeight) ||
       (boxPrevR && y < boxPrevR->BxYOrg + boxPrevR->BxHeight))
     {
