@@ -1965,7 +1965,7 @@
 </label>
 <label define="TMSG_Pass_With">
 	<message xml:lang="en">Learn</message>
-	<message xml:lang="de">Lern</message>
+	<message xml:lang="de">Lernen</message>
 	<message xml:lang="fr">Apprend</message>
 	<message xml:lang="it">Aggiungi</message>
 	<message xml:lang="tr">Atla (+ sözlük)</message>
