@@ -3834,7 +3834,7 @@ void TtcDeletePreviousChar (Document doc, View view)
         {
           /* delete the current selection instead of the previous char */
           CloseTextInsertion ();
-          /* by default doen't change the selection after the delete */
+          /* by default doesn't change the selection after the delete */
           moveAfter = FALSE;
           if (pViewSel->VsBox != NULL)
             {
@@ -3844,7 +3844,9 @@ void TtcDeletePreviousChar (Document doc, View view)
             }
           pViewSel = &ViewFrameTable[frame - 1].FrSelectionEnd;
           if (moveAfter &&
-              pViewSel->VsBox && pViewSel->VsIndBox < pViewSel->VsBox->BxNChars)
+              pViewSel->VsBox &&
+              (pViewSel->VsIndBox < pViewSel->VsBox->BxNChars ||
+               pViewSel->VsBox->BxNChars == 0))
             TtcPreviousChar (doc, view);
           if (pDoc->DocEditSequence)
             /* close the new open undo sequence */
