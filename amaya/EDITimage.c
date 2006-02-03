@@ -1311,6 +1311,7 @@ void UpdateSRCattribute (NotifyOnTarget *event)
         {
           // generate the Alternate text
           next = el;
+          elType = TtaGetElementType (el);
           TtaNextSibling (&next);
           if (next)
             // there is an Object_Content
@@ -1330,6 +1331,7 @@ void UpdateSRCattribute (NotifyOnTarget *event)
 
           // insert a pseudo paragraph
           elType.ElTypeNum = HTML_EL_Pseudo_paragraph;
+          next = TtaNewElement (doc, elType);
           TtaInsertFirstChild (&next, el, doc);
           // insert the alternate text
           elType.ElTypeNum = HTML_EL_TEXT_UNIT;
