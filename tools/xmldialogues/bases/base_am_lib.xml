@@ -1972,7 +1972,7 @@
 	<message xml:lang="es">Agregar</message>
 	<message xml:lang="pt">Pular (+ dic)</message>
 	<message xml:lang="fi">Hylkää (+ dic)</message>
-	<message xml:lang="ru">Пропустить (+словарь)</message>
+	<message xml:lang="ru">Обучить</message>
 	<message xml:lang="hu">Kihagyás (+ dic)</message>
 	<message xml:lang="ka">გამოტოვება (+ სიტყვარი)</message>
 </label>

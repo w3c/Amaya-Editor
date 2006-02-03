@@ -3073,6 +3073,7 @@
 	<message xml:lang="es">Copiar localización</message>
 	<message xml:lang="it">Copia URL</message>
 	<message xml:lang="de">Internetadresse kopieren</message>
+	<message xml:lang="ru">Копировать расположение</message>
 </label>
 <label define="BPasteLocation">
 	<message xml:lang="en">Paste location</message>
@@ -3080,6 +3081,7 @@
 	<message xml:lang="es">Pegar localización</message>
 	<message xml:lang="it">Incolla URL</message>
 	<message xml:lang="de">Internetadresse einfügen</message>
+	<message xml:lang="ru">Вставить расположение</message>
 </label>
 <label define="BCopyLink">
 	<message xml:lang="en">Copy link</message>
@@ -3087,6 +3089,7 @@
 	<message xml:lang="es">Copiar localización del enlace</message>
 	<message xml:lang="it">Copia collegamento</message>
 	<message xml:lang="de">Verknüpfung kopieren</message>
+	<message xml:lang="ru">Копировать ссылку</message>
 </label>
 <label define="BLinkTarget">
 	<message xml:lang="en">&amp;Link to previous target</message>

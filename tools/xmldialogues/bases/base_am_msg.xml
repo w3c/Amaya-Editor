@@ -4282,7 +4282,8 @@
 <message xml:lang="it">Vuota la lista degli URL</message>
 <message xml:lang="hu">URL lista törlése</message>
 <message xml:lang="ka">მისამართების სიის გასუფთავება</message>
-<message xml:lang="ru">Очистить</message></label>
+<message xml:lang="ru">Очистить</message>
+</label>
 <label define="AM_SHOWSHORTCUTS">
 <message xml:lang="en">Display all shortcuts</message>
 <message xml:lang="fr">Montrer tous les raccourcis</message>
@@ -4291,7 +4292,8 @@
 <message xml:lang="it">Locazione per aprire documenti</message>
 <message xml:lang="hu">Minden gyorsbillentyű mutatása</message>
 <message xml:lang="de">Alle Tastaturkürzel anzeigen</message>
-<message xml:lang="ka">თარგი</message></label>
+<message xml:lang="ka">თარგი</message>
+</label>
 <label define="AM_EXPORT_LENGTH">
 <message xml:lang="en">Fixed line length (0 = default value)</message>
 <message xml:lang="fr">Longueur de ligne fixée (0 = valeur par défaut)</message>
@@ -4299,7 +4301,8 @@
 <message xml:lang="es">Longitud de línea (0 = valor predeterminado)</message>
 <message xml:lang="hu">Rögzített sorhossz (0 = alapérték)</message>
 <message xml:lang="de">Feste Zeilenlänge (0 = Standardwert)</message>
-<message xml:lang="ka">ამ დოკუმენტის შენახვა როგორც...</message></label>
+<message xml:lang="ka">ამ დოკუმენტის შენახვა როგორც...</message>
+</label>
 <label define="AM_TEMPLATE">
 <message xml:lang="en">Template</message>
 <message xml:lang="fr">Modèle</message>
@@ -4308,7 +4311,8 @@
 <message xml:lang="hu">Sablon</message>
 <message xml:lang="de">Vorlage</message>
 <message xml:lang="ka">თარგი</message>
-<message xml:lang="ru">Шаблон</message></label>
+<message xml:lang="ru">Шаблон</message>
+</label>
 <label define="AM_TEMPLATE_INSTANCE">
 <message xml:lang="en">Save the document as...</message>
 <message xml:lang="fr">Enregistrer le document sous...</message>
@@ -4317,7 +4321,8 @@
 <message xml:lang="hu">Dokumentum mentése másként...</message>
 <message xml:lang="de">Dokument speichern als...</message>
 <message xml:lang="ka">ამ დოკუმენტის შენახვა როგორც...</message>
-<message xml:lang="ru">Сохранить документ как...</message></label>
+<message xml:lang="ru">Сохранить документ как...</message>
+</label>
 <label define="AM_BAD_TEMPLATE">
 <message xml:lang="en">Template not found</message>
 <message xml:lang="fr">Le modèle n'existe pas</message>
@@ -4326,7 +4331,8 @@
 <message xml:lang="hu">A sablon nem található</message>
 <message xml:lang="de">Vorlage konnte nicht gefunden werden</message>
 <message xml:lang="ka">თარგი ვერ მოიძებნა</message>
-<message xml:lang="ru">Шаблон не найден</message></label>
+<message xml:lang="ru">Шаблон не найден</message>
+</label>
 <label define="AM_SHOW_TEMPLATES">
 <message xml:lang="en">Show template's boxes</message>
 <message xml:lang="fr">Montrer les cadres des modèles</message>
@@ -4335,7 +4341,8 @@
 <message xml:lang="hu">A sablon dobozainak mutatása</message>
 <message xml:lang="de">Vorlagenumrisse anzeigen</message>
 <message xml:lang="ka">თარგების დაფების ჩვენება</message>
-<message xml:lang="ru">??? Показать коробочки шаблона(ов)</message></label>
+<message xml:lang="ru">Показать коробочки шаблона(ов)</message>
+</label>
 <label define="AM_CLOSE_WHEN_APPLY">
 <message xml:lang="en">Apply closes the dialogue</message>
 <message xml:lang="fr">Appliquer ferme le dialogue</message>
@@ -4375,6 +4382,7 @@
 <message xml:lang="de">Der aktuellen Auswahl folgen keine Titel</message>
 <message xml:lang="hu">No heading found after the selection</message>
 <message xml:lang="it">Nessun titolo dopo la selezione</message>
+<message xml:lang="ru">Не найдено никаких заголовков после выбранного</message>
 </label>
 <label define="AMAYA_MSG_MAX">
 </label></messages></base>

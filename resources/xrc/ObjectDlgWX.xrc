@@ -53,12 +53,13 @@
               <object class="sizeritem">
                 <object class="wxComboBox" name="wxID_MIME_TYPE_CB">
                   <content/>
-                  <size>300,-1</size>
+                  <size>200,-1</size>
                 </object>
                 <option>1</option>
                 <flag>wxALL|wxEXPAND</flag>
               </object>
             </object>
+            <flag>wxEXPAND</flag>
           </object>
           <object class="spacer">
             <size>0,10</size>
