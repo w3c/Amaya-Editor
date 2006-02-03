@@ -758,17 +758,26 @@ static char *GetImageURL (Document document, View view, ThotBool isObject)
   int                i;
 #endif /* _GTK */
 
+  if (isObject)
+    RefFormImage = BaseImage + FormObject;
+  else
+    RefFormImage = BaseImage + FormImage;
+#ifdef _WX
+  TtaExtractName (DocumentURLs[document], LastURLImage, s);
+  strcat (LastURLImage, DIR_STR);
+  if (isObject)
+    strcat (LastURLImage, "object");
+  else
+    strcat (LastURLImage, "img");
+#else /* _WX */
   if (LastURLImage[0] == EOS)
     {
       strcpy (LastURLImage, DirectoryImage);
       strcat (LastURLImage, DIR_STR);
       strcat (LastURLImage, ImageName);
     }
+#endif /* _WX */
 
-  if (isObject)
-    RefFormImage = BaseImage + FormObject;
-  else
-    RefFormImage = BaseImage + FormImage;
 #ifdef _GTK
   /* Dialogue form for open URL or local */
   i = 0;

@@ -99,6 +99,7 @@ extern ThotBool CreateHRefDlgWX ( int ref,
                                   ThotWindow parent,
                                   const char *url_list,
                                   const char *HRefValue,
+                                  Document doc,
                                   int doc_type );
 extern ThotBool CreateTextDlgWX ( int ref,
                                   int subref,
@@ -126,7 +127,7 @@ extern ThotBool CreateListEditDlgWX ( int ref,
                                       const char * list_title,
                                       int nb_item,
                                       const char *items,
-                                      const char * selected_item );
+                                      const char *selected_item );
 extern ThotBool CreateEnumListDlgWX ( int ref,
                                       int subref,
                                       ThotWindow parent,
@@ -237,6 +238,7 @@ extern ThotBool CreateHRefDlgWX ( int ref,
                                     ThotWindow parent,
                                     const char *url_list,
                                     const char *HRefValue,
+                                    Document doc,
                                     int doc_type );
 extern ThotBool CreateTextDlgWX ( int ref,
                                     int subref,
@@ -264,7 +266,7 @@ extern ThotBool CreateListEditDlgWX ( int ref,
                                         const char * list_title,
                                         int nb_item,
                                         const char *items,
-                                        const char * selected_item );
+                                        const char *selected_item );
 extern ThotBool CreateEnumListDlgWX ( int ref,
                                         int subref,
                                         ThotWindow parent,

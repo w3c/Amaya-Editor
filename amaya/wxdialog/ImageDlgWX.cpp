@@ -21,7 +21,7 @@ static int      Waiting = 0;
 BEGIN_EVENT_TABLE(ImageDlgWX, AmayaDialog)
   EVT_BUTTON(     XRCID("wxID_OPENBUTTON"),   ImageDlgWX::OnOpenButton )
   EVT_BUTTON(     XRCID("wxID_BROWSEBUTTON"), ImageDlgWX::OnBrowseButton )
-  EVT_BUTTON(     XRCID("wxID_CANCEL"), ImageDlgWX::OnCancelButton )
+  EVT_BUTTON(     XRCID("wxID_CANCEL"),       ImageDlgWX::OnCancelButton )
   EVT_TEXT_ENTER( XRCID("wxID_COMBOBOX"),     ImageDlgWX::OnOpenButton )
 END_EVENT_TABLE()
 
@@ -35,9 +35,11 @@ END_EVENT_TABLE()
   returns:
   ----------------------------------------------------------------------*/
 ImageDlgWX::ImageDlgWX( int ref, wxWindow* parent, const wxString & title,
-			    const wxString & urlToOpen, const wxString & alt, const wxString & filter ) :
+                        const wxString & urlToOpen, const wxString & alt,
+                        const wxString & filter, int * p_last_used_filter ) :
   AmayaDialog( NULL, ref ),
-  m_Filter(filter)
+  m_Filter(filter),
+  m_pLastUsedFilter(p_last_used_filter)
 {
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("ImageDlgWX"));
   MyRef = ref;
@@ -113,20 +115,20 @@ void ImageDlgWX::OnBrowseButton( wxCommandEvent& event )
 {
   // Create a generic filedialog
   wxFileDialog * p_dlg = new wxFileDialog
-    (
-     this,
+    (this,
      TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_OPEN_URL) ),
      _T(""),
      _T(""), 
      m_Filter,
-     wxOPEN | wxCHANGE_DIR /* wxCHANGE_DIR -> remember the last directory used. */
-     );
+     wxOPEN | wxCHANGE_DIR /* remember the last directory used. */);
 
-  // do not force the directory, let wxWidgets choose for the current one
-  // p_dlg->SetDirectory(wxGetHomeDir());
+  wxString url = XRCCTRL(*this, "wxID_URL", wxTextCtrl)->GetValue( );
+  p_dlg->SetPath(url);
+  p_dlg->SetFilterIndex(*m_pLastUsedFilter);
   
   if (p_dlg->ShowModal() == wxID_OK)
     {
+      *m_pLastUsedFilter = p_dlg->GetFilterIndex();
       XRCCTRL(*this, "wxID_URL", wxTextCtrl)->SetValue( p_dlg->GetPath() );
       // destroy the dlg before calling thotcallback because it's a child of this
       // dialog and thotcallback will delete the dialog...
@@ -136,7 +138,10 @@ void ImageDlgWX::OnBrowseButton( wxCommandEvent& event )
       OnOpenButton( event );
     }
   else
-    p_dlg->Destroy();
+    {
+      *m_pLastUsedFilter = p_dlg->GetFilterIndex();
+      p_dlg->Destroy();
+    }
 }
 
 /*----------------------------------------------------------------------

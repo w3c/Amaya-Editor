@@ -20,11 +20,12 @@ public:
     
   // Constructor.
   ObjectDlgWX( int ref,
-	      wxWindow* parent,
-	      const wxString & title,
-	      const wxString & urlToOpen,
-	      const wxString & type,
-	      const wxString & filter );
+               wxWindow* parent,
+               const wxString & title,
+               const wxString & urlToOpen,
+               const wxString & type,
+               const wxString & filter,
+               int *p_last_used_filter);
     
   // Destructor.                  
   virtual ~ObjectDlgWX();
@@ -41,6 +42,7 @@ private:
 
 private:
   wxString m_Filter;
+  int *    m_pLastUsedFilter;
 
 };
 

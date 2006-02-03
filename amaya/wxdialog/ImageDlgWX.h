@@ -20,11 +20,12 @@ public:
     
   // Constructor.
   ImageDlgWX( int ref,
-	      wxWindow* parent,
-	      const wxString & title,
-	      const wxString & urlToOpen,
-	      const wxString & alt,
-	      const wxString & filter );
+              wxWindow* parent,
+              const wxString & title,
+              const wxString & urlToOpen,
+              const wxString & alt,
+              const wxString & filter,
+              int *p_last_used_filter );
     
   // Destructor.                  
   virtual ~ImageDlgWX();
@@ -40,6 +41,7 @@ private:
 
 private:
   wxString m_Filter;
+  int *    m_pLastUsedFilter;
 
 };
 

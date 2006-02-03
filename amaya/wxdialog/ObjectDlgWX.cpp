@@ -20,9 +20,9 @@ static int      Waiting = 0;
 // Event table: connect the events to the handler functions to process them
 //-----------------------------------------------------------------------------
 BEGIN_EVENT_TABLE(ObjectDlgWX, AmayaDialog)
-  EVT_BUTTON(     XRCID("wxID_OK"),   ObjectDlgWX::OnOpenButton )
+  EVT_BUTTON(     XRCID("wxID_OK"),           ObjectDlgWX::OnOpenButton )
   EVT_BUTTON(     XRCID("wxID_BROWSEBUTTON"), ObjectDlgWX::OnBrowseButton )
-  EVT_BUTTON(     XRCID("wxID_CANCEL"), ObjectDlgWX::OnCancelButton )
+  EVT_BUTTON(     XRCID("wxID_CANCEL"),       ObjectDlgWX::OnCancelButton )
   EVT_TEXT_ENTER( XRCID("wxID_COMBOBOX"),     ObjectDlgWX::OnOpenButton )
   EVT_COMBOBOX( XRCID("wxID_MIME_TYPE_CB"),   ObjectDlgWX::OnMimeTypeCbx )
 END_EVENT_TABLE()
@@ -38,9 +38,10 @@ END_EVENT_TABLE()
   ----------------------------------------------------------------------*/
 ObjectDlgWX::ObjectDlgWX( int ref, wxWindow* parent, const wxString & title,
 			    const wxString & urlToOpen, const wxString & mime_type,
-			    const wxString & filter ) :
+			    const wxString & filter, int * p_last_used_filter) :
   AmayaDialog( NULL, ref ),
-  m_Filter(filter)
+  m_Filter(filter),
+  m_pLastUsedFilter(p_last_used_filter)
 {
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("ObjectDlgWX"));
   MyRef = ref;
@@ -159,12 +160,13 @@ void ObjectDlgWX::OnBrowseButton( wxCommandEvent& event )
      m_Filter,
      wxOPEN | wxCHANGE_DIR /* wxCHANGE_DIR -> remember the last directory used. */
      );
+  wxString url = XRCCTRL(*this, "wxID_URL", wxTextCtrl)->GetValue( );
+  p_dlg->SetPath(url);
+  p_dlg->SetFilterIndex(*m_pLastUsedFilter);
 
-  // do not force the directory, let wxWidgets choose for the current one
-  // p_dlg->SetDirectory(wxGetHomeDir());
-  
   if (p_dlg->ShowModal() == wxID_OK)
     {
+      *m_pLastUsedFilter = p_dlg->GetFilterIndex();
       XRCCTRL(*this, "wxID_URL", wxTextCtrl)->SetValue( p_dlg->GetPath() );
       // destroy the dlg before calling thotcallback because it's a child of this
       // dialog and thotcallback will delete the dialog...
@@ -175,6 +177,7 @@ void ObjectDlgWX::OnBrowseButton( wxCommandEvent& event )
     }
   else
     {
+      *m_pLastUsedFilter = p_dlg->GetFilterIndex();
       p_dlg->Destroy();
     }
 }

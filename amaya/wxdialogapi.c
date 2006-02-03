@@ -38,6 +38,9 @@
 
 // this global is used to remember the last filter when using a filebrowser
 int g_Last_used_filter = 0;
+int img_Last_used_filter = 0;
+int obj_Last_used_filter = 0;
+int link_Last_used_filter = 0;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -139,15 +142,11 @@ ThotBool CreateInitConfirmDlgWX ( int ref,
     + doc_type : ??? not used
   returns:
   ----------------------------------------------------------------------*/
-ThotBool CreateOpenDocDlgWX ( int ref, ThotWindow parent,
-			      const char *title,
-			      const char *urlList,
-			      const char *urlToOpen,
-			      const char *docName,
-			      int doc_select,
-			      int dir_select,
-			      DocumentType doc_type,
-			      ThotBool newfile)
+ThotBool CreateOpenDocDlgWX ( int ref, ThotWindow parent, const char *title,
+                              const char *urlList, const char *urlToOpen,
+                              const char *docName, int doc_select,
+                              int dir_select, DocumentType doc_type,
+                              ThotBool newfile)
 {
 #ifdef _WX
   /* check if the dialog is alredy open */
@@ -183,13 +182,13 @@ ThotBool CreateOpenDocDlgWX ( int ref, ThotWindow parent,
     wx_filter = APPFILENAMEFILTER;
 
   OpenDocDlgWX * p_dlg = new OpenDocDlgWX( ref, parent,
-					   wx_title,
-					   wx_docName,
-					   BuildWX_URL_List(urlList),
-					   wx_urlToOpen,
-					   wx_filter,
-					   &g_Last_used_filter,
-					   wx_profiles);
+                                           wx_title,
+                                           wx_docName,
+                                           BuildWX_URL_List(urlList),
+                                           wx_urlToOpen,
+                                           wx_filter,
+                                           &g_Last_used_filter,
+                                           wx_profiles);
 
   if ( TtaRegisterWidgetWX( ref, p_dlg ) )
       /* the dialog has been sucesfully registred */
@@ -258,8 +257,6 @@ ThotBool CreateNewTemplateDocDlgWX (int ref,  ThotWindow parent, Document doc,
 }
 
 
-
-
 /*----------------------------------------------------------------------
   CreateImageDlgWX create the dialog for creating new image
   params:
@@ -268,10 +265,8 @@ ThotBool CreateNewTemplateDocDlgWX (int ref,  ThotWindow parent, Document doc,
     + urlToOpen : suggested url
   returns:
   ----------------------------------------------------------------------*/
-ThotBool CreateImageDlgWX ( int ref, ThotWindow parent,
-			    const char *title,
-			    const char *urlToOpen,
-			    const char *alt)
+ThotBool CreateImageDlgWX (int ref, ThotWindow parent, const char *title,
+                           const char *urlToOpen, const char *alt)
 {
 #ifdef _WX
   /* check if the dialog is alredy open */
@@ -284,17 +279,17 @@ ThotBool CreateImageDlgWX ( int ref, ThotWindow parent,
   wxString wx_filter = APPIMAGENAMEFILTER;
 
   ImageDlgWX * p_dlg = new ImageDlgWX( ref,
-				       parent,
-				       wx_title,
-				       wx_urlToOpen,
-				       wx_alt,
-				       wx_filter );
+                                       parent,
+                                       wx_title,
+                                       wx_urlToOpen,
+                                       wx_alt,
+                                       wx_filter,
+                                       &img_Last_used_filter
+                                       );
 
   if ( TtaRegisterWidgetWX( ref, p_dlg ) )
-    {
-      /* the dialog has been sucesfully registred */
-      return TRUE;
-    }
+    /* the dialog has been sucesfully registred */
+    return TRUE;
   else
     {
       /* an error occured durring registration */
@@ -314,10 +309,8 @@ ThotBool CreateImageDlgWX ( int ref, ThotWindow parent,
     + urlToOpen : suggested url
   returns:
   ----------------------------------------------------------------------*/
-ThotBool CreateObjectDlgWX ( int ref, ThotWindow parent,
-			     const char *title,
-			     const char *urlToOpen,
-			     const char *type)
+ThotBool CreateObjectDlgWX (int ref, ThotWindow parent, const char *title,
+                            const char *urlToOpen, const char *type)
 {
 #ifdef _WX
   /* check if the dialog is alredy open */
@@ -330,17 +323,16 @@ ThotBool CreateObjectDlgWX ( int ref, ThotWindow parent,
   wxString wx_filter = APPIMAGENAMEFILTER;
 
   ObjectDlgWX * p_dlg = new ObjectDlgWX( ref,
-					 parent,
-					 wx_title,
-					 wx_urlToOpen,
-					 wx_type,
-					 wx_filter );
+                                         parent,
+                                         wx_title,
+                                         wx_urlToOpen,
+                                         wx_type,
+                                         wx_filter,
+                                         &obj_Last_used_filter );
 
   if ( TtaRegisterWidgetWX( ref, p_dlg ) )
-    {
-      /* the dialog has been sucesfully registred */
-      return TRUE;
-    }
+    /* the dialog has been sucesfully registred */
+    return TRUE;
   else
     {
       /* an error occured durring registration */
@@ -358,8 +350,7 @@ ThotBool CreateObjectDlgWX ( int ref, ThotWindow parent,
     + doc_title : the current document title
   returns:
   ----------------------------------------------------------------------*/
-ThotBool CreateTitleDlgWX ( int ref, ThotWindow parent,
-			    char *doc_title )
+ThotBool CreateTitleDlgWX (int ref, ThotWindow parent, char *doc_title)
 {
 #ifdef _WX
   /* check if the dialog is alredy open */
@@ -394,9 +385,9 @@ ThotBool CreateTitleDlgWX ( int ref, ThotWindow parent,
     + replace : the  initial replace string
   returns:
   ----------------------------------------------------------------------*/
-ThotBool CreateSearchDlgWX ( int ref, ThotWindow parent,  char* caption,
-			     char* searched,  char* replace,
-			     ThotBool withReplace, ThotBool searchAfter)
+ThotBool CreateSearchDlgWX (int ref, ThotWindow parent,  char* caption,
+                            char* searched,  char* replace,
+                            ThotBool withReplace, ThotBool searchAfter)
 {
 #ifdef _WX
   /* check if the dialog is alredy open */
@@ -435,18 +426,11 @@ ThotBool CreateSearchDlgWX ( int ref, ThotWindow parent,  char* caption,
     + ps_file : postscript file
   returns:
   ----------------------------------------------------------------------*/
-ThotBool CreatePrintDlgWX ( int ref, ThotWindow parent,
-			    char* printer_file,
-			    char* ps_file,
-			    int paper_format,
-			    int orientation,
-			    int disposition,
-			    int paper_print,
-			    ThotBool manual_feed,
-			    ThotBool with_toc,
-			    ThotBool with_links,
-			    ThotBool with_url,
-			    ThotBool ignore_css )
+ThotBool CreatePrintDlgWX (int ref, ThotWindow parent, char* printer_file,
+                           char* ps_file, int paper_format, int orientation,
+                           int disposition, int paper_print, ThotBool manual_feed,
+                           ThotBool with_toc, ThotBool with_links,
+                           ThotBool with_url, ThotBool ignore_css)
 {
 #ifdef _WX
   /* check if the dialog is alredy open */
@@ -490,8 +474,7 @@ ThotBool CreatePrintDlgWX ( int ref, ThotWindow parent,
     + pathname : file location
   returns:
   ----------------------------------------------------------------------*/
-ThotBool CreateSaveAsDlgWX ( int ref, ThotWindow parent,
-			     char* pathname, int doc)
+ThotBool CreateSaveAsDlgWX (int ref, ThotWindow parent, char* pathname, int doc)
 {
 #ifdef _WX
   /* check if the dialog is alredy open */
@@ -524,7 +507,7 @@ ThotBool CreateSaveAsDlgWX ( int ref, ThotWindow parent,
     + pathname : file location
   returns:
   ----------------------------------------------------------------------*/
-ThotBool CreateSaveObject ( int ref, ThotWindow parent, char* objectname)
+ThotBool CreateSaveObject (int ref, ThotWindow parent, char* objectname)
 {
 #ifdef _WX
   // Create a generic filedialog
@@ -570,8 +553,8 @@ ThotBool CreateSaveObject ( int ref, ThotWindow parent, char* objectname)
     + pathname : file location
   returns:
   ----------------------------------------------------------------------*/
-ThotBool CreateAuthentDlgWX ( int ref, ThotWindow parent,
-			     char *auth_realm, char *server)
+ThotBool CreateAuthentDlgWX (int ref, ThotWindow parent,
+                             char *auth_realm, char *server)
 {
 #ifdef _WX
   /* check if the dialog is alredy open */
@@ -600,8 +583,8 @@ ThotBool CreateAuthentDlgWX ( int ref, ThotWindow parent,
   params:
   returns:
   ----------------------------------------------------------------------*/
-ThotBool CreateCSSDlgWX( int ref, int subref, ThotWindow parent, char *title,
-			 int nb_item, char *items)
+ThotBool CreateCSSDlgWX (int ref, int subref, ThotWindow parent, char *title,
+                         int nb_item, char *items)
 {
 #ifdef _WX
   wxString      wx_title = TtaConvMessageToWX( title );
@@ -655,8 +638,8 @@ ThotBool CreateCSSDlgWX( int ref, int subref, ThotWindow parent, char *title,
   params:
   returns:
   ----------------------------------------------------------------------*/
-ThotBool CreateListDlgWX( int ref, int subref, ThotWindow parent, char *title,
-			  int nb_item, char *items)
+ThotBool CreateListDlgWX (int ref, int subref, ThotWindow parent, char *title,
+                          int nb_item, char *items)
 {
 #ifdef _WX
   wxString      wx_title = TtaConvMessageToWX( title );
@@ -710,8 +693,8 @@ ThotBool CreateListDlgWX( int ref, int subref, ThotWindow parent, char *title,
   params:
   returns:
   ----------------------------------------------------------------------*/
-ThotBool CreateCheckedListDlgWX( int ref, ThotWindow parent, char *title,
-				 int nb_item, char *items, ThotBool *checks)
+ThotBool CreateCheckedListDlgWX (int ref, ThotWindow parent, char *title,
+                                 int nb_item, char *items, ThotBool *checks)
 {
 #ifdef _WX
   wxString      wx_title = TtaConvMessageToWX( title );
@@ -757,7 +740,7 @@ ThotBool CreateCheckedListDlgWX( int ref, ThotWindow parent, char *title,
 /*----------------------------------------------------------------------
   CreateDocInfoDlgWX create the Documnent Infos dialog
   ----------------------------------------------------------------------*/
-ThotBool CreateDocInfoDlgWX ( int ref, ThotWindow parent, int doc)
+ThotBool CreateDocInfoDlgWX (int ref, ThotWindow parent, int doc)
 {
 #ifdef _WX
   /* check if the dialog is alredy open */
@@ -787,11 +770,9 @@ ThotBool CreateDocInfoDlgWX ( int ref, ThotWindow parent, int doc)
   - Add CSS file
   - Create/Modify a link
  ------------------------------------------------------------------------*/
-ThotBool CreateHRefDlgWX ( int ref,
-			   ThotWindow parent,
-			   const char *url_list,
-			   const char *HRefValue,
-			   int doc_type)
+ThotBool CreateHRefDlgWX (int ref, ThotWindow parent,
+                          const char *url_list, const char *HRefValue,
+                          Document doc, int doc_type)
 {
 #ifdef _WX
   wxString wx_title      = TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_ATTRIBUTE) );
@@ -808,15 +789,17 @@ ThotBool CreateHRefDlgWX ( int ref,
     return FALSE;
 
   HRefDlgWX * p_dlg = new HRefDlgWX( ref,
-				     parent,
-				     wx_title,
-				     wx_items,
-				     wx_init_value,
-				     wx_filter );
+                                     parent,
+                                     wx_title,
+                                     wx_items,
+                                     wx_init_value,
+                                     wx_filter,
+                                     &link_Last_used_filter,
+                                     doc);
 
   if ( TtaRegisterWidgetWX( ref, p_dlg ) )
-      /* the dialog has been sucesfully registred */
-      return TRUE;
+    /* the dialog has been sucesfully registred */
+    return TRUE;
   else
     {
       /* an error occured durring registration */
@@ -836,9 +819,9 @@ ThotBool CreateHRefDlgWX ( int ref,
     + value : init value
   returns:
   ----------------------------------------------------------------------*/
-ThotBool CreateTextDlgWX ( int ref, int subref, ThotWindow parent,
-			   const char *title, const char *label,
-			   const char *value )
+ThotBool CreateTextDlgWX (int ref, int subref, ThotWindow parent,
+                          const char *title, const char *label,
+                          const char *value)
 {
 #ifdef _WX
   wxString wx_title   = TtaConvMessageToWX( title );
@@ -874,8 +857,8 @@ ThotBool CreateTextDlgWX ( int ref, int subref, ThotWindow parent,
  CreateCreateTableDlgWX
  params: nb of cols, nb of rows, border attribute
  ------------------------------------------------------------------------*/
-ThotBool CreateCreateTableDlgWX ( int ref, ThotWindow parent,
-				  int def_cols, int def_rows, int def_border)
+ThotBool CreateCreateTableDlgWX (int ref, ThotWindow parent,
+                                 int def_cols, int def_rows, int def_border)
 {
 #ifdef _WX
 
@@ -909,8 +892,8 @@ ThotBool CreateCreateTableDlgWX ( int ref, ThotWindow parent,
  Used to :
   - Change Amaya configuration options
  ------------------------------------------------------------------------*/
-ThotBool CreatePreferenceDlgWX ( int ref, ThotWindow parent,
-				 const char *url_list )
+ThotBool CreatePreferenceDlgWX (int ref, ThotWindow parent,
+                                const char *url_list)
 {
 #ifdef _WX
 
@@ -941,8 +924,8 @@ ThotBool CreatePreferenceDlgWX ( int ref, ThotWindow parent,
  Used to :
   - Create the Spell Checker Amaya dialog
  ------------------------------------------------------------------------*/
-ThotBool CreateSpellCheckDlgWX ( int ref, int base, ThotWindow parent,
-				 int checkingArea)
+ThotBool CreateSpellCheckDlgWX (int ref, int base, ThotWindow parent,
+                                int checkingArea)
 {
 #ifdef _WX
   /* check if the dialog is alredy open */
@@ -970,7 +953,7 @@ ThotBool CreateSpellCheckDlgWX ( int ref, int base, ThotWindow parent,
  Used to :
   - Create the Style Amaya dialog
  ------------------------------------------------------------------------*/
-ThotBool CreateStyleDlgWX ( int ref, ThotWindow parent)
+ThotBool CreateStyleDlgWX (int ref, ThotWindow parent)
 {
 #ifdef _WX
   /* check if the dialog is alredy open */
@@ -997,9 +980,9 @@ ThotBool CreateStyleDlgWX ( int ref, ThotWindow parent)
   params:
   returns:
   ----------------------------------------------------------------------*/
-ThotBool CreateListEditDlgWX( int ref, ThotWindow parent,
-			      const char *title, const char * list_title,
-			      int nb_item, const char *items, const char * selected_item )
+ThotBool CreateListEditDlgWX (int ref, ThotWindow parent,
+                              const char *title, const char * list_title,
+                              int nb_item, const char *items, const char *selected_item)
 {
 #ifdef _WX
   wxString      wx_title         = TtaConvMessageToWX( title );
@@ -1047,12 +1030,10 @@ ThotBool CreateListEditDlgWX( int ref, ThotWindow parent,
   params:
   returns:
   ----------------------------------------------------------------------*/
-ThotBool CreateEnumListDlgWX( int ref, int subref, ThotWindow parent,
-			      const char *title,
-			      const char *label,
-			      int nb_item,
-			      const char *items,
-			      int selection )
+ThotBool CreateEnumListDlgWX (int ref, int subref, ThotWindow parent,
+                              const char *title, const char *label,
+                              int nb_item, const char *items,
+                              int selection)
 {
 #ifdef _WX
   /* check if the dialog is alredy open */
@@ -1111,10 +1092,8 @@ ThotBool CreateEnumListDlgWX( int ref, int subref, ThotWindow parent,
   params:
   returns:
   ----------------------------------------------------------------------*/
-ThotBool CreateNumDlgWX( int ref, int subref, ThotWindow parent,
-			  const char *title,
-			  const char *label,
-			  int value )
+ThotBool CreateNumDlgWX (int ref, int subref, ThotWindow parent,
+                         const char *title, const char *label, int value)
 {
 #ifdef _WX
   /* check if the dialog is alredy open */

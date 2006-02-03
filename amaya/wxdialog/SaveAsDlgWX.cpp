@@ -39,9 +39,7 @@ END_EVENT_TABLE()
     + parent : parent window
     + pathname : document location
     ----------------------------------------------------------------------*/
-SaveAsDlgWX::SaveAsDlgWX( int ref,
-                          wxWindow* parent,
-                          const wxString & pathname,
+SaveAsDlgWX::SaveAsDlgWX( int ref, wxWindow* parent, const wxString & pathname,
                           int doc ) :
   AmayaDialog( parent, ref )
 {
@@ -260,8 +258,6 @@ SaveAsDlgWX::SaveAsDlgWX( int ref,
 
   Fit();
   Refresh();
-  //Layout();
-  
   SetAutoLayout( TRUE );
 }
 

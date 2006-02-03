@@ -43,15 +43,10 @@ END_EVENT_TABLE()
     + docName : ??? not used
   returns:
   ----------------------------------------------------------------------*/
-OpenDocDlgWX::OpenDocDlgWX( int ref,
-			    wxWindow* parent,
-			    const wxString & title,
-			    const wxString & docName,
-			    const wxArrayString & urlList,
-			    const wxString & urlToOpen,
-			    const wxString & filter,
-			    int * p_last_used_filter,
-			    const wxString & profiles) :
+OpenDocDlgWX::OpenDocDlgWX( int ref, wxWindow* parent, const wxString & title,
+                            const wxString & docName, const wxArrayString & urlList,
+                            const wxString & urlToOpen, const wxString & filter,
+                            int * p_last_used_filter, const wxString & profiles) :
   AmayaDialog( parent, ref )
   ,m_Filter(filter)
   ,m_LockUpdateFlag(false)
@@ -70,23 +65,26 @@ OpenDocDlgWX::OpenDocDlgWX( int ref,
   XRCCTRL(*this, "wxID_RADIOBOX", wxRadioBox)->SetString(0, TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_REPLACECURRENT)));
   XRCCTRL(*this, "wxID_RADIOBOX", wxRadioBox)->SetString(1, TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_INNEWTAB)));
   XRCCTRL(*this, "wxID_RADIOBOX", wxRadioBox)->SetString(2, TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_INNEWWINDOW)));
+  XRCCTRL(*this, "wxID_BUTTON_FILENAME", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_BROWSE)));
 
-  XRCCTRL(*this, "wxID_LABEL_FILENAME", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_FILE)));
-  XRCCTRL(*this, "wxID_LABEL_DIR", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_DIRECTORY)));
   if (profiles.IsEmpty())
     {
       // Open document
-      XRCCTRL(*this, "wxID_BUTTON_FILENAME", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_BROWSE)));
-      //XRCCTRL(*this, "wxID_LABEL_DIR", wxStaticText)->Hide();
-      //XRCCTRL(*this, "wxID_DIR", wxTextCtrl)->Hide();
+      XRCCTRL(*this, "wxID_LABEL_FILENAME", wxStaticText)->Hide();
+      XRCCTRL(*this, "wxID_FILENAME", wxTextCtrl)->Hide();
+      XRCCTRL(*this, "wxID_LABEL_DIR", wxStaticText)->Hide();
+      XRCCTRL(*this, "wxID_DIR", wxTextCtrl)->Hide();
       XRCCTRL(*this, "wxID_BUTTON_DIR", wxBitmapButton)->Hide();
       XRCCTRL(*this, "wxID_PROFILE", wxComboBox)->Hide();
       XRCCTRL(*this, "wxID_PROFILE_LABEL", wxStaticText)->Hide();
+      GetSizer()->SetSizeHints( this );
     }
   else
     {
       // New document
-      XRCCTRL(*this, "wxID_BUTTON_DIR", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_BROWSE)));
+      XRCCTRL(*this, "wxID_LABEL_FILENAME", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_FILE)));
+      XRCCTRL(*this, "wxID_LABEL_DIR", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_DIRECTORY)));
+      XRCCTRL(*this, "wxID_BUTTON_DIR", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_SEL)));
       XRCCTRL(*this, "wxID_PROFILE", wxComboBox)->SetValue( profiles );
       XRCCTRL(*this, "wxID_PROFILE_LABEL", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_XML_PROFILE)));
     }
@@ -105,6 +103,8 @@ OpenDocDlgWX::OpenDocDlgWX( int ref,
   wxChar dir_sep = DIR_SEP;
   m_DirSep = wxString(dir_sep);
 
+  Fit();
+  Refresh();
   SetAutoLayout( TRUE );
 }
 
@@ -152,7 +152,7 @@ void OpenDocDlgWX::OnFilenameButton( wxCommandEvent& event )
     (this,
      TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_OPEN_URL) ),
      _T(""),
-     _T(""), 
+     _T(""),
      m_Filter,
      wxOPEN | wxCHANGE_DIR /* remember last directory */);
   p_dlg->SetPath(XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->GetValue());
@@ -162,7 +162,7 @@ void OpenDocDlgWX::OnFilenameButton( wxCommandEvent& event )
     {
       *m_pLastUsedFilter = p_dlg->GetFilterIndex();
       XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetValue( p_dlg->GetPath() );
-	  UpdateDirAndFilenameFromString( p_dlg->GetPath() );
+      UpdateDirAndFilenameFromString( p_dlg->GetPath() );
       p_dlg->Destroy();
     }
   else
@@ -203,18 +203,18 @@ void OpenDocDlgWX::UpdateDirAndFilenameFromString( const wxString & full_path )
     {
       m_LockUpdateFlag = true;
       if (!full_path.StartsWith(_T("http")))
-	{
-	  int end_slash_pos = full_path.Find(DIR_SEP, true);
-	  wxString dir_value = full_path.SubString(0, end_slash_pos);
-	  wxString filename_value = full_path.SubString(end_slash_pos+1, full_path.Length());
-	  XRCCTRL(*this, "wxID_DIR", wxTextCtrl)->SetValue(dir_value);
-	  XRCCTRL(*this, "wxID_FILENAME", wxTextCtrl)->SetValue(filename_value);
-	}
+        {
+          int end_slash_pos = full_path.Find(DIR_SEP, true);
+          wxString dir_value = full_path.SubString(0, end_slash_pos);
+          wxString filename_value = full_path.SubString(end_slash_pos+1, full_path.Length());
+          XRCCTRL(*this, "wxID_DIR", wxTextCtrl)->SetValue(dir_value);
+          XRCCTRL(*this, "wxID_FILENAME", wxTextCtrl)->SetValue(filename_value);
+        }
       else
-	{
-	  XRCCTRL(*this, "wxID_DIR", wxTextCtrl)->Clear();
-	  XRCCTRL(*this, "wxID_FILENAME", wxTextCtrl)->Clear();
-	}
+        {
+          XRCCTRL(*this, "wxID_DIR", wxTextCtrl)->Clear();
+          XRCCTRL(*this, "wxID_FILENAME", wxTextCtrl)->Clear();
+        }
       m_LockUpdateFlag = false;
     }
 }

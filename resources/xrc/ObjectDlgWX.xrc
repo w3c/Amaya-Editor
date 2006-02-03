@@ -19,33 +19,46 @@
             <object class="wxBoxSizer">
               <orient>wxHORIZONTAL</orient>
               <object class="sizeritem">
-                <object class="wxTextCtrl" name="wxID_URL"/>
+                <object class="wxTextCtrl" name="wxID_URL">
+                  <size>400,-1</size>
+                </object>
                 <flag>wxALL|wxEXPAND</flag>
-                <minsize>300,-1</minsize>
               </object>
               <object class="spacer">
                 <size>5,0</size>
               </object>
               <object class="sizeritem">
                 <object class="wxBitmapButton" name="wxID_BROWSEBUTTON">
-                  <bitmap stock_id="wxART_FOLDER"></bitmap>
+                  <bitmap stock_id="wxART_FILE_OPEN"></bitmap>
                 </object>
               </object>
             </object>
           </object>
-          <object class="sizeritem">
-            <object class="wxStaticText" name="wxID_TYPE_LABEL">
-              <label>Get the MIME Type :</label>
-            </object>
-            <flag>wxALL|wxEXPAND</flag>
-            <border>5</border>
+          <object class="spacer">
+            <size>0,10</size>
           </object>
           <object class="sizeritem">
-            <object class="wxComboBox" name="wxID_MIME_TYPE_CB">
-              <content/>
+            <object class="wxBoxSizer">
+              <orient>wxHORIZONTAL</orient>
+              <object class="spacer">
+                <size>5,0</size>
+              </object>
+              <object class="sizeritem">
+                <object class="wxStaticText" name="wxID_TYPE_LABEL">
+                  <label>Get the MIME Type :</label>
+                </object>
+                <flag>wxALL|wxEXPAND</flag>
+                <border>5</border>
+              </object>
+              <object class="sizeritem">
+                <object class="wxComboBox" name="wxID_MIME_TYPE_CB">
+                  <content/>
+                  <size>300,-1</size>
+                </object>
+                <option>1</option>
+                <flag>wxALL|wxEXPAND</flag>
+              </object>
             </object>
-            <option>1</option>
-            <flag>wxALL|wxEXPAND</flag>
           </object>
           <object class="spacer">
             <size>0,10</size>

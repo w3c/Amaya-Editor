@@ -20,11 +20,13 @@ public:
     
   // Constructor.
   HRefDlgWX( int ref,
-	     wxWindow* parent,
-	     const wxString & title,
-	     const wxArrayString & url_list,
-	     const wxString & wx_init_value,
-	     const wxString & filter );
+             wxWindow* parent,
+             const wxString & title,
+             const wxArrayString & url_list,
+             const wxString & wx_init_value,
+             const wxString & filter,
+             int *p_last_used_filter,
+             int doc);
     
   // Destructor.                  
   virtual ~HRefDlgWX();
@@ -42,6 +44,7 @@ private:
 
 private:
   wxString m_Filter;
+  int *    m_pLastUsedFilter;
 
 };
 
