@@ -209,7 +209,7 @@ MENUS
 	Types button:BRule -> CreateHorizontalRule icon:XHTML_hr.png;
 	Types button:BImage -> CreateImage icon:XHTML_Image.png;
 	Types button:BBreak -> CreateBreak icon: XHTML_br.png;
-	Types button:BDivision -> CreateDivision;
+	Types button:BDivision -> CreateDivision icon:XHTML_Div.png;
 	Types button:BBlockQuote -> CreateBlockQuote icon:XHTML_quote.png;
 	Types button:BIFrame -> CreateIFrame;
 	Types button:BRuby -> CreateRuby;
@@ -217,7 +217,7 @@ MENUS
 
 	Types button:TSectionNumber -> SectionNumbering;
 	Types button:BMakeToc -> MakeToc;
-	Types button:BDate -> CreateDate;
+	Types button:BDate -> CreateDate icon:XHTML_date.png;
 	Types button:BMakeBook -> MakeBook;
 
 	Types Separator;
