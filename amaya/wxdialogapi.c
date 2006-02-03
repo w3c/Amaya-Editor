@@ -163,8 +163,8 @@ ThotBool CreateOpenDocDlgWX ( int ref, ThotWindow parent, const char *title,
     {
     wx_filter = APPHTMLNAMEFILTER;
     if (newfile)
-      /* create a new HTML document: activat the list of profiles */
-      wx_profiles = _T("XHTML 1.1");
+      /* create a new HTML document: activate the list of profiles */
+      wx_profiles = _T("XHTML Transitional");
     }
   else if (doc_type == docMath)
     wx_filter = APPMATHNAMEFILTER;

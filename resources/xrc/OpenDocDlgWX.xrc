@@ -82,7 +82,7 @@
                       <label>*File name*</label>
                       <size>200,-1</size>
                     </object>
-                    <option>0</option>
+                    <option>1</option>
                     <flag>wxEXPAND</flag>
                   </object>
                   <object class="sizeritem">
@@ -122,8 +122,6 @@
                   </object>
                   <object class="spacer">
                     <size>0,5</size>
-                    <option>1</option>
-                    <flag>wxALL</flag>
                   </object>
                 </object>
                 <option>1</option>

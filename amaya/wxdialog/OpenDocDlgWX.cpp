@@ -52,6 +52,8 @@ OpenDocDlgWX::OpenDocDlgWX( int ref, wxWindow* parent, const wxString & title,
   ,m_LockUpdateFlag(false)
   ,m_pLastUsedFilter(p_last_used_filter)
 {
+  char   *s;
+
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("OpenDocDlgWX"));
   // waiting for a return
   Waiting = 1;
@@ -85,7 +87,12 @@ OpenDocDlgWX::OpenDocDlgWX( int ref, wxWindow* parent, const wxString & title,
       XRCCTRL(*this, "wxID_LABEL_FILENAME", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_FILE)));
       XRCCTRL(*this, "wxID_LABEL_DIR", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_DIRECTORY)));
       XRCCTRL(*this, "wxID_BUTTON_DIR", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_SEL)));
-      XRCCTRL(*this, "wxID_PROFILE", wxComboBox)->SetValue( profiles );
+      // Get the last selected profile
+      s = TtaGetEnvString ("XHTML_Profile");
+      if (s && s[0] != EOS)
+        XRCCTRL(*this, "wxID_PROFILE", wxComboBox)->SetValue(TtaConvMessageToWX(s));
+      else
+        XRCCTRL(*this, "wxID_PROFILE", wxComboBox)->SetValue( profiles );
       XRCCTRL(*this, "wxID_PROFILE_LABEL", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_XML_PROFILE)));
     }
 
@@ -249,6 +256,7 @@ void OpenDocDlgWX::OnOpenButton( wxCommandEvent& event )
     {
       strcpy( buffer, (const char*)profile.mb_str(wxConvUTF8) );
       // give the profile to amaya
+      TtaSetEnvString ("XHTML_Profile", buffer, TRUE);
       ThotCallback (BaseDialog + DocInfoDocType,  STRING_DATA, (char *)buffer );
     }
   // return done
