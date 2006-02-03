@@ -690,8 +690,8 @@ static void GivePictureSize (PtrAbstractBox pAb, int zoom, int *width,
     }
   else
     {
-      *width = PixelValue (picture->PicWArea, UnPixel, pAb, zoom);
-      *height = PixelValue (picture->PicHArea, UnPixel, pAb, zoom);
+      *width = PixelValue (picture->PicWArea, UnPixel, pAb, 0/*zoom*/);
+      *height = PixelValue (picture->PicHArea, UnPixel, pAb, 0/*zoom*/);
     }
 }
 
@@ -1957,13 +1957,22 @@ static void AddFlow (PtrAbstractBox pAb, int frame)
   ViewFrame          *pFrame;
   PtrFlow             pFlow, prev = NULL;
   Positioning        *pos;
-  int                 w, h;
+  int                 w, h, zoom;
 
   pFrame = &ViewFrameTable[frame - 1];
   if (pFrame->FrAbstractBox && pAb && pAb->AbLeafType == LtCompound &&
       pAb->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility &&
       pAb->AbPositioning)
     {
+
+      // zoom apply to SVG only
+      //if (pAb->AbElement && pAb->AbElement->ElStructSchema &&
+      //    pAb->AbElement->ElStructSchema->SsName &&
+      //    !strcmp (pAb->AbElement->ElStructSchema->SsName, "SVG"))
+      zoom = ViewFrameTable[frame - 1].FrMagnification;
+      //else
+      //  zoom = 0;
+
       /* check if the flow is already registered */
       pFlow = pFrame->FrFlow;
       while (pFlow)
@@ -2009,25 +2018,25 @@ static void AddFlow (PtrAbstractBox pAb, int frame)
                                           (PtrAbstractBox) w, 0);
           else if (pos->PnLeftUnit != UnUndefined && pos->PnLeftUnit != UnAuto)
             pFlow->FlXStart = PixelValue (pos->PnLeftDistance, pos->PnLeftUnit, pAb,
-                                          ViewFrameTable[frame - 1].FrMagnification);
+                                          zoom);
           else if (pos->PnRightUnit == UnPercent)
             pFlow->FlXStart = -PixelValue (pos->PnRightDistance, UnPercent,
                                            (PtrAbstractBox) w, 0);
           else if (pos->PnRightUnit != UnUndefined && pos->PnRightUnit != UnAuto)
             pFlow->FlXStart = -PixelValue (pos->PnRightDistance, pos->PnRightUnit, pAb,
-                                           ViewFrameTable[frame - 1].FrMagnification);
+                                           zoom);
           if (pos->PnTopUnit == UnPercent)
             pFlow->FlYStart = PixelValue (pos->PnTopDistance, UnPercent,
                                           (PtrAbstractBox) h, 0);
           else if (pos->PnTopUnit != UnUndefined && pos->PnTopUnit != UnAuto)
             pFlow->FlYStart = PixelValue (pos->PnTopDistance, pos->PnTopUnit, pAb,
-                                          ViewFrameTable[frame - 1].FrMagnification);
+                                          zoom);
           else if (pos->PnBottomUnit == UnPercent)
             pFlow->FlYStart = -PixelValue (pos->PnBottomDistance, UnPercent,
                                            (PtrAbstractBox) h, 0);
           else if (pos->PnBottomUnit != UnUndefined && pos->PnBottomUnit != UnAuto)
             pFlow->FlYStart = -PixelValue (pos->PnBottomDistance, pos->PnBottomUnit, pAb,
-                                           ViewFrameTable[frame - 1].FrMagnification);
+                                           zoom);
         }
 #ifdef POSITIONING
       printf ("Adding flow x=%d y=%d\n",pFlow->FlXStart,pFlow->FlYStart);
@@ -2201,8 +2210,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
   ThotPictInfo       *picture;
   BoxType             boxType;
   char                script = 'L';
-  int                 width, i;
-  int                 height;
+  int                 width, i, height, zoom;
   ThotBool            enclosedWidth, directParent;
   ThotBool            enclosedHeight, uniqueChild;
   ThotBool            inlineChildren, inlineFloatC;
@@ -2249,6 +2257,14 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
 
   if (pBox)
     {
+      // zoom apply to SVG only
+      //if (pAb->AbElement && pAb->AbElement->ElStructSchema &&
+      //    pAb->AbElement->ElStructSchema->SsName &&
+      //    !strcmp (pAb->AbElement->ElStructSchema->SsName, "SVG"))
+      zoom = ViewFrameTable[frame - 1].FrMagnification;
+      //else
+      //  zoom = 0;
+
       if (pAb->AbLeafType == LtCompound)
         pBox->BxType = boxType;
       /* pMainBox points to the root box of the view */
@@ -2463,8 +2479,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
             if (picture->PicPixmap == None)
 #endif /*_GL*/
               LoadPicture (frame, pBox, picture);
-          GivePictureSize (pAb, ViewFrameTable[frame - 1].FrMagnification,
-                           &width, &height);
+          GivePictureSize (pAb, zoom, &width, &height);
           break;
         case LtSymbol:
           pBox->BxBuffer = NULL;
@@ -2492,8 +2507,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
           pBox->BxPictInfo = NULL;
           pBox->BxXRatio = 1;
           pBox->BxYRatio = 1;
-          GivePolylineSize (pAb, ViewFrameTable[frame - 1].FrMagnification,
-                            &width, &height);
+          GivePolylineSize (pAb, zoom, &width, &height);
           break;
         case LtPath:
           /* Prend une copie du path */
@@ -3354,7 +3368,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
   ViewFrame          *pFrame;
   AbDimension        *pDimAb;
   AbPosition         *pPosAb;
-  int                 width, height;
+  int                 width, height, zoom;
   int                 nSpaces, savedW, savedH;
   int                 i, charDelta, adjustDelta;
   ThotBool            condition, inLine, inLineFloat;
@@ -3819,6 +3833,15 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
     }
   else
     {
+
+      // zoom apply to SVG only
+      //if (pAb->AbElement && pAb->AbElement->ElStructSchema &&
+      //    pAb->AbElement->ElStructSchema->SsName &&
+      //    !strcmp (pAb->AbElement->ElStructSchema->SsName, "SVG"))
+      zoom = ViewFrameTable[frame - 1].FrMagnification;
+      //else
+      //   zoom = 0;
+
       /* CHANGE BOX ASPECT */
       if (pAb->AbAspectChange)
         {
@@ -3903,6 +3926,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
           /* Restore the propagation */
           Propagate = savpropage;
         }
+
       /* CHANGE THE CONTENTS */
       if (pAb->AbChange || pAb->AbSizeChange)
         {
@@ -3941,7 +3965,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
             }
           else
             {
-              /* update a leaf element */
+               /* update a leaf element */
               switch (pAb->AbLeafType)
                 {
                 case LtPageColBreak:
@@ -3988,9 +4012,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
                       SetCursorWatch (frame);
                       LoadPicture (frame, pBox, (ThotPictInfo *) pBox->BxPictInfo);
                       ResetCursorWatch (frame);
-                      GivePictureSize (pAb,
-                                       ViewFrameTable[frame - 1].FrMagnification,
-                                       &width, &height);
+                      GivePictureSize (pAb, zoom, &width, &height);
                     }
                   else
                     {
@@ -4054,9 +4076,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
                             pCurrentAb = pCurrentAb->AbEnclosing;
                         }
                     }
-                  GivePolylineSize (pAb,
-                                    ViewFrameTable[frame - 1].FrMagnification,
-                                    &width, &height);
+                  GivePolylineSize (pAb, zoom, &width, &height);
                   break;
                 case LtPath:
                   /* by default don't change the size */
@@ -4189,8 +4209,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
                   imageDesc = (ThotPictInfo *) pBox->BxPictInfo;
                   pBox->BxW = 0;
                   LoadPicture (frame, pBox, imageDesc);
-                  GivePictureSize (pAb, ViewFrameTable[frame - 1].FrMagnification,
-                                   &width, &height);
+                  GivePictureSize (pAb, zoom, &width, &height);
                   break;
                 case LtSymbol:
                   GiveSymbolSize (pAb, &width, &height);
@@ -4274,7 +4293,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
                   imageDesc = (ThotPictInfo *) pBox->BxPictInfo;
                   pBox->BxH = 0;
                   LoadPicture (frame, pBox, imageDesc);
-                  GivePictureSize (pAb, ViewFrameTable[frame -1].FrMagnification, &width, &height);
+                  GivePictureSize (pAb, zoom, &width, &height);
                   break;
                 case LtSymbol:
                   GiveSymbolSize (pAb, &width, &height);
@@ -4441,15 +4460,13 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
                                         (PtrAbstractBox) (pAb->AbBox->BxW), 0);
                       else
                         i = PixelValue (pPosAb->PosDistance,
-                                        pPosAb->PosUnit, pAb,
-                                        ViewFrameTable[frame - 1].FrMagnification);
+                                        pPosAb->PosUnit, pAb, zoom);
                       if (pPosAb->PosDeltaUnit == UnPercent)
                         i += PixelValue (pPosAb->PosDistDelta, UnPercent,
                                          (PtrAbstractBox) (pAb->AbBox->BxW), 0);
                       else
                         i += PixelValue (pPosAb->PosDistDelta,
-                                         pPosAb->PosDeltaUnit, pAb,
-                                         ViewFrameTable[frame - 1].FrMagnification);
+                                         pPosAb->PosDeltaUnit, pAb, zoom);
                       pLine->LiYOrg += i;
                       EncloseInLine (pBox, frame, pAb->AbEnclosing);
                     }
