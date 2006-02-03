@@ -188,14 +188,29 @@ static void CSSPrintError (char *msg, char *value)
         }
       CSSErrorsFound = TRUE;
       if (LineNumber < 0)
-        fprintf (ErrFile, "  In style attribute, %s \"%s\"\n", msg, value);
+        {
+          if (value)
+            fprintf (ErrFile, "  In style attribute, %s \"%s\"\n", msg, value);
+          else
+            fprintf (ErrFile, "  In style attribute, %s\n", msg);
+        }
       else
         {
-          fprintf (ErrFile, "@  line %d: %s \"%s\"\n",
-                   LineNumber+NewLineSkipped, msg, value);
-          if (CSSErrFile)
-            fprintf (CSSErrFile, "@  line %d: %s \"%s\"\n",
+          if (value)
+            fprintf (ErrFile, "@  line %d: %s \"%s\"\n",
                      LineNumber+NewLineSkipped, msg, value);
+          else
+            fprintf (ErrFile, "@  line %d: %s\n", LineNumber+NewLineSkipped,
+                     msg);
+          if (CSSErrFile)
+            {
+              if (value)
+                fprintf (CSSErrFile, "@  line %d: %s \"%s\"\n",
+                         LineNumber+NewLineSkipped, msg, value);
+              else
+                fprintf (CSSErrFile, "@  line %d: %s\n",
+                         LineNumber+NewLineSkipped, msg);
+            }
         }
     }
 }
@@ -4259,7 +4274,8 @@ static char *ParseCSSContent (Element element, PSchema tsch,
   value.typed_data.unit = UNIT_REL;
   value.typed_data.real = FALSE;
   value.typed_data.value = 0;
-  TtaSetStylePresentation (PRContent, element, tsch, ctxt, value);
+  if (DoApply)
+    TtaSetStylePresentation (PRContent, element, tsch, ctxt, value);
   cssRule = SkipBlanksAndComments (cssRule);
   repeat = TRUE;
   while (repeat)
@@ -4297,8 +4313,9 @@ static char *ParseCSSContent (Element element, PSchema tsch,
               value.typed_data.unit = UNIT_REL;
               value.typed_data.real = FALSE;
               value.pointer = p;
-              TtaSetStylePresentation (PRContentString, element, tsch, ctxt,
-                                       value);
+              if (DoApply)
+                TtaSetStylePresentation (PRContentString, element, tsch, ctxt,
+                                         value);
               *cssRule = quoteChar;
               cssRule++;
             }
@@ -4306,7 +4323,8 @@ static char *ParseCSSContent (Element element, PSchema tsch,
       else if (!strncasecmp (cssRule, "url", 3))
         {  
           cssRule += 3;
-          cssRule = SetCSSImage (element, tsch, ctxt, cssRule, css, PRContentURL);
+          cssRule = SetCSSImage (element, tsch, ctxt, cssRule, css,
+                                 PRContentURL);
         }
       else if (!strncasecmp (cssRule, "counter", 7))
         {
@@ -4322,45 +4340,46 @@ static char *ParseCSSContent (Element element, PSchema tsch,
         }
       else if (!strncasecmp (cssRule, "attr", 4))
         {
-	  value.pointer = NULL;
+          value.pointer = NULL;
           cssRule += 4;
-	  cssRule = SkipBlanksAndComments (cssRule);
-	  if (*cssRule == '(')
-	    {
-	      cssRule++;
-	      cssRule = SkipBlanksAndComments (cssRule);
-	      start = cssRule;
-	      while (*cssRule != EOS && *cssRule != ')')
-		cssRule++;
-	      if (*cssRule != ')')
-		cssRule = start;
-	      else
-		{
-		  last = cssRule;
-		  /* remove extra spaces */
-		  if (last[-1] == SPACE)
-		    {
-		      *last = SPACE;
-		      last--;
-		      while (last[-1] == SPACE)
-			last--;
-		    }
-		  savedChar = *last;
-		  *last = EOS;
-		  value.typed_data.unit = UNIT_REL;
-		  value.typed_data.real = FALSE;
-		  value.pointer = start;
-		  TtaSetStylePresentation (PRContentAttr, element, tsch, ctxt,
-					   value);
-		  *last = savedChar;
-		}
-	    }
-	  if (value.pointer == NULL)
-	    {
-	      CSSParseError ("Invalid content value", p, cssRule);
-	      cssRule = SkipProperty (cssRule, FALSE);
-	    }
-	  cssRule++;
+          cssRule = SkipBlanksAndComments (cssRule);
+          if (*cssRule == '(')
+            {
+              cssRule++;
+              cssRule = SkipBlanksAndComments (cssRule);
+              start = cssRule;
+              while (*cssRule != EOS && *cssRule != ')')
+                cssRule++;
+              if (*cssRule != ')')
+                cssRule = start;
+              else
+                {
+                  last = cssRule;
+                  /* remove extra spaces */
+                  if (last[-1] == SPACE)
+                    {
+                      *last = SPACE;
+                      last--;
+                      while (last[-1] == SPACE)
+                        last--;
+                    }
+                  savedChar = *last;
+                  *last = EOS;
+                  value.typed_data.unit = UNIT_REL;
+                  value.typed_data.real = FALSE;
+                  value.pointer = start;
+                  if (DoApply)
+                    TtaSetStylePresentation (PRContentAttr, element, tsch,
+                                             ctxt, value);
+                  *last = savedChar;
+                }
+            }
+          if (value.pointer == NULL)
+            {
+              CSSParseError ("Invalid content value", p, cssRule);
+              cssRule = SkipProperty (cssRule, FALSE);
+            }
+          cssRule++;
         }
       else if (!strncasecmp (cssRule, "open-quote", 10))
         {
@@ -5578,7 +5597,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
   int                specificity, xmlType;
   int                skippedNL;
   ThotBool           isHTML;
-  ThotBool           level, quoted;
+  ThotBool           level, quoted, doubleColon;
 #define ATTR_ID 1
 #define ATTR_CLASS 2
 #define ATTR_PSEUDO 3
@@ -5719,6 +5738,13 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
             /* pseudo-class or pseudo-element */
             {
               selector++;
+              doubleColon = FALSE;
+              if (*selector == ':')
+                /* it's a double "::". Probably CSS3 syntax */
+                {
+                  selector++;
+                  doubleColon = TRUE;
+                }
               while (*selector != '.' && *selector != ':' &&
                      *selector != '#' && *selector != '[' &&
                      *selector != EOS && *selector != ',' &&
@@ -5737,17 +5763,33 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
               else
                 {
                   if (!strcmp (deb, "first-letter") ||
-                      !strcmp (deb, "first-line") ||
-                      !strcmp (deb, "hover") ||
-                      !strcmp (deb, "focus"))
+                      !strcmp (deb, "first-line"))
+                    {
+                      if (doubleColon)
+                        CSSPrintError ("Warning: \"::\" is CSS3 syntax", NULL);
+                      /* not supported */
+                      DoApply = FALSE;
+                    }
+                  else if (!strcmp (deb, "hover") ||
+                           !strcmp (deb, "focus"))
                     /* not supported */
                     DoApply = FALSE;
                   else
                     specificity += 10;
                   if (!strncmp (deb, "before", 6))
-                    ctxt->pseudo = PbBefore;
+                    {
+                      if (doubleColon)
+                        CSSPrintError ("Warning: \"::before\" is CSS3 syntax",
+                                       NULL);
+                      ctxt->pseudo = PbBefore;
+                    }
                   else if (!strncmp (deb, "after", 5))
-                    ctxt->pseudo = PbAfter;
+                    {
+                      if (doubleColon)
+                        CSSPrintError ("Warning: \"::after\" is CSS3 syntax",
+                                       NULL);
+                      ctxt->pseudo = PbAfter;
+                    }
                   else if (!strncmp (deb, "lang", 4))
                     /* it's the lang pseudo-class */
                     {
