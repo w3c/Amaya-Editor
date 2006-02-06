@@ -1919,7 +1919,7 @@ static ThotBool HasFloatingChild (PtrAbstractBox pAb, ThotBool *directParent,
                    pChildAb->AbBox->BxType == BoFloatGhost)
             /* it's a floating child */
             found = TRUE;
-          else
+          else if (!pChildAb->AbPresentationBox)
             {
               if (!found)
                 {
