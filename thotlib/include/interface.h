@@ -80,6 +80,12 @@ extern void TtaRemoveDocAccessKeys (Document doc);
 extern void TtaRemoveAccessKey (Document doc, unsigned int key);
 
 /*----------------------------------------------------------------------
+  TtaUpdateAttrMenu                                                       
+  Updates the Attributes tool.
+  ----------------------------------------------------------------------*/
+extern void TtaUpdateAttrMenu (Document document);
+
+/*----------------------------------------------------------------------
   TtaExecuteMenuAction execute the corresponding menu action.
   ----------------------------------------------------------------------*/
 extern void TtaExecuteMenuAction (const char *actionName, Document doc, View view,

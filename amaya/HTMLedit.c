@@ -918,6 +918,8 @@ void GenerateInlineElement (int eType, int aType, char * data)
               TtaSetDocumentModified (doc);
               if (!open)
                 TtaCloseUndoSequence (doc);
+              // As the selection can be changed, update the Attribute list
+              TtaUpdateAttrMenu (doc);
             }
         }
     }

@@ -12,6 +12,7 @@ extern void CallbackReqAttrMenu ( int ref,
 extern void BuildReqAttrMenu ( PtrAttribute pAttr,
                                PtrDocument pDoc );
 extern void UpdateAttrMenu ( PtrDocument pDoc );
+extern void TtaUpdateAttrMenu ( Document document );
 extern void CallbackValAttrMenu ( int ref,
                                   int valmenu,
                                   char *valtext );
@@ -32,6 +33,7 @@ extern void CallbackReqAttrMenu ( int ref,
 extern void BuildReqAttrMenu ( PtrAttribute pAttr,
                                  PtrDocument pDoc );
 extern void UpdateAttrMenu ( PtrDocument pDoc );
+extern void TtaUpdateAttrMenu ( Document document );
 extern void CallbackValAttrMenu ( int ref,
                                     int valmenu,
                                     char *valtext );

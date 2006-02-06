@@ -502,6 +502,7 @@ void AmayaAttributePanel::SetupTextValue( const char * text )
   wxTextCtrl * p_text_ctrl = XRCCTRL(*m_pPanel_Text, "wxID_ATTR_TEXT_VALUE", wxTextCtrl);
   p_text_ctrl->SetValue( TtaConvMessageToWX( text ) );
   m_pPanel_Text->Refresh();
+  p_text_ctrl->SetInsertionPointEnd();
 }
 
 /*----------------------------------------------------------------------

@@ -22,6 +22,7 @@
 #include "dialog.h"
 #include "constmedia.h"
 #include "typemedia.h"
+#include "application.h"
 #include "libmsg.h"
 #include "message.h"
 #include "constmenu.h"
@@ -132,6 +133,7 @@ extern UINT      subMenuID[MAX_FRAME];
 #include "uconvert_f.h"
 #include "undo_f.h"
 #include "dialogapi_f.h"
+#include "thotmsg_f.h"
 
 /*----------------------------------------------------------------------
   InitFormLangue
@@ -1332,6 +1334,20 @@ void UpdateAttrMenu (PtrDocument pDoc)
         }
     }
 #endif /* !_WX */
+}
+
+/*----------------------------------------------------------------------
+  TtaUpdateAttrMenu                                                       
+  Updates the Attributes tool.
+  ----------------------------------------------------------------------*/
+void TtaUpdateAttrMenu (Document document)
+{
+  if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else
+    UpdateAttrMenu (LoadedDocument[document - 1]);
 }
 
 /*----------------------------------------------------------------------
