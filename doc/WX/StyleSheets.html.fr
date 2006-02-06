@@ -5,7 +5,7 @@
 <head>
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <title>Les feuilles de style</title>
-  <meta name="GENERATOR" content="amaya 9.2.2, see http://www.w3.org/Amaya/"
+  <meta name="GENERATOR" content="amaya 9.3.1, see http://www.w3.org/Amaya/"
   />
   <link href="style.css" rel="stylesheet" type="text/css" />
   <link />
@@ -43,12 +43,9 @@ src="../../resources/icons/misc/right.png" /></a></p>
     </ul>
   </li>
   <li><a href="#Visualiser">Visualiser le style appliqué</a></li>
-  <li><a href="#Associer">Associer une classe à un élément</a>
-    <ul>
-      <li><a href="#L554">Créer un style générique pour un élément ou une
-        classe</a></li>
-    </ul>
-  </li>
+  <li><a href="#Associer">Associer une classe à un élément</a></li>
+  <li><a href="#L554">Créer un style générique pour un élément ou une
+    classe</a></li>
   <li><a href="#L613">Créer des éléments de style HTML</a>
     <ul>
       <li><a href="#Types">Types information</a></li>
@@ -345,7 +342,7 @@ comme un autre attribut).</p>
   </li>
 </ul>
 
-<h4 id="L554">Créer un style générique pour un élément ou une classe</h4>
+<h3 id="L554">Créer un style générique pour un élément ou une classe</h3>
 
 <p>Quand un attribut <strong>style</strong> a été associé à un élément, vous
 pouvez utiliser cet élément comme un modèle pour créer ou modifier une règle
@@ -357,7 +354,6 @@ une classe :</p>
   <li>Sélectionnez l'élément que vous désirez utiliser comme modèle. Par
     défaut la sélection est mise sur la chaîne de caractères, et vous devez
     utiliser la touche F2 pour sélectionner l''élément englobant.
-    <p></p>
     <p class="Note"><strong>Note</strong> : Vous devez sélectionner un seul
     élément et cet élément doit avoir un attribut <code>style</code>.</p>
     <p></p>
@@ -387,7 +383,7 @@ l'outil <strong>Appliquer une classe</strong>.</p>
 <h3 id="L613"><a name="L1371" id="L1371">Créer des éléments de style
 HTML</a></h3>
 
-<p>HTML fournit certains éléments de niveau de caractère qui permettent
+<p>HTML définit certains éléments de niveau de caractère qui permettent
 d'associer du style aux chaînes de caractères. Deux entrées depuis le menu
 <strong>XHTML</strong> permettent de manier ces éléments HTML.</p>
 
@@ -434,12 +430,15 @@ caractères</strong> s'annulent si elles sont appliquées de nouveau.</p>
 
 <p class="ProcedureCaption">Pour supprimer un élément style :</p>
 <ol>
-  <li>Sélectionnez l'élément que vous voulez supprimer. Par défaut la
-    sélection est mise sur la chaîne de caractères, et vous devez utiliser la
-    touche F2 pour sélectionner l''élément englobant.</li>
+  <li>Sélectionnez l'élément que vous voulez supprimer.</li>
   <li>Appliquez de nouveau la commande du sous-menu <strong>Types
     information</strong> ou <strong>Eléments caractères</strong> du
-    menu<strong>XHTML</strong>.</li>
+    menu<strong>XHTML</strong>, ou dans l'outil XHTML : <em>emphasis</em>
+    (<img src="../../resources/icons/16x16/XHTML_I.png" alt="Emphasis button"
+    />), <strong>strong</strong> (<img
+    src="../../resources/icons/16x16/XHTML_B.png" alt="Strong button" />) and
+    <code>code</code> (<img src="../../resources/icons/16x16/XHTML_T.png"
+    alt="Code button" />).</li>
 </ol>
 </div>
 </body>

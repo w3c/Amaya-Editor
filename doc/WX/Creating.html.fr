@@ -5,7 +5,8 @@
 <head>
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <title>Créer des éléments</title>
-  <meta name="GENERATOR" content="amaya 9.3, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 9.3.1, see http://www.w3.org/Amaya/"
+  />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -116,6 +117,11 @@ cellules. Le point d'insertion est automatiquement placé dans le premier de
 ces composants. Vous pouvez saisir le contenu de ce composant immédiatement
 ou plus tard. Vous pouvez vous déplacer jusqu'au prochain composant (vide)
 avec la souris ou avec les flèches de direction.</p>
+
+<p>HTML définit certains éléments de niveau de caractère qui permettent
+d'associer du style aux chaînes de caractères. Voir <a
+href="StyleSheets.html.fr#L1371">Créer des éléments de style HTML</a> pour
+créer de tels éléments.</p>
 
 <h3 id="touche"><a name="L906" id="L906">La touche Enter (ou Return)</a></h3>
 
