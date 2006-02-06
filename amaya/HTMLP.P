@@ -5564,9 +5564,13 @@ ATTRIBUTES
 
  IntHeightPxl:
 	BEGIN
+	if Data_cell
+	   Height: IntHeightPxl px min;
+  if Heading_cell
+	   Height: IntHeightPxl px min;
 	if AREA
 	   Height: IntHeightPxl px UserSpecified;
-	if not AREA
+	if not AREA and not Data_cell and not Heading_cell
 	   Height: IntHeightPxl px;
 	IN Structure_view BEGIN
 	   if PICTURE_UNIT
