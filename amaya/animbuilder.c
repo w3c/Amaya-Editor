@@ -141,11 +141,10 @@ static int *get_intptr_attribute_from_el (Element el, int Attribut_Type)
 {
 #ifdef _SVG
   AttributeType attrType;
-  Attribute attr = NULL;
-  ElementType elType = TtaGetElementType (el);
-  int *result;
+  Attribute     attr = NULL;
+  ElementType   elType = TtaGetElementType (el);
+  int          *result;
   
-  result = (int *)TtaGetMemory (sizeof (int));
   attrType.AttrSSchema = elType.ElSSchema;
   attrType.AttrTypeNum = Attribut_Type;  
   attr = TtaGetAttribute (el, attrType);

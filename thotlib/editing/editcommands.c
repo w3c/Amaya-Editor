@@ -3468,6 +3468,7 @@ void PasteXClipboard (unsigned char *src, int nbytes, CHARSET charset)
             clipboard->BuContent[j++] = b;
           i++;
         }
+      TtaFreeMemory (buffer);
 
       /* Paste the last X clipboard buffer */
       if (j > 0)
