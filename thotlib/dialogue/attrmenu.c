@@ -1458,7 +1458,7 @@ void CallbackValAttrMenu (int ref, int valmenu, char *valtext)
   int                 firstChar, lastChar, att;
   int                 act;
   ThotBool            lock = TRUE;
-  ThotBool            isID = FALSE, isACCESS = FALSE;
+  ThotBool            isID = FALSE, isACCESS = FALSE, isCLASS = FALSE;
 
   act = 0; /* apply by default */
   switch (ref)
@@ -1492,6 +1492,7 @@ void CallbackValAttrMenu (int ref, int valmenu, char *valtext)
               !strcmp (tmp, "xml:id") ||
               (!strcmp (tmp, "name") &&
                !strcmp (SchCurrentAttr->SsName, "HTML")));
+      isCLASS = !strcmp (tmp, "class");
       if ((isACCESS || isID) && TextAttrValue[0] == EOS)
         return;
       if (!strcmp (tmp, "class") && TextAttrValue[0] == EOS)
@@ -1598,6 +1599,8 @@ void CallbackValAttrMenu (int ref, int valmenu, char *valtext)
                 /* applique les attributs a la partie selectionnee */
                 AttachAttrToRange (pAttrNew, lastChar, firstChar, lastSel,
                                    firstSel, SelDoc, TRUE);
+                if (isCLASS)
+                  TtaExecuteMenuAction ("ApplyClass", doc, 1, TRUE);
                 break;
 		  
               case AtReferenceAttr:		    
