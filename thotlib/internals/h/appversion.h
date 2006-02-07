@@ -2,8 +2,8 @@
 #define __APPVERSION_H__
 #ifdef _WX
 #define APP_MAJVER 9
-#define APP_MINVER 3
-#define APP_SUBVER 1
+#define APP_MINVER 4
+#define APP_SUBVER 
 #else /* _WX */
 #define APP_MAJVER 8
 #define APP_MINVER 8

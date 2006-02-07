@@ -616,8 +616,8 @@ fi # with_wx = no
 
 # the wx version
 AMAYAWX_MAJVER=9
-AMAYAWX_MINVER=3
-AMAYAWX_SUBVER=1
+AMAYAWX_MINVER=4
+AMAYAWX_SUBVER=
 
 #the old version (to remove when switching on wx)
 AMAYA_MAJVER=8
