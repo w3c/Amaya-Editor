@@ -4172,7 +4172,7 @@ void DisplayPRule (PtrPRule rule, FILE *fileDescriptor,
                 }
               break;
             case VarCounter:
-              fprintf (fileDescriptor, " counter(Cnt%d)", pSchP->PsCounter[item->ViCounter - 1]);
+              fprintf (fileDescriptor, " counter(Cnt%d)", pSchP->PsCounter[item->ViCounter - 1]->CnNItems);
               l += 14;
               break;
             case VarAttrValue:
