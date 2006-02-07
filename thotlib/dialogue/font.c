@@ -1687,7 +1687,7 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
   char               code = ' ';
   int                car;
   int                frame;
-  unsigned int       mask;
+  unsigned int       mask, fontmask;
   
   *font = NULL;
   car = EOS;
@@ -2053,7 +2053,8 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
                   for (frame = 1; frame <= MAX_FRAME; frame++)
                     {
                       mask = 1 << (frame - 1);
-                      if (fontset->FontMask & mask)
+                      fontmask = fontset->FontMask;
+                      if (fontmask & mask)
                         {
                           lfont = LoadNearestFont (code, fontset->FontFamily,
                                                    fontset->FontHighlight,
@@ -2114,7 +2115,7 @@ static SpecFont LoadFontSet (char script, int family, int highlight,
 {
   int                 index;
   SpecFont            prevfontset, fontset;
-  unsigned int        mask;
+  unsigned int        mask, fontmask;
   ThotBool            specificFont = (script == 'G');
 
   index = 0;
@@ -2149,7 +2150,8 @@ static SpecFont LoadFontSet (char script, int family, int highlight,
           fontset->FontFamily = family;
           fontset->FontHighlight = highlight;
           fontset->FontSize = index;
-          fontset->FontMask = mask;
+          fontmask = fontset->FontMask;
+          fontset->FontMask = fontmask | mask;
           fontset->Font_1 = LoadNearestFont (script, family, highlight,
                                              index, index, frame, TRUE, TRUE);
           /* link this new fontset */
@@ -2164,7 +2166,8 @@ static SpecFont LoadFontSet (char script, int family, int highlight,
   else
     {
       /* add the window frame number */
-      fontset->FontMask = fontset->FontMask | mask;
+      fontmask = fontset->FontMask;
+      fontset->FontMask = fontmask | mask;
       /* attach that font to the frame */
       fontset->Font_1 = LoadNearestFont (script, family, highlight,
                                          index, index, frame, TRUE, TRUE);
@@ -2497,7 +2500,7 @@ void ThotFreeFont (int frame)
 {
   SpecFont            prevset, fontset, nextset;
   int                 i;
-  unsigned int        mask;
+  unsigned int        mask, fontmask;
   ThotBool            doIt;
 
   if (frame > 0)
@@ -2523,7 +2526,8 @@ void ThotFreeFont (int frame)
             }
           else
             {
-              fontset->FontMask = fontset->FontMask & (~mask);
+              fontmask = fontset->FontMask;
+              fontset->FontMask = fontmask & (~mask);
               prevset = fontset;
             }
           fontset = nextset;
