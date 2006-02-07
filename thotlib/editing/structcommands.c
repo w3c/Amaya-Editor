@@ -1230,8 +1230,9 @@ void ProcessFirstLast (PtrElement pPrev, PtrElement pNext, PtrDocument pDoc)
   The parameter save is TRUE when the cut contents is saved for future
   paste.
   The parameter replace is TRUE when the cut contents will be replaced.
+  Return TRUE if the selection is move to the next element
   ----------------------------------------------------------------------*/
-void CutCommand (ThotBool save, ThotBool replace)
+ThotBool CutCommand (ThotBool save, ThotBool replace)
 {
   PtrElement          firstSel, lastSel, pEl, pE, pPrev, pNext, pParent,
     pS, pSS, pParentEl, pFree, pF, pF1, pPrevPage, pSave,
@@ -1247,7 +1248,7 @@ void CutCommand (ThotBool save, ThotBool replace)
   int                 firstChar, lastChar, nextChar, NSiblings, last, i;
   int                 firstCharInit, lastCharInit, prevDepth, nextDepth;
   ThotBool            oneAtLeast, cutPage, stop, pageSelected, cutAll;
-  ThotBool            recorded, lock, fakeCell, pEfake, ok;
+  ThotBool            recorded, lock, fakeCell, pEfake, ok, selNext;
 
   pPrev = NULL;
   pNext = NULL;
@@ -1260,10 +1261,11 @@ void CutCommand (ThotBool save, ThotBool replace)
   lock = TRUE;
   cellCleared = NULL;
   pParentEl = NULL;
+  selNext = FALSE;
   /* y-a-t'il une selection courante ? */
   if (!GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar,
                             &lastChar))
-    return;
+    return FALSE;
   else
     {
       /* on detruit les elements selectionnes, sauf si le document est en */
@@ -1989,6 +1991,7 @@ void CutCommand (ThotBool save, ThotBool replace)
                         {
                           /* select the following element */
                           pSel = FirstLeaf (pNext);
+                          selNext = TRUE;
                           /* Select the first character or the whole element */
                           if (pSel->ElTerminal && pSel->ElLeafType == LtText)
                             SelectPositionWithEvent (pSelDoc, pSel, 1);
@@ -2031,6 +2034,7 @@ void CutCommand (ThotBool save, ThotBool replace)
             }
         }
     }
+  return selNext;
 }
 
 /*----------------------------------------------------------------------

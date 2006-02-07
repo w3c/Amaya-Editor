@@ -13,7 +13,7 @@ extern void CloseTextInsertion ( void );
 extern void CloseParagraphInsertion ( PtrAbstractBox pAb,
                                       int frame );
 extern void ClearClipboard ( PtrTextBuffer clipboard );
-extern void ContentEditing ( int editType );
+extern ThotBool ContentEditing ( int editType );
 extern void InsertChar ( int frame,
                          CHAR_T c,
                          int keyboard );
@@ -53,7 +53,7 @@ extern void CloseTextInsertion ( void );
 extern void CloseParagraphInsertion ( PtrAbstractBox pAb,
                                         int frame );
 extern void ClearClipboard ( PtrTextBuffer clipboard );
-extern void ContentEditing ( int editType );
+extern ThotBool ContentEditing ( int editType );
 extern void InsertChar ( int frame,
                            CHAR_T c,
                            int keyboard );

@@ -28,8 +28,8 @@ extern PtrElement PreviousNotPage ( PtrElement pEl,
 extern void ProcessFirstLast ( PtrElement pPrev,
                                PtrElement pNext,
                                PtrDocument pDoc );
-extern void CutCommand ( ThotBool save,
-                         ThotBool replace );
+extern ThotBool CutCommand ( ThotBool save,
+                             ThotBool replace );
 extern void TtaSetCopyAndCutFunction ( Proc procedure );
 extern void TtaSetCopyCellFunction ( Proc3 procedure );
 extern void TtaSetCopyRowFunction ( Proc3 procedure );
@@ -71,8 +71,8 @@ extern PtrElement PreviousNotPage ( PtrElement pEl,
 extern void ProcessFirstLast ( PtrElement pPrev,
                                  PtrElement pNext,
                                  PtrDocument pDoc );
-extern void CutCommand ( ThotBool save,
-                           ThotBool replace );
+extern ThotBool CutCommand ( ThotBool save,
+                               ThotBool replace );
 extern void TtaSetCopyAndCutFunction ( Proc procedure );
 extern void TtaSetCopyCellFunction ( Proc3 procedure );
 extern void TtaSetCopyRowFunction ( Proc3 procedure );

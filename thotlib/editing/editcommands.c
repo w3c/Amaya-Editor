@@ -1979,10 +1979,10 @@ static void PasteClipboard (ThotBool defaultHeight, ThotBool defaultWidth,
 }
 
 /*----------------------------------------------------------------------
-  Traite les commandes TextInserting Cut Paste Copy Oops          
-  ainsi que l'insertion des Graphiques Images et Symboles         
+  ContentEditing manages Cut, Paste, Copy, Remvoe, and Insert commands.
+  Return TRUE if a Cut command moved the selection to a next element.
   ----------------------------------------------------------------------*/
-void ContentEditing (int editType)
+ThotBool ContentEditing (int editType)
 {
   PtrBox              pBox;
   PtrBox              pSelBox;
@@ -2005,7 +2005,7 @@ void ContentEditing (int editType)
   int                 frame, doc;
   ThotBool            still, ok, textPasted;
   ThotBool            defaultWidth, defaultHeight;
-  ThotBool            show, graphEdit, open;
+  ThotBool            show, graphEdit, open, selNext = FALSE;
 
   pCell = NULL;
   textPasted = FALSE;
@@ -2025,7 +2025,7 @@ void ContentEditing (int editType)
       frame = ActiveFrame;
       /*-- recherche le pave concerne --*/
       if (frame <= 0)
-        return;
+        return selNext;
       else
         {
           if (editType == TEXT_PASTE || editType == TEXT_X_PASTE)
@@ -2044,12 +2044,12 @@ void ContentEditing (int editType)
               /* a pu ici changer de frame active pour la selection */
               frame = ActiveFrame;
               if (frame == 0)
-                return;	/* nothing to do */
+                return selNext;	/* nothing to do */
               else
                 {
                   pBox = ViewFrameTable[frame - 1].FrSelectionBegin.VsBox;
                   if (pBox == NULL)
-                    return;	/* nothing to do */
+                    return selNext;	/* nothing to do */
                   pAb = pBox->BxAbstractBox;
                 }
             }
@@ -2059,14 +2059,14 @@ void ContentEditing (int editType)
               (editType == TEXT_INSERT || editType == TEXT_PASTE))
             /* the box to be edited is read-only */
             /* can't insert or paste within a read-only char string */
-            return;
+            return selNext;
           if (editType == TEXT_DEL || editType == TEXT_CUT)
             {
               if (AbsBoxSelectedAttr)
                 {
                   if (AbsBoxSelectedAttr->AbReadOnly)
                     /* selection within a read-only attribute value */
-                    return;
+                    return selNext;
                 }
               else
                 {
@@ -2074,7 +2074,7 @@ void ContentEditing (int editType)
                       ElementIsReadOnly (FirstSelectedElement->ElParent))
                     /* the parent element is read-only.
                        Don't delete anything*/
-                    return;
+                    return selNext;
                   else if (ElementIsReadOnly (FirstSelectedElement))
                     {
                       /* the parent is not read-only */
@@ -2087,7 +2087,7 @@ void ContentEditing (int editType)
                             (LastSelectedChar > 0 &&
                              LastSelectedChar < LastSelectedElement->ElVolume))
                           /* the text element is not completely selected */
-                          return;
+                          return selNext;
                     }
                 }
             }
@@ -2101,7 +2101,7 @@ void ContentEditing (int editType)
       doc = FrameTable[frame].FrDoc;
       pDoc = LoadedDocument[doc - 1];
       if (pDoc == NULL)
-        return;
+        return selNext;
       open = !pDoc->DocEditSequence;
       pViewSel = &pFrame->FrSelectionBegin;
       show = (documentDisplayMode[doc - 1] == DisplayImmediately);
@@ -2112,7 +2112,7 @@ void ContentEditing (int editType)
               pBox == ViewFrameTable[frame - 1].FrSelectionEnd.VsBox &&
               pViewSel->VsIndBox >= pBox->BxNChars &&
               pBox->BxAbstractBox->AbVolume != 0)
-            return;
+            return selNext;
         }
 
       if (editType == TEXT_INSERT && !NewInsert)
@@ -2209,7 +2209,7 @@ void ContentEditing (int editType)
                 {
                   DeleteNextChar (frame, pAb->AbElement, FALSE);
                   pFrame->FrReady = TRUE;
-                  return;
+                  return selNext;
                 }
               else
                 pAb = NULL;
@@ -2245,7 +2245,7 @@ void ContentEditing (int editType)
                     }
                   notifyAttr.attribute = NULL;
                   CallEventAttribute (&notifyAttr, FALSE);
-                  return;
+                  return selNext;
                 }
               else if (FirstSelectedElement != LastSelectedElement ||
                        pAb != pLastAb)
@@ -2300,7 +2300,7 @@ void ContentEditing (int editType)
             {
               /* close the current text insertion */
               CloseTextInsertion ();
-              CutCommand (FALSE, editType == TEXT_SUP);	/* Cut without saving */
+              selNext = CutCommand (FALSE, editType == TEXT_SUP);	/* Cut without saving */
             }
           else if (editType == TEXT_CUT || editType == TEXT_COPY)
             {
@@ -2311,7 +2311,7 @@ void ContentEditing (int editType)
                 {
                   /* close the current text insertion */
                   CloseTextInsertion ();
-                  CutCommand (TRUE, FALSE);
+                  selNext = CutCommand (TRUE, FALSE);
                 }
               else if (editType == TEXT_COPY && !NewInsert)
                 CopyCommand ();
@@ -2367,8 +2367,8 @@ void ContentEditing (int editType)
                 }
               else
                 {
-                  /* Delete the whol polyline */
-                  CutCommand (FALSE, FALSE);
+                  /* Delete the whole polyline */
+                  selNext = CutCommand (FALSE, FALSE);
                   pAb = NULL;	/* edit is done */
                 }
             }
@@ -2580,7 +2580,7 @@ void ContentEditing (int editType)
 	  
           if (pAb->AbElement == NULL)
             /* le pave a disparu entre temps */
-            return;
+            return selNext;
 	  
           /* signale la nouvelle selection courante */
           if ((editType == TEXT_CUT || editType == TEXT_PASTE ||
@@ -2616,6 +2616,7 @@ void ContentEditing (int editType)
                               FALSE, open);
         }
     }
+  return selNext;
 }
 
 
@@ -3756,11 +3757,11 @@ void TtcDeletePreviousChar (Document doc, View view)
 {
   ViewSelection      *pViewSel;
   DisplayMode         dispMode;
-  int                 frame;
   PtrDocument         pDoc;
   PtrElement          firstEl, lastEl;
+  int                 frame;
   int                 firstChar, lastChar;
-  ThotBool            delPrev, moveAfter;
+  ThotBool            delPrev, moveAfter, nextSelected;
   ThotBool            lock = TRUE;
 
   if (doc != 0)
@@ -3813,6 +3814,7 @@ void TtcDeletePreviousChar (Document doc, View view)
 
       /* avoid to redisplay step by step */
       dispMode = TtaGetDisplayMode (doc);
+      nextSelected = FALSE;
       if (dispMode == DisplayImmediately)
         TtaSetDisplayMode (doc, DeferredDisplay);
       /* lock tables formatting */
@@ -3837,14 +3839,16 @@ void TtcDeletePreviousChar (Document doc, View view)
           CloseTextInsertion ();
           /* by default doesn't change the selection after the delete */
           moveAfter = FALSE;
-          if (pViewSel->VsBox != NULL)
+          if (pViewSel->VsBox )
             {
+              // Move after if the element will be removed and there is
+              // a next element
               moveAfter = (pViewSel->VsBox->BxAbstractBox->AbLeafType != LtText ||
                            pViewSel->VsBox->BxAbstractBox->AbVolume == 0);
-              ContentEditing (TEXT_DEL);
+              nextSelected = ContentEditing (TEXT_DEL);
             }
           pViewSel = &ViewFrameTable[frame - 1].FrSelectionEnd;
-          if (moveAfter &&
+          if (moveAfter && nextSelected &&
               pViewSel->VsBox &&
               (pViewSel->VsIndBox < pViewSel->VsBox->BxNChars ||
                pViewSel->VsBox->BxNChars == 0))
