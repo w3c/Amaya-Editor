@@ -66,6 +66,7 @@ Document ANNOT_NewDocument (Document doc, AnnotMode mode)
   annot_dir = GetAnnotDir ();
   docname = TtaGetDocumentName (doc);
   tmpname = GetTempName (annot_dir, "annot");
+strcpy (tmpname, "C:\Documents and Settings\Irène\amaya\annotations\annot10DtTd");
 
   if (!tmpname) 
     {
@@ -321,8 +322,10 @@ void  ANNOT_InitDocumentMeta (Document doc, Document docAnnot, AnnotMeta *annot,
   elType.ElTypeNum = Annot_EL_Author;
   el = TtaSearchTypedElement (elType, SearchInTree, head);
   el = TtaGetFirstChild (el);
+#ifdef _WX
+#else /* _WX */
   TtaSetTextContent (el, (unsigned char *)user, TtaGetDefaultLanguage (), docAnnot); 
-
+#endif /* _WX */
   if (annot->creator)
     {
       RDFStatementP s;
@@ -480,31 +483,27 @@ void  ANNOT_InitDocumentBody (Document docAnnot, char *source_doc_title)
   /* and content="Amaya" */
   child = TtaGetLastChild (head);
 
-#if 0
-  elType.ElTypeNum = HTML_EL_META;
-  meta = TtaNewElement (docAnnot, elType);
-  attrType.AttrTypeNum = HTML_ATTR_meta_name;
-  attr = TtaNewAttribute (attrType);
-  TtaAttachAttribute (meta, attr, docAnnot);
-  TtaSetAttributeText (attr, "GENERATOR", meta, docAnnot);
-  attrType.AttrTypeNum = HTML_ATTR_meta_content;
-  attr = TtaNewAttribute (attrType);
-  TtaAttachAttribute (meta, attr, docAnnot);
-  strcpy (tempfile, HTAppName);
-  strcat (tempfile, " ");
-  strcat (tempfile, HTAppVersion);
-  TtaSetAttributeText (attr, tempfile, meta, docAnnot);
-  TtaInsertSibling (meta, child, FALSE, docAnnot);
-#endif
   
   /* Create the BODY */
   elType.ElTypeNum = HTML_EL_BODY;
   body = TtaSearchTypedElement (elType, SearchInTree, root);
   if (!body)
     {
-      body = TtaNewTree (docAnnot, elType, "");
+      body = TtaNewElement (docAnnot, elType);
       TtaInsertSibling (body, head, FALSE, docAnnot);
+      elType.ElTypeNum = HTML_EL_Paragraph;
+      el = TtaNewTree (docAnnot, elType, "");
+      TtaInsertFirstChild (&el, body, docAnnot);
     }
+  // now select within the annottion
+  child = body;
+  do
+  {
+	el = child;
+    child = TtaGetLastChild (el);
+  }
+  while (child);
+  TtaSelectElement (docAnnot, el);
 }
 
 #ifdef ANNOT_ON_ANNOT
@@ -1025,175 +1024,6 @@ void ANNOT_InitDocumentStructure (Document doc, Document docAnnot,
   TtaSetDisplayMode (docAnnot, DisplayImmediately);
 }
 
-#if 0
-/*-----------------------------------------------------------------------
-   Procedure ANNOT_InitDocumentStructure (docAnnot, document)
-  -----------------------------------------------------------------------
-   Initializes an annotation document by adding a BODY part
-   and adding META elements for title, author, date, and type
-  -----------------------------------------------------------------------*/
-void ANNOT_InitDocumentStructure (Document docAnnot, Document document)
-{
-  ElementType  elType;
-  Element      root, head, body, el, di, tl, top, child, meta;
-  Attribute           attr;
-  AttributeType       attrType;
-  time_t       curDate;
-  struct tm   *localDate;
-  char        *strDate;
-  char        *doc_anchor;
-  char         tempfile[MAX_LENGTH];
-  char        *annot_user;
-
-  annot_user = GetAnnotUser ();
-
-  /* avoid refreshing the document while we're constructing it */
-  TtaSetDisplayMode (docAnnot, NoComputedDisplay);
-  root = TtaGetRootElement (docAnnot);
-  elType = TtaGetElementType (root);
-  elType.ElTypeNum = HTML_EL_HEAD;
-  head = TtaSearchTypedElement (elType, SearchInTree, root);
-
-  /* Add a document title */
-  elType.ElTypeNum = HTML_EL_TITLE;
-  el = TtaSearchTypedElement (elType, SearchInTree, root);
-  el = TtaGetFirstChild (el);
-  /* @@ maybe parse the URL here */
-  TtaSetTextContent (el, DocumentURLs[docAnnot], 
-		     TtaGetDefaultLanguage (), docAnnot);
-
-  /* add a document URL */
-  elType.ElTypeNum = HTML_EL_Document_URL;
-  el = TtaSearchTypedElement (elType, SearchInTree, root);
-  el = TtaGetFirstChild (el);
-  TtaSetTextContent (el, DocumentURLs[docAnnot],
-		     TtaGetDefaultLanguage (), docAnnot);
-  
-  /* create a META element in the HEAD with attributes name="GENERATOR" */
-  /* and content="Amaya" */
-  child = TtaGetLastChild (head);
-
-#if 0
-  elType.ElTypeNum = HTML_EL_META;
-  meta = TtaNewElement (docAnnot, elType);
-  attrType.AttrTypeNum = HTML_ATTR_meta_name;
-  attr = TtaNewAttribute (attrType);
-  TtaAttachAttribute (meta, attr, docAnnot);
-  TtaSetAttributeText (attr, "GENERATOR", meta, docAnnot);
-  attrType.AttrTypeNum = HTML_ATTR_meta_content;
-  attr = TtaNewAttribute (attrType);
-  TtaAttachAttribute (meta, attr, docAnnot);
-  strcpy (tempfile, HTAppName);
-  strcat (tempfile, " ");
-  strcat (tempfile, HTAppVersion);
-  TtaSetAttributeText (attr, tempfile, meta, docAnnot);
-  TtaInsertSibling (meta, child, FALSE, docAnnot);
-#endif
-  
-  /* Create the BODY */
-  elType.ElTypeNum = HTML_EL_BODY;
-  body = TtaSearchTypedElement (elType, SearchInTree, root);
-  if (!body)
-    {
-      body = TtaNewTree (docAnnot, elType, "");
-      TtaInsertSibling (body, head, FALSE, docAnnot);
-    }
-
-  /*
-   * Write the annotation file meta-info
-   */
-
-  /* create the DL structure */
-  elType.ElTypeNum = HTML_EL_Definition_List;
-  top = TtaCreateDescent (docAnnot, body, elType);
-  el = top;
-
-  /* Add a link to the annoted paragraph itself */
-  elType.ElTypeNum = HTML_EL_Definition_Item;
-  di = TtaCreateDescent (docAnnot, el, elType);
-  elType.ElTypeNum = HTML_EL_Term_List;
-  tl = TtaCreateDescent (docAnnot, di, elType);
-  elType.ElTypeNum = HTML_EL_Term;
-  el = TtaCreateDescent (docAnnot, tl, elType);
-  elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-  el = TtaCreateDescent (docAnnot, el, elType);
-  TtaSetTextContent (el, "Annotated document", TtaGetDefaultLanguage (), docAnnot); 
-  elType.ElTypeNum = HTML_EL_Definition;
-  el = TtaNewElement (docAnnot, elType);
-  TtaInsertSibling (el, tl, FALSE, docAnnot);
-  elType.ElTypeNum = HTML_EL_Anchor;
-  el = TtaCreateDescent (docAnnot, el, elType);
-  attrType.AttrSSchema = elType.ElSSchema;
-  attrType.AttrTypeNum = HTML_ATTR_HREF_;
-  attr = TtaNewAttribute (attrType);
-  TtaAttachAttribute (el, attr, docAnnot);
-  doc_anchor = TtaGetMemory (strlen (DocumentURLs[document])
-			     + strlen (annot_user)
-			     + strlen (DocumentURLs[docAnnot])
-			     + 20);
-  sprintf (doc_anchor, "%s#%s_%s_%s", DocumentURLs[document],
-	   ANNOT_ANAME, annot_user, DocumentURLs[docAnnot]);
-  TtaSetAttributeText (attr, doc_anchor, el, docAnnot);
-  TtaFreeMemory (doc_anchor);
-  elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-  el = TtaCreateDescent (docAnnot, el, elType);
-  TtaSetTextContent (el, TtaGetDocumentName (document), TtaGetDefaultLanguage (), docAnnot);
-
-  /* write the author's name */
-  elType.ElTypeNum = HTML_EL_Definition_Item;
-  el = TtaNewElement (docAnnot, elType);
-  TtaInsertSibling (el, di, FALSE, docAnnot);
-  di = el;
-  elType.ElTypeNum = HTML_EL_Term_List;
-  tl = TtaCreateDescent (docAnnot, di, elType);
-  elType.ElTypeNum = HTML_EL_Term;
-  el = TtaCreateDescent (docAnnot, tl, elType);
-  elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-  el = TtaCreateDescent (docAnnot, el, elType);
-  TtaSetTextContent (el, "Author", TtaGetDefaultLanguage (), docAnnot); 
-  elType.ElTypeNum = HTML_EL_Definition;
-  el = TtaNewElement (docAnnot, elType);
-  TtaInsertSibling (el, tl, FALSE, docAnnot);
-  elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-  el = TtaCreateDescent (docAnnot, el, elType);
-  TtaSetTextContent (el, annot_user, TtaGetDefaultLanguage (), docAnnot); 
-
-  /* write the date */
-  elType.ElTypeNum = HTML_EL_Definition_Item;
-  el = TtaNewElement (docAnnot, elType);
-  TtaInsertSibling (el, di, FALSE, docAnnot);
-  di = el;
-  elType.ElTypeNum = HTML_EL_Term_List;
-  tl = TtaCreateDescent (docAnnot, di, elType);
-  elType.ElTypeNum = HTML_EL_Term;
-  el = TtaCreateDescent (docAnnot, tl, elType);
-  elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-  el = TtaCreateDescent (docAnnot, el, elType);
-  TtaSetTextContent (el, "Date", TtaGetDefaultLanguage (), docAnnot); 
-  elType.ElTypeNum = HTML_EL_Definition;
-  el = TtaNewElement (docAnnot, elType);
-  TtaInsertSibling (el, tl, FALSE, docAnnot);
-  elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-  el = TtaCreateDescent (docAnnot, el, elType);
-  curDate = time (&curDate);
-  localDate = localtime (&curDate);
-  /* @@ possible memory bug */
-  strDate = TtaGetMemory (25);
-  sprintf (strDate, "%04d-%02d-%02dT%02d:%02d", localDate->tm_year+1900,
-	   localDate->tm_mon+1, localDate->tm_mday, 
-           localDate->tm_hour, localDate->tm_min);
-  TtaSetTextContent (el, strDate, TtaGetDefaultLanguage (), docAnnot); 
-  TtaFreeMemory (strDate);
-
-  /* write an HR to separate the annotation from the text itself */
-  elType.ElTypeNum = HTML_EL_Horizontal_Rule;
-  el = TtaNewElement (docAnnot, elType);
-  TtaInsertSibling (el, top, FALSE, docAnnot);
-
-  /* show the document */
-  TtaSetDisplayMode (docAnnot, DisplayImmediately);
-}
-#endif
 
 /*-----------------------------------------------------------------------
    Procedure ANNOT_PrepareAnnotView (document)
