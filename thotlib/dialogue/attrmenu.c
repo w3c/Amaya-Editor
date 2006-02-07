@@ -1509,9 +1509,7 @@ void CallbackValAttrMenu (int ref, int valmenu, char *valtext)
               (!strcmp (tmp, "name") &&
                !strcmp (SchCurrentAttr->SsName, "HTML")));
       isCLASS = !strcmp (tmp, "class");
-      if ((isACCESS || isID) && TextAttrValue[0] == EOS)
-        return;
-      if (!strcmp (tmp, "class") && TextAttrValue[0] == EOS)
+      if (TextAttrValue[0] == EOS)
         return;
       act = valmenu;
       break;
@@ -1615,8 +1613,10 @@ void CallbackValAttrMenu (int ref, int valmenu, char *valtext)
                 /* applique les attributs a la partie selectionnee */
                 AttachAttrToRange (pAttrNew, lastChar, firstChar, lastSel,
                                    firstSel, SelDoc, TRUE);
+#ifdef _WX
                 if (isCLASS)
                   TtaExecuteMenuAction ("ApplyClass", doc, 1, TRUE);
+#endif /* _WX */
                 break;
 		  
               case AtReferenceAttr:		    
