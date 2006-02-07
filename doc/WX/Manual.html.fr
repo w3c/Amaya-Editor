@@ -14,9 +14,8 @@ body {background-color: #FFFFFF}</style>
 <body xml:lang="fr" lang="fr">
 <h1 style="text-align : center">Manuel d'utilisation d'Amaya</h1>
 
-<h4 style="text-align:center">Version 9.3<br />
-<img src="../../resources/icons/22x22/logo.png" alt="Amaya" class="logo"
-/></h4>
+<h4 style="text-align:center">Version 9.4<br />
+</h4>
 <dl>
   <dt><strong>Auteurs :</strong></dt>
     <dd>Irène Vatton, Vincent Quint, José Kahan</dd>
