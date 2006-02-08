@@ -66,7 +66,6 @@ Document ANNOT_NewDocument (Document doc, AnnotMode mode)
   annot_dir = GetAnnotDir ();
   docname = TtaGetDocumentName (doc);
   tmpname = GetTempName (annot_dir, "annot");
-strcpy (tmpname, "C:\Documents and Settings\Irène\amaya\annotations\annot10DtTd");
 
   if (!tmpname) 
     {
@@ -322,10 +321,7 @@ void  ANNOT_InitDocumentMeta (Document doc, Document docAnnot, AnnotMeta *annot,
   elType.ElTypeNum = Annot_EL_Author;
   el = TtaSearchTypedElement (elType, SearchInTree, head);
   el = TtaGetFirstChild (el);
-#ifdef _WX
-#else /* _WX */
   TtaSetTextContent (el, (unsigned char *)user, TtaGetDefaultLanguage (), docAnnot); 
-#endif /* _WX */
   if (annot->creator)
     {
       RDFStatementP s;
