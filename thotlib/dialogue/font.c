@@ -1828,6 +1828,8 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
 #ifdef _GL
               code = '1'; /* West Europe Latin */
               pfont = &(fontset->Font_1);
+if (pfont == NULL)
+printf ("first loading");
 #else /* _GL */
 #ifdef _WINDOWS
               code = '1'; /* West Europe Latin */
@@ -2113,7 +2115,7 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
 static SpecFont LoadFontSet (char script, int family, int highlight,
                              int size, TypeUnit unit, int frame)
 {
-  int                 index;
+  int                 index, i;
   SpecFont            prevfontset, fontset;
   unsigned int        mask, fontmask;
   ThotBool            specificFont = (script == 'G');
@@ -2163,13 +2165,23 @@ static SpecFont LoadFontSet (char script, int family, int highlight,
       else
         fontset = FirstFontSel;
     }
-  else
+  else if ((fontset->FontMask & mask) == 0)
     {
       /* add the window frame number */
       fontmask = fontset->FontMask;
       fontset->FontMask = fontmask | mask;
       /* attach that font to the frame */
-      fontset->Font_1 = LoadNearestFont (script, family, highlight,
+	  if (fontset->Font_1)
+	  {
+        for (i = 0; i < FirstFreeFont; i++)
+          if (TtFonts[i] == fontset->Font_1)
+		  {
+ 		    TtFontMask[i] = TtFontMask[i] | mask;
+			i = FirstFreeFont;
+		  }
+	  }
+	  else
+        fontset->Font_1 = LoadNearestFont (script, family, highlight,
                                          index, index, frame, TRUE, TRUE);
     }
   return (fontset);
@@ -2599,7 +2611,6 @@ void ThotFreeFont (int frame)
                 {
                   //printf ("ThotFreeFont frame=%d font=%d\n", frame, i);
                   FreeAFont (i);
-                  TtFontMask[i] = 0;
                 }
             }
           else
