@@ -1617,7 +1617,7 @@ static ThotBool SelectAbsBoxes (PtrElement pEl, ThotBool createView)
                   }
               }
 
-          if (!abExist && createView&& pEl->ElTerminal)
+          if (!abExist && createView && pEl->ElTerminal)
             {
               /* send an event to the application to open another view*/
               notifyDoc.event = TteViewOpen;

@@ -558,12 +558,12 @@ static ThotBool serialize (librdf_world *world, librdf_model *model,
     {
       FILE *test;
 
-      test = fopen (filename, "w");
+      test = TtaWriteOpen (filename);
       if (test)
 	{
 	  if (librdf_serializer_serialize_model (serializer, test, NULL, model) != 0)
 	    result = FALSE;
-	  fclose (test);
+	  TtaWriteClose (test);
 	  /* uncomment this to output the model to stdout */
 	  /* librdf_serializer_serialize_model (serializer, stdout, NULL, model); */
 	  librdf_free_serializer(serializer);

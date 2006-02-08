@@ -550,7 +550,7 @@ void SCHEMA_InitSchemas (Document doc)
 	}
     }
 
-  fp = fopen (buffer, "r");
+  fp = TtaReadOpen (buffer);
 
   if (!fp)
     {
@@ -663,7 +663,7 @@ void SCHEMA_InitSchemas (Document doc)
       /* RRS @@ else config error */
     }
 
-  fclose (fp);
+  TtaReadClose (fp);
   TtaFreeMemory (buffer);
 
   /* Establish a default type for new annotations. */

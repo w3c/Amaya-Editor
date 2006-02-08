@@ -105,7 +105,7 @@ char  *LINK_GetAnnotationIndexFile (char *source_url)
     {
       index_file = (char *)TtaGetMemory (MAX_PATH);
       found = 0;
-      if ((fp = fopen (annot_main_index_file, "r")))
+      if ((fp = TtaReadOpen (annot_main_index_file)))
 	{
 	  while (fgets (buffer, MAX_LENGTH, fp))
 	    {
@@ -119,7 +119,7 @@ char  *LINK_GetAnnotationIndexFile (char *source_url)
 		  break;
 		}
 	    }
-	  fclose (fp);
+	  TtaReadClose (fp);
 	}
       if (!found)
 	{
@@ -174,9 +174,9 @@ void LINK_UpdateAnnotationIndexFile (char *old_source_url, char *new_source_url)
   move = FALSE;
   if (TtaFileExist (annot_main_index_file))
     {
-      if ((fp_old = fopen (annot_main_index_file, "r")))
+      if ((fp_old = TtaReadOpen (annot_main_index_file)))
 	{
-	  if ((fp_new = fopen (annot_new_main_index_file, "w")))
+	  if ((fp_new = TtaWriteOpen (annot_new_main_index_file)))
 	    {
 	      while (fgets (buffer, MAX_LENGTH, fp_old))
 		{
@@ -199,10 +199,10 @@ void LINK_UpdateAnnotationIndexFile (char *old_source_url, char *new_source_url)
 		  if (tmp_index_file != index_file)
 		    TtaFreeMemory (tmp_index_file);
 		}
-	      fclose (fp_new);
+	      TtaWriteClose (fp_new);
 	      move = TRUE;
 	    }
-	  fclose (fp_old);
+	  TtaReadClose (fp_old);
 	}
     }
   
@@ -243,12 +243,12 @@ static void AddAnnotationIndexFile (char *source_url, char *index_file)
 	    DIR_SEP, 
 	    annot_main_index);
 
-  if ((fp = fopen (annot_main_index_file, "a")))
+  if ((fp = TtaAddOpen (annot_main_index_file)))
     {
       fprintf (fp, "%s %s\n", 
 	       (www_source_url) ? www_source_url : source_url,
 	       (www_index_file) ? www_index_file : index_file);
-      fclose (fp);
+      TtaWriteClose (fp);
     }
   if (www_source_url)
     HT_FREE (www_source_url);
@@ -807,14 +807,14 @@ void LINK_DeleteLink (Document source_doc, ThotBool isReplyTo)
 	    DIR_SEP, 
 	    main_index);
 
-  if (!(fp_new = fopen (main_index_file_new, "w")))
+  if (!(fp_new = TtaWriteOpen (main_index_file_new)))
     error++;
 
   if (!error)
     {
-      if (!(fp_old = fopen (main_index_file_old, "r")))
+      if (!(fp_old = TtaReadOpen (main_index_file_old)))
 	{
-	  fclose (fp_new);
+	  TtaReadClose (fp_new);
 	  error++;
 	}
     }
@@ -835,8 +835,8 @@ void LINK_DeleteLink (Document source_doc, ThotBool isReplyTo)
 	  if (strncmp (source_doc_url, buffer, len))
 	    fputs (buffer, fp_new);
 	}
-      fclose (fp_new);
-      fclose (fp_old);
+      TtaWriteClose (fp_new);
+      TtaReadClose (fp_old);
       
       if (source_doc_url != DocumentURLs[source_doc])
 	TtaFreeMemory (source_doc_url);

@@ -2105,7 +2105,7 @@ void AnnotList_writeIndex (char *indexFile, List *annot_list,
   if (!(annot_list || thread_list) || !indexFile || indexFile[0] == EOS)
     return;
 
-  fp = fopen (indexFile, "w");
+  fp = TtaWriteOpen (indexFile);
   /* write the prologue */
   fprintf (fp,
 	   "<?xml version=\"1.0\" ?>\n" 
@@ -2127,9 +2127,8 @@ void AnnotList_writeIndex (char *indexFile, List *annot_list,
 #endif /* ANNOT_ON_ANNOT */
 
   /* write the epiloge */
-  fprintf (fp, 
-	   "</r:RDF>\n");
-  fclose (fp);
+  fprintf (fp, "</r:RDF>\n");
+  TtaWriteClose (fp);
 }
 
 /* ------------------------------------------------------------
@@ -2170,7 +2169,7 @@ char * ANNOT_PreparePostBody (Document doc)
   /* find the size of the html fragment */
   AM_GetFileSize (html_tmpfile, &content_length);
 
-  fp = fopen (rdf_tmpfile, "w");
+  fp = TtaWriteOpen (rdf_tmpfile);
   /* write the prologue */
   fprintf (fp,
 	   "<?xml version=\"1.0\" ?>\n" 
@@ -2229,7 +2228,7 @@ char * ANNOT_PreparePostBody (Document doc)
  ** insert the HTML body itself
  */
 
-  fp2 = fopen (html_tmpfile, "r");
+  fp2 = TtaReadOpen (html_tmpfile);
   if (fp2)
     {
       /* skip any prologue (to have a valid XML doc )*/
@@ -2244,7 +2243,7 @@ char * ANNOT_PreparePostBody (Document doc)
 	fprintf (fp, "  %s", tmp_str);
 	fgets (tmp_str, 79, fp2);
       }
-      fclose (fp2);
+      TtaReadClose (fp2);
     }
 
   TtaFileUnlink (html_tmpfile);
@@ -2258,7 +2257,7 @@ char * ANNOT_PreparePostBody (Document doc)
 	   "</r:Description>\n"
 	   "</r:RDF>\n");
 
-  fclose (fp);  
+  TtaWriteClose (fp);  
   return (rdf_tmpfile);
 }
 
