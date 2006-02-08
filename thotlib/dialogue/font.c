@@ -1828,8 +1828,6 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
 #ifdef _GL
               code = '1'; /* West Europe Latin */
               pfont = &(fontset->Font_1);
-if (pfont == NULL)
-printf ("first loading");
 #else /* _GL */
 #ifdef _WINDOWS
               code = '1'; /* West Europe Latin */
