@@ -31,6 +31,7 @@ extern void TtaGZClose ( gzFile file );
 extern BinFile TtaReadOpen ( CONST char *filename );
 extern void TtaReadClose ( BinFile file );
 extern BinFile TtaWriteOpen ( CONST char *filename );
+extern BinFile TtaAddOpen ( CONST char *filename );
 extern void TtaWriteClose ( BinFile file );
 extern BinFile TtaRWOpen ( CONST char *filename );
 extern ThotBool TtaWriteByte ( BinFile file,
@@ -89,6 +90,7 @@ extern void TtaGZClose ( gzFile file );
 extern BinFile TtaReadOpen ( CONST char *filename );
 extern void TtaReadClose ( BinFile file );
 extern BinFile TtaWriteOpen ( CONST char *filename );
+extern BinFile TtaAddOpen ( CONST char *filename );
 extern void TtaWriteClose ( BinFile file );
 extern BinFile TtaRWOpen ( CONST char *filename );
 extern ThotBool TtaWriteByte ( BinFile file,

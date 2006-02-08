@@ -480,15 +480,12 @@ BinFile TtaReadOpen (CONST char *filename)
   if (filename && filename[0] != EOS)
     {
 #ifdef _WX
-
 #ifdef _WINDOWS
       file = wxFopen( TtaConvMessageToWX(filename), _T("rb"));
 #else /* _WINDOWS */
       file = wxFopen( TtaConvMessageToWX(filename), _T("r"));
 #endif /* _WINDOWS */
-
 #else /* _WX */
-      
 	  name = GetRealFileName (filename);
 #ifdef _WINDOWS
       file = fopen (name, "rb");
@@ -496,7 +493,6 @@ BinFile TtaReadOpen (CONST char *filename)
       file = fopen (name, "r");
 #endif /* _WINDOWS */
       TtaFreeMemory (name);
-
 #endif /* _WX */
 
       return file;
@@ -529,15 +525,12 @@ BinFile TtaWriteOpen (CONST char *filename)
   if (filename && filename[0] != EOS)
     {
 #ifdef _WX
-
 #ifdef _WINDOWS
       file = wxFopen( TtaConvMessageToWX(filename), _T("wb+"));
 #else /* _WINDOWS */
       file = wxFopen( TtaConvMessageToWX(filename), _T("w+"));
 #endif /* _WINDOWS */
-
 #else /* _WX */
-
       name = GetRealFileName (filename);
 #ifdef _WINDOWS
       file = fopen (name, "wb+");
@@ -545,7 +538,31 @@ BinFile TtaWriteOpen (CONST char *filename)
       file = fopen (name, "w+");
 #endif /* _WINDOWS */
       TtaFreeMemory (name);
+#endif /* _WX */
+      return file;
+    }
+  else
+    return (BinFile) NULL;
+}
 
+/*----------------------------------------------------------------------
+   TtaAddOpen opens a file for writing at the end.
+  ----------------------------------------------------------------------*/
+BinFile TtaAddOpen (CONST char *filename)
+{
+#ifndef _WX
+  char *   name;
+#endif /* _WX */
+  BinFile  file;
+
+  if (filename && filename[0] != EOS)
+    {
+#ifdef _WX
+      file = wxFopen( TtaConvMessageToWX(filename), _T("a"));
+#else /* _WX */
+      name = GetRealFileName (filename);
+      file = fopen (name, "a");
+      TtaFreeMemory (name);
 #endif /* _WX */
       return file;
     }
