@@ -888,11 +888,10 @@ AnnotMeta *LINK_CreateMeta (Document source_doc, Document annot_doc, AnnotMode m
       (!AnnotMetaData[source_doc].annotations 
        && !AnnotMetaData[source_doc].local_annot_loaded))
     {
-      char *annotIndex;
+      char *annotIndex = NULL;
 
       annotIndex = LINK_GetAnnotationIndexFile (source_doc_url);
       LINK_LoadAnnotationIndex (source_doc, annotIndex, FALSE);
-      TtaFreeMemory (annotIndex);
       AnnotMetaData[source_doc].local_annot_loaded = TRUE;
     }
 
@@ -1104,7 +1103,8 @@ void LINK_LoadAnnotationIndex (Document doc, char *annotIndex, ThotBool mark_vis
     return;
   
   annot_list = RDF_parseFile (annotIndex, &AnnotMetaData[doc].rdf_model);
-
+  TtaFreeMemory (annotIndex);
+  annotIndex = NULL;
   if (!annot_list)
     /* we didn't read any annotation */
     return;

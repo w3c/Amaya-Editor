@@ -746,13 +746,11 @@ static int FindListSubTree (int id, Element * elem)
 static ThotBool ExportSubTree (Element subTree, Document doc)
 {
   FILE		     *inputFile = NULL;
-  struct stat        *StatBuffer;
   SSchema	      sch;
-  ElementType         elType;
-  char	              tmpfilename[MAX_PATH], *name;
-  int	              charRead;
-  int                 len;
-  int		      status;
+  ElementType     elType;
+  char	          tmpfilename[MAX_PATH], *name;
+  int	          charRead;
+  int             len;
   ThotBool	      result = FALSE;
 
   len = BUFFER_LEN - szHTML;
@@ -779,24 +777,20 @@ static ThotBool ExportSubTree (Element subTree, Document doc)
   else
     TtaExportTree (subTree, doc, tmpfilename, "XMLT");
 
-  StatBuffer = (struct stat *) TtaGetMemory (sizeof (struct stat));
-  status = stat (tmpfilename, StatBuffer);
-  if (status != -1)
-    if (StatBuffer->st_size < len)
-      inputFile = TtaReadOpen (tmpfilename);
+  if (TtaFileExist (tmpfilename))
+    inputFile = TtaReadOpen (tmpfilename);
   charRead = EOS;
-  if (inputFile != NULL)
+  if (inputFile)
     {
       charRead = getc (inputFile);
       while (charRead != EOF && szHTML < BUFFER_LEN - 1)
-	{
-	  bufHTML[szHTML++] = charRead;
-	  charRead = getc (inputFile);
-	}
+	  {
+	    bufHTML[szHTML++] = charRead;
+	    charRead = getc (inputFile);
+	  }
     }
   TtaReadClose (inputFile);  
   TtaFileUnlink (tmpfilename);
-  TtaFreeMemory (StatBuffer);
   if (charRead == EOF)
     result = TRUE;
   bufHTML[szHTML] = EOS;

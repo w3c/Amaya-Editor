@@ -507,11 +507,11 @@ static void triple_handler (void * context, const raptor_statement *triple)
  ------------------------------------------------------------*/
 List *RDF_parseFile (char *file_name, List **rdf_model)
 {
-  ParseContext ctx;
-
-  raptor_parser* rdfxml_parser=NULL;
-  raptor_uri *uri = NULL;
-  char * full_file_name;
+  ParseContext   ctx;
+  raptor_parser *rdfxml_parser=NULL;
+  raptor_uri    *uri = NULL;
+  char          *full_file_name;
+  char          *tmp, *path;
 
   ctx.annot_list = &annot_list;
   ctx.rdf_model = rdf_model;
@@ -536,17 +536,28 @@ List *RDF_parseFile (char *file_name, List **rdf_model)
    that we can use it */
   full_file_name = (char *)TtaGetMemory (strlen (file_name) + sizeof ("file:"));
   sprintf (full_file_name, "file:%s", file_name);
+#ifdef _WX
+  path = (char *)TtaConvertMbsToByte ((unsigned char *)file_name,
+	                                 TtaGetLocaleCharset ());
+   /* remember the base name for anoynmous subjects */
+  tmp = (char *)TtaConvertMbsToByte ((unsigned char *)full_file_name,
+	                                 TtaGetLocaleCharset ());
+   /* remember the base name for anoynmous subjects */
+  TtaFreeMemory (full_file_name);
+  full_file_name = tmp;
+#else /* _WX */
+  path = file_name;
+#endif /* _WX */
    /* remember the base name for anoynmous subjects */
   ctx.base_uri = full_file_name;
-  raptor_set_statement_handler(rdfxml_parser, (void *) &ctx, triple_handler);
 
-  {
-    unsigned char *tmp;
-    
-    tmp = raptor_uri_filename_to_uri_string ((const char *) file_name);
-    uri = raptor_new_uri ((const unsigned char *) tmp);
-    free (tmp);
-  }
+  raptor_set_statement_handler(rdfxml_parser, (void *) &ctx, triple_handler); 
+  tmp = (char *) raptor_uri_filename_to_uri_string ((const char *) path);
+  uri = raptor_new_uri ((const unsigned char *) tmp);
+#ifdef _WX
+  TtaFreeMemory (path);
+#endif /* _WX */
+  TtaFreeMemory (tmp);
 
   if (raptor_parse_file (rdfxml_parser, uri, NULL))
     {

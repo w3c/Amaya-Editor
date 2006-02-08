@@ -669,7 +669,6 @@ static void ANNOT_Load2 (Document doc, View view, AnnotLoadMode mode)
 	tmp_url = body_url;
       annotIndex = LINK_GetAnnotationIndexFile (tmp_url);
       LINK_LoadAnnotationIndex (doc, annotIndex, TRUE);
-      TtaFreeMemory (annotIndex);
       AnnotMetaData[doc].local_annot_loaded = TRUE;
     }
   
