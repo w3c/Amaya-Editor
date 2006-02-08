@@ -97,7 +97,7 @@ Document ANNOT_NewDocument (Document doc, AnnotMode mode)
     {
       /* intialize the (amaya) metadata related to a document */
       if (DocumentURLs[annotDoc])
-	TtaFreeMemory (DocumentURLs[annotDoc]);
+        TtaFreeMemory (DocumentURLs[annotDoc]);
       DocumentURLs[annotDoc] = fname;
       DocumentMeta[annotDoc] = DocumentMetaDataAlloc ();
       DocumentMeta[annotDoc]->method = CE_ABSOLUTE;
@@ -260,7 +260,7 @@ void ANNOT_ReloadAnnotMeta (Document annotDoc)
   Initializes an annotation document by adding a BODY part
   and adding META elements for title, author, date, and type
   -----------------------------------------------------------------------*/
-void  ANNOT_InitDocumentMeta (Document doc, Document docAnnot, AnnotMeta *annot,
+void ANNOT_InitDocumentMeta (Document doc, Document docAnnot, AnnotMeta *annot,
 			      char *source_doc_title)
 {
   ElementType    elType;

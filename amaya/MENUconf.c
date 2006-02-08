@@ -371,7 +371,7 @@ static void  GetEnvString (char *name, char  *value)
   ----------------------------------------------------------------------*/
 void InitAmayaDefEnv (void)
 {
-  char        *ptr,  *ptr2;
+  char        *ptr;
   char         username[MAX_LENGTH];
   ThotBool     annot_rautoload, annot_rautoload_rst;
 
@@ -443,16 +443,12 @@ void InitAmayaDefEnv (void)
   TtaSetDefEnvString ("ANNOT_RAUTOLOAD", "no", FALSE);
   TtaSetDefEnvString ("ANNOT_RAUTOLOAD_RST", "yes", FALSE);
   TtaSetEnvString ("ANNOT_MAIN_INDEX", "annot.index", FALSE);
-  ptr = TtaGetEnvString ("APP_HOME");
-  ptr2 = (char *)TtaGetMemory ( strlen (ptr) + strlen ("annotations")
-                                + 2);
-  sprintf (ptr2, "%s%c%s", ptr, DIR_SEP, "annotations");
-  TtaSetDefEnvString ("ANNOT_DIR", ptr2, FALSE);
-  TtaFreeMemory (ptr2);
   /* set up the default annotation user name */
   if (!_GetSysUserName (username))
     username[0] = EOS;
+  // keep local encoding
   TtaSetDefEnvString ("ANNOT_USER", username, FALSE);
+
   /* reset remote annotations autoload ?*/
   TtaGetEnvBoolean ("ANNOT_RAUTOLOAD_RST", &annot_rautoload_rst);
   TtaGetEnvBoolean ("ANNOT_RAUTOLOAD", &annot_rautoload);
@@ -3936,7 +3932,22 @@ void         GeometryConfMenu (Document document, View view)
   ----------------------------------------------------------------------*/
 static void GetAnnotConf (void)
 {
+#ifdef _WX
+  unsigned char *ptr, *val;
+
+  val = (unsigned char *)TtaGetEnvString ("ANNOT_USER");
+  ptr = TtaConvertByteToMbs (val, TtaGetLocaleCharset ());
+  if (ptr)
+    {
+      strncpy (GProp_Annot.AnnotUser, (char *)ptr, MAX_LENGTH);
+      GProp_Annot.AnnotUser[MAX_LENGTH-1] = EOS;
+    }
+  else
+    GProp_Annot.AnnotUser[0] = EOS;
+  TtaFreeMemory (ptr);
+#else /* _WX */
   GetEnvString ("ANNOT_USER", GProp_Annot.AnnotUser);
+#endif /* _WX */
   GetEnvString ("ANNOT_POST_SERVER", GProp_Annot.AnnotPostServer);
   GetEnvString ("ANNOT_SERVERS", GProp_Annot.AnnotServers);
   TtaGetEnvBoolean ("ANNOT_LAUTOLOAD", &(GProp_Annot.AnnotLAutoLoad));
@@ -3959,8 +3970,16 @@ static void SetAnnotConf (void)
   /* we remove the \n added for the configuration menu widget */
   ConvertSpaceNL (GProp_Annot.AnnotServers, FALSE);
 #endif /* _WINGUI */
+#ifdef _WX
+  unsigned char *ptr;
 
+  ptr = TtaConvertMbsToByte ((unsigned char *)GProp_Annot.AnnotUser,
+                             TtaGetLocaleCharset ());
+  TtaSetEnvString ("ANNOT_USER", (char *)ptr, TRUE);
+  TtaFreeMemory (ptr);
+#else /* _WX */
   TtaSetEnvString ("ANNOT_USER", GProp_Annot.AnnotUser, TRUE);
+#endif /* _WX */
   TtaSetEnvString ("ANNOT_POST_SERVER", GProp_Annot.AnnotPostServer, TRUE);
   TtaSetEnvString ("ANNOT_SERVERS", GProp_Annot.AnnotServers, TRUE);
   TtaSetEnvBoolean ("ANNOT_LAUTOLOAD", GProp_Annot.AnnotLAutoLoad, TRUE);
@@ -3983,7 +4002,22 @@ static void SetAnnotConf (void)
 static void GetDefaultAnnotConf ()
 {
   /* read the default values */
-  GetDefEnvString ("ANNOT_USER", GProp_Annot.AnnotUser);
+#ifdef _WX
+  unsigned char *ptr, *val;
+
+  val = (unsigned char *)TtaGetEnvString ("ANNOT_USER");
+  ptr = TtaConvertByteToMbs (val, TtaGetLocaleCharset ());
+  if (ptr)
+    {
+      strncpy (GProp_Annot.AnnotUser, (char *)ptr, MAX_LENGTH);
+      GProp_Annot.AnnotUser[MAX_LENGTH-1] = EOS;
+    }
+  else
+    GProp_Annot.AnnotUser[0] = EOS;
+  TtaFreeMemory (ptr);
+#else /* _WX */
+  GetEnvString ("ANNOT_USER", GProp_Annot.AnnotUser);
+#endif /* _WX */
   GetDefEnvString ("ANNOT_POST_SERVER", GProp_Annot.AnnotPostServer);
   GetDefEnvString ("ANNOT_SERVERS", GProp_Annot.AnnotServers);
   TtaGetDefEnvBoolean ("ANNOT_LAUTOLOAD", &(GProp_Annot.AnnotLAutoLoad));

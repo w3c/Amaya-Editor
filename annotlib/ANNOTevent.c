@@ -302,10 +302,12 @@ void ANNOT_UpdateTransfer (Document doc)
   -----------------------------------------------------------------------*/
 void ANNOT_Init ()
 {
-  char *tmp;
+  char *tmp, *ptr;
 
   /* initialize the annot global variables */
-  annotDir = TtaStrdup (TtaGetEnvString ("ANNOT_DIR"));
+  ptr = TtaGetEnvString ("APP_HOME");
+  annotDir = (char *)TtaGetMemory (strlen (ptr) + strlen ("annotations") + 2);
+  sprintf (annotDir, "%s%c%s", ptr, DIR_SEP, "annotations");
   annotMainIndex = TtaStrdup (TtaGetEnvString ("ANNOT_MAIN_INDEX"));
   TtaGetEnvBoolean ("ANNOT_LAUTOLOAD", &annotLAutoLoad);
   TtaGetEnvBoolean ("ANNOT_RAUTOLOAD", &annotRAutoLoad);
@@ -313,7 +315,8 @@ void ANNOT_Init ()
 
   tmp = TtaGetEnvString ("ANNOT_USER");
   if (tmp)
-    annotUser = (char *)TtaConvertByteToMbs ((unsigned char *)tmp, ISO_8859_1);
+    annotUser = (char *)TtaConvertByteToMbs ((unsigned char *)tmp,
+                                             TtaGetLocaleCharset ());
   else
     annotUser = NULL;
   tmp = TtaGetEnvString ("ANNOT_SERVERS");
