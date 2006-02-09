@@ -2184,7 +2184,7 @@ static void BrowserForm (Document doc, View view, char *urlname)
 /*----------------------------------------------------------------------
   InitOpenDocForm initializes a form that ask the URI of the opened or
   new created document.
-  The parameter name gives a proposed document name.
+  The parameter name gives a proposed document name (New document).
   The parameter title gives the title of the the form.
   ----------------------------------------------------------------------*/
 static void InitOpenDocForm (Document doc, View view, char *name, char *title,
@@ -2192,6 +2192,10 @@ static void InitOpenDocForm (Document doc, View view, char *name, char *title,
 {
   char              s [MAX_LENGTH];
   ThotBool          remote;
+#ifdef _WX
+  char             *thotdir;
+  wxString          homedir;
+#endif /* _WX */
 #if defined(_GTK)
   int               i;
 
@@ -2238,6 +2242,15 @@ static void InitOpenDocForm (Document doc, View view, char *name, char *title,
         }
       else
         {
+#ifdef _WX
+          // Avoid to create new documents into Amaya space
+          thotdir = TtaGetEnvString ("THOTDIR");
+          if (!strncmp (s, thotdir, strlen (thotdir)))
+            {
+              homedir = TtaGetHomeDir();
+              strcpy(s, (const char *)homedir.mb_str(wxConvUTF8));
+            }
+#endif /* _WX */
           strcpy (DirectoryName, s);
           strcpy (DocumentName, name);
           strcat (s, DIR_STR);

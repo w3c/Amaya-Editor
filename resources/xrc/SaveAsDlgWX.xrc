@@ -18,40 +18,62 @@
                 </object>
                 <flag>wxALL|wxEXPAND</flag>
               </object>
-              <object class="spacer">
-                <size>0,5</size>
-              </object>
               <object class="sizeritem">
-                <object class="wxTextCtrl" name="wxID_DOC_LOCATION_CTRL">
-                  <focused>1</focused>
+                <object class="wxBoxSizer">
+                  <orient>wxHORIZONTAL</orient>
+                  <object class="sizeritem">
+                    <object class="wxTextCtrl" name="wxID_DOC_LOCATION_CTRL">
+                      <size>445,-1</size>
+                      <focused>1</focused>
+                    </object>
+                    <flag>wxALL|wxEXPAND</flag>
+                  </object>
+                  <object class="spacer">
+                    <size>5,0</size>
+                  </object>
+                  <object class="sizeritem">
+                    <object class="wxBitmapButton" name="wxID_BROWSE">
+                      <bitmap stock_id="wxART_FILE_OPEN"></bitmap>
+                    </object>
+                  </object>
                 </object>
+                <option>0</option>
                 <flag>wxALL|wxEXPAND</flag>
               </object>
             </object>
             <option>0</option>
             <flag>wxALL|wxEXPAND</flag>
-            <border>5</border>
+            <border>4</border>
           </object>
           <object class="sizeritem">
             <object class="wxBoxSizer">
-              <orient>wxVERTICAL</orient>
+              <orient>wxHORIZONTAL</orient>
               <object class="sizeritem">
                 <object class="wxStaticText" name="wxID_IMG_LOCATION">
                   <label>*Repertoire des images*</label>
+                  <size>150,-1</size>
                 </object>
-                <flag>wxALL|wxEXPAND</flag>
-              </object>
-              <object class="spacer">
-                <size>0,5</size>
+                <flag>wxALIGN_CENTRE_VERTICAL</flag>
+                <border>5</border>
               </object>
               <object class="sizeritem">
                 <object class="wxTextCtrl" name="wxID_IMG_LOCATION_CTRL"/>
-                <flag>wxALL|wxEXPAND</flag>
+                <flag>wxEXPAND</flag>
+                <minsize>300,-1</minsize>
+              </object>
+              <object class="spacer">
+                <size>5,0</size>
+              </object>
+              <object class="sizeritem">
+                <object class="wxBitmapButton" name="wxID_IMG_BROWSE">
+                  <bitmap stock_id="wxART_FOLDER"></bitmap>
+                </object>
+                <flag>wxRIGHT</flag>
               </object>
             </object>
-            <option>0</option>
-            <flag>wxALL|wxEXPAND</flag>
-            <border>5</border>
+            <option>1</option>
+            <flag>wxRIGHT|wxEXPAND</flag>
+            <border>4</border>
           </object>
           <object class="sizeritem">
             <object class="wxBoxSizer">
@@ -176,33 +198,21 @@
               <label>*Confirm*</label>
               <default>1</default>
             </object>
-          </object>
-          <object class="spacer">
-            <size>10,0</size>
-          </object>
-          <object class="sizeritem">
-            <object class="wxButton" name="wxID_BROWSE">
-              <label>*Browse*</label>
-            </object>
-            <flag>wxALL</flag>
-          </object>
-          <object class="spacer">
-            <size>10,0</size>
+            <border>5</border>
           </object>
           <object class="sizeritem">
             <object class="wxButton" name="wxID_CLEAR">
               <label>*Clear*</label>
             </object>
             <flag>wxALL</flag>
-          </object>
-          <object class="spacer">
-            <size>10,0</size>
+            <border>5</border>
           </object>
           <object class="sizeritem">
             <flag>wxALL</flag>
             <object class="wxButton" name="wxID_CANCEL">
               <label>*Cancel*</label>
             </object>
+            <border>5</border>
           </object>
         </object>
       </object>

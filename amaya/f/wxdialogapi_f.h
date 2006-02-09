@@ -66,7 +66,8 @@ extern ThotBool CreatePrintDlgWX ( int ref,
 extern ThotBool CreateSaveAsDlgWX ( int ref,
                                     ThotWindow parent,
                                     char* pathname,
-                                    int doc );
+                                    int doc,
+                                    ThotBool saveImgs );
 extern ThotBool CreateSaveObject ( int ref,
                                    ThotWindow parent,
                                    char* objectname );
@@ -205,7 +206,8 @@ extern ThotBool CreatePrintDlgWX ( int ref,
 extern ThotBool CreateSaveAsDlgWX ( int ref,
                                       ThotWindow parent,
                                       char* pathname,
-                                      int doc );
+                                      int doc,
+                                      ThotBool saveImgs );
 extern ThotBool CreateSaveObject ( int ref,
                                      ThotWindow parent,
                                      char* objectname );

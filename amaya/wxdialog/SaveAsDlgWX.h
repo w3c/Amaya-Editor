@@ -19,9 +19,10 @@ public:
     
   // Constructor.
   SaveAsDlgWX( int ref,
-	       wxWindow* parent,
-	       const wxString & pathname,
-	       int doc );
+               wxWindow* parent,
+               const wxString & pathname,
+               int doc,
+               bool saveImgs);
   
   // Destructor.                  
   virtual ~SaveAsDlgWX();
@@ -31,6 +32,7 @@ private:
   void OnConfirmButton( wxCommandEvent& event );
   void OnCancelButton( wxCommandEvent& event );
   void OnBrowseButton( wxCommandEvent& event );
+  void OnDirButton( wxCommandEvent& event );
   void OnClearButton( wxCommandEvent& event );
   void OnCharsetCbx( wxCommandEvent& event );
   void OnMimeTypeCbx( wxCommandEvent& event );

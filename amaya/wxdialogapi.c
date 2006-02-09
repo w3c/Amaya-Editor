@@ -474,7 +474,8 @@ ThotBool CreatePrintDlgWX (int ref, ThotWindow parent, char* printer_file,
     + pathname : file location
   returns:
   ----------------------------------------------------------------------*/
-ThotBool CreateSaveAsDlgWX (int ref, ThotWindow parent, char* pathname, int doc)
+ThotBool CreateSaveAsDlgWX (int ref, ThotWindow parent, char* pathname,
+                            int doc, ThotBool saveImgs)
 {
 #ifdef _WX
   /* check if the dialog is alredy open */
@@ -483,9 +484,10 @@ ThotBool CreateSaveAsDlgWX (int ref, ThotWindow parent, char* pathname, int doc)
 
   wxString wx_pathname = TtaConvMessageToWX( pathname );
   SaveAsDlgWX * p_dlg = new SaveAsDlgWX( ref,
-					 parent,
-					 wx_pathname,
-					 doc );
+                                         parent,
+                                         wx_pathname,
+                                         doc,
+                                         saveImgs);
 
   if ( TtaRegisterWidgetWX( ref, p_dlg ) )
       /* the dialog has been sucesfully registred */

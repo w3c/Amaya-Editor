@@ -539,6 +539,10 @@ static void InitSaveForm (Document document, View view, char *pathname)
   char             s[MAX_LENGTH];
   int              i;
 #endif /* _GTK */
+#ifdef _WX
+  LoadedImageDesc *pImage;
+  ThotBool         created, saveImgs;
+#endif /* _WX */
 
   if (TextFormat)
     {
@@ -654,9 +658,20 @@ static void InitSaveForm (Document document, View view, char *pathname)
   CreateSaveAsDlgWindow (TtaGetViewFrame (document, view), pathname);
 #endif /* _WINGUI */
 #ifdef _WX
-  ThotBool created;
+  saveImgs = FALSE;
+  if (IsW3Path (pathname))
+    {
+      // check idf some images must be saved
+      pImage = ImageURLs;
+      while (!saveImgs && pImage)
+        {
+          saveImgs = (pImage->document == document && pImage->status == IMAGE_MODIFIED);
+          pImage = pImage->nextImage;
+        }
+    }
   created = CreateSaveAsDlgWX (BaseDialog + SaveForm,
-                               TtaGetViewFrame (document, view), pathname, document);
+                               TtaGetViewFrame (document, view), pathname,
+                               document, (bool)saveImgs);
   if (created)
     TtaShowDialogue (BaseDialog + SaveForm, FALSE);
 #endif /* _WX */
@@ -3620,6 +3635,13 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
     strcat (documentFile, SaveName);
 
   doc = SavingDocument;
+  // remove extra '/'
+  len = strlen(SaveImgsURL);
+  if (len && SaveImgsURL[len-1] == url_sep)
+    SaveImgsURL[len-1] = EOS;
+  if (!strcmp (SavePath, SaveImgsURL))
+    // same path
+    SaveImgsURL[0] = EOS;
   if (ok && dst_is_local)
     {
       /* verify that the directory exists */
