@@ -140,7 +140,8 @@ int GetBoxDistance (PtrBox pBox, PtrFlow pFlow, int xRef, int yRef,
   y += height;
   if (xRef < xcell || xRef > xcell + wcell ||
       yRef < ycell || yRef > ycell + hcell)
-    return MAX_DISTANCE;
+    //return MAX_DISTANCE;
+    return value = GetDistance (xRef - x, width) + ratio * GetDistance (yRef - y, height);
   else if (pCell)
     value = GetDistance (xRef - x, width) + 10 * GetDistance (yRef - y, height);
   else
@@ -228,7 +229,10 @@ void GetClickedBox (PtrBox *result, PtrFlow *pFlow, PtrAbstractBox pRootAb,
                   if ((pAb->AbPresentationBox && !pAb->AbCanBeModified) ||
                       pAb->AbLeafType == LtGraphics ||
                       pAb->AbLeafType == LtPolyLine ||
-                      pAb->AbLeafType == LtPath)
+                      pAb->AbLeafType == LtPath ||
+                      // skip column heads
+                      (pAb->AbEnclosing && pAb->AbEnclosing->AbBox &&
+                       pAb->AbEnclosing->AbBox->BxType == BoColumn))
                     {
 #ifdef _GL  
                       if (bx <= x && bx + pBox->BxClipW >= x &&
