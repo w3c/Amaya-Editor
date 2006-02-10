@@ -5246,7 +5246,7 @@ void ParseExternalDocument (char *fileName, char *originalName, Element el,
           event.document = doc;
           event.element = copy;
           event.elementType.ElSSchema = NULL;
-          event.elementType.ElTypeNum = NULL; /* tell UpdateURLsInSubtree not to
+          event.elementType.ElTypeNum = 0; /* tell UpdateURLsInSubtree not to
                                               change IDs through MaqueUniqueName */
           event.position = externalDoc;
           event.info = 0;
