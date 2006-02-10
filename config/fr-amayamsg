@@ -78,7 +78,7 @@
 76 La sauvegarde sauvera aussi les images suivantes?
 77 Erreur de sauvegarde de l'URL
 78 Sauvegarder sur le disque ?
-79 Copier images
+79 Copier les images
 80 Transformer les URL
 81 Adresse du document
 82 Répertoire des images
@@ -136,7 +136,7 @@
 134 Nombre de colonnes
 135 Bordure
 136 Texte de remplacement
-137 Le texte remplacement est obligatoire
+137 Le texte de remplacement est obligatoire
 138 Imprimer l'URL
 139 Appliquer
 140 Défauts
