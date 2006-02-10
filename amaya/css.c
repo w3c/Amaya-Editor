@@ -1068,12 +1068,12 @@ void LoadStyleSheet (char *url, Document doc, Element link, CSSInfoPtr css,
           return;
         }
       while (!endOfFile)
-	{
-	  len = gzread (res, bufferRead, COPY_BUFFER_SIZE);
-	  if (len < COPY_BUFFER_SIZE)
-	    endOfFile = TRUE;
-	  lenBuff += len;
-	}
+        {
+          len = gzread (res, bufferRead, COPY_BUFFER_SIZE);
+          if (len < COPY_BUFFER_SIZE)
+            endOfFile = TRUE;
+          lenBuff += len;
+        }
       len = 0;
       TtaGZClose (res);
       tmpBuff = (char *)TtaGetMemory (lenBuff + 1);
