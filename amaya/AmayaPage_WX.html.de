@@ -3,7 +3,7 @@
 <head>
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <title>Willkommen bei Amaya</title>
-  <meta name="generator" content="amaya 9.3, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 9.4, see http://www.w3.org/Amaya/" />
   <link href="amaya.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -74,7 +74,7 @@
 </svg>
 </div>
 
-<h1>Willkommen bei Amaya 9.3</h1>
+<h1>Willkommen bei Amaya 9.4</h1>
 
 <p>Amaya ist ein Web-Client, der sowohl als Browser als auch als
 Autorenwerkzeug dient. Amaya wurde vom <a href="http://www.w3.org/">W3C</a>
