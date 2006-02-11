@@ -291,7 +291,7 @@ SaveAsDlgWX::~SaveAsDlgWX()
   ----------------------------------------------------------------------*/
 void SaveAsDlgWX::OnConfirmButton( wxCommandEvent& event )
 {
-  if (Waiting)
+  //if (Waiting)
     {
       // save callback
       ThotCallback (MyRef, INTEGER_DATA, (char*) 1);
@@ -304,7 +304,7 @@ void SaveAsDlgWX::OnConfirmButton( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void SaveAsDlgWX::OnCancelButton( wxCommandEvent& event )
 {
-  if (Waiting)
+  //if (Waiting)
     {
       // a return is still requested
       ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
