@@ -1973,9 +1973,17 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
           if (clearL || clearR)
             {
               if (clearL && pLine->LiYOrg < bottomL)
-                pLine->LiYOrg = bottomL;
+                {
+                  int delta = pLine->LiXOrg - left - indent;
+                  pLine->LiYOrg = bottomL;
+                  pLine->LiXOrg = left + indent;
+                  pLine->LiXMax += delta;
+                }
               if (clearR && pLine->LiYOrg < bottomR)
-                pLine->LiYOrg = bottomR;
+                {
+                  pLine->LiYOrg = bottomR;
+                  pLine->LiXMax = pBlock->BxW - pLine->LiXOrg;
+                }
             }
           else if (!newFloat)
             {
@@ -2218,6 +2226,7 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
               if (!extensibleBlock)
                 {
                   setinline = (pNextBox->BxAbstractBox->AbFloat == 'N' &&
+                               pNextBox->BxAbstractBox->AbClear != 'B' &&
                                !ExtraFlow (pNextBox, frame));
                   if (setinline)
                     val = pLine->LiXMax;

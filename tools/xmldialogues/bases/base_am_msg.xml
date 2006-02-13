@@ -4046,7 +4046,7 @@
 <message xml:lang="it">Regole di stile CSS applicate all'elemento &lt;%s&gt;\n</message>
 <message xml:lang="es">Reglas de estilo aplicadas al elemento &lt;%s&gt;\n</message>
 <message xml:lang="de">CSS-Regeln, die für &lt;%s&gt; gelten\n</message>
-<message xml:lang="ru">Правила таблицы стилей CSS применены к элементу &amp;%s&amp;\n</message>
+<message xml:lang="ru">Правила таблицы стилей CSS применены к элементу &lt;%s&gt;\n</message>
 <message xml:lang="hu">CSS stílus szabályok alkalmazása a(z) &lt;%s&gt; elemre\n</message>
 <message xml:lang="ka">CSS სტილის წესები გამოყენებულია &lt;%s&gt; ელემენტისთვის\n</message></label>
 <label define="AM_LINK_LINE">
