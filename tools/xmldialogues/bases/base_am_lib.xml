@@ -2524,17 +2524,17 @@
 	<message xml:lang="ka">გაძლიერება</message>
 </label>
 <label define="TMSG_BUTTON_CODE">
-	<message xml:lang="en">Fixed font</message>
-	<message xml:lang="fr">Fonte fixe</message>
+	<message xml:lang="en">Code</message>
+	<message xml:lang="fr">Code</message>
 	<message xml:lang="de">Code</message>
-	<message xml:lang="it">Font non proporzionale</message>
-	<message xml:lang="tr">Sabit genişlikli yazıtipi</message>
+	<message xml:lang="it">Codice</message>
+	<message xml:lang="tr">Kod</message>
 	<message xml:lang="es">Código (code)</message>
-	<message xml:lang="pt">Tipo (font) fixo</message>
-	<message xml:lang="fi">Vakio fontti</message>
+	<message xml:lang="pt">Código (font)</message>
+	<message xml:lang="fi">Koodi</message>
 	<message xml:lang="ru">Код</message>
-	<message xml:lang="hu">Adott betűkészlet</message>
-	<message xml:lang="ka">მონოსიგანის შრიფტი</message>
+	<message xml:lang="hu">Kód</message>
+	<message xml:lang="ka">კოდი</message>
 </label>
 <label define="TMSG_BUTTON_IMG">
 	<message xml:lang="en">Insert image</message>
