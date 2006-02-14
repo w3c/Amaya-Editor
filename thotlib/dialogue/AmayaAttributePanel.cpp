@@ -38,17 +38,17 @@
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaAttributePanel, AmayaSubPanel)
 
-/*----------------------------------------------------------------------
- *       Class:  AmayaAttributePanel
- *      Method:  AmayaAttributePanel
- * Description:  construct a panel (bookmarks, elements, attributes ...)
- *               TODO
-  -----------------------------------------------------------------------*/
-AmayaAttributePanel::AmayaAttributePanel( wxWindow * p_parent_window, AmayaNormalWindow * p_parent_nwindow )
-  : AmayaSubPanel( p_parent_window, p_parent_nwindow, _T("wxID_PANEL_ATTRIBUTE") )
-  ,m_pRBEnum(NULL)
-  ,m_NbAttr(0)
-  ,m_NbAttr_evt(0)
+  /*----------------------------------------------------------------------
+   *       Class:  AmayaAttributePanel
+   *      Method:  AmayaAttributePanel
+   * Description:  construct a panel (bookmarks, elements, attributes ...)
+   *               TODO
+   -----------------------------------------------------------------------*/
+  AmayaAttributePanel::AmayaAttributePanel( wxWindow * p_parent_window, AmayaNormalWindow * p_parent_nwindow )
+    : AmayaSubPanel( p_parent_window, p_parent_nwindow, _T("wxID_PANEL_ATTRIBUTE") )
+    ,m_pRBEnum(NULL)
+    ,m_NbAttr(0)
+    ,m_NbAttr_evt(0)
 {
   m_pVPanelParent       = XRCCTRL(*this, "wxID_PANEL_ATTRVALUE", wxPanel);
   m_pVPanelSizer  = m_pVPanelParent->GetSizer();
@@ -83,7 +83,7 @@ AmayaAttributePanel::AmayaAttributePanel( wxWindow * p_parent_window, AmayaNorma
  *      Method:  ~AmayaAttributePanel
  * Description:  destructor
  *               TODO
-  -----------------------------------------------------------------------*/
+ -----------------------------------------------------------------------*/
 AmayaAttributePanel::~AmayaAttributePanel()
 {
   // unregister myself to the manager, so nothing should be asked to me in future
@@ -95,7 +95,7 @@ AmayaAttributePanel::~AmayaAttributePanel()
  *       Class:  AmayaAttributePanel
  *      Method:  GetPanelType
  * Description:  
-  -----------------------------------------------------------------------*/
+ -----------------------------------------------------------------------*/
 int AmayaAttributePanel::GetPanelType()
 {
   return WXAMAYA_PANEL_ATTRIBUTE;
@@ -172,7 +172,7 @@ void AmayaAttributePanel::OnListSelectItem( wxCommandEvent& event )
   selecte an attribut to the given position
   params:
   bool force_checked : true if this function must ignore the checked item state
-                       (default is false)
+  (default is false)
   returns:
   ----------------------------------------------------------------------*/
 void AmayaAttributePanel::SelectAttribute( int position, bool force_checked )
@@ -187,15 +187,15 @@ void AmayaAttributePanel::SelectAttribute( int position, bool force_checked )
       // TODO: simplify the code => remove this special case for event menu...
       int item_num = 0;
       if ( position >= m_NbAttr )
-	{
-	  item_num = position - m_NbAttr;
-	  CallbackAttrMenu( -1, item_num, TtaGiveActiveFrame() );
-	}
+        {
+          item_num = position - m_NbAttr;
+          CallbackAttrMenu( -1, item_num, TtaGiveActiveFrame() );
+        }
       else
-	{
-	  item_num = position;
-	  CallbackAttrMenu( -2, item_num, TtaGiveActiveFrame() );
-	}
+        {
+          item_num = position;
+          CallbackAttrMenu( -2, item_num, TtaGiveActiveFrame() );
+        }
     }
   else
     ShowAttributValue( wxATTR_TYPE_NONE );
@@ -215,24 +215,24 @@ void AmayaAttributePanel::OnListCheckItem( wxCommandEvent& event )
       SelectAttribute( event.GetSelection(), true );
 
       if (!m_CurrentAttMandatory)
-	{
-	  /* remove attribute */
-	  RemoveCurrentAttribute();
-	}
+        {
+          /* remove attribute */
+          RemoveCurrentAttribute();
+        }
       else
-	{
-	  /* this attribut is mandatory, user is not allowed to remove it ! */
-	  m_pAttrList->Check(event.GetSelection(), true);
-	  TtaDisplaySimpleMessage (INFO, LIB, TMSG_ATTR_MANDATORY);
-	}
+        {
+          /* this attribut is mandatory, user is not allowed to remove it ! */
+          m_pAttrList->Check(event.GetSelection(), true);
+          TtaDisplaySimpleMessage (INFO, LIB, TMSG_ATTR_MANDATORY);
+        }
     }
   else
-  {
-    /* force the item selection */
-    SelectAttribute( event.GetSelection() );
-    /* creation of a new attribut with a default value */
-    CreateCurrentAttribute();
-  }
+    {
+      /* force the item selection */
+      SelectAttribute( event.GetSelection() );
+      /* creation of a new attribut with a default value */
+      CreateCurrentAttribute();
+    }
   event.Skip();
 }
 
@@ -270,6 +270,8 @@ void AmayaAttributePanel::RemoveCurrentAttribute()
   ----------------------------------------------------------------------*/
 void AmayaAttributePanel::CreateCurrentAttribute()
 {
+  ShowAttributValue (m_CurrentAttType);
+#ifdef IV
   switch (m_CurrentAttType)
     {
     case wxATTR_TYPE_TEXT:
@@ -301,6 +303,7 @@ void AmayaAttributePanel::CreateCurrentAttribute()
       wxASSERT(FALSE); /* should not append ? */
       break;
     }
+#endif
 }
 
 
@@ -325,30 +328,30 @@ void AmayaAttributePanel::ShowAttributValue( wxATTR_TYPE type )
     {
     case wxATTR_TYPE_ENUM:
       {
-	m_pVPanelSizer->Show( m_pPanel_Enum, true );
-	m_pVPanelSizer->Show( m_pPanel_ApplyArea, true );
-	m_pPanel_Enum->Refresh();
+        m_pVPanelSizer->Show( m_pPanel_Enum, true );
+        m_pVPanelSizer->Show( m_pPanel_ApplyArea, true );
+        m_pPanel_Enum->Refresh();
       }
       break;
     case wxATTR_TYPE_TEXT:
       {
-	m_pVPanelSizer->Show( m_pPanel_Text, true );
-	m_pVPanelSizer->Show( m_pPanel_ApplyArea, true );
-	m_pPanel_Text->Refresh();
+        m_pVPanelSizer->Show( m_pPanel_Text, true );
+        m_pVPanelSizer->Show( m_pPanel_ApplyArea, true );
+        m_pPanel_Text->Refresh();
       }
       break;
     case wxATTR_TYPE_LANG:
       {
-	m_pVPanelSizer->Show( m_pPanel_Lang, true );
-	m_pVPanelSizer->Show( m_pPanel_ApplyArea, true );
-	m_pPanel_Lang->Refresh();
+        m_pVPanelSizer->Show( m_pPanel_Lang, true );
+        m_pVPanelSizer->Show( m_pPanel_ApplyArea, true );
+        m_pPanel_Lang->Refresh();
       }
       break;
     case wxATTR_TYPE_NUM:
       {
-	m_pVPanelSizer->Show( m_pPanel_Num, true );
-	m_pVPanelSizer->Show( m_pPanel_ApplyArea, true );
-	m_pPanel_Num->Refresh();
+        m_pVPanelSizer->Show( m_pPanel_Num, true );
+        m_pVPanelSizer->Show( m_pPanel_ApplyArea, true );
+        m_pPanel_Num->Refresh();
       }
       break;
     default:
@@ -394,9 +397,9 @@ void AmayaAttributePanel::SetupListValue( const char * p_attr_list,
     {
       /* just add T (toggle items) */
       if (p_attr_list[index] == 'T')
-	m_pAttrList->Append( TtaConvMessageToWX( &p_attr_list[index+1] ) );
+        m_pAttrList->Append( TtaConvMessageToWX( &p_attr_list[index+1] ) );
       else
-	ignore_attr_item++;
+        ignore_attr_item++;
       index += strlen (&p_attr_list[index]) + 1; /* one entry length */
       i_item++;
     }
@@ -407,9 +410,9 @@ void AmayaAttributePanel::SetupListValue( const char * p_attr_list,
     {
       /* just add T (toggle items) */
       if (p_attr_evt_list[index] == 'T')
-	m_pAttrList->Append( TtaConvMessageToWX( &p_attr_evt_list[index+1] ) );
+        m_pAttrList->Append( TtaConvMessageToWX( &p_attr_evt_list[index+1] ) );
       else
-	ignore_attr_evt_item++;
+        ignore_attr_evt_item++;
       index += strlen (&p_attr_evt_list[index]) + 1; /* one entry length */
       i_item++;
     }
@@ -482,11 +485,11 @@ void AmayaAttributePanel::SetupLangValue( const char * selected_lang,
   if ( wx_selected_lang != _T("") )
     p_combo->SetStringSelection(wx_selected_lang);
   else
-  {
+    {
 #ifndef _WINDOWS
-    p_combo->SetValue(_T(""));
+      p_combo->SetValue(_T(""));
 #endif /* _WINDOWS */
-  }
+    }
 
   m_pPanel_Lang->Refresh();
 }
@@ -536,7 +539,7 @@ void AmayaAttributePanel::SetupEnumValue( const char * enums, int nb_enum, int s
       i_item++;
     }
   m_pRBEnum = new wxRadioBox( m_pPanel_Enum, -1, _T(""), wxDefaultPosition, wxDefaultSize,
-			      choices, 1, wxRA_SPECIFY_COLS );
+                              choices, 1, wxRA_SPECIFY_COLS );
   if (selected != -1)
     m_pRBEnum->SetSelection(selected);
   p_sizer->Prepend(m_pRBEnum, 0, wxALL|wxEXPAND, 0);
@@ -673,7 +676,7 @@ void AmayaAttributePanel::ForceAttributeUpdate()
  *       Class:  AmayaAttributePanel
  *      Method:  DoUpdate
  * Description:  force a refresh when the user expand or detach this panel
-  -----------------------------------------------------------------------*/
+ -----------------------------------------------------------------------*/
 void AmayaAttributePanel::DoUpdate()
 {
   AmayaSubPanel::DoUpdate();
@@ -684,7 +687,7 @@ void AmayaAttributePanel::DoUpdate()
  *       Class:  AmayaAttributePanel
  *      Method:  IsActive
  * Description:  
-  -----------------------------------------------------------------------*/
+ -----------------------------------------------------------------------*/
 bool AmayaAttributePanel::IsActive()
 {
   return (AmayaSubPanel::IsActive() && !IsFreezed());
@@ -694,7 +697,7 @@ bool AmayaAttributePanel::IsActive()
  *       Class:  AmayaAttributePanel
  *      Method:  SetMandatoryState
  * Description:  
-  -----------------------------------------------------------------------*/
+ -----------------------------------------------------------------------*/
 void AmayaAttributePanel::SetMandatoryState( bool is_mandatory )
 {
   m_CurrentAttMandatory = is_mandatory;
@@ -717,6 +720,6 @@ BEGIN_EVENT_TABLE(AmayaAttributePanel, AmayaSubPanel)
   EVT_BUTTON(       XRCID("wxID_OK"),              AmayaAttributePanel::OnApply )
   EVT_BUTTON(       XRCID("wxID_BUTTON_DEL_ATTR"), AmayaAttributePanel::OnDelAttr )
   EVT_CHECKBOX(     XRCID("wxID_CHECK_AUTOREF"),   AmayaAttributePanel::OnAutoRefresh )
-END_EVENT_TABLE()
+  END_EVENT_TABLE()
 
 #endif /* #ifdef _WX */
