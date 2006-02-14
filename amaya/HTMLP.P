@@ -2577,8 +2577,11 @@ RULES
 	CreateWith(VerticalLine);
 	LineBreak: Yes;
 	HorizPos: Left = Enclosing . Left;
+  if within Option_Menu
+    Visibility: 0;
 	VertPos: Top = Previous not MAP . Bottom + 0.4;
 	IN Structure_view BEGIN
+		Visibility: Enclosing =;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
@@ -6163,20 +6166,24 @@ ATTRIBUTES
 
  ShowMe:
 	BEGIN
+  if within Font_
+		Visibility: 10;
 	if within OptGroup
 		Visibility: GrandFather =;
-	if not within OptGroup
+	if not within OptGroup and not within Font_
 		Visibility: Enclosing =;
 	END;
 
  Selected:
 	BEGIN
 	CreateBefore(AttrNameOnly);
+  if within Font_
+		Visibility: 10;
 	IF inherited Multiple
 	        CreateFirst (SelectedInAltView);
 	if within OptGroup
 		Visibility:GrandFather =;
-	if not within OptGroup
+	if not within OptGroup and not within Font_
 		Visibility: Enclosing =;
 	IN Structure_view
 		Visibility: Enclosing =;

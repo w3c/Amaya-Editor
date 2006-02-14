@@ -1533,7 +1533,7 @@ static void ProcessOptionElement (Element option, Element el,
   ----------------------------------------------------------------------*/
 void OnlyOneOptionSelected (Element el, Document doc, ThotBool parsing)
 {
-  ElementType      elType;
+  ElementType      elType, opType;
   Element          option, menu, child, firstOption;
   AttributeType    attrType, attrshowMeType;
   Attribute        attr, showMeAttr;
@@ -1621,6 +1621,8 @@ void OnlyOneOptionSelected (Element el, Document doc, ThotBool parsing)
           if (parsing || !multiple)
             {
               option = TtaGetFirstChild (menu);
+              opType = TtaGetElementType (menu);
+              opType.ElTypeNum = HTML_EL_Option;
               while (option)
                 {
                   elType = TtaGetElementType (option);
@@ -1631,20 +1633,16 @@ void OnlyOneOptionSelected (Element el, Document doc, ThotBool parsing)
                       if (!firstOption)
                         firstOption = option;
                     }
-                  else if (elType.ElTypeNum == HTML_EL_OptGroup)
+                  else 
                     {
-                      child = TtaGetFirstChild (option);
+                      child = TtaSearchTypedElement (opType, SearchInTree, option);
                       while (child)
                         {
-                          elType = TtaGetElementType (child);
-                          if (elType.ElTypeNum == HTML_EL_Option)
-                            {
-                              ProcessOptionElement (child, el, doc, multiple,
-                                                    parsing);
-                              if (!firstOption)
-                                firstOption = option;
-                            }
-                          TtaNextSibling (&child);
+                          ProcessOptionElement (child, el, doc, multiple, parsing);
+                          if (!firstOption)
+                            firstOption = option;
+                          // look for the next option
+                          child = TtaSearchTypedElementInTree (opType, SearchForward, option, child);
                         }
                     }
                   TtaNextSibling (&option);
@@ -2740,6 +2738,8 @@ static void EndOfEndTag (char c)
             }
         }
 
+      //if (!strcasecmp ((char *)inputBuffer, "font"))
+      //             printf ("font element\n");
       profile = TtaGetDocumentProfile(HTMLcontext.doc);
       if (!ok)
         {
