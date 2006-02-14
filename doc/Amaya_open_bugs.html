@@ -6,18 +6,21 @@
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <title>Open bugs in Amaya</title>
   <style type="text/css">
-body       { background: #fffbf0; color: #000; }
-caption    { font-family: helvetica; font-size: 18;
-             font-weight: Bold; text-align: left;}
-tr.title   {  background-color: #FFE9C1; }
-th         { width: 100px; }
-th.summary { width: 450px; }
-td.categ   { width: 200px; }
-h1         { font-size: 14;
-             text-align: center; }
-p.date     { font-size: 14; 
-             text-align: center; }
-h2         {  font-size: 12; }
+body          { background: #fffbf0; color: #000; }
+caption       { font-family: helvetica; font-size: 18;
+                font-weight: Bold; text-align: left;}
+tr.title      {  background-color: #FFE9C1; }
+th.summary    { width: 450px; }
+th.submission { width: 150px; }
+th.submitter  { width: 150px; }
+th.date-fixed { width: 150px; }
+th.bug-id     { width: 100px; }
+td            { margin-left: 5px; }
+h1            { font-size: 14;
+                text-align: center; }
+p.date        { font-size: 14; 
+                text-align: center; }
+h2            {  font-size: 12; }
 .fixed {background-color: #E5E5E5; color: #7F7F7F}</style>
 </head>
 
@@ -31,12 +34,14 @@ class="fixed">displayed that way.</span></p>
 <table border="1">
   <tbody>
     <tr class="title">
+      <th class="bug-id">Bug Id.</th>
       <th class="summary">Editing</th>
-      <th>Submission</th>
-      <th>Submitted By</th>
-      <th>Fixed</th>
+      <th class="submission">Submission</th>
+      <th class="submitter">Submitted By</th>
+      <th class="date-fixed">Fixed</th>
     </tr>
     <tr>
+      <td id="ED001">ED001</td>
       <td>If the "Show Applied Style" window is opened for a tab, it should
         be closed when another tab is selected</td>
       <td>2005-12-20</td>
@@ -44,6 +49,7 @@ class="fixed">displayed that way.</span></p>
       <td></td>
     </tr>
     <tr>
+      <td id="ED002">ED002</td>
       <td>When two areas overlap, the common area links in Amaya to the
         target of the last created area, but in Internet Explorer and
         Mozilla, it links to the target of the first. Of course, I do not
@@ -55,6 +61,7 @@ class="fixed">displayed that way.</span></p>
       <td></td>
     </tr>
     <tr>
+      <td id="ED003">ED003</td>
       <td>The MakeBook function doesn't manage the namespace declarations of
         collected documents. Moreover, the new generated document is not
         opened in read-only mode.</td>
@@ -63,6 +70,7 @@ class="fixed">displayed that way.</span></p>
       <td></td>
     </tr>
     <tr>
+      <td id="ED004">ED004</td>
       <td>I cut and paste an image, the usemap attribute (if present) is
       lost</td>
       <td>2006-01-10</td>
@@ -70,6 +78,7 @@ class="fixed">displayed that way.</span></p>
       <td></td>
     </tr>
     <tr>
+      <td id="ED005">ED005</td>
       <td>If I create an empty fieldset (with a legend), save the document
         and reload, I can not write inside the fieldset</td>
       <td>2006-01-10</td>
@@ -77,6 +86,7 @@ class="fixed">displayed that way.</span></p>
       <td></td>
     </tr>
     <tr>
+      <td id="ED006">ED006</td>
       <td>In Amaya 9.3, the attribute window does not show the name attribute
         of a submit or reset button (&lt;input type="reset" /&gt; or
         &lt;input type="submit"&gt;).</td>
@@ -85,12 +95,14 @@ class="fixed">displayed that way.</span></p>
       <td></td>
     </tr>
     <tr>
+      <td id="ED007">ED007</td>
       <td>A command "Ctrl l-c" to copy URL to clipboard.</td>
       <td>2006-01-27</td>
       <td>Tim Berners-Lee</td>
       <td></td>
     </tr>
     <tr>
+      <td id="ED008">ED008</td>
       <td>Amaya doesn't support a number of i18n features that one considers
         to be basic these days (or didn't last time I looked) such as fonts
         that I have on my system in
@@ -100,6 +112,7 @@ class="fixed">displayed that way.</span></p>
       <td></td>
     </tr>
     <tr>
+      <td id="ED009">ED009</td>
       <td>If I have Arabic, Chinese, etc, characters in my text, the
         formatting becomes often awful, with characters on the top of one
         another.</td>
@@ -108,6 +121,7 @@ class="fixed">displayed that way.</span></p>
       <td></td>
     </tr>
     <tr>
+      <td id="ED010">ED010</td>
       <td>I use tidy and Amaya to manage XHTML documents. A major annoyance
         is that they break lines differently, introducing a lot of noise in
         my CVS/RCS history</td>
@@ -116,20 +130,48 @@ class="fixed">displayed that way.</span></p>
       <td></td>
     </tr>
     <tr>
+      <td id="ED011">ED011</td>
       <td>The setting of 'Show map areas' and 'Show targets' should persist
         across page reloads and links to other pages within the same
       window</td>
-      <td>2006--02-05</td>
+      <td>2006-02-05</td>
       <td>Chris Beall</td>
       <td></td>
     </tr>
+    <tr>
+      <td id="ED012">ED012</td>
+      <td>Add a check mark to split/unsplit commands to see which one is
+        currently active.</td>
+      <td>2006-02-08</td>
+      <td>A. Kotok</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td id="ED013">ED013</td>
+      <td>I made a minor edit in the source view having nothing to do with
+        the style, but the "Normal" view changed from sans-serif font to
+        serif. While reloading had no effect, quitting Amaya and restarting
+        returned to sans-serif.</td>
+      <td>2006-02-08</td>
+      <td>A. Kotok</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td id="ED014">ED014</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
     <tr class="title">
+      <td></td>
       <th class="summary">CSS</th>
       <th>Submission</th>
       <th>Submitted By</th>
       <th>Fixed</th>
     </tr>
     <tr>
+      <td id="CSS001">CSS001</td>
       <td>When lists are included in blocks that are centered, the list
         bullets are not centered but the text is.</td>
       <td>2003-10</td>
@@ -137,6 +179,7 @@ class="fixed">displayed that way.</span></p>
       <td></td>
     </tr>
     <tr>
+      <td id="CSS002">CSS002</td>
       <td>The CSS property "fill" is interpreted for the HTML element
         &lt;td&gt;</td>
       <td>2004-10-15</td>
@@ -145,6 +188,7 @@ class="fixed">displayed that way.</span></p>
       <td></td>
     </tr>
     <tr>
+      <td id="CSS003">CSS003</td>
       <td>The 'background-position' doesn't work at all, but seems like it is
         recognized.</td>
       <td>2005-08-17</td>
@@ -152,12 +196,14 @@ class="fixed">displayed that way.</span></p>
       <td></td>
     </tr>
     <tr>
+      <td id="CSS004">CSS004</td>
       <td>Negative margins are not correctly applied to floated boxes</td>
       <td>2006-01-31</td>
       <td>I. Vatton</td>
       <td></td>
     </tr>
     <tr>
+      <td id="CSS005">CSS005</td>
       <td>Floated boxes don't cross hierarchical structure, so following
         divisions are displayed below as if they have a "clear: both"
       rule</td>
@@ -166,6 +212,7 @@ class="fixed">displayed that way.</span></p>
       <td></td>
     </tr>
     <tr>
+      <td id="CSS006">CSS006</td>
       <td>Table centering is lost when width is used in addition to margin
         (auto)</td>
       <td>2006-02-14</td>
@@ -173,35 +220,54 @@ class="fixed">displayed that way.</span></p>
       <td></td>
     </tr>
     <tr>
+      <td id="CSS007">CSS007</td>
       <td>The vertical-align:middle rule does not work on cells</td>
       <td>2006-02-14</td>
       <td>John Russell</td>
       <td></td>
     </tr>
+    <tr>
+      <td id="CSS008">CSS008</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
   </tbody>
   <tbody>
     <tr class="title">
+      <td></td>
       <th class="summary">MathML</th>
       <th>Submission</th>
       <th>Submitted By</th>
       <th>Fixed</th>
     </tr>
     <tr>
+      <td id="ML001">ML001</td>
       <td>The pmathml.xsl stylesheet is not deleted when all mathml elements
         are removed from a document.</td>
       <td>2005-03-03</td>
       <td>L. Carcone</td>
       <td></td>
     </tr>
+    <tr>
+      <td id="ML002">ML002</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
   </tbody>
   <tbody>
     <tr class="title">
+      <td></td>
       <th class="summary">SVG</th>
       <th>Submission</th>
       <th>Submitted By</th>
       <th>Fixed</th>
     </tr>
     <tr>
+      <td id="SVG002">SVG002</td>
       <td>It's difficult select with the mouse a line parallel with the axis
         x. Following a code of a element line parallel with the axis x:
         &lt;line stroke=black y1=400 x1=92 y2=400 y2=400 x2=196&gt;</td>
@@ -210,6 +276,7 @@ class="fixed">displayed that way.</span></p>
       <td></td>
     </tr>
     <tr>
+      <td id="SVG003">SVG003</td>
       <td>When moving an object, the svg container box get a null height (as
         in http://waloo.homelinux.net/amaya/html+svg.html) where the second
         svg element does not have room for the orange rect to fit in
@@ -222,20 +289,37 @@ class="fixed">displayed that way.</span></p>
       <td></td>
     </tr>
     <tr>
+      <td id="SVG004">SVG004</td>
       <td>The "fill-rule:evenodd" style porperty is not interpreted.</td>
       <td>2005-09-30</td>
       <td>Ray Foulkes</td>
       <td></td>
     </tr>
+    <tr>
+      <td id="SVG005">SVG005</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td id="SVG006">SVG006</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
   </tbody>
   <tbody>
     <tr class="title">
+      <td></td>
       <th class="summary">Windows</th>
       <th>Submission</th>
       <th>Submitted By</th>
       <th>Fixed</th>
     </tr>
     <tr>
+      <td id="WIN001">WIN001</td>
       <td>Problems at Save when jigteam was stuck:<br />
         . Amaya window did not refresh after having hit the Stop button (have
         to iconize the window and then expandie it to do that).<br />
@@ -246,6 +330,7 @@ class="fixed">displayed that way.</span></p>
       <td></td>
     </tr>
     <tr>
+      <td id="WIN002">WIN002</td>
       <td>Sometimes, files with img tags that do not appear in Amaya at all;
         instead, you have a large empty area.
 
@@ -255,13 +340,22 @@ class="fixed">displayed that way.</span></p>
       <td>Ivan Herman</td>
       <td></td>
     </tr>
+    <tr>
+      <td id="WIN003">WIN003</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
     <tr class="title">
+      <td></td>
       <th class="summary">Mac OSX</th>
       <th>Submission</th>
       <th>Submitted By</th>
       <th>Fixed</th>
     </tr>
     <tr>
+      <td id="MAC001">MAC001</td>
       <td>The command 'open -a /Applications/amaya.app index.html' opens the
         default document, not the document in parameter</td>
       <td>2005-06-26</td>
@@ -269,6 +363,7 @@ class="fixed">displayed that way.</span></p>
       <td></td>
     </tr>
     <tr>
+      <td id="MAC002">MAC002</td>
       <td>open -a /Applications/Amaya.app &lt;filename&gt; does not work.</td>
       <td><a
         href="http://lists.w3.org/Archives/Public/www-amaya/2006JanMar/0067.html">2006-01-28</a></td>
@@ -276,6 +371,7 @@ class="fixed">displayed that way.</span></p>
       <td></td>
     </tr>
     <tr>
+      <td id="MAC003">MAC003</td>
       <td>The document is not scrolled when the selection is extended with
         the mouse</td>
       <td>2005-06</td>
@@ -283,6 +379,7 @@ class="fixed">displayed that way.</span></p>
       <td></td>
     </tr>
     <tr>
+      <td id="MAC004">MAC004</td>
       <td>Suggestion of new shortcuts:
 
         <p>&lt;Cmd&gt;: for "Check spelling"<br />
@@ -295,6 +392,7 @@ class="fixed">displayed that way.</span></p>
       <td></td>
     </tr>
     <tr>
+      <td id="MAC005">MAC005</td>
       <td>On OS-X,
 
         <p>Cmd/: brings up the spelling panel <br />
@@ -305,17 +403,35 @@ class="fixed">displayed that way.</span></p>
       <td></td>
     </tr>
     <tr>
+      <td id="MAC006">MAC006</td>
       <td>Don't close the application when closing the last window</td>
       <td>2005-12-20</td>
       <td>Pascal "Blady"</td>
       <td></td>
     </tr>
     <tr>
+      <td id="MAC007">MAC007</td>
       <td>Dragging an HTML file from the finder to either the Amaya icon in
         the Dock, or to Amaya itself, does not open that file, as it does in
         other Mac applications</td>
       <td>2006-01-25</td>
       <td>A. Kotok</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td id="MAC008">MAC008</td>
+      <td>Amaya 9.3 Mac, copying text from either IRC (Snak) or email
+        (Uudora), one cannot paste into body text in Amaya. You can paste
+        into a link dialog box, so the Copy did take.</td>
+      <td>2006-02-08</td>
+      <td>A. Kotok</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td id="MAC009">MAC009</td>
+      <td></td>
+      <td></td>
+      <td></td>
       <td></td>
     </tr>
   </tbody>
