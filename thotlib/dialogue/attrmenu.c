@@ -1509,7 +1509,7 @@ void CallbackValAttrMenu (int ref, int valmenu, char *valtext)
               (!strcmp (tmp, "name") &&
                !strcmp (SchCurrentAttr->SsName, "HTML")));
       isCLASS = !strcmp (tmp, "class");
-      if (TextAttrValue[0] == EOS)
+      if (SchCurrentAttr->SsAttribute->TtAttr[NumCurrentAttr - 1]->AttrType == AtTextAttr && TextAttrValue[0] == EOS)
         return;
       act = valmenu;
       break;

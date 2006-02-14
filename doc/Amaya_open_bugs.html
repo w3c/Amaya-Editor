@@ -43,20 +43,6 @@ class="fixed">displayed that way.</span></p>
       <td>L. Carcone</td>
       <td></td>
     </tr>
-    <tr class="fixed">
-      <td>Amaya changes charset=us-ascii into charset=iso-8859-1 when
-        inserting a iso-8859-1 character.</td>
-      <td>2005-12-20</td>
-      <td>Pascal "Blady"</td>
-      <td>2005-12-22</td>
-    </tr>
-    <tr class="fixed">
-      <td>Amaya didn't always choose the right dictionary for spell-checking
-        when the &lt;body&gt; element had no "lang" attribute</td>
-      <td>2005-12-28</td>
-      <td>Pascal "Blady"</td>
-      <td>2006-01-03</td>
-    </tr>
     <tr>
       <td>When two areas overlap, the common area links in Amaya to the
         target of the last created area, but in Internet Explorer and
@@ -76,31 +62,6 @@ class="fixed">displayed that way.</span></p>
       <td>L. Carcone</td>
       <td></td>
     </tr>
-    <tr class="fixed">
-      <td>When applying a class, Amaya doesn't generate an enclosing span
-        element. So the class of span elements included in the selection are
-        lost.</td>
-      <td>2005-12-04</td>
-      <td>Bartolomé Sintes Marco</td>
-      <td>2005-12-21</td>
-    </tr>
-    <tr class="fixed">
-      <td>I notice that when one is entering preformatted text with Amaya 9.3
-        a weird behavior results when pressing the enter key.
-        <ul>
-          <li>select some text and convert it to &lt;pre&gt; &lt;\pre&gt;</li>
-          <li>position the cursor at the end of that line</li>
-          <li>press enter (a new line is created, but isn't displayed)</li>
-          <li>Omove the mouse pointer to just below this line and click the
-            left button</li>
-        </ul>
-
-        <p>(a new line appears in the view of the document)</p>
-      </td>
-      <td>2006-01-10</td>
-      <td>Jeff Jill</td>
-      <td>2006-01-30</td>
-    </tr>
     <tr>
       <td>I cut and paste an image, the usemap attribute (if present) is
       lost</td>
@@ -115,19 +76,6 @@ class="fixed">displayed that way.</span></p>
       <td>Bartolomé Sintes</td>
       <td></td>
     </tr>
-    <tr class="fixed">
-      <td>Internet Explorer expects a # character in the usemap attribute of
-        the img element (usemap="#map" instead of usemap="map"). If the # is
-        added in the source view, the image maps work in Internet Explorer.
-
-        <p>According to the W3C validator, both (with or without the #) are
-        XHTML Strict 1.0 correct and both work in Firefox 1.5 and Amaya 9.3,
-        so I would suggest Amaya should create the #.</p>
-      </td>
-      <td>2006-01-10</td>
-      <td>Bartolomé Sintes</td>
-      <td>2006-01-16</td>
-    </tr>
     <tr>
       <td>In Amaya 9.3, the attribute window does not show the name attribute
         of a submit or reset button (&lt;input type="reset" /&gt; or
@@ -135,38 +83,6 @@ class="fixed">displayed that way.</span></p>
       <td>2006-01-24</td>
       <td>Bartolomé Sintes</td>
       <td></td>
-    </tr>
-    <tr class="fixed">
-      <td>Amaya's use of F2 instead of Escape is frustrating for OSX as you
-        have to use Fn key with F2.
-
-        <p>Amaya 9.3.1 should accept Esc and F2.</p>
-      </td>
-      <td>2006-01-27</td>
-      <td>Tim Berners-Lee</td>
-      <td>2006-01-31</td>
-    </tr>
-    <tr class="fixed">
-      <td>If nothing is selected, copy would not delete the copy buffer.</td>
-      <td>2006-01-27</td>
-      <td>Steven Pemberton</td>
-      <td>2006-01-31</td>
-    </tr>
-    <tr class="fixed">
-      <td>It seems that if it has a suggestion but you type a better word in
-        the input area of spellchecker, and press "Replace", then it replaces
-        not with your word but with the suggestion.</td>
-      <td>2006-01-26</td>
-      <td>Tim Berners-Lee</td>
-      <td>2006-01-27</td>
-    </tr>
-    <tr class="fixed">
-      <td>Spellchecker : <br />
-        Skip + dic should be Learn<br />
-        Replace + dic could be removed</td>
-      <td>2006-01-27</td>
-      <td>Tim Berners-Lee</td>
-      <td>2006-02-01</td>
     </tr>
     <tr>
       <td>A command "Ctrl l-c" to copy URL to clipboard.</td>
@@ -199,14 +115,6 @@ class="fixed">displayed that way.</span></p>
       <td>Dan Connolly</td>
       <td></td>
     </tr>
-    <tr class="fixed">
-      <td>When I insert an image, I wish it would start the dialog box in the
-        current directory; likewise when I link to a stylesheet (and I would
-        like the same style of dialog too).</td>
-      <td>2006-01-27</td>
-      <td>Steven Pemberton</td>
-      <td>2006-02-02</td>
-    </tr>
     <tr>
       <td>The setting of 'Show map areas' and 'Show targets' should persist
         across page reloads and links to other pages within the same
@@ -214,23 +122,6 @@ class="fixed">displayed that way.</span></p>
       <td>2006--02-05</td>
       <td>Chris Beall</td>
       <td></td>
-    </tr>
-    <tr class="fixed">
-      <td>Amaya crashes when saving an annotation if the logon name is
-        Cyrillic name</td>
-      <td>2006-02-06</td>
-      <td>Vlad Bortin</td>
-      <td>2006-02-08</td>
-    </tr>
-    <tr class="fixed">
-      <td>Drag select some text in a table, extend the drag to the right,
-        past the table, and up a bit. This selects the entire table element.
-        Moving the cursor back into the table does not release it. The only
-        way to deselect the whole table is to release the drag and click on
-        some elemen</td>
-      <td>2006-01-24</td>
-      <td>A. Kotok</td>
-      <td>2006-02-09</td>
     </tr>
     <tr class="title">
       <th class="summary">CSS</th>
@@ -259,13 +150,6 @@ class="fixed">displayed that way.</span></p>
       <td>2005-08-17</td>
       <td>Stanimir Stamenkov</td>
       <td></td>
-    </tr>
-    <tr class="fixed">
-      <td>Problem with blocks that are not positioned absolutely to their
-        containing block.</td>
-      <td>2005-10-19</td>
-      <td>Kevin Watts</td>
-      <td>2006-01-04</td>
     </tr>
     <tr>
       <td>Negative margins are not correctly applied to floated boxes</td>
@@ -323,18 +207,6 @@ class="fixed">displayed that way.</span></p>
       <td>2004-04-28</td>
       <td>Stephane Bonhomme</td>
       <td></td>
-    </tr>
-    <tr class="fixed">
-      <td>Both Amaya or Mozilla display the SVG image if the MIME type is
-        image/svg+xml or image/x-bitmap, but Internet Explorer only displays
-        the image/svg+xml type object (tested with Adobe SVGViewer 6.0
-        plug-in in Mozilla and Internet Explorer).
-
-        <p>This MIME type is not shown in the create object dialog</p>
-      </td>
-      <td>2006-01-10</td>
-      <td>Bartolomé Sintes</td>
-      <td>2006-01-20</td>
     </tr>
     <tr>
       <td>The "fill-rule:evenodd" style porperty is not interpreted.</td>
@@ -432,19 +304,6 @@ class="fixed">displayed that way.</span></p>
       <td>2006-01-25</td>
       <td>A. Kotok</td>
       <td></td>
-    </tr>
-    <tr class="fixed">
-      <td>When we switch from a tab to another tab, the url bar is
-      cleaned</td>
-      <td>2005-12-20</td>
-      <td>I. Vatton</td>
-      <td>2006-01-11</td>
-    </tr>
-    <tr class="fixed">
-      <td>Amaya crashes when it cannot load a document in a new Tab</td>
-      <td>2006-01-13</td>
-      <td>L. Carcone</td>
-      <td>2006-01-18</td>
     </tr>
   </tbody>
 </table>
