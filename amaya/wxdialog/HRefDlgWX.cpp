@@ -82,6 +82,9 @@ HRefDlgWX::~HRefDlgWX()
       ThotCallback (m_Ref, INTEGER_DATA, (char*) 0);
       m_doc = 0;
     }
+  else
+    // clean up the dialog context
+    TtaDestroyDialogue( m_Ref );
 }
 
 /*----------------------------------------------------------------------
