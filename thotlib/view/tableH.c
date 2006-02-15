@@ -899,8 +899,7 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
         /* we will have to recheck scrollbars */
         AnyWidthUpdate = TRUE;
       /* the table width is constrained by the enclosing box */
-      table->AbWidth.DimAbRef = table->AbEnclosing;
-      /*if (width != pBox->BxW)*/
+      //table->AbWidth.DimAbRef = table->AbEnclosing;
       /* don't pack rows with each cell */
       PackRows = FALSE;
       ResizeWidth (pBox, pBox, NULL, width + cellspacing - pBox->BxW,
