@@ -8,10 +8,11 @@
 // declare our list class: this macro declares and partly implements MyList
 // class (which derives from wxListBase)
 #include "wx/wx.h"
+#include "paneltypes_wx.h"
 #include "AmayaSubPanel.h"
+
 WX_DECLARE_LIST(AmayaSubPanel, SubPanelList);
 
-#include "paneltypes_wx.h"
 
 /*
  *  Description:  - AmayaSubPanelManager manage the global behaviour between every sub panels

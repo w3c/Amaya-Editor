@@ -938,7 +938,8 @@ void MoveBoxEdge (PtrBox pBox, PtrBox pSourceBox, OpRelation op, int delta,
             r += pBox->BxRMargin;
           r += pBox->BxRBorder + pBox->BxRPadding;
           delta = delta + pBox->BxWidth - pBox->BxW - l - r;
-          ResizeWidth (pBox, pSourceBox, NULL, delta, 0, 0, 0, frame);
+          // the history starts here
+          ResizeWidth (pBox, NULL, NULL, delta, 0, 0, 0, frame);
           /* restore the fixed edge */
           pBox->BxHorizEdge = oldHorizEdge;
         }
@@ -999,7 +1000,8 @@ void MoveBoxEdge (PtrBox pBox, PtrBox pSourceBox, OpRelation op, int delta,
             b += pBox->BxBMargin;
           b += pBox->BxBBorder + pBox->BxBPadding;
           delta = delta + pBox->BxHeight - pBox->BxH - t - b;
-          ResizeHeight (pBox, pSourceBox, NULL, delta, 0, 0, frame);
+          // the history starts here
+          ResizeHeight (pBox, NULL, NULL, delta, 0, 0, frame);
           /* restore the fixed edge */
           pBox->BxVertEdge = oldVertEdge;
         }
@@ -1955,9 +1957,6 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
                       pCurrentAb->AbEnclosing->AbBox->BxType != BoBlock &&
                       pCurrentAb->AbEnclosing->AbBox->BxType != BoFloatBlock);
 	  
-          //if (pCurrentAb->AbWidth.DimUnit == UnPercent)
-          //printf("ResizeWidth %s %d + %d\n", pCurrentAb->AbElement->ElLabel, pBox->BxW, delta);
-
           /* check positionning constraints */
           if (!toMove ||
               pCurrentAb->AbFloat == 'L' ||
@@ -2497,6 +2496,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
               TtaFreeMemory ((STRING) pBox->BxPictInfo);
               pBox->BxPictInfo = NULL;
             }
+
           /* Check the validity of dependency rules */
           toMove = TRUE;
           if (pCurrentAb->AbEnclosing && pCurrentAb->AbEnclosing->AbBox)

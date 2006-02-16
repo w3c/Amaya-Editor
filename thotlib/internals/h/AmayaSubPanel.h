@@ -10,6 +10,7 @@
 
 class AmayaFloatingPanel;
 class AmayaNormalWindow;
+class AmayaSubPanelManager;
 
 /*
  *  Description:  - AmayaSubPanel contains a sub-panel (xhtml, ...)
