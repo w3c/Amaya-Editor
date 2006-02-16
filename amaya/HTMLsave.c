@@ -2578,7 +2578,9 @@ void SaveDocument (Document doc, View view)
     /* it's a remote document */
     {
       Synchronize (doc, view);
-      if (DocumentMeta[doc]->content_location)
+      if (SavingDocument != doc)
+        ok = FALSE;
+      else if (DocumentMeta[doc]->content_location)
         ok = TRUE;
       else if (AddNoName (doc, view, tempname, &ok))
         {
@@ -2619,13 +2621,16 @@ void SaveDocument (Document doc, View view)
       else
         {
           Synchronize (doc, view);
-          /* save a local copy of the current document */
-          if (xmlDoc)
-            ptr = GetLocalPath (xmlDoc, tempname);
-          else
-            ptr = GetLocalPath (doc, tempname);
-          ok = TtaFileCopy (ptr, tempname);
-          TtaFreeMemory (ptr);
+          if (SavingDocument == doc)
+            {
+              /* save a local copy of the current document */
+              if (xmlDoc)
+                ptr = GetLocalPath (xmlDoc, tempname);
+              else
+                ptr = GetLocalPath (doc, tempname);
+              ok = TtaFileCopy (ptr, tempname);
+              TtaFreeMemory (ptr);
+            }
         }
     }
 

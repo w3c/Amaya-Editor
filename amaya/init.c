@@ -1433,12 +1433,14 @@ void CheckParsingErrors (Document doc)
       else if (XMLNotWellFormed)
         {
           /* Raise a popup message */
-          if (DocumentTypes[doc] == docHTML)
+          if (SavingDocument != DocumentSource[doc] && DocumentTypes[doc] == docHTML)
             /* when propose a reload */
             reload = TtaGetMessage (LIB, TMSG_BUTTON_RELOAD);
           else
             reload = NULL;
-
+          if (SavingDocument == DocumentSource[doc])
+            // stop the save process
+            SavingDocument = 0;
           /* The document is not well-formed */
           if (reload)
             ptr = TtaGetMessage (AMAYA, AM_XML_RETRY);
