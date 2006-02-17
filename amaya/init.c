@@ -2703,6 +2703,10 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
       /* remove the current selection */
       TtaUnselect (doc);
       UpdateContextSensitiveMenus (doc);
+#ifdef _WX
+      HideHSplitToggle (doc, 1);
+      HideVSplitToggle (doc, 1);
+#endif /* _WX */
       TtaFreeView (doc, 1);
       isOpen = TRUE;
       /* use the same document identifier */
@@ -3053,6 +3057,12 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 
           /* MapArea menu item */
           TtaSetToggleItem (doc, 1, Views, TShowMapAreas, MapAreas[doc]);
+          TtaSetMenuOff (doc, 1, Attributes_);
+
+          /* SplitView menu items */
+          TtaSetToggleItem (doc, 1, Views, TSplitHorizontally, HSplit[doc]);
+          TtaSetToggleItem (doc, 1, Views, TSplitVertically, VSplit[doc]);
+
           TtaSetMenuOff (doc, 1, Attributes_);
 
           /* if we open the new document in a new view, control */
@@ -4744,6 +4754,14 @@ void ShowSource (Document doc, View view)
             SetArrowButton (DocumentSource[doc], FALSE, TRUE);
           else
             SetArrowButton (DocumentSource[doc], FALSE, FALSE);
+
+#ifdef _WX
+          /* update toggle buttons */
+	  if (HSplit[doc] == TRUE && VSplit[doc] == FALSE)
+	    ShowHSplitToggle (sourceDoc, 1);
+	  if (HSplit[doc] == FALSE && VSplit[doc] == TRUE)
+	    ShowVSplitToggle (sourceDoc, 1);
+#endif /* _WX */
 
           // check if a parsing error is detected
           sprintf (tempdir, "%s%c%d%cPARSING.ERR",
@@ -7527,6 +7545,8 @@ void InitAmaya (NotifyEvent * event)
       DocumentSource[i] = 0;
       DocumentMeta[i] = NULL;
       MapAreas[i] = map;
+      HSplit[i] = FALSE;
+      VSplit[i] = FALSE;
       SButtons[i] = bt;
       SAddress[i] = add;
       /* initialize history */
@@ -7850,7 +7870,7 @@ void FullScreen (Document doc, View view)
   split horizontally the view
   ----------------------------------------------------------------------*/
 void SplitHorizontally (Document doc, View view)
-{
+{  
 #ifdef _WX
   int frame_id = GetWindowNumber (doc, view);
   TtaSplitViewHorizontally( frame_id );
@@ -7866,6 +7886,85 @@ void SplitVertically (Document doc, View view)
 #ifdef _WX
   int frame_id = GetWindowNumber (doc, view);
   TtaSplitViewVertically( frame_id );
+#endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
+  ShowHSplitToggle
+  Show toggle mark
+  ----------------------------------------------------------------------*/
+void ShowHSplitToggle (Document doc, View view)
+{  
+#ifdef _WX
+  HSplit[doc] = TRUE;
+  TtaSetToggleItem (doc, view, Views, TSplitHorizontally, HSplit[doc]);
+  // Set V toggle off
+  HideVSplitToggle (doc, view);
+  // Update the document source toggle
+  if (DocumentSource[doc])
+    {
+      HSplit[DocumentSource[doc]] = TRUE;
+      TtaSetToggleItem (DocumentSource[doc], 1, Views,
+			TSplitHorizontally, HSplit[DocumentSource[doc]]);
+    }
+#endif /* _WX */
+}
+/*----------------------------------------------------------------------
+  ShowVSplitToggle
+  Show toggle mark
+  ----------------------------------------------------------------------*/
+void ShowVSplitToggle (Document doc, View view)
+{  
+#ifdef _WX
+  VSplit[doc] = TRUE;
+  TtaSetToggleItem (doc, view, Views, TSplitVertically, VSplit[doc]);
+  // Set H toggle off
+  HideHSplitToggle (doc, view);
+  // Update the document source toggle
+  if (DocumentSource[doc])
+    {
+      VSplit[DocumentSource[doc]] = TRUE;
+      TtaSetToggleItem (DocumentSource[doc], 1, Views,
+			TSplitVertically, VSplit[DocumentSource[doc]]);
+    }
+#endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
+  HideHSplitToggle
+  Hide toggle mark
+  ----------------------------------------------------------------------*/
+void HideHSplitToggle (Document doc, View view)
+{  
+#ifdef _WX
+  HSplit[doc] = FALSE;
+  TtaSetToggleItem (doc, view, Views, TSplitHorizontally, HSplit[doc]);
+  // Update the document source toggle
+  if (DocumentSource[doc])
+    {
+      HSplit[DocumentSource[doc]] = FALSE;
+      TtaSetToggleItem (DocumentSource[doc], 1, Views,
+			TSplitHorizontally, HSplit[DocumentSource[doc]]);
+    }
+#endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
+  HideVSplitToggle
+  Hide toggle mark
+  ----------------------------------------------------------------------*/
+void HideVSplitToggle (Document doc, View view)
+{  
+#ifdef _WX
+  VSplit[doc] = FALSE;
+  TtaSetToggleItem (doc, view, Views, TSplitVertically, VSplit[doc]);
+  // Update the document source toggle
+  if (DocumentSource[doc])
+    {
+      VSplit[DocumentSource[doc]] = FALSE;
+      TtaSetToggleItem (DocumentSource[doc], 1, Views,
+			TSplitVertically, VSplit[DocumentSource[doc]]);
+    }
 #endif /* _WX */
 }
 

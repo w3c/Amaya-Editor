@@ -533,6 +533,10 @@ THOT_EXPORT ThotBool                 SButtons[DocumentTableLength];
 THOT_EXPORT ThotBool                 SAddress[DocumentTableLength];
 /* Document that shows map areas */
 THOT_EXPORT ThotBool                 MapAreas[DocumentTableLength];
+/* Document splitted horizontally */
+THOT_EXPORT ThotBool                 HSplit[DocumentTableLength];
+/* Document splitted vertically */
+THOT_EXPORT ThotBool                 VSplit[DocumentTableLength];
 /* identifier of the document displaying the source code */
 THOT_EXPORT Document                 DocumentSource[DocumentTableLength];
 /* The whole document is loaded when the corresponding entry in FilesLoading is 0 */

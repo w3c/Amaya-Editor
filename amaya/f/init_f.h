@@ -165,6 +165,14 @@ extern void SplitHorizontally ( Document doc,
                                 View view );
 extern void SplitVertically ( Document doc,
                               View view );
+extern void ShowHSplitToggle ( Document doc,
+                               View view );
+extern void ShowVSplitToggle ( Document doc,
+                               View view );
+extern void HideHSplitToggle ( Document doc,
+                               View view );
+extern void HideVSplitToggle ( Document doc,
+                               View view );
 extern void ShowMapAreas ( Document doc,
                            View view );
 extern void ShowButtons ( Document doc,
@@ -359,6 +367,14 @@ extern void SplitHorizontally ( Document doc,
                                   View view );
 extern void SplitVertically ( Document doc,
                                 View view );
+extern void ShowHSplitToggle ( Document doc,
+                                 View view );
+extern void ShowVSplitToggle ( Document doc,
+                                 View view );
+extern void HideHSplitToggle ( Document doc,
+                                 View view );
+extern void HideVSplitToggle ( Document doc,
+                                 View view );
 extern void ShowMapAreas ( Document doc,
                              View view );
 extern void ShowButtons ( Document doc,

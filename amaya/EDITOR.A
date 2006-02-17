@@ -213,7 +213,7 @@ MENUS
 	Types button:BBlockQuote -> CreateBlockQuote icon:XHTML_quote.png;
 	Types button:BIFrame -> CreateIFrame;
 	Types button:BRuby -> CreateRuby;
-  Types Separator;
+        Types Separator;
 
 	Types button:TSectionNumber -> SectionNumbering;
 	Types button:BMakeToc -> MakeToc;
@@ -221,52 +221,52 @@ MENUS
 	Types button:BMakeBook -> MakeBook;
 
 	Types Separator;
-    Types.Phrase toggle:TEmphasis -> SetOnOffEmphasis icon:XHTML_I.png;
-    Types.Phrase toggle:TStrong -> SetOnOffStrong icon:XHTML_B.png;
-    Types.Phrase toggle:TCite -> SetOnOffCite;
-    Types.Phrase toggle:TDefinition -> SetOnOffDefinition;
-    Types.Phrase toggle:TCode -> SetOnOffCode icon:XHTML_T.png;
-    Types.Phrase toggle:TVariable -> SetOnOffVariable;
-    Types.Phrase toggle:TSample -> SetOnOffSample;
-    Types.Phrase toggle:TKeyboard -> SetOnOffKeyboard;
+        Types.Phrase toggle:TEmphasis -> SetOnOffEmphasis icon:XHTML_I.png;
+        Types.Phrase toggle:TStrong -> SetOnOffStrong icon:XHTML_B.png;
+        Types.Phrase toggle:TCite -> SetOnOffCite;
+        Types.Phrase toggle:TDefinition -> SetOnOffDefinition;
+        Types.Phrase toggle:TCode -> SetOnOffCode icon:XHTML_T.png;
+        Types.Phrase toggle:TVariable -> SetOnOffVariable;
+        Types.Phrase toggle:TSample -> SetOnOffSample;
+        Types.Phrase toggle:TKeyboard -> SetOnOffKeyboard;
 	Types.Phrase toggle:TAbbreviation -> SetOnOffAbbr;
 	Types.Phrase toggle:TAcronym -> SetOnOffAcronym;
 	Types.Phrase toggle:TInsertion -> SetOnOffINS;
 	Types.Phrase toggle:TDeletion -> SetOnOffDEL;
 
-    Types.Font toggle:TItalic -> SetOnOffItalic;
-    Types.Font toggle:TBold -> SetOnOffBold;
-    Types.Font toggle:TTeletype -> SetOnOffTeletype;
-    Types.Font toggle:TBig -> SetOnOffBig;
-    Types.Font toggle:TSmall -> SetOnOffSmall;
-    Types.Font toggle:TSub -> SetOnOffSub icon:sub.png;
-    Types.Font toggle:TSup -> SetOnOffSup icon:super.png;
-    Types.Font toggle:TQuotation -> SetOnOffQuotation;
-    Types.Font toggle:TBDO -> SetOnOffBDO;
+        Types.Font toggle:TItalic -> SetOnOffItalic;
+        Types.Font toggle:TBold -> SetOnOffBold;
+        Types.Font toggle:TTeletype -> SetOnOffTeletype;
+        Types.Font toggle:TBig -> SetOnOffBig;
+        Types.Font toggle:TSmall -> SetOnOffSmall;
+        Types.Font toggle:TSub -> SetOnOffSub icon:sub.png;
+        Types.Font toggle:TSup -> SetOnOffSup icon:super.png;
+        Types.Font toggle:TQuotation -> SetOnOffQuotation;
+        Types.Font toggle:TBDO -> SetOnOffBDO;
 
-    XMLTypes button:BDisplayMath -> CreateMath icon:MATHML_Bmath.png;
-    XMLTypes.MathElement button:BMText -> CreateMTEXT;
-    XMLTypes.MathElement button:BMIdentifier -> CreateMI;
-    XMLTypes.MathElement button:BMNumber -> CreateMN;
-    XMLTypes.MathElement button:BMOperator -> CreateMO;
-    XMLTypes.MathElement button:BMSpace -> CreateMSPACE;
-    XMLTypes.MathElement button:BMEntity -> CreateMathEntity icon:MATHML_greek.png;
-    XMLTypes.MathElement button:BMInvisibleTimes -> CreateInvisibleTimes;
-    XMLTypes.MathElement button:BMApplyFunction -> CreateApplyFunction;
-    XMLTypes.MathConstruct button:BNthRoot -> CreateMROOT icon:MATHML_root.png;
-    XMLTypes.MathConstruct button:BSquareRoot -> CreateMSQRT icon:MATHML_sqrt.png;
-    XMLTypes.MathConstruct button:BEnclose -> CreateMENCLOSE;
-    XMLTypes.MathConstruct button:BFraction -> CreateMFRAC icon:MATHML_frac.png;
-    XMLTypes.MathConstruct button:BSubscriptAndSuperscript -> CreateMSUBSUP icon:MATHML_subsup.png;
-    XMLTypes.MathConstruct button:BSubscript -> CreateMSUB icon:MATHML_sub.png;
-    XMLTypes.MathConstruct button:BSuperscript -> CreateMSUP icon:MATHML_sup.png;
-    XMLTypes.MathConstruct button:BUnderAndOver -> CreateMUNDEROVER icon:MATHML_overunder.png;
-    XMLTypes.MathConstruct button:BUnder -> CreateMUNDER icon:MATHML_under.png;
-    XMLTypes.MathConstruct button:BOver -> CreateMOVER icon:MATHML_over.png;
-    XMLTypes.MathConstruct button:BParentheses -> CreateMROW icon:MATHML_fence.png;
-    XMLTypes.MathConstruct button:BMultiscripts -> CreateMMULTISCRIPTS icon:MATHML_mscript.png;
-    XMLTypes.MathMatrics button:BMatrix -> CreateMTABLE icon:MATHML_matrix.png;
-  XMLTypes.MathMatrics Separator;
+        XMLTypes button:BDisplayMath -> CreateMath icon:MATHML_Bmath.png;
+        XMLTypes.MathElement button:BMText -> CreateMTEXT;
+        XMLTypes.MathElement button:BMIdentifier -> CreateMI;
+        XMLTypes.MathElement button:BMNumber -> CreateMN;
+        XMLTypes.MathElement button:BMOperator -> CreateMO;
+        XMLTypes.MathElement button:BMSpace -> CreateMSPACE;
+        XMLTypes.MathElement button:BMEntity -> CreateMathEntity icon:MATHML_greek.png;
+        XMLTypes.MathElement button:BMInvisibleTimes -> CreateInvisibleTimes;
+        XMLTypes.MathElement button:BMApplyFunction -> CreateApplyFunction;
+        XMLTypes.MathConstruct button:BNthRoot -> CreateMROOT icon:MATHML_root.png;
+        XMLTypes.MathConstruct button:BSquareRoot -> CreateMSQRT icon:MATHML_sqrt.png;
+        XMLTypes.MathConstruct button:BEnclose -> CreateMENCLOSE;
+        XMLTypes.MathConstruct button:BFraction -> CreateMFRAC icon:MATHML_frac.png;
+        XMLTypes.MathConstruct button:BSubscriptAndSuperscript -> CreateMSUBSUP icon:MATHML_subsup.png;
+        XMLTypes.MathConstruct button:BSubscript -> CreateMSUB icon:MATHML_sub.png;
+        XMLTypes.MathConstruct button:BSuperscript -> CreateMSUP icon:MATHML_sup.png;
+        XMLTypes.MathConstruct button:BUnderAndOver -> CreateMUNDEROVER icon:MATHML_overunder.png;
+        XMLTypes.MathConstruct button:BUnder -> CreateMUNDER icon:MATHML_under.png;
+        XMLTypes.MathConstruct button:BOver -> CreateMOVER icon:MATHML_over.png;
+        XMLTypes.MathConstruct button:BParentheses -> CreateMROW icon:MATHML_fence.png;
+        XMLTypes.MathConstruct button:BMultiscripts -> CreateMMULTISCRIPTS icon:MATHML_mscript.png;
+        XMLTypes.MathMatrics button:BMatrix -> CreateMTABLE icon:MATHML_matrix.png;
+        XMLTypes.MathMatrics Separator;
 	XMLTypes.MathMatrics button:BMCellHExtend -> CellHorizExtend;
 	XMLTypes.MathMatrics button:BMCellVExtend -> CellVertExtend;
 	XMLTypes.MathMatrics button:BMCellHShrink -> CellHorizShrink;
@@ -311,20 +311,20 @@ MENUS
 	Views button:BShowAlternate -> ShowAlternate;
 	Views button:BShowToC -> ShowToC;
 	Views button:BShowTimeLine -> ShowTimeLineWindow;
-	Views button:BSplitHorizontally -> SplitHorizontally icon:split_horizontaly.png;
-	Views button:BSplitVertically -> SplitVertically icon:split_verticaly.png;
+	Views toggle:TSplitHorizontally -> SplitHorizontally;
+	Views toggle:TSplitVertically -> SplitVertically;
 
-  Style button:BCharacterStyle -> TtcChangeCharacters;
-  Style button:BColors -> TtcChangeColors;
-  Style button:BCSSStyle -> SetCSSStyle icon:css.png;
-  Style button:BFormat -> TtcChangeFormat;
+        Style button:BCharacterStyle -> TtcChangeCharacters;
+        Style button:BColors -> TtcChangeColors;
+        Style button:BCSSStyle -> SetCSSStyle icon:css.png;
+        Style button:BFormat -> TtcChangeFormat;
 	Style button:BBackgroundImage -> ChangeBackgroundImage icon:BG_repeat.png;
 	Style Separator;
 
 	Style button:BCreateClass -> CreateClass;
 	Style button:BApplyClass -> ApplyClass;
 	Style button:BShowAppliedStyle -> ShowAppliedStyle;
-  Style Separator;
+        Style Separator;
 	Style button:BLinkCSS -> LinkCSS;
 	Style button:BOpenCSS -> OpenCSS;
 	Style button:BDisableCSS -> DisableCSS;
@@ -354,7 +354,7 @@ MENUS
 	Cooperation_ button:BProp -> PropDocument;
 	Cooperation_ button:BCopyLock -> CopyLockInformation;
 	Cooperation_ Separator;
-  Cooperation_ toggle:BLockIndicator -> LockIndicator;
+        Cooperation_ toggle:BLockIndicator -> LockIndicator;
 
 	Help_ button:BInformation -> HelpAmaya icon:about.png;
 	Help_ button:BAtW3C -> HelpAtW3C;
@@ -401,6 +401,10 @@ FUNCTIONS
   DoCenter,
   DoRightAlign,
   DoJustify,
+  ShowHSplitToggle,
+  ShowVSplitToggle,
+  HideHSplitToggle,
+  HideVSplitToggle,
   CreateMIntegral,
   CreateMSum;
 END

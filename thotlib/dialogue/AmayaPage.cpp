@@ -205,10 +205,19 @@ AmayaFrame * AmayaPage::AttachFrame( AmayaFrame * p_frame, int position )
     }
   else
     {
+      AmayaFrame * p_frame = GetFrame(1);
+      Document document = FrameTable[p_frame->GetFrameId()].FrDoc;
+      View view         = FrameTable[p_frame->GetFrameId()].FrView;
       if (m_pSplitterWindow->GetSplitMode() == wxSPLIT_VERTICAL)
-        ok = m_pSplitterWindow->SplitVertically( m_pTopFrame, m_pBottomFrame );
+	{
+	  ok = m_pSplitterWindow->SplitVertically( m_pTopFrame, m_pBottomFrame );
+	  TtaExecuteMenuAction ("ShowVSplitToggle", document, view, FALSE);
+	}
       else
-        ok = m_pSplitterWindow->SplitHorizontally( m_pTopFrame, m_pBottomFrame );
+	{
+	  ok = m_pSplitterWindow->SplitHorizontally( m_pTopFrame, m_pBottomFrame );
+	  TtaExecuteMenuAction ("ShowHSplitToggle", document, view, FALSE);
+	}
       AdjustSplitterPos();
     }
   wxASSERT_MSG(ok, _T("AmayaPage::AttachFrame -> Impossible d'attacher la frame") );
@@ -350,14 +359,27 @@ AmayaFrame * AmayaPage::DetachFrame( int position )
   -----------------------------------------------------------------------*/
 void AmayaPage::DoBottomSplitButtonAction()
 {
+  // Update toggle menu item
+  AmayaFrame * p_frame = GetFrame(1);
+  Document document = FrameTable[p_frame->GetFrameId()].FrDoc;
+  View view         = FrameTable[p_frame->GetFrameId()].FrView;
+
   // check if we must switch the split orientation
   if ( m_pSplitterWindow->IsSplit() &&
        m_pSplitterWindow->GetSplitMode() == wxSPLIT_VERTICAL )
     {
       DoSwitchHoriVert();
+      // Update toggle buttons
+      TtaExecuteMenuAction ("HideVSplitToggle", document, view, FALSE);
+      TtaExecuteMenuAction ("ShowHSplitToggle", document, view, FALSE);
     }
   else
     {
+      // Update toggle buttons
+      if ( m_pSplitterWindow->IsSplit() )
+	TtaExecuteMenuAction ("HideHSplitToggle", document, view, FALSE);
+      else
+	TtaExecuteMenuAction ("ShowHSplitToggle", document, view, FALSE);
       // store the wanted orientation for the next split action
       SetSplitMode(wxSPLIT_HORIZONTAL);
       // do the split/unsplit action
@@ -372,14 +394,26 @@ void AmayaPage::DoBottomSplitButtonAction()
   -----------------------------------------------------------------------*/
 void AmayaPage::DoRightSplitButtonAction()
 {
+  AmayaFrame * p_frame = GetFrame(1);
+  Document document = FrameTable[p_frame->GetFrameId()].FrDoc;
+  View view         = FrameTable[p_frame->GetFrameId()].FrView;
+
   // check if we must switch the split orientation
   if ( m_pSplitterWindow->IsSplit() &&
        m_pSplitterWindow->GetSplitMode() == wxSPLIT_HORIZONTAL )
     {
       DoSwitchHoriVert();
+      // Update toggle buttons
+      TtaExecuteMenuAction ("HideHSplitToggle", document, view, FALSE);
+      TtaExecuteMenuAction ("ShowVSplitToggle", document, view, FALSE);
     }
   else
     {
+      // Update toggle buttons
+      if ( m_pSplitterWindow->IsSplit() )
+	TtaExecuteMenuAction ("HideVSplitToggle", document, view, FALSE);
+      else
+	TtaExecuteMenuAction ("ShowVSplitToggle", document, view, FALSE);
       // store the wanted orientation for the next split action
       SetSplitMode(wxSPLIT_VERTICAL);
       // do the split/unsplit action
@@ -523,7 +557,14 @@ void AmayaPage::OnSplitterPosChanged( wxSplitterEvent& event )
   -----------------------------------------------------------------------*/
 void AmayaPage::OnSplitterDClick( wxSplitterEvent& event )
 {
+  AmayaFrame * p_frame = GetFrame(1);
+  Document document = FrameTable[p_frame->GetFrameId()].FrDoc;
+  View view         = FrameTable[p_frame->GetFrameId()].FrView;
+
   DoSplitUnsplit();
+  // Update Toggle buttons
+  TtaExecuteMenuAction ("HideHSplitToggle", document, view, FALSE);
+  TtaExecuteMenuAction ("HideVSplitToggle", document, view, FALSE);
 }
 
 /*----------------------------------------------------------------------
