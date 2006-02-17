@@ -376,11 +376,6 @@ Remove Center element: (center{*+})+;
         * > :*;
 	}
 
-!Remove paragraph level: p{img};
-!     	{
-!        img > :*;
-!     	}
-
 Remove paragraph level: (p{*+})+;
      	{
         * > :*;
