@@ -96,7 +96,6 @@ AmayaLogDebug * AmayaApp::m_pAmayaLogDebug = NULL;
 bool AmayaApp::OnInit()
 {
   m_AmayaIsInit = false;
-
   // do not let wxWidgets exit Amaya when there is no opened windows
   // ** it can append after a crash when the backup restore dialog                    **
   // ** is popup before the main Window is created                                    **
@@ -118,7 +117,25 @@ bool AmayaApp::OnInit()
   // Required for images
   wxImage::AddHandler(new wxGIFHandler);
   wxImage::AddHandler(new wxPNGHandler);
-
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+  // check there is no other Amaya instance
+  m_pAmayaInstance = new AmayaAppInstance( this );
+  if (m_pAmayaInstance->IsAnotherAmayaRunning())
+    {
+      wxLogError(_T("Another instance is running"));
+      
+      wxString url;
+      if (wxApp::argc % 2 == 0)
+        /* The last argument in the command line is the document to be opened */
+        url = wxApp::argv[wxApp::argc-1];
+      m_pAmayaInstance->SendURLToOtherAmayaInstance( url );
+      return false;
+    }
+  else
+    {
+      m_pAmayaInstance->StartURLGrabberServer();
+    }  
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 #ifdef _GL
   // try to find a good configuration for opengl
   TTALOGDEBUG_0( TTA_LOG_INIT, _T("AmayaApp - Try to find a valide opengl configuration."));
@@ -136,14 +153,10 @@ bool AmayaApp::OnInit()
   TTALOGDEBUG_0( TTA_LOG_INIT, _T("AmayaApp - A valide opengl configuration has been found."));
 #endif /* _GL */
   
-  //#ifndef _GLPRINT
-
   // just convert arguments format (unicode to UTF-8) before passing it to amaya_main
   InitAmayaArgs();
-
   /* initialize the Registry */
   TtaInitializeAppRegistry(amaya_argv[0]);
-
 #ifndef _GLPRINT
   // Initialize all the XRC handlers. Always required (unless you feel like
   // going through and initializing a handler of each control type you will
@@ -201,30 +214,26 @@ bool AmayaApp::OnInit()
   wxXmlResource::Get()->Load( TtaGetResourcePathWX( WX_RESOURCES_XRC, "Toolbar.xrc") );
   // TODO: rajouter ici toutes les autres ressources a charger (pour les dialogues)
 
-  //#endif /* #ifndef _GLPRINT */
-
   /* setup the socket event loop */
   /* when a socket is active, check every 100 ms if something happend on the socket */
   m_SocketEventLoop = new wxAmayaSocketEventLoop( 10 );
   wxAmayaSocketEvent::InitSocketEvent( m_SocketEventLoop );
 
-
-
   /* setup the app icon */
 #ifdef _WINDOWS
-  m_AppIcon = wxIcon( TtaGetResourcePathWX( WX_RESOURCES_ICON_MISC, "logo.ico"), wxBITMAP_TYPE_ICO );
+  m_AppIcon = wxIcon( TtaGetResourcePathWX( WX_RESOURCES_ICON_MISC, "logo.ico"),
+                      wxBITMAP_TYPE_ICO );
 #else /* _WINDOWS */
-  m_AppIcon = wxIcon( TtaGetResourcePathWX( WX_RESOURCES_ICON_22X22, "logo.png"), wxBITMAP_TYPE_PNG );
+  m_AppIcon = wxIcon( TtaGetResourcePathWX( WX_RESOURCES_ICON_22X22, "logo.png"),
+                      wxBITMAP_TYPE_PNG );
 #endif /* _WINDOWS */
 
   // fill the icons list
   SetupDocumentIconList();
-
 #endif /* _GLPRINT */
-
+#ifdef IV
   // check there is no other Amaya instance
   m_pAmayaInstance = new AmayaAppInstance( this );
-  
   if (m_pAmayaInstance->IsAnotherAmayaRunning())
     {
       wxLogError(_T("Another instance is running"));
@@ -240,7 +249,7 @@ bool AmayaApp::OnInit()
     {
       m_pAmayaInstance->StartURLGrabberServer();
     }
-  
+#endif /* IV */
   m_AmayaIsInit = true;
   
   return true;

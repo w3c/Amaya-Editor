@@ -218,7 +218,9 @@ and must be removed at the end of the debug */
     typedef unsigned char   ThotBool;
   #endif /* #ifdef __cplusplus */
 #endif /* _MACOS */
+#ifndef BOOL
   typedef ThotBool BOOL;
+#endif
   #define ThotPid_get()	getpid()
   #define ThotPid		pid_t
 
