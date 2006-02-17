@@ -265,7 +265,7 @@ int AmayaApp::OnExit()
   TTALOGDEBUG_0( TTA_LOG_INIT, _T("AmayaApp::OnExit"));
 
   delete m_pAmayaInstance;
-
+  m_pAmayaInstance = NULL;
   // flush the clipboard in order to keep current text for further use in other applications
   wxTheClipboard->Flush();
 

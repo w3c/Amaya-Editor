@@ -427,9 +427,9 @@ Retirer le Centrer: (center{*+})+;
         * > :*;
 	}
 
-Retirer le niveau paragraphe: p{img};
+Retirer le niveau paragraphe: (p{*+})+;
      	{
-        img > :*;
+        * > :*;
      	}
 
 Retirer le BlockQuote: blockquote{*+};

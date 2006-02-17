@@ -387,9 +387,9 @@ Eliminar elemento center: (center{*+})+;
         * > :*;
 	}
 
-Eliminar nivel de párrafo: p{img};
+Eliminar nivel de párrafo: (p{*+})+;
      	{
-        img > :*;
+        * > :*;
      	}
 
 Eliminar elemento blockQuote: blockquote{*+};

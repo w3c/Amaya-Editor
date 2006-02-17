@@ -50,10 +50,10 @@ static int FormVal = 0;
  * list of pat.
  */
 static struct _mStack
-  {
-     strNode            *Node;
-     strListSymb        *Symbols;
-  }
+{
+  strNode            *Node;
+  strListSymb        *Symbols;
+}
 matchStack[MAX_STACK];
 
 static int          maxMatchDepth;
@@ -63,12 +63,12 @@ static int          topMatchStack;
 /*  HTML generation */
 /* stack of generated tags */
 typedef struct _gStack
-  {
-     char               *Tag;
-     strAttrDesc        *Attributes;
-     int                 Idf;
-     int                 Nbc;
-  }
+{
+  char               *Tag;
+  strAttrDesc        *Attributes;
+  int                 Idf;
+  int                 Nbc;
+}
 strGenStack;
 
 static strGenStack  *GenerationStack[MAX_STACK];
@@ -99,7 +99,7 @@ static Element       mySelect;
 
 
 /*----------------------------------------------------------------------
-   FreeStructTree: frees the structure tree and matching relations. 
+  FreeStructTree: frees the structure tree and matching relations. 
   ----------------------------------------------------------------------*/
 static void FreeStructTree (StructureTree t)
 {
@@ -111,26 +111,26 @@ static void FreeStructTree (StructureTree t)
     {
       match = t->Matches;
       while (match != NULL)
-	{
-	  matchc = match->MatchChildren;
-	  while (matchc != NULL)
-	    {
-	      matchc2 = matchc->Next;
-	      TtaFreeMemory (matchc);
-	      matchc = matchc2;
-	    }
-	  match2 = match->Next;
-	  TtaFreeMemory (match);
-	  match = match2;
-	}
+        {
+          matchc = match->MatchChildren;
+          while (matchc != NULL)
+            {
+              matchc2 = matchc->Next;
+              TtaFreeMemory (matchc);
+              matchc = matchc2;
+            }
+          match2 = match->Next;
+          TtaFreeMemory (match);
+          match = match2;
+        }
 
       node = t->Child;
       while (node != NULL)
-	{
-	  node2 = node->Next;
-	  FreeStructTree (node);
-	  node = node2;
-	}
+        {
+          node2 = node->Next;
+          FreeStructTree (node);
+          node = node2;
+        }
       TtaFreeMemory (t->Tag);
       TtaFreeMemory (t->Candidates);
       TtaFreeMemory (t);
@@ -143,116 +143,116 @@ static void FreeStructTree (StructureTree t)
   ----------------------------------------------------------------------*/
 static void         FreeMatchEnv ()
 {
-   strListElem           *list, *list1;
+  strListElem           *list, *list1;
 
-   /* liberation de la liste des sous-arbres transferes */
-   list = strMatchEnv.ListSubTrees;
-   strMatchEnv.ListSubTrees = NULL;
-   while (list != NULL)
-     {
-	list1 = list;
-	list = list->Next;
-	TtaFreeMemory (list1);
-     }
-   strMatchEnv.ListSubTrees = NULL;
+  /* liberation de la liste des sous-arbres transferes */
+  list = strMatchEnv.ListSubTrees;
+  strMatchEnv.ListSubTrees = NULL;
+  while (list != NULL)
+    {
+      list1 = list;
+      list = list->Next;
+      TtaFreeMemory (list1);
+    }
+  strMatchEnv.ListSubTrees = NULL;
 
-   /* liberation de l'arbre des tags */
-   FreeStructTree (strMatchEnv.SourceTree);
-   strMatchEnv.SourceTree = NULL;
+  /* liberation de l'arbre des tags */
+  FreeStructTree (strMatchEnv.SourceTree);
+  strMatchEnv.SourceTree = NULL;
 }
 
 /*----------------------------------------------------------------------
-   NewNode: allocation of a Structure tree node.     
+  NewNode: allocation of a Structure tree node.     
   ----------------------------------------------------------------------*/
 static strNode *NewNode (char *tag)
 {
-   StructureTree res;
+  StructureTree res;
 
-   res = (StructureTree) TtaGetMemory (sizeof (strNode));
-   res->Tag = (unsigned char *)TtaGetMemory (NAME_LENGTH);
-   strcpy ((char *)res->Tag, (char *)tag);
-   res->Matches = NULL;
-   res->Candidates = NULL;
-   res->Elem = NULL;
-   res->MatchSymb = NULL;
-   res->Parent = NULL;
-   res->Child = NULL;
-   res->Next = NULL;
-   res->Previous = NULL;
-   res->IsTrans = FALSE;
-   res->NodeDepth = 0;
-   return res;
+  res = (StructureTree) TtaGetMemory (sizeof (strNode));
+  res->Tag = (unsigned char *)TtaGetMemory (NAME_LENGTH);
+  strcpy ((char *)res->Tag, (char *)tag);
+  res->Matches = NULL;
+  res->Candidates = NULL;
+  res->Elem = NULL;
+  res->MatchSymb = NULL;
+  res->Parent = NULL;
+  res->Child = NULL;
+  res->Next = NULL;
+  res->Previous = NULL;
+  res->IsTrans = FALSE;
+  res->NodeDepth = 0;
+  return res;
 }
 
 
 /*----------------------------------------------------------------------
-    thot tree -> structure tree
+  thot tree -> structure tree
   ----------------------------------------------------------------------*/
 static void BuildStructureTree (Element elem, Document doc, StructureTree father,
-				int maxdepth, int depth)
+                                int maxdepth, int depth)
 {
-   Element             elemCour;
-   Attribute           attr;
-   ElementType         elemType;
-   char               *tag;
-   strNode            *added, *child;
+  Element             elemCour;
+  Attribute           attr;
+  ElementType         elemType;
+  char               *tag;
+  strNode            *added, *child;
 #ifdef AMAYA_DEBUG
-   int i;
+  int i;
 #endif
 
-   if (depth > maxdepth)
-      return;
-   tag = (char *)TtaGetMemory (NAME_LENGTH);
-   elemType = TtaGetElementType (elem);
-   strcpy ((char *)tag, (char *)GetXMLElementName (elemType, doc));
-   attr = NULL;
-   TtaNextAttribute (elem, &attr);
-   if (strcmp ((char *)tag, "???") && strcmp ((char *)tag, "none") &&
-       (TtaGetFirstChild (elem) != NULL || attr != NULL ||
-	TtaIsLeaf (elemType)))
-     {
-	added = NewNode (tag);
-	added->Elem = elem;
-	added->Parent = father;
-	added->NodeDepth = depth;
-	if (father->Child == NULL)
-	  {
-	     father->Child = added;
-	     added->Previous = NULL;
-	  }
-	else
-	  {
-	     child = father->Child;
-	     while (child->Next != NULL)
-		child = child->Next;
-	     child->Next = added;
-	     added->Previous = child;
-	  }
-	depth++;
+  if (depth > maxdepth)
+    return;
+  tag = (char *)TtaGetMemory (NAME_LENGTH);
+  elemType = TtaGetElementType (elem);
+  strcpy ((char *)tag, (char *)GetXMLElementName (elemType, doc));
+  attr = NULL;
+  TtaNextAttribute (elem, &attr);
+  if (strcmp ((char *)tag, "???") && strcmp ((char *)tag, "none") &&
+      (TtaGetFirstChild (elem) != NULL || attr != NULL ||
+       TtaIsLeaf (elemType)))
+    {
+      added = NewNode (tag);
+      added->Elem = elem;
+      added->Parent = father;
+      added->NodeDepth = depth;
+      if (father->Child == NULL)
+        {
+          father->Child = added;
+          added->Previous = NULL;
+        }
+      else
+        {
+          child = father->Child;
+          while (child->Next != NULL)
+            child = child->Next;
+          child->Next = added;
+          added->Previous = child;
+        }
+      depth++;
 #ifdef AMAYA_DEBUG
-	for (i=0;i<depth;i++)
-	  printf("  ");
-	printf("%s\n",added->Tag);
+      for (i=0;i<depth;i++)
+        printf("  ");
+      printf("%s\n",added->Tag);
 #endif
-     }
-   else
-      added = father;
-   TtaFreeMemory (tag);
-   if ((strcmp ((char *)TtaGetSSchemaName (elemType.ElSSchema), "HTML") != 0) ||
-       (elemType.ElTypeNum != HTML_EL_Comment_ && 
-	elemType.ElTypeNum != HTML_EL_Invalid_element))
-     {
-	elemCour = TtaGetFirstChild (elem);
-	while (elemCour != NULL)
-	  {
-	     BuildStructureTree (elemCour, doc, added, maxdepth, depth);
-	     TtaNextSibling (&elemCour);
-	  }
-     }
+    }
+  else
+    added = father;
+  TtaFreeMemory (tag);
+  if ((strcmp ((char *)TtaGetSSchemaName (elemType.ElSSchema), "HTML") != 0) ||
+      (elemType.ElTypeNum != HTML_EL_Comment_ && 
+       elemType.ElTypeNum != HTML_EL_Invalid_element))
+    {
+      elemCour = TtaGetFirstChild (elem);
+      while (elemCour != NULL)
+        {
+          BuildStructureTree (elemCour, doc, added, maxdepth, depth);
+          TtaNextSibling (&elemCour);
+        }
+    }
 }
 
 /*----------------------------------------------------------------------
-    pattern matching functions
+  pattern matching functions
   ----------------------------------------------------------------------*/
 
 /*----------------------------------------------------------------------
@@ -261,43 +261,43 @@ static void BuildStructureTree (Element elem, Document doc, StructureTree father
   ----------------------------------------------------------------------*/
 static void IntersectMatch (strListSymb **res, strListSymb *LS, strMatch *MS)
 {
-   strListSymb        *pLS, *pRes;
-   strMatch           *pMS;
-   ThotBool            found;
+  strListSymb        *pLS, *pRes;
+  strMatch           *pMS;
+  ThotBool            found;
 
-   if (*res != NULL)
-     {
-	FreeList (*res);
-	*res = NULL;
-     }
-   pRes = NULL;
-   pLS = LS;
-   while (pLS != NULL)
-     {
-	pMS = MS;
-	found = FALSE;
-	while (!found && pMS != NULL)
-	  {
-	     found = (pMS->MatchSymb == pLS->Symbol);
-	     pMS = pMS->Next;
-	  }
-	if (found)
-	  {
-	     if (pRes == NULL)
-	       {
-		  *res = (strListSymb *) TtaGetMemory (sizeof (strListSymb));
-		  pRes = *res;
-	       }
-	     else
-	       {
-		  pRes->Next = (strListSymb *) TtaGetMemory (sizeof (strListSymb));
-		  pRes = pRes->Next;
-	       }
-	     pRes->Next = NULL;
-	     pRes->Symbol = pLS->Symbol;
-	  }
-	pLS = pLS->Next;
-     }
+  if (*res != NULL)
+    {
+      FreeList (*res);
+      *res = NULL;
+    }
+  pRes = NULL;
+  pLS = LS;
+  while (pLS != NULL)
+    {
+      pMS = MS;
+      found = FALSE;
+      while (!found && pMS != NULL)
+        {
+          found = (pMS->MatchSymb == pLS->Symbol);
+          pMS = pMS->Next;
+        }
+      if (found)
+        {
+          if (pRes == NULL)
+            {
+              *res = (strListSymb *) TtaGetMemory (sizeof (strListSymb));
+              pRes = *res;
+            }
+          else
+            {
+              pRes->Next = (strListSymb *) TtaGetMemory (sizeof (strListSymb));
+              pRes = pRes->Next;
+            }
+          pRes->Next = NULL;
+          pRes->Symbol = pLS->Symbol;
+        }
+      pLS = pLS->Next;
+    }
 }
 
 
@@ -308,14 +308,14 @@ static void IntersectMatch (strListSymb **res, strListSymb *LS, strMatch *MS)
   ----------------------------------------------------------------------*/
 static void InitMatchStack (void)
 {
-   int i;
+  int i;
 
-   for (i = 0; i < MAX_STACK; i++)
-     {
-	matchStack[i].Node = NULL;
-	matchStack[i].Symbols = NULL;
-     }
-    topMatchStack = 0;
+  for (i = 0; i < MAX_STACK; i++)
+    {
+      matchStack[i].Node = NULL;
+      matchStack[i].Symbols = NULL;
+    }
+  topMatchStack = 0;
 }
 
 
@@ -358,148 +358,148 @@ static void PopMatchStack (strNode **node, strListSymb **symb)
   ----------------------------------------------------------------------*/
 static void ConstListMatch (strNode * node, strSymbDesc * symb)
 {
-   strMatch           *sm;
-   strMatchChildren   *smc;
-   strNode            *n;
-   strListSymb        *dl;
+  strMatch           *sm;
+  strMatchChildren   *smc;
+  strNode            *n;
+  strListSymb        *dl;
 
-   sm = node->Matches;
-   if (sm == NULL)
-     {
-	node->Matches = (strMatch *) TtaGetMemory (sizeof (strMatch));
-	sm = node->Matches;
-     }
-   else
-     {
-	while (sm->Next != NULL && sm->MatchSymb != symb)
-	   sm = sm->Next;
-	if (sm->MatchSymb != symb)
-	  {
-	     sm->Next = (strMatch *) TtaGetMemory (sizeof (strMatch));
-	     sm = sm->Next;
-	  }
-	else
-	   return;
-     }
-   sm->MatchSymb = symb;
-   sm->MatchNode = node;
-   sm->Next = NULL;
-   sm->MatchChildren = NULL;
-   PopMatchStack (&n, &dl);
-   while (n != NULL)
-     {
-	smc = (strMatchChildren *) TtaGetMemory (sizeof (strMatchChildren));
-	smc->Next = sm->MatchChildren;
-	sm->MatchChildren = smc;
-	smc->MatchSymb = dl->Symbol;
-	smc->MatchNode = n;
-	PopMatchStack (&n, &dl);
-     }
+  sm = node->Matches;
+  if (sm == NULL)
+    {
+      node->Matches = (strMatch *) TtaGetMemory (sizeof (strMatch));
+      sm = node->Matches;
+    }
+  else
+    {
+      while (sm->Next != NULL && sm->MatchSymb != symb)
+        sm = sm->Next;
+      if (sm->MatchSymb != symb)
+        {
+          sm->Next = (strMatch *) TtaGetMemory (sizeof (strMatch));
+          sm = sm->Next;
+        }
+      else
+        return;
+    }
+  sm->MatchSymb = symb;
+  sm->MatchNode = node;
+  sm->Next = NULL;
+  sm->MatchChildren = NULL;
+  PopMatchStack (&n, &dl);
+  while (n != NULL)
+    {
+      smc = (strMatchChildren *) TtaGetMemory (sizeof (strMatchChildren));
+      smc->Next = sm->MatchChildren;
+      sm->MatchChildren = smc;
+      smc->MatchSymb = dl->Symbol;
+      smc->MatchNode = n;
+      PopMatchStack (&n, &dl);
+    }
 }
 
 /*----------------------------------------------------------------------
   ChildrenMatch: return TRUE if the chidren of node n are matched with the possible 
-   children of the pattern symbol p.
-   ----------------------------------------------------------------------*/
+  children of the pattern symbol p.
+  ----------------------------------------------------------------------*/
 static ThotBool ChildrenMatch (strNode * n, strSymbDesc * p)
 {
-   strNode            *child;
-   strListSymb        *candidate, *ms;
-   ThotBool            matchFound, matchFailed;
+  strNode            *child;
+  strListSymb        *candidate, *ms;
+  ThotBool            matchFound, matchFailed;
 
-   matchFound = FALSE;
-   matchFailed = FALSE;
+  matchFound = FALSE;
+  matchFailed = FALSE;
 
-   candidate = p->Children;
-   if (candidate == NULL)
-     /* there is no possible children for p, returns true */
-     {
-	ConstListMatch (n, p);
-	return TRUE;
-     }
-   if (n->Child == NULL)
-     /* n is a leaf */
-     {
-	if (p->IsOptChild)
-	  { /* possible children of p are all optional: returns true */
-	     ConstListMatch (n, p);
-	     return TRUE;
-	  }
-	else
-	   return FALSE;
-     }
-   /* looking for a matching of each child of symbol p (candidate) with the
-      children of the source node n */ 
-   child = n->Child;
-   IntersectMatch (&(child->Candidates), p->Children, child->Matches);
-   candidate = child->Candidates;
-   if (candidate == NULL)
-     {
-	return FALSE;
-     }
-   InitMatchStack ();
-   while (!matchFailed && !matchFound)
-     {
-	if (child == NULL && (candidate != NULL && candidate->Symbol == NULL))
-	  {
-	    /* all the children of n are matched, add a matching for n and p */
-	     ConstListMatch (n, p);
-	     matchFound = TRUE;
-	  }
-	else if (child == NULL || candidate == NULL ||
-		 candidate->Symbol == NULL)
-	  {  
-	    /* the children are not all matched, pop the matching stack to see
-	       if an other symbol can be matched with a node already explored*/
-	     PopMatchStack (&child, &ms);
-	     while (child != NULL &&
-		    ms->Next == NULL)
-		PopMatchStack (&child, &ms);
-	     if (child == NULL)
-	       {
-		  matchFailed = TRUE;
-		  /* no matching of n has been found, exiting */
-	       }
-	     else
-	       {/* a new candidate to matching is aviable */
-		  candidate = ms->Next;
-	       }
-	  }
-	else
-	  {			/* here:  child!=NULL && candidate != -1 */
-	    /* searches if the next siblings of child can be matched with
-	       successors of candidate */
+  candidate = p->Children;
+  if (candidate == NULL)
+    /* there is no possible children for p, returns true */
+    {
+      ConstListMatch (n, p);
+      return TRUE;
+    }
+  if (n->Child == NULL)
+    /* n is a leaf */
+    {
+      if (p->IsOptChild)
+        { /* possible children of p are all optional: returns true */
+          ConstListMatch (n, p);
+          return TRUE;
+        }
+      else
+        return FALSE;
+    }
+  /* looking for a matching of each child of symbol p (candidate) with the
+     children of the source node n */ 
+  child = n->Child;
+  IntersectMatch (&(child->Candidates), p->Children, child->Matches);
+  candidate = child->Candidates;
+  if (candidate == NULL)
+    {
+      return FALSE;
+    }
+  InitMatchStack ();
+  while (!matchFailed && !matchFound)
+    {
+      if (child == NULL && (candidate != NULL && candidate->Symbol == NULL))
+        {
+          /* all the children of n are matched, add a matching for n and p */
+          ConstListMatch (n, p);
+          matchFound = TRUE;
+        }
+      else if (child == NULL || candidate == NULL ||
+               candidate->Symbol == NULL)
+        {  
+          /* the children are not all matched, pop the matching stack to see
+             if an other symbol can be matched with a node already explored*/
+          PopMatchStack (&child, &ms);
+          while (child != NULL &&
+                 ms->Next == NULL)
+            PopMatchStack (&child, &ms);
+          if (child == NULL)
+            {
+              matchFailed = TRUE;
+              /* no matching of n has been found, exiting */
+            }
+          else
+            {/* a new candidate to matching is aviable */
+              candidate = ms->Next;
+            }
+        }
+      else
+        {			/* here:  child!=NULL && candidate != -1 */
+          /* searches if the next siblings of child can be matched with
+             successors of candidate */
 
-	     /* push child and candidate */
-	     PushMatchStack (child, candidate);
-	     if (child->Next != NULL)
-	       {
-		  /* build the candidate list for matching of the next
-		     sibling */
-		  IntersectMatch (&(child->Next->Candidates),
-				  candidate->Symbol->Followings,
-				  child->Next->Matches);
-		  /* try the first candidate */
-		  candidate = child->Next->Candidates;
-	       }
-	     else
-	       {		/* child->Next==NULL */
-		  ms = candidate->Symbol->Followings;
-		  while (ms != NULL && ms->Symbol != NULL)
-		     ms = ms->Next;
-		  if (ms != NULL)
-		     candidate = ms;
-	       }
-	     child = child->Next;
-	  }
-     }
+          /* push child and candidate */
+          PushMatchStack (child, candidate);
+          if (child->Next != NULL)
+            {
+              /* build the candidate list for matching of the next
+                 sibling */
+              IntersectMatch (&(child->Next->Candidates),
+                              candidate->Symbol->Followings,
+                              child->Next->Matches);
+              /* try the first candidate */
+              candidate = child->Next->Candidates;
+            }
+          else
+            {		/* child->Next==NULL */
+              ms = candidate->Symbol->Followings;
+              while (ms != NULL && ms->Symbol != NULL)
+                ms = ms->Next;
+              if (ms != NULL)
+                candidate = ms;
+            }
+          child = child->Next;
+        }
+    }
    
-   if (!matchFound && p->IsOptChild)
-     {
-	ConstListMatch (n, p);
-	matchFound = TRUE;
-     }
-   return matchFound;
+  if (!matchFound && p->IsOptChild)
+    {
+      ConstListMatch (n, p);
+      matchFound = TRUE;
+    }
+  return matchFound;
 }
 
 /*----------------------------------------------------------------------
@@ -508,84 +508,84 @@ static ThotBool ChildrenMatch (strNode * n, strSymbDesc * p)
   ----------------------------------------------------------------------*/
 static ThotBool MatchAttributes (strSymbDesc *pSymb, Element elem)
 {
-   ThotBool            result;
-   ElementType         elType;
-   strAttrDesc        *pAttr = NULL;
-   AttributeType       AttrTyp;
-   Attribute           attr = NULL;
-   char               *buf;
-   int                 AttrKind, length;
+  ThotBool            result;
+  ElementType         elType;
+  strAttrDesc        *pAttr = NULL;
+  AttributeType       AttrTyp;
+  Attribute           attr = NULL;
+  char               *buf;
+  int                 AttrKind, length;
 
-   buf = (char *)TtaGetMemory (MAX_LENGTH);
-   elType = TtaGetElementType (elem);
-   AttrTyp.AttrSSchema = elType.ElSSchema;
-   result = TRUE;
-   pAttr = pSymb->Attributes;
-   while (pAttr != NULL && result)
-     {
-	AttrTyp.AttrTypeNum = pAttr->ThotAttr;
-	if (AttrTyp.AttrTypeNum != 0)
-	  {
-	     attr = TtaGetAttribute (elem, AttrTyp);
-	     result = (attr != (Attribute) NULL);
-	  }
-	if (result)
-	  {
-	     TtaGiveAttributeType (attr, &AttrTyp, &AttrKind);
-	     if (AttrKind == 2 && !pAttr->IsInt)
-	       {
-		  length = MAX_LENGTH;
-		  TtaGiveTextAttributeValue (attr, buf, &length);
-		  result = !strcmp ((char *)pAttr->TextVal, (char *)buf);
-	       }
-	     else if (AttrKind != 2 && pAttr->IsInt)
-	       {
-		  result = (TtaGetAttributeValue (attr) == pAttr->IntVal);
-	       }
-	     else
-		result = FALSE;
-	  }
-	pAttr = pAttr->Next;
-     }
-   TtaFreeMemory (buf);
-   return result;
+  buf = (char *)TtaGetMemory (MAX_LENGTH);
+  elType = TtaGetElementType (elem);
+  AttrTyp.AttrSSchema = elType.ElSSchema;
+  result = TRUE;
+  pAttr = pSymb->Attributes;
+  while (pAttr != NULL && result)
+    {
+      AttrTyp.AttrTypeNum = pAttr->ThotAttr;
+      if (AttrTyp.AttrTypeNum != 0)
+        {
+          attr = TtaGetAttribute (elem, AttrTyp);
+          result = (attr != (Attribute) NULL);
+        }
+      if (result)
+        {
+          TtaGiveAttributeType (attr, &AttrTyp, &AttrKind);
+          if (AttrKind == 2 && !pAttr->IsInt)
+            {
+              length = MAX_LENGTH;
+              TtaGiveTextAttributeValue (attr, buf, &length);
+              result = !strcmp ((char *)pAttr->TextVal, (char *)buf);
+            }
+          else if (AttrKind != 2 && pAttr->IsInt)
+            {
+              result = (TtaGetAttributeValue (attr) == pAttr->IntVal);
+            }
+          else
+            result = FALSE;
+        }
+      pAttr = pAttr->Next;
+    }
+  TtaFreeMemory (buf);
+  return result;
 }
 
 
 /*----------------------------------------------------------------------
-   MatchNode: builds a pointer list to symbols that match with the node n
+  MatchNode: builds a pointer list to symbols that match with the node n
   ----------------------------------------------------------------------*/
 static ThotBool MatchNode (strNode *n)
 {
-   strTransDesc          *td;
-   strSymbDesc           *sd;
+  strTransDesc          *td;
+  strSymbDesc           *sd;
 
-   td = CourTransSet->Transformations;
-   while (td != NULL)
-     {
-	if (td->IsActiveTrans)
-	  {
-	     sd = td->Symbols;
-	     /* for each symbol having the same tag than the node n, seaches */
-	     /* if the children of the node can be matched with those of the */
-	     /* pattern symbol */
-	     while (sd != NULL)
-	       {
-		  if (sd->IsActiveSymb)
-		     if ((n->NodeDepth - sd->Depth <= maxSelDepth)
-			 && (n->NodeDepth - sd->Depth >= 0))
-			if (!strcmp ((char *)sd->Tag, "*") ||
-			    !strcmp ((char *)sd->Tag, (char *)n->Tag))
-			   if (sd->Attributes == NULL ||
-			       MatchAttributes (sd, n->Elem))
-			      ChildrenMatch (n, sd);
-		  sd = sd->Next;
-	       }
-	     ChildrenMatch (n, td->RootDesc);
-	  }
-	td = td->Next;
-     }
-   return TRUE;
+  td = CourTransSet->Transformations;
+  while (td != NULL)
+    {
+      if (td->IsActiveTrans)
+        {
+          sd = td->Symbols;
+          /* for each symbol having the same tag than the node n, seaches */
+          /* if the children of the node can be matched with those of the */
+          /* pattern symbol */
+          while (sd != NULL)
+            {
+              if (sd->IsActiveSymb)
+                if ((n->NodeDepth - sd->Depth <= maxSelDepth)
+                    && (n->NodeDepth - sd->Depth >= 0))
+                  if (!strcmp ((char *)sd->Tag, "*") ||
+                      !strcmp ((char *)sd->Tag, (char *)n->Tag))
+                    if (sd->Attributes == NULL ||
+                        MatchAttributes (sd, n->Elem))
+                      ChildrenMatch (n, sd);
+              sd = sd->Next;
+            }
+          ChildrenMatch (n, td->RootDesc);
+        }
+      td = td->Next;
+    }
+  return TRUE;
 }
 
 /*----------------------------------------------------------------------
@@ -598,47 +598,47 @@ static ThotBool MatchNode (strNode *n)
   ----------------------------------------------------------------------*/
 static strNode *RecursivePostfixSearch (StructureTree t, ThotBool (*f) (strNode *))
 {
-   strNode *n, *res;
+  strNode *n, *res;
 
-   n = t->Child;
-   while (n != NULL)
-     {
-	res = RecursivePostfixSearch (n, f);
-	if (res == NULL)
-	  {
-	     if (f (n))
-		n = n->Next;
-	     else
-		return n;
-	  }
-	else
-	   return res;
-     }
-   return NULL;
+  n = t->Child;
+  while (n != NULL)
+    {
+      res = RecursivePostfixSearch (n, f);
+      if (res == NULL)
+        {
+          if (f (n))
+            n = n->Next;
+          else
+            return n;
+        }
+      else
+        return res;
+    }
+  return NULL;
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 static strNode *PostfixSearch (StructureTree t, ThotBool (*f) (strNode *))
 {
-   strNode *res;
+  strNode *res;
 
-   res = RecursivePostfixSearch (t, f);
-   if (res == NULL)
-     {
-	if (f (t))
-	   return NULL;
-	else
-	   return t;
-     }
-   else
-      return res;
+  res = RecursivePostfixSearch (t, f);
+  if (res == NULL)
+    {
+      if (f (t))
+        return NULL;
+      else
+        return t;
+    }
+  else
+    return res;
 }
 
 /*----------------------------------------------------------------------
- AddListSubTree:  inserts the reference to a structure subtree, with its
- rank between its sibling, and its identifier in the environment's
- subtrees list
+  AddListSubTree:  inserts the reference to a structure subtree, with its
+  rank between its sibling, and its identifier in the environment's
+  subtrees list
   ----------------------------------------------------------------------*/
 static void AddListSubTree (Element elem, int idf, int rank)
 {
@@ -647,7 +647,7 @@ static void AddListSubTree (Element elem, int idf, int rank)
   pcour = strMatchEnv.ListSubTrees;
   pprec = NULL;
   while (pcour != NULL &&
-	 (pcour->Id < idf || (pcour->Id == idf && pcour->Rank < rank)))
+         (pcour->Id < idf || (pcour->Id == idf && pcour->Rank < rank)))
     {
       pprec = pcour;
       pcour = pcour->Next;
@@ -661,7 +661,7 @@ static void AddListSubTree (Element elem, int idf, int rank)
     {
       strMatchEnv.ListSubTrees = (strListElem *) TtaGetMemory (sizeof (strListElem));
       pprec = strMatchEnv.ListSubTrees;
-     }
+    }
   pprec->Id = idf;
   pprec->Rank = rank;
   pprec->Elem = elem;
@@ -675,73 +675,73 @@ static void AddListSubTree (Element elem, int idf, int rank)
   ----------------------------------------------------------------------*/
 static Element FindListSTreeByLabel (char *label)
 {
-   strListElem        *pcour;
-   ThotBool            found;
+  strListElem        *pcour;
+  ThotBool            found;
 
-   found = FALSE;
-   pcour = strMatchEnv.ListSubTrees;
-   while (!found && pcour != NULL)
-     {
-	found = !strcmp ((char *)TtaGetElementLabel (pcour->Elem), (char *)label);
-	if (!found)
-	   pcour = pcour->Next;
-     }
-   if (!found)
-      return NULL;
-   else
-      return pcour->Elem;
+  found = FALSE;
+  pcour = strMatchEnv.ListSubTrees;
+  while (!found && pcour != NULL)
+    {
+      found = !strcmp ((char *)TtaGetElementLabel (pcour->Elem), (char *)label);
+      if (!found)
+        pcour = pcour->Next;
+    }
+  if (!found)
+    return NULL;
+  else
+    return pcour->Elem;
 }
 
 /*----------------------------------------------------------------------
-   search for the next element with the identifier id in the ListSubTrees, 
-   searches the first one if *elem =NULL 
+  search for the next element with the identifier id in the ListSubTrees, 
+  searches the first one if *elem =NULL 
   ----------------------------------------------------------------------*/
 static int FindListSubTree (int id, Element * elem)
 {
-   strListElem        *pcour;
-   ThotBool            found;
-   int                 result;
+  strListElem        *pcour;
+  ThotBool            found;
+  int                 result;
 
-   found = FALSE;
-   pcour = strMatchEnv.ListSubTrees;
-   while (!found && pcour != NULL)
-     {
-	found = (pcour->Id == id && (*elem == NULL || *elem == pcour->Elem));
-	if (!found)
-	   pcour = pcour->Next;
-     }
-   if (found && *elem == NULL)
-     {
-	*elem = pcour->Elem;
-	result = pcour->Rank;
-     }
-   else
-     {
-	*elem = NULL;
-	result = 0;
-	if (found)
-	  {
-	     pcour = pcour->Next;
-	     found = FALSE;
-	     while (!found && pcour != NULL)
-	       {
-		  found = pcour->Id == id;
-		  if (!found)
-		     pcour = pcour->Next;
-	       }
-	     if (found)
-	       {
-		  *elem = pcour->Elem;
-		  result = pcour->Rank;
-	       }
-	  }
-     }
-   return result;
+  found = FALSE;
+  pcour = strMatchEnv.ListSubTrees;
+  while (!found && pcour != NULL)
+    {
+      found = (pcour->Id == id && (*elem == NULL || *elem == pcour->Elem));
+      if (!found)
+        pcour = pcour->Next;
+    }
+  if (found && *elem == NULL)
+    {
+      *elem = pcour->Elem;
+      result = pcour->Rank;
+    }
+  else
+    {
+      *elem = NULL;
+      result = 0;
+      if (found)
+        {
+          pcour = pcour->Next;
+          found = FALSE;
+          while (!found && pcour != NULL)
+            {
+              found = pcour->Id == id;
+              if (!found)
+                pcour = pcour->Next;
+            }
+          if (found)
+            {
+              *elem = pcour->Elem;
+              result = pcour->Rank;
+            }
+        }
+    }
+  return result;
 }
 
 /*----------------------------------------------------------------------
-   ExportSubTree Exports a subtree in generation buffer without any
-   change
+  ExportSubTree Exports a subtree in generation buffer without any
+  change
   ----------------------------------------------------------------------*/
 static ThotBool ExportSubTree (Element subTree, Document doc)
 {
@@ -769,10 +769,10 @@ static ThotBool ExportSubTree (Element subTree, Document doc)
     TtaExportTree (subTree, doc, tmpfilename, "AnnotT");
   else if (strcmp (name, "HTML") == 0)
     {
-    if (DocumentMeta[doc] && DocumentMeta[doc]->xmlformat)
-      TtaExportTree (subTree, doc, tmpfilename, "HTMLTX");
-    else
-      TtaExportTree (subTree, doc, tmpfilename, "HTMLT");
+      if (DocumentMeta[doc] && DocumentMeta[doc]->xmlformat)
+        TtaExportTree (subTree, doc, tmpfilename, "HTMLTX");
+      else
+        TtaExportTree (subTree, doc, tmpfilename, "HTMLT");
     }
   else
     TtaExportTree (subTree, doc, tmpfilename, "XMLT");
@@ -784,10 +784,10 @@ static ThotBool ExportSubTree (Element subTree, Document doc)
     {
       charRead = getc (inputFile);
       while (charRead != EOF && szHTML < BUFFER_LEN - 1)
-	  {
-	    bufHTML[szHTML++] = charRead;
-	    charRead = getc (inputFile);
-	  }
+        {
+          bufHTML[szHTML++] = charRead;
+          charRead = getc (inputFile);
+        }
     }
   TtaReadClose (inputFile);  
   TtaFileUnlink (tmpfilename);
@@ -818,180 +818,254 @@ static void RemoveFragment (Element elem, Document doc)
       parSch = elType.ElSSchema;
       
       while (parent != NULL && 
-	     TtaSameSSchemas (parSch, elSch) &&
-	     TtaGetFirstChild (parent) == TtaGetLastChild (parent) &&
-	     !strcmp ((char *)GetXMLElementName (TtaGetElementType (parent), doc), "???"))
-	{
-	  elem = parent;
-	  parent = TtaGetParent (parent);
-	  if (parent)
-	    {
-        if (TtaGetParent(parent))
-          elType = TtaGetElementType (TtaGetParent(parent));
-        else
-          elType = TtaGetElementType (parent);
-        parSch = elType.ElSSchema;
-	    }
-	}
+             TtaSameSSchemas (parSch, elSch) &&
+             TtaGetFirstChild (parent) == TtaGetLastChild (parent) &&
+             !strcmp ((char *)GetXMLElementName (TtaGetElementType (parent), doc), "???"))
+        {
+          elem = parent;
+          parent = TtaGetParent (parent);
+          if (parent)
+            {
+              if (TtaGetParent(parent))
+                elType = TtaGetElementType (TtaGetParent(parent));
+              else
+                elType = TtaGetElementType (parent);
+              parSch = elType.ElSSchema;
+            }
+        }
     }
   TtaRegisterElementDelete (elem, doc);
   TtaRemoveTree (elem, doc);  
 }
 
 /*----------------------------------------------------------------------
-   StartFragmentParser initializes  parsing environement in order to parse
-   the HTML fragment in buffer in the context of a last descendance of the
-   element ElFather 
+  StartFragmentParser initializes  parsing environement in order to parse
+  the HTML fragment in buffer in the context of a last descendance of the
+  element ElFather 
+  selectionDone is TRUE, when the selection is already updated
   ----------------------------------------------------------------------*/
-static ThotBool StartFragmentParser (strMatchChildren * sMatch, Document doc)
+static ThotBool StartFragmentParser (strMatchChildren *sMatch, Document doc,
+ThotBool *selectionDone)
 {
-   strMatchChildren   *prevMatch, *DMatch;
-   Element             courEl, invEl;
-   ElementType         typeEl;
-   ThotBool            res;
-   SSchema             selSch, courSch;
-   Attribute           heritAttr;
-   Element             elAttr;
-   ElementType         elType;
-   Language            language;
-   char               *attrValue;
-   int                 l;
-   DisplayMode         dispMode;
+  strMatchChildren   *prevMatch, *DMatch;
+  Element             courEl, invEl, newEl, prev, next, child, cnext, br;
+  ElementType         typeEl, elType, brType;
+  ThotBool            res;
+  SSchema             selSch, courSch;
+  Attribute           heritAttr;
+  Element             elAttr;
+  Language            language;
+  char               *attrValue;
+  int                 l;
+  DisplayMode         dispMode;
 
-   res = TRUE;
-   prevMatch = NULL;
-   DMatch = sMatch;
-   myFirstSelect = DMatch->MatchNode->Elem;
-   /* init an history sequence */
-   TtaOpenUndoSequence (doc, myFirstSelect, myLastSelect, 0, 0);
-   elType = TtaGetElementType (myFirstSelect);
-   selSch = elType.ElSSchema;
-   courEl = myFirstSelect;
-   /* PreviousHTMLSibling (&myFirstSelect);*/
-   TtaPreviousSibling (&myFirstSelect);
-   isClosed = TRUE;
+  res = TRUE;
+  *selectionDone = FALSE;
+  prevMatch = NULL;
+  DMatch = sMatch;
+  myFirstSelect = DMatch->MatchNode->Elem;
+  /* init an history sequence */
+  TtaOpenUndoSequence (doc, myFirstSelect, myLastSelect, 0, 0);
+  elType = TtaGetElementType (myFirstSelect);
+  selSch = elType.ElSSchema;
+  courEl = myFirstSelect;
+  /* PreviousHTMLSibling (&myFirstSelect);*/
+  TtaPreviousSibling (&myFirstSelect);
+  isClosed = TRUE;
    
-   while (myFirstSelect == NULL)
-     {
-       courEl = TtaGetParent (courEl);
-       if (TtaGetParent (courEl))
-         elType = TtaGetElementType (TtaGetParent (courEl));
-       else
-         elType = TtaGetElementType (courEl);
-	   courSch = elType.ElSSchema;
-       if (TtaSameSSchemas (courSch, selSch) &&
-           !strcmp ((char *)GetXMLElementName (TtaGetElementType (courEl), doc), "???"))
-	 {
-	   myFirstSelect = courEl;
-	   TtaPreviousSibling (&myFirstSelect);
-	   isClosed = TRUE;
-	 }
-       else
-	 {
-	   myFirstSelect = courEl;
-	   isClosed = FALSE;
-	 }
-     }
-       
-   /*   if (myFirstSelect == NULL)
-     { 
-        myFirstSelect = DMatch->MatchNode->Parent->Elem;
-        isClosed = FALSE;
-     }
-    */
+  while (myFirstSelect == NULL)
+    {
+      courEl = TtaGetParent (courEl);
+      if (TtaGetParent (courEl))
+        elType = TtaGetElementType (TtaGetParent (courEl));
+      else
+        elType = TtaGetElementType (courEl);
+      courSch = elType.ElSSchema;
+      if (TtaSameSSchemas (courSch, selSch) &&
+          !strcmp ((char *)GetXMLElementName (TtaGetElementType (courEl), doc), "???"))
+        {
+          myFirstSelect = courEl;
+          TtaPreviousSibling (&myFirstSelect);
+          isClosed = TRUE;
+        }
+      else
+        {
+          myFirstSelect = courEl;
+          isClosed = FALSE;
+        }
+    }
    
-   while (DMatch != NULL)
-     {
-	prevMatch = DMatch;
-	DMatch = DMatch->Next;
-	if (DMatch != NULL)
-	  RemoveFragment (prevMatch->MatchNode->Elem, doc);
-     }
-   if (prevMatch != NULL)
-     {
-	myLastSelect = prevMatch->MatchNode->Elem;
-	TtaNextSibling (&myLastSelect);
-	RemoveFragment (prevMatch->MatchNode->Elem, doc);
-     }
-   if (strcmp ((char *)bufHTML, ""))
-     {
+  while (DMatch != NULL)
+    {
+      prevMatch = DMatch;
+      DMatch = DMatch->Next;
+      if (DMatch != NULL)
+        RemoveFragment (prevMatch->MatchNode->Elem, doc);
+    }
+  if (prevMatch != NULL)
+    {
+      myLastSelect = prevMatch->MatchNode->Elem;
+      TtaNextSibling (&myLastSelect);
+      RemoveFragment (prevMatch->MatchNode->Elem, doc);
+    }
+  if (strcmp ((char *)bufHTML, ""))
+    {
 #ifdef AMAYA_DEBUG
-       printf("%s\n\n", bufHTML);
+      printf("%s\n\n", bufHTML);
 #endif
-	TtaSetStructureChecking (FALSE, doc);
-	/* Get the current language */
-	heritAttr = TtaGetTypedAttrAncestor (myFirstSelect, 1, NULL, &elAttr);
-	if (heritAttr)
-	  {
-	    l = TtaGetTextAttributeLength (heritAttr);
-	    attrValue = (char *)TtaGetMemory (l+1);
-	    TtaGiveTextAttributeValue (heritAttr, attrValue, &l);
-	    /* Convert the attribute value into a language name */
-	    language = TtaGetLanguageIdFromName (attrValue);
-	    TtaFreeMemory (attrValue);
-	  }
-	else
-	  language = TtaGetDefaultLanguage();
-  /* suspend abstract box construction */
-  dispMode = TtaGetDisplayMode (doc);
-  TtaSetDisplayMode (doc, SuspendDisplay);
-	/* Calling of the appropriate parser */
-	if (DocumentMeta[doc]->xmlformat)
-	  ParseXmlBuffer (bufHTML, myFirstSelect, isClosed, doc, language, NULL);
-	else
-	  ParseSubTree (bufHTML, myFirstSelect, language, isClosed, doc);
+      TtaSetStructureChecking (FALSE, doc);
+      /* Get the current language */
+      heritAttr = TtaGetTypedAttrAncestor (myFirstSelect, 1, NULL, &elAttr);
+      if (heritAttr)
+        {
+          l = TtaGetTextAttributeLength (heritAttr);
+          attrValue = (char *)TtaGetMemory (l+1);
+          TtaGiveTextAttributeValue (heritAttr, attrValue, &l);
+          /* Convert the attribute value into a language name */
+          language = TtaGetLanguageIdFromName (attrValue);
+          TtaFreeMemory (attrValue);
+        }
+      else
+        language = TtaGetDefaultLanguage();
+      /* suspend abstract box construction */
+      dispMode = TtaGetDisplayMode (doc);
+      TtaSetDisplayMode (doc, SuspendDisplay);
+      /* Calling of the appropriate parser */
+      if (DocumentMeta[doc]->xmlformat)
+        ParseXmlBuffer (bufHTML, myFirstSelect, isClosed, doc, language, NULL);
+      else
+        ParseSubTree (bufHTML, myFirstSelect, language, isClosed, doc);
 
-	courEl = myFirstSelect;
-	if (isClosed)
-	  TtaNextSibling (&courEl);
-	else
-	  courEl = TtaGetFirstChild (courEl);
-	while (courEl != NULL && courEl != myLastSelect)
-	  {	    
-	    TtaRegisterElementCreate (courEl, doc);
-	    TtaNextSibling (&courEl);
-	  }
-	TtaCloseUndoSequence (doc);
-	TtaSetStructureChecking (TRUE, doc);
-  TtaSetDisplayMode (doc, dispMode);
+      courEl = myFirstSelect;
+      if (isClosed)
+        {
+          // avoid to generate a pseudo_paragraph after a paragraph
+          elType = TtaGetElementType (myFirstSelect);
+          TtaNextSibling (&courEl);
+          typeEl = TtaGetElementType (courEl);
+          if (elType.ElSSchema &&
+              (elType.ElTypeNum == HTML_EL_Paragraph ||
+               elType.ElTypeNum == HTML_EL_Pseudo_paragraph) &&
+              !strcmp (TtaGetSSchemaName(elType.ElSSchema), "HTML") &&
+              typeEl.ElSSchema &&
+              typeEl.ElTypeNum == HTML_EL_Pseudo_paragraph &&
+              !strcmp (TtaGetSSchemaName(typeEl.ElSSchema), "HTML"))
+            {
+              // merge with the previous paragraph
+              newEl = NULL;
+              prev = TtaGetLastChild (myFirstSelect);
+              brType.ElSSchema = typeEl.ElSSchema;
+              brType.ElTypeNum = HTML_EL_BR;
+              while (courEl && courEl != myLastSelect)
+                {
+                  next = courEl;
+                  TtaNextSibling (&next);
+                  TtaRemoveTree (courEl, doc);
+                  if (prev)
+                    {
+                      br = TtaNewTree (doc, brType, "");
+                      TtaInsertSibling (br, prev, FALSE, doc);
+                      prev = br;
+                      if (newEl == NULL)
+                        newEl = br; // first new element
+                    }
+                  if (typeEl.ElSSchema &&
+                      typeEl.ElTypeNum == HTML_EL_Pseudo_paragraph &&
+                      !strcmp (TtaGetSSchemaName(typeEl.ElSSchema), "HTML"))
+                    {
+                      // move children
+                        child =  TtaGetLastChild (courEl);
+                        while (child)
+                          {
+                            TtaRemoveTree (child, doc);
+                            if (prev)
+                                TtaInsertSibling (child, prev, FALSE, doc);
+                            else
+                              TtaInsertFirstChild (&child, newEl, doc);
+                            if (newEl == NULL)
+                              newEl = child; // first new element
+                            cnext =  TtaGetLastChild (courEl);
+                            if (cnext == NULL)
+                              {
+                                // last child
+                                prev = child;
+                                child = NULL;
+                              }
+                            else
+                              child = cnext;
+                         }
+                    }
+                  else
+                    {
+                      // move the element itself
+                      if (prev)
+                        TtaInsertSibling (courEl, prev, FALSE, doc);
+                      else
+                        TtaInsertFirstChild (&courEl, newEl, doc);
+                      prev = courEl;
+                      if (newEl == NULL)
+                        newEl = courEl; // first new element
+                    }
+                  courEl = next;
+                  if (courEl)
+                    typeEl = TtaGetElementType (courEl);
+                }
+              courEl = newEl;
+              TtaSelectElement (doc, newEl);
+              next = TtaGetLastChild (myFirstSelect);
+              if (next != newEl)
+              TtaExtendSelection (doc, next, TtaGetElementVolume (next) + 1);
+              *selectionDone = TRUE;
+            }
+        }
+      else
+        courEl = TtaGetFirstChild (courEl);
+      while (courEl && courEl != myLastSelect)
+        {
+          TtaRegisterElementCreate (courEl, doc);
+          TtaNextSibling (&courEl);
+        }
+      TtaCloseUndoSequence (doc);
+      TtaSetStructureChecking (TRUE, doc);
+      TtaSetDisplayMode (doc, dispMode);
 
-	/* checks if invalid elements have been generated */
-	/* (invalid transformation) */
-	typeEl.ElSSchema = TtaGetDocumentSSchema (doc);
-	typeEl.ElTypeNum = HTML_EL_Invalid_element;
-	invEl = NULL;
-	if (isClosed)
-	  {
-	     courEl = myFirstSelect;
-	     TtaNextSibling (&courEl);
-	     invEl = TtaSearchTypedElement (typeEl, SearchForward, courEl);
-	     if (invEl != NULL)
-	       {
-		  if ((!myLastSelect && 
-		       TtaIsAncestor (invEl, TtaGetParent (myFirstSelect)))
-		  || ((myLastSelect && 
-		       TtaIsBefore (invEl, myLastSelect))))
-		    {		/* if the transformation failed */
-		       res = FALSE;
-		       TtaUndoNoRedo (doc);
-		    }
-	       }
-	  }
-	else
-	  {
-	   invEl = TtaSearchTypedElement (typeEl, SearchInTree, myFirstSelect);
-	   if (invEl != NULL)
-	     {
-	      if (myLastSelect == NULL || TtaIsBefore (invEl, myLastSelect))
-		{
-		  /* if the transformation failed */
-		  res = FALSE;
-		  TtaUndoNoRedo (doc);
-		}
-	     }
-	  }
-     }
-   return res;
+      /* checks if invalid elements have been generated */
+      /* (invalid transformation) */
+      typeEl.ElSSchema = TtaGetDocumentSSchema (doc);
+      typeEl.ElTypeNum = HTML_EL_Invalid_element;
+      invEl = NULL;
+      if (isClosed)
+        {
+          courEl = myFirstSelect;
+          TtaNextSibling (&courEl);
+          invEl = TtaSearchTypedElement (typeEl, SearchForward, courEl);
+          if (invEl != NULL)
+            {
+              if ((!myLastSelect && 
+                   TtaIsAncestor (invEl, TtaGetParent (myFirstSelect)))
+                  || ((myLastSelect && 
+                       TtaIsBefore (invEl, myLastSelect))))
+                {		/* if the transformation failed */
+                  res = FALSE;
+                  TtaUndoNoRedo (doc);
+                }
+            }
+        }
+      else
+        {
+          invEl = TtaSearchTypedElement (typeEl, SearchInTree, myFirstSelect);
+          if (invEl != NULL)
+            {
+              if (myLastSelect == NULL || TtaIsBefore (invEl, myLastSelect))
+                {
+                  /* if the transformation failed */
+                  res = FALSE;
+                  TtaUndoNoRedo (doc);
+                }
+            }
+        }
+    }
+  return res;
 }
 
 /*----------------------------------------------------------------------
@@ -1006,177 +1080,177 @@ static ThotBool StartFragmentParser (strMatchChildren * sMatch, Document doc)
   of them in lastCreated.
   ----------------------------------------------------------------------*/
 static ThotBool FlattenAndInsertElement (Element elSource, Element elDest,
-					 ThotBool sibling, Document doc,
-					 Element * lastCreated, int *nbCreated)
+                                         ThotBool sibling, Document doc,
+                                         Element * lastCreated, int *nbCreated)
 {
-   Element             elCour, elPreced, elNext;
-   int                 nbc;
-   ThotBool            res;
+  Element             elCour, elPreced, elNext;
+  int                 nbc;
+  ThotBool            res;
 
-   *nbCreated = 0;
-   if (TtaIsLeaf (TtaGetElementType (elSource)))
-     {			
+  *nbCreated = 0;
+  if (TtaIsLeaf (TtaGetElementType (elSource)))
+    {			
       /* if the source element is a leaf, it is impossible to flatten it more*/
       lastCreated = NULL;
       return FALSE;
-     }
-   res = TRUE;
-   elCour = TtaGetFirstChild (elSource);
-   elPreced = NULL;
-   if (sibling)
-      elPreced = elDest;
-   while (elCour != NULL && res)
-     {		
-       	/* for each child of the source element */
-	elNext = elCour;
-	TtaNextSibling (&elNext);
-	TtaRemoveTree (elCour, doc);
-	if (elPreced != NULL)
-	   TtaInsertSibling (elCour, elPreced, FALSE, doc);
-	else
-	   TtaInsertFirstChild (&elCour, elDest, doc);
-	res = (TtaGetErrorCode() == 0); /* 0 is no error */
-	if (res)
-	  {
-	     elPreced = elCour;
-	     *lastCreated = elCour;
-	     (*nbCreated)++;
-	  }
-	else
-	  {
-	     if (elPreced != NULL)
-		res =  FlattenAndInsertElement(elCour, elPreced, TRUE, doc,
-					       lastCreated, &nbc);
-	     else
-		res =  FlattenAndInsertElement(elCour, elDest, FALSE, doc,
-					       lastCreated, &nbc);
-	     elPreced = *lastCreated;
-	     (*nbCreated) += nbc;
-	  }
-	elCour = elNext;
-     }
-   if (!res && TtaIsConstant (TtaGetElementType (elSource)))
-      /* we don't mind about failure when inserting constants */
-      return TRUE;
-   else
-      return res;
+    }
+  res = TRUE;
+  elCour = TtaGetFirstChild (elSource);
+  elPreced = NULL;
+  if (sibling)
+    elPreced = elDest;
+  while (elCour != NULL && res)
+    {		
+      /* for each child of the source element */
+      elNext = elCour;
+      TtaNextSibling (&elNext);
+      TtaRemoveTree (elCour, doc);
+      if (elPreced != NULL)
+        TtaInsertSibling (elCour, elPreced, FALSE, doc);
+      else
+        TtaInsertFirstChild (&elCour, elDest, doc);
+      res = (TtaGetErrorCode() == 0); /* 0 is no error */
+      if (res)
+        {
+          elPreced = elCour;
+          *lastCreated = elCour;
+          (*nbCreated)++;
+        }
+      else
+        {
+          if (elPreced != NULL)
+            res =  FlattenAndInsertElement(elCour, elPreced, TRUE, doc,
+                                           lastCreated, &nbc);
+          else
+            res =  FlattenAndInsertElement(elCour, elDest, FALSE, doc,
+                                           lastCreated, &nbc);
+          elPreced = *lastCreated;
+          (*nbCreated) += nbc;
+        }
+      elCour = elNext;
+    }
+  if (!res && TtaIsConstant (TtaGetElementType (elSource)))
+    /* we don't mind about failure when inserting constants */
+    return TRUE;
+  else
+    return res;
 }
 /*----------------------------------------------------------------------
-   RankedInsertion
-   Inserts an element as a given child or sibling of an element, creating a
-   descendance between the two elements if necesary. 
-   Parameters:
-   newEl: the element to be inserted
-   parent: the element in which newEl will be inserted
-   prevEl : the element after which newEl will be inserted
-   rank:  rank of newEl 
-   doc: document in which newwEl have to be inserted
+  RankedInsertion
+  Inserts an element as a given child or sibling of an element, creating a
+  descendance between the two elements if necesary. 
+  Parameters:
+  newEl: the element to be inserted
+  parent: the element in which newEl will be inserted
+  prevEl : the element after which newEl will be inserted
+  rank:  rank of newEl 
+  doc: document in which newwEl have to be inserted
   ----------------------------------------------------------------------*/
 static ThotBool RankedInsertion (Element newEl, Element parent, Element prevEl,
-				 int *rank, Document doc)
+                                 int *rank, Document doc)
 {
-   ElementType         elemTypeNew;
-   Element             elFirst, elLast, elPrevious, elCour, elem;
-   int                 i;
-   ThotBool            result;
+  ElementType         elemTypeNew;
+  Element             elFirst, elLast, elPrevious, elCour, elem;
+  int                 i;
+  ThotBool            result;
 
 
-   if (prevEl == NULL && parent == NULL)
-      return FALSE;
-   result = TRUE;
-   TtaSetErrorMessages (0);
+  if (prevEl == NULL && parent == NULL)
+    return FALSE;
+  result = TRUE;
+  TtaSetErrorMessages (0);
 
-   elCour = NULL;
-   if (*rank > 1 || prevEl != NULL)
-     {
-	/* if the element have not to be inserted as the first child of parent */
-	if (prevEl == NULL)
-	  {
-	     elCour = TtaGetFirstChild (parent);
-	     i = 2;
-	  }
-	else
-	  {
-	     elCour = prevEl;
-	     i = 1;
-	  }
-	/* search for the previous sibling of the inserted element */
-	for (; i < *rank && elCour != NULL; i++)
-	   TtaNextSibling (&elCour);
-	/* if there is not enough children of parent, */
-	/*insert element as the next sibling of the last child of parent */
-	if (elCour == NULL && parent != NULL)
-	   elCour = TtaGetLastChild (parent);
-	else if (elCour == NULL)
-	   elCour = TtaGetLastChild (TtaGetParent (prevEl));
-     }
-   *rank = 1;
-   if (elCour != NULL)
-     {
-	/* the newEl has to be inserted as the next sibling of elCour */
-	TtaInsertSibling (newEl, elCour, FALSE, doc);
-     }
-   else
-      /* the newEl has to be inserted as the first child of parent */
-      TtaInsertFirstChild (&newEl, parent, doc);
+  elCour = NULL;
+  if (*rank > 1 || prevEl != NULL)
+    {
+      /* if the element have not to be inserted as the first child of parent */
+      if (prevEl == NULL)
+        {
+          elCour = TtaGetFirstChild (parent);
+          i = 2;
+        }
+      else
+        {
+          elCour = prevEl;
+          i = 1;
+        }
+      /* search for the previous sibling of the inserted element */
+      for (; i < *rank && elCour != NULL; i++)
+        TtaNextSibling (&elCour);
+      /* if there is not enough children of parent, */
+      /*insert element as the next sibling of the last child of parent */
+      if (elCour == NULL && parent != NULL)
+        elCour = TtaGetLastChild (parent);
+      else if (elCour == NULL)
+        elCour = TtaGetLastChild (TtaGetParent (prevEl));
+    }
+  *rank = 1;
+  if (elCour != NULL)
+    {
+      /* the newEl has to be inserted as the next sibling of elCour */
+      TtaInsertSibling (newEl, elCour, FALSE, doc);
+    }
+  else
+    /* the newEl has to be inserted as the first child of parent */
+    TtaInsertFirstChild (&newEl, parent, doc);
 
-   if (TtaGetErrorCode ())
-     {
-	/* the newEl has not been inserted */
-	/* create a descendance between the parent and the newEl */
-	elemTypeNew = TtaGetElementType (newEl);
-	if (parent == NULL)
-	   parent = TtaGetParent (elCour);
-	elLast = TtaCreateDescent (doc, parent, elemTypeNew);
-	if (elLast != NULL && !TtaGetErrorCode ())
-	  {
-	     /* A descendance has been created */
-	     elFirst = TtaGetFirstChild (parent);
-	     while (elFirst != NULL && !TtaIsAncestor (elLast, elFirst))
-	       {
-		  TtaNextSibling (&elFirst);
-	       }
-	     if (elFirst != NULL)
-	       {
-		  TtaRemoveTree (elFirst, doc);
-		  if (elCour != NULL)
-		     TtaInsertSibling (elFirst, elCour, FALSE, doc);
-		  else
-		     TtaInsertFirstChild (&elFirst, parent, doc);
-		  if (TtaGetErrorCode ())
-		    {
-		       TtaDeleteTree (elFirst, doc);
-		       result = FALSE;
-		    }
-		  else
-		    {
-		       elPrevious = TtaGetParent (elLast);
-		       TtaDeleteTree (elLast, doc);
-		       TtaInsertFirstChild (&newEl, elPrevious, doc);
-		       if (TtaGetErrorCode ())
-			 {
-			    TtaDeleteTree (elFirst, doc);
-			    result = FALSE;
-			 }
-		    }
-	       }
-	  }
-	else
-	   result = FALSE;
-     }
-   if (result == FALSE)
-     {
+  if (TtaGetErrorCode ())
+    {
+      /* the newEl has not been inserted */
+      /* create a descendance between the parent and the newEl */
+      elemTypeNew = TtaGetElementType (newEl);
+      if (parent == NULL)
+        parent = TtaGetParent (elCour);
+      elLast = TtaCreateDescent (doc, parent, elemTypeNew);
+      if (elLast != NULL && !TtaGetErrorCode ())
+        {
+          /* A descendance has been created */
+          elFirst = TtaGetFirstChild (parent);
+          while (elFirst != NULL && !TtaIsAncestor (elLast, elFirst))
+            {
+              TtaNextSibling (&elFirst);
+            }
+          if (elFirst != NULL)
+            {
+              TtaRemoveTree (elFirst, doc);
+              if (elCour != NULL)
+                TtaInsertSibling (elFirst, elCour, FALSE, doc);
+              else
+                TtaInsertFirstChild (&elFirst, parent, doc);
+              if (TtaGetErrorCode ())
+                {
+                  TtaDeleteTree (elFirst, doc);
+                  result = FALSE;
+                }
+              else
+                {
+                  elPrevious = TtaGetParent (elLast);
+                  TtaDeleteTree (elLast, doc);
+                  TtaInsertFirstChild (&newEl, elPrevious, doc);
+                  if (TtaGetErrorCode ())
+                    {
+                      TtaDeleteTree (elFirst, doc);
+                      result = FALSE;
+                    }
+                }
+            }
+        }
+      else
+        result = FALSE;
+    }
+  if (result == FALSE)
+    {
       /* impossible to create a descendance to the element */
       /* trying to flatten the element to be transferred */
       /* this is the worst case */
       if (elCour == NULL)
-	 result = FlattenAndInsertElement (newEl, parent, FALSE, doc,
-					   &elem, rank);
+        result = FlattenAndInsertElement (newEl, parent, FALSE, doc,
+                                          &elem, rank);
       else
-	 result = FlattenAndInsertElement (newEl, elCour, TRUE, doc,
-					   &elem, rank);
-     }
-   return result;
+        result = FlattenAndInsertElement (newEl, elCour, TRUE, doc,
+                                          &elem, rank);
+    }
+  return result;
 }
 
 /*----------------------------------------------------------------------
@@ -1185,106 +1259,106 @@ static ThotBool RankedInsertion (Element newEl, Element parent, Element prevEl,
   ----------------------------------------------------------------------*/
 static void CopySubTreeChildren (Element father, Document doc)
 {
-   Element             elCour, elOriginal;
-   AttributeType       attrType;
-   Attribute           attrFound;
-   char              label[10];
-   int                 l, rank, idf, delta;
+  Element             elCour, elOriginal;
+  AttributeType       attrType;
+  Attribute           attrFound;
+  char              label[10];
+  int                 l, rank, idf, delta;
 
-   attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
-   attrType.AttrTypeNum = HTML_ATTR_Ghost_restruct;
-   elCour = TtaGetFirstChild (father);
-   while (elCour != NULL)
-     {
-	CopySubTreeChildren (elCour, doc);
-	attrFound = TtaGetAttribute (elCour, attrType);
-	if (attrFound != NULL)
-	  {
-	     l = 10;
-	     TtaGiveTextAttributeValue (attrFound, label, &l);
-	     TtaRemoveAttribute (elCour, attrFound, doc);
-	     idf = atoi (label);
-	     elOriginal = NULL;
-	     rank = FindListSubTree (idf, &elOriginal);
-	     delta = 0;
-	     while (elOriginal != NULL)
-	       {
-		  TtaRemoveTree (elOriginal, doc);
-		  RankedInsertion (elOriginal, elCour, NULL, &rank, doc);
-		  delta += rank - 1;
-		  rank = delta + FindListSubTree (idf, &elOriginal);
-	       }
-	  }
-	TtaNextSibling (&elCour);
-     }
+  attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
+  attrType.AttrTypeNum = HTML_ATTR_Ghost_restruct;
+  elCour = TtaGetFirstChild (father);
+  while (elCour != NULL)
+    {
+      CopySubTreeChildren (elCour, doc);
+      attrFound = TtaGetAttribute (elCour, attrType);
+      if (attrFound != NULL)
+        {
+          l = 10;
+          TtaGiveTextAttributeValue (attrFound, label, &l);
+          TtaRemoveAttribute (elCour, attrFound, doc);
+          idf = atoi (label);
+          elOriginal = NULL;
+          rank = FindListSubTree (idf, &elOriginal);
+          delta = 0;
+          while (elOriginal != NULL)
+            {
+              TtaRemoveTree (elOriginal, doc);
+              RankedInsertion (elOriginal, elCour, NULL, &rank, doc);
+              delta += rank - 1;
+              rank = delta + FindListSubTree (idf, &elOriginal);
+            }
+        }
+      TtaNextSibling (&elCour);
+    }
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 static void CopySubTrees (strNode * Root, Document doc)
 {
-   char              label[10];
-   int                 l, idf, rank, delta;
-   AttributeType       attrType;
-   Attribute           attrFound;
-   Element             elCour, elLast, elOriginal;
+  char              label[10];
+  int                 l, idf, rank, delta;
+  AttributeType       attrType;
+  Attribute           attrFound;
+  Element             elCour, elLast, elOriginal;
 
-   elCour = myFirstSelect;	
-   elLast = myLastSelect;	
-   if (isClosed)
+  elCour = myFirstSelect;	
+  elLast = myLastSelect;	
+  if (isClosed)
+    TtaNextSibling (&elCour);
+  else
+    elCour = TtaGetFirstChild (myFirstSelect);
+  attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
+  attrType.AttrTypeNum = HTML_ATTR_Ghost_restruct;
+  while (elCour != NULL && elCour != elLast)
+    { 	/* Copies the children of elCour into the result instance */		
+      CopySubTreeChildren (elCour, doc);
+      /* search for a zzghost attribute */
+      attrFound = TtaGetAttribute (elCour, attrType);	
+      if (attrFound != NULL)
+        {
+          l = 10;
+          TtaGiveTextAttributeValue (attrFound, label, &l);
+          idf = atoi (label);
+          if (idf != 0)
+            {
+              TtaRemoveAttribute (elCour, attrFound, doc);
+              elOriginal = NULL;
+              /* serches and inserts the children of element elOriginal */
+              rank = FindListSubTree (idf, &elOriginal);
+              delta = 0;
+              while (elOriginal != NULL)
+                {
+                  TtaRemoveTree (elOriginal, doc);
+                  RankedInsertion (elOriginal, elCour, NULL, &rank, doc);
+                  delta += rank - 1;
+                  rank = delta + FindListSubTree (idf, &elOriginal);
+                }
+            }
+        }
       TtaNextSibling (&elCour);
-   else
-      elCour = TtaGetFirstChild (myFirstSelect);
-   attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
-   attrType.AttrTypeNum = HTML_ATTR_Ghost_restruct;
-   while (elCour != NULL && elCour != elLast)
-     { 	/* Copies the children of elCour into the result instance */		
-	CopySubTreeChildren (elCour, doc);
-	/* search for a zzghost attribute */
-	attrFound = TtaGetAttribute (elCour, attrType);	
-	if (attrFound != NULL)
-	  {
-	     l = 10;
-	     TtaGiveTextAttributeValue (attrFound, label, &l);
-	     idf = atoi (label);
-	     if (idf != 0)
-	       {
-		 TtaRemoveAttribute (elCour, attrFound, doc);
-		 elOriginal = NULL;
-		 /* serches and inserts the children of element elOriginal */
-		 rank = FindListSubTree (idf, &elOriginal);
-		 delta = 0;
-		 while (elOriginal != NULL)
-		   {
-		     TtaRemoveTree (elOriginal, doc);
-		     RankedInsertion (elOriginal, elCour, NULL, &rank, doc);
-		     delta += rank - 1;
-		     rank = delta + FindListSubTree (idf, &elOriginal);
-		   }
-	       }
-	  }
-	TtaNextSibling (&elCour);
-     }
-   /* insert the subtrees as children of the root */
-   elOriginal = NULL;
-   elCour = myFirstSelect;
-   rank = FindListSubTree (0, &elOriginal);
-   delta = 0;
-   while (elOriginal != NULL)
-     {
-	TtaRemoveTree (elOriginal, doc);
-	if (isClosed)
-	   RankedInsertion (elOriginal, NULL, elCour, &rank, doc);
-	else
-	   RankedInsertion (elOriginal, elCour, NULL, &rank, doc);
-	delta += rank - 1;
-	rank = delta + FindListSubTree (0, &elOriginal);
-     }
+    }
+  /* insert the subtrees as children of the root */
+  elOriginal = NULL;
+  elCour = myFirstSelect;
+  rank = FindListSubTree (0, &elOriginal);
+  delta = 0;
+  while (elOriginal != NULL)
+    {
+      TtaRemoveTree (elOriginal, doc);
+      if (isClosed)
+        RankedInsertion (elOriginal, NULL, elCour, &rank, doc);
+      else
+        RankedInsertion (elOriginal, elCour, NULL, &rank, doc);
+      delta += rank - 1;
+      rank = delta + FindListSubTree (0, &elOriginal);
+    }
 }
 
 /*----------------------------------------------------------------------
-   PutBeginTag,PutEndTag,TransferNode 
-   fill the HTML buffer with the generated nodes 
+  PutBeginTag,PutEndTag,TransferNode 
+  fill the HTML buffer with the generated nodes 
   ----------------------------------------------------------------------*/
 static ThotBool PutInHtmlBuffer (char *s)
 {
@@ -1358,103 +1432,103 @@ static ThotBool PutBeginTag (strNodeDesc * ND, strNode * TN)
   while (AD != NULL)
     {
       if (AD->IsTransf)
-	{
-	  /* transfer attribute */
-	  ancestor = TN;
-	  found = FALSE;
-	  while (!found && ancestor != NULL)
-	    {
-	      /* searching for source element (in current element ancestors) */
-	      if (ancestor->MatchSymb != NULL)
-		found = (!strcmp ((char *)ancestor->MatchSymb->SymbolName, (char *)AD->AttrTag)
-			 || !strcmp ((char *)ancestor->MatchSymb->Tag,(char *) AD->AttrTag));
-	      else
-		found = (!strcmp ((char *)ancestor->Tag, (char *)AD->AttrTag));
-	      if (!found)
-		ancestor = ancestor->Parent;
-	    }
-	  if (found)
-	    {
-	      /* searching for an ancestor of the source element which have
-		 the wanted attribute  */
-	      found = FALSE;
-	      while (!found && ancestor != NULL)
-		{
-		  attr = NULL;
-		  attrType.AttrTypeNum = -1;
-		  if (ancestor->Tag && strcmp((char *)ancestor->Tag, "Root"))
-		    {
-		      tag = (char *)TtaGetMemory (NAME_LENGTH);
-		      strcpy ((char *)tag, (char *)GetXMLElementName (TtaGetElementType (ancestor->Elem), TransDoc));
-		      attrType.AttrTypeNum = MapThotAttr ((char *)AD->AttrAttr, (char *)tag);
-		      TtaFreeMemory (tag);
-		      if (attrType.AttrTypeNum != -1)
-			attr = TtaGetAttribute (ancestor->Elem, attrType);
-		    }
-		  found = (attr != NULL);
-		  if (!found)
-		    ancestor = ancestor->Parent;
-		}
-	      if (found)
-		{
-		  /* the attribute has been found, writing the attribute name*/
-		  res = res && PutInHtmlBuffer (" ");
-		  res = res && PutInHtmlBuffer ((char *)AD->AttrAttr);
-		  res = res && PutInHtmlBuffer ("=");
-		  /* writing the attribute value */
-		  TtaGiveAttributeType (attr, &attrType, &attrKind);
-		  if (attrKind == 2)
-		    {	/* text attribute */
-		      l = TtaGetTextAttributeLength (attr);
-		      attrValue = (char *)TtaGetMemory (l+1);
-		      TtaGiveTextAttributeValue (attr, attrValue, &l);
-		      res = res && PutInHtmlBuffer ("\"");
-		      res = res && PutInHtmlBuffer ((char *)attrValue);
-		      res = res && PutInHtmlBuffer ("\"");
-		      TtaFreeMemory (attrValue);
-		    }
-		  else
-		    {
-		      /* int attribute */
-		      attrValue = (char *)TtaGetMemory (NAME_LENGTH);
-		      sprintf (attrValue, "%d", TtaGetAttributeValue (attr));
-		      res = res && PutInHtmlBuffer ((char *)attrValue);
-		      TtaFreeMemory (attrValue);
-		    }
-		}
-	    }
-	  if (!found)
-	    fprintf (stderr, "can't transfer attribute %s\n", AD->AttrAttr);
-	}
+        {
+          /* transfer attribute */
+          ancestor = TN;
+          found = FALSE;
+          while (!found && ancestor != NULL)
+            {
+              /* searching for source element (in current element ancestors) */
+              if (ancestor->MatchSymb != NULL)
+                found = (!strcmp ((char *)ancestor->MatchSymb->SymbolName, (char *)AD->AttrTag)
+                         || !strcmp ((char *)ancestor->MatchSymb->Tag,(char *) AD->AttrTag));
+              else
+                found = (!strcmp ((char *)ancestor->Tag, (char *)AD->AttrTag));
+              if (!found)
+                ancestor = ancestor->Parent;
+            }
+          if (found)
+            {
+              /* searching for an ancestor of the source element which have
+                 the wanted attribute  */
+              found = FALSE;
+              while (!found && ancestor != NULL)
+                {
+                  attr = NULL;
+                  attrType.AttrTypeNum = -1;
+                  if (ancestor->Tag && strcmp((char *)ancestor->Tag, "Root"))
+                    {
+                      tag = (char *)TtaGetMemory (NAME_LENGTH);
+                      strcpy ((char *)tag, (char *)GetXMLElementName (TtaGetElementType (ancestor->Elem), TransDoc));
+                      attrType.AttrTypeNum = MapThotAttr ((char *)AD->AttrAttr, (char *)tag);
+                      TtaFreeMemory (tag);
+                      if (attrType.AttrTypeNum != -1)
+                        attr = TtaGetAttribute (ancestor->Elem, attrType);
+                    }
+                  found = (attr != NULL);
+                  if (!found)
+                    ancestor = ancestor->Parent;
+                }
+              if (found)
+                {
+                  /* the attribute has been found, writing the attribute name*/
+                  res = res && PutInHtmlBuffer (" ");
+                  res = res && PutInHtmlBuffer ((char *)AD->AttrAttr);
+                  res = res && PutInHtmlBuffer ("=");
+                  /* writing the attribute value */
+                  TtaGiveAttributeType (attr, &attrType, &attrKind);
+                  if (attrKind == 2)
+                    {	/* text attribute */
+                      l = TtaGetTextAttributeLength (attr);
+                      attrValue = (char *)TtaGetMemory (l+1);
+                      TtaGiveTextAttributeValue (attr, attrValue, &l);
+                      res = res && PutInHtmlBuffer ("\"");
+                      res = res && PutInHtmlBuffer ((char *)attrValue);
+                      res = res && PutInHtmlBuffer ("\"");
+                      TtaFreeMemory (attrValue);
+                    }
+                  else
+                    {
+                      /* int attribute */
+                      attrValue = (char *)TtaGetMemory (NAME_LENGTH);
+                      sprintf (attrValue, "%d", TtaGetAttributeValue (attr));
+                      res = res && PutInHtmlBuffer ((char *)attrValue);
+                      TtaFreeMemory (attrValue);
+                    }
+                }
+            }
+          if (!found)
+            fprintf (stderr, "can't transfer attribute %s\n", AD->AttrAttr);
+        }
       else
-	{
-	  /* creation of an attribute */
-	  res = res && PutInHtmlBuffer (" ");
-	  res = res && PutInHtmlBuffer ((char *)AD->NameAttr);
-	  res = res && PutInHtmlBuffer ("=");
-	  if (AD->IsInt)
-	    {
-	      /* int attribute */
-	      attrValue = (char *)TtaGetMemory (NAME_LENGTH);
-	      sprintf (attrValue, "%d", AD->IntVal);
-	      res = res && PutInHtmlBuffer ((char *)attrValue);
-	      TtaFreeMemory (attrValue);
-	    }
-	  else
-	    {		/* text attribute */
-	      /* l = strlen (bufHTML);
-		 bufHTML[l] = '"';
-		 bufHTML[l + 1] = EOS;
-		 szHTML++;*/
-	      res = res && PutInHtmlBuffer ("\"");
-	      res = res && PutInHtmlBuffer ((char *)AD->TextVal);
-	      res = res && PutInHtmlBuffer ("\"");
-	      /*l = strlen (bufHTML);
-		bufHTML[l] = '"';
-		bufHTML[l + 1] = EOS;
-		szHTML++;*/
-	    }
-	}
+        {
+          /* creation of an attribute */
+          res = res && PutInHtmlBuffer (" ");
+          res = res && PutInHtmlBuffer ((char *)AD->NameAttr);
+          res = res && PutInHtmlBuffer ("=");
+          if (AD->IsInt)
+            {
+              /* int attribute */
+              attrValue = (char *)TtaGetMemory (NAME_LENGTH);
+              sprintf (attrValue, "%d", AD->IntVal);
+              res = res && PutInHtmlBuffer ((char *)attrValue);
+              TtaFreeMemory (attrValue);
+            }
+          else
+            {		/* text attribute */
+              /* l = strlen (bufHTML);
+                 bufHTML[l] = '"';
+                 bufHTML[l + 1] = EOS;
+                 szHTML++;*/
+              res = res && PutInHtmlBuffer ("\"");
+              res = res && PutInHtmlBuffer ((char *)AD->TextVal);
+              res = res && PutInHtmlBuffer ("\"");
+              /*l = strlen (bufHTML);
+                bufHTML[l] = '"';
+                bufHTML[l + 1] = EOS;
+                szHTML++;*/
+            }
+        }
       AD = AD->Next;
     }
   /* closing the tag */
@@ -1488,36 +1562,36 @@ static ThotBool PutEndTag (strGenStack * ND)
 }
 
 /*----------------------------------------------------------------------
-   TransferChildren : copies the children of node into the result instance 
+  TransferChildren : copies the children of node into the result instance 
   ----------------------------------------------------------------------*/
 static ThotBool TransferChildren (strNode * node)
 {
-   strNode            *child;
-   ElementType	       elType; 
-   ThotBool	       res = TRUE;
+  strNode            *child;
+  ElementType	       elType; 
+  ThotBool	       res = TRUE;
  
-   child = node->Child;
-   while (child != NULL)
-     {
-	if (TtaGetElementVolume (child->Elem) != 0)
-	  {/* if the element is empty: no transfert */
-	     GenerationStack[TopGenerStack]->Nbc++;
-	     elType = TtaGetElementType (child->Elem);
-	     /*strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)*/
-	     if (TransferMode == ByAttribute)
-	       AddListSubTree (child->Elem,
-			       GenerationStack[TopGenerStack]->Idf,
-			       GenerationStack[TopGenerStack]->Nbc);
-	     else
-	       res = res && ExportSubTree (child->Elem, TransDoc);
-	  }
-	child = child->Next;
-     }
-   return res;
+  child = node->Child;
+  while (child != NULL)
+    {
+      if (TtaGetElementVolume (child->Elem) != 0)
+        {/* if the element is empty: no transfert */
+          GenerationStack[TopGenerStack]->Nbc++;
+          elType = TtaGetElementType (child->Elem);
+          /*strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)*/
+          if (TransferMode == ByAttribute)
+            AddListSubTree (child->Elem,
+                            GenerationStack[TopGenerStack]->Idf,
+                            GenerationStack[TopGenerStack]->Nbc);
+          else
+            res = res && ExportSubTree (child->Elem, TransDoc);
+        }
+      child = child->Next;
+    }
+  return res;
 }
 
 /*----------------------------------------------------------------------
-   TransferNode : copies a node and its content into the result instance 
+  TransferNode : copies a node and its content into the result instance 
   ----------------------------------------------------------------------*/
 static ThotBool TransferNode (strNode * node, ThotBool inplace)
 {
@@ -1527,29 +1601,29 @@ static ThotBool TransferNode (strNode * node, ThotBool inplace)
   if (TtaGetElementVolume (node->Elem) != 0)
     {	/* if the element is empty: no transfert */
       if (!inplace)
-	/* closing previously generated elements */
-	while (TopGenerStack >= lastRulePlace)
-	  {
-	    res = res && PutEndTag (GenerationStack[TopGenerStack]);
-	    TtaFreeMemory (GenerationStack[TopGenerStack]->Tag);
-	    TtaFreeMemory (GenerationStack[TopGenerStack]);
-	    TopGenerStack--;
-	  }
+        /* closing previously generated elements */
+        while (TopGenerStack >= lastRulePlace)
+          {
+            res = res && PutEndTag (GenerationStack[TopGenerStack]);
+            TtaFreeMemory (GenerationStack[TopGenerStack]->Tag);
+            TtaFreeMemory (GenerationStack[TopGenerStack]);
+            TopGenerStack--;
+          }
       elType = TtaGetElementType (node->Elem); 
       GenerationStack[TopGenerStack]->Nbc++;
-/* 	strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)  */
+      /* 	strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)  */
       if (TransferMode == ByAttribute)
-	AddListSubTree (node->Elem, GenerationStack[TopGenerStack]->Idf,
-			GenerationStack[TopGenerStack]->Nbc);
+        AddListSubTree (node->Elem, GenerationStack[TopGenerStack]->Idf,
+                        GenerationStack[TopGenerStack]->Nbc);
       else
-	res = res && ExportSubTree (node->Elem, TransDoc);
+        res = res && ExportSubTree (node->Elem, TransDoc);
     }
   return res;
 }
 
 
 /*----------------------------------------------------------------------
-   Fonctions de transformation par regles            
+  Fonctions de transformation par regles            
   ----------------------------------------------------------------------*/
 static ThotBool TransformNode (strMatchChildren * sm);
 
@@ -1558,48 +1632,48 @@ static ThotBool TransformNode (strMatchChildren * sm);
   ----------------------------------------------------------------------*/
 static ThotBool ApplyTransChild (strMatchChildren * smc)
 {
-   strMatchChildren   *smc2;
-   strMatch           *sm;
-   ThotBool            found;
-   ThotBool            result = TRUE;
+  strMatchChildren   *smc2;
+  strMatch           *sm;
+  ThotBool            found;
+  ThotBool            result = TRUE;
 
-   smc2 = smc;
-   while (smc2 != NULL)
-     {
-	smc2->MatchNode->IsTrans = TRUE;
-	if (smc2->MatchSymb->Rule == NULL)
-	  {
-	    /* no transformation rule for the node, searches if a child has
-	       been matched */
-	     sm = smc2->MatchNode->Matches;
-	     found = FALSE;
-	     while (!found && sm != NULL)
-	       {
-		  found = (sm->MatchSymb == smc2->MatchSymb &&
-			   sm->MatchChildren != NULL);
-		  if (!found)
-		     sm = sm->Next;
-	       }
-	     if (found)
-	       {
-		 /* at least one child has been matched,        */
-		 /* applying the transformation to the children */
-		  result = result && ApplyTransChild (sm->MatchChildren);
-	       }
-	     else
-	       { /* there is no matching: transferring the node to
-		    destination instance */
-		  result = result && TransferNode (smc2->MatchNode, FALSE);
-	       }
-	  }
-	else
-	  { /* there is a transformation rule relative to the matched symbol */
-	    /* applying the rule */
-	     result = result && TransformNode (smc2);
-	  }
-	smc2 = smc2->Next;
-     }
-return result;
+  smc2 = smc;
+  while (smc2 != NULL)
+    {
+      smc2->MatchNode->IsTrans = TRUE;
+      if (smc2->MatchSymb->Rule == NULL)
+        {
+          /* no transformation rule for the node, searches if a child has
+             been matched */
+          sm = smc2->MatchNode->Matches;
+          found = FALSE;
+          while (!found && sm != NULL)
+            {
+              found = (sm->MatchSymb == smc2->MatchSymb &&
+                       sm->MatchChildren != NULL);
+              if (!found)
+                sm = sm->Next;
+            }
+          if (found)
+            {
+              /* at least one child has been matched,        */
+              /* applying the transformation to the children */
+              result = result && ApplyTransChild (sm->MatchChildren);
+            }
+          else
+            { /* there is no matching: transferring the node to
+                 destination instance */
+              result = result && TransferNode (smc2->MatchNode, FALSE);
+            }
+        }
+      else
+        { /* there is a transformation rule relative to the matched symbol */
+          /* applying the rule */
+          result = result && TransformNode (smc2);
+        }
+      smc2 = smc2->Next;
+    }
+  return result;
 }
 
 
@@ -1610,116 +1684,116 @@ return result;
   ---------------------------------------------------------------------*/
 static ThotBool TransformNode (strMatchChildren * sm)
 {
-   int                 courNode, l;
-   strMatch           *sm2;
-   strNodeDesc        *RNodeCour;
-   strRuleDesc	      *rule;
-   ThotBool            stop, sonsMatch;
-   ThotBool	       result = TRUE;
-   ThotBool            transChildDone = FALSE;
+  int                 courNode, l;
+  strMatch           *sm2;
+  strNodeDesc        *RNodeCour;
+  strRuleDesc	      *rule;
+  ThotBool            stop, sonsMatch;
+  ThotBool	       result = TRUE;
+  ThotBool            transChildDone = FALSE;
 
-   sm2 = sm->MatchNode->Matches;
-   sonsMatch = FALSE;
-   while (sm2 != NULL && !sonsMatch)
-     {
-	sonsMatch = (sm2->MatchSymb == sm->MatchSymb &&
-		     sm2->MatchChildren != NULL);
-	if (!sonsMatch)
-	   sm2 = sm2->Next;
-     }
-   /* sonsMatch is true if there is at least one matched node in the children
-      of source node */
-   sm->MatchNode->MatchSymb = sm->MatchSymb;
-   rule = sm->MatchSymb->Rule;
-   while (rule != NULL)
-     {
-       if (rule->DeleteRule)
-	 transChildDone = TRUE;
-       else
-	 {
-	   courNode = 1;
-	   RNodeCour = rule->OptionNodes;
-	   stop = (RNodeCour == NULL || courNode > TopGenerStack);
-	   while (!stop)
-	     { /* for each optional tag in the rule */
-	       if (!strcmp ((char *)GenerationStack[courNode]->Tag, (char *)RNodeCour->Tag))
-		 { /* does nothing if the tag is already present in the
-		      destination instance */
-		   RNodeCour = RNodeCour->Next;
-		   courNode++;
-		   stop = (RNodeCour == NULL || courNode > TopGenerStack);
-		 }
-	       else
-		 {
-		   /* a new branch have to be created in the destination */
-		   stop = TRUE;
-		 }
-	     }
+  sm2 = sm->MatchNode->Matches;
+  sonsMatch = FALSE;
+  while (sm2 != NULL && !sonsMatch)
+    {
+      sonsMatch = (sm2->MatchSymb == sm->MatchSymb &&
+                   sm2->MatchChildren != NULL);
+      if (!sonsMatch)
+        sm2 = sm2->Next;
+    }
+  /* sonsMatch is true if there is at least one matched node in the children
+     of source node */
+  sm->MatchNode->MatchSymb = sm->MatchSymb;
+  rule = sm->MatchSymb->Rule;
+  while (rule != NULL)
+    {
+      if (rule->DeleteRule)
+        transChildDone = TRUE;
+      else
+        {
+          courNode = 1;
+          RNodeCour = rule->OptionNodes;
+          stop = (RNodeCour == NULL || courNode > TopGenerStack);
+          while (!stop)
+            { /* for each optional tag in the rule */
+              if (!strcmp ((char *)GenerationStack[courNode]->Tag, (char *)RNodeCour->Tag))
+                { /* does nothing if the tag is already present in the
+                     destination instance */
+                  RNodeCour = RNodeCour->Next;
+                  courNode++;
+                  stop = (RNodeCour == NULL || courNode > TopGenerStack);
+                }
+              else
+                {
+                  /* a new branch have to be created in the destination */
+                  stop = TRUE;
+                }
+            }
 	   
-	   while (TopGenerStack >= courNode)
-	     { /* closes the opened tags (on generation stack) */
-	       result = result && PutEndTag (GenerationStack[TopGenerStack]);
-	       TtaFreeMemory (GenerationStack[TopGenerStack]->Tag);
-	       TtaFreeMemory (GenerationStack[TopGenerStack]);
-	       TopGenerStack--;
-	     }
+          while (TopGenerStack >= courNode)
+            { /* closes the opened tags (on generation stack) */
+              result = result && PutEndTag (GenerationStack[TopGenerStack]);
+              TtaFreeMemory (GenerationStack[TopGenerStack]->Tag);
+              TtaFreeMemory (GenerationStack[TopGenerStack]);
+              TopGenerStack--;
+            }
 	   
-	   while (RNodeCour != NULL)
-	     {/* generates optional nodes not already present */
-	       result = result && PutBeginTag (RNodeCour, sm->MatchNode);
-	       courNode++;
-	       RNodeCour = RNodeCour->Next;
-	     }
+          while (RNodeCour != NULL)
+            {/* generates optional nodes not already present */
+              result = result && PutBeginTag (RNodeCour, sm->MatchNode);
+              courNode++;
+              RNodeCour = RNodeCour->Next;
+            }
 	   
-	   lastRulePlace = courNode;
-	   RNodeCour = rule->NewNodes;
+          lastRulePlace = courNode;
+          RNodeCour = rule->NewNodes;
 	   
-	   while (RNodeCour != NULL && 
-		  RNodeCour->Tag[0] != '"' &&
-		  strcmp ((char *)RNodeCour->Tag, "*") != 0 &&
-		  strcmp ((char *)RNodeCour->Tag, "#") != 0)
-	     { /* generates the new nodes */
-	       result = result && PutBeginTag (RNodeCour, sm->MatchNode);
-	       courNode++;
-	       RNodeCour = RNodeCour->Next;
-	     }
+          while (RNodeCour != NULL && 
+                 RNodeCour->Tag[0] != '"' &&
+                 strcmp ((char *)RNodeCour->Tag, "*") != 0 &&
+                 strcmp ((char *)RNodeCour->Tag, "#") != 0)
+            { /* generates the new nodes */
+              result = result && PutBeginTag (RNodeCour, sm->MatchNode);
+              courNode++;
+              RNodeCour = RNodeCour->Next;
+            }
 
-	   /* traite le dernier noeud de la regle */
-	   if (RNodeCour != NULL && RNodeCour->Tag[0] == '"')
-	     {
-	       l = strlen ((char *)RNodeCour->Tag) - 2;
-	       strncpy ((char *)&bufHTML[szHTML], (char *)&RNodeCour->Tag[1], l);
-	       szHTML += l;
-	       bufHTML[szHTML]='\0';
-	     }
-	   if (RNodeCour != NULL && RNodeCour->Tag[0] == '*')
-	     { /* copie du noeud source */
-	       result = result && TransferNode (sm->MatchNode, TRUE);
-	       transChildDone = TRUE;
-	     }
-	   if ((RNodeCour != NULL && RNodeCour->Tag[0] == '#') ||
-	       (rule->NextRule == NULL))
-	     {
-	       /* it is the last rule of the node or the explicit children */
-	       /* transformation place */
-	       /* process the children */
-	       if ((rule->NextRule != NULL) || transChildDone == FALSE)
-		 {
-		   if (sonsMatch)
-		     {
-		       result = result && ApplyTransChild (sm2->MatchChildren);
-		     }
-		   else
-		     {			
-		       result = result && TransferChildren (sm->MatchNode);
-		     }
-		   transChildDone = TRUE;
-		 }
-	     }
-	 }
-       rule = rule->NextRule;
-     }
-   return result;
+          /* traite le dernier noeud de la regle */
+          if (RNodeCour != NULL && RNodeCour->Tag[0] == '"')
+            {
+              l = strlen ((char *)RNodeCour->Tag) - 2;
+              strncpy ((char *)&bufHTML[szHTML], (char *)&RNodeCour->Tag[1], l);
+              szHTML += l;
+              bufHTML[szHTML]='\0';
+            }
+          if (RNodeCour != NULL && RNodeCour->Tag[0] == '*')
+            { /* copie du noeud source */
+              result = result && TransferNode (sm->MatchNode, TRUE);
+              transChildDone = TRUE;
+            }
+          if ((RNodeCour != NULL && RNodeCour->Tag[0] == '#') ||
+              (rule->NextRule == NULL))
+            {
+              /* it is the last rule of the node or the explicit children */
+              /* transformation place */
+              /* process the children */
+              if ((rule->NextRule != NULL) || transChildDone == FALSE)
+                {
+                  if (sonsMatch)
+                    {
+                      result = result && ApplyTransChild (sm2->MatchChildren);
+                    }
+                  else
+                    {			
+                      result = result && TransferChildren (sm->MatchNode);
+                    }
+                  transChildDone = TRUE;
+                }
+            }
+        }
+      rule = rule->NextRule;
+    }
+  return result;
 }
 
 /*----------------------------------------------------------------------
@@ -1741,8 +1815,7 @@ static void ApplyTransformation (strMatch *sm, Document doc)
   strMatchChildren    *child;
   int                  length, error;
   char                 buf [MAX_LENGTH], *name;
-  ThotBool             res;
-  ThotBool             found;
+  ThotBool             res, selectionDone, found;
 
   res = FALSE;
   idfCounter = 1;
@@ -1756,8 +1829,8 @@ static void ApplyTransformation (strMatch *sm, Document doc)
 
       oldDisplayMode = TtaGetDisplayMode (doc);
       if (oldDisplayMode != DisplayImmediately)
-	/* force a display mode */
-	TtaSetDisplayMode (doc, DisplayImmediately);
+        /* force a display mode */
+        TtaSetDisplayMode (doc, DisplayImmediately);
       /* change the display mode */
       TtaSetDisplayMode (doc, DeferredDisplay);
       /* remove the selection */
@@ -1780,157 +1853,161 @@ static void ApplyTransformation (strMatch *sm, Document doc)
       /* applying the transformation */
       res = ApplyTransChild (sm->MatchChildren);
       while (TopGenerStack > 0)
-	{
-	  res = res && PutEndTag (GenerationStack[TopGenerStack]);
-	  TtaFreeMemory (GenerationStack[TopGenerStack]->Tag);
-	  GenerationStack[TopGenerStack]->Tag = NULL;
-	  TtaFreeMemory (GenerationStack[TopGenerStack]);
-	  TopGenerStack--;
-	}
+        {
+          res = res && PutEndTag (GenerationStack[TopGenerStack]);
+          TtaFreeMemory (GenerationStack[TopGenerStack]->Tag);
+          GenerationStack[TopGenerStack]->Tag = NULL;
+          TtaFreeMemory (GenerationStack[TopGenerStack]);
+          TopGenerStack--;
+        }
       
       /* parsing the produced structure */
-      res = res && StartFragmentParser (sm->MatchChildren, doc);
+      res = res && StartFragmentParser (sm->MatchChildren, doc, &selectionDone);
       TtaFreeMemory (bufHTML);
 
       /* restore the current charset */   
       TtaSetDocumentCharset (doc, charset, FALSE);
       if (res)
-	{	
-	  /* if the html parsing was succesful */
-	  /* transfers the unchanged subtrees */
-	  if (TransferMode == ByAttribute)
-	    CopySubTrees (strMatchEnv. SourceTree, doc);
-	  /* deletes the source structure elements */
-	  child = sm->MatchChildren;
-	  TtaSetErrorMessages (0);
-	  while (child != NULL)
-	    {
-	      if (child->MatchNode->Elem != NULL &&
-		  FindListSTreeByLabel (TtaGetElementLabel (child->MatchNode->Elem)) == NULL)
-		{
-		  if (TtaGetParent (child->MatchNode->Elem) != NULL)
-		    TtaDeleteTree (TtaGetParent (child->MatchNode->Elem), doc);
-		  else
-		    TtaDeleteTree (child->MatchNode->Elem, doc);
-		}
-	      child = child->Next;
-	    }
-	  TtaSetErrorMessages (1);
-	}
+        {	
+          /* if the html parsing was succesful */
+          /* transfers the unchanged subtrees */
+          if (TransferMode == ByAttribute)
+            CopySubTrees (strMatchEnv. SourceTree, doc);
+          /* deletes the source structure elements */
+          child = sm->MatchChildren;
+          TtaSetErrorMessages (0);
+          while (child != NULL)
+            {
+              if (child->MatchNode->Elem != NULL &&
+                  FindListSTreeByLabel (TtaGetElementLabel (child->MatchNode->Elem)) == NULL)
+                {
+                  if (TtaGetParent (child->MatchNode->Elem) != NULL)
+                    TtaDeleteTree (TtaGetParent (child->MatchNode->Elem), doc);
+                  else
+                    TtaDeleteTree (child->MatchNode->Elem, doc);
+                }
+              child = child->Next;
+            }
+          TtaSetErrorMessages (1);
+        }
 
       TtaFreeMemory (stack->Tag);
       TtaFreeMemory (stack);
       if (res)
-	{
-	  /* transformation was succesful */
-	  ResultTrans = TRUE;
-	  elType = TtaGetElementType (myFirstSelect);
-	  sch = elType.ElSSchema;
-	  name = (char *)TtaGetSSchemaName (sch);
-	  if (!strcmp (name, "MathML"))
-	    {
-	      /* checking the MathML thot tree */
-	      if (isClosed)
-		elParent = TtaGetParent (myFirstSelect);
-	      else
-		elParent = myFirstSelect;
-	      while (elParent != NULL &&
-		     !strcmp ((char *)GetXMLElementName (TtaGetElementType (elParent), doc), "???"))
-		elParent = TtaGetParent (elParent);
-	      if (elParent != NULL)
-		{
-		  TtaSetStructureChecking (FALSE, doc);
-		  /* set the document context */
-		  context.encoding = TtaGetDocumentCharset (doc);
-		  context.doc = doc;
-		  MathMLElementComplete (&context, elParent, &error);
-		  TtaSetStructureChecking (TRUE, doc);
-		} 
-	    }
-	  else if (!strcmp (name, "HTML"))
-	    {
-	      /* disable the structure checking */
-	      TtaSetStructureChecking (FALSE, doc);
-	      /* check the Thot abstract tree */
-	      CheckAbstractTree (doc);
-	      /* enable the structure checking */
-	      TtaSetStructureChecking (TRUE, doc);
-	    }
+        {
+          /* transformation was succesful */
+          ResultTrans = TRUE;
+          elType = TtaGetElementType (myFirstSelect);
+          sch = elType.ElSSchema;
+          name = (char *)TtaGetSSchemaName (sch);
+          if (!strcmp (name, "MathML"))
+            {
+              /* checking the MathML thot tree */
+              if (isClosed)
+                elParent = TtaGetParent (myFirstSelect);
+              else
+                elParent = myFirstSelect;
+              while (elParent != NULL &&
+                     !strcmp ((char *)GetXMLElementName (TtaGetElementType (elParent), doc), "???"))
+                elParent = TtaGetParent (elParent);
+              if (elParent != NULL)
+                {
+                  TtaSetStructureChecking (FALSE, doc);
+                  /* set the document context */
+                  context.encoding = TtaGetDocumentCharset (doc);
+                  context.doc = doc;
+                  MathMLElementComplete (&context, elParent, &error);
+                  TtaSetStructureChecking (TRUE, doc);
+                } 
+            }
+          else if (!strcmp (name, "HTML"))
+            {
+              /* disable the structure checking */
+              TtaSetStructureChecking (FALSE, doc);
+              /* check the Thot abstract tree */
+              CheckAbstractTree (doc);
+              /* enable the structure checking */
+              TtaSetStructureChecking (TRUE, doc);
+            }
 		   
-	  if (myLastSelect == NULL)
-	    {
-	      if (!isClosed)
-		myLastSelect = TtaGetLastChild (myFirstSelect);
-	      else
-		myLastSelect = TtaGetLastChild (TtaGetParent (myFirstSelect));
-	    }
-	  else
-	    TtaPreviousSibling (&myLastSelect);
-	  if (isClosed)
-	    TtaNextSibling (&myFirstSelect);
-	  else
-	    myFirstSelect = TtaGetFirstChild (myFirstSelect);
+          if (myLastSelect == NULL)
+            {
+              if (!isClosed)
+                myLastSelect = TtaGetLastChild (myFirstSelect);
+              else
+                myLastSelect = TtaGetLastChild (TtaGetParent (myFirstSelect));
+            }
+          else
+            TtaPreviousSibling (&myLastSelect);
+          if (isClosed)
+            TtaNextSibling (&myFirstSelect);
+          else
+            myFirstSelect = TtaGetFirstChild (myFirstSelect);
 
-	  if (strcmp ((char *)TtaGetSSchemaName (sch), "HTML") == 0)
-	    {
-	      /* displaying the images */
-	      attrType.AttrSSchema = sch;
-	      attrType.AttrTypeNum = HTML_ATTR_SRC;
-	      elFound = NULL;
-	      attr = NULL;
-	      TtaSearchAttribute (attrType, SearchInTree, myFirstSelect,
-				  &elFound, &attr);
-	      if (elFound == NULL)
-		TtaSearchAttribute (attrType, SearchForward, myFirstSelect,
-				    &elFound, &attr);
-	      while (elFound != NULL && 
-		     (myLastSelect == NULL || 
-		      TtaIsBefore (elFound, myLastSelect) ||
-		      TtaIsAncestor (elFound, myLastSelect)))
-		{
+          if (strcmp ((char *)TtaGetSSchemaName (sch), "HTML") == 0)
+            {
+              /* displaying the images */
+              attrType.AttrSSchema = sch;
+              attrType.AttrTypeNum = HTML_ATTR_SRC;
+              elFound = NULL;
+              attr = NULL;
+              TtaSearchAttribute (attrType, SearchInTree, myFirstSelect,
+                                  &elFound, &attr);
+              if (elFound == NULL)
+                TtaSearchAttribute (attrType, SearchForward, myFirstSelect,
+                                    &elFound, &attr);
+              while (elFound != NULL && 
+                     (myLastSelect == NULL || 
+                      TtaIsBefore (elFound, myLastSelect) ||
+                      TtaIsAncestor (elFound, myLastSelect)))
+                {
 #ifdef DEBUG
-		  printf ("Fetching Image...\n");
+                  printf ("Fetching Image...\n");
 #endif
-		  FetchImage (doc, elFound, NULL, 0, NULL, NULL);
-		  TtaSearchAttribute (attrType, SearchForward, elFound,
-				      &elFound, &attr);
-		}
-	    }
-	  /* selecting the new elements */
-	  /* or setting the selction to the specified node */
-	  elType = TtaGetElementType (myFirstSelect);
-	  attrType.AttrSSchema = elType.ElSSchema;
-	  if (!strcmp ((char *)TtaGetSSchemaName (attrType.AttrSSchema), "HTML"))
-	    attrType.AttrTypeNum = HTML_ATTR_Ghost_restruct;
-	  else if (!strcmp ((char *)TtaGetSSchemaName (attrType.AttrSSchema), "MathML"))
-	    attrType.AttrTypeNum = MathML_ATTR_Ghost_restruct;
-	  found = FALSE;
-	  elFound = NULL;
-	  attr = NULL;
-	  domain = SearchInTree;
-	  elFound = TtaGetParent(myFirstSelect);
-	  while (elFound != NULL && !found)
-	    {
-	      TtaSearchAttribute (attrType, domain, elFound, &elFound, &attr);
-	      domain = SearchForward;
-	      if (elFound != NULL)
-		{
-		  length = MAX_LENGTH;
-		  TtaGiveTextAttributeValue (attr, buf, &length);
-		  found = !strcmp ((char *)buf, "Select");
-		}
-	    }
-	  if (found)
-	    {
-	      TtaRemoveAttribute (elFound, attr, doc);
-	      myFirstSelect = elFound;
-	      myLastSelect = NULL;
-	    }
-	  TtaSetDocumentModified (doc);
-	  TtaSelectElement (doc, myFirstSelect);
-	  if (myLastSelect != NULL && TtaIsBefore (myFirstSelect, myLastSelect))
-	    TtaExtendSelection (doc, myLastSelect, 0);
-	}
+                  FetchImage (doc, elFound, NULL, 0, NULL, NULL);
+                  TtaSearchAttribute (attrType, SearchForward, elFound,
+                                      &elFound, &attr);
+                }
+            }
+          /* selecting the new elements */
+          /* or setting the selction to the specified node */
+          elType = TtaGetElementType (myFirstSelect);
+          attrType.AttrSSchema = elType.ElSSchema;
+          if (!strcmp ((char *)TtaGetSSchemaName (attrType.AttrSSchema), "HTML"))
+            attrType.AttrTypeNum = HTML_ATTR_Ghost_restruct;
+          else if (!strcmp ((char *)TtaGetSSchemaName (attrType.AttrSSchema), "MathML"))
+            attrType.AttrTypeNum = MathML_ATTR_Ghost_restruct;
+          found = FALSE;
+          elFound = NULL;
+          attr = NULL;
+          domain = SearchInTree;
+          elFound = TtaGetParent(myFirstSelect);
+          while (elFound != NULL && !found)
+            {
+              TtaSearchAttribute (attrType, domain, elFound, &elFound, &attr);
+              domain = SearchForward;
+              if (elFound != NULL)
+                {
+                  length = MAX_LENGTH;
+                  TtaGiveTextAttributeValue (attr, buf, &length);
+                  found = !strcmp ((char *)buf, "Select");
+                }
+            }
+          if (found)
+            {
+              TtaRemoveAttribute (elFound, attr, doc);
+              myFirstSelect = elFound;
+              myLastSelect = NULL;
+            }
+          TtaSetDocumentModified (doc);
+          // Do we have to set the selection
+          if (!selectionDone)
+            {
+              TtaSelectElement (doc, myFirstSelect);
+              if (myLastSelect != NULL && TtaIsBefore (myFirstSelect, myLastSelect))
+                TtaExtendSelection (doc, myLastSelect, 0);
+            }
+        }
     }
   TtaSetDisplayMode (doc, DisplayImmediately);
 }
@@ -1959,38 +2036,38 @@ static ThotBool CheckSelectionLevel (Document doc)
       /* surround the whole selection, if it is the case, */
       /* the parent is considered as a selected element */ 
       if (myFirstSelect != NULL && ffc <= 1)
-	{
-	  /* searching for the first selected element */
-	  prevFirst = myFirstSelect;
-	  TtaPreviousSibling (&prevFirst);
-	  parentFirst = TtaGetParent (myFirstSelect);
-	  while (parentFirst != NULL && 
-		 prevFirst == NULL && 
-		 TtaIsBefore (parentFirst, myLastSelect))
-	    {
-	      myFirstSelect = parentFirst;
-	      prevFirst = myFirstSelect;
-	      TtaPreviousSibling (&prevFirst);
-	      parentFirst = TtaGetParent (myFirstSelect);
-	    }
-	}
+        {
+          /* searching for the first selected element */
+          prevFirst = myFirstSelect;
+          TtaPreviousSibling (&prevFirst);
+          parentFirst = TtaGetParent (myFirstSelect);
+          while (parentFirst != NULL && 
+                 prevFirst == NULL && 
+                 TtaIsBefore (parentFirst, myLastSelect))
+            {
+              myFirstSelect = parentFirst;
+              prevFirst = myFirstSelect;
+              TtaPreviousSibling (&prevFirst);
+              parentFirst = TtaGetParent (myFirstSelect);
+            }
+        }
       if (myLastSelect != NULL &&
-	  (llc == 0 || (llc > 0 && llc >= TtaGetElementVolume (myLastSelect))))
-	{
-	  /* searching for the last selected element */
-	  nextLast = myLastSelect;
-	  TtaNextSibling (&nextLast);
-	  parentLast = TtaGetParent (myLastSelect);
-	  while (parentLast != NULL && 
-		 nextLast == NULL && 
-		 TtaIsBefore (myFirstSelect, parentLast))
-	    {
-	      myLastSelect = parentLast;
-	      nextLast = myLastSelect;
-	      TtaNextSibling (&nextLast);
-	      parentLast = TtaGetParent (myLastSelect);
-	    }
-	}
+          (llc == 0 || (llc > 0 && llc >= TtaGetElementVolume (myLastSelect))))
+        {
+          /* searching for the last selected element */
+          nextLast = myLastSelect;
+          TtaNextSibling (&nextLast);
+          parentLast = TtaGetParent (myLastSelect);
+          while (parentLast != NULL && 
+                 nextLast == NULL && 
+                 TtaIsBefore (myFirstSelect, parentLast))
+            {
+              myLastSelect = parentLast;
+              nextLast = myLastSelect;
+              TtaNextSibling (&nextLast);
+              parentLast = TtaGetParent (myLastSelect);
+            }
+        }
     }
   else if (myFirstSelect != NULL)
     {
@@ -1999,18 +2076,18 @@ static ThotBool CheckSelectionLevel (Document doc)
       prevFirst = TtaGetFirstChild (myFirstSelect);
       nextLast = TtaGetLastChild (myFirstSelect);
       while (prevFirst != NULL && prevFirst == nextLast)
-	{
-	  myFirstSelect = prevFirst;
-	  prevFirst = TtaGetFirstChild (myFirstSelect);
-	  nextLast = TtaGetLastChild (myFirstSelect);
-	}
+        {
+          myFirstSelect = prevFirst;
+          prevFirst = TtaGetFirstChild (myFirstSelect);
+          nextLast = TtaGetLastChild (myFirstSelect);
+        }
       if (prevFirst != NULL)
-	{
-	  myFirstSelect = prevFirst;
-	  myLastSelect = nextLast;
-	}
+        {
+          myFirstSelect = prevFirst;
+          myLastSelect = nextLast;
+        }
       else
-	myLastSelect = myFirstSelect;
+        myLastSelect = myFirstSelect;
       parentFirst = parentLast = TtaGetParent (myFirstSelect);
     }
   
@@ -2029,32 +2106,32 @@ static ThotBool CheckSelectionLevel (Document doc)
       /* if it is not the case, they become the first selected element */
       elType = TtaGetElementType (parentFirst);
       while (parentFirst != NULL &&
-	     /* all selected elements are selected? */
-	     nextLast == NULL && prevFirst == NULL &&
-	     /* it's not the HTML element? */
-	     (!strcmp ((char *)TtaGetSSchemaName (elType.ElSSchema), "HTML") ||
-	      elType.ElTypeNum != HTML_EL_HTML))
-	{
-	  maxSelDepth++;
-	  mySelect = parentFirst;
-	  parentFirst = TtaGetParent (parentFirst);
-	  if (parentFirst != NULL)
-	    {
-	      elType = TtaGetElementType (parentFirst);
-	      nextLast = mySelect;
-	      prevFirst = mySelect;
-	      TtaNextSibling (&nextLast);
-	      TtaPreviousSibling (&prevFirst);
-	    }
-	}
+             /* all selected elements are selected? */
+             nextLast == NULL && prevFirst == NULL &&
+             /* it's not the HTML element? */
+             (!strcmp ((char *)TtaGetSSchemaName (elType.ElSSchema), "HTML") ||
+              elType.ElTypeNum != HTML_EL_HTML))
+        {
+          maxSelDepth++;
+          mySelect = parentFirst;
+          parentFirst = TtaGetParent (parentFirst);
+          if (parentFirst != NULL)
+            {
+              elType = TtaGetElementType (parentFirst);
+              nextLast = mySelect;
+              prevFirst = mySelect;
+              TtaNextSibling (&nextLast);
+              TtaPreviousSibling (&prevFirst);
+            }
+        }
     }
   return result;
 }
 
 /*----------------------------------------------------------------------
-   MyNextSelectedElement
-   Gives the next selected element, accordingly  to extension given by
-   CheckSelectionLevel
+  MyNextSelectedElement
+  Gives the next selected element, accordingly  to extension given by
+  CheckSelectionLevel
   ----------------------------------------------------------------------*/
 static void MyNextSelectedElement (Document doc, Element * elSelect)
 {
@@ -2067,33 +2144,33 @@ static void MyNextSelectedElement (Document doc, Element * elSelect)
   else
     {
       if (*elSelect == myFirstSelect)
-	{
-	  TtaGiveFirstSelectedElement (doc, &elFirst, &fc, &lc);
-	  if (elFirst == myFirstSelect)
-	    TtaGiveNextSelectedElement (doc, &elFirst, &fc, &lc);
-	  else
-	    while (elFirst != NULL &&
-		   TtaIsAncestor (elFirst, myFirstSelect))
-	      TtaGiveNextSelectedElement (doc, &elFirst, &fc, &lc);
-	}
+        {
+          TtaGiveFirstSelectedElement (doc, &elFirst, &fc, &lc);
+          if (elFirst == myFirstSelect)
+            TtaGiveNextSelectedElement (doc, &elFirst, &fc, &lc);
+          else
+            while (elFirst != NULL &&
+                   TtaIsAncestor (elFirst, myFirstSelect))
+              TtaGiveNextSelectedElement (doc, &elFirst, &fc, &lc);
+        }
       else
-	{
-	  elFirst = *elSelect;
-	  TtaGiveNextSelectedElement (doc, &elFirst, &fc, &lc);
-	}
+        {
+          elFirst = *elSelect;
+          TtaGiveNextSelectedElement (doc, &elFirst, &fc, &lc);
+        }
       if (elFirst != NULL && TtaIsAncestor (elFirst, myLastSelect))
-	*elSelect = myLastSelect;
+        *elSelect = myLastSelect;
       else
-	*elSelect = elFirst;
+        *elSelect = elFirst;
     }
 }
 
 
 /*----------------------------------------------------------------------
-   IsValidHtmlChild                                       
-   returns TRUE if tag is a valid child of an element of type elType 
-   WARNING This function works as long as there are no cycles in S schema
-           whithout any HTML element inside....
+  IsValidHtmlChild                                       
+  returns TRUE if tag is a valid child of an element of type elType 
+  WARNING This function works as long as there are no cycles in S schema
+  whithout any HTML element inside....
   ----------------------------------------------------------------------*/
 static ThotBool IsValidHtmlChild (ElementType elemType, char *tag, char *prevtag)
 {
@@ -2120,188 +2197,188 @@ static ThotBool IsValidHtmlChild (ElementType elemType, char *tag, char *prevtag
       tagElType.ElTypeNum != 0)
     {
       switch (constOfType)
-	{
-	case ConstructAny:
-	  result = TRUE;
-	  break;
+        {
+        case ConstructAny:
+          result = TRUE;
+          break;
 	  
-	case ConstructIdentity:
-	  if (cardinal > 0)
-	    {
-	      if (subTypes[0].ElTypeNum == tagElType.ElTypeNum)
-		result = TRUE;
-	      else
-		{
-		  name = GetXMLElementName (subTypes[0], TransDoc);
-		  if (!strcmp ((char *)name, "???") ||
-		      !strcmp ((char *)name, "none"))
-		    /* search if tag can be inserted as a child of the identity */
-		    result = IsValidHtmlChild (subTypes[0], tag, "");
-		}
-	      /* any math element can be inserted under <math> (only row in MathML.S)*/
-	      if (!result &&
-		  !strcmp ((char *)TtaGetElementTypeName (elemType), "math") && 
-		  !strcmp ((char *)TtaGetSSchemaName (elemType.ElSSchema), "MathML"))
-		result = IsValidHtmlChild (subTypes[0], tag, "");
-	    }
-	  break;
+        case ConstructIdentity:
+          if (cardinal > 0)
+            {
+              if (subTypes[0].ElTypeNum == tagElType.ElTypeNum)
+                result = TRUE;
+              else
+                {
+                  name = GetXMLElementName (subTypes[0], TransDoc);
+                  if (!strcmp ((char *)name, "???") ||
+                      !strcmp ((char *)name, "none"))
+                    /* search if tag can be inserted as a child of the identity */
+                    result = IsValidHtmlChild (subTypes[0], tag, "");
+                }
+              /* any math element can be inserted under <math> (only row in MathML.S)*/
+              if (!result &&
+                  !strcmp ((char *)TtaGetElementTypeName (elemType), "math") && 
+                  !strcmp ((char *)TtaGetSSchemaName (elemType.ElSSchema), "MathML"))
+                result = IsValidHtmlChild (subTypes[0], tag, "");
+            }
+          break;
 	  
-	case ConstructList:
-	  if (cardinal > 0)
-	    {
-	      if (subTypes[0].ElTypeNum == tagElType.ElTypeNum)
-		result = TRUE;
-	      else
-		{
-		  name = GetXMLElementName (subTypes[0], TransDoc);
-		  if (!strcmp ((char *)name, "???") ||
-		      !strcmp ((char *)name, "p*") ||
-		      !strcmp ((char *)name, "none"))
-		    result = IsValidHtmlChild (subTypes[0], tag, "");
-		}
-	    }
-	  break;
+        case ConstructList:
+          if (cardinal > 0)
+            {
+              if (subTypes[0].ElTypeNum == tagElType.ElTypeNum)
+                result = TRUE;
+              else
+                {
+                  name = GetXMLElementName (subTypes[0], TransDoc);
+                  if (!strcmp ((char *)name, "???") ||
+                      !strcmp ((char *)name, "p*") ||
+                      !strcmp ((char *)name, "none"))
+                    result = IsValidHtmlChild (subTypes[0], tag, "");
+                }
+            }
+          break;
 	  
-	case ConstructChoice:
-	  for (i = 0; !result && i < cardinal; i++)
-	    if (subTypes[i].ElTypeNum == tagElType.ElTypeNum)
-	      result = TRUE;
-	  if (!result)
-	    for (i = 0; !result && i < cardinal; i++)
-	      {
-		name = GetXMLElementName (subTypes[i], TransDoc);
-		if (!strcmp ((char *)name, "???") ||
-		    !strcmp ((char *)name, "p*") ||
-		    !strcmp ((char *)name, "none"))
-		  result = IsValidHtmlChild (subTypes[i], tag, "");
-	      }
-	  break;
+        case ConstructChoice:
+          for (i = 0; !result && i < cardinal; i++)
+            if (subTypes[i].ElTypeNum == tagElType.ElTypeNum)
+              result = TRUE;
+          if (!result)
+            for (i = 0; !result && i < cardinal; i++)
+              {
+                name = GetXMLElementName (subTypes[i], TransDoc);
+                if (!strcmp ((char *)name, "???") ||
+                    !strcmp ((char *)name, "p*") ||
+                    !strcmp ((char *)name, "none"))
+                  result = IsValidHtmlChild (subTypes[i], tag, "");
+              }
+          break;
 	  
-	case ConstructOrderedAggregate:
-	  start = 0;
-	  if (!strcmp ((char *)prevtag, ""))
-	    found = TRUE;
-	  else
-	    /* there is a previous sibling */
-	    {
-	      /* search the rule of that previous sibling */
-	      GIType (prevtag, &prevElType, (Document)TransDoc);
-	      found = (prevElType.ElTypeNum == 0);
-	      for (i = 0; !found && i < cardinal; i++)
-		{
-		  if (prevElType.ElTypeNum == subTypes[i].ElTypeNum)
-		    {
-		      found = TRUE;
-		      start = i+1;
-		    }
-		  else
-		    {
-		      name = GetXMLElementName (subTypes[i], TransDoc);
-		      if (strcmp ((char *)name, "???") ||
-			  strcmp ((char *)name, "p*") ||
-			  strcmp ((char *)name, "none"))
-			i = cardinal;
-		    }
-		}
-	    }
-	  if (found)
-	    {
-	      i = start;
-	      while (!result && i < cardinal)
-		{
-		  if (tagElType.ElTypeNum == subTypes[i].ElTypeNum)
-		    result = TRUE;
-		  else
-		    {
-		      name = GetXMLElementName (subTypes[i], TransDoc);
-		      if (!strcmp ((char *)name, "???") ||
-			  !strcmp ((char *)name, "p*") ||
-			  !strcmp ((char *)name, "none") ||
-			  TtaIsOptionalInAggregate (i, elemType)) 
-			i++;
-		      else
-			i = cardinal;
-		    }
-		}
-	      if (!result)
-		{
-		  i = start;
-		  while (!result && i < cardinal)
-		    {
-		      name = GetXMLElementName (subTypes[i], TransDoc);
-		      if (!strcmp ((char *)name, "???") ||
-			  !strcmp ((char *)name, "p*") ||
-			  !strcmp ((char *)name, "none"))
-			{
-			  result = IsValidHtmlChild (subTypes[i], tag, "");
-			  if (!result &&
-			      TtaIsOptionalInAggregate(i, elemType)) 
-			    i++;
-			  else
-			    i = cardinal;
-			}
-		      else
-			i = cardinal;
-		    }
-		}
-	    }
-	  break;
+        case ConstructOrderedAggregate:
+          start = 0;
+          if (!strcmp ((char *)prevtag, ""))
+            found = TRUE;
+          else
+            /* there is a previous sibling */
+            {
+              /* search the rule of that previous sibling */
+              GIType (prevtag, &prevElType, (Document)TransDoc);
+              found = (prevElType.ElTypeNum == 0);
+              for (i = 0; !found && i < cardinal; i++)
+                {
+                  if (prevElType.ElTypeNum == subTypes[i].ElTypeNum)
+                    {
+                      found = TRUE;
+                      start = i+1;
+                    }
+                  else
+                    {
+                      name = GetXMLElementName (subTypes[i], TransDoc);
+                      if (strcmp ((char *)name, "???") ||
+                          strcmp ((char *)name, "p*") ||
+                          strcmp ((char *)name, "none"))
+                        i = cardinal;
+                    }
+                }
+            }
+          if (found)
+            {
+              i = start;
+              while (!result && i < cardinal)
+                {
+                  if (tagElType.ElTypeNum == subTypes[i].ElTypeNum)
+                    result = TRUE;
+                  else
+                    {
+                      name = GetXMLElementName (subTypes[i], TransDoc);
+                      if (!strcmp ((char *)name, "???") ||
+                          !strcmp ((char *)name, "p*") ||
+                          !strcmp ((char *)name, "none") ||
+                          TtaIsOptionalInAggregate (i, elemType)) 
+                        i++;
+                      else
+                        i = cardinal;
+                    }
+                }
+              if (!result)
+                {
+                  i = start;
+                  while (!result && i < cardinal)
+                    {
+                      name = GetXMLElementName (subTypes[i], TransDoc);
+                      if (!strcmp ((char *)name, "???") ||
+                          !strcmp ((char *)name, "p*") ||
+                          !strcmp ((char *)name, "none"))
+                        {
+                          result = IsValidHtmlChild (subTypes[i], tag, "");
+                          if (!result &&
+                              TtaIsOptionalInAggregate(i, elemType)) 
+                            i++;
+                          else
+                            i = cardinal;
+                        }
+                      else
+                        i = cardinal;
+                    }
+                }
+            }
+          break;
 	  
-	case ConstructUnorderedAggregate:
-	  for (i = 0; !result && i < cardinal; i++)
-	    if (tagElType.ElTypeNum == subTypes[i].ElTypeNum)
-	      result = TRUE;
-	  if (!result)
-	    for (i = 0; !result && i < cardinal; i++)
-	      {
-		name = GetXMLElementName (subTypes[i], TransDoc);
-		if (!strcmp ((char *)name, "???") ||
-		    !strcmp ((char *)name, "p*") ||
-		    !strcmp ((char *)name, "none"))
-		  result = IsValidHtmlChild (subTypes[i], tag, "");
-	      }
-	  break;
+        case ConstructUnorderedAggregate:
+          for (i = 0; !result && i < cardinal; i++)
+            if (tagElType.ElTypeNum == subTypes[i].ElTypeNum)
+              result = TRUE;
+          if (!result)
+            for (i = 0; !result && i < cardinal; i++)
+              {
+                name = GetXMLElementName (subTypes[i], TransDoc);
+                if (!strcmp ((char *)name, "???") ||
+                    !strcmp ((char *)name, "p*") ||
+                    !strcmp ((char *)name, "none"))
+                  result = IsValidHtmlChild (subTypes[i], tag, "");
+              }
+          break;
 	  
-	case ConstructNature:
-	  if (cardinal > 0 &&
-	      TtaSameSSchemas (tagElType.ElSSchema, subTypes[0].ElSSchema))
-	    {
-	      if (subTypes[0].ElTypeNum == 0)
-		TtaGiveTypeFromName (&subTypes[0], TtaGetElementTypeName(elemType));
-	      if (tagElType.ElTypeNum == subTypes[0].ElTypeNum)
-		result = TRUE;
-	      else
-		{
-		  name = GetXMLElementName (subTypes[0], TransDoc);
-		  if (!strcmp ((char *)name, "???") ||
-		      !strcmp ((char *)name, "p*") ||
-		      !strcmp ((char *)name, "none"))
-		    result = IsValidHtmlChild (subTypes[0], tag, "");
-		}
-	    }
-	  break;
+        case ConstructNature:
+          if (cardinal > 0 &&
+              TtaSameSSchemas (tagElType.ElSSchema, subTypes[0].ElSSchema))
+            {
+              if (subTypes[0].ElTypeNum == 0)
+                TtaGiveTypeFromName (&subTypes[0], TtaGetElementTypeName(elemType));
+              if (tagElType.ElTypeNum == subTypes[0].ElTypeNum)
+                result = TRUE;
+              else
+                {
+                  name = GetXMLElementName (subTypes[0], TransDoc);
+                  if (!strcmp ((char *)name, "???") ||
+                      !strcmp ((char *)name, "p*") ||
+                      !strcmp ((char *)name, "none"))
+                    result = IsValidHtmlChild (subTypes[0], tag, "");
+                }
+            }
+          break;
 
-	case ConstructConstant:
-	case ConstructReference:
-	case ConstructBasicType:
-	case ConstructPair:
-	case ConstructEmpty:
-	case ConstructDocument:
-	case ConstructError:
-	  break;
-	}
+        case ConstructConstant:
+        case ConstructReference:
+        case ConstructBasicType:
+        case ConstructPair:
+        case ConstructEmpty:
+        case ConstructDocument:
+        case ConstructError:
+          break;
+        }
     }
   TtaFreeMemory((void*)subTypes);
   return result;
 }
 
 /*----------------------------------------------------------------------
-   CheckValidTransRoot                                                  
-   checks if the higher-level generated elements are possible children of the   
-   transformation root element                                          
+  CheckValidTransRoot                                                  
+  checks if the higher-level generated elements are possible children of the   
+  transformation root element                                          
   ----------------------------------------------------------------------*/
 static ThotBool CheckValidTransRoot (strMatch * sm, ElementType elemTypeRoot,
-				     char *prevTag)
+                                     char *prevTag)
 {
   strMatchChildren   *smc;
   strMatch           *sm2;
@@ -2317,70 +2394,70 @@ static ThotBool CheckValidTransRoot (strMatch * sm, ElementType elemTypeRoot,
   while (result && smc != NULL)
     {
       if (smc->MatchSymb->Rule == NULL)
-	{			/* there is no rule for the current node */
-	  sm2 = smc->MatchNode->Matches;
-	  sonsMatch = FALSE;
-	  while (sm2 != NULL && !sonsMatch)
-	    { /* checks if the children of the node have been matched */
-	      sonsMatch = (sm2->MatchSymb == smc->MatchSymb && sm2->MatchChildren != NULL);
-	      if (!sonsMatch)
-		sm2 = sm2->Next;
-	    }
-	  if (!sonsMatch)
-	    {		/* if the children of the node have not been matched */
-	      /* checks if the node can be transferred in the destination */
-	      if (TtaGetElementVolume (smc->MatchNode->Elem) != 0)
-		{ /* if the element is empty, it is ignored in transformation*/
-		  if (strcmp ((char *)prevTag, (char *)smc->MatchNode->Tag))
-		    result = IsValidHtmlChild (elemTypeRoot,
-					       (char *)smc->MatchNode->Tag,
-					       prevTag);
-		  strcpy ((char *)prevTag, (char *)smc->MatchNode->Tag);
-		}
-	    }
-	  else
-	    {
-	      /* if they have been, checks the elements generated by these
-		 children */
-	      result = CheckValidTransRoot (sm2, elemTypeRoot, prevTag);
-	    }
-	}
+        {			/* there is no rule for the current node */
+          sm2 = smc->MatchNode->Matches;
+          sonsMatch = FALSE;
+          while (sm2 != NULL && !sonsMatch)
+            { /* checks if the children of the node have been matched */
+              sonsMatch = (sm2->MatchSymb == smc->MatchSymb && sm2->MatchChildren != NULL);
+              if (!sonsMatch)
+                sm2 = sm2->Next;
+            }
+          if (!sonsMatch)
+            {		/* if the children of the node have not been matched */
+              /* checks if the node can be transferred in the destination */
+              if (TtaGetElementVolume (smc->MatchNode->Elem) != 0)
+                { /* if the element is empty, it is ignored in transformation*/
+                  if (strcmp ((char *)prevTag, (char *)smc->MatchNode->Tag))
+                    result = IsValidHtmlChild (elemTypeRoot,
+                                               (char *)smc->MatchNode->Tag,
+                                               prevTag);
+                  strcpy ((char *)prevTag, (char *)smc->MatchNode->Tag);
+                }
+            }
+          else
+            {
+              /* if they have been, checks the elements generated by these
+                 children */
+              result = CheckValidTransRoot (sm2, elemTypeRoot, prevTag);
+            }
+        }
       else
-	{			/* there is a rule for the current node */
-	  node = smc->MatchSymb->Rule->OptionNodes;
-	  if (node != NULL)
-	    {		/* if there is at least one place node */
-	      if (strcmp ((char *)prevTag, (char *)node->Tag))
-		{
-		  result = IsValidHtmlChild (elemTypeRoot,
-					     (char *)node->Tag,
-					     prevTag);
-		  strcpy ((char *)prevTag, (char *)node->Tag);
-		}
-	    }
-	  else
-	    {
-	      node = smc->MatchSymb->Rule->NewNodes;
-	      if (node != NULL)
-		{
-		  if (!strcmp ((char *)node->Tag, "*"))
-		    strcpy ((char *)curTag, (char *)smc->MatchNode->Tag);
-		  else
-		    strcpy ((char *)curTag, (char *)node->Tag);
-		  result = IsValidHtmlChild (elemTypeRoot,
-					     curTag,
-					     prevTag);
-		  strcpy ((char *)prevTag, (char *)curTag);
-		}
-	      else		/*deleted node */
-		if (smc->MatchSymb->Rule->DeleteRule)
-		  result = TRUE;
-		else
-		  result = FALSE;
-	    }
-	} 
+        {			/* there is a rule for the current node */
+          node = smc->MatchSymb->Rule->OptionNodes;
+          if (node != NULL)
+            {		/* if there is at least one place node */
+              if (strcmp ((char *)prevTag, (char *)node->Tag))
+                {
+                  result = IsValidHtmlChild (elemTypeRoot,
+                                             (char *)node->Tag,
+                                             prevTag);
+                  strcpy ((char *)prevTag, (char *)node->Tag);
+                }
+            }
+          else
+            {
+              node = smc->MatchSymb->Rule->NewNodes;
+              if (node != NULL)
+                {
+                  if (!strcmp ((char *)node->Tag, "*"))
+                    strcpy ((char *)curTag, (char *)smc->MatchNode->Tag);
+                  else
+                    strcpy ((char *)curTag, (char *)node->Tag);
+                  result = IsValidHtmlChild (elemTypeRoot,
+                                             curTag,
+                                             prevTag);
+                  strcpy ((char *)prevTag, (char *)curTag);
+                }
+              else		/*deleted node */
+                if (smc->MatchSymb->Rule->DeleteRule)
+                  result = TRUE;
+                else
+                  result = FALSE;
+            }
+        } 
       if (result)
-	smc = smc->Next;
+        smc = smc->Next;
     }
   TtaFreeMemory (curTag);
   return result;
@@ -2388,7 +2465,7 @@ static ThotBool CheckValidTransRoot (strMatch * sm, ElementType elemTypeRoot,
 
 
 /*----------------------------------------------------------------------
-   callback of the transformation selection menu 
+  callback of the transformation selection menu 
   ----------------------------------------------------------------------*/
 void TransCallbackDialog (int ref, int typedata, char* data)
 {
@@ -2401,26 +2478,26 @@ void TransCallbackDialog (int ref, int typedata, char* data)
     case TransMenu:
       /* GTK or Win32 menu */
       if (menuTrans[val] && menuTrans[val]->MatchSymb)
-	trans = (strTransDesc *)(menuTrans[val]->MatchSymb->Rule);
+        trans = (strTransDesc *)(menuTrans[val]->MatchSymb->Rule);
       if (trans && trans->IsAction)
-	/* call the defined action */
-	TtaExecuteMenuAction ((char *)trans->DestinationTag, TransDoc, 1, FALSE);
+        /* call the defined action */
+        TtaExecuteMenuAction ((char *)trans->DestinationTag, TransDoc, 1, FALSE);
       else
-	ApplyTransformation (menuTrans[val], TransDoc);
+        ApplyTransformation (menuTrans[val], TransDoc);
       FreeMatchEnv ();
       break;
     case TransForm:
       /* WX form */
       if (val == 1)
-	{
-	  if (menuTrans[FormVal] && menuTrans[FormVal]->MatchSymb)
-	    trans = (strTransDesc *)(menuTrans[FormVal]->MatchSymb->Rule);
-	  if (trans && trans->IsAction)
-	    /* call the defined action */
-	    TtaExecuteMenuAction ((char *)trans->DestinationTag, TransDoc, 1, FALSE);
-	  else
-	    ApplyTransformation (menuTrans[FormVal], TransDoc);
-	}
+        {
+          if (menuTrans[FormVal] && menuTrans[FormVal]->MatchSymb)
+            trans = (strTransDesc *)(menuTrans[FormVal]->MatchSymb->Rule);
+          if (trans && trans->IsAction)
+            /* call the defined action */
+            TtaExecuteMenuAction ((char *)trans->DestinationTag, TransDoc, 1, FALSE);
+          else
+            ApplyTransformation (menuTrans[FormVal], TransDoc);
+        }
       TtaDestroyDialogue (ref);
       FreeMatchEnv ();
       break;
@@ -2434,7 +2511,7 @@ void TransCallbackDialog (int ref, int typedata, char* data)
 }
 
 /*----------------------------------------------------------------------
-   InitTransform: initialisation, called during Amaya initialisation
+  InitTransform: initialisation, called during Amaya initialisation
   ----------------------------------------------------------------------*/
 void InitTransform ()
 {
@@ -2444,7 +2521,7 @@ void InitTransform ()
 
 
 /*----------------------------------------------------------------------
-   callback of  the transform entry of Edit menu 
+  callback of  the transform entry of Edit menu 
   ----------------------------------------------------------------------*/
 void TransformType (Document doc, View view)
 {
@@ -2471,178 +2548,178 @@ void TransformType (Document doc, View view)
     { 
       maxMatchDepth = 0;
       if (mySelect != NULL)
-	{ /* parse les transformations correspondant aux schemas */
-	  /* des elements entre myFirstSelect et mySelect */
-	  i = 0;
-	  ok = FALSE;
-	  elemSelect = myFirstSelect;
-	  while (elemSelect != TtaGetParent(mySelect))
-	    {
-	      elType = TtaGetElementType (elemSelect);
-	      strcpy ((char *)nameSet, (char *)TtaGetSSchemaName (elType.ElSSchema));
-	      ok =  DoStartParser (nameSet, elType.ElSSchema, &CourTransSet) ||
-		    ok;
-	      if (i < 4 && ok && (i == 0 || CourTransSet != transSets[i-1]))
-		{
-		  transSets [i++] = CourTransSet;
-		  if (maxMatchDepth < CourTransSet->MaxDepth + maxSelDepth)
-		    maxMatchDepth = CourTransSet->MaxDepth + maxSelDepth;
-		}
-	      elemSelect = TtaGetParent (elemSelect);
-	    }
+        { /* parse les transformations correspondant aux schemas */
+          /* des elements entre myFirstSelect et mySelect */
+          i = 0;
+          ok = FALSE;
+          elemSelect = myFirstSelect;
+          while (elemSelect != TtaGetParent(mySelect))
+            {
+              elType = TtaGetElementType (elemSelect);
+              strcpy ((char *)nameSet, (char *)TtaGetSSchemaName (elType.ElSSchema));
+              ok =  DoStartParser (nameSet, elType.ElSSchema, &CourTransSet) ||
+                ok;
+              if (i < 4 && ok && (i == 0 || CourTransSet != transSets[i-1]))
+                {
+                  transSets [i++] = CourTransSet;
+                  if (maxMatchDepth < CourTransSet->MaxDepth + maxSelDepth)
+                    maxMatchDepth = CourTransSet->MaxDepth + maxSelDepth;
+                }
+              elemSelect = TtaGetParent (elemSelect);
+            }
 	  
-	}
+        }
       else
-	{ /* check if all selected elements belong to the same structure */
-	  elemSelect = myFirstSelect;
-	  elType = TtaGetElementType (elemSelect);
-	  strcpy ((char *)nameSet, (char *)TtaGetSSchemaName (elType.ElSSchema));
-	  transSchema = elType.ElSSchema;
-	  while (elemSelect != NULL)
-	    {
-	      MyNextSelectedElement (TransDoc, &elemSelect);
-	      if (elemSelect)
-		{
-		  elType = TtaGetElementType (elemSelect);
-		  if (strcmp ((char *)nameSet, (char *)TtaGetSSchemaName (elType.ElSSchema)))
-		    {
-		      /* the structure changes -> stop the process */
-		      strcpy ((char *)nameSet, (char *)"");
-		      transSchema = NULL;
-		      elemSelect = NULL;
-		    }
-		}
-	    }
-	  ok = DoStartParser (nameSet, transSchema, &CourTransSet);
-	  if (ok)
-	    {
-	      transSets [0] = CourTransSet;
-	      maxMatchDepth = CourTransSet->MaxDepth + maxSelDepth;
-	    }
-	}
+        { /* check if all selected elements belong to the same structure */
+          elemSelect = myFirstSelect;
+          elType = TtaGetElementType (elemSelect);
+          strcpy ((char *)nameSet, (char *)TtaGetSSchemaName (elType.ElSSchema));
+          transSchema = elType.ElSSchema;
+          while (elemSelect != NULL)
+            {
+              MyNextSelectedElement (TransDoc, &elemSelect);
+              if (elemSelect)
+                {
+                  elType = TtaGetElementType (elemSelect);
+                  if (strcmp ((char *)nameSet, (char *)TtaGetSSchemaName (elType.ElSSchema)))
+                    {
+                      /* the structure changes -> stop the process */
+                      strcpy ((char *)nameSet, (char *)"");
+                      transSchema = NULL;
+                      elemSelect = NULL;
+                    }
+                }
+            }
+          ok = DoStartParser (nameSet, transSchema, &CourTransSet);
+          if (ok)
+            {
+              transSets [0] = CourTransSet;
+              maxMatchDepth = CourTransSet->MaxDepth + maxSelDepth;
+            }
+        }
     }
   if (ok)
     { /* builds the source structure tree */
       menuBuf = (char *)TtaGetMemory (MAX_LENGTH);
       strMatchEnv.SourceTree = (StructureTree) NewNode ("Root");
       if (mySelect != NULL)
-	{
-	  (strMatchEnv.SourceTree)->Elem = TtaGetParent (mySelect);
-	  BuildStructureTree (mySelect, TransDoc, strMatchEnv.SourceTree,
-			      maxMatchDepth, 0);
-	}
+        {
+          (strMatchEnv.SourceTree)->Elem = TtaGetParent (mySelect);
+          BuildStructureTree (mySelect, TransDoc, strMatchEnv.SourceTree,
+                              maxMatchDepth, 0);
+        }
       else
-	{
-	  (strMatchEnv.SourceTree)->Elem = TtaGetParent (myFirstSelect);
-	  elemSelect = myFirstSelect;
-	  while (elemSelect != NULL)
-	    {
-	      BuildStructureTree (elemSelect, TransDoc, strMatchEnv.SourceTree,
-				  maxMatchDepth, 0);
-	      MyNextSelectedElement (TransDoc, &elemSelect);
-	    }
-	}
+        {
+          (strMatchEnv.SourceTree)->Elem = TtaGetParent (myFirstSelect);
+          elemSelect = myFirstSelect;
+          while (elemSelect != NULL)
+            {
+              BuildStructureTree (elemSelect, TransDoc, strMatchEnv.SourceTree,
+                                  maxMatchDepth, 0);
+              MyNextSelectedElement (TransDoc, &elemSelect);
+            }
+        }
       i = 0;
       while (i < 4 && transSets [i] != NULL)
-	{
-	  CourTransSet = transSets [i++];
-	  /* pattern matching */
-	  PostfixSearch (strMatchEnv.SourceTree, MatchNode);
-	}
+        {
+          CourTransSet = transSets [i++];
+          /* pattern matching */
+          PostfixSearch (strMatchEnv.SourceTree, MatchNode);
+        }
       /* construct the popup menu with the result of matching*/
       node = strMatchEnv.SourceTree;
       i = 0;
       j = 0;
       tag = (char *)TtaGetMemory (NAME_LENGTH);
       do
-	{			/* for each node above the first selected */
+        {			/* for each node above the first selected */
 #ifdef AMAYA_DEBUG
-	  printf ("Matches for %s element :\n",node->Tag);
+          printf ("Matches for %s element :\n",node->Tag);
 #endif
-	  sm = node->Matches;
-	  while (sm != NULL)
-	    {		/* for each matching of the node */
-	      if (!strcmp ((char *)sm->MatchSymb->Tag, "pattern_root"))
-		{ /* if it is matching a pattern root : */
-		  /* insert the transformation name in the menu buffer */
+          sm = node->Matches;
+          while (sm != NULL)
+            {		/* for each matching of the node */
+              if (!strcmp ((char *)sm->MatchSymb->Tag, "pattern_root"))
+                { /* if it is matching a pattern root : */
+                  /* insert the transformation name in the menu buffer */
 	
 	  
-		  elemSelect = sm->MatchChildren->MatchNode->Elem;
-		  TtaPreviousSibling (&elemSelect);
-		  if (elemSelect)
-		  {
-		    elType = TtaGetElementType (elemSelect);
-		    strcpy ((char *)tag, (char *)GetXMLElementName (elType, TransDoc));
-		  }
-		  while (elemSelect != NULL &&
-			 (!strcmp ((char *)tag, "???") ||
-			  !strcmp ((char *)tag, "none")))
-		    {
-		      TtaPreviousSibling (&elemSelect);
-		      if (elemSelect)
-			  {
-		    elType = TtaGetElementType (elemSelect);
-			strcpy ((char *)tag, (char *)GetXMLElementName (elType, TransDoc));
-			  }
-		    }
-		  if (elemSelect == NULL)
-		    strcpy ((char *)tag, (char *)"");
-		  if (CheckValidTransRoot (sm,
-				TtaGetElementType (sm->MatchNode->Elem), tag))
-		    {
+                  elemSelect = sm->MatchChildren->MatchNode->Elem;
+                  TtaPreviousSibling (&elemSelect);
+                  if (elemSelect)
+                    {
+                      elType = TtaGetElementType (elemSelect);
+                      strcpy ((char *)tag, (char *)GetXMLElementName (elType, TransDoc));
+                    }
+                  while (elemSelect != NULL &&
+                         (!strcmp ((char *)tag, "???") ||
+                          !strcmp ((char *)tag, "none")))
+                    {
+                      TtaPreviousSibling (&elemSelect);
+                      if (elemSelect)
+                        {
+                          elType = TtaGetElementType (elemSelect);
+                          strcpy ((char *)tag, (char *)GetXMLElementName (elType, TransDoc));
+                        }
+                    }
+                  if (elemSelect == NULL)
+                    strcpy ((char *)tag, (char *)"");
+                  if (CheckValidTransRoot (sm,
+                                           TtaGetElementType (sm->MatchNode->Elem), tag))
+                    {
 #ifdef AMAYA_DEBUG
-		      printf ("   %s\n",sm->MatchSymb->SymbolName);
+                      printf ("   %s\n",sm->MatchSymb->SymbolName);
 #endif
-		      for (k = 0; 
-			   k < i && 
-			     strcmp ((char *)menuTrans[k]->MatchSymb->SymbolName, 
-				     (char *)sm->MatchSymb->SymbolName); 
-			   k++);
-		      if (k == i)
-			{
+                      for (k = 0; 
+                           k < i && 
+                             strcmp ((char *)menuTrans[k]->MatchSymb->SymbolName, 
+                                     (char *)sm->MatchSymb->SymbolName); 
+                           k++);
+                      if (k == i)
+                        {
 #ifdef _WX
-			   strcpy (&menuBuf[j], (char *)sm->MatchSymb->SymbolName);
+                          strcpy (&menuBuf[j], (char *)sm->MatchSymb->SymbolName);
 #else /* _WX */
-			   sprintf (&menuBuf[j], "%s%s", "B",
-				     sm->MatchSymb->SymbolName);
+                          sprintf (&menuBuf[j], "%s%s", "B",
+                                   sm->MatchSymb->SymbolName);
 #endif /* _WX */
-			   j += strlen ((char *)&menuBuf[j]) + 1;
-			   menuTrans[i++] = (strMatch *) sm;
-			}
-		    }
-		}
-	      sm = sm->Next;
-	    }
-	  node = node->Child;
-	}
+                          j += strlen ((char *)&menuBuf[j]) + 1;
+                          menuTrans[i++] = (strMatch *) sm;
+                        }
+                    }
+                }
+              sm = sm->Next;
+            }
+          node = node->Child;
+        }
       while (node != NULL &&
-	     (!TtaIsAncestor (node->Elem, myFirstSelect)));
+             (!TtaIsAncestor (node->Elem, myFirstSelect)));
       TtaFreeMemory (tag);
       if (i > 0)
-	{
+        {
 #ifdef _WX
-	  ThotBool created = CreateListDlgWX (TransBaseDialog + TransForm,
-					      TransBaseDialog + TransSelect,
-					      TtaGetViewFrame (doc, 1),
-					      TtaGetMessage (AMAYA, AM_TRANS),
-					      i, menuBuf);
-	  FormVal = 0;
-	  if (created)
-	    TtaShowDialogue (TransBaseDialog + TransForm, TRUE);
+          ThotBool created = CreateListDlgWX (TransBaseDialog + TransForm,
+                                              TransBaseDialog + TransSelect,
+                                              TtaGetViewFrame (doc, 1),
+                                              TtaGetMessage (AMAYA, AM_TRANS),
+                                              i, menuBuf);
+          FormVal = 0;
+          if (created)
+            TtaShowDialogue (TransBaseDialog + TransForm, TRUE);
 #else /* _WX */
-	  /* if some transformations have been matched, shows the menu */
-	  TtaNewPopup (TransBaseDialog + TransMenu, TtaGetViewFrame (doc, 1), 
-		       TtaGetMessage (AMAYA, AM_TRANS), i, menuBuf,
-		       NULL, 'L');
+          /* if some transformations have been matched, shows the menu */
+          TtaNewPopup (TransBaseDialog + TransMenu, TtaGetViewFrame (doc, 1), 
+                       TtaGetMessage (AMAYA, AM_TRANS), i, menuBuf,
+                       NULL, 'L');
 #ifndef _WINGUI
-	  TtaSetDialoguePosition ();
+          TtaSetDialoguePosition ();
 #endif /* _WINGUI */
-	  TtaShowDialogue (TransBaseDialog + TransMenu, TRUE);
+          TtaShowDialogue (TransBaseDialog + TransMenu, TRUE);
 #endif /* _WX */
-	}
+        }
       else
-	/* display a popup message */
-	InitInfo (NULL, TtaGetMessage (AMAYA, AM_NO_TRANS));
+        /* display a popup message */
+        InitInfo (NULL, TtaGetMessage (AMAYA, AM_NO_TRANS));
       /*TtaSetStatus (TransDoc, 1, TtaGetMessage (AMAYA, AM_NO_TRANS), NULL);*/
       TtaFreeMemory (menuBuf);
     }
@@ -2656,10 +2733,10 @@ void TransformType (Document doc, View view)
 
 
 /*----------------------------------------------------------------------
-   TransformIntoType:  Changes the type of a the selected elements into
-   the given DestType.
-   Selects the transformations that produces the givem type, matches
-   their patterns, and applies the first matched transformation
+  TransformIntoType:  Changes the type of a the selected elements into
+  the given DestType.
+  Selects the transformations that produces the givem type, matches
+  their patterns, and applies the first matched transformation
   ----------------------------------------------------------------------*/
 ThotBool TransformIntoType (ElementType * resultType, Document doc)
 {
@@ -2690,46 +2767,46 @@ ThotBool TransformIntoType (ElementType * resultType, Document doc)
       ok = FALSE;
       maxMatchDepth = 0;
       if (mySelect != NULL)
-	{ /* parse les transformations correspondant aux schemas des elements*/
-	  /* entre myFirstSelect et mySelect */
-	  i = 0;
-	  elemSelect = myFirstSelect;
-	  while (CourTransSet == NULL && elemSelect != TtaGetParent(mySelect))
-	    {
-	      elType = TtaGetElementType (elemSelect);
-	      if (TtaSameSSchemas (elType.ElSSchema, resultType->ElSSchema))
-		{
-		  strcpy ((char *)nameSet, (char *)TtaGetSSchemaName (elType.ElSSchema));
-		  ok = DoStartParser (nameSet, elType.ElSSchema, &CourTransSet);
-		}
-	      if (CourTransSet == NULL)
-		elemSelect = TtaGetParent (elemSelect);
-	    }
-	}
+        { /* parse les transformations correspondant aux schemas des elements*/
+          /* entre myFirstSelect et mySelect */
+          i = 0;
+          elemSelect = myFirstSelect;
+          while (CourTransSet == NULL && elemSelect != TtaGetParent(mySelect))
+            {
+              elType = TtaGetElementType (elemSelect);
+              if (TtaSameSSchemas (elType.ElSSchema, resultType->ElSSchema))
+                {
+                  strcpy ((char *)nameSet, (char *)TtaGetSSchemaName (elType.ElSSchema));
+                  ok = DoStartParser (nameSet, elType.ElSSchema, &CourTransSet);
+                }
+              if (CourTransSet == NULL)
+                elemSelect = TtaGetParent (elemSelect);
+            }
+        }
       else
-	{
-	  elemSelect = myFirstSelect;
-	  elType = TtaGetElementType (elemSelect);
-	  strcpy ((char *)nameSet, (char *)TtaGetSSchemaName(elType.ElSSchema));
-	  transSchema = elType.ElSSchema;
-	  while (elemSelect != NULL)
-	    {
-	      elType = TtaGetElementType (elemSelect);
-	      if (strcmp ((char *)nameSet, (char *)TtaGetSSchemaName (elType.ElSSchema)) == 0)
-		{
-		  MyNextSelectedElement (TransDoc, &elemSelect);
-		  if (elemSelect != NULL)
-		    elType = TtaGetElementType (elemSelect);
-		}
-	      else
-		{
-		  strcpy ((char *)nameSet, "");
-		  transSchema = NULL;
-		  elemSelect = NULL;
-		}
-	    }
-	  ok = DoStartParser (nameSet, transSchema, &CourTransSet);
-	}
+        {
+          elemSelect = myFirstSelect;
+          elType = TtaGetElementType (elemSelect);
+          strcpy ((char *)nameSet, (char *)TtaGetSSchemaName(elType.ElSSchema));
+          transSchema = elType.ElSSchema;
+          while (elemSelect != NULL)
+            {
+              elType = TtaGetElementType (elemSelect);
+              if (strcmp ((char *)nameSet, (char *)TtaGetSSchemaName (elType.ElSSchema)) == 0)
+                {
+                  MyNextSelectedElement (TransDoc, &elemSelect);
+                  if (elemSelect != NULL)
+                    elType = TtaGetElementType (elemSelect);
+                }
+              else
+                {
+                  strcpy ((char *)nameSet, "");
+                  transSchema = NULL;
+                  elemSelect = NULL;
+                }
+            }
+          ok = DoStartParser (nameSet, transSchema, &CourTransSet);
+        }
     }
   if (ok)
     {
@@ -2737,108 +2814,108 @@ ThotBool TransformIntoType (ElementType * resultType, Document doc)
       td = CourTransSet->Transformations;
       CourTransSet->MaxDepth = 0;
       while (td != NULL)
-	{
-	  if (td->DestinationTag == NULL ||
-	      strcmp ((char *)td->DestinationTag, (char *)DestTag))
-	    {		
-	      /* the transformation does not produce the given type, it is
-		 desactived */
-		  ok = FALSE;
-	      td->IsActiveTrans = FALSE;
-	      sd = td->Symbols;
-	      while (sd != NULL)
-		{
-		  sd->IsActiveSymb = FALSE;
-		  sd = sd->Next;
-		}
-	    }
-	  else
-	    {
-	      /* at least 1 transformation produces the given type */		 
-	      ok = TRUE;	
-	      if (td->PatDepth > CourTransSet->MaxDepth)
-		CourTransSet->MaxDepth = td->PatDepth;
-	    }
-	  td = td->Next;
-	}
+        {
+          if (td->DestinationTag == NULL ||
+              strcmp ((char *)td->DestinationTag, (char *)DestTag))
+            {		
+              /* the transformation does not produce the given type, it is
+                 desactived */
+              ok = FALSE;
+              td->IsActiveTrans = FALSE;
+              sd = td->Symbols;
+              while (sd != NULL)
+                {
+                  sd->IsActiveSymb = FALSE;
+                  sd = sd->Next;
+                }
+            }
+          else
+            {
+              /* at least 1 transformation produces the given type */		 
+              ok = TRUE;	
+              if (td->PatDepth > CourTransSet->MaxDepth)
+                CourTransSet->MaxDepth = td->PatDepth;
+            }
+          td = td->Next;
+        }
       maxMatchDepth = CourTransSet->MaxDepth + maxSelDepth;
       
       /* builds the source structure tree */
       strMatchEnv.SourceTree = (StructureTree) NewNode ("Root");
       if (mySelect != NULL)
-	{
-	  (strMatchEnv.SourceTree)->Elem = TtaGetParent (mySelect);
-	  BuildStructureTree (mySelect, TransDoc, strMatchEnv.SourceTree,
-			      maxMatchDepth, 0);
-	}
+        {
+          (strMatchEnv.SourceTree)->Elem = TtaGetParent (mySelect);
+          BuildStructureTree (mySelect, TransDoc, strMatchEnv.SourceTree,
+                              maxMatchDepth, 0);
+        }
       else
-	{
-	  (strMatchEnv.SourceTree)->Elem = TtaGetParent (myFirstSelect);
-	  elemSelect = myFirstSelect;
-	  while (elemSelect != NULL)
-	    {
-	      BuildStructureTree (elemSelect, TransDoc, strMatchEnv.SourceTree,
-				  maxMatchDepth, 0);
-	      MyNextSelectedElement (TransDoc, &elemSelect);
-	    }
-	}
+        {
+          (strMatchEnv.SourceTree)->Elem = TtaGetParent (myFirstSelect);
+          elemSelect = myFirstSelect;
+          while (elemSelect != NULL)
+            {
+              BuildStructureTree (elemSelect, TransDoc, strMatchEnv.SourceTree,
+                                  maxMatchDepth, 0);
+              MyNextSelectedElement (TransDoc, &elemSelect);
+            }
+        }
       
       /* pattern matching */
       PostfixSearch (strMatchEnv.SourceTree, MatchNode);
 	
       node = strMatchEnv.SourceTree;
       while (node->Child != NULL && 
-	     TtaIsAncestor (myFirstSelect, node->Elem))
-	node = node->Child;
+             TtaIsAncestor (myFirstSelect, node->Elem))
+        node = node->Child;
       i = 0;
       last = -1;
       best = -1;
       
       tag = (char *)TtaGetMemory (NAME_LENGTH);
       do
-	{ /* for each node above the first selected */
-	  chglev = TRUE;
-	  node = node->Parent;
-	  if (node)
-	     sm = node->Matches;
-	  else
-	     sm = NULL;
-	  while (sm != NULL)
-	    {		/* for each matching of the node */
-	      if (!strcmp ((char *)sm->MatchSymb->Tag, "pattern_root"))
-		{ /* if it is matching a pattern root : insert the
-		     transformation in the matched transformations list */
+        { /* for each node above the first selected */
+          chglev = TRUE;
+          node = node->Parent;
+          if (node)
+            sm = node->Matches;
+          else
+            sm = NULL;
+          while (sm != NULL)
+            {		/* for each matching of the node */
+              if (!strcmp ((char *)sm->MatchSymb->Tag, "pattern_root"))
+                { /* if it is matching a pattern root : insert the
+                     transformation in the matched transformations list */
 		  
-		  strcpy ((char *)tag, "");
-		  if (CheckValidTransRoot (sm,
-				 TtaGetElementType (sm->MatchNode->Elem), tag))
-		    {
-		      if (chglev)
-			{
-			  chglev = FALSE;
-			  if (last == -1 || 
-			      TtaIsAncestor (sm->MatchNode->Child->Elem, origFirstSelect))
-			    last = i;
-			  if (origFirstSelect == sm->MatchNode->Child->Elem)
-			    best = i;
-			}
-		      menuTrans[i++] = (strMatch *) sm;
-		    }
-		}
-	      sm = sm->Next;
-	    }
-	}
+                  strcpy ((char *)tag, "");
+                  if (CheckValidTransRoot (sm,
+                                           TtaGetElementType (sm->MatchNode->Elem), tag))
+                    {
+                      if (chglev)
+                        {
+                          chglev = FALSE;
+                          if (last == -1 || 
+                              TtaIsAncestor (sm->MatchNode->Child->Elem, origFirstSelect))
+                            last = i;
+                          if (origFirstSelect == sm->MatchNode->Child->Elem)
+                            best = i;
+                        }
+                      menuTrans[i++] = (strMatch *) sm;
+                    }
+                }
+              sm = sm->Next;
+            }
+        }
       while (node && node != strMatchEnv.SourceTree);
       TtaFreeMemory (tag);
       if (i > 0)
-	/* if at least one transformation have been matched, apply the best
-	   one */
-	{
-	  if (best == -1)
-	    /* no transformation for the actual selection : take another one */
-	    best = last;
-	  TransCallbackDialog (TransBaseDialog + TransMenu, 0, (char*)best);  
-	}
+        /* if at least one transformation have been matched, apply the best
+           one */
+        {
+          if (best == -1)
+            /* no transformation for the actual selection : take another one */
+            best = last;
+          TransCallbackDialog (TransBaseDialog + TransMenu, 0, (char*)best);  
+        }
     }
   TtaFreeMemory (nameSet);  
   return ResultTrans;

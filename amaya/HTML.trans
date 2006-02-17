@@ -366,52 +366,57 @@ Numbered list:(p|ul|menu|dir|pre|form)+;
 ! Remove elements
 !!!!!!!!!!!!!!!!!!!!!!!!!
 
-Remove the division: (div{*+})+;
+Remove division: (div{*+})+;
 	{
         * > :*;
 	}
 
-Remove the Center element: (center{*+})+;
+Remove Center element: (center{*+})+;
 	{
         * > :*;
 	}
 
-Remove the paragraph level: p{img};
+!Remove paragraph level: p{img};
+!     	{
+!        img > :*;
+!     	}
+
+Remove paragraph level: (p{*+})+;
      	{
-        img > :*;
+        * > :*;
      	}
 
-Remove the BlockQuote element: blockquote{*+};
+Remove blockquote element: blockquote{*+};
 	{
 	* > :*;
 	}
 
-Remove the font element: font{*+};
+Remove font element: font{*+};
 	{
 	* > :*;
 	}
 
-Remove the span element: span{*+};
+Remove span element: span{*+};
 	{
 	* > :*;
 	}
 
-Remove the Subscript: sub{*+};
+Remove Subscript: sub{*+};
 	{
 	* > :*;
 	}
 	
-Remove the Superscript: sup{*+};
+Remove Superscript: sup{*+};
 	{
 	* > :*;
 	}
 	
-Remove the Quotation: q{*+};
+Remove Quotation: q{*+};
 	{
         * > :*;
 	}
 
-Remove the BiDi: bdo{*+};
+Remove BiDi: bdo{*+};
 	{
         * > :*;
 	}

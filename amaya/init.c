@@ -1438,9 +1438,9 @@ void CheckParsingErrors (Document doc)
             reload = TtaGetMessage (LIB, TMSG_BUTTON_RELOAD);
           else
             reload = NULL;
-          if (SavingDocument == DocumentSource[doc])
-            // stop the save process
-            SavingDocument = 0;
+          //if (SavingDocument == DocumentSource[doc])
+          // stop the save process
+          // SavingDocument = 0;
           /* The document is not well-formed */
           if (reload)
             ptr = TtaGetMessage (AMAYA, AM_XML_RETRY);
