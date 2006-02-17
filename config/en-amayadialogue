@@ -106,8 +106,8 @@
 104 h5
 105 h6
 106 List
-107 Bulleted list (ul)
-108 Numbered list (ol)
+107 Unordered list (ul)
+108 Ordered list (ol)
 109 Definition list (dl)
 110 Term (dt)
 111 Definition (dd)

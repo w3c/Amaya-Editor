@@ -106,8 +106,8 @@
 104 Titre niveau 5 (h5)
 105 Titre niveau 6 (h6)
 106 Liste
-107 Liste à puces (ul)
-108 Liste numérotée (ol)
+107 Liste non ordonnée (ul)
+108 Liste ordonnée (ol)
 109 Liste de définitions (dl)
 110 Terme (dt)
 111 Définition (dd)

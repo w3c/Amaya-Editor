@@ -1268,8 +1268,8 @@
 <message xml:lang="hu">&amp;Lista</message>
 <message xml:lang="ka">ჩამონათვალი</message></label>
 <label define="BBulletedList">
-<message xml:lang="en">Bulleted list (ul)</message>
-<message xml:lang="fr">Liste à puces (ul)</message>
+<message xml:lang="en">Unordered list (ul)</message>
+<message xml:lang="fr">Liste non ordonnée (ul)</message>
 <message xml:lang="de">Ungeordnete Liste (ul)</message>
 <message xml:lang="it">Lista puntata (ul)</message>
 <message xml:lang="tr">Noktalı liste (ul)</message>
@@ -1280,8 +1280,8 @@
 <message xml:lang="hu">Listajeles lista (ul)</message>
 <message xml:lang="ka">ნიშნებით (ul)</message></label>
 <label define="BNumberedList">
-<message xml:lang="en">Numbered list (ol)</message>
-<message xml:lang="fr">Liste numérotée (ol)</message>
+<message xml:lang="en">Ordered list (ol)</message>
+<message xml:lang="fr">Liste ordonnée (ol)</message>
 <message xml:lang="de">Geordnete Liste (ol)</message>
 <message xml:lang="it">Lista numerata (ol)</message>
 <message xml:lang="tr">Numaralı liste (ol)</message>
