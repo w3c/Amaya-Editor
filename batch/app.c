@@ -361,7 +361,7 @@ static PtrSSchema ConstructAbstractSchStruct ()
    GetSchStruct (&pSS);
    pSS->SsCode = 0;
    /* allocate the element table */
-   num = MAX_BASIC_TYPE - 1;         /* table size */
+   num = MAX_BASIC_TYPE;         /* table size */
    pSS->SsRule = (SrRuleTable*) malloc (num * sizeof (PtrSRule));
    pSS->SsRuleTableSize = num;
    for (i = 0; i < num; i++)
