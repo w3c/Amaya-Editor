@@ -4116,7 +4116,10 @@ void CreateInitConfirmDlgWindow (ThotWindow parent, char *extrabutton,
     }
   else
     {
-      strcpy (Message2, TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+      if (confirmbutton && confirmbutton[0] != EOS)
+        strcpy (Message2, confirmbutton);
+      else
+        strcpy (Message2, TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
       DialogBox (hInstance, MAKEINTRESOURCE (INITCONFIRMDIALOG), parent,
                  (DLGPROC) InitConfirmDlgProc);
     }

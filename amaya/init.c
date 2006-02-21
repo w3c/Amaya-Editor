@@ -1916,8 +1916,12 @@ void ConfirmError (Document document, View view, char *label,
     }
 #endif /* _WX */
 #ifdef _WINGUI
-  CreateInitConfirmDlgWindow (TtaGetViewFrame (document, view),
-                              extrabutton, confirmbutton, label);
+  if (confirmbutton)
+    CreateInitConfirmDlgWindow (TtaGetViewFrame (document, view),
+                                extrabutton, confirmbutton, label);
+  else
+    CreateInitConfirmDlgWindow (TtaGetViewFrame (document, view),
+                                confirmbutton, extrabutton, label);
 #endif /* _WINGUI */
   /* remove the critic section */
   CriticConfirm = FALSE;
