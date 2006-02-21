@@ -673,14 +673,14 @@ void TtaSetDocumentAccessMode (Document document, int accessMode)
           if (accessMode == 0)
             {
               pDoc->DocReadOnly = TRUE;
-              if (pDoc->DocDocElement != NULL)
-                pDoc->DocDocElement->ElAccess = ReadOnly;
+              //if (pDoc->DocDocElement != NULL)
+              //  pDoc->DocDocElement->ElAccess = ReadOnly;
             }
           else
             {
               pDoc->DocReadOnly = FALSE;
-              if (pDoc->DocDocElement != NULL)
-                pDoc->DocDocElement->ElAccess = ReadWrite;
+              //if (pDoc->DocDocElement != NULL)
+              //  pDoc->DocDocElement->ElAccess = ReadWrite;
             }
 #ifndef NODISPLAY
           /* update the paste entry */
@@ -815,6 +815,29 @@ void TtaSetDocumentUnmodified (Document document)
   else
     /* parameter document is correct */
     SetDocumentModified (LoadedDocument[document - 1], FALSE, 0);
+}
+
+/*----------------------------------------------------------------------
+  TtaSetDocumentUpdated
+
+  Notifies the tool kit that a document must be considered as updated
+  by the application or by the user. That will allow the application to
+  detect if any change will be made on the document
+  (see TtaIsDocumentUpdated).
+  Parameter:
+  document: the document.
+  ----------------------------------------------------------------------*/
+void TtaSetDocumentUpdated (Document document)
+{
+  UserErrorCode = 0;
+  /* verifies the parameter document */
+  if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else
+    /* parameter document is correct */
+    LoadedDocument[document - 1]->DocUpdated = TRUE;
 }
 
 /*----------------------------------------------------------------------
@@ -1393,8 +1416,6 @@ int TtaGetDocumentAccessMode (Document document)
   else if (LoadedDocument[document - 1] == NULL)
     TtaError (ERR_invalid_document_parameter);
   else if (LoadedDocument[document - 1]->DocReadOnly)
-    result = 0;
-  else if (ElementIsReadOnly (LoadedDocument[document - 1]->DocDocElement))
     result = 0;
   else
     result = 1;

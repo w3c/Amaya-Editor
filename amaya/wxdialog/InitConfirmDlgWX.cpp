@@ -32,14 +32,10 @@ END_EVENT_TABLE()
     + label : the message to show at dialog center
   returns:
   ----------------------------------------------------------------------*/
-InitConfirmDlgWX::InitConfirmDlgWX( int ref,
-				    wxWindow* parent,
-				    const wxString & title,
-				    const wxString & extrabutton,
-				    const wxString & confirmbutton,
-				    const wxString & label,
-				    const wxString & label2,
-				    const wxString & label3 ) :
+InitConfirmDlgWX::InitConfirmDlgWX( int ref, wxWindow* parent,
+				    const wxString & title, const wxString & extrabutton,
+				    const wxString & confirmbutton, const wxString & label,
+				    const wxString & label2, const wxString & label3 ) :
   AmayaDialog( parent, ref )
 {
 wxString cancelbutton;
@@ -69,16 +65,21 @@ wxString cancelbutton;
     p_sizer->Show(XRCCTRL(*this, "wxID_EXTRABUTTON", wxButton), false);
   else
     XRCCTRL(*this, "wxID_EXTRABUTTON", wxButton)->SetLabel( extrabutton );
+
   if (confirmbutton.IsEmpty())
     {
     p_sizer->Show(XRCCTRL(*this, "wxID_OK", wxButton), false);
-    cancelbutton = TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_LIB_CONFIRM));
+    if (extrabutton.IsEmpty())
+      cancelbutton = TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_LIB_CONFIRM));
+else
+  cancelbutton = TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_DISCARD));
     }
   else
     {
     XRCCTRL(*this, "wxID_OK", wxButton)->SetLabel( confirmbutton );
     cancelbutton = TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_CANCEL));
     }
+
   if (cancelbutton.IsEmpty())
     p_sizer->Show(XRCCTRL(*this, "wxID_CANCELBUTTON", wxButton), false);
   else

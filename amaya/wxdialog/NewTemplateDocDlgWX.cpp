@@ -215,7 +215,7 @@ void NewTemplateDocDlgWX::OnCreateButton( wxCommandEvent& event )
   
       // give the new url to amaya (to do url completion)
       ThotCallback (BaseDialog + URLName,  STRING_DATA, (char *)docname );  
-      Close();      
+      TtaDestroyDialogue (BaseDialog + OpenTemplate);      
       CreateInstanceOfTemplate (m_doc, temp, docname, docHTML);
     }
   else
@@ -248,7 +248,7 @@ void NewTemplateDocDlgWX::OnClearButton( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void NewTemplateDocDlgWX::OnCancelButton( wxCommandEvent& event )
 {
-  Close();
+  TtaDestroyDialogue (BaseDialog + OpenTemplate);      
 }
 
 /*----------------------------------------------------------------------
