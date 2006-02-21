@@ -416,6 +416,19 @@ extern void TtaSetDocumentModified (Document document);
   ----------------------------------------------------------------------*/
 extern void TtaSetDocumentUnmodified (Document document);
 
+
+/*----------------------------------------------------------------------
+  TtaSetDocumentUpdated
+
+  Notifies the tool kit that a document must be considered as updated
+  by the application or by the user. That will allow the application to
+  detect if any change will be made on the document
+  (see TtaIsDocumentUpdated).
+  Parameter:
+  document: the document.
+  ----------------------------------------------------------------------*/
+extern void TtaSetDocumentUpdated (Document document);
+
 /*----------------------------------------------------------------------
    TtaSetDocumentUnupdated
 
