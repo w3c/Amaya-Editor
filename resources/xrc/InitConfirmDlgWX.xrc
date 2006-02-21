@@ -11,45 +11,32 @@
           <orient>wxVERTICAL</orient>
           <object class="sizeritem">
             <object class="wxStaticText" name="wxID_LABEL">
-              
               <label></label>
-              
-              <style>wxALIGN_CENTRE</style>
+              <style>wxALIGN_LEFT</style>
             </object>
-            
             <flag>wxEXPAND</flag>
           </object>
           <object class="sizeritem">
             <object class="wxStaticText" name="wxID_LABEL_2">
-              
               <label></label>
-              
-              <style>wxALIGN_CENTRE</style>
+              <style>wxALIGN_LEFT</style>
             </object>
-            
             <flag>wxEXPAND</flag>
           </object>
           <object class="sizeritem">
             <object class="wxStaticText" name="wxID_LABEL_3">
-              
               <label></label>
-              
-              <style>wxALIGN_CENTRE</style>
+              <style>wxALIGN_LEFT</style>
             </object>
-            
             <flag>wxEXPAND</flag>
           </object>
           <object class="sizeritem">
             <object class="wxStaticLine"/>
-            
             <flag>wxEXPAND</flag>
           </object>
         </object>
-        
         <option>1</option>
-        
         <flag>wxTOP|wxLEFT|wxRIGHT|wxEXPAND</flag>
-        
         <border>10</border>
       </object>
       <object class="sizeritem">
@@ -61,33 +48,26 @@
           <object class="sizeritem">
             <flag>wxALL</flag>
             <object class="wxButton" name="wxID_OK">
-              
               <label>CONFIRMBUTTON</label>
-              
               <default>1</default>
-              
               <focused>1</focused>
             </object>
           </object>
           <object class="spacer">
-            
             <size>10,0</size>
           </object>
           <object class="sizeritem">
             <flag>wxALL</flag>
             <object class="wxButton" name="wxID_EXTRABUTTON">
-              
               <label>EXTRABUTTON</label>
             </object>
           </object>
           <object class="spacer">
-            
             <size>10,0</size>
           </object>
           <object class="sizeritem">
             <flag>wxALL</flag>
             <object class="wxButton" name="wxID_CANCEL">
-              
               <label>CANCELBUTTON</label>
             </object>
           </object>

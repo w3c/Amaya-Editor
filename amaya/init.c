@@ -118,6 +118,7 @@ static int          NewDocProfile = 0;
 static ThotBool     NewXML = TRUE;
 static ThotBool     BADMimeType = FALSE;
 static ThotBool     CriticConfirm = FALSE;
+static ThotBool     CriticCheckError = FALSE;
 /* the open document is the Amaya default page */
 static ThotBool     WelcomePage = FALSE;
 /* we have to mark the initial loading status to avoid to re-open the
@@ -1391,13 +1392,17 @@ void CleanUpParsingErrors ()
   ----------------------------------------------------------------------*/
 void CheckParsingErrors (Document doc)
 {
-  char      *ptr, *reload;
+  char      *ptr;
   ThotBool   closeLog = FALSE;
 #ifndef _WX
   char       profile [200];
   int        prof;
 #endif /* _WX */
 
+  // Avoid recursive call
+  if (CriticCheckError)
+    return;
+  CriticCheckError = TRUE;
 #ifndef _WINGUI
   CloseLogs (doc);
   closeLog = TRUE;
@@ -1433,33 +1438,61 @@ void CheckParsingErrors (Document doc)
       else if (XMLNotWellFormed)
         {
           /* Raise a popup message */
-          if (SavingDocument != DocumentSource[doc] && DocumentTypes[doc] == docHTML)
-            /* when propose a reload */
-            reload = TtaGetMessage (LIB, TMSG_BUTTON_RELOAD);
-          else
-            reload = NULL;
-          //if (SavingDocument == DocumentSource[doc])
-          // stop the save process
-          // SavingDocument = 0;
           /* The document is not well-formed */
-          if (reload)
-            ptr = TtaGetMessage (AMAYA, AM_XML_RETRY);
-          else
-            ptr = TtaGetMessage (AMAYA, AM_XML_ERROR);
-          ConfirmError (doc, 1, ptr,
-                        TtaGetMessage (AMAYA, AM_AFILTER_SHOW), reload);
-          CleanUpParsingErrors ();
-          if (UserAnswer && reload)
-            ParseAsHTML (doc, 1);
+          if (DocumentTypes[doc] == docHTML &&
+              (!DocumentMeta[doc] || !DocumentMeta[doc]->compound))
+            {
+              ptr = TtaGetMessage (AMAYA, AM_XML_RETRY);
+              if (SavingDocument && SavingDocument == DocumentSource[doc])
+                {
+                  ConfirmError (doc, 1, ptr,
+                                TtaGetMessage (AMAYA, AM_SAVE_ANYWAY),
+                                NULL);
+                  if (!ExtraChoice && !UserAnswer)
+                    // GTK or WX version: stop the save process
+                    SavingDocument = 0;
+                  ParseAsHTML (doc, 1);
+                }
+              else
+                {
+                  //InitConfirm (doc, 1, ptr);
+                  InitConfirm3L (doc, 1, ptr, NULL, NULL, FALSE);
+                  ParseAsHTML (doc, 1);
+#ifdef IV
+                  ConfirmError (doc, 1, ptr,
+                                TtaGetMessage (AMAYA, AM_AFILTER_SHOW),
+                                NULL);
+                  ParseAsHTML (doc, 1);
+                  if (ExtraChoice || UserAnswer)
+                    {
+                      CleanUpParsingErrors ();
+                      CloseLogs (doc);
+                      closeLog = TRUE;
+                      ShowLogFile (doc, 1);
+                      ShowSource (doc, 1);
+                    }
+#endif
+                }
+            }
           else
             {
-              if (ExtraChoice || UserAnswer)
-                {
-                  CloseLogs (doc);
-                  closeLog = TRUE;
-                  ShowLogFile (doc, 1);
-                  ShowSource (doc, 1);
-                }
+              ptr = TtaGetMessage (AMAYA, AM_XML_ERROR);
+              if (SavingDocument == DocumentSource[doc])
+                // stop the save process
+                SavingDocument = 0;
+              // Set the document in read-only mode
+              TtaSetDocumentAccessMode (doc, 0);
+              ConfirmError (doc, 1, ptr,
+                            TtaGetMessage (AMAYA, AM_AFILTER_SHOW),
+                            NULL);
+                  if (ExtraChoice)
+                    {
+                      CleanUpParsingErrors ();
+                      CloseLogs (doc);
+                      closeLog = TRUE;
+                      ShowLogFile (doc, 1);
+                      ShowSource (doc, 1);
+                    }
             }
         }
 #ifndef _WX
@@ -1533,6 +1566,7 @@ void CheckParsingErrors (Document doc)
         /* update the document source too */
         TtaSetItemOff (DocumentSource[doc], 1, File, BShowLogFile);
     }
+  CriticCheckError = FALSE;
 }
 
 
@@ -1836,12 +1870,16 @@ void ConfirmError (Document document, View view, char *label,
   int       i, n;
 
   i = 0;
-  n = 1;
-  strcpy (&s[i], confirmbutton);
+  n = 0;
+  if (confirmbutton)
+    {
+      strcpy (&s[i], confirmbutton);
+      i += strlen (&s[i]) + 1;
+      n++;
+    }
   if (extrabutton)
     {
       /* display 3 buttons: extrabutton - show - cancel */
-      i += strlen (&s[i]) + 1;
       strcpy (&s[i], extrabutton);
       n++;
     }
@@ -3505,7 +3543,31 @@ void ReparseAs (Document doc, View view, ThotBool asHTML,
   ----------------------------------------------------------------------*/
 void ParseAsHTML (Document doc, View view)
 {
-  ReparseAs (doc, view, TRUE, UNDEFINED_CHARSET);
+  char           *localFile = NULL;
+  char            documentname[MAX_LENGTH];
+  char            s[MAX_LENGTH];
+
+  /* Initialize the LogFile variables */
+  CleanUpParsingErrors ();
+  /* remove the PARSING.ERR file */
+  RemoveParsingErrors (doc);
+  /* Remove the previous namespaces declaration */
+  TtaFreeNamespaceDeclarations (doc);
+  localFile = GetLocalPath (doc, DocumentURLs[doc]);
+  TtaExtractName (localFile, s, documentname);
+  /* Removes all CSS informations linked with the document */
+  RemoveDocCSSs (doc);  
+  /* Free access keys table */
+  TtaRemoveDocAccessKeys (doc);
+
+  StartParser (doc, localFile, documentname, s, localFile, FALSE, FALSE);
+  /* fetch and display all images referred by the document */
+  DocNetworkStatus[doc] = AMAYA_NET_ACTIVE;
+  FetchAndDisplayImages (doc, AMAYA_LOAD_IMAGE, NULL);
+  DocNetworkStatus[doc] = AMAYA_NET_INACTIVE;
+  /* check parsing errors */
+  CheckParsingErrors (doc);
+  TtaFreeMemory (localFile);
 }
 
 #ifdef _SVG
@@ -7341,6 +7403,7 @@ void InitAmaya (NotifyEvent * event)
   SelectionDoc = 0;
   ParsedDoc = 0;
   ParsedCSS = 0;
+  Error_DocURL = NULL; /* no current error */
   SelectionInPRE = FALSE;
   SelectionInComment = FALSE;
   SelectionInEM = FALSE;

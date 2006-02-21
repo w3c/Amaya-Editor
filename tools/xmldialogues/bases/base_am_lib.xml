@@ -2300,15 +2300,9 @@
 	<message xml:lang="hu">Kijelöl</message>
 	<message xml:lang="ka">შერჩევა</message>
 </label>
-<label define="TMSG_USE_F2">
-	<message xml:lang="en">Use F2 key to select the parent element</message>
-	<message xml:lang="fr">Utiliser la touche F2 pour sélectionner l'élément englobant</message>
-	<message xml:lang="es">Utilice la tecla F2 para seleccionar el elemento padre</message>
-	<message xml:lang="de">Verwenden Sie die F2 Taste, um das Elternelement auszuwählen</message>
-	<message xml:lang="it">Usa il tasto F2 per selezionare l'elemento padre</message>
-	<message xml:lang="ru">Для выбора родительского элемента используйте F2</message>
-	<message xml:lang="hu">Az F2 billentyűvel jelölhető ki az elődelem</message>
-	<message xml:lang="ka">ძირეული ელემენტის შესარჩევად F2 კლავიში გამოიყენეთ</message>
+<label define="TMSG_DISCARD">
+	<message xml:lang="en">Discard</message>
+	<message xml:lang="fr">Abandonner</message>
 </label>
 <label define="TMSG_MATHML">
 	<message xml:lang="en">Maths</message>

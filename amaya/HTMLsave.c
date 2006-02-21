@@ -2337,7 +2337,8 @@ void DoSynchronize (Document doc, View view, NotifyElement *event)
           /* get the current position in the document */
           position = RelativePosition (otherDoc, &distance);
           TtaClearUndoHistory (otherDoc);
-
+          // By default remove the read-only mode
+          TtaSetDocumentAccessMode (otherDoc, 1);
           /* save the current state of the document into the temporary file */
           tempdoc = GetLocalPath (otherDoc, DocumentURLs[otherDoc]);
           TtaExportDocumentWithNewLineNumbers (doc, tempdoc, "TextFileT");
@@ -2579,7 +2580,11 @@ void SaveDocument (Document doc, View view)
     {
       Synchronize (doc, view);
       if (SavingDocument != doc)
-        ok = FALSE;
+        {
+          ok = FALSE;
+          // reset the source document as updated
+          TtaSetDocumentUpdated (doc);
+        }
       else if (DocumentMeta[doc]->content_location)
         ok = TRUE;
       else if (AddNoName (doc, view, tempname, &ok))
@@ -2636,8 +2641,11 @@ void SaveDocument (Document doc, View view)
 
   /* restore original display mode */
   TtaSetDisplayMode (doc, dispMode);
-  SavingDocument = 0;
 
+  if (SavingDocument == 0)
+    // the saving was discarded
+    return;
+  SavingDocument = 0;
   if (ok)
     {
       /* cancel the possible don't replace mark */
@@ -2658,7 +2666,7 @@ void SaveDocument (Document doc, View view)
       else if (DocumentSource[doc])
         {
           TtaSetDocumentUnmodified (DocumentSource[doc]);
-      TtaSetInitialSequence (DocumentSource[doc]);
+          TtaSetInitialSequence (DocumentSource[doc]);
         }
         
       /* switch Amaya buttons and menus */
@@ -2672,12 +2680,12 @@ void SaveDocument (Document doc, View view)
       if (!TtaFileExist (tempname))
         RemoveAutoSavedDoc (doc);
     }
-  else
+  else if (!IsW3Path (tempname))
     {
       char msg[200];
       /* cannot save */
       sprintf (msg, TtaGetMessage (AMAYA, AM_CANNOT_SAVE), DocumentURLs[doc]);
-      InitConfirm (0, 0, msg);
+      InitConfirm3L (0, 0, msg, NULL, NULL, FALSE);
     }
 }
 

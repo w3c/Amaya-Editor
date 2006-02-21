@@ -210,8 +210,8 @@
 208 Portrait
 209 Paysage
 210 Support FTP
-211 Document XML mal formé - Recharger pour corriger ou montrer les erreurs ?
-212 Document XML mal formé - Montrer les erreurs ?
+211 Erreur(s) dans le code source
+212 Erreur fatale - Corriger le code source pour continuer
 213 Essayer l'entrée "Fichier/Forcer un code caractère"
 214 Caractères invalides
 215 Profil du document :
@@ -223,7 +223,7 @@
 221 Sélecteur de fichiers
 222 Sélection
 223 Filtre local des annotations
-224 Montrer
+224 Montrer les erreurs
 225 Cacher
 226 Montrer tout
 227 Cacher tout
@@ -283,7 +283,7 @@
 281 Propriétes du document ne sont pas disponibles pour l'instant. Essayez de nouveau plus tard...
 282 En attente des propriétes du document...
 283 Désolé, WebDAV ne support pas URLs comme %s
-284 Sauvegarde du verrou dans la base local a échué
+284 Sauvegarde du verrou dans la base local a échoué
 285 Impossible éffacer verrou de la base local
 286 Désolé, cette opération est interdit pour %s
 287 Opération a échué! Cause: Faute de dépendence
@@ -381,3 +381,4 @@
 379 Element protégé
 380 La sélection ne peut pas traverser un élément de ce type
 381 Pas d'en-tête trouvé après la sélection
+382 Sauver quand même

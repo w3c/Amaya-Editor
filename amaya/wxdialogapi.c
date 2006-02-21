@@ -75,14 +75,9 @@ wxArrayString BuildWX_URL_List( const char * url_list )
     + true : the dialogue has been created
     + false : error, nothing is created
   ----------------------------------------------------------------------*/
-ThotBool CreateInitConfirmDlgWX ( int ref,
-				  ThotWindow parent,
-				  char *title,
-				  char *extrabutton,
-				  char *confirmbutton,
-				  char *label,
-				  char *label2,
-				  char *label3 )
+ThotBool CreateInitConfirmDlgWX ( int ref, ThotWindow parent,
+				  char *title, char *extrabutton, char *confirmbutton,
+				  char *label, char *label2, char *label3 )
 {
 #ifdef _WX
   /* check if the dialog is alredy open */

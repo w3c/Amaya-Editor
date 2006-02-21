@@ -347,6 +347,7 @@ THOT_EXPORT char       LastURLImage[MAX_LENGTH];
 THOT_EXPORT char       ImageName[MAX_LENGTH];
 THOT_EXPORT char       ImgAlt[MAX_LENGTH];
 THOT_EXPORT char      *LastURLName;	/* last URL requested               */
+THOT_EXPORT char      *Error_DocURL; /* The parsed file */
 THOT_EXPORT char      *DirectoryName;	/* local path of the document       */
 THOT_EXPORT char      *DocumentName;	/* document name                    */
 THOT_EXPORT char      *SavePath;	/* saving path                      */

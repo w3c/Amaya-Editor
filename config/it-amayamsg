@@ -210,8 +210,8 @@
 208 Ritratto
 209 Paesaggio
 210 Abilita FTP
-211 XML non valido - Ricarico come HTML o mostro gli errori di parsificazione?
-212 XML non valido - Mostro gli errori di parsificazione?
+211 **Error(s) in the source code
+212 **Fatal error - Fix the source code to continue
 213 Prova la voce 'File/Forza codifica caratteri'
 214 Caratteri non validi
 215 Profilo di documento:
@@ -382,3 +382,4 @@
 379 Elemento protetto
 380 La selezione non può attraversare un elemento di questo tipo
 381 Nessun titolo dopo la selezione
+382 **Save anyway

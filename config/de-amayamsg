@@ -210,8 +210,8 @@
 208 Hochformat
 209 Querformat
 210 FTP zulassen
-211 XML-Dokument nicht wohlgeformt - als HTML laden oder Parserfehler anzeigen?
-212 XML-Dokument nicht wohlgeformt - Parsefehler anzeigen?
+211 **Error(s) in the source code
+212 **Fatal error - Fix the source code to continue
 213 Verwenden Sie 'Datei/Zeichenkodierung erzwingen'
 214 Ungültige Zeichen
 215 Dokumenttyp:
@@ -381,3 +381,4 @@
 379 Geschütztes Element
 380 Die Auswahl darf ein solches Element nicht treffen
 381 Der aktuellen Auswahl folgen keine Titel
+382 **Save anyway

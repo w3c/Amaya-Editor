@@ -210,8 +210,8 @@
 208 Vertical
 209 Apaisado
 210 Activar FTP
-211 XML inválido - ¿Recargar como HTML o mostrar análisis de errores?
-212 XML inválido - ¿Mostrar análisis de errores?
+211 **Error(s) in the source code
+212 **Fatal error - Fix the source code to continue
 213 Utiliza el menú 'Archivo > Forzar codificación de caracteres'
 214 Caracteres inválidos
 215 Perfil de este documento:
@@ -381,3 +381,4 @@
 379 Elemento protegido
 380 La selección no debe cruzar un elemento de este tipo
 381 No hay encabezado tras la selección
+382 **Save anyway

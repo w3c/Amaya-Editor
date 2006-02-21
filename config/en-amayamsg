@@ -210,8 +210,8 @@
 208 Portrait
 209 Landscape
 210 Enable FTP
-211 Not Well-Formed XML document - Reload as HTML or show parsing errors?
-212 Not Well-Formed XML document - Show parsing errors?
+211 Error(s) in the source code
+212 Fatal error - Fix the source code to continue
 213 Try the 'File/Force a Character Coding' entry
 214 Invalid characters
 215 Document profile:
@@ -223,7 +223,7 @@
 221 File Browser
 222 Selection
 223 Annotation Local Filter Menu
-224 Show
+224 Show errors
 225 Hide
 226 Show all
 227 Hide all
@@ -381,3 +381,4 @@
 379 Protected element
 380 The selection should not cross an element of this type
 381 No heading found after the selection
+382 Save anyway

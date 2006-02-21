@@ -210,8 +210,8 @@
 208 Álló
 209 Fekvő
 210 FTP engedélyezése
-211 Nem jólformázott XML dokumentum - töltsük be újra HTML-ként, vagy elemzési hibák megtekintése?
-212 Nem jólformázott XML dokumentum - elemzési hibák megtekintése?
+211 **Error(s) in the source code
+212 **Fatal error - Fix the source code to continue
 213 Próbálja a 'Fájl/Kényszerített karakter kódolás' menüt
 214 Érvénytelen karakterek
 215 Dokumentum profile:
@@ -381,3 +381,4 @@
 379 Védett elem
 380 A kijelölés nem érinthet ilyen típusú elemet
 381 No heading found after the selection
+382 **Save anyway

@@ -3589,7 +3589,9 @@ void TtcInsertChar (Document doc, View view, CHAR_T c)
 
   if (doc != 0)
     {
-      if (TtaGetDocumentAccessMode(doc) == 0)
+      /* start the undo sequence */
+      GetCurrentSelection (&pDoc, &firstEl, &lastEl, &firstChar, &lastChar);
+      if (pDoc->DocReadOnly)
         {
           //TtaDisplaySimpleMessage (CONFIRM, LIB, TMSG_EL_RO);
           return;
@@ -3621,8 +3623,6 @@ void TtcInsertChar (Document doc, View view, CHAR_T c)
             return;
         }
 
-      /* start the undo sequence */
-      GetCurrentSelection (&pDoc, &firstEl, &lastEl, &firstChar, &lastChar);
       if (pDoc && pViewSel->VsBox)
         {
           /* avoid to redisplay step by step */

@@ -210,8 +210,8 @@
 208 Portre
 209 Peysaj
 210 FTP desteği
-211 XML belgesinde hata - Hataları düzeltmek için yeniden yükle veya hataları göster?
-212 XML belgesinde hata - Hataları göster?
+211 **Error(s) in the source code
+212 **Fatal error - Fix the source code to continue
 213 **Try the 'File/Force a Character Coding' entry
 214 Yanlış karakter
 215 Belgenin profili:
@@ -381,3 +381,4 @@
 379 **Protected element
 380 **The selection should not cross an element of this type
 381 **No heading found after the selection
+382 **Save anyway

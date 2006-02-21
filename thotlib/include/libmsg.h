@@ -181,7 +181,7 @@
 #define TMSG_APPLY_CLASS		176
 #define TMSG_SEL_CLASS		177
 #define TMSG_SEL		178
-#define TMSG_USE_F2		179
+#define TMSG_DISCARD		179
 #define TMSG_MATHML		180
 #define TMSG_MISC		181
 #define TMSG_BINARY_REL		182

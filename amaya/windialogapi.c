@@ -4103,23 +4103,23 @@ void CreateInitConfirmDlgWindow (ThotWindow parent, char *extrabutton,
   else
   {
   if (extrabutton && extrabutton[0] != EOS)
-  {
-	/* a meesage with 3 buttons */
-    strcpy (Message3, extrabutton);
-	if (confirmbutton && confirmbutton[0] != EOS)
-      strcpy (Message2, confirmbutton);
-	else
-      strcpy (Message2, TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
-
-    DialogBox (hInstance, MAKEINTRESOURCE (INITCONFIRMDIALOG1), parent,
-               (DLGPROC) InitConfirmDlgProc);
-  }
+    {
+      /* a message with 3 buttons */
+      strcpy (Message3, extrabutton);
+      if (confirmbutton && confirmbutton[0] != EOS)
+        strcpy (Message2, confirmbutton);
+      else
+        strcpy (Message2, TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+      
+      DialogBox (hInstance, MAKEINTRESOURCE (INITCONFIRMDIALOG1), parent,
+                 (DLGPROC) InitConfirmDlgProc);
+    }
   else
-  {
-    strcpy (Message2, TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
-    DialogBox (hInstance, MAKEINTRESOURCE (INITCONFIRMDIALOG), parent,
-               (DLGPROC) InitConfirmDlgProc);
-  }
+    {
+      strcpy (Message2, TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+      DialogBox (hInstance, MAKEINTRESOURCE (INITCONFIRMDIALOG), parent,
+                 (DLGPROC) InitConfirmDlgProc);
+    }
   }
 }
 

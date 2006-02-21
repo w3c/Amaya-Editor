@@ -479,7 +479,7 @@ ShowAlternate
 ShowLinks
 ShowSource
 ShowStructure
-ShowFormatted
+#ShowFormatted
 ShowToC
 # ShowTimeLineWindow
 TtcCloseView

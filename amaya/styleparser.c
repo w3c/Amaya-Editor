@@ -65,7 +65,6 @@ typedef struct CSSProperty
 }
 CSSProperty;
 
-static char         *DocURL = NULL; /* The parsed CSS file */
 static int           LineNumber = -1; /* The line where the error occurs */
 static int           NewLineSkipped = 0;
 static int           RedisplayImages = 0; /* number of BG images loading */
@@ -180,11 +179,11 @@ static void CSSPrintError (char *msg, char *value)
       if (ParsedCSS > 0 && !CSSErrFile)
         OpenParsingErrors (ParsedCSS);
 
-      if (DocURL)
+      if (Error_DocURL)
         {
-          fprintf (ErrFile, "\n*** Errors/warnings in %s\n", DocURL);
+          fprintf (ErrFile, "\n*** Errors/warnings in %s\n", Error_DocURL);
           /* set to NULL as long as the CSS file doesn't change */
-          DocURL = NULL;
+          Error_DocURL = NULL;
         }
       CSSErrorsFound = TRUE;
       if (LineNumber < 0)
@@ -5437,7 +5436,7 @@ void  ParseHTMLSpecificStyle (Element el, char *cssRule, Document doc,
     {
       /* update the context for reported errors */
       ParsedDoc = doc;
-      DocURL = DocumentURLs[doc];
+      Error_DocURL = DocumentURLs[doc];
     }
   isHTML = (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0);
   /* create the context of the Specific presentation driver */
@@ -6837,10 +6836,10 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
   TtaFreeMemory (refcss->class_list);
   refcss->class_list = NULL;
   if (url)
-    DocURL = url;
+    Error_DocURL = url;
   else
     /* the CSS source in within the document itself */
-    DocURL = DocumentURLs[docRef];
+    Error_DocURL = DocumentURLs[docRef];
   LineNumber = numberOfLinesRead + 1;
   NewLineSkipped = 0;
   newlines = 0;
@@ -7143,7 +7142,7 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
                   if (!ignoreImport)
                     {
                       /* save the displayed URL when an error is reported */
-                      saveDocURL = DocURL;
+                      saveDocURL = Error_DocURL;
                       ptr = TtaStrdup (base);
                       /* get the CSS URI in UTF-8 */
                       /*ptr = ReallocUTF8String (ptr, docRef);*/
@@ -7151,7 +7150,7 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
                                       url, pInfo->PiMedia,
                                       pInfo->PiCategory == CSS_USER_STYLE);
                       /* restore the displayed URL when an error is reported */
-                      DocURL = saveDocURL;
+                      Error_DocURL = saveDocURL;
                       TtaFreeMemory (ptr);
                     }
                   /* restore the number of lines */
@@ -7190,7 +7189,7 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
     TtaSetDisplayMode (docRef, dispMode);
 
   /* Prepare the context for style attributes */
-  DocURL = DocumentURLs[docRef];
+  Error_DocURL = DocumentURLs[docRef];
   LineNumber = -1;
   return (c);
 }

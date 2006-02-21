@@ -2519,29 +2519,13 @@
 <message xml:lang="hu">FTP engedélyezése</message>
 <message xml:lang="ka">FTP-ს გააქტივება</message></label>
 <label define="AM_XML_RETRY">
-<message xml:lang="en">Not Well-Formed XML document - Reload as HTML or show parsing errors?</message>
-<message xml:lang="fr">Document XML mal formé - Recharger pour corriger ou montrer les erreurs ?</message>
-<message xml:lang="it">XML non valido - Ricarico come HTML o mostro gli errori di parsificazione?</message>
-<message xml:lang="de">XML-Dokument nicht wohlgeformt - als HTML laden oder Parserfehler anzeigen?</message>
-<message xml:lang="es">XML inválido - ¿Recargar como HTML o mostrar análisis de errores?</message>
-<message xml:lang="pt">XML inválido - recarregar como HTML ou mostrar erros sintáticos?</message>
-<message xml:lang="fi">Huonosti muotoiltu XML-dokumentti - Ladataanko HTML:nä vai näytetään virheellisenä?</message>
-<message xml:lang="tr">XML belgesinde hata - Hataları düzeltmek için yeniden yükle veya hataları göster?</message>
-<message xml:lang="ru">Неправильно построенный XML-документ. Перезагрузить как HTML или показать разбор ошибок?</message>
-<message xml:lang="hu">Nem jólformázott XML dokumentum - töltsük be újra HTML-ként, vagy elemzési hibák megtekintése?</message>
-<message xml:lang="ka">მცდარი ფორმის XML დოკუმენტი - გადაიტვირთო HTML-ად თუ ვაჩვენო შეცდომები?</message></label>
+<message xml:lang="en">Error(s) in the source code</message>
+<message xml:lang="fr">Erreur(s) dans le code source</message>
+</label>
 <label define="AM_XML_ERROR">
-<message xml:lang="en">Not Well-Formed XML document - Show parsing errors?</message>
-<message xml:lang="fr">Document XML mal formé - Montrer les erreurs ?</message>
-<message xml:lang="it">XML non valido - Mostro gli errori di parsificazione?</message>
-<message xml:lang="de">XML-Dokument nicht wohlgeformt - Parsefehler anzeigen?</message>
-<message xml:lang="es">XML inválido - ¿Mostrar análisis de errores?</message>
-<message xml:lang="pt">XML inválido - mostrar erros na leitura?</message>
-<message xml:lang="fi">Huonosti muotoiltu XML-dokumentti - Näytetäänkö virheet?</message>
-<message xml:lang="tr">XML belgesinde hata - Hataları göster?</message>
-<message xml:lang="ru">Неправильно построенный XML-документ. Показать разбор ошибок?</message>
-<message xml:lang="hu">Nem jólformázott XML dokumentum - elemzési hibák megtekintése?</message>
-<message xml:lang="ka">მცდარი ფორმის XML დოკუმენტი - ვაჩვენო შეცდომები?</message></label>
+<message xml:lang="en">Fatal error - Fix the source code to continue</message>
+<message xml:lang="fr">Erreur fatale - Corriger le code source pour continuer</message>
+</label>
 <label define="AM_XML_CHARACTER_RETRY">
 <message xml:lang="en">Try the 'File/Force a Character Coding' entry</message>
 <message xml:lang="fr">Essayer l'entrée &quot;Fichier/Forcer un code caractère&quot;</message>
@@ -2672,9 +2656,9 @@
 <message xml:lang="hu">Jegyzet helyi szűrő menü</message>
 <message xml:lang="ka">ანოტაციის ლოკალური ფილტრის მენიუ</message></label>
 <label define="AM_AFILTER_SHOW">
-<message xml:lang="en">Show</message>
+<message xml:lang="en">Show errors</message>
 <message xml:lang="de">Zeigen</message>
-<message xml:lang="fr">Montrer</message>
+<message xml:lang="fr">Montrer les erreurs</message>
 <message xml:lang="es">Mostrar</message>
 <message xml:lang="it">Mostra</message>
 <message xml:lang="pt">Exibir</message>
@@ -3384,7 +3368,7 @@
 <message xml:lang="ka">%s ტიპის მისამართებისთვის WebDAV არაა გათვალისწინებული</message></label>
 <label define="AM_SAVE_LOCKBASE_FAILED">
 <message xml:lang="en">Failed to save lock info in the local base</message>
-<message xml:lang="fr">Sauvegarde du verrou dans la base local a échué</message>
+<message xml:lang="fr">Sauvegarde du verrou dans la base local a échoué</message>
 <message xml:lang="pt">Impossível salvar informação de trava localmente</message>
 <message xml:lang="de">Konnte Sperrinformation lokal nicht speichern</message>
 <message xml:lang="fi">Lukitustietojen tallennus paikallisesti epäonnistui</message>
@@ -4389,6 +4373,10 @@
 <message xml:lang="hu">No heading found after the selection</message>
 <message xml:lang="it">Nessun titolo dopo la selezione</message>
 <message xml:lang="ru">Не найдено никаких заголовков после выбранного</message>
+</label>
+<label define="AM_SAVE_ANYWAY">
+	<message xml:lang="en">Save anyway</message>
+	<message xml:lang="fr">Sauver quand même</message>
 </label>
 <label define="AMAYA_MSG_MAX">
 </label></messages></base>

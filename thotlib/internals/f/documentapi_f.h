@@ -45,6 +45,7 @@ extern void SetDocumentModified ( PtrDocument pDoc,
                                   int length );
 extern void TtaSetDocumentModified ( Document document );
 extern void TtaSetDocumentUnmodified ( Document document );
+extern void TtaSetDocumentUpdated ( Document document );
 extern void TtaSetDocumentUnupdated ( Document document );
 extern char *TtaGetDocumentName ( Document document );
 extern Document TtaGetDocumentFromName ( char *documentName );
@@ -153,6 +154,7 @@ extern void SetDocumentModified ( PtrDocument pDoc,
                                     int length );
 extern void TtaSetDocumentModified ( Document document );
 extern void TtaSetDocumentUnmodified ( Document document );
+extern void TtaSetDocumentUpdated ( Document document );
 extern void TtaSetDocumentUnupdated ( Document document );
 extern char *TtaGetDocumentName ( Document document );
 extern Document TtaGetDocumentFromName ( char *documentName );
