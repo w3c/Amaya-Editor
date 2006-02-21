@@ -1235,8 +1235,7 @@ static char *ParseCSSBorderStyleRight (Element element, PSchema tsch,
 }
 
 /*----------------------------------------------------------------------
-  ParseCSSBorderStyleStyle: parse a CSS border-style        
-  attribute string.                                          
+  ParseCSSBorderStyle: parse a CSS border-style attribute string.
   ----------------------------------------------------------------------*/
 static char *ParseCSSBorderStyle (Element element, PSchema tsch,
                                   PresentationContext context,
