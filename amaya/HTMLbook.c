@@ -1623,6 +1623,9 @@ void SectionNumbering (Document doc, View view)
               i = 0;
               while (isdigit (text[i]) || text[i] == '.')
                 i++;
+              // remove extra spaces
+              while (text[i] == SPACE)
+                i++;
               TtaRegisterElementReplace (child, doc);
               TtaSetTextContent (child, (unsigned char *)s, Latin_Script, doc);
               TtaAppendTextContent (child, (unsigned char *)&text[i], doc);
