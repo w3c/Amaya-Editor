@@ -1298,7 +1298,7 @@ void UpdateEditorMenus (Document doc)
   -----------------------------------------------------------------------*/
 void ShowLogFile (Document doc, View view)
 {
-  char     fileName [100];
+  char     fileName[200];
   int      newdoc;
 
   if (DocumentTypes[doc] == docSource)
@@ -1323,7 +1323,7 @@ void ShowLogFile (Document doc, View view)
   ----------------------------------------------------------------------*/
 ThotBool OpenParsingErrors (Document document)
 {  
-  char       fileName [100];
+  char       fileName[200];
 
   if (document == 0)
     return FALSE;
@@ -1355,7 +1355,7 @@ ThotBool OpenParsingErrors (Document document)
   ----------------------------------------------------------------------*/
 void RemoveParsingErrors (Document document)
 {  
-  char       htmlErrFile [100];
+  char       htmlErrFile[200];
   
   sprintf (htmlErrFile, "%s%c%d%cPARSING.ERR",
            TempFileDirectory, DIR_SEP, document, DIR_SEP);
@@ -1393,11 +1393,12 @@ void CleanUpParsingErrors ()
 void CheckParsingErrors (Document doc)
 {
   char      *ptr;
-  ThotBool   closeLog = FALSE;
+  char       fileName[200];
+  char       text [200];
 #ifndef _WX
-  char       profile [200];
   int        prof;
 #endif /* _WX */
+  ThotBool   closeLog = FALSE;
 
   // Avoid recursive call
   if (CriticCheckError)
@@ -1443,6 +1444,22 @@ void CheckParsingErrors (Document doc)
               (!DocumentMeta[doc] || !DocumentMeta[doc]->compound))
             {
               ptr = TtaGetMessage (AMAYA, AM_XML_RETRY);
+              // save the original log file
+              sprintf (fileName, "%s%c%d%cPARSING.ERR",
+                       TempFileDirectory, DIR_SEP, doc, DIR_SEP);
+              strcpy (text, fileName);
+              strcat (text, ".org");
+              CleanUpParsingErrors ();
+              CloseLogs (doc);
+              TtaFileUnlink (text);
+              TtaFileRename (fileName, text);
+              ParseAsHTML (doc, 1);
+              // restore the original log file
+              CleanUpParsingErrors ();
+              CloseLogs (doc);
+              TtaFileUnlink (fileName);
+              TtaFileRename (text, fileName);
+              closeLog = TRUE;
               if (SavingDocument && SavingDocument == DocumentSource[doc])
                 {
                   ConfirmError (doc, 1, ptr,
@@ -1451,27 +1468,19 @@ void CheckParsingErrors (Document doc)
                   if (!ExtraChoice && !UserAnswer)
                     // GTK or WX version: stop the save process
                     SavingDocument = 0;
-                  ParseAsHTML (doc, 1);
                 }
               else
                 {
-                  //InitConfirm (doc, 1, ptr);
-                  InitConfirm3L (doc, 1, ptr, NULL, NULL, FALSE);
-                  ParseAsHTML (doc, 1);
-#ifdef IV
+                  //InitConfirm3L (doc, 1, ptr, NULL, NULL, FALSE);
                   ConfirmError (doc, 1, ptr,
                                 TtaGetMessage (AMAYA, AM_AFILTER_SHOW),
                                 NULL);
-                  ParseAsHTML (doc, 1);
                   if (ExtraChoice || UserAnswer)
                     {
-                      CleanUpParsingErrors ();
-                      CloseLogs (doc);
-                      closeLog = TRUE;
-                      ShowLogFile (doc, 1);
+                      // GTK or WX version: show errors
+                       ShowLogFile (doc, 1);
                       ShowSource (doc, 1);
                     }
-#endif
                 }
             }
           else
@@ -1485,8 +1494,9 @@ void CheckParsingErrors (Document doc)
               ConfirmError (doc, 1, ptr,
                             TtaGetMessage (AMAYA, AM_AFILTER_SHOW),
                             NULL);
-                  if (ExtraChoice)
+                  if (ExtraChoice || UserAnswer)
                     {
+                      // GTK or WX version: show errors
                       CleanUpParsingErrors ();
                       CloseLogs (doc);
                       closeLog = TRUE;
@@ -1503,26 +1513,26 @@ void CheckParsingErrors (Document doc)
           prof = TtaGetDocumentProfile (doc);
           if (prof == L_Basic)
             {
-              strcpy (profile, TtaGetMessage (AMAYA, AM_XML_PROFILE));
-              strcat (profile, " XHTML Basic");
+              strcpy (text, TtaGetMessage (AMAYA, AM_XML_PROFILE));
+              strcat (text, " XHTML Basic");
             }
           else if (prof == L_Strict)
             {
-              strcpy (profile, TtaGetMessage (AMAYA, AM_XML_PROFILE));
+              strcpy (text, TtaGetMessage (AMAYA, AM_XML_PROFILE));
               if (DocumentMeta[doc]->xmlformat)
-                strcat (profile, " XHTML 1.0 Strict");
+                strcat (text, " XHTML 1.0 Strict");
               else
-                strcat (profile, " HTML 4.0 Strict");
+                strcat (text, " HTML 4.0 Strict");
             }
           else if (prof == L_Xhtml11)
             {
-              strcpy (profile, TtaGetMessage (AMAYA, AM_XML_PROFILE));
-              strcat (profile, " XHTML 1.1");
+              strcpy (text, TtaGetMessage (AMAYA, AM_XML_PROFILE));
+              strcat (text, " XHTML 1.1");
             }
           else
-            strcpy (profile, "");
+            strcpy (text, "");
 
-          InitConfirm3L (doc, 1, profile, NULL,
+          InitConfirm3L (doc, 1, text, NULL,
                          TtaGetMessage (AMAYA, AM_XML_WARNING), FALSE);
           CleanUpParsingErrors ();
           if (UserAnswer)
@@ -1536,7 +1546,7 @@ void CheckParsingErrors (Document doc)
       else if (XMLErrorsFound)
         {
           /* Parsing errors detected */
-          strcpy (profile, "");
+          strcpy (text, "");
           InitConfirm (doc, 1, TtaGetMessage (AMAYA, AM_XML_WARNING));
           CleanUpParsingErrors ();
           if (UserAnswer)
