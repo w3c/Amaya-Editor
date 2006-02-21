@@ -6641,6 +6641,7 @@ static void InitializeHTMLParser (Element lastelem, ThotBool isclosed,
   HTMLcontext.language = TtaGetDefaultLanguage ();
   HTMLcontext.parsingTextArea = FALSE;
   HTMLcontext.parsingScript = FALSE;
+  HTMLcontext.parsingCSS = FALSE;
   if (lastelem != NULL && doc != 0)
     {
       /* initialize the stack with ancestors of lastelem */

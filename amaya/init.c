@@ -3569,8 +3569,13 @@ void ParseAsHTML (Document doc, View view)
   RemoveDocCSSs (doc);  
   /* Free access keys table */
   TtaRemoveDocAccessKeys (doc);
-
+  // ignore the XML format
+  if (DocumentMeta && DocumentMeta[doc]->xmlformat)
+    DocumentMeta[doc]->xmlformat = FALSE;
   StartParser (doc, localFile, documentname, s, localFile, FALSE, FALSE);
+  // restore the XML format
+  if (DocumentMeta && DocumentMeta[doc]->xmlformat)
+    DocumentMeta[doc]->xmlformat = TRUE;
   /* fetch and display all images referred by the document */
   DocNetworkStatus[doc] = AMAYA_NET_ACTIVE;
   FetchAndDisplayImages (doc, AMAYA_LOAD_IMAGE, NULL);
