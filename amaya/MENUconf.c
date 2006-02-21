@@ -2368,7 +2368,7 @@ static void GetPublishConf (void)
   TtaGetEnvBoolean ("ENABLE_LOST_UPDATE_CHECK", &(GProp_Publish.LostUpdateCheck));
   TtaGetEnvBoolean ("VERIFY_PUBLISH", &(GProp_Publish.VerifyPublish));
   TtaGetEnvBoolean ("EXPORT_CRLF", &(GProp_Publish.ExportCRLF));
-  TtaGetEnvInt ("EXPORT_LENGHT", &(GProp_Publish.ExportLength));
+  TtaGetEnvInt ("EXPORT_LENGTH", &(GProp_Publish.ExportLength));
   GetEnvString ("DEFAULTNAME", GProp_Publish.DefaultName);
   GetEnvString ("SAFE_PUT_REDIRECT", GProp_Publish.SafePutRedirect);
   GetEnvString ("DOCUMENT_CHARSET", GProp_Publish.CharsetType);
@@ -2385,7 +2385,7 @@ static void SetPublishConf (void)
   TtaSetEnvBoolean ("ENABLE_LOST_UPDATE_CHECK", GProp_Publish.LostUpdateCheck, TRUE);
   TtaSetEnvBoolean ("VERIFY_PUBLISH", GProp_Publish.VerifyPublish, TRUE);
   TtaSetEnvBoolean ("EXPORT_CRLF", GProp_Publish.ExportCRLF, TRUE);
-  TtaSetEnvInt ("EXPORT_LENGHT", GProp_Publish.ExportLength, TRUE);
+  TtaSetEnvInt ("EXPORT_LENGTH", GProp_Publish.ExportLength, TRUE);
   TtaSetEnvString ("DEFAULTNAME", GProp_Publish.DefaultName, TRUE);
   TtaSetEnvString ("SAFE_PUT_REDIRECT", GProp_Publish.SafePutRedirect, TRUE);
   TtaSetEnvString ("DOCUMENT_CHARSET", GProp_Publish.CharsetType, TRUE);
@@ -2407,7 +2407,7 @@ static void GetDefaultPublishConf ()
                    PublishBase + mTogglePublish, 2);
   GetDefEnvToggle ("EXPORT_CRLF", &(GProp_Publish.ExportCRLF),
                    PublishBase + mTogglePublish, 3);
-  TtaGetDefEnvInt ("EXPORT_LENGHT", &(GProp_Publish.ExportLength));
+  TtaGetDefEnvInt ("EXPORT_LENGTH", &(GProp_Publish.ExportLength));
   GetDefEnvString ("DEFAULTNAME", GProp_Publish.DefaultName);
   GetDefEnvString ("SAFE_PUT_REDIRECT", GProp_Publish.SafePutRedirect);
   GetDefEnvString ("DOCUMENT_CHARSET", GProp_Publish.CharsetType);

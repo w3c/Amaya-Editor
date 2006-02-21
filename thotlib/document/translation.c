@@ -3952,7 +3952,7 @@ ThotBool ExportDocument (Document doc, char *fName, char *tschema,
   /* check if the user forced a line length */
   if (pDoc->DocSSchema && strcmp (pDoc->DocSSchema->SsName, "TextFile"))
     {
-      TtaGetEnvInt ("EXPORT_LENGHT", &(ExportLength));
+      TtaGetEnvInt ("EXPORT_LENGTH", &(ExportLength));
       /* check if the document has a doctype */
       if (GetDoctypeFunction)
         /* check if there is a DOCTYPE */
