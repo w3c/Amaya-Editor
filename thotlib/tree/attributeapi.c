@@ -448,7 +448,16 @@ void TtaRemoveAttribute (Element element, Attribute attribute, Document document
     TtaError (ERR_invalid_parameter);
   else if (((PtrAttribute) attribute)->AeAttrSSchema == NULL ||
            ((PtrElement) element)->ElStructSchema == NULL)
-    TtaError (ERR_invalid_parameter);
+    {
+      TtaError (ERR_invalid_parameter);
+      // should never occur
+      pAttr = (PtrAttribute) attribute;
+      if (pAttr == ((PtrElement) element)->ElFirstAttr)
+        {
+          ((PtrElement) element)->ElFirstAttr = pAttr->AeNext;
+          FreeAttribute (pAttr);
+        }
+    }
   else
     {
       pAttr = ((PtrElement) element)->ElFirstAttr;

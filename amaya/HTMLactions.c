@@ -3134,7 +3134,7 @@ static void ResetFontOrPhrase (Document doc, Element elem)
 void SetCharFontOrPhrase (int doc, int elemtype)
 {
   Element             firstSel, lastSel, el, parent;
-  ElementType         elType;
+  ElementType         elType, parentType;
   DisplayMode         dispMode;
   int                 firstSelectedChar, lastSelectedChar, i;
   ThotBool            remove;
@@ -3165,8 +3165,24 @@ void SetCharFontOrPhrase (int doc, int elemtype)
     }
   else
     elType.ElSSchema = TtaGetSSchema ("HTML", doc);
+
   if (parent == NULL)
     {
+      if ( TtaIsSelectionEmpty ())
+        {
+          // check if the user wants to close the current element
+          parent = TtaGetParent (firstSel);
+          parentType = TtaGetElementType (parent);
+          i =  TtaGetElementVolume (firstSel);
+          if (parentType.ElSSchema == elType.ElSSchema &&
+              parentType.ElTypeNum == elemtype &&
+              elType.ElTypeNum == HTML_EL_TEXT_UNIT && lastSelectedChar >= i &&
+              firstSel == TtaGetLastChild (parent))
+            {
+              TtcCreateElement (doc, 1);
+              return;
+            }
+        }
       elType.ElTypeNum = elemtype;
       parent = TtaGetTypedAncestor (firstSel, elType);
       // check if the whole selection is included by the same parent

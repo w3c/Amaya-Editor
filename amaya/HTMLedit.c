@@ -344,7 +344,7 @@ ThotBool CheckMandatory (NotifyAttribute *event)
   GenerateInlinechildren generates the newType inline element as children
   of block elements.
   -----------------------------------------------------------------------*/
-static void GenerateInlinechildren (Element el, ElementType newType, Document doc)
+static Element GenerateInlinechildren (Element el, ElementType newType, Document doc)
 {
   ElementType	    elType, childType;
   Element         child, added, next, last, in_line, prev;
@@ -361,8 +361,10 @@ static void GenerateInlinechildren (Element el, ElementType newType, Document do
           /* create a in_line element */
           in_line = TtaNewElement (doc, newType);
           prev = NULL;
-          if (elType.ElTypeNum == HTML_EL_Basic_Elem)
+          if (elType.ElTypeNum == HTML_EL_Basic_Elem ||
+              elType.ElTypeNum == HTML_EL_Element)
             {
+              // this is a temporary element
               child = el;
               el = TtaGetParent (child);
               prev = child;
@@ -379,6 +381,8 @@ static void GenerateInlinechildren (Element el, ElementType newType, Document do
           else
             TtaInsertFirstChild (&in_line, el, doc);
           TtaRegisterElementCreate (in_line, doc);
+          // the HTML_EL_Basic_Elem was replaced by in_line
+          el = in_line;
         }
       else if (child && IsCharacterLevelElement (child) &&
                (last != child ||
@@ -419,6 +423,7 @@ static void GenerateInlinechildren (Element el, ElementType newType, Document do
             }
         }
     }
+  return el;
 }
 
 /*----------------------------------------------------------------------
@@ -498,7 +503,7 @@ void GenerateInlineElement (int eType, int aType, char * data)
                 attrType.AttrTypeNum = SVG_ATTR_style_;
             }
 #endif /* _SVG */
-          else if (!strcmp(name, "SVG"))
+          else if (!strcmp(name, "MathML"))
             {
               newType.ElSSchema = elType.ElSSchema;
               newType.ElTypeNum = 0;
@@ -539,11 +544,23 @@ void GenerateInlineElement (int eType, int aType, char * data)
               lg =  TtaGetElementVolume (lastSel);
               lastChanged = FALSE;
               selpos = TtaIsSelectionEmpty ();
+              if (selpos &&
+                  (aType == HTML_ATTR_ID || aType == HTML_ATTR_Language ||
+                   aType == HTML_ATTR_Class || aType == HTML_ATTR_Style_) &&
+                  !strcmp(name, "HTML") &&
+                  (elType.ElTypeNum == HTML_EL_Basic_Elem ||
+                   elType.ElTypeNum == HTML_EL_Element))
+                {
+                  // this is a temporary element
+                  // attach the attribute to the parent element
+                  parent = TtaGetParent (lastSel);
+                  el = parent;
+                }
               if (firstSel != lastSel &&
                   elType.ElTypeNum == HTML_EL_TEXT_UNIT &&
                   (lastchar == 0 || lastchar > lg))
                 {
-                  // the whole first element is included
+                  // the whole last element is included
                   parent = TtaGetParent (lastSel);
                   parentType = TtaGetElementType (parent);
                   if (!strcmp (name, "HTML") &&
@@ -563,7 +580,7 @@ void GenerateInlineElement (int eType, int aType, char * data)
                   lg =  TtaGetElementVolume (el);
                   split = ((el == firstSel || el == lastSel) && !strcmp(name, "HTML") &&
                            elType.ElTypeNum == HTML_EL_TEXT_UNIT &&
-                           (firstchar > 1 || (i > 0 && i < lg)));
+                           ((firstchar > 1 && firstchar <= lg) || (i > 0 && i < lg)));
                   // check the next selected element
                   if (el == lastSel)
                     // only one element selected
@@ -646,7 +663,7 @@ void GenerateInlineElement (int eType, int aType, char * data)
                               TtaGiveBufferContent (el, buffer, lg, &lang);
                               if (i == 0)
                                 i = lg + 1;
-                              if (el == lastSel && i <= lg)
+                              if (el == lastSel && (i <= lg || (selpos && i == lg)))
                                 {
                                   min = firstchar;
                                   if (selpos)
@@ -847,8 +864,9 @@ void GenerateInlineElement (int eType, int aType, char * data)
                               // apply the style to the enclosing element
                               el = in_line;
                             }
-                          else if (eType != HTML_EL_Anchor && eType != HTML_EL_Span)
-                            GenerateInlinechildren (el, newType, doc);
+                          else if ((eType != HTML_EL_Anchor || aType == HTML_ATTR_HREF_) &&
+                                   eType != HTML_EL_Span)
+                            el = GenerateInlinechildren (el, newType, doc);
 
                           if (el && attrType.AttrTypeNum != 0)
                             {
