@@ -346,20 +346,44 @@ ThotBool CheckMandatory (NotifyAttribute *event)
   -----------------------------------------------------------------------*/
 static void GenerateInlinechildren (Element el, ElementType newType, Document doc)
 {
-  ElementType	    elType;
-  Element         child, added, next, last, in_line;
+  ElementType	    elType, childType;
+  Element         child, added, next, last, in_line, prev;
 
   /* generate a strong, etc. into the block element? */
   elType = TtaGetElementType (el);
   if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
     {
       child = TtaGetFirstChild (el);
-      elType = TtaGetElementType (child);
+      childType = TtaGetElementType (child);
       last = TtaGetLastChild (el);
-      if (child && IsCharacterLevelElement (child) &&
-          (last != child ||
-           elType.ElSSchema != newType.ElSSchema ||
-           elType.ElTypeNum != newType.ElTypeNum))
+      if (child == NULL)
+        {
+          /* create a in_line element */
+          in_line = TtaNewElement (doc, newType);
+          prev = NULL;
+          if (elType.ElTypeNum == HTML_EL_Basic_Elem)
+            {
+              child = el;
+              el = TtaGetParent (child);
+              prev = child;
+              TtaPreviousSibling (&prev);
+              TtaRegisterElementDelete (child, doc);
+              TtaDeleteTree (child, doc);
+            }
+          // generate a text
+          newType.ElTypeNum = HTML_EL_TEXT_UNIT;
+          child = TtaNewElement (doc, newType);
+          TtaInsertFirstChild (&child, in_line, doc);
+          if (prev)
+            TtaInsertSibling (in_line, prev, FALSE, doc);
+          else
+            TtaInsertFirstChild (&in_line, el, doc);
+          TtaRegisterElementCreate (in_line, doc);
+        }
+      else if (child && IsCharacterLevelElement (child) &&
+               (last != child ||
+                childType.ElSSchema != newType.ElSSchema ||
+                childType.ElTypeNum != newType.ElTypeNum))
         {
           /* create a in_line element */
           in_line = TtaNewElement (doc, newType);
@@ -517,7 +541,7 @@ void GenerateInlineElement (int eType, int aType, char * data)
               selpos = TtaIsSelectionEmpty ();
               if (firstSel != lastSel &&
                   elType.ElTypeNum == HTML_EL_TEXT_UNIT &&
-                  (lastchar == 0 || lastchar >= lg))
+                  (lastchar == 0 || lastchar > lg))
                 {
                   // the whole first element is included
                   parent = TtaGetParent (lastSel);
@@ -539,7 +563,7 @@ void GenerateInlineElement (int eType, int aType, char * data)
                   lg =  TtaGetElementVolume (el);
                   split = ((el == firstSel || el == lastSel) && !strcmp(name, "HTML") &&
                            elType.ElTypeNum == HTML_EL_TEXT_UNIT &&
-                           (firstchar > 1 || (i != 0 && i < lg)));
+                           (firstchar > 1 || (i > 0 && i < lg)));
                   // check the next selected element
                   if (el == lastSel)
                     // only one element selected
@@ -621,8 +645,8 @@ void GenerateInlineElement (int eType, int aType, char * data)
                               buffer = (CHAR_T *)TtaGetMemory ((lg+1) * sizeof(CHAR_T) );
                               TtaGiveBufferContent (el, buffer, lg, &lang);
                               if (i == 0)
-                                i = lg;
-                              if (el == lastSel && i < lg)
+                                i = lg + 1;
+                              if (el == lastSel && i <= lg)
                                 {
                                   min = firstchar;
                                   if (selpos)
@@ -1810,6 +1834,7 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
                 {
                   if (createLink &&
                       elType.ElTypeNum != HTML_EL_TEXT_UNIT &&
+                      elType.ElTypeNum != HTML_EL_Basic_Elem &&
                       elType.ElTypeNum != HTML_EL_Teletype_text &&
                       elType.ElTypeNum != HTML_EL_Italic_text &&
                       elType.ElTypeNum != HTML_EL_Bold_text &&
