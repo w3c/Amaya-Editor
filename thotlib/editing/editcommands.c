@@ -3591,7 +3591,7 @@ void TtcInsertChar (Document doc, View view, CHAR_T c)
     {
       /* start the undo sequence */
       GetCurrentSelection (&pDoc, &firstEl, &lastEl, &firstChar, &lastChar);
-      if (pDoc->DocReadOnly)
+      if (pDoc && pDoc->DocReadOnly)
         {
           //TtaDisplaySimpleMessage (CONFIRM, LIB, TMSG_EL_RO);
           return;
