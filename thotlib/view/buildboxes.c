@@ -3826,9 +3826,10 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
         UpdateColumnWidth (pAb, NULL, frame);
       /* check enclosing cell */
       else if (pCell && !IsDead (pAb) &&
-               (pAb->AbNext == NULL ||
-                (!pAb->AbNext->AbDead && !pAb->AbNext->AbNew)))
+               (pAb->AbNext || (!pAb->AbNext->AbDead && !pAb->AbNext->AbNew)))
         UpdateColumnWidth (pCell, NULL, frame);
+      else if (pCell)
+        UpdateCellHeight (pCell, frame);
       result = TRUE;
     }
   else
