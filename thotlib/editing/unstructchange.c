@@ -1472,6 +1472,8 @@ void TtcCreateElement (Document doc, View view)
 
   if (!GetCurrentSelection (&pDoc, &firstSel, &lastSel, &firstChar, &lastChar))
     return;
+  if (pDoc->DocReadOnly)
+		return;
   /* Check if we are changing the active frame */
   frame = GetWindowNumber (doc, view);
   if (frame != ActiveFrame)

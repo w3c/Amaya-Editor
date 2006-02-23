@@ -2436,13 +2436,13 @@ LRESULT CALLBACK InitConfirmDlgProc (ThotWindow hwnDlg, UINT msg,
     case WM_INITDIALOG:
 	  InitConfirmForm = hwnDlg;
       /* get the default GUI font */
-      SetWindowText (hwnDlg, Message);
       ptr = TtaGetMessage (LIB, TMSG_LIB_CONFIRM);
+      SetWindowText (hwnDlg, ptr);
       SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM), Message2);
 	if (strcmp (Message2, ptr))
 	  /* generate a button show */
       SetWindowText (GetDlgItem (hwnDlg, ID_MIDDLE), Message3);
-	SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
+	SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_DISCARD));
       messageWnd = CreateWindow ("STATIC", Message,
 				 WS_CHILD | WS_VISIBLE | SS_LEFT,
 				 10, 5, 500, 15, hwnDlg, (HMENU) 99, 
@@ -4102,27 +4102,20 @@ void CreateInitConfirmDlgWindow (ThotWindow parent, char *extrabutton,
     SetFocus (InitConfirmForm);
   else
   {
-  if (extrabutton && extrabutton[0] != EOS)
+    if (confirmbutton && confirmbutton[0] != EOS)
+      strcpy (Message2, confirmbutton);
+    else
+      strcpy (Message2, TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+    if (extrabutton && extrabutton[0] != EOS)
     {
       /* a message with 3 buttons */
-      strcpy (Message3, extrabutton);
-      if (confirmbutton && confirmbutton[0] != EOS)
-        strcpy (Message2, confirmbutton);
-      else
-        strcpy (Message2, TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
-      
+      strcpy (Message3, extrabutton); 
       DialogBox (hInstance, MAKEINTRESOURCE (INITCONFIRMDIALOG1), parent,
                  (DLGPROC) InitConfirmDlgProc);
     }
-  else
-    {
-      if (confirmbutton && confirmbutton[0] != EOS)
-        strcpy (Message2, confirmbutton);
-      else
-        strcpy (Message2, TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+    else
       DialogBox (hInstance, MAKEINTRESOURCE (INITCONFIRMDIALOG), parent,
                  (DLGPROC) InitConfirmDlgProc);
-    }
   }
 }
 
