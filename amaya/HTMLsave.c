@@ -1623,7 +1623,8 @@ void RedisplaySourceFile (Document doc)
         /* get the current position in the document */
         position = RelativePosition (DocumentSource[doc], &distance);
         TtaClearUndoHistory (DocumentSource[doc]);
-
+        /* if selection is in the source document, cancel it */
+        TtaUnselect (DocumentSource[doc]);
         /* Get its local copy */
         localFile = GetLocalPath (doc, DocumentURLs[doc]);
         TtaExtractName (localFile, tempdir, documentname);

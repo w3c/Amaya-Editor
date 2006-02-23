@@ -2573,7 +2573,7 @@ void ResetHighlightedElement ()
   ----------------------------------------------------------------------*/
 void SynchronizeSourceView (NotifyElement *event)
 {
-  Element             firstSel, el, child, otherEl;
+  Element             firstSel, el, child, otherEl, root;
   ElementType         elType;
   AttributeType       attrType;
   Attribute	      attr;
@@ -2635,11 +2635,12 @@ void SynchronizeSourceView (NotifyElement *event)
             return;
           /* look for an element with the same line number in the other doc */
           /* line numbers are increasing in document order */
-          el = TtaGetMainRoot (otherDoc);
+          root = TtaGetMainRoot (otherDoc);
+          el = root;
           elType = TtaGetElementType (el);
           do
             {
-              if (TtaGetElementLineNumber (el) >= line)
+              if (el != root && TtaGetElementLineNumber (el) >= line)
                 /* that's the right element */
                 otherEl = el;
               else

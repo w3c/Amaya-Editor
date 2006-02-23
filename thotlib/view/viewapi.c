@@ -517,9 +517,11 @@ void TtaShowElement (Document document, View view, Element element, int position
           if (pEl->ElAbstractBox[aView - 1] != NULL &&
               pEl->ElAbstractBox[aView - 1]->AbLeafType == LtCompound &&
               pEl->ElAbstractBox[aView - 1]->AbTruncatedHead)
-            /* Destroying the abstract box of the element in this view */
-            DestroyAbsBoxesView (pEl, LoadedDocument[document - 1], FALSE,
-                                 aView);
+            /* don't destroy the root box */
+            if (pEl->ElParent != NULL)
+              /* Destroying the abstract box of the element in this view */
+              DestroyAbsBoxesView (pEl, LoadedDocument[document - 1], FALSE,
+                                   aView);
           /* and CheckAbsBox will rebuild it at the beginning of the element */
           CheckAbsBox (pEl, aView, LoadedDocument[document - 1], FALSE, TRUE);
           if (pEl->ElAbstractBox[aView - 1] != NULL)
