@@ -995,7 +995,8 @@ char *UpdateDocumentCharset (Document doc)
   ----------------------------------------------------------------------*/
 void SetNamespacesAndDTD (Document doc)
 {
-  Element		    root, el, head, meta, docEl, doctype, elFound, text, elDecl;
+  Element		    root, el, head, meta, docEl, doctype, elFound, text;
+  Element       next, elDecl;
   ElementType		elType;
   Attribute		  attr;
   AttributeType	attrType;
@@ -1145,6 +1146,9 @@ void SetNamespacesAndDTD (Document doc)
               TtaGiveTextContent (text, (unsigned char *)buffer, &length, &lang);
               if (strstr (buffer, "xml version="))
                 {
+                  /* check next PI ? */
+                  next = el;
+                  TtaNextSibling (&next);
                   if (strstr (buffer, charsetname))
                     {
                       /* it's not necessary to generate the XML declaration */
@@ -1156,17 +1160,18 @@ void SetNamespacesAndDTD (Document doc)
                       // the charset changed -> regenerate the declaration
                       xmlDecl = TRUE;
                       elDecl = NULL;
-                      TtaDeleteTree (elFound, doc);
+                      TtaDeleteTree (el, doc);
                     }
                   elFound = NULL;
-                  /* check next PI ? */
-                  TtaNextSibling (&el);
+                  el = next;
                   if (el)
                     {
                       elType = TtaGetElementType (el);
                       if (elType.ElTypeNum == pi_type)
+                        {
                         /* get PI lines */
                         elFound = TtaGetFirstChild (el);
+                        }
                     }
                 }
               else if (strstr (buffer, "pmathml.xsl"))
