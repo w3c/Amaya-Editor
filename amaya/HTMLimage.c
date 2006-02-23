@@ -997,7 +997,7 @@ ThotBool FetchImage (Document doc, Element el, char *imageURI, int flags,
   char                tempfile[MAX_LENGTH];
   int                 length, i, newflags;
   ThotBool            update, ret;
-  ThotBool            newImage;
+  ThotBool            newImage, clean;
   FetchImage_context *FetchImage_ctx;
 
   pathname[0] = EOS;
@@ -1041,6 +1041,16 @@ ThotBool FetchImage (Document doc, Element el, char *imageURI, int flags,
                   /* allocate some memory: length of name + 6 cars for noname */
                   utf8value = (char *)TtaGetMemory (length + 7);
                   TtaGiveTextAttributeValue (attr, utf8value, &length);
+                  // remove extra spaces
+                  clean = FALSE;
+                  while (length > 0 && utf8value[length-1] == SPACE)
+                    {
+                      utf8value[length-1] = EOS;
+                      length--;
+                      clean = TRUE;
+                    }
+                  if (clean)
+                    TtaSetAttributeText (attr, utf8value, elAttr, doc);
                   imageName = (char *)TtaConvertMbsToByte ((unsigned char *)utf8value,
                                                            TtaGetDefaultCharset ());
                   TtaFreeMemory (utf8value);
