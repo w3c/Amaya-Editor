@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
-  <title></title>
+  <title>Amaya wish list</title>
   <style type="text/css">
 body          { background: #fffbf0; color: #000; }
 caption       { font-family: helvetica; font-size: 18;
@@ -54,15 +54,6 @@ h2            {  font-size: 12; }
         one day for easily changing other characteristics of the page (like
         the class of that paragraph.)</td>
       <td></td>
-      <td>J. Reagle</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td id="WED003">WED003</td>
-      <td>Adding specific XHTML commands for editing lists, attributes, etc.
-        (not well specified yet). For example increase/decrease) the nesting
-        level of nested lists easily.</td>
-      <td>2002-12</td>
       <td>J. Reagle</td>
       <td></td>
     </tr>
@@ -132,31 +123,6 @@ h2            {  font-size: 12; }
         http://www-106.ibm.com/developerworks/library/u-china.html</a></td>
       <td>2004-01</td>
       <td>Zhang Weiwu</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td id="WED011">WED011</td>
-      <td>Is it possible to create such a transformation that transforms
-        '&lt;any_tag&gt;some text&lt;/any_tag&gt;' into 'some text'?
-
-        <p>- I know how to do it for a given element, e.g.</p>
-
-        <p>'Remove strong: (strong{*+}); { * &gt; :*; }' (1).</p>
-
-        <p>- But if I try to generalize it like this:</p>
-
-        <p>'Remove element: (elm:*{*+}); { * &gt; :*; }' (2)</p>
-
-        <p>it removes instead the parent element.</p>
-
-        <p>- If I have the structure text:strong:p:body, (1) removes strong
-        correctly, while (2) removes p.</p>
-
-        <p>Of course I could rewrite (1) for any possible tag but I believe
-        there must be an easier way.</p>
-      </td>
-      <td>2004-10-25</td>
-      <td>Jakub Holý</td>
       <td></td>
     </tr>
     <tr>
@@ -348,7 +314,7 @@ h2            {  font-size: 12; }
       <td id="WED030">WED030</td>
       <td>Change the tooltip for the "C" icon from "Fixed font" to "Code"</td>
       <td>2006-02-11</td>
-      <td>Chris Beall</td>
+      <td>C. Beall</td>
       <td>2006-02-15</td>
     </tr>
     <tr>
@@ -357,7 +323,7 @@ h2            {  font-size: 12; }
         view, to identify them, e.g. Structure:(or Struct:), Alt:, TOC:
       Links:</td>
       <td>2006-02-11</td>
-      <td>Chris Beall</td>
+      <td>C. Beall</td>
       <td></td>
     </tr>
     <tr class="done">
@@ -382,15 +348,25 @@ h2            {  font-size: 12; }
         default), a Save command that would write a file NOT ending in either
         .htm or .html turns into a Save As... command which proposes the
         .html extension (as it already does, I believe).</td>
-      <td>2006-02</td>
+      <td>2006-02-16</td>
       <td>A. Kotok</td>
       <td></td>
     </tr>
     <tr>
       <td><a name="WED034" id="WED034">WED034</a></td>
+      <td>Using Amaya 9.4 on Windows XP SP2. Have %AMAYA_USER_HOME%
+        environment variable specified. Trying to start Amaya when the
+        %AMAYA_USER_HOME% directory does not exist causes Amaya to crash.</td>
+      <td>2006-02-18</td>
+      <td>S. Stamenkov</td>
       <td></td>
-      <td></td>
-      <td></td>
+    </tr>
+    <tr>
+      <td id="WED034">WED034</td>
+      <td>Amaya should be able to open two formatted views of the same
+        document.</td>
+      <td>2006-02-21</td>
+      <td>c. Beall</td>
       <td></td>
     </tr>
   </tbody>
@@ -414,7 +390,7 @@ h2            {  font-size: 12; }
       <td id="WANN002">WANN002</td>
       <td>A way to post all the annotations made on a document?</td>
       <td>2004-10-07</td>
-      <td>Jean-Luc Meunier</td>
+      <td>JL. Meunier</td>
       <td></td>
     </tr>
     <tr>
@@ -457,7 +433,7 @@ h2            {  font-size: 12; }
         check my CSS file against it. Perhaps the W3C CSS validator could be
         included in Amaya.</td>
       <td>2003-02</td>
-      <td>Bartolomé Sintes</td>
+      <td>B. Sintes</td>
       <td></td>
     </tr>
     <tr>
@@ -476,7 +452,7 @@ h2            {  font-size: 12; }
         file would be shown in differents colors (comments are already shown
         in green). It would improve the legibility of the CSS files.</td>
       <td>2006-01-11</td>
-      <td>Bartolomé Sintes</td>
+      <td>B. Sintes</td>
       <td></td>
     </tr>
     <tr>
@@ -485,11 +461,26 @@ h2            {  font-size: 12; }
         right or left in images, to take this example (eg for presentation
         slides) which is ignored by Amaya.</td>
       <td>2006-01-24</td>
-      <td>Ivan Herman</td>
+      <td>I. Herman</td>
       <td></td>
     </tr>
     <tr>
       <td id="WCSS010">WCSS010</td>
+      <td>In order for a page developer to test such alternate stylesheets,
+        they would need to appear in the lists displayed by:
+        <ul>
+          <li>Style</li>
+          <li>Enable</li>
+          <li>Disable</li>
+          <li>Open</li>
+        </ul>
+      </td>
+      <td>2006-02-16</td>
+      <td>C. Beall</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td id="WCSS011">WCSS011</td>
       <td></td>
       <td></td>
       <td></td>

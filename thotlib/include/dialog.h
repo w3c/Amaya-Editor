@@ -24,7 +24,7 @@ extern int WX_SearchResult; /* 0 if ok, 1 if no replace, 2 if not found */
 
 enum DButtons
   {
-     D_CANCEL, D_DONE
+     D_CANCEL, D_DONE, D_DISCARD
   };
 
 

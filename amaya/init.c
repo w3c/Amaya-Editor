@@ -1895,7 +1895,7 @@ void ConfirmError (Document document, View view, char *label,
     }
   TtaNewSheet (BaseDialog + ConfirmForm, TtaGetViewFrame (document, view),
                TtaGetMessage (LIB, TMSG_LIB_CONFIRM),
-               n, s, TRUE, 2, 'L', D_CANCEL);
+               n, s, TRUE, 2, 'L', D_DISCARD);
   TtaNewLabel (BaseDialog + ConfirmText, BaseDialog + ConfirmForm, label);
   TtaSetDialoguePosition ();
   TtaShowDialogue (BaseDialog + ConfirmForm, FALSE);

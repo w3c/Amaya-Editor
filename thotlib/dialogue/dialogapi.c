@@ -3971,6 +3971,12 @@ static void NewSheet (int ref, ThotWidget parent, char *title, int number,
             gtk_widget_show_all (w);
             gtk_box_pack_start (GTK_BOX(row), w, FALSE, FALSE, 5);
             break;
+          case D_DISCARD:
+            w = gtk_button_new_with_label(TtaGetMessage (LIB, TMSG_DISCARD));
+            GTK_WIDGET_SET_FLAGS (GTK_WIDGET(w), GTK_CAN_DEFAULT);
+            gtk_widget_show_all (w);
+            gtk_box_pack_start (GTK_BOX(row), w, FALSE, FALSE, 5);
+            break;
           }
       else
         {
