@@ -12,6 +12,7 @@
 #include "init_f.h"
 #include "appdialogue_wx.h"
 #include "message_wx.h"
+static int MyRef = 0;
 
 
 //-----------------------------------------------------------------------------
@@ -29,17 +30,15 @@ END_EVENT_TABLE()
     + parent : parent window
     + title : dialog title
   ----------------------------------------------------------------------*/
-ListDlgWX::ListDlgWX( int ref,
-		      int subref,
-		      wxWindow* parent,
-		      const wxString & title,
-		      const wxArrayString& items ) :
-  AmayaDialog( parent, ref )
-  ,m_SubRef(subref)
+ListDlgWX::ListDlgWX( int ref, int subref, wxWindow* parent,
+                      const wxString & title, const wxArrayString& items ) :
+  AmayaDialog( parent, ref ),
+  m_SubRef(subref)
 {
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("ListDlgWX"));
 
   // update dialog labels with given ones
+  MyRef = ref;
   SetTitle( title );
   XRCCTRL(*this, "wxID_LABEL", wxStaticText)->SetLabel( title );
   XRCCTRL(*this, "wxID_OK", wxButton)->SetLabel( TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_LIB_CONFIRM)) );
@@ -57,7 +56,7 @@ ListDlgWX::ListDlgWX( int ref,
   ----------------------------------------------------------------------*/
 ListDlgWX::~ListDlgWX()
 {
-  ThotCallback (m_Ref, INTEGER_DATA, (char*) 0);
+  ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
 }
 
 /*----------------------------------------------------------------------
@@ -80,7 +79,7 @@ void ListDlgWX::OnOkButton( wxCommandEvent& event )
       ThotCallback (m_SubRef+1, INTEGER_DATA, (char*) i);
     }
   LoadDefaultOpeningLocation (FALSE);
-  ThotCallback (m_Ref, INTEGER_DATA, (char*) 1);
+  ThotCallback (MyRef, INTEGER_DATA, (char*) 1);
 }
 
 /*----------------------------------------------------------------------
@@ -90,7 +89,7 @@ void ListDlgWX::OnOkButton( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void ListDlgWX::OnCancelButton( wxCommandEvent& event )
 {
-  ThotCallback (m_Ref, INTEGER_DATA, (char*) 0);
+  ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
 }
 
 #endif /* _WX */

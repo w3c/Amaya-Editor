@@ -16,10 +16,10 @@
 #include "message_wx.h"
 #include "MENUconf.h"
 #include "MENUconf_f.h"
-
 #include "PreferenceDlgWX.h"
 
 bool PreferenceDlgWX::m_OnApplyLock = FALSE;
+static int MyRef = 0;
 
 //-----------------------------------------------------------------------------
 // Event table: connect the events to the handler functions to process them
@@ -27,17 +27,13 @@ bool PreferenceDlgWX::m_OnApplyLock = FALSE;
 BEGIN_EVENT_TABLE(PreferenceDlgWX, AmayaDialog)
 
   EVT_NOTEBOOK_PAGE_CHANGED( XRCID("wxID_NOTEBOOK"), PreferenceDlgWX::OnPageChanged )
-
   EVT_BUTTON(     XRCID("wxID_OK"),           PreferenceDlgWX::OnOk )
   EVT_BUTTON(     XRCID("wxID_DEFAULT"),      PreferenceDlgWX::OnDefault )
   EVT_BUTTON(     XRCID("wxID_CANCEL"),       PreferenceDlgWX::OnCancel )
-
   // Clear url list callback
   EVT_BUTTON(     XRCID("wxID_BUTTON_CLEARURL"), PreferenceDlgWX::OnClearUrlList )
-
   // Cache tab callbacks
   EVT_BUTTON(     XRCID("wxID_BUTTON_EMPTYCACHE"), PreferenceDlgWX::OnEmptyCache )
-  
   // Color tab callbacks
   EVT_BUTTON(     XRCID("wxID_BUTTON_TEXTCOLOR"),    PreferenceDlgWX::OnColorPalette )
   EVT_BUTTON(     XRCID("wxID_BUTTON_BACKCOLOR"),    PreferenceDlgWX::OnColorPalette )
@@ -51,33 +47,28 @@ BEGIN_EVENT_TABLE(PreferenceDlgWX, AmayaDialog)
   EVT_TEXT( XRCID("wxID_COMBO_SELCOLOR"),        PreferenceDlgWX::OnColorTextChanged )
   EVT_TEXT( XRCID("wxID_COMBO_BACKCOLOR"),       PreferenceDlgWX::OnColorTextChanged )
   EVT_TEXT( XRCID("wxID_COMBO_TEXTCOLOR"),       PreferenceDlgWX::OnColorTextChanged )
-
   // Geometry tab callbacks
   EVT_BUTTON( XRCID("wxID_BUTTON_GEOMSAVE"),    PreferenceDlgWX::OnGeomSave )
   EVT_BUTTON( XRCID("wxID_BUTTON_GEOMRESTOR"),  PreferenceDlgWX::OnGeomRestor )
-  
-
   EVT_CLOSE( PreferenceDlgWX::OnClose )
   END_EVENT_TABLE()
 
   /*----------------------------------------------------------------------
-    PreferenceDlgWX create the dialog used to 
-    - Change amaya preferences
+    PreferenceDlgWX create the dialog used to change amaya preferences
     params:
     + parent : parent window
     + title : dialog title
     + ...
     returns:
     ----------------------------------------------------------------------*/
-  PreferenceDlgWX::PreferenceDlgWX( int ref,
-                                    wxWindow* parent,
+  PreferenceDlgWX::PreferenceDlgWX( int ref, wxWindow* parent,
                                     const wxArrayString & url_list ) :
-    AmayaDialog( parent, ref )
-                 ,m_IsInitialized(false) // this flag is used to know when events can be proceed
+    AmayaDialog( parent, ref ),
+    m_IsInitialized(false) // this flag is used to know when events can be proceed
 {
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("PreferenceDlgWX"));
   m_UrlList = url_list;
-
+  MyRef = ref;
 #ifndef DAV
   wxNotebook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxNotebook);
   // invalid WebDAV Page
@@ -141,7 +132,7 @@ BEGIN_EVENT_TABLE(PreferenceDlgWX, AmayaDialog)
 PreferenceDlgWX::~PreferenceDlgWX()
 {
   /* do not call this one because it cancel the link creation */
-  /*  ThotCallback (m_Ref, INTEGER_DATA, (char*) 0);*/
+  /*  ThotCallback (MyRef, INTEGER_DATA, (char*) 0);*/
 }
 
 /*----------------------------------------------------------------------
@@ -1136,7 +1127,7 @@ void PreferenceDlgWX::OnOk( wxCommandEvent& event )
   ThotCallback (GetPrefDAVBase() + DAVMenu, INTEGER_DATA, (char*) 1);
 #endif /* DAV */
 
-  ThotCallback (m_Ref, INTEGER_DATA, (char*) 1);
+  ThotCallback (MyRef, INTEGER_DATA, (char*) 1);
 
   XRCCTRL(*this, "wxID_CANCEL", wxButton)->Enable();
   m_OnApplyLock = FALSE;
@@ -1207,7 +1198,7 @@ void PreferenceDlgWX::OnDefault( wxCommandEvent& event )
     }
 #endif /* DAV */
 
-  ThotCallback (m_Ref, INTEGER_DATA, (char*) 2);
+  ThotCallback (MyRef, INTEGER_DATA, (char*) 2);
 }
 
 /*----------------------------------------------------------------------
@@ -1234,7 +1225,7 @@ void PreferenceDlgWX::OnCancel( wxCommandEvent& event )
 #ifdef DAV
   ThotCallback (GetPrefDAVBase() + DAVMenu, INTEGER_DATA, (char*) 0);
 #endif /* DAV */
-  ThotCallback (m_Ref, INTEGER_DATA, (char*) 0);
+  ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
   m_OnApplyLock = FALSE;
 }
 

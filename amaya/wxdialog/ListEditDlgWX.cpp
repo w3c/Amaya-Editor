@@ -3,7 +3,6 @@
 #include "wx/wx.h"
 #include "wx/xrc/xmlres.h"              // XRC XML resouces
 #include "wx/string.h"
-
 #include "AmayaApp.h"
 #include "ListEditDlgWX.h"
 
@@ -11,7 +10,7 @@
 #include "amaya.h"
 #include "appdialogue_wx.h"
 #include "message_wx.h"
-
+static int MyRef = 0;
 
 //-----------------------------------------------------------------------------
 // Event table: connect the events to the handler functions to process them
@@ -21,7 +20,6 @@ BEGIN_EVENT_TABLE(ListEditDlgWX, AmayaDialog)
   EVT_BUTTON(         XRCID("wxID_CANCEL"),   ListEditDlgWX::OnCancelButton )
   EVT_LISTBOX_DCLICK( XRCID("wxID_LIST"),     ListEditDlgWX::OnOkButton )
   EVT_TEXT_ENTER(     XRCID("wxID_TEXT"),     ListEditDlgWX::OnOkButton )
-
   EVT_LISTBOX(        XRCID("wxID_LIST"),     ListEditDlgWX::OnSelected ) 
 END_EVENT_TABLE()
 
@@ -31,29 +29,24 @@ END_EVENT_TABLE()
     + parent : parent window
     + title : dialog title
   ----------------------------------------------------------------------*/
-ListEditDlgWX::ListEditDlgWX( int ref,
-			      wxWindow* parent,
-			      const wxString & title,
-			      const wxString & list_title,
-			      const wxArrayString& items,
-			      const wxString & selected_item ) :
+ListEditDlgWX::ListEditDlgWX( int ref, wxWindow* parent, const wxString & title,
+                              const wxString & list_title, const wxArrayString& items,
+                              const wxString & selected_item ) :
   AmayaDialog( parent, ref )
 {
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("ListEditDlgWX"));
+  MyRef = ref;
 
   // update dialog labels with given ones
   SetTitle( title );
-  XRCCTRL(*this, "wxID_LABEL",  wxStaticText)->SetLabel( list_title );
-  XRCCTRL(*this, "wxID_OK",     wxButton)->SetLabel( TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_LIB_CONFIRM)) );
+  XRCCTRL(*this, "wxID_LABEL", wxStaticText)->SetLabel( list_title );
+  XRCCTRL(*this, "wxID_OK", wxButton)->SetLabel( TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_LIB_CONFIRM)) );
   XRCCTRL(*this, "wxID_CANCEL", wxButton)->SetLabel( TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_CANCEL)) );
-  XRCCTRL(*this, "wxID_LIST",   wxListBox)->Append( items );
-
+  XRCCTRL(*this, "wxID_LIST", wxListBox)->Append( items );
   // pre-select item
   XRCCTRL(*this, "wxID_LIST", wxListBox)->SetStringSelection(selected_item);
   XRCCTRL(*this, "wxID_TEXT", wxTextCtrl)->SetValue(selected_item);
-
   Fit();
-
   SetAutoLayout( TRUE );
 }
 
@@ -62,7 +55,7 @@ ListEditDlgWX::ListEditDlgWX( int ref,
   ----------------------------------------------------------------------*/
 ListEditDlgWX::~ListEditDlgWX()
 {
-  ThotCallback (m_Ref, INTEGER_DATA, (char*) 0);
+  ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
 }
 
 /*----------------------------------------------------------------------
@@ -79,9 +72,9 @@ void ListEditDlgWX::OnOkButton( wxCommandEvent& event )
       char buffer[512];
       wxASSERT( selected_item.Len() < 512 );
       strcpy( buffer, (const char*)selected_item.mb_str(wxConvUTF8) );
-      ThotCallback (m_Ref + 1, STRING_DATA, buffer);
+      ThotCallback (MyRef + 1, STRING_DATA, buffer);
     }
-  ThotCallback (m_Ref, INTEGER_DATA, (char*) 1);
+  ThotCallback (MyRef, INTEGER_DATA, (char*) 1);
 }
 
 /*----------------------------------------------------------------------
@@ -91,7 +84,7 @@ void ListEditDlgWX::OnOkButton( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void ListEditDlgWX::OnCancelButton( wxCommandEvent& event )
 {
-  ThotCallback (m_Ref, INTEGER_DATA, (char*) 0);
+  ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
 }
 
 /*----------------------------------------------------------------------
@@ -104,5 +97,4 @@ void ListEditDlgWX::OnSelected( wxCommandEvent& event )
   wxString s_selected = XRCCTRL(*this, "wxID_LIST", wxListBox)->GetStringSelection();
   XRCCTRL(*this, "wxID_TEXT", wxTextCtrl)->SetValue( s_selected );
 }
-
 #endif /* _WX */

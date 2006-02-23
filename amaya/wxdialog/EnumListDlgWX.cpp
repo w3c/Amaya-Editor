@@ -11,6 +11,7 @@
 #include "amaya.h"
 #include "appdialogue_wx.h"
 #include "message_wx.h"
+static int MyRef = 0;
 
 
 //-----------------------------------------------------------------------------
@@ -28,23 +29,19 @@ END_EVENT_TABLE()
     + parent : parent window
     + title : dialog title
   ----------------------------------------------------------------------*/
-EnumListDlgWX::EnumListDlgWX( int ref,
-			      int subref,
-			      wxWindow* parent,
-			      const wxString & title,
-			      const wxString & label,
-			      const wxArrayString& items,
-			      int selection ) :
+EnumListDlgWX::EnumListDlgWX( int ref, int subref, wxWindow* parent,
+                              const wxString & title, const wxString & label,
+                              const wxArrayString& items, int selection ) :
   AmayaDialog( parent, ref )
   ,m_SubRef(subref)
 {
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("EnumListDlgWX"));
+  MyRef = ref;
 
   // update dialog labels with given ones
   SetTitle( title );
   XRCCTRL(*this, "wxID_OK", wxButton)->SetLabel( TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_LIB_CONFIRM)) );
   XRCCTRL(*this, "wxID_CANCEL", wxButton)->SetLabel( TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_CANCEL)) );
-
 
   // setup the radiobox
   wxPanel * p_panel = XRCCTRL(*this, "wxID_PANEL_LIST", wxPanel);
@@ -64,7 +61,7 @@ EnumListDlgWX::EnumListDlgWX( int ref,
   ----------------------------------------------------------------------*/
 EnumListDlgWX::~EnumListDlgWX()
 {
-  ThotCallback (m_Ref, INTEGER_DATA, (char*) 0);
+  ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
 }
 
 /*----------------------------------------------------------------------
@@ -76,7 +73,7 @@ void EnumListDlgWX::OnOkButton( wxCommandEvent& event )
 {
   int selected_item = m_pRadiobox->GetSelection();
   ThotCallback (m_SubRef, INTEGER_DATA, (char*)selected_item);
-  ThotCallback (m_Ref, INTEGER_DATA, (char*)1);
+  ThotCallback (MyRef, INTEGER_DATA, (char*)1);
 }
 
 /*----------------------------------------------------------------------
@@ -87,7 +84,7 @@ void EnumListDlgWX::OnOkButton( wxCommandEvent& event )
 void EnumListDlgWX::OnCancelButton( wxCommandEvent& event )
 {
   Close();
-  //  ThotCallback (m_Ref, INTEGER_DATA, (char*) 0);
+  //  ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
 }
 
 #endif /* _WX */

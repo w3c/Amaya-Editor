@@ -5,7 +5,6 @@
 #include "wx/string.h"
 #include "wx/arrstr.h"
 #include "wx/spinctrl.h"
-
 #include "AmayaApp.h"
 #include "NumDlgWX.h"
 
@@ -13,6 +12,7 @@
 #include "amaya.h"
 #include "appdialogue_wx.h"
 #include "message_wx.h"
+static int MyRef = 0;
 
 //-----------------------------------------------------------------------------
 // Event table: connect the events to the handler functions to process them
@@ -20,7 +20,7 @@
 BEGIN_EVENT_TABLE(NumDlgWX, AmayaDialog)
   EVT_BUTTON(     XRCID("wxID_OK"),           NumDlgWX::OnOk )
   EVT_BUTTON(     XRCID("wxID_CANCEL"),       NumDlgWX::OnCancel )
-  //  EVT_TEXT_ENTER( XRCID("wxID_TEXT"),         NumDlgWX::OnOk )
+//EVT_TEXT_ENTER( XRCID("wxID_TEXT"),         NumDlgWX::OnOk )
 END_EVENT_TABLE()
 
 /*----------------------------------------------------------------------
@@ -32,15 +32,13 @@ END_EVENT_TABLE()
     + ...
   returns:
   ----------------------------------------------------------------------*/
-NumDlgWX::NumDlgWX( int ref, int subref,
-		    wxWindow* parent,
-		    const wxString & title,
-		    const wxString & label,
-		    int value ) :
-    AmayaDialog( NULL, ref )
-    ,m_SubRef(subref)
+NumDlgWX::NumDlgWX( int ref, int subref, wxWindow* parent,
+                    const wxString & title, const wxString & label, int value ) :
+  AmayaDialog( NULL, ref )
+  ,m_SubRef(subref)
 {
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("NumDlgWX"));
+  MyRef = ref;
 
   // update dialog labels with given ones
   SetTitle( title );
@@ -58,7 +56,7 @@ NumDlgWX::NumDlgWX( int ref, int subref,
   ----------------------------------------------------------------------*/
 NumDlgWX::~NumDlgWX()
 {
-  ThotCallback (m_Ref, INTEGER_DATA, (char*) 0);
+  ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
 }
 
 /*----------------------------------------------------------------------
@@ -71,7 +69,7 @@ void NumDlgWX::OnOk( wxCommandEvent& event )
   // return the selected value
   int value = XRCCTRL(*this, "wxID_NUM", wxSpinCtrl)->GetValue( );
   ThotCallback (m_SubRef, INTEGER_DATA, (char *)value);
-  ThotCallback (m_Ref, INTEGER_DATA, (char*)1);
+  ThotCallback (MyRef, INTEGER_DATA, (char*)1);
 }
 
 /*----------------------------------------------------------------------
