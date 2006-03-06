@@ -2310,8 +2310,8 @@ static void EndOfXmlElement (char *name)
   ----------------------------------------------------------------------*/
 static ThotBool  IsLeadingSpaceUseless ()
 {
-  ElementType   elType, lastElType, ancestorType;
-  Element       parent, ancestor, prev;
+  ElementType   elType, lastElType, ancestorType, prevType;
+  Element       parent, ancestor, prev, last;
   ThotBool      removeLeadingSpaces;
 
 
@@ -2358,7 +2358,22 @@ static ThotBool  IsLeadingSpaceUseless ()
               if ((strcmp (TtaGetSSchemaName (lastElType.ElSSchema), "HTML") == 0) &&
                   ((lastElType.ElTypeNum == HTML_EL_Comment_) ||
                    (lastElType.ElTypeNum == HTML_EL_XMLPI)))
-                removeLeadingSpaces = XhtmlCannotContainText (elType);
+                {
+                  /* Search the last significant sibling prior to a comment or a Pi */
+                  /* except for a comment or a Pi within the HEAD section */
+                  last = XMLcontext.lastElement;
+                  TtaPreviousSibling (&last);
+                  while (last && removeLeadingSpaces)
+                    {
+                      prevType = TtaGetElementType (last);
+                      if ((strcmp (TtaGetSSchemaName (prevType.ElSSchema), "HTML") == 0) &&
+                          (prevType.ElTypeNum != HTML_EL_Comment_) &&
+                          (prevType.ElTypeNum != HTML_EL_XMLPI) &&
+                          (prevType.ElTypeNum != HTML_EL_DOCTYPE))
+                        removeLeadingSpaces = FALSE;
+                      TtaPreviousSibling (&last);
+                    }
+                }
             }
         }
     }

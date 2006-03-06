@@ -1109,14 +1109,10 @@ ThotBool IsBlockElement (Element el)
   ----------------------------------------------------------------------*/
 static void TextToDocument ()
 {
-  ElementType      elType, lastType;
-  Element          elText, parent, ancestor, prev;
+  ElementType      elType, lastType, prevType;
+  Element          elText, parent, ancestor, prev, last;
   int              i;
   ThotBool         ignoreLeadingSpaces;
-#ifdef _OLD_
-  ElementType      prevType;
-  Element          last;
-#endif /* _OLD_ */
 
   CloseBuffer ();
   if (HTMLcontext.lastElement != NULL)
@@ -1151,12 +1147,11 @@ static void TextToDocument ()
                   (lastType.ElTypeNum == HTML_EL_Comment_ ||
                    lastType.ElTypeNum == HTML_EL_XMLPI))
                 {
-#ifdef _OLD_
                   /* Search the last significant sibling prior to a comment or a Pi */
                   /* except for a comment or a Pi within the HEAD section */
                   last = HTMLcontext.lastElement;
                   TtaPreviousSibling (&last);
-                  while (last != NULL && ignoreLeadingSpaces)
+                  while (last && ignoreLeadingSpaces)
                     {
                       prevType = TtaGetElementType (last);
                       if ((strcmp (TtaGetSSchemaName (prevType.ElSSchema), "HTML") == 0) &&
@@ -1166,9 +1161,6 @@ static void TextToDocument ()
                         ignoreLeadingSpaces = FALSE;
                       TtaPreviousSibling (&last);
                     }
-#else /* _OLD_ */
-                  ignoreLeadingSpaces = XhtmlCannotContainText (elType);
-#endif /* _OLD_ */
                 }
 	       
               if (ignoreLeadingSpaces)
@@ -3582,7 +3574,6 @@ static void         StartOfComment (char c)
   elComment = TtaNewElement (HTMLcontext.doc, elType);
   TtaSetElementLineNumber (elComment, NumberOfLinesRead);
   InsertElement (&elComment);
-  HTMLcontext.lastElementClosed = TRUE;
   /* create a Comment_line element as the first child of */
   /* element Comment */
   if (elComment != NULL)
@@ -3663,6 +3654,7 @@ static void         EndOfComment (char c)
                               HTMLcontext.doc);
     }
   CommentText = NULL;
+  HTMLcontext.lastElementClosed = TRUE;
   InitBuffer ();
 }
 
