@@ -1641,10 +1641,12 @@ static ThotBool  CompleteUrl(char **url)
       ptr = &((*(url))[5]);
       s = (char *)TtaGetMemory (MAX_LENGTH);
         s[0] = EOS;
+      *url = s;
       if (ptr[0] == '/' && ptr[1] == '/' && ptr[2] == '/')
         ptr = &ptr[2];
-      *url = s;
 #ifdef _WINDOWS
+      else if (ptr[0] == '/' && ptr[1] == '/' && ptr[3] == ':')
+        ptr = &ptr[2];
       if (ptr[1] != ':')
         {
           char    *ptr2;
@@ -2245,10 +2247,15 @@ static void InitOpenDocForm (Document doc, View view, char *name, char *title,
                              DocumentType docType)
 {
   char              s [MAX_LENGTH];
+  char             *thotdir;
   ThotBool          remote;
 #ifdef _WX
-  char             *thotdir;
   wxString          homedir;
+#else /* _WX */
+#ifdef _WINDOWS
+  char             *d;
+#endif /* _WINDOWS */
+  char             *homedir;
 #endif /* _WX */
 #if defined(_GTK)
   int               i;
@@ -2296,15 +2303,26 @@ static void InitOpenDocForm (Document doc, View view, char *name, char *title,
         }
       else
         {
-#ifdef _WX
           // Avoid to create new documents into Amaya space
           thotdir = TtaGetEnvString ("THOTDIR");
           if (!strncmp (s, thotdir, strlen (thotdir)))
             {
+#ifdef _WX
               homedir = TtaGetHomeDir();
               strcpy(s, (const char *)homedir.mb_str(wxConvUTF8));
-            }
+#else /* _WX */
+#ifdef _WINDOWS
+              d = getenv ("HOMEDRIVE");
+              homedir = getenv ("HOMEPATH");
+              if (d && *d && homedir)
+                sprintf (s, "%s%s", d, homedir);
+#else /* _WINDOWS */
+              homedir = getenv ("HOME");
+			  if (homedir)
+                strcpy(s, homedir);
+#endif /* _WINDOWS */
 #endif /* _WX */
+            }
           strcpy (DirectoryName, s);
           strcpy (DocumentName, name);
           strcat (s, DIR_STR);
