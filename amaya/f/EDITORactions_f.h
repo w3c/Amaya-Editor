@@ -32,6 +32,8 @@ extern void InitializeNewDoc ( char *url,
                                Document doc,
                                int profile,
                                ThotBool isXML );
+extern void NotFoundDoc ( char *url,
+                          Document doc );
 extern void RemoveDoctype ( Document document,
                             View view );
 extern void AddDoctype ( Document document,
@@ -299,6 +301,8 @@ extern void InitializeNewDoc ( char *url,
                                  Document doc,
                                  int profile,
                                  ThotBool isXML );
+extern void NotFoundDoc ( char *url,
+                            Document doc );
 extern void RemoveDoctype ( Document document,
                               View view );
 extern void AddDoctype ( Document document,

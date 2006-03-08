@@ -641,6 +641,228 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile,
   UpdateEditorMenus (doc);
 }
 
+/*----------------------------------------------------------------------
+  NotFoundDoc builds the 404 error document
+  When the parameter doc is 0 the function creates a new document window.
+  The url is coded with the default charset.
+  ----------------------------------------------------------------------*/
+void NotFoundDoc (char *url, Document doc)
+{
+  ElementType          elType;
+  Element              docEl, root, title, text, el, head, child, meta, body;
+  Element              doctype;
+  AttributeType        attrType;
+  Attribute            attr;
+  Language             language;
+  char                *pathname, *documentname;
+  char                *s;
+  char                 tempfile[MAX_LENGTH];
+  char                *charsetName;
+  CHARSET              charset;
+  ThotBool             xhtml_mimetype;
+
+  pathname = (char *)TtaGetMemory (MAX_LENGTH);
+  documentname = (char *)TtaGetMemory (MAX_LENGTH);
+  NormalizeURL (url, 0, pathname, documentname, NULL);
+  if (doc == 0 || DontReplaceOldDoc)
+    {
+      doc = InitDocAndView (doc,
+                            !DontReplaceOldDoc /* replaceOldDoc */,
+                            InNewWindow /* inNewWindow */,
+                            documentname, docHTML, 0, FALSE, L_Strict,
+                            CE_ABSOLUTE);
+      InitDocHistory (doc);
+      DontReplaceOldDoc = FALSE;
+    }
+  else
+    {
+      /* record the current position in the history */
+      AddDocHistory (doc, DocumentURLs[doc], 
+                     DocumentMeta[doc]->initial_url,
+                     DocumentMeta[doc]->form_data,
+                     DocumentMeta[doc]->method);
+      doc = InitDocAndView (doc,
+                            !DontReplaceOldDoc /* replaceOldDoc */,
+                            InNewWindow /* inNewWindow */,
+                            documentname, docHTML, 0, FALSE, L_Strict,
+                            CE_ABSOLUTE);
+    }
+  TtaFreeMemory (documentname);
+  TtaFreeMemory (pathname);
+
+  /* save the document name into the document table */
+  s = TtaStrdup (url);
+  DocumentURLs[doc] = s;
+  AddURLInCombobox (url, NULL, FALSE);
+  TtaSetTextZone (doc, 1, URL_list);
+  DocumentMeta[doc] = DocumentMetaDataAlloc ();
+  DocumentMeta[doc]->form_data = NULL;
+  DocumentMeta[doc]->initial_url = NULL;
+  DocumentMeta[doc]->method = CE_ABSOLUTE;
+  DocumentMeta[doc]->xmlformat = FALSE;
+  DocumentMeta[doc]->compound = FALSE;
+  DocumentSource[doc] = 0;
+
+  /* store the document profile */
+  TtaSetDocumentProfile (doc, L_Strict);
+  ResetStop (doc);
+  language = TtaGetDefaultLanguage ();
+  docEl = TtaGetMainRoot (doc);
+  /* Set the document charset */
+  charsetName = TtaGetEnvString ("DOCUMENT_CHARSET");
+  charset = TtaGetCharset (charsetName);
+  if (charset != UNDEFINED_CHARSET)
+    {
+      TtaSetDocumentCharset (doc, charset, FALSE);
+      DocumentMeta[doc]->charset = TtaStrdup (charsetName);
+    }
+  else
+    {
+      TtaSetDocumentCharset (doc, ISO_8859_1, FALSE);
+      DocumentMeta[doc]->charset = TtaStrdup ("iso-8859-1");
+    }
+
+  elType = TtaGetElementType (docEl);
+  attrType.AttrSSchema = elType.ElSSchema;
+
+  /*-------------  New XHTML document ------------*/
+  /* force the XML parsing */
+  DocumentMeta[doc]->xmlformat = TRUE;
+  DocumentMeta[doc]->compound = FALSE;
+  TtaGetEnvBoolean ("ENABLE_XHTML_MIMETYPE", &xhtml_mimetype);
+  if (xhtml_mimetype)
+    DocumentMeta[doc]->content_type = TtaStrdup (AM_XHTML_MIME_TYPE);
+  else
+    DocumentMeta[doc]->content_type = TtaStrdup ("text/html");
+
+  /* create the DOCTYPE element corresponding to the document's profile */
+  elType.ElTypeNum = HTML_EL_DOCTYPE;
+  doctype = TtaSearchTypedElement (elType, SearchInTree, docEl);
+  if (doctype)
+    TtaDeleteTree (doctype, doc);
+  /* Load user's style sheet */
+  LoadUserStyleSheet (doc);
+
+  /* Set the namespace declaration */
+  elType.ElTypeNum = HTML_EL_HTML;
+  root = TtaSearchTypedElement (elType, SearchInTree, docEl);
+  TtaSetUriSSchema (elType.ElSSchema, XHTML_URI);
+  TtaSetANamespaceDeclaration (doc, root, NULL, XHTML_URI);
+
+  /* attach an attribute PrintURL to the root element */
+  attrType.AttrTypeNum = HTML_ATTR_PrintURL;
+  attr = TtaNewAttribute (attrType);
+  TtaAttachAttribute (root, attr, doc);
+
+  s = (char *)TtaConvertByteToMbs ((unsigned char *)TtaGetMessage (LIB, TMSG_NOT_FOUND),
+                                   TtaGetDefaultCharset ());
+  /* create a default title if there is no content in the TITLE element */
+  elType.ElTypeNum = HTML_EL_TITLE;
+  title = TtaSearchTypedElement (elType, SearchInTree, root);
+  text = TtaGetFirstChild (title);
+  if (text && TtaGetTextLength (text) == 0)
+    TtaSetTextContent (text, (unsigned char*)s, language, doc);
+  UpdateTitle (title, doc);
+
+  elType.ElTypeNum = HTML_EL_HEAD;
+  head = TtaSearchTypedElement (elType, SearchInTree, root);
+
+  /* create a Document_URL element as the first child of HEAD */
+  elType.ElTypeNum = HTML_EL_Document_URL;
+  el = TtaSearchTypedElement (elType, SearchInTree, head);
+  if (el == NULL)
+    {
+      /* there is no Document_URL element, create one */
+      el = TtaNewElement (doc, elType);
+      TtaInsertFirstChild (&el, head, doc);
+    }
+  /* prevent the user from editing this element */
+  TtaSetAccessRight (el, ReadOnly, doc);
+  /* element Document_URL already exists */
+  text = TtaGetFirstChild (el);
+  if (text == NULL)
+    {
+      elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+      text = TtaNewElement (doc, elType);
+      TtaInsertFirstChild (&text, el, doc);
+    }
+  if (url && text)
+    TtaSetTextContent (text, (unsigned char*)url, language, doc);
+
+  /* create a META element in the HEAD with name="generator" */
+  /* and content="Amaya" */
+  child = TtaGetLastChild (head);
+  elType.ElTypeNum = HTML_EL_META;
+  meta = TtaNewElement (doc, elType);
+  attrType.AttrTypeNum = HTML_ATTR_meta_name;
+  attr = TtaNewAttribute (attrType);
+  TtaAttachAttribute (meta, attr, doc);
+  TtaSetAttributeText (attr, "generator", meta, doc);
+  attrType.AttrTypeNum = HTML_ATTR_meta_content;
+  attr = TtaNewAttribute (attrType);
+  TtaAttachAttribute (meta, attr, doc);
+  strcpy (tempfile, TtaGetAppName());
+  strcat (tempfile, " ");
+  strcat (tempfile, TtaGetAppVersion());
+  strcat (tempfile, ", see http://www.w3.org/Amaya/");
+  TtaSetAttributeText (attr, tempfile, meta, doc);
+  TtaInsertSibling (meta, child, FALSE, doc);
+
+  /* create a BODY element if there is not */
+  elType.ElTypeNum = HTML_EL_BODY;
+  body = TtaSearchTypedElement (elType, SearchInTree, root);
+  if (!body)
+    {
+      body = TtaNewTree (doc, elType, "");
+      TtaInsertSibling (body, head, FALSE, doc);
+    }
+
+  /* Search the first element in the BODY to set initial selection */
+  elType.ElTypeNum = HTML_EL_Element;
+  el = TtaSearchTypedElement (elType, SearchInTree, body);
+  /* Create a H1 */
+  elType.ElTypeNum = HTML_EL_H1;
+  child = TtaNewElement (doc, elType);
+  TtaInsertSibling (child, el, TRUE, doc);
+  /* Create a text */
+  elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+  text = TtaNewElement (doc, elType);
+  TtaSetTextContent (text, (unsigned char*)s, language, doc);
+  TtaInsertFirstChild (&text, child, doc);
+  /* Create a paragraph */
+  elType.ElTypeNum = HTML_EL_Paragraph;
+  child = TtaNewElement (doc, elType);
+  TtaInsertSibling (child, el, TRUE, doc);
+  /* Create a text */
+  TtaFreeMemory (s);
+  s = (char *)TtaConvertByteToMbs ((unsigned char *)TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
+                                   TtaGetDefaultCharset ());
+  elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+  text = TtaNewElement (doc, elType);
+  if (s)
+    {
+      pathname = (char *)TtaGetMemory (strlen (s) + strlen (url) + 1);
+      sprintf (pathname, s, url);
+      TtaSetTextContent (text, (unsigned char*)pathname, language, doc);
+      TtaFreeMemory (pathname);
+      TtaFreeMemory (s);
+    }
+  TtaInsertFirstChild (&text, child, doc);
+      
+  /* set the initial selection */
+  UpdateContextSensitiveMenus (doc);
+  /* Activate show areas */
+  if (MapAreas[doc])
+    ChangeAttrOnRoot (doc, HTML_ATTR_ShowAreas);
+
+  /* Update the Doctype menu */
+  UpdateDoctypeMenu (doc);
+  /* the document should be saved */
+  TtaSetDocumentUnmodified (doc);
+  UpdateEditorMenus (doc);
+  TtaSetAccessRight (root, ReadOnly, doc);
+}
+
 /*--------------------------------------------------------------------------
   CreateOrChangeDoctype
   Create or change the doctype of a document

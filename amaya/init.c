@@ -5942,8 +5942,8 @@ void CallbackDialogue (int ref, int typedata, char *data)
                )
             {
 #else /* _WX */
-	      /* Do not destroy this dialog on WX to prevent a crash on mac version */
-	      TtaDestroyDialogue (BaseDialog + OpenForm);
+              /* Do not destroy this dialog on WX to prevent a crash on mac version */
+              TtaDestroyDialogue (BaseDialog + OpenForm);
               TtaDestroyDialogue (BaseDialog + FileBrowserForm);
 #endif /* _WX */
               if (LastURLName[0] != EOS)
@@ -5990,6 +5990,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
                     }
                   else
                     {
+#ifdef IV
                       if (IsMathMLName (tempfile))
                         NewDocType = docMath;
                       else if (IsSVGName (tempfile))
@@ -6008,6 +6009,8 @@ void CallbackDialogue (int ref, int typedata, char *data)
                         NewDocType = docHTML;
                       InitializeNewDoc (tempfile, NewDocType, CurrentDocument,
                                         NewDocProfile, NewXML);
+#endif /* IV */
+                      NotFoundDoc (tempfile, CurrentDocument);
                     }
                 }
               else if (DocumentName[0] != EOS)

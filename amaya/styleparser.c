@@ -6581,9 +6581,7 @@ int IsImplicitClassName (char *class_, Document doc)
 }
 
 /************************************************************************
- *									*  
  *  Functions needed for support of HTML: translate to CSS equivalent   *
- *									*  
  ************************************************************************/
 
 /*----------------------------------------------------------------------
@@ -6592,7 +6590,7 @@ int IsImplicitClassName (char *class_, Document doc)
 void HTMLSetBackgroundColor (Document doc, Element el, int specificity,
                              char *color)
 {
-  char             css_command[100];
+  char             css_command[1000];
 
   sprintf (css_command, "background-color: %s", color);
   ParseHTMLSpecificStyle (el, css_command, doc, specificity, FALSE);
@@ -6604,7 +6602,7 @@ void HTMLSetBackgroundColor (Document doc, Element el, int specificity,
 void HTMLSetForegroundColor (Document doc, Element el, int specificity,
                              char *color)
 {
-  char           css_command[100];
+  char           css_command[1000];
 
   sprintf (css_command, "color: %s", color);
   ParseHTMLSpecificStyle (el, css_command, doc, specificity, FALSE);
@@ -6615,7 +6613,7 @@ void HTMLSetForegroundColor (Document doc, Element el, int specificity,
   ----------------------------------------------------------------------*/
 void HTMLResetBackgroundColor (Document doc, Element el)
 {
-  char           css_command[100];
+  char           css_command[1000];
 
   sprintf (css_command, "background: red");
   ParseHTMLSpecificStyle (el, css_command, doc, 0, TRUE);
@@ -6637,7 +6635,7 @@ void HTMLResetBackgroundImage (Document doc, Element el)
   ----------------------------------------------------------------------*/
 void HTMLResetForegroundColor (Document doc, Element el)
 {
-  char           css_command[100];
+  char           css_command[1000];
 
   /* it's not necessary to well know the current color but it must be valid */
   sprintf (css_command, "color: red");
@@ -6649,7 +6647,7 @@ void HTMLResetForegroundColor (Document doc, Element el)
   ----------------------------------------------------------------------*/
 void HTMLSetAlinkColor (Document doc, Element el, char *color)
 {
-  char           css_command[100];
+  char           css_command[1000];
 
   sprintf (css_command, ":link { color: %s }", color);
   ApplyCSSRules (el, css_command, doc, FALSE);
@@ -6660,7 +6658,7 @@ void HTMLSetAlinkColor (Document doc, Element el, char *color)
   ----------------------------------------------------------------------*/
 void HTMLSetAactiveColor (Document doc, Element el, char *color)
 {
-  char           css_command[100];
+  char           css_command[1000];
 
   sprintf (css_command, ":active { color: %s }", color);
   ApplyCSSRules (el, css_command, doc, FALSE);
@@ -6671,7 +6669,7 @@ void HTMLSetAactiveColor (Document doc, Element el, char *color)
   ----------------------------------------------------------------------*/
 void HTMLSetAvisitedColor (Document doc, Element el, char *color)
 {
-  char           css_command[100];
+  char           css_command[1000];
 
   sprintf (css_command, ":visited { color: %s }", color);
   ApplyCSSRules (el, css_command, doc, FALSE);
@@ -6682,7 +6680,7 @@ void HTMLSetAvisitedColor (Document doc, Element el, char *color)
   ----------------------------------------------------------------------*/
 void HTMLResetAlinkColor (Document doc, Element el)
 {
-  char           css_command[100];
+  char           css_command[1000];
 
   sprintf (css_command, ":link { color: red }");
   ApplyCSSRules (el, css_command, doc, TRUE);
@@ -6693,7 +6691,7 @@ void HTMLResetAlinkColor (Document doc, Element el)
   ----------------------------------------------------------------------*/
 void HTMLResetAactiveColor (Document doc, Element el)
 {
-  char           css_command[100];
+  char           css_command[1000];
 
   sprintf (css_command, ":active { color: red }");
   ApplyCSSRules (el, css_command, doc, TRUE);
@@ -6704,7 +6702,7 @@ void HTMLResetAactiveColor (Document doc, Element el)
   ----------------------------------------------------------------------*/
 void HTMLResetAvisitedColor (Document doc, Element el)
 {
-  char           css_command[100];
+  char           css_command[1000];
 
   sprintf (css_command, ":visited { color: red }");
   ApplyCSSRules (el, css_command, doc, TRUE);
