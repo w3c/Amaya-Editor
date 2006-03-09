@@ -286,13 +286,15 @@ typedef struct _AmayaDoc_context
    Reload_callback function */
 typedef struct _RELOAD_context
 {
-  Document newdoc;
-  char *documentname;
-  char *form_data;
+  Document   newdoc;
+  char      *documentname;
+  char      *form_data;
   ClickEvent method;
-  int position;	/* volume preceding the the first element to be shown */
-  int distance; /* distance from the top of the window to the top of this
+  int        position;	/* volume preceding the the first element to be shown */
+  int        distance; /* distance from the top of the window to the top of this
                    element (% of the window height) */
+  int        visibility; /* register the current visibility */
+  ThotBool   maparea; /* register the current maparea */
 } RELOAD_context;
 
 typedef enum
@@ -2697,7 +2699,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
   ElementType   elType;
   char          buffer[MAX_LENGTH];
   int           x, y, w, h;
-  int           requested_doc;
+  int           requested_doc, visibility = 5;
   Language	lang;
   ThotBool      isOpen, reinitialized = FALSE, show;
   /* specific to wxWidgets user interface */
@@ -2738,6 +2740,8 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
   if (replaceOldDoc && oldDoc>0)
     /* the new document will replace another document in the same window */
     {
+      // transmit the visibility to the new document
+      visibility = TtaGetSensibility (doc, 1);
 #ifdef _WX
       /* get the old document window */
       window_id = TtaGetDocumentWindowId( doc, -1 );
@@ -3192,6 +3196,12 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
     }
   if (reinitialized || !isOpen)
     {
+      if (reinitialized && visibility == 4)
+        {
+          // restore the visibility
+          TtaSetSensibility (doc, 1, visibility);
+          TtaSetToggleItem (doc, 1, Views, TShowTargets, TRUE);
+        }
       /* now update menus and buttons according to the document status */
       if (DocumentTypes[doc] == docLog ||
           DocumentTypes[doc] == docLibrary ||
@@ -4389,6 +4399,7 @@ void Reload_callback (int doc, int status, char *urlName,
   Document           res = 0;
   Element            el;
   RELOAD_context    *ctx;
+  int                visibility;
   ThotBool           stopped_flag = FALSE, keep;
 
   /* restore the context associated with the request */
@@ -4397,7 +4408,8 @@ void Reload_callback (int doc, int status, char *urlName,
   newdoc = ctx->newdoc;
   form_data = ctx->form_data;
   method = ctx->method;
-
+  visibility = ctx->visibility;
+  MapAreas[doc] = ctx->maparea;
   if (!DocumentURLs[doc])
     /* the user has closed the corresponding document. Just free resources */
     {
@@ -4437,6 +4449,15 @@ void Reload_callback (int doc, int status, char *urlName,
       res = LoadDocument (newdoc, urlName, form_data, NULL, method,
                           tempfile, documentname, http_headers, FALSE, &DontReplaceOldDoc);
       UpdateEditorMenus (doc);
+      if (visibility == 4)
+        {
+          // restore the visibility
+          TtaSetSensibility (doc, 1, visibility);
+          TtaSetToggleItem (doc, 1, Views, TShowTargets, TRUE);
+        }
+      if (MapAreas[doc])
+        // set Map areas visible
+        TtaSetToggleItem (doc, 1, Views, TShowMapAreas, TRUE);
 
       if (res == 0)
         {
@@ -4598,7 +4619,6 @@ void Reload (Document doc, View view)
   toparse = 0;
   ActiveTransfer (doc);
   /* Create the context for the callback */
-
   ctx = (RELOAD_context*)TtaGetMemory (sizeof (RELOAD_context));
   ctx->newdoc = doc;
   ctx->documentname = documentname;
@@ -4606,7 +4626,8 @@ void Reload (Document doc, View view)
   ctx->method = method;
   ctx->position = position;
   ctx->distance = distance;
-
+  ctx->visibility = TtaGetSensibility (doc, 1);
+  ctx->maparea = MapAreas[doc];
   if (IsW3Path (pathname))
     {
       /* load the document from the Web */
@@ -8084,7 +8105,7 @@ void ShowMapAreas (Document doc, View view)
     TtaError (ERR_invalid_parameter);
   else
     {
-      HMENU hmenu = WIN_GetMenu (frame); 
+      HMENU hmenu = WIN_GetMenu (frame);
       if (!MapAreas[doc])
         {
           CheckMenuItem (hmenu, menu_item, MF_BYCOMMAND | MF_CHECKED); 
