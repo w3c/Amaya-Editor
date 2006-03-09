@@ -132,7 +132,7 @@ BEGIN_EVENT_TABLE(PreferenceDlgWX, AmayaDialog)
 PreferenceDlgWX::~PreferenceDlgWX()
 {
   /* do not call this one because it cancel the link creation */
-  /*  ThotCallback (MyRef, INTEGER_DATA, (char*) 0);*/
+  TtaDestroyDialogue (MyRef);
 }
 
 /*----------------------------------------------------------------------
