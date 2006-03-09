@@ -2642,7 +2642,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
                 SetPositionConstraint (VertRef, pBox, &i);
               if (!pAb->AbVertEnclosing)
                 /* the inline rule doesn't act on this box */
-                ComputePosRelation (&pAb->AbHorizRef, pBox, frame, FALSE);
+                ComputePosRelation (&pAb->AbVertPos/*&pAb->AbHorizRef*/, pBox, frame, FALSE);
               else if (pAb->AbNotInLine)
                 /* the inline rule doesn't act on this box */
                 ComputePosRelation (&pAb->AbVertPos, pBox, frame, FALSE);
@@ -4442,14 +4442,14 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
                 pAb->AbVertPos.PosEdge = Top;
               pAb->AbVertPosChange = FALSE;
             }
-          else if (pAb->AbEnclosing == NULL)
+          else if (pAb->AbEnclosing == NULL || !pAb->AbVertEnclosing)
             condition = TRUE;
           else if (pAb->AbEnclosing->AbBox->BxType == BoBlock ||
                    pAb->AbEnclosing->AbBox->BxType == BoFloatBlock ||
                    pAb->AbEnclosing->AbBox->BxType == BoGhost ||
-                   pAb->AbEnclosing->AbBox->BxType == BoFloatGhost)
+                    pAb->AbEnclosing->AbBox->BxType == BoFloatGhost)
             {
-              /* the positioning rule is ignored */
+              /* the position depends on the line? */
               if (!pAb->AbHorizEnclosing && pBox->BxNChars > 0)
                 {
                   pPosAb = &pAb->AbVertPos;
