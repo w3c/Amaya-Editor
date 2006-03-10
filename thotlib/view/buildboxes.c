@@ -4418,6 +4418,16 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
             {
               /* remove the old horizontal position */
               ClearPosRelation (pBox, TRUE);
+              if (pAb->AbHorizPos.PosAbRef && pAb->AbHorizPos.PosAbRef == pAb->AbPrevious)
+                while (pAb->AbHorizPos.PosAbRef &&
+                       pAb->AbHorizPos.PosAbRef->AbPositioning &&
+                       (pAb->AbHorizPos.PosAbRef->AbPositioning->PnAlgorithm == PnAbsolute ||
+                        pAb->AbHorizPos.PosAbRef->AbPositioning->PnAlgorithm == PnFixed))
+                  {
+                    pAb->AbHorizPos.PosAbRef = pAb->AbHorizPos.PosAbRef->AbPrevious;
+                    if (pAb->AbHorizPos.PosAbRef && pAb->AbHorizPos.PosAbRef->AbDead)
+                      pAb->AbHorizPos.PosAbRef = pAb->AbHorizPos.PosAbRef->AbPrevious;
+                  }
               /* new horizontal position */
               ComputePosRelation (&pAb->AbHorizPos, pBox, frame, TRUE);
               result = TRUE;
@@ -4481,6 +4491,16 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
             {
               /* remove the old vertical position */
               ClearPosRelation (pBox, FALSE);
+              if (pAb->AbVertPos.PosAbRef && pAb->AbVertPos.PosAbRef == pAb->AbPrevious)
+              while (pAb->AbVertPos.PosAbRef &&
+                     pAb->AbVertPos.PosAbRef->AbPositioning &&
+                     (pAb->AbVertPos.PosAbRef->AbPositioning->PnAlgorithm == PnAbsolute ||
+                      pAb->AbVertPos.PosAbRef->AbPositioning->PnAlgorithm == PnFixed))
+                {
+                  pAb->AbVertPos.PosAbRef = pAb->AbVertPos.PosAbRef->AbPrevious;
+                    if (pAb->AbVertPos.PosAbRef && pAb->AbVertPos.PosAbRef->AbDead)
+                      pAb->AbVertPos.PosAbRef = pAb->AbVertPos.PosAbRef->AbPrevious;
+                }
               /* new vertical position */
               ComputePosRelation (&pAb->AbVertPos, pBox, frame, FALSE);
               result = TRUE;
