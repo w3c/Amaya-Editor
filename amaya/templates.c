@@ -460,7 +460,7 @@ int CreateInstanceOfTemplate (Document doc, char *templatename, char *docname,
       /* Register the last used template directory */
       TtaSetEnvString ("TEMPLATES_DIRECTORY", DirectoryName, TRUE);
       LoadDocument (newdoc, templatename, NULL, NULL, CE_ABSOLUTE,
-                    "", DocumentName, NULL, FALSE, &DontReplaceOldDoc);
+                    "", DocumentName, NULL, FALSE, &DontReplaceOldDoc, NULL);
       InsertInstanceMeta (newdoc);
       
       /* Update URLs of linked documents */

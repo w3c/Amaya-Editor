@@ -103,7 +103,8 @@ extern Document LoadDocument ( Document doc,
                                char *documentname,
                                AHTHeaders *http_headers,
                                ThotBool history,
-                               ThotBool *inNewWindow );
+                               ThotBool *inNewWindow,
+                               char *realdocname );
 extern void Reload_callback ( int doc,
                               int status,
                               char *urlName,
@@ -305,7 +306,8 @@ extern Document LoadDocument ( Document doc,
                                  char *documentname,
                                  AHTHeaders *http_headers,
                                  ThotBool history,
-                                 ThotBool *inNewWindow );
+                                 ThotBool *inNewWindow,
+                                 char *realdocname );
 extern void Reload_callback ( int doc,
                                 int status,
                                 char *urlName,

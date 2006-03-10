@@ -3654,12 +3654,14 @@ static void DisplaySVGtitle (Document doc)
   For a local loading, the parameter tempfile must be an empty string.
   For a remote loading, the parameter tempfile gives the file name that
   contains the current copy of the remote file.
+  Parameter realdocname is not NULL when the document is restored
   ----------------------------------------------------------------------*/
 Document LoadDocument (Document doc, char *pathname,
                        char *form_data, char *initial_url,
                        int method, char *tempfile,
                        char *documentname, AHTHeaders *http_headers,
-                       ThotBool history, ThotBool *inNewWindow)
+                       ThotBool history, ThotBool *inNewWindow,
+                       char *realdocname)
 {
   CSSInfoPtr          css;
   PInfoPtr            pInfo;
@@ -4212,6 +4214,9 @@ Document LoadDocument (Document doc, char *pathname,
         }
       
       /* save the document name into the document table */
+      if (realdocname)
+        s = TtaStrdup (realdocname);
+      else
       s = TtaStrdup (pathname);
       if (DocumentURLs[newdoc] != NULL)
         {
@@ -4447,7 +4452,8 @@ void Reload_callback (int doc, int status, char *urlName,
       /* parse and display the document, res contains the new document
          identifier, as given by the thotlib */
       res = LoadDocument (newdoc, urlName, form_data, NULL, method,
-                          tempfile, documentname, http_headers, FALSE, &DontReplaceOldDoc);
+                          tempfile, documentname, http_headers, FALSE,
+                          &DontReplaceOldDoc, NULL);
       UpdateEditorMenus (doc);
       if (visibility == 4)
         {
@@ -5232,7 +5238,7 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName,
           res = LoadDocument (newdoc, pathname, form_data, 
                               initial_url, method,
                               tempfile, documentname,
-                              http_headers, ctx->history, &inNewWindow);
+                              http_headers, ctx->history, &inNewWindow, NULL);
           W3Loading = 0;		/* loading is complete now */
           if (res == 0)
             {
@@ -6950,7 +6956,7 @@ static int RestoreOneAmayaDoc (Document doc, char *tempdoc, char *docname,
   AHTHeaders    http_headers;
   char          content_type[MAX_LENGTH];
   char           tempfile[MAX_LENGTH];
-  int           newdoc, len;
+  int           newdoc;
   ThotBool      stopped_flag;
 
   W3Loading = doc;
@@ -6980,7 +6986,8 @@ static int RestoreOneAmayaDoc (Document doc, char *tempdoc, char *docname,
           else
             http_headers.content_type = NULL;
           LoadDocument (newdoc, docname, NULL, NULL, CE_ABSOLUTE, 
-                        tempdoc, DocumentName, &http_headers, FALSE, &DontReplaceOldDoc);
+                        tempdoc, DocumentName, &http_headers, FALSE,
+                        &DontReplaceOldDoc, docname);
         }
       else
         {
@@ -6988,10 +6995,10 @@ static int RestoreOneAmayaDoc (Document doc, char *tempdoc, char *docname,
           tempfile[0] = EOS;
           /* load the temporary file */
           LoadDocument (newdoc, tempdoc, NULL, NULL, CE_ABSOLUTE,
-                        tempfile, DocumentName, NULL, FALSE, &DontReplaceOldDoc);
+                        tempfile, DocumentName, NULL, FALSE,
+                        &DontReplaceOldDoc, docname);
           /* change its URL */
           TtaFreeMemory (DocumentURLs[newdoc]);
-          len = strlen (docname) + 1;
           DocumentURLs[newdoc] = TtaStrdup (docname);
           DocumentSource[newdoc] = 0;
           /* add the URI in the combobox string */
@@ -7006,6 +7013,7 @@ static int RestoreOneAmayaDoc (Document doc, char *tempdoc, char *docname,
       stopped_flag = FetchAndDisplayImages (newdoc, AMAYA_LOAD_IMAGE, NULL);
       if (!stopped_flag)
         {
+          ResetStop (newdoc);
           DocNetworkStatus[newdoc] = AMAYA_NET_INACTIVE;
           /* almost one file is restored */
           TtaSetStatus (newdoc, 1, TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED),

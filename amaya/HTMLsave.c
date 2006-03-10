@@ -2695,6 +2695,7 @@ void SaveDocument (Document doc, View view)
     }
 }
 
+
 /*----------------------------------------------------------------------
   CanReplaceCurrentDocument
   Return TRUE if the document has not been modified
@@ -2759,7 +2760,10 @@ void BackUpDocs ()
   /* check all modified documents */
   f = NULL;
   for (doc = 1; doc < DocumentTableLength; doc++)
-    if (DocumentURLs[doc] && TtaIsDocumentModified (doc) && doc != W3Loading)
+    if (DocumentURLs[doc] && TtaIsDocumentModified (doc) && doc != W3Loading &&
+        (DocumentTypes[doc] != docSource &&
+         DocumentTypes[doc] != docLibrary &&
+         DocumentTypes[doc] != docLog))
       {
         if (f == NULL)
           {
@@ -2791,6 +2795,7 @@ void BackUpDocs ()
 
         /* write the backup file */
         DocumentURLs[doc] = TtaStrdup (pathname);
+        DocumentSource[doc] = 0;
         SaveDocument (doc, 1);
         /* register the backup file name and the original document name */
         fprintf (f, "\"%s\" \"%s\" %d\n", pathname, ptr, DocumentTypes[doc]);
