@@ -2144,8 +2144,8 @@ ThotBool MakeUniqueName (Element el, Document doc, ThotBool doIt,
         /* the element has a xml:id attribute. Check it too */
         checkXMLID = TRUE;
     }
-  else
 #endif /* TEMPLATES */
+  else
 #ifdef XML_GENERIC
     attrType.AttrTypeNum = XML_ATTR_xmlid;
 #else /* XML_GENERIC */
