@@ -414,17 +414,17 @@ void StyleDlgWX::OnValueChanged( wxSpinEvent& event )
   else if (id == wxXmlResource::GetXRCID(_T("wxID_SPIN_MTOP")))
     XRCCTRL(*this, "wx_MTOP_DONE", wxCheckBox)->SetValue(TRUE);
   else if (id == wxXmlResource::GetXRCID(_T("wxID_SPIN_MBOTTOM")))
-    XRCCTRL(*this, "wx_PTOP_DONE", wxCheckBox)->SetValue(TRUE);
-  else if (id == wxXmlResource::GetXRCID(_T("wxID_SPIN_MLEFT")))
     XRCCTRL(*this, "wx_MBOTTOM_DONE", wxCheckBox)->SetValue(TRUE);
-  else if (id == wxXmlResource::GetXRCID(_T("wxID_SPIN_MRIGHT")))
-    XRCCTRL(*this, "wx_PBOTTOM_DONE", wxCheckBox)->SetValue(TRUE);
-  else if (id == wxXmlResource::GetXRCID(_T("wxID_SPIN_PTOP")))
+  else if (id == wxXmlResource::GetXRCID(_T("wxID_SPIN_MLEFT")))
     XRCCTRL(*this, "wx_MLEFT_DONE", wxCheckBox)->SetValue(TRUE);
-  else if (id == wxXmlResource::GetXRCID(_T("wxID_SPIN_PBOTTOM")))
-    XRCCTRL(*this, "wx_PLEFT_DONE", wxCheckBox)->SetValue(TRUE);
-  else if (id == wxXmlResource::GetXRCID(_T("wxID_SPIN_PLEFT")))
+  else if (id == wxXmlResource::GetXRCID(_T("wxID_SPIN_MRIGHT")))
     XRCCTRL(*this, "wx_MRIGHT_DONE", wxCheckBox)->SetValue(TRUE);
+  else if (id == wxXmlResource::GetXRCID(_T("wxID_SPIN_PTOP")))
+    XRCCTRL(*this, "wx_PTOP_DONE", wxCheckBox)->SetValue(TRUE);
+  else if (id == wxXmlResource::GetXRCID(_T("wxID_SPIN_PBOTTOM")))
+    XRCCTRL(*this, "wx_PBOTTOM_DONE", wxCheckBox)->SetValue(TRUE);
+  else if (id == wxXmlResource::GetXRCID(_T("wxID_SPIN_PLEFT")))
+    XRCCTRL(*this, "wx_PLEFT_DONE", wxCheckBox)->SetValue(TRUE);
   else if (id == wxXmlResource::GetXRCID(_T("wxID_SPIN_PRIGHT")))
     XRCCTRL(*this, "wx_PRIGHT_DONE", wxCheckBox)->SetValue(TRUE);
   else if (id == wxXmlResource::GetXRCID(_T("wxID_SPIN_MARGIN")))
