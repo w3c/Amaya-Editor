@@ -225,7 +225,7 @@ void ParseCSSequivAttribute (int attrType, Attribute attr, Element el,
 
   /* parse the equivalent CSS rule */
   if (css_command[0] != EOS)
-    ParseHTMLSpecificStyle (el, css_command, doc, 0, delete_);
+    ParseHTMLSpecificStyle (el, css_command, doc, 200, delete_);
   if (text)
     TtaFreeMemory (text);
 }
