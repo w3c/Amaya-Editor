@@ -4756,29 +4756,6 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
   else
     casc = (Cascade*)CSScasc;
   memset (casc, 0, sizeof (Cascade));
-#ifdef IV
-  casc->ContentRuleBefore = NULL;
-  casc->schemaOfContentRuleBefore = NULL;
-  casc->attrOfContentRuleBefore = NULL;
-  casc->ContentRuleAfter = NULL;
-  casc->schemaOfContentRuleAfter = NULL;
-  casc->attrOfContentRuleAfter = NULL;
-  for (i = 0; i < PtPictInfo; i++)
-    {
-      casc->MainElement.selectedRule[i] = NULL;
-      casc->MainElement.schemaOfSelectedRule[i] = NULL;
-      casc->MainElement.attrOfSelectedRule[i] = NULL;
-      casc->MainElement.attrBlockOfSelectedRule[i] = NULL;
-      casc->BeforePseudoEl.selectedRule[i] = NULL;
-      casc->BeforePseudoEl.schemaOfSelectedRule[i] = NULL;
-      casc->BeforePseudoEl.attrOfSelectedRule[i] = NULL;
-      casc->BeforePseudoEl.attrBlockOfSelectedRule[i] = NULL;
-      casc->AfterPseudoEl.selectedRule[i] = NULL;
-      casc->AfterPseudoEl.schemaOfSelectedRule[i] = NULL;
-      casc->AfterPseudoEl.attrOfSelectedRule[i] = NULL;
-      casc->AfterPseudoEl.attrBlockOfSelectedRule[i] = NULL;
-    }
-#endif
   /* get all rules associated with the element type in the main presentation */
   /* schema (default stylesheet of the user agent in CSS terms) */
   pRuleView = NULL;
