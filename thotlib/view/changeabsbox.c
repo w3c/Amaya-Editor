@@ -3066,7 +3066,8 @@ static void UpdateListItemNumber (PtrElement pElBegin, PtrElement pElModif,
           pAb = pAbbBegin[view - 1];
           while (pAb)
             {
-              if (pAb->AbPresentationBox && pAb->AbTypeNum == 0 &&
+              if (pAb->AbListStyleImage != 'Y' &&
+                  pAb->AbPresentationBox && pAb->AbTypeNum == 0 &&
                   (pAb->AbListStyleType == '1' ||
                    pAb->AbListStyleType == 'Z' ||
                    pAb->AbListStyleType == 'i' ||
