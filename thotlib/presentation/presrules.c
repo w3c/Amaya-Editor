@@ -3479,8 +3479,6 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
           /* rapport au filet separateur) ou s'il se positionne par */
           /* rapport a un autre element. */
           afterPageBreak = FALSE;
-if (!pAb->AbPresentationBox && !strcmp (pAb->AbElement->ElLabel, "L411"))
-  printf ("ApplyVertPos L411\n");
           if (pAb->AbPrevious != NULL)
             /* il y a un pave precedent */
             {
