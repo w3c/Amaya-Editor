@@ -876,7 +876,7 @@ EXCEPT
 	BODY:		NoCut, CssBackground, NoMove, NoResize,
 		        SetWindowBackground, NoBreakByReturn;
 	HEAD:		NoCut;
-	TITLE:		NoCut;
+	TITLE:		NoCut, NoSpellCheck;
 	Document_URL:	Hidden, NoSpellCheck, NoCut;
 	C_Empty:	Hidden, NoSpellCheck, NoSelect;
 	C_BR:		SelectParent;
@@ -889,7 +889,7 @@ EXCEPT
 	Term_List:	Hidden, CanCut;
 	Definitions:	Hidden;
   XMLPI:	        ReturnCreateNL, NoSpellCheck, NoReplicate;
-	Comment\240:	ReturnCreateNL, NoReplicate;
+	Comment\240:	ReturnCreateNL, NoSpellCheck, NoReplicate;
 	Comment_line:	Hidden, MarkupPreserve;
 	PI_line:	Hidden, MarkupPreserve;
 	DOCTYPE:	NoCut, NoSpellCheck;
