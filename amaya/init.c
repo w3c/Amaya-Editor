@@ -1456,6 +1456,8 @@ void CheckParsingErrors (Document doc)
               TtaFileUnlink (text);
               TtaFileRename (fileName, text);
               ParseAsHTML (doc, 1);
+              // reset XML format for future saving
+              DocumentMeta[doc]->xmlformat = TRUE;
               // restore the original log file
               CleanUpParsingErrors ();
               CloseLogs (doc);
