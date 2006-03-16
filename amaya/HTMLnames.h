@@ -662,7 +662,6 @@ XmlEntity XhtmlEntityTable[] =
 {"harr", 8596},   /* left right arrow, U+2194 ISOamsa */
 {"hearts", 9829}, /* black heart suit = valentine, U+2665 ISOpub */
 {"hellip", 8230}, /* horizontal ellipsis = three dot leader, U+2026 ISOpub */
-{"hyphen", 173},  /* hyphen = discretionary hyphen, U+00AD ISOnum */
 {"iacute", 237},  /* latin small letter i with acute, U+00ED ISOlat1 */
 {"icirc", 238},   /* latin small letter i with circumflex, U+00EE ISOlat1 */
 {"iexcl", 161},   /* inverted exclamation mark, U+00A1 ISOnum */
