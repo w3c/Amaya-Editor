@@ -1318,6 +1318,8 @@ int ThotInput (int frame, unsigned int value, int command, int PicMask, int key)
 #endif /* _WX */
           if (MenuActionList[CMD_ParentElement].Call_Action)
             {
+              /* close the current insertion */
+              CloseTextInsertion ();
               (*(Proc2)MenuActionList[CMD_ParentElement].Call_Action) ((void *)document,
                                                                        (void *)view);
               return 2;
