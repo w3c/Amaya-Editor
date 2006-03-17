@@ -1516,6 +1516,59 @@ void TtcClearClipboard ()
 }
 
 /*----------------------------------------------------------------------
+  TtaStringToClipboard
+  ----------------------------------------------------------------------*/
+void TtaStringToClipboard (unsigned char *s, CHARSET encoding)
+{
+  int              len;
+
+  if (s)
+    {
+      len = strlen ((char *)s);
+      if (len)
+        {
+#ifdef _WX
+          if (wxTheClipboard->Open())
+            {
+              TtcClearClipboard ();
+              // Write some text to the clipboard
+              ClipboardLength = len;
+              if (encoding == UTF_8)
+                Xbuffer = (unsigned char *)TtaStrdup ((char *)s);
+              else
+                Xbuffer = TtaConvertByteToMbs (s, encoding);
+              
+              // This data objects are held by the clipboard, 
+              // so do not delete them in the app.
+              wxTheClipboard->AddData( new wxTextDataObject( TtaConvMessageToWX((char *)s) ) );
+              wxTheClipboard->Close();
+            }
+#endif /* _WX */
+#ifdef _GTK
+          /* Must get the selection */
+          TtcClearClipboard ();
+          if (encoding == UTF_8)
+            {
+              Xbuffer = (unsigned char *)TtaStrdup ((char *)s);
+              ClipboardLength = len;
+            }
+          else
+            {
+              Xbuffer = TtaConvertByteToMbs (s, encoding);
+              ClipboardLength = strlen ((char *)Xbuffer);
+            }
+#endif /* _GTK */
+#ifdef _WINGUI
+          if (encoding == UTF_8)
+            Xbuffer = TtaConvertMbsToByte (s, TtaGetLocaleCharset ());
+          else
+            Xbuffer = TtaStrdup (s);
+#endif /* _WINGUI */
+        }
+    }
+}
+
+/*----------------------------------------------------------------------
   DoCopyToClipboard
   ----------------------------------------------------------------------*/
 void DoCopyToClipboard (Document doc, View view, ThotBool force)

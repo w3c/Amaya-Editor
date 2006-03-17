@@ -41,6 +41,8 @@ extern void TtcPreviousSelWord ( Document document,
 extern void TtcNextSelWord ( Document document,
                              View view );
 extern void TtcClearClipboard ( void );
+extern void TtaStringToClipboard ( unsigned char *s,
+                                   CHARSET encoding );
 extern void DoCopyToClipboard ( Document doc,
                                 View view,
                                 ThotBool force );
@@ -94,6 +96,8 @@ extern void TtcPreviousSelWord ( Document document,
 extern void TtcNextSelWord ( Document document,
                                View view );
 extern void TtcClearClipboard ( void );
+extern void TtaStringToClipboard ( unsigned char *s,
+                                     CHARSET encoding );
 extern void DoCopyToClipboard ( Document doc,
                                   View view,
                                   ThotBool force );

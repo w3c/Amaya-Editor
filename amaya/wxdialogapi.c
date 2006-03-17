@@ -1,6 +1,7 @@
 
 #ifdef _WX
-  #include "wx/wx.h"
+#include "wx/wx.h"
+#include "wxdialog/file_filters.h"
 #endif /* _WX */
 
 #define THOT_EXPORT extern
@@ -226,16 +227,15 @@ ThotBool CreateNewTemplateDocDlgWX (int ref,  ThotWindow parent, Document doc,
   wxString wx_docName        = TtaConvMessageToWX( docName );
   wxString wx_filter         = APPHTMLNAMEFILTER;
   
-  NewTemplateDocDlgWX * p_dlg =
-    new NewTemplateDocDlgWX( ref,
-			     parent,
-			     doc,
-			     wx_title,
-			     wx_docName,
-			     wx_templateDir,
-			     wx_filter,
-			     &g_Last_used_filter
-	          	   );
+  NewTemplateDocDlgWX * p_dlg = new NewTemplateDocDlgWX( ref,
+                                                         parent,
+                                                         doc,
+                                                         wx_title,
+                                                         wx_docName,
+                                                         wx_templateDir,
+                                                         wx_filter,
+                                                         &g_Last_used_filter
+                                                         );
 
   if ( TtaRegisterWidgetWX( ref, p_dlg ) )
       /* the dialog has been sucesfully registred */
@@ -272,7 +272,6 @@ ThotBool CreateImageDlgWX (int ref, ThotWindow parent, const char *title,
   wxString wx_urlToOpen = TtaConvMessageToWX( urlToOpen );
   wxString wx_alt = TtaConvMessageToWX( alt );
   wxString wx_filter = APPIMAGENAMEFILTER;
-
   ImageDlgWX * p_dlg = new ImageDlgWX( ref,
                                        parent,
                                        wx_title,
@@ -316,7 +315,6 @@ ThotBool CreateObjectDlgWX (int ref, ThotWindow parent, const char *title,
   wxString wx_urlToOpen = TtaConvMessageToWX( urlToOpen );
   wxString wx_type = TtaConvMessageToWX( type );
   wxString wx_filter = APPIMAGENAMEFILTER;
-
   ObjectDlgWX * p_dlg = new ObjectDlgWX( ref,
                                          parent,
                                          wx_title,
@@ -507,16 +505,26 @@ ThotBool CreateSaveAsDlgWX (int ref, ThotWindow parent, char* pathname,
 ThotBool CreateSaveObject (int ref, ThotWindow parent, char* objectname)
 {
 #ifdef _WX
+#ifdef _MACOS
+  char     s[512];
+  wxString homedir = TtaGetHomeDir();
+  strcpy (SavePath, (const char *)homedir.mb_str(wxConvUTF8));
+  strcat (SavePath, "/Desktop/");
+  strcat (SavePath, objectname);
+  DoSaveObjectAs ();
+  SavingObject = 0;
+  return FALSE;
+#else /* */
   // Create a generic filedialog
-  wxFileDialog * p_dlg = new wxFileDialog
-    (
-     parent,
-     TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_OBJECT_LOCATION) ),
-     _T(""),
-     TtaConvMessageToWX( objectname ),
-     _T("*.*"),
-     wxSAVE | wxCHANGE_DIR /* wxCHANGE_DIR -> remember the last directory used. */
-     );
+  wxString      wx_filter = APPFILENAMEFILTER;
+  wxFileDialog *p_dlg = new wxFileDialog (
+                                          parent,
+                                          TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_OBJECT_LOCATION) ),
+                                          _T(""),
+                                          TtaConvMessageToWX( objectname ),
+                                          wx_filter,
+                                          wxSAVE | wxCHANGE_DIR /* remember the last directory used. */
+                                          );
 
   // do not force the directory, let wxWidgets choose for the current one
   // p_dlg->SetDirectory(wxGetHomeDir());
@@ -539,6 +547,7 @@ ThotBool CreateSaveObject (int ref, ThotWindow parent, char* objectname)
       ThotCallback (ref, INTEGER_DATA, (char*)0);
     }
   return TRUE;
+#endif /* _WX */
 #else /* _WX */
   return FALSE;
 #endif /* _WX */

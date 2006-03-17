@@ -1481,9 +1481,9 @@ void CheckParsingErrors (Document doc)
                                 NULL);
                   if (ExtraChoice || UserAnswer)
                     {
+                      ShowSource (doc, 1);
                       // GTK or WX version: show errors
                        ShowLogFile (doc, 1);
-                      ShowSource (doc, 1);
                     }
                 }
             }
@@ -6378,10 +6378,14 @@ void CallbackDialogue (int ref, int typedata, char *data)
                 }
             }
           TtaDestroyDialogue (BaseDialog + SaveForm);
-          if (SavingDocument != 0)
+          if (SavingDocument)
             DoSaveAs (UserCharset, UserMimeType);
-          else if (SavingObject != 0)
-            DoSaveObjectAs ();
+          else if (SavingObject)
+            {
+              DoSaveObjectAs ();
+              // make sure the saving is closed
+              SavingObject = 0;
+            }
           /* Move the information into LastURLName or DirectoryName */
           if (IsW3Path (SavePath))
             {
@@ -6504,7 +6508,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
         /* "Cancel" button */
         {
           TtaDestroyDialogue (BaseDialog + SaveForm);
-          if (SavingObject != 0)
+          if (SavingObject)
             /* delete temporary file */
             DeleteTempObjectFile ();
           SavingDocument = 0;

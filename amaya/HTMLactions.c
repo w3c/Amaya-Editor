@@ -3232,6 +3232,11 @@ void SetCharFontOrPhrase (int doc, int elemtype)
   ----------------------------------------------------------------------*/
 void CopyLocation (Document doc, View view)
 {
+#ifdef _WX
+  TtaStringToClipboard ((unsigned char *)DocumentURLs[doc], UTF_8);
+#else /* _WX */
+  TtaStringToClipboard ((unsigned char *)DocumentURLs[doc], TtaGetLocaleCharset());
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------

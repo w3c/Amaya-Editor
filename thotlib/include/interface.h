@@ -372,6 +372,11 @@ extern void TtaShowElementMenu (Document doc, View view);
   ----------------------------------------------------------------------*/
 extern void TtaRefreshElementMenu (Document doc, View view);
 
+/*----------------------------------------------------------------------
+  TtaStringToClipboard
+  ----------------------------------------------------------------------*/
+extern void TtaStringToClipboard (unsigned char *s, CHARSET encoding);
+
 #endif /* __CEXTRACT__  */
 
 #endif
