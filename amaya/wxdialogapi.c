@@ -2,6 +2,7 @@
 #ifdef _WX
 #include "wx/wx.h"
 #include "wxdialog/file_filters.h"
+#include "registry_wx.h"
 #endif /* _WX */
 
 #define THOT_EXPORT extern
@@ -10,6 +11,8 @@
 #include "appdialogue_wx.h"
 #include "message_wx.h"
 #include "wxdialog/file_filters.h"
+#include "init_f.h"
+#include "HTMLsave_f.h"
 
 #ifdef _WX
   #include "wxdialog/NewTemplateDocDlgWX.h"
@@ -506,15 +509,17 @@ ThotBool CreateSaveObject (int ref, ThotWindow parent, char* objectname)
 {
 #ifdef _WX
 #ifdef _MACOS
-  char     s[512];
   wxString homedir = TtaGetHomeDir();
   strcpy (SavePath, (const char *)homedir.mb_str(wxConvUTF8));
   strcat (SavePath, "/Desktop/");
-  strcat (SavePath, objectname);
-  DoSaveObjectAs ();
-  SavingObject = 0;
-  return FALSE;
-#else /* */
+  if (CheckMakeDirectory (SavePath, TRUE))
+    {
+      strcat (SavePath, objectname);
+      DoSaveObjectAs ();
+      SavingObject = 0;
+      return FALSE;
+    }
+  #endif /* _MACOS */
   // Create a generic filedialog
   wxString      wx_filter = APPFILENAMEFILTER;
   wxFileDialog *p_dlg = new wxFileDialog (
@@ -547,7 +552,6 @@ ThotBool CreateSaveObject (int ref, ThotWindow parent, char* objectname)
       ThotCallback (ref, INTEGER_DATA, (char*)0);
     }
   return TRUE;
-#endif /* _WX */
 #else /* _WX */
   return FALSE;
 #endif /* _WX */
