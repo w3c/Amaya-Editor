@@ -47,7 +47,7 @@
 /* RDF parser */
 #ifdef AM_REDLAND
 #ifndef BOOKMARKS
-#include "librdf.h"
+#include "redland.h"
 #include "raptor.h"
 #endif /* BOOKMARKS */
 #endif /* AM_REDLAND */

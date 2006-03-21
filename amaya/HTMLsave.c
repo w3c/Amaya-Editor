@@ -688,7 +688,7 @@ void InitSaveObjectForm (Document document, View view, char *object,
   char                tempdir[MAX_LENGTH];
 #endif /* _WINGUI */
 
-  if (SavingDocument != 0 || SavingObject != 0)
+  if (SavingDocument || SavingObject)
     return;
   SavingObject = document;
   strncpy (tempSavedObject, object, sizeof (tempSavedObject));

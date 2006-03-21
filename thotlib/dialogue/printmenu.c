@@ -359,7 +359,7 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
 #ifndef _WX
        sprintf (&cmd[i], " -w%lu", (intptr_t) FrRef[0]);
 #else /* _WX */
-       sprintf (&cmd[i], " -w%u", (unsigned int) FrameTable[0].WdFrame);
+       sprintf (&cmd[i], " -w%u", (intptr_t) FrameTable[0].WdFrame);
 #endif /* _WX */
 #endif /* _WINDOWS */
      }

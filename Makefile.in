@@ -368,6 +368,7 @@ redland_config: @MAKEREDLAND@ force
 			--disable-shared \
 			--without-bdb \
 	 		--enable-parsers=raptor \
+	 		--with-raptor=internal \
 			--with-xml-parser=expat \
 			--with-www=none \
 			--without-libwww \

@@ -508,10 +508,10 @@ EDITORAPP.c : @srcdir@/EDITOR.A
 @NOPRINT@	@(cd ../thotlib ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)" print)
 
 install : all @NOPRINT@../bin/print
-	../script_install ../bin $(prefix) $(bindir)
+	../script_install ../bin $(DESTDIR)$(prefix) $(DESTDIR)$(bindir)
 
 uninstall :
-	../script_uninstall $(prefix) $(bindir)
+	../script_uninstall $(DESTDIR)$(prefix) $(DESTDIR)$(bindir)
 
 CEXTRACT= ../bin/cextract
 

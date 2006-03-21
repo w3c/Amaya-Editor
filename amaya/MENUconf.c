@@ -3467,7 +3467,7 @@ LRESULT CALLBACK WIN_ColorDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
   ----------------------------------------------------------------------*/
 static void ColorCallbackDialog (int ref, int typedata, char *data)
 {
-  long int val;
+  intptr_t val;
 
   if (ref == -1)
     {
@@ -3477,7 +3477,7 @@ static void ColorCallbackDialog (int ref, int typedata, char *data)
   else
     {
       /* has the user changed the options? */
-      val = (long int) data;
+      val = (intptr_t) data;
       switch (ref - ColorBase)
         {
         case ColorMenu:

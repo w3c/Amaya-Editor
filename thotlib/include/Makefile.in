@@ -24,14 +24,14 @@ all :
 clean :
 
 install :
-	@(if test ! -d $(includedir) ; then $(MKDIR) $(includedir); fi)
-	@(if test ! -d $(includedir)/thot ; then $(MKDIR) $(includedir)/thot; fi)
+	@(if test ! -d $(DESTDIR)$(includedir) ; then $(MKDIR) $(DESTDIR)$(includedir); fi)
+	@(if test ! -d $(DESTDIR)$(includedir)/thot ; then $(MKDIR) $(DESTDIR)$(includedir)/thot; fi)
 	(for include in $(INCLUDES) ; do \
-	  $(INSTALL_DATA) $(THOTDIR)/thotlib/include/$$include $(includedir)/thot ; \
+	  $(INSTALL_DATA) $(THOTDIR)/thotlib/include/$$include $(DESTDIR)$(includedir)/thot ; \
 	  done)
 
 uninstall :
-	$(RM) -rf $(includedir)/thot
+	$(RM) -rf $(DESTDIR)$(includedir)/thot
 
 depend :
 

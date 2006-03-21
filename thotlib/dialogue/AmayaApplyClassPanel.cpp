@@ -117,7 +117,7 @@ void AmayaApplyClassPanel::SendDataToPanel( AmayaParams& p )
   int          nb_class = p.param1;
   const char  *listBuffer = (char *)p.param2;
   const char  *currentClass = (char *)p.param3;
-  int          ref = (long int)p.param4;
+  int          ref = (intptr_t)p.param4;
   
   m_ApplyClassRef = ref;
   
