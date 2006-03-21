@@ -502,6 +502,7 @@ typedef struct _DocumentMetaDataElement
   char      *content_length;   /* content length returned by the server */
   char      *content_location; /* simplified content location returned by the server */
   char      *full_content_location; /* full content location returned by the server */
+  char      *reason;           /* http_headers reason*/
 
   ClickEvent method;           /* method used to send this data */
   ThotBool   xmlformat;        /* the document should be exported in xml format */

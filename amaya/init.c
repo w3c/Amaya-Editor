@@ -331,41 +331,22 @@ void DocumentMetaClear (DocumentMetaDataElement *me)
   if (!me)
     return;
 
-  if (me->form_data)
-    {
-      TtaFreeMemory (me->form_data);
-      me->form_data = NULL;
-    }
-  if (me->initial_url)
-    {
-      TtaFreeMemory (me->initial_url);
-      me->initial_url = NULL;
-    }
-  if (me->content_type)
-    {
-      TtaFreeMemory (me->content_type);
-      me->content_type = NULL;
-    }
-  if (me->charset)
-    {
-      TtaFreeMemory (me->charset);
-      me->charset = NULL;
-    }
-  if (me->content_length)
-    {
-      TtaFreeMemory (me->content_length);
-      me->content_length = NULL;
-    }
-  if (me->content_location)
-    {
-      TtaFreeMemory (me->content_location);
-      me->content_location = NULL;
-    }
-  if (me->full_content_location)
-    {
-      TtaFreeMemory (me->full_content_location);
-      me->full_content_location = NULL;
-    }
+  TtaFreeMemory (me->form_data);
+  me->form_data = NULL;
+  TtaFreeMemory (me->initial_url);
+  me->initial_url = NULL;
+  TtaFreeMemory (me->content_type);
+  me->content_type = NULL;
+  TtaFreeMemory (me->charset);
+  me->charset = NULL;
+  TtaFreeMemory (me->content_length);
+  me->content_length = NULL;
+  TtaFreeMemory (me->content_location);
+  me->content_location = NULL;
+  TtaFreeMemory (me->full_content_location);
+  me->full_content_location = NULL;
+  TtaFreeMemory (me->reason);
+  me->reason = NULL;
 }
 
 /*----------------------------------------------------------------------
@@ -557,7 +538,6 @@ void DocumentInfo (Document document, View view)
 
   TtaSetDialoguePosition ();
   TtaShowDialogue (BaseDialog + DocInfoForm, TRUE);
-
 #endif /* #if defined(_GTK) */
    
 #ifdef _WINGUI
@@ -3678,7 +3658,7 @@ Document LoadDocument (Document doc, char *pathname,
   char               *charEncoding;
   char               *tempdir;
   char               *s, *localdoc;
-  char               *content_type;
+  char               *content_type, *reason;
   char               *http_content_type;
   int                 i, j;
   int                 docProfile;
@@ -4241,6 +4221,9 @@ Document LoadDocument (Document doc, char *pathname,
         DocumentMeta[newdoc]->initial_url = TtaStrdup (initial_url);
       else
         DocumentMeta[newdoc]->initial_url = NULL;
+      reason = HTTP_headers (http_headers, AM_HTTP_REASON);
+      if (reason && !strcasecmp (reason, "OK"))
+        DocumentMeta[newdoc]->reason = TtaStrdup (reason);
       DocumentMeta[newdoc]->method = (ClickEvent) method;
       DocumentSource[newdoc] = 0;
       DocumentMeta[newdoc]->xmlformat = isXML;
@@ -4278,7 +4261,7 @@ Document LoadDocument (Document doc, char *pathname,
       */
       /* content-type */
       if (http_content_type)
-        DocumentMeta[newdoc]->content_type = TtaStrdup (http_content_type);
+          DocumentMeta[newdoc]->content_type = TtaStrdup (http_content_type);
       else if (local_content_type[0] != EOS)
         /* assign a content type to the local files */
         DocumentMeta[newdoc]->content_type = TtaStrdup (local_content_type);
@@ -7239,15 +7222,12 @@ ThotBool CheckMakeDirectory (char *name, ThotBool recursive)
     return FALSE;
 
   /* does the directory exist? */
-  if (TtaMakeDirectory (name))
-    return TRUE;
-
-  /* no, try to create it then */
   i = TtaMakeDirectory (name);
-
-  /* were be able to create the directory (or found it already?) */
-  if (!i)
+  if (i)
+    return TRUE;
+  else
     {
+      /* no, try to create it then */
       /* don't do anything else */
       if (!recursive)
         return FALSE;
