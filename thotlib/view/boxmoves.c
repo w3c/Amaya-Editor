@@ -196,7 +196,8 @@ ThotBool IsParentBox (PtrBox pAncestor, PtrBox pChild)
       equal = FALSE;
       while (!equal && pAb != NULL)
         {
-          equal = pAb->AbBox == pAncestor;
+          // prevent a deadlock when pAb == pAb->AbEnclosing
+          equal = pAb->AbBox == pAncestor || pAb == pAb->AbEnclosing;
           pAb = pAb->AbEnclosing;
         }
       return (equal);
@@ -2246,7 +2247,7 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
                       IsParentBox (pBox, box))
                     /* update managed by ComputeLines */
                     pAb = NULL;
-                  if (pAb && !pAb->AbDead)
+                  if (pAb && !pAb->AbDead && !pAb->AbNew && pAb->AbBox)
                     {
                       /* Is it the same dimension? */
                       if (pDimRel->DimROp[i] == OpSame)
@@ -2721,7 +2722,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
               pAb = pCurrentAb->AbFirstEnclosed;
               while (pAb)
                 {
-                  if (!pAb->AbDead && pAb->AbBox)
+                  if (!pAb->AbDead && !pAb->AbNew && pAb->AbBox)
                     {
                       box = pAb->AbBox;
                       /* check if the position box depends on its enclosing */
