@@ -94,10 +94,9 @@ SaveAsDlgWX::SaveAsDlgWX( int ref, wxWindow* parent, const wxString & pathname,
       XRCCTRL(*this, "wxID_DOC_FORMAT", wxRadioBox)->SetString(0, TtaConvMessageToWX( "HTML"  ) );
       XRCCTRL(*this, "wxID_DOC_FORMAT", wxRadioBox)->SetString(1, TtaConvMessageToWX( "XML" ));
       XRCCTRL(*this, "wxID_DOC_FORMAT", wxRadioBox)->SetString(2, TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_TEXT) ));
-      if ((DocumentMeta[doc] && DocumentMeta[doc]->xmlformat) ||
-          doc_type == docMath ||
-          doc_type == docSVG ||
-          doc_type == docXml)
+      if (DocumentMeta[doc] && DocumentMeta[doc]->xmlformat)
+        XRCCTRL(*this, "wxID_DOC_FORMAT", wxRadioBox)->SetSelection(1);
+      else if (doc_type == docMath || doc_type == docSVG || doc_type == docXml)
         XRCCTRL(*this, "wxID_DOC_FORMAT", wxRadioBox)->SetSelection(1);
       else if (doc_type == docHTML)
         XRCCTRL(*this, "wxID_DOC_FORMAT", wxRadioBox)->SetSelection(0);
