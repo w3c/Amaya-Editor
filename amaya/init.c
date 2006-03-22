@@ -4222,7 +4222,7 @@ Document LoadDocument (Document doc, char *pathname,
       else
         DocumentMeta[newdoc]->initial_url = NULL;
       reason = HTTP_headers (http_headers, AM_HTTP_REASON);
-      if (reason && !strcasecmp (reason, "OK"))
+      if (reason && strcasecmp (reason, "OK"))
         DocumentMeta[newdoc]->reason = TtaStrdup (reason);
       DocumentMeta[newdoc]->method = (ClickEvent) method;
       DocumentSource[newdoc] = 0;

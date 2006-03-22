@@ -83,6 +83,18 @@ DocInfoDlgWX::DocInfoDlgWX( int ref, wxWindow* parent, int doc ) :
   else
     content = TtaGetMessage (AMAYA, AM_UNKNOWN);
   XRCCTRL(*this, "wxID_LOCATION_CONTENT", wxTextCtrl)->SetValue(TtaConvMessageToWX(content));
+
+  // Reason
+  if (DocumentMeta[doc] 
+      && DocumentMeta[doc]->reason != NULL)
+    {
+      char msg[512];
+      sprintf (msg, TtaGetMessage (AMAYA, AM_UNKNOWN_XXX_STATUS), DocumentMeta[doc]->reason);
+      XRCCTRL(*this, "wxID_REASON", wxStaticText)->SetLabel(TtaConvMessageToWX(msg));
+    }
+  else
+    XRCCTRL(*this, "wxID_REASON", wxStaticText)->SetLabel(TtaConvMessageToWX(""));
+   
   // update dialog labels
   XRCCTRL(*this, "wxID_CANCEL", wxButton)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_DONE)));
 
