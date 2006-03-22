@@ -2928,8 +2928,8 @@ static ThotBool ShowTextLine (Element el, Document doc)
               if (otherEl)
                 {
                   TtaFreeMemory (utf8value);
-                  len = TtaGetTextLength (otherEl);
-                  utf8value = (char *)TtaGetMemory (len + 1);
+                  len = TtaGetTextLength (otherEl) + 1;
+                  utf8value = (char *)TtaGetMemory (len);
                   TtaGiveTextContent (otherEl, (unsigned char *)utf8value,
                                       &len, &lang);
                   ptr = strstr (utf8value, " in ");
