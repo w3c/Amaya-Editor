@@ -249,6 +249,12 @@ and must be removed at the end of the debug */
 #define BSPACE  '\b'
 
 #define NBSP      0xA0
-#define MAX_BYTES 6 
+#define MAX_BYTES 6
+
+/* we encourage using "long" to store pointer values, never use "int" ! */
+#ifndef __intptr_t_defined
+#define __intptr_t_defined
+typedef           long   intptr_t;
+#endif
 
 #endif /* THOT_SYS_H */
