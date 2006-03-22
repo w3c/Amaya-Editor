@@ -1758,24 +1758,31 @@ static ThotBool SaveDocumentLocally (Document doc, char *directoryName,
 }
 
 /*----------------------------------------------------------------------
-  AddNoName
+  HasSavingName
   This function is called whenether one tries to save a document
   without name (just the directory path e.g. http://www.w3.org/pub/WWW/ )
-  It ask the user whether an extra name suffix should be added or
+  It asks the user whether an extra name suffix should be added or
   abort.
+  Return TRUE if there is a document name
+  with_suffix is TRUE if the document name has a suffix
   ----------------------------------------------------------------------*/
-static ThotBool AddNoName (Document document, View view, char *url,
-                           ThotBool *ok)
+static ThotBool HasSavingName (Document doc, View view, char *url,
+                               ThotBool *with_suffix)
 {
-  char            msg[MAX_LENGTH];
+  char            msg[MAX_LENGTH], suffix[MAX_LENGTH];
   char            documentname[MAX_LENGTH];
   int             len;
+  ThotBool        ok;
 
   len = strlen (url);
   TtaExtractName (url, msg, documentname);
-  *ok = (documentname[0] != EOS);
-  if (*ok)
-    return (FALSE);
+  if (documentname[0] != EOS)
+    {
+      // check isf there is a suffix
+      TtaExtractSuffix (documentname, suffix);
+      *with_suffix = (suffix[0] != EOS);
+      return (TRUE);
+    }
   else
     {
       /* the name is not correct for the put operation */
@@ -1789,17 +1796,30 @@ static ThotBool AddNoName (Document document, View view, char *url,
       else if (url[len -1] != DIR_SEP)
         strcat (msg, DIR_STR);
       /* get default name */
-      DefaultName = TtaGetEnvString ("DEFAULTNAME");
-      if (DefaultName == NULL || *DefaultName == EOS)
-        DefaultName = StdDefaultName;
-
-      strcat (msg, DefaultName);
-      InitConfirm (document, view, msg);
-
-      if (UserAnswer == 0)
-        return (FALSE);
+      ok = (DocumentMeta[doc] && DocumentMeta[doc]->content_location);
+      if (!ok)
+        {
+          DefaultName = TtaGetEnvString ("DEFAULTNAME");
+          if (DefaultName == NULL || *DefaultName == EOS)
+            DefaultName = StdDefaultName;
+          strcat (msg, DefaultName);
+          InitConfirm (doc, view, msg);
+          
+          if (UserAnswer != 0 && DocumentMeta[doc])
+            {
+              DocumentMeta[doc]->content_location = TtaStrdup (DefaultName);
+              ok = (DocumentMeta[doc]->content_location);
+            }
+        }
+      if (ok)
+        {
+          // check isf there is a suffix
+          TtaExtractSuffix (DocumentMeta[doc]->content_location, suffix);
+          *with_suffix = (suffix[0] != EOS);
+        }
       else
-        return (TRUE);
+        *with_suffix = FALSE;
+      return ok;
     }
 }
 
@@ -2502,6 +2522,7 @@ void SaveDocument (Document doc, View view)
   char               *ptr;
   int                 i;
   ThotBool            ok, newLineNumbers;
+  ThotBool            with_suffix = FALSE;
 
   if (DocumentTypes[doc] == docAnnot) 
     {
@@ -2561,10 +2582,7 @@ void SaveDocument (Document doc, View view)
      saving some elements, for instance META */
   dispMode = TtaGetDisplayMode (doc);
   if (TextFormat)
-    {
-      dispMode = TtaGetDisplayMode (doc);
-      TtaSetDisplayMode (doc, DeferredDisplay);
-    }
+    TtaSetDisplayMode (doc, DeferredDisplay);
   else if (dispMode == DisplayImmediately)
     TtaSetDisplayMode (doc, DeferredDisplay);
 
@@ -2591,15 +2609,16 @@ void SaveDocument (Document doc, View view)
           // reset the source document as updated
           TtaSetDocumentUpdated (doc);
         }
-      else if (DocumentMeta[doc]->content_location)
-        ok = TRUE;
-      else if (AddNoName (doc, view, tempname, &ok))
+      else
+        ok = HasSavingName (doc, view, tempname, &with_suffix);
+
+      if (!ok || !with_suffix)
         {
-          ok = TRUE;
-          if (DocumentMeta[doc]->content_location)
-            TtaFreeMemory (DocumentMeta[doc]->content_location);
-          ptr = TtaGetEnvString ("DEFAULTNAME");
-          DocumentMeta[doc]->content_location = TtaStrdup (ptr);
+          // call Save As when there is no suffix
+          SavingDocument = 0;
+          TtaSetDisplayMode (doc, dispMode);
+          SaveDocumentAs (doc, view);
+          return;
         }
 
       ptr = GetLocalPath (doc, DocumentURLs[doc]);
@@ -3576,7 +3595,6 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
   char                tempdir[MAX_LENGTH];
   char                msg[200];
   char                url_sep;
-  int                 res;
   int                 len, xmlDoc;
   char               *old_charset = NULL;
   char               *old_mimetype = NULL;
@@ -3585,8 +3603,7 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
   char               *ptr;
   ThotBool            src_is_local;
   ThotBool            dst_is_local, ok;
-  ThotBool	          docModified, toUndo;
-  ThotBool            new_put_def_name;
+  ThotBool	          docModified, toUndo, with_suffix = FALSE;
 
   if (SavingDocument == 0)
     return;
@@ -3627,23 +3644,11 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
   else
     url_sep = URL_SEP;
 
-  new_put_def_name = FALSE;
   if (SaveName[0] == EOS)
     {
       /* there is no document name */
-      if (AddNoName (SavingDocument, 1, documentFile, &ok))
-        {
-          ok = TRUE;
-          res = strlen(SavePath) - 1;
-          if (SavePath[res] == url_sep)
-            SavePath[res] = EOS;
-          /* need to update the document url */
-          strcpy (SaveName, DefaultName);
-          strcat (documentFile, SaveName);
-          /* set up a temp flag to say we're using the default name */
-          new_put_def_name = TRUE;
-        }
-      else if (!ok)
+      ok = HasSavingName (SavingDocument, 1, documentFile, &with_suffix);
+      if (!ok)
         {
           /* cannot save */
           doc = SavingDocument;
