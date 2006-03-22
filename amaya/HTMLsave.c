@@ -1808,7 +1808,7 @@ static ThotBool HasSavingName (Document doc, View view, char *url,
           if (UserAnswer != 0 && DocumentMeta[doc])
             {
               DocumentMeta[doc]->content_location = TtaStrdup (DefaultName);
-              ok = (DocumentMeta[doc]->content_location);
+              ok = (DocumentMeta[doc]->content_location != NULL);
             }
         }
       if (ok)
