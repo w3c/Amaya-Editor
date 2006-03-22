@@ -747,8 +747,8 @@ static void ParseForm (Document doc, Element ancestor, Element el, int mode)
   ----------------------------------------------------------------------*/
 static void DoSubmit (Document doc, int method, char *action)
 {
-  ClickEvent          evt;
   char               *urlName, *ptr, *param;
+  int                 evt;
   int                 lg;
 
   /* clear the selection */

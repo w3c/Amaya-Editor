@@ -504,7 +504,7 @@ typedef struct _DocumentMetaDataElement
   char      *full_content_location; /* full content location returned by the server */
   char      *reason;           /* http_headers reason*/
 
-  ClickEvent method;           /* method used to send this data */
+  int        method;           /* method used to send this data */
   ThotBool   xmlformat;        /* the document should be exported in xml format */
   ThotBool   compound;        /* the document is a compound document */
 #ifdef ANNOTATIONS

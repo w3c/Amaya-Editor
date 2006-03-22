@@ -191,7 +191,7 @@ int RelativePosition (Document doc, int *distance)
   being displayed in another window. 
   ----------------------------------------------------------------------*/
 static ThotBool IsNextDocLoaded (const Document baseDoc, const char *url,
-                                 const char *form_data, const ClickEvent CE_event)
+                                 const char *form_data, const int CE_event)
 {
   char              *tempdocument;
   char              *target;
@@ -397,7 +397,7 @@ void GotoPreviousHTML (Document doc, View view)
       (strcmp(DocumentURLs[doc], url) || !same_form_data))
     {
       /* is the next document already loaded? */
-      next_doc_loaded = IsNextDocLoaded (doc, url, form_data, (ClickEvent)method);
+      next_doc_loaded = IsNextDocLoaded (doc, url, form_data, method);
       if (!next_doc_loaded && !CanReplaceCurrentDocument (doc, view))
         {
           /* out of the critic section */
@@ -475,7 +475,7 @@ void GotoPreviousHTML (Document doc, View view)
   else
     {
       StopTransfer (doc, 1);
-      GetAmayaDoc (url, form_data, doc, doc, (ClickEvent)method, FALSE,
+      GetAmayaDoc (url, form_data, doc, doc, method, FALSE,
                    (void (*)(int, int, char*, char*, const AHTHeaders*, void*))
                    GotoPreviousHTML_callback,(void *) ctx);
       /* out of the critic section */
@@ -588,7 +588,7 @@ void GotoNextHTML (Document doc, View view)
        !same_form_data))
     {
       /* is the next document already loaded? */
-      next_doc_loaded = IsNextDocLoaded (doc, url, form_data, (ClickEvent)method);
+      next_doc_loaded = IsNextDocLoaded (doc, url, form_data, method);
       if (!CanReplaceCurrentDocument (doc, view))
         {
           /* out of the critic section */
@@ -640,7 +640,7 @@ void GotoNextHTML (Document doc, View view)
   else
     {
       StopTransfer (doc, 1);
-      GetAmayaDoc (url, form_data, doc, doc, (ClickEvent)method, FALSE,
+      GetAmayaDoc (url, form_data, doc, doc, method, FALSE,
                    (void (*)(int, int, char*, char*, const AHTHeaders*, void*)) GotoNextHTML_callback, (void *) ctx);
       /* out of the critic section */
       Back_Forward = FALSE;
@@ -652,7 +652,7 @@ void GotoNextHTML (Document doc, View view)
   Add a new URL in the history associated with the window of document doc.
   ----------------------------------------------------------------------*/
 void AddDocHistory (Document doc, char *url, char *initial_url,
-                    char *form_data, ClickEvent method)
+                    char *form_data, int method)
 {
   int                 i, position, distance;
 
@@ -908,10 +908,10 @@ void HelpAtW3C (Document document, View view)
 #ifdef _WX
   LoadDefaultOpeningLocation (TRUE); //in new frame
   document = GetAmayaDoc (localname, NULL, document, document,
-                          (ClickEvent)CE_HELP,
+                          CE_HELP,
                           FALSE, NULL, NULL);
 #else /* _WX */
-  document = GetAmayaDoc (localname, NULL, 0, 0, (ClickEvent)CE_HELP,
+  document = GetAmayaDoc (localname, NULL, 0, 0, CE_HELP,
                           FALSE, NULL, NULL);
 #endif /* _WX */
   InitDocHistory (document);
@@ -938,10 +938,10 @@ void HelpLocal (Document doc, View view)
     }
 #ifdef _WX
   LoadDefaultOpeningLocation (TRUE); // in new frame
-  document = GetAmayaDoc (localname, NULL, doc, doc, (ClickEvent)CE_HELP,
+  document = GetAmayaDoc (localname, NULL, doc, doc, CE_HELP,
                           FALSE, NULL, NULL);
 #else /* _WX */
-  document = GetAmayaDoc (localname, NULL, 0, 0, (ClickEvent)CE_HELP,
+  document = GetAmayaDoc (localname, NULL, 0, 0, CE_HELP,
                           FALSE, NULL, NULL);
 #endif /* _WX */
   InitDocHistory (document);
@@ -978,10 +978,10 @@ static void DisplayHelp (int doc, int index)
     }
 #ifdef _WX
   LoadDefaultOpeningLocation (TRUE); //in new frame
-  document = GetAmayaDoc (localname, NULL, doc, doc, (ClickEvent)CE_HELP,
+  document = GetAmayaDoc (localname, NULL, doc, doc, CE_HELP,
                           FALSE, NULL, NULL);
 #else /* _WX */
-  document = GetAmayaDoc (localname, NULL, 0, 0, (ClickEvent)CE_HELP,
+  document = GetAmayaDoc (localname, NULL, 0, 0, CE_HELP,
                           FALSE, NULL, NULL);
 #endif /* _WX */
   /* Set the Help document in ReadOnly mode */

@@ -276,7 +276,7 @@ typedef struct _AmayaDoc_context
   char      *documentname; /* the document name */
   char      *initial_url;  /* initial loaded URL */
   char      *form_data;
-  ClickEvent method;
+  int        method;
   ThotBool   inNewWindow;
   TTcbf     *cbf;
   void      *ctx_cbf;
@@ -289,7 +289,7 @@ typedef struct _RELOAD_context
   Document   newdoc;
   char      *documentname;
   char      *form_data;
-  ClickEvent method;
+  int        method;
   int        position;	/* volume preceding the the first element to be shown */
   int        distance; /* distance from the top of the window to the top of this
                    element (% of the window height) */
@@ -1289,7 +1289,7 @@ void ShowLogFile (Document doc, View view)
     {
       sprintf (fileName, "%s%c%d%cPARSING.ERR",
                TempFileDirectory, DIR_SEP, doc, DIR_SEP);
-      newdoc = GetAmayaDoc (fileName, NULL, 0, doc, (ClickEvent)CE_LOG, FALSE,
+      newdoc = GetAmayaDoc (fileName, NULL, 0, doc, CE_LOG, FALSE,
                             NULL, NULL);
       /* store the relation with the original document */
       if (newdoc)
@@ -2673,7 +2673,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
                          ThotBool inNewWindow,
                          char *docname, DocumentType docType,
                          Document sourceOfDoc, ThotBool readOnly, int profile,
-                         ClickEvent method)
+                         int method)
 {
   Document      doc; /* the new doc */
   View          mainView, structView, altView, linksView, tocView;
@@ -4052,7 +4052,7 @@ Document LoadDocument (Document doc, char *pathname,
                                            FALSE /* replaceOldDoc */,
                                            TRUE /* inNewWindow */,
                                            documentname, docType, 0, FALSE,
-                                           docProfile, (ClickEvent)method);
+                                           docProfile, method);
                   ResetStop (doc);
                   /* clear the status line of previous document */
                   TtaSetStatus (doc, 1, " ", NULL);
@@ -4064,7 +4064,7 @@ Document LoadDocument (Document doc, char *pathname,
                                          TRUE /* replaceOldDoc */,
                                          FALSE /* inNewWindow */,
                                          documentname, docType, 0, FALSE,
-                                         docProfile, (ClickEvent)method);
+                                         docProfile, method);
             }
           else if (method == CE_ABSOLUTE  || method == CE_HELP ||
                    method == CE_FORM_POST || method == CE_FORM_GET)
@@ -4073,7 +4073,7 @@ Document LoadDocument (Document doc, char *pathname,
                                      TRUE /* replaceOldDoc */,
                                      FALSE /* inNewWindow */,
                                      documentname, docType, 0, FALSE,
-                                     docProfile, (ClickEvent)method);
+                                     docProfile, method);
 #ifdef ANNOTATIONS
           else if (method == CE_ANNOT) /*  && docType == docHTML) */
             {
@@ -4100,7 +4100,7 @@ Document LoadDocument (Document doc, char *pathname,
                                      TRUE /* replaceOldDoc */,
                                      FALSE /* inNewWindow */,
                                      documentname, docType, 0, FALSE,
-                                     docProfile, (ClickEvent)method);
+                                     docProfile, method);
           else
             {
               /* document already initialized */
@@ -4224,7 +4224,7 @@ Document LoadDocument (Document doc, char *pathname,
       reason = HTTP_headers (http_headers, AM_HTTP_REASON);
       if (reason && strcasecmp (reason, "OK"))
         DocumentMeta[newdoc]->reason = TtaStrdup (reason);
-      DocumentMeta[newdoc]->method = (ClickEvent) method;
+      DocumentMeta[newdoc]->method = method;
       DocumentSource[newdoc] = 0;
       DocumentMeta[newdoc]->xmlformat = isXML;
       DocumentMeta[newdoc]->compound = FALSE;
@@ -4385,7 +4385,7 @@ void Reload_callback (int doc, int status, char *urlName,
   char              *documentname;
   char              *form_data;
   char              *initial_url, *ptr;
-  ClickEvent         method;
+  int                method;
   Document           res = 0;
   Element            el;
   RELOAD_context    *ctx;
@@ -4542,7 +4542,7 @@ void Reload (Document doc, View view)
   char               *pathname;
   char               *documentname;
   char               *form_data;
-  ClickEvent          method;
+  int                 method;
   RELOAD_context     *ctx;
   int                 toparse;
   int                 mode;
@@ -4798,13 +4798,13 @@ void ShowSource (Document doc, View view)
                                   FALSE /* inNewWindow */,
                                   documentname, (DocumentType)docSource, doc, FALSE,
                                   TtaGetDocumentProfile (doc),
-                                  (ClickEvent)CE_ABSOLUTE);   
+                                  (int)CE_ABSOLUTE);   
 #else /* _WX */
       sourceDoc = InitDocAndView (doc,
                                   FALSE /* replaceOldDoc */,
                                   TRUE /* inNewWindow */,
                                   documentname, (DocumentType)docSource, doc, FALSE,
-                                  L_Other, (ClickEvent)CE_ABSOLUTE);   
+                                  L_Other, (int)CE_ABSOLUTE);   
 #endif /* _WX */
 
       if (sourceDoc > 0)
@@ -5151,7 +5151,7 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName,
   Document            res;
   AmayaDoc_context   *ctx;
   TTcbf              *cbf;
-  ClickEvent         method;
+  int                 method;
   void               *ctx_cbf;
   char                tempdocument[MAX_LENGTH];
   char               *tempfile;
@@ -5375,7 +5375,7 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName,
   - history: record the URL in the browsing history
   ----------------------------------------------------------------------*/
 Document GetAmayaDoc (char *urlname, char *form_data,
-                      Document doc, Document baseDoc, ClickEvent method,
+                      Document doc, Document baseDoc, int method,
                       ThotBool history, TTcbf *cbf, void *ctx_cbf)
 {
   Document            newdoc, refdoc;
@@ -5553,7 +5553,7 @@ Document GetAmayaDoc (char *urlname, char *form_data,
                                   FALSE /* replaceOldDoc */,
                                   TRUE /* inNewWindow */,
                                   documentname, (DocumentType)docLog, 0, FALSE,
-                                  L_Other, (ClickEvent)method);
+                                  L_Other, method);
       else if (method == CE_HELP)
         {
           /* add the URI in the combobox string */
@@ -5564,14 +5564,14 @@ Document GetAmayaDoc (char *urlname, char *form_data,
                                    !DontReplaceOldDoc /* replaceOldDoc */,
                                    InNewWindow /* inNewWindow */,
                                    documentname, (DocumentType)docType, 0, TRUE,
-                                   L_Other, (ClickEvent)method);
+                                   L_Other, method);
 #else /* _WX */
           /* need to create a new window for the document */
           newdoc = InitDocAndView (doc,
                                    FALSE /* replaceOldDoc */,
                                    TRUE /* inNewWindow */,
                                    documentname, (DocumentType)docType, 0, TRUE,
-                                   L_Other, (ClickEvent)method);
+                                   L_Other, method);
 #endif /* _WX */
           if (newdoc)
             {
@@ -5591,7 +5591,7 @@ Document GetAmayaDoc (char *urlname, char *form_data,
                                    FALSE /* replaceOldDoc */,
                                    TRUE /* inNewWindow */,
                                    documentname, (DocumentType)docAnnot, 0, FALSE,
-                                   L_Annot, (ClickEvent)method);
+                                   L_Annot, method);
           /* we're downloading an annotation, fix the accept_header
              (thru the content_type variable) to application/rdf */
           content_type = "application/rdf";
@@ -5610,7 +5610,7 @@ Document GetAmayaDoc (char *urlname, char *form_data,
                                    InNewWindow /* inNewWindow */,
 #endif /* _WX */
                                    documentname, (DocumentType)docType, 0, FALSE,
-                                   L_Other, (ClickEvent)method);
+                                   L_Other, method);
         }
       else
         {
@@ -5970,11 +5970,11 @@ void CallbackDialogue (int ref, int typedata, char *data)
                   /* load an URL */ 
                   else if (DontReplaceOldDoc)
                     GetAmayaDoc (LastURLName, NULL, doc, doc,
-                                 (ClickEvent)Loading_method,
+                                 Loading_method,
                                  FALSE, NULL, NULL);
                   else
                     GetAmayaDoc (LastURLName, NULL, CurrentDocument,
-                                 CurrentDocument, (ClickEvent)Loading_method,
+                                 CurrentDocument, Loading_method,
                                  TRUE, NULL, NULL);
                 }
               else if (DirectoryName[0] != EOS && DocumentName[0] != EOS)
@@ -5993,11 +5993,11 @@ void CallbackDialogue (int ref, int typedata, char *data)
                       if (DontReplaceOldDoc)
                         GetAmayaDoc (tempfile, NULL,
                                      doc, doc,
-                                     (ClickEvent)Loading_method,
+                                     Loading_method,
                                      FALSE, NULL, NULL);
                       else
                         GetAmayaDoc (tempfile, NULL, CurrentDocument,
-                                     CurrentDocument, (ClickEvent)Loading_method,
+                                     CurrentDocument, Loading_method,
                                      TRUE, NULL, NULL);
                     }
                   else
@@ -6037,11 +6037,11 @@ void CallbackDialogue (int ref, int typedata, char *data)
                   /* update the list of URLs */
                   if (DontReplaceOldDoc)
                     GetAmayaDoc (DocumentName, NULL, doc, doc,
-                                 (ClickEvent)Loading_method,
+                                 Loading_method,
                                  FALSE, NULL, NULL);
                   else
                     GetAmayaDoc (DocumentName, NULL, CurrentDocument,
-                                 CurrentDocument, (ClickEvent)Loading_method,
+                                 CurrentDocument, Loading_method,
                                  TRUE, NULL, NULL);
                 }
               else if (DirectoryName[0] != EOS)
@@ -6956,7 +6956,7 @@ static int RestoreOneAmayaDoc (Document doc, char *tempdoc, char *docname,
                            FALSE /* replaceOldDoc */,
                            TRUE /* inNewWindow */,
                            DocumentName, (DocumentType)docType, 0, FALSE,
-                           L_Other, (ClickEvent)CE_ABSOLUTE);
+                           L_Other, CE_ABSOLUTE);
   if (newdoc != 0)
     {
       /* load the saved file */

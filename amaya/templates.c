@@ -188,7 +188,7 @@ void OpenTemplateDocument (Document doc)
   ReloadTemplateParams : restores the script URL and method into meta
   to reload a template
   ----------------------------------------------------------------------*/
-void ReloadTemplateParams (char **docURL, ClickEvent *method)
+void ReloadTemplateParams (char **docURL, int *method)
 {
   *method = CE_FORM_GET;
   TtaFreeMemory (*docURL);
@@ -437,7 +437,7 @@ int CreateInstanceOfTemplate (Document doc, char *templatename, char *docname,
                                !DontReplaceOldDoc /* replaceOldDoc */,
                                InNewWindow, /* inNewWindow */
                                DocumentName, (DocumentType)docType, 0, FALSE,
-                               L_Other, (ClickEvent)CE_ABSOLUTE);
+                               L_Other, CE_ABSOLUTE);
       DontReplaceOldDoc = FALSE;
     }
   else
@@ -451,7 +451,7 @@ int CreateInstanceOfTemplate (Document doc, char *templatename, char *docname,
                                !DontReplaceOldDoc /* replaceOldDoc */,
                                InNewWindow, /* inNewWindow */
                                DocumentName, (DocumentType)docType, 0, FALSE,
-                               L_Other, (ClickEvent)CE_ABSOLUTE);
+                               L_Other, CE_ABSOLUTE);
     }
 
   if (newdoc != 0)

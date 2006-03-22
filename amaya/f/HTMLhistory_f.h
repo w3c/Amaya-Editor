@@ -34,7 +34,7 @@ extern void AddDocHistory ( Document doc,
                             char *url,
                             char *initial_url,
                             char *form_data,
-                            ClickEvent method );
+                            int method );
 extern void HelpAmaya ( Document document,
                         View view );
 extern void HelpAtW3C ( Document document,
@@ -126,7 +126,7 @@ extern void AddDocHistory ( Document doc,
                               char *url,
                               char *initial_url,
                               char *form_data,
-                              ClickEvent method );
+                              int method );
 extern void HelpAmaya ( Document document,
                           View view );
 extern void HelpAtW3C ( Document document,

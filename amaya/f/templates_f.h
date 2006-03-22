@@ -10,7 +10,7 @@ extern void NewTemplate ( Document doc,
                           View view );
 extern void OpenTemplateDocument ( Document doc );
 extern void ReloadTemplateParams ( char **docURL,
-                                   ClickEvent *method );
+                                   int *method );
 extern void InitTemplateList ( void );
 extern void InsertInstanceMeta ( Document newdoc );
 extern int CreateInstanceOfTemplate ( Document doc,
@@ -26,7 +26,7 @@ extern void NewTemplate ( Document doc,
                             View view );
 extern void OpenTemplateDocument ( Document doc );
 extern void ReloadTemplateParams ( char **docURL,
-                                     ClickEvent *method );
+                                     int *method );
 extern void InitTemplateList ( void );
 extern void InsertInstanceMeta ( Document newdoc );
 extern int CreateInstanceOfTemplate ( Document doc,

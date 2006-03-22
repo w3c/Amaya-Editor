@@ -641,7 +641,7 @@ static ThotBool FollowTheLink (Element anchor, Element elSource,
               readonly = (TtaGetAccessRight (root) == ReadOnly);
               /* Load the new document */
               targetDocument = GetAmayaDoc (pathname, NULL, reldoc, doc, 
-                                            (ClickEvent)method, history, 
+                                            method, history, 
                                             (void (*)(int, int, char*, char*, const AHTHeaders*, void*)) FollowTheLink_callback,
                                             (void *) ctx);
               if (readonly)
@@ -728,7 +728,7 @@ void CheckRefresh (Document doc)
 			      
                               /* Load the new document */
                               doc = GetAmayaDoc (pathname, NULL, doc, doc, 
-                                                 (ClickEvent)CE_RELATIVE, FALSE, 
+                                                 CE_RELATIVE, FALSE, 
                                                  NULL, NULL);
                               el = NULL;
                             }
