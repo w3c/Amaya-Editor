@@ -913,6 +913,101 @@ void ApplDelayedRule (PtrElement pEl, PtrDocument pDoc)
 }
 
 /*----------------------------------------------------------------------
+  ElemHasCondAttribute
+  Check whether element pEl has an attribute that satisfies condition pCond.
+  ----------------------------------------------------------------------*/
+static ThotBool ElemHasCondAttribute (PtrElement pEl, PtrCondition pCond,
+                                      PtrSSchema pSS)
+{
+  PtrAttribute        pA;
+  unsigned char       attrVal[MAX_TXT_LEN];
+  int                 i, j;
+  ThotBool            found;
+
+  pA = pEl->ElFirstAttr;
+  found = FALSE;
+  while (pA)
+    /* check all attributes of the element */
+    {
+      if (pA->AeAttrNum != pCond->CoTypeAttr ||
+          !strcmp (pA->AeAttrSSchema->SsName, pSS->SsName) == 0)
+        /* that's not the attribute we are looking for */
+        /* check next attribute of that ancestor */
+        pA = pA->AeNext; 
+      else
+        /* that's the attribute we are looking for */
+        {
+          if (!pCond->CoTestAttrValue)
+            /* we don't care about the attribute value */
+            found = TRUE;
+          else
+            /* check the attribute value */
+            {
+              if (pA->AeAttrType != AtTextAttr)
+                /* compare integer values */
+                found = (pCond->CoAttrValue == pA->AeAttrValue);
+              else
+                /* it's a text attribute. Compare strings */
+                {
+                  if (!pA->AeAttrText)
+                    /* empty attribute */
+                    found = (pCond->CoAttrTextValue == NULL ||
+                             pCond->CoAttrTextValue[0] == EOS);
+                  else
+                    {
+                      CopyBuffer2MBs (pA->AeAttrText, 0, attrVal,
+                                      MAX_TXT_LEN);
+                      /* test the attribute value */
+                      j = 0; i = 0;
+                      found = FALSE;
+                      if (pCond->CoTextMatch == CoSubstring)
+                        /* compare strings up to an hyphen */
+                        {
+                          while (pCond->CoAttrTextValue[i] != EOS &&
+                                 attrVal[i] != EOS &&
+                                 attrVal[i] == pCond->CoAttrTextValue[i])
+                            i++;
+                          found = (pCond->CoAttrTextValue[i] == EOS &&
+                                   (attrVal[i] == '-' ||
+                                    attrVal[i] == EOS));
+                        }
+                      else
+                        {
+                          while (!found && attrVal[j] != EOS)
+                            {
+                              i = 0;
+                              while (pCond->CoAttrTextValue[i] != EOS &&
+                                     attrVal[j + i] == pCond->CoAttrTextValue[i])
+                                i++;
+                              found = (pCond->CoAttrTextValue[i] == EOS);
+                              if (found)
+                                {
+                                  if (pCond->CoTextMatch == CoWord)
+                                    {
+                                      /* check if a word matches */
+                                      i += j;
+                                      found = (j == 0 || attrVal[j - 1] == SPACE) &&
+                                        (attrVal[i] == EOS || attrVal[i] == SPACE);
+                                    }
+                                  else if (pCond->CoTextMatch == CoMatch)
+                                    /* the whole attribute value must be equal */
+                                    found = attrVal[j + i] == EOS;
+                                }
+                              /* prepare next search */
+                              j++;
+                            }
+                        }
+                    }
+                }
+            }
+          /* don't check other attributes for this element */
+          pA = NULL;
+        }
+    }
+  return found;
+}
+
+/*----------------------------------------------------------------------
   CondPresentation evalue les conditions d'application d'une regle de    
   presentation qui s'applique a` l'element pEl ou a l'attribut pAttr
   pour la vue de numero View.                              
@@ -925,17 +1020,15 @@ void ApplDelayedRule (PtrElement pEl, PtrDocument pDoc)
   ----------------------------------------------------------------------*/
 ThotBool CondPresentation (PtrCondition pCond, PtrElement pEl,
                            PtrAttribute pAttr, PtrElement pElAttr,
-			   PtrPRule pRule, int view, PtrSSchema pSS,
+                           PtrPRule pRule, int view, PtrSSchema pSS,
                            PtrDocument pDoc)
 {
   PtrPSchema          pSchP = NULL;
   PtrElement          pElSibling, pAsc, pElem, pRoot;
   PtrReference        pRef;
-  PtrAttribute        pA;
   PtrCondition        firstCondLevel;
-  unsigned char       attrVal[MAX_TXT_LEN];
   int                 valcompt, valmaxi, valmini;
-  int                 i = 0, j;
+  int                 i = 0;
   PtrSRule            pRe1;
   ThotBool            ok, found, stop, equal;
 
@@ -1331,86 +1424,10 @@ ThotBool CondPresentation (PtrCondition pCond, PtrElement pEl,
             found = FALSE;
             while (pAsc)
               {
-                pA = pAsc->ElFirstAttr;
-                while (pA)
-                  /* boucle sur les attributs de l'element */
-                  {
-                    if (pA->AeAttrNum != pCond->CoTypeAttr ||
-                        !strcmp (pA->AeAttrSSchema->SsName, pSS->SsName) == 0)
-                      /* that's not the attribute we are looking for */
-                      /* check next attribute of that ancestor */
-                      pA = pA->AeNext; 
-                    else
-                      /* that's the attribute we are looking for */
-                      {
-                        if (!pCond->CoTestAttrValue)
-                          /* we don't care about the attribute value */
-                          found = TRUE;
-                        else
-                          /* check the attribute value */
-                          {
-                            if (pA->AeAttrType == AtTextAttr)
-                              /* it's a text attribute. Compare strings */
-                              {
-                                if (!pA->AeAttrText)
-                                  found = (pCond->CoAttrTextValue == NULL ||
-                                           pCond->CoAttrTextValue[0] == EOS);
-                                else
-                                  {
-                                    CopyBuffer2MBs (pA->AeAttrText, 0, attrVal,
-                                                    MAX_TXT_LEN);
-                                    /* test the attribute value */
-                                    j = 0;
-                                    found = FALSE;
-                                    if (pCond->CoTextMatch == CoSubstring)
-                                      /* compare strings up to an hyphen */
-                                      {
-                                        while (pCond->CoAttrTextValue[i] != EOS &&
-                                               attrVal[i] != EOS &&
-                                               attrVal[i] == pCond->CoAttrTextValue[i])
-                                          i++;
-                                        found = (pCond->CoAttrTextValue[i] == EOS &&
-                                                 (attrVal[i] == '-' ||
-                                                  attrVal[i] == EOS));
-                                      }
-                                    else
-                                      {
-                                        while (!found && attrVal[j] != EOS)
-                                          {
-                                            i = 0;
-                                            while (pCond->CoAttrTextValue[i] != EOS &&
-                                                   attrVal[j + i] == pCond->CoAttrTextValue[i])
-                                              i++;
-                                            found = (pCond->CoAttrTextValue[i] == EOS);
-                                            if (found)
-                                              {
-                                                if (pCond->CoTextMatch == CoWord)
-                                                  {
-                                                    /* check if a word matches */
-                                                    i += j;
-                                                    found = (j == 0 || attrVal[j - 1] == SPACE) &&
-                                                      (attrVal[i] == EOS || attrVal[i] == SPACE);
-                                                  }
-                                                else if (pCond->CoTextMatch == CoMatch)
-                                                  /* the whole attribute value must be equal */
-                                                  found = attrVal[j + i] == EOS;
-                                              }
-                                            /* prepare next search */
-                                            j++;
-                                          }
-                                      }
-                                  }
-                              }
-                            else
-                              found = (pCond->CoAttrValue == pA->AeAttrValue);
-                          }
-                        /* don't check other attributes for this element */
-                        pA = NULL;
-                        if (found)
-                          /* don't look further */
-                          pAsc = NULL;
-                      }
-                  }
+                found = ElemHasCondAttribute (pAsc, pCond, pSS);
+                if (found)
+                  /* don't look further */
+                  pAsc = NULL;
                 /* if the attribute has not been encountered yet, check next
                    ancestor */
                 if (pAsc)
@@ -1420,42 +1437,7 @@ ThotBool CondPresentation (PtrCondition pCond, PtrElement pEl,
 
           case PcAttribute:
             /* verifie si l'element possede cet attribut */
-            pA = pElem->ElFirstAttr;
-            found = FALSE;
-            while (pA != NULL && !found)
-              /* boucle sur les attributs de l'element */
-              {
-                if (pA->AeAttrNum == pCond->CoTypeAttr &&
-                    strcmp (pA->AeAttrSSchema->SsName, pSS->SsName) == 0)
-                  /* that's the attribute we are looking for */
-                  {
-                    if (!pCond->CoTestAttrValue)
-                      /* we don't care about the attribute value */
-                      found = TRUE;
-                    else
-                      /* test the attribute value */
-                      {
-                        if (pA->AeAttrType == AtTextAttr)
-                          /* it's a text attribute. Compare strings */
-                          {
-                            if (!pA->AeAttrText)
-                              found = (pCond->CoAttrTextValue ||
-                                       pCond->CoAttrTextValue[0] == EOS);
-                            else
-                              {
-                                CopyBuffer2MBs (pA->AeAttrText, 0, attrVal,
-                                                MAX_TXT_LEN);
-                                found = !strcmp ((const char *)pCond->CoAttrTextValue, (const char *)attrVal);
-                              }
-                          }
-                        else
-                          found = (pCond->CoAttrValue == pA->AeAttrValue);
-                      } 
-                    pA = NULL;
-                  }
-                else
-                  pA = pA->AeNext;		/* attribut suivant */
-              }
+            found = ElemHasCondAttribute (pElem, pCond, pSS);
             /* as it's impossible to set an attribute to the PAGE */
             if (!found && pElem->ElTypeNumber == PageBreak + 1)
               {
@@ -1482,41 +1464,7 @@ ThotBool CondPresentation (PtrCondition pCond, PtrElement pEl,
                         pAsc = pAsc->ElParent;
                       }
                   }
-                pA = pRoot->ElFirstAttr;
-                /* check the list of attributes of the root element */
-                while (pA != NULL && !found)
-                  /* boucle sur les attributs de l'element */
-                  {
-                    if (pA->AeAttrNum == pCond->CoTypeAttr)
-                      {
-                        if (!pCond->CoTestAttrValue)
-                          /* we don't care about the attribute value */
-                          found = TRUE;
-                        else
-                          /* test the attribute value */
-                          {
-                            if (pA->AeAttrType == AtTextAttr)
-                              /* it's a text attribute. Compare strings */
-                              {
-                                if (!pA->AeAttrText)
-                                  found = (pCond->CoAttrTextValue ||
-                                           pCond->CoAttrTextValue[0] == EOS);
-                                else
-                                  {
-                                    CopyBuffer2MBs (pA->AeAttrText, 0, attrVal,
-                                                    MAX_TXT_LEN);
-                                    found = !strcmp ((const char *)pCond->CoAttrTextValue,
-                                                     (const char *)attrVal);
-                                  }
-                              }
-                            else
-                              found = (pCond->CoAttrValue == pA->AeAttrValue);
-                          } 
-                        pA = NULL;
-                      }
-                    else
-                      pA = pA->AeNext;	/* attribut suivant */
-                  }
+                found = ElemHasCondAttribute (pRoot, pCond, pSS);
               }
             break;
 
