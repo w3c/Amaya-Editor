@@ -20,9 +20,11 @@
 THOT_EXPORT Frame_Ctl FrameTable[MAX_FRAME+1];
 
 #ifdef _WX
-/* each Window can contains several documents
- * */
+/* each Window can contains several documents */
 THOT_EXPORT Window_Ctl WindowTable[MAX_WINDOW+1];
+/* Status of scroll bars */
+THOT_EXPORT ThotBool VscrollShown[MAX_FRAME+1];
+THOT_EXPORT ThotBool HscrollShown[MAX_FRAME+1];
 #endif /* _WX */
 
 #ifdef _GTK

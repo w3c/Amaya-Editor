@@ -58,11 +58,9 @@ IMPLEMENT_DYNAMIC_CLASS(AmayaFrame, wxPanel)
  *      Method:  AmayaFrame
  * Description:  just construct a frame : AmayaCanvas + 2 AmayaScrollBar into a wxFlexGridSizer
   -----------------------------------------------------------------------*/
-AmayaFrame::AmayaFrame(
-                       int             frame_id
-                       ,wxWindow * p_parent /* the final parent : the page splitter window */
-                       ,AmayaWindow *   p_amaya_parent_window
-                       )
+  AmayaFrame::AmayaFrame( int frame_id,
+                          wxWindow *p_parent, /* final parent: the page splitter window */
+                          AmayaWindow *p_amaya_parent_window)
   :  wxPanel( p_parent, -1, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL
 #ifndef _WINDOWS
               | wxRAISED_BORDER
@@ -84,7 +82,8 @@ AmayaFrame::AmayaFrame(
 
   m_pScrollBarV = NULL; 
   m_pScrollBarH = NULL;
-
+  VscrollShown[frame_id] = FALSE;
+  HscrollShown[frame_id] = FALSE;
   // create a textctrl widget.
   // it will receive every keybord events in order to handle unicode.
   // do not hide this widget because it can't get events when hidden
@@ -109,16 +108,14 @@ AmayaFrame::AmayaFrame(
   // The scrollbars are added when ShowScrollbar is called
   ShowScrollbar( 1 );
   ShowScrollbar( 2 );
-
   SetSizer(m_pVSizer);
-  
   m_pVSizer->Fit(this);
   m_pVSizer->Layout();
 
   // assign a dnd file target to each frame
   SetDropTarget(new AmayaFileDropTarget(this));
-  
   SetAutoLayout(TRUE);
+  Layout();
 }
 
 
@@ -145,9 +142,14 @@ AmayaFrame::~AmayaFrame()
   // then if the page is closed, the frame is deleted by wxWidgets because the frame is a child of the page.
   // it's important to free the corresponding frame context
   //DestroyFrame( m_FrameId );
-  FrameTable[GetFrameId()].WdFrame = NULL;
-}
+  int frame_id = GetFrameId();
+  FrameTable[frame_id].WdFrame = NULL;
+  VscrollShown[frame_id] = FALSE;
+  HscrollShown[frame_id] = FALSE;
+ }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 AmayaCanvas * AmayaFrame::CreateDrawingArea()
 {
   AmayaCanvas * p_canvas = NULL;
@@ -183,6 +185,8 @@ AmayaCanvas * AmayaFrame::CreateDrawingArea()
   return p_canvas;
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void AmayaFrame::ReplaceDrawingArea( AmayaCanvas * p_new_canvas )
 {
   if( !p_new_canvas )
@@ -213,14 +217,23 @@ int AmayaFrame::GetFrameId()
 {
   return m_FrameId;
 }
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 AmayaScrollBar * AmayaFrame::GetScrollbarH()
 {
   return m_pScrollBarH;
 }
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 AmayaScrollBar * AmayaFrame::GetScrollbarV()
 {
   return m_pScrollBarV;
 }
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 AmayaCanvas * AmayaFrame::GetCanvas()
 {
   return m_pCanvas;
@@ -237,27 +250,32 @@ AmayaCanvas * AmayaFrame::GetCanvas()
   -----------------------------------------------------------------------*/
 void AmayaFrame::HideScrollbar( int scrollbar_id )
 {
+  int frame_id = GetFrameId();
+
   TTALOGDEBUG_1( TTA_LOG_DIALOG, _T("AmayaFrame::HideScrollbar = %d"), scrollbar_id );
   switch( scrollbar_id )
     {
     case 1:
       {
         // do not remove the scrollbar if it doesnt exist
-        if (!m_pScrollBarV) return;
-
+        if (!m_pScrollBarV || !VscrollShown[frame_id])
+          return;
+        VscrollShown[frame_id] = FALSE;
         m_pHSizer->Show(m_pScrollBarV, false);
+        m_pHSizer->Layout();
       }
       break;
     case 2:
       {
         // do not remove the scrollbar if it doesnt exist
-        if (!m_pScrollBarH) return;
-
+        if (!m_pScrollBarH || !HscrollShown[frame_id])
+          return;
+        HscrollShown[frame_id] = FALSE;
         m_pVSizer->Show(m_pScrollBarH, false);
+        m_pVSizer->Layout();
       }
       break;
     }
-  Layout();
 }
 
 /*----------------------------------------------------------------------
@@ -271,6 +289,8 @@ void AmayaFrame::HideScrollbar( int scrollbar_id )
   -----------------------------------------------------------------------*/
 void AmayaFrame::ShowScrollbar( int scrollbar_id )
 {
+  int frame_id = GetFrameId();
+
   TTALOGDEBUG_1( TTA_LOG_DIALOG, _T("AmayaFrame::ShowScrollbar = %d"), scrollbar_id );
   switch( scrollbar_id )
     {
@@ -278,17 +298,18 @@ void AmayaFrame::ShowScrollbar( int scrollbar_id )
       {
         // do not create the scrollbar if it always exist
         if (!m_pScrollBarV)
-          {
-        
+          {        
             // Create vertical scrollbar
-            m_pScrollBarV = new AmayaScrollBar( this, GetFrameId(), wxSB_VERTICAL );
+            m_pScrollBarV = new AmayaScrollBar( this, frame_id, wxSB_VERTICAL );
+            VscrollShown[frame_id] = TRUE;
             m_pHSizer->Add( m_pScrollBarV, 0, wxEXPAND );
           }
-        else
+        else if (!VscrollShown[frame_id])
           {
+            VscrollShown[frame_id] = TRUE;
             m_pHSizer->Show(m_pScrollBarV, true);
           }
-        Layout();
+        m_pHSizer-Layout();
       }
       break;
     case 2:
@@ -297,14 +318,18 @@ void AmayaFrame::ShowScrollbar( int scrollbar_id )
         if (!m_pScrollBarH)
           {
             // Create vertical and horizontal scrollbars
-            m_pScrollBarH = new AmayaScrollBar( this, GetFrameId(), wxSB_HORIZONTAL );
+            m_pScrollBarH = new AmayaScrollBar( this, frame_id, wxSB_HORIZONTAL );
+            HscrollShown[frame_id] = TRUE;
             m_pVSizer->Add( m_pScrollBarH, 0, wxEXPAND );
           }
-        else
+        else if (!HscrollShown[frame_id])
           {
+            HscrollShown[frame_id] = TRUE;
             m_pVSizer->Show(m_pScrollBarH, true);
           }
-        Layout();
+#ifndef _MACOS // could crash on that platform with 6.2
+       m_pVSizer-Layout();
+#endif /* _MACOS */
       }
       break;
     }
@@ -312,7 +337,6 @@ void AmayaFrame::ShowScrollbar( int scrollbar_id )
 
 
 #ifdef _GL
-
 /*----------------------------------------------------------------------
  *       Class:  AmayaFrame
  *      Method:  SetCurrent
