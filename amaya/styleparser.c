@@ -3079,52 +3079,66 @@ static char *ParseACSSFontWeight (Element element, PSchema tsch,
   weight.typed_data.unit = UNIT_REL;
   weight.typed_data.real = FALSE;
   cssRule = SkipBlanksAndComments (cssRule);
-  if (!strncasecmp (cssRule, "100", 3) && cssRule[3] != '%' &&
-      !isalpha (cssRule[3]))
+  if (isdigit (*cssRule) && *cssRule != '0' &&
+      cssRule[1] == '0' && cssRule[2] == '0' &&
+      (cssRule[3] == EOS || cssRule[3] == SPACE || cssRule[3] == '/' ||
+       cssRule[3] == ';' || cssRule[3] == '}' || cssRule[3] == EOL || 
+       cssRule[3] == TAB || cssRule[3] ==  __CR__))
     {
-      weight.typed_data.value = -3;
-      cssRule = SkipWord (cssRule);
+      if (!strncasecmp (cssRule, "100", 3))
+        {
+          weight.typed_data.value = -3;
+          cssRule = SkipWord (cssRule);
+        }
+      else if (!strncasecmp (cssRule, "200", 3))
+        {
+          weight.typed_data.value = -2;
+          cssRule = SkipWord (cssRule);
+        }
+      else if (!strncasecmp (cssRule, "300", 3))
+        {
+          weight.typed_data.value = -1;
+          cssRule = SkipWord (cssRule);
+        }
+      else if (!strncasecmp (cssRule, "400", 3))
+        {
+          weight.typed_data.value = 0;
+          cssRule = SkipWord (cssRule);
+        }
+      else if (!strncasecmp (cssRule, "500", 3))
+        {
+          weight.typed_data.value = +1;
+          cssRule = SkipWord (cssRule);
+        }
+      else if (!strncasecmp (cssRule, "600", 3))
+        {
+          weight.typed_data.value = +2;
+          cssRule = SkipWord (cssRule);
+        }
+      else if (!strncasecmp (cssRule, "700", 3))
+        {
+          weight.typed_data.value = +3;
+          cssRule = SkipWord (cssRule);
+        }
+      else if (!strncasecmp (cssRule, "800", 3))
+        {
+          weight.typed_data.value = +4;
+          cssRule = SkipWord (cssRule);
+        }
+      else if (!strncasecmp (cssRule, "900", 3))
+        {
+          weight.typed_data.value = +5;
+          cssRule = SkipWord (cssRule);
+        }
     }
-  else if (!strncasecmp (cssRule, "200", 3) && !isalpha (cssRule[3]))
-    {
-      weight.typed_data.value = -2;
-      cssRule = SkipWord (cssRule);
-    }
-  else if (!strncasecmp (cssRule, "300", 3) && ! isalpha(cssRule[3]))
-    {
-      weight.typed_data.value = -1;
-      cssRule = SkipWord (cssRule);
-    }
-  else if (!strncasecmp (cssRule, "normal", 6) ||
-           (!strncasecmp (cssRule, "400", 3) && !isalpha (cssRule[3])))
+  else if (!strncasecmp (cssRule, "normal", 6))
     {
       weight.typed_data.value = 0;
       cssRule = SkipWord (cssRule);
     }
-  else if (!strncasecmp (cssRule, "500", 3) && !isalpha (cssRule[3]))
-    {
-      weight.typed_data.value = +1;
-      cssRule = SkipWord (cssRule);
-    }
-  else if (!strncasecmp (cssRule, "600", 3) && !isalpha (cssRule[3]))
-    {
-      weight.typed_data.value = +2;
-      cssRule = SkipWord (cssRule);
-    }
-  else if (!strncasecmp (cssRule, "bold", 4) ||
-           (!strncasecmp (cssRule, "700", 3) && !isalpha (cssRule[3])))
+  else if (!strncasecmp (cssRule, "bold", 4))
     {
       weight.typed_data.value = +3;
-      cssRule = SkipWord (cssRule);
-    }
-  else if (!strncasecmp (cssRule, "800", 3) && !isalpha (cssRule[3]))
-    {
-      weight.typed_data.value = +4;
-      cssRule = SkipWord (cssRule);
-    }
-  else if (!strncasecmp (cssRule, "900", 3) && !isalpha (cssRule[3]))
-    {
-      weight.typed_data.value = +5;
       cssRule = SkipWord (cssRule);
     }
   else if (!strncasecmp (cssRule, "inherit", 7))
