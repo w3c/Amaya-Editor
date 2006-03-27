@@ -5296,7 +5296,14 @@ static void  ParseCSSRule (Element element, PSchema tsch,
   while (*cssRule != EOS)
     {
       cssRule = SkipBlanksAndComments (cssRule);
-      if (*cssRule < 0x41 || *cssRule > 0x7A ||
+      if (*cssRule == '#')
+        {
+          end = SkipProperty (cssRule, FALSE);
+          CSSParseError ("Invalid property",
+                         cssRule, end);
+          cssRule = end; 
+        }
+      else if (*cssRule < 0x41 || *cssRule > 0x7A ||
           (*cssRule > 0x5A && *cssRule < 0x60))
         cssRule++;
       else if (*cssRule != EOS)
@@ -5321,13 +5328,12 @@ static void  ParseCSSRule (Element element, PSchema tsch,
             /* property content is allowed only for pseudo-elements :before and
                :after */
             {
-              end = cssRule;
-              end = SkipProperty (end, FALSE);
+              end = SkipProperty (cssRule, FALSE);
               CSSParseError ("content is allowed only for pseudo-elements",
                              cssRule, end);
-              i = NB_CSSSTYLEATTRIBUTE;
+              cssRule = end;
             }
-          if (i == NB_CSSSTYLEATTRIBUTE)
+          else if (i == NB_CSSSTYLEATTRIBUTE)
             cssRule = SkipProperty (cssRule, TRUE);
           else
             {
