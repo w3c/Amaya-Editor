@@ -3233,9 +3233,61 @@ void SetCharFontOrPhrase (int doc, int elemtype)
 void CopyLocation (Document doc, View view)
 {
 #ifdef _WX
-  TtaStringToClipboard ((unsigned char *)DocumentURLs[doc], UTF_8);
-#else /* _WX */
-  TtaStringToClipboard ((unsigned char *)DocumentURLs[doc], TtaGetLocaleCharset());
+  Element        el;
+  ElementType    elType;
+  AttributeType  attrType;
+  Attribute      attr;
+  int            firstSelectedChar, lastSelectedChar, length;
+  char           msgBuffer[MaxMsgLength], *name;
+
+  strcpy (msgBuffer, DocumentURLs[doc]);
+  TtaGiveFirstSelectedElement (doc, &el, &firstSelectedChar,
+                               &lastSelectedChar);
+  if (el)
+    {
+      // add the current  ID/name */
+      elType = TtaGetElementType (el);
+      if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+        el = TtaGetParent (el);
+      name = TtaGetSSchemaName (elType.ElSSchema);
+      attrType.AttrSSchema = elType.ElSSchema;
+      if (!strcmp (name, "HTML"))
+        attrType.AttrTypeNum = HTML_ATTR_ID;
+      else if (!strcmp (name, "SVG"))
+        attrType.AttrTypeNum = SVG_ATTR_xmlid;
+      else if (!strcmp (name, "MathML"))
+        attrType.AttrTypeNum = MathML_ATTR_id;
+      else if (!strcmp (name, "XLink"))
+        attrType.AttrTypeNum = XLink_ATTR_id;
+      else
+        attrType.AttrTypeNum = XML_ATTR_xmlid;
+      attr = TtaGetAttribute (el, attrType);
+      if (attr)
+        {
+          length = TtaGetTextAttributeLength (attr) + 1;
+          name = (char *)TtaGetMemory (length);
+          TtaGiveTextAttributeValue (attr, name, &length);
+          strcat (msgBuffer, "#");
+          strcat (msgBuffer, name);
+          TtaFreeMemory (name);
+        }
+      else if (!strcmp (name, "HTML"))
+        {
+          attrType.AttrTypeNum = HTML_ATTR_NAME;
+          attr = TtaGetAttribute (el, attrType);
+          if (attr)
+            {
+              length = TtaGetTextAttributeLength (attr) + 1;
+              name = (char *)TtaGetMemory (length);
+              TtaGiveTextAttributeValue (attr, name, &length);
+              strcat (msgBuffer, "#");
+              strcat (msgBuffer, name);
+              TtaFreeMemory (name);
+            }
+        }
+    }
+
+  TtaStringToClipboard ((unsigned char *)msgBuffer, UTF_8);
 #endif /* _WX */
 }
 

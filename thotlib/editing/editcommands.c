@@ -43,7 +43,6 @@
 static ThotPictInfo PictClipboard;
 static LeafType     ClipboardType;
 static Language     ClipboardLanguage = 0;
-
 /* X Clipboard */
 static struct _TextBuffer XClipboard;
 
@@ -3973,48 +3972,50 @@ void TtcPasteFromClipboard (Document doc, View view)
       TTALOGDEBUG_0( TTA_LOG_CLIPBOARD, _T("Can't open clipboard.") );
       return;
     }
-  
   wxTextDataObject data;
+#ifdef IV
   if (wxTheClipboard->IsSupported( data.GetFormat() ))
     {
       TTALOGDEBUG_0( TTA_LOG_CLIPBOARD, _T("Clipboard supports requested format.") );
-      
+#endif /* IV */
       if (wxTheClipboard->GetData( data ))
         {
           wxString text = data.GetText();
-          TTALOGDEBUG_0( TTA_LOG_CLIPBOARD, _T("Successfully retrieved data from the clipboard.") );
           TTALOGDEBUG_0( TTA_LOG_CLIPBOARD, _T("Text pasted from the clipboard : ") + text );
-          /* if ClipboardLength is not zero, the last Xbuffer comes from Thot */
-          if (Xbuffer)
-            TtcClearClipboard ();
-
-          if (Xbuffer == NULL)
+	      
+          int len = strlen((const char *)text.mb_str(wxConvUTF8));
+          int i = ClipboardLength;
+          if (i < len)
+            i = len;
+          char *tmp = (char*)TtaGetMemory ((len + 1) * sizeof(char));
+          strcpy ((char *)tmp, (const char *)text.mb_str(wxConvUTF8));
+          if (Xbuffer == NULL || len != ClipboardLength ||
+              strncmp ((const char *)Xbuffer, tmp, i))
             {
-              int len = strlen((const char *)text.mb_str(wxConvUTF8));
-              TTALOGDEBUG_1( TTA_LOG_CLIPBOARD, _T("ClipboardLen=%d"), len );
-              Xbuffer = (unsigned char*)TtaGetMemory ((len + 1) * sizeof (unsigned char));
-              strncpy ((char *)Xbuffer, (const char *)text.mb_str(wxConvUTF8), len);
-              Xbuffer[len] = EOS;
+              TtcClearClipboard ();
+              PasteXClipboard ((unsigned char *)tmp, len, UTF_8);
             }
-          PasteXClipboard (Xbuffer, strlen((char *)Xbuffer), UTF_8);
+          else
+            PasteXClipboard (Xbuffer, ClipboardLength, UTF_8);
+          TtaFreeMemory (tmp);
         }
       else
         TTALOGDEBUG_0( TTA_LOG_CLIPBOARD, _T("Error getting data from the clipboard.") );
+#ifdef IV
      }
   else
     TTALOGDEBUG_0( TTA_LOG_CLIPBOARD, _T("Clipboard doesn't support requested format.") );
-  
+#endif /* IV */
+
   wxTheClipboard->Close();
   TTALOGDEBUG_0( TTA_LOG_CLIPBOARD, _T("Closed the clipboard.\n") );
 #endif /* _WX */
-
 #ifdef _GTK
   DisplayMode         dispMode;
   int                 frame;
 
   if (doc == 0)
     return;
-
   frame = GetWindowNumber (doc, view);
   if (frame != ActiveFrame)
     {
@@ -4214,37 +4215,46 @@ void TtcPaste (Document doc, View view)
           if (wxTheClipboard->Open())
             {
               wxTextDataObject data;
+#ifdef IV
               if (wxTheClipboard->IsSupported( data.GetFormat() ))
                 {
                   TTALOGDEBUG_0( TTA_LOG_CLIPBOARD, _T("Clipboard supports requested format.") );
+#endif /* IV */
                   if (wxTheClipboard->GetData( data ))
                     {
                       wxString text = data.GetText();
-                      TTALOGDEBUG_0( TTA_LOG_CLIPBOARD, _T("Successfully retrieved data from the clipboard.") );
                       TTALOGDEBUG_0( TTA_LOG_CLIPBOARD, _T("Text pasted from the clipboard : ") + text );
 	      
-                      int buff_tmp_len = strlen((const char *)text.mb_str(wxConvUTF8));
-                      char * buff_tmp = (char*)TtaGetMemory ((buff_tmp_len + 1) * sizeof(char));
-                      strncpy ((char *)buff_tmp, (const char *)text.mb_str(wxConvUTF8), buff_tmp_len);
-                      buff_tmp[buff_tmp_len] = EOS;
-	      
-                      if (Xbuffer == NULL || strncmp ((const char *)Xbuffer, buff_tmp, 100))
-                        PasteXClipboard((unsigned char *)buff_tmp, strlen(buff_tmp), UTF_8);
-                      else 
+                      int len = strlen((const char *)text.mb_str(wxConvUTF8));
+                      int i = ClipboardLength;
+                      if (i < len)
+                        i = len;
+                      char *tmp = (char*)TtaGetMemory ((len + 1) * sizeof(char));
+                      strcpy ((char *)tmp, (const char *)text.mb_str(wxConvUTF8));
+                      if (Xbuffer == NULL || strncmp ((const char *)Xbuffer, tmp, i))
+                        {
+                          TtcClearClipboard ();
+                          PasteXClipboard((unsigned char *)tmp, len, UTF_8);
+                        }
+                      else if (ClipboardURI)
+                        PasteXClipboard(Xbuffer, ClipboardLength, UTF_8);
+                      else
                         ContentEditing (TEXT_PASTE);
+                      TtaFreeMemory (tmp);
                     }
                   else
                     {
                       TTALOGDEBUG_0( TTA_LOG_CLIPBOARD, _T("Error getting data from the clipboard."));
                       ContentEditing (TEXT_PASTE);
                     }
+#ifdef IV
                 }
               else
                 {
                   TTALOGDEBUG_0( TTA_LOG_CLIPBOARD, _T("Clipboard doesn't support requested format."));
                   ContentEditing (TEXT_PASTE);
                 }
-  
+#endif /* IV */
               wxTheClipboard->Close();
               TTALOGDEBUG_0( TTA_LOG_CLIPBOARD, _T("Clipboard closed."));
             }
@@ -4254,7 +4264,6 @@ void TtcPaste (Document doc, View view)
               ContentEditing (TEXT_PASTE);
             }
 #endif /* _WX */
-
 #ifdef _GTK
           if (FirstSelectedElement == NULL && FirstSavedElement)
             {

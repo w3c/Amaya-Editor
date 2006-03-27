@@ -1309,7 +1309,7 @@ static int CopyXClipboard (unsigned char **buffer, View view)
       if (!SelPosition && lastChar == 0)
         {
           /* get the content of the whole element */
-          lastChar = pLastEl->ElVolume + 1;
+          lastChar = pLastEl->ElVolume + 2;
           firstChar = 1;
         }
       if (pFirstEl->ElTypeNumber != CharString + 1)
@@ -1511,6 +1511,7 @@ void TtcClearClipboard ()
     TtaFreeMemory (Xbuffer);
   Xbuffer = NULL;
   ClipboardLength = 0;
+  ClipboardURI = FALSE; // no URI stored
 #ifdef _WX
 #endif /* _WX */
 }
@@ -1564,6 +1565,9 @@ void TtaStringToClipboard (unsigned char *s, CHARSET encoding)
           else
             Xbuffer = TtaStrdup (s);
 #endif /* _WINGUI */
+
+          // It should be an URI
+          ClipboardURI = TRUE;
         }
     }
 }
@@ -1620,6 +1624,7 @@ void DoCopyToClipboard (Document doc, View view, ThotBool force)
 #endif /* _GTK */
 #ifdef _WINGUI
   /* Store the current selection */
+  ClipboardURI = FALSE;
   ClipboardLength = CopyXClipboard (&Xbuffer, view);
 #endif /* _WINGUI */
 }

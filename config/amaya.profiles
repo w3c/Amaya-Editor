@@ -68,6 +68,7 @@ TtcParentElement
 TtcChildElement
 TtcPreviousElement
 TtcNextElement
+CopyLocation
 
 ################# AMAYA BROWSER
 <Browser>
