@@ -7235,6 +7235,12 @@ ThotBool CheckMakeDirectory (char *name, ThotBool recursive)
       /* try to create all the missing directories up to name */
       tmp_name = TtaStrdup (name);
       ptr = tmp_name;
+#ifdef _WINDOWS
+      if (*ptr != EOS && ptr[1] == ':')
+        ptr += 2;
+#endif /* _WINDOWS */
+      if (*ptr == DIR_SEP)
+        ptr++;
       /* create all the intermediary directories */
       while (*ptr != EOS)
         {

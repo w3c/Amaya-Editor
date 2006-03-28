@@ -734,9 +734,11 @@ void DeleteTempObjectFile (void)
 void DoSaveObjectAs (void)
 {
   char           tempfile[MAX_LENGTH];
+  char           pathname[MAX_LENGTH];
+  char           docname[MAX_LENGTH];
   char           msg[MAX_LENGTH];
-  ThotBool       dst_is_local;
   int            res;
+  ThotBool       dst_is_local;
    
   if (SavingObject == 0)
     return;
@@ -771,6 +773,7 @@ void DoSaveObjectAs (void)
       SavingDocument = 0;
       return;
     }
+
   if (TtaFileExist (tempfile))
     {
       /* ask confirmation */
@@ -783,10 +786,41 @@ void DoSaveObjectAs (void)
           TtaSetDialoguePosition ();
           TtaShowDialogue (BaseDialog + SaveForm, FALSE);
 #endif /* !_WINGUI */
+          // redisplay Save form
+          res = SavingObject;
+          SavingObject = 0;
+          InitSaveObjectForm (res, 1, SavePath, ObjectName);
           return;
         }
     }
-  TtaFileCopy (tempSavedObject, tempfile);
+  else
+    {
+      TtaExtractName (tempfile, pathname, docname);
+      if (!CheckMakeDirectory (pathname, TRUE))
+        {
+          // cannot create the current path
+          /* cannot save */
+          sprintf (msg, TtaGetMessage (AMAYA, AM_CANNOT_SAVE), tempfile);
+          InitInfo (NULL, msg);
+          // redisplay Save form
+          res = SavingObject;
+          SavingObject = 0;
+          InitSaveObjectForm (res, 1, SavePath, ObjectName);
+          return;
+        }
+    }
+
+  if (!TtaFileCopy (tempSavedObject, tempfile))
+    {
+      /* cannot save */
+      sprintf (msg, TtaGetMessage (AMAYA, AM_CANNOT_SAVE), tempfile);
+      InitInfo (NULL, msg);
+      // redisplay Save form
+      res = SavingObject;
+      SavingObject = 0;
+      InitSaveObjectForm (res, 1, SavePath, ObjectName);
+      return;
+    }
   /* delete the temporary file */
   DeleteTempObjectFile ();
   SavingObject = 0;
@@ -1706,11 +1740,8 @@ static ThotBool SaveDocumentLocally (Document doc, char *directoryName,
         {
           /* copy the image file to the new destination */
           if (!IsW3Path (DocumentURLs[doc]))
-            {
-              /* local to local */
-              TtaFileCopy (DocumentURLs[doc], tempname);
-              ok = TRUE;
-            }
+            /* local to local */
+            ok = TtaFileCopy (DocumentURLs[doc], tempname);
           else
             {
               /* remote to local */
@@ -1737,6 +1768,7 @@ static ThotBool SaveDocumentLocally (Document doc, char *directoryName,
                 }
             }
         }
+
       if (ok)
         {
           TtaSetDocumentDirectory (doc, directoryName);
@@ -1750,7 +1782,7 @@ static ThotBool SaveDocumentLocally (Document doc, char *directoryName,
             /* export the new container (but to the temporary file name */
             ok = TtaExportDocumentWithNewLineNumbers (doc, ptr, "HTMLTX");
           else
-            TtaFileCopy (tempname, ptr);
+            ok = TtaFileCopy (tempname, ptr);
           TtaFreeMemory (ptr);
         }
     }
@@ -1797,7 +1829,12 @@ static ThotBool HasSavingName (Document doc, View view, char *url,
         strcat (msg, DIR_STR);
       /* get default name */
       ok = (DocumentMeta[doc] && DocumentMeta[doc]->content_location);
-      if (!ok)
+      if (ok)
+        {
+          // don't pay attention to current suffix
+          *with_suffix = TRUE;
+        }
+      else
         {
           DefaultName = TtaGetEnvString ("DEFAULTNAME");
           if (DefaultName == NULL || *DefaultName == EOS)
@@ -1810,15 +1847,15 @@ static ThotBool HasSavingName (Document doc, View view, char *url,
               DocumentMeta[doc]->content_location = TtaStrdup (DefaultName);
               ok = (DocumentMeta[doc]->content_location != NULL);
             }
+          if (ok)
+            {
+              // check isf there is a suffix
+              TtaExtractSuffix (DocumentMeta[doc]->content_location, suffix);
+              *with_suffix = (suffix[0] != EOS);
+            }
+          else
+            *with_suffix = FALSE;
         }
-      if (ok)
-        {
-          // check isf there is a suffix
-          TtaExtractSuffix (DocumentMeta[doc]->content_location, suffix);
-          *with_suffix = (suffix[0] != EOS);
-        }
-      else
-        *with_suffix = FALSE;
       return ok;
     }
 }
@@ -2519,6 +2556,7 @@ void SaveDocument (Document doc, View view)
   DisplayMode         dispMode;
   char                tempname[MAX_LENGTH];
   char                localFile[MAX_LENGTH];
+  char                msg[MAX_LENGTH];
   char               *ptr;
   int                 i;
   ThotBool            ok, newLineNumbers;
@@ -2707,7 +2745,6 @@ void SaveDocument (Document doc, View view)
     }
   else if (!IsW3Path (tempname))
     {
-      char msg[200];
       /* cannot save */
       sprintf (msg, TtaGetMessage (AMAYA, AM_CANNOT_SAVE), DocumentURLs[doc]);
       InitConfirm3L (0, 0, msg, NULL, NULL, FALSE);
@@ -3593,7 +3630,7 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
   char                imgbase[MAX_LENGTH];
   char                documentname[MAX_LENGTH];
   char                tempdir[MAX_LENGTH];
-  char                msg[200];
+  char                msg[MAX_LENGTH];
   char                url_sep;
   int                 len, xmlDoc;
   char               *old_charset = NULL;
@@ -3653,8 +3690,7 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
           /* cannot save */
           doc = SavingDocument;
           sprintf (msg, TtaGetMessage (AMAYA, AM_CANNOT_SAVE), DocumentURLs[doc]);
-          InitConfirm (0, 0, msg);
-          //TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_SAVE), DocumentURLs[doc]);
+          InitInfo (NULL, msg);
           SavingDocument = 0;
           /* display the dialog box */
           InitSaveForm (doc, 1, documentFile);
@@ -3673,19 +3709,8 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
     SaveImgsURL[0] = EOS;
   if (ok && dst_is_local)
     {
-      /* verify that the directory exists */
-      if (!TtaCheckDirectory (SavePath))
-        {
-          sprintf (msg, TtaGetMessage (AMAYA, AM_CANNOT_SAVE), SavePath);
-          InitConfirm (0, 0, msg);
-          //TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_SAVE), SavePath);
-          /* the user has to change the name of the images directory */
-          /* display the dialog box */
-          InitSaveForm (doc, 1, documentFile);
-          ok = FALSE;
-        }
       /* verify that we don't overwite anything and ask for confirmation */
-      else if (TtaFileExist (documentFile))
+      if (TtaFileExist (documentFile))
         {
           /* ask confirmation */
           tempname = (char *)TtaGetMemory (MAX_LENGTH);
@@ -3699,6 +3724,17 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
               InitSaveForm (doc, 1, documentFile);
               ok = FALSE;
             }
+        }
+      /* verify that the directory exists */
+      else if (!CheckMakeDirectory (SavePath, TRUE))
+        {
+          sprintf (msg, TtaGetMessage (AMAYA, AM_CANNOT_SAVE), SavePath);
+          InitInfo (NULL, msg);
+          /* the user has to change the name of the images directory */
+          /* display the dialog box */
+          SavingDocument = 0;
+          InitSaveForm (doc, 1, documentFile);
+          ok = FALSE;
         }
     }
  
@@ -3747,10 +3783,11 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
                 }
               else
                 strcpy(tempname, imgbase);
-              ok = TtaCheckDirectory (tempname);
+              ok = CheckMakeDirectory (tempname, TRUE);
               if (!ok)
                 {
-                  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_SAVE), tempname);
+                  sprintf (msg, TtaGetMessage (AMAYA, AM_CANNOT_SAVE), tempname);
+                  InitInfo (NULL, msg);
                   TtaFreeMemory (tempname);
                   /* free base before returning*/
                   if (base)
@@ -4007,7 +4044,8 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
           */
           if (toUndo)
             TtaUndoNoRedo (doc);
-          TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_SAVE), documentFile);
+          sprintf (msg, TtaGetMessage (AMAYA, AM_CANNOT_SAVE), documentFile);
+          InitInfo (NULL, msg);
           /* restore the previous status of the document */
           if (DocumentTypes[doc] == docImage)
             {
