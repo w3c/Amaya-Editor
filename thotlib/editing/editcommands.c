@@ -4214,12 +4214,7 @@ void TtcPaste (Document doc, View view)
 #ifdef _WX
           if (wxTheClipboard->Open())
             {
-              wxTextDataObject data;
-#ifdef IV
-              if (wxTheClipboard->IsSupported( data.GetFormat() ))
-                {
-                  TTALOGDEBUG_0( TTA_LOG_CLIPBOARD, _T("Clipboard supports requested format.") );
-#endif /* IV */
+                  wxTextDataObject data;
                   if (wxTheClipboard->GetData( data ))
                     {
                       wxString text = data.GetText();
@@ -4247,14 +4242,6 @@ void TtcPaste (Document doc, View view)
                       TTALOGDEBUG_0( TTA_LOG_CLIPBOARD, _T("Error getting data from the clipboard."));
                       ContentEditing (TEXT_PASTE);
                     }
-#ifdef IV
-                }
-              else
-                {
-                  TTALOGDEBUG_0( TTA_LOG_CLIPBOARD, _T("Clipboard doesn't support requested format."));
-                  ContentEditing (TEXT_PASTE);
-                }
-#endif /* IV */
               wxTheClipboard->Close();
               TTALOGDEBUG_0( TTA_LOG_CLIPBOARD, _T("Clipboard closed."));
             }
