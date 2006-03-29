@@ -390,7 +390,6 @@ char *GetXMLElementName (ElementType elType, Document doc)
 }
 
 
-
 /*----------------------------------------------------------------------
   IsXMLElementInline
   Generic function which searchs in the mapping tables if a given

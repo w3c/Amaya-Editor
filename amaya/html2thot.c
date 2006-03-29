@@ -1104,6 +1104,7 @@ ThotBool IsBlockElement (Element el)
   return ret;
 }
 
+ 
 /*----------------------------------------------------------------------
   TextToDocument  Put the content of input buffer in the document.
   ----------------------------------------------------------------------*/
@@ -1115,9 +1116,12 @@ static void TextToDocument ()
   ThotBool         ignoreLeadingSpaces;
 
   CloseBuffer ();
-  if (HTMLcontext.lastElement != NULL)
+  if (HTMLcontext.lastElement)
     {
       i = 0;
+      ignoreLeadingSpaces = IsLeadingSpaceUseless (HTMLcontext.lastElement,
+                                                  HTMLcontext.doc, FALSE);
+#ifdef IV
       if (InsertSibling ())
         /* There is a previous sibling */
         /* (HTMLcontext.lastElement) for the new Text element */
@@ -1194,7 +1198,7 @@ static void TextToDocument ()
                 }
             }
         }
-       
+#endif /* IV */
       if (ignoreLeadingSpaces &&
           !Within (HTML_EL_Preformatted, DocumentSSchema) &&
           !Within (HTML_EL_STYLE_, DocumentSSchema) &&

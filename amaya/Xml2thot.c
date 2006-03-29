@@ -2307,104 +2307,134 @@ static void EndOfXmlElement (char *name)
 
 /*----------------------------------------------------------------------
   IsLeadingSpaceUseless
+  lastEl is the previous sibling of the new Text element
+  doc is the current document
+  isXML is TRUE if parsing a generic XML
   ----------------------------------------------------------------------*/
-static ThotBool  IsLeadingSpaceUseless ()
+ThotBool  IsLeadingSpaceUseless (Element lastEl, Document doc, ThotBool isXML)
 {
   ElementType   elType, lastElType, ancestorType, prevType;
   Element       parent, ancestor, prev, last;
+  char         *name, *s;
   ThotBool      removeLeadingSpaces;
 
 
   if (InsertSibling ())
-    /* There is a previous sibling (XMLcontext.lastElement) 
-       for the new Text element */
+    /* There is a previous sibling (lastEl) for the new Text element */
     {
-      parent = TtaGetParent (XMLcontext.lastElement);
+      parent = TtaGetParent (lastEl);
       if (parent == NULL)
-        parent = XMLcontext.lastElement;
+        parent = lastEl;
       elType = TtaGetElementType (parent);
-      lastElType = TtaGetElementType (XMLcontext.lastElement);
+      lastElType = TtaGetElementType (lastEl);
       removeLeadingSpaces = TRUE;
-
-      if (strcmp ((char *)currentParserCtxt->SSchemaName, "XML") == 0)
+      if (isXML)
         {
-          /* Does the parent element contain a 'Line' presentation rule ? */
-          if (TtaHasXmlInLineRule (elType, XMLcontext.doc))
+          /* Does the parent element contains a 'Line' presentation rule ? */
+          if (TtaHasXmlInLineRule (elType, doc))
             removeLeadingSpaces = FALSE;
         }
       else
         {
-          if (IsXMLElementInline (lastElType, XMLcontext.doc))
+          name = TtaGetSSchemaName (elType.ElSSchema);
+          s = TtaGetSSchemaName (lastElType.ElSSchema);
+          if (!strcmp (s, "MathML") &&
+              lastElType.ElTypeNum == MathML_EL_MathML)
+            // keep space after a Math element
+            removeLeadingSpaces = FALSE;
+          else if (!strcmp (name, "HTML") &&
+                   elType.ElTypeNum != HTML_EL_HEAD &&
+                   elType.ElTypeNum != HTML_EL_BODY &&
+                   elType.ElTypeNum != HTML_EL_Division &&
+                   elType.ElTypeNum != HTML_EL_Unnumbered_List &&
+                   elType.ElTypeNum != HTML_EL_Numbered_List &&
+                   elType.ElTypeNum != HTML_EL_Term_List &&
+                   elType.ElTypeNum != HTML_EL_Definition_List &&
+                   elType.ElTypeNum != HTML_EL_MAP &&
+                   !strcmp (s, "HTML") &&
+                   (lastElType.ElTypeNum == HTML_EL_Comment_ ||
+                    lastElType.ElTypeNum == HTML_EL_XMLPI))
             {
-              if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+              /* Search the last significant sibling prior to a comment or a Pi */
+              /* except for a comment or a Pi within the HEAD section */
+              last = lastEl;
+              TtaPreviousSibling (&last);
+              while (last && removeLeadingSpaces)
                 {
-                  if (elType.ElTypeNum != HTML_EL_Option_Menu &&
-                      elType.ElTypeNum != HTML_EL_OptGroup)
-                    {
-                      removeLeadingSpaces = FALSE;
-                      if (lastElType.ElTypeNum == HTML_EL_BR)
-                        removeLeadingSpaces = TRUE;
-                    }
-                }
-              else if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "SVG") == 0)
-                {
-                  if (elType.ElTypeNum == SVG_EL_text_ ||
-                      elType.ElTypeNum == SVG_EL_tspan )
+                  prevType = TtaGetElementType (last);
+                  s = TtaGetSSchemaName (prevType.ElSSchema);
+                  if (strcmp (s, "HTML") ||
+                      prevType.ElTypeNum != HTML_EL_Comment_ &&
+                      prevType.ElTypeNum != HTML_EL_XMLPI &&
+                      prevType.ElTypeNum != HTML_EL_DOCTYPE)
+                  // there is a previous element before
                     removeLeadingSpaces = FALSE;
-                }
-            }
-          else
-            {
-              if ((strcmp (TtaGetSSchemaName (lastElType.ElSSchema), "HTML") == 0) &&
-                  ((lastElType.ElTypeNum == HTML_EL_Comment_) ||
-                   (lastElType.ElTypeNum == HTML_EL_XMLPI)))
-                {
-                  /* Search the last significant sibling prior to a comment or a Pi */
-                  /* except for a comment or a Pi within the HEAD section */
-                  last = XMLcontext.lastElement;
                   TtaPreviousSibling (&last);
-                  while (last && removeLeadingSpaces)
-                    {
-                      prevType = TtaGetElementType (last);
-                      if ((strcmp (TtaGetSSchemaName (prevType.ElSSchema), "HTML") == 0) &&
-                          (prevType.ElTypeNum != HTML_EL_Comment_) &&
-                          (prevType.ElTypeNum != HTML_EL_XMLPI) &&
-                          (prevType.ElTypeNum != HTML_EL_DOCTYPE))
-                        removeLeadingSpaces = FALSE;
-                      TtaPreviousSibling (&last);
-                    }
                 }
             }
+          else if (!strcmp (name, "HTML") &&
+                   IsCharacterLevelElement (lastEl))
+            {
+              if (elType.ElTypeNum != HTML_EL_Option_Menu &&
+                  elType.ElTypeNum != HTML_EL_OptGroup)
+                {
+                  removeLeadingSpaces = FALSE;
+                  if (lastElType.ElTypeNum == HTML_EL_BR)
+                    removeLeadingSpaces = TRUE;
+                }
+            }
+#ifdef _SVG
+          else if (!strcmp (name, "SVG") &&
+                   (elType.ElTypeNum == SVG_EL_text_ ||
+                    elType.ElTypeNum == SVG_EL_tspan))
+            removeLeadingSpaces = FALSE;
+#endif /* _SVG */
         }
     }
   else
     /* the new Text element should be the first child 
        of the latest element encountered */
     {
-      parent = XMLcontext.lastElement;
-      elType = TtaGetElementType (XMLcontext.lastElement);
       removeLeadingSpaces = TRUE;
-      if ((strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") != 0) ||
-          ((strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML")  == 0) &&
-           elType.ElTypeNum != HTML_EL_Option_Menu &&
-           elType.ElTypeNum != HTML_EL_OptGroup))
+#ifdef IV
+      parent = lastEl;
+      elType = TtaGetElementType (lastEl);
+      name = TtaGetSSchemaName (elType.ElSSchema);
+      if (!strcmp(name, "HTML") &&
+          elType.ElTypeNum != HTML_EL_Option_Menu &&
+          elType.ElTypeNum != HTML_EL_OptGroup)
         {
           ancestor = parent;
           ancestorType = TtaGetElementType (ancestor);
-          while (removeLeadingSpaces &&
-                 IsXMLElementInline (ancestorType, XMLcontext.doc))
+          while (removeLeadingSpaces && ancestor &&
+                 IsCharacterLevelElement (ancestor))
             {
+              // check if there is a 
               prev = ancestor;
               TtaPreviousSibling (&prev);
+              prevType = TtaGetElementType (prev);
+              while (prev &&
+                     !strcmp (TtaGetSSchemaName (prevType.ElSSchema), "HTML") &&
+                     prevType.ElTypeNum == HTML_EL_Comment_ &&
+                      prevType.ElTypeNum == HTML_EL_XMLPI &&
+                      prevType.ElTypeNum != HTML_EL_DOCTYPE)
+                {
+                  TtaPreviousSibling (&prev);
+                  prevType = TtaGetElementType (prev);
+                }
               if (prev == NULL)
                 {
-                  ancestor = TtaGetParent (ancestor);
+                  ancestor = NULL;
+#ifdef IV
+                   ancestor = TtaGetParent (ancestor);
                   ancestorType = TtaGetElementType (ancestor);
+#endif
                 }
               else
                 removeLeadingSpaces = FALSE;
             }
         }
+#endif
     }
   return removeLeadingSpaces;
 }
@@ -2465,11 +2495,12 @@ void PutInXmlElement (char *data, int length)
         }
     }
 
-  if (XMLcontext.lastElement != NULL)
+  if (XMLcontext.lastElement)
     i = 0;
   {
     /* Suppress the leading spaces in Inline elements */
-    uselessSpace = IsLeadingSpaceUseless ();
+    uselessSpace = IsLeadingSpaceUseless (XMLcontext.lastElement, XMLcontext.doc,
+                                          !strcmp ((char *)currentParserCtxt->SSchemaName, "XML"));
     if (RemoveLeadingSpace && uselessSpace)
       /* suppress leading spaces */
       while (bufferws[i] == SPACE)
