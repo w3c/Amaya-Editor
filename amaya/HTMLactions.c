@@ -448,7 +448,24 @@ ThotBool IsCSSLink (Element el, Document doc)
       /* get a buffer for the attribute value */
       length = MAX_LENGTH;
       TtaGiveTextAttributeValue (attr, buffer, &length);
-      if (strncasecmp (buffer, "stylesheet", 10) == 0 ||
+      /* remove trailing spaces */
+      while (buffer[length-1] == SPACE || buffer[length-1] == TAB)
+        {
+          buffer[length-1] = EOS;
+          length--;
+        }
+      /* Check alternate style sheets (see section 14.3.2 of the HTML 4.01
+         spec.) but note that Firefox accepts "stylesheet alternative" and
+         possibly other non-standard values. */
+      if (strncasecmp (buffer, "alternate", 9) == 0)
+        /* it's probably an alternate style sheet (check that the next word
+           is "stylesheet") */
+        {
+          /* @@@@@ just ignore it. But we should accept it and handle it as an
+             alternate style sheet */
+          return FALSE;
+        }
+      else if (strcasecmp (buffer, "stylesheet") == 0 ||
           strcasecmp (buffer, "style") == 0)
         {
           /* now check the type of the stylesheet */
