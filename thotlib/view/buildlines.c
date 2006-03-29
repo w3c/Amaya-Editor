@@ -3381,6 +3381,8 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
   /* what is the maximum width allowed */
   pParent = pAb->AbEnclosing;
   isFloat = pAb->AbFloat != 'N';
+  //if (!strcmp (pAb->AbElement->ElLabel, "L356"))
+  //printf ("ComputeLines L356\n");
   if ((pAb->AbWidth.DimUnit == UnAuto || pBox->BxType == BoFloatBlock) &&
       pParent)
     {
@@ -3401,9 +3403,15 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
       pCell = GetParentCell (pBox);
       if (pAb->AbWidth.DimUnit == UnAuto && isFloat)
         {
-          /* manage this box as an extensible box */
-          maxWidth = 30 * DOT_PER_INCH;
-          extensibleBox = TRUE;
+          if (pParent && pParent->AbBox &&
+              pParent->AbWidth.DimUnit != UnAuto)
+            maxWidth = pParent->AbBox->BxW - left - right;
+          else
+            {
+              /* manage this box as an extensible box */
+              maxWidth = 30 * DOT_PER_INCH;
+              extensibleBox = TRUE;
+            }
         }
       else if (pParent && pParent->AbBox && pParent->AbBox->BxType != BoCell)
         {
@@ -3775,6 +3783,11 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
     left -= pBox->BxLMargin;
   if (pBox->BxRMargin < 0)
     right -= pBox->BxRMargin;
+  if (extensibleBox /*&& pBox->BxMaxWidth == 0*/)
+    {
+      // Restore the previous width
+      pBox->BxW = width;
+    }
   pBox->BxMinWidth += left + right;
   pBox->BxMaxWidth += left + right;
   UpdateBlockWithFloat (frame, pBox, xAbs, yAbs, TRUE, height);
@@ -4120,7 +4133,7 @@ void RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox,
   int                 w, h, height, width;
   ThotBool            changeSelectBegin;
   ThotBool            changeSelectEnd;
-  ThotBool            status;
+  ThotBool            status, extensibleBox;
 
 
   /* Si la boite est eclatee, on remonte jusqu'a la boite bloc de lignes */
@@ -4183,9 +4196,9 @@ void RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox,
       RemoveLines (pBox, frame, pLine, FALSE, &changeSelectBegin,
                    &changeSelectEnd);
       ComputeLines (pBox, frame, &height);
-      if (pBox->BxContentWidth ||
-          (pAb->AbWidth.DimIsPosition && pAb->AbWidth.DimMinimum && 
-           pBox->BxMaxWidth != pBox->BxWidth))
+      extensibleBox = (pBox->BxContentWidth ||
+                       (!pAb->AbWidth.DimIsPosition && pAb->AbWidth.DimMinimum));
+      if (extensibleBox /*&& pBox->BxMaxWidth != pBox->BxWidth*/)
         /* it's an extensible block of lines */
         width = pBox->BxMaxWidth;
       else if (pBox->BxMinWidth > pBox->BxWidth)
@@ -4269,10 +4282,10 @@ void RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox,
             }
         }
 
-      if (width != 0 && width != pBox->BxW)
+      if (width != 0 && width != pBox->BxWidth)
         {
           pBox->BxCycles = 1;
-          ChangeDefaultWidth (pBox, ibox, width, 0, frame);
+          ChangeDefaultWidth (pBox, ibox, pBox->BxW + width - pBox->BxWidth, 0, frame);
           pBox->BxCycles = 0;
         }
       /* Faut-il conserver la hauteur ? */
