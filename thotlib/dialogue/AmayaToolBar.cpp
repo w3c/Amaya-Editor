@@ -38,6 +38,11 @@
 static ThotBool  UpdateFrameUrl = TRUE;
 #endif /* _MACOS */
 
+#ifdef _WINDOWS
+static  char      BufUrl[512];
+static  ThotBool  isBufUrl = 0;
+#endif /* _WINDOWS */
+
 IMPLEMENT_DYNAMIC_CLASS(AmayaToolBar, wxPanel)
 
 /*----------------------------------------------------------------------
@@ -97,10 +102,11 @@ AmayaToolBar::~AmayaToolBar()
   -----------------------------------------------------------------------*/
 void AmayaToolBar::OnURLTextEnter( wxCommandEvent& event )
 {
-  GotoSelectedURL();
-  
+
+   // TtaDisplayMessage (INFO, buffer);
+	GotoSelectedURL();
   // do not skip this event because we don't want to propagate this event
-  //  event.Skip();
+  // event.Skip();
 }
 
 /*----------------------------------------------------------------------
@@ -111,19 +117,36 @@ void AmayaToolBar::OnURLTextEnter( wxCommandEvent& event )
 void AmayaToolBar::GotoSelectedURL()
 {
   Document doc;
-  View view;
+  View     view;
+
   FrameToView (TtaGiveActiveFrame(), &doc, &view);
 
   CloseTextInsertion ();
 
-  /* call the callback  with the url selected text */
+     //TtaDisplayMessage (CONFIRM, "GotoSelectedURL");
+	 /* call the callback  with the url selected text */
   PtrDocument pDoc = LoadedDocument[doc-1];
   wxASSERT(pDoc);
   if (pDoc && pDoc->Call_Text)
     {
       char buffer[512];
       strcpy(buffer, (m_pComboBox->GetValue()).mb_str(wxConvUTF8));
-      (*(Proc3)pDoc->Call_Text) ((void *)doc, (void *)view, (void *)buffer);
+// patch to go-round a bug on Windows (TEXT_ENTER event called twice)
+#ifdef _WINDOWS 
+	  if (isBufUrl == FALSE)
+	  {
+		  isBufUrl = TRUE;
+        (*(Proc3)pDoc->Call_Text) ((void *)doc, (void *)view, (void *)buffer);
+	     strcpy (BufUrl, buffer);
+	  }
+	  else if (strcmp (buffer, BufUrl) != 0)
+	  {
+        (*(Proc3)pDoc->Call_Text) ((void *)doc, (void *)view, (void *)buffer);
+	     strcpy (BufUrl, buffer);
+	  }
+#else /* _WINDOWS */
+        (*(Proc3)pDoc->Call_Text) ((void *)doc, (void *)view, (void *)buffer);
+#endif /* _WINDOWS */
     }
 }
 
