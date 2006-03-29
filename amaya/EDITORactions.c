@@ -1335,7 +1335,10 @@ void CreateStyle (Document document, View view)
   AttributeType       attrType;
   Attribute           attr;
 
+  /* Don't check the Thot abstract tree against the structure schema. */
+  TtaSetStructureChecking (FALSE, document);
   el = InsertWithinHead (document, view, HTML_EL_STYLE_);
+  TtaSetStructureChecking (TRUE, document);
   if (el)
     {
       /* create an attribute type="text/css" */
