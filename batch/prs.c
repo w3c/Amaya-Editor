@@ -671,13 +671,45 @@ static void         NewConst (indLine wi)
   ----------------------------------------------------------------------*/
 static void         NewVar (indLine wi)
 {
-  if (pPSchema->PsNVariables >= MAX_PRES_VARIABLE)
-    CompilerMessage (wi, PRS, FATAL, MAX_VARIABLES_OVERFLOW, inputLine,
-                     LineNum);
-  else
-    pPSchema->PsVariable[pPSchema->PsNVariables++].PvNItems = 0;
-}
+  PtrPresVariable    var;
+  int                i, size;
 
+  if (pPSchema->PsNVariables >= pPSchema->PsVariableTableSize)
+    /* the variable table is full. Extend it */
+    {
+      /* add 10 new entries */
+      size = pPSchema->PsNVariables + 10;
+      i = size * sizeof (PtrPresVariable);
+      if (!pPSchema->PsVariable)
+        pPSchema->PsVariable = (PresVarTable*) malloc (i);
+      else
+        pPSchema->PsVariable = (PresVarTable*) realloc (pPSchema->PsVariable, i);
+      if (!pPSchema->PsVariable)
+        {
+          CompilerMessage (wi, PRS, FATAL, MAX_VARIABLES_OVERFLOW, inputLine,
+                           LineNum);
+          return;
+        }
+      else
+        {
+          pPSchema->PsVariableTableSize = size;
+          for (i = pPSchema->PsNVariables; i < size; i++)
+            pPSchema->PsVariable->PresVar[i] = NULL;
+        }
+    }
+  /* allocate and initialize a new variable */
+  var = (PtrPresVariable) malloc (sizeof (PresVariable));
+  if (var == NUL)
+    /* can't allocate a new variable */
+    {
+      CompilerMessage (wi, PRS, FATAL, MAX_VARIABLES_OVERFLOW, inputLine,
+                       LineNum);
+      return;
+    }
+  pPSchema->PsVariable->PresVar[pPSchema->PsNVariables] = var;
+  pPSchema->PsNVariables++;
+  var->PvNItems = 0;
+}
 
 /*----------------------------------------------------------------------
   Round arrondit un float en un int.                              
@@ -1365,7 +1397,7 @@ static void ProcessShortKeyWord (int x, indLine wi, SyntacticCode gCode)
       /*  ,  */
       if (gCode == RULE_Function)
         {
-          pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
+          pPresVar = pPSchema->PsVariable->PresVar[pPSchema->PsNVariables - 1];
           if (pPresVar->PvItem[pPresVar->PvNItems -1].ViType == VarPageNumber)
             /* c'est la fin d'un PageNumber dans une variable. On connait */
             /* la vue concernee */
@@ -1631,7 +1663,7 @@ static void         CreateConstant (BasicType constType, indLine wi)
       if (NewVariableDef || VariableDef)
         /* dans une definition de variable */
         {
-          pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
+          pPresVar = pPSchema->PsVariable->PresVar[pPSchema->PsNVariables - 1];
           NewVarListItem (pPresVar, wi);
           pPresVar->PvItem[pPresVar->PvNItems - 1].ViType = VarText;
           pPresVar->PvItem[pPresVar->PvNItems - 1].ViConstant =
@@ -2899,37 +2931,37 @@ static void ProcessLongKeyWord (int x, SyntacticCode gCode, indLine wi)
       CreateConstant (tt_Picture, wi);
       break;
     case KWD_DATE:
-      pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
+      pPresVar = pPSchema->PsVariable->PresVar[pPSchema->PsNVariables - 1];
       NewVarListItem (pPresVar, wi);
       pPresVar->PvItem[pPresVar->PvNItems - 1].ViType = VarDate;
       break;
     case KWD_FDATE:
-      pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
+      pPresVar = pPSchema->PsVariable->PresVar[pPSchema->PsNVariables - 1];
       NewVarListItem (pPresVar, wi);
       pPresVar->PvItem[pPresVar->PvNItems - 1].ViType = VarFDate;
       break;
     case KWD_DocName:
-      pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
+      pPresVar = pPSchema->PsVariable->PresVar[pPSchema->PsNVariables - 1];
       NewVarListItem (pPresVar, wi);
       pPresVar->PvItem[pPresVar->PvNItems - 1].ViType = VarDocName;
       break;
     case KWD_DirName:
-      pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
+      pPresVar = pPSchema->PsVariable->PresVar[pPSchema->PsNVariables - 1];
       NewVarListItem (pPresVar, wi);
       pPresVar->PvItem[pPresVar->PvNItems - 1].ViType = VarDirName;
       break;
     case KWD_ElemName:
-      pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
+      pPresVar = pPSchema->PsVariable->PresVar[pPSchema->PsNVariables - 1];
       NewVarListItem (pPresVar, wi);
       pPresVar->PvItem[pPresVar->PvNItems - 1].ViType = VarElemName;
       break;
     case KWD_AttributeName:
-      pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
+      pPresVar = pPSchema->PsVariable->PresVar[pPSchema->PsNVariables - 1];
       NewVarListItem (pPresVar, wi);
       pPresVar->PvItem[pPresVar->PvNItems - 1].ViType = VarAttrName;
       break;
     case KWD_AttributeValue:
-      pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
+      pPresVar = pPSchema->PsVariable->PresVar[pPSchema->PsNVariables - 1];
       NewVarListItem (pPresVar, wi);
       pPresVar->PvItem[pPresVar->PvNItems - 1].ViType = VarAttrValue;
       pPresVar->PvItem[pPresVar->PvNItems - 1].ViStyle = CntDecimal;
@@ -2938,20 +2970,20 @@ static void ProcessLongKeyWord (int x, SyntacticCode gCode, indLine wi)
     case KWD_VALUE:
       break;
     case KWD_PageNumber:
-      pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
+      pPresVar = pPSchema->PsVariable->PresVar[pPSchema->PsNVariables - 1];
       NewVarListItem (pPresVar, wi);
       pPresVar->PvItem[pPresVar->PvNItems - 1].ViType = VarPageNumber;
       pPresVar->PvItem[pPresVar->PvNItems - 1].ViStyle = CntDecimal;
       pPresVar->PvItem[pPresVar->PvNItems - 1].ViView = 1;
       break;
     case KWD_Arabic:
-      pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
+      pPresVar = pPSchema->PsVariable->PresVar[pPSchema->PsNVariables - 1];
       pPresVar->PvItem[pPresVar->PvNItems - 1].ViStyle = CntDecimal;
       break;
     case KWD_Decimal:
       if (gCode == RULE_CounterStyle)
         {
-          pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
+          pPresVar = pPSchema->PsVariable->PresVar[pPSchema->PsNVariables - 1];
           pPresVar->PvItem[pPresVar->PvNItems - 1].ViStyle = CntDecimal;
         }
       else if (gCode == RULE_ListStyleType)
@@ -2960,59 +2992,59 @@ static void ProcessLongKeyWord (int x, SyntacticCode gCode, indLine wi)
     case KWD_DecimalLeadingZero:
       if (gCode == RULE_CounterStyle)
         {
-          pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
+          pPresVar = pPSchema->PsVariable->PresVar[pPSchema->PsNVariables - 1];
           pPresVar->PvItem[pPresVar->PvNItems - 1].ViStyle = CntZLDecimal;
         }
       else if (gCode == RULE_ListStyleType)
         CurRule->PrChrValue = 'Z';
       break;
     case KWD_URoman:
-      pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
+      pPresVar = pPSchema->PsVariable->PresVar[pPSchema->PsNVariables - 1];
       pPresVar->PvItem[pPresVar->PvNItems - 1].ViStyle = CntURoman;
       break;
     case KWD_UpperRoman:
       if (gCode == RULE_CounterStyle)
         {
-          pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
+          pPresVar = pPSchema->PsVariable->PresVar[pPSchema->PsNVariables - 1];
           pPresVar->PvItem[pPresVar->PvNItems - 1].ViStyle = CntURoman;
         }
       else if (gCode == RULE_ListStyleType)
         CurRule->PrChrValue = 'I';
       break;
     case KWD_LRoman:
-      pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
+      pPresVar = pPSchema->PsVariable->PresVar[pPSchema->PsNVariables - 1];
       pPresVar->PvItem[pPresVar->PvNItems - 1].ViStyle = CntLRoman;
       break;
     case KWD_LowerRoman:
       if (gCode == RULE_CounterStyle)
         {
-          pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
+          pPresVar = pPSchema->PsVariable->PresVar[pPSchema->PsNVariables - 1];
           pPresVar->PvItem[pPresVar->PvNItems - 1].ViStyle = CntLRoman;
         }
       else if (gCode == RULE_ListStyleType)
         CurRule->PrChrValue = 'i';
       break;
     case KWD_Uppercase:
-      pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
+      pPresVar = pPSchema->PsVariable->PresVar[pPSchema->PsNVariables - 1];
       pPresVar->PvItem[pPresVar->PvNItems - 1].ViStyle = CntUppercase;
       break;
     case KWD_UpperLatin:
       if (gCode == RULE_CounterStyle)
         {
-          pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
+          pPresVar = pPSchema->PsVariable->PresVar[pPSchema->PsNVariables - 1];
           pPresVar->PvItem[pPresVar->PvNItems - 1].ViStyle = CntUppercase;
         }
       else if (gCode == RULE_ListStyleType)
         CurRule->PrChrValue = 'A';
       break;
     case KWD_Lowercase:
-      pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
+      pPresVar = pPSchema->PsVariable->PresVar[pPSchema->PsNVariables - 1];
       pPresVar->PvItem[pPresVar->PvNItems - 1].ViStyle = CntLowercase;
       break;
     case KWD_LowerLatin:
       if (gCode == RULE_CounterStyle)
         {
-          pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
+          pPresVar = pPSchema->PsVariable->PresVar[pPSchema->PsNVariables - 1];
           pPresVar->PvItem[pPresVar->PvNItems - 1].ViStyle = CntLowercase;
         }
       else if (gCode == RULE_ListStyleType)
@@ -3021,14 +3053,14 @@ static void ProcessLongKeyWord (int x, SyntacticCode gCode, indLine wi)
     case KWD_LowerGreek:
       if (gCode == RULE_CounterStyle)
         {
-          pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
+          pPresVar = pPSchema->PsVariable->PresVar[pPSchema->PsNVariables - 1];
           pPresVar->PvItem[pPresVar->PvNItems - 1].ViStyle = CntLGreek;
         }
       else if (gCode == RULE_ListStyleType)
         CurRule->PrChrValue = 'g';
       break;
     case KWD_UpperGreek:
-      pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
+      pPresVar = pPSchema->PsVariable->PresVar[pPSchema->PsNVariables - 1];
       pPresVar->PvItem[pPresVar->PvNItems - 1].ViStyle = CntUGreek;
       break;
     case KWD_FORWARD:
@@ -4708,7 +4740,7 @@ static void ProcessName (SyntacticCode gCode, int identnum, SyntacticCode prevRu
                            inputLine, LineNum);
         else
           {
-            pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
+            pPresVar = pPSchema->PsVariable->PresVar[pPSchema->PsNVariables - 1];
             pPresVar->PvItem[pPresVar->PvNItems - 1].ViView =
               Identifier[identnum].SrcIdentDefRule;
           }
@@ -4780,7 +4812,7 @@ static void ProcessName (SyntacticCode gCode, int identnum, SyntacticCode prevRu
                 /* change le type de ce nom qui devient un nom d'attribut */
                 Identifier[identnum].SrcIdentCode = RULE_AttrName;
                 /* traite ce nom d'attribut */
-                pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
+                pPresVar = pPSchema->PsVariable->PresVar[pPSchema->PsNVariables - 1];
                 NewVarListItem (pPresVar, wi);
                 pPresVar->PvItem[pPresVar->PvNItems - 1].ViType = VarAttrValue;
                 pPresVar->PvItem[pPresVar->PvNItems - 1].ViStyle = CntDecimal;
@@ -4790,7 +4822,7 @@ static void ProcessName (SyntacticCode gCode, int identnum, SyntacticCode prevRu
       else if (prevRule == RULE_CounterAttrPage)
         /* un compteur dans une definition de variable */
         {
-          pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
+          pPresVar = pPSchema->PsVariable->PresVar[pPSchema->PsNVariables - 1];
           pPresVar->PvItem[pPresVar->PvNItems].ViType = VarCounter;
           pPresVar->PvItem[pPresVar->PvNItems].ViCounter =
             Identifier[identnum].SrcIdentDefRule;
@@ -4912,7 +4944,7 @@ static void ProcessName (SyntacticCode gCode, int identnum, SyntacticCode prevRu
       else if (prevRule == RULE_Function || prevRule == RULE_CounterAttrPage)
         /* c'est un nom d'attribut dans une variable */
         {
-          pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
+          pPresVar = pPSchema->PsVariable->PresVar[pPSchema->PsNVariables - 1];
           NewVarListItem (pPresVar, wi);
           pPresVar->PvItem[pPresVar->PvNItems - 1].ViType = VarAttrValue;
           pPresVar->PvItem[pPresVar->PvNItems - 1].ViStyle = CntDecimal;
@@ -5072,7 +5104,7 @@ static void ProcessName (SyntacticCode gCode, int identnum, SyntacticCode prevRu
               {
                 Identifier[identnum].SrcIdentCode = RULE_AttrName;
                 /* traite ce nom d'attribut */
-                pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
+                pPresVar = pPSchema->PsVariable->PresVar[pPSchema->PsNVariables - 1];
                 NewVarListItem (pPresVar, wi);
                 pPresVar->PvItem[pPresVar->PvNItems - 1].ViType = VarAttrValue;
                 pPresVar->PvItem[pPresVar->PvNItems - 1].ViAttr = i;
@@ -5095,7 +5127,7 @@ static void ProcessName (SyntacticCode gCode, int identnum, SyntacticCode prevRu
           if (VariableDef || NewVariableDef)
             /* dans une definition de variable */
             {
-              pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
+              pPresVar = pPSchema->PsVariable->PresVar[pPSchema->PsNVariables - 1];
               NewVarListItem (pPresVar, wi);
               pPresVar->PvItem[pPresVar->PvNItems - 1].ViType = VarText;
               pPresVar->PvItem[pPresVar->PvNItems - 1].ViConstant =
@@ -5156,7 +5188,7 @@ static void ProcessName (SyntacticCode gCode, int identnum, SyntacticCode prevRu
               pPresBox->PbContVariable = Identifier[identnum].SrcIdentDefRule;
               /* cherche tous les compteurs reference's par cette variable */
               /* et marque que la boite de presentation courante les utilise */
-              pPresVar = &pPSchema->PsVariable[Identifier[identnum].SrcIdentDefRule - 1];
+              pPresVar = pPSchema->PsVariable->PresVar[Identifier[identnum].SrcIdentDefRule - 1];
               for (i = 0; i < pPresVar->PvNItems; i++)
                 {
                   pVarElem = &pPresVar->PvItem[i];
@@ -6637,7 +6669,7 @@ static void         CheckPageBoxes ()
                             if (pPSchema->PsPresentBox->PresBox[hfB]->PbContent == ContVariable)
                               /* la boite contient une variable */
                               {
-                                pPresVar = &pPSchema->PsVariable[pPSchema->PsPresentBox->PresBox[hfB]->PbContVariable - 1];
+                                pPresVar = pPSchema->PsVariable->PresVar[pPSchema->PsPresentBox->PresBox[hfB]->PbContVariable - 1];
                                 for (i = 0; i < pPresVar->PvNItems; i++)
                                   if (pPresVar->PvItem[i].ViType == VarCounter)
                                     /* la variable contient une valeur de */

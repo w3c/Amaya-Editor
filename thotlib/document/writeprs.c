@@ -1166,7 +1166,7 @@ ThotBool WritePresentationSchema (Name fileName, PtrPSchema pPSch, PtrSSchema pS
    Counter            *pCntr;
    CntrItem           *pCItem;
    PresConstant       *pConst;
-   PresVariable       *pVar;
+   PtrPresVariable     pVar;
    PresVarItem        *pVarItem;
    PtrPresentationBox  pBox;
    AttributePres      *pAttPres;
@@ -1290,7 +1290,7 @@ ThotBool WritePresentationSchema (Name fileName, PtrPSchema pPSch, PtrSSchema pS
    /* ecrit les variables de presentation */
    for (i = 0; i < pPSch->PsNVariables; i++)
      {
-	pVar = &pPSch->PsVariable[i];
+	pVar = pPSch->PsVariable->PresVar[i];
 	WriteShort (pVar->PvNItems);
 	for (j = 0; j < pVar->PvNItems; j++)
 	  {

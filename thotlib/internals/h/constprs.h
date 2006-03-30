@@ -19,8 +19,6 @@
 				   presentation schema */
 #define MAX_PRES_COUNTER 60	/* max. number of counters for an presentation
 				   schema */
-#define MAX_PRES_VARIABLE 180	/* max. number of variables for a presentation
-				   schema */
 #define MAX_PRES_CONST 1024	/* max number of constant strings for
 				   presentation schema */
 #define MAX_PRES_CONST_LEN 100	/* max. length of presentation string

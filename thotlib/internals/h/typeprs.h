@@ -660,6 +660,13 @@ typedef struct _PresVariable
     PresVarItem  PvItem[MAX_PRES_VAR_ITEM]; /* list of the elements */  
 } PresVariable;
 
+typedef struct _PresVariable *PtrPresVariable;
+
+typedef struct _PresVarTable
+{
+  PtrPresVariable  PresVar[1];
+} PresVarTable;
+
 typedef enum 
 {
   ComparConstant, ComparAttr
@@ -808,50 +815,50 @@ typedef struct _PresentSchema *PtrPSchema;
 /* a presentation schema loaded in memory */
 typedef struct _PresentSchema
 {
-  PtrPSchema    PsNext;    		/* for free blocks linking */
-  PtrSSchema    PsSSchema;              /* Structure schema */
+  PtrPSchema    PsNext;    		    /* for free blocks linking */
+  PtrSSchema    PsSSchema;        /* Structure schema */
   char         *PsStructName;    	/* name of the structure schema */
   char	       *PsPresentName;		/* name of this presentation schema */
-  int	 	PsStructCode;    	/* code identifying the version of this
-					   structure schema */
-  StyleSheetOrigin PsOrigin;            /* origin of this structure schema */
-  int		PsNViews;	    	/* number of views */
-  ViewTable     PsView;    		/* definition of the views */
+  int	 	        PsStructCode;    	/* code identifying the version of this
+					                           structure schema */
+  StyleSheetOrigin PsOrigin;      /* origin of this structure schema */
+  int		        PsNViews;	    	  /* number of views */
+  ViewTable     PsView;    		    /* definition of the views */
   PtrHostView   PsHostViewList[MAX_VIEW]; /* for each view defined in ViewTable
-				           pointer to its first host view */
-  ThotBool      PsPaginatedView[MAX_VIEW]; /* indicates the paginated views */
-  ThotBool      PsColumnView[MAX_VIEW];	/* indicates the views separated in
-					   columns */
-  int		PsNPrintedViews;	/* number of views to print */
-  PrintedView   PsPrintedView[MAX_PRINT_VIEW];/* the views to print */
-  ThotBool      PsExportView[MAX_VIEW]; /* indicates the views that display
-					   only the exported elements */
-  int		PsNCounters;		/* number of counters */
-  int		PsNConstants;		/* number of presentation constants */
-  int		PsNVariables;		/* number of presentation variables */
-  int		PsNPresentBoxes;	/* number of presentation and layout
-					   boxes that are actually defined */
-  int           PsPresentBoxTableSize;  /* size of table PsPresentBox */
-  int           PsNElemPRule;           /* number of known structure rules */
-  PtrPRule      PsFirstDefaultPRule;	/* beginning of the default rules
-					   string */
+				                                     pointer to its first host view */
+  ThotBool      PsPaginatedView[MAX_VIEW];/* indicates the paginated views */
+  ThotBool      PsColumnView[MAX_VIEW];	  /* indicates the views separated in
+					                                   columns */
+  int		        PsNPrintedViews;	/* number of views to be printed */
+  PrintedView   PsPrintedView[MAX_PRINT_VIEW];/* the views to be printed */
+  ThotBool      PsExportView[MAX_VIEW];   /* indicates the views that display
+					                                   only the exported elements */
+  int		        PsNCounters;		  /* number of counters */
+  int		        PsNConstants;		  /* number of presentation constants */
+  int		        PsNVariables;		  /* number of presentation variables */
+  int           PsVariableTableSize; /* size of table PsVariable */
+  int		        PsNPresentBoxes;	/* number of presentation and layout
+					                           boxes that are actually defined */
+  int           PsPresentBoxTableSize; /* size of table PsPresentBox */
+  int           PsNElemPRule;       /* number of known structure rules */
+  PtrPRule      PsFirstDefaultPRule;/* beginning of the default rules string */
   Counter       PsCounter[MAX_PRES_COUNTER];  /* counters */
   PresConstant  PsConstant[MAX_PRES_CONST];   /* presentation constants */
-  PresVariable  PsVariable[MAX_PRES_VARIABLE];/* presentation variables*/
-  PresBoxTable  *PsPresentBox;          /* descriptions of the presentation
-					   and layout boxes */
+  PresVarTable  *PsVariable;        /* presentation variables*/
+  PresBoxTable  *PsPresentBox;      /* descriptions of the presentation
+					                             and layout boxes */
         /* For columns layout, box number 0 contains the Column group box,
-	   box number 1 contains the left-hand column, etc. */
-  AttrPresTable *PsAttrPRule;           /* pointers on the presentation
-					   rules of the logical attributes,
-					   in the same order as in the table
-					   StructSchema.SsAttribute */
+	         box number 1 contains the left-hand column, etc. */
+  AttrPresTable *PsAttrPRule;       /* pointers on the presentation
+					                             rules of the logical attributes,
+					                                 in the same order as in the table
+					                                 StructSchema.SsAttribute */
   NumberTable	*PsNAttrPRule;          /* number of presentation rules
-					   packets for each logical attribute,
-					   i.e. size of the strings of
-					   AttributePres in table PsAttrPRule
-					   in the same order as in table
-					   StructSchema.SsAttribute */
+					                               packets for each logical attribute,
+					                               i.e. size of the strings of
+					                               AttributePres in table PsAttrPRule
+					                               in the same order as in table
+					                               StructSchema.SsAttribute */
   PtrPRuleTable	*PsElemPRule;    	/* pointers on the beginning of the
 					   string of presentation rules related
 					   to each type of element, in the same

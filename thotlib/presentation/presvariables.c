@@ -875,7 +875,7 @@ ThotBool PresAbsBoxUserEditable (PtrAbstractBox pAb)
 	   if (pBo->PbContent == ContVariable)
 	      /* une boite dont le contenu est une variable de presentation */
 	     {
-		pPr = &pAb->AbPSchema->PsVariable[pBo->PbContVariable - 1];
+		pPr = pAb->AbPSchema->PsVariable->PresVar[pBo->PbContVariable - 1];
 		if (pPr->PvNItems == 1)
 		   /* la variable n'a qu'un element */
 		   if (pPr->PvItem[0].ViType == VarAttrValue ||
@@ -1136,7 +1136,7 @@ ThotBool NewVariable (int varNum, PtrSSchema pSS, PtrPSchema pSchP,
    pAb->AbLeafType = LtText;
    pA = NULL;
    /* remplit le buffer avec le contenu defini par la variable */
-   pPr1 = &pSchP->PsVariable[varNum - 1];
+   pPr1 = pSchP->PsVariable->PresVar[varNum - 1];
    for (f = 1; f <= pPr1->PvNItems; f++)
       /* boucle sur les elements de la variable */
      {

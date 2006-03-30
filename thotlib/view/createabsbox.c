@@ -2144,7 +2144,7 @@ PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
   ThotPictInfo       *image;
   int                 view, vis;
   int                 viewSch, viewIndex;
-  PresVariable       *pVar;
+  PtrPresVariable     pVar;
   PresVarItem        *pItem;
   PresConstant       *pConst;
   ThotBool            ok, stop, volok, done;
@@ -2737,7 +2737,7 @@ PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
                    pRCre->PrPresBox refers to the variable to be generated */
                 {
                   done = FALSE;
-                  pVar = &pSchP->PsVariable[pRCre->PrPresBox[0] - 1];
+                  pVar = pSchP->PsVariable->PresVar[pRCre->PrPresBox[0] - 1];
                   if (pVar->PvNItems == 1)
                     /* there is 1 and only 1 item in this variable */
                     {

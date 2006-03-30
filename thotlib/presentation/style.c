@@ -2830,7 +2830,7 @@ static void SetVariableItem (unsigned int type, PSchema tsch,
                              PresentationContext c, PresentationValue v)
 {
   GenericContext     ctxt = (GenericContext) c;
-  PresVariable       *pVar;
+  PtrPresVariable    pVar;
   int                cst;
 
   if (c->destroy)
@@ -2842,16 +2842,16 @@ static void SetVariableItem (unsigned int type, PSchema tsch,
     cst = PresConstInsert (tsch, (char *)v.pointer, tt_Picture);
   if (cst >= 0 && ctxt->var > 0)
     {
-      pVar = &(((PtrPSchema)tsch)->PsVariable[ctxt->var - 1]);
+      pVar = ((PtrPSchema)tsch)->PsVariable->PresVar[ctxt->var - 1];
       if (pVar->PvNItems < MAX_PRES_VAR_ITEM)
         {
           if (type == PRContentString || type == PRContentURL ||
-	      type == PRContentAttr)
+              type == PRContentAttr)
             {
-	      if (type == PRContentAttr)
-		pVar->PvItem[pVar->PvNItems].ViType = VarNamedAttrValue;
-	      else
-		pVar->PvItem[pVar->PvNItems].ViType = VarText;
+              if (type == PRContentAttr)
+                pVar->PvItem[pVar->PvNItems].ViType = VarNamedAttrValue;
+              else
+                pVar->PvItem[pVar->PvNItems].ViType = VarText;
               pVar->PvItem[pVar->PvNItems].ViConstant = cst;
             }
           pVar->PvNItems ++;
@@ -2866,17 +2866,42 @@ static void SetVariableItem (unsigned int type, PSchema tsch,
 static void VariableInsert (PtrPSchema tsch, GenericContext c)
 {
   GenericContext     ctxt = (GenericContext) c;
-  int                var;
+  PtrPresVariable    var;
+  int                i, size;
 
   if (c->destroy)
     return;
-  if (tsch->PsNVariables < MAX_PRES_VARIABLE)
+  if (tsch->PsNVariables >= tsch->PsVariableTableSize)
+    /* the variable table is full. Extend it */
     {
-      tsch->PsNVariables++;
-      var = tsch->PsNVariables;
-      tsch->PsVariable[var - 1].PvNItems = 0;
-      ctxt->var = var;
+      /* add 10 new entries */
+      size = tsch->PsNVariables + 10;
+      i = size * sizeof (PtrPresVariable);
+      if (!tsch->PsVariable)
+        tsch->PsVariable = (PresVarTable*) malloc (i);
+      else
+        tsch->PsVariable = (PresVarTable*) realloc (tsch->PsVariable, i);
+      if (!tsch->PsVariable)
+        {
+          ctxt->var = 0;
+          return;
+        }
+      else
+        {
+          tsch->PsVariableTableSize = size;
+          for (i = tsch->PsNVariables; i < size; i++)
+            tsch->PsVariable->PresVar[i] = NULL;
+        }
     }
+  /* allocate and initialize a new variable */
+  var = (PtrPresVariable) malloc (sizeof (PresVariable));
+  if (var == NUL)
+    /* can't allocate a new variable */
+    return;
+  tsch->PsVariable->PresVar[tsch->PsNVariables] = var;
+  tsch->PsNVariables++;
+  ctxt->var = tsch->PsNVariables;
+  var->PvNItems = 0;
 }
 
 /*----------------------------------------------------------------------

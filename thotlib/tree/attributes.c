@@ -349,7 +349,7 @@ void RedisplayAttribute (PtrAttribute pAttr, PtrElement pEl, PtrDocument pDoc)
       /* parcourt les variables de presentation du schema */
       for (varNum = 0; varNum < pPSchema->PsNVariables; varNum++)
         {
-          pPresVar = &pPSchema->PsVariable[varNum];
+          pPresVar = pPSchema->PsVariable->PresVar[varNum];
           found = FALSE;
           /* examine les items de la variable */
           for (item = 0; item < pPresVar->PvNItems && !found; item++)

@@ -3774,7 +3774,7 @@ void TtaListStyleSchemas (Document document, FILE *fileDescriptor)
   PtrDocSchemasDescr  pPfS;
   PtrHandlePSchema    pHd;
   PresConstant       *pPr1;
-  PresVariable       *pVar;
+  PtrPresVariable     pVar;
   PresVarItem        *pItem;
   PtrTtAttribute      pAt1;
   AttributePres      *pRP1;
@@ -3876,7 +3876,7 @@ void TtaListStyleSchemas (Document document, FILE *fileDescriptor)
                       fprintf (fileDescriptor, "\nVARIABLES\n");
                       for (i = 0; i < pSc1->PsNVariables; i++)
                         {
-                          pVar = &pSc1->PsVariable[i];
+                          pVar = pSc1->PsVariable->PresVar[i];
                           fprintf (fileDescriptor, "   Var");
                           wrnumber (i+1, fileDescriptor);
                           fprintf (fileDescriptor, "= ");
@@ -4129,7 +4129,7 @@ void DisplayPRule (PtrPRule rule, FILE *fileDescriptor,
   PresentationSettingBlock setting;
   char                     buffer[200];
   int                      l, i;
-  PresVariable             *var;
+  PtrPresVariable          var;
   PresVarItem              *item;
 
   if (rule == NULL)
@@ -4153,7 +4153,7 @@ void DisplayPRule (PtrPRule rule, FILE *fileDescriptor,
   if (rule->PrType == PtFunction && rule->PrPresFunction == FnContent)
     /* it's a content rule. List all rules of the created box */
     {
-      var = &pSchP->PsVariable[rule->PrPresBox[0] - 1];
+      var = pSchP->PsVariable->PresVar[rule->PrPresBox[0] - 1];
       for (i = 0; i < var->PvNItems; i++)
         {
           item = &var->PvItem[i];
