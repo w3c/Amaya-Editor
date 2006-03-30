@@ -4280,7 +4280,9 @@ static char *ParseCSSContent (Element element, PSchema tsch,
                               CSSInfoPtr css, ThotBool isHTML)
 {
   PresentationValue   value;
-  char                *p, *last, *start, quoteChar, savedChar;
+  char                *last, *start, quoteChar, savedChar;
+  int                 length, val;
+  unsigned char       *buffer, *p;
   ThotBool            repeat;
 
   value.typed_data.unit = UNIT_REL;
@@ -4292,7 +4294,7 @@ static char *ParseCSSContent (Element element, PSchema tsch,
   repeat = TRUE;
   while (repeat)
     {
-      p = cssRule;
+      p = (unsigned char*) cssRule;
       if (!strncasecmp (cssRule, "normal", 6))
         /* The pseudo-element is not generated */
         {
@@ -4311,12 +4313,48 @@ static char *ParseCSSContent (Element element, PSchema tsch,
         /* It's a string */
         {
           quoteChar = *cssRule;
+          /* how long is the string? */
+          last = cssRule;
+          last = SkipString (last);
+          length = last - cssRule;
+          /* get a buffer to store the string */
+          buffer = (unsigned char*) TtaGetMemory (length);
+          p = buffer; /* beginning of the string */
           cssRule++;
-          p = cssRule;
-          /**** escape characters are not handled.
-                See function SkipQuotedString ******/
           while (*cssRule != EOS && *cssRule != quoteChar)
-            cssRule++;
+            {
+              if (*cssRule == '\\')
+                {
+                  cssRule++; /* skip the backslash */
+                  if ((*cssRule >= '0' && *cssRule <= '9') ||
+                      (*cssRule >= 'A' && *cssRule <= 'F') ||
+                      (*cssRule >= 'a' && *cssRule <= 'f'))
+                    {
+                      start = cssRule; /* first hex digit after the backslash*/
+                      cssRule++;
+                      while ((*cssRule >= '0' && *cssRule <= '9') ||
+                             (*cssRule >= 'A' && *cssRule <= 'F') ||
+                             (*cssRule >= 'a' && *cssRule <= 'f'))
+                        cssRule++;
+                      savedChar = *cssRule;
+                      *cssRule = EOS;
+                      sscanf (start, "%x", &val);
+                      TtaWCToMBstring ((wchar_t) val, &p);
+                      *cssRule = savedChar;
+                    }
+                  else
+                    {
+                      *p = *cssRule;
+                      p++; cssRule++;
+                    }
+                }
+              else
+                {
+                  *p = *cssRule;
+                  p++; cssRule++;
+                }
+            }
+          *p = EOS;
           if (*cssRule != quoteChar)
             cssRule = SkipProperty (cssRule, FALSE);
           else
@@ -4324,13 +4362,14 @@ static char *ParseCSSContent (Element element, PSchema tsch,
               *cssRule = EOS;
               value.typed_data.unit = UNIT_REL;
               value.typed_data.real = FALSE;
-              value.pointer = p;
+              value.pointer = buffer;
               if (DoApply)
                 TtaSetStylePresentation (PRContentString, element, tsch, ctxt,
                                          value);
               *cssRule = quoteChar;
               cssRule++;
             }
+          TtaFreeMemory (buffer);
         }
       else if (!strncasecmp (cssRule, "url", 3))
         {  
@@ -4388,7 +4427,7 @@ static char *ParseCSSContent (Element element, PSchema tsch,
             }
           if (value.pointer == NULL)
             {
-              CSSParseError ("Invalid content value", p, cssRule);
+              CSSParseError ("Invalid content value", (char*) p, cssRule);
               cssRule = SkipProperty (cssRule, FALSE);
             }
           cssRule++;
@@ -4421,7 +4460,7 @@ static char *ParseCSSContent (Element element, PSchema tsch,
         }
       else
         {
-          CSSParseError ("Invalid content value", p, cssRule);
+          CSSParseError ("Invalid content value", (char*) p, cssRule);
           cssRule = SkipProperty (cssRule, FALSE);
         }
       cssRule = SkipBlanksAndComments (cssRule);
