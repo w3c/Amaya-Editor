@@ -1509,7 +1509,7 @@ PtrPSchema      ReadPresentationSchema (char *fileName, PtrSSchema pSS)
 	  /* lit les variables de presentation */
 	  if (!error)
       {
-	      pPSch->PsVariable = (PresVarTable*) malloc (pPSch->PsNVariables * sizeof (PtrPresentationBox));
+	      pPSch->PsVariable = (PresVarTable*) malloc (pPSch->PsNVariables * sizeof (PtrPresVariable));
 	      pPSch->PsVariableTableSize = pPSch->PsNVariables;
         for (i = 0; i < pPSch->PsNVariables && !error; i++)
           {
