@@ -5642,6 +5642,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
   char              *deb, *cur, *sel, *next, c;
   char              *schemaName, *mappedName, *saveURL;
   char              *names[MAX_ANCESTORS];
+  ThotBool           pseudoFirstChild[MAX_ANCESTORS];
   ElemRel            rel[MAX_ANCESTORS];
   char              *attrnames[MAX_ANCESTORS];
   int                attrnums[MAX_ANCESTORS];
@@ -5665,6 +5666,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
   for (i = 0; i < MAX_ANCESTORS; i++)
     {
       names[i] = NULL;
+      pseudoFirstChild[i] = FALSE;
       rel[i] = RelAncestor;
       attrnames[i] = NULL;
       attrnums[i] = 0;
@@ -5672,6 +5674,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
       attrvals[i] = NULL;
       attrmatch[i] = Txtmatch;
       ctxt->name[i] = 0;
+      ctxt->firstChild[i] = FALSE;
       ctxt->attrType[i] = 0;
       ctxt->attrLevel[i] = 0;
       ctxt->attrText[i] = NULL;
@@ -5812,78 +5815,56 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
               *cur++ = EOS;
               /* point to the pseudo-class or pseudo-element in sel[] if it's
                  a valid name */
-              if (deb[0] <= 64)
+              if (!strcmp (deb, "first-child"))
+                /* first-child pseudo-class */
                 {
-                  CSSPrintError ("Invalid pseudo-element", deb);
+                  pseudoFirstChild[0] = TRUE;
+                  specificity += 10;
+                }
+              else if (!strcmp (deb, "link") || !strcmp (deb, "visited"))
+                /* link or visited pseudo-classes */
+                {
+                  nbattrs++;
+                  if (nbattrs == MAX_ANCESTORS)
+                    /* abort parsing */
+                    {
+                      CSSPrintError ("Selector too long", deb);
+                      return (selector);
+                    }
+                  for (i = nbattrs; i > 0; i--)
+                    {
+                      attrnames[i] = attrnames[i - 1];
+                      attrnums[i] = attrnums[i - 1];
+                      attrlevels[i] = attrlevels[i - 1];
+                      attrvals[i] = attrvals[i - 1];
+                      attrmatch[i] = attrmatch[i - 1];
+                    }
+                  attrnames[0] = NULL;
+                  attrnums[0] = ATTR_PSEUDO;
+                  attrlevels[0] = 0;
+                  attrmatch[0] = Txtmatch;
+                  attrvals[0] = deb;
+                  specificity += 10;
+                }
+              else if (!strcmp (deb, "hover") || !strcmp (deb, "active") ||
+                       !strcmp (deb, "focus"))
+                /* hover, active, focus pseudo-classes */
+                {
+                  specificity += 10;
+                  /* not supported */
                   DoApply = FALSE;
                 }
-              else
+              else if (!strncmp (deb, "lang", 4))
+                /* it's the lang pseudo-class */
                 {
-                  if (!strcmp (deb, "first-letter") ||
-                      !strcmp (deb, "first-line"))
+                  if (deb[4] != '(' || deb[strlen(deb)-1] != ')')
+                    /* at least one parenthesis is missing. Error */
                     {
-                      if (doubleColon)
-                        CSSPrintError ("Warning: \"::\" is CSS3 syntax", NULL);
-                      /* not supported */
+                      CSSPrintError ("Invalid :lang pseudo-class", deb);
                       DoApply = FALSE;
                     }
-                  else if (!strcmp (deb, "hover") ||
-                           !strcmp (deb, "focus"))
-                    /* not supported */
-                    DoApply = FALSE;
                   else
-                    specificity += 10;
-                  if (!strncmp (deb, "before", 6))
-                    {
-                      if (doubleColon)
-                        CSSPrintError ("Warning: \"::before\" is CSS3 syntax",
-                                     NULL);
-                      ctxt->pseudo = PbBefore;
-                    }
-                  else if (!strncmp (deb, "after", 5))
-                    {
-                      if (doubleColon)
-                        CSSPrintError ("Warning: \"::after\" is CSS3 syntax",
-                                       NULL);
-                      ctxt->pseudo = PbAfter;
-                    }
-                  else if (!strncmp (deb, "lang", 4))
-                    /* it's the lang pseudo-class */
-                    {
-                      if (deb[4] != '(' || deb[strlen(deb)-1] != ')')
-                        /* at least one parenthesis is missing. Error */
-                        {
-                          CSSPrintError ("Invalid :lang pseudo-class", deb);
-                          DoApply = FALSE;
-                        }
-                      else
-                        /* simulate selector [lang|="xxx"] */
-                        {
-                          nbattrs++;
-                          if (nbattrs == MAX_ANCESTORS)
-                            /* abort parsing */
-                            {
-                              CSSPrintError ("Selector too long", deb);
-                              return (selector);
-                            }
-                          deb[strlen(deb)-1] = EOS;
-                          deb[4] = EOS;
-                          for (i = nbattrs; i > 0; i--)
-                            {
-                              attrnames[i] = attrnames[i - 1];
-                              attrnums[i] = attrnums[i - 1];
-                              attrlevels[i] = attrlevels[i - 1];
-                              attrvals[i] = attrvals[i - 1];
-                              attrmatch[i] = attrmatch[i - 1];
-                            }
-                          attrnames[0] = deb;
-                          attrnums[0] = 0;
-                          attrlevels[0] = 0;
-                          attrmatch[0] = Txtsubstring;
-                          attrvals[0] = &deb[5];
-                        }
-                    }
-                  else
+                    /* simulate selector [lang|="xxx"] */
                     {
                       nbattrs++;
                       if (nbattrs == MAX_ANCESTORS)
@@ -5892,6 +5873,8 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
                           CSSPrintError ("Selector too long", deb);
                           return (selector);
                         }
+                      deb[strlen(deb)-1] = EOS;
+                      deb[4] = EOS;
                       for (i = nbattrs; i > 0; i--)
                         {
                           attrnames[i] = attrnames[i - 1];
@@ -5900,15 +5883,49 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
                           attrvals[i] = attrvals[i - 1];
                           attrmatch[i] = attrmatch[i - 1];
                         }
-                      attrnames[0] = NULL;
-                      attrnums[0] = ATTR_PSEUDO;
+                      attrnames[0] = deb;
+                      attrnums[0] = 0;
                       attrlevels[0] = 0;
-                      attrmatch[0] = Txtmatch;
-                      attrvals[0] = deb;
+                      attrmatch[0] = Txtsubstring;
+                      attrvals[0] = &deb[5];
+                      specificity += 10;
                     }
-                  if (names[0] && !strcmp (names[0], "*"))
-                    names[0] = NULL;
                 }
+              else if (!strcmp (deb, "first-line") ||
+                       !strcmp (deb, "first-letter"))
+                /* pseudo-elements first-line or first-letter */
+                {
+                  if (doubleColon)
+                    CSSPrintError ("Warning: \"::\" is CSS3 syntax", NULL);
+                  specificity += 1;
+                  /* not supported */
+                  DoApply = FALSE;
+                }
+              else if (!strncmp (deb, "before", 6))
+                /* pseudo-element before */
+                {
+                  if (doubleColon)
+                    CSSPrintError ("Warning: \"::before\" is CSS3 syntax",
+                                   NULL);
+                  ctxt->pseudo = PbBefore;
+                  specificity += 1;
+                }
+              else if (!strncmp (deb, "after", 5))
+                /* pseudo-element after */
+                {
+                  if (doubleColon)
+                    CSSPrintError ("Warning: \"::after\" is CSS3 syntax",
+                                   NULL);
+                  ctxt->pseudo = PbAfter;
+                  specificity += 1;
+                }
+              else
+                {
+                  CSSPrintError ("Invalid pseudo-element", deb);
+                  DoApply = FALSE;
+                }
+              if (names[0] && !strcmp (names[0], "*"))
+                names[0] = NULL;
             }
           else if (*selector == '#')
             /* unique identifier */
@@ -6154,6 +6171,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
           for (i = nbnames; i > 0; i--)
             {
               names[i] = names[i - 1];
+              pseudoFirstChild[i] = pseudoFirstChild[i - 1];
               rel[i] = rel[i - 1];
             }
           /* increase the level of all attributes */
@@ -6174,6 +6192,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
   ctxt->schema = NULL;
   ctxt->nbElem = nbnames;
   elType.ElSSchema = NULL;
+  elType.ElTypeNum = 0;
   schemaName = TtaGetSSchemaName(TtaGetDocumentSSchema (doc));
   if (!strcmp (schemaName, "HTML"))
     xmlType = XHTML_TYPE;
@@ -6190,7 +6209,8 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
   while (i <= nbnames)
     {
       ctxt->rel[i] = rel[i];
-      if (!names[i])
+      ctxt->firstChild[i] = pseudoFirstChild[i];
+      if (!names[i] && i > 0)
         ctxt->name[i] = HTML_EL_ANY_TYPE;
       else
         /* store element information */
@@ -6200,10 +6220,12 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
             /* it's a generic XML document. Check the main document schema */
             {
               elType.ElSSchema = TtaGetDocumentSSchema (doc);
-              TtaGetXmlElementType (names[i], &elType, &mappedName, doc);
+              elType.ElTypeNum = 0;
+              if (names[i])
+                TtaGetXmlElementType (names[i], &elType, &mappedName, doc);
               if (!elType.ElTypeNum)
                 {
-                  if (!strcmp (names[i], "*"))
+                  if (!names[i] || !strcmp (names[i], "*"))
                     elType.ElTypeNum = HTML_EL_ANY_TYPE;
                   else
                     elType.ElSSchema = NULL;
@@ -6211,7 +6233,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
             }
           else
             {
-              if (!strcmp (names[i], "*"))
+              if (!names[i] || !strcmp (names[i], "*"))
                 {
                   elType.ElSSchema = TtaGetDocumentSSchema (doc);
                   elType.ElTypeNum = HTML_EL_ANY_TYPE;
@@ -6226,7 +6248,8 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
               if (elType.ElSSchema == NULL)
                 {
                   /* element name not found. Search in all loaded schemas */
-                  TtaGetXmlElementType (names[i], &elType, NULL, doc);
+                  if (names[i])
+                    TtaGetXmlElementType (names[i], &elType, NULL, doc);
                   if (elType.ElSSchema)
                     {
                       /* the element type concerns an imported nature */
@@ -6256,7 +6279,9 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
                     {
                       /* Creation of a new element type in the main schema */
                       elType.ElSSchema = TtaGetDocumentSSchema (doc);
-                      TtaAppendXmlElement (names[i], &elType, &mappedName, doc);
+                      if (names[i])
+                        TtaAppendXmlElement (names[i], &elType, &mappedName,
+                                             doc);
                     }
 #endif /* XML_GENERIC */
                   else

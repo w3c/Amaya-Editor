@@ -1075,7 +1075,9 @@ ThotBool CondPresentation (PtrCondition pCond, PtrElement pEl,
         switch (pCond->CoCondition)
           {
           case PcFirst:
-            /* on saute les marques de page precedentes */
+            /* ignore previous page break */
+            /* we should also ignore Hideen elements (but not their contents),
+               TEXT elements, comments, PIs, etc. @@@@@@@@ */
             pElSibling = pElem->ElPrevious;
             stop = FALSE;
             do
@@ -3598,8 +3600,9 @@ PtrAbstractBox TruncateOrCompleteAbsBox (PtrAbstractBox pAb, ThotBool truncate,
                           pSchPattr = pSchP;
                         pSSattr = pAttr->AeAttrSSchema;
                         if (pHd && /* this is a P schema extension */
-                            /* if it's an ID ou class attribute, take P schema
-                               extensions associated with the document S schema */
+                            /* if it's an ID, class or pseudo-class attribute,
+                               take P schema extensions associated with the
+                               document S schema */
                             (AttrHasException (ExcCssClass, pAttr->AeAttrNum,
                                                pAttr->AeAttrSSchema) ||
                              AttrHasException (ExcCssId, pAttr->AeAttrNum,
@@ -4604,7 +4607,7 @@ static void GetRulesFromInheritedAttributes (PtrElement pEl,
           pSSattr = pAttr->AeAttrSSchema;
           if (pDoc->DocView[viewNb-1].DvPSchemaView == 1 && extens &&
               /* it's a P schema extension */
-              /* if it's an ID ou class attribute, take P schema
+              /* if it's an ID, class or pseudo-class attribute, take P schema
                  extensions associated with the document S schema*/
               (AttrHasException (ExcCssClass, pAttr->AeAttrNum,
                                  pAttr->AeAttrSSchema) ||
@@ -4656,7 +4659,8 @@ static void GetRulesFromInheritedAttributes (PtrElement pEl,
           while (valNum > 0);
 
           /* look for more ancestors having this attribute only if it's a
-             P schema extension and if the attribute is id or class */
+             P schema extension and if the attribute is id, class or
+             pseudo-class */
           if (pDoc->DocView[viewNb-1].DvPSchemaView != 1 || !extens ||
               !(AttrHasException (ExcCssClass, pAttr->AeAttrNum,
                                   pAttr->AeAttrSSchema) ||
@@ -4916,8 +4920,9 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
                   pSSattr = pAttr->AeAttrSSchema;
                   if (pDoc->DocView[viewNb - 1].DvPSchemaView == 1 && pHd &&
                       /* this is a P schema extension */
-                      /* if it's an ID ou class attribute, take P schema
-                         extensions associated with the document S schema */
+                      /* if it's an ID, class or pseudo-class attribute, take
+                         P schema extensions associated with the document
+                         S schema */
                       (AttrHasException (ExcCssClass, pAttr->AeAttrNum,
                                          pAttr->AeAttrSSchema) ||
                        AttrHasException (ExcCssId, pAttr->AeAttrNum,
@@ -5406,7 +5411,7 @@ PtrAbstractBox AbsBoxesCreate (PtrElement pEl, PtrDocument pDoc,
   ThotBool            stop, ok, crAbsBox, truncate;
   ThotBool            notBreakable, ignoreDescent;
   ThotBool            Creation, ApplyRules;
-  ThotBool            PcFirst, PcLast;
+  ThotBool            pFirst, pLast;
 
   pAbReturn = NULL;
   lqueue = 0;
@@ -5820,27 +5825,27 @@ PtrAbstractBox AbsBoxesCreate (PtrElement pEl, PtrDocument pDoc,
                         pAbReturn = pAbChild;
                     if (forward)
                       {
-                        PcLast = (pElChild->ElNext == NULL);
+                        pLast = (pElChild->ElNext == NULL);
                         if (ApplyRules)
-                          PcFirst = (pElChild->ElPrevious == NULL);
+                          pFirst = (pElChild->ElPrevious == NULL);
                         else
-                          PcFirst = FALSE;
+                          pFirst = FALSE;
                       }
                     else
                       {
-                        PcFirst = (pElChild->ElPrevious == NULL);
+                        pFirst = (pElChild->ElPrevious == NULL);
                         if (ApplyRules)
-                          PcLast = (pElChild->ElNext == NULL);
+                          pLast = (pElChild->ElNext == NULL);
                         else
-                          PcLast = FALSE;
+                          pLast = FALSE;
                       }
                     pAsc = pElChild->ElParent;
                     while (pAsc != pEl)
                       {
-                        if (PcFirst)
-                          PcFirst = (pAsc->ElPrevious == NULL);
-                        if (PcLast)
-                          PcLast = (pAsc->ElNext == NULL);
+                        if (pFirst)
+                          pFirst = (pAsc->ElPrevious == NULL);
+                        if (pLast)
+                          pLast = (pAsc->ElNext == NULL);
                         pAsc = pAsc->ElParent;
                       }
 		       
@@ -5906,7 +5911,7 @@ PtrAbstractBox AbsBoxesCreate (PtrElement pEl, PtrDocument pDoc,
                             }
                         while (!stop);
                       }
-                    if (PcLast || PcFirst)
+                    if (pLast || pFirst)
                       /* on a cree' les paves du premier (ou dernier) fils */
                       /* de pEl, le pave englobant des fils de pEl est  */
                       /* complete si le pave du premier (ou dernier) fils est */
@@ -5945,7 +5950,7 @@ PtrAbstractBox AbsBoxesCreate (PtrElement pEl, PtrDocument pDoc,
                               {
                                 pAbChild = pAb->AbFirstEnclosed;
                                 pAbPres = NULL;
-                                if (PcLast)
+                                if (pLast)
                                   {
                                     if (pAbChild == NULL)
                                       /* tous les descendants ont une visibilite' */
@@ -5972,7 +5977,7 @@ PtrAbstractBox AbsBoxesCreate (PtrElement pEl, PtrDocument pDoc,
                                     if (forward && !truncate)
                                       *complete = TRUE;
                                   }
-                                if (PcFirst)
+                                if (pFirst)
                                   {
                                     pAbChild = pAb->AbFirstEnclosed;
                                     if (pAbChild == NULL)

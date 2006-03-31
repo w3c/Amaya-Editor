@@ -1994,7 +1994,7 @@ void DestroyAbsBoxesView (PtrElement pEl, PtrDocument pDoc, ThotBool verify,
                           int view)
 {
   PtrAbstractBox      pAb, pAbbReDisp, pAbbR, pAbb, pElAscent;
-  PtrAbstractBox      PcFirst, PcLast, pNext;
+  PtrAbstractBox      pFirst, pLast, pNext;
   PtrElement          pElChild;
 
   pAb = pEl->ElAbstractBox[view - 1];
@@ -2023,8 +2023,8 @@ void DestroyAbsBoxesView (PtrElement pEl, PtrDocument pDoc, ThotBool verify,
           pAb->AbEnclosing->AbElement == pAb->AbElement)
         pAb = pAb->AbEnclosing;
 
-      PcFirst = NULL;
-      PcLast = NULL;
+      pFirst = NULL;
+      pLast = NULL;
       pAbbReDisp = pAb;	/* on reaffichera ce pave */
       /* traite tous les paves correspondant a cet element */
       /* les marque d'abord tous 'morts' en verifiant si leur */
@@ -2077,9 +2077,9 @@ void DestroyAbsBoxesView (PtrElement pEl, PtrDocument pDoc, ThotBool verify,
               SetDeadAbsBox (pAb);
               if (pAb == AbsBoxSelectedAttr)
                 CancelSelection ();
-              if (PcFirst == NULL)
-                PcFirst = pAb;
-              PcLast = pAb;
+              if (pFirst == NULL)
+                pFirst = pAb;
+              pLast = pAb;
               /* passe au pave suivant du meme element */
               pAb = pAb->AbNext;
             }
@@ -2097,14 +2097,14 @@ void DestroyAbsBoxesView (PtrElement pEl, PtrDocument pDoc, ThotBool verify,
         }
       while (pAb != NULL);
 
-      if (PcFirst == NULL)
+      if (pFirst == NULL)
         return;
-      else if (PcFirst != PcLast)
+      else if (pFirst != pLast)
         /* il y a plusieurs paves pour cet element, on reaffichera */
         /* le pave englobant */
-        pAbbReDisp = Enclosing (pAbbReDisp, PcFirst->AbEnclosing);
+        pAbbReDisp = Enclosing (pAbbReDisp, pFirst->AbEnclosing);
 
-      pAb = PcFirst;
+      pAb = pFirst;
       do
         {
           /* cherche tous les paves qui font reference au pave a */
@@ -2113,7 +2113,7 @@ void DestroyAbsBoxesView (PtrElement pEl, PtrDocument pDoc, ThotBool verify,
           ApplyRefAbsBoxSupp (pAb, &pAbbR, pDoc);
           pAbbReDisp = Enclosing (pAbbReDisp, pAbbR);
           /* passe au pave mort suivant */
-          if (pAb == PcLast)
+          if (pAb == pLast)
             pAb = NULL;
           else
             pAb = pAb->AbNext;

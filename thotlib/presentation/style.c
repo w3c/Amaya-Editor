@@ -570,7 +570,8 @@ static void AddCond (PtrCondition *base, PtrCondition cond, SSchema sch)
 /*----------------------------------------------------------------------
   PresRuleAddElemCond : add an element condition to a presentation rule.
   ----------------------------------------------------------------------*/
-static void PresRuleAddElemCond (PtrPRule rule, GenericContext ctxt, int level)
+static void PresRuleAddElemCond (PtrPRule rule, GenericContext ctxt, int level,
+                                 ThotBool firstChild)
 {
   PtrCondition        cond = NULL;
 
@@ -581,7 +582,12 @@ static void PresRuleAddElemCond (PtrPRule rule, GenericContext ctxt, int level)
       return;
     }
   memset (cond, 0, sizeof (Condition));
-  if (ctxt->rel[level] == RelVoid)
+  if (firstChild)
+    {
+      cond->CoCondition = PcFirst;
+      cond->CoNotNegative = TRUE;
+    }
+  else if (ctxt->rel[level] == RelVoid)
     {
       /* the current element type must be ... */
       cond->CoCondition = PcElemType;
@@ -981,7 +987,9 @@ static int TstRuleContext (PtrPRule rule, GenericContext ctxt,
               (cond->CoTypeAncestor == ctxt->name[i] &&
                cond->CoCondition == PcSibling &&
                cond->CoImmediate &&
-               ctxt->rel[i] == RelPrevious))
+               ctxt->rel[i] == RelPrevious) &&
+              (cond->CoCondition == PcFirst &&
+               ctxt->firstChild[i]))
             {
               // check the next condition
               cond = cond->CoNextCondition;
@@ -1059,8 +1067,8 @@ static PtrPRule PresRuleSearch (PtrPSchema tsch, GenericContext ctxt,
       attrType = ctxt->attrType[0];
       *chain = PresAttrChainInsert (tsch, attrType, ctxt, 0);
     }
+  /* we are now sure that only elements are concerned */
   else if (ctxt->type)
-    /* we are now sure that only elements are concerned */
     {
       if (tsch->PsElemPRule)
         *chain = &tsch->PsElemPRule->ElemPres[ctxt->type - 1];
@@ -1151,7 +1159,7 @@ static PtrPRule PresRuleInsert (PtrPSchema tsch, GenericContext ctxt,
               if (ctxt->attrType[0] && ctxt->attrLevel[0] == 0 && ctxt->type)
                 /* the attribute is attached to that element like a
                    selector "a#id" */
-                PresRuleAddElemCond (pRule, ctxt, 0);
+                PresRuleAddElemCond (pRule, ctxt, 0, FALSE);
               /* add other conditions ... */
               i = 0;
               att = 0;
@@ -1159,7 +1167,10 @@ static PtrPRule PresRuleInsert (PtrPSchema tsch, GenericContext ctxt,
                 {
                   if (i > 0)
                     /* it's an ancestor like a selector "li a" */
-                    PresRuleAddElemCond (pRule, ctxt, i);
+                    PresRuleAddElemCond (pRule, ctxt, i, FALSE);
+                  if (ctxt->firstChild[i])
+                    /* it's a pseudo-class first-child */
+                    PresRuleAddElemCond (pRule, ctxt, i, TRUE);
                   while (ctxt->attrType[att] && ctxt->attrLevel[att] == i)
                     {
                       /* skip the first attribute if it is at level 0 : it

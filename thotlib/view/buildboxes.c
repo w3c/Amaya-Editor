@@ -1260,7 +1260,7 @@ void GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width,
 
   box = NULL;
   pBox = pAb->AbBox;
-  /* PcFirst fils vivant */
+  /* first child that is not dead */
   pFirstAb = pAb->AbFirstEnclosed;
   still = TRUE;
   hMin = !pAb->AbWidth.DimIsPosition && pAb->AbWidth.DimMinimum;

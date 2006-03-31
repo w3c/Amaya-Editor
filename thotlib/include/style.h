@@ -71,6 +71,7 @@ typedef struct struct_GenericContext
     PseudoBox     pseudo;                   /* pseudo box in selector    */
     int           nbElem;                   /* number of elem. in name[] */
     int           name[MAX_ANCESTORS];      /* ancestors type            */
+    ThotBool      firstChild[MAX_ANCESTORS];/* first:child pseudo-class  */
     int           attrType[MAX_ANCESTORS];  /* type of the attribute     */
     int           attrLevel[MAX_ANCESTORS]; /* level of the attribute    */
     char         *attrText[MAX_ANCESTORS];  /* attr. or box name         */

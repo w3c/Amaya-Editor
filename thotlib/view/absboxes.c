@@ -329,7 +329,7 @@ void  AddAbsBoxes (PtrAbstractBox pAbbRoot, PtrDocument pDoc, ThotBool head)
    PtrAbstractBox      pAb;
    PtrElement          pEl;
    ThotBool            complete;
-   PtrAbstractBox      pAbbReDisp, pAbbR, PcFirst, PcLast, pAbb;
+   PtrAbstractBox      pAbbReDisp, pAbbR, pFirst, pLast, pAbb;
    ThotBool            stop;
 
    if ((head && pAbbRoot->AbTruncatedHead) ||
@@ -345,27 +345,27 @@ void  AddAbsBoxes (PtrAbstractBox pAbbRoot, PtrDocument pDoc, ThotBool head)
        while (pAb != NULL)
 	 {
 	   /* cherche le premier et le dernier freres crees a ce niveau */
-	   PcFirst = pAb;
-	   PcLast = pAb;
+	   pFirst = pAb;
+	   pLast = pAb;
 	   stop = FALSE;
 	   do
-	     if (PcLast->AbNext == NULL)
+	     if (pLast->AbNext == NULL)
 	       stop = TRUE;
-	     else if (!PcLast->AbNext->AbNew)
+	     else if (!pLast->AbNext->AbNew)
 	       stop = TRUE;
 	     else
-	       PcLast = PcLast->AbNext;
+	       pLast = pLast->AbNext;
 	   while (!stop);
 	   stop = FALSE;
 	   do
-	     if (PcFirst->AbPrevious == NULL)
+	     if (pFirst->AbPrevious == NULL)
 	       stop = TRUE;
-	     else if (!PcFirst->AbPrevious->AbNew)
+	     else if (!pFirst->AbPrevious->AbNew)
 	       stop = TRUE;
 	     else
-	       PcFirst = PcFirst->AbPrevious;
+	       pFirst = pFirst->AbPrevious;
 	   while (!stop);
-	   if (PcFirst == PcLast)
+	   if (pFirst == pLast)
 	     /* un seul pave cree a ce niveau, c'est lui qu'il faudra */
 	     /* reafficher. */
 	     pAbbReDisp = pAb;
@@ -373,7 +373,7 @@ void  AddAbsBoxes (PtrAbstractBox pAbbRoot, PtrDocument pDoc, ThotBool head)
 	     /* plusieurs paves crees, on reaffichera l'englobant */
 	     pAbbReDisp = pAb->AbEnclosing;
 	   /* modifie les paves environnant les paves crees */
-	   ApplyRefAbsBoxNew (PcFirst, PcLast, &pAbbR, pDoc);
+	   ApplyRefAbsBoxNew (pFirst, pLast, &pAbbR, pDoc);
 	   /* conserve le pointeur sur le pave a reafficher */
 	   pAbbReDisp = Enclosing (pAbbReDisp, pAbbR);
 	   
@@ -383,9 +383,9 @@ void  AddAbsBoxes (PtrAbstractBox pAbbRoot, PtrDocument pDoc, ThotBool head)
 			  pDoc->DocViewModifiedAb[pAbbRoot->AbDocView - 1]);
 	   /* passe au niveau inferieur */
 	   if (head)
-	     pAb = PcLast->AbNext;
+	     pAb = pLast->AbNext;
 	   else
-	     pAb = PcFirst->AbPrevious;
+	     pAb = pFirst->AbPrevious;
 	   if (pAb != NULL)
 	     {
 	       /* saute les paves de presentation produits par CreateWith */
