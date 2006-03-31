@@ -2697,7 +2697,7 @@ static char *ParseCSSLineHeight (Element element, PSchema tsch,
   else if (!strncasecmp (cssRule, "inherit", 7))
     {
       pval.typed_data.unit = VALUE_INHERIT;
-      cssRule += 6;
+      cssRule += 7;
     }
   else
     cssRule = ParseCSSUnit (cssRule, &pval);
@@ -5837,7 +5837,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
                     {
                       if (doubleColon)
                         CSSPrintError ("Warning: \"::before\" is CSS3 syntax",
-                                       NULL);
+                                     NULL);
                       ctxt->pseudo = PbBefore;
                     }
                   else if (!strncmp (deb, "after", 5))
