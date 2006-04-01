@@ -761,6 +761,34 @@ static PtrElement   PageBrk (PtrElement pEl, int schView)
       return (PageBrk (pEl->ElFirstChild, schView));
 }
 
+/*----------------------------------------------------------------------
+  FunctionRule retourne le pointeur sur la premiere regle        
+  de fonction de presentation associee a l'element pEl dans le
+  schema de presentation pSchP.                
+  Retourne NULL s'il n'y a pas de regle de creation pour  
+  cet element                                             
+  ----------------------------------------------------------------------*/
+static PtrPRule FunctionRule (PtrElement pEl, int index, PtrPSchema pSchP,
+                              PtrDocument pDoc)
+{
+  PtrPRule            pRule;
+
+  pRule = NULL;
+  if (pSchP != NULL)
+    {
+      /* pRule : premiere regle de presentation specifique a ce type */
+      /* d'element */
+      pRule = (pSchP)->PsElemPRule->ElemPres[index - 1];
+      if (pRule != NULL)
+        {
+          while (pRule->PrType < PtFunction && pRule->PrNextPRule != NULL)
+            pRule = pRule->PrNextPRule;
+          if (pRule->PrType != PtFunction)
+            pRule = NULL;
+        }
+    }
+  return pRule;
+}
 
 /*----------------------------------------------------------------------
   InsertMark insere une Marque de Page avant l'element auquel correspond
@@ -785,13 +813,14 @@ static PtrElement InsertMark (PtrAbstractBox pAb, int frame, int nbView,
    PtrAbstractBox      modifAbsBox, topPageAbsBox, savePageAbsBox;
    PtrAbstractBox      pP1, pP;
    PtrPSchema          pSchP;
+   PtrSSchema          pSchS;
    AbPosition         *pPos;
 #ifndef PAGINEETIMPRIME
    PtrElement          pF;
    NotifyElement       notifyEl;
    int                 NSiblings;
 #endif
-   int                 cpt, h, val;
+   int                 cpt, h, val, index;
    ThotBool            stop, inTop;
    ThotBool            ElemIsChild, ElemIsBefore, cut;
 
@@ -882,7 +911,8 @@ static PtrElement InsertMark (PtrAbstractBox pAb, int frame, int nbView,
        /* apres cet element. Rq: la page sera trop longue ! */
        if (pP->AbPresentationBox)
 	 {
-	   pRule = FunctionRule (pEl, &pSchP, pDoc);
+     SearchPresSchema (pEl, &pSchP, &index, &pSchS, pDoc);
+	   pRule = FunctionRule (pEl, index, pSchP, pDoc);
 	   while (pRule != NULL && ElemIsBefore == TRUE)
 	     {
 	       if (pP->AbTypeNum == pRule->PrPresBox[0]

@@ -2909,6 +2909,7 @@ static void VariableInsert (PtrPSchema tsch, GenericContext c)
   if (var == NUL)
     /* can't allocate a new variable */
     return;
+  memset (var, 0, sizeof (PresVariable));
   tsch->PsVariable->PresVar[tsch->PsNVariables] = var;
   tsch->PsNVariables++;
   ctxt->var = tsch->PsNVariables;

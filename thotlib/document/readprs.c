@@ -1510,10 +1510,12 @@ PtrPSchema      ReadPresentationSchema (char *fileName, PtrSSchema pSS)
 	  if (!error)
       {
 	      pPSch->PsVariable = (PresVarTable*) malloc (pPSch->PsNVariables * sizeof (PtrPresVariable));
+        memset (pPSch->PsVariable, 0, pPSch->PsNVariables * sizeof (PtrPresVariable));
 	      pPSch->PsVariableTableSize = pPSch->PsNVariables;
         for (i = 0; i < pPSch->PsNVariables && !error; i++)
           {
             pVar = (PtrPresVariable) malloc (sizeof (PresVariable));
+            memset (pVar, 0, sizeof (PresVariable));
             pPSch->PsVariable->PresVar[i] = pVar;
             error = !TtaReadShort (file, &pVar->PvNItems);
             if (!error)
@@ -1549,11 +1551,13 @@ PtrPSchema      ReadPresentationSchema (char *fileName, PtrSSchema pSS)
     if (!error)
 	    {
 	      pPSch->PsPresentBox = (PresBoxTable*) malloc (pPSch->PsNPresentBoxes * sizeof (PtrPresentationBox));
+        memset (pPSch->PsPresentBox, 0, pPSch->PsNPresentBoxes * sizeof (PtrPresentationBox));
 	      pPSch->PsPresentBoxTableSize = pPSch->PsNPresentBoxes;
 	    }
 	  for (i = 0; i < pPSch->PsNPresentBoxes && !error; i++)
 	    {
-	      pBox = (PtrPresentationBox) malloc (sizeof (PresentationBox));
+        pBox = (PtrPresentationBox) malloc (sizeof (PresentationBox));
+        memset (pBox, 0, sizeof (PresentationBox));
 	      pPSch->PsPresentBox->PresBox[i] = pBox;
 	      TtaReadName (file, (unsigned char *)pBox->PbName);
 	      pBox->PbFirstPRule = ReadPRulePtr (file, &pNextPRule);
@@ -1582,6 +1586,9 @@ PtrPSchema      ReadPresentationSchema (char *fileName, PtrSSchema pSS)
 	    {
 	      pPSch->PsAttrPRule = (AttrPresTable*) malloc (pSS->SsAttrTableSize * sizeof (PtrAttributePres));
 	      pPSch->PsNAttrPRule = (NumberTable*) malloc (pSS->SsAttrTableSize * sizeof (int));
+        memset (pPSch->PsAttrPRule, 0, pSS->SsAttrTableSize * sizeof (PtrAttributePres));
+	      memset (pPSch->PsAttrPRule, 0, pSS->SsAttrTableSize * sizeof (int));
+
 	      for (i = 0; i < pSS->SsNAttributes && !error; i++)
 		{
 		  /* lecture du nombre de paquet de regles differentes */

@@ -31,9 +31,6 @@ extern PtrPRule SearchRulepAb ( PtrDocument pDoc,
                                 FunctionType typeFunc,
                                 ThotBool attr,
                                 PtrAttribute * pAttr );
-extern PtrPRule FunctionRule ( PtrElement pEl,
-                               PtrPSchema * pSchP,
-                               PtrDocument pDoc );
 extern void SetDeadAbsBox ( PtrAbstractBox pAb );
 extern void ApplyRefAbsBoxSupp ( PtrAbstractBox pAb,
                                  PtrAbstractBox * pAbbReDisp,
@@ -132,9 +129,6 @@ extern PtrPRule SearchRulepAb ( PtrDocument pDoc,
                                   FunctionType typeFunc,
                                   ThotBool attr,
                                   PtrAttribute * pAttr );
-extern PtrPRule FunctionRule ( PtrElement pEl,
-                                 PtrPSchema * pSchP,
-                                 PtrDocument pDoc );
 extern void SetDeadAbsBox ( PtrAbstractBox pAb );
 extern void ApplyRefAbsBoxSupp ( PtrAbstractBox pAb,
                                    PtrAbstractBox * pAbbReDisp,

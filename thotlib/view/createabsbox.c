@@ -1078,6 +1078,8 @@ ThotBool CondPresentation (PtrCondition pCond, PtrElement pEl,
             /* ignore previous page break */
             /* we should also ignore Hideen elements (but not their contents),
                TEXT elements, comments, PIs, etc. @@@@@@@@ */
+            /* voir aussi ProcessFirstLast (structcommands.c) et tous les
+               appels à ChangeFirstLast */
             pElSibling = pElem->ElPrevious;
             stop = FALSE;
             do

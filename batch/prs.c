@@ -706,6 +706,7 @@ static void         NewVar (indLine wi)
                        LineNum);
       return;
     }
+  memset (var, 0, sizeof (PresVariable));
   pPSchema->PsVariable->PresVar[pPSchema->PsNVariables] = var;
   pPSchema->PsNVariables++;
   var->PvNItems = 0;
@@ -6191,6 +6192,7 @@ static void         CheckPageBoxes ()
   NumberTable        *viewOfBox;
 
   viewOfBox = (NumberTable*) malloc (pPSchema->PsNPresentBoxes * sizeof (int));
+  memset (viewOfBox, 0, pPSchema->PsNPresentBoxes * sizeof (int));
   /* a priori les boites de presentation ne sont pas des boites pages */
   for (b = 0; b < pPSchema->PsNPresentBoxes; b++)
     {
@@ -6879,7 +6881,8 @@ static void         CheckAllBoxesUsed ()
   BoolTable          *usedBox;
   AttributePres      *pPRuleA;
 
-  usedBox = (BoolTable*) malloc (pPSchema->PsNPresentBoxes * sizeof (ThotBool));
+  usedBox = (BoolTable*) malloc (pPSchema->PsNPresentBoxes * sizeof(ThotBool));
+  memset (usedBox, 0, pPSchema->PsNPresentBoxes * sizeof (ThotBool));
   /* marque d'abord qu'aucune boite de presentation n'est utilisee */
   for (b = 0; b < pPSchema->PsNPresentBoxes; b++)
     usedBox->Bln[b] = False;
