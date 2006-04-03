@@ -51,11 +51,11 @@ ThotBool	 NumberLinks;
 ThotBool	 WithToC;
 ThotBool         IgnoreCSS;
 
-static struct _SubDoc  *SubDocs;
+static struct _SubDoc  *SubDocs = NULL;
 static char             PSfile[MAX_PATH];
 static char             PPrinter[MAX_PATH];
 static char            *DocPrintURL;
-static Document		DocPrint;
+static Document		      DocPrint;
 static int              PaperPrint;
 static int              ManualFeed = PP_OFF;
 static int              Orientation;
@@ -1101,7 +1101,7 @@ static void CloseMakeBook (Document document)
   /* update internal links */
   SetInternalLinks (document);
   /* if the document changed force the browser mode */
-  if (SubDocs == NULL)
+  if (SubDocs)
     /* send a warning to the user to avoid to save this document */
     /* remove registered  sub-documents */
     FreeSubDocTable ();
@@ -1289,6 +1289,9 @@ void MakeBook (Document doc, View view)
   Element	    root, body;
   ElementType	    elType;
 
+  if (SubDocs)
+    // another make_book is wi=orking
+    return;
   /* stops all current transfers on this document */
   StopTransfer (doc, 1);
   /* simulate a transfert in the main document */
@@ -1298,7 +1301,6 @@ void MakeBook (Document doc, View view)
   elType = TtaGetElementType (root);
   elType.ElTypeNum = HTML_EL_BODY;
   body = TtaSearchTypedElement (elType, SearchForward, root);
-
   if (body)
     GetIncludedDocuments (body, body, doc, NULL);
 }
