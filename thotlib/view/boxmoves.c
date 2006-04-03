@@ -876,7 +876,7 @@ void MoveBoxEdge (PtrBox pBox, PtrBox pSourceBox, OpRelation op, int delta,
   int                 translation;
 
   pAb = pBox->BxAbstractBox;
-  translation = 0;
+  translation = delta;
   /* Avoid to perform two times the same job */
   if (pAb != NULL && delta != 0 && pBox->BxPacking <= 1)
     {
@@ -898,6 +898,11 @@ void MoveBoxEdge (PtrBox pBox, PtrBox pSourceBox, OpRelation op, int delta,
                 pBox->BxMoved = pSourceBox;
               else if (pSourceBox->BxMoved != pBox)
                 pBox->BxMoved = pSourceBox;
+              else
+                {
+                  pBox->BxMoved = NULL;
+                  pSourceBox->BxMoved = NULL;
+                }
             }
 
           /* compute changes and temporally change the fixed edge */
@@ -949,9 +954,11 @@ void MoveBoxEdge (PtrBox pBox, PtrBox pSourceBox, OpRelation op, int delta,
           /* save the previous fixed edge */
           oldVertEdge = pBox->BxVertEdge;
           /* Look for the vertical fixed edge and the vertical free edge */
-          if ((op == OpHeight/* && !pBox->BxVertInverted) ||
-                                (op != OpHeight && pBox->BxVertInverted*/))
-            oldPosEdge = pAb->AbHeight.DimPosition.PosEdge;
+          if (op == OpHeight)
+            {
+              oldPosEdge = pAb->AbHeight.DimPosition.PosEdge;
+              pBox->BxMoved = NULL;
+            }
           else
             {
               oldPosEdge = pAb->AbVertPos.PosEdge;
@@ -960,6 +967,11 @@ void MoveBoxEdge (PtrBox pBox, PtrBox pSourceBox, OpRelation op, int delta,
                 pBox->BxMoved = pSourceBox;
               else if (pSourceBox->BxMoved != pBox)
                 pBox->BxMoved = pSourceBox;
+              else
+                {
+                  pBox->BxMoved = NULL;
+                  pSourceBox->BxMoved = NULL;
+                }
             }
 	  
           /* compute changes and temporally change the fixed edge */
@@ -1015,7 +1027,7 @@ void MoveBoxEdge (PtrBox pBox, PtrBox pSourceBox, OpRelation op, int delta,
       else if (pSourceBox->BxMoved != pBox)
         pBox->BxMoved = pSourceBox;
     }
-}
+ }
 
 
 /*----------------------------------------------------------------------
