@@ -2313,8 +2313,8 @@ static void EndOfXmlElement (char *name)
   ----------------------------------------------------------------------*/
 ThotBool  IsLeadingSpaceUseless (Element lastEl, Document doc, ThotBool isXML)
 {
-  ElementType   elType, lastElType, ancestorType, prevType;
-  Element       parent, ancestor, prev, last;
+  ElementType   elType, lastElType, prevType;
+  Element       parent, last;
   char         *name, *s;
   ThotBool      removeLeadingSpaces;
 
@@ -2343,6 +2343,7 @@ ThotBool  IsLeadingSpaceUseless (Element lastEl, Document doc, ThotBool isXML)
             // keep space after a Math element
             removeLeadingSpaces = FALSE;
           else if (!strcmp (name, "HTML") &&
+                   // parent
                    elType.ElTypeNum != HTML_EL_HEAD &&
                    elType.ElTypeNum != HTML_EL_BODY &&
                    elType.ElTypeNum != HTML_EL_Division &&
@@ -2350,7 +2351,9 @@ ThotBool  IsLeadingSpaceUseless (Element lastEl, Document doc, ThotBool isXML)
                    elType.ElTypeNum != HTML_EL_Numbered_List &&
                    elType.ElTypeNum != HTML_EL_Term_List &&
                    elType.ElTypeNum != HTML_EL_Definition_List &&
-                   elType.ElTypeNum != HTML_EL_MAP &&
+                   elType.ElTypeNum != HTML_EL_Table_ &&
+                   elType.ElTypeNum != HTML_EL_Table_row &&
+                   // element
                    !strcmp (s, "HTML") &&
                    (lastElType.ElTypeNum == HTML_EL_Comment_ ||
                     lastElType.ElTypeNum == HTML_EL_XMLPI))
@@ -2404,12 +2407,12 @@ ThotBool  IsLeadingSpaceUseless (Element lastEl, Document doc, ThotBool isXML)
           elType.ElTypeNum != HTML_EL_Option_Menu &&
           elType.ElTypeNum != HTML_EL_OptGroup)
         {
+          // not within an Option menu
           ancestor = parent;
           ancestorType = TtaGetElementType (ancestor);
           while (removeLeadingSpaces && ancestor &&
                  IsCharacterLevelElement (ancestor))
             {
-              // check if there is a 
               prev = ancestor;
               TtaPreviousSibling (&prev);
               prevType = TtaGetElementType (prev);
@@ -2425,16 +2428,14 @@ ThotBool  IsLeadingSpaceUseless (Element lastEl, Document doc, ThotBool isXML)
               if (prev == NULL)
                 {
                   ancestor = NULL;
-#ifdef IV
                    ancestor = TtaGetParent (ancestor);
                   ancestorType = TtaGetElementType (ancestor);
-#endif
                 }
               else
                 removeLeadingSpaces = FALSE;
             }
         }
-#endif
+#endif /* IV */
     }
   return removeLeadingSpaces;
 }
