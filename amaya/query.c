@@ -3420,9 +3420,6 @@ int PutObjectWWW (int docid, char *fileName, char *urlName,
     }
 
   AmayaLastHTTPErrorMsg [0] = EOS;
-  AmayaLastHTTPErrorMsgR [0] = EOS;
-
-   
   if (urlName == NULL || docid == 0 || fileName == NULL 
       || !TtaFileExist (fileName))
     /* no file to be uploaded */
@@ -3481,7 +3478,7 @@ int PutObjectWWW (int docid, char *fileName, char *urlName,
           tmp = strrchr (me->default_put_name, URL_SEP);
           if (tmp)
             {
-              /* it is a URL finishing in /. Only add the resrouce name */
+              /* it is a URL finishing in /. Only add the resource name */
               tmp++;
               strcpy (tmp, resource_name);
             }

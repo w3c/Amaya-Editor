@@ -514,7 +514,6 @@ void AHTPrintPendingRequestStatus (Document docid, BOOL last_seconds_of_life)
     {
       sprintf (buffer, TtaGetMessage (AMAYA, AM_WAITING_REQUESTS), waiting_count);
       TtaSetStatus (docid, 1, buffer, NULL);
-
     }
 }
 
@@ -530,8 +529,7 @@ void PrintTerminateStatus (AHTReqContext *me, int status)
   HTError           *next_error;
   HTErrorElement     errorElement;
   HTList            *cur;
-  char               msg_status[10];
-  char               msg_error[200];
+  char               msg_status[20];
   char              *server_status = NULL;
   char              *wc_tmp;
   HTResponse        *response;
@@ -554,52 +552,39 @@ void PrintTerminateStatus (AHTReqContext *me, int status)
                   NULL);
   else if (status == -400 || status == 505)
     {
-      TtaSetStatus (me->docid, 1, 
-                    TtaGetMessage (AMAYA, 
-                                   AM_SERVER_DID_NOT_UNDERSTAND_REQ_SYNTAX),
-                    NULL);
-      sprintf (AmayaLastHTTPErrorMsg, 
-               TtaGetMessage (AMAYA,
-                              AM_SERVER_DID_NOT_UNDERSTAND_REQ_SYNTAX));
+      strcpy (AmayaLastHTTPErrorMsg, 
+              TtaGetMessage (AMAYA, AM_SERVER_DID_NOT_UNDERSTAND_REQ_SYNTAX));
+      TtaSetStatus (me->docid, 1, AmayaLastHTTPErrorMsg, NULL);
     }
-  else if (status == -401) 
+  else if (status == -401)
     {
-      TtaSetStatus (me->docid, 1,
-                    TtaGetMessage (AMAYA, 
-                                   AM_AUTHENTICATION_FAILURE), 
-                    me->status_urlName);
       sprintf (AmayaLastHTTPErrorMsg, 
                TtaGetMessage (AMAYA, AM_AUTHENTICATION_FAILURE),
                me->status_urlName);
+      TtaSetStatus (me->docid, 1, AmayaLastHTTPErrorMsg, NULL);
     }
   else if (status == -403)
     {
-      TtaSetStatus (me->docid, 1,
-                    TtaGetMessage (AMAYA, AM_FORBIDDEN_ACCESS),
-                    me->status_urlName);
       sprintf (AmayaLastHTTPErrorMsg, 
                TtaGetMessage (AMAYA, AM_FORBIDDEN_ACCESS), 
                me->urlName);
+      TtaSetStatus (me->docid, 1, AmayaLastHTTPErrorMsg, NULL);
     }
   else if (status == -405)
     {
-      TtaSetStatus (me->docid, 1, 
-                    TtaGetMessage (AMAYA, AM_METHOD_NOT_ALLOWED),
-                    NULL);
-      sprintf(AmayaLastHTTPErrorMsg, 
+      strcpy (AmayaLastHTTPErrorMsg, 
               TtaGetMessage (AMAYA, AM_METHOD_NOT_ALLOWED));
+      TtaSetStatus (me->docid, 1, AmayaLastHTTPErrorMsg, NULL);
     }
   else if (status == -409)
     {
-      TtaSetStatus (me->docid, 1,
-                    "Conflict with the current state of the resource", NULL);
-      sprintf(AmayaLastHTTPErrorMsg, "409: Conflict with the current state of the resource");
+      strcpy (AmayaLastHTTPErrorMsg, TtaGetMessage (AMAYA, AM_CONFLICT));
+      TtaSetStatus (me->docid, 1, AmayaLastHTTPErrorMsg, NULL);
     }
   else if (status == -902)
     {
-      TtaSetStatus (me->docid, 1,
-                    "Transfer interrupted", NULL);
-      sprintf(AmayaLastHTTPErrorMsg, "902: Transfer interrupted");
+      strcpy (AmayaLastHTTPErrorMsg, TtaGetMessage (AMAYA, AM_LOAD_ABORT));
+      TtaSetStatus (me->docid, 1, AmayaLastHTTPErrorMsg, NULL);
     }
 #ifdef DAV
   else if (status == -423 || status == 207 || status == -424 ) 
@@ -650,15 +635,16 @@ void PrintTerminateStatus (AHTReqContext *me, int status)
         /* there's no error context */
         {
           sprintf (msg_status, "%d", status);
-          strcpy (msg_error, TtaGetMessage (AMAYA, AM_UNKNOWN_XXX_STATUS));
           if (status == -905)
-            strcat (msg_error, " : Connection timeout");
+            strcpy (AmayaLastHTTPErrorMsg, TtaGetMessage (AMAYA, AM_CANT_CONNECT_TO_HOST));
           else if (status == -906)
-            strcat (msg_error, " : Can't locate host");
+            strcpy (AmayaLastHTTPErrorMsg, TtaGetMessage (AMAYA, AM_NO_HOST));
           else if (status == -904)
-            strcat (msg_error, " : Recover pipe line");
-          TtaSetStatus (me->docid, 1, msg_error, msg_status);
-          sprintf (AmayaLastHTTPErrorMsg, msg_error, msg_status);
+            strcpy (AmayaLastHTTPErrorMsg, "Recover pipe line");
+          else
+            sprintf (AmayaLastHTTPErrorMsg, TtaGetMessage (AMAYA, AM_UNKNOWN_XXX_STATUS), msg_status);
+            
+          TtaSetStatus (me->docid, 1, AmayaLastHTTPErrorMsg, NULL);
           return;
         }
       else
@@ -666,73 +652,51 @@ void PrintTerminateStatus (AHTReqContext *me, int status)
 
       if (errorElement == HTERR_INTERRUPTED)
         {
-          TtaSetStatus (me->docid, 1,
-                        "Transfer interrupted by user", NULL);
-          sprintf (AmayaLastHTTPErrorMsg, "%s", "Transfer interrupted by user");
+          strcpy (AmayaLastHTTPErrorMsg, TtaGetMessage (AMAYA, AM_LOAD_ABORT));
+          TtaSetStatus (me->docid, 1, AmayaLastHTTPErrorMsg, NULL);
         }
       else if (errorElement == HTERR_PRECON_FAILED) 
         {
-          TtaSetStatus (me->docid, 1,
-                        "Document has changed (412)", NULL);
-          sprintf (AmayaLastHTTPErrorMsg, "%s", "Document has changed (412)");
+          strcpy (AmayaLastHTTPErrorMsg, "Document has changed (412)");
+          TtaSetStatus (me->docid, 1, AmayaLastHTTPErrorMsg, NULL);
           status = -412;
         }
       else if (errorElement == HTERR_TIME_OUT || errorElement == HTERR_TIMEOUT)
         {
-          TtaSetStatus (me->docid, 1,
-                        "Connection Timeout", NULL);
-          sprintf (AmayaLastHTTPErrorMsg,
-                   "Connection Timeout");
+          strcpy (AmayaLastHTTPErrorMsg, TtaGetMessage (AMAYA, AM_REQUEST_TIMEOUT));
+          TtaSetStatus (me->docid, 1, AmayaLastHTTPErrorMsg, NULL);
         }
       else if (errorElement == HTERR_NOT_IMPLEMENTED)
         {
-          TtaSetStatus (me->docid, 1,
-                        TtaGetMessage (AMAYA, AM_SERVER_NOT_IMPLEMENTED_501_ERROR), 
-                        NULL);
-          sprintf (AmayaLastHTTPErrorMsg, 
-                   TtaGetMessage (AMAYA, AM_SERVER_NOT_IMPLEMENTED_501_ERROR));
+          strcpy (AmayaLastHTTPErrorMsg, 
+                  TtaGetMessage (AMAYA, AM_SERVER_NOT_IMPLEMENTED_501_ERROR));
+          TtaSetStatus (me->docid, 1, AmayaLastHTTPErrorMsg, NULL);
           status = -501;
         }
       else if (errorElement == HTERR_NO_REMOTE_HOST)
         {
-          TtaSetStatus (me->docid, 1,
-                        "Host %s doesn't exist", (char *) error->par);
-          sprintf (AmayaLastHTTPErrorMsg, 
-                   "Host %s doesn't exist", (char *) error->par);
+          sprintf (AmayaLastHTTPErrorMsg,  "%s: %s",
+                   TtaGetMessage (AMAYA, AM_NO_HOST), (char *) error->par);
+          TtaSetStatus (me->docid, 1, AmayaLastHTTPErrorMsg, NULL);
         }
       else if (errorElement == HTERR_INTERNAL)
         {
           if ((error->length > 0) && (error->length <= 25) &&
               (error->par) && (((char *) error->par)[0] != EOS)) 
             {
-              TtaSetStatus (me->docid, 1, 
-                            TtaGetMessage (AMAYA, AM_SERVER_INTERNAL_ERROR_500_CAUSE), 
-                            (char *)error->par);
               sprintf (AmayaLastHTTPErrorMsg, 
                        TtaGetMessage (AMAYA, AM_SERVER_INTERNAL_ERROR_500_CAUSE), 
                        error->par);
+              TtaSetStatus (me->docid, 1, AmayaLastHTTPErrorMsg, NULL);
             }
           else
             {
-              TtaSetStatus (me->docid, 1, 
-                            TtaGetMessage (AMAYA, AM_SERVER_INTERNAL_ERROR_500_NO_CAUSE), 
-                            NULL);
-              sprintf (AmayaLastHTTPErrorMsg, 
-                       TtaGetMessage (AMAYA, AM_SERVER_INTERNAL_ERROR_500_NO_CAUSE));
+               sprintf (AmayaLastHTTPErrorMsg, 
+                       TtaGetMessage (AMAYA, AM_SERVER_INTERNAL_ERROR_500_CAUSE), "?");
+               TtaSetStatus (me->docid, 1, AmayaLastHTTPErrorMsg, NULL);
             }
           status = -500; 
         }
-      /* JK: not used anymore, but left here for debugging reasons */
-#if 0
-      else if (errorElement == HTERR_HTTP09)
-        {
-          TtaSetStatus (me->docid, 1,
-                        "Server or network forced libwww to downgrade to HTTP/0.9.",
-                        NULL);
-          sprintf (AmayaLastHTTPErrorMsg,
-                   "Server or network forced libwww to downgrade to HTTP/0.9 for this host. Please quit.");
-        }
-#endif
       else if (server_status)
         {
           wc_tmp = TtaStrdup (server_status);
@@ -745,22 +709,25 @@ void PrintTerminateStatus (AHTReqContext *me, int status)
         {
           /* we don't have anything else, except for the status code */
           sprintf (msg_status, "%d", status);
-          strcpy (msg_error, TtaGetMessage (AMAYA, AM_UNKNOWN_XXX_STATUS));
           if (status == -905)
-            strcat (msg_error, " : Connection timeout");
+            strcpy (AmayaLastHTTPErrorMsg, TtaGetMessage (AMAYA, AM_CANT_CONNECT_TO_HOST));
           else if (status == -906)
-            strcat (msg_error, " : Can't locate host");
+            strcpy (AmayaLastHTTPErrorMsg, TtaGetMessage (AMAYA, AM_NO_HOST));
           else if (status == -904)
-            strcat (msg_error, " : Recover pipe line");
-          TtaSetStatus (me->docid, 1, msg_error, msg_status);
-          sprintf (AmayaLastHTTPErrorMsg, msg_error, msg_status);
+            strcpy (AmayaLastHTTPErrorMsg, "Recover pipe line");
+          else
+            sprintf (AmayaLastHTTPErrorMsg, TtaGetMessage (AMAYA, AM_UNKNOWN_XXX_STATUS),
+                     msg_status);
+            
+          TtaSetStatus (me->docid, 1, AmayaLastHTTPErrorMsg, NULL);
         }
     }
+#ifdef IV
   /* set the reason string */
   if (status < 0 && status != -902 )
     {
       if (me->http_headers.reason && *me->http_headers.reason)
-        sprintf (AmayaLastHTTPErrorMsgR, "Server reason: %s", 
+        sprintf (AmayaLastHTTPErrorMsgR, TtaGetMessage (AMAYA,AM_SERVER_REASON), 
                  me->http_headers.reason);
       else
         {
@@ -771,13 +738,12 @@ void PrintTerminateStatus (AHTReqContext *me, int status)
               if (server_status && *server_status)
                 {
                   wc_tmp = TtaStrdup (server_status);
-                  sprintf (AmayaLastHTTPErrorMsgR, "Server reason: %s", 
+                  sprintf (AmayaLastHTTPErrorMsgR, TtaGetMessage (AMAYA,AM_SERVER_REASON), 
                            wc_tmp);
                   TtaFreeMemory (wc_tmp);
                 }
             }
         }
     }
+#endif
 }
-
-

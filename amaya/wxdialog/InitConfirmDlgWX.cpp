@@ -108,7 +108,10 @@ else
   ----------------------------------------------------------------------*/
 InitConfirmDlgWX::~InitConfirmDlgWX()
 {
-  TtaDestroyDialogue (MyRef);
+  if (Waiting)
+    {
+      TtaDestroyDialogue (MyRef);
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -125,8 +128,10 @@ void InitConfirmDlgWX::OnExtraButton( wxCommandEvent& event )
 void InitConfirmDlgWX::OnConfirmButton( wxCommandEvent& event )
 {
  if (Waiting)
-   ThotCallback (MyRef, INTEGER_DATA, (char*) 1);
- Waiting = 0;
+   {
+     Waiting = 0;
+     ThotCallback (MyRef, INTEGER_DATA, (char*) 1);
+   }
  }
 
 /*----------------------------------------------------------------------
@@ -135,7 +140,10 @@ void InitConfirmDlgWX::OnConfirmButton( wxCommandEvent& event )
 void InitConfirmDlgWX::OnCancelButton( wxCommandEvent& event )
 {
  if (Waiting)
-   ThotCallback (MyRef, INTEGER_DATA, (char*) 0); 
+   {
+     Waiting = 0;
+     ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
+   }
 }
 
 /*----------------------------------------------------------------------

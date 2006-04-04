@@ -118,267 +118,269 @@
 116 Speichern unter %s scheint fehlerhaft zu sein, Ignorieren?
 117 URI %s nach %s weitergeleitet, ignorieren?
 118 Aktualisierung von %s fehlerhaft, ignorieren?
-119 Der Server meldet einen 501-Fehler: %s
-120 Der Server meldet einen 501-Fehler
-121 Der Server unterstützt diese Anforderungsmethode nicht
-122 Filter
-123 Aktive Übertragungen
-124 Wartende Übertragungen
-125 Inhaltsverzeichnis
-126 Verweise
-127 Wiederholungsmodus
-128 Wiederholung
-129 Wiederholung x
-130 Ihr letzter Amaya-Prozeß wurde abgebrochen. Möchten Sie Sicherungskopien laden?
-131 Login gescheitert. Wiederholen?
-132 Umleitung folgen?
-133 Zeilen:
-134 Spalten:
-135 Rahmen:
-136 Alternativer Text:
-137 Alternativer Text ist erforderlich!
-138 URI im Seitenkopf
-139 Übernehmen
-140 Fehlwert
-141 Cache leeren
-142 Cache
-143 Cache aktivieren
-144 Geschützte Dokumente cachen
-145 Offline-Modus
-146 Verfallsdatum ignorieren
-147 Verzeichnis
-148 Cachegröße (MB)
-149 Eintragsgröße (MB)
-150 Proxy
-151 HTTP-Proxy
-152 Proxy-Domänen
-153 Allgemein
-154 Startseite
-155 Tooltip-Verzögerung (ms)
-156 Doppelklickverzögerung (ms)
-157 Schriftgröße der Menüs
-158 Schriftzoom
-159 Dialogsprache
-160 Zeilenweises Einfügen aktivieren
-161 Backupdateien anlegen
-162 Fenstereinstellungen beim Beenden speichern
-163 Hintergrundbild anzeigen
-164 Symbolleiste anzeigen
-165 Adresszeile anzeigen
-166 Anker anzeigen
-167 CR/LF exportieren
-168 Browser
-169 Bilder laden (img)
-170 Doppelklick aktiviert Verweis
-171 Veröffentlichen
-172 ETAGS und Preconditions verwenden
-173 PUT durch GET verifizieren
-174 Dateiname, falls URI mit '/' endet
-175 Fenstergeometrie
-176 Aktuelle Geometrie speichern
-177 Standardgeometrie einstellen
-178 Änderungen werden erst beim Öffnen eines neuen Fensters wirksam.
-179 Farben
-180 Schrift (Dokument)
-181 Hintergrund(Dokument)
-182 Schrift (Menüs)
-183 Hintergrund (Menüs)
-184 Kann den Cache nicht starten. Möglicherweise ist das Cacheverzeichnis ungültig, oder ein anderer Prozeß verwendet den Cache.
-185 Bevorzugte Sprachen
-186 Änderungen werden erst bei einem Neustart wirksam
-187 PUT automatisch an diese Domäne umleiten
-188 Formatvorlagen ignorieren
-189 Transformationstyp
-190 (Einträge durch Leerzeichen trennen)
-191 Ausschließen
-192 Zulassen
-193 Zeichenname
-194 Heimatverzeichnis
-195 Temporärverzeichnis
-196 Palette benutzen
-197 Sprachen
-198 Anmerkungen
-199 Autor
-200 Veröffentlichen auf
-201 Laden von
-202 Lokale Anmerkungen automatisch laden
-203 Entfernte Anmerkungen automatisch laden
-204 Offline-Modus
-205 Markierung
-206 Hintergrundfarbe für Markierungen
-207 Ausrichtung
-208 Hochformat
-209 Querformat
-210 FTP zulassen
-211 **Error(s) in the source code
-212 **Fatal error - Fix the source code to continue
-213 Verwenden Sie 'Datei/Zeichenkodierung erzwingen'
-214 Ungültige Zeichen
-215 Dokumenttyp:
-216 Anzeigen - siehe Datei > Parserfehler anzeigen
-217 Die Codierung dieses Dokuments wird von Amaya nicht unterstützt
-218 Durch das Bearbeiten und Speichern ändert sich der Dokumenttyp
-219 Nicht verfügbar
+119 Der Server meldet einen Fehler: %s
+120 Der Server unterstützt diese Anforderungsmethode nicht
+121 Filter
+122 Aktive Übertragungen
+123 Wartende Übertragungen
+124 Inhaltsverzeichnis
+125 Verweise
+126 Wiederholungsmodus
+127 Wiederholung
+128 Wiederholung x
+129 Ihr letzter Amaya-Prozeß wurde abgebrochen. Möchten Sie Sicherungskopien laden?
+130 Login gescheitert. Wiederholen?
+131 Umleitung folgen?
+132 Zeilen:
+133 Spalten:
+134 Rahmen:
+135 Alternativer Text:
+136 Alternativer Text ist erforderlich!
+137 URI im Seitenkopf
+138 Übernehmen
+139 Fehlwert
+140 Cache leeren
+141 Cache
+142 Cache aktivieren
+143 Geschützte Dokumente cachen
+144 Offline-Modus
+145 Verfallsdatum ignorieren
+146 Verzeichnis
+147 Cachegröße (MB)
+148 Eintragsgröße (MB)
+149 Proxy
+150 HTTP-Proxy
+151 Proxy-Domänen
+152 Allgemein
+153 Startseite
+154 Tooltip-Verzögerung (ms)
+155 Doppelklickverzögerung (ms)
+156 Schriftgröße der Menüs
+157 Schriftzoom
+158 Dialogsprache
+159 Zeilenweises Einfügen aktivieren
+160 Backupdateien anlegen
+161 Fenstereinstellungen beim Beenden speichern
+162 Hintergrundbild anzeigen
+163 Symbolleiste anzeigen
+164 Adresszeile anzeigen
+165 Anker anzeigen
+166 CR/LF exportieren
+167 Browser
+168 Bilder laden (img)
+169 Doppelklick aktiviert Verweis
+170 Veröffentlichen
+171 ETAGS und Preconditions verwenden
+172 PUT durch GET verifizieren
+173 Dateiname, falls URI mit '/' endet
+174 Fenstergeometrie
+175 Aktuelle Geometrie speichern
+176 Standardgeometrie einstellen
+177 Änderungen werden erst beim Öffnen eines neuen Fensters wirksam.
+178 Farben
+179 Schrift (Dokument)
+180 Hintergrund(Dokument)
+181 Schrift (Menüs)
+182 Hintergrund (Menüs)
+183 Kann den Cache nicht starten. Möglicherweise ist das Cacheverzeichnis ungültig, oder ein anderer Prozeß verwendet den Cache.
+184 Bevorzugte Sprachen
+185 Änderungen werden erst bei einem Neustart wirksam
+186 PUT automatisch an diese Domäne umleiten
+187 Formatvorlagen ignorieren
+188 Transformationstyp
+189 (Einträge durch Leerzeichen trennen)
+190 Ausschließen
+191 Zulassen
+192 Zeichenname
+193 Heimatverzeichnis
+194 Temporärverzeichnis
+195 Palette benutzen
+196 Sprachen
+197 Anmerkungen
+198 Autor
+199 Veröffentlichen auf
+200 Laden von
+201 Lokale Anmerkungen automatisch laden
+202 Entfernte Anmerkungen automatisch laden
+203 Offline-Modus
+204 Markierung
+205 Hintergrundfarbe für Markierungen
+206 Ausrichtung
+207 Hochformat
+208 Querformat
+209 FTP zulassen
+210 **Error(s) in the source code
+211 **Fatal error - Fix the source code to continue
+212 Verwenden Sie 'Datei/Zeichenkodierung erzwingen'
+213 Ungültige Zeichen
+214 Dokumenttyp:
+215 Anzeigen - siehe Datei > Parserfehler anzeigen
+216 Die Codierung dieses Dokuments wird von Amaya nicht unterstützt
+217 Durch das Bearbeiten und Speichern ändert sich der Dokumenttyp
+218 Nicht verfügbar
+219 Durchsuchen
 220 Durchsuchen
-221 Durchsuchen
-222 Auswahl
-223 Anmerkungsfilter
-224 Zeigen
-225 Verbergen
-226 Alle
-227 Keine
-228 * = verborgen, - = teilweise verborgen
-229 Filtern nach
-230 Autor
-231 Typ
-232 Server
-233 Zugriffstasten
-234 Ignorieren
-235 Formatelement
-236 Kann XPointer nicht erzeugen
-237 Anbringen eines Start XPointer an ein internes zusätzliches Element nicht möglich
-238 Anbringen eines End XPointer an ein internes zusätzliches Element nicht möglich
-239 Kein Ziel zum Verschieben der Anmerkung gefunden
-240 Die Anmerkung kann nicht in ein anderes Dokument verschoben werden
-241 Anmerkung an geändertes Dokument ist nicht möglich, bitte erst speichern
-242 Kein Ersteller für Anmerkung konfiguriert, bitte das Menü "Anmerkungen/Konfiguration" öffnen
-243 Für diese Anmerkung kann kein XPointer erzeugt werden
-244 Neue Anmerkung erzeugen
-245 Absenden der Anmerkung gescheitert
-246 Löschen der Anmerkung gescheitert
-247 Anmerkung gelöscht
-248 Laden des Anmerkungsindex gescheitert
-249 Fehler
-250 Zeichenkodierung wählen
-251 MIME-Typ wählen
-252 Zeichenkodierung ändern
-253 MIME-Typ ändern
-254 Ändern
-255 Dieser Dokumenttyp unterstützt keine Zeichensätze
-256 Diese Option kann nur mit einem HTTP URI Ziel verwendet werden
-257 Fehler: ungültiger MIME-Typ
-258 Unbekannt
-259 Formatvorlagen wurden ignoriert - siehe Datei > Parserfehler anzeigen
-260 Dieses Dokument wird bereits in einem anderen Fenster angezeigt
-261 Beim Speichern dieser Instanz des Dokuments können Änderungen in anderen Instanzen verloren gehen (lost update problem)
-262 Durch das Hinzufügen oder Ändern des Dokumententyps gehen Elemente oder Attribute verloren
-263 Soll die Operation ausgeführt werden ?
-264 MIME-Typ application/xhtml+xml für XHTML-Dokumente verwenden
-265 Standardzeichensatz für neue Dakumente
-266 Sperrung erfolgreich
-267 Sperrung fehlgeschlagen
-268 Sperre %s...
-269 Dokument %s ist gesperrt
-270 Dokument %s wurde von %s gesperrt (timeout %s)
-271 Sperrinformation überschreiben?
-272 Sperrinformation kopieren?
-273 Versuche Dokument zu entsperren...
-274 Entsperrung erfolgreich
-275 Entsperrung fehlgeschlagen
-276 Entsperre %s...
-277 Dokument ist entsperrt
-278 Dokument entsperren?
-279 Dokumenteigenschaften
-280 Dokumenteigenschaften nicht verfügbar
-281 Dokumenteigenschaften momentan nicht verfügbar. Versuchen Sie es später...
-282 Suche nach Dokumenteigenschaften...
-283 Keine WebDAV-Unterstützung für URLs vom Typ %s
-284 Konnte Sperrinformation lokal nicht speichern
-285 Konnte Sperrinformation lokal nicht entfernen
-286 Operation nicht erlaubt für %s
-287 Anforderung fehlgeschlagen: keine Abhängigkeit
-288 Anforderung fehlgeschlagen: %s
-289 Erneut versuchen?
-290 WebDAV
-291 Persönliche Benutzerreferenzen (URL)
-292 WebDAV Resourcenliste des Benutzers (URL)
-293 Sperrtiefe
-294 Unendlich
-295 Sperrzeitüberschreitung
-296 Unendlich
-297 Andere (Sekunden)
-298 Sperrbereich
-299 Exklusiv
-300 Gemeinsam
-301 Benachrichtigung
-302 Immer benachrichtigen
-303 Am Ende benachrichtigen
-304 Animation
-305 SVG Bibliothek
-306 Option kopieren
-307 Markierung kopieren
-308 Auf Markierung beziehen
-309 Neues Modell zu Bibliothek hinzufügen
-310 URL der neuen SVG-Datei ...
-311 Titel der Bibliothek
-312 URL der Bibliothek
-313 Bibliothek erzeugen
-314 Bibliothek durchsuchen
-315 Bibliothek erzeugen oder suchen
-316 Die Markierung enthält nicht nur SVG-Elemente. Bitte neu markieren
-317 Der Titel der Bibliothek muss angegeben werden
-318 Den Cursor an die neue Schlüsselposition bewegen...
-319 Schlüsselposition definiert. Schieber bewegen um die Dauer der Animation festzulegen...
-320 Anfangsfarbe des Elements wählen...
-321 Anfangsfarbe definiert. Schieber bewegen um die Dauer der Animation festzulegen...
-322 Endfarbe wählen...
-323 Animation definiert.
-324 Animiertes Attribut
-325 Element ohne ID
-326 ID hinzufügen
-327 ID löschen
-328 IDs hinzufügen/löschen
-329 Operationen anwenden
-330 Elementname eingeben
-331 CSS anwenden
-332 Aktueller Bildschirmtyp
-333 Neue Überschrift
-334 Lesezeicheneigenschaften
-335 Eigenschaften der Überschriften
-336 Inhaltsverzeichnis:
-337 Titel:
-338 Umbenennen:
-339 Autor:
-340 Erstellt am:
-341 Zuletzt geändert am:
-342 Beschreibung:
-343 Wählen Sie bitte ein Element aus
-344 CSS komplett
-345 CSS-Regeln, die für <%s> gelten\n
-346 Blaue Linien sind Verweise, die durch einen Doppel- (oder Einfach-)klick aktiviert wurden.\n
-347 Objekte laden (object, embed, iframe)
-348 Für dieses Element gibt es keine Formatvorlage
-349 Keine Einfügeposition definiert. Bitte zuerst auswählen
-350 Dokumentinformation
-351 Documenttyp
-352 MIME Type
-353 Zeichensatz
-354 Content Length
-355 Content Location
-356 Einstellungen
-357 Zeichen (&xxx;)
-358 Objekt erzeugen
-359 Verzeichnis
-360 Datei
-361 Aktuelle Seite ersetzen
-362 In neuer Seite
-363 In neuem Fenster
-364 Anti-aliasing
-365 ISO-Datumsformat
-366 Ort für neue Dokumente
-367 Ort zum Öffnen
-368 Warnen, wenn mehrere Seiten geschlossen werden
-369 Die maximale Anzahl an URLs in der History ist erreicht
-370 URL-Liste löschen
-371 Alle Tastaturkürzel anzeigen
-372 Feste Zeilenlänge (0 = Standardwert)
-373 Vorlage
-374 Dokument speichern als...
-375 Vorlage konnte nicht gefunden werden
-376 Vorlagenumrisse anzeigen
-377 Mit "Anwenden" wird der Dialog geschlossen
-378 In diesem Dokument nicht möglich
-379 Geschütztes Element
-380 Die Auswahl darf ein solches Element nicht treffen
-381 Der aktuellen Auswahl folgen keine Titel
-382 **Save anyway
+221 Auswahl
+222 Anmerkungsfilter
+223 Zeigen
+224 Verbergen
+225 Alle
+226 Keine
+227 * = verborgen, - = teilweise verborgen
+228 Filtern nach
+229 Autor
+230 Typ
+231 Server
+232 Zugriffstasten
+233 Ignorieren
+234 Formatelement
+235 Kann XPointer nicht erzeugen
+236 Anbringen eines Start XPointer an ein internes zusätzliches Element nicht möglich
+237 Anbringen eines End XPointer an ein internes zusätzliches Element nicht möglich
+238 Kein Ziel zum Verschieben der Anmerkung gefunden
+239 Die Anmerkung kann nicht in ein anderes Dokument verschoben werden
+240 Anmerkung an geändertes Dokument ist nicht möglich, bitte erst speichern
+241 Kein Ersteller für Anmerkung konfiguriert, bitte das Menü "Anmerkungen/Konfiguration" öffnen
+242 Für diese Anmerkung kann kein XPointer erzeugt werden
+243 Neue Anmerkung erzeugen
+244 Absenden der Anmerkung gescheitert
+245 Löschen der Anmerkung gescheitert
+246 Anmerkung gelöscht
+247 Laden des Anmerkungsindex gescheitert
+248 Fehler
+249 Zeichenkodierung wählen
+250 MIME-Typ wählen
+251 Zeichenkodierung ändern
+252 MIME-Typ ändern
+253 Ändern
+254 Dieser Dokumenttyp unterstützt keine Zeichensätze
+255 Diese Option kann nur mit einem HTTP URI Ziel verwendet werden
+256 Fehler: ungültiger MIME-Typ
+257 Unbekannt
+258 Formatvorlagen wurden ignoriert - siehe Datei > Parserfehler anzeigen
+259 Dieses Dokument wird bereits in einem anderen Fenster angezeigt
+260 Beim Speichern dieser Instanz des Dokuments können Änderungen in anderen Instanzen verloren gehen (lost update problem)
+261 Durch das Hinzufügen oder Ändern des Dokumententyps gehen Elemente oder Attribute verloren
+262 Soll die Operation ausgeführt werden ?
+263 MIME-Typ application/xhtml+xml für XHTML-Dokumente verwenden
+264 Standardzeichensatz für neue Dakumente
+265 Sperrung erfolgreich
+266 Sperrung fehlgeschlagen
+267 Sperre %s...
+268 Dokument %s ist gesperrt
+269 Dokument %s wurde von %s gesperrt (timeout %s)
+270 Sperrinformation überschreiben?
+271 Sperrinformation kopieren?
+272 Versuche Dokument zu entsperren...
+273 Entsperrung erfolgreich
+274 Entsperrung fehlgeschlagen
+275 Entsperre %s...
+276 Dokument ist entsperrt
+277 Dokument entsperren?
+278 Dokumenteigenschaften
+279 Dokumenteigenschaften nicht verfügbar
+280 Dokumenteigenschaften momentan nicht verfügbar. Versuchen Sie es später...
+281 Suche nach Dokumenteigenschaften...
+282 Keine WebDAV-Unterstützung für URLs vom Typ %s
+283 Konnte Sperrinformation lokal nicht speichern
+284 Konnte Sperrinformation lokal nicht entfernen
+285 Operation nicht erlaubt für %s
+286 Anforderung fehlgeschlagen: keine Abhängigkeit
+287 Anforderung fehlgeschlagen: %s
+288 Erneut versuchen?
+289 WebDAV
+290 Persönliche Benutzerreferenzen (URL)
+291 WebDAV Resourcenliste des Benutzers (URL)
+292 Sperrtiefe
+293 Unendlich
+294 Sperrzeitüberschreitung
+295 Unendlich
+296 Andere (Sekunden)
+297 Sperrbereich
+298 Exklusiv
+299 Gemeinsam
+300 Benachrichtigung
+301 Immer benachrichtigen
+302 Am Ende benachrichtigen
+303 Animation
+304 SVG Bibliothek
+305 Option kopieren
+306 Markierung kopieren
+307 Auf Markierung beziehen
+308 Neues Modell zu Bibliothek hinzufügen
+309 URL der neuen SVG-Datei ...
+310 Titel der Bibliothek
+311 URL der Bibliothek
+312 Bibliothek erzeugen
+313 Bibliothek durchsuchen
+314 Bibliothek erzeugen oder suchen
+315 Die Markierung enthält nicht nur SVG-Elemente. Bitte neu markieren
+316 Der Titel der Bibliothek muss angegeben werden
+317 Den Cursor an die neue Schlüsselposition bewegen...
+318 Schlüsselposition definiert. Schieber bewegen um die Dauer der Animation festzulegen...
+319 Anfangsfarbe des Elements wählen...
+320 Anfangsfarbe definiert. Schieber bewegen um die Dauer der Animation festzulegen...
+321 Endfarbe wählen...
+322 Animation definiert.
+323 Animiertes Attribut
+324 Element ohne ID
+325 ID hinzufügen
+326 ID löschen
+327 IDs hinzufügen/löschen
+328 Operationen anwenden
+329 Elementname eingeben
+330 CSS anwenden
+331 Aktueller Bildschirmtyp
+332 Neue Überschrift
+333 Lesezeicheneigenschaften
+334 Eigenschaften der Überschriften
+335 Inhaltsverzeichnis:
+336 Titel:
+337 Umbenennen:
+338 Autor:
+339 Erstellt am:
+340 Zuletzt geändert am:
+341 Beschreibung:
+342 Wählen Sie bitte ein Element aus
+343 CSS komplett
+344 CSS-Regeln, die für <%s> gelten\n
+345 Blaue Linien sind Verweise, die durch einen Doppel- (oder Einfach-)klick aktiviert wurden.\n
+346 Objekte laden (object, embed, iframe)
+347 Für dieses Element gibt es keine Formatvorlage
+348 Keine Einfügeposition definiert. Bitte zuerst auswählen
+349 Dokumentinformation
+350 Documenttyp
+351 MIME Type
+352 Zeichensatz
+353 Content Length
+354 Content Location
+355 Einstellungen
+356 Zeichen (&xxx;)
+357 Objekt erzeugen
+358 Verzeichnis
+359 Datei
+360 Aktuelle Seite ersetzen
+361 In neuer Seite
+362 In neuem Fenster
+363 Anti-aliasing
+364 ISO-Datumsformat
+365 Ort für neue Dokumente
+366 Ort zum Öffnen
+367 Warnen, wenn mehrere Seiten geschlossen werden
+368 Die maximale Anzahl an URLs in der History ist erreicht
+369 URL-Liste löschen
+370 Alle Tastaturkürzel anzeigen
+371 Feste Zeilenlänge (0 = Standardwert)
+372 Vorlage
+373 Dokument speichern als...
+374 Vorlage konnte nicht gefunden werden
+375 Vorlagenumrisse anzeigen
+376 Mit "Anwenden" wird der Dialog geschlossen
+377 In diesem Dokument nicht möglich
+378 Geschütztes Element
+379 Die Auswahl darf ein solches Element nicht treffen
+380 Der aktuellen Auswahl folgen keine Titel
+381 **Save anyway
+382 **Cannot locate host
+383 **Document has changed (412)
+384 **Conflict with the current state of the resource

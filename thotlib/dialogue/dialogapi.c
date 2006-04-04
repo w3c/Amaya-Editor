@@ -5792,7 +5792,8 @@ void TtaShowDialogue (int ref, ThotBool remanent)
       if (catalogue->Cat_Widget)
         {
           /* Faut-il invalider un TtaShowDialogue precedent */
-          TtaAbortShowDialogue ();
+          if (ShowCat && ShowCat != catalogue)
+            TtaAbortShowDialogue ();
           /* Memorise qu'un retour sur le catalogue est attendu et */
           /* qu'il peut etre aborter si et seulement s'il n'est pas remanent */
           if (!remanent)

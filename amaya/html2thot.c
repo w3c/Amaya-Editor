@@ -1110,8 +1110,8 @@ ThotBool IsBlockElement (Element el)
   ----------------------------------------------------------------------*/
 static void TextToDocument ()
 {
-  ElementType      elType, lastType, prevType;
-  Element          elText, parent, ancestor, prev, last;
+  ElementType      elType;
+  Element          elText;
   int              i;
   ThotBool         ignoreLeadingSpaces;
 

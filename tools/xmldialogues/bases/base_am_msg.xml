@@ -1429,29 +1429,17 @@
 <message xml:lang="hu">A(z) %s újratültése sikertelen, hagyjuk figyelmen kívül?</message>
 <message xml:lang="ka">%s გადატვირთვა შეწყდა, გავაგრძელო?</message></label>
 <label define="AM_SERVER_INTERNAL_ERROR_500_CAUSE">
-<message xml:lang="en">Server reports a 501 error: %s</message>
-<message xml:lang="fr">Le serveur rapporte une erreur 501:</message>
-<message xml:lang="de">Der Server meldet einen 501-Fehler: %s</message>
-<message xml:lang="it">Il server riporta un errore 501: %s</message>
-<message xml:lang="tr">Sunucu 501 hatası veriyor: %s</message>
-<message xml:lang="es">El servidor responde con un error 501: %s</message>
-<message xml:lang="pt">O servidor responde com um erro 501: %s</message>
-<message xml:lang="fi">Palvelinvirhe 501: %s</message>
-<message xml:lang="ru">Сервер сообщает об ошибке 501: %s</message>
-<message xml:lang="hu">A kiszolgáló 501-es hibát jelzett: %s</message>
-<message xml:lang="ka">სერვერი იტყობინება შეცდომას 501: %s</message></label>
-<label define="AM_SERVER_INTERNAL_ERROR_500_NO_CAUSE">
-<message xml:lang="en">Server reports a 501 error</message>
-<message xml:lang="fr">Le serveur rapporte une erreur 501</message>
-<message xml:lang="de">Der Server meldet einen 501-Fehler</message>
-<message xml:lang="it">Il server riporta un errore 501</message>
-<message xml:lang="tr">Sunucu 501 hatası veriyor</message>
-<message xml:lang="es">El servidor responde con un error 501</message>
-<message xml:lang="pt">O servidor responde com um erro 501</message>
-<message xml:lang="fi">Palvelinvirhe 501</message>
-<message xml:lang="ru">Сервер сообщает об ошибке 501</message>
-<message xml:lang="hu">A kiszolgáló 501-es hibát jelzett</message>
-<message xml:lang="ka">სერვერი იტყობინება შეცდომას 501</message></label>
+<message xml:lang="en">Server reports an error: %s</message>
+<message xml:lang="fr">Le serveur rapporte une erreur :</message>
+<message xml:lang="de">Der Server meldet einen Fehler: %s</message>
+<message xml:lang="it">Il server riporta un errore: %s</message>
+<message xml:lang="tr">Sunucu hatası veriyor: %s</message>
+<message xml:lang="es">El servidor responde con un error: %s</message>
+<message xml:lang="pt">O servidor responde com um erro: %s</message>
+<message xml:lang="fi">Palvelinvirhe: %s</message>
+<message xml:lang="ru">Сервер сообщает об ошибке: %s</message>
+<message xml:lang="hu">A kiszolgáló es hibát jelzett: %s</message>
+<message xml:lang="ka">სერვერი იტყობინება შეცდომას: %s</message></label>
 <label define="AM_SERVER_NOT_IMPLEMENTED_501_ERROR">
 <message xml:lang="en">Server does not support this request method</message>
 <message xml:lang="fr">Le serveur ne supporte pas cette méthode d'accès</message>
@@ -4377,6 +4365,18 @@
 <label define="AM_SAVE_ANYWAY">
 	<message xml:lang="en">Save anyway</message>
 	<message xml:lang="fr">Sauver quand même</message>
+</label>
+<label define="AM_NO_HOST">
+	<message xml:lang="en">Cannot locate host</message>
+	<message xml:lang="fr">Serveur inconnu</message>
+</label>
+<label define="AM_DOC_CHANGED">
+	<message xml:lang="en">Document has changed (412)</message>
+	<message xml:lang="fr">Document modifié (412)</message>
+</label>
+<label define="AM_CONFLICT">
+	<message xml:lang="en">Conflict with the current state of the resource</message>
+	<message xml:lang="fr">Conflit avec l'état de la ressource</message>
 </label>
 <label define="AMAYA_MSG_MAX">
 </label></messages></base>

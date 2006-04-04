@@ -1971,8 +1971,8 @@ void InitConfirm3L (Document document, View view, char *label1, char *label2,
       TtaShowDialogue (BaseDialog + ConfirmForm, FALSE);
       /* wait for an answer */
       TtaWaitShowDialogue ();
-      if (AmayaIsAlive ())
-        TtaDestroyDialogue (BaseDialog + ConfirmForm);   
+      //if (AmayaIsAlive ())
+      //  TtaDestroyDialogue (BaseDialog + ConfirmForm);   
     }
 #endif /* _WX */
 #ifdef _WINGUI

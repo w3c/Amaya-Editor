@@ -1810,7 +1810,7 @@ static ThotBool HasSavingName (Document doc, View view, char *url,
   TtaExtractName (url, msg, documentname);
   if (documentname[0] != EOS)
     {
-      // check isf there is a suffix
+      // check if there is a suffix
       TtaExtractSuffix (documentname, suffix);
       *with_suffix = (suffix[0] != EOS);
       return (TRUE);
@@ -1990,6 +1990,9 @@ static ThotBool SaveObjectThroughNet (Document doc, View view,
     {
       DocNetworkStatus[doc] |= AMAYA_NET_ERROR;
       ResetStop (doc);
+          InitInfo ("", AmayaLastHTTPErrorMsg);
+          res = -1;
+#ifdef IV
       sprintf (msg, "%s %s",
                TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
                url);
@@ -2004,12 +2007,12 @@ static ThotBool SaveObjectThroughNet (Document doc, View view,
         }
       else
         {
-          InitConfirm3L (doc, view, msg, AmayaLastHTTPErrorMsg, 
-                         AmayaLastHTTPErrorMsgR, FALSE);
+          InitInfo ("", AmayaLastHTTPErrorMsg);
           res = -1;
         }
       /* erase the last status message */
-      TtaSetStatus (doc, view, "", NULL);	       
+      TtaSetStatus (doc, view, "", NULL);	  
+#endif     
     }
   else
     {
@@ -2184,69 +2187,57 @@ static ThotBool SaveDocumentThroughNet (Document doc, View view, char *url,
         {
           DocNetworkStatus[doc] |= AMAYA_NET_ERROR;
           ResetStop (doc);
-          sprintf (msg, "%s %s",
-                   TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
-                   url);
-          if (confirm)
-            {
-              if (AmayaLastHTTPErrorMsg[0] != EOS ||
-                  AmayaLastHTTPErrorMsgR[0] != EOS)
-                InitConfirm3L (doc, view, msg, AmayaLastHTTPErrorMsg,
-                               AmayaLastHTTPErrorMsgR, FALSE);
-              res = - 1;
-            }
+          if (AmayaLastHTTPErrorMsg[0] != EOS)
+            InitInfo ("", AmayaLastHTTPErrorMsg);
           else
             {
-              InitConfirm3L (doc, view, msg, AmayaLastHTTPErrorMsg, 
-                             AmayaLastHTTPErrorMsgR, FALSE);
-              res = -1;
+              sprintf (AmayaLastHTTPErrorMsg, TtaGetMessage (AMAYA, AM_CANNOT_SAVE),
+                       DocumentURLs[doc]);
+              InitInfo ("", AmayaLastHTTPErrorMsg);
             }
-          /* JK: to erase the last status message */
-          TtaSetStatus (doc, view, "", NULL);	       
+          res = -1;
         }
 
-      i = 0;
-      while (pImage)
+      if (res == 0)
         {
-          if (pImage->document == doc && pImage->status == IMAGE_MODIFIED)
+          i = 0;
+          while (pImage)
             {
-              if (imgToSave[i++])
+              if (pImage->document == doc && pImage->status == IMAGE_MODIFIED)
                 {
-                  /* we get the MIME type of the image. We reuse whatever the
-                     server sent if we have it, otherwise, we try to infer it from
-                     the image type as discovered by the handler */
-                  if (pImage->content_type)
-                    content_type = pImage->content_type;
-                  else
-                    content_type = PicTypeToMIME ((PicType)pImage->imageType);
-                  res = SafeSaveFileThroughNet(doc, pImage->tempfile,
-                                               pImage->originalName, content_type,
-                                               use_preconditions);
-                  if (res == -1 && AmayaLastHTTPErrorMsgR[0] == EOS)
-                    res = 0;
-                  if (res)
+                  if (imgToSave[i++])
                     {
-                      /* message not null if an error is detected */
-                      DocNetworkStatus[doc] |= AMAYA_NET_ERROR;
-                      ResetStop (doc);
-                      sprintf (msg, "%s %s",
-                               TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
-                               pImage->originalName);
-                      InitConfirm3L (doc, view, msg, AmayaLastHTTPErrorMsg, 
-                                     AmayaLastHTTPErrorMsgR, FALSE);
-                      /* erase the last status message */
-                      TtaSetStatus (doc, view, "", NULL);
-                      /*res = -1;*/res = 0;
-                      /* continue */
-                      /*pImage = NULL;*/
+                      /* we get the MIME type of the image. We reuse whatever the
+                         server sent if we have it, otherwise, we try to infer it from
+                         the image type as discovered by the handler */
+                      if (pImage->content_type)
+                        content_type = pImage->content_type;
+                      else
+                        content_type = PicTypeToMIME ((PicType)pImage->imageType);
+                      res = SafeSaveFileThroughNet(doc, pImage->tempfile,
+                                                   pImage->originalName, content_type,
+                                                   use_preconditions);
+                      if (res)
+                        {
+                          /* message not null if an error is detected */
+                          DocNetworkStatus[doc] |= AMAYA_NET_ERROR;
+                          ResetStop (doc);
+                          sprintf (msg, "%s %s",
+                                   TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
+                                   pImage->originalName);
+                          InitInfo ("", msg);
+                          /*res = -1;*/res = 0;
+                          /* continue */
+                          /*pImage = NULL;*/
+                        }
+                      else
+                        pImage->status = IMAGE_LOADED;
                     }
-                  else
-                    pImage->status = IMAGE_LOADED;
                 }
+              
+              if (pImage != NULL)
+                pImage = pImage->nextImage;
             }
-
-          if (pImage != NULL)
-            pImage = pImage->nextImage;
         }
       ResetStop (doc);
     }
@@ -2747,7 +2738,7 @@ void SaveDocument (Document doc, View view)
     {
       /* cannot save */
       sprintf (msg, TtaGetMessage (AMAYA, AM_CANNOT_SAVE), DocumentURLs[doc]);
-      InitConfirm3L (0, 0, msg, NULL, NULL, FALSE);
+      InitInfo ("", msg);
     }
 }
 
