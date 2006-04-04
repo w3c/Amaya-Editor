@@ -8,73 +8,73 @@
 
 
 1;#Latin1 (West European)
-1;1=$THOTDIR/fonts/FreeSerif.ttf;2=$THOTDIR/fonts/FreeSerifBold.ttf;3=$THOTDIR/fonts/FreeSerifItalic.ttf;4=$THOTDIR/fonts/FreeSerifBoldItalic.ttf;
-2;1=$THOTDIR/fonts/FreeSans.ttf;2=$THOTDIR/fonts/FreeSansBold.ttf;3=$THOTDIR/fonts/FreeSansOblique.ttf;4=$THOTDIR/fonts/FreeSansBoldOblique.ttf;
-3;1=$THOTDIR/fonts/FreeMono.ttf;2=$THOTDIR/fonts/FreeMonoBold.ttf;3=$THOTDIR/fonts/FreeMonoOblique.ttf;4=$THOTDIR/fonts/FreeMonoBoldOblique.ttf;
+1;1=/usr/share/fonts/truetype/freefont/FreeSerif.ttf;2=/usr/share/fonts/truetype/freefont/FreeSerifBold.ttf;3=/usr/share/fonts/truetype/freefont/FreeSerifItalic.ttf;4=/usr/share/fonts/truetype/freefont/FreeSerifBoldItalic.ttf;
+2;1=/usr/share/fonts/truetype/freefont/FreeSans.ttf;2=/usr/share/fonts/truetype/freefont/FreeSansBold.ttf;3=/usr/share/fonts/truetype/freefont/FreeSansOblique.ttf;4=/usr/share/fonts/truetype/freefont/FreeSansBoldOblique.ttf;
+3;1=/usr/share/fonts/truetype/freefont/FreeMono.ttf;2=/usr/share/fonts/truetype/freefont/FreeMonoBold.ttf;3=/usr/share/fonts/truetype/freefont/FreeMonoOblique.ttf;4=/usr/share/fonts/truetype/freefont/FreeMonoBoldOblique.ttf;
 
 
 2;#Latin2 (East European)
-1;1=$THOTDIR/fonts/FreeSerif.ttf;2=$THOTDIR/fonts/FreeSerifBold.ttf;3=$THOTDIR/fonts/FreeSerifItalic.ttf;4=$THOTDIR/fonts/FreeSerifBoldItalic.ttf;
-2;1=$THOTDIR/fonts/FreeSans.ttf;2=$THOTDIR/fonts/FreeSansBold.ttf;3=$THOTDIR/fonts/FreeSansOblique.ttf;4=$THOTDIR/fonts/FreeSansBoldOblique.ttf;
-3;1=$THOTDIR/fonts/FreeMono.ttf;2=$THOTDIR/fonts/FreeMonoBold.ttf;3=$THOTDIR/fonts/FreeMonoOblique.ttf;4=$THOTDIR/fonts/FreeMonoBoldOblique.ttf;
+1;1=/usr/share/fonts/truetype/freefont/FreeSerif.ttf;2=/usr/share/fonts/truetype/freefont/FreeSerifBold.ttf;3=/usr/share/fonts/truetype/freefont/FreeSerifItalic.ttf;4=/usr/share/fonts/truetype/freefont/FreeSerifBoldItalic.ttf;
+2;1=/usr/share/fonts/truetype/freefont/FreeSans.ttf;2=/usr/share/fonts/truetype/freefont/FreeSansBold.ttf;3=/usr/share/fonts/truetype/freefont/FreeSansOblique.ttf;4=/usr/share/fonts/truetype/freefont/FreeSansBoldOblique.ttf;
+3;1=/usr/share/fonts/truetype/freefont/FreeMono.ttf;2=/usr/share/fonts/truetype/freefont/FreeMonoBold.ttf;3=/usr/share/fonts/truetype/freefont/FreeMonoOblique.ttf;4=/usr/share/fonts/truetype/freefont/FreeMonoBoldOblique.ttf;
 
 
 3;#Latin3 (South European)
-1;1=$THOTDIR/fonts/FreeSerif.ttf;2=$THOTDIR/fonts/FreeSerifBold.ttf;3=$THOTDIR/fonts/FreeSerifItalic.ttf;4=$THOTDIR/fonts/FreeSerifBoldItalic.ttf;
-2;1=$THOTDIR/fonts/FreeSans.ttf;2=$THOTDIR/fonts/FreeSansBold.ttf;3=$THOTDIR/fonts/FreeSansOblique.ttf;4=$THOTDIR/fonts/FreeSansBoldOblique.ttf;
-3;1=$THOTDIR/fonts/FreeMono.ttf;2=$THOTDIR/fonts/FreeMonoBold.ttf;3=$THOTDIR/fonts/FreeMonoOblique.ttf;4=$THOTDIR/fonts/FreeMonoBoldOblique.ttf;
+1;1=/usr/share/fonts/truetype/freefont/FreeSerif.ttf;2=/usr/share/fonts/truetype/freefont/FreeSerifBold.ttf;3=/usr/share/fonts/truetype/freefont/FreeSerifItalic.ttf;4=/usr/share/fonts/truetype/freefont/FreeSerifBoldItalic.ttf;
+2;1=/usr/share/fonts/truetype/freefont/FreeSans.ttf;2=/usr/share/fonts/truetype/freefont/FreeSansBold.ttf;3=/usr/share/fonts/truetype/freefont/FreeSansOblique.ttf;4=/usr/share/fonts/truetype/freefont/FreeSansBoldOblique.ttf;
+3;1=/usr/share/fonts/truetype/freefont/FreeMono.ttf;2=/usr/share/fonts/truetype/freefont/FreeMonoBold.ttf;3=/usr/share/fonts/truetype/freefont/FreeMonoOblique.ttf;4=/usr/share/fonts/truetype/freefont/FreeMonoBoldOblique.ttf;
 
 
 4;#Latin4 (North European)
-1;1=$THOTDIR/fonts/FreeSerif.ttf;2=$THOTDIR/fonts/FreeSerifBold.ttf;3=$THOTDIR/fonts/FreeSerifItalic.ttf;4=$THOTDIR/fonts/FreeSerifBoldItalic.ttf;
-2;1=$THOTDIR/fonts/FreeSans.ttf;2=$THOTDIR/fonts/FreeSansBold.ttf;3=$THOTDIR/fonts/FreeSansOblique.ttf;4=$THOTDIR/fonts/FreeSansBoldOblique.ttf;
-3;1=$THOTDIR/fonts/FreeMono.ttf;2=$THOTDIR/fonts/FreeMonoBold.ttf;3=$THOTDIR/fonts/FreeMonoOblique.ttf;4=$THOTDIR/fonts/FreeMonoBoldOblique.ttf;
+1;1=/usr/share/fonts/truetype/freefont/FreeSerif.ttf;2=/usr/share/fonts/truetype/freefont/FreeSerifBold.ttf;3=/usr/share/fonts/truetype/freefont/FreeSerifItalic.ttf;4=/usr/share/fonts/truetype/freefont/FreeSerifBoldItalic.ttf;
+2;1=/usr/share/fonts/truetype/freefont/FreeSans.ttf;2=/usr/share/fonts/truetype/freefont/FreeSansBold.ttf;3=/usr/share/fonts/truetype/freefont/FreeSansOblique.ttf;4=/usr/share/fonts/truetype/freefont/FreeSansBoldOblique.ttf;
+3;1=/usr/share/fonts/truetype/freefont/FreeMono.ttf;2=/usr/share/fonts/truetype/freefont/FreeMonoBold.ttf;3=/usr/share/fonts/truetype/freefont/FreeMonoOblique.ttf;4=/usr/share/fonts/truetype/freefont/FreeMonoBoldOblique.ttf;
 
 
 5;#Cyrillic
-1;1=$THOTDIR/fonts/FreeSerif.ttf;2=$THOTDIR/fonts/FreeSerifBold.ttf;3=$THOTDIR/fonts/FreeSerifItalic.ttf;4=$THOTDIR/fonts/FreeSerifBoldItalic.ttf;
-2;1=$THOTDIR/fonts/FreeSans.ttf;2=$THOTDIR/fonts/FreeSansBold.ttf;3=$THOTDIR/fonts/FreeSansOblique.ttf;4=$THOTDIR/fonts/FreeSansBoldOblique.ttf;
-3;1=$THOTDIR/fonts/FreeMono.ttf;2=$THOTDIR/fonts/FreeMonoBold.ttf;3=$THOTDIR/fonts/FreeMonoOblique.ttf;4=$THOTDIR/fonts/FreeMonoBoldOblique.ttf;
+1;1=/usr/share/fonts/truetype/freefont/FreeSerif.ttf;2=/usr/share/fonts/truetype/freefont/FreeSerifBold.ttf;3=/usr/share/fonts/truetype/freefont/FreeSerifItalic.ttf;4=/usr/share/fonts/truetype/freefont/FreeSerifBoldItalic.ttf;
+2;1=/usr/share/fonts/truetype/freefont/FreeSans.ttf;2=/usr/share/fonts/truetype/freefont/FreeSansBold.ttf;3=/usr/share/fonts/truetype/freefont/FreeSansOblique.ttf;4=/usr/share/fonts/truetype/freefont/FreeSansBoldOblique.ttf;
+3;1=/usr/share/fonts/truetype/freefont/FreeMono.ttf;2=/usr/share/fonts/truetype/freefont/FreeMonoBold.ttf;3=/usr/share/fonts/truetype/freefont/FreeMonoOblique.ttf;4=/usr/share/fonts/truetype/freefont/FreeMonoBoldOblique.ttf;
 
 
 6;#Arabic
-1;1=$THOTDIR/fonts/FreeSerif.ttf;2=$THOTDIR/fonts/FreeSerifBold.ttf;3=$THOTDIR/fonts/FreeSerifItalic.ttf;4=$THOTDIR/fonts/FreeSerifBoldItalic.ttf;
-2;1=$THOTDIR/fonts/FreeSerif.ttf;2=$THOTDIR/fonts/FreeSerifBold.ttf;3=$THOTDIR/fonts/FreeSerifItalic.ttf;4=$THOTDIR/fonts/FreeSerifBoldItalic.ttf;
-3;1=$THOTDIR/fonts/FreeSerif.ttf;2=$THOTDIR/fonts/FreeSerifBold.ttf;3=$THOTDIR/fonts/FreeSerifItalic.ttf;4=$THOTDIR/fonts/FreeSerifBoldItalic.ttf;
+1;1=/usr/share/fonts/truetype/freefont/FreeSerif.ttf;2=/usr/share/fonts/truetype/freefont/FreeSerifBold.ttf;3=/usr/share/fonts/truetype/freefont/FreeSerifItalic.ttf;4=/usr/share/fonts/truetype/freefont/FreeSerifBoldItalic.ttf;
+2;1=/usr/share/fonts/truetype/freefont/FreeSerif.ttf;2=/usr/share/fonts/truetype/freefont/FreeSerifBold.ttf;3=/usr/share/fonts/truetype/freefont/FreeSerifItalic.ttf;4=/usr/share/fonts/truetype/freefont/FreeSerifBoldItalic.ttf;
+3;1=/usr/share/fonts/truetype/freefont/FreeSerif.ttf;2=/usr/share/fonts/truetype/freefont/FreeSerifBold.ttf;3=/usr/share/fonts/truetype/freefont/FreeSerifItalic.ttf;4=/usr/share/fonts/truetype/freefont/FreeSerifBoldItalic.ttf;
 
 
 7;#Greek
-1;1=$THOTDIR/fonts/FreeSerif.ttf;2=$THOTDIR/fonts/FreeSerifBold.ttf;3=$THOTDIR/fonts/FreeSerifItalic.ttf;4=$THOTDIR/fonts/FreeSerifBoldItalic.ttf;
-2;1=$THOTDIR/fonts/FreeSans.ttf;2=$THOTDIR/fonts/FreeSansBold.ttf;3=$THOTDIR/fonts/FreeSansOblique.ttf;4=$THOTDIR/fonts/FreeSansBoldOblique.ttf;
-3;1=$THOTDIR/fonts/FreeMono.ttf;2=$THOTDIR/fonts/FreeMonoBold.ttf;3=$THOTDIR/fonts/FreeMonoOblique.ttf;4=$THOTDIR/fonts/FreeMonoBoldOblique.ttf;
+1;1=/usr/share/fonts/truetype/freefont/FreeSerif.ttf;2=/usr/share/fonts/truetype/freefont/FreeSerifBold.ttf;3=/usr/share/fonts/truetype/freefont/FreeSerifItalic.ttf;4=/usr/share/fonts/truetype/freefont/FreeSerifBoldItalic.ttf;
+2;1=/usr/share/fonts/truetype/freefont/FreeSans.ttf;2=/usr/share/fonts/truetype/freefont/FreeSansBold.ttf;3=/usr/share/fonts/truetype/freefont/FreeSansOblique.ttf;4=/usr/share/fonts/truetype/freefont/FreeSansBoldOblique.ttf;
+3;1=/usr/share/fonts/truetype/freefont/FreeMono.ttf;2=/usr/share/fonts/truetype/freefont/FreeMonoBold.ttf;3=/usr/share/fonts/truetype/freefont/FreeMonoOblique.ttf;4=/usr/share/fonts/truetype/freefont/FreeMonoBoldOblique.ttf;
 
 
 8;#Hebrew
-1;1=$THOTDIR/fonts/FreeSerif.ttf;2=$THOTDIR/fonts/FreeSerifBold.ttf;3=$THOTDIR/fonts/FreeSerifItalic.ttf;4=$THOTDIR/fonts/FreeSerifBoldItalic.ttf;
-2;1=$THOTDIR/fonts/FreeSans.ttf;2=$THOTDIR/fonts/FreeSansBold.ttf;3=$THOTDIR/fonts/FreeSansOblique.ttf;4=$THOTDIR/fonts/FreeSansBoldOblique.ttf;
-3;1=$THOTDIR/fonts/FreeMono.ttf;2=$THOTDIR/fonts/FreeMonoBold.ttf;3=$THOTDIR/fonts/FreeMonoOblique.ttf;4=$THOTDIR/fonts/FreeMonoBoldOblique.ttf;
+1;1=/usr/share/fonts/truetype/freefont/FreeSerif.ttf;2=/usr/share/fonts/truetype/freefont/FreeSerifBold.ttf;3=/usr/share/fonts/truetype/freefont/FreeSerifItalic.ttf;4=/usr/share/fonts/truetype/freefont/FreeSerifBoldItalic.ttf;
+2;1=/usr/share/fonts/truetype/freefont/FreeSans.ttf;2=/usr/share/fonts/truetype/freefont/FreeSansBold.ttf;3=/usr/share/fonts/truetype/freefont/FreeSansOblique.ttf;4=/usr/share/fonts/truetype/freefont/FreeSansBoldOblique.ttf;
+3;1=/usr/share/fonts/truetype/freefont/FreeMono.ttf;2=/usr/share/fonts/truetype/freefont/FreeMonoBold.ttf;3=/usr/share/fonts/truetype/freefont/FreeMonoOblique.ttf;4=/usr/share/fonts/truetype/freefont/FreeMonoBoldOblique.ttf;
 
 
 9;#Latin5 (Turkish)
-1;1=$THOTDIR/fonts/FreeSerif.ttf;2=$THOTDIR/fonts/FreeSerifBold.ttf;3=$THOTDIR/fonts/FreeSerifItalic.ttf;4=$THOTDIR/fonts/FreeSerifBoldItalic.ttf;
-2;1=$THOTDIR/fonts/FreeSans.ttf;2=$THOTDIR/fonts/FreeSansBold.ttf;3=$THOTDIR/fonts/FreeSansOblique.ttf;4=$THOTDIR/fonts/FreeSansBoldOblique.ttf;
-3;1=$THOTDIR/fonts/FreeMono.ttf;2=$THOTDIR/fonts/FreeMonoBold.ttf;3=$THOTDIR/fonts/FreeMonoOblique.ttf;4=$THOTDIR/fonts/FreeMonoBoldOblique.ttf;
+1;1=/usr/share/fonts/truetype/freefont/FreeSerif.ttf;2=/usr/share/fonts/truetype/freefont/FreeSerifBold.ttf;3=/usr/share/fonts/truetype/freefont/FreeSerifItalic.ttf;4=/usr/share/fonts/truetype/freefont/FreeSerifBoldItalic.ttf;
+2;1=/usr/share/fonts/truetype/freefont/FreeSans.ttf;2=/usr/share/fonts/truetype/freefont/FreeSansBold.ttf;3=/usr/share/fonts/truetype/freefont/FreeSansOblique.ttf;4=/usr/share/fonts/truetype/freefont/FreeSansBoldOblique.ttf;
+3;1=/usr/share/fonts/truetype/freefont/FreeMono.ttf;2=/usr/share/fonts/truetype/freefont/FreeMonoBold.ttf;3=/usr/share/fonts/truetype/freefont/FreeMonoOblique.ttf;4=/usr/share/fonts/truetype/freefont/FreeMonoBoldOblique.ttf;
 
 
 10;#Latin6 (Nordic)
-1;1=$THOTDIR/fonts/FreeSerif.ttf;2=$THOTDIR/fonts/FreeSerifBold.ttf;3=$THOTDIR/fonts/FreeSerifItalic.ttf;4=$THOTDIR/fonts/FreeSerifBoldItalic.ttf;
-2;1=$THOTDIR/fonts/FreeSans.ttf;2=$THOTDIR/fonts/FreeSansBold.ttf;3=$THOTDIR/fonts/FreeSansOblique.ttf;4=$THOTDIR/fonts/FreeSansBoldOblique.ttf;
-3;1=$THOTDIR/fonts/FreeMono.ttf;2=$THOTDIR/fonts/FreeMonoBold.ttf;3=$THOTDIR/fonts/FreeMonoOblique.ttf;4=$THOTDIR/fonts/FreeMonoBoldOblique.ttf;
+1;1=/usr/share/fonts/truetype/freefont/FreeSerif.ttf;2=/usr/share/fonts/truetype/freefont/FreeSerifBold.ttf;3=/usr/share/fonts/truetype/freefont/FreeSerifItalic.ttf;4=/usr/share/fonts/truetype/freefont/FreeSerifBoldItalic.ttf;
+2;1=/usr/share/fonts/truetype/freefont/FreeSans.ttf;2=/usr/share/fonts/truetype/freefont/FreeSansBold.ttf;3=/usr/share/fonts/truetype/freefont/FreeSansOblique.ttf;4=/usr/share/fonts/truetype/freefont/FreeSansBoldOblique.ttf;
+3;1=/usr/share/fonts/truetype/freefont/FreeMono.ttf;2=/usr/share/fonts/truetype/freefont/FreeMonoBold.ttf;3=/usr/share/fonts/truetype/freefont/FreeMonoOblique.ttf;4=/usr/share/fonts/truetype/freefont/FreeMonoBoldOblique.ttf;
 
 
 18;#Georgian
-1;1=$THOTDIR/fonts/FreeSerif.ttf;2=$THOTDIR/fonts/FreeSerifBold.ttf;3=$THOTDIR/fonts/FreeSerifItalic.ttf;4=$THOTDIR/fonts/FreeSerifBoldItalic.ttf;
-2;1=$THOTDIR/fonts/FreeSans.ttf;2=$THOTDIR/fonts/FreeSansBold.ttf;3=$THOTDIR/fonts/FreeSansOblique.ttf;4=$THOTDIR/fonts/FreeSansBoldOblique.ttf;
-3;1=$THOTDIR/fonts/FreeMono.ttf;2=$THOTDIR/fonts/FreeMonoBold.ttf;3=$THOTDIR/fonts/FreeMonoOblique.ttf;4=$THOTDIR/fonts/FreeMonoBoldOblique.ttf;
+1;1=/usr/share/fonts/truetype/freefont/FreeSerif.ttf;2=/usr/share/fonts/truetype/freefont/FreeSerifBold.ttf;3=/usr/share/fonts/truetype/freefont/FreeSerifItalic.ttf;4=/usr/share/fonts/truetype/freefont/FreeSerifBoldItalic.ttf;
+2;1=/usr/share/fonts/truetype/freefont/FreeSans.ttf;2=/usr/share/fonts/truetype/freefont/FreeSansBold.ttf;3=/usr/share/fonts/truetype/freefont/FreeSansOblique.ttf;4=/usr/share/fonts/truetype/freefont/FreeSansBoldOblique.ttf;
+3;1=/usr/share/fonts/truetype/freefont/FreeMono.ttf;2=/usr/share/fonts/truetype/freefont/FreeMonoBold.ttf;3=/usr/share/fonts/truetype/freefont/FreeMonoOblique.ttf;4=/usr/share/fonts/truetype/freefont/FreeMonoBoldOblique.ttf;
 
 
 20;#Symbols (...)
-1;1=/usr/X11R6/lib/X11/fonts/Type1/s050000l.pfb;2=/usr/X11R6/lib/X11/fonts/Type1/s050000l.pfb;
+1;1=/usr/share/fonts/type1/gsfonts/s050000l.pfb;2=/usr/share/fonts/type1/gsfonts/s050000l.pfb;
 
 
 21;#esstix (...)
