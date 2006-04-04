@@ -105,9 +105,8 @@ static void InsertPastedElement (PtrElement pEl, ThotBool within,
   else if (before)
     {
       /* teste d'abord si pEl est le premier fils de son pere, abstraction
-         faite des marques de page */
-      pSibling = pEl->ElPrevious;
-      BackSkipPageBreak (&pSibling);
+         faite des marques de page et autres element a ignorer */
+      pSibling = SiblingElement (pEl, TRUE);
       /* insere l'element dans l'arbre */
       InsertElementBefore (pEl, *pNew);
       if (pSibling == NULL)
@@ -117,9 +116,8 @@ static void InsertPastedElement (PtrElement pEl, ThotBool within,
   else
     {
       /* teste d'abord si pEl est le dernier fils de son pere, abstraction
-         faite des marques de page */
-      pSibling = pEl->ElNext;
-      FwdSkipPageBreak (&pSibling);
+         faite des marques de page et autres elements a ignorer */
+      pSibling = SiblingElement (pEl, FALSE);
       /* insere l'element dans l'arbre */
       InsertElementAfter (pEl, *pNew);
       if (pSibling == NULL)
@@ -1459,7 +1457,7 @@ void TtcCreateElement (Document doc, View view)
 {
   PtrElement          firstSel, lastSel, pListEl, pE, pNew, pSibling;
   PtrElement          pClose, pAncest, pElem, pParent, pElDelete, pPrevious;
-  PtrElement          pNext, pElReplicate, pAggregEl;
+  PtrElement          pNext, pElReplicate, pAggregEl, pSib;
   PtrDocument         pDoc;
   PtrSSchema          pSS;
   NotifyElement       notifyEl;
@@ -2019,11 +2017,11 @@ void TtcCreateElement (Document doc, View view)
                       /* envoie l'evenement ElemDelete.Post a l'application */
                       CallEventType ((NotifyEvent *) (&notifyEl), FALSE);
                       if (pNext != NULL)
-                        if (PreviousNotPage (pNext, TRUE) == NULL)
+                        if (SiblingElement (pNext, TRUE) == NULL)
                           /* l'element qui suit l'element detruit devient premier*/
                           ChangeFirstLast (pNext, pDoc, TRUE, FALSE);
                       if (pPrevious != NULL)
-                        if (NextNotPage (pPrevious, FALSE) == NULL)
+                        if (SiblingElement (pPrevious, FALSE) == NULL)
                           /* l'element qui precede l'element detruit devient
                              dernier */
                           ChangeFirstLast (pPrevious, pDoc, FALSE, FALSE);
@@ -2052,22 +2050,47 @@ void TtcCreateElement (Document doc, View view)
                     }
                 }
               /* Insertion du nouvel element */
+              if (ElemDoesNotCount (pNew, !createAfter))
+                pSib = NULL;
+              else
+                pSib = pE;
               if (createAfter)
                 {
-                  pClose = pE->ElNext;
-                  FwdSkipPageBreak (&pClose);
+                  if (pSib)
+                    {
+                      pClose = SiblingElement (pSib, FALSE);
+                      if (pClose)
+                        pSib = NULL;
+                      else
+                        /* no significant sibling after */
+                        if (ElemDoesNotCount (pSib, FALSE))
+                          /* this element does not count as last element. Look for
+                             the one that is really considered as the last child */
+                          pSib =  SiblingElement (pSib, TRUE);
+                    }
                   InsertElementAfter (pE, pNew);
-                  if (pClose == NULL)
-                    /* l'element pE n'est plus le dernier fils de son pere */
-                    ChangeFirstLast (pE, pDoc, FALSE, TRUE);
+                  if (pSib)
+                    /* element pSib is no longer the last child */
+                    ChangeFirstLast (pSib, pDoc, FALSE, TRUE);
                 }
               else
                 {
-                  pClose = pE->ElPrevious;
+                  if (pSib)
+                    {
+                      pClose = SiblingElement (pSib, TRUE);
+                      if (pClose)
+                        pSib = NULL;
+                      else
+                        /* no significant sibling before */
+                        if (ElemDoesNotCount (pSib, TRUE))
+                          /* this element does not count as first element. Look for
+                             the one that is really considered as the first child */
+                          pSib =  SiblingElement (pSib, FALSE);
+                    }
                   InsertElementBefore (pE, pNew);
-                  if (pClose == NULL)
-                    /* l'element pE n'est plus le premier fils de son pere */
-                    ChangeFirstLast (pE, pDoc, TRUE, TRUE);
+                  if (pSib)
+                    /* element pSib is no longer the first child */
+                    ChangeFirstLast (pSib, pDoc, TRUE, TRUE);
                 }
               if (!histSeq)
                 {

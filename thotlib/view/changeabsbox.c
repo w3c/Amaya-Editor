@@ -4283,10 +4283,10 @@ void UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
 ThotBool IsIdenticalTextType (PtrElement pEl, PtrDocument pDoc,
                               PtrElement * pLib)
 {
-  PtrElement          pEl2, pEVoisin;
+  PtrElement          pEl2;
   PtrAbstractBox      pAb;
   int                 view, dvol;
-  ThotBool            equal, stop;
+  ThotBool            equal;
 
   equal = FALSE;
   if (pEl != NULL)
@@ -4310,24 +4310,12 @@ ThotBool IsIdenticalTextType (PtrElement pEl, PtrDocument pDoc,
           if (pEl->ElStructSchema == NULL)
             /* pEl a ete libere' par l'application */
             return equal;
-          /* teste si pEl est le dernier fils de son pere, */
-          /* abstraction faite des marques de page */
+          /* teste si pEl est le dernier fils de son pere, abstraction faite
+             des marques de page et autres elements a ignorer */
           /* fusionne les deux elements de texte */
-          pEVoisin = pEl->ElNext;
-          stop = FALSE;
-          do
-            if (pEVoisin == NULL)
-              /* pEl devient le dernier fils de son pere */
-              {
-                ChangeFirstLast (pEl, pDoc, FALSE, FALSE);
-                stop = TRUE;
-              }
-            else if (!pEVoisin->ElTerminal
-                     || pEVoisin->ElLeafType != LtPageColBreak)
-              stop = TRUE;
-            else
-              pEVoisin = pEVoisin->ElNext;
-          while (!stop);
+          if (SiblingElement (pEl, FALSE) == NULL)
+            /* pEl devient le dernier fils de son pere */
+            ChangeFirstLast (pEl, pDoc, FALSE, FALSE);
           /* met a jour le volume des paves correspondants */
           for (view = 1; view <= MAX_VIEW_DOC; view++)
             {

@@ -115,7 +115,8 @@
 #define KWD_StartCounter 	1194
 #define KWD_SetCounter 	1195
 #define KWD_MarkupPreserve 	1196
-#define KWD_Root 	1197
+#define KWD_NotAnElementNode 	1197
+#define KWD_Root 	1198
 
 /*  RULES  */
 

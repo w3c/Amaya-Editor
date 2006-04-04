@@ -220,7 +220,6 @@ void GetExternalTypeName (PtrSSchema pSS, int typeNum, char **typeName)
       *typeName = pSS->SsRule->SrElem[typeNum - 1]->SrName;
 }
 
-
 /*----------------------------------------------------------------------
   BuildAbsBoxSpliText On a coupe' en deux la feuille de texte pEl.	
   construit les paves de la 2eme partie (pNewEl) et	
@@ -245,7 +244,6 @@ void BuildAbsBoxSpliText (PtrElement pEl, PtrElement pNewEl,
     UpdateAbsBoxVolume (pEl, view, pDoc);
 }
 
-
 /*----------------------------------------------------------------------
   SplitBeforeSelection     coupe en deux la feuille de texte	
   firstSel, a la position firstChar. Met a jour en	
@@ -265,7 +263,7 @@ void SplitBeforeSelection (PtrElement *firstSel, int *firstChar,
       /* on coupe en deux l'element feuille dans l'arbre abstrait */
       /* ce qui cree un deuxieme element feuille juste apres l'element */
       /* initial */
-      pNext = (*firstSel)->ElNext;
+      pNext = SiblingElement (*firstSel, FALSE);
       SplitTextElement (*firstSel, *firstChar, pDoc, FALSE, &pSecond, FALSE);
       BuildAbsBoxSpliText (*firstSel, pSecond, pNext, pDoc);
       if (*firstSel == *lastSel)
@@ -296,8 +294,7 @@ void SplitAfterSelection (PtrElement lastSel, int lastChar, PtrDocument pDoc)
     /* il faut effectivement couper l'element */
     {
       /* on cherche le frere suivant qui n'est pas un saut de page */
-      pNextEl = lastSel->ElNext;
-      FwdSkipPageBreak (&pNextEl);
+      pNextEl = SiblingElement (lastSel, FALSE);
       /* on coupe en deux la feuille de texte dans l'arbre abstrait */
       SplitTextElement (lastSel, lastChar, pDoc, FALSE, &pSecond, FALSE);
       /* construit les paves de la 2eme partie et met a jours ceux de */
@@ -1765,8 +1762,7 @@ PtrElement CreateSibling (PtrDocument pDoc, PtrElement pEl, ThotBool before,
                 /* teste si pEl est le premier fils de son pere,
                    abstraction faite des marques de page */
                 {
-                  pNextEl = pEl->ElPrevious;
-                  BackSkipPageBreak (&pNextEl);
+                  pNextEl = SiblingElement (pEl, TRUE);
                   InsertElementBefore (pEl, pNew);
                 }
               else
@@ -1774,8 +1770,7 @@ PtrElement CreateSibling (PtrDocument pDoc, PtrElement pEl, ThotBool before,
                 /* on teste si pEl est le dernier fils de son pere,abstraction */
                 /* faite des marques de page */
                 {
-                  pNextEl = pEl->ElNext;
-                  FwdSkipPageBreak (&pNextEl);
+                  pNextEl = SiblingElement (pEl, FALSE);
                   InsertElementAfter (pEl, pNew);
                 }
               /* si c'est un choix, active le menu correspondant et cree le */
@@ -2106,9 +2101,7 @@ PtrElement CreateWithinElement (PtrDocument pDoc, PtrElement pEl,
                           if (pPrevEl == NULL)
                             {
                               InsertFirstChild (pEl, p1);
-                              pNextEl = p1->ElNext;
-                              /* saute les marques de page qui suivent */
-                              FwdSkipPageBreak (&pNextEl);
+                              pNextEl = SiblingElement (p1, FALSE);
                               if (pNextEl != NULL)
                                 /* l'element suivant le nouvel element */
                                 /* n'est plus premier */
@@ -2117,9 +2110,7 @@ PtrElement CreateWithinElement (PtrDocument pDoc, PtrElement pEl,
                           else
                             {
                               InsertElementAfter (pPrevEl, p1);
-                              pNextEl = p1->ElNext;
-                              /* saute les marques de page qui suivent */
-                              FwdSkipPageBreak (&pNextEl);
+                              pNextEl = SiblingElement (p1, FALSE);
                               if (pNextEl == NULL)
                                 /* l'element precedent le nouvel */
                                 /* element n'est plus dernier */
@@ -2228,9 +2219,7 @@ PtrElement CreateWithinElement (PtrDocument pDoc, PtrElement pEl,
                         if (p1 == NULL)
                           {
                             InsertFirstChild (pEl, p);
-                            pNextEl = p->ElNext;
-                            /* saute les marques de page qui suivent */
-                            FwdSkipPageBreak (&pNextEl);
+                            pNextEl = SiblingElement(p, FALSE);
                             if (pNextEl != NULL)
                               /* l'element suivant le nouvel element n'est */
                               /* plus premier */
@@ -2239,9 +2228,7 @@ PtrElement CreateWithinElement (PtrDocument pDoc, PtrElement pEl,
                         else
                           {
                             InsertElementAfter (p1, p);
-                            pNextEl = p->ElNext;
-                            /* saute les marques de page qui suivent */
-                            FwdSkipPageBreak (&pNextEl);
+                            pNextEl = SiblingElement(p, FALSE);
                             if (pNextEl == NULL)
                               /* l'element precedent le nouvel element n'est */
                               /* plus dernier */
@@ -2336,9 +2323,7 @@ PtrElement CreateWithinElement (PtrDocument pDoc, PtrElement pEl,
               RemoveExcludedElem (&p, pDoc);
               if (p != NULL)
                 {
-                  pNextEl = p->ElNext;
-                  /* saute les marques de page qui suivent */
-                  FwdSkipPageBreak (&pNextEl);
+                  pNextEl = SiblingElement (p, FALSE);
                   if (pNextEl != NULL)
                     /* l'element suivant le nouvel element n'est */
                     /* plus premier */
@@ -2525,8 +2510,7 @@ PtrElement CreateOrPasteInText (ThotBool create, ThotBool paste,
   GetCurrentSelection (&pDoc, &firstSel, &lastSel, &firstChar, &lastChar);
   /* teste si le dernier selectionne' est le dernier fils de son pere, */
   /* abstraction faite des marques de page */
-  pNextEl = lastSel->ElNext;
-  FwdSkipPageBreak (&pNextEl);
+  pNextEl = SiblingElement (lastSel, FALSE);
   SplitTextElement (lastSel, lastChar, pDoc, TRUE, &pFollow, FALSE);
   if (create)
     {
@@ -2559,7 +2543,6 @@ PtrElement CreateOrPasteInText (ThotBool create, ThotBool paste,
     BuildAbsBoxSpliText (lastSel, pFollow, pNextEl, pDoc);
   return pNew;
 }
-
 
 /*----------------------------------------------------------------------
   AddInsertMenuItem ajoute une nouvelle entree dans le menu contenu  
@@ -3715,8 +3698,7 @@ void CreatePasteIncludeMenuCallback (ThotBool create, ThotBool paste, int item)
                       /* selectionne' est le dernier fils de son pere, */
                       /* abstraction faite des  marques de page */
                       {
-                        pNextEl = firstSel->ElNext;
-                        FwdSkipPageBreak (&pNextEl);
+                        pNextEl = SiblingElement (firstSel, FALSE);
                         /* coupe la feuille de texte */
                         SplitTextElement (firstSel, firstChar,
                                           pDoc, TRUE, &pFollow,

@@ -47,6 +47,10 @@ extern void GetDelayedRule ( PtrPRule *pR,
                              PtrAttribute * pAttr );
 extern void ApplDelayedRule ( PtrElement pEl,
                               PtrDocument pDoc );
+extern ThotBool ElemDoesNotCount ( PtrElement pEl,
+                                   ThotBool previous );
+extern PtrElement SiblingElement ( PtrElement pEl,
+                                   ThotBool previous );
 extern ThotBool CondPresentation ( PtrCondition pCond,
                                    PtrElement pEl,
                                    PtrAttribute pAttr,
@@ -157,6 +161,10 @@ extern void GetDelayedRule ( PtrPRule *pR,
                                PtrAttribute * pAttr );
 extern void ApplDelayedRule ( PtrElement pEl,
                                 PtrDocument pDoc );
+extern ThotBool ElemDoesNotCount ( PtrElement pEl,
+                                     ThotBool previous );
+extern PtrElement SiblingElement ( PtrElement pEl,
+                                     ThotBool previous );
 extern ThotBool CondPresentation ( PtrCondition pCond,
                                      PtrElement pEl,
                                      PtrAttribute pAttr,

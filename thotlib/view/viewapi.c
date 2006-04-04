@@ -1035,8 +1035,7 @@ void RedisplaySplittedText (PtrElement element, int position,
   ----------------------------------------------------------------------*/
 void RedisplayMergedText (PtrElement element, Document document)
 {
-  PtrElement          pEl, pENeighbour;
-  ThotBool            stop;
+  PtrElement          pEl;
   PtrDocument         pDoc;
   int                 view, dvol, h;
   PtrAbstractBox      pAb;
@@ -1052,22 +1051,10 @@ void RedisplayMergedText (PtrElement element, Document document)
   if (documentDisplayMode[document - 1] == NoComputedDisplay)
     return;
   /* teste si pEl est le dernier fils de son pere, */
-  /* abstraction faite des marques de page */
-  pENeighbour = pEl->ElNext;
-  stop = FALSE;
-  do
-    if (pENeighbour == NULL)
-      /* pEl devient le dernier fils de son pere */
-      {
-        ChangeFirstLast (pEl, pDoc, FALSE, FALSE);
-        stop = TRUE;
-      }
-    else if (!pENeighbour->ElTerminal ||
-             pENeighbour->ElLeafType != LtPageColBreak)
-      stop = TRUE;
-    else
-      pENeighbour = pENeighbour->ElNext;
-  while (!(stop));
+  /* abstraction faite des marques de page et autres elements a ignorer */
+  if (SiblingElement (pEl, FALSE) == NULL)
+    /* pEl devient le dernier fils de son pere */
+    ChangeFirstLast (pEl, pDoc, FALSE, FALSE);
 
   /* met a jour le volume des paves correspondants */
   for (view = 0; view < MAX_VIEW_DOC; view++)
@@ -1208,11 +1195,11 @@ void UndisplayInheritedAttributes (PtrElement pEl, PtrAttribute pAttr,
   ----------------------------------------------------------------------*/
 void UndisplayElement (PtrElement pEl, Document document)
 {
-  PtrElement          pNext, pPrevious, pFather, pNeighbour, pE, pSS;
+  PtrElement          pNext, pPrevious, pFather, pE, pSS, pSib;
   ThotBool            stop;
   PtrDocument         pDoc;
   int                 savePageHeight;
-  ThotBool            immediat;
+  ThotBool            immediat, first;
 
   pDoc = LoadedDocument[document - 1];
   if (pDoc == NULL)
@@ -1245,7 +1232,6 @@ void UndisplayElement (PtrElement pEl, Document document)
           return;
         }
     }
-  /* cherche l'element qui precede l'element a detruire : pPrevious */
   pPrevious = pEl->ElPrevious;
   /* saute les marques de page */
   stop = FALSE;
@@ -1258,7 +1244,6 @@ void UndisplayElement (PtrElement pEl, Document document)
     else
       pPrevious = pPrevious->ElPrevious;
   while (!(stop));
-  /* cherche le premier element apres l'element a detruire : pNext */
   pNext = NextElement (pEl);
   stop = FALSE;
   do
@@ -1271,6 +1256,29 @@ void UndisplayElement (PtrElement pEl, Document document)
   while (!(stop));
   if (pNext == NULL)
     pNext = NextElement (pPrevious);
+
+  pSib = NULL;
+  first = FALSE;
+  if (!ElemDoesNotCount (pEl, TRUE))
+    /* the element we are removing is a significant element when it comes to
+       decide whether an element is the first (resp. last) child of its parent */
+    {
+      if (!SiblingElement (pEl, FALSE))
+        /* we are removing a last child. Get the previous sibling: it will
+           become the last child */
+        {
+          first = FALSE;
+          pSib = SiblingElement (pEl, TRUE);
+        }
+      else if (!SiblingElement (pEl, TRUE))
+        /* we are removing a first child. Get the next sibling: it will
+           become the first child */
+        {
+          first = TRUE;
+          pSib = SiblingElement (pEl, FALSE);
+        }
+    }
+
   DestroyAbsBoxes (pEl, pDoc, TRUE);
   pFather = pEl->ElParent;
   RemoveElement (pEl);
@@ -1297,40 +1305,11 @@ void UndisplayElement (PtrElement pEl, Document document)
         }
       PageHeight = savePageHeight;
     }
-  if (pNext != NULL)
-    {
-      pNeighbour = pNext->ElPrevious;
-      stop = FALSE;
-      do
-        if (pNeighbour == NULL)
-          stop = TRUE;
-        else if (!pNeighbour->ElTerminal
-                 || pNeighbour->ElLeafType != LtPageColBreak)
-          stop = TRUE;
-        else
-          pNeighbour = pNeighbour->ElPrevious;
-      while (!(stop));
-      if (pNeighbour == NULL)
-        /* l'element qui suit la partie detruite devient premier */
-        ChangeFirstLast (pNext, pDoc, TRUE, FALSE);
-    }
-  if (pPrevious != NULL)
-    {
-      pNeighbour = pPrevious->ElNext;
-      stop = FALSE;
-      do
-        if (pNeighbour == NULL)
-          stop = TRUE;
-        else if (!pNeighbour->ElTerminal
-                 || pNeighbour->ElLeafType != LtPageColBreak)
-          stop = TRUE;
-        else
-          pNeighbour = pNeighbour->ElNext;
-      while (!(stop));
-      if (pNeighbour == NULL)
-        /* l'element qui precede la partie detruite devient dernier */
-        ChangeFirstLast (pPrevious, pDoc, FALSE, FALSE);
-    }
+
+  if (pSib)
+    /* element pSib becomes first or last */
+    ChangeFirstLast (pSib, pDoc, first, FALSE);
+
   /* reevalue l'image de toutes les vues */
   AbstractImageUpdated (pDoc);
   RedisplayCommand (document);

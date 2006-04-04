@@ -1867,7 +1867,7 @@ PtrElement NextElement (PtrElement pEl)
 
 
 /*----------------------------------------------------------------------
-   NextElement 
+   PreviousElement 
    returns a pointer to the element preceding the one pointed by
    pEl.
   ----------------------------------------------------------------------*/

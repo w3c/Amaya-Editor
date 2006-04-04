@@ -1184,40 +1184,15 @@ PtrElement PreviousNotPage (PtrElement pEl, ThotBool sibling)
   ----------------------------------------------------------------------*/
 void ProcessFirstLast (PtrElement pPrev, PtrElement pNext, PtrDocument pDoc)
 {
-  PtrElement          pSibling;
-  ThotBool            stop;
-
   if (pNext)
     {
-      pSibling = pNext->ElPrevious;
-      stop = FALSE;
-      do
-        if (pSibling == NULL)
-          stop = TRUE;
-        else if (!pSibling->ElTerminal ||
-                 pSibling->ElLeafType != LtPageColBreak)
-          stop = TRUE;
-        else
-          pSibling = pSibling->ElPrevious;
-      while (!stop);
-      if (pSibling == NULL)
+      if (!SiblingElement (pNext, TRUE))
         /* l'element qui suit la partie detruite devient premier */
         ChangeFirstLast (pNext, pDoc, TRUE, FALSE);
     }
-  if (pPrev != NULL)
+  if (pPrev)
     {
-      pSibling = pPrev->ElNext;
-      stop = FALSE;
-      do
-        if (pSibling == NULL)
-          stop = TRUE;
-        else if (!pSibling->ElTerminal ||
-                 pSibling->ElLeafType != LtPageColBreak)
-          stop = TRUE;
-        else
-          pSibling = pSibling->ElNext;
-      while (!stop);
-      if (pSibling == NULL)
+      if (!SiblingElement (pPrev, FALSE))
         /* l'element qui precede la partie detruite devient dernier */
         ChangeFirstLast (pPrev, pDoc, FALSE, FALSE);
     }
@@ -3233,8 +3208,7 @@ void CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
                   /* Insertion du nouvel element */
                   if (createAfter)
                     {
-                      pSibling = pEl->ElNext;
-                      FwdSkipPageBreak (&pSibling);
+                      pSibling = SiblingElement (pEl, FALSE);
                       InsertElementAfter (pEl, pNew);
                       AddEditOpInHistory (pNew, pSelDoc, FALSE, TRUE);
                       if (pSibling == NULL)
@@ -3244,7 +3218,7 @@ void CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
                     }
                   else
                     {
-                      pSibling = pEl->ElPrevious;
+                      pSibling = SiblingElement (pEl, TRUE);
                       InsertElementBefore (pEl, pNew);
                       if (empty)
                         {
@@ -3287,10 +3261,10 @@ void CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
                           notifyEl.elementType.ElSSchema =
                             (SSchema) (pEl->ElStructSchema);
                           notifyEl.position = NSiblings + 1;
-                          pSibling = NextElement (pEl);
+                          pNextEl = NextElement (pEl);
                           /* retire l'element de l'arbre abstrait */
                           RemoveElement (pEl);
-                          UpdateNumbers (pSibling, pEl, pSelDoc, TRUE);
+                          UpdateNumbers (pNextEl, pEl, pSelDoc, TRUE);
                           RedisplayCopies (pEl, pSelDoc, TRUE);
                           DeleteElement (&pEl, pSelDoc);
                           /* envoie l'evenement ElemDelete.Post a l'application*/
@@ -3606,8 +3580,7 @@ void TtaInsertAnyElement (Document document, ThotBool before)
           pNew = NewSubtree (typeNum, pSS, pDoc, TRUE, TRUE, TRUE, TRUE);
           if (before)
             {
-              pSibling = firstSel->ElPrevious;
-              BackSkipPageBreak (&pSibling);
+              pSibling = SiblingElement (firstSel, TRUE);
               InsertElementBefore (firstSel, pNew);
               AddEditOpInHistory (pNew, pDoc, FALSE, TRUE);
               if (pSibling == NULL)
@@ -3616,8 +3589,7 @@ void TtaInsertAnyElement (Document document, ThotBool before)
             }
           else
             {
-              pSibling = lastSel->ElNext;
-              FwdSkipPageBreak (&pSibling);
+              pSibling = SiblingElement (lastSel, FALSE);
               InsertElementAfter (lastSel, pNew);
               AddEditOpInHistory (pNew, pDoc, FALSE, TRUE);
               if (pSibling == NULL)

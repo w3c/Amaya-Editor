@@ -888,11 +888,11 @@ EXCEPT
 	Definition_Item:Hidden;
 	Term_List:	Hidden, CanCut;
 	Definitions:	Hidden;
-  XMLPI:	        ReturnCreateNL, NoSpellCheck, NoReplicate;
-	Comment\240:	ReturnCreateNL, NoSpellCheck, NoReplicate;
+  XMLPI:	        ReturnCreateNL, NoSpellCheck, NoReplicate, NotAnElementNode;
+	Comment\240:	ReturnCreateNL, NoSpellCheck, NoReplicate, NotAnElementNode;
 	Comment_line:	Hidden, MarkupPreserve;
 	PI_line:	Hidden, MarkupPreserve;
-	DOCTYPE:	NoCut, NoSpellCheck;
+	DOCTYPE:	NoCut, NoSpellCheck, NotAnElementNode;
 	DOCTYPE_line:	Hidden, NoCut;
   CDATA_line:     Hidden, MarkupPreserve;
 	GRAPHICS:	NoMove, NoResize, SelectParent;

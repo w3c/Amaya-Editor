@@ -686,23 +686,15 @@ ThotBool CompleteElement (PtrElement pEl, PtrDocument pDoc)
 			   /* c'est le 1er composant de l'agregat */
 			   {
 			     InsertFirstChild (pEl, pNewEl);
-			     pClose = pNewEl->ElNext;
-			     /* saute les marques de page qui suivent */
-			     FwdSkipPageBreak (&pClose);
-			     if (pClose != NULL)
-			       /* l'element suivant le nouvel element */
-			       /* n'est plus premier */
+			     if (SiblingElement (pNewEl, FALSE))
+			       /* l'element suivant le nouvel element n'est plus premier */
 			       ChangeFirstLast (pClose, pDoc, TRUE, TRUE);
 			   }
 			 else
 			   {
 			     InsertElementAfter (pPrev, pNewEl);
-			     pClose = pNewEl->ElNext;
-			     /* saute les marques de page qui suivent */
-			     FwdSkipPageBreak (&pClose);
-			     if (pClose == NULL)
-			       /* l'element precedent le nouvel
-				  element n'est plus dernier */
+			     if (!SiblingElement (pNewEl, FALSE))
+			       /* l'element precedent le nouvel element n'est plus dernier */
 			       ChangeFirstLast (pPrev, pDoc, FALSE, TRUE);
 			   }
 			 /* traite les exclusions des elements crees */
@@ -809,23 +801,17 @@ ThotBool CompleteElement (PtrElement pEl, PtrDocument pDoc)
 			 /* la liste est vide, on insere en tete */
 			 {
 			   InsertFirstChild (pEl, pComponent);
-			   pClose = pComponent->ElNext;
-			   /* saute les marques de page qui suivent */
-			   FwdSkipPageBreak (&pClose);
+			   pClose = SiblingElement (pComponent, FALSE);
 			   if (pClose != NULL)
-			     /* l'element suivant le nouvel
-				element n'est plus premier */
+			     /* l'element suivant le nouvel	element n'est plus premier */
 			     ChangeFirstLast (pClose, pDoc, TRUE, TRUE);
 			 }
 		       else
 			 {
 			   InsertElementAfter (pLastEl, pComponent);
-			   pClose = pComponent->ElNext;
-			   /* saute les marques de page qui suivent */
-			   FwdSkipPageBreak (&pClose);
+			   pClose = SiblingElement (pComponent, FALSE);
 			   if (pClose == NULL)
-			     /* l'element precedent le nouvel
-				element n'est plus dernier */
+			     /* l'element precedent le nouvel element n'est plus dernier */
 			     ChangeFirstLast (pLastEl, pDoc, FALSE, TRUE);
 			 }
 		       /* traite les exclusions des elements crees */
@@ -991,7 +977,7 @@ ThotBool BreakElement (PtrElement pElReplicate, PtrElement pSplitEl,
 		    nextChar = 0;
 		}
 	    }
-	  pClose = pPrev->ElNext;
+	  pClose = SiblingElement (pPrev, FALSE);
 	  /* enregistre les elements preexistants */
 	  pE = pPrev->ElNext;
 	  nbEl = 0;
@@ -1148,8 +1134,7 @@ ThotBool BreakElement (PtrElement pElReplicate, PtrElement pSplitEl,
 	      pEl2 = pE;
 	      pE = pE->ElParent;
 	    }
-	  pClose = pEl2->ElNext;
-	  FwdSkipPageBreak (&pClose);
+	  pClose = SiblingElement (pEl2, FALSE);
 	  InsertElementAfter (pEl2, pChild);
 	  if (pClose == NULL)
 	    /* l'element pEl2 n'est plus le dernier fils de son pere */

@@ -34,6 +34,7 @@
 #include "attributes_f.h"
 #include "attributeapi_f.h"
 #include "changeabsbox_f.h"
+#include "createabsbox_f.h"
 #include "displayview_f.h"
 #include "documentapi_f.h"
 #include "exceptions_f.h"
@@ -650,9 +651,7 @@ static Element CreateDescent (Document document, Element element,
           if (firstCreated != NULL)
             {
 #ifndef NODISPLAY
-              pNeighbour = firstCreated->ElNext;
-              /* ignore the following page marks */
-              FwdSkipPageBreak (&pNeighbour);
+              pNeighbour = SiblingElement (firstCreated, FALSE);
 #endif
               if (withContent)
                 if (!lastCreated->ElTerminal)
@@ -933,18 +932,20 @@ void TtaInsertSibling (Element newElement, Element sibling,
                        ThotBool before, Document document)
 {
 #ifndef NODISPLAY
-  PtrElement          pNeighbour;
-
+  PtrElement          pNeighbour, pOtherNeighbour;
+  ThotBool            first;
 #endif
-  PtrElement          pEl;
+  PtrElement          pEl, pSibling;
   PtrDocument         pDoc;
 
   UserErrorCode = 0;
-  if (newElement == NULL || sibling == NULL)
+  pEl = (PtrElement) newElement;
+  pSibling = (PtrElement) sibling;
+  if (pEl == NULL || pSibling == NULL)
     TtaError (ERR_invalid_parameter);
-  else if (((PtrElement) newElement)->ElParent != NULL)
+  else if (pEl->ElParent != NULL)
     TtaError (ERR_element_already_inserted);
-  else if (((PtrElement) sibling)->ElParent == NULL)
+  else if (pSibling->ElParent == NULL)
     /* cannot insert an element as a sibling of a root */
     TtaError (ERR_element_already_inserted);
   else if (document < 1 || document > MAX_DOCUMENTS)
@@ -953,33 +954,47 @@ void TtaInsertSibling (Element newElement, Element sibling,
   else if (LoadedDocument[document - 1] == NULL)
     TtaError (ERR_invalid_document_parameter);
   else if (((LoadedDocument[document - 1])->DocCheckingMode & STR_CHECK_MASK)
-           && !AllowedSibling ((PtrElement) sibling,
-                               LoadedDocument[document - 1],
-                               ((PtrElement) newElement)->ElTypeNumber,
-                               ((PtrElement) newElement)->ElStructSchema,
-                               before, FALSE, FALSE))
+           && !AllowedSibling (pSibling, LoadedDocument[document - 1],
+                               pEl->ElTypeNumber, pEl->ElStructSchema, before,
+                               FALSE, FALSE))
     TtaError (ERR_element_does_not_match_DTD);
   else
     {
       pDoc = LoadedDocument[document - 1];
-      if (before)
-        {
 #ifndef NODISPLAY
-          pNeighbour = ((PtrElement) sibling)->ElPrevious;
-          BackSkipPageBreak (&pNeighbour);
-#endif
-          InsertElementBefore ((PtrElement) sibling, (PtrElement) newElement);
-        }
+      first = before;
+      if (ElemDoesNotCount (pEl, before))
+        /* the new element is not taken into account to decide whether its
+           sibling is a first (resp. last) child or not. Its status won't
+           change */
+        pNeighbour = NULL;
       else
         {
-#ifndef NODISPLAY
-          pNeighbour = ((PtrElement) sibling)->ElNext;
-          FwdSkipPageBreak (&pNeighbour);
-#endif
-          InsertElementAfter ((PtrElement) sibling, (PtrElement) newElement);
+          pNeighbour = SiblingElement (pSibling, before);
+          if (!pNeighbour)
+            /* element pSibling was a first (resp. last) child. After insertion
+               its status will change */
+            pNeighbour = pSibling;
+          else
+            /* a significant element prevented element pSibling to be a first
+               (resp. last) child */
+            {
+              /* this significant element was perhaps a first (resp. last)
+                 child (e.g. if pSibling was it self not significant) */
+              pOtherNeighbour = SiblingElement (pNeighbour, !before);
+              if (!pOtherNeighbour)
+                /* it was first (resp. last). Change its status */
+                first = !first;
+              else
+                pNeighbour = NULL;
+            }
         }
+#endif
+      if (before)
+        InsertElementBefore (pSibling, pEl);
+      else
+        InsertElementAfter (pSibling, pEl);
       /* treats the exclusions of the created element */
-      pEl = (PtrElement) newElement;
       if (pDoc->DocCheckingMode & STR_CHECK_MASK)
         RemoveExcludedElem (&pEl, pDoc);
       if (pEl)
@@ -994,10 +1009,7 @@ void TtaInsertSibling (Element newElement, Element sibling,
           /* treats the required attributs of created elements */
           if (pDoc->DocCheckingMode & ATTR_MANDATORY_MASK)
             AttachMandatoryAttributes (pEl, pDoc);
-          if (pNeighbour)
-            /* The inserted element is neither the first nor the last */
-            sibling = NULL;
-          RedisplayNewElement (document, pEl, (PtrElement) sibling, before, TRUE);
+          RedisplayNewElement (document, pEl, pNeighbour, first, TRUE);
 #endif /* NODISPLAY */
         }
     }
@@ -1092,9 +1104,7 @@ void TtaInsertFirstChild (Element *newElement, Element parent, Document document
         {
           pSon = (PtrElement) (*newElement);
 #ifndef NODISPLAY
-          pNeighbour = pSon->ElNext;
-          /* ignore the following page marks */
-          FwdSkipPageBreak (&pNeighbour);
+          pNeighbour = SiblingElement (pSon, FALSE);
 #endif
           /* Treats the exclusions in the created element */
           if (pDoc->DocCheckingMode & STR_CHECK_MASK)

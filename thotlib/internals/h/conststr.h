@@ -70,6 +70,7 @@
 #define ExcSetCounter 44
 #define ExcCanCut 45
 #define ExcMarkupPreserve 46
+#define ExcNotAnElementNode 47
 
 /* Draw exceptions */
 #define ExcSelectParent 310

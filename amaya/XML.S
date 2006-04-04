@@ -40,12 +40,12 @@ EXCEPT
    class:		CssClass;
    PseudoClass:	        Invisible, CssPseudoClass;
    RealLang:	        Invisible;
-   xmlpi:	        ReturnCreateNL, NoSpellCheck, NoReplicate;
-   xmlcomment:	        ReturnCreateNL, NoReplicate;
+   xmlpi:	        ReturnCreateNL, NoSpellCheck, NoReplicate, NotAnElementNode;
+   xmlcomment:	        ReturnCreateNL, NoReplicate, NotAnElementNode;
    xmlcomment_line:     Hidden, MarkupPreserve;
    xmlpi_line:          Hidden, MarkupPreserve;
    doctype_line:        Hidden, NoCut;
-   doctype:             NoCut;
+   doctype:             NoCut, NotAnElementNode;
    cdata_line:          Hidden, MarkupPreserve;
    XML_Element:         Hidden, IsPlaceholder;
    xml_space:           SpacePreserve;

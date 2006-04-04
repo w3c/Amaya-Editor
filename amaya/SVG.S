@@ -2504,13 +2504,13 @@ EXCEPT
    PICTURE:       NoMove, NoResize, SelectParent;
    TEXT:          NoMove, NoResize;
    Unknown_namespace:   NoCreate;
-   DOCTYPE:             NoCut, NoSpellCheck;
+   DOCTYPE:             NoCut, NoSpellCheck, NotAnElementNode;
    DOCTYPE_line:        Hidden, NoCut;
    XMLcomment_line:     Hidden, MarkupPreserve;
    XMLPI_line:          Hidden, MarkupPreserve;
    CDATA_line:          Hidden, MarkupPreserve;
-   XMLPI:	        ReturnCreateNL, NoSpellCheck, NoReplicate;
-   XMLcomment:	  ReturnCreateNL, NoReplicate;
+   XMLPI:	        ReturnCreateNL, NoSpellCheck, NoReplicate, NotAnElementNode;
+   XMLcomment:	  ReturnCreateNL, NoReplicate, NotAnElementNode;
 
    { exceptions for attributes }
    id:                CssId; {Default id attribute}

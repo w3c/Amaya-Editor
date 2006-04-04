@@ -1007,6 +1007,89 @@ static ThotBool ElemHasCondAttribute (PtrElement pEl, PtrCondition pCond,
   return found;
 }
 
+
+/*----------------------------------------------------------------------
+  ElemDoesNotCount
+  return TRUE if element pEl is a Page break, a Comment, a PI, a text string
+  or a hidden element that contains only such elements. 
+  ----------------------------------------------------------------------*/
+ThotBool ElemDoesNotCount (PtrElement pEl, ThotBool previous)
+{
+  ThotBool    ignore = FALSE;
+  PtrElement  pChild;
+
+  if (pEl->ElTypeNumber == PageBreak + 1)
+    /* ignore a page break */
+    ignore = TRUE;
+  else if (pEl->ElTerminal && (pEl->ElLeafType == LtText))
+    /* ignore a text leaf */
+    ignore = TRUE;
+  else if (TypeHasException (ExcNotAnElementNode, pEl->ElTypeNumber,
+                             pEl->ElStructSchema))
+    /* ignore a PI or a comment */
+    ignore = TRUE;
+  else if (TypeHasException (ExcHidden, pEl->ElTypeNumber,
+                             pEl->ElStructSchema))
+    /* hidden elements do not count, but their children count */
+    {
+      if (pEl->ElTerminal || !pEl->ElFirstChild)
+        ignore = TRUE;
+      else
+        {
+          pChild = pEl->ElFirstChild;
+          if (previous)
+            /* get the last child */
+            {
+              while (pChild->ElNext)
+                pChild = pChild->ElNext;
+            }
+          do
+            {
+              ignore = ElemDoesNotCount (pChild, previous);
+              if (previous)
+                pChild = pChild->ElPrevious;
+              else
+                pChild = pChild->ElNext;
+            }
+          while (pChild && ignore);
+        }
+    }
+  return ignore;
+}
+
+/*----------------------------------------------------------------------
+  SiblingElement return the element node which is the previous or next
+  (it depends on parameter previous) sibling of element pEl.
+  Page breaks, Comments, PIs, text strings etc. are ignored.
+  ----------------------------------------------------------------------*/
+PtrElement SiblingElement (PtrElement pEl, ThotBool previous)
+{
+  PtrElement    pSibling;
+  ThotBool      stop;
+
+  if (!pEl)
+    return NULL;
+  if (previous)
+    pSibling = pEl->ElPrevious;
+  else
+    pSibling = pEl->ElNext;
+  stop = FALSE;
+  do
+    if (pSibling == NULL)
+      stop = TRUE;
+    else if (ElemDoesNotCount (pSibling, previous))
+      {
+        if (previous)
+          pSibling = pSibling->ElPrevious;
+        else
+          pSibling = pSibling->ElNext;
+      }
+    else
+      stop = TRUE;
+  while (!stop);
+  return pSibling;
+}
+
 /*----------------------------------------------------------------------
   CondPresentation evalue les conditions d'application d'une regle de    
   presentation qui s'applique a` l'element pEl ou a l'attribut pAttr
@@ -1024,13 +1107,13 @@ ThotBool CondPresentation (PtrCondition pCond, PtrElement pEl,
                            PtrDocument pDoc)
 {
   PtrPSchema          pSchP = NULL;
-  PtrElement          pElSibling, pAsc, pElem, pRoot;
+  PtrElement          pAsc, pElem, pRoot;
   PtrReference        pRef;
   PtrCondition        firstCondLevel;
   int                 valcompt, valmaxi, valmini;
   int                 i = 0;
   PtrSRule            pRe1;
-  ThotBool            ok, found, stop, equal;
+  ThotBool            ok, found, equal;
 
   /* a priori les conditions sont satisfaites */
   firstCondLevel = NULL;
@@ -1075,37 +1158,11 @@ ThotBool CondPresentation (PtrCondition pCond, PtrElement pEl,
         switch (pCond->CoCondition)
           {
           case PcFirst:
-            /* ignore previous page break */
-            /* we should also ignore Hideen elements (but not their contents),
-               TEXT elements, comments, PIs, etc. @@@@@@@@ */
-            /* voir aussi ProcessFirstLast (structcommands.c) et tous les
-               appels à ChangeFirstLast */
-            pElSibling = pElem->ElPrevious;
-            stop = FALSE;
-            do
-              if (pElSibling == NULL)
-                stop = TRUE;
-              else if (pElSibling->ElTypeNumber == PageBreak + 1)
-                pElSibling = pElSibling->ElPrevious;
-              else
-                stop = TRUE;
-            while (!stop);
-            found = pElSibling == NULL;
+            found = (SiblingElement (pElem, TRUE) == NULL);
             break;
 
           case PcLast:
-            /* on saute les marques de page suivantes */
-            pElSibling = pElem->ElNext;
-            stop = FALSE;
-            do
-              if (pElSibling == NULL)
-                stop = TRUE;
-              else if (pElSibling->ElTypeNumber == PageBreak + 1)
-                pElSibling = pElSibling->ElNext;
-              else
-                stop = TRUE;
-            while (!stop);
-            found = pElSibling == NULL;
+            found = (SiblingElement (pElem, FALSE) == NULL);
             break;
        
           case PcReferred:
