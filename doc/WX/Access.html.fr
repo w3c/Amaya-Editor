@@ -4,8 +4,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Accessibilité dans Amaya</title>
-  <meta name="GENERATOR" content="amaya 9.1, see http://www.w3.org/Amaya/" />
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 9.4, see http://www.w3.org/Amaya/" />
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -95,11 +95,5 @@ l'exception la saisie de texte) sans utiliser le clavier.</p>
     et des contrôles de forme.</li>
 </ul>
 </div>
-
-<p><a href="Configure.html.fr"><img alt="previous"
-src="../../resources/icons/misc/left.png" /></a> <a
-href="Manual.html.fr"><img alt="top" src="../../resources/icons/misc/up.png"
-/></a></p>
-<hr />
 </body>
 </html>

@@ -5,7 +5,7 @@
 <head>
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <title>Sélectionner</title>
-  <meta name="GENERATOR" content="amaya 9.3, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 9.4, see http://www.w3.org/Amaya/" />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -184,12 +184,5 @@ pour sélectionner rapidement de gros éléments ou des groupes d'éléments.</p>
     dehors de cet attribut.</li>
 </ul>
 </div>
-
-<p><a href="Browsing.html.fr"><img alt="previous"
-src="../../resources/icons/misc/left.png" /></a> <a
-href="Manual.html.fr"><img alt="top" src="../../resources/icons/misc/up.png"
-/></a> <a href="Searching.html.fr"><img alt="next"
-src="../../resources/icons/misc/right.png" /></a></p>
-<hr />
 </body>
 </html>

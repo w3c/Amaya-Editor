@@ -5,8 +5,7 @@
 <head>
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <title>Configurer Amaya</title>
-  <meta name="GENERATOR" content="amaya 9.3.1, see http://www.w3.org/Amaya/"
-  />
+  <meta name="GENERATOR" content="amaya 9.4, see http://www.w3.org/Amaya/" />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -31,7 +30,7 @@ accesskey="n"><img alt="next" src="../../resources/icons/misc/right.png"
         <ul>
           <li><a href="#pertoire">Le répertoire
           c<strong>onfig</strong></a></li>
-          <li><a href="#pertoire1">Le répertoire d'AmayaHome</a></li>
+          <li><a href="#pertoire1">Le répertoire AmayaHome</a></li>
           <li><a href="#pertoire2">Le répertoire AmayaTemp</a></li>
         </ul>
       </li>

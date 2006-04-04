@@ -4,8 +4,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Annotations</title>
-  <meta name="GENERATOR" content="amaya 9.1, see http://www.w3.org/Amaya/" />
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 9.4, see http://www.w3.org/Amaya/" />
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -119,24 +119,24 @@ d'annotations sur lequel les annotations distantes sont enregistrées.</p>
 <h3 id="Annotation">Menu des annotations</h3>
 
 <p>La plupart des commandes utilisées pour la gestion des annotations se
-trouvent dans le menu d'annotations représenté ci dessous.</p>
-
-<p style="text-align: center"><img src="../images/annotationsmenu-fr.png"
-alt="Annotations menu" /></p>
+trouvent dans le menu d'annotations ou dans le menu de préférences.</p>
 
 <h3 id="Creating">Créer une annotation</h3>
 
 <p>La version courante d'Amaya supporte deux sortes d'annotations: celles qui
 s'appliquent sur le document entier et celles qui s'appliquent sur une partie
-ou une sélection du document. Pour annoter un document entier, sélectionnez
-l'entrée <strong>Annoter le document</strong> du menu
-<strong>Annotations</strong>. Pour annoter une partie, placez le curseur sur
-la partie désirée et sélectionnez l'entrée <strong>Annoter la
-sélection</strong>. Pour annoter la sélection, utilisez la même entrée après
-avoir fait la sélection désirée. Dans tous les cas, une fenêtre d'annotation
-s'affichera (figure suivante). Le contenu de cette fenêtre montre les
-méta-données de l'annotation à l'intérieur d'un cadre et le
-<strong>corps</strong> de l'annotation à l'extérieur.</p>
+ou une sélection du document.</p>
+<ul>
+  <li>Pour annoter un document entier, sélectionnez l'entrée <strong>Annoter
+    le document</strong> du menu <strong>Annotations</strong>.</li>
+  <li>Pour annoter une partie, faire la sélection désirée et sélectionnez
+    l'entrée <strong>Annoter la sélection</strong>.</li>
+</ul>
+
+<p>Dans tous les cas, une fenêtre d'annotation s'affichera (figure suivante).
+Le contenu de cette fenêtre montre les méta-données de l'annotation à
+l'intérieur d'un cadre et le <strong>corps</strong> de l'annotation à
+l'extérieur.</p>
 
 <p style="text-align: center"><img src="../images/annotationwindow.png"
 alt="annotation window" /></p>
@@ -173,14 +173,16 @@ menu <strong>Fichier</strong> ou cliquer sur le bouton équivalent ou bien
 activer le raccourci-clavier correspondant. Les annotations locales sont
 sauvées sous le répertoire des annotations et les annotations distantes sont
 sauvées sous le serveur d'annotation correspondant, si l'utilisateur possède
-un droit d'écriture dessus. Pour transformer une annotation locale en une
-annotation publique (distante), l'utilisateur doit utiliser l'entrée
-<strong>Enregistrer les annotations</strong>, elles seront alors enregistrées
-sous le serveur défini dans le menu de configuration puis, en cas de succès,
-supprimées du répertoire local. La sauvegarde des annotations se fera alors
-directement sur le serveur d'annotations. Dans la version initiale des
-annotations, l'opération inverse (transfert d'une annotation distante dans le
-répertoire local) n'est pas supportée .</p>
+un droit d'écriture dessus.</p>
+
+<p>Pour transformer une annotation locale en une annotation publique
+(distante), l'utilisateur doit utiliser l'entrée <strong>Enregistrer les
+annotations</strong>, elles seront alors enregistrées sous le serveur défini
+dans le menu de configuration puis, en cas de succès, supprimées du
+répertoire local. La sauvegarde des annotations se fera alors directement sur
+le serveur d'annotations. Dans la version initiale des annotations,
+l'opération inverse (transfert d'une annotation distante dans le répertoire
+local) n'est pas supportée .</p>
 
 <p>Certaines commandes accessibles dans la vue principale d'Amaya sont
 également disponibles pour les annotation comme par exemple le commande
@@ -207,35 +209,6 @@ dans le menu de configuration. Dans la version actuelle des annotations, la
 recherche sur un serveur d'annotations retourne <strong>toutes</strong> les
 annotations associées à un document. Dans une prochaine version, il sera
 possible de mieux cibler la requête envoyée aux serveurs.</p>
-
-<p>L'entrée <strong>Filtre local</strong> permet à l'utilisateur de montrer
-ou de cacher les icônes d'annotation dans un document annoté pour mieux se
-concentrer par exemple sur ce qui l'intéresse ou pour faciliter la lecture
-d'un document annoté. L'utilisateur peut filtrer ces icônes selon trois
-critères: le <strong>nom de l'auteur</strong> de l'annotation, le
-<strong>type</strong> de l'annotation et le <strong>nom du serveur</strong>
-d'annotations. Pour appliquer chacun de ces filtres, cliquez sur le texte
-correspondant pour sélectionner un type donné d'annotation puis sur le bouton
-correspondant à l'action. Les commandes <strong>Montrer Tout</strong> et
-<strong>Cacher Tout</strong> s'appliquent sur l'ensemble des annotations. On
-préfixe chaque entrée du menu d'un espace (' '), d'une étoile ('*') et d'un
-tiré ('-') pour indiquer que toutes les annotations appartenant à une
-catégorie donnée sont visibles, cachées ou partiellement cachées,
-respectivement.</p>
-
-<p>Il est à noter que le menu Filtre vous montre l'état courant du document
-au moment où le filtre est invoqué. Si vous ajoutez des nouvelles annotations
-entre temps, le filtre ne les montrera pas. Il faudra appuyer sur le bouton
-terminer et le rappeler pour voir le nouvel état.</p>
-
-<p>Pour chaque annotation, le nom de l'utilisateur est obtenu en concaténant
-le nom de l'auteur et le nom du serveur d'annotations sur lequel celle-ci est
-enregistrée, comme montré dans la figure suivante.</p>
-
-<p></p>
-
-<p style="text-align: center"><img src="../images/localfilter.png"
-alt="local filter dialog box" /></p>
 
 <h3 id="Navigating">Activer des annotations</h3>
 

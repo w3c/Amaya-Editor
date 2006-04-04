@@ -788,8 +788,6 @@ considérés comme non significatifs et sont donc supprimés. La forme correcte
 aurait été:</p>
 <pre><code>    &lt;p&gt;Amaya supprime les &lt;strong&gt;blancs non significatifs&lt;/strong&gt; au chargement&lt;/p&gt;</code></pre>
 </div>
-
-<p></p>
 </div>
 </body>
 </html>

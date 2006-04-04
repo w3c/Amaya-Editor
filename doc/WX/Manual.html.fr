@@ -157,7 +157,7 @@ et comment les utiliser.</a></p>
 </ul>
 <hr />
 
-<p class="policyfooter"><small>Copyright  ©  1994-2005 <a
+<p class="policyfooter"><small>Copyright  ©  1994-2006 <a
 href="http://www.inria.fr/">INRIA</a> and <a
 href="http://www.w3.org/">W3C</a><sup>®</sup> (<a
 href="http://www.lcs.mit.edu/">MIT</a>, <a

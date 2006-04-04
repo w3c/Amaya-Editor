@@ -5,8 +5,7 @@
 <head>
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <title>Créer des éléments</title>
-  <meta name="GENERATOR" content="amaya 9.3.1, see http://www.w3.org/Amaya/"
-  />
+  <meta name="GENERATOR" content="amaya 9.4, see http://www.w3.org/Amaya/" />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -320,12 +319,5 @@ considérés comme non significatifs et sont donc supprimés. La forme correcte
 aurait été:</p>
 <pre><code>    &lt;p&gt;Amaya supprime les &lt;strong&gt;blancs non significatifs&lt;/strong&gt; au chargement&lt;/p&gt;</code></pre>
 </div>
-
-<p><a href="Document.html.fr#Changing"><img alt="previous"
-src="../../resources/icons/misc/left.png" /></a> <a
-href="Manual.html.fr"><img alt="top" src="../../resources/icons/misc/up.png"
-/></a> <a href="Attributes.html.fr#Attributes"><img alt="next"
-src="../../resources/icons/misc/right.png" /></a></p>
-<hr />
 </body>
 </html>

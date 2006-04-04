@@ -4,9 +4,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Xml Support</title>
-  <meta http-equiv="Content-Type"
+  <meta http-equiv="content-type"
   content="application/xhtml+xml; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 9.1, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 9.4, see http://www.w3.org/Amaya/" />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -65,9 +65,5 @@ règles propres à chaque type. Pour les parties génériques, seule la commande
 <p>Vous pouvez également modifier des documents XML en utilisant le vue
 source et en effectuant la commande <strong>synchroniser</strong>. Vos
 modifications seront prises en compte dans la vue formatée.</p>
-
-<p></p>
-
-<p></p>
 </body>
 </html>
