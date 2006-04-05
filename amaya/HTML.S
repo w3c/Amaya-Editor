@@ -1002,14 +1002,14 @@ EXCEPT
 	onselect:	EventAttr;
 	ID :		CssId; {Default id attribute}
 	Class:		CssClass;
-	External_Object_Content: Hidden;
-	Embed_:	        NoBreakByReturn, NoReplicate;
+	External_Object_Content: Hidden, NoSpellCheck;
+	Embed_:	        NoBreakByReturn, NoReplicate, NoSpellCheck;
 	Embed_Content:  Hidden, NoSelect;
 	Object:	        NoBreakByReturn, NoReplicate;
 	Object_Content: Hidden, NoSelect, NoCreate, NoCut, NoBreakByReturn;
 	Applet:	        NoBreakByReturn, NoReplicate;
 	Applet_Content: Hidden, NoSelect, NoCreate, NoCut, NoBreakByReturn;
-	IFRAME:	        NoBreakByReturn, NoReplicate;
+	IFRAME:	        NoBreakByReturn, NoReplicate, NoSpellCheck;
 	Iframe_Content: Hidden, NoSelect, NoCut, NoBreakByReturn;
 	Iframe_Src_Content: Hidden, NoCut, NoSelect;
 	is_css:	        Invisible;
