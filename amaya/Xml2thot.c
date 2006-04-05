@@ -2370,6 +2370,7 @@ ThotBool  IsLeadingSpaceUseless (Element lastEl, Document doc, ThotBool isXML)
                   if (strcmp (s, "HTML") ||
                       prevType.ElTypeNum != HTML_EL_Comment_ &&
                       prevType.ElTypeNum != HTML_EL_XMLPI &&
+                      prevType.ElTypeNum != HTML_EL_TEXT_UNIT &&
                       prevType.ElTypeNum != HTML_EL_DOCTYPE)
                   // there is a previous element before
                     removeLeadingSpaces = FALSE;
