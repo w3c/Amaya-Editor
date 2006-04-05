@@ -2344,6 +2344,7 @@ ThotBool  IsLeadingSpaceUseless (Element lastEl, Document doc, ThotBool isXML)
             removeLeadingSpaces = FALSE;
           else if (!strcmp (name, "HTML") &&
                    // parent
+                   elType.ElTypeNum != HTML_EL_HTML &&
                    elType.ElTypeNum != HTML_EL_HEAD &&
                    elType.ElTypeNum != HTML_EL_BODY &&
                    elType.ElTypeNum != HTML_EL_Division &&
