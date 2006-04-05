@@ -473,6 +473,20 @@ static FontScript **FontConfigLoad ()
           if (file)
             complete = FontLoadFile (file, fontsscript_tab);
         }
+      if (!complete)
+        {
+          /* try a debian font file */
+          strcpy (word1, word);
+          strcat (word1, ".deb1");
+          strcpy (fname1, fname);
+          strcat (fname1, ".deb1");
+          if (!SearchFile (fname1, 0, name))
+            SearchFile (word1, 2, name);
+          /* open the fonts definition file */
+          file = TtaReadOpen (name);
+          if (file)
+            complete = FontLoadFile (file, fontsscript_tab);
+        }
 #endif /* _UNIX && !_MACOS*/
 #if defined(_WINDOWS) && defined (_GL) 
       /* try a redhat font file */
