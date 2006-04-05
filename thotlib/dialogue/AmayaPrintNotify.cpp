@@ -38,9 +38,9 @@ AmayaPrintNotify::AmayaPrintNotify() :
 
   // create the label
   m_pLabel = new wxStaticText( this, -1, _T("                                                                           "),
-			       wxDefaultPosition,
-			       wxDefaultSize,
-			       wxALIGN_CENTRE );
+                               wxDefaultPosition,
+                               wxSize(200, -1)/*wxDefaultSize*/,
+                               wxALIGN_CENTRE );
 
   // create the button
   m_pCancelButton = new wxButton(this, -1, TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_CANCEL)));
