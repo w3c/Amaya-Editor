@@ -2567,6 +2567,11 @@ void CheckPseudoParagraph (Element el, Document doc)
     /* it's not an HTML element */
     return;
 
+  if (elType.ElTypeNum == HTML_EL_Comment_ ||
+      elType.ElTypeNum == HTML_EL_XMLPI)
+    /* the new element is a comment or a PI. No need to change anything */
+    return;
+
   if (elType.ElTypeNum == HTML_EL_Pseudo_paragraph)
     /* the new element is a Pseudo_paragraph */
     {
