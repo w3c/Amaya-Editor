@@ -2022,6 +2022,10 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
           pBox->BxW += delta;
           /* outside width */
           pBox->BxWidth = pBox->BxWidth + delta + diff;
+          if (pBox->BxType == BoPicture ||
+              pCurrentAb->AbLeafType == LtGraphics)
+            pBox->BxMaxWidth = pBox->BxWidth;
+            
           pBox->BxXOrg += orgTrans;
 
           /* Moving sibling boxes and the parent? */

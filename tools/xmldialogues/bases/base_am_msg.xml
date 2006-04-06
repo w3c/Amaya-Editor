@@ -4378,5 +4378,9 @@
 	<message xml:lang="en">Conflict with the current state of the resource</message>
 	<message xml:lang="fr">Conflit avec l'état de la ressource</message>
 </label>
+<label define="AM_INVALID_SELECTION">
+	<message xml:lang="en">Invalid selection</message>
+	<message xml:lang="fr">Sélection invalide</message>
+</label>
 <label define="AMAYA_MSG_MAX">
 </label></messages></base>

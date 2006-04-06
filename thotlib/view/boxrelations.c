@@ -1217,6 +1217,7 @@ void ComputePosRelation (AbPosition *rule, PtrBox pBox, int frame,
   pRefBox = NULL;
   pRefAb = rule->PosAbRef;
   pAb = pBox->BxAbstractBox;
+
   if (pRefAb && IsDead (pRefAb))
     {
       fprintf (stderr, "Position refers a dead box");

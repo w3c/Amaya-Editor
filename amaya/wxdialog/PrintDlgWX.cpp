@@ -38,19 +38,11 @@ END_EVENT_TABLE()
     + parent : parent window
     + ps_file : postscript file
   ----------------------------------------------------------------------*/
-PrintDlgWX::PrintDlgWX( int ref,
-			wxWindow* parent,
-			const wxString & printer_file,
-			const wxString & ps_file,
-			int paper_format,
-			int orientation,
-			int disposition,
-			int paper_print,
-			bool manual_feed,
-			bool with_toc,
-			bool with_links,
-			bool with_url,
-			bool ignore_css ) :
+PrintDlgWX::PrintDlgWX( int ref, wxWindow* parent, const wxString & printer_file,
+                        const wxString & ps_file, int paper_format,
+                        int orientation, int disposition, int paper_print,
+                        bool manual_feed, bool with_toc, bool with_links,
+                        bool with_url, bool ignore_css ) :
   AmayaDialog( parent, ref )
 {
   m_Printer = printer_file;
