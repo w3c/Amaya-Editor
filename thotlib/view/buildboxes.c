@@ -3785,7 +3785,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
 
       /* Destruction */
       pCell = GetParentCell (pCurrentBox);
-      isCell = pAb->AbBox->BxType == BoCell;
+      isCell = pCurrentBox->BxType == BoCell;
       RemoveBoxes (pAb, FALSE, frame);
       
       /* update the list of leaf boxes */
@@ -3823,10 +3823,10 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
         }
       
       /* Check table consistency */
-      if (isCell)
-        UpdateColumnWidth (pAb, NULL, frame);
+      if (isCell && pCurrentBox && pCurrentBox->BxAbstractBox)
+        UpdateColumnWidth (pCurrentBox->BxAbstractBox, NULL, frame);
       /* check enclosing cell */
-      else if (pCell && !IsDead (pAb) &&
+      if (pCell && !IsDead (pAb) &&
                (pAb->AbNext || (!pAb->AbNext->AbDead && !pAb->AbNext->AbNew)))
         UpdateColumnWidth (pCell, NULL, frame);
       else if (pCell)
