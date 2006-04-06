@@ -262,6 +262,42 @@ class="fixed">displayed that way.</span></p>
     </tr>
     <tr>
       <td id="ED027">ED027</td>
+      <td>Amaya cannot handle the UNC prefix '\\' and strips the first '\',
+        leading to an empty file being
+        loaded.\\linux-machine\webshare\sub-directory\filename.html
+
+        <p>Attempting a file:// approach:
+        file://linux-machine/webshare/sub-directory/filename.html</p>
+
+        <p>results in amaya transliterating to
+        C:\linux-machine\webshare\sub-dir ... etc.</p>
+      </td>
+      <td>2006-03-20</td>
+      <td>D. Gilligan</td>
+      <td></td>
+    </tr>
+    <tr class="fixed">
+      <td id="ED028">ED028</td>
+      <td>I check the attribute (in the Attributes Tool), enter a value, and
+        click the apply button, and NOTHING HAPPENS.</td>
+      <td>2006-03-21</td>
+      <td>K. Rubow</td>
+      <td>2006-03-21</td>
+    </tr>
+    <tr class="fixed">
+      <td id="ED029">ED029</td>
+      <td>Additional white space is added at the point of a comment:
+
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed
+        &lt;!-- comment --&gt; do eiusmod tempor incididunt ut labore et
+        dolore magna aliqua.</p>
+      </td>
+      <td>2006-03-22</td>
+      <td>L. Bruzelius</td>
+      <td>2006-04-05</td>
+    </tr>
+    <tr>
+      <td id="ED030">ED030</td>
       <td></td>
       <td></td>
       <td></td>
@@ -351,6 +387,14 @@ class="fixed">displayed that way.</span></p>
     </tr>
     <tr>
       <td id="CSS011">CSS011</td>
+      <td>The anchor element &lt;a&gt; does not show strike-through link
+        text, when contained within a &lt;del&gt; element.</td>
+      <td>2006-03-27</td>
+      <td>T. Jedenfelt</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td id="CSS012">CSS012</td>
       <td></td>
       <td></td>
       <td></td>
@@ -612,6 +656,6 @@ class="fixed">displayed that way.</span></p>
   </tbody>
 </table>
 <br />
-Date: <!--$date=-->2006-03-31<!--$-->
+Date: <!--$date=-->2006-04-06<!--$-->
 </body>
 </html>
