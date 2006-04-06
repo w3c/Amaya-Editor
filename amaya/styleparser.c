@@ -3447,9 +3447,9 @@ static char *ParseCSSFont (Element element, PSchema tsch,
 }
 
 /*----------------------------------------------------------------------
-  ParseCSSTextDecoration: parse a CSS text decor string   
-  we expect the input string describing the attribute to be     
-  underline, overline, line-through, blink or none.
+  ParseCSSTextDecoration: parse a CSS text-decoration value.
+  We expect the input string to be none, inherit or a combination of
+  underline, overline, line-through, and blink.
   ----------------------------------------------------------------------*/
 static char *ParseCSSTextDecoration (Element element, PSchema tsch,
                                      PresentationContext context, char *cssRule,
@@ -3457,35 +3457,17 @@ static char *ParseCSSTextDecoration (Element element, PSchema tsch,
 {
   PresentationValue   decor;
   char               *ptr = cssRule;
+  ThotBool            ok;
 
   decor.typed_data.value = 0;
   decor.typed_data.unit = UNIT_REL;
   decor.typed_data.real = FALSE;
   cssRule = SkipBlanksAndComments (cssRule);
+  ok = TRUE;
   if (!strncasecmp (cssRule, "none", 4))
     {
       decor.typed_data.value = NoUnderline;
       cssRule += 4;
-    }
-  else if (!strncasecmp (cssRule, "underline", 9))
-    {
-      decor.typed_data.value = Underline;
-      cssRule += 9;
-    }
-  else if (!strncasecmp (cssRule, "overline", 8))
-    {
-      decor.typed_data.value = Overline;
-      cssRule += 8;
-    }
-  else if (!strncasecmp (cssRule, "line-through", 12))
-    {
-      decor.typed_data.value = CrossOut;
-      cssRule += 12;
-    }
-  else if (!strncasecmp (cssRule, "blink", 5))
-    {
-      /* the blink text-decoration attribute is not supported */
-      cssRule += 5;
     }
   else if (!strncasecmp (cssRule, "inherit", 7))
     {
@@ -3493,6 +3475,39 @@ static char *ParseCSSTextDecoration (Element element, PSchema tsch,
       cssRule += 7;
     }
   else
+    {
+      do
+        {
+          if (!strncasecmp (cssRule, "underline", 9))
+            {
+              decor.typed_data.value = Underline;
+              cssRule += 9;
+            }
+          else if (!strncasecmp (cssRule, "overline", 8))
+            {
+              decor.typed_data.value = Overline;
+              cssRule += 8;
+            }
+          else if (!strncasecmp (cssRule, "line-through", 12))
+            {
+              decor.typed_data.value = CrossOut;
+              cssRule += 12;
+            }
+          else if (!strncasecmp (cssRule, "blink", 5))
+            {
+              /* the blink text-decoration attribute is not supported */
+              cssRule += 5;
+            }
+          else
+            ok = FALSE;
+          if (ok)
+            {
+              cssRule = SkipBlanksAndComments (cssRule);
+            }
+        }
+      while (ok && (*cssRule != ';' && *cssRule != '}' && *cssRule != EOS));
+    }
+  if (!ok)
     {
       cssRule = SkipValue ("Invalid text-decoration value", cssRule);
       cssRule = CheckImportantRule (cssRule, context);
