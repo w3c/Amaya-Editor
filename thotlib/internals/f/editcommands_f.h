@@ -14,9 +14,9 @@ extern void CloseParagraphInsertion ( PtrAbstractBox pAb,
                                       int frame );
 extern void ClearClipboard ( PtrTextBuffer clipboard );
 extern ThotBool ContentEditing ( int editType );
-extern void InsertChar ( int frame,
-                         CHAR_T c,
-                         int keyboard );
+extern ThotBool InsertChar ( int frame,
+                             CHAR_T c,
+                             int keyboard );
 extern void PasteXClipboard ( unsigned char *src,
                               int nbytes,
                               CHARSET charset );
@@ -54,9 +54,9 @@ extern void CloseParagraphInsertion ( PtrAbstractBox pAb,
                                         int frame );
 extern void ClearClipboard ( PtrTextBuffer clipboard );
 extern ThotBool ContentEditing ( int editType );
-extern void InsertChar ( int frame,
-                           CHAR_T c,
-                           int keyboard );
+extern ThotBool InsertChar ( int frame,
+                               CHAR_T c,
+                               int keyboard );
 extern void PasteXClipboard ( unsigned char *src,
                                 int nbytes,
                                 CHARSET charset );

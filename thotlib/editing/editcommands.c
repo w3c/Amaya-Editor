@@ -2621,8 +2621,10 @@ ThotBool ContentEditing (int editType)
 
 /*----------------------------------------------------------------------
   Insere un caractere dans une boite de texte.                    
+  Return TRUE if a Cut command was applied and it moved the selection
+  to a next element.
   ----------------------------------------------------------------------*/
-void InsertChar (int frame, CHAR_T c, int keyboard)
+ThotBool InsertChar (int frame, CHAR_T c, int keyboard)
 {
   PtrTextBuffer       pBuffer;
   PtrAbstractBox      pAb, pBlock;
@@ -2645,7 +2647,7 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
   ThotBool            toSplit, toSplitForScript = FALSE;
   ThotBool            saveinsert, rtl;
   ThotBool            notification = FALSE;
-  ThotBool            status, selprev;
+  ThotBool            status, selprev, selNext = FALSE;
 
   toDelete = (c == 127);
   script  = ' ';
@@ -2667,7 +2669,7 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
       pViewSelEnd = &pFrame->FrSelectionEnd;
       
       if (pAb == NULL && nat != LtText)
-        return;
+        return selNext;
 
       if (pAb == NULL)
         {
@@ -2689,7 +2691,7 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
               GetFrameParams (frame, &visib, &zoom);
               SetFrameParams (frame, pAb->AbVisibility, zoom);
               InsertChar (frame, c, keyboard);
-              return;
+              return selNext;
             }
 
           switch (pAb->AbLeafType)
@@ -2735,7 +2737,7 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
                       font = pSelBox->BxFont;
 		      
                       if (pBuffer == NULL)
-                        return;
+                        return selNext;
                       /* the selection should at the end of a buffer */
                       if (ind < pBuffer->BuLength && pBuffer->BuPrevious)
                         {
@@ -2764,7 +2766,7 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
                               CloseTextInsertion ();
                               DeleteNextChar (frame, pAb->AbElement, TRUE);
                               pFrame->FrReady = TRUE;
-                              return;
+                              return selNext;
                             }
                           else
                             {
@@ -2888,7 +2890,7 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
                                          the last element in the line*/
                                       FirstSelectedChar = 1;
                                       NewContent (pAb);
-                                      CutCommand (FALSE, FALSE);
+                                      selNext = CutCommand (FALSE, FALSE);
                                       TextInserting = FALSE;
                                       /* move the selection at the end of the
                                          previous element */
@@ -2900,11 +2902,11 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
                                           if (selprev)
                                             TtcPreviousChar (FrameTable[frame].FrDoc,
                                                            FrameTable[frame].FrView);
-                                          else
+                                          else if (!selNext)
                                             TtcNextChar (FrameTable[frame].FrDoc,
                                                          FrameTable[frame].FrView);
                                         }
-                                      return;
+                                      return FALSE/*selNext*/;
                                     }
                                   /* update selection marks */
                                   xDelta = BoxCharacterWidth (109, font);
@@ -3382,6 +3384,7 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
           SetDocumentModified (LoadedDocument[FrameTable[frame].FrDoc - 1], TRUE, 1); 
         }
     }
+  return selNext;
 }
 
 /*----------------------------------------------------------------------
@@ -3802,7 +3805,9 @@ void TtcDeletePreviousChar (Document doc, View view)
       if (delPrev)
         /* remove the current empty element even if there is an insertion
            point */
-        delPrev = (pViewSel->VsBox &&
+        delPrev = (firstEl->ElStructSchema &&
+                   !strcmp (firstEl->ElStructSchema->SsName, "TextFile")) ||
+                  (pViewSel->VsBox &&
                    pViewSel->VsBox->BxAbstractBox->AbVolume != 0);
       else
         /* remove the previous char if the selection is at the end of the
@@ -3830,7 +3835,15 @@ void TtcDeletePreviousChar (Document doc, View view)
                pViewSel->VsBox->BxFirstChar + pViewSel->VsIndBox == 1))
             if (!pViewSel->VsBox->BxAbstractBox->AbPresentationBox ||
                 pViewSel->VsBox->BxFirstChar + pViewSel->VsIndBox > 1)
-              InsertChar (frame, 127, -1);
+              {
+              nextSelected = InsertChar (frame, 127, -1);
+              // if the selected was moved to the next character
+              if (nextSelected &&
+                  pViewSel->VsBox &&
+                  (pViewSel->VsIndBox < pViewSel->VsBox->BxNChars ||
+                   pViewSel->VsBox->BxNChars == 0))
+                TtcPreviousChar (doc, view);
+              }
         }
       else
         {
@@ -3838,7 +3851,7 @@ void TtcDeletePreviousChar (Document doc, View view)
           CloseTextInsertion ();
           /* by default doesn't change the selection after the delete */
           moveAfter = FALSE;
-          if (pViewSel->VsBox )
+          if (pViewSel->VsBox)
             {
               // Move after if the element will be removed and there is
               // a next element

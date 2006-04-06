@@ -1205,7 +1205,7 @@ void ProcessFirstLast (PtrElement pPrev, PtrElement pNext, PtrDocument pDoc)
   The parameter save is TRUE when the cut contents is saved for future
   paste.
   The parameter replace is TRUE when the cut contents will be replaced.
-  Return TRUE if the selection is move to the next element
+  Return TRUE if the selection is moved to the next element
   ----------------------------------------------------------------------*/
 ThotBool CutCommand (ThotBool save, ThotBool replace)
 {
