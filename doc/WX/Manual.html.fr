@@ -35,30 +35,7 @@ assembler et imprimer la totalité du manuel.</p>
 fournies par les éditeurs et les outils classiques. Elles ne sont pas
 présentées ici. Seuls les aspects spécifiques d'<strong>Amaya</strong> sont
 décrits.</p>
-
-<h2><a name="L9201" id="L9201">Démarrer Amaya</a></h2>
-
-<p>Pour démarrer <strong>Amaya</strong> sur une plate-forme Linux :</p>
-<pre>    amaya [-display host] [document]</pre>
-
-<p>Le paramètre <code>-display host</code> est optionnel. Il permet
-d'afficher les pages Web sur un écran X-Window (host) distant quand cet
-affichage distant est autorisé.</p>
-
-<p>Le paramètre <code>[document]</code> est optionnel. C'est le nom de
-fichier ou le URI du premier document qu' <strong>Amaya</strong> doit
-afficher quand il démarre. Si aucun paramètre n'est donné, un document par
-défaut est présenté. Le document par défaut pourrait être votre <em>home
-page</em> (voir <a href="Configure.html.fr#L138">comment configurer votre
-Home Page</a>) ou la page de bienvenue d'Amaya.<br />
-</p>
 <hr />
-
-<h2><a name="Parcourir" id="Parcourir">Parcourir des pages Web avec
-Amaya</a></h2>
-
-<p><strong>Amaya</strong> peut être utilisé pour parcourir des documents Web
-locaux ou distants.</p>
 
 <p>Chaque section suivante décrit brièvement comment utiliser une fonction
 spécifique d'Amaya :</p>
@@ -68,24 +45,6 @@ spécifique d'Amaya :</p>
   <li><a rel="Chapter"
   href="Selecting.html.fr#Selecting">Sélectionner</a></li>
   <li><a rel="Chapter" href="Views.html.fr#Views">Afficher des vues</a></li>
-</ul>
-
-<h2><a name="L932" id="L932">Éditer des pages Web avec Amaya</a></h2>
-
-<p><strong>Amaya</strong> ne vous permet pas seulement de parcourir des
-documents sur le Web, il vous permet aussi de les éditer et de les <a
-href="Publishing.html.fr#Saving">sauver</a> soit localement soit dans des
-serveurs Web.</p>
-
-<p>Nous tentons de rendre Amaya aussi robuste que possible. Une session
-d'Amaya peut néanmoins échouer. Si cela arrive, Amaya tente de sauver les
-documents modifiés dans des fichiers de sauvegarde. Quand l'utilisateur
-redémarre une nouvelle session d'Amaya, le rechargement des fichiers de
-sauvegarde est automatiquement proposé.</p>
-
-<p>Chaque section suivante décrit brièvement comment utiliser une fonction
-spécifique d'Amaya :</p>
-<ul>
   <li><a href="Document.html.fr">Éditer des documents</a></li>
   <li><a rel="Chapter" href="Creating.html.fr#Creating">Créer de nouveaux
     éléments</a></li>
@@ -124,9 +83,13 @@ spécifique d'Amaya :</p>
     dans Amaya</a></li>
 </ul>
 
-<p>Il est également possible de changer les options par défaut (reportez-vous
-à la section <a href="Configure.html.fr#Configuring" rel="Chapter">Configurer
-Amaya</a>).</p>
+<p>La section <a href="Configure.html.fr#Configuring"
+rel="Chapter">Configurer Amaya</a> explique comment modifier les options par
+defaut.</p>
+
+<p>La section <a href="ShortCuts.html.fr#page_body">Les raccourcis clavier
+dans Amaya</a> explique comment est construite la liste des raccourcis
+clavier.</p>
 
 <p>La page sur <a href="Access.html.fr#Access" rel="Chapter">l'Accessibilité
 dans Amaya</a> décrit les fonctionnalités d'accessibilité d'Amaya, et

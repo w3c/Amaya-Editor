@@ -17,7 +17,7 @@
 ***************************************/
 
 static char *Manual[] = {
-  "Index.html",
+"Manual.html",
 "Browsing.html",
 "Views.html",
 "Selecting.html",

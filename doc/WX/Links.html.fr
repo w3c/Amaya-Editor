@@ -5,7 +5,7 @@
 <head>
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <title>Liens et Ancres</title>
-  <meta name="GENERATOR" content="amaya 9.3, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 9.5, see http://www.w3.org/Amaya/" />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -29,6 +29,7 @@ src="../../resources/icons/misc/right.png" /></a></p>
       <li><a href="#L1188">Créer un élément cible</a></li>
       <li><a href="#L1247">Créer un lien externe</a></li>
       <li><a href="#L1290">Créer un lien interne</a></li>
+      <li><a href="#Copier">Copier l'adresse de la cible</a></li>
       <li><a href="#Changer">Changer un lien</a></li>
       <li><a href="#Supprimer">Supprimer un lien ou une ancre cible</a></li>
     </ul>
@@ -47,9 +48,7 @@ vous devez tout d'abord la transformer en ancre cible.</p>
 
 <p class="ProcedureCaption">Pour créer une ancre cible :</p>
 <ol>
-  <li>Sélectionnez la chaîne de caractère appropriée avec la souris.
-    <p></p>
-  </li>
+  <li>Sélectionnez la chaîne de caractère appropriée avec la souris.</li>
   <li>Choisissez <strong>Créer cible</strong> dans le menu
     <strong>Liens</strong>. Le texte ainsi sélectionné est désormais une
     cible.
@@ -58,15 +57,13 @@ vous devez tout d'abord la transformer en ancre cible.</p>
     src="../images/target.gif" alt=" target " />. Dans la vue liens, les
     icônes cibles qui identifient les ancres cibles sont toujours visualisées
     (il n'existe pas d'option pour montrer ou cacher les icônes cibles).</p>
-    <p></p>
   </li>
   <li>Quand une ancre cible est créée, Amaya génère automatiquement la valeur
     de l'attribut <strong>Name</strong> :
     <ul>
       <li>En extrayant un mot de plus de 3 caractères depuis le contenu de
-        l'ancre
-        <p>ou</p>
-      </li>
+        l'ancre<br />
+        ou</li>
       <li>En générant un label.</li>
     </ul>
     <p>Dans les deux cas, Amaya garanti que la valeur générée est unique dans
@@ -89,9 +86,8 @@ référencé par un lien (une ancre source). Avant de créer un lien à un tel
 <p class="ProcedureCaption">Pour créer un élément cible :</p>
 <ol>
   <li>Sélectionnez la chaîne de caractère appropriée avec la souris puis
-    utiliser la touche <kbd>F2</kbd> afin de sélectionner l'élément entier.
-    <p></p>
-  </li>
+    utiliser la touche <kbd>F2</kbd> afin de sélectionner l'élément
+  entier.</li>
   <li>Choisissez <strong>Créer cible</strong> dans le menu
     <strong>Liens</strong>. L'élément sélectionné a maintenant un attribut ID
     qui en fait désormais une cible possible.
@@ -99,16 +95,15 @@ référencé par un lien (une ancre source). Avant de créer un lien à un tel
     courante, le texte sera précédé d'une icône cible <img
     src="../images/target.gif" alt=" target " />. Dans la vue liens, les
     icônes cibles qui identifient les ancres cibles sont toujours visualisées
-    (il n'existe pas d'option pour montrer ou cacher les icônes cibles).</p>
-    <p></p>
+    (il n'existe pas d'option pour montrer ou cacher les icônes cibles).<br />
+    </p>
   </li>
   <li>Quand un élément cible est créé, Amaya génère automatiquement la valeur
     de l'attribut <strong>ID</strong> :
     <ul>
       <li>En extrayant un mot de plus de 3 caractères depuis le contenu de
-        l'ancre
-        <p>ou</p>
-      </li>
+        l'ancre<br />
+        ou</li>
       <li>En générant un label.</li>
     </ul>
     <p>Dans les deux cas, Amaya garanti que la valeur générée est valide et
@@ -189,6 +184,14 @@ un élément cible dans le même document :</p>
 ou l'élément cible récemment, inutile d'effectuer l'étape 2. Chosissez plutôt
 <strong>Lier la cible créée</strong> dans le menu <strong>Liens</strong> : la
 cible du nouveau lien sera la dernière cible que vous avez créée.</p>
+
+<h3 id="Copier">Copier l'adresse de la cible</h3>
+
+<p>La commande <strong>Copier l'adresse</strong> enregistre l'adresse (URI)
+de la cible sélectionnée dans le clipboard du système. Si aucune cible n'est
+sélectionnée, c'est l'adresse du document courant qui est enregistrée. Cette
+adresse peut ainsi être collée dans un formulaire ou dans une autre
+application externe.</p>
 
 <h3 id="Changer"><a name="Changing" id="Changing">Changer un lien</a></h3>
 

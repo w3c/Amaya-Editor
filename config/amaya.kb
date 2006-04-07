@@ -145,12 +145,12 @@ Ctrl <Key>i , Ctrl <Key>z:         SetOnOffBDO()
 
 #Links and SvgLibrary
 Ctrl <Key>l , Ctrl <Key>a:         AddNewModelIntoLibrary()
+Ctrl <Key>l , Ctrl <Key>c:         CopyLocation()
 Ctrl <Key>l , Ctrl <Key>d:         DeleteAnchor() 
-Ctrl <Key>l , Ctrl <Key>f:	       AddNewModelIntoLibraryForm()
-Ctrl <Key>l , Ctrl <Key>i:         CopyLocation()
+Ctrl <Key>l , Ctrl <Key>f:	   AddNewModelIntoLibraryForm()
 Ctrl <Key>l , Ctrl <Key>l:         CreateOrChangeLink() 
 Ctrl <Key>l , Ctrl <Key>p:         LinkToPreviousTarget() 
-Ctrl <Key>l , Ctrl <Key>s:	       ShowLibrary()
+Ctrl <Key>l , Ctrl <Key>s:	   ShowLibrary()
 Ctrl <Key>l , Ctrl <Key>t:         CreateTarget()
 
 #Math (types submenu)
