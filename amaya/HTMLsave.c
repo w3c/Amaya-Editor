@@ -1850,7 +1850,8 @@ static ThotBool HasSavingName (Document doc, View view, char *url,
           if (ok)
             {
               // check isf there is a suffix
-              TtaExtractSuffix (DocumentMeta[doc]->content_location, suffix);
+	      strcpy (documentname, DocumentMeta[doc]->content_location);
+	      TtaExtractSuffix (documentname, suffix);
               *with_suffix = (suffix[0] != EOS);
             }
           else
