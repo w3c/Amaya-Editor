@@ -4221,6 +4221,8 @@ void RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox,
       /* n'est pas encore placee dans l'image concrete   */
       if (ReadyToDisplay && !pBox->BxXToCompute && !pBox->BxYToCompute)
         {
+          if (extensibleBox)
+            w = width;
           if (pBox->BxWidth > w)
             w = pBox->BxWidth;
           if (height > pBox->BxHeight)
