@@ -2,12 +2,132 @@
 <!DOCTYPE plist SYSTEM "file://localhost/System/Library/DTDs/PropertyList.dtd">
 <plist version="0.9">
 <dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleDocumentTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>html</string>
+				<string>htm</string>
+				<string>shtml</string>
+				<string>xht</string>
+				<string>xhtml</string>
+			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>amaya.icns</string>
+			<key>CFBundleTypeName</key>
+			<string>HTML Document</string>
+			<key>CFBundleTypeOSTypes</key>
+			<array>
+				<string>HTML</string>
+			</array>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+		</dict>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>svg</string>
+			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>amaya.icns</string>
+			<key>CFBundleTypeName</key>
+			<string>SVG Document</string>
+			<key>CFBundleTypeOSTypes</key>
+			<array>
+				<string>SVG</string>
+			</array>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+		</dict>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>mathml</string>
+				<string>mml</string>
+			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>amaya.icns</string>
+			<key>CFBundleTypeName</key>
+			<string>MathML Document</string>
+			<key>CFBundleTypeOSTypes</key>
+			<array>
+				<string>MML</string>
+			</array>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+		</dict>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+			    <string>text</string>
+				<string>txt</string>
+				<string>log</string>
+				<string>css</string>
+				<string>rdf</string>
+			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>amaya.icns</string>
+			<key>CFBundleTypeName</key>
+			<string>Text Document</string>
+			<key>CFBundleTypeOSTypes</key>
+			<array>
+				<string>TEXT</string>
+			</array>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+		</dict>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>jpeg</string>
+				<string>jpg</string>
+				<string>png</string>
+				<string>gif</string>
+			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>amaya.icns</string>
+			<key>CFBundleTypeName</key>
+			<string>document.icns</string>
+			<key>CFBundleTypeOSTypes</key>
+			<array>
+				<string>GIFf</string>
+				<string>JPEG</string>
+				<string>PNGf</string>
+			</array>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+		</dict>
+	</array>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLIconFile</key>
+			<string>amaya.icns</string>
+			<key>CFBundleURLName</key>
+			<string>http URL</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>http</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleURLIconFile</key>
+			<string>amaya.icns</string>
+			<key>CFBundleURLName</key>
+			<string>https URL</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>https</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleIdentifier</key>
-	<string>org.IDENTIFIER</string>
-	<key>CFBundleDevelopmentRegion</key>
-	<string>English</string>
+	<string>fr.inria.amaya</string>
 	<key>CFBundleExecutable</key>
 	<string>EXECUTABLE</string>
 	<key>CFBundleIconFile</key>
