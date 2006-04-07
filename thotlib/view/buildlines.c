@@ -259,10 +259,10 @@ static void Adjust (PtrBox pParentBox, PtrLine pLine, int frame,
             else if (!pBox->BxAbstractBox->AbNotInLine)
               {
                 boxes[max++] = pBox;
-                pBox->BxSpaceWidth = 0;
                 /* Compute the line width without spaces */
                 if (pBox->BxAbstractBox->AbLeafType == LtText)
                   {
+                    pBox->BxSpaceWidth = 0;
                     delta = pBox->BxNSpaces * BoxCharacterWidth (SPACE, pBox->BxFont);
                     pBox->BxW -= delta;
                     pBox->BxWidth -= delta;
