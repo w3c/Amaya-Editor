@@ -17,7 +17,6 @@
 #include "dialog.h"
 #include "selection.h"
 #include "application.h"
-#include "dialog.h"
 #include "document.h"
 #include "message.h"
 #include "libmsg.h"
@@ -97,9 +96,9 @@ bool AmayaApp::OnInit()
 {
   m_AmayaIsInit = false;
   // do not let wxWidgets exit Amaya when there is no opened windows
-  // ** it can append after a crash when the backup restore dialog                    **
-  // ** is popup before the main Window is created                                    **
-  // ** this problem occured on MacOSX only but to be sure, just disable this feature **
+  // ** it can append after a crash when the backup restore dialog 
+  // ** is popup before the main Window is created
+  // ** this problem occured on MacOSX only but to be sure, just disable this feature
   SetExitOnFrameDelete(FALSE);
 
   // for debug : the output is stderr
@@ -117,7 +116,7 @@ bool AmayaApp::OnInit()
   // Required for images
   wxImage::AddHandler(new wxGIFHandler);
   wxImage::AddHandler(new wxPNGHandler);
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+  //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   // check there is no other Amaya instance
   m_pAmayaInstance = new AmayaAppInstance( this );
   if (m_pAmayaInstance->IsAnotherAmayaRunning())
@@ -135,7 +134,7 @@ bool AmayaApp::OnInit()
     {
       m_pAmayaInstance->StartURLGrabberServer();
     }  
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+  //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 #ifdef _GL
   // try to find a good configuration for opengl
   TTALOGDEBUG_0( TTA_LOG_INIT, _T("AmayaApp - Try to find a valide opengl configuration."));

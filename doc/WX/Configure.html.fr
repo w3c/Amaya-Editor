@@ -5,7 +5,7 @@
 <head>
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <title>Configurer Amaya</title>
-  <meta name="GENERATOR" content="amaya 9.4, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 9.5, see http://www.w3.org/Amaya/" />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -26,6 +26,7 @@ accesskey="n"><img alt="next" src="../../resources/icons/misc/right.png"
 <ul>
   <li><a href="#Configurer">Configurer Amaya</a>
     <ul>
+      <li><a href="#plusieurs">Une ou plusieurs instances d'Amaya</a></li>
       <li><a href="#propos">A propos des répertoires de configuration</a>
         <ul>
           <li><a href="#pertoire">Le répertoire
@@ -100,6 +101,13 @@ initialiser les paramètres globaux, dialogues, raccourcis, taille et position
 de la fenêtre, feuille de style de l'utilisateur, etc. Vous pouvez changer la
 majorité des paramètres de configuration par le biais des menus de
 préférences spécifiques.</p>
+
+<h3 id="plusieurs">Une ou plusieurs instances d'Amaya</h3>
+
+<p>Par défaut une seule instance de l'application est lancée. Toute nouvelle
+invocation est redirigée vers l'instance active. Ce comportement peut être
+modifié en forçant la variable d'environnement
+<strong>AMAYA_MULTIPLE_INSTANCES=yes</strong>.</p>
 
 <h3 id="propos"><a name="Conventions">A propos des répertoires de
 configuration</a></h3>

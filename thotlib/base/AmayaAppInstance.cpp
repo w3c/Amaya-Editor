@@ -1,9 +1,15 @@
 #ifdef _WX
-
 #include "logdebug.h"
-
 #include "AmayaAppInstance.h"
 #include "message_wx.h"
+
+#include "thot_gui.h"
+#include "thot_sys.h"
+#include "constmedia.h"
+#include "typemedia.h"
+#include "application.h"
+
+static ThotBool A_multiple = FALSE;
 
 /*----------------------------------------------------------------------
  *       Class:  AmayaAppInstance
@@ -13,9 +19,11 @@
 AmayaAppInstance::AmayaAppInstance( AmayaApp * p_amaya_app ) :
   m_pAmayaApp(p_amaya_app)
 {
+  // check the environment variable
+  TtaGetEnvBoolean ("AMAYA_MULTIPLE_INSTANCES", &A_multiple);
   m_InstanceName = wxString::Format(m_pAmayaApp->GetAppName()+_T("-%s"), wxGetUserId().c_str());
-  m_pSingleInstance_Checker = new wxSingleInstanceChecker(m_InstanceName);
-
+  if (!A_multiple)
+    m_pSingleInstance_Checker = new wxSingleInstanceChecker(m_InstanceName);
   m_ServicePort = _T("4242");
   m_ServiceTopic = m_InstanceName;
   m_ServiceHostname = _T("localhost");
@@ -31,8 +39,12 @@ AmayaAppInstance::AmayaAppInstance( AmayaApp * p_amaya_app ) :
   -----------------------------------------------------------------------*/
 AmayaAppInstance::~AmayaAppInstance()
 {
-  delete m_pSingleInstance_Checker;
-  m_pSingleInstance_Checker = NULL;
+  if (!A_multiple)
+    {
+      // no multiple instances
+      delete m_pSingleInstance_Checker;
+      m_pSingleInstance_Checker = NULL;
+    }
 
   delete m_pURLGrabberServer;
   m_pURLGrabberServer = NULL;
@@ -45,7 +57,10 @@ AmayaAppInstance::~AmayaAppInstance()
   -----------------------------------------------------------------------*/
 bool AmayaAppInstance::IsAnotherAmayaRunning()
 {
-  return ( m_pSingleInstance_Checker->IsAnotherRunning() );
+  if (A_multiple)
+    return false;
+  else
+    return ( m_pSingleInstance_Checker->IsAnotherRunning() );
 }
 
 /*----------------------------------------------------------------------

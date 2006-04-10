@@ -14,7 +14,7 @@ body {background-color: #FFFFFF}</style>
 <body xml:lang="fr" lang="fr">
 <h1 style="text-align : center">Manuel d'utilisation d'Amaya</h1>
 
-<h4 style="text-align:center">Version 9.4<br />
+<h4 style="text-align:center">Version 9.5<br />
 </h4>
 <dl>
   <dt><strong>Auteurs :</strong></dt>
