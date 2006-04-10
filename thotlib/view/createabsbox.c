@@ -1032,27 +1032,36 @@ ThotBool ElemDoesNotCount (PtrElement pEl, ThotBool previous)
                              pEl->ElStructSchema))
     /* hidden elements do not count, but their children count */
     {
-      if (pEl->ElTerminal || !pEl->ElFirstChild)
-        ignore = TRUE;
+      if (pEl->ElParent &&
+          TypeHasException (ExcNotAnElementNode, pEl->ElParent->ElTypeNumber,
+                            pEl->ElParent->ElStructSchema))
+        /* it's a line within a comment or a PI. It counts: the P schema
+           puts a "<-- " in front of the first line */
+        ignore = FALSE;
       else
-        {
-          pChild = pEl->ElFirstChild;
-          if (previous)
-            /* get the last child */
-            {
-              while (pChild->ElNext)
-                pChild = pChild->ElNext;
-            }
-          do
-            {
-              ignore = ElemDoesNotCount (pChild, previous);
-              if (previous)
-                pChild = pChild->ElPrevious;
-              else
-                pChild = pChild->ElNext;
-            }
-          while (pChild && ignore);
-        }
+        /* check the children */
+        if (pEl->ElTerminal || !pEl->ElFirstChild)
+          /* no child. Ignore */
+          ignore = TRUE;
+        else
+          {
+            pChild = pEl->ElFirstChild;
+            if (previous)
+              /* get the last child */
+              {
+                while (pChild->ElNext)
+                  pChild = pChild->ElNext;
+              }
+            do
+              {
+                ignore = ElemDoesNotCount (pChild, previous);
+                if (previous)
+                  pChild = pChild->ElPrevious;
+                else
+                  pChild = pChild->ElNext;
+              }
+            while (pChild && ignore);
+          }
     }
   return ignore;
 }

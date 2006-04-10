@@ -33,6 +33,7 @@ PRINT
 #define INVALID_Color Black
 #define UNKNOWNTAG_Color Black
 #define LINK_Color Black
+#define COMMENT_Color Black
 #else
 #define TAG_Color DarkIndigo1
 #define ATTR_Color DarkIndigo1
@@ -40,6 +41,7 @@ PRINT
 #define INVALID_Color Red
 #define UNKNOWNTAG_Color Red
 #define LINK_Color DarkIndigo1
+#define COMMENT_Color DarkLawnGreen3
 #endif
 
 #define TAG_Font Helvetica
@@ -657,7 +659,6 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Visibility: Enclosing =;
-		Foreground: TAG_Color;
 		END;
 	END;
 
@@ -668,7 +669,6 @@ BOXES
 		Visibility: Enclosing =;
 		VertPos: HRef = Previous . HRef;
 		HorizPos: Left = Previous . Right;
-		Foreground: TAG_Color;
 		END;
 	END;
 
@@ -4666,10 +4666,12 @@ RULES
   Comment\240:
 	BEGIN
 	Visibility: 0;
-	IN Structure_view BEGIN
+  IN Structure_view BEGIN
 		Visibility: Enclosing =;
 		Font: COMMENT_Font;
-		Style: COMMENT_Style; Weight: COMMENT_Weight;
+		Style: COMMENT_Style;
+    Weight: COMMENT_Weight;
+		Foreground: COMMENT_Color;
 		Width: Enclosing . Width;
 		VertPos: Top = Previous . Bottom;
 		END;
@@ -4691,7 +4693,8 @@ RULES
 	IN Structure_view BEGIN
 		Visibility: Enclosing =;
 		Font: COMMENT_Font;
-		Style: COMMENT_Style; Weight: COMMENT_Weight;
+		Style: COMMENT_Style;
+    Weight: COMMENT_Weight;
 		Width: Enclosing . Width;
 		END;
 	END;

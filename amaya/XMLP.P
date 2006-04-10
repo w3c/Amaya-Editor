@@ -26,10 +26,12 @@ VIEWS
 #define TAG_Color Black
 #define ATTR_Color Black
 #define ATTRVALUE_Color Black
+#define COMMENT_Color Black
 #else
 #define TAG_Color DarkIndigo1
 #define ATTR_Color DarkIndigo1
 #define ATTRVALUE_Color DarkMagenta2
+#define COMMENT_Color DarkLawnGreen3
 #endif
  
 #define TAG_Font Helvetica
@@ -160,7 +162,6 @@ BOXES
 	IN Structure_view BEGIN
 		Visibility: Enclosing =;
 		HorizRef: Enclosed . HRef;
-		Foreground: TAG_Color;
 		END;
 	END;
 
@@ -171,7 +172,6 @@ BOXES
 	IN Structure_view BEGIN
 		Visibility: Enclosing =;
 		HorizRef: Enclosed . HRef;
-		Foreground: TAG_Color;
 		VertPos: HRef = Previous . HRef;
 		HorizPos: Left = Previous . Right;
 		END;
@@ -344,6 +344,7 @@ RULES
 		Font: COMMENT_Font;
 		Style: COMMENT_Style; Weight: COMMENT_Weight;
 		Width: Enclosed . Width ;
+		Foreground: COMMENT_Color;
 		END;
 	END;
 

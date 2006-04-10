@@ -1091,35 +1091,6 @@ static ThotBool ReapplRef (PtrAbstractBox pRef, PtrAbstractBox pAb,
 }
 
 /*----------------------------------------------------------------------
-  FunctionRule retourne le pointeur sur la premiere regle        
-  de fonction de presentation associee a l'element pEl dans le
-  schema de presentation pSchP.                
-  Retourne NULL s'il n'y a pas de regle de creation pour  
-  cet element                                             
-  ----------------------------------------------------------------------*/
-static PtrPRule FunctionRule (PtrElement pEl, int index, PtrPSchema pSchP,
-                              PtrDocument pDoc)
-{
-  PtrPRule            pRule;
-
-  pRule = NULL;
-  if (pSchP != NULL)
-    {
-      /* pRule : premiere regle de presentation specifique a ce type */
-      /* d'element */
-      pRule = (pSchP)->PsElemPRule->ElemPres[index - 1];
-      if (pRule != NULL)
-        {
-          while (pRule->PrType < PtFunction && pRule->PrNextPRule != NULL)
-            pRule = pRule->PrNextPRule;
-          if (pRule->PrType != PtFunction)
-            pRule = NULL;
-        }
-    }
-  return pRule;
-}
-
-/*----------------------------------------------------------------------
   SetDeadAbsBox marque Mort le pave pointe par pAb et met a jour       
   le volume des paves englobants. Le pave mort sera       
   detruit par la procedure AbstractImageUpdated, apres traitement     
@@ -1579,16 +1550,25 @@ void ChangeFirstLast (PtrElement pEl, PtrDocument pDoc, ThotBool first,
     {
       /* get the main P Schema */
       pSP = PresentationSchema (pEl->ElStructSchema, pDoc);
-      /* check the main P Schema and its additional schemas (CSS style sheets) */
+      /*check the main P Schema and its additional schemas (CSS style sheets)*/
       pHd = NULL;
       while (pSP)
         {
           /* cherche la 1ere fonction de presentation associee au type */
           /* de l'element */
-          pRPres = FunctionRule (pEl, pEl->ElTypeNumber, pSP, pDoc);
+
+          pRPres = pSP->PsElemPRule->ElemPres[pEl->ElTypeNumber - 1];
+          /* premiere regle de presentation specifique a ce type d'element */
+          if (pRPres)
+            {
+             while (pRPres->PrType < PtFunction && pRPres->PrNextPRule != NULL)
+               pRPres = pRPres->PrNextPRule;
+             if (pRPres->PrType != PtFunction)
+               pRPres = NULL;
+            }
+
           /* traite les regles de creation associees au type de l'element*/
-          ApplFunctionPresRules (pRPres, pSP, NULL, pDoc, pEl, change,
-                                 first);
+          ApplFunctionPresRules (pRPres, pSP, NULL, pDoc, pEl, change, first);
           /* l'element herite-t-il d'attributs qui ont des fonctions de */
           /* presentation */
           if (pSP->PsNInheritedAttrs->Num[pEl->ElTypeNumber - 1])
