@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resource version="2.3.0.1" xmlns="http://www.wxwindows.org/wxxrc">
+  <object class="wxDialog" name="MakeIdDlgWX">
+    <title>*Make ID*</title>
+    <centered>1</centered>
+    <style>wxDEFAULT_DIALOG_STYLE|wxWANTS_CHARS|wxRESIZE_BORDER</style>
+    <object class="wxBoxSizer">
+      <orient>wxVERTICAL</orient>
+      <object class="sizeritem">
+        <object class="wxBoxSizer">
+          <orient>wxVERTICAL</orient>
+          <object class="sizeritem">
+            <object class="wxBoxSizer">
+              <orient>wxHORIZONTAL</orient>
+              <object class="sizeritem">
+                <object class="wxBoxSizer">
+                  <orient>wxVERTICAL</orient>
+                  <object class="sizeritem">
+                    <object class="wxStaticText" name="wxID_LABEL_NAME">
+                      <label>*Tag name*</label>
+                      <size>200,-1</size>
+                    </object>
+                  </object>
+                  <object class="spacer">
+                    <size>0,5</size>
+                  </object>
+                  <object class="sizeritem">
+                    <object class="wxTextCtrl" name="wxID_NAME">
+                      <size>200,-1</size>
+                    </object>
+                  </object>
+                  <object class="spacer">
+                    <flag>wxEXPAND</flag>
+                  </object>
+                </object>
+                <option>1</option>
+                <flag>wxEXPAND|wxALIGN_CENTRE_VERTICAL</flag>
+              </object>
+              <object class="spacer">
+                <size>10,0</size>
+              </object>
+              <object class="sizeritem">
+                <object class="wxBoxSizer">
+                  <orient>wxVERTICAL</orient>
+                  <object class="sizeritem">
+                    <object class="wxStaticText" name="wxID_LABEL_RADIO">
+                      <label>*Apply operation*</label>
+                      <size>200,-1</size>
+                    </object>
+                    <option>1</option>
+                    <flag>wxEXPAND</flag>
+                  </object>
+                  <object class="sizeritem">
+                    <object class="wxRadioBox" name="wxID_RADIOBOX">
+                      <label></label>
+                      <content>
+                        <item>*In the whole document*</item>
+                        <item>*Within selection*</item>
+                      </content>
+                      <style>wxRA_SPECIFY_COLS</style>
+                    </object>
+                    <flag>wxEXPAND</flag>
+                  </object>
+                  <object class="spacer">
+                    <size>0,20</size>
+                    <flag>wxEXPAND</flag>
+                  </object>
+                </object>
+                <option>1</option>
+                <flag>wxEXPAND|wxALIGN_CENTRE_VERTICAL</flag>
+              </object>
+            </object>
+            <flag>wxBOTTOM|wxEXPAND</flag>
+            <border>4</border>
+          </object>
+        </object>
+        <flag>wxALL|wxEXPAND</flag>
+        <border>5</border>
+      </object>
+      <object class="sizeritem">
+        <flag>wxALL|wxALIGN_RIGHT|wxADJUST_MINSIZE</flag>
+        <object class="wxBoxSizer">
+          <orient>wxHORIZONTAL</orient>
+          <object class="sizeritem">
+            <flag>wxALL</flag>
+            <border>5</border>
+            <object class="wxButton" name="wxID_ADD">
+              <label>*Add*</label>
+              <default>1</default>
+            </object>
+          </object>
+          <object class="sizeritem">
+            <flag>wxALL</flag>
+            <border>5</border>
+            <object class="wxButton" name="wxID_REMOVE">
+              <label>*Remove*</label>
+            </object>
+          </object>
+          <object class="sizeritem">
+            <flag>wxALL</flag>
+            <border>5</border>
+            <object class="wxButton" name="wxID_CANCEL">
+              <label>*Cancel*</label>
+            </object>
+          </object>
+        </object>
+      </object>
+    </object>
+  </object>
+</resource>

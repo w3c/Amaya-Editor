@@ -43,6 +43,8 @@ extern ThotBool CreateObjectDlgWX ( int ref,
 extern ThotBool CreateTitleDlgWX ( int ref,
                                    ThotWindow parent,
                                    char *doc_title );
+extern ThotBool CreateMakeIdDlgWX ( int ref,
+                                    ThotWindow parent );
 extern ThotBool CreateSearchDlgWX ( int ref,
                                     ThotWindow parent,
                                     char* caption,
@@ -183,6 +185,8 @@ extern ThotBool CreateObjectDlgWX ( int ref,
 extern ThotBool CreateTitleDlgWX ( int ref,
                                      ThotWindow parent,
                                      char *doc_title );
+extern ThotBool CreateMakeIdDlgWX ( int ref,
+                                      ThotWindow parent );
 extern ThotBool CreateSearchDlgWX ( int ref,
                                       ThotWindow parent,
                                       char* caption,

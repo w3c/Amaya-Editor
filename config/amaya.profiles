@@ -433,7 +433,7 @@ HelpXml
 +meta-module
 +presentation-module
 +makebook
-#+makeid
++makeid
 +maths
 +object-module
 +ruby

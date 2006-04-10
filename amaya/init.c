@@ -8252,7 +8252,11 @@ void MakeIDMenu (Document doc, View view)
 #endif /* _WINGUI */
 
 #ifdef _WX
-  wxASSERT_MSG(false, _T("TODO: MakeIDMenu"));
+  if (CreateMakeIdDlgWX (BaseDialog + MakeIdMenu, TtaGetViewFrame (doc, view)))
+    {
+      TtaSetDialoguePosition ();
+      TtaShowDialogue (BaseDialog + MakeIdMenu, FALSE);
+    }
 #endif /* _WX */
 }
 

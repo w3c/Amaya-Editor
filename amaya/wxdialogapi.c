@@ -26,6 +26,7 @@
   #include "wxdialog/InitConfirmDlgWX.h"
   #include "wxdialog/ListDlgWX.h"
   #include "wxdialog/ListEditDlgWX.h"
+  #include "wxdialog/MakeIdDlgWX.h"
   #include "wxdialog/NumDlgWX.h"
   #include "wxdialog/ObjectDlgWX.h"
   #include "wxdialog/OpenDocDlgWX.h"
@@ -361,6 +362,30 @@ ThotBool CreateTitleDlgWX (int ref, ThotWindow parent, char *doc_title)
 				       wx_title,
 				       wx_doc_title );
 
+  if ( TtaRegisterWidgetWX( ref, p_dlg ) )
+      /* the dialog has been sucesfully registred */
+      return TRUE;
+  else
+    {
+      /* an error occured durring registration */
+      p_dlg->Destroy();
+      return FALSE;
+    }
+#endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
+  CreateMakeIdDlgWX create the dialog to Add/Remove IDs
+  returns:
+  ----------------------------------------------------------------------*/
+ThotBool CreateMakeIdDlgWX (int ref, ThotWindow parent)
+{
+#ifdef _WX
+  /* check if the dialog is alredy open */
+  if (TtaRaiseDialogue (ref))
+    return FALSE;
+
+  MakeIdDlgWX * p_dlg = new MakeIdDlgWX (ref, parent);
   if ( TtaRegisterWidgetWX( ref, p_dlg ) )
       /* the dialog has been sucesfully registred */
       return TRUE;
