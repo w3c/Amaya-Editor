@@ -125,6 +125,8 @@ SaveAsDlgWX::SaveAsDlgWX( int ref, wxWindow* parent, const wxString & pathname,
   // Document location
   XRCCTRL(*this, "wxID_DOC_LOCATION", wxStaticText)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_DOC_LOCATION) ));
   XRCCTRL(*this, "wxID_DOC_LOCATION_CTRL", wxTextCtrl)->SetValue(pathname);
+  // set te cursor to the end
+  XRCCTRL(*this, "wxID_DOC_LOCATION_CTRL", wxTextCtrl)->SetInsertionPointEnd();
 
   // Charset  
   wxString wx_label = TtaConvMessageToWX( "Charset :" );

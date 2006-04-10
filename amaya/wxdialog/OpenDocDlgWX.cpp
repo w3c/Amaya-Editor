@@ -107,6 +107,8 @@ OpenDocDlgWX::OpenDocDlgWX( int ref, wxWindow* parent, const wxString & title,
   // setup combobox values
   XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->Append( urlList );
   XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetValue( urlToOpen );
+  // set te cursor to the end
+  XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetInsertionPointEnd();
   UpdateDirAndFilenameFromString( urlToOpen );
 
   // dir separator

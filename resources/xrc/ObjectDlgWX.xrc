@@ -3,7 +3,7 @@
   <object class="wxDialog" name="ObjectDlgWX">
     <title></title>
     <centered>1</centered>
-    <style>wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER</style>
+    <style>wxDEFAULT_DIALOG_STYLE|wxSTAY_ON_TOP|wxRESIZE_BORDER</style>
     <object class="wxBoxSizer">
       <orient>wxVERTICAL</orient>
       <object class="sizeritem">
@@ -11,8 +11,10 @@
           <orient>wxVERTICAL</orient>
           <object class="sizeritem">
             <object class="wxStaticText" name="wxID_LABEL">
+              
               <label>Get the Object name</label>
             </object>
+            
             <flag>wxALL|wxEXPAND</flag>
           </object>
           <object class="sizeritem">
@@ -20,72 +22,98 @@
               <orient>wxHORIZONTAL</orient>
               <object class="sizeritem">
                 <object class="wxTextCtrl" name="wxID_URL">
+                  
                   <size>400,-1</size>
                 </object>
+                
                 <flag>wxALL|wxEXPAND</flag>
               </object>
               <object class="spacer">
+                
                 <size>5,0</size>
               </object>
               <object class="sizeritem">
                 <object class="wxBitmapButton" name="wxID_BROWSEBUTTON">
+                  
                   <bitmap stock_id="wxART_FILE_OPEN"></bitmap>
                 </object>
               </object>
             </object>
           </object>
           <object class="spacer">
+            
             <size>0,10</size>
           </object>
           <object class="sizeritem">
             <object class="wxBoxSizer">
               <orient>wxHORIZONTAL</orient>
               <object class="spacer">
+                
                 <size>5,0</size>
               </object>
               <object class="sizeritem">
                 <object class="wxStaticText" name="wxID_TYPE_LABEL">
+                  
                   <label>Get the MIME Type :</label>
                 </object>
+                
                 <flag>wxALL|wxEXPAND</flag>
+                
                 <border>5</border>
               </object>
               <object class="sizeritem">
                 <object class="wxComboBox" name="wxID_MIME_TYPE_CB">
+                  
                   <content/>
+                  
                   <size>200,-1</size>
                 </object>
+                
                 <option>1</option>
+                
                 <flag>wxALL|wxEXPAND</flag>
               </object>
             </object>
+            
             <flag>wxEXPAND</flag>
           </object>
           <object class="spacer">
+            
             <size>0,10</size>
           </object>
           <object class="sizeritem">
             <object class="wxStaticText" name="wxID_ALT_LABEL">
+              
               <label>Get alternate text</label>
             </object>
+            
             <flag>wxALL|wxEXPAND</flag>
+            
             <border>5</border>
           </object>
           <object class="sizeritem">
             <object class="wxTextCtrl" name="wxID_ALT"/>
+            
             <flag>wxALL|wxEXPAND</flag>
+            
             <minsize>300,-1</minsize>
           </object>
           <object class="sizeritem">
             <object class="wxStaticText" name="wxID_MANDATORY">
+              
               <label>*Alt is mandatory</label>
+              
               <fg>#7A1919</fg>
             </object>
+            
             <flag>wxALL|wxEXPAND</flag>
+            
             <border>5</border>
           </object>
         </object>
+        
         <flag>wxALL|wxEXPAND</flag>
+        
         <border>5</border>
       </object>
       <object class="sizeritem">
@@ -97,7 +125,9 @@
             <flag>wxALL</flag>
             <border>5</border>
             <object class="wxButton" name="wxID_OK">
+              
               <label>OPENBUTTON</label>
+              
               <default>1</default>
             </object>
           </object>
@@ -105,6 +135,7 @@
             <flag>wxALL</flag>
             <border>5</border>
             <object class="wxButton" name="wxID_CANCEL">
+              
               <label>CANCELBUTTON</label>
             </object>
           </object>

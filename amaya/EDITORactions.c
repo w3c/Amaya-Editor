@@ -1322,7 +1322,7 @@ void CreateLinkInHead (Document document, View view)
       SelectDestination (document, el, FALSE, FALSE);
     }
 #ifdef _WX
-  TtaRedirectFocus();
+  //TtaRedirectFocus();
 #endif /* _WX */
 }
 

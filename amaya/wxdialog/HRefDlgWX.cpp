@@ -65,9 +65,11 @@ HRefDlgWX::HRefDlgWX( int ref, wxWindow* parent, const wxString & title,
   XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->Append(url_list);
   // initialize it
   XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetValue(wx_init_value);
+  // set te cursor to the end
+  XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetInsertionPointEnd();
 
   // give focus to ...
-  //  XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetFocus();
+  XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetFocus();
   SetAutoLayout( TRUE );
 }
 
