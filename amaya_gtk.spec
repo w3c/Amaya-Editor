@@ -8,7 +8,7 @@
 
 # neededforbuild  autoconf automake mmcore mmbase mmslib xpm libz libpng libjpeg
 
-%define version 8.8.3
+%define version 8.8.5
 
 Vendor:       W3C World Wide Web Consortium
 Distribution: W3C
@@ -24,7 +24,7 @@ BuildRoot:    /var/tmp/%{name}-buildroot
 
 Summary:      Web Browser/Editor from the World Wide Web Consortium
 Version:      %{version}
-Source: ftp://ftp.w3.org/pub/amaya/amaya-fullsrc-9.3.tgz
+Source: ftp://ftp.w3.org/pub/amaya/amaya-fullsrc-9.5.tgz
 # Patch: amaya-src-%{version}.diff
 %description
 

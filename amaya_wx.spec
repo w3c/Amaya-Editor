@@ -8,7 +8,7 @@
 
 # neededforbuild  autoconf automake mmcore mmbase mmslib xpm libz libpng libjpeg
 
-%define version 9.3
+%define version 9.5
 
 Vendor:       W3C World Wide Web Consortium
 Distribution: W3C
