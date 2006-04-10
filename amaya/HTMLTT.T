@@ -329,13 +329,13 @@ RULES
 
  List_Item: BEGIN
 	Create Attributes;
-	if within 1 Unnumbered_List
+	if within 1 Unnumbered_List and not immediately within Numbered_List
 	   Create '*  ';
-	if within 2 Unnumbered_List
+	if within 2 Unnumbered_List and not immediately within Numbered_List
 	   Create 'o  ';
-	if within > 2 Unnumbered_List
+	if within > 2 Unnumbered_List and not immediately within Numbered_List
 	   Create '+  ';
-        if within Numbered_List
+  if immediately within Numbered_List
 	   Create (Value(ItemCounter, Arabic) '. ');
 	Indent +3;
 	Indent -3 after;
