@@ -56,6 +56,8 @@ ImageDlgWX::ImageDlgWX( int ref, wxWindow* parent, const wxString & title,
   XRCCTRL(*this, "wxID_CANCEL", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_CANCEL) ));
 
   XRCCTRL(*this, "wxID_URL", wxTextCtrl)->SetValue(urlToOpen  );
+  // set te cursor to the end
+  XRCCTRL(*this, "wxID_URL", wxTextCtrl)->SetInsertionPointEnd();
   XRCCTRL(*this, "wxID_ALT", wxTextCtrl)->SetValue( alt );
 
   SetAutoLayout( TRUE );

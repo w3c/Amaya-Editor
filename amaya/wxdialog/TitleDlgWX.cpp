@@ -47,7 +47,7 @@ END_EVENT_TABLE()
 
   // set te cursor to the end
   XRCCTRL(*this, "wxID_TITLE", wxTextCtrl)->SetInsertionPointEnd();
-
+  XRCCTRL(*this, "wxID_TITLE", wxTextCtrl)->SetFocus();
   SetAutoLayout( TRUE );
 }
 

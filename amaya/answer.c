@@ -532,7 +532,6 @@ void PrintTerminateStatus (AHTReqContext *me, int status)
   char               msg_status[20];
   char              *server_status = NULL;
   char              *wc_tmp;
-  HTResponse        *response;
 
   if (status == 200)
     TtaSetStatus (me->docid, 1,  
@@ -726,6 +725,7 @@ void PrintTerminateStatus (AHTReqContext *me, int status)
   /* set the reason string */
   if (status < 0 && status != -902 )
     {
+  HTResponse        *response;
       if (me->http_headers.reason && *me->http_headers.reason)
         sprintf (AmayaLastHTTPErrorMsgR, TtaGetMessage (AMAYA,AM_SERVER_REASON), 
                  me->http_headers.reason);
