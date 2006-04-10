@@ -3,7 +3,7 @@
 <head>
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <title>Welcome to Amaya</title>
-  <meta name="generator" content="amaya 9.4, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 9.5, see http://www.w3.org/Amaya/" />
   <link href="amaya.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -74,7 +74,7 @@
 </svg>
 </div>
 
-<h1>Bienvenido a Amaya 9.4</h1>
+<h1>Bienvenido a Amaya 9.5</h1>
 
 <p>Amaya es un cliente Web que actúa como navegador y como editor. Ha sido
 diseñado por el <a href="http://www.w3.org/">W3C</a> y el <a
@@ -92,9 +92,9 @@ Hojas de estilo en Cascada (CSS).</p>
 <p>¿Sabía que...?</p>
 <dl>
   <dt>Amaya es un editor estructurado</dt>
-    <dd>Al pulsar la tecla F2, se selecciona la estructura de nivel superior,
-      de manera que las funciones de edición (copiar, pegar, atributos, etc.)
-      se aplican a esos elementos estructurados.</dd>
+    <dd>Al pulsar la tecla F2 (o Escape), se selecciona la estructura de
+      nivel superior, de manera que las funciones de edición (copiar, pegar,
+      atributos, etc.) se aplican a esos elementos estructurados.</dd>
   <dt>Los documentos pueden editarse utilizando vistas sincronizadas</dt>
     <dd>El menú Ver permite abrir la vista de Estructura, la vista de Código
       fuente, etc. Al hacer clic en la línea roja inferior, abre o cierra esa
