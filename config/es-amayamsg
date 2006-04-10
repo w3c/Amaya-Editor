@@ -209,8 +209,8 @@
 207 Vertical
 208 Apaisado
 209 Activar FTP
-210 **Error(s) in the source code
-211 **Fatal error - Fix the source code to continue
+210 Error(s) in the source code
+211 Fatal error - Fix the source code to continue
 212 Utiliza el menú 'Archivo > Forzar codificación de caracteres'
 213 Caracteres inválidos
 214 Perfil de este documento:
@@ -380,8 +380,8 @@
 378 Elemento protegido
 379 La selección no debe cruzar un elemento de este tipo
 380 No hay encabezado tras la selección
-381 **Save anyway
-382 **Cannot locate host
-383 **Document has changed (412)
-384 **Conflict with the current state of the resource
-385 **Invalid selection
+381 Save anyway
+382 Cannot locate host
+383 Document has changed (412)
+384 Conflict with the current state of the resource
+385 Invalid selection

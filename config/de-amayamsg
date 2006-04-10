@@ -209,8 +209,8 @@
 207 Hochformat
 208 Querformat
 209 FTP zulassen
-210 **Error(s) in the source code
-211 **Fatal error - Fix the source code to continue
+210 Fehler im Quelltext
+211 Schwerer Fehler : Berichtigen Sie den Quelltext um fortzufahren
 212 Verwenden Sie 'Datei/Zeichenkodierung erzwingen'
 213 Ungültige Zeichen
 214 Dokumenttyp:
@@ -380,8 +380,8 @@
 378 Geschütztes Element
 379 Die Auswahl darf ein solches Element nicht treffen
 380 Der aktuellen Auswahl folgen keine Titel
-381 **Save anyway
-382 **Cannot locate host
-383 **Document has changed (412)
-384 **Conflict with the current state of the resource
-385 **Invalid selection
+381 Trotzdem sichern
+382 Der Host konnte nicht gefunden werden
+383 Das Dokument wurde verändert (412)
+384 Es besteht ein Konflikt mit dem aktuellen Status der Ressource
+385 Die Auswahl ist ungültig

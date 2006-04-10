@@ -2303,6 +2303,10 @@
 <label define="TMSG_DISCARD">
 	<message xml:lang="en">Discard</message>
 	<message xml:lang="fr">Abandonner</message>
+	<message xml:lang="es">Discard</message>
+	<message xml:lang="de">Verwerfen</message>
+	<message xml:lang="it">Elimina</message>
+	<message xml:lang="hu">Kihagy</message>
 </label>
 <label define="TMSG_MATHML">
 	<message xml:lang="en">Maths</message>

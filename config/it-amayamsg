@@ -209,8 +209,8 @@
 207 Ritratto
 208 Paesaggio
 209 Abilita FTP
-210 **Error(s) in the source code
-211 **Fatal error - Fix the source code to continue
+210 Errori nel codice sorgente
+211 Errore fatale - Correggi il sorgente per continuare
 212 Prova la voce 'File/Forza codifica caratteri'
 213 Caratteri non validi
 214 Profilo di documento:
@@ -381,8 +381,8 @@
 378 Elemento protetto
 379 La selezione non può attraversare un elemento di questo tipo
 380 Nessun titolo dopo la selezione
-381 **Save anyway
-382 **Cannot locate host
-383 **Document has changed (412)
-384 **Conflict with the current state of the resource
-385 **Invalid selection
+381 Salva comunque
+382 Non posso trovare l'host
+383 Il documento è stato modificato (412)
+384 Conflitto con lo stato attuale della risorsa
+385 Selezione non valida

@@ -2509,10 +2509,18 @@
 <label define="AM_XML_RETRY">
 <message xml:lang="en">Error(s) in the source code</message>
 <message xml:lang="fr">Erreur(s) dans le code source</message>
+<message xml:lang="es">Error(s) in the source code</message>
+<message xml:lang="de">Fehler im Quelltext</message>
+<message xml:lang="it">Errori nel codice sorgente</message>
+<message xml:lang="hu">Hiba a forráskódban</message>
 </label>
 <label define="AM_XML_ERROR">
 <message xml:lang="en">Fatal error - Fix the source code to continue</message>
 <message xml:lang="fr">Erreur fatale - Corriger le code source pour continuer</message>
+<message xml:lang="es">Fatal error - Fix the source code to continue</message>
+<message xml:lang="de">Schwerer Fehler : Berichtigen Sie den Quelltext um fortzufahren</message>
+<message xml:lang="it">Errore fatale - Correggi il sorgente per continuare</message>
+<message xml:lang="hu">Végzetes hiba - Javítsa ki a forráskódot</message>
 </label>
 <label define="AM_XML_CHARACTER_RETRY">
 <message xml:lang="en">Try the 'File/Force a Character Coding' entry</message>
@@ -4365,22 +4373,42 @@
 <label define="AM_SAVE_ANYWAY">
 	<message xml:lang="en">Save anyway</message>
 	<message xml:lang="fr">Sauver quand même</message>
+	<message xml:lang="es">Save anyway</message>
+	<message xml:lang="de">Trotzdem sichern</message>
+	<message xml:lang="it">Salva comunque</message>
+	<message xml:lang="hu">Mentés így is</message>
 </label>
 <label define="AM_NO_HOST">
 	<message xml:lang="en">Cannot locate host</message>
 	<message xml:lang="fr">Serveur inconnu</message>
+	<message xml:lang="es">Cannot locate host</message>
+	<message xml:lang="de">Der Host konnte nicht gefunden werden</message>
+	<message xml:lang="it">Non posso trovare l'host</message>
+	<message xml:lang="hu">Az állomás nem található</message>
 </label>
 <label define="AM_DOC_CHANGED">
 	<message xml:lang="en">Document has changed (412)</message>
 	<message xml:lang="fr">Document modifié (412)</message>
+	<message xml:lang="es">Document has changed (412)</message>
+	<message xml:lang="de">Das Dokument wurde verändert (412)</message>
+	<message xml:lang="it">Il documento è stato modificato (412)</message>
+	<message xml:lang="hu">A dokumentum megváltozott (412)</message>
 </label>
 <label define="AM_CONFLICT">
 	<message xml:lang="en">Conflict with the current state of the resource</message>
 	<message xml:lang="fr">Conflit avec l'état de la ressource</message>
+	<message xml:lang="es">Conflict with the current state of the resource</message>
+	<message xml:lang="de">Es besteht ein Konflikt mit dem aktuellen Status der Ressource</message>
+	<message xml:lang="it">Conflitto con lo stato attuale della risorsa</message>
+	<message xml:lang="hu">Ellentmondás az erőforrás jelenlegi állapotával</message>
 </label>
 <label define="AM_INVALID_SELECTION">
 	<message xml:lang="en">Invalid selection</message>
 	<message xml:lang="fr">Sélection invalide</message>
+	<message xml:lang="es">Invalid selection</message>
+	<message xml:lang="de">Die Auswahl ist ungültig</message>
+	<message xml:lang="it">Selezione non valida</message>
+	<message xml:lang="hu">Érvénytelen kijelölés</message>
 </label>
 <label define="AMAYA_MSG_MAX">
 </label></messages></base>

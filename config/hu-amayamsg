@@ -209,8 +209,8 @@
 207 Álló
 208 Fekvő
 209 FTP engedélyezése
-210 **Error(s) in the source code
-211 **Fatal error - Fix the source code to continue
+210 Hiba a forráskódban
+211 Végzetes hiba - Javítsa ki a forráskódot
 212 Próbálja a 'Fájl/Kényszerített karakter kódolás' menüt
 213 Érvénytelen karakterek
 214 Dokumentum profile:
@@ -380,8 +380,8 @@
 378 Védett elem
 379 A kijelölés nem érinthet ilyen típusú elemet
 380 No heading found after the selection
-381 **Save anyway
-382 **Cannot locate host
-383 **Document has changed (412)
-384 **Conflict with the current state of the resource
-385 **Invalid selection
+381 Mentés így is
+382 Az állomás nem található
+383 A dokumentum megváltozott (412)
+384 Ellentmondás az erőforrás jelenlegi állapotával
+385 Érvénytelen kijelölés
