@@ -3,7 +3,7 @@
   <object class="wxDialog" name="TitleDlgWX">
     <title></title>
     <centered>1</centered>
-    <style>wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER</style>
+    <style>wxDEFAULT_DIALOG_STYLE|wxSTAY_ON_TOP|wxRESIZE_BORDER</style>
     <object class="wxFlexGridSizer">
       <cols>1</cols>
       <object class="sizeritem">
@@ -11,14 +11,28 @@
           <orient>wxHORIZONTAL</orient>
           <object class="sizeritem">
             <object class="wxTextCtrl" name="wxID_TITLE">
-              <value></value>
+              
+              
+              
+              
+              <size>200,-1</size>
               <style>wxTE_PROCESS_ENTER|wxTE_NOHIDESEL</style>
+            
+              <focused>1</focused>
             </object>
+            
+            
             <option>1</option>
+            
+            
             <flag>wxEXPAND</flag>
           </object>
         </object>
+        
+        
         <flag>wxALL|wxGROW</flag>
+        
+        
         <border>5</border>
       </object>
       <object class="sizeritem">
@@ -29,17 +43,27 @@
           <object class="sizeritem">
             <flag>wxALL</flag>
             <object class="wxButton" name="wxID_OK">
+              
+              
               <label>CONFIRMBUTTON</label>
+              
+              
               <default>1</default>
+              
+              
               <focused>1</focused>
             </object>
           </object>
           <object class="spacer">
+            
+            
             <size>10,0</size>
           </object>
           <object class="sizeritem">
             <flag>wxALL</flag>
             <object class="wxButton" name="wxID_CANCEL">
+              
+              
               <label>CANCELBUTTON</label>
             </object>
           </object>
