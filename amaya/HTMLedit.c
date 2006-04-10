@@ -2518,18 +2518,22 @@ void CreateRemoveIDAttribute (char *elName, Document doc, ThotBool createID,
     {
       /* does the element have an ID attribute already? */
       attr = TtaGetAttribute (el, attrType);
-      if (!attr && createID) /* add it */
-        {
-          /* we reuse an existing Amaya function */
-          CreateTargetAnchor (doc, el, TRUE, TRUE);
-          i++;
-        }
-      else if (attr && !createID) /* delete it */
-        {
-          TtaRegisterAttributeDelete (attr, el, doc);
-          TtaRemoveAttribute (el, attr, doc);
-          i++;
-        }
+	  if (!TtaIsReadOnly (el))
+		{
+          /* the selected element is not read-only */
+          if (!attr && createID) /* add it */
+		  {
+            /* we reuse an existing Amaya function */
+            CreateTargetAnchor (doc, el, TRUE, TRUE);
+            i++;
+		  }
+          else if (attr && !createID) /* delete it */
+		  {
+            TtaRegisterAttributeDelete (attr, el, doc);
+            TtaRemoveAttribute (el, attr, doc);
+            i++;
+		  }
+	  }
       /* get the next element */
       el = SearchTypedElementForward (elType, el, lastEl);
     }
