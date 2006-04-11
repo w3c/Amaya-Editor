@@ -170,8 +170,8 @@ int TtaMakeWindow( int x, int y, int w, int h, int kind, int parent_window_id )
     
   if (x + w > display_width_px)
     x = display_width_px - w;
-  if (y + h > display_height_px - min_y)
-    y = display_height_px - min_y - h;
+  if (y + h > display_height_px)
+    y = display_height_px - h;
 
   if (w > 0 && h > 0)
     window_size = wxSize(w, h);
@@ -2103,10 +2103,16 @@ ThotBool TtaHandleShortcutKey( wxKeyEvent& event )
     }
 
 #ifdef _MACOS
+  if (( p_text_ctrl || p_combo_box || p_spinctrl ) && event.AltDown())
+    {
+      // compound character
+      event.Skip();
+      return true;      
+    }
   // on windows, CTRL+ALT is equivalent to ALTGR key
   if (!TtaIsSpecialKey(thot_keysym) &&
-      ((event.ControlDown() && !event.AltDown()) ||
-       (event.AltDown() && !event.CmdDown() && (thot_keysym < 'A' || thot_keysym > 'Z'))))
+      ((event.ControlDown() && !event.AltDown()) /*||
+       (event.AltDown() && !event.CmdDown() && (thot_keysym < 'A' || thot_keysym > 'Z'))*/))
        // this is for the Windows menu shortcuts, ALT+F => should open File menu
 #else /* _MACOS */
   // on windows, CTRL+ALT is equivalent to ALTGR key
