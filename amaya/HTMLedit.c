@@ -2547,6 +2547,9 @@ void CreateRemoveIDAttribute (char *elName, Document doc, ThotBool createID,
   if (dispMode == DisplayImmediately)
     TtaSetDisplayMode (doc, dispMode);
   sprintf (IdStatus, "%d elements changed", i);
+#ifdef _WX
+  //InitInfo ("", IdStatus);
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
