@@ -2641,7 +2641,7 @@ static void GiveWindowGeometry (Document doc, int docType, int method,
       *x += 100;
       *y += 60;
       *h = 300;
-      *w = 550;
+      *w = 600;
     }
   else if (method == CE_HELP  || docType == docBookmark)
     {

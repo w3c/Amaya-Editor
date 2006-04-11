@@ -135,6 +135,11 @@ int TtaMakeWindow( int x, int y, int w, int h, int kind, int parent_window_id )
   wxSize        window_size;
   int           window_id = TtaGetFreeWindowId();
   int           display_width_px, display_height_px;
+#ifdef _MACOS
+  int           min_y = 20;
+#else /* _MACOS */
+  int           min_y = 0;
+#endif /* _MACOS */
  
   if (window_id >= MAX_WINDOW)
     return 0; /* there is no more free windows */
@@ -153,24 +158,25 @@ int TtaMakeWindow( int x, int y, int w, int h, int kind, int parent_window_id )
       w = display_width_px;
       x = 0;
     }
-  if (h >= display_height_px)
+  else if (x < 0)
+    x = 0;
+  if (h >= display_height_px - min_y)
     {
-      h = display_height_px;
-      y = 0;
+      h = display_height_px - min_y;
+      y = min_y;
     }
+  else if (y < min_y)
+    y = min_y;
+    
   if (x + w > display_width_px)
     x = display_width_px - w;
-  if (y + h > display_height_px)
-    y = display_height_px - h;
+  if (y + h > display_height_px - min_y)
+    y = display_height_px - min_y - h;
+
   if (w > 0 && h > 0)
     window_size = wxSize(w, h);
   else
     window_size = wxSize(800, 600);
-
-#ifdef _MACOS
-  if (y < 20)
-    y = 20;
-#endif /* _MACOS */
   wxPoint window_pos(x, y);
 
   /* Create the window */

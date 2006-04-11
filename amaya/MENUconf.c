@@ -3670,18 +3670,19 @@ static void SetEnvGeom (const char *view_name, Document doc)
   
   /* get current geometry */
   if (!TtaGetViewMaximized(doc, view))
-    TtaSetEnvBoolean("WINDOW_MAXIMIZED", FALSE, TRUE);
+    {
+      TtaSetEnvBoolean("WINDOW_MAXIMIZED", FALSE, TRUE);
+      if (!TtaGetViewIconized(doc, view) && !TtaGetViewFullscreen(doc, view))
+        {
+          // do not save the window size if the window is maximized, iconized or fullscreen
+          // because this is a separated state
+          TtaGetViewXYWH (doc, view, &x, &y, &w, &h);
+          sprintf(s, "%d %d %d %d", x, y, w, h);
+          TtaSetEnvString((char *)view_name, s, TRUE);
+        }
+    }
   else
     TtaSetEnvBoolean("WINDOW_MAXIMIZED", TRUE, TRUE);      
-
-  if (!TtaGetViewMaximized(doc, view) && !TtaGetViewIconized(doc, view) && !TtaGetViewFullscreen(doc, view))
-    {
-      // do not save the window size if the window is maximized, iconized or fullscreen
-      // because this is a separated state
-      TtaGetViewXYWH (doc, view, &x, &y, &w, &h);
-      sprintf(s, "%d %d %d %d", x, y, w, h);
-      TtaSetEnvString((char *)view_name, s, TRUE);
-    }
 }
 
 /*----------------------------------------------------------------------
