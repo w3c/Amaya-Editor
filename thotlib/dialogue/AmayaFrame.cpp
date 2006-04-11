@@ -309,7 +309,7 @@ void AmayaFrame::ShowScrollbar( int scrollbar_id )
             VscrollShown[frame_id] = TRUE;
             m_pHSizer->Show(m_pScrollBarV, true);
           }
-        m_pHSizer-Layout();
+        m_pHSizer->Layout();
       }
       break;
     case 2:
@@ -328,7 +328,7 @@ void AmayaFrame::ShowScrollbar( int scrollbar_id )
             m_pVSizer->Show(m_pScrollBarH, true);
           }
 #ifndef _MACOS // could crash on that platform with 6.2
-       m_pVSizer-Layout();
+       m_pVSizer->Layout();
 #endif /* _MACOS */
       }
       break;

@@ -11,7 +11,7 @@ class AmayaFileDropTarget : public wxFileDropTarget
 {
 public:
   AmayaFileDropTarget( AmayaFrame *pOwner ) { m_pOwner = pOwner; }
-  
+  virtual ~AmayaFileDropTarget();
   virtual bool OnDropFiles( wxCoord x, wxCoord y,
 			    const wxArrayString& filenames );
   
