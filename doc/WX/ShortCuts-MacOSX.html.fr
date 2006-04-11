@@ -2,8 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 9.3.1, see http://www.w3.org/Amaya/"
-  />
+  <meta name="GENERATOR" content="amaya 9.5, see http://www.w3.org/Amaya/" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Raccourcis clavier pour Mac OS X</title>
   <style type="text/css">
@@ -337,7 +336,7 @@ affichés par défaut. Pour afficher, vous devez sélectionner l'option
       <td colspan="2">Menu Liste</td>
     </tr>
     <tr>
-      <td>Liste a` puce</td>
+      <td>Liste à puce</td>
       <td>Ctrl-h Ctrl-l</td>
     </tr>
     <tr>
@@ -663,6 +662,10 @@ affichés par défaut. Pour afficher, vous devez sélectionner l'option
     </tr>
     <tr class="menu">
       <td colspan="2">Menu Liens</td>
+    </tr>
+    <tr>
+      <td>Copier l'adesse</td>
+      <td>Ctrl-l Ctrl-c</td>
     </tr>
     <tr>
       <td>Lier la cible créée</td>
