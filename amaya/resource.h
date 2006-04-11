@@ -704,6 +704,7 @@
 #define ID_CREATEID                     1533
 #define ID_REMOVEID                     1534
 #define IDC_IDC_TIDELEMNAME             1535
+#define IDC_TIDELEMNAME                 1535
 #define IDC_IDELEMNAME                  1536
 #define IDC_IDAPPLYTODOC                1538
 #define IDC_IDAPPLYTOSEL                1539

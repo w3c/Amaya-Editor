@@ -3482,17 +3482,15 @@ LRESULT CALLBACK MakeIDDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 		     TtaGetMessage (LIB, TMSG_DONE));
       /* set up/clear the other options */
       /* elem name */
-      SetDlgItemText (hwnDlg, IDC_IDELEMNAME,
+      SetDlgItemText (hwnDlg, IDC_TIDELEMNAME,
 		      TtaGetMessage (AMAYA, ENTER_ELEMENT_NAME));
       SetDlgItemText (hwnDlg, IDC_IDELEMNAME, IdElemName);
       SetDlgItemText (hwnDlg, IDC_IDAPPLYTODOC,
 		      TtaGetMessage (LIB, TMSG_IN_WHOLE_DOC));
       SetDlgItemText (hwnDlg, IDC_IDAPPLYTOSEL,
 		      TtaGetMessage (LIB, TMSG_WITHIN_SEL));
-      SetDlgItemText (hwnDlg, IDC_IDAPPLYTODOC,
-		      TtaGetMessage (AMAYA, APPLY_OPERATION));
       /* status bar */
-      SetDlgItemText (hwnDlg, IDC_IDSTATUS, TtaGetMessage (AMAYA, APPLY_OPERATION));
+      SetDlgItemText (hwnDlg, IDC_IDSTATUS, "");
       /* radio buttons */
       if (IdApplyToSelection)
 	CheckRadioButton (hwnDlg, IDC_IDAPPLYTOSEL, 

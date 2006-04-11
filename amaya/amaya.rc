@@ -212,7 +212,7 @@ STYLE DS_MODALFRAME | DS_CENTERMOUSE | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Create/Remove ID Attribute Menu"
 FONT 8, "MS Sans Serif"
 BEGIN
-    LTEXT           "Enter an Element name",IDC_IDC_TIDELEMNAME,8,5,147,8
+    LTEXT           "Enter an Element name",IDC_TIDELEMNAME,8,5,147,8
     EDITTEXT        IDC_IDELEMNAME,8,19,217,12,ES_AUTOHSCROLL
     CONTROL         "Apply to whole document",IDC_IDAPPLYTODOC,"Button",
                     BS_AUTORADIOBUTTON,8,37,114,9
