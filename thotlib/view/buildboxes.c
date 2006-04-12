@@ -3995,8 +3995,6 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
                 case LtPicture:
                   if (pAb->AbChange)
                     {
-if (!strcmp (pAb->AbElement->ElLabel, "L357"))
-  printf ("AbChange L357\n");
                       /* the picture change, RAZ the structure */
                       CleanPictInfo ((ThotPictInfo *) pBox->BxPictInfo);
                       if (pAb->AbWidth.DimAbRef == NULL &&  pAb->AbWidth.DimValue == -1)
