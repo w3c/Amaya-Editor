@@ -591,14 +591,14 @@ void GenerateInlineElement (int eType, int aType, char * data)
                           el = firstSel;
                           elType = TtaGetElementType (el);
                           firstchar = 1;
-                          i = TtaGetElementVolume (el);
+                          i = TtaGetElementVolume (el)+1;
                         }
                       else
                         {
                           // empty paragraph
                           firstSel = lastSel = el;
                           firstchar = 1;
-                          i = TtaGetElementVolume (el);
+                          i = TtaGetElementVolume (el)+1;
                           inside = TRUE;
                         }
                     }
@@ -634,7 +634,8 @@ void GenerateInlineElement (int eType, int aType, char * data)
                   split = ((el == firstSel || el == lastSel) &&
                            !strcmp(name, "HTML") &&
                            elType.ElTypeNum == HTML_EL_TEXT_UNIT &&
-                           ((firstchar > 1 && firstchar <= lg) || (i > 0 && i < lg)));
+                           ((firstchar > 1 && firstchar <= lg) ||
+                            (i > 0 && i <= lg && i >= firstchar)));
                   // check the next selected element
                   if (el == lastSel)
                     // only one element selected
@@ -725,7 +726,7 @@ void GenerateInlineElement (int eType, int aType, char * data)
                               TtaGiveBufferContent (el, buffer, lg, &lang);
                               if (i == 0)
                                 i = lg + 1;
-                              if (el == lastSel && (i <= lg || (selpos && i == lg)))
+                              if (el == lastSel && i <= lg)
                                 {
                                   min = firstchar;
                                   if (selpos)
