@@ -2659,12 +2659,14 @@ void SaveDocument (Document doc, View view)
       /* it's a complete name: save it */
       if (ok)
         {
-          if (TextFormat)
-            ok = SaveObjectThroughNet (doc, view, DocumentURLs[doc],
-                                       FALSE, TRUE);
+          if (DocumentMeta[doc] && DocumentMeta[doc]->full_content_location)
+            ptr = DocumentMeta[doc]->full_content_location;
           else
-            ok = SaveDocumentThroughNet (doc, view, DocumentURLs[doc],
-                                         TRUE, TRUE, TRUE);
+            ptr = DocumentURLs[doc];
+          if (TextFormat)
+            ok = SaveObjectThroughNet (doc, view, ptr, FALSE, TRUE);
+          else
+            ok = SaveDocumentThroughNet (doc, view, ptr, TRUE, TRUE, TRUE);
         }
     }
   else
