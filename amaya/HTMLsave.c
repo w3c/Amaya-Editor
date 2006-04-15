@@ -1165,55 +1165,54 @@ void SetNamespacesAndDTD (Document doc)
       /* check if XML declaration or the math PI are already defined */
       xmlDecl = DocumentMeta[doc]->xmlformat;
       el = TtaGetFirstChild (docEl);
-      elType = TtaGetElementType (el);
-      if (elType.ElTypeNum == pi_type)
+      while (el)
         {
-          /* get PI lines */
-          elFound = TtaGetFirstChild (el);
-          while (elFound)
+          elType = TtaGetElementType (el);
+          if (elType.ElTypeNum != pi_type)
+            TtaNextSibling (&el);
+          else
             {
-              /* get PI text */
-              text = TtaGetFirstChild (elFound);
-              if (text == NULL)
-                text = elFound;
-              length = 300;
-              TtaGiveTextContent (text, (unsigned char *)buffer, &length, &lang);
-              if (strstr (buffer, "xml version="))
+              /* get PI lines */
+              next = el;
+              TtaNextSibling (&next);
+              elFound = TtaGetFirstChild (el);
+              while (elFound)
                 {
-                  /* check next PI ? */
-                  next = el;
-                  TtaNextSibling (&next);
-                  if (strstr (buffer, charsetname))
+                  /* get PI text */
+                  text = TtaGetFirstChild (elFound);
+                  if (text == NULL)
+                    text = elFound;
+                  length = 300;
+                  TtaGiveTextContent (text, (unsigned char *)buffer, &length,
+                                      &lang);
+                  if (strstr (buffer, "xml version="))
                     {
-                      /* it's not necessary to generate the XML declaration */
-                      xmlDecl = FALSE;
-                      elDecl = elFound;
-                    }
-                  else
-                    {
-                      // the charset changed -> regenerate the declaration
-                      xmlDecl = TRUE;
-                      elDecl = NULL;
-                      TtaDeleteTree (el, doc);
-                    }
-                  elFound = NULL;
-                  el = next;
-                  if (el)
-                    {
-                      elType = TtaGetElementType (el);
-                      if (elType.ElTypeNum == pi_type)
+                      if (strstr (buffer, charsetname))
                         {
-                        /* get PI lines */
-                        elFound = TtaGetFirstChild (el);
+                          /* not necessary to generate the XML declaration */
+                          xmlDecl = FALSE;
+                          elDecl = elFound;
                         }
+                      else
+                        {
+                          // the charset changed -> regenerate the declaration
+                          xmlDecl = TRUE;
+                          elDecl = NULL;
+                          TtaDeleteTree (el, doc);
+                          el = next;
+                        }
+                      elFound = NULL;
                     }
+                  else if (strstr (buffer, "mathml.xsl"))
+                    {
+                      /* it's not necessary to generate the math PI */
+                      mathPI = FALSE;
+                      elFound = NULL;
+                    }
+                  if (elFound)
+                    TtaNextSibling (&elFound);
                 }
-              else if (strstr (buffer, "pmathml.xsl"))
-                {
-                  /* it's not necessary to generate the math PI */
-                  mathPI = FALSE;
-                  elFound = NULL;
-                }
+              el = next;
             }
         }
 
