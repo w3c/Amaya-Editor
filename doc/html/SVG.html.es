@@ -3,8 +3,8 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 9.5, see http://www.w3.org/Amaya/" />
   <title>Editar gráficos</title>
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -20,7 +20,8 @@
         alt="anterior" src="../images/left.gif" /></a> <a
         href="Manual.html.es" accesskey="t"><img alt="superior"
         src="../images/up.gif" /></a> <a href="Xml.html.es"
-        accesskey="n"><img src="../images/right.gif" alt="siguiente" /></a></p>
+        accesskey="n"><img src="../images/right.gif" alt="siguiente"
+        /></a></p>
       </td>
     </tr>
   </tbody>
@@ -51,10 +52,7 @@
       <li><a href="using_graphics/ChangeSVGLibPresentation.html.es">Cómo
         cambiar la presentación de la biblioteca SVG</a></li>
     </ul>
-    <p></p>
   </li>
-  <li><a href="using_graphics/Animation.html.es">Gráficos y animaciones
-    SMIL</a></li>
 </ul>
 </div>
 </body>

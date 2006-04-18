@@ -57,8 +57,6 @@
         в библиотеку</a></li>
       <li><a href="using_graphics/ChangeSVGLibPresentation.html.ru">Как
         изменить представление SVG библиотеки</a></li>
-      <li><a href="using_graphics/Animation.html.ru">Графика и SMIL
-        анимация</a></li>
     </ul>
     <p></p>
     <p></p>

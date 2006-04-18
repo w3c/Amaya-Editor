@@ -321,8 +321,6 @@ href="Configure.html.ru">конфигурировать домашнюю страницу</a>) или страница
             href="using_graphics/ChangeSVGLibPresentation.html.ru#page_body"
             rel="subdocument">Как изменить представление SVG
           библиотеки</a></li>
-          <li><a href="using_graphics/Animation.html.ru">Графика и SMIL
-            анимация</a></li>
         </ul>
       </li>
     </ul>

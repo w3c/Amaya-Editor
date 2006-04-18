@@ -25,7 +25,7 @@ body {padding-left: 2em}</style>
 <h1 id="Amaya">Amaya - Guide utilisateur</h1>
 
 <p class="head"><span class="author">Irène Vatton</span> <br />
-Dernière mise à jour : <!--$date=-->01-12-2005 - 11:43<!--$-->
+Dernière mise à jour : <!--$date=-->2006-04-18<!--$-->
 </p>
 </div>
 
@@ -312,8 +312,6 @@ final du document tel qu'il est vu par un navigateur Web</p>
     créer des graphiques vectoriels</li>
   <li>Bibliothèque SVG <img alt="(Librairie)" src="../images/libsvg.gif" /> :
     affiche la palette de graphiques prédéfinis</li>
-  <li>Ligne de temps <img alt="(Animation)" src="../images/anim.gif"
-    /> : affiche la ligne de temps pour l'animation des graphiques</li>
 </ul>
 
 <p>et une zone d'affichage de l'adresse du document.</p>

@@ -18,7 +18,7 @@
     <tr>
       <td><img alt="W3C" src="../images/w3c_home" /><img alt="Amaya"
         src="../images/amaya.gif" /></td>
-      <td><p><a href="Animation.html.fr" accesskey="p"><img alt="previous"
+      <td><p><a href="SVG.html.fr" accesskey="p"><img alt="previous"
         src="../images/left.gif" /></a> <a href="Manual.html.fr"
         accesskey="t"><img alt="top" src="../images/up.gif" /></a> <a
         href="StyleSheets.html.fr" accesskey="n"><img
