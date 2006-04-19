@@ -2311,7 +2311,8 @@ static void EndOfXmlElement (char *name)
   doc is the current document
   isXML is TRUE if parsing a generic XML
   ----------------------------------------------------------------------*/
-ThotBool  IsLeadingSpaceUseless (Element lastEl, Document doc, ThotBool isXML)
+ThotBool  IsLeadingSpaceUseless (Element lastEl, Document doc, 
+				 ThotBool sibling, ThotBool isXML)
 {
   ElementType   elType, lastElType, prevType;
   Element       parent, last;
@@ -2319,7 +2320,7 @@ ThotBool  IsLeadingSpaceUseless (Element lastEl, Document doc, ThotBool isXML)
   ThotBool      removeLeadingSpaces;
 
 
-  if (InsertSibling ())
+  if (sibling)
     /* There is a previous sibling (lastEl) for the new Text element */
     {
       parent = TtaGetParent (lastEl);
@@ -2453,6 +2454,7 @@ void PutInXmlElement (char *data, int length)
   int          i = 0;
   int          i1, i2 = 0, i3 = 0;
   ThotBool     uselessSpace = FALSE;
+  ThotBool     insSibling;
 
   i = 0;
   /* Immediately after a start tag, treatment of the leading spaces */
@@ -2501,7 +2503,8 @@ void PutInXmlElement (char *data, int length)
     i = 0;
   {
     /* Suppress the leading spaces in Inline elements */
-    uselessSpace = IsLeadingSpaceUseless (XMLcontext.lastElement, XMLcontext.doc,
+    insSibling = InsertSibling ();
+    uselessSpace = IsLeadingSpaceUseless (XMLcontext.lastElement, XMLcontext.doc, insSibling,
                                           !strcmp ((char *)currentParserCtxt->SSchemaName, "XML"));
     if (RemoveLeadingSpace && uselessSpace)
       /* suppress leading spaces */

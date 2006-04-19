@@ -1114,13 +1114,15 @@ static void TextToDocument ()
   Element          elText;
   int              i;
   ThotBool         ignoreLeadingSpaces;
+  ThotBool         insSibling;
 
   CloseBuffer ();
   if (HTMLcontext.lastElement)
     {
       i = 0;
+      insSibling = InsertSibling ();
       ignoreLeadingSpaces = IsLeadingSpaceUseless (HTMLcontext.lastElement,
-                                                  HTMLcontext.doc, FALSE);
+                                                  HTMLcontext.doc, insSibling, FALSE);
       if (ignoreLeadingSpaces &&
           !Within (HTML_EL_Preformatted, DocumentSSchema) &&
           !Within (HTML_EL_STYLE_, DocumentSSchema) &&
