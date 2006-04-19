@@ -68,8 +68,10 @@ HRefDlgWX::HRefDlgWX( int ref, wxWindow* parent, const wxString & title,
   // set te cursor to the end
   XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetInsertionPointEnd();
 
+#ifndef _MACOS
   // give focus to ...
   XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetFocus();
+#endif /* _MACOS */
   SetAutoLayout( TRUE );
 }
 
