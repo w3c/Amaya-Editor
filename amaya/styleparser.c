@@ -217,7 +217,6 @@ static void CSSPrintError (char *msg, char *value)
 /*----------------------------------------------------------------------
   CSSParseError
   print the error message msg on stderr.
-  When the line is 0 ask expat about the current line number
   ----------------------------------------------------------------------*/
 static void CSSParseError (char *msg, char *value, char *endvalue)
 {
@@ -4497,8 +4496,10 @@ static char *ParseCSSBackgroundImage (Element element, PSchema tsch,
                                       ThotBool isHTML)
 {
   PresentationValue          image, value;
+  char                       *ptr;
 
   cssRule = SkipBlanksAndComments (cssRule);
+  ptr = cssRule;
   if (!strncasecmp (cssRule, "none", 4))
     {
       cssRule += 4;
@@ -4510,6 +4511,11 @@ static char *ParseCSSBackgroundImage (Element element, PSchema tsch,
           TtaSetStylePresentation (PRBackgroundPicture, element, tsch, ctxt,
                                    image);
         }
+    }
+  else if (!strncasecmp (cssRule, "inherit", 7))
+    {
+      value.typed_data.unit = VALUE_INHERIT;
+      cssRule += 7;
     }
   else if (!strncasecmp (cssRule, "url", 3))
     {  
@@ -4526,6 +4532,12 @@ static char *ParseCSSBackgroundImage (Element element, PSchema tsch,
             value.typed_data.real = FALSE;
             TtaSetStylePresentation (PRShowBox, element, tsch, ctxt, value);
           }
+    }
+  else
+    {
+      cssRule = SkipWord (cssRule);
+      CSSParseError ("Invalid background-image value", ptr, cssRule);
+      cssRule = SkipProperty (cssRule, FALSE);
     }
   return (cssRule);
 }
@@ -5353,8 +5365,7 @@ static void  ParseCSSRule (Element element, PSchema tsch,
       if (*cssRule == '#')
         {
           end = SkipProperty (cssRule, FALSE);
-          CSSParseError ("Invalid property",
-                         cssRule, end);
+          CSSParseError ("Invalid property", cssRule, end);
           cssRule = end; 
         }
       else if (*cssRule < 0x41 || *cssRule > 0x7A ||
