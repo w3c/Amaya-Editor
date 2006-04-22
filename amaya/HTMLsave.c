@@ -1191,7 +1191,7 @@ void SetNamespacesAndDTD (Document doc)
                         {
                           /* not necessary to generate the XML declaration */
                           xmlDecl = FALSE;
-                          elDecl = elFound;
+                          elDecl = el;
                         }
                       else
                         {
