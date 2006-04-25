@@ -1729,8 +1729,11 @@ void CreateTargetAnchor (Document doc, Element el, ThotBool forceID,
       new_ = TRUE;
     }
   else
-    /* already done */
-    return;
+    {
+      /* already done */
+      SetTargetContent (doc, attr);
+      return;
+    }
 
   /* build a value for the new attribute */
   url = (char *)TtaGetMemory (MAX_LENGTH);
