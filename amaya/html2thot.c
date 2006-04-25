@@ -4422,9 +4422,14 @@ static void HTMLparse (FILE * infile, char* HTMLbuf)
                        !Within (HTML_EL_STYLE_, DocumentSSchema) &&
                        !Within (HTML_EL_SCRIPT_, DocumentSSchema) &&
                        !Within (HTML_EL_Text_Area, DocumentSSchema)))
-                    /* ignore spaces at the beginning of an input line */
+                    {
                     if (EmptyLine)
+                    /* ignore spaces at the beginning of an input line */
                       charRead = EOS;
+                    else if (LgBuffer > 0 && inputBuffer[LgBuffer-1] == SPACE)
+                    /* ignore multiple spaces */
+                      charRead = EOS;
+                    }
                 }
               else
                 /* it's a printable character. Keep it as it is and */
