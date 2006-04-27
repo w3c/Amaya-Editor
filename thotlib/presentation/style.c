@@ -2963,11 +2963,8 @@ int TtaSetStylePresentation (unsigned int type, Element el, PSchema tsch,
             }
           else
             i = ctxt->type;
-          if (v.typed_data.unit == UNIT_PX)
-            minValue = FALSE;
-          else
-            /* apply a min value for all compound element */
-            minValue = (i == 0 || i >= PageBreak);
+          /* apply a min value for all compound element */
+          minValue = (i == 0 || i >= PageBreak);
         }
       else
         minValue = FALSE;
