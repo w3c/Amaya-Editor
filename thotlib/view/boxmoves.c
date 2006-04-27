@@ -1139,8 +1139,7 @@ void XMoveAllEnclosed (PtrBox pBox, int delta, int frame)
               /* if the box position is not complete
                  transmit the box position instead of the shift except for
                  out of structure relations */
-              if (/*!pBox->BxXOutOfStruct && !pBox->BxHorizFlex &&*/
-                  pBox->BxXToCompute)
+              if (pBox->BxXToCompute)
                 delta = pBox->BxXOrg;
 
 #ifdef _GL 
@@ -1153,10 +1152,12 @@ void XMoveAllEnclosed (PtrBox pBox, int delta, int frame)
               pChildAb = pAb->AbFirstEnclosed;
               /* Traite le niveau inferieur */
               toHorizPack = FALSE;
-
-              while (pChildAb != NULL)
+              if (pBox->BxType == BoBlock || pBox->BxType == BoFloatBlock)
+                // update included floated boxes
+                ShiftFloatingBoxes (pBox, delta, frame);
+              while (pChildAb)
                 {
-                  if (pChildAb->AbBox != NULL)
+                  if (pChildAb->AbBox)
                     {
                       if (pChildAb->AbBox->BxXOutOfStruct)
                         toHorizPack = TRUE;
@@ -2025,7 +2026,6 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
           if (pBox->BxType == BoPicture ||
               pCurrentAb->AbLeafType == LtGraphics)
             pBox->BxMaxWidth = pBox->BxWidth;
-            
           pBox->BxXOrg += orgTrans;
 
           /* Moving sibling boxes and the parent? */

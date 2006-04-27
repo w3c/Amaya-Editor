@@ -49,26 +49,103 @@
 #include "units_f.h"
 
 /*----------------------------------------------------------------------
+  ExtraAbFlow returns TRUE if the abstract box is ignored by the
+  standard flow.
+  Return TRUE for PnAbsolute or PnFixed.
+  ----------------------------------------------------------------------*/
+ThotBool ExtraAbFlow (PtrAbstractBox pAb, int frame)
+{
+  if (pAb && frame > 0 &&
+      pAb->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility &&
+      pAb->AbLeafType == LtCompound &&
+      pAb->AbPositioning &&
+      (pAb->AbPositioning->PnAlgorithm == PnAbsolute ||
+       pAb->AbPositioning->PnAlgorithm == PnFixed))
+    return TRUE;
+  else
+    return FALSE;
+}
+
+/*----------------------------------------------------------------------
+  VertExtraAbFlow returns TRUE if the abstract box is ignored by the
+  vertical standard flow.
+  Return TRUE for PnAbsolute or PnFixed and Y positioning.
+  ----------------------------------------------------------------------*/
+ThotBool VertExtraAbFlow (PtrAbstractBox pAb, int frame)
+{
+  Positioning        *pos;
+
+  if (pAb && frame > 0 &&
+      pAb->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility &&
+      pAb->AbLeafType == LtCompound &&
+      pAb->AbPositioning &&
+      (pAb->AbPositioning->PnAlgorithm == PnAbsolute ||
+       pAb->AbPositioning->PnAlgorithm == PnFixed))
+    {
+      pos = pAb->AbPositioning;
+      if ((pos->PnTopUnit == UnAuto ||
+           pos->PnTopUnit == UnUndefined) &&
+          (pos->PnBottomUnit == UnAuto ||
+           pos->PnBottomUnit == UnUndefined) &&
+          (pos->PnLeftUnit == UnAuto ||
+           pos->PnLeftUnit == UnUndefined) &&
+          (pos->PnRightUnit == UnAuto ||
+           pos->PnRightUnit == UnUndefined))
+        return FALSE;
+      else
+        return TRUE;
+    }
+  else
+    return FALSE;
+}
+
+/*----------------------------------------------------------------------
+  HorizExtraAbFlow returns TRUE if the abstract box is ignored by the
+  horizontal standard flow.
+  Return TRUE for PnAbsolute or PnFixed and X positioning.
+  ----------------------------------------------------------------------*/
+ThotBool HorizExtraAbFlow (PtrAbstractBox pAb, int frame)
+{
+  Positioning        *pos;
+
+  if (pAb && frame > 0 &&
+      pAb->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility &&
+      pAb->AbLeafType == LtCompound &&
+      pAb->AbPositioning &&
+      (pAb->AbPositioning->PnAlgorithm == PnAbsolute ||
+       pAb->AbPositioning->PnAlgorithm == PnFixed))
+    {
+      pos = pAb->AbPositioning;
+      if ((pos->PnLeftUnit != UnUndefined ||
+           pos->PnRightUnit != UnUndefined ||
+           pos->PnTopUnit != UnUndefined ||
+           pos->PnBottomUnit != UnUndefined) &&
+          (pos->PnAlgorithm == PnAbsolute ||
+           pos->PnAlgorithm == PnFixed ||
+           pos->PnAlgorithm == PnRelative))
+        return FALSE;
+      else
+        return TRUE;
+    }
+  else
+    return FALSE;
+}
+
+/*----------------------------------------------------------------------
   ExtraFlow returns TRUE if the box is ignored by the standard flow.
+  Return TRUE for PnAbsolute or PnFixed.
   ----------------------------------------------------------------------*/
 ThotBool ExtraFlow (PtrBox pBox, int frame)
 {
-  //#ifdef POSITIONING
-  if (pBox && pBox->BxAbstractBox && frame > 0 &&
-      pBox->BxAbstractBox->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility &&
-      pBox->BxAbstractBox->AbLeafType == LtCompound &&
-      pBox->BxAbstractBox->AbPositioning &&
-      (pBox->BxAbstractBox->AbPositioning->PnAlgorithm == PnAbsolute ||
-       pBox->BxAbstractBox->AbPositioning->PnAlgorithm == PnFixed))
-    return TRUE;
+  if (pBox)
+    return ExtraAbFlow (pBox->BxAbstractBox, frame);
   else
-    //#endif /* POSITIONING */
     return FALSE;
 }
 
 /*----------------------------------------------------------------------
   IsFlow says if the box is displayed in a different flow.
-  Return TRUE for PnAbsolute PnFixed and PnRelative (if shifted)
+  Return TRUE for PnAbsolute, PnFixed or PnRelative (if shifted).
   ----------------------------------------------------------------------*/
 ThotBool IsFlow (PtrBox pBox, int frame)
 {
@@ -546,7 +623,6 @@ void AddBoxTranslations (PtrAbstractBox pAb, int visibility, int frame,
   width = pBox->BxW;
   height = pBox->BxH;
   pChildAb = pAb->AbFirstEnclosed;
-  
   /* By default don't recheck parent sizes */
   checkWidth = FALSE;
   checkHeight = FALSE;
@@ -556,7 +632,7 @@ void AddBoxTranslations (PtrAbstractBox pAb, int visibility, int frame,
   /* Transforme origines relatives des boites filles en origines absolues */
   if (pAb->AbVisibility >= visibility)
     while (pChildAb)
-      {	
+      {
         pChildBox = pChildAb->AbBox;
         if (pChildBox)
           {
@@ -682,6 +758,7 @@ void AddBoxTranslations (PtrAbstractBox pAb, int visibility, int frame,
                       /* il faut deplacer tout le contenu de la boite */
                       XMoveAllEnclosed (pChildBox, x, frame);
                     else
+                      // floated boxes are already shifted
                       pChildBox->BxXOrg += x;
 		    
                     pChildBox->BxXToCompute = FALSE;	/* La boite est placee */
@@ -772,6 +849,7 @@ void AddBoxTranslations (PtrAbstractBox pAb, int visibility, int frame,
                       /* il faut deplacer tout le contenu de la boite */
                       YMoveAllEnclosed (pChildBox, y, frame);
                     else
+                      // floated boxes are already shifted
                       pChildBox->BxYOrg += y;
                     /* La boite est placee */
                     pChildBox->BxYToCompute = FALSE;
@@ -862,7 +940,7 @@ void AddBoxTranslations (PtrAbstractBox pAb, int visibility, int frame,
           }
 #endif /* _GL */
 
-        /* passe au suivant */
+        /* next child */
         pChildAb = pChildAb->AbNext;
       }
   /* Si une dimension de la boite depend du contenu et qu'une des  */

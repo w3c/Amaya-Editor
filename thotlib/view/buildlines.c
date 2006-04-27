@@ -1948,7 +1948,7 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
           pLine->LiXMax = left + pBlock->BxW - pLine->LiXOrg;
           bottomR = pLine->LiYOrg;
         }
-      else //if (pBlock->BxType == BoFloatBlock)
+      else
         {
           /* keep the CSS2 minimun of margins and the current shift */
 #ifdef IV
@@ -2869,7 +2869,6 @@ static void UpdateBlockWithFloat (int frame, PtrBox pBlock,
         /* we should move the right floated box */
         XMove (pfloat->FlBox, NULL,
                pBlock->BxMaxWidth + x1 - pfloat->FlBox->BxXOrg, frame);
-	
       if (pBlock->BxW - pfloat->FlBox->BxXOrg - x > x2)
         /* float change the minimum width of the block */
         x2 = pBlock->BxW - pfloat->FlBox->BxXOrg - x;
@@ -2889,11 +2888,36 @@ static void UpdateBlockWithFloat (int frame, PtrBox pBlock,
 }
 
 /*----------------------------------------------------------------------
-  MoveFloatingBoxes updates the position of floating boxes below the
+  ShiftFloatingBoxes updates the X position of floating boxes
+  ----------------------------------------------------------------------*/
+void ShiftFloatingBoxes (PtrBox pBlock, int delta, int frame)
+{
+  PtrFloat            pfloat;
+
+  pfloat = pBlock->BxLeftFloat;
+  while (pfloat && pfloat->FlBox)
+    {
+      if (pfloat->FlBox->BxAbstractBox &&
+          pfloat->FlBox->BxAbstractBox->AbFloat == 'L')
+        /* change the position */
+        XMoveAllEnclosed (pfloat->FlBox, delta, frame);
+      pfloat = pfloat->FlNext;
+    }
+
+  pfloat = pBlock->BxRightFloat;
+  while (pfloat && pfloat->FlBox)
+    {
+      if (pfloat->FlBox->BxAbstractBox &&
+          pfloat->FlBox->BxAbstractBox->AbFloat == 'R')
+        /* change the position */
+        XMoveAllEnclosed (pfloat->FlBox, delta, frame);
+      pfloat = pfloat->FlNext;
+    }
+}
+
+/*----------------------------------------------------------------------
+  MoveFloatingBoxes updates the Y position of floating boxes below the
   position y
-  Updates the minimum and maximum widths of the block when the parameter
-  updateWidth is TRUE.
-  Returns the updated height.
   ----------------------------------------------------------------------*/
 static void MoveFloatingBoxes (PtrBox pBlock, int y, int delta, int frame)
 {
@@ -3010,13 +3034,6 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
       (boxPrevR && y < boxPrevR->BxYOrg + boxPrevR->BxHeight))
     {
       if (box->BxWidth <= w + 1)
-#ifdef IV
- ||
-          (boxPrevL && box->BxAbstractBox->AbFloat == 'L' &&
-           box->BxXOrg + box->BxLMargin + box->BxW <= boxPrevL->BxXOrg + boxPrevL->BxLMargin) ||
-          (boxPrevR && box->BxAbstractBox->AbFloat == 'R' &&
-          box->BxXOrg + box->BxLMargin >= boxPrevR->BxXOrg + boxPrevR->BxLMargin+ boxPrevR->BxW))
-#endif
         {
           /* it's possible to display the floating box at the current position */
           if (boxPrevL && y < boxPrevL->BxYOrg + boxPrevL->BxHeight &&
@@ -3074,7 +3091,6 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
           pLine->LiYOrg = y - orgY;
         }
     }
-
   XMove (box, NULL, x - box->BxXOrg, frame);
   YMove (box, NULL, y - box->BxYOrg, frame);
   if (box->BxAbstractBox->AbFloat == 'L')

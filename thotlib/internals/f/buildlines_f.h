@@ -11,6 +11,9 @@ extern PtrBox GetNextBox ( PtrAbstractBox pAb,
 extern int FloatToInt ( float e );
 extern void ClearFloats ( PtrBox pBox );
 extern void ClearAFloat ( PtrAbstractBox pAb );
+extern void ShiftFloatingBoxes ( PtrBox pBlock,
+                                 int delta,
+                                 int frame );
 extern int SetFloat ( PtrBox box,
                       PtrBox pBlock,
                       PtrLine pLine,
@@ -61,6 +64,9 @@ extern PtrBox GetNextBox ( PtrAbstractBox pAb,
 extern int FloatToInt ( float e );
 extern void ClearFloats ( PtrBox pBox );
 extern void ClearAFloat ( PtrAbstractBox pAb );
+extern void ShiftFloatingBoxes ( PtrBox pBlock,
+                                   int delta,
+                                   int frame );
 extern int SetFloat ( PtrBox box,
                         PtrBox pBlock,
                         PtrLine pLine,

@@ -338,7 +338,7 @@ static PtrAbstractBox NextAbToCheck (PtrAbstractBox pAb, PtrAbstractBox pRefAb)
 /*----------------------------------------------------------------------
   PropagateXOutOfStruct propage l'indicateur hors-structure.        
   ----------------------------------------------------------------------*/
-static void PropagateXOutOfStruct (PtrAbstractBox pCurrentAb,
+static void PropagateXOutOfStruct (PtrAbstractBox pCurrentAb, int frame,
                                    ThotBool status, ThotBool enclosed)
 {
   PtrAbstractBox      pAb;
@@ -350,31 +350,33 @@ static void PropagateXOutOfStruct (PtrAbstractBox pCurrentAb,
   else
     pAb = pCurrentAb->AbEnclosing->AbFirstEnclosed;
 
-  while (pAb != NULL)
+  while (pAb)
     {
-      pBox = pAb->AbBox;
-      if (pAb == pCurrentAb || pBox == NULL || IsDead (pAb))
-        ;			/* inutile de traiter ce pave */
-      else if (pBox->BxXOutOfStruct == status)
-        ;			/* inutile de traiter ce pave */
-      else if (pAb->AbHorizPos.PosAbRef == pCurrentAb && !pAb->AbHorizPosChange)
+      if (!HorizExtraAbFlow (pAb, frame))
         {
-          /* Dependance de position */
-          pBox->BxXOutOfStruct = status;
-          /* Propagate aussi le non englobement */
-          if (pAb->AbEnclosing == pCurrentAb->AbEnclosing)
-            /* une boite soeur positionnee par rapport a une boite */
-            /* elastique non englobee n'est pas englobee elle-meme */
-            pAb->AbHorizEnclosing = enclosed;
-          PropagateXOutOfStruct (pAb, status, pAb->AbHorizEnclosing);
+          pBox = pAb->AbBox;
+          if (pAb == pCurrentAb || pBox == NULL || IsDead (pAb))
+            ;			/* inutile de traiter ce pave */
+          else if (pBox->BxXOutOfStruct == status)
+            ;			/* inutile de traiter ce pave */
+          else if (pAb->AbHorizPos.PosAbRef == pCurrentAb && !pAb->AbHorizPosChange)
+            {
+              /* Dependance de position */
+              pBox->BxXOutOfStruct = status;
+              /* Propagate aussi le non englobement */
+              if (pAb->AbEnclosing == pCurrentAb->AbEnclosing)
+                /* une boite soeur positionnee par rapport a une boite */
+                /* elastique non englobee n'est pas englobee elle-meme */
+                pAb->AbHorizEnclosing = enclosed;
+              PropagateXOutOfStruct (pAb, frame, status, pAb->AbHorizEnclosing);
+            }
+          else if (pAb->AbWidth.DimIsPosition &&
+                   pAb->AbWidth.DimPosition.PosAbRef == pCurrentAb &&
+                   !pAb->AbWidthChange)
+            /* Dependance de dimension */
+            pBox->BxWOutOfStruct = status;
         }
-      else if (pAb->AbWidth.DimIsPosition &&
-               pAb->AbWidth.DimPosition.PosAbRef == pCurrentAb &&
-               !pAb->AbWidthChange)
-        /* Dependance de dimension */
-        pBox->BxWOutOfStruct = status;
-
-      /* passe au pave suivant */
+      /* next abstract box */
       pAb = pAb->AbNext;
     }
 }
@@ -383,7 +385,7 @@ static void PropagateXOutOfStruct (PtrAbstractBox pCurrentAb,
 /*----------------------------------------------------------------------
   PropagateYOutOfStruct propage l'indicateur hors-structure.         
   ----------------------------------------------------------------------*/
-static void PropagateYOutOfStruct (PtrAbstractBox pCurrentAb,
+static void PropagateYOutOfStruct (PtrAbstractBox pCurrentAb, int frame,
                                    ThotBool status, ThotBool enclosed)
 {
   PtrAbstractBox      pAb;
@@ -395,28 +397,30 @@ static void PropagateYOutOfStruct (PtrAbstractBox pCurrentAb,
   else
     pAb = pCurrentAb->AbEnclosing->AbFirstEnclosed;
 
-  while (pAb != NULL)
+  while (pAb)
     {
-      pBox = pAb->AbBox;
-      if (pAb == pCurrentAb || pBox == NULL || IsDead (pAb))
-        ;			/* inutile de traiter ce pave */
-      else if (pBox->BxYOutOfStruct == status)
-        ;			/* inutile de traiter ce pave */
-      else if (pAb->AbVertPos.PosAbRef == pCurrentAb && !pAb->AbVertPosChange)
+      if (!VertExtraAbFlow (pAb, frame))
         {
-          pBox->BxYOutOfStruct = status;
-          /* Propagate aussi le non englobement */
-          if (pAb->AbEnclosing == pCurrentAb->AbEnclosing)
-            /* une boite soeur positionnee par rapport a une boite */
-            /* elastique non englobee n'est pas englobee elle-meme */
-            pAb->AbVertEnclosing = enclosed;
-          PropagateYOutOfStruct (pAb, status, pAb->AbVertEnclosing);
+          pBox = pAb->AbBox;
+          if (pAb == pCurrentAb || pBox == NULL || IsDead (pAb))
+            ;			/* inutile de traiter ce pave */
+          else if (pBox->BxYOutOfStruct == status)
+            ;			/* inutile de traiter ce pave */
+          else if (pAb->AbVertPos.PosAbRef == pCurrentAb && !pAb->AbVertPosChange)
+            {
+              pBox->BxYOutOfStruct = status;
+              /* Propagate aussi le non englobement */
+              if (pAb->AbEnclosing == pCurrentAb->AbEnclosing)
+                /* une boite soeur positionnee par rapport a une boite */
+                /* elastique non englobee n'est pas englobee elle-meme */
+                pAb->AbVertEnclosing = enclosed;
+              PropagateYOutOfStruct (pAb, frame, status, pAb->AbVertEnclosing);
+            }
+          else if (pAb->AbHeight.DimIsPosition
+                   && pAb->AbHeight.DimPosition.PosAbRef == pCurrentAb && !pAb->AbHeightChange)
+            pBox->BxHOutOfStruct = status;
         }
-      else if (pAb->AbHeight.DimIsPosition
-               && pAb->AbHeight.DimPosition.PosAbRef == pCurrentAb && !pAb->AbHeightChange)
-        pBox->BxHOutOfStruct = status;
-
-      /* passe au pave suivant */
+      /* next abstract box */
       pAb = pAb->AbNext;
     }
 }
@@ -445,19 +449,35 @@ void SetPositionConstraint (BoxEdge localEdge, PtrBox pBox, int *val)
       pBox->BxHorizEdge = VertMiddle;
       break;
     case VertRef:
-      *val -= pBox->BxVertRef;
-      pPosAb = &pBox->BxAbstractBox->AbVertRef;
-      if (pPosAb->PosAbRef == pBox->BxAbstractBox)
+#ifdef IV
+      if (pBox->BxAbstractBox->AbFloat == 'L')
         {
-          if (pPosAb->PosRefEdge == VertMiddle)
-            pBox->BxHorizEdge = VertMiddle;
-          else if (pPosAb->PosRefEdge == Right)
-            pBox->BxHorizEdge = Right;
-          else
-            pBox->BxHorizEdge = Left;
+          // force left alignment
+          *val = 0;
+          pBox->BxHorizEdge = Left;
+        }
+      else if (pBox->BxAbstractBox->AbFloat == 'R')
+        {
+          *val -= pBox->BxWidth;
+          pBox->BxHorizEdge = Right;
         }
       else
-        pBox->BxHorizEdge = VertRef;
+#endif
+        {
+          *val -= pBox->BxVertRef;
+          pPosAb = &pBox->BxAbstractBox->AbVertRef;
+          if (pPosAb->PosAbRef == pBox->BxAbstractBox)
+            {
+              if (pPosAb->PosRefEdge == VertMiddle)
+                pBox->BxHorizEdge = VertMiddle;
+              else if (pPosAb->PosRefEdge == Right)
+                pBox->BxHorizEdge = Right;
+              else
+                pBox->BxHorizEdge = Left;
+            }
+          else
+            pBox->BxHorizEdge = VertRef;
+        }
       break;
     case Top:
       pBox->BxVertEdge = Top;
@@ -1375,7 +1395,7 @@ void ComputePosRelation (AbPosition *rule, PtrBox pBox, int frame,
                   if (!IsXPosComplete (pBox))
                     pBox->BxXToCompute = TRUE;
                   pBox->BxXOutOfStruct = TRUE;
-                  PropagateXOutOfStruct (pAb, TRUE, pAb->AbHorizEnclosing);
+                  PropagateXOutOfStruct (pAb, frame, TRUE, pAb->AbHorizEnclosing);
                 }
               else if (pRefAb->AbBox)
                 {
@@ -1390,7 +1410,7 @@ void ComputePosRelation (AbPosition *rule, PtrBox pBox, int frame,
                       if (!IsXPosComplete (pBox))
                         pBox->BxXToCompute = TRUE;
                       pBox->BxXOutOfStruct = TRUE;
-                      PropagateXOutOfStruct (pAb, TRUE, pAb->AbHorizEnclosing);
+                      PropagateXOutOfStruct (pAb, frame, TRUE, pAb->AbHorizEnclosing);
                     }
                 }
             }
@@ -1541,7 +1561,7 @@ void ComputePosRelation (AbPosition *rule, PtrBox pBox, int frame,
                   if (!IsYPosComplete (pBox))
                     pBox->BxYToCompute = TRUE;
                   pBox->BxYOutOfStruct = TRUE;
-                  PropagateYOutOfStruct (pAb, TRUE, pAb->AbVertEnclosing);
+                  PropagateYOutOfStruct (pAb, frame, TRUE, pAb->AbVertEnclosing);
                 }
               else if (pRefAb->AbBox)
                 {
@@ -1557,7 +1577,7 @@ void ComputePosRelation (AbPosition *rule, PtrBox pBox, int frame,
                       if (!IsYPosComplete (pBox))
                         pBox->BxYToCompute = TRUE;
                       pBox->BxYOutOfStruct = TRUE;
-                      PropagateYOutOfStruct (pAb, TRUE, pAb->AbVertEnclosing);
+                      PropagateYOutOfStruct (pAb, frame, TRUE, pAb->AbVertEnclosing);
                     }
                 }	
             }
@@ -3027,7 +3047,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                           pChildAb->AbBox->BxXOutOfStruct = TRUE;
                           if (pChildAb->AbEnclosing == pAb->AbEnclosing)
                             pChildAb->AbHorizEnclosing = pAb->AbHorizEnclosing;
-                          PropagateXOutOfStruct (pChildAb, TRUE, pChildAb->AbHorizEnclosing);
+                          PropagateXOutOfStruct (pChildAb, frame, TRUE, pChildAb->AbHorizEnclosing);
                         }
                       if (pChildAb->AbVertPos.PosAbRef == pAb
                           && pChildAb->AbVertPos.PosRefEdge != Top
@@ -3040,7 +3060,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                           pChildAb->AbBox->BxYOutOfStruct = TRUE;
                           if (pChildAb->AbEnclosing == pAb->AbEnclosing)
                             pChildAb->AbVertEnclosing = pAb->AbVertEnclosing;
-                          PropagateYOutOfStruct (pChildAb, TRUE, pChildAb->AbVertEnclosing);
+                          PropagateYOutOfStruct (pChildAb, frame, TRUE, pChildAb->AbVertEnclosing);
                         }
                     }
                   pChildAb = pChildAb->AbNext;
@@ -3147,7 +3167,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                           pChildAb->AbBox->BxYOutOfStruct = TRUE;
                           if (pChildAb->AbEnclosing == pAb->AbEnclosing)
                             pChildAb->AbVertEnclosing = pAb->AbVertEnclosing;
-                          PropagateYOutOfStruct (pChildAb, TRUE, pChildAb->AbVertEnclosing);
+                          PropagateYOutOfStruct (pChildAb, frame, TRUE, pChildAb->AbVertEnclosing);
                         }
                     }
                   pChildAb = pChildAb->AbNext;
@@ -3758,7 +3778,7 @@ static ThotBool CheckDimRelation (PtrBox pBox, ThotBool horizRef)
   ClearOutOfStructRelation removes out of structure relations of the box
   pBox.
   ----------------------------------------------------------------------*/
-void ClearOutOfStructRelation (PtrBox pBox)
+void ClearOutOfStructRelation (PtrBox pBox, int frame)
 {
   PtrBox              pOrginBox;
   PtrAbstractBox      pAb;
@@ -3774,7 +3794,7 @@ void ClearOutOfStructRelation (PtrBox pBox)
       if (pOrginBox)
         RemovePosRelation (pOrginBox, pBox, NULL, TRUE, FALSE, TRUE);
       /* Clean up out of structure info */
-      PropagateXOutOfStruct (pAb, FALSE, pAb->AbHorizEnclosing);
+      PropagateXOutOfStruct (pAb, frame, FALSE, pAb->AbHorizEnclosing);
     }
   
   /* Remove vertical out of structure relations */
@@ -3787,7 +3807,7 @@ void ClearOutOfStructRelation (PtrBox pBox)
       if (pOrginBox)
         RemovePosRelation (pOrginBox, pBox, NULL, TRUE, FALSE, FALSE);
       /* Clean up out of structure info */
-      PropagateYOutOfStruct (pAb, FALSE, pAb->AbVertEnclosing);
+      PropagateYOutOfStruct (pAb, frame, FALSE, pAb->AbVertEnclosing);
     }
 
   /* Remove out of structure width constraints */

@@ -6,6 +6,12 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern ThotBool ExtraAbFlow ( PtrAbstractBox pAb,
+                              int frame );
+extern ThotBool VertExtraAbFlow ( PtrAbstractBox pAb,
+                                  int frame );
+extern ThotBool HorizExtraAbFlow ( PtrAbstractBox pAb,
+                                   int frame );
 extern ThotBool ExtraFlow ( PtrBox pBox,
                             int frame );
 extern ThotBool IsFlow ( PtrBox pBox,
@@ -30,6 +36,12 @@ extern void SetBoxToTranslate ( PtrAbstractBox pAb,
 
 #else /* __STDC__ */
 
+extern ThotBool ExtraAbFlow ( PtrAbstractBox pAb,
+                                int frame );
+extern ThotBool VertExtraAbFlow ( PtrAbstractBox pAb,
+                                    int frame );
+extern ThotBool HorizExtraAbFlow ( PtrAbstractBox pAb,
+                                     int frame );
 extern ThotBool ExtraFlow ( PtrBox pBox,
                               int frame );
 extern ThotBool IsFlow ( PtrBox pBox,

@@ -35,7 +35,8 @@ extern void ComputeAxisRelation ( AbPosition rule,
                                   PtrBox pBox,
                                   int frame,
                                   ThotBool horizRef );
-extern void ClearOutOfStructRelation ( PtrBox pBox );
+extern void ClearOutOfStructRelation ( PtrBox pBox,
+                                       int frame );
 extern void ClearPosRelation ( PtrBox pBox,
                                ThotBool horizRef );
 extern void ClearAxisRelation ( PtrBox pBox,
@@ -77,7 +78,8 @@ extern void ComputeAxisRelation ( AbPosition rule,
                                     PtrBox pBox,
                                     int frame,
                                     ThotBool horizRef );
-extern void ClearOutOfStructRelation ( PtrBox pBox );
+extern void ClearOutOfStructRelation ( PtrBox pBox,
+                                         int frame );
 extern void ClearPosRelation ( PtrBox pBox,
                                  ThotBool horizRef );
 extern void ClearAxisRelation ( PtrBox pBox,
