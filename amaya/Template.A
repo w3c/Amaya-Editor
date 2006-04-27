@@ -7,4 +7,11 @@ DEFAULT
 	  ElemRClick.Pre -> SimpleRClick;
 	  ElemLClick.Pre -> SimpleLClick;
    END;
+   
+ELEMENTS
+
+   useMenu :
+      BEGIN
+         ElemClick.Pre -> ShowUseTypes;
+      END;
 END

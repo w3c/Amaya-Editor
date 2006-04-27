@@ -25,7 +25,7 @@ VIEWS
 #define ATTR_Color DarkIndigo1
 #define ATTRVALUE_Color DarkMagenta2
 #define INVALID_Color Red
-
+   
 DEFAULT
    BEGIN
    Visibility: Enclosing =;
@@ -144,6 +144,14 @@ BOXES
 		END;
 	END;
 
+ UseMenu_Gif: BEGIN
+	Content: Picture 'use.gif';
+	HorizPos: Left = Enclosing . Left;
+	VertPos: Top = Enclosing . Top;
+	Depth: Creator - 2;
+	IN Structure_view
+		Visibility: 0;
+	END;	
 
 RULES
 
@@ -151,7 +159,7 @@ RULES
 		Visibility: Enclosing =;
 		END;
 
- FREE_STRUCT:	
+  bag:	
 		BEGIN	
     CreateBefore(ElementName);
   	CreateWith(VerticalLine);
@@ -182,13 +190,21 @@ RULES
 		  VertPos: Top = Previous . Bottom;
 		  END;
 	 END;
-
- FREE_CONTENT:	
+	 
+	useMenu:
+	  BEGIN
+	    CreateFirst(UseMenu_Gif);
+	  END;
+	 
+  useEl:	
 		BEGIN	
     CreateBefore(ElementName);
   	CreateWith(VerticalLine);
     Width: auto{Enclosing . Width};
+    Display: Block;
     VertPos: Top = Previous . Bottom;
+    MarginTop: 0;
+    HorizPos: Left = Enclosing . Left; 
 		BorderTopWidth: 1 pt;
 		BorderLeftWidth: 1 pt;
 		BorderBottomWidth: 1 pt;
@@ -197,44 +213,55 @@ RULES
 		BorderLeftStyle: Dotted;
 		BorderBottomStyle: Dotted;
 		BorderRightStyle: Dotted;
-		BorderTopColor: Red;
-		BorderLeftColor: Red;
-		BorderBottomColor: Red;
-		BorderRightColor: Red;
+		BorderTopColor: Green;
+		BorderLeftColor: Green;
+		BorderBottomColor: Green;
+		BorderRightColor: Green;
   	IN Structure_view BEGIN
-		  BorderTopWidth: 0;
-		  BorderLeftWidth: 0;
-		  BorderBottomWidth: 0;
+			BorderTopWidth: 0;
+			BorderLeftWidth: 0;
+			BorderBottomWidth: 0;
 		  BorderRightWidth: 0;
 		  HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		  Width: Enclosing . Width - STRUCT_INDENT;
+	    Width: Enclosing . Width - STRUCT_INDENT;
 		  VertPos: Top = Previous . Bottom;
 		  END;
-		END;
-
- PICTURE_UNIT:
-   BEGIN
- 	 {Visibility: 0;}
-	 Depth: Enclosing - 1;
-   HorizRef: * . Bottom;
-	 HorizPos: Left = Enclosing . Left;
-	 VertPos: Top = Enclosing . Top;
-	 Width: 16 px;
-	 Height: 16 px;
 	 END;
+	 
+  repeat:	
+		BEGIN	
+    CreateBefore(ElementName);
+  	CreateWith(VerticalLine);
+    Width: auto{Enclosing . Width};
+    Display: Block;
+    VertPos: Top = Previous . Bottom;
+    MarginTop: 0;
+    HorizPos: Left = Enclosing . Left; 
+		BorderTopWidth: 1 pt;
+		BorderLeftWidth: 1 pt;
+		BorderBottomWidth: 1 pt;
+		BorderRightWidth: 1 pt;
+		BorderTopStyle: Dotted;
+		BorderLeftStyle: Dotted;
+		BorderBottomStyle: Dotted;
+		BorderRightStyle: Dotted;
+		BorderTopColor: Blue;
+		BorderLeftColor: Blue;
+		BorderBottomColor: Blue;
+		BorderRightColor: Blue;
+  	IN Structure_view BEGIN
+			BorderTopWidth: 0;
+			BorderLeftWidth: 0;
+			BorderBottomWidth: 0;
+		  BorderRightWidth: 0;
+		  HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	    Width: Enclosing . Width - STRUCT_INDENT;
+		  VertPos: Top = Previous . Bottom;
+		  END;
+	 END;	 
+
 
 ATTRIBUTES
-
-  Language:
-	BEGIN
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-	END;
-  xmlid:
-	BEGIN
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-  END;
 
   Unknown_attribute:
 	BEGIN
@@ -249,22 +276,5 @@ ATTRIBUTES
 	if NOT TEXT_UNIT and NOT PICTURE_UNIT and NOT Unknown_namespace
   	 CreateBefore(UnknownAttrValue);
 	END;
-
-
-{****
-   role = TEXT;
-
-   arcrole = TEXT;
-
-   title = TEXT;
-
-   show = new, replace, embed, other, none_;
-
-   actuate = onLoad, onRequest, other, none_;
-
-   from = TEXT;
-
-   to = TEXT;
-****}
 
 END

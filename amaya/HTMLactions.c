@@ -152,11 +152,11 @@ Element GetElemWithAttr (Document doc, AttributeType attrType, char *nameVal,
   SearchNAMEattribute
   search in document doc an element having an attribut NAME or ID (defined
   in DTD HTML, MathML, SVG, Template or generic XML) whose value is nameVal.         
-  Return that element or NULL if not found.               
+  Return that element or NULL if not found.
   If ignoreAtt is not NULL, it is an attribute that should be ignored when
-  comparing NAME attributes.              
+  comparing NAME attributes.
   If ignoreEl is not NULL, it is an element that should be ignored when
-  comparing NAME attributes.              
+  comparing NAME attributes.
   ----------------------------------------------------------------------*/
 Element SearchNAMEattribute (Document doc, char *nameVal, Attribute ignoreAtt,
                              Element ignoreEl)
@@ -237,13 +237,19 @@ Element SearchNAMEattribute (Document doc, char *nameVal, Attribute ignoreAtt,
 #ifdef TEMPLATES
   if (!elFound)
     {
-      /* search all elements having an attribute ID (defined in the Template schema) */
       attrType.AttrSSchema = TtaGetSSchema ("Template", doc);
       if (attrType.AttrSSchema)
         {
-          attrType.AttrTypeNum = Template_ATTR_xmlid;
+          /* search all elements having an attribute ID (defined in the XTiger schema) */
+          attrType.AttrTypeNum = Template_ATTR_id;
           elFound = GetElemWithAttr (doc, attrType, nameVal, ignoreAtt, ignoreEl);
+		  if(!elFound) {
+		    /* search all elements having an attribute NAME (defined in the XTiger schema) */
+            attrType.AttrTypeNum = Template_ATTR_name;
+            elFound = GetElemWithAttr (doc, attrType, nameVal, ignoreAtt, ignoreEl);
+		  }
         }
+
     }
 #endif /* TEMPLATES */          
 #ifdef XML_GENERIC
@@ -1069,20 +1075,11 @@ void NextLinkOrFormElement (Document doc, View view)
   ThotBool            found, cycle;
   int                 i;
   int                 firstChar, lastChar;
-#ifdef TEMPLATES
-  ElementType         elType1, elType2;
-  Element             el2;
 
-  if (DocumentTypes[doc] == docText ||
-      DocumentTypes[doc] == docCSS ||
-      DocumentTypes[doc] == docSource)
-    // insert a tab
-    TtcInsertChar (doc, view, 0x9);
-  else if (!DocumentMeta[doc]->template_version)
-    {
-#endif /* TEMPLATES */    
-      schema = TtaGetSSchema ("HTML", doc);
-      attrType1.AttrTypeNum = HTML_ATTR_NAME;
+#ifdef TEMPLATES
+
+  schema = TtaGetSSchema ("HTML", doc);  
+  attrType1.AttrTypeNum = HTML_ATTR_NAME;
       attrType1.AttrSSchema = schema;
       attrType2.AttrTypeNum = HTML_ATTR_HREF_;
       attrType2.AttrSSchema = schema;
@@ -1176,68 +1173,8 @@ void NextLinkOrFormElement (Document doc, View view)
           if (!found)
             TtaSearchAttributes (attrType1, attrType2, SearchForward, el, &el, &attr);
         }
-  
-#ifdef TEMPLATES
-    }
-  else
-    {
-      /* The document is a template's instance
-       * The tab key is used to go to the next
-       * editable field */
-      schema = TtaGetSSchema ("Template", doc);
-      elType1.ElSSchema = schema;
-      elType1.ElTypeNum = Template_EL_FREE_STRUCT;
-      elType2.ElSSchema = schema;
-      elType2.ElTypeNum = Template_EL_FREE_CONTENT;
-      
-      root = TtaGetRootElement (doc);
-      TtaGiveFirstSelectedElement (doc, &startEl, &firstChar, &lastChar);
-      /* don't manage this element */
-      if (startEl == NULL)
-        {
-          /* start from the root element */
-          startEl = root;
-          /* we don't accept to restart from the beginning */
-          cycle = TRUE;
-        }
-      else
-        cycle = FALSE;
-      
-      el = TtaSearchTypedElement (elType1, SearchForward, startEl);
-      el2 = TtaSearchTypedElement (elType2, SearchForward, startEl);
+#endif // TEMPLATES
 
-      if (el == NULL)
-        {
-          el = el2;
-          if (el == NULL && !cycle)
-            {
-              /* There was no other element - Search from the beginning*/
-              el = TtaSearchTypedElement (elType1, SearchForward, root);
-              el2 = TtaSearchTypedElement (elType2, SearchForward, root);
-              if (el == NULL)
-                el = el2;
-            }
-        }
-      if (el != NULL && el2 != NULL)
-        {
-          if(TtaIsBefore (el2, el))
-            {
-              el = el2;
-            }
-        }
-      if (el != NULL)
-        {
-          /* el should contain the first free_struct or free_content element */
-          el = TtaGetLastLeaf (el);
-          if (el != NULL)
-            {
-              firstChar = TtaGetTextLength(el) + 1;
-              TtaSelectString (doc, el, firstChar, 0 /* To just put the selector at position firstChar */);
-
-            }
-        }
-    }
-#endif /* TEMPLATES */
 }
 
 
@@ -1254,10 +1191,6 @@ void PreviousLinkOrFormElement (Document doc, View view)
   ThotBool            found, cycle;
   int                 i;
   int                 firstChar, lastChar;
-#ifdef TEMPLATES
-  ElementType         elType1, elType2;
-  Element             el2;
-#endif /* TEMPLATES */    
 
   if (DocumentTypes[doc] == docText ||
       DocumentTypes[doc] == docCSS ||
@@ -1270,10 +1203,6 @@ void PreviousLinkOrFormElement (Document doc, View view)
   attrType2.AttrTypeNum = HTML_ATTR_HREF_;
   attrType2.AttrSSchema = schema;
 
-#ifdef TEMPLATES
-  if (!DocumentMeta[doc]->template_version)
-    {
-#endif /* TEMPLATES */    
       /* keep in mind the last element of the document */
       root = TtaGetRootElement (doc);
       el = TtaGetLastChild (root);
@@ -1392,90 +1321,6 @@ void PreviousLinkOrFormElement (Document doc, View view)
           if (!found && !attr)
             TtaSearchAttributes (attrType1, attrType2, SearchBackward, el, &el, &attr);
         }
-#ifdef TEMPLATES
-    }
-  else
-    {
-      /* The document is a template's instance
-       * The tab key is used to go to the next
-       * editable field */
-      found = false;
-      schema = TtaGetSSchema ("Template", doc);
-      elType1.ElSSchema = schema;
-      elType1.ElTypeNum = Template_EL_FREE_STRUCT;
-      elType2.ElSSchema = schema;
-      elType2.ElTypeNum = Template_EL_FREE_CONTENT;
-      
-      root = TtaGetRootElement (doc);
-      TtaGiveFirstSelectedElement (doc, &startEl, &firstChar, &lastChar);
-      el = TtaGetParent(startEl);
-      
-      while (!found && (el != NULL))
-        {
-          elType = TtaGetElementType(el);
-          if ((elType1.ElSSchema == elType.ElSSchema 
-               && elType1.ElTypeNum == elType.ElTypeNum) 
-              || (elType2.ElSSchema == elType.ElSSchema
-                  && elType.ElTypeNum == elType2.ElTypeNum))
-            {
-              found = true;
-            }
-          else
-            {
-              el = TtaGetParent(el);
-            }
-        }
-
-      if (el!=NULL)
-        startEl = el;
-      
-      /* don't manage this element */
-      if (startEl == NULL)
-        {
-          /* start from the root element */
-          startEl = root;
-          /* we don't accept to restart from the beginning */
-          cycle = TRUE;
-        }
-      else
-        cycle = FALSE;
-      
-      el = TtaSearchTypedElement (elType1, SearchBackward, startEl);
-      el2 = TtaSearchTypedElement (elType2, SearchBackward, startEl);
-      
-      if (el == NULL)
-        {
-          el = el2;
-          if (el == NULL && !cycle)
-            {
-              /* There was no other element - Search from the beginning*/
-              el = TtaSearchTypedElementInTree (elType1, SearchBackward, root, TtaGetLastLeaf(root));
-              el2 = TtaSearchTypedElementInTree (elType2, SearchBackward, root, TtaGetLastLeaf(root));
-              if (el == NULL)
-                el = el2;
-            }
-
-        }
-
-      if (el != NULL && el2 != NULL)
-        {
-          if(TtaIsBefore (el, el2))
-            {
-              el = el2;
-            }
-        }
-      if (el != NULL)
-        {
-          /* el must contain the first free_struct or free_content element */
-          el = TtaGetLastLeaf (el);
-          if (el != NULL)
-            {
-              firstChar = TtaGetTextLength(el) + 1;
-              TtaSelectString (doc, el, firstChar, 0 /* To just put the selector at position firstChar */);
-            }
-        }
-    }
-#endif /* TEMPLATES */
 }
 
 /*----------------------------------------------------------------------

@@ -4564,9 +4564,13 @@ void Reload (Document doc, View view)
   /* reload the document */
   pathname = (char *)TtaGetMemory (MAX_LENGTH);
   documentname = (char *)TtaGetMemory (MAX_LENGTH);
+
+#ifdef TODO
   /* if the document is a template, restore the template script URL */
   if (DocumentMeta[doc] && DocumentMeta[doc]->method == CE_TEMPLATE)
     ReloadTemplateParams (&(DocumentURLs[doc]), &(DocumentMeta[doc]->method));
+#endif //TODO
+  
   NormalizeURL (DocumentURLs[doc], 0, pathname, documentname, NULL);
 
   if (!IsW3Path (pathname) && !TtaFileExist (pathname))

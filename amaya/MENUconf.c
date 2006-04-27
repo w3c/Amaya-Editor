@@ -1799,6 +1799,7 @@ static void UpdateShowAddress ()
   ----------------------------------------------------------------------*/
 static void UpdateShowTemplates ()
 {  
+#ifdef TODO
   int               doc;
   DisplayMode     dispMode;
   for (doc = 1; doc < DocumentTableLength; doc++)
@@ -1815,7 +1816,7 @@ static void UpdateShowTemplates ()
             }
         }
     }
-
+#endif //TODO
 }
 
 /*----------------------------------------------------------------------

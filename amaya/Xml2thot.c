@@ -5976,10 +5976,10 @@ void StartXmlParser (Document doc, char *fileName,
       TtaSetStructureChecking (TRUE, doc);
       DocumentSSchema = NULL;
     }
-#ifdef TEMPLATES
+#ifdef TODO
   if (IsTemplateInstance(doc))
     LoadInstanceOfTemplate(doc);
-#endif /* TEMPLATES */
+#endif /* TODO */
 
   TtaSetDocumentUnmodified (doc);
 

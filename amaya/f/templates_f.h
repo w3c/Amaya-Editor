@@ -8,33 +8,19 @@
 
 extern void NewTemplate ( Document doc,
                           View view );
-extern void OpenTemplateDocument ( Document doc );
-extern void ReloadTemplateParams ( char **docURL,
-                                   int *method );
-extern void InitTemplateList ( void );
-extern void InsertInstanceMeta ( Document newdoc );
 extern int CreateInstanceOfTemplate ( Document doc,
                                       char *templatename,
                                       char *docname,
                                       DocumentType docType );
-extern void LoadInstanceOfTemplate ( Document doc );
-extern ThotBool IsTemplateInstance ( Document doc );
 
 #else /* __STDC__ */
 
 extern void NewTemplate ( Document doc,
                             View view );
-extern void OpenTemplateDocument ( Document doc );
-extern void ReloadTemplateParams ( char **docURL,
-                                     int *method );
-extern void InitTemplateList ( void );
-extern void InsertInstanceMeta ( Document newdoc );
 extern int CreateInstanceOfTemplate ( Document doc,
                                         char *templatename,
                                         char *docname,
                                         DocumentType docType );
-extern void LoadInstanceOfTemplate ( Document doc );
-extern ThotBool IsTemplateInstance ( Document doc );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

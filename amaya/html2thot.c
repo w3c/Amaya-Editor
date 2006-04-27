@@ -7038,10 +7038,6 @@ void StartParser (Document doc, char *fileName,
           docURL2 = NULL;
         }
 
-      /* an HTML document could be a template */
-      if (!plainText)
-        OpenTemplateDocument (doc);
-
       if (!external_doc)
         TtaSetDisplayMode (doc, dispMode);
 

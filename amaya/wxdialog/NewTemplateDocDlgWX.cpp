@@ -54,8 +54,7 @@ NewTemplateDocDlgWX::NewTemplateDocDlgWX ( int ref,
                                            wxWindow* parent,
                                            int doc,
                                            const wxString & title,
-                                           const wxString & docName,
-                                           const wxString & templateDir,
+										   const wxString & templateDir,
                                            const wxString & filter,
                                            int * p_last_used_filter
                                            ) :
@@ -159,7 +158,7 @@ void NewTemplateDocDlgWX::UpdateTemplateFromDir ()
       m_LockUpdateFlag = false;
       
       wxArrayString templateList;
-      wxDir::GetAllFiles(dir_value, &templateList, _T("*.html"), wxDIR_FILES);
+      wxDir::GetAllFiles(dir_value, &templateList, _T("*.xtd"), wxDIR_FILES);
       XRCCTRL(*this, "wxID_TEMPLATEFILENAME", wxComboBox)->Clear();
       XRCCTRL(*this, "wxID_TEMPLATEFILENAME", wxComboBox)->Append( templateList );
     }
@@ -215,8 +214,9 @@ void NewTemplateDocDlgWX::OnCreateButton( wxCommandEvent& event )
   
       // give the new url to amaya (to do url completion)
       ThotCallback (BaseDialog + URLName,  STRING_DATA, (char *)docname );  
-      TtaDestroyDialogue (BaseDialog + OpenTemplate);      
+      
       CreateInstanceOfTemplate (m_doc, temp, docname, docHTML);
+	  TtaDestroyDialogue (BaseDialog + OpenTemplate);
     }
   else
     {

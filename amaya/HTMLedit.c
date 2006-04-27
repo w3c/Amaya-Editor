@@ -2208,12 +2208,20 @@ ThotBool MakeUniqueName (Element el, Document doc, ThotBool doIt,
 #ifdef TEMPLATES
   else if (!strcmp(name, "Template"))
     {
+      //TODO : Check if NAME and ID must be different.
       /* it's an element from Template namespace, look for the
          id attribute from the same namespace */
-      attrIDType.AttrTypeNum = Template_ATTR_xmlid;
+      attrIDType.AttrTypeNum = Template_ATTR_id;
       attrID = TtaGetAttribute (el, attrIDType);
       if (attrID)
-        /* the element has a xml:id attribute. Check it too */
+        /* the element has a id attribute. Check it too */
+        checkXMLID = TRUE;
+      /* it's an element from Template namespace, look for the
+         id attribute from the same namespace */
+      attrIDType.AttrTypeNum = Template_ATTR_name;
+      attrID = TtaGetAttribute (el, attrIDType);
+      if (attrID)
+        /* the element has a id attribute. Check it too */
         checkXMLID = TRUE;
     }
 #endif /* TEMPLATES */

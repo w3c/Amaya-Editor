@@ -13,7 +13,6 @@ translation
 C_Empty: \0
 TEXT_UNIT: \0
 
-FREE_STRUCT: free_struct
-FREE_CONTENT: free_content
-
-xmlid: xml:id
+useEl : use
+useAt : use
+valueAt : value

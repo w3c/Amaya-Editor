@@ -23,7 +23,6 @@ public:
 		       wxWindow* parent,
 		       int doc,
 		       const wxString & title,
-		       const wxString & docName,
 		       const wxString & templateDir,
 		       const wxString & filter,
 		       int * p_last_used_filter

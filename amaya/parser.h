@@ -25,7 +25,7 @@
 #define SVG_URI         "http://www.w3.org/2000/svg"
 #define XLink_URI       "http://www.w3.org/1999/xlink"
 #define XLink_PREFIX    "xlink"
-#define Template_URI    "http://www.w3.org/Amaya/template"
+#define Template_URI    "http://www.w3.org/xtiger"
 #define Template_PREFIX "t"
 
 #define NAMESPACE_URI   "http://www.w3.org/XML/1998/namespace"

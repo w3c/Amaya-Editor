@@ -87,6 +87,7 @@ void   MapTemplateEntity (char *entityName, char *entityValue, char *script)
 void    TemplateEntityCreated (unsigned char *entityValue, Language lang,
 			      char *entityName, Document doc)
 {
+
 }
 
 
@@ -99,15 +100,38 @@ void TemplateElementComplete (ParserData *context, Element el, int *error)
 {
   Document       doc;
   ElementType elType;
+  Element    useMenu;
 
   doc = context->doc;
   elType = TtaGetElementType (el);
   switch (elType.ElTypeNum)
     {
-    case Template_EL_FREE_STRUCT:
-      CheckMandatoryAttribute (el, doc, Template_ATTR_xmlid);
-    case Template_EL_FREE_CONTENT:
-      CheckMandatoryAttribute (el, doc, Template_ATTR_xmlid);
+	case Template_EL_head:
+	  break;
+    case Template_EL_component:
+      CheckMandatoryAttribute (el, doc, Template_ATTR_name);
+	  break;
+    case Template_EL_union:
+      CheckMandatoryAttribute (el, doc, Template_ATTR_name);
+	  break;
+    case Template_EL_import:
+      CheckMandatoryAttribute (el, doc, Template_ATTR_src);
+	  break;
+    case Template_EL_useEl:
+      CheckMandatoryAttribute (el, doc, Template_ATTR_id);
+	  CheckMandatoryAttribute (el, doc, Template_ATTR_types);
+	  //Create the UseMenu Button
+	  elType.ElTypeNum = Template_EL_useMenu;
+	  useMenu = TtaNewElement(doc, elType);
+	  TtaInsertFirstChild(&useMenu, el, doc);
+	  break;
+    case Template_EL_bag:
+      CheckMandatoryAttribute (el, doc, Template_ATTR_id);
+	  CheckMandatoryAttribute (el, doc, Template_ATTR_types);
+	  break;
+    case Template_EL_attribute:
+      CheckMandatoryAttribute (el, doc, Template_ATTR_name);
+	  break;
     }
 }
 
@@ -127,18 +151,104 @@ void               UnknownTemplateNameSpace (ParserData *context,
   ----------------------------------------------------------------------*/
 void TemplateAttributeComplete (Attribute attr, Element el, Document doc)
 {
+	//TODO : The attribute attribute name is not unique!!
+	/*
    AttributeType	attrType;
    int            attrKind;
    TtaGiveAttributeType (attr, &attrType, &attrKind);
    switch (attrType.AttrTypeNum)
      {
-     case Template_ATTR_xmlid:
+     case Template_ATTR_id:
+       CheckUniqueName (el, doc, attr, attrType);
+       break;
+     case Template_ATTR_name:
        CheckUniqueName (el, doc, attr, attrType);
        break;
      default:
        break;
      }
+   */
 }
 
 
+#ifdef TODO
+/*----------------------------------------------------------------------
+  TemplateCheckInsert
+  ----------------------------------------------------------------------*/
+void  TemplateCheckInsert (Element *el, Element parent,
+                             Document doc, ThotBool *inserted)
+{
+
+ElementType  newElType, elType, prevType;
+  Element      newEl, ancestor, prev, prevprev;
+   
+  if (parent == NULL)
+    return;
+
+  elType = TtaGetElementType (*el);
+  //TODO Remove this line
+  elType = TtaGetElementType (parent);
+
+  if (elType.ElTypeNum == MathML_EL_MathML &&
+      strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0)
+    {
+      ancestor = parent;
+      elType = TtaGetElementType (ancestor);
+      if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+        return;
+
+      while (ancestor != NULL &&
+             IsXMLElementInline (elType, doc))
+        {
+          ancestor = TtaGetParent (ancestor);
+          elType = TtaGetElementType (ancestor);
+        }
+       
+      if (ancestor != NULL)
+        {
+          elType = TtaGetElementType (ancestor);
+          if (XhtmlCannotContainText (elType) &&
+              !XmlWithinStack (HTML_EL_Option_Menu, XhtmlParserCtxt->XMLSSchema))
+            {
+              /* Element ancestor cannot contain math directly. Create a */
+              /* Pseudo_paragraph element as the parent of the math element */
+              newElType.ElSSchema = XhtmlParserCtxt->XMLSSchema;
+              newElType.ElTypeNum = HTML_EL_Pseudo_paragraph;
+              newEl = TtaNewElement (doc, newElType);
+              XmlSetElemLineNumber (newEl);
+              /* insert the new Pseudo_paragraph element */
+              InsertXmlElement (&newEl); 
+              BlockInCharLevelElem (newEl);
+              if (newEl != NULL)
+                {
+                  /* insert the Text element in the tree */
+                  TtaInsertFirstChild (el, newEl, doc);
+                  *inserted = TRUE;
+		   
+                  /* if previous siblings of the new Pseudo_paragraph element
+                     are inline elements, move them within the new
+                     Pseudo_paragraph element */
+                  prev = newEl;
+                  TtaPreviousSibling (&prev);
+                  while (prev != NULL)
+                    {
+                      prevType = TtaGetElementType (prev);
+                      if (IsXMLElementInline (prevType, doc))
+                        {
+                          prevprev = prev;  TtaPreviousSibling (&prevprev);
+                          TtaRemoveTree (prev, doc);
+                          TtaInsertFirstChild (&prev, newEl, doc);
+                          prev = prevprev;
+                        }
+                      else
+                        prev = NULL;
+                    }
+                }
+            }
+        }
+    }
+  return;
+}
+
+#endif
 
