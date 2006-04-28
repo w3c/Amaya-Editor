@@ -7,32 +7,32 @@ body
 
 /************** En tête ***************/
 
-.etatcivil 
+.info 
 { 
   text-align:center;
   }
 
-.nom 
+.name
 { 
   font-family: Times, "Times New Roman", serif;
   font-weight: bold;
   font-size: 140%;
   }
 
-.adresse 
+.address
 { 
   float:right;
   text-align:right
   }
 
 /***************** Corps *****************/
-.corps
+.body
 { 
   float: right;
   width: 80%;
   }
 
-.rubrique
+.field
 { 
   border-style: solid;
   border-color: #594FBF;
@@ -41,18 +41,18 @@ body
   background-color: #BBBBBB;
   }
 
-.libelle
+.label
 { 
   font-weight: bold;
   display:block;
   }
 
-.commentaire:after
+.comment:after
 { 
   content: ", "
   }
 
-.lieu:after
+.location:after
 { 
   content: ". "
   }
@@ -73,7 +73,7 @@ body
   width: 19%;
   }
 
-.entree
+.entry
 { 
   display: block;
  }
