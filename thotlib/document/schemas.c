@@ -1018,7 +1018,7 @@ static void AppendSRule (int *ret, PtrSSchema pSS, PtrPSchema pPSch,
 
       if (!pSS->SsRule
 #ifndef NODISPLAY
-          || !pPSch->PsElemPRule
+          || (pPSch && !pPSch->PsElemPRule)
 #endif
           )
         {
