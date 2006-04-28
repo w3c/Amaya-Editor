@@ -535,7 +535,7 @@ void GenerateInlineElement (int eType, int aType, char * data)
               TtaClearViewSelections ();
               /* Need to force a redisplay */
               dispMode = TtaGetDisplayMode (doc);
-              TtaSetDisplayMode (doc, NoComputedDisplay);
+              TtaSetDisplayMode (doc, DeferredDisplay/*NoComputedDisplay*/);
               in_line = NULL;
               el = firstSel;
               parent = NULL;
