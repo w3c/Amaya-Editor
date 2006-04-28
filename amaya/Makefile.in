@@ -260,7 +260,10 @@ AMAYA_OBJ = \
 	MENUconf.o \
 	XLinkbuilder.o \
 	XLinkedit.o \
+	mydictionary.o \
+	templateDeclarations.o \
 	templates.o \
+	templatesStructure.o \
 	trans.o \
 	transparse.o \
 	UIcss.o \

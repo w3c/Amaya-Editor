@@ -6,69 +6,96 @@
  */
 
 #ifndef _DICTIONARY_H_
+#define _DICTIONARY_H_
 
-  typedef char* DicKey;
-  typedef void* DicElement;
+typedef void  *DicElement;
 
-  struct sDictionary;
-  typedef struct sDictionary* DicDictionary;
+//A record contains an element and its key.
+struct sRecord;
+typedef struct sRecord *Record;
+struct sRecord
+{
+	char        *key;
+  DicElement   element;
+	Record       next;
+};
 
-
-/*----------------------------------------------------------------------
-  Creates an empty dictionary and returns it.
-  ----------------------------------------------------------------------*/
-  DicDictionary		CreateDictionary();
-
-/*----------------------------------------------------------------------
-  Removes all the elements in the dictionary.
-  Warning : No element wil be freed.
-  ----------------------------------------------------------------------*/
-  void				CleanDictionary(DicDictionary dic);
-  
-/*----------------------------------------------------------------------
-  Adds an element el with a key key to the dictionary dic. If an element
-  existed already for the given key the old element is returned in order
-  to be freed if necessary.  
-  ----------------------------------------------------------------------*/
-  DicElement		Add(DicDictionary dic, DicKey key, DicElement el);
+//A dictionary contains a a sequence of Record
+struct sDictionary;
+typedef struct sDictionary* DicDictionary;
+struct sDictionary
+{
+	Record first;
+	Record iter;
+};
 
 /*----------------------------------------------------------------------
-  Adds an element el with a key key to the dictionary dic. If an element
-  existed already for the given key the old element is returned in order
-  to be freed if necessary.  
   ----------------------------------------------------------------------*/
-  DicElement		Remove(DicDictionary dic, DicKey key);
+extern DicDictionary CreateDictionary ( void );
 
 /*----------------------------------------------------------------------
-  Returns an element by its key or NULL if the element doesn't exist.
   ----------------------------------------------------------------------*/
-  DicElement		Get(DicDictionary dic, DicKey key);
+extern void CleanDictionary ( DicDictionary dic );
 
 /*----------------------------------------------------------------------
-  Returns true if there is no element in the dictionary.
+  Returns the Record with the passed key or the Record which would be
+  before if there is no Record with that key.
+  If the element should be the first it returns NULL
   ----------------------------------------------------------------------*/
-  bool				isEmpty(DicDictionary dic);
+extern Record Find ( DicDictionary dic, char * key );
 
 /*----------------------------------------------------------------------
-  Dictionary Iterator
+  Looks up dic for the element identified by key.
+  Returns :
+  null !isFirst  : if the element key has not been found.
+	null isFirst   : if the element key has been found but it is the first 
+  in the linked list.
+  !null !isFirst : if the element key has been found returns the previous element.
   ----------------------------------------------------------------------*/
-  void              First			(DicDictionary dic);
-  void				Next			(DicDictionary dic);
-  bool				IsDone			(DicDictionary dic);
-  char*				CurrentKey		(DicDictionary dic);
-  void*				CurrentElement	(DicDictionary dic);
-
-  /*----------------------------------------------------------------------
-  Returns true if the character c is a white space or '\0'.
-  ----------------------------------------------------------------------*/
-  inline bool isEOSorWhiteSpace(char c);
+extern Record FindPrevious ( DicDictionary dic, char * key, ThotBool *isFirst );
 
 /*----------------------------------------------------------------------
-  Returns a dictionary where all the keys are the tokens from a string
-  where each item is separated by white spaces.
-  All the elements are null.
   ----------------------------------------------------------------------*/
-  DicDictionary CreateDictionaryFromList(char *list);
+extern DicElement Add ( DicDictionary dic, char * key, DicElement el );
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+extern DicElement Remove ( DicDictionary dic, char * key);
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+extern DicElement Get ( DicDictionary dic, char * key);
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+extern void First ( DicDictionary dic );
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+extern void Next ( DicDictionary dic );
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+extern ThotBool IsDone ( DicDictionary dic );
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+extern char* CurrentKey ( DicDictionary dic );
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+extern void* CurrentElement ( DicDictionary dic );
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+extern ThotBool IsEmpty ( DicDictionary dic );
+ 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+extern ThotBool isEOSorWhiteSpace ( char c );
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+extern DicDictionary CreateDictionaryFromList ( char *list );
 
 #endif  /* _DICTIONARY_H_ */

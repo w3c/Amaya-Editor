@@ -8,19 +8,13 @@
 
 extern void NewTemplate ( Document doc,
                           View view );
-extern int CreateInstanceOfTemplate ( Document doc,
-                                      char *templatename,
-                                      char *docname,
-                                      DocumentType docType );
+extern ThotBool ShowUseTypes ( NotifyElement *event );
 
 #else /* __STDC__ */
 
 extern void NewTemplate ( Document doc,
                             View view );
-extern int CreateInstanceOfTemplate ( Document doc,
-                                        char *templatename,
-                                        char *docname,
-                                        DocumentType docType );
+extern ThotBool ShowUseTypes ( NotifyElement *event );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
