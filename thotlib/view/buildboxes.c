@@ -4428,7 +4428,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
               /* remove the old horizontal position */
               ClearPosRelation (pBox, TRUE);
               if (pAb->AbHorizPos.PosAbRef && pAb->AbHorizPos.PosAbRef == pAb->AbPrevious)
-                while (pAb->AbHorizPos.PosAbRef && HorizExtraAbFlow (pAb, frame))
+                while (pAb->AbHorizPos.PosAbRef && ExtraAbFlow (pAb, frame))
                   {
                     pAb->AbHorizPos.PosAbRef = pAb->AbHorizPos.PosAbRef->AbPrevious;
                     if (pAb->AbHorizPos.PosAbRef && pAb->AbHorizPos.PosAbRef->AbDead)
@@ -4498,7 +4498,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
               /* remove the old vertical position */
               ClearPosRelation (pBox, FALSE);
               if (pAb->AbVertPos.PosAbRef && pAb->AbVertPos.PosAbRef == pAb->AbPrevious)
-              while (pAb->AbVertPos.PosAbRef && VertExtraAbFlow (pAb, frame))
+              while (pAb->AbVertPos.PosAbRef && ExtraAbFlow (pAb, frame))
                 {
                   pAb->AbVertPos.PosAbRef = pAb->AbVertPos.PosAbRef->AbPrevious;
                     if (pAb->AbVertPos.PosAbRef && pAb->AbVertPos.PosAbRef->AbDead)
