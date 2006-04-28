@@ -225,15 +225,15 @@ ThotBool CreateNewTemplateDocDlgWX (int ref,  ThotWindow parent, Document doc,
   if (TtaRaiseDialogue (ref))
     return FALSE;
   
-  wxString wx_title          = TtaConvMessageToWX( title );
-  wxString wx_filter         = APPHTMLNAMEFILTER;
-  wxString wx_templateDir    = TtaConvMessageToWX( templateDir );
+  wxString wx_title = TtaConvMessageToWX( title );
+  wxString wx_filter = TtaConvMessageToWX("Template files (*.xtd)\0");
+  wxString wx_templateDir = TtaConvMessageToWX( templateDir );
   
   NewTemplateDocDlgWX * p_dlg = new NewTemplateDocDlgWX( ref,
                                                          parent,
                                                          doc,
                                                          wx_title,
-														 wx_templateDir,
+                                                         wx_templateDir,
                                                          wx_filter,
                                                          &g_Last_used_filter
                                                          );

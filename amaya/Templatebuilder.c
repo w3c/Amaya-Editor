@@ -118,7 +118,7 @@ void TemplateElementComplete (ParserData *context, Element el, int *error)
       CheckMandatoryAttribute (el, doc, Template_ATTR_src);
 	  break;
     case Template_EL_useEl:
-      CheckMandatoryAttribute (el, doc, Template_ATTR_id);
+      //CheckMandatoryAttribute (el, doc, Template_ATTR_id);
 	  CheckMandatoryAttribute (el, doc, Template_ATTR_types);
 	  //Create the UseMenu Button
 	  elType.ElTypeNum = Template_EL_useMenu;
@@ -126,7 +126,7 @@ void TemplateElementComplete (ParserData *context, Element el, int *error)
 	  TtaInsertFirstChild(&useMenu, el, doc);
 	  break;
     case Template_EL_bag:
-      CheckMandatoryAttribute (el, doc, Template_ATTR_id);
+      //CheckMandatoryAttribute (el, doc, Template_ATTR_id);
 	  CheckMandatoryAttribute (el, doc, Template_ATTR_types);
 	  break;
     case Template_EL_attribute:

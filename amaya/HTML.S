@@ -299,6 +299,7 @@ STRUCT
 	ruby;                                                   { ruby }
 	MathML;							{ MATH }
 	XLink;							{ Annotations }
+  Template;           { XTiger }
 	External_Object;				        { External Object }
 	END;
 

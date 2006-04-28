@@ -179,7 +179,7 @@ DicElement Get (DicDictionary dic, char * key)
 	if (!rec)
     return NULL;
 
-	if (strcmp(rec->key,key)==0)
+	if (strcmp (rec->key,key) == 0)
 		return rec->element;
 	else
 		return NULL;
