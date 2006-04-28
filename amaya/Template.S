@@ -28,9 +28,9 @@ STRUCT
 
   component (ATTR name = TEXT) = ANY - (head, union, import);
 
-  union (ATTR name; includeAt = TEXT; exclude = TEXT) = CONSTANT C_CR; {It's always empty}
+  union (ATTR name; includeAt = TEXT; exclude = TEXT) = CONSTANT C_CR; {It is always empty}
 
-  import (ATTR src = TEXT) = CONSTANT C_CR; {It's always empty}
+  import (ATTR src = TEXT) = CONSTANT C_CR; {It is always empty}
 
   repeat (ATTR minOcc = INTEGER; maxOcc = INTEGER) = BEGIN 
     RepeatContent = CASE OF
@@ -50,7 +50,7 @@ STRUCT
     type = TEXT; 
     useAt = TEXT; 
     valueAt = TEXT; 
-    fixed = true, false) = CONSTANT C_CR; {It's always empty}
+    fixed = true, false) = CONSTANT C_CR; {It is always empty}
 
 EXCEPT
   {Hiding unkown and language attributes}
