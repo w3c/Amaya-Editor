@@ -17,6 +17,7 @@
 #include "templates_f.h"
 #include "registry_wx.h"
 
+static int      MyRef = 0;
 
 //-----------------------------------------------------------------------------
 // Event table: connect the events to the handler functions to process them
@@ -54,17 +55,19 @@ NewTemplateDocDlgWX::NewTemplateDocDlgWX ( int ref,
                                            wxWindow* parent,
                                            int doc,
                                            const wxString & title,
-										   const wxString & templateDir,
+                                           const wxString & templateDir,
                                            const wxString & filter,
                                            int * p_last_used_filter
                                            ) :
   AmayaDialog( parent, ref )
-                                             ,m_Filter(filter)
-                                             ,m_LockUpdateFlag(false)
-                                             ,m_pLastUsedFilter(p_last_used_filter)
-                                             ,m_doc(doc)
+  ,m_Filter(filter)
+  ,m_LockUpdateFlag(false)
+  ,m_pLastUsedFilter(p_last_used_filter)
+  ,m_doc(doc)
 {
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("NewTemplateDocDlgWX"));
+  MyRef = ref;
+
   // update dialog labels with given ones
   SetTitle( title );
 
@@ -216,7 +219,7 @@ void NewTemplateDocDlgWX::OnCreateButton( wxCommandEvent& event )
       ThotCallback (BaseDialog + URLName,  STRING_DATA, (char *)docname );  
       
       CreateInstanceOfTemplate (m_doc, temp, docname, docHTML);
-	  TtaDestroyDialogue (BaseDialog + OpenTemplate);
+      TtaDestroyDialogue (MyRef);
     }
   else
     {
@@ -248,7 +251,7 @@ void NewTemplateDocDlgWX::OnClearButton( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void NewTemplateDocDlgWX::OnCancelButton( wxCommandEvent& event )
 {
-  TtaDestroyDialogue (BaseDialog + OpenTemplate);      
+  TtaDestroyDialogue (MyRef);      
 }
 
 /*----------------------------------------------------------------------

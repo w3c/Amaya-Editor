@@ -36,15 +36,13 @@ struct menuType
 void NewTemplate (Document doc, View view)
 {
 #ifdef TEMPLATES
-  int window_id  = TtaGetDocumentWindowId( doc, view );
-  ThotWindow p_window = (ThotWindow) TtaGetWindowFromId(window_id);
   char *templateDir = TtaGetEnvString ("TEMPLATES_DIRECTORY");
   ThotBool created;
 
   if (templates == NULL)
     templates = InitializeTemplateEnvironment();
   created = CreateNewTemplateDocDlgWX(BaseDialog + OpenTemplate,
-                                      p_window, doc,
+                                      TtaGetViewFrame (doc, view), doc,
                                       TtaGetMessage (AMAYA, AM_NEW_TEMPLATE),templateDir);
   
   if (created)
