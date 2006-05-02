@@ -159,7 +159,7 @@ ATTRIBUTES
   minOcc:
     begin
       create SAN;
-      create 'minOcc=';
+      create 'minOccurs=';
       create DoubleQuote;
       create minOcc;
       create DoubleQuote;
@@ -168,7 +168,7 @@ ATTRIBUTES
   maxOcc:
     begin
       create SAN;
-      create 'maxOcc=';
+      create 'maxOccurs=';
       create DoubleQuote;
       create maxOcc;
       create DoubleQuote;
@@ -222,7 +222,7 @@ ATTRIBUTES
   valueAt:
     begin
       create SAN;
-      create 'value=';
+      create 'default=';
       create DoubleQuote;
       create valueAt;
       create DoubleQuote;

@@ -14,7 +14,7 @@
 <p class="info"><strong class="name"><t:use types="string">
   Name</t:use>
 </strong><br />
-<span class="birth_day">Date of birth: <t:use types="string">
+<span class="birth_day">Date of birth: <t:use types="number">
   ../../..</t:use>
 </span></p>
 <address class="address">
@@ -24,7 +24,7 @@
   Tel: <t:use types="string">
     number</t:use>
   <br />
-  <a class="email"><t:attribute name="href"  value="mailto:email@serveur"/>
+  <a class="email"><t:attribute name="href"  default="mailto:email@serveur"/>
   e-mail: <t:use types="string">
     email@server</t:use>
   </a>
@@ -48,7 +48,7 @@
 
 <div class="field">
 <h1 id="Education">Education and training</h1>
-<t:repeat  minOcc="1">
+<t:repeat  minOccurs="1">
   <t:use types="dl">
     <dl>
       <dt class="date">2004 - 2005</dt>
@@ -62,7 +62,7 @@
 
 <div class="field">
 <h1 id="Employment">Employment and placements</h1>
-<t:repeat  minOcc="1">
+<t:repeat  minOccurs="1">
   <t:use types="dl">
     <dl>
       <dt class="date">June-July 2004</dt>
@@ -76,7 +76,7 @@
 
 <div class="field">
 <h1 id="Languages">Languages</h1>
-<t:repeat  minOcc="1">
+<t:repeat  minOccurs="1">
   <t:use types="dl">
     <dl>
       <dt>English</dt>
@@ -88,7 +88,7 @@
 
 <div class="field">
 <h1 id="Skill">Skills</h1>
-<t:repeat  minOcc="1">
+<t:repeat  minOccurs="1">
   <t:use types="p">
 
     <p>Description of knowlegdes</p>
@@ -98,7 +98,7 @@
 
 <div class="field">
 <h1 id="Interest">Interests</h1>
-<t:repeat  minOcc="1">
+<t:repeat  minOccurs="1">
   <t:use types="p">
 
     <p>Other informations</p>
