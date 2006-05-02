@@ -5,7 +5,7 @@
   <title>CV</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
   <meta name="description" content="CV" />
-  <meta name="keywords" content="mot-clef" />
+  <meta name="keywords" content="employment" />
   <meta name="template_id" content="amaya-cv-en-0.1" />
   <link rel="stylesheet" type="text/css" href="cv.css" />
 </head>
@@ -32,7 +32,7 @@
 <map id="menu" title="Menu" class="menu">
   <a class="entry" href="#Objectives">Objectives</a><a class="entry"
   href="#Education">Education and training</a><a class="entry"
-  href="#Employment">Eployment and placements</a><a class="entry"
+  href="#Employment">Employment and placements</a><a class="entry"
   href="#Language">Languages</a><a class="entry" href="#Skill">Skills</a><a
   class="entry" href="#Interest">Interests</a></map>
 
