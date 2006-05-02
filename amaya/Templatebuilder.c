@@ -106,7 +106,7 @@ void TemplateElementComplete (ParserData *context, Element el, int *error)
   elType = TtaGetElementType (el);
   switch (elType.ElTypeNum)
     {
-	case Template_EL_head:
+    case Template_EL_head:
 	  break;
     case Template_EL_component:
       CheckMandatoryAttribute (el, doc, Template_ATTR_name);
@@ -132,6 +132,8 @@ void TemplateElementComplete (ParserData *context, Element el, int *error)
     case Template_EL_attribute:
       CheckMandatoryAttribute (el, doc, Template_ATTR_name);
 	  break;
+    default:
+      break;
     }
 }
 

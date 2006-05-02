@@ -86,6 +86,18 @@ RULES
     create 'repeat>\12' after;
   end;
 
+  option:
+    begin
+    create SOT;
+    create 'option';
+    create Attributes;
+    create tagend;
+    indent +2;
+    indent -2 after;
+    create SCT after;
+    create 'repeat>\12' after;
+  end;
+
   useEl: 
     begin
     create SOT;

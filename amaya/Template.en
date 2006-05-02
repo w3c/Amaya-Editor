@@ -10,9 +10,12 @@ export
 
 translation
 
-C_Empty: \0
+C_CR: \0
 TEXT_UNIT: \0
-
-useEl : use
-useAt : use
-valueAt : value
+useMenu: \0
+useEl: use
+useAt: use
+valueAt: default
+includeAt: include
+minOcc: minOccurs
+maxOcc: maxOccurs

@@ -263,6 +263,38 @@ RULES
 		  VertPos: Top = Previous . Bottom;
 		  END;
 	 END;	 
+	 
+  option:	
+		BEGIN	
+    CreateBefore(ElementName);
+  	CreateWith(VerticalLine);
+    Width: auto{Enclosing . Width};
+    {Display: Block;}
+    VertPos: Top = Previous . Bottom;
+    MarginTop: 0;
+    HorizPos: Left = Enclosing . Left; 
+		BorderTopWidth: 1 pt;
+		BorderLeftWidth: 1 pt;
+		BorderBottomWidth: 1 pt;
+		BorderRightWidth: 1 pt;
+		BorderTopStyle: Dotted;
+		BorderLeftStyle: Dotted;
+		BorderBottomStyle: Dotted;
+		BorderRightStyle: Dotted;
+		BorderTopColor: Blue;
+		BorderLeftColor: Blue;
+		BorderBottomColor: Blue;
+		BorderRightColor: Blue;
+  	IN Structure_view BEGIN
+			BorderTopWidth: 0;
+			BorderLeftWidth: 0;
+			BorderBottomWidth: 0;
+		  BorderRightWidth: 0;
+		  HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	    Width: Enclosing . Width - STRUCT_INDENT;
+		  VertPos: Top = Previous . Bottom;
+		  END;
+	 END;	 
 
 
 ATTRIBUTES

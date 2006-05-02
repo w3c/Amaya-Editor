@@ -16,7 +16,14 @@ CONST
 
 STRUCT
 
-  Template {Virtual} = BEGIN ANY; END + (head, component, union, import, repeat, useEl, bag, attribute);
+  Template {Virtual} = CASE OF
+      head;
+      repeat;
+      option;
+      useEl;
+      bag;
+      attribute;
+    END;
 
   head = LIST OF (
     Declaration = CASE OF
@@ -27,19 +34,32 @@ STRUCT
   );
 
   component (ATTR name = TEXT) = ANY - (head, union, import);
-
   union (ATTR name; includeAt = TEXT; exclude = TEXT) = CONSTANT C_CR; {It is always empty}
-
   import (ATTR src = TEXT) = CONSTANT C_CR; {It is always empty}
+
+  Model = CASE OF
+      component;
+      useEl;
+      bag;
+      ANY;
+      END - (head, union, import, repeat, option);
 
   repeat (ATTR minOcc = INTEGER; maxOcc = INTEGER) = BEGIN 
     RepeatContent = CASE OF
-      Model = CASE OF component; useEl; END;
+      Model;
       Repetitions = LIST OF (useEl); 
     END;
-  END;  
+  END;
+
+  option = BEGIN 
+    Model;
+  END;
   
-  useEl (ATTR id = TEXT; types = TEXT; currentType = TEXT) = BEGIN useMenu; ANY; END - (head, union, import, component);
+  useEl (ATTR id = TEXT; types = TEXT; currentType = TEXT)
+     = BEGIN
+        useMenu;
+        ANY;
+       END - (head, union, import, component);
 
   useMenu = CONSTANT C_CR; {Just a button}  
 
