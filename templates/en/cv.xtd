@@ -24,16 +24,16 @@
   Tel: <t:use types="string">
     number</t:use>
   <br />
-  <a class="email"><t:attribute name="href" default="mailto:email@serveur"/>
+  <a class="email"><t:attribute name="href"  value="mailto:email@serveur"/>
   e-mail: <t:use types="string">
     email@server</t:use>
   </a>
 </address>
 <map id="menu" title="Menu" class="menu">
-  <a class="entry" href="#Objectives">Objectives</a> <a class="entry"
-  href="#Education">Education and training</a> <a class="entry"
-  href="#Employment">Employment and placements</a> <a class="entry"
-  href="#Language">Languages</a> <a class="entry" href="#Skill">Skills</a> <a
+  <a class="entry" href="#Objectives">Objectives</a><a class="entry"
+  href="#Education">Education and training</a><a class="entry"
+  href="#Employment">Eployment and placements</a><a class="entry"
+  href="#Language">Languages</a><a class="entry" href="#Skill">Skills</a><a
   class="entry" href="#Interest">Interests</a></map>
 
 <div class="body">
@@ -48,7 +48,7 @@
 
 <div class="field">
 <h1 id="Education">Education and training</h1>
-<t:repeat minOccurs="1">
+<t:repeat  minOcc="1">
   <t:use types="dl">
     <dl>
       <dt class="date">2004 - 2005</dt>
@@ -62,7 +62,7 @@
 
 <div class="field">
 <h1 id="Employment">Employment and placements</h1>
-<t:repeat minOccurs="1">
+<t:repeat  minOcc="1">
   <t:use types="dl">
     <dl>
       <dt class="date">June-July 2004</dt>
@@ -76,7 +76,7 @@
 
 <div class="field">
 <h1 id="Languages">Languages</h1>
-<t:repeat minOccurs="1">
+<t:repeat  minOcc="1">
   <t:use types="dl">
     <dl>
       <dt>English</dt>
@@ -88,7 +88,7 @@
 
 <div class="field">
 <h1 id="Skill">Skills</h1>
-<t:repeat minOccurs="1">
+<t:repeat  minOcc="1">
   <t:use types="p">
 
     <p>Description of knowlegdes</p>
@@ -98,7 +98,7 @@
 
 <div class="field">
 <h1 id="Interest">Interests</h1>
-<t:repeat minOccurs="1">
+<t:repeat  minOcc="1">
   <t:use types="p">
 
     <p>Other informations</p>
@@ -117,7 +117,7 @@ height="31" width="88" /></a> <a href="http://www.w3.org/Amaya"><img
 src="http://www.w3.org/Amaya/Icons/w3c-amaya.gif" alt="W3C-Amaya" height="31"
 width="88" /></a></p>
 <address>
-  <!--$date=-->2006-04-28<!--$-->
+  <!--$date=-->2006-05-02<!--$-->
 
 </address>
 </div>

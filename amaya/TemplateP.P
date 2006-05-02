@@ -164,7 +164,7 @@ RULES
     CreateBefore(ElementName);
   	CreateWith(VerticalLine);
     Width: auto{Enclosing . Width};
-    Display: Block;
+    {Display: Block;}
     VertPos: Top = Previous . Bottom;
     MarginTop: 0;
     HorizPos: Left = Enclosing . Left; 
@@ -201,7 +201,7 @@ RULES
     CreateBefore(ElementName);
   	CreateWith(VerticalLine);
     Width: auto{Enclosing . Width};
-    Display: Block;
+    {Display: Block;}
     VertPos: Top = Previous . Bottom;
     MarginTop: 0;
     HorizPos: Left = Enclosing . Left; 
@@ -233,7 +233,7 @@ RULES
     CreateBefore(ElementName);
   	CreateWith(VerticalLine);
     Width: auto{Enclosing . Width};
-    Display: Block;
+    {Display: Block;}
     VertPos: Top = Previous . Bottom;
     MarginTop: 0;
     HorizPos: Left = Enclosing . Left; 

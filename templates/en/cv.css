@@ -1,44 +1,47 @@
 body
-{ 
-  color: #594FBF;
-  background: #DDDDDD;
+ { 
+  color: #6d5858;
+  background-color: #f9f8ea;
+  font-family: Times, "Times New Roman", serif;
+  font-size: 14px;
  }
 
+span
+ {
+ display: inline;
+ }
 
-/************** En tête ***************/
+/************** Top ***************/
 
 .info 
-{ 
-  text-align:center;
-  }
+ { 
+  text-align: left;
+ }
 
 .name
-{ 
-  font-family: Times, "Times New Roman", serif;
+ { 
   font-weight: bold;
   font-size: 140%;
-  }
+ }
 
 .address
-{ 
-  float:right;
-  text-align:right
-  }
+ { 
+  text-align:left;
+ }
 
-/***************** Corps *****************/
+/***************** Body *****************/
 .body
 { 
-  float: right;
-  width: 80%;
+  width: 70%;
   }
 
 .field
 { 
-  border-style: solid;
-  border-color: #594FBF;
   padding: 10px;
   margin: 10px;
-  background-color: #BBBBBB;
+  border-style: solid;
+  border-color: #353175;
+  border-width: 1px 4px 4px 1px;
   }
 
 .label
@@ -61,24 +64,32 @@ body
 /***************** Menu ******************/
 .menu 
 { 
-  clear: both;
-  float: left;
+  top: 0;
+  right: 4px;
+  position: absolute;
   margin-top: 10px;
   text-align: left;
-  background-color: #BBBBBB;
-  font-size: 120%;
-  border-style:solid;
-  border-color: #594FBF;
-  padding: 2px;
-  width: 19%;
+  color: #6d5858;
+  padding: 10px;
+  width: 20%;
   }
 
 .entry
 { 
   display: block;
+  color: #353175;
+  font-weight:normal;
+  font-size : 130%;
+  text-decoration: none;
+  text-align: center;
+  background-color: #f8ebc4;
+  margin: 4px;
+  border-style: solid;
+  border-color: #353175;
+  border-width: 1px 4px 4px 1px;
  }
 
-/**************** Pied de page **********/
+/**************** Page foot **********/
 
 .footer
 { 
