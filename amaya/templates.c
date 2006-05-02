@@ -27,7 +27,7 @@ struct menuType
 #include "appdialogue_wx.h"
 #include "init_f.h"
 #include "wxdialogapi_f.h"
-#include "templateDeclarations.h"
+#include "templatesStructure_f.h"
 #endif /* TEMPLATES */
 
 /*----------------------------------------------------------------------

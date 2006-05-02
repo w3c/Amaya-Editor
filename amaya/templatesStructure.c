@@ -10,7 +10,6 @@
  *
  */
 
-#ifdef TEMPLATES
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "document.h"
@@ -22,7 +21,7 @@
 #include "AHTURLTools_f.h"
 #include "templateDeclarations.h"
 
-
+#ifdef TEMPLATES
 /* Information needed for the callback after loading a template.
    Just the path of the template, which identifies it. */
 typedef struct _TemplateCtxt
@@ -163,6 +162,7 @@ void GetTemplate_callback (int newdoc, int status,  char *urlName,
 	FreeDocumentResource (newdoc);
 	CleanUpParsingErrors ();
 }
+#endif /* TEMPLATES */
 
 /*----------------------------------------------------------------------
   GetSchemaFromDocType: Returns the name of the schema corresponding to 
@@ -170,6 +170,7 @@ void GetTemplate_callback (int newdoc, int status,  char *urlName,
   ----------------------------------------------------------------------*/
 char *GetSchemaFromDocType (DocumentType docType)
 {
+#ifdef TEMPLATES
 	switch (docType)
     {
     case docAnnot :
@@ -185,12 +186,15 @@ char *GetSchemaFromDocType (DocumentType docType)
     default :
       return "HTML";
     }
+#endif /* TEMPLATES */
+  return "HTML";
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void LoadTemplate (char* templatename, char* schemaname)
 {
+#ifdef TEMPLATES
 	Document newdoc, templateDoc;
 
 	if(Get(templates,templatename)) return;
@@ -204,11 +208,12 @@ void LoadTemplate (char* templatename, char* schemaname)
       //Creation of the callback context
       TemplateCtxt *ctx = (TemplateCtxt *)TtaGetMemory (sizeof (TemplateCtxt));
       ctx->path = templatename;
-      newdoc = GetAmayaDoc (templatename, NULL, templateDoc,
-                            NULL, CE_MAKEBOOK, FALSE, 
+      newdoc = GetAmayaDoc (templatename, NULL, templateDoc, templateDoc,
+                            CE_MAKEBOOK, FALSE, 
                             (void (*)(int, int, char*, char*, const AHTHeaders*, void*)) GetTemplate_callback,
                             (void *) ctx);
     }
+#endif /* TEMPLATES */
 }
 
 /*----------------------------------------------------------------------
@@ -216,6 +221,7 @@ void LoadTemplate (char* templatename, char* schemaname)
 void CreateInstanceDocument (Document doc, char *templatename, char *docname,
                              DocumentType docType)
 {
+#ifdef TEMPLATES
 	Document newdoc;
 	
 	if (!IsW3Path (docname) && TtaFileExist (docname))
@@ -299,6 +305,5 @@ void CreateInstanceDocument (Document doc, char *templatename, char *docname,
 		  CheckFreeAreas (newdoc, el);
       }*/
     }
-}
-
 #endif /* TEMPLATES */
+}
