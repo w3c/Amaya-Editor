@@ -159,7 +159,12 @@ RULES
 		Visibility: Enclosing =;
 		END;
 
-  bag:	
+  head: BEGIN
+		Visibility: 0;
+	  IN Structure_view
+		  Visibility: Enclosing =;
+    END;
+  bag:
 		BEGIN	
     CreateBefore(ElementName);
   	CreateWith(VerticalLine);
@@ -201,7 +206,7 @@ RULES
 	  END;
 	 
   useEl:	
-		BEGIN	
+		BEGIN
     CreateBefore(ElementName);
   	CreateWith(VerticalLine);
     Width: auto{Enclosing . Width};
@@ -232,7 +237,7 @@ RULES
 		  END;
 	 END;
 	 
-  repeat:	
+  repeat:
 		BEGIN	
     CreateBefore(ElementName);
   	CreateWith(VerticalLine);
@@ -265,7 +270,7 @@ RULES
 	 END;	 
 	 
   option:	
-		BEGIN	
+		BEGIN
     CreateBefore(ElementName);
   	CreateWith(VerticalLine);
     Width: auto{Enclosing . Width};
