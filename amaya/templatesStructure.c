@@ -301,20 +301,4 @@ void CreateInstanceDocument (Document doc, char *templatename, char *docname,
     }
 }
 
-
-/*----------------------------------------------------------------------
-  Load a template and create the instance file - update images and 
-  stylesheets related to the template.
-  ----------------------------------------------------------------------*/
-int CreateInstanceOfTemplate (Document doc, char *templatename, char *docname,
-                              DocumentType docType)
-{
-	char* schemaname = GetSchemaFromDocType(docType);	
-	ThotBool dontReplace = DontReplaceOldDoc;
-
-	LoadTemplate( templatename, schemaname);
-	DontReplaceOldDoc = dontReplace;
-	CreateInstanceDocument (doc, templatename, docname, docType);
-	return -1;
-}
 #endif /* TEMPLATES */
