@@ -118,8 +118,32 @@ extern ThotBool TtaWriteInteger ( BinFile file,
                                  int lval );
 extern ThotBool TtaCompareFiles ( CONST char *file1,
                                  CONST char *file2 );
+
+/*----------------------------------------------------------------------
+   TtaMakeDirectory
+   Platform independent call to the local mkdir function
+   Return value:
+   TRUE if the directory could be created or if it existed already,
+   FALSE otherwise.
+  ----------------------------------------------------------------------*/
 extern ThotBool TtaMakeDirectory ( char *directory );
+
+/*----------------------------------------------------------------------
+   TtaCheckDirectory
+   Ckecks that a directory exists and can be accessed.
+   Return value:
+   TRUE if the directory is OK, FALSE if not.	
+  ----------------------------------------------------------------------*/
 extern ThotBool TtaCheckDirectory ( char *directory );
+
+/*----------------------------------------------------------------------
+  TtaCheckMakeDirectory
+  Checks that a directory name exists. If No, it tries to create it.
+  If recusive == TRUE, it tries to create all the intermediary directories.
+  Return value:
+  TRUE if the operation succeeds, FALSE otherwise.
+  ----------------------------------------------------------------------*/
+extern ThotBool TtaCheckMakeDirectory (char *name, ThotBool recursive);
 
 #endif /* __CEXTRACT__ */
 #endif /* _FILEACCESS_H_ */

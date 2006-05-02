@@ -2966,7 +2966,7 @@ ThotBool CreateLibraryDirectory (char *libDirectory)
   ThotBool    RepCreated = FALSE;
 #ifdef _SVG
   ExtractLibraryPrefixFilename (libDirectory);
-  RepCreated = CheckMakeDirectory (libDirectory, TRUE);
+  RepCreated = TtaCheckMakeDirectory (libDirectory, TRUE);
 #endif /* _SVG */
   return RepCreated;
 }

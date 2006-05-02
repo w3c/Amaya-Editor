@@ -989,10 +989,7 @@ int FileWriteAccess (char *fileName)
 
 /*----------------------------------------------------------------------
    TtaMakeDirectory
-
    Platform independent call to the local mkdir function
-   Parameter:
-   directory: the directory name.
    Return value:
    TRUE if the directory could be created or if it existed already,
    FALSE otherwise.
@@ -1020,13 +1017,9 @@ ThotBool TtaMakeDirectory (char *directory)
 
 /*----------------------------------------------------------------------
    TtaCheckDirectory
-
    Ckecks that a directory exists and can be accessed.
-   Parameter:
-   directory: the directory name.
    Return value:
-   TRUE if the directory is OK, FALSE if not.
-	
+   TRUE if the directory is OK, FALSE if not.	
   ----------------------------------------------------------------------*/
 ThotBool TtaCheckDirectory (char *directory)
 {
@@ -1065,6 +1058,72 @@ ThotBool TtaCheckDirectory (char *directory)
 #endif /* _WX */
 }
 
+
+/*----------------------------------------------------------------------
+  TtaCheckMakeDirectory
+  Checks that a directory name exists. If No, it tries to create it.
+  If recusive == TRUE, it tries to create all the intermediary directories.
+  Return value:
+  TRUE if the operation succeeds, FALSE otherwise.
+  ----------------------------------------------------------------------*/
+ThotBool TtaCheckMakeDirectory (char *name, ThotBool recursive)
+{
+  ThotBool  i;
+  char     *tmp_name;
+  char     *ptr;
+  char      tmp_char;
+
+  /* protection against bad calls */
+  if (!name || *name == EOS)
+    return FALSE;
+
+  /* does the directory exist? */
+  i = TtaMakeDirectory (name);
+  if (i)
+    return TRUE;
+  else
+    {
+      /* no, try to create it then */
+      /* don't do anything else */
+      if (!recursive)
+        return FALSE;
+      
+      /* try to create all the missing directories up to name */
+      tmp_name = TtaStrdup (name);
+      ptr = tmp_name;
+#ifdef _WINDOWS
+      if (*ptr != EOS && ptr[1] == ':')
+        ptr += 2;
+#endif /* _WINDOWS */
+      if (*ptr == DIR_SEP)
+        ptr++;
+      /* create all the intermediary directories */
+      while (*ptr != EOS)
+        {
+          if (*ptr != DIR_SEP)
+            ptr++;
+          else
+            {
+              tmp_char = *ptr;
+              *ptr = EOS;
+              i = TtaMakeDirectory (tmp_name);
+              if (!i)
+                {
+                  TtaFreeMemory (tmp_name);
+                  return FALSE;
+                }
+              *ptr = tmp_char;
+              ptr++;
+            }
+        }
+      /* create the last dir */
+      i = TtaMakeDirectory (tmp_name);
+      TtaFreeMemory (tmp_name);
+      if (!i)
+        return FALSE;
+    }
+  return TRUE;
+}
 
 
 

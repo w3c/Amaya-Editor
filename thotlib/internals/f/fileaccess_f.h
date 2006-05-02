@@ -62,6 +62,8 @@ extern void FindCompleteName ( char *fileName,
 extern int FileWriteAccess ( char *fileName );
 extern ThotBool TtaMakeDirectory ( char *directory );
 extern ThotBool TtaCheckDirectory ( char *directory );
+extern ThotBool TtaCheckMakeDirectory ( char *name,
+                                        ThotBool recursive );
 
 #else /* __STDC__ */
 
@@ -121,6 +123,8 @@ extern void FindCompleteName ( char *fileName,
 extern int FileWriteAccess ( char *fileName );
 extern ThotBool TtaMakeDirectory ( char *directory );
 extern ThotBool TtaCheckDirectory ( char *directory );
+extern ThotBool TtaCheckMakeDirectory ( char *name,
+                                          ThotBool recursive );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -150,8 +150,6 @@ extern Document GetAmayaDoc ( char *urlname,
 extern void CallbackDialogue ( int ref,
                                int typedata,
                                char *data );
-extern ThotBool CheckMakeDirectory ( char *name,
-                                     ThotBool recursive );
 extern void FreeAmayaIcons ( void );
 extern void FreeAmayaStructures ( void );
 extern void InitAmaya ( NotifyEvent * event );
@@ -353,8 +351,6 @@ extern Document GetAmayaDoc ( char *urlname,
 extern void CallbackDialogue ( int ref,
                                  int typedata,
                                  char *data );
-extern ThotBool CheckMakeDirectory ( char *name,
-                                       ThotBool recursive );
 extern void FreeAmayaIcons ( void );
 extern void FreeAmayaStructures ( void );
 extern void InitAmaya ( NotifyEvent * event );

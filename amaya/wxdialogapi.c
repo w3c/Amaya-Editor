@@ -534,7 +534,7 @@ ThotBool CreateSaveObject (int ref, ThotWindow parent, char* objectname)
   wxString homedir = TtaGetHomeDir();
   strcpy (SavePath, (const char *)homedir.mb_str(wxConvUTF8));
   strcat (SavePath, "/Desktop/");
-  if (CheckMakeDirectory (SavePath, TRUE))
+  if (TtaCheckMakeDirectory (SavePath, TRUE))
     {
       strcat (SavePath, objectname);
       DoSaveObjectAs ();

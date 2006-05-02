@@ -7201,71 +7201,6 @@ static ThotBool RestoreAmayaDocs ()
 
 
 /*----------------------------------------------------------------------
-  CheckMakeDirectory verifies if a directory name exists. If it doesn't
-  exist, it tries to create it. If recusive == TRUE, it tries to create
-  all the intermediary directories.
-  Returns TRUE if the operation succeeds, FALSE otherwise.
-  ----------------------------------------------------------------------*/
-ThotBool CheckMakeDirectory (char *name, ThotBool recursive)
-{
-  ThotBool  i;
-  char     *tmp_name;
-  char     *ptr;
-  char      tmp_char;
-
-  /* protection against bad calls */
-  if (!name || *name == EOS)
-    return FALSE;
-
-  /* does the directory exist? */
-  i = TtaMakeDirectory (name);
-  if (i)
-    return TRUE;
-  else
-    {
-      /* no, try to create it then */
-      /* don't do anything else */
-      if (!recursive)
-        return FALSE;
-      
-      /* try to create all the missing directories up to name */
-      tmp_name = TtaStrdup (name);
-      ptr = tmp_name;
-#ifdef _WINDOWS
-      if (*ptr != EOS && ptr[1] == ':')
-        ptr += 2;
-#endif /* _WINDOWS */
-      if (*ptr == DIR_SEP)
-        ptr++;
-      /* create all the intermediary directories */
-      while (*ptr != EOS)
-        {
-          if (*ptr != DIR_SEP)
-            ptr++;
-          else
-            {
-              tmp_char = *ptr;
-              *ptr = EOS;
-              i = TtaMakeDirectory (tmp_name);
-              if (!i)
-                {
-                  TtaFreeMemory (tmp_name);
-                  return FALSE;
-                }
-              *ptr = tmp_char;
-              ptr++;
-            }
-        }
-      /* create the last dir */
-      i = TtaMakeDirectory (tmp_name);
-      TtaFreeMemory (tmp_name);
-      if (!i)
-        return FALSE;
-    }
-  return TRUE;
-}
-
-/*----------------------------------------------------------------------
   FreeAmayaIcons cleans up icons objects.
   ----------------------------------------------------------------------*/
 void FreeAmayaIcons ()
@@ -7581,11 +7516,11 @@ void InitAmaya (NotifyEvent * event)
   TtaSetNextCellInColumnFunction ((Proc5) NextCellInColumn);
   /* Initialize the Amaya user and tmp directories */
   s = TtaGetEnvString ("APP_TMPDIR");
-  if (!CheckMakeDirectory (s, TRUE))
+  if (!TtaCheckMakeDirectory (s, TRUE))
     /* try to use the default value */
     {
       s = TtaGetDefEnvString ("APP_TMPDIR");
-      if (CheckMakeDirectory (s, TRUE))
+      if (TtaCheckMakeDirectory (s, TRUE))
         /* make it the current user one */
         TtaSetEnvString ("APP_TMPDIR", s, TRUE);
       else
@@ -7608,7 +7543,7 @@ void InitAmaya (NotifyEvent * event)
   TtaAppendDocumentPath (TempFileDirectory);
 #ifdef _WINGUI
   s = TtaGetEnvString ("APP_HOME");
-  if (!CheckMakeDirectory (s, TRUE))
+  if (!TtaCheckMakeDirectory (s, TRUE))
     /* didn't work, so we exit */
     {
       sprintf (TempFileDirectory,

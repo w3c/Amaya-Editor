@@ -796,7 +796,7 @@ void DoSaveObjectAs (void)
   else
     {
       TtaExtractName (tempfile, pathname, docname);
-      if (!CheckMakeDirectory (pathname, TRUE))
+      if (!TtaCheckMakeDirectory (pathname, TRUE))
         {
           // cannot create the current path
           /* cannot save */
@@ -3719,7 +3719,7 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
             }
         }
       /* verify that the directory exists */
-      else if (!CheckMakeDirectory (SavePath, TRUE))
+      else if (!TtaCheckMakeDirectory (SavePath, TRUE))
         {
           sprintf (msg, TtaGetMessage (AMAYA, AM_CANNOT_SAVE), SavePath);
           InitInfo (NULL, msg);
@@ -3776,7 +3776,7 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
                 }
               else
                 strcpy(tempname, imgbase);
-              ok = CheckMakeDirectory (tempname, TRUE);
+              ok = TtaCheckMakeDirectory (tempname, TRUE);
               if (!ok)
                 {
                   sprintf (msg, TtaGetMessage (AMAYA, AM_CANNOT_SAVE), tempname);

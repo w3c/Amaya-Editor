@@ -1618,7 +1618,8 @@ void TtaInitializeAppRegistry (char *appArgv0)
   ptr = TtaGetEnvString ("APP_HOME");
   if (ptr && TtaDirExists (ptr))
     strcpy (app_home, ptr);
-  if (app_home[0] != EOS && !TtaDirExists (app_home) && !TtaMakeDirectory (app_home))
+  // IV: May 2006  replace TtaMakeDirectory (app_home) by TtaCheckMakeDirectory (app_home, TRUE)
+  if (app_home[0] != EOS && !TtaDirExists (app_home) && !TtaCheckMakeDirectory (app_home, TRUE))
     app_home[0] = EOS;
 
   /* store the value of APP_HOME in the registry */
