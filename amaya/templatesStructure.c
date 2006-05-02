@@ -13,7 +13,6 @@
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "document.h"
-#include "Template.h"
 #include "init_f.h"
 #include "HTMLimage_f.h"
 #include "HTMLactions_f.h"
@@ -22,6 +21,7 @@
 #include "templateDeclarations.h"
 
 #ifdef TEMPLATES
+#include "Template.h"
 /* Information needed for the callback after loading a template.
    Just the path of the template, which identifies it. */
 typedef struct _TemplateCtxt
