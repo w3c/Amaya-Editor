@@ -2,8 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Edition des graphiques</title>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 9.1, see http://www.w3.org/Amaya/" />
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 8.8.51, see http://www.w3.org/Amaya/"
+  />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -40,7 +41,7 @@ sont aussi disponibles pour éditer le graphique (par exemple il est possible
 de créer un lien sur un élément SVG).</p>
 
 <p>L'édition de nouveaux graphiques SVG dans Amaya n'est pas encore possible
-mais l'équipe de développement d'Amaya y travail.</p>
+mais l'équipe de développement d'Amaya travaille sur ce projet.</p>
 </div>
 </div>
 </body>

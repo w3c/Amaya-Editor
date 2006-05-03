@@ -5,7 +5,7 @@
 <head>
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <title>Vues d'un document</title>
-  <meta name="GENERATOR" content="amaya 9.2.2, see http://www.w3.org/Amaya/"
+  <meta name="GENERATOR" content="amaya 8.8.51, see http://www.w3.org/Amaya/"
   />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -174,12 +174,12 @@ pour redonner le focus clavier à une vue.</p>
 
 <p>Pour fermer une vue choisissez la commande <strong>Partager la vue
 horizontalement</strong> ou <strong>Partager la vue verticalement</strong> du
-menu <strong>Vues</strong>. Une autre façon de fermer une vue est de cliquer
-avec la souris sur le boutton rouge en bas ou à droite de votre page.</p>
+menu <strong>Vues</strong>. Une autre façon de fermer une vue est de
+double-cliquer sur la ligne rouge en bas ou à droite de votre page.</p>
 
-<p>Vous pouvez aussi fermer l'onglet (clique droit sur l'onglet ou menu
-<strong>Fichier</strong>) si vous voulez fermer votre document ainsi que
-toutes ses vues.</p>
+<p>Vous pouvez aussi fermer l'onglet (menu <strong>Fichier</strong> ou clic
+droit sur l'onglet, excepté pour la version Mac OSX) si vous voulez fermer
+votre document ainsi que toutes ses vues.</p>
 
 <h3>Utiliser les vues</h3>
 

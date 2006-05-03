@@ -5,7 +5,8 @@
 <head>
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <title>Changer la structure</title>
-  <meta name="GENERATOR" content="amaya 9.3, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.8.51, see http://www.w3.org/Amaya/"
+  />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -25,12 +26,11 @@ src="../../resources/icons/misc/right.png" /></a></p>
 <h2>Créer des documents</h2>
 </div>
 
-<p>Amaya vous permet ce créer de nouveaux documents locaux ou distants.
-Quatre types de documents sont disponibles :</p>
+<p>Amaya vous permet ce créer de nouveaux documents locaux ou distants. Trois
+types de documents sont disponibles :</p>
 <ul>
   <li><a href="HTML.html.fr">XHTML</a>, hypertexte</li>
   <li><a href="Math.html.fr#Math">MathML</a>, expressions mathématiques</li>
-  <li><a href="SVG.html.fr">SVG</a>, graphique</li>
   <li><a href="StyleSheets.html.fr">CSS</a>, feuille de style</li>
 </ul>
 
@@ -49,32 +49,5 @@ Quatre types de documents sont disponibles :</p>
     chargée sinon, Amaya créé un nouveau document contenant l'élément racine
     correspondant au type choisi.</li>
 </ol>
-
-<p>Par ailleurs, vous pouvez créer un document à partir d'un modèle
-pré-défini.</p>
-
-<p class="ProcedureCaption">Pour créer un document à partir d'un modèle :</p>
-<ol>
-  <li>Choisissez l'entrée <strong>Nouveau</strong> du menu
-    <strong>Fichier</strong> et selectionnez <strong>À partir du
-    modèle.</strong></li>
-  <li>Amaya vous demande de choisir un modèle. Vous pouvez choisir l'un des
-    modèles proposé dans la liste ou spécifier un autre répertoire où est
-    situé le modèle que vous désirez.</li>
-  <li>Le champ <strong>Enregistrez le document sous...</strong> vous propose
-    de choisir l'emplacement où votre document sera enregistré. Vous pouvez
-    utiliser le bouton parcourir pour naviguer parmi vos fichiers et
-    selectionner un chemin d'accès.</li>
-  <li>Choisissez l'emplacement où le nouveau document doit s'ouvrir : onglet
-    courant, nouvel onglet ou nouvelle fenêtre.</li>
-  <li>Confirmez avec le bouton <strong>Ouvrir</strong>. Amaya copie le modèle
-    et met à jour ses liens.</li>
-</ol>
-
-<p class="ProcedureCaption">Édition d'un document issu d'un modèle</p>
-
-<p>Lorsque vous éditez un document à partir d'un modèle, certaines zones sont
-protégées. Vous ne pourrez modifier que les zones identifiées par un cadre
-rouge pointillé.</p>
 </body>
 </html>
