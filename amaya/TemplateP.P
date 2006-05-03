@@ -148,6 +148,7 @@ BOXES
 	Content: Picture 'use.gif';
 	HorizPos: Left = Enclosing . Left;
 	VertPos: Top = Enclosing . Top;
+  Width: 4 px;
 	Depth: Creator - 2;
 	IN Structure_view
 		Visibility: 0;
@@ -199,8 +200,8 @@ RULES
 	useMenu:
 	  BEGIN
 	    CreateFirst(UseMenu_Gif);
-      Width: 2 px;
-      Height: 2 px;
+      Width: 4 px;
+      Height: 4 px;
 	    IN Structure_view
 	 	    Visibility: 0;
 	  END;

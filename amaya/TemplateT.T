@@ -95,7 +95,7 @@ RULES
     indent +2;
     indent -2 after;
     create SCT after;
-    create 'repeat>\12' after;
+    create 'option>\12' after;
   end;
 
   useEl: 
@@ -103,11 +103,11 @@ RULES
     create SOT;
     create 'use';
     create Attributes;
-    create tagend;
+    create '>';
     indent +2;
     indent -2 after;
     create SCT after;
-    create 'use>\12' after;
+    create 'use>' after;
   end;
 
   bag:
