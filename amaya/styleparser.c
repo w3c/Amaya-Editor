@@ -6881,11 +6881,12 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
   int                 CSSindex;
   int                 CSScomment;
   int                 import;
-  int                 openRule;
+  int                 openBlock;
   int                 newlines;
+  int                 page;
   ThotBool            HTMLcomment;
   ThotBool            toParse, eof, quoted, s_quoted;
-  ThotBool            ignore, media, page, lineComment;
+  ThotBool            ignore, media, lineComment;
   ThotBool            noRule, ignoreImport, fontface;
 
   CSScomment = MAX_CSS_LENGTH;
@@ -6896,11 +6897,11 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
   media = FALSE;
   ignoreImport = FALSE;
   ignore = lineComment = FALSE;
-  page = FALSE;
+  page = 0;
   quoted = s_quoted = FALSE;
   fontface = FALSE;
   eof = FALSE;
-  openRule = 0;
+  openBlock = 0;
   import = MAX_CSS_LENGTH;
   c = SPACE;
   index = 0;
@@ -7061,16 +7062,16 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
                 noRule = TRUE;
               break;
             case ' ':
-              if (!quoted && !s_quoted && import != MAX_CSS_LENGTH && openRule == 0)
+              if (!quoted && !s_quoted && import != MAX_CSS_LENGTH && openBlock == 0)
                 media = !strncasecmp (&CSSbuffer[import+1], "media", 5);
               break;
             case '{':
               if (!quoted && !s_quoted)
                 {
-                  openRule++;
+                  openBlock++;
                   if (import != MAX_CSS_LENGTH)
                     {
-                      if (openRule == 1 && media)
+                      if (openBlock == 1 && media)
                         {
                           /* is it the screen concerned? */
                           CSSbuffer[CSSindex+1] = EOS;
@@ -7082,8 +7083,9 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
                           noRule = TRUE;
                         }
                       else if (!strncasecmp (&CSSbuffer[import+1], "page", 4))
+                        /* it is a @page block */
                         {
-                          page = TRUE;
+                          page = openBlock;/*remember the level of this block*/
                           noRule = TRUE;
                         }
                       else if (!strncasecmp (&CSSbuffer[import+1], "font-face", 9))
@@ -7097,26 +7099,27 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
             case '}':
               if (!quoted && !s_quoted)
                 {
-                  openRule--;
-                  if (page)
+                  if (page == openBlock)
+                    /* closing the @page block */
                     {
                       noRule = TRUE;
-                      page = FALSE; /* close the page section */
+                      page = 0; /* close the page section */
                     }
                   else if (fontface)
                     {
                       noRule = TRUE;
                       fontface = FALSE; /* close the fontface section */
                     }
-                  else if (openRule == 0 && import != MAX_CSS_LENGTH)
+                  else if (openBlock == 1 && import != MAX_CSS_LENGTH)
                     {
                       import = MAX_CSS_LENGTH;
                       noRule = TRUE;
                       ignore = FALSE;
                       media = FALSE;
                     }
-                  else
+                  else if (!page)
                     toParse = TRUE;
+                  openBlock--;
                 }
               break;
             case '"':
