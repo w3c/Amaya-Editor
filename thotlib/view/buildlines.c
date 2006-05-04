@@ -28,6 +28,7 @@
 #include "buildboxes_f.h"
 #include "exceptions_f.h"
 #include "memory_f.h"
+#include "boxrelations_f.h"
 #include "boxselection_f.h"
 #include "buildlines_f.h"
 #include "font_f.h"
@@ -2854,7 +2855,9 @@ static void UpdateBlockWithFloat (int frame, PtrBox pBlock,
   pfloat = pBlock->BxLeftFloat;
   while (pfloat && pfloat->FlBox)
     {
-      if (pfloat->FlBox->BxXOrg + pfloat->FlBox->BxWidth - x > x1)
+      if (extensibleblock)
+        x1 += pfloat->FlBox->BxWidth;
+      else if (pfloat->FlBox->BxXOrg + pfloat->FlBox->BxWidth - x > x1)
         /* float change the minimum width of the block */
         x1 = pfloat->FlBox->BxXOrg + pfloat->FlBox->BxWidth - x;
       if (pfloat->FlBox->BxYOrg + pfloat->FlBox->BxHeight - y > *height)
@@ -2862,14 +2865,13 @@ static void UpdateBlockWithFloat (int frame, PtrBox pBlock,
         *height = pfloat->FlBox->BxYOrg + pfloat->FlBox->BxHeight - y;
       pfloat = pfloat->FlNext;
     }
+
   pfloat = pBlock->BxRightFloat;
   while (pfloat && pfloat->FlBox)
     {
       if (extensibleblock)
-        /* we should move the right floated box */
-        XMove (pfloat->FlBox, NULL,
-               pBlock->BxMaxWidth + x1 - pfloat->FlBox->BxXOrg, frame);
-      if (pBlock->BxW - pfloat->FlBox->BxXOrg - x > x2)
+        x2 += pfloat->FlBox->BxWidth;
+      else if (pBlock->BxW - pfloat->FlBox->BxXOrg - x > x2)
         /* float change the minimum width of the block */
         x2 = pBlock->BxW - pfloat->FlBox->BxXOrg - x;
       if (pfloat->FlBox->BxYOrg + pfloat->FlBox->BxHeight - y > *height)
@@ -2877,6 +2879,21 @@ static void UpdateBlockWithFloat (int frame, PtrBox pBlock,
         *height = pfloat->FlBox->BxYOrg + pfloat->FlBox->BxHeight - y;
       pfloat = pfloat->FlNext;
     }
+
+  if (extensibleblock)
+    {
+      // move right floated boxes according to the right constraint
+      pfloat = pBlock->BxRightFloat;
+      x = x1 + pBlock->BxMaxWidth + x2;
+      while (pfloat && pfloat->FlBox)
+        {
+          XMove (pfloat->FlBox, NULL,
+                 x - pfloat->FlBox->BxWidth - pfloat->FlBox->BxXOrg, frame);
+          x -= pfloat->FlBox->BxWidth;
+          pfloat = pfloat->FlNext;
+        }
+    }
+
   if (updateWidth)
     {
       /* update min and max widths */
@@ -3370,7 +3387,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
   int                 org, width, noWrappedWidth;
   int                 lostPixels, minWidth;
   int                 top, left, right, bottom, spacing;
-  ThotBool            toAdjust, breakLine;
+  ThotBool            toAdjust, breakLine, isExtraFlow;
   ThotBool            xAbs, yAbs, extensibleBox;
   ThotBool            full, still, standard, isFloat;
 
@@ -3397,14 +3414,15 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
   /* what is the maximum width allowed */
   pParent = pAb->AbEnclosing;
   isFloat = pAb->AbFloat != 'N';
-  //if (!strcmp (pAb->AbElement->ElLabel, "L356"))
-  //printf ("ComputeLines L356\n");
+  isExtraFlow = ExtraFlow (pBox, frame);
   if ((pAb->AbWidth.DimUnit == UnAuto || pBox->BxType == BoFloatBlock) &&
       pParent)
     {
       /* limit to the enclosing box */
       if (pAb->AbWidth.DimAbRef == NULL && pAb->AbWidth.DimValue == -1)
         {
+          if (isExtraFlow)
+            pParent = GetEnclosingViewport (pAb);
           while (pParent && pParent->AbBox &&
                  ((pParent->AbWidth.DimAbRef == NULL &&
                    pParent->AbWidth.DimValue == -1) ||
@@ -3774,7 +3792,8 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
   noWrappedWidth = 0;
   /* met a jour la base du bloc de lignes   */
   /* s'il depend de la premiere boite englobee */
-  if (pAb->AbHorizRef.PosAbRef == pAb->AbFirstEnclosed && pBox->BxFirstLine)
+  if (pAb->AbHorizRef.PosAbRef == pAb->AbFirstEnclosed && pAb->AbFirstEnclosed &&
+      pAb->AbFirstEnclosed->AbFloat == 'N' && pBox->BxFirstLine)
     {
       pPosAb = &pAb->AbHorizRef;
       if (pPosAb->PosUnit == UnPercent)
@@ -3789,7 +3808,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
       else
         x += PixelValue (pPosAb->PosDistDelta, pPosAb->PosDeltaUnit, pAb,
                          ViewFrameTable[frame - 1].FrMagnification);
-      x += top;
+      x += left;
       MoveHorizRef (pBox, NULL,
                     pBox->BxFirstLine->LiHorizRef + x - pBox->BxHorizRef, frame);
     }

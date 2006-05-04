@@ -3311,17 +3311,16 @@ void ElementPasted (NotifyElement * event)
   -----------------------------------------------------------------------*/
 void CheckNewLines (NotifyOnTarget *event)
 {
-  Element     ancestor, selEl, leaf, newLeaf, firstLeaf, firstParag, el,
-    child, orig, prev, next, parent;
+  Element     ancestor, selEl, leaf, newLeaf, firstLeaf, firstParag;
+  Element     el, child, orig, prev, next, parent;
   Document    doc;
   ElementType elType;
   CHAR_T      *content, *sibContent;
   int         firstSelChar, lastSelChar, length, i, j, sibLength, start;
   Language    lang;
   char       *name;
-  ThotBool    pre, para, changed, selChanged, newParagraph, undoSeqExtended,
-    prevCharEOL;
-  ThotBool    PasteLineByLine;
+  ThotBool    pre, para, changed, selChanged, newParagraph, undoSeqExtended;
+  ThotBool    prevCharEOL, pasteLineByLine, moveNext;
 
   doc = event->document;
   if (DocumentTypes[doc] == docText || DocumentTypes[doc] == docCSS ||
@@ -3384,6 +3383,10 @@ void CheckNewLines (NotifyOnTarget *event)
               TtaGiveBufferContent (leaf, content, length, &lang);
               j = 0;
               prev = NULL;
+              // get information about next leaves
+              next = leaf;
+              TtaNextSibling (&next);
+              moveNext = FALSE;
               for (i = 0; i < length; i++)
                 {
                   if (content[i] == EOL)
@@ -3391,6 +3394,7 @@ void CheckNewLines (NotifyOnTarget *event)
                       /* the current character is a newline */
                       content[i] = EOS;
                       TtaSetBufferContent (leaf, &content[j], lang, doc);
+                      // generate a new line
                       el = TtaNewTree (doc, elType, "");
                       TtaInsertSibling (el, ancestor, FALSE, doc);
                       if (!undoSeqExtended)
@@ -3400,15 +3404,33 @@ void CheckNewLines (NotifyOnTarget *event)
                         }
                       if (prev)
                         TtaRegisterElementCreate (prev, doc);
+                      // next leaves should be moved into the last line
+                      moveNext = TRUE;
                       leaf = TtaGetFirstChild (el);
                       prev = ancestor = el;
                       j = i + 1;
                     }
                 }
+
               if (prev)
                 {
                   TtaSetBufferContent (leaf, &content[j], lang, doc);
                   TtaRegisterElementCreate (prev, doc);
+                  if (moveNext)
+                    {
+                      /* move next leaves into the last created line */
+                      el = leaf;
+                      while (next)
+                        {
+                          prev = next;
+                          TtaNextSibling (&next);
+                          TtaRegisterElementDelete (prev, doc);
+                          TtaRemoveTree (prev, doc);
+                          TtaInsertSibling (prev, el, FALSE, doc);
+                          TtaRegisterElementCreate (prev, doc);
+                          el = prev;
+                        }
+                    }
                   TtaSelectString (doc, leaf, i, i-1);
                 }
               TtaFreeMemory (content);
@@ -3423,7 +3445,7 @@ void CheckNewLines (NotifyOnTarget *event)
     return;
 
   /* get the user value for the Paste-Line-By-Line option */
-  TtaGetEnvBoolean ("PASTE_LINE_BY_LINE", &PasteLineByLine);
+  TtaGetEnvBoolean ("PASTE_LINE_BY_LINE", &pasteLineByLine);
 
   /* replace every new line in the content of the element by a space
      and replace every sequence of spaces by a single space */
@@ -3456,8 +3478,8 @@ void CheckNewLines (NotifyOnTarget *event)
           else
             /* The pasted text is within a paragraph */
             {
-              if (!PasteLineByLine && !prevCharEOL)
-                /* in this mode (!PasteLineByLine), create a paragraph only
+              if (!pasteLineByLine && !prevCharEOL)
+                /* in this mode (!pasteLineByLine), create a paragraph only
                    when there are two newlines (possibly with some spaces) */
                 {
                   content[i] = SPACE;

@@ -381,6 +381,18 @@ void CancelSelection ()
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
+void InsertViewSelMarks ( int frame,
+                          PtrAbstractBox pAb,
+                          int firstChar,
+                          int lastChar,
+                          ThotBool startSelection,
+                          ThotBool endSelection,
+                          ThotBool alone )
+{
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void SelectRange (PtrDocument SelDoc, PtrElement PremSel, PtrElement DerSel,
 		  int premcar, int dercar)
 {

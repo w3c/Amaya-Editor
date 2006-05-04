@@ -2974,7 +2974,7 @@ void RemoveBoxes (PtrAbstractBox pAb, ThotBool rebuild, int frame)
   ThotBool            changeSelectBegin;
   ThotBool            changeSelectEnd;
 
-  if (pAb != NULL)
+  if (pAb)
     {
       if (pAb->AbBox)
         {
@@ -3015,6 +3015,13 @@ void RemoveBoxes (PtrAbstractBox pAb, ThotBool rebuild, int frame)
             /* free child boxes */
             UnsplitBox (pBox);
 
+          // Set the abstract box status
+          pAb->AbChange = pAb->AbMBPChange = FALSE;
+          pAb->AbWidthChange = pAb->AbHeightChange = FALSE;
+          pAb->AbHorizPosChange = pAb->AbVertPosChange = FALSE;
+          pAb->AbHorizRefChange = pAb->AbVertRefChange = FALSE;
+          pAb->AbAspectChange = pAb->AbSizeChange = FALSE;
+          pAb->AbFloatChange = pAb->AbPositionChange = FALSE;
           if (pAb->AbDead)
             pAb->AbNew = FALSE;
           else
@@ -3031,10 +3038,10 @@ void RemoveBoxes (PtrAbstractBox pAb, ThotBool rebuild, int frame)
 
           /* Liberation des boites des paves inclus */
           pChildAb = pAb->AbFirstEnclosed;
-          while (pChildAb != NULL)
+          while (pChildAb)
             {
               RemoveBoxes (pChildAb, rebuild, frame);
-              pChildAb = pChildAb->AbNext;	/* while */
+              pChildAb = pChildAb->AbNext;
             }
 
           /* Suppression des references a pBox dans la selection */
@@ -5096,6 +5103,105 @@ void CheckScrollingWidth (int frame)
 }
 
 /*----------------------------------------------------------------------
+  AnyFloatPosChange
+  ----------------------------------------------------------------------*/
+static ThotBool AnyFloatPosChange (PtrAbstractBox pAb)
+{
+  ThotBool     found = FALSE;
+
+  if (pAb && !pAb->AbDead)
+    {
+      found = (pAb->AbFloatChange || pAb->AbPositionChange);
+      if (!found)
+        found = AnyFloatPosChange (pAb->AbFirstEnclosed);
+      if (!found)
+        found = AnyFloatPosChange (pAb->AbNext);
+    }
+  return found;
+}
+
+/*----------------------------------------------------------------------
+  NewConcreteImage
+  ----------------------------------------------------------------------*/
+static void NewConcreteImage (int frame)
+{
+  PtrAbstractBox      pAb, pv1, pvN;
+  ViewSelection      *pViewSel;
+  ViewFrame          *pFrame;
+  int                 x, y;
+  int                 c1;
+  int                 cN;
+  int                 h;
+  ThotBool            unique;
+
+  pFrame = &ViewFrameTable[frame - 1];
+  c1 = 0;
+  cN = 0;
+  if (pFrame->FrAbstractBox)
+    /* On sauvegarde la selection courante dans la fenetre */
+    {
+      pViewSel = &pFrame->FrSelectionBegin;
+      if (pViewSel->VsBox)
+        {
+          pv1 = pViewSel->VsBox->BxAbstractBox;
+          if (pViewSel->VsIndBox == 0)
+            c1 = 0;
+          else
+            c1 = pViewSel->VsBox->BxFirstChar + pViewSel->VsIndBox;
+          /* On annule le debut de selection */
+          pViewSel->VsBox = NULL;
+        }
+      else
+        pv1 = NULL;
+      pViewSel = &pFrame->FrSelectionEnd;
+      if (pViewSel->VsBox != NULL)
+        {
+          pvN = pViewSel->VsBox->BxAbstractBox;
+          if (pViewSel->VsIndBox == 0)
+            cN = 0;
+          else
+            cN = pViewSel->VsBox->BxFirstChar + pViewSel->VsIndBox;
+          /* On annule la fin de selection */
+          pViewSel->VsBox = NULL;
+        }
+      else
+        pvN = NULL;
+      unique = pFrame->FrSelectOneBox;
+
+      /* On libere de la hierarchie avant recreation */
+      pAb = pFrame->FrAbstractBox;
+      /* On sauvegarde la position de la fenetre dans le document */
+      x = pFrame->FrXOrg;
+      y = pFrame->FrYOrg;
+      pAb->AbDead = TRUE;
+      RemoveBoxes (pAb, TRUE, frame);
+
+      /* On libere les polices de caracteres utilisees */
+      pFrame->FrAbstractBox = NULL;
+      /* Recreation de la vue */
+      pAb->AbDead = FALSE;
+      pAb->AbNew = TRUE;
+      h = 0;
+      (void) ChangeConcreteImage (frame, &h, pAb);
+      /* On restaure la position de la fenetre dans le document */
+      pFrame->FrXOrg = x;
+      pFrame->FrYOrg = y;
+      /* On restaure la selection courante dans la fenetre */
+      if (unique)
+        InsertViewSelMarks (frame, pv1, c1, cN, TRUE, TRUE, unique);
+      /* La selection porte sur plusieurs paves */
+      else
+        {
+          if (pv1 != NULL)
+            InsertViewSelMarks (frame, pv1, c1, 0, TRUE, FALSE, FALSE);
+          if (pvN != NULL)
+            InsertViewSelMarks (frame, pvN, 0, cN, FALSE, TRUE, FALSE);
+        }
+    }
+}
+
+
+/*----------------------------------------------------------------------
   ChangeConcreteImage traite la mise a jour d'une hierachie de paves 
   Pendant la creation d'une arborescence de boites on     
   place chaque boite a` l'interieur de son englobante     
@@ -5150,8 +5256,9 @@ ThotBool ChangeConcreteImage (int frame, int *pageHeight, PtrAbstractBox pAb)
           (pAb->AbEnclosing || pAb->AbPrevious || pAb->AbNext))
         {
           /* The view has another root element */
+#ifdef THOT_DEBUG
           TtaDisplaySimpleMessage (INFO, LIB, TMSG_VIEW_MODIFIED_BEFORE_CREATION);
-          return FALSE;
+#endif /* THOT_DEBUG */
         }
       else if (pAb->AbEnclosing == NULL && pAb->AbDead)
         {
@@ -5190,159 +5297,167 @@ ThotBool ChangeConcreteImage (int frame, int *pageHeight, PtrAbstractBox pAb)
               pFrame->FrFlow = NULL;
             }
 
-          saveMode = documentDisplayMode[doc - 1];
-          if (saveMode == DisplayImmediately)
-            documentDisplayMode[doc - 1] = DeferredDisplay;
-
-          /* On prepare le traitement de l'englobement apres modification */
-          pFrame->FrReady = FALSE;	/* La frame n'est pas affichable */
-          if (*pageHeight != 0)
-            /* changement de la signification de la valeur de page */
-            /* si negatif : mode pagination sans evaluation de coupure */
-            /* si egal 0 : pas mode pagination */
-            /* si superieur a 0 : mode pagination et coupure demandee */
+          /* rebuild the whole image if there is a float or positioning change */
+          if ((pAb != pFrame->FrAbstractBox || !pAb->AbNew) && AnyFloatPosChange (pAb))
             {
-              /* La pagination ignore le zoom et la visibilite courants */
-              savevisu = pFrame->FrVisibility;
-              pFrame->FrVisibility = 5;
-              savezoom = pFrame->FrMagnification;
-              pFrame->FrMagnification = 0;
+              NewConcreteImage (frame);
+              DefClip (frame, -1, -1, -1, -1);
             }
-          Propagate = ToChildren;	/* Limite la propagation */
-          /* On note le premier pave a examiner pour l'englobante */
-          pParentAb = pAb->AbEnclosing;
-
-          /* On prepare la mise a jour d'un bloc de lignes */
-          if (pParentAb && pParentAb->AbBox)
+          else
             {
-              /* differ enclosing rules for ancestor boxes */
-              PackBoxRoot = pParentAb->AbBox;
-              while (pParentAb->AbBox->BxType == BoGhost ||
-                     pParentAb->AbBox->BxType == BoFloatGhost)
-                /* get the enclosing block */
-                pParentAb = pParentAb->AbEnclosing;
+              saveMode = documentDisplayMode[doc - 1];
+              if (saveMode == DisplayImmediately)
+                documentDisplayMode[doc - 1] = DeferredDisplay;
 
-              /* On prepare la mise a jour d'un bloc de lignes */
-              if (pParentAb->AbBox->BxType == BoBlock ||
-                  pParentAb->AbBox->BxType == BoFloatBlock ||
-                  pParentAb->AbBox->BxType == BoGhost ||
-                  pParentAb->AbBox->BxType == BoFloatGhost)
+              /* On prepare le traitement de l'englobement apres modification */
+              pFrame->FrReady = FALSE;	/* La frame n'est pas affichable */
+              if (*pageHeight != 0)
+                /* changement de la signification de la valeur de page */
+                /* si negatif : mode pagination sans evaluation de coupure */
+                /* si egal 0 : pas mode pagination */
+                /* si superieur a 0 : mode pagination et coupure demandee */
                 {
-                  if (pAb->AbNew || pAb->AbDead)
+                  /* La pagination ignore le zoom et la visibilite courants */
+                  savevisu = pFrame->FrVisibility;
+                  pFrame->FrVisibility = 5;
+                  savezoom = pFrame->FrMagnification;
+                  pFrame->FrMagnification = 0;
+                }
+              Propagate = ToChildren;	/* Limite la propagation */
+              /* On note le premier pave a examiner pour l'englobante */
+              pParentAb = pAb->AbEnclosing;
+              
+              /* On prepare la mise a jour d'un bloc de lignes */
+              if (pParentAb && pParentAb->AbBox)
+                {
+                  /* differ enclosing rules for ancestor boxes */
+                  PackBoxRoot = pParentAb->AbBox;
+                  while (pParentAb->AbBox->BxType == BoGhost ||
+                         pParentAb->AbBox->BxType == BoFloatGhost)
+                    /* get the enclosing block */
+                    pParentAb = pParentAb->AbEnclosing;
+                  
+                  /* On prepare la mise a jour d'un bloc de lignes */
+                  if (pParentAb->AbBox->BxType == BoBlock ||
+                      pParentAb->AbBox->BxType == BoFloatBlock ||
+                      pParentAb->AbBox->BxType == BoGhost ||
+                      pParentAb->AbBox->BxType == BoFloatGhost)
                     {
-                      /* need to rebuild lines starting form
-                         the previous box */
-                      pChildAb = pAb->AbPrevious;
-                      if (pChildAb == NULL || pChildAb->AbBox == NULL)
-                        /* all lines */
-                        pLine = NULL;
+                      if (pAb->AbNew || pAb->AbDead)
+                        {
+                          /* need to rebuild lines starting form
+                             the previous box */
+                          pChildAb = pAb->AbPrevious;
+                          if (pChildAb == NULL || pChildAb->AbBox == NULL)
+                            /* all lines */
+                            pLine = NULL;
+                          else
+                            {
+                              pBox = pChildAb->AbBox;
+                              if (pBox->BxType == BoSplit ||
+                                  pBox->BxType == BoMulScript)
+                                while (pBox->BxNexChild)
+                                  pBox = pBox->BxNexChild;
+                              pLine = SearchLine (pBox, frame);
+                            }
+                        }
                       else
                         {
-                          pBox = pChildAb->AbBox;
-                          if (pBox->BxType == BoSplit ||
-                              pBox->BxType == BoMulScript)
-                            while (pBox->BxNexChild)
-                              pBox = pBox->BxNexChild;
+                          /* Il faut refaire la mise en lignes sur la premiere boite contenue */
+                          pBox = pAb->AbBox;
+                          if (pBox->BxType == BoSplit || pBox->BxType == BoMulScript)
+                            pBox = pBox->BxNexChild;
                           pLine = SearchLine (pBox, frame);
                         }
                     }
+                }
+
+              /* lock the table formatting */
+              TtaGiveTableFormattingLock (&lock);
+              if (!lock)
+                /* table formatting is not loked, lock it now */
+                TtaLockTableFormatting ();
+
+              /* Il faut annuler l'elasticite des boites dont les regles */
+              /* de position et de dimension sont a reevaluer, sinon on  */
+              /* risque d'alterer les nouvelles regles de position et de */
+              /* dimension en propageant les autres modifications sur    */
+              /* ces anciennes boites elastiques de l'image abstraite    */
+              ClearFlexibility (pAb, frame);
+
+              /* Manage all changes */
+              change = IsAbstractBoxUpdated (pAb, frame, &computeBBoxes);
+              if (computeBBoxes)
+                ComputeChangedBoundingBoxes (frame);
+              /* Les modifications sont traitees */
+              Propagate = ToAll;	/* On passe en mode normal de propagation */
+              /* Traitement des englobements retardes */
+              ComputeEnclosing (frame);
+              
+              /* On ne limite plus le traitement de l'englobement */
+              PackBoxRoot = NULL;
+              
+              /* Si l'image concrete est videe de son contenu */
+              if (pFrame->FrAbstractBox->AbBox->BxNext == NULL)
+                {
+                  /* On annule le decalage de la fenetre dans l'image concrete */
+                  pFrame->FrXOrg = 0;
+                  pFrame->FrYOrg = 0;
+                }
+
+              /* Faut-il verifier l'englobement ? */
+              if (change && pParentAb)
+                {
+                  /* On saute les boites fantomes de la mise en lignes */
+                  if (pParentAb->AbBox->BxType == BoGhost ||
+                      pParentAb->AbBox->BxType == BoFloatGhost)
+                    {
+                      while (pParentAb->AbBox->BxType == BoGhost ||
+                             pParentAb->AbBox->BxType == BoFloatGhost)
+                        pParentAb = pParentAb->AbEnclosing;
+                      pLine = pParentAb->AbBox->BxFirstLine;
+                    }
+
+                  pParentBox = pParentAb->AbBox;
+                  /* Mise a jour d'un bloc de lignes */
+                  if (pParentBox->BxType == BoBlock ||
+                      pParentBox->BxType == BoFloatBlock)
+                    RecomputeLines (pParentAb, pLine, NULL, frame);
+
+                  /* Mise a jour d'une boite composee */
                   else
                     {
-                      /* Il faut refaire la mise en lignes sur la premiere boite contenue */
-                      pBox = pAb->AbBox;
-                      if (pBox->BxType == BoSplit || pBox->BxType == BoMulScript)
-                        pBox = pBox->BxNexChild;
-                      pLine = SearchLine (pBox, frame);
-                    }
-                }
-            }
-
-          /* lock the table formatting */
-          TtaGiveTableFormattingLock (&lock);
-          if (!lock)
-            /* table formatting is not loked, lock it now */
-            TtaLockTableFormatting ();
-
-          /* Il faut annuler l'elasticite des boites dont les regles */
-          /* de position et de dimension sont a reevaluer, sinon on  */
-          /* risque d'alterer les nouvelles regles de position et de */
-          /* dimension en propageant les autres modifications sur    */
-          /* ces anciennes boites elastiques de l'image abstraite    */
-          ClearFlexibility (pAb, frame);
-
-          /* Manage all changes */
-          change = IsAbstractBoxUpdated (pAb, frame, &computeBBoxes);
-          if (computeBBoxes)
-            ComputeChangedBoundingBoxes (frame);
-          /* Les modifications sont traitees */
-          Propagate = ToAll;	/* On passe en mode normal de propagation */
-          /* Traitement des englobements retardes */
-          ComputeEnclosing (frame);
-
-          /* On ne limite plus le traitement de l'englobement */
-          PackBoxRoot = NULL;
-
-          /* Si l'image concrete est videe de son contenu */
-          if (pFrame->FrAbstractBox->AbBox->BxNext == NULL)
-            {
-              /* On annule le decalage de la fenetre dans l'image concrete */
-              pFrame->FrXOrg = 0;
-              pFrame->FrYOrg = 0;
-            }
-
-          /* Faut-il verifier l'englobement ? */
-          if (change && pParentAb)
-            {
-              /* On saute les boites fantomes de la mise en lignes */
-              if (pParentAb->AbBox->BxType == BoGhost ||
-                  pParentAb->AbBox->BxType == BoFloatGhost)
-                {
-                  while (pParentAb->AbBox->BxType == BoGhost ||
-                         pParentAb->AbBox->BxType == BoFloatGhost)
-                    pParentAb = pParentAb->AbEnclosing;
-                  pLine = pParentAb->AbBox->BxFirstLine;
-                }
-
-              pParentBox = pParentAb->AbBox;
-              /* Mise a jour d'un bloc de lignes */
-              if (pParentBox->BxType == BoBlock ||
-                  pParentBox->BxType == BoFloatBlock)
-                RecomputeLines (pParentAb, pLine, NULL, frame);
-
-              /* Mise a jour d'une boite composee */
-              else
-                {
-                  /* Les liens entre boites filles ont peut-etre ete modifies */
-                  pChildAb = pAb->AbFirstEnclosed;
-                  while (pChildAb != NULL)
-                    {
-                      if (pChildAb->AbBox != NULL)
+                      /* Les liens entre boites filles ont peut-etre ete modifies */
+                      pChildAb = pAb->AbFirstEnclosed;
+                      while (pChildAb != NULL)
                         {
-                          pChildBox = pChildAb->AbBox;
-                          pChildBox->BxHorizInc = NULL;
-                          pChildBox->BxVertInc = NULL;
+                          if (pChildAb->AbBox != NULL)
+                            {
+                              pChildBox = pChildAb->AbBox;
+                              pChildBox->BxHorizInc = NULL;
+                              pChildBox->BxVertInc = NULL;
+                            }
+                          pChildAb = pChildAb->AbNext;
                         }
-                      pChildAb = pChildAb->AbNext;
+                      if (pParentAb->AbBox && pParentAb->AbBox->BxType == BoCell)
+                        UpdateColumnWidth (pParentAb, NULL, frame);
+                      else if (pParentAb->AbBox && pParentAb->AbBox->BxType != BoRow)
+                        WidthPack (pParentAb, NULL, frame);
+                      HeightPack (pParentAb, NULL, frame);
                     }
-                  if (pParentAb->AbBox && pParentAb->AbBox->BxType == BoCell)
-                    UpdateColumnWidth (pParentAb, NULL, frame);
-                  else if (pParentAb->AbBox && pParentAb->AbBox->BxType != BoRow)
-                    WidthPack (pParentAb, NULL, frame);
-                  HeightPack (pParentAb, NULL, frame);
                 }
+
+              /* restore the current mode and  update tables if necessary */
+              if (saveMode == DisplayImmediately)
+                documentDisplayMode[doc - 1] = saveMode;
+
+              if (!lock)
+                /* unlock table formatting */
+                TtaUnlockTableFormatting ();
+              /* Est-ce que l'on a de nouvelles boites dont le contenu est */
+              /* englobe et depend de relations hors-structure ?           */
+              ComputeEnclosing (frame);
             }
-
-          /* restore the current mode and  update tables if necessary */
-          if (saveMode == DisplayImmediately)
-            documentDisplayMode[doc - 1] = saveMode;
-
-          if (!lock)
-            /* unlock table formatting */
-            TtaUnlockTableFormatting ();
-
-          /* Est-ce que l'on a de nouvelles boites dont le contenu est */
-          /* englobe et depend de relations hors-structure ?           */
-          ComputeEnclosing (frame);
 
           /* Verification de la mise en page */
           if (*pageHeight > 0)
@@ -5363,7 +5478,3 @@ ThotBool ChangeConcreteImage (int frame, int *pageHeight, PtrAbstractBox pAb)
 #endif /* _WINGUI */
   return result;
 }
-
-
-
-

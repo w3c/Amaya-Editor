@@ -990,7 +990,7 @@ void  ApplyStandardRule (PtrElement pEl, PtrDocument pDoc,
                 /* cherche la regle standard si on ne l'a pas encore */
                 if (pRP == NULL)
                   pRP = SearchRulepAb (pDoc, pAb, &pSPR, ruleType, funcType, TRUE, &pAttr);
-                if (pRP != NULL)
+                if (pRP)
                   ApplyPRuleAndRedisplay(pAb, pDoc, pAttr, pRP, pSPR);
               }
           }
@@ -1055,6 +1055,7 @@ static void RemoveFunctionPRule (PtrPRule pPres, PtrAbstractBox pAb,
   ApplyASpecificStyleRule
   Redisplay boxes of element pEl that are concerned by removing the
   presentation function pRule
+  Return TRUE if the rule is applied.
   ----------------------------------------------------------------------*/
 void  ApplyASpecificStyleRule (PtrPRule pRule, PtrElement pEl,
                                PtrDocument pDoc, ThotBool remove)
@@ -1092,12 +1093,12 @@ void  ApplyASpecificStyleRule (PtrPRule pRule, PtrElement pEl,
           }
         /* the schema view associatde with the current view */
         viewSch = pDoc->DocView[view].DvPSchemaView;
-        while (pAb != NULL)
+        while (pAb)
           {
             /* process each presentation rule */
             pCurrentRule = pRule;
             done = FALSE;
-            if (pCurrentRule != NULL)
+            if (pCurrentRule)
               {
                 ruleType = pCurrentRule->PrType;
                 /* is the view concerned by the presentation rule ? */
@@ -1142,8 +1143,7 @@ void  ApplyASpecificStyleRule (PtrPRule pRule, PtrElement pEl,
                                     TtaFreeMemory (pAb->AbPictListStyle);
                                     pAb->AbPictListStyle = NULL;
                                   }
-                                ApplyPRuleAndRedisplay (pAb, pDoc, pAttr, pRP,
-                                                        pSPR);
+                                ApplyPRuleAndRedisplay (pAb, pDoc, pAttr, pRP, pSPR);
                               }
                             else if (remove && pAb->AbLeafType == LtCompound &&
                                      pAb->AbPositioning)
@@ -1159,38 +1159,40 @@ void  ApplyASpecificStyleRule (PtrPRule pRule, PtrElement pEl,
                                     pAb->AbPositioning->PnTopDistance = 0;
                                     pAb->AbPositioning->PnTopUnit = UnUndefined;
                                     pAb->AbVertPosChange = TRUE;
+                                    pAb->AbPositionChange = TRUE;
                                   }
                                 else if (ruleType == PtRight)
                                   {
                                     pAb->AbPositioning->PnRightDistance = 0;
                                     pAb->AbPositioning->PnRightUnit = UnUndefined;
                                     pAb->AbHorizPosChange = TRUE;
+                                    pAb->AbPositionChange = TRUE;
                                   }
                                 else if (ruleType == PtBottom)
                                   {
                                     pAb->AbPositioning->PnBottomDistance = 0;
                                     pAb->AbPositioning->PnBottomUnit = UnUndefined;
                                     pAb->AbVertPosChange = TRUE;
+                                    pAb->AbPositionChange = TRUE;
                                   }
                                 else if (ruleType == PtLeft)
                                   {
                                     pAb->AbPositioning->PnLeftDistance = 0;
                                     pAb->AbPositioning->PnLeftUnit = UnUndefined;
                                     pAb->AbHorizPosChange = TRUE;
+                                    pAb->AbPositionChange = TRUE;
                                   }
                               }
                           }
                       }
                   }
               }
-	  
             if (done)
               {
                 /* update abstract image and redisplay */
                 AbstractImageUpdated (pDoc);
                 RedisplayDocViews (pDoc);
               }
-
             /* get the next abstract box of that element */
             if (enclosed)
               {

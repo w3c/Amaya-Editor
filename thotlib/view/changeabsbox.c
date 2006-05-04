@@ -3304,13 +3304,9 @@ void SetChange (PtrAbstractBox pAb, PtrDocument pDoc, PRuleType typeRule,
       pAb->AbMBPChange = TRUE;
       break;
     case PtHorizPos:
-    case PtRight:
-    case PtLeft:
       pAb->AbHorizPosChange = TRUE;
       break;
     case PtVertPos:
-    case PtTop:
-    case PtBottom:
       pAb->AbVertPosChange = TRUE;
       break;
     case PtHorizRef:
@@ -3340,6 +3336,10 @@ void SetChange (PtrAbstractBox pAb, PtrDocument pDoc, PRuleType typeRule,
       pAb->AbFloatChange = TRUE;
       break;
     case PtPosition:
+    case PtRight:
+    case PtLeft:
+    case PtTop:
+    case PtBottom:
       pAb->AbPositionChange = TRUE;
       break;
     default:

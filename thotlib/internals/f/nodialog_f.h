@@ -119,6 +119,13 @@ extern void ComputeViewSelMarks ( ViewSelection * marque,
 extern void HighlightSelection ( ThotBool DebVisible,
                                  ThotBool clearOldSel );
 extern void CancelSelection ( void );
+extern void InsertViewSelMarks ( int frame,
+                                 PtrAbstractBox pAb,
+                                 int firstChar,
+                                 int lastChar,
+                                 ThotBool startSelection,
+                                 ThotBool endSelection,
+                                 ThotBool alone );
 extern void SelectRange ( PtrDocument SelDoc,
                           PtrElement PremSel,
                           PtrElement DerSel,
@@ -276,6 +283,13 @@ extern void ComputeViewSelMarks ( ViewSelection * marque,
 extern void HighlightSelection ( ThotBool DebVisible,
                                    ThotBool clearOldSel );
 extern void CancelSelection ( void );
+extern void InsertViewSelMarks ( int frame,
+                                   PtrAbstractBox pAb,
+                                   int firstChar,
+                                   int lastChar,
+                                   ThotBool startSelection,
+                                   ThotBool endSelection,
+                                   ThotBool alone );
 extern void SelectRange ( PtrDocument SelDoc,
                             PtrElement PremSel,
                             PtrElement DerSel,

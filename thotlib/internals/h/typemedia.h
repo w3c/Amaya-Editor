@@ -279,7 +279,6 @@ typedef struct _Box
   ThotBool        BxVertFlex;         /* The box is elastic */
   ThotBool        BxXToCompute;       /* Box being placed in X */
   ThotBool        BxYToCompute;       /* Box being placed in Y */
-  ThotBool        BxShrink;           /* Box width should be shrunk */
   ThotBool	      BxNew;	            /* Newly displayed box */
   ThotBool	      BxContentHeight;	  /* Real height is the content height */
   ThotBool	      BxContentWidth;	    /* Real width is the content width */

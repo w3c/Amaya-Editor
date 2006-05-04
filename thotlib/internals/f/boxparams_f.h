@@ -7,26 +7,26 @@
 #ifdef __STDC__
 
 extern void InitializeFrameParams ( int frame,
-                                    int Visibilite,
-                                    int Zoom );
+                                    int visibility,
+                                    int zoom );
 extern void GetFrameParams ( int frame,
-                             int *Visibilite,
-                             int *Zoom );
+                             int *visibility,
+                             int *zoom );
 extern void SetFrameParams ( int frame,
-                             int Visibilite,
-                             int Zoom );
+                             int visibility,
+                             int zoom );
 
 #else /* __STDC__ */
 
 extern void InitializeFrameParams ( int frame,
-                                      int Visibilite,
-                                      int Zoom );
+                                      int visibility,
+                                      int zoom );
 extern void GetFrameParams ( int frame,
-                               int *Visibilite,
-                               int *Zoom );
+                               int *visibility,
+                               int *zoom );
 extern void SetFrameParams ( int frame,
-                               int Visibilite,
-                               int Zoom );
+                               int visibility,
+                               int zoom );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

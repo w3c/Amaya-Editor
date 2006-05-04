@@ -1294,8 +1294,6 @@ void ListAbsBoxes (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
         wrpos (&pPavDim->DimPosition, root, fileDescriptor);
       else
         wrdim (pPavDim, root, TRUE, fileDescriptor);
-      if (pAb->AbBox && pAb->AbBox->BxShrink)
-        fprintf (fileDescriptor, " Shrink");
       fprintf (fileDescriptor, "\n");
       for (j = 1; j <= Indent + 6; j++)
         fprintf (fileDescriptor, " ");
