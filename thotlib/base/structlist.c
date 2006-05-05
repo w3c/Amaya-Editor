@@ -1755,7 +1755,8 @@ static void WrTransform (PtrTransform trans,  FILE *fileDescriptor)
   ListBoxTree writes information about boxes associated to the abstract
   box pAb and all children.
   ----------------------------------------------------------------------*/
-static void ListBoxTree (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
+static void ListBoxTree (PtrAbstractBox pAb, int frame, int Indent,
+                         FILE *fileDescriptor)
 {
   PtrAbstractBox      pAbEnclosed;
   PtrPosRelations     pPosRel;
@@ -1867,7 +1868,7 @@ static void ListBoxTree (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
               wrnumber (pBox->BxRuleHeight, fileDescriptor);
             }
           /* display extra margins */
-          GetExtraMargins (pBox, NULL, &t, &b, &l, &r);
+          GetExtraMargins (pBox, NULL, frame, &t, &b, &l, &r);
           if (t || b || l || r)
             {
               fprintf (fileDescriptor, "\n");
@@ -2280,7 +2281,7 @@ static void ListBoxTree (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
               pAbEnclosed = pAb->AbFirstEnclosed;
               while (pAbEnclosed != NULL)
                 {
-                  ListBoxTree (pAbEnclosed, Indent + 2, fileDescriptor);
+                  ListBoxTree (pAbEnclosed, frame, Indent + 2, fileDescriptor);
                   pAbEnclosed = pAbEnclosed->AbNext;
                 }
             }
@@ -2302,7 +2303,7 @@ void ListBoxes (int frame, FILE *fileDescriptor)
       /* On numerote les paves */
       NumberAbsBoxes (pFrame->FrAbstractBox);
       /* On ecrit les informations sur les boites crees */
-      ListBoxTree (pFrame->FrAbstractBox, 0, fileDescriptor);
+      ListBoxTree (pFrame->FrAbstractBox, frame, 0, fileDescriptor);
     }
 }
 

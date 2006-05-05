@@ -95,43 +95,40 @@ wxString TtaGetResourcePathWX( wxResourceType type, const char * filename )
   ----------------------------------------------------------------------*/
 wxString TtaGetHomeDir()
 {
+  wxString wx_win_homedir = wxGetHomeDir();
 #ifdef _WINDOWS
-	wxChar      buffer[2000];
-	DWORD       dwSize;
-
-  typedef BOOL (STDMETHODCALLTYPE FAR * LPFNGETPROFILESDIRECTORY) (
-                                                                   LPTSTR lpProfileDir,
-                                                                   LPDWORD lpcchSize
-                                                                   );
-  HMODULE                  g_hUserEnvLib          = NULL;
-  LPFNGETPROFILESDIRECTORY GetProfilesDirectory   = NULL;
-
-  buffer[0] = EOS;
-
-  g_hUserEnvLib = LoadLibrary (_T("userenv.dll"));
-  if (g_hUserEnvLib)
+  if (wx_win_homedir.IsEmpty())
     {
-      GetProfilesDirectory =
-        (LPFNGETPROFILESDIRECTORY) GetProcAddress (g_hUserEnvLib,
-                                                   "GetProfilesDirectoryW");
+      wxChar      buffer[2000];
+      DWORD       dwSize;
+
+      typedef BOOL (STDMETHODCALLTYPE FAR * LPFNGETPROFILESDIRECTORY) (
+                                                                       LPTSTR lpProfileDir,
+                                                                       LPDWORD lpcchSize
+                                                                       );
+      HMODULE                  g_hUserEnvLib          = NULL;
+      LPFNGETPROFILESDIRECTORY GetProfilesDirectory   = NULL;
+
+      buffer[0] = EOS;
+      g_hUserEnvLib = LoadLibrary (_T("userenv.dll"));
+      if (g_hUserEnvLib)
+        {
+          GetProfilesDirectory =
+            (LPFNGETPROFILESDIRECTORY) GetProcAddress (g_hUserEnvLib,
+                                                       "GetProfilesDirectoryW");
+          dwSize = MAX_PATH;
+          GetProfilesDirectory (buffer, &dwSize);
+        }
+      if (buffer[0] == EOS)
+        GetWindowsDirectory (buffer, dwSize);
+      
+      wxString wx_win_profiles_dir(buffer);      
       dwSize = MAX_PATH;
-      GetProfilesDirectory (buffer, &dwSize);
+      wxGetUserName(buffer, dwSize);
+      wxString wx_win_username(buffer);
+      wx_win_homedir = wx_win_profiles_dir + _T("\\") + wx_win_username;
     }
-  if (buffer[0] == EOS)
-    GetWindowsDirectory (buffer, dwSize);
-
-  wxString wx_win_profiles_dir(buffer);
-
-  dwSize = MAX_PATH;
-  wxGetUserName(buffer, dwSize);
-  wxString wx_win_username(buffer);
-
-  wxString wx_win_homedir = wx_win_profiles_dir + _T("\\") + wx_win_username;
-  return wx_win_homedir;
 #endif /* _WINDOWS */
-
-#ifdef _UNIX
-  return wxGetHomeDir();
-#endif /* _UNIX */
+  return wx_win_homedir;
 }
 #endif /* _WX */
