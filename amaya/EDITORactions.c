@@ -2190,7 +2190,7 @@ void DoTableCreation (Document document)
         /* replace the cell element by a data cell */
         TtaChangeTypeOfElement (cell, document, HTML_EL_Data_cell);
       TtaSelectElement (document, TtaGetFirstLeaf (cell));
-      
+
       while (NumberCols > 1)
         {
           new_ = TtaNewTree (document, elType, "");
@@ -2213,6 +2213,7 @@ void DoTableCreation (Document document)
     }
   TtaUnlockTableFormatting ();
   TtaSetDisplayMode (document, DisplayImmediately);
+  UpdateContextSensitiveMenus (document);
 }
 
 /*----------------------------------------------------------------------
