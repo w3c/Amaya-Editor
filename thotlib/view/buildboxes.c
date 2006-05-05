@@ -1310,7 +1310,7 @@ void GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width,
             {
               /* it's an extensible line */
               pBox->BxW = pBox->BxMaxWidth;
-              GetExtraMargins (pBox, NULL, &t, &b, &l, &r);
+              GetExtraMargins (pBox, NULL, frame, &t, &b, &l, &r);
               l += pBox->BxLBorder + pBox->BxLPadding;
               if (pBox->BxLMargin > 0)
                 l += pBox->BxLMargin;
@@ -5326,7 +5326,7 @@ ThotBool ChangeConcreteImage (int frame, int *pageHeight, PtrAbstractBox pAb)
               Propagate = ToChildren;	/* Limite la propagation */
               /* On note le premier pave a examiner pour l'englobante */
               pParentAb = pAb->AbEnclosing;
-              
+              PackBoxRoot = NULL;
               /* On prepare la mise a jour d'un bloc de lignes */
               if (pParentAb && pParentAb->AbBox)
                 {

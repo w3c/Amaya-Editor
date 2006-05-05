@@ -256,8 +256,8 @@ void LocateSelectionInView (int frame, int x, int y, int button)
                   (!pAb->AbPresentationBox || pAb->AbCanBeModified))
                 {
                   pos = x - xOrg;
-                  LocateClickedChar (pBox, extend, &pBuffer, &pos, &index,
-                                     &nChars, &nSpaces);
+                  LocateClickedChar (pBox, frame, extend, &pBuffer, &pos,
+                                     &index, &nChars, &nSpaces);
                   nChars = pBox->BxFirstChar + nChars;
                   if (extend)
                     {
@@ -2804,7 +2804,7 @@ void DirectCreation (PtrBox pBox, int frame)
   - an the number of white spaces before.
   The position x is updated too.
   ----------------------------------------------------------------------*/
-void LocateClickedChar (PtrBox pBox, ThotBool extend,
+void LocateClickedChar (PtrBox pBox, int frame, ThotBool extend,
                         PtrTextBuffer *pBuffer, int *x, int *index,
                         int *nChars, int *nSpaces)
 {
@@ -2818,7 +2818,7 @@ void LocateClickedChar (PtrBox pBox, ThotBool extend,
   CHAR_T              c;
   ThotBool            notfound, rtl;
 
-  GetExtraMargins (pBox, NULL, &t, &b, &l, &r);
+  GetExtraMargins (pBox, NULL, frame, &t, &b, &l, &r);
   *x = *x - l - pBox->BxLMargin - pBox->BxLBorder - pBox->BxLPadding;
   /* Nombre de caracteres qui precedent */
   *index = 0;

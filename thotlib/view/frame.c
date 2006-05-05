@@ -557,7 +557,7 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
   pBox->BxYOrg += shifty;
   if (pBox->BxType == BoGhost && pAb->AbDisplay == 'B')
     {
-      GetExtraMargins (pBox, pFrom, &t, &b, &l, &r);
+      GetExtraMargins (pBox, pFrom, frame, &t, &b, &l, &r);
       pParent = pAb->AbEnclosing;
       while (pParent && pParent->AbBox && pParent->AbBox->BxType == BoGhost)
         pParent = pParent->AbEnclosing;
@@ -593,7 +593,7 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
           r = pBox->BxRMargin;
         }
       else
-        GetExtraMargins (pBox, pFrom, &t, &b, &l, &r);
+        GetExtraMargins (pBox, pFrom, frame, &t, &b, &l, &r);
       /* the default area to be painted with the background */
       xd = pBox->BxXOrg + l;
       yd = pBox->BxYOrg + t;

@@ -16,6 +16,7 @@
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
+#include "picture.h"
 #include "appdialogue.h"
 #include "frame.h"
 #include "content.h"
@@ -37,10 +38,11 @@
 #include "exceptions_f.h"
 #include "font_f.h"
 #include "frame_f.h"
-#include "memory_f.h"
 #ifdef _GL
 #include "glwindowdisplay.h"
 #endif /*_GL*/
+#include "memory_f.h"
+#include "picture_f.h"
 #include "stix_f.h"
 #include "tableH_f.h"
 #include "windowdisplay_f.h"
@@ -936,7 +938,7 @@ void MoveBoxEdge (PtrBox pBox, PtrBox pSourceBox, OpRelation op, int delta,
               XMove (pBox, pSourceBox, translation, frame);
             }
           /* Resize the box */
-          GetExtraMargins (pBox, NULL, &t, &b, &l, &r);
+          GetExtraMargins (pBox, NULL, frame, &t, &b, &l, &r);
           if (pBox->BxLMargin > 0)
             l += pBox->BxLMargin;
           l +=  pBox->BxLBorder +  pBox->BxLPadding;
@@ -1005,7 +1007,7 @@ void MoveBoxEdge (PtrBox pBox, PtrBox pSourceBox, OpRelation op, int delta,
               YMove (pBox, pSourceBox, translation, frame);
             }
           /* Resize the box */
-          GetExtraMargins (pBox, NULL, &t, &b, &l, &r);
+          GetExtraMargins (pBox, NULL, frame, &t, &b, &l, &r);
           if (pBox->BxTMargin > 0)
             t += pBox->BxTMargin;
           t +=  pBox->BxTBorder +  pBox->BxTPadding;
@@ -1762,30 +1764,35 @@ void MoveHorizRef (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
   l = the added pixels at the left
   r = the added pixels at the right
   ----------------------------------------------------------------------*/
-void GetExtraMargins (PtrBox pBox, PtrAbstractBox pFrom,
+void GetExtraMargins (PtrBox pBox, PtrAbstractBox pFrom, int frame,
                       int *t, int *b, int *l, int *r)
 {
   PtrAbstractBox      pAb, pParent, pNext, pPrev;
   PtrBox              box;
-  ThotBool            first, last, add;
+  ThotBool            first, last, add, isExtra;
 
   *t = *b = *l = *r = 0;
   pAb = pBox->BxAbstractBox;
   if (pFrom)
-    /* add values only if it's the pFrom or a pFrom parent box */
-    add = (pFrom == pAb);
+    {
+      /* add values only if it's the pFrom or a pFrom parent box */
+      add = (pFrom == pAb);
+      isExtra = ExtraAbFlow (pFrom, frame);
+    }
   else
-    add = TRUE;
-  if (pAb && !pAb->AbDead)
+    {
+      add = TRUE;
+      isExtra = ExtraAbFlow (pAb, frame);
+    }
+  if (pAb && !pAb->AbDead && !isExtra)
     {
       pParent = pAb->AbEnclosing;
       /* check if there are enclosing ghost boxes */ 
-      while (pParent && pParent->AbBox &&
+      /*while (pParent && pParent->AbBox &&
              pParent->AbBox->BxType == BoComplete)
-        pParent = pParent->AbEnclosing;
+             pParent = pParent->AbEnclosing;*/
       if (pParent && pParent->AbBox &&
-          (pParent->AbBox->BxType == BoGhost ||
-           pParent->AbBox->BxType == BoFloatGhost))
+          pParent->AbBox->BxType == BoGhost)
         {
           if (pBox->BxType == BoPiece || pBox->BxType == BoScript)
             {
@@ -1924,7 +1931,7 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
   if (pCurrentAb == NULL)
     return;
 
-  GetExtraMargins (pBox, NULL, &i, &j, &extraL, &extraR);
+  GetExtraMargins (pBox, NULL, frame, &i, &j, &extraL, &extraR);
   if (!pCurrentAb->AbMBPChange && delta)
     {
       if (pBox->BxLMargin > 0)
@@ -2023,10 +2030,15 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
           pBox->BxW += delta;
           /* outside width */
           pBox->BxWidth = pBox->BxWidth + delta + diff;
-          if (pBox->BxType == BoPicture ||
-              pCurrentAb->AbLeafType == LtGraphics)
-            pBox->BxMaxWidth = pBox->BxWidth;
           pBox->BxXOrg += orgTrans;
+
+          if (pBox->BxType == BoPicture || pCurrentAb->AbLeafType == LtGraphics)
+            {
+              pBox->BxMaxWidth = pBox->BxWidth;
+              if (pBox->BxType == BoPicture &&
+                  pCurrentAb->AbWidth.DimUnit == UnPercent)
+                LoadPicture (frame, pBox, (ThotPictInfo *) (pCurrentAb->AbPictBackground));
+            }
 
           /* Moving sibling boxes and the parent? */
           pPosRel = pBox->BxPosRelations;
@@ -2385,7 +2397,9 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
                         UpdateLineBlock (pAb, pLine, pBox, diff, 0, frame);
                     }
                   /* if the inclusion is not checked at the end */
-                  else if (!IsParentBox (pAb->AbBox, PackBoxRoot) &&
+                  else if ((pAb->AbBox->BxType == BoTable ||
+                            // force the check of a table when children change
+                            !IsParentBox (pAb->AbBox, PackBoxRoot)) &&
                            pAb->AbBox != pFromBox)
                     {
                       /* Differ the checking of the inclusion */
@@ -2470,7 +2484,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
   if (pCurrentAb == NULL)
     return;
 
-  GetExtraMargins (pBox, NULL, &extraT, &extraB, &i, &j);
+  GetExtraMargins (pBox, NULL, frame, &extraT, &extraB, &i, &j);
   if (!pCurrentAb->AbMBPChange && delta)
     {
       if (pBox->BxTMargin > 0)
@@ -2911,7 +2925,6 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
             {
               /* keep in mind if the relation concerns parent boxes */
               externalRef = !IsParentBox (pAb->AbBox, pSourceBox);
-	      
               /*
                * if pSourceBox is a child and the inclusion is not performed
                * by another sibling box, we need to propagate the change
@@ -2920,8 +2933,8 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
                   /* doesn't check enclosing of a positioned box */
                 ;
               else if ((Propagate == ToAll || externalRef) &&
-                  !IsSiblingBox (pBox, pFromBox) &&
-                  !IsSiblingBox (pBox, pSourceBox))
+                       !IsSiblingBox (pBox, pFromBox) &&
+                       !IsSiblingBox (pBox, pSourceBox))
                 {
                   if (pAb->AbBox->BxType == BoBlock ||
                       pAb->AbBox->BxType == BoFloatBlock)
@@ -2931,7 +2944,9 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
                         EncloseInLine (pBox, frame, pAb);
                     }
                   /* if the inclusion is not checked at the end */
-                  else if (!IsParentBox (pAb->AbBox, PackBoxRoot) &&
+                  else if ((pAb->AbBox->BxType == BoTable ||
+                            // force the check of a table when children change
+                            !IsParentBox (pAb->AbBox, PackBoxRoot)) &&
                            pAb->AbBox != pFromBox)
                     {
                       /* Differ the checking of the inclusion */

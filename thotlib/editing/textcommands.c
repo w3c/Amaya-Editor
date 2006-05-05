@@ -281,7 +281,7 @@ static void LocateLeafBox (int frame, View view, int x, int y, int xDelta,
 #else /* _GL */
               x -= pBox->BxXOrg;
 #endif /* _GL */
-              LocateClickedChar (pBox, extendSel, &pBuffer, &x, &index,
+              LocateClickedChar (pBox, frame, extendSel, &pBuffer, &x, &index,
                                  &nChars, &nbbl);
               if (LeftExtended && nChars > 0 && nChars <= pBox->BxNChars)
                 nChars--;

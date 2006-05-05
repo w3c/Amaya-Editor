@@ -460,7 +460,7 @@ void ComputeViewSelMarks (ViewSelection *selMark, int frame)
 
       if (rtl)
         x = - x + pBox->BxW;
-      GetExtraMargins (pBox, NULL, &t, &b, &l, &r);
+      GetExtraMargins (pBox, NULL, frame, &t, &b, &l, &r);
       selMark->VsXPos = x + l + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
       selMark->VsNSpaces = spaces;
     }
@@ -499,7 +499,7 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
       if (pAb->AbBox)
         {
           pBox = pAb->AbBox;
-          GetExtraMargins (pBox, NULL, &t, &b, &l, &r);
+          GetExtraMargins (pBox, NULL, frame, &t, &b, &l, &r);
           if (pBox->BxAbstractBox->AbUnicodeBidi == 'O')
             rtl = (pBox->BxAbstractBox->AbDirection == 'R');
           else

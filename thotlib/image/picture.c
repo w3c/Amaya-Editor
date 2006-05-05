@@ -2360,9 +2360,10 @@ void ClipAndBoxUpdate (PtrAbstractBox pAb, PtrBox box, int w, int h,
             /* the rule min is applied to this box */
             ChangeDefaultWidth (box, box, w, 0, frame);
           else if (pAb->AbEnclosing &&
+                   pAb->AbWidth.DimUnit != UnPercent &&
                    pAb->AbWidth.DimAbRef == pAb->AbEnclosing &&
                    pAb->AbNext == NULL && pAb->AbPrevious == NULL)
-            /* the parent box should inherit the picture width */
+            /* the (SVG) parent box should inherit the picture width */
             ChangeWidth (pAb->AbEnclosing->AbBox,
                          pAb->AbEnclosing->AbBox, NULL,
                          w + left + right, 0, frame);
@@ -2373,9 +2374,10 @@ void ClipAndBoxUpdate (PtrAbstractBox pAb, PtrBox box, int w, int h,
             /* the rule min is applied to this box */
             ChangeDefaultHeight (box, box, h, frame);
           else if (pAb->AbEnclosing &&
+                   pAb->AbHeight.DimUnit != UnPercent &&
                    pAb->AbHeight.DimAbRef == pAb->AbEnclosing &&
                    pAb->AbNext == NULL && pAb->AbPrevious == NULL)
-            /* the parent box should inherit the picture height */
+            /* the (SVG) parent box should inherit the picture height */
             ChangeHeight (pAb->AbEnclosing->AbBox,
                           pAb->AbEnclosing->AbBox, NULL,
                           h + top + bottom + top + bottom, frame);

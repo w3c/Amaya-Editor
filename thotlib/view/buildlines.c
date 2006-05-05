@@ -1776,7 +1776,7 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
       if (pBox)
         {
           pAb = pBox->BxAbstractBox;
-          GetExtraMargins (pBox, NULL, &t, &b, &l, &r);
+          GetExtraMargins (pBox, NULL, frame, &t, &b, &l, &r);
           /* border, margin, and padding of the current box */
           lbmp = pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
           rbmp = pBox->BxRMargin + pBox->BxRBorder + pBox->BxRPadding;
@@ -2154,7 +2154,7 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
         {
           /* the first piece must be inserted in the line */
           pBox = pLine->LiFirstPiece;
-          GetExtraMargins (pBox, NULL, &t, &b, &l, &r);
+          GetExtraMargins (pBox, NULL, frame, &t, &b, &l, &r);
           /* look for a break element */
           found = FindBreakLine (pBox, &width, &breakWidth, &boxLength,
                                  &nSpaces, &newIndex, &pNewBuff, &wordWidth);
@@ -2350,7 +2350,7 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
                 pBox = pNextBox;
               else
                 {
-                  GetExtraMargins (pNextBox, NULL, &t, &b, &l, &r);
+                  GetExtraMargins (pNextBox, NULL, frame, &t, &b, &l, &r);
                   ManageBreakLine (pNextBox, width, breakWidth, boxLength,
                                    nSpaces, newIndex, l, r, pNewBuff, pRootAb);
                   if (pNextBox->BxNexChild)
@@ -2505,7 +2505,7 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
           else
             {
               /* Break the box anywhere */
-              GetExtraMargins (pNextBox, NULL, &t, &b, &l, &r);
+              GetExtraMargins (pNextBox, NULL, frame, &t, &b, &l, &r);
               pBox = pNextBox;
               BreakMainBox (pLine, pNextBox, maxLength, l, r, pRootAb, TRUE);
               if (pBox->BxAbstractBox->AbLeafType == LtText && pBox->BxNexChild)
@@ -2535,7 +2535,7 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
                    (CanHyphen (pNextBox) || pNextBox->BxNSpaces != 0))
             {
               /* Break that box */
-              GetExtraMargins (pNextBox, NULL, &t, &b, &l, &r);
+              GetExtraMargins (pNextBox, NULL, frame, &t, &b, &l, &r);
               pBox = pNextBox;
               if (BreakMainBox (pLine, pNextBox, maxLength, l, r, pRootAb, FALSE))
                 {
@@ -2592,7 +2592,7 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
                   pNextBox->BxNSpaces != 0)
                 {
                   /* break on the last space of the box*/
-                  GetExtraMargins (pNextBox, NULL, &t, &b, &l, &r);
+                  GetExtraMargins (pNextBox, NULL, frame, &t, &b, &l, &r);
                   if (pNextBox->BxType == BoPiece ||
                       pNextBox->BxType == BoDotted ||
                       pNextBox->BxType == BoScript)
@@ -2623,7 +2623,7 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
                       && lastbox->BxAbstractBox->AbLeafType == LtText)
                     {
                       /* mandatory break */
-                      GetExtraMargins (lastbox, NULL, &t, &b, &l, &r);
+                      GetExtraMargins (lastbox, NULL, frame, &t, &b, &l, &r);
                       BreakMainBox (pLine, lastbox, maxLength, l, r, pRootAb, TRUE);
                       if (lastbox->BxType != BoScript && lastbox->BxNexChild)
                         /* take the first child of a main box */
@@ -2722,7 +2722,7 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
           pBox->BxAbstractBox->AbLeafType == LtText &&
           pBox->BxNSpaces != 0)
         {
-          GetExtraMargins (pBox, NULL, &t, &b, &l, &r);
+          GetExtraMargins (pBox, NULL, frame, &t, &b, &l, &r);
           if (pLine->LiLastPiece == NULL)
             {
               maxLength = pBox->BxWidth;
@@ -2838,7 +2838,7 @@ static void UpdateBlockWithFloat (int frame, PtrBox pBlock,
     x = pBlock->BxXOrg;
   else
     x = 0;
-  GetExtraMargins (pBlock, NULL, &t, &b, &l, &r);
+  GetExtraMargins (pBlock, NULL, frame, &t, &b, &l, &r);
   x += l + pBlock->BxLBorder + pBlock->BxLPadding;
   if (pBlock->BxLMargin > 0)
     x += pBlock->BxLMargin;
@@ -3331,7 +3331,7 @@ static void RemoveBreaks (PtrBox pBox, int frame, ThotBool removed,
                     {
                       pBox->BxNChars += nchar;
                       pBox->BxW = width;
-                      GetExtraMargins (pBox, NULL, &t, &b, &l, &r);
+                      GetExtraMargins (pBox, NULL, frame, &t, &b, &l, &r);
                       pBox->BxWidth = width + pBox->BxLBorder + pBox->BxLPadding
                                       + pBox->BxRBorder + pBox->BxRPadding + l + r;
                       if (pBox->BxLMargin > 0)
@@ -3385,7 +3385,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
   AbPosition         *pPosAb;
   int                 x, lineSpacing, indent, maxWidth;
   int                 org, width, noWrappedWidth;
-  int                 lostPixels, minWidth;
+  int                 lostPixels, minWidth, y;
   int                 top, left, right, bottom, spacing;
   ThotBool            toAdjust, breakLine, isExtraFlow;
   ThotBool            xAbs, yAbs, extensibleBox;
@@ -3404,7 +3404,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
   pRootAb = ViewFrameTable[frame - 1].FrAbstractBox;
   /* save current width */
   width = pBox->BxW;
-  GetExtraMargins (pBox, NULL, &top, &bottom, &left, &right);
+  GetExtraMargins (pBox, NULL, frame, &top, &bottom, &left, &right);
   top += pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding;
   bottom += pBox->BxBMargin + pBox->BxBBorder + pBox->BxBPadding;
   left += pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
@@ -3790,27 +3790,26 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
   if (noWrappedWidth > pBox->BxMaxWidth)
     pBox->BxMaxWidth = noWrappedWidth;
   noWrappedWidth = 0;
-  /* met a jour la base du bloc de lignes   */
-  /* s'il depend de la premiere boite englobee */
+  /* update the block baseline */
   if (pAb->AbHorizRef.PosAbRef == pAb->AbFirstEnclosed && pAb->AbFirstEnclosed &&
       pAb->AbFirstEnclosed->AbFloat == 'N' && pBox->BxFirstLine)
     {
       pPosAb = &pAb->AbHorizRef;
       if (pPosAb->PosUnit == UnPercent)
-        x = PixelValue (pPosAb->PosDistance, UnPercent,
+        y = PixelValue (pPosAb->PosDistance, UnPercent,
                         (PtrAbstractBox) (pAb->AbBox->BxW), 0);
       else
-        x = PixelValue (pPosAb->PosDistance, pPosAb->PosUnit, pAb,
+        y = PixelValue (pPosAb->PosDistance, pPosAb->PosUnit, pAb,
                         ViewFrameTable[frame - 1].FrMagnification);
       if (pPosAb->PosDeltaUnit == UnPercent)
-        x += PixelValue (pPosAb->PosDistDelta, UnPercent,
+        y += PixelValue (pPosAb->PosDistDelta, UnPercent,
                          (PtrAbstractBox) (pAb->AbBox->BxW), 0);
       else
-        x += PixelValue (pPosAb->PosDistDelta, pPosAb->PosDeltaUnit, pAb,
+        y += PixelValue (pPosAb->PosDistDelta, pPosAb->PosDeltaUnit, pAb,
                          ViewFrameTable[frame - 1].FrMagnification);
-      x += left;
+      y += top;
       MoveHorizRef (pBox, NULL,
-                    pBox->BxFirstLine->LiHorizRef + x - pBox->BxHorizRef, frame);
+                    pBox->BxFirstLine->LiHorizRef + y - pBox->BxHorizRef, frame);
     }
 
   /* now add margins, borders and paddings to min and max widths */
@@ -4467,7 +4466,7 @@ void UpdateLineBlock (PtrAbstractBox pAb, PtrLine pLine, PtrBox pBox,
                             {
                               length = box->BxNChars;
                               /* look for a break */
-                              GetExtraMargins (box, NULL, &t, &b, &l, &r);
+                              GetExtraMargins (box, NULL, frame, &t, &b, &l, &r);
                               maxLength = SearchBreak (pLine, box,
                                                        maxLength, box->BxFont,
                                                        l, r,
@@ -4509,7 +4508,7 @@ void UpdateLineBlock (PtrAbstractBox pAb, PtrLine pLine, PtrBox pBox,
                                 {
                                   length = box->BxNChars;
                                   /* look for a break */
-                                  GetExtraMargins (box, NULL, &t, &b, &l, &r);
+                                  GetExtraMargins (box, NULL, frame, &t, &b, &l, &r);
                                   maxLength = SearchBreak (pLi2, box,
                                                            maxLength, box->BxFont,
                                                            l, r,
@@ -4564,7 +4563,7 @@ void EncloseInLine (PtrBox pBox, int frame, PtrAbstractBox pAb)
   PtrLine             pNextLine;
 
   pBlock = pAb->AbBox;
-  GetExtraMargins (pBlock, NULL, &top, &bottom, &left, &right);
+  GetExtraMargins (pBlock, NULL, frame, &top, &bottom, &left, &right);
   top += pBlock->BxTMargin + pBlock->BxTBorder + pBlock->BxTPadding;
   left += pBlock->BxLMargin + pBlock->BxLBorder + pBlock->BxLPadding;
   if (pBlock->BxType == BoBlock)
