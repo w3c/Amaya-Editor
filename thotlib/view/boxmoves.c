@@ -2397,9 +2397,7 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
                         UpdateLineBlock (pAb, pLine, pBox, diff, 0, frame);
                     }
                   /* if the inclusion is not checked at the end */
-                  else if ((pAb->AbBox->BxType == BoTable ||
-                            // force the check of a table when children change
-                            !IsParentBox (pAb->AbBox, PackBoxRoot)) &&
+                  else if (!IsParentBox (pAb->AbBox, PackBoxRoot) &&
                            pAb->AbBox != pFromBox)
                     {
                       /* Differ the checking of the inclusion */
@@ -2414,6 +2412,8 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
                             WidthPack (pAb, pSourceBox, frame);
                         }
                     }
+                  else if (pAb->AbBox->BxType == BoTable)
+                    RecordEnclosing (pAb->AbBox, TRUE);
                 }
               else if (!pCurrentAb->AbNew &&
                        Propagate == ToSiblings &&
@@ -2944,9 +2944,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
                         EncloseInLine (pBox, frame, pAb);
                     }
                   /* if the inclusion is not checked at the end */
-                  else if ((pAb->AbBox->BxType == BoTable ||
-                            // force the check of a table when children change
-                            !IsParentBox (pAb->AbBox, PackBoxRoot)) &&
+                  else if (!IsParentBox (pAb->AbBox, PackBoxRoot) &&
                            pAb->AbBox != pFromBox)
                     {
                       /* Differ the checking of the inclusion */
@@ -2956,6 +2954,8 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
                       else if (pAb->AbBox->BxPacking <= 1)
                         HeightPack (pAb, pSourceBox, frame);
                     }
+                  else if (pAb->AbBox->BxType == BoTable)
+                    RecordEnclosing (pAb->AbBox, FALSE);
                 }
               else if ((pBox->BxType == BoBlock ||
                         pBox->BxType == BoFloatBlock) &&
