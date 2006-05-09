@@ -404,6 +404,11 @@ void AmayaNormalWindow::OnMenuItem( wxCommandEvent& event )
            else if (!strcmp (MenuActionList[action_id].ActionName, "TtcDeleteSelection"))
              return;
          }
+       else
+         {
+           event.Skip();
+           return;
+         }
     }
 
   TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaNormalWindow::OnMenuItem id=%d action_id=%d"), id, action_id );
