@@ -30,7 +30,9 @@
             <size>0,5</size>
           </object>
           <object class="sizeritem">
-            <object class="wxTextCtrl" name="wxID_TEXT"/>
+            <object class="wxTextCtrl" name="wxID_TEXT">
+              <focused>1</focused>
+            </object>
             <flag>wxEXPAND</flag>
           </object>
           <object class="spacer">

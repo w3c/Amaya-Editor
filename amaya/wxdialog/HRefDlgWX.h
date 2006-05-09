@@ -32,7 +32,7 @@ public:
   virtual ~HRefDlgWX();
 
 private:
-
+  void OnURLSelected( wxCommandEvent& event );
   void OnOk( wxCommandEvent& event );
   void OnBrowse( wxCommandEvent& event );
   void OnClick( wxCommandEvent& event );

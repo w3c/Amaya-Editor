@@ -27,6 +27,7 @@ BEGIN_EVENT_TABLE(HRefDlgWX, AmayaDialog)
   EVT_BUTTON(     XRCID("wxID_CLEAR"),        HRefDlgWX::OnClear )
   EVT_BUTTON(     XRCID("wxID_CANCEL"),       HRefDlgWX::OnCancel )
   EVT_TEXT_ENTER( XRCID("wxID_COMBOBOX"),     HRefDlgWX::OnOk )
+  EVT_COMBOBOX( XRCID("wxID_COMBOBOX"),       HRefDlgWX::OnURLSelected )
 END_EVENT_TABLE()
 
 /*----------------------------------------------------------------------
@@ -66,7 +67,8 @@ HRefDlgWX::HRefDlgWX( int ref, wxWindow* parent, const wxString & title,
   // initialize it
   XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetValue(wx_init_value);
   // set te cursor to the end
-  XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetInsertionPointEnd();
+  //XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetInsertionPointEnd();
+  XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetSelection (0, -1);
 
 #ifndef _MACOS
   // give focus to ...
@@ -91,6 +93,14 @@ HRefDlgWX::~HRefDlgWX()
   else
     // clean up the dialog context
     TtaDestroyDialogue( MyRef );
+}
+
+/*----------------------------------------------------------------------
+  OnURLSelected new value selected
+  ----------------------------------------------------------------------*/
+void HRefDlgWX::OnURLSelected( wxCommandEvent& event )
+{
+  XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetInsertionPointEnd();
 }
 
 /*----------------------------------------------------------------------

@@ -46,6 +46,7 @@ ListEditDlgWX::ListEditDlgWX( int ref, wxWindow* parent, const wxString & title,
   // pre-select item
   XRCCTRL(*this, "wxID_LIST", wxListBox)->SetStringSelection(selected_item);
   XRCCTRL(*this, "wxID_TEXT", wxTextCtrl)->SetValue(selected_item);
+  XRCCTRL(*this, "wxID_TEXT", wxTextCtrl)->SetSelection(0,-1);
   Fit();
   SetAutoLayout( TRUE );
 }
@@ -96,5 +97,6 @@ void ListEditDlgWX::OnSelected( wxCommandEvent& event )
 {
   wxString s_selected = XRCCTRL(*this, "wxID_LIST", wxListBox)->GetStringSelection();
   XRCCTRL(*this, "wxID_TEXT", wxTextCtrl)->SetValue( s_selected );
+  XRCCTRL(*this, "wxID_TEXT", wxTextCtrl)->SetInsertionPointEnd();
 }
 #endif /* _WX */

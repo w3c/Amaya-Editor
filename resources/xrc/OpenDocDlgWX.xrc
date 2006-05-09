@@ -40,6 +40,7 @@
                 <object class="wxComboBox" name="wxID_COMBOBOX">
                   <content/>
                   <size>400,-1</size>
+                  <style>wxCB_DROPDOWN</style>
                   <focused>1</focused>
                 </object>
                 <flag>wxEXPAND</flag>

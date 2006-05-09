@@ -22,7 +22,8 @@ BEGIN_EVENT_TABLE(ImageDlgWX, AmayaDialog)
   EVT_BUTTON(     XRCID("wxID_OPENBUTTON"),   ImageDlgWX::OnOpenButton )
   EVT_BUTTON(     XRCID("wxID_BROWSEBUTTON"), ImageDlgWX::OnBrowseButton )
   EVT_BUTTON(     XRCID("wxID_CANCEL"),       ImageDlgWX::OnCancelButton )
-  EVT_TEXT_ENTER( XRCID("wxID_COMBOBOX"),     ImageDlgWX::OnOpenButton )
+  EVT_TEXT_ENTER( XRCID("wxID_URL"),          ImageDlgWX::OnOpenButton )
+  EVT_TEXT_ENTER( XRCID("wxID_ALT"),          ImageDlgWX::OnOpenButton )
 END_EVENT_TABLE()
 
 /*----------------------------------------------------------------------
@@ -55,12 +56,13 @@ ImageDlgWX::ImageDlgWX( int ref, wxWindow* parent, const wxString & title,
   XRCCTRL(*this, "wxID_BROWSEBUTTON", wxBitmapButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_BROWSE) ));
   XRCCTRL(*this, "wxID_CANCEL", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_CANCEL) ));
 
+  XRCCTRL(*this, "wxID_ALT", wxTextCtrl)->SetValue( alt );
+
   XRCCTRL(*this, "wxID_URL", wxTextCtrl)->SetValue(urlToOpen  );
 #ifndef _MACOS
   // set te cursor to the end
-  XRCCTRL(*this, "wxID_URL", wxTextCtrl)->SetInsertionPointEnd();
+  XRCCTRL(*this, "wxID_URL", wxTextCtrl)->SetSelection(0, -1);
 #endif /* _MACOS */
-  XRCCTRL(*this, "wxID_ALT", wxTextCtrl)->SetValue( alt );
 
   SetAutoLayout( TRUE );
 }

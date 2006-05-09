@@ -50,8 +50,9 @@ END_EVENT_TABLE()
 
 
   // update dialog Spin Ctrls
-  XRCCTRL(*this, "wxID_NUMBER_COL", wxSpinCtrl)->SetValue(def_cols);
   XRCCTRL(*this, "wxID_NUMBER_ROW", wxSpinCtrl)->SetValue(def_rows);
+  XRCCTRL(*this, "wxID_NUMBER_COL", wxSpinCtrl)->SetValue(def_cols);
+  XRCCTRL(*this, "wxID_NUMBER_COL", wxSpinCtrl)->SetSelection(0,-1);
   if (def_border >= 0)
     {
       XRCCTRL(*this, "wxID_TABLE_BORDER_TXT", wxStaticText)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_BORDER) ));

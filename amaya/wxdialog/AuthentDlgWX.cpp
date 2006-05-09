@@ -19,10 +19,12 @@ static int      Waiting = 0;
 // Event table: connect the events to the handler functions to process them
 //-----------------------------------------------------------------------------
 BEGIN_EVENT_TABLE(AuthentDlgWX, AmayaDialog)
-  EVT_BUTTON( XRCID("wxID_OK"),       AuthentDlgWX::OnConfirmButton )
-  EVT_BUTTON( XRCID("wxID_CANCEL"),        AuthentDlgWX::OnCancelButton )
-  EVT_TEXT( XRCID("wxID_AU"),                    AuthentDlgWX::OnName )
-  EVT_TEXT( XRCID("wxID_PASSWD"),                AuthentDlgWX::OnPassword )
+  EVT_BUTTON( XRCID("wxID_OK"),         AuthentDlgWX::OnConfirmButton )
+  EVT_BUTTON( XRCID("wxID_CANCEL"),     AuthentDlgWX::OnCancelButton )
+  EVT_TEXT( XRCID("wxID_AU"),           AuthentDlgWX::OnName )
+  EVT_TEXT( XRCID("wxID_PASSWD"),       AuthentDlgWX::OnPassword )
+  EVT_TEXT_ENTER( XRCID("wxID_AU"),     AuthentDlgWX::OnConfirmButton )
+  EVT_TEXT_ENTER( XRCID("wxID_PASSWD"), AuthentDlgWX::OnConfirmButton )
 END_EVENT_TABLE()
 
 /*----------------------------------------------------------------------
@@ -65,6 +67,7 @@ AuthentDlgWX::AuthentDlgWX( int ref,
 
   wxString wx_name = TtaConvMessageToWX( Answer_name );
   XRCCTRL(*this, "wxID_AU", wxTextCtrl)->SetValue(wx_name);
+  XRCCTRL(*this, "wxID_AU", wxTextCtrl)->SetSelection (0, -1);
   wxString wx_password = TtaConvMessageToWX( Answer_password );
   XRCCTRL(*this, "wxID_PASSWD", wxTextCtrl)->SetValue(wx_password);
 

@@ -23,7 +23,8 @@ BEGIN_EVENT_TABLE(ObjectDlgWX, AmayaDialog)
   EVT_BUTTON(     XRCID("wxID_OK"),           ObjectDlgWX::OnOpenButton )
   EVT_BUTTON(     XRCID("wxID_BROWSEBUTTON"), ObjectDlgWX::OnBrowseButton )
   EVT_BUTTON(     XRCID("wxID_CANCEL"),       ObjectDlgWX::OnCancelButton )
-  EVT_TEXT_ENTER( XRCID("wxID_COMBOBOX"),     ObjectDlgWX::OnOpenButton )
+  EVT_TEXT_ENTER( XRCID("wxID_ID_URL"),       ObjectDlgWX::OnOpenButton )
+  EVT_TEXT_ENTER( XRCID("wxID_ID_ALT"),       ObjectDlgWX::OnOpenButton )
   EVT_COMBOBOX( XRCID("wxID_MIME_TYPE_CB"),   ObjectDlgWX::OnMimeTypeCbx )
 END_EVENT_TABLE()
 
@@ -58,9 +59,6 @@ ObjectDlgWX::ObjectDlgWX( int ref, wxWindow* parent, const wxString & title,
   XRCCTRL(*this, "wxID_BROWSEBUTTON", wxBitmapButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_BROWSE) ));
   XRCCTRL(*this, "wxID_CANCEL", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_CANCEL) ));
 
-  XRCCTRL(*this, "wxID_URL", wxTextCtrl)->SetValue(urlToOpen  );
-  // set te cursor to the end
-  XRCCTRL(*this, "wxID_URL", wxTextCtrl)->SetInsertionPointEnd();
   // set the mime-type
   XRCCTRL(*this, "wxID_MIME_TYPE_CB", wxComboBox)->Append( mime_type );
   if (strcmp (UserMimeType, "image/png"))
@@ -85,6 +83,10 @@ ObjectDlgWX::ObjectDlgWX( int ref, wxWindow* parent, const wxString & title,
     XRCCTRL(*this, "wxID_MIME_TYPE_CB",
 	    wxComboBox)->Append( TtaConvMessageToWX( "text/html" ) );
   XRCCTRL(*this, "wxID_MIME_TYPE_CB", wxComboBox)->SetValue( mime_type );
+
+  XRCCTRL(*this, "wxID_URL", wxTextCtrl)->SetValue(urlToOpen  );
+  // set te cursor to the end
+  XRCCTRL(*this, "wxID_URL", wxTextCtrl)->SetSelection(0, -1);
 
   SetAutoLayout( TRUE );
 }

@@ -108,7 +108,8 @@ OpenDocDlgWX::OpenDocDlgWX( int ref, wxWindow* parent, const wxString & title,
   XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->Append( urlList );
   XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetValue( urlToOpen );
   // set te cursor to the end
-  XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetInsertionPointEnd();
+  //XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetInsertionPointEnd();
+  XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetSelection(0, -1);
   UpdateDirAndFilenameFromString( urlToOpen );
 
   // dir separator
@@ -185,6 +186,7 @@ void OpenDocDlgWX::OnFilenameButton( wxCommandEvent& event )
     {
       *m_pLastUsedFilter = p_dlg->GetFilterIndex();
       XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetValue( p_dlg->GetPath() );
+      XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetInsertionPointEnd();
       UpdateDirAndFilenameFromString( p_dlg->GetPath() );
       p_dlg->Destroy();
     }
@@ -211,6 +213,7 @@ void OpenDocDlgWX::UpdateComboboxFromDirAndFilename()
       if (dir_value.Last() != m_DirSep)
         dir_value += m_DirSep;
       XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetValue( dir_value + filename_value );
+      XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetInsertionPointEnd();
       m_LockUpdateFlag = false;
     }
 }
@@ -315,6 +318,7 @@ void OpenDocDlgWX::OnCancelButton( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void OpenDocDlgWX::OnURLSelected( wxCommandEvent& event )
 {
+  XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetInsertionPointEnd();
 }
 
 /*----------------------------------------------------------------------
