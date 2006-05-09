@@ -67,8 +67,8 @@ END_EVENT_TABLE()
   XRCCTRL(*this, "wxID_CANCEL", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_CANCEL) ));
 
   // Gives spin ranges
-  XRCCTRL(*this, "wxID_NUMBER_COL", wxSpinCtrl )->SetRange(1, 1000);
   XRCCTRL(*this, "wxID_NUMBER_ROW", wxSpinCtrl )->SetRange(1, 1000);
+  XRCCTRL(*this, "wxID_NUMBER_COL", wxSpinCtrl )->SetRange(1, 1000);
 
   Layout();
   
