@@ -1113,7 +1113,7 @@ ThotBool ComputePositioning (PtrBox pBox, int frame)
                     pBox->BxContentWidth = FALSE;
                   InsertPosRelation (pBox, pRefBox, OpWidth, pPosAb->PosEdge, pPosAb->PosRefEdge);
                   /* The box is now set stretchable */
-                  pBox->BxHorizFlex = TRUE;
+                  pBox->BxHorizFlex = pRefBox;
                   pRefBox->BxMoved = NULL;
                   MoveBoxEdge (pBox, pRefBox, OpWidth, x + lr + w + rr - r, frame, TRUE);
                 }
@@ -3110,7 +3110,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                 /* la boite  devient maintenant placee en absolu */
                 pBox->BxXToCompute = TRUE;
               /* La boite est marquee elastique */
-              pBox->BxHorizFlex = TRUE;
+              pBox->BxHorizFlex = pRefBox;
               pRefBox->BxMoved = NULL;
               MoveBoxEdge (pBox, pRefBox, op, val, frame, TRUE);
             }
@@ -3214,7 +3214,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                 /* la boite  devient maintenant placee en absolu */
                 pBox->BxYToCompute = TRUE;
               /* La boite est marquee elastique */
-              pBox->BxVertFlex = TRUE;
+              pBox->BxVertFlex = pRefBox;
               ClearBoxMoved (pBox);
               MoveBoxEdge (pBox, pRefBox, op, val, frame, FALSE);
             }
@@ -3720,6 +3720,10 @@ static ThotBool CheckDimRelation (PtrBox pBox, ThotBool horizRef)
   /* Relation found, compact the list */
   if (found > 0)
     {
+      if (horizRef)
+        pBox->BxWOutOfStruct = FALSE;
+      else
+        pBox->BxHOutOfStruct = FALSE;
       /* remove the relation */
       if (pFoundDimRel->DimRTable[found - 1] == pBox)
         /* change the horiz ref */
@@ -3796,12 +3800,16 @@ void ClearOutOfStructRelation (PtrBox pBox, int frame)
       /* Streched box? */
       if (pBox->BxHorizFlex)
         {
-          pOrginBox = pAb->AbWidth.DimPosition.PosAbRef->AbBox;
-          if (pOrginBox)
-            RemovePosRelation (pOrginBox, pBox, NULL, FALSE, FALSE, TRUE);
+          pOrginBox = pBox->BxHorizFlex;
+          RemovePosRelation (pOrginBox, pBox, NULL, FALSE, FALSE, TRUE);
+          // reset flags
+          pBox->BxHorizEdge = pAb->AbHorizPos.PosEdge;
+          pBox->BxHorizInverted = FALSE;
+          pBox->BxHorizFlex = NULL;
         }
       else
         CheckDimRelation (pBox, TRUE);
+      pBox->BxWOutOfStruct = FALSE;
     }
 
   /* Remove out of structure height constraints */
@@ -3811,13 +3819,16 @@ void ClearOutOfStructRelation (PtrBox pBox, int frame)
       /* Streched box? */
       if (pBox->BxVertFlex)
         {
-          if (pAb->AbHeight.DimPosition.PosAbRef)
-            pOrginBox = pAb->AbHeight.DimPosition.PosAbRef->AbBox;
-          if (pOrginBox)
-            RemovePosRelation (pOrginBox, pBox, NULL, FALSE, FALSE, FALSE);
+          pOrginBox = pBox->BxVertFlex;
+          RemovePosRelation (pOrginBox, pBox, NULL, FALSE, FALSE, FALSE);
+          // reset flags
+          pBox->BxVertEdge = pAb->AbVertPos.PosEdge;
+          pBox->BxVertInverted = FALSE;
+          pBox->BxVertFlex = NULL;
         }
       else
         CheckDimRelation (pBox, FALSE);
+      pBox->BxHOutOfStruct = FALSE;
     }
 }
 
@@ -4052,40 +4063,39 @@ void ClearDimRelation (PtrBox pBox, ThotBool horizRef, int frame)
 {
   PtrBox              pOrginBox;
   PtrAbstractBox      pAb;
-  ThotBool            loop;
 
-  if (pBox == NULL)
+  if (pBox == NULL || pBox->BxAbstractBox == NULL)
     return;
-  loop = !CheckDimRelation (pBox, horizRef);
-  /* Remove out of structure width constraints */
+
   pOrginBox = NULL;
   pAb = pBox->BxAbstractBox;
-  if (loop && pAb)
+  if (horizRef && pBox->BxHorizFlex)
     {
-      if (horizRef && pBox->BxHorizFlex)
-        {
-          /* Streched box? */
-          if (pAb->AbWidth.DimPosition.PosAbRef)
-            pOrginBox = pAb->AbWidth.DimPosition.PosAbRef->AbBox;
-          if (pOrginBox)
-            RemovePosRelation (pOrginBox, pBox, NULL, FALSE, FALSE, TRUE);
-          /* Restore the fixed edge */
-          pBox->BxHorizEdge = pAb->AbHorizPos.PosEdge;
-          pBox->BxHorizInverted = FALSE;
-          pBox->BxHorizFlex = FALSE;
-          ResizeWidth (pBox, NULL, NULL, -pBox->BxW, 0, 0, 0, frame);
-        }
-      else if (!horizRef && pBox->BxVertFlex)
-        {
-          if (pAb->AbHeight.DimPosition.PosAbRef)
-            pOrginBox = pAb->AbHeight.DimPosition.PosAbRef->AbBox;
-          if (pOrginBox)
-            RemovePosRelation (pOrginBox, pBox, NULL, FALSE, FALSE, FALSE);
-          /* Restore the fixed edge */
-          pBox->BxVertEdge = pAb->AbVertPos.PosEdge;
-          pBox->BxVertInverted = FALSE;
-          pBox->BxVertFlex = FALSE;
-          ResizeHeight (pBox, NULL, NULL, -pBox->BxH, 0, 0, frame);
-        }
+      /* Remove out of structure width constraints */
+      pOrginBox = pBox->BxHorizFlex;
+      RemovePosRelation (pOrginBox, pBox, NULL, FALSE, FALSE, TRUE);
+      /* Restore the fixed edge */
+      pBox->BxHorizEdge = pAb->AbHorizPos.PosEdge;
+      pBox->BxHorizInverted = FALSE;
+      pBox->BxHorizFlex = NULL;
+      ResizeWidth (pBox, NULL, NULL, -pBox->BxW, 0, 0, 0, frame);
     }
+  else if (!horizRef && pBox->BxVertFlex)
+    {
+      /* Remove out of structure width constraints */
+      pOrginBox = pBox->BxVertFlex;
+      RemovePosRelation (pOrginBox, pBox, NULL, FALSE, FALSE, FALSE);
+      /* Restore the fixed edge */
+      pBox->BxVertEdge = pAb->AbVertPos.PosEdge;
+      pBox->BxVertInverted = FALSE;
+      pBox->BxVertFlex = NULL;
+      ResizeHeight (pBox, NULL, NULL, -pBox->BxH, 0, 0, frame);
+    }
+  else
+    CheckDimRelation (pBox, horizRef);
+  // reset flags
+  if (horizRef && pBox->BxWOutOfStruct)
+    pBox->BxWOutOfStruct = FALSE;
+  else if (!horizRef && pBox->BxHOutOfStruct)
+    pBox->BxHOutOfStruct = FALSE;
 }

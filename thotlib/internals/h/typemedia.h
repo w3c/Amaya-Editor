@@ -267,6 +267,8 @@ typedef struct _Box
   PtrBox          BxMoved;	          /* Linking of moved boxes */
   PtrBox          BxHorizInc;	        /* Box linking to the enclosing one */
   PtrBox          BxVertInc;	        /* Box linking to the enclosing one */
+  PtrBox          BxHorizFlex;        /* The box that makes it elastic */
+   PtrBox         BxVertFlex;         /* The box that makes it elastic */
   BoxEdge         BxHorizEdge;		    /* Position point fixed in X */
   BoxEdge         BxVertEdge;		      /* Position point fixed in Y */
   ThotBool        BxXOutOfStruct;	    /* Out of structure horizontal pos. */
@@ -275,8 +277,6 @@ typedef struct _Box
   ThotBool        BxHOutOfStruct;	    /* Out of structure height */
   ThotBool        BxHorizInverted;	  /* Inverted horizontal marks */
   ThotBool        BxVertInverted;	    /* Inverted vertical marks */
-  ThotBool        BxHorizFlex;        /* The box is elastic */
-  ThotBool        BxVertFlex;         /* The box is elastic */
   ThotBool        BxXToCompute;       /* Box being placed in X */
   ThotBool        BxYToCompute;       /* Box being placed in Y */
   ThotBool	      BxNew;	            /* Newly displayed box */
