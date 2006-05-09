@@ -186,6 +186,7 @@ ${AMAYADIR}/WindowsWX/LibThotEditor/*.dsp \
 ${AMAYADIR}/WindowsWX/LibThotKernel/*.dsp \
 ${AMAYADIR}/WindowsWX/app/*.dsp \
 ${AMAYADIR}/WindowsWX/cpp/*.dsp \
+${AMAYADIR}/WindowsWX/davlib/*.dsp \
 ${AMAYADIR}/WindowsWX/libjpeg/*.dsp \
 ${AMAYADIR}/WindowsWX/libpng/*.dsp \
 ${AMAYADIR}/WindowsWX/libwww/*.dsp \
@@ -196,6 +197,7 @@ ${AMAYADIR}/WindowsWX/prs/*.dsp \
 ${AMAYADIR}/WindowsWX/str/*.dsp \
 ${AMAYADIR}/WindowsWX/thotprinter/*.dsp \
 ${AMAYADIR}/WindowsWX/tra/*.dsp \
+${AMAYADIR}/WindowsWX/wx-setup/setup.h \
 ${AMAYADIR}/WindowsWX/zlib/*.dsp \
 ${AMAYADIR}/libjpeg/Makefile.in \
 ${AMAYADIR}/libjpeg/Makefile \
