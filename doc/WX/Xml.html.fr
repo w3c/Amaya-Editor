@@ -6,7 +6,7 @@
   <title>Xml Support</title>
   <meta http-equiv="content-type"
   content="application/xhtml+xml; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 9.4, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 9.51, see http://www.w3.org/Amaya/" />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -40,7 +40,7 @@ leur organisation dans le document.</p>
 structure qui reflète l'organisation du document et une vue formatée qui
 affiche le contenu des éléments. Sans autre indication de style, tous les
 éléments sont considérés comme <strong>blocs</strong>. Néanmoins, pour des
-raisons de lisibilité les éléments contenant au moins un fils de type "texte"
+raisons de lisibilité les éléments contenant au moins un fils de type "Text"
 sont considérés comme des <strong>éléments en ligne</strong> et sont mis en
 ligne dans la vue formatée. Amaya permet également d'associer des feuilles de
 styles CSS pour ces documents par l'intermédiaire d'instructions de
