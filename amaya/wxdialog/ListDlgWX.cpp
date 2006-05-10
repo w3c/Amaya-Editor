@@ -47,7 +47,7 @@ ListDlgWX::ListDlgWX( int ref, int subref, wxWindow* parent,
 
   // pre-select the first item
   XRCCTRL(*this, "wxID_LIST", wxListBox)->SetSelection(0);
-
+  Fit();
   SetAutoLayout( TRUE );
 }
 

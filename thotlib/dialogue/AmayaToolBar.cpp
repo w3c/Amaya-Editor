@@ -185,6 +185,7 @@ void AmayaToolBar::SetURLValue( const wxString & newurl )
     m_pComboBox->Append(newurl);
   // new url should exists into combobox items so just select it.
   m_pComboBox->SetStringSelection( newurl );
+  //m_pComboBox->SetSelection(0,-1);
 #ifdef _MACOS
   UpdateFrameUrl = TRUE;
 #endif /* _MACOS */

@@ -47,6 +47,8 @@ MakeIdDlgWX::MakeIdDlgWX( int ref, wxWindow* parent) :
   XRCCTRL(*this, "wxID_LABEL_RADIO", wxStaticText)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA, APPLY_OPERATION)));
   XRCCTRL(*this, "wxID_RADIOBOX", wxRadioBox)->SetString(0, TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_IN_WHOLE_DOC)));
   XRCCTRL(*this, "wxID_RADIOBOX", wxRadioBox)->SetString(1, TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_WITHIN_SEL)));
+  XRCCTRL(*this, "wxID_NAME", wxTextCtrl)->SetSelection(0, -1);
+  XRCCTRL(*this, "wxID_STATUS", wxStaticText)->SetLabel(TtaConvMessageToWX(""));
 
   SetAutoLayout( TRUE );
 }
@@ -81,8 +83,9 @@ void MakeIdDlgWX::OnAddButton( wxCommandEvent& event )
   // create or load the new document
   ThotCallback (MyRef, INTEGER_DATA, (char*)1);
 
-  /* The dialogue is no longer destroyed in the callback to prevent a crash on Mac */
-  TtaDestroyDialogue (MyRef);
+  /* keep the dialog to display the result */
+  //TtaDestroyDialogue (MyRef);
+  XRCCTRL(*this, "wxID_STATUS", wxStaticText)->SetLabel(TtaConvMessageToWX(IdStatus));
 }
 
 /*----------------------------------------------------------------------
