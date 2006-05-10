@@ -26,7 +26,9 @@
                   </object>
                   <object class="sizeritem">
                     <object class="wxTextCtrl" name="wxID_NAME">
+                      <value>h2</value>
                       <size>200,-1</size>
+                      <focused>1</focused>
                     </object>
                   </object>
                   <object class="spacer">
@@ -72,6 +74,13 @@
             </object>
             <flag>wxBOTTOM|wxEXPAND</flag>
             <border>4</border>
+          </object>
+          <object class="sizeritem">
+            <object class="wxStaticText" name="wxID_STATUS">
+              <label>*status of the operation</label>
+              <size>300,-1</size>
+              <fg>#7A1919</fg>
+            </object>
           </object>
         </object>
         <flag>wxALL|wxEXPAND</flag>

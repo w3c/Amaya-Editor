@@ -3,7 +3,7 @@
   <object class="wxDialog" name="StyleDlgWX">
     <title>StyleDlgWX</title>
     <centered>1</centered>
-    <style>wxDEFAULT_DIALOG_STYLE|wxSTAY_ON_TOP|wxRESIZE_BORDER|wxNO_3D|wxTAB_TRAVERSAL|wxCLIP_CHILDREN</style>
+    <style>wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxNO_3D|wxTAB_TRAVERSAL|wxCLIP_CHILDREN</style>
     <object class="wxBoxSizer">
       <orient>wxVERTICAL</orient>
       <object class="sizeritem">
@@ -37,7 +37,7 @@
                             <object class="sizeritem">
                               <object class="wxComboBox" name="wxID_COMBOBOX_FAMILY">
                                 <content>
-                                  <item></item>
+                                  <item/>
                                   <item>times</item>
                                   <item>helvetica</item>
                                   <item>courier</item>
@@ -46,8 +46,7 @@
                                   <item>monospace</item>
                                   <item>cursive</item>
                                   <item>fantasy</item>
-                                  <item>inherit</item>
-                                </content>
+                                  <item>inherit</item></content>
                                 <size>200,-1</size>
                                 <focused>1</focused>
                               </object>
@@ -86,7 +85,6 @@
                                   <item>oblique</item>
                                   <item>inherit</item></content>
                                 <size>150,-1</size>
-                                <focused>1</focused>
                               </object>
                               <flag>wxLEFT</flag>
                             </object>
@@ -127,7 +125,6 @@
                                   <item>bolder</item>
                                   <item>inherit</item></content>
                                 <size>150,-1</size>
-                                <focused>1</focused>
                               </object>
                             </object>
                           </object>
@@ -156,7 +153,6 @@
                                   <item>small-caps</item>
                                   <item>inherit</item></content>
                                 <size>150,-1</size>
-                                <focused>1</focused>
                               </object>
                             </object>
                           </object>
@@ -192,7 +188,6 @@
                                   <item>line-through</item>
                                   <item>blink</item></content>
                                 <size>150,-1</size>
-                                <focused>1</focused>
                               </object>
                             </object>
                           </object>
@@ -222,7 +217,6 @@
                                   <item>uppercase</item>
                                   <item>lowercase</item></content>
                                 <size>150,-1</size>
-                                <focused>1</focused>
                               </object>
                             </object>
                           </object>
@@ -265,7 +259,6 @@
                                   <item>xx-large</item>
                                   <item>inherit</item></content>
                                 <size>150,-1</size>
-                                <focused>1</focused>
                               </object>
                             </object>
                             <object class="sizeritem">
@@ -281,7 +274,6 @@
                                   <object class="wxSpinCtrl" name="wxID_SPIN_SIZE">
                                     <min>0</min>
                                     <size>70,-1</size>
-                                    <focused>1</focused>
                                   </object>
                                   <flag>wxALIGN_CENTRE_VERTICAL</flag>
                                 </object>
@@ -302,7 +294,6 @@
                                       <item>%</item>
                                     </content>
                                     <size>70,-1</size>
-                                    <focused>1</focused>
                                   </object>
                                 </object>
                               </object>
@@ -337,7 +328,6 @@
                                   <item>normal</item>
                                   <item>inherit</item></content>
                                 <size>150,-1</size>
-                                <focused>1</focused>
                               </object>
                             </object>
                             <object class="sizeritem">
@@ -350,7 +340,6 @@
                               <object class="wxSpinCtrl" name="wxID_SPIN_LINE">
                                 <min>0</min>
                                 <size>70,-1</size>
-                                <focused>1</focused>
                               </object>
                               <flag>wxALIGN_CENTRE_VERTICAL</flag>
                             </object>
@@ -371,7 +360,6 @@
                                   <item>ex</item>
                                   <item>%</item></content>
                                 <size>70,-1</size>
-                                <focused>1</focused>
                               </object>
                             </object>
                           </object>
@@ -402,7 +390,6 @@
                               <object class="wxSpinCtrl" name="wxID_SPIN_INDENT">
                                 <min>0</min>
                                 <size>70,-1</size>
-                                <focused>1</focused>
                               </object>
                               <flag>wxALIGN_CENTRE_VERTICAL</flag>
                             </object>
@@ -423,7 +410,6 @@
                                   <item>%</item>
                                 </content>
                                 <size>70,-1</size>
-                                <focused>1</focused>
                               </object>
                             </object>
                           </object>
@@ -457,7 +443,6 @@
                                   <item>bottom</item>
                                   <item>text-bottom</item></content>
                                 <size>150,-1</size>
-                                <focused>1</focused>
                               </object>
                             </object>
                             <object class="sizeritem">
@@ -471,7 +456,6 @@
                                 <min>0</min>
                                 <max>100</max>
                                 <size>70,-1</size>
-                                <focused>1</focused>
                               </object>
                               <flag>wxALIGN_CENTRE_VERTICAL</flag>
                             </object>
@@ -484,7 +468,6 @@
                                   <item>%</item>
                                 </content>
                                 <size>70,-1</size>
-                                <focused>1</focused>
                               </object>
                             </object>
                           </object>
@@ -514,7 +497,6 @@
                                   <item>center</item>
                                   <item>inherit</item></content>
                                 <size>150,-1</size>
-                                <focused>1</focused>
                               </object>
                             </object>
                           </object>
@@ -548,7 +530,6 @@
                                   <item>pre</item>
                                   <item>nowrap</item></content>
                                 <size>150,-1</size>
-                                <focused>1</focused>
                               </object>
                             </object>
                           </object>
@@ -576,7 +557,6 @@
                                   <item>normal</item>
                                   <item>inherit</item></content>
                                 <size>150,-1</size>
-                                <focused>1</focused>
                               </object>
                             </object>
                             <object class="sizeritem">
@@ -589,7 +569,6 @@
                               <object class="wxSpinCtrl" name="wxID_SPIN_WORD">
                                 <min>0</min>
                                 <size>70,-1</size>
-                                <focused>1</focused>
                               </object>
                               <flag>wxALIGN_CENTRE_VERTICAL</flag>
                             </object>
@@ -610,7 +589,6 @@
                                   <item>ex</item>
                                   <item>%</item></content>
                                 <size>70,-1</size>
-                                <focused>1</focused>
                               </object>
                             </object>
                           </object>
@@ -638,7 +616,6 @@
                                   <item>normal</item>
                                   <item>inherit</item></content>
                                 <size>150,-1</size>
-                                <focused>1</focused>
                               </object>
                             </object>
                             <object class="sizeritem">
@@ -651,7 +628,6 @@
                               <object class="wxSpinCtrl" name="wxID_SPIN_LETTER">
                                 <min>0</min>
                                 <size>70,-1</size>
-                                <focused>1</focused>
                               </object>
                               <flag>wxALIGN_CENTRE_VERTICAL</flag>
                             </object>
@@ -672,7 +648,6 @@
                                   <item>ex</item>
                                   <item>%</item></content>
                                 <size>70,-1</size>
-                                <focused>1</focused>
                               </object>
                             </object>
                           </object>
@@ -756,7 +731,6 @@
                           <item/>
                           <item>none</item></content>
                         <size>200,-1</size>
-                        <focused>1</focused>
                       </object>
                       <option>1</option>
                       <flag>wxEXPAND</flag>
@@ -899,7 +873,6 @@
                               <item/>
                               <item>scroll</item>
                               <item>fixed</item></content>
-                            <focused>1</focused>
                           </object>
                         </object>
                         <object class="spacer">
@@ -922,7 +895,6 @@
                               <item>left</item>
                               <item>center</item>
                               <item>right</item></content>
-                            <focused>1</focused>
                           </object>
                         </object>
                         <object class="sizeritem">
@@ -936,7 +908,6 @@
                             <min>0</min>
                             <max>100</max>
                             <size>70,-1</size>
-                            <focused>1</focused>
                           </object>
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
                         </object>
@@ -954,7 +925,6 @@
                               <item>ex</item>
                             </content>
                             <size>70,-1</size>
-                            <focused>1</focused>
                           </object>
                         </object>
                         <object class="spacer">
@@ -967,7 +937,6 @@
                               <item>top</item>
                               <item>center</item>
                               <item>bottom</item></content>
-                            <focused>1</focused>
                           </object>
                         </object>
                         <object class="sizeritem">
@@ -981,7 +950,6 @@
                             <min>0</min>
                             <max>100</max>
                             <size>70,-1</size>
-                            <focused>1</focused>
                           </object>
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
                         </object>
@@ -999,7 +967,6 @@
                               <item>ex</item>
                             </content>
                             <size>70,-1</size>
-                            <focused>1</focused>
                           </object>
                         </object>
                       </object>
@@ -1045,7 +1012,6 @@
                             <content>
                               <item/>
                               <item>auto</item></content>
-                            <focused>1</focused>
                           </object>
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
                         </object>
@@ -1059,7 +1025,6 @@
                           <object class="wxSpinCtrl" name="wxID_SPIN_BTOP">
                             <min>0</min>
                             <size>70,-1</size>
-                            <focused>1</focused>
                           </object>
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
                         </object>
@@ -1077,7 +1042,6 @@
                               <item>%</item>
                             </content>
                             <size>70,-1</size>
-                            <focused>1</focused>
                           </object>
                           <flag>wxALL|wxALIGN_CENTRE_VERTICAL</flag>
                           <border>5</border>
@@ -1106,7 +1070,6 @@
                               <item>ridge</item>
                               <item>inset</item>
                               <item>outset</item></content>
-                            <focused>1</focused>
                           </object>
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
                         </object>
@@ -1133,7 +1096,6 @@
                                   <item>Red</item></content>
                                 <size>150,-1</size>
                                 <style>wxCB_READONLY</style>
-                                <focused>1</focused>
                               </object>
                               <flag>wxEXPAND</flag>
                             </object>
@@ -1175,7 +1137,6 @@
                             <content>
                               <item/>
                               <item>auto</item></content>
-                            <focused>1</focused>
                           </object>
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
                         </object>
@@ -1189,7 +1150,6 @@
                           <object class="wxSpinCtrl" name="wxID_SPIN_BBOTTOM">
                             <min>0</min>
                             <size>70,-1</size>
-                            <focused>1</focused>
                           </object>
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
                         </object>
@@ -1210,7 +1170,6 @@
                               <item>%</item>
                             </content>
                             <size>70,-1</size>
-                            <focused>1</focused>
                           </object>
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
                         </object>
@@ -1238,7 +1197,6 @@
                               <item>ridge</item>
                               <item>inset</item>
                               <item>outset</item></content>
-                            <focused>1</focused>
                           </object>
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
                         </object>
@@ -1265,7 +1223,6 @@
                                   <item>Red</item></content>
                                 <size>150,-1</size>
                                 <style>wxCB_READONLY</style>
-                                <focused>1</focused>
                               </object>
                               <flag>wxEXPAND</flag>
                             </object>
@@ -1308,7 +1265,6 @@
                             <content>
                               <item/>
                               <item>auto</item></content>
-                            <focused>1</focused>
                           </object>
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
                         </object>
@@ -1322,7 +1278,6 @@
                           <object class="wxSpinCtrl" name="wxID_SPIN_BLEFT">
                             <min>0</min>
                             <size>70,-1</size>
-                            <focused>1</focused>
                           </object>
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
                         </object>
@@ -1343,7 +1298,6 @@
                               <item>%</item>
                             </content>
                             <size>70,-1</size>
-                            <focused>1</focused>
                           </object>
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
                         </object>
@@ -1371,7 +1325,6 @@
                               <item>ridge</item>
                               <item>inset</item>
                               <item>outset</item></content>
-                            <focused>1</focused>
                           </object>
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
                         </object>
@@ -1398,7 +1351,6 @@
                                   <item>Red</item></content>
                                 <size>150,-1</size>
                                 <style>wxCB_READONLY</style>
-                                <focused>1</focused>
                               </object>
                               <flag>wxEXPAND</flag>
                             </object>
@@ -1441,7 +1393,6 @@
                             <content>
                               <item/>
                               <item>auto</item></content>
-                            <focused>1</focused>
                           </object>
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
                         </object>
@@ -1455,7 +1406,6 @@
                           <object class="wxSpinCtrl" name="wxID_SPIN_BRIGHT">
                             <min>0</min>
                             <size>70,-1</size>
-                            <focused>1</focused>
                           </object>
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
                         </object>
@@ -1476,7 +1426,6 @@
                               <item>%</item>
                             </content>
                             <size>70,-1</size>
-                            <focused>1</focused>
                           </object>
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
                         </object>
@@ -1504,7 +1453,6 @@
                               <item>ridge</item>
                               <item>inset</item>
                               <item>outset</item></content>
-                            <focused>1</focused>
                           </object>
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
                         </object>
@@ -1531,7 +1479,6 @@
                                   <item>Red</item></content>
                                 <size>150,-1</size>
                                 <style>wxCB_READONLY</style>
-                                <focused>1</focused>
                               </object>
                               <flag>wxEXPAND</flag>
                             </object>
@@ -1573,7 +1520,6 @@
                             <content>
                               <item/>
                               <item>auto</item></content>
-                            <focused>1</focused>
                           </object>
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
                         </object>
@@ -1587,7 +1533,6 @@
                           <object class="wxSpinCtrl" name="wxID_SPIN_B">
                             <min>0</min>
                             <size>70,-1</size>
-                            <focused>1</focused>
                           </object>
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
                         </object>
@@ -1608,7 +1553,6 @@
                               <item>%</item>
                             </content>
                             <size>70,-1</size>
-                            <focused>1</focused>
                           </object>
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
                         </object>
@@ -1636,7 +1580,6 @@
                               <item>ridge</item>
                               <item>inset</item>
                               <item>outset</item></content>
-                            <focused>1</focused>
                           </object>
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
                         </object>
@@ -1663,7 +1606,6 @@
                                   <item>Red</item></content>
                                 <size>150,-1</size>
                                 <style>wxCB_READONLY</style>
-                                <focused>1</focused>
                               </object>
                               <flag>wxEXPAND</flag>
                             </object>
@@ -1742,7 +1684,6 @@
                                 <object class="sizeritem">
                                   <object class="wxSpinCtrl" name="wxID_SPIN_MTOP">
                                     <size>70,-1</size>
-                                    <focused>1</focused>
                                   </object>
                                   <flag>wxALIGN_CENTRE_VERTICAL</flag>
                                 </object>
@@ -1763,7 +1704,6 @@
                                       <item>%</item>
                                     </content>
                                     <size>70,-1</size>
-                                    <focused>1</focused>
                                   </object>
                                 </object>
                               </object>
@@ -1790,7 +1730,6 @@
                                     <content>
                                       <item/>
                                       <item>auto</item></content>
-                                    <focused>1</focused>
                                   </object>
                                 </object>
                                 <object class="sizeritem">
@@ -1806,7 +1745,6 @@
                                       <object class="wxSpinCtrl" name="wxID_SPIN_PTOP">
                                         <min>0</min>
                                         <size>70,-1</size>
-                                        <focused>1</focused>
                                       </object>
                                       <flag>wxALIGN_CENTRE_VERTICAL</flag>
                                     </object>
@@ -1827,7 +1765,6 @@
                                           <item>%</item>
                                         </content>
                                         <size>70,-1</size>
-                                        <focused>1</focused>
                                       </object>
                                     </object>
                                   </object>
@@ -1864,7 +1801,6 @@
                                 <content>
                                   <item/>
                                   <item>auto</item></content>
-                                <focused>1</focused>
                               </object>
                             </object>
                             <object class="sizeritem">
@@ -1879,7 +1815,6 @@
                                 <object class="sizeritem">
                                   <object class="wxSpinCtrl" name="wxID_SPIN_MBOTTOM">
                                     <size>70,-1</size>
-                                    <focused>1</focused>
                                   </object>
                                   <flag>wxALIGN_CENTRE_VERTICAL</flag>
                                 </object>
@@ -1927,7 +1862,6 @@
                                     <content>
                                       <item/>
                                       <item>auto</item></content>
-                                    <focused>1</focused>
                                   </object>
                                 </object>
                                 <object class="sizeritem">
@@ -1943,7 +1877,6 @@
                                       <object class="wxSpinCtrl" name="wxID_SPIN_PBOTTOM">
                                         <min>0</min>
                                         <size>70,-1</size>
-                                        <focused>1</focused>
                                       </object>
                                     </object>
                                     <object class="spacer">
@@ -2000,7 +1933,6 @@
                                 <content>
                                   <item/>
                                   <item>auto</item></content>
-                                <focused>1</focused>
                               </object>
                             </object>
                             <object class="sizeritem">
@@ -2015,7 +1947,6 @@
                                 <object class="sizeritem">
                                   <object class="wxSpinCtrl" name="wxID_SPIN_MLEFT">
                                     <size>70,-1</size>
-                                    <focused>1</focused>
                                   </object>
                                   <flag>wxALIGN_CENTRE_VERTICAL</flag>
                                 </object>
@@ -2036,7 +1967,6 @@
                                       <item>%</item>
                                     </content>
                                     <size>70,-1</size>
-                                    <focused>1</focused>
                                   </object>
                                 </object>
                               </object>
@@ -2063,7 +1993,6 @@
                                     <content>
                                       <item/>
                                       <item>auto</item></content>
-                                    <focused>1</focused>
                                   </object>
                                 </object>
                                 <object class="sizeritem">
@@ -2079,7 +2008,6 @@
                                       <object class="wxSpinCtrl" name="wxID_SPIN_PLEFT">
                                         <min>0</min>
                                         <size>70,-1</size>
-                                        <focused>1</focused>
                                       </object>
                                       <flag>wxALIGN_CENTRE_VERTICAL</flag>
                                     </object>
@@ -2100,7 +2028,6 @@
                                           <item>%</item>
                                         </content>
                                         <size>70,-1</size>
-                                        <focused>1</focused>
                                       </object>
                                     </object>
                                   </object>
@@ -2137,7 +2064,6 @@
                                 <content>
                                   <item/>
                                   <item>auto</item></content>
-                                <focused>1</focused>
                               </object>
                             </object>
                             <object class="sizeritem">
@@ -2152,7 +2078,6 @@
                                 <object class="sizeritem">
                                   <object class="wxSpinCtrl" name="wxID_SPIN_MRIGHT">
                                     <size>70,-1</size>
-                                    <focused>1</focused>
                                   </object>
                                   <flag>wxALIGN_CENTRE_VERTICAL</flag>
                                 </object>
@@ -2173,7 +2098,6 @@
                                       <item>%</item>
                                     </content>
                                     <size>70,-1</size>
-                                    <focused>1</focused>
                                   </object>
                                 </object>
                               </object>
@@ -2200,7 +2124,6 @@
                                     <content>
                                       <item/>
                                       <item>auto</item></content>
-                                    <focused>1</focused>
                                   </object>
                                 </object>
                                 <object class="sizeritem">
@@ -2216,7 +2139,6 @@
                                       <object class="wxSpinCtrl" name="wxID_SPIN_PRIGHT">
                                         <min>0</min>
                                         <size>70,-1</size>
-                                        <focused>1</focused>
                                       </object>
                                       <flag>wxALIGN_CENTRE_VERTICAL</flag>
                                     </object>
@@ -2237,7 +2159,6 @@
                                           <item>%</item>
                                         </content>
                                         <size>70,-1</size>
-                                        <focused>1</focused>
                                       </object>
                                     </object>
                                   </object>
@@ -2274,7 +2195,6 @@
                                 <content>
                                   <item/>
                                   <item>auto</item></content>
-                                <focused>1</focused>
                               </object>
                             </object>
                             <object class="sizeritem">
@@ -2289,7 +2209,6 @@
                                 <object class="sizeritem">
                                   <object class="wxSpinCtrl" name="wxID_SPIN_MARGIN">
                                     <size>70,-1</size>
-                                    <focused>1</focused>
                                   </object>
                                   <flag>wxALIGN_CENTRE_VERTICAL</flag>
                                 </object>
@@ -2310,7 +2229,6 @@
                                       <item>%</item>
                                     </content>
                                     <size>70,-1</size>
-                                    <focused>1</focused>
                                   </object>
                                 </object>
                               </object>
@@ -2337,7 +2255,6 @@
                                     <content>
                                       <item/>
                                       <item>auto</item></content>
-                                    <focused>1</focused>
                                   </object>
                                 </object>
                                 <object class="sizeritem">
@@ -2352,7 +2269,6 @@
                                     <object class="sizeritem">
                                       <object class="wxSpinCtrl" name="wxID_SPIN_PADDING">
                                         <size>70,-1</size>
-                                        <focused>1</focused>
                                       </object>
                                       <flag>wxALIGN_CENTRE_VERTICAL</flag>
                                     </object>
@@ -2373,7 +2289,6 @@
                                           <item>%</item>
                                         </content>
                                         <size>70,-1</size>
-                                        <focused>1</focused>
                                       </object>
                                     </object>
                                   </object>
@@ -2417,7 +2332,6 @@
                                 <content>
                                   <item/>
                                   <item>auto</item></content>
-                                <focused>1</focused>
                               </object>
                             </object>
                             <object class="sizeritem">
@@ -2433,7 +2347,6 @@
                                   <object class="wxSpinCtrl" name="wxID_SPIN_WIDTH">
                                     <min>0</min>
                                     <size>70,-1</size>
-                                    <focused>1</focused>
                                   </object>
                                   <flag>wxALIGN_CENTRE_VERTICAL</flag>
                                 </object>
@@ -2454,7 +2367,6 @@
                                       <item>%</item>
                                     </content>
                                     <size>70,-1</size>
-                                    <focused>1</focused>
                                   </object>
                                 </object>
                               </object>
@@ -2481,7 +2393,6 @@
                                     <content>
                                       <item/>
                                       <item>auto</item></content>
-                                    <focused>1</focused>
                                   </object>
                                 </object>
                                 <object class="sizeritem">
@@ -2497,7 +2408,6 @@
                                       <object class="wxSpinCtrl" name="wxID_SPIN_HEIGHT">
                                         <min>0</min>
                                         <size>70,-1</size>
-                                        <focused>1</focused>
                                       </object>
                                       <flag>wxALIGN_CENTRE_VERTICAL</flag>
                                     </object>
@@ -2518,7 +2428,6 @@
                                           <item>%</item>
                                         </content>
                                         <size>70,-1</size>
-                                        <focused>1</focused>
                                       </object>
                                     </object>
                                   </object>
@@ -2730,12 +2639,11 @@
                         <object class="sizeritem">
                           <object class="wxChoice" name="wxID_CHOICE_POSITION">
                             <content>
-                              <item></item>
+                              <item/>
                               <item>absolute</item>
                               <item>fixed</item>
                               <item>relative</item>
-                              <item>static</item>
-                            </content>
+                              <item>static</item></content>
                             <size>110,-1</size>
                             <focused>1</focused>
                           </object>
@@ -3085,6 +2993,5 @@
         <border>5</border>
       </object>
     </object>
-    <focused>1</focused>
   </object>
 </resource>
