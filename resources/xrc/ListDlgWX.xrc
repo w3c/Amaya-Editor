@@ -20,7 +20,7 @@
           <object class="sizeritem">
             <object class="wxListBox" name="wxID_LIST">
               <content/>
-              <size>250,100</size>
+              <size>400,100</size>
               <style>wxLB_NEEDED_SB</style>
             </object>
             <option>1</option>
