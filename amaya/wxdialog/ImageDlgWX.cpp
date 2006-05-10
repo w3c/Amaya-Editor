@@ -145,7 +145,7 @@ void ImageDlgWX::OnBrowseButton( wxCommandEvent& event )
     }
   else
     {
-      *m_pLastUsedFilter = p_dlg->GetFilterIndex();
+      // *m_pLastUsedFilter = p_dlg->GetFilterIndex();
       p_dlg->Destroy();
     }
 }
