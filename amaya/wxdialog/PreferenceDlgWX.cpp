@@ -236,6 +236,7 @@ void PreferenceDlgWX::SetupLabelDialog_General()
 
   // fill the combobox with url list
   XRCCTRL(*this, "wxID_COMBOBOX_HOMEPAGE", wxComboBox)->Append(m_UrlList);
+  XRCCTRL(*this, "wxID_COMBOBOX_HOMEPAGE", wxComboBox)->SetSelection(0, -1);
 }
 
 /*----------------------------------------------------------------------
@@ -246,8 +247,9 @@ void PreferenceDlgWX::SetupLabelDialog_General()
   ----------------------------------------------------------------------*/
 void PreferenceDlgWX::SetupDialog_General( const Prop_General & prop )
 {
-  XRCCTRL(*this, "wxID_COMBOBOX_HOMEPAGE", wxComboBox)->SetValue( TtaConvMessageToWX(prop.HomePage) );
+  wxString        value;
 
+  XRCCTRL(*this, "wxID_COMBOBOX_HOMEPAGE", wxComboBox)->SetValue( TtaConvMessageToWX(prop.HomePage) );
   XRCCTRL(*this, "wxID_CHARZOOM_VALUE", wxSpinCtrl)->SetValue( prop.Zoom );
 
   XRCCTRL(*this, "wxID_CHECK_CCLINE", wxCheckBox)->SetValue( prop.PasteLineByLine );
@@ -260,7 +262,33 @@ void PreferenceDlgWX::SetupDialog_General( const Prop_General & prop )
   XRCCTRL(*this, "wxID_CHECK_SHOWTEMPLATES", wxCheckBox)->SetValue( prop.S_Templates );
 
   XRCCTRL(*this, "wxID_RADIO_QUICKAXX", wxRadioBox)->SetSelection( prop.AccesskeyMod );
-  XRCCTRL(*this, "wxID_CHOICE_LG", wxChoice)->SetStringSelection( TtaConvMessageToWX(prop.DialogueLang) );
+  if (!strcmp (prop.DialogueLang, "de"))
+    value = TtaConvMessageToWX(prop.DialogueLang)+_T(" (German)");
+  else if (!strcmp (prop.DialogueLang, "en"))
+    value = TtaConvMessageToWX(prop.DialogueLang)+_T(" (English)");
+  else if (!strcmp (prop.DialogueLang, "es"))
+    value = TtaConvMessageToWX(prop.DialogueLang)+_T(" (Spanish)");
+  else if (!strcmp (prop.DialogueLang, "fi"))
+    value = TtaConvMessageToWX(prop.DialogueLang)+_T(" (Finnish)");
+  else if (!strcmp (prop.DialogueLang, "fr"))
+    value = TtaConvMessageToWX(prop.DialogueLang)+_T(" (French)");
+  else if (!strcmp (prop.DialogueLang, "hu"))
+    value = TtaConvMessageToWX(prop.DialogueLang)+_T(" (Hungarian)");
+  else if (!strcmp (prop.DialogueLang, "it"))
+    value = TtaConvMessageToWX(prop.DialogueLang)+_T(" (Italian)");
+  else if (!strcmp (prop.DialogueLang, "ka"))
+    value = TtaConvMessageToWX(prop.DialogueLang)+_T(" (Georgian)");
+  else if (!strcmp (prop.DialogueLang, "pt"))
+    value = TtaConvMessageToWX(prop.DialogueLang)+_T(" (Portuguese)");
+  else if (!strcmp (prop.DialogueLang, "ru"))
+    value = TtaConvMessageToWX(prop.DialogueLang)+_T(" (Russian)");
+  else if (!strcmp (prop.DialogueLang, "tr"))
+    value = TtaConvMessageToWX(prop.DialogueLang)+_T(" (Turkish)");
+  else
+    value = TtaConvMessageToWX(prop.DialogueLang);
+  XRCCTRL(*this, "wxID_CHOICE_LG", wxChoice)->SetStringSelection( value );
+  XRCCTRL(*this, "wxID_COMBOBOX_HOMEPAGE", wxComboBox)->SetSelection(0, -1);
+  XRCCTRL(*this, "wxID_COMBOBOX_HOMEPAGE", wxComboBox)->SetFocus();
 }
 
 /*----------------------------------------------------------------------
@@ -290,8 +318,8 @@ Prop_General PreferenceDlgWX::GetValueDialog_General()
   prop.AccesskeyMod = XRCCTRL(*this, "wxID_RADIO_QUICKAXX", wxRadioBox)->GetSelection();
 
   value = XRCCTRL(*this, "wxID_CHOICE_LG", wxChoice)->GetStringSelection();
-  strcpy( prop.DialogueLang, (const char*)value.mb_str(wxConvUTF8) );
-
+  strncpy( prop.DialogueLang, (const char*)value.mb_str(wxConvUTF8), 2 );
+  prop.DialogueLang[2] = EOS;
   return prop;
 }
 

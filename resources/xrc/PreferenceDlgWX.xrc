@@ -31,6 +31,7 @@
                     <object class="sizeritem">
                       <object class="wxComboBox" name="wxID_COMBOBOX_HOMEPAGE">
                         <content/>
+                        <focused>1</focused>
                       </object>
                       <option>1</option>
                       <flag>wxALL|wxEXPAND</flag>
@@ -56,17 +57,17 @@
                         <object class="sizeritem">
                           <object class="wxChoice" name="wxID_CHOICE_LG">
                             <content>
-                              <item>de</item>
-                              <item>en</item>
-                              <item>es</item>
-                              <item>fi</item>
-                              <item>fr</item>
-                              <item>hu</item>
-                              <item>it</item>
-                              <item>ka</item>
-                              <item>pt</item>
-                              <item>ru</item>
-                              <item>tr</item>
+                              <item>de (German)</item>
+                              <item>en (English)</item>
+                              <item>es (Spanish)</item>
+                              <item>fi (Finnish)</item>
+                              <item>fr (French)</item>
+                              <item>hu (Hungarian)</item>
+                              <item>it (Italian)</item>
+                              <item>ka (Georgian)</item>
+                              <item>pt (Portuguese)</item>
+                              <item>ru (Russian)</item>
+                              <item>tr (Turkish)</item>
                             </content>
                           </object>
                           <flag>wxLEFT|wxALIGN_CENTRE_VERTICAL</flag>
