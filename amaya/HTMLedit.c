@@ -2435,7 +2435,7 @@ void CreateRemoveIDAttribute (char *elName, Document doc, ThotBool createID,
   /* the user must select something */
   if (inSelection && !TtaIsDocumentSelected (doc))
     {
-      strcpy (IdStatus, "Nothing selected");
+      strcpy (IdStatus, TtaGetMessage (AMAYA, AM_NO_INSERT_POINT));
       return;
     }
   /* search for the elementType corresponding to the element name given
@@ -2444,7 +2444,7 @@ void CreateRemoveIDAttribute (char *elName, Document doc, ThotBool createID,
   if (elType.ElTypeNum == 0)
     {
       /* element name not found */
-      strcpy (IdStatus, "Unknown element");
+      strcpy (IdStatus, TtaGetMessage (AMAYA, AM_INVALID_ELEMENT));
       return;
     }
   /* in function of the target elType, we choose the correct
@@ -2479,7 +2479,7 @@ void CreateRemoveIDAttribute (char *elName, Document doc, ThotBool createID,
      in this element */
   if (attrType.AttrTypeNum == 0)
     {
-      strcpy (IdStatus, "DTD forbids it");
+      sprintf (IdStatus, TtaGetMessage (AMAYA, AM_CHANGE_NUMBER), 0);
       return;
     }
   attrType.AttrSSchema = elType.ElSSchema;
@@ -2558,7 +2558,7 @@ void CreateRemoveIDAttribute (char *elName, Document doc, ThotBool createID,
     TtaSetDocumentModified (doc);
   if (dispMode == DisplayImmediately)
     TtaSetDisplayMode (doc, dispMode);
-  sprintf (IdStatus, "%d elements changed", i);
+  sprintf (IdStatus, TtaGetMessage (AMAYA, AM_CHANGE_NUMBER), i);
 #ifdef _WX
   //InitInfo ("", IdStatus);
 #endif /* _WX */
@@ -4800,5 +4800,3 @@ Element SearchAnchor (Document doc, Element element, Attribute *HrefAttr,
   while (elAnchor == NULL && ancestor);
   return elAnchor;
 }
-
-
