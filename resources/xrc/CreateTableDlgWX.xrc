@@ -8,10 +8,11 @@
       <orient>wxVERTICAL</orient>
       <object class="sizeritem">
         <object class="wxBoxSizer">
-          <orient>wxVERTICAL</orient>
+          <orient>wxHORIZONTAL</orient>
           <object class="sizeritem">
             <object class="wxStaticText" name="wxID_NUMBER_COL_TXT">
               <label>Number of columns   </label>
+              <size>150,-1</size>
             </object>
             <flag>wxALL|wxEXPAND</flag>
             <border>5</border>
@@ -25,9 +26,17 @@
             </object>
             <flag>wxALL|wxEXPAND</flag>
           </object>
+        </object>
+        <flag>wxALL|wxEXPAND</flag>
+        <border>5</border>
+      </object>
+      <object class="sizeritem">
+        <object class="wxBoxSizer">
+          <orient>wxHORIZONTAL</orient>
           <object class="sizeritem">
             <object class="wxStaticText" name="wxID_NUMBER_ROW_TXT">
               <label>Number of raws</label>
+              <size>150,-1</size>
             </object>
             <flag>wxALL|wxEXPAND</flag>
             <border>5</border>
@@ -40,9 +49,17 @@
             </object>
             <flag>wxALL|wxEXPAND</flag>
           </object>
+        </object>
+        <flag>wxALL|wxEXPAND</flag>
+        <border>5</border>
+      </object>
+      <object class="sizeritem">
+        <object class="wxBoxSizer">
+          <orient>wxHORIZONTAL</orient>
           <object class="sizeritem">
             <object class="wxStaticText" name="wxID_TABLE_BORDER_TXT">
               <label>Border</label>
+              <size>150,-1</size>
             </object>
             <flag>wxALL|wxEXPAND</flag>
             <border>5</border>
