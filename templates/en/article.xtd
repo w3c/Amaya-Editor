@@ -38,24 +38,20 @@
       <t:attribute name="width" use="optional"/>
     </t:option>
     <t:use types="string">Author Name</t:use><br />
-    <span class="address">
-      <t:use types="string">Address</t:use>
-    </span>
-    </p>
+    <span class="address"><t:use types="string">Address</t:use></span></p>
   </t:component>
 </t:head>
-
 <t:use types="h1">
   <h1>Article Title</h1>
 </t:use>
-
 <div class="authors">
 <t:repeat minOccurs="1">
   <t:use types="author">
-<p class="author">
-Author Name<br/>
-<span class="address">Address</span></p>
-</t:use></t:repeat>
+    <p class="author"><t:option>
+      <img class="portrait" src=".." alt="picture" /></t:option>
+    Author Name<br />
+    <span class="address">Address</span></p>
+  </t:use></t:repeat>
 </div>
 
 <div class="abstract">
@@ -68,7 +64,7 @@ Author Name<br/>
 <t:repeat minOccurs="2">
 
   <div class="section">
-  <h2><t:use types="string">1. SECTION HEADING</t:use></h2>
+  <h2><t:use types="string">1. HEADING</t:use></h2>
   <t:repeat>
     <t:bag types="anyElement">
       <p>First paragraph of section ...</p>
@@ -78,7 +74,9 @@ Author Name<br/>
 </t:repeat>
 
 <h2>REFERENCES</h2>
-<t:repeat minOccurs="5" maxOccurs="20">
-  <t:use types="refbook refarticle refreport"></t:use></t:repeat>
+<t:repeat minOccurs="3" maxOccurs="20">
+  <t:use types="refbook refarticle refreport"></t:use><t:use
+  types="refbook refarticle refreport"></t:use><t:use
+  types="refbook refarticle refreport"></t:use></t:repeat>
 </body>
 </html>
