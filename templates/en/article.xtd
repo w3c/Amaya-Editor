@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+ xmlns:t="http://wam.inrialpes.fr/xtiger" xml:lang="en" lang="en">
+<head>
+  <title>Article</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <meta name="description" content="Article" />
+  <meta name="template_id" content="xtiger-article-en-0.1" />
+  <link rel="stylesheet" type="text/css" href="article.css" />
+</head>
+
+<body>
+<t:head>
+  <t:component name="refbook">
+    <p class="refbook"><t:repeat minOccurs="1">
+      <span class="bibauthor"><t:use types="string"></t:use></span></t:repeat>
+    <span class="title"><t:use types="string">Book title</t:use></span> <span
+    class="pub"><t:use types="string">Publisher</t:use></span></p>
+  </t:component>
+  <t:component name="refarticle">
+    <p class="refarticle"><t:repeat minOccurs="1">
+      <span class="bibauthor"><t:use types="string"></t:use></span></t:repeat>
+    <span class="title"><t:use types="string">Article title</t:use></span>
+    <span class="conf"><t:use types="string">Conference</t:use></span></p>
+  </t:component>
+  <t:component name="refreport">
+    <p class="refreport"><t:repeat minOccurs="1">
+      <span class="bibauthor"><t:use types="string"></t:use></span></t:repeat>
+    <span class="title"><t:use types="string">Report title</t:use></span>
+    <span class="url"><t:use types="string">url</t:use></span></p>
+  </t:component>
+  <t:union name="bibref" include="refbook refarticle refreport">
+  </t:union>
+  <t:component name="author">
+    <p class="author"><t:option>
+      <img class="portrait" /> <t:attribute name="alt"
+      default="picture of the author"/>
+      <t:attribute name="width" use="optional"/>
+    </t:option>
+    <t:use types="string">Author Name</t:use><br />
+    <span class="address">
+      <t:use types="string">Address</t:use>
+    </span>
+    </p>
+  </t:component>
+</t:head>
+
+<t:use types="h1">
+  <h1>Article Title</h1>
+</t:use>
+
+<div class="authors">
+<t:repeat minOccurs="1">
+  <t:use types="author">
+<p class="author">
+Author Name<br/>
+<span class="address">Address</span></p>
+</t:use></t:repeat>
+</div>
+
+<div class="abstract">
+<h2>ABSTRACT</h2>
+<t:repeat>
+  <t:use types="p">
+    <p>First paragraph of abstract...</p>
+  </t:use></t:repeat>
+</div>
+<t:repeat minOccurs="2">
+
+  <div class="section">
+  <h2><t:use types="string">1. SECTION HEADING</t:use></h2>
+  <t:repeat>
+    <t:bag types="anyElement">
+      <p>First paragraph of section ...</p>
+    </t:bag>
+  </t:repeat>
+  </div>
+</t:repeat>
+
+<h2>REFERENCES</h2>
+<t:repeat minOccurs="5" maxOccurs="20">
+  <t:use types="refbook refarticle refreport"></t:use></t:repeat>
+</body>
+</html>
