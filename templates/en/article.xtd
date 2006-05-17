@@ -75,8 +75,9 @@
 
 <h2>REFERENCES</h2>
 <t:repeat minOccurs="3" maxOccurs="20">
-  <t:use types="refbook refarticle refreport"></t:use><t:use
-  types="refbook refarticle refreport"></t:use><t:use
-  types="refbook refarticle refreport"></t:use></t:repeat>
+  <t:use types="refbook refarticle refreport"> </t:use>
+  <t:use types="refbook refarticle refreport"> </t:use>
+  <t:use types="refbook refarticle refreport"> </t:use>
+</t:repeat>
 </body>
 </html>
