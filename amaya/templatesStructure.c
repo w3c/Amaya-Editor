@@ -302,6 +302,7 @@ void InstantiateTemplate_callback (int newdoc, int status,  char *urlName,
 								   char *outputfile, AHTHeaders *http_headers,
 								   void * context)
 {
+#ifdef TEMPLATES
 	InstanciationCtxt *ctx = (InstanciationCtxt*)context;
 
 	InstanciateTemplate(ctx->templatePath, newdoc);
@@ -377,6 +378,7 @@ void InstantiateTemplate_callback (int newdoc, int status,  char *urlName,
 		TtaSetStatus (instanceDoc, 1, TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED),NULL);		 
 	}
 	*/
+#endif /* TEMPLATES */
 }
 
 
@@ -384,6 +386,7 @@ void InstantiateTemplate_callback (int newdoc, int status,  char *urlName,
 ----------------------------------------------------------------------*/
 void InstanciateTemplate (char *templatename, char *schemaname, char *docname, DocumentType docType)
 {
+#ifdef TEMPLATES
 	Document templateDoc = TtaNewDocument (schemaname, "tmp");
 	DontReplaceOldDoc = FALSE;
 	if (templateDoc != 0)
@@ -400,6 +403,7 @@ void InstanciateTemplate (char *templatename, char *schemaname, char *docname, D
 			(void (*)(int, int, char*, char*, const AHTHeaders*, void*)) InstantiateTemplate_callback,
 			(void *) ctx);
     }
+#endif /* TEMPLATES */
 }
 
 #ifdef TODO
@@ -498,6 +502,7 @@ void CreateInstanceDocument (Document doc, char *templatename, char *docname,
 ----------------------------------------------------------------------*/
 void ParseTemplate (XTigerTemplate t, Element el, Document doc)
 {
+#ifdef TEMPLATES
 	AttributeType attType;
 	Attribute att;
 	char *name;
@@ -561,12 +566,14 @@ void ParseTemplate (XTigerTemplate t, Element el, Document doc)
 		ParseTemplate(t, child, doc);
 		child = aux;
 	}
+#endif /* TEMPLATES */
 }
 
 /*----------------------------------------------------------------------
 ----------------------------------------------------------------------*/
 void InstanciateTemplate(char *templatename, Document doc)
 {
+#ifdef TEMPLATES
 	XTigerTemplate t;
 	Element el;
 	
@@ -576,4 +583,5 @@ void InstanciateTemplate(char *templatename, Document doc)
 	t	=	(XTigerTemplate) Get(templates,templatename);
 	el	=	TtaGetMainRoot (doc);
 	ParseTemplate(t, el, doc);
+#endif /* TEMPLATES */
 }
