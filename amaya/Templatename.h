@@ -23,15 +23,16 @@ static AttributeMapping TemplateAttributeMappingTable[] =
    /* The rest of this table MUST be in alphabetical order */
    {"unknown_attr", "", 'A', Template_ATTR_Unknown_attribute, L_OtherValue},
    {"currentType", "", 'A', Template_ATTR_currentType, L_OtherValue},   
-   {"default", "", 'A', Template_ATTR_valueAt, L_OtherValue},   
+   {"default", "", 'A', Template_ATTR_defaultAt, L_OtherValue},   
    {"exclude", "", 'A', Template_ATTR_exclude, L_OtherValue},
    {"fixed", "", 'A', Template_ATTR_fixed, L_OtherValue},
    {"id", "", 'A', Template_ATTR_id, L_OtherValue},
    {"include", "", 'A', Template_ATTR_includeAt, L_OtherValue},
-   {"maxOccurs", "", 'A', Template_ATTR_maxOcc, L_OtherValue},
-   {"minOccurs", "", 'A', Template_ATTR_minOcc, L_OtherValue}, 
+   {"maxOccurs", "", 'A', Template_ATTR_maxOccurs, L_OtherValue},
+   {"minOccurs", "", 'A', Template_ATTR_minOccurs, L_OtherValue}, 
    {"name", "", 'A', Template_ATTR_name, L_OtherValue},   
    {"src", "", 'A', Template_ATTR_src, L_OtherValue},
+   {"title", "", 'A', Template_ATTR_title, L_OtherValue},   
    {"type", "", 'A', Template_ATTR_type, L_OtherValue},   
    {"types", "", 'A', Template_ATTR_types, L_OtherValue},
    {"use", "", 'A', Template_ATTR_useAt, L_OtherValue},
@@ -41,8 +42,10 @@ static AttributeMapping TemplateAttributeMappingTable[] =
 /* mapping table of attribute values */
 static AttrValueMapping TemplateAttrValueMappingTable[] =
 {
-   {Template_ATTR_fixed, "false", Template_ATTR_fixed_VAL_false},
-   {Template_ATTR_fixed, "true", Template_ATTR_fixed_VAL_true},   
+   {Template_ATTR_type, "integer", Template_ATTR_type_VAL_integerVal},
+   {Template_ATTR_type, "decimal", Template_ATTR_type_VAL_decimal},
+   {Template_ATTR_type, "string", Template_ATTR_type_VAL_string},
+   {Template_ATTR_type, "list", Template_ATTR_type_VAL_listVal},
    {0, "", 0}			/* Last entry. Mandatory */
 };
 #else /* TEMPLATES */

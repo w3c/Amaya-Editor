@@ -13,6 +13,8 @@ extern void CreateInstanceDocument ( Document doc,
                                      char *templatename,
                                      char *docname,
                                      DocumentType docType );
+extern void InstanciateTemplate(char *templatename, Document doc);
+extern void InstanciateTemplate (char *templatename, char *schemaname, char *docname, DocumentType docType);
 
 #else /* __STDC__ */
 
@@ -23,6 +25,8 @@ extern void CreateInstanceDocument ( Document doc,
                                        char *templatename,
                                        char *docname,
                                        DocumentType docType );
+extern void InstanciateTemplate(char *templatename, Document doc);
+extern void InstanciateTemplate (char *templatename, char *schemaname, char *docname, DocumentType docType);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

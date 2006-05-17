@@ -145,47 +145,165 @@ BOXES
 	END;
 
  UseMenu_Gif: BEGIN
-	Content: Picture 'use.gif';
+	Content: Picture 'xtigeruse.gif';
 	HorizPos: Left = Enclosing . Left;
 	VertPos: Top = Enclosing . Top;
-  Width: 4 px;
+	MarginTop: 0 px;
+	MarginBottom: 0 px;
+	MarginLeft: 0 px;
+	MarginRight: 0 px;
+  Width: 5 px;
+  Height: 5 px;
 	Depth: Creator - 2;
 	IN Structure_view
 		Visibility: 0;
-	END;	
+	END;
+
+ BagMenu_Gif: BEGIN
+	Content: Picture 'xtigerbag.gif';
+	HorizPos: Left = Enclosing . Left;
+	VertPos: Top = Enclosing . Top;
+	MarginTop: 0 px;
+	MarginBottom: 0 px;
+	MarginLeft: 0 px;
+	MarginRight: 0 px;
+  Width: 5 px;
+  Height: 5 px;
+	Depth: Creator - 2;
+	IN Structure_view
+		Visibility: 0;
+	END;
+
+ OptionMenu_Gif: BEGIN
+	Content: Picture 'xtigeroption.gif';
+	HorizPos: Left = Enclosing . Left;
+	VertPos: Top = Enclosing . Top;
+	MarginTop: 0 px;
+	MarginBottom: 0 px;
+	MarginLeft: 0 px;
+	MarginRight: 0 px;
+  Width: 5 px;
+  Height: 5 px;
+	Depth: Creator - 2;
+	IN Structure_view
+		Visibility: 0;
+	END;
+
+ RepeatMenu_Gif: BEGIN
+	Content: Picture 'xtigerrepeat.gif';
+	HorizPos: Left = Enclosing . Left;
+	VertPos: Top = Enclosing . Top;
+	MarginTop: 0 px;
+	MarginBottom: 0 px;
+	MarginLeft: 0 px;
+	MarginRight: 0 px;
+  Width: 5 px;
+  Height: 5 px;
+	Depth: Creator - 2;
+	IN Structure_view
+		Visibility: 0;
+	END;
 
 RULES
 
- Template:	BEGIN
-		Visibility: Enclosing =;
-		END;
-
-  head: BEGIN
-		Visibility: 0;
-	  IN Structure_view
-		  Visibility: Enclosing =;
+  head :
+    BEGIN
+      Visibility : 0;
     END;
+    
+  attribute:
+		BEGIN
+		Visibility : 0;
+	  CreateBefore(ElementName);
+	  CreateWith(VerticalLine);
+
+  	IN Structure_view BEGIN
+  	  Visibility : 1;
+		  HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	    Width: Enclosing . Width - STRUCT_INDENT;
+		  VertPos: Top = Previous . Bottom;
+		  END;
+	 END;
+
+  folder : 
+		BEGIN
+    Width: auto{Enclosing . Width};
+    Height: auto{Enclosing . Height};
+    {Display: Block;}
+    VertPos: Top = 			Previous . Bottom;
+    HorizPos: Left =		Enclosing . Left; 
+		BorderTopWidth: 	 	1 px;
+		BorderLeftWidth: 		1 px;
+		BorderBottomWidth: 	1 px;
+		BorderRightWidth: 	1 px;
+		BorderTopStyle: 		Dashed;
+		BorderLeftStyle: 		Dashed;
+		BorderBottomStyle: 	Dashed;
+		BorderRightStyle: 	Dashed;
+		BorderTopColor: 		Violet;
+		BorderLeftColor: 		Violet;
+		BorderBottomColor: 	Violet;
+		BorderRightColor: 	Violet;
+		PaddingRight: 			2 px;
+		PaddingLeft: 				2 px;
+		PaddingTop: 				2 px;
+		PaddingBottom: 			2 px;		
+		IN Structure_view BEGIN
+			BorderTopStyle: 		None;
+			BorderLeftStyle: 		None;
+			BorderBottomStyle: 	None;
+			BorderRightStyle: 	None;
+			PaddingRight: 			0 px;
+			PaddingLeft: 				0 px;
+			PaddingTop: 				0 px;
+			PaddingBottom: 			0 px;
+			BorderTopWidth: 	 	0 px;
+			BorderLeftWidth: 		0 px;
+			BorderBottomWidth: 	0 px;
+			BorderRightWidth: 	0 px;					
+		END;
+	 END;
+
+
+	bagMenu:
+	  BEGIN
+	    CreateFirst(BagMenu_Gif);
+      VertPos: Top = 			Enclosing . Top - 5 px;
+      HorizPos: Left =		Enclosing . Left - 5 px;
+	    HorizRef : * . Bottom;
+      MarginTop: 				0 px;
+      MarginBottom: 		0 px;
+      MarginRight: 			0 px;
+      MarginLeft: 			0 px;
+	    IN Structure_view
+	 	    Visibility: 0;
+	  END;
+
   bag:
-		BEGIN	
+		BEGIN
     CreateBefore(ElementName);
   	CreateWith(VerticalLine);
     Width: auto{Enclosing . Width};
+    Height: auto{Enclosing . Height};
     {Display: Block;}
-    VertPos: Top = Previous . Bottom;
-    MarginTop: 0;
-    HorizPos: Left = Enclosing . Left; 
-		BorderTopWidth: 1 pt;
-		BorderLeftWidth: 1 pt;
-		BorderBottomWidth: 1 pt;
-		BorderRightWidth: 1 pt;
-		BorderTopStyle: Dotted;
-		BorderLeftStyle: Dotted;
-		BorderBottomStyle: Dotted;
-		BorderRightStyle: Dotted;
-		BorderTopColor: Red;
-		BorderLeftColor: Red;
-		BorderBottomColor: Red;
-		BorderRightColor: Red;
+    VertPos: Top = 			Previous . Bottom;
+    HorizPos: Left =		Enclosing . Left; 
+		BorderTopWidth: 	 	1 px;
+		BorderLeftWidth: 		1 px;
+		BorderBottomWidth: 	1 px;
+		BorderRightWidth: 	1 px;
+		BorderTopStyle: 		Dashed;
+		BorderLeftStyle: 		Dashed;
+		BorderBottomStyle: 	Dashed;
+		BorderRightStyle: 	Dashed;
+		BorderTopColor: 		Green;
+		BorderLeftColor: 		Green;
+		BorderBottomColor: 	Green;
+		BorderRightColor: 	Green;
+		PaddingRight: 			2 px;
+		PaddingLeft: 				2 px;
+		PaddingTop: 				2 px;
+		PaddingBottom: 			2 px;
   	IN Structure_view BEGIN
 			BorderTopWidth: 0;
 			BorderLeftWidth: 0;
@@ -200,8 +318,13 @@ RULES
 	useMenu:
 	  BEGIN
 	    CreateFirst(UseMenu_Gif);
-      Width: 4 px;
-      Height: 4 px;
+      VertPos: Top = 			Enclosing . Top - 5 px;
+      HorizPos: Left =		Enclosing . Left - 5 px;
+	    HorizRef : * . Bottom;
+      MarginTop: 				0 px;
+      MarginBottom: 		0 px;
+      MarginRight: 			0 px;
+      MarginLeft: 			0 px;
 	    IN Structure_view
 	 	    Visibility: 0;
 	  END;
@@ -211,22 +334,27 @@ RULES
     CreateBefore(ElementName);
   	CreateWith(VerticalLine);
     Width: auto{Enclosing . Width};
+    Height: auto{Enclosing . Height};
+    LineBreak : no;
     {Display: Block;}
-    VertPos: Top = Previous . Bottom;
-    MarginTop: 0;
-    HorizPos: Left = Enclosing . Left; 
-		BorderTopWidth: 1 pt;
-		BorderLeftWidth: 1 pt;
-		BorderBottomWidth: 1 pt;
-		BorderRightWidth: 1 pt;
-		BorderTopStyle: Dotted;
-		BorderLeftStyle: Dotted;
-		BorderBottomStyle: Dotted;
-		BorderRightStyle: Dotted;
-		BorderTopColor: Green;
-		BorderLeftColor: Green;
-		BorderBottomColor: Green;
-		BorderRightColor: Green;
+    VertPos: Top = 			Previous . Bottom;
+    HorizPos: Left =		Enclosing . Left; 
+		BorderTopWidth: 	 	1 px;
+		BorderLeftWidth: 		1 px;
+		BorderBottomWidth: 	1 px;
+		BorderRightWidth: 	1 px;
+		BorderTopStyle: 		Dashed;
+		BorderLeftStyle: 		Dashed;
+		BorderBottomStyle: 	Dashed;
+		BorderRightStyle: 	Dashed;
+		BorderTopColor: 		Blue;
+		BorderLeftColor: 		Blue;
+		BorderBottomColor: 	Blue;
+		BorderRightColor: 	Blue;
+		PaddingRight: 			2 px;
+		PaddingLeft: 				2 px;
+		PaddingTop: 				2 px;
+		PaddingBottom: 			2 px;
   	IN Structure_view BEGIN
 			BorderTopWidth: 0;
 			BorderLeftWidth: 0;
@@ -237,6 +365,20 @@ RULES
 		  VertPos: Top = Previous . Bottom;
 		  END;
 	 END;
+
+	repeatMenu:
+	  BEGIN
+	    CreateFirst(RepeatMenu_Gif);
+      VertPos: Top = 			Enclosing . Top - 6 px;
+      HorizPos: Left =		Enclosing . Left - 6 px;
+	    HorizRef : * . Bottom;
+      MarginTop: 				0 px;
+      MarginBottom: 		0 px;
+      MarginRight: 			0 px;
+      MarginLeft: 			0 px;
+	    IN Structure_view
+	 	    Visibility: 0;
+	  END;
 	 
   repeat:
 		BEGIN	
@@ -245,20 +387,25 @@ RULES
     Width: auto{Enclosing . Width};
     {Display: Block;}
     VertPos: Top = Previous . Bottom;
-    MarginTop: 0;
+    MarginTop: 3 px;
     HorizPos: Left = Enclosing . Left; 
-		BorderTopWidth: 1 pt;
-		BorderLeftWidth: 1 pt;
-		BorderBottomWidth: 1 pt;
-		BorderRightWidth: 1 pt;
+		BorderTopWidth: 2 pt;
+		BorderLeftWidth: 2 pt;
+		BorderBottomWidth: 2 pt;
+		BorderRightWidth: 2 pt;
 		BorderTopStyle: Dotted;
 		BorderLeftStyle: Dotted;
 		BorderBottomStyle: Dotted;
 		BorderRightStyle: Dotted;
-		BorderTopColor: Blue;
-		BorderLeftColor: Blue;
-		BorderBottomColor: Blue;
-		BorderRightColor: Blue;
+		BorderTopColor: Purple;
+		BorderLeftColor: Purple;
+		BorderBottomColor: Purple;
+		BorderRightColor: Purple;
+		PaddingRight: 			3 px;
+		PaddingLeft: 				3 px;
+		PaddingTop: 				3 px;
+		PaddingBottom: 			3 px;
+		
   	IN Structure_view BEGIN
 			BorderTopWidth: 0;
 			BorderLeftWidth: 0;
@@ -269,6 +416,20 @@ RULES
 		  VertPos: Top = Previous . Bottom;
 		  END;
 	 END;	 
+
+	optionMenu:
+	  BEGIN
+	    CreateFirst(OptionMenu_Gif);
+      VertPos: Top = 			Enclosing . Top - 5 px;
+      HorizPos: Left =		Enclosing . Left - 5 px;
+	    HorizRef : * . Bottom;
+      MarginTop: 				0 px;
+      MarginBottom: 		0 px;
+      MarginRight: 			0 px;
+      MarginLeft: 			0 px;
+	    IN Structure_view
+	 	    Visibility: 0;
+	  END;
 	 
   option:	
 		BEGIN
@@ -283,14 +444,18 @@ RULES
 		BorderLeftWidth: 1 pt;
 		BorderBottomWidth: 1 pt;
 		BorderRightWidth: 1 pt;
-		BorderTopStyle: Dotted;
-		BorderLeftStyle: Dotted;
-		BorderBottomStyle: Dotted;
-		BorderRightStyle: Dotted;
-		BorderTopColor: Blue;
-		BorderLeftColor: Blue;
-		BorderBottomColor: Blue;
-		BorderRightColor: Blue;
+		BorderTopStyle: Dashed;
+		BorderLeftStyle: Dashed;
+		BorderBottomStyle: Dashed;
+		BorderRightStyle: Dashed;
+		BorderTopColor: Orange;
+		BorderLeftColor: Orange;
+		BorderBottomColor: Orange;
+		BorderRightColor: Orange;
+		PaddingRight: 			2 px;
+		PaddingLeft: 				2 px;
+		PaddingTop: 				2 px;
+		PaddingBottom: 			2 px;		
   	IN Structure_view BEGIN
 			BorderTopWidth: 0;
 			BorderLeftWidth: 0;
@@ -305,6 +470,89 @@ RULES
 
 ATTRIBUTES
 
+  name :
+  BEGIN
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
+	END;    
+
+  title :
+  BEGIN
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
+	END;    
+	
+  includeAt :
+  BEGIN
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
+	END;    
+
+  exclude :
+  BEGIN
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
+	END;    
+
+  src :
+  BEGIN
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
+	END;    
+	
+  minOccurs :
+  BEGIN
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
+	END;    
+
+  maxOccurs :
+  BEGIN
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
+	END;    
+
+  types :
+  BEGIN
+	CreateBefore(AttrNameAndValue);
+	END;    
+
+  currentType :
+  BEGIN
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
+	END;    
+	
+  type :
+  BEGIN
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
+	END;    
+
+  useAt :
+  BEGIN
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
+	END;    
+
+  defaultAt :
+  BEGIN
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
+	END;    
+
+  fixed :
+  BEGIN
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
+	END;    
+
+  values :
+  BEGIN
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
+	END;    
+
   Unknown_attribute:
 	BEGIN
 	if TEXT_UNIT
@@ -317,6 +565,6 @@ ATTRIBUTES
 	   CreateAfter(Unknown_End);
 	if NOT TEXT_UNIT and NOT PICTURE_UNIT and NOT Unknown_namespace
   	 CreateBefore(UnknownAttrValue);
-	END;
+	END;	
 
 END

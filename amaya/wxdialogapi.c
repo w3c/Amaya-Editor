@@ -226,7 +226,7 @@ ThotBool CreateNewTemplateDocDlgWX (int ref,  ThotWindow parent, Document doc,
     return FALSE;
   
   wxString wx_title = TtaConvMessageToWX( title );
-  wxString wx_filter = TtaConvMessageToWX("Template files (*.xtd)\0");
+  wxString wx_filter = TtaConvMessageToWX("Any file *.*\0");
   wxString wx_templateDir = TtaConvMessageToWX( templateDir );
   
   NewTemplateDocDlgWX * p_dlg = new NewTemplateDocDlgWX( ref,

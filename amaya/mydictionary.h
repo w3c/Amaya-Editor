@@ -42,7 +42,7 @@ extern void CleanDictionary ( DicDictionary dic );
   before if there is no Record with that key.
   If the element should be the first it returns NULL
   ----------------------------------------------------------------------*/
-extern Record Find ( DicDictionary dic, char * key );
+extern Record Find ( DicDictionary dic, const char * key );
 
 /*----------------------------------------------------------------------
   Looks up dic for the element identified by key.
@@ -52,19 +52,19 @@ extern Record Find ( DicDictionary dic, char * key );
   in the linked list.
   !null !isFirst : if the element key has been found returns the previous element.
   ----------------------------------------------------------------------*/
-extern Record FindPrevious ( DicDictionary dic, char * key, ThotBool *isFirst );
+extern Record FindPrevious ( DicDictionary dic, const char * key, ThotBool *isFirst );
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-extern DicElement Add ( DicDictionary dic, char * key, DicElement el );
+extern DicElement Add ( DicDictionary dic, const char * key, DicElement el );
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-extern DicElement Remove ( DicDictionary dic, char * key);
+extern DicElement Remove ( DicDictionary dic, const char * key);
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-extern DicElement Get ( DicDictionary dic, char * key);
+extern DicElement Get ( DicDictionary dic, const char * key);
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -76,26 +76,26 @@ extern void Next ( DicDictionary dic );
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-extern ThotBool IsDone ( DicDictionary dic );
+extern ThotBool IsDone ( const DicDictionary dic );
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-extern char* CurrentKey ( DicDictionary dic );
+extern char* CurrentKey ( const DicDictionary dic );
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-extern void* CurrentElement ( DicDictionary dic );
+extern void* CurrentElement ( const DicDictionary dic );
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-extern ThotBool IsEmpty ( DicDictionary dic );
+extern ThotBool IsEmpty ( const DicDictionary dic );
  
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-extern ThotBool isEOSorWhiteSpace ( char c );
+extern ThotBool isEOSorWhiteSpace ( const char c );
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-extern DicDictionary CreateDictionaryFromList ( char *list );
+extern DicDictionary CreateDictionaryFromList ( const char *list );
 
 #endif  /* _DICTIONARY_H_ */

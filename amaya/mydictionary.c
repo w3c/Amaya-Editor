@@ -9,7 +9,6 @@
 #include "amaya.h"
 #include "mydictionary.h"
 
-
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 DicDictionary CreateDictionary()
@@ -30,8 +29,8 @@ void CleanDictionary (DicDictionary dic)
     {
       free(rec->key);
       old = rec;
+	  rec = rec->next;
       free(old);
-      rec = rec->next;
     }
 	dic->first = NULL;
 	dic->iter = NULL;
@@ -43,7 +42,7 @@ void CleanDictionary (DicDictionary dic)
   before if there is no Record with that key.
   If the element should be the first it returns NULL
   ----------------------------------------------------------------------*/
-Record Find (DicDictionary dic, char * key)
+Record Find (DicDictionary dic, const char * key)
 {
 	Record rec = dic->first;
 	Record precedent = NULL;
@@ -75,7 +74,7 @@ Record Find (DicDictionary dic, char * key)
   in the linked list.
   !null !isFirst : if the element key has been found returns the previous element.
   ----------------------------------------------------------------------*/
-Record FindPrevious (DicDictionary dic, char * key, ThotBool *isFirst)
+Record FindPrevious (DicDictionary dic, const char * key, ThotBool *isFirst)
 {
 	Record rec = dic->first;
 	Record precedent = NULL;
@@ -105,7 +104,7 @@ Record FindPrevious (DicDictionary dic, char * key, ThotBool *isFirst)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-DicElement Add (DicDictionary dic, char * key, DicElement el)
+DicElement Add (DicDictionary dic, const char * key, DicElement el)
 {	
 	Record     rec = Find(dic, key);
 	Record     newRec;
@@ -142,7 +141,7 @@ DicElement Add (DicDictionary dic, char * key, DicElement el)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-DicElement Remove (DicDictionary dic, char * key)
+DicElement Remove (DicDictionary dic, const char * key)
 {
 	ThotBool isFirst;
 	Record aux = NULL;
@@ -172,7 +171,7 @@ DicElement Remove (DicDictionary dic, char * key)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-DicElement Get (DicDictionary dic, char * key)
+DicElement Get (DicDictionary dic, const char * key)
 {
 	Record rec = Find(dic,key);
 	
@@ -202,14 +201,14 @@ void Next (DicDictionary dic)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-ThotBool IsDone (DicDictionary dic)
+ThotBool IsDone (const DicDictionary dic)
 {
 	return dic->iter == NULL;
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-char* CurrentKey (DicDictionary dic)
+char* CurrentKey (const DicDictionary dic)
 {
 	if(dic->iter)
 		return dic->iter->key;
@@ -219,7 +218,7 @@ char* CurrentKey (DicDictionary dic)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void* CurrentElement (DicDictionary dic)
+void* CurrentElement (const DicDictionary dic)
 {
 	if(dic->iter)
 		return dic->iter->element;
@@ -229,21 +228,21 @@ void* CurrentElement (DicDictionary dic)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-ThotBool IsEmpty (DicDictionary dic)
+ThotBool IsEmpty (const DicDictionary dic)
 {
 	return !dic->first;
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-ThotBool isEOSorWhiteSpace (char c)
+ThotBool isEOSorWhiteSpace (const char c)
 {
 	return c == SPACE || c == '\t' || c == '\n' || c == EOS;
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-DicDictionary CreateDictionaryFromList (char *list)
+DicDictionary CreateDictionaryFromList (const char *list)
 {
 	char temp[128];
 	int labelSize;

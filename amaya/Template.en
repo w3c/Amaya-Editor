@@ -13,9 +13,9 @@ translation
 C_CR: \0
 TEXT_UNIT: \0
 useMenu: \0
-useEl: use
-useAt: use
-valueAt: default
 includeAt: include
-minOcc: minOccurs
-maxOcc: maxOccurs
+integerVal: integer
+listVal : list
+useAt: use
+defaultAt : default
+useEl: use

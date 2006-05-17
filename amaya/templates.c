@@ -68,7 +68,9 @@ int CreateInstanceOfTemplate (Document doc, char *templatename, char *docname,
 
 	LoadTemplate( templatename, schemaname);
 	DontReplaceOldDoc = dontReplace;
-	CreateInstanceDocument (doc, templatename, docname, docType);
+	InstanciateTemplate( templatename, schemaname, docname, docType);
+	//CreateInstanceDocument (doc, templatename, docname, docType);
+	//OpenInstance(doc, docname, docType);
 	return -1;
 #endif /* TEMPLATES */
 }
@@ -148,10 +150,10 @@ static char *createMenuString (const struct menuType* items, const int nbItems)
 #endif /* TEMPLATES */
 
 /*----------------------------------------------------------------------
-  ThotBool ShowUseTypes (Document doc) 
+  ThotBool UseMenuClicked (Document doc) 
   Shows a menu with all the types that can be used in a use element.
   ----------------------------------------------------------------------*/
-ThotBool ShowUseTypes (NotifyElement *event)
+ThotBool UseMenuClicked (NotifyElement *event)
 {
 #ifdef TEMPLATES
 	Document         doc = event->document;
@@ -185,6 +187,17 @@ ThotBool ShowUseTypes (NotifyElement *event)
 	TtaDestroyDialogue (BaseDialog + OptionMenu);
 
 	//ReturnOption
+	return TRUE;
+#endif /* TEMPLATES */
+}
+
+/*----------------------------------------------------------------------
+  ThotBool BagMenuClicked (Document doc) 
+  Shows a menu with all the types that can be used in a use element.
+  ----------------------------------------------------------------------*/
+ThotBool BagMenuClicked (NotifyElement *event)
+{
+#ifdef TEMPLATES
 	return TRUE;
 #endif /* TEMPLATES */
 }

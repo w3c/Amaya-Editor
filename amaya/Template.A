@@ -12,6 +12,11 @@ ELEMENTS
 
    useMenu :
       BEGIN
-         ElemClick.Pre -> ShowUseTypes;
+         ElemClick.Pre -> UseMenuClicked;
       END;
+   bagMenu :
+      BEGIN
+         ElemClick.Pre -> BagMenuClicked;
+      END;
+      
 END

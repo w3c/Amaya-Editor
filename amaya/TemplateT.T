@@ -132,7 +132,7 @@ RULES
 
 ATTRIBUTES
 
-  name:
+  name :
     begin
       create SAN;
       create 'name=';
@@ -141,6 +141,15 @@ ATTRIBUTES
       create DoubleQuote;
     end;
 
+  title :
+    begin
+      create SAN;
+      create 'title=';
+      create DoubleQuote;
+      create title;
+      create DoubleQuote;
+    end;
+	
   includeAt :
     begin
       create SAN;
@@ -150,7 +159,7 @@ ATTRIBUTES
       create DoubleQuote;
     end;
 
-  exclude:
+  exclude :
     begin
       create SAN;
       create 'exclude=';
@@ -159,7 +168,7 @@ ATTRIBUTES
       create DoubleQuote;
     end;
 
-  src:
+  src :
     begin
       create SAN;
       create 'src=';
@@ -167,35 +176,26 @@ ATTRIBUTES
       create src;
       create DoubleQuote;
     end;
-
-  minOcc:
+	
+  minOccurs :
     begin
       create SAN;
       create 'minOccurs=';
       create DoubleQuote;
-      create minOcc;
+      create minOccurs;
       create DoubleQuote;
     end;
 
-  maxOcc:
+  maxOccurs :
     begin
       create SAN;
       create 'maxOccurs=';
       create DoubleQuote;
-      create maxOcc;
+      create maxOccurs;
       create DoubleQuote;
     end;
 
-  id:
-    begin
-      create SAN;
-      create 'id=';
-      create DoubleQuote;
-      create id;
-      create DoubleQuote;
-    end;
-
-  types:
+  types :
     begin
       create SAN;
       create 'types=';
@@ -204,7 +204,7 @@ ATTRIBUTES
       create DoubleQuote;
     end;
 
-  currentType:
+  currentType :
     begin
       create SAN;
       create 'currentType=';
@@ -212,8 +212,8 @@ ATTRIBUTES
       create currentType;
       create DoubleQuote;
     end;
-
-  type:
+	
+  type :
     begin
       create SAN;
       create 'type=';
@@ -222,7 +222,7 @@ ATTRIBUTES
       create DoubleQuote;
     end;
 
-  useAt:
+  useAt :
     begin
       create SAN;
       create 'use=';
@@ -231,21 +231,30 @@ ATTRIBUTES
       create DoubleQuote;
     end;
 
-  valueAt:
+  defaultAt :
     begin
       create SAN;
       create 'default=';
       create DoubleQuote;
-      create valueAt;
+      create defaultAt;
       create DoubleQuote;
     end;
 
-  fixed:
+  fixed :
     begin
       create SAN;
       create 'fixed=';
       create DoubleQuote;
       create fixed;
+      create DoubleQuote;
+    end;
+
+  values :
+    begin
+      create SAN;
+      create 'values=';
+      create DoubleQuote;
+      create values;
       create DoubleQuote;
     end;
 

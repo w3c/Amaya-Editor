@@ -17,12 +17,14 @@ XTigerTemplate CreatePredefinedTypesLibrary ()
 	lib->isLibrary = true;
 
 	char *integerName = strdup("integer");
+	char *decimalName = strdup("decimal");
 	char *booleanName = strdup("boolean");
 	char *stringName  = strdup("string" );
 
-	Add ( lib->declaredTypes, integerName, NewSimpleType(lib, integerName, XTIGER_NUMBER ));
-	Add ( lib->declaredTypes, stringName,  NewSimpleType(lib, stringName,  XTIGER_STRING  ));
-	Add ( lib->declaredTypes, booleanName, NewSimpleType(lib, booleanName, XTIGER_BOOLEAN ));
+	Add ( lib->simpleTypes, integerName, NewSimpleType(lib, integerName, XTIGER_INTEGER ));
+	Add ( lib->simpleTypes, decimalName, NewSimpleType(lib, decimalName, XTIGER_DECIMAL ));
+	Add ( lib->simpleTypes, stringName,  NewSimpleType(lib, stringName,  XTIGER_STRING  ));
+	Add ( lib->simpleTypes, booleanName, NewSimpleType(lib, booleanName, XTIGER_BOOLEAN ));
 
 	//TODO : Add the any unions
 	return lib;
@@ -84,11 +86,33 @@ Declaration NewUnion (const XTigerTemplate t, const char *name,
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
+Declaration NewElement (const XTigerTemplate t, const char *name)
+{
+	Declaration dec = NewDeclaration (t, name, XMLELEMENT);
+	return dec;
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void FreeDeclaration (Declaration dec)
 {
 	//TODO
 	TtaFreeMemory(dec->name);
 	TtaFreeMemory(dec);
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+Declaration GetDeclaration(const XTigerTemplate t, const char *name)
+{
+	Declaration dec = (Declaration)Get(t->simpleTypes, name);	
+	if(dec) return dec;
+	dec = (Declaration)Get(t->components, name);
+	if(dec) return dec;
+	dec = (Declaration)Get(t->elements, name);
+	if(dec) return dec;
+	dec = (Declaration)Get(t->unions, name);
+	return dec;
 }
 
 
@@ -99,9 +123,12 @@ XTigerTemplate NewXTigerTemplate (ThotBool addPredefined)
 {	
 	XTigerTemplate t = (XTigerTemplate)TtaGetMemory (sizeof(_XTigerTemplate));
 	
-	t->isLibrary     = false;
-	t->libraries     = CreateDictionary();
-	t->declaredTypes = CreateDictionary();
+	t->isLibrary    = false;
+//	t->libraries    = CreateDictionary();
+	t->elements		= CreateDictionary();
+	t->simpleTypes	= CreateDictionary();
+	t->components	= CreateDictionary();
+	t->unions		= CreateDictionary();
 	if (addPredefined)
 		AddLibraryDeclarations (t,(XTigerTemplate)Get (templates, PREDEFINED_LIB));
 
@@ -113,10 +140,11 @@ XTigerTemplate NewXTigerTemplate (ThotBool addPredefined)
   ----------------------------------------------------------------------*/
 void FreeXTigerTemplate (XTigerTemplate t)
 {	
-	DicDictionary  dic = t->libraries;
-  XTigerTemplate lib;
+	DicDictionary  dic;
 	Declaration    dec;
-
+/*
+    XTigerTemplate lib;
+	dic = t->libraries;
 	//TODO : Clean only unused libraries (not the predefined) and elements declared by t
 	for (First(dic); !IsDone(dic); Next(dic))
     {
@@ -128,16 +156,47 @@ void FreeXTigerTemplate (XTigerTemplate t)
     }
 
 	CleanDictionary (dic);
-	dic = t->declaredTypes;
-
+*/
+	//Cleaning the components
+	dic = t->components;
 	for (First(dic); !IsDone(dic); Next(dic))
     {
       dec = (Declaration)CurrentElement (dic);
       if (dec->declaredIn == t)
         TtaFreeMemory (dec);
     }
-
 	CleanDictionary (dic);
+
+	//Cleaning the elements
+	dic = t->elements;
+	for (First(dic); !IsDone(dic); Next(dic))
+    {
+      dec = (Declaration)CurrentElement (dic);
+      if (dec->declaredIn == t)
+        TtaFreeMemory (dec);
+    }
+	CleanDictionary (dic);
+
+	//Cleaning the simple types
+	dic = t->simpleTypes;
+	for (First(dic); !IsDone(dic); Next(dic))
+    {
+      dec = (Declaration)CurrentElement (dic);
+      if (dec->declaredIn == t)
+        TtaFreeMemory (dec);
+    }
+	CleanDictionary (dic);
+
+	//Cleaning the unions
+	dic = t->unions;
+	for (First(dic); !IsDone(dic); Next(dic))
+    {
+      dec = (Declaration)CurrentElement (dic);
+      if (dec->declaredIn == t)
+        TtaFreeMemory (dec);
+    }
+	CleanDictionary (dic);
+
 	TtaFreeMemory (t);
 }
 #endif /* TEMPLATES */

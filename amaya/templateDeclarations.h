@@ -4,13 +4,14 @@
 #define PREDEFINED_LIB "-Predefined-"
 #define COMPONENT   0
 #define SIMPLE_TYPE 1
-#define ELEMENT     2
+#define XMLELEMENT  2
 #define UNION       3
 
-#define XTIGER_NUMBER  0
-#define XTIGER_STRING  1
-#define XTIGER_BOOLEAN 2
-#define XTIGER_CUSTOM  3
+#define XTIGER_INTEGER 0
+#define XTIGER_DECIMAL 1
+#define XTIGER_STRING  2
+#define XTIGER_BOOLEAN 3
+#define XTIGER_CUSTOM  4
 
 #define THOT_EXPORT extern
 #include "amaya.h"
@@ -23,15 +24,22 @@ typedef struct _XTigerTemplate *XTigerTemplate;
 
 struct _XTigerTemplate
 {	
-  ThotBool        isLibrary;			 //Is this a library? (otherway it's a template)
-  DicDictionary   libraries;		   //Imported libraries
-  DicDictionary   declaredTypes;	 //All types declared in the document
-  int             documentUsingMe; //How many documents are using this template or library?
+  ThotBool        isLibrary;			//Is this a library? (otherway it's a template)
+//  DicDictionary   libraries;			//Imported libraries
+  DicDictionary   simpleTypes;			//All simple types declared in the document
+  DicDictionary   elements;				//All element types declared in the document
+  DicDictionary   components;			//All component types declared in the document
+  DicDictionary   unions;				//All union types declared in the document
 };
 
 /* Structure of a Declaration */
 typedef int TypeNature;
 typedef int SimpleTypeType;
+
+typedef struct _XmlElement
+{
+	char	*name;
+} XmlElement;
 
 typedef struct _SimpleType
 {
@@ -55,10 +63,11 @@ typedef struct _Declaration
 	TypeNature     nature;
 	XTigerTemplate declaredIn;
 	union
-  {
+	{
 		SimpleType   simpleType;
 		Component    componentType;
 		Union        unionType;
+		XmlElement   elementType;
 	};
 } *Declaration;
 
@@ -95,7 +104,16 @@ extern Declaration NewUnion ( const XTigerTemplate t,
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
+extern Declaration NewElement ( const XTigerTemplate t,
+                              const char *name );
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 extern void FreeDeclaration ( Declaration dec );
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+extern Declaration GetDeclaration(const XTigerTemplate t, const char *name);
 
 /*----------------------------------------------------------------------
    Creates a new template with its dictionaries

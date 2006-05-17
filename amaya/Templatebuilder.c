@@ -98,9 +98,9 @@ void    TemplateEntityCreated (unsigned char *entityValue, Language lang,
   ----------------------------------------------------------------------*/
 void TemplateElementComplete (ParserData *context, Element el, int *error)
 {
-  Document       doc;
-  ElementType elType;
-  Element    useMenu;
+  Document		doc;
+  ElementType	elType, childType;
+  Element		aMenu, last, child, newChild;
 
   doc = context->doc;
   elType = TtaGetElementType (el);
@@ -108,30 +108,82 @@ void TemplateElementComplete (ParserData *context, Element el, int *error)
     {
     case Template_EL_head:
 	  break;
+
     case Template_EL_component:
       CheckMandatoryAttribute (el, doc, Template_ATTR_name);
 	  break;
+
     case Template_EL_union:
       CheckMandatoryAttribute (el, doc, Template_ATTR_name);
 	  break;
+
     case Template_EL_import:
       CheckMandatoryAttribute (el, doc, Template_ATTR_src);
 	  break;
+
     case Template_EL_useEl:
       //CheckMandatoryAttribute (el, doc, Template_ATTR_id);
 	  CheckMandatoryAttribute (el, doc, Template_ATTR_types);
-	  //Create the UseMenu Button
+	  //Create the menu
 	  elType.ElTypeNum = Template_EL_useMenu;
-	  useMenu = TtaNewElement(doc, elType);
-	  TtaInsertFirstChild(&useMenu, el, doc);
+	  aMenu = TtaNewElement(doc, elType);
+	  last = TtaGetLastChild(el);
+	  if(last) 
+		  TtaInsertSibling(aMenu, last, FALSE, doc);
+	  else
+		  TtaInsertFirstChild(&aMenu, el, doc);	  	  
 	  break;
+
     case Template_EL_bag:
       //CheckMandatoryAttribute (el, doc, Template_ATTR_id);
 	  CheckMandatoryAttribute (el, doc, Template_ATTR_types);
+	  //Create the menu
+	  elType.ElTypeNum = Template_EL_bagMenu;
+	  aMenu = TtaNewElement(doc, elType);
+	  last = TtaGetLastChild(el);
+	  if(last) 
+		  TtaInsertSibling(aMenu, last, FALSE, doc);
+	  else
+		  TtaInsertFirstChild(&aMenu, el, doc);
 	  break;
+
     case Template_EL_attribute:
       CheckMandatoryAttribute (el, doc, Template_ATTR_name);
 	  break;
+	case Template_EL_option :
+	  //Create the menu
+	  elType.ElTypeNum = Template_EL_optionMenu;
+	  aMenu = TtaNewElement(doc, elType);
+	  last = TtaGetLastChild(el);
+	  if(last) 
+		  TtaInsertSibling(aMenu, last, FALSE, doc);
+	  else
+		  TtaInsertFirstChild(&aMenu, el, doc);
+	  break;
+
+	case Template_EL_repeat :
+	  //If the content is not a XTiger element, we fold it in a folder
+	  child = TtaGetFirstChild(el);
+	  childType = TtaGetElementType(child);
+	  if(strcmp(TtaGetSSchemaName(childType.ElSSchema),"Template")!=0)
+	  {
+		  elType.ElTypeNum = Template_EL_folder;
+		  newChild = TtaNewElement(doc, elType);
+		  TtaRemoveTree(child, doc);
+		  TtaInsertFirstChild(&child, newChild, doc);
+		  TtaInsertFirstChild(&newChild, el, doc);
+	  }
+
+	  //Create the menu
+	  elType.ElTypeNum = Template_EL_repeatMenu;
+	  aMenu = TtaNewElement(doc, elType);
+	  last = TtaGetLastChild(el);
+	  if(last) 
+		  TtaInsertSibling(aMenu, last, FALSE, doc);
+	  else
+		  TtaInsertFirstChild(&aMenu, el, doc);
+	  break;
+
     default:
       break;
     }
@@ -173,84 +225,24 @@ void TemplateAttributeComplete (Attribute attr, Element el, Document doc)
 }
 
 
-#ifdef TODO
 /*----------------------------------------------------------------------
   TemplateCheckInsert
   ----------------------------------------------------------------------*/
 void  TemplateCheckInsert (Element *el, Element parent,
                              Document doc, ThotBool *inserted)
 {
+  ElementType  elType, parentType;
+  char *elName, *parentName;
 
-ElementType  newElType, elType, prevType;
-  Element      newEl, ancestor, prev, prevprev;
-   
-  if (parent == NULL)
-    return;
+  elType = TtaGetElementType(*el);
+  parentType = TtaGetElementType(parent);
 
-  elType = TtaGetElementType (*el);
-  //TODO Remove this line
-  elType = TtaGetElementType (parent);
+  elName = TtaGetElementTypeName(elType);
+  parentName = TtaGetElementTypeName(parentType);
 
-  if (elType.ElTypeNum == MathML_EL_MathML &&
-      strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0)
-    {
-      ancestor = parent;
-      elType = TtaGetElementType (ancestor);
-      if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
-        return;
+  *inserted = FALSE;
 
-      while (ancestor != NULL &&
-             IsXMLElementInline (elType, doc))
-        {
-          ancestor = TtaGetParent (ancestor);
-          elType = TtaGetElementType (ancestor);
-        }
-       
-      if (ancestor != NULL)
-        {
-          elType = TtaGetElementType (ancestor);
-          if (XhtmlCannotContainText (elType) &&
-              !XmlWithinStack (HTML_EL_Option_Menu, XhtmlParserCtxt->XMLSSchema))
-            {
-              /* Element ancestor cannot contain math directly. Create a */
-              /* Pseudo_paragraph element as the parent of the math element */
-              newElType.ElSSchema = XhtmlParserCtxt->XMLSSchema;
-              newElType.ElTypeNum = HTML_EL_Pseudo_paragraph;
-              newEl = TtaNewElement (doc, newElType);
-              XmlSetElemLineNumber (newEl);
-              /* insert the new Pseudo_paragraph element */
-              InsertXmlElement (&newEl); 
-              BlockInCharLevelElem (newEl);
-              if (newEl != NULL)
-                {
-                  /* insert the Text element in the tree */
-                  TtaInsertFirstChild (el, newEl, doc);
-                  *inserted = TRUE;
-		   
-                  /* if previous siblings of the new Pseudo_paragraph element
-                     are inline elements, move them within the new
-                     Pseudo_paragraph element */
-                  prev = newEl;
-                  TtaPreviousSibling (&prev);
-                  while (prev != NULL)
-                    {
-                      prevType = TtaGetElementType (prev);
-                      if (IsXMLElementInline (prevType, doc))
-                        {
-                          prevprev = prev;  TtaPreviousSibling (&prevprev);
-                          TtaRemoveTree (prev, doc);
-                          TtaInsertFirstChild (&prev, newEl, doc);
-                          prev = prevprev;
-                        }
-                      else
-                        prev = NULL;
-                    }
-                }
-            }
-        }
-    }
   return;
 }
 
-#endif
 

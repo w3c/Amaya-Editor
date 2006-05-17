@@ -33,51 +33,71 @@ STRUCT
     END
   );
 
-  component (ATTR name = TEXT) = ANY - (head, union, import);
-  union (ATTR name; includeAt = TEXT; exclude = TEXT) = CONSTANT C_CR; {It is always empty}
+  component (ATTR name = TEXT; title = TEXT) = ANY - (head, union, import);
+  union (ATTR name; includeAt = TEXT; exclude = TEXT; title) = CONSTANT C_CR; {It is always empty}
   import (ATTR src = TEXT) = CONSTANT C_CR; {It is always empty}
 
-  Model = CASE OF
-      component;
-      useEl;
-      bag;
-      ANY;
-      END - (head, union, import, repeat, option);
-
-  repeat (ATTR minOcc = INTEGER; maxOcc = INTEGER) = BEGIN 
-    RepeatContent = CASE OF
-      Model;
-      Repetitions = LIST OF (useEl); 
+  Repetition 
+  	= CASE OF
+  	  useEl;
+  	  option;
+  	  repeat;
+  	  bag; 
+    	folder;
     END;
-  END;
 
-  option = BEGIN 
-    Model;
-  END;
+  folder
+  	= BEGIN
+  		ANY - (head, union, import, component);
+  	END;
+
+  repeat (ATTR id = TEXT; minOccurs = TEXT; maxOccurs = TEXT; title)
+  	= BEGIN
+	  	LIST OF (Repetition);
+  		repeatMenu;
+  	END;
+
+  option (ATTR id)
+  	= BEGIN 
+    	ANY - (head, union, import, component);
+    	optionMenu;
+  	END;
   
-  useEl (ATTR id = TEXT; types = TEXT; currentType = TEXT)
+  useEl (ATTR id; types = TEXT; currentType = TEXT; title)
      = BEGIN
-        useMenu;
         ANY;
+        useMenu;        
        END - (head, union, import, component);
 
-  useMenu = CONSTANT C_CR; {Just a button}  
+  bag (ATTR id; types) 
+     = BEGIN
+        ANY;
+        bagMenu;        
+       END - (head, union, import, component);
 
-  bag (ATTR id; types) = ANY - (head, union, import, component);
+  useMenu 		= CONSTANT C_CR; {Just a button}  
+  bagMenu 		= CONSTANT C_CR; {Just a button}  
+  repeatMenu 	= CONSTANT C_CR; {Just a button}  
+  optionMenu 	= CONSTANT C_CR; {Just a button}  
 
   attribute (ATTR 
     name; 
-    type = TEXT; 
+    type = integerVal, decimal, string, listVal; 
     useAt = TEXT; 
-    valueAt = TEXT; 
-    fixed = true, false) = CONSTANT C_CR; {It is always empty}
+    defaultAt = TEXT; 
+    fixed = TEXT; 
+    values = TEXT;
+    title) = CONSTANT C_CR; {It is always empty}
 
 EXCEPT
   {Hiding unkown and language attributes}
 	Unknown_attribute: Invisible;
 	Language: Invisible;
 	
-	{The use button is not editable}
-	useMenu : NoCut, NoCreate, NoMove, NoResize, NoSelect;
+	{Element buttons are not editable}
+	useMenu			: NoCut, NoCreate, NoMove, NoResize, NoSelect;
+	bagMenu 		: NoCut, NoCreate, NoMove, NoResize, NoSelect;
+	optionMenu 	: NoCut, NoCreate, NoMove, NoResize, NoSelect;
+	repeatMenu 	: NoCut, NoCreate, NoMove, NoResize, NoSelect;
 
 END

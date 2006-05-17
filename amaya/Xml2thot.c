@@ -414,7 +414,7 @@ static void    InitXmlParserContexts (void)
   ctxt->MapAttribute = (Proc) MapTemplateAttribute;
   ctxt->MapAttributeValue = (Proc) MapTemplateAttributeValue;
   ctxt->CheckContext = (Proc) XmlCheckContext;
-  ctxt->CheckInsert = (Proc) XmlCheckInsert;
+  ctxt->CheckInsert = (Proc) TemplateCheckInsert;
   ctxt->ElementCreated = NULL;
   ctxt->ElementComplete = (Proc) TemplateElementComplete;
   ctxt->AttributeComplete = (Proc) TemplateAttributeComplete;
