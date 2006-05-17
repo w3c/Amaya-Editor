@@ -36,7 +36,7 @@ private:
   void OnCancel( wxCommandEvent& event );
   void OnDefault( wxCommandEvent& event );
   void OnButton( wxCommandEvent& event );
-  void OnValueChanged( wxSpinEvent& event );
+  void OnValueChanged( wxCommandEvent& event );
 
   void OnColorPalette( wxCommandEvent& event );
   void OnColorChanged( wxCommandEvent& event );

@@ -22,13 +22,16 @@
                     <object class="sizeritem">
                       <object class="wxBoxSizer">
                         <orient>wxVERTICAL</orient>
+                        <object class="spacer">
+                          <size>0,20</size>
+                        </object>
                         <object class="sizeritem">
                           <object class="wxBoxSizer">
                             <orient>wxHORIZONTAL</orient>
                             <object class="sizeritem">
                               <object class="wxStaticText" name="wxID_LABEL_FAMILY">
                                 <label>font-family</label>
-                                <size>95,-1</size>
+                                <size>120,-1</size>
                               </object>
                             </object>
                             <object class="spacer">
@@ -56,9 +59,7 @@
                           <flag>wxALL|wxEXPAND</flag>
                         </object>
                         <object class="spacer">
-                          <size>0,10</size>
-                          <option>1</option>
-                          <flag>wxEXPAND</flag>
+                          <size>0,5</size>
                         </object>
                         <object class="sizeritem">
                           <object class="wxBoxSizer">
@@ -66,7 +67,7 @@
                             <object class="sizeritem">
                               <object class="wxStaticText" name="wxID_LABEL_STYLE">
                                 <label>font-style</label>
-                                <size>95,-1</size>
+                                <size>120,-1</size>
                               </object>
                               <option>0</option>
                               <flag>wxALIGN_CENTRE_VERTICAL</flag>
@@ -84,11 +85,14 @@
                                   <item>italic</item>
                                   <item>oblique</item>
                                   <item>inherit</item></content>
-                                <size>150,-1</size>
+                                <size>120,-1</size>
                               </object>
                               <flag>wxLEFT</flag>
                             </object>
                           </object>
+                        </object>
+                        <object class="spacer">
+                          <size>0,5</size>
                         </object>
                         <object class="sizeritem">
                           <object class="wxBoxSizer">
@@ -96,7 +100,7 @@
                             <object class="sizeritem">
                               <object class="wxStaticText" name="wxID_LABEL_WEIGHT">
                                 <label>font-weight</label>
-                                <size>95,-1</size>
+                                <size>120,-1</size>
                               </object>
                               <option>0</option>
                               <flag>wxALIGN_CENTRE_VERTICAL</flag>
@@ -124,10 +128,13 @@
                                   <item>lighter</item>
                                   <item>bolder</item>
                                   <item>inherit</item></content>
-                                <size>150,-1</size>
+                                <size>120,-1</size>
                               </object>
                             </object>
                           </object>
+                        </object>
+                        <object class="spacer">
+                          <size>0,5</size>
                         </object>
                         <object class="sizeritem">
                           <object class="wxBoxSizer">
@@ -135,7 +142,7 @@
                             <object class="sizeritem">
                               <object class="wxStaticText" name="wxID_LABEL_VARIANT">
                                 <label>font-variant</label>
-                                <size>95,-1</size>
+                                <size>120,-1</size>
                               </object>
                               <option>0</option>
                               <flag>wxALIGN_CENTRE_VERTICAL</flag>
@@ -152,15 +159,21 @@
                                   <item>normal</item>
                                   <item>small-caps</item>
                                   <item>inherit</item></content>
-                                <size>150,-1</size>
+                                <size>120,-1</size>
                               </object>
                             </object>
                           </object>
                         </object>
                         <object class="spacer">
-                          <size>10,0</size>
-                          <option>1</option>
+                          <size>0,10</size>
+                        </object>
+                        <object class="sizeritem">
+                          <object class="wxStaticLine"/>
+                          <option>0</option>
                           <flag>wxEXPAND</flag>
+                        </object>
+                        <object class="spacer">
+                          <size>0,10</size>
                         </object>
                         <object class="sizeritem">
                           <object class="wxBoxSizer">
@@ -168,7 +181,7 @@
                             <object class="sizeritem">
                               <object class="wxStaticText" name="wxID_LABEL_TEXT_DECORATION">
                                 <label>text-decoration</label>
-                                <size>95,-1</size>
+                                <size>120,-1</size>
                               </object>
                               <option>0</option>
                               <flag>wxALIGN_CENTRE_VERTICAL</flag>
@@ -187,10 +200,13 @@
                                   <item>overline</item>
                                   <item>line-through</item>
                                   <item>blink</item></content>
-                                <size>150,-1</size>
+                                <size>120,-1</size>
                               </object>
                             </object>
                           </object>
+                        </object>
+                        <object class="spacer">
+                          <size>0,5</size>
                         </object>
                         <object class="sizeritem">
                           <object class="wxBoxSizer">
@@ -198,7 +214,7 @@
                             <object class="sizeritem">
                               <object class="wxStaticText" name="wxID_LABEL_TEXT_TRANSFORM">
                                 <label>text-transform</label>
-                                <size>95,-1</size>
+                                <size>120,-1</size>
                               </object>
                               <option>0</option>
                               <flag>wxALIGN_CENTRE_VERTICAL</flag>
@@ -216,26 +232,21 @@
                                   <item>capitalize</item>
                                   <item>uppercase</item>
                                   <item>lowercase</item></content>
-                                <size>150,-1</size>
+                                <size>120,-1</size>
                               </object>
                             </object>
                           </object>
                         </object>
-                      </object>
-                    </object>
-                    <object class="spacer">
-                      <size>10,0</size>
-                    </object>
-                    <object class="sizeritem">
-                      <object class="wxBoxSizer">
-                        <orient>wxVERTICAL</orient>
+                        <object class="spacer">
+                          <size>0,5</size>
+                        </object>
                         <object class="sizeritem">
                           <object class="wxBoxSizer">
                             <orient>wxHORIZONTAL</orient>
                             <object class="sizeritem">
-                              <object class="wxStaticText" name="wxID_LABEL_SIZE">
-                                <label>font-size</label>
-                                <size>95,-1</size>
+                              <object class="wxStaticText" name="wxID_LABEL_TEXT_ALIGN">
+                                <label>text-align</label>
+                                <size>120,-1</size>
                               </object>
                               <option>0</option>
                               <flag>wxALIGN_CENTRE_VERTICAL</flag>
@@ -246,7 +257,47 @@
                               <flag>wxEXPAND</flag>
                             </object>
                             <object class="sizeritem">
-                              <object class="wxChoice" name="wxID_CHOICE_SIZE">
+                              <object class="wxChoice" name="wxID_CHOICE_ALIGN">
+                                <content>
+                                  <item/>
+                                  <item>left</item>
+                                  <item>right</item>
+                                  <item>center</item>
+                                  <item>inherit</item></content>
+                                <size>120,-1</size>
+                              </object>
+                            </object>
+                          </object>
+                        </object>
+                      </object>
+                    </object>
+                    <object class="spacer">
+                      <size>20,0</size>
+                    </object>
+                    <object class="sizeritem">
+                      <object class="wxBoxSizer">
+                        <orient>wxVERTICAL</orient>
+                        <object class="spacer">
+                          <size>0,20</size>
+                        </object>
+                        <object class="sizeritem">
+                          <object class="wxBoxSizer">
+                            <orient>wxHORIZONTAL</orient>
+                            <object class="sizeritem">
+                              <object class="wxStaticText" name="wxID_LABEL_SIZE">
+                                <label>font-size</label>
+                                <size>100,-1</size>
+                              </object>
+                              <option>0</option>
+                              <flag>wxALIGN_CENTRE_VERTICAL</flag>
+                            </object>
+                            <object class="spacer">
+                              <size>10,0</size>
+                              <option>1</option>
+                              <flag>wxEXPAND</flag>
+                            </object>
+                            <object class="sizeritem">
+                              <object class="wxComboBox" name="wxID_CHOICE_SIZE">
                                 <content>
                                   <item/>
                                   <item>larger</item>
@@ -257,53 +308,23 @@
                                   <item>large</item>
                                   <item>x-large</item>
                                   <item>xx-large</item>
-                                  <item>inherit</item></content>
+                                  <item>inherit</item>
+                                  <item>0px</item>
+                                  <item>0pt</item>
+                                  <item>0pc</item>
+                                  <item>0in</item>
+                                  <item>0mm</item>
+                                  <item>0cm</item>
+                                  <item>0em</item>
+                                  <item>0ex</item>
+                                  <item>0%</item></content>
                                 <size>150,-1</size>
-                              </object>
-                            </object>
-                            <object class="sizeritem">
-                              <object class="wxBoxSizer">
-                                <orient>wxHORIZONTAL</orient>
-                                <object class="sizeritem">
-                                  <object class="wxCheckBox" name="wx_SIZE_DONE">
-                                    <label></label>
-                                  </object>
-                                  <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                                </object>
-                                <object class="sizeritem">
-                                  <object class="wxSpinCtrl" name="wxID_SPIN_SIZE">
-                                    <min>0</min>
-                                    <size>70,-1</size>
-                                  </object>
-                                  <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                                </object>
-                                <object class="spacer">
-                                  <size>5,0</size>
-                                </object>
-                                <object class="sizeritem">
-                                  <object class="wxChoice" name="wxID_SIZE_UNIT">
-                                    <content>
-                                      <item>px</item>
-                                      <item>pt</item>
-                                      <item>pc</item>
-                                      <item>in</item>
-                                      <item>mm</item>
-                                      <item>cm</item>
-                                      <item>em</item>
-                                      <item>ex</item>
-                                      <item>%</item>
-                                    </content>
-                                    <size>70,-1</size>
-                                  </object>
-                                </object>
                               </object>
                             </object>
                           </object>
                         </object>
                         <object class="spacer">
-                          <size>10,0</size>
-                          <option>1</option>
-                          <flag>wxEXPAND</flag>
+                          <size>0,5</size>
                         </object>
                         <object class="sizeritem">
                           <object class="wxBoxSizer">
@@ -322,47 +343,28 @@
                               <flag>wxEXPAND</flag>
                             </object>
                             <object class="sizeritem">
-                              <object class="wxChoice" name="wxID_CHOICE_LINE">
+                              <object class="wxComboBox" name="wxID_CHOICE_LINE">
                                 <content>
                                   <item/>
                                   <item>normal</item>
-                                  <item>inherit</item></content>
+                                  <item>inherit</item>
+                                  <item>0</item>
+                                  <item>0px</item>
+                                  <item>0pt</item>
+                                  <item>0pc</item>
+                                  <item>0in</item>
+                                  <item>0mm</item>
+                                  <item>0cm</item>
+                                  <item>0em</item>
+                                  <item>0ex</item>
+                                  <item>0%</item></content>
                                 <size>150,-1</size>
                               </object>
                             </object>
-                            <object class="sizeritem">
-                              <object class="wxCheckBox" name="wx_LINE_DONE">
-                                <label></label>
-                              </object>
-                              <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                            </object>
-                            <object class="sizeritem">
-                              <object class="wxSpinCtrl" name="wxID_SPIN_LINE">
-                                <min>0</min>
-                                <size>70,-1</size>
-                              </object>
-                              <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                            </object>
-                            <object class="spacer">
-                              <size>5,0</size>
-                            </object>
-                            <object class="sizeritem">
-                              <object class="wxChoice" name="wxID_LINE_UNIT">
-                                <content>
-                                  <item/>
-                                  <item>px</item>
-                                  <item>pt</item>
-                                  <item>pc</item>
-                                  <item>in</item>
-                                  <item>mm</item>
-                                  <item>cm</item>
-                                  <item>em</item>
-                                  <item>ex</item>
-                                  <item>%</item></content>
-                                <size>70,-1</size>
-                              </object>
-                            </object>
                           </object>
+                        </object>
+                        <object class="spacer">
+                          <size>0,5</size>
                         </object>
                         <object class="sizeritem">
                           <object class="wxBoxSizer">
@@ -381,38 +383,25 @@
                               <flag>wxEXPAND</flag>
                             </object>
                             <object class="sizeritem">
-                              <object class="wxCheckBox" name="wx_INDENT_DONE">
-                                <label></label>
-                              </object>
-                              <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                            </object>
-                            <object class="sizeritem">
-                              <object class="wxSpinCtrl" name="wxID_SPIN_INDENT">
-                                <min>0</min>
-                                <size>70,-1</size>
-                              </object>
-                              <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                            </object>
-                            <object class="spacer">
-                              <size>5,0</size>
-                            </object>
-                            <object class="sizeritem">
-                              <object class="wxChoice" name="wxID_INDENT_UNIT">
+                              <object class="wxComboBox" name="wxID_CHOICE_INDENT">
                                 <content>
-                                  <item>px</item>
-                                  <item>pt</item>
-                                  <item>pc</item>
-                                  <item>in</item>
-                                  <item>mm</item>
-                                  <item>cm</item>
-                                  <item>em</item>
-                                  <item>ex</item>
-                                  <item>%</item>
-                                </content>
-                                <size>70,-1</size>
+                                  <item/>
+                                  <item>0px</item>
+                                  <item>0pt</item>
+                                  <item>0pc</item>
+                                  <item>0in</item>
+                                  <item>0mm</item>
+                                  <item>0cm</item>
+                                  <item>0em</item>
+                                  <item>0ex</item>
+                                  <item>0%</item></content>
+                                <size>150,-1</size>
                               </object>
                             </object>
                           </object>
+                        </object>
+                        <object class="spacer">
+                          <size>0,5</size>
                         </object>
                         <object class="sizeritem">
                           <object class="wxBoxSizer">
@@ -431,7 +420,7 @@
                               <flag>wxEXPAND</flag>
                             </object>
                             <object class="sizeritem">
-                              <object class="wxChoice" name="wxID_CHOICE_VALIGN">
+                              <object class="wxComboBox" name="wxID_CHOICE_VALIGN">
                                 <content>
                                   <item/>
                                   <item>baseline</item>
@@ -441,61 +430,8 @@
                                   <item>text-top</item>
                                   <item>middle</item>
                                   <item>bottom</item>
-                                  <item>text-bottom</item></content>
-                                <size>150,-1</size>
-                              </object>
-                            </object>
-                            <object class="sizeritem">
-                              <object class="wxCheckBox" name="wx_VALIGN_DONE">
-                                <label></label>
-                              </object>
-                              <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                            </object>
-                            <object class="sizeritem">
-                              <object class="wxSpinCtrl" name="wxID_SPIN_VALIGN">
-                                <min>0</min>
-                                <max>100</max>
-                                <size>70,-1</size>
-                              </object>
-                              <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                            </object>
-                            <object class="spacer">
-                              <size>5,0</size>
-                            </object>
-                            <object class="sizeritem">
-                              <object class="wxChoice" name="wxID_VALIGN_UNIT">
-                                <content>
-                                  <item>%</item>
-                                </content>
-                                <size>70,-1</size>
-                              </object>
-                            </object>
-                          </object>
-                        </object>
-                        <object class="sizeritem">
-                          <object class="wxBoxSizer">
-                            <orient>wxHORIZONTAL</orient>
-                            <object class="sizeritem">
-                              <object class="wxStaticText" name="wxID_LABEL_TEXT_ALIGN">
-                                <label>text-align</label>
-                                <size>100,-1</size>
-                              </object>
-                              <option>0</option>
-                              <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                            </object>
-                            <object class="spacer">
-                              <size>10,0</size>
-                              <option>1</option>
-                              <flag>wxEXPAND</flag>
-                            </object>
-                            <object class="sizeritem">
-                              <object class="wxChoice" name="wxID_CHOICE_ALIGN">
-                                <content>
-                                  <item/>
-                                  <item>left</item>
-                                  <item>right</item>
-                                  <item>center</item>
-                                  <item>inherit</item></content>
+                                  <item>text-bottom</item>
+                                  <item>0%</item></content>
                                 <size>150,-1</size>
                               </object>
                             </object>
@@ -503,8 +439,6 @@
                         </object>
                         <object class="spacer">
                           <size>0,10</size>
-                          <option>1</option>
-                          <flag>wxEXPAND</flag>
                         </object>
                         <object class="sizeritem">
                           <object class="wxBoxSizer">
@@ -534,6 +468,9 @@
                             </object>
                           </object>
                         </object>
+                        <object class="spacer">
+                          <size>0,5</size>
+                        </object>
                         <object class="sizeritem">
                           <object class="wxBoxSizer">
                             <orient>wxHORIZONTAL</orient>
@@ -551,47 +488,26 @@
                               <flag>wxEXPAND</flag>
                             </object>
                             <object class="sizeritem">
-                              <object class="wxChoice" name="wxID_CHOICE_WORD">
+                              <object class="wxComboBox" name="wxID_CHOICE_WORD">
                                 <content>
                                   <item/>
                                   <item>normal</item>
-                                  <item>inherit</item></content>
+                                  <item>inherit</item>
+                                  <item>0px</item>
+                                  <item>0pt</item>
+                                  <item>0pc</item>
+                                  <item>0in</item>
+                                  <item>0mm</item>
+                                  <item>0cm</item>
+                                  <item>0em</item>
+                                  <item>0ex</item></content>
                                 <size>150,-1</size>
                               </object>
                             </object>
-                            <object class="sizeritem">
-                              <object class="wxCheckBox" name="wx_WORD_DONE">
-                                <label></label>
-                              </object>
-                              <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                            </object>
-                            <object class="sizeritem">
-                              <object class="wxSpinCtrl" name="wxID_SPIN_WORD">
-                                <min>0</min>
-                                <size>70,-1</size>
-                              </object>
-                              <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                            </object>
-                            <object class="spacer">
-                              <size>5,0</size>
-                            </object>
-                            <object class="sizeritem">
-                              <object class="wxChoice" name="wxID_WORD_UNIT">
-                                <content>
-                                  <item/>
-                                  <item>px</item>
-                                  <item>pt</item>
-                                  <item>pc</item>
-                                  <item>in</item>
-                                  <item>mm</item>
-                                  <item>cm</item>
-                                  <item>em</item>
-                                  <item>ex</item>
-                                  <item>%</item></content>
-                                <size>70,-1</size>
-                              </object>
-                            </object>
                           </object>
+                        </object>
+                        <object class="spacer">
+                          <size>0,5</size>
                         </object>
                         <object class="sizeritem">
                           <object class="wxBoxSizer">
@@ -610,44 +526,20 @@
                               <flag>wxEXPAND</flag>
                             </object>
                             <object class="sizeritem">
-                              <object class="wxChoice" name="wxID_CHOICE_LETTER">
+                              <object class="wxComboBox" name="wxID_CHOICE_LETTER">
                                 <content>
                                   <item/>
                                   <item>normal</item>
-                                  <item>inherit</item></content>
+                                  <item>inherit</item>
+                                  <item>0px</item>
+                                  <item>0pt</item>
+                                  <item>0pc</item>
+                                  <item>0in</item>
+                                  <item>0mm</item>
+                                  <item>0cm</item>
+                                  <item>0em</item>
+                                  <item>0ex</item></content>
                                 <size>150,-1</size>
-                              </object>
-                            </object>
-                            <object class="sizeritem">
-                              <object class="wxCheckBox" name="wx_LETTER_DONE">
-                                <label></label>
-                              </object>
-                              <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                            </object>
-                            <object class="sizeritem">
-                              <object class="wxSpinCtrl" name="wxID_SPIN_LETTER">
-                                <min>0</min>
-                                <size>70,-1</size>
-                              </object>
-                              <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                            </object>
-                            <object class="spacer">
-                              <size>5,0</size>
-                            </object>
-                            <object class="sizeritem">
-                              <object class="wxChoice" name="wxID_LETTER_UNIT">
-                                <content>
-                                  <item/>
-                                  <item>px</item>
-                                  <item>pt</item>
-                                  <item>pc</item>
-                                  <item>in</item>
-                                  <item>mm</item>
-                                  <item>cm</item>
-                                  <item>em</item>
-                                  <item>ex</item>
-                                  <item>%</item></content>
-                                <size>70,-1</size>
                               </object>
                             </object>
                           </object>
@@ -889,84 +781,42 @@
                           <size>10,0</size>
                         </object>
                         <object class="sizeritem">
-                          <object class="wxChoice" name="wxID_CHOICE_BG_HPOSITION">
+                          <object class="wxComboBox" name="wxID_CHOICE_BGHPOS">
                             <content>
                               <item/>
                               <item>left</item>
                               <item>center</item>
-                              <item>right</item></content>
-                          </object>
-                        </object>
-                        <object class="sizeritem">
-                          <object class="wxCheckBox" name="wx_BGHPOS_DONE">
-                            <label></label>
-                          </object>
-                          <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                        </object>
-                        <object class="sizeritem">
-                          <object class="wxSpinCtrl" name="wxID_SPIN_BGHPOS">
-                            <min>0</min>
-                            <max>100</max>
-                            <size>70,-1</size>
-                          </object>
-                          <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                        </object>
-                        <object class="sizeritem">
-                          <object class="wxChoice" name="wxID_BGHPOS_UNIT">
-                            <content>
-                              <item>%</item>
-                              <item>px</item>
-                              <item>pt</item>
-                              <item>pc</item>
-                              <item>in</item>
-                              <item>mm</item>
-                              <item>cm</item>
-                              <item>em</item>
-                              <item>ex</item>
-                            </content>
-                            <size>70,-1</size>
+                              <item>right</item>
+                              <item>0px</item>
+                              <item>0pt</item>
+                              <item>0pc</item>
+                              <item>0in</item>
+                              <item>0mm</item>
+                              <item>0cm</item>
+                              <item>0em</item>
+                              <item>0ex</item>
+                              <item>0%</item></content>
                           </object>
                         </object>
                         <object class="spacer">
                           <size>5,0</size>
                         </object>
                         <object class="sizeritem">
-                          <object class="wxChoice" name="wxID_CHOICE_BG_VPOSITION">
+                          <object class="wxComboBox" name="wxID_CHOICE_BGVPOS">
                             <content>
                               <item/>
                               <item>top</item>
                               <item>center</item>
-                              <item>bottom</item></content>
-                          </object>
-                        </object>
-                        <object class="sizeritem">
-                          <object class="wxCheckBox" name="wx_BGVPOS_DONE">
-                            <label></label>
-                          </object>
-                          <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                        </object>
-                        <object class="sizeritem">
-                          <object class="wxSpinCtrl" name="wxID_SPIN_BGVPOS">
-                            <min>0</min>
-                            <max>100</max>
-                            <size>70,-1</size>
-                          </object>
-                          <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                        </object>
-                        <object class="sizeritem">
-                          <object class="wxChoice" name="wxID_BGVPOS_UNIT">
-                            <content>
-                              <item>%</item>
-                              <item>px</item>
-                              <item>pt</item>
-                              <item>pc</item>
-                              <item>in</item>
-                              <item>mm</item>
-                              <item>cm</item>
-                              <item>em</item>
-                              <item>ex</item>
-                            </content>
-                            <size>70,-1</size>
+                              <item>bottom</item>
+                              <item>0px</item>
+                              <item>0pt</item>
+                              <item>0pc</item>
+                              <item>0in</item>
+                              <item>0mm</item>
+                              <item>0cm</item>
+                              <item>0em</item>
+                              <item>0ex</item>
+                              <item>0%</item></content>
                           </object>
                         </object>
                       </object>
@@ -1008,46 +858,23 @@
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
                         </object>
                         <object class="sizeritem">
-                          <object class="wxChoice" name="wxID_CHOICE_BTOP">
+                          <object class="wxComboBox" name="wxID_CHOICE_BTOP">
                             <content>
                               <item/>
-                              <item>auto</item></content>
+                              <item>auto</item>
+                              <item>0px</item>
+                              <item>0pt</item>
+                              <item>0pc</item>
+                              <item>0in</item>
+                              <item>0mm</item>
+                              <item>0cm</item>
+                              <item>0em</item>
+                              <item>0ex</item></content>
                           </object>
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                        </object>
-                        <object class="sizeritem">
-                          <object class="wxCheckBox" name="wx_BTOP_DONE">
-                            <label></label>
-                          </object>
-                          <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                        </object>
-                        <object class="sizeritem">
-                          <object class="wxSpinCtrl" name="wxID_SPIN_BTOP">
-                            <min>0</min>
-                            <size>70,-1</size>
-                          </object>
-                          <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                        </object>
-                        <object class="sizeritem">
-                          <object class="wxChoice" name="wxID_BTOP_UNIT">
-                            <content>
-                              <item>px</item>
-                              <item>pt</item>
-                              <item>pc</item>
-                              <item>in</item>
-                              <item>mm</item>
-                              <item>cm</item>
-                              <item>em</item>
-                              <item>ex</item>
-                              <item>%</item>
-                            </content>
-                            <size>70,-1</size>
-                          </object>
-                          <flag>wxALL|wxALIGN_CENTRE_VERTICAL</flag>
-                          <border>5</border>
                         </object>
                         <object class="spacer">
-                          <size>5,0</size>
+                          <size>10,0</size>
                         </object>
                         <object class="sizeritem">
                           <object class="wxStaticText" name="wxID_LABEL_BTOP_S">
@@ -1133,43 +960,18 @@
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
                         </object>
                         <object class="sizeritem">
-                          <object class="wxChoice" name="wxID_CHOICE_BBOTTOM">
+                          <object class="wxComboBox" name="wxID_CHOICE_BBOTTOM">
                             <content>
                               <item/>
-                              <item>auto</item></content>
-                          </object>
-                          <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                        </object>
-                        <object class="sizeritem">
-                          <object class="wxCheckBox" name="wx_BBOTTOM_DONE">
-                            <label></label>
-                          </object>
-                          <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                        </object>
-                        <object class="sizeritem">
-                          <object class="wxSpinCtrl" name="wxID_SPIN_BBOTTOM">
-                            <min>0</min>
-                            <size>70,-1</size>
-                          </object>
-                          <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                        </object>
-                        <object class="spacer">
-                          <size>5,0</size>
-                        </object>
-                        <object class="sizeritem">
-                          <object class="wxChoice" name="wxID_BBOTTOM_UNIT">
-                            <content>
-                              <item>px</item>
-                              <item>pt</item>
-                              <item>pc</item>
-                              <item>in</item>
-                              <item>mm</item>
-                              <item>cm</item>
-                              <item>em</item>
-                              <item>ex</item>
-                              <item>%</item>
-                            </content>
-                            <size>70,-1</size>
+                              <item>auto</item>
+                              <item>0px</item>
+                              <item>0pt</item>
+                              <item>0pc</item>
+                              <item>0in</item>
+                              <item>0mm</item>
+                              <item>0cm</item>
+                              <item>0em</item>
+                              <item>0ex</item></content>
                           </object>
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
                         </object>
@@ -1261,43 +1063,18 @@
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
                         </object>
                         <object class="sizeritem">
-                          <object class="wxChoice" name="wxID_CHOICE_BLEFT">
+                          <object class="wxComboBox" name="wxID_CHOICE_BLEFT">
                             <content>
                               <item/>
-                              <item>auto</item></content>
-                          </object>
-                          <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                        </object>
-                        <object class="sizeritem">
-                          <object class="wxCheckBox" name="wx_BLEFT_DONE">
-                            <label></label>
-                          </object>
-                          <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                        </object>
-                        <object class="sizeritem">
-                          <object class="wxSpinCtrl" name="wxID_SPIN_BLEFT">
-                            <min>0</min>
-                            <size>70,-1</size>
-                          </object>
-                          <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                        </object>
-                        <object class="spacer">
-                          <size>5,0</size>
-                        </object>
-                        <object class="sizeritem">
-                          <object class="wxChoice" name="wxID_BLEFT_UNIT">
-                            <content>
-                              <item>px</item>
-                              <item>pt</item>
-                              <item>pc</item>
-                              <item>in</item>
-                              <item>mm</item>
-                              <item>cm</item>
-                              <item>em</item>
-                              <item>ex</item>
-                              <item>%</item>
-                            </content>
-                            <size>70,-1</size>
+                              <item>auto</item>
+                              <item>0px</item>
+                              <item>0pt</item>
+                              <item>0pc</item>
+                              <item>0in</item>
+                              <item>0mm</item>
+                              <item>0cm</item>
+                              <item>0em</item>
+                              <item>0ex</item></content>
                           </object>
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
                         </object>
@@ -1389,43 +1166,18 @@
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
                         </object>
                         <object class="sizeritem">
-                          <object class="wxChoice" name="wxID_CHOICE_BRIGHT">
+                          <object class="wxComboBox" name="wxID_CHOICE_BRIGHT">
                             <content>
                               <item/>
-                              <item>auto</item></content>
-                          </object>
-                          <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                        </object>
-                        <object class="sizeritem">
-                          <object class="wxCheckBox" name="wx_BRIGHT_DONE">
-                            <label></label>
-                          </object>
-                          <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                        </object>
-                        <object class="sizeritem">
-                          <object class="wxSpinCtrl" name="wxID_SPIN_BRIGHT">
-                            <min>0</min>
-                            <size>70,-1</size>
-                          </object>
-                          <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                        </object>
-                        <object class="spacer">
-                          <size>5,0</size>
-                        </object>
-                        <object class="sizeritem">
-                          <object class="wxChoice" name="wxID_BRIGHT_UNIT">
-                            <content>
-                              <item>px</item>
-                              <item>pt</item>
-                              <item>pc</item>
-                              <item>in</item>
-                              <item>mm</item>
-                              <item>cm</item>
-                              <item>em</item>
-                              <item>ex</item>
-                              <item>%</item>
-                            </content>
-                            <size>70,-1</size>
+                              <item>auto</item>
+                              <item>0px</item>
+                              <item>0pt</item>
+                              <item>0pc</item>
+                              <item>0in</item>
+                              <item>0mm</item>
+                              <item>0cm</item>
+                              <item>0em</item>
+                              <item>0ex</item></content>
                           </object>
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
                         </object>
@@ -1516,43 +1268,18 @@
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
                         </object>
                         <object class="sizeritem">
-                          <object class="wxChoice" name="wxID_CHOICE_B">
+                          <object class="wxComboBox" name="wxID_CHOICE_B">
                             <content>
                               <item/>
-                              <item>auto</item></content>
-                          </object>
-                          <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                        </object>
-                        <object class="sizeritem">
-                          <object class="wxCheckBox" name="wx_BORDER_DONE">
-                            <label></label>
-                          </object>
-                          <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                        </object>
-                        <object class="sizeritem">
-                          <object class="wxSpinCtrl" name="wxID_SPIN_B">
-                            <min>0</min>
-                            <size>70,-1</size>
-                          </object>
-                          <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                        </object>
-                        <object class="spacer">
-                          <size>5,0</size>
-                        </object>
-                        <object class="sizeritem">
-                          <object class="wxChoice" name="wxID_B_UNIT">
-                            <content>
-                              <item>px</item>
-                              <item>pt</item>
-                              <item>pc</item>
-                              <item>in</item>
-                              <item>mm</item>
-                              <item>cm</item>
-                              <item>em</item>
-                              <item>ex</item>
-                              <item>%</item>
-                            </content>
-                            <size>70,-1</size>
+                              <item>auto</item>
+                              <item>0px</item>
+                              <item>0pt</item>
+                              <item>0pc</item>
+                              <item>0in</item>
+                              <item>0mm</item>
+                              <item>0cm</item>
+                              <item>0em</item>
+                              <item>0ex</item></content>
                           </object>
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
                         </object>
@@ -1665,51 +1392,24 @@
                               <size>10,0</size>
                             </object>
                             <object class="sizeritem">
-                              <object class="wxChoice" name="wxID_CHOICE_MTOP">
+                              <object class="wxComboBox" name="wxID_CHOICE_MTOP">
                                 <content>
                                   <item/>
-                                  <item>auto</item></content>
+                                  <item>auto</item>
+                                  <item>0px</item>
+                                  <item>0pt</item>
+                                  <item>0pc</item>
+                                  <item>0in</item>
+                                  <item>0mm</item>
+                                  <item>0cm</item>
+                                  <item>0em</item>
+                                  <item>0ex</item>
+                                  <item>0%</item></content>
                                 <focused>1</focused>
                               </object>
                             </object>
-                            <object class="sizeritem">
-                              <object class="wxBoxSizer">
-                                <orient>wxHORIZONTAL</orient>
-                                <object class="sizeritem">
-                                  <object class="wxCheckBox" name="wx_MTOP_DONE">
-                                    <label></label>
-                                  </object>
-                                  <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                                </object>
-                                <object class="sizeritem">
-                                  <object class="wxSpinCtrl" name="wxID_SPIN_MTOP">
-                                    <size>70,-1</size>
-                                  </object>
-                                  <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                                </object>
-                                <object class="spacer">
-                                  <size>5,0</size>
-                                </object>
-                                <object class="sizeritem">
-                                  <object class="wxChoice" name="wxID_MTOP_UNIT">
-                                    <content>
-                                      <item>px</item>
-                                      <item>pt</item>
-                                      <item>pc</item>
-                                      <item>in</item>
-                                      <item>mm</item>
-                                      <item>cm</item>
-                                      <item>em</item>
-                                      <item>ex</item>
-                                      <item>%</item>
-                                    </content>
-                                    <size>70,-1</size>
-                                  </object>
-                                </object>
-                              </object>
-                            </object>
                             <object class="spacer">
-                              <size>10,0</size>
+                              <size>40,0</size>
                             </object>
                             <object class="sizeritem">
                               <object class="wxBoxSizer">
@@ -1726,47 +1426,19 @@
                                   <size>10,0</size>
                                 </object>
                                 <object class="sizeritem">
-                                  <object class="wxChoice" name="wxID_CHOICE_PTOP">
+                                  <object class="wxComboBox" name="wxID_CHOICE_PTOP">
                                     <content>
                                       <item/>
-                                      <item>auto</item></content>
-                                  </object>
-                                </object>
-                                <object class="sizeritem">
-                                  <object class="wxBoxSizer">
-                                    <orient>wxHORIZONTAL</orient>
-                                    <object class="sizeritem">
-                                      <object class="wxCheckBox" name="wx_PTOP_DONE">
-                                        <label></label>
-                                      </object>
-                                      <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                                    </object>
-                                    <object class="sizeritem">
-                                      <object class="wxSpinCtrl" name="wxID_SPIN_PTOP">
-                                        <min>0</min>
-                                        <size>70,-1</size>
-                                      </object>
-                                      <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                                    </object>
-                                    <object class="spacer">
-                                      <size>5,0</size>
-                                    </object>
-                                    <object class="sizeritem">
-                                      <object class="wxChoice" name="wxID_PTOP_UNIT">
-                                        <content>
-                                          <item>px</item>
-                                          <item>pt</item>
-                                          <item>pc</item>
-                                          <item>in</item>
-                                          <item>mm</item>
-                                          <item>cm</item>
-                                          <item>em</item>
-                                          <item>ex</item>
-                                          <item>%</item>
-                                        </content>
-                                        <size>70,-1</size>
-                                      </object>
-                                    </object>
+                                      <item>auto</item>
+                                      <item>0px</item>
+                                      <item>0pt</item>
+                                      <item>0pc</item>
+                                      <item>0in</item>
+                                      <item>0mm</item>
+                                      <item>0cm</item>
+                                      <item>0em</item>
+                                      <item>0ex</item>
+                                      <item>0%</item></content>
                                   </object>
                                 </object>
                               </object>
@@ -1797,51 +1469,23 @@
                               <size>10,0</size>
                             </object>
                             <object class="sizeritem">
-                              <object class="wxChoice" name="wxID_CHOICE_MBOTTOM">
+                              <object class="wxComboBox" name="wxID_CHOICE_MBOTTOM">
                                 <content>
                                   <item/>
-                                  <item>auto</item></content>
-                              </object>
-                            </object>
-                            <object class="sizeritem">
-                              <object class="wxBoxSizer">
-                                <orient>wxHORIZONTAL</orient>
-                                <object class="sizeritem">
-                                  <object class="wxCheckBox" name="wx_MBOTTOM_DONE">
-                                    <label></label>
-                                  </object>
-                                  <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                                </object>
-                                <object class="sizeritem">
-                                  <object class="wxSpinCtrl" name="wxID_SPIN_MBOTTOM">
-                                    <size>70,-1</size>
-                                  </object>
-                                  <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                                </object>
-                                <object class="spacer">
-                                  <size>5,0</size>
-                                </object>
-                                <object class="sizeritem">
-                                  <object class="wxChoice" name="wxID_MBOTTOM_UNIT">
-                                    <content>
-                                      <item>px</item>
-                                      <item>pt</item>
-                                      <item>pc</item>
-                                      <item>in</item>
-                                      <item>mm</item>
-                                      <item>cm</item>
-                                      <item>em</item>
-                                      <item>ex</item>
-                                      <item>%</item>
-                                    </content>
-                                    <size>70,-1</size>
-                                    <focused>1</focused>
-                                  </object>
-                                </object>
+                                  <item>auto</item>
+                                  <item>0px</item>
+                                  <item>0pt</item>
+                                  <item>0pc</item>
+                                  <item>0in</item>
+                                  <item>0mm</item>
+                                  <item>0cm</item>
+                                  <item>0em</item>
+                                  <item>0ex</item>
+                                  <item>0%</item></content>
                               </object>
                             </object>
                             <object class="spacer">
-                              <size>10,0</size>
+                              <size>40,0</size>
                             </object>
                             <object class="sizeritem">
                               <object class="wxBoxSizer">
@@ -1858,47 +1502,19 @@
                                   <size>10,0</size>
                                 </object>
                                 <object class="sizeritem">
-                                  <object class="wxChoice" name="wxID_CHOICE_PBOTTOM">
+                                  <object class="wxComboBox" name="wxID_CHOICE_PBOTTOM">
                                     <content>
                                       <item/>
-                                      <item>auto</item></content>
-                                  </object>
-                                </object>
-                                <object class="sizeritem">
-                                  <object class="wxBoxSizer">
-                                    <orient>wxHORIZONTAL</orient>
-                                    <object class="sizeritem">
-                                      <object class="wxCheckBox" name="wx_PBOTTOM_DONE">
-                                        <label></label>
-                                      </object>
-                                      <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                                    </object>
-                                    <object class="sizeritem">
-                                      <object class="wxSpinCtrl" name="wxID_SPIN_PBOTTOM">
-                                        <min>0</min>
-                                        <size>70,-1</size>
-                                      </object>
-                                    </object>
-                                    <object class="spacer">
-                                      <size>5,0</size>
-                                    </object>
-                                    <object class="sizeritem">
-                                      <object class="wxChoice" name="wxID_PBOTTOM_UNIT">
-                                        <content>
-                                          <item>px</item>
-                                          <item>pt</item>
-                                          <item>pc</item>
-                                          <item>in</item>
-                                          <item>mm</item>
-                                          <item>cm</item>
-                                          <item>em</item>
-                                          <item>ex</item>
-                                          <item>%</item>
-                                        </content>
-                                        <size>70,-1</size>
-                                        <focused>1</focused>
-                                      </object>
-                                    </object>
+                                      <item>auto</item>
+                                      <item>0px</item>
+                                      <item>0pt</item>
+                                      <item>0pc</item>
+                                      <item>0in</item>
+                                      <item>0mm</item>
+                                      <item>0cm</item>
+                                      <item>0em</item>
+                                      <item>0ex</item>
+                                      <item>0%</item></content>
                                   </object>
                                 </object>
                               </object>
@@ -1929,50 +1545,23 @@
                               <size>10,0</size>
                             </object>
                             <object class="sizeritem">
-                              <object class="wxChoice" name="wxID_CHOICE_MLEFT">
+                              <object class="wxComboBox" name="wxID_CHOICE_MLEFT">
                                 <content>
                                   <item/>
-                                  <item>auto</item></content>
-                              </object>
-                            </object>
-                            <object class="sizeritem">
-                              <object class="wxBoxSizer">
-                                <orient>wxHORIZONTAL</orient>
-                                <object class="sizeritem">
-                                  <object class="wxCheckBox" name="wx_MLEFT_DONE">
-                                    <label></label>
-                                  </object>
-                                  <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                                </object>
-                                <object class="sizeritem">
-                                  <object class="wxSpinCtrl" name="wxID_SPIN_MLEFT">
-                                    <size>70,-1</size>
-                                  </object>
-                                  <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                                </object>
-                                <object class="spacer">
-                                  <size>5,0</size>
-                                </object>
-                                <object class="sizeritem">
-                                  <object class="wxChoice" name="wxID_MLEFT_UNIT">
-                                    <content>
-                                      <item>px</item>
-                                      <item>pt</item>
-                                      <item>pc</item>
-                                      <item>in</item>
-                                      <item>mm</item>
-                                      <item>cm</item>
-                                      <item>em</item>
-                                      <item>ex</item>
-                                      <item>%</item>
-                                    </content>
-                                    <size>70,-1</size>
-                                  </object>
-                                </object>
+                                  <item>auto</item>
+                                  <item>0px</item>
+                                  <item>0pt</item>
+                                  <item>0pc</item>
+                                  <item>0in</item>
+                                  <item>0mm</item>
+                                  <item>0cm</item>
+                                  <item>0em</item>
+                                  <item>0ex</item>
+                                  <item>0%</item></content>
                               </object>
                             </object>
                             <object class="spacer">
-                              <size>10,0</size>
+                              <size>40,0</size>
                             </object>
                             <object class="sizeritem">
                               <object class="wxBoxSizer">
@@ -1989,47 +1578,19 @@
                                   <size>10,0</size>
                                 </object>
                                 <object class="sizeritem">
-                                  <object class="wxChoice" name="wxID_CHOICE_PLEFT">
+                                  <object class="wxComboBox" name="wxID_CHOICE_PLEFT">
                                     <content>
                                       <item/>
-                                      <item>auto</item></content>
-                                  </object>
-                                </object>
-                                <object class="sizeritem">
-                                  <object class="wxBoxSizer">
-                                    <orient>wxHORIZONTAL</orient>
-                                    <object class="sizeritem">
-                                      <object class="wxCheckBox" name="wx_PLEFT_DONE">
-                                        <label></label>
-                                      </object>
-                                      <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                                    </object>
-                                    <object class="sizeritem">
-                                      <object class="wxSpinCtrl" name="wxID_SPIN_PLEFT">
-                                        <min>0</min>
-                                        <size>70,-1</size>
-                                      </object>
-                                      <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                                    </object>
-                                    <object class="spacer">
-                                      <size>5,0</size>
-                                    </object>
-                                    <object class="sizeritem">
-                                      <object class="wxChoice" name="wxID_PLEFT_UNIT">
-                                        <content>
-                                          <item>px</item>
-                                          <item>pt</item>
-                                          <item>pc</item>
-                                          <item>in</item>
-                                          <item>mm</item>
-                                          <item>cm</item>
-                                          <item>em</item>
-                                          <item>ex</item>
-                                          <item>%</item>
-                                        </content>
-                                        <size>70,-1</size>
-                                      </object>
-                                    </object>
+                                      <item>auto</item>
+                                      <item>0px</item>
+                                      <item>0pt</item>
+                                      <item>0pc</item>
+                                      <item>0in</item>
+                                      <item>0mm</item>
+                                      <item>0cm</item>
+                                      <item>0em</item>
+                                      <item>0ex</item>
+                                      <item>0%</item></content>
                                   </object>
                                 </object>
                               </object>
@@ -2060,50 +1621,23 @@
                               <size>10,0</size>
                             </object>
                             <object class="sizeritem">
-                              <object class="wxChoice" name="wxID_CHOICE_MRIGHT">
+                              <object class="wxComboBox" name="wxID_CHOICE_MRIGHT">
                                 <content>
                                   <item/>
-                                  <item>auto</item></content>
-                              </object>
-                            </object>
-                            <object class="sizeritem">
-                              <object class="wxBoxSizer">
-                                <orient>wxHORIZONTAL</orient>
-                                <object class="sizeritem">
-                                  <object class="wxCheckBox" name="wx_MRIGHT_DONE">
-                                    <label></label>
-                                  </object>
-                                  <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                                </object>
-                                <object class="sizeritem">
-                                  <object class="wxSpinCtrl" name="wxID_SPIN_MRIGHT">
-                                    <size>70,-1</size>
-                                  </object>
-                                  <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                                </object>
-                                <object class="spacer">
-                                  <size>5,0</size>
-                                </object>
-                                <object class="sizeritem">
-                                  <object class="wxChoice" name="wxID_MRIGHT_UNIT">
-                                    <content>
-                                      <item>px</item>
-                                      <item>pt</item>
-                                      <item>pc</item>
-                                      <item>in</item>
-                                      <item>mm</item>
-                                      <item>cm</item>
-                                      <item>em</item>
-                                      <item>ex</item>
-                                      <item>%</item>
-                                    </content>
-                                    <size>70,-1</size>
-                                  </object>
-                                </object>
+                                  <item>auto</item>
+                                  <item>0px</item>
+                                  <item>0pt</item>
+                                  <item>0pc</item>
+                                  <item>0in</item>
+                                  <item>0mm</item>
+                                  <item>0cm</item>
+                                  <item>0em</item>
+                                  <item>0ex</item>
+                                  <item>0%</item></content>
                               </object>
                             </object>
                             <object class="spacer">
-                              <size>10,0</size>
+                              <size>40,0</size>
                             </object>
                             <object class="sizeritem">
                               <object class="wxBoxSizer">
@@ -2120,47 +1654,19 @@
                                   <size>10,0</size>
                                 </object>
                                 <object class="sizeritem">
-                                  <object class="wxChoice" name="wxID_CHOICE_PRIGHT">
+                                  <object class="wxComboBox" name="wxID_CHOICE_PRIGHT">
                                     <content>
                                       <item/>
-                                      <item>auto</item></content>
-                                  </object>
-                                </object>
-                                <object class="sizeritem">
-                                  <object class="wxBoxSizer">
-                                    <orient>wxHORIZONTAL</orient>
-                                    <object class="sizeritem">
-                                      <object class="wxCheckBox" name="wx_PRIGHT_DONE">
-                                        <label></label>
-                                      </object>
-                                      <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                                    </object>
-                                    <object class="sizeritem">
-                                      <object class="wxSpinCtrl" name="wxID_SPIN_PRIGHT">
-                                        <min>0</min>
-                                        <size>70,-1</size>
-                                      </object>
-                                      <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                                    </object>
-                                    <object class="spacer">
-                                      <size>5,0</size>
-                                    </object>
-                                    <object class="sizeritem">
-                                      <object class="wxChoice" name="wxID_PRIGHT_UNIT">
-                                        <content>
-                                          <item>px</item>
-                                          <item>pt</item>
-                                          <item>pc</item>
-                                          <item>in</item>
-                                          <item>mm</item>
-                                          <item>cm</item>
-                                          <item>em</item>
-                                          <item>ex</item>
-                                          <item>%</item>
-                                        </content>
-                                        <size>70,-1</size>
-                                      </object>
-                                    </object>
+                                      <item>auto</item>
+                                      <item>0px</item>
+                                      <item>0pt</item>
+                                      <item>0pc</item>
+                                      <item>0in</item>
+                                      <item>0mm</item>
+                                      <item>0cm</item>
+                                      <item>0em</item>
+                                      <item>0ex</item>
+                                      <item>0%</item></content>
                                   </object>
                                 </object>
                               </object>
@@ -2191,50 +1697,23 @@
                               <size>10,0</size>
                             </object>
                             <object class="sizeritem">
-                              <object class="wxChoice" name="wxID_CHOICE_MARGIN">
+                              <object class="wxComboBox" name="wxID_CHOICE_MARGIN">
                                 <content>
                                   <item/>
-                                  <item>auto</item></content>
-                              </object>
-                            </object>
-                            <object class="sizeritem">
-                              <object class="wxBoxSizer">
-                                <orient>wxHORIZONTAL</orient>
-                                <object class="sizeritem">
-                                  <object class="wxCheckBox" name="wx_MARGIN_DONE">
-                                    <label></label>
-                                  </object>
-                                  <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                                </object>
-                                <object class="sizeritem">
-                                  <object class="wxSpinCtrl" name="wxID_SPIN_MARGIN">
-                                    <size>70,-1</size>
-                                  </object>
-                                  <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                                </object>
-                                <object class="spacer">
-                                  <size>5,0</size>
-                                </object>
-                                <object class="sizeritem">
-                                  <object class="wxChoice" name="wxID_MARGIN_UNIT">
-                                    <content>
-                                      <item>px</item>
-                                      <item>pt</item>
-                                      <item>pc</item>
-                                      <item>in</item>
-                                      <item>mm</item>
-                                      <item>cm</item>
-                                      <item>em</item>
-                                      <item>ex</item>
-                                      <item>%</item>
-                                    </content>
-                                    <size>70,-1</size>
-                                  </object>
-                                </object>
+                                  <item>auto</item>
+                                  <item>0px</item>
+                                  <item>0pt</item>
+                                  <item>0pc</item>
+                                  <item>0in</item>
+                                  <item>0mm</item>
+                                  <item>0cm</item>
+                                  <item>0em</item>
+                                  <item>0ex</item>
+                                  <item>0%</item></content>
                               </object>
                             </object>
                             <object class="spacer">
-                              <size>10,0</size>
+                              <size>40,0</size>
                             </object>
                             <object class="sizeritem">
                               <object class="wxBoxSizer">
@@ -2251,46 +1730,19 @@
                                   <size>10,0</size>
                                 </object>
                                 <object class="sizeritem">
-                                  <object class="wxChoice" name="wxID_CHOICE_PADDING">
+                                  <object class="wxComboBox" name="wxID_CHOICE_PADDING">
                                     <content>
                                       <item/>
-                                      <item>auto</item></content>
-                                  </object>
-                                </object>
-                                <object class="sizeritem">
-                                  <object class="wxBoxSizer">
-                                    <orient>wxHORIZONTAL</orient>
-                                    <object class="sizeritem">
-                                      <object class="wxCheckBox" name="wx_PADDING_DONE">
-                                        <label></label>
-                                      </object>
-                                      <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                                    </object>
-                                    <object class="sizeritem">
-                                      <object class="wxSpinCtrl" name="wxID_SPIN_PADDING">
-                                        <size>70,-1</size>
-                                      </object>
-                                      <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                                    </object>
-                                    <object class="spacer">
-                                      <size>5,0</size>
-                                    </object>
-                                    <object class="sizeritem">
-                                      <object class="wxChoice" name="wxID_PADDING_UNIT">
-                                        <content>
-                                          <item>px</item>
-                                          <item>pt</item>
-                                          <item>pc</item>
-                                          <item>in</item>
-                                          <item>mm</item>
-                                          <item>cm</item>
-                                          <item>em</item>
-                                          <item>ex</item>
-                                          <item>%</item>
-                                        </content>
-                                        <size>70,-1</size>
-                                      </object>
-                                    </object>
+                                      <item>auto</item>
+                                      <item>0px</item>
+                                      <item>0pt</item>
+                                      <item>0pc</item>
+                                      <item>0in</item>
+                                      <item>0mm</item>
+                                      <item>0cm</item>
+                                      <item>0em</item>
+                                      <item>0ex</item>
+                                      <item>0%</item></content>
                                   </object>
                                 </object>
                               </object>
@@ -2328,51 +1780,23 @@
                               <size>10,0</size>
                             </object>
                             <object class="sizeritem">
-                              <object class="wxChoice" name="wxID_CHOICE_WIDTH">
+                              <object class="wxComboBox" name="wxID_CHOICE_WIDTH">
                                 <content>
                                   <item/>
-                                  <item>auto</item></content>
-                              </object>
-                            </object>
-                            <object class="sizeritem">
-                              <object class="wxBoxSizer">
-                                <orient>wxHORIZONTAL</orient>
-                                <object class="sizeritem">
-                                  <object class="wxCheckBox" name="wx_WIDTH_DONE">
-                                    <label></label>
-                                  </object>
-                                  <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                                </object>
-                                <object class="sizeritem">
-                                  <object class="wxSpinCtrl" name="wxID_SPIN_WIDTH">
-                                    <min>0</min>
-                                    <size>70,-1</size>
-                                  </object>
-                                  <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                                </object>
-                                <object class="spacer">
-                                  <size>5,0</size>
-                                </object>
-                                <object class="sizeritem">
-                                  <object class="wxChoice" name="wxID_WIDTH_UNIT">
-                                    <content>
-                                      <item>px</item>
-                                      <item>pt</item>
-                                      <item>pc</item>
-                                      <item>in</item>
-                                      <item>mm</item>
-                                      <item>cm</item>
-                                      <item>em</item>
-                                      <item>ex</item>
-                                      <item>%</item>
-                                    </content>
-                                    <size>70,-1</size>
-                                  </object>
-                                </object>
+                                  <item>auto</item>
+                                  <item>0px</item>
+                                  <item>0pt</item>
+                                  <item>0pc</item>
+                                  <item>0in</item>
+                                  <item>0mm</item>
+                                  <item>0cm</item>
+                                  <item>0em</item>
+                                  <item>0ex</item>
+                                  <item>0%</item></content>
                               </object>
                             </object>
                             <object class="spacer">
-                              <size>10,0</size>
+                              <size>40,0</size>
                             </object>
                             <object class="sizeritem">
                               <object class="wxBoxSizer">
@@ -2389,47 +1813,19 @@
                                   <size>10,0</size>
                                 </object>
                                 <object class="sizeritem">
-                                  <object class="wxChoice" name="wxID_CHOICE_HEIGHT">
+                                  <object class="wxComboBox" name="wxID_CHOICE_HEIGHT">
                                     <content>
                                       <item/>
-                                      <item>auto</item></content>
-                                  </object>
-                                </object>
-                                <object class="sizeritem">
-                                  <object class="wxBoxSizer">
-                                    <orient>wxHORIZONTAL</orient>
-                                    <object class="sizeritem">
-                                      <object class="wxCheckBox" name="wx_HEIGHT_DONE">
-                                        <label></label>
-                                      </object>
-                                      <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                                    </object>
-                                    <object class="sizeritem">
-                                      <object class="wxSpinCtrl" name="wxID_SPIN_HEIGHT">
-                                        <min>0</min>
-                                        <size>70,-1</size>
-                                      </object>
-                                      <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                                    </object>
-                                    <object class="spacer">
-                                      <size>5,0</size>
-                                    </object>
-                                    <object class="sizeritem">
-                                      <object class="wxChoice" name="wxID_HEIGHT_UNIT">
-                                        <content>
-                                          <item>px</item>
-                                          <item>pt</item>
-                                          <item>pc</item>
-                                          <item>in</item>
-                                          <item>mm</item>
-                                          <item>cm</item>
-                                          <item>em</item>
-                                          <item>ex</item>
-                                          <item>%</item>
-                                        </content>
-                                        <size>70,-1</size>
-                                      </object>
-                                    </object>
+                                      <item>auto</item>
+                                      <item>0px</item>
+                                      <item>0pt</item>
+                                      <item>0pc</item>
+                                      <item>0in</item>
+                                      <item>0mm</item>
+                                      <item>0cm</item>
+                                      <item>0em</item>
+                                      <item>0ex</item>
+                                      <item>0%</item></content>
                                   </object>
                                 </object>
                               </object>
@@ -2513,6 +1909,9 @@
                     </object>
                   </object>
                 </object>
+                <object class="spacer">
+                  <size>0,10</size>
+                </object>
                 <object class="sizeritem">
                   <object class="wxBoxSizer">
                     <orient>wxHORIZONTAL</orient>
@@ -2594,30 +1993,17 @@
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
                         </object>
                         <object class="sizeritem">
-                          <object class="wxCheckBox" name="wx_TOP_DONE">
-                            <label></label>
-                          </object>
-                          <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                        </object>
-                        <object class="sizeritem">
-                          <object class="wxSpinCtrl" name="wxID_SPIN_TOP">
-                            <size>70,-1</size>
-                            <focused>1</focused>
-                          </object>
-                          <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                        </object>
-                        <object class="sizeritem">
-                          <object class="wxChoice" name="wxID_TOP_UNIT">
+                          <object class="wxComboBox" name="wxID_CHOICE_TOP">
                             <content>
-                              <item>px</item>
-                              <item>pt</item>
-                              <item>pc</item>
-                              <item>in</item>
-                              <item>mm</item>
-                              <item>cm</item>
-                              <item>em</item>
-                              <item>ex</item>
-                              <item>%</item>
+                              <item>0px</item>
+                              <item>0pt</item>
+                              <item>0pc</item>
+                              <item>0in</item>
+                              <item>0mm</item>
+                              <item>0cm</item>
+                              <item>0em</item>
+                              <item>0ex</item>
+                              <item>100%</item>
                             </content>
                             <size>70,-1</size>
                             <focused>1</focused>
@@ -2626,7 +2012,7 @@
                           <border>5</border>
                         </object>
                         <object class="spacer">
-                          <size>40,0</size>
+                          <size>130,0</size>
                         </object>
                         <object class="sizeritem">
                           <object class="wxStaticText" name="wxID_LABEL_POSITION">
@@ -2667,34 +2053,21 @@
                           </object>
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
                         </object>
-                        <object class="sizeritem">
-                          <object class="wxCheckBox" name="wx_BOTTOM_DONE">
-                            <label></label>
-                          </object>
-                          <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                        </object>
-                        <object class="sizeritem">
-                          <object class="wxSpinCtrl" name="wxID_SPIN_BOTTOM">
-                            <size>70,-1</size>
-                            <focused>1</focused>
-                          </object>
-                          <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                        </object>
                         <object class="spacer">
                           <size>5,0</size>
                         </object>
                         <object class="sizeritem">
-                          <object class="wxChoice" name="wxID_BOTTOM_UNIT">
+                          <object class="wxComboBox" name="wxID_CHOICE_BOTTOM">
                             <content>
-                              <item>px</item>
-                              <item>pt</item>
-                              <item>pc</item>
-                              <item>in</item>
-                              <item>mm</item>
-                              <item>cm</item>
-                              <item>em</item>
-                              <item>ex</item>
-                              <item>%</item>
+                              <item>0px</item>
+                              <item>0pt</item>
+                              <item>0pc</item>
+                              <item>0in</item>
+                              <item>0mm</item>
+                              <item>0cm</item>
+                              <item>0em</item>
+                              <item>0ex</item>
+                              <item>0%</item>
                             </content>
                             <size>70,-1</size>
                             <focused>1</focused>
@@ -2724,34 +2097,21 @@
                           <option>0</option>
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
                         </object>
-                        <object class="sizeritem">
-                          <object class="wxCheckBox" name="wx_LEFT_DONE">
-                            <label></label>
-                          </object>
-                          <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                        </object>
-                        <object class="sizeritem">
-                          <object class="wxSpinCtrl" name="wxID_SPIN_LEFT">
-                            <size>70,-1</size>
-                            <focused>1</focused>
-                          </object>
-                          <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                        </object>
                         <object class="spacer">
                           <size>5,0</size>
                         </object>
                         <object class="sizeritem">
-                          <object class="wxChoice" name="wxID_LEFT_UNIT">
+                          <object class="wxComboBox" name="wxID_CHOICE_LEFT">
                             <content>
-                              <item>px</item>
-                              <item>pt</item>
-                              <item>pc</item>
-                              <item>in</item>
-                              <item>mm</item>
-                              <item>cm</item>
-                              <item>em</item>
-                              <item>ex</item>
-                              <item>%</item>
+                              <item>0px</item>
+                              <item>0pt</item>
+                              <item>0pc</item>
+                              <item>0in</item>
+                              <item>0mm</item>
+                              <item>0cm</item>
+                              <item>0em</item>
+                              <item>0ex</item>
+                              <item>0%</item>
                             </content>
                             <size>70,-1</size>
                             <focused>1</focused>
@@ -2778,34 +2138,21 @@
                           <option>0</option>
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
                         </object>
-                        <object class="sizeritem">
-                          <object class="wxCheckBox" name="wx_RIGHT_DONE">
-                            <label></label>
-                          </object>
-                          <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                        </object>
-                        <object class="sizeritem">
-                          <object class="wxSpinCtrl" name="wxID_SPIN_RIGHT">
-                            <size>70,-1</size>
-                            <focused>1</focused>
-                          </object>
-                          <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                        </object>
                         <object class="spacer">
                           <size>5,0</size>
                         </object>
                         <object class="sizeritem">
-                          <object class="wxChoice" name="wxID_RIGHT_UNIT">
+                          <object class="wxComboBox" name="wxID_CHOICE_RIGHT">
                             <content>
-                              <item>px</item>
-                              <item>pt</item>
-                              <item>pc</item>
-                              <item>in</item>
-                              <item>mm</item>
-                              <item>cm</item>
-                              <item>em</item>
-                              <item>ex</item>
-                              <item>%</item>
+                              <item>0px</item>
+                              <item>0pt</item>
+                              <item>0pc</item>
+                              <item>0in</item>
+                              <item>0mm</item>
+                              <item>0cm</item>
+                              <item>0em</item>
+                              <item>0ex</item>
+                              <item>0%</item>
                             </content>
                             <size>70,-1</size>
                             <focused>1</focused>
