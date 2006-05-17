@@ -1429,7 +1429,6 @@
                                   <object class="wxComboBox" name="wxID_CHOICE_PTOP">
                                     <content>
                                       <item/>
-                                      <item>auto</item>
                                       <item>0px</item>
                                       <item>0pt</item>
                                       <item>0pc</item>
@@ -1505,7 +1504,6 @@
                                   <object class="wxComboBox" name="wxID_CHOICE_PBOTTOM">
                                     <content>
                                       <item/>
-                                      <item>auto</item>
                                       <item>0px</item>
                                       <item>0pt</item>
                                       <item>0pc</item>
@@ -1581,7 +1579,6 @@
                                   <object class="wxComboBox" name="wxID_CHOICE_PLEFT">
                                     <content>
                                       <item/>
-                                      <item>auto</item>
                                       <item>0px</item>
                                       <item>0pt</item>
                                       <item>0pc</item>
@@ -1657,7 +1654,6 @@
                                   <object class="wxComboBox" name="wxID_CHOICE_PRIGHT">
                                     <content>
                                       <item/>
-                                      <item>auto</item>
                                       <item>0px</item>
                                       <item>0pt</item>
                                       <item>0pc</item>
@@ -1733,7 +1729,6 @@
                                   <object class="wxComboBox" name="wxID_CHOICE_PADDING">
                                     <content>
                                       <item/>
-                                      <item>auto</item>
                                       <item>0px</item>
                                       <item>0pt</item>
                                       <item>0pc</item>
@@ -1995,6 +1990,8 @@
                         <object class="sizeritem">
                           <object class="wxComboBox" name="wxID_CHOICE_TOP">
                             <content>
+                              <item>auto</item>
+                              <item>inherit</item>
                               <item>0px</item>
                               <item>0pt</item>
                               <item>0pc</item>
@@ -2003,7 +2000,7 @@
                               <item>0cm</item>
                               <item>0em</item>
                               <item>0ex</item>
-                              <item>100%</item>
+                              <item>0%</item>
                             </content>
                             <size>70,-1</size>
                             <focused>1</focused>
@@ -2059,6 +2056,9 @@
                         <object class="sizeritem">
                           <object class="wxComboBox" name="wxID_CHOICE_BOTTOM">
                             <content>
+                              <item/>
+                              <item>auto</item>
+                              <item>inherit</item>
                               <item>0px</item>
                               <item>0pt</item>
                               <item>0pc</item>
@@ -2103,6 +2103,9 @@
                         <object class="sizeritem">
                           <object class="wxComboBox" name="wxID_CHOICE_LEFT">
                             <content>
+                              <item/>
+                              <item>auto</item>
+                              <item>inherit</item>
                               <item>0px</item>
                               <item>0pt</item>
                               <item>0pc</item>
@@ -2144,6 +2147,9 @@
                         <object class="sizeritem">
                           <object class="wxComboBox" name="wxID_CHOICE_RIGHT">
                             <content>
+                              <item/>
+                              <item>auto</item>
+                              <item>inherit</item>
                               <item>0px</item>
                               <item>0pt</item>
                               <item>0pc</item>

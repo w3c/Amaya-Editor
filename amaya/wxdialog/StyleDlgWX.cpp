@@ -249,7 +249,7 @@ void StyleDlgWX::OnButton( wxCommandEvent& event )
   Return TRUE if it's a valid else fix the string.
   -----------------------------------------------------------------------*/
 static ThotBool CheckValue (char *buffer, ThotBool negative, ThotBool length,
-                            ThotBool percent, ThotBool number)
+                            ThotBool percent, ThotBool number, ThotBool string)
 {
   char        *ptr = buffer, *pos;
   ThotBool     zero, ret = TRUE;
@@ -348,6 +348,11 @@ static ThotBool CheckValue (char *buffer, ThotBool negative, ThotBool length,
           return FALSE;
         }
     }
+  else if (!string)
+    {
+      buffer[0] = EOS;
+      return FALSE;
+    }
   else
     return ret;
 }
@@ -371,9 +376,8 @@ void StyleDlgWX::OnValueChanged( wxCommandEvent& event )
       if (value.Len() > 0)
         {
           strncpy (buffer, (const char*)value.mb_str(wxConvUTF8), 50);
-          if (!CheckValue (buffer, FALSE, TRUE, TRUE, FALSE))
+          if (!CheckValue (buffer, FALSE, TRUE, TRUE, FALSE, TRUE))
             {
-printf ("change SIZE value=%s\n", buffer);
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_CHOICE_SIZE", wxComboBox)->SetValue(value);
             }
@@ -386,9 +390,8 @@ printf ("change SIZE value=%s\n", buffer);
       if (value.Len() > 0)
         {
           strncpy (buffer, (const char*)value.mb_str(wxConvUTF8), 50);
-          if (!CheckValue (buffer, FALSE, TRUE, TRUE, TRUE))
+          if (!CheckValue (buffer, FALSE, TRUE, TRUE, TRUE, TRUE))
             {
-printf ("change LINE value=%s\n", buffer);
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_CHOICE_LINE", wxComboBox)->SetValue(value);
             }
@@ -401,9 +404,8 @@ printf ("change LINE value=%s\n", buffer);
       if (value.Len() > 0)
         {
           strncpy (buffer, (const char*)value.mb_str(wxConvUTF8), 50);
-          if (!CheckValue (buffer, TRUE, TRUE, TRUE, FALSE))
+          if (!CheckValue (buffer, TRUE, TRUE, TRUE, FALSE, FALSE))
             {
-printf ("change INDENT value=%s\n", buffer);
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_CHOICE_INDENT", wxComboBox)->SetValue(value);
             }
@@ -416,9 +418,8 @@ printf ("change INDENT value=%s\n", buffer);
       if (value.Len() > 0)
         {
           strncpy (buffer, (const char*)value.mb_str(wxConvUTF8), 50);
-          if (!CheckValue (buffer, FALSE, FALSE, TRUE, FALSE))
+          if (!CheckValue (buffer, FALSE, FALSE, TRUE, FALSE, TRUE))
             {
-printf ("change VALIGN value=%s\n", buffer);
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_CHOICE_VALIGN", wxComboBox)->SetValue(value);
             }
@@ -431,9 +432,8 @@ printf ("change VALIGN value=%s\n", buffer);
       if (value.Len() > 0)
         {
           strncpy (buffer, (const char*)value.mb_str(wxConvUTF8), 50);
-          if (!CheckValue (buffer, FALSE, TRUE, TRUE, FALSE))
+          if (!CheckValue (buffer, FALSE, TRUE, TRUE, FALSE, TRUE))
             {
-printf ("change WORD value=%s\n", buffer);
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_CHOICE_WORD", wxComboBox)->SetValue(value);
             }
@@ -446,9 +446,8 @@ printf ("change WORD value=%s\n", buffer);
       if (value.Len() > 0)
         {
           strncpy (buffer, (const char*)value.mb_str(wxConvUTF8), 50);
-          if (!CheckValue (buffer, FALSE, TRUE, TRUE, FALSE))
+          if (!CheckValue (buffer, FALSE, TRUE, TRUE, FALSE, TRUE))
             {
-printf ("change LETTER value=%s\n", buffer);
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_CHOICE_LETTER", wxComboBox)->SetValue(value);
             }
@@ -461,9 +460,8 @@ printf ("change LETTER value=%s\n", buffer);
       if (value.Len() > 0)
         {
           strncpy (buffer, (const char*)value.mb_str(wxConvUTF8), 50);
-          if (!CheckValue (buffer, FALSE, TRUE, TRUE, FALSE))
+          if (!CheckValue (buffer, FALSE, TRUE, TRUE, FALSE, TRUE))
             {
-printf ("change BGHPOS value=%s\n", buffer);
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_CHOICE_BGHPOS", wxComboBox)->SetValue(value);
             }
@@ -476,9 +474,8 @@ printf ("change BGHPOS value=%s\n", buffer);
       if (value.Len() > 0)
         {
           strncpy (buffer, (const char*)value.mb_str(wxConvUTF8), 50);
-          if (!CheckValue (buffer, FALSE, TRUE, TRUE, FALSE))
+          if (!CheckValue (buffer, FALSE, TRUE, TRUE, FALSE, TRUE))
             {
-printf ("change BGVPOS value=%s\n", buffer);
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_CHOICE_BGVPOS", wxComboBox)->SetValue(value);
             }
@@ -491,9 +488,8 @@ printf ("change BGVPOS value=%s\n", buffer);
       if (value.Len() > 0)
         {
           strncpy (buffer, (const char*)value.mb_str(wxConvUTF8), 50);
-          if (!CheckValue (buffer, FALSE, TRUE, TRUE, FALSE))
+          if (!CheckValue (buffer, FALSE, TRUE, TRUE, FALSE, TRUE))
             {
-printf ("change BTOP value=%s\n", buffer);
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_CHOICE_BTOP", wxComboBox)->SetValue(value);
             }
@@ -506,9 +502,8 @@ printf ("change BTOP value=%s\n", buffer);
       if (value.Len() > 0)
         {
           strncpy (buffer, (const char*)value.mb_str(wxConvUTF8), 50);
-          if (!CheckValue (buffer, FALSE, TRUE, TRUE, FALSE))
+          if (!CheckValue (buffer, FALSE, TRUE, TRUE, FALSE, TRUE))
             {
-printf ("change BBOTTOM value=%s\n", buffer);
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_CHOICE_BBOTTOM", wxComboBox)->SetValue(value);
             }
@@ -521,9 +516,8 @@ printf ("change BBOTTOM value=%s\n", buffer);
       if (value.Len() > 0)
         {
           strncpy (buffer, (const char*)value.mb_str(wxConvUTF8), 50);
-          if (!CheckValue (buffer, FALSE, TRUE, TRUE, FALSE))
+          if (!CheckValue (buffer, FALSE, TRUE, TRUE, FALSE, TRUE))
             {
-printf ("change BLEFT value=%s\n", buffer);
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_CHOICE_BLEFT", wxComboBox)->SetValue(value);
             }
@@ -536,9 +530,8 @@ printf ("change BLEFT value=%s\n", buffer);
       if (value.Len() > 0)
         {
           strncpy (buffer, (const char*)value.mb_str(wxConvUTF8), 50);
-          if (!CheckValue (buffer, FALSE, TRUE, TRUE, FALSE))
+          if (!CheckValue (buffer, FALSE, TRUE, TRUE, FALSE, TRUE))
             {
-printf ("change BRIGHT value=%s\n", buffer);
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_CHOICE_BRIGHT", wxComboBox)->SetValue(value);
             }
@@ -551,9 +544,8 @@ printf ("change BRIGHT value=%s\n", buffer);
       if (value.Len() > 0)
         {
           strncpy (buffer, (const char*)value.mb_str(wxConvUTF8), 50);
-          if (!CheckValue (buffer, FALSE, TRUE, TRUE, FALSE))
+          if (!CheckValue (buffer, FALSE, TRUE, TRUE, FALSE, TRUE))
             {
-printf ("change B value=%s\n", buffer);
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_CHOICE_B", wxComboBox)->SetValue(value);
             }
@@ -566,9 +558,8 @@ printf ("change B value=%s\n", buffer);
       if (value.Len() > 0)
         {
           strncpy (buffer, (const char*)value.mb_str(wxConvUTF8), 50);
-          if (!CheckValue (buffer, TRUE, TRUE, TRUE, FALSE))
+          if (!CheckValue (buffer, TRUE, TRUE, TRUE, FALSE, TRUE))
             {
-printf ("change MTOP value=%s\n", buffer);
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_CHOICE_MTOP", wxComboBox)->SetValue(value);
             }
@@ -581,9 +572,8 @@ printf ("change MTOP value=%s\n", buffer);
       if (value.Len() > 0)
         {
           strncpy (buffer, (const char*)value.mb_str(wxConvUTF8), 50);
-          if (!CheckValue (buffer, FALSE, TRUE, TRUE, FALSE))
+          if (!CheckValue (buffer, FALSE, TRUE, TRUE, FALSE, FALSE))
             {
-printf ("change PTOP value=%s\n", buffer);
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_CHOICE_PTOP", wxComboBox)->SetValue(value);
             }
@@ -596,9 +586,8 @@ printf ("change PTOP value=%s\n", buffer);
       if (value.Len() > 0)
         {
           strncpy (buffer, (const char*)value.mb_str(wxConvUTF8), 50);
-          if (!CheckValue (buffer, TRUE, TRUE, TRUE, FALSE))
+          if (!CheckValue (buffer, TRUE, TRUE, TRUE, FALSE, TRUE))
             {
-printf ("change MBOTTOM value=%s\n", buffer);
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_CHOICE_MBOTTOM", wxComboBox)->SetValue(value);
             }
@@ -611,9 +600,8 @@ printf ("change MBOTTOM value=%s\n", buffer);
       if (value.Len() > 0)
         {
           strncpy (buffer, (const char*)value.mb_str(wxConvUTF8), 50);
-          if (!CheckValue (buffer, FALSE, TRUE, TRUE, FALSE))
+          if (!CheckValue (buffer, FALSE, TRUE, TRUE, FALSE, FALSE))
             {
-printf ("change PBOTTOM value=%s\n", buffer);
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_CHOICE_PBOTTOM", wxComboBox)->SetValue(value);
             }
@@ -626,9 +614,8 @@ printf ("change PBOTTOM value=%s\n", buffer);
       if (value.Len() > 0)
         {
           strncpy (buffer, (const char*)value.mb_str(wxConvUTF8), 50);
-          if (!CheckValue (buffer, TRUE, TRUE, TRUE, FALSE))
+          if (!CheckValue (buffer, TRUE, TRUE, TRUE, FALSE, TRUE))
             {
-printf ("change MLEFT value=%s\n", buffer);
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_CHOICE_MLEFT", wxComboBox)->SetValue(value);
             }
@@ -641,9 +628,8 @@ printf ("change MLEFT value=%s\n", buffer);
       if (value.Len() > 0)
         {
           strncpy (buffer, (const char*)value.mb_str(wxConvUTF8), 50);
-          if (!CheckValue (buffer, FALSE, TRUE, TRUE, FALSE))
+          if (!CheckValue (buffer, FALSE, TRUE, TRUE, FALSE, FALSE))
             {
-printf ("change PLEFT value=%s\n", buffer);
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_CHOICE_PLEFT", wxComboBox)->SetValue(value);
             }
@@ -656,9 +642,8 @@ printf ("change PLEFT value=%s\n", buffer);
       if (value.Len() > 0)
         {
           strncpy (buffer, (const char*)value.mb_str(wxConvUTF8), 50);
-          if (!CheckValue (buffer, TRUE, TRUE, TRUE, FALSE))
+          if (!CheckValue (buffer, TRUE, TRUE, TRUE, FALSE, TRUE))
             {
-printf ("change MRIGHT value=%s\n", buffer);
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_CHOICE_MRIGHT", wxComboBox)->SetValue(value);
             }
@@ -671,9 +656,8 @@ printf ("change MRIGHT value=%s\n", buffer);
       if (value.Len() > 0)
         {
           strncpy (buffer, (const char*)value.mb_str(wxConvUTF8), 50);
-          if (!CheckValue (buffer, FALSE, TRUE, TRUE, FALSE))
+          if (!CheckValue (buffer, FALSE, TRUE, TRUE, FALSE, FALSE))
             {
-printf ("change PRIGHT value=%s\n", buffer);
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_CHOICE_PRIGHT", wxComboBox)->SetValue(value);
             }
@@ -686,9 +670,8 @@ printf ("change PRIGHT value=%s\n", buffer);
       if (value.Len() > 0)
         {
           strncpy (buffer, (const char*)value.mb_str(wxConvUTF8), 50);
-          if (!CheckValue (buffer, FALSE, TRUE, TRUE, FALSE))
+          if (!CheckValue (buffer, FALSE, TRUE, TRUE, FALSE, TRUE))
             {
-printf ("change MARGIN value=%s\n", buffer);
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_CHOICE_MARGIN", wxComboBox)->SetValue(value);
             }
@@ -701,9 +684,8 @@ printf ("change MARGIN value=%s\n", buffer);
       if (value.Len() > 0)
         {
           strncpy (buffer, (const char*)value.mb_str(wxConvUTF8), 50);
-          if (!CheckValue (buffer, FALSE, TRUE, TRUE, FALSE))
+          if (!CheckValue (buffer, FALSE, TRUE, TRUE, FALSE, TRUE))
             {
-printf ("change PADDING value=%s\n", buffer);
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_CHOICE_PADDING", wxComboBox)->SetValue(value);
             }
@@ -716,9 +698,8 @@ printf ("change PADDING value=%s\n", buffer);
       if (value.Len() > 0)
         {
           strncpy (buffer, (const char*)value.mb_str(wxConvUTF8), 50);
-          if (!CheckValue (buffer, FALSE, TRUE, TRUE, FALSE))
+          if (!CheckValue (buffer, FALSE, TRUE, TRUE, FALSE, TRUE))
             {
-printf ("change WIDTH value=%s\n", buffer);
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_CHOICE_WIDTH", wxComboBox)->SetValue(value);
             }
@@ -731,9 +712,8 @@ printf ("change WIDTH value=%s\n", buffer);
       if (value.Len() > 0)
         {
           strncpy (buffer, (const char*)value.mb_str(wxConvUTF8), 50);
-          if (!CheckValue (buffer, FALSE, TRUE, TRUE, FALSE))
+          if (!CheckValue (buffer, FALSE, TRUE, TRUE, FALSE, TRUE))
             {
-printf ("change HEIGHT value=%s\n", buffer);
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_CHOICE_HEIGHT", wxComboBox)->SetValue(value);
             }
@@ -746,9 +726,8 @@ printf ("change HEIGHT value=%s\n", buffer);
       if (value.Len() > 0)
         {
           strncpy (buffer, (const char*)value.mb_str(wxConvUTF8), 50);
-          if (!CheckValue (buffer, TRUE, TRUE, TRUE, FALSE))
+          if (!CheckValue (buffer, TRUE, TRUE, TRUE, FALSE, TRUE))
             {
-printf ("change TOP value=%s\n", buffer);
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_CHOICE_TOP", wxComboBox)->SetValue(value);
             }
@@ -761,9 +740,8 @@ printf ("change TOP value=%s\n", buffer);
       if (value.Len() > 0)
         {
           strncpy (buffer, (const char*)value.mb_str(wxConvUTF8), 50);
-          if (!CheckValue (buffer, TRUE, TRUE, TRUE, FALSE))
+          if (!CheckValue (buffer, TRUE, TRUE, TRUE, FALSE, TRUE))
             {
-printf ("change BOTTOM value=%s\n", buffer);
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_CHOICE_BOTTOM", wxComboBox)->SetValue(value);
             }
@@ -776,9 +754,8 @@ printf ("change BOTTOM value=%s\n", buffer);
       if (value.Len() > 0)
         {
           strncpy (buffer, (const char*)value.mb_str(wxConvUTF8), 50);
-          if (!CheckValue (buffer, TRUE, TRUE, TRUE, FALSE))
+          if (!CheckValue (buffer, TRUE, TRUE, TRUE, FALSE, TRUE))
             {
-printf ("change LEFT value=%s\n", buffer);
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_CHOICE_LEFT", wxComboBox)->SetValue(value);
             }
@@ -791,9 +768,8 @@ printf ("change LEFT value=%s\n", buffer);
       if (value.Len() > 0)
         {
           strncpy (buffer, (const char*)value.mb_str(wxConvUTF8), 50);
-          if (!CheckValue (buffer, TRUE, TRUE, TRUE, FALSE))
+          if (!CheckValue (buffer, TRUE, TRUE, TRUE, FALSE, TRUE))
             {
-printf ("change RIGHT value=%s\n", buffer);
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_CHOICE_RIGHT", wxComboBox)->SetValue(value);
             }
