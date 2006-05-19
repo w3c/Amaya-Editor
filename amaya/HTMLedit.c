@@ -209,8 +209,8 @@ ThotBool RemoveAccessKey (NotifyAttribute *event)
   ----------------------------------------------------------------------*/
 void RemoveLink (Element el, Document doc)
 {
-  Element	    elText;
-  ElementType	    elType;
+  Element	          elText;
+  ElementType	      elType;
   AttributeType     attrType;
   Attribute         attr;
   char             *s, *ptr = NULL, *end = NULL;
@@ -3299,6 +3299,48 @@ void ElementPasted (NotifyElement * event)
                       event->position, FALSE);
 }
 
+ 
+/*----------------------------------------------------------------------
+  -----------------------------------------------------------------------*/ 
+void CheckMaxLength (Element elText, Document doc)
+{
+  Element	          el;
+  ElementType	      elType;
+  AttributeType     attrType;
+  Attribute         attr;
+  CHAR_T           *buffer;
+  Language          lang;
+  int               length, lg;
+
+  // check the maxlength attribute
+  el = elText;
+  elType = TtaGetElementType (el);
+  while (el &&
+         elType.ElTypeNum != HTML_EL_Text_Input &&
+         elType.ElTypeNum != HTML_EL_Password_Input &&
+         elType.ElTypeNum != HTML_EL_File_Input)
+    {
+      el = TtaGetParent (el);
+      elType = TtaGetElementType (el);
+    }
+  attrType.AttrSSchema = elType.ElSSchema;
+  attrType.AttrTypeNum = HTML_ATTR_MaxLength;
+  attr = TtaGetAttribute (el, attrType);
+  if (attr)
+    {
+      // maxlength value
+      length = TtaGetAttributeValue (attr);
+      lg =  TtaGetElementVolume (elText);
+      if (lg > length)
+        {
+          buffer = (CHAR_T *)TtaGetMemory (lg * sizeof(CHAR_T));
+          TtaGiveBufferContent (elText, buffer, lg-1, &lang);
+          buffer[length] = EOS;
+          TtaSetBufferContent (elText, buffer, lang, doc);
+        }
+    }
+}
+
 
 /*----------------------------------------------------------------------
   CheckNewLines
@@ -3322,18 +3364,21 @@ void CheckNewLines (NotifyOnTarget *event)
   ThotBool    pre, para, changed, selChanged, newParagraph, undoSeqExtended;
   ThotBool    prevCharEOL, pasteLineByLine, moveNext;
 
+  if (!event->target)
+    return;
   doc = event->document;
   if (DocumentTypes[doc] == docText || DocumentTypes[doc] == docCSS ||
       DocumentTypes[doc] == docSource || DocumentTypes[doc] == docLog)
     pre = FALSE;
   else
     {
+      if (DocumentTypes[doc] == docHTML)
+        // check maxlength of input elements
+        CheckMaxLength (event->target, doc);
       TtaGetEnvBoolean ("PRESERVE_SPACE", &pre);
       if (pre)
         return;
     }
-  if (!event->target)
-    return;
   leaf = event->target;
   length = TtaGetElementVolume (leaf);
   if (length == 0)

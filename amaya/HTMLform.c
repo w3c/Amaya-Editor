@@ -70,7 +70,6 @@ ThotBool SaveDocumentStatus (NotifyOnTarget *event)
   return FALSE; /* let Thot perform normal operation */
 }
  
- 
 /*----------------------------------------------------------------------
   -----------------------------------------------------------------------*/ 
 void RestoreDocumentStatus (NotifyOnTarget *event)

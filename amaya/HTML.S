@@ -884,7 +884,7 @@ EXCEPT
 	Frames:		Hidden;
 	FRAMESET:	NoCreate;	{ prevent a Return at the end of the
 					  document from creating a FRAMESET }
-	Inserted_Text:	Hidden, NoCut;
+	Inserted_Text:	Hidden, NoCut, NoSpellCheck, CheckAllChars;
 	Basic_Set:	Hidden;
 	Definition_Item:Hidden;
 	Term_List:	Hidden, CanCut;

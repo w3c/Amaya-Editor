@@ -71,6 +71,7 @@
 #define ExcCanCut 45
 #define ExcMarkupPreserve 46
 #define ExcNotAnElementNode 47
+#define ExcCheckAllChars 48
 
 /* Draw exceptions */
 #define ExcSelectParent 310

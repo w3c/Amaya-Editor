@@ -2444,6 +2444,11 @@ void TtaGiveBoxAbsPosition (Element element, Document document, View view,
               *xCoord = 32000;
               *yCoord = 32000;
             }
+          else if (pAb->AbBox == NULL)
+            {
+              *xCoord = 0;
+              *yCoord = 0;
+            }
           else
             {
               pBox = pAb->AbBox;

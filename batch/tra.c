@@ -351,7 +351,7 @@ static void PresentationName (PRuleType TypeRPres, SyntRuleNum pr, int wi)
 	       TypeRPres == PtPaddingLeft ||
 	       TypeRPres == PtBorderTopWidth ||
 	       TypeRPres == PtBorderRightWidth ||
-	       TypeRPres == PtBorderBottomWidth,
+	       TypeRPres == PtBorderBottomWidth ||
 	       TypeRPres == PtBorderLeftWidth ||
 	       TypeRPres == PtXRadius ||
 	       TypeRPres == PtYRadius ||
@@ -408,7 +408,7 @@ static void PresentationName (PRuleType TypeRPres, SyntRuleNum pr, int wi)
 	   TypeRPres == PtPaddingLeft ||
 	   TypeRPres == PtBorderTopWidth ||
 	   TypeRPres == PtBorderRightWidth ||
-	   TypeRPres == PtBorderBottomWidth,
+	   TypeRPres == PtBorderBottomWidth ||
 	   TypeRPres == PtBorderLeftWidth ||
 	   TypeRPres == PtXRadius ||
 	   TypeRPres == PtYRadius ||
@@ -463,7 +463,7 @@ static void PresentationName (PRuleType TypeRPres, SyntRuleNum pr, int wi)
 	   TypeRPres == PtPaddingLeft ||
 	   TypeRPres == PtBorderTopWidth ||
 	   TypeRPres == PtBorderRightWidth ||
-	   TypeRPres == PtBorderBottomWidth,
+	   TypeRPres == PtBorderBottomWidth ||
 	   TypeRPres == PtBorderLeftWidth ||
 	   TypeRPres == PtXRadius ||
 	   TypeRPres == PtYRadius ||
@@ -726,7 +726,7 @@ static void NewRuleBlock ()
 	     CurPres == PtPaddingLeft + 1 ||
 	     CurPres == PtBorderTopWidth + 1 ||
 	     CurPres == PtBorderRightWidth + 1 ||
-	     CurPres == PtBorderBottomWidth,
+	     CurPres == PtBorderBottomWidth + 1 ||
 	     CurPres == PtBorderLeftWidth + 1 ||
 	     CurPres == PtXRadius + 1 ||
 	     CurPres == PtYRadius + 1 ||

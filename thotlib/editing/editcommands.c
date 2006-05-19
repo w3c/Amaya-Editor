@@ -3672,6 +3672,18 @@ void TtcInsertChar (Document doc, View view, CHAR_T c)
           if (dispMode == DisplayImmediately)
             TtaSetDisplayMode (doc, dispMode);
         }
+
+      // check if a CloseTextInsertion should be generated
+      while (firstEl)
+        {
+          if (TypeHasException (ExcCheckAllChars, firstEl->ElTypeNumber, firstEl->ElStructSchema))
+            {
+              CloseTextInsertion ();
+              firstEl = NULL;
+            }
+          else
+            firstEl = firstEl->ElParent;
+        }
     }
 }
 

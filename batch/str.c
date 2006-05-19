@@ -1887,6 +1887,10 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
         /* this Thot element is not a DOM element node */
         ExceptionNum (ExcNotAnElementNode, True, False, False, wi);
         break;
+      case KWD_CheckAllChars:
+        /* check any inserted character */
+        ExceptionNum (ExcCheckAllChars, True, False, False, wi);
+        break;
       case KWD_Root:
         CurExtensRule = NewExtensionRule (wi, 0);
         CurExtensRule->SrName[0] = '\0';

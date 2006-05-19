@@ -132,7 +132,7 @@ ExceptVal =	 'NoCut' / 'CanCut' / 'NoCreate' / 'NoReplicate' /
 		 'NoShowBox' / 'SetWindowBackground' /
 		 'Shadow' / 'EventAttr' / 'SpacePreserve' /
 		 'IsPlaceholder' / 'StartCounter' / 'SetCounter' /
-     'MarkupPreserve' / 'NotAnElementNode' /
+		 'MarkupPreserve' / 'NotAnElementNode' / 'CheckAllChars' /
 		 ExceptNum .
 ExceptNum =	 NUMBER .
 
