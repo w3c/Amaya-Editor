@@ -1556,7 +1556,17 @@ static char *ParseCSSFloat (Element element, PSchema tsch,
     }
 
   if (pval.typed_data.value == 0 && pval.typed_data.unit != VALUE_INHERIT)
-    cssRule = SkipValue ("Invalid float value", cssRule);
+    {
+      if (!strncasecmp (cssRule, "top", 3) ||
+          !strncasecmp (cssRule, "bottom", 6) ||
+          !strncasecmp (cssRule, "inside", 6) ||
+          !strncasecmp (cssRule, "outside", 7) ||
+          !strncasecmp (cssRule, "start", 5) ||
+          !strncasecmp (cssRule, "end", 3))
+        cssRule = SkipValue ("Warning: CSS3 value not supported", cssRule);
+      else
+        cssRule = SkipValue ("Invalid float value", cssRule);
+    }
   else
     {
       cssRule = CheckImportantRule (cssRule, context);

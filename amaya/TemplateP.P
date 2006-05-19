@@ -10,10 +10,11 @@ VIEWS
 
 
 #define STRUCT_INDENT 1.5
-#define TAG_Color DarkIndigo1
+#define TAG_Font Helvetica
+#define TAG_Color DarkGreen3
 #define TAG_Weight Bold
 #define TAG_Visibility 7
-#define TAG_FONTSIZE 12 pt
+#define TAG_FONTSIZE 11 pt
 #define ATTR_Font Helvetica
 #define ATTR_Style Roman
 #define ATTR_Weight Normal
@@ -22,7 +23,7 @@ VIEWS
 #define INVALID_Weight Normal
 #define INVALID_Visibility 7
 #define INVALID_Font Helvetica
-#define ATTR_Color DarkIndigo1
+#define ATTR_Color DarkGreen3
 #define ATTRVALUE_Color DarkMagenta2
 #define INVALID_Color Red
    
@@ -198,19 +199,52 @@ BOXES
 
 RULES
 
-  head :
+  head:
     BEGIN
-      Visibility : 0;
+    Visibility : 0;
+    CreateBefore(ElementName);
+  	CreateWith(VerticalLine);
+  	IN Structure_view BEGIN
+      Visibility: Enclosing =;
+		  HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	    Width: Enclosing . Width - STRUCT_INDENT;
+		  VertPos: Top = Previous . Bottom;
+		  END;
     END;
     
+  component:
+		BEGIN
+		Visibility : 0;
+	  CreateBefore(ElementName);
+	  CreateWith(VerticalLine);
+  	IN Structure_view BEGIN
+  	  Visibility : Enclosing =;
+		  HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	    Width: Enclosing . Width - STRUCT_INDENT;
+		  VertPos: Top = Previous . Bottom;
+		  END;
+	 END;
+
+  union:
+		BEGIN
+		Visibility : 0;
+	  CreateBefore(ElementName);
+	  CreateWith(VerticalLine);
+  	IN Structure_view BEGIN
+  	  Visibility : Enclosing =;
+		  HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	    Width: Enclosing . Width - STRUCT_INDENT;
+		  VertPos: Top = Previous . Bottom;
+		  END;
+	 END;
+
   attribute:
 		BEGIN
 		Visibility : 0;
 	  CreateBefore(ElementName);
 	  CreateWith(VerticalLine);
-
   	IN Structure_view BEGIN
-  	  Visibility : 1;
+  	  Visibility : Enclosing =;
 		  HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 	    Width: Enclosing . Width - STRUCT_INDENT;
 		  VertPos: Top = Previous . Bottom;
@@ -303,6 +337,10 @@ RULES
 			BorderLeftWidth: 0;
 			BorderBottomWidth: 0;
 		  BorderRightWidth: 0;
+		  PaddingRight: 0;
+		  PaddingLeft: 0;
+		  PaddingTop: 0;
+		  PaddingBottom: 0;
 		  HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 	    Width: Enclosing . Width - STRUCT_INDENT;
 		  VertPos: Top = Previous . Bottom;
@@ -354,6 +392,10 @@ RULES
 			BorderLeftWidth: 0;
 			BorderBottomWidth: 0;
 		  BorderRightWidth: 0;
+		  PaddingRight: 0;
+		  PaddingLeft: 0;
+		  PaddingTop: 0;
+		  PaddingBottom: 0;
 		  HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 	    Width: Enclosing . Width - STRUCT_INDENT;
 		  VertPos: Top = Previous . Bottom;
@@ -404,6 +446,10 @@ RULES
 			BorderLeftWidth		:	 	0;
 			BorderBottomWidth	:		0;
 			BorderRightWidth	:		0;
+		  PaddingRight: 0;
+		  PaddingLeft: 0;
+		  PaddingTop: 0;
+		  PaddingBottom: 0;
 			HorizPos: Left 		=		Enclosing . Left + STRUCT_INDENT;
 			Width				: 		Enclosing . Width - STRUCT_INDENT;
 			VertPos	: Top 		= 		Previous . Bottom;
@@ -454,6 +500,10 @@ RULES
 			BorderLeftWidth: 0;
 			BorderBottomWidth: 0;
 		  BorderRightWidth: 0;
+		  PaddingRight: 0;
+		  PaddingLeft: 0;
+		  PaddingTop: 0;
+		  PaddingBottom: 0;
 		  HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 	    Width: Enclosing . Width - STRUCT_INDENT;
 		  VertPos: Top = Previous . Bottom;

@@ -5,65 +5,64 @@
   <title>Article</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
   <link rel="stylesheet" type="text/css" href="article.css" />
+  <t:head>
+    <t:component name="refbook">
+      <p class="refbook">
+        <t:repeat minOccurs="1">
+          <span class="bibauthor"><t:use types="string">Author</t:use></span>
+        </t:repeat>
+        <span class="title"><t:use types="string">Book title</t:use></span>
+        <span class="pub"><t:use types="string">Publisher</t:use></span>
+      </p>
+    </t:component>
+
+    <t:component name="refarticle">
+      <p class="refarticle">
+        <t:repeat minOccurs="1">
+          <span class="bibauthor"><t:use types="string">Author</t:use></span>
+        </t:repeat>
+        <span class="title"><t:use types="string">Article title</t:use></span>
+        <span class="conf"><t:use types="string">Conference</t:use></span>
+      </p>
+    </t:component>
+
+    <t:component name="refreport">
+      <p class="refreport">
+        <t:repeat minOccurs="1">
+          <span class="bibauthor"><t:use types="string">Author</t:use></span>
+        </t:repeat>
+        <span class="title"><t:use types="string">Report title</t:use></span>
+        <t:option>
+          <span class="url"><t:use types="string">url</t:use></span>
+        </t:option>
+      </p>
+    </t:component>
+
+    <t:union name="bibref" include="refbook refarticle refreport"></t:union>
+
+    <t:component name="author">
+      <p class="author">
+        <t:option>
+          <img class="portrait">
+            <t:attribute name="alt" default="picture"/>
+            <t:attribute name="width" use="optional"/>
+          </img>
+        </t:option>
+        <t:use types="string">Author Name</t:use>
+        <br />
+        <span class="address">
+          <t:use types="string br">Address</t:use>
+        </span>
+        <br/>
+        <span class="email">
+          <t:use types="string">email</t:use>
+        </span>
+      </p>
+    </t:component>
+  </t:head>
 </head>
 
 <body>
-<t:head>
-  <t:component name="refbook">
-    <p class="refbook">
-      <t:repeat minOccurs="1">
-        <span class="bibauthor"><t:use types="string">Author</t:use></span>
-      </t:repeat>
-      <span class="title"><t:use types="string">Book title</t:use></span>
-      <span class="pub"><t:use types="string">Publisher</t:use></span>
-    </p>
-  </t:component>
-
-  <t:component name="refarticle">
-    <p class="refarticle">
-      <t:repeat minOccurs="1">
-        <span class="bibauthor"><t:use types="string">Author</t:use></span>
-      </t:repeat>
-      <span class="title"><t:use types="string">Article title</t:use></span>
-      <span class="conf"><t:use types="string">Conference</t:use></span>
-    </p>
-  </t:component>
-
-  <t:component name="refreport">
-    <p class="refreport">
-      <t:repeat minOccurs="1">
-        <span class="bibauthor"><t:use types="string">Author</t:use></span>
-      </t:repeat>
-      <span class="title"><t:use types="string">Report title</t:use></span>
-      <t:option>
-        <span class="url"><t:use types="string">url</t:use></span>
-      </t:option>
-    </p>
-  </t:component>
-
-  <t:union name="bibref" include="refbook refarticle refreport"></t:union>
-
-  <t:component name="author">
-    <p class="author">
-      <t:option>
-        <img class="portrait">
-          <t:attribute name="alt" default="picture"/>
-          <t:attribute name="width" use="optional"/>
-        </img>
-      </t:option>
-      <t:use types="string">Author Name</t:use>
-      <br />
-      <span class="address">
-        <t:use types="string br">Address</t:use>
-      </span>
-      <br/>
-      <span class="email">
-        <t:use types="string">email</t:use>
-      </span>
-    </p>
-  </t:component>
-</t:head>
-
 <t:use types="h1">
   <h1>Article Title</h1>
 </t:use>

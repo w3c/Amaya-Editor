@@ -6038,28 +6038,32 @@ void CheckAbstractTree (Document doc)
               elType = TtaGetElementType (el);
               /* is this element allowed in the HEAD? */
               if (TtaGetRankInAggregate (elType, headElType) <= 0)
-                /* this element is not a valid component of aggregate
-                   HEAD. It may be an SGML inclusion, let's check */
-                if (!TtaCanInsertFirstChild (elType, elHead, doc))
-                  /* this element cannot be a child of HEAD, move it to
-                     the BODY */
-                  {
-                    /* create the BODY element if it does not exist */
-                    if (elBody == NULL)
-                      {
-                        newElType.ElSSchema = htmlSSchema;
-                        newElType.ElTypeNum = HTML_EL_BODY;
-                        elBody = TtaNewElement (doc, newElType);
-                        TtaInsertSibling (elBody, elHead, FALSE, doc);
-                      }
-                    /* move the current element into the BODY element */
-                    TtaRemoveTree (el, doc);
-                    if (lastChild == NULL)
-                      TtaInsertFirstChild (&el, elBody, doc);
-                    else
-                      TtaInsertSibling (el, lastChild, FALSE, doc);
-                    lastChild = el;
-                  }
+                /* this element is not a valid component of aggregate HEAD */
+#ifdef TEMPLATES
+                /* if it is a Template element, accept it */
+                if (strcmp(TtaGetSSchemaName(elType.ElSSchema),"Template") != 0)
+#endif /* TEMPLATES */
+                  /* It may be an SGML inclusion, let's check */
+                  if (!TtaCanInsertFirstChild (elType, elHead, doc))
+                    /* this element cannot be a child of HEAD, move it to
+                       the BODY */
+                    {
+                      /* create the BODY element if it does not exist */
+                      if (elBody == NULL)
+                        {
+                          newElType.ElSSchema = htmlSSchema;
+                          newElType.ElTypeNum = HTML_EL_BODY;
+                          elBody = TtaNewElement (doc, newElType);
+                          TtaInsertSibling (elBody, elHead, FALSE, doc);
+                        }
+                      /* move the current element into the BODY element */
+                      TtaRemoveTree (el, doc);
+                      if (lastChild == NULL)
+                        TtaInsertFirstChild (&el, elBody, doc);
+                      else
+                        TtaInsertSibling (el, lastChild, FALSE, doc);
+                      lastChild = el;
+                    }
               el = nextEl;
             }
         }
