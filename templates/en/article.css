@@ -1,11 +1,54 @@
-    p.author {text-align: center; width: 33%;}
-    h1 {text-align: center; font-size: 130%}
+    h1 {text-align: center; font-size: 130%; font-family: sans-serif}
     h2 {font-size: 120%}
     h3 {font-size: 100%}
+    div.authors {font-family: sans-serif}
+    p.author {text-align: center; width: 33%; float: left}
+    div.example {margin-left: 1.2em}
     div.example pre {margin-bottom: 0.4em}
     div.example p {margin-top:0; font-style:italic}
-    div.biblio {margin-left: 1.3em}
-    div.biblio p {text-indent: -1.3em}
+    div.figure {text-align: center}
+    div.figure p {margin-top:0; font-style:italic; text-align: center}
+    div.figure pre {text-align: left}
+
+    /* bibliography */
+    a.bibref:after {content: "[*]"}
+    div.references p {margin-left: 1.6em}
+    div.references p {text-indent: -1.6em}
+
+  /* page layout and style for printing */
   @media print {
     html {margin: 0; padding: 0}
-    body {font: 10pt serif}
+    body {font: 9pt serif}
+    .noprint {display: none}
+    h1 {font-size: 190%}
+    h2 {font-size: 130%; margin-bottom: .2em; margin-top: .6em}
+    h3 {font-size: 120%; margin-bottom: .2em; margin-top: .6em}
+    p.author { padding-bottom: 1cm}
+    div.authors {font-size: 120%}
+    a[href] {text-decoration: none; color: inherit}
+    a.bibref:after {content: target-content(attr(href))}
+    p, li, dd {text-align: justify}
+    p {margin-bottom: .5em; margin-top: .5em}
+    ul, ol {margin-left: 2em}
+    pre, tt, code {font-size: 85%;
+       font-family: "Bitstream Vera Sans Mono", "Lucida Console", monospace}
+    pre {line-height: 1.3}
+    div.example {margin-left: 0; margin-top: .9em}
+    div.example p {text-align: center; padding-bottom: .8em}
+    div.figure {padding-top: 1em}
+    div.topfigure img {width: 100%}
+    .bibliography p {text-align: left}
+    div.body {column-count: 2; column-gap: 8.5mm; hyphenate: auto}
+    @page {
+      margin: 17mm;
+      padding: 16mm 0 5mm;
+      size: a4;
+      font: 9pt serif; 
+      @bottom-center {
+        font: 9pt serif;
+        content: counter(page);
+        vertical-align: top;
+        margin: 0.3em 0;
+        }
+      }
+    }

@@ -99,7 +99,7 @@
 <t:repeat minOccurs="1">
   <div class="section">
   <h2>
-    <t:use types="string">HEADING</t:use>
+    <t:use types="string">1. HEADING</t:use>
   </h2>
   <t:repeat>
     <t:bag types="anyElement">
@@ -113,7 +113,9 @@
   <h2>REFERENCES</h2>
     <div class="references">
       <t:repeat minOccurs="3" maxOccurs="30">
-        <t:use types="refbook refarticle refreport"/>
+        <t:use types="refbook refarticle refreport"> </t:use>
+        <t:use types="bibref"> </t:use>
+        <t:use types="bibref"> </t:use>
       </t:repeat>
     </div>
 </div>
