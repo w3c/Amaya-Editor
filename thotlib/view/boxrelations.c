@@ -890,50 +890,66 @@ void ComputeMBP (PtrAbstractBox pAb, int frame, ThotBool horizRef,
       else
         dim = pBox->BxW;
 
-      /* top margin */
-      if (pAb->AbTopMarginUnit == UnPercent)
-        pBox->BxTMargin = PixelValue (pAb->AbTopMargin, UnPercent,
+      if (pAb->AbLeafType == LtCompound && pAb->AbTruncatedHead)
+        {
+          pBox->BxTMargin = 0;
+          pBox->BxTPadding = 0;
+          pBox->BxTBorder = 0;
+        }
+      else
+        {
+          /* top margin */
+          if (pAb->AbTopMarginUnit == UnPercent)
+            pBox->BxTMargin = PixelValue (pAb->AbTopMargin, UnPercent,
+                                          (PtrAbstractBox) dim, 0);
+          else if (pAb->AbTopMarginUnit != UnAuto)
+            pBox->BxTMargin = PixelValue (pAb->AbTopMargin, pAb->AbTopMarginUnit,
+                                          pAb, ViewFrameTable[frame - 1].FrMagnification);
+          /* top padding */
+          if (pAb->AbTopPaddingUnit == UnPercent)
+            pBox->BxTPadding = PixelValue (pAb->AbTopPadding, UnPercent,
+                                           (PtrAbstractBox) dim, 0);
+          else
+            pBox->BxTPadding = PixelValue (pAb->AbTopPadding, pAb->AbTopPaddingUnit,
+                                           pAb, ViewFrameTable[frame - 1].FrMagnification);
+          /* top border */
+          if (pAb->AbTopBorderUnit == UnPercent)
+            pBox->BxTBorder = PixelValue (pAb->AbTopBorder, UnPercent,
                                       (PtrAbstractBox) dim, 0);
-      else if (pAb->AbTopMarginUnit != UnAuto)
-        pBox->BxTMargin = PixelValue (pAb->AbTopMargin, pAb->AbTopMarginUnit,
-                                      pAb, ViewFrameTable[frame - 1].FrMagnification);
+          else
+            pBox->BxTBorder = PixelValue (pAb->AbTopBorder, pAb->AbTopBorderUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
+        }
 
-      /* bottom margin */
-      if (pAb->AbBottomMarginUnit == UnPercent)
-        pBox->BxBMargin = PixelValue (pAb->AbBottomMargin, UnPercent,
-                                      (PtrAbstractBox) dim, 0);
-      else if (pAb->AbBottomMarginUnit != UnAuto)
-        pBox->BxBMargin = PixelValue (pAb->AbBottomMargin, pAb->AbBottomMarginUnit,
-                                      pAb, ViewFrameTable[frame - 1].FrMagnification);
-
-      /* top padding */
-      if (pAb->AbTopPaddingUnit == UnPercent)
-        pBox->BxTPadding = PixelValue (pAb->AbTopPadding, UnPercent,
-                                       (PtrAbstractBox) dim, 0);
+      if (pAb->AbLeafType == LtCompound && pAb->AbTruncatedTail)
+        {
+          pBox->BxBMargin = 0;
+          pBox->BxBPadding = 0;
+          pBox->BxBBorder = 0;
+        }
       else
-        pBox->BxTPadding = PixelValue (pAb->AbTopPadding, pAb->AbTopPaddingUnit,
-                                       pAb, ViewFrameTable[frame - 1].FrMagnification);
-      /* bottom padding */
-      if (pAb->AbBottomPaddingUnit == UnPercent)
-        pBox->BxBPadding = PixelValue (pAb->AbBottomPadding, UnPercent,
-                                       (PtrAbstractBox) dim, 0);
-      else
-        pBox->BxBPadding = PixelValue (pAb->AbBottomPadding, pAb->AbBottomPaddingUnit,
-                                       pAb, ViewFrameTable[frame - 1].FrMagnification);
-
-      /* top border */
-      if (pAb->AbTopBorderUnit == UnPercent)
-        pBox->BxTBorder = PixelValue (pAb->AbTopBorder, UnPercent,
-                                      (PtrAbstractBox) dim, 0);
-      else
-        pBox->BxTBorder = PixelValue (pAb->AbTopBorder, pAb->AbTopBorderUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
-      /* bottom border */
-      if (pAb->AbBottomBorderUnit == UnPercent)
-        pBox->BxBBorder = PixelValue (pAb->AbBottomBorder, UnPercent,
-                                      (PtrAbstractBox) dim, 0);
-      else
-        pBox->BxBBorder = PixelValue (pAb->AbBottomBorder, pAb->AbBottomBorderUnit,
-                                      pAb, ViewFrameTable[frame - 1].FrMagnification);
+        {
+          /* bottom margin */
+          if (pAb->AbBottomMarginUnit == UnPercent)
+            pBox->BxBMargin = PixelValue (pAb->AbBottomMargin, UnPercent,
+                                          (PtrAbstractBox) dim, 0);
+          else if (pAb->AbBottomMarginUnit != UnAuto)
+            pBox->BxBMargin = PixelValue (pAb->AbBottomMargin, pAb->AbBottomMarginUnit,
+                                          pAb, ViewFrameTable[frame - 1].FrMagnification);
+          /* bottom padding */
+          if (pAb->AbBottomPaddingUnit == UnPercent)
+            pBox->BxBPadding = PixelValue (pAb->AbBottomPadding, UnPercent,
+                                           (PtrAbstractBox) dim, 0);
+          else
+            pBox->BxBPadding = PixelValue (pAb->AbBottomPadding, pAb->AbBottomPaddingUnit,
+                                           pAb, ViewFrameTable[frame - 1].FrMagnification);
+          /* bottom border */
+          if (pAb->AbBottomBorderUnit == UnPercent)
+            pBox->BxBBorder = PixelValue (pAb->AbBottomBorder, UnPercent,
+                                          (PtrAbstractBox) dim, 0);
+          else
+            pBox->BxBBorder = PixelValue (pAb->AbBottomBorder, pAb->AbBottomBorderUnit,
+                                          pAb, ViewFrameTable[frame - 1].FrMagnification);
+        }
     }
 }
 

@@ -431,7 +431,7 @@ void DrawStixSigma (int frame, int x, int y,  int l, int h, ThotFont font, int f
 void DrawStixIntegral (int frame, int x, int y, int l, int h,
                        int type, int size, int fg)
 {
-  unsigned char   symb;
+  unsigned char   symb = 0x34;
   int             delta;
   ThotFont        font;
 

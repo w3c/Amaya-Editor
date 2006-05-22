@@ -2261,6 +2261,8 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
       pAb->AbBox = pBox;
     }
 
+if (!strcmp (pAb->AbElement->ElLabel, "L86"))
+  printf ("CreateBox L86\n");
   if (pBox)
     {
       // zoom apply to SVG only
@@ -4680,7 +4682,7 @@ void RebuildConcreteImage (int frame)
           ShowSelection (pFrame->FrAbstractBox, TRUE);
 	   
           /* recompute scrolls */
-          CheckScrollingWidth (frame);
+          CheckScrollingWidthHeight (frame);
           UpdateScrollbars (frame);
         }
     }
@@ -5028,15 +5030,16 @@ static ThotBool IsAbstractBoxUpdated (PtrAbstractBox pAb, int frame,
 
 
 /*----------------------------------------------------------------------
-  CheckScrollingWidth computes the maximum between the document width
+  CheckScrollingWidthHeight computes the maximum between the document width
   and the width needed to display all its contents.
+  Check also the height of positioned boxes
   ----------------------------------------------------------------------*/
-void CheckScrollingWidth (int frame)
+void CheckScrollingWidthHeight (int frame)
 {
   PtrAbstractBox      pAb;
   PtrBox              pBox, box;
   ViewFrame          *pFrame;
-  int                 max, org;
+  int                 xmax, xorg, ymax;
   int                 w, h;
 
   if  (AnyWidthUpdate)
@@ -5044,12 +5047,13 @@ void CheckScrollingWidth (int frame)
       pFrame = &ViewFrameTable[frame - 1];
       pAb = pFrame->FrAbstractBox;
       GetSizesFrame (frame, &w, &h);
+      ymax = 0;
       if (pAb && pAb->AbBox)
         {
           /* check if the document inherits its contents */
           pBox = pAb->AbBox;
-          max = pBox->BxWidth;
-          org = pBox->BxXOrg;
+          xmax = pBox->BxWidth;
+          xorg = pBox->BxXOrg;
           if (!pBox->BxContentWidth)
             {
               /* take the first leaf box */
@@ -5061,27 +5065,39 @@ void CheckScrollingWidth (int frame)
 #ifdef _GL
                   if (pBox->BxBoundinBoxComputed)
                     {
-                      if (pBox->BxClipX + pBox->BxClipW > max &&
+                      if (pBox->BxClipX + pBox->BxClipW > xmax &&
                           (pBox->BxType != BoPiece || pBox->BxNChars > 0))
                         {
                            /* ignoge boxes with absolute or fixed positions */
                           pAb = GetEnclosingViewport (pBox->BxAbstractBox);
                           if (pAb == NULL ||
                               pAb->AbPositioning->PnAlgorithm == PnRelative)
-                            max = pBox->BxClipX + pBox->BxClipW;
+                            xmax = pBox->BxClipX + pBox->BxClipW;
+                        }
+                      // check if a positioned box is out of the document
+                      if (ExtraFlow (pBox, frame))
+                        {
+                          if (ymax < pBox->BxClipY + pBox->BxClipH)
+                            ymax = pBox->BxClipY + pBox->BxClipH;
                         }
                     }
                   else
 #endif /*  _GL */
                     {
-                      if (pBox->BxXOrg + pBox->BxWidth > max &&
+                      if (pBox->BxXOrg + pBox->BxWidth > xmax &&
                           (pBox->BxType != BoPiece || pBox->BxNChars > 0))
                         {
                           /* ignoge boxes with absolute or fixed positions */
                           pAb = GetEnclosingViewport (pBox->BxAbstractBox);
                           if (pAb == NULL ||
                               pAb->AbPositioning->PnAlgorithm == PnRelative)
-                            max = pBox->BxXOrg + pBox->BxWidth;
+                            xmax = pBox->BxXOrg + pBox->BxWidth;
+                        }
+                      // check if a positioned box is out of the document
+                      if (ExtraFlow (pBox, frame))
+                        {
+                          if (ymax < pBox->BxXOrg + pBox->BxWidth)
+                            ymax = pBox->BxYOrg + pBox->BxHeight;
                         }
                     }
                   if (pBox->BxNext == box)
@@ -5090,8 +5106,12 @@ void CheckScrollingWidth (int frame)
                     pBox = pBox->BxNext;
                 }
             }
-          FrameTable[frame].FrScrollOrg = org;
-          FrameTable[frame].FrScrollWidth = max - org;
+          FrameTable[frame].FrScrollOrg = xorg;
+          FrameTable[frame].FrScrollWidth = xmax - xorg;
+          pBox = pFrame->FrAbstractBox->AbBox;
+          if (ymax > pBox->BxYOrg + pBox->BxHeight)
+            // force the height of the root element
+            pBox->BxHeight = ymax - pBox->BxYOrg;
         }
       else
         {

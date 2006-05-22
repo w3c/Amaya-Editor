@@ -128,7 +128,7 @@ void VerticalScroll (int frame, int delta, int selection)
                       add = RedrawFrameTop (frame, -delta);
                     }
                   /* recompute scrolls */
-                  CheckScrollingWidth (frame);
+                  CheckScrollingWidthHeight (frame);
                   UpdateScrollbars (frame);
                 }
               

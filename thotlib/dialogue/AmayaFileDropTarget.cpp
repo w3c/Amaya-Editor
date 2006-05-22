@@ -58,7 +58,6 @@ bool AmayaFileDropTarget::OnDropFiles( wxCoord x, wxCoord y, const wxArrayString
   View                view;
   int                 frame_id = 0;
   char                buffer[512];
-  ThotBool            found = FALSE;
 
   if (m_pOwner)
     frame_id = m_pOwner->GetFrameId();

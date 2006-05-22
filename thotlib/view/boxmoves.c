@@ -2442,7 +2442,7 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
       if (pCurrentAb->AbEnclosing == NULL)
         {
           AnyWidthUpdate = TRUE;
-          CheckScrollingWidth (frame);
+          CheckScrollingWidthHeight (frame);
         }
     }
 }

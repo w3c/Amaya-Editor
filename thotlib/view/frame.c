@@ -2542,7 +2542,7 @@ void DisplayFrame (int frame)
           /* Drawing of the updated area */
           RedrawFrameBottom (frame, 0, NULL);	  
           /* recompute scrolls */
-          CheckScrollingWidth (frame);
+          CheckScrollingWidthHeight (frame);
           UpdateScrollbars (frame);
 #ifdef _GL
           GL_Swap (frame);

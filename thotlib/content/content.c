@@ -860,7 +860,7 @@ void AddPointInPolyline (PtrTextBuffer firstBuffer, int rank, int x, int y)
 {
   PtrTextBuffer       pBuf, pNextBuf;
   int                 i, j;
-  PolyLinePoint       savePoint, oldSavePoint;
+  PolyLinePoint       savePoint = {0,0}, oldSavePoint = {0,0};
   ThotBool            stop;
 
   /* cherche le buffer contenant le point de rang rank */

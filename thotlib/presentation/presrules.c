@@ -608,553 +608,532 @@ int IntegerRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view,
   PtrAbstractBox      pAbb;
   PtrElement          pElInherit;
   int                 val, i, sign;
-  ThotBool            done;
 
   val = 0;
   *ok = TRUE;
   *unit = UnRelative;
   if (pPRule && pEl)
     {
-      done = FALSE;
-      if (pAb && !pAb->AbInLine)
-        /* the abstract box exists */
+      switch (pPRule->PrPresMode)
         {
-          if (pAb->AbTruncatedHead &&
-              (pPRule->PrType == PtMarginTop ||
-               pPRule->PrType == PtPaddingTop ||
-               pPRule->PrType == PtBorderTopWidth))
-            /* the beginning of the abstract box is not generated and it's a rule
-               about spacing at the beginning. Return 0 */
-            done = TRUE;
-          if (pAb->AbTruncatedTail &&
-              (pPRule->PrType == PtMarginBottom ||
-               pPRule->PrType == PtPaddingBottom ||
-               pPRule->PrType == PtBorderBottomWidth))
-            /* the end of the abstract box is not generated and it's a rule
-               about spacing at the end. Return 0 */
-            done = TRUE;
-        }
-      if (!done)
-        switch (pPRule->PrPresMode)
-          {
-          case PresInherit:
-            if (pPRule->PrType == PtVisibility)
-              pAbb = AbsBoxInheritImm (pPRule, pEl, view);
-            else
-              pAbb = AbsBoxInherit (pPRule, pEl, view);
-            if (pAbb == NULL)
-              *ok = FALSE;
-            else
-              {
-                if (pPRule->PrInhAttr)
-                  {
-                    /* c'est la valeur d'un attribut */
-                    pAttr = GetEnclosingAttr (pEl, pPRule->PrInhDelta, pAttr);
-                    if (pPRule->PrInhDelta < 0 && !pPRule->PrInhPercent)
-                      /* il faut retrancher cette valeur */
-                      i = -AttrValue (pAttr);
-                    else
-                      /* il faut ajouter cette valeur */
-                      i = AttrValue (pAttr);
-                    if (!pPRule->PrInhPercent &&
-                        (pPRule->PrInhUnit == UnRelative ||
-                         pPRule->PrInhUnit == UnXHeight))
-                      if (pPRule->PrType == PtIndent ||
-                          pPRule->PrType == PtLineSpacing ||
-                          pPRule->PrType == PtLineWeight ||
-                          pPRule->PrType == PtMarginTop ||
-                          pPRule->PrType == PtMarginRight ||
-                          pPRule->PrType == PtMarginBottom ||
-                          pPRule->PrType == PtMarginLeft ||
-                          pPRule->PrType == PtPaddingTop ||
-                          pPRule->PrType == PtPaddingRight ||
-                          pPRule->PrType == PtPaddingBottom ||
-                          pPRule->PrType == PtPaddingLeft ||
-                          pPRule->PrType == PtBorderTopWidth ||
-                          pPRule->PrType == PtBorderRightWidth ||
-                          pPRule->PrType == PtBorderBottomWidth ||
-                          pPRule->PrType == PtBorderLeftWidth ||
-                          pPRule->PrType == PtXRadius ||
-                          pPRule->PrType == PtYRadius ||
-                          pPRule->PrType == PtTop ||
-                          pPRule->PrType == PtRight ||
-                          pPRule->PrType == PtBottom ||
-                          pPRule->PrType == PtLeft ||
-                          pPRule->PrType == PtOpacity ||
-                          pPRule->PrType == PtFillOpacity ||
-                          pPRule->PrType == PtStrokeOpacity)
-                        /* convertit en 1/10 de caractere */
-                        /* ou en milliemes pour l'opacite' */
-                        i = 10 * i;
-                  }
-                else
-                  /* c'est la valeur elle meme qui est dans la regle */
-                  i = pPRule->PrInhDelta;
-
-                switch (pPRule->PrType)
-                  {
-                  case PtVisibility:
-                    if (pPRule->PrInhPercent)
-                      val = (pAbb->AbVisibility * i) / 100;
-                    else
-                      val = pAbb->AbVisibility + i;
-                    break;
-                  case PtSize:
-                    *unit = pAbb->AbSizeUnit;
-                    if (pPRule->PrInhPercent)
-                      /* a percentage is applied to the inherited value */
-                      {
-                        if (*unit == UnRelative)
-                          /* convert the relative inherited value into points*/
-                          {
-                            val = (ThotFontPointSize (pAbb->AbSize) * i) / 100;
-                            *unit = UnPoint;
-                          }
-                        else
-                          val = (pAbb->AbSize * i) / 100;
-                      }
-                    else if (pPRule->PrInhUnit == *unit || i == 0)
-                      /* same units, just add values */
-                      val = pAbb->AbSize + i;
-                    else if (*unit == UnRelative)
-                      /* the inherited value is relative, but the delta is
-                         absolute. Convert the inherited value */
-                      {
-                        val = ThotFontPointSize (pAbb->AbSize);
-                        if (pPRule->PrInhUnit == UnPoint)
-                          val = val + i;
-                        else
-                          val = val + PixelToPoint (i);
-                        *unit = UnPoint;
-                      }
-                    else if (*unit == UnPoint)
-                      /* the inherited value is in points */
-                      {
-                        if (pPRule->PrInhUnit == UnRelative)
-                          /* a increment of 1 relative unit equals 20% */
-                          val = pAbb->AbSize + ((pAbb->AbSize * i * 20) / 100);
-                        else if (pPRule->PrInhUnit == UnPixel)
-                          /* delta is in pixels. Convert it to points */
-                          val = pAbb->AbSize + PixelToPoint (i);
-                      }
-                    else if (*unit == UnPixel)
-                      /* the inherited value is in pixels */
-                      {
-                        if (pPRule->PrInhUnit == UnRelative)
-                          /* a increment of 1 relative unit equals 20% */
-                          val = pAbb->AbSize + ((pAbb->AbSize * i * 20) / 100);
-                        else if (pPRule->PrInhUnit == UnPoint)
-                          /* delta is in pixels. Convert it to pixels */
-                          val = pAbb->AbSize + PointToPixel (i);
-                      }
-                    else if (*unit == UnPercent)
-                      /* the inherited value is a percentage */
-                      {
-                        if (i < 0)
-                          {
-                            sign = -1;
-                            i = -i;
-                          }
-                        else
-                          sign = 1;
-                        if (pPRule->PrInhUnit == UnPixel)
-                          i = FontRelSize (PixelToPoint (i));
-                        else if (pPRule->PrInhUnit == UnPoint)
-                          i = FontRelSize (i);
-                        val = pAbb->AbSize + (sign * i * 20);
-                      }
-
-                    if (*unit == UnRelative)
-                      {
-                        if (val > MAX_LOG_SIZE)
-                          val = MAX_LOG_SIZE;
-                        else if (val < 0)
-                          val = 0;
-                      }
-                    break;
-                  case PtIndent:
-                    if (pPRule->PrInhPercent)
-                      val = (pAbb->AbIndent * i) / 100;
-                    else
-                      val = pAbb->AbIndent + i;
-                    *unit = pAbb->AbIndentUnit;
-                    break;
-                  case PtLineSpacing:
-                    if (pPRule->PrInhPercent)
-                      val = (pAbb->AbLineSpacing * i) / 100;
-                    else
-                      val = pAbb->AbLineSpacing + i;
-                    *unit = pAbb->AbLineSpacingUnit;
-                    break;
-                  case PtDepth:
-                    if (pPRule->PrInhPercent)
-                      val = (pAbb->AbDepth * i) / 100;
-                    else
-                      val = pAbb->AbDepth + i;
-                    break;
-                  case PtFillPattern:
-                    val = pAbb->AbFillPattern;
-                    break;
-                  case PtOpacity:
-                    val = pAbb->AbOpacity + i;
-                    if (val > 1000)
-                      val = 1000;
-                    else if (val < 0)
-                      val = 0;
-                    break;
-                  case PtFillOpacity:
-                    val = pAbb->AbFillOpacity + i;
-                    if (val > 1000)
-                      val = 1000;
-                    else if (val < 0)
-                      val = 0;
-                    break;
-                  case PtStrokeOpacity:
-                    val = pAbb->AbStrokeOpacity + i;
-                    if (val > 1000)
-                      val = 1000;
-                    else if (val < 0)
-                      val = 0;
-                    break;
-                  case PtBackground:
-                    val = pAbb->AbBackground;
-                    break;
-                  case PtForeground:
-                    val = pAbb->AbForeground;
-                    break;
-                  case PtLineWeight:
-                    if (pPRule->PrInhPercent)
-                      val = (pAbb->AbLineWeight * i) / 100;
-                    else
-                      val = pAbb->AbLineWeight + i;
-                    if (val < 0)
-                      val = 0;
-                    *unit = pAbb->AbLineWeightUnit;
-                    break;
-                  case PtBorderTopColor:
-                    val = pAbb->AbTopBColor;
-                    break;
-                  case PtBorderRightColor:
-                    val = pAbb->AbRightBColor;
-                    break;
-                  case PtBorderBottomColor:
-                    val = pAbb->AbBottomBColor;
-                    break;
-                  case PtBorderLeftColor:
-                    val = pAbb->AbLeftBColor;
-                    break;
-                  case PtMarginTop:
-                    val = pAbb->AbTopMargin;
-                    *unit = pAbb->AbTopMarginUnit;
-                    break;
-                  case PtMarginRight:
-                    val = pAbb->AbRightMargin;
-                    *unit = pAbb->AbRightMarginUnit;
-                    break;
-                  case PtMarginBottom:
-                    val = pAbb->AbBottomMargin;
-                    *unit = pAbb->AbBottomMarginUnit;
-                    break;
-                  case PtMarginLeft:
-                    val = pAbb->AbLeftMargin;
-                    *unit = pAbb->AbLeftMarginUnit;
-                    break;
-                  case PtPaddingTop:
-                    val = pAbb->AbTopPadding;
-                    *unit = pAbb->AbTopPaddingUnit;
-                    break;
-                  case PtPaddingRight:
-                    val = pAbb->AbRightPadding;
-                    *unit = pAbb->AbRightPaddingUnit;
-                    break;
-                  case PtPaddingBottom:
-                    val = pAbb->AbBottomPadding;
-                    *unit = pAbb->AbBottomPaddingUnit;
-                    break;
-                  case PtPaddingLeft:
-                    val = pAbb->AbLeftPadding;
-                    *unit = pAbb->AbLeftPaddingUnit;
-                    break;
-                  case PtBorderTopWidth:
-                    val = pAbb->AbTopBorder;
-                    *unit = pAbb->AbTopBorderUnit;
-                    break;
-                  case PtBorderRightWidth:
-                    val = pAbb->AbRightBorder;
-                    *unit = pAbb->AbRightBorderUnit;
-                    break;
-                  case PtBorderBottomWidth:
-                    val = pAbb->AbBottomBorder;
-                    *unit = pAbb->AbBottomBorderUnit;
-                    break;
-                  case PtBorderLeftWidth:
-                    val = pAbb->AbLeftBorder;
-                    *unit = pAbb->AbLeftBorderUnit;
-                    break;
-                  case PtXRadius:
-                    val = pAbb->AbRx;
-                    *unit = pAbb->AbRxUnit;
-                    break;
-                  case PtYRadius:
-                    val = pAbb->AbRy;
-                    *unit = pAbb->AbRyUnit;
-                    break;
-                  case PtTop:
-                    if (pAb->AbLeafType != LtCompound ||
-                        pAbb->AbPositioning == NULL)
-                      {
-                        val = 0;
-                        *unit = UnUndefined;
-                      }
-                    else
-                      {
-                        val = pAbb->AbPositioning->PnTopDistance;
-                        *unit = pAbb->AbPositioning->PnTopUnit;
-                      }
-                    break;
-                  case PtRight:
-                    if (pAb->AbLeafType != LtCompound ||
-                        pAbb->AbPositioning == NULL)
-                      {
-                        val = 0;
-                        *unit = UnUndefined;
-                      }
-                    else
-                      {
-                        val = pAbb->AbPositioning->PnRightDistance;
-                        *unit = pAbb->AbPositioning->PnRightUnit;
-                      }
-                    break;
-                  case PtBottom:
-                    if (pAb->AbLeafType != LtCompound ||
-                        pAbb->AbPositioning == NULL)
-                      {
-                        val = 0;
-                        *unit = UnUndefined;
-                      }
-                    else
-                      {
-                        val = pAbb->AbPositioning->PnBottomDistance;
-                        *unit = pAbb->AbPositioning->PnBottomUnit;
-                      }
-                    break;
-                  case PtLeft:
-                    if (pAb->AbLeafType != LtCompound ||
-                        pAbb->AbPositioning == NULL)
-                      {
-                        val = 0;
-                        *unit = UnUndefined;
-                      }
-                    else
-                      {
-                        val = pAbb->AbPositioning->PnLeftDistance;
-                        *unit = pAbb->AbPositioning->PnLeftUnit;
-                      }
-                    break;
-                  default:
-                    break;
-                  }
-
-                if (pPRule->PrInhMinOrMax != 0 && !pPRule->PrInhPercent)
-                  /* il y a un minimum ou un maximum a respecter */
-                  {
-                    if (pPRule->PrMinMaxAttr)
-                      /* c'est la valeur d'un attribut */
-                      {
-                        pAttr = GetEnclosingAttr (pEl, pPRule->PrInhMinOrMax,
-                                                  pAttr);
-                        if (pPRule->PrInhMinOrMax < 0)
-                          /* inverser cette valeur */
-                          i = -AttrValue (pAttr);
-                        else
-                          i = AttrValue (pAttr);
-                        if (pPRule->PrInhUnit == UnRelative ||
-                            pPRule->PrInhUnit == UnXHeight)
-                          if (pPRule->PrType == PtIndent ||
-                              pPRule->PrType == PtLineSpacing ||
-                              pPRule->PrType == PtLineWeight ||
-                              pPRule->PrType == PtOpacity ||
-                              pPRule->PrType == PtFillOpacity ||
-                              pPRule->PrType == PtStrokeOpacity)
-                            /* convertit en 1/10 de caractere ou en milliemes
-                               pour l'opacite' */
-                            i = 10 * i;
-                      }
-                    else
-                      /* c'est la valeur elle meme qui est dans la regle */
-                      i = pPRule->PrInhMinOrMax;
-                    if (pPRule->PrInhDelta >= 0)
-                      /* c'est un maximum */
-                      /* dans les paves, les tailles relatives sont */
-                      /* exprimees dans une echelle de valeurs entre 0 et */
-                      /* n-1, alors que dans les regles de presentation */
-                      /* l'echelle est entre 1 et n. */
-                      if (pPRule->PrType == PtSize &&
-                          pAbb->AbSizeUnit == UnRelative)
+        case PresInherit:
+          if (pPRule->PrType == PtVisibility)
+            pAbb = AbsBoxInheritImm (pPRule, pEl, view);
+          else
+            pAbb = AbsBoxInherit (pPRule, pEl, view);
+          if (pAbb == NULL)
+            *ok = FALSE;
+          else
+            {
+              if (pPRule->PrInhAttr)
+                {
+                  /* c'est la valeur d'un attribut */
+                  pAttr = GetEnclosingAttr (pEl, pPRule->PrInhDelta, pAttr);
+                  if (pPRule->PrInhDelta < 0 && !pPRule->PrInhPercent)
+                    /* il faut retrancher cette valeur */
+                    i = -AttrValue (pAttr);
+                  else
+                    /* il faut ajouter cette valeur */
+                    i = AttrValue (pAttr);
+                  if (!pPRule->PrInhPercent &&
+                      (pPRule->PrInhUnit == UnRelative ||
+                       pPRule->PrInhUnit == UnXHeight))
+                    if (pPRule->PrType == PtIndent ||
+                        pPRule->PrType == PtLineSpacing ||
+                        pPRule->PrType == PtLineWeight ||
+                        pPRule->PrType == PtMarginTop ||
+                        pPRule->PrType == PtMarginRight ||
+                        pPRule->PrType == PtMarginBottom ||
+                        pPRule->PrType == PtMarginLeft ||
+                        pPRule->PrType == PtPaddingTop ||
+                        pPRule->PrType == PtPaddingRight ||
+                        pPRule->PrType == PtPaddingBottom ||
+                        pPRule->PrType == PtPaddingLeft ||
+                        pPRule->PrType == PtBorderTopWidth ||
+                        pPRule->PrType == PtBorderRightWidth ||
+                        pPRule->PrType == PtBorderBottomWidth ||
+                        pPRule->PrType == PtBorderLeftWidth ||
+                        pPRule->PrType == PtXRadius ||
+                        pPRule->PrType == PtYRadius ||
+                        pPRule->PrType == PtTop ||
+                        pPRule->PrType == PtRight ||
+                        pPRule->PrType == PtBottom ||
+                        pPRule->PrType == PtLeft ||
+                        pPRule->PrType == PtOpacity ||
+                        pPRule->PrType == PtFillOpacity ||
+                        pPRule->PrType == PtStrokeOpacity)
+                      /* convertit en 1/10 de caractere */
+                      /* ou en milliemes pour l'opacite' */
+                      i = 10 * i;
+                }
+              else
+                /* c'est la valeur elle meme qui est dans la regle */
+                i = pPRule->PrInhDelta;
+              
+              switch (pPRule->PrType)
+                {
+                case PtVisibility:
+                  if (pPRule->PrInhPercent)
+                    val = (pAbb->AbVisibility * i) / 100;
+                  else
+                    val = pAbb->AbVisibility + i;
+                  break;
+                case PtSize:
+                  *unit = pAbb->AbSizeUnit;
+                  if (pPRule->PrInhPercent)
+                    /* a percentage is applied to the inherited value */
+                    {
+                      if (*unit == UnRelative)
+                        /* convert the relative inherited value into points*/
                         {
-                          if (val > i - 1)
-                            val = i - 1;
+                          val = (ThotFontPointSize (pAbb->AbSize) * i) / 100;
+                          *unit = UnPoint;
                         }
                       else
+                        val = (pAbb->AbSize * i) / 100;
+                    }
+                  else if (pPRule->PrInhUnit == *unit || i == 0)
+                    /* same units, just add values */
+                    val = pAbb->AbSize + i;
+                  else if (*unit == UnRelative)
+                    /* the inherited value is relative, but the delta is
+                       absolute. Convert the inherited value */
+                    {
+                      val = ThotFontPointSize (pAbb->AbSize);
+                      if (pPRule->PrInhUnit == UnPoint)
+                        val = val + i;
+                      else
+                        val = val + PixelToPoint (i);
+                      *unit = UnPoint;
+                    }
+                  else if (*unit == UnPoint)
+                    /* the inherited value is in points */
+                    {
+                      if (pPRule->PrInhUnit == UnRelative)
+                        /* a increment of 1 relative unit equals 20% */
+                        val = pAbb->AbSize + ((pAbb->AbSize * i * 20) / 100);
+                      else if (pPRule->PrInhUnit == UnPixel)
+                        /* delta is in pixels. Convert it to points */
+                        val = pAbb->AbSize + PixelToPoint (i);
+                    }
+                  else if (*unit == UnPixel)
+                    /* the inherited value is in pixels */
+                    {
+                      if (pPRule->PrInhUnit == UnRelative)
+                        /* a increment of 1 relative unit equals 20% */
+                        val = pAbb->AbSize + ((pAbb->AbSize * i * 20) / 100);
+                      else if (pPRule->PrInhUnit == UnPoint)
+                        /* delta is in pixels. Convert it to pixels */
+                        val = pAbb->AbSize + PointToPixel (i);
+                    }
+                  else if (*unit == UnPercent)
+                    /* the inherited value is a percentage */
+                    {
+                      if (i < 0)
                         {
-                          if (val > i)
-                            val = i;
+                          sign = -1;
+                          i = -i;
                         }
-                    else
-                      /* c'est un minimum */
-                      /* dans les paves, les tailles relatives sont */
-                      /* exprimees dans une echelle de valeurs entre 0 et */
-                      /* n-1, alors que dans les regles de presentation */
-                      /* l'echelle est entre 1 et n. */
-                      if (pPRule->PrType == PtSize && pAbb->AbSizeUnit == UnRelative)
-                        {
-                          if (val < i - 1)
-                            val = i - 1;
-                        }
-                      else if (val < i)
-                        val = i;
-                  }
-              }
-            break;
-          case PresFunction:
-            break;
-          case PresImmediate:
-            if (pPRule->PrType == PtVisibility ||
-                pPRule->PrType == PtDepth ||
-                pPRule->PrType == PtFillPattern ||
-                pPRule->PrType == PtBackground ||
-                pPRule->PrType == PtForeground ||
-                pPRule->PrType == PtBorderTopColor ||
-                pPRule->PrType == PtBorderRightColor ||
-                pPRule->PrType == PtBorderBottomColor ||
-                pPRule->PrType == PtBorderLeftColor)
-              {
-                if (pPRule->PrAttrValue)
-                  /* c'est la valeur d'un attribut */
-                  {
-                    pAttr = GetEnclosingAttr (pEl, pPRule->PrIntValue, pAttr);
-                    if (pPRule->PrIntValue < 0)
-                      /* il faut inverser cette valeur */
-                      val = -AttrValue (pAttr);
-                    else
-                      val = AttrValue (pAttr);
-                  }
-                else
-                  /* c'est la valeur elle meme qui est dans la regle */
-                  val = pPRule->PrIntValue;
-              }
-            else if (pPRule->PrType == PtBreak1 ||
-                     pPRule->PrType == PtBreak2 ||
-                     pPRule->PrType == PtIndent ||
-                     pPRule->PrType == PtSize ||
-                     pPRule->PrType == PtLineSpacing ||
-                     pPRule->PrType == PtLineWeight ||
-                     pPRule->PrType == PtMarginTop ||
-                     pPRule->PrType == PtMarginRight ||
-                     pPRule->PrType == PtMarginBottom ||
-                     pPRule->PrType == PtMarginLeft ||
-                     pPRule->PrType == PtPaddingTop ||
-                     pPRule->PrType == PtPaddingRight ||
-                     pPRule->PrType == PtPaddingBottom ||
-                     pPRule->PrType == PtPaddingLeft ||
-                     pPRule->PrType == PtBorderTopWidth ||
-                     pPRule->PrType == PtBorderRightWidth ||
-                     pPRule->PrType == PtBorderBottomWidth ||
-                     pPRule->PrType == PtBorderLeftWidth ||
-                     pPRule->PrType == PtXRadius ||
-                     pPRule->PrType == PtYRadius ||
-                     pPRule->PrType == PtTop ||
-                     pPRule->PrType == PtRight ||
-                     pPRule->PrType == PtBottom ||
-                     pPRule->PrType == PtLeft)
-              {
-                if (pPRule->PrMinAttr)
-                  /* c'est la valeur d'un attribut */
-                  {
-                    pAttr = GetEnclosingAttr (pEl, pPRule->PrMinValue, pAttr);
-                    if (pPRule->PrMinValue < 0)
-                      /* il faut inverser cette valeur */
-                      val = -AttrValue (pAttr);
-                    else
-                      val = AttrValue (pAttr);
-                    if (pPRule->PrMinUnit == UnRelative
-                        || pPRule->PrMinUnit == UnXHeight)
-                      if (pPRule->PrType != PtSize)
-                        /* convertit en 1/10 de caractere */
-                        val = val * 10;
-                  }
-                else
-                  /* c'est la valeur elle-meme qui est dans la regle */
-                  val = pPRule->PrMinValue;
-		
-                if (pPRule->PrMinUnit == UnPercent &&
-                    (pPRule->PrType == PtBreak1 ||
-                     pPRule->PrType == PtBreak2 ||
-                     pPRule->PrType == PtSize ||
-                     pPRule->PrType == PtLineSpacing ||
-                     pPRule->PrType == PtLineWeight))
-                  {
-                    if (pPRule->PrType == PtSize)
-                      /* font-size is relative to the parent's font-size */
-                      {
-                        /* get the parent abstract box */
-                        AncestorAbsBox (pEl, view, &pAbb, &pElInherit);
-                        if (pAbb == NULL)
-                          /* no parent ??? */
-                          *ok = FALSE;
-                        else
-                          /* compute the font-size */
-                          {
-                            val = (pAbb->AbSize * val) / 100;
-                            *unit = pAbb->AbSizeUnit;
-                          }
-                      }
-                    else
-                      /* the value is relative to the font-size of the
-                         abstract box itself (relative size) */
-                      {
-                        /* Relative a la police courante */
-                        *unit = UnRelative;
-                        val = val / 10;
-                      }
-                  }
-                else
-                  {
-                    *unit = pPRule->PrMinUnit;
+                      else
+                        sign = 1;
+                      if (pPRule->PrInhUnit == UnPixel)
+                        i = FontRelSize (PixelToPoint (i));
+                      else if (pPRule->PrInhUnit == UnPoint)
+                        i = FontRelSize (i);
+                      val = pAbb->AbSize + (sign * i * 20);
+                    }
+
+                  if (*unit == UnRelative)
+                    {
+                      if (val > MAX_LOG_SIZE)
+                        val = MAX_LOG_SIZE;
+                      else if (val < 0)
+                        val = 0;
+                    }
+                  break;
+                case PtIndent:
+                  if (pPRule->PrInhPercent)
+                    val = (pAbb->AbIndent * i) / 100;
+                  else
+                    val = pAbb->AbIndent + i;
+                  *unit = pAbb->AbIndentUnit;
+                  break;
+                case PtLineSpacing:
+                  if (pPRule->PrInhPercent)
+                    val = (pAbb->AbLineSpacing * i) / 100;
+                  else
+                    val = pAbb->AbLineSpacing + i;
+                  *unit = pAbb->AbLineSpacingUnit;
+                  break;
+                case PtDepth:
+                  if (pPRule->PrInhPercent)
+                    val = (pAbb->AbDepth * i) / 100;
+                  else
+                    val = pAbb->AbDepth + i;
+                  break;
+                case PtFillPattern:
+                  val = pAbb->AbFillPattern;
+                  break;
+                case PtOpacity:
+                  val = pAbb->AbOpacity + i;
+                  if (val > 1000)
+                    val = 1000;
+                  else if (val < 0)
+                    val = 0;
+                  break;
+                case PtFillOpacity:
+                  val = pAbb->AbFillOpacity + i;
+                  if (val > 1000)
+                    val = 1000;
+                  else if (val < 0)
+                    val = 0;
+                  break;
+                case PtStrokeOpacity:
+                  val = pAbb->AbStrokeOpacity + i;
+                  if (val > 1000)
+                    val = 1000;
+                  else if (val < 0)
+                    val = 0;
+                  break;
+                case PtBackground:
+                  val = pAbb->AbBackground;
+                  break;
+                case PtForeground:
+                  val = pAbb->AbForeground;
+                  break;
+                case PtLineWeight:
+                  if (pPRule->PrInhPercent)
+                    val = (pAbb->AbLineWeight * i) / 100;
+                  else
+                    val = pAbb->AbLineWeight + i;
+                  if (val < 0)
+                    val = 0;
+                  *unit = pAbb->AbLineWeightUnit;
+                  break;
+                case PtBorderTopColor:
+                  val = pAbb->AbTopBColor;
+                  break;
+                case PtBorderRightColor:
+                  val = pAbb->AbRightBColor;
+                  break;
+                case PtBorderBottomColor:
+                  val = pAbb->AbBottomBColor;
+                  break;
+                case PtBorderLeftColor:
+                  val = pAbb->AbLeftBColor;
+                  break;
+                case PtMarginTop:
+                  val = pAbb->AbTopMargin;
+                  *unit = pAbb->AbTopMarginUnit;
+                  break;
+                case PtMarginRight:
+                  val = pAbb->AbRightMargin;
+                  *unit = pAbb->AbRightMarginUnit;
+                  break;
+                case PtMarginBottom:
+                  val = pAbb->AbBottomMargin;
+                  *unit = pAbb->AbBottomMarginUnit;
+                  break;
+                case PtMarginLeft:
+                  val = pAbb->AbLeftMargin;
+                  *unit = pAbb->AbLeftMarginUnit;
+                  break;
+                case PtPaddingTop:
+                  val = pAbb->AbTopPadding;
+                  *unit = pAbb->AbTopPaddingUnit;
+                  break;
+                case PtPaddingRight:
+                  val = pAbb->AbRightPadding;
+                  *unit = pAbb->AbRightPaddingUnit;
+                  break;
+                case PtPaddingBottom:
+                  val = pAbb->AbBottomPadding;
+                  *unit = pAbb->AbBottomPaddingUnit;
+                  break;
+                case PtPaddingLeft:
+                  val = pAbb->AbLeftPadding;
+                  *unit = pAbb->AbLeftPaddingUnit;
+                  break;
+                case PtBorderTopWidth:
+                  val = pAbb->AbTopBorder;
+                  *unit = pAbb->AbTopBorderUnit;
+                  break;
+                case PtBorderRightWidth:
+                  val = pAbb->AbRightBorder;
+                  *unit = pAbb->AbRightBorderUnit;
+                  break;
+                case PtBorderBottomWidth:
+                  val = pAbb->AbBottomBorder;
+                  *unit = pAbb->AbBottomBorderUnit;
+                  break;
+                case PtBorderLeftWidth:
+                  val = pAbb->AbLeftBorder;
+                  *unit = pAbb->AbLeftBorderUnit;
+                  break;
+                case PtXRadius:
+                  val = pAbb->AbRx;
+                  *unit = pAbb->AbRxUnit;
+                  break;
+                case PtYRadius:
+                  val = pAbb->AbRy;
+                  *unit = pAbb->AbRyUnit;
+                  break;
+                case PtTop:
+                  if (pAb->AbLeafType != LtCompound ||
+                      pAbb->AbPositioning == NULL)
+                    {
+                      val = 0;
+                      *unit = UnUndefined;
+                    }
+                  else
+                    {
+                      val = pAbb->AbPositioning->PnTopDistance;
+                      *unit = pAbb->AbPositioning->PnTopUnit;
+                    }
+                  break;
+                case PtRight:
+                  if (pAb->AbLeafType != LtCompound ||
+                      pAbb->AbPositioning == NULL)
+                    {
+                      val = 0;
+                      *unit = UnUndefined;
+                    }
+                  else
+                    {
+                      val = pAbb->AbPositioning->PnRightDistance;
+                      *unit = pAbb->AbPositioning->PnRightUnit;
+                    }
+                  break;
+                case PtBottom:
+                  if (pAb->AbLeafType != LtCompound ||
+                      pAbb->AbPositioning == NULL)
+                    {
+                      val = 0;
+                      *unit = UnUndefined;
+                    }
+                  else
+                    {
+                      val = pAbb->AbPositioning->PnBottomDistance;
+                      *unit = pAbb->AbPositioning->PnBottomUnit;
+                    }
+                  break;
+                case PtLeft:
+                  if (pAb->AbLeafType != LtCompound ||
+                      pAbb->AbPositioning == NULL)
+                    {
+                      val = 0;
+                      *unit = UnUndefined;
+                    }
+                  else
+                    {
+                      val = pAbb->AbPositioning->PnLeftDistance;
+                      *unit = pAbb->AbPositioning->PnLeftUnit;
+                    }
+                  break;
+                default:
+                  break;
+                }
+
+              if (pPRule->PrInhMinOrMax != 0 && !pPRule->PrInhPercent)
+                /* il y a un minimum ou un maximum a respecter */
+                {
+                  if (pPRule->PrMinMaxAttr)
+                    /* c'est la valeur d'un attribut */
+                    {
+                      pAttr = GetEnclosingAttr (pEl, pPRule->PrInhMinOrMax,
+                                                pAttr);
+                      if (pPRule->PrInhMinOrMax < 0)
+                        /* inverser cette valeur */
+                        i = -AttrValue (pAttr);
+                      else
+                        i = AttrValue (pAttr);
+                      if (pPRule->PrInhUnit == UnRelative ||
+                          pPRule->PrInhUnit == UnXHeight)
+                        if (pPRule->PrType == PtIndent ||
+                            pPRule->PrType == PtLineSpacing ||
+                            pPRule->PrType == PtLineWeight ||
+                            pPRule->PrType == PtOpacity ||
+                            pPRule->PrType == PtFillOpacity ||
+                            pPRule->PrType == PtStrokeOpacity)
+                          /* convertit en 1/10 de caractere ou en milliemes
+                             pour l'opacite' */
+                          i = 10 * i;
+                    }
+                  else
+                    /* c'est la valeur elle meme qui est dans la regle */
+                    i = pPRule->PrInhMinOrMax;
+                  if (pPRule->PrInhDelta >= 0)
+                    /* c'est un maximum */
+                    /* dans les paves, les tailles relatives sont */
+                    /* exprimees dans une echelle de valeurs entre 0 et */
+                    /* n-1, alors que dans les regles de presentation */
+                    /* l'echelle est entre 1 et n. */
                     if (pPRule->PrType == PtSize &&
-                        pPRule->PrMinUnit == UnRelative)
-                      val--;
-                  }
-              }
-            if (pPRule->PrType == PtOpacity || 
-                pPRule->PrType == PtFillOpacity ||
-                pPRule->PrType == PtStrokeOpacity)
-              {
-                if (pPRule->PrAttrValue)
-                  /* c'est la valeur d'un attribut */
-                  {
-                    pAttr = GetEnclosingAttr (pEl, pPRule->PrIntValue, pAttr);
-                    /* the attribute value is supposed to be a percentage, but
-                       the value in the abstract box is in thousandth */
-                    val = AttrValue (pAttr) * 10;
-                  }
-                else
-                  /* c'est la valeur elle meme qui est dans la regle */
-                  val = pPRule->PrIntValue;
-              }
-            if (pPRule->PrType == PtSize && *unit == UnRelative)
-              {
-                if (val > MAX_LOG_SIZE)
-                  val = MAX_LOG_SIZE;
-                else if (val < 0)
-                  val = 0;
-              }
-            else if (pPRule->PrType == PtLineWeight && val < 0)
-              val = 0;
-            break;
-          default:
-            break;
-          }
+                        pAbb->AbSizeUnit == UnRelative)
+                      {
+                        if (val > i - 1)
+                          val = i - 1;
+                      }
+                    else
+                      {
+                        if (val > i)
+                          val = i;
+                      }
+                  else
+                    /* c'est un minimum */
+                    /* dans les paves, les tailles relatives sont */
+                    /* exprimees dans une echelle de valeurs entre 0 et */
+                    /* n-1, alors que dans les regles de presentation */
+                    /* l'echelle est entre 1 et n. */
+                    if (pPRule->PrType == PtSize && pAbb->AbSizeUnit == UnRelative)
+                      {
+                        if (val < i - 1)
+                          val = i - 1;
+                      }
+                    else if (val < i)
+                      val = i;
+                }
+            }
+          break;
+        case PresFunction:
+          break;
+        case PresImmediate:
+          if (pPRule->PrType == PtVisibility ||
+              pPRule->PrType == PtDepth ||
+              pPRule->PrType == PtFillPattern ||
+              pPRule->PrType == PtBackground ||
+              pPRule->PrType == PtForeground ||
+              pPRule->PrType == PtBorderTopColor ||
+              pPRule->PrType == PtBorderRightColor ||
+              pPRule->PrType == PtBorderBottomColor ||
+              pPRule->PrType == PtBorderLeftColor)
+            {
+              if (pPRule->PrAttrValue)
+                /* c'est la valeur d'un attribut */
+                {
+                  pAttr = GetEnclosingAttr (pEl, pPRule->PrIntValue, pAttr);
+                  if (pPRule->PrIntValue < 0)
+                    /* il faut inverser cette valeur */
+                    val = -AttrValue (pAttr);
+                  else
+                    val = AttrValue (pAttr);
+                }
+              else
+                /* c'est la valeur elle meme qui est dans la regle */
+                val = pPRule->PrIntValue;
+            }
+          else if (pPRule->PrType == PtBreak1 ||
+                   pPRule->PrType == PtBreak2 ||
+                   pPRule->PrType == PtIndent ||
+                   pPRule->PrType == PtSize ||
+                   pPRule->PrType == PtLineSpacing ||
+                   pPRule->PrType == PtLineWeight ||
+                   pPRule->PrType == PtMarginTop ||
+                   pPRule->PrType == PtMarginRight ||
+                   pPRule->PrType == PtMarginBottom ||
+                   pPRule->PrType == PtMarginLeft ||
+                   pPRule->PrType == PtPaddingTop ||
+                   pPRule->PrType == PtPaddingRight ||
+                   pPRule->PrType == PtPaddingBottom ||
+                   pPRule->PrType == PtPaddingLeft ||
+                   pPRule->PrType == PtBorderTopWidth ||
+                   pPRule->PrType == PtBorderRightWidth ||
+                   pPRule->PrType == PtBorderBottomWidth ||
+                   pPRule->PrType == PtBorderLeftWidth ||
+                   pPRule->PrType == PtXRadius ||
+                   pPRule->PrType == PtYRadius ||
+                   pPRule->PrType == PtTop ||
+                   pPRule->PrType == PtRight ||
+                   pPRule->PrType == PtBottom ||
+                   pPRule->PrType == PtLeft)
+            {
+              if (pPRule->PrMinAttr)
+                /* c'est la valeur d'un attribut */
+                {
+                  pAttr = GetEnclosingAttr (pEl, pPRule->PrMinValue, pAttr);
+                  if (pPRule->PrMinValue < 0)
+                    /* il faut inverser cette valeur */
+                    val = -AttrValue (pAttr);
+                  else
+                    val = AttrValue (pAttr);
+                  if (pPRule->PrMinUnit == UnRelative
+                      || pPRule->PrMinUnit == UnXHeight)
+                    if (pPRule->PrType != PtSize)
+                      /* convertit en 1/10 de caractere */
+                      val = val * 10;
+                }
+              else
+                /* c'est la valeur elle-meme qui est dans la regle */
+                val = pPRule->PrMinValue;
+		
+              if (pPRule->PrMinUnit == UnPercent &&
+                  (pPRule->PrType == PtBreak1 ||
+                   pPRule->PrType == PtBreak2 ||
+                   pPRule->PrType == PtSize ||
+                   pPRule->PrType == PtLineSpacing ||
+                   pPRule->PrType == PtLineWeight))
+                {
+                  if (pPRule->PrType == PtSize)
+                    /* font-size is relative to the parent's font-size */
+                    {
+                      /* get the parent abstract box */
+                      AncestorAbsBox (pEl, view, &pAbb, &pElInherit);
+                      if (pAbb == NULL)
+                        /* no parent ??? */
+                        *ok = FALSE;
+                      else
+                        /* compute the font-size */
+                        {
+                          val = (pAbb->AbSize * val) / 100;
+                          *unit = pAbb->AbSizeUnit;
+                        }
+                    }
+                  else
+                    /* the value is relative to the font-size of the
+                       abstract box itself (relative size) */
+                    {
+                      /* Relative a la police courante */
+                      *unit = UnRelative;
+                      val = val / 10;
+                    }
+                }
+              else
+                {
+                  *unit = pPRule->PrMinUnit;
+                  if (pPRule->PrType == PtSize &&
+                      pPRule->PrMinUnit == UnRelative)
+                    val--;
+                }
+            }
+          if (pPRule->PrType == PtOpacity || 
+              pPRule->PrType == PtFillOpacity ||
+              pPRule->PrType == PtStrokeOpacity)
+            {
+              if (pPRule->PrAttrValue)
+                /* c'est la valeur d'un attribut */
+                {
+                  pAttr = GetEnclosingAttr (pEl, pPRule->PrIntValue, pAttr);
+                  /* the attribute value is supposed to be a percentage, but
+                     the value in the abstract box is in thousandth */
+                  val = AttrValue (pAttr) * 10;
+                }
+              else
+                /* c'est la valeur elle meme qui est dans la regle */
+                val = pPRule->PrIntValue;
+            }
+          if (pPRule->PrType == PtSize && *unit == UnRelative)
+            {
+              if (val > MAX_LOG_SIZE)
+                val = MAX_LOG_SIZE;
+              else if (val < 0)
+                val = 0;
+            }
+          else if (pPRule->PrType == PtLineWeight && val < 0)
+            val = 0;
+          break;
+        default:
+          break;
+        }
     }
   return val;
 }
@@ -3667,6 +3646,8 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
           pAb->AbTopBorder = IntegerRule (pPRule, pAb->AbElement,
                                           pAb->AbDocView, &appl, &unit,
                                           pAttr, pAb);
+if (!strcmp (pAb->AbElement->ElLabel, "L86"))
+  printf ("BorderTop L86 val=%d unit=%d\n", pAb->AbTopBorder, unit);
           pAb->AbTopBorderUnit = unit;
           if (!appl && pAb->AbElement->ElParent == NULL)
             /* Pas de regle pour la racine, on met la valeur par defaut */

@@ -4325,7 +4325,7 @@ void RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox,
           pBox->BxCycles = 0;
         }
       /* Faut-il conserver la hauteur ? */
-      if (height != 0 && height != pBox->BxH)
+      if (height != 0 && height != pBox->BxHeight)
         {
           /* Il faut propager la modification de hauteur */
           propagateStatus = Propagate;
