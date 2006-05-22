@@ -7,26 +7,29 @@
 #ifdef __STDC__
 
 extern char *GetSchemaFromDocType ( DocumentType docType );
-extern void LoadTemplate ( char* templatename,
-                           char* schemaname );
+extern void LoadTemplate (Document doc, char* templatename, char* docname,
+						  DocumentType doctype, ThotBool createInstance);
 extern void CreateInstanceDocument ( Document doc,
                                      char *templatename,
                                      char *docname,
                                      DocumentType docType );
 extern void InstanciateTemplate(char *templatename, Document doc);
-extern void InstanciateTemplate (char *templatename, char *schemaname, char *docname, DocumentType docType);
+extern void InstanciateTemplate (Document doc, char *templatename, char *docname,
+								 DocumentType docType);
 
 #else /* __STDC__ */
 
 extern char *GetSchemaFromDocType ( DocumentType docType );
-extern void LoadTemplate ( char* templatename,
-                             char* schemaname );
+extern void LoadTemplate (Document doc, char* templatename, char* docname,
+						  DocumentType doctype, ThotBool createInstance);
 extern void CreateInstanceDocument ( Document doc,
                                        char *templatename,
                                        char *docname,
                                        DocumentType docType );
 extern void InstanciateTemplate(char *templatename, Document doc);
-extern void InstanciateTemplate (char *templatename, char *schemaname, char *docname, DocumentType docType);
+extern void InstanciateTemplate (Document doc, char *templatename, char *docname,
+								 DocumentType docType);
+
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

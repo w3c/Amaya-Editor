@@ -63,16 +63,10 @@ int CreateInstanceOfTemplate (Document doc, char *templatename, char *docname,
                               DocumentType docType)
 {
 #ifdef TEMPLATES
-	char* schemaname = GetSchemaFromDocType(docType);	
-	ThotBool dontReplace = DontReplaceOldDoc;
 
-	LoadTemplate( templatename, schemaname);
-	DontReplaceOldDoc = dontReplace;
-	InstanciateTemplate( templatename, schemaname, docname, docType);
-	//CreateInstanceDocument (doc, templatename, docname, docType);
-	//OpenInstance(doc, docname, docType);
-	return -1;
+	LoadTemplate(doc, templatename, docname, docType, TRUE);
 #endif /* TEMPLATES */
+	return 0;
 }
 
 #ifdef TEMPLATES
@@ -186,9 +180,9 @@ ThotBool UseMenuClicked (NotifyElement *event)
 	TtaWaitShowProcDialogue();
 	TtaDestroyDialogue (BaseDialog + OptionMenu);
 
+#endif /* TEMPLATES */
 	//ReturnOption
 	return TRUE;
-#endif /* TEMPLATES */
 }
 
 /*----------------------------------------------------------------------
@@ -198,7 +192,7 @@ ThotBool UseMenuClicked (NotifyElement *event)
 ThotBool BagMenuClicked (NotifyElement *event)
 {
 #ifdef TEMPLATES
-	return TRUE;
 #endif /* TEMPLATES */
+	return TRUE;
 }
 

@@ -42,7 +42,8 @@ STRUCT
   	END;
 
   repeat ( ATTR id = TEXT; minOccurs = TEXT; maxOccurs = TEXT; title )
-  	= LIST OF ( Repetition = CASE OF
+  	= LIST OF ( Repetition 
+		= CASE OF
 		useEl;
 		option;
 		repeat;

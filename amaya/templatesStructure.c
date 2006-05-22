@@ -18,16 +18,23 @@
 #include "HTMLactions_f.h"
 #include "HTMLhistory_f.h"
 #include "AHTURLTools_f.h"
-#include "templateDeclarations.h"
-#include "templatesStructure_f.h"
+#include "Xml2thot_f.h"
 
 #ifdef TEMPLATES
+
+#include "templateDeclarations.h"
+#include "templatesStructure_f.h"
 #include "Template.h"
+
 /* Information needed for the callback after loading a template.
 Just the path of the template, which identifies it. */
 typedef struct _TemplateCtxt
 {
-	char *path;
+	char			*templatePath;
+	char			*instancePath;
+	DocumentType    docType;
+	ThotBool		dontReplace;
+	ThotBool		createInstance;
 } TemplateCtxt;
 
 typedef struct _InstanciationCtxt
@@ -36,17 +43,47 @@ typedef struct _InstanciationCtxt
 	char *			instancePath;
 	char *			schemaName;
 	DocumentType	docType;
+	ThotBool		dontReplace;
 } InstanciationCtxt;
 
+#endif /* TEMPLATES */
+
+/*----------------------------------------------------------------------
+GetSchemaFromDocType: Returns the name of the schema corresponding to 
+a doc type.
+----------------------------------------------------------------------*/
+char *GetSchemaFromDocType (DocumentType docType)
+{
+#ifdef TEMPLATES
+	switch (docType)
+    {
+    case docAnnot :
+		return "Annot";
+    case docBookmark :
+		return "Topics";
+    case docSVG :
+		return "SVG";
+    case docMath :
+		return "MathML";
+    case docXml :
+		return "XML";
+    default :
+		return "HTML";
+    }
+#endif // TEMPLATES
+	return "HTML";
+}
 
 /*----------------------------------------------------------------------
 Creates an Element type and stores all needed information. 
 ----------------------------------------------------------------------*/
 void RemoveOldDeclarations (XTigerTemplate t, char *name) {
+#ifdef TEMPLATES
 	Remove(t->components, name);
 	Remove(t->elements, name);
 	Remove(t->unions, name);
 	Remove(t->simpleTypes, name);
+#endif // TEMPLATES
 }
 
 /*----------------------------------------------------------------------
@@ -54,6 +91,7 @@ Returns the value of a string attribute
 ----------------------------------------------------------------------*/
 char *GetAttributeStringValue (Element el, int att)
 {
+#ifdef TEMPLATES
 	AttributeType attType;
 	attType.AttrSSchema = TtaGetElementType(el).ElSSchema;
 	attType.AttrTypeNum = att;
@@ -64,6 +102,7 @@ char *GetAttributeStringValue (Element el, int att)
 	char *aux = (char*) TtaGetMemory(size+1);
 	TtaGiveTextAttributeValue (attribute, aux, &size);
 	return aux;
+#endif /* TEMPLATES */
 }
 
 /*----------------------------------------------------------------------
@@ -71,6 +110,7 @@ Creates an Element type and stores all needed information.
 ----------------------------------------------------------------------*/
 void AddElementDeclaration (XTigerTemplate t, Element el)
 {
+#ifdef TEMPLATES
 	char *name;
 	Declaration dec;
 	
@@ -82,6 +122,7 @@ void AddElementDeclaration (XTigerTemplate t, Element el)
 	Add(t->elements, name, dec);
 	
 	if (name)    TtaFreeMemory (name);
+#endif /* TEMPLATES */
 }
 
 /*----------------------------------------------------------------------
@@ -89,6 +130,7 @@ Creates a Union type and stores all needed information.
 ----------------------------------------------------------------------*/
 void AddUnionDeclaration (XTigerTemplate t, Element el)
 {
+#ifdef TEMPLATES
 	char *name, *include, *exclude;
 	Declaration dec;
 	
@@ -106,6 +148,7 @@ void AddUnionDeclaration (XTigerTemplate t, Element el)
 	if (name)    TtaFreeMemory (name);
 	if (include) TtaFreeMemory (include);
 	if (exclude) TtaFreeMemory (exclude);
+#endif /* TEMPLATES */
 }
 
 /*----------------------------------------------------------------------
@@ -113,6 +156,7 @@ Creates a Component type and stores all needed information.
 ----------------------------------------------------------------------*/
 void AddComponentDeclaration (XTigerTemplate t, Element el)
 {
+#ifdef TEMPLATES
 	char *name;
 	Declaration dec;
 	
@@ -123,6 +167,7 @@ void AddComponentDeclaration (XTigerTemplate t, Element el)
 	Add(t->components, name, dec);
 	
 	if (name)    TtaFreeMemory (name);
+#endif /* TEMPLATES */
 }
 
 /*----------------------------------------------------------------------
@@ -130,6 +175,7 @@ Imports all declarations in a library lib to a template t
 ----------------------------------------------------------------------*/
 void AddLibraryDeclarations (XTigerTemplate t, XTigerTemplate lib)
 {	
+#ifdef TEMPLATES
 	DicDictionary from = lib->elements;	
 	DicDictionary to = t->elements;
 	
@@ -153,6 +199,7 @@ void AddLibraryDeclarations (XTigerTemplate t, XTigerTemplate lib)
 	
 	for (First(from); !IsDone(from); Next(from))
 		Add (to, CurrentKey(from), CurrentElement(from));
+#endif /* TEMPLATES */
 }
 
 /*----------------------------------------------------------------------
@@ -160,15 +207,18 @@ Load (if needed) a library and adds all its declarations to a template
 ----------------------------------------------------------------------*/
 void AddImportedLibrary (XTigerTemplate t, Element el)
 {
+#ifdef TEMPLATES
 	XTigerTemplate lib = NULL;
 	//Load the library
 	AddLibraryDeclarations (t,lib);
+#endif /* TEMPLATES */
 }
 
 /*----------------------------------------------------------------------
 ----------------------------------------------------------------------*/
 void CheckTypesAttribute (XTigerTemplate t, Element el)
 {
+#ifdef TEMPLATES
 	char *types;
 	DicDictionary dic;
 	Declaration dec;
@@ -177,21 +227,24 @@ void CheckTypesAttribute (XTigerTemplate t, Element el)
 	dic   = CreateDictionaryFromList(types);
 	
 	for (First(dic); !IsDone(dic); Next(dic))
+	{
 		if ( GetDeclaration(t, CurrentKey(dic)) == NULL)
 		{
 			dec = NewElement(t, CurrentKey(dic));
 			Add(t->elements, CurrentKey(dic), dec);
 		}
-		
-		TtaFreeMemory(types);
-		CleanDictionary(dic);
+	}
+	
+	TtaFreeMemory(types);
+	CleanDictionary(dic);
+#endif /* TEMPLATES */
 }
 
 /*----------------------------------------------------------------------
 ----------------------------------------------------------------------*/
 void ParseDeclarations (XTigerTemplate t, Element el)
 {
-	
+#ifdef TEMPLATES	
 	ElementType type = TtaGetElementType(el);
 	
 	if(strcmp(TtaGetSSchemaName(type.ElSSchema),"Template")==0)
@@ -223,78 +276,69 @@ void ParseDeclarations (XTigerTemplate t, Element el)
 		ParseDeclarations(t, child);
 		TtaNextSibling(&child);
 	}
+#endif /* TEMPLATES */
 }
 
 /*----------------------------------------------------------------------
-GetTemplate_callback: Called after loading a template.
+LoadTemplate_callback: Called after loading a template.
 ----------------------------------------------------------------------*/
-void GetTemplate_callback (int newdoc, int status,  char *urlName,
+void LoadTemplate_callback (int newdoc, int status,  char *urlName,
                            char *outputfile, AHTHeaders *http_headers,
                            void * context)
 {	
+#ifdef TEMPLATES
+	TemplateCtxt *ctx = (TemplateCtxt*)context;
+	
 	XTigerTemplate t = NewXTigerTemplate (TRUE);
 	t->isLibrary = FALSE;
 	
-	Add (templates, ((TemplateCtxt*)context)->path, t);
+	Add (templates, ctx->templatePath, t);
 	Element el = TtaGetMainRoot(newdoc);
 	ParseDeclarations (t, el);
-	
-	//We free all the resources for the template
-	TtaCloseDocument (newdoc);
-	FreeDocumentResource (newdoc);
-	CleanUpParsingErrors ();
-}
-#endif /* TEMPLATES */
 
-/*----------------------------------------------------------------------
-GetSchemaFromDocType: Returns the name of the schema corresponding to 
-a doc type.
-----------------------------------------------------------------------*/
-char *GetSchemaFromDocType (DocumentType docType)
-{
-#ifdef TEMPLATES
-	switch (docType)
-    {
-    case docAnnot :
-		return "Annot";
-    case docBookmark :
-		return "Topics";
-    case docSVG :
-		return "SVG";
-    case docMath :
-		return "MathML";
-    case docXml :
-		return "XML";
-    default :
-		return "HTML";
-    }
+	if(ctx->createInstance) {
+		DontReplaceOldDoc = FALSE;
+		InstanciateTemplate(newdoc, ctx->templatePath, ctx->instancePath, ctx->docType);
+	}
+
+	TtaFreeMemory(ctx);
 #endif /* TEMPLATES */
-	return "HTML";
 }
+
 
 /*----------------------------------------------------------------------
 ----------------------------------------------------------------------*/
-void LoadTemplate (char* templatename, char* schemaname)
+void LoadTemplate (Document doc, char* templatename, char* docname, DocumentType doctype, ThotBool createInstance)
 {
 #ifdef TEMPLATES
-	Document newdoc, templateDoc;
+	//Stores the template path for next instanciations
+	char			*directory, *document;
+	unsigned int	size = strlen(templatename);
 	
-	if(Get(templates,templatename)) return;
-	
-	// We create a document (with no views) and ask Amaya to open the document
-	// remplacing it (so no view will be created!)
-	templateDoc = TtaNewDocument (schemaname, "tmp");
-	DontReplaceOldDoc = FALSE;
-	if (templateDoc != 0)
-    {
+	directory	= (char*) TtaGetMemory(size);
+	document	= (char*) TtaGetMemory(size);
+
+	TtaExtractName (templatename, directory, document);	
+	TtaSetEnvString ("TEMPLATES_DIRECTORY", directory, TRUE);
+
+	TtaFreeMemory(directory);
+	TtaFreeMemory(document);
+
+	if(!Get(templates,templatename))
+	{	
 		//Creation of the callback context
-		TemplateCtxt *ctx = (TemplateCtxt *)TtaGetMemory (sizeof (TemplateCtxt));
-		ctx->path = templatename;
-		newdoc = GetAmayaDoc (templatename, NULL, templateDoc, templateDoc,
-			CE_MAKEBOOK, FALSE, 
-			(void (*)(int, int, char*, char*, const AHTHeaders*, void*)) GetTemplate_callback,
+		TemplateCtxt *ctx	= (TemplateCtxt *)TtaGetMemory (sizeof (TemplateCtxt));
+		ctx->templatePath	= templatename;
+		ctx->instancePath	= docname;
+		ctx->docType		= doctype;
+		ctx->createInstance = createInstance;
+	
+		Document newdoc = GetAmayaDoc (templatename, NULL, doc, doc, CE_MAKEBOOK, FALSE, 
+			(void (*)(int, int, char*, char*, const AHTHeaders*, void*)) LoadTemplate_callback,
 			(void *) ctx);
-    }
+	}
+	else if(createInstance)
+		InstanciateTemplate(doc, templatename, docname, doctype);
 #endif /* TEMPLATES */
 }
 
@@ -305,11 +349,8 @@ void InstantiateTemplate_callback (int newdoc, int status,  char *urlName,
 #ifdef TEMPLATES
 	InstanciationCtxt *ctx = (InstanciationCtxt*)context;
 
-	InstanciateTemplate(ctx->templatePath, newdoc);
-	/*
-	Document instanceDoc = TtaNewDocument (ctx->schemaName, ctx->instancePath);
-	TtaCopyTree(TtaGetMainRoot(newdoc), newdoc, instanceDoc, TtaGetMainRoot(instanceDoc));
-	*/
+	//We copy the templatePath so the context can be freed later.
+	InstanciateTemplate(strdup(ctx->templatePath), newdoc);
 
 	switch (ctx->docType)
 	{
@@ -330,173 +371,32 @@ void InstantiateTemplate_callback (int newdoc, int status,  char *urlName,
 		break;
 	}
 
-	//TtaExportDocument(newdoc, ctx->instancePath, ctx->docType);
-	
-	//We free all the resources for the template
-	TtaCloseDocument (newdoc);
-	FreeDocumentResource (newdoc);
-/*
-	//We free all the resources for the instance
-	TtaCloseDocument (instanceDoc);
-	FreeDocumentResource (instanceDoc);
-*/
-	CleanUpParsingErrors ();
-/*	
-	TtaExtractName (ctx->templatePath, DirectoryName, DocumentName);	
-    TtaSetEnvString ("TEMPLATES_DIRECTORY", DirectoryName, TRUE);
-
+	//Open the instance
+	DontReplaceOldDoc = FALSE;
 	TtaExtractName (ctx->instancePath, DirectoryName, DocumentName);
-	// change its directory name 
-	TtaSetDocumentDirectory (instanceDoc, DirectoryName);
-	TtaSetDocumentName(instanceDoc, DocumentName);
+	CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
 
-	// change its URL 
-	TtaFreeMemory (DocumentURLs[instanceDoc]);
-	DocumentURLs[instanceDoc] = TtaStrdup (ctx->instancePath);
-	DocumentSource[instanceDoc] = 0;
-	
-	// add the URI in the combobox string 
-	AddURLInCombobox (ctx->instancePath, NULL, FALSE);
-	TtaSetTextZone (newdoc, 1, URL_list);
-	
-
-    LoadDocument (instanceDoc, ctx->instancePath, NULL, NULL, CE_ABSOLUTE,
-		"", DocumentName, NULL, FALSE, &DontReplaceOldDoc, NULL);
-	
-	
-
-
-	TtaSetDocumentModified (instanceDoc);
-	W3Loading = 0;		// loading is complete now 
-	DocNetworkStatus[instanceDoc] = AMAYA_NET_ACTIVE;
-	int stopped_flag = FetchAndDisplayImages (instanceDoc, AMAYA_LOAD_IMAGE, NULL);
-	
-	if (!stopped_flag)
-	{
-		DocNetworkStatus[instanceDoc] = AMAYA_NET_INACTIVE;
-		// almost one file is restored
-		TtaSetStatus (instanceDoc, 1, TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED),NULL);		 
-	}
-	*/
 #endif /* TEMPLATES */
 }
 
 
 /*----------------------------------------------------------------------
 ----------------------------------------------------------------------*/
-void InstanciateTemplate (char *templatename, char *schemaname, char *docname, DocumentType docType)
+void InstanciateTemplate (Document doc, char *templatename, char *docname, DocumentType docType)
 {
 #ifdef TEMPLATES
-	Document templateDoc = TtaNewDocument (schemaname, "tmp");
-	DontReplaceOldDoc = FALSE;
-	if (templateDoc != 0)
-    {
 		//Creation of the callback context
-		InstanciationCtxt *ctx = (InstanciationCtxt *)TtaGetMemory (sizeof (InstanciationCtxt));
-		ctx->templatePath = templatename;
-		ctx->instancePath = docname;
-		ctx->schemaName   = schemaname;
-		ctx->docType      = docType;
+		InstanciationCtxt *ctx	= (InstanciationCtxt *)TtaGetMemory (sizeof (InstanciationCtxt));
+		ctx->templatePath		= templatename;
+		ctx->instancePath		= docname;
+		ctx->schemaName			= GetSchemaFromDocType(docType);
+		ctx->docType			= docType;
 		
-		Document newdoc = GetAmayaDoc (templatename, NULL, templateDoc, templateDoc,
-			CE_MAKEBOOK, FALSE, 
+		Document newdoc = GetAmayaDoc (templatename, NULL, doc, doc, CE_MAKEBOOK, FALSE, 
 			(void (*)(int, int, char*, char*, const AHTHeaders*, void*)) InstantiateTemplate_callback,
 			(void *) ctx);
-    }
 #endif /* TEMPLATES */
 }
-
-#ifdef TODO
-/*----------------------------------------------------------------------
-----------------------------------------------------------------------*/
-void CreateInstanceDocument (Document doc, char *templatename, char *docname,
-                             DocumentType docType)
-{
-#ifdef TEMPLATES
-	Document newdoc;
-	
-	if (!IsW3Path (docname) && TtaFileExist (docname))
-    {
-		char *s = (char *)TtaGetMemory (strlen (docname) +
-			strlen (TtaGetMessage (AMAYA, AM_OVERWRITE_CHECK)) + 2);
-		sprintf (s, TtaGetMessage (AMAYA, AM_OVERWRITE_CHECK), docname);
-		InitConfirm (0, 0, s);
-		TtaFreeMemory (s);
-		if (!UserAnswer)
-			return;
-    }
-	
-	if (InNewWindow || DontReplaceOldDoc)
-    {
-		newdoc = InitDocAndView (doc,
-			!DontReplaceOldDoc, // replaceOldDoc
-			InNewWindow, // inNewWindow
-			DocumentName, docType, 0, FALSE,
-			L_Other, CE_ABSOLUTE);
-		DontReplaceOldDoc = FALSE;
-    }
-	
-	else
-    {
-		// record the current position in the history
-		AddDocHistory (doc, DocumentURLs[doc], 
-			DocumentMeta[doc]->initial_url,
-			DocumentMeta[doc]->form_data,
-			DocumentMeta[doc]->method);
-		
-		newdoc = InitDocAndView (doc,
-			!DontReplaceOldDoc, // replaceOldDoc
-			InNewWindow, // inNewWindow
-			DocumentName, docType, 0, FALSE,
-			L_Other, CE_ABSOLUTE);
-    }
-	
-	if (newdoc != 0)
-    {	
-		TtaExtractName (templatename, DirectoryName, DocumentName);
-		
-		TtaSetEnvString ("TEMPLATES_DIRECTORY", DirectoryName, TRUE);
-		
-		LoadDocument (newdoc, templatename, NULL, NULL, CE_ABSOLUTE,
-			"", DocumentName, NULL, FALSE, &DontReplaceOldDoc, NULL);
-		
-		/* change its URL */
-		TtaFreeMemory (DocumentURLs[newdoc]);
-		DocumentURLs[newdoc] = TtaStrdup (docname);
-		DocumentSource[newdoc] = 0;
-		
-		/* add the URI in the combobox string */
-		AddURLInCombobox (docname, NULL, FALSE);
-		TtaSetTextZone (newdoc, 1, URL_list);
-		
-		TtaExtractName (docname, DirectoryName, DocumentName);
-		/* change its directory name */
-		TtaSetDocumentDirectory (newdoc, DirectoryName);
-		TtaSetDocumentName(newdoc, DocumentName);
-		
-		TtaSetDocumentModified (newdoc);
-		W3Loading = 0;		/* loading is complete now */
-		DocNetworkStatus[newdoc] = AMAYA_NET_ACTIVE;
-		int stopped_flag = FetchAndDisplayImages (newdoc, AMAYA_LOAD_IMAGE, NULL);
-		
-		if (!stopped_flag)
-        {
-			DocNetworkStatus[newdoc] = AMAYA_NET_INACTIVE;
-			/* almost one file is restored */
-			TtaSetStatus (newdoc, 1, TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED),NULL);		 
-        }
-		
-		/* Set elements access rights according to template elements */
-		InstanciateTemplate(templatename, newdoc);
-		
-		TtaSaveDocument(newdoc, docname);
-		
-		/* check parsing errors */
-		CheckParsingErrors (newdoc);
-    }
-#endif /* TEMPLATES */
-}
-#endif /* TODO */
 
 /*----------------------------------------------------------------------
 ----------------------------------------------------------------------*/
@@ -552,7 +452,7 @@ void ParseTemplate (XTigerTemplate t, Element el, Document doc)
 			//Initialize the attribute
 			//Allow the edition of the attribute
 		case Template_EL_repeat :
-			//Create the min number of repetitions
+			//Create the min number of repetitñions
         default :
 			break;
         }
@@ -574,14 +474,43 @@ void ParseTemplate (XTigerTemplate t, Element el, Document doc)
 void InstanciateTemplate(char *templatename, Document doc)
 {
 #ifdef TEMPLATES
-	XTigerTemplate t;
-	Element el;
-	
-	//Add link to template
-	
+	XTigerTemplate	t;
+	ElementType		elType;
+	Element			root, piElem, piLine, piLeaf;
+
+	char		*piValue;
+
 	//Instanciate all elements
-	t	=	(XTigerTemplate) Get(templates,templatename);
-	el	=	TtaGetMainRoot (doc);
-	ParseTemplate(t, el, doc);
+	t		=	(XTigerTemplate) Get(templates,templatename);
+	root	=	TtaGetMainRoot (doc);
+	ParseTemplate(t, root, doc);
+
+	//Add link to template	
+	elType = TtaGetElementType(root);	
+	elType.ElTypeNum = HTML_EL_XMLPI;
+	piElem = TtaNewElement (doc, elType);
+
+	TtaInsertFirstChild(&piElem, root, doc);
+	/* Create a XMLPI_line element as the first child of element XMLPI */
+
+	elType.ElTypeNum = HTML_EL_PI_line;	
+	piLine = TtaNewElement (doc, elType);
+	TtaInsertFirstChild (&piLine, piElem, doc);
+	
+	piValue = (char*)TtaGetMemory(
+		strlen("xtiger template=\"")+
+		strlen(templatename)+
+		2);
+	strcpy(piValue,"xtiger template=\"");
+	strcat(piValue,templatename);
+	strcat(piValue, "\"");
+	
+	elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+	piLeaf = TtaNewElement (doc, elType);	
+	TtaInsertFirstChild (&piLeaf, piLine, doc);
+
+	TtaSetTextContent (piLeaf, (unsigned char *)piValue, Latin_Script, doc);
+	TtaFreeMemory(piValue);
+
 #endif /* TEMPLATES */
 }
