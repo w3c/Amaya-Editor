@@ -70,6 +70,7 @@ static int           NewLineSkipped = 0;
 static int           RedisplayImages = 0; /* number of BG images loading */
 static int           RedisplayDoc = 0; /* document to be redisplayed */
 static int           Style_parsing = 0; /* > 0 when parsing a set of CSS rules */
+static char         *ImportantPos = NULL;
 static ThotBool      RedisplayBGImage = FALSE; /* TRUE when a BG image is inserted */
 static ThotBool      DoApply = TRUE;
 
@@ -776,7 +777,7 @@ static char *ParseCSSColor (char *cssRule, PresentationValue * val)
   CheckImportantRule updates the field important of the context and
   the line number.
   ----------------------------------------------------------------------*/
-static char *CheckImportantRule (char *cssRule, PresentationContext context)
+static void CheckImportantRule (char *cssRule, PresentationContext context)
 {
   PresentationContextBlock dummyctxt;
 
@@ -785,22 +786,40 @@ static char *CheckImportantRule (char *cssRule, PresentationContext context)
     context = &dummyctxt;
 
   cssRule = SkipBlanksAndComments (cssRule);
-  /* update the line number */
-  context->cssLine = LineNumber + NewLineSkipped;
+  while (*cssRule != EOS && *cssRule != '!' && *cssRule != ';')
+    cssRule++;
   if (*cssRule != '!')
     context->important = FALSE;
   else
     {
       cssRule++;
+      ImportantPos = cssRule;
       cssRule = SkipBlanksAndComments (cssRule);
       if (!strncasecmp (cssRule, "important", 9))
         {
+          ImportantPos[-1] = EOS;
           context->important = TRUE;
-          cssRule += 9;
         }
       else
-        context->important = FALSE;
+        {
+          ImportantPos = NULL;
+          context->important = FALSE;
+        }
     }
+}
+
+/*----------------------------------------------------------------------
+  SkipImportantRule skips important markup
+  ----------------------------------------------------------------------*/
+static char *SkipImportantRule (char *cssRule)
+{
+  if (ImportantPos)
+    {
+      ImportantPos[-1] = '!';
+      cssRule = ImportantPos + 9;
+      ImportantPos = NULL;
+    }
+  cssRule = SkipBlanksAndComments (cssRule);
   return (cssRule);
 }
 
@@ -817,14 +836,8 @@ static char *ParseCSSBorderTopWidth (Element element, PSchema tsch,
   
   cssRule = SkipBlanksAndComments (cssRule);
   cssRule = ParseABorderValue (cssRule, &border);
-  /* check if it's an important rule */
-  cssRule = CheckImportantRule (cssRule, context);
   if (border.typed_data.unit != UNIT_INVALID && DoApply)
-    {
-      TtaSetStylePresentation (PRBorderTopWidth, element, tsch, context, border);
-      border.typed_data.value = 1;
-      border.typed_data.unit = UNIT_REL;
-    }
+    TtaSetStylePresentation (PRBorderTopWidth, element, tsch, context, border);
   return (cssRule);
 }
 
@@ -842,14 +855,8 @@ static char *ParseCSSBorderBottomWidth (Element element, PSchema tsch,
   cssRule = SkipBlanksAndComments (cssRule);
   /* first parse the attribute string */
   cssRule = ParseABorderValue (cssRule, &border);
-  /* check if it's an important rule */
-  cssRule = CheckImportantRule (cssRule, context);
   if (border.typed_data.unit != UNIT_INVALID && DoApply)
-    {
-      TtaSetStylePresentation (PRBorderBottomWidth, element, tsch, context, border);
-      border.typed_data.value = 1;
-      border.typed_data.unit = UNIT_REL;
-    }
+    TtaSetStylePresentation (PRBorderBottomWidth, element, tsch, context, border);
   return (cssRule);
 }
 
@@ -867,14 +874,8 @@ static char *ParseCSSBorderLeftWidth (Element element, PSchema tsch,
   cssRule = SkipBlanksAndComments (cssRule);
   /* first parse the attribute string */
   cssRule = ParseABorderValue (cssRule, &border);
-  /* check if it's an important rule */
-  cssRule = CheckImportantRule (cssRule, context);
   if (border.typed_data.unit != UNIT_INVALID && DoApply)
-    {
-      TtaSetStylePresentation (PRBorderLeftWidth, element, tsch, context, border);
-      border.typed_data.value = 1;
-      border.typed_data.unit = UNIT_REL;
-    }
+    TtaSetStylePresentation (PRBorderLeftWidth, element, tsch, context, border);
   return (cssRule);
 }
 
@@ -892,14 +893,8 @@ static char *ParseCSSBorderRightWidth (Element element, PSchema tsch,
   cssRule = SkipBlanksAndComments (cssRule);
   /* first parse the attribute string */
   cssRule = ParseABorderValue (cssRule, &border);
-  /* check if it's an important rule */
-  cssRule = CheckImportantRule (cssRule, context);
   if (border.typed_data.unit != UNIT_INVALID && DoApply)
-    {
-      TtaSetStylePresentation (PRBorderRightWidth, element, tsch, context, border);
-      border.typed_data.value = 1;
-      border.typed_data.unit = UNIT_REL;
-    }
+    TtaSetStylePresentation (PRBorderRightWidth, element, tsch, context, border);
   return (cssRule);
 }
 
@@ -984,13 +979,9 @@ static char *ParseCSSBorderColorTop (Element element, PSchema tsch,
     }
   else
     cssRule = ParseCSSColor (cssRule, &best);
-  /* check if it's an important rule */
-  cssRule = CheckImportantRule (cssRule, context);
   if (best.typed_data.unit != UNIT_INVALID && DoApply)
-    {
-      /* install the new presentation */
-      TtaSetStylePresentation (PRBorderTopColor, element, tsch, context, best);
-    }
+    /* install the new presentation */
+    TtaSetStylePresentation (PRBorderTopColor, element, tsch, context, best);
   return (cssRule);
 }
 
@@ -1013,13 +1004,9 @@ static char *ParseCSSBorderColorLeft (Element element, PSchema tsch,
     }
   else
     cssRule = ParseCSSColor (cssRule, &best);
-  /* check if it's an important rule */
-  cssRule = CheckImportantRule (cssRule, context);
   if (best.typed_data.unit != UNIT_INVALID && DoApply)
-    {
       /* install the new presentation */
       TtaSetStylePresentation (PRBorderLeftColor, element, tsch, context, best);
-    }
   return (cssRule);
 }
 
@@ -1042,13 +1029,9 @@ static char *ParseCSSBorderColorBottom (Element element, PSchema tsch,
     }
   else
     cssRule = ParseCSSColor (cssRule, &best);
-  /* check if it's an important rule */
-  cssRule = CheckImportantRule (cssRule, context);
   if (best.typed_data.unit != UNIT_INVALID && DoApply)
-    {
       /* install the new presentation */
       TtaSetStylePresentation (PRBorderBottomColor, element, tsch, context, best);
-    }
   return (cssRule);
 }
 
@@ -1071,13 +1054,8 @@ static char *ParseCSSBorderColorRight (Element element, PSchema tsch,
     }
   else
     cssRule = ParseCSSColor (cssRule, &best);
-  cssRule = CheckImportantRule (cssRule, context);
   if (best.typed_data.unit != UNIT_INVALID && DoApply)
-    {
-      /* check if it's an important rule */
-      /* install the new presentation */
       TtaSetStylePresentation (PRBorderRightColor, element, tsch, context, best);
-    }
   return (cssRule);
 }
 
@@ -1158,12 +1136,8 @@ static char *ParseCSSBorderStyleTop (Element element, PSchema tsch,
   
   cssRule = SkipBlanksAndComments (cssRule);
   cssRule = ParseBorderStyle (cssRule, &border);
-  cssRule = CheckImportantRule (cssRule, context);
   if (border.typed_data.unit != UNIT_INVALID && DoApply)
-    {
-      /* check if it's an important rule */
       TtaSetStylePresentation (PRBorderTopStyle, element, tsch, context, border);
-    }
   return (cssRule);
 }
 
@@ -1180,12 +1154,8 @@ static char *ParseCSSBorderStyleLeft (Element element, PSchema tsch,
   
   cssRule = SkipBlanksAndComments (cssRule);
   cssRule = ParseBorderStyle (cssRule, &border);
-  cssRule = CheckImportantRule (cssRule, context);
   if (border.typed_data.unit != UNIT_INVALID && DoApply)
-    {
-      /* check if it's an important rule */
       TtaSetStylePresentation (PRBorderLeftStyle, element, tsch, context, border);
-    }
   return (cssRule);
 }
 
@@ -1202,12 +1172,8 @@ static char *ParseCSSBorderStyleBottom (Element element, PSchema tsch,
   
   cssRule = SkipBlanksAndComments (cssRule);
   cssRule = ParseBorderStyle (cssRule, &border);
-  cssRule = CheckImportantRule (cssRule, context);
   if (border.typed_data.unit != UNIT_INVALID && DoApply)
-    {
-      /* check if it's an important rule */
       TtaSetStylePresentation (PRBorderBottomStyle, element, tsch, context, border);
-    }
   return (cssRule);
 }
 
@@ -1224,12 +1190,8 @@ static char *ParseCSSBorderStyleRight (Element element, PSchema tsch,
   
   cssRule = SkipBlanksAndComments (cssRule);
   cssRule = ParseBorderStyle (cssRule, &border);
-  cssRule = CheckImportantRule (cssRule, context);
   if (border.typed_data.unit != UNIT_INVALID && DoApply)
-    {
-      /* check if it's an important rule */
       TtaSetStylePresentation (PRBorderRightStyle, element, tsch, context, border);
-    }
   return (cssRule);
 }
 
@@ -1326,7 +1288,6 @@ static char *ParseCSSBorderTop (Element element, PSchema tsch,
             {
               /* rule not found */
               cssRule = SkipValue ("Invalid border value", cssRule);
-              cssRule = CheckImportantRule (cssRule, context);
               return (cssRule);
             }
         }
@@ -1339,7 +1300,6 @@ static char *ParseCSSBorderTop (Element element, PSchema tsch,
     ParseCSSBorderTopWidth (element, tsch, context, "medium", css, isHTML);
   if (!style)
     ParseCSSBorderStyleTop (element, tsch, context, "none", css, isHTML);
-  cssRule = CheckImportantRule (cssRule, context);
   return (cssRule);
 }
 
@@ -1375,7 +1335,6 @@ static char *ParseCSSBorderLeft (Element element, PSchema tsch,
             {
               /* rule not found */
               cssRule = SkipValue ("Invalid border value", cssRule);
-              cssRule = CheckImportantRule (cssRule, context);
               return (cssRule);
             }
         }
@@ -1388,7 +1347,6 @@ static char *ParseCSSBorderLeft (Element element, PSchema tsch,
     ParseCSSBorderLeftWidth (element, tsch, context, "medium", css, isHTML);
   if (!style)
     ParseCSSBorderStyleLeft (element, tsch, context, "none", css, isHTML);
-  cssRule = CheckImportantRule (cssRule, context);
   return (cssRule);
 }
 
@@ -1424,7 +1382,6 @@ static char *ParseCSSBorderBottom (Element element, PSchema tsch,
             {
               /* rule not found */
               cssRule = SkipValue ("Invalid border value", cssRule);
-              cssRule = CheckImportantRule (cssRule, context);
               return (cssRule);
             }
         }
@@ -1437,7 +1394,6 @@ static char *ParseCSSBorderBottom (Element element, PSchema tsch,
     ParseCSSBorderBottomWidth (element, tsch, context, "medium", css, isHTML);
   if (!style)
     ParseCSSBorderStyleBottom (element, tsch, context, "none", css, isHTML);
-  cssRule = CheckImportantRule (cssRule, context);
   return (cssRule);
 }
 
@@ -1473,7 +1429,6 @@ static char *ParseCSSBorderRight (Element element, PSchema tsch,
             {
               /* rule not found */
               cssRule = SkipValue ("Invalid border value", cssRule);
-              cssRule = CheckImportantRule (cssRule, context);
               return (cssRule);
             }
         }
@@ -1486,7 +1441,6 @@ static char *ParseCSSBorderRight (Element element, PSchema tsch,
     ParseCSSBorderRightWidth (element, tsch, context, "medium", css, isHTML);
   if (!style)
     ParseCSSBorderStyleRight (element, tsch, context, "none", css, isHTML);
-  cssRule = CheckImportantRule (cssRule, context);
   return (cssRule);
 }
 
@@ -1569,7 +1523,6 @@ static char *ParseCSSFloat (Element element, PSchema tsch,
     }
   else
     {
-      cssRule = CheckImportantRule (cssRule, context);
       if (DoApply)
         {
           dispMode = TtaGetDisplayMode (context->doc);
@@ -1614,13 +1567,11 @@ static char *ParseCSSClear (Element element, PSchema tsch,
   if (pval.typed_data.value == 0 && pval.typed_data.unit != VALUE_INHERIT)
     {
       cssRule = SkipValue ("Invalid clear value", cssRule);
-      cssRule = CheckImportantRule (cssRule, context);
       cssRule = SkipValue (NULL, cssRule);
     }
   else
     {
       cssRule = SkipValue (NULL, cssRule);
-      cssRule = CheckImportantRule (cssRule, context);
       if (DoApply)
         TtaSetStylePresentation (PRClear, element, tsch, context, pval);
     }
@@ -1665,7 +1616,6 @@ static char *ParseCSSVisibility(Element element, PSchema tsch,
       cssRule = SkipValue ("Invalid visibility value", cssRule);
       return (cssRule);
     }
-  cssRule = CheckImportantRule (cssRule, context);
   if (DoApply)
     TtaSetStylePresentation (PRVis, element, tsch, context, pval);
   cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid visibility value");
@@ -1739,7 +1689,6 @@ static char *ParseCSSDisplay (Element element, PSchema tsch,
       return (cssRule);
     }
 
-  cssRule = CheckImportantRule (cssRule, context);
   if (DoApply)
     TtaSetStylePresentation (PRDisplay, element, tsch, context, pval);
   cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid display value");
@@ -1755,7 +1704,6 @@ static char *ParseCSSLetterSpacing (Element element, PSchema tsch,
                                     CSSInfoPtr css, ThotBool isHTML)
 {
   cssRule = SkipValue (NULL, cssRule);
-  cssRule = CheckImportantRule (cssRule, context);
   return (cssRule);
 }
 
@@ -1858,7 +1806,6 @@ static char *ParseACSSListStyleType (Element element, PSchema tsch,
       return (cssRule);
     }
 
-  cssRule = CheckImportantRule (cssRule, context);
   if (DoApply)
     TtaSetStylePresentation (PRListStyleType, element, tsch, context, pval);
   return (cssRule);
@@ -2069,7 +2016,6 @@ static char *SetCSSImage (Element element, PSchema tsch,
     el = TtaGetMainRoot (ctxt->doc);
   url = NULL;
   cssRule = ParseCSSUrl (cssRule, &url);
-  cssRule = CheckImportantRule (cssRule, ctxt);
   if (ctxt->destroy)
     {
       /* remove the background image PRule */
@@ -2137,7 +2083,6 @@ static char *ParseACSSListStyleImage (Element element, PSchema tsch,
   if (!strncasecmp (cssRule, "none", 4))
     {
       cssRule += 4;
-      cssRule = CheckImportantRule (cssRule, ctxt);
       pval.typed_data.value = 0;
       if (DoApply)
         TtaSetStylePresentation (PRListStyleImage, element, tsch, ctxt, pval);
@@ -2152,15 +2097,11 @@ static char *ParseACSSListStyleImage (Element element, PSchema tsch,
     {
       cssRule += 7;
       pval.typed_data.unit = VALUE_INHERIT;
-      cssRule = CheckImportantRule (cssRule, ctxt);
       if (DoApply)
         TtaSetStylePresentation (PRListStyleImage, element, tsch, ctxt, pval);
     }
   else
-    {
       cssRule = SkipValue ("Invalid list-style-image value", cssRule);
-      cssRule = CheckImportantRule (cssRule, ctxt);
-    }
   return (cssRule);
 }
 
@@ -2212,11 +2153,9 @@ static char *ParseACSSListStylePosition (Element element, PSchema tsch,
   else
     {
       cssRule = SkipValue ("Invalid list-style-position value", cssRule);
-      cssRule = CheckImportantRule (cssRule, context);
       return (cssRule);
     }
 
-  cssRule = CheckImportantRule (cssRule, context);
   if (DoApply)
     TtaSetStylePresentation (PRListStylePosition, element, tsch, context, pval);
   return (cssRule);
@@ -2331,14 +2270,12 @@ static char *ParseCSSTextAlign (Element element, PSchema tsch,
   else
     {
       cssRule = SkipValue ("Invalid text-align value", cssRule);
-      cssRule = CheckImportantRule (cssRule, context);
       return (cssRule);
     }
 
   /*
    * install the new presentation.
    */
-  cssRule = CheckImportantRule (cssRule, context);
   if (align.typed_data.value && DoApply)
     TtaSetStylePresentation (PRAdjust, element, tsch, context, align);
   cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid text-align value");
@@ -2385,14 +2322,12 @@ static char *ParseCSSTextAnchor (Element element, PSchema tsch,
   else
     {
       cssRule = SkipValue ("Invalid text-anchor value", cssRule);
-      cssRule = CheckImportantRule (cssRule, context);
       return (cssRule);
     }
 
   /*
    * install the new presentation.
    */
-  cssRule = CheckImportantRule (cssRule, context);
   if (DoApply &&
       (align.typed_data.value || align.typed_data.unit == VALUE_INHERIT))
     TtaSetStylePresentation (PRAdjust, element, tsch, context, align);
@@ -2433,14 +2368,12 @@ static char *ParseCSSDirection (Element element, PSchema tsch,
   else
     {
       cssRule = SkipValue ("Invalid direction value", cssRule);
-      cssRule = CheckImportantRule (cssRule, context);
       return (cssRule);
     }
 
   /*
    * install the new presentation.
    */
-  cssRule = CheckImportantRule (cssRule, context);
   if (DoApply &&
       (direction.typed_data.value || direction.typed_data.unit == VALUE_INHERIT))
     TtaSetStylePresentation (PRDirection, element, tsch, context, direction);
@@ -2486,14 +2419,12 @@ static char *ParseCSSUnicodeBidi (Element element, PSchema tsch,
   else
     {
       cssRule = SkipValue ("Invalid unicode-bidi value", cssRule);
-      cssRule = CheckImportantRule (cssRule, context);
       return (cssRule);
     }
 
   /*
    * install the new presentation.
    */
-  cssRule = CheckImportantRule (cssRule, context);
   if (DoApply &&
       (bidi.typed_data.value || bidi.typed_data.unit == VALUE_INHERIT))
     TtaSetStylePresentation (PRUnicodeBidi, element, tsch, context, bidi);
@@ -2521,11 +2452,9 @@ static char *ParseCSSTextIndent (Element element, PSchema tsch,
            pval.typed_data.unit == UNIT_BOX)
     {
       CSSParseError ("Invalid text-indent value", ptr, cssRule);
-      cssRule = CheckImportantRule (cssRule, context);
       return (cssRule);
     }
   /* install the attribute */
-  cssRule = CheckImportantRule (cssRule, context);
   if (DoApply)
     TtaSetStylePresentation (PRIndent, element, tsch, context, pval);
   return (cssRule);
@@ -2540,7 +2469,6 @@ static char *ParseCSSTextTransform (Element element, PSchema tsch,
                                     CSSInfoPtr css, ThotBool isHTML)
 {
   cssRule = SkipValue (NULL, cssRule);
-  cssRule = CheckImportantRule (cssRule, context);
   return (cssRule);
 }
 
@@ -2618,7 +2546,6 @@ static char *ParseCSSVerticalAlign (Element element, PSchema tsch,
         {
           pval.typed_data.value = 0;
           CSSParseError ("Invalid vertical-align value", ptr, cssRule);
-          cssRule = CheckImportantRule (cssRule, context);
           return (cssRule);
         }
       else if (pval.typed_data.value == 0)
@@ -2634,7 +2561,6 @@ static char *ParseCSSVerticalAlign (Element element, PSchema tsch,
         }
     }
 
-  cssRule = CheckImportantRule (cssRule, context);
   if (pval.typed_data.unit != UNIT_INVALID && DoApply)
     TtaSetStylePresentation (PRHorizRef, element, tsch, context, pval);
   cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid vertical-align value");
@@ -2667,7 +2593,6 @@ static char *ParseCSSWhiteSpace (Element element, PSchema tsch,
   else
     cssRule = SkipValue ("Invalid white-space value", cssRule);
 
-  cssRule = CheckImportantRule (cssRule, context);
   cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid white-space value");
   return (cssRule);
 }
@@ -2681,7 +2606,6 @@ static char *ParseCSSWordSpacing (Element element, PSchema tsch,
                                   CSSInfoPtr css, ThotBool isHTML)
 {
   cssRule = SkipValue (NULL, cssRule);
-  cssRule = CheckImportantRule (cssRule, context);
   return (cssRule);
 }
 
@@ -2711,7 +2635,6 @@ static char *ParseCSSLineHeight (Element element, PSchema tsch,
   else
     cssRule = ParseCSSUnit (cssRule, &pval);
 
-  cssRule = CheckImportantRule (cssRule, context);
   if (pval.typed_data.unit == UNIT_INVALID)
     CSSParseError ("Invalid line-height value", ptr, cssRule);
   else if (DoApply)
@@ -2834,10 +2757,7 @@ static char *ParseACSSFontSize (Element element, PSchema tsch,
   else if (!isdigit (*cssRule) && *cssRule != '.')
     {
       if (!check)
-        {
-          cssRule = SkipValue ("Invalid font-size value", cssRule);
-          cssRule = CheckImportantRule (cssRule, context);
-        }
+        cssRule = SkipValue ("Invalid font-size value", cssRule);
       return (cssRule);
     }
   else
@@ -2896,7 +2816,6 @@ static char *ParseACSSFontSize (Element element, PSchema tsch,
     }
 
   /* install the presentation style */
-  cssRule = CheckImportantRule (cssRule, context);
   if (!check && DoApply)
     TtaSetStylePresentation (PRSize, element, tsch, context, pval);
   if (!check && ptr)
@@ -2919,7 +2838,6 @@ static char *ParseCSSFontSize (Element element, PSchema tsch,
 {
   char               *ptr = cssRule;
   cssRule = ParseACSSFontSize (element, tsch, context, cssRule, css, isHTML, FALSE);
-  cssRule = CheckImportantRule (cssRule, context);
   cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid font-size value");
   return cssRule;
 }
@@ -3049,7 +2967,6 @@ static char *ParseACSSFontFamily (Element element, PSchema tsch,
       cssRule = SkipBlanksAndComments (cssRule);
     }
 
-  cssRule = CheckImportantRule (cssRule, context);
   if ((font.typed_data.value != 0 || font.typed_data.unit == VALUE_INHERIT) &&
       DoApply)
     /* install the new presentation */
@@ -3178,7 +3095,6 @@ static char *ParseACSSFontWeight (Element element, PSchema tsch,
     }
 
   /* install the new presentation */
-  cssRule = CheckImportantRule (cssRule, context);
   if (DoApply)
     TtaSetStylePresentation (PRWeight, element, tsch, context, weight);
   return (cssRule);
@@ -3199,7 +3115,6 @@ static char *ParseCSSFontWeight (Element element, PSchema tsch,
   cssRule = ParseACSSFontWeight (element, tsch, context, cssRule, css, isHTML);
   if (ptr == cssRule)
     cssRule = SkipValue ("Invalid font-weight value", cssRule);
-  cssRule = CheckImportantRule (cssRule, context);
   return (cssRule);
 }
 
@@ -3251,7 +3166,6 @@ static char *ParseCSSFontVariant (Element element, PSchema tsch,
   cssRule = ParseACSSFontVariant (element, tsch, context, cssRule, css, isHTML);
   if (ptr == cssRule)
     cssRule = SkipValue ("Invalid font-variant value", cssRule);
-  cssRule = CheckImportantRule (cssRule, context);
   return (cssRule);
 }
 
@@ -3302,7 +3216,6 @@ static char *ParseACSSFontStyle (Element element, PSchema tsch,
   /*
    * install the new presentation.
    */
-  cssRule = CheckImportantRule (cssRule, context);
   if (DoApply &&
       (style.typed_data.value != 0 || style.typed_data.unit == VALUE_INHERIT))
     {
@@ -3342,7 +3255,6 @@ static char *ParseCSSFontStyle (Element element, PSchema tsch,
   cssRule = ParseACSSFontStyle (element, tsch, context, cssRule, css, isHTML);
   if (ptr == cssRule)
     cssRule = SkipValue ("Invalid font-style value", cssRule);
-  cssRule = CheckImportantRule (cssRule, context);
   return (cssRule);
 }
 
@@ -3441,17 +3353,11 @@ static char *ParseCSSFont (Element element, PSchema tsch,
       if (*cssRule != ';' && *cssRule != '}' && *cssRule != EOS)
         cssRule = ParseACSSFontFamily (element, tsch, context, cssRule, css, isHTML);
       if (ptr == cssRule)
-        {
-          cssRule = SkipValue ("Invalid font value", cssRule);
-          cssRule = CheckImportantRule (cssRule, context);
-        }
+        cssRule = SkipValue ("Invalid font value", cssRule);
     }
   cssRule = SkipBlanksAndComments (cssRule);
   if (*cssRule != ';' && *cssRule != '}' && *cssRule != EOS)
-    {
-      cssRule = SkipValue ("Invalid font value", cssRule);
-      cssRule = CheckImportantRule (cssRule, context);
-    }
+    cssRule = SkipValue ("Invalid font value", cssRule);
   return (cssRule);
 }
 
@@ -3519,14 +3425,12 @@ static char *ParseCSSTextDecoration (Element element, PSchema tsch,
   if (!ok)
     {
       cssRule = SkipValue ("Invalid text-decoration value", cssRule);
-      cssRule = CheckImportantRule (cssRule, context);
       return (cssRule);
     }
 
   /*
    * install the new presentation.
    */
-  cssRule = CheckImportantRule (cssRule, context);
   if (DoApply &&
       (decor.typed_data.value || decor.typed_data.unit == VALUE_INHERIT))
     TtaSetStylePresentation (PRUnderline, element, tsch, context, decor);
@@ -3553,8 +3457,6 @@ static char *ParseCSSHeight (Element element, PSchema tsch,
       val.typed_data.value = 0;
       val.typed_data.real = FALSE;
       cssRule += 4;
-      cssRule = CheckImportantRule (cssRule, context);
-      cssRule = CheckImportantRule (cssRule, context);
       cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid height value");
     }
   else
@@ -3567,7 +3469,6 @@ static char *ParseCSSHeight (Element element, PSchema tsch,
       CSSParseError ("height value", ptr, cssRule);
       val.typed_data.unit = UNIT_PX;
     }
-  cssRule = CheckImportantRule (cssRule, context);
   if (DoApply)
     /* install the new presentation */
     TtaSetStylePresentation (PRHeight, element, tsch, context, val);
@@ -3594,7 +3495,6 @@ static char *ParseCSSWidth (Element element, PSchema tsch,
       val.typed_data.value = 0;
       val.typed_data.real = FALSE;
       cssRule += 4;
-      cssRule = CheckImportantRule (cssRule, context);
       cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid width value");
     }
   else
@@ -3604,11 +3504,9 @@ static char *ParseCSSWidth (Element element, PSchema tsch,
        val.typed_data.unit == UNIT_BOX))
     {
       CSSParseError ("Invalid width value", ptr, cssRule);
-      cssRule = CheckImportantRule (cssRule, context);
       val.typed_data.unit = UNIT_PX;
     }
 
-  cssRule = CheckImportantRule (cssRule, context);
   if (DoApply)
     /* install the new presentation */
     TtaSetStylePresentation (PRWidth, element, tsch, context, val);
@@ -3635,12 +3533,10 @@ static char *ParseACSSMarginTop (Element element, PSchema tsch,
       margin.typed_data.value = 0;
       margin.typed_data.real = FALSE;
       cssRule += 4;
-      cssRule = CheckImportantRule (cssRule, context);
     }
   else
     cssRule = ParseCSSUnit (cssRule, &margin);
 
-  cssRule = CheckImportantRule (cssRule, context);
   if (margin.typed_data.value != 0 &&
       (margin.typed_data.unit == UNIT_INVALID ||
        margin.typed_data.unit == UNIT_BOX))
@@ -3685,12 +3581,10 @@ static char *ParseACSSMarginBottom (Element element, PSchema tsch,
       margin.typed_data.value = 0;
       margin.typed_data.real = FALSE;
       cssRule += 4;
-      cssRule = CheckImportantRule (cssRule, context);
     }
   else
     cssRule = ParseCSSUnit (cssRule, &margin);
 
-  cssRule = CheckImportantRule (cssRule, context);
   if (margin.typed_data.value != 0 &&
       (margin.typed_data.unit == UNIT_INVALID ||
        margin.typed_data.unit == UNIT_BOX))
@@ -3735,12 +3629,10 @@ static char *ParseACSSMarginLeft (Element element, PSchema tsch,
       margin.typed_data.value = 0;
       margin.typed_data.real = FALSE;
       cssRule += 4;
-      cssRule = CheckImportantRule (cssRule, context);
     }
   else
     cssRule = ParseCSSUnit (cssRule, &margin);
 
-  cssRule = CheckImportantRule (cssRule, context);
   if (margin.typed_data.value != 0 &&
       (margin.typed_data.unit == UNIT_INVALID ||
        margin.typed_data.unit == UNIT_BOX))
@@ -3786,12 +3678,10 @@ static char *ParseACSSMarginRight (Element element, PSchema tsch,
       margin.typed_data.value = 0;
       margin.typed_data.real = FALSE;
       cssRule += 4;
-      cssRule = CheckImportantRule (cssRule, context);
     }
   else
     cssRule = ParseCSSUnit (cssRule, &margin);
 
-  cssRule = CheckImportantRule (cssRule, context);
   if (margin.typed_data.value != 0 &&
       (margin.typed_data.unit == UNIT_INVALID ||
        margin.typed_data.unit == UNIT_BOX))
@@ -3893,7 +3783,6 @@ static char *ParseCSSPaddingTop (Element element, PSchema tsch,
   /* first parse the attribute string */
   cssRule = ParseCSSUnit (cssRule, &padding);
 
-  cssRule = CheckImportantRule (cssRule, context);
   if (padding.typed_data.value != 0 &&
       (padding.typed_data.unit == UNIT_INVALID ||
        padding.typed_data.unit == UNIT_BOX))
@@ -3924,7 +3813,6 @@ static char *ParseCSSPaddingBottom (Element element, PSchema tsch,
   if (padding.typed_data.value == 0)
     padding.typed_data.unit = UNIT_EM;
 
-  cssRule = CheckImportantRule (cssRule, context);
   if (padding.typed_data.value != 0 &&
       (padding.typed_data.unit == UNIT_INVALID ||
        padding.typed_data.unit == UNIT_BOX))
@@ -3955,7 +3843,6 @@ static char *ParseCSSPaddingLeft (Element element, PSchema tsch,
   if (padding.typed_data.value == 0)
     padding.typed_data.unit = UNIT_EM;
 
-  cssRule = CheckImportantRule (cssRule, context);
   if (padding.typed_data.value != 0 &&
       (padding.typed_data.unit == UNIT_INVALID ||
        padding.typed_data.unit == UNIT_BOX))
@@ -3986,7 +3873,6 @@ static char *ParseCSSPaddingRight (Element element, PSchema tsch,
   if (padding.typed_data.value == 0)
     padding.typed_data.unit = UNIT_EM;
 
-  cssRule = CheckImportantRule (cssRule, context);
   if (padding.typed_data.value != 0 &&
       (padding.typed_data.unit == UNIT_INVALID ||
        padding.typed_data.unit == UNIT_BOX))
@@ -4073,7 +3959,6 @@ static char *ParseCSSForeground (Element element, PSchema tsch,
 
   p = cssRule;
   cssRule = ParseCSSColor (cssRule, &best);
-  cssRule = CheckImportantRule (cssRule, context);
   if (best.typed_data.unit != UNIT_INVALID && DoApply)
     {
       if (*cssRule != EOS && *cssRule !=';')
@@ -4105,14 +3990,12 @@ static char *ParseCSSBackgroundColor (Element element, PSchema tsch,
       best.typed_data.value = PATTERN_NONE;
       best.typed_data.unit = UNIT_REL;
       cssRule = SkipWord (cssRule);
-      cssRule = CheckImportantRule (cssRule, context);
       if (DoApply)
         TtaSetStylePresentation (PRFillPattern, element, tsch, context, best);
     }
   else
     {
       cssRule = ParseCSSColor (cssRule, &best);
-      cssRule = CheckImportantRule (cssRule, context);
       if (best.typed_data.unit != UNIT_INVALID && DoApply)
         {
           /* install the new presentation. */
@@ -4164,7 +4047,6 @@ static char *ParseSVGStroke (Element element, PSchema tsch,
   else
     cssRule = ParseCSSColor (cssRule, &best);
 
-  cssRule = CheckImportantRule (cssRule, context);
   if (best.typed_data.unit != UNIT_INVALID && DoApply)
     /* install the new presentation */
     TtaSetStylePresentation (PRForeground, element, tsch, context, best);
@@ -4187,7 +4069,6 @@ static char *ParseSVGFill (Element element, PSchema tsch,
     {
       best.typed_data.value = PATTERN_NONE;
       best.typed_data.unit = UNIT_REL;
-      cssRule = CheckImportantRule (cssRule, context);
       if (DoApply)
         TtaSetStylePresentation (PRFillPattern, element, tsch, context, best);
       cssRule = SkipWord (cssRule);
@@ -4210,7 +4091,6 @@ static char *ParseSVGFill (Element element, PSchema tsch,
   else
     cssRule = ParseCSSColor (cssRule, &best);
 
-  cssRule = CheckImportantRule (cssRule, context);
   if (best.typed_data.unit != UNIT_INVALID && DoApply)
     {
       /* install the new presentation. */
@@ -4235,7 +4115,6 @@ static char *ParseSVGOpacity (Element element, PSchema tsch,
   best.typed_data.unit = UNIT_INVALID;
   best.typed_data.real = FALSE;
   cssRule = ParseClampedUnit (cssRule, &best);
-  cssRule = CheckImportantRule (cssRule, context);
   if (DoApply)
     /* install the new presentation. */
     TtaSetStylePresentation (PROpacity, element, tsch, context, best);
@@ -4254,7 +4133,6 @@ static char *ParseSVGStrokeOpacity (Element element, PSchema tsch,
   best.typed_data.unit = UNIT_INVALID;
   best.typed_data.real = FALSE;
   cssRule = ParseClampedUnit (cssRule, &best);
-  cssRule = CheckImportantRule (cssRule, context);
   if (DoApply)
     /* install the new presentation. */
     TtaSetStylePresentation (PRStrokeOpacity, element, tsch, context, best);
@@ -4273,7 +4151,6 @@ static char *ParseSVGFillOpacity (Element element, PSchema tsch,
   best.typed_data.unit = UNIT_INVALID;
   best.typed_data.real = FALSE;
   cssRule = ParseClampedUnit (cssRule, &best);
-  cssRule = CheckImportantRule (cssRule, context);
   if (DoApply)
     /* install the new presentation. */
     TtaSetStylePresentation (PRFillOpacity, element, tsch, context, best);
@@ -4493,7 +4370,6 @@ static char *ParseCSSContent (Element element, PSchema tsch,
             *cssRule == '!')
           repeat = FALSE;
     }
-  cssRule = CheckImportantRule (cssRule, ctxt);
   return (cssRule);
 }
 
@@ -4513,7 +4389,6 @@ static char *ParseCSSBackgroundImage (Element element, PSchema tsch,
   if (!strncasecmp (cssRule, "none", 4))
     {
       cssRule += 4;
-      cssRule = CheckImportantRule (cssRule, ctxt);
       if (DoApply)
         {
           /* no background image */
@@ -4578,7 +4453,6 @@ static char *ParseACSSBackgroundRepeat (Element element, PSchema tsch,
 
   cssRule = SkipWord (cssRule);
   /* check if it's an important rule */
-  cssRule = CheckImportantRule (cssRule, ctxt);
   if (DoApply)
     /* install the new presentation */
     TtaSetStylePresentation (PRPictureMode, element, tsch, ctxt, repeat);
@@ -4599,7 +4473,6 @@ static char *ParseCSSBackgroundRepeat (Element element, PSchema tsch,
     {
       cssRule = SkipValue ("Invalid background-repeat value", cssRule);
       /* check if it's an important rule */
-      cssRule = CheckImportantRule (cssRule, ctxt);
     }
   return cssRule;
 }
@@ -4642,8 +4515,6 @@ static char *ParseCSSBackgroundAttachment (Element element, PSchema tsch,
   if (ptr == cssRule)
     {
       cssRule = SkipValue ("Invalid background-attachement value", cssRule);
-      /* check if it's an important rule */
-      cssRule = CheckImportantRule (cssRule, ctxt);
     }
   return cssRule;
 }
@@ -4680,11 +4551,6 @@ static char *ParseACSSBackgroundPosition (Element element, PSchema tsch,
   else
     ok = FALSE;
 
-  if (ok)
-    {
-      /* check if it's an important rule */
-      cssRule = CheckImportantRule (cssRule, ctxt);
-    }
   cssRule = SkipBlanksAndComments (cssRule);
   return (cssRule);
 }
@@ -4704,11 +4570,7 @@ static char *ParseCSSBackgroundPosition (Element element, PSchema tsch,
   cssRule = ParseACSSBackgroundPosition (element, tsch, ctxt,
                                          cssRule, css, isHTML);
   if (ptr == cssRule)
-    {
-      cssRule = SkipValue ("Invalid background-position value", cssRule);
-      /* check if it's an important rule */
-      cssRule = CheckImportantRule (cssRule, ctxt);
-    }
+    cssRule = SkipValue ("Invalid background-position value", cssRule);
   else if (*cssRule !=  ';' && *cssRule != EOS)
     {
       /* possible second value */
@@ -4716,11 +4578,7 @@ static char *ParseCSSBackgroundPosition (Element element, PSchema tsch,
       cssRule = ParseACSSBackgroundPosition (element, tsch, ctxt,
                                              cssRule, css, isHTML);
       if (ptr == cssRule)
-        {
-          cssRule = SkipValue ("Invalid background-position value", cssRule);
-          /* check if it's an important rule */
-          cssRule = CheckImportantRule (cssRule, ctxt);
-        }
+        cssRule = SkipValue ("Invalid background-position value", cssRule);
     }
   return (cssRule);
 }
@@ -4857,8 +4715,6 @@ static char *ParseCSSPageBreakBefore (Element element, PSchema tsch,
       page.typed_data.value = PageInherit;
     }
   cssRule = SkipWord (cssRule);
-  /* check if it's an important rule */
-  cssRule = CheckImportantRule (cssRule, ctxt);
   /* install the new presentation */
   if (DoApply &&
       ((page.typed_data.unit == UNIT_REL && page.typed_data.value == PageAlways)
@@ -4908,8 +4764,6 @@ static char *ParseCSSPageBreakAfter (Element element, PSchema tsch,
       page.typed_data.value = PageInherit;
     }
   cssRule = SkipWord (cssRule);
-  /* check if it's an important rule */
-  cssRule = CheckImportantRule (cssRule, ctxt);
 #if 0
   /* install the new presentation */
   if (DoApply &&
@@ -4949,7 +4803,6 @@ static char *ParseCSSPageBreakInside (Element element, PSchema tsch,
       page.typed_data.value = PageInherit;
     }
   cssRule = SkipWord (cssRule);
-  cssRule = CheckImportantRule (cssRule, ctxt);
   /* install the new presentation */
   /*if ((page.typed_data.unit == UNIT_REL ||
     page.typed_data.unit == VALUE_INHERIT) &&
@@ -4980,8 +4833,6 @@ static char *ParseSVGStrokeWidth (Element element, PSchema tsch,
   else
     cssRule = SkipValue ("Invalid stroke-width value", cssRule);
 
-  /* check if it's an important rule */
-  cssRule = CheckImportantRule (cssRule, ctxt);
   if (width.typed_data.unit != UNIT_INVALID && DoApply)
     {
       TtaSetStylePresentation (PRLineWeight, element, tsch, ctxt, width);
@@ -5035,12 +4886,10 @@ static char *ParseCSSPosition (Element element, PSchema tsch,
   if (pval.typed_data.value == 0 && pval.typed_data.unit != VALUE_INHERIT)
     {
       cssRule = SkipValue ("Invalid position value", ptr);
-      cssRule = CheckImportantRule (cssRule, ctxt);
       cssRule = SkipValue (NULL, cssRule);
     }
   else
     {
-      cssRule = CheckImportantRule (cssRule, ctxt);
       cssRule = SkipBlanksAndComments (cssRule);
       if (*cssRule != EOS && *cssRule != ';')
         SkipValue ("Invalid position value", ptr);
@@ -5084,7 +4933,6 @@ static char *ParseCSSTop (Element element, PSchema tsch,
       cssRule = SkipValue ("top value", ptr);
       val.typed_data.unit = UNIT_PX;
     }
-  cssRule = CheckImportantRule (cssRule, context);
   if (DoApply)
     TtaSetStylePresentation (PRTop, element, tsch, context, val);
   return (cssRule);
@@ -5124,7 +4972,6 @@ static char *ParseCSSRight (Element element, PSchema tsch,
       cssRule = SkipValue ("right value", ptr);
       val.typed_data.unit = UNIT_PX;
     }
-  cssRule = CheckImportantRule (cssRule, context);
   if (DoApply)
     TtaSetStylePresentation (PRRight, element, tsch, context, val);
   return (cssRule);
@@ -5164,7 +5011,6 @@ static char *ParseCSSBottom (Element element, PSchema tsch,
       cssRule = SkipValue ("bottom value", ptr);
       val.typed_data.unit = UNIT_PX;
     }
-  cssRule = CheckImportantRule (cssRule, context);
   if (DoApply)
     TtaSetStylePresentation (PRBottom, element, tsch, context, val);
   return (cssRule);
@@ -5204,7 +5050,6 @@ static char *ParseCSSLeft (Element element, PSchema tsch,
       cssRule = SkipValue ("left value", ptr);
       val.typed_data.unit = UNIT_PX;
     }
-  cssRule = CheckImportantRule (cssRule, context);
   if (DoApply)
     TtaSetStylePresentation (PRLeft, element, tsch, context, val);
   return (cssRule);
@@ -5240,7 +5085,6 @@ static char *ParseCSSZIndex (Element element, PSchema tsch,
           val.typed_data.unit = UNIT_BOX;
         }
     }
-  cssRule = CheckImportantRule (cssRule, context);
   /***
       if (DoApply)
       TtaSetStylePresentation (PR, element, tsch, context, val);
@@ -5396,6 +5240,8 @@ static void  ParseCSSRule (Element element, PSchema tsch,
                 }
             }
 
+          // check if it's an important rule
+          CheckImportantRule (cssRule, ctxt);
           if (i < NB_CSSSTYLEATTRIBUTE &&
               !strcasecmp (CSSProperties[i].name, "content") &&
               ((GenericContext)ctxt)->pseudo != PbBefore &&
@@ -5481,6 +5327,9 @@ static void  ParseCSSRule (Element element, PSchema tsch,
               else
                 cssRule = SkipProperty (cssRule, TRUE);
             }
+          // skip important markup
+          cssRule = SkipImportantRule (cssRule);
+
         }
       /* next property */
       cssRule = SkipBlanksAndComments (cssRule);
