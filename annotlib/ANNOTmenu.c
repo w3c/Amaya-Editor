@@ -78,7 +78,7 @@ typedef struct _typeSelector
   RDFResourceP type;
 } TypeSelector;
 
-#ifndef _WINGUI
+#ifdef _GTK
 /*----------------------------------------------------------------------
   CustomQueryCallbackDialog
   callback of the annot custom query menu
@@ -159,7 +159,7 @@ static void CustomQueryCallbackDialog (int ref, int typedata, char *data)
         }
     }
 }
-#endif /* !_WINGUI */
+#endif /* _GTK */
 
 /*----------------------------------------------------------------------
   CustomQueryMenuInit
