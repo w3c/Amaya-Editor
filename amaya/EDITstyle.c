@@ -113,8 +113,100 @@ static void RemoveElementStyle (Element el, Document doc, ThotBool removeSpan)
 
 
 /*----------------------------------------------------------------------
+  UpdateCSSImport searches strings @import within the styleString and
+  makes it relative to the newpath.
+  oldpath = old document path
+  newpath = new document path
+  Returns NULL or a new allocated styleString.
+  ----------------------------------------------------------------------*/
+static char *UpdateCSSImport (char *oldpath, char *newpath, char *styleString)
+{
+  char               *b, *e, *ptr, *oldptr, *sString;
+  char                old_url[MAX_LENGTH];
+  char                tempname[MAX_LENGTH];
+  char                cssname[MAX_LENGTH];
+  char               *new_url;
+  int                 len;
+
+  ptr = NULL;
+  sString = styleString;
+  b = strstr (sString, "@import");
+  while (b)
+    {
+      /* we need to compare this url with the new doc path */
+      b += 7;
+      b = SkipBlanksAndComments (b);
+      /*** Caution: Strings can either be written with double quotes or
+           with single quotes. Only double quotes are handled here.
+           Escaped quotes are not handled. See function SkipQuotedString */
+      if (*b == '"')
+        {
+          /* search the url end */
+          b++;
+          e = b;
+          while (*e != EOS && *e != '"')
+            e++;
+        }
+      else if (*b == '\'')
+        {
+          /* search the url end */
+          b++;
+          e = b;
+          while (*e != EOS && *e != '\'')
+            e++;
+        }
+
+      if (*e != EOS)
+        {
+          len = (int)(e - b);
+          strncpy (old_url, b, len);
+          old_url[len] = EOS;
+          /* get the old full css name */
+          NormalizeURL (old_url, 0, tempname, cssname, oldpath);
+          /* build the new full css name */
+          new_url = MakeRelativeURL (tempname, newpath);
+	      
+          /* generate the new style string */
+          if (ptr)
+            {
+              oldptr = ptr;
+              len = - len + strlen (oldptr) + strlen (new_url) + 1;
+              ptr = (char *)TtaGetMemory (len);	  
+              len = (int)(b - oldptr);
+              strncpy (ptr, oldptr, len);
+              sString = &ptr[len];
+              /* new name */
+              strcpy (sString, new_url);
+              /* following text */
+              strcat (sString, e);
+              TtaFreeMemory (oldptr);
+            }
+          else
+            {
+              len = - len + strlen (styleString) + strlen (new_url) + 1;
+              ptr = (char *)TtaGetMemory (len);
+              len = (int)(b - styleString);
+              strncpy (ptr, styleString, len);
+              sString = &ptr[len];
+              /* new name */
+              strcpy (sString, new_url);
+              /* following text */
+              strcat (sString, e);
+            }
+          TtaFreeMemory (new_url);
+        }
+      else
+        sString = b;
+
+      /* next background-image */
+      b = strstr (sString, "@import"); 
+    }
+  return (ptr);
+}
+
+/*----------------------------------------------------------------------
   UpdateCSSBackgroundImage searches strings url() or url("") within
-  the styleString and make it relative to the newpath.
+  the styleString and makes it relative to the newpath.
   oldpath = old document path
   newpath = new document path
   imgpath = new image directory
@@ -132,10 +224,13 @@ char *UpdateCSSBackgroundImage (char *oldpath, char *newpath,
   char               *new_url;
   int                 len;
 
-  ptr = NULL;
-  sString = styleString;
+  ptr = UpdateCSSImport (oldpath, newpath, styleString);
+  if (ptr)
+    sString = ptr;
+  else
+    sString = styleString;
   b = strstr (sString, "url");
-  while (b != NULL)
+  while (b)
     {
       /* we need to compare this url with the new doc path */
       b += 3;
@@ -155,6 +250,14 @@ char *UpdateCSSBackgroundImage (char *oldpath, char *newpath,
               while (*e != EOS && *e != '"')
                 e++;
             }
+          else if (*b == '\'')
+            {
+              /* search the url end */
+              b++;
+              e = b;
+              while (*e != EOS && *e != '\'')
+                e++;
+            }
           else
             {
               /* search the url end */
@@ -162,6 +265,7 @@ char *UpdateCSSBackgroundImage (char *oldpath, char *newpath,
               while (*e != EOS && *e != ')')
                 e++;
             }
+
           if (*e != EOS)
             {
               len = (int)(e - b);

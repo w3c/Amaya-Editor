@@ -7,29 +7,98 @@
 #ifdef __STDC__
 
 extern char *GetSchemaFromDocType ( DocumentType docType );
-extern void LoadTemplate (Document doc, char* templatename, char* docname,
-						  DocumentType doctype, ThotBool createInstance);
-extern void CreateInstanceDocument ( Document doc,
-                                     char *templatename,
-                                     char *docname,
-                                     DocumentType docType );
-extern void InstanciateTemplate(char *templatename, Document doc);
-extern void InstanciateTemplate (Document doc, char *templatename, char *docname,
-								 DocumentType docType);
+extern void RemoveOldDeclarations ( XTigerTemplate t,
+                                    char *name );
+extern char *GetAttributeStringValue ( Element el,
+                                       int att );
+extern void AddElementDeclaration ( XTigerTemplate t,
+                                    Element el );
+extern void AddUnionDeclaration ( XTigerTemplate t,
+                                  Element el );
+extern void AddComponentDeclaration ( XTigerTemplate t,
+                                      Element el );
+extern void AddLibraryDeclarations ( XTigerTemplate t,
+                                     XTigerTemplate lib );
+extern void AddImportedLibrary ( XTigerTemplate t,
+                                 Element el );
+extern void CheckTypesAttribute ( XTigerTemplate t,
+                                  Element el );
+extern void ParseDeclarations ( XTigerTemplate t,
+                                Element el );
+extern void LoadTemplate_callback ( int newdoc,
+                                    int status,
+                                    char *urlName,
+                                    char *outputfile,
+                                    AHTHeaders *http_headers,
+                                    void * context );
+extern void LoadTemplate ( Document doc,
+                           char* templatename,
+                           char* docname,
+                           DocumentType doctype,
+                           ThotBool createInstance );
+extern void InstantiateTemplate_callback ( int newdoc,
+                                           int status,
+                                           char *urlName,
+                                           char *outputfile,
+                                           AHTHeaders *http_headers,
+                                           void * context );
+extern void InstanciateTemplate ( Document doc,
+                                  char *templatename,
+                                  char *docname,
+                                  DocumentType docType );
+extern void ParseTemplate ( XTigerTemplate t,
+                            Element el,
+                            Document doc );
+extern void InstanciateTemplate ( char *templatename,
+                                  Document doc );
 
 #else /* __STDC__ */
 
 extern char *GetSchemaFromDocType ( DocumentType docType );
-extern void LoadTemplate (Document doc, char* templatename, char* docname,
-						  DocumentType doctype, ThotBool createInstance);
-extern void CreateInstanceDocument ( Document doc,
-                                       char *templatename,
-                                       char *docname,
-                                       DocumentType docType );
-extern void InstanciateTemplate(char *templatename, Document doc);
-extern void InstanciateTemplate (Document doc, char *templatename, char *docname,
-								 DocumentType docType);
-
+extern void RemoveOldDeclarations ( XTigerTemplate t,
+                                      char *name );
+extern char *GetAttributeStringValue ( Element el,
+                                         int att );
+extern void AddElementDeclaration ( XTigerTemplate t,
+                                      Element el );
+extern void AddUnionDeclaration ( XTigerTemplate t,
+                                    Element el );
+extern void AddComponentDeclaration ( XTigerTemplate t,
+                                        Element el );
+extern void AddLibraryDeclarations ( XTigerTemplate t,
+                                       XTigerTemplate lib );
+extern void AddImportedLibrary ( XTigerTemplate t,
+                                   Element el );
+extern void CheckTypesAttribute ( XTigerTemplate t,
+                                    Element el );
+extern void ParseDeclarations ( XTigerTemplate t,
+                                  Element el );
+extern void LoadTemplate_callback ( int newdoc,
+                                      int status,
+                                      char *urlName,
+                                      char *outputfile,
+                                      AHTHeaders *http_headers,
+                                      void * context );
+extern void LoadTemplate ( Document doc,
+                             char* templatename,
+                             char* docname,
+                             DocumentType doctype,
+                             ThotBool createInstance );
+extern void InstantiateTemplate_callback ( int newdoc,
+                                             int status,
+                                             char *urlName,
+                                             char *outputfile,
+                                             AHTHeaders *http_headers,
+                                             void * context );
+extern void InstanciateTemplate ( Document doc,
+                                    char *templatename,
+                                    char *docname,
+                                    DocumentType docType );
+extern void ParseTemplate ( XTigerTemplate t,
+                              Element el,
+                              Document doc );
+extern void InstanciateTemplate ( char *templatename,
+                                    Document doc );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

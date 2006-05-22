@@ -32,9 +32,10 @@ extern void UnknownTemplateNameSpace ( ParserData *context,
 extern void TemplateAttributeComplete ( Attribute attr,
                                         Element el,
                                         Document doc );
-extern void  TemplateCheckInsert (Element *el, Element parent,
-                             Document doc, ThotBool *inserted);
-
+extern void TemplateCheckInsert ( Element *el,
+                                  Element parent,
+                                  Document doc,
+                                  ThotBool *inserted );
 
 #else /* __STDC__ */
 
@@ -64,8 +65,10 @@ extern void UnknownTemplateNameSpace ( ParserData *context,
 extern void TemplateAttributeComplete ( Attribute attr,
                                           Element el,
                                           Document doc );
-extern void  TemplateCheckInsert (Element *el, Element parent,
-                             Document doc, ThotBool *inserted);
+extern void TemplateCheckInsert ( Element *el,
+                                    Element parent,
+                                    Document doc,
+                                    ThotBool *inserted );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

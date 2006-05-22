@@ -12,7 +12,8 @@ extern int CreateInstanceOfTemplate ( Document doc,
                                       char *templatename,
                                       char *docname,
                                       DocumentType docType );
-extern ThotBool ShowUseTypes ( NotifyElement *event );
+extern ThotBool UseMenuClicked ( NotifyElement *event );
+extern ThotBool BagMenuClicked ( NotifyElement *event );
 
 #else /* __STDC__ */
 
@@ -22,7 +23,8 @@ extern int CreateInstanceOfTemplate ( Document doc,
                                         char *templatename,
                                         char *docname,
                                         DocumentType docType );
-extern ThotBool ShowUseTypes ( NotifyElement *event );
+extern ThotBool UseMenuClicked ( NotifyElement *event );
+extern ThotBool BagMenuClicked ( NotifyElement *event );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

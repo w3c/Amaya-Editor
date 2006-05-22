@@ -72,6 +72,8 @@ extern void CheckPastedElement ( Element el,
                                  int position,
                                  ThotBool by_ref );
 extern void ElementPasted ( NotifyElement * event );
+extern void CheckMaxLength ( Element elText,
+                             Document doc );
 extern void CheckNewLines ( NotifyOnTarget *event );
 extern void CreateTarget ( Document doc,
                            View view );
@@ -209,6 +211,8 @@ extern void CheckPastedElement ( Element el,
                                    int position,
                                    ThotBool by_ref );
 extern void ElementPasted ( NotifyElement * event );
+extern void CheckMaxLength ( Element elText,
+                               Document doc );
 extern void CheckNewLines ( NotifyOnTarget *event );
 extern void CreateTarget ( Document doc,
                              View view );

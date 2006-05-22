@@ -394,7 +394,7 @@ ThotBool CheckValidID (NotifyAttribute *event)
 void SetRelativeURLs (Document doc, char *newpath)
 {
   SSchema             XHTMLSSchema, MathSSchema, SVGSSchema, XLinkSSchema;
-  Element             el, root, content;
+  Element             el, root, content, next;
   ElementType         elType;
   Attribute           attr;
   AttributeType       attrType;
@@ -448,9 +448,16 @@ void SetRelativeURLs (Document doc, char *newpath)
               TtaFreeMemory (new_url);
             }
         }
-      TtaNextSibling (&el);
-      if (el != NULL)
-        elType = TtaGetElementType (el);
+
+      // look for another style element
+      next = TtaSearchTypedElement (elType, SearchForward, el);
+      if (next)
+        {
+          el = next;
+          elType = TtaGetElementType (el);
+        }
+      else
+        el = NULL;
     }
 
   /* manage URLs and SRCs attributes */
@@ -3177,6 +3184,7 @@ static ThotBool UpdateDocImage (Document doc, ThotBool src_is_local,
   return TRUE;
 }
 
+
 /*----------------------------------------------------------------------
   UpdateImages
   if CopyImage is TRUE change all picture SRC attribute and CSS background
@@ -3193,7 +3201,7 @@ static void UpdateImages (Document doc, ThotBool src_is_local,
   AttributeType       attrType;
   ElementType         elType;
   Attribute           attr;
-  Element             el, root, content, svgpic;
+  Element             el, root, content, svgpic, next;
   LoadedImageDesc    *pImage;
   Language            lang;
   char                tempfile[MAX_LENGTH];
@@ -3273,7 +3281,7 @@ static void UpdateImages (Document doc, ThotBool src_is_local,
             content = TtaGetFirstChild (el);
           else
             content = NULL;
-          if (content != NULL)
+          if (content)
             {
               buflen = MAX_CSS_LENGTH;
               TtaGiveTextContent (content, (unsigned char *)CSSbuffer, &buflen, &lang);
@@ -3293,7 +3301,7 @@ static void UpdateImages (Document doc, ThotBool src_is_local,
                   /* extract the first URL from the new style string */
                   ptr = GetCSSBackgroundURL (stringStyle);
                   oldStyle = CSSbuffer;
-                  while (ptr != NULL)
+                  while (ptr)
                     {
                       /* for next research */
                       stringStyle = strstr (stringStyle, "url") + 3;
@@ -3392,9 +3400,16 @@ static void UpdateImages (Document doc, ThotBool src_is_local,
                   TtaFreeMemory (sStyle);
                 }
             }
-          TtaNextSibling (&el);
-          if (el)
-            elType = TtaGetElementType (el);
+
+          // look for another style element
+          next = TtaSearchTypedElement (elType, SearchForward, el);
+          if (next)
+            {
+              el = next;
+              elType = TtaGetElementType (el);
+            }
+          else
+            el = NULL;
         }
 
       max = sizeof (SRC_attr_tab) / sizeof (AttSearch);
