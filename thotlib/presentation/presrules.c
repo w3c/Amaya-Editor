@@ -3646,8 +3646,6 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
           pAb->AbTopBorder = IntegerRule (pPRule, pAb->AbElement,
                                           pAb->AbDocView, &appl, &unit,
                                           pAttr, pAb);
-if (!strcmp (pAb->AbElement->ElLabel, "L86"))
-  printf ("BorderTop L86 val=%d unit=%d\n", pAb->AbTopBorder, unit);
           pAb->AbTopBorderUnit = unit;
           if (!appl && pAb->AbElement->ElParent == NULL)
             /* Pas de regle pour la racine, on met la valeur par defaut */

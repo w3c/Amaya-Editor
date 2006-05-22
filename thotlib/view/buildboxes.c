@@ -1497,7 +1497,9 @@ void GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width,
           }
     }
   
-  if (pFirstAb == NULL && pAb->AbVolume == 0)
+  // check if the box is visible
+  if (!pAb->AbDead &&
+      pAb->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility)
     {
       /* Empty box */
       if (*width == 0)
@@ -2261,8 +2263,6 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
       pAb->AbBox = pBox;
     }
 
-if (!strcmp (pAb->AbElement->ElLabel, "L86"))
-  printf ("CreateBox L86\n");
   if (pBox)
     {
       // zoom apply to SVG only

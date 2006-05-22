@@ -1859,13 +1859,13 @@ void GetExtraMargins (PtrBox pBox, PtrAbstractBox pFrom, int frame,
                         }
                       if (pParent->AbBox->BxType == BoBlock || first)
                         {
-                          *t += box->BxTMargin;
+                          //*t += box->BxTMargin;
                           if (pFrom != pAb)
                             *t += box->BxTBorder + box->BxTPadding;
                         }
                       if (pParent->AbBox->BxType == BoBlock || last)
                         {
-                          *b += box->BxBMargin;
+                          //*b += box->BxBMargin;
                           if (pFrom != pAb)
                             *b += box->BxBBorder + box->BxBPadding;
                         }
