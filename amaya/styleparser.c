@@ -816,7 +816,9 @@ static char *SkipImportantRule (char *cssRule)
   if (ImportantPos)
     {
       ImportantPos[-1] = '!';
-      cssRule = ImportantPos + 9;
+      cssRule = ImportantPos;
+      cssRule = SkipBlanksAndComments (cssRule);
+      cssRule += 9;
       ImportantPos = NULL;
     }
   cssRule = SkipBlanksAndComments (cssRule);
