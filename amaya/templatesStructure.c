@@ -20,10 +20,10 @@
 #include "AHTURLTools_f.h"
 #include "Xml2thot_f.h"
 
-#ifdef TEMPLATES
-
 #include "templateDeclarations.h"
 #include "templatesStructure_f.h"
+
+#ifdef TEMPLATES
 #include "Template.h"
 
 /* Information needed for the callback after loading a template.
