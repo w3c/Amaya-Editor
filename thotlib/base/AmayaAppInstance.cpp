@@ -21,8 +21,13 @@ AmayaAppInstance::AmayaAppInstance( AmayaApp * p_amaya_app ) :
 {
   // check the environment variable
   TtaGetEnvBoolean ("AMAYA_MULTIPLE_INSTANCES", &A_multiple);
+#ifdef _WINDOWS
+  m_InstanceName = wxString::Format(m_pAmayaApp->GetAppName()+_T("-%s"),
+                                    wxGetUserId().c_str());
+#else /* _WINDOWS */
   m_InstanceName = wxString::Format(_T(".")+m_pAmayaApp->GetAppName()+_T("-%s"),
                                     wxGetUserId().c_str());
+#endif /* _WINDOWS */
   if (!A_multiple)
     m_pSingleInstance_Checker = new wxSingleInstanceChecker(m_InstanceName);
   m_ServicePort = _T("4242");
