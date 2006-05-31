@@ -207,7 +207,7 @@ static void InsertPosRelation (PtrBox pOrginBox, PtrBox pTargetBox,
   The parameter op gives the relation:
   - OpSame, if the relation concerns the same dimension.
   - OpReverse, if the Width will change the Height or vice versa.
-  - OpIgnore, keeps in moind the box that has a relation.
+  - OpIgnore, keeps in mind the box that has a relation.
   The parameter inLine is TRUE when the pOrginBox box is displayed within
   a block of lines.
   ----------------------------------------------------------------------*/
@@ -1105,12 +1105,15 @@ ThotBool ComputePositioning (PtrBox pBox, int frame)
             }
           
           /* Move also enclosed boxes */
-          pAb->AbHorizPosChange = FALSE;
-          pAb->AbVertPosChange = FALSE;
-          pBox->BxXToCompute = TRUE;
-          pAb->AbHorizEnclosing = FALSE;
-          pBox->BxXOutOfStruct = TRUE;
-          if (appl)
+          if (appl || appr)
+            {
+              pAb->AbHorizPosChange = FALSE;
+              pBox->BxXToCompute = TRUE;
+              pAb->AbHorizEnclosing = FALSE;
+              pBox->BxXOutOfStruct = TRUE;
+              //PropagateXOutOfStruct (pAb, frame, TRUE, FALSE);
+            }
+         if (appl)
             {
               /* left positioning */
               if (appr)
@@ -1163,12 +1166,27 @@ ThotBool ComputePositioning (PtrBox pBox, int frame)
           else
             ComputePosRelation (&pAb->AbHorizPos, pBox, frame, TRUE);
           
-          pBox->BxYToCompute = TRUE;
-          pAb->AbVertEnclosing = FALSE;
-          pBox->BxYOutOfStruct = TRUE;
+          if (appt || appb)
+            {
+              pAb->AbVertPosChange = FALSE;
+              pBox->BxYToCompute = TRUE;
+              pAb->AbVertEnclosing = FALSE;
+              pBox->BxYOutOfStruct = TRUE;
+              //PropagateYOutOfStruct (pAb, frame, TRUE, FALSE);
+            }
           if (appt)
             {
               /* top positioning */
+              if (appb)
+                {
+                  /* stretchable height */
+                  pAb->AbHeightChange = FALSE;
+                  pBox->BxHOutOfStruct = TRUE;
+                  if (pBox->BxContentHeight)
+                    pBox->BxContentHeight = FALSE;
+                  ResizeHeight (pBox, pBox, NULL, tr + h + br - b - pBox->BxH, 0, 0, frame);
+                  InsertDimRelation (pRefBox, pBox, OpSame, FALSE, FALSE);
+                }
               YMoveAllEnclosed (pBox, y + t, frame);
               // register as a pos rule
               pPosAb = &pAb->AbVertPos;
@@ -1179,14 +1197,6 @@ ThotBool ComputePositioning (PtrBox pBox, int frame)
               pPosAb->PosEdge = Top;
               if (pRefBox)
                 InsertPosRelation (pBox, pRefBox, OpVertDep, Top, Top);
-              if (appb)
-                {
-                  /* stretchable height */
-                  pAb->AbHeightChange = FALSE;
-                  if (pBox->BxContentHeight)
-                    pBox->BxContentHeight = FALSE;
-                  ResizeHeight (pBox, pBox, NULL, tr + h + br - b - pBox->BxH, 0, 0, frame);
-                }
             }
           else if (appb)
             {
@@ -2156,7 +2166,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
   int                 dx, dy, dim;
   int                 t, b, l, r;
   ThotBool            inLine, isExtraFlow;
-  ThotBool            defaultDim, shrink = FALSE;
+  ThotBool            defaultDim;
 
   pBox = pAb->AbBox;
   pParentAb = pAb->AbEnclosing;
@@ -2164,7 +2174,6 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
   /* Check the box visibility */
   if (pAb->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility)
     {
-      //#ifdef POSITIONING
       /* check if the width is set by positioning rules */
       isExtraFlow = ExtraFlow (pBox, frame);
       if (isExtraFlow)
@@ -2200,7 +2209,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                       pAb->AbPositioning->PnAlgorithm == PnFixed &&
                       pAb->AbWidth.DimUnit == UnAuto)
                     /* shrink does apply */
-                    shrink = TRUE;
+                    pBox->BxShrink = TRUE;
                 }
             }
           if (!horizRef)
@@ -2234,8 +2243,10 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                (pAb->AbPositioning->PnAlgorithm == PnAbsolute ||
                 pAb->AbPositioning->PnAlgorithm == PnFixed))
         /* no explicit left or right rule but shrink does apply */
-        shrink = TRUE;
-      //#endif /* POSITIONING */
+        pBox->BxShrink = TRUE;
+      else if (horizRef && pParentAb && pParentAb->AbBox &&
+               (pAb->AbWidth.DimUnit == UnAuto || pAb->AbWidth.DimUnit == UnPercent))
+        pBox->BxShrink = pParentAb->AbBox->BxShrink;
 
       /* Check validity of rules */
       if (horizRef && pAb->AbWidth.DimIsPosition)
@@ -2501,7 +2512,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                           pDimAb->DimUnit == UnAuto)
                         /* the rule gives the outside value */
                         val = val - dx;
-                      ResizeWidth (pBox, pBox, NULL, val - pBox->BxW, 0, 0, 0, frame);
+                      ResizeWidth (pBox, pBox, NULL, val - pBox->BxW, 0, 0, 0, frame, FALSE);
                     }
                 }
               else
@@ -2573,7 +2584,6 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                           if (pAb->AbFloat != 'N'||
                               pBox->BxType == BoFloatGhost ||
                               pAb->AbNotInLine ||
-                              shrink ||
                               pAb->AbDisplay == 'I')
                             {
                               /* floated box or inline -> content width */
@@ -2722,7 +2732,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                           val = PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb,
                                             ViewFrameTable[frame - 1].FrMagnification);
                         }
-                      ResizeWidth (pBox, pBox, NULL, val - pBox->BxW, 0, 0, 0, frame);
+                      ResizeWidth (pBox, pBox, NULL, val - pBox->BxW, 0, 0, 0, frame, FALSE);
                     }
                   else
                     {
@@ -2816,7 +2826,8 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                               /* the rule gives the outside value */
                               if (val >= dx)
                                 val = val - dx;
-                              ResizeWidth (pBox, pBox, NULL, val - pBox->BxW, 0, 0, 0, frame);
+                              ResizeWidth (pBox, pBox, NULL, val - pBox->BxW, 0,
+                                           0, 0, frame, FALSE);
                               /* Marks out of structure relations */
                               if (pDimAb->DimAbRef != pParentAb
                                   && pDimAb->DimAbRef->AbEnclosing != pParentAb)
@@ -3244,6 +3255,8 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
       /* Marque dans la boite si la dimension depend du contenu ou non */
       pBox->BxRuleWidth = 0;
       defaultDim = pBox->BxContentWidth;
+      if (defaultDim)
+        pBox->BxShrink = FALSE;
     }
   else
     {
@@ -4094,7 +4107,7 @@ void ClearDimRelation (PtrBox pBox, ThotBool horizRef, int frame)
       pBox->BxHorizEdge = pAb->AbHorizPos.PosEdge;
       pBox->BxHorizInverted = FALSE;
       pBox->BxHorizFlex = NULL;
-      ResizeWidth (pBox, NULL, NULL, -pBox->BxW, 0, 0, 0, frame);
+      ResizeWidth (pBox, NULL, NULL, -pBox->BxW, 0, 0, 0, frame, FALSE);
     }
   else if (!horizRef && pBox->BxVertFlex)
     {

@@ -533,6 +533,7 @@ ThotBool IsHTMLName (const char *path)
       if (!strcmp (nsuffix, "html") ||
           !strcmp (nsuffix, "htm") ||
           !strcmp (nsuffix, "shtml") ||
+          !strcmp (nsuffix, "asp") ||
           !strcmp (nsuffix, "jsp") ||
           !strcmp (nsuffix, "tpl") ||
           !strcmp (nsuffix, "xht") ||
@@ -561,6 +562,7 @@ ThotBool IsHTMLName (const char *path)
           if (!strcmp (nsuffix, "html") ||
               !strcmp (nsuffix, "htm") ||
               !strcmp (nsuffix, "shtml") ||
+              !strcmp (nsuffix, "asp") ||
               !strcmp (nsuffix, "jsp") ||
               !strcmp (nsuffix, "tpl") ||
               !strcmp (nsuffix, "xht") ||
@@ -671,6 +673,7 @@ ThotBool IsXMLName (const char *path)
 
   if (!strcasecmp (suffix, "xml") ||
       !strcasecmp (suffix, "xht") ||
+      !strcasecmp (suffix, "xtd") ||
       !strcmp (suffix, "xhtm") ||
       !strcmp (suffix, "xhtml") ||
       !strcmp (suffix, "smi") ||
@@ -682,6 +685,7 @@ ThotBool IsXMLName (const char *path)
       TtaExtractSuffix (temppath, suffix);       
       if (!strcasecmp (suffix, "xml") ||
           !strcasecmp (suffix, "xht") ||
+          !strcasecmp (suffix, "xtd") ||
           !strcmp (suffix, "xhtm") ||
           !strcmp (suffix, "xhtml") ||
           !strcmp (suffix, "smi") |

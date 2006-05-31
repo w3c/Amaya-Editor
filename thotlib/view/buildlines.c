@@ -2081,7 +2081,7 @@ static ThotBool IsFloatSet (PtrBox box, PtrBox floatBox, PtrBox pBlock)
   Parameters top, bottom, left, and right give the summ of
   margin/border/padding of the block.
   Work with absolute positions when xAbs and yAbs are TRUE.
-  When the parameter extensibleBlock is TRUE, it doesn't tke into account
+  When the parameter extensibleBlock is TRUE, it doesn't take into account
   the current max with.
   Returns:
   - the minimum width of the line (the larger word).
@@ -2104,7 +2104,7 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
   PtrBox              pNextBox;
   PtrBox              lastbox;
   int                 ascent, descent;
-  int                 width, breakWidth;
+  int                 width, breakWidth, w;
   int                 boxLength, nSpaces;
   int                 newIndex, wordWidth;
   int                 xi, val;
@@ -2233,15 +2233,16 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
                     val = pLine->LiXMax;
                   else
                     val = pBlock->BxW;
+                  l = pNextBox->BxLBorder + pNextBox->BxLPadding + pNextBox->BxRBorder + pNextBox->BxRPadding;
+                  if (pNextBox->BxLMargin > 0)
+                    l += pNextBox->BxLMargin;
+                  if (pNextBox->BxRMargin > 0)
+                    l += pNextBox->BxRMargin;
                   if (pNextBox->BxAbstractBox->AbWidth.DimUnit == UnPercent)
                     {
                       // compute the external width
                       val = pBlock->BxW * pNextBox->BxAbstractBox->AbWidth.DimValue / 100;
-                      val += pNextBox->BxLBorder + pNextBox->BxLPadding + pNextBox->BxRBorder + pNextBox->BxRPadding;
-                     if (pNextBox->BxLMargin > 0)
-                        val += pNextBox->BxLMargin;
-                      if (pNextBox->BxRMargin > 0)
-                        val += pNextBox->BxRMargin;
+                      val = val + l;
                       if (setinline && val > pLine->LiXMax)
                         /* reduce the box width to the current line width */
                         val = pLine->LiXMax;
@@ -2258,8 +2259,24 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
                     }
                   else
                     pNextBox->BxContentWidth = FALSE;
-                  ResizeWidth (pNextBox, pBlock, NULL,
-                               val - pNextBox->BxWidth, 0, 0, 0, frame);
+                  if (pNextBox->BxShrink)
+                    {
+                      // new rule width
+                      val -= l;
+                      w = pNextBox->BxMaxWidth - l;
+                      if (w > 0 && w < val)
+                        {
+                          ResizeWidth (pNextBox, pBlock, pBlock,
+                                       w - pNextBox->BxW, 0, 0, 0, frame, FALSE);
+                          pNextBox->BxRuleWidth = val;
+                        }
+                      else
+                        ResizeWidth (pNextBox, pBlock, pBlock,
+                                     val - pNextBox->BxW, 0, 0, 0, frame, FALSE);
+                    }
+                  else
+                    ResizeWidth (pNextBox, pBlock, pBlock,
+                                 val - l - pNextBox->BxW, 0, 0, 0, frame, FALSE);
                 }
             }
         }
@@ -2879,7 +2896,6 @@ static void UpdateBlockWithFloat (int frame, PtrBox pBlock,
         *height = pfloat->FlBox->BxYOrg + pfloat->FlBox->BxHeight - y;
       pfloat = pfloat->FlNext;
     }
-
   if (extensibleblock)
     {
       // move right floated boxes according to the right constraint
@@ -2893,7 +2909,6 @@ static void UpdateBlockWithFloat (int frame, PtrBox pBlock,
           pfloat = pfloat->FlNext;
         }
     }
-
   if (updateWidth)
     {
       /* update min and max widths */
@@ -3415,7 +3430,9 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
   pParent = pAb->AbEnclosing;
   isFloat = pAb->AbFloat != 'N';
   isExtraFlow = ExtraFlow (pBox, frame);
-  if ((pAb->AbWidth.DimUnit == UnAuto || pBox->BxType == BoFloatBlock) &&
+  if (pBox->BxShrink && pBox->BxRuleWidth)
+    maxWidth = pBox->BxRuleWidth;
+  else if ((pAb->AbWidth.DimUnit == UnAuto || pBox->BxType == BoFloatBlock) &&
       pParent)
     {
       /* limit to the enclosing box */
@@ -3429,13 +3446,19 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
                   pParent->AbBox->BxType == BoGhost ||
                   pParent->AbBox->BxType == BoFloatGhost))
             {
-              if (pParent->AbFloat != 'N')
-                isFloat = TRUE;
-              pParent = pParent->AbEnclosing;
+              isExtraFlow = ExtraFlow (pParent->AbBox, frame);
+              if (isExtraFlow)
+                pParent = GetEnclosingViewport (pParent);
+              else
+                {
+                  if (pParent->AbFloat != 'N')
+                    isFloat = TRUE;
+                  pParent = pParent->AbEnclosing;
+                }
             }
         }
       pCell = GetParentCell (pBox);
-      if (pAb->AbWidth.DimUnit == UnAuto && isFloat)
+      if (pAb->AbWidth.DimUnit == UnAuto && (isFloat || isExtraFlow))
         {
           if (pParent && pParent->AbBox &&
               pParent->AbWidth.DimUnit != UnAuto)
@@ -3469,7 +3492,8 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
     }
   else
     maxWidth = 30 * DOT_PER_INCH;
-  if (extensibleBox)
+
+  if (extensibleBox || pBox->BxShrink)
     pBox->BxW = maxWidth;
 
   pNextBox = NULL;
@@ -3724,7 +3748,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
                   pBox->BxContentWidth = TRUE;
                   pLine->LiXMax = pLine->LiRealLength;
                 }
-              if (/*!pBox->BxContentWidth &&*/ !extensibleBox)
+              if (!extensibleBox)
                 Align (pBox, pLine, frame, TRUE, xAbs, yAbs);
               else
                 Align (pBox, pLine, frame, FALSE, xAbs, yAbs);
@@ -3817,11 +3841,10 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
     left -= pBox->BxLMargin;
   if (pBox->BxRMargin < 0)
     right -= pBox->BxRMargin;
-  if (extensibleBox /*&& pBox->BxMaxWidth == 0*/)
-    {
+  if (extensibleBox || pBox->BxShrink)
       // Restore the previous width
       pBox->BxW = width;
-    }
+    
   pBox->BxMinWidth += left + right;
   pBox->BxMaxWidth += left + right;
   UpdateBlockWithFloat (frame, pBox, xAbs, yAbs, TRUE, height);
@@ -4164,7 +4187,7 @@ void RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox,
   ViewFrame          *pFrame;
   ViewSelection      *pSelBegin;
   ViewSelection      *pSelEnd;
-  int                 w, h, height, width;
+  int                 w, h, height, width, l;
   ThotBool            changeSelectBegin;
   ThotBool            changeSelectEnd;
   ThotBool            status, extensibleBox;
@@ -4232,7 +4255,7 @@ void RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox,
       ComputeLines (pBox, frame, &height);
       extensibleBox = (pBox->BxContentWidth ||
                        (!pAb->AbWidth.DimIsPosition && pAb->AbWidth.DimMinimum));
-      if (extensibleBox /*&& pBox->BxMaxWidth != pBox->BxWidth*/)
+      if (extensibleBox)
         /* it's an extensible block of lines */
         width = pBox->BxMaxWidth;
       else if (pBox->BxMinWidth > pBox->BxWidth)
@@ -4318,11 +4341,24 @@ void RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox,
             }
         }
 
+      l = pBox->BxLBorder + pBox->BxLPadding + pBox->BxRBorder + pBox->BxRPadding;
+      if (pBox->BxLMargin > 0)
+        l += pBox->BxLMargin;
+      if (pBox->BxRMargin > 0)
+        l += pBox->BxRMargin;
       if (width != 0 && width != pBox->BxWidth)
         {
           pBox->BxCycles = 1;
-          ChangeDefaultWidth (pBox, ibox, pBox->BxW + width - pBox->BxWidth, 0, frame);
+          ChangeDefaultWidth (pBox, ibox, width - l, 0, frame);
           pBox->BxCycles = 0;
+        }
+      else if (pBox->BxShrink && pBox->BxMaxWidth - l > 0)
+        {
+          if (pBox->BxMaxWidth - l < pBox->BxRuleWidth)
+            w = pBox->BxMaxWidth - l;
+          else
+            w = pBox->BxRuleWidth;
+          ResizeWidth (pBox, pBox, NULL, w - pBox->BxW, 0, 0, 0, frame, TRUE);
         }
       /* Faut-il conserver la hauteur ? */
       if (height != 0 && height != pBox->BxHeight)
@@ -4330,8 +4366,6 @@ void RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox,
           /* Il faut propager la modification de hauteur */
           propagateStatus = Propagate;
           /* We certainly need to re-check the height of enclosing elements */
-          /*if (propagateStatus == ToChildren)
-            RecordEnclosing (pBox, FALSE);*/
           ChangeDefaultHeight (pBox, ibox, height, frame);
           Propagate = propagateStatus;
         }
@@ -4368,7 +4402,14 @@ void UpdateLineBlock (PtrAbstractBox pAb, PtrLine pLine, PtrBox pBox,
   if (pLine)
     {
       pDimAb = &pAb->AbWidth;
-      if (pParentBox->BxContentWidth)
+      if (pParentBox->BxShrink &&
+          (pParentBox->BxW != pParentBox->BxRuleWidth ||
+           (xDelta < 0 && pParentBox->BxW + xDelta < pParentBox->BxRuleWidth)))
+        {
+          pLine = NULL;
+          RecomputeLines (pAb, NULL, NULL, frame);
+        }
+      else if (pParentBox->BxContentWidth)
         {
           /* the line can be extended */
           if (!pDimAb->DimIsPosition && pDimAb->DimMinimum &&
@@ -4392,7 +4433,7 @@ void UpdateLineBlock (PtrAbstractBox pAb, PtrLine pLine, PtrBox pBox,
             {
               ShiftLine (pLine, pAb, pBox, xDelta, frame);
               pLine->LiXMax = pLine->LiRealLength;
-              ResizeWidth (pParentBox, pParentBox, NULL, xDelta, 0, 0, 0, frame);
+              ResizeWidth (pParentBox, pParentBox, NULL, xDelta, 0, 0, 0, frame, FALSE);
             }
         }
       else if (!pDimAb->DimIsPosition && pDimAb->DimMinimum

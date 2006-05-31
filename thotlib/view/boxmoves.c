@@ -694,8 +694,9 @@ void ChangeDefaultWidth (PtrBox pBox, PtrBox pSourceBox, int width,
   if (pBox && pBox->BxAbstractBox)
     {
       pAb = pBox->BxAbstractBox;
-      minimumRule = (!pAb->AbWidth.DimIsPosition &&
-                     (pAb->AbWidth.DimMinimum));
+      minimumRule = (!pAb->AbWidth.DimIsPosition && pAb->AbWidth.DimMinimum);
+      if (minimumRule)
+        pBox->BxShrink = FALSE;
       /* check if the current width depends on the contents */
       if (pBox->BxContentWidth)
         {
@@ -706,11 +707,12 @@ void ChangeDefaultWidth (PtrBox pBox, PtrBox pSourceBox, int width,
               delta = pBox->BxRuleWidth - pBox->BxW;
               pBox->BxRuleWidth = width;
               pBox->BxContentWidth = !pBox->BxContentWidth;
-              ResizeWidth (pBox, pSourceBox, NULL, delta, spaceDelta, 0, 0, frame);
+              ResizeWidth (pBox, pSourceBox, NULL, delta, spaceDelta, 0, 0, frame, FALSE);
             }
           else
             /* update the current content width */
-            ResizeWidth (pBox, pSourceBox, NULL, width - pBox->BxW, 0, 0, spaceDelta, frame);
+            ResizeWidth (pBox, pSourceBox, NULL, width - pBox->BxW, 0, 0,
+                         spaceDelta, frame, FALSE);
         }
       else if (minimumRule)
         {
@@ -720,7 +722,8 @@ void ChangeDefaultWidth (PtrBox pBox, PtrBox pSourceBox, int width,
               /* apply the content rule */
               pBox->BxRuleWidth = pBox->BxW;
               pBox->BxContentWidth = !pBox->BxContentWidth;
-              ResizeWidth (pBox, pSourceBox, NULL, width - pBox->BxW, 0, 0, spaceDelta, frame);
+              ResizeWidth (pBox, pSourceBox, NULL, width - pBox->BxW, 0, 0,
+                           spaceDelta, frame, FALSE);
             }
           else
             /* update the content width */
@@ -745,6 +748,9 @@ void ChangeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
     {
       minimumRule = (!pBox->BxAbstractBox->AbWidth.DimIsPosition
                      && pBox->BxAbstractBox->AbWidth.DimMinimum);
+      if (minimumRule)
+        pBox->BxShrink = FALSE;
+        
       if (minimumRule && IsParentBox (pFromBox, pBox)
           && pFromBox->BxContentWidth)
         /* If the minimum size depends on an enclosing box and the current
@@ -764,7 +770,7 @@ void ChangeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
               pBox->BxRuleWidth = pBox->BxW;
               pBox->BxContentWidth = !pBox->BxContentWidth;
               ResizeWidth (pBox, pSourceBox, pFromBox, width - pBox->BxW,
-                           0, 0, spaceDelta, frame);
+                           0, 0, spaceDelta, frame, FALSE);
             }
           else
             /* update the minimum width */
@@ -781,21 +787,33 @@ void ChangeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
               pBox->BxRuleWidth = pBox->BxW + delta;
               pBox->BxContentWidth = !pBox->BxContentWidth;
               ResizeWidth (pBox, pSourceBox, pFromBox, width - pBox->BxW,
-                           0, 0, spaceDelta, frame);
+                           0, 0, spaceDelta, frame, FALSE);
             }
           else
             /* update the current minimum */
-            ResizeWidth (pBox, pSourceBox, pFromBox, delta, 0, 0, spaceDelta, frame);
+            ResizeWidth (pBox, pSourceBox, pFromBox, delta, 0, 0,
+                         spaceDelta, frame, FALSE);
         }
       else
         {
-          if (pBox->BxType == BoCell &&
-              !pBox->BxAbstractBox->AbWidth.DimIsPosition &&
-              pBox->BxAbstractBox->AbWidth.DimAbRef == NULL &&
-              pBox->BxAbstractBox->AbWidth.DimValue >= 0)
+          if (pBox->BxShrink && pBox->BxW != pBox->BxRuleWidth)
+            {
+              pBox->BxRuleWidth += delta;
+              if (pBox->BxW < pBox->BxRuleWidth)
+                // keep the shrinked width
+                delta = 0;
+              //else
+                // update the box width
+                //delta = pBox->BxRuleWidth - pBox->BxW;
+            }
+          else if (pBox->BxType == BoCell &&
+                   !pBox->BxAbstractBox->AbWidth.DimIsPosition &&
+                   pBox->BxAbstractBox->AbWidth.DimAbRef == NULL &&
+                   pBox->BxAbstractBox->AbWidth.DimValue >= 0)
             /* a CSS rule fixes the width of this cell */
             delta = pFromBox->BxWidth - pBox->BxWidth;
-          ResizeWidth (pBox, pSourceBox, pFromBox, delta, 0, 0, spaceDelta, frame);
+          ResizeWidth (pBox, pSourceBox, pFromBox, delta, 0, 0,
+                       spaceDelta, frame, FALSE);
         }
     }
 }
@@ -947,7 +965,7 @@ void MoveBoxEdge (PtrBox pBox, PtrBox pSourceBox, OpRelation op, int delta,
           r += pBox->BxRBorder + pBox->BxRPadding;
           delta = delta + pBox->BxWidth - pBox->BxW - l - r;
           // the history starts here
-          ResizeWidth (pBox, NULL, NULL, delta, 0, 0, 0, frame);
+          ResizeWidth (pBox, NULL, NULL, delta, 0, 0, 0, frame, FALSE);
           /* restore the fixed edge */
           pBox->BxHorizEdge = oldHorizEdge;
         }
@@ -1903,9 +1921,11 @@ void GetExtraMargins (PtrBox pBox, PtrAbstractBox pFrom, int frame,
   extra (margin, border, padding)
   The parameter spaceDelta gives the number of spaces added (>0) or removed
   only if it's a text box included within a justified line.
+  The parameter shrink is TRUE when the resize is generated by a shrink
+  contraint. In this case the update is not transmitted to enclosed boxes.
   ----------------------------------------------------------------------*/
-void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
-                  int delta, int l, int r, int spaceDelta, int frame)
+void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta,
+                  int l, int r, int spaceDelta, int frame, ThotBool shrink)
 {
   PtrBox              box;
   PtrLine             pLine;
@@ -1920,7 +1940,7 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
   int                 extraL, extraR;
   int                 addL = 0, addR = 0;
   ThotBool            notEmpty;
-  ThotBool            toMove;
+  ThotBool            toMove, position;
   ThotBool            absoluteMove;
   ThotBool            externalRef;
 
@@ -1977,9 +1997,9 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
             toMove = (pCurrentAb->AbEnclosing->AbBox->BxType != BoGhost &&
                       pCurrentAb->AbEnclosing->AbBox->BxType != BoBlock &&
                       pCurrentAb->AbEnclosing->AbBox->BxType != BoFloatBlock);
-	  
+          position = IsFlow (pBox, frame);
           /* check positionning constraints */
-          if (!toMove ||
+          if ((!toMove && !position) ||
               pCurrentAb->AbFloat == 'L' ||
               (pCurrentAb->AbFloat != 'R' &&
                (pBox->BxHorizEdge == Left || pBox->BxHorizEdge == VertRef)))
@@ -2028,6 +2048,9 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
             UpdateBoxRegion (frame, pBox, orgTrans, 0, delta, 0);
           /* inside width */
           pBox->BxW += delta;
+          if (!shrink && pBox->BxShrink)
+            // keep in mind the last inherited width
+            pBox->BxRuleWidth = pBox->BxW;
           /* outside width */
           pBox->BxWidth = pBox->BxWidth + delta + diff;
           pBox->BxXOrg += orgTrans;
@@ -2139,7 +2162,7 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
                                        || pRelation->ReOp == OpWidth)
                                 MoveBoxEdge (pRelation->ReBox, pBox, pRelation->ReOp, endTrans, frame, TRUE);
                               else if (pRelation->ReBox != pSourceBox)
-                                XMove (pRelation->ReBox, pBox, endTrans - val, frame);
+                                XMove (pRelation->ReBox, pBox, endTrans + val, frame);
                             }
                           break;
                         default:
@@ -2159,7 +2182,7 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
           /* Keep in mind if the box positionning is absolute or not */
           absoluteMove = IsXPosComplete (pBox);
           /* internal boxes take into account margins borders and paddings */
-          if (/*!absoluteMove && */(l || r))
+          if (l || r)
             {
               orgTrans += l;
               middleTrans += (l - r)/2;
@@ -2183,7 +2206,10 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
             /* or it doesn't inherit the size from its contents */
             {
               if (pBox->BxType == BoBlock || pBox->BxType == BoFloatBlock)
-                RecomputeLines (pCurrentAb, pBox->BxFirstLine, pSourceBox, frame);
+                {
+                  if (!shrink)
+                    RecomputeLines (pCurrentAb, pBox->BxFirstLine, pSourceBox, frame);
+                }
               else if (pBox->BxType != BoGhost && pBox->BxType != BoFloatGhost)
                 {
                   pAb = pCurrentAb->AbFirstEnclosed;
@@ -2271,9 +2297,10 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
                 {
                   box = pDimRel->DimRTable[i];
                   pAb = box->BxAbstractBox;
-                  if ((pBox->BxType == BoBlock || pBox->BxType == BoFloatBlock) &&
+                  if ((pBox->BxType == BoBlock || pBox->BxType == BoFloatBlock ||
+                       shrink) &&
                       IsParentBox (pBox, box))
-                    /* update managed by ComputeLines */
+                    /* update managed by ComputeLines or should not occur */
                     pAb = NULL;
                   if (pAb && !pAb->AbDead && !pAb->AbNew && pAb->AbBox)
                     {
@@ -2691,7 +2718,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
                                        || pRelation->ReOp == OpHeight)
                                 MoveBoxEdge (pRelation->ReBox, pBox, pRelation->ReOp, endTrans, frame, FALSE);
                               else if (pRelation->ReBox != pSourceBox)
-                                YMove (pRelation->ReBox, pBox, endTrans - val, frame);
+                                YMove (pRelation->ReBox, pBox, endTrans + val, frame);
                             }
                           break;
                         default:
@@ -2981,20 +3008,21 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
       if (pCurrentAb->AbLeafType == LtSymbol)
         {
           font = pBox->BxFont;
-          i = GetMathFontWidth (pCurrentAb->AbShape, pBox->BxAbstractBox->AbEnclosing->AbBox->BxFont, pBox->BxH);
+          i = GetMathFontWidth (pCurrentAb->AbShape,
+                                pBox->BxAbstractBox->AbEnclosing->AbBox->BxFont, pBox->BxH);
           switch (pCurrentAb->AbShape)
             {
             case 'd':	/* double integral */
               if (i == 0)
                 i = BoxCharacterWidth (0xf3, font)
                   + BoxCharacterWidth (0xf3, font) / 2;
-              ResizeWidth (pBox, NULL, NULL, i - pBox->BxW, 0, 0, 0, frame);
+              ResizeWidth (pBox, NULL, NULL, i - pBox->BxW, 0, 0, 0, frame, FALSE);
               break;		
             case 'i':	/* integral */
             case 'c':	/* circle integral */
               if (i == 0)
                 i = BoxCharacterWidth (0xf3, font);
-              ResizeWidth (pBox, NULL, NULL, i - pBox->BxW, 0, 0, 0, frame);
+              ResizeWidth (pBox, NULL, NULL, i - pBox->BxW, 0, 0, 0, frame, FALSE);
               break;
             case '(':
             case ')':
@@ -3006,7 +3034,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
             case '>':
               if (i == 0)
                 i = BoxCharacterWidth (0xe6, font);
-              ResizeWidth (pBox, NULL, NULL, i - pBox->BxW, 0, 0, 0, frame);
+              ResizeWidth (pBox, NULL, NULL, i - pBox->BxW, 0, 0, 0, frame, FALSE);
               break;
             default:
               break;

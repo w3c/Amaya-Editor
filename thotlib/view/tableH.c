@@ -833,7 +833,7 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
       /* don't pack rows with each cell */
       PackRows = FALSE;
       ResizeWidth (pBox, pBox, NULL, width + cellspacing - pBox->BxW,
-                   0, 0, 0, frame);
+                   0, 0, 0, frame, FALSE);
       for (cRef = 0; cRef < cNumber; cRef++)
         {
           box = colBox[cRef]->AbBox;
@@ -847,7 +847,7 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
             delta = box->BxMaxWidth;
           /* update the new inside width */
           delta = delta - box->BxW;
-          ResizeWidth (box, box, NULL, delta, 0, 0, 0, frame);
+          ResizeWidth (box, box, NULL, delta, 0, 0, 0, frame, FALSE);
 #ifdef TAB_DEBUG
           printf ("Width[%d]=%d\n", cRef, box->BxWidth);
 #endif
@@ -869,7 +869,7 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
       /* don't pack rows with each cell */
       PackRows = FALSE;
       ResizeWidth (pBox, pBox, NULL, width + cellspacing - pBox->BxW,
-                   0, 0, 0, frame);
+                   0, 0, 0, frame, FALSE);
       for (cRef = 0; cRef < cNumber; cRef++)
         {
           box = colBox[cRef]->AbBox;
@@ -883,7 +883,7 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
             delta = box->BxMinWidth;
           /* update the new inside width */
           delta = delta - box->BxW;
-          ResizeWidth (box, box, NULL, delta, 0, 0, 0, frame);
+          ResizeWidth (box, box, NULL, delta, 0, 0, 0, frame, FALSE);
 #ifdef TAB_DEBUG
           printf ("Width[%d]=%d\n", cRef, box->BxWidth);
 #endif
@@ -903,7 +903,7 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
       /* don't pack rows with each cell */
       PackRows = FALSE;
       ResizeWidth (pBox, pBox, NULL, width + cellspacing - pBox->BxW,
-                   0, 0, 0, frame);
+                   0, 0, 0, frame, FALSE);
       /* get the space available for stretchable columns */      
       delta = width - sum - sumPercent;
       /* display with the maximum or the minimum widths */
@@ -1023,7 +1023,7 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
                 }
             }
           i = i - box->BxW;
-          ResizeWidth (box, box, NULL, i, 0, 0, 0, frame);
+          ResizeWidth (box, box, NULL, i, 0, 0, 0, frame, FALSE);
 #ifdef TAB_DEBUG
           printf ("Width[%d]=%d\n", cRef, box->BxWidth);
 #endif
@@ -1926,7 +1926,8 @@ void UpdateTable (PtrAbstractBox table, PtrAbstractBox col,
               pAb = SearchEnclosingType (col, BoTable, BoTable);
               /* during table building each column needs a minimum width */
               if (col->AbBox->BxWidth < 20)
-                ResizeWidth (col->AbBox, col->AbBox, NULL, 20 - col->AbBox->BxWidth, 0, 0, 0, frame);
+                ResizeWidth (col->AbBox, col->AbBox, NULL, 20 - col->AbBox->BxWidth,
+                             0, 0, 0, frame, FALSE);
             }
         }
       else if (row && row->AbBox)

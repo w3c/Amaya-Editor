@@ -1941,200 +1941,201 @@ void DrawPicture (PtrBox box, ThotPictInfo *imageDesc, int frame,
   if (imageDesc->PicFileName == NULL || imageDesc->PicFileName[0] == EOS || 
       (box->BxAbstractBox->AbLeafType == LtCompound &&
 #ifdef _GL
-       !strcmp (imageDesc->PicFileName, LostPicturePath)))
+       !strcmp (imageDesc->PicFileName, LostPicturePath)
 #else /*_GL*/
-    imageDesc->PicPixmap == PictureLogo))
+    imageDesc->PicPixmap == PictureLogo
 #endif /* _GL */
-     return;
+       ))
+    return;
 
 #ifdef _GL
-     if (Printing)
-{
-PrintingGL = TRUE;
-Printing = FALSE;
-}
-#endif /* _GL */
-
-drawable = (ThotDrawable)TtaGetThotWindow (frame);
-GetXYOrg (frame, &xFrame, &yFrame);
-typeImage = imageDesc->PicType;
-GetPictureFileName (imageDesc->PicFileName, fileName);
-
-/* the default presenation depends on the box type */
-pres = imageDesc->PicPresent;
-if (pres == DefaultPres)
-{
-  if (box->BxType == BoPicture)
-    /* an image is rescaled */
-    pres = ReScale;
-  else
-    /* a background image is repeated */
-    pres = FillFrame;
-}
-/* resize plugins if necessary */
-if (typeImage >= InlineHandlers)
-{
-  imageDesc->PicWArea = w;
-  imageDesc->PicHArea = h;
-}
-picWArea = imageDesc->PicWArea;
-picHArea = imageDesc->PicHArea;
-bgColor = box->BxAbstractBox->AbBackground;
-  
-SetPictureClipping (&picWArea, &picHArea, w, h, imageDesc);
-if (!Printing)
-{
-  if (imageDesc->PicType == eps_type) 
-    DrawEpsBox (box, imageDesc, frame, epsflogo_width, epsflogo_height);
-  else
+  if (Printing)
     {
-#ifdef _TRACE_GL_BUGS_GLISTEXTURE
-      if (imageDesc->TextureBind)
-        printf ( "GLBUG - DrawPicture : glIsTexture=%s\n", glIsTexture (imageDesc->TextureBind) ? "yes" : "no" );
-#endif /* _TRACE_GL_BUGS_GLISTEXTURE */
-      if ((pres == ReScale && 
-           (imageDesc->PicWArea != w || imageDesc->PicHArea != h)) ||
-#ifdef _GL
-          !glIsTexture (imageDesc->TextureBind))	    
-#else /*_GL*/
-	      imageDesc->PicPixmap == NULL)
-#endif /*_GL*/
-    {
-      LoadPicture (frame, box, imageDesc);
-      w = picWArea = imageDesc->PicWArea;
-      h = picHArea = imageDesc->PicHArea;
-      SetPictureClipping (&picWArea, &picHArea, w, h, imageDesc);
+      PrintingGL = TRUE;
+      Printing = FALSE;
     }
-	  
-  if (pres == RealSize && 
-      box->BxAbstractBox->AbLeafType == LtPicture)
-    /* Center real sized images wihin their picture boxes */
-    Picture_Center (picWArea, picHArea, w, h, 
-                    pres, &xTranslate, &yTranslate, &picXOrg, &picYOrg);
-	  
-  if (typeImage < InlineHandlers)
-    LayoutPicture ((ThotPixmap) imageDesc->PicPixmap, drawable,
-                   picXOrg, picYOrg, w, h, 
-                   x + xTranslate, y + yTranslate, 
-                   t, l, frame, imageDesc, box);
-}
-}
-else if (typeImage < InlineHandlers && typeImage > -1)
-{
-/* for the moment we didn't consider plugin printing */
-#ifdef _WINGUI
-if (TtPrinterDC)
-{
-#ifdef _WIN_PRINT
-  /* load the device context into TtDisplay */
-  WIN_GetDeviceContext (frame);
-  LoadPicture (frame, box, imageDesc);
-  if (imageDesc->PicPixmap == NULL) 
-    WinErrorBox (NULL, "DrawPicture (1)");
-  else
+#endif /* _GL */
+
+  drawable = (ThotDrawable)TtaGetThotWindow (frame);
+  GetXYOrg (frame, &xFrame, &yFrame);
+  typeImage = imageDesc->PicType;
+  GetPictureFileName (imageDesc->PicFileName, fileName);
+
+  /* the default presenation depends on the box type */
+  pres = imageDesc->PicPresent;
+  if (pres == DefaultPres)
     {
-      /* Retrieve the bitmap's color format, width, and height. */ 
-      if (!GetObject ((HBITMAP)(imageDesc->PicPixmap),
-                      sizeof(BITMAP), (LPSTR)&bmp))
-        WinErrorBox (NULL, "DrawPicture (1)");
+      if (box->BxType == BoPicture)
+        /* an image is rescaled */
+        pres = ReScale;
+      else
+        /* a background image is repeated */
+        pres = FillFrame;
+    }
+  /* resize plugins if necessary */
+  if (typeImage >= InlineHandlers)
+    {
+      imageDesc->PicWArea = w;
+      imageDesc->PicHArea = h;
+    }
+  picWArea = imageDesc->PicWArea;
+  picHArea = imageDesc->PicHArea;
+  bgColor = box->BxAbstractBox->AbBackground;
+  SetPictureClipping (&picWArea, &picHArea, w, h, imageDesc);
+  if (!Printing)
+    {
+      if (imageDesc->PicType == eps_type) 
+        DrawEpsBox (box, imageDesc, frame, epsflogo_width, epsflogo_height);
       else
         {
-          /* Convert the color format to a count of bits. */ 
-          cClrBits = (WORD) (bmp.bmPlanes * bmp.bmBitsPixel);
-          if (cClrBits != 1)
-            { 
-              if (cClrBits <= 4) 
-                cClrBits = 4;
-              else if (cClrBits <= 8) 
-                cClrBits = 8;
-              else if (cClrBits <= 16) 
-                cClrBits = 16;
-              else if (cClrBits <= 24) 
-                cClrBits = 24;
-              else 
-                cClrBits = 32;
-            }
-          /* 
-           * Allocate memory for the BITMAPINFO structure. (This structure 
-           * contains a BITMAPINFOHEADER structure and an array of RGBQUAD data 
-           * structures.) 
-           */ 
-          if (cClrBits != 24) 
-            pbmi = (LPBITMAPINFO) HeapAlloc (GetProcessHeap (), HEAP_ZERO_MEMORY,
-                                             sizeof (BITMAPINFOHEADER) + (2^cClrBits) * sizeof (RGBQUAD));
-          else
-            /* There is no RGBQUAD array for the 24-bit-per-pixel format */ 
-            pbmi = (LPBITMAPINFO) LocalAlloc(LPTR, sizeof(BITMAPINFOHEADER));
-          if (pbmi)
+#ifdef _TRACE_GL_BUGS_GLISTEXTURE
+          if (imageDesc->TextureBind)
+            printf ( "GLBUG - DrawPicture : glIsTexture=%s\n", glIsTexture (imageDesc->TextureBind) ? "yes" : "no" );
+#endif /* _TRACE_GL_BUGS_GLISTEXTURE */
+          if ((pres == ReScale && 
+               (imageDesc->PicWArea != w || imageDesc->PicHArea != h)) ||
+#ifdef _GL
+              !glIsTexture (imageDesc->TextureBind)
+#else /*_GL*/
+              imageDesc->PicPixmap == NULL
+#endif /*_GL*/
+              )
             {
-              /* Initialize the fields in the BITMAPINFO structure. */
-              pbmi->bmiHeader.biSize     = sizeof (BITMAPINFOHEADER);
-              pbmi->bmiHeader.biWidth    = bmp.bmWidth;
-              pbmi->bmiHeader.biHeight   = bmp.bmHeight;
-              pbmi->bmiHeader.biPlanes   = bmp.bmPlanes;
-              pbmi->bmiHeader.biBitCount = bmp.bmBitsPixel;
-              if (cClrBits < 24)
-                pbmi->bmiHeader.biClrUsed = 2^cClrBits;
-              /* If the bitmap is not compressed, set the BI_RGB flag. */  
-              pbmi->bmiHeader.biCompression = BI_RGB;
-              /* 
-               * Compute the number of bytes in the array of color 
-               * indices and store the result in biSizeImage. 
-               */
-              pbmi->bmiHeader.biSizeImage = (pbmi->bmiHeader.biWidth + 7) / 8 * pbmi->bmiHeader.biHeight * cClrBits;
-              /* 
-               * Set biClrImportant to 0, indicating that all of the 
-               * device colors are important. 
-               */
-              pbmi->bmiHeader.biClrImportant = 0;
-              lpBits = GlobalAlloc (GMEM_FIXED, pbmi->bmiHeader.biSizeImage);
-              if (!lpBits) 
-                WinErrorBox (NULL, "DrawPicture (2)");
-              else
-                {
-                  if (!GetDIBits (TtDisplay, (HBITMAP) (imageDesc->PicPixmap), 0,
-                                  (UINT)pbmi->bmiHeader.biHeight,
-                                  lpBits, pbmi, DIB_RGB_COLORS)) 
-                    WinErrorBox (NULL, "DrawPicture (3)");
-                  else
-                    {
-                      StretchDIBits (TtPrinterDC, x, y, w, h, 0, 0,
-                                     pbmi->bmiHeader.biWidth,
-                                     pbmi->bmiHeader.biHeight,
-                                     lpBits, pbmi, DIB_RGB_COLORS, SRCCOPY);
-                    }
-                  GlobalFree (lpBits);
-                }
-              LocalFree (pbmi);
+              LoadPicture (frame, box, imageDesc);
+              w = picWArea = imageDesc->PicWArea;
+              h = picHArea = imageDesc->PicHArea;
+              SetPictureClipping (&picWArea, &picHArea, w, h, imageDesc);
             }
+      
+          if (pres == RealSize && 
+              box->BxAbstractBox->AbLeafType == LtPicture)
+            /* Center real sized images wihin their picture boxes */
+            Picture_Center (picWArea, picHArea, w, h, 
+                            pres, &xTranslate, &yTranslate, &picXOrg, &picYOrg);
+          
+          if (typeImage < InlineHandlers)
+            LayoutPicture ((ThotPixmap) imageDesc->PicPixmap, drawable,
+                           picXOrg, picYOrg, w, h, 
+                           x + xTranslate, y + yTranslate, 
+                           t, l, frame, imageDesc, box);
         }
     }
-  WIN_ReleaseDeviceContext ();
+  else if (typeImage < InlineHandlers && typeImage > -1)
+    {
+      /* for the moment we didn't consider plugin printing */
+#ifdef _WINGUI
+      if (TtPrinterDC)
+        {
+#ifdef _WIN_PRINT
+          /* load the device context into TtDisplay */
+          WIN_GetDeviceContext (frame);
+          LoadPicture (frame, box, imageDesc);
+          if (imageDesc->PicPixmap == NULL) 
+            WinErrorBox (NULL, "DrawPicture (1)");
+          else
+            {
+              /* Retrieve the bitmap's color format, width, and height. */ 
+              if (!GetObject ((HBITMAP)(imageDesc->PicPixmap),
+                              sizeof(BITMAP), (LPSTR)&bmp))
+                WinErrorBox (NULL, "DrawPicture (1)");
+              else
+                {
+                  /* Convert the color format to a count of bits. */ 
+                  cClrBits = (WORD) (bmp.bmPlanes * bmp.bmBitsPixel);
+                  if (cClrBits != 1)
+                    { 
+                      if (cClrBits <= 4) 
+                        cClrBits = 4;
+                      else if (cClrBits <= 8) 
+                        cClrBits = 8;
+                      else if (cClrBits <= 16) 
+                        cClrBits = 16;
+                      else if (cClrBits <= 24) 
+                        cClrBits = 24;
+                      else 
+                        cClrBits = 32;
+                    }
+                  /* 
+                   * Allocate memory for the BITMAPINFO structure. (This structure 
+                   * contains a BITMAPINFOHEADER structure and an array of RGBQUAD data 
+                   * structures.) 
+                   */ 
+                  if (cClrBits != 24) 
+                    pbmi = (LPBITMAPINFO) HeapAlloc (GetProcessHeap (), HEAP_ZERO_MEMORY,
+                                                     sizeof (BITMAPINFOHEADER) + (2^cClrBits) * sizeof (RGBQUAD));
+                  else
+                    /* There is no RGBQUAD array for the 24-bit-per-pixel format */ 
+                    pbmi = (LPBITMAPINFO) LocalAlloc(LPTR, sizeof(BITMAPINFOHEADER));
+                  if (pbmi)
+                    {
+                      /* Initialize the fields in the BITMAPINFO structure. */
+                      pbmi->bmiHeader.biSize     = sizeof (BITMAPINFOHEADER);
+                      pbmi->bmiHeader.biWidth    = bmp.bmWidth;
+                      pbmi->bmiHeader.biHeight   = bmp.bmHeight;
+                      pbmi->bmiHeader.biPlanes   = bmp.bmPlanes;
+                      pbmi->bmiHeader.biBitCount = bmp.bmBitsPixel;
+                      if (cClrBits < 24)
+                        pbmi->bmiHeader.biClrUsed = 2^cClrBits;
+                      /* If the bitmap is not compressed, set the BI_RGB flag. */  
+                      pbmi->bmiHeader.biCompression = BI_RGB;
+                      /* 
+                       * Compute the number of bytes in the array of color 
+                       * indices and store the result in biSizeImage. 
+                       */
+                      pbmi->bmiHeader.biSizeImage = (pbmi->bmiHeader.biWidth + 7) / 8 * pbmi->bmiHeader.biHeight * cClrBits;
+                      /* 
+                       * Set biClrImportant to 0, indicating that all of the 
+                       * device colors are important. 
+                       */
+                      pbmi->bmiHeader.biClrImportant = 0;
+                      lpBits = GlobalAlloc (GMEM_FIXED, pbmi->bmiHeader.biSizeImage);
+                      if (!lpBits) 
+                        WinErrorBox (NULL, "DrawPicture (2)");
+                      else
+                        {
+                          if (!GetDIBits (TtDisplay, (HBITMAP) (imageDesc->PicPixmap), 0,
+                                          (UINT)pbmi->bmiHeader.biHeight,
+                                          lpBits, pbmi, DIB_RGB_COLORS)) 
+                            WinErrorBox (NULL, "DrawPicture (3)");
+                          else
+                            {
+                              StretchDIBits (TtPrinterDC, x, y, w, h, 0, 0,
+                                             pbmi->bmiHeader.biWidth,
+                                             pbmi->bmiHeader.biHeight,
+                                             lpBits, pbmi, DIB_RGB_COLORS, SRCCOPY);
+                            }
+                          GlobalFree (lpBits);
+                        }
+                      LocalFree (pbmi);
+                    }
+                }
+            }
+          WIN_ReleaseDeviceContext ();
 #endif /* _WIN_PRINT */
-}
+        }
 #endif /* _WINGUI */
     
 #if defined(_GTK) || defined(_WX)
- (*(PictureHandlerTable[typeImage].Produce_Postscript)) (
-                                                         (void *)fileName,
-                                                         (void *)pres,
-                                                         (void *)x,
-                                                         (void *)y,
-                                                         (void *)w,
-                                                         (void *)h,
-                                                         (void *)(FILE *) drawable,
-                                                         (void *)bgColor,
-                                                         (void *)0,
-                                                         (void *)0);  
+      (*(PictureHandlerTable[typeImage].Produce_Postscript)) (
+                                                              (void *)fileName,
+                                                              (void *)pres,
+                                                              (void *)x,
+                                                              (void *)y,
+                                                              (void *)w,
+                                                              (void *)h,
+                                                              (void *)(FILE *) drawable,
+                                                              (void *)bgColor,
+                                                              (void *)0,
+                                                              (void *)0);  
 #endif /* #if defined(_GTK) || defined(_WX) */
-}
+    }
   
 #ifdef _GL
-if (PrintingGL)
-{
-  PrintingGL = FALSE;
-  Printing = TRUE;
-}
+  if (PrintingGL)
+    {
+      PrintingGL = FALSE;
+      Printing = TRUE;
+    }
 #endif /* _GL */
 }
 
@@ -2144,62 +2145,62 @@ if (PrintingGL)
 unsigned char *ZoomPicture (unsigned char *cpic, int cWIDE, int cHIGH ,
   int eWIDE, int eHIGH, int bperpix)
 {
-int            cy, ex, ey;
-int           *cxarr, *cxarrp;
-unsigned char *clptr, *elptr, *epptr, *epic;
+  int            cy, ex, ey;
+  int           *cxarr, *cxarrp;
+  unsigned char *clptr, *elptr, *epptr, *epic;
 
-clptr = NULL;
-cxarrp = NULL;
-cy = 0;
-/* check for size */
-if ((cWIDE < 0) || (cHIGH < 0) || (eWIDE < 0) || (eHIGH < 0) ||
-(cWIDE > 2000) || (cHIGH > 2000) || (eWIDE > 2000) || (eHIGH > 2000))
-     return (NULL);
+  clptr = NULL;
+  cxarrp = NULL;
+  cy = 0;
+  /* check for size */
+  if ((cWIDE < 0) || (cHIGH < 0) || (eWIDE < 0) || (eHIGH < 0) ||
+      (cWIDE > 2000) || (cHIGH > 2000) || (eWIDE > 2000) || (eHIGH > 2000))
+    return (NULL);
 
-     /* generate a 'raw' epic, as we'll need it for ColorDither if EM_DITH */
-     if (eWIDE == cWIDE && eHIGH == cHIGH)
-     /* 1:1 expansion.  points destination pic at source pic */
-     epic = cpic;
-     else
-{
-  /* run the rescaling algorithm */
-  /* create a new pic of the appropriate size */
-  epic = (unsigned char *) TtaGetMemory((size_t) (eWIDE * eHIGH * bperpix));
-  if (!epic)
-    printf(" unable to TtaGetMemory memory for zoomed image \n");
-  cxarr = (int *) TtaGetMemory (eWIDE * sizeof (int));
-  if (!cxarr)
-    printf("unable to allocate cxarr for zoomed image \n");
-  for (ex = 0; ex < eWIDE; ex++) 
-    cxarr[ex] = bperpix * ((cWIDE * ex) / eWIDE);
-      
-  elptr = epptr = epic;
-  for (ey = 0;  ey < eHIGH;  ey++, elptr += (eWIDE * bperpix))
+  /* generate a 'raw' epic, as we'll need it for ColorDither if EM_DITH */
+  if (eWIDE == cWIDE && eHIGH == cHIGH)
+    /* 1:1 expansion.  points destination pic at source pic */
+    epic = cpic;
+  else
     {
-      cy = (cHIGH * ey) / eHIGH;
-      epptr = elptr;
-      clptr = cpic + (cy * cWIDE * bperpix);
+      /* run the rescaling algorithm */
+      /* create a new pic of the appropriate size */
+      epic = (unsigned char *) TtaGetMemory((size_t) (eWIDE * eHIGH * bperpix));
+      if (!epic)
+        printf(" unable to TtaGetMemory memory for zoomed image \n");
+      cxarr = (int *) TtaGetMemory (eWIDE * sizeof (int));
+      if (!cxarr)
+        printf("unable to allocate cxarr for zoomed image \n");
+      for (ex = 0; ex < eWIDE; ex++) 
+        cxarr[ex] = bperpix * ((cWIDE * ex) / eWIDE);
+      
+      elptr = epptr = epic;
+      for (ey = 0;  ey < eHIGH;  ey++, elptr += (eWIDE * bperpix))
+        {
+          cy = (cHIGH * ey) / eHIGH;
+          epptr = elptr;
+          clptr = cpic + (cy * cWIDE * bperpix);
 	  
-      if (bperpix == 1)
-        {
-          for (ex = 0, cxarrp = cxarr;  ex < eWIDE;  ex++, epptr++) 
-            *epptr = clptr[*cxarrp++];
-        }
-      else
-        {
-          int j;  unsigned char *cp;
-          for (ex = 0, cxarrp = cxarr; ex < eWIDE; ex++,cxarrp++)
+          if (bperpix == 1)
             {
-              cp = clptr + *cxarrp;
-              for (j = 0; j < bperpix; j++) 
-                *epptr++ = *cp++;
+              for (ex = 0, cxarrp = cxarr;  ex < eWIDE;  ex++, epptr++) 
+                *epptr = clptr[*cxarrp++];
+            }
+          else
+            {
+              int j;  unsigned char *cp;
+              for (ex = 0, cxarrp = cxarr; ex < eWIDE; ex++,cxarrp++)
+                {
+                  cp = clptr + *cxarrp;
+                  for (j = 0; j < bperpix; j++) 
+                    *epptr++ = *cp++;
+                }
             }
         }
+      TtaFreeMemory (cxarr);
     }
-  TtaFreeMemory (cxarr);
-}
   
-     return (epic);
+  return (epic);
 }
 
 /*----------------------------------------------------------------------
@@ -2316,7 +2317,7 @@ ThotBool Ratio_Calculate (PtrAbstractBox pAb, ThotPictInfo *imageDesc,
               imageDesc->PicWArea = w;
               /* update the box size */
               ResizeWidth (box, box, NULL, w - box->BxW,
-                           0, 0, 0, frame);		  
+                           0, 0, 0, frame, FALSE);		  
             }
         }
       else if (constrained_Width && !constrained_Height && w)
@@ -2676,14 +2677,14 @@ void LoadPicture (int frame, PtrBox box, ThotPictInfo *imageDesc)
       /* one of box size is unknown, keep the image size */
       if (w == 0)
         {
-        wBox = imageDesc->PicWidth;
-        w = wBox;
-      }
+          wBox = imageDesc->PicWidth;
+          w = wBox;
+        }
       if (h == 0)
         {
-        hBox = imageDesc->PicHeight;
-        h = hBox;
-      }
+          hBox = imageDesc->PicHeight;
+          h = hBox;
+        }
       ClipAndBoxUpdate (pAb, box, w, h, top, bottom, left, right, frame);
     }
 

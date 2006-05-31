@@ -82,7 +82,8 @@ extern void ResizeWidth ( PtrBox pBox,
                           int l,
                           int r,
                           int spaceDelta,
-                          int frame );
+                          int frame,
+                          ThotBool shrink );
 extern void ResizeHeight ( PtrBox pBox,
                            PtrBox pSourceBox,
                            PtrBox pFromBox,
@@ -183,7 +184,8 @@ extern void ResizeWidth ( PtrBox pBox,
                             int l,
                             int r,
                             int spaceDelta,
-                            int frame );
+                            int frame,
+                            ThotBool shrink );
 extern void ResizeHeight ( PtrBox pBox,
                              PtrBox pSourceBox,
                              PtrBox pFromBox,

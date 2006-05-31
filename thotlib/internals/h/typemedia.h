@@ -284,6 +284,7 @@ typedef struct _Box
   ThotBool	      BxContentWidth;	    /* Real width is the content width */
   ThotBool        BxShadow;		        /* Characters are showed as '*' */
   ThotBool        BxDisplay;	        /* The box has borders or background */
+  ThotBool        BxShrink;           /* Use ContentWidth is shorter */
 #ifdef _GL
   ThotBool        BxBoundinBoxComputed;
   ThotBool        VisibleModification;    
