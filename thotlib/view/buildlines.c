@@ -2233,7 +2233,9 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
                     val = pLine->LiXMax;
                   else
                     val = pBlock->BxW;
-                  l = pNextBox->BxLBorder + pNextBox->BxLPadding + pNextBox->BxRBorder + pNextBox->BxRPadding;
+                  GetExtraMargins (pNextBox, NULL, frame, &t, &b, &l, &r);
+                  l = l + pNextBox->BxLBorder + pNextBox->BxLPadding;
+                  l = l + r + pNextBox->BxRBorder + pNextBox->BxRPadding;
                   if (pNextBox->BxLMargin > 0)
                     l += pNextBox->BxLMargin;
                   if (pNextBox->BxRMargin > 0)
@@ -4175,8 +4177,9 @@ void RemoveLines (PtrBox pBox, int frame, PtrLine pFirstLine,
 /*----------------------------------------------------------------------
   RecomputeLines recomputes a part or the whole block of lines after
   a change in the box ibox.
+  Return TRUE when the block width was shrunk.
   ----------------------------------------------------------------------*/
-void RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox,
+ThotBool RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox,
                      int frame)
 {
   Propagation         propagateStatus;
@@ -4188,9 +4191,8 @@ void RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox,
   ViewSelection      *pSelBegin;
   ViewSelection      *pSelEnd;
   int                 w, h, height, width, l;
-  ThotBool            changeSelectBegin;
-  ThotBool            changeSelectEnd;
-  ThotBool            status, extensibleBox;
+  ThotBool            changeSelectBegin, changeSelectEnd;
+  ThotBool            status, extensibleBox, shrunk = FALSE;
 
 
   /* Si la boite est eclatee, on remonte jusqu'a la boite bloc de lignes */
@@ -4202,7 +4204,7 @@ void RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox,
     {
       if (pBox->BxCycles > 0)
         /* the block of lines is currently computed */
-        return;
+        return shrunk;
       if (pBox->BxFirstLine == NULL)
         pLine = NULL;
       else
@@ -4217,7 +4219,7 @@ void RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox,
                 pLine = pLine->LiNext;
               if (pLine == NULL)
                 /* cette ligne ne fait plus parti du bloc de lignes */
-                return;
+                return shrunk;
             }
         }
 
@@ -4346,20 +4348,24 @@ void RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox,
         l += pBox->BxLMargin;
       if (pBox->BxRMargin > 0)
         l += pBox->BxRMargin;
-      if (width != 0 && width != pBox->BxWidth)
-        {
-          pBox->BxCycles = 1;
-          ChangeDefaultWidth (pBox, ibox, width - l, 0, frame);
-          pBox->BxCycles = 0;
-        }
-      else if (pBox->BxShrink && pBox->BxMaxWidth - l > 0)
+      if (pBox->BxShrink && pBox->BxMaxWidth - l > 0)
         {
           if (pBox->BxMaxWidth - l < pBox->BxRuleWidth)
             w = pBox->BxMaxWidth - l;
           else
             w = pBox->BxRuleWidth;
-          ResizeWidth (pBox, pBox, NULL, w - pBox->BxW, 0, 0, 0, frame, TRUE);
+          // the box is shrunk only if there is only one line
+          shrunk = (w != pBox->BxW && pBox->BxFirstLine == pBox->BxLastLine);
+          if (shrunk/*pBox != ibox && !IsParentBox (ibox, pBox)*/)
+            ResizeWidth (pBox, ibox, NULL, w - pBox->BxW, 0, 0, 0, frame, TRUE);
         }
+      else if (width != 0 && width != pBox->BxWidth)
+        {
+          pBox->BxCycles = 1;
+          ChangeDefaultWidth (pBox, ibox, width - l, 0, frame);
+          pBox->BxCycles = 0;
+        }
+
       /* Faut-il conserver la hauteur ? */
       if (height != 0 && height != pBox->BxHeight)
         {
@@ -4370,6 +4376,7 @@ void RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox,
           Propagate = propagateStatus;
         }
     }
+  return shrunk;
 }
 
 

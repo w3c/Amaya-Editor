@@ -1486,7 +1486,20 @@ void GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width,
           !TypeHasException (ExcNoSelect, pEl->ElTypeNumber, pEl->ElStructSchema) &&
           (pAb->AbHeight.DimAbRef != NULL || pAb->AbHeight.DimValue != 0 ||
            pAb->AbHeight.DimUnit == UnAuto) && *height == 0)
-        *height = BoxFontHeight (pAb->AbBox->BxFont, EOS);
+        {
+          if (pAb->AbLeafType == LtCompound)
+            {
+              pChildAb = pAb->AbFirstEnclosed;
+              while (pChildAb && (pChildAb->AbPresentationBox || pChildAb->AbDead))
+                pChildAb = pChildAb->AbNext;
+              if (pChildAb)
+                *height = BoxFontHeight (pAb->AbBox->BxFont, EOS);
+              else
+                *height = 2;
+            }
+          else
+            *height = BoxFontHeight (pAb->AbBox->BxFont, EOS);
+        }
     }
 }
 
@@ -4565,7 +4578,13 @@ void ComputeEnclosing (int frame)
           else if (pDimRel->DimRTable[i]->BxAbstractBox == NULL)
             ;		/* doesn't exist anymore */
           else if (pDimRel->DimROp[i] == OpSame)
-            WidthPack (pDimRel->DimRTable[i]->BxAbstractBox, NULL, frame);
+            {
+              if (pDimRel->DimRTable[i]->BxType == BoBlock ||
+                   pDimRel->DimRTable[i]->BxType == BoFloatBlock)
+                  RecomputeLines (pDimRel->DimRTable[i]->BxAbstractBox, NULL, NULL, frame);
+              /* make sure that the enclosing of this box is updated */
+              WidthPack (pDimRel->DimRTable[i]->BxAbstractBox, NULL, frame);
+            }
           else if (pDimRel->DimROp[i] == OpReverse)
             HeightPack (pDimRel->DimRTable[i]->BxAbstractBox, NULL, frame);
           /* next entry */

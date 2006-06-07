@@ -680,6 +680,64 @@ void ChangeDefaultHeight (PtrBox pBox, PtrBox pSourceBox, int height,
 
 
 /*----------------------------------------------------------------------
+  TransmitRuleWidth transmits the update of rule value to nested boxes.
+  ----------------------------------------------------------------------*/
+static void TransmitRuleWidth (PtrBox pBox, PtrBox pSourceBox, int frame)
+{
+  PtrAbstractBox      pAb;
+  PtrBox              box;
+  PtrDimRelations     pDimRel;
+  int                 i, val, width;
+
+  if (pBox && pBox->BxAbstractBox)
+    {
+      pDimRel = pBox->BxWidthRelations;
+      width = pBox->BxRuleWidth;
+      while (pDimRel)
+        {
+          i = 0;
+          while (i < MAX_RELAT_DIM && pDimRel->DimRTable[i] != NULL)
+            {
+              box = pDimRel->DimRTable[i];
+              if (box)
+                pAb = box->BxAbstractBox;
+              else
+                pAb = NULL;
+              if (IsParentBox (pBox, box) && box->BxShrink &&
+                  pAb && !pAb->AbDead && !pAb->AbNew && pAb->AbBox)
+                {
+                  /* Is it the same dimension? */
+                  if (pDimRel->DimROp[i] == OpSame)
+                    {
+                      /* Changing the width */
+                      if (pAb->AbWidth.DimUnit == UnPercent &&
+                          pAb->AbWidth.DimValue != 100)
+                        val = width * pAb->AbWidth.DimValue / 100;
+                      else
+                        {
+                          // transmit the column width to table cells
+                          val = width;
+                          if (box->BxLMargin > 0)
+                            val -= box->BxLMargin;
+                          if (box->BxRMargin > 0)
+                            val -= box->BxRMargin;
+                          val = val - box->BxLBorder - box->BxLPadding - box->BxRBorder - box->BxRPadding;
+                        }
+
+                      /* avoid cycles on the same box */
+                      if (box != pBox)
+                        ChangeWidth (box, pSourceBox, pBox, val - box->BxRuleWidth, 0, frame);
+                    }
+                }
+              i++;
+            }
+          /* next relation block */
+          pDimRel = pDimRel->DimRNext;
+        }
+    }
+}
+
+/*----------------------------------------------------------------------
   ChangeDefaultWidth updates the contents box width.
   Check if the rule of the mininmum is respected and eventually exchange
   the real and the constrainted width.
@@ -796,15 +854,16 @@ void ChangeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
         }
       else
         {
-          if (pBox->BxShrink && pBox->BxW != pBox->BxRuleWidth)
+          if (pBox->BxShrink && pBox->BxRuleWidth && pBox->BxW != pBox->BxRuleWidth)
             {
               pBox->BxRuleWidth += delta;
               if (pBox->BxW < pBox->BxRuleWidth)
-                // keep the shrinked width
-                delta = 0;
-              //else
-                // update the box width
-                //delta = pBox->BxRuleWidth - pBox->BxW;
+                {
+                  // keep the shrinked width
+                  delta = 0;
+                  // but transmit the new rule value to nested boxes
+                  TransmitRuleWidth (pBox, pSourceBox, frame);
+                }
             }
           else if (pBox->BxType == BoCell &&
                    !pBox->BxAbstractBox->AbWidth.DimIsPosition &&
@@ -1939,10 +1998,8 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta,
   int                 orgTrans, middleTrans, endTrans;
   int                 extraL, extraR;
   int                 addL = 0, addR = 0;
-  ThotBool            notEmpty;
-  ThotBool            toMove, position;
-  ThotBool            absoluteMove;
-  ThotBool            externalRef;
+  ThotBool            notEmpty, toMove, position;
+  ThotBool            absoluteMove, externalRef;
 
   if (pBox == NULL || (pBox->BxType == BoGhost || pBox->BxType == BoFloatGhost))
     return;
@@ -2043,7 +2100,8 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta,
                pCurrentAb->AbFirstEnclosed == NULL ||
                /* redisplay filled boxes */
                pCurrentAb->AbFillBox ||
-               pCurrentAb->AbPictBackground))
+               pCurrentAb->AbPictBackground ||
+               pBox->BxTBorder ||  pBox->BxBBorder ||  pBox->BxLBorder ||  pBox->BxBBorder))
             /* update the clipping region */
             UpdateBoxRegion (frame, pBox, orgTrans, 0, delta, 0);
           /* inside width */
@@ -2208,7 +2266,11 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta,
               if (pBox->BxType == BoBlock || pBox->BxType == BoFloatBlock)
                 {
                   if (!shrink)
-                    RecomputeLines (pCurrentAb, pBox->BxFirstLine, pSourceBox, frame);
+                    // the block update is not due to a shrink operation
+                    if (RecomputeLines (pCurrentAb, pBox->BxFirstLine, pSourceBox, frame))
+                        // The block width was changed by RecomputeLines
+                        // the current update should be stopped
+                        return;
                 }
               else if (pBox->BxType != BoGhost && pBox->BxType != BoFloatGhost)
                 {
@@ -2499,10 +2561,8 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
   int                 orgTrans, middleTrans, endTrans;
   int                 extraT, extraB;
   int                 addT = 0, addB = 0;
-  ThotBool            notEmpty;
-  ThotBool            toMove;
-  ThotBool            absoluteMove;
-  ThotBool            externalRef;
+  ThotBool            notEmpty, toMove;
+  ThotBool            absoluteMove, externalRef;
   
   if (pBox == NULL || (pBox->BxType == BoGhost || pBox->BxType == BoFloatGhost))
     return;
@@ -2603,7 +2663,8 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
                pCurrentAb->AbFirstEnclosed == NULL ||
                /* redisplay filled boxes */
                pCurrentAb->AbFillBox ||
-               pCurrentAb->AbPictBackground))
+               pCurrentAb->AbPictBackground ||
+               pBox->BxTBorder ||  pBox->BxBBorder ||  pBox->BxLBorder ||  pBox->BxBBorder))
             /* update the clipping region */
             UpdateBoxRegion (frame, pBox, 0, orgTrans, 0, delta);
 
@@ -3492,6 +3553,42 @@ void YMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 }
 
 /*----------------------------------------------------------------------
+  Shrink shrinks to nested boxes.
+  ----------------------------------------------------------------------*/
+static void Shrink (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
+{
+  PtrAbstractBox      pChildAb;
+  PtrBox              pChildBox, pBox;
+  int                 x, width;
+  ThotBool            absoluteMove;
+
+  pBox = pAb->AbBox;
+  if (pBox && !pAb->AbDead)
+    {
+      absoluteMove = IsXPosComplete (pBox);
+      if (absoluteMove)
+        x = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
+      else
+        x = 0;
+      width = x;
+      pChildAb = pAb->AbFirstEnclosed;
+      while (pChildAb)
+        {
+          pChildBox = pChildAb->AbBox;
+          if (!pChildAb->AbDead && pChildBox &&
+              pChildAb->AbHorizEnclosing &&
+              !ExtraFlow (pChildBox, frame) &&
+              pChildAb->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility &&
+              pChildBox->BxXOrg + pChildBox->BxWidth > width)
+            width = pChildBox->BxXOrg + pChildBox->BxWidth;
+          pChildAb = pChildAb->AbNext;
+        }
+      width -= x;
+      ResizeWidth (pBox, pSourceBox, NULL, width - pBox->BxW, 0, 0, 0, frame, TRUE);
+    }
+}
+
+/*----------------------------------------------------------------------
   WidthPack checks the horizontal inclusion of nested boxes.
   ----------------------------------------------------------------------*/
 void WidthPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
@@ -3528,6 +3625,8 @@ void WidthPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
            pBox->BxType == BoColumn)
     /* don't pack a column head or a ghost element */
     return;
+  else if (pBox->BxShrink)
+    Shrink (pAb, pSourceBox, frame);
   else if (pBox->BxContentWidth ||
            (!pDimAb->DimIsPosition && pDimAb->DimMinimum))
     {
@@ -3699,10 +3798,10 @@ void WidthPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
             pChildAb = pChildAb->AbNext;
           }
       
-      if (x != 0)
+      if (x)
         /* update the enclosing box width */
         ChangeDefaultWidth (pBox, pSourceBox, width, 0, frame);
-      /* Now check the ascestor box */
+      /* Now check the anscestor box */
       else if (toMove)
         {
           if (pAb->AbEnclosing == NULL)

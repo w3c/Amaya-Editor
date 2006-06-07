@@ -43,10 +43,10 @@ extern void RemoveLines ( PtrBox pBox,
                           ThotBool removed,
                           ThotBool *changeSelectBegin,
                           ThotBool *changeSelectEnd );
-extern void RecomputeLines ( PtrAbstractBox pAb,
-                             PtrLine pFirstLine,
-                             PtrBox ibox,
-                             int frame );
+extern ThotBool RecomputeLines ( PtrAbstractBox pAb,
+                                 PtrLine pFirstLine,
+                                 PtrBox ibox,
+                                 int frame );
 extern void UpdateLineBlock ( PtrAbstractBox pAb,
                               PtrLine pLine,
                               PtrBox pBox,
@@ -96,10 +96,10 @@ extern void RemoveLines ( PtrBox pBox,
                             ThotBool removed,
                             ThotBool *changeSelectBegin,
                             ThotBool *changeSelectEnd );
-extern void RecomputeLines ( PtrAbstractBox pAb,
-                               PtrLine pFirstLine,
-                               PtrBox ibox,
-                               int frame );
+extern ThotBool RecomputeLines ( PtrAbstractBox pAb,
+                                   PtrLine pFirstLine,
+                                   PtrBox ibox,
+                                   int frame );
 extern void UpdateLineBlock ( PtrAbstractBox pAb,
                                 PtrLine pLine,
                                 PtrBox pBox,

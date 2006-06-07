@@ -969,7 +969,6 @@ ThotBool ComputePositioning (PtrBox pBox, int frame)
   int                 lr, tr, rr, br;
   ThotBool            appl,appt, appr, appb;
 
-  //#ifdef POSITIONING
   if (pBox && pBox->BxAbstractBox &&
       pBox->BxAbstractBox->AbLeafType == LtCompound &&
       pBox->BxAbstractBox->AbPositioning &&
@@ -1222,7 +1221,6 @@ ThotBool ComputePositioning (PtrBox pBox, int frame)
         return FALSE;
     }
   else
-    //#endif /* POSITIONING */
     return FALSE;
 }
 
@@ -3253,10 +3251,12 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
     {
       pAb->AbWidthChange = FALSE;
       /* Marque dans la boite si la dimension depend du contenu ou non */
-      pBox->BxRuleWidth = 0;
       defaultDim = pBox->BxContentWidth;
       if (defaultDim)
-        pBox->BxShrink = FALSE;
+        {
+          pBox->BxRuleWidth = 0;
+          pBox->BxShrink = FALSE;
+        }
     }
   else
     {

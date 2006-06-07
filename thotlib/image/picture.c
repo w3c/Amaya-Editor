@@ -2452,6 +2452,8 @@ void LoadPicture (int frame, PtrBox box, ThotPictInfo *imageDesc)
   int                 left, right, top, bottom;
   ThotBool            redo = FALSE;
 
+if (!strcmp (box->BxAbstractBox->AbElement->ElLabel, "L243"))
+  printf ("LoadPicture L243\n");
   left = box->BxLMargin + box->BxLBorder + box->BxLPadding;
   right = box->BxRMargin + box->BxRBorder + box->BxRPadding;
   top = box->BxTMargin + box->BxTBorder + box->BxTPadding;
