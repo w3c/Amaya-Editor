@@ -1194,7 +1194,7 @@
 <label define="AM_DONT_SAVE">
 <message xml:lang="en">Don't save</message>
 <message xml:lang="fr">Ne pas sauver</message>
-<message xml:lang="de">Speichern</message>
+<message xml:lang="de">Nicht speichern</message>
 <message xml:lang="it">Non salvare</message>
 <message xml:lang="es">No guardar</message>
 <message xml:lang="ru">Не сохранять</message>
@@ -4409,6 +4409,14 @@
 	<message xml:lang="de">Die Auswahl ist ungültig</message>
 	<message xml:lang="it">Selezione non valida</message>
 	<message xml:lang="hu">Érvénytelen kijelölés</message>
+</label>
+<label define="AM_INVALID_ELEMENT">
+	<message xml:lang="en">Unknown element</message>
+	<message xml:lang="fr">Elément inconnu</message>
+</label>
+<label define="AM_CHANGE_NUMBER">
+	<message xml:lang="en">%d updated elements</message>
+	<message xml:lang="fr">%d éléments changés</message>
 </label>
 <label define="AMAYA_MSG_MAX">
 </label></messages></base>
