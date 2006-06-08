@@ -1096,7 +1096,7 @@ static ThotBool ReapplRef (PtrAbstractBox pRef, PtrAbstractBox pAb,
   detruit par la procedure AbstractImageUpdated, apres traitement     
   par le Mediateur.                                       
   ----------------------------------------------------------------------*/
-void                SetDeadAbsBox (PtrAbstractBox pAb)
+void SetDeadAbsBox (PtrAbstractBox pAb)
 {
   int                 vol;
   PtrAbstractBox      pAbb;

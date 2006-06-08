@@ -4823,8 +4823,7 @@ void ClearConcreteImage (int frame)
 static ThotBool IsAbstractBoxUpdated (PtrAbstractBox pAb, int frame,
                                       ThotBool *computeBBoxes)
 {
-  PtrAbstractBox      pChildAb;
-  PtrAbstractBox      pFirstAb;
+  PtrAbstractBox      pChildAb, pFirstAb;
   PtrAbstractBox      pNewAb;
   PtrLine             pLine;
   PtrBox              pBox;
@@ -4843,39 +4842,6 @@ static ThotBool IsAbstractBoxUpdated (PtrAbstractBox pAb, int frame,
     result = FALSE;
   else
     {
-      /* rebuild of abstract box with a new floating child */
-      if (!pAb->AbDead && pAb->AbEnclosing)
-        {
-          pChildAb = pAb->AbFirstEnclosed;
-          while (pChildAb)
-            {
-              if (pChildAb->AbNew && !pChildAb->AbDead &&
-                  pChildAb->AbFloat != 'N')
-                {
-                  /* a new floating child is added */
-                  if (pAb->AbBox && 
-                      pAb->AbBox->BxType != BoCell && 
-                      pAb->AbBox->BxType != BoRow && 
-                      pAb->AbBox->BxType != BoTable && 
-                      pAb->AbBox->BxType != BoBlock && 
-                      pAb->AbBox->BxType != BoFloatBlock)
-                    {
-                      /* the current box will become a block */
-                      pAb->AbDead = TRUE;
-                      /* remove boxes */
-                      ComputeUpdates (pAb, frame, computeBBoxes);
-                      /* regenerate boxes */
-                      pAb->AbDead = FALSE;
-                      TransmitDeadStatus (pAb, FALSE);
-                      pAb->AbNew = TRUE;
-                    }
-                  pChildAb = NULL;
-                }
-              else
-                pChildAb = pChildAb->AbNext;
-            }
-        }
-
       if (pAb->AbDead && (pAb->AbNew || pAb->AbBox == NULL))
         result = FALSE;
       else if (pAb->AbDead || pAb->AbNew)
@@ -4890,18 +4856,18 @@ static ThotBool IsAbstractBoxUpdated (PtrAbstractBox pAb, int frame,
           CheckDefaultPositions (pAb, frame);
           Propagate = propStatus;
         }
-      /* On traite tous les paves descendants modifies avant le pave lui-meme */
       else
         {
+          /* Manage children updtates before current updates */
           /* On limite l'englobement a la boite courante */
           pBox = PackBoxRoot;
           PackBoxRoot = pAb->AbBox;
 	   
-          /* Traitement des creations */
+          /* manage creations */
           pChildAb = pAb->AbFirstEnclosed;
           pNewAb = NULL;
           toUpdate = FALSE;
-          while (pChildAb != NULL)
+          while (pChildAb)
             {
               if (pChildAb->AbNew)
                 {
@@ -5147,7 +5113,8 @@ static ThotBool AnyFloatPosChange (PtrAbstractBox pAb)
 
   if (pAb && !pAb->AbDead)
     {
-      found = (pAb->AbFloatChange || pAb->AbPositionChange);
+      found = (pAb->AbFloatChange || pAb->AbPositionChange ||
+               (pAb->AbNew && !pAb->AbFloat != 'N'));
       if (!found)
         found = AnyFloatPosChange (pAb->AbFirstEnclosed);
       if (!found)

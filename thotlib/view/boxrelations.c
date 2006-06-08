@@ -3579,7 +3579,7 @@ static ThotBool RemovePosRelation (PtrBox pOrginBox, PtrBox pTargetBox,
     {
       /* reorganize the list */
       pRelation = &pPreviousPosRel->PosRTable[found - 1];      
-      if (pCurrentAb != NULL &&
+      if (pCurrentAb &&
           (pRelation->ReOp == OpHorizDep || pRelation->ReOp == OpVertDep))
         /* Remove the reverse relation */
         loop = RemovePosRelation (pRelation->ReBox, pOrginBox, NULL, Pos, Axe, horizRef);
