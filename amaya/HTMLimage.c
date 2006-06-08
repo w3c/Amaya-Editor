@@ -888,6 +888,7 @@ static void HandleImageLoaded (int doc, int status, char *urlName,
              an OBJECT, a use or a tref element */
           if (ctxEl->callback)
             {
+printf ("Callback %s\n", urlName);
               if (desc->status == IMAGE_LOADED)
                 ctxEl->callback (doc, ctxEl->currentElement, desc->tempfile,
                                  ctxEl->extra, TRUE);
@@ -1162,7 +1163,7 @@ ThotBool FetchImage (Document doc, Element el, char *imageURI, int flags,
                 {
                   /* chain this new element as waiting for this image */
                   ctxEl = desc->elImage;
-                  if (ctxEl && ctxEl->currentElement != el)
+                  if (ctxEl && (ctxEl->currentElement != el || callback))
                     {
                       /* concerned elements are different */
                       while (ctxEl->nextElement != NULL)
