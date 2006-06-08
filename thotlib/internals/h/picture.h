@@ -38,8 +38,12 @@ typedef struct
   int            PicHeight;
   PictureScaling PicPresent;
   int            PicType;
-  char          *PicFileName; 
+  char          *PicFileName;
   ThotPixmap     PicPixmap;
+  int            PicPosX;
+  int            PicPosY;
+  TypeUnit       PicXUnit;
+  TypeUnit       PicYUnit;
 #ifdef _GTK
   GdkImlibImage *im;
   ThotPixmap     PicMask;        /* Bitmap Mask */
