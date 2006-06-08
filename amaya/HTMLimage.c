@@ -888,7 +888,6 @@ static void HandleImageLoaded (int doc, int status, char *urlName,
              an OBJECT, a use or a tref element */
           if (ctxEl->callback)
             {
-printf ("Callback %s\n", urlName);
               if (desc->status == IMAGE_LOADED)
                 ctxEl->callback (doc, ctxEl->currentElement, desc->tempfile,
                                  ctxEl->extra, TRUE);

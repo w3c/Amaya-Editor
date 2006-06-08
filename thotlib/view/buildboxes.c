@@ -1487,8 +1487,9 @@ void GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width,
           (pAb->AbHeight.DimAbRef != NULL || pAb->AbHeight.DimValue != 0 ||
            pAb->AbHeight.DimUnit == UnAuto) && *height == 0)
         {
-          if (pAb->AbLeafType == LtCompound)
+          if (pAb->AbLeafType == LtCompound && FrameTable[frame].FrView == 1)
             {
+              // it's a compound element of a formatted view
               pChildAb = pAb->AbFirstEnclosed;
               while (pChildAb && (pChildAb->AbPresentationBox || pChildAb->AbDead))
                 pChildAb = pChildAb->AbNext;
