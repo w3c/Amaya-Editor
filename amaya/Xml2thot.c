@@ -5115,7 +5115,9 @@ void ParseExternalDocument (char *fileName, char *originalName, Element el,
           TtaSetStructureChecking (FALSE, externalDoc);
           /* Delete all element except the root element */
           parent = TtaGetFirstChild (RootElement);
-          while (parent != NULL)
+          // look for the root element (HTML, SVG, etc.)
+          RootElement = TtaGetRootElement (externalDoc);
+          while (parent && parent != RootElement)
             {
               oldel = parent;
               TtaNextSibling (&parent);
@@ -5200,8 +5202,9 @@ void ParseExternalDocument (char *fileName, char *originalName, Element el,
 	  
           /* Parse the external file */
           DocumentMeta[externalDoc]->compound = FALSE;
-          if (!strcmp ((char *)typeName, "HTML") && !isXML)
+          if (!strcmp ((char *)typeName, "HTML"))
             {
+              // Use the html parser as the document could be invalid 
               DocumentMeta[externalDoc]->xmlformat = FALSE;
               htmlURL = (char *)TtaGetMemory (strlen ((char *)s) + 1);
               if (htmlURL != NULL)
