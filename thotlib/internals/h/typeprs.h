@@ -233,8 +233,9 @@ typedef enum
   PtDisplay, /* PtDisplay must be at the end. If the value is ListItem, this
                 makes sure that the marker box can inherit properties from
                 the creator box (see function CreateListItemMarker). */
-  /* the three following types must be the last ones */
+  PtBackgroundHorizPos, PtBackgroundVertPos,
   PtVis, /* CSS visibility */
+  /* the three following types must be the last ones */
   PtBreak1, PtBreak2, PtPictInfo
 } PRuleType;
 
@@ -257,8 +258,8 @@ typedef enum
   {
     FnLine, FnPage, FnCreateBefore, FnCreateWith, FnCreateFirst, FnCreateLast,
     FnCreateAfter, FnContent, FnColumn, FnCopy, FnContentRef, FnSubColumn,
-    FnNoLine, FnCreateEnclosing, FnShowBox, FnBackgroundPicture, FnPictureMode,
-    FnNotInLine, FnAny
+    FnNoLine, FnCreateEnclosing, FnShowBox, FnBackgroundPicture,
+    FnBackgroundRepeat, FnNotInLine, FnAny
   } FunctionType;
 
 /* counter styles */
@@ -521,12 +522,13 @@ typedef struct _PresRule
 	  char     _PrChrValue_;
 	}  s1;
 	struct	/* PRuleType = PtBreak1, PtBreak2,
-	        PtIndent, PtSize, PtLineSpacing, PtLineWeight,
-		PtMarginTop, PtMarginRight, PtMarginBottom, PtMarginLeft
-	        PtPaddingTop, PtPaddingRight, PtPaddingBottom, PtPaddingLeft,
-                PtBorderTopWidth, PtBorderRightWidth, PtBorderBottomWidth,
-                PtBorderLeftWidth, PtXRadius, PtYRadius,
-                PtTop, PtRight, PtBottom, PtLeft */
+	           PtIndent, PtSize, PtLineSpacing, PtLineWeight,
+		         PtMarginTop, PtMarginRight, PtMarginBottom, PtMarginLeft,
+	           PtPaddingTop, PtPaddingRight, PtPaddingBottom, PtPaddingLeft,
+             PtBorderTopWidth, PtBorderRightWidth, PtBorderBottomWidth,
+             PtBorderLeftWidth, PtXRadius, PtYRadius,
+             PtTop, PtRight, PtBottom, PtLeft,
+             PtBackgroundHorizPos, PtBackgroundVertPos */
 	{
 	  TypeUnit _PrMinUnit_;	/* the distance is expressed in picas,
 				   1/10 of a character, etc. */

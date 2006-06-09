@@ -429,6 +429,7 @@ static void   PutPresRule (BinFile pivFile, PtrPRule pPRule)
         rType == PtXRadius || rType == PtYRadius ||
         rType == PtTop || rType == PtRight || rType == PtBottom ||
         rType == PtLeft ||
+        rType == PtBackgroundHorizPos || rType ==  PtBackgroundVertPos ||
         rType == PtBorderTopColor ||
         rType == PtBorderRightColor ||
         rType == PtBorderBottomColor ||
@@ -475,7 +476,8 @@ static void   PutPresRule (BinFile pivFile, PtrPRule pPRule)
         rType == PtBorderBottomWidth || rType == PtBorderLeftWidth ||
         rType == PtXRadius || rType == PtYRadius ||
         rType == PtTop || rType == PtRight || rType == PtBottom ||
-        rType == PtLeft)))
+        rType == PtLeft ||
+        rType == PtBackgroundHorizPos || rType == PtBackgroundVertPos)))
     {
       /* ecrit la marque de regle */
       TtaWriteByte (pivFile, (char) C_PIV_PRESENT);
@@ -651,6 +653,12 @@ static void   PutPresRule (BinFile pivFile, PtrPRule pPRule)
         case PtLeft:
           TtaWriteByte (pivFile, C_PR_LEFT);
           break;
+        case PtBackgroundHorizPos:
+          TtaWriteByte (pivFile, C_PR_BACKGROUNDHORIZPOS);
+          break;
+        case PtBackgroundVertPos:
+          TtaWriteByte (pivFile, C_PR_BACKGROUNDVERTPOS);
+          break;
         case PtHyphenate:
           TtaWriteByte (pivFile, C_PR_HYPHENATE);
           break;
@@ -747,6 +755,8 @@ static void   PutPresRule (BinFile pivFile, PtrPRule pPRule)
         case PtRight:
         case PtBottom:
         case PtLeft:
+        case PtBackgroundHorizPos:
+        case PtBackgroundVertPos:
           PutBoolean (pivFile, (pPRule->PrPresMode == PresImmediate));
           if (pPRule->PrPresMode == PresImmediate)
             {

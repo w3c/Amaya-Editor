@@ -436,7 +436,7 @@ static FunctionType ReadFunctionType (BinFile file, ThotBool * repeat)
       functType = FnBackgroundPicture;
       break;
     case C_PF_PICTUREMODE:
-      functType = FnPictureMode;
+      functType = FnBackgroundRepeat;
       break;
     case C_PF_NOTINLINE:
       functType = FnNotInLine;

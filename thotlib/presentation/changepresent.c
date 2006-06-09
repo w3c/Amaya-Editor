@@ -483,6 +483,12 @@ int          NumTypePRuleAPI (PtrPRule pRule)
     case PtLeft:
       return PRLeft;
       break;
+    case PtBackgroundHorizPos:
+      return PRBackgroundHorizPos;
+      break;
+    case PtBackgroundVertPos:
+      return PRBackgroundVertPos;
+      break;
     case PtBorderTopColor:
       return PRBorderTopColor;
       break;
@@ -1041,7 +1047,7 @@ static void RemoveFunctionPRule (PtrPRule pPres, PtrAbstractBox pAb,
       TtaFreeMemory (pAb->AbPictBackground);
       pAb->AbPictBackground = NULL;
     }
-  else if (pPres->PrPresFunction == FnPictureMode &&
+  else if (pPres->PrPresFunction == FnBackgroundRepeat &&
            pAb->AbPictBackground)
     ((ThotPictInfo *) (pAb->AbPictBackground))->PicPresent = FillFrame;
   else if (pPres->PrPresFunction == FnShowBox)

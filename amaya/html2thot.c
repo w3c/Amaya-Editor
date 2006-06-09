@@ -6176,6 +6176,14 @@ void CheckAbstractTree (Document doc)
                          elType.ElTypeNum == HTML_EL_XMLPI);
                   termList = TtaGetParent (firstTerm);
                   elType = TtaGetElementType (termList);
+#ifdef TEMPLATES
+                  /* if its parent is a Template element, skip it */
+                  while (strcmp(TtaGetSSchemaName(elType.ElSSchema),"Template") == 0)
+                    {
+                      termList = TtaGetParent (termList);
+                      elType = TtaGetElementType (termList);
+                    }
+#endif /* TEMPLATES */
                   if (elType.ElTypeNum != HTML_EL_Term_List)
                     {
                       /* create a Term_List element before the first
@@ -6441,6 +6449,14 @@ void CheckAbstractTree (Document doc)
                 {
                   parent = TtaGetParent (el);
                   elType = TtaGetElementType (parent);
+#ifdef TEMPLATES
+                  /* if its parent is a Template element, skip it */
+                  while (strcmp(TtaGetSSchemaName(elType.ElSSchema),"Template") == 0)
+                    {
+                      parent = TtaGetParent (parent);
+                      elType = TtaGetElementType (parent);
+                    }
+#endif /* TEMPLATES */
                   if (elType.ElTypeNum != HTML_EL_Unnumbered_List &&
                       elType.ElTypeNum != HTML_EL_Numbered_List &&
                       elType.ElTypeNum != HTML_EL_Menu &&

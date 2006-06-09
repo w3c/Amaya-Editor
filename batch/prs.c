@@ -3399,7 +3399,7 @@ static void ProcessLongKeyWord (int x, SyntacticCode gCode, indLine wi)
       CurRule->PrPresBox[0] = pPSchema->PsNConstants;
       break;
     case KWD_PictureMode:
-      LayoutRule (FnPictureMode, wi);
+      LayoutRule (FnBackgroundRepeat, wi);
       CurRule->PrNPresBoxes = 1;
       CurRule->PrPresBox[0] = RealSize;
       break;

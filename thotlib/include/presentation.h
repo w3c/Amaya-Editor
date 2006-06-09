@@ -79,24 +79,26 @@ typedef int        *PRule;
 #define PRFloat 64
 #define PRClear 65
 #define PRDisplay 66
-#define PRVis 67 // CSS visibility
-#define PRNoBreak1 68
-#define PRNoBreak2 69
-#define PRCreateEnclosing 70
-#define PRShowBox 71
-#define PRBackgroundPicture 72
-#define PRPictureMode 73
-#define PRNotInLine 74
-#define PRNone 75
-#define PRPageBefore 76
-#define PRPageAfter 77
-#define PRPageInside 78
+#define PRBackgroundHorizPos 67
+#define PRBackgroundVertPos 68
+#define PRVis 69 // CSS visibility
+#define PRNoBreak1 70
+#define PRNoBreak2 71
 /* PtPictInfo */
-#define PRContent 79
-#define PRContentString 80
-#define PRContentURL 81
-#define PRContentAttr 82
-#define LAST_PRES_RULE_TYPE 82
+#define PRCreateEnclosing 72
+#define PRShowBox 73
+#define PRBackgroundPicture 74
+#define PRBackgroundRepeat 75
+#define PRNotInLine 76
+#define PRNone 77
+#define PRPageBefore 78
+#define PRPageAfter 79
+#define PRPageInside 80
+#define PRContent 81
+#define PRContentString 82
+#define PRContentURL 83
+#define PRContentAttr 84
+#define LAST_PRES_RULE_TYPE 85
 
 /*
  * A bunch of constants describing the most common values for presentation
@@ -613,7 +615,7 @@ extern void TtaNextPRule (Element element, /*INOUT*/ PRule * pRule);
    Parameters:
    element: the element of interest.
    presentationType: type of the desired presentation rule. Available
-   values are PRSize, PtStyle, PtWeight, PRFont, PRUnderline, PRThickness,
+   values are PRSize, PRStyle, PRWeight, PRFont, PRUnderline, PRThickness,
    PRIndent, PRLineSpacing, PRDepth, PRAdjust, PRLineStyle, PRDirection,
    PRUnicodeBidi, PRLineWeight, PRFillPattern, PRBackground, PRForeground,
    PRHyphenate, PRShowBox, PRNotInLine.

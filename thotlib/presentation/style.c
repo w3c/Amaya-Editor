@@ -1297,7 +1297,8 @@ static void PresentationValueToPRule (PresentationValue val, int type,
           type == PtBreak1 ||            type == PtBreak2 ||
           type == PtXRadius ||           type == PtYRadius ||
           type == PtTop ||               type == PtRight ||
-          type == PtBottom ||            type == PtLeft)
+          type == PtBottom ||            type == PtLeft ||
+          type == PtBackgroundVertPos || type == PtBackgroundHorizPos)
         value *= 10;
       break;
     case UNIT_EM:
@@ -1675,6 +1676,8 @@ static void PresentationValueToPRule (PresentationValue val, int type,
     case PtRight:
     case PtBottom:
     case PtLeft:
+    case PtBackgroundVertPos:
+    case PtBackgroundHorizPos:
       rule->PrMinUnit = int_unit;
       rule->PrMinValue = value;
       rule->PrMinAttr = FALSE;
@@ -2006,7 +2009,7 @@ static void PresentationValueToPRule (PresentationValue val, int type,
           rule->PrNPresBoxes = 1;
           rule->PrPresBox[0] = value;
           break;
-        case FnPictureMode:
+        case FnBackgroundRepeat:
           rule->PrPresFunction = (FunctionType) funcType;
           rule->PrNPresBoxes = 1;
           switch (value)
@@ -2420,6 +2423,8 @@ static PresentationValue PRuleToPresentationValue (PtrPRule rule)
     case PtRight:
     case PtBottom:
     case PtLeft:
+    case PtBackgroundVertPos:
+    case PtBackgroundHorizPos:
       int_unit = rule->PrMinUnit;
       value = rule->PrMinValue;
       break;
@@ -2513,7 +2518,7 @@ static PresentationValue PRuleToPresentationValue (PtrPRule rule)
           value = rule->PrPresBox[0];
           unit = UNIT_REL;
           break;
-        case FnPictureMode:
+        case FnBackgroundRepeat:
           unit = UNIT_REL;
           value = REALSIZE;
           switch (rule->PrPresBox[0])
@@ -2618,9 +2623,9 @@ static void TypeToPresentation (unsigned int type, PRuleType *intRule,
       *intRule = PtFunction;
       *func = FnShowBox;
       break;
-    case PRPictureMode:
+    case PRBackgroundRepeat:
       *intRule = PtFunction;
-      *func = FnPictureMode;
+      *func = FnBackgroundRepeat;
       break;
     case PRBackgroundPicture:
       *intRule = PtFunction;
@@ -2802,6 +2807,14 @@ static void TypeToPresentation (unsigned int type, PRuleType *intRule,
       break;
     case PRLeft:
       *intRule = PtLeft;
+      *absolute = TRUE;
+      break;
+    case PRBackgroundHorizPos:
+      *intRule = PtBackgroundHorizPos;
+      *absolute = TRUE;
+      break;
+    case PRBackgroundVertPos:
+      *intRule = PtBackgroundVertPos;
       *absolute = TRUE;
       break;
     case PRDisplay:
@@ -3245,6 +3258,12 @@ void PRuleToPresentationSetting (PtrPRule rule, PresentationSetting setting,
     case PtLeft:
       setting->type = PRLeft;
       break;
+    case PtBackgroundHorizPos:
+      setting->type = PRBackgroundHorizPos;
+      break;
+    case PtBackgroundVertPos:
+      setting->type = PRBackgroundVertPos;
+      break;
     case PtHeight:
       setting->type = PRHeight;
       break;
@@ -3269,8 +3288,8 @@ void PRuleToPresentationSetting (PtrPRule rule, PresentationSetting setting,
         case FnBackgroundPicture:
           setting->type = PRBackgroundPicture;
           break;
-        case FnPictureMode:
-          setting->type = PRPictureMode;
+        case FnBackgroundRepeat:
+          setting->type = PRBackgroundRepeat;
           break;
         case FnPage:
           setting->type = PRPageBefore;
@@ -4020,6 +4039,58 @@ void TtaPToCss (PresentationSetting settings, char *buffer, int len,
         sprintf (buffer, "left: %d", settings->value.typed_data.value);
       add_unit = 1;
       break;
+    case PRBackgroundHorizPos:
+      if (unit == UNIT_PERCENT)
+        {
+          if (settings->value.typed_data.value == 0)
+            sprintf (buffer, "background-position: left");
+          else if (settings->value.typed_data.value == 100)
+            sprintf (buffer, "background-position: right");
+          else if (settings->value.typed_data.value == 50)
+            sprintf (buffer, "background-position: center");
+          else
+            if (real)
+              sprintf (buffer, "background-position: %g%%", fval);
+            else
+              sprintf (buffer, "background-position: %d%%",
+                       settings->value.typed_data.value);
+        }
+      else
+        {
+          if (real)
+            sprintf (buffer, "background-position: %g", fval);
+          else
+            sprintf (buffer, "background-position: %d",
+                     settings->value.typed_data.value);
+          add_unit = 1;
+        }
+      break;
+    case PRBackgroundVertPos:
+      if (unit == UNIT_PERCENT)
+        {
+          if (settings->value.typed_data.value == 0)
+            sprintf (buffer, "background-position: top");
+          else if (settings->value.typed_data.value == 100)
+            sprintf (buffer, "background-position: bottom");
+          else if (settings->value.typed_data.value == 50)
+            sprintf (buffer, "background-position: center");
+          else
+            if (real)
+              sprintf (buffer, "background-position: %g%%", fval);
+            else
+              sprintf (buffer, "background-position: %d%%",
+                       settings->value.typed_data.value);
+        }
+      else
+        {
+          if (real)
+            sprintf (buffer, "background-position: %g", fval);
+          else
+            sprintf (buffer, "background-position: %d",
+                     settings->value.typed_data.value);
+          add_unit = 1;
+        }
+      break;
     case PRFloat:
       switch (settings->value.typed_data.value)
         {
@@ -4091,7 +4162,7 @@ void TtaPToCss (PresentationSetting settings, char *buffer, int len,
       else
         sprintf (buffer, "background-image: none");
       break;
-    case PRPictureMode:
+    case PRBackgroundRepeat:
       switch (settings->value.typed_data.value)
         {
         case REALSIZE:

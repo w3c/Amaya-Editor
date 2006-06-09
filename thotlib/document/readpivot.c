@@ -1334,6 +1334,12 @@ void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
     case C_PR_LEFT:
       TypeRP = PtLeft;
       break;
+    case C_PR_BACKGROUNDHORIZPOS:
+      TypeRP = PtBackgroundHorizPos;
+      break;
+    case C_PR_BACKGROUNDVERTPOS:
+      TypeRP = PtBackgroundVertPos;
+      break;
     case C_PR_HYPHENATE:
       TypeRP = PtHyphenate;
       break;
@@ -1473,6 +1479,8 @@ void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
       case PtRight:
       case PtBottom:
       case PtLeft:
+      case PtBackgroundHorizPos:
+      case PtBackgroundVertPos:
         immed = ReadBoolean (pivFile);
         TtaReadShort (pivFile, &val);
         unit = ReadUnit (pivFile);
@@ -1678,6 +1686,8 @@ void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
           case PtRight:
           case PtBottom:
           case PtLeft:
+          case PtBackgroundHorizPos:
+          case PtBackgroundVertPos:
             if (immed)
               {
                 pPRule->PrMinAttr = FALSE;

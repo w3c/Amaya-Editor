@@ -1044,9 +1044,9 @@ PRule TtaNewPRule (int presentationType, View view, Document document)
               pPres->PrType = PtFunction;
               pPres->PrPresFunction = FnBackgroundPicture;
               break;
-            case PRPictureMode:
+            case PRBackgroundRepeat:
               pPres->PrType = PtFunction;
-              pPres->PrPresFunction = FnPictureMode;
+              pPres->PrPresFunction = FnBackgroundRepeat;
               break;
             case PRCreateEnclosing:
               pPres->PrType = PtFunction;
@@ -1108,9 +1108,9 @@ PRule TtaNewPRuleForView (int presentationType, int view, Document document)
           pPres->PrType = PtFunction;
           pPres->PrPresFunction = FnBackgroundPicture;
           break;
-        case PRPictureMode:
+        case PRBackgroundRepeat:
           pPres->PrType = PtFunction;
-          pPres->PrPresFunction = FnPictureMode;
+          pPres->PrPresFunction = FnBackgroundRepeat;
           break;
         case PRCreateEnclosing:
           pPres->PrType = PtFunction;
@@ -1186,9 +1186,9 @@ PRule TtaNewPRuleForNamedView (int presentationType, char *viewName,
               pPres->PrType = PtFunction;
               pPres->PrPresFunction = FnBackgroundPicture;
               break;
-            case PRPictureMode:
+            case PRBackgroundRepeat:
               pPres->PrType = PtFunction;
-              pPres->PrPresFunction = FnPictureMode;
+              pPres->PrPresFunction = FnBackgroundRepeat;
               break;
             case PRCreateEnclosing:
               pPres->PrType = PtFunction;
@@ -1344,7 +1344,7 @@ void TtaAttachPRule (Element element, PRule pRule, Document document)
   PRBorderTopWidth, PRBorderRightWidth, PRBorderBottomWidth, PRBorderLeftWidth:
   an integer > 0 (border width in points).
   PRXRadius, PRYRadius: an integer (radius in points)
-  PRTop, PRRight, PRBottom, PRLeft: an integer (distance)
+  PRTop, PRRight, PRBottom, PRLeft, PRBackgroundHorizPos, PRBackgroundVertPos: an integer (distance)
   PRVertPos, PRHorizPos: an integer (distance in points)
   PRWidth, PRHeight: an integer (size in points)
   PRHyphenate: Hyphenation, NoHyphenation.
@@ -1375,7 +1375,7 @@ void TtaSetPRuleValue (Element element, PRule pRule, int value, Document documen
         case PtFunction:
           if (((PtrPRule) pRule)->PrPresFunction == FnBackgroundPicture)
             ((PtrPRule) pRule)->PrPresBox[0] = value;
-          else if (((PtrPRule) pRule)->PrPresFunction == FnPictureMode)
+          else if (((PtrPRule) pRule)->PrPresFunction == FnBackgroundRepeat)
             ((PtrPRule) pRule)->PrPresBox[0] = value;
           break;
 
@@ -1805,6 +1805,8 @@ void TtaSetPRuleValue (Element element, PRule pRule, int value, Document documen
         case PtRight:
         case PtBottom:
         case PtLeft:
+        case PtBackgroundHorizPos:
+        case PtBackgroundVertPos:
           ((PtrPRule) pRule)->PrPresMode = PresImmediate;
           ((PtrPRule) pRule)->PrMinUnit = UnPoint;
           ((PtrPRule) pRule)->PrMinAttr = FALSE;
@@ -1927,7 +1929,7 @@ void TtaSetPRuleValue (Element element, PRule pRule, int value, Document documen
   PRBorderTopWidth, PRBorderRightWidth, PRBorderBottomWidth, PRBorderLeftWidth:
   an integer > 0 (border width).
   PRXRadius, PRYRadius: a positive integer (radius)
-  PRTop, PRRight, PRBottom, PRLeft: an integer (distance)
+  PRTop, PRRight, PRBottom, PRLeft, PRBackgroundHorizPos, PRBackgroundVertPos: an integer (distance)
   PRVertPos, PRHorizPos: an integer (distance)
   PRWidth, PRHeight: an integer (width or height)
   ----------------------------------------------------------------------*/
@@ -1978,6 +1980,8 @@ void TtaSetPRuleValueWithUnit (Element element, PRule pRule, int value,
         case PtRight:
         case PtBottom:
         case PtLeft:
+        case PtBackgroundHorizPos:
+        case PtBackgroundVertPos:
           ((PtrPRule) pRule)->PrPresMode = PresImmediate;
           ((PtrPRule) pRule)->PrMinUnit = unit;
           ((PtrPRule) pRule)->PrMinAttr = FALSE;
@@ -2650,7 +2654,7 @@ int                 TtaGetPRuleType (PRule pRule)
   PRBorderTopWidth, PRBorderRightWidth, PRBorderBottomWidth, PRBorderLeftWidth:
   an integer > 0 (border width).
   PRXRadius, PRYRadius: radius
-  PRTop, PRRight, PRBottom, PRLeft: distance
+  PRTop, PRRight, PRBottom, PRLeft, PRBackgroundHorizPos, PRBackgroundVertPos: distance
   PtVertPos, PtHorizPos: distance
   PtWidth, PtHeight: distance
   PRHyphenate: Hyphenation, NoHyphenation.
@@ -3010,6 +3014,8 @@ int TtaGetPRuleValue (PRule pRule)
       case PtRight:
       case PtBottom:
       case PtLeft:
+      case PtBackgroundHorizPos:
+      case PtBackgroundVertPos:
         value = ((PtrPRule) pRule)->PrMinValue;
         break;
 
@@ -3105,7 +3111,7 @@ int TtaGetPositionPRuleDelta (PRule pRule)
   PRBorderTopWidth, PRBorderRightWidth, PRBorderBottomWidth,
   PRBorderLeftWidth,
   PRXRadius, PRYRadius,
-  PRTop, PRRight, PRBottom, PRLeft,
+  PRTop, PRRight, PRBottom, PRLeft, PRBackgroundHorizPos, PRBackgroundVertPos,
   PRVertPos, PRHorizPos, PRWidth, PRHeight.
   This unit could be UnRelative, UnXHeight, UnPoint, UnPixel, UnPercent.
   Return UnRelative in other cases.
@@ -3145,6 +3151,8 @@ int TtaGetPRuleUnit (PRule pRule)
       case PtRight:
       case PtBottom:
       case PtLeft:
+      case PtBackgroundHorizPos:
+      case PtBackgroundVertPos:
         value = ((PtrPRule) pRule)->PrMinUnit;
         break;
       case PtHeight:
@@ -3278,6 +3286,8 @@ int                 TtaSamePRules (PRule pRule1, PRule pRule2)
                     case PtRight:
                     case PtBottom:
                     case PtLeft:
+                    case PtBackgroundHorizPos:
+                    case PtBackgroundVertPos:
                       if (pR1->PrMinUnit == pR2->PrMinUnit)
                         if (pR1->PrMinAttr == pR2->PrMinAttr)
                           if (pR1->PrMinValue == pR2->PrMinValue)

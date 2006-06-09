@@ -4457,7 +4457,7 @@ static char *ParseACSSBackgroundRepeat (Element element, PSchema tsch,
   /* check if it's an important rule */
   if (DoApply)
     /* install the new presentation */
-    TtaSetStylePresentation (PRPictureMode, element, tsch, ctxt, repeat);
+    TtaSetStylePresentation (PRBackgroundRepeat, element, tsch, ctxt, repeat);
   return (cssRule);
 }
 
@@ -4497,6 +4497,10 @@ static char *ParseACSSBackgroundAttachment (Element element, PSchema tsch,
     {
       cssRule = SkipWord (cssRule);
     }
+  else if (!strncasecmp (cssRule, "inherit", 7))
+    {
+      cssRule = SkipWord (cssRule);
+    }
   return (cssRule);
 }
 
@@ -4515,9 +4519,7 @@ static char *ParseCSSBackgroundAttachment (Element element, PSchema tsch,
   cssRule = ParseACSSBackgroundAttachment (element, tsch, ctxt,
                                            cssRule, css, isHTML);
   if (ptr == cssRule)
-    {
-      cssRule = SkipValue ("Invalid background-attachement value", cssRule);
-    }
+    cssRule = SkipValue ("Invalid background-attachement value", cssRule);
   return cssRule;
 }
 
@@ -4528,32 +4530,86 @@ static char *ParseCSSBackgroundAttachment (Element element, PSchema tsch,
 static char *ParseACSSBackgroundPosition (Element element, PSchema tsch,
                                           PresentationContext ctxt,
                                           char *cssRule, CSSInfoPtr css,
-                                          ThotBool isHTML)
+                                          ThotBool isHTML, ThotBool *across)
 {
-  ThotBool              ok;
+  PresentationValue   val;
+  char               *ptr;
 
   cssRule = SkipBlanksAndComments (cssRule);
-  ok = TRUE;
+  ptr = cssRule;
+  val.typed_data.value = 0;
+  val.typed_data.real = FALSE;
+  val.typed_data.unit = UNIT_INVALID;
   if (!strncasecmp (cssRule, "left", 4))
-    cssRule = SkipWord (cssRule);
-  else if (!strncasecmp (cssRule, "right", 5))
-    cssRule = SkipWord (cssRule);
-  else if (!strncasecmp (cssRule, "center", 6))
-    cssRule = SkipWord (cssRule);
-  else if (!strncasecmp (cssRule, "top", 3))
-    cssRule = SkipWord (cssRule);
-  else if (!strncasecmp (cssRule, "bottom", 6))
-    cssRule = SkipWord (cssRule);
-  else if (isdigit (*cssRule) || *cssRule == '.' || *cssRule == '-')
     {
-      while (*cssRule != EOS && *cssRule != SPACE &&
-             *cssRule != ',' && *cssRule != ';')
-        cssRule++;
+      val.typed_data.value = 0;
+      val.typed_data.unit = UNIT_PERCENT;
+      cssRule += 4;
+      *across = TRUE;
+    }
+  else if (!strncasecmp (cssRule, "right", 5))
+    {
+      val.typed_data.value = 100;
+      val.typed_data.unit = UNIT_PERCENT;
+      cssRule += 5;
+      *across = TRUE;
+    }
+  else if (!strncasecmp (cssRule, "center", 6))
+    {
+      val.typed_data.value = 50;
+      val.typed_data.unit = UNIT_PERCENT;
+      cssRule += 6;
+    }
+  else if (!strncasecmp (cssRule, "top", 3))
+    {
+      val.typed_data.value = 0;
+      val.typed_data.unit = UNIT_PERCENT;
+      cssRule += 3;
+      *across = FALSE;
+    }
+  else if (!strncasecmp (cssRule, "bottom", 6))
+    {
+      val.typed_data.value = 100;
+      val.typed_data.unit = UNIT_PERCENT;
+      cssRule += 6;
+      *across = FALSE;
+    }
+  else if (!strncasecmp (cssRule, "inherit", 7))
+    {
+      val.typed_data.unit = VALUE_INHERIT;
+      cssRule += 7;
     }
   else
-    ok = FALSE;
+    /* <length> or <percentage> */
+    {
+      cssRule = ParseCSSUnit (cssRule, &val);
+      if (val.typed_data.unit == UNIT_BOX && val.typed_data.value == 0)
+        /* 0 with no unit. Accept */
+        val.typed_data.unit = UNIT_PERCENT;
+    }
 
-  cssRule = SkipBlanksAndComments (cssRule);
+  if (val.typed_data.unit != UNIT_INVALID &&
+      val.typed_data.unit != UNIT_BOX)
+    {
+      if (DoApply)
+        /* install the new presentation */
+        {
+          if (val.typed_data.unit == VALUE_INHERIT)
+            /* "inherit" applies to both dimensions */
+            {
+              TtaSetStylePresentation (PRBackgroundHorizPos, element, tsch,
+                                       ctxt, val);
+              TtaSetStylePresentation (PRBackgroundVertPos, element, tsch,
+                                       ctxt, val);
+            }
+          else if (*across)
+            TtaSetStylePresentation (PRBackgroundHorizPos, element, tsch,
+                                     ctxt, val);
+          else
+            TtaSetStylePresentation (PRBackgroundVertPos, element, tsch,
+                                     ctxt, val);
+        }
+    }
   return (cssRule);
 }
 
@@ -4567,20 +4623,27 @@ static char *ParseCSSBackgroundPosition (Element element, PSchema tsch,
                                          ThotBool isHTML)
 {
   char     *ptr;
+  ThotBool  across;
 
   ptr = cssRule;
-  cssRule = ParseACSSBackgroundPosition (element, tsch, ctxt,
-                                         cssRule, css, isHTML);
+  across = TRUE;
+  cssRule = ParseACSSBackgroundPosition (element, tsch, ctxt, cssRule, css,
+                                         isHTML, &across);
   if (ptr == cssRule)
     cssRule = SkipValue ("Invalid background-position value", cssRule);
-  else if (*cssRule !=  ';' && *cssRule != EOS)
+  else
     {
-      /* possible second value */
-      ptr = cssRule;
-      cssRule = ParseACSSBackgroundPosition (element, tsch, ctxt,
-                                             cssRule, css, isHTML);
-      if (ptr == cssRule)
-        cssRule = SkipValue ("Invalid background-position value", cssRule);
+      cssRule = SkipBlanksAndComments (cssRule);
+      if (*cssRule !=  ';' && *cssRule !=  '!' && *cssRule != EOS)
+        {
+          /* possible second value */
+          ptr = cssRule;
+          across = !across;
+          cssRule = ParseACSSBackgroundPosition (element, tsch, ctxt, cssRule,
+                                                 css, isHTML, &across);
+          if (ptr == cssRule)
+            cssRule = SkipValue ("Invalid background-position value", cssRule);
+        }
     }
   return (cssRule);
 }
@@ -4594,10 +4657,11 @@ static char *ParseCSSBackground (Element element, PSchema tsch,
 {
   char           *ptr;
   int             skippedNL;
-  ThotBool        img, repeat, position, attach, color;
+  ThotBool        img, repeat, position, attach, color, across;
 
   cssRule = SkipBlanksAndComments (cssRule);
   img = repeat = position = attach = color = FALSE;
+  across = TRUE;
   while (*cssRule != ';' && *cssRule != '}' && *cssRule != EOS && *cssRule != ',')
     {
       /* perhaps a Background Image */
@@ -4635,8 +4699,9 @@ static char *ParseCSSBackground (Element element, PSchema tsch,
                !strncasecmp (cssRule, "bottom", 6) ||
                isdigit (*cssRule) || *cssRule == '.' || *cssRule == '-')
         {
-          cssRule = ParseACSSBackgroundPosition (element, tsch, ctxt,
-                                                 cssRule, css, isHTML);
+          cssRule = ParseACSSBackgroundPosition (element, tsch, ctxt, cssRule,
+                                                 css, isHTML, &across);
+          across = !across;
           position = repeat = TRUE;
         }
       /* perhaps a Background Color */
@@ -4670,7 +4735,7 @@ static char *ParseCSSBackground (Element element, PSchema tsch,
                                "repeat", css, isHTML);
   if (img && !position)
     ParseACSSBackgroundPosition (element, tsch, ctxt,
-                                 "0% 0%", css, isHTML);
+                                 "0% 0%", css, isHTML, &across);
   if (img && !attach)
     ParseACSSBackgroundAttachment (element, tsch, ctxt,
                                    "scroll", css, isHTML);

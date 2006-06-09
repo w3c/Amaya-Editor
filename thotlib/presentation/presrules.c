@@ -659,6 +659,8 @@ int IntegerRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view,
                         pPRule->PrType == PtRight ||
                         pPRule->PrType == PtBottom ||
                         pPRule->PrType == PtLeft ||
+                        pPRule->PrType == PtBackgroundHorizPos ||
+                        pPRule->PrType == PtBackgroundVertPos ||
                         pPRule->PrType == PtOpacity ||
                         pPRule->PrType == PtFillOpacity ||
                         pPRule->PrType == PtStrokeOpacity)
@@ -930,6 +932,10 @@ int IntegerRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view,
                       *unit = pAbb->AbPositioning->PnLeftUnit;
                     }
                   break;
+                case PtBackgroundHorizPos:
+                case PtBackgroundVertPos:
+                  /* to be written @@@@ */
+                  break;
                 default:
                   break;
                 }
@@ -1045,7 +1051,9 @@ int IntegerRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view,
                    pPRule->PrType == PtTop ||
                    pPRule->PrType == PtRight ||
                    pPRule->PrType == PtBottom ||
-                   pPRule->PrType == PtLeft)
+                   pPRule->PrType == PtLeft ||
+                   pPRule->PrType == PtBackgroundHorizPos ||
+                   pPRule->PrType == PtBackgroundVertPos)
             {
               if (pPRule->PrMinAttr)
                 /* c'est la valeur d'un attribut */
@@ -1118,7 +1126,7 @@ int IntegerRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view,
                   val = AttrValue (pAttr) * 10;
                 }
               else
-                /* c'est la valeur elle meme qui est dans la regle */
+                /* c'est la valeur elle-meme qui est dans la regle */
                 val = pPRule->PrIntValue;
             }
           if (pPRule->PrType == PtSize && *unit == UnRelative)
@@ -3384,7 +3392,7 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
                     }
                 }
               break;
-            case FnPictureMode:
+            case FnBackgroundRepeat:
               if (pPRule->PrViewNum == viewSch)
                 {
                   if (pAb->AbElement->ElTerminal &&
@@ -4110,6 +4118,30 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
               pAb->AbPositioning->PnLeftDistance = IntegerRule (pPRule,
                                                                 pAb->AbElement, pAb->AbDocView, &appl, &unit, pAttr, pAb);
               pAb->AbPositioning->PnLeftUnit = unit;
+            }
+          break;
+        case PtBackgroundHorizPos:
+          if (pAb->AbLeafType == LtCompound &&
+              pPRule->PrViewNum == viewSch)
+            {
+              if (pAb->AbPictBackground == NULL)
+                NewPictInfo (pAb, "", UNKNOWN_FORMAT, False);
+              ((ThotPictInfo *) (pAb->AbPictBackground))->PicPosX =
+                 IntegerRule (pPRule, pAb->AbElement, pAb->AbDocView, &appl,
+                              &unit, pAttr, pAb);
+              ((ThotPictInfo *) (pAb->AbPictBackground))->PicXUnit = unit;
+            }
+          break;
+        case PtBackgroundVertPos:
+          if (pAb->AbLeafType == LtCompound &&
+              pPRule->PrViewNum == viewSch)
+            {
+              if (pAb->AbPictBackground == NULL)
+                NewPictInfo (pAb, "", UNKNOWN_FORMAT, False);
+              ((ThotPictInfo *) (pAb->AbPictBackground))->PicPosY =
+                 IntegerRule (pPRule, pAb->AbElement, pAb->AbDocView, &appl,
+                              &unit, pAttr, pAb);
+              ((ThotPictInfo *) (pAb->AbPictBackground))->PicYUnit = unit;
             }
           break;
         case PtVis:

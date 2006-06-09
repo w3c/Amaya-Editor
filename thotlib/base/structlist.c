@@ -110,8 +110,8 @@ static void WrPRuleType (PtrPRule pRule, FILE * fileDescriptor)
         case FnBackgroundPicture:
           fprintf (fileDescriptor, "BackgroundPicture");
           break;
-        case FnPictureMode:
-          fprintf (fileDescriptor, "PictureMode");
+        case FnBackgroundRepeat:
+          fprintf (fileDescriptor, "BackgroundRepeat");
           break;
         case FnNotInLine:
           fprintf (fileDescriptor, "InLine: No");
@@ -294,6 +294,12 @@ static void WrPRuleType (PtrPRule pRule, FILE * fileDescriptor)
       break;
     case PtLeft:
       fprintf (fileDescriptor, "Left");
+      break;
+    case PtBackgroundHorizPos:
+      fprintf (fileDescriptor, "BackgroundHorizPos");
+      break;
+    case PtBackgroundVertPos:
+      fprintf (fileDescriptor, "BackgroundVertPos");
       break;
     case PtDisplay:
       fprintf (fileDescriptor, "Display");
@@ -1390,6 +1396,10 @@ void ListAbsBoxes (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
                 fprintf (fileDescriptor, "YRepeat");
               else
                 fprintf (fileDescriptor, "RealSize");
+              fprintf (fileDescriptor, " XPos: %d", image->PicPosX);
+              wrTypeUnit (image->PicXUnit, fileDescriptor);
+              fprintf (fileDescriptor, " YPos: %d", image->PicPosY);
+              wrTypeUnit (image->PicYUnit, fileDescriptor);
               fprintf (fileDescriptor, "\n");
               for (j = 1; j <= Indent + 6; j++)
                 fprintf (fileDescriptor, " ");
@@ -3263,8 +3273,8 @@ static void wrFonctPres (PtrPRule pR, FILE *fileDescriptor)
           wrnumber (pR->PrPresBox[0], fileDescriptor);
         }
       break;
-    case FnPictureMode:
-      fprintf (fileDescriptor, "PictureMode: ");
+    case FnBackgroundRepeat:
+      fprintf (fileDescriptor, "BackgroundRepeat: ");
       switch (pR->PrPresBox[0])
         {
         case RealSize:
@@ -3298,7 +3308,7 @@ static void wrFonctPres (PtrPRule pR, FILE *fileDescriptor)
       pR->PrPresFunction != FnContentRef &&
       pR->PrPresFunction != FnShowBox &&
       pR->PrPresFunction != FnBackgroundPicture &&
-      pR->PrPresFunction != FnPictureMode &&
+      pR->PrPresFunction != FnBackgroundRepeat &&
       pR->PrPresFunction != FnNoLine)
     {
       fprintf (fileDescriptor, "(");
@@ -3666,6 +3676,14 @@ static void wrprules (PtrPRule RP, FILE *fileDescriptor, PtrPSchema pPSch)
           break;
         case PtLeft:
           fprintf (fileDescriptor, "Left: ");
+          wrminind (RP, fileDescriptor);
+          break;
+        case PtBackgroundHorizPos:
+          fprintf (fileDescriptor, "BackgroundHorizPos: ");
+          wrminind (RP, fileDescriptor);
+          break;
+        case PtBackgroundVertPos:
+          fprintf (fileDescriptor, "BackgroundVertPos: ");
           wrminind (RP, fileDescriptor);
           break;
         case PtDisplay:

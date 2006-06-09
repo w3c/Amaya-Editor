@@ -439,7 +439,7 @@ static void WriteFunctionType (FunctionType functType, ThotBool rep)
 	    case FnBackgroundPicture:
 	       TtaWriteByte (outfile, C_PF_BGPICTURE);
 	       break;
-	    case FnPictureMode:
+	    case FnBackgroundRepeat:
 	       TtaWriteByte (outfile, C_PF_PICTUREMODE);
 	       break;
 	    case FnNotInLine:
@@ -1142,6 +1142,8 @@ void                WritePRules (PtrPRule pPRule, PtrSSchema pSS)
             case PtRight:
             case PtBottom:
             case PtLeft:
+            case PtBackgroundHorizPos:
+            case PtBackgroundVertPos:
             case PtVis:
               break;
             }

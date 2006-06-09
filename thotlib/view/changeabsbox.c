@@ -3269,7 +3269,7 @@ void SetChange (PtrAbstractBox pAb, PtrDocument pDoc, PRuleType typeRule,
         CreateListItemMarker (pAb, pDoc, NULL);
       break;
     case PtFunction:
-      if (func == FnBackgroundPicture || func == FnPictureMode ||
+      if (func == FnBackgroundPicture || func == FnBackgroundRepeat ||
           func == FnShowBox)
         pAb->AbAspectChange = TRUE;
       else

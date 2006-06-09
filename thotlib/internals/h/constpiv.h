@@ -51,6 +51,8 @@
 #define C_PR_LEFT ':'
 #define C_PR_BORDERLEFTSTYLE '<'
 #define C_PR_BORDERRIGHTSTYLE '>'
+#define C_PR_BACKGROUNDHORIZPOS '?'
+#define C_PR_BACKGROUNDVERTPOS '@'
 #define C_PR_ADJUST 'A'
 /*      C_PR_PAGEBREAK 'B'           defined in constprs.h */
 #define C_PR_HYPHENATE 'C'
