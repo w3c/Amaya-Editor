@@ -1487,6 +1487,7 @@ void GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width,
           (pAb->AbHeight.DimAbRef != NULL || pAb->AbHeight.DimValue != 0 ||
            pAb->AbHeight.DimUnit == UnAuto) && *height == 0)
         {
+#ifdef IV
           if (pAb->AbLeafType == LtCompound && FrameTable[frame].FrView == 1)
             {
               // it's a compound element of a formatted view
@@ -1499,6 +1500,7 @@ void GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width,
                 *height = 2;
             }
           else
+#endif
             *height = BoxFontHeight (pAb->AbBox->BxFont, EOS);
         }
     }
@@ -5115,7 +5117,7 @@ static ThotBool AnyFloatPosChange (PtrAbstractBox pAb)
   if (pAb && !pAb->AbDead)
     {
       found = (pAb->AbFloatChange || pAb->AbPositionChange ||
-               (pAb->AbNew && !pAb->AbFloat != 'N'));
+               (pAb->AbNew && pAb->AbFloat != 'N'));
       if (!found)
         found = AnyFloatPosChange (pAb->AbFirstEnclosed);
       if (!found)
@@ -5127,16 +5129,19 @@ static ThotBool AnyFloatPosChange (PtrAbstractBox pAb)
 /*----------------------------------------------------------------------
   NewConcreteImage
   ----------------------------------------------------------------------*/
-static void NewConcreteImage (int frame)
+static void NewConcreteImage (int frame, Document doc)
 {
   PtrAbstractBox      pAb, pv1, pvN;
   ViewSelection      *pViewSel;
   ViewFrame          *pFrame;
+  DisplayMode         saveMode;
   int                 x, y;
   int                 c1;
   int                 cN;
   int                 h;
   ThotBool            unique;
+  ThotBool            lock = TRUE;
+
 
   pFrame = &ViewFrameTable[frame - 1];
   c1 = 0;
@@ -5144,6 +5149,16 @@ static void NewConcreteImage (int frame)
   if (pFrame->FrAbstractBox)
     /* On sauvegarde la selection courante dans la fenetre */
     {
+      /* lock the table formatting */
+      TtaGiveTableFormattingLock (&lock);
+      if (!lock)
+        /* table formatting is not locked, lock it now */
+        TtaLockTableFormatting ();
+
+      saveMode = documentDisplayMode[doc - 1];
+      if (saveMode == DisplayImmediately)
+        documentDisplayMode[doc - 1] = DeferredDisplay;
+
       pViewSel = &pFrame->FrSelectionBegin;
       if (pViewSel->VsBox)
         {
@@ -5201,6 +5216,17 @@ static void NewConcreteImage (int frame)
           if (pvN != NULL)
             InsertViewSelMarks (frame, pvN, 0, cN, FALSE, TRUE, FALSE);
         }
+
+      /* restore the current mode and  update tables if necessary */
+      if (saveMode == DisplayImmediately)
+        documentDisplayMode[doc - 1] = saveMode;
+
+      if (!lock)
+        /* unlock table formatting */
+        TtaUnlockTableFormatting ();
+      /* Est-ce que l'on a de nouvelles boites dont le contenu est */
+      /* englobe et depend de relations hors-structure ?           */
+      ComputeEnclosing (frame);
     }
 }
 
@@ -5304,7 +5330,7 @@ ThotBool ChangeConcreteImage (int frame, int *pageHeight, PtrAbstractBox pAb)
           /* rebuild the whole image if there is a float or positioning change */
           if ((pAb != pFrame->FrAbstractBox || !pAb->AbNew) && AnyFloatPosChange (pAb))
             {
-              NewConcreteImage (frame);
+              NewConcreteImage (frame, doc);
               DefClip (frame, -1, -1, -1, -1);
             }
           else
@@ -5379,7 +5405,7 @@ ThotBool ChangeConcreteImage (int frame, int *pageHeight, PtrAbstractBox pAb)
               /* lock the table formatting */
               TtaGiveTableFormattingLock (&lock);
               if (!lock)
-                /* table formatting is not loked, lock it now */
+                /* table formatting is not locked, lock it now */
                 TtaLockTableFormatting ();
 
               /* Il faut annuler l'elasticite des boites dont les regles */
