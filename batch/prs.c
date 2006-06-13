@@ -5824,6 +5824,7 @@ static void ProcessString (SyntacticCode gCode, indLine wl, indLine wi)
 {
   int                 i;
   PresConstant       *pPresConst;
+  char               *ptr;
 
   if (gCode == RULE_ConstValue || gCode == RULE_FileName ||
       gCode == RULE_ListStyleImageURI)
@@ -5841,9 +5842,16 @@ static void ProcessString (SyntacticCode gCode, indLine wl, indLine wi)
             CurRule->PrIntValue = pPSchema->PsNConstants;
           }
         pPresConst = &pPSchema->PsConstant[pPSchema->PsNConstants - 1];
-        for (i = 0; i < wl - 1; i++)
-          pPresConst->PdString[i] = inputLine[wi + i - 1];
-        pPresConst->PdString[wl - 1] = EOS;
+        if (inputLine[wi - 1] == EOS)
+          pPresConst->PdString = NULL;
+        else
+          {
+            ptr = (char *) TtaGetMemory (wl);
+            pPresConst->PdString = ptr;
+            for (i = 0; i < wl - 1; i++)
+              ptr[i] = inputLine[wi + i - 1];
+            ptr[wl - 1] = EOS;
+          }
       }
   else if (gCode == RULE_TextEqual)
     /* TextEqual c'est une valeur d'attribut */
