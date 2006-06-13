@@ -3261,7 +3261,7 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
   AbPosition          Posit;
   PresConstant	     *pConst;
   PathBuffer	      directoryName;
-  char                fname[MAX_PATH];
+  char                fname[MAX_PATH], *ptr;
   unsigned char       c;
   int                 viewSch, i;
   ThotBool            appl;
@@ -3369,7 +3369,7 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
                       if (pSchP == NULL)
                         pSchP = PresentationSchema (pDoc->DocSSchema, pDoc);
                       pConst = &pSchP->PsConstant[pPRule->PrPresBox[0] - 1];
-                      if (pConst->PdString[0] != EOS)
+                      if (pConst->PdString && pConst->PdString[0] != EOS)
                         {
 #ifndef _WINDOWS
                           if (pConst->PdString[0] == DIR_SEP)
@@ -4260,7 +4260,7 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
                       if (pSchP == NULL)
                         pSchP = PresentationSchema (pDoc->DocSSchema, pDoc);
                       pConst = &pSchP->PsConstant[pPRule->PrIntValue - 1];
-                      if (pConst->PdString[0] != EOS)
+                      if (pConst->PdString && pConst->PdString[0] != EOS)
                         {
 #ifndef _WINDOWS
                           if (pConst->PdString[0] == DIR_SEP)

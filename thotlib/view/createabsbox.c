@@ -569,7 +569,10 @@ void ConstantCopy (int NConst, PtrPSchema pSchP, PtrAbstractBox pAb)
     {
     case GraphicElem:
       pAb->AbLeafType = LtGraphics;
-      pAb->AbShape = (char)pConst->PdString[0];
+      if (pConst->PdString)
+        pAb->AbShape = (char)pConst->PdString[0];
+      else
+        pAb->AbShape = EOS;
       if (pAb->AbShape == 'C')
         /* rectangle with rounded corners */
         {
@@ -583,7 +586,10 @@ void ConstantCopy (int NConst, PtrPSchema pSchP, PtrAbstractBox pAb)
       break;
     case Symbol:
       pAb->AbLeafType = LtSymbol;
-      pAb->AbShape = (char) pConst->PdString[0];
+      if (pConst->PdString)
+        pAb->AbShape = (char) pConst->PdString[0];
+      else
+        pAb->AbShape = EOS;
       pAb->AbGraphScript = 'G';
       if (pAb->AbShape == EOS)
         pAb->AbVolume = 0;

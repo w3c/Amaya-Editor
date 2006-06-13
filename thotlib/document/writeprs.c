@@ -27,27 +27,27 @@ static BinFile      outfile;
 #include "writeprs_f.h"
 
 /*----------------------------------------------------------------------
-   WriteShort							
+  WriteShort							
   ----------------------------------------------------------------------*/
 static void WriteShort (int n)
 {
-   TtaWriteByte (outfile, (char) (n / 256));
-   TtaWriteByte (outfile, (char) (n % 256));
+  TtaWriteByte (outfile, (char) (n / 256));
+  TtaWriteByte (outfile, (char) (n % 256));
 }
 
 /*----------------------------------------------------------------------
-   WriteSignedShort						
+  WriteSignedShort						
   ----------------------------------------------------------------------*/
 static void WriteSignedShort (int n)
 {
-   if (n >= 0)
-      WriteShort (n);
-   else
-      WriteShort (n + 65536);
+  if (n >= 0)
+    WriteShort (n);
+  else
+    WriteShort (n + 65536);
 }
 
 /*----------------------------------------------------------------------
-   WriteName							
+  WriteName							
   ----------------------------------------------------------------------*/
 static void WriteName (char *n)
 {
@@ -59,69 +59,69 @@ static void WriteName (char *n)
     {
       i = 0;
       do
-	TtaWriteByte (outfile, n[i++]);
+        TtaWriteByte (outfile, n[i++]);
       while (n[i - 1] != EOS);
     }
 }
 
 
 /*----------------------------------------------------------------------
-   WriteRulePtr							
+  WriteRulePtr							
   ----------------------------------------------------------------------*/
 static void WriteRulePtr (PtrPRule p)
 {
-   if (p == NULL)
-      TtaWriteByte (outfile, EOS);
-   else
-      TtaWriteByte (outfile, '\1');
+  if (p == NULL)
+    TtaWriteByte (outfile, EOS);
+  else
+    TtaWriteByte (outfile, '\1');
 }
 
 
 /*----------------------------------------------------------------------
-   WriteBoolean							
+  WriteBoolean							
   ----------------------------------------------------------------------*/
 static void WriteBoolean (ThotBool b)
 {
-   if (b)
-      TtaWriteByte (outfile, '\1');
-   else
-      TtaWriteByte (outfile, EOS);
+  if (b)
+    TtaWriteByte (outfile, '\1');
+  else
+    TtaWriteByte (outfile, EOS);
 }
 
 /*----------------------------------------------------------------------
-   WriteUnit ecrit une unite dans le fichier sur un octet          
+  WriteUnit ecrit une unite dans le fichier sur un octet          
   ----------------------------------------------------------------------*/
 static void WriteUnit (TypeUnit unit)
 {
-   switch (unit)
-	 {
-	    case UnRelative:
-	       TtaWriteByte (outfile, C_UNIT_REL);
-	       break;
-	    case UnXHeight:
-	       TtaWriteByte (outfile, C_UNIT_XHEIGHT);
-	       break;
-	    case UnPoint:
-	       TtaWriteByte (outfile, C_UNIT_POINT);
-	       break;
-	    case UnPixel:
-	       TtaWriteByte (outfile, C_UNIT_PIXEL);
-	       break;
-	    case UnPercent:
-	       TtaWriteByte (outfile, C_UNIT_PERCENT);
-	       break;
-	    case UnAuto:
-	       TtaWriteByte (outfile, C_UNIT_AUTO);
-	       break;
-	    default:
-	       fprintf (stderr, "Invalid unit %X\n", (int)unit);
-	       TtaWriteByte (outfile, C_UNIT_REL);
-	       break;
-	 }
+  switch (unit)
+    {
+    case UnRelative:
+      TtaWriteByte (outfile, C_UNIT_REL);
+      break;
+    case UnXHeight:
+      TtaWriteByte (outfile, C_UNIT_XHEIGHT);
+      break;
+    case UnPoint:
+      TtaWriteByte (outfile, C_UNIT_POINT);
+      break;
+    case UnPixel:
+      TtaWriteByte (outfile, C_UNIT_PIXEL);
+      break;
+    case UnPercent:
+      TtaWriteByte (outfile, C_UNIT_PERCENT);
+      break;
+    case UnAuto:
+      TtaWriteByte (outfile, C_UNIT_AUTO);
+      break;
+    default:
+      fprintf (stderr, "Invalid unit %X\n", (int)unit);
+      TtaWriteByte (outfile, C_UNIT_REL);
+      break;
+    }
 }
 
 /*----------------------------------------------------------------------
-   WritePRuleType  ecrit un type de regle de presentation		
+  WritePRuleType  ecrit un type de regle de presentation		
   ----------------------------------------------------------------------*/
 void                WritePRuleType (PRuleType ruleType)
 {
@@ -321,624 +321,624 @@ void                WritePRuleType (PRuleType ruleType)
 
 
 /*----------------------------------------------------------------------
-   WritePresMode ecrit un mode de calcul dans le fichier		
+  WritePresMode ecrit un mode de calcul dans le fichier		
   ----------------------------------------------------------------------*/
 static void WritePresMode (PresMode mode)
 {
-   switch (mode)
-	 {
-	    case PresImmediate:
-	       TtaWriteByte (outfile, C_IMMEDIATE);
-	       break;
-	    case PresInherit:
-	       TtaWriteByte (outfile, C_INHERIT);
-	       break;
-	    case PresFunction:
-	       TtaWriteByte (outfile, C_PRES_FUNCTION);
-	       break;
-	    default:
-	       fprintf (stderr, "Invalid mode %X\n", mode);
-	       break;
-	 }
+  switch (mode)
+    {
+    case PresImmediate:
+      TtaWriteByte (outfile, C_IMMEDIATE);
+      break;
+    case PresInherit:
+      TtaWriteByte (outfile, C_INHERIT);
+      break;
+    case PresFunction:
+      TtaWriteByte (outfile, C_PRES_FUNCTION);
+      break;
+    default:
+      fprintf (stderr, "Invalid mode %X\n", mode);
+      break;
+    }
 }
 
 
 /*----------------------------------------------------------------------
-   WriteInheritMode       ecrit un type d'heritage dans le fichier	
+  WriteInheritMode       ecrit un type d'heritage dans le fichier	
   ----------------------------------------------------------------------*/
 static void WriteInheritMode (InheritMode mode)
 {
-   switch (mode)
-	 {
-	    case InheritParent:
-	       TtaWriteByte (outfile, C_INH_ASCEND);
-	       break;
-	    case InheritPrevious:
-	       TtaWriteByte (outfile, C_INH_PREVIOUS);
-	       break;
-	    case InheritChild:
-	       TtaWriteByte (outfile, C_INH_DESC);
-	       break;
-	    case InheritCreator:
-	       TtaWriteByte (outfile, C_INH_CREATOR);
-	       break;
-	    case InheritGrandFather:
-	       TtaWriteByte (outfile, C_INH_GRAND_FATHER);
-	       break;
-	    default:
-	       fprintf (stderr, "Invalid inherit %X\n", mode);
-	       break;
-	 }
+  switch (mode)
+    {
+    case InheritParent:
+      TtaWriteByte (outfile, C_INH_ASCEND);
+      break;
+    case InheritPrevious:
+      TtaWriteByte (outfile, C_INH_PREVIOUS);
+      break;
+    case InheritChild:
+      TtaWriteByte (outfile, C_INH_DESC);
+      break;
+    case InheritCreator:
+      TtaWriteByte (outfile, C_INH_CREATOR);
+      break;
+    case InheritGrandFather:
+      TtaWriteByte (outfile, C_INH_GRAND_FATHER);
+      break;
+    default:
+      fprintf (stderr, "Invalid inherit %X\n", mode);
+      break;
+    }
 }
 
 
 /*----------------------------------------------------------------------
-   WriteFunctionType  ecrit un type de fonction de presentation	
+  WriteFunctionType  ecrit un type de fonction de presentation	
   ----------------------------------------------------------------------*/
 static void WriteFunctionType (FunctionType functType, ThotBool rep)
 {
-   switch (functType)
-	 {
-	    case FnLine:
-	       TtaWriteByte (outfile, C_PF_LINE);
-	       break;
-	    case FnPage:
-	       TtaWriteByte (outfile, C_PF_PAGE);
-	       break;
-	    case FnCreateBefore:
-	       if (rep)
-		  TtaWriteByte (outfile, C_PF_CR_BEFORE_REP);
-	       else
-		  TtaWriteByte (outfile, C_PF_CR_BEFORE);
-	       break;
-	    case FnCreateWith:
-	       TtaWriteByte (outfile, C_PF_CR_WITH);
-	       break;
-	    case FnCreateFirst:
-	       if (rep)
-		  TtaWriteByte (outfile, C_PF_CR_FIRST_REP);
-	       else
-		  TtaWriteByte (outfile, C_PF_CR_FIRST);
-	       break;
-	    case FnCreateLast:
-	       if (rep)
-		  TtaWriteByte (outfile, C_PF_CR_LAST_REP);
-	       else
-		  TtaWriteByte (outfile, C_PF_CR_LAST);
-	       break;
-	    case FnCreateAfter:
-	       if (rep)
-		  TtaWriteByte (outfile, C_PF_CR_AFTER_REP);
-	       else
-		  TtaWriteByte (outfile, C_PF_CR_AFTER);
-	       break;
-	    case FnCreateEnclosing:
-	       if (rep)
-		  TtaWriteByte (outfile, C_PF_CR_ENCLOSING_REP);
-	       else
-		  TtaWriteByte (outfile, C_PF_CR_ENCLOSING);
-	       break;
-	    case FnColumn:
-	       TtaWriteByte (outfile, C_PF_COLUMN);
-	       break;
-	    case FnSubColumn:
-	       TtaWriteByte (outfile, C_PF_SUBCOLUMN);
-	       break;
-	    case FnCopy:
-	       TtaWriteByte (outfile, C_PF_COPY);
-	       break;
-	    case FnContentRef:
-	       TtaWriteByte (outfile, C_PF_REF_CONTENT);
-	       break;
-	    case FnNoLine:
-	       TtaWriteByte (outfile, C_PF_NOLINE);
-	       break;
-	    case FnShowBox:
-	       TtaWriteByte (outfile, C_PF_SHOWBOX);
-	       break;
-	    case FnBackgroundPicture:
-	       TtaWriteByte (outfile, C_PF_BGPICTURE);
-	       break;
-	    case FnBackgroundRepeat:
-	       TtaWriteByte (outfile, C_PF_PICTUREMODE);
-	       break;
-	    case FnNotInLine:
-	       TtaWriteByte (outfile, C_PF_NOTINLINE);
-	       break;
-	    default:
-	       fprintf (stderr, "Invalid function %X\n", functType);
-	       break;
-	 }
+  switch (functType)
+    {
+    case FnLine:
+      TtaWriteByte (outfile, C_PF_LINE);
+      break;
+    case FnPage:
+      TtaWriteByte (outfile, C_PF_PAGE);
+      break;
+    case FnCreateBefore:
+      if (rep)
+        TtaWriteByte (outfile, C_PF_CR_BEFORE_REP);
+      else
+        TtaWriteByte (outfile, C_PF_CR_BEFORE);
+      break;
+    case FnCreateWith:
+      TtaWriteByte (outfile, C_PF_CR_WITH);
+      break;
+    case FnCreateFirst:
+      if (rep)
+        TtaWriteByte (outfile, C_PF_CR_FIRST_REP);
+      else
+        TtaWriteByte (outfile, C_PF_CR_FIRST);
+      break;
+    case FnCreateLast:
+      if (rep)
+        TtaWriteByte (outfile, C_PF_CR_LAST_REP);
+      else
+        TtaWriteByte (outfile, C_PF_CR_LAST);
+      break;
+    case FnCreateAfter:
+      if (rep)
+        TtaWriteByte (outfile, C_PF_CR_AFTER_REP);
+      else
+        TtaWriteByte (outfile, C_PF_CR_AFTER);
+      break;
+    case FnCreateEnclosing:
+      if (rep)
+        TtaWriteByte (outfile, C_PF_CR_ENCLOSING_REP);
+      else
+        TtaWriteByte (outfile, C_PF_CR_ENCLOSING);
+      break;
+    case FnColumn:
+      TtaWriteByte (outfile, C_PF_COLUMN);
+      break;
+    case FnSubColumn:
+      TtaWriteByte (outfile, C_PF_SUBCOLUMN);
+      break;
+    case FnCopy:
+      TtaWriteByte (outfile, C_PF_COPY);
+      break;
+    case FnContentRef:
+      TtaWriteByte (outfile, C_PF_REF_CONTENT);
+      break;
+    case FnNoLine:
+      TtaWriteByte (outfile, C_PF_NOLINE);
+      break;
+    case FnShowBox:
+      TtaWriteByte (outfile, C_PF_SHOWBOX);
+      break;
+    case FnBackgroundPicture:
+      TtaWriteByte (outfile, C_PF_BGPICTURE);
+      break;
+    case FnBackgroundRepeat:
+      TtaWriteByte (outfile, C_PF_PICTUREMODE);
+      break;
+    case FnNotInLine:
+      TtaWriteByte (outfile, C_PF_NOTINLINE);
+      break;
+    default:
+      fprintf (stderr, "Invalid function %X\n", functType);
+      break;
+    }
 }
 
 
 /*----------------------------------------------------------------------
-   WriteAlignment    ecrit un mode d'alignement de lignes		
+  WriteAlignment    ecrit un mode d'alignement de lignes		
   ----------------------------------------------------------------------*/
 static void         WriteAlignment (BAlignment align)
 {
-   switch (align)
-	 {
-	    case AlignLeft:
-	       TtaWriteByte (outfile, C_PIV_LEFT);
-	       break;
-	    case AlignRight:
-	       TtaWriteByte (outfile, C_PIV_RIGHT);
-	       break;
-	    case AlignCenter:
-	       TtaWriteByte (outfile, C_PIV_CENTERED);
-	       break;
-	    case AlignLeftDots:
-	       TtaWriteByte (outfile, C_PIV_LEFTDOT);
-	       break;
-	    case AlignJustify:
-	       TtaWriteByte (outfile, C_PIV_JUSTIFY);
-	       break;
-	    default:
-	       fprintf (stderr, "Invalid alignment %X\n", align);
-	       break;
-	 }
+  switch (align)
+    {
+    case AlignLeft:
+      TtaWriteByte (outfile, C_PIV_LEFT);
+      break;
+    case AlignRight:
+      TtaWriteByte (outfile, C_PIV_RIGHT);
+      break;
+    case AlignCenter:
+      TtaWriteByte (outfile, C_PIV_CENTERED);
+      break;
+    case AlignLeftDots:
+      TtaWriteByte (outfile, C_PIV_LEFTDOT);
+      break;
+    case AlignJustify:
+      TtaWriteByte (outfile, C_PIV_JUSTIFY);
+      break;
+    default:
+      fprintf (stderr, "Invalid alignment %X\n", align);
+      break;
+    }
 }
 
 
 /*----------------------------------------------------------------------
-   WritePresCondition      ecrit un type de condition		
+  WritePresCondition      ecrit un type de condition		
   ----------------------------------------------------------------------*/
 void                WritePresCondition (PresCondition cond)
 {
-   switch (cond)
-	 {
-	    case PcFirst:
-	       TtaWriteByte (outfile, C_COND_FIRST);
-	       break;
-	    case PcLast:
-	       TtaWriteByte (outfile, C_COND_LAST);
-	       break;
-	    case PcReferred:
-	       TtaWriteByte (outfile, C_COND_REFERRED);
-	       break;
-	    case PcFirstRef:
-	       TtaWriteByte (outfile, C_COND_FIRSTREF);
-	       break;
-	    case PcLastRef:
-	       TtaWriteByte (outfile, C_COND_LASTREF);
-	       break;
-	    case PcExternalRef:
-	       TtaWriteByte (outfile, C_COND_EXTREF);
-	       break;
-	    case PcInternalRef:
-	       TtaWriteByte (outfile, C_COND_INTREF);
-	       break;
-	    case PcCopyRef:
-	       TtaWriteByte (outfile, C_COND_COPYREF);
-	       break;
-	    case PcAnyAttributes:
-	       TtaWriteByte (outfile, C_COND_ATTR);
-	       break;
-	    case PcFirstAttr:
-	       TtaWriteByte (outfile, C_COND_FIRST_ATTR);
-	       break;
-	    case PcLastAttr:
-	       TtaWriteByte (outfile, C_COND_LAST_ATTR);
-	       break;
-	    case PcUserPage:
-	       TtaWriteByte (outfile, C_COND_USERPAGE);
-	       break;
-	    case PcStartPage:
-	       TtaWriteByte (outfile, C_COND_STARTPAGE);
-	       break;
-	    case PcComputedPage:
-	       TtaWriteByte (outfile, C_COND_COMPPAGE);
-	       break;
-	    case PcEmpty:
-	       TtaWriteByte (outfile, C_COND_EMPTY);
-	       break;
-	    case PcRoot:
-	       TtaWriteByte (outfile, C_COND_ROOT);
-	       break;
-	    case PcEven:
-	       TtaWriteByte (outfile, C_COND_EVEN);
-	       break;
-	    case PcOdd:
-	       TtaWriteByte (outfile, C_COND_ODD);
-	       break;
-	    case PcOne:
-	       TtaWriteByte (outfile, C_COND_ONE);
-	       break;
-	    case PcInterval:
-	       TtaWriteByte (outfile, C_COND_INTER);
-	       break;
-	    case PcWithin:
-	       TtaWriteByte (outfile, C_COND_ANCEST);
-	       break;
-	    case PcElemType:
-	       TtaWriteByte (outfile, C_COND_ELEM);
-	       break;
-	    case PcAttribute:
-	       TtaWriteByte (outfile, C_COND_HAS_ATTR);
-	       break;
-	    case PcInheritAttribute:
-	       TtaWriteByte (outfile, C_COND_INHERIT_ATTR);
-	       break;
-	    case PcNoCondition:
-	       TtaWriteByte (outfile, C_COND_NOCOND);
-	       break;
-	    case PcDefaultCond:
-	       TtaWriteByte (outfile, C_COND_DEFAULT);
-	       break;
-	    default:
-	       fprintf (stderr, "Invalid condition %X\n", cond);
-	       break;
-	 }
+  switch (cond)
+    {
+    case PcFirst:
+      TtaWriteByte (outfile, C_COND_FIRST);
+      break;
+    case PcLast:
+      TtaWriteByte (outfile, C_COND_LAST);
+      break;
+    case PcReferred:
+      TtaWriteByte (outfile, C_COND_REFERRED);
+      break;
+    case PcFirstRef:
+      TtaWriteByte (outfile, C_COND_FIRSTREF);
+      break;
+    case PcLastRef:
+      TtaWriteByte (outfile, C_COND_LASTREF);
+      break;
+    case PcExternalRef:
+      TtaWriteByte (outfile, C_COND_EXTREF);
+      break;
+    case PcInternalRef:
+      TtaWriteByte (outfile, C_COND_INTREF);
+      break;
+    case PcCopyRef:
+      TtaWriteByte (outfile, C_COND_COPYREF);
+      break;
+    case PcAnyAttributes:
+      TtaWriteByte (outfile, C_COND_ATTR);
+      break;
+    case PcFirstAttr:
+      TtaWriteByte (outfile, C_COND_FIRST_ATTR);
+      break;
+    case PcLastAttr:
+      TtaWriteByte (outfile, C_COND_LAST_ATTR);
+      break;
+    case PcUserPage:
+      TtaWriteByte (outfile, C_COND_USERPAGE);
+      break;
+    case PcStartPage:
+      TtaWriteByte (outfile, C_COND_STARTPAGE);
+      break;
+    case PcComputedPage:
+      TtaWriteByte (outfile, C_COND_COMPPAGE);
+      break;
+    case PcEmpty:
+      TtaWriteByte (outfile, C_COND_EMPTY);
+      break;
+    case PcRoot:
+      TtaWriteByte (outfile, C_COND_ROOT);
+      break;
+    case PcEven:
+      TtaWriteByte (outfile, C_COND_EVEN);
+      break;
+    case PcOdd:
+      TtaWriteByte (outfile, C_COND_ODD);
+      break;
+    case PcOne:
+      TtaWriteByte (outfile, C_COND_ONE);
+      break;
+    case PcInterval:
+      TtaWriteByte (outfile, C_COND_INTER);
+      break;
+    case PcWithin:
+      TtaWriteByte (outfile, C_COND_ANCEST);
+      break;
+    case PcElemType:
+      TtaWriteByte (outfile, C_COND_ELEM);
+      break;
+    case PcAttribute:
+      TtaWriteByte (outfile, C_COND_HAS_ATTR);
+      break;
+    case PcInheritAttribute:
+      TtaWriteByte (outfile, C_COND_INHERIT_ATTR);
+      break;
+    case PcNoCondition:
+      TtaWriteByte (outfile, C_COND_NOCOND);
+      break;
+    case PcDefaultCond:
+      TtaWriteByte (outfile, C_COND_DEFAULT);
+      break;
+    default:
+      fprintf (stderr, "Invalid condition %X\n", cond);
+      break;
+    }
 }
 
 
 /*----------------------------------------------------------------------
-   WriteCounterValue ecrit la nature de la condition sur un compteur 
+  WriteCounterValue ecrit la nature de la condition sur un compteur 
   ----------------------------------------------------------------------*/
 static void         WriteCounterValue (CounterValue val)
 {
-   switch (val)
-	 {
-	    case CntMaxVal:
-	       TtaWriteByte (outfile, C_VAL_MAX);
-	       break;
-	    case CntMinVal:
-	       TtaWriteByte (outfile, C_VAL_MIN);
-	       break;
-	    case CntCurVal:
-	       TtaWriteByte (outfile, C_VAL_CUR);
-	       break;
-	    default:
-	       fprintf (stderr, "Invalid counter cond. %X\n", val);
-	       break;
-	 }
+  switch (val)
+    {
+    case CntMaxVal:
+      TtaWriteByte (outfile, C_VAL_MAX);
+      break;
+    case CntMinVal:
+      TtaWriteByte (outfile, C_VAL_MIN);
+      break;
+    case CntCurVal:
+      TtaWriteByte (outfile, C_VAL_CUR);
+      break;
+    default:
+      fprintf (stderr, "Invalid counter cond. %X\n", val);
+      break;
+    }
 }
 
 
 /*----------------------------------------------------------------------
-   WriteArithRel     ecrit la relation de la condition Within	
+  WriteArithRel     ecrit la relation de la condition Within	
   ----------------------------------------------------------------------*/
 static void         WriteArithRel (ArithRel rel)
 {
-   switch (rel)
-	 {
-	    case CondGreater:
-	       TtaWriteByte (outfile, C_WITHIN_GT);
-	       break;
-	    case CondLess:
-	       TtaWriteByte (outfile, C_WITHIN_LT);
-	       break;
-	    case CondEquals:
-	       TtaWriteByte (outfile, C_WITHIN_EQ);
-	       break;
-	    default:
-	       fprintf (stderr, "Invalid relationship %X\n", rel);
-	       break;
-	 }
+  switch (rel)
+    {
+    case CondGreater:
+      TtaWriteByte (outfile, C_WITHIN_GT);
+      break;
+    case CondLess:
+      TtaWriteByte (outfile, C_WITHIN_LT);
+      break;
+    case CondEquals:
+      TtaWriteByte (outfile, C_WITHIN_EQ);
+      break;
+    default:
+      fprintf (stderr, "Invalid relationship %X\n", rel);
+      break;
+    }
 }
 
 /*----------------------------------------------------------------------
-   WriteBoxEdge      ecrit un repere de boite			
+  WriteBoxEdge      ecrit un repere de boite			
   ----------------------------------------------------------------------*/
 static void         WriteBoxEdge (BoxEdge edge)
 {
-   switch (edge)
-	 {
-	    case Top:
-	       TtaWriteByte (outfile, C_AX_TOP);
-	       break;
-	    case Bottom:
-	       TtaWriteByte (outfile, C_AX_BOTTOM);
-	       break;
-	    case Left:
-	       TtaWriteByte (outfile, C_AX_LEFT);
-	       break;
-	    case Right:
-	       TtaWriteByte (outfile, C_AX_RIGHT);
-	       break;
-	    case HorizRef:
-	       TtaWriteByte (outfile, C_AX_HREF);
-	       break;
-	    case VertRef:
-	       TtaWriteByte (outfile, C_AX_VREF);
-	       break;
-	    case HorizMiddle:
-	       TtaWriteByte (outfile, C_AX_HMIDDLE);
-	       break;
-	    case VertMiddle:
-	       TtaWriteByte (outfile, C_AX_VMIDDLE);
-	       break;
-	    case NoEdge:
-	       TtaWriteByte (outfile, C_AX_NULL);
-	       break;
-	    default:
-	       fprintf (stderr, "Invalid side %X\n", edge);
-	       break;
-	 }
+  switch (edge)
+    {
+    case Top:
+      TtaWriteByte (outfile, C_AX_TOP);
+      break;
+    case Bottom:
+      TtaWriteByte (outfile, C_AX_BOTTOM);
+      break;
+    case Left:
+      TtaWriteByte (outfile, C_AX_LEFT);
+      break;
+    case Right:
+      TtaWriteByte (outfile, C_AX_RIGHT);
+      break;
+    case HorizRef:
+      TtaWriteByte (outfile, C_AX_HREF);
+      break;
+    case VertRef:
+      TtaWriteByte (outfile, C_AX_VREF);
+      break;
+    case HorizMiddle:
+      TtaWriteByte (outfile, C_AX_HMIDDLE);
+      break;
+    case VertMiddle:
+      TtaWriteByte (outfile, C_AX_VMIDDLE);
+      break;
+    case NoEdge:
+      TtaWriteByte (outfile, C_AX_NULL);
+      break;
+    default:
+      fprintf (stderr, "Invalid side %X\n", edge);
+      break;
+    }
 }
 
 
 /*----------------------------------------------------------------------
-   WriteLevel     ecrit un niveau relatif de boite			
+  WriteLevel     ecrit un niveau relatif de boite			
   ----------------------------------------------------------------------*/
 static void         WriteLevel (Level level)
 {
-   switch (level)
-	 {
-	    case RlEnclosing:
-	       TtaWriteByte (outfile, C_PARENT);
-	       break;
-	    case RlSameLevel:
-	       TtaWriteByte (outfile, C_SAME_LEVEL);
-	       break;
-	    case RlEnclosed:
-	       TtaWriteByte (outfile, C_CHILD);
-	       break;
-	    case RlPrevious:
-	       TtaWriteByte (outfile, C_PREVIOUS);
-	       break;
-	    case RlNext:
-	       TtaWriteByte (outfile, C_NEXT);
-	       break;
-	    case RlSelf:
-	       TtaWriteByte (outfile, C_SELF);
-	       break;
-	    case RlContainsRef:
-	       TtaWriteByte (outfile, C_CONTAINS_REF);
-	       break;
-	    case RlRoot:
-	       TtaWriteByte (outfile, C_ROOT);
-	       break;
-	    case RlReferred:
-	       TtaWriteByte (outfile, C_REFERRED);
-	       break;
-	    case RlCreator:
-	       TtaWriteByte (outfile, C_CREATOR);
-	       break;
-	    case RlLastSibling:
-	       TtaWriteByte (outfile, C_LAST_SIBLING);
-	       break;
-	    default:
-	       fprintf (stderr, "Invalid level %X\n", level);
-	       break;
-	 }
+  switch (level)
+    {
+    case RlEnclosing:
+      TtaWriteByte (outfile, C_PARENT);
+      break;
+    case RlSameLevel:
+      TtaWriteByte (outfile, C_SAME_LEVEL);
+      break;
+    case RlEnclosed:
+      TtaWriteByte (outfile, C_CHILD);
+      break;
+    case RlPrevious:
+      TtaWriteByte (outfile, C_PREVIOUS);
+      break;
+    case RlNext:
+      TtaWriteByte (outfile, C_NEXT);
+      break;
+    case RlSelf:
+      TtaWriteByte (outfile, C_SELF);
+      break;
+    case RlContainsRef:
+      TtaWriteByte (outfile, C_CONTAINS_REF);
+      break;
+    case RlRoot:
+      TtaWriteByte (outfile, C_ROOT);
+      break;
+    case RlReferred:
+      TtaWriteByte (outfile, C_REFERRED);
+      break;
+    case RlCreator:
+      TtaWriteByte (outfile, C_CREATOR);
+      break;
+    case RlLastSibling:
+      TtaWriteByte (outfile, C_LAST_SIBLING);
+      break;
+    default:
+      fprintf (stderr, "Invalid level %X\n", level);
+      break;
+    }
 }
 
 
 /*----------------------------------------------------------------------
-   WriteCounterOp  ecrit un type d'operation sur compteur		
+  WriteCounterOp  ecrit un type d'operation sur compteur		
   ----------------------------------------------------------------------*/
 static void         WriteCounterOp (CounterOp op)
 {
-   switch (op)
-	 {
-	    case CntrSet:
-	       TtaWriteByte (outfile, C_CNT_SET);
-	       break;
-	    case CntrAdd:
-	       TtaWriteByte (outfile, C_CNT_ADD);
-	       break;
-	    case CntrRank:
-	       TtaWriteByte (outfile, C_CNT_RANK);
-	       break;
-	    case CntrRLevel:
-	       TtaWriteByte (outfile, C_CNT_RLEVEL);
-	       break;
-	    default:
-	       fprintf (stderr, "Invalid operator %X\n", op);
-	       break;
-	 }
+  switch (op)
+    {
+    case CntrSet:
+      TtaWriteByte (outfile, C_CNT_SET);
+      break;
+    case CntrAdd:
+      TtaWriteByte (outfile, C_CNT_ADD);
+      break;
+    case CntrRank:
+      TtaWriteByte (outfile, C_CNT_RANK);
+      break;
+    case CntrRLevel:
+      TtaWriteByte (outfile, C_CNT_RLEVEL);
+      break;
+    default:
+      fprintf (stderr, "Invalid operator %X\n", op);
+      break;
+    }
 }
 
 
 /*----------------------------------------------------------------------
-   WriteBasicType ecrit un type de base				
+  WriteBasicType ecrit un type de base				
   ----------------------------------------------------------------------*/
 static void         WriteBasicType (BasicType typ)
 {
-   switch (typ)
-	 {
-	    case CharString:
-	       TtaWriteByte (outfile, C_CHAR_STRING);
-	       break;
-	    case GraphicElem:
-	       TtaWriteByte (outfile, C_GRAPHICS);
-	       break;
-	    case Symbol:
-	       TtaWriteByte (outfile, C_SYMBOL);
-	       break;
-	    case tt_Picture:
-	       TtaWriteByte (outfile, C_PICTURE);
-	       break;
-	    case Refer:
-	       TtaWriteByte (outfile, C_REFER);
-	       break;
-	    case PageBreak:
-	       TtaWriteByte (outfile, C_PAGE_BREAK);
-	       break;
-	    default:
-	       fprintf (stderr, "Invalid type %X\n", typ);
-	       break;
-	 }
+  switch (typ)
+    {
+    case CharString:
+      TtaWriteByte (outfile, C_CHAR_STRING);
+      break;
+    case GraphicElem:
+      TtaWriteByte (outfile, C_GRAPHICS);
+      break;
+    case Symbol:
+      TtaWriteByte (outfile, C_SYMBOL);
+      break;
+    case tt_Picture:
+      TtaWriteByte (outfile, C_PICTURE);
+      break;
+    case Refer:
+      TtaWriteByte (outfile, C_REFER);
+      break;
+    case PageBreak:
+      TtaWriteByte (outfile, C_PAGE_BREAK);
+      break;
+    default:
+      fprintf (stderr, "Invalid type %X\n", typ);
+      break;
+    }
 }
 
 
 /*----------------------------------------------------------------------
-   WriteVariableType    ecrit un type de variable			
+  WriteVariableType    ecrit un type de variable			
   ----------------------------------------------------------------------*/
 void                WriteVariableType (VariableType typ)
 {
-   switch (typ)
-	 {
-	    case VarText:
-	       TtaWriteByte (outfile, C_VAR_TEXT);
-	       break;
-	    case VarCounter:
-	       TtaWriteByte (outfile, C_VAR_COUNTER);
-	       break;
-	    case VarAttrValue:
-	       TtaWriteByte (outfile, C_VAR_ATTR_VAL);
-	       break;
-	    case VarDate:
-	       TtaWriteByte (outfile, C_VAR_DATE);
-	       break;
-	    case VarFDate:
-	       TtaWriteByte (outfile, C_VAR_FDATE);
-	       break;
-	    case VarDirName:
-	       TtaWriteByte (outfile, C_VAR_DIRNAME);
-	       break;
-	    case VarDocName:
-	       TtaWriteByte (outfile, C_VAR_DOCNAME);
-	       break;
-	    case VarElemName:
-	       TtaWriteByte (outfile, C_VAR_ELEMNAME);
-	       break;
-	    case VarAttrName:
-	       TtaWriteByte (outfile, C_VAR_ATTRNAME);
-	       break;
-	    case VarPageNumber:
-	       TtaWriteByte (outfile, C_VAR_PAGENUMBER);
-	       break;
-	    default:
-	       fprintf (stderr, "Invalid variable %X\n", typ);
-	       break;
-	 }
+  switch (typ)
+    {
+    case VarText:
+      TtaWriteByte (outfile, C_VAR_TEXT);
+      break;
+    case VarCounter:
+      TtaWriteByte (outfile, C_VAR_COUNTER);
+      break;
+    case VarAttrValue:
+      TtaWriteByte (outfile, C_VAR_ATTR_VAL);
+      break;
+    case VarDate:
+      TtaWriteByte (outfile, C_VAR_DATE);
+      break;
+    case VarFDate:
+      TtaWriteByte (outfile, C_VAR_FDATE);
+      break;
+    case VarDirName:
+      TtaWriteByte (outfile, C_VAR_DIRNAME);
+      break;
+    case VarDocName:
+      TtaWriteByte (outfile, C_VAR_DOCNAME);
+      break;
+    case VarElemName:
+      TtaWriteByte (outfile, C_VAR_ELEMNAME);
+      break;
+    case VarAttrName:
+      TtaWriteByte (outfile, C_VAR_ATTRNAME);
+      break;
+    case VarPageNumber:
+      TtaWriteByte (outfile, C_VAR_PAGENUMBER);
+      break;
+    default:
+      fprintf (stderr, "Invalid variable %X\n", typ);
+      break;
+    }
 }
 
 
 /*----------------------------------------------------------------------
-   WriteCounterStyle ecrit un style de compteur			
+  WriteCounterStyle ecrit un style de compteur			
   ----------------------------------------------------------------------*/
 static void         WriteCounterStyle (CounterStyle style)
 {
-   switch (style)
-	 {
-	    case CntDecimal:
-	       TtaWriteByte (outfile, C_NUM_DECIMAL);
-	       break;
-	    case CntZLDecimal:
-	       TtaWriteByte (outfile, C_NUM_ZLDECIMAL);
-	       break;
-	    case CntURoman:
-	       TtaWriteByte (outfile, C_NUM_ROMAN);
-	       break;
-	    case CntLRoman:
-	       TtaWriteByte (outfile, C_NUM_LOWER_ROMAN);
-	       break;
-	    case CntUppercase:
-	       TtaWriteByte (outfile, C_NUM_UPPERCASE);
-	       break;
-	    case CntLowercase:
-	       TtaWriteByte (outfile, C_NUM_LOWERCASE);
-	       break;
-	    case CntLGreek:
-	       TtaWriteByte (outfile, C_NUM_GREEK);
-	       break;
-	    case CntUGreek:
-	       TtaWriteByte (outfile, C_NUM_UPPER_GREEK);
-	       break;
-	    default:
-	       fprintf (stderr, "Invalid style %X\n", style);
-	       break;
-	 }
+  switch (style)
+    {
+    case CntDecimal:
+      TtaWriteByte (outfile, C_NUM_DECIMAL);
+      break;
+    case CntZLDecimal:
+      TtaWriteByte (outfile, C_NUM_ZLDECIMAL);
+      break;
+    case CntURoman:
+      TtaWriteByte (outfile, C_NUM_ROMAN);
+      break;
+    case CntLRoman:
+      TtaWriteByte (outfile, C_NUM_LOWER_ROMAN);
+      break;
+    case CntUppercase:
+      TtaWriteByte (outfile, C_NUM_UPPERCASE);
+      break;
+    case CntLowercase:
+      TtaWriteByte (outfile, C_NUM_LOWERCASE);
+      break;
+    case CntLGreek:
+      TtaWriteByte (outfile, C_NUM_GREEK);
+      break;
+    case CntUGreek:
+      TtaWriteByte (outfile, C_NUM_UPPER_GREEK);
+      break;
+    default:
+      fprintf (stderr, "Invalid style %X\n", style);
+      break;
+    }
 }
 
 
 /*----------------------------------------------------------------------
-   WriteContentType   ecrit un type de contenu			
+  WriteContentType   ecrit un type de contenu			
   ----------------------------------------------------------------------*/
 void                WriteContentType (ContentType typ)
 {
-   switch (typ)
-	 {
-	    case FreeContent:
-	       TtaWriteByte (outfile, C_CONT_FREE);
-	       break;
-	    case ContVariable:
-	       TtaWriteByte (outfile, C_CONT_VAR);
-	       break;
-	    case ContConst:
-	       TtaWriteByte (outfile, C_CONT_CONST);
-	       break;
-	    default:
-	       fprintf (stderr, "Invalid content %X\n", typ);
-	       break;
-	 }
+  switch (typ)
+    {
+    case FreeContent:
+      TtaWriteByte (outfile, C_CONT_FREE);
+      break;
+    case ContVariable:
+      TtaWriteByte (outfile, C_CONT_VAR);
+      break;
+    case ContConst:
+      TtaWriteByte (outfile, C_CONT_CONST);
+      break;
+    default:
+      fprintf (stderr, "Invalid content %X\n", typ);
+      break;
+    }
 }
 
 
 /*----------------------------------------------------------------------
-   WriteAttrComparType						
+  WriteAttrComparType						
   ----------------------------------------------------------------------*/
 static void         WriteAttrComparType (AttrComparType typ)
 {
-   switch (typ)
-	 {
-	    case ComparConstant:
-	       TtaWriteByte (outfile, C_COMP_CONST);
-	       break;
-	    case ComparAttr:
-	       TtaWriteByte (outfile, C_COMP_ATTR);
-	       break;
-	    default:
-	       fprintf (stderr, "Invalid comparison %X\n", typ);
-	       break;
-	 }
+  switch (typ)
+    {
+    case ComparConstant:
+      TtaWriteByte (outfile, C_COMP_CONST);
+      break;
+    case ComparAttr:
+      TtaWriteByte (outfile, C_COMP_ATTR);
+      break;
+    default:
+      fprintf (stderr, "Invalid comparison %X\n", typ);
+      break;
+    }
 }
 
 /*----------------------------------------------------------------------
-   WriteRefKind						
+  WriteRefKind						
   ----------------------------------------------------------------------*/
 static void         WriteRefKind (RefKind kind)
 {
-   switch (kind)
-	 {
-	    case RkElType:
-	       TtaWriteByte (outfile, C_KIND_ELEMENT_TYPE);
-	       break;
-	    case RkPresBox:
-	       TtaWriteByte (outfile, C_KIND_PRES_BOX);
-	       break;
-	    case RkAttr:
-	       TtaWriteByte (outfile, C_KIND_ATTRIBUTE);
-	       break;
-	    case RkAnyElem:
-	       TtaWriteByte (outfile, C_KIND_ANYELEM);
-	       break;
-	    case RkAnyBox:
-	       TtaWriteByte (outfile, C_KIND_ANYBOX);
-	       break;
-	    default:
-	       fprintf (stderr, "Invalid reference %X\n", kind);
-	       break;
-	 }
+  switch (kind)
+    {
+    case RkElType:
+      TtaWriteByte (outfile, C_KIND_ELEMENT_TYPE);
+      break;
+    case RkPresBox:
+      TtaWriteByte (outfile, C_KIND_PRES_BOX);
+      break;
+    case RkAttr:
+      TtaWriteByte (outfile, C_KIND_ATTRIBUTE);
+      break;
+    case RkAnyElem:
+      TtaWriteByte (outfile, C_KIND_ANYELEM);
+      break;
+    case RkAnyBox:
+      TtaWriteByte (outfile, C_KIND_ANYBOX);
+      break;
+    default:
+      fprintf (stderr, "Invalid reference %X\n", kind);
+      break;
+    }
 }
 
 /*----------------------------------------------------------------------
-   WritePosRule   ecrit un positionnement relatif			
+  WritePosRule   ecrit un positionnement relatif			
   ----------------------------------------------------------------------*/
 static void         WritePosRule (PosRule posRule)
 {
-   WriteBoxEdge (posRule.PoPosDef);
-   WriteBoxEdge (posRule.PoPosRef);
-   WriteUnit (posRule.PoDistUnit);
-   WriteUnit (posRule.PoDeltaUnit);
-   WriteBoolean (posRule.PoDistAttr);
-   WriteSignedShort (posRule.PoDistance);
-   WriteSignedShort (posRule.PoDistDelta);
-   WriteLevel (posRule.PoRelation);
-   WriteBoolean (posRule.PoNotRel);
-   WriteBoolean (posRule.PoUserSpecified);
-   WriteRefKind (posRule.PoRefKind);
-   WriteShort (posRule.PoRefIdent);
+  WriteBoxEdge (posRule.PoPosDef);
+  WriteBoxEdge (posRule.PoPosRef);
+  WriteUnit (posRule.PoDistUnit);
+  WriteUnit (posRule.PoDeltaUnit);
+  WriteBoolean (posRule.PoDistAttr);
+  WriteSignedShort (posRule.PoDistance);
+  WriteSignedShort (posRule.PoDistDelta);
+  WriteLevel (posRule.PoRelation);
+  WriteBoolean (posRule.PoNotRel);
+  WriteBoolean (posRule.PoUserSpecified);
+  WriteRefKind (posRule.PoRefKind);
+  WriteShort (posRule.PoRefIdent);
 }
 
 
 /*----------------------------------------------------------------------
-   WritePRules   ecrit la chaine de regle de presentation qui	
-   commence par la regle pointee par pPRule.			
+  WritePRules   ecrit la chaine de regle de presentation qui	
+  commence par la regle pointee par pPRule.			
   ----------------------------------------------------------------------*/
 void                WritePRules (PtrPRule pPRule, PtrSSchema pSS)
 {
@@ -1000,7 +1000,7 @@ void                WritePRules (PtrPRule pPRule, PtrSSchema pSS)
             default:
               break;
             }
-	     pCond = pCond->CoNextCondition;
+          pCond = pCond->CoNextCondition;
         }
       WritePresCondition (PcNoCondition);
       WriteShort (currentRule->PrViewNum);
@@ -1160,307 +1160,315 @@ void                WritePRules (PtrPRule pPRule, PtrSSchema pSS)
 }
 
 /*----------------------------------------------------------------------
-   WritePresentationSchema    cree le fichier de sortie et y ecrit	
-   le schema de presentation					
+  WritePresentationSchema    cree le fichier de sortie et y ecrit	
+  le schema de presentation					
   ----------------------------------------------------------------------*/
 ThotBool WritePresentationSchema (Name fileName, PtrPSchema pPSch, PtrSSchema pSS)
 {
-   Counter            *pCntr;
-   CntrItem           *pCItem;
-   PresConstant       *pConst;
-   PtrPresVariable     pVar;
-   PresVarItem        *pVarItem;
-   PtrPresentationBox  pBox;
-   AttributePres      *pAttPres;
-   NumAttrCase        *pCase;
-   int                 i, j, k;
-   PtrHostView         pHostView;
+  Counter            *pCntr;
+  CntrItem           *pCItem;
+  PresConstant       *pConst;
+  PtrPresVariable     pVar;
+  PresVarItem        *pVarItem;
+  PtrPresentationBox  pBox;
+  AttributePres      *pAttPres;
+  NumAttrCase        *pCase;
+  PtrHostView         pHostView;
+  char               *ptr;
+  int                 i, j, k;
 
-   /* cree le fichier */
-   outfile = TtaWriteOpen (fileName);
-   if (outfile == 0)
-      /* echec */
-      return False;
-   /* copie le code d'identification du schema de structure */
-   pPSch->PsStructCode = pSS->SsCode;
+  /* cree le fichier */
+  outfile = TtaWriteOpen (fileName);
+  if (outfile == 0)
+    /* echec */
+    return False;
+  /* copie le code d'identification du schema de structure */
+  pPSch->PsStructCode = pSS->SsCode;
 
-   /* ecrit la partie fixe */
-   i = 0;
-   do
-     TtaWriteByte (outfile, pPSch->PsStructName[i++]);
-   while (pPSch->PsStructName[i - 1] != EOS);
-   WriteShort (pPSch->PsStructCode);
-   WriteShort (pPSch->PsNViews);
-   for (i = 0; i < pPSch->PsNViews; i++)
-      WriteName (pPSch->PsView[i]);
-   /* write the host views for each declared view */
-   for (i = 0; i < pPSch->PsNViews; i++)
-      {
+  /* ecrit la partie fixe */
+  i = 0;
+  do
+    TtaWriteByte (outfile, pPSch->PsStructName[i++]);
+  while (pPSch->PsStructName[i - 1] != EOS);
+  WriteShort (pPSch->PsStructCode);
+  WriteShort (pPSch->PsNViews);
+  for (i = 0; i < pPSch->PsNViews; i++)
+    WriteName (pPSch->PsView[i]);
+  /* write the host views for each declared view */
+  for (i = 0; i < pPSch->PsNViews; i++)
+    {
       /* count the number of host views for the current view */
       j = 0;
       pHostView = pPSch->PsHostViewList[i];
       while (pHostView)
-	 {
-	 j++;
-	 pHostView = pHostView->NextHostView;
-	 }
+        {
+          j++;
+          pHostView = pHostView->NextHostView;
+        }
       /* write the number of host views for the current view */
       WriteShort (j);
       /* write the name of each host view */
       pHostView = pPSch->PsHostViewList[i];
       while (pHostView)
-	 {
-         WriteName (pHostView->HostViewName);
-	 pHostView = pHostView->NextHostView;
-	 }
-      }
-   for (i = 0; i < pPSch->PsNViews; i++)
-      WriteBoolean (pPSch->PsPaginatedView[i]);
-   /* significatif uniquement dans la V4 */
-   for (i = 0; i < pPSch->PsNViews; i++)
-      WriteBoolean (pPSch->PsColumnView[i]);
-   WriteShort (pPSch->PsNPrintedViews);
-   for (i = 0; i < pPSch->PsNPrintedViews; i++)
-     WriteShort (pPSch->PsPrintedView[i].VpNumber);
-   for (i = 0; i < pPSch->PsNViews; i++)
-      WriteBoolean (pPSch->PsExportView[i]);
-   WriteShort (pPSch->PsNCounters);
-   WriteShort (pPSch->PsNConstants);
-   WriteShort (pPSch->PsNVariables);
-   WriteShort (pPSch->PsNPresentBoxes);
-   WriteRulePtr (pPSch->PsFirstDefaultPRule);
+        {
+          WriteName (pHostView->HostViewName);
+          pHostView = pHostView->NextHostView;
+        }
+    }
+  for (i = 0; i < pPSch->PsNViews; i++)
+    WriteBoolean (pPSch->PsPaginatedView[i]);
+  /* significatif uniquement dans la V4 */
+  for (i = 0; i < pPSch->PsNViews; i++)
+    WriteBoolean (pPSch->PsColumnView[i]);
+  WriteShort (pPSch->PsNPrintedViews);
+  for (i = 0; i < pPSch->PsNPrintedViews; i++)
+    WriteShort (pPSch->PsPrintedView[i].VpNumber);
+  for (i = 0; i < pPSch->PsNViews; i++)
+    WriteBoolean (pPSch->PsExportView[i]);
+  WriteShort (pPSch->PsNCounters);
+  WriteShort (pPSch->PsNConstants);
+  WriteShort (pPSch->PsNVariables);
+  WriteShort (pPSch->PsNPresentBoxes);
+  WriteRulePtr (pPSch->PsFirstDefaultPRule);
 
-   /* ecrit les compteurs */
-   for (i = 0; i < pPSch->PsNCounters; i++)
-     {
-	pCntr = &pPSch->PsCounter[i];
-	WriteShort (pCntr->CnNItems);
-	for (j = 0; j < pCntr->CnNItems; j++)
-	  {
-	     pCItem = &pCntr->CnItem[j];
-	     WriteCounterOp (pCItem->CiCntrOp);
-	     WriteShort (pCItem->CiElemType);
-	     WriteSignedShort (pCItem->CiAscendLevel);
-	     WriteShort (pCItem->CiViewNum);
-	     WriteSignedShort (pCItem->CiParamValue);
-	     WriteShort (pCItem->CiInitAttr);
-	     WriteShort (pCItem->CiReinitAttr);
-	     WriteShort (pCItem->CiCondAttr);
-	     WriteBoolean (pCItem->CiCondAttrPresent);
-	  }
-	WriteShort (pCntr->CnNPresBoxes);
-	for (j = 0; j < pCntr->CnNPresBoxes; j++)
-	  {
-	     WriteShort (pCntr->CnPresBox[j]);
-	     WriteBoolean (pCntr->CnMinMaxPresBox[j]);
-	  }
-	WriteShort (pCntr->CnNTransmAttrs);
-	for (j = 0; j < pCntr->CnNTransmAttrs; j++)
-	  {
-	     WriteName (pCntr->CnTransmAttr[j]);
-	     WriteShort (pCntr->CnTransmSSchemaAttr[j]);
-	  }
-	WriteShort (pCntr->CnNCreators);
-	for (j = 0; j < pCntr->CnNCreators; j++)
-	  {
-	     WriteShort (pCntr->CnCreator[j]);
-	     WriteBoolean (pCntr->CnMinMaxCreator[j]);
-	  }
-	for (j = 0; j < pCntr->CnNCreators; j++)
-	   WriteBoolean (pCntr->CnPresBoxCreator[j]);
-	WriteShort (pCntr->CnNCreatedBoxes);
-	for (j = 0; j < pCntr->CnNCreatedBoxes; j++)
-	  {
-	     WriteShort (pCntr->CnCreatedBox[j]);
-	     WriteBoolean (pCntr->CnMinMaxCreatedBox[j]);
-	  }
-	WriteBoolean (pCntr->CnPageFooter);
-     }
+  /* ecrit les compteurs */
+  for (i = 0; i < pPSch->PsNCounters; i++)
+    {
+      pCntr = &pPSch->PsCounter[i];
+      WriteShort (pCntr->CnNItems);
+      for (j = 0; j < pCntr->CnNItems; j++)
+        {
+          pCItem = &pCntr->CnItem[j];
+          WriteCounterOp (pCItem->CiCntrOp);
+          WriteShort (pCItem->CiElemType);
+          WriteSignedShort (pCItem->CiAscendLevel);
+          WriteShort (pCItem->CiViewNum);
+          WriteSignedShort (pCItem->CiParamValue);
+          WriteShort (pCItem->CiInitAttr);
+          WriteShort (pCItem->CiReinitAttr);
+          WriteShort (pCItem->CiCondAttr);
+          WriteBoolean (pCItem->CiCondAttrPresent);
+        }
+      WriteShort (pCntr->CnNPresBoxes);
+      for (j = 0; j < pCntr->CnNPresBoxes; j++)
+        {
+          WriteShort (pCntr->CnPresBox[j]);
+          WriteBoolean (pCntr->CnMinMaxPresBox[j]);
+        }
+      WriteShort (pCntr->CnNTransmAttrs);
+      for (j = 0; j < pCntr->CnNTransmAttrs; j++)
+        {
+          WriteName (pCntr->CnTransmAttr[j]);
+          WriteShort (pCntr->CnTransmSSchemaAttr[j]);
+        }
+      WriteShort (pCntr->CnNCreators);
+      for (j = 0; j < pCntr->CnNCreators; j++)
+        {
+          WriteShort (pCntr->CnCreator[j]);
+          WriteBoolean (pCntr->CnMinMaxCreator[j]);
+        }
+      for (j = 0; j < pCntr->CnNCreators; j++)
+        WriteBoolean (pCntr->CnPresBoxCreator[j]);
+      WriteShort (pCntr->CnNCreatedBoxes);
+      for (j = 0; j < pCntr->CnNCreatedBoxes; j++)
+        {
+          WriteShort (pCntr->CnCreatedBox[j]);
+          WriteBoolean (pCntr->CnMinMaxCreatedBox[j]);
+        }
+      WriteBoolean (pCntr->CnPageFooter);
+    }
 
-   /* ecrit les constantes de presentation */
-   for (i = 0; i < pPSch->PsNConstants; i++)
-     {
-	pConst = &pPSch->PsConstant[i];
-	WriteBasicType (pConst->PdType);
-	TtaWriteByte (outfile, pConst->PdScript);
-	j = 0;
-	do
-	   TtaWriteByte (outfile, pConst->PdString[j++]);
-	while (pConst->PdString[j - 1] != EOS);
-     }
+  /* ecrit les constantes de presentation */
+  for (i = 0; i < pPSch->PsNConstants; i++)
+    {
+      pConst = &pPSch->PsConstant[i];
+      WriteBasicType (pConst->PdType);
+      TtaWriteByte (outfile, pConst->PdScript);
+      ptr = pConst->PdString;
+      if (ptr)
+        {
+          do
+            {
+              TtaWriteByte (outfile, *ptr);
+              ptr++;
+            }
+          while (*ptr != EOS);
+        }
+      TtaWriteByte (outfile, EOS);
+    }
 
-   /* ecrit les variables de presentation */
-   for (i = 0; i < pPSch->PsNVariables; i++)
-     {
-	pVar = pPSch->PsVariable->PresVar[i];
-	WriteShort (pVar->PvNItems);
-	for (j = 0; j < pVar->PvNItems; j++)
-	  {
-	     pVarItem = &pVar->PvItem[j];
-	     WriteVariableType (pVarItem->ViType);
-	     switch (pVarItem->ViType)
-		   {
-		      case VarText:
-			 WriteShort (pVarItem->ViConstant);
-			 break;
-		      case VarCounter:
-			 WriteShort (pVarItem->ViCounter);
-			 WriteCounterStyle (pVarItem->ViStyle);
-			 WriteCounterValue (pVarItem->ViCounterVal);
-			 break;
-		      case VarAttrValue:
-			 WriteShort (pVarItem->ViAttr);
-			 WriteCounterStyle (pVarItem->ViStyle);
+  /* ecrit les variables de presentation */
+  for (i = 0; i < pPSch->PsNVariables; i++)
+    {
+      pVar = pPSch->PsVariable->PresVar[i];
+      WriteShort (pVar->PvNItems);
+      for (j = 0; j < pVar->PvNItems; j++)
+        {
+          pVarItem = &pVar->PvItem[j];
+          WriteVariableType (pVarItem->ViType);
+          switch (pVarItem->ViType)
+            {
+            case VarText:
+              WriteShort (pVarItem->ViConstant);
+              break;
+            case VarCounter:
+              WriteShort (pVarItem->ViCounter);
+              WriteCounterStyle (pVarItem->ViStyle);
+              WriteCounterValue (pVarItem->ViCounterVal);
+              break;
+            case VarAttrValue:
+              WriteShort (pVarItem->ViAttr);
+              WriteCounterStyle (pVarItem->ViStyle);
 
-			 break;
-		      case VarPageNumber:
-			 WriteShort (pVarItem->ViView);
-			 WriteCounterStyle (pVarItem->ViStyle);
-			 break;
-		      default:
-			 break;
-		   }
-	  }
-     }
+              break;
+            case VarPageNumber:
+              WriteShort (pVarItem->ViView);
+              WriteCounterStyle (pVarItem->ViStyle);
+              break;
+            default:
+              break;
+            }
+        }
+    }
 
-   /* ecrit les boites de presentation */
-   for (i = 0; i < pPSch->PsNPresentBoxes; i++)
-     {
-	pBox = pPSch->PsPresentBox->PresBox[i];
-	WriteName (pBox->PbName);
-	WriteRulePtr (pBox->PbFirstPRule);
-	WriteBoolean (pBox->PbPageFooter);
-	WriteBoolean (pBox->PbPageHeader);
-	WriteBoolean (pBox->PbPageBox);
-	WriteShort (pBox->PbFooterHeight);
-	WriteShort (pBox->PbHeaderHeight);
-	WriteShort (pBox->PbPageCounter);
-	WriteContentType (pBox->PbContent);
-	switch (pBox->PbContent)
-	      {
-		 case ContVariable:
-		    WriteShort (pBox->PbContVariable);
-		    break;
-		 case ContConst:
-		    WriteShort (pBox->PbContConstant);
-		    break;
-		 default:
-		    break;
-	      }
-     }
+  /* ecrit les boites de presentation */
+  for (i = 0; i < pPSch->PsNPresentBoxes; i++)
+    {
+      pBox = pPSch->PsPresentBox->PresBox[i];
+      WriteName (pBox->PbName);
+      WriteRulePtr (pBox->PbFirstPRule);
+      WriteBoolean (pBox->PbPageFooter);
+      WriteBoolean (pBox->PbPageHeader);
+      WriteBoolean (pBox->PbPageBox);
+      WriteShort (pBox->PbFooterHeight);
+      WriteShort (pBox->PbHeaderHeight);
+      WriteShort (pBox->PbPageCounter);
+      WriteContentType (pBox->PbContent);
+      switch (pBox->PbContent)
+        {
+        case ContVariable:
+          WriteShort (pBox->PbContVariable);
+          break;
+        case ContConst:
+          WriteShort (pBox->PbContConstant);
+          break;
+        default:
+          break;
+        }
+    }
 
-   /* ecrit les presentations des attributs */
-   for (i = 0; i < pSS->SsNAttributes; i++)
-      WriteShort (pPSch->PsNAttrPRule->Num[i]);
+  /* ecrit les presentations des attributs */
+  for (i = 0; i < pSS->SsNAttributes; i++)
+    WriteShort (pPSch->PsNAttrPRule->Num[i]);
 
-   for (i = 0; i < pSS->SsNAttributes; i++)
-     {
-	pAttPres = pPSch->PsAttrPRule->AttrPres[i];
-	for (k = pPSch->PsNAttrPRule->Num[i]; k-- > 0;
-	     pAttPres = pAttPres->ApNextAttrPres)
-	  {
-	     WriteShort (pAttPres->ApElemType);
-	     if (pAttPres->ApElemType)
-	       WriteBoolean (pAttPres->ApElemInherits);
-	     switch (pSS->SsAttribute->TtAttr[i]->AttrType)
-		   {
-		      case AtNumAttr:
-			 WriteShort (pAttPres->ApNCases);
-			 for (j = 0; j < pAttPres->ApNCases; j++)
-			   {
-			      pCase = &pAttPres->ApCase[j];
-			      WriteAttrComparType (pCase->CaComparType);
-			      WriteSignedShort (pCase->CaLowerBound);
-			      WriteSignedShort (pCase->CaUpperBound);
-			      WriteRulePtr (pCase->CaFirstPRule);
-			   }
-			 break;
-		      case AtReferenceAttr:
-			 WriteRulePtr (pAttPres->ApRefFirstPRule);
-			 break;
-		      case AtTextAttr:
-			 if (pAttPres->ApString)
-			   /* presentation rules apply only for a given
-			      value (char string) of the attribute */
-			   {
-			     WriteBoolean (TRUE);
-			     WriteName (pAttPres->ApString);
-			   }
-			 else
-			   /* presentation rules apply for any value of the
-			      attribute */
-			   WriteBoolean (FALSE);
-			 WriteRulePtr (pAttPres->ApTextFirstPRule);
-			 break;
-		      case AtEnumAttr:
-			 for (j = 0; j <= pSS->SsAttribute->TtAttr[i]->AttrNEnumValues; j++)
-			    WriteRulePtr (pAttPres->ApEnumFirstPRule[j]);
-			 break;
-		   }
-	  }
-     }
+  for (i = 0; i < pSS->SsNAttributes; i++)
+    {
+      pAttPres = pPSch->PsAttrPRule->AttrPres[i];
+      for (k = pPSch->PsNAttrPRule->Num[i]; k-- > 0;
+           pAttPres = pAttPres->ApNextAttrPres)
+        {
+          WriteShort (pAttPres->ApElemType);
+          if (pAttPres->ApElemType)
+            WriteBoolean (pAttPres->ApElemInherits);
+          switch (pSS->SsAttribute->TtAttr[i]->AttrType)
+            {
+            case AtNumAttr:
+              WriteShort (pAttPres->ApNCases);
+              for (j = 0; j < pAttPres->ApNCases; j++)
+                {
+                  pCase = &pAttPres->ApCase[j];
+                  WriteAttrComparType (pCase->CaComparType);
+                  WriteSignedShort (pCase->CaLowerBound);
+                  WriteSignedShort (pCase->CaUpperBound);
+                  WriteRulePtr (pCase->CaFirstPRule);
+                }
+              break;
+            case AtReferenceAttr:
+              WriteRulePtr (pAttPres->ApRefFirstPRule);
+              break;
+            case AtTextAttr:
+              if (pAttPres->ApString)
+                /* presentation rules apply only for a given
+                   value (char string) of the attribute */
+                {
+                  WriteBoolean (TRUE);
+                  WriteName (pAttPres->ApString);
+                }
+              else
+                /* presentation rules apply for any value of the
+                   attribute */
+                WriteBoolean (FALSE);
+              WriteRulePtr (pAttPres->ApTextFirstPRule);
+              break;
+            case AtEnumAttr:
+              for (j = 0; j <= pSS->SsAttribute->TtAttr[i]->AttrNEnumValues; j++)
+                WriteRulePtr (pAttPres->ApEnumFirstPRule[j]);
+              break;
+            }
+        }
+    }
 
-   /* ecrit la table des pointeurs de regle de chaque type du schema de */
-   /* structure */
-   for (i = 0; i < pSS->SsNRules; i++)
-      WriteRulePtr (pPSch->PsElemPRule->ElemPres[i]);
+  /* ecrit la table des pointeurs de regle de chaque type du schema de */
+  /* structure */
+  for (i = 0; i < pSS->SsNRules; i++)
+    WriteRulePtr (pPSch->PsElemPRule->ElemPres[i]);
 
-   /* ecrit toutes les regles de presentation */
-   /* ecrit les regles standard */
-   WritePRules (pPSch->PsFirstDefaultPRule, pSS);
+  /* ecrit toutes les regles de presentation */
+  /* ecrit les regles standard */
+  WritePRules (pPSch->PsFirstDefaultPRule, pSS);
 
-   /* ecrit les regles des boites */
-   for (i = 0; i < pPSch->PsNPresentBoxes; i++)
-      WritePRules (pPSch->PsPresentBox->PresBox[i]->PbFirstPRule, pSS);
+  /* ecrit les regles des boites */
+  for (i = 0; i < pPSch->PsNPresentBoxes; i++)
+    WritePRules (pPSch->PsPresentBox->PresBox[i]->PbFirstPRule, pSS);
 
-   /* ecrit les regles des attributs */
-   for (i = 0; i < pSS->SsNAttributes; i++)
-     {
-	pAttPres = pPSch->PsAttrPRule->AttrPres[i];
-	for (k = pPSch->PsNAttrPRule->Num[i]; k-- > 0;
-	     pAttPres = pAttPres->ApNextAttrPres)
-	  {
-	     switch (pSS->SsAttribute->TtAttr[i]->AttrType)
-		   {
-		      case AtNumAttr:
-			 for (j = 0; j < pAttPres->ApNCases; j++)
-			   WritePRules (pAttPres->ApCase[j].CaFirstPRule, pSS);
-			 break;
-		      case AtReferenceAttr:
-			 WritePRules (pAttPres->ApRefFirstPRule, pSS);
-			 break;
-		      case AtTextAttr:
-			 WritePRules (pAttPres->ApTextFirstPRule, pSS);
-			 break;
-		      case AtEnumAttr:
-			 for (j = 0; j <= pSS->SsAttribute->TtAttr[i]->AttrNEnumValues; j++)
-			    WritePRules (pAttPres->ApEnumFirstPRule[j], pSS);
-			 break;
-		   }
-	  }
-     }
+  /* ecrit les regles des attributs */
+  for (i = 0; i < pSS->SsNAttributes; i++)
+    {
+      pAttPres = pPSch->PsAttrPRule->AttrPres[i];
+      for (k = pPSch->PsNAttrPRule->Num[i]; k-- > 0;
+           pAttPres = pAttPres->ApNextAttrPres)
+        {
+          switch (pSS->SsAttribute->TtAttr[i]->AttrType)
+            {
+            case AtNumAttr:
+              for (j = 0; j < pAttPres->ApNCases; j++)
+                WritePRules (pAttPres->ApCase[j].CaFirstPRule, pSS);
+              break;
+            case AtReferenceAttr:
+              WritePRules (pAttPres->ApRefFirstPRule, pSS);
+              break;
+            case AtTextAttr:
+              WritePRules (pAttPres->ApTextFirstPRule, pSS);
+              break;
+            case AtEnumAttr:
+              for (j = 0; j <= pSS->SsAttribute->TtAttr[i]->AttrNEnumValues; j++)
+                WritePRules (pAttPres->ApEnumFirstPRule[j], pSS);
+              break;
+            }
+        }
+    }
 
-   /* ecrit les regles des elements */
-   for (i = 0; i < pSS->SsNRules; i++)
-      WritePRules (pPSch->PsElemPRule->ElemPres[i], pSS);
+  /* ecrit les regles des elements */
+  for (i = 0; i < pSS->SsNRules; i++)
+    WritePRules (pPSch->PsElemPRule->ElemPres[i], pSS);
 
-   for (i = 0; i < pSS->SsNAttributes; i++)
-      WriteShort (pPSch->PsNHeirElems->Num[i]);
+  for (i = 0; i < pSS->SsNAttributes; i++)
+    WriteShort (pPSch->PsNHeirElems->Num[i]);
 
-   for (i = 0; i < pSS->SsNRules; i++)
-      WriteShort (pPSch->PsNInheritedAttrs->Num[i]);
+  for (i = 0; i < pSS->SsNRules; i++)
+    WriteShort (pPSch->PsNInheritedAttrs->Num[i]);
 
-   for (i = 0; i < pSS->SsNAttributes; i++)
-      WriteShort (pPSch->PsNComparAttrs->Num[i]);
+  for (i = 0; i < pSS->SsNAttributes; i++)
+    WriteShort (pPSch->PsNComparAttrs->Num[i]);
 
-   for (i = 0; i < pSS->SsNRules; i++)
-      WriteShort (pPSch->PsElemTransmit->Num[i]);
-   WriteShort (pPSch->PsNTransmElems);
-   for (i = 0; i < pPSch->PsNTransmElems; i++)
-     {
-	WriteShort (pPSch->PsTransmElem[i].TeTargetDoc);
-	WriteName (pPSch->PsTransmElem[i].TeTargetAttr);
-     }
-   TtaWriteClose (outfile);
-   return True;
+  for (i = 0; i < pSS->SsNRules; i++)
+    WriteShort (pPSch->PsElemTransmit->Num[i]);
+  WriteShort (pPSch->PsNTransmElems);
+  for (i = 0; i < pPSch->PsNTransmElems; i++)
+    {
+      WriteShort (pPSch->PsTransmElem[i].TeTargetDoc);
+      WriteName (pPSch->PsTransmElem[i].TeTargetAttr);
+    }
+  TtaWriteClose (outfile);
+  return True;
 }

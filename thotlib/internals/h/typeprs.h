@@ -650,7 +650,7 @@ typedef struct _PresConstant
 {
   BasicType PdType;                       /* type of the constant */
   char      PdScript;                     /* script of the constant */
-  char      PdString[MAX_PRES_CONST_LEN]; /* constant presentation string,
+  char     *PdString; /* constant presentation string,
 					     terminated by a NUL character */
 } PresConstant;
 

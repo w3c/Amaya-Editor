@@ -362,7 +362,8 @@ void RedisplayAttribute (PtrAttribute pAttr, PtrElement pEl, PtrDocument pDoc)
                 }
               else if (pItem->ViType == VarNamedAttrValue)
                 {
-                  if (!strcmp (pAttr->AeAttrSSchema->SsAttribute->TtAttr[pAttr->AeAttrNum - 1]->AttrName,
+                  if (pPSchema->PsConstant[pItem->ViConstant - 1].PdString &&
+                      !strcmp (pAttr->AeAttrSSchema->SsAttribute->TtAttr[pAttr->AeAttrNum - 1]->AttrName,
                                pPSchema->PsConstant[pItem->ViConstant - 1].PdString))
                     found = TRUE;
                 }

@@ -1502,12 +1502,17 @@ PtrPSchema      ReadPresentationSchema (char *fileName, PtrSSchema pSS)
                 pConst->PdType = ReadBasicType (file);
                 if (!TtaReadByte (file, (unsigned char *)&pConst->PdScript))
                   error = True;
-                j = 0;
                 if (!error)
-                  do
-                    if (!TtaReadByte (file, (unsigned char *)&pConst->PdString[j++]))
-                      error = True;
-                  while (pConst->PdString[j - 1] != EOS && !error) ;
+                  {
+                    j = 0;
+                    buf[0] = EOS;
+                    do
+                      if (!TtaReadByte (file, (unsigned char *)&buf[j++]))
+                        error = True;
+                    while (buf[j - 1] != EOS && j < MAX_TXT_LEN && !error);
+                    buf[MAX_TXT_LEN - 1] = EOS;
+                    pConst->PdString = TtaStrdup (buf);
+                  }
               }
 
           /* lit les variables de presentation */

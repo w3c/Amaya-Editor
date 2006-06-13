@@ -3713,7 +3713,7 @@ static void wrprules (PtrPRule RP, FILE *fileDescriptor, PtrPSchema pPSch)
             else
               if (RP->PrIntValue == 0)
                 fprintf (fileDescriptor, "None");
-              else
+              else if (pPSch->PsConstant[RP->PrIntValue-1].PdString)
                 fprintf (fileDescriptor, pPSch->PsConstant[RP->PrIntValue-1].PdString);
           break;
         case PtListStylePosition:
@@ -3798,6 +3798,7 @@ void TtaListStyleSchemas (Document document, FILE *fileDescriptor)
   PtrTtAttribute      pAt1;
   AttributePres      *pRP1;
   NumAttrCase        *pCa1;
+  char               *ptr, c;
   int                 i, j;
   int                 el, attr, val;
    
@@ -3875,14 +3876,18 @@ void TtaListStyleSchemas (Document document, FILE *fileDescriptor)
                             }
 			 
                           fprintf (fileDescriptor, " \'");
-                          j = 0;
-                          while (pPr1->PdString[j] != '\0')
+                          ptr = pPr1->PdString;
+                          if (ptr)
                             {
-                              if (pPr1->PdString[j] < ' ')
-                                fprintf (fileDescriptor, "\\%3d", (int) pPr1->PdString[j]);
-                              else
-                                fprintf (fileDescriptor, "%c", pPr1->PdString[j]);
-                              j++;
+                              while (*ptr != EOS)
+                                {
+                                  c = *ptr;
+                                  if (c < ' ')
+                                    fprintf (fileDescriptor, "\\%3d", (int)c);
+                                  else
+                                    fprintf (fileDescriptor, "%c", c);
+                                  ptr++;
+                                }
                             }
                           fprintf (fileDescriptor, "\';\n");
                         }
@@ -4146,7 +4151,7 @@ void DisplayPRule (PtrPRule rule, FILE *fileDescriptor,
                    PtrElement pEl, PtrPSchema pSchP, int indent)
 {
   PresentationSettingBlock setting;
-  char                     buffer[200];
+  char                     buffer[200], *ptr;
   int                      l, i;
   PtrPresVariable          var;
   PresVarItem              *item;
@@ -4179,15 +4184,28 @@ void DisplayPRule (PtrPRule rule, FILE *fileDescriptor,
           switch (item->ViType)
             {
             case VarText:
+              ptr = pSchP->PsConstant[item->ViConstant - 1].PdString;
               if (pSchP->PsConstant[item->ViConstant - 1].PdType == CharString)
                 {
-                  fprintf (fileDescriptor, " \"%s\"", pSchP->PsConstant[item->ViConstant - 1].PdString);
-                  l += 3+strlen(pSchP->PsConstant[item->ViConstant - 1].PdString);
+                  fprintf (fileDescriptor, " \"");
+                  l += 3;
+                  if (ptr)
+                    {
+                      fprintf (fileDescriptor, "%s", ptr);
+                      l += strlen(ptr);
+                    }
+                  fprintf (fileDescriptor, "\"");
                 }
               else if (pSchP->PsConstant[item->ViConstant - 1].PdType == tt_Picture)
                 {
-                  fprintf (fileDescriptor, " url(\"%s\")", pSchP->PsConstant[item->ViConstant - 1].PdString);
-                  l += 8+strlen(pSchP->PsConstant[item->ViConstant - 1].PdString);
+                  fprintf (fileDescriptor, " url(\"");
+                  l += 8;
+                  if (ptr)
+                    {
+                      fprintf (fileDescriptor, "%s", ptr);
+                      l += strlen(ptr);
+                    }
+                  fprintf (fileDescriptor, "\"");
                 }
               break;
             case VarCounter:
@@ -4198,7 +4216,11 @@ void DisplayPRule (PtrPRule rule, FILE *fileDescriptor,
               fprintf (fileDescriptor, " attr(%s)", pSchP->PsSSchema->SsAttribute->TtAttr[item->ViAttr - 1]->AttrName);
               break;
             case VarNamedAttrValue:
-              fprintf (fileDescriptor, " attr(%s)", pSchP->PsConstant[item->ViConstant - 1].PdString);
+              ptr = pSchP->PsConstant[item->ViConstant - 1].PdString;
+              fprintf (fileDescriptor, " attr(");
+              if (ptr)
+                fprintf (fileDescriptor, "%s", ptr);
+              fprintf (fileDescriptor, ")");
               break;
             default:
               break;

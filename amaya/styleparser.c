@@ -2026,7 +2026,7 @@ static char *SetCSSImage (Element element, PSchema tsch,
     }
   else if (url && DoApply)
     {
-      bg_image = TtaGetEnvString ("ENABLE_BG_IMAGES");
+     bg_image = TtaGetEnvString ("ENABLE_BG_IMAGES");
       if (bg_image == NULL || !strcasecmp (bg_image, "yes"))
         /* background images are enabled */
         {
@@ -6566,8 +6566,20 @@ static void ParseStyleDeclaration (Element el, char *cssRule, Document doc,
   /* first use of the context */
   ctxt->uses = 1;
   while (selector && *selector != EOS)
-    selector = ParseGenericSelector (selector, cssRule, ctxt, doc, css,
-                                     link, url);
+    {
+      if (ctxt->uses > 1)
+        {
+          /* this context is waiting for a callback */
+          ctxt = TtaGetGenericStyleContext (doc);
+          if (ctxt == NULL)
+            return;
+          ctxt->destroy = destroy;
+          /* first use of the context */
+          ctxt->uses = 1; 
+        }
+      selector = ParseGenericSelector (selector, cssRule, ctxt, doc, css,
+                                       link, url);
+    }
   /* check if the context can be freed */
   ctxt->uses -= 1;
   if (ctxt->uses == 0)

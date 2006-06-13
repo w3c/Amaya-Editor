@@ -527,9 +527,12 @@ static int PresConstInsert (PSchema tcsh, char *value, BasicType constType)
   /* lookup the existing constants, searching for a corresponding entry */
   for (i = 0; i < pSchemaPrs->PsNConstants; i++)
     {
-      if (pSchemaPrs->PsConstant[i].PdType == CharString &&
-          !strncmp (value, pSchemaPrs->PsConstant[i].PdString, MAX_PRES_CONST_LEN))
+      if (pSchemaPrs->PsConstant[i].PdType == constType &&
+          pSchemaPrs->PsConstant[i].PdString &&
+          !strcmp (value, pSchemaPrs->PsConstant[i].PdString))
+        {
         return (i+1);
+        }
     }
 
   /* if not found, try to add it at the end */
@@ -538,7 +541,7 @@ static int PresConstInsert (PSchema tcsh, char *value, BasicType constType)
   i = pSchemaPrs->PsNConstants;
   pSchemaPrs->PsConstant[i].PdType = constType;
   pSchemaPrs->PsConstant[i].PdScript = 'L';
-  strncpy (&pSchemaPrs->PsConstant[i].PdString[0], value, MAX_PRES_CONST_LEN);
+  pSchemaPrs->PsConstant[i].PdString = TtaStrdup (value);
   pSchemaPrs->PsNConstants++;
   return(i+1);
 }
@@ -3094,7 +3097,7 @@ int TtaGetStylePresentation (unsigned int type, Element el, PSchema tsch,
   if (type == PRBackgroundPicture)
     {
       cst = v->typed_data.unit;
-      v->pointer = &((PtrPSchema) tsch)->PsConstant[cst-1].PdString[0];
+      v->pointer = ((PtrPSchema) tsch)->PsConstant[cst-1].PdString;
     }
   return (0);
 }
@@ -3319,7 +3322,7 @@ void PRuleToPresentationSetting (PtrPRule rule, PresentationSetting setting,
       if (cst <= 0)
         setting->value.pointer = NULL;
       else
-        setting->value.pointer = &pPS->PsConstant[cst-1].PdString[0];
+        setting->value.pointer = pPS->PsConstant[cst-1].PdString;
     }
 }
 
