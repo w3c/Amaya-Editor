@@ -2947,7 +2947,7 @@ void RemoveAutoSavedDoc (Document doc)
   char    *url, c;
   int      l;
 
-  if (DocumentURLs[doc] == NULL)
+  if (DocumentURLs[doc] == NULL || DocumentTypes[doc] == docLog)
     return;
 
 #ifdef AMAYA_DEBUG
@@ -2986,6 +2986,9 @@ void GenerateAutoSavedDoc (Document doc)
   char           *url, c;
   int             l, interval = 0;
   ThotBool        ok;
+
+  if (DocumentURLs[doc] == NULL || DocumentTypes[doc] == docLog)
+    return;
 
   TtaGetEnvInt ("AUTO_SAVE", &interval);
   if (interval == 0 || DocumentURLs[doc] == NULL)

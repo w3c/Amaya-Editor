@@ -683,30 +683,36 @@ static char *ParseCSSColor (char *cssRule, PresentationValue * val)
   ptr = TtaGiveRGB (cssRule, &redval, &greenval, &blueval);
   if (!strncasecmp (cssRule, "InactiveCaptionText", 19))
     {
+      val->typed_data.unit = VALUE_INHERIT;
       cssRule += 19;
     }
   else if (!strncasecmp (cssRule, "ThreeDLightShadow", 17))
     {
+      val->typed_data.unit = VALUE_INHERIT;
       cssRule += 17;
     }
   else if (!strncasecmp (cssRule, "ThreeDDarkShadow", 16))
     {
+      val->typed_data.unit = VALUE_INHERIT;
       cssRule += 16;
     }
   else if (!strncasecmp (cssRule, "ButtonHighlight", 15) ||
            !strncasecmp (cssRule, "InactiveCaption", 15) ||
            !strncasecmp (cssRule, "ThreeDHighlight", 15))
     {
+      val->typed_data.unit = VALUE_INHERIT;
       cssRule += 15;
     }
   else if (!strncasecmp (cssRule, "InactiveBorder", 14) ||
            !strncasecmp (cssRule, "InfoBackground", 14))
     {
+      val->typed_data.unit = VALUE_INHERIT;
       cssRule += 14;
     }
   else if (!strncasecmp (cssRule, "ActiveCaption", 13) ||
            !strncasecmp (cssRule, "HighlightText", 13))
     {
+      val->typed_data.unit = VALUE_INHERIT;
       cssRule += 13;
     }
   else if (!strncasecmp (cssRule, "ActiveBorder", 12) ||
@@ -714,11 +720,13 @@ static char *ParseCSSColor (char *cssRule, PresentationValue * val)
            !strncasecmp (cssRule, "ButtonShadow", 12) ||
            !strncasecmp (cssRule, "ThreeDShadow", 12))
     {
+      val->typed_data.unit = VALUE_INHERIT;
       cssRule += 12;
     }
   else if (!strncasecmp (cssRule, "CaptionText", 11) ||
            !strncasecmp (cssRule, "WindowFrame", 11))
     {
+      val->typed_data.unit = VALUE_INHERIT;
       cssRule += 11;
     }
   else if (!strncasecmp (cssRule, "Background", 10) ||
@@ -727,25 +735,30 @@ static char *ParseCSSColor (char *cssRule, PresentationValue * val)
            !strncasecmp (cssRule, "ThreeDFace", 10) ||
            !strncasecmp (cssRule, "WindowText", 10))
     {
+      val->typed_data.unit = VALUE_INHERIT;
       cssRule += 10;
     }
   else if (!strncasecmp (cssRule, "Highlight", 9) ||
            !strncasecmp (cssRule, "Scrollbar", 9))
     {
+      val->typed_data.unit = VALUE_INHERIT;
       cssRule += 9;
     }
   else if (!strncasecmp (cssRule, "GrayText", 8) ||
            !strncasecmp (cssRule, "InfoText", 8) ||
            !strncasecmp (cssRule, "MenuText", 8))
     {
+      val->typed_data.unit = VALUE_INHERIT;
       cssRule += 8;
     }
   else if (!strncasecmp (cssRule, "Window", 6))
     {
+      val->typed_data.unit = VALUE_INHERIT;
       cssRule += 6;
     }
   else if (!strncasecmp (cssRule, "Menu", 5))
     {
+      val->typed_data.unit = VALUE_INHERIT;
       cssRule += 5;
     }
   else if (!strncasecmp (cssRule, "inherit", 7))
