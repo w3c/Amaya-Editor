@@ -213,6 +213,7 @@
                           <item>*Nouvel onglet (pas encode disponible sous Mac)</item>
                           <item>*Nouvelle fenetre*</item>
                         </content>
+                        <size>400,-1</size>
                         <style>wxRA_SPECIFY_COLS</style>
                       </object>
                     </object>
@@ -300,6 +301,7 @@
                     <object class="sizeritem">
                       <object class="wxStaticText" name="wxID_LABEL_LANNEGLISTLG">
                         <label>*Liste des langues preferees comme fr en   :*</label>
+                        <size>280,-1</size>
                       </object>
                       <flag>wxRIGHT</flag>
                       <border>2</border>
@@ -319,6 +321,7 @@
                     <object class="sizeritem">
                       <object class="wxStaticText" name="wxID_LABEL_MAXURL">
                         <label>*Urls number in history :*</label>
+                        <size>280,-1</size>
                       </object>
                       <flag>wxRIGHT|wxALIGN_CENTRE_VERTICAL</flag>
                       <border>5</border>
@@ -332,6 +335,7 @@
                     <object class="sizeritem">
                       <object class="wxButton" name="wxID_BUTTON_CLEARURL">
                         <label>*Clear url history*</label>
+                        <size>120,-1</size>
                       </object>
                       <flag>wxLEFT|wxALIGN_CENTRE_VERTICAL</flag>
                       <border>5</border>

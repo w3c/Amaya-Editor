@@ -610,7 +610,7 @@
                     <object class="sizeritem">
                       <object class="wxStaticText" name="wxID_LABEL_BGIMAGE">
                         <label>background-image</label>
-                        <size>120,-1</size>
+                        <size>125,-1</size>
                       </object>
                       <flag>wxALIGN_CENTRE_VERTICAL</flag>
                     </object>
@@ -687,7 +687,7 @@
                             <object class="sizeritem">
                               <object class="wxStaticText" name="wxID_LABEL_BGREPEAT">
                                 <label>background-repeat</label>
-                                <size>120,-1</size>
+                                <size>125,-1</size>
                               </object>
                               <flag>wxALIGN_CENTRE_VERTICAL</flag>
                             </object>
@@ -852,7 +852,7 @@
                         <object class="sizeritem">
                           <object class="wxStaticText" name="wxID_LABEL_BTOP_W">
                             <label>border-top:     width </label>
-                            <size>125,-1</size>
+                            <size>135,-1</size>
                           </object>
                           <option>0</option>
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
@@ -955,7 +955,7 @@
                         <object class="sizeritem">
                           <object class="wxStaticText" name="wxID_LABEL_BBOTTOM_W">
                             <label>border-bottom: width </label>
-                            <size>125,-1</size>
+                            <size>135,-1</size>
                           </object>
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
                         </object>
@@ -1057,7 +1057,7 @@
                         <object class="sizeritem">
                           <object class="wxStaticText" name="wxID_LABEL_BLEFT_W">
                             <label>border-left:     width</label>
-                            <size>125,-1</size>
+                            <size>135,-1</size>
                           </object>
                           <option>0</option>
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
@@ -1160,7 +1160,7 @@
                         <object class="sizeritem">
                           <object class="wxStaticText" name="wxID_LABEL_BRIGHT_W">
                             <label>border-right:   width</label>
-                            <size>125,-1</size>
+                            <size>135,-1</size>
                           </object>
                           <option>0</option>
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
@@ -1263,7 +1263,7 @@
                         <object class="sizeritem">
                           <object class="wxStaticText" name="wxID_LABEL_B_W">
                             <label>border:          width </label>
-                            <size>125,-1</size>
+                            <size>135,-1</size>
                           </object>
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
                         </object>
@@ -1417,13 +1417,13 @@
                                 <object class="sizeritem">
                                   <object class="wxStaticText" name="wxID_LABEL_PTOP">
                                     <label>padding-top</label>
-                                    <size>100,-1</size>
+                                    <size>110,-1</size>
                                   </object>
                                   <option>0</option>
                                   <flag>wxALIGN_CENTRE_VERTICAL</flag>
                                 </object>
                                 <object class="spacer">
-                                  <size>10,0</size>
+                                  <size>5,0</size>
                                 </object>
                                 <object class="sizeritem">
                                   <object class="wxComboBox" name="wxID_CHOICE_PTOP">
@@ -1492,13 +1492,13 @@
                                 <object class="sizeritem">
                                   <object class="wxStaticText" name="wxID_LABEL_PBOTTOM">
                                     <label>padding-bottom</label>
-                                    <size>100,-1</size>
+                                    <size>110,-1</size>
                                   </object>
                                   <option>0</option>
                                   <flag>wxALIGN_CENTRE_VERTICAL</flag>
                                 </object>
                                 <object class="spacer">
-                                  <size>10,0</size>
+                                  <size>5,0</size>
                                 </object>
                                 <object class="sizeritem">
                                   <object class="wxComboBox" name="wxID_CHOICE_PBOTTOM">
@@ -1567,13 +1567,13 @@
                                 <object class="sizeritem">
                                   <object class="wxStaticText" name="wxID_LABEL_PLEFT">
                                     <label>padding-left</label>
-                                    <size>100,-1</size>
+                                    <size>110,-1</size>
                                   </object>
                                   <option>0</option>
                                   <flag>wxALIGN_CENTRE_VERTICAL</flag>
                                 </object>
                                 <object class="spacer">
-                                  <size>10,0</size>
+                                  <size>5,0</size>
                                 </object>
                                 <object class="sizeritem">
                                   <object class="wxComboBox" name="wxID_CHOICE_PLEFT">
@@ -1642,13 +1642,13 @@
                                 <object class="sizeritem">
                                   <object class="wxStaticText" name="wxID_LABEL_PRIGHT">
                                     <label>padding-right</label>
-                                    <size>100,-1</size>
+                                    <size>110,-1</size>
                                   </object>
                                   <option>0</option>
                                   <flag>wxALIGN_CENTRE_VERTICAL</flag>
                                 </object>
                                 <object class="spacer">
-                                  <size>10,0</size>
+                                  <size>5,0</size>
                                 </object>
                                 <object class="sizeritem">
                                   <object class="wxComboBox" name="wxID_CHOICE_PRIGHT">
@@ -1717,13 +1717,13 @@
                                 <object class="sizeritem">
                                   <object class="wxStaticText" name="wxID_LABEL_PADDING">
                                     <label>padding</label>
-                                    <size>100,-1</size>
+                                    <size>110,-1</size>
                                   </object>
                                   <option>0</option>
                                   <flag>wxALIGN_CENTRE_VERTICAL</flag>
                                 </object>
                                 <object class="spacer">
-                                  <size>10,0</size>
+                                  <size>5,0</size>
                                 </object>
                                 <object class="sizeritem">
                                   <object class="wxComboBox" name="wxID_CHOICE_PADDING">
@@ -1799,13 +1799,13 @@
                                 <object class="sizeritem">
                                   <object class="wxStaticText" name="wxID_LABEL_HEIGHT">
                                     <label>height</label>
-                                    <size>100,-1</size>
+                                    <size>110,-1</size>
                                   </object>
                                   <option>0</option>
                                   <flag>wxALIGN_CENTRE_VERTICAL</flag>
                                 </object>
                                 <object class="spacer">
-                                  <size>10,0</size>
+                                  <size>5,0</size>
                                 </object>
                                 <object class="sizeritem">
                                   <object class="wxComboBox" name="wxID_CHOICE_HEIGHT">
@@ -2067,8 +2067,7 @@
                               <item>0cm</item>
                               <item>0em</item>
                               <item>0ex</item>
-                              <item>0%</item>
-                            </content>
+                              <item>0%</item></content>
                             <size>70,-1</size>
                             <focused>1</focused>
                           </object>
@@ -2114,8 +2113,7 @@
                               <item>0cm</item>
                               <item>0em</item>
                               <item>0ex</item>
-                              <item>0%</item>
-                            </content>
+                              <item>0%</item></content>
                             <size>70,-1</size>
                             <focused>1</focused>
                           </object>
@@ -2158,8 +2156,7 @@
                               <item>0cm</item>
                               <item>0em</item>
                               <item>0ex</item>
-                              <item>0%</item>
-                            </content>
+                              <item>0%</item></content>
                             <size>70,-1</size>
                             <focused>1</focused>
                           </object>
