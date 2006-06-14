@@ -216,6 +216,8 @@
                         <size>400,-1</size>
                         <style>wxRA_SPECIFY_COLS</style>
                       </object>
+                      <option>1</option>
+                      <flag>wxEXPAND</flag>
                     </object>
                   </object>
                   <flag>wxTOP|wxBOTTOM|wxLEFT|wxEXPAND</flag>

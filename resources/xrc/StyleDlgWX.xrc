@@ -852,7 +852,7 @@
                         <object class="sizeritem">
                           <object class="wxStaticText" name="wxID_LABEL_BTOP_W">
                             <label>border-top:     width </label>
-                            <size>135,-1</size>
+                            <size>145,-1</size>
                           </object>
                           <option>0</option>
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
@@ -955,7 +955,7 @@
                         <object class="sizeritem">
                           <object class="wxStaticText" name="wxID_LABEL_BBOTTOM_W">
                             <label>border-bottom: width </label>
-                            <size>135,-1</size>
+                            <size>145,-1</size>
                           </object>
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
                         </object>
@@ -1057,7 +1057,7 @@
                         <object class="sizeritem">
                           <object class="wxStaticText" name="wxID_LABEL_BLEFT_W">
                             <label>border-left:     width</label>
-                            <size>135,-1</size>
+                            <size>145,-1</size>
                           </object>
                           <option>0</option>
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
@@ -1160,7 +1160,7 @@
                         <object class="sizeritem">
                           <object class="wxStaticText" name="wxID_LABEL_BRIGHT_W">
                             <label>border-right:   width</label>
-                            <size>135,-1</size>
+                            <size>145,-1</size>
                           </object>
                           <option>0</option>
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
@@ -1263,7 +1263,7 @@
                         <object class="sizeritem">
                           <object class="wxStaticText" name="wxID_LABEL_B_W">
                             <label>border:          width </label>
-                            <size>135,-1</size>
+                            <size>145,-1</size>
                           </object>
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
                         </object>
