@@ -3261,7 +3261,7 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
   AbPosition          Posit;
   PresConstant	     *pConst;
   PathBuffer	      directoryName;
-  char                fname[MAX_PATH], *ptr;
+  char                fname[MAX_PATH];
   unsigned char       c;
   int                 viewSch, i;
   ThotBool            appl;
