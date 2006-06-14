@@ -76,7 +76,9 @@ int AmayaApp::AttrList[] =
   WX_GL_MIN_ALPHA, 0, /* don't change the position of this entry (8) */
   WX_GL_STENCIL_SIZE, 1,
   WX_GL_DOUBLEBUFFER,
+#ifdef _WINDOWS
   WX_GL_NOT_ACCELERATED, /* don't change the position of this entry (12) */
+#endif /* _WINDOWS */
   0
 };
 #endif /* _GL */
@@ -385,6 +387,7 @@ void AmayaApp::OnIdle( wxIdleEvent& event )
   -----------------------------------------------------------------------*/
 int * AmayaApp::GetGL_AttrList()
 {
+#ifdef _WINDOWS
   // depending on thot.rc option set/unset OpenGL hardware acceleration
 
   // default is no acceleration because of strange bugs on
@@ -397,6 +400,7 @@ int * AmayaApp::GetGL_AttrList()
     AttrList[12] = 0; /* ok enable opengl hardware acceleration */
   else
     AttrList[12] = WX_GL_NOT_ACCELERATED; /* disable opengl hardware acceleration */
+#endif /* _WINDOWS */
   return AttrList;
 }
 #endif /* _GL */

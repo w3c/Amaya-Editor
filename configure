@@ -310,7 +310,7 @@ ac_includes_default="\
 # include <unistd.h>
 #endif"
 
-ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS build build_cpu build_vendor build_os host host_cpu host_vendor host_os target target_cpu target_vendor target_os SET_MAKE YACC CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT CPP CXX CXXFLAGS ac_ct_CXX LEX LEXLIB LEX_OUTPUT_ROOT AWK INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA LN_S RANLIB ac_ct_RANLIB CP MV RM MKDIR ECHO CAT CHMOD SED AR DIFF EGREP ALLOCA LIBOBJS AMAYAOS AMAYAGUI GTKCONFIG_FOUND GTK_INCLUDES GTK_LIBRARIES GL_BUILDDIR GL_INCLUDES GL_LIBRARIES WX_SRCDIR WX_BUILDDIR WX_INCLUDES WX_LIBRARIES WX_LINKDEPS LIBJPEG LIBPNG LIBZ MAKEJPEG MAKEPNG GTK_GL_INCLUDES GTK_GL_LIBRARIES FREETYPE_INCLUDES FREETYPE_LIBRARIES XFT_INCLUDES XFT_LIBRARIES PRINTIFNOTGL NOPRINT APP_MAJVER APP_MINVER APP_SUBVER APP_VER CEXTRACT_VER CEXTRACT_FLAGS THOTINCLUDES APIINCLUDES VPATHOPT GTK_OPTIONS THOT_OPTIONS AMAYA_OPTIONS PLUGIN_OPTIONS AMAYA_ANNOT_OPTIONS AMAYA_ANNOT_INCLUDES AMAYA_ANNOT_EXTRA_LIBS IMGLIBS EXTRA_LIBS EXTRA_INCLUDES DAVDIR LIBDAV WITHDAV WWWDAV MAKERAPTOR MAKEREDLAND ANNOTLIB_COMPILE_BM AMAYA_RAPTOR_SRC AMAYA_RAPTOR_LIBS AMAYA_RAPTOR_INCLUDES MAKE_LIBWWW_RDF_PARSER LIBWWW_RDF_PARSER SUBDIRS EXTRA_MAKEFILE_IN LTLIBOBJS'
+ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS build build_cpu build_vendor build_os host host_cpu host_vendor host_os target target_cpu target_vendor target_os SET_MAKE YACC CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT CPP CXX CXXFLAGS ac_ct_CXX LEX LEXLIB LEX_OUTPUT_ROOT AWK INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA LN_S RANLIB ac_ct_RANLIB CP MV RM MKDIR ECHO CAT CHMOD SED AR DIFF EGREP ALLOCA LIBOBJS AMAYAOS AMAYAGUI GTKCONFIG_FOUND GTK_INCLUDES GTK_LIBRARIES GL_BUILDDIR GL_INCLUDES GL_LIBRARIES WXCONFIG WX_SRCDIR WX_BUILDDIR BUILDWXWIDGETS WX_INCLUDES WX_LIBRARIES WX_LINKDEPS LIBJPEG LIBPNG LIBZ MAKEJPEG MAKEPNG GTK_GL_INCLUDES GTK_GL_LIBRARIES FREETYPE_INCLUDES FREETYPE_LIBRARIES XFT_INCLUDES XFT_LIBRARIES PRINTIFNOTGL NOPRINT APP_MAJVER APP_MINVER APP_SUBVER APP_VER CEXTRACT_VER CEXTRACT_FLAGS THOTINCLUDES APIINCLUDES VPATHOPT GTK_OPTIONS THOT_OPTIONS AMAYA_OPTIONS PLUGIN_OPTIONS AMAYA_ANNOT_OPTIONS AMAYA_ANNOT_INCLUDES AMAYA_ANNOT_EXTRA_LIBS IMGLIBS EXTRA_LIBS EXTRA_INCLUDES DAVDIR LIBDAV WITHDAV WWWDAV MAKERAPTOR MAKEREDLAND ANNOTLIB_COMPILE_BM AMAYA_RAPTOR_SRC AMAYA_RAPTOR_LIBS AMAYA_RAPTOR_INCLUDES MAKE_LIBWWW_RDF_PARSER LIBWWW_RDF_PARSER SUBDIRS EXTRA_MAKEFILE_IN LTLIBOBJS'
 ac_subst_files='plugin_frag www_frag math_frag svg_frag annot_frag dav_frag templates_frag'
 
 # Initialize some variables set by options.
@@ -859,6 +859,7 @@ if test -n "$ac_init_help"; then
 Optional Features:
   --disable-FEATURE       do not include FEATURE (same as --enable-FEATURE=no)
   --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
+  --enable-system-wx try the wxWidgets system library
   --disable-svg           remove SVG support
   --disable-annot         remove Annotations support
   --disable-redland       disable the redland RDF library
@@ -873,7 +874,7 @@ Optional Packages:
   --with-gl               enable Opengl canvas (experimental)
   --with-gtk              use GTK GUI toolkit
   --with-wx               use wxWidgets GUI toolkit
-  --with-mesa             enable canvas with software OpenGL implementation (Mesa)
+  --with-mesa         enable canvas with software OpenGL implementation (Mesa)
   --with-nogui            do not use GUI toolkit (not maintained)
   --with-wxdebug          compiles wxWidgets with debuging options
   --with-wxsrcdir=...     compiles Amaya with a specific wxWidgets sources path
@@ -13423,7 +13424,11 @@ if test "$with_wx" = "yes" -o "$enable_wx" = "yes" ; then
     with_gtk="no"
   fi
 fi
+# Check whether --enable-system-wx or --disable-system-wx was given.
+if test "${enable_system_wx+set}" = set; then
+  enableval="$enable_system_wx"
 
+fi;
 if test "$with_gtk" = "" -o "$with_wx=" = "" ; then
   # Nothing is enable so force the default GUI toolkit (WX)
   with_gtk="no"
@@ -13659,21 +13664,67 @@ echo "$as_me: error: Mesa library sources not found (opengl). Please download Me
 fi
 
 if test "$with_wx" = "yes" ; then
-  # WX_SRCDIR is better to understand the code than with_wxsrcdir variable
-  if test ! -f $with_wxsrcdir/Makefile.in ; then
-    $with_wxsrcdir = ../../wxWidgets
+  if test "$enable_system_wx" = "yes"; then
+    # Extract the first word of "wx-config", so it can be a program name with args.
+set dummy wx-config; ac_word=$2
+echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
+if test "${ac_cv_path_WXCONFIG+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  case $WXCONFIG in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_WXCONFIG="$WXCONFIG" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if $as_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_path_WXCONFIG="$as_dir/$ac_word$ac_exec_ext"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
   fi
-  cd $with_wxsrcdir
-  WX_SRCDIR=`pwd`
-  cd -
+done
+done
+
+  ;;
+esac
+fi
+WXCONFIG=$ac_cv_path_WXCONFIG
+
+if test -n "$WXCONFIG"; then
+  echo "$as_me:$LINENO: result: $WXCONFIG" >&5
+echo "${ECHO_T}$WXCONFIG" >&6
+else
+  echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+fi
+
+    if test -z "$WXCONFIG"; then
+      enable_system_wx="no"
+    fi
+  fi
+
+  if test "$enable_system_wx" != "yes"; then
+    # WX_SRCDIR is better to understand the code than with_wxsrcdir variable
+    if test ! -f $with_wxsrcdir/Makefile.in ; then
+      $with_wxsrcdir = ../../wxWidgets
+    fi
+    cd $with_wxsrcdir
+    WX_SRCDIR=`pwd`
+    cd -
 
 
-  # check that sources of wxWidgets exists
-  if test ! -f $WX_SRCDIR/Makefile.in ; then
-    { { echo "$as_me:$LINENO: error: wxWidgets library sources not found. Please download wxWidgets sources (http://www.wxwidgets.org/)" >&5
+    # check that sources of wxWidgets exists
+    if test ! -f $WX_SRCDIR/Makefile.in ; then
+      { { echo "$as_me:$LINENO: error: wxWidgets library sources not found. Please download wxWidgets sources (http://www.wxwidgets.org/)" >&5
 echo "$as_me: error: wxWidgets library sources not found. Please download wxWidgets sources (http://www.wxwidgets.org/)" >&2;}
    { (exit or remove --with-wx option); exit or remove --with-wx option; }; }
-  fi
+    fi
 
   # --------- configure wxWidgets library --------------- #
   echo "---> Configuring wxWidgets library."
@@ -13684,6 +13735,7 @@ echo "$as_me: error: wxWidgets library sources not found. Please download wxWidg
   else
     WX_BUILDDIR="wxWidgets_RELEASE"
   fi
+
   mkdir -p $WX_BUILDDIR
   cd $WX_BUILDDIR
 
@@ -13713,7 +13765,7 @@ echo "$as_me: error: wxWidgets library sources not found. Please download wxWidg
     #   --enable-unicode        compile wxString with Unicode support
     #   --with-gtk              use GTK+
     #   --with-opengl           use OpenGL (or Mesa)
-    WXCONFIGURE_OPTION="--with-opengl --with-gtk --enable-gtk2 --enable-unicode --enable-ipc --disable-shared  --with-libpng=builtin --with-libjpeg=builtin --with-libtiff=builtin $WXCONFIGURE_TUNNING_OPTION"
+    WXCONFIGURE_OPTION="--build=$build_alias --host=$host_alias --target=$target_alias --with-opengl --with-gtk --enable-gtk2 --enable-unicode --enable-ipc --disable-shared  --with-libpng=builtin --with-libjpeg=builtin --with-libtiff=builtin $WXCONFIGURE_TUNNING_OPTION"
   fi
   if test "$AMAYAOS" = "MACOSX" ; then
     # MACOSX
@@ -13756,7 +13808,15 @@ echo "$as_me: error: Cannot find wx-config. Please download wxWidgets (http://ww
 
   # setup include paths
   # "-I$WX_SRCDIR/src/png -I$WX_SRCDIR/src/jpeg -I$WX_SRCDIR/src/tiff" is a temporary patch to fix incorrect generated paths by wx-config --cxxflags (remove it when wxWidgets will be fixed)
-  WX_INCLUDES="-I$WX_SRCDIR/src/png -I$WX_SRCDIR/src/jpeg -I$WX_SRCDIR/src/tiff `$WXCONFIG --cxxflags`"
+  WX_INCLUDES="-I$WX_SRCDIR/src/png -I$WX_SRCDIR/src/jpeg -I$WX_SRCDIR/src/tiff"
+
+  BUILDWXWIDGETS="wxwidgets"
+
+
+ fi
+
+  WX_INCLUDES="$WX_INCLUDES `$WXCONFIG --cxxflags`"
+
 
 
   # setup libraries paths
@@ -13882,13 +13942,13 @@ fi # with_wx = no
 
 # the wx version
 AMAYAWX_MAJVER=9
-AMAYAWX_MINVER=51
+AMAYAWX_MINVER=52
 AMAYAWX_SUBVER=0
 
 #the old version (to remove when switching on wx)
 AMAYA_MAJVER=8
-AMAYA_MINVER=8
-AMAYA_SUBVER=51
+AMAYA_MINVER=52
+AMAYA_SUBVER=0
 
 if test "$with_wx" = "yes" ; then
   APP_MAJVER=$AMAYAWX_MAJVER
@@ -15025,7 +15085,7 @@ if test "$build_amaya" = "yes" ; then
        EXTRA_MAKEFILE_IN="$srcdir/davlib/Makefile.in"
     fi
 
-    if test "$with_wx" = "yes" ; then
+    if test "$with_wx" = "yes" -a "enable_system_wx" = "yes" ; then
        EXTRA_MAKEFILE_IN="$EXTRA_MAKEFILE_IN $WX_SRCDIR/Makefile.in $WX_SRCDIR/configure.in"
     fi
 
@@ -15706,8 +15766,10 @@ s,@GTK_LIBRARIES@,$GTK_LIBRARIES,;t t
 s,@GL_BUILDDIR@,$GL_BUILDDIR,;t t
 s,@GL_INCLUDES@,$GL_INCLUDES,;t t
 s,@GL_LIBRARIES@,$GL_LIBRARIES,;t t
+s,@WXCONFIG@,$WXCONFIG,;t t
 s,@WX_SRCDIR@,$WX_SRCDIR,;t t
 s,@WX_BUILDDIR@,$WX_BUILDDIR,;t t
+s,@BUILDWXWIDGETS@,$BUILDWXWIDGETS,;t t
 s,@WX_INCLUDES@,$WX_INCLUDES,;t t
 s,@WX_LIBRARIES@,$WX_LIBRARIES,;t t
 s,@WX_LINKDEPS@,$WX_LINKDEPS,;t t

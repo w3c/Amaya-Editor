@@ -243,7 +243,7 @@ if test "$with_wx" = "yes" -o "$enable_wx" = "yes" ; then
     with_gtk="no"
   fi
 fi
-
+AC_ARG_ENABLE(system-wx,       [  --enable-system-wx try the wxWidgets system library ])
 if test "$with_gtk" = "" -o "$with_wx=" = "" ; then
   # Nothing is enable so force the default GUI toolkit (WX)
   with_gtk="no"
@@ -251,7 +251,7 @@ if test "$with_gtk" = "" -o "$with_wx=" = "" ; then
 fi
 
 # check for mesa library (OpenGL)
-AC_ARG_WITH(MESA,              [  --with-mesa             enable canvas with software OpenGL implementation (Mesa) ])
+AC_ARG_WITH(MESA,              [  --with-mesa         enable canvas with software OpenGL implementation (Mesa) ])
 if test "$with_mesa" = "" ; then
  if test "$enable_mesa" = "yes" ; then
     with_mesa="yes"
@@ -420,19 +420,27 @@ if test "$with_mesa" = "yes" ; then
 fi
 
 if test "$with_wx" = "yes" ; then
-  # WX_SRCDIR is better to understand the code than with_wxsrcdir variable
-  if test ! -f $with_wxsrcdir/Makefile.in ; then
-    $with_wxsrcdir = ../../wxWidgets
+  if test "$enable_system_wx" = "yes"; then
+    AC_PATH_PROG(WXCONFIG, wx-config)
+    if test -z "$WXCONFIG"; then
+      enable_system_wx="no"
+    fi
   fi
-  cd $with_wxsrcdir
-  WX_SRCDIR=`pwd`
-  cd -
-  AC_SUBST(WX_SRCDIR)
+  
+  if test "$enable_system_wx" != "yes"; then
+    # WX_SRCDIR is better to understand the code than with_wxsrcdir variable
+    if test ! -f $with_wxsrcdir/Makefile.in ; then
+      $with_wxsrcdir = ../../wxWidgets
+    fi
+    cd $with_wxsrcdir
+    WX_SRCDIR=`pwd`
+    cd -
+    AC_SUBST(WX_SRCDIR)
 
-  # check that sources of wxWidgets exists
-  if test ! -f $WX_SRCDIR/Makefile.in ; then
-    AC_MSG_ERROR(wxWidgets library sources not found. Please download wxWidgets sources (http://www.wxwidgets.org/), or remove --with-wx option, or check --with-wxsrcdir is correct !)
-  fi
+    # check that sources of wxWidgets exists
+    if test ! -f $WX_SRCDIR/Makefile.in ; then
+      AC_MSG_ERROR(wxWidgets library sources not found. Please download wxWidgets sources (http://www.wxwidgets.org/), or remove --with-wx option, or check --with-wxsrcdir is correct !)
+    fi
 
   # --------- configure wxWidgets library --------------- #
   echo "---> Configuring wxWidgets library."
@@ -443,6 +451,7 @@ if test "$with_wx" = "yes" ; then
   else
     WX_BUILDDIR="wxWidgets_RELEASE"
   fi
+
   mkdir -p $WX_BUILDDIR
   cd $WX_BUILDDIR
   AC_SUBST(WX_BUILDDIR)
@@ -472,7 +481,7 @@ if test "$with_wx" = "yes" ; then
     #   --enable-unicode        compile wxString with Unicode support
     #   --with-gtk              use GTK+
     #   --with-opengl           use OpenGL (or Mesa)
-    WXCONFIGURE_OPTION="--with-opengl --with-gtk --enable-gtk2 --enable-unicode --enable-ipc --disable-shared  --with-libpng=builtin --with-libjpeg=builtin --with-libtiff=builtin $WXCONFIGURE_TUNNING_OPTION"
+    WXCONFIGURE_OPTION="--build=$build_alias --host=$host_alias --target=$target_alias --with-opengl --with-gtk --enable-gtk2 --enable-unicode --enable-ipc --disable-shared  --with-libpng=builtin --with-libjpeg=builtin --with-libtiff=builtin $WXCONFIGURE_TUNNING_OPTION"
   fi
   if test "$AMAYAOS" = "MACOSX" ; then
     # MACOSX
@@ -511,7 +520,15 @@ if test "$with_wx" = "yes" ; then
 
   # setup include paths  
   # "-I$WX_SRCDIR/src/png -I$WX_SRCDIR/src/jpeg -I$WX_SRCDIR/src/tiff" is a temporary patch to fix incorrect generated paths by wx-config --cxxflags (remove it when wxWidgets will be fixed)
-  WX_INCLUDES="-I$WX_SRCDIR/src/png -I$WX_SRCDIR/src/jpeg -I$WX_SRCDIR/src/tiff `$WXCONFIG --cxxflags`"
+  WX_INCLUDES="-I$WX_SRCDIR/src/png -I$WX_SRCDIR/src/jpeg -I$WX_SRCDIR/src/tiff"
+
+  BUILDWXWIDGETS="wxwidgets"
+  AC_SUBST(BUILDWXWIDGETS)
+
+ fi
+
+  WX_INCLUDES="$WX_INCLUDES `$WXCONFIG --cxxflags`"
+
   AC_SUBST(WX_INCLUDES)
 
   # setup libraries paths
@@ -616,13 +633,13 @@ fi # with_wx = no
 
 # the wx version
 AMAYAWX_MAJVER=9
-AMAYAWX_MINVER=51
+AMAYAWX_MINVER=52
 AMAYAWX_SUBVER=0
 
 #the old version (to remove when switching on wx)
 AMAYA_MAJVER=8
-AMAYA_MINVER=8
-AMAYA_SUBVER=51
+AMAYA_MINVER=52
+AMAYA_SUBVER=0
 
 if test "$with_wx" = "yes" ; then
   APP_MAJVER=$AMAYAWX_MAJVER
@@ -1502,7 +1519,7 @@ if test "$build_amaya" = "yes" ; then
        EXTRA_MAKEFILE_IN="$srcdir/davlib/Makefile.in"
     fi
 
-    if test "$with_wx" = "yes" ; then
+    if test "$with_wx" = "yes" -a "enable_system_wx" = "yes" ; then
        EXTRA_MAKEFILE_IN="$EXTRA_MAKEFILE_IN $WX_SRCDIR/Makefile.in $WX_SRCDIR/configure.in"
     fi
 

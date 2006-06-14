@@ -12,7 +12,7 @@
 #
 
 # default parameters
-AMAYAVERSION="9.3"
+AMAYAVERSION="9.52"
 DEST=$HOME
 
 # Check argument number on the command line

@@ -28,7 +28,7 @@ bindir = @bindir@
 
 srcdir	= $(THOTDIR)
 
-default : tools gl wxwidgets thotlib batch amaya_prog @PRINTIFNOTGL@
+default : tools gl @BUILDWXWIDGETS@ thotlib batch amaya_prog @PRINTIFNOTGL@
 
 amaya : amaya_prog tools thotlib @PRINTIFNOTGL@
 
@@ -201,6 +201,7 @@ libwww_config :
 	  cd $(LIBWWW) ; unset LANG; \
 	  if [ ! -f Makefile -o ! -f wwwconf.h ] ; then \
 	  	$$libwwwdir/configure \
+			--build=@build_alias@ --host=@host_alias@ --target=@target_alias@ \
 			--disable-shared \
 			@WITHDAV@ \
 			--with-zlib; \
@@ -313,6 +314,7 @@ libraptor_config: @MAKERAPTOR@ force
 	  if [ ! -f Makefile -o ! -f config.h ] ; then \
 	  	CFLAGS="-I$$raptordir/expat/lib" \
 			$$raptordir/configure \
+			--build=@build_alias@ --host=@host_alias@ --target=@target_alias@ \
 			--without-shared \
 			--with-expat ; \
 		$(ECHO) "patching libraptor/libtool because -flat_namespace option is missing and do not compile on macosx" ; \
@@ -365,6 +367,7 @@ redland_config: @MAKEREDLAND@ force
 			CPPFLAGS="-I$$localdir/../../$(LIBWWW)/modules/expat/lib" \
 			LDFLAGS="-L$$localdir/libwww/modules/expat -L$$localdir/libwww/modules/expat/.libs" \
 			$$redlanddir/configure \
+			--build=@build_alias@ --host=@host_alias@ --target=@target_alias@ \
 			--disable-shared \
 			--without-bdb \
 	 		--enable-parsers=raptor \

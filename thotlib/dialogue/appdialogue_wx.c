@@ -63,6 +63,7 @@
 #include "AmayaStatsThread.h"
 #include "AmayaQuickSplitButton.h"
 
+#ifdef _WX
 static int g_logerror_action_id = -1;
 static int g_back_action_id = -1;
 static int g_forward_action_id = -1;
@@ -76,6 +77,7 @@ static int g_logo_action_id = -1;
 
 static void TtaMakeWindowMenuBar( int window_id );
 static void BuildPopdownWX ( int window_id, Menu_Ctl *ptrmenu, ThotMenu p_menu );
+#endif /* _WX */
 
 /* 
  * In this file there is a list of functions useful
