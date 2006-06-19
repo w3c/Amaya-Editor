@@ -2012,8 +2012,8 @@ ThotBool TtaHandleUnicodeKey (wxKeyEvent& event)
   int ret = 0;
 
   if ((thot_keysym != 0) && !TtaIsSpecialKey(thot_keycode) &&
-      !event.CmdDown()
-#ifndef _MACOS
+      (!event.CmdDown() || event.AltDown())
+#if !defined(_MACOS) && !defined(_WINDOWS)
        && !event.AltDown()
 #endif /* _MACOS */
        )
@@ -2032,9 +2032,9 @@ ThotBool TtaHandleUnicodeKey (wxKeyEvent& event)
                 (p_button || p_check_listbox)))
             {
               int thotMask = 0;
-              if (event.CmdDown() || event.ControlDown())
+              if ((event.CmdDown() || event.ControlDown()) && !event.AltDown())
                 thotMask |= THOT_MOD_CTRL;
-              if (event.AltDown())
+              if (event.AltDown() && !event.CmdDown())
                 thotMask |= THOT_MOD_ALT;
               if (event.ShiftDown())
                 thotMask |= THOT_MOD_SHIFT; 
