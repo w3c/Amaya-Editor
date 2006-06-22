@@ -1,17 +1,21 @@
 #ifndef TEMPLATE_DECLARATIONS
 #define TEMPLATE_DECLARATIONS
 
+//The predefined library id
 #define PREDEFINED_LIB "-Predefined-"
+
+//Type natures
 #define COMPONENT   0
 #define SIMPLE_TYPE 1
 #define XMLELEMENT  2
 #define UNION       3
 
-#define XTIGER_INTEGER 0
-#define XTIGER_DECIMAL 1
-#define XTIGER_STRING  2
-#define XTIGER_BOOLEAN 3
-#define XTIGER_CUSTOM  4
+//Simple type ids
+#define XTIGER_NUMBER  0
+#define XTIGER_STRING  1
+#define XTIGER_BOOLEAN 2
+//And for future issues
+#define XTIGER_CUSTOM  3
 
 #define THOT_EXPORT extern
 #include "amaya.h"
@@ -25,7 +29,9 @@ typedef struct _XTigerTemplate *XTigerTemplate;
 struct _XTigerTemplate
 {	
   ThotBool        isLibrary;			//Is this a library? (otherway it's a template)
-//  DicDictionary   libraries;			//Imported libraries
+#ifdef TODO_XTIGER
+  DicDictionary   libraries;			//Imported libraries
+#endif
   DicDictionary   simpleTypes;			//All simple types declared in the document
   DicDictionary   elements;				//All element types declared in the document
   DicDictionary   components;			//All component types declared in the document
@@ -33,6 +39,8 @@ struct _XTigerTemplate
 };
 
 /* Structure of a Declaration */
+
+//Just for clarity
 typedef int TypeNature;
 typedef int SimpleTypeType;
 
@@ -71,6 +79,7 @@ typedef struct _Declaration
 	};
 } *Declaration;
 
+//List of loaded templates and libraries
 THOT_EXPORT DicDictionary templates;
 
 /*----------------------------------------------------------------------
@@ -130,4 +139,13 @@ extern void FreeXTigerTemplate ( XTigerTemplate t );
   ----------------------------------------------------------------------*/
 extern void AddLibraryDeclarations (XTigerTemplate t, XTigerTemplate lib);
 
+/*----------------------------------------------------------------------
+Imports all declarations in a library lib to a template t
+----------------------------------------------------------------------*/
+extern void AddLibraryDeclarations (XTigerTemplate t, XTigerTemplate lib);
+
+/*----------------------------------------------------------------------
+Removes the declaration identified by name
+----------------------------------------------------------------------*/
+extern void RemoveOldDeclarations (XTigerTemplate t, char *name);
 #endif //TEMPLATE_DECLARATIONS

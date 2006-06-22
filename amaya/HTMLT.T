@@ -25,7 +25,7 @@ RULES
 	Use MathMLT for MathML;
 	Use SVGT for SVG;
 	Use XLinkT for XLink;
-  Use TemplateT for Template;
+    Use TemplateT for Template;
 	Create PI Before;
 	create SOT;
 	Create 'html';

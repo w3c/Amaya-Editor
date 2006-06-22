@@ -45,7 +45,8 @@ extern void InstantiateTemplate_callback ( int newdoc,
 extern void InstanciateTemplate ( Document doc,
                                   char *templatename,
                                   char *docname,
-                                  DocumentType docType );
+                                  DocumentType docType,
+								  ThotBool loaded);
 extern void ParseTemplate ( XTigerTemplate t,
                             Element el,
                             Document doc );
@@ -93,7 +94,8 @@ extern void InstantiateTemplate_callback ( int newdoc,
 extern void InstanciateTemplate ( Document doc,
                                     char *templatename,
                                     char *docname,
-                                    DocumentType docType );
+                                    DocumentType docType,
+								    ThotBool loaded);
 extern void ParseTemplate ( XTigerTemplate t,
                               Element el,
                               Document doc );

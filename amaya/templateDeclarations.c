@@ -16,13 +16,11 @@ XTigerTemplate CreatePredefinedTypesLibrary ()
 	XTigerTemplate lib = NewXTigerTemplate(false);
 	lib->isLibrary = true;
 
-	char *integerName = strdup("integer");
-	char *decimalName = strdup("decimal");
+	char *integerName = strdup("number");
 	char *booleanName = strdup("boolean");
 	char *stringName  = strdup("string" );
 
-	Add ( lib->simpleTypes, integerName, NewSimpleType(lib, integerName, XTIGER_INTEGER ));
-	Add ( lib->simpleTypes, decimalName, NewSimpleType(lib, decimalName, XTIGER_DECIMAL ));
+	Add ( lib->simpleTypes, integerName, NewSimpleType(lib, integerName, XTIGER_NUMBER ));
 	Add ( lib->simpleTypes, stringName,  NewSimpleType(lib, stringName,  XTIGER_STRING  ));
 	Add ( lib->simpleTypes, booleanName, NewSimpleType(lib, booleanName, XTIGER_BOOLEAN ));
 
@@ -79,8 +77,39 @@ Declaration NewUnion (const XTigerTemplate t, const char *name,
                        DicDictionary include, DicDictionary exclude)
 {
 	Declaration dec = NewDeclaration (t, name, UNION);
-	dec->unionType.include = include;
-	dec->unionType.exclude = exclude;
+	Declaration aux;
+	
+	dec->unionType.include = CreateDictionary();
+	dec->unionType.exclude = CreateDictionary();
+
+	//We initialize include
+	for (First(include); !IsDone(include); Next(include)) {
+		
+		aux = GetDeclaration(t, CurrentKey(include));
+		
+		if(aux==NULL) //Unknown type > a new XML element
+		{
+			aux = NewElement(t, CurrentKey(include));
+			Add(t->elements, aux->name, aux);
+		}
+		
+		Add(dec->unionType.include, aux->name, aux);
+	}
+
+	//We initialize exclude
+	for (First(exclude); !IsDone(exclude); Next(exclude)) {
+		
+		aux = GetDeclaration(t, CurrentKey(exclude));
+		
+		if(aux==NULL) //Unknown type > a new XML element
+		{
+			aux = NewElement(t, CurrentKey(exclude));
+			Add(t->elements, aux->name, aux);
+		}
+		
+		Add(dec->unionType.exclude, aux->name, aux);
+	}
+
 	return dec;
 }
 
@@ -96,7 +125,8 @@ Declaration NewElement (const XTigerTemplate t, const char *name)
   ----------------------------------------------------------------------*/
 void FreeDeclaration (Declaration dec)
 {
-	//TODO
+	//TODO : remove it from its dictionary
+	//TODO : clean dictionaries etc.
 	TtaFreeMemory(dec->name);
 	TtaFreeMemory(dec);
 }
@@ -124,7 +154,9 @@ XTigerTemplate NewXTigerTemplate (ThotBool addPredefined)
 	XTigerTemplate t = (XTigerTemplate)TtaGetMemory (sizeof(_XTigerTemplate));
 	
 	t->isLibrary    = false;
-//	t->libraries    = CreateDictionary();
+#ifdef TODO_XTIGER
+	t->libraries    = CreateDictionary();
+#endif
 	t->elements		= CreateDictionary();
 	t->simpleTypes	= CreateDictionary();
 	t->components	= CreateDictionary();
@@ -142,7 +174,8 @@ void FreeXTigerTemplate (XTigerTemplate t)
 {	
 	DicDictionary  dic;
 	Declaration    dec;
-/*
+
+#ifdef TODO_XTIGER
     XTigerTemplate lib;
 	dic = t->libraries;
 	//TODO : Clean only unused libraries (not the predefined) and elements declared by t
@@ -156,12 +189,14 @@ void FreeXTigerTemplate (XTigerTemplate t)
     }
 
 	CleanDictionary (dic);
-*/
+#endif
+
 	//Cleaning the components
 	dic = t->components;
 	for (First(dic); !IsDone(dic); Next(dic))
     {
       dec = (Declaration)CurrentElement (dic);
+	  //Deleting only types defined by the template (not the imported ones)
       if (dec->declaredIn == t)
         TtaFreeMemory (dec);
     }
@@ -172,6 +207,7 @@ void FreeXTigerTemplate (XTigerTemplate t)
 	for (First(dic); !IsDone(dic); Next(dic))
     {
       dec = (Declaration)CurrentElement (dic);
+	  //Deleting only types defined by the template (not the imported ones)
       if (dec->declaredIn == t)
         TtaFreeMemory (dec);
     }
@@ -182,6 +218,7 @@ void FreeXTigerTemplate (XTigerTemplate t)
 	for (First(dic); !IsDone(dic); Next(dic))
     {
       dec = (Declaration)CurrentElement (dic);
+	  //Deleting only types defined by the template (not the imported ones)
       if (dec->declaredIn == t)
         TtaFreeMemory (dec);
     }
@@ -192,6 +229,7 @@ void FreeXTigerTemplate (XTigerTemplate t)
 	for (First(dic); !IsDone(dic); Next(dic))
     {
       dec = (Declaration)CurrentElement (dic);
+	  //Deleting only types defined by the template (not the imported ones)
       if (dec->declaredIn == t)
         TtaFreeMemory (dec);
     }
@@ -199,4 +237,47 @@ void FreeXTigerTemplate (XTigerTemplate t)
 
 	TtaFreeMemory (t);
 }
+
+/*----------------------------------------------------------------------
+Imports all declarations in a library lib to a template t
+----------------------------------------------------------------------*/
+void AddLibraryDeclarations (XTigerTemplate t, XTigerTemplate lib)
+{	
+	DicDictionary from = lib->elements;	
+	DicDictionary to = t->elements;
+	
+	for (First(from); !IsDone(from); Next(from))
+		Add (to, CurrentKey(from), CurrentElement(from));
+	
+	from = lib->components;	
+	to = t->components;
+	
+	for (First(from); !IsDone(from); Next(from))
+		Add (to, CurrentKey(from), CurrentElement(from));
+	
+	from = lib->unions;	
+	to = t->unions;
+	
+	for (First(from); !IsDone(from); Next(from))
+		Add (to, CurrentKey(from), CurrentElement(from));
+	
+	from = lib->simpleTypes;	
+	to = t->simpleTypes;
+	
+	for (First(from); !IsDone(from); Next(from))
+		Add (to, CurrentKey(from), CurrentElement(from));
+}
+
+/*----------------------------------------------------------------------
+----------------------------------------------------------------------*/
+void RemoveOldDeclarations (XTigerTemplate t, char *name)
+{
+#ifdef TEMPLATES
+	Remove(t->components, name);
+	Remove(t->elements, name);
+	Remove(t->unions, name);
+	Remove(t->simpleTypes, name);
+#endif // TEMPLATES
+}
+
 #endif /* TEMPLATES */

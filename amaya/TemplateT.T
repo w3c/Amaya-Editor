@@ -129,6 +129,26 @@ RULES
     create Attributes;
     create CloseEmptyTagNL;
   end;
+  
+  useMenu:
+    begin
+    Remove;
+  end;
+  
+  bagMenu:
+    begin
+    Remove;
+  end;
+  
+  optionMenu:
+    begin
+    Remove;
+  end;
+  
+  repeatMenu:
+    begin
+    Remove;
+  end;
 
 ATTRIBUTES
 

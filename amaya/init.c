@@ -3796,6 +3796,7 @@ Document LoadDocument (Document doc, char *pathname,
           docType = docHTML;
           unknown = FALSE;
         }
+	  
       /* Assign a content type to that local document */
       if (isRDF)
         strcpy (local_content_type , "application/xml+rdf");
@@ -4111,7 +4112,10 @@ Document LoadDocument (Document doc, char *pathname,
             }
         }
       else
+	  {
+		DocumentTypes[doc] = docType;
         newdoc = doc;
+	  }
 
       if (docType == docImage)
         /* create an HTML container */
@@ -5431,7 +5435,20 @@ Document GetAmayaDoc (char *urlname, char *form_data,
     docType = docText;
 #ifdef XML_GENERIC
   else if (IsXMLName (documentname))
+  {
     docType = docXml;
+#ifdef TEMPLATES
+	ThotBool xmlDec, withDoctype, isXML, useMath, isKnown;
+	int parsingLevel;
+	CHARSET doc_charset;
+	char charsetname[MAX_LENGTH];
+
+	//TODO Check that urlname is a valid URL
+    CheckDocHeader(urlname, &xmlDec, &withDoctype, &isXML, &useMath, &isKnown,
+                      &parsingLevel, &doc_charset, charsetname, (DocumentType*)&docType);
+
+#endif
+  }
 #endif /* XML_GENERIC */
 #ifdef _SVG
   else if (IsLibraryName (documentname))
