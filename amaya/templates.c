@@ -40,7 +40,7 @@ void NewTemplate (Document doc, View view)
   ThotBool created;
 
   if (templates == NULL)
-    templates = InitializeTemplateEnvironment();
+    InitializeTemplateEnvironment();
   created = CreateNewTemplateDocDlgWX(BaseDialog + OpenTemplate,
                                       TtaGetViewFrame (doc, view), doc,
                                       TtaGetMessage (AMAYA, AM_NEW_TEMPLATE),templateDir);

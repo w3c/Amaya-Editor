@@ -31,14 +31,10 @@ void AddElementDeclaration (XTigerTemplate t, Element el)
 {
 #ifdef TEMPLATES
 	char *name;
-	Declaration dec;
-	
+
 	name	  = GetAttributeStringValue (el, Template_ATTR_name);
 	
-	dec  = NewElement(t, name);
-	
-	RemoveOldDeclarations(t, name);
-	Add(t->elements, name, dec);
+	NewElement(t, name);
 	
 	if (name)    TtaFreeMemory (name);
 #endif /* TEMPLATES */
@@ -51,18 +47,14 @@ void AddUnionDeclaration (XTigerTemplate t, Element el)
 {
 #ifdef TEMPLATES
 	char *name, *include, *exclude;
-	Declaration dec;
 	
 	name	  = GetAttributeStringValue (el, Template_ATTR_name);
 	include   = GetAttributeStringValue (el, Template_ATTR_includeAt);
 	exclude   = GetAttributeStringValue (el, Template_ATTR_exclude);
 	
-	dec  = NewUnion(t, name, 
+	NewUnion(t, name, 
 		CreateDictionaryFromList(include), 
 		CreateDictionaryFromList(exclude));
-	
-	RemoveOldDeclarations(t, name);
-	Add(t->unions, name, dec);
 	
 	if (name)    TtaFreeMemory (name);
 	if (include) TtaFreeMemory (include);
@@ -77,13 +69,9 @@ void AddComponentDeclaration (XTigerTemplate t, Element el)
 {
 #ifdef TEMPLATES
 	char *name;
-	Declaration dec;
 	
 	name = GetAttributeStringValue (el, Template_ATTR_name);
-	dec = NewComponent(t, name, el);
-	
-	RemoveOldDeclarations(t, name);
-	Add(t->components, name, dec);
+	NewComponent(t, name, el);
 	
 	if (name)    TtaFreeMemory (name);
 #endif /* TEMPLATES */
@@ -110,20 +98,14 @@ void CheckTypesAttribute (XTigerTemplate t, Element el)
 #ifdef TEMPLATES
 	char *types;
 	DicDictionary dic;
-	Declaration dec;
-	
+
 	types = GetAttributeStringValue (el, Template_ATTR_types);
 	dic   = CreateDictionaryFromList(types);
 	
 	for (First(dic); !IsDone(dic); Next(dic))
-	{
 		if ( GetDeclaration(t, CurrentKey(dic)) == NULL)
-		{
 			//TODO_XTIGER We must add the current namespace
-			dec = NewElement(t, CurrentKey(dic));
-			Add(t->elements, CurrentKey(dic), dec);
-		}
-	}
+			NewElement(t, CurrentKey(dic));
 	
 	TtaFreeMemory(types);
 	CleanDictionary(dic);
@@ -169,164 +151,6 @@ void ParseDeclarations (XTigerTemplate t, Element el)
 #endif /* TEMPLATES */
 }
 
-void PrintUnion (Declaration dec, int indent, XTigerTemplate t, FILE *file)
-{	
-#ifdef TEMPLATES
-	DicDictionary  dic;
-	Declaration    aux;
-	char*		   indentation;
-	int 		   i=0;
-	
-	indentation = (char*) TtaGetMemory(indent*sizeof(char)+1);
-	for(i=0;i<indent;i++)
-		indentation [i] = '\t';
-	indentation [indent] = '\0';
-	
-	
-	dic = dec->unionType.include;
-	if(!IsEmpty(dic))
-	{
-		fprintf(file, "\n%sINCLUDE",indentation);
-		
-		for(First(dic);!IsDone(dic);Next(dic))
-		{
-			aux = (Declaration) CurrentElement(dic);
-			switch(aux->nature)
-			{
-			case COMPONENT :			
-			case SIMPLE_TYPE :
-			case XMLELEMENT :
-				fprintf(file, "\n%s+ %s ",indentation,aux->name);
-				if(aux->declaredIn!=t)
-					fprintf(file, "*");
-				break;
-			case UNION :
-				fprintf(file, "\n%s+ %s ",indentation,aux->name);
-				if(aux->declaredIn!=t)
-					fprintf(file, "*");
-				PrintUnion(aux, indent+1, t, file);
-			default :
-				//impossible
-				break;
-			}
-		}
-	}
-	
-	dic = dec->unionType.exclude;
-	if(!IsEmpty(dic))
-	{
-		fprintf(file, "\n%sEXCLUDE",indentation);
-		
-		for(First(dic);!IsDone(dic);Next(dic))
-		{
-			aux = (Declaration) CurrentElement(dic);
-			switch(aux->nature)
-			{
-			case COMPONENT :			
-			case SIMPLE_TYPE :
-			case XMLELEMENT :
-				fprintf(file, "\n%s- %s ",indentation,aux->name);
-				if(aux->declaredIn!=t)
-					fprintf(file, "*");
-				break;
-			case UNION :
-				fprintf(file, "\n%s- %s ",indentation,aux->name);
-				if(aux->declaredIn!=t)
-					fprintf(file, "*");
-				PrintUnion(aux, indent+1, t, file);
-			default :
-				//impossible
-				break;
-			}
-		}
-	}
-	
-	TtaFreeMemory(indentation);
-#endif /* TEMPLATES */
-}
-
-void PrintDeclarations (XTigerTemplate t, FILE *file)
-{
-#ifdef TEMPLATES
-	DicDictionary  aux;
-	Declaration    dec;
-	
-	fprintf(file, "SIMPLE TYPES\n");
-	fprintf(file, "------------");
-	aux = t->simpleTypes;
-	for(First(aux);!IsDone(aux);Next(aux))
-	{
-		dec = (Declaration) CurrentElement(aux);
-		fprintf(file, "\n%s ",dec->name);
-		if(dec->declaredIn!=t)
-			fprintf(file, "*");
-	}
-	
-	aux = t->elements;
-	if(!IsEmpty(aux))
-	{
-		fprintf(file, "\n\nXML ELEMENTS\n");
-		fprintf(file, "------------");	
-		for(First(aux);!IsDone(aux);Next(aux))
-		{
-			dec = (Declaration) CurrentElement(aux);
-			fprintf(file,"\n%s ",dec->name);
-			if(dec->declaredIn!=t)
-				fprintf(file, "*");
-		}
-	}
-	
-	aux = t->components;
-	if(!IsEmpty(aux))
-	{
-		fprintf(file, "\n\nCOMPONENTS\n");
-		fprintf(file, "----------");	
-		for(First(aux);!IsDone(aux);Next(aux))
-		{
-			dec = (Declaration) CurrentElement(aux);
-			fprintf(file,"\n%s ",dec->name);
-			if(dec->declaredIn!=t)
-				fprintf(file, "*");
-			fprintf(file,"\n********************\n");
-			TtaListAbstractTree (dec->componentType.content, file);
-			fprintf(file,"********************\n");
-		}
-	}
-	
-	aux = t->unions;
-	if(!IsEmpty(aux))
-	{
-		fprintf(file, "\n\nUNIONS\n");
-		fprintf(file, "------");
-		for(First(aux);!IsDone(aux);Next(aux))
-		{
-			dec = (Declaration) CurrentElement(aux);
-			fprintf(file,"\n%s ",dec->name);
-			if(dec->declaredIn!=t)
-				fprintf(file, "*");
-			PrintUnion(dec, 1, t, file);
-		}
-	}
-#endif /* TEMPLATES */
-}
-
-void DumpDeclarations(XTigerTemplate t)
-{
-#ifdef TEMPLATES
-	char localname[MAX_LENGTH];
-	FILE *file;
-
-    strcpy (localname, TempFileDirectory);
-    strcat (localname, DIR_STR);
-    strcat (localname, "templateDecl.debug");
-    file = TtaWriteOpen (localname);
-		
-	PrintDeclarations(t, file);
-
-	TtaWriteClose (file);
-#endif /* TEMPLATES */
-}
-
 /*----------------------------------------------------------------------
 LoadTemplate_callback: Called after loading a template.
 ----------------------------------------------------------------------*/
@@ -337,13 +161,12 @@ void LoadTemplate_callback (int newdoc, int status,  char *urlName,
 #ifdef TEMPLATES	
 	TemplateCtxt *ctx = (TemplateCtxt*)context;
 	
-	XTigerTemplate t = NewXTigerTemplate (TRUE);
-	t->isLibrary = FALSE;
-	
-	Add (templates, ctx->templatePath, t);
+	XTigerTemplate t = NewXTigerTemplate (ctx->templatePath, TRUE);
 
 	Element el = TtaGetMainRoot(newdoc);
-	ParseDeclarations (t, el);	
+	ParseDeclarations (t, el);
+	RedefineSpecialUnions (t);
+	PreInstanciateComponents (t);
 
 #ifdef AMAYA_DEBUG	
 	DumpDeclarations (t);

@@ -26,108 +26,62 @@
 struct _XTigerTemplate;
 typedef struct _XTigerTemplate *XTigerTemplate;
 
-struct _XTigerTemplate
-{	
-  ThotBool        isLibrary;			//Is this a library? (otherway it's a template)
-#ifdef TODO_XTIGER
-  DicDictionary   libraries;			//Imported libraries
-#endif
-  DicDictionary   simpleTypes;			//All simple types declared in the document
-  DicDictionary   elements;				//All element types declared in the document
-  DicDictionary   components;			//All component types declared in the document
-  DicDictionary   unions;				//All union types declared in the document
-};
+/* Structure of a declaration */
+struct _Declaration;
+typedef struct _Declaration *Declaration;
 
-/* Structure of a Declaration */
-
-//Just for clarity
-typedef int TypeNature;
 typedef int SimpleTypeType;
 
-typedef struct _XmlElement
-{
-	char	*name;
-} XmlElement;
-
-typedef struct _SimpleType
-{
-	SimpleTypeType type;
-} SimpleType;
-
-typedef struct _Component
-{
-	Element        content;
-} Component;
-
-typedef struct _Union
-{
-	DicDictionary  include; //Dictionary<Declaration>
-	DicDictionary  exclude; //Dictionary<Declaration>
-} Union;
-
-typedef struct _Declaration
-{
-	char          *name;
-	TypeNature     nature;
-	XTigerTemplate declaredIn;
-	union
-	{
-		SimpleType   simpleType;
-		Component    componentType;
-		Union        unionType;
-		XmlElement   elementType;
-	};
-} *Declaration;
-
-//List of loaded templates and libraries
-THOT_EXPORT DicDictionary templates;
-
-/*----------------------------------------------------------------------
-  Returns a library with the predefined types
-  ----------------------------------------------------------------------*/
-extern XTigerTemplate CreatePredefinedTypesLibrary ( void );
+#ifdef TEMPLATES
+	//List of loaded templates and libraries
+	THOT_EXPORT DicDictionary templates;
+#endif
 
 /*----------------------------------------------------------------------
   Initializing the template environment
   ----------------------------------------------------------------------*/
-extern DicDictionary InitializeTemplateEnvironment ( void );
+extern void InitializeTemplateEnvironment ( void );
+
+/*----------------------------------------------------------------------
+   Creates a new template with its dictionaries and stores it.
+ ----------------------------------------------------------------------*/
+extern XTigerTemplate NewXTigerTemplate (const char *templatePath, 
+										 const ThotBool addPredefined );
+
+/*----------------------------------------------------------------------
+  Creates a new library with its dictionaries and stores it.
+  ----------------------------------------------------------------------*/
+extern XTigerTemplate NewXTigerLibrary (const char *templatePath, 
+										const ThotBool addPredefined );
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-extern Declaration NewSimpleType ( const XTigerTemplate t,
+extern void NewSimpleType ( const XTigerTemplate t,
                                    const char *name,
-                                   TypeNature xtype );
+                                   SimpleTypeType xtype );
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-extern Declaration NewComponent ( const XTigerTemplate t,
+extern void NewComponent ( const XTigerTemplate t,
                                   const char *name,
                                   const Element el );
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-extern Declaration NewUnion ( const XTigerTemplate t,
+extern void NewUnion ( const XTigerTemplate t,
                               const char *name,
-                              DicDictionary include,
-                              DicDictionary exclude );
+                              DicDictionary include = NULL,
+                              DicDictionary exclude = NULL );
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-extern Declaration NewElement ( const XTigerTemplate t,
+extern void NewElement ( const XTigerTemplate t,
                               const char *name );
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-extern void FreeDeclaration ( Declaration dec );
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 extern Declaration GetDeclaration(const XTigerTemplate t, const char *name);
 
-/*----------------------------------------------------------------------
-   Creates a new template with its dictionaries
- ----------------------------------------------------------------------*/
-extern XTigerTemplate NewXTigerTemplate ( ThotBool addPredefined );
 
 /*----------------------------------------------------------------------
   Free all the space used by a template (also its dictionaries)
@@ -139,13 +93,8 @@ extern void FreeXTigerTemplate ( XTigerTemplate t );
   ----------------------------------------------------------------------*/
 extern void AddLibraryDeclarations (XTigerTemplate t, XTigerTemplate lib);
 
-/*----------------------------------------------------------------------
-Imports all declarations in a library lib to a template t
-----------------------------------------------------------------------*/
-extern void AddLibraryDeclarations (XTigerTemplate t, XTigerTemplate lib);
+extern void PreInstanciateComponents(XTigerTemplate t);
+extern void RedefineSpecialUnions(XTigerTemplate t);
+extern void DumpDeclarations(XTigerTemplate t);
 
-/*----------------------------------------------------------------------
-Removes the declaration identified by name
-----------------------------------------------------------------------*/
-extern void RemoveOldDeclarations (XTigerTemplate t, char *name);
 #endif //TEMPLATE_DECLARATIONS

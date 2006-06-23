@@ -3,8 +3,6 @@
  *  AUTHOR : Francesc Campoy Flores
  */
 
-#ifdef TEMPLATES
-
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "mydictionary.h"
@@ -269,4 +267,3 @@ DicDictionary CreateDictionaryFromList (const char *list)
 
 	return dic;
 }
-#endif /* TEMPLATES */
