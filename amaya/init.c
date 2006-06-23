@@ -5382,15 +5382,19 @@ Document GetAmayaDoc (char *urlname, char *form_data,
   CSSInfoPtr          css;
   PInfoPtr            pInfo;
   AmayaDoc_context   *ctx = NULL;
+	CHARSET             doc_charset;
   char               *tempfile;
   char               *parameters;
   char               *target;
   char               *initial_url;
   char               *documentname;
   char               *content_type = NULL;
+	char                charsetname[MAX_LENGTH];
+	int                 parsingLevel;
   int                 toparse;
   int                 mode;
   int                 docType;
+	ThotBool            xmlDec, withDoctype, isXML, useMath, isKnown;
   ThotBool            ok;
 
   /* Extract parameters if necessary */
@@ -5437,17 +5441,9 @@ Document GetAmayaDoc (char *urlname, char *form_data,
   else if (IsXMLName (documentname))
   {
     docType = docXml;
-#ifdef TEMPLATES
-	ThotBool xmlDec, withDoctype, isXML, useMath, isKnown;
-	int parsingLevel;
-	CHARSET doc_charset;
-	char charsetname[MAX_LENGTH];
-
 	//TODO Check that urlname is a valid URL
     CheckDocHeader(urlname, &xmlDec, &withDoctype, &isXML, &useMath, &isKnown,
-                      &parsingLevel, &doc_charset, charsetname, (DocumentType*)&docType);
-
-#endif
+                   &parsingLevel, &doc_charset, charsetname, (DocumentType*)&docType);
   }
 #endif /* XML_GENERIC */
 #ifdef _SVG
@@ -5610,7 +5606,7 @@ Document GetAmayaDoc (char *urlname, char *form_data,
           content_type = "application/rdf";
         }
 #endif /* ANNOTATIONS */
-      else if (doc == 0 || DontReplaceOldDoc)
+      else if (method != CE_MAKEBOOK && (doc == 0 || DontReplaceOldDoc))
         {
           /* In case of initial document, open the view before loading */
           /* add the URI in the combobox string */

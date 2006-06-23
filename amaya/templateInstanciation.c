@@ -25,7 +25,7 @@ void ReallyInstanciateTemplate (char *instancePath, char *templatePath, int doc,
 {
 #ifdef TEMPLATES
 	//We copy the templatePath so the context can be freed later.
-	InstanciateTemplate(strdup(templatePath), doc);
+	InstanciateTemplate(TtaStrdup(templatePath), doc);
 
 #ifdef AMAYA_DEBUG
 

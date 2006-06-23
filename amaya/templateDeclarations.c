@@ -120,10 +120,6 @@ XTigerTemplate CreatePredefinedTypesLibrary ()
 	XTigerTemplate lib = NewXTigerLibrary(PREDEFINED_LIB, FALSE);
 	lib->isLibrary = true;
 
-	char *integerName = strdup("number");
-	char *booleanName = strdup("boolean");
-	char *stringName  = strdup("string" );
-
 	NewSimpleType(lib, "number",  XTIGER_NUMBER  );
 	NewSimpleType(lib, "boolean", XTIGER_BOOLEAN );
 	NewSimpleType(lib, "string",  XTIGER_STRING  );

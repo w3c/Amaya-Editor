@@ -215,22 +215,24 @@ void LoadTemplate_callback (int newdoc, int status,  char *urlName,
 		TtaExportDocumentWithNewLineNumbers (newdoc, ctx->instancePath, NULL);
 		break;
 	}
-
-	TtaFreeMemory(ctx);
+  TtaFreeMemory (ctx->templatePath);
+  TtaFreeMemory (ctx->instancePath);
+	TtaFreeMemory (ctx);
 #endif /* TEMPLATES */
 }
 
 
 /*----------------------------------------------------------------------
 ----------------------------------------------------------------------*/
-void LoadTemplate (Document doc, char* templatename, char* docname, DocumentType doctype, ThotBool createInstance)
+void LoadTemplate (Document doc, char* templatename, char* docname,
+                   DocumentType doctype, ThotBool createInstance)
 {
 #ifdef TEMPLATES
-
-	//Stores the template path for show it in next instanciation forms
+  Document newdoc;
 	char			*directory, *document;
-	unsigned int	size = strlen(templatename);
+	unsigned int	size = strlen(templatename) + 1;
 	
+	//Stores the template path for show it in next instanciation forms
 	directory	= (char*) TtaGetMemory(size);
 	document	= (char*) TtaGetMemory(size);
 
@@ -245,12 +247,12 @@ void LoadTemplate (Document doc, char* templatename, char* docname, DocumentType
 	{	
 		//Creation of the callback context
 		TemplateCtxt *ctx	= (TemplateCtxt *)TtaGetMemory (sizeof (TemplateCtxt));
-		ctx->templatePath	= templatename;
-		ctx->instancePath	= docname;
+		ctx->templatePath	= TtaStrdup (templatename);
+		ctx->instancePath	= TtaStrdup (docname);
 		ctx->docType		= doctype;
 		ctx->createInstance = createInstance;
 	
-		Document newdoc = GetAmayaDoc (templatename, NULL, doc, doc, CE_MAKEBOOK, FALSE, 
+		newdoc = GetAmayaDoc (templatename, NULL, doc, doc, CE_MAKEBOOK, FALSE, 
 			(void (*)(int, int, char*, char*, const AHTHeaders*, void*)) LoadTemplate_callback,
 			(void *) ctx);
 	}
