@@ -1540,7 +1540,7 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
               iw -= dx;
             }
           else
-            ix = 0;
+            iw = 0;
         }
       if (clipY > y)
         {
@@ -1636,13 +1636,22 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
 #endif /* _GL */
                   i += dw;
                   dx = 0;
+                  dw = imageDesc->PicWidth;
                 } while (i < w);
               j += dh;
               dy = 0;
+              dh = imageDesc->PicHeight;
             }
           while (j < h);
         }
       
+#ifdef _GTK
+      if (imageDesc->PicMask)
+        {
+          gdk_gc_set_clip_mask (TtGraphicGC, (ThotPixmap)None);
+          gdk_gc_set_clip_origin (TtGraphicGC, 0, 0);
+        }
+#endif /* _GTK */
 #if !defined(_GL) && defined(_WINGUI)
       if (w > 0 && h > 0)
         BitBlt (TtDisplay, xFrame, yFrame, w, h, hMemDC, 0, 0, SRCCOPY);
@@ -1704,8 +1713,8 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
           /* clipping width is done by the image width */
           if (w > imageDesc->PicWidth)
             w = imageDesc->PicWidth;
-          delta = imageDesc->PicWidth - dx;
-          if (delta <= 0)
+          dw = imageDesc->PicWidth - dx;
+          if (dw <= 0)
             {
               clipWidth = 0;
               dx = 0;
@@ -1713,10 +1722,10 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
             }
           else
             {
-              if (clipWidth > delta)
-                clipWidth = delta;
-              if (w > delta)
-                w = delta;
+              if (clipWidth > dw)
+                clipWidth = dw;
+              if (w > dw)
+                w = dw;
             }
         }
       
@@ -1733,8 +1742,8 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
           /* clipping height is done by the image height */
           if (h > imageDesc->PicHeight)
             h = imageDesc->PicHeight;
-          delta = imageDesc->PicHeight - dy;
-          if (delta <= 0)
+          dh = imageDesc->PicHeight - dy;
+          if (dh <= 0)
             {
               clipHeight = 0;
               dy = 0;
@@ -1742,10 +1751,10 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
             }
           else
             {
-              if (clipHeight > delta)
-                clipHeight = delta;
-              if (h > delta)
-                h = delta;
+              if (clipHeight > dh)
+                clipHeight = dh;
+              if (h > dh)
+                h = dh;
             }
         }
       /* compute the clipping in the drawing area */
