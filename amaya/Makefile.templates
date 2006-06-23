@@ -8,11 +8,19 @@ AMAYA_TEMPLATES_OPTIONS= -DTEMPLATES
 
 AMAYA_TEMPLATES_OBJ= \
 	TemplateAPP.o \
-	Templatebuilder.o
+	Templatebuilder.o \
+	templateDeclarations.o \
+	templateInstanciation.o \
+	templateLoad.o \
+	templateUtils.o
 
 AMAYA_TEMPLATES_SRC= \
 	TemplateAPP.c \
-	Templatebuilder.c
+	Templatebuilder.c \
+	templateDeclarations.c \
+	templateInstanciation.c \
+	templateLoad.c \
+	templateUtils.c
 
 AMAYA_TEMPLATES_INCLUDES= 
 

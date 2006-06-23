@@ -128,9 +128,9 @@ amaya_comp_redland: @MAKEREDLAND@ force
 
 
 #########################################################################
-#									#
-#		         General rules					#
-#									#
+#                                                                       #
+#		              General rules                                         #
+#                                                                       #
 #########################################################################
 
 ALL_AMAYA_OPTIONS= $(AMAYA_OPTIONS) \
@@ -261,9 +261,7 @@ AMAYA_OBJ = \
 	XLinkbuilder.o \
 	XLinkedit.o \
 	mydictionary.o \
-	templateDeclarations.o \
 	templates.o \
-	templatesStructure.o \
 	trans.o \
 	transparse.o \
 	UIcss.o \
