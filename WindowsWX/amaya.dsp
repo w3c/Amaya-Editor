@@ -57,7 +57,7 @@ LINK32=link.exe
 # SUBTRACT LINK32 /pdb:none
 # Begin Special Build Tool
 SOURCE="$(InputPath)"
-PreLink_Cmds=copy                                      ..\..\wxWidgets\lib\vc_dll\*.dll                                      bin\ 
+PreLink_Cmds=copy                                       ..\..\wxWidgets\lib\vc_dll\*.dll                                       bin\ 
 # End Special Build Tool
 
 !ELSEIF  "$(CFG)" == "amaya - Win32 Debug"
@@ -88,7 +88,7 @@ LINK32=link.exe
 # SUBTRACT LINK32 /pdb:none
 # Begin Special Build Tool
 SOURCE="$(InputPath)"
-PreLink_Cmds=copy                                      ..\..\wxWidgets\lib\vc_dll\*.dll                                      bin\ 
+PreLink_Cmds=copy                                       ..\..\wxWidgets\lib\vc_dll\*.dll                                       bin\ 
 # End Special Build Tool
 
 !ENDIF 
@@ -463,22 +463,19 @@ SOURCE=..\amaya\templateDeclarations.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\amaya\templateDeclarations.h
+SOURCE=..\amaya\templateInstanciation.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\amaya\templateLoad.c
 # End Source File
 # Begin Source File
 
 SOURCE=..\amaya\templates.c
-
-!IF  "$(CFG)" == "amaya - Win32 Release"
-
-!ELSEIF  "$(CFG)" == "amaya - Win32 Debug"
-
-!ENDIF 
-
 # End Source File
 # Begin Source File
 
-SOURCE=..\amaya\templatesStructure.c
+SOURCE=..\amaya\templateUtils.c
 # End Source File
 # Begin Source File
 
@@ -503,10 +500,6 @@ SOURCE=..\amaya\transparse.c
 # Begin Source File
 
 SOURCE=..\amaya\UIcss.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\amaya\wxdialog\wx\msw\watch1.cur
 # End Source File
 # Begin Source File
 
