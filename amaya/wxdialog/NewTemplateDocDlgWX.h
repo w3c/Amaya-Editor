@@ -37,7 +37,7 @@ private:
   void OnCreateButton( wxCommandEvent& event );
   void OnClearButton( wxCommandEvent& event );
   void OnCancelButton( wxCommandEvent& event );
-       
+  void OnClose( wxCloseEvent& event );
 
   void OnInstanceFilenameButton( wxCommandEvent& event );
   void OnTemplateDirNameButton ( wxCommandEvent& event );
@@ -58,7 +58,6 @@ private:
   bool     m_LockUpdateFlag;
   int *    m_pLastUsedFilter;
   wxString m_DirSep;
-  int m_doc;
 };
 
 #endif  //__OPENDOCDLGWX_H__

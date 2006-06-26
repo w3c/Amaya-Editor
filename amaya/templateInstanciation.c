@@ -68,7 +68,6 @@ void ReallyInstanciateTemplate (char *instancePath, char *templatePath, int doc,
 	FreeDocumentResource(doc);
 */
 	//Open the instance
-	DontReplaceOldDoc = FALSE;
 	TtaExtractName (instancePath, DirectoryName, DocumentName);
 	CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
 
@@ -88,15 +87,16 @@ void InstantiateTemplate_callback (int newdoc, int status,  char *urlName,
 
 /*----------------------------------------------------------------------
 ----------------------------------------------------------------------*/
-void InstanciateTemplate (Document doc, char *templatename, char *docname, DocumentType docType, ThotBool loaded)
+void InstanciateTemplate (Document doc, char *templatename, char *docname,
+                          DocumentType docType, ThotBool loaded)
 {
 #ifdef TEMPLATES
 	if(!loaded)
 	{
 		//Creation of the callback context
 		InstanciationCtxt *ctx	= (InstanciationCtxt *)TtaGetMemory (sizeof (InstanciationCtxt));
-		ctx->templatePath		= templatename;
-		ctx->instancePath		= docname;
+		ctx->templatePath		= TtaStrdup (templatename);
+		ctx->instancePath		= TtaStrdup (docname);
 		ctx->schemaName			= GetSchemaFromDocType(docType);
 		ctx->docType			= docType;
 		

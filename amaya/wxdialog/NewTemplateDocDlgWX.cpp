@@ -18,6 +18,7 @@
 #include "registry_wx.h"
 
 static int      MyRef = 0;
+static int      Mydoc = 0;
 
 //-----------------------------------------------------------------------------
 // Event table: connect the events to the handler functions to process them
@@ -39,6 +40,7 @@ BEGIN_EVENT_TABLE(NewTemplateDocDlgWX, AmayaDialog)
   
   EVT_TEXT( XRCID("wxID_TEMPLATEDIRNAME"), NewTemplateDocDlgWX::OnText_TemplateDirName )
   EVT_TEXT( XRCID("wxID_INSTANCEFILENAME"), NewTemplateDocDlgWX::OnText_InstanceFilename )
+  EVT_CLOSE( NewTemplateDocDlgWX::OnClose )
   END_EVENT_TABLE()
 
 /*----------------------------------------------------------------------
@@ -59,15 +61,13 @@ NewTemplateDocDlgWX::NewTemplateDocDlgWX ( int ref,
                                            const wxString & filter,
                                            int * p_last_used_filter
                                            ) :
-  AmayaDialog( parent, ref )
-  ,m_Filter(filter)
+  m_Filter(filter)
   ,m_LockUpdateFlag(false)
   ,m_pLastUsedFilter(p_last_used_filter)
-  ,m_doc(doc)
 {
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("NewTemplateDocDlgWX"));
   MyRef = ref;
-
+  Mydoc = doc;
   // update dialog labels with given ones
   SetTitle( title );
 
@@ -218,8 +218,9 @@ void NewTemplateDocDlgWX::OnCreateButton( wxCommandEvent& event )
       // give the new url to amaya (to do url completion)
       ThotCallback (BaseDialog + URLName,  STRING_DATA, (char *)docname );  
       
-      CreateInstanceOfTemplate (m_doc, temp, docname, docHTML);
-      TtaDestroyDialogue (MyRef);
+      CreateInstanceOfTemplate (Mydoc, temp, docname, docHTML);
+      TtaUnmapDialogue (MyRef);
+      //TtaDestroyDialogue (MyRef);
     }
   else
     {
@@ -228,6 +229,7 @@ void NewTemplateDocDlgWX::OnCreateButton( wxCommandEvent& event )
                               TtaConvMessageToWX(""),
                               (long) wxOK | wxICON_EXCLAMATION);
       msgdlg.ShowModal();
+      TtaDestroyDialogue (MyRef);
     }
 }
 
@@ -252,6 +254,14 @@ void NewTemplateDocDlgWX::OnClearButton( wxCommandEvent& event )
 void NewTemplateDocDlgWX::OnCancelButton( wxCommandEvent& event )
 {
   TtaDestroyDialogue (MyRef);      
+}
+
+/*----------------------------------------------------------------------
+  OnClose
+  ----------------------------------------------------------------------*/
+void NewTemplateDocDlgWX::OnClose( wxCloseEvent& event )
+{
+  //TtaDestroyDialogue (MyRef);  
 }
 
 /*----------------------------------------------------------------------

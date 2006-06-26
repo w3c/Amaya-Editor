@@ -186,7 +186,7 @@ void LoadTemplate_callback (int newdoc, int status,  char *urlName,
 
     if(ctx->createInstance)
 	{
-		DontReplaceOldDoc = FALSE;
+		DontReplaceOldDoc = TRUE;
 		InstanciateTemplate(newdoc, ctx->templatePath, ctx->instancePath, ctx->docType, TRUE);
 	}
 /* TODO: Must we free the resources??

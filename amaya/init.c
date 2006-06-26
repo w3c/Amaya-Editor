@@ -2719,7 +2719,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 
   /* previous document */
   doc = oldDoc;
-  if (replaceOldDoc && oldDoc>0)
+  if (replaceOldDoc && oldDoc > 0)
     /* the new document will replace another document in the same window */
     {
       // transmit the visibility to the new document
@@ -2785,13 +2785,14 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
       isOpen = TRUE;
       if (docType == docSource)
         {
-          /* if the document is a source view, open it into the same page as formatted view */
+          /* source view is open it into the same page as formatted view */
           window_id = TtaGetDocumentWindowId( doc, -1 );
           TtaGetDocumentPageId( doc, -1, &page_id, &page_position );
           page_position = 2;
         }
       else
         {
+          // the document is displayed in a window
           window_id = TtaGetDocumentWindowId( doc, -1 );
           wxASSERT(window_id > 0);
           page_id   = TtaGetFreePageId( window_id );
@@ -2886,6 +2887,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
           lang = TtaGetLanguageIdFromScript('L');
           TtaSetTextContent (leaf, (unsigned char *)buffer, lang, doc);
         }
+
       if (docType == docBookmark)
         TtaSetNotificationMode (doc, 0); /* we don't need notif. in bookmarks */
       else
@@ -2893,37 +2895,39 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
        
       /* store the profile of the new document */
       TtaSetDocumentProfile (doc, profile);
+
+      if (method == CE_MAKEBOOK)
+        // it's not necessary to create the document window
+        return doc;
+
       /* gets registered window parameters */
       GiveWindowGeometry (doc, docType, method, &x, &y, &w, &h);
 #ifdef _WX
       /* create a new window if needed */
       if (window_id == -1)
         {
-          /* get the window parent because the log should stay on top of his parent */
+          /* get the parent window because the log should stay on top of his parent */
           int parent_window_id = TtaGetDocumentWindowId( oldDoc, -1 );
           if (docType == docLog)
-            {
-              window_id = TtaMakeWindow(x, y, w, h, WXAMAYAWINDOW_SIMPLE, parent_window_id );
-            }
+            window_id = TtaMakeWindow(x, y, w, h, WXAMAYAWINDOW_SIMPLE, parent_window_id );
           else
-            {
-              /* a normal window should never had a parent ! */
-              window_id = TtaMakeWindow(x, y, w, h, WXAMAYAWINDOW_NORMAL, 0 );
-            }
+            /* a normal window should never had a parent ! */
+            window_id = TtaMakeWindow(x, y, w, h, WXAMAYAWINDOW_NORMAL, 0 );
           page_id = TtaGetFreePageId( window_id );
           page_position = 1;
         }
 #endif /* _WX */
 
 #ifdef _WX
-      /* init the internal default documents menus states : enable/disable, toggle/untoggle
-       * need to be done before frame creation because the active frame will use it to refresh the menus */
+      /* init default documents menus states: enable/disable, toggle/untoggle
+       * need to be done before frame creation because the active frame will
+       * use it to refresh the menus */
       if (!replaceOldDoc || !isOpen)
         TtaInitMenuItemStats(doc);
       TtaInitTopMenuStats(doc);
 #endif /* _WX */
 
-       /* open the main view */
+      /* open the main view */
       if (docType == docLog)
         /* without menu bar */
         mainView = TtaOpenMainView (doc, DocumentTypeNames[docType], x, y, w, h, FALSE, FALSE,
@@ -2943,7 +2947,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 
 #ifdef _WX
       /* init the zoom factor to 0 if the document isn't replaced */
-      if (!replaceOldDoc/* && docType!=docSource*/)
+      if (!replaceOldDoc)
         TtaSetZoom (doc, -1, 0);
 #endif /* _WX */
 
@@ -2966,11 +2970,9 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 #ifdef _WX
 #ifdef _SVG
           if (docType == docLibrary)
-            {
-              /* Initialize SVG Library Buffer string */
-              TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA,  AM_OPEN_URL),
-                              FALSE, (Proc)OpenLibraryCallback, SVGlib_list);
-            }
+            /* Initialize SVG Library Buffer string */
+            TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA,  AM_OPEN_URL),
+                            FALSE, (Proc)OpenLibraryCallback, SVGlib_list);
 #endif /* _SVG */
 #endif /* _WX */
 
@@ -2978,14 +2980,12 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
           TtcSwitchButtonBar (doc, 1); /* no button bar */
           if (docType != docLibrary)
             TtcSwitchCommands (doc, 1); /* no command open */
-          else
-            {
 #ifdef _SVG
-              /* Initialize SVG Library Buffer string */
-              TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA,  AM_OPEN_URL),
-                              FALSE, (Proc)OpenLibraryCallback, SVGlib_list);
+          else
+            /* Initialize SVG Library Buffer string */
+            TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA,  AM_OPEN_URL),
+                            FALSE, (Proc)OpenLibraryCallback, SVGlib_list);
 #endif /* _SVG */
-            }
 #endif /* _WX */
         }
       else if (!isOpen)
@@ -3131,8 +3131,6 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
               ActiveTransfer (doc);
             }
 #endif /* _GTK || _WINGUI */
-
-
         } /* isOpen */
     }
 
@@ -3156,14 +3154,14 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 #if _WX
   /* now be sure that the urlbar is setup */
   TtaAddTextZone ( doc, 1, TtaGetMessage (AMAYA,  AM_OPEN_URL),
-   	               TRUE, (Proc)TextURL, URL_list );
+                   TRUE, (Proc)TextURL, URL_list );
 #endif /* _WX */
 
   if ((DocumentTypes[doc] == docHTML ||
-      DocumentTypes[doc] == docSVG ||
-      DocumentTypes[doc] == docXml ||
-      DocumentTypes[doc] == docMath ||
-      DocumentTypes[doc] == docLibrary)
+       DocumentTypes[doc] == docSVG ||
+       DocumentTypes[doc] == docXml ||
+       DocumentTypes[doc] == docMath ||
+       DocumentTypes[doc] == docLibrary)
 #ifndef _WX
       && !replaceOldDoc
 #endif /* _WX */
@@ -3270,7 +3268,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
           if (DocumentTypes[doc] == docMath)
             TtaSetMenuOn (doc, 1, Style);
           else
-              TtaSetMenuOff (doc, 1, Style);
+            TtaSetMenuOff (doc, 1, Style);
           TtaChangeButton (doc, 1, iI, iconINo, FALSE);
           TtaChangeButton (doc, 1, iB, iconBNo, FALSE);
           TtaChangeButton (doc, 1, iT, iconTNo, FALSE);
@@ -3374,7 +3372,6 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
   // show the window if it's not allready done
   TtaShowWindow( window_id, TRUE );
 #endif /* _WX */
-
   return (doc);
 }
 
@@ -5306,7 +5303,8 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName,
             }
         }
 
-      if (ok && !stopped_flag)
+      if (ok && !stopped_flag &&
+          DocumentTypes[newdoc] != docLog && method != CE_MAKEBOOK)
         {
           ResetStop (newdoc);
 #ifdef _GL
@@ -5321,7 +5319,7 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName,
 
   /* select the target if present */
   if (ok && !stopped_flag && target != NULL && target[0] != EOS &&
-      newdoc != 0)
+      newdoc != 0 && method != CE_MAKEBOOK)
     {
       /* attribute HREF contains the NAME of a target anchor */
       elFound = SearchNAMEattribute (newdoc, target, NULL, NULL);
@@ -5606,11 +5604,12 @@ Document GetAmayaDoc (char *urlname, char *form_data,
           content_type = "application/rdf";
         }
 #endif /* ANNOTATIONS */
-      else if (method != CE_MAKEBOOK && (doc == 0 || DontReplaceOldDoc))
+      else if (doc == 0 || DontReplaceOldDoc)
         {
           /* In case of initial document, open the view before loading */
           /* add the URI in the combobox string */
-          AddURLInCombobox (initial_url, NULL, FALSE);
+          if (method != CE_MAKEBOOK)
+              AddURLInCombobox (initial_url, NULL, FALSE);
           newdoc = InitDocAndView (doc,
                                    FALSE /* replaceOldDoc */,
 #ifndef _WX
