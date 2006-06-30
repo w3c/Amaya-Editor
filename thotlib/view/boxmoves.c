@@ -2030,8 +2030,6 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta,
   if (delta || diff ||
       pCurrentAb->AbLeftMarginUnit == UnAuto || pCurrentAb->AbRightMarginUnit == UnAuto)
     {
-if (pCurrentAb->AbLeafType == LtPicture && !pCurrentAb->AbPresentationBox)
-  printf ("ResizeWidth %s w=%d + %d\n", pCurrentAb->AbElement->ElLabel, pBox->BxW, delta);
       /* Do we have to clean up the history of moved boxes */
       if (pSourceBox == NULL && pFromBox == NULL)
         pBox->BxMoved = NULL;
