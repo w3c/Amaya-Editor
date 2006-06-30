@@ -1512,11 +1512,13 @@ static void DisplaySel (PtrElement pEl, int view, int frame, ThotBool *abExist)
         /* the next abstract box does not belong to the element */
         pNextAb = NULL;
       selEnd = pNextAb == NULL;
+
       /* indicate that this abstract box is selected to the display module */
-      if (pEl == first &&
-          pEl->ElLeafType != LtText && pEl->ElLeafType != LtSymbol)
+     if (pEl == first)
         {
-          if (pEl->ElLeafType == LtPolyLine ||
+          if (pEl->ElLeafType == LtText || pEl->ElLeafType == LtSymbol)
+            firstChar = FirstSelectedChar;
+          else if (pEl->ElLeafType == LtPolyLine ||
                    pEl->ElLeafType == LtPath ||
                    pEl->ElLeafType == LtGraphics)
             firstChar = SelectedPointInPolyline;
@@ -1528,10 +1530,11 @@ static void DisplaySel (PtrElement pEl, int view, int frame, ThotBool *abExist)
       else
         firstChar = 0;
       
-      if (pAb->AbElement == last &&
-          pEl->ElLeafType != LtText && pEl->ElLeafType != LtSymbol)
+      if (pAb->AbElement == last)
         {
-          if (pEl->ElLeafType == LtPolyLine ||
+          if (pEl->ElLeafType == LtText || pEl->ElLeafType == LtSymbol)
+            lastChar = LastSelectedChar;
+          else if (pEl->ElLeafType == LtPolyLine ||
                    pEl->ElLeafType == LtPath ||
                    pEl->ElLeafType == LtGraphics)
             lastChar = SelectedPointInPolyline;
