@@ -416,7 +416,7 @@ static void CreateAreaMap (Document doc, View view, char *shape)
 {
   Element             el, map, parent, image, child, div;
   Element             newMap, newElem;
-  ElementType         elType;
+  ElementType         elType, parentType;
   AttributeType       attrType;
   Attribute           attr, attrRef, attrShape, attrRefimg, newuseMap;
   char                *url;
@@ -438,12 +438,21 @@ static void CreateAreaMap (Document doc, View view, char *shape)
       TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NO_INSERT_POINT);
       return;
     }
-
+  div = NULL;
   elType = TtaGetElementType (el);
   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML"))
     /* not within an HTML element. Nothing to do */
     return;
-
+  if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
+    {
+      // look for the enclosing IMG
+      parent = TtaGetParent (el);
+      parentType = TtaGetElementType (parent);
+      if (strcmp(TtaGetSSchemaName (parentType.ElSSchema), "HTML") ||
+          parentType.ElTypeNum != HTML_EL_IMG)
+        return;
+      el = parent;
+    }
   /* first force the display of areas */
   if (!MapAreas[doc])
     ShowMapAreas (doc, view);
@@ -466,7 +475,8 @@ static void CreateAreaMap (Document doc, View view, char *shape)
   oldStructureChecking = TtaGetStructureChecking (doc);
   /* Avoid generation of popup dialog for mandatory attributes */
   TtaSetStructureChecking (FALSE, doc);
-  if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
+  if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT ||
+      elType.ElTypeNum == HTML_EL_IMG)
     /* an image is selected. Create an area for it */
     {
       url = (char *)TtaGetMemory (MAX_LENGTH);
@@ -710,7 +720,9 @@ static void CreateAreaMap (Document doc, View view, char *shape)
       /* FrameUpdating creation of Area and selection of destination */
       SelectDestination (doc, el, FALSE, FALSE);
     }
-  if (newElem)
+  if (div)
+    TtaRegisterElementCreate (div, doc);
+  else if (newElem)
     TtaRegisterElementCreate (newElem, doc);
   /* if a map has been created, register its Ref_IMG attribute to
      avoid troubles when Undoing the command: function DeleteMap

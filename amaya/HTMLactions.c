@@ -580,7 +580,7 @@ static ThotBool FollowTheLink (Element anchor, Element elSource,
           if (HTMLSSchema)
             {
               attrType.AttrSSchema = HTMLSSchema;
-              attrType.AttrTypeNum = HTML_ATTR_ISMAP;
+              attrType.AttrTypeNum = HTML_ATTR_ISAMAP;
               attr = TtaGetAttribute (elSource, attrType);
               if (attr)
                 {

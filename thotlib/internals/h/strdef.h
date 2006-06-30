@@ -116,8 +116,10 @@
 #define KWD_SetCounter 	1195
 #define KWD_MarkupPreserve 	1196
 #define KWD_NotAnElementNode 	1197
-#define KWD_CheckAllChars 1198
-#define KWD_Root 	1199
+#define KWD_CheckAllChars 	1198
+#define KWD_IsImg 	1199
+#define KWD_IsMap 	1200
+#define KWD_Root 	1201
 
 /*  RULES  */
 

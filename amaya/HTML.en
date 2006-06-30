@@ -16,7 +16,7 @@ translation
 TEXT_UNIT: Text
 GRAPHICS_UNIT: \0
 SYMBOL_UNIT: Symbol
-PICTURE_UNIT: img
+PICTURE_UNIT: input
 REFERENCE_UNIT: Reference
 PAGE_BREAK: Page_break
 
@@ -25,6 +25,7 @@ BODY: body
 Invalid_element: invalid element
 Comment\240: Comment
 HEAD: head
+IMG: img
 TITLE: title
 ISINDEX: isindex
 STYLE_: style
@@ -178,7 +179,7 @@ Height_: height
 hspace: hspace
 vspace: vspace
 Img_border: border
-ISMAP: ismap
+ISAMAP: ismap
 USEMAP: usemap
 target_: target
 SRC: src

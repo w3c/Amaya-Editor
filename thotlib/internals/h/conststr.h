@@ -82,6 +82,8 @@
 #define ExcMoveResize 315
 #define ExcNoShowBox 316
 #define ExcEmptyGraphic 317
+#define ExcIsImg 318
+#define ExcIsMap 319
 
 /* Table exceptions */
 #define ExcIsTable 320

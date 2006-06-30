@@ -282,6 +282,7 @@ static int          EmptyElement[] =
     HTML_EL_COL,
     HTML_EL_FRAME,
     HTML_EL_Horizontal_Rule,
+    HTML_EL_IMG,
     HTML_EL_Input,
     HTML_EL_ISINDEX,
     HTML_EL_LINK,
@@ -303,7 +304,7 @@ static int          CharLevelElement[] =
     HTML_EL_ACRONYM,
     HTML_EL_Font_, HTML_EL_Quotation, HTML_EL_Subscript, HTML_EL_Superscript,
     HTML_EL_Span, HTML_EL_BDO, HTML_EL_INS, HTML_EL_DEL,
-    HTML_EL_Input,
+    HTML_EL_IMG, HTML_EL_Input,
     HTML_EL_Option, HTML_EL_OptGroup, HTML_EL_Option_Menu,
     HTML_EL_Text_Input, HTML_EL_Password_Input, HTML_EL_File_Input,
     HTML_EL_Checkbox_Input, HTML_EL_Radio_Input, HTML_EL_Submit_Input,
@@ -1279,6 +1280,7 @@ static ThotBool     CheckSurrounding (Element * el, Element parent)
   if (elType.ElTypeNum == HTML_EL_TEXT_UNIT || elType.ElTypeNum == HTML_EL_BR
       || elType.ElTypeNum == HTML_EL_PICTURE_UNIT
       || elType.ElTypeNum == HTML_EL_IFRAME
+      || elType.ElTypeNum == HTML_EL_IMG
       || elType.ElTypeNum == HTML_EL_Input
       || elType.ElTypeNum == HTML_EL_Text_Area
       || IsCharacterLevelElement (*el))

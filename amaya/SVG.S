@@ -2490,7 +2490,7 @@ EXCEPT
    use_:	        NoMove, NoResize, HighlightChildren, NoShowBox,
 	                NoCreate, IsGroup, EmptyGraphic;
    tref:	        EmptyGraphic;
-   image:	        MoveResize, HighlightChildren, NoShowBox, EmptyGraphic;
+   image:	        MoveResize, HighlightChildren, NoShowBox, EmptyGraphic, IsImg;
    symbol_:	      NoMove, NoResize,  HighlightChildren,NoShowBox,
                   NoCreate;
    a:	            NoMove, NoResize, HighlightChildren, NoShowBox,

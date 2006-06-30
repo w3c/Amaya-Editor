@@ -923,11 +923,9 @@ static ThotBool TteItemMenuAttr (PtrSSchema pSS, int att, PtrElement pEl,
   Returns also the number of events attibutes and updates the corresponding
   buffer.
   ----------------------------------------------------------------------*/
-static int BuildAttrMenu (char *bufMenu, PtrDocument pDoc, int *nbEvent,
-                          char *bufEventAttr)
+static int BuildAttrMenu (char *bufMenu, PtrDocument pDoc, PtrElement firstSel,
+                          int *nbEvent, char *bufEventAttr)
 {
-  PtrDocument         SelDoc;
-  PtrElement          firstSel, lastSel;
   PtrSSchema          pSS;
   PtrSSchema          pSchExt;
   PtrAttribute        pAttr;
@@ -935,212 +933,204 @@ static int BuildAttrMenu (char *bufMenu, PtrDocument pDoc, int *nbEvent,
   PtrTtAttribute      pAt;
   char                tempBuffer[100];
   int                 i, j, k;
-  int                 firstChar, lastChar;
   int                 lgmenu = 0, lgsubmenu;
   int                 att, nbOfEntries;
-  ThotBool            selectionOK, isNew;
+  ThotBool            isNew;
 
   nbOfEntries = 0;
   *nbEvent = 0;
-  /* demande quelle est la selection courante */
-  selectionOK = GetCurrentSelection (&SelDoc, &firstSel, &lastSel, &firstChar,
-                                     &lastChar);
-  if (selectionOK && SelDoc == pDoc && firstSel)
-    /* il y a une selection et elle est dans le document traite' */
+  /* cherche les attributs globaux definis dans le schema de structure */
+  /* du premier element selectionne' et dans les extrensions de ce schema*/
+  pSS = firstSel->ElStructSchema;/* schema de struct de l'element courant*/
+  if (pSS)
     {
-      /* cherche les attributs globaux definis dans le schema de structure */
-      /* du premier element selectionne' et dans les extrensions de ce schema*/
-      pSS = firstSel->ElStructSchema;/* schema de struct de l'element courant*/
-      if (pSS)
+      /* on parcourt toutes les extensions de ce schema de structure */
+      do
         {
-          /* on parcourt toutes les extensions de ce schema de structure */
-          do
-            {
-              /* on a deja traite' ce schema de structure ? */
-              isNew = TRUE;
-              for (i = 0; i < nbOfEntries; i++)
-                if (pSS == AttrStruct[i])
-                  /* already known */
-                  isNew = FALSE;
-	      
-              if (isNew)
-                /* the element uses a new structure schema */
-                /* add all global attributes of this schema in the table */
-                {
-                  att = 0;
-                  while (att < pSS->SsNAttributes &&
-                         nbOfEntries - *nbEvent < MAX_MENU)
-                    {
-                      att++;
-                      /* skip local attributes */
-                      if (pSS->SsAttribute->TtAttr[att - 1]->AttrGlobal &&
-                          /* and invisible attributes */
-                          !AttrHasException (ExcInvisible, att, pSS))
-                        /* skip the attribute Language execpt the first time */
-                        if (nbOfEntries == 0 || att != 1)
-                          if (TteItemMenuAttr (pSS, att, firstSel, SelDoc))
-                            {
-                              /* keep in mind the structure schema and */
-                              /* the attribute number of this new entry */
-                              AttrStruct[nbOfEntries] = pSS;
-                              AttrNumber[nbOfEntries] = att;
-                              AttrOblig[nbOfEntries] = FALSE;
-                              /* is it an event attribute */
-                              AttrEvent[nbOfEntries] =
-                                AttrHasException (ExcEventAttr, att, pSS);
-                              if (AttrEvent[nbOfEntries])
-                                (*nbEvent)++;
-                              nbOfEntries++;
-                            }
-                    }
-                }
-              /* next extension schema */
-              pSS = pSS->SsNextExtens;
-            }
-          while (pSS != NULL);
-        }
-
-      /* cherche les attributs locaux du premier element selectionne' */
-      pSS = firstSel->ElStructSchema;
-      if (pSS != NULL)
-        {
-          pRe1 = pSS->SsRule->SrElem[firstSel->ElTypeNumber - 1];
-          pSchExt = SelDoc->DocSSchema;
-          do
-            {
-              if (pRe1 != NULL)
-                /* prend les attributs locaux definis dans cette regle */
-                for (att = 0; att < pRe1->SrNLocalAttrs; att++)
-                  if (!pSS->SsAttribute->TtAttr[pRe1->SrLocalAttr->Num[att] - 1]->AttrGlobal)
-                    if (nbOfEntries - *nbEvent < MAX_MENU &&
-                        !AttrHasException (ExcInvisible,
-                                           pRe1->SrLocalAttr->Num[att], pSS) &&
-                        TteItemMenuAttr (pSS, pRe1->SrLocalAttr->Num[att],
-                                         firstSel, SelDoc))
-                      {
-                        /* conserve le schema de structure et le numero */
-                        /* d'attribut de cette nouvelle entree du menu */
-                        AttrStruct[nbOfEntries] = pSS;
-                        AttrNumber[nbOfEntries] = pRe1->SrLocalAttr->Num[att];
-                        AttrOblig[nbOfEntries] = pRe1->SrRequiredAttr->Bln[att];
-                        /* is it an event attribute */
-                        AttrEvent[nbOfEntries] = AttrHasException (ExcEventAttr,
-                                                                   pRe1->SrLocalAttr->Num[att], pSS);
-                        if (AttrEvent[nbOfEntries])
-                          (*nbEvent)++;
-                        nbOfEntries++;
-                      }
-              /* passe a l'extension suivante du schema du document */
-              pSchExt = pSchExt->SsNextExtens;
-              /* cherche dans cette extension de schema la regle d'extension */
-              /* pour le premier element selectionne' */
-              if (pSchExt != NULL)
-                {
-                  pSS = pSchExt;
-                  pRe1 = ExtensionRule (firstSel->ElStructSchema,
-                                        firstSel->ElTypeNumber, pSchExt);
-                }
-            }
-          while (pSchExt != NULL);
-        }
-      /* la table contient tous les attributs applicables aux elements */
-      /* selectionnes */
-      /* add attributes attached to the element that are not yet in
-         the table */
-      pAttr = firstSel->ElFirstAttr;
-      while (pAttr)
-        {
+          /* on a deja traite' ce schema de structure ? */
           isNew = TRUE;
-          for (att = 0; att < nbOfEntries && isNew; att++)
-            {
-              if (pAttr->AeAttrNum == AttrNumber[att] &&
-                  pAttr->AeAttrSSchema == AttrStruct[att])
-                isNew = FALSE;
-            }
+          for (i = 0; i < nbOfEntries; i++)
+            if (pSS == AttrStruct[i])
+              /* already known */
+              isNew = FALSE;
+	      
           if (isNew)
+            /* the element uses a new structure schema */
+            /* add all global attributes of this schema in the table */
             {
-              if (nbOfEntries - *nbEvent < MAX_MENU &&
-                  !AttrHasException (ExcInvisible, pAttr->AeAttrNum,
-                                     pAttr->AeAttrSSchema) &&
-                  TteItemMenuAttr (pAttr->AeAttrSSchema, pAttr->AeAttrNum,
-                                   firstSel, SelDoc))
+              att = 0;
+              while (att < pSS->SsNAttributes &&
+                     nbOfEntries - *nbEvent < MAX_MENU)
                 {
-                  /* conserve le schema de structure et le numero */
-                  /* d'attribut de cette nouvelle entree du menu */
-                  AttrStruct[nbOfEntries] = pAttr->AeAttrSSchema;
-                  AttrNumber[nbOfEntries] = pAttr->AeAttrNum;
-                  AttrOblig[nbOfEntries] = FALSE;
-                  /* is it an event attribute? */
-                  AttrEvent[nbOfEntries] = AttrHasException (ExcEventAttr,
-                                                             pAttr->AeAttrNum, pAttr->AeAttrSSchema);
-                  if (AttrEvent[nbOfEntries])
-                    (*nbEvent)++;
-                  nbOfEntries++;
+                  att++;
+                  /* skip local attributes */
+                  if (pSS->SsAttribute->TtAttr[att - 1]->AttrGlobal &&
+                      /* and invisible attributes */
+                      !AttrHasException (ExcInvisible, att, pSS))
+                    /* skip the attribute Language execpt the first time */
+                    if (nbOfEntries == 0 || att != 1)
+                      if (TteItemMenuAttr (pSS, att, firstSel, pDoc))
+                        {
+                          /* keep in mind the structure schema and */
+                          /* the attribute number of this new entry */
+                          AttrStruct[nbOfEntries] = pSS;
+                          AttrNumber[nbOfEntries] = att;
+                          AttrOblig[nbOfEntries] = FALSE;
+                          /* is it an event attribute */
+                          AttrEvent[nbOfEntries] =
+                            AttrHasException (ExcEventAttr, att, pSS);
+                          if (AttrEvent[nbOfEntries])
+                            (*nbEvent)++;
+                          nbOfEntries++;
+                        }
                 }
             }
-          pAttr = pAttr->AeNext;
+          /* next extension schema */
+          pSS = pSS->SsNextExtens;
         }
+      while (pSS != NULL);
+    }
 
-      /* build the menu according to the table */
-      GetAttribute (&pAttr);
-      if (nbOfEntries > 0)
+  /* cherche les attributs locaux du premier element selectionne' */
+  pSS = firstSel->ElStructSchema;
+  if (pSS != NULL)
+    {
+      pRe1 = pSS->SsRule->SrElem[firstSel->ElTypeNumber - 1];
+      pSchExt = pDoc->DocSSchema;
+      do
         {
-          lgmenu = 0;
-          lgsubmenu = 0;
-          k = 0;
-          j = 0;
-          /* met les noms des attributs de la table dans le menu */
-          for (att = 0; att < nbOfEntries && AttrStruct[att]; att++)
+          if (pRe1 != NULL)
+            /* prend les attributs locaux definis dans cette regle */
+            for (att = 0; att < pRe1->SrNLocalAttrs; att++)
+              if (!pSS->SsAttribute->TtAttr[pRe1->SrLocalAttr->Num[att] - 1]->AttrGlobal)
+                if (nbOfEntries - *nbEvent < MAX_MENU &&
+                    !AttrHasException (ExcInvisible,
+                                       pRe1->SrLocalAttr->Num[att], pSS) &&
+                    TteItemMenuAttr (pSS, pRe1->SrLocalAttr->Num[att],
+                                     firstSel, pDoc))
+                  {
+                    /* conserve le schema de structure et le numero */
+                    /* d'attribut de cette nouvelle entree du menu */
+                    AttrStruct[nbOfEntries] = pSS;
+                    AttrNumber[nbOfEntries] = pRe1->SrLocalAttr->Num[att];
+                    AttrOblig[nbOfEntries] = pRe1->SrRequiredAttr->Bln[att];
+                    /* is it an event attribute */
+                    AttrEvent[nbOfEntries] = AttrHasException (ExcEventAttr,
+                                                               pRe1->SrLocalAttr->Num[att], pSS);
+                    if (AttrEvent[nbOfEntries])
+                      (*nbEvent)++;
+                    nbOfEntries++;
+                  }
+          /* passe a l'extension suivante du schema du document */
+          pSchExt = pSchExt->SsNextExtens;
+          /* cherche dans cette extension de schema la regle d'extension */
+          /* pour le premier element selectionne' */
+          if (pSchExt)
             {
-              pAt = AttrStruct[att]->SsAttribute->TtAttr[AttrNumber[att]-1];
-              pAttr->AeAttrSSchema = AttrStruct[att];
-              pAttr->AeAttrNum = AttrNumber[att];
-              pAttr->AeDefAttr = FALSE;
-              if (pAt->AttrType == AtEnumAttr && pAt->AttrNEnumValues == 1)
-                /* attribut enumere' a une seule valeur (attribut booleen) */
-                sprintf (tempBuffer, "T%s", pAt->AttrName);
-              else
-                sprintf (tempBuffer, "T%s...", pAt->AttrName);
-              i = strlen (tempBuffer) + 1;
-              if (AttrEvent[att])
-                {
-                  if (lgsubmenu + i < MAX_TXT_LEN)
-                    strcpy (&bufEventAttr[lgsubmenu], tempBuffer);
-                  lgsubmenu += i;
-                  /* mark all active enties*/
-                  if (AttributeValue (firstSel, pAttr) != NULL)
-                    ActiveEventAttr[k] = 1;
-                  else
-                    ActiveEventAttr[k] = 0;
-                  AttrEventNumber[k] = att;
-                  k++;
-                }
-              else
-                {
-                  if (lgmenu + i < MAX_TXT_LEN)
-                    strcpy (&bufMenu[lgmenu], tempBuffer);
-                  lgmenu += i;
-                  /* mark all active enties*/
-                  if (AttributeValue (firstSel, pAttr) != NULL)
-                    ActiveAttr[j] = 1;
-                  else
-                    ActiveAttr[j] = 0;
-                  j++;
-                }
+              pSS = pSchExt;
+              pRe1 = ExtensionRule (firstSel->ElStructSchema,
+                                    firstSel->ElTypeNumber, pSchExt);
             }
         }
-      DeleteAttribute (NULL, pAttr);
-
-      if (*nbEvent > 0)
+      while (pSchExt);
+    }
+  /* la table contient tous les attributs applicables aux elements */
+  /* selectionnes */
+  /* add attributes attached to the element that are not yet in
+     the table */
+  pAttr = firstSel->ElFirstAttr;
+  while (pAttr)
+    {
+      isNew = TRUE;
+      for (att = 0; att < nbOfEntries && isNew; att++)
         {
-          /* add the event entry if needed */
-          sprintf (tempBuffer, "M%s", TtaGetMessage (LIB, TMSG_EVENTS));
-          i = strlen (tempBuffer) + 1;
-          if (lgmenu + i < MAX_TXT_LEN)
+          if (pAttr->AeAttrNum == AttrNumber[att] &&
+              pAttr->AeAttrSSchema == AttrStruct[att])
+            isNew = FALSE;
+        }
+      if (isNew)
+        {
+          if (nbOfEntries - *nbEvent < MAX_MENU &&
+              !AttrHasException (ExcInvisible, pAttr->AeAttrNum,
+                                 pAttr->AeAttrSSchema) &&
+              TteItemMenuAttr (pAttr->AeAttrSSchema, pAttr->AeAttrNum,
+                               firstSel, pDoc))
             {
-              strcpy (&bufMenu[lgmenu], tempBuffer);
+              /* conserve le schema de structure et le numero */
+              /* d'attribut de cette nouvelle entree du menu */
+              AttrStruct[nbOfEntries] = pAttr->AeAttrSSchema;
+              AttrNumber[nbOfEntries] = pAttr->AeAttrNum;
+              AttrOblig[nbOfEntries] = FALSE;
+              /* is it an event attribute? */
+              AttrEvent[nbOfEntries] = AttrHasException (ExcEventAttr,
+                                                         pAttr->AeAttrNum, pAttr->AeAttrSSchema);
+              if (AttrEvent[nbOfEntries])
+                (*nbEvent)++;
               nbOfEntries++;
             }
+        }
+      pAttr = pAttr->AeNext;
+    }
+
+  /* build the menu according to the table */
+  GetAttribute (&pAttr);
+  if (nbOfEntries > 0)
+    {
+      lgmenu = 0;
+      lgsubmenu = 0;
+      k = 0;
+      j = 0;
+      /* met les noms des attributs de la table dans le menu */
+      for (att = 0; att < nbOfEntries && AttrStruct[att]; att++)
+        {
+          pAt = AttrStruct[att]->SsAttribute->TtAttr[AttrNumber[att]-1];
+          pAttr->AeAttrSSchema = AttrStruct[att];
+          pAttr->AeAttrNum = AttrNumber[att];
+          pAttr->AeDefAttr = FALSE;
+          if (pAt->AttrType == AtEnumAttr && pAt->AttrNEnumValues == 1)
+            /* attribut enumere' a une seule valeur (attribut booleen) */
+            sprintf (tempBuffer, "T%s", pAt->AttrName);
+          else
+            sprintf (tempBuffer, "T%s...", pAt->AttrName);
+          i = strlen (tempBuffer) + 1;
+          if (AttrEvent[att])
+            {
+              if (lgsubmenu + i < MAX_TXT_LEN)
+                strcpy (&bufEventAttr[lgsubmenu], tempBuffer);
+              lgsubmenu += i;
+              /* mark all active enties*/
+              if (AttributeValue (firstSel, pAttr) != NULL)
+                ActiveEventAttr[k] = 1;
+              else
+                ActiveEventAttr[k] = 0;
+              AttrEventNumber[k] = att;
+              k++;
+            }
+          else
+            {
+              if (lgmenu + i < MAX_TXT_LEN)
+                strcpy (&bufMenu[lgmenu], tempBuffer);
+              lgmenu += i;
+              /* mark all active enties*/
+              if (AttributeValue (firstSel, pAttr) != NULL)
+                ActiveAttr[j] = 1;
+              else
+                ActiveAttr[j] = 0;
+              j++;
+            }
+        }
+    }
+  DeleteAttribute (NULL, pAttr);
+
+  if (*nbEvent > 0)
+    {
+      /* add the event entry if needed */
+      sprintf (tempBuffer, "M%s", TtaGetMessage (LIB, TMSG_EVENTS));
+      i = strlen (tempBuffer) + 1;
+      if (lgmenu + i < MAX_TXT_LEN)
+        {
+          strcpy (&bufMenu[lgmenu], tempBuffer);
+          nbOfEntries++;
         }
     }
 
@@ -1155,7 +1145,7 @@ static int BuildAttrMenu (char *bufMenu, PtrDocument pDoc, int *nbEvent,
 void UpdateAttrMenu (PtrDocument pDoc)
 {
   ThotBool            selectionOK;
-  PtrElement          firstSel, lastSel;
+  PtrElement          firstSel, lastSel, parent;
   int                 firstChar, lastChar;
   char                bufMenuAttr[MAX_TXT_LEN];
   char                bufEventAttr[MAX_TXT_LEN];
@@ -1201,14 +1191,20 @@ void UpdateAttrMenu (PtrDocument pDoc)
         }
       else
         {
+          /* when the PICTURE element of an IMG is selected display
+             attributes of the parent element */
+          parent = firstSel->ElParent;
+          if (firstSel->ElTerminal && firstSel->ElLeafType == LtPicture && parent &&
+              TypeHasException (ExcIsImg, parent->ElTypeNumber, parent->ElStructSchema))
+            firstSel = parent;
           if (pDoc != PrevDoc ||
               firstSel->ElStructSchema != PrevStructSchema ||
               firstSel->ElTypeNumber != PrevElTypeNumber ||
               firstSel->ElFirstAttr != NULL ||
               PrevElAttr)
             {
-              nbItemAttr = BuildAttrMenu (bufMenuAttr, pDoc, &nbEvent,
-                                          bufEventAttr);
+              nbItemAttr = BuildAttrMenu (bufMenuAttr, pDoc, firstSel,
+                                          &nbEvent, bufEventAttr);
               PrevDoc = pDoc;
               PrevStructSchema = firstSel->ElStructSchema;
               PrevElTypeNumber = firstSel->ElTypeNumber;
@@ -1464,8 +1460,8 @@ static void AttachAttrToRange (PtrAttribute pAttr, int lastChar,
   ----------------------------------------------------------------------*/
 void CallbackValAttrMenu (int ref, int valmenu, char *valtext)
 {
-  PtrDocument         SelDoc;
-  PtrElement          firstSel, lastSel;
+  PtrDocument         pDoc;
+  PtrElement          firstSel, lastSel, parent;
   PtrAttribute        pAttrNew;
   DisplayMode         dispMode = DeferredDisplay;
   Document            doc = 0;
@@ -1516,11 +1512,17 @@ void CallbackValAttrMenu (int ref, int valmenu, char *valtext)
     }
 
   /* demande quelle est la selection courante */
-  if (!GetCurrentSelection (&SelDoc, &firstSel, &lastSel, &firstChar,
+  if (!GetCurrentSelection (&pDoc, &firstSel, &lastSel, &firstChar,
                             &lastChar))
     /* no selection. quit */
     return;
 
+  /* when the PICTURE element of an IMG is selected display
+     attributes of the parent element */
+  parent = firstSel->ElParent;
+  if (firstSel->ElTerminal && firstSel->ElLeafType == LtPicture && parent &&
+      TypeHasException (ExcIsImg, parent->ElTypeNumber, parent->ElStructSchema))
+    firstSel = parent;
   if (act == 2)
     /* the user wants to delete the attribute. Is it a mandatory attribute
        for the selected element ? */
@@ -1549,13 +1551,13 @@ void CallbackValAttrMenu (int ref, int valmenu, char *valtext)
         /* on ne fait rien si le document ou` se trouve la selection
            n'utilise pas le schema de structure qui definit l'attribut */
         if (SchCurrentAttr &&
-            GetSSchemaForDoc (SchCurrentAttr->SsName, SelDoc))
+            GetSSchemaForDoc (SchCurrentAttr->SsName, pDoc))
           {
             /* lock tables formatting */
             TtaGiveTableFormattingLock (&lock);
             if (!lock)
               {
-                doc = IdentDocument (SelDoc);
+                doc = IdentDocument (pDoc);
                 dispMode = TtaGetDisplayMode (doc);
                 if (dispMode == DisplayImmediately)
                   TtaSetDisplayMode (doc, DeferredDisplay);
@@ -1583,7 +1585,7 @@ void CallbackValAttrMenu (int ref, int valmenu, char *valtext)
                   pAttrNew->AeAttrValue = NumAttrValue;
                 /* applique les attributs a la partie selectionnee */
                 AttachAttrToRange (pAttrNew, lastChar, firstChar, lastSel,
-                                   firstSel, SelDoc, TRUE);
+                                   firstSel, pDoc, TRUE);
                 break;
 		    
               case AtTextAttr:
@@ -1612,7 +1614,7 @@ void CallbackValAttrMenu (int ref, int valmenu, char *valtext)
                   }
                 /* applique les attributs a la partie selectionnee */
                 AttachAttrToRange (pAttrNew, lastChar, firstChar, lastSel,
-                                   firstSel, SelDoc, TRUE);
+                                   firstSel, pDoc, TRUE);
 #ifdef _WX
                 if (isCLASS)
                   TtaExecuteMenuAction ("ApplyClass", doc, 1, TRUE);
@@ -1633,7 +1635,7 @@ void CallbackValAttrMenu (int ref, int valmenu, char *valtext)
                   }
                 /* applique les attributs a la partie selectionnee */
                 AttachAttrToRange (pAttrNew, lastChar, firstChar, lastSel,
-                                   firstSel, SelDoc, TRUE);
+                                   firstSel, pDoc, TRUE);
                 break;
 		  
               default:
@@ -1646,7 +1648,7 @@ void CallbackValAttrMenu (int ref, int valmenu, char *valtext)
                 if (dispMode == DisplayImmediately)
                   TtaSetDisplayMode (doc, DisplayImmediately);
               }
-            UpdateAttrMenu (SelDoc);
+            UpdateAttrMenu (pDoc);
             DeleteAttribute (NULL, pAttrNew);
           }
       }
@@ -1662,8 +1664,8 @@ void CallbackAttrMenu (int refmenu, int att, int frame)
 {
   PtrTtAttribute      pAttr;
   PtrAttribute        pAttrNew, currAttr;
-  PtrDocument         SelDoc;
-  PtrElement          firstSel, lastSel;
+  PtrDocument         pDoc;
+  PtrElement          firstSel, lastSel, parent;
   PtrReference        Ref;
   PtrSRule            pSRule;
   Document            doc;
@@ -1697,9 +1699,15 @@ void CallbackAttrMenu (int refmenu, int att, int frame)
         }
     }
   if (att >= 0)
-    if (GetCurrentSelection (&SelDoc, &firstSel, &lastSel, &firstChar,
+    if (GetCurrentSelection (&pDoc, &firstSel, &lastSel, &firstChar,
                              &lastChar))
       {
+        /* when the PICTURE element of an IMG is selected display
+           attributes of the parent element */
+        parent = firstSel->ElParent;
+        if (firstSel->ElTerminal && firstSel->ElLeafType == LtPicture && parent &&
+            TypeHasException (ExcIsImg, parent->ElTypeNumber, parent->ElStructSchema))
+          firstSel = parent;
         GetAttribute (&pAttrNew);
         pAttrNew->AeAttrSSchema = AttrStruct[att];
         pAttrNew->AeAttrNum = AttrNumber[att];
@@ -1715,8 +1723,8 @@ void CallbackAttrMenu (int refmenu, int att, int frame)
             pAttrNew->AeAttrReference->RdAttribute = pAttrNew;
             /* applique l'attribut a la partie selectionnee */
             AttachAttrToRange (pAttrNew, lastChar, firstChar, lastSel,
-                               firstSel, SelDoc, TRUE);
-            UpdateAttrMenu (SelDoc);
+                               firstSel, pDoc, TRUE);
+            UpdateAttrMenu (pDoc);
           }
         else
           {
@@ -1778,7 +1786,7 @@ void CallbackAttrMenu (int refmenu, int att, int frame)
                 DocCurrentAttr = LoadedDocument[doc - 1];
                 /* register the current attribut */
                 CurrentAttr = att;
-                MenuValues (pAttr, mandatory, currAttr, SelDoc, view, FALSE);
+                MenuValues (pAttr, mandatory, currAttr, pDoc, view, FALSE);
 #else /* _WX */
                 if (currAttr == NULL)
                   /* le premier element selectionne' n'a pas cet */
@@ -1789,7 +1797,7 @@ void CallbackAttrMenu (int refmenu, int att, int frame)
                   pAttrNew->AeAttrValue = 0;
                 /* applique l'operation a la partie selectionnee */
                 AttachAttrToRange (pAttrNew, lastChar, firstChar, lastSel,
-                                   firstSel, SelDoc, TRUE);
+                                   firstSel, pDoc, TRUE);
 #endif /* _WX */
               }
             else
@@ -1823,7 +1831,7 @@ void CallbackAttrMenu (int refmenu, int att, int frame)
                 DocCurrentAttr = LoadedDocument[doc - 1];
                 /* register the current attribut */
                 CurrentAttr = att;
-                MenuValues (pAttr, mandatory, currAttr, SelDoc, view, FALSE);
+                MenuValues (pAttr, mandatory, currAttr, pDoc, view, FALSE);
                 /* restore the toggle state */
 #if defined(_GTK)
                 if (ActiveAttr[item] == 0)

@@ -116,6 +116,27 @@ STRUCT
 	  { href   target }
 	CONSTANT C_Empty;
 
+	IMG							{ IMG }
+	    (ATTR !SRC = Text; !ALT = Text; longdesc = Text;
+		{  src          alt         longdesc }
+		  Height_ = Text; Width__ = Text;
+		{ height          width }
+		  IntWidthPercent = Integer; IntWidthPxl = Integer;
+		  IntHeightPercent = Integer; IntHeightPxl = Integer;
+		  USEMAP = Text; ISAMAP = Yes_;
+		{ usemap         ismap }
+		 IsInput = Yes_;    NAME = Text;
+		{ input type=IMAGE  name }
+		  Alignment = Top_, Middle_, Bottom_, Left_, Right_;
+		{ align       top   middle   bottom   left   right }
+		  Img_border = Integer;
+		{ border }
+		  hspace = Integer; vspace = Integer) =
+		{ hspace            vspace }
+    BEGIN
+	    PICTURE (ATTR SRC);
+    END;
+
   BODY								{ BODY }
      (ATTR onload = Text; onunload = Text;
 	 { onload         onunload }
@@ -144,23 +165,7 @@ STRUCT
 	Table_;							{ TABLE }
 	FIELDSET;						{ FIELDSET }
 	Address;						{ ADDRESS }
-	PICTURE							{ IMG }
-	    (ATTR !SRC = Text; !ALT = Text; longdesc = Text;
-		{  src          alt         longdesc }
-		  Height_ = Text; Width__ = Text;
-		{ height          width }
-		  IntWidthPercent = Integer; IntWidthPxl = Integer;
-		  IntHeightPercent = Integer; IntHeightPxl = Integer;
-		  USEMAP = Text; ISMAP = Yes_;
-		{ usemap         ismap }
-		 IsInput = Yes_;    NAME = Text;
-		{ input type=IMAGE  name }
-		  Alignment = Top_, Middle_, Bottom_, Left_, Right_;
-		{ align       top   middle   bottom   left   right }
-		  Img_border = Integer;
-		{ border }
-		  hspace = Integer; vspace = Integer);
-		{ hspace            vspace }
+	IMG;  							{ IMG }
 	Object;							{ OBJECT }
 	Applet;							{ APPLET }
 	MathML;						  { MATH }
@@ -173,7 +178,7 @@ STRUCT
 		{ height   width }
 		  IntWidthPercent; IntWidthPxl;
 		  IntHeightPercent; IntHeightPxl;
-		  USEMAP; ISMAP;
+		  USEMAP; ISAMAP;
 		{ usemap  ismap }
 		 IsInput;    NAME;
 		{ input type=IMAGE  name }
@@ -254,7 +259,7 @@ STRUCT
      (ATTR Width__; IntWidthPercent; IntWidthPxl) =
 	 { width }
 	Basic_Set
-	     - (PICTURE, Object, Applet,
+	     - (IMG, Object, Applet,
 		Big_text, Small_text, Subscript, Superscript,
 		Font_, BaseFont, External_Object);
 
@@ -281,7 +286,7 @@ STRUCT
 	Phrase;							{ phrase }
 	Form_Element;                                           { formctrl }
 	Anchor;							{ A }
-	PICTURE;						{ IMG }
+	IMG;						{ IMG }
 	Applet;							{ APPLET }
 	Font_;							{ FONT }
 	BaseFont;						{ BASEFONT }
@@ -914,7 +919,8 @@ EXCEPT
 	H6:		ParagraphBreak;
 	Address:	ParagraphBreak;
 	Term:		ParagraphBreak;
-	MAP:		IsDraw;
+	MAP:		IsDraw, IsMap;
+  IMG:    IsImg;
 	AREA:		MoveResize, ClickableSurface, HighlightChildren;
   Anchor: ClickableSurface;
 	Password_Input: Shadow;

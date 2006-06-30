@@ -1318,6 +1318,9 @@ void GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width,
           pChildBox = pChildAb->AbBox;
           if (!pChildAb->AbDead && pChildBox &&
               pChildAb->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility &&
+              (FrameTable[frame].FrView != 1 ||
+               !TypeHasException (ExcIsMap, pChildAb->AbElement->ElTypeNumber,
+                                  pChildAb->AbElement->ElStructSchema)) &&
               (isExtra || !ExtraFlow (pChildBox, frame)))
             {
               if ((hMin || pBox->BxContentWidth) &&
@@ -1368,6 +1371,9 @@ void GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width,
           pChildBox = pChildAb->AbBox;
           if (!pChildAb->AbDead && pChildBox &&
               pChildAb->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility &&
+              (FrameTable[frame].FrView != 1 ||
+               !TypeHasException (ExcIsMap, pChildAb->AbElement->ElTypeNumber,
+                                  pChildAb->AbElement->ElStructSchema)) &&
               (isExtra || !ExtraFlow (pChildBox, frame)))
             {
               if (pChildAb->AbHorizEnclosing &&
@@ -1420,7 +1426,10 @@ void GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width,
           {
             pChildBox = pChildAb->AbBox;
             if (!pChildAb->AbDead && pChildBox &&
-                pChildAb->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility)
+                pChildAb->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility &&
+                (FrameTable[frame].FrView != 1 ||
+                 !TypeHasException (ExcIsMap, pChildAb->AbElement->ElTypeNumber,
+                                    pChildAb->AbElement->ElStructSchema)))
               {
                 if (pBox->BxContentWidth &&
                     !IsXPosComplete (pBox) && ! pChildBox->BxXOutOfStruct &&
@@ -3380,12 +3389,11 @@ static void TransmitDeadStatus (PtrAbstractBox pAb, ThotBool status)
 ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
 {
   PtrLine             pLine;
-  PtrAbstractBox      pCurrentAb, pCell, pBlock, pParent, curr, table;
+  PtrAbstractBox      pCurrentAb, pCell, pBlock, pParent, curr, table, pChild;
   PtrBox              pNextBox;
   PtrBox              pCurrentBox = NULL;
-  PtrBox              pMainBox;
-  PtrBox              pLastBox;
-  PtrBox              pBox;
+  PtrBox              pMainBox, pLastBox, pBox;
+  PtrElement          pEl;
   TypeUnit            unit;
   ThotPictInfo       *imageDesc;
   Propagation         savpropage;
@@ -3396,7 +3404,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
   int                 nSpaces, savedW, savedH;
   int                 i, charDelta, adjustDelta;
   ThotBool            condition, inLine, inLineFloat;
-  ThotBool            result, isCell, uniqueChild;
+  ThotBool            result, isCell, uniqueChild, isImg;
   ThotBool            orgXComplete, directParent;
   ThotBool            orgYComplete, dummyChild;
 #ifdef _GL
@@ -3412,7 +3420,10 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
   adjustDelta = 0;		/* largeur avec des blancs justifies */
   width = 0;
   height = 0;
-  pMainBox = pFrame->FrAbstractBox->AbBox;	/* root box */
+  if (pFrame->FrAbstractBox == NULL)
+    pMainBox = NULL;
+  else
+    pMainBox = pFrame->FrAbstractBox->AbBox;	/* root box */
   pBox = pAb->AbBox;
   pBlock = NULL;
   result = FALSE;
@@ -4203,24 +4214,32 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
         }
 
       /* keep in memory previous width and height of the box */
-      savedW = pBox->BxW;
-      savedH = pBox->BxH;
-      if (pAb->AbLeafType == LtPicture &&
+      savedW = width = pBox->BxW;
+      savedH = height = pBox->BxH;
+      pEl = pAb->AbElement;
+      if (pEl)
+        isImg = TypeHasException (ExcIsImg, pEl->ElTypeNumber, pEl->ElStructSchema);
+      else
+        isImg = FALSE;
+      if ((pAb->AbLeafType == LtPicture || isImg) &&
           (pAb->AbWidthChange || pAb->AbHeightChange))
         {
-          if (pAb->AbWidthChange &&
+          if (!pAb->AbWidthChange &&
               !pAb->AbWidth.DimIsPosition &&
               pAb->AbWidth.DimValue == -1 &&
               pAb->AbWidth.DimAbRef == NULL)
-            /* due to the ration, the width changes */
+            /* due to the ratio, the width changes */
             pBox->BxW = 0;
           if (!pAb->AbHeightChange &&
               !pAb->AbHeight.DimIsPosition &&
               pAb->AbHeight.DimValue == -1 &&
               pAb->AbHeight.DimAbRef == NULL)
-            /* due to the ration, the height changes */
+            /* due to the ratio, the height changes */
             pBox->BxH = 0;
         }
+      else
+        // not width or height change
+        isImg = FALSE;
       /* CHANGE WIDTH */
       if (pAb->AbWidthChange)
         {
@@ -4267,20 +4286,16 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
                 }
 	      
               /* Change the width of the contents */
-              result = width != savedW;
+              if (!result)
+                result = width != savedW;
               ChangeDefaultWidth (pBox, NULL, width, 0, frame);
-              if (pAb->AbLeafType == LtPicture && height != savedH)
-                {
-                  /* clear the ratio */
-                  pBox->BxH = savedH;
-                  ChangeDefaultHeight (pBox, NULL, height, frame);
-                }
+              // the width is updated
+              savedW = width;
             }
           else
             {
               /* the box width is constrained */
-              if (pAb->AbLeafType == LtPicture)
-                LoadPicture (frame, pBox, (ThotPictInfo *) pBox->BxPictInfo);
+              savedW = width;
               result = TRUE;
             }
 
@@ -4345,24 +4360,20 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
                 }
 
               /* Change the height of the contents */
-              result = height != savedH;
+              if (!result)
+                result = height != savedH;
               /* force the reevaluation of the baseline */
               ClearAxisRelation (pBox, FALSE);
               /* new horizontal */
               ComputeAxisRelation (pAb->AbHorizRef, pBox, frame, FALSE);
               ChangeDefaultHeight (pBox, NULL, height, frame);
-              if (pAb->AbLeafType == LtPicture && width != savedW)
-                {
-                  /* clear the ratio */
-                  pBox->BxW = savedW;
-                  ChangeDefaultWidth (pBox, NULL, width, 0, frame);
-                }
+              // the height is updated
+              savedH = height;
             }
           else
             {
               /* the box height is constrained */
-              if (pAb->AbLeafType == LtPicture)
-                LoadPicture (frame, pBox, (ThotPictInfo *) pBox->BxPictInfo);
+              savedH = height;
               result = TRUE;
             }
 
@@ -4373,6 +4384,50 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
             /* update radius of the rectangle with rounded corners */
             ComputeRadius (pAb, frame, FALSE);
         }
+
+      if (isImg)
+        {
+          // Need to update update the width/height of the enclosed PICTURE
+          pChild = pAb->AbFirstEnclosed;
+          while (pChild && !pChild->AbDead)
+            {
+              if (pChild->AbBox && !pChild->AbPresentationBox &&
+                  pChild->AbLeafType == LtPicture)
+                {
+                  /* Update its width */
+                  pChild->AbBox->BxW = 0;
+                  pChild->AbBox->BxH = 0;
+                  ClearDimRelation (pChild->AbBox, TRUE, frame);
+                  ComputeDimRelation (pChild, frame, TRUE);
+                  /* Update its height */
+                  ClearDimRelation (pChild->AbBox, FALSE, frame);
+                  ComputeDimRelation (pChild, frame, FALSE);
+                  // regenerate the texture
+                  LoadPicture (frame, pChild->AbBox,
+                               (ThotPictInfo *) pChild->AbBox->BxPictInfo);
+                }
+              pChild = pChild->AbNext;
+            }
+        }
+      else if (pAb->AbLeafType == LtPicture)
+        // regenerate the texture
+        LoadPicture (frame, pBox, (ThotPictInfo *) pBox->BxPictInfo);
+
+      if (pAb->AbLeafType == LtPicture || isImg)
+        {
+          // Need to update update a dimension according to the ratio
+          if (width != savedW)
+            {
+              pBox->BxW = savedW;
+              ChangeDefaultWidth (pBox, NULL, width, 0, frame);
+            }
+          if (height != savedH)
+            {
+              pBox->BxH = savedH;
+              ChangeDefaultHeight (pBox, NULL, height, frame);
+            }
+        }
+
       /* MARGIN PADDING BORDER */
       if (pAb->AbMBPChange)
         {

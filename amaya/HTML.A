@@ -28,6 +28,14 @@ ELEMENTS
 	ElemDelete.Pre -> DeletePicture;
 	END;
 
+   IMG:
+	BEGIN
+	ElemNew.Post -> UpdateSRCattribute;
+	ElemTextModify.Post -> UpdateSRCattribute;
+	ElemSelect.Pre -> SelectPicture;
+	ElemDelete.Pre -> DeletePicture;
+	END;
+
    TEXT_UNIT:
 	ElemTextModify.Post -> CheckNewLines;
 

@@ -2368,8 +2368,6 @@ ThotBool Ratio_Calculate (PtrAbstractBox pAb, ThotPictInfo *imageDesc,
   imageDesc->PicHeight = height;
   oldw = imageDesc->PicWArea;
   oldh = imageDesc->PicHArea;
-  //if (pAb->AbLeafType == LtCompound && imageDesc->PicPresent == RealSize)
-  //printf ("Apply ratio %s w=%d/%d h=%d/%d\n", imageDesc->PicFileName, width, w, height, h);
   if (w == 0)
     imageDesc->PicWArea = width;
   else
@@ -2436,6 +2434,8 @@ ThotBool Ratio_Calculate (PtrAbstractBox pAb, ThotPictInfo *imageDesc,
 void ClipAndBoxUpdate (PtrAbstractBox pAb, PtrBox box, int w, int h,
                        int top, int bottom, int left, int right, int frame)
 {
+  PtrAbstractBox parent;
+
   /* prepare the redisplay of the box */
   UpdateBoxRegion (frame, box, 0, 0, w, h);
   if (pAb->AbLeafType == LtPicture)
@@ -2443,16 +2443,20 @@ void ClipAndBoxUpdate (PtrAbstractBox pAb, PtrBox box, int w, int h,
       /* transmit picture dimensions */
       if (!pAb->AbWidth.DimIsPosition)
         {
+          parent = pAb->AbEnclosing;
           if (pAb->AbWidth.DimMinimum)
             /* the rule min is applied to this box */
             ChangeDefaultWidth (box, box, w, 0, frame);
-          else if (pAb->AbEnclosing &&
+          else if (parent && parent->AbElement &&
+                   !parent->AbWidth.DimIsPosition &&
+                   parent->AbWidth.DimAbRef == NULL &&
+                   parent->AbWidth.DimValue == -1 &&
+                   TypeHasException (ExcIsImg, parent->AbElement->ElTypeNumber,
+                                     parent->AbElement->ElStructSchema) &&
                    pAb->AbWidth.DimUnit != UnPercent &&
-                   pAb->AbWidth.DimAbRef == pAb->AbEnclosing &&
-                   pAb->AbNext == NULL && pAb->AbPrevious == NULL)
-            /* the (SVG) parent box should inherit the picture width */
-            ChangeWidth (pAb->AbEnclosing->AbBox,
-                         pAb->AbEnclosing->AbBox, NULL,
+                   pAb->AbWidth.DimAbRef == parent)
+            /* the (SVG or HTML) parent box should inherit the picture width */
+            ChangeWidth (parent->AbBox, parent->AbBox, NULL,
                          w + left + right, 0, frame);
         }
       if (!pAb->AbHeight.DimIsPosition)
@@ -2460,13 +2464,16 @@ void ClipAndBoxUpdate (PtrAbstractBox pAb, PtrBox box, int w, int h,
           if (pAb->AbHeight.DimMinimum)
             /* the rule min is applied to this box */
             ChangeDefaultHeight (box, box, h, frame);
-          else if (pAb->AbEnclosing &&
+          else if (parent && parent->AbElement &&
+                   !parent->AbWidth.DimIsPosition &&
+                   parent->AbWidth.DimAbRef == NULL &&
+                   parent->AbWidth.DimValue == -1 &&
+                   TypeHasException (ExcIsImg, parent->AbElement->ElTypeNumber,
+                                     parent->AbElement->ElStructSchema) &&
                    pAb->AbHeight.DimUnit != UnPercent &&
-                   pAb->AbHeight.DimAbRef == pAb->AbEnclosing &&
-                   pAb->AbNext == NULL && pAb->AbPrevious == NULL)
-            /* the (SVG) parent box should inherit the picture height */
-            ChangeHeight (pAb->AbEnclosing->AbBox,
-                          pAb->AbEnclosing->AbBox, NULL,
+                   pAb->AbHeight.DimAbRef == parent)
+            /* the (SVG or HTML) parent box should inherit the picture height */
+            ChangeHeight (parent->AbBox, parent->AbBox, NULL,
                           h + top + bottom + top + bottom, frame);
         }
     }
@@ -2538,8 +2545,6 @@ void LoadPicture (int frame, PtrBox box, ThotPictInfo *imageDesc)
   int                 left, right, top, bottom;
   ThotBool            redo = FALSE;
 
-if (!strcmp (box->BxAbstractBox->AbElement->ElLabel, "L243"))
-  printf ("LoadPicture L243\n");
   left = box->BxLMargin + box->BxLBorder + box->BxLPadding;
   right = box->BxRMargin + box->BxRBorder + box->BxRPadding;
   top = box->BxTMargin + box->BxTBorder + box->BxTPadding;
@@ -2766,12 +2771,18 @@ if (!strcmp (box->BxAbstractBox->AbElement->ElLabel, "L243"))
       if (w == 0)
         {
           wBox = imageDesc->PicWidth;
-          w = wBox;
+          if (h != 0 && h == imageDesc->PicHArea)
+            w = imageDesc->PicWArea;
+          else
+            w = wBox;
         }
       if (h == 0)
         {
           hBox = imageDesc->PicHeight;
-          h = hBox;
+          if (w != 0 && w == imageDesc->PicWArea)
+            h = imageDesc->PicHArea;
+          else
+            h = hBox;
         }
       ClipAndBoxUpdate (pAb, box, w, h, top, bottom, left, right, frame);
     }

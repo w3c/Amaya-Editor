@@ -56,7 +56,7 @@ static ElemMapping    XHTMLElemMappingTable[] =
    {"i", SPACE, HTML_EL_Italic_text, L_StrictValue, TRUE},
    {"iframe", SPACE, HTML_EL_IFRAME, L_TransitionalValue, TRUE},
    /*{"image", 'E', HTML_EL_PICTURE_UNIT, L_StrictValue, TRUE},*/
-   {"img", 'E', HTML_EL_PICTURE_UNIT, L_BasicValue, TRUE},
+   {"img", 'E', HTML_EL_IMG, L_BasicValue, TRUE},
    {"input", 'E', HTML_EL_Input, L_BasicValue, TRUE},
    {"input", 'E', HTML_EL_Text_Input, L_BasicValue, TRUE},
    {"input", 'E', HTML_EL_Password_Input, L_BasicValue, TRUE},
@@ -236,7 +236,7 @@ AttributeMapping XHTMLAttributeMappingTable[] =
    {"http-equiv", "", 'A', HTML_ATTR_http_equiv, L_BasicValue},
 
    {"id", "", 'A', HTML_ATTR_ID, L_BasicValue},
-   {"ismap", "", 'A', HTML_ATTR_ISMAP, L_StrictValue},
+   {"ismap", "", 'A', HTML_ATTR_ISAMAP, L_StrictValue},
 
    {"label", "", 'A', HTML_ATTR_label, L_BasicValue},
    {"lang", "", 'A', HTML_ATTR_Language, L_BasicValue},
@@ -502,7 +502,7 @@ AttrValueMapping XhtmlAttrValueMappingTable[] =
 
 /* The following declarations allow the parser to accept boolean attributes */
 /* written "checked=CHECKED"), for instance */
-   {HTML_ATTR_ISMAP, "ismap", HTML_ATTR_ISMAP_VAL_Yes_},
+   {HTML_ATTR_ISAMAP, "ismap", HTML_ATTR_ISAMAP_VAL_Yes_},
    {HTML_ATTR_nohref, "nohref", HTML_ATTR_nohref_VAL_Yes_},
    {HTML_ATTR_COMPACT, "compact", HTML_ATTR_COMPACT_VAL_Yes_},
    {HTML_ATTR_Multiple, "multiple", HTML_ATTR_Multiple_VAL_Yes_},

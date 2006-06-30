@@ -2642,6 +2642,32 @@ RULES
 		Visibility: 0;
 	END;
 
+ IMG: BEGIN
+	CreateBefore(ElementName);
+	CreateWith(VerticalLine);
+	HorizRef: * . Bottom;
+  Width: Enclosed . Width;
+  Height: Enclosed . Height;
+	Gather: Yes;
+	if within HEAD
+		Visibility: 0;
+	VertPos: Top = Previous not MAP . Bottom;
+	LineBreak: No;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		Height: Enclosed . Height;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		VertPos: Top = Previous . Bottom;
+		END;	
+	IN Alternate_view BEGIN
+		VertPos: Top = Previous . Bottom;
+		Height: Enclosed . Height;
+		END;
+	IN Links_view
+		Visibility: 0;
+	END;
+
  Object_Content: BEGIN
 	Width: auto {Enclosing . Width};
 	Height: Enclosing . Height;
@@ -3850,7 +3876,7 @@ RULES
 	END;
 
  PICTURE_UNIT: BEGIN
-	if not Immediately within Object and not IsInput
+	if not Immediately within Object and  not Immediately within IMG and not IsInput
 		CreateBefore(ElementName);
 	if within Object_Content
 		CreateBefore(ElementName);
@@ -3862,7 +3888,16 @@ RULES
 	END;
 	LineBreak: No;
 	PageBreak: No;
-	HorizRef: * . Bottom;
+  if Immediately within IMG
+    BEGIN
+    Width: Enclosing . Width;
+    Height: Enclosing . Height;
+    END;
+  if Immediately within Object
+    BEGIN
+    Width: Enclosing . Width;
+    Height: Enclosing . Height;
+    END;
 	IN Structure_view BEGIN
 		Height: 0;
 		Width: 0;
@@ -5104,9 +5139,9 @@ ATTRIBUTES
  NoImages(PICTURE_UNIT*):
 	BEGIN
 	Visibility: 1;
-	if ALT and not Immediately within Object and not within Embed_
+	if ALT and not Immediately within Object and not Immediately within IMG and not within Embed_
       CreateBefore(SHOW_ALT);
-	if Not ALT and not Immediately within Object and not within Embed_
+	if Not ALT and not Immediately within Object and not Immediately within IMG and not within Embed_
 	    CreateBefore(SHOW_IMG);
 	IN Alternate_view
 		Visibility: Enclosing =;
@@ -5141,6 +5176,8 @@ ATTRIBUTES
  NoObjects(PICTURE_UNIT*):
 	BEGIN
 	if Immediately within Object
+	    Visibility: 0;
+	if Immediately within IMG
 	    Visibility: 0;
 	if within Embed_
 	    Visibility: 0;
@@ -5507,10 +5544,19 @@ ATTRIBUTES
 	CreateLast(VALUE_REV_ANCH);
 	END;
 
- SRC:   BEGIN
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-	END;
+ data:
+   BEGIN
+	 CreateBefore(AttrName);
+	 CreateBefore(AttrValue);
+	 END;
+ SRC:
+   BEGIN
+   if not Immediately within Object and not Immediately within IMG
+     BEGIN
+	   CreateBefore(AttrName);
+	   CreateBefore(AttrValue);
+     END;
+	 END;
 
  Width__:
 	BEGIN
@@ -5528,9 +5574,9 @@ ATTRIBUTES
 	   if not PICTURE_UNIT and not AREA
 	   	Width: Enclosing . Width;
 	   if PICTURE_UNIT
-		Width: 0;
+		    Width: 0;
 	   if AREA
-		Width: 0;
+		    Width: 0;
 	   END;
 	IN Alternate_view BEGIN
 	   Width: Enclosing . Width;
@@ -5542,9 +5588,9 @@ ATTRIBUTES
 	Width: Enclosing . Width * IntWidthPercent %;
 	IN Structure_view BEGIN
 	   if not PICTURE_UNIT
-	   	Width: Enclosing . Width;
+	   	  Width: Enclosing . Width;
 	   if PICTURE_UNIT
-		Width: 0;
+		    Width: 0;
 	   END;
 	IN Alternate_view BEGIN
 	  if Data_cell  BEGIN
@@ -5582,13 +5628,13 @@ ATTRIBUTES
 	   if PICTURE_UNIT
 	        Height: 0;
 	   if not PICTURE_UNIT
-		Height: Enclosed . Height;
+		      Height: Enclosed . Height;
 	   END;
 	IN Alternate_view BEGIN
 	   if PICTURE_UNIT
 	        Height: 0;
 	   if not PICTURE_UNIT
-		Height: Enclosed . Height;
+		      Height: Enclosed . Height;
 	   END;
 	END;
 
@@ -5597,9 +5643,9 @@ ATTRIBUTES
 	Height: Enclosing . Height * IntHeightPercent %;
 	IN Structure_view BEGIN
 	   if not PICTURE_UNIT
-	   	Height: Enclosed . Height;
+	   	   Height: Enclosed . Height;
 	   if PICTURE_UNIT
-		Height: 0;
+		     Height: 0;
 	   END;
 	IN Alternate_view BEGIN
 	  if Data_cell  BEGIN
@@ -5692,12 +5738,6 @@ ATTRIBUTES
 	END;
 
  classid:
-	BEGIN
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-	END;
-
- data:
 	BEGIN
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
@@ -6034,7 +6074,7 @@ ATTRIBUTES
 	   Adjust: Enclosing =;
 	END;
 
- ISMAP:
+ ISAMAP:
 	CreateBefore(AttrNameOnly);
 
  BaseFontSize:
@@ -7088,7 +7128,7 @@ ATTRIBUTES
 	CreateBefore(AttrValue);
 #ifndef PAGE
 	if PICTURE_UNIT
-		CreateBefore(Target_gif);
+		  CreateBefore(Target_gif);
 	if not PICTURE_UNIT
 	   	CreateFirst(Target_gif);
 #endif

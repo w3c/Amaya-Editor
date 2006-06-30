@@ -191,20 +191,24 @@ void DefBoxRegion (int frame, PtrBox pBox, int xstart, int xstop,
 {
   ViewFrame          *pFrame;
   PtrFlow             pFlow;
+  PtrAbstractBox      pAb;
+  PtrElement          pEl = NULL;
   int                 x1, x2, y1, y2, k;
 
   k = 0;
   if (pBox)
     {
+      pAb = pBox->BxAbstractBox;
 #ifdef _GL
-      PtrAbstractBox      pAb, pClipAb;
+      PtrAbstractBox      pClipAb;
 
       if (FrameTable[frame].FrView == 1)
         {
           /* clip on the enclosing box that changes the System origin */
-          pAb = pBox->BxAbstractBox;
-          if (pAb && pAb->AbElement && pAb->AbElement->ElStructSchema &&
-              strcmp (pAb->AbElement->ElStructSchema->SsName, "TextFile"))
+          if (pAb)
+            pEl = pAb->AbElement;
+          if (pAb && pEl && pEl->ElStructSchema &&
+              strcmp (pEl->ElStructSchema->SsName, "TextFile"))
             {
               pClipAb = pAb;
               /* the box could be included within a SVG element */
@@ -226,13 +230,16 @@ void DefBoxRegion (int frame, PtrBox pBox, int xstart, int xstop,
             }
         }
 #endif /* _GL */
+      if (pAb)
+        pEl = pAb->AbElement;
       pFrame = &ViewFrameTable[frame - 1];
       /* take into account the positioning */
       pFlow = GetRelativeFlow (pBox, frame);
       if (pBox->BxAbstractBox &&
           (pBox->BxAbstractBox->AbLeafType == LtGraphics ||
            pBox->BxAbstractBox->AbLeafType == LtPolyLine ||
-           pBox->BxAbstractBox->AbLeafType == LtPath))
+           pBox->BxAbstractBox->AbLeafType == LtPath ||
+           TypeHasException (ExcIsImg, pEl->ElTypeNumber, pEl->ElStructSchema)))
         k = EXTRA_GRAPH;
 
       x1 = pBox->BxXOrg;
@@ -301,43 +308,54 @@ void UpdateBoxRegion (int frame, PtrBox pBox, int dx, int dy, int dw, int dh)
 {
   ViewFrame          *pFrame;
   PtrFlow             pFlow;
+  PtrAbstractBox      pAb;
+  PtrElement          pEl = NULL;
   int                 x1, x2, y1, y2, cpoints, caret;
 
   cpoints = 0;
   if (pBox)
     {
-#ifdef _GL
-      PtrAbstractBox      pAb, pClipAb;
-
-      /* clip on the enclosing box that changes the System origin */
       pAb = pBox->BxAbstractBox;
+#ifdef _GL
+      PtrAbstractBox      pClipAb;
+
       if (FrameTable[frame].FrView == 1)
         {
-          pClipAb = pAb;
-          while (pAb)
+          /* clip on the enclosing box that changes the System origin */
+          if (pAb)
+            pEl = pAb->AbElement;
+          if (pAb && pEl && pEl->ElStructSchema &&
+              strcmp (pEl->ElStructSchema->SsName, "TextFile"))
             {
-              if (pAb->AbElement &&
-                  pAb->AbBox &&
-                  pAb->AbElement->ElSystemOrigin)
-                pClipAb = pAb;
-              pAb = pAb->AbEnclosing;
-            }
-          if (pClipAb != pBox->BxAbstractBox)
-            {
-              /* clip the enclosing limits */
-              dx = dy = dw = dh = 0;
-              pBox = pClipAb->AbBox;
-              cpoints = EXTRA_GRAPH;
+              pClipAb = pAb;
+              while (pAb)
+                {
+                  if (pAb->AbElement &&
+                      pAb->AbBox &&
+                      pAb->AbElement->ElSystemOrigin)
+                    pClipAb = pAb;
+                  pAb = pAb->AbEnclosing;
+                }
+              if (pClipAb != pBox->BxAbstractBox)
+                {
+                  /* clip the enclosing limits */
+                  dx = dy = dw = dh = 0;
+                  pBox = pClipAb->AbBox;
+                  cpoints = EXTRA_GRAPH;
+                }
             }
         }
 #endif /* _GL */
+      if (pAb)
+        pEl = pAb->AbElement;
       pFrame = &ViewFrameTable[frame - 1];
       /* take into account the positioning */
       pFlow = GetRelativeFlow (pBox, frame);
       if (pBox->BxAbstractBox &&
           (pBox->BxAbstractBox->AbLeafType == LtGraphics ||
            pBox->BxAbstractBox->AbLeafType == LtPolyLine ||
-           pBox->BxAbstractBox->AbLeafType == LtPath))
+           pBox->BxAbstractBox->AbLeafType == LtPath ||
+           TypeHasException (ExcIsImg, pEl->ElTypeNumber, pEl->ElStructSchema)))
         /* increase the redisplay area due to control points */
         cpoints = EXTRA_GRAPH;
 
@@ -465,6 +483,7 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
   PtrBox              from;
   PtrAbstractBox      pChild, pAb, pParent, pNext;
   PtrDocument         pDoc;
+  PtrElement          pEl = NULL;
   ViewFrame          *pFrame;
   ThotPictInfo       *imageDesc;
   PictureScaling      pres;
@@ -491,6 +510,8 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
   xd = yd = width = height = t = b = l = r = 0;
   from = pFrom->AbBox;
   pAb = pBox->BxAbstractBox;
+  if (pAb)
+    pEl = pAb->AbElement;
   if ((pBox->BxType == BoGhost /*&& pAb->AbDisplay != 'B'*/) ||
       pBox->BxType == BoFloatGhost)
     {
@@ -721,11 +742,15 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
       imageDesc = (ThotPictInfo *) pFrom->AbPictBackground;
       if (pFrom->AbSelected)
         {
+          if (FrameTable[frame].FrView == 1 &&
+              TypeHasException (ExcIsImg, pEl->ElTypeNumber, pEl->ElStructSchema))
+            // display an IMG as a PICTURE element
+            DisplayPointSelection (frame, pBox, 0);
 #ifdef _GL
-          if (pFrom->AbElement->ElSystemOrigin)
+          else if (pFrom->AbElement->ElSystemOrigin)
             DrawRectangle (frame, 0, 0, 0, 0, width, height, 0, BgSelColor, 2);
-          else
 #endif /* _GL */  
+          else
             /* draw the box selection */
             DrawRectangle (frame, 0, 0, xd - x, yd - y, width, height, 0, BgSelColor, 2);
         }

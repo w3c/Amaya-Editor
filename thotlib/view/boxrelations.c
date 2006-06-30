@@ -514,7 +514,7 @@ void SetPositionConstraint (BoxEdge localEdge, PtrBox pBox, int *val)
   ComputeRadius updates the horizontal or vartical radius of a rectangle
   with rounded corners.
   ----------------------------------------------------------------------*/
-void     ComputeRadius (PtrAbstractBox pAb, int frame, ThotBool horizRef)
+void ComputeRadius (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 {
   PtrBox              pBox;
 
@@ -2151,11 +2151,9 @@ PtrBox GetVPosRelativeBox (PtrBox pBox, PtrBox pPreviousBox)
   ----------------------------------------------------------------------*/
 ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 {
-  PtrBox              pRefBox;
-  PtrBox              pBox;
-  PtrAbstractBox      pParentAb, pColumn;
-  PtrAbstractBox      pChildAb;
-  PtrElement          pEl;
+  PtrBox              pRefBox, pBox;
+  PtrAbstractBox      pParentAb, pColumn, pChildAb;
+  PtrElement          pEl, parent;
   PtrLine             pLine;
   OpRelation          op;
   AbDimension        *pDimAb;
@@ -2168,7 +2166,10 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 
   pBox = pAb->AbBox;
   pParentAb = pAb->AbEnclosing;
-   
+  if (pParentAb)
+    parent = pParentAb->AbElement;
+  else
+    parent = NULL;
   /* Check the box visibility */
   if (pAb->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility)
     {
@@ -2386,6 +2387,30 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                 pDimAb->DimUnit = UnPoint;
               else
                 pDimAb->DimUnit = UnPixel;
+            }
+          else if (pAb->AbLeafType == LtPicture &&
+                   pParentAb && parent &&
+                   TypeHasException (ExcIsImg, parent->ElTypeNumber,
+                                     parent->ElStructSchema))
+            {
+              /* change the rule according to the enclosing IMG */
+              if ((horizRef && (!pParentAb->AbWidth.DimIsPosition &&
+                                pParentAb->AbWidth.DimValue == -1 &&
+                                pParentAb->AbWidth.DimAbRef == NULL)) ||
+                  (!horizRef && (!pParentAb->AbHeight.DimIsPosition &&
+                                 pParentAb->AbHeight.DimValue == -1 &&
+                                 pParentAb->AbHeight.DimAbRef == NULL)))
+                {
+                  // default dimension
+                  pDimAb->DimAbRef = NULL;
+                  pDimAb->DimValue = -1;                  
+                }
+              else
+                {
+                  // iherit from enclosing
+                  pDimAb->DimAbRef = pParentAb;
+                  pDimAb->DimValue = 0;
+                }
             }
           else if (horizRef && pDimAb->DimAbRef &&
                    pDimAb->DimUnit != UnAuto &&

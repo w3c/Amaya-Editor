@@ -1883,7 +1883,7 @@ RULES
    PICTURE_UNIT:
 	BEGIN
 	Width: Enclosing . Width;
-        Height: Enclosing . Height;
+  Height: Enclosing . Height;
 	IN Structure_view
 		Visibility: 0;
 	IN Alternate_view

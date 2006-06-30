@@ -368,6 +368,7 @@ ${AMAYADIR}/cpp/i386/*.ifile \
 ${AMAYADIR}/cpp/i386/t-* \
 ${AMAYADIR}/cpp/i386/x-* \
 ${AMAYADIR}/davlib/Makefile.in \
+${AMAYADIR}/davlib/Makefile.dav \
 ${AMAYADIR}/davlib/*.c \
 ${AMAYADIR}/davlib/f/*.h \
 ${AMAYADIR}/davlib/h/*.h \

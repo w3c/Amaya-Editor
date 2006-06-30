@@ -2226,6 +2226,7 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
               pLine->LiLastBox = pLine->LiFirstBox;
               if (!extensibleBlock)
                 {
+                  int shift = pBlock->BxLMargin + pBlock->BxLPadding + pBlock->BxLBorder;
                   setinline = (pNextBox->BxAbstractBox->AbFloat == 'N' &&
                                pNextBox->BxAbstractBox->AbClear != 'B' &&
                                !ExtraFlow (pNextBox, frame));
@@ -2234,12 +2235,22 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
                   else
                     val = pBlock->BxW;
                   GetExtraMargins (pNextBox, NULL, frame, &t, &b, &l, &r);
-                  l = l + pNextBox->BxLBorder + pNextBox->BxLPadding;
-                  l = l + r + pNextBox->BxRBorder + pNextBox->BxRPadding;
-                  if (pNextBox->BxLMargin > 0)
-                    l += pNextBox->BxLMargin;
-                  if (pNextBox->BxRMargin > 0)
-                    l += pNextBox->BxRMargin;
+                  if (pNextBox->BxLMargin + pNextBox->BxLPadding > 0)
+                    {
+                      if (pBlock->BxLeftFloat == NULL || !setinline)
+                        l = l + pNextBox->BxLMargin + pNextBox->BxLPadding;
+                      else if (pLine->LiXOrg < shift + pNextBox->BxLMargin + pNextBox->BxLPadding)
+                        l = l + pNextBox->BxLMargin + pNextBox->BxLPadding - pLine->LiXOrg - shift;
+                    }
+                  if (pNextBox->BxRMargin + pNextBox->BxRPadding > 0)
+                    {
+                      if (pBlock->BxRightFloat == NULL || !setinline)
+                        l += pNextBox->BxRMargin + pNextBox->BxRPadding;
+                      else if (pNextBox->BxRMargin + pNextBox->BxRPadding > pBlock->BxW - val)
+                        l = l + pNextBox->BxRMargin + pNextBox->BxRPadding - pBlock->BxW + val;
+                   }
+                  l = l + pNextBox->BxLBorder;
+                  l = l + r + pNextBox->BxRBorder;
                   if (pNextBox->BxAbstractBox->AbWidth.DimUnit == UnPercent)
                     {
                       // compute the external width

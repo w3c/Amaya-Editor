@@ -2030,6 +2030,8 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta,
   if (delta || diff ||
       pCurrentAb->AbLeftMarginUnit == UnAuto || pCurrentAb->AbRightMarginUnit == UnAuto)
     {
+if (pCurrentAb->AbLeafType == LtPicture && !pCurrentAb->AbPresentationBox)
+  printf ("ResizeWidth %s w=%d + %d\n", pCurrentAb->AbElement->ElLabel, pBox->BxW, delta);
       /* Do we have to clean up the history of moved boxes */
       if (pSourceBox == NULL && pFromBox == NULL)
         pBox->BxMoved = NULL;
@@ -2048,6 +2050,7 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta,
               TtaFreeMemory ((STRING) pBox->BxPictInfo);
               pBox->BxPictInfo = NULL;
             }
+
           /* Check the validity of dependency rules */
           toMove = TRUE;
           if (pCurrentAb->AbEnclosing && pCurrentAb->AbEnclosing->AbBox)
@@ -3661,6 +3664,9 @@ void WidthPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
               pChildAb->AbHorizEnclosing &&
               !ExtraFlow (pChildBox, frame) &&
               pChildAb->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility &&
+              (FrameTable[frame].FrView != 1 ||
+               !TypeHasException (ExcIsMap, pChildAb->AbElement->ElTypeNumber,
+                                  pChildAb->AbElement->ElStructSchema)) &&
               (pChildAb->AbWidth.DimAbRef != pAb ||
                pChildBox->BxContentWidth ||
                /* Sometimes table width doesn't follow the rule */
@@ -3745,6 +3751,9 @@ void WidthPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
             pChildBox = pChildAb->AbBox;
             if (!pChildAb->AbDead && pChildBox &&
                 pChildAb->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility &&
+                (FrameTable[frame].FrView != 1 ||
+                 !TypeHasException (ExcIsMap, pChildAb->AbElement->ElTypeNumber,
+                                    pChildAb->AbElement->ElStructSchema)) &&
                 pChildAb->AbHorizEnclosing)
               {
                 /* look for the box which relies the box to its enclosing */
@@ -3897,6 +3906,9 @@ void HeightPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
           if (!pChildAb->AbDead && pChildBox &&
               pChildAb->AbVertEnclosing &&
               pChildAb->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility &&
+                (FrameTable[frame].FrView != 1 ||
+                 !TypeHasException (ExcIsMap, pChildAb->AbElement->ElTypeNumber,
+                                    pChildAb->AbElement->ElStructSchema)) &&
               (pChildAb->AbHeight.DimAbRef != pAb ||
                pChildBox->BxContentHeight))
             {
@@ -3978,6 +3990,9 @@ void HeightPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
             pChildBox = pChildAb->AbBox;
             if (!pChildAb->AbDead && pChildBox &&
                 pChildAb->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility &&
+                (FrameTable[frame].FrView != 1 ||
+                 !TypeHasException (ExcIsMap, pChildAb->AbElement->ElTypeNumber,
+                                    pChildAb->AbElement->ElStructSchema)) &&
                 pChildAb->AbVertEnclosing)
               {
                 /* look for the box which relies the box to its enclosing */

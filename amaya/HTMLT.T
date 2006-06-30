@@ -492,6 +492,13 @@ RULES
 	Create 'object>\12' After;	
 	END;
 
+ IMG: BEGIN
+	create SOT;
+	Create 'img';
+	Create Attributes;
+	Create ' />\12';
+	END;
+
  INS:	BEGIN
 	create SOT;
 	Create 'ins';
@@ -913,7 +920,9 @@ RULES
 		END;
 	if Immediately within Object
 		Remove;
-	if NOT Immediately within Object AND NOT IsInput BEGIN
+	if Immediately within IMG
+		Remove;
+	if NOT Immediately within Object AND NOT Immediately within IMG AND NOT IsInput BEGIN
 	        create SOT;
 		Create 'img';
 		Create Attributes;
@@ -1807,13 +1816,6 @@ ATTRIBUTES
 	Create DoubleQuote;
 	END;
 
- data: BEGIN
-        create SAN;
-	Create 'data="';
-	Create data;
-	Create DoubleQuote;
-	END;
-
  Object_type: BEGIN
         create SAN;
 	Create 'type="';
@@ -2338,8 +2340,15 @@ ATTRIBUTES
 	Create DoubleQuote;
 	END;
 
+ data:	BEGIN
+           create SAN;
+	   Create 'data="';
+	   Create Translated data;
+	   Create DoubleQuote;
+	END;
+
  SRC:	BEGIN
-	if not Immediately within Object
+	if not Immediately within Object and not Immediately within IMG
 	   BEGIN
            create SAN;
 	   Create 'src="';
@@ -2347,7 +2356,7 @@ ATTRIBUTES
 	   Create DoubleQuote;
 	   END;
 	END;
-
+ 
  ALT:	BEGIN
 	if not Immediately within Object
 	   BEGIN
@@ -2414,7 +2423,7 @@ ATTRIBUTES
 	Create DoubleQuote;
 	END;
 
- ISMAP: BEGIN
+ ISAMAP: BEGIN
         create SAN;
 	Create 'ismap="ismap"';
 	END;

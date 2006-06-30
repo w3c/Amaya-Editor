@@ -1024,7 +1024,7 @@ ATTRIBUTES
  vspace: BEGIN
 	END;
 
- ISMAP:
+ ISAMAP:
 	BEGIN
 	END;
 

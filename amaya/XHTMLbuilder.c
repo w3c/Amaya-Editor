@@ -318,7 +318,7 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
   char           *name1, *data;
   int            length;
   SSchema        htmlSchema;
-  ThotBool       isImage, isInline;
+  ThotBool       isImage, isInline, clean;
   char           msgBuffer[MaxMsgLength];
   int            lineNum;
 
@@ -370,6 +370,11 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
 
   switch (elType.ElTypeNum)
     {
+    case HTML_EL_PICTURE_UNIT:
+      /* Check the mandatory SRC attribute */
+      CheckMandatoryAttribute (el, doc, HTML_ATTR_SRC);
+      break;
+
     case HTML_EL_Object:	/* it's an object */
       data = NULL;
       isImage = FALSE;
@@ -445,15 +450,27 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
           if (data)
             /* the object has a data attribute */
             {
+              // remove extra spaces
+              clean = FALSE;
+              while (length > 0 && data[length-1] == SPACE)
+                {
+                  data[length-1] = EOS;
+                  length--;
+                  clean = TRUE;
+                }
+              if (clean)
+                TtaSetAttributeText (attr, data, el, doc);
+              // copy the attribute in the picture element
               attrType.AttrTypeNum = HTML_ATTR_SRC;
               attr = TtaGetAttribute (picture, attrType);
               if (attr == NULL)
                 {
                   attr = TtaNewAttribute (attrType);
                   TtaAttachAttribute (picture, attr, doc);
+
                 }
               TtaSetAttributeText (attr, data, picture, doc);
-            }
+              }
           attrType.AttrTypeNum = HTML_ATTR_Height_;
           attr = TtaGetAttribute (el, attrType);
           if (attr)
@@ -489,9 +506,6 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
                 }
             }
         }
-      //else
-        /* cannot display object image */
-      // SetAttrOnElement (doc, el, HTML_ATTR_NoObjects, 1);
 
       /* is the Object_Content element already created ? */
       if (child)
@@ -528,8 +542,99 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
                 }
             }
         }
-      if (data)
-        TtaFreeMemory (data);
+      TtaFreeMemory (data);
+      break;
+
+    case HTML_EL_IMG:
+      /* Check the mandatory ALT attribute */
+      CheckMandatoryAttribute (el, doc, HTML_ATTR_ALT);
+      /* Check the mandatory SRC attribute */
+      CheckMandatoryAttribute (el, doc, HTML_ATTR_SRC);
+      /* We need a PICTURE element as child to hold the image */
+      picture = NULL;
+      child = TtaGetFirstChild (el);
+      if (child)
+        {
+          elType = TtaGetElementType (child);
+          if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
+            // the picture is already created
+            picture = child;
+        }
+      if (picture == NULL)
+        {
+          elType.ElTypeNum = HTML_EL_PICTURE_UNIT;
+          picture = TtaNewTree (doc, elType, "");
+          if (child)
+            TtaInsertSibling (picture, child, TRUE, doc);
+          else
+            TtaInsertFirstChild (&picture, el, doc);
+        }
+      attrType.AttrSSchema = elType.ElSSchema;
+      attrType.AttrTypeNum = HTML_ATTR_SRC;
+      attr = TtaGetAttribute (el, attrType);
+      if (attr)
+        /* the img has a src attribute */
+        {
+          length = TtaGetTextAttributeLength (attr);
+          data = (char *)TtaGetMemory (length + 1);
+          TtaGiveTextAttributeValue (attr, data, &length);
+          if (data)
+            {
+              // remove extra spaces
+              clean = FALSE;
+              while (length > 0 && data[length-1] == SPACE)
+                {
+                  data[length-1] = EOS;
+                  length--;
+                  clean = TRUE;
+                }
+              if (clean)
+                TtaSetAttributeText (attr, data, el, doc);
+              // copy the attribute in the picture element
+              attr = TtaGetAttribute (picture, attrType);
+              if (attr == NULL)
+                {
+                  attr = TtaNewAttribute (attrType);
+                  TtaAttachAttribute (picture, attr, doc);
+                }
+              TtaSetAttributeText (attr, data, picture, doc);
+              TtaFreeMemory (data);
+            }
+        }
+      attrType.AttrTypeNum = HTML_ATTR_Height_;
+      attr = TtaGetAttribute (el, attrType);
+      if (attr)
+        /* the img has a height attribute. Applies it to the
+           picture element */
+        {
+          length = TtaGetTextAttributeLength (attr);
+          if (length > 0)
+            {
+              text = (char *)TtaGetMemory (length + 1);
+              TtaGiveTextAttributeValue (attr, text, &length);
+              /* create the corresponding attribute IntHeightPercent or */
+              /* IntHeightPxl */
+              CreateAttrHeightPercentPxl (text, el, doc, -1);
+              TtaFreeMemory (text);
+            }
+        }
+      attrType.AttrTypeNum = HTML_ATTR_Width__;
+      attr = TtaGetAttribute (el, attrType);
+      if (attr)
+        /* the img has a width attribute. Applies it to the
+           picture element */
+        {
+          length = TtaGetTextAttributeLength (attr);
+          if (length > 0)
+            {
+              text = (char *)TtaGetMemory (length + 1);
+              TtaGiveTextAttributeValue (attr, text, &length);
+              /* create the corresponding attribute IntWidthPercent or */
+              /* IntWidthPxl */
+              CreateAttrWidthPercentPxl (text, el, doc, -1);
+              TtaFreeMemory (text);
+            }
+        }
       break;
 
     case HTML_EL_Parameter:
@@ -903,16 +1008,6 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
       /* Check the mandatory alt attribute */
       CheckMandatoryAttribute (el, doc, HTML_ATTR_ALT);
       break;
-
-    case HTML_EL_PICTURE_UNIT:
-      /* Check the mandatory ALT attribute */
-      attrType.AttrSSchema = htmlSchema;
-      attrType.AttrTypeNum = HTML_ATTR_IsInput;
-      if (TtaGetAttribute (el, attrType) == NULL)
-        CheckMandatoryAttribute (el, doc, HTML_ATTR_ALT);
-      /* Check the mandatory SRC attribute */
-      CheckMandatoryAttribute (el, doc, HTML_ATTR_SRC);
-      break;
        
     case HTML_EL_LINK:
       CheckCSSLink (el, doc, htmlSchema);
@@ -1280,7 +1375,8 @@ void CreateAttrWidthPercentPxl (char *buffer, Element el,
   isImage = (elType.ElTypeNum == HTML_EL_PICTURE_UNIT ||
              elType.ElTypeNum == HTML_EL_Data_cell ||
              elType.ElTypeNum == HTML_EL_Heading_cell ||
-             elType.ElTypeNum == HTML_EL_Object);
+             elType.ElTypeNum == HTML_EL_Object ||
+             elType.ElTypeNum == HTML_EL_IMG);
 
   if (elType.ElTypeNum == HTML_EL_Object)
     /* the width attribute is attached to an Object element */
@@ -1409,7 +1505,8 @@ void CreateAttrHeightPercentPxl (char *buffer, Element el,
   isImage = (elType.ElTypeNum == HTML_EL_PICTURE_UNIT ||
              elType.ElTypeNum == HTML_EL_Data_cell ||
              elType.ElTypeNum == HTML_EL_Heading_cell ||
-             elType.ElTypeNum == HTML_EL_Object);
+             elType.ElTypeNum == HTML_EL_Object ||
+             elType.ElTypeNum == HTML_EL_IMG);
 
   if (elType.ElTypeNum == HTML_EL_Object)
     /* the height attribute is attached to an Object element */

@@ -139,6 +139,7 @@ number
 			 'Shadow' / 'EventAttr' / 'SpacePreserve' /
 			 'IsPlaceholder' / 'StartCounter' / 'SetCounter' /
 			 'MarkupPreserve' / 'NotAnElementNode' / 'CheckAllChars' /
+	     'IsImg' / 'IsMap' /
 			 ExceptNum .
    52	ExceptNum =	 NUMBER .
 	
@@ -275,7 +276,9 @@ code  key-word      numbers of rules using the key-word
 1196  MarkupPreserve       51
 1197  NotAnElementNode     51
 1198  CheckAllChars        51
-1199  Root                 54
+1199  IsImg                51
+1200  IsMap                51
+1201  Root                 54
 
 
 

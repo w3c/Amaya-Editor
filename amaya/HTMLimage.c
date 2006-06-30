@@ -363,19 +363,32 @@ void UpdateImageMap (Element image, Document doc, int oldWidth, int oldHeight)
   Attribute           attr;
   Element             el, child;
   Element             prev, next, parent;
+  ElementType         elType;
   char               *text;
   int                 shape, w, h, length;
   int                 deltax, deltay, val;
   DisplayMode         dispMode;
   ThotBool            newMap;
-  ThotBool      oldStructureChecking;
+  ThotBool            oldStructureChecking;
 
+  if (image == NULL)
+    return;
   dispMode = TtaGetDisplayMode (doc);
   /* Search the USEMAP attribute */
-  attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
+  elType = TtaGetElementType (image);
+  attrType.AttrSSchema = elType.ElSSchema;
   attrType.AttrTypeNum = HTML_ATTR_USEMAP;
+  parent = TtaGetParent (image);
+  if (parent)
+    {
+      elType = TtaGetElementType (parent);
+      if (elType.ElTypeNum == HTML_EL_IMG &&
+          !strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+        image = parent;
+    }
+  
   attr = TtaGetAttribute (image, attrType);
-  if (attr != NULL)
+  if (attr)
     {
       /* Disable structure checking */
       oldStructureChecking = TtaGetStructureChecking (doc);
@@ -1023,15 +1036,17 @@ ThotBool FetchImage (Document doc, Element el, char *imageURI, int flags,
               attrType2.AttrTypeNum = HTML_ATTR_FrameSrc;
               elAttr = el;
             }
+#ifdef _SVG
           else
             {
               attrType.AttrTypeNum = SVG_ATTR_xlink_href;
               elAttr = TtaGetParent (el);
             }
+#endif /* _SVG */
           attr = TtaGetAttribute (elAttr, attrType);
           if (attr == NULL)
             attr = TtaGetAttribute (elAttr, attrType2);
-          if (attr != NULL)
+          if (attr)
             /* an element with an attribute SRC or xlink:href has been found */
             {
               /* get the attribute value */
@@ -1309,6 +1324,17 @@ static void FetchImages (Document doc, int flags, Element elSubTree,
                {
                  if (loadObjects)
                    FetchImage (doc, el, NULL, flags, NULL, NULL);		  
+               }
+             else if (elType.ElTypeNum == HTML_EL_IMG)
+               {
+                 /* this element is an OBJECT or an EMBED */
+                 if (loadImages)
+                   {
+                     // manage the included PICTURE element
+                     elType.ElTypeNum = HTML_EL_PICTURE_UNIT;
+                     pic = TtaSearchTypedElement (elType, SearchInTree, el);
+                     FetchImage (doc, pic, NULL, flags, NULL, NULL);
+                   }
                }
              else
                {

@@ -45,6 +45,7 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect)
 {
   ViewFrame          *pFrame;
   PtrAbstractBox      pAb;
+  PtrElement          pEl;
   PtrTextBuffer       pBuffer;
   PtrPathSeg          pPa;
   int                 leftX, middleX, rightX;
@@ -68,14 +69,16 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect)
       /* selection points */
       GetExtraMargins (pBox, NULL, frame, &t, &b, &l, &r);
       leftX = l + pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder
-        + pBox->BxLPadding - pFrame->FrXOrg;
+        + pBox->BxLPadding - pFrame->FrXOrg - halfThick;
       topY = t + pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder
-        + pBox->BxTPadding - pFrame->FrYOrg;
-      bottomY = topY + pBox->BxH - thick;
-      rightX = leftX + pBox->BxW - thick;
-      middleX = leftX + (pBox->BxW / 2) - halfThick;
-      middleY = topY + (pBox->BxH / 2) - halfThick;
-      if (pAb->AbLeafType == LtPicture)
+        + pBox->BxTPadding - pFrame->FrYOrg - halfThick;
+      bottomY = topY + pBox->BxH + halfThick - 1;
+      rightX = leftX + pBox->BxW + halfThick - 1;
+      middleX = leftX + (pBox->BxW / 2);
+      middleY = topY + (pBox->BxH / 2);
+      pEl = pAb->AbElement;
+      if (pAb->AbLeafType == LtPicture ||
+          TypeHasException (ExcIsImg, pEl->ElTypeNumber, pEl->ElStructSchema))
         {
           /* 8 control points */
           DrawRectangle (frame, 0, 0, leftX, topY, thick, thick,
@@ -414,12 +417,14 @@ void DisplayBgBoxSelection (int frame, PtrBox pBox)
   PtrBox              pChildBox;
   ViewFrame          *pFrame;
   PtrAbstractBox      pAb;
+  PtrElement          pEl;
   int                 leftX, topY;
 
-  if (pBox != NULL)
+  if (pBox && pBox->BxAbstractBox)
     {
       pFrame = &ViewFrameTable[frame - 1];
       pAb = pBox->BxAbstractBox;
+      pEl = pAb->AbElement;
       if (pBox->BxType == BoSplit || pBox->BxType == BoMulScript)
         {
           /* display the selection on pieces of the current box */
@@ -430,10 +435,12 @@ void DisplayBgBoxSelection (int frame, PtrBox pBox)
               pChildBox = pChildBox->BxNexChild;
             }
         }
-      else if (pAb->AbLeafType == LtPicture ||
-               pAb->AbLeafType == LtGraphics ||
-               pAb->AbLeafType == LtPath ||
-               pAb->AbLeafType == LtPolyLine)
+      else if (FrameTable[frame].FrView == 1 && // formatted view
+               (pAb->AbLeafType == LtPicture ||
+                pAb->AbLeafType == LtGraphics ||
+                pAb->AbLeafType == LtPath ||
+                pAb->AbLeafType == LtPolyLine ||
+                TypeHasException (ExcIsImg, pEl->ElTypeNumber, pEl->ElStructSchema)))
         DisplayPointSelection (frame, pBox, 0);
       else
         {

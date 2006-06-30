@@ -1386,29 +1386,52 @@ void ShowSelection (PtrAbstractBox pRootAb, ThotBool showBegin)
 static void DisplaySel (PtrElement pEl, int view, int frame, ThotBool *abExist)
 {
   PtrAbstractBox      pAb, pNextAb, pSelAb[MAX_TRANSMIT];
+  PtrElement          parent, first, last;
   int                 firstChar, lastChar;
   int                 depth;
   ThotBool            selBegin, selEnd, partialSel;
-  ThotBool            unique, active, show;
+  ThotBool            unique, active, show, saveSelPosition;
 
   if (TtaGetDisplayMode (FrameTable[frame].FrDoc) != DisplayImmediately)
     show = FALSE;
   else
     show = TRUE;
+  unique = FirstSelectedElement == LastSelectedElement;
+  first = FirstSelectedElement;
+  last = LastSelectedElement;
+  firstChar = FirstSelectedChar;
+  lastChar = LastSelectedChar;
+  saveSelPosition = SelPosition; // could be altered
+  if (FrameTable[view].FrView != 1 && // not formatted view
+      first == last && unique &&
+      pEl->ElTerminal && pEl->ElLeafType == LtPicture)
+    {
+      parent = pEl->ElParent;
+      if (parent &&
+          TypeHasException (ExcIsImg, parent->ElTypeNumber,
+                            parent->ElStructSchema))
+        {
+          // higlight the IMG element instead of the PICTURE
+          pEl = parent;
+          first = last = pEl;
+          SelPosition = FALSE;
+        }
+      
+    }
   pAb = pEl->ElAbstractBox[view - 1];
   /* first abstract box of elemenebt in the view */
-  if (pAb != NULL)
+  if (pAb)
     {
       partialSel = FALSE;
-      if (pEl == FirstSelectedElement && pEl->ElTerminal)
+      if (pEl == first && pEl->ElTerminal)
         /* it's the first element in the current selection */
         {
           if (pEl->ElLeafType == LtText &&
-              FirstSelectedChar > 1 && pEl->ElTextLength > 0)
+              firstChar > 1 && pEl->ElTextLength > 0)
             /* the text leaf is partly selected */
             partialSel = TRUE;
           else if (pEl->ElLeafType == LtSymbol &&
-                   FirstSelectedChar >= 1 && pEl->ElVolume > 0)
+                   firstChar >= 1 && pEl->ElVolume > 0)
             /* the text leaf is partly selected */
             partialSel = TRUE;
           else if ((pEl->ElLeafType == LtPolyLine ||
@@ -1431,7 +1454,6 @@ static void DisplaySel (PtrElement pEl, int view, int frame, ThotBool *abExist)
     }
 
   /* handles all abstract box of the element in the view */
-  unique = FirstSelectedElement == LastSelectedElement;
   active = view == SelectedView;
   selBegin =  TRUE;
   depth = 0;
@@ -1439,7 +1461,7 @@ static void DisplaySel (PtrElement pEl, int view, int frame, ThotBool *abExist)
     {
       /* search the next selected element */
       partialSel = FALSE;
-      if (pEl == LastSelectedElement && pEl->ElTerminal)
+      if (pEl == last && pEl->ElTerminal)
         /* that's the last element in the current selection */
         {
           if (pEl->ElLeafType == LtText &&
@@ -1448,7 +1470,7 @@ static void DisplaySel (PtrElement pEl, int view, int frame, ThotBool *abExist)
             /* that text leaf is partly selected */
             partialSel = TRUE;
           else if (pEl->ElLeafType == LtSymbol &&
-                   FirstSelectedChar >= 1 && pEl->ElVolume > 0)
+                   firstChar >= 1 && pEl->ElVolume > 0)
             /* the text leaf is partly selected */
             partialSel = TRUE;
           else if ((pEl->ElLeafType == LtPolyLine ||
@@ -1491,11 +1513,10 @@ static void DisplaySel (PtrElement pEl, int view, int frame, ThotBool *abExist)
         pNextAb = NULL;
       selEnd = pNextAb == NULL;
       /* indicate that this abstract box is selected to the display module */
-      if (pEl == FirstSelectedElement)
+      if (pEl == first &&
+          pEl->ElLeafType != LtText && pEl->ElLeafType != LtSymbol)
         {
-          if (pEl->ElLeafType == LtText || pEl->ElLeafType == LtSymbol)
-            firstChar = FirstSelectedChar;
-          else if (pEl->ElLeafType == LtPolyLine ||
+          if (pEl->ElLeafType == LtPolyLine ||
                    pEl->ElLeafType == LtPath ||
                    pEl->ElLeafType == LtGraphics)
             firstChar = SelectedPointInPolyline;
@@ -1507,11 +1528,10 @@ static void DisplaySel (PtrElement pEl, int view, int frame, ThotBool *abExist)
       else
         firstChar = 0;
       
-      if (pAb->AbElement == LastSelectedElement)
+      if (pAb->AbElement == last &&
+          pEl->ElLeafType != LtText && pEl->ElLeafType != LtSymbol)
         {
-          if (pEl->ElLeafType == LtText || pEl->ElLeafType == LtSymbol)
-            lastChar = LastSelectedChar;
-          else if (pEl->ElLeafType == LtPolyLine ||
+          if (pEl->ElLeafType == LtPolyLine ||
                    pEl->ElLeafType == LtPath ||
                    pEl->ElLeafType == LtGraphics)
             lastChar = SelectedPointInPolyline;
@@ -1547,6 +1567,7 @@ static void DisplaySel (PtrElement pEl, int view, int frame, ThotBool *abExist)
   /* not sure it's the right place */
   GL_Swap (frame);
 #endif /* _GL */
+  SelPosition = saveSelPosition; // restore original value
 }
 
 
@@ -2091,8 +2112,8 @@ static void DoExtendSelection (PtrElement pEl, int rank, ThotBool fixed,
                                ThotBool begin, ThotBool drag,
                                ThotBool checkSelection)
 {
-  PtrElement          oldFirstEl, oldLastEl, pElP, pAsc, pCell, pColHead,
-    pNext;
+  PtrElement          oldFirstEl, oldLastEl, pElP, pAsc, pCell;
+  PtrElement          pColHead, pNext, parent;
   int                 oldFirstChar, oldLastChar;
   ThotBool            change, done, sel;
   ThotBool            updateFixed;
@@ -2175,10 +2196,23 @@ static void DoExtendSelection (PtrElement pEl, int rank, ThotBool fixed,
               LastSelectedElement = pEl;
               LastSelectedChar = 0;
               if (FixedChar > 0 ||
-		  pEl->ElLeafType == LtPicture ||
-		  pEl->ElLeafType == LtSymbol)
+                  pEl->ElLeafType == LtPicture ||
+                  pEl->ElLeafType == LtSymbol)
                 {
-                  if (rank > 0 && rank < FixedChar)
+                  parent = pEl->ElParent;
+                  if (pEl->ElLeafType == LtPicture && parent &&
+                      TypeHasException (ExcIsImg, parent->ElTypeNumber,
+                                        parent->ElStructSchema))
+                    {
+                      // select the whole IMG element
+                      pEl = parent;
+                      FirstSelectedElement = pEl;
+                      FirstSelectedChar = 0;
+                      LastSelectedElement = pEl;
+                      LastSelectedChar = 0;
+                      FixedElement = pEl;
+                    }
+                  else if (rank > 0 && rank < FixedChar)
                     {
                       FirstSelectedChar = rank;
                       LastSelectedChar = FixedChar;
@@ -2395,15 +2429,21 @@ static void DoExtendSelection (PtrElement pEl, int rank, ThotBool fixed,
                oldLastChar != LastSelectedChar))
             {
               change = TRUE;
-              if (FirstSelectedChar == 0 && !SelectedColumn)
-                while (FirstSelectedElement->ElNext == NULL
-                       && FirstSelectedElement->ElPrevious == NULL
-                       && FirstSelectedElement->ElParent != NULL)
-                  FirstSelectedElement = FirstSelectedElement->ElParent;
-              if (ElemIsAnAncestor (FirstSelectedElement, LastSelectedElement))
+              if (!oldFirstEl->ElTerminal || oldFirstEl->ElLeafType != LtPicture ||
+                  !TypeHasException (ExcIsImg, FirstSelectedElement->ElTypeNumber,
+                                     FirstSelectedElement->ElStructSchema))
                 {
-                  LastSelectedElement = FirstSelectedElement;
-                  LastSelectedChar = 0;
+                  // select the parent element if the whole content is selected
+                  if (FirstSelectedChar == 0 && !SelectedColumn)
+                    while (FirstSelectedElement->ElNext == NULL
+                           && FirstSelectedElement->ElPrevious == NULL
+                           && FirstSelectedElement->ElParent != NULL)
+                      FirstSelectedElement = FirstSelectedElement->ElParent;
+                  if (ElemIsAnAncestor (FirstSelectedElement, LastSelectedElement))
+                    {
+                      LastSelectedElement = FirstSelectedElement;
+                      LastSelectedChar = 0;
+                    }
                 }
               if (LastSelectedChar == 0 &&
                   LastSelectedElement != FirstSelectedElement &&
@@ -3155,28 +3195,30 @@ void PrepareSelectionMenu ()
   /* search the first ancestor of the first selected element that is */
   /* not hidden */
   SelMenuParentEl = NULL;
-  if (FirstSelectedElement != NULL)
-    if (FirstSelectedElement->ElParent != NULL)
-      {
-        pEl1 = FirstSelectedElement->ElParent;
-        stop = FALSE;
-        while (!stop)
+  if (FirstSelectedElement && FirstSelectedElement->ElParent)
+    {
+      pEl1 = FirstSelectedElement->ElParent;
+      stop = FALSE;
+      while (!stop)
+        {
           if (pEl1 == NULL)
             stop = TRUE;
-          else if (!ElementIsHidden (pEl1) && !HiddenType (pEl1) && ElemIsAnAncestor (pEl1, LastSelectedElement))
+          else if (!ElementIsHidden (pEl1) && !HiddenType (pEl1) &&
+                   ElemIsAnAncestor (pEl1, LastSelectedElement))
             stop = TRUE;
           else
             pEl1 = pEl1->ElParent;
-        if (pEl1 != NULL)
-          SelMenuParentEl = pEl1;
-      }
-
+        }
+      if (pEl1)
+        SelMenuParentEl = pEl1;
+    }
+  
   /* search the previous element that can be selected */
   SelMenuPreviousEl = NULL;
   stop = FALSE;
   pEl1 = FirstSelectedElement;
-  while (!stop && pEl1 != NULL)
-    if (pEl1->ElPrevious != NULL)
+  while (!stop && pEl1)
+    if (pEl1->ElPrevious)
       {
         pEl1 = pEl1->ElPrevious;
         if (!ElementIsHidden (pEl1))
@@ -3222,8 +3264,8 @@ void PrepareSelectionMenu ()
   SelMenuNextEl = NULL;
   stop = FALSE;
   pEl1 = LastSelectedElement;
-  while (!stop && pEl1 != NULL)
-    if (pEl1->ElNext != NULL)
+  while (!stop && pEl1)
+    if (pEl1->ElNext)
       {
         pEl1 = pEl1->ElNext;
         if (!ElementIsHidden (pEl1))
@@ -3267,7 +3309,7 @@ void PrepareSelectionMenu ()
   SelMenuChildEl = NULL;
   stop = FALSE;
   pEl1 = FirstSelectedElement;
-  while (!stop && pEl1 != NULL)
+  while (!stop && pEl1)
     /* cannot select the contents of a copy or hidden element */
     if (pEl1->ElIsCopy || ElementIsHidden (pEl1))
       pEl1 = NULL;
@@ -3299,7 +3341,7 @@ void PrepareSelectionMenu ()
   ----------------------------------------------------------------------*/
 void BuildSelectionMessage ()
 {
-  PtrElement          pEl, pTable;
+  PtrElement          pEl, pTable, parent;
   PtrDocument         pDoc;
   char                msgBuf[MAX_TXT_LEN];
   int                 nbasc;
@@ -3322,40 +3364,46 @@ void BuildSelectionMessage ()
   nbasc = 0;
   msgBuf[0] = EOS;
   pTable = NULL;
-  while (pEl != NULL)
+  while (pEl)
     {
+      parent = pEl->ElParent;
       /* skip that ancestor if it is hidden */
       if (!HiddenType (pEl))
         {
-          if (nbasc == 0 && WholeColumnSelected)
+          if (!parent ||
+              !TypeHasException (ExcIsImg, parent->ElTypeNumber, parent->ElStructSchema))
             {
-              strcat (msgBuf, "column");
-              pTable = pEl;
-              while (pTable &&
-                     !TypeHasException (ExcIsTable,
-                                        pTable->ElTypeNumber,
-                                        pTable->ElStructSchema))
-                pTable = pTable->ElParent;
+              if (nbasc == 0 && WholeColumnSelected)
+                {
+                  strcat (msgBuf, "column");
+                  pTable = pEl;
+                  while (pTable &&
+                         !TypeHasException (ExcIsTable,
+                                            pTable->ElTypeNumber,
+                                            pTable->ElStructSchema))
+                    pTable = pTable->ElParent;
+                }
+              else if (pTable == NULL || pEl == pTable)
+                {
+                  /* put a separator if it's not the first element name */
+                  if (nbasc > 0)
+                    strcat (msgBuf, " \\ ");
+                  /* put the name of the element */
+                  if (pEl->ElStructSchema)
+                    strcat (msgBuf,
+                            pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrName);
+                  /* display parent elements of the table */
+                  pTable = NULL;
+                }
+              if (msgBuf[0] != EOS)
+                nbasc++;
             }
-          else if (pTable == NULL || pEl == pTable)
-            {
-              /* put a separator if it's not the first element name */
-              if (nbasc > 0)
-                strcat (msgBuf, " \\ ");
-              /* put the name of the element */
-              if (pEl->ElStructSchema)
-                strcat (msgBuf,
-                        pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrName);
-              /* display parent elements of the table */
-              pTable = NULL;
-            }
-          nbasc++;
         }
       if (nbasc >= MAX_ITEM_MSG_SEL)
         pEl = NULL;
       else
         {
-          pEl = pEl->ElParent;
+          pEl = parent;
           if (pEl && pEl == pDoc->DocDocElement)
             /* do not display the Document element name */
             pEl = NULL;
@@ -3530,7 +3578,7 @@ void SelectAround (int val)
             }
           else if (StructSelectionMode)
             pEl = SelMenuParentEl;
-          else 
+          else
             {
               if (SelectedColumn)
                 /* we are in column selection mode */
@@ -3606,10 +3654,18 @@ void SelectAround (int val)
                           LastSelectedElement->ElParent)
                         /* selection is normalized. Select the parent */
                         {
-                          if (FirstSelectedElement->ElParent)
-                            /* do not go up to the Document element */
-                            if (FirstSelectedElement->ElParent->ElParent)
-                              pEl = FirstSelectedElement->ElParent;
+                          if (FirstSelectedElement->ElTerminal &&
+                              FirstSelectedElement->ElLeafType == LtPicture &&
+                              SelPosition)
+                            {
+                              // select the whole element
+                               DoExtendSelection (FirstSelectedElement, 0, TRUE,TRUE, TRUE, TRUE);
+                              return;
+                            }
+                          else if (FirstSelectedElement->ElParent &&
+                                   /* do not go up to the Document element */
+                                   FirstSelectedElement->ElParent->ElParent)
+                            pEl = FirstSelectedElement->ElParent;
                         }
                       else
                         /* The first and last selected elements are not siblings.

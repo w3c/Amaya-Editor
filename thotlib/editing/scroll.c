@@ -39,11 +39,11 @@
 #endif /*_GL*/
 
 /*----------------------------------------------------------------------
-   VerticalScroll scrolls forward (delta > 0) or backward (delta < 0).
-   Moves by raster-op a part of the window and displays the new part:                  
-   - forwardr by RedrawFrameBottom,                       
-   - backward by RedrawFrameTop.                     
-   The parameter selection is 1 if threre is a selection, 0 if not.
+  VerticalScroll scrolls forward (delta > 0) or backward (delta < 0).
+  Moves by raster-op a part of the window and displays the new part:                  
+  - forwardr by RedrawFrameBottom,                       
+  - backward by RedrawFrameTop.                     
+  The parameter selection is 1 if threre is a selection, 0 if not.
   ----------------------------------------------------------------------*/
 void VerticalScroll (int frame, int delta, int selection)
 {
@@ -152,12 +152,12 @@ void VerticalScroll (int frame, int delta, int selection)
 
 
 /*----------------------------------------------------------------------
-   HorizontalScroll effectue un scroll en avant (delta > 0) ou en arriere   
-   (delta < 0).                                            
-   Deplacement par rasterop d'une partie de la fenetre et  
-   reaffichage du reste de la fenetre par RedrawFrameBottom.    
-   Le parametre selection indique s'il faut gerer la       
-   selection (valeur 1) ou non (valeur 0).                 
+  HorizontalScroll effectue un scroll en avant (delta > 0) ou en arriere   
+  (delta < 0).                                            
+  Deplacement par rasterop d'une partie de la fenetre et  
+  reaffichage du reste de la fenetre par RedrawFrameBottom.    
+  Le parametre selection indique s'il faut gerer la       
+  selection (valeur 1) ou non (valeur 0).                 
   ----------------------------------------------------------------------*/
 void HorizontalScroll (int frame, int delta, int selection)
 {
@@ -230,494 +230,494 @@ void HorizontalScroll (int frame, int delta, int selection)
 
 
 /*----------------------------------------------------------------------
-   ShowYPosition force la position du bord haut de la boi^te        
-   racine de la vue dans sa framee^tre.                    
-   La parame`tre frame de'signe la fenetree^tre de la vue. 
-   Le parame`tre y donne la position demande'e et le       
-   parame`tre haut la hauteur de la fenetree^tre.          
+  ShowYPosition force la position du bord haut de la boi^te        
+  racine de la vue dans sa framee^tre.                    
+  La parame`tre frame de'signe la fenetree^tre de la vue. 
+  Le parame`tre y donne la position demande'e et le       
+  parame`tre haut la hauteur de la fenetree^tre.          
   ----------------------------------------------------------------------*/
 void ShowYPosition (int frame, int y, int height)
 {
-   ViewFrame          *pFrame;
-   PtrBox              pBox;
-   int                 delta;
-   int                 shift;
+  ViewFrame          *pFrame;
+  PtrBox              pBox;
+  int                 delta;
+  int                 shift;
 
-   pFrame = &ViewFrameTable[frame - 1];
-   if (pFrame->FrAbstractBox != NULL)
-     {
-	pBox = pFrame->FrAbstractBox->AbBox;
-	if (pBox != NULL)
-	  {
-	     /* il faut tenir compte du decalage possible de l'origine */
-	     /* de la fenetre par rapport au debut de l'Picture Concrete */
-	     shift = pFrame->FrYOrg;
+  pFrame = &ViewFrameTable[frame - 1];
+  if (pFrame->FrAbstractBox != NULL)
+    {
+      pBox = pFrame->FrAbstractBox->AbBox;
+      if (pBox != NULL)
+        {
+          /* il faut tenir compte du decalage possible de l'origine */
+          /* de la fenetre par rapport au debut de l'Picture Concrete */
+          shift = pFrame->FrYOrg;
 
-	     if (y == 0)	/* cadrage en haut */
-	       {
-		  if (pFrame->FrAbstractBox->AbTruncatedHead)
-		     JumpIntoView (frame, 0);
-		  else
-		    {
-		       /* Regarde si le cadrage en haut n'est pas deja
-			  effectue */
-		       delta = pBox->BxYOrg - shift;
-		       if (delta < 0)
-			  /* Cadre la boite racine sur le bord gauche de la
-			     fenetre */
-			  VerticalScroll (frame, delta, 1);
-		    }
-	       }
-	     else if (y == height && !pFrame->FrAbstractBox->AbTruncatedTail)
-	       /* cadrage en bas */
-	       {
-		  /* Recupere la hauteur de la fenetre */
-		  GetSizesFrame (frame, &delta, &height);
-		  /* Regarde si le cadrage en bas n'est pas deja effectue */
-		  delta = pBox->BxYOrg + pBox->BxHeight - pFrame->FrYOrg -
-		                                                      height;
-		  if (delta > 0)
-		     /* Cadre la boite racine en bas de la fenetreentre */
-		     VerticalScroll (frame, delta, 1);
-	       }
-	     else
-	       {
-		  /* Regarde si un scroll a la fin du document est demande */
-		  /* alors que le document n'est pas complet en fin        */
-		  if (y == height)
-		     JumpIntoView (frame, 100);
-		  else
-		    {
-		       /* nouvelle position demandee */
-		       delta = (int) ((float) (y * pBox->BxHeight) / (float) height);
-		       /* decalage */
-		       delta = delta + pBox->BxYOrg - shift;
-		       VerticalScroll (frame, delta, 1);
-		    }
-	       }
-	  }
-     }
+          if (y == 0)	/* cadrage en haut */
+            {
+              if (pFrame->FrAbstractBox->AbTruncatedHead)
+                JumpIntoView (frame, 0);
+              else
+                {
+                  /* Regarde si le cadrage en haut n'est pas deja
+                     effectue */
+                  delta = pBox->BxYOrg - shift;
+                  if (delta < 0)
+                    /* Cadre la boite racine sur le bord gauche de la
+                       fenetre */
+                    VerticalScroll (frame, delta, 1);
+                }
+            }
+          else if (y == height && !pFrame->FrAbstractBox->AbTruncatedTail)
+            /* cadrage en bas */
+            {
+              /* Recupere la hauteur de la fenetre */
+              GetSizesFrame (frame, &delta, &height);
+              /* Regarde si le cadrage en bas n'est pas deja effectue */
+              delta = pBox->BxYOrg + pBox->BxHeight - pFrame->FrYOrg -
+                height;
+              if (delta > 0)
+                /* Cadre la boite racine en bas de la fenetreentre */
+                VerticalScroll (frame, delta, 1);
+            }
+          else
+            {
+              /* Regarde si un scroll a la fin du document est demande */
+              /* alors que le document n'est pas complet en fin        */
+              if (y == height)
+                JumpIntoView (frame, 100);
+              else
+                {
+                  /* nouvelle position demandee */
+                  delta = (int) ((float) (y * pBox->BxHeight) / (float) height);
+                  /* decalage */
+                  delta = delta + pBox->BxYOrg - shift;
+                  VerticalScroll (frame, delta, 1);
+                }
+            }
+        }
+    }
 }
 
 
 /*----------------------------------------------------------------------
-   PositionAbsBox rend la position de l'image abstraite de la fenetre^tre      
-   frame dans le document.                                 
-   Cette fonction retourne la valeur :                              
-   -1 si l'image abstraite est vide.                                
-   0 si l'image abstraite est complete.                            
-   1 si l'image abstraite est situe'e au de'but du document.       
-   2 si l'image abstraite est situe'e a` la fin du document.       
-   3 si l'image abstraite est situe'e au milieu du document.       
-   nbCharBegin indique le nombre de carate`res avant l'image abstraite.  
-   nbCharEnd indique le nombre de carate`res apres l'image abstraite.    
-   total indique le nombre total de carate`res du document.        
+  PositionAbsBox rend la position de l'image abstraite de la fenetre^tre      
+  frame dans le document.                                 
+  Cette fonction retourne la valeur :                              
+  -1 si l'image abstraite est vide.                                
+  0 si l'image abstraite est complete.                            
+  1 si l'image abstraite est situe'e au de'but du document.       
+  2 si l'image abstraite est situe'e a` la fin du document.       
+  3 si l'image abstraite est situe'e au milieu du document.       
+  nbCharBegin indique le nombre de carate`res avant l'image abstraite.  
+  nbCharEnd indique le nombre de carate`res apres l'image abstraite.    
+  total indique le nombre total de carate`res du document.        
   ----------------------------------------------------------------------*/
 int PositionAbsBox (int frame, int *nbCharBegin, int *nbCharEnd, int *total)
 {
-   ViewFrame          *pFrame;
-   PtrBox              premiere;
-   PtrBox              derniere;
-   int                 h, l;
+  ViewFrame          *pFrame;
+  PtrBox              premiere;
+  PtrBox              derniere;
+  int                 h, l;
 
-   /* Initialisation */
-   *nbCharBegin = 0;
-   *nbCharEnd = 0;
-   *total = 0;
+  /* Initialisation */
+  *nbCharBegin = 0;
+  *nbCharEnd = 0;
+  *total = 0;
 
-   /* Recupere les informations sur la fenetre */
-   if (frame < 1 || frame >= MAX_FRAME)
-      return -1;
+  /* Recupere les informations sur la fenetre */
+  if (frame < 1 || frame >= MAX_FRAME)
+    return -1;
 
-   GetSizesFrame (frame, &l, &h);
-   pFrame = &ViewFrameTable[frame - 1];
-   /* Est-ce qu'il y a une vue ? */
-   if (pFrame->FrAbstractBox == NULL)
-      return -1;
-   /* Regarde si l'image est complete */
-   else if (!pFrame->FrAbstractBox->AbTruncatedHead &&
-	    !pFrame->FrAbstractBox->AbTruncatedTail)
-     {
-	premiere = pFrame->FrAbstractBox->AbBox;
-	*total = premiere->BxHeight;
-	return 0;
-     }
-   else
-     {
-	/* Repere la position de l'image abstraite dans le document */
-	premiere = pFrame->FrAbstractBox->AbBox->BxNext;
-	derniere = pFrame->FrAbstractBox->AbBox->BxPrevious;
-	VolumeTree (pFrame->FrAbstractBox, premiere->BxAbstractBox,
-		    derniere->BxAbstractBox, nbCharBegin, nbCharEnd, total);
+  GetSizesFrame (frame, &l, &h);
+  pFrame = &ViewFrameTable[frame - 1];
+  /* Est-ce qu'il y a une vue ? */
+  if (pFrame->FrAbstractBox == NULL)
+    return -1;
+  /* Regarde si l'image est complete */
+  else if (!pFrame->FrAbstractBox->AbTruncatedHead &&
+           !pFrame->FrAbstractBox->AbTruncatedTail)
+    {
+      premiere = pFrame->FrAbstractBox->AbBox;
+      *total = premiere->BxHeight;
+      return 0;
+    }
+  else
+    {
+      /* Repere la position de l'image abstraite dans le document */
+      premiere = pFrame->FrAbstractBox->AbBox->BxNext;
+      derniere = pFrame->FrAbstractBox->AbBox->BxPrevious;
+      VolumeTree (pFrame->FrAbstractBox, premiere->BxAbstractBox,
+                  derniere->BxAbstractBox, nbCharBegin, nbCharEnd, total);
 
-	/* L'image se trouve au debut du document ? */
-	if (!pFrame->FrAbstractBox->AbTruncatedHead)
-	   return 1;
-	/* L'image se trouve a la fin du document ? */
-	else if (!pFrame->FrAbstractBox->AbTruncatedTail)
-	   return 2;
-	else
-	   return 3;
-     }
+      /* L'image se trouve au debut du document ? */
+      if (!pFrame->FrAbstractBox->AbTruncatedHead)
+        return 1;
+      /* L'image se trouve a la fin du document ? */
+      else if (!pFrame->FrAbstractBox->AbTruncatedTail)
+        return 2;
+      else
+        return 3;
+    }
 }
 
 
 /*----------------------------------------------------------------------
-   ComputeDisplayedChars e'value la portion d'image concre`te affiche'e    
-   dans la fenetree^tre frame.                                     
-   La proce'dure rend :                                            
-   - Xpos : la position en X du premier cararte`re visualise'.     
-   - Ypos : la position en Y du premier cararte`re visualise'.     
-   - width : la largeur de la portion de l'arbre visualise'e.    
-   - height : la hauteur de la portion de l'arbre visualise'e.    
+  ComputeDisplayedChars e'value la portion d'image concre`te affiche'e    
+  dans la fenetree^tre frame.                                     
+  La proce'dure rend :                                            
+  - Xpos : la position en X du premier cararte`re visualise'.     
+  - Ypos : la position en Y du premier cararte`re visualise'.     
+  - width : la largeur de la portion de l'arbre visualise'e.    
+  - height : la hauteur de la portion de l'arbre visualise'e.    
   ----------------------------------------------------------------------*/
 void ComputeDisplayedChars (int frame, int *Xpos, int *Ypos, int *width, int *height)
 {
-   PtrBox              pBoxFirst, pBoxLast;
-   PtrBox              pBox;
-   ViewFrame          *pFrame;
-   PtrFlow             pFlow;
-   int                 upFrameLimit, lowFrameLimit;
-   int                 min, max;
-   int                 h, l, htotal;
-   int                 vtotal;
-   float               carparpix;
-   float               ratio;
+  PtrBox              pBoxFirst, pBoxLast;
+  PtrBox              pBox;
+  ViewFrame          *pFrame;
+  PtrFlow             pFlow;
+  int                 upFrameLimit, lowFrameLimit;
+  int                 min, max;
+  int                 h, l, htotal;
+  int                 vtotal;
+  float               carparpix;
+  float               ratio;
 
-   *Xpos = 0;
-   *Ypos = 0;
-   *width = 1;
-   *height = 1;
+  *Xpos = 0;
+  *Ypos = 0;
+  *width = 1;
+  *height = 1;
 
-   if (frame < 1 || frame >= MAX_FRAME)
-      return;
+  if (frame < 1 || frame >= MAX_FRAME)
+    return;
 
-   /* get window sizes */
-   GetSizesFrame (frame, &l, &h);
-   htotal = h;			/* height of the scroll bar */
-   pFrame = &ViewFrameTable[frame - 1];
+  /* get window sizes */
+  GetSizesFrame (frame, &l, &h);
+  htotal = h;			/* height of the scroll bar */
+  pFrame = &ViewFrameTable[frame - 1];
 
-   if (pFrame->FrAbstractBox != NULL)
-     {
-       pBox = pFrame->FrAbstractBox->AbBox;
-       if (pBox == NULL)
-	 return;
-       if (pFrame->FrAbstractBox->AbElement == NULL)
-	 return;
-     }
-   else
-      return;
+  if (pFrame->FrAbstractBox != NULL)
+    {
+      pBox = pFrame->FrAbstractBox->AbBox;
+      if (pBox == NULL)
+        return;
+      if (pFrame->FrAbstractBox->AbElement == NULL)
+        return;
+    }
+  else
+    return;
 
-   /* Limits of the document */
-   /* Bottom limit */
-   upFrameLimit = pFrame->FrYOrg - pBox->BxYOrg;
-   /* Top limit */
-   lowFrameLimit = upFrameLimit + h;
-   /* FrameTable[frame].FrScrollOrg is negative or null */
-   /* Left limit is the current scroll width */
-   min = FrameTable[frame].FrScrollOrg - pFrame->FrXOrg;
-   /* Right limit is the current scroll width */
-   max = min + FrameTable[frame].FrScrollWidth - l;
+  /* Limits of the document */
+  /* Bottom limit */
+  upFrameLimit = pFrame->FrYOrg - pBox->BxYOrg;
+  /* Top limit */
+  lowFrameLimit = upFrameLimit + h;
+  /* FrameTable[frame].FrScrollOrg is negative or null */
+  /* Left limit is the current scroll width */
+  min = FrameTable[frame].FrScrollOrg - pFrame->FrXOrg;
+  /* Right limit is the current scroll width */
+  max = min + FrameTable[frame].FrScrollWidth - l;
 
-   /***     Horizontal scrolling      ***/
-   /*        +-------------+             */
-   /*        |  Document   |             */
-   /* +------+-------------+---------+   */
-   /* |  Scrolling zone    |         |   */
-   /* |      |             |         |   */
-   /* |    +-+-------------+---+     |   */
-   /* |    | |             |   |     |   */
-   /* |<---| |             |   |---->|   */
-   /* | min| |      ViewFrame  | max |   */
-   /* |    | |             |   |     |   */
-   /* |    +-+-------------+---+     |   */
-   /* +------+-------------+---------+   */
-   /*        +-------------+             */
-   /* ratio of the width of the Concrete Image with the scrolling width */
-   ratio = (float) l / (float) FrameTable[frame].FrScrollWidth;
+  /***     Horizontal scrolling      ***/
+  /*        +-------------+             */
+  /*        |  Document   |             */
+  /* +------+-------------+---------+   */
+  /* |  Scrolling zone    |         |   */
+  /* |      |             |         |   */
+  /* |    +-+-------------+---+     |   */
+  /* |    | |             |   |     |   */
+  /* |<---| |             |   |---->|   */
+  /* | min| |      ViewFrame  | max |   */
+  /* |    | |             |   |     |   */
+  /* |    +-+-------------+---+     |   */
+  /* +------+-------------+---------+   */
+  /*        +-------------+             */
+  /* ratio of the width of the Concrete Image with the scrolling width */
+  ratio = (float) l / (float) FrameTable[frame].FrScrollWidth;
 
-   if (min < 0)
-     {
-	/* percent of what remains on the left part */
-	*Xpos = (int) ((float) (-min) * ratio);
-	/* position of the slider */
-	if (*Xpos < 4)
-	   *Xpos = 4;
-     }
-   else
-      /* there is nothing on the left */
-      *Xpos = 0;
+  if (min < 0)
+    {
+      /* percent of what remains on the left part */
+      *Xpos = (int) ((float) (-min) * ratio);
+      /* position of the slider */
+      if (*Xpos < 4)
+        *Xpos = 4;
+    }
+  else
+    /* there is nothing on the left */
+    *Xpos = 0;
 
-   if (max > 0)
-     {
-	/* percent of what remains on the right part */
-	*width = (int) ((float) max * ratio);
-	/* width of the slider */
-	if (*width < 4)
-	   *width = l - 4 - *Xpos;
-	else
-	   *width = - *width + l - *Xpos;
-     }
-   else
-      /* there is nothing on the left */
-      *width = l - *Xpos;
+  if (max > 0)
+    {
+      /* percent of what remains on the right part */
+      *width = (int) ((float) max * ratio);
+      /* width of the slider */
+      if (*width < 4)
+        *width = l - 4 - *Xpos;
+      else
+        *width = - *width + l - *Xpos;
+    }
+  else
+    /* there is nothing on the left */
+    *width = l - *Xpos;
 
-   /***     Vertical scrolling             ***/
-   /*      +-------------+                   */
-   /*      |  Document   |min                */
-   /*    +-+-------------+-+     +-+         */
-   /*    |    Concrete     |\    | |         */
-   /*    |                 | \   | |max      */
-   /*    |+---------------+|  \  | |         */
-   /*    ||               ||\  --|-|         */
-   /*    ||   ViewFrame   || ====|=|slider   */
-   /*    ||               ||/  --|-|         */
-   /*    |+---------------+|  /  | |         */
-   /*    |                 | /   | |max      */
-   /*    |     Image       |/    | |         */
-   /*    +-+-------------+-+     +-+         */
-   /*      |             |max                */
-   /*      +-------------+                   */
+  /***     Vertical scrolling             ***/
+  /*      +-------------+                   */
+  /*      |  Document   |min                */
+  /*    +-+-------------+-+     +-+         */
+  /*    |    Concrete     |\    | |         */
+  /*    |                 | \   | |max      */
+  /*    |+---------------+|  \  | |         */
+  /*    ||               ||\  --|-|         */
+  /*    ||   ViewFrame   || ====|=|slider   */
+  /*    ||               ||/  --|-|         */
+  /*    |+---------------+|  /  | |         */
+  /*    |                 | /   | |max      */
+  /*    |     Image       |/    | |         */
+  /*    +-+-------------+-+     +-+         */
+  /*      |             |max                */
+  /*      +-------------+                   */
 
-   /** Compute the part of the document which is not formatted **/
-   if ((!pFrame->FrAbstractBox->AbTruncatedHead) &&
-       (!pFrame->FrAbstractBox->AbTruncatedTail))
-     {
-	/* The whole document is formatted */
-       min = 0;
-       max = 0;
-     }
-   else
-     {
-	if (pBox->BxNext == NULL)
-	  {
-	     /* le document est vide (que la racine) */
-	     min = 0;
-	     max = 0;
-	  }
-	else
-	  {
-	     pBoxFirst = pBox->BxNext;	/* pBoxFirst boite terminale */
-	     pBoxLast = pBox->BxPrevious;	/* pBoxLast boite terminale */
-	     /* Elimine les boites de presentations */
-	     while (pBoxFirst->BxAbstractBox->AbPresentationBox &&
-		    pBoxFirst != pBoxLast)
-		pBoxFirst = pBoxFirst->BxNext;
-	     if (pBoxFirst != pBoxLast)
-	       while (pBoxLast->BxAbstractBox->AbPresentationBox &&
-		      pBoxLast->BxPrevious->BxAbstractBox &&
-		      pBoxFirst != pBoxLast)
-		 pBoxLast = pBoxLast->BxPrevious;
+  /** Compute the part of the document which is not formatted **/
+  if ((!pFrame->FrAbstractBox->AbTruncatedHead) &&
+      (!pFrame->FrAbstractBox->AbTruncatedTail))
+    {
+      /* The whole document is formatted */
+      min = 0;
+      max = 0;
+    }
+  else
+    {
+      if (pBox->BxNext == NULL)
+        {
+          /* le document est vide (que la racine) */
+          min = 0;
+          max = 0;
+        }
+      else
+        {
+          pBoxFirst = pBox->BxNext;	/* pBoxFirst boite terminale */
+          pBoxLast = pBox->BxPrevious;	/* pBoxLast boite terminale */
+          /* Elimine les boites de presentations */
+          while (pBoxFirst->BxAbstractBox->AbPresentationBox &&
+                 pBoxFirst != pBoxLast)
+            pBoxFirst = pBoxFirst->BxNext;
+          if (pBoxFirst != pBoxLast)
+            while (pBoxLast->BxAbstractBox->AbPresentationBox &&
+                   pBoxLast->BxPrevious->BxAbstractBox &&
+                   pBoxFirst != pBoxLast)
+              pBoxLast = pBoxLast->BxPrevious;
 
-	     /* Evalue la hauteur et la position Y par rapport a l'image
-		abstraite */
-	     VolumeTree (pFrame->FrAbstractBox, pBoxFirst->BxAbstractBox,
-			 pBoxLast->BxAbstractBox, &min, &max, &vtotal);
-	     /* min gives the volume before the displayed part */
-	     /* max gives the volume after the displayed part */
-	     /* Compute the number of characters represented by a pixel height */
-	     carparpix = (float) vtotal / (float) h;
-	     if (min > 0)
-	       min = (int) ((float) min / carparpix);
-	     if (max > 0)
-	       max = (int) ((float) max / carparpix);
-	     /* slider height representing the displayed part */
-	     h = h - min - max;
-	  }
-     }
+          /* Evalue la hauteur et la position Y par rapport a l'image
+             abstraite */
+          VolumeTree (pFrame->FrAbstractBox, pBoxFirst->BxAbstractBox,
+                      pBoxLast->BxAbstractBox, &min, &max, &vtotal);
+          /* min gives the volume before the displayed part */
+          /* max gives the volume after the displayed part */
+          /* Compute the number of characters represented by a pixel height */
+          carparpix = (float) vtotal / (float) h;
+          if (min > 0)
+            min = (int) ((float) min / carparpix);
+          if (max > 0)
+            max = (int) ((float) max / carparpix);
+          /* slider height representing the displayed part */
+          h = h - min - max;
+        }
+    }
 
-   /* check if there are extra flow */
-   pFlow = pFrame->FrFlow;
-   while (pFlow)
-     {
-       if (pFlow->FlRootBox && pFlow->FlRootBox->AbBox &&
-	   pFlow->FlRootBox->AbBox->BxHeight > pBox->BxHeight)
-	 pBox->BxHeight = pFlow->FlRootBox->AbBox->BxHeight;
-       pFlow = pFlow->FlNext;
-     }
-   /* Rapport hauteur Picture Concrete sur hauteur portion du scroll */
-   ratio = (float) h / (float) pBox->BxHeight;
-   if (upFrameLimit > 0)
-     {
-	/* Il reste une portion de document en haut de la fenetre */
-	*Ypos = (int) ((float) upFrameLimit * ratio) + min;
-	if (*Ypos < 4)
-	   *Ypos = 4;
-     }
-   else
-      *Ypos = min;
+  /* check if there are extra flow */
+  pFlow = pFrame->FrFlow;
+  while (pFlow)
+    {
+      if (pFlow->FlRootBox && pFlow->FlRootBox->AbBox &&
+          pFlow->FlRootBox->AbBox->BxHeight > pBox->BxHeight)
+        pBox->BxHeight = pFlow->FlRootBox->AbBox->BxHeight;
+      pFlow = pFlow->FlNext;
+    }
+  /* Rapport hauteur Picture Concrete sur hauteur portion du scroll */
+  ratio = (float) h / (float) pBox->BxHeight;
+  if (upFrameLimit > 0)
+    {
+      /* Il reste une portion de document en haut de la fenetre */
+      *Ypos = (int) ((float) upFrameLimit * ratio) + min;
+      if (*Ypos < 4)
+        *Ypos = 4;
+    }
+  else
+    *Ypos = min;
 
-   if (lowFrameLimit < pBox->BxHeight)
-     {
-	/* Calcul de la portion de document en bas de la fenetre */
-	*height = (int) ((float) (pBox->BxHeight - lowFrameLimit) * ratio) + max;
-	/* Calcul de la hauteur du slider */
-	if (*height < 4)
-	   *height = htotal - 4 - *Ypos;
-	else
-	   *height = -*height + htotal - *Ypos;
-     }
-   else
-      *height = htotal - *Ypos - max;
+  if (lowFrameLimit < pBox->BxHeight)
+    {
+      /* Calcul de la portion de document en bas de la fenetre */
+      *height = (int) ((float) (pBox->BxHeight - lowFrameLimit) * ratio) + max;
+      /* Calcul de la hauteur du slider */
+      if (*height < 4)
+        *height = htotal - 4 - *Ypos;
+      else
+        *height = -*height + htotal - *Ypos;
+    }
+  else
+    *height = htotal - *Ypos - max;
 
-   /* Finalement on verifie que la largeur */
-   /* la hauteur sont au moins egal a 1    */
-   if (*width < 1)
-      *width = 1;
-   if (*height < 1)
-      *height = 1;
+  /* Finalement on verifie que la largeur */
+  /* la hauteur sont au moins egal a 1    */
+  if (*width < 1)
+    *width = 1;
+  if (*height < 1)
+    *height = 1;
 }
 
 /*----------------------------------------------------------------------
   ShowBox displays the box pBox at the requested position in the window.
   The parameter position is:
-    0 for the top of the window
-    1 for the middle of the window
-    2 for the bottom of the window
-   When the postion = 0, percent give the percent from the top of the
-   window.
+  0 for the top of the window
+  1 for the middle of the window
+  2 for the bottom of the window
+  When the postion = 0, percent give the percent from the top of the
+  window.
   ----------------------------------------------------------------------*/
 void ShowBox (int frame, PtrBox pBox, int position, int percent)
 {
-   PtrAbstractBox      pBlock;
-   PtrBox              pBox1;
-   PtrLine             pLine;
-   ViewFrame          *pFrame;
-   int                 ymin, ymax;
-   int                 width, height;
-   int                 y, dy, h;
+  PtrAbstractBox      pBlock;
+  PtrBox              pBox1;
+  PtrLine             pLine;
+  ViewFrame          *pFrame;
+  int                 ymin, ymax;
+  int                 width, height;
+  int                 y, dy, h;
 
-   if (pBox == NULL)
-      return;
-   pBox1 = pBox;
-   pBlock = NULL;
-   pLine = NULL;
-   if (pBox->BxType == BoGhost || pBox->BxType == BoFloatGhost)
-     {
-       while (pBox && (pBox->BxType == BoGhost || pBox->BxType == BoFloatGhost))
-	 pBox = pBox->BxAbstractBox->AbFirstEnclosed->AbBox;
-       if (!pBox)
-	 {
-	   pBox = pBox1;
-	   while (pBox->BxType == BoGhost || pBox->BxType == BoFloatGhost)
-	     pBox = pBox->BxAbstractBox->AbEnclosing->AbBox;
-	 }
-       /* manage the line instead of the box itself */
-       pLine = SearchLine (pBox, frame);
-       if (pLine)
-	 {
-	   pBlock = pBox->BxAbstractBox;
-	   while (pBlock && pBlock->AbBox->BxType != BoBlock &&
-		  pBlock->AbBox->BxType != BoFloatBlock)
-	     pBlock = pBlock->AbEnclosing;
-	 }
-     }
+  if (pBox == NULL)
+    return;
+  pBox1 = pBox;
+  pBlock = NULL;
+  pLine = NULL;
+  if (pBox->BxType == BoGhost || pBox->BxType == BoFloatGhost)
+    {
+      while (pBox && (pBox->BxType == BoGhost || pBox->BxType == BoFloatGhost))
+        pBox = pBox->BxAbstractBox->AbFirstEnclosed->AbBox;
+      if (!pBox)
+        {
+          pBox = pBox1;
+          while (pBox->BxType == BoGhost || pBox->BxType == BoFloatGhost)
+            pBox = pBox->BxAbstractBox->AbEnclosing->AbBox;
+        }
+      /* manage the line instead of the box itself */
+      pLine = SearchLine (pBox, frame);
+      if (pLine)
+        {
+          pBlock = pBox->BxAbstractBox;
+          while (pBlock && pBlock->AbBox->BxType != BoBlock &&
+                 pBlock->AbBox->BxType != BoFloatBlock)
+            pBlock = pBlock->AbEnclosing;
+        }
+    }
 
-   if (pBox->BxType == BoSplit)
-     pBox = pBox->BxNexChild;
+  if (pBox->BxType == BoSplit)
+    pBox = pBox->BxNexChild;
 
-   pFrame = &ViewFrameTable[frame - 1];
-   if (pBlock && pBlock->AbBox)
-     {
-       y = pBlock->AbBox->BxYOrg + pLine->LiYOrg;
-       h = pLine->LiHeight;
-     }
-   else
-     {
-       y = pBox->BxYOrg;
-       h = pBox->BxHeight;
-     }
-   /* largeur et hauteur de la fenetre */
-   GetSizesFrame (frame, &width, &height);
-   ymin = pFrame->FrYOrg;
-   ymax = ymin + height;
+  pFrame = &ViewFrameTable[frame - 1];
+  if (pBlock && pBlock->AbBox)
+    {
+      y = pBlock->AbBox->BxYOrg + pLine->LiYOrg;
+      h = pLine->LiHeight;
+    }
+  else
+    {
+      y = pBox->BxYOrg;
+      h = pBox->BxHeight;
+    }
+  /* largeur et hauteur de la fenetre */
+  GetSizesFrame (frame, &width, &height);
+  ymin = pFrame->FrYOrg;
+  ymax = ymin + height;
 
-   /* On debloque eventuellement l'affichage */
-   pFrame->FrReady = TRUE;
+  /* On debloque eventuellement l'affichage */
+  pFrame->FrReady = TRUE;
 
-   if (position == 0)
-     /* Affiche le haut de la boite a pourcent du haut de la fenetre */
-     dy = y - ymin - ((height * percent) / 100);
-   else if (position == 1)
-     /* Centre le milieu de la boite sur le milieu de la fenetre */
-     dy = y + (h / 2) - ymin - (height / 2);
-   else
-     /* Affiche en bas de la fenetre */
-     dy = y + h - ymax;
+  if (position == 0)
+    /* Affiche le haut de la boite a pourcent du haut de la fenetre */
+    dy = y - ymin - ((height * percent) / 100);
+  else if (position == 1)
+    /* Centre le milieu de la boite sur le milieu de la fenetre */
+    dy = y + (h / 2) - ymin - (height / 2);
+  else
+    /* Affiche en bas de la fenetre */
+    dy = y + h - ymax;
 
-   /* Il faut realiser l'affichage par scroll ou par appel explicite */
-   if (dy != 0)
-      VerticalScroll (frame, dy, 1);
-   else
-      {
+  /* Il faut realiser l'affichage par scroll ou par appel explicite */
+  if (dy != 0)
+    VerticalScroll (frame, dy, 1);
+  else
+    {
       RedrawFrameBottom (frame, dy, NULL);
       /* Mise a jour des ascenseurs */
       UpdateScrollbars (frame);
-      }
+    }
 }
 
 /*----------------------------------------------------------------------
-   IsScrolled regarde si la marque d'insertion (de'but de se'lection) 
-   est visible dans la fenetre^tre affiche'e sur l'e'cran.        
-   Si c'est le cas, la fonction rend la valeur vrai.       
-   Si cela n'est pas le cas, la fonction demande le        
-   de'placement horizontal ou vertical de la portion       
-   d'image concre`te affiche'e et rend la valeur fausse.   
-   Le parame`tre selection indique s'il faut ge'rer la     
-   se'lection (valeur 1) ou non (valeur 0).                
+  IsScrolled regarde si la marque d'insertion (de'but de se'lection) 
+  est visible dans la fenetre^tre affiche'e sur l'e'cran.        
+  Si c'est le cas, la fonction rend la valeur vrai.       
+  Si cela n'est pas le cas, la fonction demande le        
+  de'placement horizontal ou vertical de la portion       
+  d'image concre`te affiche'e et rend la valeur fausse.   
+  Le parame`tre selection indique s'il faut ge'rer la     
+  se'lection (valeur 1) ou non (valeur 0).                
   ----------------------------------------------------------------------*/
 ThotBool IsScrolled (int frame, int selection)
 {
-   int                 xmin, xmax;
-   int                 ymin, ymax;
-   int                 x, y, dx, dy, h;
-   ViewFrame          *pFrame;
-   PtrBox              pBo1;
-   ThotBool            result;
+  int                 xmin, xmax;
+  int                 ymin, ymax;
+  int                 x, y, dx, dy, h;
+  ViewFrame          *pFrame;
+  PtrBox              pBo1;
+  ThotBool            result;
 
-   pFrame = &ViewFrameTable[frame - 1];
-   pBo1 = pFrame->FrSelectionBegin.VsBox;
-   if (pBo1 == NULL)
-     return TRUE;
-   x = pBo1->BxXOrg + pFrame->FrSelectionBegin.VsXPos;
-   y = pBo1->BxYOrg;
-   h = pBo1->BxHeight;
-   GetSizesFrame (frame, &dx, &dy);
-   xmin = pFrame->FrXOrg;
-   xmax = xmin + dx;
-   dx = dx / 2;
-   ymin = pFrame->FrYOrg;
-   ymax = ymin + dy;
-   dy = dy / 2;
+  pFrame = &ViewFrameTable[frame - 1];
+  pBo1 = pFrame->FrSelectionBegin.VsBox;
+  if (pBo1 == NULL)
+    return TRUE;
+  x = pBo1->BxXOrg + pFrame->FrSelectionBegin.VsXPos;
+  y = pBo1->BxYOrg;
+  h = pBo1->BxHeight;
+  GetSizesFrame (frame, &dx, &dy);
+  xmin = pFrame->FrXOrg;
+  xmax = xmin + dx;
+  dx = dx / 2;
+  ymin = pFrame->FrYOrg;
+  ymax = ymin + dy;
+  dy = dy / 2;
 
-   /* On debloque eventuellement l'affichage */
-   pFrame->FrReady = TRUE;
-   if (pBo1->BxAbstractBox->AbHorizPos.PosUserSpecified)
-      /* C'est une creation interactive de boite, la boite sera */
-      /* automatiquement placee dans la fenetre au moment de sa creation */
-      result = TRUE;
-   else if (x < xmin || x > xmax)
-     {
-	/* Deplacement du cadre le la fenetre */
-	HorizontalScroll (frame, x - xmin - dx, selection);
-	result = FALSE;
-     }
-   else
-      result = TRUE;
+  /* On debloque eventuellement l'affichage */
+  pFrame->FrReady = TRUE;
+  if (pBo1->BxAbstractBox->AbHorizPos.PosUserSpecified)
+    /* C'est une creation interactive de boite, la boite sera */
+    /* automatiquement placee dans la fenetre au moment de sa creation */
+    result = TRUE;
+  else if (x < xmin || x > xmax)
+    {
+      /* Deplacement du cadre le la fenetre */
+      HorizontalScroll (frame, x - xmin - dx, selection);
+      result = FALSE;
+    }
+  else
+    result = TRUE;
 
-   if (pBo1->BxAbstractBox->AbVertPos.PosUserSpecified)
-      /* C'est une creation interactive de boite, la boite sera */
-      /* automatiquement placee dans la fenetre au moment de sa creation */
-      result = TRUE;
-   else if (y < ymin || y + h > ymax)
-     {
-	/* Deplacement du cadre le la fenetre */
-	VerticalScroll (frame, y - ymin - dy, selection);
-	result = FALSE;
-     }
-   else
-      result = TRUE;
-   return result;
+  if (pBo1->BxAbstractBox->AbVertPos.PosUserSpecified)
+    /* C'est une creation interactive de boite, la boite sera */
+    /* automatiquement placee dans la fenetre au moment de sa creation */
+    result = TRUE;
+  else if (y < ymin || y + h > ymax)
+    {
+      /* Deplacement du cadre le la fenetre */
+      VerticalScroll (frame, y - ymin - dy, selection);
+      result = FALSE;
+    }
+  else
+    result = TRUE;
+  return result;
 }
 
 
@@ -727,96 +727,96 @@ ThotBool IsScrolled (int frame, int selection)
   ----------------------------------------------------------------------*/
 void ShowSelectedBox (int frame, ThotBool active)
 {
-   ViewFrame          *pFrame;
-   PtrBox              pBo1;
-   int                 xmin, xmax;
-   int                 ymin, ymax;
-   int                 x, y, dx, dy, w, h;
+  ViewFrame          *pFrame;
+  PtrBox              pBo1;
+  int                 xmin, xmax;
+  int                 ymin, ymax;
+  int                 x, y, dx, dy, w, h;
 
 #ifndef _WX
-   /* do not update the ActiveFrame when drawing because the selected frame is not allways the drawn one */
-   if (active)
-     /* make the window active */
-      ChangeSelFrame (frame);
+  /* do not update the ActiveFrame when drawing because the selected frame is not allways the drawn one */
+  if (active)
+    /* make the window active */
+    ChangeSelFrame (frame);
 #endif /* _WX */
 
-   pFrame = &ViewFrameTable[frame - 1];
-   if (pFrame->FrSelectionBegin.VsBox != NULL && pFrame->FrReady)
-     {
-	pBo1 = pFrame->FrSelectionBegin.VsBox;
-	/* Check if almost one box is displayed */
-	while (pBo1 && pBo1->BxAbstractBox &&
-	       pBo1->BxAbstractBox->AbVisibility < pFrame->FrVisibility)
-	  {
-	     if (pBo1->BxAbstractBox->AbSelected ||
-		 pBo1 == pFrame->FrSelectionBegin.VsBox)
-		pBo1 = pBo1->BxNext;
-	     else
-		/* no box found */
-		return;
-	  }
-	if (pBo1 != NULL)
-	  {
+  pFrame = &ViewFrameTable[frame - 1];
+  if (pFrame->FrSelectionBegin.VsBox != NULL && pFrame->FrReady)
+    {
+      pBo1 = pFrame->FrSelectionBegin.VsBox;
+      /* Check if almost one box is displayed */
+      while (pBo1 && pBo1->BxAbstractBox &&
+             pBo1->BxAbstractBox->AbVisibility < pFrame->FrVisibility)
+        {
+          if (pBo1->BxAbstractBox->AbSelected ||
+              pBo1 == pFrame->FrSelectionBegin.VsBox)
+            pBo1 = pBo1->BxNext;
+          else
+            /* no box found */
+            return;
+        }
+      if (pBo1 != NULL)
+        {
 #ifdef _GL
-	    if (pBo1->BxBoundinBoxComputed)
-	      {
-		x = pBo1->BxClipX + pFrame->FrXOrg;
-		y = pBo1->BxClipY + pFrame->FrYOrg;
-	      }
-	    else
+          if (pBo1->BxBoundinBoxComputed)
+            {
+              x = pBo1->BxClipX + pFrame->FrXOrg;
+              y = pBo1->BxClipY + pFrame->FrYOrg;
+            }
+          else
 #endif /* _GL*/
-	      {
-		x = pBo1->BxXOrg;
-		y = pBo1->BxYOrg;
-	      }
-	     GetSizesFrame (frame, &w, &h);
-	     xmin = pFrame->FrXOrg;
-	     xmax = xmin + w;
-	     ymin = pFrame->FrYOrg;
-	     ymax = ymin + h;
-	     /* center in the window */
-	     dx = pFrame->FrSelectionBegin.VsXPos;
-	     dy = 13;
-	     w /= 2;
-	     h /= 2;
-	     if (pBo1->BxAbstractBox)
-	       {
-		 if (!pBo1->BxAbstractBox->AbHorizPos.PosUserSpecified)
-		   /* the box position is not given by the user */
-		   {
-		   if (x + dx < xmin + 10)
-		     /* scroll the window */
-		     HorizontalScroll (frame, x + dx - xmin - w, 0);
-		   else if (x + dx > xmax - 10)
-		     /* scroll the window */
-		     HorizontalScroll (frame, x + dx - xmax + w, 0);
-		   }
+            {
+              x = pBo1->BxXOrg;
+              y = pBo1->BxYOrg;
+            }
+          GetSizesFrame (frame, &w, &h);
+          xmin = pFrame->FrXOrg;
+          xmax = xmin + w;
+          ymin = pFrame->FrYOrg;
+          ymax = ymin + h;
+          /* center in the window */
+          dx = pFrame->FrSelectionBegin.VsXPos;
+          dy = 13;
+          w /= 2;
+          h /= 2;
+          if (pBo1->BxAbstractBox)
+            {
+              if (!pBo1->BxAbstractBox->AbHorizPos.PosUserSpecified)
+                /* the box position is not given by the user */
+                {
+                  if (x + dx < xmin + 10)
+                    /* scroll the window */
+                    HorizontalScroll (frame, x + dx - xmin - w, 0);
+                  else if (x + dx > xmax - 10)
+                    /* scroll the window */
+                    HorizontalScroll (frame, x + dx - xmax + w, 0);
+                }
 
-		 if (!pBo1->BxAbstractBox->AbVertPos.PosUserSpecified)
-		   /* the box position is not given by the user */
-		   {
+              if (!pBo1->BxAbstractBox->AbVertPos.PosUserSpecified)
+                /* the box position is not given by the user */
+                {
 #ifdef _GL
-		   if (y + pBo1->BxClipH < ymin + dy)
-		     /* scroll the window */
-		     VerticalScroll (frame, y + pBo1->BxClipH - ymin - h, 0);
+                  if (y + pBo1->BxClipH < ymin + dy)
+                    /* scroll the window */
+                    VerticalScroll (frame, y + pBo1->BxClipH - ymin - h, 0);
 #else /* _GL */
-		   if (y + pBo1->BxHeight < ymin + dy)
-		     /* scroll the window */
-		     VerticalScroll (frame, y + pBo1->BxHeight - ymin - h, 0);
+                  if (y + pBo1->BxHeight < ymin + dy)
+                    /* scroll the window */
+                    VerticalScroll (frame, y + pBo1->BxHeight - ymin - h, 0);
 #endif /* _GL */
-		   else if (y > ymax - dy)
-		     /* scroll the window */
-		     VerticalScroll (frame, y - ymax + h, 0);
-		   }
-	       }
-	  }
-     }
+                  else if (y > ymax - dy)
+                    /* scroll the window */
+                    VerticalScroll (frame, y - ymax + h, 0);
+                }
+            }
+        }
+    }
 }
 
 
 /*----------------------------------------------------------------------
-   IsAbsBoxVisible retourne Vrai si le pAb deborde de la          
-   frame du document.                                       
+  IsAbsBoxVisible retourne Vrai si le pAb deborde de la          
+  frame du document.                                       
   ----------------------------------------------------------------------*/
 ThotBool IsAbsBoxVisible (int frame, PtrAbstractBox pAb)
 {
@@ -830,8 +830,8 @@ ThotBool IsAbsBoxVisible (int frame, PtrAbstractBox pAb)
   else if (pAb->AbBox == NULL)
     return (FALSE);		/* pas de boite a tester */
   else if (pAb->AbVisibility < pFrame->FrVisibility ||
-	   pAb->AbBox->BxType == BoGhost ||
-	   pAb->AbBox->BxType == BoFloatGhost)
+           pAb->AbBox->BxType == BoGhost ||
+           pAb->AbBox->BxType == BoFloatGhost)
     return (FALSE);		/* la boite n'est pas visible par definition */
   else
     {
@@ -845,8 +845,8 @@ ThotBool IsAbsBoxVisible (int frame, PtrAbstractBox pAb)
       ymax = dy;
 #endif /* _GL */
       if (y <= ymax)
-	return (FALSE);
+        return (FALSE);
       else
-	return (TRUE);
+        return (TRUE);
     }
 }

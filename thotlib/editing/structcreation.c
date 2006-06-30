@@ -357,6 +357,14 @@ PtrAbstractBox CreateALeaf (PtrAbstractBox pAB, int *frame, LeafType leafType,
     /* on ne peut inserer ou coller dans un document en lecture seule */
     {
       doc = IdentDocument (pDoc);
+      if (pEl && pEl->ElTerminal && pEl->ElLeafType == LtPicture)
+        {
+          // create around the IMG instead of the PICTURE element
+          pE = pEl->ElParent;
+          if (pE &&
+              TypeHasException (ExcIsImg, pE->ElTypeNumber, pE->ElStructSchema))
+            pEl = pE;
+        }
       pE = NULL;
       pLeaf = NULL;
       empty = TRUE;
@@ -634,10 +642,20 @@ PtrAbstractBox CreateALeaf (PtrAbstractBox pAB, int *frame, LeafType leafType,
                                 }
                               else
                                 {
+                                  // add a new child
                                   pE = NewSubtree (ruleNum, pSS, pDoc, FALSE,
                                                    TRUE, TRUE, TRUE);
                                   InsertChildFirst (pE, pLeaf, &pLeaf, pDoc);
-                                  /* accroche les elements crees a l'arbre abstrait */
+#ifdef IV
+                                  // should we add this ???? register the update
+                                  opened = pDoc->DocEditSequence;
+                                  if (!opened)
+                                    OpenHistorySequence (pDoc, pEl, pEl, NULL,
+                                                         firstChar, lastChar);
+                                  AddEditOpInHistory (pLeaf, pDoc, FALSE, TRUE);
+                                  if (!opened)
+                                    CloseHistorySequence (pDoc);
+#endif
                                 }
                             }
                         if (pE != NULL)
@@ -688,7 +706,7 @@ PtrAbstractBox CreateALeaf (PtrAbstractBox pAB, int *frame, LeafType leafType,
                             ident = TRUE;
                           else
                             ident = FALSE;
-                          /* chaine l'element cree */
+                          /* register changes */
                           opened = pDoc->DocEditSequence;
                           if (!opened)
                             OpenHistorySequence (pDoc, pEl, pEl, NULL,
