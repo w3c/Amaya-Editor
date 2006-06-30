@@ -1354,7 +1354,7 @@ static unsigned char PresRuleValue (PtrPRule pPRule)
 static ThotBool     EmptyElement (PtrElement pEl)
 {
   PtrElement          pChild;
-  ThotBool            empty, specialGraphic;
+  ThotBool            empty, specialGraphic, isImg;
 
   empty = TRUE;
   if (pEl->ElTerminal)
@@ -1396,6 +1396,7 @@ static ThotBool     EmptyElement (PtrElement pEl)
     {
       specialGraphic = TypeHasException (ExcEmptyGraphic, pEl->ElTypeNumber,
                                          pEl->ElStructSchema);
+      isImg = TypeHasException (ExcIsImg, pEl->ElTypeNumber, pEl->ElStructSchema);
       pChild = pEl->ElFirstChild;
       while (pChild && empty)
         {
@@ -1415,11 +1416,19 @@ static ThotBool     EmptyElement (PtrElement pEl)
                   if (!pChild->ElSource)
                     /* this is not a transcluded element */
                     empty = FALSE;
-                  else
-                    if (pChild->ElSource->RdTypeRef != RefInclusion)
-                      /* this is not a transcluded element */
-                      empty = FALSE;
+                  else if (pChild->ElSource->RdTypeRef != RefInclusion)
+                    /* this is not a transcluded element */
+                    empty = FALSE;
                 }
+            }
+          else if (isImg)
+            /* this is a HTML img of SVG image that
+               has to be considered empty even if it contains a PICTURE Leaf
+               element */
+            {
+              if (!pChild->ElTerminal || pChild->ElLeafType != LtPicture)
+                /* this is not a Thot picture basic element */
+                empty = FALSE;
             }
           else if (!EmptyElement (pChild))
             empty = FALSE;

@@ -20,14 +20,6 @@ DEFAULT
 
 ELEMENTS
 
-   PICTURE_UNIT:
-	BEGIN
-	ElemNew.Post -> UpdateSRCattribute;
-	ElemTextModify.Post -> UpdateSRCattribute;
-	ElemSelect.Pre -> SelectPicture;
-	ElemDelete.Pre -> DeletePicture;
-	END;
-
    IMG:
 	BEGIN
 	ElemNew.Post -> UpdateSRCattribute;

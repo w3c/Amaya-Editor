@@ -496,7 +496,16 @@ RULES
 	create SOT;
 	Create 'img';
 	Create Attributes;
-	Create ' />\12';
+	if empty
+	  Create ' />\12';
+	if not empty
+		BEGIN
+	Create '>\12';
+	Indent +2;
+	Indent -2 After;
+	create SCT after;
+	Create 'img>' After;
+		END;
 	END;
 
  INS:	BEGIN

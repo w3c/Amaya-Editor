@@ -3296,7 +3296,8 @@ void CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
                           NotifySubTree (TteElemNew, pSelDoc, pNew, 0, 0,
                                          FALSE, FALSE);
                           // detect if the image is replaced by an external doc
-                          if (typeNum == LtPicture + 1)
+                          if (typeNum == LtPicture + 1 ||
+                              TypeHasException (ExcIsImg, typeNum, pSS))
                             {
                               if (pSibling)
                                 pF = pSibling->ElNext;

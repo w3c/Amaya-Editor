@@ -960,12 +960,19 @@ void ComputeSRCattribute (Element el, Document doc, Document sourceDocument,
   Element            pict;
   ElementType        elType;
   LoadedImageDesc   *desc;
+  Attribute          srcattr = NULL;
+  AttributeType      attrType;
   char              *value, *base;
   char               pathimage[MAX_LENGTH];
   char               localname[MAX_LENGTH];
   char               imagename[MAX_LENGTH];
+  ThotBool           newPict, newAttr;
 
   elType = TtaGetElementType (el);
+  attrType.AttrSSchema = elType.ElSSchema;
+  attrType.AttrTypeNum = HTML_ATTR_SRC;
+  newPict = FALSE;
+  newAttr =  FALSE;
   if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
     /* it's a Thot picture element */
     pict = el;
@@ -977,7 +984,15 @@ void ComputeSRCattribute (Element el, Document doc, Document sourceDocument,
         {
           /* no Thot picture element. Create one */
           pict = TtaNewTree (doc, elType, "");
-          TtaInsertFirstChild (&el, pict, doc);
+          TtaInsertFirstChild (&pict, el, doc);
+          newPict = TRUE;
+        }
+      srcattr = TtaGetAttribute (pict, attrType);
+      if (srcattr == NULL)
+        {
+          newAttr = TRUE;
+          srcattr = TtaNewAttribute (attrType);
+          TtaAttachAttribute (pict, srcattr, doc);
         }
     }
 
@@ -1004,7 +1019,9 @@ void ComputeSRCattribute (Element el, Document doc, Document sourceDocument,
           desc->tempfile = TtaStrdup (desc->localName);
           /* suppose that the image will be stored in the same directory */
           TtaSetAttributeText (attr, imagename, el, doc);
-
+          // update the src of the PICTURE element
+          if (srcattr)
+            TtaSetAttributeText (srcattr, imagename, pict, doc);
           /* set contents of the picture element */
           TtaSetTextContent (pict, (unsigned char *)desc->tempfile, SPACE, doc);
           DisplayImage (doc, pict, desc, NULL, NULL);
@@ -1015,6 +1032,9 @@ void ComputeSRCattribute (Element el, Document doc, Document sourceDocument,
           base = GetBaseURL (doc);
           value = MakeRelativeURL (pathimage, base);
           TtaSetAttributeText (attr, value, el, doc);
+          // update the src of the PICTURE element
+          if (srcattr)
+            TtaSetAttributeText (srcattr, value, pict, doc);
           TtaFreeMemory (base);
           TtaFreeMemory (value);
           /* set stop button */
@@ -1033,6 +1053,9 @@ void ComputeSRCattribute (Element el, Document doc, Document sourceDocument,
           base = GetBaseURL (doc);
           value = MakeRelativeURL (pathimage, base);
           TtaSetAttributeText (attr, value, el, doc);
+          // update the src of the PICTURE element
+          if (srcattr)
+            TtaSetAttributeText (srcattr, value, pict, doc);
           /* set and display the element content */
           DisplayImage (doc, pict, NULL, pathimage, NULL);
           TtaFreeMemory (base);
@@ -1045,10 +1068,19 @@ void ComputeSRCattribute (Element el, Document doc, Document sourceDocument,
           /* set stop button */
           ActiveTransfer (doc);
           TtaSetAttributeText (attr, pathimage, el, doc);
+          // update the src of the PICTURE element
+          if (srcattr)
+            TtaSetAttributeText (srcattr, pathimage, pict, doc);
           FetchImage (doc, pict, NULL, 0, NULL, NULL);
           ResetStop (doc);
         }
     }
+  if (newPict)
+    ;
+  else if (newAttr)
+    TtaRegisterAttributeCreate (srcattr, pict, doc);
+  else
+    TtaRegisterAttributeReplace (srcattr, pict, doc);
 }
 
 /*----------------------------------------------------------------------
@@ -1081,6 +1113,9 @@ void UpdateSRCattribute (NotifyOnTarget *event)
     {
       elType = TtaGetElementType (elSRC);
       isObject = (elType.ElTypeNum == HTML_EL_Object);
+      if (elType.ElTypeNum == HTML_EL_IMG)
+        // ignore the PICTURE within an IGM
+        return;
     }
 
   ImgAlt[0] = EOS;
@@ -1525,7 +1560,7 @@ void CreateImage (Document doc, View view)
       /* Get the type of the first selected element */
       elType = TtaGetElementType (firstSelEl);
       name = TtaGetSSchemaName (elType.ElSSchema);
-      if (!strcmp (name, "HTML") && elType.ElTypeNum == HTML_EL_PICTURE_UNIT &&
+      if (!strcmp (name, "HTML") && elType.ElTypeNum == HTML_EL_IMG &&
           c1 == 0 && i == 0 && lastSelEl == firstSelEl)
         /* the first selected element is an HTML <img>, it is fully selected
            and only this element is selected */
@@ -1602,8 +1637,10 @@ void CreateImage (Document doc, View view)
           CreateNewImage = TRUE;
           if (!strcmp (name, "SVG"))
             {
+#ifdef _SVG
               elType.ElTypeNum = SVG_EL_image;
               TtaCreateElement (elType, doc);
+#endif /* _SVG */
             }
           else if (!strcmp (name, "HTML"))
             {
@@ -1625,7 +1662,7 @@ void CreateImage (Document doc, View view)
                   leaf = TtaGetFirstLeaf (parent);
                   TtaSelectElement (doc, leaf);
                 }
-              elType.ElTypeNum = HTML_EL_PICTURE_UNIT;
+              elType.ElTypeNum = HTML_EL_IMG;
               /* do not check mandatory attributes */
               oldStructureChecking = TtaGetStructureChecking (doc);
               TtaSetStructureChecking (FALSE, doc);
