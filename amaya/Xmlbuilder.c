@@ -120,6 +120,15 @@ void MapXmlAttributeValue (char *AttrVal, const AttributeType * attrType,
 			   int *value)
 
 {
+  *value = 0;
+
+   if (attrType->AttrTypeNum == XML_ATTR_xml_space)
+     {
+       if (strcmp (AttrVal, "preserve") == 0)
+	 *value = XML_ATTR_xml_space_VAL_xml_space_preserve;
+       else
+	 *value = XML_ATTR_xml_space_VAL_xml_space_default;
+     }
 
 }
 
