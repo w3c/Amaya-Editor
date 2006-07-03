@@ -69,11 +69,6 @@ static int          LatestReturned;	/* rank in table SelectedElement of the
 static int          OldSelectedView;	/* old active view */
 static PtrDocument  OldDocSelectedView;	/* the document to which the old active
                                            view belongs */
-static int          SelectedPictureEdge;/* if the current selection is a
-                                           picture, 1 means that the caret is
-                                           on the right side, 0 means that it
-                                           is on the left side or that the
-                                           whole picture is selected */
 #define MAX_TRANSMIT 10
 
 /*----------------------------------------------------------------------

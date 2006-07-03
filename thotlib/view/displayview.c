@@ -1104,6 +1104,7 @@ void   TtaSetDisplayMode (Document doc, DisplayMode newDisplayMode)
 {
   DisplayMode       oldDisplayMode;
   PtrDocument       pDoc;
+  PtrElement        pEl;
 
   UserErrorCode = 0;
   /* Checks the parameter document */
@@ -1156,31 +1157,40 @@ void   TtaSetDisplayMode (Document doc, DisplayMode newDisplayMode)
                     HighlightSelection (TRUE, FALSE);
                 }
               else
-                /* restore the registerd selection */
+                /* restore the registered selection */
                 {
-                  if (NewDocSelection[doc - 1].SDElemSel == NULL)
+                  pEl = (PtrElement)(NewDocSelection[doc - 1].SDElemSel);
+                  if (pEl == NULL)
                     /* cancel the selection */
                     ResetSelection (pDoc);
                   else
                     {
-                      /* il y a effectivement une selection a etablir */
-                      if (NewDocSelection[doc - 1].SDFirstChar == 0 &&
-                          NewDocSelection[doc - 1].SDLastChar == 0)
-                        /* selection d'un element complet */
-                        SelectElement (pDoc, (PtrElement) (NewDocSelection[doc - 1].SDElemSel), TRUE, TRUE);
+                      if (NewDocSelection[doc - 1].SDElemExt == NULL &&
+                          pEl->ElTerminal &&
+                          pEl->ElLeafType == LtPicture)
+                        /* partial selection */
+                        SelectString (pDoc, pEl,
+                                      NewDocSelection[doc - 1].SDFirstChar,
+                                      NewDocSelection[doc - 1].SDLastChar);
+                      else if (NewDocSelection[doc - 1].SDFirstChar == 0 &&
+                               NewDocSelection[doc - 1].SDLastChar == 0)
+                        /* whole element selected */
+                        SelectElement (pDoc, pEl, TRUE, TRUE);
                       else
-                        SelectString (pDoc,
-                                      (PtrElement)(NewDocSelection[doc-1].SDElemSel),
+                        /* partial selection */
+                        SelectString (pDoc, pEl,
                                       NewDocSelection[doc - 1].SDFirstChar,
                                       NewDocSelection[doc - 1].SDLastChar);
                       /* the selection is done */
                       NewDocSelection[doc - 1].SDElemSel = NULL;
                     }
-                  /* etablit l'extension de selection enregistree */
-                  if (NewDocSelection[doc - 1].SDElemExt != NULL)
+
+                  /* is there an extended selection */
+                  if (NewDocSelection[doc - 1].SDElemExt)
                     /* il y a une extension de selection a etablir */
                     {
-                      ExtendSelection ((PtrElement) (NewDocSelection[doc - 1].SDElemExt),
+                      pEl = (PtrElement)(NewDocSelection[doc - 1].SDElemExt);
+                      ExtendSelection (pEl,
                                        NewDocSelection[doc - 1].SDCharExt,
                                        TRUE, FALSE, FALSE);
                       /* il n'y a plus d'extension de selection a etablir */

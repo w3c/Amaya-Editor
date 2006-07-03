@@ -484,6 +484,8 @@ static ThotBool CloseTextInsertionWithControl (ThotBool toNotify)
               SelPosition = (LastSelectedCharInAttr <= FirstSelectedCharInAttr);
             }
           NewContent (pSelBox->BxAbstractBox);
+          /* Check if a paragraph should be reformatted after an edit */
+          CloseParagraphInsertion (pSelBox->BxAbstractBox, frame);
 	    
           /* update the new selection */
           if (pViewSel->VsBox && LastInsertAttr == NULL)
@@ -1181,8 +1183,9 @@ void CloseTextInsertion ()
 void CloseParagraphInsertion (PtrAbstractBox pAb, int frame)
 {
   PtrBox              pBox;
+  PtrElement          pEl;
 
-  if (LastInsertParagraph != NULL)
+  if (LastInsertParagraph)
     {
       if (LastInsertParagraph->AbElement != LastInsertElement
           || LastInsertParagraph->AbBox == NULL)
@@ -1201,16 +1204,19 @@ void CloseParagraphInsertion (PtrAbstractBox pAb, int frame)
         {
           /* Est-ce que la selection a quitte le dernier bloc de ligne */
           pAb = pAb->AbEnclosing;
-          while (pAb != NULL)
+          while (pAb)
             if (pAb == LastInsertParagraph || pAb->AbBox == NULL)
               /* n'a pas change de paragraphe */
               pAb = NULL;
             else
               {
                 pBox = pAb->AbBox;
+                pEl = pAb->AbElement;
                 if (pBox)
                   {
-                    if (pBox->BxType == BoGhost || pBox->BxType == BoFloatGhost)
+                    if (pBox->BxType == BoGhost || pBox->BxType == BoFloatGhost ||
+                        (pEl &&
+                         TypeHasException (ExcIsImg, pEl->ElTypeNumber, pEl->ElStructSchema)))
                       pAb = pAb->AbEnclosing;
                     else
                       {

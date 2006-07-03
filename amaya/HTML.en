@@ -16,7 +16,7 @@ translation
 TEXT_UNIT: Text
 GRAPHICS_UNIT: \0
 SYMBOL_UNIT: Symbol
-PICTURE_UNIT: input
+PICTURE_UNIT: img
 REFERENCE_UNIT: Reference
 PAGE_BREAK: Page_break
 

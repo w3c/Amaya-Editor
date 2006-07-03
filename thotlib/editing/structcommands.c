@@ -1260,6 +1260,14 @@ ThotBool CutCommand (ThotBool save, ThotBool replace)
             /* the selection ends with a substring of a ReadOnly
                element. This substring can't be deleted */
             stop = TRUE;
+          else if (firstSel == lastSel && firstSel->ElTerminal &&
+                   firstSel->ElLeafType == LtPicture)
+            {
+              // remove the IMG element instead of the PICTURE
+              pEl = firstSel->ElParent;
+              if (TypeHasException (ExcIsImg, pEl->ElTypeNumber, pEl->ElStructSchema))
+                firstSel = lastSel = pEl;
+            }
           pEl = firstSel;
           while (!stop && pEl != NULL)
             if (ElementIsReadOnly (pEl->ElParent))

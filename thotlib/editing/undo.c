@@ -1039,6 +1039,14 @@ static void UndoOperation (ThotBool undo, Document doc, ThotBool reverse)
                                       editOp->EoFirstSelectedChar,
                                       editOp->EoLastSelectedChar);
             }
+          else if (editOp->EoFirstSelectedEl == editOp->EoLastSelectedEl &&
+                   editOp->EoFirstSelectedEl->ElTerminal &&
+                   editOp->EoFirstSelectedEl->ElLeafType == LtPicture)
+            {
+              i = editOp->EoFirstSelectedChar - 1;
+              TtaSelectString (doc, (Element)(editOp->EoFirstSelectedEl),
+                               editOp->EoFirstSelectedChar, i);              
+            }
           else if (editOp->EoFirstSelectedChar > 0)
             {
               if (editOp->EoFirstSelectedEl == editOp->EoLastSelectedEl)

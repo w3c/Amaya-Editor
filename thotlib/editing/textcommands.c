@@ -340,7 +340,7 @@ static void MovingCommands (int code, Document doc, View view,
   int                 indpos, xpos;
   int                 first, last;
   int                 firstC, lastC;
-  ThotBool            done, top = TRUE;
+  ThotBool            done, top = TRUE, isPict;
 
   indpos = 0;
   xpos = 0;
@@ -435,6 +435,7 @@ static void MovingCommands (int code, Document doc, View view,
         return;
       else
         Moving = TRUE;
+
       if (DocSelectedAttr)
         {
           /* work within an attribute */
@@ -442,15 +443,26 @@ static void MovingCommands (int code, Document doc, View view,
           lastC = LastSelectedCharInAttr;
           firstEl = NULL;
           lastEl = NULL;
+          isPict = FALSE;
         }
       else
         {
-          firstC = FirstSelectedChar;
-          lastC = LastSelectedChar;
           firstEl = FirstSelectedElement;
           lastEl = LastSelectedElement;
-          if (firstC == lastC && firstC == 0 && firstEl == lastEl)
-            lastC = firstEl->ElVolume + 1;
+          isPict = (FirstSelectedElement->ElTerminal &&
+               FirstSelectedElement->ElLeafType == LtPicture);
+          if (isPict)
+            {
+              firstC = SelectedPictureEdge;
+              lastC = SelectedPictureEdge;
+            }
+          else
+            {
+              firstC = FirstSelectedChar;
+              lastC = LastSelectedChar;
+              if (firstC == lastC && firstC == 0 && firstEl == lastEl)
+                lastC = firstEl->ElVolume + 1;
+            }
         }
       /* could we shrink the current extended selection */
       if (extendSel)
