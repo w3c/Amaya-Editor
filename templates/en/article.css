@@ -3,6 +3,8 @@
     h3 {font-size: 100%}
     div.authors {font-family: sans-serif}
     p.author {text-align: center; width: 33%; float: left}
+    span.catnamelevel1and2 {font-weight: bold}
+    span.catlevel4 {fonst-style: italic}
     div.example {margin-left: 1.2em}
     div.example pre {margin-bottom: 0.4em}
     div.example p {margin-top:0; font-style:italic}
@@ -12,8 +14,9 @@
 
     /* bibliography */
     a.bibref:after {content: "[*]"}
-    div.references p {margin-left: 1.6em}
-    div.references p {text-indent: -1.6em}
+    div.bibliography {margin-left: 1.6em}
+    div.bibliography h2 {text-indent: -1.6em}
+    div.bibliography p {text-indent: -1.6em}
 
   /* page layout and style for printing */
   @media print {
@@ -43,7 +46,7 @@
       margin: 17mm;
       padding: 16mm 0 5mm;
       size: a4;
-      font: 9pt serif; 
+      font: 9pt serif;
       @bottom-center {
         font: 9pt serif;
         content: counter(page);

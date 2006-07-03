@@ -44,11 +44,11 @@
       <p class="author">
         <t:option>
           <img class="portrait">
-            <t:attribute name="alt" default="picture"/>
+            <t:attribute name="alt" default="Author picture"/>
             <t:attribute name="width" use="optional"/>
           </img>
         </t:option>
-        <t:use types="string">Author Name</t:use>
+        <t:use types="string">Author name</t:use>
         <br />
         <span class="address">
           <t:use types="string br">Address</t:use>
@@ -95,10 +95,32 @@
   </t:repeat>
 </div>
 
+<h2>Categories and Subject Descriptors</h2>
+<t:repeat minOccurs="1">
+  <p class="category">
+    <span class="catnumlevel1and2"><t:use types="string">X</t:use>.<t:use types="string">n</t:use></span>
+    [<span class="catnamelevel1and2"><t:use types="string">Name</t:use></span>]:
+    <t:repeat minOccurs="1">
+      <span class="catlevel3"><t:use types="string">name</t:use></span>
+      <t:option>
+        &mdash; <span class="catlevel4"><t:use types="string">name, name</t:use></span>
+      </t:option>
+    </t:repeat>
+  </p>
+</t:repeat>
+
+<h2>General Terms</h2>
+
+<p><t:use types="string"> </t:use></p>
+
+<h2>Keywords</h2>
+
+<p><t:use types="string"> </t:use></p>
+
 <t:repeat minOccurs="1">
   <div class="section">
   <h2>
-    <t:use types="string">HEADING</t:use>
+    <t:use types="string">SECTION HEADING</t:use>
   </h2>
   <t:repeat>
     <t:bag types="anyElement">
