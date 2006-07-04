@@ -513,7 +513,8 @@ void AmayaAttributePanel::SetupTextValue( const char * text )
   params:
   returns:
   ----------------------------------------------------------------------*/
-void AmayaAttributePanel::SetupEnumValue( const char * enums, int nb_enum, int selected )
+void AmayaAttributePanel::SetupEnumValue( const char * enums, int nb_enum,
+                                          int selected )
 {
   /* test if the attribut type is boolean */
   if (nb_enum <= 1)
@@ -538,8 +539,8 @@ void AmayaAttributePanel::SetupEnumValue( const char * enums, int nb_enum, int s
       index += strlen(&enums[index])+1; /* one entry length */
       i_item++;
     }
-  m_pRBEnum = new wxRadioBox( m_pPanel_Enum, -1, _T(""), wxDefaultPosition, wxDefaultSize,
-                              choices, 1, wxRA_SPECIFY_COLS );
+  m_pRBEnum = new wxRadioBox( m_pPanel_Enum, -1, _T(""), wxDefaultPosition,
+                              wxDefaultSize, choices, 1, wxRA_SPECIFY_COLS );
   if (selected != -1)
     m_pRBEnum->SetSelection(selected);
   p_sizer->Prepend(m_pRBEnum, 0, wxALL|wxEXPAND, 0);
@@ -597,7 +598,10 @@ void AmayaAttributePanel::OnApply( wxCommandEvent& event )
       break;
     case wxATTR_TYPE_ENUM:
       {
-        CallbackValAttrMenu (NumMenuAttrEnum, m_pRBEnum->GetSelection(), NULL);
+        if (m_pRBEnum)
+          CallbackValAttrMenu (NumMenuAttrEnum, m_pRBEnum->GetSelection(), NULL);
+        else
+          CallbackValAttrMenu (NumMenuAttrEnum, 1 , NULL);
         /* create/modify attribute */
         CallbackValAttrMenu (NumMenuAttr, 1, NULL);
         
