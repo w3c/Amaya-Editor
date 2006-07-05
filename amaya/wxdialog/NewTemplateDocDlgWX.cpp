@@ -241,9 +241,8 @@ void NewTemplateDocDlgWX::OnCreateButton( wxCommandEvent& event )
 void NewTemplateDocDlgWX::OnClearButton( wxCommandEvent& event )
 {
   XRCCTRL(*this, "wxID_TEMPLATEFILENAME", wxComboBox)->SetValue(_T(""));
-  XRCCTRL(*this, "wxID_FILENAME", wxTextCtrl)->Clear();
   XRCCTRL(*this, "wxID_TEMPLATEDIRNAME", wxTextCtrl)->Clear();
-  XRCCTRL(*this, "wxID_DIR", wxTextCtrl)->Clear();
+  XRCCTRL(*this, "wxID_INSTANCEFILENAME", wxTextCtrl)->Clear();
 }
 
 /*----------------------------------------------------------------------

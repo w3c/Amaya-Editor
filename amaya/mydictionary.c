@@ -11,7 +11,7 @@
   ----------------------------------------------------------------------*/
 DicDictionary CreateDictionary()
 {
-	DicDictionary dic = (DicDictionary)malloc(sizeof(sDictionary));
+	DicDictionary dic = (DicDictionary)TtaGetMemory(sizeof(sDictionary));
 	dic->first = NULL;
 	dic->iter = NULL;
 	return dic;
@@ -32,6 +32,7 @@ void CleanDictionary (DicDictionary dic)
     }
 	dic->first = NULL;
 	dic->iter = NULL;
+  TtaFreeMemory(dic);
 }
 
 
@@ -111,8 +112,8 @@ DicElement Add (DicDictionary dic, const char * key, DicElement el)
 	if(!rec)
     {
       //The element should be the first
-      newRec          = (Record) malloc(sizeof(sRecord));
-      newRec->key     = (char *) strdup(key);
+      newRec          = (Record) TtaGetMemory(sizeof(sRecord));
+      newRec->key     = (char *) TtaStrdup(key);
       newRec->element = el;
       newRec->next    = dic->first;
       dic->first = newRec;
@@ -127,8 +128,8 @@ DicElement Add (DicDictionary dic, const char * key, DicElement el)
 
 	else
     { //The element should be insered just after rec
-      newRec          = (Record) malloc(sizeof(sRecord));
-      newRec->key     = (char *) strdup(key);
+      newRec          = (Record) TtaGetMemory(sizeof(sRecord));
+      newRec->key     = (char *) TtaStrdup(key);
       newRec->element = el;
       newRec->next    = rec->next;
       rec->next       = newRec;
@@ -160,9 +161,9 @@ DicElement Remove (DicDictionary dic, const char * key)
       rec->next = aux->next;
     }
 
-	free(aux->key);
+	TtaFreeMemory(aux->key);
 	result = aux->element;
-	free(aux);
+	TtaFreeMemory(aux);
 
 	return result;
 }

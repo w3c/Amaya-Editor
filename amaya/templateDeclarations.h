@@ -93,8 +93,16 @@ extern void FreeXTigerTemplate ( XTigerTemplate t );
   ----------------------------------------------------------------------*/
 extern void AddLibraryDeclarations (XTigerTemplate t, XTigerTemplate lib);
 
-extern void PreInstanciateComponents(XTigerTemplate t);
 extern void RedefineSpecialUnions(XTigerTemplate t);
 extern void DumpDeclarations(XTigerTemplate t);
+
+//Acess to template members
+
+extern DicDictionary GetComponents(XTigerTemplate t);
+extern Document GetTemplateDocument(XTigerTemplate t);
+
+//Access to component members
+extern Element GetComponentContent(Declaration d);
+
 
 #endif //TEMPLATE_DECLARATIONS

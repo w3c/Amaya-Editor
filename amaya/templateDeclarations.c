@@ -4,9 +4,19 @@
  *  AUTHOR : Francesc Campoy Flores
  */
 
+#ifdef TEMPLATES
+
 #include "templateDeclarations.h"
 
-#ifdef TEMPLATES
+#define UNION_ANY            "any"
+#define UNION_ANYCOMPONENT   "anyComponent"
+#define UNION_ANYSIMPLE      "anySimple"
+#define UNION_ANYELEMENT     "anyElement"
+#define UNION_ANY_DEFINITION "anyComponent anySimple anyElement"
+
+#define TYPE_NUMBER          "number"
+#define TYPE_STRING          "string"
+#define TYPE_BOOLEAN         "boolean"
 
 //Private structure of a template
 struct _XTigerTemplate
@@ -120,14 +130,16 @@ XTigerTemplate CreatePredefinedTypesLibrary ()
 	XTigerTemplate lib = NewXTigerLibrary(PREDEFINED_LIB, FALSE);
 	lib->isLibrary = true;
 
-	NewSimpleType(lib, "number",  XTIGER_NUMBER  );
-	NewSimpleType(lib, "boolean", XTIGER_BOOLEAN );
-	NewSimpleType(lib, "string",  XTIGER_STRING  );
+	NewSimpleType(lib, TYPE_NUMBER,  XTIGER_NUMBER  );
+	NewSimpleType(lib, TYPE_BOOLEAN, XTIGER_BOOLEAN );
+	NewSimpleType(lib, TYPE_STRING,  XTIGER_STRING  );
 
-	NewUnion(lib, "any"          );
-	NewUnion(lib, "anyComponent" );
-	NewUnion(lib, "anySimple"    );
-	NewUnion(lib, "anyElement"   );
+	NewUnion(lib, UNION_ANYCOMPONENT );
+	NewUnion(lib, UNION_ANYSIMPLE    );
+	NewUnion(lib, UNION_ANYELEMENT   );
+  
+	NewUnion(lib, UNION_ANY, 
+           CreateDictionaryFromList(UNION_ANY_DEFINITION));
 
 	return lib;
 #else
@@ -591,22 +603,70 @@ void DumpDeclarations(XTigerTemplate t)
 }
 
 /*----------------------------------------------------------------------
-RedefineSpecialUnions: Redefines any, anyComponent etc 
+RedefineSpecialUnions: Redefines predefined unions : any, anySimple, etc 
 ----------------------------------------------------------------------*/
 void RedefineSpecialUnions(XTigerTemplate t)
 {
 #ifdef TEMPLATES
-	//if(Get(templates, PREDEFINED_LIB))
+  Declaration un;
+  DicDictionary dic;
+
+  //We get the old definition to modify it 
+  un = GetDeclaration(t,UNION_ANYSIMPLE);
+  //TODO : Check that it is actually the good declaration and not a newer one
+  un->unionType.include = t->simpleTypes;
+  un->unionType.exclude = CreateDictionary();
+  
+  un = GetDeclaration(t,UNION_ANYCOMPONENT);
+  //TODO : Check that it is actually the good declaration and not a newer one
+  un->unionType.include = t->components;
+  un->unionType.exclude = CreateDictionary();
+
+  un = GetDeclaration(t,UNION_ANYELEMENT);
+  //TODO : Check that it is actually the good declaration and not a newer one
+  un->unionType.include = t->elements;
+  un->unionType.exclude = CreateDictionary();
+  
+  un = GetDeclaration(t,UNION_ANY);
+  //TODO : Check that it is actually the good declaration and not a newer one
+  dic = t->unions;
+  for(First(dic);!IsDone(dic);Next(dic))
+    {
+      Add(un->unionType.include, CurrentKey(dic), CurrentElement(dic));
+    }
+
+  //No recursive inclusion
+  Remove(un->unionType.include,UNION_ANY);
+  un->unionType.exclude = CreateDictionary();
+
 #endif /* TEMPLATES */
 }
 
-/*----------------------------------------------------------------------
-PreInstanciateComponents: Instanciates all components in order to improve
-edition.
-----------------------------------------------------------------------*/
-void PreInstanciateComponents(XTigerTemplate t)
+DicDictionary GetComponents(XTigerTemplate t)
 {
 #ifdef TEMPLATES
-	
+  return t->components;
+#else
+  return NULL;
+#endif /* TEMPLATES */
+}
+
+Element GetComponentContent(Declaration d)
+{
+#ifdef TEMPLATES
+  if(d->nature == COMPONENT)
+    return d->componentType.content;
+  else
+#endif /* TEMPLATES */
+    return NULL;
+}
+
+
+Document GetTemplateDocument(XTigerTemplate t)
+{
+#ifdef TEMPLATES
+  return t->doc;
+#else
+  return NULL;
 #endif /* TEMPLATES */
 }

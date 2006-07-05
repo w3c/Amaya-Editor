@@ -3,12 +3,12 @@
 #include "HTMLactions_f.h"
 #include "init_f.h"
 
-#include "templateUtils.h"
 #include "templateDeclarations.h"
-
-#ifdef TEMPLATES
+#include "templateUtils.h"
 
 #include "Template.h"
+
+#ifdef TEMPLATES
 
 typedef struct _InstanciationCtxt
 {
@@ -62,11 +62,8 @@ void ReallyInstanciateTemplate (char *instancePath, char *templatePath, int doc,
 		break;
 	}
 
-/* TODO: Must we free the resources??
-	//Free the template document
-	TtaCloseDocument(doc);
-	FreeDocumentResource(doc);
-*/
+  //FreeDocumentResource(doc);
+
 	//Open the instance
 	TtaExtractName (instancePath, DirectoryName, DocumentName);
 	CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
@@ -81,6 +78,10 @@ void InstantiateTemplate_callback (int newdoc, int status,  char *urlName,
 #ifdef TEMPLATES
 	InstanciationCtxt *ctx = (InstanciationCtxt*)context;
 	ReallyInstanciateTemplate(ctx->instancePath, ctx->templatePath, newdoc, ctx->docType);
+
+  TtaFreeMemory(ctx->templatePath);
+  TtaFreeMemory(ctx->instancePath);
+  TtaFreeMemory(ctx);
 #endif /* TEMPLATES */
 }
 
@@ -100,7 +101,7 @@ void InstanciateTemplate (Document doc, char *templatename, char *docname,
 		ctx->schemaName			= GetSchemaFromDocType(docType);
 		ctx->docType			= docType;
 		
-		Document newdoc = GetAmayaDoc (templatename, NULL, doc, doc, CE_MAKEBOOK, FALSE, 
+		GetAmayaDoc (templatename, NULL, doc, doc, CE_MAKEBOOK, FALSE, 
 			(void (*)(int, int, char*, char*, const AHTHeaders*, void*)) InstantiateTemplate_callback,
 			(void *) ctx);
 	}
@@ -223,5 +224,25 @@ void InstanciateTemplate(char *templatename, Document doc)
 	TtaSetTextContent (piLeaf, (unsigned char *)piValue, Latin_Script, doc);
 	TtaFreeMemory(piValue);
 */
+#endif /* TEMPLATES */
+}
+
+/*----------------------------------------------------------------------
+PreInstanciateComponents: Instanciates all components in order to improve
+edition.
+----------------------------------------------------------------------*/
+void PreInstanciateComponents(XTigerTemplate t)
+{
+#ifdef TEMPLATES
+  /*
+  DicDictionary components = GetComponents(t);
+  Declaration comp;
+
+  for(First(components);!IsDone(components);Next(components))
+    {
+      comp = (Declaration) CurrentElement(components);
+      ParseTemplate(t, GetComponentContent(comp), GetTemplateDocument(t));
+    }
+  */
 #endif /* TEMPLATES */
 }

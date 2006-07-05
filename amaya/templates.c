@@ -51,7 +51,6 @@ void NewTemplate (Document doc, View view)
       TtaShowDialogue (BaseDialog + OpenTemplate, TRUE);
     }
 
-  if(templateDir) TtaFreeMemory(templateDir);
 #endif /* TEMPLATES */
 }
 
@@ -195,4 +194,3 @@ ThotBool BagMenuClicked (NotifyElement *event)
 #endif /* TEMPLATES */
 	return TRUE;
 }
-

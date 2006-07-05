@@ -162,66 +162,40 @@ void LoadTemplate_callback (int newdoc, int status,  char *urlName,
 	TemplateCtxt *ctx = (TemplateCtxt*)context;
 	
 	XTigerTemplate t = NewXTigerTemplate (ctx->templatePath, TRUE);
-
+  
 	Element el = TtaGetMainRoot(newdoc);
 	ParseDeclarations (t, el);
 	RedefineSpecialUnions (t);
 	PreInstanciateComponents (t);
-
+  
 #ifdef AMAYA_DEBUG	
 	DumpDeclarations (t);
-
+  
 	char localname[MAX_LENGTH];
 	FILE *file;
-
-    strcpy (localname, TempFileDirectory);
-    strcat (localname, DIR_STR);
-    strcat (localname, "template.debug");
-    file = TtaWriteOpen (localname);
-		
+  
+  strcpy (localname, TempFileDirectory);
+  strcat (localname, DIR_STR);
+  strcat (localname, "template.debug");
+  file = TtaWriteOpen (localname);
+  
 	TtaListAbstractTree (TtaGetMainRoot(newdoc), file);
-
+  
 	TtaWriteClose (file);
 #endif
-
-    if(ctx->createInstance)
-	{
-		DontReplaceOldDoc = TRUE;
-		InstanciateTemplate(newdoc, ctx->templatePath, ctx->instancePath, ctx->docType, TRUE);
-	}
-/* TODO: Must we free the resources??
-	else
-	{
-		//Free the template document
-		TtaCloseDocument(newdoc);
-		FreeDocumentResource(newdoc);
-	}
-*/
-	switch (ctx->docType)
-	{
-	case docSVG :
-		TtaExportDocumentWithNewLineNumbers (newdoc, ctx->instancePath, "SVGT");
-		break;
-	case docMath :
-		TtaExportDocumentWithNewLineNumbers (newdoc, ctx->instancePath, "MathMLT");
-		break;
-	case docHTML :
-		if(TtaGetDocumentProfile(newdoc)==L_Xhtml11)
-			TtaExportDocumentWithNewLineNumbers (newdoc, ctx->instancePath, "HTMLT11");
-		else
-			TtaExportDocumentWithNewLineNumbers (newdoc, ctx->instancePath, "HTMLTX");
-		break;
-	default :
-		TtaExportDocumentWithNewLineNumbers (newdoc, ctx->instancePath, NULL);
-		break;
-	}
-  TtaFreeMemory (ctx->templatePath);
-  TtaFreeMemory (ctx->instancePath);
-	TtaFreeMemory (ctx);
+  
+  if(ctx->createInstance)
+    {
+      DontReplaceOldDoc = TRUE;
+      InstanciateTemplate(newdoc, ctx->templatePath, ctx->instancePath, ctx->docType, TRUE);
+      
+      TtaFreeMemory (ctx->templatePath);
+      TtaFreeMemory (ctx->instancePath);
+      TtaFreeMemory (ctx);
 #endif /* TEMPLATES */
+    }
 }
-
-
+  
 /*----------------------------------------------------------------------
 ----------------------------------------------------------------------*/
 void LoadTemplate (Document doc, char* templatename, char* docname,
