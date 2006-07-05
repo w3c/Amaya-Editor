@@ -13,6 +13,7 @@
 #include "appdialogue_wx.h"
 #include "message_wx.h"
 #include "wxdialog/file_filters.h"
+#include "AHTURLTools_f.h"
 
 static int MyRef = 0;
 static int Waiting = 0;
@@ -358,11 +359,25 @@ void SaveAsDlgWX::OnBrowseButton( wxCommandEvent& event )
      wxSAVE | wxCHANGE_DIR /* remember the last directory used. */
      );
   
-  // force the directory and file name
-  path = XRCCTRL(*this, "wxID_DOC_LOCATION_CTRL", wxTextCtrl)->GetValue();
+  // force the directory and file name, except for W3 docs on windows 
+    path = XRCCTRL(*this, "wxID_DOC_LOCATION_CTRL", wxTextCtrl)->GetValue();
+#ifdef _WINDOWS 
+  {
+     char buffer[512];
+     wxASSERT( path.Len() < 512 );
+     strcpy( buffer, (const char*)path.mb_str(wxConvUTF8) );
+	 if (!IsW3Path (buffer))
+	 {
+        file_value = path.AfterLast (DIR_SEP);
+        p_dlg->SetPath(path);
+        p_dlg->SetFilename(file_value);
+	 }
+  }
+#else /* _WINDOWS */
   file_value = path.AfterLast (DIR_SEP);
   p_dlg->SetPath(path);
   p_dlg->SetFilename(file_value);
+#endif /* _WINDOWS */
   
   if (p_dlg->ShowModal() == wxID_OK)
     {
