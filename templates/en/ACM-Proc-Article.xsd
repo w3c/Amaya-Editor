@@ -1,11 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
+<!-- This XTiger template defines the structure of an article to be
+     published in the Proceedings of an ACM conference, following the
+     LaTeX style sig-alternate.cls
+
+     The resulting XHTML document can be formatted by the ACM-Proc-Article.css
+     style sheet, or it can be transformed into a LaTeX file by
+     ACM-Proc-Article2latex.xsl
+-->
+
 <html xmlns="http://www.w3.org/1999/xhtml"
  xmlns:t="http://wam.inrialpes.fr/xtiger" xml:lang="en" lang="en">
 <head>
   <title>Article</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-  <link rel="stylesheet" type="text/css" href="article.css" />
+  <link rel="stylesheet" type="text/css" href="ACM-Proc-Article.css" />
   <t:head>
+
+    <t:component name="figure">
+      <div class="figure topfigure">
+        <t:attribute name="id" use="optional"/>
+        <img>
+           <t:attribute name="width" use="optional"/>
+        </img>
+        <p><t:use types="string">Caption</t:use></p>
+      </div>
+    </t:component>
+
+    <t:component name="codeExample">
+      <div class="example">
+        <t:attribute name="id" use="optional"/>
+        <pre><t:use types="string">Some code</t:use></pre>
+        <p><t:use types="string">Caption</t:use></p>
+      </div>
+    </t:component>
+
     <t:component name="refbook">
       <p class="refbook">
         <t:repeat minOccurs="1">
@@ -48,7 +77,9 @@
             <t:attribute name="width" use="optional"/>
           </img>
         </t:option>
-        <t:use types="string">Author name</t:use>
+        <span class="name">
+          <t:use types="string">Author name</t:use>
+        </span>
         <br />
         <span class="address">
           <t:use types="string br">Address</t:use>
@@ -63,6 +94,14 @@
 </head>
 
 <body>
+
+<p class="conferenceinfo">
+<span class="conferencename"><t:use types="string">Conference name</t:use>,</span>
+<span class="conferencedateandloc"><t:use types="string">Month days, year,
+  city, country</t:use>.</span>
+Copyright <span class="copyrightyear"><t:use types="string">year</t:use></span> ACM
+<span class="crdata"><t:use types="string">conference code</t:use></span></p>
+
 <t:use types="h1">
   <h1>Article Title</h1>
 </t:use>
@@ -74,7 +113,7 @@
         <t:option>
           <img class="portrait" src=".." alt="picture" />
         </t:option>
-        Author Name
+        <span class="name">Author Name</span>
         <br />
         <span class="address">Address</span>
         <br />
@@ -87,7 +126,7 @@
 <div class="body">
 
 <div class="abstract">
-  <h2>ABSTRACT</h2>
+  <p class="heading">ABSTRACT</p>
   <t:repeat>
     <t:use types="p">
       <p>First paragraph of abstract...</p>
@@ -95,27 +134,29 @@
   </t:repeat>
 </div>
 
-<h2>Categories and Subject Descriptors</h2>
-<t:repeat minOccurs="1">
-  <p class="category">
-    <span class="catnumlevel1and2"><t:use types="string">X</t:use>.<t:use types="string">n</t:use></span>
-    [<span class="catnamelevel1and2"><t:use types="string">Name</t:use></span>]:
-    <t:repeat minOccurs="1">
-      <span class="catlevel3"><t:use types="string">name</t:use></span>
-      <t:option>
-        &mdash; <span class="catlevel4"><t:use types="string">name, name</t:use></span>
-      </t:option>
-    </t:repeat>
-  </p>
-</t:repeat>
+<div class="descr">
+  <p class="heading">Categories and Subject Descriptors</p>
+  <t:repeat minOccurs="1">
+    <p class="category">
+      <span class="catnumlevel1and2"><t:use types="string">X</t:use>.<t:use types="string">n</t:use></span>
+      [<span class="catnamelevel1and2"><t:use types="string">Name</t:use></span>]:
+      <t:repeat minOccurs="1">
+        <span class="catlevel3"><t:use types="string">name</t:use></span>
+        <t:option>
+          &mdash; <span class="catlevel4"><t:use types="string">name, name</t:use></span>
+        </t:option>
+      </t:repeat>
+    </p>
+  </t:repeat>
 
-<h2>General Terms</h2>
+  <p class="heading">General Terms</p>
 
-<p><t:use types="string"> </t:use></p>
+  <p class="terms"><t:use types="string"> </t:use></p>
 
-<h2>Keywords</h2>
+  <p class="heading">Keywords</p>
 
-<p><t:use types="string"> </t:use></p>
+  <p class="keywords"><t:use types="string"> </t:use></p>
+</div>
 
 <t:repeat minOccurs="1">
   <div class="section">

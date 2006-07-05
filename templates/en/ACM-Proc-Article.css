@@ -1,8 +1,31 @@
+/* This CSS style sheet defines the style of XHTML documents structured
+   according the XTiger template ACM-Proc-Article.xsd */
+
+    body {counter-reset: sect1 sect2 sect3 sect4}
+    p.conferenceinfo {font-size: smaller}
     h1 {text-align: center; font-size: 130%; font-family: sans-serif}
-    h2 {font-size: 120%}
-    h3 {font-size: 100%}
+    p.heading {font-size: 120%; font-weight: bold}
+    h2 {font-size: 120%; font-weight: bold;
+        counter-reset: sect2 sect3 sect4}
+    h2:before { content: counter(sect1) ". ";
+                counter-increment: sect1;}
+    h3 {font-size: 100%; counter-reset: sect3 sect4}
+    h3:before { content: counter(sect1) "." counter(sect2) ". ";
+                counter-increment: sect2;}
+    h4 {font-size: 100%; counter-reset: sect4}
+    h4:before { content: counter(sect1) "." counter(sect2) "."
+                         counter(sect3) ". ";
+                counter-increment: sect3;}
+    h5 {font-size: 100%}
+    h5:before { content: counter(sect1) "." counter(sect2) "."
+                         counter(sect3) "." counter(sect4) ". ";
+                counter-increment: sect4;}
     div.authors {font-family: sans-serif}
+    /* width: 33% for 3 authors -- Change according to the number of authors */
     p.author {text-align: center; width: 33%; float: left}
+    p.author span.name {font-size: 100%}
+    p.author span.email {font-size: 110%}
+    div.body {clear: both}
     span.catnamelevel1and2 {font-weight: bold}
     span.catlevel4 {font-style: italic}
     div.example {margin-left: 1.2em}
@@ -17,6 +40,7 @@
     div.bibliography {margin-left: 1.6em}
     div.bibliography h2 {text-indent: -1.6em}
     div.bibliography p {text-indent: -1.6em}
+    div.references span.title {font-style: italic}
 
   /* page layout and style for printing */
   @media print {
@@ -34,7 +58,8 @@
     p {margin-bottom: .5em; margin-top: .5em}
     ul, ol {margin-left: 2em}
     pre, tt, code {font-size: 85%;
-       font-family: "Bitstream Vera Sans Mono", "Lucida Console", monospace}
+                   font-family: "Bitstream Vera Sans Mono",
+                                "Lucida Console", monospace}
     pre {line-height: 1.3}
     div.example {margin-left: 0; margin-top: .9em}
     div.example p {text-align: center; padding-bottom: .8em}
