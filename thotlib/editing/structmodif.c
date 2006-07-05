@@ -872,7 +872,14 @@ ThotBool BreakElement (PtrElement pElReplicate, PtrElement pSplitEl,
   /* y-a-t'il une selection courante ? */
   if (!GetCurrentSelection (&pDoc, &firstSel, &lastSel, &firstChar, &lastChar))
     return ret;
-  else if (!pDoc->DocReadOnly)
+  if (firstSel && firstSel == lastSel &&
+      firstSel->ElTerminal && firstSel->ElLeafType == LtPicture)
+    {
+      pE = firstSel->ElParent;
+      if (TypeHasException (ExcIsImg, pE->ElTypeNumber, pE->ElStructSchema))
+        return ret;
+    }
+  if (!pDoc->DocReadOnly)
     {
       doc = IdentDocument (pDoc);
       if (pSplitEl != NULL)

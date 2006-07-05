@@ -1761,6 +1761,11 @@ void TtcCreateElement (Document doc, View view)
                     }
                   else if (firstSel->ElLeafType == LtPicture)
                     {
+                      // check previous and next of the picture
+                      PtrElement parent = firstSel->ElParent;
+                      if (TypeHasException (ExcIsImg, parent->ElTypeNumber,
+                                            parent->ElStructSchema))
+                        firstSel = lastSel = parent;
                       if (firstSel->ElPrevious == NULL && firstChar == 0)
                         /* no previous and a selection at the left border */
                         selBegin = TRUE;
@@ -1897,7 +1902,10 @@ void TtcCreateElement (Document doc, View view)
                 {
                   if (TypeHasException (ExcNoReplicate, pElReplicate->ElTypeNumber,
                                         pElReplicate->ElStructSchema))
-                    selEnd = TRUE;
+                    {
+                      if (!selBegin)
+                      selEnd = TRUE;
+                    }
                   else
                     typeNum = pElReplicate->ElTypeNumber;
                   pSS = pElReplicate->ElStructSchema;

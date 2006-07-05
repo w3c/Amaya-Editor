@@ -448,7 +448,7 @@ void GenerateInlineElement (int eType, int aType, char * data)
   CHAR_T         *buffer;
   DisplayMode     dispMode;
   ThotBool	      doit, split, before, charlevel, inside;
-  ThotBool        lastChanged, parse, open, selpos;
+  ThotBool        lastChanged, parse, open, selpos, isPict = FALSE;
 
   doc = TtaGetSelectedDocument();
   if (doc)
@@ -547,7 +547,17 @@ void GenerateInlineElement (int eType, int aType, char * data)
               lg =  TtaGetElementVolume (lastSel);
               lastChanged = FALSE;
               selpos = TtaIsSelectionEmpty ();
-              if ((selpos || firstSel == lastSel) &&
+              isPict = elType.ElTypeNum == HTML_EL_PICTURE_UNIT;
+              if ((selpos || firstSel == lastSel) && isPict)
+                {
+                  // this is a picture element
+                  // attach the attribute to the parent element
+                  parent = TtaGetParent (lastSel);
+                  el = parent;
+                  elType = TtaGetElementType (el);
+                  lastSel = el;
+                }
+              else if ((selpos || firstSel == lastSel) &&
                   (aType == HTML_ATTR_ID || aType == HTML_ATTR_Language ||
                    aType == HTML_ATTR_Class || aType == HTML_ATTR_Style_) &&
                   !strcmp(name, "HTML") &&
@@ -558,6 +568,8 @@ void GenerateInlineElement (int eType, int aType, char * data)
                   // attach the attribute to the parent element
                   parent = TtaGetParent (lastSel);
                   el = parent;
+                  elType = TtaGetElementType (el);
+                  lastSel = el;
                 }
               else if ((selpos || firstSel == lastSel) &&
                        !strcmp(name, "HTML") &&
@@ -687,7 +699,15 @@ void GenerateInlineElement (int eType, int aType, char * data)
                         }
 
                       if (!strcmp(name, "HTML"))
-                        charlevel = IsCharacterLevelElement (el);
+                        {
+                          if (!selpos &&
+                              (aType == HTML_ATTR_ID || aType == HTML_ATTR_Language ||
+                               aType == HTML_ATTR_Class || aType == HTML_ATTR_Style_))
+                            // acept to set the attribute to inline element
+                            charlevel = TtaIsLeaf (elType);
+                          else
+                            charlevel = IsCharacterLevelElement (el);
+                        }
                       else
                         charlevel = TtaIsLeaf (elType);
                       if (!charlevel)
@@ -700,7 +720,7 @@ void GenerateInlineElement (int eType, int aType, char * data)
                                elType.ElTypeNum == newType.ElTypeNum &&
                                firstSel == lastSel)
                         {
-                          // just add style to this element
+                          // we already have a such element
                           doit = FALSE;
                           charlevel = FALSE;
                         }
@@ -851,7 +871,7 @@ void GenerateInlineElement (int eType, int aType, char * data)
                                 sibling = el;
                               else
                                 sibling = NULL;
-                              if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
+                              if (isPict)
                                 before = (firstchar == 0);
                               else if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
                                 before = (firstchar <= 1);
@@ -3150,7 +3170,9 @@ void CheckPastedElement (Element el, Document doc, int info, int position,
               DocStatusUpdate (doc, Document_state);
             }
         }
-      else if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
+      else if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT ||
+               elType.ElTypeNum == HTML_EL_IMG ||
+               elType.ElTypeNum == HTML_EL_Image_Input)
         {
           originDocument = (Document) position;
           if (originDocument > 0)

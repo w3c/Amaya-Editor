@@ -2461,9 +2461,9 @@ ThotBool CanAssociateAttr (PtrElement pEl, PtrAttribute pAttr,
   pEl : l'element devant lequel se fera la division.      
   pSplitEl : l'element qui va etre divise'.		
   ----------------------------------------------------------------------*/
-ThotBool            CanSplitElement (PtrElement firstEl, int firstChar,
-                                     ThotBool lineBlock, PtrElement * pList,
-                                     PtrElement * pEl, PtrElement * pSplitEl)
+ThotBool CanSplitElement (PtrElement firstEl, int firstChar,
+                          ThotBool lineBlock, PtrElement * pList,
+                          PtrElement * pEl, PtrElement * pSplitEl)
 {
   PtrElement          pE;
   int		       nComp;
@@ -2483,54 +2483,53 @@ ThotBool            CanSplitElement (PtrElement firstEl, int firstChar,
              doit etre un atome contenu dans une liste qui elle-meme est une
              descendante d'une autre liste (sans agregat entre les deux)
              ou sinon un atome contenu dans une liste */
-          if (!ElementIsReadOnly (firstEl))
-            if (firstEl->ElTerminal)
-              if (firstEl->ElLeafType != LtPageColBreak)
-                if (firstEl->ElParent != NULL)
-                  if (firstEl->ElPrevious != NULL ||
-                      (firstEl->ElLeafType == LtText && firstChar > 1) ||
-                      (firstEl->ElLeafType == LtPicture && firstChar > 0))
+          if (!ElementIsReadOnly (firstEl) &&
+              firstEl->ElTerminal &&
+              firstEl->ElLeafType != LtPageColBreak &&
+              firstEl->ElParent &&
+              (firstEl->ElPrevious ||
+               (firstEl->ElLeafType == LtText && firstChar > 1) ||
+               (firstEl->ElLeafType == LtPicture && firstChar > 0)))
+            {
+              /* on cherche d'abord si un element ascendant
+                 possede une exception ParagraphBreak */
+              pE = firstEl->ElParent;
+              while (pE != NULL && *pList == NULL)
+                {
+                  if (TypeHasException (ExcParagraphBreak,
+                                        pE->ElTypeNumber, pE->ElStructSchema))
+                    *pList = AncestorList (pE);
+                  else
+                    pE = pE->ElParent;
+                }
+              if (*pList == NULL)
+                {
+                  constr = GetElementConstruct (firstEl->ElParent, &nComp);
+                  if (constr == CsList)
+                    *pList = AncestorList (firstEl->ElParent);
+                  else if (constr == CsAny)
                     {
-                      /* on cherche d'abord si un element ascendant
-                         possede une exception ParagraphBreak */
-                      pE = firstEl->ElParent;
-                      while (pE != NULL && *pList == NULL)
+                      if (firstEl->ElParent->ElParent != NULL)
                         {
-                          if (TypeHasException (ExcParagraphBreak,
-                                                pE->ElTypeNumber, pE->ElStructSchema))
-                            *pList = AncestorList (pE);
-                          else
-                            pE = pE->ElParent;
-                        }
-                      if (*pList == NULL)
-                        {
-                          constr = GetElementConstruct (firstEl->ElParent,
-                                                        &nComp);
-                          if (constr == CsList)
-                            *pList = AncestorList (firstEl->ElParent);
-                          else if (constr == CsAny)
-                            {
-                              if (firstEl->ElParent->ElParent != NULL)
-                                {
-                                  constr = GetElementConstruct	(firstEl->ElParent->ElParent, &nComp);
-                                  if (constr == CsAny || constr == CsList)
-                                    *pList = firstEl->ElParent->ElParent;
-                                }
-                            }
-                          else
-                            {
-                              pE = firstEl;
-                              if (constr == CsChoice)
-                                if (firstEl->ElParent->ElParent != NULL)
-                                  if (GetElementConstruct (firstEl->ElParent->ElParent, &nComp) == CsList)
-                                    pE = firstEl->ElParent->ElParent;
-                              *pList = AncestorList (pE);
-                              if (*pList == NULL)
-                                /* Search if the type of the parent is Any */
-                                *pList = ParentAny (firstEl->ElParent);
-                            }
+                          constr = GetElementConstruct (firstEl->ElParent->ElParent, &nComp);
+                          if (constr == CsAny || constr == CsList)
+                            *pList = firstEl->ElParent->ElParent;
                         }
                     }
+                  else
+                    {
+                      pE = firstEl;
+                      if (constr == CsChoice)
+                        if (firstEl->ElParent->ElParent != NULL)
+                          if (GetElementConstruct (firstEl->ElParent->ElParent, &nComp) == CsList)
+                            pE = firstEl->ElParent->ElParent;
+                      *pList = AncestorList (pE);
+                      if (*pList == NULL)
+                        /* Search if the type of the parent is Any */
+                        *pList = ParentAny (firstEl->ElParent);
+                    }
+                }
+            }
           if (*pList != NULL &&
               TypeHasException (ExcNoCreate,
                                 (*pList)->ElFirstChild->ElTypeNumber,
