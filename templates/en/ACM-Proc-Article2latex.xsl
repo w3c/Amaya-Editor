@@ -233,8 +233,10 @@
     <xsl:text>\caption{</xsl:text><xsl:apply-templates /><xsl:text>}</xsl:text>
   </xsl:template>
 
+  <!-- all images must be converted to eps format before making the
+       transformation -->
   <xsl:template match="xhtml:img">
-    <xsl:text>\psfig{file=@@@@@.epsf, height=@@@cm, width=8.45cm,}</xsl:text>
+    <xsl:text>\psfig{file=<xsl:value-of select="substring-before(string(@src),'.')"/>.eps, width=8.45cm,}</xsl:text>
   </xsl:template>
 
 </xsl:stylesheet>
