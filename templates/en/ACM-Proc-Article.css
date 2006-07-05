@@ -23,7 +23,7 @@
     div.authors {font-family: sans-serif}
     /* width: 33% for 3 authors -- Change according to the number of authors */
     p.author {text-align: center; width: 33%; float: left}
-    p.author span.name {font-size: 100%}
+    p.author span.name {font-size: 110%}
     p.author span.email {font-size: 110%}
     div.body {clear: both}
     span.catnamelevel1and2 {font-weight: bold}
