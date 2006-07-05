@@ -2389,6 +2389,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                 pDimAb->DimUnit = UnPixel;
             }
           else if (pAb->AbLeafType == LtPicture &&
+                   !pAb->AbPresentationBox &&
                    pParentAb && parent &&
                    TypeHasException (ExcIsImg, parent->ElTypeNumber,
                                      parent->ElStructSchema))

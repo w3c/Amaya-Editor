@@ -1325,9 +1325,10 @@ static void FetchImages (Document doc, int flags, Element elSubTree,
                  if (loadObjects)
                    FetchImage (doc, el, NULL, flags, NULL, NULL);		  
                }
-             else if (elType.ElTypeNum == HTML_EL_IMG)
+             else if (elType.ElTypeNum == HTML_EL_IMG ||
+                      elType.ElTypeNum == HTML_EL_Image_Input)
                {
-                 /* this element is an OBJECT or an EMBED */
+                 /* this element is an IMG or INPUT */
                  if (loadImages)
                    {
                      // manage the included PICTURE element

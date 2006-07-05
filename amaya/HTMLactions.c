@@ -800,8 +800,7 @@ static void DblClickOnButton (Element element, Document document)
   ----------------------------------------------------------------------*/
 static ThotBool ActivateElement (Element element, Document document)
 {
-  AttributeType       attrType;
-  Attribute           attr, HrefAttr;
+  Attribute           HrefAttr;
   Element             anchor, elFound;
   ElementType         elType, elType1;
   char               *name;
@@ -858,16 +857,15 @@ static ThotBool ActivateElement (Element element, Document document)
                  elType.ElTypeNum == HTML_EL_Reset_Input))
     /* Form button */
     {
-      elType1.ElTypeNum = elType.ElTypeNum;
-      if (elType1.ElTypeNum == HTML_EL_Submit_Input ||
-          elType1.ElTypeNum == HTML_EL_Reset_Input)
+      if (elType.ElTypeNum == HTML_EL_Submit_Input ||
+          elType.ElTypeNum == HTML_EL_Reset_Input)
         /* it 's a double click on a submit or reset button */
         {
           /* interrupt current transfer and submit the corresponding form */
           StopTransfer (document, 1);	   
           SubmitForm (document, element);
         }
-      else if (elType1.ElTypeNum == HTML_EL_BUTTON_)
+      else if (elType.ElTypeNum == HTML_EL_BUTTON_)
         DblClickOnButton (element, document);
       return (TRUE);
     }
@@ -887,11 +885,10 @@ static ThotBool ActivateElement (Element element, Document document)
         }
       else if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
         {
-          attrType.AttrSSchema = elType.ElSSchema;
-          attrType.AttrTypeNum = HTML_ATTR_IsInput;
-          attr = TtaGetAttribute (element, attrType);
-          if (attr)
-            /* it's a input image */
+          /* check if it's a input image */
+          elFound = TtaGetParent (element);
+          elType1 = TtaGetElementType (elFound);
+          if (elType1.ElTypeNum == HTML_EL_Image_Input)
             {
               /* interrupt current transfer */
               StopTransfer (document, 1);	   

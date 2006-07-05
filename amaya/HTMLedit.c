@@ -4439,10 +4439,8 @@ ThotBool GlobalAttrInMenu (NotifyAttribute * event)
   AttrNAMEinMenu
   doesn't display NAME in Reset_Input and Submit_Input
   ----------------------------------------------------------------------*/
-ThotBool            AttrNAMEinMenu (NotifyAttribute * event)
+ThotBool AttrNAMEinMenu (NotifyAttribute * event)
 {
-  AttributeType       attrType;
-  Attribute           attr;
   ElementType         elType;
 
   elType = TtaGetElementType (event->element);
@@ -4452,16 +4450,8 @@ ThotBool            AttrNAMEinMenu (NotifyAttribute * event)
     /* prevent Thot from including an entry for that attribute */
     return TRUE;
   else if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
-    {
-      /* check if it's an input element */
-      attrType.AttrSSchema = elType.ElSSchema;
-      attrType.AttrTypeNum = HTML_ATTR_IsInput;
-      attr = TtaGetAttribute (event->element, attrType);
-      if (attr)
-        return FALSE;		/* let Thot perform normal operation */
-      else
-        return TRUE;		/* not allowed on standard pictures */
-    }
+    /* No visivible attributes on a picture element */
+    return TRUE;		/* not allowed on standard pictures */
   else
     return FALSE;		/* let Thot perform normal operation */
 }

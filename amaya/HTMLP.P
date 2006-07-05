@@ -269,6 +269,18 @@ BOXES
 		END;
 	END;
 
+ Attr_size: BEGIN
+	Content: Text ' size=';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style; Weight: ATTR_Weight;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+
  ATTR_REL_ANCH: BEGIN
 	Content: Text ' rel=';
 	Visibility: 0;
@@ -430,8 +442,8 @@ BOXES
         END;
 }
 
- IMG_type_image: BEGIN
-	Content: Text ' type=image';
+ ATTR_Checkbox: BEGIN
+	Content: Text ' type=checkbox';
 	HorizPos: Left = Previous . Right;
 	VertPos: HRef = Previous . HRef;
 	Visibility: 0;
@@ -442,8 +454,8 @@ BOXES
 		END;
 	END;
 
- ATTR_Checkbox: BEGIN
-	Content: Text ' type=checkbox';
+ ATTR_image: BEGIN
+	Content: Text ' type=image';
 	HorizPos: Left = Previous . Right;
 	VertPos: HRef = Previous . HRef;
 	Visibility: 0;
@@ -626,17 +638,6 @@ BOXES
 		Visibility: 0;
 	IN Alternate_view
 		Visibility: 0;
-	END;
-
- IMG_in_S: BEGIN
-	Content: Text 'input ';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		Size: TAG_FONTSIZE;
-		Font: TAG_Font;
-		Weight: TAG_Weight;
-		Visibility: TAG_Visibility;  Foreground: TAG_Color;
-		END;
 	END;
 
  UNKNOWN_E: BEGIN
@@ -1655,6 +1656,8 @@ BOXES
 	VertPos: Top = Creator . Top;
 	VertOverflow : Yes;
 	HorizOverflow : Yes;
+  Width: Enclosed . Width;
+  Height: Enclosed . Height;
 	Inline: No;
 	Visibility: Creator =;
 	IN Structure_view
@@ -2633,7 +2636,7 @@ RULES
 		Height: Enclosed . Height;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
-		END;	
+		END;
 	IN Alternate_view BEGIN
 		VertPos: Top = Previous . Bottom;
 		Height: Enclosed . Height;
@@ -2645,6 +2648,37 @@ RULES
  IMG: BEGIN
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
+	if ALT
+	  CreateBefore(IMG_ALT);
+	HorizRef: * . Bottom;
+  Width: Enclosed . Width;
+  Height: Enclosed . Height;
+	Gather: Yes;
+	if within HEAD
+		Visibility: 0;
+	VertPos: Top = Previous not MAP . Bottom;
+	LineBreak: No;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		Height: Enclosed . Height;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		VertPos: Top = Previous . Bottom;
+		END;	
+	IN Alternate_view BEGIN
+		VertPos: Top = Previous . Bottom;
+		Height: Enclosed . Height;
+		END;
+	IN Links_view
+		Visibility: 0;
+	END;
+
+ Image_Input: BEGIN
+	CreateBefore(ElementName);
+	CreateBefore(ATTR_image);
+	CreateWith(VerticalLine);
+	if ALT
+	  CreateBefore(IMG_ALT);
 	HorizRef: * . Bottom;
   Width: Enclosed . Width;
   Height: Enclosed . Height;
@@ -3429,8 +3463,8 @@ RULES
 
  Text_Input: BEGIN
 	CreateBefore(ElementName);
-	CreateWith(VerticalLine);
 	CreateBefore(ATTR_Text);
+	CreateWith(VerticalLine);
 	MarginLeft: 2 px;
 	MarginRight: 2 px;
 	PaddingTop: 1 px;
@@ -3461,6 +3495,8 @@ RULES
 		VertPos: Top = Previous . Bottom;
 		MarginLeft: 0;
 		MarginRight: 0;
+	  PaddingTop: 0;
+	  PaddingBottom: 0;
 		BorderTopWidth: 0;
 		BorderRightWidth: 0;
 		BorderBottomWidth: 0;
@@ -3486,8 +3522,8 @@ RULES
 
  File_Input: BEGIN
 	CreateBefore(ElementName);
-	CreateWith(VerticalLine);
 	CreateBefore(ATTR_File);
+	CreateWith(VerticalLine);
 	CreateAfter(BrowseLabel);
 	PaddingTop: 1 px;
 	BorderTopWidth: 1 px;
@@ -3538,6 +3574,7 @@ RULES
  Hidden_Input: BEGIN
 	CreateBefore(ElementName);
 	CreateBefore(ATTR_Hidden);
+	CreateWith(VerticalLine);
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Visibility: Enclosing =;
@@ -3548,8 +3585,8 @@ RULES
 
  Password_Input: BEGIN
 	CreateBefore(ElementName);
-	CreateWith(VerticalLine);
 	CreateBefore(ATTR_Password);
+	CreateWith(VerticalLine);
 	MarginLeft: 2 px;
 	MarginRight: 2 px;
 	PaddingTop: 1 px;
@@ -3721,6 +3758,7 @@ RULES
  Button_Input: BEGIN
 	CreateBefore(ElementName);
 	CreateBefore(ATTR_Button);
+	CreateWith(VerticalLine);
 	CreateFirst(Value_Box);
 	CreateFirst(Value_Box_Alt);
 	PaddingTop: 1 px;
@@ -3782,8 +3820,8 @@ RULES
 
  BUTTON_: BEGIN
 	CreateBefore(ElementName);
+  CreateBefore(BUTTON_ALT);
 	CreateWith(VerticalLine);
-        CreateBefore(BUTTON_ALT);
 	MarginLeft: 2 px;
 	MarginRight: 2 px;
 	PaddingTop: 1 px;
@@ -3876,19 +3914,14 @@ RULES
 	END;
 
  PICTURE_UNIT: BEGIN
-	if not Immediately within Object and  not Immediately within IMG and not IsInput
-		CreateBefore(ElementName);
-	if within Object_Content
-		CreateBefore(ElementName);
-	if ALT
-	  CreateBefore(IMG_ALT);
-	if IsInput BEGIN
-		CreateBefore(IMG_in_S);
-		CreateBefore(IMG_type_image);
-	END;
 	LineBreak: No;
 	PageBreak: No;
   if Immediately within IMG
+    BEGIN
+    Width: Enclosing . Width;
+    Height: Enclosing . Height;
+    END;
+  if Immediately within Image_Input
     BEGIN
     Width: Enclosing . Width;
     Height: Enclosing . Height;
@@ -3898,6 +3931,7 @@ RULES
     Width: Enclosing . Width;
     Height: Enclosing . Height;
     END;
+	HorizRef: * . Bottom;
 	IN Structure_view BEGIN
 		Height: 0;
 		Width: 0;
@@ -3927,11 +3961,7 @@ RULES
 
  External_Object: BEGIN
 	if ALT
-	        CreateBefore(IMG_ALT);
-	if IsInput
-		CreateBefore(IMG_in_S);
-	if not Immediately within Object and not IsInput
-		CreateBefore(ElementName);
+	  CreateBefore(IMG_ALT);
 	LineBreak: No;
 	PageBreak: No;
 	if Immediately within Object BEGIN
@@ -3981,7 +4011,7 @@ RULES
 	END;
 
  Embed_: BEGIN
-	if not Immediately within Object and not IsInput
+	if not Immediately within Object
 		CreateBefore(ElementName);
 	LineBreak: No;
 	PageBreak: No;
@@ -5136,12 +5166,24 @@ RULES
 	END;
 
 ATTRIBUTES
- NoImages(PICTURE_UNIT*):
+ NoImages(IMG):
 	BEGIN
 	Visibility: 1;
-	if ALT and not Immediately within Object and not Immediately within IMG and not within Embed_
+	if ALT
       CreateBefore(SHOW_ALT);
-	if Not ALT and not Immediately within Object and not Immediately within IMG and not within Embed_
+	if Not ALT
+	    CreateBefore(SHOW_IMG);
+	IN Alternate_view
+		Visibility: Enclosing =;
+	IN Links_view
+		Visibility: Enclosing =;
+	END;
+ NoImages(Image_Input):
+	BEGIN
+	Visibility: 1;
+	if ALT
+      CreateBefore(SHOW_ALT);
+	if Not ALT
 	    CreateBefore(SHOW_IMG);
 	IN Alternate_view
 		Visibility: Enclosing =;
@@ -5549,9 +5591,10 @@ ATTRIBUTES
 	 CreateBefore(AttrName);
 	 CreateBefore(AttrValue);
 	 END;
+
  SRC:
    BEGIN
-   if not Immediately within Object and not Immediately within IMG
+   if not PICTURE_UNIT
      BEGIN
 	   CreateBefore(AttrName);
 	   CreateBefore(AttrValue);
@@ -5560,7 +5603,10 @@ ATTRIBUTES
 
  Width__:
 	BEGIN
-	CreateBefore(AttrName);
+  if Image_Input
+	  CreateBefore(Attr_size);
+  if not Image_Input
+	  CreateBefore(AttrName);
 	CreateBefore(AttrValue);
 	END;
 
@@ -7964,9 +8010,17 @@ ATTRIBUTES
 #ifndef PAGE
   Highlight:
 	BEGIN
-        if TEXT_UNIT
+  if TEXT_UNIT
 	   CreateAfter (IndexBox);
-	if not TEXT_UNIT
+  if PICTURE_UNIT
+	   CreateAfter (IndexBox);
+  if SYMBOL_UNIT
+	   CreateAfter (IndexBox);
+  if IMG
+	   CreateAfter (IndexBox);
+  if Image_Input
+	   CreateAfter (IndexBox);
+	if not TEXT_UNIT and not PICTURE_UNIT and not SYMBOL_UNIT and not IMG and not Image_Input
 	   CreateLast (IndexBox);
 	END;
 #endif

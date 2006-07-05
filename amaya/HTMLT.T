@@ -508,6 +508,22 @@ RULES
 		END;
 	END;
 
+ Image_Input: BEGIN
+	create SOT;
+	Create 'input';
+	Create Attributes;
+	if empty
+	  Create ' />\12';
+	if not empty
+		BEGIN
+	Create '>\12';
+	Indent +2;
+	Indent -2 After;
+	create SCT after;
+	Create 'img>' After;
+		END;
+	END;
+
  INS:	BEGIN
 	create SOT;
 	Create 'ins';
@@ -795,7 +811,7 @@ RULES
 
  Checkbox_Input: BEGIN
 	create SOT;
-	Create 'input type="checkbox"';
+	Create 'input';
 	Create Attributes;
 	Remove;
 #ifdef XML
@@ -807,7 +823,7 @@ RULES
 
  Radio_Input: BEGIN
 	create SOT;
-	Create 'input type="radio"';
+	Create 'input';
 	Create Attributes;
 	Remove;
 #ifdef XML
@@ -819,7 +835,7 @@ RULES
 
  Text_Input: BEGIN
 	create SOT;
-	Create 'input type="text"';
+	Create 'input';
 	Create Attributes;
 	Remove;
 #ifdef XML
@@ -831,7 +847,7 @@ RULES
 
  Hidden_Input: BEGIN
 	create SOT;
-	Create 'input type="hidden"';
+	Create 'input';
 	Create Attributes;
 	Remove;
 #ifdef XML
@@ -843,7 +859,7 @@ RULES
 
  Password_Input: BEGIN
 	create SOT;
-	Create 'input type="password"';
+	Create 'input';
 	Create Attributes;
 	Remove;
 #ifdef XML
@@ -855,7 +871,7 @@ RULES
 
  File_Input: BEGIN
 	create SOT;
-	Create 'input type="file"';
+	Create 'input';
 	Create Attributes;
 	Remove;
 #ifdef XML
@@ -868,7 +884,7 @@ RULES
  Reset_Input: BEGIN
 	Create '\12';
 	create SOT;
-	Create 'input type="reset"';
+	Create 'input';
 	Create Attributes;
 	Remove;
 #ifdef XML
@@ -881,7 +897,7 @@ RULES
  Submit_Input: BEGIN
 	Create '\12';
 	create SOT;
-	Create 'input type="submit"';
+	Create 'input';
 	Create Attributes;
 	Remove;
 #ifdef XML
@@ -894,7 +910,7 @@ RULES
  Button_Input: BEGIN
 	Create '\12';
 	create SOT;
-	Create 'input type="button"';
+	Create 'input';
 	Create Attributes;
 	Remove;
 #ifdef XML
@@ -917,64 +933,11 @@ RULES
 	END;
 
  PICTURE_UNIT: BEGIN
-	if IsInput BEGIN
-	        create SOT;
-		Create 'input type="image"';
-		Create Attributes;
-#ifdef XML
-		Create ' />';
-#else
-		Create '>';
-#endif
-		END;
-	if Immediately within Object
-		Remove;
-	if Immediately within IMG
-		Remove;
-	if NOT Immediately within Object AND NOT Immediately within IMG AND NOT IsInput BEGIN
-	        create SOT;
-		Create 'img';
-		Create Attributes;
-#ifdef XML
-		Create ' />';
-#else
-		Create '>';
-#endif
-		END;
-	if NOT within Paragraph AND NOT within Pseudo_paragraph
-	   AND NOT within H1 AND NOT within H2
-	   AND NOT within H3 AND NOT within H4
-	   AND NOT within H5 AND NOT within H6
-           AND NOT Immediately within Object
-		Create '\12' After;
+	Remove;
 	END;
 
  External_Object: BEGIN
-	if IsInput BEGIN
-	        create SOT;
-		Create 'input type="image"';
-		Create Attributes;
-#ifdef XML
-		Create ' />';
-#else
-		Create '>';
-#endif
-		END;
-	if Immediately within Object
-		Remove;
-	if NOT Immediately within Object AND NOT IsInput BEGIN
-	        create SOT;
-		Create 'img';
-		Create Attributes;
-#ifdef XML
-		Create ' />';
-#else
-		Create '>';
-#endif
-		END;
-	if NOT within Paragraph AND NOT Immediately within Object
-           AND NOT within Pseudo_paragraph
-		Create '\12' After;
+	Remove;
 	END;
 
  External_Object_Content: BEGIN
@@ -982,8 +945,8 @@ RULES
 	END;
 
  Embed_: BEGIN
-	if NOT Immediately within Object AND NOT IsInput BEGIN
-	        create SOT;
+	if NOT Immediately within Object BEGIN
+	  create SOT;
 		Create 'embed';
 		Create Attributes;
 		Create ' />';
@@ -1401,7 +1364,7 @@ RULES
 ATTRIBUTES
 
  profile: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'profile="';
 	Create profile;
 	Create DoubleQuote;
@@ -1438,14 +1401,14 @@ ATTRIBUTES
 	END;
 
  content_type: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'type="';
 	Create content_type;
 	Create DoubleQuote;
 	END;
 
  script_src: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'src="';
 	Create script_src;
 	Create DoubleQuote;
@@ -1458,68 +1421,68 @@ ATTRIBUTES
         END;
 
  defer: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'defer="defer"';
 	END;
 
  event: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'event="';
 	Create event;
 	Create DoubleQuote;
 	END;
 
  for_: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'for="';
 	Create for_;
 	Create DoubleQuote;
 	END;
 
  http_equiv: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'http-equiv="';
 	Create http_equiv;
 	Create DoubleQuote;
 	END;
 
  meta_name: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'name="';
 	Create meta_name;
 	Create DoubleQuote;
 	END;
 
  meta_content: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'content="';
 	Create Translated meta_content;
 	Create DoubleQuote;
 	END;
 
  scheme: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'scheme="';
 	Create scheme;
 	Create DoubleQuote;
 	END;
 
  charset: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'charset="';
 	Create charset;
 	Create DoubleQuote;
 	END;
 
  REL:	BEGIN
-        create SAN;
+  Create SAN;
 	Create 'rel="';
 	Create REL;
 	Create DoubleQuote;
 	END;
 
  REV:	BEGIN
-        create SAN;
+  Create SAN;
 	Create 'rev="';
 	Create REV;
 	Create DoubleQuote;
@@ -1527,7 +1490,7 @@ ATTRIBUTES
 
  HREF_ :
 	BEGIN
-        create SAN;
+  Create SAN;
 	Create 'href="';
 	Create Translated HREF_;
 	Create DoubleQuote;
@@ -1535,7 +1498,7 @@ ATTRIBUTES
 
  hreflang :
 	BEGIN
-        create SAN;
+  Create SAN;
 	Create 'hreflang="';
 	Create hreflang;
 	Create DoubleQuote;
@@ -1543,7 +1506,7 @@ ATTRIBUTES
 
  media :
 	BEGIN
-        create SAN;
+  Create SAN;
 	Create 'media="';
 	Create media;
 	Create DoubleQuote;
@@ -1551,7 +1514,7 @@ ATTRIBUTES
 
  target_ :
 	BEGIN
-        create SAN;
+  Create SAN;
 	Create 'target="';
 	Create Translated target_;
 	Create DoubleQuote;
@@ -1559,7 +1522,7 @@ ATTRIBUTES
 
  cite:
 	BEGIN
-        create SAN;
+  Create SAN;
 	Create 'cite="';
 	Create Translated cite;
 	Create DoubleQuote;
@@ -1567,7 +1530,7 @@ ATTRIBUTES
 
  datetime:
 	BEGIN
-        create SAN;
+  Create SAN;
 	Create 'datetime="';
 	Create datetime;
 	Create DoubleQuote;
@@ -1575,7 +1538,7 @@ ATTRIBUTES
 
  background_ :
 	BEGIN
-        create SAN;
+  Create SAN;
 	Create 'background="';
 	Create Translated background_;
 	Create DoubleQuote;
@@ -1583,7 +1546,7 @@ ATTRIBUTES
 
  BackgroundColor :
 	BEGIN
-        create SAN;
+  Create SAN;
 	Create 'bgcolor="';
 	Create BackgroundColor;
 	Create DoubleQuote;
@@ -1591,7 +1554,7 @@ ATTRIBUTES
 
  TextColor :
 	BEGIN
-        create SAN;
+  Create SAN;
 	Create 'text="';
 	Create TextColor;
 	Create DoubleQuote;
@@ -1599,7 +1562,7 @@ ATTRIBUTES
 
  LinkColor :
 	BEGIN
-        create SAN;
+  Create SAN;
 	Create 'link="';
 	Create LinkColor;
 	Create DoubleQuote;
@@ -1607,7 +1570,7 @@ ATTRIBUTES
 
  VisitedLinkColor :
 	BEGIN
-        create SAN;
+  Create SAN;
 	Create 'vlink="';
 	Create VisitedLinkColor;
 	Create DoubleQuote;
@@ -1615,7 +1578,7 @@ ATTRIBUTES
 
  ActiveLinkColor :
 	BEGIN
-        create SAN;
+  Create SAN;
 	Create 'alink="';
 	Create ActiveLinkColor;
 	Create DoubleQuote;
@@ -1623,7 +1586,7 @@ ATTRIBUTES
 
  BaseFontSize:
 	BEGIN
-        create SAN;
+  create SAN;
 	Create 'size="';
 	Create BaseFontSize;
 	Create DoubleQuote;
@@ -1631,7 +1594,7 @@ ATTRIBUTES
 
  BaseFontColor:
 	BEGIN
-        create SAN;
+  Create SAN;
 	Create 'color="';
 	Create BaseFontColor;
 	Create DoubleQuote;
@@ -1639,7 +1602,7 @@ ATTRIBUTES
 
  BaseFontFace:
 	BEGIN
-        create SAN;
+  Create SAN;
 	Create 'face="';
 	Create BaseFontFace;
 	Create DoubleQuote;
@@ -1647,7 +1610,7 @@ ATTRIBUTES
 
  Font_size :
 	BEGIN
-        create SAN;
+  Create SAN;
 	Create 'size="';
 	Create Font_size;
 	Create DoubleQuote;
@@ -1655,7 +1618,7 @@ ATTRIBUTES
 
  color :
 	BEGIN
-        create SAN;
+  Create SAN;
 	Create 'color="';
 	Create color;
 	Create DoubleQuote;
@@ -1663,7 +1626,7 @@ ATTRIBUTES
 
  face :
 	BEGIN
-        create SAN;
+  Create SAN;
 	Create 'face="';
 	Create face;
 	Create DoubleQuote;
@@ -1671,77 +1634,77 @@ ATTRIBUTES
 
  Clear_ = Left_:
 	BEGIN
-        create SAN;
+  Create SAN;
 	Create 'clear="left"';
 	END;
  Clear_ = Right_:
 	BEGIN
-        create SAN;
+  Create SAN;
 	Create 'clear="right"';
 	END;
  Clear_ = All_:
 	BEGIN
-        create SAN;
+  Create SAN;
 	Create 'clear="all"';
 	END;
  Clear_ = None_:
 	BEGIN
-        create SAN;
+  Create SAN;
 	Create 'clear="none"';
 	END;
 
  Align = left_:
 	BEGIN
-        create SAN;
+  Create SAN;
 	Create 'align="left"';
 	END;
  Align = center_:
 	BEGIN
-        create SAN;
+  Create SAN;
 	Create 'align="center"';
 	END;
  Align = right_:
 	BEGIN
-        create SAN;
+  Create SAN;
 	Create 'align="right"';
 	END;
 
  TextAlign = left_:
 	BEGIN
-        create SAN;
+  Create SAN;
 	Create 'align="left"';
 	END;
  TextAlign = center_:
 	BEGIN
-        create SAN;
+  Create SAN;
 	Create 'align="center"';
 	END;
  TextAlign = right_:
 	BEGIN
-        create SAN;
+  create SAN;
 	Create 'align="right"';
 	END;
  TextAlign = justify_:
 	BEGIN
-        create SAN;
+  Create SAN;
 	Create 'align="justify"';
 	END;
 
  NoShade:
 	BEGIN
-        create SAN;
+  create SAN;
 	Create 'noshade="noshade"';
 	END;
 
  Size_: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'size="';
 	Create Size_;
 	Create DoubleQuote;
 	END;
 
  Width__: BEGIN
-        create SAN;
+  create SAN;
 	Create 'width="';
 	Create Width__;
 	Create DoubleQuote;
@@ -1749,47 +1712,47 @@ ATTRIBUTES
 
  declare:
 	BEGIN
-        create SAN;
+  create SAN;
 	Create 'declare="declare"';
 	END;
 
  codebase: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'codebase="';
 	Create codebase;
 	Create DoubleQuote;
 	END;
 
  code:	BEGIN
-        create SAN;
+  Create SAN;
 	Create 'code="';
 	Create code;
 	Create DoubleQuote;
 	END;
 
  object: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'object="';
 	Create object;
 	Create DoubleQuote;
 	END;
 
  applet_name: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'name="';
 	Create applet_name;
 	Create DoubleQuote;
 	END;
 
  Param_name: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'name="';
 	Create Param_name;
 	Create DoubleQuote;
 	END;
 
  Param_value: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'value="';
 	Create Param_value;
 	Create DoubleQuote;
@@ -1797,113 +1760,113 @@ ATTRIBUTES
 
  valuetype = data_:
         BEGIN
-        create SAN;
+  Create SAN;
 	Create 'valuetype="data"';
 	END;
  valuetype = ref:
         BEGIN
-        create SAN;
+  Create SAN;
 	Create 'valuetype="ref"';
 	END;
  valuetype = object_:
         BEGIN
-        create SAN;
+  Create SAN;
 	Create 'valuetype="object"';
 	END;
 
  Param_type: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'type="';
 	Create Param_type;
 	Create DoubleQuote;
 	END;
 
  classid: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'classid="';
 	Create classid;
 	Create DoubleQuote;
 	END;
 
  Object_type: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'type="';
 	Create Object_type;
 	Create DoubleQuote;
 	END;
 
  Embed_type: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'type="';
 	Create Embed_type;
 	Create DoubleQuote;
 	END;
 
  pluginspage: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'pluginspage="';
 	Create pluginspage;
 	Create DoubleQuote;
 	END;
 
  pluginurl: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'pluginurl="';
 	Create pluginurl;
 	Create DoubleQuote;
 	END;
 
  Link_type: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'type="';
 	Create Link_type;
 	Create DoubleQuote;
 	END;
 
  codetype: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'codetype="';
 	Create codetype;
 	Create DoubleQuote;
 	END;
 
  archive: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'archive="';
 	Create archive;
 	Create DoubleQuote;
 	END;
 
  standby: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'standby="';
 	Create standby;
 	Create DoubleQuote;
 	END;
 
  Title : BEGIN
-        create SAN;
+  Create SAN;
 	Create 'title="';
 	Create Translated Title;
 	Create DoubleQuote;
 	END;
 
  accesskey: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'accesskey="';
 	Create accesskey;
 	Create DoubleQuote;
 	END;
 
  tabindex: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'tabindex="';
 	Create tabindex;
 	Create DoubleQuote;
 	END;
 
  Associated_control: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'for="';
 	Create Associated_control;
 	Create DoubleQuote;
@@ -1911,22 +1874,22 @@ ATTRIBUTES
 
  Button_type = button:
         BEGIN
-        create SAN;
+  Create SAN;
 	Create 'type="button"';
 	END;
  Button_type = submit:
         BEGIN
-        create SAN;
+  Create SAN;
 	Create 'type="submit"';
 	END;
  Button_type = reset:
         BEGIN
-        create SAN;
+  Create SAN;
 	Create 'type="reset"';
 	END;
 
  Class: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'class="';
 	Create Class;
 	Create DoubleQuote;
@@ -1935,7 +1898,7 @@ ATTRIBUTES
  Style\240: BEGIN
 	IF not Within HEAD
 	    BEGIN
-            create SAN;
+      Create SAN;
 	    Create 'style="';
 	    Create Style\240;
 	    Create DoubleQuote;
@@ -1943,7 +1906,7 @@ ATTRIBUTES
 	END;
 
  ID:	BEGIN
-        create SAN;
+  Create SAN;
 	Create 'id="';
 	Create ID;
 	Create DoubleQuote;
@@ -1952,137 +1915,137 @@ ATTRIBUTES
  dir = ltr_ :
 	if not Document
             BEGIN
-            create SAN;
+      Create SAN;
 	    Create 'dir="ltr"';
 	    END;
  dir = rtl_ :
 	if not Document
             BEGIN
-            create SAN;
+      Create SAN;
 	    Create 'dir="rtl"';
 	    END;
 
  onclick: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'onclick="';
 	Create onclick;
 	Create DoubleQuote;
 	END;
 
  ondblclick: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'ondblclick="';
 	Create ondblclick;
 	Create DoubleQuote;
 	END;
 
  onmousedown: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'onmousedown="';
 	Create onmousedown;
 	Create DoubleQuote;
 	END;
 
  onmouseup: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'onmouseup="';
 	Create onmouseup;
 	Create DoubleQuote;
 	END;
 
  onmouseover: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'onmouseover="';
 	Create onmouseover;
 	Create DoubleQuote;
 	END;
 
  onmousemove: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'onmousemove="';
 	Create onmousemove;
 	Create DoubleQuote;
 	END;
 
  onmouseout: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'onmouseout="';
 	Create onmouseout;
 	Create DoubleQuote;
 	END;
 
  onkeypress: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'onkeypress="';
 	Create onkeypress;
 	Create DoubleQuote;
 	END;
 
  onkeydown: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'onkeydown="';
 	Create onkeydown;
 	Create DoubleQuote;
 	END;
 
  onkeyup: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'onkeyup="';
 	Create onkeyup;
 	Create DoubleQuote;
 	END;
 
  onload: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'onload="';
 	Create onload;
 	Create DoubleQuote;
 	END;
 
  onunload: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'onunload="';
 	Create onunload;
 	Create DoubleQuote;
 	END;
 
  onfocus: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'onfocus="';
 	Create onfocus;
 	Create DoubleQuote;
 	END;
 
  onblur: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'onblur="';
 	Create onblur;
 	Create DoubleQuote;
 	END;
 
  onsubmit: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'onsubmit="';
 	Create onsubmit;
 	Create DoubleQuote;
 	END;
 
  onreset: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'onreset="';
 	Create onreset;
 	Create DoubleQuote;
 	END;
 
  onselect: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'onselect="';
 	Create onselect;
 	Create DoubleQuote;
 	END;
 
  onchange: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'onchange="';
 	Create onchange;
 	Create DoubleQuote;
@@ -2090,54 +2053,54 @@ ATTRIBUTES
 
  BulletStyle = disc_ :
         BEGIN
-        create SAN;
+  Create SAN;
 	Create 'type="disc"';
 	END;
  BulletStyle = square_ :
         BEGIN
-        create SAN;
+  Create SAN;
 	Create 'type="square"';
 	END;
  BulletStyle = circle_ :
         BEGIN
-        create SAN;
+  Create SAN;
 	Create 'type="circle"';
 	END;
 
  COMPACT:
         BEGIN
-        create SAN;
+  Create SAN;
 	Create 'compact="compact"';
 	END;
 
  NumberStyle = Arabic_ :
         BEGIN
-        create SAN;
+  Create SAN;
 	Create 'type="1"';
 	END;
  NumberStyle = LowerAlpha :
         BEGIN
-        create SAN;
+  Create SAN;
 	Create 'type="a"';
 	END;
  NumberStyle = UpperAlpha :
         BEGIN
-        create SAN;
+  Create SAN;
 	Create 'type="A"';
 	END;
  NumberStyle = LowerRoman_ :
         BEGIN
-        create SAN;
+  Create SAN;
 	Create 'type="i"';
 	END;
  NumberStyle = UpperRoman_ :
         BEGIN
-        create SAN;
+  Create SAN;
 	Create 'type="I"';
 	END;
 
  Start > 1: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'start="';
 	Create Start;
 	Create DoubleQuote;
@@ -2145,54 +2108,54 @@ ATTRIBUTES
 
  ItemStyle = disc_ :
         BEGIN
-        create SAN;
+  Create SAN;
 	Create 'type="disc"';
 	END;
  ItemStyle = square_ :
         BEGIN
-        create SAN;
+  Create SAN;
 	Create 'type="square"';
 	END;
  ItemStyle = circle_ :
         BEGIN
-        create SAN;
+  Create SAN;
 	Create 'type="circle"';
 	END;
  ItemStyle = Arabic_ :
         BEGIN
-        create SAN;
+  Create SAN;
 	Create 'type="1"';
 	END;
  ItemStyle = LowerAlpha :
         BEGIN
-        create SAN;
+  Create SAN;
 	Create 'type="a"';
 	END;
  ItemStyle = UpperAlpha :
         BEGIN
-        create SAN;
+  Create SAN;
 	Create 'type="A"';
 	END;
  ItemStyle = LowerRoman_ :
         BEGIN
-        create SAN;
+  Create SAN;
 	Create 'type="i"';
 	END;
  ItemStyle = UpperRoman_ :
         BEGIN
-        create SAN;
+  Create SAN;
 	Create 'type="I"';
 	END;
 
  ItemValue: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'value="';
 	Create ItemValue;
 	Create DoubleQuote;
 	END;
 
  Script_URL: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'action="';
 	Create Script_URL;
 	Create DoubleQuote;
@@ -2200,50 +2163,50 @@ ATTRIBUTES
 
  METHOD=Post_:
         BEGIN
-        create SAN;
+  Create SAN;
 	Create 'method="post"';
 	END;
 
  METHOD=Get_:
         BEGIN
-        create SAN;
+  Create SAN;
 	Create 'method="get"';
 	END;
 
  ENCTYPE: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'enctype="';
 	Create ENCTYPE;
 	Create DoubleQuote;
 	END;
 
  accept_charset: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'accept-charset="';
 	Create accept_charset;
 	Create DoubleQuote;
 	END;
 
  NAME: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'name="';
-        Create NAME;
-        Create DoubleQuote;
+  Create NAME;
+  Create DoubleQuote;
 #ifdef XHTML11
 	if map and not ID BEGIN
-                create SAN;
+          Create SAN;
        		Create 'id="';
     		Create NAME;
        		Create DoubleQuote;
 	       	END;
 	if MAP and not ID BEGIN
-                create SAN;
+          Create SAN;
        		Create 'id="';
     		Create NAME;
        		Create DoubleQuote;
 	       	END;
 	if Anchor and not ID BEGIN
-                create SAN;
+          Create SAN;
        		Create 'id="';
     		Create NAME;
        		Create DoubleQuote;
@@ -2252,105 +2215,105 @@ ATTRIBUTES
 	END;
 
  Multiple: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'multiple="multiple"';
 	END;
 
  MenuSize: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'size="';
 	Create MenuSize;
 	Create DoubleQuote;
 	END;
 
  Selected: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'selected="selected"';
 	END;
 
  Value_: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'value="';
 	Create Value_;
 	Create DoubleQuote;
 	END;
 
  Rows: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'rows="';
 	Create Rows;
 	Create DoubleQuote;
 	END;
 
  Columns: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'cols="';
 	Create Columns;
 	Create DoubleQuote;
 	END;
 
  Checked = Yes_: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'checked="checked"';
 	END;
 
  disabled: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'disabled="disabled"';
 	END;
 
  readonly: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'readonly="readonly"';
 	END;
 
  label: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'label="';
 	Create label;
 	Create DoubleQuote;
 	END;
 
  accept: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'accept="';
 	Create accept;
 	Create DoubleQuote;
 	END;
 
  LAlign = Top_: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'align="top"';
 	END;
  LAlign = Bottom_: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'align="bottom"';
 	END;
  LAlign = Left_: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'align="left"';
 	END;
  LAlign = Right_: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'align="right"';
 	END;
 
  Area_Size: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'size="';
 	Create Area_Size;
 	Create DoubleQuote;
 	END;
 
  MaxLength: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'maxlength="';
 	Create MaxLength;
 	Create DoubleQuote;
 	END;
 
  data:	BEGIN
-           create SAN;
+     create SAN;
 	   Create 'data="';
 	   Create Translated data;
 	   Create DoubleQuote;
@@ -2358,10 +2321,21 @@ ATTRIBUTES
 
  SRC:	BEGIN
 	if not Immediately within Object and not Immediately within IMG
+     and not Immediately within Image_Input
 	   BEGIN
-           create SAN;
+     Create SAN;
 	   Create 'src="';
 	   Create Translated SRC;
+	   Create DoubleQuote;
+	   END;
+	END;
+ 
+ type:	BEGIN
+	if not Immediately within Object
+	   BEGIN
+     create SAN;
+	   Create 'type="';
+	   Create Translated type;
 	   Create DoubleQuote;
 	   END;
 	END;
@@ -2369,7 +2343,7 @@ ATTRIBUTES
  ALT:	BEGIN
 	if not Immediately within Object
 	   BEGIN
-           create SAN;
+     create SAN;
 	   Create 'alt="';
 	   Create Translated ALT;
 	   Create DoubleQuote;
@@ -2377,409 +2351,409 @@ ATTRIBUTES
 	END;
 
  longdesc: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'longdesc="';
 	Create longdesc;
 	Create DoubleQuote;
 	END;
 
  Alignment = Top_: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'align="top"';
 	END;
  Alignment = Middle_: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'align="middle"';
 	END;
  Alignment = Bottom_: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'align="bottom"';
 	END;
  Alignment = Left_: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'align="left"';
 	END;
  Alignment = Right_: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'align="right"';
 	END;
 
  Height_: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'height="';
 	Create Height_;
 	Create DoubleQuote;
 	END;
 
  Img_border: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'border="';
 	Create Img_border;
 	Create DoubleQuote;
 	END;
 
  hspace: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'hspace="';
 	Create hspace;
 	Create DoubleQuote;
 	END;
 
  vspace: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'vspace="';
 	Create vspace;
 	Create DoubleQuote;
 	END;
 
  ISAMAP: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'ismap="ismap"';
 	END;
 
  USEMAP: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'usemap="';
 	Create USEMAP;
 	Create DoubleQuote;
 	END;
 
  nohref: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'nohref="nohref"';
 	END;
 
  shape = rectangle: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'shape="rect"';
 	END;
  shape = circle: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'shape="circle"';
 	END;
  shape = polygon: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'shape="poly"';
 	END;
 
  coords: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'coords="';
 	Create coords;
 	Create DoubleQuote;
 	END;
 
  summary: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'summary="';
 	Create Translated summary;
 	Create DoubleQuote;
 	END;
 
  frame = void: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'frame="void"';
 	END;
  frame = above: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'frame="above"';
 	END;
  frame = below: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'frame="below"';
 	END;
  frame = hsides: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'frame="hsides"';
 	END;
  frame = lhs: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'frame="lhs"';
 	END;
  frame = rhs: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'frame="rhs"';
 	END;
  frame = vsides: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'frame="vsides"';
 	END;
  frame = box: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'frame="box"';
 	END;
  frame = border: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'frame="border"';
  	END;
 
  rules_ = none_: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'rules="none"';
  	END;
  rules_ = groups: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'rules="groups"';
  	END;
  rules_ = rows: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'rules="rows"';
  	END;
  rules_ = cols: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'rules="cols"';
  	END;
  rules_ = all: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'rules="all"';
  	END;
 
  Border: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'border="';
 	Create Border;
 	Create DoubleQuote;
 	END;
 
  cellspacing: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'cellspacing="';
 	Create cellspacing;
 	Create DoubleQuote;
 	END;
 
  cellpadding: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'cellpadding="';
 	Create cellpadding;
 	Create DoubleQuote;
 	END;
 
  datapagesize: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'datapagesize="';
 	Create datapagesize;
 	Create DoubleQuote;
 	END;
 
  Position = Position_top: BEGIN
-         create SAN;
+   Create SAN;
 	 Create 'align="top"';
 	END;
  Position = Position_bottom: BEGIN
-         create SAN;
+   Create SAN;
 	 Create 'align="bottom"';
 	END;
  Position = Position_left: BEGIN
-         create SAN;
+   Create SAN;
 	 Create 'align="left"';
 	END;
  Position = Position_right: BEGIN
-         create SAN;
+   Create SAN;
 	 Create 'align="right"';
 	END;
 
  Row_valign = Row_top: BEGIN
-         create SAN;
+   Create SAN;
 	 Create 'valign="top"';
 	END;
  Row_valign = Row_middle: BEGIN
-         create SAN;
+   Create SAN;
 	 Create 'valign="middle"';
 	END;
  Row_valign = Row_bottom: BEGIN
-         create SAN;
+   Create SAN;
 	 Create 'valign="bottom"';
 	END;
  Row_valign = Row_baseline: BEGIN
-         create SAN;
+   Create SAN;
 	 Create 'valign="baseline"';
 	END;
 
  abbr: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'abbr="';
 	Create Translated abbr;
 	Create DoubleQuote;
 	END;
 
  axis: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'axis="';
 	Create axis;
 	Create DoubleQuote;
 	END;
 
  headers: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'headers="';
 	Create headers;
 	Create DoubleQuote;
 	END;
 
  scope: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'scope="';
 	Create scope;
 	Create DoubleQuote;
 	END;
 
  span_: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'span="';
 	Create span_;
 	Create DoubleQuote;
 	END;
 
  rowspan_: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'rowspan="';
 	Create rowspan_;
 	Create DoubleQuote;
 	END;
 
  colspan_: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'colspan="';
 	Create colspan_;
 	Create DoubleQuote;
 	END;
 
  Cell_align = Cell_left: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'align="left"';
 	END;
  Cell_align = Cell_center: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'align="center"';
 	END;
  Cell_align = Cell_right: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'align="right"';
 	END;
  Cell_align = Cell_justify: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'align="justify"';
 	END;
  Cell_align = Cell_char: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'align="char"';
 	END;
 
  char: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'char="';
 	Create char;
 	Create DoubleQuote;
 	END;
 
  charoff: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'charoff="';
 	Create charoff;
 	Create DoubleQuote;
 	END;
  
  Cell_valign = Cell_top: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'valign="top"';
 	END;
  Cell_valign = Cell_middle: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'valign="middle"';
 	END;
  Cell_valign = Cell_bottom: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'valign="bottom"';
 	END;
  Cell_valign = Cell_baseline: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'valign="baseline"';
 	END;
 
  No_wrap = no_wrap: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'nowrap="nowrap"';
 	END;
 
  RowHeight: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'rows="';
 	Create RowHeight;
 	Create DoubleQuote;
 	END;
 
  ColWidth: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'cols="';
 	Create ColWidth;
 	Create DoubleQuote;
 	END;
 
  FrameSrc: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'src="';
 	Create FrameSrc;
 	Create DoubleQuote;
 	END;
 
  frameborder = Border1: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'frameborder="1"';
 	END;
  frameborder = Border0: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'frameborder="0"';
 	END;
 
  marginwidth: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'marginwidth="';
 	Create marginwidth;
 	Create DoubleQuote;
 	END;
 
  marginheight: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'marginheight="';
 	Create marginheight;
 	Create DoubleQuote;
 	END;
 
  no_resize: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'noresize="noresize"';
 	END;
 
  scrolling = Yes_: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'scrolling="yes"';
 	END;
  scrolling = No_: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'scrolling="no"';
 	END;
  scrolling = auto_: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'scrolling="auto"';
 	END;
 
  rbspan: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'rbspan="';
 	Create rbspan;
 	Create DoubleQuote;
 	END;
 
  EmbedHidden: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'hidden="';
 	Create EmbedHidden;
 	Create DoubleQuote;
 	END;
 
  EmbedName: BEGIN
-        create SAN;
+  Create SAN;
 	Create 'name="';
 	Create EmbedName;
 	Create DoubleQuote;
@@ -2809,7 +2783,7 @@ ATTRIBUTES
 	END;
 
  xmlid:	BEGIN
-        create SAN;
+  Create SAN;
 	Create 'xml:id="';
 	Create xmlid;
 	Create DoubleQuote;

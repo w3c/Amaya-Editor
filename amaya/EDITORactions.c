@@ -3814,12 +3814,6 @@ void CreateImageInput (Document doc, View view)
           if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
             /* the img element was created */
             {
-              /* add the attribute isInput */
-              attrType.AttrSSchema = elType.ElSSchema;
-              attrType.AttrTypeNum = HTML_ATTR_IsInput;
-              attr = TtaNewAttribute (attrType);
-              TtaAttachAttribute (input, attr, doc);
-
               /* use the ALT value to generate the attribute NAME */
               attrType.AttrTypeNum = HTML_ATTR_ALT;
               attr = TtaGetAttribute (input, attrType);

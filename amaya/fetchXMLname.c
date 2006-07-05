@@ -429,7 +429,7 @@ ThotBool IsXMLElementInline (ElementType elType, Document doc)
 }
 
 /*----------------------------------------------------------------------
-  MapMathMLAttributeValue
+  MapXMLAttributeValue
   Search in the Attribute Value Mapping Table the entry for the attribute
   ThotAtt and its value attVal. Returns the corresponding Thot value.
   ----------------------------------------------------------------------*/

@@ -312,15 +312,14 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
     elFrames, lastFrame, lastChild, parent, picture, content;
   Attribute      attr;
   AttributeType  attrType;
+  SSchema        htmlSchema;
   Language       lang;
-  char           *text;
+  char           *text, *ptr;
   char           lastChar[2];
   char           *name1, *data;
-  int            length;
-  SSchema        htmlSchema;
-  ThotBool       isImage, isInline, clean;
   char           msgBuffer[MaxMsgLength];
-  int            lineNum;
+  int            lineNum, typenum, length;
+  ThotBool       isImage, isInline, clean;
 
   *error = 0;
   doc = context->doc;
@@ -368,7 +367,8 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
         elType.ElTypeNum != HTML_EL_XMLPI)
       BlockInCharLevelElem (el);
 
-  switch (elType.ElTypeNum)
+  typenum = elType.ElTypeNum;
+  switch (typenum)
     {
     case HTML_EL_PICTURE_UNIT:
       /* Check the mandatory SRC attribute */
@@ -545,6 +545,7 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
       TtaFreeMemory (data);
       break;
 
+    case HTML_EL_Image_Input:
     case HTML_EL_IMG:
       /* Check the mandatory ALT attribute */
       CheckMandatoryAttribute (el, doc, HTML_ATTR_ALT);
@@ -601,40 +602,43 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
               TtaFreeMemory (data);
             }
         }
-      attrType.AttrTypeNum = HTML_ATTR_Height_;
-      attr = TtaGetAttribute (el, attrType);
-      if (attr)
-        /* the img has a height attribute. Applies it to the
-           picture element */
+      if (typenum == HTML_EL_IMG)
         {
-          length = TtaGetTextAttributeLength (attr);
-          if (length > 0)
+          attrType.AttrTypeNum = HTML_ATTR_Height_;
+          attr = TtaGetAttribute (el, attrType);
+          if (attr)
+            /* the img has a height attribute. Applies it to the
+               picture element */
             {
-              text = (char *)TtaGetMemory (length + 1);
-              TtaGiveTextAttributeValue (attr, text, &length);
-              /* create the corresponding attribute IntHeightPercent or */
-              /* IntHeightPxl */
-              CreateAttrHeightPercentPxl (text, el, doc, -1);
-              TtaFreeMemory (text);
+              length = TtaGetTextAttributeLength (attr);
+              if (length > 0)
+                {
+                  text = (char *)TtaGetMemory (length + 1);
+                  TtaGiveTextAttributeValue (attr, text, &length);
+                  /* create the corresponding attribute IntHeightPercent or */
+                  /* IntHeightPxl */
+                  CreateAttrHeightPercentPxl (text, el, doc, -1);
+                  TtaFreeMemory (text);
+                }
             }
-        }
-      attrType.AttrTypeNum = HTML_ATTR_Width__;
-      attr = TtaGetAttribute (el, attrType);
-      if (attr)
-        /* the img has a width attribute. Applies it to the
-           picture element */
-        {
-          length = TtaGetTextAttributeLength (attr);
-          if (length > 0)
+          attrType.AttrTypeNum = HTML_ATTR_Width__;
+          attr = TtaGetAttribute (el, attrType);
+          if (attr)
+            /* the img has a width attribute. Applies it to the
+               picture element */
             {
-              text = (char *)TtaGetMemory (length + 1);
-              TtaGiveTextAttributeValue (attr, text, &length);
-              /* create the corresponding attribute IntWidthPercent or */
-              /* IntWidthPxl */
-              CreateAttrWidthPercentPxl (text, el, doc, -1);
-              TtaFreeMemory (text);
+              length = TtaGetTextAttributeLength (attr);
+              if (length > 0)
+                {
+                  text = (char *)TtaGetMemory (length + 1);
+                  TtaGiveTextAttributeValue (attr, text, &length);
+                  /* create the corresponding attribute IntWidthPercent or */
+                  /* IntWidthPxl */
+                  CreateAttrWidthPercentPxl (text, el, doc, -1);
+                  TtaFreeMemory (text);
+                }
             }
-        }
+         }
       break;
 
     case HTML_EL_Parameter:
@@ -1232,89 +1236,37 @@ void CreateHTMLAttribute (Element       el,
     }
 }
 
-/*----------------------------------------------------------------------
-  HTMLTypeAttrValue
-  Value val has been read for the HTML attribute TYPE.
-  Create a child for the current Thot element INPUT accordingly.
-  ----------------------------------------------------------------------*/
-void HTMLTypeAttrValue (char *val, Attribute lastAttribute,
-                        Element lastAttrElement, ParserData *context)
-{
-  ElementType      elType;
-  Element          newChild;
-  AttributeType    attrType;
-  Attribute        attr;
-  char             msgBuffer[MaxMsgLength];
-  int              value;
-  int              numberOfLinesRead;
-
-  value = MapAttrValue (DummyAttribute, val);
-  elType = TtaGetElementType (context->lastElement);
-  if (value <= 0)
-    {
-      if (strlen (val) > MaxMsgLength - 40)
-        val[MaxMsgLength - 40] = EOS;
-      sprintf (msgBuffer, "Unknown attribute value \"type = %s\"", val);
-      HTMLParseError (context->doc, msgBuffer, 0);
-      attrType.AttrSSchema = elType.ElSSchema;
-      attrType.AttrTypeNum = pHTMLAttributeMapping[0].ThotAttribute;
-      sprintf (msgBuffer, "type=%s", val);
-      CreateHTMLAttribute (context->lastElement, attrType, msgBuffer, TRUE,
-                           context->doc, &lastAttribute, &lastAttrElement);
-    }
-  else
-    {
-      if (elType.ElTypeNum != HTML_EL_Input)
-        {
-          if (strlen (val) > MaxMsgLength - 40)
-            val[MaxMsgLength - 40] = EOS;
-          sprintf (msgBuffer, "Duplicate attribute \"type = %s\"", val);
-        }
-      else
-        {
-          elType.ElTypeNum = value;
-          newChild = TtaNewTree (context->doc, elType, "");
-          numberOfLinesRead = 0;
-          TtaSetElementLineNumber (newChild, numberOfLinesRead);
-          TtaInsertFirstChild (&newChild, context->lastElement, context->doc);
-          if (value == HTML_EL_PICTURE_UNIT)
-            {
-              /* add the attribute IsInput to input pictures */
-              attrType.AttrSSchema = elType.ElSSchema;
-              attrType.AttrTypeNum = HTML_ATTR_IsInput;
-              attr = TtaNewAttribute (attrType);
-              TtaAttachAttribute (newChild, attr, context->doc);
-            }
-        }
-    }
-}
 
 /*----------------------------------------------------------------------
   XhtmlTypeAttrValue 
   Value val has been read for the HTML attribute TYPE.
   Create a child for the current Thot element INPUT accordingly.
   ----------------------------------------------------------------------*/
-void XhtmlTypeAttrValue (char       *val,
-                         Attribute   currentAttribute,
-                         Element     lastAttrElement,
-                         ParserData *context)
+static void XhtmlTypeAttrValue (char *val,
+                                Attribute currentAttribute,
+                                Element lastAttrElement,
+                                ParserData *context, ThotBool isXML)
 {
   ElementType     elType;
   Element         newChild;
   AttributeType   attrType;
   Attribute       attr;
   char            msgBuffer[MaxMsgLength];
-  int             value;
+  int             value, nb;
   ThotBool        level;
 
   /* Look in the dummy section of the attribute value table */
   attrType.AttrTypeNum = DummyAttribute;
   MapHTMLAttributeValue (val, &attrType, &value);
+  elType = TtaGetElementType (context->lastElement);
   if (value <= 0)
     /* invalid value for the type attribute of an input element */
     {
       sprintf (msgBuffer, "Unknown attribute value \"type=%s\"", val);
-      XmlParseError (errorParsing, (unsigned char *)msgBuffer, 0);
+      if (isXML)
+        XmlParseError (errorParsing, (unsigned char *)msgBuffer, 0);
+      else
+        HTMLParseError (context->doc, msgBuffer, 0);
       MapHTMLAttribute ("unknown_attr", &attrType, NULL,
                         &level, context->doc);
       sprintf (msgBuffer, "type=%s", val);
@@ -1325,23 +1277,28 @@ void XhtmlTypeAttrValue (char       *val,
     /* value is the Thot type of the element to be created for this value of
        the TYPE attribute */
     {
-      elType = TtaGetElementType (context->lastElement);
       if (elType.ElTypeNum != HTML_EL_Input)
         {
           sprintf (msgBuffer, "Duplicate attribute \"type = %s\"", val);
-          XmlParseError (errorParsing, (unsigned char *)msgBuffer, 0);
+          if (isXML)
+            XmlParseError (errorParsing, (unsigned char *)msgBuffer, 0);
+          else
+            HTMLParseError (context->doc, msgBuffer, 0);
         }
       else
         {
           elType.ElTypeNum = value;
           newChild = TtaNewTree (context->doc, elType, "");
-          XmlSetElemLineNumber (newChild);
+          
+          nb = TtaGetElementLineNumber (context->lastElement);
+          TtaSetElementLineNumber (newChild, nb);
           TtaInsertFirstChild (&newChild, context->lastElement, context->doc);
-          if (value == HTML_EL_PICTURE_UNIT)
+          /* add the attribute type */
+          attrType.AttrSSchema = elType.ElSSchema;
+          attrType.AttrTypeNum = HTML_ATTR_type;
+          attr = TtaGetAttribute (newChild, attrType);
+          if (attr == NULL)
             {
-              /* add the attribute IsInput to input pictures */
-              attrType.AttrSSchema = elType.ElSSchema;
-              attrType.AttrTypeNum = HTML_ATTR_IsInput;
               attr = TtaNewAttribute (attrType);
               TtaAttachAttribute (newChild, attr, context->doc);
             }
@@ -1376,7 +1333,8 @@ void CreateAttrWidthPercentPxl (char *buffer, Element el,
              elType.ElTypeNum == HTML_EL_Data_cell ||
              elType.ElTypeNum == HTML_EL_Heading_cell ||
              elType.ElTypeNum == HTML_EL_Object ||
-             elType.ElTypeNum == HTML_EL_IMG);
+             elType.ElTypeNum == HTML_EL_IMG ||
+             elType.ElTypeNum == HTML_EL_Image_Input);
 
   if (elType.ElTypeNum == HTML_EL_Object)
     /* the width attribute is attached to an Object element */
@@ -1626,16 +1584,31 @@ void CreateAttrIntAreaSize (int value, Element el, Document doc)
 
   elType = TtaGetElementType (el);
   attrType.AttrSSchema = elType.ElSSchema;
-  attrType.AttrTypeNum = HTML_ATTR_IntAreaSize;
-  attr = TtaGetAttribute (el, attrType);
-  if (!attr)
+  if (elType.ElTypeNum == HTML_EL_Image_Input)
     {
-      attr = TtaNewAttribute (attrType);
-      TtaAttachAttribute (el, attr, doc);
+      attrType.AttrTypeNum = HTML_ATTR_IntWidthPxl;
+      attr = TtaGetAttribute (el, attrType);
+      if (!attr)
+        {
+          attr = TtaNewAttribute (attrType);
+          TtaAttachAttribute (el, attr, doc);
+        }
+      /* the presentation rule associated with attribute IntWidthPxl */
+      TtaSetAttributeValue (attr, value, el, doc);
     }
-  /* the presentation rule associated with attribute IntAreaSize expresses
-     the element width in "em". Convert the value into em */
-  TtaSetAttributeValue (attr, (int) (value * 0.40), el, doc);
+  else
+    {
+      attrType.AttrTypeNum = HTML_ATTR_IntAreaSize;
+      attr = TtaGetAttribute (el, attrType);
+      if (!attr)
+        {
+          attr = TtaNewAttribute (attrType);
+          TtaAttachAttribute (el, attr, doc);
+        }
+      /* the presentation rule associated with attribute IntAreaSize expresses
+         the element width in "em". Convert the value into em */
+      TtaSetAttributeValue (attr, (int) (value * 0.40), el, doc);
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -1923,12 +1896,8 @@ void EndOfHTMLAttributeValue (char *attrValue, AttributeMapping *lastMappedAttr,
             }
           break;
         case SPACE:
-          if (isXML)
-            XhtmlTypeAttrValue (attrValue, currentAttribute,
-                                lastAttrElement, context);
-          else
-            HTMLTypeAttrValue (attrValue, currentAttribute,
-                               lastAttrElement, context);
+          XhtmlTypeAttrValue (attrValue, currentAttribute,
+                              lastAttrElement, context,isXML );
           break;  
         default:
           break;

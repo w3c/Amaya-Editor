@@ -16,7 +16,7 @@ translation
 TEXT_UNIT: Text
 GRAPHICS_UNIT: \0
 SYMBOL_UNIT: Symbol
-PICTURE_UNIT: img
+PICTURE_UNIT: \0
 REFERENCE_UNIT: Reference
 PAGE_BREAK: Page_break
 
@@ -103,17 +103,18 @@ Text_Area: textarea
 FIELDSET: fieldset
 LEGEND: legend
 Input: input
-Text_Input: input(text)
-Password_Input: input(password)
-File_Input: input(file)
-Checkbox_Input: input(checkbox)
-Radio_Input: input(radio)
-Submit_Input: input(submit)
-Reset_Input: input(reset)
-Button_Input: input(button)
+Text_Input: input
+Password_Input: input
+File_Input: input
+Checkbox_Input: input
+Radio_Input: input
+Submit_Input: input
+Reset_Input: input
+Button_Input: input
+Image_Input: input
 BUTTON_: button
 LABEL: label
-Hidden_Input: input(hidden)
+Hidden_Input: input
 Inserted_Text: text
 Table_row: tr
 Table_: table

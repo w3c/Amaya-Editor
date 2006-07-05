@@ -453,11 +453,17 @@ RULES
 	END;
 
  PICTURE_UNIT: BEGIN
-	If Immediately within Object
-		Remove;
-	If NOT Immediately within Object BEGIN
-		Create Attributes;
-		END;
+	Remove;
+	END;
+
+ IMG: BEGIN
+	Create Attributes;
+	If NOT ALT 
+	  Create '[Image]';
+	END;
+
+ Image_Input: BEGIN
+	Create Attributes;
 	If NOT ALT 
 	  Create '[Image]';
 	END;
@@ -987,6 +993,9 @@ ATTRIBUTES
 	END;
 
  SRC:	BEGIN
+	END;
+
+ type:	BEGIN
 	END;
 
  ALT:	BEGIN

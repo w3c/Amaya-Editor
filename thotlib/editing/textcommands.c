@@ -271,16 +271,23 @@ static void LocateLeafBox (int frame, View view, int x, int y, int xDelta,
       pAb = pBox->BxAbstractBox;
       if (pAb)
         {
-          if (IsTextLeaf (pAb))
-            {
 #ifdef _GL
-              if (pBox->BxBoundinBoxComputed)
-                x -= pBox->BxClipX;
-              else
-                x -= pBox->BxXOrg + pFrame->FrXOrg;
+          if (pBox->BxBoundinBoxComputed)
+            x -= pBox->BxClipX;
+          else
+            x -= pBox->BxXOrg + pFrame->FrXOrg;
 #else /* _GL */
-              x -= pBox->BxXOrg;
+          x -= pBox->BxXOrg;
 #endif /* _GL */
+          if (pAb->AbLeafType == LtPicture)
+            {
+              if (x < pBox->BxW / 2)
+                nChars = 0;
+              else
+                nChars = 1;
+            }
+          else if (IsTextLeaf (pAb))
+            {
               LocateClickedChar (pBox, frame, extendSel, &pBuffer, &x, &index,
                                  &nChars, &nbbl);
               if (LeftExtended && nChars > 0 && nChars <= pBox->BxNChars)
@@ -327,12 +334,11 @@ void  TtaSetMoveBackwardCallback (Func callbackFunc)
 static void MovingCommands (int code, Document doc, View view,
                             ThotBool extendSel)
 {
-  PtrBox              pBox, pBoxBegin, pBoxEnd, ibox;
+  PtrBox              pBox, pBoxBegin, pBoxEnd, ibox, box;
   PtrElement          pEl = NULL, firstEl, lastEl;
-  PtrLine             pLine;
+  PtrLine             pLine, pLine1;
   ViewFrame          *pFrame;
-  ViewSelection      *pViewSel;
-  ViewSelection      *pViewSelEnd;
+  ViewSelection      *pViewSel, *pViewSelEnd;
   CHAR_T              word[MAX_WORD_LEN];
   int                 frame, x, y, i;
   int                 xDelta, yDelta;
@@ -372,8 +378,8 @@ static void MovingCommands (int code, Document doc, View view,
       if (pBoxEnd != NULL)
         {
           while (pBoxEnd &&
-                 (pBoxEnd->BxType == BoGhost ||
-                  pBoxEnd->BxType == BoFloatGhost) &&
+                 //(pBoxEnd->BxType == BoGhost ||
+                 // pBoxEnd->BxType == BoFloatGhost) &&
                  pBoxEnd->BxAbstractBox &&
                  pBoxEnd->BxAbstractBox->AbFirstEnclosed)
             {
@@ -527,7 +533,7 @@ static void MovingCommands (int code, Document doc, View view,
                   else
                     /* move the left extremity */
                     x = firstC;
-                  if (x > 1)
+                  if (x > 1 || (x == 1 && isPict))
                     {
                       if (extendSel)
                         {
@@ -571,62 +577,85 @@ static void MovingCommands (int code, Document doc, View view,
                       /* a new box before will be selected */
                       ibox = pBox->BxPrevious;
                       while (ibox &&
-                             (ibox->BxAbstractBox->AbPresentationBox ||
+                             ((ibox->BxAbstractBox->AbPresentationBox &&
+                               !ibox->BxAbstractBox->AbCanBeModified) ||
                               TypeHasException (ExcNoSelect,
                                                 ibox->BxAbstractBox->AbElement->ElTypeNumber,
                                                 ibox->BxAbstractBox->AbElement->ElStructSchema)))
                         ibox = ibox->BxPrevious;
+                      pLine = NULL;
+                      pLine1 = NULL;
                       if (ibox)
                         {
                           /* check if boxes are within the same line */
-                          pLine = SearchLine (pBox, frame);
-                          if (pLine && pLine == SearchLine (ibox, frame))
+                          box = pBox;
+                          while (box && pLine == NULL)
                             {
-                              /* moving to the beginning of the current box */
+                              pLine = SearchLine (box, frame);
+                              if (box->BxAbstractBox &&
+                                  box->BxAbstractBox->AbEnclosing)
+                                box = box->BxAbstractBox->AbEnclosing->AbBox;
+                              else box = NULL;
+                            }
+                          box = ibox;
+                          if (pLine)
+                            while (box && pLine1 == NULL)
+                              {
+                                pLine1 = SearchLine (box, frame);
+                                if (box->BxAbstractBox &&
+                                    box->BxAbstractBox->AbEnclosing)
+                                  box = box->BxAbstractBox->AbEnclosing->AbBox;
+                                else box = NULL;
+                              }
+                        }
+                      if (pLine == NULL || pLine != pLine1)
+                        {
+                          /* next position near the current box beginning */
+                          box = pBox;
 #ifdef _GL
-                              if (pBox->BxBoundinBoxComputed)
-                                {
-                                  x = pBox->BxClipX + xpos + pFrame->FrXOrg;
-                                  if (pBox->BxScript == 'A' ||
-                                      pBox->BxScript == 'H')
-                                    x += pBox->BxClipW + 2;
-                                  y = pBox->BxClipY + (pBox->BxClipH / 2) + pFrame->FrYOrg;
-                                }
-                              else
-#endif /* _GL */
-                                {
-                                  x = pBox->BxXOrg + xpos;
-                                  if (pBox->BxScript == 'A' ||
-                                      pBox->BxScript == 'H')
-                                    x += pBox->BxWidth + 2;
-                                  y = pBox->BxYOrg + (pBox->BxHeight / 2);
-                                }
+                          if (box->BxBoundinBoxComputed)
+                            {
+                              x = box->BxClipX + xpos + pFrame->FrXOrg;
+                              if (box->BxScript == 'A' ||
+                                  box->BxScript == 'H')
+                                x += box->BxClipW + 2;
+                              y = box->BxClipY + (box->BxClipH / 2) + pFrame->FrYOrg;
                             }
                           else
-                            {
-                              /* moving to the end of the previous box */
-#ifdef _GL
-                              if (pBox->BxBoundinBoxComputed)
-                                {
-                                  x = ibox->BxClipX + pFrame->FrXOrg;
-                                  if (ibox->BxScript != 'A' &&
-                                      ibox->BxScript != 'H')
-                                    x += ibox->BxClipW + 2;
-                                  y = ibox->BxClipY + (pBox->BxClipH / 2) + pFrame->FrYOrg;
-                                }
-                              else
 #endif /* _GL */
-                                {
-                                  x = ibox->BxXOrg;
-                                  if (ibox->BxScript != 'A' &&
-                                      ibox->BxScript != 'H')
-                                    x += ibox->BxWidth + 2;
-                                  y = ibox->BxYOrg + (pBox->BxHeight / 2);
-                                }
+                            {
+                              x = box->BxXOrg + xpos;
+                              if (box->BxScript == 'A' ||
+                                  box->BxScript == 'H')
+                                x += box->BxWidth + 2;
+                              y = box->BxYOrg + (box->BxHeight / 2);
                             }
-                          xDelta = -2;
-                          LocateLeafBox (frame, view, x, y, xDelta, 0, pBox, extendSel);
                         }
+                      else
+                        {
+                          /* next position box the previous box end */
+                          box = ibox;
+#ifdef _GL
+                          if (box->BxBoundinBoxComputed)
+                            {
+                              x = box->BxClipX + pFrame->FrXOrg;
+                              if (box->BxScript != 'A' &&
+                                  box->BxScript != 'H')
+                                x += box->BxClipW + 2;
+                              y = box->BxClipY + (box->BxClipH / 2) + pFrame->FrYOrg;
+                            }
+                          else
+#endif /* _GL */
+                            {
+                              x = box->BxXOrg;
+                              if (box->BxScript != 'A' &&
+                                  box->BxScript != 'H')
+                                x += box->BxWidth + 2;
+                              y = box->BxYOrg + (box->BxHeight / 2);
+                            }
+                        }
+                      xDelta = -2;
+                      LocateLeafBox (frame, view, x, y, xDelta, 0, pBox, extendSel);
                     }
                 }
             }
@@ -671,7 +700,7 @@ static void MovingCommands (int code, Document doc, View view,
                           (pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrConstruct == CsConstant))
                         {
                           if (pBox->BxNChars)
-                            x =  pBox->BxNChars;
+                            x =  pBox->BxNChars + 1;
                           else
                             x = 1;
                         }
@@ -681,7 +710,7 @@ static void MovingCommands (int code, Document doc, View view,
                   else
                     /* move the left extremity */
                     x = firstC;
-                  if (x <= pBox->BxAbstractBox->AbBox->BxNChars)
+                  if (x <= pBox->BxAbstractBox->AbBox->BxNChars || (x < 1 && isPict))
                     {
                       if (extendSel)
                         {
@@ -724,71 +753,94 @@ static void MovingCommands (int code, Document doc, View view,
                       /* a new box after will be selected */
                       ibox = pBox->BxNext;
                       while (ibox &&
-                             (ibox->BxAbstractBox->AbPresentationBox ||
+                             ((ibox->BxAbstractBox->AbPresentationBox &&
+                               !ibox->BxAbstractBox->AbCanBeModified) ||
                               TypeHasException (ExcNoSelect,
                                                 ibox->BxAbstractBox->AbElement->ElTypeNumber,
                                                 ibox->BxAbstractBox->AbElement->ElStructSchema)))
                         ibox = ibox->BxNext;
+                      pLine = NULL;
+                      pLine1 = NULL;
                       if (ibox)
                         {
                           /* check if boxes are within the same line */
-                          pLine = SearchLine (pBox, frame);
-                          if (pLine && pLine == SearchLine (ibox, frame))
+                          box = pBox;
+                          while (box && pLine == NULL)
                             {
-                              /* moving to the end of the current box */
+                              pLine = SearchLine (box, frame);
+                              if (box->BxAbstractBox &&
+                                  box->BxAbstractBox->AbEnclosing)
+                                box = box->BxAbstractBox->AbEnclosing->AbBox;
+                              else box = NULL;
+                            }
+                          box = ibox;
+                          if (pLine)
+                            while (box && pLine1 == NULL)
+                              {
+                                pLine1 = SearchLine (box, frame);
+                                if (box->BxAbstractBox &&
+                                    box->BxAbstractBox->AbEnclosing)
+                                  box = box->BxAbstractBox->AbEnclosing->AbBox;
+                                else box = NULL;
+                              }
+                        }
+                      if (pLine == NULL || pLine != pLine1)
+                        {
+                          /* next position near the current box end */
+                          box = pBox;
 #ifdef _GL
-                              if (pBox->BxBoundinBoxComputed)
-                                {
-                                  x = pBox->BxClipX + pFrame->FrXOrg;
-                                  if (pBox->BxScript != 'A' &&
-                                      pBox->BxScript != 'H')
-                                    x += pBox->BxClipW;
-                                  else
-                                    x -= 2;
-                                  y = pBox->BxClipY + (pBox->BxClipH / 2) + pFrame->FrYOrg;
-                                }
+                          if (box->BxBoundinBoxComputed)
+                            {
+                              x = box->BxClipX + pFrame->FrXOrg;
+                              if (box->BxScript != 'A' &&
+                                  box->BxScript != 'H')
+                                x += box->BxClipW;
                               else
-#endif /* _GL */
-                                {
-                                  x = pBox->BxXOrg;
-                                  if (pBox->BxScript != 'A' &&
-                                      pBox->BxScript != 'H')
-                                    x += pBox->BxWidth;
-                                  else
-                                    x -= 2;
-                                  y = pBox->BxYOrg + (pBox->BxHeight / 2);
-                                }
+                                x -= 2;
+                              y = box->BxClipY + (box->BxClipH / 2) + pFrame->FrYOrg;
                             }
                           else
-                            {
-                              /* moving to the beginning of the next box */
-#ifdef _GL
-                              if (pBox->BxBoundinBoxComputed)
-                                {
-                                  x = ibox->BxClipX + pFrame->FrXOrg;
-                                  if (ibox->BxScript == 'A' ||
-                                      ibox->BxScript == 'H')
-                                    x += ibox->BxClipW;
-                                  else
-                                    x -= 2;
-                                  y = ibox->BxClipY + pFrame->FrYOrg;
-                                }
-                              else
 #endif /* _GL */
-                                {
-                                  x = ibox->BxXOrg;
-                                  if (ibox->BxScript == 'A' ||
-                                      ibox->BxScript == 'H')
-                                    x += ibox->BxWidth;
-                                  else
-                                    x -= 2;
-                                  y = ibox->BxYOrg;
-                                }
-
+                            {
+                              x = box->BxXOrg;
+                              if (box->BxScript != 'A' &&
+                                  box->BxScript != 'H')
+                                x += box->BxWidth;
+                              else
+                                x -= 2;
+                              y = box->BxYOrg + (box->BxHeight / 2);
                             }
-                          xDelta = 2;
-                          LocateLeafBox (frame, view, x, y, xDelta, 0, pBox, extendSel);
                         }
+                      else
+                        {
+                          /* next position near the next box beginning */
+                          box = ibox;
+#ifdef _GL
+                          if (box->BxBoundinBoxComputed)
+                            {
+                              x = box->BxClipX + pFrame->FrXOrg;
+                              if (box->BxScript == 'A' ||
+                                  box->BxScript == 'H')
+                                x += box->BxClipW;
+                              else
+                                x -= 2;
+                              y = box->BxClipY + pFrame->FrYOrg;
+                            }
+                          else
+#endif /* _GL */
+                            {
+                              x = box->BxXOrg;
+                              if (box->BxScript == 'A' ||
+                                  box->BxScript == 'H')
+                                x += box->BxWidth;
+                              else
+                                x -= 2;
+                              y = box->BxYOrg;
+                            }
+
+                        }
+                      xDelta = 2;
+                      LocateLeafBox (frame, view, x, y, xDelta, 0, pBox, extendSel);
                     }
                 }
             }

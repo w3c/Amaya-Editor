@@ -125,8 +125,6 @@ STRUCT
 		  IntHeightPercent = Integer; IntHeightPxl = Integer;
 		  USEMAP = Text; ISAMAP = Yes_;
 		{ usemap         ismap }
-		 IsInput = Yes_;    NAME = Text;
-		{ input type=IMAGE  name }
 		  Alignment = Top_, Middle_, Bottom_, Left_, Right_;
 		{ align       top   middle   bottom   left   right }
 		  Img_border = Integer;
@@ -180,8 +178,8 @@ STRUCT
 		  IntHeightPercent; IntHeightPxl;
 		  USEMAP; ISAMAP;
 		{ usemap  ismap }
-		 IsInput;    NAME;
-		{ input type=IMAGE  name }
+		  NAME = Text;
+		{ name }
 		  Alignment;
 		{ align   top   middle   bottom   left   right }
 		  Img_border;
@@ -547,8 +545,9 @@ STRUCT
 
   Input = CASE OF					{ formctrl }
     Text_Input					{ INPUT / TEXT }
-	   (ATTR  NAME; Value_; disabled; readonly;
-	  { name  value   disabled  readonly }
+	   (ATTR  type = Text;
+	    NAME; Value_; disabled; readonly;
+	  { type name  value   disabled  readonly }
 		  Area_Size = Integer; MaxLength = Integer;
 		{ size                 maxlength }
 		  IntAreaSize = Integer;
@@ -557,11 +556,11 @@ STRUCT
 		  onfocus; onblur; onselect; onchange;
 		{ onfocus  onblur  onselect  onchange }
 		  Default_Value) =
-		Input_Text - (Input);
+		Input_Text - (Input) with type = 'text';
 
     Password_Input					{ INPUT / PASSWORD }
-	   (ATTR  NAME; Value_; disabled; readonly; ALT;
-		{ name  value   disabled  readonly alt}
+	   (ATTR  type; NAME; Value_; disabled; readonly; ALT;
+		{ type name  value   disabled  readonly alt}
 		  Area_Size; IntAreaSize; MaxLength;
 		{ size                    maxlength }
 		  tabindex; accesskey;
@@ -569,11 +568,11 @@ STRUCT
 		  onfocus; onblur; onselect; onchange;
 		{ onfocus  onblur  onselect  onchange }
 		  Default_Value) =
-		Input_Text  - (Input);
+		Input_Text  - (Input) with type = 'password';
 
     File_Input					{ INPUT / FILE }
-	   (ATTR  NAME; Value_; disabled; readonly; ALT;
-		{ name  value   disabled  readonly alt }
+	   (ATTR  type; NAME; Value_; disabled; readonly; ALT;
+		{ type name  value   disabled  readonly alt }
 		  Area_Size; IntAreaSize; MaxLength;
 		{ size                    maxlength }
 		  tabindex; accesskey;
@@ -581,77 +580,90 @@ STRUCT
 		  onfocus; onblur; accept = Text;
 		{ onfocus  onblur }
 		  Default_Value) =
-		Input_Text - (Input);
+		Input_Text - (Input) with type = 'file';
 
     Checkbox_Input					{ INPUT / CHECKBOX }
-	   (ATTR  NAME; Value_; Checked = Yes_, No_; ALT;
-		{ name  value   checked alt }
+	   (ATTR  type; NAME; Value_; Checked = Yes_, No_; ALT;
+		{ type name  value   checked alt }
 		  disabled; readonly;
 		{ disabled  readonly }
 		  tabindex; accesskey; onfocus; onblur;
 		{ tabindex  accesskey  onfocus  onblur }
 		  DefaultChecked = Yes_, No_) =
-		CONSTANT C_Empty with Checked ?= No_;
+		CONSTANT C_Empty with Checked ?= No_, type = 'checkbox';
+
+    Image_Input					{ INPUT / IMAGE }
+	   (ATTR  type; NAME; Value_; !SRC; ALT;
+		{ type name  value src alt }
+		  Area_Size; IntWidthPxl;
+		{ size }
+		  USEMAP; ISAMAP;
+		{ usemap  ismap }
+		  disabled; readonly; tabindex; accesskey;
+		{ disabled  readonly  tabindex  accesskey }
+		  onfocus; onblur;) =
+		{ onfocus  onblur }
+		BEGIN
+      PICTURE;
+		END with NAME ?= 'radio', type = 'image';
 
     Radio_Input					{ INPUT / RADIO }
-	   (ATTR  NAME; Value_; Checked; disabled; ALT;
-		{ name  value   checked  disabled alt }
-		  readonly; tabindex; accesskey;
-		{ readonly  tabindex  accesskey }
+	   (ATTR  type; NAME; Value_; Checked; ALT;
+		{ type name  value   checked  disabled alt }
+		  disabled; readonly; tabindex; accesskey;
+		{ disabled  readonly  tabindex  accesskey }
 		  onfocus; onblur;
 		{ onfocus  onblur }
 		  DefaultChecked) =
-		CONSTANT C_Empty with Checked ?= No_,
-				      NAME ?= 'radio';
+		CONSTANT C_Empty with Checked ?= No_, NAME ?= 'radio', type = 'radio';
 
     Submit_Input					{ INPUT / SUBMIT }
-	   (ATTR  NAME; Value_; disabled; readonly; ALT;
-		{ name  value   disabled; readonly alt }
+	   (ATTR  type; NAME; Value_; disabled; readonly; ALT;
+		{ type name  value   disabled; readonly alt }
 		  tabindex; accesskey;
 		{ tabindex  accesskey }
 		  onfocus; onblur) =
 		{ onfocus  onblur }
     BEGIN
     CONSTANT C_Empty;
-    END with Value_ ?= 'Submit';
+    END with Value_ ?= 'Submit', type = 'submit';
 
     Reset_Input					{ INPUT / RESET }
-	   (ATTR  NAME; Value_; disabled; readonly; ALT;
-		{ name  value   disabled  readonly alt }
+	   (ATTR  type; NAME; Value_; disabled; readonly; ALT;
+		{ type name  value   disabled  readonly alt }
 		  tabindex; accesskey;
 		{ tabindex  accesskey }
 		  onfocus; onblur) =
 		{ onfocus  onblur }
 		BEGIN
 		CONSTANT C_Empty;
-		END  - (Input) with NAME ?= 'Reset',
-				    Value_ ?= 'Reset';
+		END  - (Input) with NAME ?= 'Reset', Value_ ?= 'Reset', type = 'reset';
 
     Button_Input					{ INPUT / BUTTON }
-	   (ATTR  NAME; Value_; disabled; readonly; ALT;
-		{ name  value   disabled  readonly alt }
+	   (ATTR  type; NAME; Value_; disabled; readonly; ALT;
+		{ type name  value   disabled  readonly alt }
 		  tabindex; accesskey;
 		{ tabindex  accesskey }
 		  onfocus; onblur) =
 		{ onfocus  onblur }
 		BEGIN
 		CONSTANT C_Empty;
-		END;
+		END with type = 'button';
 
     Hidden_Input					{ INPUT / HIDDEN }
-	   (ATTR  NAME; Value_; disabled; ALT;
-		{ name  value   disabled alt }
+	   (ATTR  type; NAME; Value_; disabled; ALT;
+		{ type name  value   disabled alt }
 		  tabindex; accesskey;
 		{ tabindex  accesskey }
 		  onfocus; onblur) =
 		{ onfocus  onblur }
-		CONSTANT C_Empty;
+		CONSTANT C_Empty with type = 'hidden';
 
     BUTTON_						{ BUTTON }
 	   (ATTR  NAME; Value_;
 		{ name  value }
 		  Button_type = button, submit, reset;
-		{ type          button  submit  reset }
+		{ button  submit  reset }
 		  disabled; tabindex; accesskey;
 		{ disabled  tabindex  accesskey }
 		  onfocus; onblur) =
@@ -921,6 +933,7 @@ EXCEPT
 	Term:		ParagraphBreak;
 	MAP:		IsDraw, IsMap;
   IMG:    IsImg;
+  Image_Input: IsImg;
 	AREA:		MoveResize, ClickableSurface, HighlightChildren;
   Anchor: ClickableSurface;
 	Password_Input: Shadow;
@@ -942,7 +955,6 @@ EXCEPT
 	IntSizeIncr:	Invisible;
 	IntSizeDecr:	Invisible;
 	IntSizeRel:	Invisible;
-	IsInput:	Invisible;
 	x_coord:	Invisible, NewHPos;
 	y_coord:	Invisible, NewVPos;
 	Ref_IMG:	Invisible;
