@@ -31,9 +31,9 @@
     div.example {margin-left: 1.2em}
     div.example pre {margin-bottom: 0.4em}
     div.example p {margin-top:0; font-weight:bold}
-    div.figure {text-align: center}
-    div.figure p {margin-top:0; font-weight:bold; text-align: center}
-    div.figure pre {text-align: left}
+    div.figure, div.topfigure {text-align: center}
+    div.figure p, div.topfigure p {margin-top:0; font-weight:bold; text-align: center}
+    div.figure pre, div.topfigure pre {text-align: left}
 
     /* bibliography */
     a.bibref:after {content: "[*]"}

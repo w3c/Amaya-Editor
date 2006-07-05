@@ -33,14 +33,20 @@
     </xsl:text>
   </xsl:template>
 
+  <!-- remove the head element -->
   <xsl:template match="xhtml:head">
   </xsl:template>
 
   <xsl:template match="xhtml:p[@class='noprint']">
   </xsl:template>
 
+  <!-- replace character underscore by dash to avoid troubles with LaTeX -->
   <xsl:template match="text()">
     <xsl:value-of select="translate(., '_', '-')"/>
+  </xsl:template>
+
+  <!-- remove the bibliography: use BibTeX instead -->
+  <xsl:template match="xhtml:div[@class='bibliography']">
   </xsl:template>
 
   <xsl:template match="xhtml:p[@class='conferenceinfo']/text()">
@@ -204,14 +210,6 @@
     <xsl:apply-templates />
   </xsl:template>
 
-<!--
-  <xsl:template match="xhtml:div[@class='example']">
-    <xsl:text>\begin{figure}</xsl:text>
-    <xsl:apply-templates />
-    <xsl:text>\end{figure}</xsl:text>
-  </xsl:template>
--->
-
   <xsl:template match="xhtml:pre">
     <xsl:text>\begin{verbatim}</xsl:text>
     <xsl:apply-templates />
@@ -222,14 +220,21 @@
     <xsl:text>\begin{center}{\bf </xsl:text><xsl:apply-templates /><xsl:text>}\end{center}</xsl:text>
   </xsl:template>
 
-  <xsl:template match="xhtml:div[@class='figure']">
-    <xsl:text>\begin{figure}</xsl:text>
+  <xsl:template match="xhtml:div[@class='figure'] |
+                       xhtml:div[@class='topfigure']">
+    <xsl:text>\begin{figure}[ht]
+\centering</xsl:text>
     <xsl:apply-templates />
     <xsl:text>\end{figure}</xsl:text>
   </xsl:template>
 
-  <xsl:template match="xhtml:div[@class='figure']/xhtml:p">
+  <xsl:template match="xhtml:div[@class='figure']/xhtml:p |
+                       xhtml:div[@class='topfigure']/xhtml:p">
     <xsl:text>\caption{</xsl:text><xsl:apply-templates /><xsl:text>}</xsl:text>
+  </xsl:template>
+
+  <xsl:template match="xhtml:img">
+    <xsl:text>\psfig{file=@@@@@.epsf, height=@@@cm, width=8.45cm,}</xsl:text>
   </xsl:template>
 
 </xsl:stylesheet>
