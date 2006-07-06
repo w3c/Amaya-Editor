@@ -4389,15 +4389,15 @@ ThotBool GlobalAttrInMenu (NotifyAttribute * event)
         return TRUE;
 
       /* BASEFONT and PARAM accept only ID */
-      if (elType.ElTypeNum == HTML_EL_BaseFont ||
-          elType.ElTypeNum == HTML_EL_Parameter)
+      else if (elType.ElTypeNum == HTML_EL_BaseFont ||
+               elType.ElTypeNum == HTML_EL_Parameter)
         return (event->attributeType.AttrTypeNum != HTML_ATTR_ID);
 
       /* coreattrs */
-      if (event->attributeType.AttrTypeNum == HTML_ATTR_ID ||
-          event->attributeType.AttrTypeNum == HTML_ATTR_Class ||
-          event->attributeType.AttrTypeNum == HTML_ATTR_Style_ ||
-          event->attributeType.AttrTypeNum == HTML_ATTR_Title)
+      else if (event->attributeType.AttrTypeNum == HTML_ATTR_ID ||
+               event->attributeType.AttrTypeNum == HTML_ATTR_Class ||
+               event->attributeType.AttrTypeNum == HTML_ATTR_Style_ ||
+               event->attributeType.AttrTypeNum == HTML_ATTR_Title)
         {
           if (elType.ElTypeNum == HTML_EL_HEAD ||
               elType.ElTypeNum == HTML_EL_TITLE ||
@@ -4410,8 +4410,8 @@ ThotBool GlobalAttrInMenu (NotifyAttribute * event)
             return FALSE; /* let Thot perform normal operation */
         }
       /* i18n */
-      if (event->attributeType.AttrTypeNum == HTML_ATTR_dir ||
-          event->attributeType.AttrTypeNum == HTML_ATTR_Language)
+      else if (event->attributeType.AttrTypeNum == HTML_ATTR_dir ||
+               event->attributeType.AttrTypeNum == HTML_ATTR_Language)
         {
           if (elType.ElTypeNum == HTML_EL_BR ||
               elType.ElTypeNum == HTML_EL_Applet ||
@@ -4424,37 +4424,40 @@ ThotBool GlobalAttrInMenu (NotifyAttribute * event)
             return FALSE;
         }
       /* events */
-      if (event->attributeType.AttrTypeNum == HTML_ATTR_onclick ||
-          event->attributeType.AttrTypeNum == HTML_ATTR_ondblclick ||
-          event->attributeType.AttrTypeNum == HTML_ATTR_onmousedown ||
-          event->attributeType.AttrTypeNum == HTML_ATTR_onmouseup ||
-          event->attributeType.AttrTypeNum == HTML_ATTR_onmouseover ||
-          event->attributeType.AttrTypeNum == HTML_ATTR_onmousemove ||
-          event->attributeType.AttrTypeNum == HTML_ATTR_onmouseout ||
-          event->attributeType.AttrTypeNum == HTML_ATTR_onkeypress ||
-          event->attributeType.AttrTypeNum == HTML_ATTR_onkeydown ||
-          event->attributeType.AttrTypeNum == HTML_ATTR_onkeyup)
-        if (elType.ElTypeNum == HTML_EL_BDO ||
-            elType.ElTypeNum == HTML_EL_Font_ ||
-            elType.ElTypeNum == HTML_EL_BR ||
-            elType.ElTypeNum == HTML_EL_Applet ||
-            elType.ElTypeNum == HTML_EL_FRAMESET ||
-            elType.ElTypeNum == HTML_EL_FRAME ||
-            elType.ElTypeNum == HTML_EL_IFRAME ||
-            elType.ElTypeNum == HTML_EL_HEAD ||
-            elType.ElTypeNum == HTML_EL_TITLE ||
-            elType.ElTypeNum == HTML_EL_META ||
-            elType.ElTypeNum == HTML_EL_STYLE_ ||
-            elType.ElTypeNum == HTML_EL_HTML ||
-            elType.ElTypeNum == HTML_EL_ISINDEX)
-          return TRUE;
+      else if (event->attributeType.AttrTypeNum == HTML_ATTR_onclick ||
+               event->attributeType.AttrTypeNum == HTML_ATTR_ondblclick ||
+               event->attributeType.AttrTypeNum == HTML_ATTR_onmousedown ||
+               event->attributeType.AttrTypeNum == HTML_ATTR_onmouseup ||
+               event->attributeType.AttrTypeNum == HTML_ATTR_onmouseover ||
+               event->attributeType.AttrTypeNum == HTML_ATTR_onmousemove ||
+               event->attributeType.AttrTypeNum == HTML_ATTR_onmouseout ||
+               event->attributeType.AttrTypeNum == HTML_ATTR_onkeypress ||
+               event->attributeType.AttrTypeNum == HTML_ATTR_onkeydown ||
+               event->attributeType.AttrTypeNum == HTML_ATTR_onkeyup)
+        {
+          if (elType.ElTypeNum == HTML_EL_BDO ||
+              elType.ElTypeNum == HTML_EL_Font_ ||
+              elType.ElTypeNum == HTML_EL_BR ||
+              elType.ElTypeNum == HTML_EL_Applet ||
+              elType.ElTypeNum == HTML_EL_FRAMESET ||
+              elType.ElTypeNum == HTML_EL_FRAME ||
+              elType.ElTypeNum == HTML_EL_IFRAME ||
+              elType.ElTypeNum == HTML_EL_HEAD ||
+              elType.ElTypeNum == HTML_EL_TITLE ||
+              elType.ElTypeNum == HTML_EL_META ||
+              elType.ElTypeNum == HTML_EL_STYLE_ ||
+              elType.ElTypeNum == HTML_EL_HTML ||
+              elType.ElTypeNum == HTML_EL_ISINDEX)
+            return TRUE;
+        }
       /* xml:space attribute */
-      if (event->attributeType.AttrTypeNum == HTML_ATTR_xml_space)
+      else if (event->attributeType.AttrTypeNum == HTML_ATTR_xml_space)
+        {
         /* be careful here -- document may not have been received yet */
         if (DocumentMeta[event->document] == NULL
             || DocumentMeta[event->document]->xmlformat == FALSE)
-          return TRUE;	 
-
+          return TRUE;
+        }
       return FALSE;
     }
   return TRUE;	/* don't put an invalid attribute in the menu */
@@ -4469,12 +4472,7 @@ ThotBool AttrNAMEinMenu (NotifyAttribute * event)
   ElementType         elType;
 
   elType = TtaGetElementType (event->element);
-  if (elType.ElTypeNum == HTML_EL_Reset_Input ||
-      elType.ElTypeNum == HTML_EL_Submit_Input)
-    /* Attribute menu for an element Reset_Input or Submit_Input */
-    /* prevent Thot from including an entry for that attribute */
-    return TRUE;
-  else if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
+  if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
     /* No visivible attributes on a picture element */
     return TRUE;		/* not allowed on standard pictures */
   else
