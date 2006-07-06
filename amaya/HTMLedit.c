@@ -3170,8 +3170,8 @@ void CheckPastedElement (Element el, Document doc, int info, int position,
               DocStatusUpdate (doc, Document_state);
             }
         }
-      else if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT ||
-               elType.ElTypeNum == HTML_EL_IMG ||
+      else if (elType.ElTypeNum == HTML_EL_IMG ||
+               elType.ElTypeNum == HTML_EL_Object ||
                elType.ElTypeNum == HTML_EL_Image_Input)
         {
           originDocument = (Document) position;
@@ -3189,7 +3189,10 @@ void CheckPastedElement (Element el, Document doc, int info, int position,
                 {
                   /* the image has moved from one document to another */
                   /* get the SRC attribute of element IMAGE */
-                  attrType.AttrTypeNum = HTML_ATTR_SRC;
+                  if (elType.ElTypeNum == HTML_EL_Object)
+                    attrType.AttrTypeNum = HTML_ATTR_data;
+                  else
+                    attrType.AttrTypeNum = HTML_ATTR_SRC;
                   attr = TtaGetAttribute (el, attrType);
                   if (attr != NULL)
                     {

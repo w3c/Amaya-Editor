@@ -759,7 +759,8 @@ void CreateAreaPoly (Document doc, View view)
   Returns the url (encoded with the Default charset).
   Check if there is an alternate text when loading an image.
   ----------------------------------------------------------------------*/
-static char *GetImageURL (Document document, View view, ThotBool isObject)
+static char *GetImageURL (Document document, View view,
+                          ThotBool isObject, ThotBool isInput)
 {
 #if defined(_GTK) || defined(_WX)
   LoadedImageDesc   *desc;
@@ -831,6 +832,10 @@ static char *GetImageURL (Document document, View view, ThotBool isObject)
     CreateObjectDlgWX (RefFormImage, TtaGetViewFrame (document, view),
                        TtaGetMessage (AMAYA, AM_NEWOBJECT),
                        LastURLImage, UserMimeType);
+  else if (isInput)
+    CreateImageDlgWX (RefFormImage, TtaGetViewFrame (document, view),
+                      TtaGetMessage (THOT, BImageInput),
+                      LastURLImage, ImgAlt);
   else
     CreateImageDlgWX (RefFormImage, TtaGetViewFrame (document, view),
                       TtaGetMessage (LIB, TMSG_BUTTON_IMG),
@@ -971,6 +976,7 @@ void ComputeSRCattribute (Element el, Document doc, Document sourceDocument,
   elType = TtaGetElementType (el);
   attrType.AttrSSchema = elType.ElSSchema;
   attrType.AttrTypeNum = HTML_ATTR_SRC;
+
   newPict = FALSE;
   newAttr =  FALSE;
   if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
@@ -987,13 +993,14 @@ void ComputeSRCattribute (Element el, Document doc, Document sourceDocument,
           TtaInsertFirstChild (&pict, el, doc);
           newPict = TRUE;
         }
-      srcattr = TtaGetAttribute (pict, attrType);
-      if (srcattr == NULL)
-        {
-          newAttr = TRUE;
-          srcattr = TtaNewAttribute (attrType);
-          TtaAttachAttribute (pict, srcattr, doc);
-        }
+    }
+  // get the src or data attribute
+  srcattr = TtaGetAttribute (pict, attrType);
+  if (srcattr == NULL)
+    {
+      newAttr = TRUE;
+      srcattr = TtaNewAttribute (attrType);
+      TtaAttachAttribute (pict, srcattr, doc);
     }
 
   /* get the absolute URL of the image */
@@ -1098,25 +1105,28 @@ void UpdateSRCattribute (NotifyOnTarget *event)
   char            *text;
   char            *utf8value;
   int              length;
-  ThotBool         newAttr, isObject = FALSE;
+  ThotBool         newAttr, isObject = FALSE, isInput = FALSE;
 
   el = event->element;
   doc = event->document;
   elType = TtaGetElementType (el);
+  isInput = (elType.ElTypeNum == HTML_EL_Image_Input);
+  isObject = (elType.ElTypeNum == HTML_EL_Object);
   attrType.AttrSSchema = elType.ElSSchema;
   /* if it's not an HTML picture (it could be an SVG image for instance),
      ignore */
   if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
     return;
-  elSRC = TtaGetParent (el);
-  if (elSRC)
+  if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
     {
+      elSRC = TtaGetParent (el);
       elType = TtaGetElementType (elSRC);
       isObject = (elType.ElTypeNum == HTML_EL_Object);
-      if (elType.ElTypeNum == HTML_EL_IMG)
-        // ignore the PICTURE within an IGM
-        return;
+      isInput = (elType.ElTypeNum == HTML_EL_Image_Input);
+      el = elSRC;
     }
+  else
+    elSRC = el;
 
   ImgAlt[0] = EOS;
   /* ask Thot to stop displaying changes made in the document */
@@ -1162,7 +1172,7 @@ void UpdateSRCattribute (NotifyOnTarget *event)
     }
 
   /* Select an image name */
-  text = GetImageURL (doc, 1, isObject);
+  text = GetImageURL (doc, 1, isObject, isInput);
   if (text == NULL || text[0] == EOS)
     /* The user has cancelled */
     {
@@ -1208,11 +1218,10 @@ void UpdateSRCattribute (NotifyOnTarget *event)
     {
       if (dispMode == DisplayImmediately)
         TtaSetDisplayMode (doc, DeferredDisplay);
-      elSRC = el;
       /* add the ALT attribute */
       attrType.AttrTypeNum = HTML_ATTR_ALT;
       attr = TtaGetAttribute (elSRC, attrType);
-      if (attr == 0)
+      if (attr == NULL)
         {
           newAttr = TRUE;
           attr = TtaNewAttribute (attrType);
@@ -1243,7 +1252,10 @@ void UpdateSRCattribute (NotifyOnTarget *event)
 
 
   /* search the SRC attribute */
-  attrType.AttrTypeNum = HTML_ATTR_SRC;
+  if (elType.ElTypeNum = HTML_EL_Object)
+    attrType.AttrTypeNum = HTML_ATTR_data;
+  else
+    attrType.AttrTypeNum = HTML_ATTR_SRC;
   attr = TtaGetAttribute (el, attrType);
   if (attr == NULL)
     {
@@ -1415,7 +1427,7 @@ void SvgImageCreated (NotifyElement *event)
   el = event->element;
   doc = event->document;
   /* display the Image form and get the user feedback */
-  text = GetImageURL (doc, 1, FALSE);
+  text = GetImageURL (doc, 1, FALSE, FALSE);
   if (text == NULL || text[0] == EOS)
     {
       /* delete the empty image element */
@@ -1534,9 +1546,9 @@ void  SRCattrModified (NotifyAttribute *event)
 }
 
 /*----------------------------------------------------------------------
-  CreateImage
+  AddNewImage
   ----------------------------------------------------------------------*/
-void CreateImage (Document doc, View view)
+void AddNewImage (Document doc, View view, ThotBool isInput)
 {
   Element            firstSelEl, lastSelEl, parent, leaf;
   ElementType        elType;
@@ -1560,7 +1572,9 @@ void CreateImage (Document doc, View view)
       /* Get the type of the first selected element */
       elType = TtaGetElementType (firstSelEl);
       name = TtaGetSSchemaName (elType.ElSSchema);
-      if (!strcmp (name, "HTML") && elType.ElTypeNum == HTML_EL_IMG &&
+      if (!strcmp (name, "HTML") &&
+          ((!isInput && elType.ElTypeNum == HTML_EL_IMG) ||
+           (isInput && elType.ElTypeNum == HTML_EL_Image_Input)) &&
           c1 == 0 && i == 0 && lastSelEl == firstSelEl)
         /* the first selected element is an HTML <img>, it is fully selected
            and only this element is selected */
@@ -1662,7 +1676,10 @@ void CreateImage (Document doc, View view)
                   leaf = TtaGetFirstLeaf (parent);
                   TtaSelectElement (doc, leaf);
                 }
-              elType.ElTypeNum = HTML_EL_IMG;
+              if (isInput)
+                elType.ElTypeNum = HTML_EL_Image_Input;
+              else
+                elType.ElTypeNum = HTML_EL_IMG;
               /* do not check mandatory attributes */
               oldStructureChecking = TtaGetStructureChecking (doc);
               TtaSetStructureChecking (FALSE, doc);
@@ -1672,6 +1689,14 @@ void CreateImage (Document doc, View view)
         }
       ImgDocument = 0;
     }
+}
+
+/*----------------------------------------------------------------------
+  CreateImage
+  ----------------------------------------------------------------------*/
+void CreateImage (Document doc, View view)
+{
+  AddNewImage (doc, view, FALSE);
 }
 
 /*----------------------------------------------------------------------

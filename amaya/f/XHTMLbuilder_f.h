@@ -29,14 +29,6 @@ extern void CreateHTMLAttribute ( Element el,
                                   Document doc,
                                   Attribute *lastAttribute,
                                   Element *lastAttrElement );
-extern void HTMLTypeAttrValue ( char *val,
-                                Attribute lastAttribute,
-                                Element lastAttrElement,
-                                ParserData *context );
-extern void XhtmlTypeAttrValue ( char *val,
-                                 Attribute currentAttribute,
-                                 Element lastAttrElement,
-                                 ParserData *context );
 extern void CreateAttrWidthPercentPxl ( char *buffer,
                                         Element el,
                                         Document doc,
@@ -87,14 +79,6 @@ extern void CreateHTMLAttribute ( Element el,
                                     Document doc,
                                     Attribute *lastAttribute,
                                     Element *lastAttrElement );
-extern void HTMLTypeAttrValue ( char *val,
-                                  Attribute lastAttribute,
-                                  Element lastAttrElement,
-                                  ParserData *context );
-extern void XhtmlTypeAttrValue ( char *val,
-                                   Attribute currentAttribute,
-                                   Element lastAttrElement,
-                                   ParserData *context );
 extern void CreateAttrWidthPercentPxl ( char *buffer,
                                           Element el,
                                           Document doc,

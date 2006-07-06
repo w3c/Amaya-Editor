@@ -782,6 +782,14 @@ void PasteCommand ()
                at the end of a text element. Paste after the selected element */
             {
               pEl = firstSel;
+              if (pEl->ElLeafType == LtPicture)
+                {
+                  // select the parent IMG is needed
+                  pEl = pEl->ElParent;
+                  if (pEl == NULL ||
+                      !TypeHasException (ExcIsImg, pEl->ElTypeNumber, pEl->ElStructSchema))
+                    pEl = firstSel;
+                }
               within = FALSE;
               before = FALSE;
               pNextEl = NextElement (pEl);
@@ -790,6 +798,14 @@ void PasteCommand ()
             /* paste before element firstSel */
             {
               pEl = firstSel;
+              if (pEl->ElLeafType == LtPicture)
+                {
+                  // select the parent IMG is needed
+                  pEl = pEl->ElParent;
+                  if (pEl == NULL ||
+                      !TypeHasException (ExcIsImg, pEl->ElTypeNumber, pEl->ElStructSchema))
+                    pEl = firstSel;
+                }
               within = FALSE;
               before = TRUE;
               /* the element that will follow the pasted elements is the first

@@ -20,7 +20,23 @@ DEFAULT
 
 ELEMENTS
 
-   IMG:
+  IMG:
+	BEGIN
+	ElemNew.Post -> UpdateSRCattribute;
+	ElemTextModify.Post -> UpdateSRCattribute;
+	ElemSelect.Pre -> SelectPicture;
+	ElemDelete.Pre -> DeletePicture;
+	END;
+
+  Image_Input:
+	BEGIN
+	ElemNew.Post -> UpdateSRCattribute;
+	ElemTextModify.Post -> UpdateSRCattribute;
+	ElemSelect.Pre -> SelectPicture;
+	ElemDelete.Pre -> DeletePicture;
+	END;
+
+  Object:
 	BEGIN
 	ElemNew.Post -> UpdateSRCattribute;
 	ElemTextModify.Post -> UpdateSRCattribute;

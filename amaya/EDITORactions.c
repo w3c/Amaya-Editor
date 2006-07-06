@@ -3788,11 +3788,11 @@ void CreateImageInput (Document doc, View view)
   AttributeType       attrType;
   Attribute           attr;
   ElementType         elType;
-  Element             el, input;
+  Element             el;
   char               *value;
   int                 length;
   int                 firstchar, lastchar;
-  ThotBool            withinP;
+  ThotBool            withinP, newAttr;
 
   /* create the form if necessary */
   el = PrepareFormControl (doc, &withinP);
@@ -3805,52 +3805,53 @@ void CreateImageInput (Document doc, View view)
           /* create the paragraph element */
           elType.ElTypeNum = HTML_EL_Paragraph;
           TtaInsertElement (elType, doc);
+          TtaExtendUndoSequence (doc);
         }
-      CreateImage (doc, view);
-      TtaGiveFirstSelectedElement (doc, &input, &firstchar, &lastchar);
-      if (input)
+      AddNewImage (doc, view, TRUE);
+      TtaGiveFirstSelectedElement (doc, &el, &firstchar, &lastchar);
+      if (el)
         {
-          elType = TtaGetElementType (input);
+          elType = TtaGetElementType (el);
           if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
+            {
+              // select the enclosing input
+              el = TtaGetParent (el);
+              elType = TtaGetElementType (el);
+            }
+          if (elType.ElTypeNum == HTML_EL_Image_Input)
             /* the img element was created */
             {
+              TtaExtendUndoSequence (doc);
               /* use the ALT value to generate the attribute NAME */
+              attrType.AttrSSchema = elType.ElSSchema;
               attrType.AttrTypeNum = HTML_ATTR_ALT;
-              attr = TtaGetAttribute (input, attrType);
+              attr = TtaGetAttribute (el, attrType);
               if (attr)
                 {
                   length = TtaGetTextAttributeLength (attr) + 10;
                   value = (char *)TtaGetMemory (length);
                   TtaGiveTextAttributeValue (attr, value, &length);
                   attrType.AttrTypeNum = HTML_ATTR_NAME;
-                  attr = TtaNewAttribute (attrType);
-                  TtaAttachAttribute (input, attr, doc);
-                  TtaSetAttributeText (attr, value, input, doc);
+                  attr = TtaGetAttribute (el, attrType);
+                  if (attr == NULL)
+                    {
+                      newAttr = TRUE;
+                      attr = TtaNewAttribute (attrType);
+                      TtaAttachAttribute (el, attr, doc);
+                    }
+                  else
+                    newAttr = FALSE;
+                  TtaSetAttributeText (attr, value, el, doc);
+                  if (newAttr)
+                    TtaRegisterAttributeCreate (attr, el, doc);
+                  else
+                    TtaRegisterAttributeReplace (attr, el, doc);
                   TtaFreeMemory (value);
                   /* Check attribute NAME or ID in order to make sure that its
                      value unique in the document */
-                  MakeUniqueName (input, doc, TRUE, FALSE);
+                  MakeUniqueName (el, doc, TRUE, FALSE);
                 }
-              /* add a text before if needed */
-              elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-              el = input;
-              TtaPreviousSibling (&el);
-              if (el == NULL)
-                {
-                  el = TtaNewElement (doc, elType);
-                  TtaInsertSibling (el, input, TRUE, doc);
-                }
-            }
-          /* Insert a text element after */
-          el = input;
-          TtaNextSibling (&el);
-          if (el == NULL)
-            {
-              el = TtaNewElement (doc, elType);
-              TtaInsertSibling (el, input, FALSE, doc);
-              /* if it's not a HTML_EL_BUTTON_ or a SELECT
-                 select the following text element */
-              TtaSelectElement (doc, el);
+              TtaCloseUndoSequence (doc);
             }
         }
     }
@@ -3995,11 +3996,6 @@ void  CreateIFrame (Document document, View view)
 void  CreateObject (Document doc, View view)
 {
   ElementType         elType;
-  Element             el, image;
-  Attribute           attr;
-  AttributeType       attrType;
-  char               *text;
-  int                 length, firstchar, lastchar;
 
   if (HTMLelementAllowed (doc))
     {
@@ -4010,40 +4006,6 @@ void  CreateObject (Document doc, View view)
       TtaInsertElement (elType, doc);
       /* Check the Thot abstract tree against the structure schema. */
       TtaSetStructureChecking (TRUE, doc);
-
-      /* get the first selected element, i.e. the Object element */
-      TtaGiveFirstSelectedElement (doc, &el, &firstchar, &lastchar);
-      
-      elType = TtaGetElementType (el);
-      while (el != NULL &&
-             elType.ElTypeNum != HTML_EL_Object)
-        {
-          el = TtaGetParent (el);
-          elType = TtaGetElementType (el);
-        }
-      
-      if (el == NULL)
-        return;
-
-      /* copy SRC attribute of Object_Image into data attribute of Object */
-      image = TtaGetFirstChild (el);
-      attrType.AttrSSchema = elType.ElSSchema;
-      attrType.AttrTypeNum = HTML_ATTR_SRC;
-      attr = TtaGetAttribute (image, attrType);
-      if (attr)
-        {
-          length = TtaGetTextAttributeLength (attr);
-          if (length > 0)
-            {
-              text = (char *)TtaGetMemory (length + 1);
-              TtaGiveTextAttributeValue (attr, text, &length);
-              attrType.AttrTypeNum = HTML_ATTR_data;
-              attr = TtaNewAttribute (attrType);
-              TtaAttachAttribute (el, attr, doc);
-              TtaSetAttributeText (attr, text, el, doc);
-              TtaFreeMemory (text);
-            }
-        }
     }
 }
 
