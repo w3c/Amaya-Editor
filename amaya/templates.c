@@ -28,6 +28,8 @@ struct menuType
 #include "init_f.h"
 #include "wxdialogapi_f.h"
 #include "templatesStructure_f.h"
+#include "AHTURLTools_f.h"
+
 #endif /* TEMPLATES */
 
 /*----------------------------------------------------------------------
@@ -62,6 +64,19 @@ int CreateInstanceOfTemplate (Document doc, char *templatename, char *docname,
                               DocumentType docType)
 {
 #ifdef TEMPLATES
+
+  char *s;
+
+  if (!IsW3Path (docname) && TtaFileExist (docname))
+    {
+      s = (char *)TtaGetMemory (strlen (docname) +
+                                strlen (TtaGetMessage (AMAYA, AM_OVERWRITE_CHECK)) + 2);
+      sprintf (s, TtaGetMessage (AMAYA, AM_OVERWRITE_CHECK), docname);
+      InitConfirm (0, 0, s);
+      TtaFreeMemory (s);
+      if (!UserAnswer)
+        return 0;
+    }
 
 	LoadTemplate(doc, templatename, docname, docType, TRUE);
 #endif /* TEMPLATES */

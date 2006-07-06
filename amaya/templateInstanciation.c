@@ -24,49 +24,63 @@ typedef struct _InstanciationCtxt
 void ReallyInstanciateTemplate (char *instancePath, char *templatePath, int doc, DocumentType docType)
 {
 #ifdef TEMPLATES
+  ThotBool alreadyViewing = FALSE;
+  int alreadyOnDoc = 0;
+  
 	//We copy the templatePath so the context can be freed later.
 	InstanciateTemplate(TtaStrdup(templatePath), doc);
+
 
 #ifdef AMAYA_DEBUG
 
 	char localname[MAX_LENGTH];
 	FILE *file;
-
-    strcpy (localname, TempFileDirectory);
-    strcat (localname, DIR_STR);
-    strcat (localname, "template.debug");
-    file = TtaWriteOpen (localname);
-		
+  
+  strcpy (localname, TempFileDirectory);
+  strcat (localname, DIR_STR);
+  strcat (localname, "template.debug");
+  file = TtaWriteOpen (localname);
+  
 	TtaListAbstractTree (TtaGetRootElement(doc), file);
-
+  
 	TtaWriteClose (file);
-
+  
 #endif /* AMAYA_DEBUG */
-
+  
+  while(alreadyOnDoc<DocumentTableLength-1 && !alreadyViewing)
+    {
+      alreadyOnDoc++;
+      if(DocumentURLs[alreadyOnDoc]!=NULL)
+        alreadyViewing = !strcmp(DocumentURLs[alreadyOnDoc],instancePath);
+    }
+  
 	switch (docType)
-	{
-	case docSVG :
-		TtaExportDocumentWithNewLineNumbers (doc, instancePath, "SVGT");
-		break;
-	case docMath :
-		TtaExportDocumentWithNewLineNumbers (doc, instancePath, "MathMLT");
-		break;
-	case docHTML :
-		if(TtaGetDocumentProfile(doc)==L_Xhtml11)
-			TtaExportDocumentWithNewLineNumbers (doc, instancePath, "HTMLT11");
-		else
-			TtaExportDocumentWithNewLineNumbers (doc, instancePath, "HTMLTX");
-		break;
-	default :
-		TtaExportDocumentWithNewLineNumbers (doc, instancePath, NULL);
-		break;
-	}
+    {
+    case docSVG :
+      TtaExportDocumentWithNewLineNumbers (doc, instancePath, "SVGT");
+      break;
+    case docMath :
+      TtaExportDocumentWithNewLineNumbers (doc, instancePath, "MathMLT");
+      break;
+    case docHTML :
+      if(TtaGetDocumentProfile(doc)==L_Xhtml11)
+        TtaExportDocumentWithNewLineNumbers (doc, instancePath, "HTMLT11");
+      else
+        TtaExportDocumentWithNewLineNumbers (doc, instancePath, "HTMLTX");
+      break;
+    default :
+      TtaExportDocumentWithNewLineNumbers (doc, instancePath, NULL);
+      break;
+    }
+  
+  if(!alreadyViewing) //Open the instance
+    {      
+      TtaExtractName (instancePath, DirectoryName, DocumentName);
+      CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
+    }
+  else //Reload on the existing view
+    Reload(alreadyOnDoc, 0);
 
-  //FreeDocumentResource(doc);
-
-	//Open the instance
-	TtaExtractName (instancePath, DirectoryName, DocumentName);
-	CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
 
 #endif /* TEMPLATES */
 }
