@@ -428,10 +428,10 @@ static void GL_MakeTextureSize (ThotPictInfo *img, int GL_w, int GL_h)
 
 
 /*----------------------------------------------------------------------
-  GL_TextureBind : Put Texture in video card's Memory at
-  a power of 2 size for height and width 
+  GL_TextureBind: Put Texture in video card's Memory at a power of 2
+  size for height and width 
   ----------------------------------------------------------------------*/
-static void GL_TextureBind (ThotPictInfo *img, ThotBool IsPixmap)
+static void GL_TextureBind (ThotPictInfo *img, ThotBool isPixmap)
 {
   unsigned int  p2_w, p2_h;
   GLfloat       GL_w, GL_h;   
@@ -440,7 +440,7 @@ static void GL_TextureBind (ThotPictInfo *img, ThotBool IsPixmap)
   /* Put texture in 3d card memory */
   if (!glIsTexture (img->TextureBind) &&
       img->PicWidth && img->PicHeight &&
-      (img->PicPixmap || !IsPixmap))
+      (img->PicPixmap || !isPixmap))
     {
       /* Another way is to split texture in 256x256 
          pieces and render them on different quads
@@ -463,8 +463,9 @@ static void GL_TextureBind (ThotPictInfo *img, ThotBool IsPixmap)
       glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP); 
       /* does current Color modify texture no = GL_REPLACE, 
          else => GL_MODULATE, GL_DECAL, ou GL_BLEND */
+      //glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
       glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-      if (IsPixmap)
+      if (isPixmap)
         {
 #ifndef POWER2TEXSUBIMAGE
           /* create a texture whose sizes are power of 2*/
@@ -508,7 +509,7 @@ static void GL_TextureBind (ThotPictInfo *img, ThotBool IsPixmap)
                img->TexCoordW,
                img->TexCoordH,
                img->TextureBind,
-               IsPixmap ? "yes" : "no" );
+               isPixmap ? "yes" : "no" );
 #endif /* _TRACE_GL_PICTURE */
     }  
 }
@@ -1301,26 +1302,51 @@ static void SetPictureClipping (int *picWArea, int *picHArea, int wFrame,
 /*----------------------------------------------------------------------
   ComputeBgPosition returns the shift of the image in the box
   according to the unit.
-  The parameter d_box gives the box dimension
-  The parameter d_img gives the image dimension
+  Parameters org_box, d_box define the initial painted box area
+  Parameter org_img, d_img define the initial displayed image area
   Parameters value and unit give the position rule
+  Return:
+   org_box, d_box define the painted box area
+   org_img, d_img define the displayed image area
   ----------------------------------------------------------------------*/
-static int ComputeBgPosition (int d_box, int d_img, int val, TypeUnit unit)
+static void ComputeBgPosition (int val, TypeUnit unit, int *org_box, int * d_box,
+                               int *org_img, int *d_img)
 {
   int s_box, s_img;
 
   if (val == 0)
-    return 0;
+    // no change
+    return;
   else if (unit == UnPercent)
     {
-      s_box = PixelValue (val, UnPercent, (PtrAbstractBox) (d_box), 0);
-      s_img = PixelValue (val, UnPercent, (PtrAbstractBox) (d_img), 0);
-      return s_box - s_img;
+      s_box = PixelValue (val, UnPercent, (PtrAbstractBox) (*d_box), 0);
+      s_img = PixelValue (val, UnPercent, (PtrAbstractBox) (*d_img), 0);
+      if (s_box >= s_img)
+        {
+          // shift in the box
+          s_box -= s_img;
+          *org_box = s_box;
+          *d_box -= s_box;
+        }
+      else
+        {
+          // shift in the image
+          s_img -= s_box;
+          *org_img = s_img;
+          *d_img -= s_img;
+        }
+    }
+  else if (val >= 0)
+    {
+      s_box = PixelValue (val, unit, NULL, 0);
+      *org_box = s_box;
+      *d_box -= s_box;
     }
   else
     {
-      s_img = PixelValue (val, unit, NULL, 0);
-      return s_img;
+      s_img = -PixelValue (val, unit, NULL, 0);
+      *org_img = s_img;
+      *d_img -= s_img;
     }
 }
 
@@ -1460,6 +1486,11 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
       y = box->BxYOrg;
       w = box->BxW + box->BxLPadding + box->BxRPadding;
       h = box->BxH + box->BxTPadding + box->BxBPadding;
+      // ix,iy,iw,ih define the first (or unique) image area to be painted
+      ix = iy = 0;
+      iw = imageDesc->PicWidth;
+      ih = imageDesc->PicHeight;
+      picXOrg = picYOrg = 0;
       if (pAb &&
           !TypeHasException (ExcSetWindowBackground, pAb->AbElement->ElTypeNumber,
                              pAb->AbElement->ElStructSchema))
@@ -1475,39 +1506,16 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
 
       // position of the background image in the box
       if (imageDesc->PicPosX)
-        picXOrg = ComputeBgPosition (w, imageDesc->PicWidth,
-                                     imageDesc->PicPosX, imageDesc->PicXUnit);
-      else
-        picXOrg = 0;
-      if (imageDesc->PicPosY)
-        picYOrg = ComputeBgPosition (h, imageDesc->PicHeight,
-                                     imageDesc->PicPosY, imageDesc->PicYUnit);
-      else
-        picYOrg = 0;
-
-      // ix,iy,iw,ih define the first (or unique) image area to be painted
-      ix = iy = 0;
-      iw = imageDesc->PicWidth;
-      ih = imageDesc->PicHeight;
-      if (picXOrg < 0)
         {
-          ix = - picXOrg;
-          iw -= ix;
-        }
-      else
-        {
+          ComputeBgPosition (imageDesc->PicPosX, imageDesc->PicXUnit,
+                             &picXOrg, &w, &ix, &iw);
           x += picXOrg;
-          w -= picXOrg;
         }
-      if (picYOrg < 0)
+      if (imageDesc->PicPosY)
         {
-          iy = - picYOrg;
-          ih -= iy;
-        }
-      else
-        {
+          ComputeBgPosition (imageDesc->PicPosY, imageDesc->PicYUnit,
+                             &picYOrg, &h, &iy, &ih);
           y += picYOrg;
-          h -= picYOrg;
         }
 
       // Take into account the clipping area
@@ -1518,7 +1526,7 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
       // the area to be painted in the window
       if (clipX > x)
         {
-          // only a part of the box is displayed
+          // only a part of the box area is displayed
           dx = clipX - x;
           w = w - dx;
           x = clipX;
@@ -1543,7 +1551,7 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
         }
       if (clipY > y)
         {
-          // only a part of the box is displayed
+          // only a part of the box area is displayed
           dy = clipY - y;
           h = h - dy;
           y = clipY;
@@ -2800,8 +2808,7 @@ void LoadPicture (int frame, PtrBox box, ThotPictInfo *imageDesc)
           imageDesc->PicHArea = h;
         }
     }
-  /* Gif and Png handles transparency 
-     so picture format is RGBA, 
+  /* Gif and Png handles transparency so picture format is RGBA, 
      all others are RGB*/
   if (typeImage != gif_type && typeImage != png_type)
     imageDesc->RGBA = FALSE;
@@ -2809,7 +2816,6 @@ void LoadPicture (int frame, PtrBox box, ThotPictInfo *imageDesc)
     imageDesc->RGBA = TRUE;
 
   if (strcmp (imageDesc->PicFileName, LostPicturePath))
-    /* avoid to load the lost picture */
     GL_TextureBind (imageDesc, TRUE);
 #ifdef WITH_CACHE
   /* desactive the cache of images */
@@ -2883,7 +2889,6 @@ void LoadPicture (int frame, PtrBox box, ThotPictInfo *imageDesc)
     }
   if (imageDesc->PicFileName == NULL || imageDesc->PicFileName[0] == EOS)
     return;
-
   GetPictureFileName (imageDesc->PicFileName, fileName);
   zoom = 0/*ViewFrameTable[frame - 1].FrMagnification*/;
   typeImage = imageDesc->PicType;
