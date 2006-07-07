@@ -1017,8 +1017,8 @@ void DrawRectangle (int frame, int thick, int style, int x, int y, int width,
                         (float) width, (float) height);
     }
   else if (pattern == 2)
-    GL_DrawRectangle (bg, (float) x + th, (float)y + th, 
-                      (float)width - th, (float)height - th);
+    GL_DrawRectangle (bg, (float) (x + th), (float)(y + th), 
+                      (float)(width - th), (float)(height - th));
 
   /* Draw the border */
   if (thick > 0 && fg >= 0)
@@ -1028,7 +1028,7 @@ void DrawRectangle (int frame, int thick, int style, int x, int y, int width,
       if (height > thick)
         height = height - thick;
       InitDrawing (style, thick, fg); 
-      GL_DrawEmptyRectangle (fg, (float) x + th, (float) y + th,
+      GL_DrawEmptyRectangle (fg, (float) (x + th), (float) (y + th),
                              (float) width, (float) height,
                              (float) thick);
     }
