@@ -47,63 +47,61 @@
 </div>
 
 <div class="field">
-<h1 id="Education">Education and training</h1>
-<t:repeat  minOccurs="1">
-  <t:use types="dl">
-    <dl>
-      <dt class="date">2004 - 2005</dt>
+  <h1 id="Education">Education and training</h1>
+  <dl>
+    <t:repeat  minOccurs="1">
+      <t:component name="dt-dd">
+        <dt class="date"><t:use types="string">2004 - 2005</t:use></dt>
         <dd class="content"><strong class="label">Activity
           description</strong><span class="comment">Comments</span><span
           class="location">Location..</span></dd>
-    </dl>
-  </t:use>
-</t:repeat>
+      </t:component>
+    </t:repeat>
+  </dl>
 </div>
 
 <div class="field">
-<h1 id="Employment">Employment and placements</h1>
-<t:repeat  minOccurs="1">
-  <t:use types="dl">
-    <dl>
-      <dt class="date">June-July 2004</dt>
+  <h1 id="Employment">Employment and placements</h1>
+  <dl>
+    <t:repeat  minOccurs="1">
+      <t:component types="dl">
+        <dt class="date"><t:use types="string">June-July 2004</t:use></dt>
         <dd class="content"><strong class="label">Description</strong><span
           class="location">Location</span><a href="http://url">Associated
           URL</a></dd>
-    </dl>
-  </t:use>
-</t:repeat>
+      </t:component>
+    </t:repeat>
+  </dl>
 </div>
 
 <div class="field">
-<h1 id="Languages">Languages</h1>
-<t:repeat  minOccurs="1">
-  <t:use types="dl">
-    <dl>
-      <dt>English</dt>
-        <dd>Level's description</dd>
-    </dl>
-  </t:use>
-</t:repeat>
+  <h1 id="Languages">Languages</h1>
+  <dl>
+    <t:repeat  minOccurs="1">
+      <t:component name="dt-dd">
+        <dt><t:use types="string">English</t:use></dt>
+        <dd><t:use types="anyElement">Level's description</t:use></dd>
+      </t:component>
+    </t:repeat>
+  </dl>
 </div>
 
 <div class="field">
-<h1 id="Skill">Skills</h1>
-<t:repeat  minOccurs="1">
-  <t:use types="p">
-
-    <p>Description of knowlegdes</p>
-  </t:use>
-</t:repeat>
+  <h1 id="Skill">Skills</h1>
+  <t:repeat  minOccurs="1">
+    <t:use types="p">
+      <p>Description of knowlegdes</p>
+    </t:use>
+  </t:repeat>
 </div>
 
 <div class="field">
-<h1 id="Interest">Interests</h1>
-<t:repeat  minOccurs="1">
-  <t:use types="p">
-
-    <p>Other informations</p>
-  </t:use>
-</t:repeat>
+  <h1 id="Interest">Interests</h1>
+  <t:repeat  minOccurs="1">
+    <t:use types="p">
+      <p>Other informations</p>
+    </t:use>
+  </t:repeat>
 </div>
 </div>
 <!-- Fin du Corps -->
@@ -117,8 +115,7 @@ height="31" width="88" /></a> <a href="http://www.w3.org/Amaya"><img
 src="http://www.w3.org/Amaya/Icons/w3c-amaya.gif" alt="W3C-Amaya" height="31"
 width="88" /></a></p>
 <address>
-  <!--$date=-->2006-05-02<!--$-->
-
+  <!--$date=-->2006-07-07<!--$-->
 </address>
 </div>
 </body>

@@ -5860,6 +5860,32 @@ void CheckBlocksInCharElem (Document doc)
   LastElemToBeChecked = NULL;
 }
 
+/*----------------------------------------------------------------------
+  ParentOfType
+  Return the parent element of element el if it is an HTML element of type
+  typeNum. Ignore elements from the Templates namespace.
+  ----------------------------------------------------------------------*/
+static Element ParentOfType (Element el, int typeNum)
+{
+  ElementType	elType;
+  Element     parent;
+
+  parent = TtaGetParent (el);
+  elType = TtaGetElementType (parent);
+#ifdef TEMPLATES
+  /* if the parent is a Template element, skip it */
+  while (strcmp(TtaGetSSchemaName(elType.ElSSchema),"Template") == 0)
+    {
+      parent = TtaGetParent (parent);
+      elType = TtaGetElementType (parent);
+    }
+#endif /* TEMPLATES */
+  if (elType.ElTypeNum != typeNum)
+    parent = NULL;
+  else if (strcmp(TtaGetSSchemaName(elType.ElSSchema),"HTML") != 0)
+    parent = NULL;
+  return parent;
+}
 
 /*----------------------------------------------------------------------
   CheckAbstractTree
@@ -6176,17 +6202,8 @@ void CheckAbstractTree (Document doc)
                          elType.ElTypeNum == HTML_EL_Invalid_element ||
                          elType.ElTypeNum == HTML_EL_Comment_ ||
                          elType.ElTypeNum == HTML_EL_XMLPI);
-                  termList = TtaGetParent (firstTerm);
-                  elType = TtaGetElementType (termList);
-#ifdef TEMPLATES
-                  /* if its parent is a Template element, skip it */
-                  while (strcmp(TtaGetSSchemaName(elType.ElSSchema),"Template") == 0)
-                    {
-                      termList = TtaGetParent (termList);
-                      elType = TtaGetElementType (termList);
-                    }
-#endif /* TEMPLATES */
-                  if (elType.ElTypeNum != HTML_EL_Term_List)
+                  termList = ParentOfType (firstTerm, HTML_EL_Term_List);
+                  if (!termList)
                     {
                       /* create a Term_List element before the first
                          Term element */
@@ -6214,9 +6231,7 @@ void CheckAbstractTree (Document doc)
                           while (nextEl != NULL && child != lastTerm);
                         }
                     }
-                  parent = TtaGetParent (termList);
-                  elType = TtaGetElementType (parent);
-                  if (elType.ElTypeNum != HTML_EL_Definition_Item)
+                  if (!ParentOfType (termList, HTML_EL_Definition_Item))
                     {
                       /* Create a Definition_Item element surrounding */
                       /* the Term_List element */
@@ -6249,9 +6264,7 @@ void CheckAbstractTree (Document doc)
                                  elType.ElTypeNum == HTML_EL_Invalid_element ||
                                  elType.ElTypeNum == HTML_EL_Comment_ ||
                                  elType.ElTypeNum == HTML_EL_XMLPI);
-                          defList = TtaGetParent (firstDef);
-                          elType = TtaGetElementType (defList);
-                          if (elType.ElTypeNum != HTML_EL_Definitions)
+                          if (!ParentOfType (firstDef, HTML_EL_Definitions))
                             {
                               /* create a Definitions element after the
                                  Term_List element */
@@ -6303,9 +6316,7 @@ void CheckAbstractTree (Document doc)
               if (el != NULL)
                 /* an element Definition has been found */
                 {
-                  defList = TtaGetParent (el);
-                  elType = TtaGetElementType (defList);
-                  if (elType.ElTypeNum != HTML_EL_Definitions)
+                  if (!ParentOfType (el, HTML_EL_Definitions))
                     /* this Definition is not within a Definitions
                        element */
                     {
@@ -6332,9 +6343,7 @@ void CheckAbstractTree (Document doc)
                       TtaInsertSibling (defList, firstDef, TRUE, doc);
                       TtaRemoveTree (firstDef, doc);
                       TtaInsertFirstChild (&firstDef, defList, doc);
-                      parent = TtaGetParent (defList);
-                      elType = TtaGetElementType (parent);
-                      if (elType.ElTypeNum != HTML_EL_Definition_Item)
+                      if (!ParentOfType (defList, HTML_EL_Definition_Item))
                         /* this Definition is not within a Definition_Item
                            element */
                         {
@@ -6381,10 +6390,8 @@ void CheckAbstractTree (Document doc)
               if (el != NULL)
                 /* an element Definition_Item has been found */
                 {
-                  parent = TtaGetParent (el);
-                  elType = TtaGetElementType (parent);
-                  if (elType.ElTypeNum != HTML_EL_Definition_List)
-                    /* this Definition_Item is not within a Definition_List*/
+                  if (!ParentOfType (el, HTML_EL_Definition_List))
+                  /* this Definition_Item is not a child of a Definition_List*/
                     {
                       /* search all immediate Definition_Item siblings */
                       firstEntry = el;
@@ -6545,6 +6552,15 @@ void CheckAbstractTree (Document doc)
             /* a MAP element has been found. */
             {
               parent = TtaGetParent(el);
+#ifdef TEMPLATES
+              /* if its parent is a Template element, skip it */
+              elType = TtaGetElementType (parent);
+              while (strcmp(TtaGetSSchemaName(elType.ElSSchema),"Template") == 0)
+                {
+                  parent = TtaGetParent (parent);
+                  elType = TtaGetElementType (parent);
+                }
+#endif /* TEMPLATES */
               if (IsBlockElement (parent))
                 /* its parent is a block element */
                 {
