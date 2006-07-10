@@ -68,6 +68,8 @@
                               <item>pt (Portuguese)</item>
                               <item>ru (Russian)</item>
                               <item>tr (Turkish)</item>
+                              <item>zh-cn (Simplified Chinese)</item>
+                              <item>zh-tw (Traditional Chinese)</item>
                             </content>
                           </object>
                           <flag>wxLEFT|wxALIGN_CENTRE_VERTICAL</flag>

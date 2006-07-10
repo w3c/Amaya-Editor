@@ -766,7 +766,7 @@ View TtaGetViewFromName (Document document, char *viewName)
           if (dView.DvSSchema != NULL && dView.DvPSchemaView != 0)
             {
               pPS = PresentationSchema (dView.DvSSchema, pDoc);
-              if (strcmp (viewName, pPS->PsView[dView.DvPSchemaView - 1]) == 0)
+              if (pPS && !strcmp (viewName, pPS->PsView[dView.DvPSchemaView - 1]))
                 view = aView;
             }
         }

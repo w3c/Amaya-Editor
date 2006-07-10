@@ -20,7 +20,7 @@
 
 #include "typebase.h"
 
-#define MAX_LANGUAGES   20	/* Maximum number of languages handled
+#define MAX_LANGUAGES   22	/* Maximum number of languages handled
 				   simultaneously */
 #define MAX_DICTS       2	/* Maximum number of dictionaries related to a
 				   given language */

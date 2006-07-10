@@ -199,6 +199,9 @@ char *TtaGetLanguageNameFromCode (char *code)
   int                 i;
 
   Langbuffer[0] = EOS;
+  if (!strcmp (code, "cn") || !strcmp (code, "tw"))
+    // a patch to support traditional and simplified chinese
+    strcpy (code, "zh");
   for (i = 0; Langbuffer[0] == EOS && ISO639table[i].code[0] != EOS; i++)
     {
       if (!strncasecmp (code, (const char *)ISO639table[i].code, 2))

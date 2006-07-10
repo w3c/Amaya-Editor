@@ -284,6 +284,10 @@ void PreferenceDlgWX::SetupDialog_General( const Prop_General & prop )
     value = TtaConvMessageToWX(prop.DialogueLang)+_T(" (Russian)");
   else if (!strcmp (prop.DialogueLang, "tr"))
     value = TtaConvMessageToWX(prop.DialogueLang)+_T(" (Turkish)");
+  else if (!strcmp (prop.DialogueLang, "cn"))
+    value = _T("zh-")+TtaConvMessageToWX(prop.DialogueLang)+_T(" (Simplified Chinese)");
+  else if (!strcmp (prop.DialogueLang, "tw"))
+    value = _T("zh-")+TtaConvMessageToWX(prop.DialogueLang)+_T(" (Traditional Chinese)");
   else
     value = TtaConvMessageToWX(prop.DialogueLang);
   XRCCTRL(*this, "wxID_CHOICE_LG", wxChoice)->SetStringSelection( value );
@@ -318,7 +322,12 @@ Prop_General PreferenceDlgWX::GetValueDialog_General()
   prop.AccesskeyMod = XRCCTRL(*this, "wxID_RADIO_QUICKAXX", wxRadioBox)->GetSelection();
 
   value = XRCCTRL(*this, "wxID_CHOICE_LG", wxChoice)->GetStringSelection();
-  strncpy( prop.DialogueLang, (const char*)value.mb_str(wxConvUTF8), 2 );
+  char buffer[512];
+  strcpy(buffer, (const char*)value.mb_str(wxConvUTF8) );
+  if (!strncmp (buffer, "zh", 2))
+    strncpy( prop.DialogueLang, &buffer[3], 2 );
+  else
+    strncpy( prop.DialogueLang, buffer, 2 );
   prop.DialogueLang[2] = EOS;
   return prop;
 }
