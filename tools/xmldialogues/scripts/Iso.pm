@@ -42,6 +42,7 @@ bn Bengali/Bangla
 bo Tibetan
 br Breton
 ca Catalan
+cn Chinese_simplified
 co Corsican
 cs Czech
 cy Welsh
@@ -150,7 +151,7 @@ to Tonga
 tr Turkish
 ts Tsonga
 tt Tatar
-tw Twi
+tw Chinese_Taiwan
 uk Ukrainian
 ur Urdu
 uz Uzbek
