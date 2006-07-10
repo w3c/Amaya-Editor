@@ -658,7 +658,7 @@ static unsigned char *ReadPngToData (char *datafile, int *w, int *h,
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-ThotDrawable PngCreate (char *fn, ThotPictInfo *imageDesc, int *xif, int *yif,
+ThotDrawable PngCreate (char *fn, ThotPictInfo *imageDesc, int *b_w, int *b_h,
 		    int *wif, int *hif, int bgColor, int *width,
 		    int *height, int zoom)
 {
@@ -693,31 +693,31 @@ ThotDrawable PngCreate (char *fn, ThotPictInfo *imageDesc, int *xif, int *yif,
   if (buffer == NULL) 
      return ((ThotDrawable) NULL);
 
-  if (zoom != 0 && *xif == 0 && *yif == 0)
+  if (zoom != 0 && *b_w == 0 && *b_h == 0)
     {
       /* take zoom into account */
-      *xif = PixelValue (w, UnPixel, NULL, zoom);
-      *yif = PixelValue (h, UnPixel, NULL, zoom);
+      *b_w = PixelValue (w, UnPixel, NULL, zoom);
+      *b_h = PixelValue (h, UnPixel, NULL, zoom);
     }
   else
     {
-      if (*xif == 0 && *yif != 0)
-	*xif = PixelValue (w, UnPixel, NULL, zoom);
-      if (*xif != 0 && *yif == 0)
-	*yif = PixelValue (h, UnPixel, NULL, zoom);
+      if (*b_w == 0 && *b_h != 0)
+	*b_w = PixelValue (w, UnPixel, NULL, zoom);
+      if (*b_w != 0 && *b_h == 0)
+	*b_h = PixelValue (h, UnPixel, NULL, zoom);
     }
 
 #ifndef _WIN_PRINT
 #ifndef _GL
-  if ((*xif != 0 && *yif != 0) && (w != *xif || h != *yif))
+  if ((*b_w != 0 && *b_h != 0) && (w != *b_w || h != *b_h))
     {
-      /* xif and yif contain width and height of the box */
-      buffer2 = ZoomPicture (buffer, w , h, *xif, *yif, bperpix);
+      /* b_w and b_h contain width and height of the box */
+      buffer2 = ZoomPicture (buffer, w , h, *b_w, *b_h, bperpix);
       TtaFreeMemory (buffer);
       buffer = buffer2;
       buffer2 = NULL;
-      w = *xif;
-      h = *yif;
+      w = *b_w;
+      h = *b_h;
     }
 #endif /*_GL*/
 #endif /* _WIN_PRINT */
@@ -771,8 +771,8 @@ ThotDrawable PngCreate (char *fn, ThotPictInfo *imageDesc, int *xif, int *yif,
     { 
       *wif = w;
       *hif = h;      
-      *xif = 0;
-      *yif = 0;
+      *b_w = 0;
+      *b_h = 0;
     }
   return (ThotDrawable) pixmap;
 }
@@ -780,7 +780,7 @@ ThotDrawable PngCreate (char *fn, ThotPictInfo *imageDesc, int *xif, int *yif,
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void PngPrint (char *fn, PictureScaling pres, int xif, int yif, int wif,
+void PngPrint (char *fn, PictureScaling pres, int b_w, int b_h, int wif,
 	       int hif, FILE *fd, int bgColor)
 {
 #ifdef _GTK
@@ -794,7 +794,7 @@ void PngPrint (char *fn, PictureScaling pres, int xif, int yif, int wif,
   data = ReadPngToData (fn, &picW, &picH, &ncolors, &cpp, &colrs, &transparent,
 			&withAlpha, &grayScale);
   if (data)
-    DataToPrint (data, pres, xif, yif, wif, hif, picW, picH, fd, ncolors,
+    DataToPrint (data, pres, b_w, b_h, wif, hif, picW, picH, fd, ncolors,
 		 transparent, bgColor, colrs, withAlpha, grayScale);
   TtaFreeMemory (data);
   /* free the table of colors */

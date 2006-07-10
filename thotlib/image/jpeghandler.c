@@ -256,7 +256,7 @@ void JpegPrintErrorMsg (int ErrorNumber)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-ThotDrawable JpegCreate (char *fn, ThotPictInfo *imageDesc, int *xif, int *yif,
+ThotDrawable JpegCreate (char *fn, ThotPictInfo *imageDesc, int *b_w, int *b_h,
 		     int *wif, int *hif, int bgColor, int *width,
 		     int *height, int zoom)
 {
@@ -281,31 +281,31 @@ ThotDrawable JpegCreate (char *fn, ThotPictInfo *imageDesc, int *xif, int *yif,
       return ((ThotDrawable) NULL);
     }
 
-  if (zoom != 0 && *xif == 0 && *yif == 0)
+  if (zoom != 0 && *b_w == 0 && *b_h == 0)
     {
       /* take zoom into account */
-      *xif = PixelValue (w, UnPixel, NULL, zoom);
-      *yif = PixelValue (h, UnPixel, NULL, zoom);
+      *b_w = PixelValue (w, UnPixel, NULL, zoom);
+      *b_h = PixelValue (h, UnPixel, NULL, zoom);
     }
   else
     {
-      if (*xif == 0 && *yif != 0)
-	*xif = PixelValue (w, UnPixel, NULL, zoom);
-      if (*xif != 0 && *yif == 0)
-	*yif = PixelValue (h, UnPixel, NULL, zoom);
+      if (*b_w == 0 && *b_h != 0)
+	*b_w = PixelValue (w, UnPixel, NULL, zoom);
+      if (*b_w != 0 && *b_h == 0)
+	*b_h = PixelValue (h, UnPixel, NULL, zoom);
     }
 
 #ifndef _WIN_PRINT
 #ifndef _GL
-  if ((*xif != 0 && *yif != 0) && (w != *xif || h != *yif))
+  if ((*b_w != 0 && *b_h != 0) && (w != *b_w || h != *b_h))
     {   
-      /* xif and yif contain width and height of the box */
-      data2 = ZoomPicture (data, w , h, *xif, *yif, 1);
+      /* b_w and b_h contain width and height of the box */
+      data2 = ZoomPicture (data, w , h, *b_w, *b_h, 1);
       TtaFreeMemory (data);
       data = data2;
       data2 = NULL;
-      w = *xif;
-      h = *yif;
+      w = *b_w;
+      h = *b_h;
     }
 #endif /*_GL*/
 #endif /* _WIN_PRINT */
@@ -325,8 +325,8 @@ ThotDrawable JpegCreate (char *fn, ThotPictInfo *imageDesc, int *xif, int *yif,
     {
       *wif = w;
       *hif = h;
-      *xif = 0;
-      *yif = 0;
+      *b_w = 0;
+      *b_h = 0;
     }
   return ((ThotDrawable) pixmap);
 }
@@ -335,7 +335,7 @@ ThotDrawable JpegCreate (char *fn, ThotPictInfo *imageDesc, int *xif, int *yif,
 /*----------------------------------------------------------------------
    JpegPrint produces postscript from a jpeg picture file
   ----------------------------------------------------------------------*/
-void JpegPrint (char *fn, PictureScaling pres, int xif, int yif, int wif,
+void JpegPrint (char *fn, PictureScaling pres, int b_w, int b_h, int wif,
 		int hif, FILE *fd, int bgColor)
 {
 #ifdef _GTK
@@ -345,7 +345,7 @@ void JpegPrint (char *fn, PictureScaling pres, int xif, int yif, int wif,
 
   data = ReadJpegToData (fn, &picW, &picH, colrs);
   if (data)
-    DataToPrint (data, pres, xif, yif, wif, hif, picW, picH, fd, 100, -1,
+    DataToPrint (data, pres, b_w, b_h, wif, hif, picW, picH, fd, 100, -1,
 		 bgColor, colrs, FALSE, FALSE);
   TtaFreeMemory (data);
 #endif /* _GTK */
