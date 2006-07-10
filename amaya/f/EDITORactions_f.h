@@ -75,6 +75,8 @@ extern void CreateDate ( Document doc,
 extern void CreateScript ( Document doc,
                            View view );
 extern ThotBool HTMLelementAllowed ( Document doc );
+extern void CreateHTMLelement ( int typeNum,
+                                Document document );
 extern void CreateParagraph ( Document document,
                               View view );
 extern void CreateHeading1 ( Document document,
@@ -196,8 +198,6 @@ extern void CreateDivision ( Document document,
 extern void CreateNOSCRIPT ( Document document,
                              View view );
 extern void CreateIFrame ( Document document,
-                           View view );
-extern void CreateObject ( Document doc,
                            View view );
 extern void CreateParameter ( Document document,
                               View view );
@@ -344,6 +344,8 @@ extern void CreateDate ( Document doc,
 extern void CreateScript ( Document doc,
                              View view );
 extern ThotBool HTMLelementAllowed ( Document doc );
+extern void CreateHTMLelement ( int typeNum,
+                                  Document document );
 extern void CreateParagraph ( Document document,
                                 View view );
 extern void CreateHeading1 ( Document document,
@@ -465,8 +467,6 @@ extern void CreateDivision ( Document document,
 extern void CreateNOSCRIPT ( Document document,
                                View view );
 extern void CreateIFrame ( Document document,
-                             View view );
-extern void CreateObject ( Document doc,
                              View view );
 extern void CreateParameter ( Document document,
                                 View view );

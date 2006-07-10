@@ -1694,7 +1694,7 @@ ThotBool HTMLelementAllowed (Document doc)
 /*----------------------------------------------------------------------
   CreateHTMLelement
   ----------------------------------------------------------------------*/
-static void CreateHTMLelement (int typeNum, Document document)
+void CreateHTMLelement (int typeNum, Document document)
 {
   ElementType         elType;
 
@@ -3988,25 +3988,6 @@ void  CreateIFrame (Document document, View view)
       TtaRegisterElementCreate (child, document);
       TtaCloseUndoSequence (document);
   }
-}
-
-/*----------------------------------------------------------------------
-  CreateObject
-  ----------------------------------------------------------------------*/
-void  CreateObject (Document doc, View view)
-{
-  ElementType         elType;
-
-  if (HTMLelementAllowed (doc))
-    {
-      /* Don't check mandatory attributes */
-      TtaSetStructureChecking (FALSE, doc);
-      elType.ElSSchema = TtaGetSSchema ("HTML", doc);
-      elType.ElTypeNum = HTML_EL_Object;
-      TtaInsertElement (elType, doc);
-      /* Check the Thot abstract tree against the structure schema. */
-      TtaSetStructureChecking (TRUE, doc);
-    }
 }
 
 /*----------------------------------------------------------------------

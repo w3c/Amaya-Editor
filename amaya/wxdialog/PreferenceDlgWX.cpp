@@ -236,7 +236,13 @@ void PreferenceDlgWX::SetupLabelDialog_General()
 
   // fill the combobox with url list
   XRCCTRL(*this, "wxID_COMBOBOX_HOMEPAGE", wxComboBox)->Append(m_UrlList);
+#if defined(_WINDOW) || defined(_MACOS)
+  // select the string
   XRCCTRL(*this, "wxID_COMBOBOX_HOMEPAGE", wxComboBox)->SetSelection(0, -1);
+#else /* _WINDOW || _MACOS */
+  // set te cursor to the end
+  XRCCTRL(*this, "wxID_COMBOBOX_HOMEPAGE", wxComboBox)->SetInsertionPointEnd();
+#endif /* _WINDOW || _MACOS */
 }
 
 /*----------------------------------------------------------------------
@@ -291,7 +297,13 @@ void PreferenceDlgWX::SetupDialog_General( const Prop_General & prop )
   else
     value = TtaConvMessageToWX(prop.DialogueLang);
   XRCCTRL(*this, "wxID_CHOICE_LG", wxChoice)->SetStringSelection( value );
+#if defined(_WINDOW) || defined(_MACOS)
+  // select the string
   XRCCTRL(*this, "wxID_COMBOBOX_HOMEPAGE", wxComboBox)->SetSelection(0, -1);
+#else /* _WINDOW || _MACOS */
+  // set te cursor to the end
+  XRCCTRL(*this, "wxID_COMBOBOX_HOMEPAGE", wxComboBox)->SetInsertionPointEnd();
+#endif /* _WINDOW || _MACOS */
   XRCCTRL(*this, "wxID_COMBOBOX_HOMEPAGE", wxComboBox)->SetFocus();
 }
 

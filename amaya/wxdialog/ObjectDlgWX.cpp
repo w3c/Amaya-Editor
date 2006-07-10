@@ -85,8 +85,13 @@ ObjectDlgWX::ObjectDlgWX( int ref, wxWindow* parent, const wxString & title,
   XRCCTRL(*this, "wxID_MIME_TYPE_CB", wxComboBox)->SetValue( mime_type );
 
   XRCCTRL(*this, "wxID_URL", wxTextCtrl)->SetValue(urlToOpen  );
-  // set te cursor to the end
+#if defined(_WINDOW) || defined(_MACOS)
+  // select the string
   XRCCTRL(*this, "wxID_URL", wxTextCtrl)->SetSelection(0, -1);
+#else /* _WINDOW || _MACOS */
+  // set te cursor to the end
+  XRCCTRL(*this, "wxID_URL", wxTextCtrl)->SetInsertionPointEnd();
+#endif /* _WINDOW || _MACOS */
 
   SetAutoLayout( TRUE );
 }

@@ -27,6 +27,8 @@ extern void ComputeSRCattribute ( Element el,
 extern void UpdateSRCattribute ( NotifyOnTarget *event );
 extern void SvgImageCreated ( NotifyElement *event );
 extern void SRCattrModified ( NotifyAttribute *event );
+extern void CreateObject ( Document doc,
+                           View view );
 extern void AddNewImage ( Document doc,
                           View view,
                           ThotBool isInput );
@@ -64,6 +66,8 @@ extern void ComputeSRCattribute ( Element el,
 extern void UpdateSRCattribute ( NotifyOnTarget *event );
 extern void SvgImageCreated ( NotifyElement *event );
 extern void SRCattrModified ( NotifyAttribute *event );
+extern void CreateObject ( Document doc,
+                             View view );
 extern void AddNewImage ( Document doc,
                             View view,
                             ThotBool isInput );

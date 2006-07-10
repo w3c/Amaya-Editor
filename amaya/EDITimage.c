@@ -1546,6 +1546,29 @@ void  SRCattrModified (NotifyAttribute *event)
 }
 
 /*----------------------------------------------------------------------
+  CreateObject
+  ----------------------------------------------------------------------*/
+void  CreateObject (Document doc, View view)
+{
+  ElementType         elType;
+
+  if (HTMLelementAllowed (doc))
+    {
+      /* Don't check mandatory attributes */
+      TtaSetStructureChecking (FALSE, doc);
+      ImgAlt[0] = EOS;
+      ImgDocument = doc;
+      CreateNewImage = TRUE;
+      elType.ElSSchema = TtaGetSSchema ("HTML", doc);
+      elType.ElTypeNum = HTML_EL_Object;
+      TtaInsertElement (elType, doc);
+      /* Check the Thot abstract tree against the structure schema. */
+      TtaSetStructureChecking (TRUE, doc);
+      CreateNewImage = FALSE;
+    }
+}
+
+/*----------------------------------------------------------------------
   AddNewImage
   ----------------------------------------------------------------------*/
 void AddNewImage (Document doc, View view, ThotBool isInput)
