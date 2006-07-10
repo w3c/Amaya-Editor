@@ -2737,7 +2737,8 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
           DocumentTypes[doc] == docSVG ||
           DocumentTypes[doc] == docXml ||
           DocumentTypes[doc] == docMath ||
-          DocumentTypes[doc] == docLibrary)
+          DocumentTypes[doc] == docLibrary ||
+          DocumentTypes[doc] == docImage)
         {
           /* close the Alternate view if it is open */
           altView = TtaGetViewFromName (doc, "Alternate_view");
@@ -3411,9 +3412,9 @@ static void CreateHTMLContainer (char *pathname, char *docname,
   file = TtaWriteOpen (tempfile);
   fprintf (file, "<html><head><title>%s</title></head><body>", docname);
   if (local)
-    fprintf (file, "<img src=\"%s\" alt=\"iamge\">", pathname);
+    fprintf (file, "<img src=\"%s\" alt=\"image\">", pathname);
   else
-    fprintf (file, "<img src=\"internal:%s\" alt=\"iamge\">", pathname);
+    fprintf (file, "<img src=\"internal:%s\" alt=\"image\">", pathname);
   fprintf (file, "</body></html>");
   TtaWriteClose (file);
 }

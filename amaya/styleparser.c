@@ -1951,7 +1951,6 @@ void ParseCSSImageCallback (Document doc, Element element, char *file,
       if (css == NULL)
         tsch = NULL;
     }
-
   if (el || tsch)
     {
       /* Ok the image was fetched */
