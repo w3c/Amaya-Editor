@@ -1467,6 +1467,20 @@ static void CopyClassAttr (PtrElement newEl, PtrElement oldEl)
 }
 
 /*----------------------------------------------------------------------
+  ParentNotTemplate returns the first ancestor of element pEl that is not
+  a Template element.
+  ----------------------------------------------------------------------*/
+static PtrElement ParentNotTemplate (PtrElement pEl)
+{
+
+  pEl = pEl->ElParent;
+  while (pEl && pEl->ElStructSchema &&
+         !strcmp (pEl->ElStructSchema->SsName, "Template"))
+    pEl = pEl->ElParent;
+  return pEl;
+}
+
+/*----------------------------------------------------------------------
   TtcCreateElement handles the key "Return".
   ----------------------------------------------------------------------*/
 void TtcCreateElement (Document doc, View view)
@@ -1768,11 +1782,11 @@ void TtcCreateElement (Document doc, View view)
                   if (firstSel->ElLeafType == LtText)
                     {
                       if (firstSel->ElPrevious == NULL && firstChar <= 1)
-                        /* no previous and at the beginning */
+                        /* no previous sibling and at the beginning */
                         selBegin = TRUE;
                       if (firstSel->ElNext == NULL &&
                           firstChar > firstSel->ElTextLength)
-                        /* no next and at the end */
+                        /* no next sibling and at the end */
                         selEnd = TRUE;
                     }
                   else if (firstSel->ElLeafType == LtPicture)
@@ -1860,8 +1874,8 @@ void TtcCreateElement (Document doc, View view)
               if (pListEl != NULL)
                 {
                   if (lastSel->ElTerminal &&
-                      pListEl == lastSel->ElParent &&
                       (lastSel->ElNext == NULL || selBegin) &&
+                      pListEl == ParentNotTemplate(lastSel) &&
                       GetElementConstruct (lastSel->ElParent, &nComp) != CsAny &&
                       !TypeHasException (ExcReturnCreateWithin,
                                          pListEl->ElTypeNumber,

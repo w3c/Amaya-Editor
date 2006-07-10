@@ -782,7 +782,9 @@ PtrElement          AncestorList (PtrElement pEl)
           {
             constr = GetElementConstruct (pEl, &nComp);
             if ((constr == CsAggregate || constr == CsUnorderedAggregate) &&
-                nComp > 1)
+                /* skip aggregates that have only 1 component or that are in
+                   the Template namespace */
+                nComp > 1 && strcmp (pEl->ElStructSchema->SsName, "Template"))
               {
                 pEl = NULL;
                 stop = TRUE;

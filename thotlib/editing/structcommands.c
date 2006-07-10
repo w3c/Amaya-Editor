@@ -2771,8 +2771,8 @@ static ThotBool CanInsertBySplitting (PtrElement *pEl, int charSplit,
         {
           if ((pElem->ElTerminal && pElem->ElLeafType == LtText && charSplit > 0)
               || *splitElem ||
-              (createAfter && pElem->ElNext != NULL) ||
-              (!createAfter && pElem->ElPrevious != NULL))
+              (createAfter && pElem->ElNext) ||
+              (!createAfter && pElem->ElPrevious))
             {
               if (*splitElem && pElem != *pSplitEl)
                 {
