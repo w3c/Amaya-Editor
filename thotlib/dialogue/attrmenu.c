@@ -70,6 +70,7 @@ static int          AttrNumber[MAX_MENU * 2];
 static int          ActiveAttr[MAX_MENU * 2];
 static ThotBool     AttrOblig[MAX_MENU * 2];
 static ThotBool     AttrEvent[MAX_MENU * 2];
+static int          AttrCorr[MAX_MENU * 2];
 /* submenu of event attributes */
 static int          AttrEventNumber[MAX_MENU];
 static int          ActiveEventAttr[MAX_MENU];
@@ -932,10 +933,13 @@ static int BuildAttrMenu (char *bufMenu, PtrDocument pDoc, PtrElement firstSel,
   PtrSRule            pRe1;
   PtrTtAttribute      pAt;
   char                tempBuffer[100];
-  int                 i, j, k;
+  char               *ActiveName[MAX_MENU];
+  char               *CorrName[MAX_MENU];
+  int                 i, j, j2, k;
+  int                 ind, ind2, cur, len, active;
   int                 lgmenu = 0, lgsubmenu;
   int                 att, nbOfEntries;
-  ThotBool            isNew;
+  ThotBool            isNew, previous;
 
   nbOfEntries = 0;
   *nbEvent = 0;
@@ -1080,6 +1084,7 @@ static int BuildAttrMenu (char *bufMenu, PtrDocument pDoc, PtrElement firstSel,
       lgsubmenu = 0;
       k = 0;
       j = 0;
+      active = 0;
       /* met les noms des attributs de la table dans le menu */
       for (att = 0; att < nbOfEntries && AttrStruct[att]; att++)
         {
@@ -1109,17 +1114,105 @@ static int BuildAttrMenu (char *bufMenu, PtrDocument pDoc, PtrElement firstSel,
           else
             {
               if (lgmenu + i < MAX_TXT_LEN)
-                strcpy (&bufMenu[lgmenu], tempBuffer);
-              lgmenu += i;
-              /* mark all active enties*/
-              if (AttributeValue (firstSel, pAttr) != NULL)
-                ActiveAttr[j] = 1;
-              else
-                ActiveAttr[j] = 0;
-              j++;
+		{
+		/* compare that name with all element names already known */
+		cur = 0;
+		previous = FALSE;
+		for (ind = 0; ind < j && !previous; ind++)
+		  {
+		    len = strlen (&bufMenu[cur]) + 1;
+		    previous = (tempBuffer[1] < bufMenu[cur+1]);
+		    if (!previous)
+		      {
+ 			j2 = 1;
+			while (tempBuffer[j2] == bufMenu[cur+j2])
+			  j2++;
+			previous = (tempBuffer[j2] < bufMenu[cur+j2]);
+		      }
+		    if (!previous)
+		      cur += len;
+		  }
+		if (previous && ind <= nbOfEntries)
+		  {
+		    // move the tail of the current list
+		    for (ind2 = lgmenu; ind2 >= cur; ind2--)
+		      bufMenu[ind2+i] = bufMenu[ind2];
+		    /* add this new element name at the current position */
+		    strcpy (&bufMenu[cur], tempBuffer);
+		  }
+		else
+		  {
+		    /* add this new element name at the end */
+		    strcpy (bufMenu + lgmenu, tempBuffer);
+		  }
+		/* mark an active entry */
+		if (AttributeValue (firstSel, pAttr) != NULL)
+		  {
+		    ActiveName[active] = TtaStrdup (tempBuffer);
+		    active++;
+		  }
+		/* make a correspondance entry */
+		CorrName[j] = TtaStrdup (tempBuffer);
+
+		/* next */
+		  lgmenu += i;
+		  j++;
+		}
             }
         }
+
+      /* mark all active entries */
+      cur = 0;
+      for (ind = 0; ind < j && cur < MAX_TXT_LEN; ind++)
+	{
+	  ActiveAttr[ind] = 0;
+	  for (ind2 = 0; ind2 < active && ActiveAttr[ind] == 0; ind2++)
+	    {
+	      if (&bufMenu[cur] && ActiveName[ind2] &&
+		  !strcmp (&bufMenu[cur], ActiveName[ind2]))
+		ActiveAttr[ind] = 1;	    
+	    }
+	  len = strlen (&bufMenu[cur]) + 1;
+	  cur += len;
+	}
+      for (ind2 = 0; ind2 < active; ind2++)
+	{
+	  if (ActiveName[ind2])
+	    {
+	      TtaFreeMemory (ActiveName[ind2]);
+	      ActiveName[ind2] = NULL;
+	    }
+	}
+
+  /* make correspondance with the attributes table */      
+      for (ind = 0; ind < nbOfEntries; ind++)
+	AttrCorr[ind] = -1;
+      
+      cur = 0;
+      for (ind = 0; ind < j && cur < MAX_TXT_LEN; ind++)
+	{
+	  for (ind2 = 0; ind2 < j; ind2++)
+	    {
+	      if (&bufMenu[cur] && CorrName[ind2] &&
+		  !strcmp (&bufMenu[cur], CorrName[ind2]))
+		{
+		  AttrCorr[ind] = ind2;	    
+		  ind2 = j;
+		}
+	    }
+	  len = strlen (&bufMenu[cur]) + 1;
+	  cur += len;
+	}
+      for (ind2 = 0; ind2 < j; ind2++)
+	{
+	  if (CorrName[ind2])
+	    {
+	      TtaFreeMemory (CorrName[ind2]);
+	      CorrName[ind2] = NULL;
+	    }
+	}
     }
+
   DeleteAttribute (NULL, pAttr);
 
   if (*nbEvent > 0)
@@ -1660,7 +1753,7 @@ void CallbackValAttrMenu (int ref, int valmenu, char *valtext)
   handles the callbacks of the "Attributes" menu: creates a
   form to capture the value of the chosen attribute.
   ----------------------------------------------------------------------*/
-void CallbackAttrMenu (int refmenu, int att, int frame)
+void CallbackAttrMenu (int refmenu, int attMenu, int frame)
 {
   PtrTtAttribute      pAttr;
   PtrAttribute        pAttrNew, currAttr;
@@ -1673,6 +1766,7 @@ void CallbackAttrMenu (int refmenu, int att, int frame)
   int                 item, i;
   int                 firstChar, lastChar;
   ThotBool            mandatory;
+  int                 att;
 
   FrameToView (frame, &doc, &view);
   item = att;
@@ -1687,9 +1781,14 @@ void CallbackAttrMenu (int refmenu, int att, int frame)
     }
 #endif /* _WX */
   if (refmenu == EventMenu[frame - 1])
-    att = AttrEventNumber[att];
+    att = AttrEventNumber[attMenu];
   else
     {
+      /* Search the right attribute into the table */
+      if (AttrCorr[attMenu] != -1)
+	att = AttrCorr[attMenu];
+      else
+	att = attMenu; 
       i = 0;
       while (i <= att)
         {
