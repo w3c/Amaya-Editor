@@ -2186,7 +2186,8 @@ static void DoExtendSelection (PtrElement pEl, int rank, ThotBool fixed,
               FixedChar = LastSelectedChar;
             }
 
-          if (pEl == FixedElement)
+          if (pEl == FixedElement ||
+              (pEl->ElLeafType == LtPicture && FixedElement == pEl->ElParent))
             /* extension within fixed element */
             {
               FirstSelectedElement = pEl;
@@ -2427,7 +2428,7 @@ static void DoExtendSelection (PtrElement pEl, int rank, ThotBool fixed,
                oldLastChar != LastSelectedChar))
             {
               change = TRUE;
-              if (!oldFirstEl->ElTerminal || oldFirstEl->ElLeafType != LtPicture ||
+              if ((!oldFirstEl->ElTerminal || oldFirstEl->ElLeafType != LtPicture) &&
                   !TypeHasException (ExcIsImg, FirstSelectedElement->ElTypeNumber,
                                      FirstSelectedElement->ElStructSchema))
                 {
