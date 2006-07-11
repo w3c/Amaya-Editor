@@ -670,3 +670,11 @@ Document GetTemplateDocument(XTigerTemplate t)
   return NULL;
 #endif /* TEMPLATES */
 }
+
+void SetTemplateDocument(XTigerTemplate t, Document doc)
+{
+#ifdef TEMPLATES
+  t->doc = doc;
+#endif /* TEMPLATES */
+}
+

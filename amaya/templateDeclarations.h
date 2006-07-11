@@ -100,6 +100,7 @@ extern void DumpDeclarations(XTigerTemplate t);
 
 extern DicDictionary GetComponents(XTigerTemplate t);
 extern Document GetTemplateDocument(XTigerTemplate t);
+extern void SetTemplateDocument(XTigerTemplate t, Document doc);
 
 //Access to component members
 extern Element GetComponentContent(Declaration d);

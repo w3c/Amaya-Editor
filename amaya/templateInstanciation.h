@@ -6,13 +6,10 @@
 #include "document.h"
 #include "templateDeclarations.h"
 
-extern void InstanciateTemplate(char *templatename, Document doc);
+extern void InstanciateTemplate(char *templatename);
 
-extern void InstanciateTemplate (Document doc, char *templatename,
-								 char *docname, DocumentType docType,
-								 ThotBool loaded);
+void  CreateInstance(char *templatePath, char *instancePath);
 
 extern void PreInstanciateComponents(XTigerTemplate t);
 
 #endif /* TEMPLATE_INSTANCIATION */
-

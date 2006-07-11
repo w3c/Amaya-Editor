@@ -14,7 +14,7 @@
 #include "message_wx.h"
 #include "thot_sys.h"
 #include "init_f.h"
-#include "templates_f.h"
+#include "templates.h"
 #include "registry_wx.h"
 
 static int      MyRef = 0;
@@ -218,8 +218,9 @@ void NewTemplateDocDlgWX::OnCreateButton( wxCommandEvent& event )
       // give the new url to amaya (to do url completion)
       ThotCallback (BaseDialog + URLName,  STRING_DATA, (char *)docname );  
       
-      CreateInstanceOfTemplate (Mydoc, temp, docname, docHTML);
+      CreateInstanceOfTemplate (Mydoc, temp, docname);
       TtaUnmapDialogue (MyRef);
+
       //TtaDestroyDialogue (MyRef);
     }
   else

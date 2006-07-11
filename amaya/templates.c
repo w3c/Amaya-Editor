@@ -17,6 +17,8 @@
 #ifdef TEMPLATES
 #include "Template.h"
 #include "templateDeclarations.h"
+#include "templateLoad.h"
+#include "templateInstanciation.h"
 
 struct menuType
 {
@@ -27,7 +29,6 @@ struct menuType
 #include "appdialogue_wx.h"
 #include "init_f.h"
 #include "wxdialogapi_f.h"
-#include "templatesStructure_f.h"
 #include "AHTURLTools_f.h"
 
 #endif /* TEMPLATES */
@@ -44,7 +45,7 @@ void NewTemplate (Document doc, View view)
   if (templates == NULL)
     InitializeTemplateEnvironment();
   created = CreateNewTemplateDocDlgWX(BaseDialog + OpenTemplate,
-                                      TtaGetViewFrame (doc, view), doc,
+                                      /*TtaGetViewFrame (doc, view)*/NULL, doc,
                                       TtaGetMessage (AMAYA, AM_NEW_TEMPLATE),templateDir);
   
   if (created)
@@ -60,12 +61,12 @@ void NewTemplate (Document doc, View view)
   Load a template and create the instance file - update images and 
   stylesheets related to the template.
   ----------------------------------------------------------------------*/
-int CreateInstanceOfTemplate (Document doc, char *templatename, char *docname,
-                              DocumentType docType)
+void CreateInstanceOfTemplate (Document doc, char *templatename, char *docname)
 {
 #ifdef TEMPLATES
 
   char *s;
+  ThotBool dontRemplace = DontReplaceOldDoc;
 
   if (!IsW3Path (docname) && TtaFileExist (docname))
     {
@@ -73,14 +74,16 @@ int CreateInstanceOfTemplate (Document doc, char *templatename, char *docname,
                                 strlen (TtaGetMessage (AMAYA, AM_OVERWRITE_CHECK)) + 2);
       sprintf (s, TtaGetMessage (AMAYA, AM_OVERWRITE_CHECK), docname);
       InitConfirm (0, 0, s);
-      TtaFreeMemory (s);
-      if (!UserAnswer)
-        return 0;
-    }
+      TtaFreeMemory (s);      
 
-	LoadTemplate(doc, templatename, docname, docType, TRUE);
+      if (UserAnswer)
+      {
+          LoadTemplate(doc, templatename);
+          DontReplaceOldDoc = dontRemplace;
+          CreateInstance(templatename, docname);
+      }
+    }
 #endif /* TEMPLATES */
-	return 0;
 }
 
 #ifdef TEMPLATES

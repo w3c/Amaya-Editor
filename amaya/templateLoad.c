@@ -16,10 +16,6 @@ Just the path of the template, which identifies it. */
 typedef struct _TemplateCtxt
 {
 	char			*templatePath;
-	char			*instancePath;
-	DocumentType    docType;
-	ThotBool		dontReplace;
-	ThotBool		createInstance;
 } TemplateCtxt;
 
 #endif
@@ -162,6 +158,7 @@ void LoadTemplate_callback (int newdoc, int status,  char *urlName,
 	TemplateCtxt *ctx = (TemplateCtxt*)context;
 	
 	XTigerTemplate t = NewXTigerTemplate (ctx->templatePath, TRUE);
+  SetTemplateDocument(t, newdoc);
   
 	Element el = TtaGetMainRoot(newdoc);
 	ParseDeclarations (t, el);
@@ -183,23 +180,18 @@ void LoadTemplate_callback (int newdoc, int status,  char *urlName,
   
 	TtaWriteClose (file);
 #endif
+
+  DontReplaceOldDoc = TRUE;
+  InstanciateTemplate(ctx->templatePath);
   
-  if(ctx->createInstance)
-    {
-      DontReplaceOldDoc = TRUE;
-      InstanciateTemplate(newdoc, ctx->templatePath, ctx->instancePath, ctx->docType, TRUE);
-      
-      TtaFreeMemory (ctx->templatePath);
-      TtaFreeMemory (ctx->instancePath);
-      TtaFreeMemory (ctx);
+  TtaFreeMemory (ctx->templatePath);
+  TtaFreeMemory (ctx);
 #endif /* TEMPLATES */
-    }
 }
-  
+
 /*----------------------------------------------------------------------
 ----------------------------------------------------------------------*/
-void LoadTemplate (Document doc, char* templatename, char* docname,
-                   DocumentType doctype, ThotBool createInstance)
+void LoadTemplate (Document doc, char* templatename)
 {
 #ifdef TEMPLATES
   Document newdoc;
@@ -222,9 +214,6 @@ void LoadTemplate (Document doc, char* templatename, char* docname,
 		//Creation of the callback context
 		TemplateCtxt *ctx	= (TemplateCtxt *)TtaGetMemory (sizeof (TemplateCtxt));
 		ctx->templatePath	= TtaStrdup (templatename);
-		ctx->instancePath	= TtaStrdup (docname);
-		ctx->docType		= doctype;
-		ctx->createInstance = createInstance;
 	
 		newdoc = GetAmayaDoc (templatename, NULL, doc, doc, CE_MAKEBOOK, FALSE, 
 			(void (*)(int, int, char*, char*, const AHTHeaders*, void*)) LoadTemplate_callback,
@@ -232,8 +221,8 @@ void LoadTemplate (Document doc, char* templatename, char* docname,
 	}
 
 	//Otherwise we will load the template later
-	else if(createInstance)
-		InstanciateTemplate(doc, templatename, docname, doctype, FALSE);
+	else
+		InstanciateTemplate(templatename);
 
 #endif /* TEMPLATES */
 }
