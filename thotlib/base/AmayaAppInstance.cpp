@@ -97,7 +97,7 @@ void AmayaAppInstance::SendURLToOtherAmayaInstance(const wxString & url)
 	{
           /* check if it is an absolute or a relative name */
 #ifdef _WINDOWS
-          if (buffer[0] == DIR_SEP || LastURLName[1] == ':')
+          if (buffer[0] == DIR_SEP || buffer[1] == ':')
 #else /* _WINDOWS */
           if (buffer[0] == DIR_SEP)
 #endif /* _WINDOWS */
