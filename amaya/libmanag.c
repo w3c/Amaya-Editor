@@ -52,7 +52,6 @@
 #include "MENUconf_f.h"
 #include "query_f.h"
 #include "styleparser_f.h"
-#include "templates_f.h"
 #include "trans_f.h"
 #include "transparse_f.h"
 #include "UIcss_f.h"

@@ -30,6 +30,10 @@
 #include "profiles.h"
 #include "MENUconf.h"
 
+#ifdef TEMPLATES
+#include "templateDeclarations.h"
+#endif /* TEMPLATES */
+
 /*
 * A VIRER SUREMENT PAR LA SUITE
 *
@@ -231,7 +235,6 @@ extern int       menu_item;
 #include "init_f.h"
 #include "query_f.h"
 #include "styleparser_f.h"
-#include "templates_f.h"
 #include "trans_f.h"
 #include "transparse_f.h"
 #include "UIcss_f.h"
@@ -7379,6 +7382,11 @@ void FreeAmayaStructures ()
 #ifdef BOOKMARKS
       BM_Quit ();
 #endif /* BOOKMARKS */
+
+#ifdef TEMPLATES
+      FreeTemplateEnvironment ();
+#endif /* TEMPLATES */
+
       FreeAmayaCache (); 
     }
 }

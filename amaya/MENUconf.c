@@ -47,7 +47,6 @@
 #include "MENUconf_f.h"
 #include "print.h"
 #include "fileaccess.h"
-#include "templates_f.h"
 #ifdef _WX
 #include "wxdialogapi_f.h"
 #endif /* _WX */

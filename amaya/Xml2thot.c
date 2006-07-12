@@ -47,7 +47,6 @@
 #endif /* XML_GENERIC */
 #ifdef TEMPLATES
 #include "Templatebuilder_f.h"
-#include "templates_f.h"
 #endif /* TEMPLATES */
 #include "XLinkbuilder_f.h"
 #ifdef ANNOTATIONS

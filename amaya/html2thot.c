@@ -32,7 +32,6 @@
 #include "HTMLsave_f.h"
 #include "init_f.h"
 #include "styleparser_f.h"
-#include "templates_f.h"
 #include "UIcss_f.h"
 #include "XHTMLbuilder_f.h"
 #include "Xml2thot_f.h"

@@ -26,7 +26,6 @@
 #endif /* _SVG */
 #ifdef TEMPLATES
 #include "Template.h"
-#include "templates_f.h"
 #endif /* TEMPLATES */
 
 #include "XML.h"

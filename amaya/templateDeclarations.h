@@ -43,6 +43,11 @@ typedef int SimpleTypeType;
 extern void InitializeTemplateEnvironment ( void );
 
 /*----------------------------------------------------------------------
+  Freeing the template environment
+  ----------------------------------------------------------------------*/
+extern void FreeTemplateEnvironment ( void );
+
+/*----------------------------------------------------------------------
    Creates a new template with its dictionaries and stores it.
  ----------------------------------------------------------------------*/
 extern XTigerTemplate NewXTigerTemplate (const char *templatePath, 

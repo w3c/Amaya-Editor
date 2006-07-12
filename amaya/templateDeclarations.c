@@ -159,6 +159,23 @@ void InitializeTemplateEnvironment ()
 }
 
 /*----------------------------------------------------------------------
+  Initializing the template environment
+  ----------------------------------------------------------------------*/
+
+void FreeTemplateEnvironment()
+{
+#ifdef TEMPLATES
+  XTigerTemplate t;
+
+  for(First(templates);!IsDone(templates);Next(templates))
+    {
+      t = (XTigerTemplate)CurrentElement(templates);
+      TtaCloseDocument(t->doc);
+    }
+#endif
+}
+
+/*----------------------------------------------------------------------
   Adds a new declaration or redefines an existing one
   ----------------------------------------------------------------------*/
 void AddDeclaration (XTigerTemplate t, Declaration dec)
@@ -677,4 +694,3 @@ void SetTemplateDocument(XTigerTemplate t, Document doc)
   t->doc = doc;
 #endif /* TEMPLATES */
 }
-
