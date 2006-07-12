@@ -75,14 +75,14 @@ void CreateInstanceOfTemplate (Document doc, char *templatename, char *docname)
       sprintf (s, TtaGetMessage (AMAYA, AM_OVERWRITE_CHECK), docname);
       InitConfirm (0, 0, s);
       TtaFreeMemory (s);      
+      if (!UserAnswer)
+        return;
+    }    
 
-      if (UserAnswer)
-      {
-          LoadTemplate(doc, templatename);
-          DontReplaceOldDoc = dontRemplace;
-          CreateInstance(templatename, docname);
-      }
-    }
+  LoadTemplate(doc, templatename);
+  DontReplaceOldDoc = dontRemplace;
+  CreateInstance(templatename, docname);
+  
 #endif /* TEMPLATES */
 }
 

@@ -17,7 +17,7 @@ extern void CallbackValAttrMenu ( int ref,
                                   int valmenu,
                                   char *valtext );
 extern void CallbackAttrMenu ( int refmenu,
-                               int att,
+                               int attMenu,
                                int frame );
 extern void CallbackLanguageMenu ( int ref,
                                    int val,
@@ -38,7 +38,7 @@ extern void CallbackValAttrMenu ( int ref,
                                     int valmenu,
                                     char *valtext );
 extern void CallbackAttrMenu ( int refmenu,
-                                 int att,
+                                 int attMenu,
                                  int frame );
 extern void CallbackLanguageMenu ( int ref,
                                      int val,
