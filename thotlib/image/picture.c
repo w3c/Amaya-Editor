@@ -127,7 +127,7 @@ static ThotBool PrintingGL = FALSE;
 #include <GL/gl.h>
 #endif /* _MACOS */
 
-#define MAX_GL_SIZE 2048
+#define MAX_GL_SIZE 1024
 #ifdef WITH_CACHE
 typedef struct _PicCache {
   struct _PicCache *next;  
