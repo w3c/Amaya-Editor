@@ -44,6 +44,8 @@ typedef struct
   int            PicPosY;
   TypeUnit       PicXUnit;
   TypeUnit       PicYUnit;
+  int            PicShiftX;
+  int            PicShiftY;
 #ifdef _GTK
   GdkImlibImage *im;
   ThotPixmap     PicMask;        /* Bitmap Mask */

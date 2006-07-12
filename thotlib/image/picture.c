@@ -369,34 +369,14 @@ static int ceil_pow2_minus_1(unsigned int x)
 }
 #define p2(p) (is_pow2(p)?p:ceil_pow2_minus_1((unsigned int) p) + 1)
   
-/* Don't know exactly wich is faster...
-   this on is pretty good too...*/
 
-/* 
-   int p2(p){
-   p -= 1; 
-   p |= p >> 16; 
-   p |= p >> 8; 
-   p |= p >> 4; 
-   p |= p >> 2; 
-   p |= p >> 1; 
-   return p + 1;
-
-   otherwise, identical, formulical,
-   but VERY VERY VERY slower 
-   (int to float, log, ceil, and finally float to int...)
-   return 1 << (int) ceilf(logf((float) p) / M_LN2);
-   } 
-*/
-
-#ifdef POWER2TEXSUBIMAGE
 /*----------------------------------------------------------------------
-  GL_MakeTextureSize : Texture sizes must be power of two
+  GL_MakeTextureSize: Reduce Texture sizes must be power of two
   ----------------------------------------------------------------------*/
 static void GL_MakeTextureSize (ThotPictInfo *img, int GL_w, int GL_h)
 {
   unsigned char      *data, *ptr1, *ptr2;
-  int                 xdiff, x, y, nbpixel;
+  int                 xdiff, w, y, nbpixel, iw, ix, iy, h;
 
   if (img->PicPixmap != None)
     {
@@ -407,24 +387,33 @@ static void GL_MakeTextureSize (ThotPictInfo *img, int GL_w, int GL_h)
       data = (unsigned char *)TtaGetMemory (sizeof (unsigned char) * nbpixel);
       /* Black transparent filling */
       memset (data, 0, sizeof (unsigned char) * nbpixel);
-      ptr1 = (unsigned char *) img->PicPixmap;
-      ptr2 = data;
       nbpixel = ((img->RGBA)?4:3);
-      xdiff = (GL_w - img->PicWidth) * nbpixel;
-      x = nbpixel * img->PicWidth;
-      for (y = 0; y < img->PicHeight; y++)
+      w = nbpixel * img->PicWidth; // a line in the image
+      iw = nbpixel * GL_w; // a line in the pixmap
+      ix = img->PicShiftX * nbpixel; // skipped pixels by line
+      if (GL_w > img->PicWidth)
+        xdiff = (GL_w - img->PicWidth) * nbpixel;
+      else
+        xdiff = 0;
+      h = img->PicHeight - img->PicShiftY;
+      iy = img->PicShiftY * w; // skipped lines in the image
+      w -= ix;
+      ptr1 = (unsigned char *) img->PicPixmap + iy;
+      ptr2 = data;
+      for (y = 0; y < h; y++)
         {
-          /* copy R,G,B,A */
-          memcpy (ptr2, ptr1, x); 
+          ptr1 += ix;
+          if (y < GL_h)
+            /* copy R,G,B,A */
+            memcpy (ptr2, ptr1, iw); 
           /* jump over the black transparent zone*/
-          ptr1 += x;
-          ptr2 += x + xdiff;
+          ptr1 += w;
+          ptr2 += iw + xdiff;
         }
       FreePixmap (img->PicPixmap);
       img->PicPixmap = (ThotPixmap) data;
     }
 }
-#endif /* POWER2TEXSUBIMAGE */
 
 
 /*----------------------------------------------------------------------
@@ -442,16 +431,44 @@ static void GL_TextureBind (ThotPictInfo *img, ThotBool isPixmap)
       img->PicWidth && img->PicHeight &&
       (img->PicPixmap || !isPixmap))
     {
-      /* Another way is to split texture in 256x256 
-         pieces and render them on different quads
-         Declared to be the faster  */
-      p2_w = p2 (img->PicWidth);
-      p2_h = p2 (img->PicHeight);
+      /* OpenGL requires power 2 dimensions */
+      if (img->PicWidth > 1024)
+        {
+          // keep only a part of the image width
+          if ((img->PicXUnit == UnPercent && img->PicPosX >= 50) ||
+              img->PicPosX <= -1024)
+            // keep the end of the image
+            img->PicShiftX = img->PicWidth - 1024;
+          else
+            //  keep the beginning of the image
+            img->PicShiftX = 0;
+          p2_w = 1024;
+        }
+      else
+        p2_w = p2 (img->PicWidth);
+      if (img->PicHeight > 1024)
+        {
+          // keep only a part of the image height
+          if ((img->PicYUnit == UnPercent && img->PicPosY >= 50) ||
+              img->PicPosY <= -1024)
+            // keep the end of the image
+            img->PicShiftY = img->PicHeight - 1024;
+          else
+            //  keep the beginning of the image
+            img->PicShiftY = 0;
+          p2_h = 1024;
+        }
+      else
+        p2_h = p2 (img->PicHeight);
       /* We have resized the picture to match a power of 2
          We don't want to see all the picture, just the w and h 
          portion*/
       GL_w = (GLfloat) img->PicWidth/p2_w;
       GL_h = (GLfloat) img->PicHeight/p2_h;
+      if (GL_w < 0.1)
+        GL_w = 0.1; // avoid nul value
+      if (GL_h < 0.1)
+        GL_h = 0.1; // avoid nul value
       /* We give te texture to opengl Pipeline system */	    
       Mode = (img->RGBA)?GL_RGBA:GL_RGB;
       glGenTextures (1,  (GLuint*)&(img->TextureBind));
@@ -467,28 +484,30 @@ static void GL_TextureBind (ThotPictInfo *img, ThotBool isPixmap)
       glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
       if (isPixmap)
         {
-#ifndef POWER2TEXSUBIMAGE
-          /* create a texture whose sizes are power of 2*/
-          glTexImage2D (GL_TEXTURE_2D, 0, Mode, p2_w, p2_h, 0, Mode, 
-                        GL_UNSIGNED_BYTE, NULL);
-          /* Map the texture wich isn't a power of two*/
-          glTexSubImage2D (GL_TEXTURE_2D, 0, 0, 0, 
-                           img->PicWidth, img->PicHeight, 
-                           Mode, GL_UNSIGNED_BYTE,
-                           (GLvoid *) img->PicPixmap);    
-          if (img->PicPixmap != PictureLogo && !Printing)
+          if ((int)p2_w < img->PicWidth || (int)p2_h < img->PicHeight)
             {
+              GL_MakeTextureSize (img, p2_w, p2_h);
+              glTexImage2D (GL_TEXTURE_2D, 0, Mode, p2_w, p2_h,
+                            0, Mode, GL_UNSIGNED_BYTE,
+                            (GLvoid *) img->PicPixmap);
               TtaFreeMemory (img->PicPixmap);
-              img->PicPixmap = NULL;
             }
-
-#else/*  POWER2TEXSUBIMAGE */
-          GL_MakeTextureSize (img, p2_w, p2_h);
-          glTexImage2D (GL_TEXTURE_2D, 0, Mode, p2_w, p2_h,
-                        0, Mode, GL_UNSIGNED_BYTE,
-                        (GLvoid *) img->PicPixmap);
-          TtaFreeMemory (img->PicPixmap);
-#endif /* POWER2TEXSUBIMAGE */ 
+          else
+            {
+              /* create a texture whose sizes are power of 2*/
+              glTexImage2D (GL_TEXTURE_2D, 0, Mode, p2_w, p2_h, 0, Mode, 
+                            GL_UNSIGNED_BYTE, NULL);
+              /* Map the texture which isn't a power of two*/
+              glTexSubImage2D (GL_TEXTURE_2D, 0, 0, 0, 
+                               img->PicWidth, img->PicHeight, 
+                               Mode, GL_UNSIGNED_BYTE,
+                               (GLvoid *) img->PicPixmap);    
+              if (img->PicPixmap != PictureLogo && !Printing)
+                {
+                  TtaFreeMemory (img->PicPixmap);
+                  img->PicPixmap = NULL;
+                }
+            }
         }
       else
         {
@@ -1305,11 +1324,14 @@ static void SetPictureClipping (int *picWArea, int *picHArea, int wFrame,
   Parameters org_box, d_box define the initial painted box area
   Parameter org_img, d_img define the initial displayed image area
   Parameters value and unit give the position rule
+  Parameters start and end give the skipped pixels in the picture
+  at the beginning and the end
   Return:
    org_box, d_box define the painted box area
    org_img, d_img define the displayed image area
   ----------------------------------------------------------------------*/
-static void ComputeBgPosition (int val, TypeUnit unit, int *org_box, int * d_box,
+static void ComputeBgPosition (int val, TypeUnit unit, int start, int end,
+                               int *org_box, int * d_box,
                                int *org_img, int *d_img)
 {
   int s_box, s_img;
@@ -1325,6 +1347,7 @@ static void ComputeBgPosition (int val, TypeUnit unit, int *org_box, int * d_box
         {
           // shift in the box
           s_box -= s_img;
+          s_box += start;
           *org_box = s_box;
           *d_box -= s_box;
         }
@@ -1332,22 +1355,24 @@ static void ComputeBgPosition (int val, TypeUnit unit, int *org_box, int * d_box
         {
           // shift in the image
           s_img -= s_box;
+          s_img -= start;
           *org_img = s_img;
           *d_img -= s_img;
         }
     }
   else if (val >= 0)
     {
-      s_box = PixelValue (val, unit, NULL, 0);
+      s_box = PixelValue (val, unit, NULL, 0) + start;
       *org_box = s_box;
       *d_box -= s_box;
     }
   else
     {
-      s_img = -PixelValue (val, unit, NULL, 0);
+      s_img = -PixelValue (val, unit, NULL, 0) - start;
       *org_img = s_img;
       *d_img -= s_img;
     }
+  *d_img -= end;
 }
 
 /*----------------------------------------------------------------------
@@ -1507,14 +1532,32 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
       // position of the background image in the box
       if (imageDesc->PicPosX)
         {
+          i = j = 0;
+#ifdef _GL
+          if (imageDesc->PicShiftX)
+            // skipped image pixels before
+            i = imageDesc->PicShiftX;
+          else if (imageDesc->PicWidth > 1024)
+            // skipped image pixels after
+            j = imageDesc->PicWidth - 1024;
+#endif /* _GL */
           ComputeBgPosition (imageDesc->PicPosX, imageDesc->PicXUnit,
-                             &picXOrg, &w, &ix, &iw);
+                             i, j, &picXOrg, &w, &ix, &iw);
           x += picXOrg;
         }
       if (imageDesc->PicPosY)
         {
+          i = j = 0;
+#ifdef _GL
+          if (imageDesc->PicShiftY)
+            // skipped image pixels before
+            i = imageDesc->PicShiftY;
+          else if (imageDesc->PicHeight > 1024)
+            // skipped image pixels after
+            j = imageDesc->PicHeight - 1024;
+#endif /* _GL */
           ComputeBgPosition (imageDesc->PicPosY, imageDesc->PicYUnit,
-                             &picYOrg, &h, &iy, &ih);
+                             i, j, &picYOrg, &h, &iy, &ih);
           y += picYOrg;
         }
 
@@ -2403,6 +2446,8 @@ ThotBool Ratio_Calculate (PtrAbstractBox pAb, ThotPictInfo *imageDesc,
       if (!constrained_Width && constrained_Height && h)
         {
           w = (width * h) / height;
+          if (w == 0)
+            w = 1; // avoid null value
           if (w != imageDesc->PicWArea)
             {
               change = TRUE;
@@ -2415,6 +2460,8 @@ ThotBool Ratio_Calculate (PtrAbstractBox pAb, ThotPictInfo *imageDesc,
       else if (constrained_Width && !constrained_Height && w)
         {
           h = (height * w) / width;
+          if (h == 0)
+            h = 1; // avoid null value
           if (h != imageDesc->PicHArea)
             {
               change = TRUE;
