@@ -314,7 +314,7 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
   AttributeType  attrType;
   SSchema        htmlSchema;
   Language       lang;
-  char           *text, *ptr;
+  char           *text;
   char           lastChar[2];
   char           *name1, *data;
   char           msgBuffer[MaxMsgLength];
