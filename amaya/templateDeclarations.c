@@ -167,8 +167,9 @@ void FreeTemplateEnvironment()
 #ifdef TEMPLATES
   XTigerTemplate t;
 
-  for(First(templates);!IsDone(templates);Next(templates))
-    {
+  if (templates)
+    for(First(templates);!IsDone(templates);Next(templates))
+	{
       t = (XTigerTemplate)CurrentElement(templates);
       TtaCloseDocument(t->doc);
     }
