@@ -1125,6 +1125,26 @@ ThotBool TtaCheckMakeDirectory (char *name, ThotBool recursive)
   return TRUE;
 }
 
+/*----------------------------------------------------------------------
+  TtaIsW3Path                                           
+  returns TRUE if path is in fact a URL.
+  ----------------------------------------------------------------------*/
+ThotBool TtaIsW3Path (char *path)
+{
+  if (path == NULL)
+    return FALSE;
+  if (strncmp (path, "http:", 5)   && 
+      strncmp (path, "ftp:", 4)    &&
+      strncmp (path, "telnet:", 7) && 
+      strncmp (path, "wais:", 5)   &&
+      strncmp (path, "news:", 5)   && 
+      strncmp (path, "gopher:", 7) &&
+      strncmp (path, "mailto:", 7) && 
+      strncmp (path, "archie:", 7) &&
+      strncmp (path, "https:", 6))
+    return FALSE;
+  return TRUE;
+}
 
 
 

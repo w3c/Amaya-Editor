@@ -145,6 +145,11 @@ extern ThotBool TtaCheckDirectory ( char *directory );
   ----------------------------------------------------------------------*/
 extern ThotBool TtaCheckMakeDirectory (char *name, ThotBool recursive);
 
+/*----------------------------------------------------------------------
+  TtaIsW3Path returns TRUE if path is in fact a URL.       
+  ----------------------------------------------------------------------*/
+extern ThotBool TtaIsW3Path (char *path);
+
 #endif /* __CEXTRACT__ */
 #endif /* _FILEACCESS_H_ */
 

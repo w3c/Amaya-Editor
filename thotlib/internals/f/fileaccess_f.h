@@ -64,6 +64,7 @@ extern ThotBool TtaMakeDirectory ( char *directory );
 extern ThotBool TtaCheckDirectory ( char *directory );
 extern ThotBool TtaCheckMakeDirectory ( char *name,
                                         ThotBool recursive );
+extern ThotBool TtaIsW3Path ( char *path );
 
 #else /* __STDC__ */
 
@@ -125,6 +126,7 @@ extern ThotBool TtaMakeDirectory ( char *directory );
 extern ThotBool TtaCheckDirectory ( char *directory );
 extern ThotBool TtaCheckMakeDirectory ( char *name,
                                           ThotBool recursive );
+extern ThotBool TtaIsW3Path ( char *path );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
