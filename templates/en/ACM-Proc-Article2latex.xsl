@@ -85,7 +85,7 @@
   </xsl:template>
 
   <xsl:template match="xhtml:div[@class='authors']">
-    <xsl:text>\numberofauthors{</xsl:text><xsl:value-of select="count(xhtml:p[@class='author'])"/><xsl:text>}
+    <xsl:text>\numberofauthors{</xsl:text><xsl:value-of select="count(xhtml:p[@class='vcard'])"/><xsl:text>}
 \author{</xsl:text>
       <xsl:apply-templates/>
     <xsl:text>}</xsl:text>
@@ -95,17 +95,17 @@
   <xsl:template match="xhtml:div[@class='authors']/text()">
   </xsl:template>
 
-  <xsl:template match="xhtml:span[@class='name']">
+  <xsl:template match="xhtml:span[@class='fn']">
     <xsl:text>\alignauthor </xsl:text>
       <xsl:apply-templates/>
     <xsl:text>\\</xsl:text>
   </xsl:template>
 
-  <xsl:template match="xhtml:span[@class='address']">
+  <xsl:template match="xhtml:span[@class='adr']">
     <xsl:text>   \affaddr{</xsl:text><xsl:apply-templates/>
   </xsl:template>
 
-  <xsl:template match="xhtml:span[@class='address']/xhtml:br">
+  <xsl:template match="xhtml:span[@class='adr']/xhtml:br">
     <xsl:text>}\\
    \affaddr{</xsl:text>
   </xsl:template>

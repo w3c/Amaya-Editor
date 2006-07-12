@@ -22,9 +22,9 @@
                 counter-increment: sect4;}
     div.authors {font-family: sans-serif}
     /* width: 33% for 3 authors -- Change according to the number of authors */
-    p.author {text-align: center; width: 33%; float: left}
-    p.author span.name {font-size: 110%}
-    p.author span.email {font-size: 110%}
+    p.vcard {text-align: center; width: 33%; float: left}
+    p.vcard span.fn {font-size: 110%}
+    p.vcard span.email {font-size: 110%}
     div.body {clear: both}
     span.catnamelevel1and2 {font-weight: bold}
     span.catlevel4 {font-style: italic}
@@ -50,7 +50,7 @@
     h1 {font-size: 190%}
     h2 {font-size: 130%; margin-bottom: .2em; margin-top: .6em}
     h3 {font-size: 120%; margin-bottom: .2em; margin-top: .6em}
-    p.author { padding-bottom: 1cm}
+    p.vcard { padding-bottom: 1cm}
     div.authors {font-size: 120%}
     a[href] {text-decoration: none; color: inherit}
     a.bibref:after {content: target-content(attr(href))}

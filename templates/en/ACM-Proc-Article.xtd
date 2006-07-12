@@ -71,19 +71,20 @@
     <t:union name="bibref" include="refbook refarticle refreport"></t:union>
 
     <t:component name="author">
-      <p class="author">
+      <p class="vcard">
         <t:option>
-          <img class="portrait">
+          <img class="photo">
             <t:attribute name="alt" default="Author picture"/>
             <t:attribute name="width" use="optional"/>
           </img>
         </t:option>
-        <span class="name">
+        <span class="fn">
           <t:use types="string">Author name</t:use>
         </span>
         <br />
-        <span class="address">
-          <t:use types="string br">Address</t:use>
+        <span class="adr">
+          <t:use types="string br">Address line 1<br />
+                                   line 2...</t:use>
         </span>
         <br/>
         <span class="email">
@@ -114,13 +115,14 @@
 <div class="authors">
   <t:repeat minOccurs="1">
     <t:use types="author">
-      <p class="author">
+      <p class="vcard">
         <t:option>
-          <img class="portrait" src=".." alt="picture" />
+          <img class="photo" src=".." alt="Author picture" />
         </t:option>
-        <span class="name">Author Name</span>
+        <span class="fn">Author Name</span>
         <br />
-        <span class="address">Address</span>
+        <span class="adr">Address line 1<br />
+                                  line 2...</span>
         <br />
         <span class="email">email</span>
       </p>
