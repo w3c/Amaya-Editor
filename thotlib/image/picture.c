@@ -127,13 +127,7 @@ static ThotBool PrintingGL = FALSE;
 #include <GL/gl.h>
 #endif /* _MACOS */
 
-#ifdef GL_MESA_window_pos
-#define MESA
-#endif
-/* For now not software optimised but quality optimized...
-   if too sloooooow we'll revert*/
-#undef MESA
-
+#define MAX_GL_SIZE 2048
 #ifdef WITH_CACHE
 typedef struct _PicCache {
   struct _PicCache *next;  
@@ -352,13 +346,13 @@ void FreeGlTexture (void *imagedesc)
 }
 
 /*----------------------------------------------------------------------
-  p2 :  Lowest power of two bigger than the argument.
+  ceil_pow2_minus_1
   ----------------------------------------------------------------------*/
 /*All these work on UNSIGNED BITS !!! 
   if little-big endianess is involved,
-  all those atre wrong !!!*/
-#define lowest_bit(x) (x & -x)
-#define is_pow2(x) (x != 0 && x == lowest_bit(x))
+  all those are wrong !!!*/
+//#define lowest_bit(x) (x & -x)
+//#define is_pow2(x) (x != 0 && x == lowest_bit(x))
 static int ceil_pow2_minus_1(unsigned int x)
 {
   unsigned int i;
@@ -367,7 +361,19 @@ static int ceil_pow2_minus_1(unsigned int x)
     x |= x >> i;
   return x;
 }
-#define p2(p) (is_pow2(p)?p:ceil_pow2_minus_1((unsigned int) p) + 1)
+
+/*----------------------------------------------------------------------
+  p2 :  Lowest power of two bigger than the argument.
+  ----------------------------------------------------------------------*/
+static int p2(int p)
+{
+  if (p ==1)
+    return 2;
+  else if (p && p > 0)
+    return (ceil_pow2_minus_1((unsigned int) p) + 1);
+  else
+    return p;
+}
   
 
 /*----------------------------------------------------------------------
@@ -405,10 +411,13 @@ static void GL_MakeTextureSize (ThotPictInfo *img, int GL_w, int GL_h)
           ptr1 += ix;
           if (y < GL_h)
             /* copy R,G,B,A */
-            memcpy (ptr2, ptr1, iw); 
+            if (w < iw)
+              memcpy (ptr2, ptr1, w);
+            else
+              memcpy (ptr2, ptr1, iw);
           /* jump over the black transparent zone*/
           ptr1 += w;
-          ptr2 += iw + xdiff;
+          ptr2 += iw;
         }
       FreePixmap (img->PicPixmap);
       img->PicPixmap = (ThotPixmap) data;
@@ -432,31 +441,31 @@ static void GL_TextureBind (ThotPictInfo *img, ThotBool isPixmap)
       (img->PicPixmap || !isPixmap))
     {
       /* OpenGL requires power 2 dimensions */
-      if (img->PicWidth > 1024)
+      if ((glhard () && img->PicWidth > MAX_GL_SIZE) || img->PicHeight == 1)
         {
           // keep only a part of the image width
           if ((img->PicXUnit == UnPercent && img->PicPosX >= 50) ||
-              img->PicPosX <= -1024)
+              img->PicPosX <= -MAX_GL_SIZE)
             // keep the end of the image
-            img->PicShiftX = img->PicWidth - 1024;
+            img->PicShiftX = img->PicWidth - MAX_GL_SIZE;
           else
             //  keep the beginning of the image
             img->PicShiftX = 0;
-          p2_w = 1024;
+          p2_w = MAX_GL_SIZE;
         }
       else
         p2_w = p2 (img->PicWidth);
-      if (img->PicHeight > 1024)
+      if (glhard () && img->PicHeight > MAX_GL_SIZE)
         {
           // keep only a part of the image height
           if ((img->PicYUnit == UnPercent && img->PicPosY >= 50) ||
-              img->PicPosY <= -1024)
+              img->PicPosY <= -MAX_GL_SIZE)
             // keep the end of the image
-            img->PicShiftY = img->PicHeight - 1024;
+            img->PicShiftY = img->PicHeight - MAX_GL_SIZE;
           else
             //  keep the beginning of the image
             img->PicShiftY = 0;
-          p2_h = 1024;
+          p2_h = MAX_GL_SIZE;
         }
       else
         p2_h = p2 (img->PicHeight);
@@ -490,7 +499,8 @@ static void GL_TextureBind (ThotPictInfo *img, ThotBool isPixmap)
               glTexImage2D (GL_TEXTURE_2D, 0, Mode, p2_w, p2_h,
                             0, Mode, GL_UNSIGNED_BYTE,
                             (GLvoid *) img->PicPixmap);
-              TtaFreeMemory (img->PicPixmap);
+              if (img->PicPixmap != PictureLogo && !Printing)
+                TtaFreeMemory (img->PicPixmap);
             }
           else
             {
@@ -503,10 +513,7 @@ static void GL_TextureBind (ThotPictInfo *img, ThotBool isPixmap)
                                Mode, GL_UNSIGNED_BYTE,
                                (GLvoid *) img->PicPixmap);    
               if (img->PicPixmap != PictureLogo && !Printing)
-                {
-                  TtaFreeMemory (img->PicPixmap);
-                  img->PicPixmap = NULL;
-                }
+                TtaFreeMemory (img->PicPixmap);
             }
         }
       else
@@ -516,7 +523,7 @@ static void GL_TextureBind (ThotPictInfo *img, ThotBool isPixmap)
                         GL_UNSIGNED_BYTE, NULL);
         }
       if (!Printing)
-        img->PicPixmap = None;
+        img->PicPixmap = NULL;
       img->TexCoordW = GL_w;
       img->TexCoordH = GL_h;
 
@@ -1537,9 +1544,9 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
           if (imageDesc->PicShiftX)
             // skipped image pixels before
             i = imageDesc->PicShiftX;
-          else if (imageDesc->PicWidth > 1024)
+          else if (imageDesc->PicWidth > MAX_GL_SIZE)
             // skipped image pixels after
-            j = imageDesc->PicWidth - 1024;
+            j = imageDesc->PicWidth - MAX_GL_SIZE;
 #endif /* _GL */
           ComputeBgPosition (imageDesc->PicPosX, imageDesc->PicXUnit,
                              i, j, &picXOrg, &w, &ix, &iw);
@@ -1552,9 +1559,9 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
           if (imageDesc->PicShiftY)
             // skipped image pixels before
             i = imageDesc->PicShiftY;
-          else if (imageDesc->PicHeight > 1024)
+          else if (imageDesc->PicHeight > MAX_GL_SIZE)
             // skipped image pixels after
-            j = imageDesc->PicHeight - 1024;
+            j = imageDesc->PicHeight - MAX_GL_SIZE;
 #endif /* _GL */
           ComputeBgPosition (imageDesc->PicPosY, imageDesc->PicYUnit,
                              i, j, &picYOrg, &h, &iy, &ih);
