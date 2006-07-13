@@ -10,115 +10,116 @@
 -->
 
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:t="http://wam.inrialpes.fr/xtiger" xml:lang="en" lang="en">
+      xmlns:xt="http://wam.inrialpes.fr/xtiger" xml:lang="en" lang="en">
 <head>
-  <title><t:use types="string">Title</t:use></title>
+  <title><xt:use types="string">Title</xt:use></title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
   <link rel="stylesheet" type="text/css" href="ACM-Proc-Article.css" />
 
-  <t:head>
+  <xt:head>
 
-    <t:component name="figure">
+    <xt:component name="figure">
       <div class="figure topfigure">
-        <t:attribute name="id" use="optional"/>
+        <xt:attribute name="id" use="optional"/>
         <img>
-           <t:attribute name="width" use="optional"/>
+           <xt:attribute name="width" use="optional"/>
         </img>
-        <p><t:use types="string">Caption</t:use></p>
+        <p><xt:use types="string">Caption</xt:use></p>
       </div>
-    </t:component>
+    </xt:component>
 
-    <t:component name="codeExample">
+    <xt:component name="codeExample">
       <div class="example">
-        <t:attribute name="id" use="optional"/>
-        <pre><t:use types="string">Some code</t:use></pre>
-        <p><t:use types="string">Caption</t:use></p>
+        <xt:attribute name="id" use="optional"/>
+        <pre><xt:use types="string">Some code</xt:use></pre>
+        <p><xt:use types="string">Caption</xt:use></p>
       </div>
-    </t:component>
+    </xt:component>
 
-    <t:component name="refbook">
+    <xt:component name="refbook">
       <p class="refbook">
-        <t:repeat minOccurs="1">
-          <span class="bibauthor"><t:use types="string">Author</t:use></span>
-        </t:repeat>
-        <span class="title"><t:use types="string">Book title</t:use></span>
-        <span class="pub"><t:use types="string">Publisher</t:use></span>
+        <xt:repeat minOccurs="1">
+          <span class="bibauthor"><xt:use types="string">Author</xt:use></span>
+        </xt:repeat>
+        <span class="title"><xt:use types="string">Book title</xt:use></span>
+        <span class="pub"><xt:use types="string">Publisher</xt:use></span>
       </p>
-    </t:component>
+    </xt:component>
 
-    <t:component name="refarticle">
+    <xt:component name="refarticle">
       <p class="refarticle">
-        <t:repeat minOccurs="1">
-          <span class="bibauthor"><t:use types="string">Author</t:use></span>
-        </t:repeat>
-        <span class="title"><t:use types="string">Article title</t:use></span>
-        <span class="conf"><t:use types="string">Conference</t:use></span>
+        <xt:repeat minOccurs="1">
+          <span class="bibauthor"><xt:use types="string">Author</xt:use></span>
+        </xt:repeat>
+        <span class="title"><xt:use types="string">Article title</xt:use></span>
+        <span class="conf"><xt:use types="string">Conference</xt:use></span>
       </p>
-    </t:component>
+    </xt:component>
 
-    <t:component name="refreport">
+    <xt:component name="refreport">
       <p class="refreport">
-        <t:repeat minOccurs="1">
-          <span class="bibauthor"><t:use types="string">Author</t:use></span>
-        </t:repeat>
-        <span class="title"><t:use types="string">Report title</t:use></span>
-        <t:option>
-          <span class="url"><t:use types="string">url</t:use></span>
-        </t:option>
+        <xt:repeat minOccurs="1">
+          <span class="bibauthor"><xt:use types="string">Author</xt:use></span>
+        </xt:repeat>
+        <span class="title"><xt:use types="string">Report title</xt:use></span>
+        <xt:option>
+          <span class="url"><xt:use types="string">url</xt:use></span>
+        </xt:option>
       </p>
-    </t:component>
+    </xt:component>
 
-    <t:union name="bibref" include="refbook refarticle refreport"></t:union>
+    <xt:union name="bibref" include="refbook refarticle refreport"></xt:union>
 
-    <t:component name="author">
+    <xt:component name="author">
       <p class="vcard">
-        <t:option>
+        <xt:option>
           <img class="photo">
-            <t:attribute name="alt" default="Author picture"/>
-            <t:attribute name="width" use="optional"/>
+            <xt:attribute name="alt" default="Author picture"/>
+            <xt:attribute name="width" use="optional"/>
           </img>
-        </t:option>
+        </xt:option>
         <span class="fn">
-          <t:use types="string">Author name</t:use>
+          <xt:use types="string">Author name</xt:use>
         </span>
         <br />
         <span class="adr">
-          <t:use types="string br">Address line 1<br />
-                                   line 2...</t:use>
+          <xt:use types="string br">Address line 1<br />
+                                   line 2...</xt:use>
         </span>
         <br/>
         <span class="email">
-          <t:use types="string">email</t:use>
+          <xt:use types="string">email</xt:use>
         </span>
       </p>
-    </t:component>
-  </t:head>
+    </xt:component>
+
+  </xt:head>
 </head>
 
 <body>
 
 <p class="conferenceinfo">
-  <span class="conferencename"><t:use types="string">Conference
-    name</t:use>,</span>
-  <span class="conferencedateandloc"><t:use types="string">Month days, year,
-    city, country</t:use>.</span>
+  <span class="conferencename"><xt:use types="string">Conference
+    name</xt:use>,</span>
+  <span class="conferencedateandloc"><xt:use types="string">Month days, year,
+    city, country</xt:use>.</span>
   Copyright
-  <span class="copyrightyear"><t:use types="string">year</t:use></span>
+  <span class="copyrightyear"><xt:use types="string">year</xt:use></span>
   ACM
-  <span class="crdata"><t:use types="string">conference code</t:use></span>
+  <span class="crdata"><xt:use types="string">conference code</xt:use></span>
 </p>
 
-<t:use types="h1">
+<xt:use types="h1">
   <h1>Article Title</h1>
-</t:use>
+</xt:use>
 
 <div class="authors">
-  <t:repeat minOccurs="1">
-    <t:use types="author">
+  <xt:repeat minOccurs="1">
+    <xt:use types="author">
       <p class="vcard">
-        <t:option>
+        <xt:option>
           <img class="photo" src=".." alt="Author picture" />
-        </t:option>
+        </xt:option>
         <span class="fn">Author Name</span>
         <br />
         <span class="adr">Address line 1<br />
@@ -126,64 +127,64 @@
         <br />
         <span class="email">email</span>
       </p>
-    </t:use>
-  </t:repeat>
+    </xt:use>
+  </xt:repeat>
 </div>
 
 <div class="body">
 
 <div class="abstract">
   <p class="heading">ABSTRACT</p>
-  <t:repeat>
-    <t:use types="p">
+  <xt:repeat>
+    <xt:use types="p">
       <p>First paragraph of abstract...</p>
-    </t:use>
-  </t:repeat>
+    </xt:use>
+  </xt:repeat>
 </div>
 
 <div class="descr">
   <p class="heading">Categories and Subject Descriptors</p>
-  <t:repeat minOccurs="1">
+  <xt:repeat minOccurs="1">
     <p class="category">
-      <span class="catnumlevel1and2"><t:use types="string">X</t:use>.<t:use types="string">n</t:use></span>
-      [<span class="catnamelevel1and2"><t:use types="string">Name</t:use></span>]:
-      <t:repeat minOccurs="1">
-        <span class="catlevel3"><t:use types="string">name</t:use></span>
-        <t:option>
-          &mdash; <span class="catlevel4"><t:use types="string">name, name</t:use></span>
-        </t:option>
-      </t:repeat>
+      <span class="catnumlevel1and2"><xt:use types="string">X</xt:use>.<xt:use types="string">n</xt:use></span>
+      [<span class="catnamelevel1and2"><xt:use types="string">Name</xt:use></span>]:
+      <xt:repeat minOccurs="1">
+        <span class="catlevel3"><xt:use types="string">name</xt:use></span>
+        <xt:option>
+          &mdash; <span class="catlevel4"><xt:use types="string">name, name</xt:use></span>
+        </xt:option>
+      </xt:repeat>
     </p>
-  </t:repeat>
+  </xt:repeat>
 
   <p class="heading">General Terms</p>
 
-  <p class="terms"><t:use types="string"> </t:use></p>
+  <p class="terms"><xt:use types="string"> </xt:use></p>
 
   <p class="heading">Keywords</p>
 
-  <p class="keywords"><t:use types="string"> </t:use></p>
+  <p class="keywords"><xt:use types="string"> </xt:use></p>
 </div>
 
-<t:repeat minOccurs="1">
+<xt:repeat minOccurs="1">
   <div class="section">
     <h2>
-      <t:use types="string">SECTION HEADING</t:use>
+      <xt:use types="string">SECTION HEADING</xt:use>
     </h2>
-    <t:repeat>
-      <t:bag types="anyElement codeExample figure">
+    <xt:repeat>
+      <xt:bag types="anyElement codeExample figure">
         <p>First paragraph of section ...</p>
-      </t:bag>
-    </t:repeat>
+      </xt:bag>
+    </xt:repeat>
   </div>
-</t:repeat>
+</xt:repeat>
 
 <div class="bibliography">
   <h2>REFERENCES</h2>
     <div class="references">
-      <t:repeat minOccurs="3" maxOccurs="30">
-        <t:use types="refbook refarticle refreport"/>
-      </t:repeat>
+      <xt:repeat minOccurs="3" maxOccurs="30">
+        <xt:use types="refbook refarticle refreport"/>
+      </xt:repeat>
     </div>
 </div>
 </div>

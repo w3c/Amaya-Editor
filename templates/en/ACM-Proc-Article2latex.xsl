@@ -95,6 +95,10 @@
   <xsl:template match="xhtml:div[@class='authors']/text()">
   </xsl:template>
 
+  <!-- remove photographs of authors -->
+  <xsl:template match="xhtml:p[@class='vcard']/xhtml:img[@class='photo']">
+  </xsl:template>
+
   <xsl:template match="xhtml:span[@class='fn']">
     <xsl:text>\alignauthor </xsl:text>
       <xsl:apply-templates/>
