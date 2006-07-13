@@ -161,14 +161,14 @@ static char *createMenuString (const struct menuType* items, const int nbItems)
 #endif /* TEMPLATES */
 
 /*----------------------------------------------------------------------
-  ThotBool UseMenuClicked (Document doc) 
+  UseMenuClicked
   Shows a menu with all the types that can be used in a use element.
   ----------------------------------------------------------------------*/
 ThotBool UseMenuClicked (NotifyElement *event)
 {
 #ifdef TEMPLATES
 	Document         doc = event->document;
-	Element          el = TtaGetParent(event->element);
+	Element          el = event->element;
 	ElementType      elt = TtaGetElementType(el);
 	Attribute        at;
 	AttributeType    att;
@@ -186,7 +186,6 @@ ThotBool UseMenuClicked (NotifyElement *event)
 
 	giveItems (types, size, &items, &nbitems);
 	menuString = createMenuString (items, nbitems);
-
 	TtaNewScrollPopup (BaseDialog + OptionMenu, TtaGetViewFrame (doc, 1), NULL, 
                      nbitems, menuString , NULL, false, 'L');
 
@@ -196,19 +195,46 @@ ThotBool UseMenuClicked (NotifyElement *event)
 	TtaShowDialogue (BaseDialog + OptionMenu, FALSE);
 	TtaWaitShowProcDialogue();
 	TtaDestroyDialogue (BaseDialog + OptionMenu);
-
+  return FALSE;
 #endif /* TEMPLATES */
 	//ReturnOption
 	return TRUE;
 }
 
 /*----------------------------------------------------------------------
-  ThotBool BagMenuClicked (Document doc) 
-  Shows a menu with all the types that can be used in a use element.
+  OptionMenuClicked
   ----------------------------------------------------------------------*/
-ThotBool BagMenuClicked (NotifyElement *event)
+ThotBool OptionMenuClicked (NotifyElement *event)
 {
 #ifdef TEMPLATES
+  return FALSE;
+#endif /* TEMPLATES */
+	return TRUE;
+}
+
+/*----------------------------------------------------------------------
+  RepeatMenuClicked
+  Shows a menu with all the types that can be used in a use element.
+  ----------------------------------------------------------------------*/
+ThotBool RepeatMenuClicked (NotifyElement *event)
+{
+#ifdef TEMPLATES
+	Document         doc = event->document;
+	int              nbitems, size;
+	struct menuType *items;
+  char            *types, *menuString;
+
+	types = "top end";	
+	size = strlen (types);
+	giveItems (types, size, &items, &nbitems);
+	menuString = createMenuString (items, nbitems);
+	TtaNewScrollPopup (BaseDialog + OptionMenu, TtaGetViewFrame (doc, 1), NULL, 
+                     nbitems, menuString , NULL, false, 'L');
+	TtaFreeMemory (menuString);
+	TtaShowDialogue (BaseDialog + OptionMenu, FALSE);
+	TtaWaitShowProcDialogue();
+	TtaDestroyDialogue (BaseDialog + OptionMenu);
+  return FALSE;
 #endif /* TEMPLATES */
 	return TRUE;
 }

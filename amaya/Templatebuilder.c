@@ -100,7 +100,7 @@ void TemplateElementComplete (ParserData *context, Element el, int *error)
 {
   Document		doc;
   ElementType	elType, childType;
-  Element		aMenu, last, child, newChild;
+  Element		  last, child, newChild;
 
   doc = context->doc;
   elType = TtaGetElementType (el);
@@ -124,41 +124,17 @@ void TemplateElementComplete (ParserData *context, Element el, int *error)
     case Template_EL_useEl:
       //CheckMandatoryAttribute (el, doc, Template_ATTR_id);
 	  CheckMandatoryAttribute (el, doc, Template_ATTR_types);
-	  //Create the menu
-	  elType.ElTypeNum = Template_EL_useMenu;
-	  aMenu = TtaNewElement(doc, elType);
-	  last = TtaGetLastChild(el);
-	  if(last) 
-		  TtaInsertSibling(aMenu, last, FALSE, doc);
-	  else
-		  TtaInsertFirstChild(&aMenu, el, doc);	  	  
 	  break;
 
     case Template_EL_bag:
       //CheckMandatoryAttribute (el, doc, Template_ATTR_id);
 	  CheckMandatoryAttribute (el, doc, Template_ATTR_types);
-	  //Create the menu
-	  elType.ElTypeNum = Template_EL_bagMenu;
-	  aMenu = TtaNewElement(doc, elType);
-	  last = TtaGetLastChild(el);
-	  if(last) 
-		  TtaInsertSibling(aMenu, last, FALSE, doc);
-	  else
-		  TtaInsertFirstChild(&aMenu, el, doc);
 	  break;
 
     case Template_EL_attribute:
       CheckMandatoryAttribute (el, doc, Template_ATTR_name);
 	  break;
 	case Template_EL_option :
-	  //Create the menu
-	  elType.ElTypeNum = Template_EL_optionMenu;
-	  aMenu = TtaNewElement(doc, elType);
-	  last = TtaGetLastChild(el);
-	  if(last) 
-		  TtaInsertSibling(aMenu, last, FALSE, doc);
-	  else
-		  TtaInsertFirstChild(&aMenu, el, doc);
 	  break;
 
 	case Template_EL_repeat :
@@ -173,17 +149,6 @@ void TemplateElementComplete (ParserData *context, Element el, int *error)
 		  TtaInsertFirstChild(&child, newChild, doc);
 		  TtaInsertFirstChild(&newChild, el, doc);
 	  }
-
-	  //Create the menu
-	  elType.ElTypeNum = Template_EL_repeatMenu;
-	  aMenu = TtaNewElement(doc, elType);
-	  last = TtaGetLastChild(el);
-	  if(last) 
-		  TtaInsertSibling(aMenu, last, FALSE, doc);
-	  else
-		  TtaInsertFirstChild(&aMenu, el, doc);
-	  break;
-
     default:
       break;
     }

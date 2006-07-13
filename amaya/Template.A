@@ -10,13 +10,17 @@ DEFAULT
    
 ELEMENTS
 
-   useMenu :
+   useEl :
       BEGIN
          ElemClick.Pre -> UseMenuClicked;
       END;
-   bagMenu :
+   repeat :
       BEGIN
-         ElemClick.Pre -> BagMenuClicked;
+         ElemClick.Pre -> RepeatMenuClicked;
+      END;
+   option :
+      BEGIN
+         ElemClick.Pre -> OptionMenuClicked;
       END;
       
 END

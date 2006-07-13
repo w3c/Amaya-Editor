@@ -147,8 +147,8 @@ BOXES
 
  UseMenu_Gif: BEGIN
 	Content: Picture 'xtigeruse.gif';
-	HorizPos: Left = Enclosing . Left;
-	VertPos: Top = Enclosing . Top;
+	HorizPos: Left = Enclosing . Left - 5 px;
+	VertPos: Top = Enclosing . Top - 5 px;
 	MarginTop: 0 px;
 	MarginBottom: 0 px;
 	MarginLeft: 0 px;
@@ -160,8 +160,8 @@ BOXES
 
  BagMenu_Gif: BEGIN
 	Content: Picture 'xtigerbag.gif';
-	HorizPos: Left = Enclosing . Left;
-	VertPos: Top = Enclosing . Top;
+	HorizPos: Left = Enclosing . Left - 5 px;
+	VertPos: Top = Enclosing . Top - 5 px;
 	MarginTop: 0 px;
 	MarginBottom: 0 px;
 	MarginLeft: 0 px;
@@ -173,8 +173,8 @@ BOXES
 
  OptionMenu_Gif: BEGIN
 	Content: Picture 'xtigeroption.gif';
-	HorizPos: Left = Enclosing . Left;
-	VertPos: Top = Enclosing . Top;
+	HorizPos: Left = Enclosing . Left - 5 px;
+	VertPos: Top = Enclosing . Top - 5 px;
 	MarginTop: 0 px;
 	MarginBottom: 0 px;
 	MarginLeft: 0 px;
@@ -186,8 +186,8 @@ BOXES
 
  RepeatMenu_Gif: BEGIN
 	Content: Picture 'xtigerrepeat.gif';
-	HorizPos: Left = Enclosing . Left;
-	VertPos: Top = Enclosing . Top;
+	HorizPos: Left = Enclosing . Left - 5 px;
+	VertPos: Top = Enclosing . Top - 5 px;
 	MarginTop: 0 px;
 	MarginBottom: 0 px;
 	MarginLeft: 0 px;
@@ -292,24 +292,10 @@ RULES
 		END;
 	END;
 
-
-	bagMenu:
-	  BEGIN
-	    CreateFirst(BagMenu_Gif);
-      VertPos: Top = 			Enclosing . Top - 5 px;
-      HorizPos: Left =		Enclosing . Left - 5 px;
-	    HorizRef : * . Bottom;
-      MarginTop: 				0 px;
-      MarginBottom: 		0 px;
-      MarginRight: 			0 px;
-      MarginLeft: 			0 px;
-	    IN Structure_view
-	 	    Visibility: 0;
-	  END;
-
   bag:
 		BEGIN
     CreateBefore(ElementName);
+	  CreateFirst(BagMenu_Gif);
   	CreateWith(VerticalLine);
     Width: auto{Enclosing . Width};
     Height: auto{Enclosing . Height};
@@ -347,23 +333,10 @@ RULES
 		  END;
 	 END;
 	 
-	useMenu:
-	  BEGIN
-	    CreateFirst(UseMenu_Gif);
-      VertPos: Top = 			Enclosing . Top - 5 px;
-      HorizPos: Left =		Enclosing . Left - 5 px;
-	    HorizRef : * . Bottom;
-      MarginTop: 				0 px;
-      MarginBottom: 		0 px;
-      MarginRight: 			0 px;
-      MarginLeft: 			0 px;
-	    IN Structure_view
-	 	    Visibility: 0;
-	  END;
-	 
   useEl:	
 		BEGIN
     CreateBefore(ElementName);
+	  CreateFirst(UseMenu_Gif);
   	CreateWith(VerticalLine);
     Width: auto{Enclosing . Width};
     Height: auto{Enclosing . Height};
@@ -402,23 +375,10 @@ RULES
 		  END;
 	 END;
 
-	repeatMenu:
-	  BEGIN
-	    CreateFirst(RepeatMenu_Gif);
-      VertPos: Top = 			Enclosing . Top - 11 px;
-      HorizPos: Left =		Enclosing . Left - 11 px;
-	    HorizRef : * . Bottom;
-      MarginTop: 				0 px;
-      MarginBottom: 		0 px;
-      MarginRight: 			0 px;
-      MarginLeft: 			0 px;
-	    IN Structure_view
-	 	    Visibility: 0;
-	  END;
-	 
   repeat:
 	BEGIN	
 		CreateBefore(ElementName);
+	  CreateFirst(RepeatMenu_Gif);
 		CreateWith(VerticalLine);
 		Width: auto{Enclosing . Width};
 		{Display: Block;}
@@ -456,23 +416,10 @@ RULES
 		END;
 	 END;	 
 
-	optionMenu:
-	  BEGIN
-	    CreateFirst(OptionMenu_Gif);
-      VertPos: Top = 			Enclosing . Top - 5 px;
-      HorizPos: Left =		Enclosing . Left - 5 px;
-	    HorizRef : * . Bottom;
-      MarginTop: 				0 px;
-      MarginBottom: 		0 px;
-      MarginRight: 			0 px;
-      MarginLeft: 			0 px;
-	    IN Structure_view
-	 	    Visibility: 0;
-	  END;
-	 
   option:	
 		BEGIN
     CreateBefore(ElementName);
+	  CreateFirst(OptionMenu_Gif);
   	CreateWith(VerticalLine);
     Width: auto{Enclosing . Width};
     {Display: Block;}

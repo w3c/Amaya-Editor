@@ -49,7 +49,6 @@ STRUCT
 		repeat;
 		bag; 
 		folder;
-  		repeatMenu;		
 		END
 	);
 
@@ -57,25 +56,17 @@ STRUCT
   option ( ATTR id )
   	= BEGIN 
     	ANY - ( head, union, import, component );
-    	optionMenu;
   	END;
   
   useEl ( ATTR id; types = TEXT; currentType = TEXT; title )
      = BEGIN
         ANY;
-        useMenu;        
        END - ( head, union, import, component );
 
   bag ( ATTR id; types ) 
      = BEGIN
         ANY;
-        bagMenu;        
        END - ( head, union, import, component );
-
-  useMenu 		= CONSTANT C_CR; {Just a button}  
-  bagMenu 		= CONSTANT C_CR; {Just a button}  
-  repeatMenu 	= CONSTANT C_CR; {Just a button}  
-  optionMenu 	= CONSTANT C_CR; {Just a button}  
 
   attribute ( ATTR 
     name; 
@@ -91,10 +82,4 @@ EXCEPT
 	Unknown_attribute	: Invisible;
 	Language			: Invisible;
 	
-	{Element buttons are not editable}
-	useMenu		: NoCut, NoCreate, NoMove, NoResize, NoSelect;
-	bagMenu 	: NoCut, NoCreate, NoMove, NoResize, NoSelect;
-	optionMenu 	: NoCut, NoCreate, NoMove, NoResize, NoSelect;
-	repeatMenu 	: NoCut, NoCreate, NoMove, NoResize, NoSelect;
-
 END
