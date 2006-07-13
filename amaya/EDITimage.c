@@ -1252,7 +1252,7 @@ void UpdateSRCattribute (NotifyOnTarget *event)
 
 
   /* search the SRC attribute */
-  if (elType.ElTypeNum = HTML_EL_Object)
+  if (elType.ElTypeNum == HTML_EL_Object)
     attrType.AttrTypeNum = HTML_ATTR_data;
   else
     attrType.AttrTypeNum = HTML_ATTR_SRC;
