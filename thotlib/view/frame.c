@@ -235,7 +235,7 @@ void DefBoxRegion (int frame, PtrBox pBox, int xstart, int xstop,
       pFrame = &ViewFrameTable[frame - 1];
       /* take into account the positioning */
       pFlow = GetRelativeFlow (pBox, frame);
-      if (pBox->BxAbstractBox &&
+      if (pEl && pBox->BxAbstractBox &&
           (pBox->BxAbstractBox->AbLeafType == LtGraphics ||
            pBox->BxAbstractBox->AbLeafType == LtPolyLine ||
            pBox->BxAbstractBox->AbLeafType == LtPath ||
