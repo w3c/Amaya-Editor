@@ -22,6 +22,77 @@ typedef struct _InstanciationCtxt
 
 #endif /* TEMPLATES */
 
+typedef struct _AttSearch
+{
+  int   att;
+  int   type;
+} AttSearch;
+
+static AttSearch    URL_attr_tab[] = {
+  {HTML_ATTR_HREF_, XHTML_TYPE},
+  {HTML_ATTR_codebase, XHTML_TYPE},
+  {HTML_ATTR_Script_URL, XHTML_TYPE},
+  {HTML_ATTR_SRC, XHTML_TYPE},
+  {HTML_ATTR_data, XHTML_TYPE},
+  {HTML_ATTR_background_, XHTML_TYPE},
+  {HTML_ATTR_Style_, XHTML_TYPE},
+  {HTML_ATTR_cite, XHTML_TYPE},
+  //{XLink_ATTR_href_, XLINK_TYPE},
+  {MathML_ATTR_style_, MATH_TYPE},
+#ifdef _SVG
+  {SVG_ATTR_style_, SVG_TYPE},
+  {SVG_ATTR_xlink_href, SVG_TYPE}
+#endif
+};
+
+void RegisterURLs(Document doc, Element el)
+{
+#ifdef TEMPLATES
+
+  SSchema             XHTMLSSchema, MathSSchema, SVGSSchema, XLinkSSchema;
+  AttributeType       attrType;
+  Attribute           attr;
+  int                 max;
+
+  XHTMLSSchema = TtaGetSSchema ("HTML", doc);
+  MathSSchema = TtaGetSSchema ("MathML", doc);
+  SVGSSchema = TtaGetSSchema ("SVG", doc);
+  XLinkSSchema = TtaGetSSchema ("XLink", doc);
+
+  max = sizeof (URL_attr_tab) / sizeof (AttSearch);
+
+  for(int i=0; i<max; i++)
+    {
+      attrType.AttrTypeNum = URL_attr_tab[i].att;
+      switch (URL_attr_tab[i].type)
+        {
+        case XHTML_TYPE:
+          attrType.AttrSSchema = XHTMLSSchema;
+          break;
+        case MATH_TYPE:
+          attrType.AttrSSchema = MathSSchema;
+          break;
+        case SVG_TYPE:
+          attrType.AttrSSchema = SVGSSchema;
+          break;
+        case XLINK_TYPE:
+          attrType.AttrSSchema = XLinkSSchema;
+          break;
+        default:
+          attrType.AttrSSchema = NULL;
+        }
+
+      attr = TtaGetAttribute(el, attrType);
+      if(attr!=NULL)      
+        TtaRegisterAttributeReplace(attr, el, doc);
+
+    }  
+
+  for(Element child = TtaGetFirstChild(el);child;TtaNextSibling(&child))
+    RegisterURLs(doc, child);
+
+#endif /* TEMPLATES*/
+}
 
 void  CreateInstance(char *templatePath, char *instancePath) {
 #ifdef TEMPLATES
@@ -31,7 +102,7 @@ void  CreateInstance(char *templatePath, char *instancePath) {
   XTigerTemplate t = (XTigerTemplate)Get(templates, templatePath);
 
   if(t==NULL)
-    //The template must be loaded before calling this fonction
+    //The template must be loaded before calling this function
     return;
 
   Document doc = GetTemplateDocument(t);
@@ -44,37 +115,44 @@ void  CreateInstance(char *templatePath, char *instancePath) {
         alreadyViewing = !strcmp(DocumentURLs[alreadyOnDoc],instancePath);
     }
 
-  //SetRelativeURLs (doc, instancePath);
-  
-	switch (docType)
+  if(!TtaPrepareUndo(doc))
     {
-    case docSVG :
-      TtaExportDocumentWithNewLineNumbers (doc, instancePath, "SVGT");
-      break;
-    case docMath :
-      TtaExportDocumentWithNewLineNumbers (doc, instancePath, "MathMLT");
-      break;
-    case docHTML :
-      if(TtaGetDocumentProfile(doc)==L_Xhtml11)
-        TtaExportDocumentWithNewLineNumbers (doc, instancePath, "HTMLT11");
-      else
-        TtaExportDocumentWithNewLineNumbers (doc, instancePath, "HTMLTX");
-      break;
-    default :
-      TtaExportDocumentWithNewLineNumbers (doc, instancePath, NULL);
-      break;
+      TtaOpenUndoSequence(doc, NULL, NULL, 0, 0);
+
+      RegisterURLs(doc, TtaGetRootElement(doc));
+      
+      SetRelativeURLs (doc, instancePath);
+      
+      switch (docType)
+        {
+        case docSVG :
+          TtaExportDocumentWithNewLineNumbers (doc, instancePath, "SVGT");
+          break;
+        case docMath :
+          TtaExportDocumentWithNewLineNumbers (doc, instancePath, "MathMLT");
+          break;
+        case docHTML :
+          if(TtaGetDocumentProfile(doc)==L_Xhtml11)
+            TtaExportDocumentWithNewLineNumbers (doc, instancePath, "HTMLT11");
+          else
+            TtaExportDocumentWithNewLineNumbers (doc, instancePath, "HTMLTX");
+          break;
+        default :
+          TtaExportDocumentWithNewLineNumbers (doc, instancePath, NULL);
+          break;
+        }
+      
+      TtaCloseUndoSequence(doc);
+      TtaUndoNoRedo(doc);
     }
-  
-  //We undo the modification on relative URLs
-  //  SetRelativeURLs (doc, templatePath);
-  
+
   if(!alreadyViewing) //Open the instance
     {      
       TtaExtractName (instancePath, DirectoryName, DocumentName);
       CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
     }
   else //Reload on the existing view
-    Reload(alreadyOnDoc, 0);
+    Reload(alreadyOnDoc, 0);  
   
 #endif /* TEMPLATES */
 }
@@ -214,8 +292,6 @@ void InstanciateTemplate(char *templatename)
 	root	=	TtaGetMainRoot (doc);
 	ParseTemplate(t, root, doc);
 
-#ifdef TODO_CHECK
-
   //Look for PIs
   /* check if the document has a DOCTYPE declaration */
 #ifdef ANNOTATIONS
@@ -283,7 +359,6 @@ void InstanciateTemplate(char *templatename)
 
           
 #endif /* TEMPLATES */
-#endif /* TODO_CHECK */
 }
 
 /*----------------------------------------------------------------------

@@ -16,6 +16,9 @@ DEFAULT
    PRuleCreate.Pre -> ChangePRule;
    PRuleModify.Pre -> ChangePRule;
    PRuleDelete.Post -> PRuleDeleted;
+#ifdef TEMPLATES
+   DocClose.Pre -> ClosingDocument;
+#endif /* TEMPLATES*/
    END;
 
 ELEMENTS

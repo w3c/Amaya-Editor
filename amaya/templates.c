@@ -238,3 +238,12 @@ ThotBool RepeatMenuClicked (NotifyElement *event)
 #endif /* TEMPLATES */
 	return TRUE;
 }
+
+/*----------------------------------------------------------------------
+  ClosingDocument
+  Callback called before closing a document. Checks for unused templates.
+  ----------------------------------------------------------------------*/
+void ClosingDocument(NotifyDialog* dialog)
+{
+  return;
+}

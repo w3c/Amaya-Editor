@@ -181,7 +181,7 @@ void LoadTemplate_callback (int newdoc, int status,  char *urlName,
 	TtaWriteClose (file);
 #endif
 
-  DontReplaceOldDoc = TRUE;
+  //DontReplaceOldDoc = TRUE;
   InstanciateTemplate(ctx->templatePath);
   
   TtaFreeMemory (ctx->templatePath);
@@ -221,8 +221,8 @@ void LoadTemplate (Document doc, char* templatename)
 	}
 
 	//Otherwise we will load the template later
-	else
-		InstanciateTemplate(templatename);
+	//else
+  //InstanciateTemplate(templatename);
 
 #endif /* TEMPLATES */
 }
