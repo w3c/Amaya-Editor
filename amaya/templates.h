@@ -12,7 +12,7 @@ extern void CreateInstanceOfTemplate (Document doc, char *templatename, char *do
   ClosingDocument
   Callback called before closing a document. Checks for unused templates.
   ----------------------------------------------------------------------*/
-extern void ClosingDocument(NotifyDialog* dialog)
+extern void ClosingDocument(NotifyDialog* dialog);
 
 #endif /* TEMPLATE_TEMPLATES */
 
