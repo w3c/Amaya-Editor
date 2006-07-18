@@ -39,7 +39,7 @@ static ThotBool  UpdateFrameUrl = TRUE;
 #endif /* _MACOS */
 
 #ifdef _WINDOWS
-static  char      BufUrl[512];
+static  char      BufUrl[2024];
 static  ThotBool  isBufUrl = 0;
 #endif /* _WINDOWS */
 
@@ -129,7 +129,7 @@ void AmayaToolBar::GotoSelectedURL()
   wxASSERT(pDoc);
   if (pDoc && pDoc->Call_Text)
     {
-      char buffer[512];
+      char buffer[2024];
       strcpy(buffer, (m_pComboBox->GetValue()).mb_str(wxConvUTF8));
 // patch to go-round a bug on Windows (TEXT_ENTER event called twice)
 #ifdef _WINDOWS 
