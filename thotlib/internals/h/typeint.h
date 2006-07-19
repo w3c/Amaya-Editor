@@ -868,9 +868,6 @@ typedef struct _DocumentDescr
 
   char * DocTypeName; /* this is the document type name given by amaya 
                        * see amaya/amaya.h:DocumentTypeNames table for a complet enumeration */
-#ifdef TEMPLATES
-  char * templatePath;
-#endif /* TEMPLATES */
   
 } DocumentDescr;
 
