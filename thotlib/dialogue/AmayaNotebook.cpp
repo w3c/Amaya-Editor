@@ -207,7 +207,7 @@ int AmayaNotebook::GetPageId( const AmayaPage * p_page )
       page_id++;
     }
 
-  if (found)
+   if (found)
     return page_id-1;
   else
     return -1;
@@ -223,7 +223,16 @@ void AmayaNotebook::OnContextMenu( wxContextMenuEvent & event )
 
   int window_id = m_pAmayaWindow->GetWindowId();
   long flags    = 0;
-  int page_id   = HitTest(ScreenToClient(event.GetPosition()), &flags);
+  int page_id   = 0;
+  wxPoint point = event.GetPosition();
+#ifdef _MACOS
+  point = ScreenToClient(point);
+  if (point.y < 10)
+      point.y = 10;
+  page_id   = HitTest(point, &flags);
+#else /* _MACOS */
+  page_id   = HitTest(ScreenToClient(point), &flags);
+#endif /* _MACOS */
   TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaNotebook::OnContextMenu - page_id=%d, flags=%d"), page_id, flags );
 
   // store the aimed frame, it's possible that it is not the current active one
@@ -231,7 +240,11 @@ void AmayaNotebook::OnContextMenu( wxContextMenuEvent & event )
     {
       m_MContextFrameId = TtaGetFrameId ( window_id, page_id, 1 );
       wxMenu * p_menu = TtaGetContextMenu ( window_id );
-      PopupMenu (p_menu, ScreenToClient(event.GetPosition()));
+#ifdef _MACOS
+      PopupMenu (p_menu, point);
+#else /* _MACOS */
+      PopupMenu (p_menu, ScreenToClient(point));
+#endif /* _MACOS */
     }
 
   //  event.Skip();
