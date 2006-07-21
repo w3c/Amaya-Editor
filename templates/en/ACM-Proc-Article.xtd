@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- This XTiger template defines the structure of an article to be
-     published in the Proceedings of an ACM conference, following the
-     LaTeX style sig-alternate.cls
+<!-- This XTiger template defines the structure of an article for
+     publication in the Proceedings of an ACM conference.
 
      The resulting XHTML document can be formatted by the ACM-Proc-Article.css
-     style sheet, or it can be transformed into a LaTeX file by
-     ACM-Proc-Article2latex.xsl
+     style sheet, both for display and print. It can also be transformed into
+     a LaTeX file (style sig-alternate.cls) with ACM-Proc-Article2latex.xsl
 -->
 
 <html xmlns="http://www.w3.org/1999/xhtml"
@@ -17,9 +16,8 @@
   <link rel="stylesheet" type="text/css" href="ACM-Proc-Article.css" />
 
   <xt:head>
-
     <xt:component name="figure">
-      <div class="figure topfigure">
+      <div class="topfigure">
         <xt:attribute name="id" use="optional"/>
         <img>
            <xt:attribute name="width" use="optional"/>
@@ -63,7 +61,7 @@
         </xt:repeat>
         <span class="title"><xt:use types="string">Report title</xt:use></span>
         <xt:option>
-          <span class="url"><xt:use types="string">url</xt:use></span>
+          <span class="url"><xt:use types="string a">url</xt:use></span>
         </xt:option>
       </p>
     </xt:component>
@@ -77,6 +75,7 @@
             <xt:attribute name="alt" default="Author picture"/>
             <xt:attribute name="width" use="optional"/>
           </img>
+          <br />
         </xt:option>
         <span class="fn">
           <xt:use types="string">Author name</xt:use>
@@ -92,7 +91,6 @@
         </span>
       </p>
     </xt:component>
-
   </xt:head>
 </head>
 
@@ -109,9 +107,7 @@
   <span class="crdata"><xt:use types="string">conference code</xt:use></span>
 </p>
 
-<xt:use types="h1">
-  <h1>Article Title</h1>
-</xt:use>
+<h1><xt:use types="string">Article Title</xt:use></h1>
 
 <div class="authors">
   <xt:repeat minOccurs="1">
@@ -119,6 +115,7 @@
       <p class="vcard">
         <xt:option>
           <img class="photo" src=".." alt="Author picture" />
+          <br />
         </xt:option>
         <span class="fn">Author Name</span>
         <br />
@@ -156,13 +153,9 @@
       </xt:repeat>
     </p>
   </xt:repeat>
-
   <p class="heading">General Terms</p>
-
   <p class="terms"><xt:use types="string"> </xt:use></p>
-
   <p class="heading">Keywords</p>
-
   <p class="keywords"><xt:use types="string"> </xt:use></p>
 </div>
 

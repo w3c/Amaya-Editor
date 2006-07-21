@@ -41,6 +41,8 @@
     div.bibliography h2 {text-indent: -1.6em}
     div.bibliography p {text-indent: -1.6em}
     div.references span.title {font-style: italic}
+    div.references .refarticle span.title {font-style: inherit}
+    div.references .refarticle span.conf {font-style: italic}
 
   /* page layout and style for printing */
   @media print {

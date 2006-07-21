@@ -40,6 +40,9 @@
   <xsl:template match="xhtml:p[@class='noprint']">
   </xsl:template>
 
+  <xsl:template match="xhtml:div[@class='noprint']">
+  </xsl:template>
+
   <!-- replace character underscore by dash to avoid troubles with LaTeX -->
   <xsl:template match="text()">
     <xsl:value-of select="translate(., '_', '-')"/>

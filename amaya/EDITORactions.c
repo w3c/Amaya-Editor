@@ -2490,15 +2490,106 @@ void CreateCol (Document document, View view)
 }
 
 /*----------------------------------------------------------------------
-  ChangeCell creates or transforms a cell
+  FirstDescendantOfTypes
+  Return the first descendant of element el that is of type (ss, type1)
+  or (ss, type2)
+  ----------------------------------------------------------------------*/
+static Element FirstDescendantOfTypes (Element el, SSchema ss, int type1,
+                                       int type2)
+{
+  Element             desc, result;
+  ElementType         elType;
+
+  result = NULL;
+  desc = TtaGetFirstChild (el);
+  while (!result && desc)
+    {
+      elType = TtaGetElementType (desc);
+      if (elType.ElSSchema == ss &&
+          (elType.ElTypeNum == type1 || elType.ElTypeNum == type2))
+        result = desc;
+      else
+        {
+          result = FirstDescendantOfTypes (desc, ss, type1, type2);
+          while (!result && desc)
+            {
+              TtaNextSibling (&desc);
+              result = FirstDescendantOfTypes (desc, ss, type1, type2);
+            }
+        }
+    }
+  return result;
+}
+
+/*----------------------------------------------------------------------
+  LastDescendantOfTypes
+  Return the last descendant of element el that is of type (ss, type1)
+  or (ss, type2)
+  ----------------------------------------------------------------------*/
+static Element LastDescendantOfTypes (Element el, SSchema ss, int type1,
+                                       int type2)
+{
+  Element             desc, result;
+  ElementType         elType;
+
+  result = NULL;
+  desc = TtaGetLastChild (el);
+  while (!result && desc)
+    {
+      elType = TtaGetElementType (desc);
+      if (elType.ElSSchema == ss &&
+          (elType.ElTypeNum == type1 || elType.ElTypeNum == type2))
+        result = desc;
+      else
+        {
+          result = LastDescendantOfTypes (desc, ss, type1, type2);
+          while (!result && desc)
+            {
+              TtaPreviousSibling (&desc);
+              result = LastDescendantOfTypes (desc, ss, type1, type2);
+            }
+        }
+    }
+  return result;
+}
+
+/*----------------------------------------------------------------------
+  ChangeOneCell
+  if element el is a cell of type other, change it to typeCell
+  ----------------------------------------------------------------------*/
+static void ChangeOneCell (Document doc, Element el, SSchema HTMLSSchema,
+                           int other, int typeCell, ThotBool *open)
+{
+  ElementType         elType;
+
+  elType = TtaGetElementType (el);
+  if (elType.ElSSchema == HTMLSSchema && elType.ElTypeNum == other)
+    {
+      /* change the type of this cell */
+      TtaChangeTypeOfElement (el, doc, typeCell);
+      /* open the undo sequence if it is not already open */
+      if (!*open)
+        {
+          TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+          *open = TRUE;
+        }
+      /* register the change in the undo sequence */
+      TtaRegisterElementTypeChange (el, other, doc);
+    }
+}
+
+/*----------------------------------------------------------------------
+  ChangeCell
+  transform all cells in the current selection into typeCell (which is
+  either th or td)
   ----------------------------------------------------------------------*/
 static void ChangeCell (Document doc, View view, int typeCell)
 {
-  Element             el, firstSel, lastSel, parent;
+  Element             el, last, firstSel, lastSel, ancestor, cell, row, body;
   ElementType         elType;
-  SSchema	      HTMLSSchema;
+  SSchema	            HTMLSSchema;
   int                 firstchar, lastchar, other;
-  ThotBool            open = FALSE, done = FALSE;
+  ThotBool            open = FALSE;
 
   if (typeCell == HTML_EL_Heading_cell)
     other = HTML_EL_Data_cell;
@@ -2518,81 +2609,138 @@ static void ChangeCell (Document doc, View view, int typeCell)
 
       TtaGiveLastSelectedElement (doc, &lastSel, &firstchar, &lastchar);
       HTMLSSchema = TtaGetSSchema ("HTML", doc);
-      elType = TtaGetElementType (firstSel);
       el = firstSel;
-      /* Transform enclosing cell */
-      if (elType.ElSSchema == HTMLSSchema &&
-          (elType.ElTypeNum == HTML_EL_TEXT_UNIT ||
-           elType.ElTypeNum == HTML_EL_Basic_Elem ||
-           elType.ElTypeNum == HTML_EL_Element))
+      elType = TtaGetElementType (el);
+
+      if (elType.ElSSchema != HTMLSSchema || 
+          (elType.ElTypeNum != typeCell && elType.ElTypeNum != other))
+        /* the first selected element is not a table cell */
         {
-          /* check the enclosing element */
-          el = TtaGetParent (firstSel);
-          if (el && 
-              (firstSel == lastSel || el == TtaGetParent (lastSel)) &&
-              firstSel == TtaGetFirstChild (el) && lastSel == TtaGetLastChild (el))
+          /* check if there is a cell among its ancestors */
+          elType.ElSSchema = HTMLSSchema;
+          elType.ElTypeNum = other;
+          ancestor = TtaGetTypedAncestor (el, elType);
+          if (!ancestor)
             {
-              /* basic elements with the same parent */
-              elType = TtaGetElementType (el);
-              parent = TtaGetParent (el);
-              if (elType.ElSSchema == HTMLSSchema &&
-                  elType.ElTypeNum ==  HTML_EL_Pseudo_paragraph &&
-                  el == TtaGetFirstChild (parent) && el == TtaGetLastChild (parent))
-                {
-                  /* check the enclosing element */
-                  el = parent;
-                  if (el)
-                    elType = TtaGetElementType (el);
-                }
-              lastSel = el;
+              elType.ElTypeNum = typeCell;
+              ancestor = TtaGetTypedAncestor (el, elType);
             }
+          if (ancestor)
+            /* a cell ancestor was found. Start from that element */
+            el = ancestor;
+          else
+            /* no cell ancestor */
+            {
+              elType = TtaGetElementType (el);
+              if (elType.ElSSchema == HTMLSSchema &&
+                  (elType.ElTypeNum == HTML_EL_Table_ ||
+                   elType.ElTypeNum == HTML_EL_thead ||
+                   elType.ElTypeNum == HTML_EL_tbody ||
+                   elType.ElTypeNum == HTML_EL_tfoot))
+                /* we are in an ascendant of a cell. Get the first descendant
+                   cell */
+                el = FirstDescendantOfTypes (el, HTMLSSchema, typeCell, other);
+            } 
+        }
+      last = lastSel;
+      elType = TtaGetElementType (last);
+      if (elType.ElSSchema != HTMLSSchema || 
+          (elType.ElTypeNum != typeCell && elType.ElTypeNum != other))
+        /* the last selected element is not a table cell */
+        {
+          /* check if there is a cell among its ancestors */
+          elType.ElSSchema = HTMLSSchema;
+          elType.ElTypeNum = other;
+          ancestor = TtaGetTypedAncestor (last, elType);
+          if (!ancestor)
+            {
+              elType.ElTypeNum = typeCell;
+              ancestor = TtaGetTypedAncestor (last, elType);
+            }
+          if (ancestor)
+            /* a cell ancestor was found. Start from that element */
+            last = ancestor;
+          else
+            /* no cell ancestor */
+            {
+              elType = TtaGetElementType (last);
+              if (elType.ElSSchema == HTMLSSchema &&
+                  (elType.ElTypeNum == HTML_EL_Table_ ||
+                   elType.ElTypeNum == HTML_EL_thead ||
+                   elType.ElTypeNum == HTML_EL_tbody ||
+                   elType.ElTypeNum == HTML_EL_tfoot))
+                /* we are in an ascendant of a cell. Get the last descendant
+                   cell */
+                last = LastDescendantOfTypes (last, HTMLSSchema, typeCell,
+                                              other);
+            } 
         }
 
       while (el)
         {
           elType = TtaGetElementType (el);
-          if (elType.ElSSchema == HTMLSSchema && elType.ElTypeNum == typeCell)
-            /* cell has the right type */
-            done = TRUE;
           if (elType.ElSSchema == HTMLSSchema && elType.ElTypeNum == other)
-            {
-              /* change the type of this cell */
-              if (!open)
-                {
-                  TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
-                  open = TRUE;
-                }
-              TtaChangeTypeOfElement (el, doc, typeCell);
-              TtaRegisterElementTypeChange (el, other, doc);
-              done = TRUE;
-            }
-          else if (elType.ElSSchema == HTMLSSchema &&
+            /* it's a cell, change its type */
+            ChangeOneCell (doc, el, HTMLSSchema, other, typeCell, &open);
+          else if (elType.ElSSchema == HTMLSSchema && 
                    elType.ElTypeNum == HTML_EL_Table_row)
+            /* it's a row, change the type of all included cells */
             {
-              /* change the type of all included cells */
-              el = TtaGetFirstChild (el);
-              while (el)
+              cell = TtaGetFirstChild (el);
+              while (cell)
                 {
-                  elType = TtaGetElementType (el);
-                  if (elType.ElSSchema == HTMLSSchema && elType.ElTypeNum == other)
-                    {
-                      TtaChangeTypeOfElement (el, doc, typeCell);
-                      /* register that change */
-                      if (!open)
-                        {
-                          TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
-                          open = TRUE;
-                        }
-                      TtaRegisterElementTypeChange (el, other, doc);
-                    }
-                  TtaGiveNextSelectedElement (doc, &el, &firstchar, &lastchar);
+                  ChangeOneCell (doc, cell, HTMLSSchema, other, typeCell,
+                                 &open);
+                  TtaNextSibling (&cell);
                 }
-              done = TRUE;
             }
-          if (el == lastSel)
+          else if (elType.ElSSchema == HTMLSSchema && 
+                   (elType.ElTypeNum == HTML_EL_thead ||
+                    elType.ElTypeNum == HTML_EL_tbody ||
+                    elType.ElTypeNum == HTML_EL_tfoot))
+            /* it's a thead, tbody or tfoot, change the type of all included
+               cells */
+            {
+              row = TtaGetFirstChild (el);
+              while (row)
+                {
+                  cell = TtaGetFirstChild (row);
+                  while (cell)
+                    {
+                      ChangeOneCell (doc, cell, HTMLSSchema, other, typeCell,
+                                     &open);
+                      TtaNextSibling (&cell);
+                    }
+                  TtaNextSibling (&row);
+                }
+            }
+          else if (elType.ElSSchema == HTMLSSchema && 
+                   elType.ElTypeNum == HTML_EL_Table_body)
+            /* it's a Table_body, change the type of all included cells */
+            {
+              body = TtaGetFirstChild (el);
+              while (body)
+                {
+                  row = TtaGetFirstChild (body);
+                  while (row)
+                    {
+                      cell = TtaGetFirstChild (row);
+                      while (cell)
+                        {
+                          ChangeOneCell (doc, cell, HTMLSSchema, other, typeCell,
+                                         &open);
+                          TtaNextSibling (&cell);
+                        }
+                      TtaNextSibling (&row);
+                    }
+                  TtaNextSibling (&body);
+                }
+            }
+
+          if (el == last)
             el = NULL;
           else
-            TtaGiveNextSelectedElement (doc, &el, &firstchar, &lastchar);
+            TtaGiveNextElement (doc, &el, last);
         }
       if (open)
         TtaCloseUndoSequence (doc);
