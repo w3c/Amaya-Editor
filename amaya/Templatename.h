@@ -22,6 +22,7 @@ static AttributeMapping TemplateAttributeMappingTable[] =
    /* The first entry MUST be unknown_attr */
    /* The rest of this table MUST be in alphabetical order */
    {"unknown_attr", "", 'A', Template_ATTR_Unknown_attribute, L_OtherValue},
+   {"currentOccurs", "", 'A', Template_ATTR_currentOccurs, L_OtherValue},
    {"currentType", "", 'A', Template_ATTR_currentType, L_OtherValue},   
    {"default", "", 'A', Template_ATTR_defaultAt, L_OtherValue},   
    {"exclude", "", 'A', Template_ATTR_exclude, L_OtherValue},
