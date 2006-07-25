@@ -5353,6 +5353,10 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName,
     }
 #endif       
 
+#ifdef TEMPLATES
+  OpeningInstance(newdoc);
+#endif /* TEMPLATES */
+
   TtaFreeMemory (target);
   TtaFreeMemory (documentname);
   TtaFreeMemory (initial_url);
@@ -5714,21 +5718,6 @@ Document GetAmayaDoc (char *urlname, char *form_data,
       TtaFreeMemory (target);
       TtaFreeMemory (documentname);
     }
-
-#ifdef TEMPLATES
-  else
-    {
-      OpeningInstance(newdoc);
-      /*      if(IsAnInstance(doc))
-        {
-        }*/
-      //Look for xtiger PI
-      //If not found finish
-      //Else :
-      //   Load the template (if not already done)
-      //   Save a link to the template on LoadDocuments[doc]...
-    }
-#endif /* TEMPLATES */
 
   TtaFreeMemory (parameters);
   TtaFreeMemory (tempfile);
