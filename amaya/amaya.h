@@ -514,6 +514,7 @@ typedef struct _DocumentMetaDataElement
 #endif /* ANNOTATIONS */
 
 #ifdef TEMPLATES
+  char      *template_url;       /* the url of the original template (or null if not an instance) */
   char      *template_version;   /* if this document is derived from a template,
 				     The name and the version of the template used to create the document 
 				     is stored in this variable */

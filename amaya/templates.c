@@ -66,7 +66,7 @@ void CreateInstanceOfTemplate (Document doc, char *templatename, char *docname)
 #ifdef TEMPLATES
 
   char *s;
-  ThotBool dontRemplace = DontReplaceOldDoc;
+  ThotBool dontReplace = DontReplaceOldDoc;
 
   if (!IsW3Path (docname) && TtaFileExist (docname))
     {
@@ -79,8 +79,8 @@ void CreateInstanceOfTemplate (Document doc, char *templatename, char *docname)
         return;
     }    
 
-  LoadTemplate(doc, templatename);
-  DontReplaceOldDoc = dontRemplace;
+  LoadTemplate(0, templatename);
+  DontReplaceOldDoc = dontReplace;
   CreateInstance(templatename, docname);
   
 #endif /* TEMPLATES */
@@ -239,11 +239,157 @@ ThotBool RepeatMenuClicked (NotifyElement *event)
 	return TRUE;
 }
 
+void OpeningInstance(Document doc)
+{
+#ifdef TEMPLATES
+  char            aux[MAX_LENGTH], content[MAX_LENGTH];
+	ElementType		  piType, lineType, textType;
+	Element			    root, pi, line, text;
+  Language        language;
+	char		        *s;
+  int             size;
+  
+  //If it is a template we must ignore it
+  strcpy(aux, DocumentURLs[doc]);
+  strcpy(content, &aux[strlen(aux)-4]);
+  if(strncasecmp(content, ".XTD", strlen(content))==0) return;
+
+  content[0]='\0';
+
+	//Instanciate all elements
+	root	=	TtaGetMainRoot (doc);
+  
+  //Look for PIs
+  /* check if the document has a DOCTYPE declaration */
+#ifdef ANNOTATIONS
+  if (DocumentTypes[doc]  == docAnnot)
+    piType = TtaGetElementType (root);
+  else
+#endif /* ANNOTATIONS */
+    piType = TtaGetElementType (root);
+  
+  lineType.ElSSchema = piType.ElSSchema;
+  textType.ElSSchema = piType.ElSSchema;
+  
+  s = TtaGetSSchemaName (piType.ElSSchema);
+  
+  if (strcmp (s, "HTML") == 0)
+    {
+      piType.ElTypeNum = HTML_EL_XMLPI;  
+      lineType.ElTypeNum = HTML_EL_PI_line;
+      textType.ElTypeNum = HTML_EL_TEXT_UNIT;
+    }
+#ifdef _SVG
+  else if (strcmp (s, "SVG") == 0)    
+    {
+      piType.ElTypeNum = SVG_EL_XMLPI;  
+      lineType.ElTypeNum = SVG_EL_XMLPI_line;
+      textType.ElTypeNum = SVG_EL_TEXT_UNIT;
+    }
+#endif /* _SVG */
+  else if (strcmp (s, "MathML") == 0)
+    {
+      piType.ElTypeNum = MathML_EL_XMLPI;  
+      lineType.ElTypeNum = MathML_EL_XMLPI_line;
+      textType.ElTypeNum = MathML_EL_TEXT_UNIT;
+    }
+  else
+    {
+      piType.ElTypeNum = XML_EL_xmlpi;
+      lineType.ElTypeNum = XML_EL_xmlpi_line;
+      textType.ElTypeNum = XML_EL_TEXT_UNIT;
+    }
+  
+  pi = TtaSearchTypedElement (piType, SearchInTree, root);  
+  while(pi!=NULL)
+    {
+      content[0] = '\0';
+      line = TtaSearchTypedElement (lineType, SearchInTree, pi);
+      while(line!=NULL)
+        {
+          text = TtaSearchTypedElement (textType, SearchInTree, line);
+          size = MAX_LENGTH;
+          TtaGiveTextContent(text, (unsigned char*)aux, &size, &language);
+          strcat(content, aux);
+
+          //This is not an XTiger PI
+          if(!strstr(content,"xtiger")) break;            
+ 
+          line = TtaSearchTypedElement (lineType, SearchForward, line);
+        }
+      pi = TtaSearchTypedElement (piType, SearchForward, pi);
+    }
+
+  DocumentMeta[doc]->template_url = NULL;
+
+  if(content[0]=='\0')
+    return;
+    
+  char *pointer;
+  
+  //xtiger
+  strcpy(aux, content);
+  aux[6]='\0';
+  if(strcmp(aux,"xtiger")!=0)
+    return;
+  
+  //template
+  pointer = strstr(content, "template");
+  if(pointer==NULL)
+    return;
+
+  //=
+  pointer = strstr(pointer, "=");
+  if(pointer==NULL)
+    return;
+  
+  //"
+  pointer = strstr(pointer, "\"");
+  if(pointer==NULL)
+    return;
+  
+  //content
+  strcpy(aux, pointer+1);
+  pointer = strstr(aux, "\"");
+  if(pointer==NULL)
+    return;
+  *pointer = '\0';
+  
+  //and finally
+  DocumentMeta[doc]->template_url = TtaStrdup(aux);
+
+  if(!templates) InitializeTemplateEnvironment();
+
+  XTigerTemplate t = (XTigerTemplate)Get(templates, aux);
+
+  if(!t)
+    {
+      LoadTemplate(0, aux);
+      t = (XTigerTemplate)Get(templates, aux);
+    }
+  AddUser(t);
+
+#endif /* TEMPLATES */
+}
+
 /*----------------------------------------------------------------------
-  ClosingDocument
+  ClosingInstance
   Callback called before closing a document. Checks for unused templates.
   ----------------------------------------------------------------------*/
-void ClosingDocument(NotifyDialog* dialog)
+ThotBool ClosingInstance(NotifyDialog* dialog)
 {
-  return;
+#ifdef TEMPLATES
+  //If it is a template all has been already freed
+  if(DocumentMeta[dialog->document] == NULL) return FALSE;
+
+  char *turl = DocumentMeta[dialog->document]->template_url;
+  if(turl)
+    {
+      XTigerTemplate t = (XTigerTemplate)Get(templates, turl);
+      if(t)
+        RemoveUser(t);
+      TtaFreeMemory(turl);
+    }
+#endif /* TEMPLATES */
+  return FALSE;
 }

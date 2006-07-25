@@ -102,8 +102,44 @@ Record FindPrevious (DicDictionary dic, const char * key, ThotBool *isFirst)
 }
 
 /*----------------------------------------------------------------------
+  Looks up dic for the element
+  Returns :
+  null !isFirst  : if the element key has not been found.
+	null isFirst   : if the element key has been found but it is the first 
+  in the linked list.
+  !null !isFirst : if the element key has been found returns the previous element.
   ----------------------------------------------------------------------*/
-DicElement Add (DicDictionary dic, const char * key, DicElement el)
+Record FindPreviousElement (DicDictionary dic, const DicElement el, ThotBool *isFirst)
+{
+	Record rec        = dic->first;
+	Record precedent  = NULL;
+  ThotBool found    = FALSE;
+
+  while(rec && !found)
+    {
+      found = rec->element == el;
+      if(!found)
+        {
+          precedent = rec;
+          rec = rec->next;
+        }
+    }
+	
+	if (found)
+    {
+      *isFirst = precedent == NULL;
+      return precedent;
+    }
+	else
+    { //Element not found
+      *isFirst = FALSE;
+      return NULL;
+    }
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+DicElement Add (DicDictionary dic, const char * key, const DicElement el)
 {	
 	Record     rec = Find(dic, key);
 	Record     newRec;
@@ -147,6 +183,37 @@ DicElement Remove (DicDictionary dic, const char * key)
 	DicElement result = NULL;
 
 	Record rec = FindPrevious(dic, key, &isFirst);
+	if (isFirst)
+    {
+      aux = dic->first;
+      dic->first = aux->next;
+    }
+	else if (!rec)
+    //The element is not in the dictionary
+		return NULL; 
+	else
+    {
+      aux = rec->next;
+      rec->next = aux->next;
+    }
+
+	TtaFreeMemory(aux->key);
+	result = aux->element;
+	TtaFreeMemory(aux);
+
+	return result;
+}
+
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+DicElement RemoveElement (DicDictionary dic, const DicElement el)
+{
+	ThotBool isFirst;
+	Record aux = NULL;
+	DicElement result = NULL;
+
+	Record rec = FindPreviousElement(dic, el, &isFirst);
 	if (isFirst)
     {
       aux = dic->first;

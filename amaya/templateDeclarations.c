@@ -7,6 +7,7 @@
 #ifdef TEMPLATES
 
 #include "templateDeclarations.h"
+#include "HTMLactions_f.h"
 
 #define UNION_ANY            "any"
 #define UNION_ANYCOMPONENT   "anyComponent"
@@ -22,14 +23,14 @@
 struct _XTigerTemplate
 {	
   ThotBool        isLibrary;			//Is this a library? (otherway it's a template)
-#ifdef TODO_XTIGER
+  ThotBool        isPredefined;   //Is this the predefined library
   DicDictionary   libraries;			//Imported libraries
-#endif
-  DicDictionary   simpleTypes;			//All simple types declared in the document
+  DicDictionary   simpleTypes;		//All simple types declared in the document
   DicDictionary   elements;				//All element types declared in the document
   DicDictionary   components;			//All component types declared in the document
-  DicDictionary   unions;				//All union types declared in the document
-  Document        doc;                  //Use to store component structures
+  DicDictionary   unions;				  //All union types declared in the document
+  Document        doc;            //Use to store component structures
+  int             users;          //Number of documents using this template
 };
 
 /* Structure of a Declaration */
@@ -86,17 +87,18 @@ XTigerTemplate NewXTigerTemplate (const char *templatePath, const ThotBool addPr
 	XTigerTemplate t = (XTigerTemplate)TtaGetMemory (sizeof(_XTigerTemplate));
 	
 	t->isLibrary    = FALSE;
-#ifdef TODO_XTIGER
 	t->libraries    = CreateDictionary();
-#endif
-	t->elements		= CreateDictionary();
+	t->elements		  = CreateDictionary();
 	t->simpleTypes	= CreateDictionary();
-	t->components	= CreateDictionary();
-	t->unions		= CreateDictionary();
+	t->components	  = CreateDictionary();
+	t->unions		    = CreateDictionary();
 	t->doc          = -1;
+  t->users        = 0;
+  t->isPredefined = FALSE;
+
 	if (addPredefined)
-		AddLibraryDeclarations (t,(XTigerTemplate)Get (templates, PREDEFINED_LIB));
-	
+		AddLibraryDeclarations (t,(XTigerTemplate)Get (templates, PREDEFINED_LIB));	
+
 	Add (templates, templatePath, t);
 
 	return t;
@@ -140,6 +142,8 @@ XTigerTemplate CreatePredefinedTypesLibrary ()
   
 	NewUnion(lib, UNION_ANY, 
            CreateDictionaryFromList(UNION_ANY_DEFINITION));
+
+  lib->isPredefined = TRUE;
 
 	return lib;
 #else
@@ -243,19 +247,6 @@ void NewSimpleType (XTigerTemplate t, const char *name, TypeNature xtype)
 	AddDeclaration(t, dec);
 #endif /* TEMPLATES */
 }
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-/*Document CreateDocumentOfType(const Element el)
-{
-	Document     doc;
-	char         *schema, *document;
-	ElementType  type;
-
-	TtaGetSSchemaName(TtaGetSSchema(type->
-
-	TtaNewDocument(schema, document);
-}*/
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -366,21 +357,12 @@ void FreeXTigerTemplate (XTigerTemplate t)
 	DicDictionary  dic;
 	Declaration    dec;
 
-#ifdef TODO_XTIGER
-    XTigerTemplate lib;
 	dic = t->libraries;
-	//TODO : Clean only unused libraries (not the predefined) and elements declared by t
+
 	for (First(dic); !IsDone(dic); Next(dic))
-    {
-      lib = (XTigerTemplate)CurrentElement (dic);
-      lib->documentUsingMe--;
-      if (lib->documentUsingMe == 0) //If nobody uses the library
-        if (strcmp(CurrentKey(dic), PREDEFINED_LIB) != 0) //And it's not the predefined library
-          FreeXTigerTemplate (lib);
-    }
+    RemoveUser((XTigerTemplate)CurrentElement(dic));
 
 	CleanDictionary (dic);
-#endif
 
 	//Cleaning the components
 	dic = t->components;
@@ -426,6 +408,14 @@ void FreeXTigerTemplate (XTigerTemplate t)
     }
 	CleanDictionary (dic);
 
+  //Freeing the document
+  FreeDocumentResource(t->doc);
+  TtcCloseDocument(t->doc, 0);
+
+  //Removing the template of the dictionary
+  RemoveElement(templates, t);
+
+  //Freeing the template
 	TtaFreeMemory (t);
 #endif /* TEMPLATES */
 }
@@ -695,3 +685,20 @@ void SetTemplateDocument(XTigerTemplate t, Document doc)
   t->doc = doc;
 #endif /* TEMPLATES */
 }
+
+void AddUser(XTigerTemplate t)
+{
+#ifdef TEMPLATES
+  t->users++;
+#endif /* TEMPLATES */
+}
+
+void RemoveUser(XTigerTemplate t)
+{
+#ifdef TEMPLATES
+  t->users--;
+  if(t->users == 0 && !t->isPredefined)
+    FreeXTigerTemplate(t);  
+#endif /* TEMPLATES */
+}
+

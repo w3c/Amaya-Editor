@@ -214,7 +214,8 @@ void LoadTemplate (Document doc, char* templatename)
 		//Creation of the callback context
 		TemplateCtxt *ctx	= (TemplateCtxt *)TtaGetMemory (sizeof (TemplateCtxt));
 		ctx->templatePath	= TtaStrdup (templatename);
-	
+
+    DontReplaceOldDoc = TRUE;
 		newdoc = GetAmayaDoc (templatename, NULL, doc, doc, CE_MAKEBOOK, FALSE, 
 			(void (*)(int, int, char*, char*, const AHTHeaders*, void*)) LoadTemplate_callback,
 			(void *) ctx);

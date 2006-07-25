@@ -195,6 +195,15 @@ ATTRIBUTES
       create DoubleQuote;
     end;
 
+  currentOccurs :
+    begin
+      create SAN;
+      create 'currentOccurs=';
+      create DoubleQuote;
+      create currentOccurs;
+      create DoubleQuote;
+    end;
+
   types :
     begin
       create SAN;

@@ -9,4 +9,6 @@ extern char *GetSchemaFromDocType (DocumentType docType);
 
 extern char *GetAttributeStringValue (Element el, int att);
 
+extern char *GetAttributeStringValue (Element el, Attribute attribute);
+
 #endif /* TEMPLATE_UTILS */

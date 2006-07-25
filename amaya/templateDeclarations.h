@@ -109,6 +109,9 @@ extern void SetTemplateDocument(XTigerTemplate t, Document doc);
 
 //Access to component members
 extern Element GetComponentContent(Declaration d);
+extern void AddUser(XTigerTemplate t);
+extern void RemoveUser(XTigerTemplate t);
+
 
 
 #endif //TEMPLATE_DECLARATIONS

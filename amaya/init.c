@@ -31,6 +31,7 @@
 #include "MENUconf.h"
 
 #ifdef TEMPLATES
+#include "templates.h"
 #include "templateDeclarations.h"
 #endif /* TEMPLATES */
 
@@ -5364,6 +5365,7 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName,
   CheckRefresh (newdoc);
 }
 
+
 /*----------------------------------------------------------------------
   GetAmayaDoc loads the document if it is not loaded yet and calls the
   parser if the document can be parsed.
@@ -5712,6 +5714,22 @@ Document GetAmayaDoc (char *urlname, char *form_data,
       TtaFreeMemory (target);
       TtaFreeMemory (documentname);
     }
+
+#ifdef TEMPLATES
+  else
+    {
+      OpeningInstance(newdoc);
+      /*      if(IsAnInstance(doc))
+        {
+        }*/
+      //Look for xtiger PI
+      //If not found finish
+      //Else :
+      //   Load the template (if not already done)
+      //   Save a link to the template on LoadDocuments[doc]...
+    }
+#endif /* TEMPLATES */
+
   TtaFreeMemory (parameters);
   TtaFreeMemory (tempfile);
   TtaFreeMemory (initial_url);

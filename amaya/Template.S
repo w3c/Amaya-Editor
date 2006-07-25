@@ -41,7 +41,7 @@ STRUCT
   		ANY - ( head, union, import, component );
   	END;
 
-  repeat ( ATTR id = TEXT; minOccurs = TEXT; maxOccurs = TEXT; title )
+  repeat ( ATTR id = TEXT; minOccurs = TEXT; maxOccurs = TEXT; currentOccurs = TEXT; title )
   	= LIST OF ( Repetition 
 		= CASE OF
 		useEl;

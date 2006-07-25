@@ -11,6 +11,8 @@
 
 #ifdef TEMPLATES
 
+#define TEMPLATE_SCHEMA_NAME "Template"
+ 
 typedef struct _InstanciationCtxt
 {
 	char *			templatePath;
@@ -144,6 +146,7 @@ void  CreateInstance(char *templatePath, char *instancePath) {
       
       TtaCloseUndoSequence(doc);
       TtaUndoNoRedo(doc);
+      TtaClearUndoHistory(doc);
     }
 
   if(!alreadyViewing) //Open the instance
@@ -203,6 +206,112 @@ void InstanciateTemplate (Document doc, char *templatename, char *docname,
 #endif /* TEMPLATES */
 }
 
+void InstanciateRepeat(XTigerTemplate t, Element el, Document doc)
+{
+#ifdef TEMPLATES
+  int            curVal,  minVal,  maxVal;
+  Attribute      curAtt,  minAtt,  maxAtt;
+  AttributeType  curType, minType, maxType;
+  char           *text, *error;
+
+  //Preparing types
+  minType.AttrSSchema = maxType.AttrSSchema = curType.AttrSSchema 
+    = TtaGetSSchema(TEMPLATE_SCHEMA_NAME, doc);
+
+  curType.AttrTypeNum = Template_ATTR_currentOccurs; 
+  minType.AttrTypeNum = Template_ATTR_minOccurs;
+  maxType.AttrTypeNum = Template_ATTR_maxOccurs;
+
+  //Get currentOccurs, minOccurs and maxOccurs attributes
+  curAtt = TtaGetAttribute(el, curType);
+  minAtt = TtaGetAttribute(el, minType);
+  maxAtt = TtaGetAttribute(el, maxType);
+
+  //Get the values
+  if(minAtt)
+    {
+      text = GetAttributeStringValue(el, minAtt);
+      if(text)
+        {
+          minVal = atoi(text);
+          TtaFreeMemory(text);
+        }
+      else
+        //Error : Attribute with no value
+        return;
+    }
+  else
+    minVal = 0;
+
+  if(maxAtt)
+    {
+      text = GetAttributeStringValue(el, maxAtt);
+      if(text)
+        {
+          if(strcmp(text,"*")==0)
+            maxVal = INT_MAX;
+          else
+            maxVal = atoi(text);
+          TtaFreeMemory(text);
+        }
+      else
+        //Error : Attribute with no value
+        return;
+    }
+  else
+    maxVal = INT_MAX;
+
+  if(curAtt)
+    {
+      text = GetAttributeStringValue(el, curAtt);
+      if(text)
+        {
+          maxVal = atoi(text);
+          TtaFreeMemory(text);
+        }
+      else
+        //Error : Attribute with no value
+        return;
+    }
+  else
+    curVal = minVal;
+
+  text = (char*)TtaGetMemory(MAX_LENGTH);
+
+  //Create non existing attributes
+  if(!minAtt)
+    {      
+      minAtt = TtaNewAttribute(minType);
+      sprintf(text,"%d",minVal);
+      TtaAttachAttribute(el, minAtt, doc);
+      TtaSetAttributeText(minAtt, text, el, doc);
+    }
+
+  if(!maxAtt)
+    {  
+      maxAtt = TtaNewAttribute(maxType);
+      if(maxVal<INT_MAX)
+        sprintf(text,"%d",maxVal);
+      else
+        sprintf(text,"*");
+      TtaAttachAttribute(el, maxAtt, doc);      
+      TtaSetAttributeText(maxAtt, text, el, doc);
+    }
+
+  if(!curAtt)
+    {      
+      curAtt = TtaNewAttribute(curType);
+      sprintf(text,"%d",curVal);
+      TtaAttachAttribute(el, curAtt, doc);
+      TtaSetAttributeText(curAtt, text, el, doc);
+    }
+  
+  if(text)
+    TtaFreeMemory(text);
+
+#endif /* TEMPLATES */
+}
+
 /*----------------------------------------------------------------------
 ----------------------------------------------------------------------*/
 void ParseTemplate (XTigerTemplate t, Element el, Document doc)
@@ -256,8 +365,10 @@ void ParseTemplate (XTigerTemplate t, Element el, Document doc)
         case Template_EL_attribute :
           //Initialize the attribute
           //Allow the edition of the attribute
+          break;
         case Template_EL_repeat :
-          //Create the min number of repetitñions
+          InstanciateRepeat(t, el, doc);
+          break;
         default :
           break;
         }
@@ -367,8 +478,7 @@ edition.
 ----------------------------------------------------------------------*/
 void PreInstanciateComponents(XTigerTemplate t)
 {
-#ifdef TEMPLATES
-  /*
+#ifdef TEMPLATES 
   DicDictionary components = GetComponents(t);
   Declaration comp;
 
@@ -377,6 +487,5 @@ void PreInstanciateComponents(XTigerTemplate t)
       comp = (Declaration) CurrentElement(components);
       ParseTemplate(t, GetComponentContent(comp), GetTemplateDocument(t));
     }
-  */
 #endif /* TEMPLATES */
 }

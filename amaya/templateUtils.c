@@ -47,3 +47,18 @@ char *GetAttributeStringValue (Element el, int att)
 	return '\0';
 #endif /* TEMPLATES */
 }
+
+/*----------------------------------------------------------------------
+Returns the value of a string attribute 
+----------------------------------------------------------------------*/
+char *GetAttributeStringValue (Element el, Attribute attribute)
+{
+#ifdef TEMPLATES
+	int size = TtaGetTextAttributeLength(attribute);
+	char *aux = (char*) TtaGetMemory(size+1);
+	TtaGiveTextAttributeValue (attribute, aux, &size);
+	return aux;
+#else
+	return '\0';
+#endif /* TEMPLATES */
+}

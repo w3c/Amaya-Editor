@@ -55,12 +55,27 @@ extern Record Find ( DicDictionary dic, const char * key );
 extern Record FindPrevious ( DicDictionary dic, const char * key, ThotBool *isFirst );
 
 /*----------------------------------------------------------------------
+  Looks up dic for the element identified by key.
+  Returns :
+  null !isFirst  : if the element key has not been found.
+	null isFirst   : if the element key has been found but it is the first 
+  in the linked list.
+  !null !isFirst : if the element key has been found returns the previous element.
   ----------------------------------------------------------------------*/
-extern DicElement Add ( DicDictionary dic, const char * key, DicElement el );
+extern Record FindPreviousElement ( DicDictionary dic, const DicElement el, ThotBool *isFirst );
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+extern DicElement Add ( DicDictionary dic, const char * key, const DicElement el );
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 extern DicElement Remove ( DicDictionary dic, const char * key);
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+extern DicElement RemoveElement ( DicDictionary dic, const DicElement el);
+
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
