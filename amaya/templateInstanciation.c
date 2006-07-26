@@ -212,7 +212,7 @@ void InstanciateRepeat(XTigerTemplate t, Element el, Document doc)
   int            curVal,  minVal,  maxVal;
   Attribute      curAtt,  minAtt,  maxAtt;
   AttributeType  curType, minType, maxType;
-  char           *text, *error;
+  char           *text;
 
   //Preparing types
   minType.AttrSSchema = maxType.AttrSSchema = curType.AttrSSchema 
@@ -305,10 +305,39 @@ void InstanciateRepeat(XTigerTemplate t, Element el, Document doc)
       TtaAttachAttribute(el, curAtt, doc);
       TtaSetAttributeText(curAtt, text, el, doc);
     }
-  
+
   if(text)
     TtaFreeMemory(text);
 
+  //We must have currentOccurs children
+  Element  child, newChild;
+  int      childrenCount;
+
+  child = TtaGetFirstChild(el);
+  if(!child)
+    //Error : a repeat must have at least one child which will be the model
+    return;
+  
+  for(childrenCount = 0; child; TtaNextSibling(&child))
+    {
+      //TODO : Check that every children is valid
+      childrenCount ++;
+    }
+
+  if(childrenCount > maxVal)
+    //Error : too many children!
+    return;  
+
+  child = TtaGetLastChild(el);
+
+  while(childrenCount < curVal)
+    {
+      //Create a new child
+      newChild = TtaCopyTree(child, doc, doc, el);
+      TtaInsertSibling(newChild, child, FALSE, doc);
+      child = newChild;
+      childrenCount++;
+    }
 #endif /* TEMPLATES */
 }
 

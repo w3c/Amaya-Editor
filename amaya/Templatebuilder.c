@@ -100,7 +100,7 @@ void TemplateElementComplete (ParserData *context, Element el, int *error)
 {
   Document		doc;
   ElementType	elType, childType;
-  Element		  last, child, newChild;
+  Element		  last, child, newChild, next;
 
   doc = context->doc;
   elType = TtaGetElementType (el);
@@ -139,16 +139,20 @@ void TemplateElementComplete (ParserData *context, Element el, int *error)
 
 	case Template_EL_repeat :
 	  //If the content is not a XTiger element, we fold it in a folder
-	  child = TtaGetFirstChild(el);
-	  childType = TtaGetElementType(child);
-	  if(strcmp(TtaGetSSchemaName(childType.ElSSchema),"Template")!=0)
-	  {
-		  elType.ElTypeNum = Template_EL_folder;
-		  newChild = TtaNewElement(doc, elType);
-		  TtaRemoveTree(child, doc);
-		  TtaInsertFirstChild(&child, newChild, doc);
-		  TtaInsertFirstChild(&newChild, el, doc);
-	  }
+	  for(child = TtaGetFirstChild(el); child; child = next)
+      {
+        next = child;
+        TtaNextSibling(&next);
+        childType = TtaGetElementType(child);
+        if(strcmp(TtaGetSSchemaName(childType.ElSSchema),"Template")!=0)
+          {
+            elType.ElTypeNum = Template_EL_folder;
+            newChild = TtaNewElement(doc, elType);
+            TtaRemoveTree(child, doc);
+            TtaInsertFirstChild(&child, newChild, doc);
+            TtaInsertFirstChild(&newChild, el, doc);
+          }
+      }
     default:
       break;
     }
