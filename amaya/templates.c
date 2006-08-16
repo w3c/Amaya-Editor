@@ -239,6 +239,8 @@ ThotBool RepeatMenuClicked (NotifyElement *event)
 	return TRUE;
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void OpeningInstance(Document doc)
 {
 #ifdef TEMPLATES
@@ -249,16 +251,17 @@ void OpeningInstance(Document doc)
 	char		        *s;
   int             size;
   
+  if (DocumentURLs[doc] == NULL)
+    return;
   //If it is a template we must ignore it
-  strcpy(aux, DocumentURLs[doc]);
-  strcpy(content, &aux[strlen(aux)-4]);
-  if(strncasecmp(content, ".XTD", strlen(content))==0) return;
+  strcpy (aux, DocumentURLs[doc]);
+  strcpy (content, &aux[strlen(aux)-4]);
+  if(strncasecmp (content, ".XTD", strlen(content))==0)
+    return;
 
-  content[0]='\0';
-
+  content[0] = EOS;
 	//Instanciate all elements
-	root	=	TtaGetMainRoot (doc);
-  
+	root =	TtaGetMainRoot (doc);
   //Look for PIs
   /* check if the document has a DOCTYPE declaration */
 #ifdef ANNOTATIONS
