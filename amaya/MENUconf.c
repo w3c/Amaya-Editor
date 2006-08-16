@@ -4645,14 +4645,14 @@ void PreferenceMenu (Document document, View view)
 static void PreferenceCallbackDialog (int ref, int typedata, char *data)
 {
 #ifdef _WX
-  int val;
+  intptr_t val;
 
   if (ref == -1)
     TtaDestroyDialogue (PreferenceBase);
   else
     {
       /* has the user changed the options? */
-      val = (int) data;
+      val = (intptr_t) data;
       switch (ref - PreferenceBase)
         {
         case 0:
