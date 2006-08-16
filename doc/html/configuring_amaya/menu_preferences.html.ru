@@ -3,10 +3,9 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
-  <title>Меню Настройки
-</title>
-  <meta name="GENERATOR" content="amaya 8.6, see http://www.w3.org/Amaya/" />
+  <meta http-equiv="content-type" content="text/html; charset=windows-1251" />
+  <title>Меню Настройки</title>
+  <meta name="GENERATOR" content="amaya 9.52, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -15,13 +14,15 @@
 <table border="0" width="100%" summary="toc">
   <tbody>
     <tr>
-      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
-        src="../../images/amaya.gif" /></td>
+      <td><img alt="W3C" src="../../images/w3c_home" />
+         <img alt="Amaya" src="../../images/amaya.gif" />
+      </td>
       <td><p align="right"><a
         href="about_configuration_directory_and_file_conventions.html.ru"
-        accesskey="p"><img alt="Предыдущий" src="../../images/left.gif"
-        /></a> <a href="../Configure.html.ru" accesskey="t"><img alt="Вверх"
-        src="../../images/up.gif" /></a></p>
+        accesskey="p"><img alt="Предыдущий" src="../../images/left.gif" />
+        </a> <a href="../Configure.html.ru" accesskey="t"><img alt="Вверх"
+        src="../../images/up.gif" />
+        </a></p>
       </td>
     </tr>
   </tbody>
@@ -458,7 +459,7 @@ style="margin-left:.2in;border-collapse:  collapse;border:none;">
     Silver-серебристый, Teal, Yellow-жёлтый, и White-белый.
     <p></p>
   </li>
-  <li>Правильный формат hex кода #FF00F.
+  <li>Правильный формат hex кода #FF00FF.
     <p></p>
   </li>
   <li>Правильный RGB формат rgb(255, 0, 255).</li>
