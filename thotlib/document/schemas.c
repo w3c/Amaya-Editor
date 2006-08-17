@@ -2828,19 +2828,15 @@ void CopyNamespaceDeclarations (PtrDocument docSource, PtrElement elSource,
       uriDecl = docSource->DocNsUriDecl;
       while (uriDecl)
         {
-          if (uriDecl->NsUriName /*&&
-              strcmp (uriDecl->NsUriName, elSource->ElStructSchema->SsUriName) == 0*/)
+          if (uriDecl->NsUriName)
             {
-              /* The URI corresponding to the element schema has been found */
-              /* Search the first associated prefix */
-              /* Add a new prefix/element declaration */
               if (uriDecl->NsPtrPrefix)
                 {
                   prefixDecl = uriDecl->NsPtrPrefix;
                   while (prefixDecl)
                     {
                       if (prefixDecl->NsPrefixElem == elSource)
-                        /* duplicate the declaration */
+                        /* duplicate the URI declaration attached to the element */
                         SetNamespaceDeclaration (docTarget, elTarget,
                                                  prefixDecl->NsPrefixName,
                                                  uriDecl->NsUriName);
