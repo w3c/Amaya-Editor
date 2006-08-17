@@ -900,9 +900,6 @@ void HelpAtW3C (Document document, View view)
 {
   char      localname[MAX_LENGTH];
 
-#ifdef LC
-  TtaShowNamespaceDeclarations (document);
-#endif /* LC */
   strcpy (localname, AMAYA_PAGE_DOC);
   strcat (localname, "BinDist.html");
 #ifdef _WX

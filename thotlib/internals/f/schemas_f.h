@@ -103,11 +103,14 @@ extern void ChangeGenericSchemaNames ( char *sSchemaUri,
                                        PtrDocument pDoc );
 extern void SetNamespaceDeclaration ( PtrDocument pDoc,
                                       PtrElement element,
-                                      char *NsPrefix,
+                                      char *nsPrefix,
                                       char *NsUri );
-extern void ShowNamespaceDeclarations ( PtrDocument pDoc );
-extern char * GiveCurrentNsUri ( PtrDocument pDoc,
-                                 PtrElement pEl );
+extern void CopyNamespaceDeclarations ( PtrDocument docSource,
+                                        PtrElement elSource,
+                                        PtrDocument docTarget,
+                                        PtrElement elTarget );
+extern char *GiveCurrentNsUri ( PtrDocument pDoc,
+                                PtrElement pEl );
 
 #else /* __STDC__ */
 
@@ -208,11 +211,14 @@ extern void ChangeGenericSchemaNames ( char *sSchemaUri,
                                          PtrDocument pDoc );
 extern void SetNamespaceDeclaration ( PtrDocument pDoc,
                                         PtrElement element,
-                                        char *NsPrefix,
+                                        char *nsPrefix,
                                         char *NsUri );
-extern void ShowNamespaceDeclarations ( PtrDocument pDoc );
-extern char * GiveCurrentNsUri ( PtrDocument pDoc,
-                                   PtrElement pEl );
+extern void CopyNamespaceDeclarations ( PtrDocument docSource,
+                                          PtrElement elSource,
+                                          PtrDocument docTarget,
+                                          PtrElement elTarget );
+extern char *GiveCurrentNsUri ( PtrDocument pDoc,
+                                  PtrElement pEl );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

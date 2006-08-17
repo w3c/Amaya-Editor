@@ -751,7 +751,7 @@ extern void TtaSetDocumentProfile (Document document, int profile);
   Sets a namespace declaration for an element 
  ----------------------------------------------------------------------*/
 void TtaSetANamespaceDeclaration (Document document, Element element,
-				 char *Ns_Prefix, char *Ns_Uri);
+                                  char *Ns_Prefix, char *Ns_Uri);
 
 /*----------------------------------------------------------------------
   TtaFreeElemNamespaceDeclarations
@@ -764,12 +764,6 @@ void TtaFreeElemNamespaceDeclarations (Document document, Element element);
   Free all the namespaces declarations of a document
  ----------------------------------------------------------------------*/
 void TtaFreeNamespaceDeclarations (Document document);
-
-/*----------------------------------------------------------------------
-  TtaShowNamespaceDeclarations
-  Show the namespaces declarations related to a document
- ----------------------------------------------------------------------*/
-void TtaShowNamespaceDeclarations (Document document);
 
 /*----------------------------------------------------------------------
   TtaSetUriSSchema

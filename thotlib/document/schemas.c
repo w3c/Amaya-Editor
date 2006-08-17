@@ -2689,13 +2689,13 @@ void ChangeGenericSchemaNames (char *sSchemaUri, char *sSchemaName, PtrDocument 
   AddANewNamespacePrefix
   ----------------------------------------------------------------------*/
 static void AddANewNamespacePrefix (PtrDocument pDoc, PtrElement element,
-                                    char *NsPrefix, PtrNsUriDescr uriDecl)
+                                    char *nsPrefix, PtrNsUriDescr uriDecl)
 {
   PtrNsPrefixDescr   newPrefixDecl, lastPrefixDecl, prevPrefixDecl;
 
   lastPrefixDecl = uriDecl->NsPtrPrefix;
   prevPrefixDecl = lastPrefixDecl;
-  while (lastPrefixDecl != NULL)
+  while (lastPrefixDecl)
     {
       if (lastPrefixDecl->NsPrefixElem == element)
         /* avoid to duplicate a declaration for the same element */
@@ -2708,11 +2708,8 @@ static void AddANewNamespacePrefix (PtrDocument pDoc, PtrElement element,
   if (newPrefixDecl == NULL)
     return;
   memset (newPrefixDecl, 0, sizeof (NsPrefixDescr));
-  if (NsPrefix != NULL)
-    {
-      newPrefixDecl->NsPrefixName = (char *)TtaGetMemory (strlen (NsPrefix) + 1);
-      strcpy (newPrefixDecl->NsPrefixName, NsPrefix);
-    }
+  if (nsPrefix)
+    newPrefixDecl->NsPrefixName = (char *)TtaStrdup (nsPrefix);
   newPrefixDecl->NsPrefixElem = element;
 
   if (uriDecl->NsPtrPrefix == NULL)
@@ -2727,7 +2724,7 @@ static void AddANewNamespacePrefix (PtrDocument pDoc, PtrElement element,
   AddANewNamespaceUri
   ----------------------------------------------------------------------*/
 static void AddANewNamespaceUri (PtrDocument pDoc, PtrElement element,
-                                 char *NsPrefix, char *NsUri)
+                                 char *nsPrefix, char *NsUri)
 {
   PtrNsUriDescr  newUriDecl, uriDecl, prevUriDecl;
 
@@ -2736,10 +2733,7 @@ static void AddANewNamespaceUri (PtrDocument pDoc, PtrElement element,
     return;
   memset (newUriDecl, 0, sizeof (NsUriDescr));
   if (NsUri != NULL)
-    {
-      newUriDecl->NsUriName = (char *)TtaGetMemory (strlen (NsUri) + 1);
-      strcpy (newUriDecl->NsUriName, NsUri);
-    }
+    newUriDecl->NsUriName = (char *)TtaStrdup (NsUri);
   else
     newUriDecl->NsUriName = NULL;
   newUriDecl->NsUriSSchema = element->ElStructSchema;
@@ -2759,30 +2753,30 @@ static void AddANewNamespaceUri (PtrDocument pDoc, PtrElement element,
     }
 
   /* Add a new prefix/element declaration */
-  AddANewNamespacePrefix (pDoc, element, NsPrefix, newUriDecl);
+  AddANewNamespacePrefix (pDoc, element, nsPrefix, newUriDecl);
 }
 
 /*----------------------------------------------------------------------
-  UpdateNamespaceDeclaration
+  SetNamespaceDeclaration
   Add a namespace declaration to the document
   ----------------------------------------------------------------------*/
 void SetNamespaceDeclaration (PtrDocument pDoc, PtrElement element,
-                              char *NsPrefix, char *NsUri)
+                              char *nsPrefix, char *NsUri)
 {
   PtrNsUriDescr   uriDecl;
   ThotBool        found;
 
   uriDecl = NULL;
   found = FALSE;
-  if (pDoc->DocNsUriDecl != NULL)
+  if (pDoc->DocNsUriDecl)
     {
       /* Search if this uri has been already declared */
       uriDecl = pDoc->DocNsUriDecl;
-      if (NsUri != NULL)
+      if (NsUri)
         {
-          while (!found && (uriDecl != NULL))
+          while (!found && uriDecl)
             {
-              if (uriDecl->NsUriName != NULL)
+              if (uriDecl->NsUriName)
                 {
                   if (strcmp (uriDecl->NsUriName, NsUri) == 0)
                     found = TRUE;
@@ -2795,7 +2789,7 @@ void SetNamespaceDeclaration (PtrDocument pDoc, PtrElement element,
         }
       else
         {
-          while (!found && (uriDecl != NULL))
+          while (!found && uriDecl)
             {
               if (uriDecl->NsUriName == NULL)
                 found = TRUE;
@@ -2807,56 +2801,64 @@ void SetNamespaceDeclaration (PtrDocument pDoc, PtrElement element,
 
   if (!found)
     /* Add a new uri declaration */
-    AddANewNamespaceUri (pDoc, element, NsPrefix, NsUri);
+    AddANewNamespaceUri (pDoc, element, nsPrefix, NsUri);
   else
     /* Add a new prefix/element declaration */
-    AddANewNamespacePrefix (pDoc, element, NsPrefix, uriDecl);
+    AddANewNamespacePrefix (pDoc, element, nsPrefix, uriDecl);
 }
 
 /*----------------------------------------------------------------------
-  ShowNamespaceDeclarations
-  Show the namespace declarations related to a document
+  CopyNamespaceDeclarations
+  Transmit namespace declarations from the source document to the 
+  targe document.
   ----------------------------------------------------------------------*/
-void ShowNamespaceDeclarations (PtrDocument pDoc)
+void CopyNamespaceDeclarations (PtrDocument docSource, PtrElement elSource,
+                                PtrDocument docTarget, PtrElement elTarget)
 {
+  PtrNsUriDescr    uriDecl;
+  PtrNsPrefixDescr prefixDecl;
+  int              i;
 
-  PtrNsUriDescr     uriDecl;
-  PtrNsPrefixDescr  prefixDecl;
-
-  uriDecl = NULL;
-  if (pDoc->DocNsUriDecl != NULL)
+  if (docSource && docSource->DocNsUriDecl &&
+      docTarget && elSource && elTarget &&
+      elSource->ElStructSchema->SsUriName)
     {
-      uriDecl = pDoc->DocNsUriDecl;
-      while (uriDecl != NULL)
+      i = 0;
+      /* Give the current namespace declarations for this element */
+      uriDecl = docSource->DocNsUriDecl;
+      while (uriDecl)
         {
-          prefixDecl = uriDecl->NsPtrPrefix;
-          while (prefixDecl != NULL)
+          if (uriDecl->NsUriName /*&&
+              strcmp (uriDecl->NsUriName, elSource->ElStructSchema->SsUriName) == 0*/)
             {
-              if (prefixDecl->NsPrefixName != NULL)
+              /* The URI corresponding to the element schema has been found */
+              /* Search the first associated prefix */
+              /* Add a new prefix/element declaration */
+              if (uriDecl->NsPtrPrefix)
                 {
-                  printf ("\nxmlns:%s", prefixDecl->NsPrefixName);
-                  if (uriDecl->NsUriName != NULL)
-                    printf ("=\"%s\"", uriDecl->NsUriName);
+                  prefixDecl = uriDecl->NsPtrPrefix;
+                  while (prefixDecl)
+                    {
+                      if (prefixDecl->NsPrefixElem == elSource)
+                        /* duplicate the declaration */
+                        SetNamespaceDeclaration (docTarget, elTarget,
+                                                 prefixDecl->NsPrefixName,
+                                                 uriDecl->NsUriName);
+                      prefixDecl = prefixDecl->NsNextPrefixDecl;   
+                    }
                 }
-              else
-                {
-                  if (uriDecl->NsUriName != NULL)
-                    printf ("\nxmlns=\"%s\" (default)", uriDecl->NsUriName);
-                }
-              prefixDecl = prefixDecl->NsNextPrefixDecl;   
-            }	  
+            }
           uriDecl = uriDecl->NsNextUriDecl;
-        }      
-      printf ("\n");
+        }
     }
 }
+
 
 /*----------------------------------------------------------------------
   GiveCurrentNsUri
   Give the current namespace declarations for the element pEl
   ----------------------------------------------------------------------*/
-char * GiveCurrentNsUri (PtrDocument pDoc, PtrElement pEl)
-
+char *GiveCurrentNsUri (PtrDocument pDoc, PtrElement pEl)
 {
   PtrNsUriDescr    uriDecl;
   ThotBool         found;
@@ -2879,7 +2881,7 @@ char * GiveCurrentNsUri (PtrDocument pDoc, PtrElement pEl)
   found = FALSE;
   /* Give the current namespace declarations for this element */
   uriDecl = pDoc->DocNsUriDecl;
-  while (uriDecl != NULL && !found)
+  while (uriDecl && !found)
     {
       if (uriDecl->NsUriName != NULL &&
           pEl->ElStructSchema->SsUriName != NULL &&

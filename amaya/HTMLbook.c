@@ -966,15 +966,16 @@ static Element MoveDocumentBody (Element el, Document destDoc,
                                  Document sourceDoc, char *target,
                                  char *url, ThotBool deleteTree)
 {
-  Element	   root, ancestor, elem, firstInserted, div;
+  Element	         root, ancestor, elem, firstInserted, div;
   Element          lastInserted, srce, copy, old, parent, sibling;
-  ElementType	   elType;
+  ElementType	     elType;
+  SSchema          nature;
   NotifyElement    event;
   ThotBool         checkingMode;
   ThotBool         isID;
 
   div = NULL;
-  if (target != NULL)
+  if (target)
     {
       /* locate the target element within the source document */
       root = SearchNAMEattribute (sourceDoc, target, NULL, NULL);
@@ -992,7 +993,7 @@ static Element MoveDocumentBody (Element el, Document destDoc,
       root = TtaSearchTypedElement (elType, SearchForward, root);
     }
 
-  if (root != NULL)
+  if (root)
     {
       /* don't check the abstract tree against the structure schema */
       checkingMode = TtaGetStructureChecking (destDoc);
@@ -1014,7 +1015,7 @@ static Element MoveDocumentBody (Element el, Document destDoc,
                 elem = ancestor;
             }
         }
-      while (ancestor != NULL);
+      while (ancestor);
       parent = TtaGetParent (elem);
 
       /* insert a DIV element */
@@ -1026,13 +1027,22 @@ static Element MoveDocumentBody (Element el, Document destDoc,
       CreateTargetAnchor (destDoc, lastInserted, FALSE, FALSE);
       div = lastInserted;
 
+      // check if new natures are added
+      if (DocumentMeta[destDoc] && !DocumentMeta[destDoc]->compound)
+        {
+          nature = NULL;
+          TtaNextNature (sourceDoc, &nature);
+          if (nature)
+            DocumentMeta[destDoc]->compound = TRUE;
+        }
+
       /* do copy */
       firstInserted = NULL;
       if (isID)
         srce = root;
       else
         srce = TtaGetFirstChild (root);
-      while (srce != NULL)
+      while (srce)
         {
           copy = TtaCopyTree (srce, sourceDoc, destDoc, parent);
           if (copy != NULL)

@@ -1563,28 +1563,6 @@ void TtaSetANamespaceDeclaration (Document document, Element element,
 }
 
 /*----------------------------------------------------------------------
-  TtaShowElemNamespaceDeclarations
-  Show the namespaces declarations related to an element
-  ----------------------------------------------------------------------*/
-void TtaShowNamespaceDeclarations (Document document)
-{
-  PtrDocument pDoc;
-
-  UserErrorCode = 0;
-  /* verifies the parameter document */
-  if (document < 1 || document > MAX_DOCUMENTS)
-    TtaError (ERR_invalid_document_parameter);
-  else if (LoadedDocument[document - 1] == NULL)
-    TtaError (ERR_invalid_document_parameter);
-  else
-    {
-      /* parameter document is correct */
-      pDoc = LoadedDocument[document - 1];
-      ShowNamespaceDeclarations (pDoc);
-    }
-}
-
-/*----------------------------------------------------------------------
   TtaFreeElemNamespaceDeclarations
   Free the namespaces declarations related to an element
   ----------------------------------------------------------------------*/
