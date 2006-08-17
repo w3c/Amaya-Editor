@@ -671,9 +671,9 @@ void AmayaAttributePanel::ForceAttributeUpdate()
   /* do the update */
   PtrDocument pDoc;
   int         view;
-  GetDocAndView( TtaGiveActiveFrame(), &pDoc, &view );
+  GetDocAndView (TtaGiveActiveFrame(), &pDoc, &view);
   if (pDoc)
-    UpdateAttrMenu( pDoc );
+    UpdateAttrMenu (pDoc, TRUE);
 }
 
 /*----------------------------------------------------------------------

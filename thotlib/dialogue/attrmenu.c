@@ -1234,8 +1234,9 @@ static int BuildAttrMenu (char *bufMenu, PtrDocument pDoc, PtrElement firstSel,
   UpdateAttrMenu                                                       
   Updates the Attributes menu of all open frames belonging to document
   pDoc.
+  The parameter force is TRUE when the update is mandatory
   ----------------------------------------------------------------------*/
-void UpdateAttrMenu (PtrDocument pDoc)
+void UpdateAttrMenu (PtrDocument pDoc, ThotBool force)
 {
   ThotBool            selectionOK;
   PtrElement          firstSel, lastSel, parent;
@@ -1290,7 +1291,7 @@ void UpdateAttrMenu (PtrDocument pDoc)
           if (firstSel->ElTerminal && firstSel->ElLeafType == LtPicture && parent &&
               TypeHasException (ExcIsImg, parent->ElTypeNumber, parent->ElStructSchema))
             firstSel = parent;
-          if (pDoc != PrevDoc ||
+          if (force || pDoc != PrevDoc ||
               firstSel->ElStructSchema != PrevStructSchema ||
               firstSel->ElTypeNumber != PrevElTypeNumber ||
               firstSel->ElFirstAttr != NULL ||
@@ -1426,6 +1427,16 @@ void UpdateAttrMenu (PtrDocument pDoc)
 }
 
 /*----------------------------------------------------------------------
+  SimpleUpdateAttrMenu                                                       
+  Updates the Attributes menu of all open frames belonging to document
+  pDoc if necessary
+  ----------------------------------------------------------------------*/
+static void SimpleUpdateAttrMenu (PtrDocument pDoc)
+{
+  UpdateAttrMenu (pDoc, FALSE);
+}
+
+/*----------------------------------------------------------------------
   TtaUpdateAttrMenu                                                       
   Updates the Attributes tool.
   ----------------------------------------------------------------------*/
@@ -1436,7 +1447,7 @@ void TtaUpdateAttrMenu (Document document)
   else if (LoadedDocument[document - 1] == NULL)
     TtaError (ERR_invalid_document_parameter);
   else
-    UpdateAttrMenu (LoadedDocument[document - 1]);
+    UpdateAttrMenu (LoadedDocument[document - 1], FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -1500,6 +1511,7 @@ static void AttachAttrToRange (PtrAttribute pAttr, int lastChar,
                                ThotBool reDisplay)
 {
   PtrElement          pEl;
+  ThotBool            isDone = FALSE;
 
   /* eteint d'abord la selection */
   TtaClearViewSelections ();
@@ -1514,6 +1526,7 @@ static void AttachAttrToRange (PtrAttribute pAttr, int lastChar,
     {
       if (!ElementIsReadOnly (pEl))
         {
+          isDone = TRUE;
           if (pEl->ElStructSchema &&
               pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1] &&
               pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrConstruct == CsChoice)
@@ -1541,6 +1554,9 @@ static void AttachAttrToRange (PtrAttribute pAttr, int lastChar,
       if (pFirstSel && pFirstSel->ElStructSchema)
         SelectRange (pDoc, pFirstSel, pLastSel, firstChar, lastChar);
     }
+  if (!isDone)
+    // all the selection is read only
+    TtaDisplaySimpleMessage (CONFIRM, LIB, TMSG_EL_RO);
 }
 
 /*----------------------------------------------------------------------
@@ -1605,10 +1621,12 @@ void CallbackValAttrMenu (int ref, int valmenu, char *valtext)
     }
 
   /* demande quelle est la selection courante */
-  if (!GetCurrentSelection (&pDoc, &firstSel, &lastSel, &firstChar,
-                            &lastChar))
-    /* no selection. quit */
-    return;
+  if (!GetCurrentSelection (&pDoc, &firstSel, &lastSel, &firstChar, &lastChar))
+    {
+      /* no selection. quit */
+      TtaDisplaySimpleMessage (CONFIRM, LIB, TMSG_NO_SELECT);
+      return;
+    }
 
   /* when the PICTURE element of an IMG is selected display
      attributes of the parent element */
@@ -1741,7 +1759,7 @@ void CallbackValAttrMenu (int ref, int valmenu, char *valtext)
                 if (dispMode == DisplayImmediately)
                   TtaSetDisplayMode (doc, DisplayImmediately);
               }
-            UpdateAttrMenu (pDoc);
+            UpdateAttrMenu (pDoc, FALSE);
             DeleteAttribute (NULL, pAttrNew);
           }
       }
@@ -1823,7 +1841,7 @@ void CallbackAttrMenu (int refmenu, int attMenu, int frame)
             /* applique l'attribut a la partie selectionnee */
             AttachAttrToRange (pAttrNew, lastChar, firstChar, lastSel,
                                firstSel, pDoc, TRUE);
-            UpdateAttrMenu (pDoc);
+            UpdateAttrMenu (pDoc, FALSE);
           }
         else
           {
@@ -2052,7 +2070,7 @@ void AttributeMenuLoadResources ()
   if (ThotLocalActions[T_chattr] == NULL)
     {
       /* Connecte les actions de selection */
-      TteConnectAction (T_chattr, (Proc) UpdateAttrMenu);
+      TteConnectAction (T_chattr, (Proc) SimpleUpdateAttrMenu);
       TteConnectAction (T_rattr, (Proc) CallbackAttrMenu);
       TteConnectAction (T_rattrval, (Proc) CallbackValAttrMenu);
       TteConnectAction (T_rattrlang, (Proc) CallbackLanguageMenu);
