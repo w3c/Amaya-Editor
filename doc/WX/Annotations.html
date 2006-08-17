@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 9.4, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 9.52, see http://www.w3.org/Amaya/" />
   <title>Annotations in Amaya</title>
   <style type="text/css">
   </style>
@@ -16,17 +16,58 @@
 <div>
 <img alt="Amaya" src="../../resources/icons/22x22/logo.png" class="logo" />
 
+
 <p class="nav"><a href="MakeBook.html" accesskey="p"><img alt="previous"
-src="../../resources/icons/misc/left.png" /></a> <a href="Manual.html"
-accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a>
-<a href="Configure.html" accesskey="n"><img alt="next"
-src="../../resources/icons/misc/right.png" /></a></p>
+src="../../resources/icons/misc/left.png" />
+</a> <a href="Manual.html" accesskey="t"><img alt="top"
+src="../../resources/icons/misc/up.png" />
+</a> <a href="Configure.html" accesskey="n"><img alt="next"
+src="../../resources/icons/misc/right.png" />
+</a></p>
 </div>
 
 <div id="page_body">
 <h2>Annotations in Amaya</h2>
 
-<h3>What is an annotation?</h3>
+<div class="toc">
+<ul>
+  <li><a href="#What">What is an annotation?</a></li>
+  <li><a href="#About">About Local Annotations</a></li>
+  <li><a href="#About1">About Remote Annotations</a></li>
+  <li><a href="#Annotation">Annotations Menu</a></li>
+  <li><a href="#Creating">Creating an Annotation</a></li>
+  <li><a href="#Annotation1">Annotation Metadata</a></li>
+  <li><a href="#Saving">Saving an Annotation</a></li>
+  <li><a href="#Deleting">Deleting an Annotation</a></li>
+  <li><a href="#Loading">Loading and Presenting Annotations</a></li>
+  <li><a href="#Annotation2">The Annotation Local Filter Menu</a></li>
+  <li><a href="#Navigating">Navigating Annotations</a></li>
+  <li><a href="#Annotation3">Annotations in the Link window</a></li>
+  <li><a href="#Moving">Moving Annotations</a></li>
+  <li><a href="#Moving1">Moving Annotations to a Previously Memorized
+    Location</a></li>
+  <li><a href="#Replying">Replying to Annotations / Discussion
+  Threads</a></li>
+  <li><a href="#user">The user interface</a></li>
+  <li><a href="#Known">Known issues: Incomplete threads</a></li>
+  <li><a href="#Configurin">Configuring Annotation Icons</a>
+    <ul>
+      <li><a href="#User-defin">User-definable icons by Annotation type (aka
+        "dynamic icons")</a></li>
+    </ul>
+  </li>
+  <li><a href="#Known1">Known Issues with Annotations and Modified
+    Documents</a>
+    <ul>
+      <li><a href="#Orphan">Orphan Annotations</a></li>
+      <li><a href="#Misleading">Misleading Annotations</a></li>
+      <li><a href="#What1">What can you do to avoid this?</a></li>
+    </ul>
+  </li>
+</ul>
+</div>
+
+<h3 id="What">What is an annotation?</h3>
 
 <p>Annotations are comments, notes, explanations, or other types of external
 remarks that can be attached to a Web document or a selected part of the
@@ -43,14 +84,15 @@ describing annotations.</p>
 servers</strong>. When a document is browsed, Amaya queries each of these
 servers, requesting the annotations related to that document. Currently Amaya
 presents annotations with pencil annotation icons ( <img
-src="../images/annot.png" alt="Annotation pencil icon" /> )that are visually
-embedded in the document, as shown in the figure below. If the user
-single-clicks on an annotation icon, the text that was annotated is
-highlighted. If the user double-clicks on this icon, the annotation text and
-other metadata are presented in a separate window.</p>
+src="../images/annot.png" alt="Annotation pencil icon" />
+ )that are visually embedded in the document, as shown in the figure below.
+If the user single-clicks on an annotation icon, the text that was annotated
+is highlighted. If the user double-clicks on this icon, the annotation text
+and other metadata are presented in a separate window.</p>
 
 <p style="text-align: center"><img src="../images/annotationicon.png"
-alt="annotation icon (= pencil)" /></p>
+alt="annotation icon (= pencil)" />
+</p>
 
 <p>An annotation has many properties including:</p>
 <ul>
@@ -61,12 +103,12 @@ alt="annotation icon (= pencil)" /></p>
   <li>Annotation type: 'Annotation', 'Comment', 'Query', ...</li>
 </ul>
 
-<h3>About Local Annotations</h3>
+<h3 id="About">About Local Annotations</h3>
 
 <p>Amaya can store annotation data in a local file system (often called
 "local annotations") or it can store annotations <span style="color:blue"><a
-href="../html/attaching_annotations/about_storing_remote_annotations.html">remotely</a></span>,
-accessed through the World Wide Web (called "remote annotations").</p>
+href="#About1">remotely</a></span>, accessed through the World Wide Web
+(called "remote annotations").</p>
 
 <p>You do not need a server to create local annotations. Local annotations
 are stored under the user preferences directory, in a special directory
@@ -89,13 +131,12 @@ choosing <strong>Post annotation</strong> from the
 <strong>Annotations</strong> menu. Once this is completed, the local
 annotation is deleted because it has been moved to an annotation server.</p>
 
-<h3>About Remote Annotations</h3>
+<h3 id="About1">About Remote Annotations</h3>
 
 <p>Amaya can store annotation data in a <span style="color: blue"><a
-href="../html/attaching_annotations/about_storing_local_annotations.html">local
-file system</a></span> (often called "local annotations") or it can store
-annotations remotely, in Annotations Servers accessed through the World Wide
-Web (called "remote annotations").</p>
+href="#About">local file system</a></span> (often called "local annotations")
+or it can store annotations remotely, in Annotations Servers accessed through
+the World Wide Web (called "remote annotations").</p>
 
 <p>You can store remote annotations in annotation servers so that the
 annotations can be downloaded by anyone having the correct access rights,
@@ -112,7 +153,7 @@ href="http://www.w3.org/1999/02/26-modules/User/Annotations-HOWTO.html">Annotati
 Annotations menu shown below. The commands are explained later in this
 document in the context of users' goals when handling annotations.</p>
 
-<h3>Creating an Annotation</h3>
+<h3 id="Creating">Creating an Annotation</h3>
 
 <p>This version of Amaya supports two kinds of annotations: annotations that
 apply to a whole document and annotations that apply to a specific point or
@@ -135,9 +176,10 @@ selection in a document.</p>
 <p>After any of these options are performed, an annotation dialog displays
 the annotation metadata and the body of the annotation.</p>
 
-<p><img src="../images/annotationwindow.png" alt="annotation window" /></p>
+<p><img src="../images/annotationwindow.png" alt="annotation window" />
+</p>
 
-<h3>Annotation Metadata</h3>
+<h3 id="Annotation1">Annotation Metadata</h3>
 
 <p>Currently, the metadata consists of the author's name, title of the
 annotated document, annotation type, creation date, and last modification
@@ -146,14 +188,10 @@ date. Some of the metadata fields have special properties:</p>
   <li>The <strong>Source Document</strong> field is also a link that points
     back to the annotated text. If the user double-clicks it, as when
     following any other link with Amaya, the annotated document will be
-    displayed with the annotated text highlighted.
-    <p></p>
-  </li>
+    displayed with the annotated text highlighted.</li>
   <li>The <strong>Annotation Types</strong>field lets you classify the
     annotation and change its type. Double-click on the text "annotation
-    type" to see the list of types available.
-    <p></p>
-  </li>
+    type" to see the list of types available.</li>
   <li>The <strong>Last Modified</strong>field is updated automatically each
     time that an annotation is saved.</li>
 </ul>
@@ -161,7 +199,7 @@ date. Some of the metadata fields have special properties:</p>
 <p>Below the header area is the annotation body area. It shows the current
 content and can be edited like any other HTML document.</p>
 
-<h3>Saving an Annotation</h3>
+<h3 id="Saving">Saving an Annotation</h3>
 
 <p>Saving an annotation is the same as saving any other document with Amaya:
 choose <span class="Link"><strong>Save</strong></span>from the
@@ -186,7 +224,7 @@ window. For example, the body of an annotation can be printed by choosing
 choosing <strong>Reload document</strong> from the <strong>File</strong>
 menu.</p>
 
-<h3>Deleting an Annotation</h3>
+<h3 id="Deleting">Deleting an Annotation</h3>
 
 <p>The <strong>Delete</strong> command on the <strong>Annotation</strong>
 menu enables you to delete an annotation. You can invoke this command from an
@@ -199,7 +237,7 @@ open annotation window.</p>
     menu.</li>
 </ol>
 
-<h3>Loading and Presenting Annotations</h3>
+<h3 id="Loading">Loading and Presenting Annotations</h3>
 
 <p>The <strong>Load Annotations</strong> command tells Amaya to load the
 annotations that are associated with the URL of the current document. Amaya
@@ -216,7 +254,7 @@ the annotations that are associated with a document. In a future version, it
 may be possible to use a customized query menu to refine the query string
 that is sent to the servers.</p>
 
-<h3>The Annotation Local Filter Menu</h3>
+<h3 id="Annotation2">The Annotation Local Filter Menu</h3>
 
 <p>Choose <strong>Local filter</strong> from the <strong>Annotations</strong>
 menu to show or hide the annotation icons in the document window. You can
@@ -243,14 +281,14 @@ added, you will need to reload the menu again.</p>
 <p>The annotation author shows the author's name added to the name of the
 annotation server where the annotation is stored.</p>
 
-<h3>Navigating Annotations</h3>
+<h3 id="Navigating">Navigating Annotations</h3>
 
 <p>Annotations can be navigated by choosing <strong>Show Links</strong> from
 the <span class="Link"><strong>Views</strong> menu</span>. The Link window
 opens and displays a list of annotations. Annotations in the Link and
 Document windows are marked with a pencil annotation icon.</p>
 
-<h3>Annotations in the Link window</h3>
+<h3 id="Annotation3">Annotations in the Link window</h3>
 
 <p>The Link window shows all the annotations, without taking into account
 whether they have been hidden with <strong>Local filter</strong> on the
@@ -261,15 +299,13 @@ navigate from one annotation link to another, even if the annotation cannot
 be seen by the user because of disabilities or because of the characteristics
 of the used device.</p>
 
-<h3>Moving Annotations</h3>
+<h3 id="Moving">Moving Annotations</h3>
 
 <p>You can move an annotation to any other part of the same document. This
-can be used, for example, to handle <a
-href="../html/attaching_annotations/annotation_issues.html">orphan and
-misleading annotations</a>. You can move an annotation to either the current
-selection or to the value of a stored <span class="Link">XPointer</span>. It
-is only possible to move annotations in the same document where they were
-created.</p>
+can be used, for example, to handle <a href="#Known">orphan and misleading
+annotations</a>. You can move an annotation to either the current selection
+or to the value of a stored <span class="Link">XPointer</span>. It is only
+possible to move annotations in the same document where they were created.</p>
 
 <p>To move an annotation to a current selection:</p>
 <ol>
@@ -286,7 +322,7 @@ created.</p>
 the change. You can also move an annotation to the current position of the
 cursor, without having to make a selection.</p>
 
-<h3>Moving Annotations to a Previously Memorized Location</h3>
+<h3 id="Moving1">Moving Annotations to a Previously Memorized Location</h3>
 
 <p>You can store the position where you want to move an annotation to, and
 then move it there. This feature is useful for moving multiple annotations to
@@ -306,7 +342,7 @@ move.</p>
   <li>Save the annotation to make this change effective.</li>
 </ol>
 
-<h3>Replying to Annotations / Discussion Threads</h3>
+<h3 id="Replying">Replying to Annotations / Discussion Threads</h3>
 
 <p>Annotations can be seen as comments to pages. The <strong>Annotation /
 Replies</strong> feature enhances the collaborative workspace by allowing
@@ -325,13 +361,13 @@ using the <strong>File / Save</strong> menu command. To delete a reply, you
 can use the <strong>Annotations / Delete</strong> menu command.</p>
 
 <p>Replies can also be annotated like any other document, as explained in <a
-href="../html/attaching_annotations/creating_an_annotation.html">Creating an
-annotation</a>.</p>
+href="#Creating">Creating an annotation</a>.</p>
 
-<h3>The user interface</h3>
+<h3 id="user">The user interface</h3>
 
 <p><img alt="An annotation with a discussion thread"
-src="../images/threads.png" /></p>
+src="../images/threads.png" />
+</p>
 
 <p>In the current user interface, all replies related to an annotation are
 shown at the bottom of this annotation, in a thread section. Each item in the
@@ -341,7 +377,7 @@ replies in the thread. The selected reply will be highlighted and presented
 in a reply window. When another selection is made the same reply window is
 used.</p>
 
-<h3>Known issues: Incomplete threads</h3>
+<h3 id="Known">Known issues: Incomplete threads</h3>
 
 <p>There is no control yet for controlling which replies should be posted. In
 an ideal world, it should not be possible to save a reply to a reply if the
@@ -358,9 +394,10 @@ items, for example, if you download R1, Amaya will then sort the thread view,
 inserting the threads as appropriately. In our example, R2 will become a
 child of R1, as expected.</p>
 
-<h3>Configuring Annotation Icons</h3>
+<h3 id="Configurin">Configuring Annotation Icons</h3>
 
-<h4>User-definable icons by Annotation type (aka "dynamic icons")</h4>
+<h4 id="User-defin">User-definable icons by Annotation type (aka "dynamic
+icons")</h4>
 
 <p>As of Release 6.2, the icon used to mark the location of an annotation
 within an annotated document may be changed by the user.</p>
@@ -376,33 +413,39 @@ following icons:</p>
 <table>
   <tbody>
     <tr>
-      <td width="35"><img src="../../amaya/advice.png" alt="Advice" /></td>
+      <td width="35"><img src="../../amaya/advice.png" alt="Advice" />
+      </td>
       <td>Advice</td>
     </tr>
     <tr>
-      <td width="35"><img src="../../amaya/change.png" alt="Change" /></td>
+      <td width="35"><img src="../../amaya/change.png" alt="Change" />
+      </td>
       <td>Change</td>
     </tr>
     <tr>
-      <td width="35"><img src="../../amaya/annot.png" alt="Comment" /></td>
+      <td width="35"><img src="../../amaya/annot.png" alt="Comment" />
+      </td>
       <td>Comment</td>
     </tr>
     <tr>
-      <td width="35"><img src="../../amaya/example.png" alt="Example" /></td>
+      <td width="35"><img src="../../amaya/example.png" alt="Example" />
+      </td>
       <td>Example</td>
     </tr>
     <tr>
       <td width="35"><img src="../../amaya/explanation.png" alt="Explanation"
-        /></td>
+        />
+      </td>
       <td>Explanation</td>
     </tr>
     <tr>
-      <td width="35"><img src="../../amaya/question.png" alt="Question"
-      /></td>
+      <td width="35"><img src="../../amaya/question.png" alt="Question" />
+      </td>
       <td>Question</td>
     </tr>
     <tr>
-      <td width="35"><img src="../../amaya/seealso.png" alt="SeeAlso" /></td>
+      <td width="35"><img src="../../amaya/seealso.png" alt="SeeAlso" />
+      </td>
       <td>SeeAlso</td>
     </tr>
   </tbody>
@@ -455,7 +498,7 @@ non-file: URIs are supported. If the file path name starts with "$THOTDIR" or
 "$APP_HOME" then the corresponding Amaya installation directory or personal
 Amaya home directory is substituted into the pathname.</p>
 
-<h3>Known Issues with Annotations and Modified Documents</h3>
+<h3 id="Known1">Known Issues with Annotations and Modified Documents</h3>
 
 <p>When you use annotations with live documents (documents whose contents can
 be modified), you may encounter two kinds of problems: <strong>orphan
@@ -494,7 +537,7 @@ the entire reference by the XPointer to another location within the document,
 without needing to update the XPointer. The XPointer does not depend on the
 elements that precede it.</p>
 
-<h4>Orphan Annotations</h4>
+<h4 id="Orphan">Orphan Annotations</h4>
 
 <p>An annotation becomes an "orphan" when it can no longer be attached to a
 document, that is, when the XPointer does not resolve to any element in the
@@ -503,9 +546,10 @@ displays a warning if it detects any orphan annotations while downloading a
 set of annotations from an annotation server. All orphan annotations are
 visible from the Links view and are associated with an icon that shows a
 question mark superimposed on the annotation pencil <img
-src="../images/annotorp.png" alt="Orphan annotation icon" />.</p>
+src="../images/annotorp.png" alt="Orphan annotation icon" />
+.</p>
 
-<h4>Misleading Annotations</h4>
+<h4 id="Misleading">Misleading Annotations</h4>
 
 <p>An annotation becomes "misleading" when it points to a wrong piece of
 information. This problem is common when you annotate a portion of text that
@@ -513,7 +557,7 @@ may change. In the first release, Amaya does not warn the user if an
 annotation is misleading. A future release may notify users of the potential
 for an annotation to be misleading.</p>
 
-<h4>What can you do to avoid this?</h4>
+<h4 id="What1">What can you do to avoid this?</h4>
 
 <p>As the author of a document, try to use the <code>ID</code> attribute in
 strategic places, for example, inside <code>&lt;DIV&gt;</code> and
