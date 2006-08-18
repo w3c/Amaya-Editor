@@ -794,7 +794,7 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
       if (min + sum + minOfPercent > width ||
           minOfPercent < width - sum - max)
         {
-          delta = width - sum;
+          delta = width - sum - min;
           /* table contents too narrow */
           for (cRef = 0; cRef < cNumber; cRef++)
             if (colPercent[cRef])
@@ -862,6 +862,7 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
       width = min + sum + sumPercent;
       /* the table width is constrained by the enclosing box */
       table->AbWidth.DimAbRef = table->AbEnclosing;
+      table->AbWidth.DimValue = 0;
       if (width + cellspacing - pBox->BxW != 0 && pCell == NULL)
         /* we will have to recheck scrollbars */
         AnyWidthUpdate = TRUE;
@@ -1472,6 +1473,9 @@ static ThotBool SetTableWidths (PtrAbstractBox table, int frame)
                       box = cell->AbBox;
                       /* get the min and max and constrained widths */
                       GiveCellWidths (cell, frame, &min, &max, &cellWidth, &percent);
+                      if (percent == 100 && cNumber > 1)
+                        // this rule cannot apply: ignore
+                        percent = 0;
                       if (box->BxMinWidth != min)
                         box->BxMinWidth = min;
                       if (box->BxMaxWidth != max)
@@ -1650,7 +1654,8 @@ static ThotBool SetTableWidths (PtrAbstractBox table, int frame)
     {
       /* the table width is constrained */
       width += mbp;
-      //max = width;
+      if (max < width)
+        max = width;
     }
   /* do we need to reformat the table */
   change = (pBox->BxRuleWidth != width ||  pBox->BxMinWidth != min ||
