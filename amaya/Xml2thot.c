@@ -1183,7 +1183,7 @@ void     InsertXmlElement (Element *el)
   XmlLastLeafInElement
   return the last leaf element in element el.
   ----------------------------------------------------------------------*/
-Element        XmlLastLeafInElement (Element el)
+Element XmlLastLeafInElement (Element el)
 
 {
   Element     child, lastLeaf;
@@ -2448,12 +2448,12 @@ void PutInXmlElement (char *data, int length)
 
 {
   ElementType  elType;
-  Element      elText;
+  Element      elText, parent;
   char        *buffer, *bufferws;
   int          i = 0;
   int          i1, i2 = 0, i3 = 0;
   ThotBool     uselessSpace = FALSE;
-  ThotBool     insSibling;
+  ThotBool     insSibling, ok;
 
   i = 0;
   /* Immediately after a start tag, treatment of the leading spaces */
@@ -2553,25 +2553,48 @@ void PutInXmlElement (char *data, int length)
           }
         else
           {
-            /* create a TEXT element */
-            if (currentParserCtxt->XMLSSchema != NULL)
-              elType.ElSSchema = currentParserCtxt->XMLSSchema;
-            elType.ElTypeNum = 1;
-            elText = TtaNewElement (XMLcontext.doc, elType);
-            XmlSetElemLineNumber (elText);
-            InsertXmlElement (&elText);
-            XMLcontext.lastElementClosed = TRUE;
-            XMLcontext.mergeText = TRUE;
-            /* put the content of the input buffer into the TEXT element */
-            if (elText != NULL)
-              TtaSetTextContent (elText, (unsigned char *)&(buffer[i1]),
-                                 XMLcontext.language, XMLcontext.doc);
-            /* associate a specific 'Line' presentation rule to the 
-               parent element if we are parsing a generic-XML element */
+            if (currentParserCtxt->XMLSSchema &&
+                !strcmp ((char *)currentParserCtxt->SSchemaName, "HTML") &&
+                buffer[i1] == SPACE && strlen (&buffer[i1]) == 1)
+              {
+                // avoid to generate an empty pseudo paragraph
+                ok = FALSE;
+                if (InsertSibling ())
+                  parent = TtaGetParent (XMLcontext.lastElement);
+                else
+                  parent = XMLcontext.lastElement;
+                if (parent)
+                  {
+                    elType = TtaGetElementType (parent);
+                    if (IsCharacterLevelElement (parent) ||
+                        !XhtmlCannotContainText (elType))
+                      ok = TRUE; // generate the TEXT element
+                  }
+              }
+            else
+              ok = TRUE;
+            if (ok)
+              {
+                /* create a TEXT element */
+                if (currentParserCtxt->XMLSSchema)
+                  elType.ElSSchema = currentParserCtxt->XMLSSchema;
+                elType.ElTypeNum = 1;
+                elText = TtaNewElement (XMLcontext.doc, elType);
+                XmlSetElemLineNumber (elText);
+                InsertXmlElement (&elText);
+                XMLcontext.lastElementClosed = TRUE;
+                XMLcontext.mergeText = TRUE;
+                /* put the content of the input buffer into the TEXT element */
+                if (elText)
+                  TtaSetTextContent (elText, (unsigned char *)&(buffer[i1]),
+                                     XMLcontext.language, XMLcontext.doc);
+                /* associate a specific 'Line' presentation rule to the 
+                   parent element if we are parsing a generic-XML element */
 #ifdef XML_GENERIC
-            if (strcmp ((char *)currentParserCtxt->SSchemaName, "XML") == 0)
-              CreateXmlLinePRule (elText, XMLcontext.doc);
+                if (!strcmp ((char *)currentParserCtxt->SSchemaName, "XML"))
+                  CreateXmlLinePRule (elText, XMLcontext.doc);
 #endif /* XML_GENERIC */
+              }
           }
         TtaFreeMemory (buffer);
       }

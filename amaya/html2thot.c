@@ -1111,10 +1111,10 @@ ThotBool IsBlockElement (Element el)
 static void TextToDocument ()
 {
   ElementType      elType;
-  Element          elText;
+  Element          elText, parent;
   int              i;
   ThotBool         ignoreLeadingSpaces;
-  ThotBool         insSibling;
+  ThotBool         insSibling, ok;
 
   CloseBuffer ();
   if (HTMLcontext.lastElement)
@@ -1138,18 +1138,39 @@ static void TextToDocument ()
                                   HTMLcontext.doc);
           else
             {
-              /* create a TEXT element */
-              elType.ElSSchema = DocumentSSchema;
-              elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-              elText = TtaNewElement (HTMLcontext.doc, elType);
-              TtaSetElementLineNumber (elText, BufferLineNumber);
-              InsertElement (&elText);
-              HTMLcontext.lastElementClosed = TRUE;
-              HTMLcontext.mergeText = TRUE;
-              /* put the content of the input buffer into the TEXT element */
-              if (elText != NULL)
-                TtaSetTextContent (elText, (unsigned char *)&(inputBuffer[i]),
-                                   HTMLcontext.language, HTMLcontext.doc);
+              if (inputBuffer[i] == SPACE && LgBuffer == 1)
+                {
+                  // avoid to generate an empty pseudo paragraph
+                  ok = FALSE;
+                  if (InsertSibling ())
+                    parent = TtaGetParent (HTMLcontext.lastElement);
+                  else
+                    parent = HTMLcontext.lastElement;
+                  if (parent)
+                    {
+                      elType = TtaGetElementType (parent);
+                      if (IsCharacterLevelElement (parent) ||
+                          !XhtmlCannotContainText (elType))
+                        ok = TRUE; // generate the TEXT element
+                    }
+                }
+              else
+                ok = TRUE;
+              if (ok)
+                {
+                  /* create a TEXT element */
+                  elType.ElSSchema = DocumentSSchema;
+                  elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+                  elText = TtaNewElement (HTMLcontext.doc, elType);
+                  TtaSetElementLineNumber (elText, BufferLineNumber);
+                  InsertElement (&elText);
+                  HTMLcontext.lastElementClosed = TRUE;
+                  HTMLcontext.mergeText = TRUE;
+                  /* put the content of the input buffer into the TEXT element */
+                  if (elText)
+                    TtaSetTextContent (elText, (unsigned char *)&(inputBuffer[i]),
+                                       HTMLcontext.language, HTMLcontext.doc);
+                }
             }
         }
     }
