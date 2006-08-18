@@ -2527,9 +2527,9 @@ void ClipAndBoxUpdate (PtrAbstractBox pAb, PtrBox box, int w, int h,
             /* the rule min is applied to this box */
             ChangeDefaultHeight (box, box, h, frame);
           else if (parent && parent->AbElement &&
-                   !parent->AbWidth.DimIsPosition &&
-                   parent->AbWidth.DimAbRef == NULL &&
-                   parent->AbWidth.DimValue == -1 &&
+                   !parent->AbHeight.DimIsPosition &&
+                   parent->AbHeight.DimAbRef == NULL &&
+                   parent->AbHeight.DimValue == -1 &&
                    TypeHasException (ExcIsImg, parent->AbElement->ElTypeNumber,
                                      parent->AbElement->ElStructSchema) &&
                    pAb->AbHeight.DimUnit != UnPercent &&

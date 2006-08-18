@@ -159,7 +159,7 @@ static ThotBool UpdateXMLMenu (Document doc, View view)
       nbItem = 0;
       pDoc = LoadedDocument[doc - 1];
       if (GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar, &lastChar) &&
-          pSelDoc == pDoc)
+          pSelDoc == pDoc && firstSel)
         pSS = firstSel->ElStructSchema;
       else
         {
