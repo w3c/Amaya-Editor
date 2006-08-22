@@ -2696,15 +2696,18 @@ void         QueryInit ()
 #endif
 }
 
+static AHTReqContext *LoopRequest= NULL;
 /*----------------------------------------------------------------------
   LoopForStop
   a copy of the Thop event loop so we can handle the stop button in Unix
   and preemptive requests under Windows
   ----------------------------------------------------------------------*/
-static int          LoopForStop (AHTReqContext * me)
+static int LoopForStop (AHTReqContext *me)
 {
   int  status_req = HT_OK;
   
+  // register the current request
+  LoopRequest = me;
 #ifdef _WINGUI
   MSG msg;
   unsigned long libwww_msg;
@@ -2721,7 +2724,7 @@ static int          LoopForStop (AHTReqContext * me)
       if (msg.message != WM_QUIT)
         TtaHandleOneEvent (&msg);
       else
-        break;      
+        break;
     }
   if (!AmayaIsAlive ())
     /* Amaya was killed by one of the callback handlers */
@@ -2745,22 +2748,27 @@ static int          LoopForStop (AHTReqContext * me)
 #ifdef _WX
     /* this is necessary for synchronous request*/
     /* check the socket stats */
+    if (me->reqStatus != HT_ABORT)
+      // the request is not aborted
     wxAmayaSocketEvent::CheckSocketStatus( 500 );
 #endif /* _WX */
   }
 #endif /* #if defined(_GTK) || defined(_WX) */
 
-  switch (me->reqStatus) {
-  case HT_ERR:
-  case HT_ABORT:
-    status_req = NO;
-    break;
-  case HT_END:
-    status_req = YES;
-    break;
-  default:
-    break;
-  }
+  switch (me->reqStatus)
+    {
+    case HT_ERR:
+    case HT_ABORT:
+      status_req = NO;
+      break;
+    case HT_END:
+      status_req = YES;
+      break;
+    default:
+      break;
+    }
+  // Clean up the current request
+  LoopRequest = NULL;
   return (status_req);
 }
 
@@ -2771,7 +2779,6 @@ static int          LoopForStop (AHTReqContext * me)
   ----------------------------------------------------------------------*/
 void QueryClose ()
 {
-
   AmayaAlive_flag = FALSE;
 
   /* remove all the handlers and callbacks that may output a message to
@@ -3330,8 +3337,11 @@ int GetObjectWWW (int docid, int refdoc, char *urlName, char *formdata,
     /* end treatment for SYNC requests */
     if ((mode & AMAYA_SYNC) || (mode & AMAYA_ISYNC))
       {
-        /* wait here untilt the asynchronous request finishes */
+        /* wait here until the asynchronous request finishes */
+        SetStopButton (docid);
         status = LoopForStop (me);
+        FilesLoading[docid]++;
+        ResetStop(docid);
         /* if status returns HT_ERROR, should we invoke the callback? */
         if (!HTRequest_kill (me->request))
           AHTReqContext_delete (me);
@@ -3705,18 +3715,10 @@ int PutObjectWWW (int docid, char *fileName, char *urlName,
   StopRequest
   stops (kills) all active requests associated with a docid 
   ----------------------------------------------------------------------*/
-void                StopRequest (int docid)
+void StopRequest (int docid)
 {
   if (Amaya && CanDoStop ())
     { 
-#if 0 /* for later */
-      AHTDocId_Status    *docid_status;
-      /* verify if there are any requests at all associated with docid */
-      docid_status = (AHTDocId_Status *) GetDocIdStatus (docid,
-                                                         Amaya->docid_status);
-      if (docid_status == (AHTDocId_Status *) NULL)
-        return;
-#endif /* 0 */
        /* temporary call to stop all requests, as libwww changed its API */
       StopAllRequests (docid);
     }
@@ -3727,7 +3729,7 @@ void                StopRequest (int docid)
   StopAllRequests
   stops (kills) all active requests. We use the docid 
   ----------------------------------------------------------------------*/
-void                StopAllRequests (int docid)
+void StopAllRequests (int docid)
 {
   HTList             *cur;
   AHTReqContext      *me;
@@ -3739,6 +3741,9 @@ void                StopAllRequests (int docid)
      request, and if we're not already dealing with a stop */
   if (Amaya && CanDoStop () && !lock_stop)
     {
+      // is there a current LoopForStop?
+      if (LoopRequest)
+        LoopRequest->reqStatus = HT_ABORT;
 #ifdef DEBUG_LIBWWW
       fprintf (stderr, "StopRequest: number of Amaya requests "
                "before kill: %d\n", Amaya->open_requests);
@@ -3752,7 +3757,7 @@ void                StopAllRequests (int docid)
       CallbackDialogue (BaseDialog + FormAnswer,  STRING_DATA, NULL);
       CallbackDialogue (BaseDialog + ConfirmForm, INTEGER_DATA, NULL);
       /* expire all outstanding timers */
-      HTTimer_expireAll ();
+        HTTimer_expireAll ();
       /* HTNet_killAll (); */
       if (Amaya->open_requests)
         {
