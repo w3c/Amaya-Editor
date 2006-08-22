@@ -935,7 +935,9 @@ static int SearchBreak (PtrLine pLine, PtrBox pBox, int max, SpecFont font,
         else
           carWidth = BoxCharacterWidth (character, font);
 
-      if ((newWidth + carWidth > max || i >= count) && i != 0)
+      if ((newWidth + carWidth > max || i >= count) && i != 0 &&
+          // don't split a word
+          (character == SPACE || character == NEW_LINE || spaceCount > 0))
         {
           /* The character cannot be inserted in the line */
           still = FALSE;
@@ -970,7 +972,7 @@ static int SearchBreak (PtrLine pLine, PtrBox pBox, int max, SpecFont font,
                   *newIndex = charIndex + 1;
                 }
             }
-          else if (/*pBox->BxScript == 'Z' || */spaceCount == 0)
+          else if (spaceCount == 0)
             {
               /* no space found */
               (*boxLength) = i;
@@ -1690,7 +1692,8 @@ static void SetClear (PtrBox box, ThotBool *clearL, ThotBool *clearR)
       /* check if an enclosing ghost box generates a clear */
       pParent = pAb->AbEnclosing;
       while (pParent && pParent->AbBox &&
-             pParent->AbBox->BxType == BoGhost &&
+             (pParent->AbBox->BxType == BoGhost ||
+              pParent->AbBox->BxType == BoFloatGhost) &&
              pParent->AbElement &&
              pParent->AbElement->ElFirstChild == pAb->AbElement)
         {
@@ -3069,10 +3072,12 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
   if (boxPrevL && clearl && y < boxPrevL->BxYOrg + boxPrevL->BxHeight)
     {
       y = boxPrevL->BxYOrg + boxPrevL->BxHeight;
+      pLine->LiYOrg = y - orgY;
     }
   if (boxPrevR && clearr && y < boxPrevR->BxYOrg + boxPrevR->BxHeight)
     {
       y = boxPrevR->BxYOrg + boxPrevR->BxHeight;
+      pLine->LiYOrg = y - orgY;
     }
 
   if ((boxPrevL && y < boxPrevL->BxYOrg + boxPrevL->BxHeight) ||
@@ -3415,6 +3420,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
   int                 org, width, noWrappedWidth;
   int                 lostPixels, minWidth, y;
   int                 top, left, right, bottom, spacing;
+  int                 cell_width, cell_percent;
   ThotBool            toAdjust, breakLine, isExtraFlow;
   ThotBool            xAbs, yAbs, extensibleBox;
   ThotBool            full, still, standard, isFloat;
@@ -3485,7 +3491,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
         }
       else if (pParent && pParent->AbBox && pParent->AbBox->BxType != BoCell)
         {
-           if (pParent->AbBox->BxW <= 0)
+          if (pParent->AbBox->BxW <= 0 /*|| (pCell && extensibleBox)*/)
              /* manage this box as an extensible box but it's not */
              maxWidth = 30 * DOT_PER_INCH;
           else
@@ -3508,6 +3514,27 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 
   if (extensibleBox || pBox->BxShrink)
     pBox->BxW = maxWidth;
+
+
+  /* compute the line spacing */
+  if (pBox->BxType == BoBlock)
+    lineSpacing = PixelValue (pAb->AbLineSpacing, pAb->AbLineSpacingUnit,
+                              pAb, ViewFrameTable[frame - 1].FrMagnification);
+  else
+    lineSpacing = 0;
+  /* space added at the top and bottom of the paragraph */
+  spacing = lineSpacing - BoxFontHeight (pBox->BxFont, EOS);
+  standard = (spacing >= 0);
+  spacing = 0;
+  /* compute the indent */
+  if (extensibleBox)
+    indent = 0;
+  else if (pAb->AbIndentUnit == UnPercent)
+    indent = PixelValue (pAb->AbIndent, UnPercent,
+                         (PtrAbstractBox) width, 0);
+  else
+    indent = PixelValue (pAb->AbIndent, pAb->AbIndentUnit, pAb,
+                         ViewFrameTable[frame - 1].FrMagnification);
 
   pNextBox = NULL;
   full = TRUE;
@@ -3547,25 +3574,6 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
           }
     }
 
-  /* compute the line spacing */
-  if (pBox->BxType == BoBlock)
-    lineSpacing = PixelValue (pAb->AbLineSpacing, pAb->AbLineSpacingUnit,
-                              pAb, ViewFrameTable[frame - 1].FrMagnification);
-  else
-    lineSpacing = 0;
-  /* space added at the top and bottom of the paragraph */
-  spacing = lineSpacing - BoxFontHeight (pBox->BxFont, EOS);
-  standard = (spacing >= 0);
-  spacing = 0;
-  /* compute the indent */
-  if (extensibleBox)
-    indent = 0;
-  else if (pAb->AbIndentUnit == UnPercent)
-    indent = PixelValue (pAb->AbIndent, UnPercent,
-                         (PtrAbstractBox) width, 0);
-  else
-    indent = PixelValue (pAb->AbIndent, pAb->AbIndentUnit, pAb,
-                         ViewFrameTable[frame - 1].FrMagnification);
   if (pBox->BxFirstLine == NULL)
     {
       if (pNextBox == NULL)
@@ -3827,6 +3835,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
   if (noWrappedWidth > pBox->BxMaxWidth)
     pBox->BxMaxWidth = noWrappedWidth;
   noWrappedWidth = 0;
+
   /* update the block baseline */
   if (pAb->AbHorizRef.PosAbRef == pAb->AbFirstEnclosed && pAb->AbFirstEnclosed &&
       pAb->AbFirstEnclosed->AbFloat == 'N' && pBox->BxFirstLine)
