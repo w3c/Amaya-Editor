@@ -441,7 +441,7 @@ static void GL_TextureBind (ThotPictInfo *img, ThotBool isPixmap)
       (img->PicPixmap || !isPixmap))
     {
       /* OpenGL requires power 2 dimensions */
-      if ((glhard () && img->PicWidth > MAX_GL_SIZE) || img->PicHeight == 1)
+      if (glhard () && img->PicWidth > MAX_GL_SIZE)
         {
           // keep only a part of the image width
           if ((img->PicXUnit == UnPercent && img->PicPosX >= 50) ||
@@ -596,11 +596,9 @@ static void PrintPoscriptImage (ThotPictInfo *img, int x, int y,
 static void GL_TexturePartialMap (ThotPictInfo *desc, int dx, int dy,
                                   int x, int y, int w, int h, int frame)
 {
-  float    texH, texW;
+  float    texH, texW, texX, texY;
     
   GL_SetPicForeground ();
-  x -= dx;
-  y -= dy;
   if (PrintingGL)
     PrintPoscriptImage (desc, x, y, w, h, frame);
   else
@@ -617,22 +615,23 @@ static void GL_TexturePartialMap (ThotPictInfo *desc, int dx, int dy,
       /* Texture coordinates are unrelative 
          to the size of the square */      
       /* lower left */
-
-      texH = desc->TexCoordH * ((float)(desc->PicHeight - h) / (float)desc->PicHeight);
-      texW = desc->TexCoordW * ((float)(w) / (float)desc->PicWidth);
+      texW = desc->TexCoordW * (float)(dx + w) / (float)desc->PicWidth;
+      texH = desc->TexCoordH * (float)(desc->PicHeight + 1 - dy - h) / (float)desc->PicHeight;
+      texX = desc->TexCoordW * (float)(dx) / (float)desc->PicWidth;
+      texY = desc->TexCoordH * (float)(desc->PicHeight - dy) / (float)desc->PicHeight;
       /* Texture coordinates are unrelative
          to the size of the square */
       /* lower left */
-      glTexCoord2f (0.,  texH);
+      glTexCoord2f (texX, texH);
       glVertex2i   (x, y + h);
       /* upper right*/
       glTexCoord2f (texW, texH);
       glVertex2i   (x + w, y + h);
       /* lower right */
-      glTexCoord2f (texW, desc->TexCoordH);
+      glTexCoord2f (texW, texY);
       glVertex2i   (x + w, y);
       /* upper left */
-      glTexCoord2f (0., desc->TexCoordH);
+      glTexCoord2f (texX, texY);
       glVertex2i   (x, y);
       glEnd ();
 
@@ -1674,7 +1673,7 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
                     dw = w - i;
 #ifdef _GL
                   GL_TexturePartialMap (imageDesc, dx, dy, x+i, y+j,
-                                        dx+dw, dy+dh, frame);
+                                        /*dx+*/dw, /*dy+*/dh, frame);
 #else /* _GL */
 #ifdef _GTK
                   if (imageDesc->PicMask)
