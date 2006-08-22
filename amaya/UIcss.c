@@ -875,6 +875,7 @@ static void GenerateStyleListFileForElem (Element el, Document doc,
   elType = TtaGetElementType (el);
   if (elType.ElTypeNum == HTML_EL_TEXT_UNIT ||
       elType.ElTypeNum == HTML_EL_GRAPHICS_UNIT ||
+      elType.ElTypeNum == HTML_EL_PICTURE_UNIT ||
       elType.ElTypeNum == HTML_EL_SYMBOL_UNIT)
     {
       el = TtaGetParent (el);

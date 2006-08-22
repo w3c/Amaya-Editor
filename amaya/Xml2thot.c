@@ -64,7 +64,8 @@
 static XML_Parser  Parser = NULL;
 
 /* global data used by the HTML parser */
-static ParserData  XMLcontext = {0, UTF_8, 0, NULL, 0, FALSE, FALSE, FALSE, FALSE, FALSE};
+static ParserData  XMLcontext = {0, UTF_8, 0, NULL, 0,
+                                 FALSE, FALSE, FALSE, FALSE, FALSE, FALSE};
 
 /* a parser context. It describes the specific actions to be executed
    when parsing an XML document fragment according to a given DTD */
@@ -2533,8 +2534,7 @@ void PutInXmlElement (char *data, int length)
 	   
         /* Filling of the element value */
         elType = TtaGetElementType (XMLcontext.lastElement);
-        if (/* elType.ElSSchema == currentParserCtxt->XMLSSchema  && */
-            elType.ElTypeNum == 1 && XMLcontext.mergeText)
+        if (elType.ElTypeNum == 1 && XMLcontext.mergeText)
           {
             if ((buffer[i1] == SPACE) && RemoveContiguousSpace)
               {
@@ -2553,7 +2553,8 @@ void PutInXmlElement (char *data, int length)
           }
         else
           {
-            if (currentParserCtxt->XMLSSchema &&
+            if (RemoveLeadingSpace &&
+                currentParserCtxt->XMLSSchema &&
                 !strcmp ((char *)currentParserCtxt->SSchemaName, "HTML") &&
                 buffer[i1] == SPACE && strlen (&buffer[i1]) == 1)
               {

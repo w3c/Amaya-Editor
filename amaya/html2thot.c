@@ -452,7 +452,8 @@ static int	    BufferLineNumber = 0; /* line number in the source file of
 
 /* information about the Thot document under construction */
 /* global data used by the HTML parser */
-static ParserData   HTMLcontext = {0, ISO_8859_1, 0, NULL, 0, FALSE, FALSE, FALSE, FALSE, FALSE};
+static ParserData   HTMLcontext = {0, ISO_8859_1, 0, NULL, 0,
+                                   FALSE, FALSE, FALSE, FALSE, FALSE, FALSE};
 
 static SSchema      DocumentSSchema = NULL;  /* the HTML structure schema */
 static Element      rootElement = NULL;	  /* root element of the document */
