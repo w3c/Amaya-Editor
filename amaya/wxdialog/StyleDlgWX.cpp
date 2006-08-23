@@ -1785,7 +1785,9 @@ void StyleDlgWX::OnOk( wxCommandEvent& event )
       while (Index > 0 && Buffer[Index - 1] != ';')
         Index--;
       Buffer[Index] = EOS;
-      ThotCallback (m_ref, STRING_DATA, Buffer);
+      if (Buffer[0] != EOS)
+        // not an empty style
+        ThotCallback (m_ref, STRING_DATA, Buffer);
       TtaFreeMemory (Buffer);
 
       // test if the form should be closed when apply
