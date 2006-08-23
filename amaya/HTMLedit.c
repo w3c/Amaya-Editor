@@ -614,7 +614,8 @@ void GenerateInlineElement (int eType, int aType, char * data)
                           inside = TRUE;
                         }
                     }
-                  else
+                  else if (firstSel != lastSel ||
+                           elType.ElTypeNum != HTML_EL_Basic_Elem)
                     {
                       // cannot generate an in-line element here
                       el = NULL;
