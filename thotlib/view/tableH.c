@@ -421,8 +421,7 @@ static void BuildColOrRowList (PtrAbstractBox table, BoxType colrow)
   The parameter percent returns the value of the attribute which has
   exception ExcNewPercentWidth or 0
   ----------------------------------------------------------------------*/
-static ThotBool GiveAttrWidth (PtrAbstractBox pAb, int zoom, int *width,
-                               int *percent)
+ThotBool GiveAttrWidth (PtrAbstractBox pAb, int zoom, int *width, int *percent)
 {
   PtrAttribute        pAttr;
   ThotBool            found;
@@ -1218,6 +1217,8 @@ static void GiveCellWidths (PtrAbstractBox cell, int frame, int *min, int *max,
       *width = *width + mbp;
       if (*width > *min)
         *min = *width;
+      else if (*width < *min)
+        *width = *min;
       if (*width > *max)
         *max = *width;
     }

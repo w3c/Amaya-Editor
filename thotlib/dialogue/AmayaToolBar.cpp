@@ -120,17 +120,16 @@ void AmayaToolBar::GotoSelectedURL()
   View     view;
 
   FrameToView (TtaGiveActiveFrame(), &doc, &view);
-
   CloseTextInsertion ();
 
-     //TtaDisplayMessage (CONFIRM, "GotoSelectedURL");
-	 /* call the callback  with the url selected text */
+  /* call the callback  with the url selected text */
   PtrDocument pDoc = LoadedDocument[doc-1];
   wxASSERT(pDoc);
   if (pDoc && pDoc->Call_Text)
     {
       char buffer[2048];
       strcpy(buffer, (m_pComboBox->GetValue()).mb_str(wxConvUTF8));
+      printf ("%s\n",buffer);
 // patch to go-round a bug on Windows (TEXT_ENTER event called twice)
 #ifdef _WINDOWS 
 	  if (isBufUrl == FALSE)

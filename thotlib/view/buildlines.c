@@ -2295,6 +2295,13 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
                                  val - l - pNextBox->BxW, 0, 0, 0, frame, FALSE);
                 }
             }
+          else if (pAbRef == NULL &&
+                    pNextBox->BxAbstractBox->AbWidth.DimValue == -1 &&
+                   (pNextBox->BxType == BoBlock ||
+                    pNextBox->BxType == BoFloatBlock) &&
+                   pNextBox->BxCycles == 0)
+            // recheck as the max could changed
+            RecomputeLines (pNextBox->BxAbstractBox, NULL, pBlock, frame);
         }
 
       /* check if a clear is requested */
@@ -3420,7 +3427,6 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
   int                 org, width, noWrappedWidth;
   int                 lostPixels, minWidth, y;
   int                 top, left, right, bottom, spacing;
-  int                 cell_width, cell_percent;
   ThotBool            toAdjust, breakLine, isExtraFlow;
   ThotBool            xAbs, yAbs, extensibleBox;
   ThotBool            full, still, standard, isFloat;
@@ -3514,7 +3520,6 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 
   if (extensibleBox || pBox->BxShrink)
     pBox->BxW = maxWidth;
-
 
   /* compute the line spacing */
   if (pBox->BxType == BoBlock)
