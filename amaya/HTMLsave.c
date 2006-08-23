@@ -1511,7 +1511,7 @@ ThotBool ParseWithNewDoctype (Document doc, char *localFile, char *tempdir,
         TtaExportDocumentWithNewLineNumbers (ext_doc, localFile, "SVGT");
       else if (DocumentTypes[doc] == docMath)
         TtaExportDocumentWithNewLineNumbers (ext_doc, localFile, "MathMLT");
-      else if (new_doctype == L_Xhtml11)
+      else if (new_doctype == L_Xhtml11 || new_doctype == L_Basic)
         TtaExportDocumentWithNewLineNumbers (ext_doc, localFile, "HTMLT11");
       else if (xml_doctype)
         TtaExportDocumentWithNewLineNumbers (ext_doc, localFile, "HTMLTX");
@@ -1728,7 +1728,7 @@ static ThotBool SaveDocumentLocally (Document doc, char *directoryName,
         {
           if (SaveAsXML)
             {
-              if (TtaGetDocumentProfile(doc) == L_Xhtml11)
+              if (TtaGetDocumentProfile(doc) == L_Xhtml11 || TtaGetDocumentProfile(doc) == L_Basic)
                 ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, "HTMLT11");
               else
                 ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, "HTMLTX");
@@ -2063,7 +2063,7 @@ static ThotBool SaveDocumentThroughNet (Document doc, View view, char *url,
   if (DocumentTypes[doc] == docHTML)
     if (SaveAsXML)
       {
-        if (TtaGetDocumentProfile(doc) == L_Xhtml11)
+        if (TtaGetDocumentProfile(doc) == L_Xhtml11 || TtaGetDocumentProfile(doc) == L_Basic)
           TtaExportDocumentWithNewLineNumbers (doc, tempname, "HTMLT11");
         else
           TtaExportDocumentWithNewLineNumbers (doc, tempname, "HTMLTX");
@@ -2358,7 +2358,7 @@ void DoSynchronize (Document doc, View view, NotifyElement *event)
           SetNamespacesAndDTD (doc);
           if (DocumentTypes[doc] == docLibrary || DocumentTypes[doc] == docHTML)
             {
-              if (TtaGetDocumentProfile (doc) == L_Xhtml11)
+              if (TtaGetDocumentProfile (doc) == L_Xhtml11 || TtaGetDocumentProfile (doc) == L_Basic)
                 TtaExportDocumentWithNewLineNumbers (doc, tempdoc, "HTMLT11");
               else if (DocumentMeta[doc]->xmlformat)
                 TtaExportDocumentWithNewLineNumbers (doc, tempdoc, "HTMLTX");
@@ -2911,7 +2911,7 @@ static ThotBool  AutoSaveDocument (Document doc, View view, char *local_url)
         {
           if (SaveAsXML)
             {
-              if (TtaGetDocumentProfile(doc) == L_Xhtml11)
+              if (TtaGetDocumentProfile(doc) == L_Xhtml11 || TtaGetDocumentProfile(doc) == L_Basic)
                 ok = TtaExportDocumentWithNewLineNumbers (doc, tempname,
                                                           "HTMLT11");
               else

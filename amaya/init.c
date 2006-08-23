@@ -4770,7 +4770,7 @@ void ShowSource (Document doc, View view)
           if (DocumentTypes[doc] == docLibrary ||
               DocumentTypes[doc] == docHTML)
             {
-              if (TtaGetDocumentProfile (doc) == L_Xhtml11)
+              if (TtaGetDocumentProfile (doc) == L_Xhtml11 || TtaGetDocumentProfile (doc) == L_Basic)
                 TtaExportDocumentWithNewLineNumbers (doc, localFile,
                                                      "HTMLT11");
               else if (DocumentMeta[doc]->xmlformat)

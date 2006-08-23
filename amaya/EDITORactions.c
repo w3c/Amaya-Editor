@@ -885,7 +885,7 @@ static void CreateOrChangeDoctype (Document doc, View view, int new_doctype,
       /* save the current state of the document */
       if (DocumentTypes[doc] == docLibrary || DocumentTypes[doc] == docHTML)
         {
-          if (TtaGetDocumentProfile (doc) == L_Xhtml11)
+          if (TtaGetDocumentProfile (doc) == L_Xhtml11 || TtaGetDocumentProfile (doc) == L_Basic)
             TtaExportDocumentWithNewLineNumbers (doc, tempdoc, "HTMLT11");
           else if (DocumentMeta[doc]->xmlformat || xmlDoctype)
             TtaExportDocumentWithNewLineNumbers (doc, tempdoc, "HTMLTX");

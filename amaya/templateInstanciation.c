@@ -134,7 +134,7 @@ void  CreateInstance(char *templatePath, char *instancePath) {
           TtaExportDocumentWithNewLineNumbers (doc, instancePath, "MathMLT");
           break;
         case docHTML :
-          if(TtaGetDocumentProfile(doc)==L_Xhtml11)
+          if(TtaGetDocumentProfile(doc)==L_Xhtml11 || TtaGetDocumentProfile(doc)==L_Basic)
             TtaExportDocumentWithNewLineNumbers (doc, instancePath, "HTMLT11");
           else
             TtaExportDocumentWithNewLineNumbers (doc, instancePath, "HTMLTX");
