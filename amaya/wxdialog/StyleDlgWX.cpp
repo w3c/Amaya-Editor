@@ -365,9 +365,9 @@ static ThotBool CheckValue (char *buffer, ThotBool negative, ThotBool length,
   -----------------------------------------------------------------------*/
 void StyleDlgWX::OnValueChanged( wxCommandEvent& event )
 {
-  int             id = event.GetId();
-  wxString        value;
-  char            buffer[50];
+  int                 id = event.GetId();
+  wxString            value, svalue, cvalue;
+  char                buffer[50];
 
   if (id == wxXmlResource::GetXRCID(_T("wxID_CHOICE_SIZE")))
     {
@@ -493,6 +493,22 @@ void StyleDlgWX::OnValueChanged( wxCommandEvent& event )
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_CHOICE_BTOP", wxComboBox)->SetValue(value);
             }
+          else
+            {
+              // initialize other values
+              svalue = XRCCTRL(*this, "wxID_CHOICE_T_STYLE", wxChoice)->GetStringSelection();
+              if (svalue.Len() == 0)
+                XRCCTRL(*this, "wxID_CHOICE_T_STYLE", wxChoice)->SetStringSelection(TtaConvMessageToWX("solid"));
+              cvalue = XRCCTRL(*this, "wxID_COMBO_T_COLOR", wxComboBox)->GetValue();
+              if (cvalue.Len() == 0)
+                XRCCTRL(*this, "wxID_COMBO_T_COLOR", wxComboBox)->SetValue(TtaConvMessageToWX("Black"));
+            }
+        }
+      else
+        {
+          // clear other values
+          XRCCTRL(*this, "wxID_CHOICE_T_STYLE", wxChoice)->SetStringSelection(TtaConvMessageToWX(""));
+          XRCCTRL(*this, "wxID_COMBO_T_COLOR", wxComboBox)->SetValue(TtaConvMessageToWX(""));
         }
     }
   else if (id == wxXmlResource::GetXRCID(_T("wxID_CHOICE_BBOTTOM")))
@@ -507,6 +523,20 @@ void StyleDlgWX::OnValueChanged( wxCommandEvent& event )
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_CHOICE_BBOTTOM", wxComboBox)->SetValue(value);
             }
+          else
+            {
+              svalue = XRCCTRL(*this, "wxID_CHOICE_B_STYLE", wxChoice)->GetStringSelection();
+              if (svalue.Len() == 0)
+                XRCCTRL(*this, "wxID_CHOICE_B_STYLE", wxChoice)->SetStringSelection(TtaConvMessageToWX( "solid" ));
+              cvalue = XRCCTRL(*this, "wxID_COMBO_B_COLOR", wxComboBox)->GetValue();
+              if (cvalue.Len() == 0)
+                XRCCTRL(*this, "wxID_COMBO_B_COLOR", wxComboBox)->SetValue(TtaConvMessageToWX( "Black" ));
+            }
+        }
+      else
+        {
+          XRCCTRL(*this, "wxID_CHOICE_B_STYLE", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
+          XRCCTRL(*this, "wxID_COMBO_B_COLOR", wxComboBox)->SetValue(TtaConvMessageToWX( "" ));
         }
     }
   else if (id == wxXmlResource::GetXRCID(_T("wxID_CHOICE_BLEFT")))
@@ -521,6 +551,21 @@ void StyleDlgWX::OnValueChanged( wxCommandEvent& event )
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_CHOICE_BLEFT", wxComboBox)->SetValue(value);
             }
+          else
+            {
+              // initialize other values
+              svalue = XRCCTRL(*this, "wxID_CHOICE_L_STYLE", wxChoice)->GetStringSelection();
+              if (svalue.Len() == 0)
+                XRCCTRL(*this, "wxID_CHOICE_L_STYLE", wxChoice)->SetStringSelection(TtaConvMessageToWX( "solid" ));
+              cvalue = XRCCTRL(*this, "wxID_COMBO_L_COLOR", wxComboBox)->GetValue();
+              if (cvalue.Len() == 0)
+                XRCCTRL(*this, "wxID_COMBO_L_COLOR", wxComboBox)->SetValue(TtaConvMessageToWX( "Black" ));
+            }
+        }
+      else
+        {
+          XRCCTRL(*this, "wxID_CHOICE_L_STYLE", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
+          XRCCTRL(*this, "wxID_COMBO_L_COLOR", wxComboBox)->SetValue(TtaConvMessageToWX( "" ));
         }
     }
   else if (id == wxXmlResource::GetXRCID(_T("wxID_CHOICE_BRIGHT")))
@@ -535,6 +580,21 @@ void StyleDlgWX::OnValueChanged( wxCommandEvent& event )
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_CHOICE_BRIGHT", wxComboBox)->SetValue(value);
             }
+          else
+            {
+              // initialize other values
+              svalue = XRCCTRL(*this, "wxID_CHOICE_R_STYLE", wxChoice)->GetStringSelection();
+              if (svalue.Len() == 0)
+                XRCCTRL(*this, "wxID_CHOICE_R_STYLE", wxChoice)->SetStringSelection(TtaConvMessageToWX( "solid" ));
+              cvalue = XRCCTRL(*this, "wxID_COMBO_R_COLOR", wxComboBox)->GetValue();
+              if (cvalue.Len() == 0)
+                XRCCTRL(*this, "wxID_COMBO_R_COLOR", wxComboBox)->SetValue(TtaConvMessageToWX( "Black" ));
+            }
+        }
+      else
+        {
+          XRCCTRL(*this, "wxID_CHOICE_R_STYLE", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
+          XRCCTRL(*this, "wxID_COMBO_R_COLOR", wxComboBox)->SetValue(TtaConvMessageToWX( "" ));
         }
     }
   else if (id == wxXmlResource::GetXRCID(_T("wxID_CHOICE_B")))
@@ -549,6 +609,21 @@ void StyleDlgWX::OnValueChanged( wxCommandEvent& event )
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_CHOICE_B", wxComboBox)->SetValue(value);
             }
+          else
+            {
+              // initialize other values
+              svalue = XRCCTRL(*this, "wxID_CHOICE_BORDER_STYLE", wxChoice)->GetStringSelection();
+              if (svalue.Len() == 0)
+                XRCCTRL(*this, "wxID_CHOICE_BORDER_STYLE", wxChoice)->SetStringSelection(TtaConvMessageToWX( "solid" ));
+              cvalue = XRCCTRL(*this, "wxID_COMBO_BORDER_COLOR", wxComboBox)->GetValue();
+              if (cvalue.Len() == 0)
+                XRCCTRL(*this, "wxID_COMBO_BORDER_COLOR", wxComboBox)->SetValue(TtaConvMessageToWX( "Black" ));
+            }
+        }
+      else
+        {
+          XRCCTRL(*this, "wxID_CHOICE_BORDER_STYLE", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
+          XRCCTRL(*this, "wxID_COMBO_BORDER_COLOR", wxComboBox)->SetValue(TtaConvMessageToWX( "" ));
         }
     }
   else if (id == wxXmlResource::GetXRCID(_T("wxID_CHOICE_MTOP")))
