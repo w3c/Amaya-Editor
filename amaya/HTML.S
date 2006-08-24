@@ -408,19 +408,27 @@ STRUCT
 	 { cite  datetime }
 	Basic_Set;
 
-  Block = CASE OF						{ block }
-	Paragraph;						{ P }
+  Block = CASE OF {Block}
+	Paragraph;
 	Pseudo_paragraph;
-	Heading;						{ heading }
-	List_;							{ list + DL }
-	Block_Quote;						{ BLOCKQUOTE }
-	Preformatted;						{ PRE }
-	Division;						{ DIV }
-	Center;							{ CENTER }
+	Heading;
+	List_;
+	Preformatted;
+	Division;
+	Center;
+	Block_Quote;
 	Form;
-	Horizontal_Rule;					{ HR }
-	Table_;							{ TABLE }
-	Address;						{ ADDRESS }
+	Horizontal_Rule;
+	Table_;
+	Address;
+	IMG;
+	Object;
+	Applet;
+	MathML;
+  SVG;
+  XLink;
+	External_Object;
+	Embed_;
 	END;
 
   Division							{ DIV }
