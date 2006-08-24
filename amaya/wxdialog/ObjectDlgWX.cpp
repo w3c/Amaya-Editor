@@ -124,12 +124,12 @@ void ObjectDlgWX::OnMimeTypeCbx( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void ObjectDlgWX::OnOpenButton( wxCommandEvent& event )
 {
-  char     buffer[512];
+  char     buffer[MAX_LENGTH];
   char     Alt[512];
 
   // get the current url
   wxString url = XRCCTRL(*this, "wxID_URL", wxTextCtrl)->GetValue( );
-  wxASSERT( url.Len() < 512 );
+  wxASSERT( url.Len() < MAX_LENGTH );
   strcpy( buffer, (const char*)url.mb_str(wxConvUTF8) );
   // give the new url to amaya (to do url completion)
   ThotCallback (BaseImage + ImageURL,  STRING_DATA, (char *)buffer );

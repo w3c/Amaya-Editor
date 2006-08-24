@@ -8,8 +8,6 @@
 #ifndef __LIBMANAG_H_
 #define __LIBMANAG_H_
 
-#define MAX_LENGTH     512
-
 /* Structure de liste chaine pour la correspondance URI TITLE */
 typedef struct _Link_Table
 {

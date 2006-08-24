@@ -16,7 +16,7 @@
  
 #ifndef THOT_GUI_H
 #define THOT_GUI_H
-#define MAX_LENGTH     512
+#define MAX_LENGTH     800
 #define MAX_EXT         10
 
 /* strange constants .. to remove if possible */

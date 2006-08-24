@@ -20,14 +20,15 @@ public:
     
   // Constructor.
   OpenDocDlgWX( int ref,
-		wxWindow* parent,
-		const wxString & title,
-		const wxString & docName,
-		const wxArrayString & urlList,
-		const wxString & urlToOpen,
-		const wxString & filter,
-		int * p_last_used_filter,
-		const wxString & profiles );
+                wxWindow* parent,
+                const wxString & title,
+                const wxString & docName,
+                const wxArrayString & urlList,
+                const wxString & urlToOpen,
+                const wxString & filter,
+                int * p_last_used_filter,
+                const wxString & profiles,
+                int newfile);
     
   // Destructor.                  
   virtual ~OpenDocDlgWX();
@@ -41,7 +42,6 @@ private:
   void OnDirButton( wxCommandEvent& event );
   void OnFilenameButton( wxCommandEvent& event );
   void OnURLSelected( wxCommandEvent& event );
-  void OnText_Filename( wxCommandEvent& event );
   void OnText_Dir( wxCommandEvent& event );
   void OnText_Combobox( wxCommandEvent& event );
   void OnProfileSelected( wxCommandEvent& event );
@@ -49,7 +49,7 @@ private:
 
  private:
   void UpdateComboboxFromDirAndFilename();
-  void UpdateDirAndFilenameFromString(const wxString & full_path);
+  void UpdateDirFromString(const wxString & full_path);
 
  private:
   wxString m_Filter;

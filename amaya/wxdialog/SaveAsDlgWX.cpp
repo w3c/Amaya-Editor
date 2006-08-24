@@ -363,8 +363,8 @@ void SaveAsDlgWX::OnBrowseButton( wxCommandEvent& event )
     path = XRCCTRL(*this, "wxID_DOC_LOCATION_CTRL", wxTextCtrl)->GetValue();
 #ifdef _WINDOWS 
   {
-     char buffer[512];
-     wxASSERT( path.Len() < 512 );
+     char buffer[MAX_LENGTH];
+     wxASSERT( path.Len() < MAX_LENGTH );
      strcpy( buffer, (const char*)path.mb_str(wxConvUTF8) );
 	 if (!IsW3Path (buffer))
 	 {
@@ -487,8 +487,8 @@ void SaveAsDlgWX::OnDocLocation ( wxCommandEvent& event )
   wxString location = XRCCTRL(*this, "wxID_DOC_LOCATION_CTRL", wxTextCtrl)->GetValue( );
 
   // allocate a temporary buffer to convert wxString to (char *) UTF-8 buffer
-  char buffer[512];
-  wxASSERT( location.Len() < 512 );
+  char buffer[MAX_LENGTH];
+  wxASSERT( location.Len() < MAX_LENGTH );
   strcpy( buffer, (const char*)location.mb_str(wxConvUTF8) );
 
   ThotCallback (BaseDialog + NameSave,  STRING_DATA, (char *)buffer );
@@ -502,8 +502,8 @@ void SaveAsDlgWX::OnImgLocation ( wxCommandEvent& event )
   wxString location = XRCCTRL(*this, "wxID_IMG_LOCATION_CTRL", wxTextCtrl)->GetValue( );
   
   // allocate a temporary buffer to convert wxString to (char *) UTF-8 buffer
-  char buffer[512];
-  wxASSERT( location.Len() < 512 );
+  char buffer[MAX_LENGTH];
+  wxASSERT( location.Len() < MAX_LENGTH );
   strcpy( buffer, (const char*)location.mb_str(wxConvUTF8) );
   ThotCallback (BaseDialog + ImgDirSave,  STRING_DATA, (char *)buffer );
 }

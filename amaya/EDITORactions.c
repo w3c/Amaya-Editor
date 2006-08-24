@@ -439,7 +439,12 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile,
       title = TtaSearchTypedElement (elType, SearchInTree, root);
       text = TtaGetFirstChild (title);
       if (TtaGetTextLength (text) == 0)
-        TtaSetTextContent (text, (unsigned char*)"No title", language, doc);
+        {
+          if (Answer_text[0] == EOS)
+            TtaSetTextContent (text, (unsigned char*)"No title", language, doc);
+          else
+            TtaSetTextContent (text, (unsigned char*)Answer_text, language, doc);
+        }
       UpdateTitle (title, doc);
 
       elType.ElTypeNum = HTML_EL_HEAD;

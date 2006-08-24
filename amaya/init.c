@@ -43,11 +43,11 @@
 **/
 #ifdef _GTK
   #include "gtkdialogapi.h"
-  extern char      LostPicturePath [512];
+  extern char      LostPicturePath [MAX_LENGTH];
 #endif /* _GTK */
 #ifdef _WINDOWS
   #include <commctrl.h>
-  extern char      LostPicturePath [512];
+  extern char      LostPicturePath [MAX_LENGTH];
 #endif /* _WINDOWS */
 #ifdef _WINGUI
   #include "resource.h"
@@ -2391,6 +2391,7 @@ void OpenNew (Document document, View view, int docType, int docProfile)
   NewDocType = docType;
   NewDocProfile = docProfile;
   NewXML = TRUE;
+  Answer_text[0] = EOS;
   if (NewDocType == docHTML)
     {
       /* will scan html documents */

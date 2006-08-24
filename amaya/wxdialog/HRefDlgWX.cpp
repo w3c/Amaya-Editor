@@ -114,8 +114,8 @@ void HRefDlgWX::OnOk( wxCommandEvent& event )
   wxString url = XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->GetValue( );
   Waiting = 0;
   // allocate a temporary buffer to copy the 'const char *' url buffer 
-  char buffer[512];
-  wxASSERT( url.Len() < 512 );
+  char buffer[MAX_LENGTH];
+  wxASSERT( url.Len() < MAX_LENGTH );
   strcpy( buffer, (const char*)url.mb_str(wxConvUTF8) );
   // give the new url to amaya (to do url completion)
   ThotCallback (BaseDialog + AttrHREFText, STRING_DATA, (char *)buffer);

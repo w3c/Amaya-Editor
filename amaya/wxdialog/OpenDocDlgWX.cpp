@@ -14,7 +14,7 @@
 #include "thot_sys.h"
 static int      Waiting = 0;
 static int      MyRef = 0;
-
+static ThotBool Mandatory_title = FALSE;
 
 //-----------------------------------------------------------------------------
 // Event table: connect the events to the handler functions to process them
@@ -27,11 +27,9 @@ BEGIN_EVENT_TABLE(OpenDocDlgWX, AmayaDialog)
   EVT_BUTTON(     XRCID("wxID_BUTTON_FILENAME"), OpenDocDlgWX::OnFilenameButton )
   EVT_TEXT_ENTER( XRCID("wxID_COMBOBOX"),        OpenDocDlgWX::OnOpenButton )
   EVT_COMBOBOX( XRCID("wxID_COMBOBOX"),          OpenDocDlgWX::OnURLSelected )
-  EVT_TEXT_ENTER( XRCID("wxID_FILENAME"),        OpenDocDlgWX::OnOpenButton )
   EVT_TEXT_ENTER( XRCID("wxID_DIR"),             OpenDocDlgWX::OnOpenButton )
   EVT_COMBOBOX( XRCID("wxID_PROFILE"),           OpenDocDlgWX::OnProfileSelected )
 
-  EVT_TEXT( XRCID("wxID_FILENAME"), OpenDocDlgWX::OnText_Filename )
   EVT_TEXT( XRCID("wxID_DIR"),      OpenDocDlgWX::OnText_Dir )
   EVT_TEXT( XRCID("wxID_COMBOBOX"), OpenDocDlgWX::OnText_Combobox )
 END_EVENT_TABLE()
@@ -48,7 +46,8 @@ END_EVENT_TABLE()
 OpenDocDlgWX::OpenDocDlgWX( int ref, wxWindow* parent, const wxString & title,
                             const wxString & docName, const wxArrayString & urlList,
                             const wxString & urlToOpen, const wxString & filter,
-                            int * p_last_used_filter, const wxString & profiles) :
+                            int * p_last_used_filter, const wxString & profiles,
+                            int newfile) :
   AmayaDialog( parent, ref )
   ,m_Filter(filter)
   ,m_LockUpdateFlag(false)
@@ -63,7 +62,6 @@ OpenDocDlgWX::OpenDocDlgWX( int ref, wxWindow* parent, const wxString & title,
 
   // update dialog labels with given ones
   SetTitle( title );
-  //XRCCTRL(*this, "wxID_LABEL", wxStaticText)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_LOCATION) ));
   XRCCTRL(*this, "wxID_OK", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_OPEN_URL) ));
   XRCCTRL(*this, "wxID_CLEAR", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_CLEAR) ));
   XRCCTRL(*this, "wxID_CANCEL", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(LIB,TMSG_CANCEL) ));
@@ -72,31 +70,61 @@ OpenDocDlgWX::OpenDocDlgWX( int ref, wxWindow* parent, const wxString & title,
   XRCCTRL(*this, "wxID_RADIOBOX", wxRadioBox)->SetString(2, TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_INNEWWINDOW)));
   XRCCTRL(*this, "wxID_BUTTON_FILENAME", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_BROWSE)));
 
-  if (profiles.IsEmpty())
+  if (newfile)
     {
-      // Open document
-      XRCCTRL(*this, "wxID_LABEL_FILENAME", wxStaticText)->Hide();
-      XRCCTRL(*this, "wxID_FILENAME", wxTextCtrl)->Hide();
-      XRCCTRL(*this, "wxID_LABEL_DIR", wxStaticText)->Hide();
-      XRCCTRL(*this, "wxID_DIR", wxTextCtrl)->Hide();
-      XRCCTRL(*this, "wxID_BUTTON_DIR", wxBitmapButton)->Hide();
-      XRCCTRL(*this, "wxID_PROFILE", wxComboBox)->Hide();
-      XRCCTRL(*this, "wxID_PROFILE_LABEL", wxStaticText)->Hide();
-      GetSizer()->SetSizeHints( this );
+      // New HTML document
+      XRCCTRL(*this, "wxID_LABEL_DIR", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_DIRECTORY)));
+      XRCCTRL(*this, "wxID_BUTTON_DIR", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_SEL)));
+
+      // document charset
+      XRCCTRL(*this, "wxID_CHARSET", wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_DOCINFO_CHARSET)) );
+      s = TtaGetEnvString ("DOCUMENT_CHARSET");
+      if (s && s[0] != EOS)
+        XRCCTRL(*this, "wxID_CHOICE_CHARSET", wxChoice)->SetStringSelection(TtaConvMessageToWX(s));
+      else
+        XRCCTRL(*this, "wxID_CHOICE_CHARSET", wxChoice)->SetStringSelection( TtaConvMessageToWX("iso-8859-1") );
+      if (profiles.IsEmpty())
+        {
+          // not a new HTML document
+          Mandatory_title = FALSE;
+          XRCCTRL(*this, "wxID_LABEL_TITLE", wxStaticText)->Hide();
+          XRCCTRL(*this, "wxID_TITLE", wxTextCtrl)->Hide();
+          XRCCTRL(*this, "wxID_PROFILE", wxComboBox)->Hide();
+          XRCCTRL(*this, "wxID_PROFILE_LABEL", wxStaticText)->Hide();
+          XRCCTRL(*this, "wxID_ERROR", wxStaticText)->Hide();
+          GetSizer()->SetSizeHints( this );
+        }
+      else
+        {
+          // document title
+          Mandatory_title = TRUE;
+          XRCCTRL(*this, "wxID_LABEL_TITLE", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_BM_TITLE)));
+          XRCCTRL(*this, "wxID_TITLE", wxTextCtrl)->SetValue(TtaConvMessageToWX(""));
+          XRCCTRL(*this, "wxID_ERROR", wxStaticText)->SetLabel( TtaConvMessageToWX(""));
+          // Get the last selected profile
+          XRCCTRL(*this, "wxID_PROFILE_LABEL", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_XML_PROFILE)));
+          s = TtaGetEnvString ("XHTML_Profile");
+          if (s && s[0] != EOS)
+            XRCCTRL(*this, "wxID_PROFILE", wxComboBox)->SetValue(TtaConvMessageToWX(s));
+          else
+            XRCCTRL(*this, "wxID_PROFILE", wxComboBox)->SetValue( profiles );
+        }
     }
   else
     {
-      // New document
-      XRCCTRL(*this, "wxID_LABEL_FILENAME", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_FILE)));
-      XRCCTRL(*this, "wxID_LABEL_DIR", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_DIRECTORY)));
-      XRCCTRL(*this, "wxID_BUTTON_DIR", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_SEL)));
-      // Get the last selected profile
-      s = TtaGetEnvString ("XHTML_Profile");
-      if (s && s[0] != EOS)
-        XRCCTRL(*this, "wxID_PROFILE", wxComboBox)->SetValue(TtaConvMessageToWX(s));
-      else
-        XRCCTRL(*this, "wxID_PROFILE", wxComboBox)->SetValue( profiles );
-      XRCCTRL(*this, "wxID_PROFILE_LABEL", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_XML_PROFILE)));
+      // Not a new HTML document
+      Mandatory_title = FALSE;
+      XRCCTRL(*this, "wxID_LABEL_DIR", wxStaticText)->Hide();
+      XRCCTRL(*this, "wxID_DIR", wxTextCtrl)->Hide();
+      XRCCTRL(*this, "wxID_BUTTON_DIR", wxBitmapButton)->Hide();
+      XRCCTRL(*this, "wxID_LABEL_TITLE", wxStaticText)->Hide();
+      XRCCTRL(*this, "wxID_TITLE", wxTextCtrl)->Hide();
+      XRCCTRL(*this, "wxID_CHARSET", wxStaticText)->Hide();
+      XRCCTRL(*this, "wxID_CHOICE_CHARSET", wxChoice)->Hide();
+      XRCCTRL(*this, "wxID_PROFILE", wxComboBox)->Hide();
+      XRCCTRL(*this, "wxID_PROFILE_LABEL", wxStaticText)->Hide();
+      XRCCTRL(*this, "wxID_ERROR", wxStaticText)->Hide();
+      GetSizer()->SetSizeHints( this );
     }
 
   // get the default NEW_LOCATION value : in new tab
@@ -114,7 +142,7 @@ OpenDocDlgWX::OpenDocDlgWX( int ref, wxWindow* parent, const wxString & title,
   // set te cursor to the end
   XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetInsertionPointEnd();
   #endif /* _WINDOW || _MACOS */
-  UpdateDirAndFilenameFromString( urlToOpen );
+  UpdateDirFromString( urlToOpen );
 
   // dir separator
   wxChar dir_sep = DIR_SEP;
@@ -191,7 +219,7 @@ void OpenDocDlgWX::OnFilenameButton( wxCommandEvent& event )
       *m_pLastUsedFilter = p_dlg->GetFilterIndex();
       XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetValue( p_dlg->GetPath() );
       XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetInsertionPointEnd();
-      UpdateDirAndFilenameFromString( p_dlg->GetPath() );
+      UpdateDirFromString( p_dlg->GetPath() );
       p_dlg->Destroy();
     }
   else
@@ -207,9 +235,11 @@ void OpenDocDlgWX::UpdateComboboxFromDirAndFilename()
 {
   if (!m_LockUpdateFlag)
     {
+      wxString full_path = XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->GetValue();
+      int end_slash_pos = full_path.Find(DIR_SEP, true);
       m_LockUpdateFlag = true;
-      wxString dir_value      = XRCCTRL(*this, "wxID_DIR", wxTextCtrl)->GetValue();
-      wxString filename_value = XRCCTRL(*this, "wxID_FILENAME", wxTextCtrl)->GetValue();
+      wxString dir_value = XRCCTRL(*this, "wxID_DIR", wxTextCtrl)->GetValue();
+      wxString filename_value = full_path.SubString(end_slash_pos+1, full_path.Length());
 #ifdef _WINDOWS
       if (dir_value.IsEmpty())
         dir_value = _T("C:\\");
@@ -223,11 +253,11 @@ void OpenDocDlgWX::UpdateComboboxFromDirAndFilename()
 }
 
 /*----------------------------------------------------------------------
-  UpdateDirAndFilenameFromCombobox
+  UpdateDirFromCombobox
   params:
   returns:
   ----------------------------------------------------------------------*/
-void OpenDocDlgWX::UpdateDirAndFilenameFromString( const wxString & full_path )
+void OpenDocDlgWX::UpdateDirFromString( const wxString & full_path )
 {
   if (!m_LockUpdateFlag)
     {
@@ -236,15 +266,10 @@ void OpenDocDlgWX::UpdateDirAndFilenameFromString( const wxString & full_path )
         {
           int end_slash_pos = full_path.Find(DIR_SEP, true);
           wxString dir_value = full_path.SubString(0, end_slash_pos);
-          wxString filename_value = full_path.SubString(end_slash_pos+1, full_path.Length());
           XRCCTRL(*this, "wxID_DIR", wxTextCtrl)->SetValue(dir_value);
-          XRCCTRL(*this, "wxID_FILENAME", wxTextCtrl)->SetValue(filename_value);
         }
       else
-        {
-          XRCCTRL(*this, "wxID_DIR", wxTextCtrl)->Clear();
-          XRCCTRL(*this, "wxID_FILENAME", wxTextCtrl)->Clear();
-        }
+        XRCCTRL(*this, "wxID_DIR", wxTextCtrl)->Clear();
       m_LockUpdateFlag = false;
     }
 }
@@ -257,31 +282,57 @@ void OpenDocDlgWX::UpdateDirAndFilenameFromString( const wxString & full_path )
   ----------------------------------------------------------------------*/
 void OpenDocDlgWX::OnOpenButton( wxCommandEvent& event )
 {
+  wxString        value;
+  char            buffer[512];
+  int             where_id;
+
   if (!Waiting)
     // no return done
     return;
+
+  // get the selected charset
+  value = XRCCTRL(*this, "wxID_CHOICE_CHARSET", wxChoice)->GetStringSelection();
+  strcpy (buffer, (const char*)value.mb_str(wxConvUTF8));
+  TtaSetEnvString ("DOCUMENT_CHARSET", buffer, TRUE);
+
+  // Get the document title
+  if (Mandatory_title)
+    {
+      // get the document title
+      value = XRCCTRL(*this, "wxID_TITLE", wxTextCtrl)->GetValue( );
+      if (value.Len() == 0)
+        {
+          XRCCTRL(*this, "wxID_ERROR", wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage (AMAYA, AM_MISSING_TITLE)));
+          return;
+        }
+      else
+        {
+          strcpy( buffer, (const char*)value.mb_str(wxConvUTF8) );
+          ThotCallback (BaseDialog + TitleText,  STRING_DATA, (char *)buffer );
+        }
+    }
+
   // get the "where to open" indicator
-  int where_id = XRCCTRL(*this, "wxID_RADIOBOX", wxRadioBox)->GetSelection();
+  where_id = XRCCTRL(*this, "wxID_RADIOBOX", wxRadioBox)->GetSelection();
   ThotCallback (BaseDialog + OpenLocation , INTEGER_DATA, (char*)where_id);
 
   // get the combobox current url
-  wxString url = XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->GetValue( );
-  // allocate a temporary buffer to copy the 'const char *' url buffer 
-  char buffer[512];
-  wxASSERT( url.Len() < 512 );
-  strcpy( buffer, (const char*)url.mb_str(wxConvUTF8) );
+  value = XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->GetValue( );
+  strncpy (buffer, (const char*)value.mb_str(wxConvUTF8), 511);
+  buffer[511] = EOS;
   // give the new url to amaya (to do url completion)
   ThotCallback (BaseDialog + URLName,  STRING_DATA, (char *)buffer );
 
   // get the combobox profile
-  wxString profile = XRCCTRL(*this, "wxID_PROFILE", wxComboBox)->GetValue( );
-  if (!profile.IsEmpty())
+  value = XRCCTRL(*this, "wxID_PROFILE", wxComboBox)->GetValue( );
+  if (!value.IsEmpty())
     {
-      strcpy( buffer, (const char*)profile.mb_str(wxConvUTF8) );
+      strcpy( buffer, (const char*)value.mb_str(wxConvUTF8) );
       // give the profile to amaya
       TtaSetEnvString ("XHTML_Profile", buffer, TRUE);
       ThotCallback (BaseDialog + DocInfoDocType,  STRING_DATA, (char *)buffer );
     }
+
   // return done
   Waiting = 0;
   // create or load the new document
@@ -299,7 +350,6 @@ void OpenDocDlgWX::OnOpenButton( wxCommandEvent& event )
 void OpenDocDlgWX::OnClearButton( wxCommandEvent& event )
 {
   XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetValue(_T(""));
-  XRCCTRL(*this, "wxID_FILENAME", wxTextCtrl)->Clear();
   XRCCTRL(*this, "wxID_DIR", wxTextCtrl)->Clear();
 }
 
@@ -334,16 +384,6 @@ void OpenDocDlgWX::OnProfileSelected( wxCommandEvent& event )
 {
 }
 
-/*----------------------------------------------------------------------
-  Class:  OpenDocDlgWX
-  Method:  OnText_Filename
-  Description:  update the filename
-  ----------------------------------------------------------------------*/
-void OpenDocDlgWX::OnText_Filename( wxCommandEvent& event )
-{
-  UpdateComboboxFromDirAndFilename();
-  event.Skip();
-}
 
 /*----------------------------------------------------------------------
   Class:  OpenDocDlgWX
@@ -363,7 +403,7 @@ void OpenDocDlgWX::OnText_Dir( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void OpenDocDlgWX::OnText_Combobox( wxCommandEvent& event )
 {
-  UpdateDirAndFilenameFromString( XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->GetValue() );
+  UpdateDirFromString( XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->GetValue() );
   event.Skip();
 }
 

@@ -334,7 +334,7 @@ Prop_General PreferenceDlgWX::GetValueDialog_General()
   prop.AccesskeyMod = XRCCTRL(*this, "wxID_RADIO_QUICKAXX", wxRadioBox)->GetSelection();
 
   value = XRCCTRL(*this, "wxID_CHOICE_LG", wxChoice)->GetStringSelection();
-  char buffer[512];
+  char buffer[MAX_LENGTH];
   strcpy(buffer, (const char*)value.mb_str(wxConvUTF8) );
   if (!strncmp (buffer, "zh", 2))
     strncpy( prop.DialogueLang, &buffer[3], 2 );

@@ -57,6 +57,11 @@
             <flag>wxBOTTOM|wxEXPAND</flag>
             <border>4</border>
           </object>
+          <object class="spacer">
+            <size>0,5</size>
+            <option>1</option>
+            <flag>wxALL</flag>
+          </object>
           <object class="sizeritem">
             <object class="wxBoxSizer">
               <orient>wxHORIZONTAL</orient>
@@ -79,22 +84,17 @@
                 <object class="wxBoxSizer">
                   <orient>wxVERTICAL</orient>
                   <object class="sizeritem">
-                    <object class="wxStaticText" name="wxID_LABEL_FILENAME">
-                      <label>*File name*</label>
+                    <object class="wxStaticText" name="wxID_LABEL_TITLE">
+                      <label>*Document title*</label>
                       <size>200,-1</size>
                     </object>
                     <option>1</option>
                     <flag>wxEXPAND</flag>
                   </object>
                   <object class="sizeritem">
-                    <object class="wxTextCtrl" name="wxID_FILENAME"/>
+                    <object class="wxTextCtrl" name="wxID_TITLE"/>
                     <option>1</option>
                     <flag>wxEXPAND</flag>
-                  </object>
-                  <object class="spacer">
-                    <size>0,5</size>
-                    <option>1</option>
-                    <flag>wxALL</flag>
                   </object>
                   <object class="sizeritem">
                     <object class="wxStaticText" name="wxID_PROFILE_LABEL">
@@ -121,8 +121,28 @@
                     <option>1</option>
                     <flag>wxTOP|wxEXPAND</flag>
                   </object>
-                  <object class="spacer">
-                    <size>0,5</size>
+                  <object class="sizeritem">
+                    <object class="wxBoxSizer">
+                      <orient>wxHORIZONTAL</orient>
+                      <object class="sizeritem">
+                        <object class="wxStaticText" name="wxID_CHARSET">
+                          <label>*Charset :*</label>
+                          <size>80,-1</size>
+                        </object>
+                        <option>0</option>
+                        <flag>wxALIGN_CENTRE_VERTICAL</flag>
+                        <border>5</border>
+                      </object>
+                      <object class="sizeritem">
+                        <object class="wxChoice" name="wxID_CHOICE_CHARSET">
+                          <content>
+                            <item>us-ascii</item>
+                            <item>iso-8859-1</item>
+                            <item>utf-8</item>
+                          </content>
+                        </object>
+                      </object>
+                    </object>
                   </object>
                 </object>
                 <option>1</option>
@@ -135,6 +155,20 @@
         </object>
         <flag>wxALL|wxEXPAND</flag>
         <border>5</border>
+      </object>
+      <object class="spacer">
+        <size>0,1</size>
+        <option>1</option>
+      </object>
+      <object class="sizeritem">
+        <object class="wxStaticText" name="wxID_ERROR">
+          <label>The XHTML document title is mandatory</label>
+          <fg>#7A1919</fg>
+        </object>
+      </object>
+      <object class="spacer">
+        <size>0,2</size>
+        <option>1</option>
       </object>
       <object class="sizeritem">
         <flag>wxALL|wxALIGN_RIGHT|wxADJUST_MINSIZE</flag>

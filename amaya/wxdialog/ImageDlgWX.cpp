@@ -89,12 +89,12 @@ ImageDlgWX::~ImageDlgWX()
   ----------------------------------------------------------------------*/
 void ImageDlgWX::OnOpenButton( wxCommandEvent& event )
 {
-  char     Buffer[512];
+  char     Buffer[MAX_LENGTH];
   char     Alt[512];
 
   // get the current url
   wxString url = XRCCTRL(*this, "wxID_URL", wxTextCtrl)->GetValue( );
-  wxASSERT( url.Len() < 512 );
+  wxASSERT( url.Len() < MAX_LENGTH );
   strcpy( Buffer, (const char*)url.mb_str(wxConvUTF8) );
   // give the new url to amaya (to do url completion)
   ThotCallback (BaseImage + ImageURL,  STRING_DATA, (char *)Buffer );

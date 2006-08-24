@@ -199,17 +199,17 @@ void NewTemplateDocDlgWX::UpdateInstanceFilenameFromString( const wxString & ful
   ----------------------------------------------------------------------*/
 void NewTemplateDocDlgWX::OnCreateButton( wxCommandEvent& event )
 {
-  char temp[512], docname[512];
+  char temp[MAX_LENGTH], docname[MAX_LENGTH];
 
   // get the template path
   wxString templateUrl = XRCCTRL(*this, "wxID_TEMPLATEFILENAME", wxComboBox)->GetValue( );
-  wxASSERT( templateUrl.Len() < 512 );
+  wxASSERT( templateUrl.Len() < MAX_LENGTH );
   strcpy( temp, (const char*)templateUrl.mb_str(wxConvUTF8) );
   if (TtaFileExist(temp))
     {
       // get the doc instance path
       wxString instanceUrl = XRCCTRL (*this, "wxID_INSTANCEFILENAME", wxTextCtrl)->GetValue();
-      wxASSERT( instanceUrl.Len() < 512 );
+      wxASSERT( instanceUrl.Len() < MAX_LENGTH );
       strcpy( docname, (const char*)instanceUrl.mb_str(wxConvUTF8) );
       // get the "where to open" indicator
       int where_id = XRCCTRL(*this, "wxID_RADIOBOX", wxRadioBox)->GetSelection();

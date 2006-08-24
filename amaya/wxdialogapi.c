@@ -149,6 +149,8 @@ ThotBool CreateOpenDocDlgWX ( int ref, ThotWindow parent, const char *title,
                               ThotBool newfile)
 {
 #ifdef _WX
+  int select_charset = 1;
+
   /* check if the dialog is alredy open */
   if (TtaRaiseDialogue (ref))
     return FALSE;
@@ -165,13 +167,18 @@ ThotBool CreateOpenDocDlgWX ( int ref, ThotWindow parent, const char *title,
     if (newfile)
       /* create a new HTML document: activate the list of profiles */
       wx_profiles = _T("XHTML Transitional");
+    else
+      select_charset = 0;
     }
   else if (doc_type == docMath)
     wx_filter = APPMATHNAMEFILTER;
   else if (doc_type == docSVG)
     wx_filter = APPSVGNAMEFILTER;
   else if (doc_type == docCSS)
-    wx_filter = APPCSSNAMEFILTER;
+    {
+      wx_filter = APPCSSNAMEFILTER;
+      select_charset = 0; // no charset selection
+    }
   else if (doc_type == docImage)
     wx_filter = APPIMAGENAMEFILTER;
   else if (doc_type == docImage)
@@ -179,7 +186,10 @@ ThotBool CreateOpenDocDlgWX ( int ref, ThotWindow parent, const char *title,
   else if (doc_type == docLibrary)
     wx_filter = APPLIBRARYNAMEFILTER;
   else 
-    wx_filter = APPFILENAMEFILTER;
+    {
+      wx_filter = APPFILENAMEFILTER;
+      select_charset = 0; // open an existing document
+    }
 
   OpenDocDlgWX * p_dlg = new OpenDocDlgWX( ref, parent,
                                            wx_title,
@@ -188,7 +198,7 @@ ThotBool CreateOpenDocDlgWX ( int ref, ThotWindow parent, const char *title,
                                            wx_urlToOpen,
                                            wx_filter,
                                            &g_Last_used_filter,
-                                           wx_profiles);
+                                           wx_profiles, select_charset);
 
   if ( TtaRegisterWidgetWX( ref, p_dlg ) )
       /* the dialog has been sucesfully registred */
@@ -559,8 +569,8 @@ ThotBool CreateSaveObject (int ref, ThotWindow parent, char* objectname)
     {
       wxString url = p_dlg->GetPath();
       // allocate a temporary buffer to copy the 'const char *' url buffer 
-      wxASSERT( url.Len() < 512 );
-      strcpy( SavePath, (const char*)url.mb_str(wxConvUTF8) );
+      strncpy( SavePath, (const char*)url.mb_str(wxConvUTF8), MAX_LENGTH-1);
+      SavePath[MAX_LENGTH-1] = EOS;
       // destroy the dlg before calling thotcallback because it's a child of this
       // dialog and thotcallback will delete the dialog...
       // so if I do not delete it manualy here it will be deleted twice

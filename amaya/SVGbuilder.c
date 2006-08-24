@@ -1413,11 +1413,11 @@ void UpdateTransformAttr (Element el, Document doc, char *operation,
 {
   ElementType           elType;
   AttributeType	        attrType;
-  Attribute		attr;
+  Attribute		          attr;
   ThotBool              error, found;
-  char		        buffer[512];
-  char                  *text, *ptr, *newText, *newPtr;
-  int			length, opLen, otherValue;
+  char                  buffer[512];
+  char                 *text, *ptr, *newText, *newPtr;
+  int                   length, opLen, otherValue;
   float                 origValue;
 
   if (!strcmp (operation, "scale"))
