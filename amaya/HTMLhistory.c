@@ -320,10 +320,13 @@ void GotoPreviousHTML_callback (int newdoc, int status, char *urlName,
       if (ctx->last)
         SetArrowButton (doc, FALSE, TRUE);
     }
-  if (!DocumentMeta[doc]->initial_url)
-    DocumentMeta[doc]->initial_url = ctx->initial_url;
-  else
-    TtaFreeMemory (ctx->initial_url);
+  if (DocumentMeta[doc])
+    {
+      if (!DocumentMeta[doc]->initial_url)
+	DocumentMeta[doc]->initial_url = ctx->initial_url;
+      else
+	TtaFreeMemory (ctx->initial_url);
+    }
   TtaFreeMemory (ctx);
   /* out of the critic section */
   Back_Forward = FALSE;
@@ -514,10 +517,12 @@ void GotoNextHTML_callback (int newdoc, int status, char *urlName,
       el = ElementAtPosition (doc, DocHistory[doc][next].HistPosition);
       TtaShowElement (doc, 1, el, DocHistory[doc][next].HistDistance);
     }
-  if (!DocumentMeta[doc]->initial_url)
-    DocumentMeta[doc]->initial_url = ctx->initial_url;
-  else
-    TtaFreeMemory (ctx->initial_url);
+  if (DocumentMeta[doc])
+    {  if (!DocumentMeta[doc]->initial_url)
+	DocumentMeta[doc]->initial_url = ctx->initial_url;
+      else
+	TtaFreeMemory (ctx->initial_url);
+    }
   TtaFreeMemory (ctx);
   /* out of the critic section */
   Back_Forward = FALSE;
