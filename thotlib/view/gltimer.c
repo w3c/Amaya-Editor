@@ -364,7 +364,9 @@ ThotBool GL_DrawAll ()
                                 }
                               GL_Swap (frame);  
                             }
+#ifdef _GL_DEBUG
                         GL_Err ();
+#endif
                       }
                   }
             }

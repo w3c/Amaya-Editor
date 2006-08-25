@@ -259,11 +259,13 @@
                             <object class="sizeritem">
                               <object class="wxChoice" name="wxID_CHOICE_ALIGN">
                                 <content>
-                                  <item/>
+                                  <item></item>
                                   <item>left</item>
                                   <item>right</item>
                                   <item>center</item>
-                                  <item>inherit</item></content>
+                                  <item>justify</item>
+                                  <item>inherit</item>
+                                </content>
                                 <size>120,-1</size>
                               </object>
                             </object>
@@ -459,10 +461,14 @@
                             <object class="sizeritem">
                               <object class="wxChoice" name="wxID_CHOICE_WHITESPACE">
                                 <content>
-                                  <item/>
+                                  <item></item>
                                   <item>normal</item>
                                   <item>pre</item>
-                                  <item>nowrap</item></content>
+                                  <item>nowrap</item>
+                                  <item>pre-wrap</item>
+                                  <item>pre-line</item>
+                                  <item>inherit</item>
+                                </content>
                                 <size>150,-1</size>
                               </object>
                             </object>

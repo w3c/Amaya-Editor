@@ -429,9 +429,10 @@ static void GL_MakeTextureSize (ThotPictInfo *img, int GL_w, int GL_h)
   GL_TextureBind: Put Texture in video card's Memory at a power of 2
   size for height and width 
   ----------------------------------------------------------------------*/
-static void GL_TextureBind (ThotPictInfo *img, ThotBool isPixmap)
+static void GL_TextureBind (ThotPictInfo *img, ThotBool isPixmap,
+                            ThotBool isPict_elem)
 {
-  unsigned int  p2_w, p2_h;
+  int           p2_w, p2_h;
   GLfloat       GL_w, GL_h;   
   GLint		      Mode;
   
@@ -444,28 +445,52 @@ static void GL_TextureBind (ThotPictInfo *img, ThotBool isPixmap)
       if (glhard () && img->PicWidth > MAX_GL_SIZE)
         {
           // keep only a part of the image width
+          p2_w = MAX_GL_SIZE;
           if ((img->PicXUnit == UnPercent && img->PicPosX >= 50) ||
-              img->PicPosX <= -MAX_GL_SIZE)
+              img->PicPosX <= - p2_w)
             // keep the end of the image
-            img->PicShiftX = img->PicWidth - MAX_GL_SIZE;
+            img->PicShiftX = img->PicWidth - p2_w;
           else
             //  keep the beginning of the image
             img->PicShiftX = 0;
-          p2_w = MAX_GL_SIZE;
+        }
+      else if (!isPict_elem && img->PicWidth > 2 * MAX_GL_SIZE)
+        {
+          // keep only a part of the image width
+          p2_w = 2 * MAX_GL_SIZE;
+          if ((img->PicXUnit == UnPercent && img->PicPosX >= 50) ||
+              img->PicPosX <= -p2_w)
+            // keep the end of the image
+            img->PicShiftX = img->PicWidth - p2_w;
+          else
+            //  keep the beginning of the image
+            img->PicShiftX = 0;
         }
       else
         p2_w = p2 (img->PicWidth);
       if (glhard () && img->PicHeight > MAX_GL_SIZE)
         {
           // keep only a part of the image height
+          p2_h = MAX_GL_SIZE;
           if ((img->PicYUnit == UnPercent && img->PicPosY >= 50) ||
-              img->PicPosY <= -MAX_GL_SIZE)
+              img->PicPosY <= -p2_h)
             // keep the end of the image
-            img->PicShiftY = img->PicHeight - MAX_GL_SIZE;
+            img->PicShiftY = img->PicHeight - p2_h;
           else
             //  keep the beginning of the image
             img->PicShiftY = 0;
-          p2_h = MAX_GL_SIZE;
+        }
+      else if (glhard () && img->PicHeight > MAX_GL_SIZE)
+        {
+          // keep only a part of the image height
+          p2_h = 2 * MAX_GL_SIZE;
+          if ((img->PicYUnit == UnPercent && img->PicPosY >= 50) ||
+              img->PicPosY <= -p2_h)
+            // keep the end of the image
+            img->PicShiftY = img->PicHeight - p2_h;
+          else
+            //  keep the beginning of the image
+            img->PicShiftY = 0;
         }
       else
         p2_h = p2 (img->PicHeight);
@@ -522,6 +547,10 @@ static void GL_TextureBind (ThotPictInfo *img, ThotBool isPixmap)
           glTexImage2D (GL_TEXTURE_2D, 0, Mode, p2_w, p2_h, 0, Mode, 
                         GL_UNSIGNED_BYTE, NULL);
         }
+#ifdef _GL_DEBUG
+      GL_Err ();
+#endif
+
       if (!Printing)
         img->PicPixmap = NULL;
       img->TexCoordW = GL_w;
@@ -2403,7 +2432,7 @@ void *PutTextureOnImageDesc (unsigned char *pattern, int width, int height)
   imageDesc->PicWArea = width;
   imageDesc->PicHArea = height;
   imageDesc->PicPixmap = (ThotPixmap)pattern;   
-  GL_TextureBind (imageDesc, TRUE);
+  GL_TextureBind (imageDesc, TRUE, TRUE);
   return (imageDesc);  
 #endif /* _GL */
   return NULL;
@@ -2564,7 +2593,7 @@ void *Group_shot (int x, int y, int width, int height, int frame, ThotBool is_rg
 
       if (1  /* && glhard () */)
         {
-          GL_TextureBind (imageDesc, FALSE);
+          GL_TextureBind (imageDesc, FALSE, TRUE);
           glCopyTexSubImage2D (GL_TEXTURE_2D, 0, 0, 0, x, y, width, height);
         }
       else
@@ -2573,7 +2602,7 @@ void *Group_shot (int x, int y, int width, int height, int frame, ThotBool is_rg
                                                            width * height * 4);
           glReadPixels (x, y, width, height, GL_RGBA, GL_UNSIGNED_BYTE, 
                         imageDesc->PicPixmap);
-          GL_TextureBind (imageDesc, TRUE);
+          GL_TextureBind (imageDesc, TRUE, TRUE);
         }
       return imageDesc;
     }
@@ -2869,7 +2898,7 @@ void LoadPicture (int frame, PtrBox box, ThotPictInfo *imageDesc)
     imageDesc->RGBA = TRUE;
 
   if (strcmp (imageDesc->PicFileName, LostPicturePath))
-    GL_TextureBind (imageDesc, TRUE);
+    GL_TextureBind (imageDesc, TRUE, pAb->AbLeafType == LtPicture);
 #ifdef WITH_CACHE
   /* desactive the cache of images */
   if (strcmp (imageDesc->PicFileName, LostPicturePath) == 0 ||
