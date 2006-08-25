@@ -59,28 +59,6 @@
                                   <object class="wxBoxSizer">
                                     <orient>wxHORIZONTAL</orient>
                                     <object class="sizeritem">
-                                      <object class="wxBitmapButton" name="wxID_PANEL_XHTML_STRONG">
-                                        <bitmap>../icons/16x16/XHTML_B.png</bitmap>
-                                        <focused>1</focused>
-                                      </object>
-                                      <flag>wxALL</flag>
-                                      <border>1</border>
-                                    </object>
-                                    <object class="sizeritem">
-                                      <object class="wxBitmapButton" name="wxID_PANEL_XHTML_EMPH">
-                                        <bitmap>../icons/16x16/XHTML_I.png</bitmap>
-                                      </object>
-                                      <flag>wxALL</flag>
-                                      <border>1</border>
-                                    </object>
-                                    <object class="sizeritem">
-                                      <object class="wxBitmapButton" name="wxID_PANEL_XHTML_CODE">
-                                        <bitmap>../icons/16x16/XHTML_T.png</bitmap>
-                                      </object>
-                                      <flag>wxALL</flag>
-                                      <border>1</border>
-                                    </object>
-                                    <object class="sizeritem">
                                       <object class="wxBitmapButton" name="wxID_PANEL_XHTML_DIV">
                                         <bitmap>../icons/16x16/XHTML_Div.png</bitmap>
                                         <tooltip>Division</tooltip>
@@ -105,6 +83,27 @@
                                     <object class="sizeritem">
                                       <object class="wxBitmapButton" name="wxID_PANEL_XHTML_H3">
                                         <bitmap>../icons/16x16/XHTML_H3.png</bitmap>
+                                      </object>
+                                      <flag>wxALL</flag>
+                                      <border>1</border>
+                                    </object>
+                                    <object class="sizeritem">
+                                      <object class="wxBitmapButton" name="wxID_PANEL_XHTML_TABLE">
+                                        <bitmap>../icons/16x16/XHTML_Table.png</bitmap>
+                                      </object>
+                                      <flag>wxALL</flag>
+                                      <border>1</border>
+                                    </object>
+                                    <object class="sizeritem">
+                                      <object class="wxBitmapButton" name="wxID_PANEL_XHTML_TARGET">
+                                        <bitmap>../icons/16x16/XHTML_Target.png</bitmap>
+                                      </object>
+                                      <flag>wxALL</flag>
+                                      <border>1</border>
+                                    </object>
+                                    <object class="sizeritem">
+                                      <object class="wxBitmapButton" name="wxID_PANEL_XHTML_LINK">
+                                        <bitmap>../icons/16x16/XHTML_Link.png</bitmap>
                                       </object>
                                       <flag>wxALL</flag>
                                       <border>1</border>
@@ -138,6 +137,20 @@
                                       <border>1</border>
                                     </object>
                                     <object class="sizeritem">
+                                      <object class="wxBitmapButton" name="wxID_PANEL_XHTML_DT">
+                                        <bitmap>../icons/16x16/XHTML_DT.png</bitmap>
+                                      </object>
+                                      <flag>wxALL</flag>
+                                      <border>1</border>
+                                    </object>
+                                    <object class="sizeritem">
+                                      <object class="wxBitmapButton" name="wxID_PANEL_XHTML_DD">
+                                        <bitmap>../icons/16x16/XHTML_DD.png</bitmap>
+                                      </object>
+                                      <flag>wxALL</flag>
+                                      <border>1</border>
+                                    </object>
+                                    <object class="sizeritem">
                                       <object class="wxBitmapButton" name="wxID_PANEL_XHTML_IMG">
                                         <bitmap>../icons/16x16/XHTML_Image.png</bitmap>
                                       </object>
@@ -145,22 +158,65 @@
                                       <border>1</border>
                                     </object>
                                     <object class="sizeritem">
-                                      <object class="wxBitmapButton" name="wxID_PANEL_XHTML_TARGET">
-                                        <bitmap>../icons/16x16/XHTML_Target.png</bitmap>
+                                      <object class="wxBitmapButton" name="wxID_PANEL_XHTML_OBJ">
+                                        <bitmap>../icons/16x16/XHTML_object.png</bitmap>
+                                      </object>
+                                      <flag>wxALL</flag>
+                                      <border>1</border>
+                                    </object>
+                                  </object>
+                                  <option>1</option>
+                                  <flag>wxALL</flag>
+                                </object>
+                                <object class="sizeritem">
+                                  <object class="wxBoxSizer">
+                                    <orient>wxHORIZONTAL</orient>
+                                    <object class="sizeritem">
+                                      <object class="wxBitmapButton" name="wxID_PANEL_XHTML_STRONG">
+                                        <bitmap>../icons/16x16/XHTML_B.png</bitmap>
+                                        <focused>1</focused>
                                       </object>
                                       <flag>wxALL</flag>
                                       <border>1</border>
                                     </object>
                                     <object class="sizeritem">
-                                      <object class="wxBitmapButton" name="wxID_PANEL_XHTML_LINK">
-                                        <bitmap>../icons/16x16/XHTML_Link.png</bitmap>
+                                      <object class="wxBitmapButton" name="wxID_PANEL_XHTML_EMPH">
+                                        <bitmap>../icons/16x16/XHTML_I.png</bitmap>
                                       </object>
                                       <flag>wxALL</flag>
                                       <border>1</border>
                                     </object>
                                     <object class="sizeritem">
-                                      <object class="wxBitmapButton" name="wxID_PANEL_XHTML_TABLE">
-                                        <bitmap>../icons/16x16/XHTML_Table.png</bitmap>
+                                      <object class="wxBitmapButton" name="wxID_PANEL_XHTML_CODE">
+                                        <bitmap>../icons/16x16/XHTML_T.png</bitmap>
+                                      </object>
+                                      <flag>wxALL</flag>
+                                      <border>1</border>
+                                    </object>
+                                    <object class="sizeritem">
+                                      <object class="wxBitmapButton" name="wxID_PANEL_XHTML_INS">
+                                        <bitmap>../icons/16x16/XHTML_ins.png</bitmap>
+                                      </object>
+                                      <flag>wxALL</flag>
+                                      <border>1</border>
+                                    </object>
+                                    <object class="sizeritem">
+                                      <object class="wxBitmapButton" name="wxID_PANEL_XHTML_DEL">
+                                        <bitmap>../icons/16x16/XHTML_del.png</bitmap>
+                                      </object>
+                                      <flag>wxALL</flag>
+                                      <border>1</border>
+                                    </object>
+                                    <object class="sizeritem">
+                                      <object class="wxBitmapButton" name="wxID_PANEL_XHTML_SUP">
+                                        <bitmap>../icons/16x16/XHTML_sup.png</bitmap>
+                                      </object>
+                                      <flag>wxALL</flag>
+                                      <border>1</border>
+                                    </object>
+                                    <object class="sizeritem">
+                                      <object class="wxBitmapButton" name="wxID_PANEL_XHTML_SUB">
+                                        <bitmap>../icons/16x16/XHTML_sub.png</bitmap>
                                       </object>
                                       <flag>wxALL</flag>
                                       <border>1</border>

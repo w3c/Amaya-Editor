@@ -2749,12 +2749,21 @@ RULES
 	CreateWith(VerticalLine);
 	HorizPos: Left = Previous . Right;
 	VertPos: HRef = Previous . HRef;
-	Style: Italics;
+  Background: LightYellow2;
+	FillPattern: backgroundcolor;
+	ShowBox;
 	IN Structure_view BEGIN
+	  Background: Enclosing =;
+	  Foreground: Enclosing =;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
 		Style: Enclosing =;
+		END;
+	IN Alternate_view BEGIN
+	  Background: Enclosing =;
+	  Foreground: Enclosing =;
+	  Style: Italics;
 		END;
 	END;
 

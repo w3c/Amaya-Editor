@@ -76,10 +76,10 @@ AmayaPanel::AmayaPanel( wxWindow *      p_parent_window
   // load static sub-panels  
   m_aPanelList[WXAMAYA_PANEL_XHTML]      = new AmayaXHTMLPanel(     m_pScrolledWindow, p_parent_nwindow );
   m_aPanelList[WXAMAYA_PANEL_ATTRIBUTE]  = new AmayaAttributePanel( m_pScrolledWindow, p_parent_nwindow );
+  m_aPanelList[WXAMAYA_PANEL_APPLYCLASS] = new AmayaApplyClassPanel( m_pScrolledWindow, p_parent_nwindow );
   m_aPanelList[WXAMAYA_PANEL_MATHML]     = new AmayaMathMLPanel( m_pScrolledWindow, p_parent_nwindow );
   m_aPanelList[WXAMAYA_PANEL_SPECHAR]    = new AmayaSpeCharPanel( m_pScrolledWindow, p_parent_nwindow );
   m_aPanelList[WXAMAYA_PANEL_XML]        = new AmayaXMLPanel( m_pScrolledWindow, p_parent_nwindow );
-  m_aPanelList[WXAMAYA_PANEL_APPLYCLASS] = new AmayaApplyClassPanel( m_pScrolledWindow, p_parent_nwindow );
   m_aPanelList[WXAMAYA_PANEL_COLORS]     = new AmayaColorsPanel(    m_pScrolledWindow, p_parent_nwindow );
   m_aPanelList[WXAMAYA_PANEL_CHARSTYLE]  = new AmayaCharStylePanel( m_pScrolledWindow, p_parent_nwindow );
   m_aPanelList[WXAMAYA_PANEL_FORMAT]     = new AmayaFormatPanel(    m_pScrolledWindow, p_parent_nwindow );
@@ -88,10 +88,10 @@ AmayaPanel::AmayaPanel( wxWindow *      p_parent_window
   m_pScrolledWindow->SetSizer(p_PanelSizer);
   p_PanelSizer->Add( m_aPanelList[WXAMAYA_PANEL_XHTML],      0, wxBOTTOM | wxEXPAND, 5 );
   p_PanelSizer->Add( m_aPanelList[WXAMAYA_PANEL_ATTRIBUTE],  0, wxBOTTOM | wxEXPAND, 5 );
+  p_PanelSizer->Add( m_aPanelList[WXAMAYA_PANEL_APPLYCLASS], 0, wxBOTTOM | wxEXPAND, 5 );
   p_PanelSizer->Add( m_aPanelList[WXAMAYA_PANEL_MATHML],     0, wxBOTTOM | wxEXPAND, 5 );
   p_PanelSizer->Add( m_aPanelList[WXAMAYA_PANEL_SPECHAR],    0, wxBOTTOM | wxEXPAND, 5 );
   p_PanelSizer->Add( m_aPanelList[WXAMAYA_PANEL_XML],        0, wxBOTTOM | wxEXPAND, 5 );
-  p_PanelSizer->Add( m_aPanelList[WXAMAYA_PANEL_APPLYCLASS], 0, wxBOTTOM | wxEXPAND, 5 );
   p_PanelSizer->Add( m_aPanelList[WXAMAYA_PANEL_COLORS],     0, wxBOTTOM | wxEXPAND, 5 );
   p_PanelSizer->Add( m_aPanelList[WXAMAYA_PANEL_CHARSTYLE],  0, wxBOTTOM | wxEXPAND, 5 );
   p_PanelSizer->Add( m_aPanelList[WXAMAYA_PANEL_FORMAT],     0, wxBOTTOM | wxEXPAND, 5 );

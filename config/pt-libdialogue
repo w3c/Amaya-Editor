@@ -71,7 +71,7 @@
 69 Arquivo PostScript
 70 Impressora
 71 Buscar
-72 Ignore o caso 
+72 Ignore o caso
 73 Substituir por
 74 Substituir
 75 Não substituir
@@ -215,3 +215,10 @@
 213 **Boxes
 214 Divisão
 215 Destino
+216 Inserção
+217 Supressão
+218 Índice
+219 Expoente
+220 Termo
+221 Definição
+222 Objeto

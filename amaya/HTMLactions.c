@@ -2045,6 +2045,9 @@ void UpdateContextSensitiveMenus (Document doc)
     {
       SelectionInINS = newSelInElem;
       TtaSetToggleItem (doc, 1, Types, TInsertion, newSelInElem);
+#ifdef _WX
+      TtaSwitchPanelButton( doc, 1, WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_INS, newSelInElem );
+#endif /* _WX */	
     }
 
   if (firstSel == NULL)
@@ -2062,6 +2065,9 @@ void UpdateContextSensitiveMenus (Document doc)
     {
       SelectionInDEL = newSelInElem;
       TtaSetToggleItem (doc, 1, Types, TDeletion, newSelInElem);
+#ifdef _WX
+      TtaSwitchPanelButton( doc, 1, WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_DEL, newSelInElem );
+#endif /* _WX */	
     }
 
   if (firstSel == NULL)
@@ -2152,7 +2158,7 @@ void UpdateContextSensitiveMenus (Document doc)
     {
       SelectionInKBD = newSelInElem;
       TtaSetToggleItem (doc, 1, Types, TKeyboard, newSelInElem);
-    }
+     }
 
   if (firstSel == NULL)
     newSelInElem = FALSE;
@@ -2254,6 +2260,9 @@ void UpdateContextSensitiveMenus (Document doc)
     {
       SelectionInSub = newSelInElem;
       TtaSetToggleItem (doc, 1, Types, TSub, newSelInElem);
+#ifdef _WX
+      TtaSwitchPanelButton( doc, 1, WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_SUB, newSelInElem );
+#endif /* _WX */	
     }
 
   if (firstSel == NULL)
@@ -2271,6 +2280,9 @@ void UpdateContextSensitiveMenus (Document doc)
     {
       SelectionInSup = newSelInElem;
       TtaSetToggleItem (doc, 1, Types, TSup, newSelInElem);
+#ifdef _WX
+      TtaSwitchPanelButton( doc, 1, WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_SUP, newSelInElem );
+#endif /* _WX */	
     }
 
   if (firstSel == NULL)

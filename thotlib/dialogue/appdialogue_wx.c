@@ -1654,10 +1654,8 @@ void TtaRefreshPanelButton( Document doc, View view, int panel_type )
   + panel_type : the panel type
   returns:
   ----------------------------------------------------------------------*/
-void TtaSwitchPanelButton( Document doc, View view,
-                           int panel_type,
-                           int button_id,
-                           ThotBool value )
+void TtaSwitchPanelButton (Document doc, View view, int panel_type,
+                           int button_id, ThotBool value)
 {
 #ifdef _WX
   int frame_id = -1;

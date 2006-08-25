@@ -218,6 +218,13 @@
 #define TMSG_LIB_BOXES		213
 #define TMSG_BUTTON_DIV		214
 #define TMSG_BUTTON_TARGET		215
-#define TMSG_LIB_MSG_MAX		216
+#define TMSG_INSERTION		216
+#define TMSG_DELETION		217
+#define TMSG_SUB		218
+#define TMSG_SUP		219
+#define TMSG_BUTTON_DT		220
+#define TMSG_BUTTON_DD		221
+#define TMSG_OBJECT		222
+#define TMSG_LIB_MSG_MAX		223
 
 #endif
