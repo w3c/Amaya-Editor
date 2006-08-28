@@ -926,6 +926,8 @@ void UpdateURLsInSubtree (NotifyElement *event, Element el)
   HTMLschema = TtaGetSSchema ("HTML", event->document);
   if (HTMLschema)
     {
+      // first check the id of the enclosing division
+      MakeUniqueName (el, event->document, TRUE, TRUE);
       elType.ElSSchema = HTMLschema;
       while (nextEl)
         {
