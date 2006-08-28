@@ -2,9 +2,9 @@
                       "http://www.w3.org/TR/REC-html40/loose.dtd">
 <html>
 <head>
-  <meta http-equiv="Content-Type" content="text/html">
+  <meta http-equiv="content-type" content="text/html">
   <title>HTML elements</title>
-  <meta name="GENERATOR" content="amaya 9.0.1, see http://www.w3.org/Amaya/">
+  <meta name="GENERATOR" content="amaya 9.52, see http://www.w3.org/Amaya/">
   <link href="style.css" rel="stylesheet" type="text/css">
 </head>
 
@@ -13,13 +13,16 @@
 <table border="0" width="100%" summary="toc">
   <tbody>
     <tr>
-      <td><p><img border="0" alt="W3C" src="../images/w3c_home"> <img
-        border="0" alt="Amaya" src="../../resources/icons/22x22/logo.png"></p>
+      <td><p><img border="0" alt="W3C" src="../images/w3c_home" />
+         <img border="0" alt="Amaya"
+        src="../../resources/icons/22x22/logo.png" />
+        </p>
       </td>
       <td><p align="right"><a href="Manual.html"><img alt="top" border="0"
-        src="../../resources/icons/misc/up.png"></a> <a
-        href="HTML-elements/infoTypes.html"><img alt="next" border="0"
-        src="../../resources/icons/misc/right.png"></a></p>
+        src="../../resources/icons/misc/up.png" />
+        </a> <a href="HTML-elements/infoTypes.html"><img alt="next"
+        border="0" src="../../resources/icons/misc/right.png" />
+        </a></p>
       </td>
     </tr>
   </tbody>
@@ -229,16 +232,10 @@ HTML</a>.</p>
     <dd>information de style</dd>
   <dt><a
   href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-SUB">sub</a></dt>
-    <dd>indice  (Il est préférable d'utiliser un <a
-      href="StyleSheets.html.fr">style CSS</a> ou <a
-      href="HTML-elements/infoTypes.html.fr">une balise information
-      structurale</a>)</dd>
+    <dd>indice</dd>
   <dt><a
   href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-SUP">sup</a></dt>
-    <dd>exposant (Il est préférable d'utiliser un <a
-      href="StyleSheets.html.fr">style CSS</a> ou <a
-      href="HTML-elements/infoTypes.html.fr">une balise information
-      structurale</a>)</dd>
+    <dd>exposant</dd>
   <dt><a
   href="http://www.w3.org/TR/REC-html40/struct/tables.html#edef-TABLE">table</a></dt>
     <dd> une table</dd>
@@ -323,8 +320,10 @@ HTML</a>.</p>
 </dl>
 
 <p align="right"><a href="Manual.html"><img alt="top" border="0"
-src="../../resources/icons/misc/up.png"></a> <a href="HTML-elements/infoTypes.html"><img
-alt="next" border="0" src="../../resources/icons/misc/right.png"></a></p>
+src="../../resources/icons/misc/up.png" />
+</a> <a href="HTML-elements/infoTypes.html"><img alt="next" border="0"
+src="../../resources/icons/misc/right.png" />
+</a></p>
 <hr>
 
 <p></p>

@@ -5,7 +5,7 @@
 <head>
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <title>Créer des éléments</title>
-  <meta name="GENERATOR" content="amaya 9.4, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 9.52, see http://www.w3.org/Amaya/" />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -14,11 +14,14 @@
 <div>
 <img alt="Amaya" src="../../resources/icons/22x22/logo.png" class="logo" />
 
+
 <p class="nav"><a href="Document.html.fr" accesskey="p"><img alt="previous"
-src="../../resources/icons/misc/left.png" /></a> <a href="Manual.html.fr"
-accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a>
-<a href="Attributes.html.fr" accesskey="n"><img alt="next"
-src="../../resources/icons/misc/right.png" /></a></p>
+src="../../resources/icons/misc/left.png" />
+</a> <a href="Manual.html.fr" accesskey="t"><img alt="top"
+src="../../resources/icons/misc/up.png" />
+</a> <a href="Attributes.html.fr" accesskey="n"><img alt="next"
+src="../../resources/icons/misc/right.png" />
+</a></p>
 </div>
 
 <div id="Creating">
@@ -56,9 +59,58 @@ pour les éléments les plus communs (images, en-têtes, listes...). Ces
 commandes créent simplement l'élément correspondant à la position
 courante.</p>
 
-<p>De la documentation sur <a href="HTML-elements/infoTypes.html.fr">comment
-utiliser les types d'éléments</a> est disponible, ainsi que les brèves notes
-de la <a href="HTML.html.fr">liste de tous les éléments HTML 4.0</a>.</p>
+<p>La palette XHTML donne un accès direct pour :</p>
+<ul>
+  <li>insérer (ou remplacer la sélection courante par) un élément XHTML :
+    division (<img alt="Bouton Division"
+    src="../../resources/icons/16x16/XHTML_Div.png" />
+     ), titres (<img alt="Bouton Titre niveau 1"
+    src="../../resources/icons/16x16/XHTML_H1.png" />
+     ,<img alt="Bouton Titre niveau 2"
+    src="../../resources/icons/16x16/XHTML_H2.png" />
+     ,<img alt="Bouton Titre niveau 3"
+    src="../../resources/icons/16x16/XHTML_H3.png" />
+     ), table (<img alt="Bouton Table"
+    src="../../resources/icons/16x16/XHTML_Table.png" />
+     ), ancre cible ou element cible (<img alt="Bouton Cible"
+    src="../../resources/icons/16x16/XHTML_Target.png" />
+     ), ancre lien (<img alt="Bouton Lien"
+    src="../../resources/icons/16x16/XHTML_Link.png" />
+     ), liste (<img alt="Bouton Liste"
+    src="../../resources/icons/16x16/XHTML_Bullet.png" />
+     ), liste numérotée (<img alt="Bouton Liste numérotée"
+    src="../../resources/icons/16x16/XHTML_Num.png" />
+     ), liste de définitions (<img alt="Bouton Liste de définitions"
+    src="../../resources/icons/16x16/XHTML_DL.png" />
+     ), terme de définition (<img alt="Bouton Terme"
+    src="../../resources/icons/16x16/XHTML_DT.png" />
+     ), définition (<img alt="Bouton Définition"
+    src="../../resources/icons/16x16/XHTML_DD.png" />
+     ), image (<img alt="Bouton Image"
+    src="../../resources/icons/16x16/XHTML_Image.png" />
+     ), objet (<img alt="Bouton Objet"
+    src="../../resources/icons/16x16/XHTML_object.png" />
+     ).</li>
+  <li>ouvrir/fermer (ou englober la sélection courante par) un élément
+    <em>inline</em> de XHTML: <em>mise en évidence</em> (<img
+    src="../../resources/icons/16x16/XHTML_I.png" alt="Bouton Mise en evidence" />
+     ), <strong>important</strong> (<img
+    src="../../resources/icons/16x16/XHTML_B.png" alt="Bouton Important" />
+     ) <code>code</code> (<img src="../../resources/icons/16x16/XHTML_T.png"
+    alt="Bouton Code" />
+     ), <ins>insertion</ins> (<img alt="Bouton Insertion"
+    src="../../resources/icons/16x16/XHTML_ins.png" />
+     ), and <del>suppression</del> (<img alt="Bouton Suppression"
+    src="../../resources/icons/16x16/XHTML_del.png" />
+     ), <sup>exposant</sup> (<img alt="Bouton Exposant"
+    src="../../resources/icons/16x16/XHTML_sup.png" />
+     ), and <sub>indice</sub> (<img alt="Bouton Indice"
+    src="../../resources/icons/16x16/XHTML_sub.png" />
+     ).</li>
+</ul>
+
+<p>Pour plus d'information <a href="HTML.html.fr">voir la liste de tous les
+éléments HTML 4.0</a>.</p>
 
 <h3 id="Point">Point d'insertion</h3>
 
@@ -75,17 +127,18 @@ position choisie à cause des contraintes imposées par les langages HTML, SVG
 ou MathML. Amaya tente alors de créer l'élément à l'endroit le plus proche
 possible. Par exemple, si le point d'insertion se trouve à la fin de la
 dernière ligne d'un paragraphe quand vous cliquez sur le bouton <img
-src="../../resources/icons/16x16/XHTML_H2.png" alt="H2" />, Amaya ne crée pas
-la nouvelle en-tête à cette position (elle serait invalide) mais après le
-paragraphe, à la position valide la plus proche.</p>
+src="../../resources/icons/16x16/XHTML_H2.png" alt="H2" />
+, Amaya ne crée pas la nouvelle en-tête à cette position (elle serait
+invalide) mais après le paragraphe, à la position valide la plus proche.</p>
 
 <p>Dans d'autres cas, Amaya modifie la structure existante pour créer
 l'élément désiré tout en respectant les contraintes du langage. Si le point
 d'insertion est quelque part dans un item de liste (li) quand vous créez une
 en-tête (avec le bouton <img src="../../resources/icons/16x16/XHTML_H2.png"
-alt="H2" /> de la palette ou à partir du menu), l'item et la liste à laquelle
-il appartient sont automatiquement divisés afin de créer l'en-tête demandé et
-de se conformer aux contraintes du langage HTML.</p>
+alt="H2" />
+ de la palette ou à partir du menu), l'item et la liste à laquelle il
+appartient sont automatiquement divisés afin de créer l'en-tête demandé et de
+se conformer aux contraintes du langage HTML.</p>
 
 <h3 id="Sous-menu"><a name="Structure" id="Structure">Sous-menu
 Structure</a></h3>
@@ -184,7 +237,8 @@ rapidement des structures complexes emboîtées.</p>
 <ol>
   <li>Créez d'abord une liste numérotée avec un premier item, par exemple en
     cliquant sur le bouton <img alt="Numbered List "
-    src="../../resources/icons/16x16/XHTML_Num.png" />.</li>
+    src="../../resources/icons/16x16/XHTML_Num.png" />
+    .</li>
   <li>Tapez le contenu de la première ligne et pressez la touche
     <kbd>Enter</kbd> : cela crée un nouveau paragraphe dans l'item de
   liste.</li>
@@ -194,8 +248,8 @@ rapidement des structures complexes emboîtées.</p>
   <li>Entrez le contenu de la première ligne du second item.</li>
   <li>A la fin de la première ligne de l'item 2, créez une liste nouvelle
     avec son premier item (cliquez par exemple sur le bouton <img
-    alt="Numbered List " src="../../resources/icons/16x16/XHTML_Num.png" />).
-    La nouvelle liste sera automatiquement emboîtée.</li>
+    alt="Numbered List " src="../../resources/icons/16x16/XHTML_Num.png" />
+    ). La nouvelle liste sera automatiquement emboîtée.</li>
   <li>Entrez le contenu du premier item de la nouvelle liste et créez l'item
     b en appuyant deux fois sur la touche <kbd>Enter</kbd> à la fin de l'item
     a.</li>
