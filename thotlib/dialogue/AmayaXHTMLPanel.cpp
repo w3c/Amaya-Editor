@@ -192,7 +192,7 @@ void AmayaXHTMLPanel::SendDataToPanel( AmayaParams& p )
   if (p_checked_array[WXAMAYA_PANEL_XHTML_INS])
     XRCCTRL(*this, "wxID_PANEL_XHTML_INS", wxBitmapButton)->SetBackgroundColour( m_OnColour );
   else
-    XRCCTRL(*this, "wxID_PANEL_XHTML_DEL", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+    XRCCTRL(*this, "wxID_PANEL_XHTML_INS", wxBitmapButton)->SetBackgroundColour( m_OffColour );
 
   if (p_checked_array[WXAMAYA_PANEL_XHTML_DEL])
     XRCCTRL(*this, "wxID_PANEL_XHTML_DEL", wxBitmapButton)->SetBackgroundColour( m_OnColour );
