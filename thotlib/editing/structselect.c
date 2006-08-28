@@ -2451,9 +2451,18 @@ static void DoExtendSelection (PtrElement pEl, int rank, ThotBool fixed,
                        && LastSelectedElement->ElPrevious == NULL
                        && LastSelectedElement->ElParent != NULL)
                   LastSelectedElement = LastSelectedElement->ElParent;
+              if (LastSelectedElement->ElLeafType == LtPicture &&
+                  LastSelectedElement != FirstSelectedElement)
+                {
+                  pElP = LastSelectedElement->ElParent;
+                  if (pElP && TypeHasException (ExcIsImg, pElP->ElTypeNumber,
+                                                pElP->ElStructSchema))
+                    // select the image element instead of the PICTURE_UNIT
+                LastSelectedElement = pElP;
+                }
               if (ElemIsAnAncestor (LastSelectedElement, FirstSelectedElement))
                 {
-                  FirstSelectedElement = LastSelectedElement;
+                 FirstSelectedElement = LastSelectedElement;
                   FirstSelectedChar = 0;
                 }
             }
