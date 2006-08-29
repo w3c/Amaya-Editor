@@ -4018,6 +4018,7 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
               TtaSetInitialSequence (xmlDoc);
               /* Synchronize selections */
               event.document = doc;
+              event.element = NULL;
               SynchronizeSourceView (&event);
             }
           else
