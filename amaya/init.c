@@ -5391,25 +5391,27 @@ Document GetAmayaDoc (char *urlname, char *form_data,
   CSSInfoPtr          css;
   PInfoPtr            pInfo;
   AmayaDoc_context   *ctx = NULL;
-	CHARSET             doc_charset;
+  CHARSET             doc_charset;
   char               *tempfile;
   char               *parameters;
   char               *target;
   char               *initial_url;
   char               *documentname;
   char               *content_type = NULL;
-	char                charsetname[MAX_LENGTH];
-	int                 parsingLevel;
+  char                charsetname[MAX_LENGTH];
+  int                 parsingLevel;
   int                 toparse;
   int                 mode;
   int                 docType;
-	ThotBool            xmlDec, withDoctype, isXML, useMath, isKnown;
+  ThotBool            xmlDec, withDoctype, isXML, useMath, isKnown;
   ThotBool            ok;
+  char                lg_uri[10];
 
   /* Extract parameters if necessary */
   if (strlen (urlname) > MAX_LENGTH - 1) 
     {
-      TtaSetStatus (baseDoc, 1, TtaGetMessage (AMAYA, AM_TOO_LONG_URL), "512");
+      sprintf (lg_uri, "%d", MAX_LENGTH);
+      TtaSetStatus (baseDoc, 1, TtaGetMessage (AMAYA, AM_TOO_LONG_URL), lg_uri);
       return (0);
     }
 #ifndef _WX
