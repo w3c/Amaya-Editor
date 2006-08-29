@@ -321,7 +321,8 @@ void BuildAbstractBoxes (PtrElement pEl, PtrDocument pDoc)
                 pEl->ElVolume < 10 ||
                 pEl->ElVolume + pDoc->DocViewRootAb[view - 1]->AbVolume
                 < 2 * pDoc->DocViewVolume[view - 1])
-              /* on cree tous les paves du nouvel element */
+              /* force the creation of abstract boxes */
+              /* CreateNewAbsBoxes will restore the right volume */
               pDoc->DocViewFreeVolume[view - 1] = THOT_MAXINT;
             else
               /* le volume du nouvel element ajoute' au volume existant

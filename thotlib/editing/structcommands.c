@@ -137,47 +137,34 @@ void IsolateSelection (PtrDocument pDoc, PtrElement *pFirstSel,
   int                 view;
   ThotBool	       done;
 
-  if (*firstChar > 1)
-    if ((*pFirstSel)->ElTerminal && (*pFirstSel)->ElLeafType == LtText)
-      /* la selection courante commence a l'interieur du premier element */
-      /* selectionne */
-      /* coupe le premier element selectionne' */
-      {
-        SplitBeforeSelection (pFirstSel, firstChar, pLastSel, lastChar, pDoc);
-        /* prepare la creation des paves de la 2eme partie */
-        for (view = 0; view < MAX_VIEW_DOC; view++)
-          {
-            if (pDoc->DocView[view].DvPSchemaView > 0)
-              /* la vue est ouverte */
-              pDoc->DocViewFreeVolume[view] = THOT_MAXINT;
-          }
-        /* cree les paves de la deuxieme partie */
-        CreateNewAbsBoxes (*pFirstSel, pDoc, 0);
-        ApplDelayedRule (*pFirstSel, pDoc);
-      }
+  if (*firstChar > 1 &&
+      (*pFirstSel)->ElTerminal && (*pFirstSel)->ElLeafType == LtText)
+    /* la selection courante commence a l'interieur du premier element */
+    /* selectionne */
+    /* coupe le premier element selectionne' */
+    {
+      SplitBeforeSelection (pFirstSel, firstChar, pLastSel, lastChar, pDoc);
+      /* cree les paves de la deuxieme partie */
+      CreateNewAbsBoxes (*pFirstSel, pDoc, 0);
+      ApplDelayedRule (*pFirstSel, pDoc);
+    }
+
   done = FALSE;
-  if (createEmpty)
-    if (*firstChar == 1 && *lastChar <= 1 && *pFirstSel == *pLastSel)
-      if ((*pLastSel)->ElTerminal && (*pLastSel)->ElLeafType == LtText)
-        {
-          pEl = NewSubtree ((*pFirstSel)->ElTypeNumber,
-                            (*pFirstSel)->ElStructSchema, pDoc,
-                            FALSE, TRUE, FALSE, TRUE);
-          InsertElementBefore (*pFirstSel, pEl);
-          for (view = 0; view < MAX_VIEW_DOC; view++)
-            {
-              if (pDoc->DocView[view].DvPSchemaView > 0)
-                /* la vue est ouverte */
-                pDoc->DocViewFreeVolume[view] = THOT_MAXINT;
-            }
-          CreateNewAbsBoxes (pEl, pDoc, 0);
-          ApplDelayedRule (pEl, pDoc);
-          *pFirstSel = pEl;
-          *pLastSel = pEl;
-          *firstChar = 0;
-          *lastChar = 0;
-          done = TRUE;
-        }
+  if (createEmpty &&
+      *firstChar == 1 && *lastChar <= 1 && *pFirstSel == *pLastSel &&
+      (*pLastSel)->ElTerminal && (*pLastSel)->ElLeafType == LtText)
+    {
+      pEl = NewSubtree ((*pFirstSel)->ElTypeNumber, (*pFirstSel)->ElStructSchema,
+                        pDoc, FALSE, TRUE, FALSE, TRUE);
+      InsertElementBefore (*pFirstSel, pEl);
+      CreateNewAbsBoxes (pEl, pDoc, 0);
+      ApplDelayedRule (pEl, pDoc);
+      *pFirstSel = pEl;
+      *pLastSel = pEl;
+      *firstChar = 0;
+      *lastChar = 0;
+      done = TRUE;
+    }
   if (!done)
     if (*pLastSel)
       if ((*pLastSel)->ElTerminal && (*pLastSel)->ElLeafType == LtText &&

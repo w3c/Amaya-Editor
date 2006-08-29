@@ -1718,7 +1718,7 @@ void  CreateAllAbsBoxesOfEl (PtrElement pE, PtrDocument pDoc)
     {
       if (pDoc->DocView[view - 1].DvPSchemaView > 0)
         /* la vue est ouverte */
-        pDoc->DocViewFreeVolume[view - 1] = THOT_MAXINT;
+        pDoc->DocViewFreeVolume[view - 1] = THOT_MAXINT; //
     }
   /* cree effectivement les paves dans toutes les vues existantes */
   CreateNewAbsBoxes (pE, pDoc, 0);
@@ -1739,9 +1739,9 @@ void  CreateAllAbsBoxesOfEl (PtrElement pE, PtrDocument pDoc)
   ----------------------------------------------------------------------*/
 void CreateNewAbsBoxes (PtrElement pEl, PtrDocument pDoc, int viewNb)
 {
-  PtrAbstractBox      pAb, pAbbReDisp, pAbbR, pAbbFirst, pAbbLast,
-    pAbbSibling, pAbbox1;
-  int                 view, firstView, lastView, frame;
+  PtrAbstractBox      pAb, pAbbReDisp, pAbbR, pAbbFirst;
+  PtrAbstractBox      pAbbLast, pAbbSibling, pAbbox1;
+  int                 view, firstView, lastView, frame, vol;
   ThotBool            stop, complete;
 
   if (pEl != NULL)
@@ -1771,6 +1771,9 @@ void CreateNewAbsBoxes (PtrElement pEl, PtrDocument pDoc, int viewNb)
               /* il n'y a encore rien a reafficher */
               pAbbFirst = NULL;
               pAbbLast = NULL;
+
+              /* force the creation of abstract boxes */
+              pDoc->DocViewFreeVolume[view - 1] = THOT_MAXINT;
               /* cree et chaine les paves correspondant a l'element */
               if (pAbbReDisp == NULL)
                 pAb = AbsBoxesCreate (pEl, pDoc, view, TRUE, TRUE, &complete);
@@ -1872,8 +1875,7 @@ void CreateNewAbsBoxes (PtrElement pEl, PtrDocument pDoc, int viewNb)
                             DestroyNewAbsBox (&pAbbFirst, &pAbbLast, frame, pDoc);
                         }
                     }
-                  if (pAbbLast != NULL &&
-                      pAbbLast->AbNext != NULL)
+                  if (pAbbLast && pAbbLast->AbNext)
                     {
                       pAbbox1 = pAbbLast->AbNext;
                       if (pAbbox1->AbLeafType == LtCompound
@@ -1920,43 +1922,43 @@ void CreateNewAbsBoxes (PtrElement pEl, PtrDocument pDoc, int viewNb)
                   /* si on n'a pas pu creer tous les paves du contenu de */
                   /* l'element (ils depasseraient la capacite de la fenetre), */
                   /* il faut supprimer tous les paves suivant l'element */
-                  if (pAbbLast != NULL)
-                    if (pAbbLast->AbLeafType == LtCompound)
-                      if (!pAbbLast->AbInLine)
-                        if (pAbbLast->AbTruncatedTail)
-                          /* on n'a pas pu creer tous les paves */
-                          {
-                            pAb = pAbbLast;
-                            /* traite le pave de l'element et les paves englobants */
-                            do		/* marque le pave coupe' */
-                              {
-                                TruncateOrCompleteAbsBox (pAb, TRUE, FALSE, pDoc);
-                                pAb->AbTruncatedTail = TRUE;
-                                /* supprime tous ses freres suivants */
-                                pAbbSibling = pAb->AbNext;
-                                while (pAbbSibling != NULL)
-                                  {
-                                    if (!pAbbSibling->AbDead)
-                                      /* detruit le pave' */
-                                      {
-                                        SetDeadAbsBox (pAbbSibling);
-                                        /* change les regles des autres paves qui 
-                                           se referent au pave detruit */
-                                        ApplyRefAbsBoxSupp (pAbbSibling, &pAbbR, pDoc);
-                                        pAbbReDisp = Enclosing (pAbbR, pAbbReDisp);
-                                      }
-                                    pAbbSibling = pAbbSibling->AbNext;
-                                  }
-                                pAb = pAb->AbEnclosing;
-                                if (pAb != NULL)
-                                  if (pAb->AbTruncatedTail)
-                                    pAb = NULL;
-                                /* pave deja coupe', on s'arrete */
-                              }
-                            while (pAb != NULL);
-                          }
+                  if (pAbbLast &&
+                      pAbbLast->AbLeafType == LtCompound &&
+                      !pAbbLast->AbInLine &&
+                      pAbbLast->AbTruncatedTail)
+                    /* on n'a pas pu creer tous les paves */
+                    {
+                      pAb = pAbbLast;
+                      /* traite le pave de l'element et les paves englobants */
+                      do		/* marque le pave coupe' */
+                        {
+                          TruncateOrCompleteAbsBox (pAb, TRUE, FALSE, pDoc);
+                          pAb->AbTruncatedTail = TRUE;
+                          /* supprime tous ses freres suivants */
+                          pAbbSibling = pAb->AbNext;
+                          while (pAbbSibling != NULL)
+                            {
+                              if (!pAbbSibling->AbDead)
+                                /* detruit le pave' */
+                                {
+                                  SetDeadAbsBox (pAbbSibling);
+                                  /* change les regles des autres paves qui 
+                                     se referent au pave detruit */
+                                  ApplyRefAbsBoxSupp (pAbbSibling, &pAbbR, pDoc);
+                                  pAbbReDisp = Enclosing (pAbbR, pAbbReDisp);
+                                }
+                              pAbbSibling = pAbbSibling->AbNext;
+                            }
+                          pAb = pAb->AbEnclosing;
+                          if (pAb != NULL)
+                            if (pAb->AbTruncatedTail)
+                              pAb = NULL;
+                          /* pave deja coupe', on s'arrete */
+                        }
+                      while (pAb != NULL);
+                    }
                 }
-              if (pAbbFirst != NULL)
+              if (pAbbFirst)
                 /* modifie les paves qui peuvent se referer aux nouveaux paves */
                 {
                   ApplyRefAbsBoxNew (pAbbFirst, pAbbLast, &pAbbR, pDoc);
@@ -1974,6 +1976,17 @@ void CreateNewAbsBoxes (PtrElement pEl, PtrDocument pDoc, int viewNb)
                   pDoc->DocViewModifiedAb[view - 1] = Enclosing (pAbbReDisp,
                                                                  pDoc->DocViewModifiedAb[view - 1]);
                 }
+              // update the current free volume
+              if (pDoc->DocDocElement->ElAbstractBox[view - 1])
+                vol = pDoc->DocDocElement->ElAbstractBox[view - 1]->AbVolume;
+              else
+                vol = 0;
+              if (pDoc->DocViewVolume[view - 1] < vol)
+                {
+                  pDoc->DocViewVolume[view - 1] = vol;
+                  pDoc->DocViewFreeVolume[view - 1] = 0;
+                }
+              pDoc->DocViewFreeVolume[view - 1] = pDoc->DocViewVolume[view - 1] - vol;
             }
         }
     }
@@ -3710,7 +3723,7 @@ void UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
   PtrAttribute        pAttrib;
   PtrHandlePSchema    pHd;
   TypeUnit            unit;
-  int                 view, viewSch, val, valNum, index;
+  int                 view, viewSch, val, valNum, index, vol;
   PtrAttributePres    attrBlock;
   ThotBool            appl, stop, sameType, found;
   ThotBool            existingView;
@@ -3865,12 +3878,13 @@ void UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
                            func == FnCreateWith || func == FnCreateFirst ||
                            func == FnContent || func == FnCreateLast) &&
                           !remove)
-                        /* il faut creer un pave de presentation */
+                        /* force the generation of presentation boxes */
                         {
                           pDoc->DocViewFreeVolume[view - 1] = THOT_MAXINT;
                           pAb = CrAbsBoxesPres (pEl, pDoc, pR,
                                                 pAttr->AeAttrSSchema, pAttr, view,
                                                 pSchP, NULL, TRUE);
+                          pDoc->DocViewFreeVolume[view - 1] = THOT_MAXINT;
                           pAbNext = pAb;
                           if (pAb && pAb->AbEnclosing &&
                               pAb->AbEnclosing->AbDelayedPRule)
@@ -4189,10 +4203,21 @@ void UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
                                               CondPresentation (pR->PrCond, pEl, pAttr,
                                                                 pEl, pR, viewSch, elSSch, pDoc))
                                             {
+                                              /* force the creation of abstract boxes */
                                               pDoc->DocViewFreeVolume[view - 1] = THOT_MAXINT;
                                               pAb = CrAbsBoxesPres (pEl, pDoc, pR,
                                                                     pEl->ElStructSchema, pAttr, view, elPSch, NULL,
                                                                     TRUE);
+                                              // update the current free volume
+                                              if (pDoc->DocDocElement->ElAbstractBox[view - 1])
+                                                vol = pDoc->DocDocElement->ElAbstractBox[view - 1]->AbVolume;
+                                              else
+                                                vol = 0;
+                                              if (pDoc->DocViewVolume[view - 1] < vol)
+                                                {
+                                                  pDoc->DocViewVolume[view - 1] = vol;
+                                                  pDoc->DocViewFreeVolume[view - 1] = 0;
+                                                }
                                               if (pAb)
                                                 ApplyRefAbsBoxNew (pAb, pAb, &pRedisp, pDoc);
                                             }
