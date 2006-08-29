@@ -579,6 +579,7 @@ static void MovingCommands (int code, Document doc, View view,
                       while (ibox &&
                              ((ibox->BxAbstractBox->AbPresentationBox &&
                                !ibox->BxAbstractBox->AbCanBeModified) ||
+                              (ibox->BxType == BoPiece && ibox->BxNChars == 0) ||
                               TypeHasException (ExcNoSelect,
                                                 ibox->BxAbstractBox->AbElement->ElTypeNumber,
                                                 ibox->BxAbstractBox->AbElement->ElStructSchema)))
@@ -595,7 +596,8 @@ static void MovingCommands (int code, Document doc, View view,
                               if (box->BxAbstractBox &&
                                   box->BxAbstractBox->AbEnclosing)
                                 box = box->BxAbstractBox->AbEnclosing->AbBox;
-                              else box = NULL;
+                              else
+                                box = NULL;
                             }
                           box = ibox;
                           if (pLine)
@@ -605,12 +607,13 @@ static void MovingCommands (int code, Document doc, View view,
                                 if (box->BxAbstractBox &&
                                     box->BxAbstractBox->AbEnclosing)
                                   box = box->BxAbstractBox->AbEnclosing->AbBox;
-                                else box = NULL;
+                                else
+                                  box = NULL;
                               }
                         }
-                      if (pLine == NULL || pLine != pLine1)
+                      if (pLine == NULL || pLine1 == NULL)
                         {
-                          /* next position near the current box beginning */
+                          /* look for a position near the current box beginning */
                           box = pBox;
 #ifdef _GL
                           if (box->BxBoundinBoxComputed)
@@ -633,7 +636,7 @@ static void MovingCommands (int code, Document doc, View view,
                         }
                       else
                         {
-                          /* next position box the previous box end */
+                          /* look for a position near the previous box end */
                           box = ibox;
 #ifdef _GL
                           if (box->BxBoundinBoxComputed)
@@ -710,7 +713,7 @@ static void MovingCommands (int code, Document doc, View view,
                   else
                     /* move the left extremity */
                     x = firstC;
-                  if (x <= pBox->BxAbstractBox->AbBox->BxNChars || (x < 1 && isPict))
+                  if (x < pBox->BxAbstractBox->AbBox->BxNChars || (x < 1 && isPict))
                     {
                       if (extendSel)
                         {
@@ -755,6 +758,7 @@ static void MovingCommands (int code, Document doc, View view,
                       while (ibox &&
                              ((ibox->BxAbstractBox->AbPresentationBox &&
                                !ibox->BxAbstractBox->AbCanBeModified) ||
+                              (ibox->BxType == BoPiece && ibox->BxNChars == 0) ||
                               TypeHasException (ExcNoSelect,
                                                 ibox->BxAbstractBox->AbElement->ElTypeNumber,
                                                 ibox->BxAbstractBox->AbElement->ElStructSchema)))
@@ -771,7 +775,8 @@ static void MovingCommands (int code, Document doc, View view,
                               if (box->BxAbstractBox &&
                                   box->BxAbstractBox->AbEnclosing)
                                 box = box->BxAbstractBox->AbEnclosing->AbBox;
-                              else box = NULL;
+                              else
+                                box = NULL;
                             }
                           box = ibox;
                           if (pLine)
@@ -781,10 +786,11 @@ static void MovingCommands (int code, Document doc, View view,
                                 if (box->BxAbstractBox &&
                                     box->BxAbstractBox->AbEnclosing)
                                   box = box->BxAbstractBox->AbEnclosing->AbBox;
-                                else box = NULL;
+                                else
+                                  box = NULL;
                               }
                         }
-                      if (pLine == NULL || pLine != pLine1)
+                      if (pLine == NULL || pLine1 == NULL)
                         {
                           /* next position near the current box end */
                           box = pBox;
@@ -1002,9 +1008,16 @@ static void MovingCommands (int code, Document doc, View view,
                     x = ClickX + pFrame->FrXOrg;
                 }
               else
-                RightExtended = TRUE;
+                {
+                  //x = ClickX + pFrame->FrXOrg;
+                  RightExtended = TRUE;
+                }
               if (!done)
-                LocateLeafBox (frame, view, x, y, 0, yDelta, pBox, extendSel);
+                {
+                  if (pBox && yDelta < pBox->BxH)
+                    yDelta = pBox->BxH; // skip almost at the bottom of the box
+                  LocateLeafBox (frame, view, x, y, 0, yDelta, pBox, extendSel);
+                }
             }
           break;
 	   
@@ -1081,7 +1094,10 @@ static void MovingCommands (int code, Document doc, View view,
                     x = ClickX + pFrame->FrXOrg;
                 }
               else if (extendSel)
-                LeftExtended = TRUE;
+                {
+                  //x = ClickX + pFrame->FrXOrg;
+                  LeftExtended = TRUE;
+                }
               if (!done)
                 LocateLeafBox (frame, view, x, y, 0, yDelta, pBox, extendSel);
             }
@@ -1210,6 +1226,17 @@ static void MovingCommands (int code, Document doc, View view,
       if (extendSel)
         DoCopyToClipboard (doc, view, FALSE);
 #endif /* _WINDOWS && _MACOS */
+      if (extendSel && RightExtended)
+        {
+          // check if the end of the selection is visible
+          pBoxEnd = pViewSelEnd->VsBox;
+          if (pBoxEnd->BxYOrg  < pFrame->FrYOrg)
+            /* scroll up the window */
+            VerticalScroll (frame, pBoxEnd->BxYOrg - pFrame->FrYOrg, 0);
+          else if (pBoxEnd->BxYOrg + pBoxEnd->BxH > pFrame->FrYOrg + h)
+            /* scroll down the window */
+            VerticalScroll (frame, pBoxEnd->BxYOrg + pBoxEnd->BxH - pFrame->FrYOrg - h, 0);
+        }
     }
 }
 
