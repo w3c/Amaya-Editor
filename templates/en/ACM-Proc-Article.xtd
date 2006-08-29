@@ -37,7 +37,7 @@
     <xt:component name="refbook">
       <p class="refbook">
         <xt:repeat minOccurs="1">
-          <span class="bibauthor"><xt:use types="string">Author</xt:use></span>
+          <span class="bibauthor"><xt:use types="string">Author</xt:use></span>, 
         </xt:repeat>
         <span class="title"><xt:use types="string">Book title</xt:use></span>
         <span class="pub"><xt:use types="string">Publisher</xt:use></span>
@@ -47,7 +47,7 @@
     <xt:component name="refarticle">
       <p class="refarticle">
         <xt:repeat minOccurs="1">
-          <span class="bibauthor"><xt:use types="string">Author</xt:use></span>
+          <span class="bibauthor"><xt:use types="string">Author</xt:use></span>, 
         </xt:repeat>
         <span class="title"><xt:use types="string">Article title</xt:use></span>
         <span class="conf"><xt:use types="string">Conference</xt:use></span>
@@ -57,7 +57,7 @@
     <xt:component name="refreport">
       <p class="refreport">
         <xt:repeat minOccurs="1">
-          <span class="bibauthor"><xt:use types="string">Author</xt:use></span>
+          <span class="bibauthor"><xt:use types="string">Author</xt:use></span>, 
         </xt:repeat>
         <span class="title"><xt:use types="string">Report title</xt:use></span>
         <xt:option>

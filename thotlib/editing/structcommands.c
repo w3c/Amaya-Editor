@@ -134,7 +134,6 @@ void IsolateSelection (PtrDocument pDoc, PtrElement *pFirstSel,
                        ThotBool createEmpty)
 {
   PtrElement	       pEl;
-  int                 view;
   ThotBool	       done;
 
   if (*firstChar > 1 &&

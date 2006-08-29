@@ -1,13 +1,13 @@
 <?xml version='1.0' encoding="iso-8859-1"?>
 
-<!-- This transformation generates the LaTeX code for an article to be
-     published in the Proceedings of an ACM conference, following the
+<!-- This transformation generates the LaTeX code for an article for
+     publication in the Proceedings of an ACM conference, following the
      LaTeX style sig-alternate.cls
 
      The source should be a XHTML document following the XTiger template
      ACM-Proc-Article.xsd
 -->
-     
+
 <xsl:stylesheet
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:xhtml="http://www.w3.org/1999/xhtml"
