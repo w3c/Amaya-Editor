@@ -2514,7 +2514,10 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta,
                   /* the width of the block of lines could change its height
                      -> check vertical enclosing */
                   if (pAb->AbBox->BxType != BoTable)
-                    HeightPack (pAb, pSourceBox, frame);
+                    {
+                      Propagate = ToAll;
+                      HeightPack (pAb, pSourceBox, frame);
+                    }
                   /* restore the value if necessary */
                   Propagate = ToSiblings;
                 }
