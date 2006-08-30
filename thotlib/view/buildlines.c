@@ -942,7 +942,7 @@ static int SearchBreak (PtrLine pLine, PtrBox pBox, int max, SpecFont font,
       if ((newWidth + carWidth > max || i >= count) && i != 0 &&
           // don't split a word
           (character == SPACE || character == NEW_LINE ||
-           spaceCount + line_spaces> 0) || hyphenate)
+           spaceCount + line_spaces> 0 || hyphenate))
         {
           /* The character cannot be inserted in the line */
           still = FALSE;
