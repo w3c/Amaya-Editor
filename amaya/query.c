@@ -2706,14 +2706,14 @@ static int LoopForStop (AHTReqContext *me)
 {
   int  status_req = HT_OK;
   
-  // register the current request
-  LoopRequest = me;
 #ifdef _WINGUI
   MSG msg;
   unsigned long libwww_msg;
   HWND old_active_window, libwww_window;
 
 
+  // register the current request
+  LoopRequest = me;
   old_active_window = GetActiveWindow ();
   libwww_window = HTEventList_getWinHandle (&libwww_msg);
  
@@ -2734,6 +2734,8 @@ static int LoopForStop (AHTReqContext *me)
 #if defined(_GTK) || defined(_WX)  
   ThotEvent                ev;
 
+  // register the current request
+  LoopRequest = me;
   /* to test the async calls  */
   /* Loop while waiting for new events, exists when the request is over */
   while (me->reqStatus != HT_ABORT &&
