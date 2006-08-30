@@ -1162,10 +1162,10 @@ void XMoveAllEnclosed (PtrBox pBox, int delta, int frame)
       else if (pAb)
         {
 #ifdef IV
-if (!strcmp (pAb->AbElement->ElLabel, "L92"))
-  printf ("XMoveAllEnclosed L92 %d+%d\n", pBox->BxXOrg, delta);
-if (!strcmp (pAb->AbElement->ElLabel, "L93"))
-  printf ("XMoveAllEnclosed L93 %d+%d\n", pBox->BxXOrg, delta);
+if (!strcmp (pAb->AbElement->ElLabel, "L931"))
+  printf ("XMoveAllEnclosed L931 %d+%d\n", pBox->BxXOrg, delta);
+if (!strcmp (pAb->AbElement->ElLabel, "L930"))
+  printf ("XMoveAllEnclosed L930 %d+%d\n", pBox->BxXOrg, delta);
 #endif
 #ifdef _GL
           pBox->VisibleModification = TRUE;
@@ -1248,7 +1248,7 @@ if (!strcmp (pAb->AbElement->ElLabel, "L93"))
                         toHorizPack = TRUE;
                       else
                         {
-                          if (pBox->BxXToCompute &&
+                          if (pBox->BxXToCompute && !pChildAb->AbBox->BxXToCompute &&
                               Propagate == ToSiblings &&
                               !pChildAb->AbBox->BxHorizFlex)
                             pChildAb->AbBox->BxXToCompute = TRUE;
@@ -1392,7 +1392,7 @@ void YMoveAllEnclosed (PtrBox pBox, int delta, int frame)
                         toVertPack = TRUE;
                       else
                         {
-                          if (pBox->BxYToCompute &&
+                          if (pBox->BxYToCompute && !pChildAb->AbBox->BxYToCompute &&
                               Propagate == ToSiblings &&
                               !pChildAb->AbBox->BxVertFlex)
                             pChildAb->AbBox->BxYToCompute = TRUE;
@@ -2142,8 +2142,8 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta,
                   /* move all if the related box position is computed */
                   if (pRelation->ReBox->BxXToCompute)
                     Propagate = ToAll;
-                  else if (Propagate == ToSiblings)
-                    Propagate = ToChildren;
+                  //else if (Propagate == ToSiblings)
+                  //  Propagate = ToChildren;
                   pRefAb = pRelation->ReBox->BxAbstractBox;
                   if (pRefAb)
                     /* Ignore the back relation of a stretchable box */
@@ -2701,8 +2701,8 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
                   /* move all if the related box position is computed */
                   if (pRelation->ReBox->BxYToCompute)
                     Propagate = ToAll;
-                  else if (Propagate == ToSiblings)
-                    Propagate = ToChildren;
+                  //else if (Propagate == ToSiblings)
+                  //  Propagate = ToChildren;
                   pRefAb = pRelation->ReBox->BxAbstractBox;
                   if (pRefAb)
                     /* Ignore the back relation of a stretchable box */
@@ -3652,6 +3652,10 @@ void WidthPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
         x = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
       else
         x = 0;
+if (!strcmp (pAb->AbElement->ElLabel, "L930"))
+  printf ("ResizeWidth L930 %d\n", pBox->BxW);
+if (!strcmp (pAb->AbElement->ElLabel, "L947"))
+  printf ("ResizeWidth L947 %d\n", pBox->BxW);
       
       /* Initially the inside left and the inside right are the equal */
       width = x;
