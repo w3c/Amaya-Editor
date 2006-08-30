@@ -1781,13 +1781,12 @@ void CallbackAttrMenu (int refmenu, int attMenu, int frame)
   PtrSRule            pSRule;
   Document            doc;
   View                view;
-  int                 item, i;
+  int                 i;
   int                 firstChar, lastChar;
   ThotBool            mandatory;
   int                 att;
 
   FrameToView (frame, &doc, &view);
-  item = att;
   /* get the right entry in the attributes list */
 #ifdef _WX
   /* on wxWidgets, attributs is not a menu but a dialog, this dialog do not have reference */
@@ -1863,10 +1862,10 @@ void CallbackAttrMenu (int refmenu, int attMenu, int frame)
                                          (int)WIN_Language);
 #endif /* _WINGUI */
 #if defined(_GTK)
-                if (ActiveAttr[item] == 0)
-                  TtaSetToggleMenu (refmenu, item, FALSE);
+                if (ActiveAttr[att] == 0)
+                  TtaSetToggleMenu (refmenu, att, FALSE);
                 else
-                  TtaSetToggleMenu (refmenu, item, TRUE);
+                  TtaSetToggleMenu (refmenu, att, TRUE);
 #endif /* #if defined(_GTK) */
               }
             else if (pAttr->AttrType == AtEnumAttr &&
@@ -1951,10 +1950,10 @@ void CallbackAttrMenu (int refmenu, int attMenu, int frame)
                 MenuValues (pAttr, mandatory, currAttr, pDoc, view, FALSE);
                 /* restore the toggle state */
 #if defined(_GTK)
-                if (ActiveAttr[item] == 0)
-                  TtaSetToggleMenu (refmenu, item, FALSE);
+                if (ActiveAttr[att] == 0)
+                  TtaSetToggleMenu (refmenu, att, FALSE);
                 else
-                  TtaSetToggleMenu (refmenu, item, TRUE);
+                  TtaSetToggleMenu (refmenu, att, TRUE);
 #endif /* #if defined(_GTK) */
 
 #if defined(_GTK) || defined(_WX)
