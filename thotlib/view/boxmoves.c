@@ -1161,6 +1161,12 @@ void XMoveAllEnclosed (PtrBox pBox, int delta, int frame)
         }
       else if (pAb)
         {
+#ifdef IV
+if (!strcmp (pAb->AbElement->ElLabel, "L92"))
+  printf ("XMoveAllEnclosed L92 %d+%d\n", pBox->BxXOrg, delta);
+if (!strcmp (pAb->AbElement->ElLabel, "L93"))
+  printf ("XMoveAllEnclosed L93 %d+%d\n", pBox->BxXOrg, delta);
+#endif
 #ifdef _GL
           pBox->VisibleModification = TRUE;
 #endif /* _GL */
@@ -1380,7 +1386,7 @@ void YMoveAllEnclosed (PtrBox pBox, int delta, int frame)
               toVertPack = FALSE;
               while (pChildAb != NULL)
                 {
-                  if (pChildAb->AbBox != NULL)
+                  if (pChildAb->AbBox)
                     {
                       if (pChildAb->AbBox->BxYOutOfStruct)
                         toVertPack = TRUE;
@@ -2136,6 +2142,8 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta,
                   /* move all if the related box position is computed */
                   if (pRelation->ReBox->BxXToCompute)
                     Propagate = ToAll;
+                  else if (Propagate == ToSiblings)
+                    Propagate = ToChildren;
                   pRefAb = pRelation->ReBox->BxAbstractBox;
                   if (pRefAb)
                     /* Ignore the back relation of a stretchable box */
@@ -2515,7 +2523,7 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta,
                      -> check vertical enclosing */
                   if (pAb->AbBox->BxType != BoTable)
                     {
-                      Propagate = ToAll;
+                      //Propagate = ToAll;
                       HeightPack (pAb, pSourceBox, frame);
                     }
                   /* restore the value if necessary */
@@ -2693,6 +2701,8 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
                   /* move all if the related box position is computed */
                   if (pRelation->ReBox->BxYToCompute)
                     Propagate = ToAll;
+                  else if (Propagate == ToSiblings)
+                    Propagate = ToChildren;
                   pRefAb = pRelation->ReBox->BxAbstractBox;
                   if (pRefAb)
                     /* Ignore the back relation of a stretchable box */
