@@ -2142,8 +2142,6 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta,
                   /* move all if the related box position is computed */
                   if (pRelation->ReBox->BxXToCompute)
                     Propagate = ToAll;
-                  //else if (Propagate == ToSiblings)
-                  //  Propagate = ToChildren;
                   pRefAb = pRelation->ReBox->BxAbstractBox;
                   if (pRefAb)
                     /* Ignore the back relation of a stretchable box */
@@ -2523,7 +2521,7 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta,
                      -> check vertical enclosing */
                   if (pAb->AbBox->BxType != BoTable)
                     {
-                      //Propagate = ToAll;
+                      Propagate = ToChildren;
                       HeightPack (pAb, pSourceBox, frame);
                     }
                   /* restore the value if necessary */
@@ -2701,8 +2699,6 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
                   /* move all if the related box position is computed */
                   if (pRelation->ReBox->BxYToCompute)
                     Propagate = ToAll;
-                  //else if (Propagate == ToSiblings)
-                  //  Propagate = ToChildren;
                   pRefAb = pRelation->ReBox->BxAbstractBox;
                   if (pRefAb)
                     /* Ignore the back relation of a stretchable box */
