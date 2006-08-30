@@ -2288,6 +2288,8 @@ static void ApplyPos (AbPosition *PPos, PosRule *positionRule, PtrPRule pPRule,
           {
             PPos->PosAbRef = pAbb1->AbEnclosing;
             if (pPRule->PrType == PtHorizPos &&
+                !TypeHasException (ExcIsColHead, pAbb1->AbElement->ElTypeNumber,
+                                  pAbb1->AbElement->ElStructSchema) &&
                 pPosRule->PoPosDef == Left && pPosRule->PoPosRef == Right &&
                 pAbb1->AbAdjust != AlignLeft)
               {
