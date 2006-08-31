@@ -1383,9 +1383,13 @@ if test "${VPATHOPT}" = "" ; then
 	VPATHOPT="VPATH"
 fi
 
+AMAYA_INSTALLDIR="Amaya-${APP_VER}"
+
 dnl
 dnl Exports the current values of the variables.
 dnl
+
+AC_SUBST(AMAYA_INSTALLDIR)
 
 AC_SUBST(APP_MAJVER)
 AC_SUBST(APP_MINVER)

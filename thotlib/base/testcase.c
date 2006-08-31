@@ -208,7 +208,7 @@ void TtaStopBenchmarkTimer( int bench_id )
   FILE *fp = g_benchmark_timer[bench_id].fp;
   if (fp)
     {
-      fprintf (fp, "[%s] Stop timer\tElapsed time=%d ms.\n",
+      fprintf (fp, "[%s] Stop timer\tElapsed time=%ld ms.\n",
 	       g_benchmark_timer[bench_id].name,
 	       (g_benchmark_timer[bench_id].time-g_benchmark_timer[bench_id].start_time)/(CLOCKS_PER_SEC/1000));
       TtaWriteClose(fp);
@@ -236,7 +236,7 @@ void TtaSetBenchmarkMark( int bench_id, const char * mark_name )
   FILE *fp = g_benchmark_timer[bench_id].fp;
   if (fp)
     {
-      fprintf (fp, "[%s] %s\tElapsed time=%d ms\tDelta time=%d ms.\n",
+      fprintf (fp, "[%s] %s\tElapsed time=%d ms\tDelta time=%ld ms.\n",
 	       g_benchmark_timer[bench_id].name,
 	       mark_name,
 	       (g_benchmark_timer[bench_id].time-g_benchmark_timer[bench_id].start_time)/(CLOCKS_PER_SEC/1000),

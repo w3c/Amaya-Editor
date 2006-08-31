@@ -53,5 +53,5 @@ static AttrValueMapping TemplateAttrValueMappingTable[] =
 /* there is no mapping table of Template elements */
 
 static ElemMapping *TemplateElemMappingTable = NULL;
-static AttributeMapping* TemplateAttributeMappingTable = NULL;
+//static AttributeMapping* TemplateAttributeMappingTable = NULL;
 #endif /* TEMPLATES */

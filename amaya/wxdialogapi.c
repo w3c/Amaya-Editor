@@ -378,6 +378,8 @@ ThotBool CreateTitleDlgWX (int ref, ThotWindow parent, char *doc_title)
       p_dlg->Destroy();
       return FALSE;
     }
+#else /* _WX */
+  return FALSE;
 #endif /* _WX */
 }
 
@@ -402,6 +404,8 @@ ThotBool CreateMakeIdDlgWX (int ref, ThotWindow parent)
       p_dlg->Destroy();
       return FALSE;
     }
+#else /* _WX */
+  return FALSE;
 #endif /* _WX */
 }
 

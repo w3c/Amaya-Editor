@@ -49,10 +49,11 @@ static char  s[MAX_LENGTH]; /* general purpose buffer */
 /************************************************************
  ** Local custom query variables
  ************************************************************/
-
+#ifdef _GTK
 static int     CustomQueryBase;
 static ThotBool CustomQueryFlag;
 static char  *AlgaeText;
+#endif /* _GTK */
 
 /************************************************************
  ** Local annotation filter variables
