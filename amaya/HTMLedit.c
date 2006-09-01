@@ -994,24 +994,24 @@ void GenerateInlineElement (int eType, int aType, char * data)
                                       else
                                         {
                                           TtaRegisterAttributeReplace (newAttr, child, doc);
-                                          lg = TtaGetTextAttributeLength (newAttr);
-                                          name = (char *)TtaGetMemory (lg + strlen (data) + 3);
-                                          TtaGiveTextAttributeValue (newAttr, name, &lg);
                                           if (parse)
                                             {
                                               // CSS properties should be ended by ;
-                                              lg--;
-                                              while (name[lg] == SPACE)
-                                                name[lg--] = EOS;
-                                              if (name[lg] != ';')
-                                                strcat (name, "; ");
-                                              strcat (name, data);
+                                              name = TtaStrdup (data);
                                            }
-                                          else //if (strcmp (name, data))
+                                          else
                                             {
                                               // several class names
-                                              strcat (name, " ");
-                                              strcat (name, data);
+                                              lg = TtaGetTextAttributeLength (newAttr);
+                                              if (lg)
+                                                {
+                                                  name = (char *)TtaGetMemory (lg + strlen (data) + 3);
+                                                  TtaGiveTextAttributeValue (newAttr, name, &lg);
+                                                  strcat (name, " ");
+                                                  strcat (name, data);
+                                                }
+                                              else
+                                                name = TtaStrdup (data);
                                             }
                                           TtaSetAttributeText (newAttr, name, child, doc);
                                           if (parse)

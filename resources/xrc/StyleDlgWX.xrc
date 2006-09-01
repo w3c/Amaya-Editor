@@ -41,14 +41,9 @@
                               <object class="wxComboBox" name="wxID_COMBOBOX_FAMILY">
                                 <content>
                                   <item/>
-                                  <item>times</item>
-                                  <item>helvetica</item>
-                                  <item>courier</item>
-                                  <item>serif</item>
-                                  <item>sans-serif</item>
-                                  <item>monospace</item>
-                                  <item>cursive</item>
-                                  <item>fantasy</item>
+                                  <item>Times New Roman,Times,serif</item>
+                                  <item>Arial,Helvetica,sans-serif</item>
+                                  <item>Courier New,Courier,monospace</item>
                                   <item>inherit</item></content>
                                 <size>200,-1</size>
                                 <focused>1</focused>
@@ -299,7 +294,7 @@
                               <flag>wxEXPAND</flag>
                             </object>
                             <object class="sizeritem">
-                              <object class="wxComboBox" name="wxID_CHOICE_SIZE">
+                              <object class="wxComboBox" name="wxID_COMBO_SIZE">
                                 <content>
                                   <item/>
                                   <item>larger</item>
@@ -345,7 +340,7 @@
                               <flag>wxEXPAND</flag>
                             </object>
                             <object class="sizeritem">
-                              <object class="wxComboBox" name="wxID_CHOICE_LINE">
+                              <object class="wxComboBox" name="wxID_COMBO_LINE">
                                 <content>
                                   <item/>
                                   <item>normal</item>
@@ -385,7 +380,7 @@
                               <flag>wxEXPAND</flag>
                             </object>
                             <object class="sizeritem">
-                              <object class="wxComboBox" name="wxID_CHOICE_INDENT">
+                              <object class="wxComboBox" name="wxID_COMBO_INDENT">
                                 <content>
                                   <item/>
                                   <item>0px</item>
@@ -422,7 +417,7 @@
                               <flag>wxEXPAND</flag>
                             </object>
                             <object class="sizeritem">
-                              <object class="wxComboBox" name="wxID_CHOICE_VALIGN">
+                              <object class="wxComboBox" name="wxID_COMBO_VALIGN">
                                 <content>
                                   <item/>
                                   <item>baseline</item>
@@ -494,7 +489,7 @@
                               <flag>wxEXPAND</flag>
                             </object>
                             <object class="sizeritem">
-                              <object class="wxComboBox" name="wxID_CHOICE_WORD">
+                              <object class="wxComboBox" name="wxID_COMBO_WORD">
                                 <content>
                                   <item/>
                                   <item>normal</item>
@@ -532,7 +527,7 @@
                               <flag>wxEXPAND</flag>
                             </object>
                             <object class="sizeritem">
-                              <object class="wxComboBox" name="wxID_CHOICE_LETTER">
+                              <object class="wxComboBox" name="wxID_COMBO_LETTER">
                                 <content>
                                   <item/>
                                   <item>normal</item>
@@ -787,7 +782,7 @@
                           <size>10,0</size>
                         </object>
                         <object class="sizeritem">
-                          <object class="wxComboBox" name="wxID_CHOICE_BGHPOS">
+                          <object class="wxComboBox" name="wxID_COMBO_BGHPOS">
                             <content>
                               <item/>
                               <item>left</item>
@@ -808,7 +803,7 @@
                           <size>5,0</size>
                         </object>
                         <object class="sizeritem">
-                          <object class="wxComboBox" name="wxID_CHOICE_BGVPOS">
+                          <object class="wxComboBox" name="wxID_COMBO_BGVPOS">
                             <content>
                               <item/>
                               <item>top</item>
@@ -864,7 +859,7 @@
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
                         </object>
                         <object class="sizeritem">
-                          <object class="wxComboBox" name="wxID_CHOICE_BTOP">
+                          <object class="wxComboBox" name="wxID_COMBO_BTOP">
                             <content>
                               <item/>
                               <item>auto</item>
@@ -966,7 +961,7 @@
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
                         </object>
                         <object class="sizeritem">
-                          <object class="wxComboBox" name="wxID_CHOICE_BBOTTOM">
+                          <object class="wxComboBox" name="wxID_COMBO_BBOTTOM">
                             <content>
                               <item/>
                               <item>auto</item>
@@ -1069,7 +1064,7 @@
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
                         </object>
                         <object class="sizeritem">
-                          <object class="wxComboBox" name="wxID_CHOICE_BLEFT">
+                          <object class="wxComboBox" name="wxID_COMBO_BLEFT">
                             <content>
                               <item/>
                               <item>auto</item>
@@ -1172,7 +1167,7 @@
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
                         </object>
                         <object class="sizeritem">
-                          <object class="wxComboBox" name="wxID_CHOICE_BRIGHT">
+                          <object class="wxComboBox" name="wxID_COMBO_BRIGHT">
                             <content>
                               <item/>
                               <item>auto</item>
@@ -1274,7 +1269,7 @@
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
                         </object>
                         <object class="sizeritem">
-                          <object class="wxComboBox" name="wxID_CHOICE_B">
+                          <object class="wxComboBox" name="wxID_COMBO_B">
                             <content>
                               <item/>
                               <item>auto</item>
@@ -1398,7 +1393,7 @@
                               <size>10,0</size>
                             </object>
                             <object class="sizeritem">
-                              <object class="wxComboBox" name="wxID_CHOICE_MTOP">
+                              <object class="wxComboBox" name="wxID_COMBO_MTOP">
                                 <content>
                                   <item/>
                                   <item>auto</item>
@@ -1432,7 +1427,7 @@
                                   <size>5,0</size>
                                 </object>
                                 <object class="sizeritem">
-                                  <object class="wxComboBox" name="wxID_CHOICE_PTOP">
+                                  <object class="wxComboBox" name="wxID_COMBO_PTOP">
                                     <content>
                                       <item/>
                                       <item>0px</item>
@@ -1474,7 +1469,7 @@
                               <size>10,0</size>
                             </object>
                             <object class="sizeritem">
-                              <object class="wxComboBox" name="wxID_CHOICE_MBOTTOM">
+                              <object class="wxComboBox" name="wxID_COMBO_MBOTTOM">
                                 <content>
                                   <item/>
                                   <item>auto</item>
@@ -1507,7 +1502,7 @@
                                   <size>5,0</size>
                                 </object>
                                 <object class="sizeritem">
-                                  <object class="wxComboBox" name="wxID_CHOICE_PBOTTOM">
+                                  <object class="wxComboBox" name="wxID_COMBO_PBOTTOM">
                                     <content>
                                       <item/>
                                       <item>0px</item>
@@ -1549,7 +1544,7 @@
                               <size>10,0</size>
                             </object>
                             <object class="sizeritem">
-                              <object class="wxComboBox" name="wxID_CHOICE_MLEFT">
+                              <object class="wxComboBox" name="wxID_COMBO_MLEFT">
                                 <content>
                                   <item/>
                                   <item>auto</item>
@@ -1582,7 +1577,7 @@
                                   <size>5,0</size>
                                 </object>
                                 <object class="sizeritem">
-                                  <object class="wxComboBox" name="wxID_CHOICE_PLEFT">
+                                  <object class="wxComboBox" name="wxID_COMBO_PLEFT">
                                     <content>
                                       <item/>
                                       <item>0px</item>
@@ -1624,7 +1619,7 @@
                               <size>10,0</size>
                             </object>
                             <object class="sizeritem">
-                              <object class="wxComboBox" name="wxID_CHOICE_MRIGHT">
+                              <object class="wxComboBox" name="wxID_COMBO_MRIGHT">
                                 <content>
                                   <item/>
                                   <item>auto</item>
@@ -1657,7 +1652,7 @@
                                   <size>5,0</size>
                                 </object>
                                 <object class="sizeritem">
-                                  <object class="wxComboBox" name="wxID_CHOICE_PRIGHT">
+                                  <object class="wxComboBox" name="wxID_COMBO_PRIGHT">
                                     <content>
                                       <item/>
                                       <item>0px</item>
@@ -1699,7 +1694,7 @@
                               <size>10,0</size>
                             </object>
                             <object class="sizeritem">
-                              <object class="wxComboBox" name="wxID_CHOICE_MARGIN">
+                              <object class="wxComboBox" name="wxID_COMBO_MARGIN">
                                 <content>
                                   <item/>
                                   <item>auto</item>
@@ -1732,7 +1727,7 @@
                                   <size>5,0</size>
                                 </object>
                                 <object class="sizeritem">
-                                  <object class="wxComboBox" name="wxID_CHOICE_PADDING">
+                                  <object class="wxComboBox" name="wxID_COMBO_PADDING">
                                     <content>
                                       <item/>
                                       <item>0px</item>
@@ -1781,7 +1776,7 @@
                               <size>10,0</size>
                             </object>
                             <object class="sizeritem">
-                              <object class="wxComboBox" name="wxID_CHOICE_WIDTH">
+                              <object class="wxComboBox" name="wxID_COMBO_WIDTH">
                                 <content>
                                   <item/>
                                   <item>auto</item>
@@ -1814,7 +1809,7 @@
                                   <size>5,0</size>
                                 </object>
                                 <object class="sizeritem">
-                                  <object class="wxComboBox" name="wxID_CHOICE_HEIGHT">
+                                  <object class="wxComboBox" name="wxID_COMBO_HEIGHT">
                                     <content>
                                       <item/>
                                       <item>auto</item>
@@ -1994,7 +1989,7 @@
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
                         </object>
                         <object class="sizeritem">
-                          <object class="wxComboBox" name="wxID_CHOICE_TOP">
+                          <object class="wxComboBox" name="wxID_COMBO_TOP">
                             <content>
                               <item>auto</item>
                               <item>inherit</item>
@@ -2060,7 +2055,7 @@
                           <size>5,0</size>
                         </object>
                         <object class="sizeritem">
-                          <object class="wxComboBox" name="wxID_CHOICE_BOTTOM">
+                          <object class="wxComboBox" name="wxID_COMBO_BOTTOM">
                             <content>
                               <item/>
                               <item>auto</item>
@@ -2106,7 +2101,7 @@
                           <size>5,0</size>
                         </object>
                         <object class="sizeritem">
-                          <object class="wxComboBox" name="wxID_CHOICE_LEFT">
+                          <object class="wxComboBox" name="wxID_COMBO_LEFT">
                             <content>
                               <item/>
                               <item>auto</item>
@@ -2149,7 +2144,7 @@
                           <size>5,0</size>
                         </object>
                         <object class="sizeritem">
-                          <object class="wxComboBox" name="wxID_CHOICE_RIGHT">
+                          <object class="wxComboBox" name="wxID_COMBO_RIGHT">
                             <content>
                               <item/>
                               <item>auto</item>

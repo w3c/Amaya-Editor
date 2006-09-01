@@ -684,11 +684,7 @@ char *CssToPrint (Document doc, char *printdir)
 
 /*----------------------------------------------------------------------
   GenerateStyle
-  if element elem is a text string that is not the single child of a
-  Span element, create a span element that contains that text string
-  and return TRUE; span contains then the created Span element.
-  if the parameter presRule is not NULL and a span is generated, the
-  the presRule should be moved to the new span.
+  Apply the current set of CSS properties to the current selection
   -----------------------------------------------------------------------*/
 static void GenerateStyle (char * data)
 {
