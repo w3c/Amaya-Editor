@@ -32,7 +32,8 @@
 
 #ifdef TEMPLATES
 #include "templates.h"
-#include "templateDeclarations.h"
+#include "templates_f.h"
+#include "templateDeclarations_f.h"
 #endif /* TEMPLATES */
 
 /*

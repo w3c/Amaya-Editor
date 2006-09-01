@@ -1,8 +1,11 @@
-#include "templateLoad.h"
+#include "templates.h"
 
+#define THOT_EXPORT extern
 #include "templateDeclarations.h"
-#include "templateUtils.h"
-#include "templateInstanciation.h"
+
+#include "templateDeclarations_f.h"
+#include "templateUtils_f.h"
+#include "templateInstanciation_f.h"
 
 #include "HTMLactions_f.h"
 #include "init_f.h"

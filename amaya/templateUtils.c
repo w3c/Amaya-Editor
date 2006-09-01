@@ -1,4 +1,4 @@
-#include "templateUtils.h"
+#include "templates.h"
 
 /*----------------------------------------------------------------------
 GetSchemaFromDocType: Returns the name of the schema corresponding to 

@@ -1,10 +1,14 @@
-#include "templateInstanciation.h"
+#include "templates.h"
 
+#define THOT_EXPORT extern
+#include "templateDeclarations.h"
+
+#include "templateInstanciation_f.h"
 #include "HTMLactions_f.h"
 #include "init_f.h"
 #include "HTMLsave_f.h"
 
-#include "templateDeclarations.h"
+#include "templateDeclarations_f.h"
 #include "templateUtils.h"
 
 #include "Template.h"
@@ -177,7 +181,6 @@ void InstantiateTemplate_callback (int newdoc, int status,  char *urlName,
 #endif /* TEMPLATES */
 }
 
-
 /*----------------------------------------------------------------------
 ----------------------------------------------------------------------*/
 void InstanciateTemplate (Document doc, char *templatename, char *docname,
@@ -320,7 +323,7 @@ void InstanciateRepeat(XTigerTemplate t, Element el, Document doc)
   
   for(childrenCount = 0; child; TtaNextSibling(&child))
     {
-      //TODO : Check that every children is valid
+      //TODO : Check that every child is valid
       childrenCount ++;
     }
 

@@ -16,16 +16,12 @@
 
 #ifdef TEMPLATES
 #include "Template.h"
+#include "templates.h"
 #include "templateDeclarations.h"
-#include "templateLoad.h"
-#include "templateInstanciation.h"
 
-struct menuType
-{
-	char *label;
-	int   type;
-};
-
+#include "templateLoad_f.h"
+#include "templateInstanciation_f.h"
+#include "templateDeclarations_f.h"
 #include "appdialogue_wx.h"
 #include "init_f.h"
 #include "wxdialogapi_f.h"
@@ -172,10 +168,16 @@ ThotBool UseMenuClicked (NotifyElement *event)
 	ElementType      elt = TtaGetElementType(el);
 	Attribute        at;
 	AttributeType    att;
+  XTigerTemplate   t;
+  Declaration      dec;
 	int              nbitems, size;
 	struct menuType *items;
   char            *types, *menuString;
 	
+  t = (XTigerTemplate) Get(templates, DocumentMeta[doc]->template_url);
+  if (!t)
+    return FALSE; // no template ?!?!
+
 	att.AttrSSchema = elt.ElSSchema;
 	att.AttrTypeNum = Template_ATTR_types;
 	at = TtaGetAttribute (el, att);
@@ -185,6 +187,15 @@ ThotBool UseMenuClicked (NotifyElement *event)
 	TtaGiveTextAttributeValue (at, types, &size);
 
 	giveItems (types, size, &items, &nbitems);
+  if (nbitems == 1)
+    {
+      dec = GetDeclaration(t, items[0].label);
+      if (dec)
+        /* if it's a union, display the menu of this union */
+        {
+          /* @@@@@@@ */
+        }
+    }
 	menuString = createMenuString (items, nbitems);
 	TtaNewScrollPopup (BaseDialog + OptionMenu, TtaGetViewFrame (doc, 1), NULL, 
                      nbitems, menuString , NULL, false, 'L');
@@ -195,6 +206,14 @@ ThotBool UseMenuClicked (NotifyElement *event)
 	TtaShowDialogue (BaseDialog + OptionMenu, FALSE);
 	TtaWaitShowProcDialogue();
 	TtaDestroyDialogue (BaseDialog + OptionMenu);
+  
+  /* result: items[ReturnOption].label @@@@@ */
+  dec = GetDeclaration(t, items[ReturnOption].label);
+  if (dec)
+    {
+      size = 1; /* @@@@ */
+    }
+  TtaFreeMemory (items);
   return FALSE;
 #endif /* TEMPLATES */
 	//ReturnOption
