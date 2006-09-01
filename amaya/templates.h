@@ -4,7 +4,27 @@
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "document.h"
-#include "mydictionary.h"
+
+typedef void  *DicElement;
+
+//A record contains an element and its key.
+struct sRecord;
+typedef struct sRecord *Record;
+struct sRecord
+{
+	char        *key;
+  DicElement   element;
+	Record       next;
+};
+
+//A dictionary contains a sequence of Records
+struct sDictionary;
+typedef struct sDictionary* DicDictionary;
+struct sDictionary
+{
+	Record first;
+	Record iter;
+};
 
 /* Structure of a template */
 struct _XTigerTemplate;

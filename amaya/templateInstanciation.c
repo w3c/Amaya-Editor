@@ -3,12 +3,12 @@
 #define THOT_EXPORT extern
 #include "templateDeclarations.h"
 
-#include "templateInstanciation_f.h"
 #include "HTMLactions_f.h"
-#include "init_f.h"
 #include "HTMLsave_f.h"
-
+#include "init_f.h"
+#include "mydictionary_f.h"
 #include "templateDeclarations_f.h"
+#include "templateInstanciation_f.h"
 #include "templateUtils_f.h"
 
 #include "Template.h"

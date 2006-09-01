@@ -7,6 +7,8 @@
 #ifdef TEMPLATES
 
 #include "templates.h"
+
+#include "mydictionary_f.h"
 #include "templateDeclarations_f.h"
 #include "HTMLactions_f.h"
 

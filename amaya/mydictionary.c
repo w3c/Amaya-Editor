@@ -1,11 +1,15 @@
 /*
  *  FILE   : mydictionary.c
  *  AUTHOR : Francesc Campoy Flores
+
+ *  NOTES  : Defines a dictionary of pointers (void*) using a char* as a key
+ *           The dicionary doesn't take care of freeing pointed elements when needed.
+
  */
 
 #define THOT_EXPORT extern
 #include "amaya.h"
-#include "mydictionary.h"
+#include "templates.h"
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/

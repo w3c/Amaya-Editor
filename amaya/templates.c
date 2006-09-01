@@ -19,6 +19,7 @@
 #include "templates.h"
 #include "templateDeclarations.h"
 
+#include "mydictionary_f.h"
 #include "templateLoad_f.h"
 #include "templateInstanciation_f.h"
 #include "templateDeclarations_f.h"
@@ -185,14 +186,17 @@ ThotBool UseMenuClicked (NotifyElement *event)
 	size = TtaGetTextAttributeLength (at);
 	types = (char *) TtaGetMemory (size+1);	
 	TtaGiveTextAttributeValue (at, types, &size);
-
+  
 	giveItems (types, size, &items, &nbitems);
   if (nbitems == 1)
     {
       dec = GetDeclaration(t, items[0].label);
-      if (dec)
-        /* if it's a union, display the menu of this union */
+      /* if it's a union, display the menu of this union */
+      if (dec && dec->nature == UnionNat)
         {
+          /*
+          nbitems = 0;
+          dec->unionType.include.first */
           /* @@@@@@@ */
         }
     }
