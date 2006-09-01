@@ -6,6 +6,10 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern ThotBool GiveAttrWidth ( PtrAbstractBox pAb,
+                                int zoom,
+                                int *width,
+                                int *percent );
 extern void ChangeTableWidth ( PtrAbstractBox table,
                                int frame );
 extern void GetCellSpans ( PtrElement cell,
@@ -31,6 +35,10 @@ extern void TtaGiveTableFormattingLock ( ThotBool *lock );
 
 #else /* __STDC__ */
 
+extern ThotBool GiveAttrWidth ( PtrAbstractBox pAb,
+                                  int zoom,
+                                  int *width,
+                                  int *percent );
 extern void ChangeTableWidth ( PtrAbstractBox table,
                                  int frame );
 extern void GetCellSpans ( PtrElement cell,

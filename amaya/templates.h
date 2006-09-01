@@ -6,46 +6,9 @@
 #include "document.h"
 #include "mydictionary.h"
 
-#define UNION_ANY            "any"
-#define UNION_ANYCOMPONENT   "anyComponent"
-#define UNION_ANYSIMPLE      "anySimple"
-#define UNION_ANYELEMENT     "anyElement"
-#define UNION_ANY_DEFINITION "anyComponent anySimple anyElement"
-
-#define TYPE_NUMBER          "number"
-#define TYPE_STRING          "string"
-#define TYPE_BOOLEAN         "boolean"
-
-//The predefined library id
-#define PREDEFINED_LIB "-Predefined-"
-
-//Type natures
-#define COMPONENT   0
-#define SIMPLE_TYPE 1
-#define XMLELEMENT  2
-#define UNION       3
-
-//Simple type ids
-#define XTIGER_NUMBER  0
-#define XTIGER_STRING  1
-#define XTIGER_BOOLEAN 2
-//And for future issues
-#define XTIGER_CUSTOM  3
-
-#define THOT_EXPORT extern
-#include "amaya.h"
-#include "document.h"
-#include "mydictionary.h"
-
 /* Structure of a template */
 struct _XTigerTemplate;
 typedef struct _XTigerTemplate *XTigerTemplate;
-
-/* Structure of a declaration */
-struct _Declaration;
-typedef struct _Declaration *Declaration;
-
-typedef int SimpleTypeType;
 
 //Private structure of a template
 struct _XTigerTemplate
@@ -61,10 +24,13 @@ struct _XTigerTemplate
   int             users;          //Number of documents using this template
 };
 
-/* Structure of a Declaration */
+typedef enum _TypeNature {SimpleTypeNat, XmlElementNat, ComponentNat,
+                          UnionNat} TypeNature;
 
-//Just for clarity
-typedef int TypeNature;
+// XTiger simple type
+typedef enum _SimpleTypeType {XTNumber, XTString, XTBoolean} SimpleTypeType;
+
+/* Structure of a Declaration */
 
 typedef struct _XmlElement
 {
@@ -87,6 +53,10 @@ typedef struct _Union
 	DicDictionary  exclude; //Dictionary<Declaration>
 } Union;
 
+/* Structure of a declaration */
+struct _Declaration;
+typedef struct _Declaration *Declaration;
+
 struct _Declaration
 {
 	char          *name;
@@ -103,9 +73,8 @@ struct _Declaration
 
 struct menuType
 {
-	char *label;
-	int   type;
+	char        *label;
+	TypeNature   type;
 };
 
 #endif /* TEMPLATE_TEMPLATES */
-

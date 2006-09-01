@@ -10,6 +10,19 @@
 #include "templateDeclarations_f.h"
 #include "HTMLactions_f.h"
 
+#define UNION_ANY            "any"
+#define UNION_ANYCOMPONENT   "anyComponent"
+#define UNION_ANYSIMPLE      "anySimple"
+#define UNION_ANYELEMENT     "anyElement"
+#define UNION_ANY_DEFINITION "anyComponent anySimple anyElement"
+
+#define TYPE_NUMBER          "number"
+#define TYPE_STRING          "string"
+#define TYPE_BOOLEAN         "boolean"
+
+//The predefined library id
+#define PREDEFINED_LIB "-Predefined-"
+
 DicDictionary templates = NULL;
 
 #endif /* TEMPLATES */
@@ -68,9 +81,9 @@ XTigerTemplate CreatePredefinedTypesLibrary ()
 	XTigerTemplate lib = NewXTigerLibrary(PREDEFINED_LIB, FALSE);
 	lib->isLibrary = true;
 
-	NewSimpleType(lib, TYPE_NUMBER,  XTIGER_NUMBER  );
-	NewSimpleType(lib, TYPE_BOOLEAN, XTIGER_BOOLEAN );
-	NewSimpleType(lib, TYPE_STRING,  XTIGER_STRING  );
+	NewSimpleType(lib, TYPE_NUMBER,  XTNumber);
+	NewSimpleType(lib, TYPE_BOOLEAN, XTBoolean);
+	NewSimpleType(lib, TYPE_STRING,  XTString);
 
 	NewUnion(lib, UNION_ANYCOMPONENT, NULL, NULL);
 	NewUnion(lib, UNION_ANYSIMPLE, NULL, NULL);
@@ -127,16 +140,16 @@ void AddDeclaration (XTigerTemplate t, Declaration dec)
 	{
 		switch(dec->nature)
 		{
-		case SIMPLE_TYPE :
+		case SimpleTypeNat :
 			Add(t->simpleTypes, dec->name, dec);
 			break;
-		case XMLELEMENT :
+		case XmlElementNat :
 			Add(t->elements, dec->name, dec);
 			break;
-		case COMPONENT :
+		case ComponentNat :
 			Add(t->components, dec->name, dec);
 			break;
-		case UNION :
+		case UnionNat :
 			Add(t->unions, dec->name, dec);
 			break;
 		default :
@@ -174,10 +187,10 @@ static Declaration NewDeclaration (const XTigerTemplate t, const char *name,
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void NewSimpleType (XTigerTemplate t, const char *name, TypeNature xtype)
+void NewSimpleType (XTigerTemplate t, const char *name, SimpleTypeType xtype)
 {
 #ifdef TEMPLATES
-	Declaration dec = NewDeclaration (t, name, SIMPLE_TYPE);	
+	Declaration dec = NewDeclaration (t, name, SimpleTypeNat);	
 	dec->simpleType.type = xtype;
 	AddDeclaration(t, dec);
 #endif /* TEMPLATES */
@@ -191,7 +204,7 @@ void NewComponent (XTigerTemplate t, const char *name, const Element el)
 	/*if(t->doc < 0)
 		doc = CreateDocumentOfType(el);*/
 
-	Declaration dec = NewDeclaration (t, name, COMPONENT);
+	Declaration dec = NewDeclaration (t, name, ComponentNat);
 	dec->componentType.content = el;
 // TODO	dec->componentType.content = TtaCopyTree(el, TtaGetDocument(el), ;
 	AddDeclaration(t, dec);
@@ -204,7 +217,7 @@ void NewUnion (const XTigerTemplate t, const char *name,
                        DicDictionary include, DicDictionary exclude)
 {
 #ifdef TEMPLATES
-	Declaration dec = NewDeclaration (t, name, UNION);
+	Declaration dec = NewDeclaration (t, name, UnionNat);
 	Declaration aux;
 	
 	dec->unionType.include = CreateDictionary();
@@ -247,7 +260,7 @@ void NewUnion (const XTigerTemplate t, const char *name,
 void NewElement (const XTigerTemplate t, const char *name)
 {
 #ifdef TEMPLATES
-	Declaration dec = NewDeclaration (t, name, XMLELEMENT);
+	Declaration dec = NewDeclaration (t, name, XmlElementNat);
 	AddDeclaration(t, dec);
 #endif /* TEMPLATES */
 }
@@ -411,14 +424,14 @@ void PrintUnion (Declaration dec, int indent, XTigerTemplate t, FILE *file)
 			aux = (Declaration) CurrentElement(dic);
 			switch(aux->nature)
 			{
-			case COMPONENT :			
-			case SIMPLE_TYPE :
-			case XMLELEMENT :
+			case SimpleTypeNat :
+			case XmlElementNat :
+			case ComponentNat :
 				fprintf(file, "\n%s+ %s ",indentation,aux->name);
 				if(aux->declaredIn!=t)
 					fprintf(file, "*");
 				break;
-			case UNION :
+			case UnionNat :
 				fprintf(file, "\n%s+ %s ",indentation,aux->name);
 				if(aux->declaredIn!=t)
 					fprintf(file, "*");
@@ -440,14 +453,14 @@ void PrintUnion (Declaration dec, int indent, XTigerTemplate t, FILE *file)
 			aux = (Declaration) CurrentElement(dic);
 			switch(aux->nature)
 			{
-			case COMPONENT :			
-			case SIMPLE_TYPE :
-			case XMLELEMENT :
+			case SimpleTypeNat :
+			case XmlElementNat :
+			case ComponentNat :			
 				fprintf(file, "\n%s- %s ",indentation,aux->name);
 				if(aux->declaredIn!=t)
 					fprintf(file, "*");
 				break;
-			case UNION :
+			case UnionNat :
 				fprintf(file, "\n%s- %s ",indentation,aux->name);
 				if(aux->declaredIn!=t)
 					fprintf(file, "*");
@@ -579,7 +592,7 @@ void RedefineSpecialUnions(XTigerTemplate t)
     }
 
   //No recursive inclusion
-  Remove(un->unionType.include,UNION_ANY);
+  Remove(un->unionType.include, UNION_ANY);
   un->unionType.exclude = CreateDictionary();
 
 #endif /* TEMPLATES */
@@ -597,7 +610,7 @@ DicDictionary GetComponents(XTigerTemplate t)
 Element GetComponentContent(Declaration d)
 {
 #ifdef TEMPLATES
-  if(d->nature == COMPONENT)
+  if(d->nature == ComponentNat)
     return d->componentType.content;
   else
 #endif /* TEMPLATES */

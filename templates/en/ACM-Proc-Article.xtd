@@ -176,7 +176,7 @@
   <h2>REFERENCES</h2>
     <div class="references">
       <xt:repeat minOccurs="3" maxOccurs="30">
-        <xt:use types="refbook refarticle refreport"/>
+        <xt:use types="bibref"/>
       </xt:repeat>
     </div>
 </div>

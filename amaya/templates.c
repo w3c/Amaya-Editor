@@ -125,7 +125,7 @@ static void giveItems(char *text, int size, struct menuType **items, int *nbitem
 
       temp[labelSize] = EOS;
       menu[i].label = (char *) TtaStrdup(temp);
-      menu[i].type = SIMPLE_TYPE;
+      menu[i].type = SimpleTypeNat;  /* @@@@@ ???? @@@@@ */
       *items = menu;
     }
 }

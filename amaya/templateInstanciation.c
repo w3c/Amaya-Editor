@@ -9,7 +9,7 @@
 #include "HTMLsave_f.h"
 
 #include "templateDeclarations_f.h"
-#include "templateUtils.h"
+#include "templateUtils_f.h"
 
 #include "Template.h"
 
