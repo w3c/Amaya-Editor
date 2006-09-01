@@ -73,6 +73,38 @@ XTigerTemplate NewXTigerLibrary (const char *templatePath, const ThotBool addPre
 
 
 /*----------------------------------------------------------------------
+Creates a new declaration. t and name must be not NULL or this function
+will return NULL
+  ----------------------------------------------------------------------*/
+static Declaration NewDeclaration (const XTigerTemplate t, const char *name,
+                                   TypeNature xtype)
+{
+#ifdef TEMPLATES
+    if(name==NULL || t==NULL)
+		return NULL;
+	Declaration dec = (Declaration) TtaGetMemory(sizeof(_Declaration));
+	dec->declaredIn = t;
+	dec->name = TtaStrdup (name);
+	dec->nature = xtype;
+	return dec;
+#else
+	return NULL;
+#endif /* TEMPLATES */
+}
+
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void NewSimpleType (XTigerTemplate t, const char *name, SimpleTypeType xtype)
+{
+#ifdef TEMPLATES
+	Declaration dec = NewDeclaration (t, name, SimpleTypeNat);	
+	dec->simpleType.type = xtype;
+	AddDeclaration(t, dec);
+#endif /* TEMPLATES */
+}
+
+/*----------------------------------------------------------------------
   Returns a library with the predefined types
   ----------------------------------------------------------------------*/
 XTigerTemplate CreatePredefinedTypesLibrary ()
@@ -162,37 +194,6 @@ void AddDeclaration (XTigerTemplate t, Declaration dec)
 		//TODO CopyDeclarationInto(dec, old);
 		TtaFreeMemory(dec);
 	}
-#endif /* TEMPLATES */
-}
-
-/*----------------------------------------------------------------------
-Creates a new declaration. t and name must be not NULL or this function
-will return NULL
-  ----------------------------------------------------------------------*/
-static Declaration NewDeclaration (const XTigerTemplate t, const char *name,
-                                   TypeNature xtype)
-{
-#ifdef TEMPLATES
-    if(name==NULL || t==NULL)
-		return NULL;
-	Declaration dec = (Declaration) TtaGetMemory(sizeof(_Declaration));
-	dec->declaredIn = t;
-	dec->name = TtaStrdup (name);
-	dec->nature = xtype;
-	return dec;
-#else
-	return NULL;
-#endif /* TEMPLATES */
-}
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-void NewSimpleType (XTigerTemplate t, const char *name, SimpleTypeType xtype)
-{
-#ifdef TEMPLATES
-	Declaration dec = NewDeclaration (t, name, SimpleTypeNat);	
-	dec->simpleType.type = xtype;
-	AddDeclaration(t, dec);
 #endif /* TEMPLATES */
 }
 
