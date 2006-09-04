@@ -1137,8 +1137,12 @@ static void TopicURLCallbackDialog (int ref, int typedata, char *data)
 
 	case mTUMSel:
 	  if (TopicDirectory[0] == EOS)
-	    /* set path on current directory */
-	    getcwd (TopicDirectory, MAX_LENGTH);
+      {
+        /* set path on current directory */
+        char *ptr = TtaGetEnvString ("cwd");
+        if (ptr)
+          strncpy (TopicDirectory, ptr, MAX_LENGTH);
+      }
 	  /* construct the full name of the topic */
 	  strcpy (LastURLTopic, TopicDirectory);
 	  val = strlen (LastURLTopic) - 1;
@@ -1170,8 +1174,11 @@ static void TopicURLCallbackDialog (int ref, int typedata, char *data)
   ----------------------------------------------------------------------*/
 void InitTopicURL (void)
 {
+  char *ptr = TtaGetEnvString ("cwd");
+
    /* set path on current directory */
-   getcwd (TopicDirectory, MAX_LENGTH);
+  if (ptr)
+    strncpy (TopicDirectory, ptr, MAX_LENGTH);
    LastURLTopic[0] = EOS;
    strcpy (TopicFilter, "*.rdf");
 }

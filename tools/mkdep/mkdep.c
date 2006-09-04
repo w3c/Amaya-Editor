@@ -429,13 +429,14 @@ int main(int argc, char **argv)
 {
 	int i;
 	int my_argc = argc;
+  long *lg;
 	char **my_argv = argv;
 	char pwd[MAX_PATH_LENGHT];
 	char buffer[MAX_PATH_LENGHT];
 	char *vpath = NULL;
 
         init_dep();
-        getcwd(pwd, sizeof(pwd));
+        lg = getcwd(pwd, sizeof(pwd));
 
 	while (--my_argc > 0) {
 		int len;
