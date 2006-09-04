@@ -1063,6 +1063,7 @@ ThotBool AcceptTab (NotifyOnTarget *event)
   -----------------------------------------------------------------------*/
 void NextLinkOrFormElement (Document doc, View view)
 {
+#ifdef TEMPLATES
   ElementType         elType;
   Element             root, child, next, startEl, el;
   Attribute           attr;
@@ -1071,8 +1072,6 @@ void NextLinkOrFormElement (Document doc, View view)
   ThotBool            found, cycle;
   int                 i;
   int                 firstChar, lastChar;
-
-#ifdef TEMPLATES
 
   schema = TtaGetSSchema ("HTML", doc);  
   attrType1.AttrTypeNum = HTML_ATTR_NAME;
@@ -1170,7 +1169,6 @@ void NextLinkOrFormElement (Document doc, View view)
             TtaSearchAttributes (attrType1, attrType2, SearchForward, el, &el, &attr);
         }
 #endif // TEMPLATES
-
 }
 
 

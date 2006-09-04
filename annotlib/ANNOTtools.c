@@ -45,7 +45,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif /* #ifdef __cplusplus */
-/* libwww includes */
+  /* libwww includes */
 #include "HTHash.h"
 #ifdef __cplusplus
 }
@@ -99,7 +99,7 @@ void List_addEnd (List **me, void *object)
     {
       tmp = *me;
       while (tmp->next)
-	tmp = tmp->next;
+        tmp = tmp->next;
       tmp->next = new_;
     }
 }
@@ -116,9 +116,9 @@ void List_add (List **me, void *object)
   new_ = (List *) malloc (sizeof (List));
   new_->object = object;
   if (!*me)
-      new_->next = NULL;
+    new_->next = NULL;
   else
-      new_->next = *me;
+    new_->next = *me;
   *me = new_;
 }
 
@@ -163,7 +163,7 @@ void List_delAll (List **me, ThotBool (*del_function)(void *))
     {
       ptr = (List *) (*me)->next;
       if (del_function && (*me)->object)
-	(*del_function) ((*me)->object);
+        (*del_function) ((*me)->object);
       free (*me);
       *me = ptr;
     }
@@ -223,7 +223,7 @@ List *List_getLast (List *list)
   while (item)
     {
       if (!item->next)
-	break;
+        break;
       item = item->next;
     }
 
@@ -282,9 +282,9 @@ int AnnotList_localCount (List *annot_list)
     {
       annot = (AnnotMeta *) item->object;
       /* local annotations have a null URI if they were newly
-	 created this session, otherwise they have a file: URI */
+         created this session, otherwise they have a file: URI */
       if (!annot->annot_url || IsFilePath(annot->annot_url))
-	count++;
+        count++;
       item = item->next;
     }
   return (count);
@@ -294,7 +294,7 @@ int AnnotList_localCount (List *annot_list)
   AnnotFilter_toggleAll
   Changes the show settings for all the filters of 
   a given type.
-------------------------------------------------------------------*/
+  ------------------------------------------------------------------*/
 void AnnotFilter_toggleAll (Document doc, SelType selector, ThotBool show)
 {
   List *list_item;
@@ -321,7 +321,7 @@ void AnnotFilter_toggleAll (Document doc, SelType selector, ThotBool show)
     {
       filter = (AnnotFilterData *) list_item->object;
       if (filter)
-	filter->show = show;
+        filter->show = show;
       list_item = list_item->next;
     }
 }
@@ -412,19 +412,19 @@ void AnnotFilter_add (AnnotMetaDataList *annotMeta, SelType type, void *object, 
   new_ = (List *) malloc (sizeof (List));
   new_->object = (void *) filter;
   if (!*me)
-      new_->next = NULL;
+    new_->next = NULL;
   else
-      new_->next = *me;
+    new_->next = *me;
   *me = new_;
 }
 
 /*------------------------------------------------------------
-   AnnotFilter_delete
-   Deletes an annotation from a filter list. The object 
-   field is deleted with the del_function passed as a
-   parameter (if it exists).
-   Returns TRUE if something was deleted, FALSE otherwise
-   ------------------------------------------------------------*/
+  AnnotFilter_delete
+  Deletes an annotation from a filter list. The object 
+  field is deleted with the del_function passed as a
+  parameter (if it exists).
+  Returns TRUE if something was deleted, FALSE otherwise
+  ------------------------------------------------------------*/
 ThotBool AnnotFilter_delete (List **list, AnnotMeta *annot, ThotBool (*del_function)(void *))
 {
 #if 0
@@ -439,7 +439,7 @@ ThotBool AnnotFilter_delete (List **list, AnnotMeta *annot, ThotBool (*del_funct
     {
       filter = (AnnotFilterData *) list_item->object;
       if (filter->annot == annot)
-	  break;
+        break;
       prev = list_item;
       list_item = list_item->next;
     }
@@ -450,13 +450,13 @@ ThotBool AnnotFilter_delete (List **list, AnnotMeta *annot, ThotBool (*del_funct
 
       /* fix the pointers */
       if (prev == NULL)
-	*list = list_item->next;
+        *list = list_item->next;
       else
-	prev->next = list_item->next;
+        prev->next = list_item->next;
       
       /* free allocated memory */
       if (del_function && filter->object)
-	(*del_function) (filter->object);
+        (*del_function) (filter->object);
       TtaFreeMemory (filter);
       TtaFreeMemory (list_item);
     }
@@ -469,9 +469,9 @@ ThotBool AnnotFilter_delete (List **list, AnnotMeta *annot, ThotBool (*del_funct
 }
 
 /*------------------------------------------------------------
-   AnnotFilter_search
-   Returns list item that contains the object
-   ------------------------------------------------------------*/
+  AnnotFilter_search
+  Returns list item that contains the object
+  ------------------------------------------------------------*/
 List *AnnotFilter_search (List *list, void *object, ThotBool isString)
 {
   List *list_item = list;
@@ -480,15 +480,15 @@ List *AnnotFilter_search (List *list, void *object, ThotBool isString)
     {
       filter = (AnnotFilterData *) list_item->object;
       if (isString)
-	{
-	  if (!strcasecmp (filter->object, (char*)object))
-	    break;
-	}
+        {
+          if (!strcasecmp (filter->object, (char*)object))
+            break;
+        }
       else
-	{
-	  if (filter->object == object)
-	    break;
-	}
+        {
+          if (filter->object == object)
+            break;
+        }
 
       list_item = list_item->next;
     }
@@ -497,14 +497,14 @@ List *AnnotFilter_search (List *list, void *object, ThotBool isString)
 }
 
 /*------------------------------------------------------------
-   AnnotFilter_status
-   Verifies the visibility of  all the annotations related to
-   docid doc, and that are related to the selector object.
+  AnnotFilter_status
+  Verifies the visibility of  all the annotations related to
+  docid doc, and that are related to the selector object.
 
-   Returns 0 if all annotations are hidden.
-   Returns 1 if all the annotatios are visible.
-   Returns 2 if some annotations are visible
-   ------------------------------------------------------------*/
+  Returns 0 if all annotations are hidden.
+  Returns 1 if all the annotatios are visible.
+  Returns 2 if some annotations are visible
+  ------------------------------------------------------------*/
 int AnnotFilter_status (Document doc, SelType selector, void *object)
 {
   List *list_item;
@@ -523,55 +523,55 @@ int AnnotFilter_status (Document doc, SelType selector, void *object)
     {
       annot = (AnnotMeta *)list_item->object;
       /* skip those annotations that are not shown in the formatted
-	 view (or that are invisible to the user */
+         view (or that are invisible to the user */
       if (!(annot->is_visible) || annot->is_orphan)
-	continue;
+        continue;
       
       switch (selector)
-	{
-	case BY_TYPE:
-	  compare = (annot->type == object);
-	  break;
-	case BY_AUTHOR:
-	  compare = (strncmp (annot->author, (char *) object,
-			       strlen (annot->author)) == 0);
-	  break;
-	case BY_SERVER:
-	  if (annot->annot_url)
-	    tmp = annot->annot_url;
-	  else
-	    tmp = annot->body_url;
-	  GetServerName (tmp, server);
-	  compare = !strcmp (server, (char *) object);
-	  break;
+        {
+        case BY_TYPE:
+          compare = (annot->type == object);
+          break;
+        case BY_AUTHOR:
+          compare = (strncmp (annot->author, (char *) object,
+                              strlen (annot->author)) == 0);
+          break;
+        case BY_SERVER:
+          if (annot->annot_url)
+            tmp = annot->annot_url;
+          else
+            tmp = annot->body_url;
+          GetServerName (tmp, server);
+          compare = !strcmp (server, (char *) object);
+          break;
 
-	default:
-	  compare = 0;
-	  break;
-	}
+        default:
+          compare = 0;
+          break;
+        }
       if (compare)  /* update the status */
-	{
-	  if (show == -1)
-	    /* it's the first one we compare */
-	    show = (annot->show) ? 1 : 0;
-	  else if ((annot->show && show == 0)
-		   || (!(annot->show) && show == 1))
-	    /* different status */
-	    {
-	      show = 2;
-	      break;
-	    }
-	}
+        {
+          if (show == -1)
+            /* it's the first one we compare */
+            show = (annot->show) ? 1 : 0;
+          else if ((annot->show && show == 0)
+                   || (!(annot->show) && show == 1))
+            /* different status */
+            {
+              show = 2;
+              break;
+            }
+        }
     }
   return ((show == -1) ? 1 : show);
 }
 
 /*------------------------------------------------------------
-   AnnotFilter_show
-   Returns a boolean saying if a filter element containing
-   a given object should be shown. If no filter element is
-   found, it returns TRUE.
-   ------------------------------------------------------------*/
+  AnnotFilter_show
+  Returns a boolean saying if a filter element containing
+  a given object should be shown. If no filter element is
+  found, it returns TRUE.
+  ------------------------------------------------------------*/
 ThotBool AnnotFilter_show (List *list, void *object)
 {
   List *list_item = list;
@@ -591,11 +591,11 @@ ThotBool AnnotFilter_show (List *list, void *object)
 }
 
 /*------------------------------------------------------------
-   AnnotFilter_showServer
-   Returns a boolean saying if a filter element containing
-   a given object should be shown. If no filter element is
-   found, it returns TRUE.
-   ------------------------------------------------------------*/
+  AnnotFilter_showServer
+  Returns a boolean saying if a filter element containing
+  a given object should be shown. If no filter element is
+  found, it returns TRUE.
+  ------------------------------------------------------------*/
 ThotBool AnnotFilter_showServer (List *list, char *url)
 {
   List *list_item = list;
@@ -616,11 +616,11 @@ ThotBool AnnotFilter_showServer (List *list, char *url)
 }
 
 /*------------------------------------------------------------
-   AnnotFilter_showAuthor
-   Returns a boolean saying if a filter element containing
-   a given object should be shown. If no filter element is
-   found, it returns TRUE.
-   ------------------------------------------------------------*/
+  AnnotFilter_showAuthor
+  Returns a boolean saying if a filter element containing
+  a given object should be shown. If no filter element is
+  found, it returns TRUE.
+  ------------------------------------------------------------*/
 ThotBool AnnotFilter_showAuthor (List *list, char *author, char *url)
 {
   List *list_item = list;
@@ -645,9 +645,9 @@ ThotBool AnnotFilter_showAuthor (List *list, char *author, char *url)
     {
       filter = (AnnotFilterData *) list_item->object;
       if (filter)
-	result = filter->show;
+        result = filter->show;
       else
-	result = TRUE;
+        result = TRUE;
     }
   TtaFreeMemory (tmp);
 
@@ -655,10 +655,10 @@ ThotBool AnnotFilter_showAuthor (List *list, char *author, char *url)
 }
 
 /*------------------------------------------------------------
-   AnnotFilter_deleteAll
-   Deletes allannotation filter lists for a given source
-   document.
-   ------------------------------------------------------------*/
+  AnnotFilter_deleteAll
+  Deletes allannotation filter lists for a given source
+  document.
+  ------------------------------------------------------------*/
 void AnnotFilter_deleteAll (Document doc)
 {
   if (AnnotMetaData[doc].authors)
@@ -673,10 +673,10 @@ void AnnotFilter_deleteAll (Document doc)
 }
 
 /*------------------------------------------------------------
-   AnnotFilter_build
-   Builds the annotation filter list for a given source
-   document.
-   ------------------------------------------------------------*/
+  AnnotFilter_build
+  Builds the annotation filter list for a given source
+  document.
+  ------------------------------------------------------------*/
 void AnnotFilter_build (Document doc)
 {
   List *item;
@@ -695,9 +695,9 @@ void AnnotFilter_build (Document doc)
 }
 
 /*------------------------------------------------------------
-   AnnotList_search
-   Returns the list item that contains the object
-   ------------------------------------------------------------*/
+  AnnotList_search
+  Returns the list item that contains the object
+  ------------------------------------------------------------*/
 List *AnnotList_search (List *list, char *object)
 {
   List *item = list;
@@ -711,9 +711,9 @@ List *AnnotList_search (List *list, char *object)
 }
 
 /*------------------------------------------------------------
-   AnnotList_searchAnnot
-   Returns the annot item that points to the same url
-   ------------------------------------------------------------*/
+  AnnotList_searchAnnot
+  Returns the annot item that points to the same url
+  ------------------------------------------------------------*/
 AnnotMeta *AnnotList_searchAnnot (List *list, char *url, AnnotMetaDataSearch searchType)
 {
   List *item = list;
@@ -730,34 +730,34 @@ AnnotMeta *AnnotList_searchAnnot (List *list, char *url, AnnotMetaDataSearch sea
       annot = (AnnotMeta *) item->object;
 
       switch (searchType)
-	{
-	case AM_ANNOT_URL:
-	  ptr = annot->annot_url;
-	  break;
+        {
+        case AM_ANNOT_URL:
+          ptr = annot->annot_url;
+          break;
 
-	case AM_BODY_URL:
-	  ptr = annot->body_url;
-	  break;
+        case AM_BODY_URL:
+          ptr = annot->body_url;
+          break;
 
 #if 0 /* This case is no longer necessary given FixFileURL() */
-	case AM_BODY_FILE:
-	  if (annot->body_url && IsFilePath (annot->body_url))
-	    ptr = annot->body_url + sizeof ("file://") - 1;
-	  else
-	    ptr = annot->body_url;
-	  break;
+        case AM_BODY_FILE:
+          if (annot->body_url && IsFilePath (annot->body_url))
+            ptr = annot->body_url + sizeof ("file://") - 1;
+          else
+            ptr = annot->body_url;
+          break;
 #endif
 
-	case AM_ANAME:
-	  ptr = annot->name;
-	  break;
-	}
+        case AM_ANAME:
+          ptr = annot->name;
+          break;
+        }
 
       if (ptr && !strcasecmp (ptr, url))
-	{
-	  found = TRUE;
-	  break;
-	}
+        {
+          found = TRUE;
+          break;
+        }
       item = item->next;
     }
 
@@ -765,22 +765,22 @@ AnnotMeta *AnnotList_searchAnnot (List *list, char *url, AnnotMetaDataSearch sea
 }
 
 /*------------------------------------------------------------
-   AnnotList_searchAnnotBodyURL
-   Returns the URL of annot body that corresponds to annot_url
-   or NULL if it doesn't exist
-   ------------------------------------------------------------*/
+  AnnotList_searchAnnotBodyURL
+  Returns the URL of annot body that corresponds to annot_url
+  or NULL if it doesn't exist
+  ------------------------------------------------------------*/
 char *AnnotList_searchAnnotBodyURL (Document source_doc, char *annot_url)
 {
   AnnotMeta *annot;
 
   annot = AnnotList_searchAnnot (AnnotMetaData[source_doc].annotations,
-				 annot_url,
-				 AM_ANNOT_URL);
+                                 annot_url,
+                                 AM_ANNOT_URL);
 #ifdef ANNOT_ON_ANNOT
   if (!annot && AnnotThread[source_doc].annotations)
     annot = AnnotList_searchAnnot (AnnotThread[source_doc].annotations,
-				   annot_url,
-				   AM_ANNOT_URL);
+                                   annot_url,
+                                   AM_ANNOT_URL);
 #endif /* ANNOT_ON_ANNOT */
 
   if (annot && annot->body_url)
@@ -790,10 +790,10 @@ char *AnnotList_searchAnnotBodyURL (Document source_doc, char *annot_url)
 }
 
 /*------------------------------------------------------------
-   AnnotList_searchAnnotURL
-   Returns the URL of annot that corresponds to annot_url
-   or NULL if it doesn't exist
-   ------------------------------------------------------------*/
+  AnnotList_searchAnnotURL
+  Returns the URL of annot that corresponds to annot_url
+  or NULL if it doesn't exist
+  ------------------------------------------------------------*/
 char *AnnotList_searchAnnotURL (Document source_doc, char *body_url)
 {
   AnnotMeta *annot;
@@ -805,13 +805,13 @@ char *AnnotList_searchAnnotURL (Document source_doc, char *body_url)
     ptr = body_url;
 
   annot = AnnotList_searchAnnot (AnnotMetaData[source_doc].annotations,
-				 ptr,
-				 AM_BODY_URL);
+                                 ptr,
+                                 AM_BODY_URL);
 #ifdef ANNOT_ON_ANNOT
   if (!annot && AnnotThread[source_doc].annotations)
     annot = AnnotList_searchAnnot (AnnotThread[source_doc].annotations,
-				   ptr,
-				   AM_BODY_URL);
+                                   ptr,
+                                   AM_BODY_URL);
 #endif /* ANNOT_ON_ANNOT */
 
   if (ptr != body_url)
@@ -824,10 +824,10 @@ char *AnnotList_searchAnnotURL (Document source_doc, char *body_url)
 }
 
 /*------------------------------------------------------------
-   AnnotList_searchBody
-   Returns the annot meta corresponding to the body URL
-   or NULL if it doesn't exist
-   ------------------------------------------------------------*/
+  AnnotList_searchBody
+  Returns the annot meta corresponding to the body URL
+  or NULL if it doesn't exist
+  ------------------------------------------------------------*/
 AnnotMeta *AnnotList_searchBody (Document annot_doc)
 {
   AnnotMeta *annot;
@@ -847,13 +847,13 @@ AnnotMeta *AnnotList_searchBody (Document annot_doc)
     ptr = body_url;
 
   annot = AnnotList_searchAnnot (AnnotMetaData[source_doc].annotations,
-				 ptr,
-				 AM_BODY_URL);
+                                 ptr,
+                                 AM_BODY_URL);
 #ifdef ANNOT_ON_ANNOT
   if (!annot && AnnotThread[source_doc].annotations)
     annot = AnnotList_searchAnnot (AnnotThread[source_doc].annotations,
-				   ptr,
-				   AM_BODY_URL);
+                                   ptr,
+                                   AM_BODY_URL);
 #endif /* ANNOT_ON_ANNOT */
 
   if (ptr != body_url)
@@ -881,15 +881,15 @@ ThotBool AnnotList_delAnnot (List **list, char *url, ThotBool useAnnotUrl)
       annot = (AnnotMeta *) item->object;
       /* @@ this crashes... why? */
       if (useAnnotUrl && annot->annot_url)
-	ptr = annot->annot_url;
+        ptr = annot->annot_url;
       else
-	ptr = annot->body_url;
+        ptr = annot->body_url;
 
       if (ptr && !strcasecmp (ptr, url))
-	{
-	  found = TRUE;
-	  break;
-	}
+        {
+          found = TRUE;
+          break;
+        }
       prev = item;
       item = item->next;
     }
@@ -898,17 +898,17 @@ ThotBool AnnotList_delAnnot (List **list, char *url, ThotBool useAnnotUrl)
     {
       /* update the pointers */
       if (prev)
-	prev->next = item->next;
+        prev->next = item->next;
       else
-	*list = item->next;
+        *list = item->next;
       /* erase the annotation body */
       if (IsFilePath (annot->body_url))
-	{
-	  ptr = (char *)TtaGetMemory (strlen (annot->body_url) + 1);
-	  NormalizeFile (annot->body_url, ptr, AM_CONV_NONE);
-	  TtaFileUnlink (ptr);
-	  TtaFreeMemory (ptr);
-	}
+        {
+          ptr = (char *)TtaGetMemory (strlen (annot->body_url) + 1);
+          NormalizeFile (annot->body_url, ptr, AM_CONV_NONE);
+          TtaFileUnlink (ptr);
+          TtaFreeMemory (ptr);
+        }
       /* delete the annotation */
       Annot_free (annot);
       /* delete the list item */
@@ -922,8 +922,8 @@ ThotBool AnnotList_delAnnot (List **list, char *url, ThotBool useAnnotUrl)
   AnnotThread_UpdateReplyTo
   ------------------------------------------------------------*/
 int AnnotThread_UpdateReplyTo (List *thread_list,
-			       char *new_url,
-			       char *prev_url)
+                               char *new_url,
+                               char *prev_url)
 {
 #ifdef ANNOT_ON_ANNOT
   AnnotMeta *annot;
@@ -938,30 +938,30 @@ int AnnotThread_UpdateReplyTo (List *thread_list,
     {
       annot = (AnnotMeta *) item->object;
       if (annot->inReplyTo)
-	{
-	  /* replace the root of Thread */
-	  if (!strcasecmp (annot->rootOfThread, prev_url))
-	    {
-	      TtaFreeMemory (annot->rootOfThread);
-	      annot->rootOfThread = TtaStrdup (new_url);
-	      count++;
-	    }
+        {
+          /* replace the root of Thread */
+          if (!strcasecmp (annot->rootOfThread, prev_url))
+            {
+              TtaFreeMemory (annot->rootOfThread);
+              annot->rootOfThread = TtaStrdup (new_url);
+              count++;
+            }
 
-	  /* replace the reply to */
-	  if (!strcasecmp (annot->inReplyTo, prev_url))
-	    {
-	      TtaFreeMemory (annot->inReplyTo);
-	      annot->inReplyTo = TtaStrdup (new_url);
-	      count++;
-	    }
-	  /* replace the source_url */
-	  if (!strcasecmp (annot->source_url, prev_url))
-	    {
-	      TtaFreeMemory (annot->source_url);
-	      annot->source_url = TtaStrdup (new_url);
-	      count++;
-	    }
-	}
+          /* replace the reply to */
+          if (!strcasecmp (annot->inReplyTo, prev_url))
+            {
+              TtaFreeMemory (annot->inReplyTo);
+              annot->inReplyTo = TtaStrdup (new_url);
+              count++;
+            }
+          /* replace the source_url */
+          if (!strcasecmp (annot->source_url, prev_url))
+            {
+              TtaFreeMemory (annot->source_url);
+              annot->source_url = TtaStrdup (new_url);
+              count++;
+            }
+        }
       item = item->next;
     }
   return (count);
@@ -974,8 +974,8 @@ int AnnotThread_UpdateReplyTo (List *thread_list,
   AnnotThread_UpdateAnnotates
   ------------------------------------------------------------*/
 int AnnotThread_UpdateAnnotates (List *annot_list,
-			       char *new_url,
-			       char *prev_url)
+                                 char *new_url,
+                                 char *prev_url)
 {
 #ifdef ANNOT_ON_ANNOT
   AnnotMeta *annot;
@@ -989,11 +989,11 @@ int AnnotThread_UpdateAnnotates (List *annot_list,
     {
       annot = (AnnotMeta *) item->object;
       if (!strcasecmp (annot->source_url, prev_url))
-	{
-	  TtaFreeMemory (annot->source_url);
-	  annot->source_url = TtaStrdup (new_url);
-	  count++;
-	}
+        {
+          TtaFreeMemory (annot->source_url);
+          annot->source_url = TtaStrdup (new_url);
+          count++;
+        }
       item = item->next;
     }
   return (count);
@@ -1003,10 +1003,10 @@ int AnnotThread_UpdateAnnotates (List *annot_list,
 }
 
 /*------------------------------------------------------------
-   Annot_searchDocument
-   Returns the doc reference of the document that
-   contains the body_url or NONE if not found.
-   ------------------------------------------------------------*/
+  Annot_searchDocument
+  Returns the doc reference of the document that
+  contains the body_url or NONE if not found.
+  ------------------------------------------------------------*/
 Document Annot_searchDocument (char *body_url)
 {
   int i;
@@ -1016,14 +1016,14 @@ Document Annot_searchDocument (char *body_url)
     {
       tmp = TtaStrdup (body_url);
       WWWToLocal (tmp);
-      }
+    }
   else
     tmp = body_url;
 
   for (i = 1; i < DocumentTableLength; i++)
     {
       if (DocumentURLs[i] && !strcmp (DocumentURLs[i], tmp))
-	break;
+        break;
     }
 
   if (tmp != body_url)
@@ -1033,10 +1033,10 @@ Document Annot_searchDocument (char *body_url)
 }
 
 /*------------------------------------------------------------
-   AnnotThread_searchRoot
-   Returns the doc reference of the thread that corresponds to 
-   the root URL.
-   ------------------------------------------------------------*/
+  AnnotThread_searchRoot
+  Returns the doc reference of the thread that corresponds to 
+  the root URL.
+  ------------------------------------------------------------*/
 Document AnnotThread_searchRoot (char *root)
 {
 #ifdef ANNOT_ON_ANNOT
@@ -1045,10 +1045,10 @@ Document AnnotThread_searchRoot (char *root)
   for (i = 1; i < DocumentTableLength; i++)
     {
       if (!AnnotThread[i].rootOfThread)
-	continue;
+        continue;
       
       if (!strcmp (AnnotThread[i].rootOfThread, root))
-	break;
+        break;
     }
 
   return (i == DocumentTableLength) ? 0 : i;
@@ -1058,10 +1058,10 @@ Document AnnotThread_searchRoot (char *root)
 }
 
 /*------------------------------------------------------------
-   AnnotThread_searchThreadDoc
-   Returns the docid of the thread to which an annotation belongs 
-   or 0 if it's not found.
-   ------------------------------------------------------------*/
+  AnnotThread_searchThreadDoc
+  Returns the docid of the thread to which an annotation belongs 
+  or 0 if it's not found.
+  ------------------------------------------------------------*/
 Document AnnotThread_searchThreadDoc (char *annot_url)
 {
 #ifdef ANNOT_ON_ANNOT
@@ -1078,10 +1078,10 @@ Document AnnotThread_searchThreadDoc (char *annot_url)
   for (i = 0; i < DocumentTableLength; i++)
     {
       if (!AnnotThread[i].rootOfThread)
-	continue;
+        continue;
       if (AnnotList_searchAnnot (AnnotThread[i].annotations, 
-				 tmp_url, searchType))
-	break;
+                                 tmp_url, searchType))
+        break;
     }
 
   if (tmp_url != annot_url)
@@ -1107,7 +1107,7 @@ char * Annot_GetMDate (void *object)
  Thread sort algorithm adapted from
  Jamie Zawinski's <jwz@jwz.org>
  http://www.jwz.org/doc/threading.html
- *********************************/
+*********************************/
 
 
 typedef struct _Container
@@ -1152,11 +1152,11 @@ static void ConvertContainerToList (List **result, Container *container)
   while (container_tmp)
     {
       if (container_tmp->object)
-	List_addEnd (result, container_tmp->object);
+        List_addEnd (result, container_tmp->object);
       if (container_tmp->child)
-	{
-	  ConvertContainerToList (result, container_tmp->child);
-	  container_tmp->child = NULL;
+        {
+          ConvertContainerToList (result, container_tmp->child);
+          container_tmp->child = NULL;
         }
       tmp2 = container_tmp;
       container_tmp = container_tmp->next;
@@ -1182,7 +1182,7 @@ static void Container_promoteEntry (Container **parent, Container *tmp_entry)
     {
       tmp = *parent;
       while (tmp->next)
-	tmp = tmp->next;
+        tmp = tmp->next;
       tmp->next = tmp_entry;
       tmp_entry->parent = (*parent)->parent;
       tmp_entry->next = NULL;
@@ -1203,68 +1203,68 @@ static void Container_prune (Container **parent)
   while (tmp_entry)
     {
       if (!tmp_entry->object && tmp_entry->child)
-	{
-	  if (!tmp_entry->child->next)
-	    {
-	      /* empty container has only one child. Promote it to the same level 
-		 and destroy the parent */
-	      child = tmp_entry->child;
-	      child->parent = tmp_entry->parent;
-	      if (!previous)
-		*parent = child;
-	      else
-		previous->next = child;
-	      child->next = tmp_entry->next;
-	      tmp_entry->child = NULL;
-	      tmp_entry->next = NULL;
-	      ThreadItem_delete (tmp_entry);
-	      tmp_entry = child;
-	      continue;
-	    }
-	  else if (tmp_entry->parent)
-	    {
-	      /* it's not the only child, promote all the children to the
-		 parents level, except if it would become parent */
-	      child = tmp_entry->child;
-	      if (tmp_entry == *parent)
-		  *parent = child;
-	      else
-		previous->next = child;
-	      /* fix the links of the child to the parent.
-		 insert the next tmp_entry element at the end
-		 of the last child. */
-	      while (child)
-		{
-		  child->parent = tmp_entry->parent;
-		  if (!child->next)
-		    {
-		      child->next = tmp_entry->next;
-		      break;
-		    }
-		  child = child->next;
-		}
-	      child = tmp_entry->child;
-	      tmp_entry->child = NULL;
-	      tmp_entry->next = NULL;
-	      ThreadItem_delete (tmp_entry);
-	      tmp_entry = child;
-	      continue;
-	    }
-	}
+        {
+          if (!tmp_entry->child->next)
+            {
+              /* empty container has only one child. Promote it to the same level 
+                 and destroy the parent */
+              child = tmp_entry->child;
+              child->parent = tmp_entry->parent;
+              if (!previous)
+                *parent = child;
+              else
+                previous->next = child;
+              child->next = tmp_entry->next;
+              tmp_entry->child = NULL;
+              tmp_entry->next = NULL;
+              ThreadItem_delete (tmp_entry);
+              tmp_entry = child;
+              continue;
+            }
+          else if (tmp_entry->parent)
+            {
+              /* it's not the only child, promote all the children to the
+                 parents level, except if it would become parent */
+              child = tmp_entry->child;
+              if (tmp_entry == *parent)
+                *parent = child;
+              else
+                previous->next = child;
+              /* fix the links of the child to the parent.
+                 insert the next tmp_entry element at the end
+                 of the last child. */
+              while (child)
+                {
+                  child->parent = tmp_entry->parent;
+                  if (!child->next)
+                    {
+                      child->next = tmp_entry->next;
+                      break;
+                    }
+                  child = child->next;
+                }
+              child = tmp_entry->child;
+              tmp_entry->child = NULL;
+              tmp_entry->next = NULL;
+              ThreadItem_delete (tmp_entry);
+              tmp_entry = child;
+              continue;
+            }
+        }
       else if (tmp_entry->child)
-	Container_prune (&tmp_entry->child);
+        Container_prune (&tmp_entry->child);
       if (!tmp_entry)
-	break;
+        break;
       previous = tmp_entry;
       tmp_entry = tmp_entry->next;
     }
 }
 
 /*------------------------------------------------------------
-   Container_sortByDate
-   Sorts the annotations siblings in the container list
-   by most recent date.
-   ------------------------------------------------------------*/
+  Container_sortByDate
+  Sorts the annotations siblings in the container list
+  by most recent date.
+  ------------------------------------------------------------*/
 static void Container_sortByDate (Container **list, char * (*get_date_function)(void *))
 {
   time_t date_cur;
@@ -1287,67 +1287,67 @@ static void Container_sortByDate (Container **list, char * (*get_date_function)(
       entry_cur = *list;
       count = 0;
       while (entry_cur && entry_cur->next)
-	{
-	  entry_next = entry_cur->next;
-	  date_cur = StrDateToCalTime ((*get_date_function) (entry_cur->object));
-	  date_next = StrDateToCalTime ((*get_date_function) (entry_next->object));
+        {
+          entry_next = entry_cur->next;
+          date_cur = StrDateToCalTime ((*get_date_function) (entry_cur->object));
+          date_next = StrDateToCalTime ((*get_date_function) (entry_next->object));
 
 #if 0
-	  printf ("%d: date cur %d %cdate next %d\n", count++, date_cur, 
-		  (date_cur > date_next) ? '>' : '<',  date_next);
+          printf ("%d: date cur %d %cdate next %d\n", count++, date_cur, 
+                  (date_cur > date_next) ? '>' : '<',  date_next);
 #endif
-	  /* sort by most recent date */
-	  if (date_cur < date_next)
-	    {
+          /* sort by most recent date */
+          if (date_cur < date_next)
+            {
 #if 0
-	      printf ("switching date cur and date next\n");
-	      printf ("before:\n\tprevious = %p, previous-next = %p\n"
-		      "entry_cur = %p, entry_cur_next = %p\n"
-		      "entry_next = %p, entry_next->next = %p\n",
-		      previous, (previous) ? previous->next : NULL,
-		      entry_cur, entry_cur->next,
-		      entry_next, entry_next->next);
+              printf ("switching date cur and date next\n");
+              printf ("before:\n\tprevious = %p, previous-next = %p\n"
+                      "entry_cur = %p, entry_cur_next = %p\n"
+                      "entry_next = %p, entry_next->next = %p\n",
+                      previous, (previous) ? previous->next : NULL,
+                      entry_cur, entry_cur->next,
+                      entry_next, entry_next->next);
 #endif
-	      /* swap cur and next */
-	      swap = TRUE;
-	      entry_cur->next = entry_next->next;
-	      entry_next->next = entry_cur;
+              /* swap cur and next */
+              swap = TRUE;
+              entry_cur->next = entry_next->next;
+              entry_next->next = entry_cur;
 
-	      /* update previous */
-	      if (previous)
-		previous->next = entry_next;
-	      else
-		{
-		  *list = entry_next;
-		  entry_next->parent->child = entry_next;
-		}
+              /* update previous */
+              if (previous)
+                previous->next = entry_next;
+              else
+                {
+                  *list = entry_next;
+                  entry_next->parent->child = entry_next;
+                }
 
 #if 0
-	      printf ("after:\n\tprevious = %p, previous-next = %p\n"
-		      "entry_cur = %p, entry_cur_next = %p\n"
-		      "entry_next = %p, entry_next->next = %p\n",
-		      (previous) ? previous : NULL, (previous) ? previous->next : NULL,
-		      entry_cur, entry_cur->next,
-		      entry_next, entry_next->next);
+              printf ("after:\n\tprevious = %p, previous-next = %p\n"
+                      "entry_cur = %p, entry_cur_next = %p\n"
+                      "entry_next = %p, entry_next->next = %p\n",
+                      (previous) ? previous : NULL, (previous) ? previous->next : NULL,
+                      entry_cur, entry_cur->next,
+                      entry_next, entry_next->next);
 #endif
-	      previous = entry_next;
-	    }
-	  else
-	    {
-	      previous = entry_cur;
-	      entry_cur = entry_next;
-	    }
-	}
+              previous = entry_next;
+            }
+          else
+            {
+              previous = entry_cur;
+              entry_cur = entry_next;
+            }
+        }
       if (!swap)
-	break;
+        break;
     }
 }
 
 /*------------------------------------------------------------
-   AnnotThread_markOrphan
-   Marks as orphan all the top annotation entries following the
-   root entry.
-   ------------------------------------------------------------*/
+  AnnotThread_markOrphan
+  Marks as orphan all the top annotation entries following the
+  root entry.
+  ------------------------------------------------------------*/
 static void  AnnotThread_markOrphan (Container *root)
 {
   Container *tmp_entry;
@@ -1365,18 +1365,18 @@ static void  AnnotThread_markOrphan (Container *root)
     {
       tmp_entry2 = tmp_entry;
       while (tmp_entry2 && tmp_entry2->object == NULL)
-	tmp_entry2 = tmp_entry2->child;
+        tmp_entry2 = tmp_entry2->child;
       if (tmp_entry2)
-	((AnnotMeta *) tmp_entry2->object)->is_orphan_item = TRUE;
+        ((AnnotMeta *) tmp_entry2->object)->is_orphan_item = TRUE;
       tmp_entry = tmp_entry->next;
     }
 }
 #endif /* ANNOT_ON_ANNOT */
 
 /*------------------------------------------------------------
-   AnnotThread_sortThreadList
-   Sorts the thread list pointed by annotlist by InReplyTos.
-   ------------------------------------------------------------*/
+  AnnotThread_sortThreadList
+  Sorts the thread list pointed by annotlist by InReplyTos.
+  ------------------------------------------------------------*/
 void AnnotThread_sortThreadList (List **thread_list)
 {
 #ifdef ANNOT_ON_ANNOT
@@ -1411,38 +1411,38 @@ void AnnotThread_sortThreadList (List **thread_list)
       /* create the message container */
       /* use either body_url or annot_url */
       if (!annot_cur->annot_url || IsFilePath (annot_cur->annot_url))
-	url = annot_cur->body_url;
+        url = annot_cur->body_url;
       else
-	url = annot_cur->annot_url;
+        url = annot_cur->annot_url;
       /* url = annot_cur->annot_url; */
       cur_entry = (Container *) HTHashtable_object (id_table, url);
       if (!cur_entry)
-	{
-	  cur_entry = ThreadItem_new ();
-	  HTHashtable_addObject (id_table, url, cur_entry);
-	}
+        {
+          cur_entry = ThreadItem_new ();
+          HTHashtable_addObject (id_table, url, cur_entry);
+        }
       cur_entry->object = (void *) annot_cur;
 	
       /* insert the message container to its parent */
       par_entry = (Container *) HTHashtable_object (id_table, annot_cur->inReplyTo);
       if (!par_entry)
-	{
-	  par_entry = ThreadItem_new ();
-	  HTHashtable_addObject (id_table, annot_cur->inReplyTo, par_entry);
-	}	
+        {
+          par_entry = ThreadItem_new ();
+          HTHashtable_addObject (id_table, annot_cur->inReplyTo, par_entry);
+        }	
       /* add the link from the child to the parent */
       cur_entry->parent = par_entry;
       
       /* insert it with its siblings */
       if (!par_entry->child)
-	par_entry->child = cur_entry;
+        par_entry->child = cur_entry;
       else
-	{
-	  tmp_entry = par_entry->child;
-	  while (tmp_entry->next)
-	    tmp_entry = tmp_entry->next;
-	  tmp_entry->next = cur_entry;
-	}
+        {
+          tmp_entry = par_entry->child;
+          while (tmp_entry->next)
+            tmp_entry = tmp_entry->next;
+          tmp_entry->next = cur_entry;
+        }
       list_cur = list_cur->next;
     }
 
@@ -1452,19 +1452,19 @@ void AnnotThread_sortThreadList (List **thread_list)
     {
       tmp_entry = (Container *) HTHashtable_object (id_table, (char *)HTArray_data (keys)[i]);
       if (tmp_entry->parent == NULL)
-	{
-	  if (tmp_entry == root)
-	    continue;
-	  else if (tmp_entry->object || tmp_entry->child)
-	    /* promote to parent */
-	    Container_promoteEntry (&root, tmp_entry);
-	  else if (tmp_entry->child == NULL)
-	    /* destroy */
-	    {
-	      tmp_entry->next = NULL;
-	      ThreadItem_delete (tmp_entry);
-	    }
-	}
+        {
+          if (tmp_entry == root)
+            continue;
+          else if (tmp_entry->object || tmp_entry->child)
+            /* promote to parent */
+            Container_promoteEntry (&root, tmp_entry);
+          else if (tmp_entry->child == NULL)
+            /* destroy */
+            {
+              tmp_entry->next = NULL;
+              ThreadItem_delete (tmp_entry);
+            }
+        }
     }
   for (i = 0; i< HTArray_size (keys); i++)
     HT_FREE (HTArray_data(keys)[i]);
@@ -1488,10 +1488,10 @@ void AnnotThread_sortThreadList (List **thread_list)
       
       tmp_child = tmp_entry->child;
       while (tmp_child)
-	{
-	  Container_sortByDate (&tmp_child, Annot_GetMDate);
-	  tmp_child = tmp_child->child;
-	}
+        {
+          Container_sortByDate (&tmp_child, Annot_GetMDate);
+          tmp_child = tmp_child->child;
+        }
       tmp_entry = tmp_entry->next;
     }
 
@@ -1500,7 +1500,7 @@ void AnnotThread_sortThreadList (List **thread_list)
   AnnotThread_markOrphan (root);
 
   /* copy the result to annot_list. The children of root are live replies.
-   The brothers of root have messages that have lost their in-reply-to parents */
+     The brothers of root have messages that have lost their in-reply-to parents */
   annot_list = NULL;
   tmp_entry = root;
   while (tmp_entry)
@@ -1514,9 +1514,9 @@ void AnnotThread_sortThreadList (List **thread_list)
 
 #ifdef BOOKMARKS
 /*------------------------------------------------------------
-   BM_recursiveSort
-   recursively sorts the bookmark containers
-   ------------------------------------------------------------*/
+  BM_recursiveSort
+  recursively sorts the bookmark containers
+  ------------------------------------------------------------*/
 static void BM_recursiveSort (Container *root)
 {
   Container *topics, *topics_cur;
@@ -1540,23 +1540,23 @@ static void BM_recursiveSort (Container *root)
     {
       next = tmp_entry->next;
       if (BM_IsTopic (tmp_entry->object))
-	{
-	  if (!topics)
-	    topics = tmp_entry;
-	  else
-	    topics_cur->next = tmp_entry;
-	  topics_cur = tmp_entry;
-	  topics_cur->next = NULL;
-	}
+        {
+          if (!topics)
+            topics = tmp_entry;
+          else
+            topics_cur->next = tmp_entry;
+          topics_cur = tmp_entry;
+          topics_cur->next = NULL;
+        }
       else 
-	{
-	  if (!bookmarks)
-	    bookmarks = tmp_entry;
-	  else
-	    bookmarks_cur->next = tmp_entry;
-	  bookmarks_cur = tmp_entry;
-	  bookmarks_cur->next = NULL;
-	}
+        {
+          if (!bookmarks)
+            bookmarks = tmp_entry;
+          else
+            bookmarks_cur->next = tmp_entry;
+          bookmarks_cur = tmp_entry;
+          bookmarks_cur->next = NULL;
+        }
       tmp_entry = next;
     }
 
@@ -1574,30 +1574,30 @@ static void BM_recursiveSort (Container *root)
     {
       root->child = topics;
       if (bookmarks) {
-	tmp_entry = topics;
-	while (tmp_entry->next)
-	  tmp_entry = tmp_entry->next;
-	tmp_entry->next = bookmarks;
+        tmp_entry = topics;
+        while (tmp_entry->next)
+          tmp_entry = tmp_entry->next;
+        tmp_entry->next = bookmarks;
       }
     }
   else
-      root->child = bookmarks;
+    root->child = bookmarks;
 
   /* now sort each of its children recursively */
   tmp_entry = root->child;
   while (tmp_entry)
     {
       if (tmp_entry->child)
-	BM_recursiveSort (tmp_entry);
+        BM_recursiveSort (tmp_entry);
       tmp_entry = tmp_entry->next;
     }
 }
 #endif /* BOOKMARKS */
 
 /*------------------------------------------------------------
-   BM_bookmarksSort
-   Sorts the bookmark list according to parents
-   ------------------------------------------------------------*/
+  BM_bookmarksSort
+  Sorts the bookmark list according to parents
+  ------------------------------------------------------------*/
 void BM_bookmarksSort (List **bookmark_list)
 {
 #ifdef BOOKMARKS
@@ -1629,65 +1629,65 @@ void BM_bookmarksSort (List **bookmark_list)
 
       /* create the message container */
       if (bookmark_cur->bm_type == BME_TOPIC)
-	url = bookmark_cur->self_url;
+        url = bookmark_cur->self_url;
       else
-	{
-	  url = (char*) TtaGetMemory (strlen (bookmark_cur->self_url) 
-				      + strlen (bookmark_cur->parent_url)
-				      + 2);
-	  sprintf (url, "%s:%s", bookmark_cur->self_url, bookmark_cur->parent_url);
-	}
+        {
+          url = (char*) TtaGetMemory (strlen (bookmark_cur->self_url) 
+                                      + strlen (bookmark_cur->parent_url)
+                                      + 2);
+          sprintf (url, "%s:%s", bookmark_cur->self_url, bookmark_cur->parent_url);
+        }
       cur_entry = (Container *) HTHashtable_object (id_table, url);
       if (bookmark_cur->bm_type != BME_TOPIC && cur_entry)
-	{
-	  printf ("Warning, cur_entry already exists for url %s\n", url);
-	  TtaFreeMemory (url);
-	  list_cur = list_cur->next;
-	  continue;
-	}
+        {
+          printf ("Warning, cur_entry already exists for url %s\n", url);
+          TtaFreeMemory (url);
+          list_cur = list_cur->next;
+          continue;
+        }
       if (!cur_entry)
-	{
-	  cur_entry = ThreadItem_new ();
-	  HTHashtable_addObject (id_table, url, cur_entry);
-	}
+        {
+          cur_entry = ThreadItem_new ();
+          HTHashtable_addObject (id_table, url, cur_entry);
+        }
 
       cur_entry->object = (void *) bookmark_cur;
       if (bookmark_cur->bm_type != BME_TOPIC)
-	TtaFreeMemory (url);
+        TtaFreeMemory (url);
 
       /* insert the message container to its parent */
       /* @@ JK: and if there's no parent? We put it in a blank space? */
       if (bookmark_cur->parent_url)
-	url = bookmark_cur->parent_url;
+        url = bookmark_cur->parent_url;
       else
-	url = "";
+        url = "";
 
       par_entry = (Container *) HTHashtable_object (id_table, url); 
       if (!par_entry)
-	{
-	  par_entry = ThreadItem_new ();
-	  HTHashtable_addObject (id_table, url, par_entry);
-	}	
+        {
+          par_entry = ThreadItem_new ();
+          HTHashtable_addObject (id_table, url, par_entry);
+        }	
       /* add the link from the child to the parent */
       cur_entry->parent = par_entry;
       
       /* insert it with its siblings */
       if (!par_entry->child)
-	par_entry->child = cur_entry;
+        par_entry->child = cur_entry;
       else
-	{
-	  tmp_entry = par_entry->child;
-	  while (tmp_entry->next)
-	    {
-	      if (tmp_entry == tmp_entry->next)
-		{
-		  printf ("uh oh loop with tmp_entry");
-		  break;
-		}
-	      tmp_entry = tmp_entry->next;
-	    }
-	  tmp_entry->next = cur_entry;
-	}
+        {
+          tmp_entry = par_entry->child;
+          while (tmp_entry->next)
+            {
+              if (tmp_entry == tmp_entry->next)
+                {
+                  printf ("uh oh loop with tmp_entry");
+                  break;
+                }
+              tmp_entry = tmp_entry->next;
+            }
+          tmp_entry->next = cur_entry;
+        }
       list_cur = list_cur->next;
     }
 
@@ -1697,19 +1697,19 @@ void BM_bookmarksSort (List **bookmark_list)
     {
       tmp_entry = (Container *) HTHashtable_object (id_table, (char *) HTArray_data (keys)[i]);
       if (tmp_entry->parent == NULL)
-	{
-	  if (tmp_entry == root)
-	    continue;
-	  else if (tmp_entry->object || tmp_entry->child)
-	    /* promote to parent */
-	    Container_promoteEntry (&root, tmp_entry);
-	  else if (tmp_entry->child == NULL)
-	    /* destroy */
-	    {
-	      tmp_entry->next = NULL;
-	      ThreadItem_delete (tmp_entry);
-	    }
-	}
+        {
+          if (tmp_entry == root)
+            continue;
+          else if (tmp_entry->object || tmp_entry->child)
+            /* promote to parent */
+            Container_promoteEntry (&root, tmp_entry);
+          else if (tmp_entry->child == NULL)
+            /* destroy */
+            {
+              tmp_entry->next = NULL;
+              ThreadItem_delete (tmp_entry);
+            }
+        }
     }
   for (i = 0; i< HTArray_size (keys); i++)
     HT_FREE (HTArray_data(keys)[i]);
@@ -1740,7 +1740,7 @@ void BM_bookmarksSort (List **bookmark_list)
   /* AnnotThread_markOrphan (root); */
 
   /* copy the result to annot_list. The children of root are live replies.
-   The brothers of root have messages that have lost their in-reply-to parents */
+     The brothers of root have messages that have lost their in-reply-to parents */
   list_tmp = NULL;
   tmp_entry = root;
   while (tmp_entry)
@@ -1754,9 +1754,9 @@ void BM_bookmarksSort (List **bookmark_list)
 }
 
 /*------------------------------------------------------------
-   Annot_isSameURL
-   Returns TRUE if both URLs are the same, FALSE otherwise.
-   ------------------------------------------------------------*/
+  Annot_isSameURL
+  Returns TRUE if both URLs are the same, FALSE otherwise.
+  ------------------------------------------------------------*/
 ThotBool Annot_isSameURL (char *url1, char *url2)
 {
   char *tmp_url1;
@@ -1811,10 +1811,10 @@ ThotBool AnnotThread_link2ThreadDoc (Document doc)
     {
       thread_doc = AnnotThread_searchThreadDoc (DocumentURLs[doc]);
       if (thread_doc > 0)
-	{
-	  AnnotMetaData[doc].thread = &AnnotThread[thread_doc];
-	  result = TRUE;
-	}
+        {
+          AnnotMetaData[doc].thread = &AnnotThread[thread_doc];
+          result = TRUE;
+        }
     }
 #endif /*ANNOT_ON_ANNOT*/
   return result;
@@ -1848,7 +1848,7 @@ void AnnotFilter_free (List *annot_list, ThotBool (*del_function)(void *))
     {
       filter = (AnnotFilterData *) list_ptr->object;
       if (del_function && filter->object)
-	(*del_function) (filter->object);
+        (*del_function) (filter->object);
       TtaFreeMemory (filter);
       next = list_ptr->next;
       TtaFreeMemory (list_ptr);
@@ -1929,25 +1929,25 @@ void AnnotList_print (List *annot_list)
       annot = (AnnotMeta *) annot_ptr->object;
       printf("\n=====annotation meta data =========\n");  
       if (annot->source_url)
-	printf ("annot source URL = %s\n", annot->source_url);
+        printf ("annot source URL = %s\n", annot->source_url);
       if (annot->type)
-	printf ("annot type = %s\n", annot->type->name);
+        printf ("annot type = %s\n", annot->type->name);
       if (annot->xptr)
-	printf ("annot context = %s\n", annot->xptr);
+        printf ("annot context = %s\n", annot->xptr);
       if (annot->labf)
-	printf ("annot labf = %s, c1 = %d\n", annot->labf, annot->c1);
+        printf ("annot labf = %s, c1 = %d\n", annot->labf, annot->c1);
       if (annot->labl)
-	printf ("annot labl = %s, cl = %d\n", annot->labl, annot->cl);
+        printf ("annot labl = %s, cl = %d\n", annot->labl, annot->cl);
       if (annot->author) 
-	printf ("author is = %s\n", annot->author);
+        printf ("author is = %s\n", annot->author);
       if (annot->content_type)
-	printf ("content_type is = %s\n", annot->content_type);
+        printf ("content_type is = %s\n", annot->content_type);
       if (annot->content_length) 
-	printf ("content_length is = %s\n", annot->content_length);
+        printf ("content_length is = %s\n", annot->content_length);
       if (annot->body_url)
-	printf ("body url is = %s\n", annot->body_url);
+        printf ("body url is = %s\n", annot->body_url);
       if (annot->body)
-	  printf ("======= body =============\n%s", annot->body);
+        printf ("======= body =============\n%s", annot->body);
       printf ("=========================\n");
       annot_ptr = annot_ptr->next;
     }
@@ -1963,42 +1963,42 @@ static void  Annot_dumpCommonMeta (AnnotMeta *annot, FILE *fp)
 {
   char *tmp;
 #ifdef ANNOT_ON_ANNOT
-    Document source_doc;
-    Document annot_doc;
+  Document source_doc;
+  Document annot_doc;
 #endif /* ANNOT_ON_ANNOT */
 
 #ifdef ANNOT_ON_ANNOT
   if (annot->inReplyTo)
     {
       fprintf (fp, 
-	       "<r:type r:resource=\"%s\" />\n", THREAD_NS THREAD_REPLY_LOCAL_NAME);
+               "<r:type r:resource=\"%s\" />\n", THREAD_NS THREAD_REPLY_LOCAL_NAME);
     }
   else
 #endif /* ANNOT_ON_ANNOT */
     fprintf (fp, 
-	     "<r:type r:resource=\"%s\" />\n", ANNOTATION_CLASSNAME);
+             "<r:type r:resource=\"%s\" />\n", ANNOTATION_CLASSNAME);
   
   if (annot->type && annot->type != ANNOTATION_CLASS)
     fprintf (fp, 
-	     "<r:type r:resource=\"%s\" />\n",
-	     annot->type->name);
+             "<r:type r:resource=\"%s\" />\n",
+             annot->type->name);
   
 #ifdef ANNOT_ON_ANNOT
   /* replies don't have the annotates property */
   if (!annot->inReplyTo)
 #endif /* ANNOT_ON_ANNOT */
     fprintf (fp, 
-	     "<a:annotates r:resource=\"%s\" />\n",
-	     annot->source_url);
+             "<a:annotates r:resource=\"%s\" />\n",
+             annot->source_url);
   
   /* @@ JK: Removed because we're now using xptr */
 #if 0
   fprintf (fp,
-	   "<a:context>#id(%s|%d|%s|%d)</a:context>\n",
-	   annot->labf,
-	   annot->c1,
-	   annot->labl,
-	   annot->cl);
+           "<a:context>#id(%s|%d|%s|%d)</a:context>\n",
+           annot->labf,
+           annot->c1,
+           annot->labl,
+           annot->cl);
 #endif
   
 #ifdef ANNOT_ON_ANNOT
@@ -2011,49 +2011,49 @@ static void  Annot_dumpCommonMeta (AnnotMeta *annot, FILE *fp)
     annot->annot_url = NULL;
   if (source_doc != 0 && DocumentTypes[source_doc] == docAnnot)
     fprintf (fp,
-	     "<a:context>%s#%s</a:context>\n",
-	     DocumentURLs[source_doc],
-	     annot->xptr);
+             "<a:context>%s#%s</a:context>\n",
+             DocumentURLs[source_doc],
+             annot->xptr);
   else
 #endif /* ANNOT_ON_ANNOT */
     fprintf (fp,
-	     "<a:context>%s#%s</a:context>\n",
-	     annot->source_url,
-	     annot->xptr);
+             "<a:context>%s#%s</a:context>\n",
+             annot->source_url,
+             annot->xptr);
   
   if (annot->title)
     {
       tmp = annot->title;
       fprintf (fp,
-	       "<d:title>%s</d:title>\n",
-	       tmp);
+               "<d:title>%s</d:title>\n",
+               tmp);
     }
   
   if (annot->author)
     {
       tmp = annot->author;
       fprintf (fp,
-	       "<d:creator>%s</d:creator>\n",
-	       tmp);
+               "<d:creator>%s</d:creator>\n",
+               tmp);
     }
 
   fprintf (fp,
-	   "<a:created>%s</a:created>\n",
-	   annot->cdate);
+           "<a:created>%s</a:created>\n",
+           annot->cdate);
   
   fprintf (fp,
-	   "<d:date>%s</d:date>\n",
-	   annot->mdate);
+           "<d:date>%s</d:date>\n",
+           annot->mdate);
   
 #ifdef ANNOT_ON_ANNOT
   if (annot->inReplyTo)
     {
       fprintf (fp,
-	       "<t:root r:resource=\"%s\" />\n",
-	       annot->rootOfThread);
+               "<t:root r:resource=\"%s\" />\n",
+               annot->rootOfThread);
       fprintf (fp,
-	       "<t:inReplyTo r:resource=\"%s\" />\n",
-	       annot->inReplyTo);
+               "<t:inReplyTo r:resource=\"%s\" />\n",
+               annot->inReplyTo);
     }
 #endif /* ANNOT_ON_ANNOT */
 }
@@ -2075,19 +2075,19 @@ static void  Annot_dumpList (List *annot_list, FILE *fp)
       annot = (AnnotMeta *) annot_ptr->object;
      
       /* only save the local annotations; these either have a NULL URI
-	 (if they were newly created this session) or have a file: URI */
+         (if they were newly created this session) or have a file: URI */
       if (!annot->annot_url || IsFilePath(annot->annot_url))
-	{
-	  fprintf (fp, 
-		   "<r:Description>\n");
-	  Annot_dumpCommonMeta (annot, fp);
-	  fprintf (fp,
-		   "<a:body r:resource=\"%s\" />\n",
-		   annot->body_url);
+        {
+          fprintf (fp, 
+                   "<r:Description>\n");
+          Annot_dumpCommonMeta (annot, fp);
+          fprintf (fp,
+                   "<a:body r:resource=\"%s\" />\n",
+                   annot->body_url);
 	  
-	  fprintf (fp, 
-		   "</r:Description>\n");
-	}
+          fprintf (fp, 
+                   "</r:Description>\n");
+        }
       annot_ptr = annot_ptr->next;
     }
 }
@@ -2098,7 +2098,7 @@ static void  Annot_dumpList (List *annot_list, FILE *fp)
    of annot_list.
    ------------------------------------------------------------*/
 void AnnotList_writeIndex (char *indexFile, List *annot_list, 
-			   List *thread_list)
+                           List *thread_list)
 {
   FILE *fp;
 
@@ -2108,15 +2108,15 @@ void AnnotList_writeIndex (char *indexFile, List *annot_list,
   fp = TtaWriteOpen (indexFile);
   /* write the prologue */
   fprintf (fp,
-	   "<?xml version=\"1.0\" ?>\n" 
-	   "<r:RDF xmlns:r=\"" RDFMS_NS "\"\n"
-	   "xmlns:a=\"%s\"\n"
+           "<?xml version=\"1.0\" ?>\n" 
+           "<r:RDF xmlns:r=\"" RDFMS_NS "\"\n"
+           "xmlns:a=\"%s\"\n"
 #ifdef ANNOT_ON_ANNOT
-	   "xmlns:t=\"" THREAD_NS "\"\n"
+           "xmlns:t=\"" THREAD_NS "\"\n"
 #endif /* ANNOT_ON_ANNOT */
-	   "xmlns:http=\"" HTTP_NS "\"\n"
-	   "xmlns:d=\"" DC_NS "\">\n",
-	   ANNOT_NS);
+           "xmlns:http=\"" HTTP_NS "\"\n"
+           "xmlns:d=\"" DC_NS "\">\n",
+           ANNOT_NS);
   
   /* dump the standard annotations */
   Annot_dumpList (annot_list, fp);
@@ -2139,10 +2139,9 @@ void AnnotList_writeIndex (char *indexFile, List *annot_list,
    ------------------------------------------------------------*/
 char * ANNOT_PreparePostBody (Document doc)
 {
-  FILE *fp;
-  FILE *fp2;
+  FILE *fp, *fp2;
   char tmp_str[80];
-  char *rdf_tmpfile, *ptr;
+  char *rdf_tmpfile, *ptr, *ret;
   char *html_tmpfile;
   const char *content_type;
   ThotBool new_annotation;
@@ -2172,17 +2171,17 @@ char * ANNOT_PreparePostBody (Document doc)
   fp = TtaWriteOpen (rdf_tmpfile);
   /* write the prologue */
   fprintf (fp,
-	   "<?xml version=\"1.0\" ?>\n" 
-	   "<r:RDF xmlns:r=\"" RDFMS_NS "\"\n"
-	   "xmlns:a=\"%s\"\n"
+           "<?xml version=\"1.0\" ?>\n" 
+           "<r:RDF xmlns:r=\"" RDFMS_NS "\"\n"
+           "xmlns:a=\"%s\"\n"
 #ifdef ANNOT_ON_ANNOT
-	   /* @@@ jk: add an if so that we only add this NS 
-	      when dumping a reply */
-	   "xmlns:t=\"" THREAD_NS "\"\n"
+           /* @@@ jk: add an if so that we only add this NS 
+              when dumping a reply */
+           "xmlns:t=\"" THREAD_NS "\"\n"
 #endif /* ANNOT_ON_ANNOT */
-	   "xmlns:http=\"" HTTP_NS "\"\n"
-	   "xmlns:d=\"" DC_NS "\">\n",
-	   ANNOT_NS);
+           "xmlns:http=\"" HTTP_NS "\"\n"
+           "xmlns:d=\"" DC_NS "\">\n",
+           ANNOT_NS);
 
   /* beginning of the annotation's  metadata  */
   if (IsW3Path (DocumentURLs[doc]))
@@ -2208,41 +2207,43 @@ char * ANNOT_PreparePostBody (Document doc)
   if (new_annotation)
     {
       fprintf (fp,
-	       "<r:Description>\n");
+               "<r:Description>\n");
     }
   else
     {
       fprintf (fp,
-	       "<r:Description r:about=\"%s\">\n",
-	       DocumentURLs[doc]);
+               "<r:Description r:about=\"%s\">\n",
+               DocumentURLs[doc]);
     }
 
   fprintf (fp,
-	   "<http:ContentType>%s</http:ContentType>\n"
-	   "<http:ContentLength>%ld</http:ContentLength>\n"
-	   "<http:Body r:parseType=\"Literal\">\n",
-	   content_type,
-	   content_length);
+           "<http:ContentType>%s</http:ContentType>\n"
+           "<http:ContentLength>%ld</http:ContentLength>\n"
+           "<http:Body r:parseType=\"Literal\">\n",
+           content_type,
+           content_length);
 
- /* 
- ** insert the HTML body itself
- */
+  /* 
+  ** insert the HTML body itself
+  */
 
   fp2 = TtaReadOpen (html_tmpfile);
   if (fp2)
     {
       /* skip any prologue (to have a valid XML doc )*/
-      while (!feof(fp2)) {
-	fgets (tmp_str, 79, fp2);
-	if (strncmp(tmp_str, "<h", 2) == 0) /* looking for <html... */
-	  {
-	    break;
-	  }
-      }
-      while (!feof (fp2)) {
-	fprintf (fp, "  %s", tmp_str);
-	fgets (tmp_str, 79, fp2);
-      }
+      while (!feof(fp2))
+        {
+          ret = fgets (tmp_str, 79, fp2);
+          if (strncmp(tmp_str, "<h", 2) == 0) /* looking for <html... */
+            {
+              break;
+            }
+        }
+      while (!feof (fp2))
+        {
+          fprintf (fp, "  %s", tmp_str);
+          ret = fgets (tmp_str, 79, fp2);
+        }
       TtaReadClose (fp2);
     }
 
@@ -2251,11 +2252,11 @@ char * ANNOT_PreparePostBody (Document doc)
 
   /* finish writing the annotation */
   fprintf (fp, 
-	   "</http:Body>\n"
-	   "</r:Description>\n"
-	   "</a:body>\n"
-	   "</r:Description>\n"
-	   "</r:RDF>\n");
+           "</http:Body>\n"
+           "</r:Description>\n"
+           "</a:body>\n"
+           "</r:Description>\n"
+           "</r:RDF>\n");
 
   TtaWriteClose (fp);  
   return (rdf_tmpfile);
@@ -2291,16 +2292,16 @@ char *StrdupDate (void)
   /* @@ possible memory bug */
   strDate = (char *)TtaGetMemory (26);
   sprintf (strDate,
-	   "%04d-%02d-%02dT%02d:%02d:%02d%c%02d:%02d",
-	   localDate->tm_year+1900,
-	   localDate->tm_mon+1,
-	   localDate->tm_mday, 
+           "%04d-%02d-%02dT%02d:%02d:%02d%c%02d:%02d",
+           localDate->tm_year+1900,
+           localDate->tm_mon+1,
+           localDate->tm_mday, 
            localDate->tm_hour,
-	   localDate->tm_min,
-	   localDate->tm_sec,
-	   (UTCoffset > 0) ? '-' : '+',
-	   UTChourOffset,
-	   UTCminOffset);
+           localDate->tm_min,
+           localDate->tm_sec,
+           (UTCoffset > 0) ? '-' : '+',
+           UTChourOffset,
+           UTCminOffset);
   return (strDate);
 }
 
@@ -2331,12 +2332,12 @@ time_t StrDateToCalTime (char *strDate)
   memset (tzdata, 0, sizeof (tzdata));
 
   sscanf (strDate, "%04d-%02d-%02dT%02d:%02d%19s",
-	  &scanLocal.tm_year,
-	  &scanLocal.tm_mon,
-	  &scanLocal.tm_mday,
-	  &scanLocal.tm_hour,
-	  &scanLocal.tm_min,
-	  tzdata);
+          &scanLocal.tm_year,
+          &scanLocal.tm_mon,
+          &scanLocal.tm_mday,
+          &scanLocal.tm_hour,
+          &scanLocal.tm_min,
+          tzdata);
 
   scanLocal.tm_year -= 1900;
   scanLocal.tm_mon--;
@@ -2372,8 +2373,8 @@ time_t StrDateToCalTime (char *strDate)
       /* UTCoffset was initialized to +1 */
       tzdataP++;
       sscanf (tzdataP, "%02d:%02d",
-	      &UTChourOffset,
-	      &UTCminuteOffset);
+              &UTChourOffset,
+              &UTCminuteOffset);
       cal_date += UTCoffset * ((UTChourOffset * 60) + UTCminuteOffset) * 60;
       /* fall through */
 
@@ -2399,9 +2400,9 @@ time_t StrDateToCalTime (char *strDate)
  **************************************************/
 
 /*-----------------------------------------------------------------------
-   SearchAnnotation
-   Searches doc and returns the link element that points to annotDoc, or
-   NULL if it doesn't exist.
+  SearchAnnotation
+  Searches doc and returns the link element that points to annotDoc, or
+  NULL if it doesn't exist.
   -----------------------------------------------------------------------*/
 Element SearchAnnotation (Document doc, char *annotDoc)
 {
@@ -2417,24 +2418,24 @@ Element SearchAnnotation (Document doc, char *annotDoc)
 
   /* Search the anchor that points to the annotDoc */
   elCour = TtaSearchTypedElement (elType, SearchInTree, 
-				  TtaGetRootElement (doc));
+                                  TtaGetRootElement (doc));
   while (elCour != NULL) 
-  {
-    ancName = SearchAttributeInEl (doc, elCour, XLink_ATTR_id, "XLink");
-    if (ancName) 
-      {
-	if (!strcmp (ancName, annotDoc))
-	  break;
-	TtaFreeMemory (ancName);
-	ancName = NULL;
-      }
-    /* @@ JK: do we need to get the succesor? */
-    /* @@ RRS: apparently not.  TtaSearchTypedElement seems to start
-       with the successor.  When two annot (XLink) elements are in
-       a row, the GetSuccessor caused the second one to be skipped. */
-    /* elCour = TtaGetSuccessor (elCour); */
-    elCour = TtaSearchTypedElement (elType, SearchForward, elCour);
-  }
+    {
+      ancName = SearchAttributeInEl (doc, elCour, XLink_ATTR_id, "XLink");
+      if (ancName) 
+        {
+          if (!strcmp (ancName, annotDoc))
+            break;
+          TtaFreeMemory (ancName);
+          ancName = NULL;
+        }
+      /* @@ JK: do we need to get the succesor? */
+      /* @@ RRS: apparently not.  TtaSearchTypedElement seems to start
+         with the successor.  When two annot (XLink) elements are in
+         a row, the GetSuccessor caused the second one to be skipped. */
+      /* elCour = TtaGetSuccessor (elCour); */
+      elCour = TtaSearchTypedElement (elType, SearchForward, elCour);
+    }
 
   if (ancName)
     TtaFreeMemory (ancName);
@@ -2443,13 +2444,13 @@ Element SearchAnnotation (Document doc, char *annotDoc)
 }
 
 /*-----------------------------------------------------------------------
-   ReplaceLinkToAnnotation
-   Changes the annotation link pointing to oldAnnotURL so that it'll point
-   to newAnnotURL.
-   If no oldAnnotURL link is found, returns FALSE, otherwise returns TRUE.
+  ReplaceLinkToAnnotation
+  Changes the annotation link pointing to oldAnnotURL so that it'll point
+  to newAnnotURL.
+  If no oldAnnotURL link is found, returns FALSE, otherwise returns TRUE.
   -----------------------------------------------------------------------*/
 ThotBool ReplaceLinkToAnnotation (Document doc, char *annotName,
-				  char *newAnnotURL)
+                                  char *newAnnotURL)
 {
   Element anchor;
   ElementType elType;
@@ -2459,7 +2460,7 @@ ThotBool ReplaceLinkToAnnotation (Document doc, char *annotName,
   
   anchor = SearchAnnotation (doc, annotName);
   if (!anchor)
-      return FALSE;
+    return FALSE;
 
   elType = TtaGetElementType (anchor);
   attrType.AttrSSchema = GetXLinkSSchema (doc);
@@ -2473,9 +2474,9 @@ ThotBool ReplaceLinkToAnnotation (Document doc, char *annotName,
 }
 
 /*-----------------------------------------------------------------------
-   SearchElementInDoc
-   Returns the first element of type elTypeNum found in the document
-   or NULL if it doesn't exist.
+  SearchElementInDoc
+  Returns the first element of type elTypeNum found in the document
+  or NULL if it doesn't exist.
   -----------------------------------------------------------------------*/
 Element SearchElementInDoc (Document doc, int elTypeNum)
 {
@@ -2490,12 +2491,12 @@ Element SearchElementInDoc (Document doc, int elTypeNum)
 }
 
 /*-----------------------------------------------------------------------
-   SearchAttributeInEl (doc, el, attrTypeNum, schema)
-   Returns the value of attribute type attrTypeNum if it exists in the
-   document element or NULL otherwise.
+  SearchAttributeInEl (doc, el, attrTypeNum, schema)
+  Returns the value of attribute type attrTypeNum if it exists in the
+  document element or NULL otherwise.
   -----------------------------------------------------------------------*/
 char *SearchAttributeInEl (Document doc, Element el, int attrTypeNum, 
-			   char *schema)
+                           char *schema)
 {
   AttributeType  attrType;
   Attribute      attr;
@@ -2511,17 +2512,17 @@ char *SearchAttributeInEl (Document doc, Element el, int attrTypeNum,
   if (!attr)
     return NULL;
   else
-  {
-    length = TtaGetTextAttributeLength (attr);
-    text = (char *)TtaGetMemory (length + 1);
-    TtaGiveTextAttributeValue (attr, text, &length);
-    return text;
-  }
+    {
+      length = TtaGetTextAttributeLength (attr);
+      text = (char *)TtaGetMemory (length + 1);
+      TtaGiveTextAttributeValue (attr, text, &length);
+      return text;
+    }
 }
 
 /*-----------------------------------------------------------------------
-   SubstituteCharInString
-   Substitutes all occurences of old char with new char in string buffer
+  SubstituteCharInString
+  Substitutes all occurences of old char with new char in string buffer
   -----------------------------------------------------------------------*/
 void SubstituteCharInString (char *buffer, char old, char new_)
 {
@@ -2531,7 +2532,7 @@ void SubstituteCharInString (char *buffer, char old, char new_)
   while (*ptr)
     {
       if (*ptr == old)
-	*ptr = new_;
+        *ptr = new_;
       ptr++;
     }
 }
@@ -2613,33 +2614,33 @@ void GetServerName (char *url, char *server)
   char      *file;
 
   if (!url || IsFilePath (url))
-      strcpy (server, "localhost");
+    strcpy (server, "localhost");
   else
     {
       scratch_url = TtaStrdup (url);
       ExplodeURL (scratch_url, &protocol, &host, &dir, &file);
       strcpy (server, host ? host : "?");
       if (dir && dir[0])
-	{
-	  strcat (server, "/");
-	  strcat (server, dir);
-	}
+        {
+          strcat (server, "/");
+          strcat (server, dir);
+        }
       TtaFreeMemory (scratch_url);
       /* remove the query string */
       scratch_url = strrchr (server, '?');
       if (scratch_url)
-	*scratch_url = EOS;
+        *scratch_url = EOS;
     }
 }
 
 /*-----------------------------------------------------------------------
-   ANNOT_GetHTMLTitle
-   If doc is of type (X)HTML, returns the HTML title if it's not empty.
-   If doc is of type Annotation, returns the title of the annotation if
-   it's not empty.
-   Otherwise, returns the URL of the document.
-   The caller must free the returned string.
-   -----------------------------------------------------------------------*/
+  ANNOT_GetHTMLTitle
+  If doc is of type (X)HTML, returns the HTML title if it's not empty.
+  If doc is of type Annotation, returns the title of the annotation if
+  it's not empty.
+  Otherwise, returns the URL of the document.
+  The caller must free the returned string.
+  -----------------------------------------------------------------------*/
 char * ANNOT_GetHTMLTitle (Document doc)
 {
   Element          el;
@@ -2660,26 +2661,26 @@ char * ANNOT_GetHTMLTitle (Document doc)
       el = TtaSearchTypedElement (elType, SearchInTree, el);
       /* found a title */
       if (el)
-	{
-	  /* find the text content */
-	  el = TtaGetLastChild (el);
-	  /* with some content */
-	  if (el)
-	    {
-	      length = TtaGetTextLength (el) + 1;
-	      if (length > 1)
-		{
-		  title = (char *)TtaGetMemory (length);
-		  TtaGiveTextContent (el, (unsigned char *)title, &length, &lang);
-		  /* discard an empty title */
-		  if (title[0] == EOS)
-		    {
-		      TtaFreeMemory (title);
-		      title = NULL;
-		    }
-		}
-	    }
-	}
+        {
+          /* find the text content */
+          el = TtaGetLastChild (el);
+          /* with some content */
+          if (el)
+            {
+              length = TtaGetTextLength (el) + 1;
+              if (length > 1)
+                {
+                  title = (char *)TtaGetMemory (length);
+                  TtaGiveTextContent (el, (unsigned char *)title, &length, &lang);
+                  /* discard an empty title */
+                  if (title[0] == EOS)
+                    {
+                      TtaFreeMemory (title);
+                      title = NULL;
+                    }
+                }
+            }
+        }
     }
   else if (DocumentTypes[doc] == docAnnot)
     {
@@ -2690,37 +2691,37 @@ char * ANNOT_GetHTMLTitle (Document doc)
       el = TtaSearchTypedElement (elType, SearchInTree, el);
       /* found a title */
       if (el)
-	{
-	  /* find the text content */
-	  el = TtaGetLastChild (el);
-	  /* with some content */
-	  if (el)
-	    {
-	      length = TtaGetTextLength (el) + 1;
-	      if (length > 1)
-		{
-		  title = (char *)TtaGetMemory (length);
-		  TtaGiveTextContent (el, (unsigned char *)title, &length, &lang);
-		  /* discard an empty title */
-		  if (title[0] == EOS)
-		    {
-		      TtaFreeMemory (title);
-		      title = NULL;
-		    }
-		}
-	    }
-	}
+        {
+          /* find the text content */
+          el = TtaGetLastChild (el);
+          /* with some content */
+          if (el)
+            {
+              length = TtaGetTextLength (el) + 1;
+              if (length > 1)
+                {
+                  title = (char *)TtaGetMemory (length);
+                  TtaGiveTextContent (el, (unsigned char *)title, &length, &lang);
+                  /* discard an empty title */
+                  if (title[0] == EOS)
+                    {
+                      TtaFreeMemory (title);
+                      title = NULL;
+                    }
+                }
+            }
+        }
     }
   /* if we didn't get a title, use the document's URL instead */
   if (title == NULL)
-      title = TtaStrdup (DocumentURLs[doc]);
+    title = TtaStrdup (DocumentURLs[doc]);
   return (title);
 }
 
 /*-----------------------------------------------------------------------
-   ANNOT_SetType
-   Sets the annotation type of annotation document doc to the value of
-   type, if type is not empty.
+  ANNOT_SetType
+  Sets the annotation type of annotation document doc to the value of
+  type, if type is not empty.
   -----------------------------------------------------------------------*/
 void ANNOT_SetType (Document doc, RDFResourceP type)
 {
@@ -2735,7 +2736,7 @@ void ANNOT_SetType (Document doc, RDFResourceP type)
   if (!type)
     return;
 
-   /* only HTML documents can be annotated */
+  /* only HTML documents can be annotated */
   elType.ElSSchema = TtaGetDocumentSSchema (doc);
   elType.ElTypeNum = Annot_EL_RDFtype;
   /* find the type */
@@ -2748,7 +2749,7 @@ void ANNOT_SetType (Document doc, RDFResourceP type)
   el = TtaGetFirstChild (el);
   type_name = ANNOT_GetLabel(&annot_schema_list, type);
   TtaSetTextContent (el, (unsigned char *)type_name,
-		     TtaGetDefaultLanguage (), doc);
+                     TtaGetDefaultLanguage (), doc);
 
   /* update the metadata */
   if (!IsFilePath (DocumentURLs[doc])
@@ -2760,20 +2761,20 @@ void ANNOT_SetType (Document doc, RDFResourceP type)
   for (i = 1; i <= DocumentTableLength; i++)
     {
       /* find the annotation link in the source document that corresponds
-	 to this annotation */
+         to this annotation */
       annot = AnnotList_searchAnnot (AnnotMetaData[i].annotations,
-				     url, AM_BODY_URL);
+                                     url, AM_BODY_URL);
 #ifdef ANNOT_ON_ANNOT
       if (!annot && AnnotMetaData[i].thread)
-	{
-	  annot = AnnotList_searchAnnot (AnnotMetaData[i].thread->annotations,
-					 url, AM_BODY_URL);
-	  if (annot)
-	    in_thread = TRUE;
-	}
+        {
+          annot = AnnotList_searchAnnot (AnnotMetaData[i].thread->annotations,
+                                         url, AM_BODY_URL);
+          if (annot)
+            in_thread = TRUE;
+        }
 #endif /* ANNOT_ON_ANNOT */
       if (annot)
-	break;
+        break;
     }
 
   if (annot)
@@ -2781,8 +2782,8 @@ void ANNOT_SetType (Document doc, RDFResourceP type)
       annot->type = type;
 #ifdef ANNOT_ON_ANNOT
       if (in_thread)
-	/* update the reply type in the thread */
-	ANNOT_UpdateThreadItem (doc, annot, annot->body_url);
+        /* update the reply type in the thread */
+        ANNOT_UpdateThreadItem (doc, annot, annot->body_url);
 #endif /* ANNOT_ON_ANNOT */
     }
   if (url != DocumentURLs[doc])
@@ -2790,10 +2791,10 @@ void ANNOT_SetType (Document doc, RDFResourceP type)
 }
 
 /*-----------------------------------------------------------------------
-   ANNOT_MakeFileURL
-   Returns a dynamically allocated string containing the directory path
-   given in input, prefixed by the "file://" URL convention.
-   It's up to the caller to free the returned string.
+  ANNOT_MakeFileURL
+  Returns a dynamically allocated string containing the directory path
+  given in input, prefixed by the "file://" URL convention.
+  It's up to the caller to free the returned string.
   -----------------------------------------------------------------------*/
 char * ANNOT_MakeFileURL (const char *path)
 {
@@ -2805,45 +2806,45 @@ char * ANNOT_MakeFileURL (const char *path)
 #if 0
   /* @@ add the file:// (why it wasn't there before? */
   url = TtaGetMemory (strlen (path)
-		      + sizeof ("file://")
-		      + 1);
+                      + sizeof ("file://")
+                      + 1);
   if (url)
     sprintf (url, "file://%s", path);
   return url;
 #endif
 }
 
- /*-----------------------------------------------------------------------
-   ANNOT_CanAnnotate
-   Returns TRUE if it's possible to annotate a given document, FALSE
-   otherwise.
+/*-----------------------------------------------------------------------
+  ANNOT_CanAnnotate
+  Returns TRUE if it's possible to annotate a given document, FALSE
+  otherwise.
   -----------------------------------------------------------------------*/
 ThotBool ANNOT_CanAnnotate (Document doc)
 {
- DocumentType docType;
- ThotBool result;
+  DocumentType docType;
+  ThotBool result;
 
- docType = DocumentTypes[doc];
+  docType = DocumentTypes[doc];
 
- switch (docType) 
-   {
-   case docText:
-   case docImage:
-   case docSource:
-   case docCSS:
-   case docLog:
+  switch (docType) 
+    {
+    case docText:
+    case docImage:
+    case docSource:
+    case docCSS:
+    case docLog:
 #ifndef ANNOT_ON_ANNOT
-   case docAnnot:
+    case docAnnot:
 #endif
-     result = FALSE;
-     break;
+      result = FALSE;
+      break;
 
-   default:
-     result = TRUE;
-     break;
-   }
+    default:
+      result = TRUE;
+      break;
+    }
 
- return result;
+  return result;
 }
 
 /*-----------------------------------------------------------------------
@@ -2867,7 +2868,7 @@ Element ANNOT_GetHTMLRoot (Document doc, ThotBool getFirstChild)
       elType.ElTypeNum = Annot_EL_Body;
       el = TtaSearchTypedElement (elType, SearchInTree, el);
       if (getFirstChild)
-	el = TtaGetFirstChild (el);
+        el = TtaGetFirstChild (el);
     }
   else 
     el = NULL;
@@ -2940,33 +2941,33 @@ void ANNOT_CreateBodyTree (Document doc, DocumentType bodyType)
       body = TtaSearchTypedElement (elType, SearchInTree, el);
       /* body = TtaGetLastChild (el); */
       if (bodyType == docSVG)
-	{
-	  elType.ElSSchema = GetSVGSSchema (doc);
-	  elType.ElTypeNum = SVG_EL_SVG;
-	  ns_uri = SVG_URI;
-	}
+        {
+          elType.ElSSchema = GetSVGSSchema (doc);
+          elType.ElTypeNum = SVG_EL_SVG;
+          ns_uri = SVG_URI;
+        }
       else if (bodyType == docMath)
-	{
-	  elType.ElSSchema = GetMathMLSSchema (doc);
-	  elType.ElTypeNum = MathML_EL_MathML;
-	  ns_uri = MathML_URI;
-	}
+        {
+          elType.ElSSchema = GetMathMLSSchema (doc);
+          elType.ElTypeNum = MathML_EL_MathML;
+          ns_uri = MathML_URI;
+        }
       else if (bodyType == docText)
-	{
-	  elType.ElSSchema =  GetTextSSchema (doc);
-	  elType.ElTypeNum = TextFile_EL_TextFile;
-	}
+        {
+          elType.ElSSchema =  GetTextSSchema (doc);
+          elType.ElTypeNum = TextFile_EL_TextFile;
+        }
       else if (bodyType == docXml)
-	{
-	  elType.ElSSchema = GetGenericXMLSSchema ("XML", doc);
-	  elType.ElTypeNum = XML_EL_XML;
-	}
+        {
+          elType.ElSSchema = GetGenericXMLSSchema ("XML", doc);
+          elType.ElTypeNum = XML_EL_XML;
+        }
       else /* consider the default case to be HTML */
-	{
-	  elType.ElSSchema = GetXHTMLSSchema (doc);
-	  elType.ElTypeNum = HTML_EL_HTML;
-	  ns_uri = XHTML_URI;
-	}
+        {
+          elType.ElSSchema = GetXHTMLSSchema (doc);
+          elType.ElTypeNum = HTML_EL_HTML;
+          ns_uri = XHTML_URI;
+        }
       el = TtaNewTree (doc, elType, "");
       result = TtaCanInsertFirstChild (elType, body, doc);
       oldStructureChecking = TtaGetStructureChecking (doc);
@@ -2974,7 +2975,7 @@ void ANNOT_CreateBodyTree (Document doc, DocumentType bodyType)
       TtaInsertFirstChild (&el, body, doc);
       /* set the namespace declaration */
       if (ns_uri)
-	TtaSetANamespaceDeclaration (doc, el, NULL, ns_uri);
+        TtaSetANamespaceDeclaration (doc, el, NULL, ns_uri);
       /* set attribute dir on the Document element */
       AddDirAttributeToDocEl (doc);
       TtaSetStructureChecking (oldStructureChecking, doc);
@@ -3010,11 +3011,11 @@ void WWWToLocal (char *url)
       free_tmp_url = TRUE;
       tmp = tmp_url;
       while (*tmp)
-	{
-	  if (*tmp == '\\')
-	    *tmp = '/';
-	  tmp++;
-	}
+        {
+          if (*tmp == '\\')
+            *tmp = '/';
+          tmp++;
+        }
     }
   else
     {
@@ -3032,7 +3033,7 @@ void WWWToLocal (char *url)
     TtaFreeMemory (tmp_url);
   TtaFreeMemory (esc_url);
 
-   /* @@ JK: A patch for Windows */
+  /* @@ JK: A patch for Windows */
   if (tmp[0] == DIR_SEP && tmp[1] == DIR_SEP && tmp[3] ==':')
     strcpy (url, tmp + 2);
   else
@@ -3123,11 +3124,11 @@ ThotBool Annot_IsReplyTo (Document doc_annot)
   else
     annot_url = ANNOT_MakeFileURL (DocumentURLs[doc_annot]);
   annot = AnnotList_searchAnnot (AnnotMetaData[source_doc].annotations,
-				 annot_url, AM_BODY_URL);
+                                 annot_url, AM_BODY_URL);
 
   if (!annot && AnnotMetaData[source_doc].thread)
     annot = AnnotList_searchAnnot (AnnotMetaData[source_doc].thread->annotations,
-				   annot_url, AM_BODY_URL);
+                                   annot_url, AM_BODY_URL);
 
   if (annot_url != DocumentURLs[doc_annot])
     TtaFreeMemory (annot_url);
@@ -3159,10 +3160,10 @@ Document Annot_IsDocumentLoaded (Document annot_doc, char *source_annot_url, cha
   for (doc = 1; doc < DocumentTableLength; doc++)
     {
       if (!DocumentURLs[doc] || DocumentTypes[doc] != docAnnot || doc == annot_doc)
-	continue;
+        continue;
       annot_url = AnnotList_searchAnnotURL (doc, DocumentURLs[annot_doc]);
       if (annot_url)
-	break;
+        break;
     }
 
   if (!annot_url)
@@ -3206,15 +3207,15 @@ void ANNOT_bodyType_set (Document annot_doc, DocumentType bodyType)
   else /* we don't know the source document, we scan everywhere to find it */
     {
       for (i=1; i< MAX_DOCUMENTS; i++)
-	{
-	  if (i == annot_doc)
-	    continue;
-	  if (!DocumentMeta[i])
-	    continue;
-	  annot = GetMetaData (i, annot_doc);
-	  if (annot)
-	    break;
-	}
+        {
+          if (i == annot_doc)
+            continue;
+          if (!DocumentMeta[i])
+            continue;
+          annot = GetMetaData (i, annot_doc);
+          if (annot)
+            break;
+        }
     }
 
   if (annot)

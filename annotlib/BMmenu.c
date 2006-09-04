@@ -423,8 +423,8 @@ static void BookmarkMenuSelect_cbf (ThotWidget w, ThotBool state, void *cdata)
   ----------------------------------------------------------------------*/
 static void BookmarkMenuCallbackDialog (int ref, int typedata, char *data)
 {
-  int                 val;
-  ThotBool            result;
+  int ptr_t            val;
+  ThotBool             result;
   List                *parent_url_list;
 
   if (ref == -1)
@@ -435,7 +435,7 @@ static void BookmarkMenuCallbackDialog (int ref, int typedata, char *data)
   else
     {
       /* has the user changed the options? */
-      val = (int) data;
+      val = (intptr_t) data;
       switch (ref - BookmarkBase)
 	{
 	case BookmarkMenu:
@@ -790,7 +790,7 @@ static void TopicMenuSelect_cbf (ThotWidget w, ThotBool state, void *cdata)
   ----------------------------------------------------------------------*/
 static void TopicMenuCallbackDialog (int ref, int typedata, char *data)
 {
-  int                 val;
+  intptr_t            val;
   int                 result;
 
   if (ref == -1)
@@ -801,7 +801,7 @@ static void TopicMenuCallbackDialog (int ref, int typedata, char *data)
   else
     {
       /* has the user changed the options? */
-      val = (int) data;
+      val = (intptr_t) data;
       switch (ref - TopicBase)
 	{
 	case TopicMenu:
@@ -1065,7 +1065,7 @@ void BM_TopicMenu (Document doc, View view, int ref, BookmarkP bookmark)
   ----------------------------------------------------------------------*/
 static void TopicURLCallbackDialog (int ref, int typedata, char *data)
 {
-  int                 val;
+  intptr_t            val;
   char                tempname[MAX_LENGTH];
   char                tempfile[MAX_LENGTH];
   if (ref == -1)
@@ -1076,7 +1076,7 @@ static void TopicURLCallbackDialog (int ref, int typedata, char *data)
   else
     {
       /* has the user changed the options? */
-      val = (int) data;
+      val = (intptr_t) data;
       switch (ref - TopicURLBase)
 	{
 	case TopicURLMenu:
