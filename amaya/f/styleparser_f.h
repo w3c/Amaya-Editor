@@ -19,6 +19,12 @@ extern void ParseCSSImageCallback ( Document doc,
                                     void *extra,
                                     ThotBool isnew );
 extern char *GetCSSBackgroundURL ( char *cssRule );
+extern void ParseCSSRule ( Element element,
+                           PSchema tsch,
+                           PresentationContext ctxt,
+                           char *cssRule,
+                           CSSInfoPtr css,
+                           ThotBool isHTML );
 extern void ParseHTMLSpecificStyle ( Element el,
                                      char *cssRule,
                                      Document doc,
@@ -82,6 +88,12 @@ extern void ParseCSSImageCallback ( Document doc,
                                       void *extra,
                                       ThotBool isnew );
 extern char *GetCSSBackgroundURL ( char *cssRule );
+extern void ParseCSSRule ( Element element,
+                             PSchema tsch,
+                             PresentationContext ctxt,
+                             char *cssRule,
+                             CSSInfoPtr css,
+                             ThotBool isHTML );
 extern void ParseHTMLSpecificStyle ( Element el,
                                        char *cssRule,
                                        Document doc,

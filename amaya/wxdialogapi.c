@@ -7,12 +7,15 @@
 
 #define THOT_EXPORT extern
 #include "amaya.h"
+#include "css.h"
+#include "style.h"
 
 #include "appdialogue_wx.h"
 #include "message_wx.h"
 #include "wxdialog/file_filters.h"
 #include "init_f.h"
 #include "HTMLsave_f.h"
+#include "styleparser_f.h"
 
 #ifdef _WX
   #include "wxdialog/NewTemplateDocDlgWX.h"
@@ -41,11 +44,71 @@
 
 #endif /* _WX */
 
+static StyleDlgWX *Style_dlg = NULL;
+
 // this global is used to remember the last filter when using a filebrowser
 int g_Last_used_filter = 0;
 int img_Last_used_filter = 0;
 int obj_Last_used_filter = 0;
 int link_Last_used_filter = 0;
+
+/*----------------------------------------------------------------------
+  ParseStyleDlgValues: parse a CSS Style string to update the Style
+  dialog
+  ----------------------------------------------------------------------*/
+void  ParseStyleDlgValues (void *style_widget, char *cssRule)
+{
+  Document        doc;
+  GenericContext  ctxt;
+
+  Style_dlg = (StyleDlgWX *)style_widget;
+  /* store the current line for eventually reported errors */
+  /* create the context of the Specific presentation driver */
+  ctxt = TtaGetGenericStyleContext (0);
+  if (ctxt == NULL)
+    return;
+  ctxt->type = 0;
+  ctxt->cssSpecificity = 0;
+  ctxt->cssLine = 0;
+  ctxt->destroy = FALSE;
+  doc = TtaGetSelectedDocument();
+  if (doc)
+    ctxt->doc = doc;
+  /* first use of the context */
+  ctxt->uses = 1;
+  DoDialog = TRUE; /* update the CSS dialog */
+  /* Call the parser */
+  ParseCSSRule (NULL, NULL, (PresentationContext) ctxt, cssRule, NULL, TRUE);
+  DoDialog = FALSE;
+  /* check if the context can be freed */
+  ctxt->uses -= 1;
+  if (ctxt->uses == 0)
+    /* no image loading */
+    TtaFreeMemory(ctxt);
+  Style_dlg = NULL;
+}
+
+/*----------------------------------------------------------------------
+  DisplayStyleValue: update the property in Style dialog
+  ----------------------------------------------------------------------*/
+void  DisplayStyleValue (char *property, char *start_value, char *end_value)
+{
+#ifdef _WX
+  char c = EOS;
+
+  if (Style_dlg)
+    {
+      if (end_value)
+        {
+          c = *end_value;
+          *end_value = EOS;
+        }
+      Style_dlg->SetValue (property, start_value);
+      if (end_value)
+        *end_value = c;
+    }
+#endif /* _WX */
+}
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/

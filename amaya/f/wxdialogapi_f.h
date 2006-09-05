@@ -6,6 +6,11 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void ParseStyleDlgValues ( void *style_widget,
+                                  char *cssRule );
+extern void DisplayStyleValue ( char *property,
+                                char *start_value,
+                                char *end_value );
 extern ThotBool CreateInitConfirmDlgWX ( int ref,
                                          ThotWindow parent,
                                          char *title,
@@ -147,6 +152,11 @@ extern ThotBool CreateNumDlgWX ( int ref,
 
 #else /* __STDC__ */
 
+extern void ParseStyleDlgValues ( void *style_widget,
+                                    char *cssRule );
+extern void DisplayStyleValue ( char *property,
+                                  char *start_value,
+                                  char *end_value );
 extern ThotBool CreateInitConfirmDlgWX ( int ref,
                                            ThotWindow parent,
                                            char *title,

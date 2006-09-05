@@ -17,6 +17,7 @@
 #include "StyleDlgWX.h"
 #include "AHTURLTools_f.h"
 #include "EDITstyle_f.h"
+#include "wxdialogapi_f.h"
 
 static char *Buffer = NULL; // parsed buffer
 static char *Extra = NULL; // not parsed buffer
@@ -98,22 +99,14 @@ BEGIN_EVENT_TABLE(StyleDlgWX, AmayaDialog)
 
 
 /*----------------------------------------------------------------------
-  property is TRUE when the value includes the property
   ----------------------------------------------------------------------*/
-static char *SetFontFamily (wxComboBox *combo, char *value, bool property)
+static void SetComboValue (wxComboBox *combo, char *value)
 {
   char *ptr1, *ptr2, c = EOS;
 
   if (value == NULL)
-    return value;
+    return;
   ptr1 = value;
-  if (property)
-    {
-      while (*ptr1 != EOS && *ptr1 != ':')
-        ptr1++;
-      if (*ptr1 == ':')
-        ptr1++;
-    }
   while (*ptr1 == SPACE)
     ptr1++;
   ptr2 = ptr1;
@@ -123,65 +116,260 @@ static char *SetFontFamily (wxComboBox *combo, char *value, bool property)
   *ptr2 = EOS;
   combo->SetValue(TtaConvMessageToWX( ptr1 ));
   *ptr2 = c;
-  return ptr2;
 }
 
 /*----------------------------------------------------------------------
   property is TRUE when the value includes the property
   ----------------------------------------------------------------------*/
-static char *SetComboValue (wxComboBox *combo, char *value, bool property)
+static void SetChoiceValue (wxChoice *choice, char *value)
 {
   char *ptr1, *ptr2, c = EOS;
 
   if (value == NULL)
-    return value;
+    return;
   ptr1 = value;
-  if (property)
-    {
-      while (*ptr1 != EOS && *ptr1 != ':')
-        ptr1++;
-      if (*ptr1 == ':')
-        ptr1++;
-    }
   while (*ptr1 == SPACE)
     ptr1++;
   ptr2 = ptr1;
-  while (*ptr2 != EOS && *ptr2 != SPACE && *ptr2 != ';')
-    ptr2++;
-  c = *ptr2;
-  *ptr2 = EOS;
-  combo->SetValue(TtaConvMessageToWX( ptr1 ));
-  *ptr2 = c;
-  return ptr2;
-}
-
-/*----------------------------------------------------------------------
-  property is TRUE when the value includes the property
-  ----------------------------------------------------------------------*/
-static char *SetChoiceValue (wxChoice *choice, char *value, bool property)
-{
-  char *ptr1, *ptr2, c = EOS;
-
-  if (value == NULL)
-    return value;
-  ptr1 = value;
-  if (property)
-    {
-      while (*ptr1 != EOS && *ptr1 != ':')
-        ptr1++;
-      if (*ptr1 == ':')
-        ptr1++;
-    }
-  while (*ptr1 == SPACE)
-    ptr1++;
-  ptr2 = ptr1;
-  while (*ptr2 != EOS && *ptr2 != SPACE && *ptr2 != ';')
+  while (*ptr2 != EOS && *ptr2 != ';')
     ptr2++;
   c = *ptr2;
   *ptr2 = EOS;
   choice->SetStringSelection(TtaConvMessageToWX( ptr1 ));
   *ptr2 = c;
-  return ptr2;
+}
+
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void StyleDlgWX::SetValue (char *property, char *value)
+{
+  ThotBool notfound = FALSE;
+
+  if (*property == 'b')
+    {
+      if (!strncmp (property, "background-color", 16))
+        SetComboValue (XRCCTRL(*this, "wxID_COMBO_BACKCOLOR", wxComboBox), value);
+      else if (!strncmp (property, "background-image", 16))
+        SetComboValue (XRCCTRL(*this, "wxID_BGIMAGE", wxComboBox), value);
+      else if (!strncmp (property, "background-repeat", 17))
+        {
+          BG_repeat = 0;
+          if (!strncmp (value, "no-repeat", 9))
+            {
+              BG_repeat = 1;
+              XRCCTRL(*this, "wxID_BUTTON_NOREPEAT", wxBitmapButton)->SetBackgroundColour( m_OnColour );
+              XRCCTRL(*this, "wxID_BUTTON_XREPEAT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+              XRCCTRL(*this, "wxID_BUTTON_YREPEAT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+              XRCCTRL(*this, "wxID_BUTTON_REPEAT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+            }
+          else if (!strncmp (value, "repeat-x", 8))
+            {
+              BG_repeat = 2;
+              XRCCTRL(*this, "wxID_BUTTON_NOREPEAT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+              XRCCTRL(*this, "wxID_BUTTON_XREPEAT", wxBitmapButton)->SetBackgroundColour( m_OnColour );
+              XRCCTRL(*this, "wxID_BUTTON_YREPEAT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+              XRCCTRL(*this, "wxID_BUTTON_REPEAT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+            }
+          else if (!strncmp (value, "repeat-y", 8))
+            {
+              BG_repeat = 3;
+              XRCCTRL(*this, "wxID_BUTTON_NOREPEAT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+              XRCCTRL(*this, "wxID_BUTTON_XREPEAT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+              XRCCTRL(*this, "wxID_BUTTON_YREPEAT", wxBitmapButton)->SetBackgroundColour( m_OnColour );
+              XRCCTRL(*this, "wxID_BUTTON_REPEAT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+            }
+          else if (!strncmp (value, "repeat", 6))
+            {
+              BG_repeat = 4;
+              XRCCTRL(*this, "wxID_BUTTON_NOREPEAT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+              XRCCTRL(*this, "wxID_BUTTON_XREPEAT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+              XRCCTRL(*this, "wxID_BUTTON_YREPEAT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+              XRCCTRL(*this, "wxID_BUTTON_REPEAT", wxBitmapButton)->SetBackgroundColour( m_OnColour );
+            }
+        }
+      else if (!strncmp (property, "background-attachment", 21))
+        SetChoiceValue (XRCCTRL(*this, "wxID_CHOICE_BGATTACH", wxChoice), value);
+      else if (!strncmp (property, "background-positionH", 20))
+          SetChoiceValue (XRCCTRL(*this, "wxID_COMBO_BGHPOS", wxChoice), value);
+      else if (!strncmp (property, "background-positionV", 20))
+          SetChoiceValue (XRCCTRL(*this, "wxID_COMBO_BGVPOS", wxChoice), value);
+      else if (!strncmp (property, "border-top-width", 16))
+        SetComboValue (XRCCTRL(*this, "wxID_COMBO_BTOP", wxComboBox), value);
+      else if (!strncmp (property, "border-right-width", 18))
+        SetComboValue (XRCCTRL(*this, "wxID_COMBO_BRIGHT", wxComboBox), value);
+      else if (!strncmp (property, "border-bottom-width", 19))
+        SetComboValue (XRCCTRL(*this, "wxID_COMBO_BBOTTOM", wxComboBox), value);
+      else if (!strncmp (property, "border-left-width", 17))
+        SetComboValue (XRCCTRL(*this, "wxID_COMBO_BLEFT", wxComboBox), value);
+      else if (!strncmp (property, "border-width", 12))
+        SetComboValue (XRCCTRL(*this, "wxID_COMBO_B", wxComboBox), value);
+      else if (!strncmp (property, "border-top-color", 16))
+        SetComboValue (XRCCTRL(*this, "wxID_COMBO_T_COLOR", wxComboBox), value);
+      else if (!strncmp (property, "border-right-color", 18))
+        SetComboValue (XRCCTRL(*this, "wxID_COMBO_R_COLOR", wxComboBox), value);
+      else if (!strncmp (property, "border-bottom-color", 19))
+        SetComboValue (XRCCTRL(*this, "wxID_COMBO_B_COLOR", wxComboBox), value);
+      else if (!strncmp (property, "border-left-color", 17))
+        SetComboValue (XRCCTRL(*this, "wxID_COMBO_L_COLOR", wxComboBox), value);
+      else if (!strncmp (property, "border-color", 12))
+        SetComboValue (XRCCTRL(*this, "wxID_COMBO_BORDER_COLOR", wxComboBox), value);
+      else if (!strncmp (property, "border-top-style", 16))
+        SetChoiceValue (XRCCTRL(*this, "wxID_CHOICE_T_STYLE", wxChoice), value);
+      else if (!strncmp (property, "border-right-style", 18))
+        SetChoiceValue (XRCCTRL(*this, "wxID_CHOICE_R_STYLE", wxChoice), value);
+      else if (!strncmp (property, "border-bottom-style", 19))
+        SetChoiceValue (XRCCTRL(*this, "wxID_CHOICE_B_STYLE", wxChoice), value);
+      else if (!strncmp (property, "border-left-style", 17))
+        SetChoiceValue (XRCCTRL(*this, "wxID_CHOICE_L_STYLE", wxChoice), value);
+      else if (!strncmp (property, "border-style", 12))
+        SetChoiceValue (XRCCTRL(*this, "wxID_CHOICE_BORDER_STYLE", wxChoice), value);
+      else if (!strncmp (property, "bottom", 6))
+        SetComboValue (XRCCTRL(*this, "wxID_COMBO_BOTTOM", wxComboBox), value);
+      else
+        notfound = TRUE;
+    }
+  else if (*property == 'c')
+    {
+      if (!strncmp (property, "clear", 5))
+        SetChoiceValue (XRCCTRL(*this, "wxID_CHOICE_CLEAR", wxChoice), value);
+      else if (!strncmp (property, "color", 5 ))
+        SetComboValue (XRCCTRL(*this, "wxID_COMBO_TEXTCOLOR", wxComboBox), value);
+      else
+        notfound = TRUE;
+    }
+  else if (*property == 'd')
+    {
+      if (!strncmp (property, "display", 7))
+        SetChoiceValue (XRCCTRL(*this, "wxID_CHOICE_DISPLAY", wxChoice), value);
+      else
+        notfound = TRUE;
+    }
+  else if (*property == 'f')
+    {
+      if (!strncmp (property, "float", 5))
+        SetChoiceValue (XRCCTRL(*this, "wxID_CHOICE_FLOAT", wxChoice), value);
+      else if (!strncmp (property, "font-family", 11))
+        SetComboValue (XRCCTRL(*this, "wxID_COMBOBOX_FAMILY", wxComboBox), value);
+      else if (!strncmp (property, "font-style", 10))
+        SetChoiceValue (XRCCTRL(*this, "wxID_CHOICE_STYLE", wxChoice), value);
+      else if (!strncmp (property, "font-variant", 12))
+        SetChoiceValue (XRCCTRL(*this, "wxID_CHOICE_VARIANT", wxChoice), value);
+      else if (!strncmp (property, "font-weight", 11))
+        SetChoiceValue (XRCCTRL(*this, "wxID_CHOICE_WEIGHT", wxChoice), value);
+      else if (!strncmp (property, "font-size", 9))
+        SetComboValue (XRCCTRL(*this, "wxID_COMBO_SIZE", wxComboBox), value);
+      else
+        notfound = TRUE;
+    }
+  else if (*property == 'h')
+    {
+      if (!strncmp (property, "height", 6))
+        SetComboValue (XRCCTRL(*this, "wxID_COMBO_HEIGHT", wxComboBox), value);
+      else
+        notfound = TRUE;
+    }
+  else if (*property == 'l')
+    {
+      if (!strncmp (property, "left", 4))
+        SetComboValue (XRCCTRL(*this, "wxID_COMBO_LEFT", wxComboBox), value);
+      else if (!strncmp (property, "letter-spacing", 14))
+        SetComboValue (XRCCTRL(*this, "wxID_COMBO_LETTER", wxComboBox), value);
+      else if (!strncmp (property, "line-height", 11))
+        SetComboValue (XRCCTRL(*this, "wxID_COMBO_LINE", wxComboBox), value);
+      else if (!strncmp (property, "list-style-type", 15))
+        SetChoiceValue (XRCCTRL(*this, "wxID_CHOICE_LISTSTYLE", wxChoice), value);
+      else if (!strncmp (property, "list-style-image", 16))
+        SetComboValue (XRCCTRL(*this, "wxID_LIST_IMAGE", wxComboBox), value);
+      else if (!strncmp (property, "list-style-position", 19))
+        SetChoiceValue (XRCCTRL(*this, "wxID_CHOICE_LISTPOSITION", wxChoice), value);
+      else
+        notfound = TRUE;
+    }
+  else if (*property == 'm')
+    {
+      if (!strncmp (property, "margin-bottom", 13))
+        SetComboValue (XRCCTRL(*this, "wxID_COMBO_MBOTTOM", wxComboBox), value);
+      else if (!strncmp (property, "margin-top", 10))
+        SetComboValue (XRCCTRL(*this, "wxID_COMBO_MTOP", wxComboBox), value);
+      else if (!strncmp (property, "margin-right", 12))
+        SetComboValue (XRCCTRL(*this, "wxID_COMBO_MRIGHT", wxComboBox), value);
+      else if (!strncmp (property, "margin-left", 11))
+        SetComboValue (XRCCTRL(*this, "wxID_COMBO_MLEFT", wxComboBox), value);
+      else if (!strncmp (property, "margin", 6))
+        SetComboValue (XRCCTRL(*this, "wxID_COMBO_MARGIN", wxComboBox), value);
+      else
+        notfound = TRUE;
+    }
+  else if (*property == 'p')
+    {
+      if (!strncmp (property, "padding-top", 11))
+        SetComboValue (XRCCTRL(*this, "wxID_COMBO_PTOP", wxComboBox), value);
+      else if (!strncmp (property, "padding-right", 13))
+        SetComboValue (XRCCTRL(*this, "wxID_COMBO_PRIGHT", wxComboBox), value);
+      else if (!strncmp (property, "padding-bottom", 14))
+        SetComboValue (XRCCTRL(*this, "wxID_COMBO_PBOTTOM", wxComboBox), value);
+      else if (!strncmp (property, "padding-left", 12))
+        SetComboValue (XRCCTRL(*this, "wxID_COMBO_PLEFT", wxComboBox), value);
+      else if (!strncmp (property, "padding", 7))
+        SetComboValue (XRCCTRL(*this, "wxID_COMBO_PADDING", wxComboBox), value);
+      else if (!strncmp (property, "position", 8))
+        SetChoiceValue (XRCCTRL(*this, "wxID_CHOICE_POSITION", wxChoice), value);
+      else
+        notfound = TRUE;
+    }
+  else if (*property == 'r')
+    {
+      if (!strncmp (property, "right", 5))
+        SetComboValue (XRCCTRL(*this, "wxID_COMBO_RIGHT", wxComboBox), value);
+      else
+        notfound = TRUE;
+    }
+  else if (*property == 't')
+    {
+      if (!strncmp (property, "text-align", 10))
+        SetChoiceValue (XRCCTRL(*this, "wxID_CHOICE_ALIGN", wxChoice), value);
+      else if (!strncmp (property, "text-indent", 11))
+        SetComboValue (XRCCTRL(*this, "wxID_COMBO_INDENT", wxComboBox), value);
+      else if (!strncmp (property, "text-decoration", 15))
+        SetChoiceValue (XRCCTRL(*this, "wxID_CHOICE_DECORATION", wxChoice), value);
+      else if (!strncmp (property, "text-transform", 14))
+        SetChoiceValue (XRCCTRL(*this, "wxID_CHOICE_TRANSFORM", wxChoice), value);
+      else if (!strncmp (property, "top", 3))
+        SetComboValue (XRCCTRL(*this, "wxID_COMBO_TOP", wxComboBox), value);
+      else
+        notfound = TRUE;
+    }
+  else if (*property == 'v')
+    {
+      if (!strncmp (property, "vertical-align", 14))
+        SetComboValue (XRCCTRL(*this, "wxID_COMBO_VALIGN", wxComboBox), value);
+      else if (!strncmp (property, "visibility", 10))
+        SetChoiceValue (XRCCTRL(*this, "wxID_CHOICE_VISIBILITY", wxChoice), value);
+      else
+        notfound = TRUE;
+    }
+  else if (*property == 'w')
+    {
+      if (!strncmp (property, "white-space", 11))
+        SetChoiceValue (XRCCTRL(*this, "wxID_CHOICE_WHITESPACE", wxChoice), value);
+      else if (!strncmp (property, "width", 5))
+        SetComboValue (XRCCTRL(*this, "wxID_COMBO_WIDTH", wxComboBox), value);
+      else if (!strncmp (property, "word-spacing", 12))
+        SetComboValue (XRCCTRL(*this, "wxID_COMBO_WORD", wxComboBox), value);
+      else
+        notfound = TRUE;
+    }
+  else
+    notfound = TRUE;
+  if (notfound)
+    {
+      // keep the current substring
+      strcat (Extra, property);
+      strcat (Extra, ": ");
+      strcat (Extra, value);
+      strcat (Extra, "; ");
+    }
 }
 
 
@@ -189,9 +377,6 @@ static char *SetChoiceValue (wxChoice *choice, char *value, bool property)
   ----------------------------------------------------------------------*/
 void StyleDlgWX::InitValues ()
 {
-  char    *cssstyle, *ptr, c;
-  ThotBool notfound = FALSE;
-
   XRCCTRL(*this, "wxID_NO_SELECTION", wxStaticText)->SetLabel(TtaConvMessageToWX(""));
 
   XRCCTRL(*this, "wxID_COMBOBOX_FAMILY", wxComboBox)->SetValue(TtaConvMessageToWX( "" ));
@@ -252,6 +437,17 @@ void StyleDlgWX::InitValues ()
   XRCCTRL(*this, "wxID_CHOICE_LISTSTYLE", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
   XRCCTRL(*this, "wxID_CHOICE_LISTPOSITION", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
   BG_repeat = 0;
+  XRCCTRL(*this, "wxID_BUTTON_REPEAT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+  XRCCTRL(*this, "wxID_BUTTON_NOREPEAT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+  XRCCTRL(*this, "wxID_BUTTON_XREPEAT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+  XRCCTRL(*this, "wxID_BUTTON_YREPEAT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+  XRCCTRL(*this, "wxID_BUTTON_TEXTCOLOR", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+  XRCCTRL(*this, "wxID_BUTTON_BACKCOLOR", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+  XRCCTRL(*this, "wxID_BUTTON_T_COLOR", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+  XRCCTRL(*this, "wxID_BUTTON_B_COLOR", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+  XRCCTRL(*this, "wxID_BUTTON_L_COLOR", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+  XRCCTRL(*this, "wxID_BUTTON_R_COLOR", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+  XRCCTRL(*this, "wxID_BUTTON_BORDER_COLOR", wxBitmapButton)->SetBackgroundColour( m_OffColour );
 
   // get the initial style values
   if (m_OnApplyLock)
@@ -260,280 +456,10 @@ void StyleDlgWX::InitValues ()
   Buffer = GetCurrentStyle ();
   if (Buffer)
     {
-      cssstyle = Buffer;
       // prepare the buffer that will include unparsed substrings
       Extra = (char *)TtaGetMemory (strlen (Buffer));
       Extra[0] = EOS;
-      while (cssstyle && *cssstyle != EOS)
-        {
-          if (*cssstyle == 'b')
-            {
-              if (!strncmp (cssstyle, "background-color", 16))
-                cssstyle = SetComboValue (XRCCTRL(*this, "wxID_COMBO_BACKCOLOR", wxComboBox), cssstyle, TRUE);
-              else if (!strncmp (cssstyle, "background-image", 16))
-                cssstyle = SetComboValue (XRCCTRL(*this, "wxID_BGIMAGE", wxComboBox), cssstyle, TRUE);
-              else if (!strncmp (cssstyle, "background-repeat", 17))
-                {
-                  cssstyle +=16;
-                  while (*cssstyle == SPACE || *cssstyle == ':')
-                    cssstyle++;
-                  if (!strncmp (cssstyle, "no-repeat", 9))
-                    {
-                      BG_repeat = 1;
-                      cssstyle += 9;
-                    }
-                  else if (!strncmp (cssstyle, "repeat-x", 8))
-                    {
-                      BG_repeat = 2;
-                      cssstyle += 8;
-                    }
-                  else if (!strncmp (cssstyle, "repeat-y", 8))
-                    {
-                      BG_repeat = 3;
-                      cssstyle += 8;
-                    }
-                  else if (!strncmp (cssstyle, "repeat", 6))
-                    {
-                      BG_repeat = 4;
-                      cssstyle += 6;
-                    }
-                }
-              else if (!strncmp (cssstyle, "background-attachment", 21))
-                cssstyle = SetChoiceValue (XRCCTRL(*this, "wxID_CHOICE_BGATTACH", wxChoice), cssstyle, TRUE);
-              else if (!strncmp (cssstyle, "background-position", 19))
-                {
-                  cssstyle = SetChoiceValue (XRCCTRL(*this, "wxID_COMBO_BGHPOS", wxChoice), cssstyle, TRUE);
-                  cssstyle = SetChoiceValue (XRCCTRL(*this, "wxID_COMBO_BGVPOS", wxChoice), cssstyle, FALSE);
-                }
-              else if (!strncmp (cssstyle, "background", 10))
-                {
-                  //to do
-                }
-              else if (!strncmp (cssstyle, "border-top-width", 16))
-                cssstyle = SetComboValue (XRCCTRL(*this, "wxID_COMBO_BTOP", wxComboBox), cssstyle, TRUE);
-              else if (!strncmp (cssstyle, "border-right-width", 18))
-                cssstyle = SetComboValue (XRCCTRL(*this, "wxID_COMBO_BRIGHT", wxComboBox), cssstyle, TRUE);
-              else if (!strncmp (cssstyle, "border-bottom-width", 19))
-                cssstyle = SetComboValue (XRCCTRL(*this, "wxID_COMBO_BBOTTOM", wxComboBox), cssstyle, TRUE);
-              else if (!strncmp (cssstyle, "border-left-width", 17))
-                cssstyle = SetComboValue (XRCCTRL(*this, "wxID_COMBO_BLEFT", wxComboBox), cssstyle, TRUE);
-              else if (!strncmp (cssstyle, "border-width", 12))
-                cssstyle = SetComboValue (XRCCTRL(*this, "wxID_COMBO_B", wxComboBox), cssstyle, TRUE);
-              else if (!strncmp (cssstyle, "border-top-color", 16))
-                cssstyle = SetComboValue (XRCCTRL(*this, "wxID_COMBO_T_COLOR", wxComboBox), cssstyle, TRUE);
-              else if (!strncmp (cssstyle, "border-right-color", 18))
-                cssstyle = SetComboValue (XRCCTRL(*this, "wxID_COMBO_R_COLOR", wxComboBox), cssstyle, TRUE);
-              else if (!strncmp (cssstyle, "border-bottom-color", 19))
-                cssstyle = SetComboValue (XRCCTRL(*this, "wxID_COMBO_B_COLOR", wxComboBox), cssstyle, TRUE);
-              else if (!strncmp (cssstyle, "border-left-color", 17))
-                cssstyle = SetComboValue (XRCCTRL(*this, "wxID_COMBO_L_COLOR", wxComboBox), cssstyle, TRUE);
-              else if (!strncmp (cssstyle, "border-color", 12))
-                cssstyle = SetComboValue (XRCCTRL(*this, "wxID_COMBO_BORDER_COLOR", wxComboBox), cssstyle, TRUE);
-              else if (!strncmp (cssstyle, "border-top-style", 16))
-                cssstyle = SetChoiceValue (XRCCTRL(*this, "wxID_CHOICE_T_STYLE", wxChoice), cssstyle, TRUE);
-              else if (!strncmp (cssstyle, "border-right-style", 18))
-                cssstyle = SetChoiceValue (XRCCTRL(*this, "wxID_CHOICE_R_STYLE", wxChoice), cssstyle, TRUE);
-              else if (!strncmp (cssstyle, "border-bottom-style", 19))
-                cssstyle = SetChoiceValue (XRCCTRL(*this, "wxID_CHOICE_B_STYLE", wxChoice), cssstyle, TRUE);
-              else if (!strncmp (cssstyle, "border-left-style", 17))
-                cssstyle = SetChoiceValue (XRCCTRL(*this, "wxID_CHOICE_L_STYLE", wxChoice), cssstyle, TRUE);
-              else if (!strncmp (cssstyle, "border-style", 12))
-                cssstyle = SetChoiceValue (XRCCTRL(*this, "wxID_CHOICE_BORDER_STYLE", wxChoice), cssstyle, TRUE);
-              else if (!strncmp (cssstyle, "border-top", 10))
-                {
-                  cssstyle = SetChoiceValue (XRCCTRL(*this, "wxID_CHOICE_T_STYLE", wxChoice), cssstyle, TRUE);
-                  cssstyle = SetComboValue (XRCCTRL(*this, "wxID_COMBO_BTOP", wxComboBox), cssstyle, FALSE);
-                  cssstyle = SetComboValue (XRCCTRL(*this, "wxID_COMBO_T_COLOR", wxComboBox), cssstyle, FALSE);
-                }
-              else if (!strncmp (cssstyle, "border-right", 12))
-                {
-                  cssstyle = SetChoiceValue (XRCCTRL(*this, "wxID_CHOICE_R_STYLE", wxChoice), cssstyle, TRUE);
-                  cssstyle = SetComboValue (XRCCTRL(*this, "wxID_COMBO_BRIGHT", wxComboBox), cssstyle, FALSE);
-                  cssstyle = SetComboValue (XRCCTRL(*this, "wxID_COMBO_R_COLOR", wxComboBox), cssstyle, FALSE);
-                }
-              else if (!strncmp (cssstyle, "border-bottom", 13))
-                {
-                  cssstyle = SetChoiceValue (XRCCTRL(*this, "wxID_CHOICE_B_STYLE", wxChoice), cssstyle, TRUE);
-                  cssstyle = SetComboValue (XRCCTRL(*this, "wxID_COMBO_BBOTTOM", wxComboBox), cssstyle, FALSE);
-                  cssstyle = SetComboValue (XRCCTRL(*this, "wxID_COMBO_B_COLOR", wxComboBox), cssstyle, FALSE);
-                }
-              else if (!strncmp (cssstyle, "border-left", 11))
-                {
-                  cssstyle = SetChoiceValue (XRCCTRL(*this, "wxID_CHOICE_L_STYLE", wxChoice), cssstyle, TRUE);
-                  cssstyle = SetComboValue (XRCCTRL(*this, "wxID_COMBO_BLEFT", wxComboBox), cssstyle, FALSE);
-                  cssstyle = SetComboValue (XRCCTRL(*this, "wxID_COMBO_L_COLOR", wxComboBox), cssstyle, FALSE);
-                }
-              else if (!strncmp (cssstyle, "border", 6))
-                {
-                  cssstyle = SetChoiceValue (XRCCTRL(*this, "wxID_CHOICE_BORDER_STYLE", wxChoice), cssstyle, TRUE);
-                  cssstyle = SetComboValue (XRCCTRL(*this, "wxID_COMBO_B", wxComboBox), cssstyle, FALSE);
-                  cssstyle = SetComboValue (XRCCTRL(*this, "wxID_COMBO_BORDER_COLOR", wxComboBox), cssstyle, FALSE);
-                }
-              else if (!strncmp (cssstyle, "bottom", 6))
-                cssstyle = SetComboValue (XRCCTRL(*this, "wxID_COMBO_BOTTOM", wxComboBox), cssstyle, TRUE);
-              else
-                notfound = TRUE;
-            }
-          else if (*cssstyle == 'c')
-            {
-              if (!strncmp (cssstyle, "clear", 5))
-                cssstyle = SetChoiceValue (XRCCTRL(*this, "wxID_CHOICE_CLEAR", wxChoice), cssstyle, TRUE);
-              else if (!strncmp (cssstyle, "color", 5 ))
-                cssstyle = SetComboValue (XRCCTRL(*this, "wxID_COMBO_TEXTCOLOR", wxComboBox), cssstyle, TRUE);
-              else
-                notfound = TRUE;
-            }
-          else if (*cssstyle == 'd')
-            {
-              if (!strncmp (cssstyle, "display", 7))
-                cssstyle = SetChoiceValue (XRCCTRL(*this, "wxID_CHOICE_DISPLAY", wxChoice), cssstyle, TRUE);
-              else
-                notfound = TRUE;
-            }
-          else if (*cssstyle == 'f')
-            {
-              if (!strncmp (cssstyle, "float", 5))
-                cssstyle = SetChoiceValue (XRCCTRL(*this, "wxID_CHOICE_FLOAT", wxChoice), cssstyle, TRUE);
-              else if (!strncmp (cssstyle, "font-family", 11))
-                cssstyle = SetFontFamily (XRCCTRL(*this, "wxID_COMBOBOX_FAMILY", wxComboBox), cssstyle, TRUE);
-              else if (!strncmp (cssstyle, "font-style", 10))
-                cssstyle = SetChoiceValue (XRCCTRL(*this, "wxID_CHOICE_STYLE", wxChoice), cssstyle, TRUE);
-              else if (!strncmp (cssstyle, "font-variant", 12))
-                cssstyle = SetChoiceValue (XRCCTRL(*this, "wxID_CHOICE_VARIANT", wxChoice), cssstyle, TRUE);
-              else if (!strncmp (cssstyle, "font-weight", 11))
-                cssstyle = SetChoiceValue (XRCCTRL(*this, "wxID_CHOICE_WEIGHT", wxChoice), cssstyle, TRUE);
-              else if (!strncmp (cssstyle, "font-size", 9))
-                cssstyle = SetComboValue (XRCCTRL(*this, "wxID_COMBO_SIZE", wxComboBox), cssstyle, TRUE);
-              else if (!strncmp (cssstyle, "font", 4))
-                {
-                  // to do
-                }
-              else
-                notfound = TRUE;
-            }
-          else if (*cssstyle == 'h')
-            {
-               if (!strncmp (cssstyle, "height", 6))
-                 cssstyle = SetComboValue (XRCCTRL(*this, "wxID_COMBO_HEIGHT", wxComboBox), cssstyle, TRUE);
-              else
-                notfound = TRUE;
-            }
-          else if (*cssstyle == 'l')
-            {
-              if (!strncmp (cssstyle, "left", 4))
-                cssstyle = SetComboValue (XRCCTRL(*this, "wxID_COMBO_LEFT", wxComboBox), cssstyle, TRUE);
-              else if (!strncmp (cssstyle, "letter-spacing", 14))
-                cssstyle = SetComboValue (XRCCTRL(*this, "wxID_COMBO_LETTER", wxComboBox), cssstyle, TRUE);
-              else if (!strncmp (cssstyle, "line-height", 11))
-                cssstyle = SetComboValue (XRCCTRL(*this, "wxID_COMBO_LINE", wxComboBox), cssstyle, TRUE);
-              else if (!strncmp (cssstyle, "list-style-type", 15))
-                cssstyle = SetChoiceValue (XRCCTRL(*this, "wxID_CHOICE_LISTSTYLE", wxChoice), cssstyle, TRUE);
-              else if (!strncmp (cssstyle, "list-style-image", 16))
-                cssstyle = SetComboValue (XRCCTRL(*this, "wxID_LIST_IMAGE", wxComboBox), cssstyle, TRUE);
-              else if (!strncmp (cssstyle, "list-style-position", 19))
-                cssstyle = SetChoiceValue (XRCCTRL(*this, "wxID_CHOICE_LISTPOSITION", wxChoice), cssstyle, TRUE);
-              else if (!strncmp (cssstyle, "list-style", 10))
-                {
-                  while (*cssstyle != ':' && *cssstyle != EOS)
-                    cssstyle++;
-                  cssstyle = SetComboValue (XRCCTRL(*this, "wxID_LIST_IMAGE", wxComboBox), cssstyle, FALSE);
-                  cssstyle = SetChoiceValue (XRCCTRL(*this, "wxID_CHOICE_LISTPOSITION", wxChoice), cssstyle, FALSE);
-                  cssstyle = SetChoiceValue (XRCCTRL(*this, "wxID_CHOICE_LISTSTYLE", wxChoice), cssstyle, FALSE);
-                }
-              else
-                notfound = TRUE;
-            }
-          else if (*cssstyle == 'm')
-            {
-              if (!strncmp (cssstyle, "margin-bottom", 13))
-                cssstyle = SetComboValue (XRCCTRL(*this, "wxID_COMBO_MBOTTOM", wxComboBox), cssstyle, TRUE);
-              else if (!strncmp (cssstyle, "margin-top", 10))
-                cssstyle = SetComboValue (XRCCTRL(*this, "wxID_COMBO_MTOP", wxComboBox), cssstyle, TRUE);
-              else if (!strncmp (cssstyle, "margin-right", 12))
-                cssstyle = SetComboValue (XRCCTRL(*this, "wxID_COMBO_MRIGHT", wxComboBox), cssstyle, TRUE);
-              else if (!strncmp (cssstyle, "margin-left", 11))
-                cssstyle = SetComboValue (XRCCTRL(*this, "wxID_COMBO_MLEFT", wxComboBox), cssstyle, TRUE);
-              else if (!strncmp (cssstyle, "margin", 6))
-                cssstyle = SetComboValue (XRCCTRL(*this, "wxID_COMBO_MARGIN", wxComboBox), cssstyle, TRUE);
-              else
-                notfound = TRUE;
-            }
-          else if (*cssstyle == 'p')
-            {
-              if (!strncmp (cssstyle, "padding-top", 11))
-                cssstyle = SetComboValue (XRCCTRL(*this, "wxID_COMBO_PTOP", wxComboBox), cssstyle, TRUE);
-              else if (!strncmp (cssstyle, "padding-right", 13))
-                cssstyle = SetComboValue (XRCCTRL(*this, "wxID_COMBO_PRIGHT", wxComboBox), cssstyle, TRUE);
-              else if (!strncmp (cssstyle, "padding-bottom", 14))
-                cssstyle = SetComboValue (XRCCTRL(*this, "wxID_COMBO_PBOTTOM", wxComboBox), cssstyle, TRUE);
-              else if (!strncmp (cssstyle, "padding-left", 12))
-                cssstyle = SetComboValue (XRCCTRL(*this, "wxID_COMBO_PLEFT", wxComboBox), cssstyle, TRUE);
-              else if (!strncmp (cssstyle, "padding", 7))
-                cssstyle = SetComboValue (XRCCTRL(*this, "wxID_COMBO_PADDING", wxComboBox), cssstyle, TRUE);
-              else if (!strncmp (cssstyle, "position", 8))
-                cssstyle = SetChoiceValue (XRCCTRL(*this, "wxID_CHOICE_POSITION", wxChoice), cssstyle, TRUE);
-              else
-                notfound = TRUE;
-            }
-          else if (*cssstyle == 'r')
-            {
-              if (!strncmp (cssstyle, "right", 5))
-                cssstyle = SetComboValue (XRCCTRL(*this, "wxID_COMBO_RIGHT", wxComboBox), cssstyle, TRUE);
-              else
-                notfound = TRUE;
-            }
-          else if (*cssstyle == 't')
-            {
-              if (!strncmp (cssstyle, "text-align", 10))
-                cssstyle = SetChoiceValue (XRCCTRL(*this, "wxID_CHOICE_ALIGN", wxChoice), cssstyle, TRUE);
-              else if (!strncmp (cssstyle, "text-indent", 11))
-                cssstyle = SetComboValue (XRCCTRL(*this, "wxID_COMBO_INDENT", wxComboBox), cssstyle, TRUE);
-              else if (!strncmp (cssstyle, "text-decoration", 15))
-                cssstyle = SetChoiceValue (XRCCTRL(*this, "wxID_CHOICE_DECORATION", wxChoice), cssstyle, TRUE);
-              else if (!strncmp (cssstyle, "text-transform", 14))
-                cssstyle = SetChoiceValue (XRCCTRL(*this, "wxID_CHOICE_TRANSFORM", wxChoice), cssstyle, TRUE);
-              else if (!strncmp (cssstyle, "top", 3))
-                cssstyle = SetComboValue (XRCCTRL(*this, "wxID_COMBO_TOP", wxComboBox), cssstyle, TRUE);
-              else
-                notfound = TRUE;
-            }
-          else if (*cssstyle == 'v')
-            {
-              if (!strncmp (cssstyle, "vertical-align", 14))
-                cssstyle = SetComboValue (XRCCTRL(*this, "wxID_COMBO_VALIGN", wxComboBox), cssstyle, TRUE);
-              else if (!strncmp (cssstyle, "visibility", 10))
-                cssstyle = SetChoiceValue (XRCCTRL(*this, "wxID_CHOICE_VISIBILITY", wxChoice), cssstyle, TRUE);
-              else
-                notfound = TRUE;
-            }
-          else if (*cssstyle == 'w')
-            {
-              if (!strncmp (cssstyle, "white-space", 11))
-                cssstyle = SetChoiceValue (XRCCTRL(*this, "wxID_CHOICE_WHITESPACE", wxChoice), cssstyle, TRUE);
-              else if (!strncmp (cssstyle, "width", 5))
-                cssstyle = SetComboValue (XRCCTRL(*this, "wxID_COMBO_WIDTH", wxComboBox), cssstyle, TRUE);
-              else if (!strncmp (cssstyle, "word-spacing", 12))
-                cssstyle = SetComboValue (XRCCTRL(*this, "wxID_COMBO_WORD", wxComboBox), cssstyle, TRUE);
-              else
-                notfound = TRUE;
-            }
-          else
-            notfound = TRUE;
-          // get next property;
-          ptr = cssstyle;
-          while (*cssstyle != EOS && *cssstyle != ';')
-            cssstyle++;
-          c = *cssstyle;
-          if (notfound)
-            {
-              // keep the current substring
-              *cssstyle = EOS;
-              strcat (Extra, ptr);
-              *cssstyle = c;
-            }
-          while (*cssstyle == SPACE || *cssstyle == ';')
-            cssstyle++;
-        }
+      ParseStyleDlgValues (this, Buffer);
       TtaFreeMemory (Buffer);
       Buffer = NULL;
       if (Extra[0] == EOS)
@@ -587,6 +513,8 @@ StyleDlgWX::StyleDlgWX( int ref, wxWindow* parent ) :
   /* tooltip of browse buttons */
   XRCCTRL(*this, "wxID_BUTTON_BGIMAGE", wxBitmapButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_BROWSE) ));
   XRCCTRL(*this, "wxID_BUTTON_LISTIMAGE", wxBitmapButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_BROWSE) ));
+  m_OffColour = XRCCTRL(*this, "wxID_BUTTON_TEXTCOLOR", wxBitmapButton)->GetBackgroundColour();
+  m_OnColour  = wxColour(250, 200, 200);
 
   // init the close check entry
   TtaGetEnvBoolean ("CLOSE_WHEN_APPLY", &check);
@@ -618,15 +546,70 @@ StyleDlgWX::~StyleDlgWX()
 void StyleDlgWX::OnButton( wxCommandEvent& event )
 {
   int id = event.GetId();
-  BG_repeat = 0;
   if ( id == wxXmlResource::GetXRCID(_T("wxID_BUTTON_NOREPEAT")) )
-    BG_repeat = 1;
+    {
+      if (BG_repeat == 1)
+        {
+          BG_repeat = 0;
+          XRCCTRL(*this, "wxID_BUTTON_NOREPEAT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+        }
+      else
+        {
+          BG_repeat = 1;
+          XRCCTRL(*this, "wxID_BUTTON_NOREPEAT", wxBitmapButton)->SetBackgroundColour( m_OnColour );
+          XRCCTRL(*this, "wxID_BUTTON_XREPEAT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+          XRCCTRL(*this, "wxID_BUTTON_YREPEAT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+          XRCCTRL(*this, "wxID_BUTTON_REPEAT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+        }
+    }
   else if ( id == wxXmlResource::GetXRCID(_T("wxID_BUTTON_XREPEAT")) )
-    BG_repeat = 2;
+    {
+      if (BG_repeat == 2)
+        {
+          BG_repeat = 0;
+          XRCCTRL(*this, "wxID_BUTTON_XREPEAT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+        }
+      else
+        {
+          BG_repeat = 2;
+          XRCCTRL(*this, "wxID_BUTTON_XREPEAT", wxBitmapButton)->SetBackgroundColour( m_OnColour );
+          XRCCTRL(*this, "wxID_BUTTON_NOREPEAT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+          XRCCTRL(*this, "wxID_BUTTON_YREPEAT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+          XRCCTRL(*this, "wxID_BUTTON_REPEAT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+        }
+    }
   else if ( id == wxXmlResource::GetXRCID(_T("wxID_BUTTON_YREPEAT")) )
-    BG_repeat = 3;
-  else // repeat
-    BG_repeat = 4;
+    {
+     if (BG_repeat == 3)
+        {
+          BG_repeat = 0;
+          XRCCTRL(*this, "wxID_BUTTON_YREPEAT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+        }
+      else
+        {
+          BG_repeat = 3;
+          XRCCTRL(*this, "wxID_BUTTON_YREPEAT", wxBitmapButton)->SetBackgroundColour( m_OnColour );
+          XRCCTRL(*this, "wxID_BUTTON_NOREPEAT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+          XRCCTRL(*this, "wxID_BUTTON_XREPEAT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+          XRCCTRL(*this, "wxID_BUTTON_REPEAT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+        }
+    }
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_BUTTON_REPEAT")) )
+    {
+     if (BG_repeat == 4)
+        {
+          BG_repeat = 0;
+          XRCCTRL(*this, "wxID_BUTTON_REPEAT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+        }
+      else
+        {
+          BG_repeat = 4;
+          XRCCTRL(*this, "wxID_BUTTON_REPEAT", wxBitmapButton)->SetBackgroundColour( m_OnColour );
+          XRCCTRL(*this, "wxID_BUTTON_NOREPEAT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+          XRCCTRL(*this, "wxID_BUTTON_XREPEAT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+          XRCCTRL(*this, "wxID_BUTTON_YREPEAT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+        }
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -1452,7 +1435,7 @@ void StyleDlgWX::GetValueDialog_Color()
       value = XRCCTRL(*this, "wxID_CHOICE_BGATTACH", wxChoice)->GetStringSelection();
       if (value.Len() > 0)
         {
-          strcpy (&Buffer[Index], "background-attachement: ");
+          strcpy (&Buffer[Index], "background-attachment: ");
           strcat (&Buffer[Index], (const char*)value.mb_str(wxConvUTF8));
           strcat (&Buffer[Index], End_rule);
           Index += strlen (&Buffer[Index]);
@@ -1741,57 +1724,93 @@ void StyleDlgWX::OnColorTextChanged( wxCommandEvent& event )
     {
       value = XRCCTRL(*this, "wxID_COMBO_TEXTCOLOR", wxComboBox)->GetValue();
       strcpy (buffer, (const char*)value.mb_str(wxConvUTF8) );
-      TtaGiveRGB (buffer, &red, &green, &blue);
-      wxColour col( red, green, blue );
-      XRCCTRL(*this, "wxID_BUTTON_TEXTCOLOR", wxBitmapButton)->SetBackgroundColour( col );
+      if (buffer[0] == EOS || !strcmp (buffer, "transparent"))
+        XRCCTRL(*this, "wxID_BUTTON_TEXTCOLOR", wxBitmapButton)->SetBackgroundColour(m_OffColour);
+      else
+        {
+          TtaGiveRGB (buffer, &red, &green, &blue);
+          wxColour col( red, green, blue );
+          XRCCTRL(*this, "wxID_BUTTON_TEXTCOLOR", wxBitmapButton)->SetBackgroundColour( col );
+        }
     }
   else if (id == backcolor_id)
     {
       value = XRCCTRL(*this, "wxID_COMBO_BACKCOLOR", wxComboBox)->GetValue();
       strcpy (buffer, (const char*)value.mb_str(wxConvUTF8) );
-      TtaGiveRGB (buffer, &red, &green, &blue);
-      wxColour col( red, green, blue );
-      XRCCTRL(*this, "wxID_BUTTON_BACKCOLOR", wxBitmapButton)->SetBackgroundColour( col );
+      if (buffer[0] == EOS || !strcmp (buffer, "transparent"))
+        XRCCTRL(*this, "wxID_BUTTON_BACKCOLOR", wxBitmapButton)->SetBackgroundColour(m_OffColour);
+      else
+        {
+          TtaGiveRGB (buffer, &red, &green, &blue);
+          wxColour col( red, green, blue );
+          XRCCTRL(*this, "wxID_BUTTON_BACKCOLOR", wxBitmapButton)->SetBackgroundColour( col );
+        }
     }
   else if (id == tcolor_id)
     {
       value = XRCCTRL(*this, "wxID_COMBO_T_COLOR", wxComboBox)->GetValue();
       strcpy (buffer, (const char*)value.mb_str(wxConvUTF8) );
       TtaGiveRGB (buffer, &red, &green, &blue);
-      wxColour col( red, green, blue );
-      XRCCTRL(*this, "wxID_BUTTON_T_COLOR", wxBitmapButton)->SetBackgroundColour( col );
+      if (buffer[0] == EOS || !strcmp (buffer, "transparent"))
+        XRCCTRL(*this, "wxID_BUTTON_T_COLOR", wxBitmapButton)->SetBackgroundColour(m_OffColour);
+      else
+        {
+          TtaGiveRGB (buffer, &red, &green, &blue);
+          wxColour col( red, green, blue );
+          XRCCTRL(*this, "wxID_BUTTON_T_COLOR", wxBitmapButton)->SetBackgroundColour( col );
+        }
     }
   else if (id == bcolor_id)
     {
       value = XRCCTRL(*this, "wxID_COMBO_B_COLOR", wxComboBox)->GetValue();
       strcpy (buffer, (const char*)value.mb_str(wxConvUTF8) );
-      TtaGiveRGB (buffer, &red, &green, &blue);
-      wxColour col( red, green, blue );
-      XRCCTRL(*this, "wxID_BUTTON_B_COLOR", wxBitmapButton)->SetBackgroundColour( col );
+      if (buffer[0] == EOS || !strcmp (buffer, "transparent"))
+        XRCCTRL(*this, "wxID_BUTTON_B_COLOR", wxBitmapButton)->SetBackgroundColour(m_OffColour);
+      else
+        {
+          TtaGiveRGB (buffer, &red, &green, &blue);
+          wxColour col( red, green, blue );
+          XRCCTRL(*this, "wxID_BUTTON_B_COLOR", wxBitmapButton)->SetBackgroundColour( col );
+        }
     }
   else if (id == lcolor_id)
     {
       value = XRCCTRL(*this, "wxID_COMBO_L_COLOR", wxComboBox)->GetValue();
       strcpy (buffer, (const char*)value.mb_str(wxConvUTF8) );
-      TtaGiveRGB (buffer, &red, &green, &blue);
-      wxColour col( red, green, blue );
-      XRCCTRL(*this, "wxID_BUTTON_L_COLOR", wxBitmapButton)->SetBackgroundColour( col );
+      if (buffer[0] == EOS || !strcmp (buffer, "transparent"))
+        XRCCTRL(*this, "wxID_BUTTON_L_COLOR", wxBitmapButton)->SetBackgroundColour(m_OffColour);
+      else
+        {
+          TtaGiveRGB (buffer, &red, &green, &blue);
+          wxColour col( red, green, blue );
+          XRCCTRL(*this, "wxID_BUTTON_L_COLOR", wxBitmapButton)->SetBackgroundColour( col );
+        }
     }
   else if (id == rcolor_id)
     {
       value = XRCCTRL(*this, "wxID_COMBO_R_COLOR", wxComboBox)->GetValue();
       strcpy (buffer, (const char*)value.mb_str(wxConvUTF8) );
-      TtaGiveRGB (buffer, &red, &green, &blue);
-      wxColour col( red, green, blue );
-      XRCCTRL(*this, "wxID_BUTTON_R_COLOR", wxBitmapButton)->SetBackgroundColour( col );
+      if (buffer[0] == EOS || !strcmp (buffer, "transparent"))
+        XRCCTRL(*this, "wxID_BUTTON_R_COLOR", wxBitmapButton)->SetBackgroundColour(m_OffColour);
+      else
+        {
+          TtaGiveRGB (buffer, &red, &green, &blue);
+          wxColour col( red, green, blue );
+          XRCCTRL(*this, "wxID_BUTTON_R_COLOR", wxBitmapButton)->SetBackgroundColour( col );
+        }
     }
   else if (id == borderc_id)
     {
       value = XRCCTRL(*this, "wxID_COMBO_BORDER_COLOR", wxComboBox)->GetValue();
       strcpy (buffer, (const char*)value.mb_str(wxConvUTF8) );
-      TtaGiveRGB (buffer, &red, &green, &blue);
-      wxColour col( red, green, blue );
-      XRCCTRL(*this, "wxID_BUTTON_BORDER_COLOR", wxBitmapButton)->SetBackgroundColour( col );
+      if (buffer[0] == EOS || !strcmp (buffer, "transparent"))
+        XRCCTRL(*this, "wxID_BUTTON_BORDER_COLOR", wxBitmapButton)->SetBackgroundColour(m_OffColour);
+      else
+        {
+          TtaGiveRGB (buffer, &red, &green, &blue);
+          wxColour col( red, green, blue );
+          XRCCTRL(*this, "wxID_BUTTON_BORDER_COLOR", wxBitmapButton)->SetBackgroundColour( col );
+        }
     }
 
   event.Skip();
