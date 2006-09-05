@@ -175,6 +175,14 @@ static ThotWindow   InitConfirmForm = NULL;
 static ThotWindow   DocInfo[DocumentTableLength];
 
 #include "init_f.h"
+
+/*----------------------------------------------------------------------
+  DisplayStyleValue: update the property in Style dialog
+  ----------------------------------------------------------------------*/
+void  DisplayStyleValue (char *property, char *start_value, char *end_value)
+{
+}
+
 /*----------------------------------------------------------------------
    ReusePrinterDC()
    Call the Windows print dialogue or reuse the previous context.
