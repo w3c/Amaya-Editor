@@ -38,6 +38,13 @@ void DisplayPRule (PtrPRule RP, FILE *fileDescriptor,
 }
 
 /*----------------------------------------------------------------------
+  DisplayStyleValue: update the property in Style dialog
+  ----------------------------------------------------------------------*/
+void  DisplayStyleValue (char *property, char *start_value, char *end_value)
+{
+}
+
+/*----------------------------------------------------------------------
    NewInitialSequence
    Mark the current sequence as the initial sequence.
   ----------------------------------------------------------------------*/
@@ -116,7 +123,7 @@ int GetObjectWWW (int docid, char *urlName, char *formdata,
   IsW3Path                                           
   returns TRUE if path is in fact a URL.
   ----------------------------------------------------------------------*/
-ThotBool             IsW3Path (const char* path)
+ThotBool IsW3Path (const char* path)
 {
   return FALSE;
 }

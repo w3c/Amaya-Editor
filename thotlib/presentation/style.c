@@ -3338,8 +3338,11 @@ GenericContext TtaGetGenericStyleContext (Document doc)
   if (ctxt == NULL)
     return (NULL);
   memset (ctxt, 0, sizeof (GenericContextBlock));
-  ctxt->doc = doc;
-  ctxt->schema = TtaGetDocumentSSchema (doc);
+  if (doc)
+    {
+      ctxt->doc = doc;
+      ctxt->schema = TtaGetDocumentSSchema (doc);
+    }
   return (ctxt);
 }
 
