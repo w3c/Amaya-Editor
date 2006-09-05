@@ -42,9 +42,10 @@
   #include "wxdialog/TextDlgWX.h"
   #include "wxdialog/TitleDlgWX.h"
 
+static StyleDlgWX *Style_dlg = NULL;
+
 #endif /* _WX */
 
-static StyleDlgWX *Style_dlg = NULL;
 
 // this global is used to remember the last filter when using a filebrowser
 int g_Last_used_filter = 0;
@@ -58,6 +59,7 @@ int link_Last_used_filter = 0;
   ----------------------------------------------------------------------*/
 void  ParseStyleDlgValues (void *style_widget, char *cssRule)
 {
+#ifdef _WX
   Document        doc;
   GenericContext  ctxt;
 
@@ -86,6 +88,7 @@ void  ParseStyleDlgValues (void *style_widget, char *cssRule)
     /* no image loading */
     TtaFreeMemory(ctxt);
   Style_dlg = NULL;
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
