@@ -83,11 +83,11 @@ void CreateInstanceOfTemplate (Document doc, char *templatename, char *docname)
 #endif /* TEMPLATES */
 }
 
-#ifdef TEMPLATES
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-static void giveItems(char *text, int size, struct menuType **items, int *nbitems)
+void giveItems(char *text, int size, struct menuType **items, int *nbitems)
 {
+#ifdef TEMPLATES
 	ThotBool         inElement = TRUE;
   struct menuType *menu;
   char            *iter;
@@ -129,8 +129,10 @@ static void giveItems(char *text, int size, struct menuType **items, int *nbitem
       menu[i].type = SimpleTypeNat;  /* @@@@@ ???? @@@@@ */
       *items = menu;
     }
+#endif /* TEMPLATES */
 }
 
+#ifdef TEMPLATES
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 static char *createMenuString (const struct menuType* items, const int nbItems)
@@ -164,17 +166,21 @@ static char *createMenuString (const struct menuType* items, const int nbItems)
 ThotBool UseMenuClicked (NotifyElement *event)
 {
 #ifdef TEMPLATES
-	Document         doc = event->document;
-	Element          el = event->element;
-	ElementType      elt = TtaGetElementType(el);
+	Document         doc;
+	Element          el, comp;
+	ElementType      elt;
 	Attribute        at;
 	AttributeType    att;
   XTigerTemplate   t;
   Declaration      dec;
+  Record           rec, first;
 	int              nbitems, size;
 	struct menuType *items;
   char            *types, *menuString;
-	
+
+	doc = event->document;
+	el = event->element;
+	elt = TtaGetElementType(el);
   t = (XTigerTemplate) Get(templates, DocumentMeta[doc]->template_url);
   if (!t)
     return FALSE; // no template ?!?!
@@ -188,39 +194,92 @@ ThotBool UseMenuClicked (NotifyElement *event)
 	TtaGiveTextAttributeValue (at, types, &size);
   
 	giveItems (types, size, &items, &nbitems);
+	TtaFreeMemory (types);
+
   if (nbitems == 1)
     {
       dec = GetDeclaration(t, items[0].label);
       /* if it's a union, display the menu of this union */
-      if (dec && dec->nature == UnionNat)
+      if (dec)
+        switch(dec->nature)
+          {
+          case SimpleTypeNat :
+            nbitems = 0;
+            break;
+          case XmlElementNat :
+            nbitems = 0;
+            break;
+          case ComponentNat :
+            nbitems = 0;
+            break;
+          case UnionNat :
+            first = dec->unionType.include->first;
+            rec = first;
+            /* count the number of elements in the union */
+            nbitems = 0;
+            while (rec)
+              {
+                nbitems++;
+                rec = rec->next;
+              }
+            if (nbitems > 0)
+              {
+                items = (menuType*) TtaGetMemory(sizeof(struct menuType)* nbitems);
+                rec = first;
+                nbitems = 0;
+                while (rec)
+                  {
+                    items[nbitems].label = (char *) TtaStrdup(rec->key);
+                    items[nbitems].type = SimpleTypeNat;  /* @@@@@ ???? @@@@@ */
+                    nbitems++;
+                    rec = rec->next;
+                  }
+              }
+            break;
+          default :
+            //Impossible
+            break;   
+          }
+    }
+  if (nbitems > 0)
+    {
+      menuString = createMenuString (items, nbitems);
+      TtaNewScrollPopup (BaseDialog + OptionMenu, TtaGetViewFrame (doc, 1),
+                         NULL, nbitems, menuString , NULL, false, 'L');
+      TtaFreeMemory (menuString);
+      TtaShowDialogue (BaseDialog + OptionMenu, FALSE);
+      TtaWaitShowProcDialogue();
+      TtaDestroyDialogue (BaseDialog + OptionMenu);
+      /* result: items[ReturnOption].label @@@@@ */
+      dec = GetDeclaration(t, items[ReturnOption].label);
+      TtaFreeMemory (items);
+      if (dec)
         {
-          /*
-          nbitems = 0;
-          dec->unionType.include.first */
-          /* @@@@@@@ */
+          switch(dec->nature)
+            {
+            case SimpleTypeNat :
+              /* @@@@@ */
+              break;
+            case XmlElementNat :
+              /* @@@@@ */
+              break;
+            case ComponentNat :
+              /* copy element dec->componentType.content */
+              comp = TtaCopyTree (dec->componentType.content, doc, doc, el);
+              TtaInsertFirstChild (&comp, el, doc);
+              /* @@@@@ */
+              break;
+            case UnionNat :
+              /* @@@@@ */
+              break;
+            default :
+              //Impossible
+              break;   
+            }
         }
     }
-	menuString = createMenuString (items, nbitems);
-	TtaNewScrollPopup (BaseDialog + OptionMenu, TtaGetViewFrame (doc, 1), NULL, 
-                     nbitems, menuString , NULL, false, 'L');
-
-	TtaFreeMemory (menuString);
-	TtaFreeMemory (types);
-
-	TtaShowDialogue (BaseDialog + OptionMenu, FALSE);
-	TtaWaitShowProcDialogue();
-	TtaDestroyDialogue (BaseDialog + OptionMenu);
-  
-  /* result: items[ReturnOption].label @@@@@ */
-  dec = GetDeclaration(t, items[ReturnOption].label);
-  if (dec)
-    {
-      size = 1; /* @@@@ */
-    }
-  TtaFreeMemory (items);
   return FALSE;
 #endif /* TEMPLATES */
-	//ReturnOption
 	return TRUE;
 }
 
@@ -242,11 +301,18 @@ ThotBool OptionMenuClicked (NotifyElement *event)
 ThotBool RepeatMenuClicked (NotifyElement *event)
 {
 #ifdef TEMPLATES
-	Document         doc = event->document;
+  XTigerTemplate   t;
+	Document         doc;
+  Element          el, child, newEl;
+  ElementType      elt, elt1;
 	int              nbitems, size;
 	struct menuType *items;
   char            *types, *menuString;
 
+  doc = event->document;
+  t = (XTigerTemplate) Get(templates, DocumentMeta[doc]->template_url);
+  if (!t)
+    return FALSE; // no template ?!?!
 	types = "top end";	
 	size = strlen (types);
 	giveItems (types, size, &items, &nbitems);
@@ -257,6 +323,31 @@ ThotBool RepeatMenuClicked (NotifyElement *event)
 	TtaShowDialogue (BaseDialog + OptionMenu, FALSE);
 	TtaWaitShowProcDialogue();
 	TtaDestroyDialogue (BaseDialog + OptionMenu);
+  if (ReturnOption == 0 || ReturnOption == 1)
+    {
+      el = event->element;
+      child = TtaGetFirstChild (el);
+      if (child)
+        {
+          elt = TtaGetElementType (el);
+          elt1 = TtaGetElementType (child);
+          if (elt.ElSSchema == elt1.ElSSchema &&
+              elt1.ElTypeNum == Template_EL_useEl)
+            {
+              newEl = InstanciateUse (t, child, doc, FALSE);
+              if (newEl)
+                {
+                  if (ReturnOption == 0)
+                    TtaInsertFirstChild (&newEl, el, doc);
+                  else
+                    {
+                      child = TtaGetLastChild (el);
+                      TtaInsertSibling (newEl, child, FALSE, doc);
+                    }
+                }
+            }
+        }
+    }
   return FALSE;
 #endif /* TEMPLATES */
 	return TRUE;

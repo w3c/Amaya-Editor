@@ -50,7 +50,9 @@ Record Find (DicDictionary dic, const char * key)
 	Record rec = dic->first;
 	Record precedent = NULL;
 	int    cmp = -1;
-	
+
+  if (!key)
+    return NULL;
 	while (cmp < 0 && rec)
     {
       cmp = strcmp(rec->key,key);
@@ -243,6 +245,9 @@ DicElement RemoveElement (DicDictionary dic, const DicElement el)
   ----------------------------------------------------------------------*/
 DicElement Get (DicDictionary dic, const char * key)
 {
+  if (!key)
+    return NULL;
+
 	Record rec = Find(dic,key);
 	
 	if (!rec)

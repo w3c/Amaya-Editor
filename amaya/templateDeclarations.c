@@ -210,6 +210,7 @@ void NewComponent (XTigerTemplate t, const char *name, const Element el)
 	Declaration dec = NewDeclaration (t, name, ComponentNat);
 	dec->componentType.content = el;
 // TODO	dec->componentType.content = TtaCopyTree(el, TtaGetDocument(el), ;
+  dec->componentType.content = TtaCopyTree (dec->componentType.content, TtaGetDocument(dec->componentType.content), TtaGetDocument(el), el);
 	AddDeclaration(t, dec);
 #endif /* TEMPLATES */
 }

@@ -37,36 +37,28 @@ STRUCT
   union ( ATTR name; includeAt = TEXT; exclude = TEXT; title ) = CONSTANT C_CR; {It is always empty}
   import ( ATTR src = TEXT ) = CONSTANT C_CR; {It is always empty}
 
-  folder = BEGIN
-  		ANY - ( head, union, import, component );
-  	END;
+  folder = ANY - ( head, union, import, component );
 
-  repeat ( ATTR id = TEXT; minOccurs = TEXT; maxOccurs = TEXT; currentOccurs = TEXT; title )
-  	= LIST OF ( Repetition 
-		= CASE OF
-		useEl;
-		option;
-		repeat;
-		bag; 
-		folder;
-		END
-	);
+  repeat ( ATTR id = TEXT; minOccurs = TEXT; maxOccurs = TEXT; currentOccurs =
+  	TEXT; title ) =
+  	LIST OF ( Repetition =
+		  CASE OF
+		    useEl;
+	    	option;
+		    repeat;
+		    bag; 
+		    folder;
+		    END);
 
 
   option ( ATTR id )
-  	= BEGIN 
-    	ANY - ( head, union, import, component );
-  	END;
+  	= ANY - ( head, union, import, component );
   
   useEl ( ATTR id; types = TEXT; currentType = TEXT; title )
-     = BEGIN
-        ANY;
-       END - ( head, union, import, component );
+     = ANY - ( head, union, import, component );
 
   bag ( ATTR id; types ) 
-     = BEGIN
-        ANY;
-       END - ( head, union, import, component );
+     =  ANY - ( head, union, import, component );
 
   attribute ( ATTR 
     name; 

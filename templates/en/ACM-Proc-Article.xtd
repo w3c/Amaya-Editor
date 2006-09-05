@@ -34,10 +34,14 @@
       </div>
     </xt:component>
 
+    <xt:component name="bibauthor">
+      <span class="bibauthor"><xt:use types="string">Author</xt:use></span>,
+    </xt:component>
+
     <xt:component name="refbook">
       <p class="refbook">
         <xt:repeat minOccurs="1">
-          <span class="bibauthor"><xt:use types="string">Author</xt:use></span>, 
+          <xt:use types="bibauthor"/>
         </xt:repeat>
         <span class="title"><xt:use types="string">Book title</xt:use></span>
         <span class="pub"><xt:use types="string">Publisher</xt:use></span>
@@ -47,7 +51,7 @@
     <xt:component name="refarticle">
       <p class="refarticle">
         <xt:repeat minOccurs="1">
-          <span class="bibauthor"><xt:use types="string">Author</xt:use></span>, 
+          <xt:use types="bibauthor"/>
         </xt:repeat>
         <span class="title"><xt:use types="string">Article title</xt:use></span>
         <span class="conf"><xt:use types="string">Conference</xt:use></span>
@@ -57,7 +61,7 @@
     <xt:component name="refreport">
       <p class="refreport">
         <xt:repeat minOccurs="1">
-          <span class="bibauthor"><xt:use types="string">Author</xt:use></span>, 
+          <xt:use types="bibauthor"/>
         </xt:repeat>
         <span class="title"><xt:use types="string">Report title</xt:use></span>
         <xt:option>
@@ -91,6 +95,20 @@
         </span>
       </p>
     </xt:component>
+
+    <xt:component name="section">
+      <div class="section">
+        <h2>
+          <xt:use types="string">SECTION HEADING</xt:use>
+        </h2>
+        <xt:repeat>
+          <xt:bag types="anyElement codeExample figure">
+            <p>First paragraph of section ...</p>
+          </xt:bag>
+        </xt:repeat>
+      </div>
+    </xt:component>
+
   </xt:head>
 </head>
 
@@ -160,16 +178,7 @@
 </div>
 
 <xt:repeat minOccurs="1">
-  <div class="section">
-    <h2>
-      <xt:use types="string">SECTION HEADING</xt:use>
-    </h2>
-    <xt:repeat>
-      <xt:bag types="anyElement codeExample figure">
-        <p>First paragraph of section ...</p>
-      </xt:bag>
-    </xt:repeat>
-  </div>
+  <xt:use types="section"/>
 </xt:repeat>
 
 <div class="bibliography">

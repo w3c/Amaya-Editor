@@ -7,6 +7,7 @@
 #include "HTMLsave_f.h"
 #include "init_f.h"
 #include "mydictionary_f.h"
+#include "templates_f.h"
 #include "templateDeclarations_f.h"
 #include "templateInstanciation_f.h"
 #include "templateUtils_f.h"
@@ -189,7 +190,7 @@ void InstanciateTemplate (Document doc, char *templatename, char *docname,
 #ifdef TEMPLATES
 	if(!loaded)
 	{
-		//Creation of the callback context
+		//Create the callback context
 		InstanciationCtxt *ctx	= (InstanciationCtxt *)TtaGetMemory (sizeof (InstanciationCtxt));
 		ctx->templatePath		= TtaStrdup (templatename);
 		ctx->instancePath		= TtaStrdup (docname);
@@ -206,6 +207,68 @@ void InstanciateTemplate (Document doc, char *templatename, char *docname,
       CreateInstance(templatename, docname);
     }
   
+#endif /* TEMPLATES */
+}
+
+Element InstanciateUse (XTigerTemplate t, Element el, Document doc,
+                             ThotBool insert)
+{
+#ifdef TEMPLATES
+	Element          cont;
+  ElementType      elt;
+	Attribute        at;
+	AttributeType    att;
+  Declaration      dec;
+  int              size, nbitems;
+  struct menuType  *items;
+  char             *types;
+  char             *empty = " ";
+
+  /* get the value of the "types" attribute */
+  cont = NULL;
+  elt = TtaGetElementType (el);
+	att.AttrSSchema = elt.ElSSchema;
+	att.AttrTypeNum = Template_ATTR_types;
+	at = TtaGetAttribute (el, att);
+  if (!at)
+    return NULL;
+	size = TtaGetTextAttributeLength (at);
+	types = (char *) TtaGetMemory (size+1);	
+	TtaGiveTextAttributeValue (at, types, &size);
+  giveItems (types, size, &items, &nbitems);
+  if (nbitems == 1)
+    /* only one type in the "types" attribute */
+    {
+      dec = GetDeclaration (t, items[0].label);
+      if (dec)
+        switch(dec->nature)
+          {
+          case SimpleTypeNat :
+            elt.ElTypeNum = Template_EL_TEXT_UNIT;
+            cont = TtaNewElement (doc, elt);
+            TtaInsertFirstChild (&cont, el, doc);
+            TtaSetTextContent (cont, (unsigned char*) empty, 0, doc);
+            cont = NULL;
+            break;
+          case XmlElementNat :
+            /* @@@@@@ */
+            break;
+          case ComponentNat :
+            cont = TtaCopyTree (dec->componentType.content, doc, doc, el);
+            if (insert)
+              {
+                TtaInsertSibling (cont, el, TRUE, doc);
+                TtaDeleteTree (el, doc);
+              }
+            break;
+          case UnionNat :
+            break;
+          default :
+            //Impossible
+            break;   
+          }
+    }
+  return cont;
 #endif /* TEMPLATES */
 }
 
@@ -390,16 +453,18 @@ void ParseTemplate (XTigerTemplate t, Element el, Document doc)
           //Allow editing the content
           break;
         case Template_EL_useEl :
-          //Link to types
-          //Create the default content if needed
-          //If simple type allow editing the content
+          /* if this use element is not empty, don't do anything: it is
+             supposed to contain a valid instance. This should be
+             checked, though */
+          if (!TtaGetFirstChild (el))
+            InstanciateUse (t, el, doc, TRUE);
           break;
         case Template_EL_attribute :
           //Initialize the attribute
           //Allow the edition of the attribute
           break;
         case Template_EL_repeat :
-          InstanciateRepeat(t, el, doc);
+          InstanciateRepeat (t, el, doc);
           break;
         default :
           break;
