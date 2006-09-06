@@ -60,12 +60,13 @@ IMPLEMENT_DYNAMIC_CLASS(AmayaNormalWindow, AmayaWindow)
  *      Method:  AmayaNormalWindow
  * Description:  create a new AmayaNormalWindow
   -----------------------------------------------------------------------*/
-AmayaNormalWindow::AmayaNormalWindow (  int             window_id
-					,wxWindow *     p_parent_window
-					,const wxPoint& pos
-					,const wxSize&  size
-					) : 
-  AmayaWindow( window_id, p_parent_window, pos, size, WXAMAYAWINDOW_NORMAL )
+AmayaNormalWindow::AmayaNormalWindow (int window_id
+                                      ,wxWindow *p_parent_window
+                                      ,const wxPoint& pos
+                                      ,const wxSize&  size
+                                      ,int kind
+                                      ) : 
+  AmayaWindow( window_id, p_parent_window, pos, size, kind )
 {
   // initialize default slashbar position
   TtaSetEnvInt("SLASH_PANEL_POS", 195, FALSE);

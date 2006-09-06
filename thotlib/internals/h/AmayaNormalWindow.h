@@ -55,10 +55,11 @@ class AmayaNormalWindow : public AmayaWindow
  public:
   DECLARE_DYNAMIC_CLASS(AmayaNormalWindow)
 
-  AmayaNormalWindow ( int             window_id = -1
-		      ,wxWindow *     frame = NULL
-		      ,const wxPoint& pos  = wxDefaultPosition
-		      ,const wxSize&  size = wxDefaultSize );
+  AmayaNormalWindow ( int window_id = -1
+                      ,wxWindow *frame = NULL
+                      ,const wxPoint& pos  = wxDefaultPosition
+                      ,const wxSize&  size = wxDefaultSize
+                      ,int kind = WXAMAYAWINDOW_NORMAL);
   virtual ~AmayaNormalWindow();
 
   virtual AmayaPage *  GetActivePage() const;

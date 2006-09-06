@@ -142,6 +142,7 @@ int TtaMakeWindow( int x, int y, int w, int h, int kind, int parent_window_id )
 #else /* _MACOS */
   int           min_y = 0;
 #endif /* _MACOS */
+  ThotBool      value;
  
   if (window_id >= MAX_WINDOW)
     return 0; /* there is no more free windows */
@@ -185,10 +186,10 @@ int TtaMakeWindow( int x, int y, int w, int h, int kind, int parent_window_id )
   switch ( kind )
     {
     case WXAMAYAWINDOW_NORMAL:
-      p_window = new AmayaNormalWindow( window_id,
-                                        p_parent_window,
-                                        window_pos,
-                                        window_size );
+    case WXAMAYAWINDOW_ANNOT:
+    case WXAMAYAWINDOW_CSS:
+      p_window = new AmayaNormalWindow( window_id, p_parent_window,
+                                        window_pos, window_size, kind );
       if (parent_window_id == 0)
         {
           // setup the maximized state (only for normal windows)
@@ -201,10 +202,8 @@ int TtaMakeWindow( int x, int y, int w, int h, int kind, int parent_window_id )
         }
       break;
     case WXAMAYAWINDOW_SIMPLE:
-      p_window = new AmayaSimpleWindow( window_id,
-                                        p_parent_window,
-                                        window_pos,
-                                        window_size );
+      p_window = new AmayaSimpleWindow( window_id, p_parent_window,
+                                        window_pos, window_size );
       break;
     }    
   
@@ -234,8 +233,10 @@ int TtaMakeWindow( int x, int y, int w, int h, int kind, int parent_window_id )
       TtaSetEnvBoolean("OPEN_PANEL_FORMAT", TRUE, FALSE);
       
       /* open or close panels */
-      ThotBool value;
-      TtaGetEnvBoolean ("OPEN_PANEL", &value);
+      if (kind == WXAMAYAWINDOW_NORMAL)
+        TtaGetEnvBoolean ("OPEN_PANEL", &value);
+      else
+        value = FALSE;
       if (value)
         p_window->OpenPanel();
       else
@@ -983,11 +984,15 @@ int TtaMakeFrame( const char * schema_name,
 ThotBool TtaMakePage( int window_id, int page_id )
 {
 #ifdef _WX
+  int kind;
+
   AmayaWindow * p_window = TtaGetWindowFromId(window_id);
   if (p_window == NULL)
     return FALSE;
-
-  if (p_window->GetKind() == WXAMAYAWINDOW_NORMAL)
+  kind = p_window->GetKind();
+  if (kind == WXAMAYAWINDOW_NORMAL ||
+      kind == WXAMAYAWINDOW_ANNOT ||
+      kind == WXAMAYAWINDOW_CSS)
     {
       AmayaPage * p_page = p_window->GetPage(page_id);
       if (!p_page)
@@ -1016,6 +1021,8 @@ ThotBool TtaMakePage( int window_id, int page_id )
 ThotBool TtaAttachFrame( int frame_id, int window_id, int page_id, int position )
 {
 #ifdef _WX
+  int kind;
+
   if (!FrameTable[frame_id].WdFrame)
     return FALSE;
   
@@ -1023,7 +1030,10 @@ ThotBool TtaAttachFrame( int frame_id, int window_id, int page_id, int position 
   if (p_window == NULL)
     return FALSE;
   
-  if (p_window->GetKind() == WXAMAYAWINDOW_NORMAL)
+  kind = p_window->GetKind();
+  if (kind == WXAMAYAWINDOW_NORMAL ||
+      kind == WXAMAYAWINDOW_ANNOT ||
+      kind == WXAMAYAWINDOW_CSS)
     {
       AmayaPage * p_page = p_window->GetPage(page_id);
       wxASSERT_MSG(p_page, _T("TtaAttachFrame: the page doesn't exists"));
@@ -1071,6 +1081,7 @@ ThotBool TtaAttachFrame( int frame_id, int window_id, int page_id, int position 
 ThotBool TtaDetachFrame( int frame_id )
 {
 #ifdef _WX
+  int kind;
   int window_id        = FrameTable[frame_id].FrWindowId;
   int page_id          = FrameTable[frame_id].FrPageId;
   int position         = FrameTable[frame_id].FrPagePos;
@@ -1084,22 +1095,24 @@ ThotBool TtaDetachFrame( int frame_id )
     return FALSE;
   
   AmayaFrame * p_detached_frame = NULL;
-  if ( p_window->GetKind() == WXAMAYAWINDOW_SIMPLE )
+  kind = p_window->GetKind();
+  if (kind == WXAMAYAWINDOW_SIMPLE)
     {
       /* this is a simple window, so detach directly the frame from it */
       p_detached_frame = p_window->DetachFrame();
       wxASSERT( p_detached_frame == p_frame || p_detached_frame == NULL );
     }
-  else
-    if ( p_window->GetKind() == WXAMAYAWINDOW_NORMAL )
-      {
-        AmayaPage * p_page = p_window->GetPage(page_id);
-        if (!p_page)
-          return FALSE;
+  else if (kind == WXAMAYAWINDOW_NORMAL ||
+           kind == WXAMAYAWINDOW_ANNOT ||
+           kind == WXAMAYAWINDOW_CSS)
+    {
+      AmayaPage * p_page = p_window->GetPage(page_id);
+      if (!p_page)
+        return FALSE;
       
-        /* now detach the frame from this page */      
-        p_detached_frame = p_page->DetachFrame( position );
-      }
+      /* now detach the frame from this page */      
+      p_detached_frame = p_page->DetachFrame( position );
+    }
 
   if (p_frame == p_detached_frame)
     {
