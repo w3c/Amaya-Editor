@@ -156,8 +156,41 @@ static char *createMenuString (const struct menuType* items, const int nbItems)
     }
 	return result;
 }
-
 #endif /* TEMPLATES */
+
+/*----------------------------------------------------------------------
+  UseToBeCreated
+  An new use element will be created by the user through some generic editing
+  command
+  -----------------------------------------------------------------------*/
+ThotBool UseToBeCreated (NotifyElement *event)
+{
+#ifdef TEMPLATES
+  /* @@@@@ */
+#endif /* TEMPLATES */
+  return FALSE; /* let Thot perform normal operation */
+}
+
+/*----------------------------------------------------------------------
+  UseCreated
+  A new "use" element has just been created by the user with a generic editing
+  command.
+  -----------------------------------------------------------------------*/
+void UseCreated (NotifyElement *event)
+{
+#ifdef TEMPLATES
+	Document         doc;
+	Element          el;
+  XTigerTemplate   t;
+
+	doc = event->document;
+  t = (XTigerTemplate) Get(templates, DocumentMeta[doc]->template_url);
+  if (!t)
+    return; // no template ?!?!
+  el = event->element;
+  InstanciateUse (t, el, doc, TRUE);
+#endif /* TEMPLATES */
+}
 
 /*----------------------------------------------------------------------
   UseMenuClicked

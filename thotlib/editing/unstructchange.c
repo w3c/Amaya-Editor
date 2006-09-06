@@ -1424,11 +1424,11 @@ void TtcInsertLineBreak (Document doc, View view)
 }
 
 /*----------------------------------------------------------------------
-  CopyClassAttr
-  If element oldEl has an attribute with exception ExcCssClass, element
+  DuplicateAttrWithExc
+  If element oldEl has an attribute with exception ExcDuplicateAttr, element
   newEl receives a copy of this attribute.
   ----------------------------------------------------------------------*/
-static void CopyClassAttr (PtrElement newEl, PtrElement oldEl)
+static void DuplicateAttrWithExc (PtrElement newEl, PtrElement oldEl)
 {
   PtrAttribute        pAttr, pAttr2;
   int                 len;
@@ -1437,7 +1437,7 @@ static void CopyClassAttr (PtrElement newEl, PtrElement oldEl)
   pAttr2 = NULL;
   while (pAttr && !pAttr2)
     {
-      if (AttrHasException (ExcCssClass, pAttr->AeAttrNum,
+      if (AttrHasException (ExcDuplicateAttr, pAttr->AeAttrNum,
                             pAttr->AeAttrSSchema))
         {
           GetAttribute (&pAttr2);	
@@ -2077,7 +2077,7 @@ void TtcCreateElement (Document doc, View view)
                   pNew = NewSubtree (lastSel->ElTypeNumber,
                                      lastSel->ElStructSchema, pDoc,
                                      TRUE, TRUE, TRUE, TRUE);
-                  CopyClassAttr (pNew, lastSel);
+                  DuplicateAttrWithExc (pNew, lastSel);
                   pE = lastSel;
                   while (pE->ElParent != pListEl)
                     {

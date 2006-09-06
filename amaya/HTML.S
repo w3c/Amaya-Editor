@@ -1037,7 +1037,7 @@ EXCEPT
 	onchange:	EventAttr;
 	onselect:	EventAttr;
 	ID :		CssId; {Default id attribute}
-	Class:		CssClass;
+	Class:		CssClass, DuplicateAttr;
 	External_Object_Content: Hidden, NoSpellCheck;
 	Embed_:	        NoBreakByReturn, NoReplicate, NoSpellCheck;
 	Embed_Content:  Hidden, NoSelect;

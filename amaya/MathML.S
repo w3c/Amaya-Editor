@@ -490,7 +490,7 @@ EXCEPT
    C_Space:		Hidden, NoSelect;
 
    id:			CssId; {Default id attribute}
-   class:		CssClass;
+   class:		CssClass, DuplicateAttr;
    PseudoClass:	        Invisible, CssPseudoClass;
    { attributes for internal use }
    RealLang:	        Invisible;

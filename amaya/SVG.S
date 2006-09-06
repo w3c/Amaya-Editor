@@ -2514,7 +2514,7 @@ EXCEPT
 
    { exceptions for attributes }
    id:                CssId; {Default id attribute}
-   class:             CssClass;
+   class:             CssClass, DuplicateAttr;
    PseudoClass:	      Invisible, CssPseudoClass;
    Unknown_attribute: Invisible;
    Highlight:	        Invisible; 

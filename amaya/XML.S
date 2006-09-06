@@ -36,11 +36,12 @@ EXCEPT
    XML:                 MoveResize, NoMove;
    PICTURE:             NoMove, NoResize;
    TEXT:                NoMove, NoResize;
-   Highlight:	        Invisible;
-   class:		CssClass;
+   Highlight:	          Invisible;
+   class:		            CssClass, DuplicateAttr;
    PseudoClass:	        Invisible, CssPseudoClass;
-   RealLang:	        Invisible;
-   xmlpi:	        ReturnCreateNL, NoSpellCheck, NoReplicate, NotAnElementNode;
+   RealLang:	          Invisible;
+   xmlpi:	              ReturnCreateNL, NoSpellCheck, NoReplicate,
+                        NotAnElementNode;
    xmlcomment:	        ReturnCreateNL, NoReplicate, NotAnElementNode;
    xmlcomment_line:     Hidden, MarkupPreserve;
    xmlpi_line:          Hidden, MarkupPreserve;

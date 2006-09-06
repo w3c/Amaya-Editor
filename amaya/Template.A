@@ -13,6 +13,8 @@ ELEMENTS
    useEl :
       BEGIN
          ElemClick.Pre -> UseMenuClicked;
+         ElemNew.Pre -> UseToBeCreated;
+         ElemNew.Post -> UseCreated;
       END;
    repeat :
       BEGIN

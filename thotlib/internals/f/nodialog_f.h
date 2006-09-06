@@ -15,6 +15,9 @@ extern void DisplayPRule ( PtrPRule RP,
                            PtrElement pEl,
                            PtrPSchema pSchP,
                            int indent );
+extern void DisplayStyleValue ( char *property,
+                                char *start_value,
+                                char *end_value );
 extern void NewInitialSequence ( PtrDocument pDoc );
 extern void ShowBox ( int frame,
                       PtrBox pBox,
@@ -179,6 +182,9 @@ extern void DisplayPRule ( PtrPRule RP,
                              PtrElement pEl,
                              PtrPSchema pSchP,
                              int indent );
+extern void DisplayStyleValue ( char *property,
+                                  char *start_value,
+                                  char *end_value );
 extern void NewInitialSequence ( PtrDocument pDoc );
 extern void ShowBox ( int frame,
                         PtrBox pBox,

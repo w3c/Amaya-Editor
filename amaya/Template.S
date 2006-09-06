@@ -70,8 +70,9 @@ STRUCT
     title ) = CONSTANT C_CR; {It is always empty}
 
 EXCEPT
-    {Hiding unkown and language attributes}
+  {Hiding unkown and language attributes}
 	Unknown_attribute	: Invisible;
-	Language			: Invisible;
+	Language :          Invisible;
+  types :             DuplicateAttr;
 	
 END

@@ -101,11 +101,12 @@
 /* CSS exceptions */
 #define ExcCssBackground 340
 #define ExcCssClass 341
-#define ExcCssId 342
-#define ExcCssPseudoClass 343
-#define ExcSetWindowBackground 344
-#define ExcIsGroup 345
-#define ExcSpacePreserve 346
+#define ExcDuplicateAttr 342
+#define ExcCssId 343
+#define ExcCssPseudoClass 344
+#define ExcSetWindowBackground 345
+#define ExcIsGroup 346
+#define ExcSpacePreserve 347
 
 /* SpellCheck exception */
 #define ExcNoSpellCheck 400

@@ -133,7 +133,7 @@ ExceptVal =	 'NoCut' / 'CanCut' / 'NoCreate' / 'NoReplicate' /
 		 'Shadow' / 'EventAttr' / 'SpacePreserve' /
 		 'IsPlaceholder' / 'StartCounter' / 'SetCounter' /
 		 'MarkupPreserve' / 'NotAnElementNode' / 'CheckAllChars' /
-     'IsImg' / 'IsMap' /
+     'IsImg' / 'IsMap' / 'DuplicateAttr' /
 		 ExceptNum .
 ExceptNum =	 NUMBER .
 
