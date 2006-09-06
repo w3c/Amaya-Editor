@@ -1697,7 +1697,7 @@ void MoveHorizRef (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
                           pBox->BxMoved = pFromBox;
                         }
                       else
-                        pBox->BxYOrg += delta;
+                          pBox->BxYOrg += delta;
 
                       /* Move attached boxes */
                       pPosRel = pBox->BxPosRelations;
@@ -2624,7 +2624,6 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
               TtaFreeMemory ((STRING) pBox->BxPictInfo);
               pBox->BxPictInfo = NULL;
             }
-
           /* Check the validity of dependency rules */
           toMove = TRUE;
           if (pCurrentAb->AbEnclosing && pCurrentAb->AbEnclosing->AbBox)
@@ -3403,7 +3402,7 @@ void YMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
             {
               /* force the moving of this box and consider its children */ 
               pBox->BxYOrg += delta;
-              absoluteMove = FALSE;
+             absoluteMove = FALSE;
               pChild = pCurrentAb->AbFirstEnclosed;
               while (pChild)
                 {
@@ -3648,10 +3647,6 @@ void WidthPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
         x = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
       else
         x = 0;
-if (!strcmp (pAb->AbElement->ElLabel, "L930"))
-  printf ("ResizeWidth L930 %d\n", pBox->BxW);
-if (!strcmp (pAb->AbElement->ElLabel, "L947"))
-  printf ("ResizeWidth L947 %d\n", pBox->BxW);
       
       /* Initially the inside left and the inside right are the equal */
       width = x;

@@ -3900,7 +3900,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
   pBox->BxMinWidth += left + right;
   pBox->BxMaxWidth += left + right;
   UpdateBlockWithFloat (frame, pBox, xAbs, yAbs, TRUE, height);
-  *height = *height + spacing;
+  *height = *height + top + spacing;
 
   /* restore the value */
   pBox->BxCycles--;
