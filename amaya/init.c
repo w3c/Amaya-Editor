@@ -8332,7 +8332,7 @@ void AmayaClose (Document document, View view)
   SaveGeometryOnExit( document, NULL );
 
   /* free each loaded document */
-  for (i = 1; i < DocumentTableLength; i++)
+  for (i = DocumentTableLength; i > 0; i--)
     if (DocumentURLs[i] != NULL)
       {
         TtcCloseDocument (i, 1);
