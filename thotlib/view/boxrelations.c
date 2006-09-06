@@ -1115,7 +1115,9 @@ ThotBool ComputePositioning (PtrBox pBox, int frame)
          if (appl)
             {
               /* left positioning */
-              if (appr)
+              if (appr &&
+                  (pAb->AbWidth.DimUnit == UnAuto ||
+                   (pAb->AbWidth.DimAbRef == NULL && pAb->AbWidth.DimValue == -1)))
                 {
                   /* stretchable width */
                   pAb->AbWidthChange = FALSE;
@@ -2179,10 +2181,13 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
         {
           if (horizRef)
             {
-              if (pAb->AbPositioning->PnLeftUnit != UnAuto &&
-                  pAb->AbPositioning->PnLeftUnit != UnUndefined &&
-                  pAb->AbPositioning->PnRightUnit != UnAuto &&
-                  pAb->AbPositioning->PnRightUnit != UnUndefined)
+              if (pAb->AbWidth.DimUnit != UnAuto &&
+                  (pAb->AbWidth.DimAbRef || pAb->AbWidth.DimValue != -1))
+                ;
+              else if (pAb->AbPositioning->PnLeftUnit != UnAuto &&
+                       pAb->AbPositioning->PnLeftUnit != UnUndefined &&
+                       pAb->AbPositioning->PnRightUnit != UnAuto &&
+                       pAb->AbPositioning->PnRightUnit != UnUndefined)
                 {
                   /* width fixed by left and right position */
                   pAb->AbWidth.DimIsPosition = TRUE;
@@ -2214,9 +2219,9 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
           if (!horizRef)
             {
               if (pAb->AbPositioning->PnTopUnit != UnAuto &&
-                  pAb->AbPositioning->PnTopUnit != UnUndefined &&
-                  pAb->AbPositioning->PnBottomUnit != UnAuto &&
-                  pAb->AbPositioning->PnBottomUnit != UnUndefined)
+                       pAb->AbPositioning->PnTopUnit != UnUndefined &&
+                       pAb->AbPositioning->PnBottomUnit != UnAuto &&
+                       pAb->AbPositioning->PnBottomUnit != UnUndefined)
                 {
                   /* inherit from an enclosing box */
                   pAb->AbHeight.DimIsPosition = FALSE;

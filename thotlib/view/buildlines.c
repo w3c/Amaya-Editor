@@ -3452,6 +3452,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
   int                 org, width, noWrappedWidth;
   int                 lostPixels, minWidth, y;
   int                 top, left, right, bottom, spacing;
+  int                 l, r;
   ThotBool            toAdjust, breakLine, isExtraFlow;
   ThotBool            xAbs, yAbs, extensibleBox;
   ThotBool            full, still, standard, isFloat;
@@ -3488,6 +3489,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
       /* limit to the enclosing box */
       if (pAb->AbWidth.DimAbRef == NULL && pAb->AbWidth.DimValue == -1)
         {
+          l = r = 0;
           if (isExtraFlow)
             pParent = GetEnclosingViewport (pAb);
           while (pParent && pParent->AbBox &&
@@ -3496,6 +3498,8 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
                   pParent->AbBox->BxType == BoGhost ||
                   pParent->AbBox->BxType == BoFloatGhost))
             {
+              //l += pParent->AbBox->BxLMargin + pParent->AbBox->BxLBorder + pParent->AbBox->BxLPadding;
+              //r += pParent->AbBox->BxRMargin + pParent->AbBox->BxRBorder + pParent->AbBox->BxRPadding;
               isExtraFlow = ExtraFlow (pParent->AbBox, frame);
               if (isExtraFlow)
                 pParent = GetEnclosingViewport (pParent);
@@ -3506,13 +3510,18 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
                   pParent = pParent->AbEnclosing;
                 }
             }
+          if (pParent && pParent->AbBox)
+          {
+            //l += pParent->AbBox->BxLMargin + pParent->AbBox->BxLBorder + pParent->AbBox->BxLPadding;
+            //r += pParent->AbBox->BxRMargin + pParent->AbBox->BxRBorder + pParent->AbBox->BxRPadding;
+          }
         }
       pCell = GetParentCell (pBox);
       if (pAb->AbWidth.DimUnit == UnAuto && (isFloat || isExtraFlow))
         {
           if (pParent && pParent->AbBox &&
               pParent->AbWidth.DimUnit != UnAuto)
-            maxWidth = pParent->AbBox->BxW - left - right;
+            maxWidth = pParent->AbBox->BxW - left - right - l - r;
           else
             {
               /* manage this box as an extensible box */
@@ -3527,7 +3536,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
              maxWidth = 30 * DOT_PER_INCH;
           else
             /* keep the box width */
-            maxWidth = pParent->AbBox->BxW - left - right;
+            maxWidth = pParent->AbBox->BxW - left - right - l - r;
         }
       else
         {
