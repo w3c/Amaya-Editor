@@ -15,6 +15,8 @@ extern void giveItems ( char *text,
                         int size,
                         struct menuType **items,
                         int *nbitems );
+extern ThotBool UseToBeCreated ( NotifyElement *event );
+extern void UseCreated ( NotifyElement *event );
 extern ThotBool UseMenuClicked ( NotifyElement *event );
 extern ThotBool OptionMenuClicked ( NotifyElement *event );
 extern ThotBool RepeatMenuClicked ( NotifyElement *event );
@@ -32,6 +34,8 @@ extern void giveItems ( char *text,
                           int size,
                           struct menuType **items,
                           int *nbitems );
+extern ThotBool UseToBeCreated ( NotifyElement *event );
+extern void UseCreated ( NotifyElement *event );
 extern ThotBool UseMenuClicked ( NotifyElement *event );
 extern ThotBool OptionMenuClicked ( NotifyElement *event );
 extern ThotBool RepeatMenuClicked ( NotifyElement *event );

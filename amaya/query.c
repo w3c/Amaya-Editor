@@ -2705,6 +2705,7 @@ static AHTReqContext *LoopRequest= NULL;
 static int LoopForStop (AHTReqContext *me)
 {
   int  status_req = HT_OK;
+  int  count = 0;
   
 #ifdef _WINGUI
   MSG msg;
@@ -2717,14 +2718,20 @@ static int LoopForStop (AHTReqContext *me)
   old_active_window = GetActiveWindow ();
   libwww_window = HTEventList_getWinHandle (&libwww_msg);
  
-  while (me->reqStatus != HT_END && me->reqStatus != HT_ERR
-         && me->reqStatus != HT_ABORT && AmayaIsAlive () &&
+  while (me->reqStatus != HT_END &&
+         me->reqStatus != HT_ERR
+         && me->reqStatus != HT_ABORT &&
+         AmayaIsAlive () &&
          GetMessage (&msg, NULL, 0, 0))
     {
       if (msg.message != WM_QUIT)
         TtaHandleOneEvent (&msg);
       else
         break;
+      if (count < 300)
+        count ++; // no more than 300 retries
+      else
+        me->reqStatus = HT_ABORT;
     }
   if (!AmayaIsAlive ())
     /* Amaya was killed by one of the callback handlers */
@@ -2740,21 +2747,25 @@ static int LoopForStop (AHTReqContext *me)
   /* Loop while waiting for new events, exists when the request is over */
   while (me->reqStatus != HT_ABORT &&
          me->reqStatus != HT_END &&
-         me->reqStatus != HT_ERR) {
-    if (!AmayaIsAlive ())
-	    /* Amaya was killed by one of the callback handlers */
-	    exit (0);
-	 
-    if (TtaFetchOneAvailableEvent (&ev))
-      TtaHandleOneEvent (&ev);
+         me->reqStatus != HT_ERR)
+    {
+      if (!AmayaIsAlive ())
+        /* Amaya was killed by one of the callback handlers */
+        exit (0);
+      if (TtaFetchOneAvailableEvent (&ev))
+        TtaHandleOneEvent (&ev);
+      if (count < 300)
+        count ++; // no more than 300 retries
+      else
+        me->reqStatus = HT_ABORT;
 #ifdef _WX
-    /* this is necessary for synchronous request*/
-    /* check the socket stats */
-    if (me->reqStatus != HT_ABORT)
-      // the request is not aborted
-    wxAmayaSocketEvent::CheckSocketStatus( 500 );
+      /* this is necessary for synchronous request*/
+      /* check the socket stats */
+      if (me->reqStatus != HT_ABORT)
+        // the request is not aborted
+        wxAmayaSocketEvent::CheckSocketStatus( 500 );
 #endif /* _WX */
-  }
+    }
 #endif /* #if defined(_GTK) || defined(_WX) */
 
   switch (me->reqStatus)
