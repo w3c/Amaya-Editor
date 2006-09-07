@@ -3909,8 +3909,9 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
   pBox->BxMinWidth += left + right;
   pBox->BxMaxWidth += left + right;
   UpdateBlockWithFloat (frame, pBox, xAbs, yAbs, TRUE, height);
-  *height = *height + top + spacing;
-
+  // return the full height
+  *height = *height + top + spacing + bottom;
+ 
   /* restore the value */
   pBox->BxCycles--;
 }
@@ -4430,8 +4431,9 @@ ThotBool RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox,
         {
           /* Il faut propager la modification de hauteur */
           propagateStatus = Propagate;
+          height -= pBox->BxHeight;
           /* We certainly need to re-check the height of enclosing elements */
-          ChangeDefaultHeight (pBox, ibox, height, frame);
+          ChangeDefaultHeight (pBox, ibox, pBox->BxH + height, frame);
           Propagate = propagateStatus;
         }
     }
