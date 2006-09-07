@@ -3246,7 +3246,7 @@ void UpdateBoxesCounter (PtrElement pElBegin, PtrDocument pDoc, int counter,
 void SetChange (PtrAbstractBox pAb, PtrDocument pDoc, PRuleType typeRule,
                 FunctionType func)
 {
-  PtrAbstractBox pMainAb;
+  PtrAbstractBox pMainAb, pChild;
 
   switch (typeRule)
     {
@@ -3262,24 +3262,35 @@ void SetChange (PtrAbstractBox pAb, PtrDocument pDoc, PRuleType typeRule,
     case PtListStyleType:
     case PtListStyleImage:
     case PtListStylePosition:
-      if (pAb->AbPresentationBox && pAb->AbTypeNum == 0 && !pAb->AbNew)
-        /* it's a list item marker */
+      if (!pAb->AbPresentationBox && pAb->AbDisplay == 'L')
         {
           /* delete the old marker */
-          pAb->AbDead = TRUE;
-          /* get the box that created this marker */
-          pMainAb = pAb->AbElement->ElAbstractBox[pAb->AbDocView - 1];
-          while (pMainAb && pMainAb->AbPresentationBox)
-            pMainAb = pMainAb->AbNext;
-          if (pMainAb && pMainAb->AbDisplay == 'L' &&
-              pMainAb->AbListStyleType != 'N')
-            /* this box has "display: list-item", create its list item marker*/
-            CreateListItemMarker (pMainAb, pDoc, NULL);
+          pChild = pAb->AbPrevious;
+          if (pChild->AbPresentationBox && pChild->AbTypeNum == 0 && !pChild->AbNew)
+            /* delete the old marker */
+            pChild->AbDead = TRUE;
+          if (pAb->AbListStyleType != 'N')
+            /* this box has "display: list-item", create its list item marker */
+            CreateListItemMarker (pAb, pDoc, NULL);
         }
-      else if (!pAb->AbPresentationBox && pAb->AbDisplay == 'L' &&
-               pAb->AbListStyleType != 'N')
-        /* this box has "display: list-item", create its list item marker */
-        CreateListItemMarker (pAb, pDoc, NULL);
+      else if (!pAb->AbPresentationBox)
+        {
+          // transmit th new value to children
+          pChild = pAb->AbFirstEnclosed;
+          while (pChild)
+            {
+              if (!pChild->AbPresentationBox && pChild->AbDisplay == 'L')
+                {
+                  if (typeRule == PtListStyleType)
+                    pChild->AbListStyleType = pAb->AbListStyleType;
+                  else if (typeRule == PtListStyleImage)
+                    pChild->AbListStyleImage = pAb->AbListStyleImage;
+                  else if (typeRule == PtListStylePosition)
+                    pChild->AbListStylePosition = pAb->AbListStylePosition;
+                }
+             pChild = pChild->AbNext;
+           }
+        }
       break;
     case PtFunction:
       if (func == FnBackgroundPicture || func == FnBackgroundRepeat ||

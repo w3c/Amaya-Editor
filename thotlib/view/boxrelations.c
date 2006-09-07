@@ -1734,9 +1734,9 @@ void ComputePosRelation (AbPosition *rule, PtrBox pBox, int frame,
             {
               /* l = 0, take the larger margin into account */
               if (pBox->BxRMargin > pRefBox->BxLMargin)
-                x = x + pBox->BxRMargin - pRefBox->BxLMargin;
+                x = x - (pBox->BxRMargin - pRefBox->BxLMargin);
               else
-                x = x - pBox->BxRMargin + pRefBox->BxLMargin;
+                x = x - (pRefBox->BxLMargin - pBox->BxRMargin);
             }
           break;
         case Bottom:
