@@ -1687,7 +1687,7 @@ void MakeToc (Document doc, View view)
   DisplayMode         dispMode;
   char               *s, *id;
   int                 firstChar, i;
-  ThotBool            closeUndo;
+  ThotBool            closeUndo, retry = TRUE;;
 
   /* check if there is HTML Hi elements and if the current position is
      within a HTML Body element */
@@ -1743,189 +1743,203 @@ void MakeToc (Document doc, View view)
   searchedType5.ElTypeNum = HTML_EL_H6;
   toc = lH2 = lH3 = lH4 = lH5 = lH6 = prev = NULL;
   list = NULL;
-  while (el)
+  while (retry)
     {
-      el = TtaSearchElementAmong5Types (searchedType1, searchedType2,
-                                        searchedType3, searchedType4,
-                                        searchedType5, SearchForward, el);
-      if (el)
+      while (el)
         {
-          if (toc == NULL)
+          el = TtaSearchElementAmong5Types (searchedType1, searchedType2,
+                                            searchedType3, searchedType4,
+                                            searchedType5, SearchForward, el);
+          if (el)
             {
-              /* genetate the enclosing division */
-              elType.ElTypeNum = HTML_EL_Division;
-              TtaCreateElement (elType, doc);
-              TtaGiveFirstSelectedElement (doc, &child, &firstChar, &i);
-              toc = TtaGetTypedAncestor (child, elType);
-              TtaRegisterElementDelete (child, doc);
-              TtaRemoveTree (child, doc);
-              if (toc)
+              if (toc == NULL)
                 {
-                  /* it's the last created element */
-                  attrType.AttrTypeNum = HTML_ATTR_Class;
-                  attr = TtaNewAttribute (attrType);
-                  TtaAttachAttribute (toc, attr, doc);
-                  TtaSetAttributeText (attr, "toc", toc, doc);
-                  TtaRegisterAttributeCreate (attr, toc, doc);
-                }
-            }
-          if (toc == NULL)
-            el = NULL;
-          else
-            {
-              /* does the element have an ID attribute already? */
-              attrType.AttrTypeNum = HTML_ATTR_ID;
-              attr = TtaGetAttribute (el, attrType);
-              if (!attr)
-                {
-                  /* generate the ID if it does't exist */
-                  CreateTargetAnchor (doc, el, TRUE, TRUE);
-                  attr = TtaGetAttribute (el, attrType);
-                }
-              i = TtaGetTextAttributeLength (attr) + 1;
-              id = (char *)TtaGetMemory (i + 1);
-              id[0] = '#';
-              TtaGiveTextAttributeValue (attr, &id[1], &i);
-	      
-              /* locate or generate the list */
-              elType = TtaGetElementType (el);
-              if (elType.ElTypeNum == HTML_EL_H2)
-                {
-                  parent = toc;
-                  lH3 = lH4 = lH5 = lH6 = NULL;
-                  list = &lH2;
-                }
-              else if (elType.ElTypeNum == HTML_EL_H3)
-                {
-                  if (lH2)
-                    parent = TtaGetLastChild (lH2);
-                  else
-                    parent = toc;
-                  lH4 = lH5 = lH6 = NULL;
-                  list = &lH3;
-                }
-              else if (elType.ElTypeNum == HTML_EL_H4)
-                {
-                  if (lH3)
-                    parent =  TtaGetLastChild (lH3);
-                  else if (lH2)
-                    parent =  TtaGetLastChild (lH2);
-                  else
-                    parent = toc;
-                  lH5 = lH6 = NULL;
-                  list = &lH4;
-                }
-              else if (elType.ElTypeNum == HTML_EL_H5)
-                {
-                  if (lH4)
-                    parent =  TtaGetLastChild (lH4);
-                  else if (lH3)
-                    parent =  TtaGetLastChild (lH3);
-                  else if (lH2)
-                    parent =  TtaGetLastChild (lH2);
-                  else
-                    parent = toc;
-                  lH6 = NULL;
-                  list = &lH5;
-                }
-              else if (elType.ElTypeNum == HTML_EL_H6)
-                {
-                  if (lH5)
-                    parent =  TtaGetLastChild (lH5);
-                  else if (lH4)
-                    parent =  TtaGetLastChild (lH4);
-                  else if (lH3)
-                    parent =  TtaGetLastChild (lH3);
-                  else if (lH2)
-                    parent =  TtaGetLastChild (lH2);
-                  else
-                    parent = toc;
-                  list = &lH6;
-                }
-
-              if (*list == NULL)
-                {
-                  /* generate the list */
-                  *list = TtaNewElement (doc, ulType);
-                  child = TtaGetLastChild (parent);
-                  if (child)
-                    TtaInsertSibling (*list, child, FALSE, doc);
-                  else
-                    TtaInsertFirstChild (list, parent, doc);
-                  TtaRegisterElementCreate (*list, doc);
-                }
-              /* generate the list item */
-              elType.ElTypeNum = HTML_EL_List_Item;
-              item = TtaNewElement (doc, elType);
-              /* generate the HTML_EL_Pseudo_paragraph */
-              elType.ElTypeNum =  HTML_EL_Pseudo_paragraph;
-              parent = TtaNewElement (doc, elType);
-              TtaInsertFirstChild (&parent, item, doc);
-              /* generate the link anchor */
-              elType.ElTypeNum = HTML_EL_Anchor;
-              new_ = TtaNewElement (doc, elType);
-              TtaInsertFirstChild (&new_, parent, doc);
-              attrType.AttrTypeNum = HTML_ATTR_HREF_;
-              attr = TtaNewAttribute (attrType);
-              TtaAttachAttribute (new_, attr, doc);
-              TtaSetAttributeText (attr, id, new_, doc);
-              TtaFreeMemory (id);
-              id = NULL;
-              /* get a copy of the Hi contents */
-              srce = TtaGetFirstChild (el);
-              prev = NULL;
-              parent = NULL;
-              while (srce)
-                {
-                  copyType = TtaGetElementType (srce);
-                  if (copyType.ElTypeNum == HTML_EL_Anchor &&
-                      copyType.ElSSchema == elType.ElSSchema)
+                  /* genetate the enclosing division */
+                  elType.ElTypeNum = HTML_EL_Division;
+                  TtaCreateElement (elType, doc);
+                  TtaGiveFirstSelectedElement (doc, &child, &firstChar, &i);
+                  toc = TtaGetTypedAncestor (child, elType);
+                  TtaRegisterElementDelete (child, doc);
+                  TtaRemoveTree (child, doc);
+                  if (toc)
                     {
-                      /* copy the anchor contents instead of the anchor */
-                      parent = srce;
-                      srce = TtaGetFirstChild (parent);
-                    }
-                  if (srce)
-                    {
-                      /* copy children of the next source */
-                      copy = TtaCopyTree (srce, doc, doc, new_);
-                      if (copy)
-                        {
-                          if (prev == NULL)
-                            /* this is the first copied element. Insert it before elem */
-                            TtaInsertFirstChild (&copy, new_, doc);
-                          else
-                            /* insert the new copied element after the element previously
-                               copied */
-                            TtaInsertSibling (copy, prev, FALSE, doc);
-                          prev = copy;
-                        }
-                      TtaNextSibling (&srce);
-                    }
-                  if (srce == NULL && parent)
-                    {
-                      /* copy children of an anchor */
-                      srce = parent;
-                      parent = NULL;
-                      if (srce)
-                        TtaNextSibling (&srce);
+                      /* it's the last created element */
+                      attrType.AttrTypeNum = HTML_ATTR_Class;
+                      attr = TtaNewAttribute (attrType);
+                      TtaAttachAttribute (toc, attr, doc);
+                      TtaSetAttributeText (attr, "toc", toc, doc);
+                      TtaRegisterAttributeCreate (attr, toc, doc);
                     }
                 }
-              child = TtaGetLastChild (*list);
-              if (child)
-                TtaInsertSibling (item, child, FALSE, doc);
+              if (toc == NULL)
+                el = NULL;
               else
-                TtaInsertFirstChild (&item, *list, doc);
-              TtaRegisterElementCreate (item, doc);
+                {
+                  /* does the element have an ID attribute already? */
+                  attrType.AttrTypeNum = HTML_ATTR_ID;
+                  attr = TtaGetAttribute (el, attrType);
+                  if (!attr)
+                    {
+                      /* generate the ID if it does't exist */
+                      CreateTargetAnchor (doc, el, TRUE, TRUE);
+                      attr = TtaGetAttribute (el, attrType);
+                    }
+                  i = TtaGetTextAttributeLength (attr) + 1;
+                  id = (char *)TtaGetMemory (i + 1);
+                  id[0] = '#';
+                  TtaGiveTextAttributeValue (attr, &id[1], &i);
+	      
+                  /* locate or generate the list */
+                  elType = TtaGetElementType (el);
+                  if (elType.ElTypeNum == HTML_EL_H2)
+                    {
+                      parent = toc;
+                      lH3 = lH4 = lH5 = lH6 = NULL;
+                      list = &lH2;
+                    }
+                  else if (elType.ElTypeNum == HTML_EL_H3)
+                    {
+                      if (lH2)
+                        parent = TtaGetLastChild (lH2);
+                      else
+                        parent = toc;
+                      lH4 = lH5 = lH6 = NULL;
+                      list = &lH3;
+                    }
+                  else if (elType.ElTypeNum == HTML_EL_H4)
+                    {
+                      if (lH3)
+                        parent =  TtaGetLastChild (lH3);
+                      else if (lH2)
+                        parent =  TtaGetLastChild (lH2);
+                      else
+                        parent = toc;
+                      lH5 = lH6 = NULL;
+                      list = &lH4;
+                    }
+                  else if (elType.ElTypeNum == HTML_EL_H5)
+                    {
+                      if (lH4)
+                        parent =  TtaGetLastChild (lH4);
+                      else if (lH3)
+                        parent =  TtaGetLastChild (lH3);
+                      else if (lH2)
+                        parent =  TtaGetLastChild (lH2);
+                      else
+                        parent = toc;
+                      lH6 = NULL;
+                      list = &lH5;
+                    }
+                  else if (elType.ElTypeNum == HTML_EL_H6)
+                    {
+                      if (lH5)
+                        parent =  TtaGetLastChild (lH5);
+                      else if (lH4)
+                        parent =  TtaGetLastChild (lH4);
+                      else if (lH3)
+                        parent =  TtaGetLastChild (lH3);
+                      else if (lH2)
+                        parent =  TtaGetLastChild (lH2);
+                      else
+                        parent = toc;
+                      list = &lH6;
+                    }
+
+                  if (*list == NULL)
+                    {
+                      /* generate the list */
+                      *list = TtaNewElement (doc, ulType);
+                      child = TtaGetLastChild (parent);
+                      if (child)
+                        TtaInsertSibling (*list, child, FALSE, doc);
+                      else
+                        TtaInsertFirstChild (list, parent, doc);
+                      TtaRegisterElementCreate (*list, doc);
+                    }
+                  /* generate the list item */
+                  elType.ElTypeNum = HTML_EL_List_Item;
+                  item = TtaNewElement (doc, elType);
+                  /* generate the HTML_EL_Pseudo_paragraph */
+                  elType.ElTypeNum =  HTML_EL_Pseudo_paragraph;
+                  parent = TtaNewElement (doc, elType);
+                  TtaInsertFirstChild (&parent, item, doc);
+                  /* generate the link anchor */
+                  elType.ElTypeNum = HTML_EL_Anchor;
+                  new_ = TtaNewElement (doc, elType);
+                  TtaInsertFirstChild (&new_, parent, doc);
+                  attrType.AttrTypeNum = HTML_ATTR_HREF_;
+                  attr = TtaNewAttribute (attrType);
+                  TtaAttachAttribute (new_, attr, doc);
+                  TtaSetAttributeText (attr, id, new_, doc);
+                  TtaFreeMemory (id);
+                  id = NULL;
+                  /* get a copy of the Hi contents */
+                  srce = TtaGetFirstChild (el);
+                  prev = NULL;
+                  parent = NULL;
+                  while (srce)
+                    {
+                      copyType = TtaGetElementType (srce);
+                      if (copyType.ElTypeNum == HTML_EL_Anchor &&
+                          copyType.ElSSchema == elType.ElSSchema)
+                        {
+                          /* copy the anchor contents instead of the anchor */
+                          parent = srce;
+                          srce = TtaGetFirstChild (parent);
+                        }
+                      if (srce)
+                        {
+                          /* copy children of the next source */
+                          copy = TtaCopyTree (srce, doc, doc, new_);
+                          if (copy)
+                            {
+                              if (prev == NULL)
+                                /* this is the first copied element. Insert it before elem */
+                                TtaInsertFirstChild (&copy, new_, doc);
+                              else
+                                /* insert the new copied element after the element previously
+                                   copied */
+                                TtaInsertSibling (copy, prev, FALSE, doc);
+                              prev = copy;
+                            }
+                          TtaNextSibling (&srce);
+                        }
+                      if (srce == NULL && parent)
+                        {
+                          /* copy children of an anchor */
+                          srce = parent;
+                          parent = NULL;
+                          if (srce)
+                            TtaNextSibling (&srce);
+                        }
+                    }
+                  child = TtaGetLastChild (*list);
+                  if (child)
+                    TtaInsertSibling (item, child, FALSE, doc);
+                  else
+                    TtaInsertFirstChild (&item, *list, doc);
+                  TtaRegisterElementCreate (item, doc);
+                }
             }
         }
+      // check if we have to retry in the whole document
+      if (toc)
+        retry = FALSE;
+      else if (retry)
+        { 
+          el = TtaGetMainRoot (doc);
+          retry = FALSE;
+        }
     }
-
   if (closeUndo)
     TtaCloseUndoSequence (doc);
 
   if (toc == NULL)
-    TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NO_HEADING_FOUND);
+    {
+      if (dispMode == DisplayImmediately)
+        TtaSetDisplayMode (doc, dispMode);
+      TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NO_HEADING_FOUND);
+    }
   else
     {
       /* force a complete redisplay to apply CSS */
