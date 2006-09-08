@@ -1117,6 +1117,7 @@ ThotBool ComputePositioning (PtrBox pBox, int frame)
               /* left positioning */
               if (appr &&
                   (pAb->AbWidth.DimUnit == UnAuto ||
+                   pAb->AbWidth.DimIsPosition ||
                    (pAb->AbWidth.DimAbRef == NULL && pAb->AbWidth.DimValue == -1)))
                 {
                   /* stretchable width */
@@ -2182,6 +2183,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
           if (horizRef)
             {
               if (pAb->AbWidth.DimUnit != UnAuto &&
+                   !pAb->AbWidth.DimIsPosition &&
                   (pAb->AbWidth.DimAbRef || pAb->AbWidth.DimValue != -1))
                 ;
               else if (pAb->AbPositioning->PnLeftUnit != UnAuto &&
