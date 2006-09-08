@@ -2728,10 +2728,12 @@ static int LoopForStop (AHTReqContext *me)
         TtaHandleOneEvent (&msg);
       else
         break;
+#ifdef IV
       if (count < 300)
         count ++; // no more than 300 retries
       else
         me->reqStatus = HT_ABORT;
+#endif
     }
   if (!AmayaIsAlive ())
     /* Amaya was killed by one of the callback handlers */
@@ -2754,10 +2756,12 @@ static int LoopForStop (AHTReqContext *me)
         exit (0);
       if (TtaFetchOneAvailableEvent (&ev))
         TtaHandleOneEvent (&ev);
+#ifdef IV
       if (count < 300)
         count ++; // no more than 300 retries
       else
         me->reqStatus = HT_ABORT;
+#endif
 #ifdef _WX
       /* this is necessary for synchronous request*/
       /* check the socket stats */
