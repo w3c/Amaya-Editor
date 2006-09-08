@@ -423,7 +423,7 @@ static void BookmarkMenuSelect_cbf (ThotWidget w, ThotBool state, void *cdata)
   ----------------------------------------------------------------------*/
 static void BookmarkMenuCallbackDialog (int ref, int typedata, char *data)
 {
-  int ptr_t            val;
+  intptr_t            val;
   ThotBool             result;
   List                *parent_url_list;
 
