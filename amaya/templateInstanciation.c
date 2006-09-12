@@ -101,20 +101,19 @@ void RegisterURLs(Document doc, Element el)
 #endif /* TEMPLATES*/
 }
 
-void  CreateInstance(char *templatePath, char *instancePath) {
+void  CreateInstance(char *templatePath, char *instancePath)
+ {
 #ifdef TEMPLATES
   ThotBool alreadyViewing = FALSE;
   int alreadyOnDoc = 0;
 
   XTigerTemplate t = (XTigerTemplate)Get(templates, templatePath);
-
   if(t==NULL)
     //The template must be loaded before calling this function
     return;
 
-  Document doc = GetTemplateDocument(t);
+  Document doc = GetTemplateDocument (t);
   DocumentType docType = DocumentTypes[doc];
-
   while(alreadyOnDoc<DocumentTableLength-1 && !alreadyViewing)
     {
       alreadyOnDoc++;
@@ -122,12 +121,10 @@ void  CreateInstance(char *templatePath, char *instancePath) {
         alreadyViewing = !strcmp(DocumentURLs[alreadyOnDoc],instancePath);
     }
 
-  if(!TtaPrepareUndo(doc))
+  if(!TtaPrepareUndo (doc))
     {
-      TtaOpenUndoSequence(doc, NULL, NULL, 0, 0);
-
+      TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
       RegisterURLs(doc, TtaGetRootElement(doc));
-      
       SetRelativeURLs (doc, instancePath);
       
       switch (docType)
@@ -223,6 +220,7 @@ Element InstanciateUse (XTigerTemplate t, Element el, Document doc,
   struct menuType  *items;
   char             *types;
   char             *empty = " ";
+  ThotBool          oldStructureChecking;
 
   /* get the value of the "types" attribute */
   cont = NULL;
@@ -257,8 +255,11 @@ Element InstanciateUse (XTigerTemplate t, Element el, Document doc,
             cont = TtaCopyTree (dec->componentType.content, doc, doc, el);
             if (insert)
               {
+                oldStructureChecking = TtaGetStructureChecking (doc);
+                TtaSetStructureChecking (FALSE, doc);
                 TtaInsertSibling (cont, el, TRUE, doc);
                 TtaDeleteTree (el, doc);
+                TtaSetStructureChecking (oldStructureChecking, doc);
               }
             break;
           case UnionNat :
