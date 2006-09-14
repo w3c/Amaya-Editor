@@ -10,114 +10,190 @@
         <object class="wxBoxSizer">
           <orient>wxVERTICAL</orient>
           <object class="sizeritem">
-            <object class="wxStaticText" name="wxID_LABEL_TEMPLATE">
-              <label>*Template*</label>
+            <object class="wxStaticBoxSizer">
+              <label>XTiger Template</label>
+              <orient>wxVERTICAL</orient>
+              <object class="sizeritem">
+                <object class="wxBoxSizer">
+                  <orient>wxVERTICAL</orient>
+                  <object class="sizeritem">
+                    <object class="wxBoxSizer">
+                      <orient>wxHORIZONTAL</orient>
+                      <object class="sizeritem">
+                        <object class="wxStaticText" name="wxID_LABEL_TEMPLATEDIRNAME">
+                          <label>*Browse for template directory*</label>
+                        </object>
+                        <flag>wxRIGHT|wxALIGN_CENTRE_VERTICAL</flag>
+                        <border>4</border>
+                      </object>
+                      <object class="sizeritem">
+                        <object class="wxTextCtrl" name="wxID_TEMPLATEDIRNAME"/>
+                        <option>1</option>
+                        <flag>wxEXPAND</flag>
+                      </object>
+                      <object class="sizeritem">
+                        <object class="wxBitmapButton" name="wxID_BUTTON_TEMPLATEDIR">
+                          <bitmap stock_id="wxART_FOLDER"></bitmap>
+                          <tooltip>Browse Template directory</tooltip>
+                        </object>
+                      </object>
+                    </object>
+                    <flag>wxBOTTOM|wxEXPAND</flag>
+                    <border>4</border>
+                  </object>
+                  <object class="sizeritem">
+                    <object class="wxBoxSizer">
+                      <orient>wxHORIZONTAL</orient>
+                      <object class="sizeritem">
+                        <object class="wxComboBox" name="wxID_TEMPLATEFILENAME">
+                          <content/>
+                          <size>300, -1</size>
+                        </object>
+                        <option>1</option>
+                        <flag>wxEXPAND</flag>
+                      </object>
+                    </object>
+                    <option>1</option>
+                    <flag>wxEXPAND</flag>
+                    <border>0</border>
+                  </object>
+                </object>
+                <flag>wxALL|wxEXPAND</flag>
+                <border>0</border>
+              </object>
             </object>
             <option>1</option>
-            <border>4</border>
-          </object>
-          <object class="sizeritem">
-            <object class="wxBoxSizer">
-              <orient>wxHORIZONTAL</orient>
-              <object class="sizeritem">
-                <object class="wxStaticText" name="wxID_LABEL_TEMPLATEFILENAME">
-                  <label>*File Name*</label>
-                </object>
-                <flag>wxRIGHT|wxALIGN_CENTRE_VERTICAL</flag>
-                <border>4</border>
-              </object>
-              <object class="sizeritem">
-                <object class="wxComboBox" name="wxID_TEMPLATEFILENAME">
-                  <content/>
-                  <size>300, -1</size>
-                </object>
-                <option>1</option>
-                <flag>wxEXPAND</flag>
-              </object>
-            </object>
-            <flag>wxBOTTOM|wxEXPAND</flag>
+            <flag>wxALL|wxEXPAND</flag>
             <border>2</border>
           </object>
           <object class="sizeritem">
             <object class="wxBoxSizer">
-              <orient>wxHORIZONTAL</orient>
+              <orient>wxVERTICAL</orient>
+              <object class="spacer">
+                <size>0,10</size>
+              </object>
               <object class="sizeritem">
-                <object class="wxStaticText" name="wxID_LABEL_TEMPLATEDIRNAME">
-                  <label>*Browse for template directory*</label>
+                <object class="wxStaticText" name="wxID_LABEL_INSTANCEFILENAME">
+                  <label>*Instance File Name*</label>
+                  <size>300,-1</size>
                 </object>
                 <flag>wxRIGHT|wxALIGN_CENTRE_VERTICAL</flag>
                 <border>4</border>
               </object>
               <object class="sizeritem">
-                <object class="wxTextCtrl" name="wxID_TEMPLATEDIRNAME"/>
+                <object class="wxBoxSizer">
+                  <orient>wxHORIZONTAL</orient>
+                  <object class="sizeritem">
+                    <object class="wxTextCtrl" name="wxID_INSTANCEFILENAME">
+                      <size>300,-1</size>
+                    </object>
+                    <option>1</option>
+                    <flag>wxEXPAND</flag>
+                    <border>4</border>
+                  </object>
+                  <object class="spacer">
+                    <size>5,0</size>
+                  </object>
+                  <object class="sizeritem">
+                    <object class="wxBitmapButton" name="wxID_BUTTON_INSTANCENAME">
+                      <bitmap stock_id="wxART_FILE_OPEN"></bitmap>
+                      <style></style>
+                      <tooltip>Browse file</tooltip>
+                    </object>
+                    <flag></flag>
+                  </object>
+                </object>
                 <option>1</option>
                 <flag>wxEXPAND</flag>
               </object>
-              <object class="sizeritem">
-                <object class="wxBitmapButton" name="wxID_BUTTON_TEMPLATEDIRNAME">
-                  <bitmap stock_id="wxART_FILE_OPEN"></bitmap>
-                </object>
-              </object>
             </object>
-            <flag>wxBOTTOM|wxEXPAND</flag>
-            <border>4</border>
-          </object>
-          <object class="sizeritem">
-            <object class="wxStaticLine"/>
             <flag>wxEXPAND</flag>
-            <border>4</border>
-          </object>
-          <object class="sizeritem">
-            <object class="wxStaticText" name="wxID_LABEL_INSTANCE">
-              <label>*Instance*</label>
-            </object>
-            <option>1</option>
             <border>4</border>
           </object>
           <object class="sizeritem">
             <object class="wxBoxSizer">
               <orient>wxHORIZONTAL</orient>
               <object class="sizeritem">
-                <object class="wxStaticText" name="wxID_LABEL_INSTANCEFILENAME">
-                  <label>*File Name*</label>
+                <object class="wxRadioBox" name="wxID_RADIOBOX">
+                  <label></label>
+                  <content>
+                    <item>*In new tab*</item>
+                    <item>*Repleace current one*</item>
+                    <item>*In new window*</item>
+                  </content>
+                  <style>wxRA_SPECIFY_COLS</style>
                 </object>
-                <flag>wxRIGHT|wxALIGN_CENTRE_VERTICAL</flag>
-                <border>4</border>
+              </object>
+              <object class="spacer">
+                <size>5,0</size>
               </object>
               <object class="sizeritem">
-                <object class="wxTextCtrl" name="wxID_INSTANCEFILENAME"/>
+                <object class="wxBoxSizer">
+                  <orient>wxVERTICAL</orient>
+                  <object class="sizeritem">
+                    <object class="wxStaticText" name="wxID_LABEL_INSTANCEDIR">
+                      <label>*Instance directory*</label>
+                      <size>200,-1</size>
+                    </object>
+                  </object>
+                  <object class="sizeritem">
+                    <object class="wxBoxSizer">
+                      <orient>wxHORIZONTAL</orient>
+                      <object class="sizeritem">
+                        <object class="wxTextCtrl" name="wxID_INSTANCEDIR">
+                          <size>200,-1</size>
+                        </object>
+                        <option>1</option>
+                        <flag>wxEXPAND</flag>
+                        <border>4</border>
+                      </object>
+                      <object class="spacer">
+                        <size>5,0</size>
+                      </object>
+                      <object class="sizeritem">
+                        <object class="wxBitmapButton" name="wxID_BUTTON_INSTANCEDIR">
+                          <bitmap stock_id="wxART_FOLDER"></bitmap>
+                          <style></style>
+                          <tooltip>Browse directory</tooltip>
+                        </object>
+                        <flag></flag>
+                      </object>
+                    </object>
+                    <flag>wxBOTTOM|wxEXPAND</flag>
+                    <border>4</border>
+                  </object>
+                  <object class="spacer">
+                    <size>0,10</size>
+                  </object>
+                  <object class="sizeritem">
+                    <object class="wxStaticText" name="wxID_LABEL_TITLE">
+                      <label>*Instance title*</label>
+                      <size>200,-1</size>
+                    </object>
+                  </object>
+                  <object class="sizeritem">
+                    <object class="wxBoxSizer">
+                      <orient>wxVERTICAL</orient>
+                      <object class="sizeritem">
+                        <object class="wxTextCtrl" name="wxID_TITLE">
+                          <size>300,-1</size>
+                        </object>
+                        <option>1</option>
+                        <flag>wxEXPAND</flag>
+                        <border>4</border>
+                      </object>
+                    </object>
+                    <flag>wxEXPAND</flag>
+                  </object>
+                </object>
                 <option>1</option>
                 <flag>wxEXPAND</flag>
-              </object>
-              <object class="sizeritem">
-                <object class="wxBitmapButton" name="wxID_BUTTON_INSTANCEFILENAME">
-                  <bitmap stock_id="wxART_FILE_OPEN"></bitmap>
-                  <style></style>
-                </object>
-                <flag></flag>
+                <border>4</border>
               </object>
             </object>
-            <flag>wxBOTTOM|wxEXPAND</flag>
+            <option>2</option>
+            <flag>wxALL|wxEXPAND</flag>
             <border>4</border>
-          </object>
-        </object>
-        <flag>wxALL|wxEXPAND</flag>
-        <border>4</border>
-      </object>
-      <object class="sizeritem">
-        <object class="wxBoxSizer">
-          <orient>wxHORIZONTAL</orient>
-          <object class="sizeritem">
-            <object class="wxRadioBox" name="wxID_RADIOBOX">
-              <label></label>
-              <content>
-                <item>*In new tab*</item>
-                <item>*Repleace current one*</item>
-                <item>*In new window*</item>
-              </content>
-              <style>wxRA_SPECIFY_COLS</style>
-            </object>
-            <flag>wxEXPAND</flag>
           </object>
         </object>
         <flag>wxALL|wxEXPAND</flag>

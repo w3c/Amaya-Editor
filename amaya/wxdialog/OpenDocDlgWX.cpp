@@ -253,7 +253,7 @@ void OpenDocDlgWX::UpdateComboboxFromDirAndFilename()
 }
 
 /*----------------------------------------------------------------------
-  UpdateDirFromCombobox
+  UpdateDirFromString
   params:
   returns:
   ----------------------------------------------------------------------*/
@@ -282,8 +282,8 @@ void OpenDocDlgWX::UpdateDirFromString( const wxString & full_path )
   ----------------------------------------------------------------------*/
 void OpenDocDlgWX::OnOpenButton( wxCommandEvent& event )
 {
-  wxString        value;
-  char            buffer[512];
+  wxString        value, title;
+  char            buffer[MAX_LENGTH];
   int             where_id;
 
   if (!Waiting)
@@ -295,33 +295,44 @@ void OpenDocDlgWX::OnOpenButton( wxCommandEvent& event )
   strcpy (buffer, (const char*)value.mb_str(wxConvUTF8));
   TtaSetEnvString ("DOCUMENT_CHARSET", buffer, TRUE);
 
+  // get the combobox current url
+  value = XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->GetValue( );
   // Get the document title
   if (Mandatory_title)
     {
       // get the document title
-      value = XRCCTRL(*this, "wxID_TITLE", wxTextCtrl)->GetValue( );
-      if (value.Len() == 0)
+      title = XRCCTRL(*this, "wxID_TITLE", wxTextCtrl)->GetValue( );
+      if (title.Len() == 0)
         {
+#ifdef IV
           XRCCTRL(*this, "wxID_ERROR", wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage (AMAYA, AM_MISSING_TITLE)));
+          Mandatory_title = 0;
           return;
+#endif
+          int end_slash_pos = value.Find(DIR_SEP, true);
+          m_LockUpdateFlag = true;
+          title = value.SubString(end_slash_pos+1, value.Length());
+          m_LockUpdateFlag = false;
+          strncpy( buffer, (const char*)title.mb_str(wxConvUTF8), MAX_LENGTH - 1);
+          buffer[MAX_LENGTH - 1] = EOS;
+          ThotCallback (BaseDialog + TitleText,  STRING_DATA, (char *)buffer);
         }
       else
         {
-          strcpy( buffer, (const char*)value.mb_str(wxConvUTF8) );
-          ThotCallback (BaseDialog + TitleText,  STRING_DATA, (char *)buffer );
+          strncpy( buffer, (const char*)title.mb_str(wxConvUTF8), MAX_LENGTH - 1);
+          buffer[MAX_LENGTH - 1] = EOS;
+          ThotCallback (BaseDialog + TitleText,  STRING_DATA, (char *)buffer);
         }
     }
+
+  // give the new url to amaya (to do url completion)
+  strncpy (buffer, (const char*)value.mb_str(wxConvUTF8), MAX_LENGTH - 1);
+  buffer[MAX_LENGTH - 1] = EOS;
+  ThotCallback (BaseDialog + URLName,  STRING_DATA, (char *)buffer );
 
   // get the "where to open" indicator
   where_id = XRCCTRL(*this, "wxID_RADIOBOX", wxRadioBox)->GetSelection();
   ThotCallback (BaseDialog + OpenLocation , INTEGER_DATA, (char*)where_id);
-
-  // get the combobox current url
-  value = XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->GetValue( );
-  strncpy (buffer, (const char*)value.mb_str(wxConvUTF8), 511);
-  buffer[511] = EOS;
-  // give the new url to amaya (to do url completion)
-  ThotCallback (BaseDialog + URLName,  STRING_DATA, (char *)buffer );
 
   // get the combobox profile
   value = XRCCTRL(*this, "wxID_PROFILE", wxComboBox)->GetValue( );

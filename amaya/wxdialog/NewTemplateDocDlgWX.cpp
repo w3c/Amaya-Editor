@@ -3,8 +3,8 @@
 #include "wx/wx.h"
 #include "wx/xrc/xmlres.h"              // XRC XML resouces
 #include "wx/string.h"
+#include "wx/arrstr.h"
 #include "wx/dir.h"
-
 #include "AmayaApp.h"
 #include "NewTemplateDocDlgWX.h"
 
@@ -19,6 +19,7 @@
 
 static int      MyRef = 0;
 static int      Mydoc = 0;
+static int      Waiting = 0;
 
 //-----------------------------------------------------------------------------
 // Event table: connect the events to the handler functions to process them
@@ -28,17 +29,18 @@ BEGIN_EVENT_TABLE(NewTemplateDocDlgWX, AmayaDialog)
   EVT_BUTTON( XRCID("wxID_OK"), NewTemplateDocDlgWX::OnCreateButton )
   EVT_BUTTON( XRCID("wxID_CLEAR"), NewTemplateDocDlgWX::OnClearButton )
   EVT_BUTTON( XRCID("wxID_CANCEL"), NewTemplateDocDlgWX::OnCancelButton )
-
-  EVT_BUTTON( XRCID("wxID_BUTTON_INSTANCEFILENAME"), NewTemplateDocDlgWX::OnInstanceFilenameButton )
-  EVT_BUTTON( XRCID("wxID_BUTTON_TEMPLATEDIRNAME"), NewTemplateDocDlgWX::OnTemplateDirNameButton )
-
+  EVT_BUTTON( XRCID("wxID_BUTTON_INSTANCENAME"), NewTemplateDocDlgWX::OnInstanceFilenameButton )
+  EVT_BUTTON( XRCID("wxID_BUTTON_TEMPLATEDIR"), NewTemplateDocDlgWX::OnDirNameButton )
+  EVT_BUTTON( XRCID("wxID_BUTTON_INSTANCEDIR"), NewTemplateDocDlgWX::OnDirNameButton )
   EVT_TEXT_ENTER( XRCID("wxID_FILENAME"), NewTemplateDocDlgWX::OnCreateButton )
 
   EVT_TEXT_ENTER( XRCID("wxID_TEMPLATEDIRNAME"), NewTemplateDocDlgWX::OnCreateButton )
+  EVT_TEXT_ENTER( XRCID("wxID_TEMPLATEFILENAME"), NewTemplateDocDlgWX::OnCreateButton )
+  EVT_TEXT_ENTER( XRCID("wxID_INSTANCEDIR"), NewTemplateDocDlgWX::OnCreateButton )
+  EVT_TEXT_ENTER( XRCID("wxID_INSTANCEFILENAME"), NewTemplateDocDlgWX::OnCreateButton )
   EVT_COMBOBOX( XRCID("wxID_TEMPLATEFILENAME"), NewTemplateDocDlgWX::OnTemplatenameSelected )
-  
-  
   EVT_TEXT( XRCID("wxID_TEMPLATEDIRNAME"), NewTemplateDocDlgWX::OnText_TemplateDirName )
+  EVT_TEXT( XRCID("wxID_INSTANCE"), NewTemplateDocDlgWX::OnText_InstanceDirName )
   EVT_TEXT( XRCID("wxID_INSTANCEFILENAME"), NewTemplateDocDlgWX::OnText_InstanceFilename )
   EVT_CLOSE( NewTemplateDocDlgWX::OnClose )
   END_EVENT_TABLE()
@@ -66,18 +68,23 @@ NewTemplateDocDlgWX::NewTemplateDocDlgWX ( int ref,
   ,m_pLastUsedFilter(p_last_used_filter)
 {
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("NewTemplateDocDlgWX"));
+  Waiting = 1;
   MyRef = ref;
   Mydoc = doc;
   // update dialog labels with given ones
   SetTitle( title );
 
-  XRCCTRL(*this, "wxID_LABEL_TEMPLATE", wxStaticText)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_TEMPLATE) ));
-  XRCCTRL(*this, "wxID_LABEL_TEMPLATEFILENAME", wxStaticText)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_FILE) ));
-  XRCCTRL(*this, "wxID_LABEL_TEMPLATEDIRNAME", wxStaticText)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_DIRECTORY) ));
+  //XRCCTRL(*this, "wxID_LABEL_TEMPLATE", wxStaticText)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_TEMPLATE) ));
+  XRCCTRL(*this, "wxID_LABEL_TEMPLATEDIRNAME", wxStaticText)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_DIRECTORY) ));
+  XRCCTRL(*this, "wxID_LABEL_INSTANCEDIR", wxStaticText)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_DIRECTORY) ));
   
-  XRCCTRL(*this, "wxID_LABEL_INSTANCE", wxStaticText)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_TEMPLATE_INSTANCE) ));
-  XRCCTRL(*this, "wxID_LABEL_INSTANCEFILENAME", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_FILE)));
-  XRCCTRL(*this, "wxID_BUTTON_INSTANCEFILENAME", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_BROWSE)));
+  XRCCTRL(*this, "wxID_LABEL_INSTANCEFILENAME", wxStaticText)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_TEMPLATE_INSTANCE) ));
+  XRCCTRL(*this, "wxID_BUTTON_TEMPLATEDIR", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_SEL)));
+  XRCCTRL(*this, "wxID_BUTTON_INSTANCENAME", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_BROWSE)));
+  XRCCTRL(*this, "wxID_BUTTON_INSTANCEDIR", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_SEL)));
+
+  XRCCTRL(*this, "wxID_LABEL_TITLE", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_BM_TITLE)));
+  XRCCTRL(*this, "wxID_TITLE", wxTextCtrl)->SetValue(TtaConvMessageToWX(""));
 
   XRCCTRL(*this, "wxID_RADIOBOX", wxRadioBox)->SetString(0, TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_REPLACECURRENT)));
   XRCCTRL(*this, "wxID_RADIOBOX", wxRadioBox)->SetString(1, TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_INNEWTAB)));
@@ -99,12 +106,14 @@ NewTemplateDocDlgWX::NewTemplateDocDlgWX ( int ref,
   // set the default templates directory
   XRCCTRL(*this, "wxID_TEMPLATEDIRNAME", wxTextCtrl)->SetValue(templateDir);
   // Update the template combobox with templates in directory "templateDir"
-  UpdateTemplateFromDir ();
+  //UpdateTemplateFromDir ();
   
   // set the default instance path
   wxString homedir = TtaGetHomeDir();
   wxString filename = TtaConvMessageToWX("New.html");
-  XRCCTRL(*this, "wxID_INSTANCEFILENAME", wxTextCtrl)->SetValue(homedir + m_DirSep + filename);
+  wxString   full_path = homedir + m_DirSep + filename;
+  XRCCTRL(*this, "wxID_INSTANCEFILENAME", wxTextCtrl)->SetValue(full_path);
+  UpdateDirFromString (full_path);
   SetAutoLayout( TRUE );
 }
 
@@ -113,8 +122,35 @@ NewTemplateDocDlgWX::NewTemplateDocDlgWX ( int ref,
   ----------------------------------------------------------------------*/
 NewTemplateDocDlgWX::~NewTemplateDocDlgWX()
 {
+  if (Waiting)
+    {
+      TtaDestroyDialogue (MyRef);
+      Waiting = 0;
+    }
 }
 
+
+/*----------------------------------------------------------------------
+  UpdateDirFromString
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+void NewTemplateDocDlgWX::UpdateDirFromString( const wxString & full_path)
+{
+  if (!m_LockUpdateFlag)
+    {
+      m_LockUpdateFlag = true;
+      if (!full_path.StartsWith(_T("http")))
+        {
+          int end_slash_pos = full_path.Find(DIR_SEP, true);
+          wxString dir_value = full_path.SubString(0, end_slash_pos);
+          XRCCTRL(*this, "wxID_INSTANCEDIR", wxTextCtrl)->SetValue(dir_value);
+        }
+      else
+        XRCCTRL(*this, "wxID_INSTANCEDIR", wxTextCtrl)->Clear();
+      m_LockUpdateFlag = false;
+    }
+}
 
 /*----------------------------------------------------------------------
   OnInstanceFilenameButton called when the user want to change the filename
@@ -124,24 +160,31 @@ NewTemplateDocDlgWX::~NewTemplateDocDlgWX()
   ----------------------------------------------------------------------*/
 void NewTemplateDocDlgWX::OnInstanceFilenameButton( wxCommandEvent& event )
 {
+  wxFileDialog  *p_dlg;
+
   // Create a generic filedialog
-  wxFileDialog * p_dlg = new wxFileDialog
-    (this,
-     TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_OPEN_URL) ),
-     _T(""), _T(""), m_Filter,
-     wxSAVE | wxOVERWRITE_PROMPT | wxCHANGE_DIR);
+  p_dlg = new wxFileDialog(this,
+                           TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_OPEN_URL) ),
+                           _T(""), _T(""), m_Filter,
+                           wxOPEN | wxCHANGE_DIR);
+  wxString url = XRCCTRL(*this, "wxID_INSTANCEFILENAME", wxTextCtrl)->GetValue( );
+  if (url.StartsWith(_T("http")) ||
+      url.StartsWith(TtaConvMessageToWX((TtaGetEnvString ("THOTDIR")))))
+    p_dlg->SetDirectory(wxGetHomeDir());
+  else
+    p_dlg->SetPath(url);
   p_dlg->SetFilterIndex(*m_pLastUsedFilter);
-  p_dlg->SetPath(XRCCTRL(*this, "wxID_INSTANCEFILENAME", wxTextCtrl)->GetValue());
+
   if (p_dlg->ShowModal() == wxID_OK)
     {
       *m_pLastUsedFilter = p_dlg->GetFilterIndex();
-      UpdateInstanceFilenameFromString( p_dlg->GetPath() );
+      UpdateInstanceFromString( p_dlg->GetPath() );
     }
   p_dlg->Destroy();
 }
 
 /*----------------------------------------------------------------------
-  UpdateComboboxFromDirAndFilename
+  UpdateTemplateFromDir
   params:
   returns:
   ----------------------------------------------------------------------*/
@@ -150,7 +193,39 @@ void NewTemplateDocDlgWX::UpdateTemplateFromDir ()
   if (!m_LockUpdateFlag)
     {
       m_LockUpdateFlag = true;
-      wxString dir_value      = XRCCTRL(*this, "wxID_TEMPLATEDIRNAME", wxTextCtrl)->GetValue();
+      wxString dir_value = XRCCTRL(*this, "wxID_TEMPLATEDIRNAME", wxTextCtrl)->GetValue();
+#ifdef _WINDOWS
+      if (dir_value.IsEmpty())
+        dir_value = _T("C:\\");
+#endif /* _WINDOWS */
+      if (dir_value.Last() != m_DirSep)
+        dir_value += m_DirSep;
+      XRCCTRL(*this, "wxID_TEMPLATEFILENAME", wxComboBox)->Clear();
+      XRCCTRL(*this, "wxID_TEMPLATEFILENAME", wxComboBox)->SetValue( TtaConvMessageToWX(""));
+      wxArrayString templateList;
+      wxDir::GetAllFiles(dir_value, &templateList, _T("*.xtd"), wxDIR_FILES);
+      XRCCTRL(*this, "wxID_TEMPLATEFILENAME", wxComboBox)->Append( templateList );
+      //XRCCTRL(*this, "wxID_TEMPLATEFILENAME", wxComboBox)->SetSelection (0);
+       m_LockUpdateFlag = false;
+   }
+}
+
+/*----------------------------------------------------------------------
+  UpdateInstanceFromDir
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+void NewTemplateDocDlgWX::UpdateInstanceFromDir ()
+{
+  wxString value, dir_value, filename_value;
+  
+  if (!m_LockUpdateFlag)
+    {
+      m_LockUpdateFlag = true;
+      value = XRCCTRL (*this, "wxID_INSTANCEFILENAME", wxTextCtrl)->GetValue();
+      int end_slash_pos = value.Find(DIR_SEP, true);
+      filename_value = value.SubString(end_slash_pos+1, value.Length());
+      dir_value = XRCCTRL(*this, "wxID_INSTANCEDIR", wxTextCtrl)->GetValue();
 #ifdef _WINDOWS
       if (dir_value.IsEmpty())
         dir_value = _T("C:\\");
@@ -159,20 +234,16 @@ void NewTemplateDocDlgWX::UpdateTemplateFromDir ()
         dir_value += m_DirSep;
       
       m_LockUpdateFlag = false;
-      
-      wxArrayString templateList;
-      wxDir::GetAllFiles(dir_value, &templateList, _T("*.xtd"), wxDIR_FILES);
-      XRCCTRL(*this, "wxID_TEMPLATEFILENAME", wxComboBox)->Clear();
-      XRCCTRL(*this, "wxID_TEMPLATEFILENAME", wxComboBox)->Append( templateList );
+      XRCCTRL(*this, "wxID_INSTANCEFILENAME", wxTextCtrl)->SetValue(dir_value + filename_value);
     }
 }
 
 /*----------------------------------------------------------------------
-  UpdateInstanceFilenameFromString
+  UpdateInstanceFromString
   params:
   returns:
   ----------------------------------------------------------------------*/
-void NewTemplateDocDlgWX::UpdateInstanceFilenameFromString( const wxString & full_path )
+void NewTemplateDocDlgWX::UpdateInstanceFromString( const wxString & full_path )
 {
   if (!m_LockUpdateFlag)
     {
@@ -185,9 +256,8 @@ void NewTemplateDocDlgWX::UpdateInstanceFilenameFromString( const wxString & ful
           XRCCTRL(*this, "wxID_INSTANCEFILENAME", wxTextCtrl)->SetValue(dir_value + filename_value);
         }
       else
-        {
-          XRCCTRL(*this, "wxID_INSTANCEFILENAME", wxTextCtrl)->Clear();
-        }
+        XRCCTRL(*this, "wxID_INSTANCEFILENAME", wxTextCtrl)->Clear();
+      UpdateDirFromString (full_path);
       m_LockUpdateFlag = false;
     }
 }
@@ -199,29 +269,52 @@ void NewTemplateDocDlgWX::UpdateInstanceFilenameFromString( const wxString & ful
   ----------------------------------------------------------------------*/
 void NewTemplateDocDlgWX::OnCreateButton( wxCommandEvent& event )
 {
-  char temp[MAX_LENGTH], docname[MAX_LENGTH];
+  wxString        value, title;
+  char            temp[MAX_LENGTH], docname[MAX_LENGTH];
+  char            buffer[MAX_LENGTH];
 
+  if (!Waiting)
+    // avoid double click
+    return;
   // get the template path
-  wxString templateUrl = XRCCTRL(*this, "wxID_TEMPLATEFILENAME", wxComboBox)->GetValue( );
-  wxASSERT( templateUrl.Len() < MAX_LENGTH );
-  strcpy( temp, (const char*)templateUrl.mb_str(wxConvUTF8) );
+  value = XRCCTRL(*this, "wxID_TEMPLATEFILENAME", wxComboBox)->GetValue( );
+  strncpy (temp, (const char*)value.mb_str(wxConvUTF8), MAX_LENGTH - 1);
+  temp[MAX_LENGTH - 1] = EOS;
   if (TtaFileExist(temp))
     {
       // get the doc instance path
-      wxString instanceUrl = XRCCTRL (*this, "wxID_INSTANCEFILENAME", wxTextCtrl)->GetValue();
-      wxASSERT( instanceUrl.Len() < MAX_LENGTH );
-      strcpy( docname, (const char*)instanceUrl.mb_str(wxConvUTF8) );
+      value = XRCCTRL (*this, "wxID_INSTANCEFILENAME", wxTextCtrl)->GetValue();
+      strncpy (docname, (const char*)value.mb_str(wxConvUTF8), MAX_LENGTH - 1);
+      docname[MAX_LENGTH - 1] = EOS;
+
+      // get the document title
+      title = XRCCTRL(*this, "wxID_TITLE", wxTextCtrl)->GetValue( );
+      if (title.Len() == 0)
+        {
+          int end_slash_pos = value.Find(DIR_SEP, true);
+          m_LockUpdateFlag = true;
+          title = value.SubString(end_slash_pos+1, value.Length());
+          m_LockUpdateFlag = false;
+          strncpy( buffer, (const char*)title.mb_str(wxConvUTF8), MAX_LENGTH - 1);
+          buffer[MAX_LENGTH - 1] = EOS;
+          ThotCallback (BaseDialog + TitleText,  STRING_DATA, (char *)buffer);
+        }
+      else
+        {
+          strncpy( buffer, (const char*)title.mb_str(wxConvUTF8), MAX_LENGTH - 1);
+          buffer[MAX_LENGTH - 1] = EOS;
+          ThotCallback (BaseDialog + TitleText,  STRING_DATA, (char *)buffer);
+        }
+
       // get the "where to open" indicator
       int where_id = XRCCTRL(*this, "wxID_RADIOBOX", wxRadioBox)->GetSelection();
       ThotCallback (BaseDialog + OpenLocation , INTEGER_DATA, (char*)where_id);
   
       // give the new url to amaya (to do url completion)
-      ThotCallback (BaseDialog + URLName,  STRING_DATA, (char *)docname );  
+      ThotCallback (BaseDialog + URLName, STRING_DATA, (char *)docname);  
       
       CreateInstanceOfTemplate (Mydoc, temp, docname);
-      TtaUnmapDialogue (MyRef);
-
-      //TtaDestroyDialogue (MyRef);
+      TtaDestroyDialogue (MyRef);
     }
   else
     {
@@ -232,6 +325,8 @@ void NewTemplateDocDlgWX::OnCreateButton( wxCommandEvent& event )
       msgdlg.ShowModal();
       TtaDestroyDialogue (MyRef);
     }
+  // return done
+  Waiting = 1;
 }
 
 /*----------------------------------------------------------------------
@@ -241,9 +336,10 @@ void NewTemplateDocDlgWX::OnCreateButton( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void NewTemplateDocDlgWX::OnClearButton( wxCommandEvent& event )
 {
-  XRCCTRL(*this, "wxID_TEMPLATEFILENAME", wxComboBox)->SetValue(_T(""));
-  XRCCTRL(*this, "wxID_TEMPLATEDIRNAME", wxTextCtrl)->Clear();
+  //XRCCTRL(*this, "wxID_TEMPLATEFILENAME", wxComboBox)->SetValue(_T(""));
+  //XRCCTRL(*this, "wxID_TEMPLATEDIRNAME", wxTextCtrl)->Clear();
   XRCCTRL(*this, "wxID_INSTANCEFILENAME", wxTextCtrl)->Clear();
+  XRCCTRL(*this, "wxID_INSTANCEDIR", wxTextCtrl)->Clear();
 }
 
 /*----------------------------------------------------------------------
@@ -282,6 +378,8 @@ void NewTemplateDocDlgWX::OnTemplatenameSelected( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void NewTemplateDocDlgWX::OnText_InstanceFilename( wxCommandEvent& event )
 {
+  wxString   full_path = XRCCTRL(*this, "wxID_INSTANCEFILENAME", wxTextCtrl)->GetValue();
+  UpdateDirFromString (full_path);
   event.Skip();
 }
 
@@ -291,27 +389,55 @@ void NewTemplateDocDlgWX::OnText_InstanceFilename( wxCommandEvent& event )
   Method:  OnText_Templatename_Browse
   Description: Select a template from its path
   ----------------------------------------------------------------------*/
-
-
 void NewTemplateDocDlgWX::OnText_TemplateDirName (wxCommandEvent& event )
 {
   UpdateTemplateFromDir ();
   event.Skip();
 }
 
-void NewTemplateDocDlgWX::OnTemplateDirNameButton (wxCommandEvent& event)
+/*----------------------------------------------------------------------
+  Class:  NewTemplateDocDlgWX
+  Method:  OnText_InstanceDirName
+  Description: Select a template from its path
+  ----------------------------------------------------------------------*/
+void NewTemplateDocDlgWX::OnText_InstanceDirName (wxCommandEvent& event )
 {
-  wxDirDialog * p_dlg = new wxDirDialog(this);
+  UpdateInstanceFromDir ();
+  event.Skip();
+}
+
+/*----------------------------------------------------------------------
+  Class:  NewTemplateDocDlgWX
+  Method:  OnDirNameButton
+  Description: Select a template or instance from its path
+  ----------------------------------------------------------------------*/
+void NewTemplateDocDlgWX::OnDirNameButton (wxCommandEvent& event)
+{
+  int id = event.GetId();
+  int temp_id = wxXmlResource::GetXRCID(_T("wxID_BUTTON_TEMPLATEDIR"));
+  wxDirDialog *p_dlg = new wxDirDialog(this);
   p_dlg->SetStyle(p_dlg->GetStyle() | wxDD_NEW_DIR_BUTTON);
-  p_dlg->SetPath(XRCCTRL(*this, "wxID_TEMPLATEDIRNAME", wxTextCtrl)->GetValue());
-  if (p_dlg->ShowModal() == wxID_OK)
+  if (id == temp_id)
     {
-      XRCCTRL(*this, "wxID_TEMPLATEDIRNAME", wxTextCtrl)->SetValue( p_dlg->GetPath() );
-      p_dlg->Destroy();
+      p_dlg->SetPath(XRCCTRL(*this, "wxID_TEMPLATEDIRNAME", wxTextCtrl)->GetValue());
+      if (p_dlg->ShowModal() == wxID_OK)
+        {
+          XRCCTRL(*this, "wxID_TEMPLATEDIRNAME", wxTextCtrl)->SetValue( p_dlg->GetPath() );
+          p_dlg->Destroy();
+        }
+      else
+        p_dlg->Destroy();
     }
   else
     {
-      p_dlg->Destroy();
+      p_dlg->SetPath(XRCCTRL(*this, "wxID_INSTANCEDIR", wxTextCtrl)->GetValue());
+      if (p_dlg->ShowModal() == wxID_OK)
+        {
+          XRCCTRL(*this, "wxID_INSTANCEDIR", wxTextCtrl)->SetValue( p_dlg->GetPath() );
+          p_dlg->Destroy();
+        }
+      else
+        p_dlg->Destroy();
     }
 }
 

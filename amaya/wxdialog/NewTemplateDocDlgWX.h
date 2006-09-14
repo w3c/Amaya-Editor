@@ -40,23 +40,26 @@ private:
   void OnClose( wxCloseEvent& event );
 
   void OnInstanceFilenameButton( wxCommandEvent& event );
-  void OnTemplateDirNameButton ( wxCommandEvent& event );
+  void OnDirNameButton ( wxCommandEvent& event );
 
   void OnTemplatenameSelected ( wxCommandEvent& event );
 
   void OnText_TemplateDirName( wxCommandEvent& event );
+  void OnText_InstanceDirName( wxCommandEvent& event );
   void OnText_InstanceFilename( wxCommandEvent& event );
   void OnText_Combobox( wxCommandEvent& event );
 
  private:
 
   void UpdateTemplateFromDir();
-  void UpdateInstanceFilenameFromString(const wxString & full_path);
+  void UpdateInstanceFromDir ();
+  void UpdateInstanceFromString(const wxString & full_path);
+  void UpdateDirFromString( const wxString & full_path);
 
  private:
   wxString m_Filter;
   bool     m_LockUpdateFlag;
-  int *    m_pLastUsedFilter;
+  int     *m_pLastUsedFilter;
   wxString m_DirSep;
 };
 
