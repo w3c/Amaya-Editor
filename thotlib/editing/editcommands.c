@@ -3483,7 +3483,6 @@ void PasteXClipboard (unsigned char *src, int nbytes, CHARSET charset)
       if (j > 0)
         {
           clipboard->BuLength = j;
-          ContentEditing (TEXT_SUP);
           ContentEditing (TEXT_X_PASTE);
         }
       if (!lock)
