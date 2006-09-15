@@ -2169,6 +2169,14 @@ static ThotBool     ContextOK (int entry)
           else
             ok = FALSE;
         }
+       
+      if (ok)
+        {
+          /* No one element is allowed within the title */
+	  if (strcmp (pHTMLGIMapping[entry].XMLname, "title") == 0)
+            ok = FALSE;
+        }
+
       if (ok)
         /* refuse HEAD within HEAD */
         if (strcmp (pHTMLGIMapping[entry].XMLname, "head") == 0)

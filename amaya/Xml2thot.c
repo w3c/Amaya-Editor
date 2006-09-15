@@ -1750,6 +1750,13 @@ static void   XhtmlCheckContext (char *elName, const ElementType * elType,
             *isAllowed = FALSE;
         }
        
+      if (*isAllowed)
+        {
+          /* No one element is allowed within the title */
+          if (!strcmp ((char *)nameElementStack[stackLevel - 1], "title") )
+            *isAllowed = FALSE;
+        }
+
       if (*isAllowed &&
           strcmp ((char *)elName, "body") == 0 &&
           XmlWithinStack (HTML_EL_BODY, XhtmlParserCtxt->XMLSSchema))
