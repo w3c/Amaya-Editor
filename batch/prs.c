@@ -3588,7 +3588,7 @@ static void ProcessLongKeyWord (int x, SyntacticCode gCode, indLine wi)
     case KWD_RepeatY:
       CurRule->PrPresBox[0] = YRepeat;
       break;
-    case KWD_Inline:
+    case KWD_CSSInline:
       CurRule->PrChrValue = 'I';
       break;
     case KWD_Block:
@@ -3602,7 +3602,7 @@ static void ProcessLongKeyWord (int x, SyntacticCode gCode, indLine wi)
       else
         CurRule->PrChrValue = 'L';
       break;
-    case KWD_RunIin:
+    case KWD_RunIn:
       CurRule->PrChrValue = 'R';
       break;
     case KWD_InlineBlock:

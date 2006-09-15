@@ -3,6 +3,7 @@
 #define THOT_EXPORT extern
 #include "templateDeclarations.h"
 
+#include "EDITimage_f.h"
 #include "HTMLactions_f.h"
 #include "HTMLsave_f.h"
 #include "init_f.h"
@@ -11,6 +12,7 @@
 #include "templateDeclarations_f.h"
 #include "templateInstanciation_f.h"
 #include "templateUtils_f.h"
+#include "fetchHTMLname_f.h"
 
 #include "Template.h"
 
@@ -52,6 +54,9 @@ static AttSearch    URL_attr_tab[] = {
 #endif
 };
 
+/*----------------------------------------------------------------------
+  RegisterURLs
+----------------------------------------------------------------------*/
 void RegisterURLs(Document doc, Element el)
 {
 #ifdef TEMPLATES
@@ -95,12 +100,15 @@ void RegisterURLs(Document doc, Element el)
 
     }  
 
-  for(Element child = TtaGetFirstChild(el);child;TtaNextSibling(&child))
+  for (Element child = TtaGetFirstChild (el); child; TtaNextSibling(&child))
     RegisterURLs(doc, child);
 
 #endif /* TEMPLATES*/
 }
 
+/*----------------------------------------------------------------------
+  CreateInstance
+----------------------------------------------------------------------*/
 void  CreateInstance(char *templatePath, char *instancePath)
  {
 #ifdef TEMPLATES
@@ -162,6 +170,8 @@ void  CreateInstance(char *templatePath, char *instancePath)
 #endif /* TEMPLATES */
 }
 
+/*----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 void InstantiateTemplate_callback (int newdoc, int status,  char *urlName,
 								   char *outputfile, AHTHeaders *http_headers,
 								   void * context)
@@ -207,11 +217,107 @@ void InstanciateTemplate (Document doc, char *templatename, char *docname,
 #endif /* TEMPLATES */
 }
 
+/*----------------------------------------------------------------------
+  InstanciateAttribute
+----------------------------------------------------------------------*/
+static void InstanciateAttribute (XTigerTemplate t, Element el, Document doc)
+{
+#ifdef TEMPLATES
+  AttributeType  useType, nameType, defaultType, attrType;
+  Attribute      useAttr, nameAttr, defAttr, attr;
+  ElementType    elType;
+  Element        parent;
+  char           *text, *elementName;
+  ThotBool       level;
+  NotifyAttribute event;
+
+  parent = TtaGetParent (el);
+  if (!parent)
+    return;
+  // if attribute "use" has value "optional", don't do anything
+  useType.AttrSSchema = TtaGetSSchema (TEMPLATE_SCHEMA_NAME, doc);
+  useType.AttrTypeNum = Template_ATTR_useAt;
+  useAttr = TtaGetAttribute (el, useType);
+  if (useAttr)
+    // there is a "use" attribute. Check its value
+    {
+      text = GetAttributeStringValue (el, useAttr);
+      if (text && strcmp (text, "optional") == 0)
+        return;
+    }
+  // get the "name" and "default" attributes
+  nameType.AttrSSchema = defaultType.AttrSSchema = TtaGetSSchema (TEMPLATE_SCHEMA_NAME, doc);
+  nameType.AttrTypeNum = Template_ATTR_name;
+  defaultType.AttrTypeNum = Template_ATTR_defaultAt;
+  nameAttr = TtaGetAttribute (el, nameType);
+  defAttr = TtaGetAttribute (el, defaultType);
+  if (nameAttr)
+    {
+      text = GetAttributeStringValue (el, nameAttr);
+      if(text)
+        {
+          elType = TtaGetElementType (parent);
+          elementName = TtaGetElementTypeName (elType);
+          level = TRUE;
+          MapHTMLAttribute (text, &attrType, elementName, &level, doc);
+          TtaFreeMemory(text);
+          attr = TtaNewAttribute (attrType);
+          if (attr)
+            {
+              TtaAttachAttribute (parent, attr, doc);
+              if (defAttr)
+                {
+                  text = GetAttributeStringValue (el, defAttr);
+                  TtaSetAttributeText(attr, text, parent, doc);
+                  TtaFreeMemory(text);
+                  // if it's a src arttribute for an image, load the image
+                  if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") &&
+                      elType.ElTypeNum == HTML_EL_IMG)
+                    if (attrType.AttrTypeNum == HTML_ATTR_SRC &&
+                        attrType.AttrSSchema == elType.ElSSchema)
+                      {
+                        event.document = doc;
+                        event.element = parent;
+                        event.attribute = attr;
+                        SRCattrModified (&event);
+                      }
+                }
+            }
+        }
+    }
+#endif /* TEMPLATES */
+}
+
+#ifdef TEMPLATES
+/*----------------------------------------------------------------------
+  ProcessAttr
+  Look for all "attribute" elements in the subtree and instanciate them
+----------------------------------------------------------------------*/
+static void ProcessAttr (XTigerTemplate t, Element el, Document doc)
+{
+  Element      child;
+  ElementType  elType;
+
+  for (child = TtaGetFirstChild (el); child; TtaNextSibling(&child))
+    {
+      elType = TtaGetElementType (child);
+      if (elType.ElTypeNum == Template_EL_attribute &&
+          !strcmp (TtaGetSSchemaName (elType.ElSSchema), TEMPLATE_SCHEMA_NAME))
+        InstanciateAttribute (t, child, doc);
+      else
+        ProcessAttr (t, child, doc);
+    }
+}
+#endif /* TEMPLATES */
+
+/*----------------------------------------------------------------------
+  InstanciateUse
+----------------------------------------------------------------------*/
 Element InstanciateUse (XTigerTemplate t, Element el, Document doc,
                              ThotBool insert)
 {
 #ifdef TEMPLATES
-	Element          cont;
+	Element          cont, child, prev, next;
   ElementType      elt;
 	Attribute        at;
 	AttributeType    att;
@@ -220,7 +326,6 @@ Element InstanciateUse (XTigerTemplate t, Element el, Document doc,
   struct menuType  *items;
   char             *types;
   char             *empty = " ";
-  ThotBool          oldStructureChecking;
 
   /* get the value of the "types" attribute */
   cont = NULL;
@@ -253,13 +358,25 @@ Element InstanciateUse (XTigerTemplate t, Element el, Document doc,
             break;
           case ComponentNat :
             cont = TtaCopyTree (dec->componentType.content, doc, doc, el);
+            ProcessAttr (t, cont, doc);
             if (insert)
               {
-                oldStructureChecking = TtaGetStructureChecking (doc);
-                TtaSetStructureChecking (FALSE, doc);
-                TtaInsertSibling (cont, el, TRUE, doc);
-                TtaDeleteTree (el, doc);
-                TtaSetStructureChecking (oldStructureChecking, doc);
+                prev = NULL;
+                child = TtaGetFirstChild (cont);
+                while (child)
+                  {
+                    next = child;
+                    TtaNextSibling (&next);
+                    TtaRemoveTree (child, doc);
+                    if (prev)
+                      TtaInsertSibling (child, prev, FALSE, doc);
+                    else
+                      TtaInsertFirstChild (&child, el, doc);
+                    prev = child;
+                    child = next;
+                  }
+                TtaDeleteTree (cont, doc);
+                cont = el;
               }
             break;
           case UnionNat :
@@ -273,7 +390,9 @@ Element InstanciateUse (XTigerTemplate t, Element el, Document doc,
 #endif /* TEMPLATES */
 }
 
-void InstanciateRepeat(XTigerTemplate t, Element el, Document doc)
+/*----------------------------------------------------------------------
+----------------------------------------------------------------------*/
+void InstanciateRepeat (XTigerTemplate t, Element el, Document doc)
 {
 #ifdef TEMPLATES
   int            curVal,  minVal,  maxVal;
@@ -409,8 +528,10 @@ void InstanciateRepeat(XTigerTemplate t, Element el, Document doc)
 }
 
 /*----------------------------------------------------------------------
+  ParseTemplate
 ----------------------------------------------------------------------*/
-void ParseTemplate (XTigerTemplate t, Element el, Document doc)
+static void ParseTemplate (XTigerTemplate t, Element el, Document doc,
+                           ThotBool loading)
 {
 #ifdef TEMPLATES
 	AttributeType attType;
@@ -461,8 +582,8 @@ void ParseTemplate (XTigerTemplate t, Element el, Document doc)
             InstanciateUse (t, el, doc, TRUE);
           break;
         case Template_EL_attribute :
-          //Initialize the attribute
-          //Allow the edition of the attribute
+          if (!loading)
+            InstanciateAttribute (t, el, doc);
           break;
         case Template_EL_repeat :
           InstanciateRepeat (t, el, doc);
@@ -477,7 +598,7 @@ void ParseTemplate (XTigerTemplate t, Element el, Document doc)
 	while(child!=NULL) {
 		aux = child;
 		TtaNextSibling(&aux);
-		ParseTemplate(t, child, doc);
+		ParseTemplate(t, child, doc, loading);
 		child = aux;
 	}
 #endif /* TEMPLATES */
@@ -499,7 +620,7 @@ void InstanciateTemplate(char *templatename)
 	t		=	(XTigerTemplate) Get(templates,templatename);
   doc = GetTemplateDocument(t);
 	root	=	TtaGetMainRoot (doc);
-	ParseTemplate(t, root, doc);
+	ParseTemplate(t, root, doc, FALSE);
 
   //Look for PIs
   /* check if the document has a DOCTYPE declaration */
@@ -572,7 +693,7 @@ void InstanciateTemplate(char *templatename)
 
 /*----------------------------------------------------------------------
 PreInstanciateComponents: Instanciates all components in order to improve
-edition.
+editing.
 ----------------------------------------------------------------------*/
 void PreInstanciateComponents(XTigerTemplate t)
 {
@@ -583,7 +704,7 @@ void PreInstanciateComponents(XTigerTemplate t)
   for(First(components);!IsDone(components);Next(components))
     {
       comp = (Declaration) CurrentElement(components);
-      ParseTemplate(t, GetComponentContent(comp), GetTemplateDocument(t));
+      ParseTemplate(t, GetComponentContent(comp), GetTemplateDocument(t), TRUE);
     }
 #endif /* TEMPLATES */
 }

@@ -77,6 +77,7 @@
         <xt:option>
           <img class="photo">
             <xt:attribute name="alt" default="Author picture"/>
+            <xt:attribute name="src" default="DefPortrait.jpg"/>
             <xt:attribute name="width" use="optional"/>
           </img>
           <br />
@@ -129,20 +130,7 @@
 
 <div class="authors">
   <xt:repeat minOccurs="1">
-    <xt:use types="author">
-      <p class="vcard">
-        <xt:option>
-          <img class="photo" src=".." alt="Author picture" />
-          <br />
-        </xt:option>
-        <span class="fn">Author Name</span>
-        <br />
-        <span class="adr">Address line 1<br />
-                                  line 2...</span>
-        <br />
-        <span class="email">email</span>
-      </p>
-    </xt:use>
+    <xt:use types="author" />
   </xt:repeat>
 </div>
 

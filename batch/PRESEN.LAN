@@ -180,7 +180,7 @@ FontColorName =   NAME .
 FileName =	  STRING .
 PictMode =	  'NormalSize' / 'Scale' / 'RepeatXY' / 'RepeatX' / 'RepeatY' .
 
-DisplayVal =      'Inline' / 'Block' / 'ListItem' / 'RunIin' /
+DisplayVal =      'CSSInline' / 'Block' / 'ListItem' / 'RunIn' /
 		  'InlineBlock' / 'None' / 'Enclosing' '=' .
 
 ListStyleType =   'Disc' / 'Circle' / 'Square' / 'Decimal' /

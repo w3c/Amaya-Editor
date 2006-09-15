@@ -12,10 +12,6 @@ translation
 
 C_CR: \0
 TEXT_UNIT: \0
-useMenu: \0
-bagMenu: \0
-repeatMenu: \0
-optionMenu: \0
 folder: \0
 includeAt: include
 integerVal: integer

@@ -553,18 +553,19 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
       CheckMandatoryAttribute (el, doc, HTML_ATTR_SRC);
       /* We need a PICTURE element as child to hold the image */
       picture = NULL;
-      child = TtaGetFirstChild (el);
-      if (child)
+      for (child = TtaGetFirstChild (el); child && !picture;
+           TtaNextSibling (&child))
         {
-          elType = TtaGetElementType (child);
-          if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
+          childType = TtaGetElementType (child);
+          if (childType.ElTypeNum == HTML_EL_PICTURE_UNIT &&
+              childType.ElSSchema == elType.ElSSchema)
             // the picture is already created
             picture = child;
         }
       if (picture == NULL)
         {
-          elType.ElTypeNum = HTML_EL_PICTURE_UNIT;
-          picture = TtaNewTree (doc, elType, "");
+          childType.ElTypeNum = HTML_EL_PICTURE_UNIT;
+          picture = TtaNewTree (doc, childType, "");
           if (child)
             TtaInsertSibling (picture, child, TRUE, doc);
           else

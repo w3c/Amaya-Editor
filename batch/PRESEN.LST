@@ -186,7 +186,7 @@ number
    88	FileName =	  STRING .
    89	PictMode =	  'NormalSize' / 'Scale' / 'RepeatXY' / 'RepeatX' / 'RepeatY' .
 	
-   75	DisplayVal =      'Inline' / 'Block' / 'ListItem' / 'RunIin' /
+   75	DisplayVal =      'CSSInline' / 'Block' / 'ListItem' / 'RunIn' /
 			  'InlineBlock' / 'None' / 'Enclosing' '=' .
 	
    76	ListStyleType =   'Disc' / 'Circle' / 'Square' / 'Decimal' /
@@ -560,10 +560,10 @@ code  key-word      numbers of rules using the key-word
 1247  RepeatXY            89
 1248  RepeatX             89
 1249  RepeatY             89
-1250  Inline              75
+1250  CSSInline           75
 1251  Block               75
 1252  ListItem            75
-1253  RunIin              75
+1253  RunIn               75
 1254  InlineBlock         75
 1255  Disc                76
 1256  Circle              76

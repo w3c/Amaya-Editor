@@ -1489,7 +1489,8 @@ void SvgImageCreated (NotifyElement *event)
   ----------------------------------------------------------------------*/
 void  SRCattrModified (NotifyAttribute *event)
 {
-  Element          el;
+  Element          el, pict, child;
+  ElementType      elType;
   Attribute        attr;
   Document         doc;
   int              length;
@@ -1500,6 +1501,18 @@ void  SRCattrModified (NotifyAttribute *event)
   doc = event->document;
   el = event->element;
   attr = event->attribute;
+  pict = NULL;
+  /* get the PICTURE_UNIT child of element el */
+  elType = TtaGetElementType (el);
+  if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
+    pict = el;
+  else
+    for (child = TtaGetFirstChild (el); child && !pict; TtaNextSibling (&child))
+      {
+        elType = TtaGetElementType (child);
+        if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
+          pict = child;
+      }
   /* get a buffer for the attribute value */
   length = MAX_LENGTH;
   value = (char *)TtaGetMemory (length);
@@ -1517,10 +1530,10 @@ void  SRCattrModified (NotifyAttribute *event)
           /* remote image */
           localname = GetLocalPath (doc, buf2);
           /* load a remote image into a remote document */
-          TtaSetTextContent (el, (unsigned char *)localname, SPACE, doc);
+          TtaSetTextContent (pict, (unsigned char *)localname, SPACE, doc);
           TtaFreeMemory (localname);
           ActiveTransfer (doc);
-          FetchImage (doc, el, NULL, 0, NULL, NULL);
+          FetchImage (doc, pict, NULL, 0, NULL, NULL);
           ResetStop (doc);
         }
       else
@@ -1533,11 +1546,11 @@ void  SRCattrModified (NotifyAttribute *event)
               AddLoadedImage (imageName, value, doc, &desc);
               desc->status = IMAGE_MODIFIED;
               TtaFileCopy (buf2, desc->localName);
-              TtaSetTextContent (el, (unsigned char *)desc->localName, SPACE, doc);
+              TtaSetTextContent (pict, (unsigned char *)desc->localName, SPACE, doc);
             }
           else
             /* load a local image into a local document */
-            TtaSetTextContent (el, (unsigned char *)buf2, SPACE, doc);
+            TtaSetTextContent (pict, (unsigned char *)buf2, SPACE, doc);
         }
     }
   TtaFreeMemory (value);

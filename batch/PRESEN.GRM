@@ -163,10 +163,10 @@ Scale 1246
 RepeatXY 1247
 RepeatX 1248
 RepeatY 1249
-Inline 1250
+CSSInline 1250
 Block 1251
 ListItem 1252
-RunIin 1253
+RunIn 1253
 InlineBlock 1254
 Disc 1255
 Circle 1256

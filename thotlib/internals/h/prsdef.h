@@ -169,10 +169,10 @@
 #define KWD_RepeatXY 	1247
 #define KWD_RepeatX 	1248
 #define KWD_RepeatY 	1249
-#define KWD_Inline 	1250
+#define KWD_CSSInline 	1250
 #define KWD_Block 	1251
 #define KWD_ListItem 	1252
-#define KWD_RunIin 	1253
+#define KWD_RunIn 	1253
 #define KWD_InlineBlock 	1254
 #define KWD_Disc 	1255
 #define KWD_Circle 	1256

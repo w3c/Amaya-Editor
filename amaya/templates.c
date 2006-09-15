@@ -166,6 +166,12 @@ static char *createMenuString (const struct menuType* items, const int nbItems)
 ThotBool UseToBeCreated (NotifyElement *event)
 {
 #ifdef TEMPLATES
+  Element        el, parent;
+	Document       doc;
+
+  el = event->element;
+  doc = event->document;
+  /* is there a limit to the number of elements in the xt:repeat ? */
   /* @@@@@ */
 #endif /* TEMPLATES */
   return FALSE; /* let Thot perform normal operation */
@@ -184,10 +190,14 @@ void UseCreated (NotifyElement *event)
   XTigerTemplate   t;
 
 	doc = event->document;
+  el = event->element;
+  if (TtaGetFirstChild (el))
+    /* this Use element has already some content. It has already been
+       instanciated */
+    return;
   t = (XTigerTemplate) Get(templates, DocumentMeta[doc]->template_url);
   if (!t)
     return; // no template ?!?!
-  el = event->element;
   InstanciateUse (t, el, doc, TRUE);
 #endif /* TEMPLATES */
 }
