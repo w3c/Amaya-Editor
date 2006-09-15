@@ -290,6 +290,7 @@ ThotBool UseMenuClicked (NotifyElement *event)
       TtaNewScrollPopup (BaseDialog + OptionMenu, TtaGetViewFrame (doc, 1),
                          NULL, nbitems, menuString , NULL, false, 'L');
       TtaFreeMemory (menuString);
+      ReturnOption = -1; // no selection yet
       TtaShowDialogue (BaseDialog + OptionMenu, FALSE);
       TtaWaitShowProcDialogue();
       TtaDestroyDialogue (BaseDialog + OptionMenu);
@@ -363,6 +364,7 @@ ThotBool RepeatMenuClicked (NotifyElement *event)
 	TtaNewScrollPopup (BaseDialog + OptionMenu, TtaGetViewFrame (doc, 1), NULL, 
                      nbitems, menuString , NULL, false, 'L');
 	TtaFreeMemory (menuString);
+  ReturnOption = -1; // no selection yet
 	TtaShowDialogue (BaseDialog + OptionMenu, FALSE);
 	TtaWaitShowProcDialogue();
 	TtaDestroyDialogue (BaseDialog + OptionMenu);
