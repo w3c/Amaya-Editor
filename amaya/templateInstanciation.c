@@ -533,6 +533,7 @@ static void ParseTemplate (XTigerTemplate t, Element el, Document doc,
 #ifdef TEMPLATES
 	AttributeType attType;
 	Attribute att;
+	Element aux; //Needed when deleting trees
 	char *name;
 	ElementType type = TtaGetElementType(el);
 	
@@ -567,6 +568,9 @@ static void ParseTemplate (XTigerTemplate t, Element el, Document doc,
           TtaSetAttributeText(att, name, el, doc);
           
           break;
+        case Template_EL_option :
+          aux = NULL;
+          break;
         case Template_EL_bag :
           //Link to types
           //Allow editing the content
@@ -591,13 +595,13 @@ static void ParseTemplate (XTigerTemplate t, Element el, Document doc,
     }
 	
 	Element child = TtaGetFirstChild(el);
-	Element aux; //Needed when deleting trees
-	while(child!=NULL) {
-		aux = child;
-		TtaNextSibling(&aux);
-		ParseTemplate(t, child, doc, loading);
-		child = aux;
-	}
+	while(child!=NULL)
+    {
+      aux = child;
+      TtaNextSibling(&aux);
+      ParseTemplate(t, child, doc, loading);
+      child = aux;
+    }
 #endif /* TEMPLATES */
 }
 

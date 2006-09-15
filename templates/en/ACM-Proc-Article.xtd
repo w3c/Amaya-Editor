@@ -72,15 +72,19 @@
 
     <xt:union name="bibref" include="refbook refarticle refreport"></xt:union>
 
+    <xt:component name="portrait">
+       <img class="photo">
+          <xt:attribute name="alt" default="Author picture"/>
+          <xt:attribute name="src" default="DefPortrait.jpg"/>
+          <xt:attribute name="width" use="optional"/>
+       </img>
+       <br />
+    </xt:component>
+
     <xt:component name="author">
       <p class="vcard">
         <xt:option>
-          <img class="photo">
-            <xt:attribute name="alt" default="Author picture"/>
-            <xt:attribute name="src" default="DefPortrait.jpg"/>
-            <xt:attribute name="width" use="optional"/>
-          </img>
-          <br />
+          <xt:use types="portrait"/>
         </xt:option>
         <span class="fn">
           <xt:use types="string">Author name</xt:use>

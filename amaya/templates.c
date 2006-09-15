@@ -166,7 +166,7 @@ static char *createMenuString (const struct menuType* items, const int nbItems)
 ThotBool UseToBeCreated (NotifyElement *event)
 {
 #ifdef TEMPLATES
-  Element        el, parent;
+  Element        el;
 	Document       doc;
 
   el = event->element;
@@ -295,8 +295,11 @@ ThotBool UseMenuClicked (NotifyElement *event)
       TtaWaitShowProcDialogue();
       TtaDestroyDialogue (BaseDialog + OptionMenu);
       /* result: items[ReturnOption].label @@@@@ */
-      dec = GetDeclaration(t, items[ReturnOption].label);
+      if (ReturnOption != -1)
+        dec = GetDeclaration(t, items[ReturnOption].label);
       TtaFreeMemory (items);
+      if (ReturnOption == -1)
+        return FALSE;
       if (dec)
         {
           switch(dec->nature)
@@ -333,6 +336,41 @@ ThotBool UseMenuClicked (NotifyElement *event)
 ThotBool OptionMenuClicked (NotifyElement *event)
 {
 #ifdef TEMPLATES
+  Element         child, grandChild, next;
+  ElementType     elType, elType1;
+  Document        doc;
+  XTigerTemplate  t;
+
+  doc = event->document;
+  child = TtaGetFirstChild (event->element);
+  if (!child)
+    return FALSE;
+  elType = TtaGetElementType (child);
+  elType1 = TtaGetElementType (event->element);
+  if (elType.ElTypeNum != Template_EL_useEl ||
+      elType.ElSSchema != elType1.ElSSchema)
+    return FALSE;
+  grandChild = TtaGetFirstChild (child);
+  if (!grandChild)
+    /* the "use" element is empty. Instanciate it */
+    {
+      t = (XTigerTemplate) Get(templates, DocumentMeta[doc]->template_url);
+      if (!t)
+        return FALSE; // no template ?!?!
+      InstanciateUse (t, child, doc, TRUE);
+    }
+  else
+    /* remove the content of the "use" element */
+    {
+      do
+        {
+          next = grandChild;
+          TtaNextSibling (&next);
+          TtaDeleteTree (grandChild, doc);
+          grandChild = next;
+        }
+      while (next);
+    }
   return FALSE;
 #endif /* TEMPLATES */
 	return TRUE;
