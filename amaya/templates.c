@@ -413,7 +413,7 @@ void OpeningInstance(Document doc)
   //If it is a template we must ignore it
   strcpy (aux, DocumentURLs[doc]);
   strcpy (content, &aux[strlen(aux)-4]);
-  if(strncasecmp (content, ".XTD", strlen(content))==0)
+  if (strncasecmp (content, ".XTD", strlen(content))==0)
     return;
 
   content[0] = EOS;
@@ -473,7 +473,7 @@ void OpeningInstance(Document doc)
           strcat(content, aux);
 
           //This is not an XTiger PI
-          if(!strstr(content,"xtiger")) break;            
+          if (!strstr(content,"xtiger")) break;            
  
           line = TtaSearchTypedElement (lineType, SearchForward, line);
         }
@@ -482,7 +482,7 @@ void OpeningInstance(Document doc)
 
   DocumentMeta[doc]->template_url = NULL;
 
-  if(content[0]=='\0')
+  if (content[0]=='\0')
     return;
     
   char *pointer;
@@ -490,39 +490,39 @@ void OpeningInstance(Document doc)
   //xtiger
   strcpy(aux, content);
   aux[6]='\0';
-  if(strcmp(aux,"xtiger")!=0)
+  if (strcmp(aux,"xtiger")!=0)
     return;
   
   //template
   pointer = strstr(content, "template");
-  if(pointer==NULL)
+  if (pointer==NULL)
     return;
 
   //=
   pointer = strstr(pointer, "=");
-  if(pointer==NULL)
+  if (pointer==NULL)
     return;
   
   //"
   pointer = strstr(pointer, "\"");
-  if(pointer==NULL)
+  if (pointer==NULL)
     return;
   
   //content
   strcpy(aux, pointer+1);
   pointer = strstr(aux, "\"");
-  if(pointer==NULL)
+  if (pointer==NULL)
     return;
   *pointer = '\0';
   
   //and finally
   DocumentMeta[doc]->template_url = TtaStrdup(aux);
 
-  if(!templates) InitializeTemplateEnvironment();
+  if (!templates) InitializeTemplateEnvironment();
 
   XTigerTemplate t = (XTigerTemplate)Get(templates, aux);
 
-  if(!t)
+  if (!t)
     {
       LoadTemplate(0, aux);
       t = (XTigerTemplate)Get(templates, aux);
@@ -540,13 +540,13 @@ ThotBool ClosingInstance(NotifyDialog* dialog)
 {
 #ifdef TEMPLATES
   //If it is a template all has been already freed
-  if(DocumentMeta[dialog->document] == NULL) return FALSE;
+  if (DocumentMeta[dialog->document] == NULL) return FALSE;
 
   char *turl = DocumentMeta[dialog->document]->template_url;
-  if(turl)
+  if (turl)
     {
       XTigerTemplate t = (XTigerTemplate)Get(templates, turl);
-      if(t)
+      if (t)
         RemoveUser(t);
       TtaFreeMemory(turl);
     }

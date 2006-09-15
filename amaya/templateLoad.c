@@ -181,13 +181,10 @@ void LoadTemplate_callback (int newdoc, int status,  char *urlName,
   file = TtaWriteOpen (localname);
   
 	TtaListAbstractTree (TtaGetMainRoot(newdoc), file);
-  
 	TtaWriteClose (file);
 #endif
 
-  //DontReplaceOldDoc = TRUE;
-  InstanciateTemplate(ctx->templatePath);
-  
+  DoInstanceTemplate (ctx->templatePath);
   TtaFreeMemory (ctx->templatePath);
   TtaFreeMemory (ctx);
 #endif /* TEMPLATES */
@@ -209,11 +206,11 @@ void LoadTemplate (Document doc, char* templatename)
 	TtaExtractName (templatename, directory, document);	
 	TtaSetEnvString ("TEMPLATES_DIRECTORY", directory, TRUE);
 
-	TtaFreeMemory(directory);
-	TtaFreeMemory(document);
+	TtaFreeMemory (directory);
+	TtaFreeMemory (document);
 
 	//If types are not loaded we load the template and we parse it
-	if(!Get(templates,templatename))
+	if (!Get (templates,templatename))
 	{	
 		//Creation of the callback context
 		TemplateCtxt *ctx	= (TemplateCtxt *)TtaGetMemory (sizeof (TemplateCtxt));
@@ -224,10 +221,5 @@ void LoadTemplate (Document doc, char* templatename)
 			(void (*)(int, int, char*, char*, const AHTHeaders*, void*)) LoadTemplate_callback,
 			(void *) ctx);
 	}
-
-	//Otherwise we will load the template later
-	//else
-  //InstanciateTemplate(templatename);
-
 #endif /* TEMPLATES */
 }

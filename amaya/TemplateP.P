@@ -341,7 +341,7 @@ RULES
     Width: auto{Enclosing . Width};
     Height: auto{Enclosing . Height};
     LineBreak : no;
-    {Display: Block;}
+    {Display: Inline;}
     VertPos: Top = 			Previous . Bottom;
     HorizPos: Left =		Enclosing . Left; 
 		BorderTopWidth: 	 	1 px;

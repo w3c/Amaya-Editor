@@ -95,7 +95,7 @@ void RegisterURLs(Document doc, Element el)
         }
 
       attr = TtaGetAttribute(el, attrType);
-      if(attr!=NULL)      
+      if (attr!=NULL)      
         TtaRegisterAttributeReplace(attr, el, doc);
 
     }  
@@ -116,20 +116,20 @@ void  CreateInstance(char *templatePath, char *instancePath)
   int alreadyOnDoc = 0;
 
   XTigerTemplate t = (XTigerTemplate)Get(templates, templatePath);
-  if(t==NULL)
+  if (t == NULL)
     //The template must be loaded before calling this function
     return;
 
   Document doc = GetTemplateDocument (t);
   DocumentType docType = DocumentTypes[doc];
-  while(alreadyOnDoc<DocumentTableLength-1 && !alreadyViewing)
+  while (alreadyOnDoc<DocumentTableLength-1 && !alreadyViewing)
     {
       alreadyOnDoc++;
-      if(DocumentURLs[alreadyOnDoc]!=NULL)
+      if (DocumentURLs[alreadyOnDoc]!=NULL)
         alreadyViewing = !strcmp(DocumentURLs[alreadyOnDoc],instancePath);
     }
 
-  if(!TtaPrepareUndo (doc))
+  if (!TtaPrepareUndo (doc))
     {
       TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
       RegisterURLs(doc, TtaGetRootElement(doc));
@@ -144,7 +144,7 @@ void  CreateInstance(char *templatePath, char *instancePath)
           TtaExportDocumentWithNewLineNumbers (doc, instancePath, "MathMLT");
           break;
         case docHTML :
-          if(TtaGetDocumentProfile(doc)==L_Xhtml11 || TtaGetDocumentProfile(doc)==L_Basic)
+          if (TtaGetDocumentProfile(doc)==L_Xhtml11 || TtaGetDocumentProfile(doc)==L_Basic)
             TtaExportDocumentWithNewLineNumbers (doc, instancePath, "HTMLT11");
           else
             TtaExportDocumentWithNewLineNumbers (doc, instancePath, "HTMLTX");
@@ -154,12 +154,12 @@ void  CreateInstance(char *templatePath, char *instancePath)
           break;
         }
       
-      TtaCloseUndoSequence(doc);
-      TtaUndoNoRedo(doc);
-      TtaClearUndoHistory(doc);
+      TtaCloseUndoSequence (doc);
+      TtaUndoNoRedo (doc);
+      TtaClearUndoHistory (doc);
     }
 
-  if(!alreadyViewing) //Open the instance
+  if (!alreadyViewing) //Open the instance
     {      
       TtaExtractName (instancePath, DirectoryName, DocumentName);
       CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
@@ -179,13 +179,11 @@ void InstantiateTemplate_callback (int newdoc, int status,  char *urlName,
 #ifdef TEMPLATES
 	InstanciationCtxt *ctx = (InstanciationCtxt*)context;
 
-	InstanciateTemplate(ctx->templatePath);
-
-  CreateInstance(ctx->templatePath, ctx->instancePath);
-
-  TtaFreeMemory(ctx->templatePath);
-  TtaFreeMemory(ctx->instancePath);
-  TtaFreeMemory(ctx);
+	DoInstanceTemplate (ctx->templatePath);
+  CreateInstance (ctx->templatePath, ctx->instancePath);
+  TtaFreeMemory (ctx->templatePath);
+  TtaFreeMemory (ctx->instancePath);
+  TtaFreeMemory (ctx);
 #endif /* TEMPLATES */
 }
 
@@ -195,7 +193,7 @@ void InstanciateTemplate (Document doc, char *templatename, char *docname,
                           DocumentType docType, ThotBool loaded)
 {
 #ifdef TEMPLATES
-	if(!loaded)
+	if (!loaded)
 	{
 		//Create the callback context
 		InstanciationCtxt *ctx	= (InstanciationCtxt *)TtaGetMemory (sizeof (InstanciationCtxt));
@@ -210,8 +208,8 @@ void InstanciateTemplate (Document doc, char *templatename, char *docname,
 	}
 	else
     {
-      InstanciateTemplate(templatename);
-      CreateInstance(templatename, docname);
+      DoInstanceTemplate (templatename);
+      CreateInstance (templatename, docname);
     }
   
 #endif /* TEMPLATES */
@@ -254,7 +252,7 @@ static void InstanciateAttribute (XTigerTemplate t, Element el, Document doc)
   if (nameAttr)
     {
       text = GetAttributeStringValue (el, nameAttr);
-      if(text)
+      if (text)
         {
           elType = TtaGetElementType (parent);
           elementName = TtaGetElementTypeName (elType);
@@ -314,7 +312,7 @@ static void ProcessAttr (XTigerTemplate t, Element el, Document doc)
   InstanciateUse
 ----------------------------------------------------------------------*/
 Element InstanciateUse (XTigerTemplate t, Element el, Document doc,
-                             ThotBool insert)
+                        ThotBool insert)
 {
 #ifdef TEMPLATES
 	Element          cont, child, prev, next;
@@ -401,23 +399,22 @@ void InstanciateRepeat (XTigerTemplate t, Element el, Document doc)
   char           *text;
 
   //Preparing types
-  minType.AttrSSchema = maxType.AttrSSchema = curType.AttrSSchema 
-    = TtaGetSSchema(TEMPLATE_SCHEMA_NAME, doc);
-
+  curType.AttrSSchema = TtaGetSSchema (TEMPLATE_SCHEMA_NAME, doc);
+  minType.AttrSSchema = maxType.AttrSSchema = curType.AttrSSchema;
   curType.AttrTypeNum = Template_ATTR_currentOccurs; 
   minType.AttrTypeNum = Template_ATTR_minOccurs;
   maxType.AttrTypeNum = Template_ATTR_maxOccurs;
 
   //Get currentOccurs, minOccurs and maxOccurs attributes
-  curAtt = TtaGetAttribute(el, curType);
-  minAtt = TtaGetAttribute(el, minType);
-  maxAtt = TtaGetAttribute(el, maxType);
+  curAtt = TtaGetAttribute (el, curType);
+  minAtt = TtaGetAttribute (el, minType);
+  maxAtt = TtaGetAttribute (el, maxType);
 
   //Get the values
-  if(minAtt)
+  if (minAtt)
     {
       text = GetAttributeStringValue(el, minAtt);
-      if(text)
+      if (text)
         {
           minVal = atoi(text);
           TtaFreeMemory(text);
@@ -429,16 +426,16 @@ void InstanciateRepeat (XTigerTemplate t, Element el, Document doc)
   else
     minVal = 0;
 
-  if(maxAtt)
+  if (maxAtt)
     {
-      text = GetAttributeStringValue(el, maxAtt);
-      if(text)
+      text = GetAttributeStringValue (el, maxAtt);
+      if (text)
         {
-          if(strcmp(text,"*")==0)
+          if (!strcmp (text, "*"))
             maxVal = INT_MAX;
           else
-            maxVal = atoi(text);
-          TtaFreeMemory(text);
+            maxVal = atoi (text);
+          TtaFreeMemory (text);
         }
       else
         //Error : Attribute with no value
@@ -447,10 +444,10 @@ void InstanciateRepeat (XTigerTemplate t, Element el, Document doc)
   else
     maxVal = INT_MAX;
 
-  if(curAtt)
+  if (curAtt)
     {
       text = GetAttributeStringValue(el, curAtt);
-      if(text)
+      if (text)
         {
           maxVal = atoi(text);
           TtaFreeMemory(text);
@@ -465,7 +462,7 @@ void InstanciateRepeat (XTigerTemplate t, Element el, Document doc)
   text = (char*)TtaGetMemory(MAX_LENGTH);
 
   //Create non existing attributes
-  if(!minAtt)
+  if (!minAtt)
     {      
       minAtt = TtaNewAttribute(minType);
       sprintf(text,"%d",minVal);
@@ -473,10 +470,10 @@ void InstanciateRepeat (XTigerTemplate t, Element el, Document doc)
       TtaSetAttributeText(minAtt, text, el, doc);
     }
 
-  if(!maxAtt)
+  if (!maxAtt)
     {  
       maxAtt = TtaNewAttribute(maxType);
-      if(maxVal<INT_MAX)
+      if (maxVal<INT_MAX)
         sprintf(text,"%d",maxVal);
       else
         sprintf(text,"*");
@@ -484,7 +481,7 @@ void InstanciateRepeat (XTigerTemplate t, Element el, Document doc)
       TtaSetAttributeText(maxAtt, text, el, doc);
     }
 
-  if(!curAtt)
+  if (!curAtt)
     {      
       curAtt = TtaNewAttribute(curType);
       sprintf(text,"%d",curVal);
@@ -492,7 +489,7 @@ void InstanciateRepeat (XTigerTemplate t, Element el, Document doc)
       TtaSetAttributeText(curAtt, text, el, doc);
     }
 
-  if(text)
+  if (text)
     TtaFreeMemory(text);
 
   //We must have currentOccurs children
@@ -500,7 +497,7 @@ void InstanciateRepeat (XTigerTemplate t, Element el, Document doc)
   int      childrenCount;
 
   child = TtaGetFirstChild(el);
-  if(!child)
+  if (!child)
     //Error : a repeat must have at least one child which will be the model
     return;
   
@@ -510,7 +507,7 @@ void InstanciateRepeat (XTigerTemplate t, Element el, Document doc)
       childrenCount ++;
     }
 
-  if(childrenCount > maxVal)
+  if (childrenCount > maxVal)
     //Error : too many children!
     return;  
 
@@ -539,7 +536,7 @@ static void ParseTemplate (XTigerTemplate t, Element el, Document doc,
 	char *name;
 	ElementType type = TtaGetElementType(el);
 	
-	if(strcmp(TtaGetSSchemaName(type.ElSSchema),"Template")==0)
+	if (!strcmp (TtaGetSSchemaName(type.ElSSchema),"Template"))
     {
       switch(type.ElTypeNum)
         {
@@ -606,7 +603,7 @@ static void ParseTemplate (XTigerTemplate t, Element el, Document doc,
 
 /*----------------------------------------------------------------------
 ----------------------------------------------------------------------*/
-void InstanciateTemplate(char *templatename)
+void DoInstanceTemplate (char *templatename)
 {
 #ifdef TEMPLATES
 	XTigerTemplate	t;
@@ -655,7 +652,7 @@ void InstanciateTemplate(char *templatename)
     }
   doctype = TtaSearchTypedElement (elType, SearchInTree, root);
 
-  if(!doctype)
+  if (!doctype)
     {
       /* generate the XML declaration */
       /* Check the Thot abstract tree against the structure schema. */

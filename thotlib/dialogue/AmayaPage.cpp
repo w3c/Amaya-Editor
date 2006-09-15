@@ -673,7 +673,7 @@ void AmayaPage::DoClose(bool & veto)
       // try to close the frame : the user can choose to close or not with a dialog
       p_AmayaFrame->DoClose( veto );
       
-      // if the user don't want to close then just reattach the frame
+      // if the user doesn't want to close then just reattach the frame
       if ( !TtaFrameIsClosed (frame_id) )
         {
           // if the frame didnt die, just re-attach it

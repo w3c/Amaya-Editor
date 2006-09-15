@@ -28,10 +28,7 @@ extern Element InstanciateUse ( XTigerTemplate t,
 extern void InstanciateRepeat ( XTigerTemplate t,
                                 Element el,
                                 Document doc );
-extern void ParseTemplate ( XTigerTemplate t,
-                            Element el,
-                            Document doc );
-extern void InstanciateTemplate ( char *templatename );
+extern void DoInstanceTemplate ( char *templatename );
 extern void PreInstanciateComponents ( XTigerTemplate t );
 
 #else /* __STDC__ */
@@ -58,10 +55,7 @@ extern Element InstanciateUse ( XTigerTemplate t,
 extern void InstanciateRepeat ( XTigerTemplate t,
                                   Element el,
                                   Document doc );
-extern void ParseTemplate ( XTigerTemplate t,
-                              Element el,
-                              Document doc );
-extern void InstanciateTemplate ( char *templatename );
+extern void DoInstanceTemplate ( char *templatename );
 extern void PreInstanciateComponents ( XTigerTemplate t );
 
 #endif /* __STDC__ */
