@@ -2037,7 +2037,6 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
               else
                 floatL = NULL;
             }
-
           /* check previous floating box to set the width */
           else if (floatR && (clearR || floatR == NULL))
             {
@@ -2050,6 +2049,12 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
                 floatR = pfloatR->FlBox;
               else
                 floatR = NULL;
+            }
+          else
+            {
+              /* line position and width are correct know */
+              floatL = NULL;
+              floatR = NULL;
             }
         }
       else
