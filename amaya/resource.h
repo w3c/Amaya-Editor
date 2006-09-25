@@ -786,6 +786,7 @@
 #define IDC_TXT_DAVRESOURCES            1615
 #define IDC_DAVRESOURCES                1616
 #define IDC_TIMEOUT_VALUE               1617
+#define IDC_INSERT_NBSP                 1617
 #define IDC_TIMEOUT_SECOND              1618
 #define ID_BUTTON40017                  40017
 #define ID_BUTTON40018                  40018
@@ -833,7 +834,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        572
 #define _APS_NEXT_COMMAND_VALUE         40052
-#define _APS_NEXT_CONTROL_VALUE         1617
+#define _APS_NEXT_CONTROL_VALUE         1618
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

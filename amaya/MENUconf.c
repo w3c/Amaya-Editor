@@ -3805,6 +3805,9 @@ LRESULT CALLBACK WIN_GeometryDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
           break;
         case IDC_SAVE_GEOMETRY_EXIT:
           S_Geometry = !S_Geometry;
+          TtaSetEnvBoolean ("SAVE_GEOMETRY", S_Geometry, TRUE);
+          TtaSaveAppRegistry ();
+          EndDialog (hwnDlg, ID_DONE);
           break;
         }
       break;	     

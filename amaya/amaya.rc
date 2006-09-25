@@ -100,7 +100,7 @@ BEGIN
     PUSHBUTTON      "Done",ID_DONE,132,116,50,14
 END
 
-GEOMETRYMENU DIALOG DISCARDABLE  100, 100, 286, 44
+GEOMETRYMENU DIALOG DISCARDABLE  100, 100, 286, 74
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Geometry Preferences"
 FONT 8, "MS Sans Serif"
@@ -110,6 +110,8 @@ BEGIN
     DEFPUSHBUTTON   "Save current geometry",ID_APPLY,4,23,96,14
     PUSHBUTTON      "Restore default geometry",ID_DEFAULTS,106,23,120,14
     PUSHBUTTON      "Done",ID_DONE,232,23,50,14
+    CONTROL         "Save geometry on exit",IDC_SAVE_GEOMETRY_EXIT,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,7,50,138,8
 END
 
 COLORMENU DIALOG DISCARDABLE  100, 100, 277, 121
@@ -271,8 +273,6 @@ BEGIN
                     WS_TABSTOP,8,41,124,8
     CONTROL         "Use double-click",IDC_DOUBLECLICK,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,8,54,124,8
-    CONTROL         "Enable FTP",IDC_ENABLEFTP,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,8,66,124,8
     LTEXT           "Screen type ",IDC_SCREEN,7,80,169,11
     LISTBOX         IDC_SCREENLIST,7,91,163,29,LBS_SORT | 
                     LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
@@ -325,7 +325,7 @@ BEGIN
         LEFTMARGIN, 4
         RIGHTMARGIN, 282
         TOPMARGIN, 7
-        BOTTOMMARGIN, 42
+        BOTTOMMARGIN, 72
     END
 
     COLORMENU, DIALOG
@@ -548,7 +548,7 @@ BEGIN
                     WS_TABSTOP,7,127,138,8
     CONTROL         "Generate backup files",IDC_AUTOSAVE,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,7,138,138,8
-    CONTROL         "Save geometry on exit",IDC_SAVE_GEOMETRY_EXIT,"Button",
+    CONTROL         "Generate no-break spaces",IDC_INSERT_NBSP,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,7,149,138,8
     CONTROL         "Show button bar",IDC_SHOWBUTTONS,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,7,160,138,8
