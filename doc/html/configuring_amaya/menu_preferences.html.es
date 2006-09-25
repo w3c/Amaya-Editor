@@ -233,14 +233,6 @@ Amaya, para activar un enlace hay que hacer doble clic en él. Eso te permite
 elegir entre editar o activar un enlace. Puedes deshabilitar este
 comportamiento desactivando esta opción.</p>
 
-<p><strong>Activar FTP.</strong> Permite a Amaya abrir URLs de FTP. Este
-soporte es experimental y todavía tiene errores. Por ejemplo, en los URLs de
-FTP que necesitan autentificar al usuario, la información de autentificación
-no se memoriza siempre. Además, si pulsas el botón <strong>Detener</strong>
-durante una descarga FTP, Amaya puede bloquearse. Debido a estos problemas,
-esta opción se añadió para que otros desarrolladores pudieran ayudar a
-resolver los problemas. Por omisión, esta opción está desactivada.</p>
-
 <p><strong>Tipo de pantalla actual.</strong> Define el tipo de pantalla
 actual. Esta opción tiene efecto cunado una hoja de estilo CSS especifica un
 medio determinado. Esta opción se aplica inmediatamente.</p>

@@ -5,7 +5,7 @@
 <head>
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <title>Configurer Amaya</title>
-  <meta name="GENERATOR" content="amaya 9.5, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 9.52, see http://www.w3.org/Amaya/" />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -14,12 +14,14 @@
 <div>
 <img alt="Amaya" src="../../resources/icons/22x22/logo.png" class="logo" />
 
+
 <p class="nav"><a href="Annotations.html.fr" accesskey="p"><img
-alt="previous" src="../../resources/icons/misc/left.png" /></a> <a
-href="Manual.html.fr" accesskey="t"><img alt="top"
-src="../../resources/icons/misc/up.png" /></a> <a href="ShortCuts.html.fr"
-accesskey="n"><img alt="next" src="../../resources/icons/misc/right.png"
-/></a></p>
+alt="previous" src="../../resources/icons/misc/left.png" />
+</a> <a href="Manual.html.fr" accesskey="t"><img alt="top"
+src="../../resources/icons/misc/up.png" />
+</a> <a href="ShortCuts.html.fr" accesskey="n"><img alt="next"
+src="../../resources/icons/misc/right.png" />
+</a></p>
 </div>
 
 <div class="toc">
@@ -358,12 +360,13 @@ application. Quand cette option est activée, les lignes de l'application
 source sont conservées. Sinon les caractères « fin de ligne » sont remplacés
 par des espaces.</p>
 
+<p><strong>Engendrer des espaces non séquables</strong>. Quand cette option
+est activée, Amaya remplace une séquence espace+espace par un espace non
+séquable+espace.</p>
+
 <p><strong>Produire des fichiers de sauvegarde</strong>. Si cette option est
 active Amaya va produire périodiquement un fichier de sauvegarde pour chaque
 document édité.</p>
-
-<p><strong>Sauver la géométrie en quittant</strong>. La géométrie courante
-des fenêtres sera automatiquement sauvegardée en quittant l'application..</p>
 
 <p><strong>Anti-aliasing.</strong> Contrôle si l'usage de polices de
 caractères anti-aliased (meilleure qualité d'affichage quand l'option est
@@ -452,15 +455,6 @@ pour l'activer. Cela permet de différencier l'édition d'un lien de son
 activation. Vous pouvez changer ce comportement en désactivant cette option.
 <br />
 </p>
-
-<p><strong>Activer le FTP</strong>. Amaya permet de suivre les URLs de type
-FTP. Ce support est expérimental et il n'est pas encore débogué. Par exemple,
-les URLs FTP nécessitent une authentification de l'utilisateur,
-l'authentification de l'information n'étant pas toujours mémorisée. Aussi, le
-fait de taper sur le bouton Stop pendant un téléchargement FTP peut faire
-planter Amaya. Malgré ces problèmes, nous avons rajouté cette option dans
-Amaya afin que les autres développeur puissent nous aider à le déboguer
-rapidement. Par défaut, cette option est inactive.</p>
 
 <h5 id="Type">Type d'écran courant</h5>
 
@@ -690,7 +684,10 @@ effectif quand vous ouvrirez une nouvelle fenêtre de document.</p>
 
 <h4 id="rences1"><a name="HTML">Les préférences de géométrie</a></h4>
 
-<p>Ce menu vous permet</p>
+<p><strong>Sauver la géométrie en quittant</strong>. La géométrie courante
+des fenêtres sera automatiquement sauvegardée en quittant l'application.</p>
+
+<p>Deux boutons vous permettent</p>
 <ul>
   <li>de sauver la taille et la position de la fenêtre courante,</li>
   <li>ou de restaurer les valeurs par défaut.</li>

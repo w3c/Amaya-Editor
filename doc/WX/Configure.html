@@ -412,12 +412,12 @@ pasting form an external application. When that option is active, Amaya keeps
 lines in the source application. If not active, <code>newline</code>
 characters are replaced by spaces. This option is immediately effective.</p>
 
+<p><strong>Generate no-break spaces.</strong> When that option is active,
+Amaya replaces a space+space sequence by a no-break space+space.</p>
+
 <p><strong>Generate backup files.</strong> When that option is active, Amaya
 generates a backup file for each edited document, after a given volume of
 modification. This option is immediately effective.</p>
-
-<p><strong>Save geometry on exit.</strong> Controls whether the current
-windows geometry should be saved when the application is exited.</p>
 
 <p><strong>Anti-aliasing.</strong> Controls whether anti-aliased fonts are
 used (better rendering when this option is used).</p>
@@ -500,14 +500,6 @@ loaded and applied or not. This option is immediately effective.</p>
 Amaya, users double-click a link to activate it. This enables you to choose
 whether to edit a link or activate it. You can override this behavior by
 deactivating this option.</p>
-
-<p><strong>Enable FTP.</strong> Enables Amaya to follow FTP URLs. This
-support is experimental and is not yet fully debugged. For example, for FTP
-URLs needing user authentication, the authentication information is not
-always memorized. Also, pressing the <strong>Stop</strong> button during an
-FTP download may crash Amaya. Because of these problems, this option was
-added to Amaya so that other developers may help to debug it faster. By
-default, this option is turned off.</p>
 
 <h5 id="Current">Current screen type</h5>
 
@@ -725,7 +717,10 @@ you open a new document window.</p>
 
 <h4 id="Window">Window Geometry Preferences</h4>
 
-<p>This dialog enables you</p>
+<p><strong>Save geometry on exit.</strong> Controls whether the current
+windows geometry should be saved when the application is exited.</p>
+
+<p>Two buttons enable you</p>
 <ul>
   <li>to save the current window size and position of the current window,</li>
   <li>or to restore the default values.</li>

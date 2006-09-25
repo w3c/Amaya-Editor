@@ -3,9 +3,9 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <title>Configurer Amaya</title>
-  <meta name="GENERATOR" content="amaya 9.1, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 9.52, see http://www.w3.org/Amaya/" />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -14,14 +14,17 @@
 <table border="0" summary="toc">
   <tbody>
     <tr>
-      <td><p><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
-        src="../images/amaya.gif" /></p>
+      <td><p><img alt="W3C" src="../images/w3c_home" />
+         <img alt="Amaya" src="../images/amaya.gif" />
+        </p>
       </td>
       <td><p><a href="Annotations.html.fr" accesskey="p"><img alt="previous"
-        src="../images/left.gif" /></a> <a href="Manual.html.fr"
-        accesskey="t"><img alt="top" src="../images/up.gif" /></a> <a
-        href="ShortCuts.html.fr" accesskey="n"><img alt="next"
-        src="../images/right.gif" /></a></p>
+        src="../images/left.gif" />
+        </a> <a href="Manual.html.fr" accesskey="t"><img alt="top"
+        src="../images/up.gif" />
+        </a> <a href="ShortCuts.html.fr" accesskey="n"><img alt="next"
+        src="../images/right.gif" />
+        </a></p>
       </td>
     </tr>
   </tbody>
@@ -199,14 +202,14 @@ summary="action button chart">
 <h3><a name="General">Les préférences générales</a></h3>
 <dl>
   <dt><strong>Le répertoire Amaya user</strong> (sur stations Windows
-  uniquement, non montré dans la figure incluse)</dt>
+  uniquement)</dt>
     <dd>Spécifie le répertoire où les préférences de l'utilisateur sont
       stockées.<br />
       <strong>Note :</strong> l'utilisateur ne peut changer l'adresse de ce
       répertoire.<br />
     </dd>
   <dt><strong>Le répertoire Amaya temporary</strong> (sur stations Windows
-  uniquement, non montré dans la figure)</dt>
+  uniquement)</dt>
     <dd>Spécifie le répertoire où Amaya stockera les fichiers temporaires,
       par exemple, pendant que vous imprimez un document. Si ce n'est pas
       spécifié, le répertoire temporaire par défaut sera <code>c
@@ -229,12 +232,12 @@ summary="action button chart">
       cette option est activée, les lignes de l'application source sont
       conservées. Sinon les caractères « fin de ligne » sont remplacés par
       des espaces.</dd>
+  <dt><strong>Engendrer des espaces non séquables</strong></dt>
+    <dd>Quand cette option est activée, Amaya remplace une séquence
+      espace+espace par un espace non séquable+espace.</dd>
   <dt><strong>Produire des fichiers de sauvegarde</strong></dt>
     <dd>Si cette option est active Amaya va produire périodiquement un
       fichier de sauvegarde pour chaque document édité.</dd>
-  <dt><strong>Sauver la géométrie en quittant</strong></dt>
-    <dd>La géométrie courante des fenêtres sera automatiquement sauvegardée
-      en quittant l'application..</dd>
   <dt><strong>Montrer boutons</strong></dt>
     <dd>Contrôle si Amaya affiche les barres de boutons dans chaque vue
       principale de document.</dd>
@@ -309,15 +312,6 @@ navigation.</p>
       l'édition d'un lien de son activation. Vous pouvez changer ce
       comportement en désactivant cette option. <br />
     </dd>
-  <dt><strong>Activer le FTP</strong></dt>
-    <dd>Amaya permet de suivre les URLs de type FTP. Ce support est
-      expérimental et il n'est pas encore débogué. Par exemple, les URLs FTP
-      nécessitent une authentification de l'utilisateur, l'authentification
-      de l'information n'étant pas toujours mémorisée. Aussi, le fait de
-      taper sur le bouton Stop pendant un téléchargement FTP peut faire
-      planter Amaya. Malgré ces problèmes, nous avons rajouté cette option
-      dans Amaya afin que les autres développeur puissent nous aider à le
-      déboguer rapidement. Par défaut, cette option est inactive.</dd>
   <dt><strong>Type d'écran courant</strong></dt>
     <dd>L'application des feuilles de style (CSS) dépendent du type d'écran
       choisi dans ce formulaire.</dd>
@@ -503,19 +497,30 @@ document.</p>
 et des liens activés est donné dans la feuille de style Amaya.css</p>
 
 <h3><a name="HTML">Les préférences de géométrie</a></h3>
+<dl>
+  <dt><strong>Sauver la géométrie en quittant</strong></dt>
+    <dd>La géométrie courante des fenêtres sera automatiquement sauvegardée
+      en quittant l'application.</dd>
+</dl>
 
-<p>Ce menu vous permet de sauver la position de la fenêtre courante et la
-taille des différentes vues d'un document (formatée, structure, alterné,
-liens, and Table des Matières.) ou pour restaurer les valeurs par défaut.
-Notez que les valeurs qui sont sauvées appartiennent aux vues du document
+<p>Un menu vous permet aussi </p>
+<ul>
+  <li>de sauver la position de la fenêtre courante et la taille des
+    différentes vues d'un document (formatée, structure, alterné, liens, and
+    Table des Matières.)</li>
+  <li>ou pour restaurer les valeurs par défaut.</li>
+</ul>
+
+<p>Notez que les valeurs qui sont sauvées appartiennent aux vues du document
 d'où vous appelez le menu. Ces changements seront effectifs quand vous
 ouvrirez des nouvelles fenêtres document.</p>
 </div>
 
 <p><a href="Annotations.html.fr"><img alt="previous" src="../images/left.gif"
-/></a><a href="Manual.html.fr"><img alt="top" src="../images/up.gif" /></a>
-<a href="ShortCuts.html.fr"><img alt="next" src="../images/right.gif"
-/></a></p>
+/>
+</a><a href="Manual.html.fr"><img alt="top" src="../images/up.gif" />
+</a> <a href="ShortCuts.html.fr"><img alt="next" src="../images/right.gif" />
+</a></p>
 <hr />
 </body>
 </html>

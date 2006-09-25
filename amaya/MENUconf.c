@@ -151,6 +151,10 @@ static AM_WIN_MenuText WIN_GeneralMenuText[] =
     {IDC_ANONE, AM_NONE},
     {IDC_LINES, AM_PASTE_LINE_BY_LINE},
     {IDC_AUTOSAVE, AM_AUTO_SAVE},
+    {IDC_INSERT_NBSP, AM_INSERT_NBSP},
+    {IDC_SHOWBUTTONS, AM_SHOW_BUTTONBAR},
+    {IDC_SHOWADDRESS, AM_SHOW_TEXTZONE},
+    {IDC_SHOWTARGET, AM_SHOW_TARGETS},
     {0, 0}
   };
 #endif /* _WINGUI */
@@ -185,7 +189,6 @@ static AM_WIN_MenuText WIN_BrowseMenuText[] =
     {IDC_BGIMAGES, AM_SHOW_BG_IMAGES},
     {IDC_LOADCSS, AM_LOAD_CSS},
     {IDC_DOUBLECLICK, AM_ENABLE_DOUBLECLICK},
-    {IDC_ENABLEFTP, AM_ENABLE_FTP},
     {IDC_SCREEN, AM_SCREEN_TYPE},
     {IDC_TLANNEG, AM_LANG_NEGOTIATION},
     {0, 0}
@@ -244,6 +247,7 @@ static AM_WIN_MenuText WIN_ColorMenuText[] =
 /* ============> Geometry menu options */
 static int      GeometryBase;
 static Document GeometryDoc = 0;
+static ThotBool S_Geometry = TRUE;
 /* common local variables */
 static char    s[MAX_LENGTH]; /* general purpose buffer */
 #ifdef _WINGUI
@@ -251,6 +255,7 @@ HWND            GeometryHwnd = NULL;
 static AM_WIN_MenuText WIN_GeometryMenuText[] = 
   {
     {AM_INIT_DONE_BUTTON, AM_GEOMETRY_MENU},
+    {IDC_SAVE_GEOMETRY_EXIT, AM_SAVE_GEOMETRY_ON_EXIT},
     {IDC_GEOMCHANGE, AM_GEOMETRY_CHANGE},
     {ID_APPLY, AM_SAVE_GEOMETRY},
     {ID_DEFAULTS, AM_RESTORE_GEOMETRY},
@@ -399,7 +404,6 @@ void InitAmayaDefEnv (void)
   /* @@@ */
   TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &GProp_Browse.DoubleClick);
   /* @@@ */
-  TtaSetDefEnvString ("ENABLE_FTP", "yes", FALSE);
   TtaSetDefEnvString ("SCREEN_TYPE", "screen", FALSE);
 #ifndef _WINGUI
   TtaSetDefEnvString ("THOTPRINT", "lpr", FALSE);
@@ -469,8 +473,8 @@ static void GetDefEnvToggle (char *name, ThotBool *value, int ref, int entry)
 
   TtaGetDefEnvBoolean (name, value);
   if (*value != old)
-    /* change the toggle button state */
     {
+      /* change the toggle button state */
 #ifdef _GTK
       TtaSetToggleMenu (ref, entry, *value);
 #endif /* _GTK */
@@ -1563,7 +1567,7 @@ void GetGeneralConf (void)
   TtaGetEnvBoolean ("FONT_ALIASING", &(GProp_General.S_NoAliasing));
   TtaGetEnvBoolean ("ISO_DATE", &(GProp_General.S_DATE));
   TtaGetEnvBoolean ("SHOW_TARGET", &(GProp_General.S_Targets));
-  TtaGetEnvBoolean ("SAVE_GEOMETRY", &(GProp_General.S_Geometry));
+  TtaGetEnvBoolean ("INSERT_NBSP", &(GProp_General.S_NBSP));
   TtaGetEnvBoolean ("SHOW_SEQUENCES", &(GProp_General.S_Shortcuts));
   TtaGetEnvBoolean ("SHOW_TEMPLATES", &(GProp_General.S_Templates));
   GetEnvString ("HOME_PAGE", GProp_General.HomePage);
@@ -1877,8 +1881,8 @@ void SetGeneralConf (void)
   TtaSetEnvBoolean ("FONT_ALIASING", GProp_General.S_NoAliasing, TRUE);
   TtaSetEnvBoolean ("ISO_DATE", GProp_General.S_DATE, TRUE);
 
-  /* Save view geometry on exit */
-  TtaSetEnvBoolean ("SAVE_GEOMETRY", GProp_General.S_Geometry, TRUE);
+  /* Insert NBSP */
+  TtaSetEnvBoolean ("INSERT_NBSP", GProp_General.S_NBSP, TRUE);
 
   TtaSetEnvString ("HOME_PAGE", GProp_General.HomePage, TRUE);
   TtaSetEnvString ("LANG", GProp_General.DialogueLang, TRUE);
@@ -1917,7 +1921,7 @@ void GetDefaultGeneralConf ()
   GProp_General.S_AutoSave = (AutoSave_Interval > 0);
   GetDefEnvToggle ("AUTO_SAVE", &(GProp_General.S_AutoSave),
                    GeneralBase + mToggleGeneral, 1);
-  GetDefEnvToggle ("SAVE_GEOMETRY", &(GProp_General.S_Geometry),
+  GetDefEnvToggle ("INSERT_NBSP", &(GProp_General.S_NBSP),
                    GeneralBase + mToggleGeneral, 2);
   GetDefEnvToggle ("SHOW_BUTTONS", &(GProp_General.S_Buttons),
                    GeneralBase + mToggleGeneral, 3);
@@ -1965,7 +1969,7 @@ void WIN_RefreshGeneralMenu (HWND hwnDlg)
                   ? BST_CHECKED : BST_UNCHECKED);
   CheckDlgButton (hwnDlg, IDC_AUTOSAVE, GProp_General.S_AutoSave 
                   ? BST_CHECKED : BST_UNCHECKED);
-  CheckDlgButton (hwnDlg, IDC_SAVE_GEOMETRY_EXIT, GProp_General.S_Geometry 
+  CheckDlgButton (hwnDlg, IDC_INSERT_NBSP, GProp_General.S_NBSP 
                   ? BST_CHECKED : BST_UNCHECKED);
   CheckDlgButton (hwnDlg, IDC_SHOWBUTTONS, GProp_General.S_Buttons 
                   ? BST_CHECKED : BST_UNCHECKED);
@@ -2004,16 +2008,6 @@ LRESULT CALLBACK WIN_GeneralDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
       GeneralHwnd = hwnDlg;
       /* initialize the menu text */
       WIN_SetMenuText (hwnDlg, WIN_GeneralMenuText);
-      SetWindowText (GetDlgItem (hwnDlg, IDC_AUTOSAVE),
-                     TtaGetMessage (AMAYA, AM_AUTO_SAVE));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_SAVE_GEOMETRY_EXIT),
-                     TtaGetMessage (AMAYA, AM_SAVE_GEOMETRY_ON_EXIT));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_SHOWBUTTONS),
-                     TtaGetMessage (AMAYA, AM_SHOW_BUTTONBAR));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_SHOWADDRESS),
-                     TtaGetMessage (AMAYA, AM_SHOW_TEXTZONE));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_SHOWTARGET),
-                     TtaGetMessage (AMAYA, AM_SHOW_TARGETS));
       /* write the current values in the dialog entries */
       WIN_RefreshGeneralMenu (hwnDlg);
       break;
@@ -2072,8 +2066,8 @@ LRESULT CALLBACK WIN_GeneralDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
           else
             AutoSave_Interval = 0;
           break;
-        case IDC_SAVE_GEOMETRY_EXIT:
-          GProp_General.S_Geometry = !(GProp_General.S_Geometry);
+        case IDC_INSERT_NBSP:
+          GProp_General.S_NBSP = !(GProp_General.S_NBSP);
           break;
         case IDC_SHOWBUTTONS:
           GProp_General.S_Buttons = !(GProp_General.S_Buttons);
@@ -2118,7 +2112,7 @@ static void RefreshGeneralMenu ()
   TtaSetNumberForm (GeneralBase + mZoom, GProp_General.Zoom);
   TtaSetToggleMenu (GeneralBase + mToggleGeneral, 0, GProp_General.PasteLineByLine);
   TtaSetToggleMenu (GeneralBase + mToggleGeneral, 1, GProp_General.S_AutoSave);
-  TtaSetToggleMenu (GeneralBase + mToggleGeneral, 2, GProp_General.S_Geometry);
+  TtaSetToggleMenu (GeneralBase + mToggleGeneral, 2, GProp_General.S_NBSP);
   TtaSetToggleMenu (GeneralBase + mToggleGeneral, 3, GProp_General.S_Buttons);
   TtaSetToggleMenu (GeneralBase + mToggleGeneral, 4, GProp_General.S_Address);
   TtaSetToggleMenu (GeneralBase + mToggleGeneral, 5, GProp_General.S_Targets);
@@ -2200,7 +2194,7 @@ static void GeneralCallbackDialog (int ref, int typedata, char *data)
                 AutoSave_Interval = 0;	      
               break;
             case 2:
-              GProp_General.S_Geometry = !(GProp_General.S_Geometry);
+              GProp_General.S_NBSP = !(GProp_General.S_NBSP);
               break;
             case 3:
               GProp_General.S_Buttons = !(GProp_General.S_Buttons);
@@ -2277,7 +2271,6 @@ void GeneralConfMenu (Document document, View view)
                   1,
                   FALSE);
   TtaNewLabel (GeneralBase + mGeneralEmpty1, GeneralBase + GeneralMenu, " ");
-  /*TtaNewLabel (GeneralBase + mGeneralEmpty2, GeneralBase + GeneralMenu, " ");*/
   /* third line */
   TtaNewNumberForm (GeneralBase + mFontMenuSize,
                     GeneralBase + GeneralMenu,
@@ -2300,12 +2293,11 @@ void GeneralConfMenu (Document document, View view)
                   1,
                   FALSE);
   TtaNewLabel (GeneralBase + mGeneralEmpty3, GeneralBase + GeneralMenu, " ");
-  /*TtaNewLabel (GeneralBase + mGeneralEmpty4, GeneralBase + GeneralMenu, " ");*/
   /* second line */
   sprintf (s, "B%s%cB%s%cB%s%cB%s%cB%s%cB%s%c", 
            TtaGetMessage (AMAYA, AM_PASTE_LINE_BY_LINE), EOS, 
            TtaGetMessage (AMAYA, AM_AUTO_SAVE), EOS, 
-           TtaGetMessage (AMAYA, AM_SAVE_GEOMETRY_ON_EXIT), EOS, 
+           TtaGetMessage (AMAYA, AM_INSERT_NBSP), EOS, 
            TtaGetMessage (AMAYA, AM_SHOW_BUTTONBAR), EOS,
            TtaGetMessage (AMAYA, AM_SHOW_TEXTZONE), EOS,
            TtaGetMessage (AMAYA, AM_SHOW_TARGETS), EOS);
@@ -2337,15 +2329,12 @@ void GeneralConfMenu (Document document, View view)
   TtaSetDialoguePosition ();
   TtaShowDialogue (GeneralBase + GeneralMenu, TRUE);
 #endif /* _GTK */
-
 #ifdef _WX
   PreferenceMenu( document, view );
 #endif /* _WX */
-
 #ifdef _WINGUI
   /* load the current values */
   GetGeneralConf ();
-
   if (!GeneralHwnd)
     /* only activate the menu if it isn't active already */
     DialogBox (hInstance, MAKEINTRESOURCE (GENERALMENU), NULL,
@@ -2803,15 +2792,17 @@ void PublishConfMenu (Document document, View view)
   ----------------------------------------------------------------------*/
 void GetBrowseConf (void)
 {
+  ThotBool val;
+
   TtaGetEnvInt ("NEW_LOCATION", &(GProp_Browse.OpeningLocation));
   TtaGetEnvBoolean ("LOAD_IMAGES", &(GProp_Browse.LoadImages));
   TtaGetEnvBoolean ("LOAD_OBJECTS", &(GProp_Browse.LoadObjects));
   TtaGetEnvBoolean ("ENABLE_BG_IMAGES", &(GProp_Browse.BgImages));
   TtaGetEnvBoolean ("LOAD_CSS", &(GProp_Browse.LoadCss));
   TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &(GProp_Browse.DoubleClick));
-  TtaGetEnvBoolean ("ENABLE_FTP", &(GProp_Browse.EnableFTP));
   TtaGetEnvBoolean ("SHOW_CONFIRM_CLOSE_TAB", &(GProp_Browse.WarnCTab));
-  AHTFTPURL_flag_set (GProp_Browse.EnableFTP);
+  TtaGetEnvBoolean ("ENABLE_FTP", &val);
+  AHTFTPURL_flag_set (val);
   GetEnvString ("SCREEN_TYPE", GProp_Browse.ScreenType);
   TtaGetEnvInt ("DOUBLECLICKDELAY", &(GProp_Browse.DoubleClickDelay));
   GetEnvString ("ACCEPT_LANGUAGES", GProp_Browse.LanNeg);
@@ -2834,9 +2825,7 @@ void SetBrowseConf (void)
   /* @@@ */
   TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &(GProp_Browse.DoubleClick));
   /* @@@ */
-  TtaSetEnvBoolean ("ENABLE_FTP", GProp_Browse.EnableFTP, TRUE);
   TtaSetEnvBoolean ("SHOW_CONFIRM_CLOSE_TAB", GProp_Browse.WarnCTab, TRUE);
-  AHTFTPURL_flag_set (GProp_Browse.EnableFTP);
   TtaSetEnvString ("SCREEN_TYPE", GProp_Browse.ScreenType, TRUE);
   TtaSetEnvString ("ACCEPT_LANGUAGES", GProp_Browse.LanNeg, TRUE);
   /* change the current settings */
@@ -2885,8 +2874,6 @@ void GetDefaultBrowseConf ()
                    BrowseBase + mToggleBrowse, 3);
   GetDefEnvToggle ("ENABLE_DOUBLECLICK", &(GProp_Browse.DoubleClick),
                    BrowseBase + mToggleBrowse, 4);
-  GetDefEnvToggle ("ENABLE_FTP", &(GProp_Browse.EnableFTP),
-                   BrowseBase + mToggleBrowse, 5);
   GetDefEnvString ("SCREEN_TYPE", GProp_Browse.ScreenType);
   TtaGetDefEnvInt ("DOUBLECLICKDELAY", &(GProp_Browse.DoubleClickDelay));
   GetDefEnvString ("ACCEPT_LANGUAGES", GProp_Browse.LanNeg);
@@ -2933,8 +2920,6 @@ void WIN_RefreshBrowseMenu (HWND hwnDlg)
   CheckDlgButton (hwnDlg, IDC_LOADCSS, (GProp_Browse.LoadCss) 
                   ? BST_CHECKED : BST_UNCHECKED);
   CheckDlgButton (hwnDlg, IDC_DOUBLECLICK, (GProp_Browse.DoubleClick) 
-                  ? BST_CHECKED : BST_UNCHECKED);
-  CheckDlgButton (hwnDlg, IDC_ENABLEFTP, (GProp_Browse.EnableFTP) 
                   ? BST_CHECKED : BST_UNCHECKED);
   BuildScreensList ();
   SetDlgItemText (hwnDlg, IDC_LANNEG, GProp_Browse.LanNeg);
@@ -2985,9 +2970,6 @@ LRESULT CALLBACK WIN_BrowseDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
           break;
         case IDC_DOUBLECLICK:
           GProp_Browse.DoubleClick = !(GProp_Browse.DoubleClick);
-          break;
-        case IDC_ENABLEFTP:
-          GProp_Browse.EnableFTP = !(GProp_Browse.EnableFTP);
           break;
         case IDC_SCREENLIST:
           CurrentScreen = SendMessage (ScreensList, LB_GETCURSEL, 0, 0);
@@ -3091,7 +3073,6 @@ static void RefreshBrowseMenu ()
   TtaSetToggleMenu (BrowseBase + mToggleBrowse, 2, GProp_Browse.BgImages);
   TtaSetToggleMenu (BrowseBase + mToggleBrowse, 3, GProp_Browse.LoadCss);
   TtaSetToggleMenu (BrowseBase + mToggleBrowse, 4, GProp_Browse.DoubleClick);
-  TtaSetToggleMenu (BrowseBase + mToggleBrowse, 5, GProp_Browse.EnableFTP);
   /* preselect the screen matching the user preference */
   BuildScreenSelector ();
   TtaSetTextForm (BrowseBase + mLanNeg, GProp_Browse.LanNeg);
@@ -3191,9 +3172,6 @@ static void BrowseCallbackDialog (int ref, int typedata, char *data)
             case 4:
               GProp_Browse.DoubleClick = !(GProp_Browse.DoubleClick);
               break;
-            case 5:
-              GProp_Browse.EnableFTP = !(GProp_Browse.EnableFTP);
-              break;
             }
           break;
         case mScreenSelector:
@@ -3249,17 +3227,16 @@ void BrowseConfMenu (Document document, View view)
                TtaGetViewFrame (document, view),
                TtaGetMessage (AMAYA, AM_BROWSE_MENU),
                2, s, FALSE, 11, 'L', D_DONE);
-  sprintf (s, "B%s%cB%s%cB%s%cB%s%cB%s%cB%s", 
+  sprintf (s, "B%s%cB%s%cB%s%cB%s%cB%s", 
            TtaGetMessage (AMAYA, AM_LOAD_IMAGES), EOS,
            TtaGetMessage (AMAYA, AM_LOAD_OBJECTS), EOS,
            TtaGetMessage (AMAYA, AM_SHOW_BG_IMAGES), EOS, 
            TtaGetMessage (AMAYA, AM_LOAD_CSS), EOS,
-           TtaGetMessage (AMAYA, AM_ENABLE_DOUBLECLICK), EOS, 
-           TtaGetMessage (AMAYA, AM_ENABLE_FTP));
+           TtaGetMessage (AMAYA, AM_ENABLE_DOUBLECLICK));
   TtaNewToggleMenu (BrowseBase + mToggleBrowse,
                     BrowseBase + BrowseMenu,
                     NULL,
-                    6, s,
+                    5, s,
                     NULL,
                     FALSE);
   BuildScreenSelector ();
@@ -3693,6 +3670,9 @@ static void RestoreDefaultGeometryConf (void)
 {
   int   doc;
 
+  // restore default save geometry on exit
+  GetDefEnvToggle ("SAVE_GEOMETRY", &S_Geometry,
+                   GeometryBase + mToggleGeom, 0);
   for (doc = 1; doc < DocumentTableLength; doc++)
     if (DocumentURLs[doc] != NULL &&
         DocumentTypes[doc] != docSource &&
@@ -3772,7 +3752,7 @@ static void SetEnvCurrentGeometry (int doc, const char * view_name)
 void SetGeometryConf ( int document, const char * view_name )
 {
   /* read the current values and save them into the registry */
-  SetEnvCurrentGeometry ( document, view_name );
+  SetEnvCurrentGeometry (document, view_name);
 
   /* save the options */
   TtaSaveAppRegistry ();
@@ -3792,6 +3772,8 @@ LRESULT CALLBACK WIN_GeometryDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
       GeometryHwnd = hwnDlg;
       /* initialize the menu text */
       WIN_SetMenuText (hwnDlg, WIN_GeometryMenuText);
+      CheckDlgButton (hwnDlg, IDC_SAVE_GEOMETRY_EXIT, S_Geometry 
+                  ? BST_CHECKED : BST_UNCHECKED);
       /* write the current values in the dialog entries */
       break;
 
@@ -3820,6 +3802,9 @@ LRESULT CALLBACK WIN_GeometryDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
         case ID_DEFAULTS:
           RestoreDefaultGeometryConf ();
           EndDialog (hwnDlg, ID_DONE);
+          break;
+        case IDC_SAVE_GEOMETRY_EXIT:
+          S_Geometry = !S_Geometry;
           break;
         }
       break;	     
@@ -3852,9 +3837,7 @@ static void GeometryCallbackDialog (int ref, int typedata, char *data)
           switch (val) 
             {
             case 0:
-              TtaDestroyDialogue (ref);
               GeometryDoc = 0;
-              TtaDestroyDialogue (ref);
               break;
             case 1:
               SetGeometryConf ( GeometryDoc, NULL );
@@ -3866,7 +3849,12 @@ static void GeometryCallbackDialog (int ref, int typedata, char *data)
               break;
             }
           break;
-	  
+        case mToggleGeom:
+          S_Geometry = !S_Geometry;
+          /* view geometry on exit */
+          TtaSetEnvBoolean ("SAVE_GEOMETRY", S_Geometry, TRUE);
+          TtaSaveAppRegistry ();
+          break;
         default:
           break;
         }
@@ -3878,17 +3866,16 @@ static void GeometryCallbackDialog (int ref, int typedata, char *data)
   GeometryConfMenu
   Build and display the Conf Menu dialog box and prepare for input.
   ----------------------------------------------------------------------*/
-void         GeometryConfMenu (Document document, View view)
+void GeometryConfMenu (Document document, View view)
 {
-#ifndef _WINGUI
+#ifdef _GTK
   int i;
 
   if (GeometryDoc)
-    {
-      /* menu already active, so we'll destroy it in order to
-         have a menu that points to the current document */
-      TtaDestroyDialogue (GeometryBase + GeometryMenu);
-    }
+    /* menu already active, so we'll destroy it in order to
+       have a menu that points to the current document */
+    TtaDestroyDialogue (GeometryBase + GeometryMenu);
+  TtaGetEnvBoolean ("SAVE_GEOMETRY", &S_Geometry);
   GeometryDoc = document;
   /* Create the dialogue form */
   i = 0;
@@ -3908,18 +3895,30 @@ void         GeometryConfMenu (Document document, View view)
                GeometryBase + GeometryMenu,
                " "
                );
+
+  sprintf (s, "B%s", TtaGetMessage (AMAYA, AM_SAVE_GEOMETRY_ON_EXIT));
+  TtaNewToggleMenu (GeometryBase + mToggleGeom,
+                    GeometryBase + GeometryMenu,
+                    NULL,
+                    1,
+                    s,
+                    NULL,
+                    TRUE);
+  TtaSetToggleMenu (GeometryBase + mToggleGeom, 0, S_Geometry);
   /* display the menu */
   TtaSetDialoguePosition ();
   TtaShowDialogue (GeometryBase + GeometryMenu, TRUE);
-#else /* !_WINGUI */
+#endif /* GTK */
+#ifdef _WINGUI
   if (GeometryHwnd)
     /* menu already active. We'll destroy it in order to have
        a menu that points to the current document */
     EndDialog (GeometryHwnd, ID_DONE);
+  TtaGetEnvBoolean ("SAVE_GEOMETRY", &S_Geometry);
   GeometryDoc = document;
   DialogBox (hInstance, MAKEINTRESOURCE (GEOMETRYMENU), NULL,
              (DLGPROC) WIN_GeometryDlgProc);
-#endif /* !_WINGUI */
+#endif /* _WINGUI */
 }
 
 /*********************
@@ -4522,6 +4521,31 @@ Prop_Color GetProp_Color()
 #else /* _WX */
   Prop_Color prop;
   memset(&prop, 0, sizeof(Prop_Color) );
+  return prop;
+#endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
+  Use to set the Amaya global variables (Geometry preferences)
+  ----------------------------------------------------------------------*/
+void SetProp_Geometry( ThotBool prop )
+{
+#ifdef _WX
+  S_Geometry = prop;
+  TtaSetEnvBoolean ("SAVE_GEOMETRY", S_Geometry, TRUE);
+#endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
+  Use to get the Amaya global variables (Geometry preferences)
+  ----------------------------------------------------------------------*/
+ThotBool GetProp_Geometry()
+{
+#ifdef _WX
+  TtaGetEnvBoolean ("SAVE_GEOMETRY", &S_Geometry);
+  return S_Geometry;
+#else /* _WX */
+  ThotBool prop = FALSE;
   return prop;
 #endif /* _WX */
 }

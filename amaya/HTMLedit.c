@@ -1457,6 +1457,7 @@ void SelectDestination (Document doc, Element el, ThotBool withUndo,
   if (fromButton || clickFirst)
     {
       /* ask the user to select target document and target anchor */
+      TtaUnmapDialogue (BaseDialog + AttrHREFForm);
       TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_SEL_TARGET), NULL);
       TtaClickElement (&targetDoc, &targetEl);
       if (targetDoc != 0)
@@ -3388,7 +3389,7 @@ void CheckNewLines (NotifyOnTarget *event)
   Language    lang;
   char       *name;
   ThotBool    pre, para, changed, selChanged, newParagraph, undoSeqExtended;
-  ThotBool    prevCharEOL, pasteLineByLine, moveNext;
+  ThotBool    prevCharEOL, pasteLineByLine, moveNext, insert_nbsp;
 
   if (!event->target)
     return;
@@ -3517,6 +3518,8 @@ void CheckNewLines (NotifyOnTarget *event)
 
   /* get the user value for the Paste-Line-By-Line option */
   TtaGetEnvBoolean ("PASTE_LINE_BY_LINE", &pasteLineByLine);
+  /* get the user value for the Insert-nbsp option */
+  TtaGetEnvBoolean ("INSERT_NBSP", &insert_nbsp);
 
   /* replace every new line in the content of the element by a space
      and replace every sequence of spaces by a single space */
@@ -3635,7 +3638,24 @@ void CheckNewLines (NotifyOnTarget *event)
             /* beginning of the text element */
             {
               /* if this space is after a newline, remove it */
-              if (prevCharEOL ||
+              if (insert_nbsp && prev && TtaGetLastBufferContent (prev) == SPACE)
+                {
+                 /* replace the previous space by a nbsp */
+                  sibLength = TtaGetElementVolume (prev);
+                  sibLength+= 2;
+                  sibContent = (CHAR_T *)TtaGetMemory (sibLength * sizeof(CHAR_T));
+                  TtaGiveBufferContent (prev, sibContent, sibLength-1, &lang);
+                  /* insert a space */
+                  if (!undoSeqExtended)
+                    {
+                      TtaExtendUndoSequence (doc);
+                      undoSeqExtended = TRUE;
+                    }
+                  TtaRegisterElementReplace (prev, doc);
+                  sibContent[sibLength-1] = NBSP;
+                  TtaSetBufferContent (prev, sibContent, lang, doc);
+               }
+              else if (prevCharEOL ||
                   (prev && TtaGetLastBufferContent (prev) == SPACE))
                 {
                   changed = TRUE;
@@ -3662,6 +3682,13 @@ void CheckNewLines (NotifyOnTarget *event)
                 /* the previous character is not a space nor a newline.
                    Keep that space */
                 content[j++] = SPACE;
+              else if (insert_nbsp)
+                {
+                  /* replace the previous space by a nbsp */
+                  content[j-1] = NBSP;
+                  content[j++] = SPACE;
+                  changed = TRUE;
+                }
               else
                 /* the previous character is a space or a new line.
                    Remove the current space */

@@ -69,7 +69,8 @@
 #define GeometryMenu         1
 #define mGeometryLabel1      2
 #define mGeometryLabel2      3
-#define MAX_GEOMETRYMENU_DLG 4
+#define mToggleGeom          4
+#define MAX_GEOMETRYMENU_DLG 5
 
 #define DAVMenu           1
 #define MAX_DAVMENU_DLG   2
@@ -98,7 +99,7 @@ typedef struct Prop_General_t
   ThotBool S_DATE;
   ThotBool S_Targets;
   ThotBool S_AutoSave;
-  ThotBool S_Geometry;
+  ThotBool S_NBSP;
   ThotBool S_Shortcuts;
   ThotBool S_Templates;
 } Prop_General;

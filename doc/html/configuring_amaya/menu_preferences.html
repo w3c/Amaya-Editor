@@ -141,9 +141,6 @@ characters are replaced by spaces. This option is immediatly effective.</p>
 generates a backup file for each editied document, after a given volume of
 modification. This option is immediatly effective.</p>
 
-<p><strong>Save geometry on exit.</strong> Controls whether the current
-windows geometry should be saved when the application is exited.</p>
-
 <p><strong>Show button bar.</strong> Controls whether the button bar should
 be shown in all document main views.</p>
 
@@ -252,14 +249,6 @@ loaded and applied or not. This option is immediately effective.</p>
 Amaya, users double-click a link to activate it. This enables you to choose
 whether to edit a link or activate it. You can override this behavior by
 deactivating this option.</p>
-
-<p><strong>Enable FTP.</strong> Enables Amaya to follow FTP URLs. This
-support is experimental and is not yet fully debugged. For example, for FTP
-URLs needing user authentication, the authentication information is not
-always memorized. Also, pressing the <strong>Stop</strong> button during an
-FTP download may crash Amaya. Because of these problems, this option was
-added to Amaya so that other developers may help to debug it faster. By
-default, this option is turned off.</p>
 
 <p><strong>Current screen type.</strong> Defines the current screen type.
 This value has an effect when a CSS style sheet specifies a media. This
@@ -463,8 +452,11 @@ done through the Amaya.css style sheet.</p>
 
 <h2 id="Window">Window Geometry Preferences</h2>
 
-<p>This dialog enables you to save the current window position and size of
-the different views of a document (formatted, structure, alternate, links,
+<p><strong>Save geometry on exit.</strong> Controls whether the current
+windows geometry should be saved when the application is exited.</p>
+
+<p>This dialog also enables you to save the current window position and size
+of the different views of a document (formatted, structure, alternate, links,
 and Table of Contents) or to restore the default values.</p>
 
 <p>The values that are saved are those belonging to the views of the document

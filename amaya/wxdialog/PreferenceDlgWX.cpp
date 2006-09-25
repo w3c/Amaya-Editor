@@ -27,18 +27,18 @@ static int MyRef = 0;
 BEGIN_EVENT_TABLE(PreferenceDlgWX, AmayaDialog)
 
   EVT_NOTEBOOK_PAGE_CHANGED( XRCID("wxID_NOTEBOOK"), PreferenceDlgWX::OnPageChanged )
-  EVT_BUTTON(     XRCID("wxID_OK"),           PreferenceDlgWX::OnOk )
-  EVT_BUTTON(     XRCID("wxID_DEFAULT"),      PreferenceDlgWX::OnDefault )
-  EVT_BUTTON(     XRCID("wxID_CANCEL"),       PreferenceDlgWX::OnCancel )
+  EVT_BUTTON( XRCID("wxID_OK"),           PreferenceDlgWX::OnOk )
+  EVT_BUTTON( XRCID("wxID_DEFAULT"),      PreferenceDlgWX::OnDefault )
+  EVT_BUTTON( XRCID("wxID_CANCEL"),       PreferenceDlgWX::OnCancel )
   // Clear url list callback
-  EVT_BUTTON(     XRCID("wxID_BUTTON_CLEARURL"), PreferenceDlgWX::OnClearUrlList )
+  EVT_BUTTON( XRCID("wxID_BUTTON_CLEARURL"), PreferenceDlgWX::OnClearUrlList )
   // Cache tab callbacks
-  EVT_BUTTON(     XRCID("wxID_BUTTON_EMPTYCACHE"), PreferenceDlgWX::OnEmptyCache )
+  EVT_BUTTON( XRCID("wxID_BUTTON_EMPTYCACHE"), PreferenceDlgWX::OnEmptyCache )
   // Color tab callbacks
-  EVT_BUTTON(     XRCID("wxID_BUTTON_TEXTCOLOR"),    PreferenceDlgWX::OnColorPalette )
-  EVT_BUTTON(     XRCID("wxID_BUTTON_BACKCOLOR"),    PreferenceDlgWX::OnColorPalette )
-  EVT_BUTTON(     XRCID("wxID_BUTTON_SELCOLOR"),     PreferenceDlgWX::OnColorPalette )
-  EVT_BUTTON(     XRCID("wxID_BUTTON_SELBACKCOLOR"), PreferenceDlgWX::OnColorPalette )
+  EVT_BUTTON( XRCID("wxID_BUTTON_TEXTCOLOR"),    PreferenceDlgWX::OnColorPalette )
+  EVT_BUTTON( XRCID("wxID_BUTTON_BACKCOLOR"),    PreferenceDlgWX::OnColorPalette )
+  EVT_BUTTON( XRCID("wxID_BUTTON_SELCOLOR"),     PreferenceDlgWX::OnColorPalette )
+  EVT_BUTTON( XRCID("wxID_BUTTON_SELBACKCOLOR"), PreferenceDlgWX::OnColorPalette )
   EVT_COMBOBOX( XRCID("wxID_COMBO_SELBACKCOLOR"),    PreferenceDlgWX::OnColorChanged )
   EVT_COMBOBOX( XRCID("wxID_COMBO_SELCOLOR"),        PreferenceDlgWX::OnColorChanged )
   EVT_COMBOBOX( XRCID("wxID_COMBO_BACKCOLOR"),       PreferenceDlgWX::OnColorChanged )
@@ -48,8 +48,9 @@ BEGIN_EVENT_TABLE(PreferenceDlgWX, AmayaDialog)
   EVT_TEXT( XRCID("wxID_COMBO_BACKCOLOR"),       PreferenceDlgWX::OnColorTextChanged )
   EVT_TEXT( XRCID("wxID_COMBO_TEXTCOLOR"),       PreferenceDlgWX::OnColorTextChanged )
   // Geometry tab callbacks
-  EVT_BUTTON( XRCID("wxID_BUTTON_GEOMSAVE"),    PreferenceDlgWX::OnGeomSave )
-  EVT_BUTTON( XRCID("wxID_BUTTON_GEOMRESTOR"),  PreferenceDlgWX::OnGeomRestor )
+  EVT_CHECKBOX( XRCID("wxID_CHECK_SAVEGEO"),     PreferenceDlgWX::OnGeomToggle )
+  EVT_BUTTON( XRCID("wxID_BUTTON_GEOMSAVE"),     PreferenceDlgWX::OnGeomSave )
+  EVT_BUTTON( XRCID("wxID_BUTTON_GEOMRESTOR"),   PreferenceDlgWX::OnGeomRestor )
   EVT_CLOSE( PreferenceDlgWX::OnClose )
   END_EVENT_TABLE()
 
@@ -215,7 +216,7 @@ void PreferenceDlgWX::SetupLabelDialog_General()
 
   XRCCTRL(*this, "wxID_CHECK_CCLINE", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_PASTE_LINE_BY_LINE)) );
   XRCCTRL(*this, "wxID_CHECK_BACKUP", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_AUTO_SAVE)) );
-  XRCCTRL(*this, "wxID_CHECK_SAVEGEO", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_SAVE_GEOMETRY_ON_EXIT)) );
+  XRCCTRL(*this, "wxID_CHECK_INSERT_NBSP", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_INSERT_NBSP)) );
   XRCCTRL(*this, "wxID_CHECK_NOALIASING", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_NOALIASING)) );
   XRCCTRL(*this, "wxID_CHECK_DATE", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_DATE)) );
   XRCCTRL(*this, "wxID_CHECK_SHOWTARGETS", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_SHOW_TARGETS)) );
@@ -260,7 +261,7 @@ void PreferenceDlgWX::SetupDialog_General( const Prop_General & prop )
 
   XRCCTRL(*this, "wxID_CHECK_CCLINE", wxCheckBox)->SetValue( prop.PasteLineByLine );
   XRCCTRL(*this, "wxID_CHECK_BACKUP", wxCheckBox)->SetValue( prop.S_AutoSave );
-  XRCCTRL(*this, "wxID_CHECK_SAVEGEO", wxCheckBox)->SetValue( prop.S_Geometry );
+  XRCCTRL(*this, "wxID_CHECK_INSERT_NBSP", wxCheckBox)->SetValue( prop.S_NBSP );
   XRCCTRL(*this, "wxID_CHECK_NOALIASING", wxCheckBox)->SetValue( prop.S_NoAliasing );
   XRCCTRL(*this, "wxID_CHECK_DATE", wxCheckBox)->SetValue( prop.S_DATE );
   XRCCTRL(*this, "wxID_CHECK_SHOWTARGETS", wxCheckBox)->SetValue( prop.S_Targets );
@@ -325,7 +326,7 @@ Prop_General PreferenceDlgWX::GetValueDialog_General()
   prop.Zoom = XRCCTRL(*this, "wxID_CHARZOOM_VALUE",     wxSpinCtrl)->GetValue();
   prop.PasteLineByLine = XRCCTRL(*this, "wxID_CHECK_CCLINE", wxCheckBox)->GetValue();
   prop.S_AutoSave = XRCCTRL(*this, "wxID_CHECK_BACKUP", wxCheckBox)->GetValue();
-  prop.S_Geometry = XRCCTRL(*this, "wxID_CHECK_SAVEGEO", wxCheckBox)->GetValue();
+  prop.S_NBSP = XRCCTRL(*this, "wxID_CHECK_INSERT_NBSP", wxCheckBox)->GetValue();
   prop.S_NoAliasing = XRCCTRL(*this, "wxID_CHECK_NOALIASING", wxCheckBox)->GetValue();
   prop.S_DATE = XRCCTRL(*this, "wxID_CHECK_DATE", wxCheckBox)->GetValue();
   prop.S_Targets = XRCCTRL(*this, "wxID_CHECK_SHOWTARGETS", wxCheckBox)->GetValue();
@@ -373,7 +374,6 @@ void PreferenceDlgWX::SetupLabelDialog_Browse()
   XRCCTRL(*this, "wxID_CHECK_SHOWBACKGROUND", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_SHOW_BG_IMAGES)) );
   XRCCTRL(*this, "wxID_CHECK_APPLYCSS", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_LOAD_CSS)) );
   XRCCTRL(*this, "wxID_CHECK_LINKDBCLICK", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_ENABLE_DOUBLECLICK)) );
-  XRCCTRL(*this, "wxID_CHECK_ENABLEFTP", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_ENABLE_FTP)) );
   XRCCTRL(*this, "wxID_LABEL_LANNEGLISTLG", wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_LANG_NEGOTIATION)) );
   XRCCTRL(*this, "wxID_CHECK_WARNCTAB", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_WARNCTAB)) );
   XRCCTRL(*this, "wxID_LABEL_MAXURL", wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_MAXURLLIST)) );
@@ -394,7 +394,6 @@ void PreferenceDlgWX::SetupDialog_Browse( const Prop_Browse & prop )
   XRCCTRL(*this, "wxID_CHECK_SHOWBACKGROUND", wxCheckBox)->SetValue( prop.BgImages );
   XRCCTRL(*this, "wxID_CHECK_APPLYCSS", wxCheckBox)->SetValue( prop.LoadCss );
   XRCCTRL(*this, "wxID_CHECK_LINKDBCLICK", wxCheckBox)->SetValue( prop.DoubleClick );
-  XRCCTRL(*this, "wxID_CHECK_ENABLEFTP", wxCheckBox)->SetValue( prop.EnableFTP );
   XRCCTRL(*this, "wxID_CHECK_WARNCTAB", wxCheckBox)->SetValue( prop.WarnCTab );
   XRCCTRL(*this, "wxID_CHOICE_SCREEN", wxChoice)->SetStringSelection( TtaConvMessageToWX(prop.ScreenType) );
   XRCCTRL(*this, "wxID_VALUE_LANNEGLISTLG", wxTextCtrl)->SetValue( TtaConvMessageToWX(prop.LanNeg) );
@@ -419,7 +418,6 @@ Prop_Browse PreferenceDlgWX::GetValueDialog_Browse()
   prop.BgImages = XRCCTRL(*this, "wxID_CHECK_SHOWBACKGROUND", wxCheckBox)->GetValue();
   prop.LoadCss = XRCCTRL(*this, "wxID_CHECK_APPLYCSS", wxCheckBox)->GetValue();
   prop.DoubleClick = XRCCTRL(*this, "wxID_CHECK_LINKDBCLICK", wxCheckBox)->GetValue();
-  prop.EnableFTP = XRCCTRL(*this, "wxID_CHECK_ENABLEFTP", wxCheckBox)->GetValue();
   prop.WarnCTab = XRCCTRL(*this, "wxID_CHECK_WARNCTAB", wxCheckBox)->GetValue();
   
   value = XRCCTRL(*this, "wxID_CHOICE_SCREEN", wxChoice)->GetStringSelection();
@@ -904,7 +902,8 @@ void PreferenceDlgWX::OnColorTextChanged( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void PreferenceDlgWX::SetupLabelDialog_Geometry()
 {
-  int page_id;
+  int      page_id;
+  ThotBool val;
 
   // Setup notebook tab names :
   wxNotebook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxNotebook);
@@ -912,10 +911,22 @@ void PreferenceDlgWX::SetupLabelDialog_Geometry()
   if (page_id >= 0)
     p_notebook->SetPageText( page_id, TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_GEOMETRY_MENU)) );
 
+  XRCCTRL(*this, "wxID_CHECK_SAVEGEO", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_SAVE_GEOMETRY_ON_EXIT)) );
   XRCCTRL(*this, "wxID_LABEL_GEOMCHG", wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_GEOMETRY_CHANGE)) );
   XRCCTRL(*this, "wxID_BUTTON_GEOMSAVE", wxButton)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_SAVE_GEOMETRY)) );
   XRCCTRL(*this, "wxID_BUTTON_GEOMRESTOR", wxButton)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_RESTORE_GEOMETRY)) );
-  
+  val = GetProp_Geometry();
+  XRCCTRL(*this, "wxID_CHECK_SAVEGEO", wxCheckBox)->SetValue( val );
+}
+
+/*----------------------------------------------------------------------
+  OnGeomToggle is called when the user click on the save geom button
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+void PreferenceDlgWX::OnGeomToggle( wxCommandEvent& event )
+{
+  ThotCallback (GetPrefGeometryBase() + mToggleGeom, INTEGER_DATA, (char*) 0);
 }
 
 /*----------------------------------------------------------------------
@@ -935,6 +946,10 @@ void PreferenceDlgWX::OnGeomSave( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void PreferenceDlgWX::OnGeomRestor( wxCommandEvent& event )
 {
+  ThotBool val = TRUE;
+
+  XRCCTRL(*this, "wxID_CHECK_SAVEGEO", wxCheckBox)->SetValue( val );
+  SetProp_Geometry (val);
   ThotCallback (GetPrefGeometryBase() + GeometryMenu, INTEGER_DATA, (char*) 2);
 }
 

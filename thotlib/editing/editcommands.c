@@ -2744,7 +2744,7 @@ ThotBool InsertChar (int frame, CHAR_T c, int keyboard)
 		      
                       if (pBuffer == NULL)
                         return selNext;
-                      /* the selection should at the end of a buffer */
+                      /* the selection should be at the end of a buffer */
                       if (ind < pBuffer->BuLength && pBuffer->BuPrevious)
                         {
                           pBuffer = pBuffer->BuPrevious;

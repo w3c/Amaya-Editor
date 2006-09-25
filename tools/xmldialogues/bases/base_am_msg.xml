@@ -3124,20 +3124,9 @@
 	<message xml:lang="cn">Landscape</message>
 	<message xml:lang="tw">Landscape</message>
 </label>
-<label define="AM_ENABLE_FTP">
-	<message xml:lang="en">Enable FTP</message>
-	<message xml:lang="fr">Support FTP</message>
-	<message xml:lang="it">Abilita FTP</message>
-	<message xml:lang="de">FTP zulassen</message>
-	<message xml:lang="es">Activar FTP</message>
-	<message xml:lang="pt">Habilitar FTP</message>
-	<message xml:lang="fi">Ota FTP käyttöön</message>
-	<message xml:lang="tr">FTP desteği</message>
-	<message xml:lang="ru">Поддерживать FTP ссылки</message>
-	<message xml:lang="hu">FTP engedélyezése</message>
-	<message xml:lang="ka">FTP-ს გააქტივება</message>
-	<message xml:lang="cn">启用 FTP</message>
-	<message xml:lang="tw">啟用 FTP</message>
+<label define="AM_INSERT_NBSP">
+	<message xml:lang="en">Generate no-break spaces</message>
+	<message xml:lang="fr">Engendrer des espaces non séquables</message>
 </label>
 <label define="AM_XML_RETRY">
 	<message xml:lang="en">Error(s) in the source code</message>

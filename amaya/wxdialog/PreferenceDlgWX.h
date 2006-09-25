@@ -66,6 +66,7 @@ private:
 
   // "Geometry" tab
   void SetupLabelDialog_Geometry();
+  void OnGeomToggle( wxCommandEvent& event );
   void OnGeomSave( wxCommandEvent& event );
   void OnGeomRestor( wxCommandEvent& event );
 

@@ -121,17 +121,17 @@
                           <flag>wxALL|wxEXPAND</flag>
                         </object>
                         <object class="sizeritem">
+                          <object class="wxCheckBox" name="wxID_CHECK_INSERT_NBSP">
+                            <label>*Remplacer espace+espace par un espace non sequable*</label>
+                          </object>
+                          <option>1</option>
+                        </object>
+                        <object class="sizeritem">
                           <object class="wxCheckBox" name="wxID_CHECK_BACKUP">
                             <label>*Produire des fichiers de sauvegarde*</label>
                           </object>
                           <option>1</option>
                           <flag>wxEXPAND</flag>
-                        </object>
-                        <object class="sizeritem">
-                          <object class="wxCheckBox" name="wxID_CHECK_SAVEGEO">
-                            <label>*Sauver la geometrie en quittant*</label>
-                          </object>
-                          <option>1</option>
                         </object>
                         <object class="sizeritem">
                           <object class="wxCheckBox" name="wxID_CHECK_NOALIASING">
@@ -229,6 +229,11 @@
                   <object class="wxBoxSizer">
                     <orient>wxVERTICAL</orient>
                     <object class="sizeritem">
+                      <object class="wxCheckBox" name="wxID_CHECK_WARNCTAB">
+                        <label>*Avertir quand plusieurs onglets sont fermes*</label>
+                      </object>
+                    </object>
+                    <object class="sizeritem">
                       <object class="wxCheckBox" name="wxID_CHECK_LOADIMG">
                         <label>*Charger les images (img)*</label>
                         <focused>1</focused>
@@ -252,16 +257,6 @@
                     <object class="sizeritem">
                       <object class="wxCheckBox" name="wxID_CHECK_LINKDBCLICK">
                         <label>*Cliquer deux fois pour suivre un lien*</label>
-                      </object>
-                    </object>
-                    <object class="sizeritem">
-                      <object class="wxCheckBox" name="wxID_CHECK_ENABLEFTP">
-                        <label>*Support FTP*</label>
-                      </object>
-                    </object>
-                    <object class="sizeritem">
-                      <object class="wxCheckBox" name="wxID_CHECK_WARNCTAB">
-                        <label>*Avertir quand plusieurs onglets sont fermes*</label>
                       </object>
                     </object>
                   </object>
@@ -814,14 +809,6 @@
               <object class="wxBoxSizer">
                 <orient>wxVERTICAL</orient>
                 <object class="sizeritem">
-                  <object class="wxStaticText" name="wxID_LABEL_GEOMCHG">
-                    <label>*Ces changements seront effectifs lors de l ouverture d une fenetre*</label>
-                  </object>
-                  <option>0</option>
-                  <flag>wxALL|wxEXPAND</flag>
-                  <border>10</border>
-                </object>
-                <object class="sizeritem">
                   <object class="wxBoxSizer">
                     <orient>wxHORIZONTAL</orient>
                     <object class="sizeritem">
@@ -842,6 +829,30 @@
                   <option>0</option>
                   <flag>wxALL|wxEXPAND</flag>
                   <border>10</border>
+                </object>
+                <object class="sizeritem">
+                  <object class="wxStaticText" name="wxID_LABEL_GEOMCHG">
+                    <label>*Ces changements seront effectifs lors de l ouverture d une fenetre*</label>
+                  </object>
+                  <option>0</option>
+                  <flag>wxALL|wxEXPAND</flag>
+                  <border>10</border>
+                </object>
+                <object class="spacer">
+                  <size>0,40</size>
+                </object>
+                <object class="sizeritem">
+                  <object class="wxBoxSizer">
+                    <orient>wxHORIZONTAL</orient>
+                    <object class="spacer">
+                      <size>10,0</size>
+                    </object>
+                    <object class="sizeritem">
+                      <object class="wxCheckBox" name="wxID_CHECK_SAVEGEO">
+                        <label>*Sauver la geometrie en quittant*</label>
+                      </object>
+                    </object>
+                  </object>
                 </object>
               </object>
               <style>wxTAB_TRAVERSAL</style>
