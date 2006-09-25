@@ -3,7 +3,7 @@
   <object class="wxDialog" name="AuthentDlgWX">
     <title></title>
     <centered>1</centered>
-    <style>wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER</style>
+    <style>wxDEFAULT_DIALOG_STYLE|wxSTAY_ON_TOP|wxRESIZE_BORDER</style>
     <object class="wxBoxSizer">
       <orient>wxVERTICAL</orient>
       <object class="sizeritem">
@@ -11,76 +11,56 @@
           <orient>wxVERTICAL</orient>
           <object class="sizeritem">
             <object class="wxStaticText" name="wxID_LABEL_AUTHENT">
-              
               <label>Please authentification for realm 'xxx' at server 'zzzzz'</label>
             </object>
-            
             <border></border>
           </object>
           <object class="spacer">
-            
             <size>0,5</size>
           </object>
           <object class="sizeritem">
             <object class="wxStaticText" name="wxID_LABEL_SERVER">
-              
               <label>this is the server name 'zzzzz'</label>
             </object>
-            
             <border></border>
           </object>
           <object class="spacer">
-            
             <size>0,5</size>
           </object>
           <object class="spacer">
-            
             <size>0,5</size>
           </object>
           <object class="sizeritem">
             <object class="wxStaticText" name="wxID_LABEL_NAME">
-              
               <label>Give your name</label>
             </object>
           </object>
           <object class="sizeritem">
             <object class="wxTextCtrl" name="wxID_AU">
-              
               <style>wxTE_PROCESS_ENTER</style>
-              
               <focused>1</focused>
             </object>
-            
             <flag>wxEXPAND</flag>
-            
             <border>5</border>
           </object>
           <object class="spacer">
-            
             <size>0,5</size>
           </object>
           <object class="sizeritem">
             <object class="wxStaticText" name="wxID_LABEL_PASSWD">
-              
               <label>Give your password</label>
             </object>
           </object>
           <object class="sizeritem">
             <object class="wxTextCtrl" name="wxID_PASSWD">
-              
               <style>wxTE_PASSWORD</style>
             </object>
-            
             <flag>wxEXPAND</flag>
-            
             <border>5</border>
           </object>
         </object>
-        
         <option>1</option>
-        
         <flag>wxALL|wxEXPAND</flag>
-        
         <border>5</border>
       </object>
       <object class="sizeritem">
@@ -93,9 +73,7 @@
             <flag>wxALL</flag>
             <border>5</border>
             <object class="wxButton" name="wxID_OK">
-              
               <label>*OK*</label>
-              
               <default>1</default>
             </object>
           </object>
@@ -103,7 +81,6 @@
             <flag>wxALL</flag>
             <border>5</border>
             <object class="wxButton" name="wxID_CANCEL">
-              
               <label>*CANCEL*</label>
             </object>
           </object>
