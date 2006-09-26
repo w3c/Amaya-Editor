@@ -161,7 +161,7 @@ static KEY         *Automata_CTRL    = NULL;
 static KEY         *Automata_ALT     = NULL;
 static KEY         *Automata_current = NULL;
 /* Access key table for loaded documents */
-static Proc         AccessKeyFunction = NULL;
+static Proc2        AccessKeyFunction = NULL;
 static KEY         *DocAccessKey[MAX_DOCUMENTS];
 #ifdef _WINGUI
 static ThotBool    Special;
@@ -1448,7 +1448,7 @@ void FreeTranslations ()
 /*----------------------------------------------------------------------
   EndOfString check wether string end by suffix.
   ----------------------------------------------------------------------*/
-static int      EndOfString (char *string, char *suffix)
+static int EndOfString (char *string, char *suffix)
 {
   int             string_lenght, suffix_lenght;
 
@@ -1464,9 +1464,9 @@ static int      EndOfString (char *string, char *suffix)
 /*----------------------------------------------------------------------
   TtaSetAccessKeyFunction registers the access key function.
   ----------------------------------------------------------------------*/
-void TtaSetAccessKeyFunction (Proc procedure)
+void TtaSetAccessKeyFunction (Proc2 procedure)
 {
-  AccessKeyFunction = (Proc)procedure;
+  AccessKeyFunction = (Proc2)procedure;
 }
 
 

@@ -7538,15 +7538,16 @@ void InitAmaya (NotifyEvent * event)
 #endif /* _GTK */
 
   /* init transformation callback */
-  TtaSetTransformCallback ((Func) TransformIntoType);
+  TtaSetTransformCallback ((Func2) TransformIntoType);
   TargetName = NULL;
-  TtaSetAccessKeyFunction ((Proc) AccessKeyHandler);
+  TtaSetAccessKeyFunction ((Proc2) AccessKeyHandler);
   TtaSetEntityFunction ((Proc4) MapEntityByCode);
   TtaSetDoctypeFunction ((Proc3) HasADoctype);
-  TtaSetCopyAndCutFunction ((Proc) RegisterURLSavedElements);
+  TtaSetCopyAndCutFunction ((Proc1) RegisterURLSavedElements);
   TtaSetCopyCellFunction ((Proc3) CopyCell);
   TtaSetCopyRowFunction ((Proc3) CopyRow);
   TtaSetNextCellInColumnFunction ((Proc5) NextCellInColumn);
+  TtaSetFocusChange ((Proc1) FocusChanged);
   /* Initialize the Amaya user and tmp directories */
   s = TtaGetEnvString ("APP_TMPDIR");
   if (!TtaCheckMakeDirectory (s, TRUE))
@@ -7704,7 +7705,7 @@ void InitAmaya (NotifyEvent * event)
   TtaSetBackup (BackUpDocs);
 
   /* Define the auto-save function */
-  TtaSetAutoSave ((Proc)GenerateAutoSavedDoc);
+  TtaSetAutoSave ((Proc1)GenerateAutoSavedDoc);
   /* Define the auto-save interval */
   TtaGetEnvInt ("AUTO_SAVE", &AutoSave_Interval);
   TtaSetDocumentBackUpInterval (AutoSave_Interval);

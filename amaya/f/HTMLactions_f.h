@@ -46,6 +46,7 @@ extern ThotBool AnnotSimpleClick ( NotifyElement *event );
 extern void UpdateTitle ( Element el,
                           Document doc );
 extern void CloseLogs ( Document doc );
+extern void FocusChanged ( Document doc );
 extern void FreeDocumentResource ( Document doc );
 extern void DocumentClosed ( NotifyDialog * event );
 extern void UpdateContextSensitiveMenus ( Document doc );
@@ -115,6 +116,7 @@ extern ThotBool AnnotSimpleClick ( NotifyElement *event );
 extern void UpdateTitle ( Element el,
                             Document doc );
 extern void CloseLogs ( Document doc );
+extern void FocusChanged ( Document doc );
 extern void FreeDocumentResource ( Document doc );
 extern void DocumentClosed ( NotifyDialog * event );
 extern void UpdateContextSensitiveMenus ( Document doc );

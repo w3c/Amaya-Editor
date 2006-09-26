@@ -12,6 +12,19 @@
 #include "tree.h"
 #include "view.h"
 
+typedef void        (*Proc) ();
+typedef void        (*Proc1) (void * );
+typedef void        (*Proc2) (void *,void *);
+typedef void        (*Proc3) (void *,void *,void *);
+typedef void        (*Proc4) (void *,void *,void *,void *);
+typedef void        (*Proc5) (void *,void *,void *,void *,void *);
+typedef int         (*UserProc) ();
+typedef             ThotBool (*Func) ();
+/* for c++ compatibility */
+typedef             ThotBool (*Func1) (void *);
+typedef             ThotBool (*Func2) (void *, void *);
+typedef             ThotBool (*Func3) (void *, void *, void *);
+
 /************************************************************************
  *									*
  * The problem of handling ISO-Latin-1 input with Motif			*
@@ -33,21 +46,21 @@
   a Copy or Cut operation is executed:
   void procedure (Docucment doc)
   ----------------------------------------------------------------------*/
-extern void TtaSetCopyAndCutFunction (void (*procedure) ());
+extern void TtaSetCopyAndCutFunction (Proc1 procedure);
 
 /*----------------------------------------------------------------------
   TtaSetCopyCellFunction registers the function to be called when
   a cell of a row or a column is copied:
   void procedure (Element el, Docucment doc, ThotBool inRow)
   ----------------------------------------------------------------------*/
-extern void TtaSetCopyCellFunction (void (*procedure) (void *,void *,void *));
+extern void TtaSetCopyCellFunction (Proc3 procedure);
 
 /*----------------------------------------------------------------------
   TtaSetCopyRowFunction registers the function to be called when
   a table row is copied:
   void procedure (Element copy, Element orig, Docucment doc)
   ----------------------------------------------------------------------*/
-extern void TtaSetCopyRowFunction (void (*procedure) (void *,void *,void *));
+extern void TtaSetCopyRowFunction (Proc3 procedure);
 
 /*----------------------------------------------------------------------
   TtaSetNextCellInColumnFunction registers the function to be called when
@@ -55,12 +68,19 @@ extern void TtaSetCopyRowFunction (void (*procedure) (void *,void *,void *));
   void procedure (Element* cell, Element* row, Element colHead, Document doc,
   ThotBool* fake)
   ----------------------------------------------------------------------*/
-extern void TtaSetNextCellInColumnFunction (void (*procedure) (void *,void *,void *,void *,void *));
+extern void TtaSetNextCellInColumnFunction (Proc5 procedure);
+
+/*----------------------------------------------------------------------
+  TtaSetFocusChange registers the function to be called when the document
+  focus changes:
+  void procedure (Docucment doc)
+  ----------------------------------------------------------------------*/
+extern void TtaSetFocusChange (Proc1 procedure);
 
 /*----------------------------------------------------------------------
   TtaSetAccessKeyFunction registers the access key function.
   ----------------------------------------------------------------------*/
-extern void TtaSetAccessKeyFunction (void (*procedure) ());
+extern void TtaSetAccessKeyFunction (Proc2 procedure);
 
 /*----------------------------------------------------------------------
   TtaAddAccessKey registers a new access key for the document doc

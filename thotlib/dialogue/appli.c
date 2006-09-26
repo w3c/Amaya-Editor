@@ -63,11 +63,12 @@
 #ifdef _GTK
 static gchar *null_string;
 #endif /*_GTK*/
-
 #ifdef _WX
 static ThotBool     ComputeScrollBar = TRUE;
 #endif /* _WX */
 
+/* Focus change callback procedure */
+static Proc1        ChangeFocusFunction = NULL;
 static char         OldMsgSelect[MAX_TXT_LEN];
 static PtrDocument  OldDocMsgSelect;
 
@@ -725,10 +726,10 @@ void  GL_DestroyFrame (int frame)
 void GL_Win32ContextInit (HWND hwndClient, int frame)
 {
   static ThotBool dialogfont_enabled = FALSE;
-  int frame_index;
-  HGLRC hGLRC;
-  HDC hDC;
-  ThotBool found;
+  int             frame_index;
+  HGLRC           hGLRC;
+  HDC             hDC;
+  ThotBool        found;
 
   hDC = 0;
   hDC = GetDC (hwndClient);	
@@ -3532,8 +3533,11 @@ void ChangeSelFrame (int frame)
     {
       CloseTextInsertion ();
       ActiveFrame = frame;
-#ifdef _WX
       FrameToView (frame, &doc, &view);
+      // set the new focus
+      if (ChangeFocusFunction)
+        (*(Proc1)ChangeFocusFunction) ((void *) doc);
+#ifdef _WX
       /* update the class list */
       TtaExecuteMenuAction ("ApplyClass", doc, 1, FALSE);
       TtaRefreshElementMenu (doc, 1);
@@ -3543,6 +3547,15 @@ void ChangeSelFrame (int frame)
     }
 }
 
+/*----------------------------------------------------------------------
+  TtaSetFocusChange registers the function to be called when the document
+  focus changes:
+  void procedure (Docucment doc)
+  ----------------------------------------------------------------------*/
+void TtaSetFocusChange (Proc1 procedure)
+{
+  ChangeFocusFunction = procedure;
+}
 
 /*----------------------------------------------------------------------
   GetWindowFrame retourne l'indice de la table des Cadres associe'    

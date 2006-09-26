@@ -1604,6 +1604,27 @@ void CloseLogs (Document doc)
 }
 
 /*----------------------------------------------------------------------
+  FocusChanged closes all open log windows except the current document
+  -----------------------------------------------------------------------*/
+void FocusChanged (Document doc)
+{
+  int		     i;
+
+  for (i = 1; i < DocumentTableLength; i++)
+    if (DocumentURLs[i] && DocumentSource[i] != doc &&
+        DocumentTypes[i] == docLog)
+      {
+        /* close the window of the log file */
+        TtaCloseDocument (i);
+        TtaFreeMemory (DocumentURLs[i]);
+        DocumentURLs[i] = NULL;
+        DocumentSource[i] = 0;
+        /* restore the default document type */
+        DocumentTypes[i] = docFree;
+      }
+}
+
+/*----------------------------------------------------------------------
   FreeDocumentResource
   ----------------------------------------------------------------------*/
 void FreeDocumentResource (Document doc)

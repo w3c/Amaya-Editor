@@ -41,9 +41,9 @@ void TtaSetBackup (Proc procedure)
 /*----------------------------------------------------------------------
    TtaSetAutoSave connects the AutoSave function: procedure().
   ----------------------------------------------------------------------*/
-void TtaSetAutoSave (Proc procedure)
+void TtaSetAutoSave (Proc1 procedure)
 {
-  TteConnectAction (T_autosave, procedure);
+  TteConnectAction (T_autosave, (Proc) procedure);
 }
  
 /*----------------------------------------------------------------------

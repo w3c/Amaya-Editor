@@ -16,7 +16,7 @@ extern int ThotInput ( int frame,
                        int PicMask,
                        int key );
 extern void FreeTranslations ( void );
-extern void TtaSetAccessKeyFunction ( Proc procedure );
+extern void TtaSetAccessKeyFunction ( Proc2 procedure );
 extern void TtaAddAccessKey ( Document doc,
                               unsigned int key,
                               void *param );
@@ -41,7 +41,7 @@ extern int ThotInput ( int frame,
                          int PicMask,
                          int key );
 extern void FreeTranslations ( void );
-extern void TtaSetAccessKeyFunction ( Proc procedure );
+extern void TtaSetAccessKeyFunction ( Proc2 procedure );
 extern void TtaAddAccessKey ( Document doc,
                                 unsigned int key,
                                 void *param );

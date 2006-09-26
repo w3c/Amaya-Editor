@@ -98,6 +98,7 @@ extern void ChangeFrameTitle ( int frame,
                                unsigned char *text,
                                CHARSET encoding );
 extern void ChangeSelFrame ( int frame );
+extern void TtaSetFocusChange ( Proc1 procedure );
 extern int GetWindowFrame ( ThotWindow w );
 extern void GetSizesFrame ( int frame,
                             int *width,
@@ -210,6 +211,7 @@ extern void ChangeFrameTitle ( int frame,
                                  unsigned char *text,
                                  CHARSET encoding );
 extern void ChangeSelFrame ( int frame );
+extern void TtaSetFocusChange ( Proc1 procedure );
 extern int GetWindowFrame ( ThotWindow w );
 extern void GetSizesFrame ( int frame,
                               int *width,

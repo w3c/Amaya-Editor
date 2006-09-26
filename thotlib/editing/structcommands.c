@@ -71,9 +71,9 @@ static PtrSSchema   ChangeTypeSSchema[MAX_ITEMS_CHANGE_TYPE];
 static int          ChangeTypeMethod[MAX_ITEMS_CHANGE_TYPE];
 
 /* transformation callback procedure */
-static Func         TransformIntoFunction = NULL;
+static Func2        TransformIntoFunction = NULL;
 /* copy & cut callback procedure */
-static Proc         CopyAndCutFunction = NULL;
+static Proc1        CopyAndCutFunction = NULL;
 static Proc3        CopyCellFunction = NULL;
 static Proc3        CopyRowFunction = NULL;
 static Proc5        NextCellInColumnFunction = NULL;
@@ -2011,7 +2011,7 @@ ThotBool CutCommand (ThotBool save, ThotBool replace)
   a Copy or Cut operation is executed:
   void procedure (Docucment doc)
   ----------------------------------------------------------------------*/
-void TtaSetCopyAndCutFunction (Proc procedure)
+void TtaSetCopyAndCutFunction (Proc1 procedure)
 {
   CopyAndCutFunction = procedure;
 }
@@ -3628,7 +3628,7 @@ void TtaInsertAnyElement (Document document, ThotBool before)
   TtaSetTransformCallback permet de connecter une fonction de l'application
   au changement de type d'element
   ----------------------------------------------------------------------*/
-void  TtaSetTransformCallback (Func callbackFunc)
+void  TtaSetTransformCallback (Func2 callbackFunc)
 {
   TransformIntoFunction = callbackFunc;
 }

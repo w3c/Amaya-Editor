@@ -14,19 +14,6 @@
 #include "interface.h"
 #include "appaction.h"
 
-typedef void        (*Proc) ();
-typedef void        (*Proc1) (void * );
-typedef void        (*Proc2) (void *,void *);
-typedef void        (*Proc3) (void *,void *,void *);
-typedef void        (*Proc4) (void *,void *,void *,void *);
-typedef void        (*Proc5) (void *,void *,void *,void *,void *);
-typedef int         (*UserProc) ();
-typedef             ThotBool (*Func) ();
-/* for c++ compatibility */
-typedef             ThotBool (*Func1) (void *); 
-typedef             ThotBool (*Func2) (void *, void *);
-typedef             ThotBool (*Func3) (void *, void *, void *);
-
 /* Type definitions for binding actions and events */
 typedef struct _APP_action *PtrAction;
 typedef struct _APP_action
@@ -73,7 +60,7 @@ extern void         StructSelectLoadResources ();
 #ifndef __CEXTRACT__
 extern void         TteConnectAction (int id, Proc procedure);
 extern void         TtaSetBackup (Proc procedure);
-extern void         TtaSetAutoSave (Proc procedure);
+extern void         TtaSetAutoSave (Proc1 procedure);
 extern void         TtaSetDocStatusUpdate (Proc procedure);
 extern void         TteZeroMenu ();
 extern void         TteOpenMainWindow (char *name);
@@ -89,7 +76,7 @@ extern PtrEventsSet TteGetEventsSet (char *name);
 extern PtrEventsSet TteNewEventsSet (int structureId, char *name);
 extern void         TtcStandardPresentation (Document document, View view);
 extern void         TtcStandardGeometry (Document document, View view);
-extern void         TtaSetTransformCallback (Func function);
+extern void         TtaSetTransformCallback (Func2 function);
 
 /* List of editor dialogue actions */
 extern void         TtcChangeCharacters (Document document, View view);

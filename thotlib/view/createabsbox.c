@@ -4979,7 +4979,7 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
           /* now get the rules associated with the attributes of the element */
           pAttr = pEl->ElFirstAttr;	/* first attribute of element */
           /* check all attributes of element */
-          while (pAttr != NULL)
+          while (pAttr)
             {
               if (pHd == NULL)
                 /* main presentation schema. Take the one associated with
