@@ -316,7 +316,7 @@ Element InstanciateUse (XTigerTemplate t, Element el, Document doc,
 {
 #ifdef TEMPLATES
 	Element          cont, child, prev, next;
-  ElementType      elt;
+  ElementType      elType;
 	Attribute        at;
 	AttributeType    att;
   Declaration      dec;
@@ -328,8 +328,8 @@ Element InstanciateUse (XTigerTemplate t, Element el, Document doc,
 
   /* get the value of the "types" attribute */
   cont = NULL;
-  elt = TtaGetElementType (el);
-	att.AttrSSchema = elt.ElSSchema;
+  elType = TtaGetElementType (el);
+	att.AttrSSchema = elType.ElSSchema;
 	att.AttrTypeNum = Template_ATTR_types;
 	at = TtaGetAttribute (el, att);
   if (!at)
@@ -349,14 +349,17 @@ Element InstanciateUse (XTigerTemplate t, Element el, Document doc,
         switch(dec->nature)
           {
           case SimpleTypeNat :
-            elt.ElTypeNum = Template_EL_TEXT_UNIT;
-            cont = TtaNewElement (doc, elt);
+            elType.ElTypeNum = Template_EL_TEXT_UNIT;
+            cont = TtaNewElement (doc, elType);
             TtaInsertFirstChild (&cont, el, doc);
             TtaSetTextContent (cont, (unsigned char*) empty, 0, doc);
             cont = NULL;
             break;
           case XmlElementNat :
-            /* @@@@@@ */
+            GIType (dec->name, &elType, doc);
+            cont = TtaNewElement (doc, elType);
+            if (insert)
+              TtaInsertFirstChild (&cont, el, doc);
             break;
           case ComponentNat :
             cont = TtaCopyTree (dec->componentType.content, doc, doc, el);
@@ -382,6 +385,7 @@ Element InstanciateUse (XTigerTemplate t, Element el, Document doc,
               }
             break;
           case UnionNat :
+            /* @@@@@ */
             break;
           default :
             //Impossible
