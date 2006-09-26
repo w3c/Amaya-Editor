@@ -674,7 +674,7 @@ ThotBool MapXMLEntity (int XMLtype, char *entityName, int *entityValue)
   sup = 0;
 
   /* Select the right table */
-  if (XMLtype == XHTML_TYPE)
+  if (XMLtype == XHTML_TYPE || XMLtype == Template_TYPE)
     {
       ptr = XhtmlEntityTable;
       if (XHTMLSup == 0)
