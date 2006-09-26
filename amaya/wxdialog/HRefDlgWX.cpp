@@ -192,7 +192,7 @@ void HRefDlgWX::OnClick( wxCommandEvent& event )
       Clicked = 1;
       Waiting = 0;
       ThotCallback (MyRef, INTEGER_DATA, (char*) 3);
-      TtaDestroyDialogue( MyRef );
+      //TtaDestroyDialogue( MyRef );
     }
 }
 
