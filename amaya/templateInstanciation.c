@@ -324,6 +324,7 @@ Element InstanciateUse (XTigerTemplate t, Element el, Document doc,
   struct menuType  *items;
   char             *types;
   char             *empty = " ";
+  ThotBool          oldStructureChecking;
 
   /* get the value of the "types" attribute */
   cont = NULL;
@@ -337,6 +338,9 @@ Element InstanciateUse (XTigerTemplate t, Element el, Document doc,
 	types = (char *) TtaGetMemory (size+1);	
 	TtaGiveTextAttributeValue (at, types, &size);
   giveItems (types, size, &items, &nbitems);
+  // No structure checking
+  oldStructureChecking = TtaGetStructureChecking (doc);
+  TtaSetStructureChecking (FALSE, doc);
   if (nbitems == 1)
     /* only one type in the "types" attribute */
     {
@@ -384,6 +388,7 @@ Element InstanciateUse (XTigerTemplate t, Element el, Document doc,
             break;   
           }
     }
+  TtaSetStructureChecking (oldStructureChecking, doc);
   return cont;
 #endif /* TEMPLATES */
 }
