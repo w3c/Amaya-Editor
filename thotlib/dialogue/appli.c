@@ -3535,7 +3535,9 @@ void ChangeSelFrame (int frame)
       ActiveFrame = frame;
       FrameToView (frame, &doc, &view);
       // set the new focus
-      if (ChangeFocusFunction)
+      if (ChangeFocusFunction &&
+          doc && LoadedDocument[doc-1]->DocTypeName &&
+          strcmp (LoadedDocument[doc-1]->DocTypeName, "log"))
         (*(Proc1)ChangeFocusFunction) ((void *) doc);
 #ifdef _WX
       /* update the class list */
