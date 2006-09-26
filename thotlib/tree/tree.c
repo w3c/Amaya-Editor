@@ -1047,7 +1047,7 @@ ThotBool ElemIsWithinSubtree (PtrElement pEl, PtrElement pRoot)
   EquivalentType                                                          
   Tests if the type of pEl is equivalent to typeNum.
   ----------------------------------------------------------------------*/
-ThotBool     EquivalentType (PtrElement pEl, int typeNum, PtrSSchema pSS)
+ThotBool EquivalentType (PtrElement pEl, int typeNum, PtrSSchema pSS)
 {
   ThotBool            ok;
   PtrSRule            pRe1, pRe2;
@@ -1064,7 +1064,7 @@ ThotBool     EquivalentType (PtrElement pEl, int typeNum, PtrSSchema pSS)
     SSok = !strcmp (pEl->ElStructSchema->SsName, pSS->SsName);
   if (SSok && pEl->ElTypeNumber == typeNum)
     ok = TRUE;
-  else if (pSS != NULL)
+  else if (pSS && (SSok || pEl->ElTerminal))
     {
       pRe1 = pSS->SsRule->SrElem[typeNum - 1];
       /* rule defining the type of element we are searching */
