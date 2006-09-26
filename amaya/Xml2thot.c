@@ -75,10 +75,10 @@ typedef struct _XMLparserContext
   char	  *UriName;		/* URI of namespaces for that DTD */
   PtrParserCtxt  NextParserCtxt;	/* next parser context */
   char	  *SSchemaName;		/* name of Thot structure schema */
-  SSchema	   XMLSSchema;		/* the Thot structure schema */
-  int            XMLtype;             /* indentifier used by fetchname */
+  SSchema  XMLSSchema;		/* the Thot structure schema */
+  int      XMLtype;             /* indentifier used by fetchname */
   Proc	   MapAttribute;	/* returns the Thot attribute corresp.
-                             to an XML attribute name */
+                                   to an XML attribute name */
   Proc	   MapAttributeValue;	/* returns the Thot value corresp. to
                                  the name of an XML attribute value */    
   Proc	   CheckContext;        /* action to be called to verify if an
@@ -87,14 +87,14 @@ typedef struct _XMLparserContext
   Proc	   CheckInsert;         /* action to be called to insert an
                                    element in the abstract tree */
   Proc	   ElementCreated;	/* action to be called when an element
-                               has been created and inserted */
+                                   has been created and inserted */
   Proc	   ElementComplete;	/* action to be called when an element
-                               has been generated completely */
+                                   has been generated completely */
   Proc	   AttributeComplete;	/* action to be called when an
                                  attribute has been generated */
   Proc	   GetDTDName;		/* returns the name of the DTD to be
-                             used for parsing the contents of an
-                             element that uses a different DTD */
+                                   used for parsing the contents of an
+                                   element that uses a different DTD */
   Proc	   UnknownNameSpace;  	/* action to be called if an element 
                                    belongs to a not-suported namespace */
   ThotBool       DefaultLineBreak;    /* default treatment for white-space */
@@ -1739,6 +1739,27 @@ static void   XhtmlCheckContext (char *elName, const ElementType * elType,
                   else
                     *isAllowed = FALSE;
                 }
+            }
+        }
+
+      if (*isAllowed)
+	{
+          /* only LI is allowed as a child of a OL or UL element */
+          if (!strcmp ((char *)nameElementStack[stackLevel - 1], "ol") ||
+              !strcmp ((char *)nameElementStack[stackLevel - 1], "ul"))
+            {
+              if (strcmp ((char *)elName, "li"))
+		*isAllowed = FALSE;
+            }
+        }
+
+      if (*isAllowed)
+	{
+          /* only DT/DD is allowed as a child of a DL element */
+    	  if (!strcmp ((char *)nameElementStack[stackLevel - 1], "dl"))
+            {
+              if (strcmp ((char *)elName, "dt") && strcmp ((char *)elName, "dd"))
+		*isAllowed = FALSE;
             }
         }
 
