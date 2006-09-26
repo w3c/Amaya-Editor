@@ -158,7 +158,7 @@
 156 Taille caractères des menus
 157 Zoom caractères
 158 Langue des dialogues
-159 Activer le coller ligne à ligne
+159 Preserver les lignes dans le coller
 160 Produire des fichiers de sauvegarde
 161 Sauver la géométrie en quittant
 162 Montrer les images de fond
@@ -208,7 +208,7 @@
 206 Orientation
 207 Portrait
 208 Paysage
-209 Engendrer des espaces non séquables
+209 Garder les espaces multiples
 210 Erreur(s) dans le code source
 211 Erreur fatale - Corriger le code source pour continuer
 212 Essayer l'entrée "Fichier/Forcer un code caractère"

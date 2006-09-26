@@ -2389,8 +2389,8 @@
 	<message xml:lang="tw">程序語言</message>
 </label>
 <label define="AM_PASTE_LINE_BY_LINE">
-	<message xml:lang="en">Enable line-by-line paste</message>
-	<message xml:lang="fr">Activer le coller ligne à ligne</message>
+	<message xml:lang="en">Preserve lines when pasting</message>
+	<message xml:lang="fr">Preserver les lignes dans le coller</message>
 	<message xml:lang="it">Incolla mantenendo le righe originali</message>
 	<message xml:lang="de">Zeilenweises Einfügen aktivieren</message>
 	<message xml:lang="es">Activar pegado línea a línea</message>
@@ -3125,8 +3125,8 @@
 	<message xml:lang="tw">Landscape</message>
 </label>
 <label define="AM_INSERT_NBSP">
-	<message xml:lang="en">Generate no-break spaces</message>
-	<message xml:lang="fr">Engendrer des espaces non séquables</message>
+	<message xml:lang="en">Keep multiple spaces</message>
+	<message xml:lang="fr">Garder les espaces multiples</message>
 </label>
 <label define="AM_XML_RETRY">
 	<message xml:lang="en">Error(s) in the source code</message>

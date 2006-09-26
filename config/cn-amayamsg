@@ -208,7 +208,7 @@
 206 Orientation
 207 Portrait
 208 Landscape
-209 **Generate no-break spaces
+209 **Keep multiple spaces
 210 Error(s) in the source code
 211 Fatal error - Fix the source code to continue
 212 Try the 'File/Force a Character Coding' entry
