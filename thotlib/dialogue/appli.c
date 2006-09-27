@@ -3525,10 +3525,8 @@ void ChangeFrameTitle (int frame, unsigned char *text, CHARSET encoding)
   ----------------------------------------------------------------------*/
 void ChangeSelFrame (int frame)
 {
-#ifdef _WX
   Document            doc;
   View                view;
-#endif /* _WX */
   if (ActiveFrame != frame)
     {
       CloseTextInsertion ();
