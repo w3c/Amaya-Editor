@@ -35,7 +35,7 @@
     </xt:component>
 
     <xt:component name="bibauthor">
-      <span class="bibauthor"><xt:use types="string">Author</xt:use></span>,
+      <span class="bibauthor"><xt:use types="string">[xx] Author</xt:use></span>,
     </xt:component>
 
     <xt:component name="refbook">
@@ -78,7 +78,6 @@
           <xt:attribute name="src" default="DefPortrait.jpg"/>
           <xt:attribute name="width" use="optional"/>
        </img>
-       <br />
     </xt:component>
 
     <xt:component name="author">
@@ -86,12 +85,13 @@
         <xt:option>
           <xt:use types="portrait"/>
         </xt:option>
+       <br />
         <span class="fn">
           <xt:use types="string">Author name</xt:use>
         </span>
         <br />
-        <span class="adr">
-          <xt:use types="string br">Address line 1<br />
+        <span class="addr">
+          <xt:use types="string">Address line 1<br />
                                    line 2...</xt:use>
         </span>
         <br/>
