@@ -2933,6 +2933,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
       TtaInitTopMenuStats(doc);
 #endif /* _WX */
 
+      DocumentTypes[doc] = docType;
       /* open the main view */
       if (docType == docLog)
         /* without menu bar */

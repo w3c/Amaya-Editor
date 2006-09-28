@@ -1610,6 +1610,13 @@ void FocusChanged (Document doc)
 {
   int		     i;
 
+  if ( DocumentTypes[doc] == docSource)
+    {
+      doc = GetDocFromSource (doc);
+      if (doc == 0)
+        // Amaya is creating the source view of the current document
+        return;
+    }
   for (i = 1; i < DocumentTableLength; i++)
     if (DocumentURLs[i] && DocumentSource[i] != doc &&
         DocumentTypes[i] == docLog)
