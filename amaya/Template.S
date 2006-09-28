@@ -21,6 +21,7 @@ STRUCT
       repeat;
       option;
       useEl;
+      useSimple;
       bag;
       attribute;
     END;
@@ -44,6 +45,7 @@ STRUCT
   	LIST OF ( Repetition =
 		  CASE OF
 		    useEl;
+        useSimple;
 	    	option;
 		    repeat;
 		    bag; 
@@ -55,6 +57,9 @@ STRUCT
   	= ANY - ( head, union, import, component );
   
   useEl ( ATTR id; types = TEXT; currentType = TEXT; title )
+     = ANY - ( head, union, import, component );
+
+  useSimple ( ATTR id; types; currentType; title )
      = ANY - ( head, union, import, component );
 
   bag ( ATTR id; types ) 

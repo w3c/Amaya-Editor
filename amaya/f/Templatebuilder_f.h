@@ -13,8 +13,8 @@ extern void MapTemplateAttribute ( char *attrName,
                                    char* elementName,
                                    ThotBool *level,
                                    Document doc );
-extern void MapTemplateAttributeValue ( char* attVal,
-                                        const AttributeType * attrType,
+extern void MapTemplateAttributeValue ( char *attVal,
+                                        const AttributeType *attrType,
                                         int *value );
 extern void MapTemplateEntity ( char *entityName,
                                 char *entityValue,
@@ -23,6 +23,8 @@ extern void TemplateEntityCreated ( unsigned char *entityValue,
                                     Language lang,
                                     char *entityName,
                                     Document doc );
+extern ThotBool NeedAMenu ( Element el,
+                            Document doc );
 extern void TemplateElementComplete ( ParserData *context,
                                       Element el,
                                       int *error );
@@ -46,8 +48,8 @@ extern void MapTemplateAttribute ( char *attrName,
                                      char* elementName,
                                      ThotBool *level,
                                      Document doc );
-extern void MapTemplateAttributeValue ( char* attVal,
-                                          const AttributeType * attrType,
+extern void MapTemplateAttributeValue ( char *attVal,
+                                          const AttributeType *attrType,
                                           int *value );
 extern void MapTemplateEntity ( char *entityName,
                                   char *entityValue,
@@ -56,6 +58,8 @@ extern void TemplateEntityCreated ( unsigned char *entityValue,
                                       Language lang,
                                       char *entityName,
                                       Document doc );
+extern ThotBool NeedAMenu ( Element el,
+                              Document doc );
 extern void TemplateElementComplete ( ParserData *context,
                                         Element el,
                                         int *error );

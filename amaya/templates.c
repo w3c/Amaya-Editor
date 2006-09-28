@@ -21,8 +21,8 @@
 
 #include "mydictionary_f.h"
 #include "templateLoad_f.h"
-#include "templateInstanciation_f.h"
 #include "templateDeclarations_f.h"
+#include "templateInstantiate_f.h"
 #include "appdialogue_wx.h"
 #include "init_f.h"
 #include "wxdialogapi_f.h"
@@ -36,12 +36,12 @@
 void NewTemplate (Document doc, View view)
 {
 #ifdef TEMPLATES
-  char *templateDir = TtaGetEnvString ("TEMPLATES_DIRECTORY");
-  ThotBool created;
+  char        *templateDir = TtaGetEnvString ("TEMPLATES_DIRECTORY");
+  ThotBool     created;
 
-  if (templates == NULL)
-    InitializeTemplateEnvironment();
-  created = CreateNewTemplateDocDlgWX(BaseDialog + OpenTemplate,
+  if (Templates_Dic == NULL)
+    InitializeTemplateEnvironment ();
+  created = CreateNewTemplateDocDlgWX (BaseDialog + OpenTemplate,
                                       /*TtaGetViewFrame (doc, view)*/NULL, doc,
                                       TtaGetMessage (AMAYA, AM_NEW_TEMPLATE),templateDir);
   
@@ -76,16 +76,16 @@ void CreateInstanceOfTemplate (Document doc, char *templatename, char *docname)
         return;
     }    
 
-  LoadTemplate(0, templatename);
+  LoadTemplate (0, templatename);
   DontReplaceOldDoc = dontReplace;
-  CreateInstance(templatename, docname);
+  CreateInstance (templatename, docname);
   
 #endif /* TEMPLATES */
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void giveItems(char *text, int size, struct menuType **items, int *nbitems)
+void giveItems (char *text, int size, struct menuType **items, int *nbitems)
 {
 #ifdef TEMPLATES
 	ThotBool         inElement = TRUE;
@@ -110,7 +110,7 @@ void giveItems(char *text, int size, struct menuType **items, int *nbitems)
         }
     }
 
-	menu = (struct menuType*) TtaGetMemory(sizeof(struct menuType)* *nbitems);
+	menu = (struct menuType*) TtaGetMemory (sizeof (struct menuType)* *nbitems);
 	iter = text;
 	for (i = 0; i < *nbitems; i++)
     {		
@@ -125,7 +125,7 @@ void giveItems(char *text, int size, struct menuType **items, int *nbitems)
         }
 
       temp[labelSize] = EOS;
-      menu[i].label = (char *) TtaStrdup(temp);
+      menu[i].label = (char *) TtaStrdup (temp);
       menu[i].type = SimpleTypeNat;  /* @@@@@ ???? @@@@@ */
       *items = menu;
     }
@@ -144,7 +144,7 @@ static char *createMenuString (const struct menuType* items, const int nbItems)
 	for (i=0; i < nbItems; i++)
 		size += 2 + strlen (items[i].label);
 
-	result = (char *) TtaGetMemory(size);
+	result = (char *) TtaGetMemory (size);
 	iter = result;
 	for (i=0; i < nbItems; i++)
     {
@@ -195,10 +195,10 @@ void UseCreated (NotifyElement *event)
     /* this Use element has already some content. It has already been
        instanciated */
     return;
-  t = (XTigerTemplate) Get(templates, DocumentMeta[doc]->template_url);
+  t = (XTigerTemplate) Get (Templates_Dic, DocumentMeta[doc]->template_url);
   if (!t)
     return; // no template ?!?!
-  InstanciateUse (t, el, doc, TRUE);
+  InstantiateUse (t, el, doc, TRUE);
 #endif /* TEMPLATES */
 }
 
@@ -211,9 +211,9 @@ ThotBool UseMenuClicked (NotifyElement *event)
 #ifdef TEMPLATES
 	Document         doc;
 	Element          el, comp;
-	ElementType      elt;
-	Attribute        at;
-	AttributeType    att;
+	ElementType      elType;
+	Attribute        att;
+	AttributeType    attributeType;
   XTigerTemplate   t;
   Declaration      dec;
   Record           rec, first;
@@ -223,28 +223,27 @@ ThotBool UseMenuClicked (NotifyElement *event)
 
 	doc = event->document;
 	el = event->element;
-	elt = TtaGetElementType(el);
-  t = (XTigerTemplate) Get(templates, DocumentMeta[doc]->template_url);
+	elType = TtaGetElementType (el);
+  t = (XTigerTemplate) Get (Templates_Dic, DocumentMeta[doc]->template_url);
   if (!t)
     return FALSE; // no template ?!?!
 
-	att.AttrSSchema = elt.ElSSchema;
-	att.AttrTypeNum = Template_ATTR_types;
-	at = TtaGetAttribute (el, att);
-
-	size = TtaGetTextAttributeLength (at);
+  // give the list of possible items
+	attributeType.AttrSSchema = elType.ElSSchema;
+	attributeType.AttrTypeNum = Template_ATTR_types;
+	att = TtaGetAttribute (el, attributeType);
+	size = TtaGetTextAttributeLength (att);
 	types = (char *) TtaGetMemory (size+1);	
-	TtaGiveTextAttributeValue (at, types, &size);
-  
+	TtaGiveTextAttributeValue (att, types, &size);
 	giveItems (types, size, &items, &nbitems);
 	TtaFreeMemory (types);
 
   if (nbitems == 1)
     {
-      dec = GetDeclaration(t, items[0].label);
+      dec = GetDeclaration (t, items[0].label);
       /* if it's a union, display the menu of this union */
       if (dec)
-        switch(dec->nature)
+        switch (dec->nature)
           {
           case SimpleTypeNat :
             nbitems = 0;
@@ -267,12 +266,12 @@ ThotBool UseMenuClicked (NotifyElement *event)
               }
             if (nbitems > 0)
               {
-                items = (menuType*) TtaGetMemory(sizeof(struct menuType)* nbitems);
+                items = (menuType*) TtaGetMemory (sizeof (struct menuType)* nbitems);
                 rec = first;
                 nbitems = 0;
                 while (rec)
                   {
-                    items[nbitems].label = (char *) TtaStrdup(rec->key);
+                    items[nbitems].label = (char *) TtaStrdup (rec->key);
                     items[nbitems].type = SimpleTypeNat;  /* @@@@@ ???? @@@@@ */
                     nbitems++;
                     rec = rec->next;
@@ -292,17 +291,17 @@ ThotBool UseMenuClicked (NotifyElement *event)
       TtaFreeMemory (menuString);
       ReturnOption = -1; // no selection yet
       TtaShowDialogue (BaseDialog + OptionMenu, FALSE);
-      TtaWaitShowProcDialogue();
+      TtaWaitShowProcDialogue ();
       TtaDestroyDialogue (BaseDialog + OptionMenu);
       /* result: items[ReturnOption].label @@@@@ */
       if (ReturnOption != -1)
-        dec = GetDeclaration(t, items[ReturnOption].label);
+        dec = GetDeclaration (t, items[ReturnOption].label);
       TtaFreeMemory (items);
       if (ReturnOption == -1)
         return FALSE;
       if (dec)
         {
-          switch(dec->nature)
+          switch (dec->nature)
             {
             case SimpleTypeNat :
               /* @@@@@ */
@@ -347,17 +346,18 @@ ThotBool OptionMenuClicked (NotifyElement *event)
     return FALSE;
   elType = TtaGetElementType (child);
   elType1 = TtaGetElementType (event->element);
-  if (elType.ElTypeNum != Template_EL_useEl ||
+  if ((elType.ElTypeNum != Template_EL_useEl &&
+       elType.ElTypeNum != Template_EL_useSimple) ||
       elType.ElSSchema != elType1.ElSSchema)
     return FALSE;
   grandChild = TtaGetFirstChild (child);
   if (!grandChild)
-    /* the "use" element is empty. Instanciate it */
+    /* the "use" element is empty. Instantiate it */
     {
-      t = (XTigerTemplate) Get(templates, DocumentMeta[doc]->template_url);
+      t = (XTigerTemplate) Get (Templates_Dic, DocumentMeta[doc]->template_url);
       if (!t)
         return FALSE; // no template ?!?!
-      InstanciateUse (t, child, doc, TRUE);
+      InstantiateUse (t, child, doc, TRUE);
     }
   else
     /* remove the content of the "use" element */
@@ -392,7 +392,7 @@ ThotBool RepeatMenuClicked (NotifyElement *event)
   char            *types, *menuString;
 
   doc = event->document;
-  t = (XTigerTemplate) Get(templates, DocumentMeta[doc]->template_url);
+  t = (XTigerTemplate) Get (Templates_Dic, DocumentMeta[doc]->template_url);
   if (!t)
     return FALSE; // no template ?!?!
 	types = "top end";	
@@ -404,7 +404,7 @@ ThotBool RepeatMenuClicked (NotifyElement *event)
 	TtaFreeMemory (menuString);
   ReturnOption = -1; // no selection yet
 	TtaShowDialogue (BaseDialog + OptionMenu, FALSE);
-	TtaWaitShowProcDialogue();
+	TtaWaitShowProcDialogue ();
 	TtaDestroyDialogue (BaseDialog + OptionMenu);
   if (ReturnOption == 0 || ReturnOption == 1)
     {
@@ -415,9 +415,10 @@ ThotBool RepeatMenuClicked (NotifyElement *event)
           elt = TtaGetElementType (el);
           elt1 = TtaGetElementType (child);
           if (elt.ElSSchema == elt1.ElSSchema &&
-              elt1.ElTypeNum == Template_EL_useEl)
+              (elt1.ElTypeNum == Template_EL_useEl ||
+               elt1.ElTypeNum == Template_EL_useSimple))
             {
-              newEl = InstanciateUse (t, child, doc, FALSE);
+              newEl = InstantiateUse (t, child, doc, FALSE);
               if (newEl)
                 {
                   if (ReturnOption == 0)
@@ -438,137 +439,52 @@ ThotBool RepeatMenuClicked (NotifyElement *event)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void OpeningInstance(Document doc)
+void OpeningInstance (char *fileName, Document doc)
 {
 #ifdef TEMPLATES
-  char            aux[MAX_LENGTH], content[MAX_LENGTH];
-	ElementType		  piType, lineType, textType;
-	Element			    root, pi, line, text;
-  Language        language;
-	char		        *s;
-  int             size;
-  
-  if (DocumentURLs[doc] == NULL)
-    return;
-  //If it is a template we must ignore it
-  strcpy (aux, DocumentURLs[doc]);
-  strcpy (content, &aux[strlen(aux)-4]);
-  if (strncasecmp (content, ".XTD", strlen(content))==0)
-    return;
+  XTigerTemplate   t;
+  char            *content, *ptr;
+  gzFile           stream;
+  char             buffer[2000];
+  int              res, size;
 
-  content[0] = EOS;
-	//Instanciate all elements
-	root =	TtaGetMainRoot (doc);
-  //Look for PIs
-  /* check if the document has a DOCTYPE declaration */
-#ifdef ANNOTATIONS
-  if (DocumentTypes[doc]  == docAnnot)
-    piType = TtaGetElementType (root);
-  else
-#endif /* ANNOTATIONS */
-    piType = TtaGetElementType (root);
-  
-  lineType.ElSSchema = piType.ElSSchema;
-  textType.ElSSchema = piType.ElSSchema;
-  
-  s = TtaGetSSchemaName (piType.ElSSchema);
-  
-  if (strcmp (s, "HTML") == 0)
+  stream = TtaGZOpen (fileName);
+  if (stream != 0)
     {
-      piType.ElTypeNum = HTML_EL_XMLPI;  
-      lineType.ElTypeNum = HTML_EL_PI_line;
-      textType.ElTypeNum = HTML_EL_TEXT_UNIT;
-    }
-#ifdef _SVG
-  else if (strcmp (s, "SVG") == 0)    
-    {
-      piType.ElTypeNum = SVG_EL_XMLPI;  
-      lineType.ElTypeNum = SVG_EL_XMLPI_line;
-      textType.ElTypeNum = SVG_EL_TEXT_UNIT;
-    }
-#endif /* _SVG */
-  else if (strcmp (s, "MathML") == 0)
-    {
-      piType.ElTypeNum = MathML_EL_XMLPI;  
-      lineType.ElTypeNum = MathML_EL_XMLPI_line;
-      textType.ElTypeNum = MathML_EL_TEXT_UNIT;
-    }
-  else
-    {
-      piType.ElTypeNum = XML_EL_xmlpi;
-      lineType.ElTypeNum = XML_EL_xmlpi_line;
-      textType.ElTypeNum = XML_EL_TEXT_UNIT;
-    }
-  
-  pi = TtaSearchTypedElement (piType, SearchInTree, root);  
-  while(pi!=NULL)
-    {
-      content[0] = '\0';
-      line = TtaSearchTypedElement (lineType, SearchInTree, pi);
-      while(line!=NULL)
+      res = gzread (stream, buffer, 1999);
+      if (res >= 0)
         {
-          text = TtaSearchTypedElement (textType, SearchInTree, line);
-          size = MAX_LENGTH;
-          TtaGiveTextContent(text, (unsigned char*)aux, &size, &language);
-          strcat(content, aux);
-
-          //This is not an XTiger PI
-          if (!strstr(content,"xtiger")) break;            
- 
-          line = TtaSearchTypedElement (lineType, SearchForward, line);
+          ptr = strstr (buffer, "<?xtiger");
+          if (ptr)
+            ptr = strstr (ptr, "template");
+          if (ptr)
+            ptr = strstr (ptr, "=");
+          if (ptr)
+            ptr = strstr (ptr, "\"");
+          if (ptr)
+            {
+              // template URI
+              content = &ptr[1];
+              ptr = strstr (content, "\"");
+            }
+          if (ptr)
+            {
+              *ptr = EOS;
+              //Get now the template URI
+              DocumentMeta[doc]->template_url = TtaStrdup (content);
+              if (Templates_Dic == NULL)
+                InitializeTemplateEnvironment ();
+              t = (XTigerTemplate) Get (Templates_Dic, content);
+              if (!t)
+                {
+                  LoadTemplate (0, content);
+                  t = (XTigerTemplate) Get (Templates_Dic, content);
+                }
+              AddUser (t);
+            }
         }
-      pi = TtaSearchTypedElement (piType, SearchForward, pi);
     }
-
-  DocumentMeta[doc]->template_url = NULL;
-
-  if (content[0]=='\0')
-    return;
-    
-  char *pointer;
-  
-  //xtiger
-  strcpy(aux, content);
-  aux[6]='\0';
-  if (strcmp(aux,"xtiger")!=0)
-    return;
-  
-  //template
-  pointer = strstr(content, "template");
-  if (pointer==NULL)
-    return;
-
-  //=
-  pointer = strstr(pointer, "=");
-  if (pointer==NULL)
-    return;
-  
-  //"
-  pointer = strstr(pointer, "\"");
-  if (pointer==NULL)
-    return;
-  
-  //content
-  strcpy(aux, pointer+1);
-  pointer = strstr(aux, "\"");
-  if (pointer==NULL)
-    return;
-  *pointer = '\0';
-  
-  //and finally
-  DocumentMeta[doc]->template_url = TtaStrdup(aux);
-
-  if (!templates) InitializeTemplateEnvironment();
-
-  XTigerTemplate t = (XTigerTemplate)Get(templates, aux);
-
-  if (!t)
-    {
-      LoadTemplate(0, aux);
-      t = (XTigerTemplate)Get(templates, aux);
-    }
-  AddUser(t);
-
+  TtaGZClose (stream);
 #endif /* TEMPLATES */
 }
 
@@ -580,15 +496,16 @@ ThotBool ClosingInstance(NotifyDialog* dialog)
 {
 #ifdef TEMPLATES
   //If it is a template all has been already freed
-  if (DocumentMeta[dialog->document] == NULL) return FALSE;
+  if (DocumentMeta[dialog->document] == NULL)
+    return FALSE;
 
   char *turl = DocumentMeta[dialog->document]->template_url;
   if (turl)
     {
-      XTigerTemplate t = (XTigerTemplate)Get(templates, turl);
+      XTigerTemplate t = (XTigerTemplate) Get (Templates_Dic, turl);
       if (t)
-        RemoveUser(t);
-      TtaFreeMemory(turl);
+        RemoveUser (t);
+      TtaFreeMemory (turl);
     }
 #endif /* TEMPLATES */
   return FALSE;

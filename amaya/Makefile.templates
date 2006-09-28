@@ -10,7 +10,7 @@ AMAYA_TEMPLATES_OBJ= \
 	TemplateAPP.o \
 	Templatebuilder.o \
 	templateDeclarations.o \
-	templateInstanciation.o \
+	templateInstantiate.o \
 	templateLoad.o \
 	templateUtils.o
 
@@ -18,7 +18,7 @@ AMAYA_TEMPLATES_SRC= \
 	TemplateAPP.c \
 	Templatebuilder.c \
 	templateDeclarations.c \
-	templateInstanciation.c \
+	templateInstantiate.c \
 	templateLoad.c \
 	templateUtils.c
 
@@ -62,6 +62,11 @@ $(AMAYA)/TemplateT.TRA : $(AMAYA)/TemplateT.T ../bin/tra
 #
 # Interface schemas compilation
 #
+TemplateAPP.o : TemplateAPP.c
+	$(CXX) $(CXXFLAGS) $(ALL_AMAYA_OPTIONS) $(INCLUDES) -c TemplateAPP.c -o $@
+
+compTemplateA : Template.h TemplateAPP.c
+
 Template.h TemplateAPP.c : $(AMAYA)/Template.STR $(AMAYA)/Template.A ../bin/app
 	(if test "$(AMAYA)" != "" -a "$(AMAYA)" != "." ; then \
 	    $(CP) $(AMAYA)/Template.A .  ; \

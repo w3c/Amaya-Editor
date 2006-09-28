@@ -345,22 +345,69 @@ RULES
     {Display: Inline;}
     VertPos: Top = 			Previous . Bottom;
     HorizPos: Left =		Enclosing . Left; 
-		BorderTopWidth: 	 	1 px;
-		BorderLeftWidth: 		1 px;
-		BorderBottomWidth: 	1 px;
-		BorderRightWidth: 	1 px;
-		BorderTopStyle: 		Dotted;
-		BorderLeftStyle: 		Dotted;
-		BorderBottomStyle: 	Dotted;
-		BorderRightStyle: 	Dotted;
-		BorderTopColor: 		Blue;
-		BorderLeftColor: 		Blue;
-		BorderBottomColor: 	Blue;
-		BorderRightColor: 	Blue;
+    if not immediately within option
+      BEGIN
+		  BorderTopWidth: 	 	1 px;
+		  BorderLeftWidth: 		1 px;
+		  BorderBottomWidth: 	1 px;
+		  BorderRightWidth: 	1 px;
+		  BorderTopStyle: 		Dotted;
+		  BorderLeftStyle: 		Dotted;
+		  BorderBottomStyle: 	Dotted;
+		  BorderRightStyle: 	Dotted;
+		  BorderTopColor: 		Blue;
+		  BorderLeftColor: 		Blue;
+		  BorderBottomColor: 	Blue;
+		  BorderRightColor: 	Blue;
+      END;
 		PaddingRight: 			2 px;
 		PaddingLeft: 				3 px;
 		PaddingTop: 				2 px;
 		PaddingBottom: 			2 px;
+  	IN Structure_view BEGIN
+			BorderTopWidth: 0;
+			BorderLeftWidth: 0;
+			BorderBottomWidth: 0;
+		  BorderRightWidth: 0;
+		  PaddingRight: 0;
+		  PaddingLeft: 0;
+		  PaddingTop: 0;
+		  PaddingBottom: 0;
+		  HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	    Width: Enclosing . Width - STRUCT_INDENT;
+		  VertPos: Top = Previous . Bottom;
+		  END;
+	 END;
+
+  useSimple:	
+		BEGIN
+    CreateBefore(ElementName);
+  	CreateWith(VerticalLine);
+    Width: auto{Enclosing . Width};
+    Height: auto{Enclosing . Height};
+    LineBreak : no;
+    {Display: Inline;}
+    VertPos: Top = 			Previous . Bottom;
+    HorizPos: Left =		Enclosing . Left;
+    if not immediately within option
+      BEGIN
+		  BorderTopWidth: 	 	1 px;
+		  BorderLeftWidth: 		1 px;
+		  BorderBottomWidth: 	1 px;
+		  BorderRightWidth: 	1 px;
+		  BorderTopStyle: 		Dotted;
+		  BorderLeftStyle: 		Dotted;
+		  BorderBottomStyle: 	Dotted;
+		  BorderRightStyle: 	Dotted;
+		  BorderTopColor: 		Blue;
+		  BorderLeftColor: 		Blue;
+		  BorderBottomColor: 	Blue;
+		  BorderRightColor: 	Blue;
+		  PaddingRight: 			2 px;
+		  PaddingLeft: 				3 px;
+		  PaddingTop: 				2 px;
+		  PaddingBottom: 			2 px;
+      END;
   	IN Structure_view BEGIN
 			BorderTopWidth: 0;
 			BorderLeftWidth: 0;

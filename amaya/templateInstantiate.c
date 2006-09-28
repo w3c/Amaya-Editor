@@ -10,25 +10,23 @@
 #include "mydictionary_f.h"
 #include "templates_f.h"
 #include "templateDeclarations_f.h"
-#include "templateInstanciation_f.h"
+#include "templateInstantiate_f.h"
+#include "Templatebuilder_f.h"
 #include "templateUtils_f.h"
 #include "fetchHTMLname_f.h"
-
 #include "Template.h"
 
 #ifdef TEMPLATES
-
 #define TEMPLATE_SCHEMA_NAME "Template"
- 
-typedef struct _InstanciationCtxt
+
+typedef struct _InstantiateCtxt
 {
 	char *			templatePath;
 	char *			instancePath;
 	char *			schemaName;
 	DocumentType	docType;
 	ThotBool		dontReplace;
-} InstanciationCtxt;
-
+} InstantiateCtxt;
 #endif /* TEMPLATES */
 
 typedef struct _AttSearch
@@ -37,22 +35,23 @@ typedef struct _AttSearch
   int   type;
 } AttSearch;
 
-static AttSearch    URL_attr_tab[] = {
-  {HTML_ATTR_HREF_, XHTML_TYPE},
-  {HTML_ATTR_codebase, XHTML_TYPE},
-  {HTML_ATTR_Script_URL, XHTML_TYPE},
-  {HTML_ATTR_SRC, XHTML_TYPE},
-  {HTML_ATTR_data, XHTML_TYPE},
-  {HTML_ATTR_background_, XHTML_TYPE},
-  {HTML_ATTR_Style_, XHTML_TYPE},
-  {HTML_ATTR_cite, XHTML_TYPE},
-  //{XLink_ATTR_href_, XLINK_TYPE},
-  {MathML_ATTR_style_, MATH_TYPE},
+static AttSearch    URL_attr_tab[] =
+  {
+    {HTML_ATTR_HREF_, XHTML_TYPE},
+    {HTML_ATTR_codebase, XHTML_TYPE},
+    {HTML_ATTR_Script_URL, XHTML_TYPE},
+    {HTML_ATTR_SRC, XHTML_TYPE},
+    {HTML_ATTR_data, XHTML_TYPE},
+    {HTML_ATTR_background_, XHTML_TYPE},
+    {HTML_ATTR_Style_, XHTML_TYPE},
+    {HTML_ATTR_cite, XHTML_TYPE},
+    //{XLink_ATTR_href_, XLINK_TYPE},
+    {MathML_ATTR_style_, MATH_TYPE},
 #ifdef _SVG
-  {SVG_ATTR_style_, SVG_TYPE},
-  {SVG_ATTR_xlink_href, SVG_TYPE}
+    {SVG_ATTR_style_, SVG_TYPE},
+    {SVG_ATTR_xlink_href, SVG_TYPE}
 #endif
-};
+  };
 
 /*----------------------------------------------------------------------
   RegisterURLs
@@ -60,7 +59,6 @@ static AttSearch    URL_attr_tab[] = {
 void RegisterURLs(Document doc, Element el)
 {
 #ifdef TEMPLATES
-
   SSchema             XHTMLSSchema, MathSSchema, SVGSSchema, XLinkSSchema;
   AttributeType       attrType;
   Attribute           attr;
@@ -97,12 +95,10 @@ void RegisterURLs(Document doc, Element el)
       attr = TtaGetAttribute(el, attrType);
       if (attr!=NULL)      
         TtaRegisterAttributeReplace(attr, el, doc);
-
     }  
 
-  for (Element child = TtaGetFirstChild (el); child; TtaNextSibling(&child))
-    RegisterURLs(doc, child);
-
+  for (Element child = TtaGetFirstChild (el); child; TtaNextSibling (&child))
+    RegisterURLs (doc, child);
 #endif /* TEMPLATES*/
 }
 
@@ -113,9 +109,9 @@ void  CreateInstance(char *templatePath, char *instancePath)
  {
 #ifdef TEMPLATES
   ThotBool alreadyViewing = FALSE;
-  int alreadyOnDoc = 0;
+  int      alreadyOnDoc = 0;
 
-  XTigerTemplate t = (XTigerTemplate)Get(templates, templatePath);
+  XTigerTemplate t = (XTigerTemplate)Get (Templates_Dic, templatePath);
   if (t == NULL)
     //The template must be loaded before calling this function
     return;
@@ -125,8 +121,8 @@ void  CreateInstance(char *templatePath, char *instancePath)
   while (alreadyOnDoc<DocumentTableLength-1 && !alreadyViewing)
     {
       alreadyOnDoc++;
-      if (DocumentURLs[alreadyOnDoc]!=NULL)
-        alreadyViewing = !strcmp(DocumentURLs[alreadyOnDoc],instancePath);
+      if (DocumentURLs[alreadyOnDoc])
+        alreadyViewing = !strcmp (DocumentURLs[alreadyOnDoc],instancePath);
     }
 
   if (!TtaPrepareUndo (doc))
@@ -166,7 +162,6 @@ void  CreateInstance(char *templatePath, char *instancePath)
     }
   else //Reload on the existing view
     Reload(alreadyOnDoc, 0);  
-  
 #endif /* TEMPLATES */
 }
 
@@ -177,7 +172,7 @@ void InstantiateTemplate_callback (int newdoc, int status,  char *urlName,
 								   void * context)
 {
 #ifdef TEMPLATES
-	InstanciationCtxt *ctx = (InstanciationCtxt*)context;
+	InstantiateCtxt *ctx = (InstantiateCtxt*)context;
 
 	DoInstanceTemplate (ctx->templatePath);
   CreateInstance (ctx->templatePath, ctx->instancePath);
@@ -189,18 +184,18 @@ void InstantiateTemplate_callback (int newdoc, int status,  char *urlName,
 
 /*----------------------------------------------------------------------
 ----------------------------------------------------------------------*/
-void InstanciateTemplate (Document doc, char *templatename, char *docname,
+void InstantiateTemplate (Document doc, char *templatename, char *docname,
                           DocumentType docType, ThotBool loaded)
 {
 #ifdef TEMPLATES
 	if (!loaded)
 	{
 		//Create the callback context
-		InstanciationCtxt *ctx	= (InstanciationCtxt *)TtaGetMemory (sizeof (InstanciationCtxt));
-		ctx->templatePath		= TtaStrdup (templatename);
-		ctx->instancePath		= TtaStrdup (docname);
-		ctx->schemaName			= GetSchemaFromDocType(docType);
-		ctx->docType			= docType;
+		InstantiateCtxt *ctx = (InstantiateCtxt *)TtaGetMemory (sizeof (InstantiateCtxt));
+		ctx->templatePath	= TtaStrdup (templatename);
+		ctx->instancePath	= TtaStrdup (docname);
+		ctx->schemaName = GetSchemaFromDocType(docType);
+		ctx->docType = docType;
 		
 		GetAmayaDoc (templatename, NULL, doc, doc, CE_MAKEBOOK, FALSE, 
 			(void (*)(int, int, char*, char*, const AHTHeaders*, void*)) InstantiateTemplate_callback,
@@ -216,9 +211,9 @@ void InstanciateTemplate (Document doc, char *templatename, char *docname,
 }
 
 /*----------------------------------------------------------------------
-  InstanciateAttribute
+  InstantiateAttribute
 ----------------------------------------------------------------------*/
-static void InstanciateAttribute (XTigerTemplate t, Element el, Document doc)
+static void InstantiateAttribute (XTigerTemplate t, Element el, Document doc)
 {
 #ifdef TEMPLATES
   AttributeType  useType, nameType, defaultType, attrType;
@@ -301,7 +296,7 @@ static void ProcessAttr (XTigerTemplate t, Element el, Document doc)
       elType = TtaGetElementType (child);
       if (elType.ElTypeNum == Template_EL_attribute &&
           !strcmp (TtaGetSSchemaName (elType.ElSSchema), TEMPLATE_SCHEMA_NAME))
-        InstanciateAttribute (t, child, doc);
+        InstantiateAttribute (t, child, doc);
       else
         ProcessAttr (t, child, doc);
     }
@@ -309,9 +304,9 @@ static void ProcessAttr (XTigerTemplate t, Element el, Document doc)
 #endif /* TEMPLATES */
 
 /*----------------------------------------------------------------------
-  InstanciateUse
+  InstantiateUse
 ----------------------------------------------------------------------*/
-Element InstanciateUse (XTigerTemplate t, Element el, Document doc,
+Element InstantiateUse (XTigerTemplate t, Element el, Document doc,
                         ThotBool insert)
 {
 #ifdef TEMPLATES
@@ -399,7 +394,7 @@ Element InstanciateUse (XTigerTemplate t, Element el, Document doc,
 
 /*----------------------------------------------------------------------
 ----------------------------------------------------------------------*/
-void InstanciateRepeat (XTigerTemplate t, Element el, Document doc)
+void InstantiateRepeat (XTigerTemplate t, Element el, Document doc)
 {
 #ifdef TEMPLATES
   int            curVal,  minVal,  maxVal;
@@ -562,9 +557,11 @@ static void ParseTemplate (XTigerTemplate t, Element el, Document doc,
           attType.AttrTypeNum = Template_ATTR_name;
           
           name = GetAttributeStringValue(el, Template_ATTR_name);		  		  
-          TtaRemoveAttribute(el, TtaGetAttribute(el, attType),doc);
-			
-          TtaChangeElementType(el, Template_EL_useEl);
+          TtaRemoveAttribute(el, TtaGetAttribute(el, attType), doc);
+          if (NeedAMenu (el, doc))
+            TtaChangeElementType(el, Template_EL_useEl);
+          else
+            TtaChangeElementType(el, Template_EL_useSimple);
           
           attType.AttrTypeNum = Template_ATTR_types;
           att = TtaNewAttribute(attType);
@@ -585,18 +582,19 @@ static void ParseTemplate (XTigerTemplate t, Element el, Document doc,
           //Allow editing the content
           break;
         case Template_EL_useEl :
+        case Template_EL_useSimple :
           /* if this use element is not empty, don't do anything: it is
              supposed to contain a valid instance. This should be
              checked, though */
           if (!TtaGetFirstChild (el))
-            InstanciateUse (t, el, doc, TRUE);
+            InstantiateUse (t, el, doc, TRUE);
           break;
         case Template_EL_attribute :
           if (!loading)
-            InstanciateAttribute (t, el, doc);
+            InstantiateAttribute (t, el, doc);
           break;
         case Template_EL_repeat :
-          InstanciateRepeat (t, el, doc);
+          InstantiateRepeat (t, el, doc);
           break;
         default :
           break;
@@ -626,11 +624,11 @@ void DoInstanceTemplate (char *templatename)
   int             pi_type;
   Document        doc;
 
-	//Instanciate all elements
-	t		=	(XTigerTemplate) Get(templates,templatename);
-  doc = GetTemplateDocument(t);
-	root	=	TtaGetMainRoot (doc);
-	ParseTemplate(t, root, doc, FALSE);
+	//Instantiate all elements
+	t = (XTigerTemplate) Get (Templates_Dic, templatename);
+  doc = GetTemplateDocument (t);
+	root =	TtaGetMainRoot (doc);
+	ParseTemplate (t, root, doc, FALSE);
 
   //Look for PIs
   /* check if the document has a DOCTYPE declaration */
@@ -702,10 +700,10 @@ void DoInstanceTemplate (char *templatename)
 }
 
 /*----------------------------------------------------------------------
-PreInstanciateComponents: Instanciates all components in order to improve
+PreInstantiateComponents: Instantiates all components in order to improve
 editing.
 ----------------------------------------------------------------------*/
-void PreInstanciateComponents(XTigerTemplate t)
+void PreInstantiateComponents(XTigerTemplate t)
 {
 #ifdef TEMPLATES 
   DicDictionary components = GetComponents(t);

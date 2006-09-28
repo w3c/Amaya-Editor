@@ -16,6 +16,11 @@ ELEMENTS
          ElemNew.Pre -> UseToBeCreated;
          ElemNew.Post -> UseCreated;
       END;
+   useSimple :
+      BEGIN
+         ElemNew.Pre -> UseToBeCreated;
+         ElemNew.Post -> UseCreated;
+      END;
    repeat :
       BEGIN
          ElemClick.Pre -> RepeatMenuClicked;

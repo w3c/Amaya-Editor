@@ -32,7 +32,6 @@
 
 #ifdef TEMPLATES
 #include "templates.h"
-#include "templates_f.h"
 #include "templateDeclarations_f.h"
 #endif /* TEMPLATES */
 
@@ -5353,12 +5352,7 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName,
       DAVLockDiscovery (newdoc);
       DAVSetLockIndicator(newdoc);
     }
-#endif       
-
-#ifdef TEMPLATES
-  OpeningInstance(newdoc);
-#endif /* TEMPLATES */
-
+#endif /* DAV */  
   TtaFreeMemory (target);
   TtaFreeMemory (documentname);
   TtaFreeMemory (initial_url);

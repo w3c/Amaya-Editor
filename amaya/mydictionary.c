@@ -10,12 +10,13 @@
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "templates.h"
+#include "mydictionary_f.h"
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-DicDictionary CreateDictionary()
+DicDictionary CreateDictionary ()
 {
-	DicDictionary dic = (DicDictionary)TtaGetMemory(sizeof(sDictionary));
+	DicDictionary dic = (DicDictionary)TtaGetMemory (sizeof (sDictionary));
 	dic->first = NULL;
 	dic->iter = NULL;
 	return dic;
@@ -29,14 +30,14 @@ void CleanDictionary (DicDictionary dic)
 	Record old;
 	while (rec)
     {
-      free(rec->key);
+      free (rec->key);
       old = rec;
 	  rec = rec->next;
-      free(old);
+      free (old);
     }
 	dic->first = NULL;
 	dic->iter = NULL;
-  TtaFreeMemory(dic);
+  TtaFreeMemory (dic);
 }
 
 
@@ -55,7 +56,7 @@ Record Find (DicDictionary dic, const char * key)
     return NULL;
 	while (cmp < 0 && rec)
     {
-      cmp = strcmp(rec->key,key);
+      cmp = strcmp (rec->key,key);
       if (cmp < 0)
         {
           precedent = rec;
@@ -85,10 +86,10 @@ Record FindPrevious (DicDictionary dic, const char * key, ThotBool *isFirst)
 	Record precedent = NULL;
 	int cmp = -1;
 	
-	while(cmp<0 && rec)
+	while (cmp<0 && rec)
     {
-      cmp = strcmp(rec->key,key);
-      if (cmp<0)
+      cmp = strcmp (rec->key,key);
+      if (cmp < 0)
         {
           precedent = rec;
           rec = rec->next;
@@ -121,10 +122,10 @@ Record FindPreviousElement (DicDictionary dic, const DicElement el, ThotBool *is
 	Record precedent  = NULL;
   ThotBool found    = FALSE;
 
-  while(rec && !found)
+  while (rec && !found)
     {
       found = rec->element == el;
-      if(!found)
+      if (!found)
         {
           precedent = rec;
           rec = rec->next;
@@ -147,21 +148,21 @@ Record FindPreviousElement (DicDictionary dic, const DicElement el, ThotBool *is
   ----------------------------------------------------------------------*/
 DicElement Add (DicDictionary dic, const char * key, const DicElement el)
 {	
-	Record     rec = Find(dic, key);
+	Record     rec = Find (dic, key);
 	Record     newRec;
 	DicElement result = NULL;
 	
-	if(!rec)
+	if (!rec)
     {
       //The element should be the first
-      newRec          = (Record) TtaGetMemory(sizeof(sRecord));
-      newRec->key     = (char *) TtaStrdup(key);
+      newRec          = (Record) TtaGetMemory (sizeof (sRecord));
+      newRec->key     = (char *) TtaStrdup (key);
       newRec->element = el;
       newRec->next    = dic->first;
       dic->first = newRec;
     }
 
-	else if (strcmp(rec->key, key)==0)
+	else if (strcmp (rec->key, key)==0)
     {
       //The element has been found
       result          = rec->element; //We return the old element
@@ -170,8 +171,8 @@ DicElement Add (DicDictionary dic, const char * key, const DicElement el)
 
 	else
     { //The element should be insered just after rec
-      newRec          = (Record) TtaGetMemory(sizeof(sRecord));
-      newRec->key     = (char *) TtaStrdup(key);
+      newRec          = (Record) TtaGetMemory (sizeof (sRecord));
+      newRec->key     = (char *) TtaStrdup (key);
       newRec->element = el;
       newRec->next    = rec->next;
       rec->next       = newRec;
@@ -188,7 +189,7 @@ DicElement Remove (DicDictionary dic, const char * key)
 	Record aux = NULL;
 	DicElement result = NULL;
 
-	Record rec = FindPrevious(dic, key, &isFirst);
+	Record rec = FindPrevious (dic, key, &isFirst);
 	if (isFirst)
     {
       aux = dic->first;
@@ -203,9 +204,9 @@ DicElement Remove (DicDictionary dic, const char * key)
       rec->next = aux->next;
     }
 
-	TtaFreeMemory(aux->key);
+	TtaFreeMemory (aux->key);
 	result = aux->element;
-	TtaFreeMemory(aux);
+	TtaFreeMemory (aux);
 
 	return result;
 }
@@ -219,7 +220,7 @@ DicElement RemoveElement (DicDictionary dic, const DicElement el)
 	Record aux = NULL;
 	DicElement result = NULL;
 
-	Record rec = FindPreviousElement(dic, el, &isFirst);
+	Record rec = FindPreviousElement (dic, el, &isFirst);
 	if (isFirst)
     {
       aux = dic->first;
@@ -234,9 +235,9 @@ DicElement RemoveElement (DicDictionary dic, const DicElement el)
       rec->next = aux->next;
     }
 
-	TtaFreeMemory(aux->key);
+	TtaFreeMemory (aux->key);
 	result = aux->element;
-	TtaFreeMemory(aux);
+	TtaFreeMemory (aux);
 
 	return result;
 }
@@ -248,7 +249,7 @@ DicElement Get (DicDictionary dic, const char * key)
   if (!key)
     return NULL;
 
-	Record rec = Find(dic,key);
+	Record rec = Find (dic,key);
 	
 	if (!rec)
     return NULL;
@@ -270,7 +271,7 @@ void First (DicDictionary dic)
   ----------------------------------------------------------------------*/
 void Next (DicDictionary dic)
 {
-	if(dic->iter)
+	if (dic->iter)
 		dic->iter = dic->iter->next;
 }
 
@@ -285,7 +286,7 @@ ThotBool IsDone (const DicDictionary dic)
   ----------------------------------------------------------------------*/
 char* CurrentKey (const DicDictionary dic)
 {
-	if(dic->iter)
+	if (dic->iter)
 		return dic->iter->key;
 	else
 		return NULL;
@@ -295,7 +296,7 @@ char* CurrentKey (const DicDictionary dic)
   ----------------------------------------------------------------------*/
 void* CurrentElement (const DicDictionary dic)
 {
-	if(dic->iter)
+	if (dic->iter)
 		return dic->iter->element;
 	else
 		return NULL;
@@ -322,16 +323,16 @@ DicDictionary CreateDictionaryFromList (const char *list)
 	char temp[128];
 	int labelSize;
 
-	DicDictionary dic = CreateDictionary();
+	DicDictionary dic = CreateDictionary ();
 
-	for (unsigned int i=0; i<strlen(list); i++)
+	for (unsigned int i=0; i<strlen (list); i++)
     {		
       labelSize = 0;
 		
-      while (isEOSorWhiteSpace(list[i]))
+      while (isEOSorWhiteSpace (list[i]))
         ++i;
 
-      while (!isEOSorWhiteSpace(list[i]))
+      while (!isEOSorWhiteSpace (list[i]))
         {
           temp[labelSize]=list[i];
           ++i;
@@ -339,8 +340,7 @@ DicDictionary CreateDictionaryFromList (const char *list)
         }
 
       temp[labelSize] = EOS;
-      Add(dic,temp, NULL);
+      Add (dic,temp, NULL);
     }
-
 	return dic;
 }

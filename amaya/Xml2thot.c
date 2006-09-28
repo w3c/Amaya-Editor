@@ -23,7 +23,6 @@
 #include "MathML.h"
 #include "fetchHTMLname.h"
 #include "document.h"
-//#include "xmlparse.h"
 
 #include "HTMLactions_f.h"
 #include "HTMLedit_f.h"
@@ -47,6 +46,7 @@
 #endif /* XML_GENERIC */
 #ifdef TEMPLATES
 #include "Templatebuilder_f.h"
+#include "templates_f.h"
 #endif /* TEMPLATES */
 #include "XLinkbuilder_f.h"
 #ifdef ANNOTATIONS
@@ -2032,7 +2032,7 @@ static void StartOfXmlStartElement (char *name)
       (strcasecmp (elementName, "p") == 0))
     UnknownElement = TRUE;
 
-  if (currentParserCtxt != NULL && !UnknownElement)
+  if (currentParserCtxt && !UnknownElement)
     {
       if (UnknownNS)
         {
@@ -3884,7 +3884,7 @@ static void LoadXmlStyleSheet (Document doc)
 /*----------------------------------------------------------------------
   XmlStyleSheetPi
   ---------------------------------------------------------------------*/
-void      XmlStyleSheetPi (char *PiData, Element piEl)
+void XmlStyleSheetPi (char *PiData, Element piEl)
 {
   int           length, i, j;
   char         *ptr, *end;
@@ -4152,15 +4152,6 @@ static void       CreateXmlPi (char *piTarget, char *piData)
   if (!strcmp ((char *)piTarget, "xml-stylesheet"))
     XmlStyleSheetPi (piData, piEl);
   /* Warnings about PI are no longer reported */
-  /*
-    else
-    {
-    char msgBuffer[MaxMsgLength];
-    sprintf (msgBuffer,
-		"Processing Instruction not supported : %s", piTarget);
-    XmlParseError (errorParsing, msgBuffer, 0);
-    }
-  */
 }
 /*--------------------  PI  (end)  ---------------------------------*/
 
@@ -4171,7 +4162,7 @@ static void       CreateXmlPi (char *piTarget, char *piData)
   Hndl_CdataStart
   Handlers that get called at the beginning of a CDATA section
   ------------------------------------------------------------------*/
-static void     Hndl_CdataStart (void *userData)
+static void Hndl_CdataStart (void *userData)
 
 {
 #ifdef EXPAT_PARSER_DEBUG
@@ -5858,6 +5849,11 @@ void StartXmlParser (Document doc, char *fileName,
   int             error;
   ThotBool        isXHTML, xmlDec, xmlDoctype;
   ThotBool        isXml = FALSE;
+
+#ifdef TEMPLATES
+  // load the referred template if it's an instance
+  OpeningInstance(fileName, doc);
+#endif /* TEMPLATES */
 
   /* General initialization */
 #ifdef ANNOTATIONS

@@ -16,20 +16,20 @@ extern void InstantiateTemplate_callback ( int newdoc,
                                            char *outputfile,
                                            AHTHeaders *http_headers,
                                            void * context );
-extern void InstanciateTemplate ( Document doc,
+extern void InstantiateTemplate ( Document doc,
                                   char *templatename,
                                   char *docname,
                                   DocumentType docType,
                                   ThotBool loaded );
-extern Element InstanciateUse ( XTigerTemplate t,
+extern Element InstantiateUse ( XTigerTemplate t,
                                 Element el,
                                 Document doc,
                                 ThotBool insert );
-extern void InstanciateRepeat ( XTigerTemplate t,
+extern void InstantiateRepeat ( XTigerTemplate t,
                                 Element el,
                                 Document doc );
 extern void DoInstanceTemplate ( char *templatename );
-extern void PreInstanciateComponents ( XTigerTemplate t );
+extern void PreInstantiateComponents ( XTigerTemplate t );
 
 #else /* __STDC__ */
 
@@ -43,20 +43,20 @@ extern void InstantiateTemplate_callback ( int newdoc,
                                              char *outputfile,
                                              AHTHeaders *http_headers,
                                              void * context );
-extern void InstanciateTemplate ( Document doc,
+extern void InstantiateTemplate ( Document doc,
                                     char *templatename,
                                     char *docname,
                                     DocumentType docType,
                                     ThotBool loaded );
-extern Element InstanciateUse ( XTigerTemplate t,
+extern Element InstantiateUse ( XTigerTemplate t,
                                   Element el,
                                   Document doc,
                                   ThotBool insert );
-extern void InstanciateRepeat ( XTigerTemplate t,
+extern void InstantiateRepeat ( XTigerTemplate t,
                                   Element el,
                                   Document doc );
 extern void DoInstanceTemplate ( char *templatename );
-extern void PreInstanciateComponents ( XTigerTemplate t );
+extern void PreInstantiateComponents ( XTigerTemplate t );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

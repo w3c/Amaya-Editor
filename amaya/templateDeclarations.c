@@ -1,13 +1,11 @@
 /*
- *  FILE   : templateDeclarations.c
- *  DESC   : Declaration structures and creators for XTiger types.
- *  AUTHOR : Francesc Campoy Flores
+ *  FILE  : templateDeclarations.c
+ *  DESC  : Declaration structures and creators for XTiger types.
+ *  AUTHOR: Francesc Campoy Flores
  */
 
 #ifdef TEMPLATES
-
 #include "templates.h"
-
 #include "mydictionary_f.h"
 #include "templateDeclarations_f.h"
 #include "HTMLactions_f.h"
@@ -25,8 +23,7 @@
 //The predefined library id
 #define PREDEFINED_LIB "-Predefined-"
 
-DicDictionary templates = NULL;
-
+DicDictionary Templates_Dic = NULL;
 #endif /* TEMPLATES */
 
 /*----------------------------------------------------------------------
@@ -35,22 +32,22 @@ DicDictionary templates = NULL;
 XTigerTemplate NewXTigerTemplate (const char *templatePath, const ThotBool addPredefined)
 {	
 #ifdef TEMPLATES
-	XTigerTemplate t = (XTigerTemplate)TtaGetMemory (sizeof(_XTigerTemplate));
+	XTigerTemplate t = (XTigerTemplate)TtaGetMemory (sizeof (_XTigerTemplate));
 	
 	t->isLibrary    = FALSE;
-	t->libraries    = CreateDictionary();
-	t->elements		  = CreateDictionary();
-	t->simpleTypes	= CreateDictionary();
-	t->components	  = CreateDictionary();
-	t->unions		    = CreateDictionary();
+	t->libraries    = CreateDictionary ();
+	t->elements		  = CreateDictionary ();
+	t->simpleTypes	= CreateDictionary ();
+	t->components	  = CreateDictionary ();
+	t->unions		    = CreateDictionary ();
 	t->doc          = -1;
   t->users        = 0;
   t->isPredefined = FALSE;
 
 	if (addPredefined)
-		AddLibraryDeclarations (t,(XTigerTemplate)Get (templates, PREDEFINED_LIB));	
+		AddLibraryDeclarations (t,(XTigerTemplate)Get (Templates_Dic, PREDEFINED_LIB));	
 
-	Add (templates, templatePath, t);
+	Add (Templates_Dic, templatePath, t);
 
 	return t;
 #else
@@ -64,9 +61,10 @@ XTigerTemplate NewXTigerTemplate (const char *templatePath, const ThotBool addPr
 XTigerTemplate NewXTigerLibrary (const char *templatePath, const ThotBool addPredefined)
 {	
 #ifdef TEMPLATES
-	XTigerTemplate t = (XTigerTemplate)NewXTigerTemplate(templatePath, addPredefined);
-	t->isLibrary = TRUE;
+  XTigerTemplate t;
 
+	t = (XTigerTemplate)NewXTigerTemplate (templatePath, addPredefined);
+	t->isLibrary = TRUE;
 	return t;
 #else
 	return NULL;
@@ -82,9 +80,11 @@ static Declaration NewDeclaration (const XTigerTemplate t, const char *name,
                                    TypeNature xtype)
 {
 #ifdef TEMPLATES
-    if(name==NULL || t==NULL)
+  Declaration dec;
+
+  if (name == NULL || t == NULL)
 		return NULL;
-	Declaration dec = (Declaration) TtaGetMemory(sizeof(_Declaration));
+	dec = (Declaration) TtaGetMemory (sizeof (_Declaration));
 	dec->declaredIn = t;
 	dec->name = TtaStrdup (name);
 	dec->nature = xtype;
@@ -102,7 +102,7 @@ void NewSimpleType (XTigerTemplate t, const char *name, SimpleTypeType xtype)
 #ifdef TEMPLATES
 	Declaration dec = NewDeclaration (t, name, SimpleTypeNat);	
 	dec->simpleType.type = xtype;
-	AddDeclaration(t, dec);
+	AddDeclaration (t, dec);
 #endif /* TEMPLATES */
 }
 
@@ -112,21 +112,17 @@ void NewSimpleType (XTigerTemplate t, const char *name, SimpleTypeType xtype)
 XTigerTemplate CreatePredefinedTypesLibrary ()
 {
 #ifdef TEMPLATES
-	XTigerTemplate lib = NewXTigerLibrary(PREDEFINED_LIB, FALSE);
+	XTigerTemplate lib = NewXTigerLibrary (PREDEFINED_LIB, FALSE);
 	lib->isLibrary = true;
 
-	NewSimpleType(lib, TYPE_NUMBER,  XTNumber);
-	NewSimpleType(lib, TYPE_BOOLEAN, XTBoolean);
-	NewSimpleType(lib, TYPE_STRING,  XTString);
-
-	NewUnion(lib, UNION_ANYCOMPONENT, NULL, NULL);
-	NewUnion(lib, UNION_ANYSIMPLE, NULL, NULL);
-	NewUnion(lib, UNION_ANYELEMENT, NULL, NULL);
-  
-	NewUnion(lib, UNION_ANY, CreateDictionaryFromList(UNION_ANY_DEFINITION), NULL);
-
+	NewSimpleType (lib, TYPE_NUMBER,  XTNumber);
+	NewSimpleType (lib, TYPE_BOOLEAN, XTBoolean);
+	NewSimpleType (lib, TYPE_STRING,  XTString);
+	NewUnion (lib, UNION_ANYCOMPONENT, NULL, NULL);
+	NewUnion (lib, UNION_ANYSIMPLE, NULL, NULL);
+	NewUnion (lib, UNION_ANYELEMENT, NULL, NULL);
+	NewUnion (lib, UNION_ANY, CreateDictionaryFromList (UNION_ANY_DEFINITION), NULL);
   lib->isPredefined = TRUE;
-
 	return lib;
 #else
 	return NULL;
@@ -139,25 +135,24 @@ XTigerTemplate CreatePredefinedTypesLibrary ()
 void InitializeTemplateEnvironment ()
 {
 #ifdef TEMPLATES
-	templates = CreateDictionary();
-	Add (templates, PREDEFINED_LIB, CreatePredefinedTypesLibrary());	
+	Templates_Dic = CreateDictionary ();
+	Add (Templates_Dic, PREDEFINED_LIB, CreatePredefinedTypesLibrary ());	
 #endif /* TEMPLATES */
 }
 
 /*----------------------------------------------------------------------
   Releasing the template environment
   ----------------------------------------------------------------------*/
-
-void FreeTemplateEnvironment()
+void FreeTemplateEnvironment ()
 {
 #ifdef TEMPLATES
   XTigerTemplate t;
 
-  if (templates)
-    for(First(templates);!IsDone(templates);Next(templates))
+  if (Templates_Dic)
+    for (First (Templates_Dic);!IsDone (Templates_Dic);Next (Templates_Dic))
 	{
-      t = (XTigerTemplate)CurrentElement(templates);
-      TtaCloseDocument(t->doc);
+      t = (XTigerTemplate)CurrentElement (Templates_Dic);
+      TtaCloseDocument (t->doc);
     }
 #endif
 }
@@ -168,33 +163,33 @@ void FreeTemplateEnvironment()
 void AddDeclaration (XTigerTemplate t, Declaration dec)
 {
 #ifdef TEMPLATES
-	Declaration old = GetDeclaration(t, dec->name);
+	Declaration old = GetDeclaration (t, dec->name);
 	
-	if(old==NULL) //New type, not a redefinition
+	if (old==NULL) //New type, not a redefinition
 	{
-		switch(dec->nature)
+		switch (dec->nature)
 		{
-		case SimpleTypeNat :
-			Add(t->simpleTypes, dec->name, dec);
+		case SimpleTypeNat:
+			Add (t->simpleTypes, dec->name, dec);
 			break;
-		case XmlElementNat :
-			Add(t->elements, dec->name, dec);
+		case XmlElementNat:
+			Add (t->elements, dec->name, dec);
 			break;
-		case ComponentNat :
-			Add(t->components, dec->name, dec);
+		case ComponentNat:
+			Add (t->components, dec->name, dec);
 			break;
-		case UnionNat :
-			Add(t->unions, dec->name, dec);
+		case UnionNat:
+			Add (t->unions, dec->name, dec);
 			break;
-		default :
+		default:
 			//Impossible
 			break;
 		}
 	}
 	else //A redefinition. Using the old memory zone to keep consistent pointers
 	{
-		//TODO CopyDeclarationInto(dec, old);
-		TtaFreeMemory(dec);
+		//TODO CopyDeclarationInto (dec, old);
+		TtaFreeMemory (dec);
 	}
 #endif /* TEMPLATES */
 }
@@ -204,14 +199,16 @@ void AddDeclaration (XTigerTemplate t, Declaration dec)
 void NewComponent (XTigerTemplate t, const char *name, const Element el)
 {
 #ifdef TEMPLATES
-	/*if(t->doc < 0)
-		doc = CreateDocumentOfType(el);*/
+	/*if (t->doc < 0)
+		doc = CreateDocumentOfType (el);*/
 
 	Declaration dec = NewDeclaration (t, name, ComponentNat);
 	dec->componentType.content = el;
-// TODO	dec->componentType.content = TtaCopyTree(el, TtaGetDocument(el), ;
-  dec->componentType.content = TtaCopyTree (dec->componentType.content, TtaGetDocument(dec->componentType.content), TtaGetDocument(el), el);
-	AddDeclaration(t, dec);
+// TODO	dec->componentType.content = TtaCopyTree (el, TtaGetDocument (el), ;
+  dec->componentType.content = TtaCopyTree (dec->componentType.content,
+                                            TtaGetDocument (dec->componentType.content),
+                                            TtaGetDocument (el), el);
+	AddDeclaration (t, dec);
 #endif /* TEMPLATES */
 }
 
@@ -224,38 +221,34 @@ void NewUnion (const XTigerTemplate t, const char *name,
 	Declaration dec = NewDeclaration (t, name, UnionNat);
 	Declaration aux;
 	
-	dec->unionType.include = CreateDictionary();
-	dec->unionType.exclude = CreateDictionary();
+	dec->unionType.include = CreateDictionary ();
+	dec->unionType.exclude = CreateDictionary ();
 
 	//We initialize include
-	if(include != NULL)
+	if (include != NULL)
 	{
-		for (First(include); !IsDone(include); Next(include)) {
-			
-			aux = GetDeclaration(t, CurrentKey(include));
-			
-			if(aux==NULL) //Unknown type > a new XML element
-				NewElement(t, CurrentKey(include));
-			
-			Add(dec->unionType.include, aux->name, aux);
+		for (First (include); !IsDone (include); Next (include))
+      {
+			aux = GetDeclaration (t, CurrentKey (include));
+			if (aux==NULL) //Unknown type > a new XML element
+				NewElement (t, CurrentKey (include));
+			Add (dec->unionType.include, aux->name, aux);
 		}
 	}
 	
 	//We initialize exclude
-	if(exclude != NULL)
+	if (exclude != NULL)
 	{
-		for (First(exclude); !IsDone(exclude); Next(exclude)) {
-			
-			aux = GetDeclaration(t, CurrentKey(exclude));
-			
-			if(aux==NULL) //Unknown type > a new XML element
-				NewElement(t, CurrentKey(exclude));
-			
-			Add(dec->unionType.exclude, aux->name, aux);
+		for (First(exclude); !IsDone (exclude); Next (exclude))
+      {
+			aux = GetDeclaration (t, CurrentKey (exclude));
+			if (aux==NULL) //Unknown type > a new XML element
+				NewElement (t, CurrentKey (exclude));
+			Add (dec->unionType.exclude, aux->name, aux);
 		}
 	}
 
-	AddDeclaration(t, dec);
+	AddDeclaration (t, dec);
 #endif /* TEMPLATES */
 }
 
@@ -265,7 +258,7 @@ void NewElement (const XTigerTemplate t, const char *name)
 {
 #ifdef TEMPLATES
 	Declaration dec = NewDeclaration (t, name, XmlElementNat);
-	AddDeclaration(t, dec);
+	AddDeclaration (t, dec);
 #endif /* TEMPLATES */
 }
 
@@ -274,25 +267,25 @@ void NewElement (const XTigerTemplate t, const char *name)
 void FreeDeclaration (Declaration dec)
 {
 #ifdef TEMPLATES
-	//TODO : remove it from its dictionary
-	//TODO : clean dictionaries etc.
-	TtaFreeMemory(dec->name);
-	TtaFreeMemory(dec);
+	//TODO: remove it from its dictionary
+	//TODO: clean dictionaries etc.
+	TtaFreeMemory (dec->name);
+	TtaFreeMemory (dec);
 #endif /* TEMPLATES */
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-Declaration GetDeclaration(const XTigerTemplate t, const char *name)
+Declaration GetDeclaration (const XTigerTemplate t, const char *name)
 {
 #ifdef TEMPLATES
-	Declaration dec = (Declaration)Get(t->simpleTypes, name);	
-	if(dec) return dec;
-	dec = (Declaration)Get(t->components, name);
-	if(dec) return dec;
-	dec = (Declaration)Get(t->elements, name);
-	if(dec) return dec;
-	dec = (Declaration)Get(t->unions, name);
+	Declaration dec = (Declaration)Get (t->simpleTypes, name);	
+	if (dec) return dec;
+	dec = (Declaration)Get (t->components, name);
+	if (dec) return dec;
+	dec = (Declaration)Get (t->elements, name);
+	if (dec) return dec;
+	dec = (Declaration)Get (t->unions, name);
 	return dec;
 #else
 	return NULL;
@@ -311,14 +304,14 @@ void FreeXTigerTemplate (XTigerTemplate t)
 
 	dic = t->libraries;
 
-	for (First(dic); !IsDone(dic); Next(dic))
-    RemoveUser((XTigerTemplate)CurrentElement(dic));
+	for (First (dic); !IsDone (dic); Next (dic))
+    RemoveUser ((XTigerTemplate)CurrentElement (dic));
 
 	CleanDictionary (dic);
 
 	//Cleaning the components
 	dic = t->components;
-	for (First(dic); !IsDone(dic); Next(dic))
+	for (First (dic); !IsDone (dic); Next (dic))
     {
       dec = (Declaration)CurrentElement (dic);
 	  //Deleting only types defined by the template (not the imported ones)
@@ -329,7 +322,7 @@ void FreeXTigerTemplate (XTigerTemplate t)
 
 	//Cleaning the elements
 	dic = t->elements;
-	for (First(dic); !IsDone(dic); Next(dic))
+	for (First (dic); !IsDone (dic); Next (dic))
     {
       dec = (Declaration)CurrentElement (dic);
 	  //Deleting only types defined by the template (not the imported ones)
@@ -340,7 +333,7 @@ void FreeXTigerTemplate (XTigerTemplate t)
 
 	//Cleaning the simple types
 	dic = t->simpleTypes;
-	for (First(dic); !IsDone(dic); Next(dic))
+	for (First (dic); !IsDone (dic); Next (dic))
     {
       dec = (Declaration)CurrentElement (dic);
 	  //Deleting only types defined by the template (not the imported ones)
@@ -351,7 +344,7 @@ void FreeXTigerTemplate (XTigerTemplate t)
 
 	//Cleaning the unions
 	dic = t->unions;
-	for (First(dic); !IsDone(dic); Next(dic))
+	for (First (dic); !IsDone (dic); Next (dic))
     {
       dec = (Declaration)CurrentElement (dic);
 	  //Deleting only types defined by the template (not the imported ones)
@@ -361,11 +354,11 @@ void FreeXTigerTemplate (XTigerTemplate t)
 	CleanDictionary (dic);
 
   //Freeing the document
-  FreeDocumentResource(t->doc);
-  TtcCloseDocument(t->doc, 0);
+  FreeDocumentResource (t->doc);
+  TtcCloseDocument (t->doc, 0);
 
   //Removing the template of the dictionary
-  RemoveElement(templates, t);
+  RemoveElement (Templates_Dic, t);
 
   //Freeing the template
 	TtaFreeMemory (t);
@@ -381,29 +374,31 @@ void AddLibraryDeclarations (XTigerTemplate t, XTigerTemplate lib)
 	DicDictionary from = lib->elements;	
 	DicDictionary to = t->elements;
 	
-	for (First(from); !IsDone(from); Next(from))
-		Add (to, CurrentKey(from), CurrentElement(from));
+	for (First (from); !IsDone (from); Next (from))
+		Add (to, CurrentKey (from), CurrentElement (from));
 	
 	from = lib->components;	
 	to = t->components;
 	
-	for (First(from); !IsDone(from); Next(from))
-		Add (to, CurrentKey(from), CurrentElement(from));
+	for (First (from); !IsDone (from); Next (from))
+		Add (to, CurrentKey (from), CurrentElement (from));
 	
 	from = lib->unions;	
 	to = t->unions;
 	
-	for (First(from); !IsDone(from); Next(from))
-		Add (to, CurrentKey(from), CurrentElement(from));
+	for (First (from); !IsDone (from); Next (from))
+		Add (to, CurrentKey (from), CurrentElement (from));
 	
 	from = lib->simpleTypes;	
 	to = t->simpleTypes;
 	
-	for (First(from); !IsDone(from); Next(from))
-		Add (to, CurrentKey(from), CurrentElement(from));
+	for (First (from); !IsDone (from); Next (from))
+		Add (to, CurrentKey (from), CurrentElement (from));
 #endif /* TEMPLATES */
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void PrintUnion (Declaration dec, int indent, XTigerTemplate t, FILE *file)
 {	
 #ifdef TEMPLATES
@@ -412,35 +407,35 @@ void PrintUnion (Declaration dec, int indent, XTigerTemplate t, FILE *file)
 	char*		   indentation;
 	int 		   i=0;
 	
-	indentation = (char*) TtaGetMemory(indent*sizeof(char)+1);
-	for(i=0;i<indent;i++)
+	indentation = (char*) TtaGetMemory (indent*sizeof (char)+1);
+	for (i=0;i<indent;i++)
 		indentation [i] = '\t';
 	indentation [indent] = '\0';
 	
 	
 	dic = dec->unionType.include;
-	if(!IsEmpty(dic))
+	if (!IsEmpty (dic))
 	{
-		fprintf(file, "\n%sINCLUDE",indentation);
+		fprintf (file, "\n%sINCLUDE",indentation);
 		
-		for(First(dic);!IsDone(dic);Next(dic))
+		for (First (dic);!IsDone (dic);Next (dic))
 		{
-			aux = (Declaration) CurrentElement(dic);
-			switch(aux->nature)
+			aux = (Declaration) CurrentElement (dic);
+			switch (aux->nature)
 			{
-			case SimpleTypeNat :
-			case XmlElementNat :
-			case ComponentNat :
-				fprintf(file, "\n%s+ %s ",indentation,aux->name);
-				if(aux->declaredIn!=t)
-					fprintf(file, "*");
+			case SimpleTypeNat:
+			case XmlElementNat:
+			case ComponentNat:
+				fprintf (file, "\n%s+ %s ",indentation,aux->name);
+				if (aux->declaredIn!=t)
+					fprintf (file, "*");
 				break;
-			case UnionNat :
-				fprintf(file, "\n%s+ %s ",indentation,aux->name);
-				if(aux->declaredIn!=t)
-					fprintf(file, "*");
-				PrintUnion(aux, indent+1, t, file);
-			default :
+			case UnionNat:
+				fprintf (file, "\n%s+ %s ",indentation,aux->name);
+				if (aux->declaredIn!=t)
+					fprintf (file, "*");
+				PrintUnion (aux, indent+1, t, file);
+			default:
 				//impossible
 				break;
 			}
@@ -448,104 +443,108 @@ void PrintUnion (Declaration dec, int indent, XTigerTemplate t, FILE *file)
 	}
 	
 	dic = dec->unionType.exclude;
-	if(!IsEmpty(dic))
+	if (!IsEmpty (dic))
 	{
-		fprintf(file, "\n%sEXCLUDE",indentation);
+		fprintf (file, "\n%sEXCLUDE",indentation);
 		
-		for(First(dic);!IsDone(dic);Next(dic))
+		for (First (dic);!IsDone (dic);Next (dic))
 		{
-			aux = (Declaration) CurrentElement(dic);
-			switch(aux->nature)
+			aux = (Declaration) CurrentElement (dic);
+			switch (aux->nature)
 			{
-			case SimpleTypeNat :
-			case XmlElementNat :
-			case ComponentNat :			
-				fprintf(file, "\n%s- %s ",indentation,aux->name);
-				if(aux->declaredIn!=t)
-					fprintf(file, "*");
+			case SimpleTypeNat:
+			case XmlElementNat:
+			case ComponentNat:			
+				fprintf (file, "\n%s- %s ",indentation,aux->name);
+				if (aux->declaredIn!=t)
+					fprintf (file, "*");
 				break;
-			case UnionNat :
-				fprintf(file, "\n%s- %s ",indentation,aux->name);
-				if(aux->declaredIn!=t)
-					fprintf(file, "*");
-				PrintUnion(aux, indent+1, t, file);
-			default :
+			case UnionNat:
+				fprintf (file, "\n%s- %s ",indentation,aux->name);
+				if (aux->declaredIn!=t)
+					fprintf (file, "*");
+				PrintUnion (aux, indent+1, t, file);
+			default:
 				//impossible
 				break;
 			}
 		}
 	}
 	
-	TtaFreeMemory(indentation);
+	TtaFreeMemory (indentation);
 #endif /* TEMPLATES */
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void PrintDeclarations (XTigerTemplate t, FILE *file)
 {
 #ifdef TEMPLATES
 	DicDictionary  aux;
 	Declaration    dec;
 	
-	fprintf(file, "SIMPLE TYPES\n");
-	fprintf(file, "------------");
+	fprintf (file, "SIMPLE TYPES\n");
+	fprintf (file, "------------");
 	aux = t->simpleTypes;
-	for(First(aux);!IsDone(aux);Next(aux))
+	for (First (aux);!IsDone (aux);Next (aux))
 	{
-		dec = (Declaration) CurrentElement(aux);
-		fprintf(file, "\n%s ",dec->name);
-		if(dec->declaredIn!=t)
-			fprintf(file, "*");
+		dec = (Declaration) CurrentElement (aux);
+		fprintf (file, "\n%s ",dec->name);
+		if (dec->declaredIn!=t)
+			fprintf (file, "*");
 	}
 	
 	aux = t->elements;
-	if(!IsEmpty(aux))
+	if (!IsEmpty (aux))
 	{
-		fprintf(file, "\n\nXML ELEMENTS\n");
-		fprintf(file, "------------");	
-		for(First(aux);!IsDone(aux);Next(aux))
+		fprintf (file, "\n\nXML ELEMENTS\n");
+		fprintf (file, "------------");	
+		for (First (aux);!IsDone (aux);Next (aux))
 		{
-			dec = (Declaration) CurrentElement(aux);
-			fprintf(file,"\n%s ",dec->name);
-			if(dec->declaredIn!=t)
-				fprintf(file, "*");
+			dec = (Declaration) CurrentElement (aux);
+			fprintf (file,"\n%s ",dec->name);
+			if (dec->declaredIn!=t)
+				fprintf (file, "*");
 		}
 	}
 	
 	aux = t->components;
-	if(!IsEmpty(aux))
+	if (!IsEmpty (aux))
 	{
-		fprintf(file, "\n\nCOMPONENTS\n");
-		fprintf(file, "----------");	
-		for(First(aux);!IsDone(aux);Next(aux))
+		fprintf (file, "\n\nCOMPONENTS\n");
+		fprintf (file, "----------");	
+		for (First (aux);!IsDone (aux);Next (aux))
 		{
-			dec = (Declaration) CurrentElement(aux);
-			fprintf(file,"\n%s ",dec->name);
-			if(dec->declaredIn!=t)
-				fprintf(file, "*");
-			fprintf(file,"\n********************\n");
+			dec = (Declaration) CurrentElement (aux);
+			fprintf (file,"\n%s ",dec->name);
+			if (dec->declaredIn!=t)
+				fprintf (file, "*");
+			fprintf (file,"\n********************\n");
 			TtaListAbstractTree (dec->componentType.content, file);
-			fprintf(file,"********************\n");
+			fprintf (file,"********************\n");
 		}
 	}
 	
 	aux = t->unions;
-	if(!IsEmpty(aux))
+	if (!IsEmpty (aux))
 	{
-		fprintf(file, "\n\nUNIONS\n");
-		fprintf(file, "------");
-		for(First(aux);!IsDone(aux);Next(aux))
+		fprintf (file, "\n\nUNIONS\n");
+		fprintf (file, "------");
+		for (First (aux);!IsDone (aux);Next (aux))
 		{
-			dec = (Declaration) CurrentElement(aux);
-			fprintf(file,"\n%s ",dec->name);
-			if(dec->declaredIn!=t)
-				fprintf(file, "*");
-			PrintUnion(dec, 1, t, file);
+			dec = (Declaration) CurrentElement (aux);
+			fprintf (file,"\n%s ",dec->name);
+			if (dec->declaredIn!=t)
+				fprintf (file, "*");
+			PrintUnion (dec, 1, t, file);
 		}
 	}
 #endif /* TEMPLATES */
 }
 
-void DumpDeclarations(XTigerTemplate t)
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void DumpDeclarations (XTigerTemplate t)
 {
 #ifdef TEMPLATES
 	char localname[MAX_LENGTH];
@@ -563,46 +562,48 @@ void DumpDeclarations(XTigerTemplate t)
 }
 
 /*----------------------------------------------------------------------
-RedefineSpecialUnions: Redefines predefined unions : any, anySimple, etc 
+RedefineSpecialUnions: Redefines predefined unions: any, anySimple, etc 
 ----------------------------------------------------------------------*/
-void RedefineSpecialUnions(XTigerTemplate t)
+void RedefineSpecialUnions (XTigerTemplate t)
 {
 #ifdef TEMPLATES
   Declaration un;
   DicDictionary dic;
 
   //We get the old definition to modify it 
-  un = GetDeclaration(t,UNION_ANYSIMPLE);
-  //TODO : Check that it is actually the good declaration and not a newer one
+  un = GetDeclaration (t,UNION_ANYSIMPLE);
+  //TODO: Check that it is actually the good declaration and not a newer one
   un->unionType.include = t->simpleTypes;
-  un->unionType.exclude = CreateDictionary();
+  un->unionType.exclude = CreateDictionary ();
   
-  un = GetDeclaration(t,UNION_ANYCOMPONENT);
-  //TODO : Check that it is actually the good declaration and not a newer one
+  un = GetDeclaration (t,UNION_ANYCOMPONENT);
+  //TODO: Check that it is actually the good declaration and not a newer one
   un->unionType.include = t->components;
-  un->unionType.exclude = CreateDictionary();
+  un->unionType.exclude = CreateDictionary ();
 
-  un = GetDeclaration(t,UNION_ANYELEMENT);
-  //TODO : Check that it is actually the good declaration and not a newer one
+  un = GetDeclaration (t,UNION_ANYELEMENT);
+  //TODO: Check that it is actually the good declaration and not a newer one
   un->unionType.include = t->elements;
-  un->unionType.exclude = CreateDictionary();
+  un->unionType.exclude = CreateDictionary ();
   
-  un = GetDeclaration(t,UNION_ANY);
-  //TODO : Check that it is actually the good declaration and not a newer one
+  un = GetDeclaration (t,UNION_ANY);
+  //TODO: Check that it is actually the good declaration and not a newer one
   dic = t->unions;
-  for(First(dic);!IsDone(dic);Next(dic))
+  for (First (dic);!IsDone (dic);Next (dic))
     {
-      Add(un->unionType.include, CurrentKey(dic), CurrentElement(dic));
+      Add (un->unionType.include, CurrentKey (dic), CurrentElement (dic));
     }
 
   //No recursive inclusion
-  Remove(un->unionType.include, UNION_ANY);
-  un->unionType.exclude = CreateDictionary();
+  Remove (un->unionType.include, UNION_ANY);
+  un->unionType.exclude = CreateDictionary ();
 
 #endif /* TEMPLATES */
 }
 
-DicDictionary GetComponents(XTigerTemplate t)
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+DicDictionary GetComponents (XTigerTemplate t)
 {
 #ifdef TEMPLATES
   return t->components;
@@ -611,10 +612,12 @@ DicDictionary GetComponents(XTigerTemplate t)
 #endif /* TEMPLATES */
 }
 
-Element GetComponentContent(Declaration d)
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+Element GetComponentContent (Declaration d)
 {
 #ifdef TEMPLATES
-  if(d->nature == ComponentNat)
+  if (d->nature == ComponentNat)
     return d->componentType.content;
   else
 #endif /* TEMPLATES */
@@ -622,7 +625,9 @@ Element GetComponentContent(Declaration d)
 }
 
 
-Document GetTemplateDocument(XTigerTemplate t)
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+Document GetTemplateDocument (XTigerTemplate t)
 {
 #ifdef TEMPLATES
   return t->doc;
@@ -631,26 +636,32 @@ Document GetTemplateDocument(XTigerTemplate t)
 #endif /* TEMPLATES */
 }
 
-void SetTemplateDocument(XTigerTemplate t, Document doc)
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void SetTemplateDocument (XTigerTemplate t, Document doc)
 {
 #ifdef TEMPLATES
   t->doc = doc;
 #endif /* TEMPLATES */
 }
 
-void AddUser(XTigerTemplate t)
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void AddUser (XTigerTemplate t)
 {
 #ifdef TEMPLATES
   t->users++;
 #endif /* TEMPLATES */
 }
 
-void RemoveUser(XTigerTemplate t)
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void RemoveUser (XTigerTemplate t)
 {
 #ifdef TEMPLATES
   t->users--;
-  if(t->users == 0 && !t->isPredefined)
-    FreeXTigerTemplate(t);  
+  if (t->users == 0 && !t->isPredefined)
+    FreeXTigerTemplate (t);  
 #endif /* TEMPLATES */
 }
 

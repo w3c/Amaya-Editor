@@ -110,6 +110,18 @@ RULES
     create 'use>' after;
   end;
 
+  useSimple: 
+    begin
+    create SOT;
+    create 'use';
+    create Attributes;
+    create '>';
+    indent +2;
+    indent -2 after;
+    create SCT after;
+    create 'use>' after;
+  end;
+
   bag:
     begin
     create SOT;

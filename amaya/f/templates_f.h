@@ -20,7 +20,8 @@ extern void UseCreated ( NotifyElement *event );
 extern ThotBool UseMenuClicked ( NotifyElement *event );
 extern ThotBool OptionMenuClicked ( NotifyElement *event );
 extern ThotBool RepeatMenuClicked ( NotifyElement *event );
-extern void OpeningInstance ( Document doc );
+extern void OpeningInstance ( char *fileName,
+                              Document doc );
 extern ThotBool ClosingInstance ( NotifyDialog* dialog );
 
 #else /* __STDC__ */
@@ -39,7 +40,8 @@ extern void UseCreated ( NotifyElement *event );
 extern ThotBool UseMenuClicked ( NotifyElement *event );
 extern ThotBool OptionMenuClicked ( NotifyElement *event );
 extern ThotBool RepeatMenuClicked ( NotifyElement *event );
-extern void OpeningInstance ( Document doc );
+extern void OpeningInstance ( char *fileName,
+                                Document doc );
 extern ThotBool ClosingInstance ( NotifyDialog* dialog );
 
 #endif /* __STDC__ */

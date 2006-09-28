@@ -21,176 +21,228 @@
 #include "parser.h"
 #include "registry.h"
 #include "style.h"
-
+#include "templates.h"
+#include "templateDeclarations.h"
 
 #define MaxMsgLength 200
-
 #include "anim_f.h"
 #include "animbuilder_f.h"
 #include "css_f.h"
 #include "fetchXMLname_f.h"
 #include "html2thot_f.h"
 #include "HTMLactions_f.h"
-#include "styleparser_f.h"
+#include "css_f.h"
+#include "mydictionary_f.h"
+#include "templateDeclarations_f.h"
 #include "Xml2thot_f.h"
 #include "XHTMLbuilder_f.h"
 
 
 /*----------------------------------------------------------------------
-   TemplateGetDTDName
-   Return in DTDname the name of the DTD to be used for parsing the
-   content of element named elementName.
-   This element type appear with an 'X' in the ElemMappingTable.
+  TemplateGetDTDName
+  Return in DTDname the name of the DTD to be used for parsing the
+  content of element named elementName.
+  This element type appear with an 'X' in the ElemMappingTable.
   ----------------------------------------------------------------------*/
-void      TemplateGetDTDName (char *DTDname, char *elementName)
+void TemplateGetDTDName (char *DTDname, char *elementName)
 {
   strcpy (DTDname, "");
 }
 
 /*----------------------------------------------------------------------
-   MapTemplateAttribute
-   Search in the Attribute Mapping Table the entry for the
-   attribute of name Attr and returns the corresponding Thot attribute type.
+  MapTemplateAttribute
+  Search in the Attribute Mapping Table the entry for the
+  attribute of name Attr and returns the corresponding Thot attribute type.
   ----------------------------------------------------------------------*/
 void MapTemplateAttribute (char *attrName, AttributeType *attrType,
-			   char* elementName, ThotBool *level, Document doc)
+                           char* elementName, ThotBool *level, Document doc)
 {
   attrType->AttrSSchema = GetTemplateSSchema (doc);
   MapXMLAttribute (Template_TYPE, attrName, elementName, level, doc,
-		   &(attrType->AttrTypeNum));
+                   &(attrType->AttrTypeNum));
 }
 
 /*----------------------------------------------------------------------
-   MapTemplateAttributeValue
-   Search in the Attribute Value Mapping Table the entry for the attribute
-   ThotAtt and its value attVal. Returns the corresponding Thot value.
+  MapTemplateAttributeValue
+  Search in the Attribute Value Mapping Table the entry for the attribute
+  ThotAtt and its value attVal. Returns the corresponding Thot value.
   ----------------------------------------------------------------------*/
-void MapTemplateAttributeValue (char* attVal, const AttributeType * attrType, int *value)
+void MapTemplateAttributeValue (char *attVal, const AttributeType *attrType,
+                                int *value)
 {
   MapXMLAttributeValue (Template_TYPE, attVal, attrType, value);
 }
 
 /*----------------------------------------------------------------------
-   MapTemplateEntity
-   Search that entity in the entity table and return the corresponding value.
+  MapTemplateEntity
+  Search that entity in the entity table and return the corresponding value.
   ----------------------------------------------------------------------*/
-void   MapTemplateEntity (char *entityName, char *entityValue, char *script)
+void MapTemplateEntity (char *entityName, char *entityValue, char *script)
 {
   entityValue[0] = EOS;
   *script = EOS;
 }
 
 /*----------------------------------------------------------------------
-   TemplateEntityCreated
-   A Template entity has been created by the XML parser.
+  TemplateEntityCreated
+  A Template entity has been created by the XML parser.
   ----------------------------------------------------------------------*/
-void    TemplateEntityCreated (unsigned char *entityValue, Language lang,
-			      char *entityName, Document doc)
+void TemplateEntityCreated (unsigned char *entityValue, Language lang,
+                            char *entityName, Document doc)
 {
 
 }
 
+/*----------------------------------------------------------------------
+  NeedAMenu returns TRUE is a menu must be generated
+  ----------------------------------------------------------------------*/
+ThotBool NeedAMenu (Element el, Document doc)
+{
+  ElementType	     elType;
+	Attribute        att;
+	AttributeType    attributeType;
+  XTigerTemplate   t;
+  Declaration      dec;
+  Record           rec;
+	int              size;
+  char            *types, *ptr;
+  ThotBool         res = FALSE;
 
+  elType = TtaGetElementType (el);
+  attributeType.AttrSSchema = elType.ElSSchema;
+  if (elType.ElTypeNum == Template_EL_component)
+    attributeType.AttrTypeNum = Template_ATTR_name;
+  else
+    attributeType.AttrTypeNum = Template_ATTR_types;
+  att = TtaGetAttribute (el, attributeType);
+  size = TtaGetTextAttributeLength (att);
+  types = (char *) TtaGetMemory (size + 1);	
+  TtaGiveTextAttributeValue (att, types, &size);
+  ptr = strstr (types, " ");
+  if (ptr)
+    res = TRUE;
+  else
+    {
+      t = (XTigerTemplate) Get (Templates_Dic, DocumentMeta[doc]->template_url);
+      if (t)
+        {
+          dec = GetDeclaration (t, types);
+          if (dec->nature == UnionNat)
+            {
+              rec = dec->unionType.include->first;
+              if (rec->next)
+                res = TRUE;
+            }
+        }
+    }
+  TtaFreeMemory (types);
+  return res;
+}
 
 /*----------------------------------------------------------------------
-   TemplateElementComplete
-   Check the Thot structure of the Template element el.
+  TemplateElementComplete
+  Check the Thot structure of the Template element el.
   ----------------------------------------------------------------------*/
 void TemplateElementComplete (ParserData *context, Element el, int *error)
 {
-  Document		doc;
-  ElementType	elType, childType;
-  Element		  last, child, newChild, next;
+  Document		     doc;
+  ElementType	     elType, childType;
+  Element		       last, child, newChild, next;
 
   doc = context->doc;
   elType = TtaGetElementType (el);
-  switch (elType.ElTypeNum)
+  switch  (elType.ElTypeNum)
     {
     case Template_EL_head:
-	  break;
+      break;
 
     case Template_EL_component:
       CheckMandatoryAttribute (el, doc, Template_ATTR_name);
-	  break;
+      break;
 
     case Template_EL_union:
       CheckMandatoryAttribute (el, doc, Template_ATTR_name);
-	  break;
+      break;
 
     case Template_EL_import:
       CheckMandatoryAttribute (el, doc, Template_ATTR_src);
-	  break;
+      break;
 
     case Template_EL_useEl:
+    case Template_EL_useSimple:
+      if (elType.ElTypeNum == Template_EL_useEl)
+        {
+          if (!NeedAMenu (el, doc))
+            TtaChangeTypeOfElement (el, doc, Template_EL_useSimple);
+        }
       //CheckMandatoryAttribute (el, doc, Template_ATTR_id);
-	  CheckMandatoryAttribute (el, doc, Template_ATTR_types);
-	  break;
+      CheckMandatoryAttribute (el, doc, Template_ATTR_types);
+      break;
 
     case Template_EL_bag:
       //CheckMandatoryAttribute (el, doc, Template_ATTR_id);
-	  CheckMandatoryAttribute (el, doc, Template_ATTR_types);
-	  break;
+      CheckMandatoryAttribute (el, doc, Template_ATTR_types);
+      break;
 
     case Template_EL_attribute:
       CheckMandatoryAttribute (el, doc, Template_ATTR_name);
-	  break;
-	case Template_EL_option :
-	  break;
+      break;
+    case Template_EL_option :
+      break;
 
-	case Template_EL_repeat :
-	  //If the content is not a XTiger element, we fold it in a folder
-	  for(child = TtaGetFirstChild(el); child; child = next)
-      {
-        next = child;
-        TtaNextSibling(&next);
-        childType = TtaGetElementType(child);
-        if(strcmp(TtaGetSSchemaName(childType.ElSSchema),"Template")!=0)
-          {
-            elType.ElTypeNum = Template_EL_folder;
-            newChild = TtaNewElement(doc, elType);
-            TtaRemoveTree(child, doc);
-            TtaInsertFirstChild(&child, newChild, doc);
-            TtaInsertFirstChild(&newChild, el, doc);
-          }
-      }
+    case Template_EL_repeat :
+      //If the content is not a XTiger element, we fold it in a folder
+      for (child = TtaGetFirstChild (el); child; child = next)
+        {
+          next = child;
+          TtaNextSibling (&next);
+          childType = TtaGetElementType (child);
+          if (strcmp (TtaGetSSchemaName (childType.ElSSchema),"Template"))
+            {
+              elType.ElTypeNum = Template_EL_folder;
+              newChild = TtaNewElement (doc, elType);
+              TtaRemoveTree (child, doc);
+              TtaInsertFirstChild (&child, newChild, doc);
+              TtaInsertFirstChild (&newChild, el, doc);
+            }
+        }
     default:
       break;
     }
 }
 
 /*----------------------------------------------------------------------
-   UnknownTemplateNameSpace
-   The element doesn't belong to a supported namespace
+  UnknownTemplateNameSpace
+  The element doesn't belong to a supported namespace
   ----------------------------------------------------------------------*/
-void               UnknownTemplateNameSpace (ParserData *context,
-					Element *unknownEl,
-					char* content)
+void UnknownTemplateNameSpace (ParserData *context, Element *unknownEl,
+                               char* content)
 {
 }
 
 /*----------------------------------------------------------------------
-   TemplateAttributeComplete
-   The XML parser has read attribute attr for element el in document doc.
+  TemplateAttributeComplete
+  The XML parser has read attribute attr for element el in document doc.
   ----------------------------------------------------------------------*/
 void TemplateAttributeComplete (Attribute attr, Element el, Document doc)
 {
 	//TODO : The attribute attribute name is not unique!!
 	/*
-   AttributeType	attrType;
-   int            attrKind;
-   TtaGiveAttributeType (attr, &attrType, &attrKind);
-   switch (attrType.AttrTypeNum)
-     {
-     case Template_ATTR_id:
-       CheckUniqueName (el, doc, attr, attrType);
-       break;
-     case Template_ATTR_name:
-       CheckUniqueName (el, doc, attr, attrType);
-       break;
-     default:
-       break;
-     }
-   */
+    AttributeType	attrType;
+    int            attrKind;
+    TtaGiveAttributeType  (attr, &attrType, &attrKind);
+    switch (attrType.AttrTypeNum)
+    {
+    case Template_ATTR_id:
+    CheckUniqueName (el, doc, attr, attrType);
+    break;
+    case Template_ATTR_name:
+    CheckUniqueName (el, doc, attr, attrType);
+    break;
+    default:
+    break;
+    }
+  */
 }
 
 
@@ -198,19 +250,18 @@ void TemplateAttributeComplete (Attribute attr, Element el, Document doc)
   TemplateCheckInsert
   ----------------------------------------------------------------------*/
 void  TemplateCheckInsert (Element *el, Element parent,
-                             Document doc, ThotBool *inserted)
+                           Document doc, ThotBool *inserted)
 {
   ElementType  elType, parentType;
-  char *elName, *parentName;
+  char        *elName, *parentName;
 
-  elType = TtaGetElementType(*el);
-  parentType = TtaGetElementType(parent);
+  elType = TtaGetElementType (*el);
+  parentType = TtaGetElementType (parent);
 
-  elName = TtaGetElementTypeName(elType);
-  parentName = TtaGetElementTypeName(parentType);
+  elName = TtaGetElementTypeName (elType);
+  parentName = TtaGetElementTypeName (parentType);
 
   *inserted = FALSE;
-
   return;
 }
 
