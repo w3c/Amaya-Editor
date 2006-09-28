@@ -127,7 +127,7 @@ ThotBool NeedAMenu (Element el, Document doc)
       if (t)
         {
           dec = GetDeclaration (t, types);
-          if (dec->nature == UnionNat)
+          if (dec && dec->nature == UnionNat)
             {
               rec = dec->unionType.include->first;
               if (rec->next)

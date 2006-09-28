@@ -1,5 +1,5 @@
 	{ Presentation Schema for Templates.
-	  A. Tollenaere		July 2005 }
+	  A. Tollenaere		& I. Vatton July 2005 }
 
 
 PRESENTATION Template;
@@ -37,7 +37,7 @@ DEFAULT
    Width: Enclosed . Width;
    VertPos: HRef = Previous . HRef;
    HorizPos: Left = Previous . Right;
-   LineBreak: No;
+   LineBreak: Yes;
    Font: Enclosing =;
    Style: Roman;
    Weight: Enclosing =;
@@ -45,7 +45,7 @@ DEFAULT
    Indent: 0;
    Adjust: Left;
    LineSpacing: 1;
-   Depth : Enclosing =;
+   Depth: Enclosing =;
    UnderLine: Enclosing =;
    Thickness: Enclosing =;
    LineStyle: Enclosing =;
@@ -162,7 +162,7 @@ BOXES
  BagButton: BEGIN
 	Content: Picture 'xtigerbag.png';
 	HorizPos: Left = Enclosing . Left;
-	VertPos: Top = Enclosing . Top - 2 px;
+	VertPos: Top = Enclosing . Top - 8 px;
 	MarginTop: 0 px;
 	MarginBottom: 0 px;
 	MarginLeft: 0 px;
@@ -175,7 +175,7 @@ BOXES
  OptionButton: BEGIN
 	Content: Picture 'xtigeroption.png';
 	HorizPos: Left = Enclosing . Left - 5 px;
-	VertPos: Top = Enclosing . Top - 5 px;
+	VertPos: Top = Enclosing . Top - 8 px;
 	MarginTop: 0 px;
 	MarginBottom: 0 px;
 	MarginLeft: 0 px;
@@ -188,7 +188,7 @@ BOXES
  RepeatButton: BEGIN
 	Content: Picture 'xtigerrepeat.png';
 	HorizPos: Left = Enclosing . Left - 1 px;
-	VertPos: Top = Enclosing . Top - 5 px;
+	VertPos: Top = Enclosing . Top - 10 px;
 	MarginTop: 0 px;
 	MarginBottom: 0 px;
 	MarginLeft: 0 px;
@@ -202,7 +202,7 @@ RULES
 
   head:
     BEGIN
-    Visibility : 0;
+    Visibility: 0;
     CreateBefore(ElementName);
   	CreateWith(VerticalLine);
   	IN Structure_view BEGIN
@@ -215,11 +215,11 @@ RULES
     
   component:
 		BEGIN
-		Visibility : 0;
+		Visibility: 0;
 	  CreateBefore(ElementName);
 	  CreateWith(VerticalLine);
   	IN Structure_view BEGIN
-  	  Visibility : Enclosing =;
+  	  Visibility: Enclosing =;
 		  HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 	    Width: Enclosing . Width - STRUCT_INDENT;
 		  VertPos: Top = Previous . Bottom;
@@ -228,11 +228,11 @@ RULES
 
   union:
 		BEGIN
-		Visibility : 0;
+		Visibility: 0;
 	  CreateBefore(ElementName);
 	  CreateWith(VerticalLine);
   	IN Structure_view BEGIN
-  	  Visibility : Enclosing =;
+  	  Visibility: Enclosing =;
 		  HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 	    Width: Enclosing . Width - STRUCT_INDENT;
 		  VertPos: Top = Previous . Bottom;
@@ -241,41 +241,41 @@ RULES
 
   attribute:
 		BEGIN
-		Visibility : 0;
+		Visibility: 0;
 	  CreateBefore(ElementName);
 	  CreateWith(VerticalLine);
   	IN Structure_view BEGIN
-  	  Visibility : Enclosing =;
+  	  Visibility: Enclosing =;
 		  HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 	    Width: Enclosing . Width - STRUCT_INDENT;
 		  VertPos: Top = Previous . Bottom;
 		  END;
 	 END;
 
-  folder : 
+  folder: 
 	BEGIN
 		Width: auto{Enclosing . Width};
 		Height: auto{Enclosing . Height};
 		{Display: Block;}
 		MarginTop: 3 px;
-		VertPos: Top 			= 		Previous . Bottom;
-		HorizPos: Left 			=		Enclosing . Left; 
-		BorderTopWidth			: 	 	1 px;
-		BorderLeftWidth			: 		1 px;
+		VertPos: Top 			= 		Previous AnyElem . Bottom;
+		HorizPos: Left 			=		Enclosing . Left;
+{		BorderTopWidth: 	 	1 px;
+		BorderLeftWidth: 		1 px;
 		BorderBottomWidth		: 		1 px;
 		BorderRightWidth		: 		1 px;
-		BorderTopStyle			: 		Dotted;
-		BorderLeftStyle			: 		Dotted;
+		BorderTopStyle: 		Dotted;
+		BorderLeftStyle: 		Dotted;
 		BorderBottomStyle		:	 	Dotted;
 		BorderRightStyle		:	 	Dotted;
-		BorderTopColor			:		Violet;
-		BorderLeftColor			: 		Violet;
+		BorderTopColor:		Violet;
+		BorderLeftColor: 		Violet;
 		BorderBottomColor		:	 	Violet;
 		BorderRightColor		:	 	Violet;
-		PaddingRight			:		2 px;
-		PaddingLeft				:		2 px;
-		PaddingTop				:		2 px;
-		PaddingBottom			:		2 px;		
+		PaddingRight:		2 px;
+		PaddingLeft	:		2 px;
+		PaddingTop	:		2 px;
+		PaddingBottom:		2 px;}
 		IN Structure_view
 		BEGIN
 			BorderTopStyle		: 		None;
@@ -283,8 +283,8 @@ RULES
 			BorderBottomStyle	:	 	None;
 			BorderRightStyle	:	 	None;
 			PaddingRight		:		0 px;
-			PaddingLeft			:		0 px;
-			PaddingTop			:		0 px;
+			PaddingLeft:		0 px;
+			PaddingTop:		0 px;
 			PaddingBottom		:		0 px;
 			BorderTopWidth		:	 	0 px;
 			BorderLeftWidth		:		0 px;
@@ -300,8 +300,9 @@ RULES
   	CreateWith(VerticalLine);
     Width: auto{Enclosing . Width};
     Height: auto{Enclosing . Height};
+    LineBreak: No;
     {Display: Block;}
-    VertPos: Top = 			Previous . Bottom;
+    VertPos: Top = 			Previous AnyElem . Bottom;
     HorizPos: Left =		Enclosing . Left; 
 		BorderTopWidth: 	 	1 px;
 		BorderLeftWidth: 		1 px;
@@ -317,7 +318,7 @@ RULES
 		BorderRightColor: 	Green;
 		PaddingRight: 			2 px;
 		PaddingLeft: 				2 px;
-		PaddingTop: 				2 px;
+		PaddingTop: 				8 px;
 		PaddingBottom: 			2 px;
   	IN Structure_view BEGIN
 			BorderTopWidth: 0;
@@ -341,9 +342,9 @@ RULES
   	CreateWith(VerticalLine);
     Width: auto{Enclosing . Width};
     Height: auto{Enclosing . Height};
-    LineBreak : no;
+    LineBreak: No;
     {Display: Inline;}
-    VertPos: Top = 			Previous . Bottom;
+    VertPos: Top = 			Previous AnyElem . Bottom;
     HorizPos: Left =		Enclosing . Left; 
     if not immediately within option
       BEGIN
@@ -360,6 +361,9 @@ RULES
 		  BorderBottomColor: 	Blue;
 		  BorderRightColor: 	Blue;
       END;
+    {Background : LightBlue4;
+    FillPattern: backgroundcolor;
+    ShowBox;}
 		PaddingRight: 			2 px;
 		PaddingLeft: 				3 px;
 		PaddingTop: 				2 px;
@@ -373,6 +377,7 @@ RULES
 		  PaddingLeft: 0;
 		  PaddingTop: 0;
 		  PaddingBottom: 0;
+      FillPattern: nopattern;
 		  HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 	    Width: Enclosing . Width - STRUCT_INDENT;
 		  VertPos: Top = Previous . Bottom;
@@ -385,10 +390,13 @@ RULES
   	CreateWith(VerticalLine);
     Width: auto{Enclosing . Width};
     Height: auto{Enclosing . Height};
-    LineBreak : no;
+    LineBreak: No;
     {Display: Inline;}
-    VertPos: Top = 			Previous . Bottom;
+    VertPos: Top = 			Previous AnyElem. Bottom;
     HorizPos: Left =		Enclosing . Left;
+    {Background : LightBlue4;
+    FillPattern: backgroundcolor;
+    ShowBox;}
     if not immediately within option
       BEGIN
 		  BorderTopWidth: 	 	1 px;
@@ -417,6 +425,7 @@ RULES
 		  PaddingLeft: 0;
 		  PaddingTop: 0;
 		  PaddingBottom: 0;
+      FillPattern: nopattern;
 		  HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 	    Width: Enclosing . Width - STRUCT_INDENT;
 		  VertPos: Top = Previous . Bottom;
@@ -424,174 +433,176 @@ RULES
 	 END;
 
   repeat:
-	BEGIN	
-		CreateBefore(ElementName);
-	  CreateFirst(RepeatButton);
-		CreateWith(VerticalLine);
-		Width: auto{Enclosing . Width};
-		{Display: Block;}
-		VertPos: Top 			=		Previous . Bottom;
-		MarginTop				:		3 px;
-		HorizPos: Left 			=		Enclosing . Left; 
-		BorderTopWidth			: 		2 pt;
-		BorderLeftWidth			: 		2 pt;
-		BorderBottomWidth		: 		2 pt;
-		BorderRightWidth		: 		2 pt;
-		BorderTopStyle			:		Dotted;
-		BorderLeftStyle			: 		Dotted;
-		BorderBottomStyle		: 		Dotted;
-		BorderRightStyle		: 		Dotted;
-		BorderTopColor			: 		Purple;
-		BorderLeftColor			: 		Purple;
-		BorderBottomColor		:		Purple;
-		BorderRightColor		: 		Purple;
-		PaddingRight			: 		3 px;
-		PaddingLeft				: 		3 px;
-		PaddingTop				:		8 px;
-		PaddingBottom			:		3 px;		
-		IN Structure_view BEGIN
-			BorderTopWidth		: 		0;
-			BorderLeftWidth		:	 	0;
-			BorderBottomWidth	:		0;
-			BorderRightWidth	:		0;
-		  PaddingRight: 0;
-		  PaddingLeft: 0;
-		  PaddingTop: 0;
-		  PaddingBottom: 0;
-			HorizPos: Left 		=		Enclosing . Left + STRUCT_INDENT;
-			Width				: 		Enclosing . Width - STRUCT_INDENT;
-			VertPos	: Top 		= 		Previous . Bottom;
-		END;
+	  BEGIN	
+    CreateBefore(ElementName);
+    CreateFirst(RepeatButton);
+    CreateWith(VerticalLine);
+    Width: auto{Enclosing . Width};
+    LineBreak: No;
+    {Display: Block;}
+    VertPos: Top  	= Previous AnyElem . Bottom;
+    MarginTop	: 3 px;
+    HorizPos: Left  	= Enclosing . Left; 
+    BorderTopWidth:  2 pt;
+    BorderLeftWidth:  2 pt;
+    BorderBottomWidth :  2 pt;
+    BorderRightWidth :  2 pt;
+    BorderTopStyle: Dotted;
+    BorderLeftStyle:  Dotted;
+    BorderBottomStyle :  Dotted;
+    BorderRightStyle :  Dotted;
+    BorderTopColor:  Purple;
+    BorderLeftColor:  Purple;
+    BorderBottomColor : Purple;
+    BorderRightColor :  Purple;
+    PaddingRight:  3 px;
+    PaddingLeft	:  3 px;
+    PaddingTop	: 10 px;
+    PaddingBottom: 3 px; 
+    IN Structure_view BEGIN
+    	BorderTopWidth :  0;
+    	BorderLeftWidth :	 	0;
+    	BorderBottomWidth	: 0;
+    	BorderRightWidth	: 0;
+      PaddingRight: 0;
+      PaddingLeft: 0;
+      PaddingTop: 0;
+      PaddingBottom: 0;
+    	HorizPos: Left  = Enclosing . Left + STRUCT_INDENT;
+    	Width	:  Enclosing . Width - STRUCT_INDENT;
+    	VertPos	: Top  =  Previous . Bottom;
+    END;
 	 END;	 
 
   option:	
-		BEGIN
+ BEGIN
     CreateBefore(ElementName);
 	  CreateFirst(OptionButton);
   	CreateWith(VerticalLine);
     Width: auto{Enclosing . Width};
+    LineBreak: No;
     {Display: Block;}
-    VertPos: Top = Previous . Bottom;
+    VertPos: Top = Previous AnyElem . Bottom;
     MarginTop: 0;
     HorizPos: Left = Enclosing . Left; 
-		BorderTopWidth: 1 pt;
-		BorderLeftWidth: 1 pt;
-		BorderBottomWidth: 1 pt;
-		BorderRightWidth: 1 pt;
-		BorderTopStyle: Dotted;
-		BorderLeftStyle: Dotted;
-		BorderBottomStyle: Dotted;
-		BorderRightStyle: Dotted;
-		BorderTopColor: Orange;
-		BorderLeftColor: Orange;
-		BorderBottomColor: Orange;
-		BorderRightColor: Orange;
-		PaddingRight: 			2 px;
-		PaddingLeft: 				2 px;
-		PaddingTop: 				2 px;
-		PaddingBottom: 			2 px;		
+    BorderTopWidth: 1 pt;
+    BorderLeftWidth: 1 pt;
+    BorderBottomWidth: 1 pt;
+    BorderRightWidth: 1 pt;
+    BorderTopStyle: Dotted;
+    BorderLeftStyle: Dotted;
+    BorderBottomStyle: Dotted;
+    BorderRightStyle: Dotted;
+    BorderTopColor: Orange;
+    BorderLeftColor: Orange;
+    BorderBottomColor: Orange;
+    BorderRightColor: Orange;
+    PaddingRight:  	2 px;
+    PaddingLeft:   2 px;
+    PaddingTop:   2 px;
+    PaddingBottom:  	2 px; 
   	IN Structure_view BEGIN
-			BorderTopWidth: 0;
-			BorderLeftWidth: 0;
-			BorderBottomWidth: 0;
-		  BorderRightWidth: 0;
-		  PaddingRight: 0;
-		  PaddingLeft: 0;
-		  PaddingTop: 0;
-		  PaddingBottom: 0;
-		  HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+ 	    BorderTopWidth: 0;
+ 	    BorderLeftWidth: 0;
+ 	    BorderBottomWidth: 0;
+      BorderRightWidth: 0;
+      PaddingRight: 0;
+      PaddingLeft: 0;
+      PaddingTop: 0;
+      PaddingBottom: 0;
+      HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 	    Width: Enclosing . Width - STRUCT_INDENT;
-		  VertPos: Top = Previous . Bottom;
-		  END;
+      VertPos: Top = Previous . Bottom;
+      END;
 	 END;	 
 
 
 ATTRIBUTES
 
-  name :
+  name:
   BEGIN
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
 	END;    
 
-  title :
+  title:
   BEGIN
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
 	END;    
 	
-  includeAt :
+  includeAt:
   BEGIN
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
 	END;    
 
-  exclude :
+  exclude:
   BEGIN
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
 	END;    
 
-  src :
+  src:
   BEGIN
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
 	END;    
 	
-  minOccurs :
+  minOccurs:
   BEGIN
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
 	END;    
 
-  maxOccurs :
+  maxOccurs:
   BEGIN
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
 	END;    
 
-  currentOccurs :
+  currentOccurs:
   BEGIN
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
 	END;    
 
-  types :
+  types:
   BEGIN
 	CreateBefore(AttrNameAndValue);
 	END;    
 
-  currentType :
+  currentType:
   BEGIN
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
 	END;    
 	
-  type :
+  type:
   BEGIN
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
 	END;    
 
-  useAt :
+  useAt:
   BEGIN
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
 	END;    
 
-  defaultAt :
+  defaultAt:
   BEGIN
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
 	END;    
 
-  fixed :
+  fixed:
   BEGIN
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
 	END;    
 
-  values :
+  values:
   BEGIN
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
