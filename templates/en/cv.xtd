@@ -41,7 +41,6 @@
 <div class="field">
 <h1 id="Objectives">Objectives</h1>
 <t:use types="p">
-
   <p>Objectives description.</p>
 </t:use>
 </div>
@@ -52,9 +51,11 @@
     <t:repeat  minOccurs="1">
       <t:component name="dt-dd">
         <dt class="date"><t:use types="string">2004 - 2005</t:use></dt>
-        <dd class="content"><strong class="label">Activity
-          description</strong><span class="comment">Comments</span><span
-          class="location">Location..</span></dd>
+        <dd class="content">
+          <strong class="label"><t:use types="string">Activity description</t:use></strong>
+          <span class="comment"><t:use types="string">Comments</t:use></span>
+          <span class="location"><t:use types="string">Location..</t:use></span>
+        </dd>
       </t:component>
     </t:repeat>
   </dl>
@@ -66,9 +67,11 @@
     <t:repeat  minOccurs="1">
       <t:component types="dl">
         <dt class="date"><t:use types="string">June-July 2004</t:use></dt>
-        <dd class="content"><strong class="label">Description</strong><span
-          class="location">Location</span><a href="http://url">Associated
-          URL</a></dd>
+        <dd class="content">
+          <strong class="label"><t:use types="string">Description</t:use></strong>
+          <span class="location"><t:use types="string">Location</t:use></span>
+          <a href="http://url"><t:use types="string">Associated URL</t:use></a>
+        </dd>
       </t:component>
     </t:repeat>
   </dl>
