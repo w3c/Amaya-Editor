@@ -48,7 +48,7 @@ STRUCT
         useSimple;
 	    	option;
 		    repeat;
-		    bag; 
+		    bag;
 		    folder;
 		    END);
 
@@ -75,6 +75,8 @@ STRUCT
     title ) = CONSTANT C_CR; {It is always empty}
 
 EXCEPT
+  repeat: NoReplicate;
+  option: NoReplicate;
   {Hiding unkown and language attributes}
 	Unknown_attribute	: Invisible;
 	Language :          Invisible;

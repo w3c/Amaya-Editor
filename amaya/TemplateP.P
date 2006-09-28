@@ -148,12 +148,13 @@ BOXES
 
  UseButton: BEGIN
 	Content: Picture 'xtigeruse.png';
-	HorizPos: Left = Enclosing . Left - 1 px;
+	HorizPos: Left = Enclosing . Left;
 	VertPos: Top = Enclosing . Top - 2 px;
 	MarginTop: 0 px;
 	MarginBottom: 0 px;
 	MarginLeft: 0 px;
 	MarginRight: 0 px;
+  Inline: No;
 	Depth: Creator - 2;
 	IN Structure_view
 		Visibility: 0;
@@ -167,6 +168,7 @@ BOXES
 	MarginBottom: 0 px;
 	MarginLeft: 0 px;
 	MarginRight: 0 px;
+  Inline: No;
 	Depth: Creator - 2;
 	IN Structure_view
 		Visibility: 0;
@@ -174,12 +176,13 @@ BOXES
 
  OptionButton: BEGIN
 	Content: Picture 'xtigeroption.png';
-	HorizPos: Left = Enclosing . Left - 5 px;
-	VertPos: Top = Enclosing . Top - 8 px;
+	HorizPos: Left = Enclosing . Left;
+	VertPos: Top = Enclosing . Top - 5 px;
 	MarginTop: 0 px;
 	MarginBottom: 0 px;
 	MarginLeft: 0 px;
 	MarginRight: 0 px;
+  Inline: No;
 	Depth: Creator - 2;
 	IN Structure_view
 		Visibility: 0;
@@ -187,12 +190,13 @@ BOXES
 
  RepeatButton: BEGIN
 	Content: Picture 'xtigerrepeat.png';
-	HorizPos: Left = Enclosing . Left - 1 px;
+	HorizPos: Left = Enclosing . Left;
 	VertPos: Top = Enclosing . Top - 10 px;
 	MarginTop: 0 px;
 	MarginBottom: 0 px;
 	MarginLeft: 0 px;
 	MarginRight: 0 px;
+  Inline: No;
 	Depth: Creator - 2;
 	IN Structure_view
 		Visibility: 0;
@@ -256,7 +260,6 @@ RULES
 	BEGIN
 		Width: auto{Enclosing . Width};
 		Height: auto{Enclosing . Height};
-		{Display: Block;}
 		MarginTop: 3 px;
 		VertPos: Top 			= 		Previous AnyElem . Bottom;
 		HorizPos: Left 			=		Enclosing . Left;
@@ -342,7 +345,7 @@ RULES
   	CreateWith(VerticalLine);
     Width: auto{Enclosing . Width};
     Height: auto{Enclosing . Height};
-    LineBreak: No;
+    {LineBreak: No;}
     {Display: Inline;}
     VertPos: Top = 			Previous AnyElem . Bottom;
     HorizPos: Left =		Enclosing . Left; 
@@ -361,9 +364,6 @@ RULES
 		  BorderBottomColor: 	Blue;
 		  BorderRightColor: 	Blue;
       END;
-    {Background : LightBlue4;
-    FillPattern: backgroundcolor;
-    ShowBox;}
 		PaddingRight: 			2 px;
 		PaddingLeft: 				3 px;
 		PaddingTop: 				2 px;
@@ -390,13 +390,10 @@ RULES
   	CreateWith(VerticalLine);
     Width: auto{Enclosing . Width};
     Height: auto{Enclosing . Height};
-    LineBreak: No;
+    {LineBreak: No;}
     {Display: Inline;}
     VertPos: Top = 			Previous AnyElem. Bottom;
     HorizPos: Left =		Enclosing . Left;
-    {Background : LightBlue4;
-    FillPattern: backgroundcolor;
-    ShowBox;}
     if not immediately within option
       BEGIN
 		  BorderTopWidth: 	 	1 px;
@@ -438,7 +435,7 @@ RULES
     CreateFirst(RepeatButton);
     CreateWith(VerticalLine);
     Width: auto{Enclosing . Width};
-    LineBreak: No;
+    {LineBreak: No;}
     {Display: Block;}
     VertPos: Top  	= Previous AnyElem . Bottom;
     MarginTop	: 3 px;
@@ -480,7 +477,10 @@ RULES
 	  CreateFirst(OptionButton);
   	CreateWith(VerticalLine);
     Width: auto{Enclosing . Width};
-    LineBreak: No;
+    Background : LightOrange4;
+    FillPattern: backgroundcolor;
+    ShowBox;
+    {LineBreak: No;}
     {Display: Block;}
     VertPos: Top = Previous AnyElem . Bottom;
     MarginTop: 0;
