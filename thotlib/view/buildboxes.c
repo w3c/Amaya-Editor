@@ -1730,7 +1730,7 @@ static void TransmitMBP (PtrBox pBox, PtrBox pRefBox, int frame,
           pChild = pNext;
         }
     }
-  else
+  else if (!pAb->AbPresentationBox)
     {
       if (!inLineFloat)
         {
