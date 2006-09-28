@@ -408,9 +408,9 @@ void PrintUnion (Declaration dec, int indent, XTigerTemplate t, FILE *file)
 	int 		   i=0;
 	
 	indentation = (char*) TtaGetMemory (indent*sizeof (char)+1);
-	for (i=0;i<indent;i++)
-		indentation [i] = '\t';
-	indentation [indent] = '\0';
+	for (i = 0; i < indent; i++)
+		indentation [i] = TAB;
+	indentation [indent] = EOS;
 	
 	
 	dic = dec->unionType.include;
