@@ -21,13 +21,14 @@
 #include "modif_tv.h"
 #include "select_tv.h"
 #include "appdialogue_tv.h"
+#include "frame_tv.h"
 
 #include "applicationapi_f.h"
 #include "displayview_f.h"
 #include "structselect_f.h"
 #include "thotmsg_f.h"
 #include "viewapi_f.h"
-
+#include "views_f.h"
 
 /*----------------------------------------------------------------------
   TtaIsDocumentSelected answers TRUE if the document is selected.  
@@ -164,7 +165,8 @@ void TtaGetActiveView (Document *doc, View *view)
   UserErrorCode = 0;
   *doc = 0;
   *view = 0;
-  GetActiveView (&pDoc, &docView);
+  GetDocAndView (ActiveFrame, &pDoc, &docView);
+  //GetActiveView (&pDoc, &docView);
   if (pDoc)
     {
       *doc = IdentDocument (pDoc);

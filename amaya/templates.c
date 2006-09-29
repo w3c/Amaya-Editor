@@ -220,13 +220,18 @@ ThotBool UseMenuClicked (NotifyElement *event)
 	int              nbitems, size;
 	struct menuType *items;
   char            *types, *menuString;
+  View            view;
+
+  TtaGetActiveView (&doc, &view);
+  if (view != 1)
+    return FALSE; /* let Thot perform normal operation */
 
 	doc = event->document;
 	el = event->element;
 	elType = TtaGetElementType (el);
   t = (XTigerTemplate) Get (Templates_Dic, DocumentMeta[doc]->template_url);
   if (!t)
-    return FALSE; // no template ?!?!
+    return FALSE; /* let Thot perform normal operation */
 
   // give the list of possible items
 	attributeType.AttrSSchema = elType.ElSSchema;
@@ -324,7 +329,7 @@ ThotBool UseMenuClicked (NotifyElement *event)
             }
         }
     }
-  return FALSE;
+  return TRUE;
 #endif /* TEMPLATES */
 	return TRUE;
 }
@@ -339,11 +344,15 @@ ThotBool OptionMenuClicked (NotifyElement *event)
   ElementType     elType, elType1;
   Document        doc;
   XTigerTemplate  t;
+  View            view;
 
+  TtaGetActiveView (&doc, &view);
+  if (view != 1)
+    return FALSE; /* let Thot perform normal operation */
   doc = event->document;
   child = TtaGetFirstChild (event->element);
   if (!child)
-    return FALSE;
+    return FALSE; /* let Thot perform normal operation */
   elType = TtaGetElementType (child);
   elType1 = TtaGetElementType (event->element);
   if ((elType.ElTypeNum != Template_EL_useEl &&
@@ -371,7 +380,7 @@ ThotBool OptionMenuClicked (NotifyElement *event)
         }
       while (next);
     }
-  return FALSE;
+  return TRUE; /* don't let Thot perform normal operation */
 #endif /* TEMPLATES */
 	return TRUE;
 }
@@ -390,11 +399,16 @@ ThotBool RepeatMenuClicked (NotifyElement *event)
 	int              nbitems, size;
 	struct menuType *items;
   char            *types, *menuString;
+  View            view;
+
+  TtaGetActiveView (&doc, &view);
+  if (view != 1)
+    return FALSE; /* let Thot perform normal operation */
 
   doc = event->document;
   t = (XTigerTemplate) Get (Templates_Dic, DocumentMeta[doc]->template_url);
   if (!t)
-    return FALSE; // no template ?!?!
+    return FALSE; /* let Thot perform normal operation */
 	types = "top end";	
 	size = strlen (types);
 	giveItems (types, size, &items, &nbitems);
@@ -432,7 +446,7 @@ ThotBool RepeatMenuClicked (NotifyElement *event)
             }
         }
     }
-  return FALSE;
+  return TRUE; /* don't let Thot perform normal operation */
 #endif /* TEMPLATES */
 	return TRUE;
 }
@@ -446,7 +460,7 @@ void OpeningInstance (char *fileName, Document doc)
   char            *content, *ptr;
   gzFile           stream;
   char             buffer[2000];
-  int              res, size;
+  int              res;
 
   stream = TtaGZOpen (fileName);
   if (stream != 0)
