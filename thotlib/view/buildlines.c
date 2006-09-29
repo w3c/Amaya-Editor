@@ -399,19 +399,27 @@ static void Adjust (PtrBox pParentBox, PtrLine pLine, int frame,
                 // look at the position of the referred box
                 pRefAb = pBox->BxAbstractBox->AbHorizPos.PosAbRef;
                 while (pRefAb && pRefAb->AbBox &&
-                       (pRefAb->AbBox->BxType == BoGhost || pRefAb->AbBox == pBox))
+                       (pRefAb->AbBox->BxType == BoGhost ||
+                        pRefAb->AbNotInLine ||
+                        pRefAb->AbDead ||
+                        pRefAb->AbVisibility < ViewFrameTable[frame - 1].FrVisibility ||
+                        pRefAb->AbBox == pBox))
                   if (pRefAb->AbBox->BxType == BoGhost)
                     pRefAb = pRefAb->AbFirstEnclosed;
                   else
                     pRefAb = pRefAb->AbNext;
                 if (pRefAb && pRefAb->AbBox)
                   {
-                    int t, b, l, r;
-                    GetExtraMargins (pRefAb->AbBox,
+                    int    t, b, l, r;
+                    PtrBox refBox = pRefAb->AbBox;
+                    if (refBox->BxType == BoSplit ||
+                        refBox->BxType == BoMulScript)
+                      refBox = refBox->BxNexChild;
+                    GetExtraMargins (refBox,
                                      pBox->BxAbstractBox->AbHorizPos.PosAbRef,
                                      frame, &t, &b, &l, &r);
-                    dx = pRefAb->AbBox->BxXOrg - pBox->BxXOrg - l;
-                    dy = pRefAb->AbBox->BxYOrg - pBox->BxYOrg - t;
+                    dx = refBox->BxXOrg - pBox->BxXOrg - l;
+                    dy = refBox->BxYOrg - pBox->BxYOrg - t;
                   }
                 else
                   {
@@ -619,19 +627,27 @@ static void Align (PtrBox pParentBox, PtrLine pLine, int frame,
                 // look at the position of the referred box
                 pRefAb = pBox->BxAbstractBox->AbHorizPos.PosAbRef;
                 while (pRefAb && pRefAb->AbBox &&
-                       (pRefAb->AbBox->BxType == BoGhost || pRefAb->AbBox == pBox))
+                       (pRefAb->AbBox->BxType == BoGhost ||
+                        pRefAb->AbNotInLine ||
+                        pRefAb->AbDead ||
+                        pRefAb->AbVisibility < ViewFrameTable[frame - 1].FrVisibility ||
+                        pRefAb->AbBox == pBox))
                   if (pRefAb->AbBox->BxType == BoGhost)
                     pRefAb = pRefAb->AbFirstEnclosed;
                   else
                     pRefAb = pRefAb->AbNext;
                 if (pRefAb && pRefAb->AbBox)
                   {
-                    int t, b, l, r;
-                    GetExtraMargins (pRefAb->AbBox,
+                    int    t, b, l, r;
+                    PtrBox refBox = pRefAb->AbBox;
+                    if (refBox->BxType == BoSplit ||
+                        refBox->BxType == BoMulScript)
+                      refBox = refBox->BxNexChild;
+                    GetExtraMargins (refBox,
                                      pBox->BxAbstractBox->AbHorizPos.PosAbRef,
                                      frame, &t, &b, &l, &r);
-                    dx = pRefAb->AbBox->BxXOrg - pBox->BxXOrg - l;
-                    dy = pRefAb->AbBox->BxYOrg - pBox->BxYOrg - t;
+                    dx = refBox->BxXOrg - pBox->BxXOrg - l;
+                    dy = refBox->BxYOrg - pBox->BxYOrg - t;
                   }
                 else
                   {

@@ -55,7 +55,7 @@ static AttSearch    URL_attr_tab[] =
 
 /*----------------------------------------------------------------------
   RegisterURLs
-----------------------------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 void RegisterURLs(Document doc, Element el)
 {
 #ifdef TEMPLATES
@@ -104,9 +104,9 @@ void RegisterURLs(Document doc, Element el)
 
 /*----------------------------------------------------------------------
   CreateInstance
-----------------------------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 void  CreateInstance(char *templatePath, char *instancePath)
- {
+{
 #ifdef TEMPLATES
   ThotBool alreadyViewing = FALSE;
   int      alreadyOnDoc = 0;
@@ -118,7 +118,7 @@ void  CreateInstance(char *templatePath, char *instancePath)
 
   Document doc = GetTemplateDocument (t);
   DocumentType docType = DocumentTypes[doc];
-  while (alreadyOnDoc<DocumentTableLength-1 && !alreadyViewing)
+  while (alreadyOnDoc < DocumentTableLength-1 && !alreadyViewing)
     {
       alreadyOnDoc++;
       if (DocumentURLs[alreadyOnDoc])
@@ -128,7 +128,7 @@ void  CreateInstance(char *templatePath, char *instancePath)
   if (!TtaPrepareUndo (doc))
     {
       TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
-      RegisterURLs(doc, TtaGetRootElement(doc));
+      RegisterURLs (doc, TtaGetRootElement(doc));
       SetRelativeURLs (doc, instancePath);
       
       switch (docType)
@@ -155,21 +155,25 @@ void  CreateInstance(char *templatePath, char *instancePath)
       TtaClearUndoHistory (doc);
     }
 
-  if (!alreadyViewing) //Open the instance
-    {      
+  if (!alreadyViewing)
+    {
+      // Open the instance
       TtaExtractName (instancePath, DirectoryName, DocumentName);
       CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
     }
-  else //Reload on the existing view
-    Reload(alreadyOnDoc, 0);  
+  else
+    {
+      // Reload on the existing view
+      Reload (alreadyOnDoc, 0);
+    }
 #endif /* TEMPLATES */
 }
 
 /*----------------------------------------------------------------------
-----------------------------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 void InstantiateTemplate_callback (int newdoc, int status,  char *urlName,
-								   char *outputfile, AHTHeaders *http_headers,
-								   void * context)
+                                   char *outputfile, AHTHeaders *http_headers,
+                                   void * context)
 {
 #ifdef TEMPLATES
 	InstantiateCtxt *ctx = (InstantiateCtxt*)context;
@@ -183,36 +187,35 @@ void InstantiateTemplate_callback (int newdoc, int status,  char *urlName,
 }
 
 /*----------------------------------------------------------------------
-----------------------------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 void InstantiateTemplate (Document doc, char *templatename, char *docname,
                           DocumentType docType, ThotBool loaded)
 {
 #ifdef TEMPLATES
 	if (!loaded)
-	{
-		//Create the callback context
-		InstantiateCtxt *ctx = (InstantiateCtxt *)TtaGetMemory (sizeof (InstantiateCtxt));
-		ctx->templatePath	= TtaStrdup (templatename);
-		ctx->instancePath	= TtaStrdup (docname);
-		ctx->schemaName = GetSchemaFromDocType(docType);
-		ctx->docType = docType;
+    {
+      // Create the callback context
+      InstantiateCtxt *ctx = (InstantiateCtxt *)TtaGetMemory (sizeof (InstantiateCtxt));
+      ctx->templatePath	= TtaStrdup (templatename);
+      ctx->instancePath	= TtaStrdup (docname);
+      ctx->schemaName = GetSchemaFromDocType(docType);
+      ctx->docType = docType;
 		
-		GetAmayaDoc (templatename, NULL, doc, doc, CE_MAKEBOOK, FALSE, 
-			(void (*)(int, int, char*, char*, const AHTHeaders*, void*)) InstantiateTemplate_callback,
-			(void *) ctx);
-	}
+      GetAmayaDoc (templatename, NULL, doc, doc, CE_MAKEBOOK, FALSE, 
+                   (void (*)(int, int, char*, char*, const AHTHeaders*, void*)) InstantiateTemplate_callback,
+                   (void *) ctx);
+    }
 	else
     {
       DoInstanceTemplate (templatename);
       CreateInstance (templatename, docname);
-    }
-  
+    }  
 #endif /* TEMPLATES */
 }
 
 /*----------------------------------------------------------------------
   InstantiateAttribute
-----------------------------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 static void InstantiateAttribute (XTigerTemplate t, Element el, Document doc)
 {
 #ifdef TEMPLATES
@@ -285,7 +288,7 @@ static void InstantiateAttribute (XTigerTemplate t, Element el, Document doc)
 /*----------------------------------------------------------------------
   ProcessAttr
   Look for all "attribute" elements in the subtree and instanciate them
-----------------------------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 static void ProcessAttr (XTigerTemplate t, Element el, Document doc)
 {
   Element      child;
@@ -305,7 +308,7 @@ static void ProcessAttr (XTigerTemplate t, Element el, Document doc)
 
 /*----------------------------------------------------------------------
   InstantiateUse
-----------------------------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 Element InstantiateUse (XTigerTemplate t, Element el, Document doc,
                         ThotBool insert)
 {
@@ -393,7 +396,7 @@ Element InstantiateUse (XTigerTemplate t, Element el, Document doc,
 }
 
 /*----------------------------------------------------------------------
-----------------------------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 void InstantiateRepeat (XTigerTemplate t, Element el, Document doc)
 {
 #ifdef TEMPLATES
@@ -530,7 +533,7 @@ void InstantiateRepeat (XTigerTemplate t, Element el, Document doc)
 
 /*----------------------------------------------------------------------
   ParseTemplate
-----------------------------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 static void ParseTemplate (XTigerTemplate t, Element el, Document doc,
                            ThotBool loading)
 {
@@ -613,7 +616,7 @@ static void ParseTemplate (XTigerTemplate t, Element el, Document doc,
 }
 
 /*----------------------------------------------------------------------
-----------------------------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 void DoInstanceTemplate (char *templatename)
 {
 #ifdef TEMPLATES
@@ -662,7 +665,6 @@ void DoInstanceTemplate (char *templatename)
       pi_type = XML_EL_xmlpi;
     }
   doctype = TtaSearchTypedElement (elType, SearchInTree, root);
-
   if (!doctype)
     {
       /* generate the XML declaration */
@@ -694,15 +696,13 @@ void DoInstanceTemplate (char *templatename)
   strcat (buffer, "\"");
   TtaSetTextContent (text, (unsigned char*)buffer,  Latin_Script, doc);
   TtaSetStructureChecking (TRUE, doc);
-
-          
 #endif /* TEMPLATES */
 }
 
 /*----------------------------------------------------------------------
-PreInstantiateComponents: Instantiates all components in order to improve
-editing.
-----------------------------------------------------------------------*/
+  PreInstantiateComponents: Instantiates all components in order to improve
+  editing.
+  ----------------------------------------------------------------------*/
 void PreInstantiateComponents(XTigerTemplate t)
 {
 #ifdef TEMPLATES 

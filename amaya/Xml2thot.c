@@ -4151,6 +4151,15 @@ static void       CreateXmlPi (char *piTarget, char *piData)
   /* For the moment, Amaya only supports the "xml-stylesheet" PI */
   if (!strcmp ((char *)piTarget, "xml-stylesheet"))
     XmlStyleSheetPi (piData, piEl);
+#ifdef TEMPLATES
+  else if (!strcmp ((char *)piTarget, "xtiger"))
+    {
+      Element      root;
+      // Lock the root of a template instance */
+      root =	TtaGetMainRoot (XMLcontext.doc);
+      TtaSetAccessRight (root, ReadOnly, XMLcontext.doc);
+    }
+#endif /* TEMPLATES */
   /* Warnings about PI are no longer reported */
 }
 /*--------------------  PI  (end)  ---------------------------------*/
@@ -4497,7 +4506,7 @@ static void     Hndl_Notation (void *userData,
   If this handler returns 0, then the parser will throw an
   XML_ERROR_NOT_STANDALONE error.
   ----------------------------------------------------------------------*/
-static int     Hndl_NotStandalone (void *userData)
+static int Hndl_NotStandalone (void *userData)
 
 {
 #ifdef EXPAT_PARSER_DEBUG
@@ -4513,10 +4522,8 @@ static int     Hndl_NotStandalone (void *userData)
   The pidata is the rest of the characters in it after skipping
   all whitespace after the initial word.
   ----------------------------------------------------------------------*/
-static void     Hndl_PI (void *userData,
-                         const XML_Char *target,
-                         const XML_Char *pidata)
-
+static void Hndl_PI (void *userData, const XML_Char *target,
+                     const XML_Char *pidata)
 {
   unsigned char *buffer;
 

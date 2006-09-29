@@ -351,7 +351,7 @@ PtrAbstractBox CreateALeaf (PtrAbstractBox pAB, int *frame, LeafType leafType,
   if (!GetCurrentSelection (&pDoc, &pEl, &lastSel, &firstChar, &lastChar))
     /* il n'y en a pas, message d'erreur et fin */
     return pCreatedAB;
-  else if (!pDoc->DocReadOnly && !ElementIsReadOnly (pEl->ElParent))
+  else if (!pDoc->DocReadOnly && !ElementIsReadOnly (pEl))
     /* il y a bien une selection, on travaille sur le premier element */
     /* de la selection */
     /* on ne peut inserer ou coller dans un document en lecture seule */

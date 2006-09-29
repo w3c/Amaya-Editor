@@ -1701,9 +1701,9 @@ static ThotBool ConditionIsTrue (PtrTRuleBlock pBlock, PtrElement pEl,
                               /* Les n premiers ancetres successifs doivent etre du type
                                  TcElemType, sans comporter d'elements d'autres type */
                               /* on compte les ancetres successifs de ce type */
-                              while (pEl1 != NULL)
+                              while (pEl1)
                                 {
-                                  if (pSS != NULL)
+                                  if (pSS)
                                     typeOK = EquivalentType (pEl1, Cond->TcElemType, pSS);
                                   else if (strcmp (Cond->TcElemNature,
                                                    pEl1->ElStructSchema->SsName) == 0)
@@ -2271,7 +2271,7 @@ static void ApplyAttrRulesToElem (TOrder position, PtrElement pEl,
         }
     }
   /* parcourt les blocs de regles de la valeur de l'attribut */
-  while (pBlock != NULL && !*ignoreEl)
+  while (pBlock && !*ignoreEl)
     {
       if (ConditionIsTrue (pBlock, pEl, pAttr, doc))
         /* la condition du bloc est verifiee */

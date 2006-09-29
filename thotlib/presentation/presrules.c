@@ -3270,7 +3270,7 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
   ThotBool            insidePage, afterPageBreak;
   AbPosition         *pPavP1;
   ThotPictInfo       *image;
-  PtrAbstractBox      pAbb;
+  PtrAbstractBox      pAbb, pParent;
   ThotBool            ignorefix = FALSE;
 
   appl = FALSE;
@@ -4181,10 +4181,20 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
               else if (pAb->AbDisplay == 'I')
                 /* display: inline */
                 {
-                  if (pAb->AbEnclosing)
+                  pParent = pAb->AbEnclosing;
+                  while (pParent && pParent->AbElement &&
+                         pParent->AbElement->ElStructSchema &&
+                         pParent->AbElement->ElStructSchema->SsName &&
+                         !strcmp (pParent->AbElement->ElStructSchema->SsName, "Template"))
                     {
-                      pAb->AbEnclosing->AbInLine = TRUE;
-                      pAb->AbEnclosing->AbBuildAll = TRUE;
+                      // Skip template elements
+                      pParent->AbBuildAll = TRUE;
+                      pParent = pParent->AbEnclosing;
+                    }
+                  if (pParent)
+                    {
+                      pParent->AbInLine = TRUE;
+                      pParent->AbBuildAll = TRUE;
                     }
                   pAb->AbAcceptLineBreak = TRUE;
                   pAb->AbBuildAll = TRUE;

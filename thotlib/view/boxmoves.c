@@ -1859,7 +1859,7 @@ void GetExtraMargins (PtrBox pBox, PtrAbstractBox pFrom, int frame,
   if (pFrom)
     {
       /* add values only if it's the pFrom or a pFrom parent box */
-      add = (pFrom == pAb);
+      add = (pFrom == pAb || IsParentBox (pFrom->AbBox, pBox));
       isExtra = ExtraAbFlow (pFrom, frame);
     }
   else
@@ -1914,8 +1914,8 @@ void GetExtraMargins (PtrBox pBox, PtrAbstractBox pFrom, int frame,
                   pAb->AbBox->BxType == BoFloatGhost))
             {
               box = pAb->AbBox;
-              if (!add)
-                add = (pFrom == pAb);
+              if (!add && pFrom)
+                add = (pFrom == pAb || IsParentBox (pFrom->AbBox, box));
               if (add)
                 {
                   /* add values if necessary */
