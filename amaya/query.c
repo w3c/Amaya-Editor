@@ -2705,7 +2705,9 @@ static AHTReqContext *LoopRequest= NULL;
 static int LoopForStop (AHTReqContext *me)
 {
   int  status_req = HT_OK;
+#ifdef IV
   int  count = 0;
+#endif
   
 #ifdef _WINGUI
   MSG msg;

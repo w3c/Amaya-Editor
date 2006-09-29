@@ -453,7 +453,7 @@ void InstantiateRepeat (XTigerTemplate t, Element el, Document doc)
       text = GetAttributeStringValue(el, curAtt);
       if (text)
         {
-          maxVal = atoi(text);
+          curVal = atoi(text);
           TtaFreeMemory(text);
         }
       else
@@ -486,7 +486,7 @@ void InstantiateRepeat (XTigerTemplate t, Element el, Document doc)
     }
 
   if (!curAtt)
-    {      
+    {
       curAtt = TtaNewAttribute(curType);
       sprintf(text,"%d",curVal);
       TtaAttachAttribute(el, curAtt, doc);

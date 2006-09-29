@@ -399,17 +399,17 @@ ThotBool RepeatMenuClicked (NotifyElement *event)
 	int              nbitems, size;
 	struct menuType *items;
   char            *types, *menuString;
+  ThotBool          oldStructureChecking;
   View            view;
 
   TtaGetActiveView (&doc, &view);
   if (view != 1)
     return FALSE; /* let Thot perform normal operation */
-
   doc = event->document;
   t = (XTigerTemplate) Get (Templates_Dic, DocumentMeta[doc]->template_url);
   if (!t)
-    return FALSE; /* let Thot perform normal operation */
-	types = "top end";	
+    return FALSE; // no template ?!?!
+	types = "begining end";	
 	size = strlen (types);
 	giveItems (types, size, &items, &nbitems);
 	menuString = createMenuString (items, nbitems);
@@ -428,13 +428,19 @@ ThotBool RepeatMenuClicked (NotifyElement *event)
         {
           elt = TtaGetElementType (el);
           elt1 = TtaGetElementType (child);
-          if (elt.ElSSchema == elt1.ElSSchema &&
-              (elt1.ElTypeNum == Template_EL_useEl ||
-               elt1.ElTypeNum == Template_EL_useSimple))
+          if (elt.ElSSchema == elt1.ElSSchema)
             {
-              newEl = InstantiateUse (t, child, doc, FALSE);
+              if (elt1.ElTypeNum == Template_EL_useEl ||
+                  elt1.ElTypeNum == Template_EL_useSimple)
+                newEl = InstantiateUse (t, child, doc, FALSE);
+              else if (elt1.ElTypeNum == Template_EL_folder)
+                newEl = TtaCopyTree (child, doc, doc, el);
+              else
+                newEl = NULL;
               if (newEl)
                 {
+                  oldStructureChecking = TtaGetStructureChecking (doc);
+                  TtaSetStructureChecking (FALSE, doc);
                   if (ReturnOption == 0)
                     TtaInsertFirstChild (&newEl, el, doc);
                   else
@@ -442,6 +448,7 @@ ThotBool RepeatMenuClicked (NotifyElement *event)
                       child = TtaGetLastChild (el);
                       TtaInsertSibling (newEl, child, FALSE, doc);
                     }
+                  TtaSetStructureChecking (oldStructureChecking, doc);
                 }
             }
         }

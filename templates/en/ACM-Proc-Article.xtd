@@ -35,7 +35,7 @@
     </xt:component>
 
     <xt:component name="bibauthor">
-      <span class="bibauthor"><xt:use types="string">[xx] Author</xt:use></span>,
+      <span class="bibauthor"><xt:use types="string">Author</xt:use></span>,
     </xt:component>
 
     <xt:component name="refbook">
@@ -43,7 +43,7 @@
         <xt:repeat minOccurs="1">
           <xt:use types="bibauthor"/>
         </xt:repeat>
-        <span class="title"><xt:use types="string">Book title</xt:use></span>
+        <span class="title"><xt:use types="string">Book title</xt:use></span>,
         <span class="pub"><xt:use types="string">Publisher</xt:use></span>
       </p>
     </xt:component>
@@ -53,9 +53,13 @@
         <xt:repeat minOccurs="1">
           <xt:use types="bibauthor"/>
         </xt:repeat>
-        <span class="title"><xt:use types="string">Article title</xt:use></span>
+        <span class="title"><xt:use types="string">Article title</xt:use></span>,
         <span class="conf"><xt:use types="string">Conference</xt:use></span>
       </p>
+    </xt:component>
+
+    <xt:component name="reporturl">
+      , <span class="url"><xt:use types="string">url</xt:use></span>
     </xt:component>
 
     <xt:component name="refreport">
@@ -65,7 +69,7 @@
         </xt:repeat>
         <span class="title"><xt:use types="string">Report title</xt:use></span>
         <xt:option>
-          <span class="url"><xt:use types="string a">url</xt:use></span>
+           <xt:use types="reporturl"/>
         </xt:option>
       </p>
     </xt:component>
@@ -101,9 +105,26 @@
       </p>
     </xt:component>
 
-    <xt:component name="category">
-       &mdash;
+    <xt:component name="subsubcategory">
+       &#x2014;
        <span class="catlevel4"><xt:use types="string">name, name</xt:use></span>
+    </xt:component>
+
+    <xt:component name="subcategory">
+      <span class="catlevel3"><xt:use types="string">name</xt:use></span>
+      <xt:option>
+        <xt:use types="subsubcategory" />
+      </xt:option>
+    </xt:component>
+
+    <xt:component name="category">
+      <p class="category">
+        <span class="catnumlevel1and2"><xt:use types="string">X</xt:use>.<xt:use types="string">n</xt:use></span>
+        [<span class="catnamelevel1and2"><xt:use types="string">Name</xt:use></span>]:
+        <xt:repeat minOccurs="1">
+          <xt:use types="subcategory" />
+        </xt:repeat>
+      </p>
     </xt:component>
 
     <xt:component name="section">
@@ -111,11 +132,9 @@
         <h2>
           <xt:use types="string">SECTION HEADING</xt:use>
         </h2>
-        <xt:repeat>
-          <xt:bag types="anyElement codeExample figure">
-            <p>First paragraph of section ...</p>
-          </xt:bag>
-        </xt:repeat>
+        <xt:bag types="anyElement codeExample figure">
+          <p>First paragraph of section ...</p>
+        </xt:bag>
       </div>
     </xt:component>
 
@@ -157,16 +176,7 @@
 <div class="descr">
   <p class="heading">Categories and Subject Descriptors</p>
   <xt:repeat minOccurs="1">
-    <p class="category">
-      <span class="catnumlevel1and2"><xt:use types="string">X</xt:use>.<xt:use types="string">n</xt:use></span>
-      [<span class="catnamelevel1and2"><xt:use types="string">Name</xt:use></span>]:
-      <xt:repeat minOccurs="1">
-        <span class="catlevel3"><xt:use types="string">name</xt:use></span>
-        <xt:option>
-          <xt:use types="category" />
-        </xt:option>
-      </xt:repeat>
-    </p>
+    <xt:use types="category" />
   </xt:repeat>
   <p class="heading">General Terms</p>
   <p class="terms"><xt:use types="string"> </xt:use></p>
