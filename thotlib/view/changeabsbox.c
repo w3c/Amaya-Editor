@@ -3246,7 +3246,7 @@ void UpdateBoxesCounter (PtrElement pElBegin, PtrDocument pDoc, int counter,
 void SetChange (PtrAbstractBox pAb, PtrDocument pDoc, PRuleType typeRule,
                 FunctionType func)
 {
-  PtrAbstractBox pMainAb, pChild;
+  PtrAbstractBox pChild;
 
   switch (typeRule)
     {
