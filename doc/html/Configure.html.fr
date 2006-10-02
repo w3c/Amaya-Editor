@@ -226,15 +226,15 @@ summary="action button chart">
       <code>http://www.w3.org</code>.<br />
       <strong>Note :</strong> Un URI complet doit être utilisé.<br />
     </dd>
-  <dt><strong><a name="Enable">Activer le coller ligne à
-  ligne</a></strong></dt>
+  <dt><strong><a name="Enable">Preserver les lignes dans le
+  coller</a></strong></dt>
     <dd>Cette option concerne le coller depuis une autre application. Quand
       cette option est activée, les lignes de l'application source sont
       conservées. Sinon les caractères « fin de ligne » sont remplacés par
       des espaces.</dd>
   <dt><strong>Engendrer des espaces non séquables</strong></dt>
-    <dd>Quand cette option est activée, Amaya remplace une séquence
-      espace+espace par un espace non séquable+espace.</dd>
+    <dd>Quand cette option est activée, Amaya engendre des espaces non
+      séquables pour préserver les espaces multiples insérés.</dd>
   <dt><strong>Produire des fichiers de sauvegarde</strong></dt>
     <dd>Si cette option est active Amaya va produire périodiquement un
       fichier de sauvegarde pour chaque document édité.</dd>
@@ -503,7 +503,7 @@ et des liens activés est donné dans la feuille de style Amaya.css</p>
       en quittant l'application.</dd>
 </dl>
 
-<p>Un menu vous permet aussi </p>
+<p>Un menu vous permet aussi</p>
 <ul>
   <li>de sauver la position de la fenêtre courante et la taille des
     différentes vues d'un document (formatée, structure, alterné, liens, and

@@ -354,15 +354,15 @@ href="http://www.w3.org"><code>http://www.w3.org</code></a>.</p>
 <p>Les options suivantes peuvent être cochées ou non en cliquant sur la case
 de gauche alignée avec l'intitulé de l'option.</p>
 
-<p><strong><a name="Enable" id="Enable">Activer le coller ligne à
-ligne</a></strong>. Cette option concerne le coller depuis une autre
+<p><strong><a name="Enable" id="Enable">Preserver les lignes dans le
+coller</a></strong>. Cette option concerne le coller depuis une autre
 application. Quand cette option est activée, les lignes de l'application
 source sont conservées. Sinon les caractères « fin de ligne » sont remplacés
 par des espaces.</p>
 
-<p><strong>Engendrer des espaces non séquables</strong>. Quand cette option
-est activée, Amaya remplace une séquence espace+espace par un espace non
-séquable+espace.</p>
+<p><strong>Garder les espaces multiples</strong>. Quand cette option est
+activée, Amaya engendre des espaces non séquables pour preserver les espaces
+multiples insérés.</p>
 
 <p><strong>Produire des fichiers de sauvegarde</strong>. Si cette option est
 active Amaya va produire périodiquement un fichier de sauvegarde pour chaque
