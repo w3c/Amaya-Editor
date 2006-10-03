@@ -152,13 +152,13 @@ bool wxAmayaSocketEvent::CheckSocketStatus( int bloking_time )
       switch (m_RegistredSocket[entry].condition)
         {
         case WXAMAYASOCKET_READ:
-          FD_SET(m_RegistredSocket[entry].socket, &read_fds);
+          FD_SET((unsigned int)(m_RegistredSocket[entry].socket), &read_fds);
           break;
         case WXAMAYASOCKET_WRITE:
-          FD_SET(m_RegistredSocket[entry].socket, &write_fds);
+          FD_SET((unsigned int)(m_RegistredSocket[entry].socket), &write_fds);
           break;
         case WXAMAYASOCKET_EXCEPTION:
-          FD_SET(m_RegistredSocket[entry].socket, &except_fds);
+          FD_SET((unsigned int)(m_RegistredSocket[entry].socket), &except_fds);
           break;
         }
       id_entry++;

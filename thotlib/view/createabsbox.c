@@ -2968,7 +2968,7 @@ PtrPRule AttrPresRule (PtrAttribute pAttr, PtrElement pEl,
   NumAttrCase        *pCase;
   char                buffer[400];
   char               *attrValue, *ptr, *wordEnd;
-  unsigned int        len;
+  unsigned int        len, word;
   int                 i, j, k, attrNum;
   CHAR_T             *refVal;
   ThotBool            found, ok;
@@ -3375,15 +3375,15 @@ static void  SetVerticalSpace (PtrAbstractBox pAb, ThotBool head,
       pRule = SearchRulepAb (pDoc, pAb, &pSchP, PtMarginTop, FnAny, TRUE,
                              &pAttr);
       ApplyRule (pRule, pSchP, pAb, pDoc, pAttr, pAb);
-      if (pAb->AbTopMargin != 0)
+      if (pAb->AbTopMargin)
         {
           ApplyInherit (PtMarginTop, pAb, pDoc, FALSE);
           result = TRUE;
         }
       pRule = SearchRulepAb (pDoc, pAb, &pSchP, PtBorderTopWidth, FnAny, TRUE,
                              &pAttr);
-      ApplyRule (pRule, pSchP, pAb, pDoc, pAttr, pAb);
-      if (pAb->AbTopBorder != 0)
+     ApplyRule (pRule, pSchP, pAb, pDoc, pAttr, pAb);
+      if (pAb->AbTopBorder)
         {
           ApplyInherit (PtBorderTopWidth, pAb, pDoc, FALSE);
           result = TRUE;
@@ -3391,7 +3391,7 @@ static void  SetVerticalSpace (PtrAbstractBox pAb, ThotBool head,
       pRule = SearchRulepAb (pDoc, pAb, &pSchP, PtPaddingTop, FnAny, TRUE,
                              &pAttr);
       ApplyRule (pRule, pSchP, pAb, pDoc, pAttr, pAb);
-      if (pAb->AbTopPadding != 0)
+      if (pAb->AbTopPadding)
         {
           ApplyInherit (PtPaddingTop, pAb, pDoc, FALSE);
           result = TRUE;
@@ -3403,7 +3403,7 @@ static void  SetVerticalSpace (PtrAbstractBox pAb, ThotBool head,
       pRule = SearchRulepAb (pDoc, pAb, &pSchP, PtMarginBottom, FnAny, TRUE,
                              &pAttr);
       ApplyRule (pRule, pSchP, pAb, pDoc, pAttr, pAb);
-      if (pAb->AbBottomMargin != 0)
+      if (pAb->AbBottomMargin)
         {
           ApplyInherit (PtMarginBottom, pAb, pDoc, FALSE);
           result = TRUE;
@@ -3411,7 +3411,7 @@ static void  SetVerticalSpace (PtrAbstractBox pAb, ThotBool head,
       pRule = SearchRulepAb (pDoc, pAb, &pSchP, PtBorderBottomWidth, FnAny,
                              TRUE, &pAttr);
       ApplyRule (pRule, pSchP, pAb, pDoc, pAttr, pAb);
-      if (pAb->AbBottomBorder != 0)
+      if (pAb->AbBottomBorder)
         {
           ApplyInherit (PtBorderBottomWidth, pAb, pDoc, FALSE);
           result = TRUE;
@@ -3419,7 +3419,7 @@ static void  SetVerticalSpace (PtrAbstractBox pAb, ThotBool head,
       pRule = SearchRulepAb (pDoc, pAb, &pSchP, PtPaddingBottom, FnAny, TRUE,
                              &pAttr);
       ApplyRule (pRule, pSchP, pAb, pDoc, pAttr, pAb);
-      if (pAb->AbBottomPadding != 0)
+      if (pAb->AbBottomPadding)
         {
           ApplyInherit (PtPaddingBottom, pAb, pDoc, FALSE);
           result = TRUE;
@@ -3460,302 +3460,297 @@ PtrAbstractBox TruncateOrCompleteAbsBox (PtrAbstractBox pAb, ThotBool truncate,
   ThotBool            pseudoElem;
 
   pAbbCreated = NULL;
-  if (pAb != NULL)
-    if (pAb->AbLeafType == LtCompound)
-      {
-        if (pAb->AbInLine)
-          {
-            if (!truncate)
-              {
-                if (head)
-                  pAb->AbTruncatedHead = FALSE;
-                else
-                  pAb->AbTruncatedTail = FALSE;
-              }
-          }
-        else if ((head && pAb->AbTruncatedHead != truncate)
-                 || (!head && pAb->AbTruncatedTail != truncate))
-          /* il y a effectivement changement */
-          {
-            if (truncate)
-              /* the abstract box is now truncated */
-              {
-                /* remove all vertical space (margin, border and padding)
-                   at the end that is changed */
-                if (head)
-                  {
-                    if (pAb->AbTopMargin != 0)
-                      {
-                        pAb->AbTopMargin = 0;
-                        pAb->AbMBPChange = TRUE;
-                      }
-                    if (pAb->AbTopBorder != 0)
-                      {
-                        pAb->AbTopBorder = 0;
-                        pAb->AbMBPChange = TRUE;
-                      }
-                    if (pAb->AbTopPadding != 0)
-                      {
-                        pAb->AbTopPadding = 0;
-                        pAb->AbMBPChange = TRUE;
-                      }
-                  }
-                else
-                  {
-                    if (pAb->AbBottomMargin != 0)
-                      {
-                        pAb->AbBottomMargin = 0;
-                        pAb->AbMBPChange = TRUE;
-                      }
-                    if (pAb->AbBottomBorder != 0)
-                      {
-                        pAb->AbBottomBorder = 0;
-                        pAb->AbMBPChange = TRUE;
-                      }
-                    if (pAb->AbBottomPadding != 0)
-                      {
-                        pAb->AbBottomPadding = 0;
-                        pAb->AbMBPChange = TRUE;
-                      }
-                  }
-              }
-            else
-              /* le pave n'est plus coupe' a` une extremite. */
-              {
-                /* Cree les paves de presentation a` cette extremite. */
-                /* cherche la 1ere regle de presentation associee a ce type */
-                /* d'element */
-                pseudoElem = FALSE;
-                pEl = pAb->AbElement;
-                SearchPresSchema (pEl, &pSchP, &index, &pSchS, pDoc);
-                if (pSchS != NULL && pSchS != pEl->ElStructSchema)
-                  /* il s'agit de l'element racine d'une nature qui
-                     utilise le schema de presentation de son englobant*/
-                  if (pDoc->DocView[pAb->AbDocView - 1].DvSSchema !=
-                      pDoc->DocSSchema)
-                    {
-                      pSchS = pEl->ElStructSchema;
-                      pSchP = PresentationSchema (pSchS, pDoc);
-                      index = pEl->ElTypeNumber;
-                    }
-                pSchPSav = pSchP;
-                /* handle creation rules associated with the element type */
-                pRule = pSchP->PsElemPRule->ElemPres[index - 1];
-                ApplCrPresRule (pSchS, pSchP, &pAbbCreated, NULL, pDoc, pAb,
-                                head, pRule, &pseudoElem);
-                /* handle creation rules associated with any element type in
-                   all schema extensions */
-                /* We need to do that only if the element is not a basic or
-                   hidden element */
-                if (pEl->ElTypeNumber >= pEl->ElStructSchema->SsRootElem &&
-                    !TypeHasException (ExcHidden, pEl->ElTypeNumber,
-                                       pEl->ElStructSchema))
-                  {
-                    pHd = FirstPSchemaExtension (pSchS, pDoc, pEl);
-                    while (pHd)
-                      {
-                        pSchP = pHd->HdPSchema;
-                        pRule = pSchP->PsElemPRule->ElemPres[AnyType];
-                        ApplCrPresRule (pSchS, pSchP, &pAbbCreated, NULL, pDoc,
-                                        pAb, head, pRule, &pseudoElem);
-                        pHd = pHd->HdNextPSchema;
-                      }
-                  }
-
-                pAttr = NULL;
-                pSchP = PresentationSchema (pEl->ElStructSchema, pDoc);
-                pHd = NULL;
-                while (pSchP)
-                  {
-                    /* first, get rules associated with the element type only
-                       if it's not the main presentation schema */
-                    if (pHd)
-                      {
-                        pRule = pSchP->PsElemPRule->ElemPres[pEl->ElTypeNumber - 1];
-                        ApplCrPresRule (pSchS, pSchP, &pAbbCreated, NULL, pDoc,
-                                        pAb, head, pRule, &pseudoElem);
-                      }
-
-                    /* handle the rules associated with attributes of ancestors
-                       that apply to the element */
-                    if (pSchP->PsNInheritedAttrs->Num[pEl->ElTypeNumber -1])
-                      /* the element type inherits some attribute */
-                      {
-                        inheritTable = pSchP->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1];
-                        if (!inheritTable)
-                          {
-                            /* inheritance table does not exist. Create it */
-                            CreateInheritedAttrTable (pEl->ElTypeNumber,
-                                                      pEl->ElStructSchema, pSchP, pDoc);
-                            inheritTable = pSchP->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1];
-                          }
-                        for (l = 1; l <= pEl->ElStructSchema->SsNAttributes; l++)
-                          if ((*inheritTable)[l - 1])
-                            /* pEl inherits attribute l */
-                            {
-                              /* is this attribute present on an ancestor? */
-                              if ((*inheritTable)[l - 1] == 'S')
-                                pFirstAncest = pEl;
-                              else
-                                pFirstAncest = pEl->ElParent;
-                              if ((pAttr = GetTypedAttrAncestor (pFirstAncest, l,
-                                                                 pEl->ElStructSchema, &pElAttr)) != NULL)
-                                {
-                                  /* process all values of the attribute, in case of
-                                     a text attribute with multiple values */
-                                  valNum = 1;
-                                  do
-                                    {
-                                      pRule = AttrPresRule (pAttr, pEl, TRUE, NULL,
-                                                            pSchP, &valNum, &attrBlock);
-                                      if (pRule && !pRule->PrDuplicate)
-                                        ApplCrPresRule (pAttr->AeAttrSSchema, pSchP,
-                                                        &pAbbCreated, pAttr, pDoc,
-                                                        pAb, head, pRule, &pseudoElem);
-                                    }
-                                  while (valNum > 0);
-                                }
-                            }
-                      }
-
-                    if (pEl->ElTypeNumber > MAX_BASIC_TYPE &&
-                        pSchP->PsNInheritedAttrs->Num[AnyType])
-                      /* some attributes are inherited by all element types */
-                      {
-                        inheritTable = pSchP->PsInheritedAttr->ElInherit[AnyType];
-                        if (!inheritTable)
-                          {
-                            /* cette table n'existe pas on la genere */
-                            CreateInheritedAttrTable (AnyType+1,
-                                                      pEl->ElStructSchema, pSchP, pDoc);
-                            inheritTable = pSchP->PsInheritedAttr->ElInherit[AnyType];
-                          }
-                        for (l = 1; l <= pEl->ElStructSchema->SsNAttributes; l++)
-                          if ((*inheritTable)[l - 1])
-                            /* pEl inherits attribute l */
-                            {
-                              /* is this attribute present on an ancestor? */
-                              if ((*inheritTable)[l - 1] == 'S')
-                                pFirstAncest = pEl;
-                              else
-                                pFirstAncest = pEl->ElParent;
-                              if ((pAttr = GetTypedAttrAncestor (pFirstAncest, l,
-                                                                 pEl->ElStructSchema, &pElAttr)) != NULL)
-                                {
-                                  /* process all values of the attribute, in case of
-                                     a text attribute with multiple values */
-                                  valNum = 1;
-                                  do
-                                    {
-                                      pRule = AttrPresRule (pAttr, pEl, TRUE, NULL,
-                                                            pSchP, &valNum, &attrBlock);
-                                      if (pRule && !pRule->PrDuplicate)
-                                        ApplCrPresRule (pAttr->AeAttrSSchema, pSchP,
-                                                        &pAbbCreated, pAttr, pDoc,
-                                                        pAb, head, pRule, &pseudoElem);
-                                    }
-                                  while (valNum > 0);
-                                }
-                            }
-                      }
-
-                    /* handle the creation rules associated with the attributes
-                       of the element */
-                    pAttr = pEl->ElFirstAttr;     /* first attribute of element */
-                    /* check all attributes of element */
-                    while (pAttr != NULL)
-                      {
-                        if (pHd == NULL)
-                          /* main presentation schema. Take the one associated
-                             with the attribute S schema */
-                          pSchPattr = PresentationSchema (pAttr->AeAttrSSchema,
-                                                          pDoc);
-                        else
-                          pSchPattr = pSchP;
-                        pSSattr = pAttr->AeAttrSSchema;
-                        if (pHd && /* this is a P schema extension */
-                            /* if it's an ID, class or pseudo-class attribute,
-                               take P schema extensions associated with the
-                               document S schema */
-                            (AttrHasException (ExcCssClass, pAttr->AeAttrNum,
-                                               pAttr->AeAttrSSchema) ||
-                             AttrHasException (ExcCssId, pAttr->AeAttrNum,
-                                               pAttr->AeAttrSSchema) ||
-                             AttrHasException (ExcCssPseudoClass, pAttr->AeAttrNum,
-                                               pAttr->AeAttrSSchema)))
-                          pSSattr = pDoc->DocSSchema;
-                        /* process all values of the attribute, in case of a text
-                           attribute with multiple values */
-                        valNum = 1;
-                        do
-                          {
-                            /* first rule for this value of the attribute */
-                            pRule = AttrPresRule (pAttr, pEl, FALSE, NULL,
-                                                  pSchPattr, &valNum, &attrBlock);
-                            ApplCrPresRule (pAttr->AeAttrSSchema, pSchP,
-                                            &pAbbCreated, pAttr, pDoc, pAb, head,
-                                            pRule, &pseudoElem);
-                          }
-                        while (valNum > 0);
-                        /* get the next attribute of the element */
-                        pAttr = pAttr->AeNext;
-                      }
-
-                    if (pHd == NULL)
-                      /* on n'a pas encore cherche' dans les schemas de
-                         presentation additionnels. On prend le premier schema
-                         additionnel si on travaille pour la vue principale,
-                         sinon on ignore les schemas additionnels */
-                      {
-                        if (pDoc->DocView[pAb->AbDocView - 1].DvPSchemaView == 1)
-                          pHd = FirstPSchemaExtension (pEl->ElStructSchema, pDoc,
-                                                       pEl);
-                      }
-                    else
-                      /* passe au schema additionnel suivant */
-                      pHd = pHd->HdNextPSchema;
-                    if (pHd == NULL)
-                      /* il n'y a pas (ou plus) de schemas
-                         additionnels a prendre en compte */
-                      pSchP = NULL;
-                    else
-                      pSchP = pHd->HdPSchema;
-                  }
-                if (pseudoElem)
-                  /* A CSS pseudo-element has to be created for this end of
-                     the box */
-                  {
-                    if (head)
-                      pAb->AbTruncatedHead = truncate;
-                    else
-                      pAb->AbTruncatedTail = truncate;
-                    pSchP = pSchPSav;
-                    /* pRSpec: premiere regle de presentation associee au type
-                       de l'element */
-                    pRSpec = pSchP->PsElemPRule->ElemPres[index - 1];
-                    /* premiere regle de presentation par defaut */
-                    pRDef = pSchP->PsFirstDefaultPRule;
-                    /* initialise la file des regles qui n'ont pas pu etre
-                       appliquees*/
-                    lqueue = 0;
-                    pAbbReturn = NULL;
-                    ApplyPresRules (pEl, pDoc, pAb->AbDocView,
-                                    pDoc->DocView[pAb->AbDocView - 1].DvPSchemaView,
-                                    pSchS, pSchP, &pRSpec, &pRDef, &pAbbReturn,
-                                    !head, &lqueue, &rQueue, pAb, NULL, NULL, TRUE);
-                    pAbbCreated = pAbbReturn;
-                  }
-              }
-            if (head)
-              pAb->AbTruncatedHead = truncate;
-            else
-              pAb->AbTruncatedTail = truncate;
-            if (!truncate)
-              /* generate all vertical spaces (margin, border and padding)
+  if (pAb && pAb->AbLeafType == LtCompound)
+    {
+      if (pAb->AbInLine)
+        {
+          if (!truncate)
+            {
+              if (head)
+                pAb->AbTruncatedHead = FALSE;
+              else
+                pAb->AbTruncatedTail = FALSE;
+            }
+        }
+      else if ((head && pAb->AbTruncatedHead != truncate)
+               || (!head && pAb->AbTruncatedTail != truncate))
+        /* il y a effectivement changement */
+        {
+          if (truncate)
+            /* the abstract box is now truncated */
+            {
+              /* remove all vertical space (margin, border and padding)
                  at the end that is changed */
-              SetVerticalSpace (pAb, head, pDoc);
-          }
-      }
+              if (head)
+                {
+                  if (pAb->AbTopMargin)
+                    {
+                      pAb->AbTopMargin = 0;
+                      pAb->AbMBPChange = TRUE;
+                    }
+                  if (pAb->AbTopBorder)
+                    {
+                      pAb->AbTopBorder = 0;
+                      pAb->AbMBPChange = TRUE;
+                    }
+                  if (pAb->AbTopPadding)
+                    {
+                      pAb->AbTopPadding = 0;
+                      pAb->AbMBPChange = TRUE;
+                    }
+                }
+              else
+                {
+                  if (pAb->AbBottomMargin)
+                    {
+                      pAb->AbBottomMargin = 0;
+                      pAb->AbMBPChange = TRUE;
+                    }
+                  if (pAb->AbBottomBorder)
+                    {
+                      pAb->AbBottomBorder = 0;
+                      pAb->AbMBPChange = TRUE;
+                    }
+                  if (pAb->AbBottomPadding)
+                    {
+                      pAb->AbBottomPadding = 0;
+                      pAb->AbMBPChange = TRUE;
+                    }
+                }
+            }
+          else
+            /* le pave n'est plus coupe' a` une extremite. */
+            {
+              /* Cree les paves de presentation a` cette extremite. */
+              /* cherche la 1ere regle de presentation associee a ce type */
+              /* d'element */
+              pseudoElem = FALSE;
+              pEl = pAb->AbElement;
+              SearchPresSchema (pEl, &pSchP, &index, &pSchS, pDoc);
+              if (pSchS != NULL && pSchS != pEl->ElStructSchema)
+                /* il s'agit de l'element racine d'une nature qui
+                   utilise le schema de presentation de son englobant*/
+                if (pDoc->DocView[pAb->AbDocView - 1].DvSSchema !=
+                    pDoc->DocSSchema)
+                  {
+                    pSchS = pEl->ElStructSchema;
+                    pSchP = PresentationSchema (pSchS, pDoc);
+                    index = pEl->ElTypeNumber;
+                  }
+              pSchPSav = pSchP;
+              /* handle creation rules associated with the element type */
+              pRule = pSchP->PsElemPRule->ElemPres[index - 1];
+              ApplCrPresRule (pSchS, pSchP, &pAbbCreated, NULL, pDoc, pAb,
+                              head, pRule, &pseudoElem);
+              /* handle creation rules associated with any element type in
+                 all schema extensions */
+              /* We need to do that only if the element is not a basic or
+                 hidden element */
+              if (pEl->ElTypeNumber >= pEl->ElStructSchema->SsRootElem &&
+                  !TypeHasException (ExcHidden, pEl->ElTypeNumber,
+                                     pEl->ElStructSchema))
+                {
+                  pHd = FirstPSchemaExtension (pSchS, pDoc, pEl);
+                  while (pHd)
+                    {
+                      pSchP = pHd->HdPSchema;
+                      pRule = pSchP->PsElemPRule->ElemPres[AnyType];
+                      ApplCrPresRule (pSchS, pSchP, &pAbbCreated, NULL, pDoc,
+                                      pAb, head, pRule, &pseudoElem);
+                      pHd = pHd->HdNextPSchema;
+                    }
+                }
+
+              pAttr = NULL;
+              pSchP = PresentationSchema (pEl->ElStructSchema, pDoc);
+              pHd = NULL;
+              while (pSchP)
+                {
+                  /* first, get rules associated with the element type only
+                     if it's not the main presentation schema */
+                  if (pHd)
+                    {
+                      pRule = pSchP->PsElemPRule->ElemPres[pEl->ElTypeNumber - 1];
+                      ApplCrPresRule (pSchS, pSchP, &pAbbCreated, NULL, pDoc,
+                                      pAb, head, pRule, &pseudoElem);
+                    }
+
+                  /* handle the rules associated with attributes of ancestors
+                     that apply to the element */
+                  if (pSchP->PsNInheritedAttrs->Num[pEl->ElTypeNumber -1])
+                    /* the element type inherits some attribute */
+                    {
+                      inheritTable = pSchP->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1];
+                      if (!inheritTable)
+                        {
+                          /* inheritance table does not exist. Create it */
+                          CreateInheritedAttrTable (pEl->ElTypeNumber,
+                                                    pEl->ElStructSchema, pSchP, pDoc);
+                          inheritTable = pSchP->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1];
+                        }
+                      for (l = 1; l <= pEl->ElStructSchema->SsNAttributes; l++)
+                        if ((*inheritTable)[l - 1])
+                          /* pEl inherits attribute l */
+                          {
+                            /* is this attribute present on an ancestor? */
+                            if ((*inheritTable)[l - 1] == 'S')
+                              pFirstAncest = pEl;
+                            else
+                              pFirstAncest = pEl->ElParent;
+                            if ((pAttr = GetTypedAttrAncestor (pFirstAncest, l,
+                                                               pEl->ElStructSchema, &pElAttr)) != NULL)
+                              {
+                                /* process all values of the attribute, in case of
+                                   a text attribute with multiple values */
+                                valNum = 1;
+                                do
+                                  {
+                                    pRule = AttrPresRule (pAttr, pEl, TRUE, NULL,
+                                                          pSchP, &valNum, &attrBlock);
+                                    if (pRule && !pRule->PrDuplicate)
+                                      ApplCrPresRule (pAttr->AeAttrSSchema, pSchP,
+                                                      &pAbbCreated, pAttr, pDoc,
+                                                      pAb, head, pRule, &pseudoElem);
+                                  }
+                                while (valNum > 0);
+                              }
+                          }
+                    }
+
+                  if (pEl->ElTypeNumber > MAX_BASIC_TYPE &&
+                      pSchP->PsNInheritedAttrs->Num[AnyType])
+                    /* some attributes are inherited by all element types */
+                    {
+                      inheritTable = pSchP->PsInheritedAttr->ElInherit[AnyType];
+                      if (!inheritTable)
+                        {
+                          /* cette table n'existe pas on la genere */
+                          CreateInheritedAttrTable (AnyType+1,
+                                                    pEl->ElStructSchema, pSchP, pDoc);
+                          inheritTable = pSchP->PsInheritedAttr->ElInherit[AnyType];
+                        }
+                      for (l = 1; l <= pEl->ElStructSchema->SsNAttributes; l++)
+                        if ((*inheritTable)[l - 1])
+                          /* pEl inherits attribute l */
+                          {
+                            /* is this attribute present on an ancestor? */
+                            if ((*inheritTable)[l - 1] == 'S')
+                              pFirstAncest = pEl;
+                            else
+                              pFirstAncest = pEl->ElParent;
+                            if ((pAttr = GetTypedAttrAncestor (pFirstAncest, l,
+                                                               pEl->ElStructSchema, &pElAttr)) != NULL)
+                              {
+                                /* process all values of the attribute, in case of
+                                   a text attribute with multiple values */
+                                valNum = 1;
+                                do
+                                  {
+                                    pRule = AttrPresRule (pAttr, pEl, TRUE, NULL,
+                                                          pSchP, &valNum, &attrBlock);
+                                    if (pRule && !pRule->PrDuplicate)
+                                      ApplCrPresRule (pAttr->AeAttrSSchema, pSchP,
+                                                      &pAbbCreated, pAttr, pDoc,
+                                                      pAb, head, pRule, &pseudoElem);
+                                  }
+                                while (valNum > 0);
+                              }
+                          }
+                    }
+
+                  /* handle the creation rules associated with the attributes
+                     of the element */
+                  pAttr = pEl->ElFirstAttr;     /* first attribute of element */
+                  /* check all attributes of element */
+                  while (pAttr)
+                    {
+                      if (pHd == NULL)
+                        /* main presentation schema. Take the one associated
+                           with the attribute S schema */
+                        pSchPattr = PresentationSchema (pAttr->AeAttrSSchema,
+                                                        pDoc);
+                      else
+                        pSchPattr = pSchP;
+                      pSSattr = pAttr->AeAttrSSchema;
+                      if (pHd && /* this is a P schema extension */
+                          /* if it's an ID, class or pseudo-class attribute,
+                             take P schema extensions associated with the
+                             document S schema */
+                          (AttrHasException (ExcCssClass, pAttr->AeAttrNum,
+                                             pAttr->AeAttrSSchema) ||
+                           AttrHasException (ExcCssId, pAttr->AeAttrNum,
+                                             pAttr->AeAttrSSchema) ||
+                           AttrHasException (ExcCssPseudoClass, pAttr->AeAttrNum,
+                                             pAttr->AeAttrSSchema)))
+                        pSSattr = pDoc->DocSSchema;
+                      /* process all values of the attribute, in case of a text
+                         attribute with multiple values */
+                      valNum = 1;
+                      do
+                        {
+                          /* first rule for this value of the attribute */
+                          pRule = AttrPresRule (pAttr, pEl, FALSE, NULL,
+                                                pSchPattr, &valNum, &attrBlock);
+                          ApplCrPresRule (pAttr->AeAttrSSchema, pSchP,
+                                          &pAbbCreated, pAttr, pDoc, pAb, head,
+                                          pRule, &pseudoElem);
+                        }
+                      while (valNum > 0);
+                      /* get the next attribute of the element */
+                      pAttr = pAttr->AeNext;
+                    }
+
+                  if (pHd == NULL)
+                    /* it was the main P schema, get the first schema extension */
+                    {
+                      if (pDoc->DocView[pAb->AbDocView - 1].DvPSchemaView == 1)
+                        pHd = FirstPSchemaExtension (pEl->ElStructSchema, pDoc,
+                                                     pEl);
+                    }
+                  else
+                    /* next style sheet (P schema extension) */
+                    pHd = pHd->HdNextPSchema;
+                  if (pHd == NULL)
+                    /* no schema any more. stop */
+                    pSchP = NULL;
+                  else
+                    pSchP = pHd->HdPSchema;
+                }
+
+              if (pseudoElem)
+                /* A CSS pseudo-element has to be created for this end of the box */
+                {
+                  if (head)
+                    pAb->AbTruncatedHead = truncate;
+                  else
+                    pAb->AbTruncatedTail = truncate;
+                  pSchP = pSchPSav;
+                  /* pRSpec: premiere regle de presentation associee au type
+                     de l'element */
+                  pRSpec = pSchP->PsElemPRule->ElemPres[index - 1];
+                  /* premiere regle de presentation par defaut */
+                  pRDef = pSchP->PsFirstDefaultPRule;
+                  /* initialise la file des regles qui n'ont pas pu etre
+                     appliquees*/
+                  lqueue = 0;
+                  pAbbReturn = NULL;
+                  ApplyPresRules (pEl, pDoc, pAb->AbDocView,
+                                  pDoc->DocView[pAb->AbDocView - 1].DvPSchemaView,
+                                  pSchS, pSchP, &pRSpec, &pRDef, &pAbbReturn,
+                                  !head, &lqueue, &rQueue, pAb, NULL, NULL, TRUE);
+                  pAbbCreated = pAbbReturn;
+                }
+            }
+          if (head)
+            pAb->AbTruncatedHead = truncate;
+          else
+            pAb->AbTruncatedTail = truncate;
+          if (!truncate)
+            /* generate all vertical spaces (margin, border and padding)
+               at the end that is changed */
+            SetVerticalSpace (pAb, head, pDoc);
+        }
+    }
   return (pAbbCreated);
 }
 
@@ -3979,10 +3974,10 @@ static PtrElement DescVisible (PtrElement pE, DocViewNumber viewNb,
   Get the next presentation rule associated with attribute pAttr (which
   belongs to element pElAttr) that applies to element pEl.
   ----------------------------------------------------------------------*/
-static PtrPRule GetNextAttrPresRule (PtrPRule *pR, PtrSSchema pSS,
-                                     PtrAttribute pAttr, PtrElement pElAttr,
-                                     PtrDocument pDoc, PtrElement pEl,
-                                     int view)
+PtrPRule GetNextAttrPresRule (PtrPRule *pR, PtrSSchema pSS,
+                              PtrAttribute pAttr, PtrElement pElAttr,
+                              PtrDocument pDoc, PtrElement pEl,
+                              int view)
 {
   PtrPRule            pRuleView1, pRule;
 
@@ -4761,19 +4756,19 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
                      PtrAbstractBox pNewAbbox, void* CSScasc,
                      FILE *fileDescriptor, ThotBool pseudoElOnly)
 {
-  int                i, view, l, valNum;
-  PtrPRule           pRuleView, pRule, pR;
-  PtrHandlePSchema   pHd;
-  PtrPSchema         pSchPres, pSchPattr;
-  PtrAttribute       pAttr;
-  PtrElement         pFirstAncest;
-  PtrSSchema	     pSSattr;
-  PtrAttributePres   attrBlock;
+  int                 i, view, l, valNum;
+  PtrPRule            pRuleView, pRule, pR;
+  PtrHandlePSchema    pHd;
+  PtrPSchema          pSchPres, pSchPattr;
+  PtrAttribute        pAttr;
+  PtrElement          pFirstAncest;
+  PtrSSchema	        pSSattr;
+  PtrAttributePres    attrBlock;
   InheritAttrTable   *inheritTable;
   Cascade            *casc;
-  Cascade            casc1;
+  Cascade             casc1;
   RuleQueue          *queue;
-  ThotBool           stop, apply;
+  ThotBool            stop;
 
   queue = (RuleQueue*)rQueue;
   /* initialize the cascade: no rule selected yet */
@@ -4821,7 +4816,7 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
                 }
             }
     }
-  while (pRule != NULL);
+  while (pRule);
 
   if (!pNewAbbox)
     return;
@@ -4842,7 +4837,7 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
           /* look at the rules that apply to any element type in this
              P schema extension */
           pRule = pSchPres->PsElemPRule->ElemPres[AnyType];
-          while (pRule != NULL)
+          while (pRule)
             {
               if (pRule->PrCond == NULL ||
                   CondPresentation (pRule->PrCond, pEl, NULL, NULL, pRule, 1,
@@ -4893,7 +4888,7 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
           /* look at the rules that apply to the element type in this
              P schema extension */
           pRule = pSchPres->PsElemPRule->ElemPres[pEl->ElTypeNumber - 1];
-          while (pRule != NULL)
+          while (pRule)
             {
               if (pRule->PrCond == NULL ||
                   CondPresentation (pRule->PrCond, pEl, NULL, NULL, pRule, 1,
@@ -4987,71 +4982,64 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
                 pSchPattr = PresentationSchema (pAttr->AeAttrSSchema, pDoc);
               else
                 pSchPattr = pSchPres;
-              apply = TRUE;
-              if (apply)
+              view = AppliedView (pEl, pAttr, pDoc, viewNb);
+              pSSattr = pAttr->AeAttrSSchema;
+              if (pDoc->DocView[viewNb - 1].DvPSchemaView == 1 && pHd &&
+                  /* this is a P schema extension */
+                  /* if it's an ID, class or pseudo-class attribute, take
+                     P schema extensions associated with the document
+                     S schema */
+                  (AttrHasException (ExcCssClass, pAttr->AeAttrNum, pSSattr) ||
+                   AttrHasException (ExcCssId, pAttr->AeAttrNum, pSSattr) ||
+                   AttrHasException (ExcCssPseudoClass, pAttr->AeAttrNum, pSSattr)))
+                pSSattr = pDoc->DocSSchema;
+              /* process all values of the attribute, in case of a text
+                 attribute with multiple values */
+              valNum = 1;
+              do
                 {
-                  view = AppliedView (pEl, pAttr, pDoc, viewNb);
-                  pSSattr = pAttr->AeAttrSSchema;
-                  if (pDoc->DocView[viewNb - 1].DvPSchemaView == 1 && pHd &&
-                      /* this is a P schema extension */
-                      /* if it's an ID, class or pseudo-class attribute, take
-                         P schema extensions associated with the document
-                         S schema */
-                      (AttrHasException (ExcCssClass, pAttr->AeAttrNum,
-                                         pAttr->AeAttrSSchema) ||
-                       AttrHasException (ExcCssId, pAttr->AeAttrNum,
-                                         pAttr->AeAttrSSchema) ||
-                       AttrHasException (ExcCssPseudoClass, pAttr->AeAttrNum,
-                                         pAttr->AeAttrSSchema)))
-                    pSSattr = pDoc->DocSSchema;
-                  /* process all values of the attribute, in case of a text
-                     attribute with multiple values */
-                  valNum = 1;
-                  do
+                  /* first rule for this value of the attribute */
+                  pR = AttrPresRule (pAttr, pEl, FALSE, NULL, pSchPattr,
+                                     &valNum, &attrBlock);
+                  /* look for all rules associated with this value */
+                  while (pR)
                     {
-                      /* first rule for this value of the attribute */
-                      pR = AttrPresRule (pAttr, pEl, FALSE, NULL, pSchPattr,
-                                         &valNum, &attrBlock);
-                      /* look for all rules associated with this value */
-                      while (pR != NULL)
+                      pRule = NULL;
+                      if (!pR->PrDuplicate &&
+                          /* if it's a creation rule, apply it now */
+                          !ApplCrRule (pR, pSSattr, pSchPattr, pAttr,
+                                       pAbbReturn, viewNb, pDoc, pEl, forward,
+                                       lqueue, queue, pNewAbbox, fileDescriptor))
+                        /* not a creation rule, get the right rule */
+                        pRule = GetNextAttrPresRule (&pR,
+                                                     pSSattr, pAttr,
+                                                     pEl, pDoc, pEl, view);
+                      if (pRule && DoesViewExist (pEl, pDoc, viewNb))
+                        /* this rule applies to the element */
                         {
-                          pRule = NULL;
-                          if (!pR->PrDuplicate &&
-                              /* if it's a creation rule, apply it now */
-                              !ApplCrRule (pR, pSSattr, pSchPattr, pAttr,
-                                           pAbbReturn, viewNb, pDoc, pEl, forward,
-                                           lqueue, queue, pNewAbbox, fileDescriptor))
-                            /* not a creation rule, get the right rule */
-                            pRule = GetNextAttrPresRule (&pR,
-                                                         pSSattr, pAttr,
-                                                         pEl, pDoc, pEl, view);
-                          if (pRule && DoesViewExist (pEl, pDoc, viewNb))
-                            /* this rule applies to the element */
-                            {
-                              if (viewSch != 1 ||
-                                  !CascRegistered (pRule, pSchPattr, pAttr,
-                                                   attrBlock, casc))
-                                if (fileDescriptor)
-                                  DisplayPRule (pRule, fileDescriptor, pEl,
-                                                pSchPattr, 0);
-                                else if (!ApplyRule (pRule, pSchPattr,
-                                                     pNewAbbox, pDoc, pAttr, pNewAbbox))
-                                  /* not the main view, apply the rule now */
-                                  WaitingRule (pRule, pNewAbbox, pSchPattr,
-                                               pAttr, NULL, queue, lqueue);
-                            }
-                          /* next rule associated with this value of the attr*/
-                          pR = pR->PrNextPRule;
+                          if (viewSch != 1 ||
+                              !CascRegistered (pRule, pSchPattr, pAttr,
+                                               attrBlock, casc))
+                            if (fileDescriptor)
+                              DisplayPRule (pRule, fileDescriptor, pEl,
+                                            pSchPattr, 0);
+                            else if (!ApplyRule (pRule, pSchPattr,
+                                                 pNewAbbox, pDoc, pAttr, pNewAbbox))
+                              /* not the main view, apply the rule now */
+                              WaitingRule (pRule, pNewAbbox, pSchPattr,
+                                           pAttr, NULL, queue, lqueue);
                         }
+                      /* next rule associated with this value of the attr*/
+                      pR = pR->PrNextPRule;
                     }
-                  while (valNum > 0);
                 }
+              while (valNum > 0);
               /* get the next attribute of the element */
               pAttr = pAttr->AeNext;
             }
         }
-      /* next style sheet (P schema extension) */
       if (pHd)
+        /* next style sheet (P schema extension) */
         pHd = pHd->HdNextPSchema;
       else
         /* it was the main P schema, get the first schema extension */
@@ -5065,7 +5053,7 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 
   /* get all specific presentation rules attached to the element itself */
   pRule = pEl->ElFirstPRule;
-  while (pRule != NULL)
+  while (pRule)
     /* get the rule if it applies to the view and if it's not a page height */
     {
       if (!(pEl->ElTypeNumber == PageBreak + 1 && pRule->PrType == PtHeight))
@@ -5096,7 +5084,7 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
                   {
                     pAttr = pEl->ElFirstAttr;
                     stop = FALSE;
-                    while (pAttr != NULL && !stop)
+                    while (pAttr && !stop)
                       if (pAttr->AeAttrNum == pRule->PrSpecifAttr &&
                           !strcmp (pAttr->AeAttrSSchema->SsName,
                                    pRule->PrSpecifAttrSSchema->SsName))
@@ -5277,7 +5265,7 @@ static void Attach (PtrAbstractBox pAb, PtrElement pEl, DocViewNumber nv,
                 /* 1er pave de l'element */
                 /* cherche l'element precedent ayant un pave dans la vue */
                 pE = BackSearchVisibleElem (pPa1->AbEnclosing->AbElement, pEl, nv);
-                if (pE != NULL)
+                if (pE)
                   /* verifie si le pave found pour un element precedent */
                   /* est bien inclus dans le meme pave englobant. */
                   /* Par exemple deux notes de bas de page successives */
@@ -5294,7 +5282,7 @@ static void Attach (PtrAbstractBox pAb, PtrElement pEl, DocViewNumber nv,
                       /* chainera pas le pave au pave de l'element precedent */
                       pE = NULL;
                   }
-                if (pE != NULL)
+                if (pE)
                   if (pE->ElTypeNumber == PageBreak + 1
                       && pE->ElPageType == PgBegin)
                     /* le precedent est une marque de page de debut */
@@ -5303,12 +5291,11 @@ static void Attach (PtrAbstractBox pAb, PtrElement pEl, DocViewNumber nv,
                     {
                       pP = pE->ElAbstractBox[nv - 1];
                       /* pave de l'element precedent */
-                      if (pP->AbNext != NULL)
-                        if (pP->AbNext->AbElement ==
-                            pPa1->AbEnclosing->AbElement)
-                          /* la marque de page est suivie par un pave cree */
-                          /* par l'englobant */
-                          pE = NULL;
+                      if (pP->AbNext &&
+                          pP->AbNext->AbElement == pPa1->AbEnclosing->AbElement)
+                        /* la marque de page est suivie par un pave cree */
+                        /* par l'englobant */
+                        pE = NULL;
                     }
                 if (pE == NULL)
                   /* pas de pave d'element precedent */
@@ -5330,7 +5317,7 @@ static void Attach (PtrAbstractBox pAb, PtrElement pEl, DocViewNumber nv,
                             stop = TRUE;
                         }
                     while (!stop);
-                    if (pP != NULL)
+                    if (pP)
                       {
                         if (pP->AbElement == pPa1->AbEnclosing->AbElement)
                           {
@@ -6033,13 +6020,13 @@ PtrAbstractBox AbsBoxesCreate (PtrElement pEl, PtrDocument pDoc,
                                     else
                                       {
                                         /* cherche le dernier pave' fils */
-                                        while (pAbChild->AbNext != NULL)
+                                        while (pAbChild->AbNext)
                                           pAbChild = pAbChild->AbNext;
                                         /* ignore les paves de presentation */
                                         while (pAbChild->AbPresentationBox &&
                                                pAbChild->AbPrevious != NULL)
                                           pAbChild = pAbChild->AbPrevious;
-                                        if (pAbChild->AbDead)
+                                        if (pAbChild->AbDead && pAbChild->AbVisibility)
                                           truncate = TRUE;
                                         else
                                           if (forward)

@@ -283,7 +283,6 @@ static void GetInheritedPRule (PtrPRule *pRule, PtrElement pEl,
   If the returned rule is associated with an attribute, pAttr points to this
   attribute.
   ----------------------------------------------------------------------*/
-
 PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc,
                               PtrPSchema *pSPR, PtrSSchema *pSSR,
                               ThotBool presBox, int presNum, 
@@ -292,8 +291,8 @@ PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc,
                               ThotBool attr, PtrAttribute *pAttr)
 {
   int                 index;
-  PtrPRule            pRule, pRuleView1, pR;
-  PtrSSchema          pSchS;
+  PtrPRule            pRule, pRuleView, pR;
+  PtrSSchema          pSchS, pSSattr;
   ThotBool            stop;
   PtrAttribute        pA;
   InheritAttrTable   *inheritTable;
@@ -309,7 +308,7 @@ PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc,
   if (presBox)
     /* presentation box have no attribute */
     attr = FALSE;
-  if (pEl != NULL && PresentationSchema (pEl->ElStructSchema, pDoc) != NULL)
+  if (pEl && PresentationSchema (pEl->ElStructSchema, pDoc))
     {
       if (pEl->ElTerminal && isElPage &&
           pEl->ElLeafType == LtPageColBreak)
@@ -336,10 +335,10 @@ PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc,
       /* look first at the default presentation rules from the main
          presentation schema */
       pRule = pSchP->PsFirstDefaultPRule;
-      SimpleSearchRulepEl (&pRuleView1, pEl, view, typeRule, typeFunc, &pRule,
+      SimpleSearchRulepEl (&pRuleView, pEl, view, typeRule, typeFunc, &pRule,
                            pDoc);
       if (pRule == NULL)
-        pRule = pRuleView1;
+        pRule = pRuleView;
       *pSPR = pSchP;
       *pSSR = pSchS;
       prevAttrBlock = NULL;
@@ -364,7 +363,7 @@ PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc,
               pR = pSP->PsElemPRule->ElemPres[AnyType];
               if (pR)
                 {
-                  SimpleSearchRulepEl (&pRuleView1, pEl, view, typeRule,
+                  SimpleSearchRulepEl (&pRuleView, pEl, view, typeRule,
                                        typeFunc, &pR, pDoc);
                   if (pR && RuleHasHigherPriority (pR, pSP, NULL,
                                                    pRule, *pSPR, NULL))
@@ -409,7 +408,7 @@ PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc,
                 /* special rule for list item markers in view1 */
                 pR = SearchRuleListItemMarker (typeRule, pEl, pDoc);
               else
-                SimpleSearchRulepEl (&pRuleView1, pEl, view, typeRule,
+                SimpleSearchRulepEl (&pRuleView, pEl, view, typeRule,
                                      typeFunc, &pR, pDoc);
               prevAttrBlock = NULL;
               if (!pR && view > 1)
@@ -419,9 +418,9 @@ PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc,
                    rule for the right view */
                 {
                   if (!pRule)
-                    pRule = pRuleView1;
-                  else if (pRuleView1 && pRule->PrViewNum != view)
-                    pRule = pRuleView1;
+                    pRule = pRuleView;
+                  else if (pRuleView && pRule->PrViewNum != view)
+                    pRule = pRuleView;
                 }
               else
                 if (pR && RuleHasHigherPriority (pR, pSP, NULL,
@@ -475,14 +474,24 @@ PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc,
                 {
                   /* check all attributes of element */
                   pA = pEl->ElFirstAttr; /* first attribute of element */
-                  while (pA != NULL)
+                  while (pA)
                     {
+                      pSSattr = pA->AeAttrSSchema;
                       if (pHd == NULL)
                         /* main presentation schema. Take the schema associated
                            with the attribute's S schema */
-                        pSPattr = PresentationSchema (pA->AeAttrSSchema, pDoc);
+                        pSPattr = PresentationSchema (pSSattr, pDoc);
                       else 
                         pSPattr = pSP;
+                      if (view == 1 && pHd &&
+                          /* this is a P schema extension */
+                          /* if it's an ID, class or pseudo-class attribute, take
+                             P schema extensions associated with the document
+                             S schema */
+                          (AttrHasException (ExcCssClass, pA->AeAttrNum, pSSattr) ||
+                           AttrHasException (ExcCssId, pA->AeAttrNum, pSSattr) ||
+                           AttrHasException (ExcCssPseudoClass, pA->AeAttrNum, pSSattr)))
+                        pSSattr = pDoc->DocSSchema;
                       /* process all values of the attribute, in case of a
                          text attribute with multiple values */
                       valNum = 1;
@@ -491,25 +500,27 @@ PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc,
                           pR = AttrPresRule (pA, pEl, FALSE, NULL, pSPattr,
                                              &valNum, &attrBlock);
                           /* look at all rules for this value */
-                          while (pR != NULL)
+                          while (pR)
                             {
                               if (pR->PrType == typeRule &&
                                   (typeRule != PtFunction ||
                                    typeFunc == FnAny ||
                                    pR->PrPresFunction == typeFunc) &&
                                   pR->PrViewNum == view)
-                                if (pR->PrCond == NULL ||
-                                    CondPresentation (pR->PrCond, pEl, pA, pEl,
-                                                      pR, view, pA->AeAttrSSchema, pDoc))
-                                  if (RuleHasHigherPriority (pR, pSPattr,
-                                                             attrBlock, pRule, *pSPR, prevAttrBlock))
-                                    {
-                                      pRule = pR;
-                                      *pAttr = pA;
-                                      *pSPR = pSPattr;
-                                      *pSSR = pA->AeAttrSSchema;
-                                      prevAttrBlock = attrBlock;
-                                    }
+                                {
+                                  if (pR->PrCond == NULL ||
+                                      CondPresentation (pR->PrCond, pEl, pA, pEl,
+                                                        pR, view, pSSattr, pDoc))
+                                    if (RuleHasHigherPriority (pR, pSPattr,
+                                                               attrBlock, pRule, *pSPR, prevAttrBlock))
+                                      {
+                                        pRule = pR;
+                                        *pAttr = pA;
+                                        *pSPR = pSPattr;
+                                        *pSSR = pSSattr;
+                                        prevAttrBlock = attrBlock;
+                                      }
+                                }
                               if (pR->PrType <= typeRule)
                                 /* regle suivante */
                                 pR = pR->PrNextPRule;
@@ -517,7 +528,7 @@ PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc,
                                 pR = NULL;
                             }
                         }
-                      while (valNum > 0 && pR);
+                      while (valNum > 0);
                       /* passe a l'attribut suivant de l'element */
                       pA = pA->AeNext;
                     }
@@ -561,9 +572,10 @@ PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc,
                 {
                   *pAttr = pEl->ElFirstAttr;
                   stop = FALSE;
-                  while (*pAttr != NULL && !stop)
+                  while (*pAttr && !stop)
                     if ((*pAttr)->AeAttrNum == pR->PrSpecifAttr &&
-                        (*pAttr)->AeAttrSSchema == pR->PrSpecifAttrSSchema)
+                          !strcmp ((*pAttr)->AeAttrSSchema->SsName,
+                                   pR->PrSpecifAttrSSchema->SsName))
                       {
                         stop = TRUE;
                         *pSSR = (*pAttr)->AeAttrSSchema;
@@ -3722,7 +3734,7 @@ void UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
                      ThotBool remove, ThotBool inherit,
                      PtrAttribute pAttrComp)
 {
-  PtrPRule            pR, pRuleView1, pRNA, firstOfType;
+  PtrPRule            pR, pRuleView, pRNA, firstOfType;
   PtrDelayedPRule     pDelR;
   PRuleType           typeRule;
   FunctionType        func;
@@ -3768,11 +3780,11 @@ void UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
               /* type des regles courantes */
               if (typeRule == PtFunction)
                 func = pR->PrPresFunction;
-              pRuleView1 = NULL;
+              pRuleView = NULL;
               if (pR->PrViewNum == 1)
                 /* regle pour la vue 1 */
                 /* on la garde pour le cas ou on ne trouve pas mieux */
-                pRuleView1 = pR;
+                pRuleView = pR;
 
               for (view = 1; view <= MAX_VIEW_DOC; view++)
                 {
@@ -3822,7 +3834,7 @@ void UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
                           while (!stop && pR != NULL);
 		      
                           if (pR == NULL)
-                            pR = pRuleView1;
+                            pR = pRuleView;
                         }
                       /*if (pR && pR->PrCond &&
                         !CondPresentation (pR->PrCond, pEl, pAttr, pElAttr,
