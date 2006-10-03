@@ -876,9 +876,12 @@ if test "$with_gl" = "yes" -o "$with_mesa" = "yes" ; then
          /Developer/SDKs/MacOSX10.2.8.sdk/usr/X11R6/include/freetype2/  \
          /Developer/SDKs/MacOSX10.3.0.sdk/usr/X11R6/include/  \
          /Developer/SDKs/MacOSX10.3.0.sdk/usr/X11R6/include/freetype2/  \
+         /Developer/SDKs/MacOSX10.4u.sdk/usr/X11R6/include/  \
+         /Developer/SDKs/MacOSX10.4u.sdk/usr/X11R6/include/freetype2/  \
          /Developer/SDKs/MacOSX10.3.9.sdk/usr/X11R6/include/  \
          /Developer/SDKs/MacOSX10.3.9.sdk/usr/X11R6/include/freetype2/  \
          /Developer/SDKs/MacOSX10.4.0.sdk/usr/X11R6/include/  \
+         /Developer/SDKs/MacOSX10.4.0.sdk/usr/X11R6/include/freetype2/  \
          /opt/local/include/  \
          /opt/local/include/freetype2/  \
          /usr/X11R6/include/freetype2/freetype/  \
@@ -896,6 +899,7 @@ if test "$with_gl" = "yes" -o "$with_mesa" = "yes" ; then
          /Developer/SDKs/MacOSX10.1.5.sdk/usr/X11R6/lib/  \
          /Developer/SDKs/MacOSX10.2.8.sdk/usr/X11R6/lib/  \
          /Developer/SDKs/MacOSX10.3.0.sdk/usr/X11R6/lib/  \
+         /Developer/SDKs/MacOSX10.4u.sdk/usr/X11R6/lib/  \
          /Developer/SDKs/MacOSX10.3.9.sdk/usr/X11R6/lib/  \
          /Developer/SDKs/MacOSX10.4.0.sdk/usr/X11R6/lib/  \
          /opt/local/lib/  \
