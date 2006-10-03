@@ -527,7 +527,7 @@ End POSTCRIPT
 /*----------------------------------------------------------------------
   The feedback buffer parser
   ----------------------------------------------------------------------*/
-static GLint GLGetVertex(GLvertex *v, GLfloat *p)
+static int GLGetVertex(GLvertex *v, GLfloat *p)
 {
   v->xyz[0] = p[0];
   v->xyz[1] = p[1];
@@ -543,10 +543,10 @@ static GLint GLGetVertex(GLvertex *v, GLfloat *p)
 GLParseFeedbackBuffer : Reads the buffer containing the information 
 about each graphic rendered on screen by openGL
 -------------------------------------------------------------------*/
-GLint GLParseFeedbackBuffer (GLfloat *current)
+int GLParseFeedbackBuffer (GLfloat *current)
 {
   char flag, dash = 0;
-  GLint i, used, count, v, vtot;
+  int i, used, count, v, vtot;
   GLfloat lwidth = 1., psize = 1.;
   GLvertex vertices[3];
 
@@ -560,7 +560,7 @@ GLint GLParseFeedbackBuffer (GLfloat *current)
     {
       while (used > 0)
 	{
-	  switch ((GLint)*current)
+	  switch ((int)*current)
 	    {
 	    case GL_POINT_TOKEN :
 	      current ++;
@@ -607,7 +607,7 @@ GLint GLParseFeedbackBuffer (GLfloat *current)
 	      break;
 
 	    case GL_POLYGON_TOKEN :
-	      count = (GLint)current[1];
+	      count = (int)current[1];
 	      current += 2;
 	      used -= 2;
 	      v = vtot = 0;
@@ -646,7 +646,7 @@ GLint GLParseFeedbackBuffer (GLfloat *current)
 	      break;    
   
 	    case GL_PASS_THROUGH_TOKEN :
-	      switch ((GLint) current[1])
+	      switch ((int) current[1])
 		{
 		case GL_BEGIN_LINE_STIPPLE : 
 		  dash = 4; break;
@@ -682,7 +682,7 @@ GLint GLParseFeedbackBuffer (GLfloat *current)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-GLint GLText (const char *str, const int fg, const void *font,
+int GLText (const char *str, const int fg, const void *font,
 	      const unsigned int fontsize, const int x, const int y,
 	      const int length)
 {
@@ -855,11 +855,11 @@ int GLString (unsigned char *buff, int lg, int frame, int x, int y,
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-GLint GLDrawPixelsPoscript (GLsizei width, GLsizei height,
-			    GLint xorig, GLint yorig,
-			    GLenum format, GLenum type, 
-			    unsigned char *pixels, 
-			    GLfloat x, GLfloat y)
+int GLDrawPixelsPoscript (int width, int height,
+			  int xorig, int yorig,
+			  GLenum format, GLenum type, 
+			  unsigned char *pixels, 
+			  GLfloat x, GLfloat y)
 {
   int row, col, colwidth;
   FILE *stream;
@@ -914,7 +914,7 @@ GLint GLDrawPixelsPoscript (GLsizei width, GLsizei height,
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-GLint GLEnable(GLint mode)
+int GLEnable(int mode)
 {
   switch(mode)
     {
@@ -929,7 +929,7 @@ GLint GLEnable(GLint mode)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-GLint GLDisable(GLint mode)
+int GLDisable(int mode)
 { 
   switch(mode)
     {
@@ -944,7 +944,7 @@ GLint GLDisable(GLint mode)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-GLint GLPointSize(GLfloat value)
+int GLPointSize(GLfloat value)
 {
   if (!GL) 
     return 0;
@@ -955,7 +955,7 @@ GLint GLPointSize(GLfloat value)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-GLint GLLineWidth(GLfloat value)
+int GLLineWidth(GLfloat value)
 {
   if (!GL) 
     return 0;

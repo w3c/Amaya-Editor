@@ -91,11 +91,11 @@ typedef struct
 
 typedef struct 
 {
-  GLint       buffersize;
+  int         buffersize;
   float       lastlinewidth;
   GLfloat     *feedback;
   GLrgb       lastrgb, threshold;
-  GLint       viewport[4];
+  int         viewport[4];
   char        *title, *producer, *filename;
   FILE        *stream;
 } GLcontext;
@@ -106,43 +106,43 @@ typedef struct
 extern "C" {
 #endif
 */
-  GLint GLBeginPage (char *title, char *producer, 
-		     GLint viewport[4],
-		     FILE *stream, const char *filename);
+  int GLBeginPage (char *title, char *producer, 
+		   int viewport[4],
+		   FILE *stream, const char *filename);
 
-  GLint GLEndPage (void);
+  int GLEndPage (void);
 
-  GLint GLBeginViewport (GLint viewport[4]);
-  GLint GLEndViewport (void);
+  int GLBeginViewport (int viewport[4]);
+  int GLEndViewport (void);
 
-  GLint GLEnable (GLint mode);
-  GLint GLDisable (GLint mode);
-  GLint GLPointSize (GLfloat value);
-  GLint GLLineWidth (GLfloat value);
+  int GLEnable (int mode);
+  int GLDisable (int mode);
+  int GLPointSize (GLfloat value);
+  int GLLineWidth (GLfloat value);
 
   /*Graphic stuff*/
-  GLint GLParseFeedbackBuffer (GLfloat *current);
+  int GLParseFeedbackBuffer (GLfloat *current);
 
   void GLPrintPostScriptColor(void *rgb);
  
   /*Text*/
-  GLint GLText (const char *str, 
-		const int fg, 
-		const void *font, 
-		const unsigned int fontsize, 
-		const int x, 
-		const int y, 
-		const int length);
+  int GLText (const char *str, 
+	      const int fg, 
+	      const void *font, 
+	      const unsigned int fontsize, 
+	      const int x, 
+	      const int y, 
+	      const int length);
   int GLString (unsigned char *buff, int lg, int frame, int x, int y,
 		ThotFont font, int boxWidth, int bl, int hyphen,
 		int startABlock, int fg);
 
   /*Pictures*/
-  GLint GLDrawPixelsPoscript(GLsizei width, GLsizei height,
-			    GLint xorig, GLint yorig,
-			    GLenum format, GLenum type, 
-			    unsigned char *pixels, 
-			     GLfloat x, GLfloat y);
+  int GLDrawPixelsPoscript(int width, int height,
+			   int xorig, int yorig,
+			   GLenum format, GLenum type, 
+			   unsigned char *pixels, 
+			   GLfloat x, GLfloat y);
 
   void FinishPrintBox();
   void InitPrintBox ();

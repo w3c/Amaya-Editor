@@ -798,7 +798,7 @@ void ComputeBoundingBox (PtrBox box, int frame, int xmin, int xmax,
 {
 #ifdef _GL
   GLfloat    feedBuffer[FEEDBUFFERSIZE];
-  GLint      size;
+  int        size;
   ViewFrame  *pFrame;
  
   if (NotFeedBackMode)
@@ -853,7 +853,7 @@ void ComputeFilledBox (PtrBox box, int frame, int xmin, int xmax,
                        int ymin, int ymax, ThotBool show_bgimage)
 {
   GLfloat feedBuffer[4096];
-  GLint size;
+  int     size;
   
   if (NotFeedBackMode)
     {
@@ -898,8 +898,8 @@ void FinishPrintBox ()
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-GLint GLDrawPixelsPoscript (GLsizei width, GLsizei height,
-			    GLint xorig, GLint yorig,
+int GLDrawPixelsPoscript (int width, int height,
+			    int xorig, int yorig,
 			    GLenum format, GLenum type, 
 			    unsigned char *pixels, 
 			    GLfloat x, GLfloat y)
@@ -918,13 +918,13 @@ return 0;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-GLint GLText (const char *str,
-	      const int fg,
-	      const void *font,
-	      const unsigned int fontsize, 
-	      const int x, 
-	      const int y,
-	      const int length)
+int GLText (const char *str,
+	    const int fg,
+	    const void *font,
+	    const unsigned int fontsize, 
+	    const int x, 
+	    const int y,
+	    const int length)
 {
 return 0;
 }
