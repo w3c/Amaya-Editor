@@ -38,7 +38,7 @@ private:
   void OnDefault( wxCommandEvent& event );
   void OnButton( wxCommandEvent& event );
   void OnValueChanged( wxCommandEvent& event );
-
+  void SetColorTextChanged (int id);
   void OnColorPalette( wxCommandEvent& event );
   void OnColorChanged( wxCommandEvent& event );
   void OnColorTextChanged( wxCommandEvent& event );

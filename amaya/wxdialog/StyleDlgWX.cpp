@@ -102,7 +102,9 @@ BEGIN_EVENT_TABLE(StyleDlgWX, AmayaDialog)
   ----------------------------------------------------------------------*/
 static void SetComboValue (wxComboBox *combo, char *value)
 {
-  char *ptr1, *ptr2, c = EOS;
+  wxString current;
+  char    *ptr1, *ptr2, *buffer, c = EOS;
+  int      len, len1;
 
   if (value == NULL)
     return;
@@ -114,7 +116,21 @@ static void SetComboValue (wxComboBox *combo, char *value)
     ptr2++;
   c = *ptr2;
   *ptr2 = EOS;
-  combo->SetValue(TtaConvMessageToWX( ptr1 ));
+  combo->SetValue (TtaConvMessageToWX (ptr1));
+  // check if the value is set
+  current = combo->GetValue ();
+  len = current.Len();
+  len1 = strlen (ptr1);
+  buffer = NULL;
+  if (len > 0)
+    buffer = TtaStrdup ((const char*)current.mb_str(wxConvUTF8));
+  if (len != len1 || (len > 0 && strncmp (buffer, ptr1, len)))
+    {
+      // add first the value in the combo box
+      combo->Append (TtaConvMessageToWX (ptr1));
+      combo->SetValue (TtaConvMessageToWX (ptr1));
+    }
+    TtaFreeMemory (buffer);
   *ptr2 = c;
 }
 
@@ -139,17 +155,134 @@ static void SetChoiceValue (wxChoice *choice, char *value)
   *ptr2 = c;
 }
 
+/*----------------------------------------------------------------------
+  SetColorTextChanged gets the combobox values and converts the string
+  to a wxColour object
+  ----------------------------------------------------------------------*/
+void StyleDlgWX::SetColorTextChanged (int id)
+{
+  wxString            value;
+  unsigned short      red;
+  unsigned short      green;
+  unsigned short      blue;
+  char                buffer[512];
+  int textcolor_id = wxXmlResource::GetXRCID(_T("wxID_COMBO_TEXTCOLOR"));
+  int backcolor_id = wxXmlResource::GetXRCID(_T("wxID_COMBO_BACKCOLOR"));
+  int tcolor_id = wxXmlResource::GetXRCID(_T("wxID_COMBO_T_COLOR"));
+  int bcolor_id = wxXmlResource::GetXRCID(_T("wxID_COMBO_B_COLOR"));
+  int lcolor_id = wxXmlResource::GetXRCID(_T("wxID_COMBO_L_COLOR"));
+  int rcolor_id = wxXmlResource::GetXRCID(_T("wxID_COMBO_R_COLOR"));
+  int borderc_id = wxXmlResource::GetXRCID(_T("wxID_COMBO_BORDER_COLOR"));
+
+  if (id == textcolor_id)
+    {
+      value = XRCCTRL(*this, "wxID_COMBO_TEXTCOLOR", wxComboBox)->GetValue();
+      strcpy (buffer, (const char*)value.mb_str(wxConvUTF8) );
+      if (buffer[0] == EOS || !strcmp (buffer, "transparent"))
+        XRCCTRL(*this, "wxID_BUTTON_TEXTCOLOR", wxBitmapButton)->SetBackgroundColour(m_OffColour);
+      else
+        {
+          TtaGiveRGB (buffer, &red, &green, &blue);
+          wxColour col( red, green, blue );
+          XRCCTRL(*this, "wxID_BUTTON_TEXTCOLOR", wxBitmapButton)->SetBackgroundColour( col );
+        }
+    }
+  else if (id == backcolor_id)
+    {
+      value = XRCCTRL(*this, "wxID_COMBO_BACKCOLOR", wxComboBox)->GetValue();
+      strcpy (buffer, (const char*)value.mb_str(wxConvUTF8) );
+      if (buffer[0] == EOS || !strcmp (buffer, "transparent"))
+        XRCCTRL(*this, "wxID_BUTTON_BACKCOLOR", wxBitmapButton)->SetBackgroundColour(m_OffColour);
+      else
+        {
+          TtaGiveRGB (buffer, &red, &green, &blue);
+          wxColour col( red, green, blue );
+          XRCCTRL(*this, "wxID_BUTTON_BACKCOLOR", wxBitmapButton)->SetBackgroundColour( col );
+        }
+    }
+  else if (id == tcolor_id)
+    {
+      value = XRCCTRL(*this, "wxID_COMBO_T_COLOR", wxComboBox)->GetValue();
+      strcpy (buffer, (const char*)value.mb_str(wxConvUTF8) );
+      TtaGiveRGB (buffer, &red, &green, &blue);
+      if (buffer[0] == EOS || !strcmp (buffer, "transparent"))
+        XRCCTRL(*this, "wxID_BUTTON_T_COLOR", wxBitmapButton)->SetBackgroundColour(m_OffColour);
+      else
+        {
+          TtaGiveRGB (buffer, &red, &green, &blue);
+          wxColour col( red, green, blue );
+          XRCCTRL(*this, "wxID_BUTTON_T_COLOR", wxBitmapButton)->SetBackgroundColour( col );
+        }
+    }
+  else if (id == bcolor_id)
+    {
+      value = XRCCTRL(*this, "wxID_COMBO_B_COLOR", wxComboBox)->GetValue();
+      strcpy (buffer, (const char*)value.mb_str(wxConvUTF8) );
+      if (buffer[0] == EOS || !strcmp (buffer, "transparent"))
+        XRCCTRL(*this, "wxID_BUTTON_B_COLOR", wxBitmapButton)->SetBackgroundColour(m_OffColour);
+      else
+        {
+          TtaGiveRGB (buffer, &red, &green, &blue);
+          wxColour col( red, green, blue );
+          XRCCTRL(*this, "wxID_BUTTON_B_COLOR", wxBitmapButton)->SetBackgroundColour( col );
+        }
+    }
+  else if (id == lcolor_id)
+    {
+      value = XRCCTRL(*this, "wxID_COMBO_L_COLOR", wxComboBox)->GetValue();
+      strcpy (buffer, (const char*)value.mb_str(wxConvUTF8) );
+      if (buffer[0] == EOS || !strcmp (buffer, "transparent"))
+        XRCCTRL(*this, "wxID_BUTTON_L_COLOR", wxBitmapButton)->SetBackgroundColour(m_OffColour);
+      else
+        {
+          TtaGiveRGB (buffer, &red, &green, &blue);
+          wxColour col( red, green, blue );
+          XRCCTRL(*this, "wxID_BUTTON_L_COLOR", wxBitmapButton)->SetBackgroundColour( col );
+        }
+    }
+  else if (id == rcolor_id)
+    {
+      value = XRCCTRL(*this, "wxID_COMBO_R_COLOR", wxComboBox)->GetValue();
+      strcpy (buffer, (const char*)value.mb_str(wxConvUTF8) );
+      if (buffer[0] == EOS || !strcmp (buffer, "transparent"))
+        XRCCTRL(*this, "wxID_BUTTON_R_COLOR", wxBitmapButton)->SetBackgroundColour(m_OffColour);
+      else
+        {
+          TtaGiveRGB (buffer, &red, &green, &blue);
+          wxColour col( red, green, blue );
+          XRCCTRL(*this, "wxID_BUTTON_R_COLOR", wxBitmapButton)->SetBackgroundColour( col );
+        }
+    }
+  else if (id == borderc_id)
+    {
+      value = XRCCTRL(*this, "wxID_COMBO_BORDER_COLOR", wxComboBox)->GetValue();
+      strcpy (buffer, (const char*)value.mb_str(wxConvUTF8) );
+      if (buffer[0] == EOS || !strcmp (buffer, "transparent"))
+        XRCCTRL(*this, "wxID_BUTTON_BORDER_COLOR", wxBitmapButton)->SetBackgroundColour(m_OffColour);
+      else
+        {
+          TtaGiveRGB (buffer, &red, &green, &blue);
+          wxColour col( red, green, blue );
+          XRCCTRL(*this, "wxID_BUTTON_BORDER_COLOR", wxBitmapButton)->SetBackgroundColour( col );
+        }
+    }
+}
+
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void StyleDlgWX::SetValue (char *property, char *value)
 {
-  ThotBool notfound = FALSE;
+  wxCommandEvent  event;
+  ThotBool        notfound = FALSE;
 
   if (*property == 'b')
     {
       if (!strncmp (property, "background-color", 16))
-        SetComboValue (XRCCTRL(*this, "wxID_COMBO_BACKCOLOR", wxComboBox), value);
+        {
+          SetComboValue (XRCCTRL(*this, "wxID_COMBO_BACKCOLOR", wxComboBox), value);
+          SetColorTextChanged (XRCCTRL(*this, "wxID_COMBO_BACKCOLOR", wxComboBox)->GetId());
+        }
       else if (!strncmp (property, "background-image", 16))
         SetComboValue (XRCCTRL(*this, "wxID_BGIMAGE", wxComboBox), value);
       else if (!strncmp (property, "background-repeat", 17))
@@ -205,15 +338,30 @@ void StyleDlgWX::SetValue (char *property, char *value)
       else if (!strncmp (property, "border-width", 12))
         SetComboValue (XRCCTRL(*this, "wxID_COMBO_B", wxComboBox), value);
       else if (!strncmp (property, "border-top-color", 16))
-        SetComboValue (XRCCTRL(*this, "wxID_COMBO_T_COLOR", wxComboBox), value);
+        {
+          SetComboValue (XRCCTRL(*this, "wxID_COMBO_T_COLOR", wxComboBox), value);
+          SetColorTextChanged (XRCCTRL(*this, "wxID_COMBO_T_COLOR", wxComboBox)->GetId());
+        }
       else if (!strncmp (property, "border-right-color", 18))
-        SetComboValue (XRCCTRL(*this, "wxID_COMBO_R_COLOR", wxComboBox), value);
+        {
+          SetComboValue (XRCCTRL(*this, "wxID_COMBO_R_COLOR", wxComboBox), value);
+          SetColorTextChanged (XRCCTRL(*this, "wxID_COMBO_R_COLOR", wxComboBox)->GetId());
+        }
       else if (!strncmp (property, "border-bottom-color", 19))
-        SetComboValue (XRCCTRL(*this, "wxID_COMBO_B_COLOR", wxComboBox), value);
+        {
+          SetComboValue (XRCCTRL(*this, "wxID_COMBO_B_COLOR", wxComboBox), value);
+          SetColorTextChanged (XRCCTRL(*this, "wxID_COMBO_B_COLOR", wxComboBox)->GetId());
+        }
       else if (!strncmp (property, "border-left-color", 17))
-        SetComboValue (XRCCTRL(*this, "wxID_COMBO_L_COLOR", wxComboBox), value);
+        {
+          SetComboValue (XRCCTRL(*this, "wxID_COMBO_L_COLOR", wxComboBox), value);
+          SetColorTextChanged (XRCCTRL(*this, "wxID_COMBO_L_COLOR", wxComboBox)->GetId());
+        }
       else if (!strncmp (property, "border-color", 12))
-        SetComboValue (XRCCTRL(*this, "wxID_COMBO_BORDER_COLOR", wxComboBox), value);
+        {
+          SetComboValue (XRCCTRL(*this, "wxID_COMBO_BORDER_COLOR", wxComboBox), value);
+          SetColorTextChanged (XRCCTRL(*this, "wxID_COMBO_BORDER_COLOR", wxComboBox)->GetId());
+        }
       else if (!strncmp (property, "border-top-style", 16))
         SetChoiceValue (XRCCTRL(*this, "wxID_CHOICE_T_STYLE", wxChoice), value);
       else if (!strncmp (property, "border-right-style", 18))
@@ -234,7 +382,10 @@ void StyleDlgWX::SetValue (char *property, char *value)
       if (!strncmp (property, "clear", 5))
         SetChoiceValue (XRCCTRL(*this, "wxID_CHOICE_CLEAR", wxChoice), value);
       else if (!strncmp (property, "color", 5 ))
-        SetComboValue (XRCCTRL(*this, "wxID_COMBO_TEXTCOLOR", wxComboBox), value);
+        {
+          SetComboValue (XRCCTRL(*this, "wxID_COMBO_TEXTCOLOR", wxComboBox), value);
+          SetColorTextChanged (XRCCTRL(*this, "wxID_COMBO_TEXTCOLOR", wxComboBox)->GetId());
+        }
       else
         notfound = TRUE;
     }
@@ -627,7 +778,10 @@ static ThotBool CheckValue (char *buffer, ThotBool negative, ThotBool length,
       ret = FALSE;
       // remove initial spaces
       do
-        *ptr = *(++ptr);
+        {
+          *ptr = ptr[1];
+          ptr++;
+        }
       while (*ptr != EOS);
       ptr = buffer;
     }
@@ -637,7 +791,10 @@ static ThotBool CheckValue (char *buffer, ThotBool negative, ThotBool length,
       ret = FALSE;
       // set positive value
       do
-        *ptr = *(++ptr);
+        {
+          *ptr = ptr[1];
+          ptr++;
+        }
       while (*ptr != EOS);
       ptr = buffer;
     }
@@ -676,8 +833,11 @@ static ThotBool CheckValue (char *buffer, ThotBool negative, ThotBool length,
           ret = FALSE;
           pos = ptr;
           do
-            *pos = *(++pos);
-          while (*pos != EOS);
+            {
+              *ptr = ptr[1];
+              ptr++;
+            }
+           while (*pos != EOS);
         }
 
       if (*ptr == EOS)
@@ -1705,114 +1865,9 @@ void StyleDlgWX::OnColorChanged( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void StyleDlgWX::OnColorTextChanged( wxCommandEvent& event )
 {
-  // get the combobox values and convert the string to a wxColour object
-  wxString            value;
-  unsigned short      red;
-  unsigned short      green;
-  unsigned short      blue;
-  char                buffer[512];
   int                 id = event.GetId();
-  int textcolor_id = wxXmlResource::GetXRCID(_T("wxID_COMBO_TEXTCOLOR"));
-  int backcolor_id = wxXmlResource::GetXRCID(_T("wxID_COMBO_BACKCOLOR"));
-  int tcolor_id = wxXmlResource::GetXRCID(_T("wxID_COMBO_T_COLOR"));
-  int bcolor_id = wxXmlResource::GetXRCID(_T("wxID_COMBO_B_COLOR"));
-  int lcolor_id = wxXmlResource::GetXRCID(_T("wxID_COMBO_L_COLOR"));
-  int rcolor_id = wxXmlResource::GetXRCID(_T("wxID_COMBO_R_COLOR"));
-  int borderc_id = wxXmlResource::GetXRCID(_T("wxID_COMBO_BORDER_COLOR"));
 
-  if (id == textcolor_id)
-    {
-      value = XRCCTRL(*this, "wxID_COMBO_TEXTCOLOR", wxComboBox)->GetValue();
-      strcpy (buffer, (const char*)value.mb_str(wxConvUTF8) );
-      if (buffer[0] == EOS || !strcmp (buffer, "transparent"))
-        XRCCTRL(*this, "wxID_BUTTON_TEXTCOLOR", wxBitmapButton)->SetBackgroundColour(m_OffColour);
-      else
-        {
-          TtaGiveRGB (buffer, &red, &green, &blue);
-          wxColour col( red, green, blue );
-          XRCCTRL(*this, "wxID_BUTTON_TEXTCOLOR", wxBitmapButton)->SetBackgroundColour( col );
-        }
-    }
-  else if (id == backcolor_id)
-    {
-      value = XRCCTRL(*this, "wxID_COMBO_BACKCOLOR", wxComboBox)->GetValue();
-      strcpy (buffer, (const char*)value.mb_str(wxConvUTF8) );
-      if (buffer[0] == EOS || !strcmp (buffer, "transparent"))
-        XRCCTRL(*this, "wxID_BUTTON_BACKCOLOR", wxBitmapButton)->SetBackgroundColour(m_OffColour);
-      else
-        {
-          TtaGiveRGB (buffer, &red, &green, &blue);
-          wxColour col( red, green, blue );
-          XRCCTRL(*this, "wxID_BUTTON_BACKCOLOR", wxBitmapButton)->SetBackgroundColour( col );
-        }
-    }
-  else if (id == tcolor_id)
-    {
-      value = XRCCTRL(*this, "wxID_COMBO_T_COLOR", wxComboBox)->GetValue();
-      strcpy (buffer, (const char*)value.mb_str(wxConvUTF8) );
-      TtaGiveRGB (buffer, &red, &green, &blue);
-      if (buffer[0] == EOS || !strcmp (buffer, "transparent"))
-        XRCCTRL(*this, "wxID_BUTTON_T_COLOR", wxBitmapButton)->SetBackgroundColour(m_OffColour);
-      else
-        {
-          TtaGiveRGB (buffer, &red, &green, &blue);
-          wxColour col( red, green, blue );
-          XRCCTRL(*this, "wxID_BUTTON_T_COLOR", wxBitmapButton)->SetBackgroundColour( col );
-        }
-    }
-  else if (id == bcolor_id)
-    {
-      value = XRCCTRL(*this, "wxID_COMBO_B_COLOR", wxComboBox)->GetValue();
-      strcpy (buffer, (const char*)value.mb_str(wxConvUTF8) );
-      if (buffer[0] == EOS || !strcmp (buffer, "transparent"))
-        XRCCTRL(*this, "wxID_BUTTON_B_COLOR", wxBitmapButton)->SetBackgroundColour(m_OffColour);
-      else
-        {
-          TtaGiveRGB (buffer, &red, &green, &blue);
-          wxColour col( red, green, blue );
-          XRCCTRL(*this, "wxID_BUTTON_B_COLOR", wxBitmapButton)->SetBackgroundColour( col );
-        }
-    }
-  else if (id == lcolor_id)
-    {
-      value = XRCCTRL(*this, "wxID_COMBO_L_COLOR", wxComboBox)->GetValue();
-      strcpy (buffer, (const char*)value.mb_str(wxConvUTF8) );
-      if (buffer[0] == EOS || !strcmp (buffer, "transparent"))
-        XRCCTRL(*this, "wxID_BUTTON_L_COLOR", wxBitmapButton)->SetBackgroundColour(m_OffColour);
-      else
-        {
-          TtaGiveRGB (buffer, &red, &green, &blue);
-          wxColour col( red, green, blue );
-          XRCCTRL(*this, "wxID_BUTTON_L_COLOR", wxBitmapButton)->SetBackgroundColour( col );
-        }
-    }
-  else if (id == rcolor_id)
-    {
-      value = XRCCTRL(*this, "wxID_COMBO_R_COLOR", wxComboBox)->GetValue();
-      strcpy (buffer, (const char*)value.mb_str(wxConvUTF8) );
-      if (buffer[0] == EOS || !strcmp (buffer, "transparent"))
-        XRCCTRL(*this, "wxID_BUTTON_R_COLOR", wxBitmapButton)->SetBackgroundColour(m_OffColour);
-      else
-        {
-          TtaGiveRGB (buffer, &red, &green, &blue);
-          wxColour col( red, green, blue );
-          XRCCTRL(*this, "wxID_BUTTON_R_COLOR", wxBitmapButton)->SetBackgroundColour( col );
-        }
-    }
-  else if (id == borderc_id)
-    {
-      value = XRCCTRL(*this, "wxID_COMBO_BORDER_COLOR", wxComboBox)->GetValue();
-      strcpy (buffer, (const char*)value.mb_str(wxConvUTF8) );
-      if (buffer[0] == EOS || !strcmp (buffer, "transparent"))
-        XRCCTRL(*this, "wxID_BUTTON_BORDER_COLOR", wxBitmapButton)->SetBackgroundColour(m_OffColour);
-      else
-        {
-          TtaGiveRGB (buffer, &red, &green, &blue);
-          wxColour col( red, green, blue );
-          XRCCTRL(*this, "wxID_BUTTON_BORDER_COLOR", wxBitmapButton)->SetBackgroundColour( col );
-        }
-    }
-
+  SetColorTextChanged (id);
   event.Skip();
 }
 
