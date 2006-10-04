@@ -2968,7 +2968,7 @@ PtrPRule AttrPresRule (PtrAttribute pAttr, PtrElement pEl,
   NumAttrCase        *pCase;
   char                buffer[400];
   char               *attrValue, *ptr, *wordEnd;
-  unsigned int        len, word;
+  unsigned int        len;
   int                 i, j, k, attrNum;
   CHAR_T             *refVal;
   ThotBool            found, ok;
@@ -4035,18 +4035,18 @@ PtrPRule GetNextAttrPresRule (PtrPRule *pR, PtrSSchema pSS,
   ApplyVisibRuleAttr modifie le parametre vis selon la regle de   
   visibilite de pAttr.                                    
   ----------------------------------------------------------------------*/
-static void ApplyVisibRuleAttr (PtrElement pEl, PtrAttribute pAttr,
-                                PtrElement pElAttr, PtrDocument pDoc, int *vis,
-                                DocViewNumber viewNb, ThotBool *ok,
-                                ThotBool inheritRule)
+static ThotBool ApplyVisibRuleAttr (PtrElement pEl, PtrAttribute pAttr,
+                                    PtrElement pElAttr, PtrDocument pDoc,
+                                    int *vis, DocViewNumber viewNb,
+                                    ThotBool *ok, ThotBool inheritRule)
 {
   PtrPRule            pR, pRuleView1;
-  int                 view, valNum;
-  ThotBool            stop, useView1;
   PtrPSchema          pSchP;
   PtrHandlePSchema    pHd;
   PtrAttributePres    attrBlock;
   TypeUnit            unit;
+  int                 view, valNum;
+  ThotBool            stop, useView1, cssUndisplay = FALSE;
 
   /* on cherchera d'abord dans le schema de presentation principal de */
   /* l'attribut */
@@ -4056,7 +4056,7 @@ static void ApplyVisibRuleAttr (PtrElement pEl, PtrAttribute pAttr,
   view = AppliedView (pEl, pAttr, pDoc, viewNb);
   /* on examine le schema de presentation principal, puis les schemas */
   /* additionnels */
-  while (pSchP != NULL)
+  while (pSchP)
     {
       /* process all values of the attribute, in case of a text attribute
          with multiple values */
@@ -4090,7 +4090,7 @@ static void ApplyVisibRuleAttr (PtrElement pEl, PtrAttribute pAttr,
                             else
                               /* saute les regles de visibilite suivantes
                                  de la vue 1 */
-                              while (pR->PrNextPRule != NULL &&
+                              while (pR->PrNextPRule &&
                                      pR->PrNextPRule->PrType == PtVisibility &&
                                      pR->PrNextPRule->PrViewNum == 1)
                                 pR = pR->PrNextPRule;
@@ -4118,7 +4118,7 @@ static void ApplyVisibRuleAttr (PtrElement pEl, PtrAttribute pAttr,
                         }
                     }
 		
-                  if (useView1 && pRuleView1 != NULL)
+                  if (useView1 && pRuleView1)
                     /* on n'a pas trouve de regle specifique pour la vue view */
                     /* On utilise la regle de visibilite de la vue 1 si elle
                        existe */
@@ -4133,8 +4133,11 @@ static void ApplyVisibRuleAttr (PtrElement pEl, PtrAttribute pAttr,
                       CondPresentation (pR->PrCond, pEl, pAttr, pElAttr,
                                         pR, view, pAttr->AeAttrSSchema, pDoc))
                     if (CharRule (pR, pEl, viewNb, ok) == 'N')
-                      /* display: none */
-                      *vis = 0;
+                      {
+                        /* display: none */
+                        *vis = 0;
+                        cssUndisplay = TRUE;
+                      }
                 }
               pR = pR->PrNextPRule;
             }
@@ -4158,31 +4161,33 @@ static void ApplyVisibRuleAttr (PtrElement pEl, PtrAttribute pAttr,
       else
         pSchP = pHd->HdPSchema;
     }
+  return cssUndisplay;
 }
 
 /*----------------------------------------------------------------------
-  ComputeVisib determine la visibilite de l'element a creer en         
-  fonction de la regle de visibilite associee au type de     
-  l'element ou a ses attributs                               
-  pAbbReturnne la visibilite calculee dans vis                   
-  Met a jour vis, pRSpec, pRDef, TypeP et pSchPPage          
+  ComputeVisib computes the element visibility according to the
+  ElAccess, the PtVisibility and PtDisplay rules, 
+  The parameter vis returns the visibility value.            
+  Other pRSpec, pRDef, ignoreDescent, complete, pType, and
+  pSchPPage parameters are updated.
+  The function returns TRUE when visibility is set to 0 by a css rule.
   ----------------------------------------------------------------------*/
-static void ComputeVisib (PtrElement pEl, PtrDocument pDoc,
-                          DocViewNumber viewNb, int viewSch, PtrPRule *pRSpec,
-                          PtrPRule *pRDef, int *vis,
-                          ThotBool *ignoreDescent, ThotBool *complete,
-                          int *TypeP, PtrPSchema *pSchPPage)
+static ThotBool ComputeVisib (PtrElement pEl, PtrDocument pDoc,
+                              DocViewNumber viewNb, int viewSch,
+                              PtrPRule *pRSpec, PtrPRule *pRDef, int *vis,
+                              ThotBool *ignoreDescent, ThotBool *complete,
+                              int *pType, PtrPSchema *pSchPPage)
 {
-  int                 view, l;
   PtrPRule            pRule, pRuleV, pRuleDisplay;
-  PtrElement          pPrevious, pNext, pElAssociatedPage, pAsc, pElAttr,
-    pFirstAncest;
+  PtrElement          pPrevious, pNext, pElAssociatedPage, pAsc;
+  PtrElement          pElAttr, pFirstAncest;
   PtrAttribute        pAttr;
   PtrPSchema          pSP;
   PtrHandlePSchema    pHd;
   InheritAttrTable   *inheritTable;
-  ThotBool            ok, stop;
   TypeUnit            unit;
+  int                 view, l;
+  ThotBool            ok, stop, cssUndisplay = FALSE;
 
   /* si un element ascendant est rendu invisible, notre element a une */
   /* visibilite' nulle */
@@ -4190,7 +4195,7 @@ static void ComputeVisib (PtrElement pEl, PtrDocument pDoc,
   pAsc = pEl;
   while (pAsc)
     if (pAsc->ElAccess == Hidden)
-      return;
+      return cssUndisplay;
     else
       pAsc = pAsc->ElParent;
 
@@ -4226,13 +4231,16 @@ static void ComputeVisib (PtrElement pEl, PtrDocument pDoc,
                not to a pseudo belement generated by :before or :after */
             {
               if (CharRule (pRule, pEl, viewNb, &ok) == 'N')
-                /* display: none */
-                *vis = 0;
+                {
+                  /* display: none */
+                  *vis = 0;
+                  cssUndisplay = TRUE;
+                }
               else
                 ok = FALSE;
             }
           if (ok)
-            return;
+            return cssUndisplay;
         }
       pRule = pRule->PrNextPRule;
     }
@@ -4256,7 +4264,7 @@ static void ComputeVisib (PtrElement pEl, PtrDocument pDoc,
         {
           /* s'il y a une regle de visibilite pour cette vue, on */
           /* la prend */
-          if (pRuleV != NULL)
+          if (pRuleV)
             *vis = IntegerRule (pRuleV, pEl, viewNb, &ok, &unit, NULL, NULL);
           /* sinon, on prend celle de la vue 1 */
           else
@@ -4268,10 +4276,12 @@ static void ComputeVisib (PtrElement pEl, PtrDocument pDoc,
             /* this is a Display rule that applies to the element itslef,
                not to a pseudo belement generated by :before or :after */
             {
-              if (CharRule (pRuleDisplay, pEl, viewNb, &ok) == 'N')
-                if (ok)
+              if (CharRule (pRuleDisplay, pEl, viewNb, &ok) == 'N' && ok)
+                {
                   /* display: none */
                   *vis = 0;
+                  cssUndisplay = TRUE;
+                }
             }
           /* not necessary to continue? */
           //view = MAX_VIEW;
@@ -4287,7 +4297,8 @@ static void ComputeVisib (PtrElement pEl, PtrDocument pDoc,
       if (pSP->PsNInheritedAttrs->Num[pEl->ElTypeNumber - 1])
         {
           /* il y a heritage possible */
-          if ((inheritTable = pSP->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1]) == NULL)
+          inheritTable = pSP->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1];
+          if (inheritTable == NULL)
             {
               /* cette table n'existe pas on la genere */
               CreateInheritedAttrTable (pEl->ElTypeNumber,
@@ -4306,15 +4317,17 @@ static void ComputeVisib (PtrElement pEl, PtrDocument pDoc,
                                                    pEl->ElStructSchema,
                                                    &pElAttr)) != NULL)
                   /* cherche si l existe au dessus */
-                  ApplyVisibRuleAttr (pEl, pAttr, pElAttr, pDoc, vis, viewNb,
-                                      &ok, TRUE);
+                  cssUndisplay = ApplyVisibRuleAttr (pEl, pAttr, pElAttr,
+                                                     pDoc, vis, viewNb,
+                                                     &ok, TRUE);
               }
         }
       if (pEl->ElTypeNumber > MAX_BASIC_TYPE &&
           pSP->PsNInheritedAttrs->Num[AnyType])
         {
           /* il y a heritage possible */
-          if ((inheritTable = pSP->PsInheritedAttr->ElInherit[AnyType]) == NULL)
+          inheritTable = pSP->PsInheritedAttr->ElInherit[AnyType];
+          if (inheritTable == NULL)
             {
               /* cette table n'existe pas on la genere */
               CreateInheritedAttrTable (AnyType+1, pEl->ElStructSchema,
@@ -4333,8 +4346,9 @@ static void ComputeVisib (PtrElement pEl, PtrDocument pDoc,
                                                    pEl->ElStructSchema,
                                                    &pElAttr)) != NULL)
                   /* cherche si l existe au dessus */
-                  ApplyVisibRuleAttr (pEl, pAttr, pElAttr, pDoc, vis, viewNb,
-                                      &ok, TRUE);
+                  cssUndisplay = ApplyVisibRuleAttr (pEl, pAttr, pElAttr,
+                                                     pDoc, vis, viewNb,
+                                                     &ok, TRUE);
               }
         }
 
@@ -4358,7 +4372,8 @@ static void ComputeVisib (PtrElement pEl, PtrDocument pDoc,
   while (pAttr != NULL)
     /* boucle sur les attributs de l'element */
     {
-      ApplyVisibRuleAttr (pEl, pAttr, pEl, pDoc, vis, viewNb, &ok, FALSE);
+      cssUndisplay = ApplyVisibRuleAttr (pEl, pAttr, pEl, pDoc, vis,
+                                         viewNb, &ok, FALSE);
       pAttr = pAttr->AeNext;	/* attribut suivant de l'element */
     }
 
@@ -4385,8 +4400,8 @@ static void ComputeVisib (PtrElement pEl, PtrDocument pDoc,
         /* cherchant les regles Page ou Column des elements englobants */
         /* ou precedants */
         {
-          *TypeP = GetPageBoxType (pEl, pDoc, viewSch, pSchPPage);
-          if (*TypeP == 0)
+          *pType = GetPageBoxType (pEl, pDoc, viewSch, pSchPPage);
+          if (*pType == 0)
             /* pas de page definie, on ne cree rien */
             *vis = 0;
           else if (*vis <= 0)
@@ -4464,9 +4479,9 @@ static void ComputeVisib (PtrElement pEl, PtrDocument pDoc,
             {
               /* cherche le type de boite page a creer en cherchant */
               /* les regles Page des elements englobants */
-              *TypeP = GetPageBoxType (pElAssociatedPage, pDoc, viewSch,
+              *pType = GetPageBoxType (pElAssociatedPage, pDoc, viewSch,
                                        pSchPPage);
-              if (*TypeP == 0)
+              if (*pType == 0)
                 {
                   /* pas de page definie, on ne cree rien */
                   *ignoreDescent = TRUE;
@@ -4475,6 +4490,7 @@ static void ComputeVisib (PtrElement pEl, PtrDocument pDoc,
             }
         }
     }
+  return cssUndisplay;
 }
 
 /*----------------------------------------------------------------------
@@ -5472,14 +5488,14 @@ PtrAbstractBox AbsBoxesCreate (PtrElement pEl, PtrDocument pDoc,
   ThotBool            stop, ok, crAbsBox, truncate;
   ThotBool            notBreakable, ignoreDescent;
   ThotBool            Creation, ApplyRules;
-  ThotBool            pFirst, pLast;
+  ThotBool            pFirst, pLast, cssUndisplay;
 
   pAbReturn = NULL;
   lqueue = 0;
   pqueue = 0;
   /* Abstract boxes of the element are not created */
   *complete = FALSE;
-  if (pEl != NULL && pEl->ElStructSchema != NULL)
+  if (pEl && pEl->ElStructSchema)
     {
       viewSch = AppliedView (pEl, NULL, pDoc, viewNb);
       /* pointeur sur le pave qui sera cree' pour l'element */
@@ -5491,7 +5507,7 @@ PtrAbstractBox AbsBoxesCreate (PtrElement pEl, PtrDocument pDoc,
       /* pas tous crees */
       Creation = FALSE;	/* a priori rien a creer */
       pAb = pEl->ElAbstractBox[viewNb - 1];
-      if (pAb != NULL && !pAb->AbDead)
+      if (pAb && !pAb->AbDead)
         {
           /* le pave existe deja pour cette vue */
           Creation = FALSE;
@@ -5557,8 +5573,9 @@ PtrAbstractBox AbsBoxesCreate (PtrElement pEl, PtrDocument pDoc,
           pqueue = 0;
 	    
           /* determine la visibilite du pave a creer */
-          ComputeVisib (pEl, pDoc, viewNb, viewSch, &pRSpec, &pRDef, &vis,
-                        &ignoreDescent, complete, &typePres, &pSchPPage);
+          cssUndisplay = ComputeVisib (pEl, pDoc, viewNb, viewSch, &pRSpec,
+                                       &pRDef, &vis, &ignoreDescent,
+                                       complete, &typePres, &pSchPPage);
 	    
           /* si l'element est visible dans cette vue ou si c'est la racine,*/
           /* on cree son pave, si ce n'est deja fait */
@@ -5627,6 +5644,28 @@ PtrAbstractBox AbsBoxesCreate (PtrElement pEl, PtrDocument pDoc,
                         /* pave feuille, on cree tout */
                         *complete = TRUE;
                     }
+                }
+            }
+          else if (cssUndisplay)
+            {
+              // set inline the enclosing abstract box
+              pElParent = pEl->ElParent;
+              while (pElParent && pElParent->ElStructSchema &&
+                     pElParent->ElStructSchema->SsName &&
+                     !strcmp (pElParent->ElStructSchema->SsName, "Template"))
+                {
+                  // Skip template elements
+                  pAbParent = pElParent->ElAbstractBox[viewNb - 1];
+                  if (pAbParent)
+                    pAbParent->AbBuildAll = TRUE;
+                  pElParent = pElParent->ElParent;
+                }
+              if (pElParent && pElParent->ElAbstractBox[viewNb - 1])
+                {
+                  pAbParent = pElParent->ElAbstractBox[viewNb - 1];
+                  pAbParent->AbInLine = TRUE;
+                  pAbParent->AbBuildAll = TRUE;
+                  pAbParent->AbChange = TRUE;
                 }
             }
         }
@@ -5831,7 +5870,7 @@ PtrAbstractBox AbsBoxesCreate (PtrElement pEl, PtrDocument pDoc,
                         pElParent = pElParent->ElParent;
                     while (!stop);
                     /* marque ce pave coupe' */
-                    if (pElParent != NULL)
+                    if (pElParent)
                       pAbPres = TruncateOrCompleteAbsBox (pElParent->ElAbstractBox[viewNb - 1], TRUE, (ThotBool)(!forward), pDoc);
                   }
                 else
@@ -5912,7 +5951,7 @@ PtrAbstractBox AbsBoxesCreate (PtrElement pEl, PtrDocument pDoc,
 		       
                     pElParent = pElChild->ElParent;
                     if (forward)
-                      if (pElChild->ElNext != NULL)
+                      if (pElChild->ElNext)
                         /* passe au fils suivant */
                         pElChild = pElChild->ElNext;
                       else
@@ -5981,9 +6020,9 @@ PtrAbstractBox AbsBoxesCreate (PtrElement pEl, PtrDocument pDoc,
                       {
                         stop = FALSE;
                         do
-                          if (pElParent != NULL)
+                          if (pElParent)
                             {
-                              if (pElParent->ElAbstractBox[viewNb - 1] != NULL)
+                              if (pElParent->ElAbstractBox[viewNb - 1])
                                 stop = TRUE;
                               else if ((forward && pElParent->ElNext == NULL)
                                        || (!forward
@@ -5992,8 +6031,8 @@ PtrAbstractBox AbsBoxesCreate (PtrElement pEl, PtrDocument pDoc,
                               else
                                 pElParent = NULL;
                             }
-                        while (!stop && pElParent != NULL);
-                        if (pElParent != NULL)
+                        while (!stop && pElParent);
+                        if (pElParent)
                           {
                             pAb = pElParent->ElAbstractBox[viewNb - 1];
                             /* saute les paves de presentation crees par */
@@ -6076,7 +6115,7 @@ PtrAbstractBox AbsBoxesCreate (PtrElement pEl, PtrDocument pDoc,
               /* regle de positionnement des axes de reference n'a ete  */
               /* appliquee */
               if (Creation)
-                if (pNewAbbox != NULL)
+                if (pNewAbbox)
                   {
                     if (pNewAbbox->AbVertRef.PosAbRef == NULL)
                       pNewAbbox->AbVertRef.PosAbRef = pNewAbbox->AbFirstEnclosed;
@@ -6144,7 +6183,7 @@ PtrAbstractBox AbsBoxesCreate (PtrElement pEl, PtrDocument pDoc,
                         Delay (pRule, pSPres, pAb, pAttr, pAb);
                   }
               }
-            while (pRule != NULL);
+            while (pRule);
           /* applique toutes les regles en retard des descendants */
           if (descent)
             {

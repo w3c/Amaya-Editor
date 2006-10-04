@@ -3296,7 +3296,7 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
           switch (pPRule->PrPresFunction)
             {
             case FnLine:
-              if (pAb->AbLeafType == LtCompound)
+              if (pAb->AbLeafType == LtCompound && pAb->AbDisplay != 'N')
                 /* si la regle de mise en lignes est definie pour la */
                 /* vue principale, elle s'applique a toutes les vues, */
                 /* sinon, elle ne s'applique qu'a la vue pour laquelle */
@@ -4171,11 +4171,23 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
               if (pAb->AbDisplay == 'N')
                 /* display: none */
                 {
-                  if (pAb->AbElement->ElParent)
-                    /* the root element must be visible */
+                  pParent = pAb->AbEnclosing;
+                  while (pParent && pParent->AbElement &&
+                         pParent->AbElement->ElStructSchema &&
+                         pParent->AbElement->ElStructSchema->SsName &&
+                         !strcmp (pParent->AbElement->ElStructSchema->SsName, "Template"))
                     {
+                      // Skip template elements
+                      pParent->AbBuildAll = TRUE;
+                      pParent = pParent->AbEnclosing;
+                    }
+                  if (pParent)
+                    {
+                      pParent->AbInLine = TRUE;
+                      pParent->AbBuildAll = TRUE;
                       pAb->AbVisibility = 0;
                       pAb->AbDead = TRUE;
+                      pAb->AbInLine = FALSE;
                     }
                 }
               else if (pAb->AbDisplay == 'I')
