@@ -22,7 +22,8 @@ extern void NewInitialSequence ( PtrDocument pDoc );
 extern void ShowBox ( int frame,
                       PtrBox pBox,
                       int position,
-                      int percent );
+                      int percent,
+                      ThotBool updateScroll );
 extern void ExtendSelection ( PtrElement pEl,
                               int rank,
                               ThotBool fixed,
@@ -189,7 +190,8 @@ extern void NewInitialSequence ( PtrDocument pDoc );
 extern void ShowBox ( int frame,
                         PtrBox pBox,
                         int position,
-                        int percent );
+                        int percent,
+                        ThotBool updateScroll );
 extern void ExtendSelection ( PtrElement pEl,
                                 int rank,
                                 ThotBool fixed,

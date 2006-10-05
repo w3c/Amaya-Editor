@@ -576,8 +576,10 @@ void ComputeDisplayedChars (int frame, int *Xpos, int *Ypos, int *width, int *he
   2 for the bottom of the window
   When the postion = 0, percent give the percent from the top of the
   window.
+  scrollUpdate is TRUE when scrollbars must be recomputed
   ----------------------------------------------------------------------*/
-void ShowBox (int frame, PtrBox pBox, int position, int percent)
+void ShowBox (int frame, PtrBox pBox, int position, int percent,
+              ThotBool scrollUpdate)
 {
   PtrAbstractBox      pBlock;
   PtrBox              pBox1;
@@ -652,7 +654,8 @@ void ShowBox (int frame, PtrBox pBox, int position, int percent)
     {
       RedrawFrameBottom (frame, dy, NULL);
       /* Mise a jour des ascenseurs */
-      UpdateScrollbars (frame);
+      if (scrollUpdate)
+        UpdateScrollbars (frame);
     }
 }
 

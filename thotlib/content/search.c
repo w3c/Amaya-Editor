@@ -820,7 +820,7 @@ void ScrollPageToTop (PtrElement pPage, int view, PtrDocument pDoc)
 	    {
 	      /* fenetre correspondant a la vue */
 	      frame = pDoc->DocViewFrame[view - 1];
-	      ShowBox (frame, pAbGraph->AbBox, 0, 0);
+	      ShowBox (frame, pAbGraph->AbBox, 0, 0, TRUE);
 	    }
 	}
     }

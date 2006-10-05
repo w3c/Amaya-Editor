@@ -54,7 +54,8 @@ void NewInitialSequence (PtrDocument pDoc)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void ShowBox (int frame, PtrBox pBox, int position, int percent)
+void ShowBox (int frame, PtrBox pBox, int position, int percent,
+              ThotBool updateScroll)
 {
 }
 

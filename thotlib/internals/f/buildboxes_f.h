@@ -70,7 +70,8 @@ extern ThotBool ComputeUpdates ( PtrAbstractBox pAb,
                                  int frame,
                                  ThotBool *computeBBoxes );
 extern void ComputeEnclosing ( int frame );
-extern void RebuildConcreteImage ( int frame );
+extern void RebuildConcreteImage ( int frame,
+                                   ThotBool scrollUpdate );
 extern ThotBool IsDead ( PtrAbstractBox pAb );
 extern void ClearConcreteImage ( int frame );
 extern void CheckScrollingWidthHeight ( int frame );
@@ -144,7 +145,8 @@ extern ThotBool ComputeUpdates ( PtrAbstractBox pAb,
                                    int frame,
                                    ThotBool *computeBBoxes );
 extern void ComputeEnclosing ( int frame );
-extern void RebuildConcreteImage ( int frame );
+extern void RebuildConcreteImage ( int frame,
+                                     ThotBool scrollUpdate );
 extern ThotBool IsDead ( PtrAbstractBox pAb );
 extern void ClearConcreteImage ( int frame );
 extern void CheckScrollingWidthHeight ( int frame );

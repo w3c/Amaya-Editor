@@ -560,7 +560,7 @@ void WIN_ChangeViewSize (int frame, int width, int height, int top_delta,
 
 #ifndef _GL
   /* need to recompute the content of the window */
-  RebuildConcreteImage (frame);
+  RebuildConcreteImage (frame, TRUE);
 #else /*_GL*/
   if (GL_prepare (frame))
     {
@@ -570,7 +570,7 @@ void WIN_ChangeViewSize (int frame, int width, int height, int top_delta,
       GL_ActivateDrawing (frame);
       /* redisplay the whole window */
       DefClip (frame, -1, -1, -1, -1);
-      RebuildConcreteImage (frame);
+      RebuildConcreteImage (frame, TRUE);
       GL_Swap (frame);
       /* recompute the scroll bars */
       /*UpdateScrollbars (frame); Done in rebuildconcreteimage, no ?*/
@@ -653,7 +653,7 @@ void FrameRedraw (int frame, unsigned int width, unsigned int height)
           FrameTable[frame].FrWidth = (int) width;
           FrameTable[frame].FrHeight = (int) height;
           /* Il faut reevaluer le contenu de la fenetre */
-          RebuildConcreteImage (frame);
+          RebuildConcreteImage (frame, FALSE);
           /* recompute the scroll bars */
           UpdateScrollbars (frame);
           notifyDoc.event = TteViewResize;

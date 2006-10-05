@@ -27,7 +27,8 @@ extern void ComputeDisplayedChars ( int frame,
 extern void ShowBox ( int frame,
                       PtrBox pBox,
                       int position,
-                      int percent );
+                      int percent,
+                      ThotBool scrollUpdate );
 extern ThotBool IsScrolled ( int frame,
                              int selection );
 extern void ShowSelectedBox ( int frame,
@@ -58,7 +59,8 @@ extern void ComputeDisplayedChars ( int frame,
 extern void ShowBox ( int frame,
                         PtrBox pBox,
                         int position,
-                        int percent );
+                        int percent,
+                        ThotBool scrollUpdate );
 extern ThotBool IsScrolled ( int frame,
                                int selection );
 extern void ShowSelectedBox ( int frame,

@@ -1400,7 +1400,7 @@ void JumpIntoView (int frame, int distance)
                 }
               if (pAb)
                 {
-                  ShowBox (frame, pAb->AbBox, position, 0);
+                  ShowBox (frame, pAb->AbBox, position, 0, TRUE);
                   /* update the selection */
                   if (pDoc == SelectedDocument)
                     ShowSelection (SelectedDocument->DocViewRootAb[view], FALSE);

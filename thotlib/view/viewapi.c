@@ -529,7 +529,7 @@ void TtaShowElement (Document document, View view, Element element, int position
           /* and CheckAbsBox will rebuild it at the beginning of the element */
           CheckAbsBox (pEl, aView, LoadedDocument[document - 1], FALSE, TRUE);
           if (pEl->ElAbstractBox[aView - 1] != NULL)
-            ShowBox (frame, pEl->ElAbstractBox[aView - 1]->AbBox, 0, position);
+            ShowBox (frame, pEl->ElAbstractBox[aView - 1]->AbBox, 0, position, TRUE);
         }
     }
 }

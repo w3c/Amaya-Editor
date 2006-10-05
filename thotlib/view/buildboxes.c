@@ -4688,8 +4688,9 @@ void ComputeEnclosing (int frame)
   RebuildConcreteImage reevaluates the document view after a change
   in the frame (size, zoom).
   Redisplay within the frame supposed clean.
+  scrollUpdate is TRUE when scrollbars must be recomputed
   ----------------------------------------------------------------------*/
-void RebuildConcreteImage (int frame)
+void RebuildConcreteImage (int frame, ThotBool scrollUpdate)
 {
   ViewFrame          *pFrame;
   PtrAbstractBox      pAb, pVisibleAb;
@@ -4771,7 +4772,7 @@ void RebuildConcreteImage (int frame)
 
           /* redisplay the window */
           if (pVisibleAb)
-            ShowBox (frame, pVisibleAb->AbBox, 0, position);
+            ShowBox (frame, pVisibleAb->AbBox, 0, position, FALSE);
           else
             RedrawFrameBottom (frame, 0, NULL);
           /* if necessary show the selection */
@@ -4779,7 +4780,8 @@ void RebuildConcreteImage (int frame)
 	   
           /* recompute scrolls */
           CheckScrollingWidthHeight (frame);
-          UpdateScrollbars (frame);
+          if (scrollUpdate)
+            UpdateScrollbars (frame);
         }
     }
 }
