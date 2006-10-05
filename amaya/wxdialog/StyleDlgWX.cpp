@@ -116,8 +116,9 @@ static void SetComboValue (wxComboBox *combo, char *value)
     ptr2++;
   c = *ptr2;
   *ptr2 = EOS;
-  combo->SetValue (TtaConvMessageToWX (ptr1));
-  // check if the value is set
+  combo->SetStringSelection (TtaConvMessageToWX (ptr1));
+//  combo->SetValue (TtaConvMessageToWX (ptr1));
+  // check if the value is already in the combo list
   current = combo->GetValue ();
   len = current.Len();
   len1 = strlen (ptr1);
@@ -274,6 +275,7 @@ void StyleDlgWX::SetColorTextChanged (int id)
 void StyleDlgWX::SetValue (char *property, char *value)
 {
   wxCommandEvent  event;
+  int             id;
   ThotBool        notfound = FALSE;
 
   if (*property == 'b')
@@ -281,7 +283,8 @@ void StyleDlgWX::SetValue (char *property, char *value)
       if (!strncmp (property, "background-color", 16))
         {
           SetComboValue (XRCCTRL(*this, "wxID_COMBO_BACKCOLOR", wxComboBox), value);
-          SetColorTextChanged (XRCCTRL(*this, "wxID_COMBO_BACKCOLOR", wxComboBox)->GetId());
+          id = wxXmlResource::GetXRCID(_T("wxID_COMBO_BACKCOLOR"));
+          SetColorTextChanged (id);
         }
       else if (!strncmp (property, "background-image", 16))
         SetComboValue (XRCCTRL(*this, "wxID_BGIMAGE", wxComboBox), value);
@@ -339,28 +342,33 @@ void StyleDlgWX::SetValue (char *property, char *value)
         SetComboValue (XRCCTRL(*this, "wxID_COMBO_B", wxComboBox), value);
       else if (!strncmp (property, "border-top-color", 16))
         {
+          id = wxXmlResource::GetXRCID(_T("wxID_COMBO_T_COLOR"));
           SetComboValue (XRCCTRL(*this, "wxID_COMBO_T_COLOR", wxComboBox), value);
-          SetColorTextChanged (XRCCTRL(*this, "wxID_COMBO_T_COLOR", wxComboBox)->GetId());
+          SetColorTextChanged (id);
         }
       else if (!strncmp (property, "border-right-color", 18))
         {
+          id = wxXmlResource::GetXRCID(_T("wxID_COMBO_R_COLOR"));
           SetComboValue (XRCCTRL(*this, "wxID_COMBO_R_COLOR", wxComboBox), value);
-          SetColorTextChanged (XRCCTRL(*this, "wxID_COMBO_R_COLOR", wxComboBox)->GetId());
+          SetColorTextChanged (id);
         }
       else if (!strncmp (property, "border-bottom-color", 19))
         {
+          id = wxXmlResource::GetXRCID(_T("wxID_COMBO_B_COLOR"));
           SetComboValue (XRCCTRL(*this, "wxID_COMBO_B_COLOR", wxComboBox), value);
-          SetColorTextChanged (XRCCTRL(*this, "wxID_COMBO_B_COLOR", wxComboBox)->GetId());
+          SetColorTextChanged (id);
         }
       else if (!strncmp (property, "border-left-color", 17))
         {
+          id = wxXmlResource::GetXRCID(_T("wxID_COMBO_L_COLOR"));
           SetComboValue (XRCCTRL(*this, "wxID_COMBO_L_COLOR", wxComboBox), value);
-          SetColorTextChanged (XRCCTRL(*this, "wxID_COMBO_L_COLOR", wxComboBox)->GetId());
+          SetColorTextChanged (id);
         }
       else if (!strncmp (property, "border-color", 12))
         {
+          id = wxXmlResource::GetXRCID(_T("wxID_COMBO_BORDER_COLOR"));
           SetComboValue (XRCCTRL(*this, "wxID_COMBO_BORDER_COLOR", wxComboBox), value);
-          SetColorTextChanged (XRCCTRL(*this, "wxID_COMBO_BORDER_COLOR", wxComboBox)->GetId());
+          SetColorTextChanged (id);
         }
       else if (!strncmp (property, "border-top-style", 16))
         SetChoiceValue (XRCCTRL(*this, "wxID_CHOICE_T_STYLE", wxChoice), value);
@@ -383,8 +391,9 @@ void StyleDlgWX::SetValue (char *property, char *value)
         SetChoiceValue (XRCCTRL(*this, "wxID_CHOICE_CLEAR", wxChoice), value);
       else if (!strncmp (property, "color", 5 ))
         {
+          id = wxXmlResource::GetXRCID(_T("wxID_COMBO_TEXTCOLOR"));
           SetComboValue (XRCCTRL(*this, "wxID_COMBO_TEXTCOLOR", wxComboBox), value);
-          SetColorTextChanged (XRCCTRL(*this, "wxID_COMBO_TEXTCOLOR", wxComboBox)->GetId());
+          SetColorTextChanged (id);
         }
       else
         notfound = TRUE;
@@ -1020,9 +1029,6 @@ void StyleDlgWX::OnValueChanged( wxCommandEvent& event )
             {
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_COMBO_BTOP", wxComboBox)->SetValue(value);
-            }
-          else
-            {
               // initialize other values
               svalue = XRCCTRL(*this, "wxID_CHOICE_T_STYLE", wxChoice)->GetStringSelection();
               if (svalue.Len() == 0)
@@ -1050,9 +1056,6 @@ void StyleDlgWX::OnValueChanged( wxCommandEvent& event )
             {
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_COMBO_BBOTTOM", wxComboBox)->SetValue(value);
-            }
-          else
-            {
               svalue = XRCCTRL(*this, "wxID_CHOICE_B_STYLE", wxChoice)->GetStringSelection();
               if (svalue.Len() == 0)
                 XRCCTRL(*this, "wxID_CHOICE_B_STYLE", wxChoice)->SetStringSelection(TtaConvMessageToWX( "solid" ));
@@ -1078,9 +1081,6 @@ void StyleDlgWX::OnValueChanged( wxCommandEvent& event )
             {
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_COMBO_BLEFT", wxComboBox)->SetValue(value);
-            }
-          else
-            {
               // initialize other values
               svalue = XRCCTRL(*this, "wxID_CHOICE_L_STYLE", wxChoice)->GetStringSelection();
               if (svalue.Len() == 0)
@@ -1107,9 +1107,6 @@ void StyleDlgWX::OnValueChanged( wxCommandEvent& event )
             {
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_COMBO_BRIGHT", wxComboBox)->SetValue(value);
-            }
-          else
-            {
               // initialize other values
               svalue = XRCCTRL(*this, "wxID_CHOICE_R_STYLE", wxChoice)->GetStringSelection();
               if (svalue.Len() == 0)
@@ -1136,9 +1133,6 @@ void StyleDlgWX::OnValueChanged( wxCommandEvent& event )
             {
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_COMBO_B", wxComboBox)->SetValue(value);
-            }
-          else
-            {
               // initialize other values
               svalue = XRCCTRL(*this, "wxID_CHOICE_BORDER_STYLE", wxChoice)->GetStringSelection();
               if (svalue.Len() == 0)

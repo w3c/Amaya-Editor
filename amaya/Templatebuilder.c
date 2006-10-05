@@ -147,7 +147,7 @@ void TemplateElementComplete (ParserData *context, Element el, int *error)
 {
   Document		     doc;
   ElementType	     elType, childType;
-  Element		       last, child, folder, next, prev;
+  Element		     child, folder, next, prev;
 
   doc = context->doc;
   elType = TtaGetElementType (el);
