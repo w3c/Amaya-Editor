@@ -5285,8 +5285,8 @@ static char *ParseCSSPageBreakAfter (Element element, PSchema tsch,
     {
       if (DoDialog)
         DisplayStyleValue ("page-break-after", start_value, cssRule);
-      else if (DoApply)
-        /* TtaSetStylePresentation (PRPageAfter, element, tsch, ctxt, page) */;
+      //else if (DoApply)
+        // TtaSetStylePresentation (PRPageAfter, element, tsch, ctxt, page);
     }
   return (cssRule);
 }
@@ -5328,8 +5328,8 @@ static char *ParseCSSPageBreakInside (Element element, PSchema tsch,
     {
       if (DoDialog)
         DisplayStyleValue ("page-break-inside", start_value, cssRule);
-      else if (DoApply)
-        /*TtaSetStylePresentation (PRPageInside, element, tsch, ctxt, page)*/;
+      //else if (DoApply)
+        //TtaSetStylePresentation (PRPageInside, element, tsch, ctxt, page);
     }
   return (cssRule);
 }
