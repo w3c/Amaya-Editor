@@ -181,7 +181,7 @@ void AmayaXHTMLPanel::SendDataToPanel( AmayaParams& p )
   m_Bitmap_EmphOn  = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON_16X16, "XHTML_I_sel.png" ), wxBITMAP_TYPE_PNG);
   m_Bitmap_CodeOn  = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON_16X16, "XHTML_T_sel.png" ), wxBITMAP_TYPE_PNG);
   m_Bitmap_InsOn  = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON_16X16, "XHTML_ins_sel.png" ), wxBITMAP_TYPE_PNG);
-  m_Bitmap_DelOn  = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON_16X16, "XHTML_sup_sel.png" ), wxBITMAP_TYPE_PNG);
+  m_Bitmap_DelOn  = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON_16X16, "XHTML_del_sel.png" ), wxBITMAP_TYPE_PNG);
   m_Bitmap_SubOn  = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON_16X16, "XHTML_sub_sel.png" ), wxBITMAP_TYPE_PNG);
   m_Bitmap_SupOn  = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON_16X16, "XHTML_sup_sel.png" ), wxBITMAP_TYPE_PNG);
 
@@ -189,7 +189,7 @@ void AmayaXHTMLPanel::SendDataToPanel( AmayaParams& p )
   m_Bitmap_EmphOff  = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON_16X16, "XHTML_I.png" ), wxBITMAP_TYPE_PNG);
   m_Bitmap_CodeOff  = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON_16X16, "XHTML_T.png" ), wxBITMAP_TYPE_PNG);
   m_Bitmap_InsOff  = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON_16X16, "XHTML_ins.png" ), wxBITMAP_TYPE_PNG);
-  m_Bitmap_DelOff  = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON_16X16, "XHTML_sup.png" ), wxBITMAP_TYPE_PNG);
+  m_Bitmap_DelOff  = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON_16X16, "XHTML_del.png" ), wxBITMAP_TYPE_PNG);
   m_Bitmap_SubOff  = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON_16X16, "XHTML_sub.png" ), wxBITMAP_TYPE_PNG);
   m_Bitmap_SupOff  = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON_16X16, "XHTML_sup.png" ), wxBITMAP_TYPE_PNG);
 
