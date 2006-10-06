@@ -1599,7 +1599,7 @@ PtrBox DisplayAllBoxes (int frame, PtrFlow pFlow,
     }
 
   selected = pAb->AbSelected;
-  if (pAb->AbVis != 'H' && (pBox->BxDisplay || selected))
+  if (pAb->AbVis != 'H' && (pBox->BxDisplay || selected) && pFlow == NULL)
     DrawFilledBox (pBox, pAb, frame, pFlow, xmin, xmax, ymin, ymax,
                    selected, TRUE, TRUE, TRUE, show_bgimage);
   while (plane != nextplane)
@@ -1614,11 +1614,11 @@ PtrBox DisplayAllBoxes (int frame, PtrFlow pFlow,
       while (pAb)
         {
           if (pAb->AbDepth == plane &&
-                   /* don't display the document element */
-                   pAb != pFrame->FrAbstractBox &&
-                   pAb->AbBox &&
-                   /* skip extra flow child */
-                   (pAb == root || !IsFlow (pAb->AbBox, frame)))
+              /* don't display the document element */
+              pAb != pFrame->FrAbstractBox &&
+              pAb->AbBox &&
+              /* skip extra flow child */
+              (pAb == root || !IsFlow (pAb->AbBox, frame)))
             {
               /* box in the current plane */
               pBox = pAb->AbBox;
@@ -1919,11 +1919,12 @@ PtrBox DisplayAllBoxes (int frame, PtrFlow pFlow,
                     }
                   if (pAb->AbSelected)
                     selected = FALSE;
-                  pAb = pAb->AbEnclosing;
                   if (pAb == root)
                     /* all boxes are now managed: stop the loop */
                     pAb = NULL;
-                  else if (pAb)
+                  else
+                    pAb = pAb->AbEnclosing;
+                  if (pAb)
                     {
 #ifdef _GL
                       if (formatted && pAb->AbDepth == plane)
