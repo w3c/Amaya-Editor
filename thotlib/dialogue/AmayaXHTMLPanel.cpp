@@ -23,6 +23,7 @@
 #include "appdialogue_wx_f.h"
 #include "panel.h"
 #include "displayview_f.h"
+#include "registry_wx.h"
 
 #define THOT_EXPORT extern
 #include "frame_tv.h"
@@ -175,38 +176,57 @@ void AmayaXHTMLPanel::SendDataToPanel( AmayaParams& p )
 {
   bool * p_checked_array = (bool *)p.param2;
 
+  // load bitmaps
+  m_Bitmap_StrongOn  = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON_16X16, "XHTML_B_sel.png" ), wxBITMAP_TYPE_PNG);
+  m_Bitmap_EmphOn  = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON_16X16, "XHTML_I_sel.png" ), wxBITMAP_TYPE_PNG);
+  m_Bitmap_CodeOn  = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON_16X16, "XHTML_T_sel.png" ), wxBITMAP_TYPE_PNG);
+  m_Bitmap_InsOn  = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON_16X16, "XHTML_ins_sel.png" ), wxBITMAP_TYPE_PNG);
+  m_Bitmap_DelOn  = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON_16X16, "XHTML_sup_sel.png" ), wxBITMAP_TYPE_PNG);
+  m_Bitmap_SubOn  = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON_16X16, "XHTML_sub_sel.png" ), wxBITMAP_TYPE_PNG);
+  m_Bitmap_SupOn  = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON_16X16, "XHTML_sup_sel.png" ), wxBITMAP_TYPE_PNG);
+
+  m_Bitmap_StrongOff  = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON_16X16, "XHTML_B.png" ), wxBITMAP_TYPE_PNG);
+  m_Bitmap_EmphOff  = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON_16X16, "XHTML_I.png" ), wxBITMAP_TYPE_PNG);
+  m_Bitmap_CodeOff  = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON_16X16, "XHTML_T.png" ), wxBITMAP_TYPE_PNG);
+  m_Bitmap_InsOff  = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON_16X16, "XHTML_ins.png" ), wxBITMAP_TYPE_PNG);
+  m_Bitmap_DelOff  = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON_16X16, "XHTML_sup.png" ), wxBITMAP_TYPE_PNG);
+  m_Bitmap_SubOff  = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON_16X16, "XHTML_sub.png" ), wxBITMAP_TYPE_PNG);
+  m_Bitmap_SupOff  = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON_16X16, "XHTML_sup.png" ), wxBITMAP_TYPE_PNG);
+
   if (p_checked_array[WXAMAYA_PANEL_XHTML_STRONG])
-    XRCCTRL(*this, "wxID_PANEL_XHTML_STRONG", wxBitmapButton)->SetBackgroundColour( m_OnColour );
+    XRCCTRL(*this, "wxID_PANEL_XHTML_STRONG", wxBitmapButton)->SetBitmapLabel( m_Bitmap_StrongOn );
   else
-    XRCCTRL(*this, "wxID_PANEL_XHTML_STRONG", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+    XRCCTRL(*this, "wxID_PANEL_XHTML_STRONG", wxBitmapButton)->SetBitmapLabel( m_Bitmap_StrongOff );
   
   if (p_checked_array[WXAMAYA_PANEL_XHTML_EMPH])
-    XRCCTRL(*this, "wxID_PANEL_XHTML_EMPH", wxBitmapButton)->SetBackgroundColour( m_OnColour );
+    XRCCTRL(*this, "wxID_PANEL_XHTML_EMPH", wxBitmapButton)->SetBitmapLabel( m_Bitmap_EmphOn );
   else
-    XRCCTRL(*this, "wxID_PANEL_XHTML_EMPH", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+    XRCCTRL(*this, "wxID_PANEL_XHTML_EMPH", wxBitmapButton)->SetBitmapLabel( m_Bitmap_EmphOff );
   
   if (p_checked_array[WXAMAYA_PANEL_XHTML_CODE])
-    XRCCTRL(*this, "wxID_PANEL_XHTML_CODE", wxBitmapButton)->SetBackgroundColour( m_OnColour );
+    XRCCTRL(*this, "wxID_PANEL_XHTML_CODE", wxBitmapButton)->SetBitmapLabel( m_Bitmap_CodeOn );
   else
-    XRCCTRL(*this, "wxID_PANEL_XHTML_CODE", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+    XRCCTRL(*this, "wxID_PANEL_XHTML_CODE", wxBitmapButton)->SetBitmapLabel( m_Bitmap_CodeOff );
+
   if (p_checked_array[WXAMAYA_PANEL_XHTML_INS])
-    XRCCTRL(*this, "wxID_PANEL_XHTML_INS", wxBitmapButton)->SetBackgroundColour( m_OnColour );
+    XRCCTRL(*this, "wxID_PANEL_XHTML_INS", wxBitmapButton)->SetBitmapLabel( m_Bitmap_InsOn );
   else
-    XRCCTRL(*this, "wxID_PANEL_XHTML_INS", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+    XRCCTRL(*this, "wxID_PANEL_XHTML_INS", wxBitmapButton)->SetBitmapLabel( m_Bitmap_InsOff );
 
   if (p_checked_array[WXAMAYA_PANEL_XHTML_DEL])
-    XRCCTRL(*this, "wxID_PANEL_XHTML_DEL", wxBitmapButton)->SetBackgroundColour( m_OnColour );
+    XRCCTRL(*this, "wxID_PANEL_XHTML_DEL", wxBitmapButton)->SetBitmapLabel( m_Bitmap_DelOn );
   else
-    XRCCTRL(*this, "wxID_PANEL_XHTML_DEL", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+    XRCCTRL(*this, "wxID_PANEL_XHTML_DEL", wxBitmapButton)->SetBitmapLabel( m_Bitmap_DelOff );
   
   if (p_checked_array[WXAMAYA_PANEL_XHTML_SUB])
-    XRCCTRL(*this, "wxID_PANEL_XHTML_SUB", wxBitmapButton)->SetBackgroundColour( m_OnColour );
+    XRCCTRL(*this, "wxID_PANEL_XHTML_SUB", wxBitmapButton)->SetBitmapLabel( m_Bitmap_SubOn );
   else
-    XRCCTRL(*this, "wxID_PANEL_XHTML_SUB", wxBitmapButton)->SetBackgroundColour( m_OffColour );  
+    XRCCTRL(*this, "wxID_PANEL_XHTML_SUB", wxBitmapButton)->SetBitmapLabel( m_Bitmap_SubOff );
+
   if (p_checked_array[WXAMAYA_PANEL_XHTML_SUP])
-    XRCCTRL(*this, "wxID_PANEL_XHTML_SUP", wxBitmapButton)->SetBackgroundColour( m_OnColour );
+    XRCCTRL(*this, "wxID_PANEL_XHTML_SUP", wxBitmapButton)->SetBitmapLabel( m_Bitmap_SupOn );
   else
-    XRCCTRL(*this, "wxID_PANEL_XHTML_SUP", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+    XRCCTRL(*this, "wxID_PANEL_XHTML_SUP", wxBitmapButton)->SetBitmapLabel( m_Bitmap_SupOff );
 
   Refresh();
   Layout();

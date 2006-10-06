@@ -39,6 +39,21 @@ public:
 
   wxColour m_OffColour;
   wxColour m_OnColour;
+
+  wxBitmap m_Bitmap_StrongOn;
+  wxBitmap m_Bitmap_EmphOn;
+  wxBitmap m_Bitmap_CodeOn;
+  wxBitmap m_Bitmap_InsOn;
+  wxBitmap m_Bitmap_DelOn;
+  wxBitmap m_Bitmap_SupOn;
+  wxBitmap m_Bitmap_SubOn;
+  wxBitmap m_Bitmap_StrongOff;
+  wxBitmap m_Bitmap_EmphOff;
+  wxBitmap m_Bitmap_CodeOff;
+  wxBitmap m_Bitmap_InsOff;
+  wxBitmap m_Bitmap_DelOff;
+  wxBitmap m_Bitmap_SupOff;
+  wxBitmap m_Bitmap_SubOff;
 };
 
 #endif // __AMAYAXHTMLPANEL_H__
