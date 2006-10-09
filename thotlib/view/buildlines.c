@@ -3598,6 +3598,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
   bottom += pBox->BxBMargin + pBox->BxBBorder + pBox->BxBPadding;
   left += pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
   right += pBox->BxRMargin + pBox->BxRBorder + pBox->BxRPadding;
+  l = r = 0;
   extensibleBox = (pBox->BxContentWidth ||
                    (!pAb->AbWidth.DimIsPosition && pAb->AbWidth.DimMinimum));
   /* what is the maximum width allowed */
@@ -3612,7 +3613,6 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
       /* limit to the enclosing box */
       if (pAb->AbWidth.DimAbRef == NULL && pAb->AbWidth.DimValue == -1)
         {
-          l = r = 0;
           if (isExtraFlow)
             pParent = GetEnclosingViewport (pAb);
           while (pParent && pParent->AbBox &&
