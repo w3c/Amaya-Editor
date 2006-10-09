@@ -32,7 +32,7 @@ DEFAULT
    Visibility: Enclosing =;
    VertRef: * . Left ;
    {HorizRef: Enclosed AnyElem . HRef;}
-   HorizRef: * .Bottom - 2 px;
+   HorizRef: * . Bottom - 2 px;
    Height: Enclosed . Height;
    Width: Enclosed . Width;
    VertPos: HRef = Previous . HRef;
@@ -176,6 +176,7 @@ BOXES
 
  OptionButton: BEGIN
 	Content: Picture 'xtigeroption.png';
+  HorizRef: * . Bottom;
 	HorizPos: Left = Enclosing . Left;
 	VertPos: Top = Enclosing . Top - 5 px;
 	MarginTop: 0 px;
@@ -341,7 +342,8 @@ RULES
   useEl:	
 		BEGIN
     CreateBefore(ElementName);
-	  CreateFirst(UseButton);
+    if empty
+	     CreateFirst(UseButton);
   	CreateWith(VerticalLine);
     Width: auto{Enclosing . Width};
     Height: auto{Enclosing . Height};

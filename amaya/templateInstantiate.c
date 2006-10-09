@@ -383,13 +383,31 @@ Element InstantiateUse (XTigerTemplate t, Element el, Document doc,
               }
             break;
           case UnionNat :
-            /* @@@@@ */
+            if (!insert)
+              /* the user has clicked a "repeat" button and wants to create
+                 a new instance of the repeated element. Just create the
+                 use element */
+              {
+                elType.ElTypeNum = Template_EL_useEl;
+                cont = TtaNewElement (doc, elType);
+                if (cont)
+                  {
+                    TtaSetAccessRight (cont, ReadWrite, doc);
+                    at = TtaNewAttribute (att);
+                    if (at)
+                      {
+                        TtaAttachAttribute (cont, at, doc);
+                        TtaSetAttributeText(at, types, cont, doc);
+                      }
+                  }
+              }
             break;
           default :
             //Impossible
             break;   
           }
     }
+  TtaFreeMemory(types);
   TtaSetStructureChecking (oldStructureChecking, doc);
   return cont;
 #endif /* TEMPLATES */

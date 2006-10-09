@@ -203,10 +203,10 @@ void UseCreated (NotifyElement *event)
 }
 
 /*----------------------------------------------------------------------
-  UseMenuClicked
+  UseButtonClicked
   Shows a menu with all the types that can be used in a use element.
   ----------------------------------------------------------------------*/
-ThotBool UseMenuClicked (NotifyElement *event)
+ThotBool UseButtonClicked (NotifyElement *event)
 {
 #ifdef TEMPLATES
 	Document         doc;
@@ -227,12 +227,16 @@ ThotBool UseMenuClicked (NotifyElement *event)
     return FALSE; /* let Thot perform normal operation */
 
 	doc = event->document;
-	el = event->element;
-	elType = TtaGetElementType (el);
   t = (XTigerTemplate) Get (Templates_Dic, DocumentMeta[doc]->template_url);
   if (!t)
     return FALSE; /* let Thot perform normal operation */
 
+	el = event->element;
+  if (TtaGetFirstChild (el))
+    /* this Use element has already some content. Do not do anything */
+    return FALSE; /* let Thot perform normal operation */
+
+	elType = TtaGetElementType (el);
   // give the list of possible items
 	attributeType.AttrSSchema = elType.ElSSchema;
 	attributeType.AttrTypeNum = Template_ATTR_types;
@@ -298,7 +302,6 @@ ThotBool UseMenuClicked (NotifyElement *event)
       TtaShowDialogue (BaseDialog + OptionMenu, FALSE);
       TtaWaitShowProcDialogue ();
       TtaDestroyDialogue (BaseDialog + OptionMenu);
-      /* result: items[ReturnOption].label @@@@@ */
       if (ReturnOption != -1)
         dec = GetDeclaration (t, items[ReturnOption].label);
       TtaFreeMemory (items);
@@ -335,9 +338,9 @@ ThotBool UseMenuClicked (NotifyElement *event)
 }
 
 /*----------------------------------------------------------------------
-  OptionMenuClicked
+  OptionButtonClicked
   ----------------------------------------------------------------------*/
-ThotBool OptionMenuClicked (NotifyElement *event)
+ThotBool OptionButtonClicked (NotifyElement *event)
 {
 #ifdef TEMPLATES
   Element         child, grandChild, next;
@@ -386,10 +389,10 @@ ThotBool OptionMenuClicked (NotifyElement *event)
 }
 
 /*----------------------------------------------------------------------
-  RepeatMenuClicked
+  RepeatButtonClicked
   Shows a menu with all the types that can be used in a use element.
   ----------------------------------------------------------------------*/
-ThotBool RepeatMenuClicked (NotifyElement *event)
+ThotBool RepeatButtonClicked (NotifyElement *event)
 {
 #ifdef TEMPLATES
   XTigerTemplate   t;

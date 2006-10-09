@@ -12,7 +12,7 @@ ELEMENTS
 
    useEl :
       BEGIN
-         ElemClick.Pre -> UseMenuClicked;
+         ElemClick.Pre -> UseButtonClicked;
          ElemNew.Pre -> UseToBeCreated;
          ElemNew.Post -> UseCreated;
       END;
@@ -23,11 +23,11 @@ ELEMENTS
       END;
    repeat :
       BEGIN
-         ElemClick.Pre -> RepeatMenuClicked;
+         ElemClick.Pre -> RepeatButtonClicked;
       END;
    option :
       BEGIN
-         ElemClick.Pre -> OptionMenuClicked;
+         ElemClick.Pre -> OptionButtonClicked;
       END;
       
 END
