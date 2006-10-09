@@ -488,6 +488,7 @@ void OpeningInstance (char *fileName, Document doc)
       res = gzread (stream, buffer, 1999);
       if (res >= 0)
         {
+          buffer[res] = EOS;
           ptr = strstr (buffer, "<?xtiger");
           if (ptr)
             ptr = strstr (ptr, "template");
