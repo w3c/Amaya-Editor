@@ -294,6 +294,7 @@ ThotBool UseButtonClicked (NotifyElement *event)
     }
   if (nbitems > 0)
     {
+      TtaCancelSelection (doc);
       menuString = createMenuString (items, nbitems);
       TtaNewScrollPopup (BaseDialog + OptionMenu, TtaGetViewFrame (doc, 1),
                          NULL, nbitems, menuString , NULL, false, 'L');
@@ -321,6 +322,7 @@ ThotBool UseButtonClicked (NotifyElement *event)
               /* copy element dec->componentType.content */
               comp = TtaCopyTree (dec->componentType.content, doc, doc, el);
               TtaInsertFirstChild (&comp, el, doc);
+              el = comp;
               /* @@@@@ */
               break;
             case UnionNat :
@@ -332,6 +334,7 @@ ThotBool UseButtonClicked (NotifyElement *event)
             }
         }
     }
+  TtaSelectElement (doc, el);
   return TRUE;
 #endif /* TEMPLATES */
 	return TRUE;
@@ -362,6 +365,8 @@ ThotBool OptionButtonClicked (NotifyElement *event)
        elType.ElTypeNum != Template_EL_useSimple) ||
       elType.ElSSchema != elType1.ElSSchema)
     return FALSE;
+
+  TtaCancelSelection (doc);
   grandChild = TtaGetFirstChild (child);
   if (!grandChild)
     /* the "use" element is empty. Instantiate it */
@@ -383,6 +388,7 @@ ThotBool OptionButtonClicked (NotifyElement *event)
         }
       while (next);
     }
+  TtaSelectElement (doc, event->element);
   return TRUE; /* don't let Thot perform normal operation */
 #endif /* TEMPLATES */
 	return TRUE;
@@ -412,6 +418,8 @@ ThotBool RepeatButtonClicked (NotifyElement *event)
   t = (XTigerTemplate) Get (Templates_Dic, DocumentMeta[doc]->template_url);
   if (!t)
     return FALSE; // no template ?!?!
+
+  TtaCancelSelection (doc);
 	types = "begining end";	
 	size = strlen (types);
 	giveItems (types, size, &items, &nbitems);
@@ -423,9 +431,9 @@ ThotBool RepeatButtonClicked (NotifyElement *event)
 	TtaShowDialogue (BaseDialog + OptionMenu, FALSE);
 	TtaWaitShowProcDialogue ();
 	TtaDestroyDialogue (BaseDialog + OptionMenu);
+  el = event->element;
   if (ReturnOption == 0 || ReturnOption == 1)
     {
-      el = event->element;
       child = TtaGetFirstChild (el);
       if (child)
         {
@@ -450,12 +458,14 @@ ThotBool RepeatButtonClicked (NotifyElement *event)
                     {
                       child = TtaGetLastChild (el);
                       TtaInsertSibling (newEl, child, FALSE, doc);
+                      el = newEl;
                     }
                   TtaSetStructureChecking (oldStructureChecking, doc);
                 }
             }
         }
     }
+  TtaSelectElement (doc, el);
   return TRUE; /* don't let Thot perform normal operation */
 #endif /* TEMPLATES */
 	return TRUE;
