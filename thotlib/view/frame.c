@@ -1524,9 +1524,8 @@ PtrBox DisplayAllBoxes (int frame, PtrFlow pFlow,
                         int xmin, int xmax, int ymin, int ymax,
                         PtrBox *create, int *tVol, int *bVol)
 {
-  PtrAbstractBox      pAb, specAb, root;
-  PtrBox              pBox, box;
-  PtrBox              topBox;
+  PtrAbstractBox      pAb, specAb, root, pNext;
+  PtrBox              pBox, box, topBox;
   ViewFrame          *pFrame;
   int                 plane;
   int                 nextplane;
@@ -1872,78 +1871,41 @@ PtrBox DisplayAllBoxes (int frame, PtrFlow pFlow,
               not_g_opacity_displayed &&
 #endif /* _GL */
               (pAb == root || !IsFlow (pAb->AbBox, frame)))
+            // go down
             pAb = pAb->AbFirstEnclosed;
           else
             {
-#ifdef _GL
-              if (formatted && pAb->AbDepth == plane)
+              // go next or up
+// --------------------------------------------------------------
+              do
                 {
-                  OpacityAndTransformNext (pAb, plane, frame, x_min, x_max,
-                                           y_min, y_max, not_in_feedback);
-                  IfPopMatrix (pAb);
-                  OriginSystemExit (pAb, pFrame, plane, &xOrg, &yOrg, 
-                                    clipXOfFirstCoordSys, clipYOfFirstCoordSys);
-                }
-              not_g_opacity_displayed = TRUE;
-#else /* _GL */
-              OpacityAndTransformNext (pAb, plane, frame, xmin, xmax, ymin,
-                                       ymax, FALSE);
-#endif /* _GL */
-              if (pAb->AbSelected)
-                selected = FALSE;
-
-              if (pAb->AbNext)
-                pAb = pAb->AbNext;
-              else
-                {
-                  /* go up in the tree */
-                  while (pAb->AbEnclosing && pAb->AbEnclosing != root &&
-                         pAb->AbEnclosing->AbNext == NULL)
-                    {
-                      if (pAb->AbSelected)
-                        selected = FALSE;
-                      pAb = pAb->AbEnclosing;
-#ifdef _GL
-                      if (formatted && pAb->AbDepth == plane)
-                        {
-                          OpacityAndTransformNext (pAb, plane, frame, x_min, x_max,
-                                                   y_min, y_max, not_in_feedback);
-                          IfPopMatrix (pAb);
-                          OriginSystemExit (pAb, pFrame, plane, &xOrg, &yOrg, 
-                                            clipXOfFirstCoordSys, clipYOfFirstCoordSys);
-                        }
-#else /* _GL */
-                      OpacityAndTransformNext (pAb, plane, frame, xmin, xmax, ymin,
-                                               ymax, FALSE);
-#endif /* _GL */
-                    }
+                  pNext = pAb->AbNext;
                   if (pAb->AbSelected)
                     selected = FALSE;
+#ifdef _GL
+                  if (formatted && pAb->AbDepth == plane)
+                    {
+                      OpacityAndTransformNext (pAb, plane, frame, x_min, x_max,
+                                               y_min, y_max, not_in_feedback);
+                      IfPopMatrix (pAb);
+                      OriginSystemExit (pAb, pFrame, plane, &xOrg, &yOrg, 
+                                        clipXOfFirstCoordSys, clipYOfFirstCoordSys);
+                    }
+#else /* _GL */
+                  OpacityAndTransformNext (pAb, plane, frame, xmin, xmax, ymin,
+                                           ymax, FALSE);
+#endif /* _GL */
                   if (pAb == root)
                     /* all boxes are now managed: stop the loop */
                     pAb = NULL;
-                  else
+                  else if (pNext == NULL)
+                    /* go up in the tree */
                     pAb = pAb->AbEnclosing;
-                  if (pAb)
-                    {
-#ifdef _GL
-                      if (formatted && pAb->AbDepth == plane)
-                        {	
-                          OpacityAndTransformNext (pAb, plane, frame, x_min, x_max,
-                                                   y_min, y_max, not_in_feedback);
-                          IfPopMatrix (pAb);
-                          OriginSystemExit (pAb, pFrame, plane, &xOrg, &yOrg, 
-                                            clipXOfFirstCoordSys, clipYOfFirstCoordSys);
-                        }
-#else /* _GL */
-                      OpacityAndTransformNext (pAb, plane, frame, xmin, xmax,
-                                               ymin, ymax, FALSE);
-#endif /* _GL */
-                      if (pAb->AbSelected)
-                        selected = FALSE;
-                      pAb = pAb->AbNext;
-                    }
+                  else
+                    pAb = pNext;
                 }
+              while (pAb && pNext == NULL);
+// --------------------------------------------------------------
             }
         }
     }
