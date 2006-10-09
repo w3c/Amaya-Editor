@@ -90,39 +90,40 @@ static int BuildElementSelector (PtrDocument pDoc, PtrSSchema pSS,
             len_name = strlen (pSS->SsRule->SrElem[typeNum - 1]->SrName) + 1;
             if (len_name + menuInd < MAX_MENU_LENGTH)
               {
-		/* compare that name with all element names already known */
-		cur = 0;
-		previous = FALSE;
-		for (i = 0; i < nbItem && !previous; i++)
-		  {
-		    len = strlen (&menuBuf[cur]) + 1;
-		    previous = (pSS->SsRule->SrElem[typeNum - 1]->SrName[0] < menuBuf[cur]);
-		    if (!previous)
-		      {
- 			k = 0;
-			while (pSS->SsRule->SrElem[typeNum - 1]->SrName[k] == menuBuf[cur+k])
-			  k++;
-			previous = (pSS->SsRule->SrElem[typeNum - 1]->SrName[k] < menuBuf[cur+k]);
-		      }
-		    if (!previous)
-		      cur += len;
-		  }
-		if (previous && i <= pSS->SsNRules)
-		  {
-		    // move the tail of the current list
-		    for (k = menuInd; k >= cur; k--)
-		      menuBuf[k+len_name] = menuBuf[k];
-		    /* add this new element name at the current position */
-		    strcpy (&menuBuf[cur], pSS->SsRule->SrElem[typeNum - 1]->SrName);
-		  }
-		else
-		  {
-		    /* add this new element name at the end */
-		    strcpy (menuBuf + menuInd, pSS->SsRule->SrElem[typeNum - 1]->SrName);
-		  }
+                /* compare that name with all element names already known */
+                cur = 0;
+                previous = FALSE;
+                for (i = 0; i < nbItem && !previous; i++)
+                  {
+                    len = strlen (&menuBuf[cur]) + 1;
+                    previous = (pSS->SsRule->SrElem[typeNum - 1]->SrName[0] < menuBuf[cur]);
+                    if (!previous)
+                      {
+                        k = 0;
+                        while (menuBuf[cur+k] != EOS &&
+                               pSS->SsRule->SrElem[typeNum - 1]->SrName[k] == menuBuf[cur+k])
+                          k++;
+                        previous = (pSS->SsRule->SrElem[typeNum - 1]->SrName[k] < menuBuf[cur+k]);
+                      }
+                    if (!previous)
+                      cur += len;
+                  }
+                if (previous && i <= pSS->SsNRules)
+                  {
+                    // move the tail of the current list
+                    for (k = menuInd; k >= cur; k--)
+                      menuBuf[k+len_name] = menuBuf[k];
+                    /* add this new element name at the current position */
+                    strcpy (&menuBuf[cur], pSS->SsRule->SrElem[typeNum - 1]->SrName);
+                  }
+                else
+                  {
+                    /* add this new element name at the end */
+                    strcpy (menuBuf + menuInd, pSS->SsRule->SrElem[typeNum - 1]->SrName);
+                  }
                 nbItem++;
                 menuInd += len_name;	
-	      }
+              }
           }
       }
   return nbItem;
