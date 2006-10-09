@@ -191,7 +191,7 @@ RULES
 #ifdef PAGE
 	Page(ThePage);
         Width: Enclosing . Width;
-	Foreground: Black;
+	{Foreground: Black;}
 #else
 	Width: Enclosed . Width;
 	HorizPos: Left = Enclosing . Left + 0.7;
