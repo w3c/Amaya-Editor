@@ -431,6 +431,7 @@ ThotBool RepeatButtonClicked (NotifyElement *event)
 	TtaShowDialogue (BaseDialog + OptionMenu, FALSE);
 	TtaWaitShowProcDialogue ();
 	TtaDestroyDialogue (BaseDialog + OptionMenu);
+  TtaFreeMemory (items);
   el = event->element;
   if (ReturnOption == 0 || ReturnOption == 1)
     {
