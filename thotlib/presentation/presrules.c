@@ -3263,27 +3263,29 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
   AbPosition          Posit;
   PresConstant	     *pConst;
   PathBuffer	      directoryName;
+  AbPosition         *pPavP1;
+  ThotPictInfo       *image;
+  PtrAbstractBox      pAbb, pParent;
+  PtrElement          pEl;
   char                fname[MAX_PATH];
   unsigned char       c;
   int                 viewSch, i;
   ThotBool            appl;
   ThotBool            insidePage, afterPageBreak;
-  AbPosition         *pPavP1;
-  ThotPictInfo       *image;
-  PtrAbstractBox      pAbb, pParent;
   ThotBool            ignorefix = FALSE;
 
   appl = FALSE;
   if (pPRule && pAb && pAb->AbElement)
     {
-      viewSch = AppliedView (pAb->AbElement, pAttr, pDoc, pAb->AbDocView);
+      pEl = pAb->AbElement;
+      viewSch = AppliedView (pEl, pAttr, pDoc, pAb->AbDocView);
       switch (pPRule->PrType)
         {
         case PtVisibility:
-          pAb->AbVisibility = IntegerRule (pPRule, pAb->AbElement,
+          pAb->AbVisibility = IntegerRule (pPRule, pEl,
                                            pAb->AbDocView, &appl, &unit,
                                            pAttr, pAb);
-          if (!appl && pAb->AbElement->ElParent == NULL)
+          if (!appl && pEl->ElParent == NULL)
             /* Pas de regle pour la racine, on met la valeur par defaut */
             {
               pAb->AbVisibility = 10;
@@ -3315,7 +3317,7 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
               /* ignore the Page rule when working for the editor (as opposed
                  to the printer) and if it applies to the root of a generic
                  XML document */
-              if (Printing || pAb->AbElement->ElParent ||
+              if (Printing || pEl->ElParent ||
                   !pDoc->DocSSchema->SsIsXml)
                 ApplyPage (pDoc, pAb, viewSch, pPRule, pPRule->PrPresFunction,
                            pSchP);
@@ -3327,7 +3329,7 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
               break;
             case FnCopy:
               /* on n'applique pas la regle copie a un element holophraste'*/
-              if (!pAb->AbElement->ElHolophrast)
+              if (!pEl->ElHolophrast)
                 ApplyCopy (pDoc, pPRule, pAb, TRUE);
               appl = TRUE;
               break;
@@ -3397,12 +3399,12 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
             case FnBackgroundRepeat:
               if (pPRule->PrViewNum == viewSch)
                 {
-                  if (pAb->AbElement->ElTerminal &&
-                      pAb->AbElement->ElLeafType == LtPicture)
+                  if (pEl->ElTerminal &&
+                      pEl->ElLeafType == LtPicture)
                     {
-                      if (pAb->AbElement->ElPictInfo == NULL)
+                      if (pEl->ElPictInfo == NULL)
                         NewPictInfo (pAb, "", UNKNOWN_FORMAT, False);
-                      ((ThotPictInfo *) (pAb->AbElement->ElPictInfo))->PicPresent =
+                      ((ThotPictInfo *) (pEl->ElPictInfo))->PicPresent =
                         (PictureScaling)pPRule->PrPresBox[0];
                     }
                   else if (pAb->AbPresentationBox)
@@ -3433,11 +3435,11 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
             }	    
           break;
         case PtVertOverflow:
-          pAb->AbVertEnclosing = !BoolRule (pPRule, pAb->AbElement,
+          pAb->AbVertEnclosing = !BoolRule (pPRule, pEl,
                                             pAb->AbDocView, &appl);
           break;
         case PtHorizOverflow:
-          pAb->AbHorizEnclosing = !BoolRule (pPRule, pAb->AbElement,
+          pAb->AbHorizEnclosing = !BoolRule (pPRule, pEl,
                                              pAb->AbDocView, &appl);
           break;
         case PtVertRef:
@@ -3473,7 +3475,7 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
             {
               if (!pAb->AbPrevious->AbDead &&
                   pAb->AbPrevious->AbElement-> ElTypeNumber == PageBreak + 1 &&
-                  pAb->AbElement->ElTypeNumber != PageBreak + 1)
+                  pEl->ElTypeNumber != PageBreak + 1)
                 {
                   if (pPRule->PrPosRule.PoRelation == RlSameLevel
                       || pPRule->PrPosRule.PoRelation == RlPrevious)
@@ -3485,11 +3487,11 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
             }
           else
             /* il n'y a pas de pave precedent */
-            if (pAb->AbElement->ElPrevious != NULL)
+            if (pEl->ElPrevious != NULL)
               /* il y a un element precedent */
-              if (pAb->AbElement->ElPrevious->ElTypeNumber == PageBreak + 1
-                  && pAb->AbElement->ElPrevious->ElViewPSchema == viewSch
-                  && pAb->AbElement->ElTypeNumber != PageBreak + 1)
+              if (pEl->ElPrevious->ElTypeNumber == PageBreak + 1
+                  && pEl->ElPrevious->ElViewPSchema == viewSch
+                  && pEl->ElTypeNumber != PageBreak + 1)
                 /* l'element precedent est une marque de page pour la vue */
                 if (pPRule->PrPosRule.PoRelation == RlSameLevel
                     || pPRule->PrPosRule.PoRelation == RlPrevious)
@@ -3521,10 +3523,10 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
             {
               insidePage = FALSE;
               if (pAb->AbEnclosing != NULL)
-                if (pAb->AbElement->ElTypeNumber == PageBreak + 1
+                if (pEl->ElTypeNumber == PageBreak + 1
                     && pAb->AbEnclosing->AbElement->
                     ElTypeNumber != PageBreak + 1
-                    && pAb->AbElement->ElPrevious == NULL)
+                    && pEl->ElPrevious == NULL)
                   if (pAb->AbPrevious == NULL)
                     insidePage = TRUE;
 	      
@@ -3557,11 +3559,11 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
           pAb->AbHorizPos = Posit;
           break;
         case PtMarginTop:
-          pAb->AbTopMargin = IntegerRule (pPRule, pAb->AbElement,
+          pAb->AbTopMargin = IntegerRule (pPRule, pEl,
                                           pAb->AbDocView, &appl, &unit,
                                           pAttr, pAb);
           pAb->AbTopMarginUnit = unit;
-          if (!appl && pAb->AbElement->ElParent == NULL)
+          if (!appl && pEl->ElParent == NULL)
             /* Pas de regle pour la racine, on met la valeur par defaut */
             {
               pAb->AbTopMargin = 0;
@@ -3569,11 +3571,11 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
             }
           break;
         case PtMarginRight:
-          pAb->AbRightMargin = IntegerRule (pPRule, pAb->AbElement,
+          pAb->AbRightMargin = IntegerRule (pPRule, pEl,
                                             pAb->AbDocView, &appl, &unit,
                                             pAttr, pAb);
           pAb->AbRightMarginUnit = unit;
-          if (!appl && pAb->AbElement->ElParent == NULL)
+          if (!appl && pEl->ElParent == NULL)
             /* Pas de regle pour la racine, on met la valeur par defaut */
             {
               pAb->AbRightMargin = 0;
@@ -3581,11 +3583,11 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
             }
           break;
         case PtMarginBottom:
-          pAb->AbBottomMargin = IntegerRule (pPRule, pAb->AbElement,
+          pAb->AbBottomMargin = IntegerRule (pPRule, pEl,
                                              pAb->AbDocView, &appl, &unit,
                                              pAttr, pAb);
           pAb->AbBottomMarginUnit = unit;
-          if (!appl && pAb->AbElement->ElParent == NULL)
+          if (!appl && pEl->ElParent == NULL)
             /* Pas de regle pour la racine, on met la valeur par defaut */
             {
               pAb->AbBottomMargin = 0;
@@ -3593,11 +3595,11 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
             }
           break;
         case PtMarginLeft:
-          pAb->AbLeftMargin = IntegerRule (pPRule, pAb->AbElement,
+          pAb->AbLeftMargin = IntegerRule (pPRule, pEl,
                                            pAb->AbDocView, &appl, &unit,
                                            pAttr, pAb);
           pAb->AbLeftMarginUnit = unit;
-          if (!appl && pAb->AbElement->ElParent == NULL)
+          if (!appl && pEl->ElParent == NULL)
             /* Pas de regle pour la racine, on met la valeur par defaut */
             {
               pAb->AbLeftMargin = 0;
@@ -3605,11 +3607,11 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
             }
           break;
         case PtPaddingTop:
-          pAb->AbTopPadding = IntegerRule (pPRule, pAb->AbElement,
+          pAb->AbTopPadding = IntegerRule (pPRule, pEl,
                                            pAb->AbDocView, &appl, &unit,
                                            pAttr, pAb);
           pAb->AbTopPaddingUnit = unit;
-          if (!appl && pAb->AbElement->ElParent == NULL)
+          if (!appl && pEl->ElParent == NULL)
             /* Pas de regle pour la racine, on met la valeur par defaut */
             {
               pAb->AbTopPadding = 0;
@@ -3617,11 +3619,11 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
             }
           break;
         case PtPaddingRight:
-          pAb->AbRightPadding = IntegerRule (pPRule, pAb->AbElement,
+          pAb->AbRightPadding = IntegerRule (pPRule, pEl,
                                              pAb->AbDocView, &appl, &unit,
                                              pAttr, pAb);
           pAb->AbRightPaddingUnit = unit;
-          if (!appl && pAb->AbElement->ElParent == NULL)
+          if (!appl && pEl->ElParent == NULL)
             /* Pas de regle pour la racine, on met la valeur par defaut */
             {
               pAb->AbRightPadding = 0;
@@ -3629,11 +3631,11 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
             }
           break;
         case PtPaddingBottom:
-          pAb->AbBottomPadding = IntegerRule (pPRule, pAb->AbElement,
+          pAb->AbBottomPadding = IntegerRule (pPRule, pEl,
                                               pAb->AbDocView, &appl, &unit,
                                               pAttr, pAb);
           pAb->AbBottomPaddingUnit = unit;
-          if (!appl && pAb->AbElement->ElParent == NULL)
+          if (!appl && pEl->ElParent == NULL)
             /* Pas de regle pour la racine, on met la valeur par defaut */
             {
               pAb->AbBottomPadding = 0;
@@ -3641,11 +3643,11 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
             }
           break;
         case PtPaddingLeft:
-          pAb->AbLeftPadding = IntegerRule (pPRule, pAb->AbElement,
+          pAb->AbLeftPadding = IntegerRule (pPRule, pEl,
                                             pAb->AbDocView, &appl, &unit,
                                             pAttr, pAb);
           pAb->AbLeftPaddingUnit = unit;
-          if (!appl && pAb->AbElement->ElParent == NULL)
+          if (!appl && pEl->ElParent == NULL)
             /* Pas de regle pour la racine, on met la valeur par defaut */
             {
               pAb->AbLeftPadding = 0;
@@ -3653,11 +3655,11 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
             }
           break;
         case PtBorderTopWidth:
-          pAb->AbTopBorder = IntegerRule (pPRule, pAb->AbElement,
+          pAb->AbTopBorder = IntegerRule (pPRule, pEl,
                                           pAb->AbDocView, &appl, &unit,
                                           pAttr, pAb);
           pAb->AbTopBorderUnit = unit;
-          if (!appl && pAb->AbElement->ElParent == NULL)
+          if (!appl && pEl->ElParent == NULL)
             /* Pas de regle pour la racine, on met la valeur par defaut */
             {
               pAb->AbTopBorder = 0;
@@ -3665,11 +3667,11 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
             }
           break;
         case PtBorderRightWidth:
-          pAb->AbRightBorder = IntegerRule (pPRule, pAb->AbElement,
+          pAb->AbRightBorder = IntegerRule (pPRule, pEl,
                                             pAb->AbDocView, &appl, &unit,
                                             pAttr, pAb);
           pAb->AbRightBorderUnit = unit;
-          if (!appl && pAb->AbElement->ElParent == NULL)
+          if (!appl && pEl->ElParent == NULL)
             /* Pas de regle pour la racine, on met la valeur par defaut */
             {
               pAb->AbRightBorder = 0;
@@ -3677,11 +3679,11 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
             }
           break;
         case PtBorderBottomWidth:
-          pAb->AbBottomBorder = IntegerRule (pPRule, pAb->AbElement,
+          pAb->AbBottomBorder = IntegerRule (pPRule, pEl,
                                              pAb->AbDocView, &appl, &unit,
                                              pAttr, pAb);
           pAb->AbBottomBorderUnit = unit;
-          if (!appl && pAb->AbElement->ElParent == NULL)
+          if (!appl && pEl->ElParent == NULL)
             /* Pas de regle pour la racine, on met la valeur par defaut */
             {
               pAb->AbBottomBorder = 0;
@@ -3689,11 +3691,11 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
             }
           break;
         case PtBorderLeftWidth:
-          pAb->AbLeftBorder = IntegerRule (pPRule, pAb->AbElement,
+          pAb->AbLeftBorder = IntegerRule (pPRule, pEl,
                                            pAb->AbDocView, &appl, &unit,
                                            pAttr, pAb);
           pAb->AbLeftBorderUnit = unit;
-          if (!appl && pAb->AbElement->ElParent == NULL)
+          if (!appl && pEl->ElParent == NULL)
             /* Pas de regle pour la racine, on met la valeur par defaut */
             {
               pAb->AbLeftBorder = 0;
@@ -3701,10 +3703,10 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
             }
           break;
         case PtBorderTopColor:
-          pAb->AbTopBColor = IntegerRule (pPRule, pAb->AbElement,
+          pAb->AbTopBColor = IntegerRule (pPRule, pEl,
                                           pAb->AbDocView, &appl, &unit,
                                           pAttr, pAb);
-          if (!appl && pAb->AbElement->ElParent == NULL)
+          if (!appl && pEl->ElParent == NULL)
             /* no BorderTopColor for the root element. Set initial value */
             {
               pAb->AbTopBColor = -1;
@@ -3712,10 +3714,10 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
             }
           break;
         case PtBorderRightColor:
-          pAb->AbRightBColor = IntegerRule (pPRule, pAb->AbElement,
+          pAb->AbRightBColor = IntegerRule (pPRule, pEl,
                                             pAb->AbDocView, &appl, &unit,
                                             pAttr, pAb);
-          if (!appl && pAb->AbElement->ElParent == NULL)
+          if (!appl && pEl->ElParent == NULL)
             /* no BorderRightColor for the root element. Set initial value */
             {
               pAb->AbRightBColor = -1;
@@ -3723,10 +3725,10 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
             }
           break;
         case PtBorderBottomColor:
-          pAb->AbBottomBColor = IntegerRule (pPRule, pAb->AbElement,
+          pAb->AbBottomBColor = IntegerRule (pPRule, pEl,
                                              pAb->AbDocView, &appl, &unit,
                                              pAttr, pAb);
-          if (!appl && pAb->AbElement->ElParent == NULL)
+          if (!appl && pEl->ElParent == NULL)
             /* no BorderBottomColor for the root element. Set initial value*/
             {
               pAb->AbBottomBColor = -1;
@@ -3734,10 +3736,10 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
             }
           break;
         case PtBorderLeftColor:
-          pAb->AbLeftBColor = IntegerRule (pPRule, pAb->AbElement,
+          pAb->AbLeftBColor = IntegerRule (pPRule, pEl,
                                            pAb->AbDocView, &appl, &unit,
                                            pAttr, pAb);
-          if (!appl && pAb->AbElement->ElParent == NULL)
+          if (!appl && pEl->ElParent == NULL)
             /* no BorderLeftColor for the root element. Set initial value */
             {
               pAb->AbLeftBColor = -1;
@@ -3745,8 +3747,8 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
             }
           break;
         case PtBorderTopStyle:
-          c = CharRule (pPRule, pAb->AbElement, pAb->AbDocView, &appl);
-          if (!appl && pAb->AbElement->ElParent == NULL)
+          c = CharRule (pPRule, pEl, pAb->AbDocView, &appl);
+          if (!appl && pEl->ElParent == NULL)
             {
               c = '0';
               appl = TRUE;
@@ -3755,8 +3757,8 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
             pAb->AbTopStyle = BorderStyleIntValue (c);
           break;
         case PtBorderRightStyle:
-          c = CharRule (pPRule, pAb->AbElement, pAb->AbDocView, &appl);
-          if (!appl && pAb->AbElement->ElParent == NULL)
+          c = CharRule (pPRule, pEl, pAb->AbDocView, &appl);
+          if (!appl && pEl->ElParent == NULL)
             {
               c = '0';
               appl = TRUE;
@@ -3765,8 +3767,8 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
             pAb->AbRightStyle = BorderStyleIntValue (c);
           break;
         case PtBorderBottomStyle:
-          c = CharRule (pPRule, pAb->AbElement, pAb->AbDocView, &appl);
-          if (!appl && pAb->AbElement->ElParent == NULL)
+          c = CharRule (pPRule, pEl, pAb->AbDocView, &appl);
+          if (!appl && pEl->ElParent == NULL)
             {
               c = '0';
               appl = TRUE;
@@ -3775,8 +3777,8 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
             pAb->AbBottomStyle = BorderStyleIntValue (c);
           break;
         case PtBorderLeftStyle:
-          c = CharRule (pPRule, pAb->AbElement, pAb->AbDocView, &appl);
-          if (!appl && pAb->AbElement->ElParent == NULL)
+          c = CharRule (pPRule, pEl, pAb->AbDocView, &appl);
+          if (!appl && pEl->ElParent == NULL)
             {
               c = '0';
               appl = TRUE;
@@ -3786,12 +3788,12 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
           break;
         case PtSize:
           /* on applique la regle de taille */
-          pAb->AbSize = IntegerRule (pPRule, pAb->AbElement,
+          pAb->AbSize = IntegerRule (pPRule, pEl,
                                      pAb->AbDocView, &appl, &unit,
                                      pAttr, pAb);
           if (appl)
             pAb->AbSizeUnit = unit;
-          else if (pAb->AbElement->ElParent == NULL)
+          else if (pEl->ElParent == NULL)
             /* c'est la racine, on met a priori la valeur par defaut */
             {
               pAb->AbSize = 3;
@@ -3800,8 +3802,8 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
             }
           break;
         case PtStyle:
-          c = CharRule (pPRule, pAb->AbElement, pAb->AbDocView, &appl);
-          if (!appl && pAb->AbElement->ElParent == NULL)
+          c = CharRule (pPRule, pEl, pAb->AbDocView, &appl);
+          if (!appl && pEl->ElParent == NULL)
             /* Pas de regle pour la racine, on met la valeur par defaut */
             {
               pAb->AbFontStyle = 0;
@@ -3822,8 +3824,8 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
               }
           break;
         case PtWeight:
-          c = CharRule (pPRule, pAb->AbElement, pAb->AbDocView, &appl);
-          if (!appl && pAb->AbElement->ElParent == NULL)
+          c = CharRule (pPRule, pEl, pAb->AbDocView, &appl);
+          if (!appl && pEl->ElParent == NULL)
             /* Pas de regle pour la racine, on met la valeur par defaut */
             {
               pAb->AbFontWeight = 0;
@@ -3841,8 +3843,8 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
               }
           break;
         case PtFont:
-          c = CharRule (pPRule, pAb->AbElement, pAb->AbDocView, &appl);
-          if (!appl && pAb->AbElement->ElParent == NULL)
+          c = CharRule (pPRule, pEl, pAb->AbDocView, &appl);
+          if (!appl && pEl->ElParent == NULL)
             {
               pAb->AbFont = 1;
               appl = TRUE;
@@ -3851,8 +3853,8 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
             pAb->AbFont = (int) c & 0xFF;
           break;
         case PtUnderline:
-          c = CharRule (pPRule, pAb->AbElement, pAb->AbDocView, &appl);
-          if (!appl && pAb->AbElement->ElParent == NULL)
+          c = CharRule (pPRule, pEl, pAb->AbDocView, &appl);
+          if (!appl && pEl->ElParent == NULL)
             /* Pas de regle pour la racine, on met la valeur par defaut */
             {
               pAb->AbUnderline = 0;
@@ -3876,8 +3878,8 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
               }
           break;
         case PtThickness:
-          c = CharRule (pPRule, pAb->AbElement, pAb->AbDocView, &appl);
-          if (!appl && pAb->AbElement->ElParent == NULL)
+          c = CharRule (pPRule, pEl, pAb->AbDocView, &appl);
+          if (!appl && pEl->ElParent == NULL)
             /* Pas de regle pour la racine, on met la valeur par defaut */
             {
               pAb->AbThickness = 0;
@@ -3895,11 +3897,11 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
               }
           break;
         case PtIndent:
-          pAb->AbIndent = IntegerRule (pPRule, pAb->AbElement,
+          pAb->AbIndent = IntegerRule (pPRule, pEl,
                                        pAb->AbDocView, &appl, &unit,
                                        pAttr, pAb);
           pAb->AbIndentUnit = unit;
-          if (!appl && pAb->AbElement->ElParent == NULL)
+          if (!appl && pEl->ElParent == NULL)
             /* Pas de regle pour la racine, on met la valeur par defaut */
             {
               pAb->AbIndent = 0;
@@ -3907,11 +3909,11 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
             }
           break;
         case PtLineSpacing:
-          pAb->AbLineSpacing = IntegerRule (pPRule, pAb->AbElement,
+          pAb->AbLineSpacing = IntegerRule (pPRule, pEl,
                                             pAb->AbDocView, &appl, &unit,
                                             pAttr, pAb);
           pAb->AbLineSpacingUnit = unit;
-          if (!appl && pAb->AbElement->ElParent == NULL)
+          if (!appl && pEl->ElParent == NULL)
             /* Pas de regle pour la racine, on met la valeur par defaut */
             {
               pAb->AbLineSpacing = 10;
@@ -3920,9 +3922,9 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
             }
           break;
         case PtDepth:
-          pAb->AbDepth = IntegerRule (pPRule, pAb->AbElement, pAb->AbDocView,
+          pAb->AbDepth = IntegerRule (pPRule, pEl, pAb->AbDocView,
                                       &appl, &unit, pAttr, pAb);
-          if (!appl && pAb->AbElement->ElParent == NULL)
+          if (!appl && pEl->ElParent == NULL)
             /* Pas de regle pour la racine, on met la valeur par defaut */
             {
               pAb->AbDepth = 0;
@@ -3930,9 +3932,9 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
             }
           break;
         case PtAdjust:
-          pAb->AbAdjust = AlignRule (pPRule, pAb->AbElement, pAb->AbDocView,
+          pAb->AbAdjust = AlignRule (pPRule, pEl, pAb->AbDocView,
                                      &appl);
-          if (!appl && pAb->AbElement->ElParent == NULL)
+          if (!appl && pEl->ElParent == NULL)
             /* Pas de regle pour la racine, on met la valeur par defaut */
             {
               pAb->AbAdjust = AlignLeft;
@@ -3940,9 +3942,9 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
             }
           break;
         case PtDirection:
-          pAb->AbDirection = CharRule (pPRule, pAb->AbElement,
+          pAb->AbDirection = CharRule (pPRule, pEl,
                                        pAb->AbDocView, &appl);
-          if (!appl && pAb->AbElement->ElParent == NULL)
+          if (!appl && pEl->ElParent == NULL)
             {
               /* initial value: LeftToRight */
               pAb->AbDirection = 'L';
@@ -3950,9 +3952,9 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
             }
           break;
         case PtUnicodeBidi:
-          pAb->AbUnicodeBidi = CharRule (pPRule, pAb->AbElement,
+          pAb->AbUnicodeBidi = CharRule (pPRule, pEl,
                                          pAb->AbDocView, &appl);
-          if (!appl && pAb->AbElement->ElParent == NULL)
+          if (!appl && pEl->ElParent == NULL)
             {
               /* initial value: Normal */
               pAb->AbUnicodeBidi = 'N';
@@ -3960,20 +3962,20 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
             }
           break;
         case PtLineStyle:
-          pAb->AbLineStyle = CharRule (pPRule, pAb->AbElement,
+          pAb->AbLineStyle = CharRule (pPRule, pEl,
                                        pAb->AbDocView, &appl);
-          if (!appl && pAb->AbElement->ElParent == NULL)
+          if (!appl && pEl->ElParent == NULL)
             {
               pAb->AbLineStyle = 'S';
               appl = TRUE;
             }
           break;
         case PtLineWeight:
-          pAb->AbLineWeight = IntegerRule (pPRule, pAb->AbElement,
+          pAb->AbLineWeight = IntegerRule (pPRule, pEl,
                                            pAb->AbDocView, &appl, &unit,
                                            pAttr, pAb);
           pAb->AbLineWeightUnit = unit;
-          if (!appl && pAb->AbElement->ElParent == NULL)
+          if (!appl && pEl->ElParent == NULL)
             /* Pas de regle pour la racine, on met la valeur par defaut */
             {
               pAb->AbLineWeight = 1;
@@ -3982,10 +3984,10 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
             }
           break;
         case PtFillPattern:
-          pAb->AbFillPattern = IntegerRule (pPRule, pAb->AbElement,
+          pAb->AbFillPattern = IntegerRule (pPRule, pEl,
                                             pAb->AbDocView, &appl, &unit,
                                             pAttr, pAb);
-          if (!appl && pAb->AbElement->ElParent == NULL)
+          if (!appl && pEl->ElParent == NULL)
             /* Pas de regle pour la racine, on met la valeur par defaut */
             {
               pAb->AbFillPattern = 0;
@@ -3993,10 +3995,10 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
             }
           break;
         case PtOpacity:	      
-          pAb->AbOpacity = IntegerRule (pPRule, pAb->AbElement,
+          pAb->AbOpacity = IntegerRule (pPRule, pEl,
                                         pAb->AbDocView, &appl, &unit,
                                         pAttr, pAb);
-          if (!appl && pAb->AbElement->ElParent == NULL)
+          if (!appl && pEl->ElParent == NULL)
             /* Pas de regle pour la racine, on met la valeur par defaut */
             {
               pAb->AbOpacity = 1000;
@@ -4004,11 +4006,11 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
             }
           break;
         case PtFillOpacity:
-          pAb->AbFillOpacity = IntegerRule (pPRule, pAb->AbElement,
+          pAb->AbFillOpacity = IntegerRule (pPRule, pEl,
                                             pAb->AbDocView, &appl, &unit,
                                             pAttr, pAb);
 	  	  
-          if (!appl && pAb->AbElement->ElParent == NULL)
+          if (!appl && pEl->ElParent == NULL)
             /* Pas de regle pour la racine, on met la valeur par defaut */
             {
               pAb->AbFillOpacity = 1000;
@@ -4016,11 +4018,11 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
             }
           break;
         case PtStrokeOpacity:	      
-          pAb->AbStrokeOpacity = IntegerRule (pPRule, pAb->AbElement,
+          pAb->AbStrokeOpacity = IntegerRule (pPRule, pEl,
                                               pAb->AbDocView, &appl, &unit,
                                               pAttr, pAb);
 	   
-          if (!appl && pAb->AbElement->ElParent == NULL)
+          if (!appl && pEl->ElParent == NULL)
             /* Pas de regle pour la racine, on met la valeur par defaut */
             {
               pAb->AbStrokeOpacity = 1000;
@@ -4028,10 +4030,10 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
             }
           break;
         case PtBackground:
-          pAb->AbBackground = IntegerRule (pPRule, pAb->AbElement,
+          pAb->AbBackground = IntegerRule (pPRule, pEl,
                                            pAb->AbDocView, &appl, &unit,
                                            pAttr, pAb);
-          if (!appl && pAb->AbElement->ElParent == NULL)
+          if (!appl && pEl->ElParent == NULL)
             /* Pas de regle pour la racine,
                on met la valeur par defaut */
             {
@@ -4040,10 +4042,10 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
             }
           break;
         case PtForeground:
-          pAb->AbForeground = IntegerRule (pPRule, pAb->AbElement,
+          pAb->AbForeground = IntegerRule (pPRule, pEl,
                                            pAb->AbDocView, &appl, &unit,
                                            pAttr, pAb);
-          if (!appl && pAb->AbElement->ElParent == NULL)
+          if (!appl && pEl->ElParent == NULL)
             /* Pas de regle pour la racine, on met la valeur par defaut */
             {
               pAb->AbForeground = DefaultFColor;
@@ -4051,9 +4053,9 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
             }
           break;
         case PtHyphenate:
-          pAb->AbHyphenate = BoolRule (pPRule, pAb->AbElement,
+          pAb->AbHyphenate = BoolRule (pPRule, pEl,
                                        pAb->AbDocView, &appl);
-          if (!appl && pAb->AbElement->ElParent == NULL)
+          if (!appl && pEl->ElParent == NULL)
             /* Pas de regle pour la racine, on met la valeur par defaut */
             {
               pAb->AbHyphenate = FALSE;
@@ -4061,24 +4063,24 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
             }
           break;
         case PtPageBreak:
-          pAb->AbAcceptPageBreak = BoolRule (pPRule, pAb->AbElement,
+          pAb->AbAcceptPageBreak = BoolRule (pPRule, pEl,
                                              pAb->AbDocView, &appl);
           break;
         case PtLineBreak:
-          pAb->AbAcceptLineBreak = BoolRule (pPRule, pAb->AbElement,
+          pAb->AbAcceptLineBreak = BoolRule (pPRule, pEl,
                                              pAb->AbDocView, &appl);
           break;
         case PtGather:
-          pAb->AbBuildAll = BoolRule (pPRule, pAb->AbElement,
+          pAb->AbBuildAll = BoolRule (pPRule, pEl,
                                       pAb->AbDocView, &appl);
           break;
         case PtXRadius:
-          pAb->AbRx = IntegerRule (pPRule, pAb->AbElement, pAb->AbDocView,
+          pAb->AbRx = IntegerRule (pPRule, pEl, pAb->AbDocView,
                                    &appl, &unit, pAttr, pAb);
           pAb->AbRxUnit = unit;
           break;
         case PtYRadius:
-          pAb->AbRy = IntegerRule (pPRule, pAb->AbElement, pAb->AbDocView,
+          pAb->AbRy = IntegerRule (pPRule, pEl, pAb->AbDocView,
                                    &appl, &unit, pAttr, pAb);
           pAb->AbRyUnit = unit;
           break;
@@ -4088,7 +4090,7 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
               if (pAb->AbPositioning == NULL)
                 NewAbPositioning (pAb);
               pAb->AbPositioning->PnTopDistance = IntegerRule (pPRule,
-                                                               pAb->AbElement, pAb->AbDocView, &appl, &unit, pAttr, pAb);
+                                                               pEl, pAb->AbDocView, &appl, &unit, pAttr, pAb);
               pAb->AbPositioning->PnTopUnit = unit;
             }
           break;
@@ -4098,7 +4100,7 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
               if (pAb->AbPositioning == NULL)
                 NewAbPositioning (pAb);
               pAb->AbPositioning->PnRightDistance = IntegerRule (pPRule,
-                                                                 pAb->AbElement, pAb->AbDocView, &appl, &unit, pAttr, pAb);
+                                                                 pEl, pAb->AbDocView, &appl, &unit, pAttr, pAb);
               pAb->AbPositioning->PnRightUnit = unit;
             }
           break;
@@ -4108,7 +4110,7 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
               if (pAb->AbPositioning == NULL)
                 NewAbPositioning (pAb);
               pAb->AbPositioning->PnBottomDistance = IntegerRule (pPRule,
-                                                                  pAb->AbElement, pAb->AbDocView, &appl, &unit, pAttr, pAb);
+                                                                  pEl, pAb->AbDocView, &appl, &unit, pAttr, pAb);
               pAb->AbPositioning->PnBottomUnit = unit;
             }
           break;
@@ -4118,7 +4120,7 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
               if (pAb->AbPositioning == NULL)
                 NewAbPositioning (pAb);
               pAb->AbPositioning->PnLeftDistance = IntegerRule (pPRule,
-                                                                pAb->AbElement, pAb->AbDocView, &appl, &unit, pAttr, pAb);
+                                                                pEl, pAb->AbDocView, &appl, &unit, pAttr, pAb);
               pAb->AbPositioning->PnLeftUnit = unit;
             }
           break;
@@ -4129,7 +4131,7 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
               if (pAb->AbPictBackground == NULL)
                 NewPictInfo (pAb, "", UNKNOWN_FORMAT, False);
               ((ThotPictInfo *) (pAb->AbPictBackground))->PicPosX =
-                 IntegerRule (pPRule, pAb->AbElement, pAb->AbDocView, &appl,
+                 IntegerRule (pPRule, pEl, pAb->AbDocView, &appl,
                               &unit, pAttr, pAb);
               ((ThotPictInfo *) (pAb->AbPictBackground))->PicXUnit = unit;
             }
@@ -4141,14 +4143,14 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
               if (pAb->AbPictBackground == NULL)
                 NewPictInfo (pAb, "", UNKNOWN_FORMAT, False);
               ((ThotPictInfo *) (pAb->AbPictBackground))->PicPosY =
-                 IntegerRule (pPRule, pAb->AbElement, pAb->AbDocView, &appl,
+                 IntegerRule (pPRule, pEl, pAb->AbDocView, &appl,
                               &unit, pAttr, pAb);
               ((ThotPictInfo *) (pAb->AbPictBackground))->PicYUnit = unit;
             }
           break;
         case PtVis:
           // CSS visibility
-          pAb->AbVis = CharRule (pPRule, pAb->AbElement, pAb->AbDocView, &appl);
+          pAb->AbVis = CharRule (pPRule, pEl, pAb->AbDocView, &appl);
           if (pAb->AbVis == 'I')
             {
               if (pAb->AbEnclosing)
@@ -4157,38 +4159,45 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
                 pAb->AbVis = 'V';
             }
           if (pAb->AbVis == 'C' &&
-              !TypeHasException (ExcIsColHead,pAb->AbElement->ElTypeNumber,
-                                 pAb->AbElement->ElStructSchema) &&
-              !TypeHasException (ExcIsRow, pAb->AbElement->ElTypeNumber,
-                                 pAb->AbElement->ElStructSchema))
+              !TypeHasException (ExcIsColHead,pEl->ElTypeNumber,
+                                 pEl->ElStructSchema) &&
+              !TypeHasException (ExcIsRow, pEl->ElTypeNumber,
+                                 pEl->ElStructSchema))
             pAb->AbVis = 'V';
            break;
         case PtDisplay:
-          pAb->AbDisplay = CharRule (pPRule, pAb->AbElement, pAb->AbDocView,
+          pAb->AbDisplay = CharRule (pPRule, pEl, pAb->AbDocView,
                                      &appl);
           if (appl)
             {
               if (pAb->AbDisplay == 'N')
                 /* display: none */
                 {
-                  pParent = pAb->AbEnclosing;
-                  while (pParent && pParent->AbElement &&
-                         pParent->AbElement->ElStructSchema &&
-                         pParent->AbElement->ElStructSchema->SsName &&
-                         !strcmp (pParent->AbElement->ElStructSchema->SsName, "Template"))
+                  if (pEl->ElPrevious && pEl->ElNext &&
+                      TypeHasException (ExcHidden, pEl->ElPrevious->ElTypeNumber,
+                                        pEl->ElPrevious->ElStructSchema) &&
+                      TypeHasException (ExcHidden, pEl->ElNext->ElTypeNumber,
+                                        pEl->ElNext->ElStructSchema))
                     {
-                      // Skip template elements
-                      pParent->AbBuildAll = TRUE;
-                      pParent = pParent->AbEnclosing;
+                      pParent = pAb->AbEnclosing;
+                      while (pParent && pParent->AbElement &&
+                             pParent->AbElement->ElStructSchema &&
+                             pParent->AbElement->ElStructSchema->SsName &&
+                             !strcmp (pParent->AbElement->ElStructSchema->SsName, "Template"))
+                        {
+                          // Skip template elements
+                          pParent->AbBuildAll = TRUE;
+                          pParent = pParent->AbEnclosing;
+                        }
+                      if (pParent)
+                        {
+                          pParent->AbInLine = TRUE;
+                          pParent->AbBuildAll = TRUE;
+                        }
                     }
-                  if (pParent)
-                    {
-                      pParent->AbInLine = TRUE;
-                      pParent->AbBuildAll = TRUE;
-                      pAb->AbVisibility = 0;
-                      pAb->AbDead = TRUE;
-                      pAb->AbInLine = FALSE;
-                    }
+                  pAb->AbVisibility = 0;
+                  pAb->AbDead = TRUE;
+                  pAb->AbInLine = FALSE;
                 }
               else if (pAb->AbDisplay == 'I')
                 /* display: inline */
@@ -4225,16 +4234,16 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
                   pAb->AbAcceptLineBreak = FALSE;
                 }
             }
-          else if (pAb->AbElement->ElParent == NULL)
+          else if (pEl->ElParent == NULL)
             {
               pAb->AbDisplay = 'U';
               appl = TRUE;
             }
           break;
         case PtListStyleType:
-          pAb->AbListStyleType = CharRule (pPRule, pAb->AbElement,
+          pAb->AbListStyleType = CharRule (pPRule, pEl,
                                            pAb->AbDocView, &appl);
-          if (!appl && pAb->AbElement->ElParent == NULL)
+          if (!appl && pEl->ElParent == NULL)
             /* Pas de regle pour la racine, on met la valeur par defaut */
             {
               pAb->AbListStyleType = 'D';  /* disc */
@@ -4242,9 +4251,9 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
             }
           break;
         case PtListStylePosition:
-          pAb->AbListStylePosition = CharRule (pPRule, pAb->AbElement,
+          pAb->AbListStylePosition = CharRule (pPRule, pEl,
                                                pAb->AbDocView, &appl);
-          if (!appl && pAb->AbElement->ElParent == NULL)
+          if (!appl && pEl->ElParent == NULL)
             /* Pas de regle pour la racine, on met la valeur par defaut */
             {
               pAb->AbListStylePosition = 'O';  /* outside */
@@ -4253,7 +4262,7 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
           break;
         case PtListStyleImage:
           if (pPRule->PrPresMode == PresInherit)
-            pAb->AbListStyleImage = CharRule (pPRule, pAb->AbElement,
+            pAb->AbListStyleImage = CharRule (pPRule, pEl,
                                               pAb->AbDocView, &appl);
           else if (pPRule->PrPresMode == PresImmediate &&
                    pPRule->PrViewNum == viewSch)
@@ -4307,7 +4316,7 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
                     }
                 }
             }
-          if (!appl && pAb->AbElement->ElParent == NULL)
+          if (!appl && pEl->ElParent == NULL)
             /* Pas de regle pour la racine, on met la valeur par defaut */
             {
               pAb->AbListStyleImage = 'N';  /* none */
@@ -4315,8 +4324,7 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
             }
           break;
         case PtFloat:
-          pAb->AbFloat = CharRule (pPRule, pAb->AbElement, pAb->AbDocView,
-                                   &appl);
+          pAb->AbFloat = CharRule (pPRule, pEl, pAb->AbDocView, &appl);
           if (pAb->AbFloat != 'N')
             {
               if (pAb->AbEnclosing &&
@@ -4338,14 +4346,13 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
             }
           break;
         case PtClear:
-          pAb->AbClear = CharRule (pPRule, pAb->AbElement, pAb->AbDocView,
-                                   &appl);
+          pAb->AbClear = CharRule (pPRule, pEl, pAb->AbDocView, &appl);
           break;
         case PtPosition:
           if (pAb->AbLeafType == LtCompound &&
               pPRule->PrPresMode == PresInherit)
             {
-              pAbb = AbsBoxInherit (pPRule, pAb->AbElement, pAb->AbDocView);
+              pAbb = AbsBoxInherit (pPRule, pEl, pAb->AbDocView);
               if (pAbb == NULL)
                 appl = FALSE;
               else

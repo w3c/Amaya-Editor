@@ -3727,7 +3727,7 @@ void TtaDestroyDialogue (int ref)
             /* then give focus to canvas */
             //	      TtaRedirectFocus();
           }
-#endif /* #ifdef _WX */
+#endif /* _WX */
 
       /* Libere le catalogue */
       catalogue->Cat_Widget = 0;

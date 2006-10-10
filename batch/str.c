@@ -822,8 +822,8 @@ static int          AttributeNumber (indLine wl, indLine wi)
   If checkAttr is TRUE, the exception has to rest on an attribute.
   If checkIntAttr is TRUE, the exception has to rest on a numeric attribute.
   ----------------------------------------------------------------------*/
-static void      ExceptionNum (int num, ThotBool checkType, ThotBool checkAttr,
-                               ThotBool CheckIntAttr, indLine wi)
+static void ExceptionNum (int num, ThotBool checkType, ThotBool checkAttr,
+                          ThotBool CheckIntAttr, indLine wi)
 {
   PtrSRule            pRule;
   PtrTtAttribute      pAttr;
@@ -1789,6 +1789,10 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
       case KWD_Hidden:
         /* Hidden */
         ExceptionNum (ExcHidden, True, False, False, wi);
+        break;
+      case KWD_PseudoParag:
+        /* PseudoParag */
+        ExceptionNum (ExcPseudoParag, True, False, False, wi);
         break;
       case KWD_PageBreak:
         ExceptionNum (ExcPageBreak, True, False, False, wi);

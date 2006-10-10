@@ -5646,7 +5646,11 @@ PtrAbstractBox AbsBoxesCreate (PtrElement pEl, PtrDocument pDoc,
                     }
                 }
             }
-          else if (cssUndisplay)
+          else if (cssUndisplay && pEl->ElPrevious && pEl->ElNext &&
+                   TypeHasException (ExcHidden, pEl->ElPrevious->ElTypeNumber,
+                                     pEl->ElPrevious->ElStructSchema) &&
+                   TypeHasException (ExcHidden, pEl->ElNext->ElTypeNumber,
+                                     pEl->ElNext->ElStructSchema))
             {
               // set inline the enclosing abstract box
               pElParent = pEl->ElParent;
