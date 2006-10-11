@@ -43,6 +43,7 @@
 #include "platform_tv.h"
 #include "edit_tv.h"
 #include "appdialogue_tv.h"
+#include "frame_tv.h"
 
 /* pointer to the search domain for the the current command */
 static PtrSearchContext SearchingD = NULL;
@@ -54,14 +55,14 @@ static PtrElement    CurrRefElem;
 static PtrElement    ElemTextOK;
 static char          Caption[200];
 /* precedent searched string */
-static char          pPrecedentString[THOT_MAX_CHAR];
+static char          pPrecedentString[MAX_LENGTH];
 /* searched string */
-static char          SearchedString[THOT_MAX_CHAR];
+static char          SearchedString[MAX_LENGTH];
 static CHAR_T       *SString = NULL;
 /* length of the searched string */
 static int           SStringLen;
 /* the replace string */
-static char          ReplacingString[THOT_MAX_CHAR];
+static char          ReplacingString[MAX_LENGTH];
 static CHAR_T       *RString = NULL;
 /* length of the replace string */
 static int           RStringLen;
@@ -554,11 +555,9 @@ void CleanSearchContext ()
   ----------------------------------------------------------------------*/
 void CallbackTextReplace (int ref, int val, char *txt)
 {
-  PtrElement          pFirstSel;
-  PtrElement          pLastSel;
-  PtrDocument         pDocSel;
-  int                 firstChar;
-  int                 lastChar;
+  PtrElement          pFirstSel, pLastSel;
+  PtrDocument         pDocSel, pDoc;
+  int                 firstChar, lastChar, aView;
   PtrElement          pCurrEl;
   ThotBool            selectionOK;
   ThotBool            found, stop;
@@ -594,7 +593,8 @@ void CallbackTextReplace (int ref, int val, char *txt)
 #endif /* _GTK */
             }
         }
-      strcpy (ReplacingString, txt);
+      strncpy (ReplacingString, txt, MAX_LENGTH);
+      ReplacingString[MAX_LENGTH-1] = EOS;
       /* convert the string if necessary */
       TtaFreeMemory (RString);
       RString = TtaConvertByteToCHAR ((unsigned char*)ReplacingString, DialogCharset);
@@ -638,6 +638,8 @@ void CallbackTextReplace (int ref, int val, char *txt)
       if (SearchingD->SDocument == NULL ||
           SearchingD->SDocument->DocSSchema == NULL)
         {
+#ifdef _WX
+#else /* _WX */
 #ifdef _WINGUI
           EndDialog (SearchW, ID_DONE);
           SearchW = NULL;
@@ -650,6 +652,7 @@ void CallbackTextReplace (int ref, int val, char *txt)
           TtaFreeMemory (RString);
           RString = NULL;
           return;
+#endif /* _WX */
         }
       if (val == 2 && WithReplace && !StartSearch)
         DoReplace = FALSE;
@@ -662,16 +665,26 @@ void CallbackTextReplace (int ref, int val, char *txt)
           return;
         }
 
+      GetDocAndView (ActiveFrame, &pDoc, &aView);
       selectionOK = GetCurrentSelection (&pDocSel, &pFirstSel,
                                          &pLastSel, &firstChar, &lastChar);
-      if (!selectionOK || pDocSel != SearchingD->SDocument)
+      if (!selectionOK || pDoc != SearchingD->SDocument)
         {
-          pFirstSel = NULL;
-          pLastSel = NULL;
-          firstChar = 0;
-          lastChar = 0;
-          selectionOK = FALSE;
-          StartSearch = TRUE;
+          SearchingD->SDocument = pDoc;
+          if (pDocSel != pDoc)
+            {
+              pDocSel = pDoc;
+              pFirstSel = pLastSel = pDoc->DocDocElement;
+              firstChar = lastChar = 0;
+              SearchAfter = FALSE;
+              selectionOK = FALSE;
+              StartSearch = TRUE;
+            }
+          else if (firstChar == 0 && lastChar == 0 && pFirstSel == pLastSel)
+            {
+              firstChar = 1;
+              lastChar = pFirstSel->ElVolume + 1;
+            }
         }
       else if (firstChar == 0 && lastChar == 0 && pFirstSel == pLastSel)
         {
@@ -887,6 +900,7 @@ void CallbackTextReplace (int ref, int val, char *txt)
                                    NULL);
 #endif /* _GTK */
 #ifdef _WX
+              WX_SearchResult = 0;
               if (WithReplace && ReplaceDone)
                 {
                   if (!AutoReplace)

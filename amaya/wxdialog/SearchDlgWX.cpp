@@ -102,6 +102,7 @@ SearchDlgWX::~SearchDlgWX()
   ThotCallback (NumFormSearchText, INTEGER_DATA, (char*) 0); 
 }
 
+
 /*----------------------------------------------------------------------
   OnConfirmButton called when clicking on confirmbutton
   ----------------------------------------------------------------------*/
@@ -115,11 +116,11 @@ void SearchDlgWX::OnConfirmButton( wxCommandEvent& event )
   WX_SearchResult = 0; /* By default the search is OK */
   // allocate temporary buffers to copy the *text* buffers
   // allocate a temporary buffer to convert wxString to (char *) UTF-8 buffer
-  char buf_old_text[512];
-  wxASSERT( textToSearch.Len() < 512 );
+  char buf_old_text[MAX_LENGTH];
+  wxASSERT( textToSearch.Len() < MAX_LENGTH );
   strcpy( buf_old_text, (const char*)textToSearch.mb_str(wxConvUTF8) );
-  char buf_new_text[512];
-  wxASSERT( newText.Len() < 512 );
+  char buf_new_text[MAX_LENGTH];
+  wxASSERT( newText.Len() < MAX_LENGTH );
   strcpy( buf_new_text, (const char*)newText.mb_str(wxConvUTF8) );
 
   if (m_ireplace == 1 || m_ireplace == 2) 
@@ -151,8 +152,8 @@ void SearchDlgWX::OnNoReplaceButton( wxCommandEvent& event )
 				  wxTextCtrl)->GetValue( );
 
   // allocate a temporary buffer to convert wxString to (char *) UTF-8 buffer
-  char buf_old_text[512];
-  wxASSERT( textToSearch.Len() < 512 );
+  char buf_old_text[MAX_LENGTH];
+  wxASSERT( textToSearch.Len() < MAX_LENGTH );
   strcpy( buf_old_text, (const char*)textToSearch.mb_str(wxConvUTF8) );
 
   ThotCallback (NumZoneTextSearch, STRING_DATA, buf_old_text);
