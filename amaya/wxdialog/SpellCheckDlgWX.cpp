@@ -46,6 +46,7 @@ void SpellCheckDlgWX::Set_Proposals ( )
     XRCCTRL(*this, "wxID_SPELL_FINISHED", wxStaticText)->SetLabel( TtaConvMessageToWX (TtaGetMessage (LIB, TMSG_END_CHECK)));
   else
     {
+      XRCCTRL(*this, "wxID_SPELL_FINISHED", wxStaticText)->SetLabel( TtaConvMessageToWX (""));
       // list of proposals
       for (i = 1; i <= m_max_proposals; i++)
         {
