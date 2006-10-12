@@ -3856,9 +3856,9 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
               pCurrentBox->BxAbstractBox->AbBox)
             {
               if (pNextBox->BxType == BoPiece || pNextBox->BxType == BoScript)
-                pCurrentBox->BxAbstractBox->AbBox->BxPrevious = pNextBox->BxAbstractBox->AbBox;
+                pCurrentBox->BxAbstractBox->AbBox->BxNext = pNextBox->BxAbstractBox->AbBox;
               else
-                pCurrentBox->BxAbstractBox->AbBox->BxPrevious = pNextBox;
+                pCurrentBox->BxAbstractBox->AbBox->BxNext = pNextBox;
             }
         }
       
