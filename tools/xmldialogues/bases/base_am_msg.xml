@@ -46,6 +46,21 @@
 	<message xml:lang="cn">打开</message>
 	<message xml:lang="tw">打開</message>
 </label>
+<label define="AM_NEW_HTML">
+	<message xml:lang="en">New XHTML document</message>
+	<message xml:lang="fr">Nouveau document XHTML</message>
+	<message xml:lang="de">XHTML</message>
+	<message xml:lang="it">Nuovo documento XHTML</message>
+	<message xml:lang="es">Nuevo documento XHTML</message>
+	<message xml:lang="pt">Novo documento XHTML</message>
+	<message xml:lang="fi">Uusi XHTML dokumentti</message>
+	<message xml:lang="tr">Yeni XHTML dosyası</message>
+	<message xml:lang="ru">Новый XHTML документ...</message>
+	<message xml:lang="hu">Új XHTML dokumentum...</message>
+	<message xml:lang="ka">ახალი XHTML დოკუმენტი...</message>
+	<message xml:lang="cn">新建 XHTML 文档</message>
+	<message xml:lang="tw">新建 XHTML 文檔</message>
+</label>
 <label define="AM_NEW_HTML11">
 	<message xml:lang="en">New XHTML 1.1 document</message>
 	<message xml:lang="fr">Nouveau document XHTML 1.1</message>
@@ -3127,6 +3142,7 @@
 <label define="AM_INSERT_NBSP">
 	<message xml:lang="en">Keep multiple spaces</message>
 	<message xml:lang="fr">Garder les espaces multiples</message>
+	<message xml:lang="es">Mantener espaciado múltiple</message>
 </label>
 <label define="AM_XML_RETRY">
 	<message xml:lang="en">Error(s) in the source code</message>
@@ -5544,12 +5560,14 @@
 <label define="AM_INVALID_ELEMENT">
 	<message xml:lang="en">Unknown element</message>
 	<message xml:lang="fr">Elément inconnu</message>
+	<message xml:lang="es">Elemento desconocido</message>
 	<message xml:lang="cn">未知元素</message>
 	<message xml:lang="tw">未知元素</message>
 </label>
 <label define="AM_CHANGE_NUMBER">
 	<message xml:lang="en">%d updated elements</message>
 	<message xml:lang="fr">%d éléments changés</message>
+	<message xml:lang="es">%d elementos actualizados</message>
 	<message xml:lang="cn">%d 个已更新元素</message>
 	<message xml:lang="tw">%d 个已更新元素</message>
 </label>

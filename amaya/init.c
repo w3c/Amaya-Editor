@@ -1727,6 +1727,7 @@ static void TextURL (Document doc, View view, char *text)
 
       TtaFreeMemory (s);
       DontReplaceOldDoc = FALSE;
+      NewFile = FALSE;
       CurrentDocument = doc;
       CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
     }
@@ -2245,7 +2246,7 @@ static void InitOpenDocForm (Document doc, View view, char *name, char *title,
 #endif /* _WINDOWS */
   char             *homedir;
 #endif /* _WX */
-#if defined(_GTK)
+#ifdef _GTK
   int               i;
 
   /* Dialogue form for open URL or local */
@@ -2261,7 +2262,7 @@ static void InitOpenDocForm (Document doc, View view, char *name, char *title,
   TtaNewTextForm (BaseDialog + URLName, BaseDialog + OpenForm,
                   TtaGetMessage (AMAYA, AM_LOCATION), 50, 1, TRUE);
   TtaNewLabel (BaseDialog + LocalName, BaseDialog + OpenForm, " ");
-#endif /* #if defined(_GTK) */
+#endif /* _GTK */
 
   CurrentDocument = doc;
   /* generate the right name and URI */
@@ -2396,6 +2397,10 @@ void OpenNew (Document document, View view, int docType, int docProfile)
     {
       /* will scan html documents */
       strcpy (ScanFilter, "*.*htm*");
+#ifdef _WX
+      InitOpenDocForm (document, view, "New.html",
+                       TtaGetMessage (AMAYA, AM_NEW_HTML), docHTML);
+#else /* _WX */
       if (docProfile == L_Basic)
         InitOpenDocForm (document, view, "New.html",
                          TtaGetMessage (AMAYA, AM_NEW_HTML_BASIC), docHTML);
@@ -2408,6 +2413,7 @@ void OpenNew (Document document, View view, int docType, int docProfile)
       else
         InitOpenDocForm (document, view, "New.html",
                          TtaGetMessage (AMAYA, AM_NEW_HTML11), docHTML);
+#endif /* _WX */
     }
   else if (NewDocType == docMath)
     {
