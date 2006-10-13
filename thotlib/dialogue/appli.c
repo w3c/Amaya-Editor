@@ -397,7 +397,7 @@ void FrameKilled (int *w, int frame, int *info)
 
 
 /*----------------------------------------------------------------------
-  Called when a clique is done on the up right corner cross
+  Called when a click is done on the up right corner cross
   Kill the current document ( GTK version )                            
   ----------------------------------------------------------------------*/
 #ifdef _GTK
