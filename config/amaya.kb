@@ -57,8 +57,8 @@ Ctrl <Key>[:        TtcInsertChar("\253")
 Ctrl <Key>]:        TtcInsertChar("\273")
 Ctrl <Key>-:        ZoomOut()
 Ctrl <Key>=:        ZoomIn()
+Ctrl <Key>6:        ZoomIn()
 Ctrl <Key>+:        ZoomIn()
-#Ctrl <Key>-:           TtcInsertChar("&#173")
 
 #File menu 
 Shift Ctrl <Key>P:                 PrintAs() 
@@ -80,24 +80,18 @@ Ctrl <Key>v:	                   PasteBuffer()
 Ctrl <Key>x:	                   TtcCutSelection()
 Ctrl <Key>y:                       TtcRedo() 
 Ctrl <Key>z:                       TtcUndo() 
-#Shift Ctrl <Key>*:                SetBrowserEditor() 
-
-#Headings sbmenu
-Shift Ctrl <Key>1:                 CreateHeading1() 
-Shift Ctrl <Key>2:                 CreateHeading2() 
-Shift Ctrl <Key>3:                 CreateHeading3() 
-Shift Ctrl <Key>4:                 CreateHeading4() 
-Shift Ctrl <Key>5:                 CreateHeading5() 
-Shift Ctrl <Key>6:                 CreateHeading6() 
-Ctrl <Key>1:                       CreateHeading1() 
-Ctrl <Key>2:                       CreateHeading2() 
-Ctrl <Key>3:                       CreateHeading3() 
-Ctrl <Key>4:                       CreateHeading4() 
-Ctrl <Key>5:                       CreateHeading5() 
-Ctrl <Key>6:                       CreateHeading6()
 # BR and &nbsp;
 Ctrl <Key>Return:                  CreateBreak("\212") 
 Ctrl <Key>Space:                   TtcInsertChar("\240")
+
+#Headings sbmenu
+Ctrl <Key>h , Ctrl <Key>1:         CreateHeading1() 
+Ctrl <Key>h , Ctrl <Key>2:         CreateHeading2() 
+Ctrl <Key>h , Ctrl <Key>3:         CreateHeading3() 
+Ctrl <Key>h , Ctrl <Key>4:         CreateHeading4() 
+Ctrl <Key>h , Ctrl <Key>5:         CreateHeading5() 
+Ctrl <Key>h , Ctrl <Key>6:         CreateHeading6()
+Ctrl <Key>h , Ctrl <Key>-:         TtcInsertChar("&#173")
 
 #Types 
 Shift <Key>Return:                 CreateParagraph() 
