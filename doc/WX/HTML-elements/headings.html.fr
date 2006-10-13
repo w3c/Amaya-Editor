@@ -2,8 +2,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>éléments d'entête</title>
-  <meta name="GENERATOR" content="amaya 9.1, see http://www.w3.org/Amaya/" />
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 9.52, see http://www.w3.org/Amaya/" />
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -12,12 +12,14 @@
 <div>
 <img border="0" alt="Amaya" src="../../../resources/icons/22x22/logo.png" />
 
+
 <p class="nav"><a href="structure.html.fr"><img alt="previous" border="0"
-src="../../../resources/icons/misc/left.png" /></a> <a
-href="../Manual.html.fr#There"><img alt="top" border="0"
-src="../../../resources/icons/misc/up.png" /></a> <a
-href="lists.html.fr"><img alt="next" border="0"
-src="../../../resources/icons/misc/right.png" /></a></p>
+src="../../../resources/icons/misc/left.png" />
+</a> <a href="../Manual.html.fr#There"><img alt="top" border="0"
+src="../../../resources/icons/misc/up.png" />
+</a> <a href="lists.html.fr"><img alt="next" border="0"
+src="../../../resources/icons/misc/right.png" />
+</a></p>
 </div>
 
 <div id="Heading">
@@ -34,14 +36,14 @@ entêtes.</p>
 
 <p>Le premier des trois niveaux d'entête peut être créé depuis la barre
 d'outils en utilisant les icônes <img
-src="../../../resources/icons/16x16/XHTML_H1.png" alt="H1 button" />, <img
-src="../../../resources/icons/16x16/XHTML_H2.png" alt="H2 button" />, <img
-src="../../../resources/icons/16x16/XHTML_H3.png" alt="H3 button" />. Tous
-les niveaux d'entête peuvent être créés depuis le menu
+src="../../../resources/icons/16x16/XHTML_H1.png" alt="H1 button" />
+, <img src="../../../resources/icons/16x16/XHTML_H2.png" alt="H2 button" />
+, <img src="../../../resources/icons/16x16/XHTML_H3.png" alt="H3 button" />
+. Tous les niveaux d'entête peuvent être créés depuis le menu
 <strong>XHTML</strong>, ou en utilisant les raccourcis clavier. Les
-raccourcis clavier sont par défaut <kbd>Ctrl 1</kbd> pour <code>H1</code>,
-<kbd>Ctrl 2</kbd> pour <code>H2</code>, et pareil jusqu'à <kbd>Ctrl 6</kbd>
-for <code>H6</code>.</p>
+raccourcis clavier sont par défaut <kbd>Ctrl h Ctrl 1</kbd> pour
+<code>H1</code>, <kbd>Ctrl h Ctrl 2</kbd> pour <code>H2</code>, et pareil
+jusqu'à <kbd>Ctrl h Ctrl 6</kbd> for <code>H6</code>.</p>
 
 <p>Il existe des styles d'entête par défaut dans la plupart des navigateurs
 pour donner une idée de leur importance relative, mais l'auteur peut

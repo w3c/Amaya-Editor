@@ -37,9 +37,16 @@ Alt <Key>Left:                     GotoPreviousHTML()
 Alt <Key>Right:                    GotoNextHTML() 
 <Key>Tab:                          NextLinkOrFormElement()
 Shift <Key>Tab:                    PreviousLinkOrFormElement()
-Ctrl <Key>[:           TtcInsertChar("\253")
-Ctrl <Key>]:           TtcInsertChar("\273")
-Ctrl <Key>-:           TtcInsertChar("&#173")
+Ctrl <Key>[:                       TtcInsertChar("\253")
+Ctrl <Key>]:                       TtcInsertChar("\273")
+Ctrl <Key>-:                       ZoomOut()
+Ctrl <Key>=:                       ZoomIn()
+Ctrl <Key>6:                       ZoomIn()
+Ctrl <Key>+:                       ZoomIn()
+
+# BR and &nbsp;
+Ctrl <Key>Return:                  CreateBreak("\212") 
+Ctrl <Key>Space:                   TtcInsertChar("\240")
 
 #Structure navigation
 <Key>F2:                           TtcParentElement()
@@ -78,16 +85,14 @@ Ctrl <Key>f:	                   TtcSearchText()
 Ctrl <Key>::		           SpellCheck()
 
 #Headings sbmenu
-Ctrl <Key>1:                       CreateHeading1() 
-Ctrl <Key>2:                       CreateHeading2() 
-Ctrl <Key>3:                       CreateHeading3() 
-Ctrl <Key>4:                       CreateHeading4() 
-Ctrl <Key>5:                       CreateHeading5() 
-Ctrl <Key>6:                       CreateHeading6()
+Ctrl <Key>h , Ctrl <Key>1:         CreateHeading1() 
+Ctrl <Key>h , Ctrl <Key>2:         CreateHeading2() 
+Ctrl <Key>h , Ctrl <Key>3:         CreateHeading3() 
+Ctrl <Key>h , Ctrl <Key>4:         CreateHeading4() 
+Ctrl <Key>h , Ctrl <Key>5:         CreateHeading5() 
+Ctrl <Key>h , Ctrl <Key>6:         CreateHeading6()
+Ctrl <Key>h , Ctrl <Key>-:         TtcInsertChar("&#173")
 
-# BR and &nbsp;
-Ctrl <Key>Return:                  CreateBreak("\212") 
-Ctrl <Key>Space:                   TtcInsertChar("\240")
 
 # Types 
 Shift Ctrl <Key>Return:            CreateParagraph() 
@@ -218,8 +223,6 @@ Ctrl <Key>t , Ctrl <Key>x:         TransformType()
 
 #View Menu
 <Key>F8:                           ShowPanel()
-Ctrl <Key>-:                       ZoomOut()
-Ctrl <Key>=:                       ZoomIn()
 Shift Ctrl <Key>M:                 ShowMapAreas() 
 Shift Ctrl <Key>G:                 ShowTargets() 
 Shift Ctrl <Key>R:                 ShowStructure()

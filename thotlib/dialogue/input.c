@@ -384,17 +384,18 @@ static unsigned int SpecialKey (char *name, ThotBool shifted, ThotBool *isSpecia
   key2 = 2nd key                                       
   key  = keysym value or 0
   command = number of the command in MyActions
+  Return TRUE if the key is not registred (already declared )
   ----------------------------------------------------------------------*/
-static void MemoKey (int mod1, int key1, ThotBool spec1, int mod2, int key2,
-                     ThotBool spec2, int key, int command)
+static ThotBool MemoKey (int mod1, int key1, ThotBool spec1, int mod2,
+                         int key2, ThotBool spec2, int key, int command)
 {
-  ThotBool            exists;
+  ThotBool            isNew;
   KEY                *ptr = NULL;
   KEY                *oldptr;
   KEY               **addFirst;
 
   if (key1 == 0)
-    return;
+    return FALSE;
 
   /* Entry point into the automata */
   switch (mod1)
@@ -418,45 +419,38 @@ static void MemoKey (int mod1, int key1, ThotBool spec1, int mod2, int key2,
       addFirst = &Automata_ALT;
       break;
     default:
-      return;
+      return FALSE;
     }
 
-  /* Initializations */
-  ptr = (KEY *) TtaGetMemory (sizeof (KEY));
   oldptr = *addFirst;		/* debut chainage entrees existantes */
   /* Verifies if we already have a ctrl key */
-  if (oldptr == NULL)
-    {
-      /* It's the first ctrl key we'll create */
-      *addFirst = ptr;
-      exists = FALSE;		/* key1 isn't yet known */
-    }
-  else
+  isNew = TRUE;
+  if (oldptr)
     {
       /* verifies if this key is already recorded */
-      exists = FALSE;
       do
         {
           /* is it the same entry key ? */
           if (oldptr->K_EntryCode == key1 && oldptr->K_Special == spec1)
-            exists = TRUE;	/* the key1 entry already exists */
-          else if (oldptr->K_Other != NULL)
+            isNew = FALSE;	/* the key1 entry already exists */
+          else if (oldptr->K_Other)
             {
               oldptr = oldptr->K_Other;
               if (oldptr->K_EntryCode == key1 && oldptr->K_Special == spec1)
-                exists = TRUE;	/* we must also verify the last entry */
+                isNew = FALSE;	/* we must also verify the last entry */
             }
         }
-      while (oldptr->K_Other != NULL && !exists);
+      while (oldptr->K_Other && isNew);
     }
 
   /* is it a two key sequence with a modifier on the first one? */
   if ((key2 != 0) && (mod1 != THOT_NO_MOD))
     {
       /* Does the first level entry already exists ? */
-      if (!exists)
+      if (isNew)
         {
-          /* Creation d'une entree d'automate de 1er niveau */
+          /* Create a first level entry */
+          ptr = (KEY *) TtaGetMemory (sizeof (KEY));
           ptr->K_EntryCode = key1;
           ptr->K_Special = spec1;
           ptr->K_Next = NULL;
@@ -465,19 +459,21 @@ static void MemoKey (int mod1, int key1, ThotBool spec1, int mod2, int key2,
           ptr->K_Value = 0;
 
           /* Chainage a l'entree precedente */
-          if (oldptr != NULL)
+          if (oldptr)
             oldptr->K_Other = ptr;
+          else
+            *addFirst = ptr;
 
           oldptr = ptr;
           ptr = NULL;
         }
 
-      /* Il faut parcourir les entrees de 2eme niveau */
+      /* check the list of second level entries */
+      isNew = TRUE;
       if (oldptr->K_Next == NULL)
         {
-          /* creation d'une 1ere entree de 2eme niveau */
-          if (ptr == NULL)
-            ptr = (KEY *) TtaGetMemory (sizeof (KEY));
+          /* create a second level entry */
+          ptr = (KEY *) TtaGetMemory (sizeof (KEY));
           ptr->K_EntryCode = key2;
           ptr->K_Special = spec2;
           ptr->K_Modifier = mod2;
@@ -485,50 +481,48 @@ static void MemoKey (int mod1, int key1, ThotBool spec1, int mod2, int key2,
           ptr->K_Command = command;
           ptr->K_Value = key;
           oldptr->K_Next = ptr;
-          exists = TRUE;
         }
       else
         {
           oldptr = oldptr->K_Next;
-          exists = FALSE;
           do
             {
               /* Est-ce la meme cle d'entree */
               if (oldptr->K_EntryCode == key2)
                 /* L'entree existe deja */
-                exists = TRUE;
-              else if (oldptr->K_Other != NULL)
+                isNew = FALSE;
+              else if (oldptr->K_Other)
                 {
                   oldptr = oldptr->K_Other;
                   /* Il faut en plus verifier la derniere entree */
                   if (oldptr->K_EntryCode == key2)
-                    exists = TRUE;
+                    isNew = FALSE;
                 }
             }
-          while (oldptr->K_Other != NULL && !exists);
-        }
+          while (oldptr->K_Other && isNew);
 
-      /* Si l'entree de 2eme niveau n'existe pas deja ? */
-      if (!exists)
-        {
-          /* Creation d'une entree d'automate de 2eme niveau */
-          if (ptr == NULL)
-            ptr = (KEY *) TtaGetMemory (sizeof (KEY));
-          ptr->K_EntryCode = key2;
-          ptr->K_Special = spec2;
-          ptr->K_Modifier = mod2;
-          ptr->K_Other = NULL;
-          ptr->K_Command = command;
-          ptr->K_Value = key;
-
-          /* Chainage a l'entree precedente */
-          if (oldptr != NULL)
-            oldptr->K_Other = ptr;
+          /* Si l'entree de 2eme niveau n'existe pas deja ? */
+          if (isNew)
+            {
+              /* create a second level entry */
+              ptr = (KEY *) TtaGetMemory (sizeof (KEY));
+              ptr->K_EntryCode = key2;
+              ptr->K_Special = spec2;
+              ptr->K_Modifier = mod2;
+              ptr->K_Other = NULL;
+              ptr->K_Command = command;
+              ptr->K_Value = key;
+              
+              /* Chainage a l'entree precedente */
+              if (oldptr)
+                oldptr->K_Other = ptr;
+            }
         }
     }
-  else if (!exists)
+  else if (isNew)
     {
-      /* on cree une entree de premier niveau */
+      /* Create a first level entry */
+      ptr = (KEY *) TtaGetMemory (sizeof (KEY));
       ptr->K_EntryCode = key1;
       ptr->K_Special = spec1;
       ptr->K_Other = NULL;
@@ -537,9 +531,12 @@ static void MemoKey (int mod1, int key1, ThotBool spec1, int mod2, int key2,
       ptr->K_Value = key;
 
       /* Chainage a l'entree precedente */
-      if (oldptr != NULL)
+      if (oldptr)
         oldptr->K_Other = ptr;
+      else
+        *addFirst = ptr;
     }
+  return isNew;
 }
 
 
@@ -1937,11 +1934,13 @@ void InitTranslations (char *appliname)
               else if (i < max)
                 {
                   /* another action */
-                  MemoKey (mod1, key1, isSpecialKey1,
-                           mod2, key2, isSpecialKey2, /*255+i */ 0, i);
-                  /* display the equiv shortcut */
-                  TtaFreeMemory (MenuActionList[i].ActionEquiv);
-                  MenuActionList[i].ActionEquiv = TtaStrdup (equiv);
+                  if (MemoKey (mod1, key1, isSpecialKey1,
+                               mod2, key2, isSpecialKey2, /*255+i */ 0, i))
+                    {
+                      /* display the equiv shortcut */
+                      TtaFreeMemory (MenuActionList[i].ActionEquiv);
+                      MenuActionList[i].ActionEquiv = TtaStrdup (equiv);
+                    }
                 }
             }
           else

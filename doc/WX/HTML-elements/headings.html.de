@@ -4,8 +4,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Überschriften</title>
-  <meta name="generator" content="amaya 9.1, see http://www.w3.org/Amaya/" />
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="generator" content="amaya 9.52, see http://www.w3.org/Amaya/" />
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <style type="text/css">
   </style>
   <link href="../style.css" rel="stylesheet" type="text/css" />
@@ -19,10 +19,12 @@
 <div>
 <img alt="Amaya" src="../../../resources/icons/22x22/logo.png" />
 
+
 <p class="nav"><a href="../Document.html.de"><img alt="erste Seite"
-src="../../../resources/icons/misc/up.png" /></a> <a
-href="lists.html.de"><img alt="nächste Seite"
-src="../../../resources/icons/misc/right.png" /></a></p>
+src="../../../resources/icons/misc/up.png" />
+</a> <a href="lists.html.de"><img alt="nächste Seite"
+src="../../../resources/icons/misc/right.png" />
+</a></p>
 </div>
 
 <div id="page_body">
@@ -39,13 +41,14 @@ markieren.</p>
 
 <p>Die ersten drei Überschriftsebenen können mit Knöpfen der Knopfleiste,
 <img src="../../../resources/icons/16x16/XHTML_H1.png"
-alt="Knopf Überschrift Ebene 1" />, <img
-src="../../../resources/icons/16x16/XHTML_H2.png"
-alt="Knopf Überschrift Ebene 2" /> und <img
-src="../../../resources/icons/16x16/XHTML_H3.png"
-alt="Knopf Überschrift Ebene 3" />, erzeugt werden. Alle Überschriften können
-aus dem Menü <strong>XHTML</strong> oder über Tastenkürzel (<kbd>Strg 1</kbd>
-für <code>h1</code>, <kbd>Strg 2</kbd> für <code>h2</code> u.s.w.) erzeugt
+alt="Knopf Überschrift Ebene 1" />
+, <img src="../../../resources/icons/16x16/XHTML_H2.png"
+alt="Knopf Überschrift Ebene 2" />
+ und <img src="../../../resources/icons/16x16/XHTML_H3.png"
+alt="Knopf Überschrift Ebene 3" />
+, erzeugt werden. Alle Überschriften können aus dem Menü
+<strong>XHTML</strong> oder über Tastenkürzel (<kbd>Strg h Strg 1</kbd> für
+<code>h1</code>, <kbd>Strg h Strg 2</kbd> für <code>h2</code> u.s.w.) erzeugt
 werden</p>
 
 <p>Die meisten Browser heben Überschriften besonders hervor um deren

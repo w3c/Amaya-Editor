@@ -15,11 +15,14 @@
 <div>
 <img alt="Amaya" src="../../resources/icons/22x22/logo.png" class="logo" />
 
+
 <p class="nav"><a href="Attributes.html.fr" accesskey="p"><img alt="previous"
-src="../../resources/icons/misc/left.png" /></a> <a href="Manual.html.fr"
-accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a>
-<a href="Changing.html.fr" accesskey="n"><img alt="next"
-src="../../resources/icons/misc/right.png" /></a></p>
+src="../../resources/icons/misc/left.png" />
+</a> <a href="Manual.html.fr" accesskey="t"><img alt="top"
+src="../../resources/icons/misc/up.png" />
+</a> <a href="Changing.html.fr" accesskey="n"><img alt="next"
+src="../../resources/icons/misc/right.png" />
+</a></p>
 </div>
 
 <div id="Keyboard">
@@ -44,7 +47,7 @@ certains caractères non disponibles au clavier comme :</p>
     O E</kbd></kbd></li>
   <li>Pour obtenir un «, vous pouvez taper <kbd>Ctrl [</kbd></li>
   <li>Pour obtenir un », vous pouvez taper <kbd>Ctrl ]</kbd></li>
-  <li>Pour obtenir un ­ (hyphen), vous pouvez taper <kbd>Ctrl -</kbd></li>
+  <li>Pour obtenir un ­ (hyphen), vous pouvez taper <kbd>Ctrl h -</kbd></li>
 </ul>
 
 <p>On donne une description de la méthode multi-touches standard des versions
