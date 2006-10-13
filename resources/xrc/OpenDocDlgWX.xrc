@@ -43,6 +43,7 @@
                   <style>wxCB_DROPDOWN</style>
                   <focused>1</focused>
                 </object>
+                <option>1</option>
                 <flag>wxEXPAND</flag>
               </object>
               <object class="spacer">
