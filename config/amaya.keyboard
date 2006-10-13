@@ -52,9 +52,9 @@ Alt <Key>Down:      DoAction()
 Alt <Key>Home:      GoToHome()
 Ctrl <Key>[:        TtcInsertChar("\253")
 Ctrl <Key>]:        TtcInsertChar("\273")
+Ctrl <Key>6:        ZoomOut()
 Ctrl <Key>-:        ZoomOut()
 Ctrl <Key>=:        ZoomIn()
-Ctrl <Key>6:        ZoomIn()
 Ctrl <Key>+:        ZoomIn()
 
 # BR and &nbsp;
