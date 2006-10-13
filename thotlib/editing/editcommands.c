@@ -4253,20 +4253,27 @@ void TtcPaste (Document doc, View view)
 	      
                       int len = strlen((const char *)text.mb_str(wxConvUTF8));
                       int i = ClipboardLength;
-                      if (i < len)
-                        i = len;
-                      char *tmp = (char*)TtaGetMemory ((len + 1) * sizeof(char));
-                      strcpy ((char *)tmp, (const char *)text.mb_str(wxConvUTF8));
-                      if (Xbuffer == NULL || strncmp ((const char *)Xbuffer, tmp, i))
-                        {
-                          TtcClearClipboard ();
-                          PasteXClipboard((unsigned char *)tmp, len, UTF_8);
-                        }
-                      else if (ClipboardURI)
-                        PasteXClipboard(Xbuffer, ClipboardLength, UTF_8);
-                      else
-                        ContentEditing (TEXT_PASTE);
-                      TtaFreeMemory (tmp);
+                      if (len==0)
+                      {
+                         ContentEditing (TEXT_PASTE);
+                      }
+		      else
+                      {
+                        if (i < len)
+                          i = len;
+                        char *tmp = (char*)TtaGetMemory ((len + 1) * sizeof(char));
+                        strcpy ((char *)tmp, (const char *)text.mb_str(wxConvUTF8));
+                        if (Xbuffer == NULL || strncmp ((const char *)Xbuffer, tmp, i))
+                          {
+                            TtcClearClipboard ();
+                            PasteXClipboard((unsigned char *)tmp, len, UTF_8);
+                          }
+                        else if (ClipboardURI)
+                          PasteXClipboard(Xbuffer, ClipboardLength, UTF_8);
+                        else
+                          ContentEditing (TEXT_PASTE);
+                        TtaFreeMemory (tmp);
+                      }
                     }
                   else
                     {
