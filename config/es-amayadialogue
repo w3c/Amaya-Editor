@@ -24,47 +24,47 @@
 22 &Abrir documento...
 23 A&brir en ventana nueva...
 24 Actualiza&r
-25 A&trás
-26 A&delante
-27 &Guardar
-28 G&uardar como...
-29 Sincroni&zar
-30 Ca&mbiar doctype
-31 &Borrar doctype
-32 &Añadir doctype
-33 Cambiar a &XHTML 1.1
-34 Cambiar a XHTML 1.0 &Transitional
-35 Cambiar a XHTML 1.0 &Strict
-36 Cambiar a XHTML 1.0 &Basic
-37 Cambiar a HTML 4.01 T&ransitional
-38 Cambiar a HTML 4.01 Str&ict
-39 &Forzar codificación de caracteres
-40 Unicode (UTF-8)
-41 Occidental (ISO-8859-1)
-42 Occidental (ISO-8859-15)
-43 Occidental (Windows-1252)
-44 Europa central (ISO-8859-2)
-45 Europa Central (Windows-1250)
-46 Europa del Sur (ISO-8859-3)
-47 Báltico (ISO-8859-4)
-48 Báltico (Windows-1257)
-49 Cirílico (ISO-8859-5)
-50 Cirílico (Windows-1251)
-51 Cirílico (KOI8-R)
-52 Árabe (ISO-8859-6)
-53 Árabe (Windows-1256)
-54 Griego (ISO-8859-7)
-55 Griego (Windows-1253)
-56 Hebreo (ISO-8859-8)
-57 Hebreo (Windows-1255)
-58 Turco (ISO-8859-9)
-59 Turco (Windows-125)
-60 Chino simplificó (GB-2312)
-61 Japonés (ISO-2022-JP)
-62 Japonés (EUC-JP)
-63 Japonés (Shift-JIS)
-64 Mostrar errores &sintácticos
-65 &Propiedades
+25 &Forzar codificación de caracteres
+26 Unicode (UTF-8)
+27 Occidental (ISO-8859-1)
+28 Occidental (ISO-8859-15)
+29 Occidental (Windows-1252)
+30 Europa central (ISO-8859-2)
+31 Europa Central (Windows-1250)
+32 Europa del Sur (ISO-8859-3)
+33 Báltico (ISO-8859-4)
+34 Báltico (Windows-1257)
+35 Cirílico (ISO-8859-5)
+36 Cirílico (Windows-1251)
+37 Cirílico (KOI8-R)
+38 Árabe (ISO-8859-6)
+39 Árabe (Windows-1256)
+40 Griego (ISO-8859-7)
+41 Griego (Windows-1253)
+42 Hebreo (ISO-8859-8)
+43 Hebreo (Windows-1255)
+44 Turco (ISO-8859-9)
+45 Turco (Windows-125)
+46 Chino simplificó (GB-2312)
+47 Japonés (ISO-2022-JP)
+48 Japonés (EUC-JP)
+49 Japonés (Shift-JIS)
+50 A&trás
+51 A&delante
+52 Mostrar errores &sintácticos
+53 &Propiedades
+54 &Guardar
+55 G&uardar como...
+56 Sincroni&zar
+57 Ca&mbiar doctype
+58 &Borrar doctype
+59 &Añadir doctype
+60 Cambiar a &XHTML 1.1
+61 Cambiar a XHTML 1.0 &Transitional
+62 Cambiar a XHTML 1.0 &Strict
+63 Cambiar a XHTML 1.0 &Basic
+64 Cambiar a HTML 4.01 T&ransitional
+65 Cambiar a HTML 4.01 Str&ict
 66 Configurar e imprimir...
 67 &Imprimir
 68 &Cerrar pestaña
@@ -241,7 +241,7 @@
 239 Pegar delante
 240 Pegar detrás
 241 &Ver Biblioteca SVG
-242 &Añadir la selección a la Biblioteca SVG
+242 &Añadir a la Biblioteca SVG
 243 Comentario
 244 Elementos XML...
 245 Copiar localización

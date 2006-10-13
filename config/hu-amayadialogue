@@ -24,47 +24,47 @@
 22 Dokumentum meg&nyitása...
 23 Új &ablakban...
 24 &Dokumentum újratöltése
-25 &Vissza
-26 E&lőre
-27 &Mentés
-28 Mentés má&sként...
-29 S&zinkronizálás
-30 Dokumentum&típus megváltoztatása
-31 doctype &eltávolítása
-32 &doctype hozzá&adása
-33 Change to &XHTML 1.1
-34 XHTML 1.0 &átmenetivé tétel
-35 XHTML 1.0 &kötötté tétel
-36 XHTML 1.0 &alappá tétel
-37 &HTML 4.01 átmenetivé tétel
-38 HTML 4.01 &kötötté tétel
-39 Kényszerített karakter &kódolás
-40 Unicode (UTF-8)
-41 Nyugat-európai (ISO-8859-1)
-42 Nyugat-európai (ISO-8859-15)
-43 Nyugat-európai (Windows-1252)
-44 Közép-európai (ISO-8859-2)
-45 Közép-európai (Windows-1250)
-46 Dél-európai (ISO-8859-3)
-47 Balti (ISO-8859-4)
-48 Balti (Windows-1257)
-49 Cirill (ISO-8859-5)
-50 Cirill (Windows-1251)
-51 Cirill (KOI8-R)
-52 Arab (ISO-8859-6)
-53 Arab (Windows-1256)
-54 Görög (ISO-8859-7)
-55 Görög (Windows-1253)
-56 Héber (ISO-8859-8)
-57 Héber (Windows-1255)
-58 Török (ISO-8859-9)
-59 Török (Windows-1254)
-60 Chinese (GB-2312)
-61 Japán (ISO-2022-JP)
-62 Japán (EUC-JP)
-63 Japán (Shift-JIS)
-64 Elemzési &hibák mutatása
-65 Dokumentum &adatai
+25 Kényszerített karakter &kódolás
+26 Unicode (UTF-8)
+27 Nyugat-európai (ISO-8859-1)
+28 Nyugat-európai (ISO-8859-15)
+29 Nyugat-európai (Windows-1252)
+30 Közép-európai (ISO-8859-2)
+31 Közép-európai (Windows-1250)
+32 Dél-európai (ISO-8859-3)
+33 Balti (ISO-8859-4)
+34 Balti (Windows-1257)
+35 Cirill (ISO-8859-5)
+36 Cirill (Windows-1251)
+37 Cirill (KOI8-R)
+38 Arab (ISO-8859-6)
+39 Arab (Windows-1256)
+40 Görög (ISO-8859-7)
+41 Görög (Windows-1253)
+42 Héber (ISO-8859-8)
+43 Héber (Windows-1255)
+44 Török (ISO-8859-9)
+45 Török (Windows-1254)
+46 Chinese (GB-2312)
+47 Japán (ISO-2022-JP)
+48 Japán (EUC-JP)
+49 Japán (Shift-JIS)
+50 &Vissza
+51 E&lőre
+52 Elemzési &hibák mutatása
+53 Dokumentum &adatai
+54 &Mentés
+55 Mentés má&sként...
+56 S&zinkronizálás
+57 Doctype megváltoztatása
+58 doctype &eltávolítása
+59 &doctype hozzá&adása
+60 Change to &XHTML 1.1
+61 XHTML 1.0 &átmenetivé tétel
+62 XHTML 1.0 &kötötté tétel
+63 XHTML 1.0 &alappá tétel
+64 &HTML 4.01 átmenetivé tétel
+65 HTML 4.01 &kötötté tétel
 66 &Beállítás és nyomtatás...
 67 &Nyomtatás
 68 Lap &bezárása

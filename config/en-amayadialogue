@@ -24,47 +24,47 @@
 22 &Open document...
 23 Open in new &window...
 24 &Reload document
-25 &Back
-26 &Forward
-27 &Save
-28 Save &as...
-29 S&ynchronize
-30 Change the &Document Type
-31 &Remove the doctype
-32 &Add a doctype
-33 Change to &XHTML 1.1
-34 Change to XHTML 1.0 &Transitional
-35 Change to XHTML 1.0 &Strict
-36 Change to XHTML 1.0 &Basic
-37 Change to &HTML 4.01 Transitional
-38 Change to HTML 4.01 Str&ict
-39 Force a Character Coding
-40 Unicode (UTF-8)
-41 Western (ISO-8859-1)
-42 Western (ISO-8859-15)
-43 Western (Windows-1252)
-44 Central Europe (ISO-8859-2)
-45 Central Europe (Windows-1250)
-46 South Europe (ISO-8859-3)
-47 Baltic (ISO-8859-4)
-48 Baltic (Windows-1257)
-49 Cyrillic (ISO-8859-5)
-50 Cyrillic (Windows-1251)
-51 Cyrillic (KOI8-R)
-52 Arabic (ISO-8859-6)
-53 Arabic (Windows-1256)
-54 Greek (ISO-8859-7)
-55 Greek (Windows-1253)
-56 Hebrew (ISO-8859-8)
-57 Hebrew (Windows-1255)
-58 Turkish (ISO-8859-9)
-59 Turkish (Windows-1254)
-60 Chinese Simplified (GB-2312)
-61 Japanese (ISO-2022-JP)
-62 Japanese (EUC-JP)
-63 Japanese (Shift-JIS)
-64 Show parsing &errors
-65 Document &Information
+25 Read as
+26 Unicode (UTF-8)
+27 Western (ISO-8859-1)
+28 Western (ISO-8859-15)
+29 Western (Windows-1252)
+30 Central Europe (ISO-8859-2)
+31 Central Europe (Windows-1250)
+32 South Europe (ISO-8859-3)
+33 Baltic (ISO-8859-4)
+34 Baltic (Windows-1257)
+35 Cyrillic (ISO-8859-5)
+36 Cyrillic (Windows-1251)
+37 Cyrillic (KOI8-R)
+38 Arabic (ISO-8859-6)
+39 Arabic (Windows-1256)
+40 Greek (ISO-8859-7)
+41 Greek (Windows-1253)
+42 Hebrew (ISO-8859-8)
+43 Hebrew (Windows-1255)
+44 Turkish (ISO-8859-9)
+45 Turkish (Windows-1254)
+46 Chinese Simplified (GB-2312)
+47 Japanese (ISO-2022-JP)
+48 Japanese (EUC-JP)
+49 Japanese (Shift-JIS)
+50 &Back
+51 &Forward
+52 Show parsing &errors
+53 Document &Info
+54 &Save
+55 Save &as...
+56 S&ynchronize
+57 Change &Doctype
+58 &Remove the doctype
+59 &Add a doctype
+60 Change to &XHTML 1.1
+61 Change to XHTML 1.0 &Transitional
+62 Change to XHTML 1.0 &Strict
+63 Change to XHTML 1.0 &Basic
+64 Change to &HTML 4.01 Transitional
+65 Change to HTML 4.01 Str&ict
 66 Set&up and Print...
 67 &Print
 68 Close &tab
@@ -177,7 +177,7 @@
 175 Inline frame (iframe)
 176 ruby
 177 &Section numbering
-178 &Generate Table of contents
+178 &Add Table of contents
 179 Insert time stamp
 180 &Make book
 181 Information type
@@ -240,8 +240,8 @@
 238 Append a column
 239 Paste before
 240 Paste after
-241 Show the graphic library
-242 Add the selected graphics in the library
+241 Show SVG library
+242 Add to SVG library
 243 Comment
 244 XML elements...
 245 Copy location

@@ -24,47 +24,47 @@
 22 Avaa dokumentti...
 23 Avaa uudessa ikkunassa...
 24 Päivitä dokumentti
-25 Takaisin
-26 Eteenpäin
-27 Tallenna
-28 Tallenna nimellä...
-29 Päivitä
-30 Muuta tyyppi
-31 Poista tyyppi
-32 **&Add a doctype
-33 Aseta tyypiksi XHTML 1.1
-34 **Change to XHTML 1.0 &Transitional
-35 Aseta tyypiksi XHTML 1.0 Strict
-36 Aseta tyypiksi XHTML 1.0 Basic
-37 Aseta tyypiksi HTML 4.01 Transitional
-38 Aseta tyypiksi HTML 4.01 Strict
-39 **Force a Character Coding
-40 Unicode (UTF-8)
-41 Western (ISO-8859-1)
-42 Western (ISO-8859-15)
-43 Western (Windows-1252)
-44 Central Europe (ISO-8859-2)
-45 Central Europe (Windows-1250)
-46 South Europe (ISO-8859-3)
-47 Baltic (ISO-8859-4)
-48 Baltic (Windows-1257)
-49 Cyrillic (ISO-8859-5)
-50 Cyrillic (Windows-1251)
-51 Cyrillic (KOI8-R)
-52 Arabic (ISO-8859-6)
-53 Arabic (Windows-1256)
-54 Greek (ISO-8859-7)
-55 Greek (Windows-1253)
-56 Hebrew (ISO-8859-8)
-57 Hebrew (Windows-1255)
-58 Turkish (ISO-8859-9)
-59 Turkish (Windows-125)
-60 Chinese (GB-2312)
-61 Japanese (ISO-2022-JP)
-62 Japanese (EUC-JP)
-63 Japanese (Shift-JIS)
-64 Näytä käännösvirheet
-65 Tietoja dokumentista
+25 **Read as
+26 Unicode (UTF-8)
+27 Western (ISO-8859-1)
+28 Western (ISO-8859-15)
+29 Western (Windows-1252)
+30 Central Europe (ISO-8859-2)
+31 Central Europe (Windows-1250)
+32 South Europe (ISO-8859-3)
+33 Baltic (ISO-8859-4)
+34 Baltic (Windows-1257)
+35 Cyrillic (ISO-8859-5)
+36 Cyrillic (Windows-1251)
+37 Cyrillic (KOI8-R)
+38 Arabic (ISO-8859-6)
+39 Arabic (Windows-1256)
+40 Greek (ISO-8859-7)
+41 Greek (Windows-1253)
+42 Hebrew (ISO-8859-8)
+43 Hebrew (Windows-1255)
+44 Turkish (ISO-8859-9)
+45 Turkish (Windows-125)
+46 Chinese (GB-2312)
+47 Japanese (ISO-2022-JP)
+48 Japanese (EUC-JP)
+49 Japanese (Shift-JIS)
+50 Takaisin
+51 Eteenpäin
+52 Näytä käännösvirheet
+53 Tietoja dokumentista
+54 Tallenna
+55 Tallenna nimellä...
+56 Päivitä
+57 Muuta tyyppi
+58 Poista tyyppi
+59 **&Add a doctype
+60 Aseta tyypiksi XHTML 1.1
+61 **Change to XHTML 1.0 &Transitional
+62 Aseta tyypiksi XHTML 1.0 Strict
+63 Aseta tyypiksi XHTML 1.0 Basic
+64 Aseta tyypiksi HTML 4.01 Transitional
+65 Aseta tyypiksi HTML 4.01 Strict
 66 Tulostusasetukset...
 67 Tulosta
 68 **Close &tab
@@ -177,7 +177,7 @@
 175 Sisäinen lomake (iframe)
 176 ruby
 177 Osien numerointi
-178 **&Generate Table of contents
+178 **&Add Table of contents
 179 **Insert time stamp
 180 Valmista kooste
 181 Tiedon tyyppi
@@ -240,8 +240,8 @@
 238 **Append a column
 239 **Paste before
 240 **Paste after
-241 **Show the graphic library
-242 **Add the selected graphics in the library
+241 **Show SVG library
+242 **Add to SVG library
 243 Merkintä
 244 **XML elements...
 245 **Copy location

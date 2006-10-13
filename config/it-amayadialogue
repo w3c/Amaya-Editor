@@ -24,47 +24,47 @@
 22 Apri documento...
 23 Apri in una nuova finestra...
 24 Ricarica documento
-25 Precedente
-26 Successivo
-27 Salva
-28 Salva con nome...
-29 Sincronizza
-30 Cambia/Crea doctype
-31 Elimina doctype
-32 &Aggiungi un doctype
-33 Cambia/Crea doctype XHTML 1.1
-34 Cambia/Crea doctype XHTML 1.0 Transitional
-35 Cambia/Crea doctype XHTML 1.0 Strict
-36 Cambia/Crea doctype XHTML 1.0 Basic
-37 Cambia/Crea doctype HTML 4.01 Transitional
-38 Cambia/Crea doctype HTML 4.01 Strict
-39 Forza una codifica carattere
-40 Unicode (UTF-8)
-41 Western (ISO-8859-1)
-42 Western (ISO-8859-15)
-43 Western (Windows-1252)
-44 Central Europe (ISO-8859-2)
-45 Central Europe (Windows-1250)
-46 South Europe (ISO-8859-3)
-47 Baltic (ISO-8859-4)
-48 Baltic (Windows-1257)
-49 Cyrillic (ISO-8859-5)
-50 Cyrillic (Windows-1251)
-51 Cyrillic (KOI8-R)
-52 Arabic (ISO-8859-6)
-53 Arabic (Windows-1256)
-54 Greek (ISO-8859-7)
-55 Greek (Windows-1253)
-56 Hebrew (ISO-8859-8)
-57 Hebrew (Windows-1255)
-58 Turkish (ISO-8859-9)
-59 Turkish (Windows-125)
-60 Cinese semplificato (GB-2312)
-61 Japanese (ISO-2022-JP)
-62 Japanese (EUC-JP)
-63 Japanese (Shift-JIS)
-64 Mostra le errore
-65 Informazioni sul documento
+25 Forza una codifica carattere
+26 Unicode (UTF-8)
+27 Western (ISO-8859-1)
+28 Western (ISO-8859-15)
+29 Western (Windows-1252)
+30 Central Europe (ISO-8859-2)
+31 Central Europe (Windows-1250)
+32 South Europe (ISO-8859-3)
+33 Baltic (ISO-8859-4)
+34 Baltic (Windows-1257)
+35 Cyrillic (ISO-8859-5)
+36 Cyrillic (Windows-1251)
+37 Cyrillic (KOI8-R)
+38 Arabic (ISO-8859-6)
+39 Arabic (Windows-1256)
+40 Greek (ISO-8859-7)
+41 Greek (Windows-1253)
+42 Hebrew (ISO-8859-8)
+43 Hebrew (Windows-1255)
+44 Turkish (ISO-8859-9)
+45 Turkish (Windows-125)
+46 Cinese semplificato (GB-2312)
+47 Japanese (ISO-2022-JP)
+48 Japanese (EUC-JP)
+49 Japanese (Shift-JIS)
+50 Precedente
+51 Successivo
+52 Mostra le errore
+53 Info sul documento
+54 Salva
+55 Salva con nome...
+56 Sincronizza
+57 Cambia/Crea doctype
+58 Elimina doctype
+59 &Aggiungi un doctype
+60 Cambia/Crea doctype XHTML 1.1
+61 Cambia/Crea doctype XHTML 1.0 Transitional
+62 Cambia/Crea doctype XHTML 1.0 Strict
+63 Cambia/Crea doctype XHTML 1.0 Basic
+64 Cambia/Crea doctype HTML 4.01 Transitional
+65 Cambia/Crea doctype HTML 4.01 Strict
 66 Imposta e stampa...
 67 Stampa
 68 &Chiudi tab
@@ -177,7 +177,7 @@
 175 Cornice (iframe)
 176 ruby
 177 Numerazione delle sezioni
-178 Genera Indice (Table of contents)
+178 Genera Indice
 179 Inserisci timestamp
 180 Crea libro
 181 Tipo di informazione
@@ -241,7 +241,7 @@
 239 Incolla prima
 240 Incolla dopo
 241 Mostri librería SVG
-242 Aggiunga la selezione nella librería SVG
+242 Aggiunga nella librería SVG
 243 Commento
 244 Elementi XML...
 245 Copia URL

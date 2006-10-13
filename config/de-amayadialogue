@@ -24,47 +24,47 @@
 22 Öffnen...
 23 Öffnen (neues Fenster)...
 24 Aktualisieren
-25 Zurück
-26 Vorwärts
-27 Speichern
-28 Speichern unter...
-29 Synchronisieren
-30 DTD ändern
-31 DTD entfernen
-32 Dokumenttyp &hinzufügen
-33 XHTML 1.1
-34 Dokumenttyp XHTML 1.0 Transitional zuweisen
-35 XHTML 1.0 Strict
-36 XHTML 1.0 Basic
-37 HTML 4.01 Transitional
-38 HTML Strict
-39 Zeichenkodierung erzwingen
-40 Unicode (UTF-8)
-41 Western (ISO-8859-1)
-42 Western (ISO-8859-15)
-43 Western (Windows-1252)
-44 Mitteleuropa (ISO-8859-2)
-45 Mitteleuropa (Windows-1250)
-46 Südeuropa (ISO-8859-3)
-47 Baltisch (ISO-8859-4)
-48 Baltisch (Windows-1257)
-49 Kyrillisch (ISO-8859-5)
-50 Kyrillisch (Windows-1251)
-51 Kyrillisch (KOI8-R)
-52 Arabisch (ISO-8859-6)
-53 Arabisch (Windows-1256)
-54 Griechisch (ISO-8859-7)
-55 Griechisch (Windows-1253)
-56 Hebräisch (ISO-8859-8)
-57 Hebräisch (Windows-1255)
-58 Türkisch (ISO-8859-9)
-59 Türkisch (Windows-1254)
-60 Chinese vereinfacht (GB-2312)
-61 Japanisch (ISO-2022-JP)
-62 Japanisch (EUC-JP)
-63 Japanisch (Shift-JIS)
-64 Parserfehler anzeigen
-65 Kurzinfo
+25 Zeichenkodierung erzwingen
+26 Unicode (UTF-8)
+27 Western (ISO-8859-1)
+28 Western (ISO-8859-15)
+29 Western (Windows-1252)
+30 Mitteleuropa (ISO-8859-2)
+31 Mitteleuropa (Windows-1250)
+32 Südeuropa (ISO-8859-3)
+33 Baltisch (ISO-8859-4)
+34 Baltisch (Windows-1257)
+35 Kyrillisch (ISO-8859-5)
+36 Kyrillisch (Windows-1251)
+37 Kyrillisch (KOI8-R)
+38 Arabisch (ISO-8859-6)
+39 Arabisch (Windows-1256)
+40 Griechisch (ISO-8859-7)
+41 Griechisch (Windows-1253)
+42 Hebräisch (ISO-8859-8)
+43 Hebräisch (Windows-1255)
+44 Türkisch (ISO-8859-9)
+45 Türkisch (Windows-1254)
+46 Chinese vereinfacht (GB-2312)
+47 Japanisch (ISO-2022-JP)
+48 Japanisch (EUC-JP)
+49 Japanisch (Shift-JIS)
+50 Zurück
+51 Vorwärts
+52 Parserfehler anzeigen
+53 Kurzinfo
+54 Speichern
+55 Speichern unter...
+56 Synchronisieren
+57 DTD ändern
+58 DTD entfernen
+59 Dokumenttyp &hinzufügen
+60 XHTML 1.1
+61 Dokumenttyp XHTML 1.0 Transitional zuweisen
+62 XHTML 1.0 Strict
+63 XHTML 1.0 Basic
+64 HTML 4.01 Transitional
+65 HTML Strict
 66 Druckoptionen...
 67 Drucken
 68 Registerkarte schließen
@@ -241,7 +241,7 @@
 239 Einfügen (davor)
 240 Einfügen (danach)
 241 SVG-Bibliothek anzeigen...
-242 Markierung in SVG-Bibliothek einfügen
+242 Markierung in SVG-Bibliothek
 243 Kommentar
 244 Elemente XML...
 245 Internetadresse kopieren

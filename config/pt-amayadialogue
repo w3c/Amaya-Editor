@@ -24,47 +24,47 @@
 22 Abrir documento...
 23 Abrir em nova janela...
 24 Recarregar documento
-25 Voltar
-26 Avançar
-27 Salvar
-28 Salvar como...
-29 Sincronizar
-30 Alterar Document Type
-31 Remover doctype
-32 **&Add a doctype
-33 Alterar doctype para XHTML 1.1
-34 Modificar/Criar doctype XHTML 1.0
-35 Alterar doctype para XHTML 1.0 Strict
-36 Alterar doctype para XHTML 1.0 Basic
-37 Alterar doctype para HTML 4.01 Transitional
-38 Alterar doctype para HTML 4.01 Strict
-39 **Force a Character Coding
-40 Unicode (UTF-8)
-41 Western (ISO-8859-1)
-42 Western (ISO-8859-15)
-43 Western (Windows-1252)
-44 Central Europe (ISO-8859-2)
-45 Central Europe (Windows-1250)
-46 South Europe (ISO-8859-3)
-47 Baltic (ISO-8859-4)
-48 Baltic (Windows-1257)
-49 Cyrillic (ISO-8859-5)
-50 Cyrillic (Windows-1251)
-51 Cyrillic (KOI8-R)
-52 Arabic (ISO-8859-6)
-53 Arabic (Windows-1256)
-54 Greek (ISO-8859-7)
-55 Greek (Windows-1253)
-56 Hebrew (ISO-8859-8)
-57 Hebrew (Windows-1255)
-58 Turkish (ISO-8859-9)
-59 Turkish (Windows-125)
-60 Chinês simplificou (GB-2312)
-61 Japanese (ISO-2022-JP)
-62 Japanese (EUC-JP)
-63 Japanese (Shift-JIS)
-64 Exibir erros de gramática (parsing)
-65 Informação sobre o documento
+25 **Read as
+26 Unicode (UTF-8)
+27 Western (ISO-8859-1)
+28 Western (ISO-8859-15)
+29 Western (Windows-1252)
+30 Central Europe (ISO-8859-2)
+31 Central Europe (Windows-1250)
+32 South Europe (ISO-8859-3)
+33 Baltic (ISO-8859-4)
+34 Baltic (Windows-1257)
+35 Cyrillic (ISO-8859-5)
+36 Cyrillic (Windows-1251)
+37 Cyrillic (KOI8-R)
+38 Arabic (ISO-8859-6)
+39 Arabic (Windows-1256)
+40 Greek (ISO-8859-7)
+41 Greek (Windows-1253)
+42 Hebrew (ISO-8859-8)
+43 Hebrew (Windows-1255)
+44 Turkish (ISO-8859-9)
+45 Turkish (Windows-125)
+46 Chinês simplificou (GB-2312)
+47 Japanese (ISO-2022-JP)
+48 Japanese (EUC-JP)
+49 Japanese (Shift-JIS)
+50 Voltar
+51 Avançar
+52 Exibir erros de gramática (parsing)
+53 Info sobre documento
+54 Salvar
+55 Salvar como...
+56 Sincronizar
+57 Alterar Document Type
+58 Remover doctype
+59 **&Add a doctype
+60 Alterar doctype para XHTML 1.1
+61 Modificar/Criar doctype XHTML 1.0
+62 Alterar doctype para XHTML 1.0 Strict
+63 Alterar doctype para XHTML 1.0 Basic
+64 Alterar doctype para HTML 4.01 Transitional
+65 Alterar doctype para HTML 4.01 Strict
 66 Configurar e imprimir...
 67 Imprimir
 68 **Close &tab
@@ -177,7 +177,7 @@
 175 Quadro em linha (iframe)
 176 rubi
 177 Numeração de seção
-178 **&Generate Table of contents
+178 **&Add Table of contents
 179 **Insert time stamp
 180 Construir livro
 181 tipo de Informação
@@ -240,8 +240,8 @@
 238 **Append a column
 239 **Paste before
 240 **Paste after
-241 **Show the graphic library
-242 **Add the selected graphics in the library
+241 **Show SVG library
+242 **Add to SVG library
 243 Comentário
 244 **XML elements...
 245 **Copy location

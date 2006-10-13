@@ -24,47 +24,47 @@
 22 Belge aç...
 23 Yeni pencerede aç...
 24 Belgeyi yeniden yükle
-25 Geri
-26 Ileri
-27 Kaydet
-28 Isimle kaydet...
-29 Eşlemek
-30 Doctype\'bı düzenle
-31 doctype\'bı sil
-32 **&Add a doctype
-33 XHTML 1.1 doctype
-34 XHTML 1.0 Transitional doctype
-35 XHTML 1.0 Strict doctype
-36 XHTML 1.0 Basic doctype
-37 HTML 4.01 Transitional doctype
-38 HTML 4.01 Strict doctype
-39 **Force a Character Coding
-40 Unicode (UTF-8)
-41 Western (ISO-8859-1)
-42 Western (ISO-8859-15)
-43 Western (Windows-1252)
-44 Central Europe (ISO-8859-2)
-45 Central Europe (Windows-1250)
-46 South Europe (ISO-8859-3)
-47 Baltic (ISO-8859-4)
-48 Baltic (Windows-1257)
-49 Cyrillic (ISO-8859-5)
-50 Cyrillic (Windows-1251)
-51 Cyrillic (KOI8-R)
-52 Arabic (ISO-8859-6)
-53 Arabic (Windows-1256)
-54 Greek (ISO-8859-7)
-55 Greek (Windows-1253)
-56 Hebrew (ISO-8859-8)
-57 Hebrew (Windows-1255)
-58 Turkish (ISO-8859-9)
-59 Turkish (Windows-125)
-60 Chinese (GB-2312)
-61 Japanese (ISO-2022-JP)
-62 Japanese (EUC-JP)
-63 Japanese (Shift-JIS)
-64 Pars hatalarını göster
-65 Doküman bilgisi
+25 **Read as
+26 Unicode (UTF-8)
+27 Western (ISO-8859-1)
+28 Western (ISO-8859-15)
+29 Western (Windows-1252)
+30 Central Europe (ISO-8859-2)
+31 Central Europe (Windows-1250)
+32 South Europe (ISO-8859-3)
+33 Baltic (ISO-8859-4)
+34 Baltic (Windows-1257)
+35 Cyrillic (ISO-8859-5)
+36 Cyrillic (Windows-1251)
+37 Cyrillic (KOI8-R)
+38 Arabic (ISO-8859-6)
+39 Arabic (Windows-1256)
+40 Greek (ISO-8859-7)
+41 Greek (Windows-1253)
+42 Hebrew (ISO-8859-8)
+43 Hebrew (Windows-1255)
+44 Turkish (ISO-8859-9)
+45 Turkish (Windows-125)
+46 Chinese (GB-2312)
+47 Japanese (ISO-2022-JP)
+48 Japanese (EUC-JP)
+49 Japanese (Shift-JIS)
+50 Geri
+51 Ileri
+52 Pars hatalarını göster
+53 Doküman bilgisi
+54 Kaydet
+55 Isimle kaydet...
+56 Eşlemek
+57 Doctype\'bı düzenle
+58 doctype\'bı sil
+59 **&Add a doctype
+60 XHTML 1.1 doctype
+61 XHTML 1.0 Transitional doctype
+62 XHTML 1.0 Strict doctype
+63 XHTML 1.0 Basic doctype
+64 HTML 4.01 Transitional doctype
+65 HTML 4.01 Strict doctype
 66 Kur ve yazdır
 67 Yapılandır ve yazdır
 68 **Close &tab
@@ -177,7 +177,7 @@
 175 çizgili çerçeve (iframe)
 176 ruby
 177 Bölüm numaralandırması
-178 **&Generate Table of contents
+178 **&Add Table of contents
 179 **Insert time stamp
 180 Kitap yap
 181 Bilgi türü

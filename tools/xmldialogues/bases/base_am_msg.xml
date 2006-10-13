@@ -3149,16 +3149,16 @@
 	<message xml:lang="tw">Fatal error - Fix the source code to continue</message>
 </label>
 <label define="AM_XML_CHARACTER_RETRY">
-	<message xml:lang="en">Try the 'File/Force a Character Coding' entry</message>
-	<message xml:lang="fr">Essayer l'entrée &quot;Fichier/Forcer un code caractère&quot;</message>
+	<message xml:lang="en">Try the 'File/Read as' entry</message>
+	<message xml:lang="fr">Essayer l'entrée &quot;Fichier/Lire comme&quot;</message>
 	<message xml:lang="es">Utiliza el menú 'Archivo &gt; Forzar codificación de caracteres'</message>
 	<message xml:lang="de">Verwenden Sie 'Datei/Zeichenkodierung erzwingen'</message>
 	<message xml:lang="it">Prova la voce 'File/Forza codifica caratteri'</message>
 	<message xml:lang="ru">Перейдите к пункту меню Файл/Выбрать кодировку.</message>
 	<message xml:lang="hu">Próbálja a 'Fájl/Kényszerített karakter kódolás' menüt</message>
 	<message xml:lang="ka">მენიუდან 'ფაილი' სცადეთ ელემენტი 'კოდირების შერჩევა'</message>
-	<message xml:lang="cn">Try the 'File/Force a Character Coding' entry</message>
-	<message xml:lang="tw">Try the 'File/Force a Character Coding' entry</message>
+	<message xml:lang="cn">Try the 'File/Read as' entry</message>
+	<message xml:lang="tw">Try the 'File/Read as' entry</message>
 </label>
 <label define="AM_XML_CHARACTER_ERROR">
 	<message xml:lang="en">Invalid characters</message>

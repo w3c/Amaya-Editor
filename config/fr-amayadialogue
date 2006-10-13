@@ -24,47 +24,47 @@
 22 &Ouvrir...
 23 Ouvrir dans nou&velle fenêtre...
 24 &Recharger le document
-25 Pr&écédent
-26 S&uivant
-27 &Sauver
-28 Sauver &comme...
-29 S&ynchroniser
-30 Changer le type du &document
-31 S&upprimer le doctype
-32 &Ajouter un doctype
-33 Changer pour &XHTML 1.1
-34 Changer pour XHTML 1.0 &Transitional
-35 Changer pour XHTML 1.0 &Strict
-36 Changer pour XHTML 1.0 &Basic
-37 Changer pour &HTML 4.01 Transitional
-38 Changer pour HTML 4.01 Str&ict
-39 Forcer un code caractère
-40 Unicode (UTF-8)
-41 Occidental (ISO-8859-1)
-42 Occidental (ISO-8859-15)
-43 Occidental (Windows-1252)
-44 Europe centrale (ISO-8859-2)
-45 Europe centrale (Windows-1250)
-46 Europe du sud (ISO-8859-3)
-47 Balte (ISO-8859-4)
-48 Baltic (Windows-1257)
-49 Cyrillique (ISO-8859-5)
-50 Cyrillique (Windows-1251)
-51 Cyrillique (KOI8-R)
-52 Arabe (ISO-8859-6)
-53 Arabe (Windows-1256)
-54 Grec (ISO-8859-7)
-55 Grec (Windows-1253)
-56 Hébreu (ISO-8859-8)
-57 Hébreu (Windows-1255)
-58 Turc (ISO-8859-9)
-59 Turc (Windows-125)
-60 Chinois simplifié (GB-2312)
-61 Japonais (ISO-2022-JP)
-62 Japonais (EUC-JP)
-63 Japonais (Shift-JIS)
-64 Montrer les &erreurs
-65 Infor&mations sur le document
+25 Lire comme
+26 Unicode (UTF-8)
+27 Occidental (ISO-8859-1)
+28 Occidental (ISO-8859-15)
+29 Occidental (Windows-1252)
+30 Europe centrale (ISO-8859-2)
+31 Europe centrale (Windows-1250)
+32 Europe du sud (ISO-8859-3)
+33 Balte (ISO-8859-4)
+34 Baltic (Windows-1257)
+35 Cyrillique (ISO-8859-5)
+36 Cyrillique (Windows-1251)
+37 Cyrillique (KOI8-R)
+38 Arabe (ISO-8859-6)
+39 Arabe (Windows-1256)
+40 Grec (ISO-8859-7)
+41 Grec (Windows-1253)
+42 Hébreu (ISO-8859-8)
+43 Hébreu (Windows-1255)
+44 Turc (ISO-8859-9)
+45 Turc (Windows-125)
+46 Chinois simplifié (GB-2312)
+47 Japonais (ISO-2022-JP)
+48 Japonais (EUC-JP)
+49 Japonais (Shift-JIS)
+50 Pr&écédent
+51 S&uivant
+52 Montrer les &erreurs
+53 Info document
+54 &Sauver
+55 Sauver &comme...
+56 S&ynchroniser
+57 Changer le doctype
+58 S&upprimer le doctype
+59 &Ajouter un doctype
+60 Changer pour &XHTML 1.1
+61 Changer pour XHTML 1.0 &Transitional
+62 Changer pour XHTML 1.0 &Strict
+63 Changer pour XHTML 1.0 &Basic
+64 Changer pour &HTML 4.01 Transitional
+65 Changer pour HTML 4.01 Str&ict
 66 &Paramétrer et imprimer...
 67 &Imprimer
 68 Fermer l'on&glet
@@ -177,7 +177,7 @@
 175 Cadre en ligne (iframe)
 176 ruby
 177 &Numéroter les sections
-178 &Engendrer la table des matières
+178 &Ajouter table des matières
 179 Insérer date de mise à jour
 180 &Construire un livre
 181 Types information
@@ -240,8 +240,8 @@
 238 Ajouter une colonne
 239 Coller avant
 240 Coller après
-241 Montrer la librairie graphique
-242 Ajouter le graphique sélectionné dans la librairie
+241 Montrer la librairie SVG
+242 Ajouter à la librairie SVG
 243 Commentaire
 244 Éléments XML...
 245 Copier l'adresse
