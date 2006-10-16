@@ -1311,7 +1311,7 @@ ThotBool OpenParsingErrors (Document document)
 {  
   char       fileName[200];
 
-  if (document == 0)
+  if (document == 0 || DocumentTypes[document] == docFree)
     return FALSE;
 
   sprintf (fileName, "%s%c%d%cPARSING.ERR",
