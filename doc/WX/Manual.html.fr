@@ -45,7 +45,7 @@ spécifique d'Amaya :</p>
   <li><a rel="Chapter"
   href="Selecting.html.fr#Selecting">Sélectionner</a></li>
   <li><a rel="Chapter" href="Views.html.fr#Views">Afficher des vues</a></li>
-  <li><a href="Document.html.fr">Éditer des documents</a></li>
+  <li><a href="Document.html.fr#Changing">Éditer des documents</a></li>
   <li><a rel="Chapter" href="Creating.html.fr#Creating">Créer de nouveaux
     éléments</a></li>
   <li><a rel="Chapter" href="Attributes.html.fr#Attributes">Éditer des
@@ -62,9 +62,9 @@ spécifique d'Amaya :</p>
     des zones actives</a></li>
   <li><a href="Math.html.fr#Math" rel="Chapter">Éditer des
   mathématiques</a></li>
-  <li><a href="SVG.html.fr#Edition" rel="Chapter">Édition des
+  <li><a href="SVG.html.fr#Graphics" rel="Chapter">Édition des
   graphiques</a></li>
-  <li><a href="Xml.html.fr">Support Xml générique</a></li>
+  <li><a href="Xml.html.fr#XML" rev="Chapter">Support Xml générique</a></li>
   <li><a rel="Chapter" href="StyleSheets.html.fr#Style">Les feuilles de
     style</a></li>
   <li><a rel="Chapter" href="Searching.html.fr#Searching">Rechercher et
@@ -87,9 +87,9 @@ spécifique d'Amaya :</p>
 rel="Chapter">Configurer Amaya</a> explique comment modifier les options par
 defaut.</p>
 
-<p>La section <a href="ShortCuts.html.fr#page_body">Les raccourcis clavier
-dans Amaya</a> explique comment est construite la liste des raccourcis
-clavier.</p>
+<p>La section <a href="ShortCuts.html.fr#page_body" rel="Chapter">Les
+raccourcis clavier dans Amaya</a> explique comment est construite la liste
+des raccourcis clavier.</p>
 
 <p>La page sur <a href="Access.html.fr#Access" rel="Chapter">l'Accessibilité
 dans Amaya</a> décrit les fonctionnalités d'accessibilité d'Amaya, et

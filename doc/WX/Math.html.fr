@@ -4,7 +4,7 @@
 <head>
   <title>Editer des mathématiques</title>
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 9.3, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 9.52, see http://www.w3.org/Amaya/" />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -13,14 +13,15 @@
 <div>
 <img alt="Amaya" src="../../resources/icons/22x22/logo.png" class="logo" />
 
-<p class="nav"><a href="ImageMaps.html.fr" accesskey="p"><img alt="previous"
-src="../../resources/icons/misc/left.png" /></a> <a href="Manual.html.fr"
-accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a>
-<a href="SVG.html.fr" accesskey="n"><img alt="next"
-src="../../resources/icons/misc/right.png" /></a></p>
-</div>
 
-<div id="Math">
+<p class="nav"><a href="ImageMaps.html.fr" accesskey="p"><img alt="previous"
+src="../../resources/icons/misc/left.png" />
+</a> <a href="Manual.html.fr" accesskey="t"><img alt="top"
+src="../../resources/icons/misc/up.png" />
+</a> <a href="SVG.html.fr" accesskey="n"><img alt="next"
+src="../../resources/icons/misc/right.png" />
+</a></p>
+</div>
 
 <div class="toc">
 <ul>
@@ -41,6 +42,7 @@ src="../../resources/icons/misc/right.png" /></a></p>
 </ul>
 </div>
 
+<div id="Math">
 <h2 id="Editer">Editer des mathématiques</h2>
 
 <p>Amaya permet d'inclure des expressions mathématiques dans les pages web,

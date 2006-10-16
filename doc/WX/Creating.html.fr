@@ -24,8 +24,6 @@ src="../../resources/icons/misc/right.png" />
 </a></p>
 </div>
 
-<div id="Creating">
-
 <div class="toc">
 <ul>
   <li><a href="#Boutons">Boutons et menus</a></li>
@@ -47,6 +45,7 @@ src="../../resources/icons/misc/right.png" />
 </ul>
 </div>
 
+<div id="Creating">
 <h2 id="L1103">Créer de nouveaux <span xml:lang="fr"
 lang="fr">éléments</span></h2>
 
@@ -93,7 +92,8 @@ courante.</p>
      ).</li>
   <li>ouvrir/fermer (ou englober la sélection courante par) un élément
     <em>inline</em> de XHTML: <em>mise en évidence</em> (<img
-    src="../../resources/icons/16x16/XHTML_I.png" alt="Bouton Mise en evidence" />
+    src="../../resources/icons/16x16/XHTML_I.png"
+    alt="Bouton Mise en evidence" />
      ), <strong>important</strong> (<img
     src="../../resources/icons/16x16/XHTML_B.png" alt="Bouton Important" />
      ) <code>code</code> (<img src="../../resources/icons/16x16/XHTML_T.png"
@@ -128,7 +128,7 @@ ou MathML. Amaya tente alors de créer l'élément à l'endroit le plus proche
 possible. Par exemple, si le point d'insertion se trouve à la fin de la
 dernière ligne d'un paragraphe quand vous cliquez sur le bouton <img
 src="../../resources/icons/16x16/XHTML_H2.png" alt="H2" />
-, Amaya ne crée pas la nouvelle en-tête à cette position (elle serait
+ , Amaya ne crée pas la nouvelle en-tête à cette position (elle serait
 invalide) mais après le paragraphe, à la position valide la plus proche.</p>
 
 <p>Dans d'autres cas, Amaya modifie la structure existante pour créer
@@ -238,7 +238,7 @@ rapidement des structures complexes emboîtées.</p>
   <li>Créez d'abord une liste numérotée avec un premier item, par exemple en
     cliquant sur le bouton <img alt="Numbered List "
     src="../../resources/icons/16x16/XHTML_Num.png" />
-    .</li>
+     .</li>
   <li>Tapez le contenu de la première ligne et pressez la touche
     <kbd>Enter</kbd> : cela crée un nouveau paragraphe dans l'item de
   liste.</li>
@@ -249,7 +249,7 @@ rapidement des structures complexes emboîtées.</p>
   <li>A la fin de la première ligne de l'item 2, créez une liste nouvelle
     avec son premier item (cliquez par exemple sur le bouton <img
     alt="Numbered List " src="../../resources/icons/16x16/XHTML_Num.png" />
-    ). La nouvelle liste sera automatiquement emboîtée.</li>
+     ). La nouvelle liste sera automatiquement emboîtée.</li>
   <li>Entrez le contenu du premier item de la nouvelle liste et créez l'item
     b en appuyant deux fois sur la touche <kbd>Enter</kbd> à la fin de l'item
     a.</li>

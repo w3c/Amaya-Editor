@@ -6,7 +6,7 @@
   <title>Xml Support</title>
   <meta http-equiv="content-type"
   content="application/xhtml+xml; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 9.51, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 9.52, see http://www.w3.org/Amaya/" />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -15,16 +15,18 @@
 <div>
 <img alt="Amaya" src="../../resources/icons/22x22/logo.png" class="logo" />
 
+
 <p class="nav"><a href="Animation.html.fr" accesskey="p"><img alt="previous"
-src="../../resources/icons/misc/left.png" /></a> <a href="Manual.html.fr"
-accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a>
-<a href="StyleSheets.html.fr" accesskey="n"><img
-src="../../resources/icons/misc/right.png" alt="next" /></a></p>
+src="../../resources/icons/misc/left.png" />
+</a> <a href="Manual.html.fr" accesskey="t"><img alt="top"
+src="../../resources/icons/misc/up.png" />
+</a> <a href="StyleSheets.html.fr" accesskey="n"><img
+src="../../resources/icons/misc/right.png" alt="next" />
+</a></p>
 </div>
 
 <div id="page_body">
 <h1>Support XML</h1>
-</div>
 
 <p>Amaya permet de lire et d'afficher n'importe quel document XML
 bien-formé.</p>
@@ -65,5 +67,8 @@ règles propres à chaque type. Pour les parties génériques, seule la commande
 <p>Vous pouvez également modifier des documents XML en utilisant le vue
 source et en effectuant la commande <strong>synchroniser</strong>. Vos
 modifications seront prises en compte dans la vue formatée.</p>
+
+<p></p>
+</div>
 </body>
 </html>
