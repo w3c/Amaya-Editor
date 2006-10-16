@@ -209,7 +209,7 @@
 207 Ausrichtung
 208 Hochformat
 209 Querformat
-210 **Keep multiple spaces
+210 Mehrfache Leerzeichen erhalten
 211 Fehler im Quelltext
 212 Schwerer Fehler : Berichtigen Sie den Quelltext um fortzufahren
 213 Verwenden Sie 'Datei/Zeichenkodierung erzwingen'
@@ -386,6 +386,6 @@
 384 Das Dokument wurde verändert (412)
 385 Es besteht ein Konflikt mit dem aktuellen Status der Ressource
 386 Die Auswahl ist ungültig
-387 **Unknown element
-388 **%d updated elements
+387 Unbekanntes Element
+388 %d aktualisierte Elemente
 389 Der Titel muss angegeben werden

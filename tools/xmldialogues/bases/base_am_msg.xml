@@ -3143,6 +3143,7 @@
 	<message xml:lang="en">Keep multiple spaces</message>
 	<message xml:lang="fr">Garder les espaces multiples</message>
 	<message xml:lang="es">Mantener espaciado múltiple</message>
+	<message xml:lang="de">Mehrfache Leerzeichen erhalten</message>
 </label>
 <label define="AM_XML_RETRY">
 	<message xml:lang="en">Error(s) in the source code</message>
@@ -5561,6 +5562,7 @@
 	<message xml:lang="en">Unknown element</message>
 	<message xml:lang="fr">Elément inconnu</message>
 	<message xml:lang="es">Elemento desconocido</message>
+	<message xml:lang="de">Unbekanntes Element</message>
 	<message xml:lang="cn">未知元素</message>
 	<message xml:lang="tw">未知元素</message>
 </label>
@@ -5568,6 +5570,7 @@
 	<message xml:lang="en">%d updated elements</message>
 	<message xml:lang="fr">%d éléments changés</message>
 	<message xml:lang="es">%d elementos actualizados</message>
+	<message xml:lang="de">%d aktualisierte Elemente</message>
 	<message xml:lang="cn">%d 个已更新元素</message>
 	<message xml:lang="tw">%d 个已更新元素</message>
 </label>
