@@ -973,8 +973,8 @@ static Element MoveDocumentBody (Element el, Document destDoc,
   ElementType	     elType;
   SSchema          nature;
   NotifyElement    event;
-  ThotBool         checkingMode;
-  ThotBool         isID;
+  int              i, j;
+  ThotBool         checkingMode, isID;
 
   div = NULL;
   if (target)
@@ -1073,7 +1073,22 @@ static Element MoveDocumentBody (Element el, Document destDoc,
           old = srce;
           TtaNextSibling (&srce);
           if (deleteTree)
-            TtaDeleteTree (old, sourceDoc);
+            {
+              // remove the current selection if it concerns the removed subtree
+              TtaGiveFirstSelectedElement (sourceDoc, &elem, &i, &j);
+              if (elem)
+                {
+                  if (TtaIsAncestor (elem, old))
+                    TtaCancelSelection (sourceDoc);
+                  else
+                    {
+                      TtaGiveLastSelectedElement (sourceDoc, &elem, &i, &j);
+                      if (elem &&TtaIsAncestor (elem, old))
+                        TtaCancelSelection (sourceDoc);
+                    }
+                }
+              TtaDeleteTree (old, sourceDoc);
+            }
           /* Stop here if the target points to a specific element with an ID */
           if (isID)
             srce = NULL;
