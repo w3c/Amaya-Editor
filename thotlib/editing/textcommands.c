@@ -713,7 +713,8 @@ static void MovingCommands (int code, Document doc, View view,
                   else
                     /* move the left extremity */
                     x = firstC;
-                  if (x < pBox->BxAbstractBox->AbBox->BxNChars || (x < 1 && isPict))
+                  if (x <= pBox->BxAbstractBox->AbBox->BxNChars ||
+                      (x < 1 && isPict))
                     {
                       if (extendSel)
                         {
