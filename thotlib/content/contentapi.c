@@ -45,6 +45,7 @@
 #include "changeabsbox_f.h"
 #include "changepresent_f.h"
 #include "content_f.h"
+#include "exceptions_f.h"
 #include "font_f.h"
 #include "geom_f.h"
 #include "memory_f.h"
@@ -2321,6 +2322,7 @@ void TtaCopyPage (Element destination, Element source)
 static ThotPictInfo *GetImageDesc (Element element)
 {
   PtrAbstractBox   pAb;
+  PtrElement       pEl = (PtrElement) element;
   ThotPictInfo    *imageDesc;
   int              view;
   ThotBool         found;
@@ -2328,16 +2330,22 @@ static ThotPictInfo *GetImageDesc (Element element)
   UserErrorCode = 0;
   imageDesc = NULL;
 
-  if (element == NULL)
+  if (pEl == NULL)
     TtaError (ERR_invalid_parameter);
-  else if (!((PtrElement) element)->ElTerminal)
+
+  if (TypeHasException (ExcIsImg, pEl->ElTypeNumber, pEl->ElStructSchema))
+    pEl = pEl->ElFirstChild;
+
+  if (pEl == NULL)
+    TtaError (ERR_invalid_parameter);
+  else if (!pEl->ElTerminal)
     {
       view = 0;
       pAb = NULL;
       found = FALSE;
       do
         {
-          pAb = ((PtrElement) element)->ElAbstractBox[view];
+          pAb = pEl->ElAbstractBox[view];
           if (pAb != NULL)
             {
               while (pAb->AbPresentationBox)
@@ -2360,11 +2368,10 @@ static ThotPictInfo *GetImageDesc (Element element)
       if (!found)
         TtaError (ERR_invalid_element_type);
     }
-  else if (((PtrElement) element)->ElTerminal &&
-           ((PtrElement) element)->ElLeafType != LtPicture)
+  else if (pEl->ElTerminal && pEl->ElLeafType != LtPicture)
     TtaError (ERR_invalid_element_type);
   else
-    imageDesc = (ThotPictInfo *) (((PtrElement) element)->ElPictInfo);
+    imageDesc = (ThotPictInfo *) (pEl->ElPictInfo);
   return imageDesc;
 }
 
@@ -2410,7 +2417,7 @@ void TtaSetPictureType (Element element, char *mime_type)
     return;
 
   imageDesc = GetImageDesc (element);
-  if (imageDesc != NULL)
+  if (imageDesc)
     {
       if (!strcmp (mime_type, "image/x-bitmap"))
         typeImage = xbm_type;
