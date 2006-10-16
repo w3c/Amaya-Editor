@@ -491,6 +491,7 @@ char *ParseNumber (char *cssRule, PresentationValue *pval)
   ----------------------------------------------------------------------*/
 char *ParseCSSUnit (char *cssRule, PresentationValue *pval)
 {
+  char               *p;
   unsigned int        uni;
 
   pval->typed_data.unit = UNIT_REL;
@@ -499,7 +500,10 @@ char *ParseCSSUnit (char *cssRule, PresentationValue *pval)
     cssRule = SkipWord (cssRule);
   else
     {
+      p = cssRule;
       cssRule = SkipBlanksAndComments (cssRule);
+      if (p == cssRule)
+        p = NULL;
       uni = 0;
       while (CSSUnitNames[uni].sign)
         {
@@ -507,6 +511,8 @@ char *ParseCSSUnit (char *cssRule, PresentationValue *pval)
                             strlen (CSSUnitNames[uni].sign)))
             {
               pval->typed_data.unit = CSSUnitNames[uni].unit;
+              if (p)
+                pval->typed_data.unit = UNIT_INVALID;
               return (cssRule + strlen (CSSUnitNames[uni].sign));
             }
           else
@@ -515,6 +521,8 @@ char *ParseCSSUnit (char *cssRule, PresentationValue *pval)
       /* not in the list of predefined units */
       pval->typed_data.unit = UNIT_BOX;
     }
+  if (p)
+    pval->typed_data.unit = UNIT_INVALID;
   return (cssRule);
 }
 
