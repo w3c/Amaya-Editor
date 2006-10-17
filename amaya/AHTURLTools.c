@@ -2243,12 +2243,10 @@ void         SimplifyUrl (char **url)
   ----------------------------------------------------------------------*/
 ThotBool NormalizeFile (char *src, char *target, ConvertionType convertion)
 {
-#ifndef _WINDOWS
   char             *s;
   int               i;
-#endif /* _WINDOWS */
-  ThotBool          change;
   int               start_index; /* the first char that we'll copy */
+  ThotBool          change;
 
   change = FALSE;
   start_index = 0;
@@ -2298,20 +2296,22 @@ ThotBool NormalizeFile (char *src, char *target, ConvertionType convertion)
          convertions except for the HOME_DIR ~ one */
       CleanCopyFileURL (target, src, convertion);
     }
-#ifndef _WINDOWS
+#ifdef _WINDOWS
+  else if (src[0] == DIR_SEP && src[1] == DIR_SEP)
+    {
+      s = getenv ("HOMEDRIVE");
+      strcpy (target, s);
+      i = strlen (target);
+      strcpy (&target[i], &src[1]);
+      change = TRUE;	    
+    }
+#else /* _WINDOWS */
   else if (src[0] == '~')
     {
       /* it must be a URL typed in a text input field */
       /* do the HOME_DIR ~ substitution */
       s = TtaGetEnvString ("HOME");
       strcpy (target, s);
-#if 0
-      /* JK: invalidated this part of the code as it's simpler
-         to add the DIR_SEP whenever we have something to add
-         to the path rather than adding it systematically */
-      if (src[1] != DIR_SEP)
-        strcat (target, DIR_STR);
-#endif
       i = strlen (target);
       strcpy (&target[i], &src[1]);
       change = TRUE;
