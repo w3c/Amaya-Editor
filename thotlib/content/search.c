@@ -197,15 +197,16 @@ void ReplaceString (PtrDocument pDoc, PtrElement pEl, int firstChar,
       if (i + len <= FULL_BUFFER)
         {
           // reduce to one buffer
-          while (len >= 0)
+          while (len > 0)
             {
               pBuf1->BuContent[i++] = pBuf2->BuContent[ibuf2++];
               len--;
             }
           pBuf1->BuLength = i;
           pBuf1->BuContent[i] = EOS;
-          // remove pBuf2 buffer
-          DeleteTextBuffer (&pBuf2);
+          if (pBuf1 != pBuf2)
+            // remove pBuf2 buffer
+            DeleteTextBuffer (&pBuf2);
         }
       else
         {

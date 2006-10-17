@@ -44,11 +44,11 @@ extern unsigned      ReverseCode[NbLtr];
 static ThotBool      Clavier_charge;
 static int           Tsub[NbLtr][NbLtr];
 static int           KI = 3,	/* insertion */
-                     KO = 3,	/* omission */
-                     KB = 0,	/* bonne substition */
-                     KM = 1,	/* substitution moyenne */
-                     KD = 3,	/* substitution par defaut */
-                     KP = 3;	/* permutation */
+  KO = 3,	/* omission */
+  KB = 0,	/* bonne substition */
+  KM = 1,	/* substitution moyenne */
+  KD = 3,	/* substitution par defaut */
+  KP = 3;	/* permutation */
 static int           Seuil[MAX_WORD_LEN];
 static int           Delta[MAX_WORD_LEN];
 static int           Scores[MAX_PROPOSAL_CHKR + 1];	/* Tab des scores des correction */
@@ -71,12 +71,12 @@ static int           type_err;	/* Type du mot errone (majuscule, SmallLettering)
 
 
 /*----------------------------------------------------------------------
-   TtaLoadDocumentDictionary loads the document dictionary.          
-   Returns -1 if the dictionary can't be loaded.                     
-   Returns 1 if the dictionary is loaded.                            
+  TtaLoadDocumentDictionary loads the document dictionary.          
+  Returns -1 if the dictionary can't be loaded.                     
+  Returns 1 if the dictionary is loaded.                            
   ----------------------------------------------------------------------*/
 ThotBool TtaLoadDocumentDictionary (PtrDocument document, int *pDictionary,
-				    ThotBool toCreate)
+                                    ThotBool toCreate)
 {
   char              *extenddic;
   char               path[MAX_PATH], dictname[MAX_PATH];
@@ -89,7 +89,7 @@ ThotBool TtaLoadDocumentDictionary (PtrDocument document, int *pDictionary,
     {
       TtaExtractName (extenddic, path, dictname);
       if (dictname[0] == EOS)
-	strcpy (dictname, "dictionary.DCT");
+        strcpy (dictname, "dictionary.DCT");
     }
   else
     {
@@ -100,7 +100,7 @@ ThotBool TtaLoadDocumentDictionary (PtrDocument document, int *pDictionary,
   if (path[0] == EOS ||  !TtaCheckDirectory (path))
     strcpy (path, TtaGetEnvString ("APP_HOME"));
   LoadTreatedDict ((PtrDict *) pDictionary, 0, document, dictname,
-		   path, FALSE, toCreate);
+                   path, FALSE, toCreate);
   return (*pDictionary != EOS);
 }
 
@@ -109,14 +109,14 @@ ThotBool TtaLoadDocumentDictionary (PtrDocument document, int *pDictionary,
   ----------------------------------------------------------------------*/
 static void Asci2Code (char *string)
 {
-   int                 i;
+  int                 i;
 
-   i = 0;
-   while (string[i] != EOS)
-     {
-	string[i] = Code[(unsigned char) string[i]];
-	i++;
-     }
+  i = 0;
+  while (string[i] != EOS)
+    {
+      string[i] = Code[(unsigned char) string[i]];
+      i++;
+    }
 }
 
 
@@ -124,13 +124,13 @@ static void Asci2Code (char *string)
   ----------------------------------------------------------------------*/
 static void Code2Asci (char *string)
 {
-   int                 i = 0;
+  int                 i = 0;
 
-   while (string[i] != EOS)
-     {
-	string[i] = ReverseCode[(unsigned char) string[i]];
-	i++;
-     }
+  while (string[i] != EOS)
+    {
+      string[i] = ReverseCode[(unsigned char) string[i]];
+      i++;
+    }
 }
 
 
@@ -138,23 +138,23 @@ static void Code2Asci (char *string)
   ----------------------------------------------------------------------*/
 void SetUpperCase (char *string)
 {
-   int                 i = 0;
+  int                 i = 0;
 
-   while ((string[i]) != EOS)
-     {
-	if (isimin (string[i]) != 0)
-	   string[i] = toupper (string[i]);
+  while ((string[i]) != EOS)
+    {
+      if (isimin (string[i]) != 0)
+        string[i] = toupper (string[i]);
 
-	i++;
-     }
+      i++;
+    }
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void SetCapital (char *string)
 {
-   if (isimin (string[0]) != 0)
-      string[0] = toupper (string[0]);
+  if (isimin (string[0]) != 0)
+    string[0] = toupper (string[0]);
 
 }
 
@@ -163,16 +163,16 @@ void SetCapital (char *string)
   ----------------------------------------------------------------------*/
 ThotBool IsUpperCase (char *string)
 {
-   int                 maj = 1;
-   int                 i = 0;
-   char                c;
+  int                 maj = 1;
+  int                 i = 0;
+  char                c;
 
-   while ((c = string[i]) != EOS && (maj != 0))
-     {
-	maj = isimaj (string[i]);
-	i++;
-     }
-   return (maj == 0) ? FALSE : TRUE;
+  while ((c = string[i]) != EOS && (maj != 0))
+    {
+      maj = isimaj (string[i]);
+      i++;
+    }
+  return (maj == 0) ? FALSE : TRUE;
 }
 
 
@@ -180,92 +180,92 @@ ThotBool IsUpperCase (char *string)
   ----------------------------------------------------------------------*/
 ThotBool IsCapital (char *string)
 {
-   int                 cap = 0;
-   int                 i = 0;
-   char                c;
+  int                 cap = 0;
+  int                 i = 0;
+  char                c;
 
-   if (string[0] != EOS && isimaj (string[0]) != 0)
-     {
-	cap = 1;
-	i++;
-	while ((c = string[i]) != EOS && (cap != 0))
-	  {
-	     cap = !(isimaj (string[i]));
-	     i++;
-	  }
-     }
-   return (cap == 0) ? FALSE : TRUE;
+  if (string[0] != EOS && isimaj (string[0]) != 0)
+    {
+      cap = 1;
+      i++;
+      while ((c = string[i]) != EOS && (cap != 0))
+        {
+          cap = !(isimaj (string[i]));
+          i++;
+        }
+    }
+  return (cap == 0) ? FALSE : TRUE;
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 ThotBool IsIso (char *string)
 {
-   int                 iso = 1;
-   int                 i = 0;
+  int                 iso = 1;
+  int                 i = 0;
 
-   while (string[i] != EOS && (iso != 0))
-     {
-	iso = isalphiso (string[i]) || string[i] == '-' || string[i] == '\'';
-	i++;
-     }
-   return (iso == 0) ? FALSE : TRUE;
+  while (string[i] != EOS && (iso != 0))
+    {
+      iso = isalphiso (string[i]) || string[i] == '-' || string[i] == '\'';
+      i++;
+    }
+  return (iso == 0) ? FALSE : TRUE;
 }
 
 
 /*----------------------------------------------------------------------
-   WordInDictionary recherche dichotomique de "word" dans "dict[]"
-   retourne -2 si le dict n'existe pas                                     
-   retourne -1 si le dict est vide                                         
-   retourne -3  si le mot est present dans le dict                          
-   retourne >=0 si le mot n'est pas dans le dict (indice de sa place future) 
+  WordInDictionary recherche dichotomique de "word" dans "dict[]"
+  retourne -2 si le dict n'existe pas                                     
+  retourne -1 si le dict est vide                                         
+  retourne -3  si le mot est present dans le dict                          
+  retourne >=0 si le mot n'est pas dans le dict (indice de sa place future) 
   ----------------------------------------------------------------------*/
 int WordInDictionary (unsigned char *word, PtrDict dict)
 {
-   int                 inf, sup, med, rescomp, size;
+  int                 inf, sup, med, rescomp, size;
 
-   if (dict == NULL)
-     /* dictionnaire n'existe pas */
-     return (-2);
-   else if (dict->DictNbWords <= 0)
-     /* dictionnaire vide */
-     return (-1);
+  if (dict == NULL)
+    /* dictionnaire n'existe pas */
+    return (-2);
+  else if (dict->DictNbWords <= 0)
+    /* dictionnaire vide */
+    return (-1);
 
-   size = strlen ((char*)word);
-   /* premier mot */
-   inf = dict->DictLengths[size];
-   if (size >= MAX_WORD_LEN ||
-       (dict->DictLengths[size + 1] - 1 > dict->DictNbWords))
-     sup = dict->DictNbWords - 1;
-   else
-     /* dernier mot */
-     sup = dict->DictLengths[size + 1] - 1;
+  size = strlen ((char*)word);
+  /* premier mot */
+  inf = dict->DictLengths[size];
+  if (size >= MAX_WORD_LEN ||
+      (dict->DictLengths[size + 1] - 1 > dict->DictNbWords))
+    sup = dict->DictNbWords - 1;
+  else
+    /* dernier mot */
+    sup = dict->DictLengths[size + 1] - 1;
 
-   while (sup >= inf)
-     /* Recherche dichotomique */
-     {
-	med = (sup + inf) / 2;
-	rescomp = strcmp ((char*)&dict->DictString[dict->DictWords[med]], (char*)word);
-	if (rescomp == 0)
-	  /* Mot present dans le dict */
-	  return (-3);
-	else if (rescomp > 0)
-	  /* Poursuite de la recherche */
-	  sup = med - 1;
-	else
-	  inf = med + 1;
-     }
-   /* Mot absent dans le dict */
-   return (inf);
+  while (sup >= inf)
+    /* Recherche dichotomique */
+    {
+      med = (sup + inf) / 2;
+      rescomp = strcmp ((char*)&dict->DictString[dict->DictWords[med]], (char*)word);
+      if (rescomp == 0)
+        /* Mot present dans le dict */
+        return (-3);
+      else if (rescomp > 0)
+        /* Poursuite de la recherche */
+        sup = med - 1;
+      else
+        inf = med + 1;
+    }
+  /* Mot absent dans le dict */
+  return (inf);
 }
 
 
 /*----------------------------------------------------------------------
   CheckWord returns
-   *  1 if the word belong to the dictionary or the word is 1 or 2
-      characters long
-   *  0 if the word is unknown or empty
-   * -1 if there is no dictionary
+  *  1 if the word belong to the dictionary or the word is 1 or 2
+  characters long
+  *  0 if the word is unknown or empty
+  * -1 if there is no dictionary
   The word must be ISO-8859-1 encoded.
   ----------------------------------------------------------------------*/
 int CheckWord (unsigned char *word, Language language, PtrDict dict)
@@ -291,33 +291,33 @@ int CheckWord (unsigned char *word, Language language, PtrDict dict)
       personalDict = (PtrDict) TtaGetSecondaryDictionary (language);
       res = WordInDictionary (word1, dict);
       if (res != -3)
-	{
-	  /* not found */
-	  res = WordInDictionary (word1, globalDict);
-	  if (res == -2)
-	    return (-1);	/* PAS de globalDict */
+        {
+          /* not found */
+          res = WordInDictionary (word1, globalDict);
+          if (res == -2)
+            return (-1);	/* PAS de globalDict */
           else if (res != -3)
             {
               /* check extra dictionaries */
               if (WordInDictionary (word1, personalDict) == -3)
                 /* found */
                 res = -3;
-	    }
-	}
+            }
+        }
       if (res != -3)
-	{			/* calculer le type du mot errone' */
-	  if (IsUpperCase ((char*)word))
-	    type_err = 3;	/* MAJ */
-	  else if (IsCapital ((char*)word))
-	    type_err = 2;	/* Capitale */
-	  else
-	    type_err = 1;	/* SmallLettering ou melange */
-	  /* recopier ce mot errone' dans ChkrErrWord */
-	  strcpy ((char*)ChkrErrWord, (char*)word);
-	  return 0;
-	}
+        {			/* calculer le type du mot errone' */
+          if (IsUpperCase ((char*)word))
+            type_err = 3;	/* MAJ */
+          else if (IsCapital ((char*)word))
+            type_err = 2;	/* Capitale */
+          else
+            type_err = 1;	/* SmallLettering ou melange */
+          /* recopier ce mot errone' dans ChkrErrWord */
+          strcpy ((char*)ChkrErrWord, (char*)word);
+          return 0;
+        }
       else
-	return 1;
+        return 1;
     }
 }
 
@@ -325,77 +325,77 @@ int CheckWord (unsigned char *word, Language language, PtrDict dict)
   ----------------------------------------------------------------------*/
 static int Insert (int x, int pWord, PtrDict dict)
 {
-   int                 i, k;
+  int                 i, k;
 
-   if (x < Scores[NC - 1])
-     {
-	i = 0;
-	while (Scores[i] < x)
-	   i++;
-	for (k = NC - 1; k > i; k--)
-	  {
-	     Scores[k] = Scores[k - 1];
-	     WordsList[k] = WordsList[k - 1];
-	     DictsList[k] = DictsList[k - 1];
-	  }
-	Scores[i] = x;
-	WordsList[i] = pWord;
-	DictsList[i] = dict;
-     }
-   return (Scores[NC - 1]);
+  if (x < Scores[NC - 1])
+    {
+      i = 0;
+      while (Scores[i] < x)
+        i++;
+      for (k = NC - 1; k > i; k--)
+        {
+          Scores[k] = Scores[k - 1];
+          WordsList[k] = WordsList[k - 1];
+          DictsList[k] = DictsList[k - 1];
+        }
+      Scores[i] = x;
+      WordsList[i] = pWord;
+      DictsList[i] = dict;
+    }
+  return (Scores[NC - 1]);
 }
 
 /*----------------------------------------------------------------------
-   InsertWord 
-   inserer un mot nouveau dans un dict 
-   retourne -2 si le dictionnaire est inaccessible             
-   -1 si le dictionnaire est plein                    
-   0 si le mot est deja dans le dictionnaire         
-   1 si le mot a pu etre ajoute dans le dictionnaire 
-   par defaut : tous les mots nouveaux sont insecables        
+  InsertWord 
+  inserer un mot nouveau dans un dict 
+  retourne -2 si le dictionnaire est inaccessible             
+  -1 si le dictionnaire est plein                    
+  0 si le mot est deja dans le dictionnaire         
+  1 si le mot a pu etre ajoute dans le dictionnaire 
+  par defaut : tous les mots nouveaux sont insecables        
   ----------------------------------------------------------------------*/
 static int InsertWord (PtrDict dict, unsigned char *word)
 {
-   int          size, place, i, k;
-   int          first, last, index;
+  int          size, place, i, k;
+  int          first, last, index;
 
-   place = WordInDictionary (word, dict);
-   if (place == -2)
-      return (-2);		/* dictionnaire inaccessible */
-   if (place == -3)
-      return (0);		/* mot deja present dans le dictionnaire */
-   if (place == -1)		/* dictionnaire vide */
-      place = 0;		/* indice pour inserer dans ce dictionaire */
-   size = strlen ((char*)word) + 1;
-   /* IV: prevents an overwrite problem */
-   if (dict->DictNbWords + 2 >= dict->DictMaxWords ||
-       dict->DictNbChars >= dict->DictMaxChars + size)
-      return (-1);
-   else
-     {
-	for (i = dict->DictNbWords - 1; i >= place; i--)
-	  {
-	    /* move previous words */
-	     first = dict->DictWords[i];
-	     last = dict->DictWords[i + 1] - 1;
-	     index = last + size;
-	     for (k = last; k >= first; k--)	/* deplacement d'un mot */
-		dict->DictString[index--] = dict->DictString[k];
-	  }
-	/* insert the new word */
-	strcpy ((char*)&dict->DictString[dict->DictWords[place]], (char*)word);
-	/* update next entries including the first empty entry */
-	for (i = dict->DictNbWords + 1; i > place; i--)
-	   dict->DictWords[i] = dict->DictWords[i - 1] + size;
-	/* mise a jour des pointeurs sur les longueurs de mots */
-	for (i = size; i < MAX_WORD_LEN; i++)
-	   dict->DictLengths[i]++;
+  place = WordInDictionary (word, dict);
+  if (place == -2)
+    return (-2);		/* dictionnaire inaccessible */
+  if (place == -3)
+    return (0);		/* mot deja present dans le dictionnaire */
+  if (place == -1)		/* dictionnaire vide */
+    place = 0;		/* indice pour inserer dans ce dictionaire */
+  size = strlen ((char*)word) + 1;
+  /* IV: prevents an overwrite problem */
+  if (dict->DictNbWords + 2 >= dict->DictMaxWords ||
+      dict->DictNbChars >= dict->DictMaxChars + size)
+    return (-1);
+  else
+    {
+      for (i = dict->DictNbWords - 1; i >= place; i--)
+        {
+          /* move previous words */
+          first = dict->DictWords[i];
+          last = dict->DictWords[i + 1] - 1;
+          index = last + size;
+          for (k = last; k >= first; k--)	/* deplacement d'un mot */
+            dict->DictString[index--] = dict->DictString[k];
+        }
+      /* insert the new word */
+      strcpy ((char*)&dict->DictString[dict->DictWords[place]], (char*)word);
+      /* update next entries including the first empty entry */
+      for (i = dict->DictNbWords + 1; i > place; i--)
+        dict->DictWords[i] = dict->DictWords[i - 1] + size;
+      /* mise a jour des pointeurs sur les longueurs de mots */
+      for (i = size; i < MAX_WORD_LEN; i++)
+        dict->DictLengths[i]++;
 
-	dict->DictNbWords++;
-	dict->DictNbChars += size;
-	dict->DictModified = TRUE;
-	return (1);
-     }
+      dict->DictNbWords++;
+      dict->DictNbChars += size;
+      dict->DictModified = TRUE;
+      return (1);
+    }
 }
 
 
@@ -440,104 +440,104 @@ static void Cmp (unsigned char *wordtest, PtrDict dict)
      avec d'abord les mots de meme size,
      puis EVENTUELLEMENT les mots de +- 1 lettre
      puis EVENTUELLEMENT les mots de +- 2 lettres etc.
-     */
+  */
   difference = 0;
   for (iteration = 0; iteration <= 2 * width; iteration++)
     {
       difference = (difference > 0) ? difference - iteration : difference + iteration;
       size = lg - difference;
       if (size >= 0 && size < MAX_WORD_LEN)
-	{
-	  /*
-	    determination si le calcul des mots de cette size doivent etre calcules. 
-	    dist_mini determine le cout minimum obligatoire pour cette size de mot 
-	    si ce cout est deja superieur au seuil courant, il est inutile de traiter
-	    ces mots
-	  */
-	  dist_mini = (difference > 0) ? difference * KI : -difference * KO;
-	  /*if (dist_mini > seuilCourant)
-	    continue;*/
+        {
+          /*
+            determination si le calcul des mots de cette size doivent etre calcules. 
+            dist_mini determine le cout minimum obligatoire pour cette size de mot 
+            si ce cout est deja superieur au seuil courant, il est inutile de traiter
+            ces mots
+          */
+          dist_mini = (difference > 0) ? difference * KI : -difference * KO;
+          /*if (dist_mini > seuilCourant)
+            continue;*/
 	  
-	  /* calcul des indices de debut et fin de dictionnaire */
-	  word = dict->DictLengths[size];
-	  idx = dict->DictWords[word];
-	  if (dict->DictLengths[size + 1] - 1 > dict->DictNbWords)
-	    sup = dict->DictWords[dict->DictNbWords] - 1;
-	  else
-	    sup = dict->DictWords[dict->DictLengths[size + 1]] - 1;
+          /* calcul des indices de debut et fin de dictionnaire */
+          word = dict->DictLengths[size];
+          idx = dict->DictWords[word];
+          if (dict->DictLengths[size + 1] - 1 > dict->DictNbWords)
+            sup = dict->DictWords[dict->DictNbWords] - 1;
+          else
+            sup = dict->DictWords[dict->DictLengths[size + 1]] - 1;
 	  
-	  /* initialisation des valeurs en dehors des diagonales de calculs effectifs */
-	  for (j = 1; j <= size; j++)
-	    {
-	      i = j - width - 1;
-	      if (difference > 0)
-		i = i + difference;
-	      if (i > 0)
-		dist[i][j] = seuilCourant + 1;
-	      i = j + width + 1;
-	      if (difference < 0)
-		i = i + difference;
-	      if (i <= lg)
-		dist[i][j] = seuilCourant + 1;
-	    }
+          /* initialisation des valeurs en dehors des diagonales de calculs effectifs */
+          for (j = 1; j <= size; j++)
+            {
+              i = j - width - 1;
+              if (difference > 0)
+                i = i + difference;
+              if (i > 0)
+                dist[i][j] = seuilCourant + 1;
+              i = j + width + 1;
+              if (difference < 0)
+                i = i + difference;
+              if (i <= lg)
+                dist[i][j] = seuilCourant + 1;
+            }
 	  
-	  /* parcours du dictionnaire */
-	  while (idx < sup && idx < dict->DictNbChars)
-	    {
-	      pWord = idx;
-	      k = dict->DictCommon[word++];
-	      /* si le calcul du mot precedent a ete stoppe a l'indice derniere_ligne
-		 et que le mot courant possede un nombre de lettres communes superieur
-		 a cette valeur, il est inutile de faire le calcul */
-	      if (k <= lastline)
-		{
-		  strcpy ((char*)currentWord, (char*)&dict->DictString[pWord]);
-		  /* calcul */
-		  for (j = k; j <= size; j++)
-		    {
-		      minimum = dist[0][j];
-		      lastline = j;
-		      first = j - width;
-		      if (difference > 0)
-			first = first + difference;
-		      if (first < 1)
-			first = 1;
-		      last = j + width;
-		      if (difference < 0)
-			last = last + difference;
-		      if (last > lg)
-			last = lg;
-		      for (i = first; i <= last; i++)
-			{
-			  x = dist[i][j - 1] + KI;
-			  y = dist[i - 1][j] + KO;
-			  z = dist[i - 1][j - 1] + Tsub[currentWord[j - 1]][wordcmp[i - 1]];
-			  x = (x < y) ? x : y;
-			  x = (x < z) ? x : z;
-			  if ((i > 1) && (j > 1))
-			    {
-			      y = dist[i - 2][j - 2] + Tsub[currentWord[j - 2]][wordcmp[i - 1]]
-				+ Tsub[currentWord[j - 1]][wordcmp[i - 2]] + KP;
-			      x = (x < y) ? x : y;
-			    }
-			  dist[i][j] = x;
-			  /* mise a jour du minimum de la colonne */
-			  minimum = (x < minimum) ? x : minimum;
-			}
-		      /* sortie de boucle si les resultats sont deja tous superieurs au seuil */
-		      if (minimum > seuilCourant)
-			break;
-		    }
-		  if (x <= seuilCourant)
-		    {		  
-		      dernier_liste = Insert (x, pWord, dict);
-		      if (dernier_liste < seuilCourant)
-			seuilCourant = dernier_liste;
-		    }
-		}
-	      idx += size + 1;
-	    }
-	}
+          /* parcours du dictionnaire */
+          while (idx < sup && idx < dict->DictNbChars)
+            {
+              pWord = idx;
+              k = dict->DictCommon[word++];
+              /* si le calcul du mot precedent a ete stoppe a l'indice derniere_ligne
+                 et que le mot courant possede un nombre de lettres communes superieur
+                 a cette valeur, il est inutile de faire le calcul */
+              if (k <= lastline)
+                {
+                  strcpy ((char*)currentWord, (char*)&dict->DictString[pWord]);
+                  /* calcul */
+                  for (j = k; j <= size; j++)
+                    {
+                      minimum = dist[0][j];
+                      lastline = j;
+                      first = j - width;
+                      if (difference > 0)
+                        first = first + difference;
+                      if (first < 1)
+                        first = 1;
+                      last = j + width;
+                      if (difference < 0)
+                        last = last + difference;
+                      if (last > lg)
+                        last = lg;
+                      for (i = first; i <= last; i++)
+                        {
+                          x = dist[i][j - 1] + KI;
+                          y = dist[i - 1][j] + KO;
+                          z = dist[i - 1][j - 1] + Tsub[currentWord[j - 1]][wordcmp[i - 1]];
+                          x = (x < y) ? x : y;
+                          x = (x < z) ? x : z;
+                          if ((i > 1) && (j > 1))
+                            {
+                              y = dist[i - 2][j - 2] + Tsub[currentWord[j - 2]][wordcmp[i - 1]]
+                                + Tsub[currentWord[j - 1]][wordcmp[i - 2]] + KP;
+                              x = (x < y) ? x : y;
+                            }
+                          dist[i][j] = x;
+                          /* mise a jour du minimum de la colonne */
+                          minimum = (x < minimum) ? x : minimum;
+                        }
+                      /* sortie de boucle si les resultats sont deja tous superieurs au seuil */
+                      if (minimum > seuilCourant)
+                        break;
+                    }
+                  if (x <= seuilCourant)
+                    {		  
+                      dernier_liste = Insert (x, pWord, dict);
+                      if (dernier_liste < seuilCourant)
+                        seuilCourant = dernier_liste;
+                    }
+                }
+              idx += size + 1;
+            }
+        }
     }
 }
 
@@ -556,7 +556,7 @@ static void LoadSpellChecker ()
   if (defaultCharset == UTF_8)
     {
       word = TtaConvertByteToMbs ((unsigned char *)ChkrErrWord,
-				  ISO_8859_1);
+                                  ISO_8859_1);
       strcpy (ChkrCorrection[0], (char *)word);
       TtaFreeMemory (word);
     }
@@ -566,29 +566,29 @@ static void LoadSpellChecker ()
     {
       pWord = WordsList[i];
       if (pWord >= 0)
-	{
-	  strcpy (ChkrCorrection[i + 1], &DictsList[i]->DictString[pWord]);
-	  Code2Asci (ChkrCorrection[i + 1]);
-	  switch (type_err)
-	    {
-	    case 1:	/* SmallLettering ou melange */
-	      break;
-	    case 2:
-	      SetCapital (ChkrCorrection[i + 1]);
-	      break;
-	    case 3:
-	      SetUpperCase (ChkrCorrection[i + 1]);
-	      break;
-	    }
-	  /* convert the string into the dialog encoding if necessary */
-	  if (defaultCharset == UTF_8)
-	    {
-	      word = TtaConvertByteToMbs ((unsigned char *)ChkrCorrection[i + 1],
-					  ISO_8859_1);
-	      strcpy (ChkrCorrection[i + 1], (char *)word);
-	      TtaFreeMemory (word);
-	    }
-	}
+        {
+          strcpy (ChkrCorrection[i + 1], &DictsList[i]->DictString[pWord]);
+          Code2Asci (ChkrCorrection[i + 1]);
+          switch (type_err)
+            {
+            case 1:	/* SmallLettering ou melange */
+              break;
+            case 2:
+              SetCapital (ChkrCorrection[i + 1]);
+              break;
+            case 3:
+              SetUpperCase (ChkrCorrection[i + 1]);
+              break;
+            }
+          /* convert the string into the dialog encoding if necessary */
+          if (defaultCharset == UTF_8)
+            {
+              word = TtaConvertByteToMbs ((unsigned char *)ChkrCorrection[i + 1],
+                                          ISO_8859_1);
+              strcpy (ChkrCorrection[i + 1], (char *)word);
+              TtaFreeMemory (word);
+            }
+        }
     }
 }
 
@@ -607,26 +607,26 @@ static void SaveDictFile (PtrDict docDict)
     {
       f = TtaWriteOpen (tempbuffer);
       if (f != NULL)
-	{
-	  /* enregistrer d'abord nb words and nb chars effectifs */
-	  i = docDict->DictNbWords;
-	  j = docDict->DictNbChars;
-	  fprintf (f, "%d %d\n", i, j);
+        {
+          /* enregistrer d'abord nb words and nb chars effectifs */
+          i = docDict->DictNbWords;
+          j = docDict->DictNbChars;
+          fprintf (f, "%d %d\n", i, j);
 	  
-	  for (i = 0; i < docDict->DictNbWords; i++)
-	    {
-	      strcpy (word, &docDict->DictString[docDict->DictWords[i]]);
-	      Code2Asci (word);
-	      fprintf (f, "%s\n", word);
-	      /* ajouter le CR de fin de ligne */
-	    }
-	  TtaWriteClose (f);
-	  /* toutes les mises a jour sont enregistrees */
-	  docDict->DictModified = FALSE;
-	}
+          for (i = 0; i < docDict->DictNbWords; i++)
+            {
+              strcpy (word, &docDict->DictString[docDict->DictWords[i]]);
+              Code2Asci (word);
+              fprintf (f, "%s\n", word);
+              /* ajouter le CR de fin de ligne */
+            }
+          TtaWriteClose (f);
+          /* toutes les mises a jour sont enregistrees */
+          docDict->DictModified = FALSE;
+        }
       else
-	/* erreur sauvegarde dictionnaire document */
-	TtaDisplaySimpleMessage (INFO, LIB, TMSG_NO_SAVE);
+        /* erreur sauvegarde dictionnaire document */
+        TtaDisplaySimpleMessage (INFO, LIB, TMSG_NO_SAVE);
     }
 }
 
@@ -654,50 +654,50 @@ void AddWord (unsigned char *word, PtrDict * pDict)
       Asci2Code ((char*)word1);
       ret = InsertWord (docDict, word1);
       switch (ret)
-	{
-	case -2:
-	  /* le docDict est encore vide : le creer */
-	  if (TtaLoadDocumentDictionary (ChkrRange->SDocument, (int *) pDict, TRUE))
-	    {
-	      docDict = *pDict;
-	      /* le dictionnaire du document est maintenant charge' */
-	      ret = InsertWord (docDict, word1);
-	      TreateDictionary (docDict);
-	    }
-	  else
-	    {
-	      /* impossible d'ajouter dans le dictionnaire du document ??? */
-	      TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_REFUSE_WORD), word);
-	      OKinsere = FALSE;
-	    }
-	  break;
-	case -1:
-	  /* dictionnaire plein */
-	  SaveDictFile (docDict);
-	  /* rechargement du dictionnaire avec plus de memoire */
-	  strcpy (DiNom, docDict->DictName); 
-	  if (ReloadDictionary (pDict) == TRUE)
-	    {
-	      docDict = *pDict;
-	      if (InsertWord (docDict, word1) > 0)
-		TreateDictionary (docDict);
-	    }
-	  else
-	    OKinsere = FALSE;
-	  break;
-	case 0:
-	  /* le mot etait deja dans le dictionnaire */
-	  /* ne rien faire */
-	  OKinsere = FALSE;
-	  break;
-	case 1:
-	  /* mot ajoute' dans le dictionnaire */
-	  TreateDictionary (docDict);
-	  break;
-	}
+        {
+        case -2:
+          /* le docDict est encore vide : le creer */
+          if (TtaLoadDocumentDictionary (ChkrRange->SDocument, (int *) pDict, TRUE))
+            {
+              docDict = *pDict;
+              /* le dictionnaire du document est maintenant charge' */
+              ret = InsertWord (docDict, word1);
+              TreateDictionary (docDict);
+            }
+          else
+            {
+              /* impossible d'ajouter dans le dictionnaire du document ??? */
+              TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_REFUSE_WORD), word);
+              OKinsere = FALSE;
+            }
+          break;
+        case -1:
+          /* dictionnaire plein */
+          SaveDictFile (docDict);
+          /* rechargement du dictionnaire avec plus de memoire */
+          strcpy (DiNom, docDict->DictName); 
+          if (ReloadDictionary (pDict) == TRUE)
+            {
+              docDict = *pDict;
+              if (InsertWord (docDict, word1) > 0)
+                TreateDictionary (docDict);
+            }
+          else
+            OKinsere = FALSE;
+          break;
+        case 0:
+          /* le mot etait deja dans le dictionnaire */
+          /* ne rien faire */
+          OKinsere = FALSE;
+          break;
+        case 1:
+          /* mot ajoute' dans le dictionnaire */
+          TreateDictionary (docDict);
+          break;
+        }
       if (OKinsere == TRUE)
-	/*  enregistrer le dictionnaire du document apres chaque mise a jour */
-	SaveDictFile (docDict);
+        /*  enregistrer le dictionnaire du document apres chaque mise a jour */
+        SaveDictFile (docDict);
     }
   else
     /* car. incorrect, ajout du mot refus\351 */
@@ -727,8 +727,8 @@ static void InitChecker ()
 
 
 /*----------------------------------------------------------------------
-   GiveProposal puts into ChkrCorrection proposals for the current
-   ChkrErrWord word.
+  GiveProposal puts into ChkrCorrection proposals for the current
+  ChkrErrWord word.
   ----------------------------------------------------------------------*/
 void GiveProposal (Language language, PtrDict docDict)
 {
@@ -788,17 +788,17 @@ static void init_Tsub (FILE *ftsub)
       sscanf ((char *)ch2, "%c", (char*)&y);
       sscanf ((char *)ch3, "%c", (char*)&valeur);
       switch (valeur)
-	{
-	case 'b':
-	  coeff = KB;
-	  break;
-	case 'm':
-	  coeff = KM;
-	  break;
-	default:
-	  coeff = KD;
-	  break;
-	}
+        {
+        case 'b':
+          coeff = KB;
+          break;
+        case 'm':
+          coeff = KM;
+          break;
+        default:
+          coeff = KD;
+          break;
+        }
       Tsub[Code[x]][Code[y]] = coeff;
     }
   TtaReadClose (ftsub);
@@ -836,14 +836,14 @@ static void init_param (FILE * fd)
   while (fscanf (fd, "%d%d%d", &i, &ss, &rr) != EOF)
     {
       if (i < MAX_WORD_LEN)
-	{
-	  if (ss > 0)
-	    Seuil[i] = ss;
-	  if (rr > 0)
-	    Delta[i] = rr;
-	}
+        {
+          if (ss > 0)
+            Seuil[i] = ss;
+          if (rr > 0)
+            Delta[i] = rr;
+        }
       else
-	TtaDisplaySimpleMessage (INFO, LIB, TMSG_NO_PARAM);
+        TtaDisplaySimpleMessage (INFO, LIB, TMSG_NO_PARAM);
       /* erreur fichier parametre */
     }
 }
@@ -865,9 +865,9 @@ static void DefaultParams (int lettres)
 
 
 /*----------------------------------------------------------------------
-   ParametrizeChecker retourne  0 en cas d'impossibilite d'initialisation  
-   1 si OK                                         
-   positionne Clavier_charge                                   
+  ParametrizeChecker retourne  0 en cas d'impossibilite d'initialisation  
+  1 si OK                                         
+  positionne Clavier_charge                                   
   ----------------------------------------------------------------------*/
 int ParametrizeChecker ()
 {
@@ -885,44 +885,44 @@ int ParametrizeChecker ()
       /* remplir corrpath pour acces aux fichiers param et clavier */
       corrpath = TtaGetEnvString ("DICOPAR");
       if (corrpath == NULL)
-	ret = 0;
+        ret = 0;
       else
-	{
-	  /* Lecture du fichier parametres */
-	  strcpy (paramnom, corrpath);
-	  strcat (paramnom, DIR_STR);
-	  strcat (paramnom, "param");
-	  if ((fparam = TtaReadOpen (paramnom)) != NULL)
-	    /* Existence du fichier */
-	    init_param (fparam);
-	  else
-	    /* valeur par defaut LGR = 4 */
-	    DefaultParams (4);
+        {
+          /* Lecture du fichier parametres */
+          strcpy (paramnom, corrpath);
+          strcat (paramnom, DIR_STR);
+          strcat (paramnom, "param");
+          if ((fparam = TtaReadOpen (paramnom)) != NULL)
+            /* Existence du fichier */
+            init_param (fparam);
+          else
+            /* valeur par defaut LGR = 4 */
+            DefaultParams (4);
 
-	  /* Lecture du  fichier clavier */
-	  strcpy (clavnom, corrpath);
-	  strcat (clavnom, DIR_STR);
-	  strcat (clavnom, "clavier");
-	  if ((ftsub = TtaReadOpen (clavnom)) != NULL)
-	    /* Existence du fichier */
-	    {
-	      init_Tsub (ftsub);
-	      Clavier_charge = TRUE;
-	    }
-	  else
-	    {
-	      TtaDisplaySimpleMessage (INFO, LIB, TMSG_NO_KEYBOARD);
-	      ret = 0;
-	    }
-	}
+          /* Lecture du  fichier clavier */
+          strcpy (clavnom, corrpath);
+          strcat (clavnom, DIR_STR);
+          strcat (clavnom, "clavier");
+          if ((ftsub = TtaReadOpen (clavnom)) != NULL)
+            /* Existence du fichier */
+            {
+              init_Tsub (ftsub);
+              Clavier_charge = TRUE;
+            }
+          else
+            {
+              TtaDisplaySimpleMessage (INFO, LIB, TMSG_NO_KEYBOARD);
+              ret = 0;
+            }
+        }
     }
   return (ret);
 }
 
 
 /*----------------------------------------------------------------------
-   WordReplace
-   Both word are defaultCharset encoded.
+  WordReplace
+  Both word are defaultCharset encoded.
   ----------------------------------------------------------------------*/
 void WordReplace (unsigned char *orgWord,  unsigned char *newWord)
 {
@@ -945,30 +945,30 @@ void WordReplace (unsigned char *orgWord,  unsigned char *newWord)
     {
       idx = ChkrIndChar - stringLength;
       OpenHistorySequence (ChkrRange->SDocument, ChkrElement, ChkrElement,
-			   NULL, idx, idx + stringLength);
+                           NULL, idx, idx + stringLength);
       AddEditOpInHistory (ChkrElement, ChkrRange->SDocument, TRUE, TRUE);
       CloseHistorySequence (ChkrRange->SDocument);
       ReplaceString (ChkrRange->SDocument, ChkrElement, idx,
-		     stringLength, nString, newStringLen, TRUE);
+                     stringLength, nString, newStringLen, TRUE);
       /* met a jour ChkrIndChar */
       ChkrIndChar = idx + newStringLen;
 
       /* met eventuellement a jour la borne de fin du domaine de recherche */
       if (ChkrElement == ChkrRange->SEndElement)
-	/* la borne est dans l'element ou` on a fait le remplacement */
-	if (ChkrRange->SEndChar > 1)
-	  /* la borne n'est pas a la fin de l'element, on decale la borne */
-	  ChkrRange->SEndChar += newStringLen - stringLength;
+        /* la borne est dans l'element ou` on a fait le remplacement */
+        if (ChkrRange->SEndChar > 1)
+          /* la borne n'est pas a la fin de l'element, on decale la borne */
+          ChkrRange->SEndChar += newStringLen - stringLength;
     }
   else
     {
       idx = ChkrIndChar;
       OpenHistorySequence (ChkrRange->SDocument, ChkrElement, ChkrElement,
-			   NULL, idx, idx+stringLength-1);
+                           NULL, idx, idx+stringLength-1);
       AddEditOpInHistory (ChkrElement, ChkrRange->SDocument, TRUE, TRUE);
       CloseHistorySequence (ChkrRange->SDocument);
       ReplaceString (ChkrRange->SDocument, ChkrElement, idx,
-		     stringLength, nString, newStringLen, TRUE);
+                     stringLength, nString, newStringLen, TRUE);
     }
 
   TtaFreeMemory (nString);
@@ -979,8 +979,8 @@ void WordReplace (unsigned char *orgWord,  unsigned char *newWord)
 
 
 /*----------------------------------------------------------------------
-   CheckChangeSelection retourne vrai si la selection a change      
-   depuis la derniere recherche d'erreur.                       
+  CheckChangeSelection retourne vrai si la selection a change      
+  depuis la derniere recherche d'erreur.                       
   ----------------------------------------------------------------------*/
 ThotBool CheckChangeSelection ()
 {
@@ -1000,23 +1000,23 @@ ThotBool CheckChangeSelection ()
       pEl1 = ChkrElement;
       c1 = ChkrIndChar;
       ok = GetCurrentSelection (&ChkrRange->SDocument, &ChkrElement, &pElN,
-				&cN, &ChkrIndChar);
+                                &cN, &ChkrIndChar);
       if (ChkrIndChar < cN)
-	/* selection is just a caret */
-	ChkrIndChar = cN;
+        /* selection is just a caret */
+        ChkrIndChar = cN;
       if (pElN && ChkrIndChar == 0)
-	/* the whole element is selected */
-	ChkrIndChar = pElN->ElVolume;
+        /* the whole element is selected */
+        ChkrIndChar = pElN->ElVolume;
     }
   else
     {
       pEl1 = ChkrElement;
       c1 = ChkrIndChar;
       ok = GetCurrentSelection (&ChkrRange->SDocument, &pElN, &ChkrElement,
-				&ChkrIndChar, &cN);
+                                &ChkrIndChar, &cN);
       if (pElN && ChkrIndChar == 0)
-	/* the whole element is selected */
-	ChkrIndChar = 1;
+        /* the whole element is selected */
+        ChkrIndChar = 1;
     }
 
   if (!ok)
@@ -1042,9 +1042,9 @@ ThotBool CheckChangeSelection ()
 
 
 /*----------------------------------------------------------------------
-   CheckCharList teste si ce caractere appartient a la liste listcar    
-   retourne TRUE si oui                               
-   FALSE sinon                               
+  CheckCharList teste si ce caractere appartient a la liste listcar    
+  retourne TRUE si oui                               
+  FALSE sinon                               
   ----------------------------------------------------------------------*/
 static ThotBool CheckCharList (unsigned char car, unsigned char *listcar)
 {
@@ -1054,14 +1054,14 @@ static ThotBool CheckCharList (unsigned char car, unsigned char *listcar)
   for (i = 0; i < l; i++)
     {
       if (car == listcar[i])
-	return (TRUE);
+        return (TRUE);
     }
   return (FALSE);
 }
 
 /*----------------------------------------------------------------------
-   IncludeAChar returns TRUE if the word includes a character of the
-   list ListCar.
+  IncludeAChar returns TRUE if the word includes a character of the
+  list ListCar.
   ----------------------------------------------------------------------*/
 static ThotBool IncludeAChar (unsigned char *word)
 {
@@ -1074,14 +1074,14 @@ static ThotBool IncludeAChar (unsigned char *word)
   if (len > 0)
     {
       for (i = 0; i < len && (result == FALSE); i++)
-	if (CheckCharList (word[i], (unsigned char *)RejectedChar) == TRUE)
-	  result = TRUE;
+        if (CheckCharList (word[i], (unsigned char *)RejectedChar) == TRUE)
+          result = TRUE;
     }
   return result;
 }
 
 /*----------------------------------------------------------------------
-   IncludeANumber returns TRUE if the word include a number.
+  IncludeANumber returns TRUE if the word include a number.
   ----------------------------------------------------------------------*/
 static ThotBool IncludeANumber (unsigned char *word)
 {
@@ -1094,15 +1094,15 @@ static ThotBool IncludeANumber (unsigned char *word)
   if (len > 0)
     {
       for (i = 0; i < len && (result == FALSE); i++)
-	if (word[i] >= '0' && word[i] <= '9')
-	  result = TRUE;
+        if (word[i] >= '0' && word[i] <= '9')
+          result = TRUE;
     }
   return result;
 }
 
 /*----------------------------------------------------------------------
-   IsANumber retourne TRUE si le mot est forme' uniquement de    
-   chiffres decimaux arabes.                                       
+  IsANumber retourne TRUE si le mot est forme' uniquement de    
+  chiffres decimaux arabes.                                       
   ----------------------------------------------------------------------*/
 static ThotBool IsANumber (unsigned char *word)
 {
@@ -1117,15 +1117,15 @@ static ThotBool IsANumber (unsigned char *word)
       
       result = TRUE;
       for (i = 0; i < len && result; i++)
-	if (word[i] < 48 || word[i] > 57)
-	  result = FALSE;
+        if (word[i] < 48 || word[i] > 57)
+          result = FALSE;
     }
   return result;
 }
 
 /*----------------------------------------------------------------------
-   InRoman retourne TRUE si le mot est forme' uniquement de       
-   chiffres romains.                                               
+  InRoman retourne TRUE si le mot est forme' uniquement de       
+  chiffres romains.                                               
   ----------------------------------------------------------------------*/
 static ThotBool InRoman (unsigned char *word)
 {
@@ -1140,8 +1140,8 @@ static ThotBool InRoman (unsigned char *word)
     {
       result = TRUE;
       for (i = 0; i < len && result; i++)
-	if (CheckCharList (word[i], (unsigned char *)NRomain) != TRUE)
-	  result = FALSE;
+        if (CheckCharList (word[i], (unsigned char *)NRomain) != TRUE)
+          result = FALSE;
     }
   if (result == TRUE)
     /* analyse plus fine de ce "possible" chiffre romain */
@@ -1149,27 +1149,27 @@ static ThotBool InRoman (unsigned char *word)
       /* pas plus de 3 fois la meme lettre successivement dans ce nombre */
       lg1 = len - 3;
       for (i = 0; i < lg1 && result; i++)
-	{
-	  c = word[i];
-	  nbcar = 1;
-	  for (j = i + 1; j < len && word[j] == c; j++)
-	    nbcar++;
-	  if (nbcar > 3)
-	    /* ce n'est pas un "bon" chiffre romain */
-	    result = FALSE;
-	}
+        {
+          c = word[i];
+          nbcar = 1;
+          for (j = i + 1; j < len && word[j] == c; j++)
+            nbcar++;
+          if (nbcar > 3)
+            /* ce n'est pas un "bon" chiffre romain */
+            result = FALSE;
+        }
 
       /* pas plus de 1 fois V, L ou D successivement dans ce nombre */
       for (i = 0; i < len - 1 && result; i++)
-	{
-	  if (CheckCharList (word[i], (unsigned char *)NRomainIsole) == TRUE &&
-	      word[i + 1] == word[i])
-	    result = FALSE;
-	}
+        {
+          if (CheckCharList (word[i], (unsigned char *)NRomainIsole) == TRUE &&
+              word[i + 1] == word[i])
+            result = FALSE;
+        }
       
       /* ne pas considerer "M" comme un romain */
       if (strlen ((char *)word) == 1 && word[0] == 'M')
-	result = FALSE;
+        result = FALSE;
       /* verifier aussi l'ordre des I V X L C D M */
       /* A FAIRE */
     }
@@ -1178,10 +1178,10 @@ static ThotBool InRoman (unsigned char *word)
 
 
 /*----------------------------------------------------------------------
-   IgnoreWord                                                      
-   retourne TRUE si mot doit etre ignore (avec capitale, romain,      
-   chiffre arabe, car. special)                                       
-   retourne FALSE sinon : le mot sera alors verifie par le correcteur 
+  IgnoreWord                                                      
+  retourne TRUE si mot doit etre ignore (avec capitale, romain,      
+  chiffre arabe, car. special)                                       
+  retourne FALSE sinon : le mot sera alors verifie par le correcteur 
   ----------------------------------------------------------------------*/
 static ThotBool IgnoreWord (unsigned char *word)
 {
@@ -1205,7 +1205,7 @@ static ThotBool IgnoreWord (unsigned char *word)
 
 
 /*----------------------------------------------------------------------
-   NextSpellingError stores the next misspelled word into ChkrErrWord.
+  NextSpellingError stores the next misspelled word into ChkrErrWord.
   ----------------------------------------------------------------------*/
 void NextSpellingError (PtrDict docDict)
 {
@@ -1226,50 +1226,50 @@ void NextSpellingError (PtrDict docDict)
       novalid = TRUE;
       ok = TRUE;
       while (ok && novalid)
-	{
-	  if (ChkrRange->SStartToEnd)
-	    ok = SearchNextWord (&ChkrElement, &i, &ChkrIndChar, s, ChkrRange);
-	  else
-	    ok = SearchPreviousWord (&ChkrElement, &ChkrIndChar, &i, s, ChkrRange);
-	  /* Is it a valid selection ? */
-	  if (ok && ChkrElement->ElParent != NULL)
-	    novalid = (TypeHasException (ExcNoSpellCheck,
-					ChkrElement->ElParent->ElTypeNumber,
-					ChkrElement->ElParent->ElStructSchema));
-	}
+        {
+          if (ChkrRange->SStartToEnd)
+            ok = SearchNextWord (&ChkrElement, &i, &ChkrIndChar, s, ChkrRange);
+          else
+            ok = SearchPreviousWord (&ChkrElement, &ChkrIndChar, &i, s, ChkrRange);
+          /* Is it a valid selection ? */
+          if (ok && ChkrElement->ElParent != NULL)
+            novalid = (TypeHasException (ExcNoSpellCheck,
+                                         ChkrElement->ElParent->ElTypeNumber,
+                                         ChkrElement->ElParent->ElStructSchema));
+        }
 
       /* get back the Iso string */
       j = 0;
       while (s[j] != 0)
-	{
-	  word[j] = TtaGetCharFromWC (s[j], ISO_8859_1);
-	  j++;
-	}
+        {
+          word[j] = TtaGetCharFromWC (s[j], ISO_8859_1);
+          j++;
+        }
       word[j] = EOS;
       
       if (ok)
-	{
-	  /* verifie si c'est un nombre ou s'il doit etre ignore' */
-	  if (IsANumber (word) || IgnoreWord (word))
-	    i = -1;
-	  else
-	    {
-	      /* Charge si necessaire les dictionnaires de la langue */
-	      language = ChkrElement->ElLanguage;
-	      if (language != ChkrLanguage)
-		{
-		  ChkrLanguage = language;
-		  TtaLoadLanguageDictionaries (ChkrLanguage);
-		}
-	      i = CheckWord (word, ChkrLanguage, docDict);
-	      /* 1   = mot trouve dans l'un des dict */
-	      /* 0   = mot inconnu ou vide */
-	      /* -1  = pas de dict pour verifier un mot de cette language */
-	      if (i != 1)
-		/* est-ce un chiffre romain correct */
-		i = (InRoman (word) == TRUE) ? 1 : i;
-	    }
-	}
+        {
+          /* verifie si c'est un nombre ou s'il doit etre ignore' */
+          if (IsANumber (word) || IgnoreWord (word))
+            i = -1;
+          else
+            {
+              /* Charge si necessaire les dictionnaires de la langue */
+              language = ChkrElement->ElLanguage;
+              if (language != ChkrLanguage)
+                {
+                  ChkrLanguage = language;
+                  TtaLoadLanguageDictionaries (ChkrLanguage);
+                }
+              i = CheckWord (word, ChkrLanguage, docDict);
+              /* 1   = mot trouve dans l'un des dict */
+              /* 0   = mot inconnu ou vide */
+              /* -1  = pas de dict pour verifier un mot de cette language */
+              if (i != 1)
+                /* est-ce un chiffre romain correct */
+                i = (InRoman (word) == TRUE) ? 1 : i;
+            }
+        }
     }
   /* saute les mots qui sont dans une langue SANS dictionnaire */
   while (ok && (i > 0 || i == -1));
@@ -1279,11 +1279,11 @@ void NextSpellingError (PtrDict docDict)
     {
       /* a word is found, select it */
       if (ChkrRange->SStartToEnd)
-	SelectString (ChkrRange->SDocument, ChkrElement,
-		      ChkrIndChar - i, ChkrIndChar);
+        SelectString (ChkrRange->SDocument, ChkrElement,
+                      ChkrIndChar - i, ChkrIndChar);
       else
-	SelectString (ChkrRange->SDocument, ChkrElement,
-		      ChkrIndChar, ChkrIndChar + i);
+        SelectString (ChkrRange->SDocument, ChkrElement,
+                      ChkrIndChar, ChkrIndChar + i);
     }
   strcpy ((char *)ChkrErrWord, (char *)word);
 }

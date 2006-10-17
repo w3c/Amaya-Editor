@@ -1270,6 +1270,19 @@ void FreeSchPres (PtrPSchema pSP, PtrSSchema pSS)
           pSP->PsConstant[i].PdString = NULL;
         }
     }
+
+  if (pSP->PsVariable)
+    {
+      for (i = 0; i < pSP->PsNVariables; i++)
+        {
+          if (pSP->PsVariable->PresVar[i])
+            TtaFreeMemory (pSP->PsVariable->PresVar[i]);
+          pSP->PsVariable->PresVar[i] = NULL;
+        }
+      free (pSP->PsVariable);
+      pSP->PsVariable = NULL;
+    }
+
   if (pSP->PsPresentBox)
     {
       for (i = 0; i < pSP->PsNPresentBoxes; i++)
@@ -1280,6 +1293,7 @@ void FreeSchPres (PtrPSchema pSP, PtrSSchema pSS)
       free (pSP->PsPresentBox);
       pSP->PsPresentBox = NULL;
     }
+
   if (pSP->PsAttrPRule)
     {
       for (i = 0; i < pSS->SsNAttributes; i++)
@@ -1301,8 +1315,10 @@ void FreeSchPres (PtrPSchema pSP, PtrSSchema pSS)
         }
       free (pSP->PsAttrPRule);
     }
+
   if (pSP->PsNAttrPRule)
     free (pSP->PsNAttrPRule);
+
   if (pSP->PsElemPRule)
     {
       for (i = 0; i < pSP->PsNElemPRule; i++)
