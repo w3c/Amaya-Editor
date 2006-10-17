@@ -692,7 +692,7 @@ void DisplayImage (Document doc, Element el, LoadedImageDesc *desc,
             SetAttrOnElement (doc, el, HTML_ATTR_NoObjects, 1);
           else
             /* it's an image -> display image alt text */
-            SetAttrOnElement (doc, el, HTML_ATTR_NoImages, 1);
+            SetAttrOnElement (doc, parent, HTML_ATTR_NoImages, 1);
         }
 
       if (is_svg)

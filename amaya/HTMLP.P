@@ -2651,8 +2651,8 @@ RULES
         if ALT
           CreateBefore(IMG_ALT);
         HorizRef: * . Bottom;
-  Width: Enclosed . Width;
-  Height: Enclosed . Height;
+        Width: Enclosed . Width;
+        Height: Enclosed . Height;
         Gather: Yes;
         if within HEAD
                 Visibility: 0;
@@ -2680,8 +2680,8 @@ RULES
         if ALT
           CreateBefore(IMG_ALT);
         HorizRef: * . Bottom;
-  Width: Enclosed . Width;
-  Height: Enclosed . Height;
+        Width: Enclosed . Width;
+        Height: Enclosed . Height;
         Gather: Yes;
         if within HEAD
                 Visibility: 0;
