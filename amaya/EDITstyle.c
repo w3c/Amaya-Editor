@@ -1695,6 +1695,10 @@ void CreateClass (Document doc, View view)
         return;
 
       /* update the class name selector. */
+      if (!strcmp (schName, "HTML") && elType.ElTypeNum == HTML_EL_Preformatted)
+        // avoid to convert a pre to listing
+        elHtmlName = "pre";
+      else
       elHtmlName =  GetXMLElementName (elType, doc);
       if (elHtmlName[0] == '?')
         InitConfirm (doc, 1, TtaGetMessage (LIB, TMSG_SEL_CLASS));
