@@ -3531,6 +3531,7 @@ void CheckNewLines (NotifyOnTarget *event)
   length;
   content = (CHAR_T *)TtaGetMemory ((length + 1) * sizeof(CHAR_T));
   TtaGiveBufferContent (leaf, content, length, &lang);
+  content[length] = EOS;
   changed = FALSE;
   selChanged = FALSE;
   prevCharEOL = FALSE;
