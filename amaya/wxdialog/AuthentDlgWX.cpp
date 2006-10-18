@@ -33,13 +33,12 @@ END_EVENT_TABLE()
     + parent : parent window
     + pathname : document location
   ----------------------------------------------------------------------*/
-AuthentDlgWX::AuthentDlgWX( int ref,
-			    wxWindow* parent,
-			    char * auth_realm,
+AuthentDlgWX::AuthentDlgWX( int ref, wxWindow* parent, char * auth_realm,
 			    char * server) :
   AmayaDialog( parent, ref )
 {
-  char *ptr, *label;
+  char    *ptr1, *ptr2, *label;
+  int      len = 20;
 
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("AuthentDlgWX"));
   wxString wx_title = TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_GET_AUTHENTICATION) );
@@ -48,16 +47,28 @@ AuthentDlgWX::AuthentDlgWX( int ref,
   // waiting for a return
   Waiting = 1;
 
-  ptr = TtaGetMessage (AMAYA, AM_AUTHENTICATION_REALM);
-  label = (char *)TtaGetMemory (((auth_realm) ? strlen (auth_realm) : 0)
-			+ ((server) ? strlen (server) : 0)
-			+ strlen (ptr) + 20); /*a bit more than enough memory */
+  ptr1 = TtaGetMessage (AMAYA, AM_AUTHENTICATION_REALM);
+  ptr2 = TtaGetMessage (AMAYA, AM_AUTHENTICATION_SERVER);
+  if (ptr1)
+    len += strlen (ptr1);
+  if (ptr2)
+    len += strlen (ptr2);
+  if (auth_realm)
+    len += strlen (auth_realm);
+  if (server)
+    len += strlen (server);
+  label = (char *)TtaGetMemory (len); /*a bit more than enough memory */
   if (label)
     {
-      sprintf (label, ptr, ((auth_realm) ? auth_realm : ""));
+      if (auth_realm)
+        sprintf (label, ptr1, auth_realm);
+      else
+        sprintf (label, ptr1, "");
       XRCCTRL(*this, "wxID_LABEL_AUTHENT", wxStaticText)->SetLabel(TtaConvMessageToWX( label ) );
-      ptr = TtaGetMessage (AMAYA, AM_AUTHENTICATION_SERVER);
-      sprintf (label, ptr, ((server) ? server : ""));
+      if (server)
+        sprintf (label, ptr2, server);
+      else
+        sprintf (label, ptr2, "");
       XRCCTRL(*this, "wxID_LABEL_SERVER", wxStaticText)->SetLabel(TtaConvMessageToWX( label ) );
       TtaFreeMemory (label);
     }
