@@ -3450,9 +3450,9 @@ void CheckNewLines (NotifyOnTarget *event)
                 /* the current selection is not within this element. Don't care about
                    the selection */
                 selEl = NULL;
-              length++;
-              content = (CHAR_T *)TtaGetMemory (length * sizeof(CHAR_T));
+              content = (CHAR_T *)TtaGetMemory ((length + 1) * sizeof(CHAR_T));
               TtaGiveBufferContent (leaf, content, length, &lang);
+              content[length] = EOS;
               j = 0;
               prev = NULL;
               // get information about next leaves
@@ -3528,7 +3528,6 @@ void CheckNewLines (NotifyOnTarget *event)
     /* the current selection is not within this element. Don't care about
        the selection */
     selEl = NULL;
-  length;
   content = (CHAR_T *)TtaGetMemory ((length + 1) * sizeof(CHAR_T));
   TtaGiveBufferContent (leaf, content, length, &lang);
   content[length] = EOS;
