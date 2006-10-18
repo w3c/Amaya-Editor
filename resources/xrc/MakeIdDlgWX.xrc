@@ -15,14 +15,21 @@
               <object class="sizeritem">
                 <object class="wxBoxSizer">
                   <orient>wxVERTICAL</orient>
+                  <object class="spacer">
+                    <size>0,5</size>
+                    <option>1</option>
+                    <flag>wxEXPAND</flag>
+                  </object>
                   <object class="sizeritem">
                     <object class="wxStaticText" name="wxID_LABEL_NAME">
                       <label>*Tag name*</label>
                       <size>200,-1</size>
                     </object>
+                    <option>1</option>
+                    <flag></flag>
                   </object>
                   <object class="spacer">
-                    <size>0,5</size>
+                    <size>0,3</size>
                   </object>
                   <object class="sizeritem">
                     <object class="wxTextCtrl" name="wxID_NAME">
@@ -30,13 +37,16 @@
                       <size>200,-1</size>
                       <focused>1</focused>
                     </object>
+                    <option>1</option>
+                    <flag>wxEXPAND</flag>
                   </object>
                   <object class="spacer">
+                    <option>1</option>
                     <flag>wxEXPAND</flag>
                   </object>
                 </object>
                 <option>1</option>
-                <flag>wxEXPAND|wxALIGN_CENTRE_VERTICAL</flag>
+                <flag>wxEXPAND</flag>
               </object>
               <object class="spacer">
                 <size>10,0</size>
@@ -72,6 +82,7 @@
                 <flag>wxEXPAND|wxALIGN_CENTRE_VERTICAL</flag>
               </object>
             </object>
+            <option>1</option>
             <flag>wxBOTTOM|wxEXPAND</flag>
             <border>4</border>
           </object>

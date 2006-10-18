@@ -23,6 +23,7 @@
                   <size>400,-1</size>
                   <focused>1</focused>
                 </object>
+                <option>1</option>
                 <flag>wxALL|wxEXPAND</flag>
               </object>
               <object class="spacer">
@@ -34,6 +35,8 @@
                 </object>
               </object>
             </object>
+            <option>1</option>
+            <flag>wxEXPAND</flag>
           </object>
           <object class="spacer">
             <size>0,10</size>

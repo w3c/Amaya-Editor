@@ -29,7 +29,8 @@
                       <size>450,-1</size>
                       <focused>1</focused>
                     </object>
-                    <flag>wxALL|wxEXPAND</flag>
+                    <option>1</option>
+                    <flag>wxEXPAND</flag>
                   </object>
                   <object class="spacer">
                     <size>5,0</size>
@@ -40,11 +41,11 @@
                     </object>
                   </object>
                 </object>
-                <option>0</option>
-                <flag>wxALL|wxEXPAND</flag>
+                <option>1</option>
+                <flag>wxEXPAND</flag>
               </object>
             </object>
-            <option>0</option>
+            <option>1</option>
             <flag>wxALL|wxEXPAND</flag>
             <border>4</border>
           </object>
@@ -61,6 +62,7 @@
               </object>
               <object class="sizeritem">
                 <object class="wxTextCtrl" name="wxID_IMG_LOCATION_CTRL"/>
+                <option>1</option>
                 <flag>wxEXPAND</flag>
                 <minsize>300,-1</minsize>
               </object>
@@ -74,7 +76,6 @@
                 <flag>wxRIGHT</flag>
               </object>
             </object>
-            <option>1</option>
             <flag>wxRIGHT|wxEXPAND</flag>
             <border>4</border>
           </object>
