@@ -50,7 +50,6 @@
             <object class="wxButton" name="wxID_OK">
               <label>CONFIRMBUTTON</label>
               <default>1</default>
-              <focused>1</focused>
             </object>
           </object>
           <object class="spacer">
