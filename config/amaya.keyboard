@@ -84,6 +84,13 @@ Shift Ctrl <Key>Z:                 TtcRedo()
 Ctrl <Key>z:                       TtcUndo() 
 
 #Headings sbmenu
+Ctrl <Key>h , Shift Ctrl <Key>&:   CreateHeading1() 
+Ctrl <Key>h , Shift Ctrl <Key>é:   CreateHeading2() 
+Ctrl <Key>h , Shift Ctrl <Key>":   CreateHeading3() 
+Ctrl <Key>h , Shift Ctrl <Key>':   CreateHeading4() 
+Ctrl <Key>h , Shift Ctrl <Key>(:   CreateHeading5() 
+Ctrl <Key>h , Shift Ctrl <Key>-:   CreateHeading6()
+Ctrl <Key>h , Shift Ctrl <Key>$:   CreateHeading6()
 Ctrl <Key>h , Ctrl <Key>1:         CreateHeading1() 
 Ctrl <Key>h , Ctrl <Key>2:         CreateHeading2() 
 Ctrl <Key>h , Ctrl <Key>3:         CreateHeading3() 

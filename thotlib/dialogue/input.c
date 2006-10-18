@@ -288,6 +288,8 @@ static char *KeyName (unsigned int key)
   ----------------------------------------------------------------------*/
 static unsigned int SpecialKey (char *name, ThotBool shifted, ThotBool *isSpecial)
 {
+  unsigned char c;
+
   *isSpecial = TRUE;
   /* is it the name of a special character? */
   if (!strcasecmp (name, "Return"))
@@ -369,7 +371,8 @@ static unsigned int SpecialKey (char *name, ThotBool shifted, ThotBool *isSpecia
   else
     {
       *isSpecial = FALSE;
-      return (unsigned int) name[0];
+      c = (unsigned char) name[0];
+      return (unsigned int) c;
     }
 }
 
