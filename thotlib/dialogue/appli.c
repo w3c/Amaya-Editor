@@ -63,9 +63,7 @@
 #ifdef _GTK
 static gchar *null_string;
 #endif /*_GTK*/
-#ifdef _WX
 static ThotBool     ComputeScrollBar = TRUE;
-#endif /* _WX */
 
 /* Focus change callback procedure */
 static Proc1        ChangeFocusFunction = NULL;
@@ -560,7 +558,7 @@ void WIN_ChangeViewSize (int frame, int width, int height, int top_delta,
 
 #ifndef _GL
   /* need to recompute the content of the window */
-  RebuildConcreteImage (frame, TRUE);
+  RebuildConcreteImage (frame, FALSE);
 #else /*_GL*/
   if (GL_prepare (frame))
     {
@@ -1099,9 +1097,6 @@ ThotBool FrameResizedCallback (int frame, int new_width, int new_height)
     }
   else
     ComputeScrollBar = TRUE;
-#endif /* _WX */
-
-#ifdef _WX
   TTALOGDEBUG_3( TTA_LOG_DIALOG, _T("FrameResizedCallback: new_width=%d new_height=%d (ComputeScrollBar=%s)"),
                  new_width, new_height, ComputeScrollBar ? _T("TRUE") : _T("FALSE"));
 #endif /* _WX */
@@ -3859,16 +3854,19 @@ void UpdateScrollbars (int frame)
 #endif /* #if defined(_GTK) || defined(_WX) */
 
 #ifdef _WINGUI
+  if (!ComputeScrollBar)
+	return;
+  ComputeScrollBar = FALSE;
   need_resize = FALSE;
   l = FrameTable[frame].FrWidth;
   h = FrameTable[frame].FrHeight;
   memset(&scrollInfo, 0, sizeof(scrollInfo));	
   scrollInfo.cbSize = sizeof (SCROLLINFO);
   scrollInfo.fMask  = SIF_PAGE | SIF_POS | SIF_RANGE;
-  if (width >= l && x == 0 && width > 60)
+  if (width >= l - 4 && x == 0 && width > 60)
     {
       /*hide*/
-      if (Win_Scroll_visible (FrameTable[frame].WdScrollH))
+      if (Win_Scroll_visible (FrameTable[frame].WdScrollH) == TRUE)
         {
           scrollInfo.nMax = 2;
           SetScrollInfo (FrameTable[frame].WdScrollH, SB_CTL, &scrollInfo, TRUE);
@@ -3891,7 +3889,7 @@ void UpdateScrollbars (int frame)
       SetScrollInfo (FrameTable[frame].WdScrollH, SB_CTL, &scrollInfo, TRUE);
     }
   else
-    /*show*/
+    /*update*/
     if (Win_Scroll_visible (FrameTable[frame].WdScrollH) == FALSE)
       {
         CloseTextInsertion ();
@@ -3941,6 +3939,7 @@ void UpdateScrollbars (int frame)
                          FRHeight[frame],  
                          frame);
     }
+  ComputeScrollBar = TRUE;
 #endif /* _WINGUI */
 }
 
