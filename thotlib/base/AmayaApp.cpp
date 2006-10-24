@@ -108,7 +108,7 @@ bool AmayaApp::OnInit()
 
   // under X we usually want to use the primary selection by default (which
   // is shared with other apps)
-  wxTheClipboard->UsePrimarySelection();
+  wxTheClipboard->UsePrimarySelection(false);
 
   // this flag is set to false because amaya_main is not allready called
   // the flag will be set to true when amaya_main will be called
