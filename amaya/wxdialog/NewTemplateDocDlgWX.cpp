@@ -416,7 +416,7 @@ void NewTemplateDocDlgWX::OnDirNameButton (wxCommandEvent& event)
   int id = event.GetId();
   int temp_id = wxXmlResource::GetXRCID(_T("wxID_BUTTON_TEMPLATEDIR"));
   wxDirDialog *p_dlg = new wxDirDialog(this);
-  p_dlg->SetStyle(p_dlg->GetStyle() | wxDD_NEW_DIR_BUTTON);
+  //p_dlg->SetStyle(p_dlg->GetStyle() | wxDD_NEW_DIR_BUTTON);
   if (id == temp_id)
     {
       p_dlg->SetPath(XRCCTRL(*this, "wxID_TEMPLATEDIRNAME", wxTextCtrl)->GetValue());

@@ -326,7 +326,7 @@ void SaveAsDlgWX::OnDirButton( wxCommandEvent& event )
     {
       // Create a generic filedialog
       wxDirDialog * p_dlg = new wxDirDialog(this);
-      p_dlg->SetStyle(p_dlg->GetStyle() | wxDD_NEW_DIR_BUTTON);
+      //p_dlg->SetStyle(p_dlg->GetStyle() | wxDD_NEW_DIR_BUTTON);
       p_dlg->SetPath(XRCCTRL(*this, "wxID_IMG_LOCATION_CTRL", wxTextCtrl)->GetValue());
       if (p_dlg->ShowModal() == wxID_OK)
         {

@@ -3278,7 +3278,8 @@ void SetChange (PtrAbstractBox pAb, PtrDocument pDoc, PRuleType typeRule,
         {
           /* delete the old marker */
           pChild = pAb->AbPrevious;
-          if (pChild->AbPresentationBox && pChild->AbTypeNum == 0 && !pChild->AbNew)
+          if (pChild &&
+              pChild->AbPresentationBox && pChild->AbTypeNum == 0 && !pChild->AbNew)
             /* delete the old marker */
             pChild->AbDead = TRUE;
           if (pAb->AbListStyleType != 'N')
