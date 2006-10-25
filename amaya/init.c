@@ -2357,8 +2357,9 @@ void  OpenDoc (Document doc, View view)
     {
       /* load the new document */
       DontReplaceOldDoc = FALSE;
-      InNewWindow       = FALSE;
+      InNewWindow = FALSE;
 #endif /* _WX */
+      NewFile = FALSE;
        /* no specific type requested */
       InitOpenDocForm (doc, view, "",
                        TtaGetMessage (AMAYA, AM_OPEN_DOCUMENT), docText);
@@ -2373,8 +2374,9 @@ void OpenDocInNewWindow (Document document, View view)
 {
 #ifndef _WX
   DontReplaceOldDoc = TRUE;
-  InNewWindow       = TRUE;
+  InNewWindow = TRUE;
 #endif /* _WX */
+  NewFile = FALSE;
   /* no specific type requested */
   InitOpenDocForm (document, view, "",
                    TtaGetMessage (AMAYA, AM_OPEN_IN_NEW_WINDOW),
