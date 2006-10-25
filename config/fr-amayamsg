@@ -11,8 +11,8 @@
 9 Nouvelle feuille de style
 10 À partir du modèle
 11 Ouvrir
-12 Ouvrir dans un nouvel onglet
-13 Ouvrir dans nouvelle fenêtre
+12 Dans un nouvel onglet
+13 Dans nouvelle fenêtre
 14 RAZ
 15 Clic
 16 Document sauvé : %s
@@ -249,9 +249,9 @@
 247 Annotation détruite!
 248 Impossible de charger l'index des annotations
 249 Erreur
-250 Sélectionner un code caractère
+250 Sélectionner un codage
 251 Sélectionner un type MIME
-252 Changer le code caractère
+252 Changer le codage
 253 Changer le type MIME
 254 Changer
 255 Ce type de document n'a pas de charset
@@ -352,7 +352,7 @@
 350 Informations du document
 351 Type du document
 352 Type MIME
-353 Code de caractère
+353 Codage
 354 Taille du contenu
 355 Provenance
 356 Préférences
@@ -360,7 +360,7 @@
 358 Création d'un objet
 359 Répertoire
 360 Fichier
-361 Remplacer le document courant
+361 Remplacer le document
 362 Dans un nouvel onglet
 363 Dans une nouvelle fenêtre
 364 Anti-aliasing

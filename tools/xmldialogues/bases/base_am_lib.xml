@@ -3055,5 +3055,17 @@
 <message xml:lang="cn">Object</message>
 <message xml:lang="tw">Object</message>
 </label>
+<label define="CSSStyle">
+	<message xml:lang="en">CSS Style</message>
+	<message xml:lang="fr">Style CSS</message>
+	<message xml:lang="it">CSS Style</message>
+	<message xml:lang="es">Estilo CSS</message>
+	<message xml:lang="hu">CSS Stílus</message>
+	<message xml:lang="de">CSS Stil</message>
+	<message xml:lang="ka">CSS style...</message>
+	<message xml:lang="ru">CSS style</message>
+	<message xml:lang="cn">CSS样式</message>
+	<message xml:lang="tw">CSS樣式</message>
+</label>
 <label define="TMSG_LIB_MSG_MAX"></label></messages>
 <!--end of base --></base>

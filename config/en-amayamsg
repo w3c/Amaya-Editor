@@ -11,7 +11,7 @@
 9 New CSS style sheet
 10 From template
 11 Open document
-12 Open in new tab
+12 In new tab
 13 Open in new window
 14 Clear
 15 Click
@@ -249,9 +249,9 @@
 247 Annotation deleted!
 248 Failed to load the annotation index
 249 Error
-250 Select a Character Coding
+250 Select a Charset
 251 Select a MIME type
-252 Change Character Coding
+252 Change Charset
 253 Change MIME type
 254 Change
 255 This type of document doesn't support charsets

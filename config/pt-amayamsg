@@ -11,7 +11,7 @@
 9 Nova folha de estilo CSS
 10 Do gabarito
 11 >Abrir documento
-12 **Open in new tab
+12 **In new tab
 13 >Abrir em nova janela
 14 Apagar
 15 Clique
@@ -249,9 +249,9 @@
 247 Anotação suprimida!
 248 Carregamento do índice de anotação falhou
 249 Erro
-250 Selecionar um conjunto de caracteres (charset)
+250 Selecionar um Charset
 251 Selecionar o tipo MIME
-252 Mudar conjunto de caracteres (Charset)
+252 Mudar Charset
 253 Mudar o tipo MIME
 254 Modificar
 255 este tipo de documento não suporta conjuntos de caracteres (charsets)

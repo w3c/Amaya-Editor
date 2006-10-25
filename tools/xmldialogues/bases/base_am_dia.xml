@@ -3881,7 +3881,7 @@
 </label>
 <label define="BSplitHorizontally">
 	<message xml:lang="en">Split view horizontally</message>
-	<message xml:lang="fr">Partager la vue horizontalement</message>
+	<message xml:lang="fr">Partager horizontalement</message>
 	<message xml:lang="es">Dividir vista horizontalmente</message>
 	<message xml:lang="de">Ansicht horizontal teilen</message>
 	<message xml:lang="it">Dividi la vista in orizzontale</message>
@@ -3893,7 +3893,7 @@
 </label>
 <label define="BSplitVertically">
 	<message xml:lang="en">Split view vertically</message>
-	<message xml:lang="fr">Partager la vue verticalement</message>
+	<message xml:lang="fr">Partager verticalement</message>
 	<message xml:lang="es">Dividir vista verticalmente</message>
 	<message xml:lang="de">Ansicht vertikal teilen</message>
 	<message xml:lang="it">Dividi la vista in verticale</message>

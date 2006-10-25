@@ -648,6 +648,7 @@ StyleDlgWX::StyleDlgWX( int ref, wxWindow* parent ) :
 
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("StyleDlgWX"));
   m_ref = ref;
+  SetTitle (TtaConvMessageToWX(TtaGetMessage(LIB, CSSStyle)));
   wxString ptr = TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_APPLY_BUTTON));
   XRCCTRL(*this, "wxID_OK", wxButton)->SetLabel(ptr);
   XRCCTRL(*this, "wxID_CANCEL", wxButton)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_DONE)));

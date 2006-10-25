@@ -197,8 +197,8 @@
 	<message xml:lang="tw">打開文檔</message>
 </label>
 <label define="AM_OPEN_IN_NEW_TAB">
-	<message xml:lang="en">Open in new tab</message>
-	<message xml:lang="fr">Ouvrir dans un nouvel onglet</message>
+	<message xml:lang="en">In new tab</message>
+	<message xml:lang="fr">Dans un nouvel onglet</message>
 	<message xml:lang="it">Apri tab</message>
 	<message xml:lang="es">Abrir en pestaña nueva</message>
 	<message xml:lang="de">Öffnen (neues &amp;Registerkarte)</message>
@@ -210,7 +210,7 @@
 </label>
 <label define="AM_OPEN_IN_NEW_WINDOW">
 	<message xml:lang="en">Open in new window</message>
-	<message xml:lang="fr">Ouvrir dans nouvelle fenêtre</message>
+	<message xml:lang="fr">Dans nouvelle fenêtre</message>
 	<message xml:lang="de">Öffnen (neues Fenster)</message>
 	<message xml:lang="it">Apri in una nuova finestra</message>
 	<message xml:lang="tr">Yeni pencerede aç</message>
@@ -3718,12 +3718,12 @@
 	<message xml:lang="tw">錯誤</message>
 </label>
 <label define="AM_SELECT_CHARSET">
-	<message xml:lang="en">Select a Character Coding</message>
-	<message xml:lang="fr">Sélectionner un code caractère</message>
-	<message xml:lang="it">Seleziona un Character Coding</message>
+	<message xml:lang="en">Select a Charset</message>
+	<message xml:lang="fr">Sélectionner un codage</message>
+	<message xml:lang="it">Seleziona un Charset</message>
 	<message xml:lang="de">Zeichenkodierung wählen</message>
-	<message xml:lang="es">Seleccionar un juego de caracteres</message>
-	<message xml:lang="pt">Selecionar um conjunto de caracteres (charset)</message>
+	<message xml:lang="es">Seleccionar un Charset</message>
+	<message xml:lang="pt">Selecionar um Charset</message>
 	<message xml:lang="fi">Valitse Charset</message>
 	<message xml:lang="tr">Charset seçin</message>
 	<message xml:lang="ru">Выбрать кодировку символов</message>
@@ -3748,12 +3748,12 @@
 	<message xml:lang="tw">選擇 MIME 類型</message>
 </label>
 <label define="AM_CHANGE_CHARSET">
-	<message xml:lang="en">Change Character Coding</message>
-	<message xml:lang="fr">Changer le code caractère</message>
-	<message xml:lang="it">Cambia Character Coding</message>
+	<message xml:lang="en">Change Charset</message>
+	<message xml:lang="fr">Changer le codage</message>
+	<message xml:lang="it">Cambia Charset</message>
 	<message xml:lang="de">Zeichenkodierung ändern</message>
-	<message xml:lang="es">Cambiar juego de caracteres</message>
-	<message xml:lang="pt">Mudar conjunto de caracteres (Charset)</message>
+	<message xml:lang="es">Cambiar Charset</message>
+	<message xml:lang="pt">Mudar Charset</message>
 	<message xml:lang="fi">Muuta Charset</message>
 	<message xml:lang="tr">Charset\'i değiştir</message>
 	<message xml:lang="ru">Изменить кодировку символов</message>
@@ -5157,8 +5157,8 @@
 </label>
 <label define="AM_DOCINFO_CHARSET">
 	<message xml:lang="en">Charset</message>
-	<message xml:lang="fr">Code de caractère</message>
-	<message xml:lang="es">Juego de caracteres:</message>
+	<message xml:lang="fr">Codage</message>
+	<message xml:lang="es">Charset</message>
 	<message xml:lang="de">Zeichensatz</message>
 	<message xml:lang="it">Charset</message>
 	<message xml:lang="ru">Кодировка</message>
@@ -5259,7 +5259,7 @@
 </label>
 <label define="AM_REPLACECURRENT">
 	<message xml:lang="en">Replace current</message>
-	<message xml:lang="fr">Remplacer le document courant</message>
+	<message xml:lang="fr">Remplacer le document</message>
 	<message xml:lang="es">Reemplazar actual</message>
 	<message xml:lang="de">Aktuelle Seite ersetzen</message>
 	<message xml:lang="it">Sostituisci l'attuale</message>

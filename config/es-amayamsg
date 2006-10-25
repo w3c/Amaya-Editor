@@ -249,9 +249,9 @@
 247 ¡Anotación borrada!
 248 Fallo al cargar el índice de anotaciones
 249 Error
-250 Seleccionar un juego de caracteres
+250 Seleccionar un Charset
 251 Seleccionar un tipo MIME
-252 Cambiar juego de caracteres
+252 Cambiar Charset
 253 Cambiar tipo MIME
 254 Cambiar
 255 Este tipo de documento no soporta juegos de caracteres
@@ -352,7 +352,7 @@
 350 Propiedades del documento
 351 Tipo de documento:
 352 Tipo MIME:
-353 Juego de caracteres:
+353 Charset
 354 Longitud del contenido:
 355 Ubicación del contenido:
 356 Preferencias

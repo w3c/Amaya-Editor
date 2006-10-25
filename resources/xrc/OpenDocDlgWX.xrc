@@ -74,9 +74,9 @@
                     <item>*Repleace current one*</item>
                     <item>*Display in new window*</item>
                   </content>
+                  <size>250,-1</size>
                   <style>wxRA_SPECIFY_COLS</style>
                 </object>
-                <flag>wxEXPAND</flag>
               </object>
               <object class="spacer">
                 <size>10,0</size>
@@ -121,6 +121,9 @@
                     </object>
                     <option>1</option>
                     <flag>wxTOP|wxEXPAND</flag>
+                  </object>
+                  <object class="spacer">
+                    <size>0,5</size>
                   </object>
                   <object class="sizeritem">
                     <object class="wxBoxSizer">
