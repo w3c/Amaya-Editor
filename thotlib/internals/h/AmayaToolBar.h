@@ -44,6 +44,7 @@ public:
   void OnButton_Save( wxCommandEvent &event );
   void OnButton_Print( wxCommandEvent &event );
   void OnButton_Find( wxCommandEvent &event );
+  void OnButton_CSS( wxCommandEvent &event );
   void OnButton_Logo( wxCommandEvent &event );
   void OnURLTextEnter( wxCommandEvent& event );
   void OnURLSelected( wxCommandEvent& event );

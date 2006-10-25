@@ -14,7 +14,7 @@
               <orient>wxHORIZONTAL</orient>
               <object class="sizeritem">
                 <object class="wxStaticText" name="wxID_LABEL_DIR">
-                  <label>*Directory*</label>
+                  <label>*This Directory*</label>
                 </object>
                 <flag>wxRIGHT|wxALIGN_CENTRE_VERTICAL</flag>
                 <border>4</border>
@@ -72,7 +72,7 @@
                   <content>
                     <item>*In new tab*</item>
                     <item>*Repleace current one*</item>
-                    <item>*In new window*</item>
+                    <item>*Display in new window*</item>
                   </content>
                   <style>wxRA_SPECIFY_COLS</style>
                 </object>
@@ -127,8 +127,8 @@
                       <orient>wxHORIZONTAL</orient>
                       <object class="sizeritem">
                         <object class="wxStaticText" name="wxID_CHARSET">
-                          <label>*Charset :*</label>
-                          <size>80,-1</size>
+                          <label>*Character coding:*</label>
+                          <size>100,-1</size>
                         </object>
                         <option>0</option>
                         <flag>wxALIGN_CENTRE_VERTICAL</flag>

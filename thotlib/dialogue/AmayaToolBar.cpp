@@ -68,6 +68,7 @@ AmayaToolBar::AmayaToolBar( wxWindow * p_parent, AmayaWindow * p_amaya_window_pa
   XRCCTRL(*this, "wxID_TOOL_SAVE", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BUTTON_SAVE)));
   XRCCTRL(*this, "wxID_TOOL_PRINT", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BUTTON_PRINT)));
   XRCCTRL(*this, "wxID_TOOL_FIND", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BUTTON_SEARCH)));
+  XRCCTRL(*this, "wxID_TOOL_CSS", wxBitmapButton)->SetToolTip(TtaConvMessageToWX("CSS"));
   XRCCTRL(*this, "wxID_TOOL_LOGO", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetAppName())+_T(" ")+TtaConvMessageToWX(TtaGetAppVersion()));
 
 #ifdef _WINDOWS
@@ -79,6 +80,7 @@ AmayaToolBar::AmayaToolBar( wxWindow * p_parent, AmayaWindow * p_amaya_window_pa
   XRCCTRL(*this, "wxID_TOOL_SAVE", wxBitmapButton)->SetWindowStyle( wxNO_BORDER );
   XRCCTRL(*this, "wxID_TOOL_PRINT", wxBitmapButton)->SetWindowStyle( wxNO_BORDER );
   XRCCTRL(*this, "wxID_TOOL_FIND", wxBitmapButton)->SetWindowStyle( wxNO_BORDER );
+  XRCCTRL(*this, "wxID_TOOL_CSS", wxBitmapButton)->SetWindowStyle( wxNO_BORDER );
   XRCCTRL(*this, "wxID_TOOL_LOGO", wxBitmapButton)->SetWindowStyle( wxNO_BORDER );
 #endif /* _WINDOWS */
   
@@ -343,6 +345,19 @@ void AmayaToolBar::OnButton_Find( wxCommandEvent& event )
 
 /*----------------------------------------------------------------------
  *       Class:  AmayaToolBar
+ *      Method:  OnButton_CSS
+ * Description:  
+  -----------------------------------------------------------------------*/
+void AmayaToolBar::OnButton_CSS( wxCommandEvent& event )
+{
+  Document doc;
+  View view;
+  FrameToView (TtaGiveActiveFrame(), &doc, &view);
+  TtaExecuteMenuAction ("SetCSSStyle", doc, view, FALSE);
+}
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaToolBar
  *      Method:  OnButton_Logo
  * Description:  
   -----------------------------------------------------------------------*/
@@ -381,6 +396,7 @@ BEGIN_EVENT_TABLE(AmayaToolBar, wxPanel)
   EVT_BUTTON( XRCID("wxID_TOOL_SAVE"),           AmayaToolBar::OnButton_Save )
   EVT_BUTTON( XRCID("wxID_TOOL_PRINT"),          AmayaToolBar::OnButton_Print )
   EVT_BUTTON( XRCID("wxID_TOOL_FIND"),           AmayaToolBar::OnButton_Find )
+  EVT_BUTTON( XRCID("wxID_TOOL_CSS"),            AmayaToolBar::OnButton_CSS )
   EVT_BUTTON( XRCID("wxID_TOOL_LOGO"),           AmayaToolBar::OnButton_Logo )
   EVT_COMBOBOX( XRCID("wxID_TOOL_URL"),          AmayaToolBar::OnURLSelected )
   EVT_TEXT_ENTER( XRCID("wxID_TOOL_URL"),        AmayaToolBar::OnURLTextEnter )
