@@ -32,7 +32,6 @@
 #include "ANNOTtools_f.h"
 
 /* RDF parser */
-#include "redland.h"
 #include "raptor.h"
 
 /* Amaya includes */

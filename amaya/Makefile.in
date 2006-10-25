@@ -15,7 +15,7 @@ OBJDIRS = wxdialog
 include ../Options
 
 INCLUDES= -DHAVE_CONFIG_H $(AMAYA_INCLUDES) $(EXPAT_INCLUDES) $(GUI_INCLUDES) $(EXTRA_INCLUDES) $(GL_INCLUDES) $(GTK_GL_INCLUDES) $(FREETYPE_INCLUDES) $(XFT_INCLUDES)
-LIBS	=  $(AMAYA_PLUGIN_LIBS) $(AMAYA_ANNOT_LIBS) $(AMAYA_DAV_LIBS) \
+LIBS	=  $(AMAYA_ANNOT_LIBS) $(AMAYA_DAV_LIBS) \
 	   @AMAYA_RAPTOR_LIBS@ \
 	   $(AMAYA_MATH_LIBS) $(AMAYA_GRAPH_LIBS) \
            -L../thotlib -L.. -lThotEditor \
@@ -30,7 +30,6 @@ prefix = @prefix@
 exec_prefix = @exec_prefix@
 libdir = @libdir@
 bindir = @bindir@
-comp_plugin: $(amaya_comp_plugin)
 comp_annot: $(amaya_comp_annot)
 
 #
@@ -104,9 +103,6 @@ amaya_comp_redland: @MAKEREDLAND@ force
 #									#
 #########################################################################
 
-#include the fragment "pluginlib/Makefile.plugin" for plugins if configured in
-@plugin_frag@
-
 #include the fragment "amaya/Makefile.libwww" for libwww if configured in
 @www_frag@
 
@@ -134,34 +130,34 @@ amaya_comp_redland: @MAKEREDLAND@ force
 #########################################################################
 
 ALL_AMAYA_OPTIONS= $(AMAYA_OPTIONS) \
-	 $(AMAYA_PLUGIN_OPTIONS) $(AMAYA_LIBWWW_OPTIONS) \
+	 $(AMAYA_LIBWWW_OPTIONS) \
 	 $(AMAYA_MATH_OPTIONS) $(AMAYA_SVG_OPTIONS)  $(AMAYA_TEMPLATES_OPTIONS) \
 	 $(AMAYA_ANNOT_OPTIONS) $(AMAYA_DAV_OPTIONS) $(EXPAT_OPTIONS) \
 
-AMAYA_OPTION_INCLUDES= $(AMAYA_PLUGIN_INCLUDES) \
+AMAYA_OPTION_INCLUDES= \
          $(AMAYA_LIBWWW_INCLUDES) $(AMAYA_MATH_INCLUDES) \
 	 $(AMAYA_SVG_INCLUDES) $(AMAYA_ANNOT_INCLUDES) \
 	 $(AMAYA_DAV_INCLUDES) $(AMAYA_TEMPLATES_INCLUDES)
 
-AMAYA_OPTION_OBJ= $(AMAYA_PLUGIN_OBJ) \
+AMAYA_OPTION_OBJ= \
          $(AMAYA_LIBWWW_OBJ) $(AMAYA_SVG_OBJ) $(AMAYA_MATH_OBJ) \
          $(AMAYA_ANNOT_OBJ) $(AMAYA_DAV_OBJ) $(AMAYA_TEMPLATES_OBJ)
 
-AMAYA_SRC= $(AMAYA_PLUGIN_SRC) \
+AMAYA_SRC= \
          $(AMAYA_LIBWWW_SRC) @AMAYA_RAPTOR_SRC@ \
 	 $(AMAYA_MATH_SRC) $(AMAYA_SVG_SRC) \
          $(AMAYA_ANNOT_SRC) $(AMAYA_DAV_SRC) $(AMAYA_TEMPLATES_SRC)
 
 
-AMAYA_OPTION_LIBS= $(AMAYA_PLUGIN_LIBS) \
+AMAYA_OPTION_LIBS= \
          $(AMAYA_LIBWWW_OPTION_LIBS) $(AMAYA_MATH_LIBS) $(AMAYA_GRAPH_LIBS) \
          $(AMAYA_ANNOT_LIBS) $(AMAYA_DAV_LIBS) @AMAYA_RAPTOR_LIBS@
 
-AMAYA_OPTION_EXTRA_LIBS= $(AMAYA_PLUGIN_EXTRA_LIBS) \
+AMAYA_OPTION_EXTRA_LIBS= \
          $(AMAYA_LIBWWW_EXTRA_LIBS) $(AMAYA_MATH_EXTRA_LIBS) \
          $(AMAYA_GRAPH_EXTRA_LIBS) $(AMAYA_ANNOT_EXTRA_LIBS)
 
-AMAYA_OPTION_SCHEMAS= $(AMAYA_PLUGIN_SCHEMAS) \
+AMAYA_OPTION_SCHEMAS= \
          $(AMAYA_LIBWWW_SCHEMAS) $(MATH_SCHEMAS) $(SVG_SCHEMAS) \
          $(ANNOT_SCHEMAS) $(TEMPLATES_SCHEMAS)
 

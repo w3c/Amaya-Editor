@@ -39,7 +39,6 @@
 #include "ANNOTevent_f.h"
 
 /* RDF parser */
-#include "redland.h"
 #include "raptor.h"
 
 /* amaya includes */

@@ -223,7 +223,7 @@ fi
 
 # check if gtk gui should be used
 AC_ARG_WITH(gtk, [  --with-gtk              use GTK GUI toolkit ])
-if test "$with_gtk" = "yes" -o "$enable_gtk" = "yes" ; then
+if test "$with_gtk" = "yes" ; then
   if test "$withval" = "no" ; then
     with_gtk="no"
     with_wx="yes"
@@ -235,7 +235,7 @@ fi
 
 # check if wxWidgets gui should be used
 AC_ARG_WITH(wx, [  --with-wx               use wxWidgets GUI toolkit])
-if test "$with_wx" = "yes" -o "$enable_wx" = "yes" ; then
+if test "$with_wx" = "yes" ; then
   if test "$withval" = "no" ; then
     with_wx="no"
   else
@@ -253,12 +253,7 @@ fi
 # check for mesa library (OpenGL)
 AC_ARG_WITH(MESA,              [  --with-mesa         enable canvas with software OpenGL implementation (Mesa) ])
 if test "$with_mesa" = "" ; then
- if test "$enable_mesa" = "yes" ; then
-    with_mesa="yes"
-    with_gl="no"
-  else
-    with_mesa="no"
-  fi
+  with_mesa="no"
 fi
 
 
@@ -281,15 +276,6 @@ if test "$with_wx" = "yes" -o "$with_wx" = "" ; then
     with_mesa="yes"
   fi
  fi
-fi
-
-# check if no gui is enable
-AC_ARG_WITH(nogui, [  --with-nogui            do not use GUI toolkit (not maintained) ])
-if test "$with_nogui" = "yes" -o "$enable_nogui" = "yes" ; then
-  with_nogui="yes"
-  with_gtk="no"
-  with_wx="no"
-  NOGUI_OPTIONS="-D_NOGUI"
 fi
 
 # check if wxWidgets debug is enable
@@ -1035,100 +1021,70 @@ AC_ARG_ENABLE(bookmarks,     [  --enable-bookmarks      enables experimental boo
 AC_ARG_ENABLE(templates,     [  --disable-templates     disables experimental templates support ])
 AC_ARG_ENABLE(generic-xml,   [  --disable-generic-xml   remove Generic XML support ])
 
-dnl
-dnl plugins support is disabled by default
-dnl
-
-if test "$with_plugin" = "" ; then
-  if test "$enable_plugin" = "yes" ; then
-    with_plugin="yes"
-  else
-    with_plugin="no"
-  fi
-fi  
+AC_ARG_ENABLE([svg],
+	AC_HELP_STRING([--disable-svg],[disable SVG support]),
+	[case "${enableval}" in
+	  yes) with_svg="yes" ;;
+	  no)  with_svg="no" ;;
+	  *) AC_MSG_ERROR(bad value ${enableval} for --disable-svg) ;;
+	esac],
+	[with_svg="yes"])
 
 dnl
-dnl svg is enabled by default
+dnl annotations are enabled by default
 dnl
-if test "$with_svg" = "" ; then
-    if test "$enable_svg" = "no" ; then
-	with_svg="no"
-    else
-	with_svg="yes"
-    fi
-fi
-
-dnl
-dnl annotations is enabled by default
-dnl
-if test "$with_annot" = "" ; then
-    if test "$enable_annot" = "no" ; then
-	with_annot="no"
-    else
-	with_annot="yes"
-    fi
-else
-    with_annot="yes"
-fi
-
+AC_ARG_ENABLE([annot],
+	AC_HELP_STRING([--disable-annot],[disable Annotations support]),
+	[case "${enableval}" in
+	  yes) with_annot="yes" ;;
+	  no)  with_annot="no" ;;
+	  *) AC_MSG_ERROR(bad value ${enableval} for --disable-annot) ;;
+	esac],
+	[with_annot="yes"])
 
 dnl
 dnl The redland library is enabled by default
 dnl
-if test "$with_redland" = "" ; then
-    if test "$enable_redland" = "no" ; then
-	with_redland="no"
-    else
-	with_redland="yes"
-    fi
-else
-    with_redland="yes"
-fi
-
-dnl
-dnl The redland library is disabled by default
-dnl
-if test "$with_system_redland" = "" ; then
-    if test "$enable_system_redland" = "yes" ; then
-	with_redland="yes"
-	with_system_redland="yes"
-    else
-	with_system_redland="no"
-    fi
-else
-    with_system_redland="no"
-fi
+AC_ARG_ENABLE([redland],
+	AC_HELP_STRING([--disable-redland],[disable redland RDF support]),
+	[case "${enableval}" in
+	  yes) with_redland="yes" ;;
+	  no)  with_redland="no" ;;
+	  *) AC_MSG_ERROR(bad value ${enableval} for --disable-redland) ;;
+	esac],
+	[with_redland="yes"])
 
 dnl
 dnl The bookmarks support is disabled by default
 dnl
-if test "$with_bookmarks" = "" ; then
-    if test "$enable_bookmarks" = "yes" ; then
-	with_bookmarks="yes"
-	with_redland="yes"
-    else
-	with_bookmarks="no"
-    fi
-else
-    with_bookmarks="no"
-fi
+AC_ARG_ENABLE([bookmarks],
+	AC_HELP_STRING([--enable-bookmarks],[enable experimental bookmark support]),
+	[case "${enableval}" in
+	  yes) with_bookmarks="yes"; with_redland="yes" ;;
+	  no)  with_bookmarks="no" ;;
+	  *) AC_MSG_ERROR(bad value ${enableval} for --enable-bookmarks) ;;
+	esac],
+	[with_bookmarks="no"])
 
 dnl
 dnl The templates support is enabled by default
 dnl
-if test "$with_templates" = "no " -o "$enable_templates" = "no"; then
-      with_templates="no"
-else
-  if test "$with_wx" = "no"; then
-      AC_MSG_WARN(Templates are only available in WX version !!)
-      AC_MSG_WARN(Disabling templates)
-      with_templates="no"
-   else
-      with_templates="yes"
-   fi
-fi 
+AC_ARG_ENABLE([templates],
+	AC_HELP_STRING([--disable-templates],[disable experimental templates support]),
+	[case "${enableval}" in
+	  yes) with_templates="yes" ;;
+	  no)  with_templates="no" ;;
+	  *) AC_MSG_ERROR(bad value ${enableval} for --disable-templates) ;;
+	esac],
+	[with_templates="yes"])
 
-if test "$with_templates" = "yes" -o "$with_templates" = "" ; then
+if test "$with_templates" = yes -a "$with_wx" != "yes"; then
+    AC_MSG_WARN(Templates are only available in WX version !!)
+    AC_MSG_WARN(Disabling templates)
+    with_templates="no"
+fi
+
+if test "$with_templates" = "yes" ; then
     TEMPLATES_OPTIONS="-DTEMPLATES"
 else
     TEMPLATES_OPTIONS=""
@@ -1138,15 +1094,23 @@ fi
 dnl
 dnl Generic XML support enabled by default
 dnl
-if test "$with_generic_xml" = "" ; then
-    if test "$enable_generic_xml" = "no" ; then
-	    with_generic_xml="no"
-	    GENERIC_XML_OPTIONS=
-    else
-	    with_generic_xml="yes"
-	    GENERIC_XML_OPTIONS=-DXML_GENERIC
-    fi
-fi
+AC_ARG_ENABLE([generic-xml],
+	AC_HELP_STRING([--disable-generic-xml],[disable Generic XML support]),
+	[case "${enableval}" in
+	  yes) with_generic_xml="yes" ;;
+	  no)  with_generic_xml="no" ;;
+	  *) AC_MSG_ERROR(bad value ${enableval} for --disable-generic-xml) ;;
+	esac],
+	[with_generic_xml="yes"])
+
+AC_ARG_ENABLE([system-redland],
+	AC_HELP_STRING([--enable-system-redland],[try the redland RDF system library]),
+	[case "${enableval}" in
+	  yes) with_system_redland="yes"; with_redland="yes" ;;
+	  no)  with_system_redland="no" ;;
+	  *) AC_MSG_ERROR(bad value ${enableval} for --enable-system-redland) ;;
+	esac],
+	[with_system_redland="no"])
 
 dnl
 dnl WebDAV support enabled by default
@@ -1291,13 +1255,6 @@ if test "$build_amaya" = "yes" ; then
     	ANNOTLIB_COMPILE_BM=['#']
     fi
 
-    if test "$with_plugin" = "yes" ; then
-        AC_MSG_WARN(The plugin library isn't supported anymore in Amaya !!)
-        AC_MSG_WARN(Disabling plugin build !)
-        with_plugin="no"
-    fi
-
-
     if test ! -f $srcdir/davlib/Makefile.in ; then
 	if test "$with_dav" = "yes" ; then
 	    AC_MSG_WARN(WebDAV makefile not found !!)
@@ -1323,7 +1280,6 @@ if test "$with_debug" = "yes" ; then
 else
   AMAYA_OPTIONS="$OS_OPTIONS $MATH_OPTIONS $SVG_OPTIONS $GENERIC_XML_OPTIONS $GTK_OPTIONS $GL_OPTIONS $WX_OPTIONS $NOGUI_OPTIONS $TEMPLATES_OPTIONS"
 fi
-#PLUGIN_OPTIONS="-DPLUGIN_TRACE -DXP_UNIX"
 AMAYA_ANNOT_OPTIONS="$OS_OPTIONS $AMAYA_ANNOT_OPTIONS"
 
 if test "$with_wx" = "yes" ; then
@@ -1409,7 +1365,6 @@ AC_SUBST(VPATHOPT)
 AC_SUBST(GTK_OPTIONS)
 AC_SUBST(THOT_OPTIONS)
 AC_SUBST(AMAYA_OPTIONS)
-AC_SUBST(PLUGIN_OPTIONS)
 AC_SUBST(AMAYA_ANNOT_OPTIONS)
 AC_SUBST(AMAYA_ANNOT_INCLUDES)
 AC_SUBST(AMAYA_ANNOT_EXTRA_LIBS)
@@ -1436,14 +1391,6 @@ AC_SUBST(SUBDIRS)
 dnl
 dnl Include the option Makefile.xxx fragment according to the configure options
 dnl
-
-if test "$with_plugin" = "yes" ; then
-    AC_SUBST_FILE(plugin_frag)
-    plugin_frag=$srcdir/pluginlib/Makefile.plugin
-else
-    AC_SUBST_FILE(plugin_frag)
-    plugin_frag=/dev/null
-fi
 
     AC_SUBST_FILE(www_frag)
     www_frag=$srcdir/amaya/Makefile.libwww
@@ -1507,15 +1454,9 @@ make_output="Makefile Options.orig:Options.in tools/Makefile \
 
 if test "$build_amaya" = "yes" ; then
 
-    make_output="$make_output amaya/Makefile pluginlib/Makefile"
+    make_output="$make_output amaya/Makefile"
     EXTRA_MAKEFILE_IN="$srcdir/amaya/Makefile.in \
     $srcdir/amaya/Makefile.libwww"
-
-    if test "$with_plugin" = "yes" ; then
-       make_output="$make_output pluginlib/Makefile"
-       EXTRA_MAKEFILE_IN="$srcdir/pluginlib/Makefile.in \
-       $srcdir/pluginlib/Makefile.plugin"
-    fi
 
     if test "$with_annot" = "yes" ; then
        make_output="$make_output annotlib/Makefile"
@@ -1573,9 +1514,6 @@ fi
 if test "$build_amaya" = "yes" ; then
     echo Amaya $AMAYA_VER configured
     echo Amaya configured with libWWW
-    if test "$with_plugin" = "yes" ; then
-        echo Amaya configured with Plugins support
-    fi
     if test "$with_math" = "yes" ; then
 	echo Amaya configured with Math support
     fi
