@@ -49,10 +49,10 @@ MESA=Mesa
 FREETYPE=freetype
 TAR="tar czvfh "
 UNTAR="tar xvzf"
-TMP=$DEST/tmp-$AMAYAVERSION
-echo "Generating the temporary source tar file"
+TMP=$DEST/Amaya$AMAYAVERSION
 
-$TAR $DEST/amaya-tmp-$AMAYAVERSION.tgz \
+echo "Generating the temporary tar files"
+$TAR $DEST/libs-tmp-$AMAYAVERSION.tgz \
 ${LIBWWWDIR}/COPYRIGH \
 ${LIBWWWDIR}/README.html \
 ${LIBWWWDIR}/LICENSE.html \
@@ -115,7 +115,7 @@ ${LIBWWWDIR}/config/makexprt.pl \
 ${LIBWWWDIR}/config/missing \
 ${LIBWWWDIR}/config/mkinstalldirs \
 ${LIBWWWDIR}/config/winConfigure.pl \
-${LIBWWWDIR}/config/depcomp \
+${LIBWWWDIR}/config/depcomp\
 ${REDLANDDIR} \
 ${WXWIDGETS}/art \
 ${WXWIDGETS}/build \
@@ -136,7 +136,9 @@ ${WXWIDGETS}/config* \
 ${WXWIDGETS}/*.txt \
 ${WXWIDGETS}/*.sh \
 ${MESA} \
-${FREETYPE} \
+${FREETYPE}
+
+$TAR $DEST/amaya-tmp-$AMAYAVERSION.tgz \
 ${AMAYADIR}/resources/icons/16x16/*.ico \
 ${AMAYADIR}/resources/icons/22x22/*.ico \
 ${AMAYADIR}/resources/icons/misc/*.ico \
@@ -252,12 +254,6 @@ ${AMAYADIR}/libpng/zlib/README \
 ${AMAYADIR}/libpng/zlib/*.c \
 ${AMAYADIR}/libpng/zlib/*.h \
 ${AMAYADIR}/libpng/zlib/descrip.mms \
-${AMAYADIR}/pluginlib/Makefile.in \
-${AMAYADIR}/pluginlib/COPYRIGHT* \
-${AMAYADIR}/pluginlib/Makefile.plugin \
-${AMAYADIR}/pluginlib/*.h \
-${AMAYADIR}/pluginlib/*.c \
-${AMAYADIR}/pluginlib/f/*.h \
 ${AMAYADIR}/README.amaya \
 ${AMAYADIR}/README \
 ${AMAYADIR}/README.gl \
@@ -447,32 +443,15 @@ ${AMAYADIR}/tools/cextract-1.7/xtract.h
 mkdir $TMP
 cd $TMP
 tar xvzf $DEST/amaya-tmp-$AMAYAVERSION.tgz
+tar xvzf $DEST/libs-tmp-$AMAYAVERSION.tgz
 \rm -r */CVS */*/CVS */*/*/CVS */*/*/*/CVS */*/*/*/*/CVS */*/*/*/*/*/CVS */*/*/*/*/*/*/CVS */*/*/*/*/*/*/*/CVS
 
-AMAYADIR=Amaya
-LIBWWWDIR=libwww
-REDLANDDIR=redland
-WXWIDGETS=wxWidgets
-MESA=Mesa
-FREETYPE=freetype
-
 echo "Generating the minimum source tar file from $AMAYADIR"
-
+AMAYADIR=Amaya
 $TAR $DEST/amaya-src-$AMAYAVERSION.tgz \
 ${AMAYADIR} 
 
-echo "Generating the complete source tar file"
-$TAR $DEST/amaya-fullsrc-$AMAYAVERSION.tgz \
-${LIBWWWDIR} \
-${REDLANDDIR} \
-${WXWIDGETS} \
-${MESA} \
-${FREETYPE} \
-${AMAYADIR} 
-
-
 echo "Generating only the externals librairies source tar file"
-
 $TAR $DEST/amaya-lib-src-$AMAYAVERSION.tgz \
 ${LIBWWWDIR} \
 ${REDLANDDIR} \
@@ -480,6 +459,14 @@ ${WXWIDGETS} \
 ${MESA} \
 ${FREETYPE}
 
+
+echo "Generating the complete source tar file"
+cd ..
+AMAYADIR=Amaya$AMAYAVERSION
+$TAR $DEST/amaya-fullsrc-$AMAYAVERSION.tgz \
+${AMAYADIR} 
+
 cd $TARDIR
 \rm -r $TMP
 \rm $DEST/amaya-tmp-$AMAYAVERSION.tgz
+\rm $DEST/libs-tmp-$AMAYAVERSION.tgz

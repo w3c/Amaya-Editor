@@ -8,13 +8,14 @@
 
 # neededforbuild  autoconf automake mmcore mmbase mmslib xpm libz libpng libjpeg
 
-%define version 8.8.5
+%define version 8.52
+%define version_wx 9.52
 
 Vendor:       W3C World Wide Web Consortium
 Distribution: W3C
 Name:         amaya_gtk
 Release:      1
-Copyright:    Copyright 1995-2005 (MIT) (INRIA), (L)GPL compatible
+Copyright:    Copyright 1995-2006 (MIT) (INRIA), (L)GPL compatible
 Group:        X11/Applications/Networking
 URL:          http://www.w3.org/Amaya/
 Autoreqprov:  on
@@ -24,7 +25,8 @@ BuildRoot:    /var/tmp/%{name}-buildroot
 
 Summary:      Web Browser/Editor from the World Wide Web Consortium
 Version:      %{version}
-Source: ftp://ftp.w3.org/pub/amaya/amaya-fullsrc-9.5.tgz
+Source: ftp://ftp.w3.org/pub/amaya/amaya-src-%{version_wx}.tgz
+Source1: ftp://ftp.w3.org/pub/amaya/amaya-lib-src-%{version_wx}.tgz
 # Patch: amaya-src-%{version}.diff
 %description
 
@@ -39,13 +41,15 @@ Authors:
     Vincent.Quint@inria.fr, Laurent.Carcone@w3.org
 
 %changelog
-* Tue Oct 15 2004 Irene Vatton (Irene.Vatton@w3.org>
+* Thu Oct 26 2006 Irene Vatton <Irene.Vatton@inrialpes.fr>
+  Introduction of the AmayaV.R directory in the fullsrc tar file
+* Tue Oct 15 2004 Irene Vatton <Irene.Vatton@w3.org>
   Possibility to install GTK and WX amaya versions
-* Tue Jul 06 2004 Irene Vatton (Irene.Vatton@w3.org>
+* Tue Jul 06 2004 Irene Vatton <Irene.Vatton@w3.org>
   Updated for amaya-8.6
-* Tue Feb 24 2004 Irene Vatton (Irene.Vatton@w3.org>
+* Tue Feb 24 2004 Irene Vatton <Irene.Vatton@w3.org>
   Updated for amaya-8.3
-* Fri Jan 30 2003 Nabil Layaida (Nabil.Layaida@inria.fr>
+* Fri Jan 30 2003 Nabil Layaida <Nabil.Layaida@inria.fr>
   Adaptation to rpmbuild
 * Mon Sep 16 2002 Irene Vatton <Irene.Vatton@w3.org>
   GTK options.
@@ -76,7 +80,7 @@ autoconf
 mkdir linux
 cd linux
 export HOME=`pwd`
-../configure --with-gtk --enable-bookmarks --prefix=/usr/share --exec=/usr/share
+../configure --with-gtk --prefix=/usr/share --exec=/usr/share
 #cp Options.orig Options
 make 
 %install
