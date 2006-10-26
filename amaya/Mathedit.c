@@ -10,11 +10,14 @@
  *
  * Authors: I. Vatton, V. Quint
  *          R. Guetari - Windows routines.
- */
+ *          F. Wang - MathML panel - Last changes : 10/26/06
+ */         
 
 #ifdef _WX
 #include "wx/wx.h"
 #endif /* _WX */
+
+#include <stdarg.h>
 
 /* Included headerfiles */
 #undef THOT_EXPORT
@@ -668,17 +671,15 @@ static void RegenerateFencedSeparators (Element el, Document doc, ThotBool recor
 }
 
 /*----------------------------------------------------------------------
-  AddParen
-  Create two MF element at the beginning and at the end of the
-  MROW element el.
+  AddParenthesis
+  Create two MF element at the beginning and at the end of the MROW element el.
   ----------------------------------------------------------------------*/
-static void AddParen (Element el, Document doc)
+static void AddParenthesis (Element el, Document doc)
 {
   Element     child, fence, symbol, next;
   ElementType elType, symbType;
 
-  if (!el)
-    return;
+  if (!el)return;
   child = TtaGetFirstChild (el);
   if (child)
     {
@@ -710,35 +711,111 @@ static void AddParen (Element el, Document doc)
 
 
 /*----------------------------------------------------------------------
-  InitializeNewConstruct
-  A new MathML construct has just been created. Initilize it.
+  InsertEmptyConstruct
+  Insert an empty construct after an element
   ----------------------------------------------------------------------*/
-static void InitializeNewConstruct (Element el, int NumberRows, int NumberCols,
-                                    ThotBool history, Document doc)
+void InsertEmptyConstruct (Element *el, int TypeNum, Document doc)
+{
+ElementType newType;
+Element empty;
+
+newType = TtaGetElementType (el[0]);
+newType.ElTypeNum = TypeNum;
+
+empty = TtaNewTree (doc, newType,"");
+TtaInsertSibling(empty, el[0], FALSE, doc);
+el[0] = empty;
+}
+
+/*----------------------------------------------------------------------
+  InsertSymbol
+  Insert a symbol after an element
+  ----------------------------------------------------------------------*/
+void InsertSymbol (Element *el, int TypeNum, int symbol, Document doc)
+{
+ElementType newType;
+Element op, child;
+CHAR_T text[2];
+
+newType = TtaGetElementType (el[0]);
+newType.ElTypeNum = TypeNum;
+
+op = TtaNewElement (doc, newType);
+TtaInsertSibling(op, el[0], FALSE, doc);
+
+/*newType.ElTypeNum = MathML_EL_SYMBOL_UNIT;
+child = TtaNewElement (doc, newType);
+TtaSetGraphicsShape (child, '(', doc);
+TtaInsertFirstChild (&child, op, doc);*/
+
+newType.ElTypeNum = MathML_EL_TEXT_UNIT;
+child = TtaNewElement (doc, newType);
+TtaInsertFirstChild (&child, op, doc);
+text[0] = symbol;
+text[1] = EOS;	  
+TtaSetBufferContent (child, text, TtaGetLanguageIdFromScript('L'), doc);
+
+el[0] = op;
+}
+
+/*----------------------------------------------------------------------
+  InsertText
+  Insert a text after an element
+  ----------------------------------------------------------------------*/
+void InsertText (Element *el, int TypeNum, unsigned char *text, Document doc)
+{
+ElementType newType;
+Element op, child;
+
+newType = TtaGetElementType (el[0]);
+newType.ElTypeNum = TypeNum;
+
+op = TtaNewElement (doc, newType);
+TtaInsertSibling(op, el[0], FALSE, doc);
+newType.ElTypeNum = MathML_EL_TEXT_UNIT;
+child = TtaNewElement (doc, newType);
+TtaInsertFirstChild (&child, op, doc);
+TtaInsertTextContent (child, 0, text, doc);
+
+el[0] = op;
+}
+
+/*----------------------------------------------------------------------
+  CreateNewMtable
+  Create a MTABLE element
+  ----------------------------------------------------------------------*/
+void CreateNewMtable (Element el, int NumberCols, int NumberRows, Document doc)
 {
   ElementType      elType, newType;
-  Element          child, new_, row, parent, placeholderEl;
-  AttributeType    attrType;
-  Attribute        attr;
+  Element          newmtable, child, new_, row;
   int              col;
-
-  CreateParentMROW (el, doc);
 
   newType = TtaGetElementType (el);
   elType.ElSSchema = newType.ElSSchema;
-  if (newType.ElTypeNum == MathML_EL_MTABLE &&
-      (NumberRows > 1 || NumberCols >= 1))
+
+  if(newType.ElTypeNum != MathML_EL_MTABLE)
+    {
+    /* If the selection isn't in a MTABLE, create any */
+    newType.ElTypeNum = MathML_EL_MTABLE;
+    newmtable = TtaNewTree (doc, newType, "");
+    TtaInsertFirstChild (&newmtable, el, doc);
+    }
+  else newmtable = el;
+
+  CreateParentMROW (newmtable, doc);
+
+  if (NumberRows > 1 || NumberCols >= 1)
     {
       /* create the required number of columns and rows in the table */
       if (NumberCols >= 1)
         {
           elType.ElTypeNum = MathML_EL_TableRow;
-          child = TtaSearchTypedElement (elType, SearchInTree, el);
+          child = TtaSearchTypedElement (elType, SearchInTree, newmtable);
           elType.ElTypeNum = MathML_EL_MTR;
           new_ = TtaNewTree (doc, elType, "");
           TtaInsertFirstChild (&new_, child, doc);
           elType.ElTypeNum = MathML_EL_MTD;
-          child = TtaSearchTypedElement (elType, SearchInTree, el);
+          child = TtaSearchTypedElement (elType, SearchInTree, newmtable);
           col = NumberCols;
           while (col > 1)
             {
@@ -750,7 +827,7 @@ static void InitializeNewConstruct (Element el, int NumberRows, int NumberCols,
       if (NumberRows > 1)
         {
           elType.ElTypeNum = MathML_EL_MTR;
-          row = TtaSearchTypedElement (elType, SearchInTree, el);
+          row = TtaSearchTypedElement (elType, SearchInTree, newmtable);
           while (NumberRows > 1)
             {
               elType.ElTypeNum = MathML_EL_MTR;
@@ -769,11 +846,58 @@ static void InitializeNewConstruct (Element el, int NumberRows, int NumberCols,
                 }
             }
         }
-      CheckAllRows (el, doc, FALSE, FALSE);
+      CheckAllRows (newmtable, doc, FALSE, FALSE);
     }
 
-  /* if the new element is a mspace, create a width attribute  with a default
-     value */
+}
+
+/*----------------------------------------------------------------------
+  SelectMtableCell
+  Move the selection to the cell of coordonnates (x, y) 
+  ----------------------------------------------------------------------*/
+Element SelectMtableCell(Element mtable, int x, int y)
+{
+int i;
+ElementType  elType;
+Element cell;
+
+/* Select the row */
+elType = TtaGetElementType (mtable);
+elType.ElTypeNum = MathML_EL_TableRow;
+cell = TtaSearchTypedElement (elType, SearchInTree, mtable);
+for(i = 0; i < y; i++)TtaNextSibling(&cell);
+
+/* Select the column */
+cell = TtaGetFirstChild(cell);
+for(i = 0; i < x; i++)TtaNextSibling(&cell);
+
+/* Select the MI element */
+cell = TtaGetFirstChild(cell);
+cell = TtaGetFirstChild(cell);
+return cell;
+}
+
+/*----------------------------------------------------------------------
+  InitializeNewConstruct
+  A new MathML construct has just been created. Initilize it.
+  ----------------------------------------------------------------------*/
+static void InitializeNewConstruct (Element el, int NumberRows, int NumberCols,
+                                    ThotBool history, Document doc)
+{
+  ElementType      elType, newType;
+  Element          parent, placeholderEl;
+  AttributeType    attrType;
+  Attribute        attr;
+
+  CreateParentMROW (el, doc);
+
+  newType = TtaGetElementType (el);
+  elType.ElSSchema = newType.ElSSchema;
+
+  /* If the new element is a mtable, create this table */
+  if(newType.ElTypeNum == MathML_EL_MTABLE)CreateNewMtable (el, NumberRows, NumberCols, doc);
+
+  /* if the new element is a mspace, create a width attribute  with a default value */
   if (newType.ElTypeNum == MathML_EL_MSPACE)
     {
 #define DEFAULT_MSPACE_WIDTH ".2em"
@@ -798,6 +922,7 @@ static void InitializeNewConstruct (Element el, int NumberRows, int NumberCols,
   placeholderEl = InsertPlaceholder (el, TRUE, doc, history);
   placeholderEl = InsertPlaceholder (el, FALSE, doc, history);
 }
+
 
 /*----------------------------------------------------------------------
   AppendEmptyText
@@ -960,8 +1085,9 @@ void MathSelectionChanged (NotifyElement *event)
 /*----------------------------------------------------------------------
   CreateMathConstruct
   Create a MathML construct at the current position
+  According to the construct, other parameters can be sent to complete it. 
   ----------------------------------------------------------------------*/
-static void CreateMathConstruct (int construct)
+static void CreateMathConstruct (int construct, ...)
 {
   Document           doc;
   Element            sibling, el, row, child, leaf, new_, next, foreignObj,
@@ -974,12 +1100,17 @@ static void CreateMathConstruct (int construct)
   char              *name;
   Language           lang;
   DisplayMode        dispMode;
-  int                c1, i, len, profile;
+  int                c1, i, len, profile, selectedchild;
   CHAR_T             text[2];
   ThotBool           oldStructureChecking;
   ThotBool	     before, ParBlock, emptySel, ok, insertSibling,
-                     selectFirstChild, displayTableForm, registered;
-
+                     displayTableForm, registered;
+  
+  if(construct==0)return;
+  /* Prepare to read other variables */
+  va_list varpos;
+  va_start(varpos,construct);
+       
   doc = TtaGetSelectedDocument ();
   if (doc == 0 || !TtaGetDocumentAccessMode (doc))
     {
@@ -1020,8 +1151,7 @@ static void CreateMathConstruct (int construct)
             /* get the MathML schema associated with the current SSchema or
                associate it with the current SSchema if it is not associated
                yet */
-            mathSchema = TtaNewNature (doc, elType.ElSSchema, NULL, "MathML",
-                                       "MathMLP");
+            mathSchema = TtaNewNature (doc, elType.ElSSchema, NULL, "MathML","MathMLP");
             newType.ElTypeNum = MathML_EL_MathML;
             newType.ElSSchema = mathSchema;
             if (emptySel)
@@ -1406,7 +1536,7 @@ static void CreateMathConstruct (int construct)
   
   elType = TtaGetElementType (sibling);
   newType.ElSSchema = mathSchema;
-  selectFirstChild = TRUE;
+  selectedchild = 0;
   ParBlock = FALSE;
   switch (construct)
     {
@@ -1415,7 +1545,7 @@ static void CreateMathConstruct (int construct)
       break;
     case 2:
       newType.ElTypeNum = MathML_EL_MROOT;
-      selectFirstChild = FALSE;	/* select the Index component */
+      selectedchild = 1;
       break;
     case 3:
       newType.ElTypeNum = MathML_EL_MSQRT;
@@ -1444,7 +1574,7 @@ static void CreateMathConstruct (int construct)
     case 11:
       newType.ElTypeNum = MathML_EL_MROW;
       ParBlock = TRUE;
-      selectFirstChild = FALSE;	/* select the second component */
+      selectedchild = 1;
       break;
     case 12:
       newType.ElTypeNum = MathML_EL_MMULTISCRIPTS;
@@ -1502,10 +1632,10 @@ static void CreateMathConstruct (int construct)
         }
       
       newType.ElTypeNum = MathML_EL_MTABLE;
-      selectFirstChild = FALSE;	/* select the second component */
+      selectedchild = 1;
       break;
-      
-    case 14:
+
+   case 14:
       newType.ElTypeNum = MathML_EL_MTEXT;
       break;
     case 15:
@@ -1524,15 +1654,186 @@ static void CreateMathConstruct (int construct)
 
     case 19:
       newType.ElTypeNum = MathML_EL_MSPACE;
+      el = TtaNewTree (doc, newType, "");
+      child = TtaGetFirstChild (el);
       break;
 
     case 20: /* Integral */
       newType.ElTypeNum = MathML_EL_MSUBSUP;
       break;
 
-    case 21: /* Sum */
+    case 21: /* Operation on a family indexed by (i = ... to ...) */
       newType.ElTypeNum = MathML_EL_MUNDEROVER;
       break;
+
+    case 22: /* Simple Symbol */
+      newType.ElTypeNum = MathML_EL_MROW;
+      selectedchild = 1;
+      break;
+
+    case 23: /* Unary operation/relation */
+      newType.ElTypeNum = MathML_EL_MROW;
+      selectedchild = 1;
+      break;
+
+    case 24: /* Operation on a family indexed by a set */
+      newType.ElTypeNum = MathML_EL_MUNDER;
+      break;
+
+   case 25: /* Piecewise */
+      newType.ElTypeNum = MathML_EL_MROW;
+      selectedchild = -1;
+      break;   
+   case 26: /* Accents */
+      newType.ElTypeNum = MathML_EL_MOVER;
+      break;
+
+   case 27: /* Binary operation/relation */
+      newType.ElTypeNum = MathML_EL_MROW;
+      break;
+
+   case 28: /* congru */
+      newType.ElTypeNum = MathML_EL_MROW;
+      break;
+
+   case 29: /* forall, exists */
+      newType.ElTypeNum = MathML_EL_MROW;
+      selectedchild = 1;
+      break;
+
+   case 30: /* symbol in exposant */
+    newType.ElTypeNum = MathML_EL_MSUP;
+    break;
+
+   case 31: /* symbol with a sub element */
+    newType.ElTypeNum = MathML_EL_MSUB;
+    selectedchild = 1;
+    break;
+
+   case 32: /* combination */
+     newType.ElTypeNum = MathML_EL_MROW;
+     selectedchild = -1;
+     ParBlock = TRUE;
+     break;
+
+   case 33: /* symbol with a under element */
+    newType.ElTypeNum = MathML_EL_MUNDER;
+    selectedchild = 1;
+    break;
+
+   case 34: /* operator with an under element and an empty square after */
+    newType.ElTypeNum = MathML_EL_MROW;
+    selectedchild = -1;
+    break;
+
+   case 35: /* n-ary operation/relation */
+    newType.ElTypeNum = MathML_EL_MROW;
+    selectedchild = 0;
+    break;
+
+   case 36: /* selector */
+    newType.ElTypeNum = MathML_EL_MSUB;
+    break;
+
+   case 37: /* couple,  n-uple */
+     newType.ElTypeNum = MathML_EL_MROW;
+     selectedchild = 1;
+     break;
+
+   case 38: /* set/list separation */
+     newType.ElTypeNum = MathML_EL_MROW;
+     selectedchild = 1;
+     break;
+
+   case 39: /* set/list extension ; vectorrow */
+     newType.ElTypeNum = MathML_EL_MROW;
+     selectedchild = 1;
+     break;
+
+   case 40: /* abs/card/floor/ceiling */
+     newType.ElTypeNum = MathML_EL_MROW;
+     selectedchild = 1;
+     break;
+
+   case 41: /* operator with a sub element and an empty square after */
+    newType.ElTypeNum = MathML_EL_MROW;
+    selectedchild = -1;
+    break;
+
+   case 42: /* fence2 */
+    newType.ElTypeNum = MathML_EL_MROW;
+    selectedchild = 1;
+    break;
+
+   case 43: /* diagonalintersection ; limtendsto ; tendstotendsto */
+    newType.ElTypeNum = MathML_EL_MUNDER;
+    selectedchild = 1;
+     break;
+
+   case 44: /* elementary classical functions */
+    newType.ElTypeNum = MathML_EL_MROW;
+    selectedchild = 1;
+     break;
+
+   case 45: /* lambda construct */
+    newType.ElTypeNum = MathML_EL_MROW;
+    selectedchild = 2;
+     break;
+
+   case 46: /* quotient */
+    newType.ElTypeNum = MathML_EL_MROW;
+    selectedchild = 1;
+     break;
+
+   case 47: /* map */
+    newType.ElTypeNum = MathML_EL_MROW;
+    selectedchild = -1;
+     break;
+
+   case 48: /* complexcartesian */
+    newType.ElTypeNum = MathML_EL_MROW;
+    selectedchild = 0;
+     break;
+
+   case 49: /* complexpolar */
+    newType.ElTypeNum = MathML_EL_MSUP;
+    selectedchild = -1;
+     break;
+
+   case 50: /* diff ; partialdiff */
+    newType.ElTypeNum = MathML_EL_MFRAC;
+     selectedchild = -1;
+     break;
+
+   case 51: /* partialdiff2 */
+    newType.ElTypeNum = MathML_EL_MFRAC;
+     selectedchild = -1;
+     break;
+
+   case 52: /* integral2 */
+    newType.ElTypeNum = MathML_EL_MROW;
+     selectedchild = -1;
+     break;
+
+   case 53: /* vectorrow ; vectorcolomn ; matrix ; determinant2 */
+    newType.ElTypeNum = MathML_EL_MROW;
+     selectedchild = -1;
+     break;
+
+   case 54: /* curl ; div ; grad ; laplacian */
+    newType.ElTypeNum = MathML_EL_MROW;
+     selectedchild = -1;
+     break;
+
+   case 55: /* variance */
+    newType.ElTypeNum = MathML_EL_MROW;
+     selectedchild = -1;
+     break;
+
+   case 56: /* moment */
+    newType.ElTypeNum = MathML_EL_MROW;
+     selectedchild = 1;
+     break;
 
     default:
       TtaCloseUndoSequence (doc);
@@ -1543,12 +1844,40 @@ static void CreateMathConstruct (int construct)
     /* selection is not empty.
        Try to transform it into the requested type*/
     {
-      if (construct == 20 || construct == 21)
-        emptySel = TRUE;
-      else if (!TransformIntoType (&newType, doc))
-        /* it failed. Try to insert a new element */
-        emptySel = TRUE;
+    if (!(construct < 20 || construct == 26 || construct == 30 || construct == 36))
+      emptySel = TRUE; /* constructions with no "natural" insert point for the selection */
+    else
+      {
+      if (!TransformIntoType (&newType, doc))
+        emptySel = TRUE; /* it failed. Try to insert a new element */
+      else
+        {  
+        /* complete the creation if necessary */
+        if(construct == 26 || construct == 30)
+	  {
+          /* Accents ou exposant */
+          int symbol = va_arg(varpos, int);
+          TtaGiveFirstSelectedElement (doc, &child, &c1, &i);
+          leaf = TtaGetFirstChild (child);
+          TtaRemoveTree (leaf, doc);
+          newType.ElTypeNum = MathML_EL_MI;
+          op = TtaNewElement (doc, newType);
+          TtaInsertFirstChild (&op, child, doc);
+          newType.ElTypeNum = MathML_EL_TEXT_UNIT;
+          new_ = TtaNewElement (doc, newType);
+          TtaInsertFirstChild (&new_, op, doc);
+	  lang = TtaGetLanguageIdFromScript('L');
+          text[0] = symbol;
+          text[1] = EOS;	  
+          TtaSetBufferContent (new_, text, lang, doc);
+          selectedchild = -1;
+          selected = op;
+          }
+        }
+
+      }
     }
+
 
   if (emptySel)
     {
@@ -1587,19 +1916,568 @@ static void CreateMathConstruct (int construct)
         }
       else if (construct == 21)
         {
-          /* Sum */
-          child = TtaGetFirstChild (el); /* base */
-          leaf = TtaGetFirstChild (child);
+        /* Operation on a family indexed by (i = ... to ...) */
+        int symbol = va_arg(varpos, int);
+        op = TtaGetFirstChild (el); /* base */
+        leaf = TtaGetFirstChild (op);
+        op = leaf;
+        InsertSymbol (&op, MathML_EL_MO, symbol, doc);
+        TtaRemoveTree (leaf, doc);
+        }
+      else if(construct == 22)
+	{
+        /* Simple Symbol / Text */
+        int symbol = va_arg(varpos, int);
+        leaf = TtaGetFirstChild (el);
+        child = leaf;
+
+        if(symbol == 0)InsertText (&child, MathML_EL_MO, va_arg(varpos, unsigned char*), doc);
+        else InsertSymbol (&child, MathML_EL_MO, symbol, doc);
+
+        InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
+
+        TtaRemoveTree (leaf, doc);
+        }
+      else if (construct == 24)
+        {
+        /* Operation on a family indexed by a set */
+        int symbol = va_arg(varpos, int);
+        op = TtaGetFirstChild (el); /* base */
+        leaf = TtaGetFirstChild (op);
+        op = leaf;
+        InsertSymbol (&op, MathML_EL_MO, symbol, doc);
+        TtaRemoveTree (leaf, doc);
+        }
+      else if (construct == 25)
+        {
+        /* Piecewise */
+
+        /* ask how many the user want */
+        int number = 3;         
+        leaf = TtaGetFirstChild (el);
+        TtaRemoveTree (leaf, doc);
+        CreateNewMtable (el, 2, 1, doc);
+        new_ = el;
+        leaf = SelectMtableCell(new_, 0, 0);
+        child = leaf;
+        
+        InsertSymbol (&child, MathML_EL_MI, '{', doc);
+        TtaRemoveTree (leaf, doc);
+
+        leaf = SelectMtableCell(new_, 1, 0);
+        child = leaf;
+        CreateNewMtable (child, 1, number, doc);
+
+        leaf = SelectMtableCell(child, 0, 0);
+        selected = leaf;
+        } 
+      else if(construct == 26 || construct == 30 || construct == 31 || construct == 33)
+	{
+        /* Accents ; Exposant ; Symbol sub ; Symbol under */
+        int symbol = va_arg(varpos, int);
+        if (selectedchild == 1) child = TtaGetFirstChild (el); else child = TtaGetLastChild (el); 
+        leaf = TtaGetFirstChild (child);
+        op = leaf;
+
+        if(symbol <=0)InsertText (&op, ((symbol == -1) ? MathML_EL_MN : MathML_EL_MI), va_arg(varpos, unsigned char*), doc);
+        else InsertSymbol (&op, MathML_EL_MI, symbol, doc);
+
+        TtaRemoveTree (leaf, doc);
+        }
+      else if(construct == 27)
+        {
+        /* Binary operation/relation */
+        int symbol = va_arg(varpos, int);
+        leaf = TtaGetFirstChild (el);
+        child = leaf;
+
+        InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
+
+        if(symbol == 0)InsertText (&child, MathML_EL_MO, va_arg(varpos, unsigned char*), doc);
+        else InsertSymbol (&child, MathML_EL_MO, symbol, doc);
+        
+        InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
+
+        TtaRemoveTree (leaf, doc);
+        }
+      else if(construct == 23)
+        {
+        /* Unary operation/relation */
+        int par, symbol = va_arg(varpos, int);
+        leaf = TtaGetFirstChild (el);
+        child = leaf;
+
+        if(symbol != '!')
+          {
+          if(symbol == 0)InsertText (&child, MathML_EL_MO, va_arg(varpos, unsigned char*), doc);
+          else InsertSymbol (&child, MathML_EL_MO, symbol, doc);
+          }
+
+        par = va_arg(varpos, int);
+        if(par)InsertSymbol (&child, MathML_EL_MF, '(', doc);
+        InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
+        if(par)InsertSymbol (&child, MathML_EL_MF, ')', doc);
+
+        if(symbol == '!')
+          {
+          InsertSymbol (&child, MathML_EL_MO, symbol, doc);
+          selectedchild = 0;
+          }
+
+        TtaRemoveTree (leaf, doc);
+        if(par)selectedchild = 2;
+        }
+      else if(construct == 28)
+	{
+        /* Congru */
+        leaf = TtaGetFirstChild (el);
+        child = leaf;
+        InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
+        InsertSymbol (&child, MathML_EL_MO, 8801, doc);
+        InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
+        InsertSymbol (&child, MathML_EL_MF, '(', doc);
+        InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
+        InsertSymbol (&child, MathML_EL_MF, ')', doc);
+        TtaRemoveTree (leaf, doc);
+        }
+      else if(construct == 29)
+	{
+        /* Forall, exists */
+        leaf = TtaGetFirstChild (el);
+        child = leaf;
+        InsertSymbol (&child, MathML_EL_MI, va_arg(varpos, int), doc);
+        InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
+        InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
+        TtaRemoveTree (leaf, doc);
+        }
+      else if(construct == 32)
+	{/* combination */
+        leaf = TtaGetFirstChild (el);
+        CreateNewMtable (el, 1, 2, doc);
+        selected = SelectMtableCell(el, 0, 1);
+        TtaRemoveTree (leaf, doc);
+        }
+      else if(construct == 34 || construct == 41)
+	{
+        /* operator with an under element and an empty square after */
+        leaf = TtaGetFirstChild (el);
+        child = leaf;
+        InsertEmptyConstruct (&child, (construct == 34 ? MathML_EL_MUNDER : MathML_EL_MSUB), doc);
+
+        TtaRemoveTree (leaf, doc);
+
+        new_ = TtaGetFirstChild (child); 
+        selected = TtaGetLastChild(child);
+
+        leaf = TtaGetFirstChild (new_);
+        op = leaf;
+        if(construct == 34)InsertText (&op, MathML_EL_MO, va_arg(varpos, unsigned char*), doc);
+        else InsertSymbol (&op, MathML_EL_MO, va_arg(varpos, int), doc);
+        TtaRemoveTree (leaf, doc);
+
+        InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
+        }
+      else if(construct == 35)
+	{
+        /* n-ary operation/relation */
+        int symbol = va_arg(varpos, int);
+        unsigned char *symbol_name;
+        if(symbol == 0)symbol_name = va_arg(varpos, unsigned char*);
+
+        /* ask how many the user want */
+        int number = 5;
+
+        leaf = TtaGetFirstChild (el);
+        child = leaf;
+        InsertEmptyConstruct (&child, MathML_EL_MROW, doc);
+        TtaRemoveTree (leaf, doc);
+        for(i = 0 ; i < number; i++)
+          {
+          if(symbol == 0)InsertText (&child, MathML_EL_MO, symbol_name, doc);
+          else InsertSymbol (&child, MathML_EL_MO, symbol, doc);
+          InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
+          }
+        }
+      else if(construct == 36)
+	{/* selector */
+
+        /* ask number of coordonnates */
+        int number = 3;
+
+        child = TtaGetLastChild (el);
+        leaf = TtaGetFirstChild (child);
+        child = leaf;
+
+        for(i = 0 ; i < number; i++)
+          {
+          if(i)InsertSymbol (&child, MathML_EL_MO, ',', doc);          
+          InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
+          }
+        TtaRemoveTree (leaf, doc);
+        }
+      else if(construct == 37)
+        {/* couple,  n-uple */
+        int number = va_arg(varpos, int);
+        if(number != 2)
+          {/* ask how many the user want */
+          number = 5;
+          }
+
+        leaf = TtaGetFirstChild (el);
+        child = leaf;
+        InsertSymbol (&child, MathML_EL_MF, '(', doc);
+        TtaRemoveTree (leaf, doc);
+        for(i = 0 ; i < number; i++)
+          {
+          if(i)InsertSymbol (&child, MathML_EL_MO, ',', doc);
+          InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
+          }
+        InsertSymbol (&child, MathML_EL_MF, ')', doc);
+        }
+      else if(construct == 38)
+        {/* set/list separation */
+        int ope = va_arg(varpos, int), clo = va_arg(varpos, int);
+        leaf = TtaGetFirstChild (el);
+        child = leaf;
+        InsertSymbol (&child, MathML_EL_MF, ope, doc);
+        TtaRemoveTree (leaf, doc);
+
+        InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
+        InsertSymbol (&child, MathML_EL_MO, '|', doc);
+        InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
+
+        InsertSymbol (&child, MathML_EL_MF, clo, doc);
+        }
+      else if(construct == 39)
+        {/* set/list extension ; vectorrow */
+        int ope = va_arg(varpos, int), clo = va_arg(varpos, int);
+        /* ask how many the user want */
+        int number = 5;
+
+        leaf = TtaGetFirstChild (el);
+        child = leaf;
+        InsertSymbol (&child, MathML_EL_MF, ope, doc);
+        TtaRemoveTree (leaf, doc);
+        for(i = 0 ; i < number; i++)
+          {
+          if(i)InsertSymbol (&child, MathML_EL_MO, ';', doc);
+          InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
+          }
+        InsertSymbol (&child, MathML_EL_MF, clo, doc);
+        }
+      else if(construct == 40)
+        {/* card/abs/floor/ceiling */
+        int ope = va_arg(varpos, int), clo = va_arg(varpos, int);
+        leaf = TtaGetFirstChild (el);
+        child = leaf;
+        InsertSymbol (&child, MathML_EL_MO, ope, doc);
+        TtaRemoveTree (leaf, doc);
+        InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
+        InsertSymbol (&child, MathML_EL_MO, clo, doc);
+        }
+      else if(construct == 42)
+        {/* fence2 */
+        unsigned char ope, clo;
+        /* ask the user what characters he wants */
+        ope = '[';clo=']';
+        leaf = TtaGetFirstChild (el);
+        child = leaf;
+        InsertSymbol (&child, MathML_EL_MO, ope, doc);
+        TtaRemoveTree (leaf, doc);
+        InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
+        InsertSymbol (&child, MathML_EL_MO, clo, doc);
+        }
+      else if(construct == 43)
+	{
+        /* diagonalintersection ; limtendsto ; tendstotendsto */
+        int symbol = va_arg(varpos, int);
+        int symbol2 = va_arg(varpos, int);
+        child = TtaGetFirstChild (el); 
+        leaf = TtaGetFirstChild (child);
+        child = leaf;
+
+        if(symbol == 0)InsertText (&child, MathML_EL_MI, va_arg(varpos, unsigned char*), doc);
+        else InsertSymbol (&child, MathML_EL_MI, symbol, doc);
+
+        TtaRemoveTree (leaf, doc);
+
+        child = TtaGetLastChild (el); 
+        leaf = TtaGetFirstChild (child);
+        child = leaf;
+
+        InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
+        if(symbol2 == 0)InsertText (&child, MathML_EL_MI, va_arg(varpos, unsigned char*), doc);
+        else InsertSymbol (&child, MathML_EL_MI, symbol2, doc);
+        InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
+
+        TtaRemoveTree (leaf, doc);
+        }
+      else if(construct == 44)
+	{ /* elementary classical functions ; maybe to be replaced by severals different buttons */
+        leaf = TtaGetFirstChild (el);
+        child = leaf;
+        //InsertText (&child, MathML_EL_MO, name, doc);
+        InsertSymbol(&child, MathML_EL_MI, 'f', doc);
+        InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
+        TtaRemoveTree (leaf, doc);
+        }
+      else if(construct == 45)
+	{ /* lambda constuct */
+        leaf = TtaGetFirstChild (el);
+        child = leaf;
+        InsertSymbol(&child, MathML_EL_MI, 955, doc);
+        InsertSymbol(&child, MathML_EL_MF, '(', doc);
+        InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
+        InsertSymbol(&child, MathML_EL_MO, ',', doc);
+        InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
+        InsertSymbol(&child, MathML_EL_MF, ')', doc);
+        TtaRemoveTree (leaf, doc);
+        }
+      else if(construct == 46)
+        { /* quotient */
+        leaf = TtaGetFirstChild (el);
+        child = leaf;
+        InsertSymbol (&child, MathML_EL_MO, 8970, doc);
+        TtaRemoveTree (leaf, doc);
+        InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
+        InsertSymbol(&child, MathML_EL_MO, '/', doc);
+        InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
+        InsertSymbol (&child, MathML_EL_MO, 8971, doc);
+        }
+      else if(construct == 47)
+        { /* map construct */
+
+        /* a blank for the name of the function */
+        leaf = TtaGetFirstChild (el);
+        child = leaf;
+        InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
+        selected = TtaGetFirstChild(child);
+        TtaRemoveTree (leaf, doc);
+
+        /* Mtable of size 2 x 1 */
+        InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
+        leaf = TtaGetFirstChild (child);TtaRemoveTree (leaf, doc);
+        CreateNewMtable (child, 2, 1, doc);
+
+        /* vertical bar */
+        new_ = child;
+        leaf = SelectMtableCell(new_, 0, 0);
+        child = leaf;
+        InsertSymbol (&child, MathML_EL_MI, '|', doc);
+        TtaRemoveTree (leaf, doc);
+
+        /* Mtable of size 1 x 2 */
+        leaf = SelectMtableCell(new_, 1, 0);
+        child = leaf;
+        CreateNewMtable (child, 1, 2, doc);
+
+        /* first arrow */ 
+        new_ = child;
+        leaf = SelectMtableCell(new_, 0, 0);
+        child = leaf;
+        InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
+        InsertSymbol (&child, MathML_EL_MI, 8594, doc);
+        InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
+        TtaRemoveTree (leaf, doc);
+
+        /* second arrow */
+        leaf = SelectMtableCell(new_, 0, 1);
+        child = leaf;
+        InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
+        InsertSymbol (&child, MathML_EL_MI, 8614, doc);
+        InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
+        TtaRemoveTree (leaf, doc);
+        }
+      else if(construct == 48)
+        { /* complexcartesian */
+        int ibefore = va_arg(varpos, int); 
+        leaf = TtaGetFirstChild (el);
+        child = leaf;
+
+        InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
+        TtaRemoveTree (leaf, doc);
+        InsertSymbol(&child, MathML_EL_MO, '+', doc);
+        if(ibefore)
+          {
+          InsertSymbol(&child, MathML_EL_MI, 8520, doc); // i
+          InsertSymbol (&child, MathML_EL_MO, 8290, doc);// invisible times
+          InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
+          }
+        else
+          {
+          InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
+          InsertSymbol (&child, MathML_EL_MO, 8290, doc);// invisible times
+          InsertSymbol(&child, MathML_EL_MI, 8520, doc); // i
+          }
+        }
+      else if(construct == 49)
+        { /* complexpolar */
+        new_ = TtaGetFirstChild (el);
+        leaf = TtaGetFirstChild (new_);
+        child = leaf;
+        InsertSymbol(&child, MathML_EL_MI, 8494, doc); // e
+        TtaRemoveTree (leaf, doc);
+
+        new_ = TtaGetLastChild (el);
+        leaf = TtaGetFirstChild(new_);
+        child = leaf;
+        InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
+        TtaRemoveTree (leaf, doc);
+
+        leaf = TtaGetFirstChild(child);
+        child = leaf;
+        InsertSymbol(&child, MathML_EL_MI, 8520, doc); // i
+        InsertSymbol (&child, MathML_EL_MO, 8290, doc);// invisible times
+        InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
+        selected = TtaGetFirstChild(child);
+        TtaRemoveTree (leaf, doc);
+        }
+      else if(construct == 50)
+        { /* diff ; partialdiff */
+        int symbol = va_arg(varpos, int);
+        new_ = TtaGetFirstChild (el);
+        leaf = TtaGetFirstChild (new_);
+        child = leaf;
+        InsertSymbol (&child, MathML_EL_MO, symbol, doc);
+        InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
+        selected = TtaGetFirstChild(child);
+        TtaRemoveTree (leaf, doc);
+
+        new_ = TtaGetLastChild (el);
+        leaf = TtaGetFirstChild(new_);
+        child = leaf;
+        InsertSymbol (&child, MathML_EL_MO, symbol, doc);
+        InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
+        TtaRemoveTree (leaf, doc);
+        }
+      else if(construct== 51)
+        { /* partialdiff2 */
+        int symbol = 8706;
+        /* ask the user the degree of derivation of the function f and of the variables of f*/
+
+        new_ = TtaGetFirstChild (el);
+        leaf = TtaGetFirstChild (new_);
+        child = leaf;
+        InsertSymbol (&child, MathML_EL_MO, symbol, doc);
+        InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
+        selected = TtaGetFirstChild(child);
+        TtaRemoveTree (leaf, doc);
+
+        new_ = TtaGetLastChild (el);
+        leaf = TtaGetFirstChild(new_);
+        child = leaf;
+        InsertSymbol (&child, MathML_EL_MO, symbol, doc);
+        InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
+        TtaRemoveTree (leaf, doc);
+        }
+      else if(construct== 52)
+        { /* integral */
+        //DoubleContourIntegral 8751
+        //Integral 8747
+        // cirfnint 10768
+	//iiiint", 10764
+	//iiint", 8749
+        int symbol = 8751;
+        leaf = TtaGetFirstChild (el);
+        child = leaf;
+        InsertSymbol (&child, MathML_EL_MO, symbol, doc);
+        InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
+        selected = TtaGetFirstChild(child);
+        TtaRemoveTree (leaf, doc);
+        }
+      else if(construct== 53)
+        { /* vectorrow ; vectorcolomn ; matrix ; determinant2 */
+        int ope = va_arg(varpos, int), clo = va_arg(varpos, int);
+        int lx = va_arg(varpos, int), ly = va_arg(varpos, int);
+        leaf = TtaGetFirstChild (el);
+        child = leaf;
+
+        /* fences */
+        InsertSymbol (&child, MathML_EL_MF, ope, doc);
+        TtaRemoveTree (leaf, doc);
+        InsertEmptyConstruct(&child, MathML_EL_MROW, doc);new_ = child;
+        InsertSymbol (&child, MathML_EL_MF, clo, doc);
+
+        /* ask the user the number of rows and colomns */
+        if(lx == 0)lx = 5;
+        if(ly == 0)ly = 5;
+
+        /* mtable */
+        child = new_;
+        leaf = TtaGetFirstChild (child);TtaRemoveTree (leaf, doc);
+        CreateNewMtable (child, lx, ly, doc);
+        selected = SelectMtableCell(child, 0, 0);
+        }
+      else if(construct == 54)
+        {/* curl ; div ; grad ; laplacian */
+        int nabla = 8711;
+        int symbol = va_arg(varpos, int);
+        leaf = TtaGetFirstChild (el);
+        child = leaf;
+        if(symbol == 1)
+          {/* Laplacian */
+          Element leaf2, child2;
+          InsertEmptyConstruct(&child, MathML_EL_MSUP, doc);
+
+          leaf2 = TtaGetFirstChild (TtaGetFirstChild (child));
+          child2 = leaf2;
+          InsertSymbol (&child2, MathML_EL_MO, nabla, doc);
+          TtaRemoveTree (leaf2, doc);
+          
+          leaf2 = TtaGetFirstChild(TtaGetLastChild (child));
+          child2 = leaf2;
+          InsertSymbol (&child2, MathML_EL_MN, '2', doc);
+          TtaRemoveTree (leaf2, doc);
+          }
+        else
+          {/* curl ; div ; grad */
+          InsertSymbol (&child, MathML_EL_MO, nabla, doc);
+          if(symbol != 0)InsertSymbol (&child, MathML_EL_MO, symbol, doc);
+          }
+
+        InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
+        selected = TtaGetFirstChild(child);
+        TtaRemoveTree (leaf, doc);
+        }
+      else if(construct == 55)
+        {/* variance */
+        leaf = TtaGetFirstChild (el);
+        child = leaf;
+        InsertSymbol (&child, MathML_EL_MO, 963, doc);
+        InsertEmptyConstruct(&child, MathML_EL_MSUP, doc);
+        TtaRemoveTree (leaf, doc);
+
+          {
+          Element child2;
+
+          leaf = TtaGetFirstChild (TtaGetFirstChild (child));
+          child2 = leaf;
+          InsertEmptyConstruct(&child2, MathML_EL_MROW, doc);
           TtaRemoveTree (leaf, doc);
-          newType.ElTypeNum = MathML_EL_MO;
-          op = TtaNewElement (doc, newType);
-          TtaInsertFirstChild (&op, child, doc);
-          newType.ElTypeNum = MathML_EL_TEXT_UNIT;
-          new_ = TtaNewElement (doc, newType);
-          TtaInsertFirstChild (&new_, op, doc);
-	  lang = TtaGetLanguageIdFromScript('L');
-	  text[0] = 0x2211; text[1] = EOS; /* the Sum symbol */
-	  TtaSetBufferContent (new_, text, lang, doc);
+
+          leaf = TtaGetFirstChild (child2);
+          child2 = leaf; 
+          InsertSymbol (&child2, MathML_EL_MF, '(', doc);
+          InsertEmptyConstruct(&child2, MathML_EL_MROW, doc);
+          selected = TtaGetFirstChild(child2);
+          InsertSymbol (&child2, MathML_EL_MF, ')', doc);
+          TtaRemoveTree (leaf, doc);
+
+          leaf = TtaGetFirstChild(TtaGetLastChild (child));
+          child2 = leaf;
+          InsertSymbol (&child2, MathML_EL_MN, '2', doc);
+          TtaRemoveTree (leaf, doc);
+          }
+        
+        }
+      else if(construct == 56)
+        {/* moment */
+        leaf = TtaGetFirstChild (el);
+        child = leaf;
+        InsertSymbol (&child, MathML_EL_MO, 9001, doc);
+        InsertEmptyConstruct(&child, MathML_EL_MSUP, doc);
+        InsertSymbol (&child, MathML_EL_MO, 9002, doc);
+        TtaRemoveTree (leaf, doc);
         }
 
       /* do not check the Thot abstract tree against the structure */
@@ -1684,19 +2562,17 @@ static void CreateMathConstruct (int construct)
       
       TtaSetDocumentModified (doc);
 
-      if (construct == 21)
+      if (construct == 21 || construct == 24 || construct == 33)
 	{
 	  /* move the limits of the MSUBSUP element if it's appropriate */
 	  SetIntMovelimitsAttr (el, doc);
-	  /* enlarge the Sum symbol according to the context */
-	  if (op)
-	    CheckLargeOp (op, doc);
+	  /* enlarge the symbol according to the context */
+	  if (op)CheckLargeOp (op, doc);
 	}
       else if (ParBlock)
         /* the user wants to create a parenthesized block */
-        /* create two MF elements, as the first and last child of the new
-           MROW */
-        AddParen (el, doc);
+        /* create two MF elements, as the first and last child of the newMROW */
+        AddParenthesis (el, doc);
 
       InitializeNewConstruct (el, NumberRows, NumberCols, !registered, doc);
 
@@ -1704,7 +2580,7 @@ static void CreateMathConstruct (int construct)
       /* check the Thot abstract tree against the structure schema. */
       TtaSetStructureChecking (oldStructureChecking, doc);
 	  
-      if (construct == 20 || construct == 21)
+      if (construct == 20 || construct == 21 || construct == 24)
         {
           el = TtaGetFirstChild (el);
           TtaNextSibling (&el);
@@ -1722,12 +2598,12 @@ static void CreateMathConstruct (int construct)
         }
       else
         {
-          /* select the leaf in the first (or second) child of the new
-             element */
+        /* select a child in the new element */
+        if(selectedchild >= 0)
+          {
           child = TtaGetFirstChild (el);
-          if (!selectFirstChild)
-            /* get the second child */
-            TtaNextSibling (&child);
+          for(i=0;i<selectedchild;i++)TtaNextSibling (&child);
+
           leaf = NULL;
           while (child != NULL)
             {
@@ -1735,10 +2611,13 @@ static void CreateMathConstruct (int construct)
               child = TtaGetFirstChild (child);
             }
           if (leaf)
-            {
+            { 
               TtaSelectElement (doc, leaf);
               selected = leaf;
             }
+          }
+        else
+          TtaSelectElement (doc, selected);
         }
     }
   if (selected)
@@ -1748,6 +2627,8 @@ static void CreateMathConstruct (int construct)
       MathSelectionChanged (&event);
     }
   TtaCloseUndoSequence (doc);
+
+  va_end(varpos);
 }
 
 /*----------------------------------------------------------------------
@@ -1981,8 +2862,38 @@ void CreateMUNDER (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMOVER (Document document, View view)
 {
-  CreateMathConstruct (10);
+  CreateMathConstruct (10, 0);
 }
+
+void CreateMOVERARROW (Document doc, View view)
+{
+  CreateMathConstruct (26, 8594);
+}
+void CreateMOVERBAR (Document doc, View view)
+{
+  CreateMathConstruct (26, 175);
+}
+void CreateMOVERBREVE (Document doc, View view)
+{
+  CreateMathConstruct (26, 728);
+}
+void CreateMOVERCHECK (Document doc, View view)
+{
+  CreateMathConstruct (26, 711);
+}
+void CreateMOVERDOT (Document doc, View view)
+{
+  CreateMathConstruct (26, 729);
+}
+void CreateMOVERHAT (Document doc, View view)
+{
+  CreateMathConstruct (26, 770);
+}
+void CreateMOVERTILDE (Document doc, View view)
+{
+  CreateMathConstruct (26, 8764);
+}
+
 
 /*----------------------------------------------------------------------
   CreateMROW
@@ -2017,13 +2928,960 @@ void CreateMIntegral (Document doc, View view)
   CreateMathConstruct (20);
 }
 
+
 /*----------------------------------------------------------------------
   CreateMSum
   ----------------------------------------------------------------------*/
 void CreateMSum (Document doc, View view)
 {
-  CreateMathConstruct (21);
+  CreateMathConstruct (21, 8721);
 }
+
+/*----------------------------------------------------------------------
+  CreateMMatrix2
+  ----------------------------------------------------------------------*/
+void CreateMatrix2 (Document doc, View view)
+{
+  CreateMathConstruct (53, '(', ')', 0, 0);
+}
+
+/*----------------------------------------------------------------------
+  CreateMABS
+  ----------------------------------------------------------------------*/
+void CreateMABS (Document document, View view)
+{
+CreateMathConstruct (40,'|','|');}
+/*----------------------------------------------------------------------
+  CreateMALEPHSUB
+  ----------------------------------------------------------------------*/
+void CreateMALEPHSUB (Document document, View view)
+{
+CreateMathConstruct (31,8501);}
+/*----------------------------------------------------------------------
+  CreateMAND
+  ----------------------------------------------------------------------*/
+void CreateMAND (Document document, View view)
+{
+CreateMathConstruct (35, 8743);}
+/*----------------------------------------------------------------------
+  CreateMANDBINARY
+  ----------------------------------------------------------------------*/
+void CreateMANDBINARY (Document document, View view)
+{
+CreateMathConstruct (27, 8743);}
+/*----------------------------------------------------------------------
+  CreateMAPPROX
+  ----------------------------------------------------------------------*/
+void CreateMAPPROX (Document document, View view)
+{
+CreateMathConstruct (27,8776);}
+/*----------------------------------------------------------------------
+  CreateMARG
+  ----------------------------------------------------------------------*/
+void CreateMARG (Document document, View view)
+{
+CreateMathConstruct (23, 0, "arg", TRUE);}
+/*----------------------------------------------------------------------
+  CreateMARROW1
+  ----------------------------------------------------------------------*/
+void CreateMARROW1 (Document document, View view)
+{
+CreateMathConstruct (27,8594);}
+/*----------------------------------------------------------------------
+  CreateMARROW2
+  ----------------------------------------------------------------------*/
+void CreateMARROW2 (Document document, View view)
+{
+CreateMathConstruct (27,8614);}
+/*----------------------------------------------------------------------
+  CreateMCARD
+  ----------------------------------------------------------------------*/
+void CreateMCARD (Document document, View view)
+{
+CreateMathConstruct (40,'|','|');}
+/*----------------------------------------------------------------------
+  CreateMCARD2
+  ----------------------------------------------------------------------*/
+void CreateMCARD2 (Document document, View view)
+{
+CreateMathConstruct (23, '#', FALSE);}
+/*----------------------------------------------------------------------
+  CreateMCARTESIANPRODUCT
+  ----------------------------------------------------------------------*/
+void CreateMCARTESIANPRODUCT (Document document, View view)
+{
+CreateMathConstruct (35,215);}
+/*----------------------------------------------------------------------
+  CreateMCARTESIANPRODUCTBINARY
+  ----------------------------------------------------------------------*/
+void CreateMCARTESIANPRODUCTBINARY (Document document, View view)
+{
+CreateMathConstruct (27,215);}
+/*----------------------------------------------------------------------
+  CreateMCEILING
+  ----------------------------------------------------------------------*/
+void CreateMCEILING (Document document, View view)
+{
+CreateMathConstruct (40, 8968, 8969);}
+/*----------------------------------------------------------------------
+  CreateMCODOMAIN
+  ----------------------------------------------------------------------*/
+void CreateMCODOMAIN (Document document, View view)
+{
+CreateMathConstruct (23, 0, "codom", TRUE);}
+/*----------------------------------------------------------------------
+  CreateMCOMBINATION
+  ----------------------------------------------------------------------*/
+void CreateMCOMBINATION (Document document, View view)
+{
+CreateMathConstruct (32);}
+/*----------------------------------------------------------------------
+  CreateMCOMPLEMENT
+  ----------------------------------------------------------------------*/
+void CreateMCOMPLEMENT (Document document, View view)
+{
+CreateMathConstruct (26, 175);}
+/*----------------------------------------------------------------------
+  CreateMCOMPLEMENTSUB
+  ----------------------------------------------------------------------*/
+void CreateMCOMPLEMENTSUB (Document document, View view)
+{
+CreateMathConstruct (41, 8705);}
+/*----------------------------------------------------------------------
+  CreateMCOMPLEXCARTESIAN
+  ----------------------------------------------------------------------*/
+void CreateMCOMPLEXCARTESIAN (Document document, View view)
+{
+CreateMathConstruct (48, TRUE);}
+
+/*----------------------------------------------------------------------
+  CreateMCOMPLEXCARTESIAN2
+  ----------------------------------------------------------------------*/
+void CreateMCOMPLEXCARTESIAN2 (Document document, View view)
+{
+CreateMathConstruct (48, FALSE);}
+/*----------------------------------------------------------------------
+  CreateMCOMPLEXES
+  ----------------------------------------------------------------------*/
+void CreateMCOMPLEXES (Document document, View view)
+{
+CreateMathConstruct (22,8450);}
+/*----------------------------------------------------------------------
+  CreateMCOMPLEXPOLAR
+  ----------------------------------------------------------------------*/
+void CreateMCOMPLEXPOLAR (Document document, View view)
+{
+CreateMathConstruct (49);}
+/*----------------------------------------------------------------------
+  CreateMCOMPOSE
+  ----------------------------------------------------------------------*/
+void CreateMCOMPOSE (Document document, View view)
+{
+CreateMathConstruct (35, 8728);}
+/*----------------------------------------------------------------------
+  CreateMCOMPOSEBINARY
+  ----------------------------------------------------------------------*/
+void CreateMCOMPOSEBINARY (Document document, View view)
+{
+CreateMathConstruct (27, 8728);}
+/*----------------------------------------------------------------------
+  CreateMCONGRU
+  ----------------------------------------------------------------------*/
+void CreateMCONGRU (Document document, View view)
+{
+CreateMathConstruct (28);}
+/*----------------------------------------------------------------------
+  CreateMCONJUGATE
+  ----------------------------------------------------------------------*/
+void CreateMCONJUGATE (Document document, View view)
+{
+CreateMathConstruct (26, 175);}
+/*----------------------------------------------------------------------
+  CreateMCOUPLE
+  ----------------------------------------------------------------------*/
+void CreateMCOUPLE (Document document, View view)
+{
+CreateMathConstruct (37, 2);}
+/*----------------------------------------------------------------------
+  CreateMCURL
+  ----------------------------------------------------------------------*/
+void CreateMCURL (Document document, View view)
+{
+CreateMathConstruct (54, 215);}
+/*----------------------------------------------------------------------
+  CreateMDETERMINANT
+  ----------------------------------------------------------------------*/
+void CreateMDETERMINANT (Document document, View view)
+{
+CreateMathConstruct (23, 0, "det", FALSE);}
+/*----------------------------------------------------------------------
+  CreateMDETERMINANT2
+  ----------------------------------------------------------------------*/
+void CreateMDETERMINANT2 (Document document, View view)
+
+{
+CreateMathConstruct (53, '|', '|', 0, 0);}
+
+/*----------------------------------------------------------------------
+  CreateMDIAGONALINTERSECTION
+  ----------------------------------------------------------------------*/
+void CreateMDIAGONALINTERSECTION (Document document, View view)
+{
+CreateMathConstruct (43, 916, '<');}
+/*----------------------------------------------------------------------
+  CreateMDIFF
+  ----------------------------------------------------------------------*/
+void CreateMDIFF (Document document, View view)
+{
+CreateMathConstruct (50, 'd');}
+/*----------------------------------------------------------------------
+  CreateMDIRECTSUM
+  ----------------------------------------------------------------------*/
+void CreateMDIRECTSUM (Document document, View view)
+{
+CreateMathConstruct (27,8853);}
+/*----------------------------------------------------------------------
+  CreateMDIVERGENCE
+  ----------------------------------------------------------------------*/
+void CreateMDIVERGENCE (Document document, View view)
+{
+CreateMathConstruct (54, '.');}
+/*----------------------------------------------------------------------
+  CreateMDIVIDE
+  ----------------------------------------------------------------------*/
+void CreateMDIVIDE (Document document, View view)
+{
+CreateMathConstruct (27,247);}
+/*----------------------------------------------------------------------
+  CreateMDOMAIN
+  ----------------------------------------------------------------------*/
+void CreateMDOMAIN (Document document, View view)
+{
+CreateMathConstruct (23, 0, "dom", TRUE);}
+/*----------------------------------------------------------------------
+  CreateMCLASSICALFUNCTIONS
+  ----------------------------------------------------------------------*/
+void CreateMCLASSICALFUNCTIONS (Document document, View view)
+{
+CreateMathConstruct (44);}
+/*----------------------------------------------------------------------
+  CreateMEMPTYSET
+  ----------------------------------------------------------------------*/
+void CreateMEMPTYSET (Document document, View view)
+{
+CreateMathConstruct (22,8709);}
+/*----------------------------------------------------------------------
+  CreateMEQ
+  ----------------------------------------------------------------------*/
+void CreateMEQ (Document document, View view)
+{
+CreateMathConstruct (35, '=');}
+/*----------------------------------------------------------------------
+  CreateMEQUIVALENT
+  ----------------------------------------------------------------------*/
+void CreateMEQUIVALENT (Document document, View view)
+{
+CreateMathConstruct (35 , 8660);}
+/*----------------------------------------------------------------------
+  CreateMEQUIVALENT2
+  ----------------------------------------------------------------------*/
+void CreateMEQUIVALENT2 (Document document, View view)
+{
+CreateMathConstruct (35, 8801);}
+/*----------------------------------------------------------------------
+  CreateMEQUIVALENT2BINARY
+  ----------------------------------------------------------------------*/
+void CreateMEQUIVALENT2BINARY (Document document, View view)
+{
+CreateMathConstruct (27, 8801);}
+/*----------------------------------------------------------------------
+  CreateMEQUIVALENTBINARY
+  ----------------------------------------------------------------------*/
+void CreateMEQUIVALENTBINARY (Document document, View view)
+{
+CreateMathConstruct (27, 8660);}
+/*----------------------------------------------------------------------
+  CreateMEQUIVALENTUNDER
+  ----------------------------------------------------------------------*/
+void CreateMEQUIVALENTUNDER (Document document, View view)
+{
+CreateMathConstruct (33, '~');}
+/*----------------------------------------------------------------------
+  CreateMEULERGAMMA
+  ----------------------------------------------------------------------*/
+void CreateMEULERGAMMA (Document document, View view)
+{
+CreateMathConstruct (22,947);}
+/*----------------------------------------------------------------------
+  CreateMEXISTS
+  ----------------------------------------------------------------------*/
+void CreateMEXISTS (Document document, View view)
+{
+CreateMathConstruct (29,8707);}
+/*----------------------------------------------------------------------
+  CreateMEXPONENTIALE
+  ----------------------------------------------------------------------*/
+void CreateMEXPONENTIALE (Document document, View view)
+{
+CreateMathConstruct (22,8494);}
+/*----------------------------------------------------------------------
+  CreateMFACTORIAL
+  ----------------------------------------------------------------------*/
+void CreateMFACTORIAL (Document document, View view)
+{
+CreateMathConstruct (23,'!',FALSE);}
+/*----------------------------------------------------------------------
+  CreateMFACTOROF
+  ----------------------------------------------------------------------*/
+void CreateMFACTOROF (Document document, View view)
+{
+CreateMathConstruct (27,'|');}
+/*----------------------------------------------------------------------
+  CreateMFALSE
+  ----------------------------------------------------------------------*/
+void CreateMFALSE (Document document, View view)
+{
+CreateMathConstruct (22, 0, "False");}
+/*----------------------------------------------------------------------
+  CreateMFENCE2
+  ----------------------------------------------------------------------*/
+void CreateMFENCE2 (Document document, View view)
+{
+CreateMathConstruct (42);}
+/*----------------------------------------------------------------------
+  CreateMFLOOR
+  ----------------------------------------------------------------------*/
+void CreateMFLOOR (Document document, View view)
+{
+CreateMathConstruct (40, 8970, 8971);}
+/*----------------------------------------------------------------------
+  CreateMFORALL
+  ----------------------------------------------------------------------*/
+void CreateMFORALL (Document document, View view)
+{
+CreateMathConstruct (29,8704);}
+/*----------------------------------------------------------------------
+  CreateMGCD
+  ----------------------------------------------------------------------*/
+void CreateMGCD (Document document, View view)
+{
+CreateMathConstruct (23, 0, "gcd", TRUE);}
+/*----------------------------------------------------------------------
+  CreateMGEQ
+  ----------------------------------------------------------------------*/
+void CreateMGEQ (Document document, View view)
+{
+CreateMathConstruct (35, 8805);}
+/*----------------------------------------------------------------------
+  CreateMGRAD
+  ----------------------------------------------------------------------*/
+void CreateMGRAD (Document document, View view)
+{
+CreateMathConstruct (54, 0);}
+/*----------------------------------------------------------------------
+  CreateMGT
+  ----------------------------------------------------------------------*/
+void CreateMGT (Document document, View view)
+{
+CreateMathConstruct (35, '>');}
+/*----------------------------------------------------------------------
+  CreateMIDENT
+  ----------------------------------------------------------------------*/
+void CreateMIDENT (Document document, View view)
+{
+CreateMathConstruct (22, 0, "Id");}
+/*----------------------------------------------------------------------
+  CreateMIMAGE
+  ----------------------------------------------------------------------*/
+void CreateMIMAGE (Document document, View view)
+{
+CreateMathConstruct (23, 0, "img", TRUE);}
+/*----------------------------------------------------------------------
+  CreateMIMAGINARY
+  ----------------------------------------------------------------------*/
+void CreateMIMAGINARY (Document document, View view)
+{
+CreateMathConstruct (23, 8465 ,TRUE);}
+/*----------------------------------------------------------------------
+  CreateMIMAGINARYI
+  ----------------------------------------------------------------------*/
+void CreateMIMAGINARYI (Document document, View view)
+{
+CreateMathConstruct (22,8520);}
+/*----------------------------------------------------------------------
+  CreateMIMPLIES
+  ----------------------------------------------------------------------*/
+void CreateMIMPLIES (Document document, View view)
+{
+CreateMathConstruct (27,8658);}
+/*----------------------------------------------------------------------
+  CreateMIN
+  ----------------------------------------------------------------------*/
+void CreateMIN (Document document, View view)
+{
+CreateMathConstruct (27,8712);}
+/*----------------------------------------------------------------------
+  CreateMINF
+  ----------------------------------------------------------------------*/
+void CreateMINF (Document document, View view)
+{
+CreateMathConstruct (23, 0, "inf", FALSE);}
+/*----------------------------------------------------------------------
+  CreateMINFINITY
+  ----------------------------------------------------------------------*/
+void CreateMINFINITY (Document document, View view)
+{
+CreateMathConstruct (22,8734);}
+/*----------------------------------------------------------------------
+  CreateMINFUNDER
+  ----------------------------------------------------------------------*/
+void CreateMINFUNDER (Document document, View view)
+{
+CreateMathConstruct (34, "inf");}
+/*----------------------------------------------------------------------
+  CreateMINT2
+  ----------------------------------------------------------------------*/
+void CreateMINT2 (Document document, View view)
+{
+CreateMathConstruct (52);}
+/*----------------------------------------------------------------------
+  CreateMINTEGERS
+  ----------------------------------------------------------------------*/
+void CreateMINTEGERS (Document document, View view)
+{
+CreateMathConstruct (22,8484);}
+/*----------------------------------------------------------------------
+  CreateMINTERSECT
+  ----------------------------------------------------------------------*/
+void CreateMINTERSECT (Document document, View view)
+{
+CreateMathConstruct (35, 8898);}
+/*----------------------------------------------------------------------
+  CreateMINTERSECTBINARY
+  ----------------------------------------------------------------------*/
+void CreateMINTERSECTBINARY (Document document, View view)
+{
+CreateMathConstruct (27, 8898);}
+/*----------------------------------------------------------------------
+  CreateMINTERSECTUNDER
+  ----------------------------------------------------------------------*/
+void CreateMINTERSECTUNDER (Document document, View view)
+{
+CreateMathConstruct (24,8898);}
+/*----------------------------------------------------------------------
+  CreateMINTUNDER
+  ----------------------------------------------------------------------*/
+void CreateMINTUNDER (Document document, View view)
+{
+CreateMathConstruct (33, 8747);}
+/*----------------------------------------------------------------------
+  CreateMINVERSE
+  ----------------------------------------------------------------------*/
+void CreateMINVERSE (Document document, View view)
+{
+CreateMathConstruct (30, -1, "-1");}
+/*----------------------------------------------------------------------
+  CreateMISOMORPHIC
+  ----------------------------------------------------------------------*/
+void CreateMISOMORPHIC (Document document, View view)
+{
+CreateMathConstruct (27,8773);}
+/*----------------------------------------------------------------------
+  CreateMLISTEXTENSION
+  ----------------------------------------------------------------------*/
+void CreateMLISTEXTENSION (Document document, View view)
+{
+CreateMathConstruct (39, '[', ']');}
+/*----------------------------------------------------------------------
+  CreateMLCM
+  ----------------------------------------------------------------------*/
+void CreateMLCM (Document document, View view)
+{
+CreateMathConstruct (23, 0, "lcm", TRUE);}
+/*----------------------------------------------------------------------
+  CreateMLAPLACIAN
+  ----------------------------------------------------------------------*/
+void CreateMLAPLACIAN (Document document, View view)
+{
+CreateMathConstruct (54, 1);}
+/*----------------------------------------------------------------------
+  CreateMLEQ
+  ----------------------------------------------------------------------*/
+void CreateMLEQ (Document document, View view)
+{
+CreateMathConstruct (35, 8804);}
+/*----------------------------------------------------------------------
+  CreateMLISTSEPARATION
+  ----------------------------------------------------------------------*/
+void CreateMLISTSEPARATION (Document document, View view)
+{
+CreateMathConstruct (38, '[', ']');}
+/*----------------------------------------------------------------------
+  CreateMLT
+  ----------------------------------------------------------------------*/
+void CreateMLT (Document document, View view)
+{
+CreateMathConstruct (35, '<');}
+/*----------------------------------------------------------------------
+  CreateMLAMBDA
+  ----------------------------------------------------------------------*/
+void CreateMLAMBDA (Document document, View view)
+{
+CreateMathConstruct (45);}
+
+/*----------------------------------------------------------------------
+  CreateMLIM
+  ----------------------------------------------------------------------*/
+void CreateMLIM (Document document, View view)
+{
+CreateMathConstruct (33, 0, "lim");}
+
+/*----------------------------------------------------------------------
+  CreateMLIMTENDSTO
+  ----------------------------------------------------------------------*/
+void CreateMLIMTENDSTO (Document document, View view)
+{
+CreateMathConstruct (43, 0, 8594, "lim");}
+
+/*----------------------------------------------------------------------
+  CreateMMAP
+  ----------------------------------------------------------------------*/
+void CreateMMAP (Document document, View view)
+{
+CreateMathConstruct (47);}
+/*----------------------------------------------------------------------
+  CreateMMATRIX2
+  ----------------------------------------------------------------------*/
+void CreateMMATRIX2 (Document document, View view)
+{
+CreateMathConstruct (53, '(', ')', 0, 0);}
+/*----------------------------------------------------------------------
+  CreateMMAX
+  ----------------------------------------------------------------------*/
+void CreateMMAX (Document document, View view)
+{
+CreateMathConstruct (23, 0, "max", FALSE);}
+/*----------------------------------------------------------------------
+  CreateMMAXUNDER
+  ----------------------------------------------------------------------*/
+void CreateMMAXUNDER (Document document, View view)
+{
+CreateMathConstruct (34, "max");}
+/*----------------------------------------------------------------------
+  CreateMMEAN
+  ----------------------------------------------------------------------*/
+void CreateMMEAN (Document document, View view)
+{
+CreateMathConstruct (40, 9001, 9002);}
+/*----------------------------------------------------------------------
+  CreateMMEDIAN
+  ----------------------------------------------------------------------*/
+void CreateMMEDIAN (Document document, View view)
+{
+CreateMathConstruct (23, 0, "median", TRUE);}
+/*----------------------------------------------------------------------
+  CreateMMIN
+  ----------------------------------------------------------------------*/
+void CreateMMIN (Document document, View view)
+{
+CreateMathConstruct (23, 0, "min", FALSE);}
+/*----------------------------------------------------------------------
+  CreateMMINUNDER
+  ----------------------------------------------------------------------*/
+void CreateMMINUNDER (Document document, View view)
+{
+CreateMathConstruct (34, "min");}
+/*----------------------------------------------------------------------
+  CreateMMINUSBINARY
+  ----------------------------------------------------------------------*/
+void CreateMMINUSBINARY (Document document, View view)
+{
+CreateMathConstruct (27,8722);}
+/*----------------------------------------------------------------------
+  CreateMMINUSUNARY
+  ----------------------------------------------------------------------*/
+void CreateMMINUSUNARY (Document document, View view)
+{
+CreateMathConstruct (23, 8722, FALSE);}
+/*----------------------------------------------------------------------
+  CreateMMODE
+  ----------------------------------------------------------------------*/
+void CreateMMODE (Document document, View view)
+{
+CreateMathConstruct (23, 0, "mode", TRUE);}
+/*----------------------------------------------------------------------
+  CreateMMOMENT
+  ----------------------------------------------------------------------*/
+void CreateMMOMENT (Document document, View view)
+{
+CreateMathConstruct (56);}
+/*----------------------------------------------------------------------
+  CreateMNATURALS
+  ----------------------------------------------------------------------*/
+void CreateMNATURALS (Document document, View view)
+{
+CreateMathConstruct (22,8469);}
+/*----------------------------------------------------------------------
+  CreateMNEQ
+  ----------------------------------------------------------------------*/
+void CreateMNEQ (Document document, View view)
+{
+CreateMathConstruct (27,8800);}
+/*----------------------------------------------------------------------
+  CreateMNOT
+  ----------------------------------------------------------------------*/
+void CreateMNOT (Document document, View view)
+{
+CreateMathConstruct (23, 172, FALSE);}
+/*----------------------------------------------------------------------
+  CreateMNOTANUMBER
+  ----------------------------------------------------------------------*/
+void CreateMNOTANUMBER (Document document, View view)
+{
+CreateMathConstruct (22, 0, "NaN");}
+/*----------------------------------------------------------------------
+  CreateMNOTIN
+  ----------------------------------------------------------------------*/
+void CreateMNOTIN (Document document, View view)
+{
+CreateMathConstruct (27,8713);}
+/*----------------------------------------------------------------------
+  CreateMNOTPRSUBSET
+  ----------------------------------------------------------------------*/
+void CreateMNOTPRSUBSET (Document document, View view)
+{
+CreateMathConstruct (27,8836);}
+/*----------------------------------------------------------------------
+  CreateMNOTSUBSET
+  ----------------------------------------------------------------------*/
+void CreateMNOTSUBSET (Document document, View view)
+{
+CreateMathConstruct (27,8840);}
+/*----------------------------------------------------------------------
+  CreateMNUPLET
+  ----------------------------------------------------------------------*/
+void CreateMNUPLET (Document document, View view)
+{
+CreateMathConstruct (37, 0);}
+/*----------------------------------------------------------------------
+  CreateMOMEGASUB
+  ----------------------------------------------------------------------*/
+void CreateMOMEGASUB (Document document, View view)
+{
+CreateMathConstruct (31,969);}
+/*----------------------------------------------------------------------
+  CreateMOR
+  ----------------------------------------------------------------------*/
+void CreateMOR (Document document, View view)
+{
+CreateMathConstruct (35, 8744);}
+/*----------------------------------------------------------------------
+  CreateMORBINARY
+  ----------------------------------------------------------------------*/
+void CreateMORBINARY (Document document, View view)
+{
+CreateMathConstruct (27, 8744);}
+/*----------------------------------------------------------------------
+  CreateMORTHOGONAL
+  ----------------------------------------------------------------------*/
+void CreateMORTHOGONAL (Document document, View view)
+{
+CreateMathConstruct (27,8869);}
+/*----------------------------------------------------------------------
+  CreateMORTHOGONALCOMPLEMENT
+  ----------------------------------------------------------------------*/
+void CreateMORTHOGONALCOMPLEMENT (Document document, View view)
+{
+CreateMathConstruct (30,8869);}
+/*----------------------------------------------------------------------
+  CreateMOUTERPRODUCT
+  ----------------------------------------------------------------------*/
+void CreateMOUTERPRODUCT (Document document, View view)
+{
+CreateMathConstruct (27,8855);}
+/*----------------------------------------------------------------------
+  CreateMPARTIALDIFF
+  ----------------------------------------------------------------------*/
+void CreateMPARTIALDIFF (Document document, View view)
+{
+CreateMathConstruct (50, 8706);}
+/*----------------------------------------------------------------------
+  CreateMPARTIALDIFF2
+  ----------------------------------------------------------------------*/
+void CreateMPARTIALDIFF2 (Document document, View view)
+{
+CreateMathConstruct (51);}
+/*----------------------------------------------------------------------
+  CreateMPI
+  ----------------------------------------------------------------------*/
+void CreateMPI (Document document, View view)
+{
+CreateMathConstruct (22,960);}
+/*----------------------------------------------------------------------
+  CreateMPIECEWISE
+  ----------------------------------------------------------------------*/
+void CreateMPIECEWISE (Document document, View view)
+{
+CreateMathConstruct (25);}
+/*----------------------------------------------------------------------
+  CreateMPLUS
+  ----------------------------------------------------------------------*/
+void CreateMPLUS (Document document, View view)
+{
+CreateMathConstruct (35, '+');}
+/*----------------------------------------------------------------------
+  CreateMPOWER
+  ----------------------------------------------------------------------*/
+void CreateMPOWER (Document document, View view)
+{
+CreateMathConstruct (7);}
+/*----------------------------------------------------------------------
+  CreateMPOWERSET
+  ----------------------------------------------------------------------*/
+void CreateMPOWERSET (Document document, View view)
+{
+CreateMathConstruct (23, 8472, TRUE);}
+/*----------------------------------------------------------------------
+  CreateMPRIMES
+  ----------------------------------------------------------------------*/
+void CreateMPRIMES (Document document, View view)
+{
+CreateMathConstruct (22,8473);}
+/*----------------------------------------------------------------------
+  CreateMPRODUNDER
+  ----------------------------------------------------------------------*/
+void CreateMPRODUNDER (Document document, View view)
+{
+CreateMathConstruct (24,8719);}
+/*----------------------------------------------------------------------
+  CreateMPRODUNDEROVER
+  ----------------------------------------------------------------------*/
+void CreateMPRODUNDEROVER (Document document, View view)
+{
+CreateMathConstruct (21,8719);}
+/*----------------------------------------------------------------------
+  CreateMPRSUBSET
+  ----------------------------------------------------------------------*/
+void CreateMPRSUBSET (Document document, View view)
+{
+CreateMathConstruct (35, 8834);}
+/*----------------------------------------------------------------------
+  CreateMPRSUBSETBINARY
+  ----------------------------------------------------------------------*/
+void CreateMPRSUBSETBINARY (Document document, View view)
+{
+CreateMathConstruct (27, 8834);}
+/*----------------------------------------------------------------------
+  CreateMQUOTIENT
+  ----------------------------------------------------------------------*/
+void CreateMQUOTIENT (Document document, View view)
+{
+CreateMathConstruct (46);}
+/*----------------------------------------------------------------------
+  CreateMRATIONNALS
+  ----------------------------------------------------------------------*/
+void CreateMRATIONNALS (Document document, View view)
+{
+CreateMathConstruct (22, 8474);}
+/*----------------------------------------------------------------------
+  CreateMREAL
+  ----------------------------------------------------------------------*/
+void CreateMREAL (Document document, View view)
+{
+CreateMathConstruct (23, 8476, TRUE);}
+/*----------------------------------------------------------------------
+  CreateMREALS
+  ----------------------------------------------------------------------*/
+void CreateMREALS (Document document, View view)
+{
+CreateMathConstruct (22,8477);}
+/*----------------------------------------------------------------------
+  CreateMREM
+  ----------------------------------------------------------------------*/
+void CreateMREM (Document document, View view)
+{
+CreateMathConstruct (27, 0, "mod");}
+/*----------------------------------------------------------------------
+  CreateMSCALARPRODUCT
+  ----------------------------------------------------------------------*/
+void CreateMSCALARPRODUCT (Document document, View view)
+{
+CreateMathConstruct (27,'.');}
+/*----------------------------------------------------------------------
+  CreateMSDEV
+  ----------------------------------------------------------------------*/
+void CreateMSDEV (Document document, View view)
+{
+CreateMathConstruct (23, 963, TRUE);}
+/*----------------------------------------------------------------------
+  CreateMSELECTOR
+  ----------------------------------------------------------------------*/
+void CreateMSELECTOR (Document document, View view)
+{
+CreateMathConstruct (36);}
+/*----------------------------------------------------------------------
+  CreateMSETDIFF
+  ----------------------------------------------------------------------*/
+void CreateMSETDIFF (Document document, View view)
+{
+CreateMathConstruct (27,'\\');}
+/*----------------------------------------------------------------------
+  CreateMSETEXTENSION
+  ----------------------------------------------------------------------*/
+void CreateMSETEXTENSION (Document document, View view)
+{
+CreateMathConstruct (39, '{', '}');}
+/*----------------------------------------------------------------------
+  CreateMSETSEPARATION
+  ----------------------------------------------------------------------*/
+void CreateMSETSEPARATION (Document document, View view)
+{
+CreateMathConstruct (38, '{', '}');}
+/*----------------------------------------------------------------------
+  CreateMSETSYMDIFF
+  ----------------------------------------------------------------------*/
+void CreateMSETSYMDIFF (Document document, View view)
+{
+CreateMathConstruct (27, 916);}
+/*----------------------------------------------------------------------
+  CreateMSUBSET
+  ----------------------------------------------------------------------*/
+void CreateMSUBSET (Document document, View view)
+{
+CreateMathConstruct (35, 8838);}
+/*----------------------------------------------------------------------
+  CreateMSUBSETBINARY
+  ----------------------------------------------------------------------*/
+void CreateMSUBSETBINARY (Document document, View view)
+{
+CreateMathConstruct (27, 8838);}
+/*----------------------------------------------------------------------
+  CreateMSUMUNDER
+  ----------------------------------------------------------------------*/
+void CreateMSUMUNDER (Document document, View view)
+{
+CreateMathConstruct (24,8721);}
+/*----------------------------------------------------------------------
+  CreateMSUP2
+  ----------------------------------------------------------------------*/
+void CreateMSUP2 (Document document, View view)
+{
+CreateMathConstruct (23, 0, "sup", FALSE);}
+/*----------------------------------------------------------------------
+  CreateMSUPMINUS
+  ----------------------------------------------------------------------*/
+void CreateMSUPMINUS (Document document, View view)
+{
+CreateMathConstruct (30,'-');}
+/*----------------------------------------------------------------------
+  CreateMSUPPLUS
+  ----------------------------------------------------------------------*/
+void CreateMSUPPLUS (Document document, View view)
+{
+CreateMathConstruct (30,'+');}
+/*----------------------------------------------------------------------
+  CreateMSUPUNDER
+  ----------------------------------------------------------------------*/
+void CreateMSUPUNDER (Document document, View view)
+{
+CreateMathConstruct (34, "sup");}
+/*----------------------------------------------------------------------
+  CreateMTENDSTO
+  ----------------------------------------------------------------------*/
+void CreateMTENDSTO (Document document, View view)
+{
+CreateMathConstruct (33, 8594);}
+/*----------------------------------------------------------------------
+  CreateMTENDSTOTENDSTO
+  ----------------------------------------------------------------------*/
+void CreateMTENDSTOTENDSTO (Document document, View view)
+{
+CreateMathConstruct (43, 8594, 8594);}
+/*----------------------------------------------------------------------
+  CreateMTIMES
+  ----------------------------------------------------------------------*/
+void CreateMTIMES (Document document, View view)
+{
+CreateMathConstruct (35,215);}
+/*----------------------------------------------------------------------
+  CreateMTIMESBINARY
+  ----------------------------------------------------------------------*/
+void CreateMTIMESBINARY (Document document, View view)
+{
+CreateMathConstruct (27,215);}
+/*----------------------------------------------------------------------
+  CreateMTRANSPOSE
+  ----------------------------------------------------------------------*/
+void CreateMTRANSPOSE (Document document, View view)
+{
+CreateMathConstruct (30,'t');}
+/*----------------------------------------------------------------------
+  CreateMTRUE
+  ----------------------------------------------------------------------*/
+void CreateMTRUE (Document document, View view)
+{
+CreateMathConstruct (22, 0, "True");}
+/*----------------------------------------------------------------------
+  CreateMUNION
+  ----------------------------------------------------------------------*/
+void CreateMUNION (Document document, View view)
+{
+CreateMathConstruct (35, 8899);}
+/*----------------------------------------------------------------------
+  CreateMUNIONUNARY
+  ----------------------------------------------------------------------*/
+void CreateMUNIONUNARY (Document document, View view)
+{
+CreateMathConstruct (23, 8899, FALSE);}
+/*----------------------------------------------------------------------
+  CreateMUNIONUNDER
+  ----------------------------------------------------------------------*/
+void CreateMUNIONUNDER (Document document, View view)
+{
+CreateMathConstruct (24, 8899);}
+/*----------------------------------------------------------------------
+  CreateMUNIONBINARY
+  ----------------------------------------------------------------------*/
+void CreateMUNIONBINARY (Document document, View view)
+{
+CreateMathConstruct (27, 8899);}
+/*----------------------------------------------------------------------
+  CreateMVARIANCE
+  ----------------------------------------------------------------------*/
+void CreateMVARIANCE (Document document, View view)
+{
+CreateMathConstruct (55);}
+/*----------------------------------------------------------------------
+  CreateMVECTORPRODUCT
+  ----------------------------------------------------------------------*/
+void CreateMVECTORPRODUCT (Document document, View view)
+{
+CreateMathConstruct (27,8896);}
+/*----------------------------------------------------------------------
+  CreateMVECTORPRODUCT
+  ----------------------------------------------------------------------*/
+void CreateMVECTORROW (Document document, View view)
+{
+CreateMathConstruct (53, '(', ')', 0, 1);}
+/*----------------------------------------------------------------------
+  CreateMVECTORPRODUCT
+  ----------------------------------------------------------------------*/
+void CreateMVECTORCOLUMN (Document document, View view)
+{
+CreateMathConstruct (53, '(', ')', 1, 0);}
+/*----------------------------------------------------------------------
+  CreateMXOR
+  ----------------------------------------------------------------------*/
+void CreateMXOR (Document document, View view)
+{CreateMathConstruct (35, 0, "xor");}
+
+/*----------------------------------------------------------------------
+  CreateMXORBINARY
+  ----------------------------------------------------------------------*/
+void CreateMXORBINARY (Document document, View view)
+{
+CreateMathConstruct (27, 0, "xor");}
+
 
 /*----------------------------------------------------------------------
   CheckMROW

@@ -5621,7 +5621,7 @@ Document GetAmayaDoc (char *urlname, char *form_data,
           content_type = "application/rdf";
         }
 #endif /* ANNOTATIONS */
-      else if (doc == 0 || DontReplaceOldDoc)
+      else if (method != CE_MAKEBOOK && (doc == 0 || DontReplaceOldDoc))
         {
           /* In case of initial document, open the view before loading */
           /* add the URI in the combobox string */
