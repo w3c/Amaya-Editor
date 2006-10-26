@@ -464,9 +464,9 @@ RULES
 	create SOT;
 	Create 'applet';
 	Create Attributes;
-	Create '>\12';
+	Create '>';
 	create SCT after;
-	Create 'applet>\12' After;	
+	Create 'applet>' After;	
 	END;
 
  Parameter: BEGIN
@@ -951,9 +951,6 @@ RULES
 		Create Attributes;
 		Create ' />';
 		END;
-	if NOT within Paragraph AND NOT Immediately within Object
-           AND NOT within Pseudo_paragraph
-		Create '\12' After;
 	END;
 
  Embed_Content: BEGIN
