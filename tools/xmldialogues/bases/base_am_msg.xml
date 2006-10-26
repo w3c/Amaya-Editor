@@ -4960,7 +4960,7 @@
 </label>
 <label define="AM_BM_TITLE">
 	<message xml:lang="en">Title:</message>
-	<message xml:lang="fr">Titre:</message>
+	<message xml:lang="fr">Titre :</message>
 	<message xml:lang="de">Titel:</message>
 	<message xml:lang="it">Titolo :</message>
 	<message xml:lang="tr">Başlık:</message>

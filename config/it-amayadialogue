@@ -13,17 +13,17 @@
 11 A&iuto
 12 Nuovo
 13 Nuovo documento XHTML...
-14 Nuovo documento XHTML 1.1...
-15 Nuovo documento XHTML 1.0 Transitional...
+14 Nuovo documento X(&T)HTML 1.1...
+15 Nuovo documento XHTML 1.0 &Transitional...
 16 Nuovo documento XHTML 1.0 Strict...
 17 Nuovo documento XHTML 1.0 Basic...
-18 Nuovo documento MathML...
-19 Nuovo documento SVG...
-20 Nuovo stile CSS...
-21 Modello
+18 Nuovo documento &MathML...
+19 Nuovo documento SV&G...
+20 Nuovo s&tile CSS...
+21 Mod&ello
 22 Apri documento...
 23 Apri in una nuova finestra...
-24 Ricarica documento
+24 &Ricarica documento
 25 Forza una codifica carattere
 26 Unicode (UTF-8)
 27 Western (ISO-8859-1)
@@ -49,27 +49,27 @@
 47 Japanese (ISO-2022-JP)
 48 Japanese (EUC-JP)
 49 Japanese (Shift-JIS)
-50 Precedente
-51 Successivo
+50 Precedente(&B)
+51 Successivo(&F)
 52 Mostra le errore
-53 Info sul documento
-54 Salva
-55 Salva con nome...
-56 Sincronizza
+53 &Info sul documento
+54 &Salva
+55 S&alva con nome...
+56 Sincronizza(&Y)
 57 Cambia/Crea doctype
 58 Elimina doctype
-59 &Aggiungi un doctype
+59 Aggiungi un doctype
 60 Cambia/Crea doctype XHTML 1.1
 61 Cambia/Crea doctype XHTML 1.0 Transitional
 62 Cambia/Crea doctype XHTML 1.0 Strict
 63 Cambia/Crea doctype XHTML 1.0 Basic
 64 Cambia/Crea doctype HTML 4.01 Transitional
 65 Cambia/Crea doctype HTML 4.01 Strict
-66 Imposta e stampa...
-67 Stampa
+66 Imposta e stampa(&U)...
+67 Stam&pa
 68 &Chiudi tab
-69 Chiudi
-70 Esci
+69 Chiudi(&W)
+70 Esci(&X)
 71 Ritratta
 72 Rifai
 73 Taglia

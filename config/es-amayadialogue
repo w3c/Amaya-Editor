@@ -11,18 +11,18 @@
 9 A&notaciones
 10 &Cooperación
 11 A&yuda
-12 &Nuevo
+12 Nuevo
 13 Nuevo documento &XHTML...
-14 Nuevo documento &XHTML 1.1...
+14 Nuevo documento X&HTML 1.1...
 15 Nuevo documento XHTML 1.0 &Transitional...
 16 Nuevo documento XHTML 1.0 &Strict...
 17 Nuevo documento XHTML 1.0 &Basic...
 18 Nuevo documento &MathML...
 19 Nuevo documento SV&G...
-20 Nueva hoja de estilo &CSS...
-21 Desde &plantilla
-22 &Abrir documento...
-23 A&brir en ventana nueva...
+20 Nueva hoja de es&tilo CSS...
+21 Desd&e plantilla
+22 Abrir d&ocumento...
+23 Abrir en ventana nueva...
 24 Actualiza&r
 25 Leído como
 26 Unicode (UTF-8)
@@ -49,27 +49,27 @@
 47 Japonés (ISO-2022-JP)
 48 Japonés (EUC-JP)
 49 Japonés (Shift-JIS)
-50 A&trás
-51 A&delante
+50 Atrás(&B)
+51 Adelante(&F)
 52 Mostrar errores &sintácticos
-53 &Propiedades
-54 &Guardar
-55 G&uardar como...
-56 Sincroni&zar
-57 Ca&mbiar doctype
+53 Propiedades(&I)
+54 Guardar(&S)
+55 Gu&ardar como...
+56 Sincroni&zar(&Y)
+57 Cambiar doctype
 58 &Borrar doctype
-59 &Añadir doctype
-60 Cambiar a &XHTML 1.1
-61 Cambiar a XHTML 1.0 &Transitional
+59 Añadir doctype
+60 Cambiar a XHTML 1.1
+61 Cambiar a XHTML 1.0 Transitional
 62 Cambiar a XHTML 1.0 &Strict
-63 Cambiar a XHTML 1.0 &Basic
-64 Cambiar a HTML 4.01 T&ransitional
-65 Cambiar a HTML 4.01 Str&ict
-66 Configurar e imprimir...
-67 &Imprimir
+63 Cambiar a XHTML 1.0 Basic
+64 Cambiar a HTML 4.01 ransitional
+65 Cambiar a HTML 4.01 Strict
+66 Config&urar e imprimir...
+67 Im&primir
 68 &Cerrar pestaña
-69 Cerrar &ventana
-70 &Salir de Amaya
+69 Cerrar ventana(&W)
+70 Salir de Amaya(&X)
 71 &Deshacer
 72 &Rehacer
 73 Cor&tar

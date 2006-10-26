@@ -11,16 +11,16 @@
 9 A&nnotations
 10 C&oopération
 11 A&ide
-12 &Nouveau
+12 Nouveau
 13 Nouveau document &XHTML...
-14 Nouveau document &XHTML 1.1...
+14 Nouveau document X&HTML 1.1...
 15 Nouveau document XHTML 1.0 &Transitional...
 16 Nouveau document XHTML 1.0 &Strict...
 17 Nouveau document XHTML 1.0 &Basic ...
 18 Nouveau document &MathML...
-19 Nouveau document &SVG...
-20 Nouvelle &feuille de style...
-21 A partir du M&odèle...
+19 Nouveau document SV&G...
+20 Nouvelle feuille de s&tyle...
+21 A partir du Modèl&e...
 22 &Ouvrir...
 23 Ouvrir dans nou&velle fenêtre...
 24 &Recharger le document
@@ -49,27 +49,27 @@
 47 Japonais (ISO-2022-JP)
 48 Japonais (EUC-JP)
 49 Japonais (Shift-JIS)
-50 Pr&écédent
-51 S&uivant
-52 Montrer les &erreurs
-53 Info document
+50 Précédent(&B)
+51 Suivant(&F)
+52 Montrer les erreurs
+53 &Info document
 54 &Sauver
-55 Sauver &comme...
+55 S&auver comme...
 56 S&ynchroniser
 57 Changer le doctype
-58 S&upprimer le doctype
-59 &Ajouter un doctype
-60 Changer pour &XHTML 1.1
-61 Changer pour XHTML 1.0 &Transitional
-62 Changer pour XHTML 1.0 &Strict
-63 Changer pour XHTML 1.0 &Basic
-64 Changer pour &HTML 4.01 Transitional
-65 Changer pour HTML 4.01 Str&ict
-66 &Paramétrer et imprimer...
-67 &Imprimer
-68 Fermer l'on&glet
-69 &Fermer la fenêtre
-70 &Quitter Amaya
+58 Supprimer le doctype
+59 Ajouter un doctype
+60 Changer pour XHTML 1.1
+61 Changer pour XHTML 1.0 Transitional
+62 Changer pour XHTML 1.0 Strict
+63 Changer pour XHTML 1.0 Basic
+64 Changer pour HTML 4.01 Transitional
+65 Changer pour HTML 4.01 Strict
+66 Paramétrer et imprimer(&U)...
+67 Im&primer
+68 Fermer l'onglet(&C)
+69 Fermer la fenêtre(&W)
+70 Quitter Amaya(&X)
 71 &Défaire
 72 &Refaire
 73 Cou&per

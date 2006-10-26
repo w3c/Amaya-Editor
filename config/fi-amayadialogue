@@ -13,17 +13,17 @@
 11 &Ohje
 12 Uusi
 13 Uusi XHTML dokumentti...
-14 Uusi XHTML 1.1 dokumentti...
-15 Uusi XHTML 1.0 Transitional document...
+14 Uusi X(&T)HTML 1.1 dokumentti...
+15 Uusi XHTML 1.0 &Transitional document...
 16 Uusi XHTML 1.0 Strict document...
 17 Uusi XHTML 1.0 Basic dokumentti...
-18 Uusi MathML dokumentti...
-19 Uusi SVG dokumentti...
-20 Uusi CSS tyylitiedosto...
-21 Valmiista mallista
-22 Avaa dokumentti...
+18 Uusi &MathML dokumentti...
+19 Uusi SV&G dokumentti...
+20 Uusi CSS &tyylitiedosto...
+21 Valmiista mallista(&E)
+22 Avaa d&okumentti...
 23 Avaa uudessa ikkunassa...
-24 Päivitä dokumentti
+24 Päivitä dokumentti(&R)
 25 **Read as
 26 Unicode (UTF-8)
 27 Western (ISO-8859-1)
@@ -49,27 +49,27 @@
 47 Japanese (ISO-2022-JP)
 48 Japanese (EUC-JP)
 49 Japanese (Shift-JIS)
-50 Takaisin
-51 Eteenpäin
+50 Takaisin(&B)
+51 Eteenpäin(&F)
 52 Näytä käännösvirheet
-53 Tietoja dokumentista
-54 Tallenna
-55 Tallenna nimellä...
-56 Päivitä
+53 T&ietoja dokumentista
+54 Tallenna(&S)
+55 T&allenna nimellä...
+56 Päivitä(&Y)
 57 Muuta tyyppi
 58 Poista tyyppi
-59 **&Add a doctype
+59 **Add a doctype
 60 Aseta tyypiksi XHTML 1.1
-61 **Change to XHTML 1.0 &Transitional
+61 **Change to XHTML 1.0 Transitional
 62 Aseta tyypiksi XHTML 1.0 Strict
 63 Aseta tyypiksi XHTML 1.0 Basic
 64 Aseta tyypiksi HTML 4.01 Transitional
 65 Aseta tyypiksi HTML 4.01 Strict
-66 Tulostusasetukset...
-67 Tulosta
-68 **Close &tab
-69 Sulje ikkuna
-70 Sulje Amaya
+66 T&ulostusasetukset...
+67 Tulosta(&P)
+68 **&Close tab
+69 Sulje ikkuna(&W)
+70 Sulje Amaya(&X)
 71 Kumoa
 72 Tee uudelleen
 73 Leikkaa

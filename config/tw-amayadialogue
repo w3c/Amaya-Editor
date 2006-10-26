@@ -11,18 +11,18 @@
 9 注釋
 10 協作(&O)
 11 幫助(&H)
-12 新建(&N)
+12 新建
 13 新建 XHTML 文檔(&X)...
-14 新建 XHTML 1.1 文檔(&X)...
+14 新建 X(&T)HTML 1.1 文檔...
 15 新建 XHTML 1.0 Transitional 文檔(&T)...
 16 新建 XHTML 1.0 Strict 文檔(&R)...
 17 新建 XHTML 1.0 Basic 文檔(&B)...
 18 新建 MathML 文檔(&M)...
-19 新建 SVG 文檔(&S)...
-20 新建 CSS 樣式表(&C)...
+19 新建 SVG 文檔(&G)...
+20 新建 CSS 樣式表(&T)...
 21 來自模板(&E)...
 22 打開文檔(&O)...
-23 在新窗口打開(&W)...
+23 在新窗口打開...
 24 重新載入文檔(&R)
 25 強制字符編碼
 26 Unicode (UTF-8)
@@ -51,24 +51,24 @@
 49 Japanese (Shift-JIS)
 50 后退(&B)
 51 前進(&F)
-52 顯示解析錯誤(&E)
+52 顯示解析錯誤
 53 文檔信息(&I)
 54 保存(&S)
 55 另存為(&A)...
 56 同步(&Y)
-57 改變文檔類型(&D)
-58 刪除doctype聲明(&R)
-59 添加doctype聲明(&A)
-60 改為 &XHTML 1.1
-61 改為 XHTML 1.0 Transitional(&T)
-62 改為 XHTML 1.0 Strict(&S)
-63 改為 XHTML 1.0 Basic(&B)
-64 改為 HTML 4.01 Transitional(&H)
-65 改為 HTML 4.01 Strict(&R)
+57 改變文檔類型
+58 刪除doctype聲明
+59 添加doctype聲明
+60 改為 XHTML 1.1
+61 改為 XHTML 1.0 Transitional
+62 改為 XHTML 1.0 Strict
+63 改為 XHTML 1.0 Basic
+64 改為 HTML 4.01 Transitional
+65 改為 HTML 4.01 Strict
 66 打印設置(&U)...
 67 打印(&P)
-68 關閉標簽(&T)
-69 關閉窗口(&C)
+68 關閉標簽(&C)
+69 關閉窗口(&W)
 70 退出(&X)
 71 撤銷(&U)
 72 重做(&R)

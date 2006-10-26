@@ -13,17 +13,17 @@
 11 &Yardım
 12 Yeni
 13 Yeni XHTML dosyası...
-14 Yeni XHTML 1.1 dosyası...
-15 Yeni XHTML 1.0 Transitional dosyası...
+14 Yeni X(&T)HTML 1.1 dosyası...
+15 Yeni XHTML 1.0 &Transitional dosyası...
 16 Yeni XHTML 1.0 Strict dosyası...
 17 Yeni XHTML 1.0 Basic dosyası...
-18 Yeni MathML dosyası...
-19 Yeni SVG dosyası...
-20 Yeni CSS düz dizayn...
-21 Model
-22 Belge aç...
+18 Yeni &MathML dosyası...
+19 Yeni SV&G dosyası...
+20 Yeni CSS düz dizayn(&T)...
+21 Mod&el
+22 Belge aç(&O)...
 23 Yeni pencerede aç...
-24 Belgeyi yeniden yükle
+24 Belgeyi yeniden yükle(&R)
 25 **Read as
 26 Unicode (UTF-8)
 27 Western (ISO-8859-1)
@@ -49,27 +49,27 @@
 47 Japanese (ISO-2022-JP)
 48 Japanese (EUC-JP)
 49 Japanese (Shift-JIS)
-50 Geri
-51 Ileri
+50 Geri(&B)
+51 Ileri(&F)
 52 Pars hatalarını göster
-53 Doküman bilgisi
-54 Kaydet
-55 Isimle kaydet...
-56 Eşlemek
+53 Doküman b&ilgisi
+54 Kaydet(&S)
+55 Isimle k&aydet...
+56 Eşlemek(&Y)
 57 Doctype\'bı düzenle
 58 doctype\'bı sil
-59 **&Add a doctype
+59 **Add a doctype
 60 XHTML 1.1 doctype
 61 XHTML 1.0 Transitional doctype
 62 XHTML 1.0 Strict doctype
 63 XHTML 1.0 Basic doctype
 64 HTML 4.01 Transitional doctype
 65 HTML 4.01 Strict doctype
-66 Kur ve yazdır
-67 Yapılandır ve yazdır
-68 **Close &tab
-69 Belgeyi kapat
-70 Çıkış
+66 K&ur ve yazdır
+67 Ya&pılandır ve yazdır
+68 **&Close tab
+69 Belgeyi kapat(&W)
+70 Çıkış(&X)
 71 Geri al
 72 Iileri al
 73 Kes

@@ -11,15 +11,15 @@
 9 A&nnotations
 10 C&ooperation
 11 &Help
-12 &New
+12 New
 13 New &XHTML document...
-14 New &XHTML 1.1 document...
+14 New X&HTML 1.1 document...
 15 New XHTML 1.0 &Transitional document...
 16 New XHTML 1.0 St&rict document...
 17 New XHTML 1.0 &Basic document...
 18 New &MathML document...
-19 New &SVG document...
-20 New &CSS style sheet...
+19 New SV&G document...
+20 New CSS s&tyle sheet...
 21 From t&emplate...
 22 &Open document...
 23 Open in new &window...
@@ -51,24 +51,24 @@
 49 Japanese (Shift-JIS)
 50 &Back
 51 &Forward
-52 Show parsing &errors
+52 Show parsing errors
 53 Document &Info
 54 &Save
 55 Save &as...
 56 S&ynchronize
-57 Change &Doctype
-58 &Remove the doctype
-59 &Add a doctype
-60 Change to &XHTML 1.1
-61 Change to XHTML 1.0 &Transitional
-62 Change to XHTML 1.0 &Strict
-63 Change to XHTML 1.0 &Basic
-64 Change to &HTML 4.01 Transitional
-65 Change to HTML 4.01 Str&ict
+57 Change Doctype
+58 Remove the doctype
+59 Add a doctype
+60 Change to XHTML 1.1
+61 Change to XHTML 1.0 Transitional
+62 Change to XHTML 1.0 Strict
+63 Change to XHTML 1.0 Basic
+64 Change to HTML 4.01 Transitional
+65 Change to HTML 4.01 Strict
 66 Set&up and Print...
 67 &Print
-68 Close &tab
-69 &Close window
+68 &Close tab
+69 Close &window
 70 E&xit Amaya
 71 &Undo
 72 &Redo

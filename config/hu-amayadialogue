@@ -11,19 +11,19 @@
 9 &Jegyzetek
 10 &Együttműködés
 11 &Súgó
-12 &Új
+12 Új
 13 Új &XHTML dokumentum...
-14 Új &XHTML 1.1 dokumentum...
-15 Új XHTML 1.0 &átmeneti dokumentum...
+14 Új X&HTML 1.1 dokumentum...
+15 Új XHTML 1.0 á&tmeneti dokumentum...
 16 Új XHTML 1.0 &kötött dokumentum...
 17 Új XHTML 1.0 &alap dokumentum...
 18 Új &MathML dokumentum...
-19 Új &SVG dokumentum...
-20 Új &CSS stíluslap...
-21 &Sablonból
-22 Dokumentum meg&nyitása...
+19 Új SV&G dokumentum...
+20 Új CSS s&tíluslap...
+21 &Sablonból(&E)
+22 D&okumentum megnyitása...
 23 Új &ablakban...
-24 &Dokumentum újratöltése
+24 Dokumentum újratöltése(&R)
 25 Kényszerített karakter &kódolás
 26 Unicode (UTF-8)
 27 Nyugat-európai (ISO-8859-1)
@@ -49,27 +49,27 @@
 47 Japán (ISO-2022-JP)
 48 Japán (EUC-JP)
 49 Japán (Shift-JIS)
-50 &Vissza
-51 E&lőre
-52 Elemzési &hibák mutatása
-53 Dokumentum &adatai
-54 &Mentés
-55 Mentés má&sként...
-56 S&zinkronizálás
+50 Vissza(&B)
+51 Előre(&F)
+52 Elemzési hibák mutatása
+53 Dokumentum adata&i
+54 Mentés(&S)
+55 Mentés másként(&A)...
+56 Szinkronizálás(&Y)
 57 Doctype megváltoztatása
-58 doctype &eltávolítása
-59 &doctype hozzá&adása
-60 Change to &XHTML 1.1
-61 XHTML 1.0 &átmenetivé tétel
-62 XHTML 1.0 &kötötté tétel
-63 XHTML 1.0 &alappá tétel
+58 doctype eltávolítása
+59 Doctype hozzáadása
+60 Change to XHTML 1.1
+61 XHTML 1.0 átmenetivé tétel
+62 XHTML 1.0 kötötté tétel
+63 XHTML 1.0 alappá tétel
 64 &HTML 4.01 átmenetivé tétel
-65 HTML 4.01 &kötötté tétel
-66 &Beállítás és nyomtatás...
-67 &Nyomtatás
-68 Lap &bezárása
-69 Ablak be&zárása
-70 K&ilépés az Amayából
+65 HTML 4.01 kötötté tétel
+66 Beállítás és nyomtatás(&U)...
+67 Nyomtatás(&P)
+68 Lap bezárása(&C)
+69 Ablak bezárása(&W)
+70 Kilépés az Amayából(&X)
 71 &Visszavon
 72 &Újra
 73 &Kivágás
