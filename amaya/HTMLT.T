@@ -489,7 +489,7 @@ RULES
 	Indent +2;
 	Indent -2 After;
 	create SCT after;
-	Create 'object>\12' After;	
+	Create 'object>' After;	
 	END;
 
  IMG: BEGIN
@@ -497,10 +497,10 @@ RULES
 	Create 'img';
 	Create Attributes;
 	if empty
-	  Create ' />\12';
+	  Create ' />';
 	if not empty
 		BEGIN
-	Create '>\12';
+	Create '>';
 	Indent +2;
 	Indent -2 After;
 	create SCT after;
@@ -513,10 +513,10 @@ RULES
 	Create 'input';
 	Create Attributes;
 	if empty
-	  Create ' />\12';
+	  Create ' />';
 	if not empty
 		BEGIN
-	Create '>\12';
+	Create '>';
 	Indent +2;
 	Indent -2 After;
 	create SCT after;
