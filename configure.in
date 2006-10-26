@@ -1103,6 +1103,12 @@ AC_ARG_ENABLE([generic-xml],
 	esac],
 	[with_generic_xml="yes"])
 
+if test "$with_generic_xml" = "yes" ; then
+ GENERIC_XML_OPTIONS="-DXML_GENERIC"
+else
+ GENERIC_XML_OPTIONS=""
+fi
+
 AC_ARG_ENABLE([system-redland],
 	AC_HELP_STRING([--enable-system-redland],[try the redland RDF system library]),
 	[case "${enableval}" in

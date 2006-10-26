@@ -14706,6 +14706,12 @@ else
   with_generic_xml="yes"
 fi;
 
+if test "$with_generic_xml" = "yes" ; then
+ GENERIC_XML_OPTIONS="-DXML_GENERIC"
+else
+ GENERIC_XML_OPTIONS=""
+fi
+
 # Check whether --enable-system-redland or --disable-system-redland was given.
 if test "${enable_system_redland+set}" = set; then
   enableval="$enable_system_redland"
