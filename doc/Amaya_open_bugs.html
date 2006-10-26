@@ -138,16 +138,54 @@ class="fixed">displayed that way.</span></p>
     </tr>
     <tr>
       <td id="ED049">ED049</td>
-      <td>If we have: &lt;p&gt;abc~~~ def&lt;/p&gt; and the cursor is located
-        to the left of 'd', then backspace removes the space and leaves just
-        three non-breaking spaces, when it should leave two non-breaking
-        spaces followed by a space.
+      <td>When the option "Keep multiple spaces" is set, if we have:
+        &lt;p&gt;abc~~~ def&lt;/p&gt; and the cursor is located to the left
+        of 'd', then backspace removes the space and leaves just three
+        non-breaking spaces, when it should leave two non-breaking spaces
+        followed by a space.
 
         <p>If the cursor is located to the right of 'c', pressing Space will
         create &lt;p&gt;abc ~~~ def&lt;/p&gt;</p>
       </td>
       <td>2006-10-20</td>
       <td>R. Whittle</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td id="ED050">ED050</td>
+      <td>Amaya 9.52 for Windows XP has problems when creating a span
+        thatcontains a span inside it.
+
+        <p>one <span class="aaa">two</span> <span class="aaa">three</span>
+        <span class="aaa">four</span> five</p>
+
+        <p>Select "two three four" and give it a "bbb" class: "aaa" class has
+        disappeared</p>
+      </td>
+      <td>2006-10-20</td>
+      <td>B. Sintes</td>
+      <td></td>
+    </tr>
+    <tr class="fixed">
+      <td id="ED051">ED051</td>
+      <td>Adding the following CSS rule to a document with ol element crashes
+        Amaya:
+
+        <p>ol { list-style-position: inside; &gt; list-style-type: decimal; }
+        </p>
+      </td>
+      <td>2006-10-23</td>
+      <td>L. Stringer</td>
+      <td>2006-10-24</td>
+    </tr>
+    <tr>
+      <td id="ED052">ED052</td>
+      <td>To make Amaya consistent with most or all other programs I know, I
+        suggest that "alt f c" should close the currently edited file - AKA
+        close the current tab - rather than close all the tabs and exit the
+        program. Currently "alt f c" drives "Close Window".</td>
+      <td>2006-10-26</td>
+      <td>R. Wittle</td>
       <td></td>
     </tr>
     <tr class="title">
@@ -456,6 +494,6 @@ class="fixed">displayed that way.</span></p>
   </tbody>
 </table>
 <br />
-Date: <!--$date=-->2006-10-25<!--$-->
+Date: <!--$date=-->2006-10-26<!--$-->
 </body>
 </html>
