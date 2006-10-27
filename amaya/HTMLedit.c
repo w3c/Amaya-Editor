@@ -1966,6 +1966,7 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
                       elType.ElTypeNum != HTML_EL_ACRONYM &&
                       elType.ElTypeNum != HTML_EL_INS &&
                       elType.ElTypeNum != HTML_EL_DEL &&
+                      elType.ElTypeNum != HTML_EL_IMG &&
                       elType.ElTypeNum != HTML_EL_PICTURE_UNIT &&
                       elType.ElTypeNum != HTML_EL_Applet &&
                       elType.ElTypeNum != HTML_EL_Object &&
