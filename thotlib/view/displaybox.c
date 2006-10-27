@@ -1742,8 +1742,9 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
                         }
                       else if (c != EOS)
                         lg = CharacterWidth (c, nextfont);
-
-                      if (transc == SHOWN_SPACE || transc == SHOWN_TAB ||
+                      if (!Printing && transc == SHOWN_TAB)
+                        DrawRectangle (frame, 1, 5, x, y, lg, pBox->BxH - 1, BgSelColor, 0, 0);
+                      else if (transc == SHOWN_SPACE || transc == SHOWN_TAB ||
                           transc == SHOWN_UNBREAKABLE_SPACE || transc == SHOWN_HALF_EM)
                         /* a new space is handled */
                         DrawChar ((char)val, frame, x, y1, nextfont, BgSelColor);

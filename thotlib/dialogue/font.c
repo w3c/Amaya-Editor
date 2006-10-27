@@ -470,17 +470,17 @@ int GetCharsCapacity (int volpixel, int frame)
   ----------------------------------------------------------------------*/
 int CharacterWidth (int c, ThotFont font)
 {
-#ifndef _GL
-  int                 i = 0;
-#endif /* _GL */
-  int                 l = 0;
-
 #ifdef _WINARAB
   SIZE                wsize;
   TEXTMETRIC          textMetric;
   HFONT               hOldFont, ActiveFont;
   HDC                 display;
 #endif /*_WINARAB*/
+#ifndef _GL
+  int                 i = 0;
+#endif /* _GL */
+  int                 l = 0;
+  ThotBool            isTAB = FALSE;
   
   if (font == NULL)
     return 0;
@@ -489,7 +489,13 @@ int CharacterWidth (int c, ThotFont font)
 
   if (c == START_ENTITY)
     c = '&';
-  else if (c == TAB || c == UNBREAKABLE_SPACE ||
+  else if (c == TAB)
+    {
+      /* we use the SPACE width for the character TAB */
+      c = SPACE;
+      isTAB = TRUE;
+    }
+  else if (c == UNBREAKABLE_SPACE ||
            c == EN_SPACE || c == EN_QUAD ||
            c == FIG_SPACE)
     /* we use the SPACE width for the character TAB */
@@ -500,7 +506,6 @@ int CharacterWidth (int c, ThotFont font)
     l = 1;
   else
     {
-      
 #ifndef _GL
 #ifdef _WINGUI
       if (font->FiScript == '6')
@@ -624,6 +629,8 @@ int CharacterWidth (int c, ThotFont font)
       else
         l = gl_font_char_width ((void *) font, (CHAR_T) c);
 #endif /* _GL */
+      if (isTAB)
+        l *= 8;
     }
   return l;
 }
