@@ -192,6 +192,9 @@ void DefBoxRegion (int frame, PtrBox pBox, int xstart, int xstop,
   ViewFrame          *pFrame;
   PtrFlow             pFlow;
   PtrAbstractBox      pAb;
+#ifdef _GL
+  PtrAbstractBox      pClipAb;
+#endif /* _GL */
   PtrElement          pEl = NULL;
   int                 x1, x2, y1, y2, k;
 
@@ -199,9 +202,17 @@ void DefBoxRegion (int frame, PtrBox pBox, int xstart, int xstop,
   if (pBox)
     {
       pAb = pBox->BxAbstractBox;
+      if (pBox->BxType == BoCell)
+        {
+          // look for the cell frame
+          while (pAb->AbLeafType != LtGraphics &&
+                 pAb->AbPrevious &&
+                 pAb->AbPrevious->AbPresentationBox)
+            pAb = pAb->AbPrevious;
+          if (pAb->AbLeafType == LtGraphics)
+            pBox = pAb->AbBox;
+        }
 #ifdef _GL
-      PtrAbstractBox      pClipAb;
-
       if (FrameTable[frame].FrView == 1)
         {
           /* clip on the enclosing box that changes the System origin */
@@ -310,6 +321,9 @@ void UpdateBoxRegion (int frame, PtrBox pBox, int dx, int dy, int dw, int dh)
   ViewFrame          *pFrame;
   PtrFlow             pFlow;
   PtrAbstractBox      pAb;
+#ifdef _GL
+  PtrAbstractBox      pClipAb;
+#endif /* _GL */
   PtrElement          pEl = NULL;
   int                 x1, x2, y1, y2, cpoints, caret;
 
@@ -318,8 +332,6 @@ void UpdateBoxRegion (int frame, PtrBox pBox, int dx, int dy, int dw, int dh)
     {
       pAb = pBox->BxAbstractBox;
 #ifdef _GL
-      PtrAbstractBox      pClipAb;
-
       if (FrameTable[frame].FrView == 1)
         {
           /* clip on the enclosing box that changes the System origin */

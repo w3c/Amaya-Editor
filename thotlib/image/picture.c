@@ -1541,6 +1541,17 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
     }
   else
     {
+      if (box->BxType == BoCell)
+        {
+          // look for the cell frame
+          while (pAb->AbLeafType != LtGraphics &&
+                 pAb->AbPrevious &&
+                 pAb->AbPrevious->AbPresentationBox)
+            pAb = pAb->AbPrevious;
+          if (pAb->AbLeafType == LtGraphics)
+            box = pAb->AbBox;
+        }
+
       // x,y,w,h define the area to be painted
       x = box->BxXOrg;
       y = box->BxYOrg;

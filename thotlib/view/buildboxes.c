@@ -1658,23 +1658,26 @@ static int FontStyleAndWeight (PtrAbstractBox pAb)
 
 
 /*----------------------------------------------------------------------
-  MarkDisplayedBox marks boxe that 
+  MarkDisplayedBox marks box that should be displayed
   ----------------------------------------------------------------------*/
 static void  MarkDisplayedBox (PtrBox pBox)
 {
   PtrAbstractBox  pAb;
 
   pAb = pBox->BxAbstractBox;
-  if (pBox->BxType != BoCell &&
-      ((pAb->AbLeafType == LtCompound && pAb->AbFillBox) ||
-       (pAb->AbTopStyle > 2 && pAb->AbTopBColor != -2 &&
-        pAb->AbTopBorder > 0) ||
-       (pAb->AbLeftStyle > 2 && pAb->AbLeftBColor != -2 &&
-        pAb->AbLeftBorder > 0) ||
-       (pAb->AbBottomStyle > 2 && pAb->AbBottomBColor != -2 &&
-        pAb->AbBottomBorder > 0) ||
-       (pAb->AbRightStyle > 2 && pAb->AbRightBColor != -2 &&
-        pAb->AbRightBorder > 0)))
+  if (pBox->BxType == BoCell && pAb->AbPictBackground)
+    /* register the box */
+    pBox->BxDisplay = TRUE;    
+  else if (pBox->BxType != BoCell &&
+           ((pAb->AbLeafType == LtCompound && pAb->AbFillBox) ||
+            (pAb->AbTopStyle > 2 && pAb->AbTopBColor != -2 &&
+             pAb->AbTopBorder > 0) ||
+            (pAb->AbLeftStyle > 2 && pAb->AbLeftBColor != -2 &&
+             pAb->AbLeftBorder > 0) ||
+            (pAb->AbBottomStyle > 2 && pAb->AbBottomBColor != -2 &&
+             pAb->AbBottomBorder > 0) ||
+            (pAb->AbRightStyle > 2 && pAb->AbRightBColor != -2 &&
+             pAb->AbRightBorder > 0)))
     /* register the box */
     pBox->BxDisplay = TRUE;
   else
