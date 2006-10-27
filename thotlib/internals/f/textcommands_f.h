@@ -45,7 +45,8 @@ extern void TtaStringToClipboard ( unsigned char *s,
                                    CHARSET encoding );
 extern void DoCopyToClipboard ( Document doc,
                                 View view,
-                                ThotBool force );
+                                ThotBool force,
+                                ThotBool primary );
 extern void TtcCopyToClipboard ( Document doc,
                                  View view );
 extern void SelectCurrentWord ( int frame,
@@ -100,7 +101,8 @@ extern void TtaStringToClipboard ( unsigned char *s,
                                      CHARSET encoding );
 extern void DoCopyToClipboard ( Document doc,
                                   View view,
-                                  ThotBool force );
+                                  ThotBool force,
+                                  ThotBool primary );
 extern void TtcCopyToClipboard ( Document doc,
                                    View view );
 extern void SelectCurrentWord ( int frame,

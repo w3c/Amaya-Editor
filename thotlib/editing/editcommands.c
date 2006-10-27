@@ -3998,6 +3998,7 @@ void TtaPasteFromBuffer (unsigned char *src, int length, CHARSET charset)
 void TtcPasteFromClipboard (Document doc, View view)
 {
 #ifdef _WX 
+    wxTheClipboard->UsePrimarySelection(true);
   if (!wxTheClipboard->Open())
     {
       TTALOGDEBUG_0( TTA_LOG_CLIPBOARD, _T("Can't open clipboard.") );
@@ -4116,7 +4117,7 @@ void TtcCopySelection (Document doc, View view)
   activeWnd = GetFocus ();
   if (activeWnd == FrRef [frame])
     {
-      TtcCopyToClipboard (doc, view);
+      DoCopyToClipboard (doc, view, TRUE, FALSE);
       if (OpenClipboard (FrRef[frame]))
         {
           EmptyClipboard ();
@@ -4135,7 +4136,7 @@ void TtcCopySelection (Document doc, View view)
         } 
     }
 #else /* _WINGUI */
-  TtcCopyToClipboard (doc, view);
+  DoCopyToClipboard (doc, view, TRUE, FALSE);
 #endif /* _WINGUI */
   ContentEditing (TEXT_COPY);
 }
@@ -4243,6 +4244,7 @@ void TtcPaste (Document doc, View view)
 #endif /* _WINGUI */
 
 #ifdef _WX
+          wxTheClipboard->UsePrimarySelection(false);
           if (wxTheClipboard->Open())
             {
                   wxTextDataObject data;

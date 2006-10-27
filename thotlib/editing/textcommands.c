@@ -1225,7 +1225,7 @@ static void MovingCommands (int code, Document doc, View view,
       Moving = FALSE;
 #if !defined(_WINDOWS) && !defined(_MACOS)
       if (extendSel)
-        DoCopyToClipboard (doc, view, FALSE);
+        DoCopyToClipboard (doc, view, FALSE, TRUE);
 #endif /* _WINDOWS && _MACOS */
       if (extendSel && RightExtended)
         {
@@ -1621,6 +1621,7 @@ void TtaStringToClipboard (unsigned char *s, CHARSET encoding)
       if (len)
         {
 #ifdef _WX
+          wxTheClipboard->UsePrimarySelection(false);
           if (wxTheClipboard->Open())
             {
               TtcClearClipboard ();
@@ -1667,10 +1668,11 @@ void TtaStringToClipboard (unsigned char *s, CHARSET encoding)
 /*----------------------------------------------------------------------
   DoCopyToClipboard
   ----------------------------------------------------------------------*/
-void DoCopyToClipboard (Document doc, View view, ThotBool force)
+void DoCopyToClipboard (Document doc, View view, ThotBool force, ThotBool primary)
 {
 #ifdef _WX
   // Don't change the clipboard buffer when a single click is done
+  wxTheClipboard->UsePrimarySelection(primary);
   if (!SelPosition && wxTheClipboard->Open())
     {
       unsigned char *  buffer = NULL;
@@ -1726,7 +1728,7 @@ void DoCopyToClipboard (Document doc, View view, ThotBool force)
   ----------------------------------------------------------------------*/
 void TtcCopyToClipboard (Document doc, View view)
 {
-  DoCopyToClipboard (doc, view, TRUE);
+  DoCopyToClipboard (doc, view, TRUE, TRUE);
 }
 
 

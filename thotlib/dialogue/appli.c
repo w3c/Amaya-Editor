@@ -2515,7 +2515,7 @@ gboolean GtkLiningSelection (gpointer data)
       if (Selecting)
         {
           LocateSelectionInView (frame,  Motion_x, Motion_y, 0);
-          DoCopyToClipboard (doc, view, FALSE);
+          DoCopyToClipboard (doc, view, FALSE, TRUE);
         }
       /* As this is a timeout function, return TRUE so that it
          continues to get called */
@@ -2579,7 +2579,7 @@ ThotBool FrameButtonDownCallback (int frame, int thot_button_id,
             LocateSelectionInView (frame, x, y, 1);
 #if !defined (_WINDOWS) && !defined (_MACOS)
             FrameToView (frame, &document, &view);
-            DoCopyToClipboard (document, view, FALSE);
+            DoCopyToClipboard (document, view, FALSE, TRUE);
 #endif /* _WINDOWS */
           }
         else
@@ -2677,7 +2677,7 @@ ThotBool FrameButtonUpCallback( int frame, int thot_button_id,
       Selecting = FALSE;
 #if !defined(_WINDOWS) && !defined(_MACOS)
       FrameToView (frame, &document, &view);
-      DoCopyToClipboard (document, view, FALSE);
+      DoCopyToClipboard (document, view, FALSE, TRUE);
 #endif /* _WINDOWS && _MACOS */
     }
   if (thot_button_id == THOT_LEFT_BUTTON)
@@ -2729,7 +2729,7 @@ ThotBool FrameButtonDClickCallback( int frame, int thot_button_id,
 #if !defined (_WINDOWS) && !defined (_MACOS)
         /* a word is probably selected, copy it into clipboard */
         FrameToView (frame, &document, &view);
-        DoCopyToClipboard (document, view, FALSE);
+        DoCopyToClipboard (document, view, FALSE, TRUE);
 #endif /* _WINDOWS */
       }
       break;
@@ -2992,7 +2992,7 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event,
               TtaAbortShowDialogue ();
               LocateSelectionInView (frame, (int)event->x, (int)event->y, 1);
               FrameToView (frame, &document, &view);
-              DoCopyToClipboard (document, view, FALSE);
+              DoCopyToClipboard (document, view, FALSE, TRUE);
             }
           else
             {
@@ -3113,7 +3113,7 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event,
           gtk_timeout_remove (timer);
           timer = None;
           FrameToView (frame, &document, &view);
-          DoCopyToClipboard (document, view, FALSE);
+          DoCopyToClipboard (document, view, FALSE, TRUE);
         } 
       else if (event->button == 1)
         {
