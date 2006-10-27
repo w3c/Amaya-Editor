@@ -1223,10 +1223,19 @@ int ThotInput (int frame, unsigned int value, int command, int PicMask, int key)
 ))
         return 0;
       
-      /* Appel d'une action Thot */
       mainframe = GetWindowNumber (document, 1);
+      if (key == TAB && LoadedDocument[document - 1] &&
+          LoadedDocument[document - 1]->DocSSchema &&
+          LoadedDocument[document - 1]->DocSSchema->SsName &&
+          !strcmp (LoadedDocument[document - 1]->DocSSchema->SsName, "TextFile"))
+        {
+          /* Tab is considered as a simple character in text files */
+          command = 0;
+          value = TAB;
+        }
       if (command > 0)
         {
+          /* Call a registered Thot action */
           if (command != CMD_DeletePrevChar &&
               command != CMD_DeleteSelection &&
               command != CMD_PasteFromClipboard &&
@@ -1277,7 +1286,7 @@ int ThotInput (int frame, unsigned int value, int command, int PicMask, int key)
 #else /* _WX */
               (*(Proc2)MenuActionList[command].Call_Action) ((void *)document,
                                                              (void *)view);
-#endif /* _WX */
+#endif /* _WX */ 
               done = TRUE;
             }
           
