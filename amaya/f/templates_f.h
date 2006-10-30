@@ -17,9 +17,9 @@ extern void giveItems ( char *text,
                         int *nbitems );
 extern ThotBool UseToBeCreated ( NotifyElement *event );
 extern void UseCreated ( NotifyElement *event );
-extern ThotBool UseMenuClicked ( NotifyElement *event );
-extern ThotBool OptionMenuClicked ( NotifyElement *event );
-extern ThotBool RepeatMenuClicked ( NotifyElement *event );
+extern ThotBool UseButtonClicked ( NotifyElement *event );
+extern ThotBool OptionButtonClicked ( NotifyElement *event );
+extern ThotBool RepeatButtonClicked ( NotifyElement *event );
 extern void OpeningInstance ( char *fileName,
                               Document doc );
 extern ThotBool ClosingInstance ( NotifyDialog* dialog );
@@ -37,9 +37,9 @@ extern void giveItems ( char *text,
                           int *nbitems );
 extern ThotBool UseToBeCreated ( NotifyElement *event );
 extern void UseCreated ( NotifyElement *event );
-extern ThotBool UseMenuClicked ( NotifyElement *event );
-extern ThotBool OptionMenuClicked ( NotifyElement *event );
-extern ThotBool RepeatMenuClicked ( NotifyElement *event );
+extern ThotBool UseButtonClicked ( NotifyElement *event );
+extern ThotBool OptionButtonClicked ( NotifyElement *event );
+extern ThotBool RepeatButtonClicked ( NotifyElement *event );
 extern void OpeningInstance ( char *fileName,
                                 Document doc );
 extern ThotBool ClosingInstance ( NotifyDialog* dialog );

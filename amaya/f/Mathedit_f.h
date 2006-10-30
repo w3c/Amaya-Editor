@@ -6,6 +6,28 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void InsertEmptyConstruct ( Element *el,
+                                   int TypeNum,
+                                   Document doc );
+extern void InsertSymbol ( Element *el,
+                           int TypeNum,
+                           int symbol,
+                           Document doc );
+extern void InsertText ( Element *el,
+                         int TypeNum,
+                         unsigned char *text,
+                         Document doc );
+extern void CreateNewMtable ( Element el,
+                              int NumberCols,
+                              int NumberRows,
+                              Document doc );
+extern Element SelectMtableCell ( Element mtable,
+                                  int x,
+                                  int y );
+extern Element SetFencedSeparators ( Element fenced,
+                                     unsigned char ope,
+                                     unsigned char clo,
+                                     Document doc );
 extern void UnFrameMath ( void );
 extern void ClearMathFrame ( Document doc );
 extern void MathSelectionChanged ( NotifyElement *event );
@@ -37,6 +59,20 @@ extern void CreateMUNDER ( Document document,
                            View view );
 extern void CreateMOVER ( Document document,
                           View view );
+extern void CreateMOVERARROW ( Document doc,
+                               View view );
+extern void CreateMOVERBAR ( Document doc,
+                             View view );
+extern void CreateMOVERBREVE ( Document doc,
+                               View view );
+extern void CreateMOVERCHECK ( Document doc,
+                               View view );
+extern void CreateMOVERDOT ( Document doc,
+                             View view );
+extern void CreateMOVERHAT ( Document doc,
+                             View view );
+extern void CreateMOVERTILDE ( Document doc,
+                               View view );
 extern void CreateMROW ( Document document,
                          View view );
 extern void CreateMMULTISCRIPTS ( Document document,
@@ -47,6 +83,322 @@ extern void CreateMIntegral ( Document doc,
                               View view );
 extern void CreateMSum ( Document doc,
                          View view );
+extern void CreateMatrix2 ( Document doc,
+                            View view );
+extern void CreateMABS ( Document document,
+                         View view );
+extern void CreateMALEPHSUB ( Document document,
+                              View view );
+extern void CreateMAND ( Document document,
+                         View view );
+extern void CreateMANDBINARY ( Document document,
+                               View view );
+extern void CreateMAPPROX ( Document document,
+                            View view );
+extern void CreateMARG ( Document document,
+                         View view );
+extern void CreateMARROW1 ( Document document,
+                            View view );
+extern void CreateMARROW2 ( Document document,
+                            View view );
+extern void CreateMCARD ( Document document,
+                          View view );
+extern void CreateMCARD2 ( Document document,
+                           View view );
+extern void CreateMCARTESIANPRODUCT ( Document document,
+                                      View view );
+extern void CreateMCARTESIANPRODUCTBINARY ( Document document,
+                                            View view );
+extern void CreateMCEILING ( Document document,
+                             View view );
+extern void CreateMCODOMAIN ( Document document,
+                              View view );
+extern void CreateMCOMBINATION ( Document document,
+                                 View view );
+extern void CreateMCOMPLEMENT ( Document document,
+                                View view );
+extern void CreateMCOMPLEMENTSUB ( Document document,
+                                   View view );
+extern void CreateMCOMPLEXCARTESIAN ( Document document,
+                                      View view );
+extern void CreateMCOMPLEXCARTESIAN2 ( Document document,
+                                       View view );
+extern void CreateMCOMPLEXES ( Document document,
+                               View view );
+extern void CreateMCOMPLEXPOLAR ( Document document,
+                                  View view );
+extern void CreateMCOMPOSE ( Document document,
+                             View view );
+extern void CreateMCOMPOSEBINARY ( Document document,
+                                   View view );
+extern void CreateMCONGRU ( Document document,
+                            View view );
+extern void CreateMCONJUGATE ( Document document,
+                               View view );
+extern void CreateMCOUPLE ( Document document,
+                            View view );
+extern void CreateMCURL ( Document document,
+                          View view );
+extern void CreateMDETERMINANT ( Document document,
+                                 View view );
+extern void CreateMDETERMINANT2 ( Document document,
+                                  View view );
+extern void CreateMDIAGONALINTERSECTION ( Document document,
+                                          View view );
+extern void CreateMDIFF ( Document document,
+                          View view );
+extern void CreateMDIRECTSUM ( Document document,
+                               View view );
+extern void CreateMDIVERGENCE ( Document document,
+                                View view );
+extern void CreateMDIVIDE ( Document document,
+                            View view );
+extern void CreateMDOMAIN ( Document document,
+                            View view );
+extern void CreateMCLASSICALFUNCTIONS ( Document document,
+                                        View view );
+extern void CreateMEMPTYSET ( Document document,
+                              View view );
+extern void CreateMEQ ( Document document,
+                        View view );
+extern void CreateMEQUIVALENT ( Document document,
+                                View view );
+extern void CreateMEQUIVALENT2 ( Document document,
+                                 View view );
+extern void CreateMEQUIVALENT2BINARY ( Document document,
+                                       View view );
+extern void CreateMEQUIVALENTBINARY ( Document document,
+                                      View view );
+extern void CreateMEQUIVALENTUNDER ( Document document,
+                                     View view );
+extern void CreateMEULERGAMMA ( Document document,
+                                View view );
+extern void CreateMEXISTS ( Document document,
+                            View view );
+extern void CreateMEXPONENTIALE ( Document document,
+                                  View view );
+extern void CreateMFACTORIAL ( Document document,
+                               View view );
+extern void CreateMFACTOROF ( Document document,
+                              View view );
+extern void CreateMFALSE ( Document document,
+                           View view );
+extern void CreateMFENCE2 ( Document document,
+                            View view );
+extern void CreateMFLOOR ( Document document,
+                           View view );
+extern void CreateMFORALL ( Document document,
+                            View view );
+extern void CreateMGCD ( Document document,
+                         View view );
+extern void CreateMGEQ ( Document document,
+                         View view );
+extern void CreateMGEQBINARY ( Document document,
+                               View view );
+extern void CreateMGRAD ( Document document,
+                          View view );
+extern void CreateMGT ( Document document,
+                        View view );
+extern void CreateMIDENT ( Document document,
+                           View view );
+extern void CreateMIMAGE ( Document document,
+                           View view );
+extern void CreateMIMAGINARY ( Document document,
+                               View view );
+extern void CreateMIMAGINARYI ( Document document,
+                                View view );
+extern void CreateMIMPLIES ( Document document,
+                             View view );
+extern void CreateMIN ( Document document,
+                        View view );
+extern void CreateMINF ( Document document,
+                         View view );
+extern void CreateMINFINITY ( Document document,
+                              View view );
+extern void CreateMINFUNDER ( Document document,
+                              View view );
+extern void CreateMINT2 ( Document document,
+                          View view );
+extern void CreateMINTEGERS ( Document document,
+                              View view );
+extern void CreateMINTERSECT ( Document document,
+                               View view );
+extern void CreateMINTERSECTBINARY ( Document document,
+                                     View view );
+extern void CreateMINTERSECTUNDER ( Document document,
+                                    View view );
+extern void CreateMINTUNDER ( Document document,
+                              View view );
+extern void CreateMINVERSE ( Document document,
+                             View view );
+extern void CreateMISOMORPHIC ( Document document,
+                                View view );
+extern void CreateMLISTEXTENSION ( Document document,
+                                   View view );
+extern void CreateMLCM ( Document document,
+                         View view );
+extern void CreateMLAPLACIAN ( Document document,
+                               View view );
+extern void CreateMLEQ ( Document document,
+                         View view );
+extern void CreateMLEQBINARY ( Document document,
+                               View view );
+extern void CreateMLISTSEPARATION ( Document document,
+                                    View view );
+extern void CreateMLT ( Document document,
+                        View view );
+extern void CreateMLAMBDA ( Document document,
+                            View view );
+extern void CreateMLIM ( Document document,
+                         View view );
+extern void CreateMLIMTENDSTO ( Document document,
+                                View view );
+extern void CreateMMAP ( Document document,
+                         View view );
+extern void CreateMMATRIX2 ( Document document,
+                             View view );
+extern void CreateMMAX ( Document document,
+                         View view );
+extern void CreateMMAXUNDER ( Document document,
+                              View view );
+extern void CreateMMEAN ( Document document,
+                          View view );
+extern void CreateMMEDIAN ( Document document,
+                            View view );
+extern void CreateMMIN ( Document document,
+                         View view );
+extern void CreateMMINUNDER ( Document document,
+                              View view );
+extern void CreateMMINUSBINARY ( Document document,
+                                 View view );
+extern void CreateMMINUSUNARY ( Document document,
+                                View view );
+extern void CreateMMODE ( Document document,
+                          View view );
+extern void CreateMMOMENT ( Document document,
+                            View view );
+extern void CreateMNATURALS ( Document document,
+                              View view );
+extern void CreateMNEQ ( Document document,
+                         View view );
+extern void CreateMNOT ( Document document,
+                         View view );
+extern void CreateMNOTANUMBER ( Document document,
+                                View view );
+extern void CreateMNOTIN ( Document document,
+                           View view );
+extern void CreateMNOTPRSUBSET ( Document document,
+                                 View view );
+extern void CreateMNOTSUBSET ( Document document,
+                               View view );
+extern void CreateMNUPLET ( Document document,
+                            View view );
+extern void CreateMOMEGASUB ( Document document,
+                              View view );
+extern void CreateMOR ( Document document,
+                        View view );
+extern void CreateMORBINARY ( Document document,
+                              View view );
+extern void CreateMORTHOGONAL ( Document document,
+                                View view );
+extern void CreateMORTHOGONALCOMPLEMENT ( Document document,
+                                          View view );
+extern void CreateMOUTERPRODUCT ( Document document,
+                                  View view );
+extern void CreateMPARTIALDIFF ( Document document,
+                                 View view );
+extern void CreateMPARTIALDIFF2 ( Document document,
+                                  View view );
+extern void CreateMPI ( Document document,
+                        View view );
+extern void CreateMPIECEWISE ( Document document,
+                               View view );
+extern void CreateMPLUS ( Document document,
+                          View view );
+extern void CreateMPOWER ( Document document,
+                           View view );
+extern void CreateMPOWERSET ( Document document,
+                              View view );
+extern void CreateMPRIMES ( Document document,
+                            View view );
+extern void CreateMPRODUNDER ( Document document,
+                               View view );
+extern void CreateMPRODUNDEROVER ( Document document,
+                                   View view );
+extern void CreateMPRSUBSET ( Document document,
+                              View view );
+extern void CreateMPRSUBSETBINARY ( Document document,
+                                    View view );
+extern void CreateMQUOTIENT ( Document document,
+                              View view );
+extern void CreateMRATIONNALS ( Document document,
+                                View view );
+extern void CreateMREAL ( Document document,
+                          View view );
+extern void CreateMREALS ( Document document,
+                           View view );
+extern void CreateMREM ( Document document,
+                         View view );
+extern void CreateMSCALARPRODUCT ( Document document,
+                                   View view );
+extern void CreateMSDEV ( Document document,
+                          View view );
+extern void CreateMSELECTOR ( Document document,
+                              View view );
+extern void CreateMSETDIFF ( Document document,
+                             View view );
+extern void CreateMSETEXTENSION ( Document document,
+                                  View view );
+extern void CreateMSETSEPARATION ( Document document,
+                                   View view );
+extern void CreateMSETSYMDIFF ( Document document,
+                                View view );
+extern void CreateMSUBSET ( Document document,
+                            View view );
+extern void CreateMSUBSETBINARY ( Document document,
+                                  View view );
+extern void CreateMSUMUNDER ( Document document,
+                              View view );
+extern void CreateMSUP2 ( Document document,
+                          View view );
+extern void CreateMSUPMINUS ( Document document,
+                              View view );
+extern void CreateMSUPPLUS ( Document document,
+                             View view );
+extern void CreateMSUPUNDER ( Document document,
+                              View view );
+extern void CreateMTENDSTO ( Document document,
+                             View view );
+extern void CreateMTENDSTOTENDSTO ( Document document,
+                                    View view );
+extern void CreateMTIMES ( Document document,
+                           View view );
+extern void CreateMTIMESBINARY ( Document document,
+                                 View view );
+extern void CreateMTRANSPOSE ( Document document,
+                               View view );
+extern void CreateMTRUE ( Document document,
+                          View view );
+extern void CreateMUNION ( Document document,
+                           View view );
+extern void CreateMUNIONUNARY ( Document document,
+                                View view );
+extern void CreateMUNIONUNDER ( Document document,
+                                View view );
+extern void CreateMUNIONBINARY ( Document document,
+                                 View view );
+extern void CreateMVARIANCE ( Document document,
+                              View view );
+extern void CreateMVECTORPRODUCT ( Document document,
+                                   View view );
+extern void CreateMVECTORROW ( Document document,
+                               View view );
+extern void CreateMVECTORCOLUMN ( Document document,
+                                  View view );
+extern void CreateMXOR ( Document document,
+                         View view );
+extern void CreateMXORBINARY ( Document document,
+                               View view );
 extern void CreateMTEXT ( Document document,
                           View view );
 extern void CreateMI ( Document document,
@@ -135,6 +487,28 @@ extern void HandleColAndRowAlignAttributes ( Element row,
 
 #else /* __STDC__ */
 
+extern void InsertEmptyConstruct ( Element *el,
+                                     int TypeNum,
+                                     Document doc );
+extern void InsertSymbol ( Element *el,
+                             int TypeNum,
+                             int symbol,
+                             Document doc );
+extern void InsertText ( Element *el,
+                           int TypeNum,
+                           unsigned char *text,
+                           Document doc );
+extern void CreateNewMtable ( Element el,
+                                int NumberCols,
+                                int NumberRows,
+                                Document doc );
+extern Element SelectMtableCell ( Element mtable,
+                                    int x,
+                                    int y );
+extern Element SetFencedSeparators ( Element fenced,
+                                       unsigned char ope,
+                                       unsigned char clo,
+                                       Document doc );
 extern void UnFrameMath ( void );
 extern void ClearMathFrame ( Document doc );
 extern void MathSelectionChanged ( NotifyElement *event );
@@ -166,6 +540,20 @@ extern void CreateMUNDER ( Document document,
                              View view );
 extern void CreateMOVER ( Document document,
                             View view );
+extern void CreateMOVERARROW ( Document doc,
+                                 View view );
+extern void CreateMOVERBAR ( Document doc,
+                               View view );
+extern void CreateMOVERBREVE ( Document doc,
+                                 View view );
+extern void CreateMOVERCHECK ( Document doc,
+                                 View view );
+extern void CreateMOVERDOT ( Document doc,
+                               View view );
+extern void CreateMOVERHAT ( Document doc,
+                               View view );
+extern void CreateMOVERTILDE ( Document doc,
+                                 View view );
 extern void CreateMROW ( Document document,
                            View view );
 extern void CreateMMULTISCRIPTS ( Document document,
@@ -176,6 +564,322 @@ extern void CreateMIntegral ( Document doc,
                                 View view );
 extern void CreateMSum ( Document doc,
                            View view );
+extern void CreateMatrix2 ( Document doc,
+                              View view );
+extern void CreateMABS ( Document document,
+                           View view );
+extern void CreateMALEPHSUB ( Document document,
+                                View view );
+extern void CreateMAND ( Document document,
+                           View view );
+extern void CreateMANDBINARY ( Document document,
+                                 View view );
+extern void CreateMAPPROX ( Document document,
+                              View view );
+extern void CreateMARG ( Document document,
+                           View view );
+extern void CreateMARROW1 ( Document document,
+                              View view );
+extern void CreateMARROW2 ( Document document,
+                              View view );
+extern void CreateMCARD ( Document document,
+                            View view );
+extern void CreateMCARD2 ( Document document,
+                             View view );
+extern void CreateMCARTESIANPRODUCT ( Document document,
+                                        View view );
+extern void CreateMCARTESIANPRODUCTBINARY ( Document document,
+                                              View view );
+extern void CreateMCEILING ( Document document,
+                               View view );
+extern void CreateMCODOMAIN ( Document document,
+                                View view );
+extern void CreateMCOMBINATION ( Document document,
+                                   View view );
+extern void CreateMCOMPLEMENT ( Document document,
+                                  View view );
+extern void CreateMCOMPLEMENTSUB ( Document document,
+                                     View view );
+extern void CreateMCOMPLEXCARTESIAN ( Document document,
+                                        View view );
+extern void CreateMCOMPLEXCARTESIAN2 ( Document document,
+                                         View view );
+extern void CreateMCOMPLEXES ( Document document,
+                                 View view );
+extern void CreateMCOMPLEXPOLAR ( Document document,
+                                    View view );
+extern void CreateMCOMPOSE ( Document document,
+                               View view );
+extern void CreateMCOMPOSEBINARY ( Document document,
+                                     View view );
+extern void CreateMCONGRU ( Document document,
+                              View view );
+extern void CreateMCONJUGATE ( Document document,
+                                 View view );
+extern void CreateMCOUPLE ( Document document,
+                              View view );
+extern void CreateMCURL ( Document document,
+                            View view );
+extern void CreateMDETERMINANT ( Document document,
+                                   View view );
+extern void CreateMDETERMINANT2 ( Document document,
+                                    View view );
+extern void CreateMDIAGONALINTERSECTION ( Document document,
+                                            View view );
+extern void CreateMDIFF ( Document document,
+                            View view );
+extern void CreateMDIRECTSUM ( Document document,
+                                 View view );
+extern void CreateMDIVERGENCE ( Document document,
+                                  View view );
+extern void CreateMDIVIDE ( Document document,
+                              View view );
+extern void CreateMDOMAIN ( Document document,
+                              View view );
+extern void CreateMCLASSICALFUNCTIONS ( Document document,
+                                          View view );
+extern void CreateMEMPTYSET ( Document document,
+                                View view );
+extern void CreateMEQ ( Document document,
+                          View view );
+extern void CreateMEQUIVALENT ( Document document,
+                                  View view );
+extern void CreateMEQUIVALENT2 ( Document document,
+                                   View view );
+extern void CreateMEQUIVALENT2BINARY ( Document document,
+                                         View view );
+extern void CreateMEQUIVALENTBINARY ( Document document,
+                                        View view );
+extern void CreateMEQUIVALENTUNDER ( Document document,
+                                       View view );
+extern void CreateMEULERGAMMA ( Document document,
+                                  View view );
+extern void CreateMEXISTS ( Document document,
+                              View view );
+extern void CreateMEXPONENTIALE ( Document document,
+                                    View view );
+extern void CreateMFACTORIAL ( Document document,
+                                 View view );
+extern void CreateMFACTOROF ( Document document,
+                                View view );
+extern void CreateMFALSE ( Document document,
+                             View view );
+extern void CreateMFENCE2 ( Document document,
+                              View view );
+extern void CreateMFLOOR ( Document document,
+                             View view );
+extern void CreateMFORALL ( Document document,
+                              View view );
+extern void CreateMGCD ( Document document,
+                           View view );
+extern void CreateMGEQ ( Document document,
+                           View view );
+extern void CreateMGEQBINARY ( Document document,
+                                 View view );
+extern void CreateMGRAD ( Document document,
+                            View view );
+extern void CreateMGT ( Document document,
+                          View view );
+extern void CreateMIDENT ( Document document,
+                             View view );
+extern void CreateMIMAGE ( Document document,
+                             View view );
+extern void CreateMIMAGINARY ( Document document,
+                                 View view );
+extern void CreateMIMAGINARYI ( Document document,
+                                  View view );
+extern void CreateMIMPLIES ( Document document,
+                               View view );
+extern void CreateMIN ( Document document,
+                          View view );
+extern void CreateMINF ( Document document,
+                           View view );
+extern void CreateMINFINITY ( Document document,
+                                View view );
+extern void CreateMINFUNDER ( Document document,
+                                View view );
+extern void CreateMINT2 ( Document document,
+                            View view );
+extern void CreateMINTEGERS ( Document document,
+                                View view );
+extern void CreateMINTERSECT ( Document document,
+                                 View view );
+extern void CreateMINTERSECTBINARY ( Document document,
+                                       View view );
+extern void CreateMINTERSECTUNDER ( Document document,
+                                      View view );
+extern void CreateMINTUNDER ( Document document,
+                                View view );
+extern void CreateMINVERSE ( Document document,
+                               View view );
+extern void CreateMISOMORPHIC ( Document document,
+                                  View view );
+extern void CreateMLISTEXTENSION ( Document document,
+                                     View view );
+extern void CreateMLCM ( Document document,
+                           View view );
+extern void CreateMLAPLACIAN ( Document document,
+                                 View view );
+extern void CreateMLEQ ( Document document,
+                           View view );
+extern void CreateMLEQBINARY ( Document document,
+                                 View view );
+extern void CreateMLISTSEPARATION ( Document document,
+                                      View view );
+extern void CreateMLT ( Document document,
+                          View view );
+extern void CreateMLAMBDA ( Document document,
+                              View view );
+extern void CreateMLIM ( Document document,
+                           View view );
+extern void CreateMLIMTENDSTO ( Document document,
+                                  View view );
+extern void CreateMMAP ( Document document,
+                           View view );
+extern void CreateMMATRIX2 ( Document document,
+                               View view );
+extern void CreateMMAX ( Document document,
+                           View view );
+extern void CreateMMAXUNDER ( Document document,
+                                View view );
+extern void CreateMMEAN ( Document document,
+                            View view );
+extern void CreateMMEDIAN ( Document document,
+                              View view );
+extern void CreateMMIN ( Document document,
+                           View view );
+extern void CreateMMINUNDER ( Document document,
+                                View view );
+extern void CreateMMINUSBINARY ( Document document,
+                                   View view );
+extern void CreateMMINUSUNARY ( Document document,
+                                  View view );
+extern void CreateMMODE ( Document document,
+                            View view );
+extern void CreateMMOMENT ( Document document,
+                              View view );
+extern void CreateMNATURALS ( Document document,
+                                View view );
+extern void CreateMNEQ ( Document document,
+                           View view );
+extern void CreateMNOT ( Document document,
+                           View view );
+extern void CreateMNOTANUMBER ( Document document,
+                                  View view );
+extern void CreateMNOTIN ( Document document,
+                             View view );
+extern void CreateMNOTPRSUBSET ( Document document,
+                                   View view );
+extern void CreateMNOTSUBSET ( Document document,
+                                 View view );
+extern void CreateMNUPLET ( Document document,
+                              View view );
+extern void CreateMOMEGASUB ( Document document,
+                                View view );
+extern void CreateMOR ( Document document,
+                          View view );
+extern void CreateMORBINARY ( Document document,
+                                View view );
+extern void CreateMORTHOGONAL ( Document document,
+                                  View view );
+extern void CreateMORTHOGONALCOMPLEMENT ( Document document,
+                                            View view );
+extern void CreateMOUTERPRODUCT ( Document document,
+                                    View view );
+extern void CreateMPARTIALDIFF ( Document document,
+                                   View view );
+extern void CreateMPARTIALDIFF2 ( Document document,
+                                    View view );
+extern void CreateMPI ( Document document,
+                          View view );
+extern void CreateMPIECEWISE ( Document document,
+                                 View view );
+extern void CreateMPLUS ( Document document,
+                            View view );
+extern void CreateMPOWER ( Document document,
+                             View view );
+extern void CreateMPOWERSET ( Document document,
+                                View view );
+extern void CreateMPRIMES ( Document document,
+                              View view );
+extern void CreateMPRODUNDER ( Document document,
+                                 View view );
+extern void CreateMPRODUNDEROVER ( Document document,
+                                     View view );
+extern void CreateMPRSUBSET ( Document document,
+                                View view );
+extern void CreateMPRSUBSETBINARY ( Document document,
+                                      View view );
+extern void CreateMQUOTIENT ( Document document,
+                                View view );
+extern void CreateMRATIONNALS ( Document document,
+                                  View view );
+extern void CreateMREAL ( Document document,
+                            View view );
+extern void CreateMREALS ( Document document,
+                             View view );
+extern void CreateMREM ( Document document,
+                           View view );
+extern void CreateMSCALARPRODUCT ( Document document,
+                                     View view );
+extern void CreateMSDEV ( Document document,
+                            View view );
+extern void CreateMSELECTOR ( Document document,
+                                View view );
+extern void CreateMSETDIFF ( Document document,
+                               View view );
+extern void CreateMSETEXTENSION ( Document document,
+                                    View view );
+extern void CreateMSETSEPARATION ( Document document,
+                                     View view );
+extern void CreateMSETSYMDIFF ( Document document,
+                                  View view );
+extern void CreateMSUBSET ( Document document,
+                              View view );
+extern void CreateMSUBSETBINARY ( Document document,
+                                    View view );
+extern void CreateMSUMUNDER ( Document document,
+                                View view );
+extern void CreateMSUP2 ( Document document,
+                            View view );
+extern void CreateMSUPMINUS ( Document document,
+                                View view );
+extern void CreateMSUPPLUS ( Document document,
+                               View view );
+extern void CreateMSUPUNDER ( Document document,
+                                View view );
+extern void CreateMTENDSTO ( Document document,
+                               View view );
+extern void CreateMTENDSTOTENDSTO ( Document document,
+                                      View view );
+extern void CreateMTIMES ( Document document,
+                             View view );
+extern void CreateMTIMESBINARY ( Document document,
+                                   View view );
+extern void CreateMTRANSPOSE ( Document document,
+                                 View view );
+extern void CreateMTRUE ( Document document,
+                            View view );
+extern void CreateMUNION ( Document document,
+                             View view );
+extern void CreateMUNIONUNARY ( Document document,
+                                  View view );
+extern void CreateMUNIONUNDER ( Document document,
+                                  View view );
+extern void CreateMUNIONBINARY ( Document document,
+                                   View view );
+extern void CreateMVARIANCE ( Document document,
+                                View view );
+extern void CreateMVECTORPRODUCT ( Document document,
+                                     View view );
+extern void CreateMVECTORROW ( Document document,
+                                 View view );
+extern void CreateMVECTORCOLUMN ( Document document,
+                                    View view );
+extern void CreateMXOR ( Document document,
+                           View view );
+extern void CreateMXORBINARY ( Document document,
+                                 View view );
 extern void CreateMTEXT ( Document document,
                             View view );
 extern void CreateMI ( Document document,
