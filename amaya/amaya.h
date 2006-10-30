@@ -449,6 +449,7 @@ THOT_EXPORT ThotBool   DAVLibEnable;
 THOT_EXPORT ThotBool   Synchronizing;
 THOT_EXPORT ThotBool   AmayaUniqueInstance;
 THOT_EXPORT ThotBool   IdApplyToSelection; /* used in the Make ID menu */
+THOT_EXPORT ThotBool   Check_read_ids; /* check all parsed IDs */
 THOT_EXPORT FILE      *ErrFile;
 THOT_EXPORT FILE      *CSSErrFile;
 typedef enum

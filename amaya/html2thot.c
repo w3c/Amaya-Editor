@@ -6908,6 +6908,8 @@ void StartParser (Document doc, char *fileName,
   EntityTableEntry = 0;
   CharRank = 0;
 
+  // Get user information about read IDs
+  TtaGetEnvBoolean ("CHECK_READ_IDS", &Check_read_ids);
   HTMLcontext.encoding = TtaGetDocumentCharset (doc);
   stream = TtaGZOpen (fileName);
   if (stream != 0)

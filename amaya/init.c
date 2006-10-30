@@ -7454,6 +7454,7 @@ void InitAmaya (NotifyEvent * event)
   Synchronizing = FALSE;
   TableMenuActive = FALSE;
   MTableMenuActive = FALSE;
+  Check_read_ids = FALSE;
   IdElemName[0] = EOS;
   /* Initialize the LogFile variables */
   CleanUpParsingErrors ();
