@@ -2606,9 +2606,11 @@ ThotBool ContentEditing (int editType)
                     }
                   NewContent (pAb);
                 }
-              ChangeSelection (frame, pViewSel->VsBox->BxAbstractBox, i,
+              if (pViewSel->VsBox)
+                ChangeSelection (frame, pViewSel->VsBox->BxAbstractBox, i,
                                FALSE, TRUE, FALSE, FALSE);
-              if (pAb->AbLeafType != LtPolyLine && j != i)
+              if (pAb->AbLeafType != LtPolyLine && j != i &&
+                  pViewSelEnd->VsBox)
                 ChangeSelection (frame,
                                  pViewSelEnd->VsBox->BxAbstractBox, j,
                                  TRUE, FALSE, FALSE, FALSE);
