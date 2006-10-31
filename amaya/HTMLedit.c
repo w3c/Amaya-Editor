@@ -704,7 +704,7 @@ void GenerateInlineElement (int eType, int aType, char * data)
                           if (!selpos &&
                               (aType == HTML_ATTR_ID || aType == HTML_ATTR_Language ||
                                aType == HTML_ATTR_Class || aType == HTML_ATTR_Style_))
-                            // acept to set the attribute to inline element
+                            // accept to set the attribute to inline element
                             charlevel = TtaIsLeaf (elType);
                           else
                             charlevel = IsCharacterLevelElement (el);

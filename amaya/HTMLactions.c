@@ -310,18 +310,19 @@ void CheckUniqueName (Element el, Document doc, Attribute attr,
               TtaFreeMemory (name);
             }
         }
-#ifdef IV
-      // this function should be optional because it increases the loading time
-      else if (MakeUniqueName (el, doc, FALSE, FALSE))
+      else
         {
-          sprintf (msgBuffer, "Duplicate attribute value %s", name);
-          lineNum = TtaGetElementLineNumber(el);
-          if (DocumentMeta[doc] && DocumentMeta[doc]->xmlformat)
-            XmlParseError (errorParsing, (unsigned char *)msgBuffer, lineNum);
-          else
-            HTMLParseError (doc, msgBuffer, lineNum);
+          // this function is optional because it increases the loading time
+          if (Check_read_ids && MakeUniqueName (el, doc, FALSE, FALSE))
+            {
+              sprintf (msgBuffer, "Duplicate attribute value %s", name);
+              lineNum = TtaGetElementLineNumber(el);
+              if (DocumentMeta[doc] && DocumentMeta[doc]->xmlformat)
+                XmlParseError (errorParsing, (unsigned char *)msgBuffer, lineNum);
+              else
+                HTMLParseError (doc, msgBuffer, lineNum);
+            }
         }
-#endif
     }
 }
 

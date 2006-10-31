@@ -5975,8 +5975,6 @@ void StartXmlParser (Document doc, char *fileName,
       /* load the MathML nature if it's declared plus MathML */
       if (useMath)
         TtaNewNature (doc, DocumentSSchema,  NULL, "MathML", "MathMLP");
-      // Get user information about read IDs
-      TtaGetEnvBoolean ("CHECK_READ_IDS", &Check_read_ids);
       /* Parse the input file and build the Thot tree */
       XmlParse ((FILE*)stream, charset, &xmlDec, &xmlDoctype);
 

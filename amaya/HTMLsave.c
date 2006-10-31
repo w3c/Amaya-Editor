@@ -1456,6 +1456,8 @@ ThotBool ParseWithNewDoctype (Document doc, char *localFile, char *tempdir,
   /* Store the new document type */
   TtaSetDocumentProfile (ext_doc, new_doctype);
 
+  // Get user information about read IDs
+  Check_read_ids = TRUE;
   /* Calls the right parser */
   if (DocumentMeta[ext_doc]->xmlformat)       
     StartXmlParser (ext_doc, localFile, documentname, tempdir,
@@ -1520,7 +1522,7 @@ ThotBool ParseWithNewDoctype (Document doc, char *localFile, char *tempdir,
 
       /* reparse the document */
       DocumentMeta[doc]->xmlformat = xml_doctype;
-      RestartParser (doc, localFile, tempdir, documentname, FALSE);
+      RestartParser (doc, localFile, tempdir, documentname, FALSE, TRUE);
       /* Notify the document as modified */
       TtaSetDocumentModified (doc);
       /* Synchronize the document */
@@ -1542,9 +1544,11 @@ ThotBool ParseWithNewDoctype (Document doc, char *localFile, char *tempdir,
 
 /*----------------------------------------------------------------------
   RestartParser
+  check_ids is TRUE when unique ids must be checked
   ----------------------------------------------------------------------*/
 void RestartParser (Document doc, char *localFile,
-                    char *tempdir, char *documentname, ThotBool show_errors)
+                    char *tempdir, char *documentname, ThotBool show_errors,
+                    ThotBool check_ids)
 {
   CHARSET       charset, doc_charset;
   DocumentType  thotType;
@@ -1607,6 +1611,10 @@ void RestartParser (Document doc, char *localFile,
       TtaSetDocumentProfile (doc, parsingLevel);
       TtaUpdateMenus (doc, 1, FALSE);
     }
+
+  // Force the check of read IDs
+  if (check_ids)
+    Check_read_ids = TRUE;
   /* Calls the corresponding parser */
   if (DocumentMeta[doc]->xmlformat)       
     StartXmlParser (doc, localFile, documentname, tempdir,
@@ -2405,7 +2413,7 @@ void DoSynchronize (Document doc, View view, NotifyElement *event)
           TtaExportDocumentWithNewLineNumbers (doc, tempdoc, "TextFileT");
           TtaExtractName (tempdoc, tempdir, docname);
           ResetHighlightedElement ();
-          RestartParser (otherDoc, tempdoc, tempdir, docname, TRUE);
+          RestartParser (otherDoc, tempdoc, tempdir, docname, TRUE, TRUE);
           /* the other document is now different from the original file. It can
              be saved */
           if (modified)
@@ -2537,7 +2545,7 @@ void RedisplayDoc (Document doc)
          it will lost the selection position */
       tempdoc = GetLocalPath (doc, DocumentURLs[doc]);
       TtaExtractName (tempdoc, tempdir, docname);
-      RestartParser (doc, tempdoc, tempdir, docname, TRUE);
+      RestartParser (doc, tempdoc, tempdir, docname, TRUE, FALSE);
       TtaFreeMemory (tempdoc);
     }
 }
@@ -4013,7 +4021,7 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
             {
               /* It's a source document. Reparse the corresponding HTML document */
               TtaExtractName (documentFile, tempdir, documentname);
-              RestartParser (xmlDoc, documentFile, tempdir, documentname, TRUE);
+              RestartParser (xmlDoc, documentFile, tempdir, documentname, TRUE, FALSE);
               TtaSetDocumentUnmodified (xmlDoc);
               TtaSetInitialSequence (xmlDoc);
               /* Synchronize selections */

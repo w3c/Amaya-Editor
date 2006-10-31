@@ -36,7 +36,8 @@ extern void RestartParser ( Document doc,
                             char *localFile,
                             char *tempdir,
                             char *documentname,
-                            ThotBool show_errors );
+                            ThotBool show_errors,
+                            ThotBool check_ids );
 extern void RedisplaySourceFile ( Document doc );
 extern Document GetDocFromSource ( Document sourceDoc );
 extern void DoSynchronize ( Document doc,
@@ -89,7 +90,8 @@ extern void RestartParser ( Document doc,
                               char *localFile,
                               char *tempdir,
                               char *documentname,
-                              ThotBool show_errors );
+                              ThotBool show_errors,
+                              ThotBool check_ids );
 extern void RedisplaySourceFile ( Document doc );
 extern Document GetDocFromSource ( Document sourceDoc );
 extern void DoSynchronize ( Document doc,
