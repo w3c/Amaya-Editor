@@ -153,8 +153,8 @@ class="fixed">displayed that way.</span></p>
     </tr>
     <tr>
       <td id="ED050">ED050</td>
-      <td>Amaya 9.52 for Windows XP has problems when creating a span
-        thatcontains a span inside it.
+      <td>Amaya 9.52 for Windows XP has problems when creating a span that
+        contains a span inside it.
 
         <p>one <span class="aaa">two</span> <span class="aaa">three</span>
         <span class="aaa">four</span> five</p>
@@ -180,9 +180,13 @@ class="fixed">displayed that way.</span></p>
     </tr>
     <tr class="fixed">
       <td id="ED052">ED052</td>
-      <td>Amaya doesn't allow one to make any link encompassing an image</td>
+      <td>Amaya doesn't allow one to make any link containing only an
+      image</td>
       <td>2006-10-26</td>
-      <td>R. Whittle</td>
+      <td>R. Whittle
+
+        <p>B Sintes</p>
+      </td>
       <td>2006-10-27</td>
     </tr>
     <tr class="fixed">
@@ -194,9 +198,40 @@ class="fixed">displayed that way.</span></p>
     </tr>
     <tr>
       <td id="ED054">ED054</td>
+      <td>The "Apply class" window in the Tools window lets the user apply a
+        class double-clicking in the class name. If the same class name is
+        double-clicked several times, Amaya adds several times the class name
+        in the class attribute. It would be better if the class name would
+        not be added if it is already present.</td>
+      <td>2006-10-27</td>
+      <td>B. Sintes</td>
       <td></td>
+    </tr>
+    <tr>
+      <td id="ED055">ED055</td>
+      <td>When creating an Information Type element (e.g. &lt;em&gt;) within
+        an empty &lt;dd&gt;, Amaya 8.52 generates an "Invalid Selection"
+        message.</td>
+      <td>2006-10-30</td>
+      <td>T. Jedenfelt</td>
       <td></td>
+    </tr>
+    <tr>
+      <td id="ED056">ED056</td>
+      <td>In Amaya 9.52 for WinXP, if you create a new document and, before
+        writing any character in it, you change the doctype, the body is
+        removed and it is not possible to edit the document.</td>
+      <td>2006-10-30</td>
+      <td>B. Sintes</td>
       <td></td>
+    </tr>
+    <tr>
+      <td id="ED017">ED017</td>
+      <td>In Amaya 9.52 for Windows XP if the user writes some text in a
+        table cell and presses Intro, a new paragraph is created, but the
+        text already created is not included in a paragraph.</td>
+      <td>2006-10-30</td>
+      <td>B. Sintes</td>
       <td></td>
     </tr>
     <tr class="title">
@@ -318,6 +353,39 @@ class="fixed">displayed that way.</span></p>
       <td>2006-10-26</td>
       <td>B. Sines and J. Russell</td>
       <td>2006-10-27</td>
+    </tr>
+    <tr>
+      <td id="CSS016">CSS016</td>
+      <td>The containing block is formed by the margin edge while it must be
+        the padding edge</td>
+      <td>2006-10-22</td>
+      <td>S. Stamenkov</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td id="CSS017">CSS017</td>
+      <td>A block which has |float: left| applied causes the preceding normal
+        flow block to extend out of the viewport boundaries, as much as the
+        container (BODY) left margin is - see the attached example.
+
+        <p>Interesting to note:</p>
+        <ol>
+          <li>If the normal flow block has |clear: both| applied (|clear:
+            left| or |clear: right| doesn't do it) it is rendered o.k.</li>
+          <li>If the floated block has |float: right| applied instead - it is
+            rendered o.k.</li>
+        </ol>
+      </td>
+      <td>2006-10-23</td>
+      <td>S. Stamenkov</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td id="CSS018">CSS018</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
     </tr>
   </tbody>
   <tbody>
@@ -512,6 +580,6 @@ class="fixed">displayed that way.</span></p>
   </tbody>
 </table>
 <br />
-Date: <!--$date=-->2006-10-27<!--$-->
+Date: <!--$date=-->2006-10-31<!--$-->
 </body>
 </html>
