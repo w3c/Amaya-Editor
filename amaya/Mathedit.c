@@ -1117,12 +1117,12 @@ static void CreateMathConstruct (int construct, ...)
   AttributeType      attrType;
   NotifyElement      event;
   SSchema            docSchema, mathSchema;
-  char              *name;
   Language           lang;
   DisplayMode        dispMode;
-  int                c1, i, len, profile, selectedchild;
+  char              *name;
   CHAR_T             text[2];
   va_list            varpos;
+  int                c1, i, len, profile, selectedchild, number;
   ThotBool           oldStructureChecking;
   ThotBool	         before, ParBlock, emptySel, ok, insertSibling,
                      displayTableForm, registered;
@@ -1974,7 +1974,7 @@ static void CreateMathConstruct (int construct, ...)
         /* Piecewise */
 
         /* ask how many the user want */
-        int number = 3;         
+        number = 3;         
         leaf = TtaGetFirstChild (el);
         TtaRemoveTree (leaf, doc);
         CreateNewMtable (el, 2, 1, doc);
@@ -2110,7 +2110,7 @@ static void CreateMathConstruct (int construct, ...)
         if(symbol == 0)symbol_name = va_arg(varpos, unsigned char*);
 
         /* ask how many the user want */
-        int number = 5;
+        number = 5;
 
         leaf = TtaGetFirstChild (el);
         child = leaf;
@@ -2127,7 +2127,7 @@ static void CreateMathConstruct (int construct, ...)
 	{/* selector */
 
         /* ask number of coordonnates */
-        int number = 3;
+        number = 3;
 
         child = TtaGetLastChild (el);
         leaf = TtaGetFirstChild (child);
@@ -2142,7 +2142,7 @@ static void CreateMathConstruct (int construct, ...)
         }
       else if(construct == 37)
         {/* couple,  n-uple */
-        int number = va_arg(varpos, int);
+        number = va_arg(varpos, int);
         if(number != 2)
           {/* ask how many the user want */
           number = 5;
@@ -2177,7 +2177,7 @@ static void CreateMathConstruct (int construct, ...)
         {/* set/list extension ; vectorrow */
         int ope = va_arg(varpos, int), clo = va_arg(varpos, int);
         /* ask how many the user want */
-        int number = 5;
+        number = 5;
 
         leaf = TtaGetFirstChild (el);
         child = leaf;
@@ -2415,7 +2415,7 @@ static void CreateMathConstruct (int construct, ...)
         int ope = va_arg(varpos, int), clo = va_arg(varpos, int);
         int lx = va_arg(varpos, int), ly = va_arg(varpos, int);
 
-        child = SetFencedSeparators(el, ope, clo, doc);
+        child = SetFencedSeparators (el, (unsigned char)ope, (unsigned char)clo, doc);
         
         /* ask the user the number of rows and colomns */
         if(lx == 0)lx = 3;
