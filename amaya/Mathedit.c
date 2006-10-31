@@ -1122,15 +1122,16 @@ static void CreateMathConstruct (int construct, ...)
   DisplayMode        dispMode;
   int                c1, i, len, profile, selectedchild;
   CHAR_T             text[2];
+  va_list            varpos;
   ThotBool           oldStructureChecking;
-  ThotBool	     before, ParBlock, emptySel, ok, insertSibling,
+  ThotBool	         before, ParBlock, emptySel, ok, insertSibling,
                      displayTableForm, registered;
   
-  if(construct==0)return;
+  if (construct==0)
+    return;
+
   /* Prepare to read other variables */
-  va_list varpos;
-  va_start(varpos,construct);
-       
+  va_start (varpos,construct);
   doc = TtaGetSelectedDocument ();
   if (doc == 0 || !TtaGetDocumentAccessMode (doc))
     {
@@ -2963,953 +2964,953 @@ void CreateMatrix2 (Document doc, View view)
   CreateMathConstruct (53, '(', ')', 0, 0);
 }
 
-/*----------------------------------------------------------------------
-  CreateMABS
-  ----------------------------------------------------------------------*/
-void CreateMABS (Document document, View view)
-{
-CreateMathConstruct (40,'|','|');}
-/*----------------------------------------------------------------------
-  CreateMALEPHSUB
-  ----------------------------------------------------------------------*/
-void CreateMALEPHSUB (Document document, View view)
-{
-CreateMathConstruct (31,8501);}
-/*----------------------------------------------------------------------
-  CreateMAND
-  ----------------------------------------------------------------------*/
-void CreateMAND (Document document, View view)
-{
-CreateMathConstruct (35, 8743);}
-/*----------------------------------------------------------------------
-  CreateMANDBINARY
-  ----------------------------------------------------------------------*/
-void CreateMANDBINARY (Document document, View view)
-{
-CreateMathConstruct (27, 8743);}
-/*----------------------------------------------------------------------
-  CreateMAPPROX
-  ----------------------------------------------------------------------*/
-void CreateMAPPROX (Document document, View view)
-{
-CreateMathConstruct (27,8776);}
-/*----------------------------------------------------------------------
-  CreateMARG
-  ----------------------------------------------------------------------*/
-void CreateMARG (Document document, View view)
-{
-CreateMathConstruct (23, 0, "arg", TRUE);}
-/*----------------------------------------------------------------------
-  CreateMARROW1
-  ----------------------------------------------------------------------*/
-void CreateMARROW1 (Document document, View view)
-{
-CreateMathConstruct (27,8594);}
-/*----------------------------------------------------------------------
-  CreateMARROW2
-  ----------------------------------------------------------------------*/
-void CreateMARROW2 (Document document, View view)
-{
-CreateMathConstruct (27,8614);}
-/*----------------------------------------------------------------------
-  CreateMCARD
-  ----------------------------------------------------------------------*/
-void CreateMCARD (Document document, View view)
-{
-CreateMathConstruct (40,'|','|');}
-/*----------------------------------------------------------------------
-  CreateMCARD2
-  ----------------------------------------------------------------------*/
-void CreateMCARD2 (Document document, View view)
-{
-CreateMathConstruct (23, '#', FALSE);}
-/*----------------------------------------------------------------------
-  CreateMCARTESIANPRODUCT
-  ----------------------------------------------------------------------*/
-void CreateMCARTESIANPRODUCT (Document document, View view)
-{
-CreateMathConstruct (35,215);}
-/*----------------------------------------------------------------------
-  CreateMCARTESIANPRODUCTBINARY
-  ----------------------------------------------------------------------*/
-void CreateMCARTESIANPRODUCTBINARY (Document document, View view)
-{
-CreateMathConstruct (27,215);}
-/*----------------------------------------------------------------------
-  CreateMCEILING
-  ----------------------------------------------------------------------*/
-void CreateMCEILING (Document document, View view)
-{
-CreateMathConstruct (40, 8968, 8969);}
-/*----------------------------------------------------------------------
-  CreateMCODOMAIN
-  ----------------------------------------------------------------------*/
-void CreateMCODOMAIN (Document document, View view)
-{
-CreateMathConstruct (23, 0, "codom", TRUE);}
-/*----------------------------------------------------------------------
-  CreateMCOMBINATION
-  ----------------------------------------------------------------------*/
-void CreateMCOMBINATION (Document document, View view)
-{
-CreateMathConstruct (32);}
-/*----------------------------------------------------------------------
-  CreateMCOMPLEMENT
-  ----------------------------------------------------------------------*/
-void CreateMCOMPLEMENT (Document document, View view)
-{
-CreateMathConstruct (26, 175);}
-/*----------------------------------------------------------------------
-  CreateMCOMPLEMENTSUB
-  ----------------------------------------------------------------------*/
-void CreateMCOMPLEMENTSUB (Document document, View view)
-{
-CreateMathConstruct (41, 8705);}
-/*----------------------------------------------------------------------
-  CreateMCOMPLEXCARTESIAN
-  ----------------------------------------------------------------------*/
-void CreateMCOMPLEXCARTESIAN (Document document, View view)
-{
-CreateMathConstruct (48, TRUE);}
+/*----------------------------------------------------------------------
+  CreateMABS
+  ----------------------------------------------------------------------*/
+void CreateMABS (Document document, View view)
+{
+CreateMathConstruct (40,'|','|');}
+/*----------------------------------------------------------------------
+  CreateMALEPHSUB
+  ----------------------------------------------------------------------*/
+void CreateMALEPHSUB (Document document, View view)
+{
+CreateMathConstruct (31,8501);}
+/*----------------------------------------------------------------------
+  CreateMAND
+  ----------------------------------------------------------------------*/
+void CreateMAND (Document document, View view)
+{
+CreateMathConstruct (35, 8743);}
+/*----------------------------------------------------------------------
+  CreateMANDBINARY
+  ----------------------------------------------------------------------*/
+void CreateMANDBINARY (Document document, View view)
+{
+CreateMathConstruct (27, 8743);}
+/*----------------------------------------------------------------------
+  CreateMAPPROX
+  ----------------------------------------------------------------------*/
+void CreateMAPPROX (Document document, View view)
+{
+CreateMathConstruct (27,8776);}
+/*----------------------------------------------------------------------
+  CreateMARG
+  ----------------------------------------------------------------------*/
+void CreateMARG (Document document, View view)
+{
+CreateMathConstruct (23, 0, "arg", TRUE);}
+/*----------------------------------------------------------------------
+  CreateMARROW1
+  ----------------------------------------------------------------------*/
+void CreateMARROW1 (Document document, View view)
+{
+CreateMathConstruct (27,8594);}
+/*----------------------------------------------------------------------
+  CreateMARROW2
+  ----------------------------------------------------------------------*/
+void CreateMARROW2 (Document document, View view)
+{
+CreateMathConstruct (27,8614);}
+/*----------------------------------------------------------------------
+  CreateMCARD
+  ----------------------------------------------------------------------*/
+void CreateMCARD (Document document, View view)
+{
+CreateMathConstruct (40,'|','|');}
+/*----------------------------------------------------------------------
+  CreateMCARD2
+  ----------------------------------------------------------------------*/
+void CreateMCARD2 (Document document, View view)
+{
+CreateMathConstruct (23, '#', FALSE);}
+/*----------------------------------------------------------------------
+  CreateMCARTESIANPRODUCT
+  ----------------------------------------------------------------------*/
+void CreateMCARTESIANPRODUCT (Document document, View view)
+{
+CreateMathConstruct (35,215);}
+/*----------------------------------------------------------------------
+  CreateMCARTESIANPRODUCTBINARY
+  ----------------------------------------------------------------------*/
+void CreateMCARTESIANPRODUCTBINARY (Document document, View view)
+{
+CreateMathConstruct (27,215);}
+/*----------------------------------------------------------------------
+  CreateMCEILING
+  ----------------------------------------------------------------------*/
+void CreateMCEILING (Document document, View view)
+{
+CreateMathConstruct (40, 8968, 8969);}
+/*----------------------------------------------------------------------
+  CreateMCODOMAIN
+  ----------------------------------------------------------------------*/
+void CreateMCODOMAIN (Document document, View view)
+{
+CreateMathConstruct (23, 0, "codom", TRUE);}
+/*----------------------------------------------------------------------
+  CreateMCOMBINATION
+  ----------------------------------------------------------------------*/
+void CreateMCOMBINATION (Document document, View view)
+{
+CreateMathConstruct (32);}
+/*----------------------------------------------------------------------
+  CreateMCOMPLEMENT
+  ----------------------------------------------------------------------*/
+void CreateMCOMPLEMENT (Document document, View view)
+{
+CreateMathConstruct (26, 175);}
+/*----------------------------------------------------------------------
+  CreateMCOMPLEMENTSUB
+  ----------------------------------------------------------------------*/
+void CreateMCOMPLEMENTSUB (Document document, View view)
+{
+CreateMathConstruct (41, 8705);}
+/*----------------------------------------------------------------------
+  CreateMCOMPLEXCARTESIAN
+  ----------------------------------------------------------------------*/
+void CreateMCOMPLEXCARTESIAN (Document document, View view)
+{
+CreateMathConstruct (48, TRUE);}
 
-/*----------------------------------------------------------------------
-  CreateMCOMPLEXCARTESIAN2
-  ----------------------------------------------------------------------*/
-void CreateMCOMPLEXCARTESIAN2 (Document document, View view)
-{
-CreateMathConstruct (48, FALSE);}
-/*----------------------------------------------------------------------
-  CreateMCOMPLEXES
-  ----------------------------------------------------------------------*/
-void CreateMCOMPLEXES (Document document, View view)
-{
-CreateMathConstruct (22,8450);}
-/*----------------------------------------------------------------------
-  CreateMCOMPLEXPOLAR
-  ----------------------------------------------------------------------*/
-void CreateMCOMPLEXPOLAR (Document document, View view)
-{
-CreateMathConstruct (49);}
-/*----------------------------------------------------------------------
-  CreateMCOMPOSE
-  ----------------------------------------------------------------------*/
-void CreateMCOMPOSE (Document document, View view)
-{
-CreateMathConstruct (35, 8728);}
-/*----------------------------------------------------------------------
-  CreateMCOMPOSEBINARY
-  ----------------------------------------------------------------------*/
-void CreateMCOMPOSEBINARY (Document document, View view)
-{
-CreateMathConstruct (27, 8728);}
-/*----------------------------------------------------------------------
-  CreateMCONGRU
-  ----------------------------------------------------------------------*/
-void CreateMCONGRU (Document document, View view)
-{
-CreateMathConstruct (28);}
-/*----------------------------------------------------------------------
-  CreateMCONJUGATE
-  ----------------------------------------------------------------------*/
-void CreateMCONJUGATE (Document document, View view)
-{
-CreateMathConstruct (26, 175);}
-/*----------------------------------------------------------------------
-  CreateMCOUPLE
-  ----------------------------------------------------------------------*/
-void CreateMCOUPLE (Document document, View view)
-{
-CreateMathConstruct (37, 2);}
-/*----------------------------------------------------------------------
-  CreateMCURL
-  ----------------------------------------------------------------------*/
-void CreateMCURL (Document document, View view)
-{
-CreateMathConstruct (54, 215);}
-/*----------------------------------------------------------------------
-  CreateMDETERMINANT
-  ----------------------------------------------------------------------*/
-void CreateMDETERMINANT (Document document, View view)
-{
-CreateMathConstruct (23, 0, "det", FALSE);}
-/*----------------------------------------------------------------------
-  CreateMDETERMINANT2
-  ----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------
+  CreateMCOMPLEXCARTESIAN2
+  ----------------------------------------------------------------------*/
+void CreateMCOMPLEXCARTESIAN2 (Document document, View view)
+{
+CreateMathConstruct (48, FALSE);}
+/*----------------------------------------------------------------------
+  CreateMCOMPLEXES
+  ----------------------------------------------------------------------*/
+void CreateMCOMPLEXES (Document document, View view)
+{
+CreateMathConstruct (22,8450);}
+/*----------------------------------------------------------------------
+  CreateMCOMPLEXPOLAR
+  ----------------------------------------------------------------------*/
+void CreateMCOMPLEXPOLAR (Document document, View view)
+{
+CreateMathConstruct (49);}
+/*----------------------------------------------------------------------
+  CreateMCOMPOSE
+  ----------------------------------------------------------------------*/
+void CreateMCOMPOSE (Document document, View view)
+{
+CreateMathConstruct (35, 8728);}
+/*----------------------------------------------------------------------
+  CreateMCOMPOSEBINARY
+  ----------------------------------------------------------------------*/
+void CreateMCOMPOSEBINARY (Document document, View view)
+{
+CreateMathConstruct (27, 8728);}
+/*----------------------------------------------------------------------
+  CreateMCONGRU
+  ----------------------------------------------------------------------*/
+void CreateMCONGRU (Document document, View view)
+{
+CreateMathConstruct (28);}
+/*----------------------------------------------------------------------
+  CreateMCONJUGATE
+  ----------------------------------------------------------------------*/
+void CreateMCONJUGATE (Document document, View view)
+{
+CreateMathConstruct (26, 175);}
+/*----------------------------------------------------------------------
+  CreateMCOUPLE
+  ----------------------------------------------------------------------*/
+void CreateMCOUPLE (Document document, View view)
+{
+CreateMathConstruct (37, 2);}
+/*----------------------------------------------------------------------
+  CreateMCURL
+  ----------------------------------------------------------------------*/
+void CreateMCURL (Document document, View view)
+{
+CreateMathConstruct (54, 215);}
+/*----------------------------------------------------------------------
+  CreateMDETERMINANT
+  ----------------------------------------------------------------------*/
+void CreateMDETERMINANT (Document document, View view)
+{
+CreateMathConstruct (23, 0, "det", FALSE);}
+/*----------------------------------------------------------------------
+  CreateMDETERMINANT2
+  ----------------------------------------------------------------------*/
 void CreateMDETERMINANT2 (Document document, View view)
-
-{
-CreateMathConstruct (53, '|', '|', 0, 0);}
-
-/*----------------------------------------------------------------------
-  CreateMDIAGONALINTERSECTION
-  ----------------------------------------------------------------------*/
-void CreateMDIAGONALINTERSECTION (Document document, View view)
-{
-CreateMathConstruct (43, 916, '<');}
-/*----------------------------------------------------------------------
-  CreateMDIFF
-  ----------------------------------------------------------------------*/
-void CreateMDIFF (Document document, View view)
-{
-CreateMathConstruct (50, 'd');}
-/*----------------------------------------------------------------------
-  CreateMDIRECTSUM
-  ----------------------------------------------------------------------*/
-void CreateMDIRECTSUM (Document document, View view)
-{
-CreateMathConstruct (27,8853);}
-/*----------------------------------------------------------------------
-  CreateMDIVERGENCE
-  ----------------------------------------------------------------------*/
-void CreateMDIVERGENCE (Document document, View view)
-{
-CreateMathConstruct (54, '.');}
-/*----------------------------------------------------------------------
-  CreateMDIVIDE
-  ----------------------------------------------------------------------*/
-void CreateMDIVIDE (Document document, View view)
-{
-CreateMathConstruct (27,247);}
-/*----------------------------------------------------------------------
-  CreateMDOMAIN
-  ----------------------------------------------------------------------*/
-void CreateMDOMAIN (Document document, View view)
-{
-CreateMathConstruct (23, 0, "dom", TRUE);}
-/*----------------------------------------------------------------------
-  CreateMCLASSICALFUNCTIONS
-  ----------------------------------------------------------------------*/
-void CreateMCLASSICALFUNCTIONS (Document document, View view)
-{
-CreateMathConstruct (44);}
-/*----------------------------------------------------------------------
-  CreateMEMPTYSET
-  ----------------------------------------------------------------------*/
-void CreateMEMPTYSET (Document document, View view)
-{
-CreateMathConstruct (22,8709);}
-/*----------------------------------------------------------------------
-  CreateMEQ
-  ----------------------------------------------------------------------*/
-void CreateMEQ (Document document, View view)
-{
-CreateMathConstruct (35, '=');}
-/*----------------------------------------------------------------------
-  CreateMEQUIVALENT
-  ----------------------------------------------------------------------*/
-void CreateMEQUIVALENT (Document document, View view)
-{
-CreateMathConstruct (35 , 8660);}
-/*----------------------------------------------------------------------
-  CreateMEQUIVALENT2
-  ----------------------------------------------------------------------*/
-void CreateMEQUIVALENT2 (Document document, View view)
-{
-CreateMathConstruct (35, 8801);}
-/*----------------------------------------------------------------------
-  CreateMEQUIVALENT2BINARY
-  ----------------------------------------------------------------------*/
-void CreateMEQUIVALENT2BINARY (Document document, View view)
-{
-CreateMathConstruct (27, 8801);}
-/*----------------------------------------------------------------------
-  CreateMEQUIVALENTBINARY
-  ----------------------------------------------------------------------*/
-void CreateMEQUIVALENTBINARY (Document document, View view)
-{
-CreateMathConstruct (27, 8660);}
-/*----------------------------------------------------------------------
-  CreateMEQUIVALENTUNDER
-  ----------------------------------------------------------------------*/
-void CreateMEQUIVALENTUNDER (Document document, View view)
-{
-CreateMathConstruct (33, '~');}
-/*----------------------------------------------------------------------
-  CreateMEULERGAMMA
-  ----------------------------------------------------------------------*/
-void CreateMEULERGAMMA (Document document, View view)
-{
-CreateMathConstruct (22,947);}
-/*----------------------------------------------------------------------
-  CreateMEXISTS
-  ----------------------------------------------------------------------*/
-void CreateMEXISTS (Document document, View view)
-{
-CreateMathConstruct (29,8707);}
-/*----------------------------------------------------------------------
-  CreateMEXPONENTIALE
-  ----------------------------------------------------------------------*/
-void CreateMEXPONENTIALE (Document document, View view)
-{
-CreateMathConstruct (22,8494);}
-/*----------------------------------------------------------------------
-  CreateMFACTORIAL
-  ----------------------------------------------------------------------*/
-void CreateMFACTORIAL (Document document, View view)
-{
-CreateMathConstruct (23,'!',FALSE);}
-/*----------------------------------------------------------------------
-  CreateMFACTOROF
-  ----------------------------------------------------------------------*/
-void CreateMFACTOROF (Document document, View view)
-{
-CreateMathConstruct (27,'|');}
-/*----------------------------------------------------------------------
-  CreateMFALSE
-  ----------------------------------------------------------------------*/
-void CreateMFALSE (Document document, View view)
-{
-CreateMathConstruct (22, 0, "False");}
-/*----------------------------------------------------------------------
-  CreateMFENCE2
-  ----------------------------------------------------------------------*/
-void CreateMFENCE2 (Document document, View view)
-{
-CreateMathConstruct (42);}
-/*----------------------------------------------------------------------
-  CreateMFLOOR
-  ----------------------------------------------------------------------*/
-void CreateMFLOOR (Document document, View view)
-{
-CreateMathConstruct (40, 8970, 8971);}
-/*----------------------------------------------------------------------
-  CreateMFORALL
-  ----------------------------------------------------------------------*/
-void CreateMFORALL (Document document, View view)
-{
-CreateMathConstruct (29,8704);}
-/*----------------------------------------------------------------------
-  CreateMGCD
-  ----------------------------------------------------------------------*/
-void CreateMGCD (Document document, View view)
-{
-CreateMathConstruct (23, 0, "gcd", TRUE);}
-/*----------------------------------------------------------------------
-  CreateMGEQ
-  ----------------------------------------------------------------------*/
-void CreateMGEQ (Document document, View view)
-{
-CreateMathConstruct (35, 8805);}
-/*----------------------------------------------------------------------
-  CreateMGEQBINARY
-  ----------------------------------------------------------------------*/
-void CreateMGEQBINARY (Document document, View view)
-{
+
+{
+CreateMathConstruct (53, '|', '|', 0, 0);}
+
+/*----------------------------------------------------------------------
+  CreateMDIAGONALINTERSECTION
+  ----------------------------------------------------------------------*/
+void CreateMDIAGONALINTERSECTION (Document document, View view)
+{
+CreateMathConstruct (43, 916, '<');}
+/*----------------------------------------------------------------------
+  CreateMDIFF
+  ----------------------------------------------------------------------*/
+void CreateMDIFF (Document document, View view)
+{
+CreateMathConstruct (50, 'd');}
+/*----------------------------------------------------------------------
+  CreateMDIRECTSUM
+  ----------------------------------------------------------------------*/
+void CreateMDIRECTSUM (Document document, View view)
+{
+CreateMathConstruct (27,8853);}
+/*----------------------------------------------------------------------
+  CreateMDIVERGENCE
+  ----------------------------------------------------------------------*/
+void CreateMDIVERGENCE (Document document, View view)
+{
+CreateMathConstruct (54, '.');}
+/*----------------------------------------------------------------------
+  CreateMDIVIDE
+  ----------------------------------------------------------------------*/
+void CreateMDIVIDE (Document document, View view)
+{
+CreateMathConstruct (27,247);}
+/*----------------------------------------------------------------------
+  CreateMDOMAIN
+  ----------------------------------------------------------------------*/
+void CreateMDOMAIN (Document document, View view)
+{
+CreateMathConstruct (23, 0, "dom", TRUE);}
+/*----------------------------------------------------------------------
+  CreateMCLASSICALFUNCTIONS
+  ----------------------------------------------------------------------*/
+void CreateMCLASSICALFUNCTIONS (Document document, View view)
+{
+CreateMathConstruct (44);}
+/*----------------------------------------------------------------------
+  CreateMEMPTYSET
+  ----------------------------------------------------------------------*/
+void CreateMEMPTYSET (Document document, View view)
+{
+CreateMathConstruct (22,8709);}
+/*----------------------------------------------------------------------
+  CreateMEQ
+  ----------------------------------------------------------------------*/
+void CreateMEQ (Document document, View view)
+{
+CreateMathConstruct (35, '=');}
+/*----------------------------------------------------------------------
+  CreateMEQUIVALENT
+  ----------------------------------------------------------------------*/
+void CreateMEQUIVALENT (Document document, View view)
+{
+CreateMathConstruct (35 , 8660);}
+/*----------------------------------------------------------------------
+  CreateMEQUIVALENT2
+  ----------------------------------------------------------------------*/
+void CreateMEQUIVALENT2 (Document document, View view)
+{
+CreateMathConstruct (35, 8801);}
+/*----------------------------------------------------------------------
+  CreateMEQUIVALENT2BINARY
+  ----------------------------------------------------------------------*/
+void CreateMEQUIVALENT2BINARY (Document document, View view)
+{
+CreateMathConstruct (27, 8801);}
+/*----------------------------------------------------------------------
+  CreateMEQUIVALENTBINARY
+  ----------------------------------------------------------------------*/
+void CreateMEQUIVALENTBINARY (Document document, View view)
+{
+CreateMathConstruct (27, 8660);}
+/*----------------------------------------------------------------------
+  CreateMEQUIVALENTUNDER
+  ----------------------------------------------------------------------*/
+void CreateMEQUIVALENTUNDER (Document document, View view)
+{
+CreateMathConstruct (33, '~');}
+/*----------------------------------------------------------------------
+  CreateMEULERGAMMA
+  ----------------------------------------------------------------------*/
+void CreateMEULERGAMMA (Document document, View view)
+{
+CreateMathConstruct (22,947);}
+/*----------------------------------------------------------------------
+  CreateMEXISTS
+  ----------------------------------------------------------------------*/
+void CreateMEXISTS (Document document, View view)
+{
+CreateMathConstruct (29,8707);}
+/*----------------------------------------------------------------------
+  CreateMEXPONENTIALE
+  ----------------------------------------------------------------------*/
+void CreateMEXPONENTIALE (Document document, View view)
+{
+CreateMathConstruct (22,8494);}
+/*----------------------------------------------------------------------
+  CreateMFACTORIAL
+  ----------------------------------------------------------------------*/
+void CreateMFACTORIAL (Document document, View view)
+{
+CreateMathConstruct (23,'!',FALSE);}
+/*----------------------------------------------------------------------
+  CreateMFACTOROF
+  ----------------------------------------------------------------------*/
+void CreateMFACTOROF (Document document, View view)
+{
+CreateMathConstruct (27,'|');}
+/*----------------------------------------------------------------------
+  CreateMFALSE
+  ----------------------------------------------------------------------*/
+void CreateMFALSE (Document document, View view)
+{
+CreateMathConstruct (22, 0, "False");}
+/*----------------------------------------------------------------------
+  CreateMFENCE2
+  ----------------------------------------------------------------------*/
+void CreateMFENCE2 (Document document, View view)
+{
+CreateMathConstruct (42);}
+/*----------------------------------------------------------------------
+  CreateMFLOOR
+  ----------------------------------------------------------------------*/
+void CreateMFLOOR (Document document, View view)
+{
+CreateMathConstruct (40, 8970, 8971);}
+/*----------------------------------------------------------------------
+  CreateMFORALL
+  ----------------------------------------------------------------------*/
+void CreateMFORALL (Document document, View view)
+{
+CreateMathConstruct (29,8704);}
+/*----------------------------------------------------------------------
+  CreateMGCD
+  ----------------------------------------------------------------------*/
+void CreateMGCD (Document document, View view)
+{
+CreateMathConstruct (23, 0, "gcd", TRUE);}
+/*----------------------------------------------------------------------
+  CreateMGEQ
+  ----------------------------------------------------------------------*/
+void CreateMGEQ (Document document, View view)
+{
+CreateMathConstruct (35, 8805);}
+/*----------------------------------------------------------------------
+  CreateMGEQBINARY
+  ----------------------------------------------------------------------*/
+void CreateMGEQBINARY (Document document, View view)
+{
 CreateMathConstruct (27, 8805);}
-/*----------------------------------------------------------------------
-  CreateMGRAD
-  ----------------------------------------------------------------------*/
-void CreateMGRAD (Document document, View view)
-{
-CreateMathConstruct (54, 0);}
-/*----------------------------------------------------------------------
-  CreateMGT
-  ----------------------------------------------------------------------*/
-void CreateMGT (Document document, View view)
-{
-CreateMathConstruct (35, '>');}
-/*----------------------------------------------------------------------
-  CreateMIDENT
-  ----------------------------------------------------------------------*/
-void CreateMIDENT (Document document, View view)
-{
-CreateMathConstruct (22, 0, "Id");}
-/*----------------------------------------------------------------------
-  CreateMIMAGE
-  ----------------------------------------------------------------------*/
-void CreateMIMAGE (Document document, View view)
-{
-CreateMathConstruct (23, 0, "img", TRUE);}
-/*----------------------------------------------------------------------
-  CreateMIMAGINARY
-  ----------------------------------------------------------------------*/
-void CreateMIMAGINARY (Document document, View view)
-{
-CreateMathConstruct (23, 8465 ,TRUE);}
-/*----------------------------------------------------------------------
-  CreateMIMAGINARYI
-  ----------------------------------------------------------------------*/
-void CreateMIMAGINARYI (Document document, View view)
-{
-CreateMathConstruct (22,8520);}
-/*----------------------------------------------------------------------
-  CreateMIMPLIES
-  ----------------------------------------------------------------------*/
-void CreateMIMPLIES (Document document, View view)
-{
-CreateMathConstruct (27,8658);}
-/*----------------------------------------------------------------------
-  CreateMIN
-  ----------------------------------------------------------------------*/
-void CreateMIN (Document document, View view)
-{
-CreateMathConstruct (27,8712);}
-/*----------------------------------------------------------------------
-  CreateMINF
-  ----------------------------------------------------------------------*/
-void CreateMINF (Document document, View view)
-{
-CreateMathConstruct (23, 0, "inf", FALSE);}
-/*----------------------------------------------------------------------
-  CreateMINFINITY
-  ----------------------------------------------------------------------*/
-void CreateMINFINITY (Document document, View view)
-{
-CreateMathConstruct (22,8734);}
-/*----------------------------------------------------------------------
-  CreateMINFUNDER
-  ----------------------------------------------------------------------*/
-void CreateMINFUNDER (Document document, View view)
-{
-CreateMathConstruct (34, "inf");}
-/*----------------------------------------------------------------------
-  CreateMINT2
-  ----------------------------------------------------------------------*/
-void CreateMINT2 (Document document, View view)
-{
-CreateMathConstruct (52);}
-/*----------------------------------------------------------------------
-  CreateMINTEGERS
-  ----------------------------------------------------------------------*/
-void CreateMINTEGERS (Document document, View view)
-{
-CreateMathConstruct (22,8484);}
-/*----------------------------------------------------------------------
-  CreateMINTERSECT
-  ----------------------------------------------------------------------*/
-void CreateMINTERSECT (Document document, View view)
-{
-CreateMathConstruct (35, 8898);}
-/*----------------------------------------------------------------------
-  CreateMINTERSECTBINARY
-  ----------------------------------------------------------------------*/
-void CreateMINTERSECTBINARY (Document document, View view)
-{
-CreateMathConstruct (27, 8898);}
-/*----------------------------------------------------------------------
-  CreateMINTERSECTUNDER
-  ----------------------------------------------------------------------*/
-void CreateMINTERSECTUNDER (Document document, View view)
-{
-CreateMathConstruct (24,8898);}
-/*----------------------------------------------------------------------
-  CreateMINTUNDER
-  ----------------------------------------------------------------------*/
-void CreateMINTUNDER (Document document, View view)
-{
-CreateMathConstruct (24, 8747);}
-/*----------------------------------------------------------------------
-  CreateMINVERSE
-  ----------------------------------------------------------------------*/
-void CreateMINVERSE (Document document, View view)
-{
-CreateMathConstruct (30, -1, "-1");}
-/*----------------------------------------------------------------------
-  CreateMISOMORPHIC
-  ----------------------------------------------------------------------*/
-void CreateMISOMORPHIC (Document document, View view)
-{
-CreateMathConstruct (27,8773);}
-/*----------------------------------------------------------------------
-  CreateMLISTEXTENSION
-  ----------------------------------------------------------------------*/
-void CreateMLISTEXTENSION (Document document, View view)
-{
-CreateMathConstruct (39, '[', ']');}
-/*----------------------------------------------------------------------
-  CreateMLCM
-  ----------------------------------------------------------------------*/
-void CreateMLCM (Document document, View view)
-{
-CreateMathConstruct (23, 0, "lcm", TRUE);}
-/*----------------------------------------------------------------------
-  CreateMLAPLACIAN
-  ----------------------------------------------------------------------*/
-void CreateMLAPLACIAN (Document document, View view)
-{
-CreateMathConstruct (54, 1);}
-/*----------------------------------------------------------------------
-  CreateMLEQ
-  ----------------------------------------------------------------------*/
-void CreateMLEQ (Document document, View view)
-{
-CreateMathConstruct (35, 8804);}/*----------------------------------------------------------------------
-  CreateMLEQBINARY
-  ----------------------------------------------------------------------*/
-void CreateMLEQBINARY (Document document, View view)
-{
-CreateMathConstruct (27, 8804);}
-/*----------------------------------------------------------------------
-  CreateMLISTSEPARATION
-  ----------------------------------------------------------------------*/
-void CreateMLISTSEPARATION (Document document, View view)
-{
-CreateMathConstruct (38, '[', ']');}
-/*----------------------------------------------------------------------
-  CreateMLT
-  ----------------------------------------------------------------------*/
-void CreateMLT (Document document, View view)
-{
-CreateMathConstruct (35, '<');}
-/*----------------------------------------------------------------------
-  CreateMLAMBDA
-  ----------------------------------------------------------------------*/
-void CreateMLAMBDA (Document document, View view)
-{
-CreateMathConstruct (45);}
+/*----------------------------------------------------------------------
+  CreateMGRAD
+  ----------------------------------------------------------------------*/
+void CreateMGRAD (Document document, View view)
+{
+CreateMathConstruct (54, 0);}
+/*----------------------------------------------------------------------
+  CreateMGT
+  ----------------------------------------------------------------------*/
+void CreateMGT (Document document, View view)
+{
+CreateMathConstruct (35, '>');}
+/*----------------------------------------------------------------------
+  CreateMIDENT
+  ----------------------------------------------------------------------*/
+void CreateMIDENT (Document document, View view)
+{
+CreateMathConstruct (22, 0, "Id");}
+/*----------------------------------------------------------------------
+  CreateMIMAGE
+  ----------------------------------------------------------------------*/
+void CreateMIMAGE (Document document, View view)
+{
+CreateMathConstruct (23, 0, "img", TRUE);}
+/*----------------------------------------------------------------------
+  CreateMIMAGINARY
+  ----------------------------------------------------------------------*/
+void CreateMIMAGINARY (Document document, View view)
+{
+CreateMathConstruct (23, 8465 ,TRUE);}
+/*----------------------------------------------------------------------
+  CreateMIMAGINARYI
+  ----------------------------------------------------------------------*/
+void CreateMIMAGINARYI (Document document, View view)
+{
+CreateMathConstruct (22,8520);}
+/*----------------------------------------------------------------------
+  CreateMIMPLIES
+  ----------------------------------------------------------------------*/
+void CreateMIMPLIES (Document document, View view)
+{
+CreateMathConstruct (27,8658);}
+/*----------------------------------------------------------------------
+  CreateMIN
+  ----------------------------------------------------------------------*/
+void CreateMIN (Document document, View view)
+{
+CreateMathConstruct (27,8712);}
+/*----------------------------------------------------------------------
+  CreateMINF
+  ----------------------------------------------------------------------*/
+void CreateMINF (Document document, View view)
+{
+CreateMathConstruct (23, 0, "inf", FALSE);}
+/*----------------------------------------------------------------------
+  CreateMINFINITY
+  ----------------------------------------------------------------------*/
+void CreateMINFINITY (Document document, View view)
+{
+CreateMathConstruct (22,8734);}
+/*----------------------------------------------------------------------
+  CreateMINFUNDER
+  ----------------------------------------------------------------------*/
+void CreateMINFUNDER (Document document, View view)
+{
+CreateMathConstruct (34, "inf");}
+/*----------------------------------------------------------------------
+  CreateMINT2
+  ----------------------------------------------------------------------*/
+void CreateMINT2 (Document document, View view)
+{
+CreateMathConstruct (52);}
+/*----------------------------------------------------------------------
+  CreateMINTEGERS
+  ----------------------------------------------------------------------*/
+void CreateMINTEGERS (Document document, View view)
+{
+CreateMathConstruct (22,8484);}
+/*----------------------------------------------------------------------
+  CreateMINTERSECT
+  ----------------------------------------------------------------------*/
+void CreateMINTERSECT (Document document, View view)
+{
+CreateMathConstruct (35, 8898);}
+/*----------------------------------------------------------------------
+  CreateMINTERSECTBINARY
+  ----------------------------------------------------------------------*/
+void CreateMINTERSECTBINARY (Document document, View view)
+{
+CreateMathConstruct (27, 8898);}
+/*----------------------------------------------------------------------
+  CreateMINTERSECTUNDER
+  ----------------------------------------------------------------------*/
+void CreateMINTERSECTUNDER (Document document, View view)
+{
+CreateMathConstruct (24,8898);}
+/*----------------------------------------------------------------------
+  CreateMINTUNDER
+  ----------------------------------------------------------------------*/
+void CreateMINTUNDER (Document document, View view)
+{
+CreateMathConstruct (24, 8747);}
+/*----------------------------------------------------------------------
+  CreateMINVERSE
+  ----------------------------------------------------------------------*/
+void CreateMINVERSE (Document document, View view)
+{
+CreateMathConstruct (30, -1, "-1");}
+/*----------------------------------------------------------------------
+  CreateMISOMORPHIC
+  ----------------------------------------------------------------------*/
+void CreateMISOMORPHIC (Document document, View view)
+{
+CreateMathConstruct (27,8773);}
+/*----------------------------------------------------------------------
+  CreateMLISTEXTENSION
+  ----------------------------------------------------------------------*/
+void CreateMLISTEXTENSION (Document document, View view)
+{
+CreateMathConstruct (39, '[', ']');}
+/*----------------------------------------------------------------------
+  CreateMLCM
+  ----------------------------------------------------------------------*/
+void CreateMLCM (Document document, View view)
+{
+CreateMathConstruct (23, 0, "lcm", TRUE);}
+/*----------------------------------------------------------------------
+  CreateMLAPLACIAN
+  ----------------------------------------------------------------------*/
+void CreateMLAPLACIAN (Document document, View view)
+{
+CreateMathConstruct (54, 1);}
+/*----------------------------------------------------------------------
+  CreateMLEQ
+  ----------------------------------------------------------------------*/
+void CreateMLEQ (Document document, View view)
+{
+CreateMathConstruct (35, 8804);}/*----------------------------------------------------------------------
+  CreateMLEQBINARY
+  ----------------------------------------------------------------------*/
+void CreateMLEQBINARY (Document document, View view)
+{
+CreateMathConstruct (27, 8804);}
+/*----------------------------------------------------------------------
+  CreateMLISTSEPARATION
+  ----------------------------------------------------------------------*/
+void CreateMLISTSEPARATION (Document document, View view)
+{
+CreateMathConstruct (38, '[', ']');}
+/*----------------------------------------------------------------------
+  CreateMLT
+  ----------------------------------------------------------------------*/
+void CreateMLT (Document document, View view)
+{
+CreateMathConstruct (35, '<');}
+/*----------------------------------------------------------------------
+  CreateMLAMBDA
+  ----------------------------------------------------------------------*/
+void CreateMLAMBDA (Document document, View view)
+{
+CreateMathConstruct (45);}
 
-/*----------------------------------------------------------------------
-  CreateMLIM
-  ----------------------------------------------------------------------*/
-void CreateMLIM (Document document, View view)
-{
-CreateMathConstruct (33, 0, "lim");}
+/*----------------------------------------------------------------------
+  CreateMLIM
+  ----------------------------------------------------------------------*/
+void CreateMLIM (Document document, View view)
+{
+CreateMathConstruct (33, 0, "lim");}
 
-/*----------------------------------------------------------------------
-  CreateMLIMTENDSTO
-  ----------------------------------------------------------------------*/
-void CreateMLIMTENDSTO (Document document, View view)
-{
+/*----------------------------------------------------------------------
+  CreateMLIMTENDSTO
+  ----------------------------------------------------------------------*/
+void CreateMLIMTENDSTO (Document document, View view)
+{
 CreateMathConstruct (43, 0, 8594, "lim");}
 
-/*----------------------------------------------------------------------
-  CreateMMAP
-  ----------------------------------------------------------------------*/
-void CreateMMAP (Document document, View view)
-{
-CreateMathConstruct (47);}
-/*----------------------------------------------------------------------
-  CreateMMATRIX2
-  ----------------------------------------------------------------------*/
-void CreateMMATRIX2 (Document document, View view)
-{
-CreateMathConstruct (53, '(', ')', 0, 0);}
-/*----------------------------------------------------------------------
-  CreateMMAX
-  ----------------------------------------------------------------------*/
-void CreateMMAX (Document document, View view)
-{
-CreateMathConstruct (23, 0, "max", FALSE);}
-/*----------------------------------------------------------------------
-  CreateMMAXUNDER
-  ----------------------------------------------------------------------*/
-void CreateMMAXUNDER (Document document, View view)
-{
-CreateMathConstruct (34, "max");}
-/*----------------------------------------------------------------------
-  CreateMMEAN
-  ----------------------------------------------------------------------*/
-void CreateMMEAN (Document document, View view)
-{
-CreateMathConstruct (40, 9001, 9002);}
-/*----------------------------------------------------------------------
-  CreateMMEDIAN
-  ----------------------------------------------------------------------*/
-void CreateMMEDIAN (Document document, View view)
-{
-CreateMathConstruct (23, 0, "median", TRUE);}
-/*----------------------------------------------------------------------
-  CreateMMIN
-  ----------------------------------------------------------------------*/
-void CreateMMIN (Document document, View view)
-{
-CreateMathConstruct (23, 0, "min", FALSE);}
-/*----------------------------------------------------------------------
-  CreateMMINUNDER
-  ----------------------------------------------------------------------*/
-void CreateMMINUNDER (Document document, View view)
-{
-CreateMathConstruct (34, "min");}
-/*----------------------------------------------------------------------
-  CreateMMINUSBINARY
-  ----------------------------------------------------------------------*/
-void CreateMMINUSBINARY (Document document, View view)
-{
-CreateMathConstruct (27,8722);}
-/*----------------------------------------------------------------------
-  CreateMMINUSUNARY
-  ----------------------------------------------------------------------*/
-void CreateMMINUSUNARY (Document document, View view)
-{
-CreateMathConstruct (23, 8722, FALSE);}
-/*----------------------------------------------------------------------
-  CreateMMODE
-  ----------------------------------------------------------------------*/
-void CreateMMODE (Document document, View view)
-{
-CreateMathConstruct (23, 0, "mode", TRUE);}
-/*----------------------------------------------------------------------
-  CreateMMOMENT
-  ----------------------------------------------------------------------*/
-void CreateMMOMENT (Document document, View view)
-{
-CreateMathConstruct (56);}
-/*----------------------------------------------------------------------
-  CreateMNATURALS
-  ----------------------------------------------------------------------*/
-void CreateMNATURALS (Document document, View view)
-{
-CreateMathConstruct (22,8469);}
-/*----------------------------------------------------------------------
-  CreateMNEQ
-  ----------------------------------------------------------------------*/
-void CreateMNEQ (Document document, View view)
-{
-CreateMathConstruct (27,8800);}
-/*----------------------------------------------------------------------
-  CreateMNOT
-  ----------------------------------------------------------------------*/
-void CreateMNOT (Document document, View view)
-{
-CreateMathConstruct (23, 172, FALSE);}
-/*----------------------------------------------------------------------
-  CreateMNOTANUMBER
-  ----------------------------------------------------------------------*/
-void CreateMNOTANUMBER (Document document, View view)
-{
-CreateMathConstruct (22, 0, "NaN");}
-/*----------------------------------------------------------------------
-  CreateMNOTIN
-  ----------------------------------------------------------------------*/
-void CreateMNOTIN (Document document, View view)
-{
-CreateMathConstruct (27,8713);}
-/*----------------------------------------------------------------------
-  CreateMNOTPRSUBSET
-  ----------------------------------------------------------------------*/
-void CreateMNOTPRSUBSET (Document document, View view)
-{
-CreateMathConstruct (27,8836);}
-/*----------------------------------------------------------------------
-  CreateMNOTSUBSET
-  ----------------------------------------------------------------------*/
-void CreateMNOTSUBSET (Document document, View view)
-{
-CreateMathConstruct (27,8840);}
-/*----------------------------------------------------------------------
-  CreateMNUPLET
-  ----------------------------------------------------------------------*/
-void CreateMNUPLET (Document document, View view)
-{
-CreateMathConstruct (37, 0);}
-/*----------------------------------------------------------------------
-  CreateMOMEGASUB
-  ----------------------------------------------------------------------*/
-void CreateMOMEGASUB (Document document, View view)
-{
-CreateMathConstruct (31,969);}
-/*----------------------------------------------------------------------
-  CreateMOR
-  ----------------------------------------------------------------------*/
-void CreateMOR (Document document, View view)
-{
-CreateMathConstruct (35, 8744);}
-/*----------------------------------------------------------------------
-  CreateMORBINARY
-  ----------------------------------------------------------------------*/
-void CreateMORBINARY (Document document, View view)
-{
-CreateMathConstruct (27, 8744);}
-/*----------------------------------------------------------------------
-  CreateMORTHOGONAL
-  ----------------------------------------------------------------------*/
-void CreateMORTHOGONAL (Document document, View view)
-{
-CreateMathConstruct (27,8869);}
-/*----------------------------------------------------------------------
-  CreateMORTHOGONALCOMPLEMENT
-  ----------------------------------------------------------------------*/
-void CreateMORTHOGONALCOMPLEMENT (Document document, View view)
-{
-CreateMathConstruct (30,8869);}
-/*----------------------------------------------------------------------
-  CreateMOUTERPRODUCT
-  ----------------------------------------------------------------------*/
-void CreateMOUTERPRODUCT (Document document, View view)
-{
-CreateMathConstruct (27,8855);}
-/*----------------------------------------------------------------------
-  CreateMPARTIALDIFF
-  ----------------------------------------------------------------------*/
-void CreateMPARTIALDIFF (Document document, View view)
-{
-CreateMathConstruct (50, 8706);}
-/*----------------------------------------------------------------------
-  CreateMPARTIALDIFF2
-  ----------------------------------------------------------------------*/
-void CreateMPARTIALDIFF2 (Document document, View view)
-{
-CreateMathConstruct (51);}
-/*----------------------------------------------------------------------
-  CreateMPI
-  ----------------------------------------------------------------------*/
-void CreateMPI (Document document, View view)
-{
-CreateMathConstruct (22,960);}
-/*----------------------------------------------------------------------
-  CreateMPIECEWISE
-  ----------------------------------------------------------------------*/
-void CreateMPIECEWISE (Document document, View view)
-{
-CreateMathConstruct (25);}
-/*----------------------------------------------------------------------
-  CreateMPLUS
-  ----------------------------------------------------------------------*/
-void CreateMPLUS (Document document, View view)
-{
-CreateMathConstruct (35, '+');}
-/*----------------------------------------------------------------------
-  CreateMPOWER
-  ----------------------------------------------------------------------*/
-void CreateMPOWER (Document document, View view)
-{
-CreateMathConstruct (7);}
-/*----------------------------------------------------------------------
-  CreateMPOWERSET
-  ----------------------------------------------------------------------*/
-void CreateMPOWERSET (Document document, View view)
-{
-CreateMathConstruct (23, 8472, TRUE);}
-/*----------------------------------------------------------------------
-  CreateMPRIMES
-  ----------------------------------------------------------------------*/
-void CreateMPRIMES (Document document, View view)
-{
-CreateMathConstruct (22,8473);}
-/*----------------------------------------------------------------------
-  CreateMPRODUNDER
-  ----------------------------------------------------------------------*/
-void CreateMPRODUNDER (Document document, View view)
-{
-CreateMathConstruct (24,8719);}
-/*----------------------------------------------------------------------
-  CreateMPRODUNDEROVER
-  ----------------------------------------------------------------------*/
-void CreateMPRODUNDEROVER (Document document, View view)
-{
-CreateMathConstruct (21,8719);}
-/*----------------------------------------------------------------------
-  CreateMPRSUBSET
-  ----------------------------------------------------------------------*/
-void CreateMPRSUBSET (Document document, View view)
-{
-CreateMathConstruct (35, 8834);}
-/*----------------------------------------------------------------------
-  CreateMPRSUBSETBINARY
-  ----------------------------------------------------------------------*/
-void CreateMPRSUBSETBINARY (Document document, View view)
-{
-CreateMathConstruct (27, 8834);}
-/*----------------------------------------------------------------------
-  CreateMQUOTIENT
-  ----------------------------------------------------------------------*/
-void CreateMQUOTIENT (Document document, View view)
-{
-CreateMathConstruct (46);}
-/*----------------------------------------------------------------------
-  CreateMRATIONNALS
-  ----------------------------------------------------------------------*/
-void CreateMRATIONNALS (Document document, View view)
-{
-CreateMathConstruct (22, 8474);}
-/*----------------------------------------------------------------------
-  CreateMREAL
-  ----------------------------------------------------------------------*/
-void CreateMREAL (Document document, View view)
-{
-CreateMathConstruct (23, 8476, TRUE);}
-/*----------------------------------------------------------------------
-  CreateMREALS
-  ----------------------------------------------------------------------*/
-void CreateMREALS (Document document, View view)
-{
-CreateMathConstruct (22,8477);}
-/*----------------------------------------------------------------------
-  CreateMREM
-  ----------------------------------------------------------------------*/
-void CreateMREM (Document document, View view)
-{
-CreateMathConstruct (27, 0, "mod");}
-/*----------------------------------------------------------------------
-  CreateMSCALARPRODUCT
-  ----------------------------------------------------------------------*/
-void CreateMSCALARPRODUCT (Document document, View view)
-{
-CreateMathConstruct (27,'.');}
-/*----------------------------------------------------------------------
-  CreateMSDEV
-  ----------------------------------------------------------------------*/
-void CreateMSDEV (Document document, View view)
-{
-CreateMathConstruct (23, 963, TRUE);}
-/*----------------------------------------------------------------------
-  CreateMSELECTOR
-  ----------------------------------------------------------------------*/
-void CreateMSELECTOR (Document document, View view)
-{
-CreateMathConstruct (36);}
-/*----------------------------------------------------------------------
-  CreateMSETDIFF
-  ----------------------------------------------------------------------*/
-void CreateMSETDIFF (Document document, View view)
-{
-CreateMathConstruct (27,'\\');}
-/*----------------------------------------------------------------------
-  CreateMSETEXTENSION
-  ----------------------------------------------------------------------*/
-void CreateMSETEXTENSION (Document document, View view)
-{
-CreateMathConstruct (39, '{', '}');}
-/*----------------------------------------------------------------------
-  CreateMSETSEPARATION
-  ----------------------------------------------------------------------*/
-void CreateMSETSEPARATION (Document document, View view)
-{
-CreateMathConstruct (38, '{', '}');}
-/*----------------------------------------------------------------------
-  CreateMSETSYMDIFF
-  ----------------------------------------------------------------------*/
-void CreateMSETSYMDIFF (Document document, View view)
-{
-CreateMathConstruct (27, 916);}
-/*----------------------------------------------------------------------
-  CreateMSUBSET
-  ----------------------------------------------------------------------*/
-void CreateMSUBSET (Document document, View view)
-{
-CreateMathConstruct (35, 8838);}
-/*----------------------------------------------------------------------
-  CreateMSUBSETBINARY
-  ----------------------------------------------------------------------*/
-void CreateMSUBSETBINARY (Document document, View view)
-{
-CreateMathConstruct (27, 8838);}
-/*----------------------------------------------------------------------
-  CreateMSUMUNDER
-  ----------------------------------------------------------------------*/
-void CreateMSUMUNDER (Document document, View view)
-{
-CreateMathConstruct (24,8721);}
-/*----------------------------------------------------------------------
-  CreateMSUP2
-  ----------------------------------------------------------------------*/
-void CreateMSUP2 (Document document, View view)
-{
-CreateMathConstruct (23, 0, "sup", FALSE);}
-/*----------------------------------------------------------------------
-  CreateMSUPMINUS
-  ----------------------------------------------------------------------*/
-void CreateMSUPMINUS (Document document, View view)
-{
-CreateMathConstruct (30,'-');}
-/*----------------------------------------------------------------------
-  CreateMSUPPLUS
-  ----------------------------------------------------------------------*/
-void CreateMSUPPLUS (Document document, View view)
-{
-CreateMathConstruct (30,'+');}
-/*----------------------------------------------------------------------
-  CreateMSUPUNDER
-  ----------------------------------------------------------------------*/
-void CreateMSUPUNDER (Document document, View view)
-{
-CreateMathConstruct (34, "sup");}
-/*----------------------------------------------------------------------
-  CreateMTENDSTO
-  ----------------------------------------------------------------------*/
-void CreateMTENDSTO (Document document, View view)
-{
-CreateMathConstruct (33, 8594);}
-/*----------------------------------------------------------------------
-  CreateMTENDSTOTENDSTO
-  ----------------------------------------------------------------------*/
-void CreateMTENDSTOTENDSTO (Document document, View view)
-{
-CreateMathConstruct (43, 8594, 8594);}
-/*----------------------------------------------------------------------
-  CreateMTIMES
-  ----------------------------------------------------------------------*/
-void CreateMTIMES (Document document, View view)
-{
-CreateMathConstruct (35,215);}
-/*----------------------------------------------------------------------
-  CreateMTIMESBINARY
-  ----------------------------------------------------------------------*/
-void CreateMTIMESBINARY (Document document, View view)
-{
-CreateMathConstruct (27,215);}
-/*----------------------------------------------------------------------
-  CreateMTRANSPOSE
-  ----------------------------------------------------------------------*/
-void CreateMTRANSPOSE (Document document, View view)
-{
-CreateMathConstruct (30,'t');}
-/*----------------------------------------------------------------------
-  CreateMTRUE
-  ----------------------------------------------------------------------*/
-void CreateMTRUE (Document document, View view)
-{
-CreateMathConstruct (22, 0, "True");}
-/*----------------------------------------------------------------------
-  CreateMUNION
-  ----------------------------------------------------------------------*/
-void CreateMUNION (Document document, View view)
-{
-CreateMathConstruct (35, 8899);}
-/*----------------------------------------------------------------------
-  CreateMUNIONUNARY
-  ----------------------------------------------------------------------*/
-void CreateMUNIONUNARY (Document document, View view)
-{
-CreateMathConstruct (23, 8899, FALSE);}
-/*----------------------------------------------------------------------
-  CreateMUNIONUNDER
-  ----------------------------------------------------------------------*/
-void CreateMUNIONUNDER (Document document, View view)
-{
-CreateMathConstruct (24, 8899);}
-/*----------------------------------------------------------------------
-  CreateMUNIONBINARY
-  ----------------------------------------------------------------------*/
-void CreateMUNIONBINARY (Document document, View view)
-{
-CreateMathConstruct (27, 8899);}
-/*----------------------------------------------------------------------
-  CreateMVARIANCE
-  ----------------------------------------------------------------------*/
-void CreateMVARIANCE (Document document, View view)
-{
-CreateMathConstruct (55);}
-/*----------------------------------------------------------------------
-  CreateMVECTORPRODUCT
-  ----------------------------------------------------------------------*/
-void CreateMVECTORPRODUCT (Document document, View view)
-{
-CreateMathConstruct (27,8896);}
-/*----------------------------------------------------------------------
-  CreateMVECTORPRODUCT
-  ----------------------------------------------------------------------*/
-void CreateMVECTORROW (Document document, View view)
-{
-CreateMathConstruct (53, '(', ')', 0, 1);}
-/*----------------------------------------------------------------------
-  CreateMVECTORPRODUCT
-  ----------------------------------------------------------------------*/
-void CreateMVECTORCOLUMN (Document document, View view)
-{
-CreateMathConstruct (53, '(', ')', 1, 0);}
-/*----------------------------------------------------------------------
-  CreateMXOR
-  ----------------------------------------------------------------------*/
-void CreateMXOR (Document document, View view)
+/*----------------------------------------------------------------------
+  CreateMMAP
+  ----------------------------------------------------------------------*/
+void CreateMMAP (Document document, View view)
+{
+CreateMathConstruct (47);}
+/*----------------------------------------------------------------------
+  CreateMMATRIX2
+  ----------------------------------------------------------------------*/
+void CreateMMATRIX2 (Document document, View view)
+{
+CreateMathConstruct (53, '(', ')', 0, 0);}
+/*----------------------------------------------------------------------
+  CreateMMAX
+  ----------------------------------------------------------------------*/
+void CreateMMAX (Document document, View view)
+{
+CreateMathConstruct (23, 0, "max", FALSE);}
+/*----------------------------------------------------------------------
+  CreateMMAXUNDER
+  ----------------------------------------------------------------------*/
+void CreateMMAXUNDER (Document document, View view)
+{
+CreateMathConstruct (34, "max");}
+/*----------------------------------------------------------------------
+  CreateMMEAN
+  ----------------------------------------------------------------------*/
+void CreateMMEAN (Document document, View view)
+{
+CreateMathConstruct (40, 9001, 9002);}
+/*----------------------------------------------------------------------
+  CreateMMEDIAN
+  ----------------------------------------------------------------------*/
+void CreateMMEDIAN (Document document, View view)
+{
+CreateMathConstruct (23, 0, "median", TRUE);}
+/*----------------------------------------------------------------------
+  CreateMMIN
+  ----------------------------------------------------------------------*/
+void CreateMMIN (Document document, View view)
+{
+CreateMathConstruct (23, 0, "min", FALSE);}
+/*----------------------------------------------------------------------
+  CreateMMINUNDER
+  ----------------------------------------------------------------------*/
+void CreateMMINUNDER (Document document, View view)
+{
+CreateMathConstruct (34, "min");}
+/*----------------------------------------------------------------------
+  CreateMMINUSBINARY
+  ----------------------------------------------------------------------*/
+void CreateMMINUSBINARY (Document document, View view)
+{
+CreateMathConstruct (27,8722);}
+/*----------------------------------------------------------------------
+  CreateMMINUSUNARY
+  ----------------------------------------------------------------------*/
+void CreateMMINUSUNARY (Document document, View view)
+{
+CreateMathConstruct (23, 8722, FALSE);}
+/*----------------------------------------------------------------------
+  CreateMMODE
+  ----------------------------------------------------------------------*/
+void CreateMMODE (Document document, View view)
+{
+CreateMathConstruct (23, 0, "mode", TRUE);}
+/*----------------------------------------------------------------------
+  CreateMMOMENT
+  ----------------------------------------------------------------------*/
+void CreateMMOMENT (Document document, View view)
+{
+CreateMathConstruct (56);}
+/*----------------------------------------------------------------------
+  CreateMNATURALS
+  ----------------------------------------------------------------------*/
+void CreateMNATURALS (Document document, View view)
+{
+CreateMathConstruct (22,8469);}
+/*----------------------------------------------------------------------
+  CreateMNEQ
+  ----------------------------------------------------------------------*/
+void CreateMNEQ (Document document, View view)
+{
+CreateMathConstruct (27,8800);}
+/*----------------------------------------------------------------------
+  CreateMNOT
+  ----------------------------------------------------------------------*/
+void CreateMNOT (Document document, View view)
+{
+CreateMathConstruct (23, 172, FALSE);}
+/*----------------------------------------------------------------------
+  CreateMNOTANUMBER
+  ----------------------------------------------------------------------*/
+void CreateMNOTANUMBER (Document document, View view)
+{
+CreateMathConstruct (22, 0, "NaN");}
+/*----------------------------------------------------------------------
+  CreateMNOTIN
+  ----------------------------------------------------------------------*/
+void CreateMNOTIN (Document document, View view)
+{
+CreateMathConstruct (27,8713);}
+/*----------------------------------------------------------------------
+  CreateMNOTPRSUBSET
+  ----------------------------------------------------------------------*/
+void CreateMNOTPRSUBSET (Document document, View view)
+{
+CreateMathConstruct (27,8836);}
+/*----------------------------------------------------------------------
+  CreateMNOTSUBSET
+  ----------------------------------------------------------------------*/
+void CreateMNOTSUBSET (Document document, View view)
+{
+CreateMathConstruct (27,8840);}
+/*----------------------------------------------------------------------
+  CreateMNUPLET
+  ----------------------------------------------------------------------*/
+void CreateMNUPLET (Document document, View view)
+{
+CreateMathConstruct (37, 0);}
+/*----------------------------------------------------------------------
+  CreateMOMEGASUB
+  ----------------------------------------------------------------------*/
+void CreateMOMEGASUB (Document document, View view)
+{
+CreateMathConstruct (31,969);}
+/*----------------------------------------------------------------------
+  CreateMOR
+  ----------------------------------------------------------------------*/
+void CreateMOR (Document document, View view)
+{
+CreateMathConstruct (35, 8744);}
+/*----------------------------------------------------------------------
+  CreateMORBINARY
+  ----------------------------------------------------------------------*/
+void CreateMORBINARY (Document document, View view)
+{
+CreateMathConstruct (27, 8744);}
+/*----------------------------------------------------------------------
+  CreateMORTHOGONAL
+  ----------------------------------------------------------------------*/
+void CreateMORTHOGONAL (Document document, View view)
+{
+CreateMathConstruct (27,8869);}
+/*----------------------------------------------------------------------
+  CreateMORTHOGONALCOMPLEMENT
+  ----------------------------------------------------------------------*/
+void CreateMORTHOGONALCOMPLEMENT (Document document, View view)
+{
+CreateMathConstruct (30,8869);}
+/*----------------------------------------------------------------------
+  CreateMOUTERPRODUCT
+  ----------------------------------------------------------------------*/
+void CreateMOUTERPRODUCT (Document document, View view)
+{
+CreateMathConstruct (27,8855);}
+/*----------------------------------------------------------------------
+  CreateMPARTIALDIFF
+  ----------------------------------------------------------------------*/
+void CreateMPARTIALDIFF (Document document, View view)
+{
+CreateMathConstruct (50, 8706);}
+/*----------------------------------------------------------------------
+  CreateMPARTIALDIFF2
+  ----------------------------------------------------------------------*/
+void CreateMPARTIALDIFF2 (Document document, View view)
+{
+CreateMathConstruct (51);}
+/*----------------------------------------------------------------------
+  CreateMPI
+  ----------------------------------------------------------------------*/
+void CreateMPI (Document document, View view)
+{
+CreateMathConstruct (22,960);}
+/*----------------------------------------------------------------------
+  CreateMPIECEWISE
+  ----------------------------------------------------------------------*/
+void CreateMPIECEWISE (Document document, View view)
+{
+CreateMathConstruct (25);}
+/*----------------------------------------------------------------------
+  CreateMPLUS
+  ----------------------------------------------------------------------*/
+void CreateMPLUS (Document document, View view)
+{
+CreateMathConstruct (35, '+');}
+/*----------------------------------------------------------------------
+  CreateMPOWER
+  ----------------------------------------------------------------------*/
+void CreateMPOWER (Document document, View view)
+{
+CreateMathConstruct (7);}
+/*----------------------------------------------------------------------
+  CreateMPOWERSET
+  ----------------------------------------------------------------------*/
+void CreateMPOWERSET (Document document, View view)
+{
+CreateMathConstruct (23, 8472, TRUE);}
+/*----------------------------------------------------------------------
+  CreateMPRIMES
+  ----------------------------------------------------------------------*/
+void CreateMPRIMES (Document document, View view)
+{
+CreateMathConstruct (22,8473);}
+/*----------------------------------------------------------------------
+  CreateMPRODUNDER
+  ----------------------------------------------------------------------*/
+void CreateMPRODUNDER (Document document, View view)
+{
+CreateMathConstruct (24,8719);}
+/*----------------------------------------------------------------------
+  CreateMPRODUNDEROVER
+  ----------------------------------------------------------------------*/
+void CreateMPRODUNDEROVER (Document document, View view)
+{
+CreateMathConstruct (21,8719);}
+/*----------------------------------------------------------------------
+  CreateMPRSUBSET
+  ----------------------------------------------------------------------*/
+void CreateMPRSUBSET (Document document, View view)
+{
+CreateMathConstruct (35, 8834);}
+/*----------------------------------------------------------------------
+  CreateMPRSUBSETBINARY
+  ----------------------------------------------------------------------*/
+void CreateMPRSUBSETBINARY (Document document, View view)
+{
+CreateMathConstruct (27, 8834);}
+/*----------------------------------------------------------------------
+  CreateMQUOTIENT
+  ----------------------------------------------------------------------*/
+void CreateMQUOTIENT (Document document, View view)
+{
+CreateMathConstruct (46);}
+/*----------------------------------------------------------------------
+  CreateMRATIONNALS
+  ----------------------------------------------------------------------*/
+void CreateMRATIONNALS (Document document, View view)
+{
+CreateMathConstruct (22, 8474);}
+/*----------------------------------------------------------------------
+  CreateMREAL
+  ----------------------------------------------------------------------*/
+void CreateMREAL (Document document, View view)
+{
+CreateMathConstruct (23, 8476, TRUE);}
+/*----------------------------------------------------------------------
+  CreateMREALS
+  ----------------------------------------------------------------------*/
+void CreateMREALS (Document document, View view)
+{
+CreateMathConstruct (22,8477);}
+/*----------------------------------------------------------------------
+  CreateMREM
+  ----------------------------------------------------------------------*/
+void CreateMREM (Document document, View view)
+{
+CreateMathConstruct (27, 0, "mod");}
+/*----------------------------------------------------------------------
+  CreateMSCALARPRODUCT
+  ----------------------------------------------------------------------*/
+void CreateMSCALARPRODUCT (Document document, View view)
+{
+CreateMathConstruct (27,'.');}
+/*----------------------------------------------------------------------
+  CreateMSDEV
+  ----------------------------------------------------------------------*/
+void CreateMSDEV (Document document, View view)
+{
+CreateMathConstruct (23, 963, TRUE);}
+/*----------------------------------------------------------------------
+  CreateMSELECTOR
+  ----------------------------------------------------------------------*/
+void CreateMSELECTOR (Document document, View view)
+{
+CreateMathConstruct (36);}
+/*----------------------------------------------------------------------
+  CreateMSETDIFF
+  ----------------------------------------------------------------------*/
+void CreateMSETDIFF (Document document, View view)
+{
+CreateMathConstruct (27,'\\');}
+/*----------------------------------------------------------------------
+  CreateMSETEXTENSION
+  ----------------------------------------------------------------------*/
+void CreateMSETEXTENSION (Document document, View view)
+{
+CreateMathConstruct (39, '{', '}');}
+/*----------------------------------------------------------------------
+  CreateMSETSEPARATION
+  ----------------------------------------------------------------------*/
+void CreateMSETSEPARATION (Document document, View view)
+{
+CreateMathConstruct (38, '{', '}');}
+/*----------------------------------------------------------------------
+  CreateMSETSYMDIFF
+  ----------------------------------------------------------------------*/
+void CreateMSETSYMDIFF (Document document, View view)
+{
+CreateMathConstruct (27, 916);}
+/*----------------------------------------------------------------------
+  CreateMSUBSET
+  ----------------------------------------------------------------------*/
+void CreateMSUBSET (Document document, View view)
+{
+CreateMathConstruct (35, 8838);}
+/*----------------------------------------------------------------------
+  CreateMSUBSETBINARY
+  ----------------------------------------------------------------------*/
+void CreateMSUBSETBINARY (Document document, View view)
+{
+CreateMathConstruct (27, 8838);}
+/*----------------------------------------------------------------------
+  CreateMSUMUNDER
+  ----------------------------------------------------------------------*/
+void CreateMSUMUNDER (Document document, View view)
+{
+CreateMathConstruct (24,8721);}
+/*----------------------------------------------------------------------
+  CreateMSUP2
+  ----------------------------------------------------------------------*/
+void CreateMSUP2 (Document document, View view)
+{
+CreateMathConstruct (23, 0, "sup", FALSE);}
+/*----------------------------------------------------------------------
+  CreateMSUPMINUS
+  ----------------------------------------------------------------------*/
+void CreateMSUPMINUS (Document document, View view)
+{
+CreateMathConstruct (30,'-');}
+/*----------------------------------------------------------------------
+  CreateMSUPPLUS
+  ----------------------------------------------------------------------*/
+void CreateMSUPPLUS (Document document, View view)
+{
+CreateMathConstruct (30,'+');}
+/*----------------------------------------------------------------------
+  CreateMSUPUNDER
+  ----------------------------------------------------------------------*/
+void CreateMSUPUNDER (Document document, View view)
+{
+CreateMathConstruct (34, "sup");}
+/*----------------------------------------------------------------------
+  CreateMTENDSTO
+  ----------------------------------------------------------------------*/
+void CreateMTENDSTO (Document document, View view)
+{
+CreateMathConstruct (33, 8594);}
+/*----------------------------------------------------------------------
+  CreateMTENDSTOTENDSTO
+  ----------------------------------------------------------------------*/
+void CreateMTENDSTOTENDSTO (Document document, View view)
+{
+CreateMathConstruct (43, 8594, 8594);}
+/*----------------------------------------------------------------------
+  CreateMTIMES
+  ----------------------------------------------------------------------*/
+void CreateMTIMES (Document document, View view)
+{
+CreateMathConstruct (35,215);}
+/*----------------------------------------------------------------------
+  CreateMTIMESBINARY
+  ----------------------------------------------------------------------*/
+void CreateMTIMESBINARY (Document document, View view)
+{
+CreateMathConstruct (27,215);}
+/*----------------------------------------------------------------------
+  CreateMTRANSPOSE
+  ----------------------------------------------------------------------*/
+void CreateMTRANSPOSE (Document document, View view)
+{
+CreateMathConstruct (30,'t');}
+/*----------------------------------------------------------------------
+  CreateMTRUE
+  ----------------------------------------------------------------------*/
+void CreateMTRUE (Document document, View view)
+{
+CreateMathConstruct (22, 0, "True");}
+/*----------------------------------------------------------------------
+  CreateMUNION
+  ----------------------------------------------------------------------*/
+void CreateMUNION (Document document, View view)
+{
+CreateMathConstruct (35, 8899);}
+/*----------------------------------------------------------------------
+  CreateMUNIONUNARY
+  ----------------------------------------------------------------------*/
+void CreateMUNIONUNARY (Document document, View view)
+{
+CreateMathConstruct (23, 8899, FALSE);}
+/*----------------------------------------------------------------------
+  CreateMUNIONUNDER
+  ----------------------------------------------------------------------*/
+void CreateMUNIONUNDER (Document document, View view)
+{
+CreateMathConstruct (24, 8899);}
+/*----------------------------------------------------------------------
+  CreateMUNIONBINARY
+  ----------------------------------------------------------------------*/
+void CreateMUNIONBINARY (Document document, View view)
+{
+CreateMathConstruct (27, 8899);}
+/*----------------------------------------------------------------------
+  CreateMVARIANCE
+  ----------------------------------------------------------------------*/
+void CreateMVARIANCE (Document document, View view)
+{
+CreateMathConstruct (55);}
+/*----------------------------------------------------------------------
+  CreateMVECTORPRODUCT
+  ----------------------------------------------------------------------*/
+void CreateMVECTORPRODUCT (Document document, View view)
+{
+CreateMathConstruct (27,8896);}
+/*----------------------------------------------------------------------
+  CreateMVECTORPRODUCT
+  ----------------------------------------------------------------------*/
+void CreateMVECTORROW (Document document, View view)
+{
+CreateMathConstruct (53, '(', ')', 0, 1);}
+/*----------------------------------------------------------------------
+  CreateMVECTORPRODUCT
+  ----------------------------------------------------------------------*/
+void CreateMVECTORCOLUMN (Document document, View view)
+{
+CreateMathConstruct (53, '(', ')', 1, 0);}
+/*----------------------------------------------------------------------
+  CreateMXOR
+  ----------------------------------------------------------------------*/
+void CreateMXOR (Document document, View view)
 {CreateMathConstruct (35, 0, "xor");}
 
-/*----------------------------------------------------------------------
-  CreateMXORBINARY
-  ----------------------------------------------------------------------*/
-void CreateMXORBINARY (Document document, View view)
-{
-CreateMathConstruct (27, 0, "xor");}
+/*----------------------------------------------------------------------
+  CreateMXORBINARY
+  ----------------------------------------------------------------------*/
+void CreateMXORBINARY (Document document, View view)
+{
+CreateMathConstruct (27, 0, "xor");}
 
 
 /*----------------------------------------------------------------------
