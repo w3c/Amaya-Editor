@@ -3740,7 +3740,8 @@ void TtcCutSelection (Document doc, View view)
         ActiveFrame = frame;
     }
 
-  TtcCopyToClipboard (doc, view);
+  // set a structured copy
+  DoCopyToClipboard (doc, view, TRUE, FALSE);
 #ifdef _WINGUI
   if (!OpenClipboard (FrRef[frame]))
     WinErrorBox (FrRef [frame], "TtcCutSelection (1)");
