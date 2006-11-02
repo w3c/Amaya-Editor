@@ -85,6 +85,8 @@ static ThotBool PrevElAttr = FALSE;
 /* required attributs context */
 static PtrAttribute PtrReqAttr;
 static PtrDocument  PtrDocOfReqAttr;
+/* External function that manages attribute changes */
+static Proc2        AttributeChangeFunction = NULL;
 
 #ifdef _WINGUI
 #define ID_CONFIRM   1000
@@ -136,6 +138,15 @@ extern UINT      subMenuID[MAX_FRAME];
 #include "dialogapi_f.h"
 #include "thotmsg_f.h"
 
+
+/*----------------------------------------------------------------------
+  TtaSetAttributeChangeFunction registers the attribute creation function
+  ----------------------------------------------------------------------*/
+void TtaSetAttributeChangeFunction (Proc2 procedure)
+{
+  AttributeChangeFunction = (Proc2)procedure;
+} 
+ 
 /*----------------------------------------------------------------------
   InitFormLangue
   initializes a form for capturing the values of the Language attribute.
@@ -1579,7 +1590,8 @@ void CallbackValAttrMenu (int ref, int valmenu, char *valtext)
   int                 firstChar, lastChar, att;
   int                 act;
   ThotBool            lock = TRUE;
-  ThotBool            isID = FALSE, isACCESS = FALSE, isCLASS = FALSE;
+  ThotBool            isID = FALSE, isACCESS = FALSE;
+  ThotBool            isCLASS = FALSE, isSpan = FALSE;
 
   act = 0; /* apply by default */
   switch (ref)
@@ -1614,6 +1626,9 @@ void CallbackValAttrMenu (int ref, int valmenu, char *valtext)
               (!strcmp (tmp, "name") &&
                !strcmp (SchCurrentAttr->SsName, "HTML")));
       isCLASS = !strcmp (tmp, "class");
+      isSpan = ((isID || isCLASS ||
+                 !strcmp (tmp, "style") || !strcmp (tmp, "lang")) &&
+                  !strcmp (SchCurrentAttr->SsName, "HTML"));
       if (SchCurrentAttr->SsAttribute->TtAttr[NumCurrentAttr - 1]->AttrType == AtTextAttr && TextAttrValue[0] == EOS)
         return;
       act = valmenu;
@@ -1723,8 +1738,16 @@ void CallbackValAttrMenu (int ref, int valmenu, char *valtext)
                     if (isID)
                       TtaIsValidID ((Attribute)pAttrNew, TRUE);
                   }
-                /* applique les attributs a la partie selectionnee */
-                AttachAttrToRange (pAttrNew, lastChar, firstChar, lastSel,
+                if (isSpan && firstSel != lastSel &&
+                    AttributeChangeFunction)
+                  {
+                    // should generate a span
+                    (*(Proc2)AttributeChangeFunction) ((void *)pAttrNew->AeAttrNum,
+                                                       (void *)TextAttrValue);
+                  }
+                else
+                  /* apply the attribute to each sub-element */
+                  AttachAttrToRange (pAttrNew, lastChar, firstChar, lastSel,
                                    firstSel, pDoc, TRUE);
 #ifdef _WX
                 if (isCLASS)

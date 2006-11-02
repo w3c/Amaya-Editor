@@ -83,6 +83,11 @@ extern void TtaSetFocusChange (Proc1 procedure);
 extern void TtaSetAccessKeyFunction (Proc2 procedure);
 
 /*----------------------------------------------------------------------
+  TtaSetAttributeChangeFunction registers the attribute creation function
+  ----------------------------------------------------------------------*/
+extern void TtaSetAttributeChangeFunction (Proc2 procedure);
+
+/*----------------------------------------------------------------------
   TtaAddAccessKey registers a new access key for the document doc
   The parameter param which will be returned when the access key will be
   activated.

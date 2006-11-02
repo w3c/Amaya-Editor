@@ -427,6 +427,14 @@ static Element GenerateInlinechildren (Element el, ElementType newType, Document
 }
 
 /*----------------------------------------------------------------------
+  Generate an attribute on a set of elements (from the attribute menu)
+  -----------------------------------------------------------------------*/
+void AttributeChange (int aType, char * data)
+{
+  GenerateInlineElement (HTML_EL_Span, aType, data);
+}
+
+/*----------------------------------------------------------------------
   GenerateInlineElement
   Generates the elType inline element around the selection with the
   attribute (if aType is not 0) and sets the value data to the attribute.
@@ -615,7 +623,8 @@ void GenerateInlineElement (int eType, int aType, char * data)
                         }
                     }
                   else if (firstSel != lastSel ||
-                           elType.ElTypeNum != HTML_EL_Basic_Elem)
+                           (elType.ElTypeNum != HTML_EL_Basic_Elem &&
+                            elType.ElTypeNum != HTML_EL_Block))
                     {
                       // cannot generate an in-line element here
                       el = NULL;
@@ -701,7 +710,7 @@ void GenerateInlineElement (int eType, int aType, char * data)
 
                       if (!strcmp(name, "HTML"))
                         {
-                          if (!selpos &&
+                          if (!selpos && firstSel == lastSel &&
                               (aType == HTML_ATTR_ID || aType == HTML_ATTR_Language ||
                                aType == HTML_ATTR_Class || aType == HTML_ATTR_Style_))
                             // accept to set the attribute to inline element

@@ -4343,14 +4343,17 @@ Document LoadDocument (Document doc, char *pathname,
         BM_ViewBookmarks (newdoc, 1, FALSE);
       else
 #endif /* BOOKMARKS */
-        /* Calls the corresponding parser */
-        if (DocumentMeta[newdoc]->xmlformat && !plainText)
-          StartXmlParser (newdoc,	localdoc, documentname, tempdir,
-                          pathname, xmlDec, withDoctype, useMath, FALSE);
-        else
-          StartParser (newdoc, localdoc, documentname, tempdir,
-                       pathname, plainText, FALSE);
-      
+        {
+          // Get user information about read IDs
+          TtaGetEnvBoolean ("CHECK_READ_IDS", &Check_read_ids);
+          /* Calls the corresponding parser */
+          if (DocumentMeta[newdoc]->xmlformat && !plainText)
+            StartXmlParser (newdoc,	localdoc, documentname, tempdir,
+                            pathname, xmlDec, withDoctype, useMath, FALSE);
+          else
+            StartParser (newdoc, localdoc, documentname, tempdir,
+                         pathname, plainText, FALSE);
+        }
       TtaFreeMemory (tempdir);
    
       /* Update the Doctype menu */
@@ -7552,6 +7555,7 @@ void InitAmaya (NotifyEvent * event)
   TtaSetCopyRowFunction ((Proc3) CopyRow);
   TtaSetNextCellInColumnFunction ((Proc5) NextCellInColumn);
   TtaSetFocusChange ((Proc1) FocusChanged);
+  TtaSetAttributeChangeFunction ((Proc2) AttributeChange);
   /* Initialize the Amaya user and tmp directories */
   s = TtaGetEnvString ("APP_TMPDIR");
   if (!TtaCheckMakeDirectory (s, TRUE))

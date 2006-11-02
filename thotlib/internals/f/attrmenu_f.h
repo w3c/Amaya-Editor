@@ -6,6 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void TtaSetAttributeChangeFunction ( Proc2 procedure );
 extern void CallbackReqAttrMenu ( int ref,
                                   int val,
                                   char *txt );
@@ -28,6 +29,7 @@ extern void AttributeMenuLoadResources ( void );
 
 #else /* __STDC__ */
 
+extern void TtaSetAttributeChangeFunction ( Proc2 procedure );
 extern void CallbackReqAttrMenu ( int ref,
                                     int val,
                                     char *txt );
