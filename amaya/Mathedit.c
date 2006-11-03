@@ -744,7 +744,10 @@ void InsertSymbol (Element *el, int TypeNum, int symbol, Document doc)
   op = TtaNewElement (doc, newType);
   TtaInsertSibling(op, el[0], FALSE, doc);
 
-  if(symbol < 256)
+  /* Memo Fred : The symbol have to be SYMBOL_UNIT to be stretchable, but not all the symbols can take this type
+     I have to study it a little more... */
+
+  if(symbol == '{' || symbol == '|')
     {
       newType.ElTypeNum = MathML_EL_SYMBOL_UNIT;
       child = TtaNewElement (doc, newType);
@@ -1667,10 +1670,10 @@ static void CreateMathConstruct (int construct, ...)
     case 10:
       newType.ElTypeNum = MathML_EL_MOVER;
       break;
-    case 11:
+    case 11:/* Parenthesis ; mrow */
       newType.ElTypeNum = MathML_EL_MROW;
-      ParBlock = TRUE;
-      selectedchild = 1;
+      selectedchild = va_arg(varpos, int);
+      ParBlock = (selectedchild == 1);
       break;
     case 12:
       newType.ElTypeNum = MathML_EL_MMULTISCRIPTS;
@@ -1870,7 +1873,7 @@ static void CreateMathConstruct (int construct, ...)
 
     case 44: /* elementary classical functions */
       newType.ElTypeNum = MathML_EL_MROW;
-      selectedchild = 1;
+      selectedchild = 2;
       break;
 
     case 45: /* lambda construct */
@@ -1957,7 +1960,7 @@ static void CreateMathConstruct (int construct, ...)
                   /* Accents ; exposant */
                   int symbol = va_arg(varpos, int);
                   leaf = child;
-                  InsertSymbol (&child, (symbol == 't' || symbol == 8869 ? MathML_EL_MO : MathML_EL_MI), symbol, doc);
+                  InsertSymbol (&child, MathML_EL_MO, symbol, doc);
                   TtaRemoveTree (leaf, doc);
                   selectedchild = -1;
                   selected = child;
@@ -2324,6 +2327,7 @@ static void CreateMathConstruct (int construct, ...)
           child = leaf;
           //InsertText (&child, MathML_EL_MO, name, doc);
           InsertSymbol(&child, MathML_EL_MI, 'f', doc);
+          InsertSymbol (&child, MathML_EL_MO, 8289, doc); // apply function 
           InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
           TtaRemoveTree (leaf, doc);
         }
@@ -2952,7 +2956,7 @@ void CreateMUNDER (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMOVER (Document document, View view)
 {
-  CreateMathConstruct (10, 0);
+  CreateMathConstruct (10);
 }
 
 void CreateMOVERARROW (Document doc, View view)
@@ -2983,14 +2987,26 @@ void CreateMOVERTILDE (Document doc, View view)
 {
   CreateMathConstruct (26, 8764);
 }
+void CreateMOVERFROWN (Document doc, View view)
+{
+  CreateMathConstruct (26, 8994);
+}
 
+
+/*----------------------------------------------------------------------
+  CreateMPARENTHESIS
+  ----------------------------------------------------------------------*/
+void CreateMPARENTHESIS (Document document, View view)
+{
+  CreateMathConstruct (11, 1);
+}
 
 /*----------------------------------------------------------------------
   CreateMROW
   ----------------------------------------------------------------------*/
 void CreateMROW (Document document, View view)
 {
-  CreateMathConstruct (11);
+  CreateMathConstruct (11, 0);
 }
 
 /*----------------------------------------------------------------------
@@ -3028,9 +3044,9 @@ void CreateMSum (Document doc, View view)
 }
 
 /*----------------------------------------------------------------------
-  CreateMMatrix2
+  CreateMMATRIX
   ----------------------------------------------------------------------*/
-void CreateMatrix2 (Document doc, View view)
+void CreateMMATRIX (Document doc, View view)
 {
   CreateMathConstruct (53, '(', ')', 0, 0);
 }
@@ -3041,6 +3057,12 @@ void CreateMatrix2 (Document doc, View view)
 void CreateMABS (Document document, View view)
 {
   CreateMathConstruct (40,'|','|');}
+/*----------------------------------------------------------------------
+  CreateMNORM
+  ----------------------------------------------------------------------*/
+void CreateMNORM (Document document, View view)
+{
+  CreateMathConstruct (40,8741,8741);}
 /*----------------------------------------------------------------------
   CreateMALEPHSUB
   ----------------------------------------------------------------------*/
@@ -3339,9 +3361,9 @@ void CreateMFALSE (Document document, View view)
 {
   CreateMathConstruct (22, 0, "False");}
 /*----------------------------------------------------------------------
-  CreateMFENCE2
+  CreateMFENCE
   ----------------------------------------------------------------------*/
-void CreateMFENCE2 (Document document, View view)
+void CreateMFENCE (Document document, View view)
 {
   CreateMathConstruct (42);}
 /*----------------------------------------------------------------------
@@ -3511,9 +3533,24 @@ void CreateMLAPLACIAN (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMLEQ (Document document, View view)
 {
-  CreateMathConstruct (35, 8804);}/*----------------------------------------------------------------------
-                                    CreateMLEQBINARY
-                                    ----------------------------------------------------------------------*/
+  CreateMathConstruct (35, 8804);}
+/*----------------------------------------------------------------------
+  CreateMLL
+  ----------------------------------------------------------------------*/
+void CreateMLL (Document document, View view)
+{
+  CreateMathConstruct (27, 8810);}
+/*----------------------------------------------------------------------
+  CreateMGG
+  ----------------------------------------------------------------------*/
+void CreateMGG (Document document, View view)
+{
+  CreateMathConstruct (27, 8811);}
+
+
+/*----------------------------------------------------------------------
+  CreateMLEQBINARY
+  ----------------------------------------------------------------------*/
 void CreateMLEQBINARY (Document document, View view)
 {
   CreateMathConstruct (27, 8804);}
@@ -3556,12 +3593,6 @@ void CreateMLIMTENDSTO (Document document, View view)
 void CreateMMAP (Document document, View view)
 {
   CreateMathConstruct (47);}
-/*----------------------------------------------------------------------
-  CreateMMATRIX2
-  ----------------------------------------------------------------------*/
-void CreateMMATRIX2 (Document document, View view)
-{
-  CreateMathConstruct (53, '(', ')', 0, 0);}
 /*----------------------------------------------------------------------
   CreateMMAX
   ----------------------------------------------------------------------*/
@@ -3610,6 +3641,18 @@ void CreateMMINUSBINARY (Document document, View view)
 void CreateMMINUSUNARY (Document document, View view)
 {
   CreateMathConstruct (23, 8722, FALSE);}
+/*----------------------------------------------------------------------
+  CreateMSYMBOLO
+  ----------------------------------------------------------------------*/
+void CreateMSYMBOLO (Document document, View view)
+{
+  CreateMathConstruct (23, 'o', TRUE);}
+/*----------------------------------------------------------------------
+  CreateMSYMBOLOO
+  ----------------------------------------------------------------------*/
+void CreateMSYMBOLOO (Document document, View view)
+{
+  CreateMathConstruct (23, 'O', TRUE);}
 /*----------------------------------------------------------------------
   CreateMMODE
   ----------------------------------------------------------------------*/
@@ -3694,6 +3737,12 @@ void CreateMORBINARY (Document document, View view)
 void CreateMORTHOGONAL (Document document, View view)
 {
   CreateMathConstruct (27,8869);}
+/*----------------------------------------------------------------------
+  CreateMPARALLEL
+  ----------------------------------------------------------------------*/
+void CreateMPARALLEL (Document document, View view)
+{
+  CreateMathConstruct (27,8741);}
 /*----------------------------------------------------------------------
   CreateMORTHOGONALCOMPLEMENT
   ----------------------------------------------------------------------*/
@@ -3802,6 +3851,12 @@ void CreateMREAL (Document document, View view)
 void CreateMREALS (Document document, View view)
 {
   CreateMathConstruct (22,8477);}
+/*----------------------------------------------------------------------
+  CreateMQUATERNIONS
+  ----------------------------------------------------------------------*/
+void CreateMQUATERNIONS (Document document, View view)
+{
+  CreateMathConstruct (22,8461);}
 /*----------------------------------------------------------------------
   CreateMREM
   ----------------------------------------------------------------------*/

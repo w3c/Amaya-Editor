@@ -13,6 +13,8 @@ extern void InsertSymbol ( Element *el,
                            int TypeNum,
                            int symbol,
                            Document doc );
+extern void AttachIntVertStretch ( Element el,
+                                   Document doc );
 extern void InsertText ( Element *el,
                          int TypeNum,
                          unsigned char *text,
@@ -24,10 +26,11 @@ extern void CreateNewMtable ( Element el,
 extern Element SelectMtableCell ( Element mtable,
                                   int x,
                                   int y );
-extern Element SetFencedSeparators ( Element fenced,
-                                     unsigned char ope,
-                                     unsigned char clo,
-                                     Document doc );
+extern Element SetMFencedAttributes ( Element fenced,
+                                      unsigned char ope,
+                                      unsigned char clo,
+                                      unsigned char sep,
+                                      Document doc );
 extern void UnFrameMath ( void );
 extern void ClearMathFrame ( Document doc );
 extern void MathSelectionChanged ( NotifyElement *event );
@@ -73,6 +76,10 @@ extern void CreateMOVERHAT ( Document doc,
                              View view );
 extern void CreateMOVERTILDE ( Document doc,
                                View view );
+extern void CreateMOVERFROWN ( Document doc,
+                               View view );
+extern void CreateMPARENTHESIS ( Document document,
+                                 View view );
 extern void CreateMROW ( Document document,
                          View view );
 extern void CreateMMULTISCRIPTS ( Document document,
@@ -83,10 +90,12 @@ extern void CreateMIntegral ( Document doc,
                               View view );
 extern void CreateMSum ( Document doc,
                          View view );
-extern void CreateMatrix2 ( Document doc,
+extern void CreateMMATRIX ( Document doc,
                             View view );
 extern void CreateMABS ( Document document,
                          View view );
+extern void CreateMNORM ( Document document,
+                          View view );
 extern void CreateMALEPHSUB ( Document document,
                               View view );
 extern void CreateMAND ( Document document,
@@ -147,6 +156,8 @@ extern void CreateMDIAGONALINTERSECTION ( Document document,
                                           View view );
 extern void CreateMDIFF ( Document document,
                           View view );
+extern void CreateMDIFF2 ( Document document,
+                           View view );
 extern void CreateMDIRECTSUM ( Document document,
                                View view );
 extern void CreateMDIVERGENCE ( Document document,
@@ -183,8 +194,8 @@ extern void CreateMFACTOROF ( Document document,
                               View view );
 extern void CreateMFALSE ( Document document,
                            View view );
-extern void CreateMFENCE2 ( Document document,
-                            View view );
+extern void CreateMFENCE ( Document document,
+                           View view );
 extern void CreateMFLOOR ( Document document,
                            View view );
 extern void CreateMFORALL ( Document document,
@@ -241,6 +252,10 @@ extern void CreateMLAPLACIAN ( Document document,
                                View view );
 extern void CreateMLEQ ( Document document,
                          View view );
+extern void CreateMLL ( Document document,
+                        View view );
+extern void CreateMGG ( Document document,
+                        View view );
 extern void CreateMLEQBINARY ( Document document,
                                View view );
 extern void CreateMLISTSEPARATION ( Document document,
@@ -255,8 +270,6 @@ extern void CreateMLIMTENDSTO ( Document document,
                                 View view );
 extern void CreateMMAP ( Document document,
                          View view );
-extern void CreateMMATRIX2 ( Document document,
-                             View view );
 extern void CreateMMAX ( Document document,
                          View view );
 extern void CreateMMAXUNDER ( Document document,
@@ -273,6 +286,10 @@ extern void CreateMMINUSBINARY ( Document document,
                                  View view );
 extern void CreateMMINUSUNARY ( Document document,
                                 View view );
+extern void CreateMSYMBOLO ( Document document,
+                             View view );
+extern void CreateMSYMBOLOO ( Document document,
+                              View view );
 extern void CreateMMODE ( Document document,
                           View view );
 extern void CreateMMOMENT ( Document document,
@@ -301,6 +318,8 @@ extern void CreateMORBINARY ( Document document,
                               View view );
 extern void CreateMORTHOGONAL ( Document document,
                                 View view );
+extern void CreateMPARALLEL ( Document document,
+                              View view );
 extern void CreateMORTHOGONALCOMPLEMENT ( Document document,
                                           View view );
 extern void CreateMOUTERPRODUCT ( Document document,
@@ -337,6 +356,8 @@ extern void CreateMREAL ( Document document,
                           View view );
 extern void CreateMREALS ( Document document,
                            View view );
+extern void CreateMQUATERNIONS ( Document document,
+                                 View view );
 extern void CreateMREM ( Document document,
                          View view );
 extern void CreateMSCALARPRODUCT ( Document document,
@@ -494,6 +515,8 @@ extern void InsertSymbol ( Element *el,
                              int TypeNum,
                              int symbol,
                              Document doc );
+extern void AttachIntVertStretch ( Element el,
+                                     Document doc );
 extern void InsertText ( Element *el,
                            int TypeNum,
                            unsigned char *text,
@@ -505,10 +528,11 @@ extern void CreateNewMtable ( Element el,
 extern Element SelectMtableCell ( Element mtable,
                                     int x,
                                     int y );
-extern Element SetFencedSeparators ( Element fenced,
-                                       unsigned char ope,
-                                       unsigned char clo,
-                                       Document doc );
+extern Element SetMFencedAttributes ( Element fenced,
+                                        unsigned char ope,
+                                        unsigned char clo,
+                                        unsigned char sep,
+                                        Document doc );
 extern void UnFrameMath ( void );
 extern void ClearMathFrame ( Document doc );
 extern void MathSelectionChanged ( NotifyElement *event );
@@ -554,6 +578,10 @@ extern void CreateMOVERHAT ( Document doc,
                                View view );
 extern void CreateMOVERTILDE ( Document doc,
                                  View view );
+extern void CreateMOVERFROWN ( Document doc,
+                                 View view );
+extern void CreateMPARENTHESIS ( Document document,
+                                   View view );
 extern void CreateMROW ( Document document,
                            View view );
 extern void CreateMMULTISCRIPTS ( Document document,
@@ -564,10 +592,12 @@ extern void CreateMIntegral ( Document doc,
                                 View view );
 extern void CreateMSum ( Document doc,
                            View view );
-extern void CreateMatrix2 ( Document doc,
+extern void CreateMMATRIX ( Document doc,
                               View view );
 extern void CreateMABS ( Document document,
                            View view );
+extern void CreateMNORM ( Document document,
+                            View view );
 extern void CreateMALEPHSUB ( Document document,
                                 View view );
 extern void CreateMAND ( Document document,
@@ -628,6 +658,8 @@ extern void CreateMDIAGONALINTERSECTION ( Document document,
                                             View view );
 extern void CreateMDIFF ( Document document,
                             View view );
+extern void CreateMDIFF2 ( Document document,
+                             View view );
 extern void CreateMDIRECTSUM ( Document document,
                                  View view );
 extern void CreateMDIVERGENCE ( Document document,
@@ -664,8 +696,8 @@ extern void CreateMFACTOROF ( Document document,
                                 View view );
 extern void CreateMFALSE ( Document document,
                              View view );
-extern void CreateMFENCE2 ( Document document,
-                              View view );
+extern void CreateMFENCE ( Document document,
+                             View view );
 extern void CreateMFLOOR ( Document document,
                              View view );
 extern void CreateMFORALL ( Document document,
@@ -722,6 +754,10 @@ extern void CreateMLAPLACIAN ( Document document,
                                  View view );
 extern void CreateMLEQ ( Document document,
                            View view );
+extern void CreateMLL ( Document document,
+                          View view );
+extern void CreateMGG ( Document document,
+                          View view );
 extern void CreateMLEQBINARY ( Document document,
                                  View view );
 extern void CreateMLISTSEPARATION ( Document document,
@@ -736,8 +772,6 @@ extern void CreateMLIMTENDSTO ( Document document,
                                   View view );
 extern void CreateMMAP ( Document document,
                            View view );
-extern void CreateMMATRIX2 ( Document document,
-                               View view );
 extern void CreateMMAX ( Document document,
                            View view );
 extern void CreateMMAXUNDER ( Document document,
@@ -754,6 +788,10 @@ extern void CreateMMINUSBINARY ( Document document,
                                    View view );
 extern void CreateMMINUSUNARY ( Document document,
                                   View view );
+extern void CreateMSYMBOLO ( Document document,
+                               View view );
+extern void CreateMSYMBOLOO ( Document document,
+                                View view );
 extern void CreateMMODE ( Document document,
                             View view );
 extern void CreateMMOMENT ( Document document,
@@ -782,6 +820,8 @@ extern void CreateMORBINARY ( Document document,
                                 View view );
 extern void CreateMORTHOGONAL ( Document document,
                                   View view );
+extern void CreateMPARALLEL ( Document document,
+                                View view );
 extern void CreateMORTHOGONALCOMPLEMENT ( Document document,
                                             View view );
 extern void CreateMOUTERPRODUCT ( Document document,
@@ -818,6 +858,8 @@ extern void CreateMREAL ( Document document,
                             View view );
 extern void CreateMREALS ( Document document,
                              View view );
+extern void CreateMQUATERNIONS ( Document document,
+                                   View view );
 extern void CreateMREM ( Document document,
                            View view );
 extern void CreateMSCALARPRODUCT ( Document document,
