@@ -10,6 +10,8 @@
 #include "application.h"
 #include "fileaccess.h"
 
+#include <wx/filename.h>
+
 static ThotBool A_multiple = FALSE;
 
 /*----------------------------------------------------------------------
@@ -25,13 +27,15 @@ AmayaAppInstance::AmayaAppInstance( AmayaApp * p_amaya_app ) :
 #ifdef _WINDOWS
   m_InstanceName = wxString::Format(m_pAmayaApp->GetAppName()+_T("-%s"),
                                     wxGetUserId().c_str());
+  m_ServicePort = _T("4242");
 #else /* _WINDOWS */
   m_InstanceName = wxString::Format(_T(".")+m_pAmayaApp->GetAppName()+_T("-%s"),
                                     wxGetUserId().c_str());
+  m_ServicePort = wxFileName::GetHomeDir();
+  m_ServicePort.Append( _T("/.amaya-check-instance"));
 #endif /* _WINDOWS */
   if (!A_multiple)
     m_pSingleInstance_Checker = new wxSingleInstanceChecker(m_InstanceName);
-  m_ServicePort = _T("4242");
   m_ServiceTopic = m_InstanceName;
   m_ServiceHostname = _T("localhost");
   m_pURLGrabberServer = NULL;
