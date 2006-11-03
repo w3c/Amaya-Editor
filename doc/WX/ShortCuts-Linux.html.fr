@@ -19,8 +19,8 @@ tr.menu    { font-weight: bold; margin-top: 10px; }</style>
 <body xml:lang="fr" lang="fr">
 
 <div>
-<img alt="Amaya" src="../../resources/icons/22x22/logo.png" class="logo" />
-</div>
+<img alt="Amaya" src="../../resources/icons/22x22/logo.png" class="logo"
+/></div>
 
 <div id="page_body">
 <h2>Raccourcis clavier d'Amaya pour Linux</h2>
@@ -620,6 +620,18 @@ tr.menu    { font-weight: bold; margin-top: 10px; }</style>
     <tr>
       <td>Multiscripts</td>
       <td>Ctrl m Ctrl s</td>
+    </tr>
+    <tr>
+      <td>Piecewise</td>
+      <td>Ctrl m Ctrl j</td>
+    </tr>
+    <tr>
+      <td>Suite (row)</td>
+      <td>Ctrl m Ctrl l</td>
+    </tr>
+    <tr>
+      <td>Matrice</td>
+      <td>Ctrl m Ctrl t</td>
     </tr>
     <tr class="menu">
       <td colspan="2">Menu Liens</td>
