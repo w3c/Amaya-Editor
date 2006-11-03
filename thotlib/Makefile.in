@@ -212,8 +212,6 @@ EDITOR_OBJ = \
 	dialogue/AmayaAttributePanel.o \
 	dialogue/AmayaMathMLPanel.o \
 	dialogue/AmayaColorsPanel.o \
-	dialogue/AmayaCharStylePanel.o \
-	dialogue/AmayaFormatPanel.o \
 	dialogue/AmayaXMLPanel.o \
 	dialogue/AmayaPage.o \
 	dialogue/AmayaFrame.o \

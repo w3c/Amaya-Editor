@@ -10,8 +10,6 @@
 #include "AmayaSubPanelManager.h"
 #include "AmayaAttributePanel.h"
 #include "AmayaColorsPanel.h"
-#include "AmayaCharStylePanel.h"
-#include "AmayaFormatPanel.h"
 #include "AmayaApplyClassPanel.h"
 #include "AmayaMathMLPanel.h"
 #include "AmayaXHTMLPanel.h"
@@ -50,14 +48,6 @@ AmayaFloatingPanel::AmayaFloatingPanel( wxWindow * p_parent
     case WXAMAYA_PANEL_COLORS:
       TTALOGDEBUG_0( TTA_LOG_PANELS, _T("AmayaFloatingPanel::AmayaFloatingPanel - WXAMAYA_PANEL_COLORS"));
       m_pPanel = new AmayaColorsPanel( this );
-      break;
-    case WXAMAYA_PANEL_CHARSTYLE:
-      TTALOGDEBUG_0( TTA_LOG_PANELS, _T("AmayaFloatingPanel::AmayaFloatingPanel - WXAMAYA_PANEL_CHARSTYLE"));
-      m_pPanel = new AmayaCharStylePanel( this );
-      break;
-    case WXAMAYA_PANEL_FORMAT:
-      TTALOGDEBUG_0( TTA_LOG_PANELS, _T("AmayaFloatingPanel::AmayaFloatingPanel - WXAMAYA_PANEL_FORMAT"));
-      m_pPanel = new AmayaFormatPanel( this );
       break;
     case WXAMAYA_PANEL_APPLYCLASS:
       TTALOGDEBUG_0( TTA_LOG_PANELS, _T("AmayaFloatingPanel::AmayaFloatingPanel - WXAMAYA_PANEL_APPLYCLASS"));

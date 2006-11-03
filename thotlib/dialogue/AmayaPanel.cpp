@@ -34,8 +34,6 @@
 #include "AmayaSubPanelManager.h"
 #include "AmayaAttributePanel.h"
 #include "AmayaColorsPanel.h"
-#include "AmayaCharStylePanel.h"
-#include "AmayaFormatPanel.h"
 #include "AmayaApplyClassPanel.h"
 #include "AmayaMathMLPanel.h"
 #include "AmayaXHTMLPanel.h"
@@ -81,8 +79,6 @@ AmayaPanel::AmayaPanel( wxWindow *      p_parent_window
   m_aPanelList[WXAMAYA_PANEL_SPECHAR]    = new AmayaSpeCharPanel( m_pScrolledWindow, p_parent_nwindow );
   m_aPanelList[WXAMAYA_PANEL_XML]        = new AmayaXMLPanel( m_pScrolledWindow, p_parent_nwindow );
   m_aPanelList[WXAMAYA_PANEL_COLORS]     = new AmayaColorsPanel(    m_pScrolledWindow, p_parent_nwindow );
-  m_aPanelList[WXAMAYA_PANEL_CHARSTYLE]  = new AmayaCharStylePanel( m_pScrolledWindow, p_parent_nwindow );
-  m_aPanelList[WXAMAYA_PANEL_FORMAT]     = new AmayaFormatPanel(    m_pScrolledWindow, p_parent_nwindow );
 
   wxBoxSizer * p_PanelSizer = new wxBoxSizer ( wxVERTICAL );
   m_pScrolledWindow->SetSizer(p_PanelSizer);
@@ -93,8 +89,6 @@ AmayaPanel::AmayaPanel( wxWindow *      p_parent_window
   p_PanelSizer->Add( m_aPanelList[WXAMAYA_PANEL_SPECHAR],    0, wxBOTTOM | wxEXPAND, 5 );
   p_PanelSizer->Add( m_aPanelList[WXAMAYA_PANEL_XML],        0, wxBOTTOM | wxEXPAND, 5 );
   p_PanelSizer->Add( m_aPanelList[WXAMAYA_PANEL_COLORS],     0, wxBOTTOM | wxEXPAND, 5 );
-  p_PanelSizer->Add( m_aPanelList[WXAMAYA_PANEL_CHARSTYLE],  0, wxBOTTOM | wxEXPAND, 5 );
-  p_PanelSizer->Add( m_aPanelList[WXAMAYA_PANEL_FORMAT],     0, wxBOTTOM | wxEXPAND, 5 );
   
   // setup labels
   XRCCTRL(*this, "wxID_LABEL_TOOLS", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_TOOLS)));

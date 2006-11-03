@@ -229,8 +229,6 @@ int TtaMakeWindow( int x, int y, int w, int h, int kind, int parent_window_id )
       TtaSetEnvBoolean("OPEN_PANEL_SPECHAR", FALSE, FALSE);
       TtaSetEnvBoolean("OPEN_PANEL_APPLYCLASS", TRUE, FALSE);
       TtaSetEnvBoolean("OPEN_PANEL_COLORS", TRUE, FALSE);
-      TtaSetEnvBoolean("OPEN_PANEL_CHARSTYLE", TRUE, FALSE);
-      TtaSetEnvBoolean("OPEN_PANEL_FORMAT", TRUE, FALSE);
       
       /* open or close panels */
       if (kind == WXAMAYAWINDOW_NORMAL)
@@ -266,16 +264,6 @@ int TtaMakeWindow( int x, int y, int w, int h, int kind, int parent_window_id )
         p_panel->OpenSubPanel( WXAMAYA_PANEL_COLORS );
       else
         p_panel->CloseSubPanel( WXAMAYA_PANEL_COLORS );
-      TtaGetEnvBoolean ("OPEN_PANEL_CHARSTYLE", &value);
-      if (value)
-        p_panel->OpenSubPanel( WXAMAYA_PANEL_CHARSTYLE );
-      else
-        p_panel->CloseSubPanel( WXAMAYA_PANEL_CHARSTYLE );
-      TtaGetEnvBoolean ("OPEN_PANEL_FORMAT", &value);
-      if (value)
-        p_panel->OpenSubPanel( WXAMAYA_PANEL_FORMAT );
-      else
-        p_panel->CloseSubPanel( WXAMAYA_PANEL_FORMAT );
       TtaGetEnvBoolean ("OPEN_PANEL_APPLYCLASS", &value);
       if (value)
         p_panel->OpenSubPanel( WXAMAYA_PANEL_APPLYCLASS );

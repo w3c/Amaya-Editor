@@ -40,8 +40,6 @@
 #endif /* _WINGUI */
 
 #ifdef _WX
-#include "AmayaFormatPanel.h"
-#include "AmayaCharStylePanel.h"
 #include "AmayaSubPanelManager.h"
 #include "wxinclude.h"
 #endif /* _WX */
@@ -1575,9 +1573,6 @@ void TtcStandardPresentation (Document document, View view)
 #ifdef _GTK
   TtaShowDialogue (NumFormPresentStandard, TRUE);
 #endif /* _GTK */
-#ifdef _WX
-  wxASSERT_MSG(false, _T("TODO: TtcStandardPresentation"));
-#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -2180,18 +2175,6 @@ void TtcChangeCharacters (Document document, View view)
           StdFontSize = FALSE;
           FontSize = pAb->AbSize;
 #ifdef _WX
-          AmayaParams p;
-          p.param1 = FontFamily - 1;
-          p.param7 = UnderlineStyle;
-          p.param8 = FontStyle;
-          p.param9 = FontWeight;
-          if (pAb->AbSizeUnit == UnPoint)
-            /* convertit la taille */
-            i = pAb->AbSize;
-          else
-            i = ThotFontPointSize (pAb->AbSize);
-          p.param10 = i; /* font size */
-          AmayaSubPanelManager::GetInstance()->SendDataToPanel( WXAMAYA_PANEL_CHARSTYLE, p );
 #else /* _WX */
           if (pAb->AbSizeUnit == UnPoint)
             /* convertit la taille */
@@ -2370,9 +2353,6 @@ void TtcChangeGraphics (Document document, View view)
 #endif /* _GTK */
         }
     }
-#ifdef _WX
-  wxASSERT_MSG(false, _T("TODO: TtcChangeGraphics"));
-#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -2572,14 +2552,6 @@ void TtcChangeFormat (Document document, View view)
           DocModPresent = pDoc;
           TtaShowDialogue (NumFormPresFormat, TRUE);
 #endif /* _GTK */     
-#ifdef _WX
-          AmayaParams p;
-          p.param1 = (int)AmayaFormatPanel::wxFORMAT_MODIF_ALL;
-          p.param7 = OldLineSp;
-          p.param8 = alignNum;
-          p.param9 = IndentValue;
-          AmayaSubPanelManager::GetInstance()->SendDataToPanel( WXAMAYA_PANEL_FORMAT, p );
-#endif /* _WX */  
         }
     }	
 }
