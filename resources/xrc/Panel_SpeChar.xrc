@@ -64,56 +64,62 @@
                                         <object class="sizeritem">
                                           <object class="wxBitmapButton" name="wxID_PANEL_MATH_F1">
                                             <bitmap>../icons/16x16/MATHML_F_greek.png</bitmap>
+                                            <size>20,-1</size>
                                             <tooltip>*Filtre1*</tooltip>
                                           </object>
                                         </object>
                                         <object class="sizeritem">
                                           <object class="wxBitmapButton" name="wxID_PANEL_MATH_F2">
                                             <bitmap>../icons/16x16/MATHML_F_greek_maj.png</bitmap>
+                                            <size>20,-1</size>
                                             <tooltip>*Filtre2*</tooltip>
                                           </object>
                                         </object>
                                         <object class="sizeritem">
                                           <object class="wxBitmapButton" name="wxID_PANEL_MATH_F3">
                                             <bitmap>../icons/16x16/MATHML_F_maths.png</bitmap>
+                                            <size>20,-1</size>
                                             <tooltip>*Filtre3*</tooltip>
                                           </object>
                                         </object>
                                         <object class="sizeritem">
                                           <object class="wxBitmapButton" name="wxID_PANEL_MATH_F4">
                                             <bitmap>../icons/16x16/MATHML_F_operateurs.png</bitmap>
+                                            <size>20,-1</size>
                                             <tooltip>*Filtre4*</tooltip>
                                           </object>
                                         </object>
                                         <object class="sizeritem">
                                           <object class="wxBitmapButton" name="wxID_PANEL_MATH_F5">
                                             <bitmap>../icons/16x16/MATHML_F_relations_binaires.png</bitmap>
+                                            <size>20,-1</size>
                                             <tooltip>*Filtre5*</tooltip>
                                           </object>
                                         </object>
                                         <object class="sizeritem">
                                           <object class="wxBitmapButton" name="wxID_PANEL_MATH_F6">
                                             <bitmap>../icons/16x16/MATHML_F_relations_negation.png</bitmap>
+                                            <size>20,-1</size>
                                             <tooltip>*Filtre6*</tooltip>
                                           </object>
                                         </object>
                                         <object class="sizeritem">
                                           <object class="wxBitmapButton" name="wxID_PANEL_MATH_F7">
                                             <bitmap>../icons/16x16/MATHML_F_divers.png</bitmap>
+                                            <size>20,-1</size>
                                             <tooltip>*Filtre7*</tooltip>
                                           </object>
                                         </object>
                                         <object class="sizeritem">
                                           <object class="wxBitmapButton" name="wxID_PANEL_MATH_F8">
                                             <bitmap>../icons/16x16/MATHML_F_fleches.png</bitmap>
+                                            <size>20,-1</size>
                                             <tooltip>*Filtre7*</tooltip>
                                           </object>
                                         </object>
                                       </object>
                                     </object>
                                   </object>
-                                  <flag>wxALL|wxEXPAND</flag>
-                                  <border>2</border>
                                 </object>
                                 <object class="sizeritem">
                                   <object class="wxBoxSizer">
@@ -121,7 +127,7 @@
                                     <object class="sizeritem">
                                       <object class="wxComboBox" name="wxID_PANEL_MATH_LIST">
                                         <content/>
-                                        <size>90,-1</size>
+                                        <size>80,-1</size>
                                         <style>wxCB_READONLY</style>
                                       </object>
                                       <option>1</option>

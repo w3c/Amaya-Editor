@@ -228,8 +228,6 @@
                               </object>
                               <style>wxTAB_TRAVERSAL|wxSIMPLE_BORDER</style>
                             </object>
-                            <option>1</option>
-                            <flag>wxEXPAND</flag>
                           </object>
                           <object class="spacer">
                             <size>0,2</size>
