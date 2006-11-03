@@ -486,7 +486,7 @@ char *ParseNumber (char *cssRule, PresentationValue *pval)
 
 /*----------------------------------------------------------------------
   ParseCSSUnit:                                                  
-  parse a CSS Unit substring and returns the corresponding      
+  parse a number followed by a CSS Unit and returns the corresponding      
   value and its unit.                                           
   ----------------------------------------------------------------------*/
 char *ParseCSSUnit (char *cssRule, PresentationValue *pval)
@@ -500,29 +500,34 @@ char *ParseCSSUnit (char *cssRule, PresentationValue *pval)
     cssRule = SkipWord (cssRule);
   else
     {
+      /* is there a space after the number? */
       p = cssRule;
       cssRule = SkipBlanksAndComments (cssRule);
       if (p == cssRule)
+        /* no space */
         p = NULL;
+      else
+        /* a space is here. restore the pointer */
+        cssRule = p;
       uni = 0;
       while (CSSUnitNames[uni].sign)
         {
           if (!strncasecmp (CSSUnitNames[uni].sign, cssRule,
                             strlen (CSSUnitNames[uni].sign)))
+            /* this is a correct unit */
             {
               pval->typed_data.unit = CSSUnitNames[uni].unit;
               if (p)
+                /* there was a space before the unit. Syntax error */
                 pval->typed_data.unit = UNIT_INVALID;
               return (cssRule + strlen (CSSUnitNames[uni].sign));
             }
           else
             uni++;
         }
-      /* not in the list of predefined units */
+      /* not in the list of accepted units */
       pval->typed_data.unit = UNIT_BOX;
     }
-  if (p)
-    pval->typed_data.unit = UNIT_INVALID;
   return (cssRule);
 }
 
@@ -2945,10 +2950,11 @@ static char *ParseACSSFontSize (Element element, PSchema tsch,
 {
   ElementType         elType;
   PresentationValue   pval;
-  char               *ptr = NULL, *ptr1 = NULL;
+  char               *ptr = NULL, *ptr1 = NULL, *ptr2 = NULL;
   char               *start_value;
-  ThotBool	          real, linespace = FALSE;
+  ThotBool	          real, error, linespace = FALSE;
 
+  error = FALSE;
   pval.typed_data.real = FALSE;
   cssRule = SkipBlanksAndComments (cssRule);
   start_value = cssRule;
@@ -3031,7 +3037,7 @@ static char *ParseACSSFontSize (Element element, PSchema tsch,
     {
       if (!check)
         cssRule = SkipValue ("Invalid font-size value", cssRule);
-      return (cssRule);
+      error = TRUE;
     }
   else
     {       
@@ -3049,7 +3055,14 @@ static char *ParseACSSFontSize (Element element, PSchema tsch,
            pval.typed_data.unit == UNIT_BOX ||
            pval.typed_data.value < 0))
         /* not a valid value */
-        return (cssRule);
+        {
+          if (!check)
+            {
+              ptr2 = SkipWord (cssRule);
+              CSSParseError ("Invalid font-size value", ptr1, ptr2);
+            }
+          error = TRUE;
+        }
       else if (pval.typed_data.unit == UNIT_REL && pval.typed_data.value > 0)
         /* CSS relative sizes have to be higher than Thot ones */
         pval.typed_data.value += 1;
@@ -3089,7 +3102,7 @@ static char *ParseACSSFontSize (Element element, PSchema tsch,
     }
 
   /* install the presentation style */
-  if (!check)
+  if (!check && !error)
     {
       if (DoDialog)
         DisplayStyleValue ("font-size", start_value, cssRule);
