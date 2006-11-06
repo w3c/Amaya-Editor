@@ -96,31 +96,41 @@ void AmayaAppInstance::SendURLToOtherAmayaInstance(const wxString & url)
       
       char buffer[512];
       strcpy(buffer, (const char*)url.mb_str(wxConvUTF8) );
-      wxLogError(_T("AmayaAppInstance::SendURLToOtherAmayaInstance - url=")+url);
-      if (!TtaIsW3Path (buffer))
-	{
-          /* check if it is an absolute or a relative name */
+      if (buffer[0] == EOS)
+        {
+          char *s;
+          // Open the home page
+          s = TtaGetEnvString ("HOME_PAGE");
+          if (s)
+            strcpy (buffer, s);
+        }
+      if (buffer[0] != EOS)
+        {
+          if (!TtaIsW3Path (buffer))
+            {
+              /* check if it is an absolute or a relative name */
+              //wxLogError(_T("AmayaAppInstance::SendURLToOtherAmayaInstance - url=")+url);
 #ifdef _WINDOWS
-          if (buffer[0] == DIR_SEP || buffer[1] == ':')
+              if (buffer[0] == DIR_SEP || buffer[1] == ':')
 #else /* _WINDOWS */
-          if (buffer[0] == DIR_SEP)
+              if (buffer[0] == DIR_SEP)
 #endif /* _WINDOWS */
-	    {
-	      /* it is an absolute name */
-	      p_connection->Poke(_T("URL"), (wxChar *)buffer, strlen(buffer)+1);
-	    }
+                {
+                  /* it is an absolute name */
+                  p_connection->Poke(_T("URL"), (wxChar *)buffer, strlen(buffer)+1);
+                }
+              else
+                {
+                  /* it is a relative name */
+                  getcwd (&execname[0], sizeof (execname) / sizeof (char));
+                  strcat (execname, DIR_STR);
+                  strcat (execname, buffer);
+                  p_connection->Poke(_T("URL"), (wxChar *)execname, strlen(execname)+1);
+                }
+            }
           else
-	    {
-	      /* it is a relative name */
-	      getcwd (&execname[0], sizeof (execname) / sizeof (char));
-	      strcat (execname, DIR_STR);
-	      strcat (execname, buffer);
-	      p_connection->Poke(_T("URL"), (wxChar *)execname, strlen(execname)+1);
-	    }
-	}
-      else
-	p_connection->Poke(_T("URL"), (wxChar *)buffer, strlen(buffer)+1);
-      
+            p_connection->Poke(_T("URL"), (wxChar *)buffer, strlen(buffer)+1);
+        } 
       delete p_client;
     }
 }
