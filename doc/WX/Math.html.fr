@@ -13,14 +13,11 @@
 <div>
 <img alt="Amaya" src="../../resources/icons/22x22/logo.png" class="logo" />
 
-
 <p class="nav"><a href="ImageMaps.html.fr" accesskey="p"><img alt="previous"
-src="../../resources/icons/misc/left.png" />
-</a> <a href="Manual.html.fr" accesskey="t"><img alt="top"
-src="../../resources/icons/misc/up.png" />
-</a> <a href="SVG.html.fr" accesskey="n"><img alt="next"
-src="../../resources/icons/misc/right.png" />
-</a></p>
+src="../../resources/icons/misc/left.png" /></a> <a href="Manual.html.fr"
+accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a>
+<a href="SVG.html.fr" accesskey="n"><img alt="next"
+src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
 <div class="toc">
@@ -261,7 +258,8 @@ clavier</a></h4>
 Vous pouvez entrer des constructions mathématiques directement à partir du
 clavier puisque que chaque entréee de menu a un équivalent sur le clavier
 (les raccourcis sont indiqués dans les menus). Ceci vous permet de taper plus
-vite.</p>
+vite. Voir les <a href="ShortCuts.html.fr">raccourcis</a> clavier courant
+pour les versions Linux, Mac OS X, et Windows.</p>
 
 <p>Si vous voulez taper encore plus vite, vous pouvez aussi utiliser les
 touches de direction du clavier (flèches) pour faire passer le point
@@ -269,103 +267,6 @@ d'insertion d'une construction à une autre. En particulier, les deux flèches
 horizontales permettent de se déplacer selon la structure de l'expression
 mathématique. Par exemple, en fin de numérateur d'une fraction, la touche
 &#x2192; fait passer au début du dénominateur.</p>
-
-<table border="1">
-  <tbody>
-    <tr>
-      <th>Action</th>
-      <th>Raccourci</th>
-    </tr>
-    <tr>
-      <td>Nouvelle formule (math)</td>
-      <td>Ctrl-m Ctrl-m</td>
-    </tr>
-    <tr>
-      <td>Plein texte (mtext)</td>
-      <td>Ctrl-m Ctrl-x</td>
-    </tr>
-    <tr>
-      <td>Identificateur (mi)</td>
-      <td>Ctrl-m Ctrl-d</td>
-    </tr>
-    <tr>
-      <td>Nombre (mn)</td>
-      <td>Ctrl-m Ctrl-n</td>
-    </tr>
-    <tr>
-      <td>Operateur (mo)</td>
-      <td>Ctrl-m Ctrl-g</td>
-    </tr>
-    <tr>
-      <td>Espace (mspace)</td>
-      <td>Ctrl-m Ctrl-Space</td>
-    </tr>
-    <tr>
-      <td>Caractère (&amp;xxx;)</td>
-      <td>Ctrl-m Ctrl-e</td>
-    </tr>
-    <tr>
-      <td>Séparateur invisible</td>
-      <td>Ctrl-m Ctrl-i</td>
-    </tr>
-    <tr>
-      <td>Application de fonction</td>
-      <td>Ctrl-m Ctrl-a</td>
-    </tr>
-    <tr>
-      <td>Racine (mroot)</td>
-      <td>Ctrl-m Ctrl-r</td>
-    </tr>
-    <tr>
-      <td>Racine carrée (msqrt)</td>
-      <td>Ctrl-m Ctrl-q</td>
-    </tr>
-    <tr>
-      <td>Englobement (menclose)</td>
-      <td>Ctrl-m Ctrl-c</td>
-    </tr>
-    <tr>
-      <td>Fraction (mfrac)</td>
-      <td>Ctrl-m Ctrl-f</td>
-    </tr>
-    <tr>
-      <td>Subscript et superscript (msubsup)</td>
-      <td>Ctrl-m Ctrl-b</td>
-    </tr>
-    <tr>
-      <td>Subscript (msub)</td>
-      <td>Ctrl-m Ctrl-v</td>
-    </tr>
-    <tr>
-      <td>Superscript (msup)</td>
-      <td>Ctrl-m Ctrl-6</td>
-    </tr>
-    <tr>
-      <td>Bas et haut (munderover)</td>
-      <td>Ctrl-m Ctrl-k</td>
-    </tr>
-    <tr>
-      <td>Bas (munder)</td>
-      <td>Ctrl-m Ctrl-u</td>
-    </tr>
-    <tr>
-      <td>Haut (mover)</td>
-      <td>Ctrl-m Ctrl-o</td>
-    </tr>
-    <tr>
-      <td>Parenthèses (mrow)</td>
-      <td>Ctrl-m Ctrl-p</td>
-    </tr>
-    <tr>
-      <td>Multiscripts (mmultiscripts)</td>
-      <td>Ctrl-m Ctrl-s</td>
-    </tr>
-    <tr>
-      <td>Matrice (mtable)</td>
-      <td>Ctrl-m Ctrl-t</td>
-    </tr>
-  </tbody>
-</table>
 
 <h3 id="Entrer1"><a id="Entering1">Entrer des caractères</a></h3>
 
