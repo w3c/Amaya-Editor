@@ -84,7 +84,7 @@ válidas.<br />
 Con Amaya se pueden manipular páginas Web complejas, con formularios, tablas
 y las características más avanzadas del <acronym
 title="Hypertext Markup Language">XHTML</acronym>. Se pueden crear y editar
-<a href="../doc/WX/Math.html">expreseiones matemáticas</a> complejas dentro
+<a href="../doc/WX/Math.html">expresiones matemáticas</a> complejas dentro
 de las páginas Web. Se pueden asociar estilos a los documentos mediantes
 Hojas de estilo en Cascada (CSS).</p>
 
