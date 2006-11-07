@@ -389,7 +389,9 @@ void OpenDocDlgWX::OnCancelButton( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void OpenDocDlgWX::OnURLSelected( wxCommandEvent& event )
 {
+#ifndef _WINDOWS
   XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetInsertionPointEnd();
+#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
