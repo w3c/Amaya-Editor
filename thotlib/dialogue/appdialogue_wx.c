@@ -58,6 +58,7 @@
 #include "AmayaNotebook.h"
 #include "AmayaPanel.h"
 #include "AmayaSubPanel.h"
+#include "AmayaExplorerPanel.h"
 #include "AmayaXHTMLPanel.h"
 #include "AmayaSubPanelManager.h"
 #include "AmayaStatsThread.h"
@@ -222,6 +223,7 @@ int TtaMakeWindow( int x, int y, int w, int h, int kind, int parent_window_id )
     {
       /* init default panel states */
       TtaSetEnvBoolean("OPEN_PANEL", TRUE, FALSE);
+      TtaSetEnvBoolean("OPEN_PANEL_EXPLORER", TRUE, FALSE);
       TtaSetEnvBoolean("OPEN_PANEL_XHTML", TRUE, FALSE);
       TtaSetEnvBoolean("OPEN_PANEL_ATTRIBUTE", TRUE, FALSE);
       TtaSetEnvBoolean("OPEN_PANEL_XML", FALSE, FALSE);
@@ -238,6 +240,12 @@ int TtaMakeWindow( int x, int y, int w, int h, int kind, int parent_window_id )
         p_window->OpenPanel();
       else
         p_window->ClosePanel();
+      TtaGetEnvBoolean ("OPEN_PANEL_EXPLORER", &value);
+      if (value)
+        p_panel->OpenSubPanel( WXAMAYA_PANEL_EXPLORER );
+      else
+        p_panel->CloseSubPanel( WXAMAYA_PANEL_EXPLORER );
+        
       TtaGetEnvBoolean ("OPEN_PANEL_XHTML", &value);
       if (value)
         p_panel->OpenSubPanel( WXAMAYA_PANEL_XHTML );

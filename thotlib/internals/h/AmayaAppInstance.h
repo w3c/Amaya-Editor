@@ -34,6 +34,16 @@ class AmayaAppInstance
   wxString m_ServiceHostname;
 };
 
+//#ifdef _WINDOWS
+//typedef class wxDDEClient wxMyClient;
+//typedef class wxDDEServer wxMyServer;
+//typedef class wxDDEConnection wxMyConnection;
+//#else
+//typedef class wxClient wxMyClient;
+//typedef class wxServer wxMyServer;
+//typedef class wxConnection wxMyConnection;
+//#endif
+
 class AmayaURLGrabberConnection : public wxConnection
 {
  public:

@@ -36,6 +36,7 @@
 #include "AmayaApplyClassPanel.h"
 #include "AmayaMathMLPanel.h"
 #include "AmayaXHTMLPanel.h"
+#include "AmayaExplorerPanel.h"
 #include "AmayaXMLPanel.h"
 #include "AmayaSpeCharPanel.h"
 #include "AmayaNormalWindow.h"
@@ -70,7 +71,8 @@ AmayaPanel::AmayaPanel( wxWindow *      p_parent_window
   m_pScrolledWindow = XRCCTRL(*this, "wxID_PANEL_SWIN", wxScrolledWindow);
   m_pScrolledWindow->SetScrollRate( 5, 5 );
 
-  // load static sub-panels  
+  // load static sub-panels
+  m_aPanelList[WXAMAYA_PANEL_EXPLORER]   = new AmayaExplorerPanel(     m_pScrolledWindow, p_parent_nwindow );
   m_aPanelList[WXAMAYA_PANEL_XHTML]      = new AmayaXHTMLPanel(     m_pScrolledWindow, p_parent_nwindow );
   m_aPanelList[WXAMAYA_PANEL_ATTRIBUTE]  = new AmayaAttributePanel( m_pScrolledWindow, p_parent_nwindow );
   m_aPanelList[WXAMAYA_PANEL_APPLYCLASS] = new AmayaApplyClassPanel( m_pScrolledWindow, p_parent_nwindow );
@@ -80,6 +82,7 @@ AmayaPanel::AmayaPanel( wxWindow *      p_parent_window
 
   wxBoxSizer * p_PanelSizer = new wxBoxSizer ( wxVERTICAL );
   m_pScrolledWindow->SetSizer(p_PanelSizer);
+  p_PanelSizer->Add( m_aPanelList[WXAMAYA_PANEL_EXPLORER],   0, wxBOTTOM | wxEXPAND, 5 );
   p_PanelSizer->Add( m_aPanelList[WXAMAYA_PANEL_XHTML],      0, wxBOTTOM | wxEXPAND, 5 );
   p_PanelSizer->Add( m_aPanelList[WXAMAYA_PANEL_ATTRIBUTE],  0, wxBOTTOM | wxEXPAND, 5 );
   p_PanelSizer->Add( m_aPanelList[WXAMAYA_PANEL_APPLYCLASS], 0, wxBOTTOM | wxEXPAND, 5 );

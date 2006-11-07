@@ -12,7 +12,7 @@
 #include "print.h"
 #include "appdialogue_wx.h"
 #include "message_wx.h"
-#include "wxdialog/file_filters.h"
+#include "file_filters.h"
 #include "AHTURLTools_f.h"
 
 static int MyRef = 0;

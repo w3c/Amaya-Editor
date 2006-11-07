@@ -431,6 +431,9 @@ void AmayaSubPanelManager::SaveSubPanelState( AmayaSubPanel * p_panel )
   ThotBool value = p_panel->IsExpanded();
   switch (p_panel->GetPanelType())
     {
+    case WXAMAYA_PANEL_EXPLORER:
+      TtaSetEnvBoolean("OPEN_PANEL_EXPLORER", value, TRUE);
+      break;
     case WXAMAYA_PANEL_XHTML:
       TtaSetEnvBoolean("OPEN_PANEL_XHTML", value, TRUE);
       break;

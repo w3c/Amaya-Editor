@@ -5,13 +5,14 @@
 
 #include "logdebug.h"
 
-#include "AmayaFloatingPanel.h"
 #include "AmayaSubPanel.h"
+#include "AmayaFloatingPanel.h"
 #include "AmayaSubPanelManager.h"
 #include "AmayaAttributePanel.h"
 #include "AmayaApplyClassPanel.h"
 #include "AmayaMathMLPanel.h"
 #include "AmayaXHTMLPanel.h"
+#include "AmayaExplorerPanel.h"
 #include "AmayaXMLPanel.h"
 #include "AmayaSpeCharPanel.h"
 
@@ -36,6 +37,10 @@ AmayaFloatingPanel::AmayaFloatingPanel( wxWindow * p_parent
   m_pPanel = NULL;
   switch (m_pParentSubPanel->GetPanelType())
     {
+    case WXAMAYA_PANEL_EXPLORER:
+      TTALOGDEBUG_0( TTA_LOG_PANELS, _T("AmayaFloatingPanel::AmayaFloatingPanel - WXAMAYA_PANEL_EXPLORER"));
+      m_pPanel = new AmayaExplorerPanel( this );
+      break;
     case WXAMAYA_PANEL_XHTML:
       TTALOGDEBUG_0( TTA_LOG_PANELS, _T("AmayaFloatingPanel::AmayaFloatingPanel - WXAMAYA_PANEL_XHTML"));
       m_pPanel = new AmayaXHTMLPanel( this );
