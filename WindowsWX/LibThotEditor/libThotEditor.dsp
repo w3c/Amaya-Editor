@@ -135,6 +135,10 @@ SOURCE=..\..\thotlib\dialogue\AmayaDialog.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\thotlib\dialogue\AmayaExplorerPanel.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\thotlib\dialogue\AmayaFileDropTarget.cpp
 # End Source File
 # Begin Source File
