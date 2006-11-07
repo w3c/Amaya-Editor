@@ -13,10 +13,6 @@
  *
  */
 
-#ifdef _WX
-#include "wx/wx.h"
-#endif /* _WX */
-
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "libmsg.h"
@@ -38,11 +34,6 @@
 #ifdef _WINGUI 
 #include "wininclude.h"
 #endif /* _WINGUI */
-
-#ifdef _WX
-#include "AmayaSubPanelManager.h"
-#include "wxinclude.h"
-#endif /* _WX */
 
 #include "actions_f.h"
 #include "applicationapi_f.h"
@@ -1755,21 +1746,12 @@ void CallbackPresMenu (int ref, int val, char *txt)
         }
       break;
     case NumMenuCharFontSize:	/* menu des corps en points typo */
-#ifdef _WX
-      if (val >= 0)
-        {
-          ChngFontSize = TRUE;
-          StdFontSize = FALSE;
-          FontSize = val;
-        }
-#else /* _WX */
       if (val >= 0 && val < NumberOfFonts ())
         {
           ChngFontSize = TRUE;
           StdFontSize = FALSE;
           FontSize = ThotFontPointSize (val);
         }
-#endif /* _WX */
       else
         {
           ChngFontSize = FALSE;
@@ -1795,9 +1777,6 @@ void CallbackPresMenu (int ref, int val, char *txt)
 #ifdef _WINGUI 
       WIN_IndentValue = val;
 #endif /* _WINGUI */
-#ifdef _WX
-      StdIndent = FALSE;
-#endif /* _WX */
       if (IndentSign != 0 && IndentValue == 0)
         {
           IndentSign = 0;
@@ -1866,9 +1845,6 @@ void CallbackPresMenu (int ref, int val, char *txt)
 #ifdef _GTK
           TtaSetMenuForm (NumMenuLineSpacing, i);
 #endif /* _GTK */
-#ifdef _WX
-          StdLineSp = FALSE;
-#endif /* _WX */
         }
       break;
     case NumMenuLineSpacing:	/* saisie de l'interligne par un menu */
@@ -1957,24 +1933,7 @@ void CallbackPresMenu (int ref, int val, char *txt)
       /* active the form */
       if (val > 0)
         /* modify characters */
-        {
-#ifdef _WX
-          if (val == 1)
-#endif /* _WX */
-            ApplyPresentMod (Apply_AllChars);
-#ifdef _WX
-          else if (val == 2)
-            ApplyPresentMod (Apply_FontFamily);
-          else if (val == 3)
-            ApplyPresentMod (Apply_Underline);
-          else if (val == 4)
-            ApplyPresentMod (Apply_FontSize);
-          else if (val == 5)
-            ApplyPresentMod (Apply_FontStyle);
-          else if (val == 6)
-            ApplyPresentMod (Apply_FontWeight);
-#endif /* _WX */	    
-        }
+        ApplyPresentMod (Apply_AllChars);
       else
         TtaDestroyDialogue (ref);
       break;
@@ -2174,14 +2133,11 @@ void TtcChangeCharacters (Document document, View view)
           ChngFontSize = TRUE;
           StdFontSize = FALSE;
           FontSize = pAb->AbSize;
-#ifdef _WX
-#else /* _WX */
           if (pAb->AbSizeUnit == UnPoint)
             /* convertit la taille */
             i = FontRelSize (FontSize);
           else
             i = pAb->AbSize;
-#endif /* _WX */
 #ifdef _GTK
           TtaSetMenuForm (NumMenuCharFontSize, i);
 #endif /* _GTK */
@@ -2370,11 +2326,9 @@ void TtcChangeFormat (Document document, View view)
   PtrAbstractBox      pAb;
   int                 firstChar, lastChar;
   int                 i;
-#if defined(_WINGUI) || defined(_WX)
+#ifdef _WINGUI
   int                 alignNum;
   int                 indentNum;
-#endif /* _WINGUI || _WX */
-#ifdef _WINGUI
   int                 lineSpacingNum;
 #endif /* _WINGUI */
 #ifdef _GTK
@@ -2456,10 +2410,9 @@ void TtcChangeFormat (Document document, View view)
               break;
             }
          
-#if defined(_WINGUI) || defined(_WX)
+#ifdef _WINGUI
           alignNum = i - 1;
-#endif /* _WINGUI || defined(_WX) */
-         
+#endif /* _WINGUI */
 #ifdef _GTK
           TtaSetMenuForm (NumMenuAlignment, i - 1);
           /* zone de saisie du renfoncement en points typo */
@@ -2493,9 +2446,9 @@ void TtcChangeFormat (Document document, View view)
             i = 0;
           else
             i = 1;
-#if defined(_WINGUI) || defined(_WX)
+#ifdef _WINGUI
           indentNum = i;
-#endif  /* _WINGUI || defined(_WX) */
+#endif /* _WINGUI */
 #ifdef _GTK
           TtaSetMenuForm (NumMenuRecessSense, i);
 

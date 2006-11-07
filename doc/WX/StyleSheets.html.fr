@@ -15,27 +15,16 @@
 <div>
 <img alt="Amaya" src="../../resources/icons/22x22/logo.png" class="logo" />
 
-
 <p class="nav"><a href="Xml.html.fr" accesskey="p"><img alt="previous"
-src="../../resources/icons/misc/left.png" />
-</a> <a href="Manual.html.fr" accesskey="t"><img alt="top"
-src="../../resources/icons/misc/up.png" />
-</a> <a href="Searching.html.fr" accesskey="n"><img alt="next"
-src="../../resources/icons/misc/right.png" />
-</a></p>
+src="../../resources/icons/misc/left.png" /></a> <a href="Manual.html.fr"
+accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a>
+<a href="Searching.html.fr" accesskey="n"><img alt="next"
+src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
 <div class="toc">
 <ul>
   <li><a href="#L2881">Créer des propriétés CSS</a></li>
-  <li><a href="#L288">Créer et mettre à jour un attribut de style avec les
-    outils</a>
-    <ul>
-      <li><a href="#Couleurs">Couleurs</a></li>
-      <li><a href="#Caract">Caractères</a></li>
-      <li><a href="#Format">Format</a></li>
-    </ul>
-  </li>
   <li><a href="#feuilles1">Les feuilles de style CSS externes et
     utilisateur</a>
     <ul>
@@ -65,10 +54,11 @@ documents en utilisant les cascades des feuilles de style (CSS).</p>
 
 <h3 id="L2881">Créer des propriétés CSS</h3>
 
-<p>L'entrée <strong>Style CSS</strong> du menu <strong>Style</strong> permet
-d'engendrer une liste de propriétés CSS. Cette entrée de menu affiche une
-boite de dialogue avec 4 différents onglets: Caractères, Couleurs, Boites,
-Format.</p>
+<p>L'entrée <strong>Style CSS</strong> du menu <strong>Style</strong>, ou le
+bouton <img alt="couleur" src="../../resources/icons/16x16/colorize.png" />,
+permet d'engendrer une liste de propriétés CSS. Cette entrée de menu affiche
+une boite de dialogue avec 4 différents onglets: Caractères, Couleurs,
+Boites, Format.</p>
 
 <p>Quand l'utilisateur a positionne un ensemble de propriétés, il peut
 <strong>appliquer</strong> ces propriétés à la sélection courante :</p>
@@ -83,126 +73,6 @@ Format.</p>
 <p>Dans tous les cas, les adresses des images incluses dans la liste des
 propriétés (background-image, list-style-image) seront transformées en
 adresses relatives au document sélectionné.</p>
-
-<h3 id="L288">Créer et mettre à jour un attribut de style avec les outils</h3>
-
-<p>Amaya fournit aussi des outils qui vous permettent d'associer un attribut
-style aux éléments sélectionnés :</p>
-
-<h4 id="Couleurs">Couleurs</h4>
-
-<p>L'outil <strong>Couleurs</strong> permet de choisir les couleurs de
-premier plan et d'arrière plan dans une palette. Quand l'outil
-<strong>Couleurs</strong> est ouvert :</p>
-
-<p><ul>
-  <li>Un bouton <img alt="default"
-    src="../../resources/icons/16x16/default.png" />
-     (valeur par défaut) ou un rectangle de couleur visualise la couleur du
-    premier plan.</li>
-  <li>Un autre bouton <img alt="default"
-    src="../../resources/icons/16x16/default.png" />
-     (valeur par défaut) ou un rectangle de couleur visualise la couleur
-    d'arrière plan.</li>
-  <li>Un bouton <img alt="switch"
-    src="../../resources/icons/misc/switch_colors.png" />
-     permet d'inverser les couleurs du premier plan et d'arrière plan.</li>
-  <li>Un bouton <img alt="Default_color"
-    src="../../resources/icons/misc/black_white.png" />
-     permet de restaurer les couleurs par défaut (valeurs par défaut).</li>
-  <li>Un bouton <img alt="Refresh"
-    src="../../resources/icons/16x16/refresh.png" />
-     permet d'initialiser les couleurs du premier plan et d'arrière plan à
-    partir de la sélection courante.</li>
-  <li>Un bouton <img alt="ok" src="../../resources/icons/16x16/ok.png" />
-     permet d'appliquer les couleurs du premier plan et d'arrière plan à la
-    sélection courante.</li>
-</ul>
-</p>
-
-<p>Pour choisir une nouvelle couleur de premier plan ou d'arrière plan, il
-faut cliquer sur le bouton correspondant. Une palette permet alors de choisir
-librement une couleur.</p>
-
-<p>La valeur par défaut vous permet de retirer l'information de style
-correspondante pour l'élément sélectionné. Les couleurs choisies ne sont pas
-immédiatement appliquées à la sélection. Le bouton appliquer doit être
-cliqué.</p>
-
-<p class="Note"><strong>Note</strong> : Il est important de choisir des
-couleurs de premier plan ou d'arrière plan suffisamment contrastées.</p>
-
-<h4 id="Caract">Caractères</h4>
-
-<p>L'outil <strong>Caractères</strong> permet de choisir la police de
-caractère, le style du caractère, la taille du corps et le style souligné.</p>
-<ul>
-  <li>Un sélecteur <strong>Police</strong> fournit une liste limitée de
-    polices de caractères. Un bouton <img alt="ok"
-    src="../../resources/icons/16x16/ok.png" />
-     permet d'appliquer seulement cette valeur à la sélection courante.</li>
-  <li>Un sélecteur <strong>Souligné</strong> fournit la liste des valeurs
-    possibles. Un bouton <img alt="ok"
-    src="../../resources/icons/16x16/ok.png" />
-     permet d'appliquer seulement cette valeur à la sélection courante.</li>
-  <li>Un sélecteur <strong>Corps</strong> fournit une liste limitée de corps
-    exprimés en points. Un bouton <img alt="ok"
-    src="../../resources/icons/16x16/ok.png" />
-     permet d'appliquer seulement cette valeur à la sélection courante.</li>
-  <li>Un sélecteur <strong>Style des caractères</strong> fournit une liste
-    limitée de styles possibles. Un bouton <img alt="ok"
-    src="../../resources/icons/16x16/ok.png" />
-     permet d'appliquer seulement cette valeur à la sélection courante.</li>
-  <li>Un sélecteur <strong>Graisse</strong> fournit une liste limitée de
-    graisses possibles. Un bouton <img alt="ok"
-    src="../../resources/icons/16x16/ok.png" />
-     permet d'appliquer seulement cette valeur à la sélection courante.</li>
-  <li>Un bouton <img alt="Refresh"
-    src="../../resources/icons/16x16/refresh.png" />
-     permet d'initialiser les valeurs à partir de la sélection courante.</li>
-  <li>Un bouton <img alt="ok" src="../../resources/icons/16x16/ok.png" />
-     permet d'appliquer toutes les valeurs à la sélection courante.</li>
-</ul>
-
-<p>La valeur par défaut vous permet de retirer l'information de style
-correspondante pour l'élément sélectionné. Les valeurs choisies ne sont pas
-immédiatement appliquées à la sélection. Le bouton appliquer doit être
-cliqué.</p>
-
-<h4 id="Format">Format</h4>
-
-<p>L'outil <strong>Format</strong> permet de choisir l'alignement, le
-renfoncement, la justification et l'interligne.</p>
-<ul>
-  <li>Un sélecteur d'alignement : cliquez à gauche (<img alt="left"
-    src="../../resources/icons/16x16/format_left.png" />
-    ), à droite ( <img alt="right"
-    src="../../resources/icons/16x16/format_right.png" />
-    ), centré ( <img alt="center"
-    src="../../resources/icons/16x16/format_center.png" />
-    ), justifié ( <img alt="justify"
-    src="../../resources/icons/16x16/format_justify.png" />
-    ), ou <img alt="default" src="../../resources/icons/16x16/default.png" />
-     pour choisir la valeur par défaut.</li>
-  <li>Un sélecteur de <strong>Renfoncement</strong> permettant de saisir la
-    valeur en point. Cliquez sur le bouton <img alt="default"
-    src="../../resources/icons/16x16/default.png" />
-     pour choisir la valeur par défaut.</li>
-  <li>Un sélecteur d'<strong>Interligne</strong> permettant de saisir la
-    valeur en point. Cliquez sur le bouton <img alt="default"
-    src="../../resources/icons/16x16/default.png" />
-     pour choisir la valeur par défaut.</li>
-  <li>Un bouton <img alt="Refresh"
-    src="../../resources/icons/16x16/refresh.png" />
-     permet d'initialiser les valeurs à partir de la sélection courante.</li>
-  <li>Un bouton <img alt="ok" src="../../resources/icons/16x16/ok.png" />
-     permet d'appliquer les valeurs à la sélection courante.</li>
-</ul>
-
-<p>La valeur par défaut vous permet de retirer l'information de style
-correspondante pour l'élément sélectionné. Les valeurs choisies ne sont pas
-immédiatement appliquées à la sélection. Le bouton appliquer doit être
-cliqué.</p>
 
 <h3 id="feuilles1"><a name="feuilles">Les feuilles de style CSS externes et
 utilisateur</a></h3>
@@ -307,16 +177,16 @@ voir les propriétés CSS appliquées aux éléments englobants.</p>
     classe</strong>.</li>
   <li>Si vous voulez sélectionner la classe appliquée à un autre élément,
     vous devez sélectionner cet élément, puis cliquer sur le bouton <img
-    alt="Refresh" src="../../resources/icons/16x16/refresh.png" />
-    . La liste d'<strong>Appliquer classe</strong> est mise à jour et la
-    classe appliquée est sélectionnée.</li>
+    alt="Refresh" src="../../resources/icons/16x16/refresh.png" /> . La liste
+    d'<strong>Appliquer classe</strong> est mise à jour et la classe
+    appliquée est sélectionnée.</li>
   <li>Sélectionnez un fragment de texte ou un élément.<br />
     Pour sélectionner un élément, vous devez cliquer dans l'élément, puis
     utiliser la touche F2 jusqu'à ce que la ligne en bas de la fenêtre
     affiche son type en première position.</li>
   <li>Cliquer sur le bouton <img alt="ok"
-    src="../../resources/icons/16x16/ok.png" />
-     pour appliquer la classe à la sélection courante.<br />
+    src="../../resources/icons/16x16/ok.png" /> pour appliquer la classe à la
+    sélection courante.<br />
     Si un fragment de texte est sélectionné, Amaya engendrera un élément
     <strong>span</strong> pour englober le texte courant et l'attribut
     <strong>class</strong> sera attaché à ce nouvel élément
@@ -337,8 +207,7 @@ comme un autre attribut).</p>
     <p>Quand l'élément est sélectionné, vous cliquez sur le [X] de l'entrée
     pour supprimer l'attribut <strong>class</strong>, ou vous cliquez sur
     l'entrée et éditez sa valeur puis confirmez avec le bouton appliquer
-    (<img alt="ok" src="../../resources/icons/16x16/ok.png" />
-    ).</p>
+    (<img alt="ok" src="../../resources/icons/16x16/ok.png" /> ).</p>
   </li>
   <li>Vous pouvez aussi retirer ou éditer l'attribut <strong>class</strong>
     dans la vue structure.
@@ -410,15 +279,12 @@ information :</p>
 
 <p>Cinq de ces éléments sont également disponibles dans l'outil XHTML :
 <em>em</em> (<img src="../../resources/icons/16x16/XHTML_I.png"
-alt="Bouton Mise en evidence" />
-), <strong>stong</strong> (<img src="../../resources/icons/16x16/XHTML_B.png"
-alt="Bouton Important" />
-), <code>code</code> (<img src="../../resources/icons/16x16/XHTML_T.png"
-alt="Bouton Code" />
-), <ins>ins</ins> (<img alt="Bouton Insertion"
-src="../../resources/icons/16x16/XHTML_ins.png" />
-), <del>del</del> (<img alt="Bouton Suppression"
-src="../../resources/icons/16x16/XHTML_del.png" />
+alt="Bouton Mise en evidence" /> ), <strong>stong</strong> (<img
+src="../../resources/icons/16x16/XHTML_B.png" alt="Bouton Important" /> ),
+<code>code</code> (<img src="../../resources/icons/16x16/XHTML_T.png"
+alt="Bouton Code" /> ), <ins>ins</ins> (<img alt="Bouton Insertion"
+src="../../resources/icons/16x16/XHTML_ins.png" /> ), <del>del</del> (<img
+alt="Bouton Suppression" src="../../resources/icons/16x16/XHTML_del.png" />
 ).</p>
 
 <h4 id="L895">Eléments caractères</h4>
@@ -436,10 +302,9 @@ src="../../resources/icons/16x16/XHTML_del.png" />
 </ol>
 
 <p>Deux de ces éléments sont également disponibles dans l'outil XHTML : sup
-(<img alt="Bouton Exposant" src="../../resources/icons/16x16/XHTML_sup.png" />
-), sub (<img alt="Bouton Indice"
-src="../../resources/icons/16x16/XHTML_sub.png" />
-).</p>
+(<img alt="Bouton Exposant" src="../../resources/icons/16x16/XHTML_sup.png"
+/> ), sub (<img alt="Bouton Indice"
+src="../../resources/icons/16x16/XHTML_sub.png" /> ).</p>
 
 <h4 id="Supprimer">Supprimer un élément type information ou charactères</h4>
 
@@ -454,20 +319,16 @@ caractères</strong> s'annulent si elles sont appliquées de nouveau.</p>
     information</strong> ou <strong>Eléments caractères</strong> du menu
     <strong>XHTML</strong>, ou dans l'outil XHTML : <em>em</em> (<img
     src="../../resources/icons/16x16/XHTML_I.png"
-    alt="Bouton Mise en evidence" />
-    ), <strong>strong</strong> (<img
+    alt="Bouton Mise en evidence" /> ), <strong>strong</strong> (<img
     src="../../resources/icons/16x16/XHTML_B.png" alt="Bouton Important" />
     ), <code>code</code> (<img src="../../resources/icons/16x16/XHTML_T.png"
-    alt="Bouton Code" />
-    ), <ins>ins</ins> (<img alt="Bouton Insertion"
-    src="../../resources/icons/16x16/XHTML_ins.png" />
-    ), <del>del</del> (<img alt="Bouton Suppression"
-    src="../../resources/icons/16x16/XHTML_del.png" />
-    ), sup (<img alt="Bouton Exposant"
-    src="../../resources/icons/16x16/XHTML_sup.png" />
+    alt="Bouton Code" /> ), <ins>ins</ins> (<img alt="Bouton Insertion"
+    src="../../resources/icons/16x16/XHTML_ins.png" /> ), <del>del</del>
+    (<img alt="Bouton Suppression"
+    src="../../resources/icons/16x16/XHTML_del.png" /> ), sup (<img
+    alt="Bouton Exposant" src="../../resources/icons/16x16/XHTML_sup.png" />
     ), sub (<img alt="Bouton Indice"
-    src="../../resources/icons/16x16/XHTML_sub.png" />
-    ).</li>
+    src="../../resources/icons/16x16/XHTML_sub.png" /> ).</li>
 </ol>
 </div>
 </body>

@@ -437,9 +437,6 @@ void AmayaSubPanelManager::SaveSubPanelState( AmayaSubPanel * p_panel )
     case WXAMAYA_PANEL_ATTRIBUTE:
       TtaSetEnvBoolean("OPEN_PANEL_ATTRIBUTE", value, TRUE);
       break;
-    case WXAMAYA_PANEL_COLORS:
-      TtaSetEnvBoolean("OPEN_PANEL_COLORS", value, TRUE);
-      break;
     case WXAMAYA_PANEL_APPLYCLASS:
       TtaSetEnvBoolean("OPEN_PANEL_APPLYCLASS", value, TRUE);
       break;

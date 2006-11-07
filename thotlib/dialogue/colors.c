@@ -14,9 +14,6 @@
  *
  */
 
-#ifdef _WX
-  #include "wx/wx.h"
-#endif /* _WX */
 
 #include "thot_gui.h"
 #include "thot_sys.h"
@@ -96,10 +93,6 @@ static ThotBool     IsRegistered = FALSE;
 #include "xwindowdisplay_f.h"
 #include "colors_f.h"
 
-#ifdef _WX
-  #include "AmayaSubPanelManager.h"
-  #include "AmayaColorsPanel.h"
-#endif /* _WX */
 
 /*----------------------------------------------------------------------
    ThotUpdatePalette
@@ -130,15 +123,6 @@ void ThotSelectPalette (int bground, int fground)
    BgColor = bground;
    FgColor = fground;
 #endif /* _WINGUI */
-#ifdef _WX
-   BgColor = bground;
-   FgColor = fground;
-   /* refresh color panels */
-   AmayaParams p;
-   p.param1 = BgColor;
-   p.param8 = FgColor;
-   AmayaSubPanelManager::GetInstance()->SendDataToPanel( WXAMAYA_PANEL_COLORS, p );
-#endif /* _WX */
 }
 
 #ifdef _WINGUI
@@ -1363,10 +1347,6 @@ void TtcChangeColors (Document document, View view)
   ----------------------------------------------------------------------*/
 void TtcGetPaletteColors (int *fg, int *bg, ThotBool palType)
 { 
-#ifdef _WX
-  wxASSERT_MSG(false, _T("TODO: implementer TtcGetPaletteColors"));
-#endif /* _WX */
-
 #ifdef _WINGUI
     PalMessageSet1 = palType;
     FgColor = BgColor = -1;
