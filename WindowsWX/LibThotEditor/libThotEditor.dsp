@@ -127,10 +127,6 @@ SOURCE=..\..\thotlib\dialogue\AmayaCanvas.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\thotlib\dialogue\AmayaCharStylePanel.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\thotlib\dialogue\AmayaColorsPanel.cpp
 # End Source File
 # Begin Source File
@@ -148,10 +144,6 @@ SOURCE=..\..\thotlib\dialogue\AmayaFileDropTarget.cpp
 # Begin Source File
 
 SOURCE=..\..\thotlib\dialogue\AmayaFloatingPanel.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\thotlib\dialogue\AmayaFormatPanel.cpp
 # End Source File
 # Begin Source File
 
