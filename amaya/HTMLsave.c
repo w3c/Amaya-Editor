@@ -1036,19 +1036,19 @@ char *UpdateDocumentCharset (Document doc)
   ----------------------------------------------------------------------*/
 void SetNamespacesAndDTD (Document doc)
 {
-  Element		    root, el, head, meta, docEl, doctype, elFound, text;
+  Element       root, el, head, meta, docEl, doctype, elFound, text;
   Element       next, elDecl;
-  ElementType		elType;
-  Attribute		  attr;
-  AttributeType	attrType;
+  ElementType   elType;
+  Attribute     attr;
+  AttributeType	attrType, attrType2;
   SSchema       nature;
   Language      lang;
   char         *ptr, *s;
   char         *charsetname = NULL;
-  char		      buffer[300];
+  char          buffer[300];
   char         *attrText;
   int           length, profile, pi_type;
-  ThotBool		  useMathML, useSVG, useHTML, useXML, mathPI;
+  ThotBool      useMathML, useSVG, useHTML, useXML, mathPI;
   ThotBool      xmlDecl, xhtml_mimetype, insertMeta;
 
   insertMeta = FALSE;
@@ -1292,9 +1292,13 @@ void SetNamespacesAndDTD (Document doc)
               meta = NULL;
               attrType.AttrTypeNum = HTML_ATTR_http_equiv;
               attr = NULL;
-              while (el && !meta)
+              attrType2.AttrSSchema = attrType.AttrSSchema;
+              attrType2.AttrTypeNum = HTML_ATTR_meta_name;
+              while (el)
                 {
                   elType = TtaGetElementType (el);
+                  next = el;
+                  TtaNextSibling (&next);
                   if (elType.ElSSchema == attrType.AttrSSchema &&
                       elType.ElTypeNum == HTML_EL_META)
                     {
@@ -1305,12 +1309,24 @@ void SetNamespacesAndDTD (Document doc)
                           attrText = (char *)TtaGetMemory (length + 1);
                           TtaGiveTextAttributeValue (attr, attrText, &length);
                           if (!strcasecmp (attrText, "content-type"))
-                            meta = el;
+						  {
+							if (meta)
+						      // ther is a previous http-equiv meta
+                              TtaDeleteTree (el, doc);
+							else
+                              meta = el;
+						  }
                           TtaFreeMemory (attrText);
                         }
+					  else
+					  {
+                        attr = TtaGetAttribute (el, attrType2);
+						if (attr == NULL)
+						  // a meta with only a content
+                          TtaDeleteTree (el, doc);                          
+					  }
                     }
-                  if (!meta)
-                    TtaNextSibling (&el);
+                    el = next;
                 }
 
               if (!meta)
