@@ -884,7 +884,7 @@ static void CreateOrChangeDoctype (Document doc, View view, int new_doctype,
   
   /* The document has to be parsed with the new doctype */
   tempdoc = GetLocalPath (doc, DocumentURLs[doc]);
-  if (TtaIsDocumentUpdated (doc) ||
+  if (TtaIsDocumentUpdated (doc) || !TtaFileExist (tempdoc) ||
       (!DocumentMeta[doc]->xmlformat && xmlDoctype))
     {
       /* save the current state of the document */
