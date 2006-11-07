@@ -8,6 +8,7 @@
 
 class AmayaNormalWindow;
 class wxTreeEvent;
+class wxGenericDirCtrl;
 
 /*
  *  Description:  - AmayaExplorerPanel is a specific sub-panel which allow to explore
