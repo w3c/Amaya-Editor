@@ -127,10 +127,6 @@ SOURCE=..\..\thotlib\dialogue\AmayaCanvas.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\thotlib\dialogue\AmayaColorsPanel.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\thotlib\dialogue\AmayaConfirmCloseTab.cpp
 # End Source File
 # Begin Source File
