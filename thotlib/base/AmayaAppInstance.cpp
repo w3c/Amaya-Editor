@@ -27,7 +27,7 @@ AmayaAppInstance::AmayaAppInstance( AmayaApp * p_amaya_app ) :
 #ifdef _WINDOWS
   m_InstanceName = wxString::Format(m_pAmayaApp->GetAppName()+_T("-%s"),
                                     wxGetUserId().c_str());
-  m_ServicePort = _T("4242");
+  m_ServicePort = _T("amaya-check-instance");
 #else /* _WINDOWS */
   m_InstanceName = wxString::Format(_T(".")+m_pAmayaApp->GetAppName()+_T("-%s"),
                                     wxGetUserId().c_str());
