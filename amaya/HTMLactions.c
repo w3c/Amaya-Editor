@@ -3135,7 +3135,7 @@ void CopyLocation (Document doc, View view)
   AttributeType  attrType;
   Attribute      attr;
   int            firstSelectedChar, lastSelectedChar, length;
-  char           msgBuffer[MaxMsgLength], *name;
+  char           msgBuffer[MaxMsgLength], *name, *documentname;
 
   strcpy (msgBuffer, DocumentURLs[doc]);
   TtaGiveFirstSelectedElement (doc, &el, &firstSelectedChar,
@@ -3161,6 +3161,7 @@ void CopyLocation (Document doc, View view)
       attr = TtaGetAttribute (el, attrType);
       if (attr)
         {
+          // add the id to document URL
           length = TtaGetTextAttributeLength (attr) + 1;
           name = (char *)TtaGetMemory (length);
           TtaGiveTextAttributeValue (attr, name, &length);
@@ -3170,6 +3171,7 @@ void CopyLocation (Document doc, View view)
         }
       else if (!strcmp (name, "HTML"))
         {
+          // add the name to document URL
           attrType.AttrTypeNum = HTML_ATTR_NAME;
           attr = TtaGetAttribute (el, attrType);
           if (attr)
@@ -3180,6 +3182,28 @@ void CopyLocation (Document doc, View view)
               strcat (msgBuffer, "#");
               strcat (msgBuffer, name);
               TtaFreeMemory (name);
+            }
+          else
+            {
+              attr = NULL;
+              // get the target of the enclosing anchor
+              el = SearchAnchor (doc, el, &attr, FALSE);
+              if (el && attr)
+                {
+                  length = TtaGetTextAttributeLength (attr) + 1;
+                  name = (char *)TtaGetMemory (length);
+                  TtaGiveTextAttributeValue (attr, name, &length);
+                  if (name[0] == '#')
+                    // it's a local reference
+                    strcat (msgBuffer, name);
+                  else
+                    {
+                      documentname = (char *)TtaGetMemory (MAX_LENGTH);
+                      NormalizeURL (name, doc, msgBuffer, documentname, NULL);
+                      TtaFreeMemory (documentname);
+                    }
+                  TtaFreeMemory (name);
+                }
             }
         }
     }
