@@ -66,8 +66,7 @@ AmayaExplorerPanel::AmayaExplorerPanel( wxWindow * p_parent_window, AmayaNormalW
   wxSizer *sizer = new wxBoxSizer(wxVERTICAL);
   sizer->Add(m_dirCtrl, 1, wxEXPAND);
   panel->SetSizer(sizer);
-  m_dirCtrl->Show();
-  
+  sizer->Fit(this);
   // register myself to the manager, so I will be avertised that another panel is floating ...
   m_pManager->RegisterSubPanel( this );
 }
