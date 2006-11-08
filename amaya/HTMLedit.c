@@ -455,7 +455,7 @@ void GenerateInlineElement (int eType, int aType, char * data)
   Language        lang;
   CHAR_T         *buffer;
   DisplayMode     dispMode;
-  ThotBool	      doit, split, before, charlevel, inside;
+  ThotBool	      doit, split, before, charlevel, inside, done;
   ThotBool        lastChanged, parse, open, selpos, isPict = FALSE;
 
   doc = TtaGetSelectedDocument();
@@ -1002,27 +1002,55 @@ void GenerateInlineElement (int eType, int aType, char * data)
                                         }
                                       else
                                         {
-                                          TtaRegisterAttributeReplace (newAttr, child, doc);
+                                          done = FALSE;
                                           if (parse)
-                                            {
-                                              // CSS properties should be ended by ;
-                                              name = TtaStrdup (data);
-                                           }
+                                            // CSS properties should be ended by ;
+                                            name = TtaStrdup (data);
                                           else
                                             {
                                               // several class names
                                               lg = TtaGetTextAttributeLength (newAttr);
                                               if (lg)
                                                 {
-                                                  name = (char *)TtaGetMemory (lg + strlen (data) + 3);
+                                                  int     ic, id, ld;
+                                                  ld = strlen (data);
+                                                  name = (char *)TtaGetMemory (lg + ld + 3);
                                                   TtaGiveTextAttributeValue (newAttr, name, &lg);
-                                                  strcat (name, " ");
-                                                  strcat (name, data);
+                                                  // check if the name is already there
+                                                  ic = id = 0;
+                                                  while (!done && ic <= lg && id <= ld)
+                                                    {
+                                                      if (data[id] == EOS &&
+                                                        (name[ic] == SPACE || name[ic] == EOS))
+                                                        done = TRUE;
+                                                      else if (name[ic] != data[id])
+                                                        {
+                                                          while (name[ic] != SPACE &&
+                                                                 name[ic] != EOS)
+                                                            ic++;
+                                                          id = 0;
+                                                          ic++;
+                                                        }
+                                                      else
+                                                        {
+                                                          ic++;
+                                                          id++;
+                                                        }
+                                                    }
+                                                  if (!done)
+                                                    {
+                                                      strcat (name, " ");
+                                                      strcat (name, data);
+                                                    }
                                                 }
                                               else
                                                 name = TtaStrdup (data);
                                             }
-                                          TtaSetAttributeText (newAttr, name, child, doc);
+                                          if (!done)
+                                            {
+                                              TtaRegisterAttributeReplace (newAttr, child, doc);
+                                              TtaSetAttributeText (newAttr, name, child, doc);
+                                            }
                                           if (parse)
                                             // apply CSS properties
                                             ParseHTMLSpecificStyle (child, name, doc, 200, FALSE);
