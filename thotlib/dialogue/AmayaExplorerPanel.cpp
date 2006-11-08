@@ -55,7 +55,7 @@ AmayaExplorerPanel::AmayaExplorerPanel( wxWindow * p_parent_window, AmayaNormalW
 {
   // setup labels
   RefreshToolTips();
-  m_pTitleText->SetLabel(TtaConvMessageToWX(/*TtaGetMessage(LIB,TMSG_XHTML)*/"Explorer"));
+  m_pTitleText->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_EXPLORE)));
   
   wxPanel *panel = XRCCTRL(*this, "wxID_PANEL_CONTENT_DETACH", wxPanel);
   wxSize sz = wxDefaultSize;

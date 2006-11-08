@@ -226,6 +226,7 @@
 #define TMSG_BUTTON_DD		221
 #define TMSG_OBJECT		222
 #define CSSStyle		223
-#define TMSG_LIB_MSG_MAX		224
+#define TMSG_EXPLORE		224
+#define TMSG_LIB_MSG_MAX		225
 
 #endif
