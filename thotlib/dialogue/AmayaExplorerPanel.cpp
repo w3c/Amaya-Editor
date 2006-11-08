@@ -58,10 +58,9 @@ AmayaExplorerPanel::AmayaExplorerPanel( wxWindow * p_parent_window, AmayaNormalW
   m_pTitleText->SetLabel(TtaConvMessageToWX(/*TtaGetMessage(LIB,TMSG_XHTML)*/"Explorer"));
   
   wxPanel *panel = XRCCTRL(*this, "wxID_PANEL_CONTENT_DETACH", wxPanel);
-  
-  wxSize sz = panel->GetSize();
+  wxSize sz = wxDefaultSize;
   m_dirCtrl = new wxGenericDirCtrl(panel, wxID_ANY, wxDirDialogDefaultFolderStr,
-                                   wxDefaultPosition, sz/*wxDefaultSize*/,
+                                   wxDefaultPosition, sz,
                                 wxDIRCTRL_3D_INTERNAL|wxDIRCTRL_SELECT_FIRST|wxSUNKEN_BORDER|wxDIRCTRL_SHOW_FILTERS,
                                 APPFILENAMEFILTER);
   wxSizer *sizer = new wxBoxSizer(wxVERTICAL);
