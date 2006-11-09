@@ -166,7 +166,6 @@ static int      S_thick;
 static GLubyte  Opacity = 255;
 static GLubyte  FillOpacity = 255;
 static GLubyte  StrokeOpacity = 255;
-static ThotBool Fill_style = TRUE;
 static int      X_Clip = 0;
 static int      Y_Clip = 0;
 static int      Width_Clip = 0;
@@ -327,18 +326,15 @@ void GL_GetCurrentClipping (int *x, int *y, int *width, int *height)
 /*----------------------------------------------------------------------
   GL_SetForeground : set color before drawing a or many vertex
   ----------------------------------------------------------------------*/
-void GL_SetForeground (int fg)
+void GL_SetForeground (int fg, ThotBool fillstyle)
 {
   unsigned short  red, green, blue;
   GLubyte         us_opac;
 
-  if (Fill_style)
+  if (fillstyle)
     us_opac = FillOpacity;
   else
-    {
-      us_opac = StrokeOpacity;
-      Fill_style = TRUE;	
-    }
+    us_opac = StrokeOpacity;
   TtaGiveThotRGB (fg, &red, &green, &blue);
   glColor4ub ((GLubyte) red,  (GLubyte) green, (GLubyte) blue, (GLubyte) us_opac);    
 }
@@ -404,8 +400,7 @@ void InitDrawing (int style, int thick, int fg)
         }
      
     }
-  Fill_style = FALSE;  
-  GL_SetForeground (fg);
+ GL_SetForeground (fg, FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -432,7 +427,7 @@ void GL_VideoInvert (int width, int height, int x, int y)
 void  GL_DrawEmptyRectangle (int fg, float x, float y, float width,
                              float height, float thick)
 { 
-  GL_SetForeground (fg);
+  GL_SetForeground (fg, TRUE);
   if (IS_ZERO (thick - 1))
     {      
       glBegin (GL_LINE_LOOP);
@@ -475,7 +470,7 @@ void  GL_DrawEmptyRectangle (int fg, float x, float y, float width,
   ----------------------------------------------------------------------*/
 void GL_DrawRectangle (int fg, float x, float y, float width, float height)
 {
-  GL_SetForeground (fg);
+  GL_SetForeground (fg, TRUE);
   glBegin (GL_QUADS);
   glVertex2f (x, y);
   glVertex2f (x + width, y);
@@ -649,7 +644,7 @@ void GL_DrawPolygon (ThotPoint *points, int npoints)
   ----------------------------------------------------------------------*/
 void GL_Point (int fg, float width, float x, float y)
 {
-  GL_SetForeground (fg);
+  GL_SetForeground (fg, TRUE);
   glPointSize (width);
   glBegin (GL_POINTS);
   glVertex2f (x, y);
@@ -694,11 +689,9 @@ void GL_DrawUnicodeChar (CHAR_T const c, float x, float y,
   
   symbols[0] = c;
   symbols[1] = '\0';
-  
   if (fg < 0 || GL_font == NULL)
     return;
-  GL_SetForeground (fg); 
-  
+  GL_SetForeground (fg, TRUE); 
   UnicodeFontRender (GL_font, symbols,  x, y, 1);
 }
 
@@ -716,7 +709,7 @@ int GL_DrawString (int fg,  CHAR_T *str, float x, float y,  int hyphen,
   if (Printing)
     {      
       TransText = TRUE;
-      GL_SetForeground (fg); 
+      GL_SetForeground (fg, TRUE); 
       width = UnicodeFontRender (GL_font, str, x, y, end);
       if (hyphen)
         /* draw the hyphen */
@@ -726,7 +719,7 @@ int GL_DrawString (int fg,  CHAR_T *str, float x, float y,  int hyphen,
     }
   else
     {
-      GL_SetForeground (fg); 
+      GL_SetForeground (fg, TRUE); 
       width = UnicodeFontRender (GL_font, str, x, y, end);
       if (hyphen)
         /* draw the hyphen */

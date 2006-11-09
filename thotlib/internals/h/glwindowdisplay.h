@@ -109,7 +109,7 @@ ThotBool GL_SwapGet (int frame);
 void SetGlPipelineState ();
 void GLResize (int width, int height, int x, int y);
 void gl_window_resize (int frame, int width, int height);
-void GL_SetForeground (int fg);
+void GL_SetForeground (int fg, ThotBool fillstyle);
 void GL_SetBackground (int bg, int frame);
 void GL_ClearArea (int x, int y, int width, int height);
 void GL_window_copy_area (int frame, int xf, int yf, int xd, int yd,

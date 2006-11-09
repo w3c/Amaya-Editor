@@ -131,7 +131,7 @@ void FontOrig (ThotFont font, char firstchar, int *pX, int *pY)
   ----------------------------------------------------------------------*/
 static void LoadColor (int fg)
 {
-  GL_SetForeground (fg);
+  GL_SetForeground (fg, TRUE);
 }
 
 /*----------------------------------------------------------------------
@@ -1007,7 +1007,6 @@ void DrawRectangle (int frame, int thick, int style, int x, int y, int width,
     return;
 
   y += FrameTable[frame].FrTopMargin;
-  th = (float) thick/2.;
   /* pattern = 4 => we're drawing a math empty place*/
   if (pattern == 4)
     {
@@ -1169,7 +1168,7 @@ static void DoDrawLines (int frame, int thick, int style,
   if (pattern == 2) 
     {
       /*  InitDrawing (style, thick, bg); */
-      GL_SetForeground (bg);
+      GL_SetForeground (bg, TRUE);
       GL_DrawPolygon (points, npoints);
     }
 
@@ -1436,7 +1435,7 @@ void DrawSpline (int frame, int thick, int style, int x, int y,
   /* Fill in the polygone */
   if (pattern == 2)
     {
-      GL_SetForeground (bg);
+      GL_SetForeground (bg, TRUE);
       GL_DrawPolygon (points, npoints);
     }
 
@@ -1463,7 +1462,7 @@ static void DoDrawMesh (int frame, int thick, int style,
   if (pattern == 2) 
     {
       /*  InitDrawing (style, thick, bg); */
-      GL_SetForeground (bg); 
+      GL_SetForeground (bg, TRUE); 
       MakeMesh (mesh);  
     }
   /* Draw the border */
@@ -1699,7 +1698,7 @@ void DrawOval (int frame, int thick, int style, int x, int y, int width,
       point[12].x = point[0].x;
       point[12].y = point[0].y;
 
-      GL_SetForeground (bg);
+      GL_SetForeground (bg, TRUE);
       GL_DrawPolygon (point, 13);
       for (i=0;i<4;i++)
         {
@@ -1746,9 +1745,8 @@ void DrawEllips (int frame, int thick, int style, int x, int y, int width,
 
   if (pattern == 2 || (bg == fg && bg == pattern))
     {
-
       /* InitDrawing (style, thick, bg); */
-      GL_SetForeground (bg);
+      GL_SetForeground (bg, TRUE);
       GL_DrawArc (x + thick/2, y + thick/2, 
                   width - thick/2, height - thick/2, 
                   0, 360, TRUE);
@@ -2091,7 +2089,7 @@ void DrawRectangleFrame (int frame, int thick, int style, int x, int y,
       point[12].x = point[0].x;
       point[12].y = point[0].y;
 
-      GL_SetForeground (bg);
+      GL_SetForeground (bg, TRUE);
       GL_DrawPolygon (point, 13);
       for (i = 0; i < 4; i++)
         {  
@@ -2142,7 +2140,7 @@ void DrawEllipsFrame (int frame, int thick, int style, int x, int y,
   /* Fill in the rectangle */
   if (pattern == 2)
     {
-      GL_SetForeground (bg);
+      GL_SetForeground (bg, TRUE);
       GL_DrawArc (x, y, width, height, 0, 360, TRUE);
     }
 

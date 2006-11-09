@@ -4007,12 +4007,9 @@ void TtcPasteFromClipboard (Document doc, View view)
       TTALOGDEBUG_0( TTA_LOG_CLIPBOARD, _T("Can't open clipboard.") );
       return;
     }
-  wxTextDataObject data;
-#ifdef IV
-  if (wxTheClipboard->IsSupported( data.GetFormat() ))
+  else
     {
-      TTALOGDEBUG_0( TTA_LOG_CLIPBOARD, _T("Clipboard supports requested format.") );
-#endif /* IV */
+      wxTextDataObject data;
       if (wxTheClipboard->GetData( data ))
         {
           wxString text = data.GetText();
@@ -4036,14 +4033,10 @@ void TtcPasteFromClipboard (Document doc, View view)
         }
       else
         TTALOGDEBUG_0( TTA_LOG_CLIPBOARD, _T("Error getting data from the clipboard.") );
-#ifdef IV
-     }
-  else
-    TTALOGDEBUG_0( TTA_LOG_CLIPBOARD, _T("Clipboard doesn't support requested format.") );
-#endif /* IV */
 
-  wxTheClipboard->Close();
-  TTALOGDEBUG_0( TTA_LOG_CLIPBOARD, _T("Closed the clipboard.\n") );
+      wxTheClipboard->Close();
+      TTALOGDEBUG_0( TTA_LOG_CLIPBOARD, _T("Closed the clipboard.\n") );
+    }
 #endif /* _WX */
 #ifdef _GTK
   DisplayMode         dispMode;

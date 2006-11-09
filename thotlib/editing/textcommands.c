@@ -1621,7 +1621,8 @@ void TtaStringToClipboard (unsigned char *s, CHARSET encoding)
       if (len)
         {
 #ifdef _WX
-          wxTheClipboard->UsePrimarySelection(false);
+          // Application clipboard
+          wxTheClipboard->UsePrimarySelection (false);
           if (wxTheClipboard->Open())
             {
               TtcClearClipboard ();
@@ -1632,6 +1633,15 @@ void TtaStringToClipboard (unsigned char *s, CHARSET encoding)
               else
                 Xbuffer = TtaConvertByteToMbs (s, encoding);
               
+              // This data objects are held by the clipboard, 
+              // so do not delete them in the app.
+              wxTheClipboard->AddData( new wxTextDataObject( TtaConvMessageToWX((char *)s) ) );
+              wxTheClipboard->Close();
+            }
+          // X11 clipboard
+          wxTheClipboard->UsePrimarySelection (true);
+          if (wxTheClipboard->Open())
+            {
               // This data objects are held by the clipboard, 
               // so do not delete them in the app.
               wxTheClipboard->AddData( new wxTextDataObject( TtaConvMessageToWX((char *)s) ) );
