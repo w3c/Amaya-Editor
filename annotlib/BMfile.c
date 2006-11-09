@@ -365,9 +365,6 @@ Document redland_init (char *url, char *tmpfile,
 
       /* Open an environment */
       librdf_world_open (world);
-
-      /* register the rdfxml serializer */
-      librdf_serializer_rdfxml_constructor (world);
     }
 
   /* create a new librdf_storage object, the place where statements will be stored? */

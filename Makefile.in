@@ -28,11 +28,11 @@ bindir = @bindir@
 
 srcdir	= $(THOTDIR)
 
-default : tools gl @BUILDWXWIDGETS@ thotlib batch amaya_prog @PRINTIFNOTGL@
+default : tools gl @BUILDWXWIDGETS@ thotlib batch amaya_prog print_prog
 
-amaya : amaya_prog tools thotlib @PRINTIFNOTGL@
+amaya : amaya_prog tools thotlib print_prog
 
-@NOPRINT@print : tools thotlib print_prog
+print : tools thotlib print_prog
 
 Options:
 	@CP@ Options.orig Options
@@ -63,9 +63,9 @@ gl: rebuild force
 	@(if test -d "$(GL_BUILDDIR)" ; then cd "$(GL_BUILDDIR)" ; \
 	  $(MAKE) linux-static ; fi)
 
-@NOPRINT@print_prog: rebuild force bin/str
-@NOPRINT@	@(if test -d thotlib ; then cd thotlib ; \
-@NOPRINT@	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)" print ; fi)
+print_prog: rebuild force bin/str
+	@(if test -d thotlib ; then cd thotlib ; \
+  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)" print ; fi)
 
 misc: rebuild force
 	@(if test -d misc ; then cd misc ; \

@@ -3,7 +3,7 @@
 # Generated from Options.in
 #
 # Increase the Version number each time one entry is added
-# Version : 1.15
+# Version : 9.53
 #
 
 SHELL	= /bin/sh
@@ -79,9 +79,6 @@ XFT_LIBRARIES=@XFT_LIBRARIES@
 GL_BUILDDIR=@GL_BUILDDIR@
 GL_INCLUDES=@GL_INCLUDES@
 GL_LIBRARIES=@GL_LIBRARIES@
-
-
-PRINTIFNOTGL=@PRINTIFNOTGL@
 
 LIBWWW=libwww
 

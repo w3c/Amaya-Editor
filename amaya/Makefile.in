@@ -41,7 +41,7 @@ amaya : directories ../thotlib/libThotEditor.a amaya_schemas amaya_src ../bin/am
 #
 # General entry point everything should have compiled correctly
 #
-all : directories amaya_schemas amaya_src ../bin/amaya @NOPRINT@../bin/print
+all : directories amaya_schemas amaya_src ../bin/amaya ../bin/print
 
 clean :
 	$(RM) *.o *.h *.c EDITOR* HTML* TextFile* MathML* SVG* Timeline* XLink* XML* logo.* *.a
@@ -502,10 +502,10 @@ EDITORAPP.c : @srcdir@/EDITOR.A
 	$(LD) $(LDFLAGS) -o ../bin/amaya $(AMAYA_OBJ) $(AMAYA_OPTION_OBJ) libCSS.a $(LIBS)
 	@$(ECHO) "====>" amaya is done
 
-@NOPRINT@../bin/print :
-@NOPRINT@	@(cd ../thotlib ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)" print)
+../bin/print :
+	@(cd ../thotlib ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)" print)
 
-install : all @NOPRINT@../bin/print
+install : all ../bin/print
 	../script_install ../bin $(DESTDIR)$(prefix) $(DESTDIR)$(bindir)
 
 uninstall :
