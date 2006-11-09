@@ -176,33 +176,33 @@
 174 Eingerücktes Zitat (blockquote)
 175 Inline-Frame (iframe)
 176 Ruby
-177 Abschnitte numerieren
-178 Inhaltsverzeichnis erzeugen
-179 Zeitstempel einfügen
-180 Buch erstellen
-181 Inhaltsorientiert
-182 Betont (em)
-183 Hervorgehoben (strong)
-184 Zitatquelle (cite)
-185 Definition (dfn)
-186 Programmtext (code)
-187 Variable (var)
-188 Beispiel (samp)
-189 Tastatureingabe (kbd)
-190 Abkürzung (abbr)
-191 Akronym (acronym)
-192 Eingefügter Text (ins)
-193 Gelöschter Text (del)
-194 Darstellungsorientiert
-195 Kursiv (i)
-196 Fett (b)
-197 Gesperrt (tt)
-198 Groß (big)
-199 Klein (small)
-200 Tiefgestellt (sub)
-201 Hochgestellt (sup)
-202 Zitat (q)
-203 Textrichtung LTR/RTL (bdo)
+177 Inhaltsorientiert
+178 Betont (em)
+179 Hervorgehoben (strong)
+180 Zitatquelle (cite)
+181 Definition (dfn)
+182 Programmtext (code)
+183 Variable (var)
+184 Beispiel (samp)
+185 Tastatureingabe (kbd)
+186 Abkürzung (abbr)
+187 Akronym (acronym)
+188 Eingefügter Text (ins)
+189 Gelöschter Text (del)
+190 Darstellungsorientiert
+191 Kursiv (i)
+192 Fett (b)
+193 Gesperrt (tt)
+194 Groß (big)
+195 Klein (small)
+196 Tiefgestellt (sub)
+197 Hochgestellt (sup)
+198 Zitat (q)
+199 Textrichtung LTR/RTL (bdo)
+200 Abschnitte numerieren
+201 Inhaltsverzeichnis erzeugen
+202 Zeitstempel einfügen
+203 Buch erstellen
 204 Neue Formel (math)
 205 Primäre &Elemente
 206 Text (mtext)
@@ -246,84 +246,83 @@
 244 Elemente XML...
 245 Internetadresse kopieren
 246 Internetadresse einfügen
-247 Verknüpfung kopieren
-248 Auf vorherigen Anker
-249 Erzeugen/Ändern...
-250 Anker erzeugen
-251 Verweis/Anker löschen
-252 Id hinzufügen/entfernen...
-253 &Hilfsmittel anzeigen
-254 &Vollbildanzeige
-255 Symbolleiste anzeigen
-256 Adresszeile anzeigen
-257 Aktive Bildbereiche
-258 Anker anzeigen
-259 Schrift vergrößern
-260 Schrift verkleinern
-261 Layoutansicht
-262 Struktur
-263 Quelltext
-264 Verweise
-265 Textbrowser
-266 Inhaltsverzeichnis
-267 Zeitliche Reihenfolge
-268 Ansicht horizontal teilen
-269 Ansicht vertikal teilen
-270 Schrift...
-271 Farbe...
-272 CSS &Stil
-273 Ausrichtung...
-274 Hintergrundbild...
-275 Regel erzeugen...
-276 Klasse übernehmen...
-277 Zugewiesenes Format anzeigen...
-278 Verknüpfen...
-279 Öffnen...
-280 Deaktivieren...
-281 Aktivieren...
-282 Entfernen...
-283 Zur Markierung
-284 Zum Dokument
-285 Auf Markierung verschieben
-286 Als XPointer speichern
-287 Auf XPointer verschieben
-288 Beantworten
-289 Veröffentlichen
-290 Löschen
-291 Laden
-292 Abfrage bearbeiten...
-293 Filter...
-294 Resource sperren...
-295 Resource entsperren...
-296 Resourceeigenschaften anzeigen...
-297 Sperrinformation kopieren...
-298 Gesperrt?
-299 Info
-300 Über Amaya
-301 Index
-302 Browsen
-303 Ansichten
-304 Markieren
-305 Dokument
-306 Elemente
-307 Attribute
-308 Zeichen
-309 Transformieren
-310 Verweise
-311 Tabellen
-312 Aktive Bildbereiche
-313 Formeln
-314 SVG
-315 XML
-316 Formate/Formatvorlagen
-317 Suchen/Ersetzen
-318 Rechtschreibprüfung
-319 Speichern/Veröffentlichen
-320 WebDAV
-321 Drucken
-322 Abschnitte numerieren
-323 Buch erstellen
-324 Anmerkungen
-325 Konfiguration
-326 Tastenkürzel
-327 Benutzerfreundlichkeit
+247 Auf vorherigen Anker
+248 Erzeugen/Ändern...
+249 Anker erzeugen
+250 Verweis/Anker löschen
+251 Id hinzufügen/entfernen...
+252 &Hilfsmittel anzeigen
+253 &Vollbildanzeige
+254 Symbolleiste anzeigen
+255 Adresszeile anzeigen
+256 Aktive Bildbereiche
+257 Anker anzeigen
+258 Schrift vergrößern
+259 Schrift verkleinern
+260 Layoutansicht
+261 Struktur
+262 Quelltext
+263 Verweise
+264 Textbrowser
+265 Inhaltsverzeichnis
+266 Zeitliche Reihenfolge
+267 Ansicht horizontal teilen
+268 Ansicht vertikal teilen
+269 Schrift...
+270 Farbe...
+271 CSS &Stil
+272 Ausrichtung...
+273 Hintergrundbild...
+274 Regel erzeugen...
+275 Klasse übernehmen...
+276 Zugewiesenes Format anzeigen...
+277 Verknüpfen...
+278 Öffnen...
+279 Deaktivieren...
+280 Aktivieren...
+281 Entfernen...
+282 Zur Markierung
+283 Zum Dokument
+284 Auf Markierung verschieben
+285 Als XPointer speichern
+286 Auf XPointer verschieben
+287 Beantworten
+288 Veröffentlichen
+289 Löschen
+290 Laden
+291 Abfrage bearbeiten...
+292 Filter...
+293 Resource sperren...
+294 Resource entsperren...
+295 Resourceeigenschaften anzeigen...
+296 Sperrinformation kopieren...
+297 Gesperrt?
+298 Info
+299 Über Amaya
+300 Index
+301 Browsen
+302 Ansichten
+303 Markieren
+304 Dokument
+305 Elemente
+306 Attribute
+307 Zeichen
+308 Transformieren
+309 Verweise
+310 Tabellen
+311 Aktive Bildbereiche
+312 Formeln
+313 SVG
+314 XML
+315 Formate/Formatvorlagen
+316 Suchen/Ersetzen
+317 Rechtschreibprüfung
+318 Speichern/Veröffentlichen
+319 WebDAV
+320 Drucken
+321 Abschnitte numerieren
+322 Buch erstellen
+323 Anmerkungen
+324 Konfiguration
+325 Tastenkürzel
+326 Benutzerfreundlichkeit

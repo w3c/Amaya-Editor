@@ -176,33 +176,33 @@
 174 Bloğu aktar (blockquote)
 175 çizgili çerçeve (iframe)
 176 ruby
-177 Bölüm numaralandırması
-178 **&Add Table of contents
-179 **Insert time stamp
-180 Kitap yap
-181 Bilgi türü
-182 Vurgu (em)
-183 Kuvvetli (strong)
-184 Metin aktarımı (cite)
-185 Tanım (dfn)
-186 Kod (code)
-187 Değişken (var)
-188 Örnek (samp)
-189 Klaviye (kbd)
-190 kısaltmak (abbr)
-191 acronym
-192 Araya Koy (ins)
-193 Sil (del)
-194 Karakter birimi
-195 Eğik (i)
-196 Kalın (b)
-197 Teletip) (tt)
-198 Büyük (big)
-199 Küçük (small)
-200 Alt (sub)
-201 Üst (sup)
-202 Alıntılama (q)
-203 BiDi (bdo)
+177 Bilgi türü
+178 Vurgu (em)
+179 Kuvvetli (strong)
+180 Metin aktarımı (cite)
+181 Tanım (dfn)
+182 Kod (code)
+183 Değişken (var)
+184 Örnek (samp)
+185 Klaviye (kbd)
+186 kısaltmak (abbr)
+187 acronym
+188 Araya Koy (ins)
+189 Sil (del)
+190 Karakter birimi
+191 Eğik (i)
+192 Kalın (b)
+193 Teletip) (tt)
+194 Büyük (big)
+195 Küçük (small)
+196 Alt (sub)
+197 Üst (sup)
+198 Alıntılama (q)
+199 BiDi (bdo)
+200 Bölüm numaralandırması
+201 **&Add Table of contents
+202 **Insert time stamp
+203 Kitap yap
 204 Yeni formül (math)
 205 **Basic &Elements
 206 Düz yazı (mtext)
@@ -246,84 +246,83 @@
 244 XML elementlerin
 245 **Copy location
 246 **Paste location
-247 **Copy link
-248 Önceki hedefe bağlantı
-249 Baglantı yarat...
-250 Hedef yarat
-251 tanımı sil
-252 IDs ekle/sil
-253 **Show &tools
-254 **&Fullscreen
-255 Tusları göster
-256 Adres göster
-257 Yakınlaştır
-258 Hedefi göster
-259 Uzaklaştır
-260 Harita alanlarını göster
-261 **Show &formatted view
-262 Yapıyı göster
-263 kaynak göster
-264 Bağlantıları göster
-265 Alternatif gösterim
-266 Içindekileri göster
-267 Zaman sırası
-268 **Split view horizontally
-269 **Split view vertically
-270 Karakter tarzı...
-271 Renkler...
-272 **CSS &Style...
-273 Biçim...
-274 Arkaplan görüntüsü...
-275 Kural yarat...
-276 \'class\' uygula...
-277 **Show applied style...
-278 Bağlantı
-279 Aç
-280 Olumsuzla
-281 Olumla
-282 Sil
-283 Seçili alan ekleme
-284 Doküman eklemek
-285 Seçili alanı taşı
-286 seçilen alanı XPointer gibi kaydet
-287 Xpointer\'daki birikenleri taşı
-288 Tekrar ekle
-289 Server\'e kaydet
-290 Sil
-291 Yükle
-292 Kişisel ayarlama...
-293 Sabit filitre...
-294 Tekrar okumayı kitle...
-295 Tekrar okumayı kilidi aç...
-296 Tekrar okuma ayarlarını göster...
-297 kilitli bilgileri kopyala...
-298 kitli mi?
-299 Amaya hakkında
-300 W3C deki Amaya hakkında
-301 Içerik
-302 Tarama
-303 Görünümler
-304 Seç
-305 Döküman
-306 Yarat
-307 Tarz tanımları
-308 karakterler
-309 Yeniden yapılandırma
-310 Bağlantılar
-311 Tablolar
-312 Aktif alan
-313 Matematik
-314 Grafik
-315 XML desteği
-316 Görüntü haritaları
-317 Yazı hataları arama
-318 Yazı hataları düzeltmek
-319 Bastırma
-320 WebDAV
-321 Sayfa yerleştirme
-322 Numaralandır
-323 Kitap oluşturma
-324 Not ekleme
-325 Amaya yapılandırması
-326 Kısalmalar
-327 Amaya\'ya ulaşmak
+247 Önceki hedefe bağlantı
+248 Baglantı yarat...
+249 Hedef yarat
+250 tanımı sil
+251 IDs ekle/sil
+252 **Show &tools
+253 **&Fullscreen
+254 Tusları göster
+255 Adres göster
+256 Yakınlaştır
+257 Hedefi göster
+258 Uzaklaştır
+259 Harita alanlarını göster
+260 **Show &formatted view
+261 Yapıyı göster
+262 kaynak göster
+263 Bağlantıları göster
+264 Alternatif gösterim
+265 Içindekileri göster
+266 Zaman sırası
+267 **Split view horizontally
+268 **Split view vertically
+269 Karakter tarzı...
+270 Renkler...
+271 **CSS &Style...
+272 Biçim...
+273 Arkaplan görüntüsü...
+274 Kural yarat...
+275 \'class\' uygula...
+276 **Show applied style...
+277 Bağlantı
+278 Aç
+279 Olumsuzla
+280 Olumla
+281 Sil
+282 Seçili alan ekleme
+283 Doküman eklemek
+284 Seçili alanı taşı
+285 seçilen alanı XPointer gibi kaydet
+286 Xpointer\'daki birikenleri taşı
+287 Tekrar ekle
+288 Server\'e kaydet
+289 Sil
+290 Yükle
+291 Kişisel ayarlama...
+292 Sabit filitre...
+293 Tekrar okumayı kitle...
+294 Tekrar okumayı kilidi aç...
+295 Tekrar okuma ayarlarını göster...
+296 kilitli bilgileri kopyala...
+297 kitli mi?
+298 Amaya hakkında
+299 W3C deki Amaya hakkında
+300 Içerik
+301 Tarama
+302 Görünümler
+303 Seç
+304 Döküman
+305 Yarat
+306 Tarz tanımları
+307 karakterler
+308 Yeniden yapılandırma
+309 Bağlantılar
+310 Tablolar
+311 Aktif alan
+312 Matematik
+313 Grafik
+314 XML desteği
+315 Görüntü haritaları
+316 Yazı hataları arama
+317 Yazı hataları düzeltmek
+318 Bastırma
+319 WebDAV
+320 Sayfa yerleştirme
+321 Numaralandır
+322 Kitap oluşturma
+323 Not ekleme
+324 Amaya yapılandırması
+325 Kısalmalar
+326 Amaya\'ya ulaşmak

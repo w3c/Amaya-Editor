@@ -176,33 +176,33 @@
 174 区域引用 (blockquote)
 175 内嵌 frame (iframe)
 176 ruby
-177 区域统计(&S)
-178 生成内容列表(&G)
-179 插入时间戳
-180 制作书籍(&M)
-181 信息类型
-182 强调 (em)
-183 加强 (strong)
-184 引用 (cite)
-185 定义 (dfn)
-186 代码 (code)
-187 变量 (var)
-188 样例 (samp)
-189 键盘 (kbd)
-190 所写 (abbr)
-191 首字母 (acronym)
-192 插入 (ins)
-193 删除 (del)
-194 字符元素
-195 斜体 (i)
-196 粗体 (b)
-197 打字机风格 (tt)
-198 大号
-199 小号
-200 桥表 (sub)
-201 上标 (sup)
-202 Quotation 引用 (q)
-203 文字反排 (bdo)
+177 信息类型
+178 强调 (em)
+179 加强 (strong)
+180 引用 (cite)
+181 定义 (dfn)
+182 代码 (code)
+183 变量 (var)
+184 样例 (samp)
+185 键盘 (kbd)
+186 所写 (abbr)
+187 首字母 (acronym)
+188 插入 (ins)
+189 删除 (del)
+190 字符元素
+191 斜体 (i)
+192 粗体 (b)
+193 打字机风格 (tt)
+194 大号
+195 小号
+196 桥表 (sub)
+197 上标 (sup)
+198 Quotation 引用 (q)
+199 文字反排 (bdo)
+200 区域统计(&S)
+201 生成内容列表(&G)
+202 插入时间戳
+203 制作书籍(&M)
 204 新建数学公式 (math)
 205 基本元素(&E)
 206 普通文本 (mtext)
@@ -246,84 +246,83 @@
 244 XML 元素...
 245 复制地址
 246 粘贴地址
-247 复制链接
-248 链接到上个目标(&L)
-249 创建或更改链接(&C)...
-250 创建目标(&T)
-251 删除 anchor(&D)
-252 添加/删除 ID(&A)...
-253 显示工具栏(&T)
-254 全屏显示(&F)
-255 显示按钮栏(&B)
-256 显示 ADDRESS(&D)
-257 显示 MAP 区域(&M)
-258 显示目标 (&T)
-259 放大
-260 缩小
-261 显示格式化的视图(&F)
-262 显示结构(&S)
-263 显示源文件(&U)
-264 显示链接(&K)
-265 显示候选(&A)
-266 显示表格内容(&O)
-267 显示时间排列
-268 水平排列视图
-269 垂直排列视图
-270 字符样式(&H)...
-271 颜色(&O)...
-272 CSS样式(&S)...
-273 格式(&F)...
-274 背景图片(&B)...
-275 创建规则(&R)...
-276 应用CLASS(&C)...
-277 显示已应用的样式...
-278 链接(&K)...
-279 打开(&N)...
-280 禁用(&D)...
-281 启用(&E)...
-282 移除(&V)...
-283 为选择区作注释
-284 为文档作注释
-285 移动到选择区
-286 存储选择区为 XPointer(&X)
-287 移动到已存储的 XPointer
-288 答复注释
-289 提交到服务器
-290 删除
-291 载入
-292 自定义查询...
-293 本地过滤器...
-294 锁定资源...
-295 取消锁定资源...
-296 查看资源属性...
-297 复制锁定信息...
-298 锁定了吗?
-299 关于 Amaya
-300 关于 Amaya at W3C
-301 索引
-302 Browsing
-303 Views
-304 Selecting
-305 Document
-306 Creating elements
-307 Attributes
-308 Characters
-309 Restructuring
-310 Links
-311 Tables
-312 Image maps
-313 Math
-314 Graphics
-315 XML support
-316 Style sheets
-317 Searching
-318 Spell Checking
-319 Publishing
-320 WebDAV
-321 Printing
-322 Numbering
-323 Making books
-324 Annotations
-325 Configuring Amaya
-326 ShortCuts
-327 Accessibility in Amaya
+247 链接到上个目标(&L)
+248 创建或更改链接(&C)...
+249 创建目标(&T)
+250 删除 anchor(&D)
+251 添加/删除 ID(&A)...
+252 显示工具栏(&T)
+253 全屏显示(&F)
+254 显示按钮栏(&B)
+255 显示 ADDRESS(&D)
+256 显示 MAP 区域(&M)
+257 显示目标 (&T)
+258 放大
+259 缩小
+260 显示格式化的视图(&F)
+261 显示结构(&S)
+262 显示源文件(&U)
+263 显示链接(&K)
+264 显示候选(&A)
+265 显示表格内容(&O)
+266 显示时间排列
+267 水平排列视图
+268 垂直排列视图
+269 字符样式(&H)...
+270 颜色(&O)...
+271 CSS样式(&S)...
+272 格式(&F)...
+273 背景图片(&B)...
+274 创建规则(&R)...
+275 应用CLASS(&C)...
+276 显示已应用的样式...
+277 链接(&K)...
+278 打开(&N)...
+279 禁用(&D)...
+280 启用(&E)...
+281 移除(&V)...
+282 为选择区作注释
+283 为文档作注释
+284 移动到选择区
+285 存储选择区为 XPointer(&X)
+286 移动到已存储的 XPointer
+287 答复注释
+288 提交到服务器
+289 删除
+290 载入
+291 自定义查询...
+292 本地过滤器...
+293 锁定资源...
+294 取消锁定资源...
+295 查看资源属性...
+296 复制锁定信息...
+297 锁定了吗?
+298 关于 Amaya
+299 关于 Amaya at W3C
+300 索引
+301 Browsing
+302 Views
+303 Selecting
+304 Document
+305 Creating elements
+306 Attributes
+307 Characters
+308 Restructuring
+309 Links
+310 Tables
+311 Image maps
+312 Math
+313 Graphics
+314 XML support
+315 Style sheets
+316 Searching
+317 Spell Checking
+318 Publishing
+319 WebDAV
+320 Printing
+321 Numbering
+322 Making books
+323 Annotations
+324 Configuring Amaya
+325 ShortCuts
+326 Accessibility in Amaya

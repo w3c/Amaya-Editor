@@ -176,33 +176,33 @@
 174 Citation (blockquote)
 175 Cadre en ligne (iframe)
 176 ruby
-177 &Numéroter les sections
-178 &Ajouter table des matières
-179 Insérer date de mise à jour
-180 &Construire un livre
-181 Types information
-182 Accent (em)
-183 Force (strong)
-184 Citation (cite)
-185 Définition (dfn)
-186 Code (code)
-187 Variable (var)
-188 Exemple (samp)
-189 Clavier (kbd)
-190 Abréviation (abbr)
-191 Acronyme (acronym)
-192 Insertion (ins)
-193 Suppression (del)
-194 Éléments caractères
-195 Italique (i)
-196 Gras (b)
-197 Télétype (tt)
-198 Gros (big)
-199 Petit (small)
-200 Indice (sub)
-201 Exposant (sup)
-202 Citation (q)
-203 BiDi (bdo)
+177 Types information
+178 Accent (em)
+179 Force (strong)
+180 Citation (cite)
+181 Définition (dfn)
+182 Code (code)
+183 Variable (var)
+184 Exemple (samp)
+185 Clavier (kbd)
+186 Abréviation (abbr)
+187 Acronyme (acronym)
+188 Insertion (ins)
+189 Suppression (del)
+190 Éléments caractères
+191 Italique (i)
+192 Gras (b)
+193 Télétype (tt)
+194 Gros (big)
+195 Petit (small)
+196 Indice (sub)
+197 Exposant (sup)
+198 Citation (q)
+199 BiDi (bdo)
+200 &Numéroter les sections
+201 &Ajouter table des matières
+202 Insérer date de mise à jour
+203 &Construire un livre
 204 Nouvelle formule (math)
 205 &Eléments de base
 206 Texte (mtext)
@@ -246,84 +246,83 @@
 244 Éléments XML...
 245 Copier l'adresse
 246 Coller l'adresse
-247 Copier le lien
-248 &Lier la cible créée
-249 &Créer/changer lien...
-250 Créer ci&ble
-251 &Détruire ancre
-252 &Ajouter/Retirer des attributs ID...
-253 &Montrer outils
-254 &Plein écran
-255 Montrer &boutons
-256 Montrer a&dresse
-257 Montrer les &zones actives
-258 Montrer les &cibles
-259 Grossir
-260 Réduire
-261 Montrer la vue &formatée
-262 Montrer la &structure
-263 Montrer le s&ource
-264 Montrer les lie&ns
-265 Montrer la vue &alternée
-266 Montrer la table des &matières
-267 Montrer la ligne de temps
-268 Partager horizontalement
-269 Partager verticalement
-270 Style de &caractères...
-271 C&ouleurs...
-272 &Style CSS...
-273 &Format...
-274 &Image de fond...
-275 Créer une &règle...
-276 A&ppliquer une classe...
-277 Montrer le style appliqué...
-278 &Ajouter...
-279 O&uvrir...
-280 &Désactiver...
-281 R&éactiver...
-282 Re&tirer...
-283 Annoter la sélection
-284 Annoter le document
-285 Déplacer sur la sélection
-286 Sauver la sélection comme &XPointer
-287 Déplacer sur le XPointer enregistré
-288 Répondre à l'annotation
-289 Enregister sur le serveur
-290 Détruire
-291 Charger annotations
-292 Personnaliser la requête...
-293 Filtrer local...
-294 Verrouiller la ressource...
-295 Déverrouiller la ressource...
-296 Visualiser les propriétés de la ressource...
-297 Copier les informations du verrou...
-298 Verrouillé ?
-299 À propos de Amaya
-300 À propos de Amaya au W3C
-301 Index
-302 Navigation
-303 Vues
-304 Sélection
-305 Document
-306 Création
-307 Attributs
-308 Caractères
-309 Transformer
-310 Liens
-311 Tables
-312 Zones actives
-313 Math
-314 Graphiques
-315 Support XML
-316 Feuilles de style
-317 Chercher
-318 Corriger
-319 Publier
-320 WebDAV
-321 Imprimer
-322 Numéroter
-323 Construire un livre
-324 Annotations
-325 Configurer Amaya
-326 Raccourcis clavier
-327 Accessibilité d'Amaya
+247 &Lier la cible créée
+248 &Créer/changer lien...
+249 Créer ci&ble
+250 &Détruire ancre
+251 &Ajouter/Retirer des attributs ID...
+252 &Montrer outils
+253 &Plein écran
+254 Montrer &boutons
+255 Montrer a&dresse
+256 Montrer les &zones actives
+257 Montrer les &cibles
+258 Grossir
+259 Réduire
+260 Montrer la vue &formatée
+261 Montrer la &structure
+262 Montrer le s&ource
+263 Montrer les lie&ns
+264 Montrer la vue &alternée
+265 Montrer la table des &matières
+266 Montrer la ligne de temps
+267 Partager horizontalement
+268 Partager verticalement
+269 Style de &caractères...
+270 C&ouleurs...
+271 &Style CSS...
+272 &Format...
+273 &Image de fond...
+274 Créer une &règle...
+275 A&ppliquer une classe...
+276 Montrer le style appliqué...
+277 &Ajouter...
+278 O&uvrir...
+279 &Désactiver...
+280 R&éactiver...
+281 Re&tirer...
+282 Annoter la sélection
+283 Annoter le document
+284 Déplacer sur la sélection
+285 Sauver la sélection comme &XPointer
+286 Déplacer sur le XPointer enregistré
+287 Répondre à l'annotation
+288 Enregister sur le serveur
+289 Détruire
+290 Charger annotations
+291 Personnaliser la requête...
+292 Filtrer local...
+293 Verrouiller la ressource...
+294 Déverrouiller la ressource...
+295 Visualiser les propriétés de la ressource...
+296 Copier les informations du verrou...
+297 Verrouillé ?
+298 À propos de Amaya
+299 À propos de Amaya au W3C
+300 Index
+301 Navigation
+302 Vues
+303 Sélection
+304 Document
+305 Création
+306 Attributs
+307 Caractères
+308 Transformer
+309 Liens
+310 Tables
+311 Zones actives
+312 Math
+313 Graphiques
+314 Support XML
+315 Feuilles de style
+316 Chercher
+317 Corriger
+318 Publier
+319 WebDAV
+320 Imprimer
+321 Numéroter
+322 Construire un livre
+323 Annotations
+324 Configurer Amaya
+325 Raccourcis clavier
+326 Accessibilité d'Amaya

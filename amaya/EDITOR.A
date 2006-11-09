@@ -214,14 +214,6 @@ MENUS
 	Types button:BBlockQuote -> CreateBlockQuote icon:XHTML_quote.png;
 	Types button:BIFrame -> CreateIFrame;
 	Types button:BRuby -> CreateRuby;
-  Types Separator;
-
-	Types button:TSectionNumber -> SectionNumbering;
-	Types button:BMakeToc -> MakeToc;
-	Types button:BDate -> CreateDate icon:XHTML_date.png;
-	Types button:BMakeBook -> MakeBook;
-
-	Types Separator;
   Types.Phrase toggle:TEmphasis -> SetOnOffEmphasis;
   Types.Phrase toggle:TStrong -> SetOnOffStrong;
   Types.Phrase toggle:TCite -> SetOnOffCite;
@@ -244,6 +236,12 @@ MENUS
   Types.Font toggle:TSup -> SetOnOffSup;
   Types.Font toggle:TQuotation -> SetOnOffQuotation;
   Types.Font toggle:TBDO -> SetOnOffBDO;
+  Types Separator;
+
+	Types button:TSectionNumber -> SectionNumbering;
+	Types button:BMakeToc -> MakeToc;
+	Types button:BDate -> CreateDate icon:XHTML_date.png;
+	Types button:BMakeBook -> MakeBook;
 
   XMLTypes button:BDisplayMath -> CreateMath icon:MATHML_Bmath.png;
   XMLTypes.MathElement button:BMText -> CreateMTEXT;
@@ -289,7 +287,6 @@ MENUS
 
 	Links button:BCopyLocation -> CopyLocation;
 	Links button:BPasteLocation -> PasteLocation;
-	Links button:BCopyLink -> CopyLink;
 	Links button:BLinkTarget -> LinkToPreviousTarget;
 	Links button:BCreateLink -> CreateOrChangeLink icon:XHTML_Link.png;
 	Links button:BCreateTarget -> CreateTarget icon:XHTML_Target.png;

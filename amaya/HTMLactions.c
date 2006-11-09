@@ -3220,11 +3220,3 @@ void PasteLocation (Document doc, View view)
 {
 }
 
-/*----------------------------------------------------------------------
-  CopyLink
-  If current selection is within an anchor, store the link value into the
-  clipboard.
-  ----------------------------------------------------------------------*/
-void CopyLink (Document doc, View view)
-{
-}

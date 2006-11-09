@@ -176,33 +176,33 @@
 174 blockquote
 175 Inline frame (iframe)
 176 ruby
-177 &Section numbering
-178 &Add Table of contents
-179 Insert time stamp
-180 &Make book
-181 Information type
-182 Emphasis (em)
-183 strong
-184 cite
-185 Definition (dfn)
-186 code
-187 Variable (var)
-188 Sample (samp)
-189 Keyboard (kbd)
-190 Abbreviation (abbr)
-191 acronym
-192 Insertion (ins)
-193 Deletion (del)
-194 Character element
-195 Italic (i)
-196 Bold (b)
-197 Teletype (tt)
-198 big
-199 small
-200 Subscript (sub)
-201 Superscript (sup)
-202 Quotation (q)
-203 BiDi override (bdo)
+177 Information type
+178 Emphasis (em)
+179 strong
+180 cite
+181 Definition (dfn)
+182 code
+183 Variable (var)
+184 Sample (samp)
+185 Keyboard (kbd)
+186 Abbreviation (abbr)
+187 acronym
+188 Insertion (ins)
+189 Deletion (del)
+190 Character element
+191 Italic (i)
+192 Bold (b)
+193 Teletype (tt)
+194 big
+195 small
+196 Subscript (sub)
+197 Superscript (sup)
+198 Quotation (q)
+199 BiDi override (bdo)
+200 &Section numbering
+201 &Add Table of contents
+202 Insert time stamp
+203 &Make book
 204 New formula (math)
 205 Basic &Elements
 206 Plain text (mtext)
@@ -246,84 +246,83 @@
 244 XML elements...
 245 Copy location
 246 Paste location
-247 Copy link
-248 &Link to previous target
-249 &Create or change link...
-250 Create &target
-251 &Delete anchor
-252 &Add/Remove IDs...
-253 Show &tools
-254 &Fullscreen
-255 Show &button bar
-256 Show a&ddress
-257 Show &map areas
-258 Show &targets
-259 Zoom in
-260 Zoom out
-261 Show &formatted view
-262 Show &structure
-263 Show so&urce
-264 Show lin&ks
-265 Show &alternate
-266 Show table &of contents
-267 Show timeline
-268 Split view horizontally
-269 Split view vertically
-270 C&haracter style...
-271 C&olors...
-272 CSS &Style...
-273 &Format...
-274 &Background image...
-275 Create &rule...
-276 Apply &class...
-277 Show applied style...
-278 Lin&k...
-279 Ope&n...
-280 &Disable...
-281 &Enable...
-282 Remo&ve...
-283 Annotate selection
-284 Annotate document
-285 Move to selection
-286 Store selection as &XPointer
-287 Move to stored XPointer
-288 Reply to annotation
-289 Post to server
-290 Delete
-291 Load
-292 Customize query...
-293 Local filter...
-294 Lock resource...
-295 Unlock resource...
-296 View resource properties...
-297 Copy lock information...
-298 Locked?
-299 About Amaya
-300 About Amaya at W3C
-301 Index
-302 Browsing
-303 Views
-304 Selecting
-305 Document
-306 Creating elements
-307 Attributes
-308 Characters
-309 Restructuring
-310 Links
-311 Tables
-312 Image maps
-313 Math
-314 Graphics
-315 XML support
-316 Style sheets
-317 Searching
-318 Spell Checking
-319 Publishing
-320 WebDAV
-321 Printing
-322 Numbering
-323 Making books
-324 Annotations
-325 Configuring Amaya
-326 ShortCuts
-327 Accessibility in Amaya
+247 &Link to previous target
+248 &Create or change link...
+249 Create &target
+250 &Delete anchor
+251 &Add/Remove IDs...
+252 Show &tools
+253 &Fullscreen
+254 Show &button bar
+255 Show a&ddress
+256 Show &map areas
+257 Show &targets
+258 Zoom in
+259 Zoom out
+260 Show &formatted view
+261 Show &structure
+262 Show so&urce
+263 Show lin&ks
+264 Show &alternate
+265 Show table &of contents
+266 Show timeline
+267 Split view horizontally
+268 Split view vertically
+269 C&haracter style...
+270 C&olors...
+271 CSS &Style...
+272 &Format...
+273 &Background image...
+274 Create &rule...
+275 Apply &class...
+276 Show applied style...
+277 Lin&k...
+278 Ope&n...
+279 &Disable...
+280 &Enable...
+281 Remo&ve...
+282 Annotate selection
+283 Annotate document
+284 Move to selection
+285 Store selection as &XPointer
+286 Move to stored XPointer
+287 Reply to annotation
+288 Post to server
+289 Delete
+290 Load
+291 Customize query...
+292 Local filter...
+293 Lock resource...
+294 Unlock resource...
+295 View resource properties...
+296 Copy lock information...
+297 Locked?
+298 About Amaya
+299 About Amaya at W3C
+300 Index
+301 Browsing
+302 Views
+303 Selecting
+304 Document
+305 Creating elements
+306 Attributes
+307 Characters
+308 Restructuring
+309 Links
+310 Tables
+311 Image maps
+312 Math
+313 Graphics
+314 XML support
+315 Style sheets
+316 Searching
+317 Spell Checking
+318 Publishing
+319 WebDAV
+320 Printing
+321 Numbering
+322 Making books
+323 Annotations
+324 Configuring Amaya
+325 ShortCuts
+326 Accessibility in Amaya

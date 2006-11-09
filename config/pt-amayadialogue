@@ -176,33 +176,33 @@
 174 Citação (blockquote)
 175 Quadro em linha (iframe)
 176 rubi
-177 Numeração de seção
-178 **&Add Table of contents
-179 **Insert time stamp
-180 Construir livro
-181 tipo de Informação
-182 Ênfase (em)
-183 Forte (strong)
-184 Citação (cite)
-185 Definição (dfn)
-186 Código (code)
-187 Variável (var)
-188 Exemplo (samp)
-189 Teclado (kbd)
-190 Abreviação (abbr)
-191 Acrônimo (acronym)
-192 Inserção (ins)
-193 Supressão (del)
-194 Elemento carácter
-195 Itálico (i)
-196 Negrito (b)
-197 Teletipo (tt)
-198 Grande (big)
-199 Pequeno (small)
-200 Índice (sub)
-201 Expoente (sup)
-202 Citação (q)
-203 Sobrepor BiDi (bdo)
+177 tipo de Informação
+178 Ênfase (em)
+179 Forte (strong)
+180 Citação (cite)
+181 Definição (dfn)
+182 Código (code)
+183 Variável (var)
+184 Exemplo (samp)
+185 Teclado (kbd)
+186 Abreviação (abbr)
+187 Acrônimo (acronym)
+188 Inserção (ins)
+189 Supressão (del)
+190 Elemento carácter
+191 Itálico (i)
+192 Negrito (b)
+193 Teletipo (tt)
+194 Grande (big)
+195 Pequeno (small)
+196 Índice (sub)
+197 Expoente (sup)
+198 Citação (q)
+199 Sobrepor BiDi (bdo)
+200 Numeração de seção
+201 **&Add Table of contents
+202 **Insert time stamp
+203 Construir livro
 204 Nova fórmula (math)
 205 **Basic &Elements
 206 Texto puro (mtext)
@@ -246,84 +246,83 @@
 244 **XML elements...
 245 **Copy location
 246 **Paste location
-247 **Copy link
-248 Ligar ao destino precedente
-249 Criar ou mudar enlace (link)...
-250 Create destino
-251 Apagar âncora
-252 Adicionar/Remover IDs...
-253 **Show &tools
-254 **&Fullscreen
-255 Exibir barra de ferramentas
-256 Exibir endereço
-257 Exibir áreas de mapa
-258 Exibir destinos
-259 Ampliar (Zoom in)
-260 Reduzir (Zoom out)
-261 **Show &formatted view
-262 Exibir estrutura
-263 Exibir fonte
-264 Exibir enlaces (links)
-265 Exibir alternativa
-266 Exibir índice de conteúdos
-267 **Show timeline
-268 **Split view horizontally
-269 **Split view vertically
-270 Estilo de carácter...
-271 Cores...
-272 **CSS &Style...
-273 Formato...
-274 Imagem de fundo...
-275 Criar regra...
-276 Aplicar classe...
-277 **Show applied style...
-278 Ligar...
-279 Abrir...
-280 Desabilitar...
-281 Habilitar...
-282 Remover...
-283 Anotar seleção
-284 Anotar documento
-285 Mover até a seleção
-286 Salvar seleção como XPointer
-287 Mover para o XPointer memorizado
-288 Responder à anotação
-289 Registrar
-290 Apagar
-291 Carregar
-292 Personalizar consulta...
-293 Filtro local...
-294 Travar o recurso
-295 Destravar o recurso
-296 Exibir as propriedades do recurso
-297 Copiar a informação da trava...
-298 Travado?
-299 Sobre Amaya
-300 Sobre Amaya no W3C
-301 Índice
-302 Navegar
-303 Vistas
-304 Selecionar
-305 Documento
-306 Criar elementos
-307 Atributos
-308 Caracteres
-309 Reestruturar
-310 Enlaces (links)
-311 Tabelas
-312 Mapas de Imagem
-313 Matemática
-314 Gráficos
-315 Suporte à XML
-316 Folhas de estilo
-317 Achar...
-318 Verificar ortografia
-319 Publicar
-320 WebDAV
-321 Imprimir
-322 Numberar
-323 Criar livros
-324 Anotações
-325 Configurar Amaya
-326 Atalhos
-327 Accessibilidade em Amaya
+247 Ligar ao destino precedente
+248 Criar ou mudar enlace (link)...
+249 Create destino
+250 Apagar âncora
+251 Adicionar/Remover IDs...
+252 **Show &tools
+253 **&Fullscreen
+254 Exibir barra de ferramentas
+255 Exibir endereço
+256 Exibir áreas de mapa
+257 Exibir destinos
+258 Ampliar (Zoom in)
+259 Reduzir (Zoom out)
+260 **Show &formatted view
+261 Exibir estrutura
+262 Exibir fonte
+263 Exibir enlaces (links)
+264 Exibir alternativa
+265 Exibir índice de conteúdos
+266 **Show timeline
+267 **Split view horizontally
+268 **Split view vertically
+269 Estilo de carácter...
+270 Cores...
+271 **CSS &Style...
+272 Formato...
+273 Imagem de fundo...
+274 Criar regra...
+275 Aplicar classe...
+276 **Show applied style...
+277 Ligar...
+278 Abrir...
+279 Desabilitar...
+280 Habilitar...
+281 Remover...
+282 Anotar seleção
+283 Anotar documento
+284 Mover até a seleção
+285 Salvar seleção como XPointer
+286 Mover para o XPointer memorizado
+287 Responder à anotação
+288 Registrar
+289 Apagar
+290 Carregar
+291 Personalizar consulta...
+292 Filtro local...
+293 Travar o recurso
+294 Destravar o recurso
+295 Exibir as propriedades do recurso
+296 Copiar a informação da trava...
+297 Travado?
+298 Sobre Amaya
+299 Sobre Amaya no W3C
+300 Índice
+301 Navegar
+302 Vistas
+303 Selecionar
+304 Documento
+305 Criar elementos
+306 Atributos
+307 Caracteres
+308 Reestruturar
+309 Enlaces (links)
+310 Tabelas
+311 Mapas de Imagem
+312 Matemática
+313 Gráficos
+314 Suporte à XML
+315 Folhas de estilo
+316 Achar...
+317 Verificar ortografia
+318 Publicar
+319 WebDAV
+320 Imprimir
+321 Numberar
+322 Criar livros
+323 Anotações
+324 Configurar Amaya
+325 Atalhos
+326 Accessibilidade em Amaya
