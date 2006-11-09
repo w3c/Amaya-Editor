@@ -2910,7 +2910,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
       /* store the profile of the new document */
       TtaSetDocumentProfile (doc, profile);
 
-      if (method == CE_MAKEBOOK)
+      if (method == CE_MAKEBOOK || method == CE_TEMPLATE)
         // it's not necessary to create the document window
         return doc;
 
@@ -4041,7 +4041,7 @@ Document LoadDocument (Document doc, char *pathname,
     }
   else if (pathname[0] != EOS)
     {
-      if (method != CE_MAKEBOOK)
+      if (method != CE_MAKEBOOK && method != CE_TEMPLATE)
         {
           /* do not register and open the document view */
           if (DocumentURLs[doc])
@@ -4441,7 +4441,7 @@ void Reload_callback (int doc, int status, char *urlName,
 
       RemoveParsingErrors (newdoc);
       /* add the URI in the combobox string */
-      if (method != CE_MAKEBOOK && method != CE_ANNOT &&
+      if (method != CE_MAKEBOOK && method != CE_TEMPLATE && method != CE_ANNOT &&
           method != CE_LOG && method != CE_HELP &&
           DocumentTypes[newdoc] != docLibrary &&
           status == 0)
@@ -5201,7 +5201,7 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName,
   strncpy (pathname, urlName, MAX_LENGTH);
   pathname[MAX_LENGTH] = EOS;
   tempfile = (char *)TtaGetMemory (MAX_LENGTH + 1);
-  if (method != CE_MAKEBOOK && method != CE_ANNOT &&
+  if (method != CE_MAKEBOOK && method != CE_TEMPLATE && method != CE_ANNOT &&
       method != CE_LOG && method != CE_HELP &&
       DocumentTypes[newdoc] != docLibrary &&
       status == 0)
@@ -5252,7 +5252,7 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName,
           if (ok)
             {
               /* fetch and display all images referred by the document */
-              if (method == CE_MAKEBOOK)
+              if (method == CE_MAKEBOOK || method == CE_TEMPLATE)
                 stopped_flag = FetchAndDisplayImages (newdoc,
                                                       AMAYA_LOAD_IMAGE | AMAYA_MBOOK_IMAGE,
                                                       NULL);
@@ -5270,7 +5270,8 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName,
                 }
             }
           /* check parsing errors */
-          if (DocumentTypes[newdoc] == docLog || method == CE_MAKEBOOK)
+          if (DocumentTypes[newdoc] == docLog ||
+              method == CE_MAKEBOOK || method == CE_TEMPLATE)
             CleanUpParsingErrors ();
           else
             CheckParsingErrors (newdoc);
@@ -5322,7 +5323,8 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName,
         }
 
       if (ok && !stopped_flag &&
-          DocumentTypes[newdoc] != docLog && method != CE_MAKEBOOK)
+          DocumentTypes[newdoc] != docLog &&
+          method != CE_MAKEBOOK && method != CE_TEMPLATE)
         {
           ResetStop (newdoc);
 #ifdef _GL
@@ -5337,7 +5339,7 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName,
 
   /* select the target if present */
   if (ok && !stopped_flag && target != NULL && target[0] != EOS &&
-      newdoc != 0 && method != CE_MAKEBOOK)
+      newdoc != 0 && method != CE_MAKEBOOK && method != CE_TEMPLATE)
     {
       /* attribute HREF contains the NAME of a target anchor */
       elFound = SearchNAMEattribute (newdoc, target, NULL, NULL);
@@ -5442,7 +5444,7 @@ Document GetAmayaDoc (char *urlname, char *form_data,
   ExtractTarget (urlname, target);
   /* Add the  base content if necessary */
   if (method == CE_RELATIVE || method == CE_FORM_GET ||
-      method == CE_FORM_POST || method == CE_MAKEBOOK)
+      method == CE_FORM_POST || method == CE_MAKEBOOK || method == CE_TEMPLATE)
     NormalizeURL (urlname, baseDoc, initial_url, documentname, NULL);
   else
     NormalizeURL (urlname, 0, initial_url, documentname, NULL);
@@ -5485,7 +5487,7 @@ Document GetAmayaDoc (char *urlname, char *form_data,
          problems) */
       if (method == CE_RELATIVE || method == CE_FORM_GET ||
           method == CE_ANNOT || method == CE_FORM_POST ||
-          method == CE_MAKEBOOK)
+          method == CE_MAKEBOOK || method == CE_TEMPLATE)
         /* we're following a link, so do all the convertions on
            the URL */
         NormalizeFile (initial_url, tempfile, AM_CONV_ALL);
@@ -5566,7 +5568,7 @@ Document GetAmayaDoc (char *urlname, char *form_data,
         DocumentURLs and DocHistory are coded in the default charset */
       /* document not loaded yet */
       if ((method == CE_RELATIVE || method == CE_FORM_GET ||
-           method == CE_FORM_POST || method == CE_MAKEBOOK ||
+           method == CE_FORM_POST || method == CE_MAKEBOOK || method == CE_TEMPLATE ||
            method == CE_ANNOT) &&
           !IsW3Path (initial_url) && !TtaFileExist (initial_url))
         {
@@ -5628,7 +5630,7 @@ Document GetAmayaDoc (char *urlname, char *form_data,
         {
           /* In case of initial document, open the view before loading */
           /* add the URI in the combobox string */
-          if (method != CE_MAKEBOOK)
+          if (method != CE_MAKEBOOK && method != CE_TEMPLATE)
               AddURLInCombobox (initial_url, NULL, FALSE);
           newdoc = InitDocAndView (doc,
                                    FALSE /* replaceOldDoc */,
@@ -5644,7 +5646,7 @@ Document GetAmayaDoc (char *urlname, char *form_data,
         {
           newdoc = doc;
           /* stop current transfer for previous document */
-          if (method != CE_MAKEBOOK)
+          if (method != CE_MAKEBOOK && method != CE_TEMPLATE)
             StopTransfer (baseDoc, 1);
           else
             /* temporary docs to make a book are not in ReadOnly mode */
@@ -5664,13 +5666,13 @@ Document GetAmayaDoc (char *urlname, char *form_data,
 
           if (method == CE_FORM_POST)
             mode = mode | AMAYA_FORM_POST | AMAYA_NOCACHE;
-          else if (method == CE_MAKEBOOK)
+          else if (method == CE_MAKEBOOK || method == CE_TEMPLATE)
             mode = AMAYA_ASYNC;
 
           if (IsW3Path (initial_url))
             {
               css = SearchCSS (0, initial_url, NULL, &pInfo);
-              if (method == CE_MAKEBOOK || method == CE_RELATIVE)
+              if (method == CE_MAKEBOOK || method == CE_RELATIVE  || method == CE_TEMPLATE)
                 /* add the referer field in the GET */
                 refdoc = doc;
               else
