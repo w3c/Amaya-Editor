@@ -16,51 +16,29 @@
                       <orient>wxHORIZONTAL</orient>
                       <object class="sizeritem">
                         <object class="wxBitmapButton" name="wxID_BUTTON_EXPAND">
-                          
-                          
                           <bitmap>../icons/misc/expand_on.png</bitmap>
-                          
-                          
                           <style platform="unix|win">wxNO_BORDER</style>
                         </object>
-                        
-                        
                         <flag>wxALIGN_CENTRE</flag>
                       </object>
                       <object class="sizeritem">
                         <object class="wxStaticText" name="wxID_LABEL_TITLE">
-                          
-                          
                           <label>*Explorer*</label>
-                          
-                          
                           <style>wxALIGN_LEFT</style>
                         </object>
-                        
-                        
                         <option>1</option>
-                        
-                        
                         <flag>wxALIGN_CENTRE</flag>
                       </object>
                       <object class="sizeritem">
                         <object class="wxBitmapButton" name="wxID_BUTTON_DETACH">
-                          
-                          
                           <bitmap>../icons/misc/detach.png</bitmap>
-                          
-                          
                           <style platform="unix|win">wxNO_BORDER</style>
                         </object>
-                        
-                        
                         <flag>wxALIGN_CENTRE</flag>
                       </object>
                     </object>
                     <style>wxNO_BORDER|wxTAB_TRAVERSAL</style>
                   </object>
-                  
-                  
                   <flag>wxEXPAND</flag>
                 </object>
                 <object class="sizeritem">
@@ -76,7 +54,7 @@
                           </object>
                           <object class="sizeritem">
                             <object class="wxPanel" name="wxID_PANEL_CONTENT_DETACH">
-                              <size>200,200</size>
+                              <size>200,300</size>
                               <style>wxTAB_TRAVERSAL|wxSIMPLE_BORDER</style>
                             </object>
                             <option>1</option>
@@ -84,37 +62,21 @@
                           </object>
                         </object>
                       </object>
-                      
-                      
                       <option>1</option>
-                      
-                      
                       <flag>wxEXPAND</flag>
                     </object>
                   </object>
-                  
-                  
                   <option>1</option>
-                  
-                  
                   <flag>wxEXPAND</flag>
                 </object>
               </object>
-              
-              
               <option>1</option>
-              
-              
               <flag>wxALL|wxEXPAND</flag>
             </object>
           </object>
           <style>wxTAB_TRAVERSAL</style>
         </object>
-        
-        
         <option>1</option>
-        
-        
         <flag>wxEXPAND</flag>
       </object>
     </object>
