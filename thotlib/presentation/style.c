@@ -938,7 +938,7 @@ static int TstRuleContext (PtrPRule rule, GenericContext ctxt,
     /* the rule is associated to an attribute */
     {
       nbCtxtCond += ctxt->nbElem;
-      if (ctxt->name[0] > AnyType + 1)
+      if (ctxt->name[0] > AnyType)
         nbCtxtCond++;
       /* count the number of conditions in the context */
       for (i = 1; i <= MAX_ANCESTORS && ctxt->attrType[i]; i++)
@@ -3487,7 +3487,7 @@ void TtaPToCss (PresentationSetting settings, char *buffer, int len,
   ElementType         elType;
   float               fval = 0;
   unsigned short      red, green, blue;
-  int                 add_unit = 0;
+  int                 add_unit = 0, val;
   unsigned int        unit, i;
   ThotBool            real = FALSE;
 
@@ -3719,20 +3719,44 @@ void TtaPToCss (PresentationSetting settings, char *buffer, int len,
       add_unit = 1;
       break;
     case PRBorderTopColor:
-      TtaGiveThotRGB (settings->value.typed_data.value, &red, &green, &blue);
-      sprintf (buffer, "border-top-color: #%02X%02X%02X", red, green, blue);
+      val = settings->value.typed_data.value;
+      if (val == -2)
+        strcpy (buffer, "border-top-color: transparent");
+      else if (val > 0)
+        {
+          TtaGiveThotRGB (settings->value.typed_data.value, &red, &green, &blue);
+          sprintf (buffer, "border-top-color: #%02X%02X%02X", red, green, blue);
+        }
       break;
     case PRBorderRightColor:
-      TtaGiveThotRGB (settings->value.typed_data.value, &red, &green, &blue);
-      sprintf (buffer, "border-right-color: #%02X%02X%02X", red, green, blue);
+      val = settings->value.typed_data.value;
+      if (val == -2)
+        strcpy (buffer, "border-right-color: transparent");
+      else if (val > 0)
+        {
+          TtaGiveThotRGB (settings->value.typed_data.value, &red, &green, &blue);
+          sprintf (buffer, "border-right-color: #%02X%02X%02X", red, green, blue);
+        }
       break;
     case PRBorderBottomColor:
-      TtaGiveThotRGB (settings->value.typed_data.value, &red, &green, &blue);
-      sprintf (buffer, "border-bottom-color: #%02X%02X%02X", red, green, blue);
+      val = settings->value.typed_data.value;
+      if (val == -2)
+        strcpy (buffer, "border-bottom-color: transparent");
+      else if (val > 0)
+        {
+          TtaGiveThotRGB (settings->value.typed_data.value, &red, &green, &blue);
+          sprintf (buffer, "border-bottom-color: #%02X%02X%02X", red, green, blue);
+        }
       break;
     case PRBorderLeftColor:
-      TtaGiveThotRGB (settings->value.typed_data.value, &red, &green, &blue);
-      sprintf (buffer, "border-left-color: #%02X%02X%02X", red, green, blue);
+      val = settings->value.typed_data.value;
+      if (val == -2)
+        strcpy (buffer, "border-left-color: transparent");
+      else if (val > 0)
+        {
+          TtaGiveThotRGB (settings->value.typed_data.value, &red, &green, &blue);
+          sprintf (buffer, "border-left-color: #%02X%02X%02X", red, green, blue);
+        }
       break;
     case PRBorderTopStyle:
       strcpy (buffer, "border-top-style: ");

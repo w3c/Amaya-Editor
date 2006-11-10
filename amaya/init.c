@@ -8471,7 +8471,6 @@ void InitStringForCombobox ()
   char              *app_home;
   FILE              *file;
   int                i, nb, len;
-  CHARSET            encoding;
 
   /* remove the previous list */
   TtaFreeMemory (URL_list);
@@ -8483,10 +8482,8 @@ void InitStringForCombobox ()
 #ifdef _WX
   /* force url encoding to utf8 */
   sprintf ((char *)urlstring, "%s%clist_url_utf8.dat", app_home, DIR_SEP);
-  encoding = UTF_8;
 #else /* _WX */
   sprintf ((char *)urlstring, "%s%clist_url.dat", app_home, DIR_SEP);
-  encoding = TtaGetLocaleCharset();
 #endif /* _WX */
   
   file = TtaReadOpen ((char *)urlstring);

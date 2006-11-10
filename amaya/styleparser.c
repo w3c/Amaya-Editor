@@ -1440,15 +1440,16 @@ static char *ParseCSSBorderTop (Element element, PSchema tsch,
                                 PresentationContext context, char *cssRule,
                                 CSSInfoPtr css, ThotBool isHTML)
 {
-  char           *ptr;
-  ThotBool        style, width;
+  PresentationValue   best;
+  char               *ptr;
+  ThotBool            style, width, color;
 
   cssRule = SkipBlanksAndComments (cssRule);
   /* register given values */
   if (!strncmp (cssRule, "none", 4))
-    style = width = TRUE;
+    style = width = color = TRUE;
   else
-    style = width = FALSE;
+    style = width = color = FALSE;
   while (*cssRule != ';' && *cssRule != '}' && *cssRule != EOS && *cssRule != ',')
     {
       ptr = cssRule;
@@ -1457,7 +1458,11 @@ static char *ParseCSSBorderTop (Element element, PSchema tsch,
         {
           cssRule = ParseCSSBorderTopWidth (element, tsch, context, cssRule, css, isHTML);
           if (ptr == cssRule)
-            cssRule = ParseCSSBorderColorTop (element, tsch, context, cssRule, css, isHTML);
+            {
+              cssRule = ParseCSSBorderColorTop (element, tsch, context, cssRule, css, isHTML);
+              if (ptr != cssRule)
+                color = TRUE;
+            }
           else
             width = TRUE;
           if (ptr == cssRule)
@@ -1476,6 +1481,14 @@ static char *ParseCSSBorderTop (Element element, PSchema tsch,
     ParseCSSBorderTopWidth (element, tsch, context, "medium", css, isHTML);
   if (!style)
     ParseCSSBorderStyleTop (element, tsch, context, "none", css, isHTML);
+  if (!color && DoApply)
+    {
+      /* get the box color */
+      best.typed_data.value = -1;
+      best.typed_data.unit = UNIT_REL; 
+      best.typed_data.real = FALSE;
+      TtaSetStylePresentation (PRBorderTopColor, element, tsch, context, best);
+    }
   return (cssRule);
 }
 
@@ -1487,15 +1500,16 @@ static char *ParseCSSBorderLeft (Element element, PSchema tsch,
                                  PresentationContext context, char *cssRule,
                                  CSSInfoPtr css, ThotBool isHTML)
 {
-  char           *ptr;
-  ThotBool        style, width;
+  PresentationValue   best;
+  char               *ptr;
+  ThotBool            style, width, color;
 
   cssRule = SkipBlanksAndComments (cssRule);
   /* register given values */
   if (!strncmp (cssRule, "none", 4))
-    style = width = TRUE;
+    style = width = color = TRUE;
   else
-    style = width = FALSE;
+    style = width = color = FALSE;
   while (*cssRule != ';' && *cssRule != '}' && *cssRule != EOS && *cssRule != ',')
     {
       ptr = cssRule;
@@ -1504,7 +1518,11 @@ static char *ParseCSSBorderLeft (Element element, PSchema tsch,
         {
           cssRule = ParseCSSBorderLeftWidth (element, tsch, context, cssRule, css, isHTML);
           if (ptr == cssRule)
-            cssRule = ParseCSSBorderColorLeft (element, tsch, context, cssRule, css, isHTML);
+            {
+              cssRule = ParseCSSBorderColorLeft (element, tsch, context, cssRule, css, isHTML);
+              if (ptr != cssRule)
+                color = TRUE;
+            }
           else
             width = TRUE;
           if (ptr == cssRule)
@@ -1523,6 +1541,14 @@ static char *ParseCSSBorderLeft (Element element, PSchema tsch,
     ParseCSSBorderLeftWidth (element, tsch, context, "medium", css, isHTML);
   if (!style)
     ParseCSSBorderStyleLeft (element, tsch, context, "none", css, isHTML);
+  if (!color && DoApply)
+    {
+      /* get the box color */
+      best.typed_data.value = -1;
+      best.typed_data.unit = UNIT_REL;
+      best.typed_data.real = FALSE;
+      TtaSetStylePresentation (PRBorderLeftColor, element, tsch, context, best);
+    }
   return (cssRule);
 }
 
@@ -1534,15 +1560,16 @@ static char *ParseCSSBorderBottom (Element element, PSchema tsch,
                                    PresentationContext context, char *cssRule,
                                    CSSInfoPtr css, ThotBool isHTML)
 {
-  char           *ptr;
-  ThotBool        style, width;
+  PresentationValue   best;
+  char               *ptr;
+  ThotBool            style, width, color;
 
   cssRule = SkipBlanksAndComments (cssRule);
   /* register given values */
   if (!strncmp (cssRule, "none", 4))
-    style = width = TRUE;
+    style = width = color = TRUE;
   else
-    style = width = FALSE;
+    style = width = color = FALSE;
   while (*cssRule != ';' && *cssRule != '}' && *cssRule != EOS && *cssRule != ',')
     {
       ptr = cssRule;
@@ -1551,7 +1578,11 @@ static char *ParseCSSBorderBottom (Element element, PSchema tsch,
         {
           cssRule = ParseCSSBorderBottomWidth (element, tsch, context, cssRule, css, isHTML);
           if (ptr == cssRule)
-            cssRule = ParseCSSBorderColorBottom (element, tsch, context, cssRule, css, isHTML);
+            {
+              cssRule = ParseCSSBorderColorBottom (element, tsch, context, cssRule, css, isHTML);
+              if (ptr != cssRule)
+                color = TRUE;
+            }
           else
             width = TRUE;
           if (ptr == cssRule)
@@ -1570,6 +1601,14 @@ static char *ParseCSSBorderBottom (Element element, PSchema tsch,
     ParseCSSBorderBottomWidth (element, tsch, context, "medium", css, isHTML);
   if (!style)
     ParseCSSBorderStyleBottom (element, tsch, context, "none", css, isHTML);
+  if (!color && DoApply)
+    {
+      /* get the box color */
+      best.typed_data.value = -1;
+      best.typed_data.unit = UNIT_REL;
+      best.typed_data.real = FALSE;
+      TtaSetStylePresentation (PRBorderBottomColor, element, tsch, context, best);
+    }
   return (cssRule);
 }
 
@@ -1581,15 +1620,16 @@ static char *ParseCSSBorderRight (Element element, PSchema tsch,
                                   PresentationContext context, char *cssRule,
                                   CSSInfoPtr css, ThotBool isHTML)
 {
-  char            *ptr;
-  ThotBool        style, width;
+  PresentationValue   best;
+  char               *ptr;
+  ThotBool            style, width, color;
 
   cssRule = SkipBlanksAndComments (cssRule);
   /* register given values */
   if (!strncmp (cssRule, "none", 4))
-    style = width = TRUE;
+    style = width = color = TRUE;
   else
-    style = width = FALSE;
+    style = width = color = FALSE;
   while (*cssRule != ';' && *cssRule != '}' && *cssRule != EOS && *cssRule != ',')
     {
       ptr = cssRule;
@@ -1598,7 +1638,11 @@ static char *ParseCSSBorderRight (Element element, PSchema tsch,
         {
           cssRule = ParseCSSBorderRightWidth (element, tsch, context, cssRule, css, isHTML);
           if (ptr == cssRule)
-            cssRule = ParseCSSBorderColorRight (element, tsch, context, cssRule, css, isHTML);
+            {
+              cssRule = ParseCSSBorderColorRight (element, tsch, context, cssRule, css, isHTML);
+              if (ptr != cssRule)
+                color = TRUE;
+            }
           else
             width = TRUE;
           if (ptr == cssRule)
@@ -1617,6 +1661,13 @@ static char *ParseCSSBorderRight (Element element, PSchema tsch,
     ParseCSSBorderRightWidth (element, tsch, context, "medium", css, isHTML);
   if (!style)
     ParseCSSBorderStyleRight (element, tsch, context, "none", css, isHTML);
+  if (!color && DoApply)
+    {
+      /* get the box color */
+      best.typed_data.value = -1;
+      best.typed_data.unit = UNIT_REL;
+      TtaSetStylePresentation (PRBorderRightColor, element, tsch, context, best);
+    }
   return (cssRule);
 }
 
@@ -2221,6 +2272,7 @@ static char *SetCSSImage (Element element, PSchema tsch,
     /* default element for FetchImage */
     el = TtaGetMainRoot (ctxt->doc);
   url = NULL;
+  image.typed_data.real = FALSE;
   cssRule = ParseCSSUrl (cssRule, &url);
   ptr = cssRule;
   if (ctxt->destroy)
@@ -2692,6 +2744,7 @@ static char *ParseCSSTextIndent (Element element, PSchema tsch,
   PresentationValue   pval;
   char               *ptr;
 
+  pval.typed_data.real = FALSE;
   cssRule = SkipBlanksAndComments (cssRule);
   ptr = cssRule;
   cssRule = ParseCSSUnit (cssRule, &pval);
@@ -2890,6 +2943,7 @@ static char *ParseCSSLineHeight (Element element, PSchema tsch,
   PresentationValue   pval;
   char               *ptr;
 
+  pval.typed_data.real = FALSE;
   cssRule = SkipBlanksAndComments (cssRule);
   ptr = cssRule;
   if (!strncasecmp (cssRule, "normal", 6))
@@ -3780,6 +3834,7 @@ static char *ParseCSSHeight (Element element, PSchema tsch,
   PresentationValue   val;
   char               *ptr;
 
+  val.typed_data.real = FALSE;
   cssRule = SkipBlanksAndComments (cssRule);
   ptr = cssRule;
   /* first parse the attribute string */
@@ -3787,7 +3842,6 @@ static char *ParseCSSHeight (Element element, PSchema tsch,
     {
       val.typed_data.unit = VALUE_AUTO;
       val.typed_data.value = 0;
-      val.typed_data.real = FALSE;
       cssRule += 4;
       cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid height value");
     }
@@ -3821,6 +3875,7 @@ static char *ParseCSSWidth (Element element, PSchema tsch,
   PresentationValue   val;
   char               *ptr;
 
+  val.typed_data.real = FALSE;
   cssRule = SkipBlanksAndComments (cssRule);
   ptr = cssRule;
   /* first parse the attribute string */
@@ -3828,7 +3883,6 @@ static char *ParseCSSWidth (Element element, PSchema tsch,
     {
       val.typed_data.unit = VALUE_AUTO;
       val.typed_data.value = 0;
-      val.typed_data.real = FALSE;
       cssRule += 4;
       cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid width value");
     }
@@ -3861,6 +3915,7 @@ static char *ParseACSSMarginTop (Element element, PSchema tsch,
   PresentationValue   margin;
   char               *ptr;
   
+  margin.typed_data.real = FALSE;
   cssRule = SkipBlanksAndComments (cssRule);
   ptr = cssRule;
   /* first parse the attribute string */
@@ -3868,7 +3923,6 @@ static char *ParseACSSMarginTop (Element element, PSchema tsch,
     {
       margin.typed_data.unit = VALUE_AUTO;
       margin.typed_data.value = 0;
-      margin.typed_data.real = FALSE;
       cssRule += 4;
     }
   else
@@ -3916,6 +3970,7 @@ static char *ParseACSSMarginBottom (Element element, PSchema tsch,
   PresentationValue   margin;
   char               *ptr;
   
+  margin.typed_data.real = FALSE;
   cssRule = SkipBlanksAndComments (cssRule);
   ptr = cssRule;
   /* first parse the attribute string */
@@ -3923,7 +3978,6 @@ static char *ParseACSSMarginBottom (Element element, PSchema tsch,
     {
       margin.typed_data.unit = VALUE_AUTO;
       margin.typed_data.value = 0;
-      margin.typed_data.real = FALSE;
       cssRule += 4;
     }
   else
@@ -3966,6 +4020,7 @@ static char *ParseACSSMarginLeft (Element element, PSchema tsch,
   PresentationValue   margin;
   char               *ptr;
   
+  margin.typed_data.real = FALSE;
   cssRule = SkipBlanksAndComments (cssRule);
   ptr = cssRule;
   /* first parse the attribute string */
@@ -3973,7 +4028,6 @@ static char *ParseACSSMarginLeft (Element element, PSchema tsch,
     {
       margin.typed_data.unit = VALUE_AUTO;
       margin.typed_data.value = 0;
-      margin.typed_data.real = FALSE;
       cssRule += 4;
     }
   else
@@ -4017,6 +4071,7 @@ static char *ParseACSSMarginRight (Element element, PSchema tsch,
   PresentationValue   margin;
   char               *ptr;
   
+  margin.typed_data.real = FALSE;
   cssRule = SkipBlanksAndComments (cssRule);
   ptr = cssRule;
   /* first parse the attribute string */
@@ -4024,7 +4079,6 @@ static char *ParseACSSMarginRight (Element element, PSchema tsch,
     {
       margin.typed_data.unit = VALUE_AUTO;
       margin.typed_data.value = 0;
-      margin.typed_data.real = FALSE;
       cssRule += 4;
     }
   else
@@ -4139,7 +4193,8 @@ static char *ParseCSSPaddingTop (Element element, PSchema tsch,
 {
   PresentationValue   padding;
   char               *ptr;
-  
+ 
+  padding.typed_data.real = FALSE;
   cssRule = SkipBlanksAndComments (cssRule);
   ptr = cssRule;
   /* first parse the attribute string */
@@ -4175,6 +4230,7 @@ static char *ParseCSSPaddingBottom (Element element, PSchema tsch,
   PresentationValue   padding;
   char               *ptr;
   
+  padding.typed_data.real = FALSE;
   cssRule = SkipBlanksAndComments (cssRule);
   ptr = cssRule;
   /* first parse the attribute string */
@@ -4207,6 +4263,7 @@ static char *ParseCSSPaddingLeft (Element element, PSchema tsch,
   PresentationValue   padding;
   char               *ptr;
   
+  padding.typed_data.real = FALSE;
   cssRule = SkipBlanksAndComments (cssRule);
   ptr = cssRule;
   /* first parse the attribute string */
@@ -4239,6 +4296,7 @@ static char *ParseCSSPaddingRight (Element element, PSchema tsch,
   PresentationValue   padding;
   char               *ptr;
   
+  padding.typed_data.real = FALSE;
   cssRule = SkipBlanksAndComments (cssRule);
   ptr = cssRule;
   /* first parse the attribute string */
@@ -4344,6 +4402,7 @@ static char *ParseCSSForeground (Element element, PSchema tsch,
   PresentationValue   best;
   char               *p;
 
+  best.typed_data.real = FALSE;
   cssRule = SkipBlanksAndComments (cssRule);
   p = cssRule;
   cssRule = ParseCSSColor (cssRule, &best);
@@ -4374,6 +4433,7 @@ static char *ParseCSSBackgroundColor (Element element, PSchema tsch,
   PresentationValue     best;
   char                 *ptr;
 
+  best.typed_data.real = FALSE;
   cssRule = SkipBlanksAndComments (cssRule);
   ptr = cssRule;
   best.typed_data.unit = UNIT_INVALID;
@@ -4823,6 +4883,8 @@ static char *ParseCSSBackgroundImage (Element element, PSchema tsch,
   PresentationValue          image, value;
   char                       *ptr;
 
+  image.typed_data.real = FALSE;
+  value.typed_data.real = FALSE;
   cssRule = SkipBlanksAndComments (cssRule);
   ptr = cssRule;
   if (!strncasecmp (cssRule, "none", 4))
@@ -5455,6 +5517,7 @@ static char *ParseCSSTop (Element element, PSchema tsch,
   PresentationValue   val;
   char               *ptr;
 
+  val.typed_data.real = FALSE;
   cssRule = SkipBlanksAndComments (cssRule);
   ptr = cssRule;
   /* first parse the value */
@@ -5462,7 +5525,6 @@ static char *ParseCSSTop (Element element, PSchema tsch,
     {
       val.typed_data.unit = VALUE_AUTO;
       val.typed_data.value = 0;
-      val.typed_data.real = FALSE;
       cssRule = SkipWord (cssRule);
     }
   else if (!strncasecmp (cssRule, "inherit", 7))
@@ -5496,6 +5558,7 @@ static char *ParseCSSRight (Element element, PSchema tsch,
   PresentationValue   val;
   char               *ptr;
 
+  val.typed_data.real = FALSE;
   cssRule = SkipBlanksAndComments (cssRule);
   ptr = cssRule;
   /* first parse the attribute string */
@@ -5503,7 +5566,6 @@ static char *ParseCSSRight (Element element, PSchema tsch,
     {
       val.typed_data.unit = VALUE_AUTO;
       val.typed_data.value = 0;
-      val.typed_data.real = FALSE;
       cssRule = SkipWord (cssRule);
     }
   else if (!strncasecmp (cssRule, "inherit", 7))
@@ -5537,6 +5599,7 @@ static char *ParseCSSBottom (Element element, PSchema tsch,
   PresentationValue   val;
   char               *ptr;
 
+  val.typed_data.real = FALSE;
   cssRule = SkipBlanksAndComments (cssRule);
   ptr = cssRule;
   /* first parse the attribute string */
@@ -5544,7 +5607,6 @@ static char *ParseCSSBottom (Element element, PSchema tsch,
     {
       val.typed_data.unit = VALUE_AUTO;
       val.typed_data.value = 0;
-      val.typed_data.real = FALSE;
       cssRule = SkipWord (cssRule);
     }
   else if (!strncasecmp (cssRule, "inherit", 7))
@@ -5578,6 +5640,7 @@ static char *ParseCSSLeft (Element element, PSchema tsch,
   PresentationValue   val;
   char               *ptr;
 
+  val.typed_data.real = FALSE;
   cssRule = SkipBlanksAndComments (cssRule);
   ptr = cssRule;
   /* first parse the attribute string */
@@ -5585,7 +5648,6 @@ static char *ParseCSSLeft (Element element, PSchema tsch,
     {
       val.typed_data.unit = VALUE_AUTO;
       val.typed_data.value = 0;
-      val.typed_data.real = FALSE;
       cssRule = SkipWord (cssRule);
     }
   else if (!strncasecmp (cssRule, "inherit", 7))
@@ -5619,6 +5681,7 @@ static char *ParseCSSZIndex (Element element, PSchema tsch,
   PresentationValue   val;
   char               *ptr;
 
+  val.typed_data.real = FALSE;
   cssRule = SkipBlanksAndComments (cssRule);
   ptr = cssRule;
   /* first parse the attribute string */
@@ -5627,7 +5690,6 @@ static char *ParseCSSZIndex (Element element, PSchema tsch,
     {
       val.typed_data.unit = VALUE_AUTO;
       val.typed_data.value = 0;
-      val.typed_data.real = FALSE;
       cssRule = SkipWord (cssRule);
     }
   else
