@@ -449,6 +449,11 @@ void AmayaMathMLPanel::OnButton( wxCommandEvent& event )
       TtaExecuteMenuAction ("CreateMEXISTS", doc, view, FALSE);
       return;
     }
+  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_EXISTS2")) )
+    {
+      TtaExecuteMenuAction ("CreateMEXISTS2", doc, view, FALSE);
+      return;
+    }
   if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_EXPONENTIALE")) )
     {
       TtaExecuteMenuAction ("CreateMEXPONENTIALE", doc, view, FALSE);
@@ -1120,6 +1125,7 @@ BEGIN_EVENT_TABLE(AmayaMathMLPanel, AmayaSubPanel)
   EVT_BUTTON( XRCID("wxID_PANEL_MATH_ENCLOSE"), AmayaMathMLPanel::OnButton )
   EVT_BUTTON( XRCID("wxID_PANEL_MATH_EULERGAMMA"), AmayaMathMLPanel::OnButton )
   EVT_BUTTON( XRCID("wxID_PANEL_MATH_EXISTS"), AmayaMathMLPanel::OnButton )
+  EVT_BUTTON( XRCID("wxID_PANEL_MATH_EXISTS2"), AmayaMathMLPanel::OnButton )
   EVT_BUTTON( XRCID("wxID_PANEL_MATH_EXPONENTIALE"), AmayaMathMLPanel::OnButton )
   EVT_BUTTON( XRCID("wxID_PANEL_MATH_FACTORIAL"), AmayaMathMLPanel::OnButton )
   EVT_BUTTON( XRCID("wxID_PANEL_MATH_FACTOROF"), AmayaMathMLPanel::OnButton )

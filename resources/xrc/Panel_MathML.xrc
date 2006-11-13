@@ -554,6 +554,14 @@
                                                       </object>
                                                       <cols>7</cols>
                                                       <object class="sizeritem">
+                                                        <object class="wxBitmapButton" name="wxID_PANEL_MATH_EXISTS2">
+                                                          <bitmap>../icons/16x16/MATHML_exists2.png</bitmap>
+                                                          <tooltip>exists2</tooltip>
+                                                        </object>
+                                                        <flag>wxALL</flag>
+                                                        <border>1</border>
+                                                      </object>
+                                                      <object class="sizeritem">
                                                         <object class="wxBitmapButton" name="wxID_PANEL_MATH_NOT">
                                                           <bitmap>../icons/16x16/MATHML_not.png</bitmap>
                                                           <tooltip>not</tooltip>

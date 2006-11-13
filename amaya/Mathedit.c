@@ -1798,7 +1798,7 @@ static void CreateMathConstruct (int construct, ...)
       newType.ElTypeNum = MathML_EL_MROW;
       break;
 
-    case 29: /* forall, exists */
+    case 29: /* forall, exists, exists2 */
       newType.ElTypeNum = MathML_EL_MROW;
       selectedchild = 1;
       break;
@@ -2155,7 +2155,12 @@ static void CreateMathConstruct (int construct, ...)
           /* Forall, exists */
           leaf = TtaGetFirstChild (el);
           child = leaf;
-          InsertSymbol (&child, MathML_EL_MI, va_arg(varpos, int), doc);
+          InsertSymbol (&child, MathML_EL_MO, va_arg(varpos, int), doc);
+          if(va_arg(varpos, int))
+            {
+            InsertSymbol (&child, MathML_EL_MO, '!', doc);
+            selectedchild = 2;
+            }
           InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
           InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
           TtaRemoveTree (leaf, doc);
@@ -2219,7 +2224,11 @@ static void CreateMathConstruct (int construct, ...)
           child = TtaGetLastChild (el);
           leaf = TtaGetFirstChild (child);
           child = leaf;
+          InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
+          TtaRemoveTree (leaf, doc);
 
+          leaf = TtaGetFirstChild (child);
+          child = leaf;
           for(i = 0 ; i < number; i++)
             {
               if(i)InsertSymbol (&child, MathML_EL_MO, ',', doc);          
@@ -2313,7 +2322,11 @@ static void CreateMathConstruct (int construct, ...)
           child = TtaGetLastChild (el); 
           leaf = TtaGetFirstChild (child);
           child = leaf;
+          InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
+          TtaRemoveTree (leaf, doc);
 
+          leaf = TtaGetFirstChild (child);
+          child = leaf;
           InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
           if(symbol2 == 0)InsertText (&child, MathML_EL_MO, va_arg(varpos, unsigned char*), doc);
           else InsertSymbol (&child, MathML_EL_MO, symbol2, doc);
@@ -2436,16 +2449,25 @@ static void CreateMathConstruct (int construct, ...)
       else if(construct == 50)
         { /* diff ; partialdiff */
           int symbol = va_arg(varpos, int);
-          new_ = TtaGetFirstChild (el);
-          leaf = TtaGetFirstChild (new_);
+
+          leaf = TtaGetFirstChild (TtaGetFirstChild (el));
+          child = leaf;
+          InsertEmptyConstruct (&child, MathML_EL_MROW, doc);
+          TtaRemoveTree (leaf, doc);
+
+          leaf = TtaGetFirstChild(child);
           child = leaf;
           InsertSymbol (&child, MathML_EL_MO, symbol, doc);
           InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
-          selected = TtaGetFirstChild(child);
+          selected = child;
           TtaRemoveTree (leaf, doc);
 
-          new_ = TtaGetLastChild (el);
-          leaf = TtaGetFirstChild(new_);
+          leaf = TtaGetFirstChild (TtaGetLastChild (el));
+          child = leaf;
+          InsertEmptyConstruct (&child, MathML_EL_MROW, doc);
+          TtaRemoveTree (leaf, doc);
+
+          leaf = TtaGetFirstChild(child);
           child = leaf;
           InsertSymbol (&child, MathML_EL_MO, symbol, doc);
           InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
@@ -2456,16 +2478,24 @@ static void CreateMathConstruct (int construct, ...)
           int symbol = 8706;
           /* ask the user the degree of derivation of the function f and of the variables of f*/
 
-          new_ = TtaGetFirstChild (el);
-          leaf = TtaGetFirstChild (new_);
+          leaf = TtaGetFirstChild (TtaGetFirstChild (el));
+          child = leaf;
+          InsertEmptyConstruct (&child, MathML_EL_MROW, doc);
+          TtaRemoveTree (leaf, doc);
+
+          leaf = TtaGetFirstChild(child);
           child = leaf;
           InsertSymbol (&child, MathML_EL_MO, symbol, doc);
           InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
-          selected = TtaGetFirstChild(child);
+          selected = child;
           TtaRemoveTree (leaf, doc);
 
-          new_ = TtaGetLastChild (el);
-          leaf = TtaGetFirstChild(new_);
+          leaf = TtaGetFirstChild (TtaGetLastChild (el));
+          child = leaf;
+          InsertEmptyConstruct (&child, MathML_EL_MROW, doc);
+          TtaRemoveTree (leaf, doc);
+
+          leaf = TtaGetFirstChild(child);
           child = leaf;
           InsertSymbol (&child, MathML_EL_MO, symbol, doc);
           InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
@@ -3335,7 +3365,14 @@ void CreateMEULERGAMMA (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMEXISTS (Document document, View view)
 {
-  CreateMathConstruct (29,8707);}
+  CreateMathConstruct (29,8707,FALSE);}
+/*----------------------------------------------------------------------
+  CreateMEXISTS2
+  ----------------------------------------------------------------------*/
+void CreateMEXISTS2 (Document document, View view)
+{
+  CreateMathConstruct (29,8707,TRUE);}
+
 /*----------------------------------------------------------------------
   CreateMEXPONENTIALE
   ----------------------------------------------------------------------*/
@@ -3377,7 +3414,7 @@ void CreateMFLOOR (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMFORALL (Document document, View view)
 {
-  CreateMathConstruct (29,8704);}
+  CreateMathConstruct (29,8704,FALSE);}
 /*----------------------------------------------------------------------
   CreateMGCD
   ----------------------------------------------------------------------*/
