@@ -330,7 +330,6 @@ void GL_SetForeground (int fg, ThotBool fillstyle)
 {
   unsigned short  red, green, blue;
   GLubyte         us_opac;
-
   if (fillstyle)
     us_opac = FillOpacity;
   else
@@ -431,7 +430,7 @@ void  GL_DrawEmptyRectangle (int fg, float x, float y, float width,
   if (IS_ZERO (thick - 1))
     {      
       glBegin (GL_LINE_LOOP);
-      glVertex2f (x, y );
+      glVertex2f (x, y);
       glVertex2f (x + width, y);
       glVertex2f (x +  width, y + height);
       glVertex2f (x, y + height);
@@ -486,7 +485,7 @@ void GL_DrawLine (int x1, int y1, int x2, int y2, ThotBool round)
 {
   if (S_thick > 1 && round)
     {
-      /* round line join*/ 
+      /* round line join*/
       glBegin (GL_POINTS);
       glVertex2i (x1, y1);
       glVertex2i (x2, y2);
@@ -496,8 +495,8 @@ void GL_DrawLine (int x1, int y1, int x2, int y2, ThotBool round)
   glVertex2i (x1, y1);
   glVertex2i (x2, y2);
   glEnd ();
-    
 }
+
 /*----------------------------------------------------------------------
   GL_DrawSegments
   ----------------------------------------------------------------------*/

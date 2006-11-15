@@ -1161,12 +1161,6 @@ void XMoveAllEnclosed (PtrBox pBox, int delta, int frame)
         }
       else if (pAb)
         {
-#ifdef IV
-if (!strcmp (pAb->AbElement->ElLabel, "L931"))
-  printf ("XMoveAllEnclosed L931 %d+%d\n", pBox->BxXOrg, delta);
-if (!strcmp (pAb->AbElement->ElLabel, "L930"))
-  printf ("XMoveAllEnclosed L930 %d+%d\n", pBox->BxXOrg, delta);
-#endif
 #ifdef _GL
           pBox->VisibleModification = TRUE;
 #endif /* _GL */

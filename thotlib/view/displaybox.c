@@ -1743,7 +1743,14 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
                       else if (c != EOS)
                         lg = CharacterWidth (c, nextfont);
                       if (!Printing && transc == SHOWN_TAB)
-                        DrawRectangle (frame, 1, 5, x, y, lg, pBox->BxH - 1, BgSelColor, 0, 0);
+                        {
+#ifdef _WX
+                          SetTextureScale (IsBoxDeformed(pBox));
+                          DrawHorizontalLine (frame, 1, 5, x+2, y, lg-2, pBox->BxH, 2, BgSelColor);
+#else /* _WX */
+                        DrawChar ((char)val, frame, x, y1, nextfont, BgSelColor);
+#endif /* _WX */
+                        }
                       else if (transc == SHOWN_SPACE ||
                           transc == SHOWN_UNBREAKABLE_SPACE || transc == SHOWN_HALF_EM)
                         /* a new space is handled */
