@@ -53,6 +53,8 @@ AmayaExplorerPanel::AmayaExplorerPanel( wxWindow * p_parent_window, AmayaNormalW
   : AmayaSubPanel( p_parent_window, p_parent_nwindow, _T("wxID_PANEL_EXPLORER") ),
   m_dirCtrl(NULL)
 {
+  char *s;
+
   // setup labels
   RefreshToolTips();
   m_pTitleText->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_EXPLORE)));
@@ -64,6 +66,18 @@ AmayaExplorerPanel::AmayaExplorerPanel( wxWindow * p_parent_window, AmayaNormalW
                                 wxDIRCTRL_3D_INTERNAL|wxDIRCTRL_SELECT_FIRST|wxSUNKEN_BORDER|wxDIRCTRL_SHOW_FILTERS,
                                 APPFILENAMEFILTER);
   wxSizer *sizer = new wxBoxSizer(wxVERTICAL);
+
+  // Initial selection in the set of folders
+  s = TtaGetEnvString ("EXPLORER_PATH");
+  if (s)
+    {
+      m_dirCtrl->ExpandPath (TtaConvMessageToWX(s));
+    }
+  else
+    {
+      wxString wx_win_homedir = TtaGetHomeDir();
+      m_dirCtrl->ExpandPath (wx_win_homedir);
+    }
   sizer->Add(m_dirCtrl, 1, wxEXPAND);
   panel->SetSizer(sizer);
   sizer->Fit(this);
@@ -133,8 +147,9 @@ void AmayaExplorerPanel::OnDirTreeItemActivate(wxTreeEvent& event)
 {
     if(!m_dirCtrl->GetFilePath().IsEmpty())
     {
-        char buffer[2048];
+        char buffer[MAX_TXT_LEN];
         strcpy(buffer, m_dirCtrl->GetFilePath().mb_str(wxConvUTF8));
+        TtaSetEnvString ("EXPLORER_PATH", buffer, TRUE);
         OpenNewDocFromArgv(buffer);
     }    
 }
