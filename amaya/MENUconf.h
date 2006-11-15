@@ -85,6 +85,11 @@
 #define mAnnotRAutoLoadRst      8
 #define MAX_ANNOTMENU_DLG       9
 
+#define TemplatesMenu              1
+#define mToggleTemplatesFrame      2
+#define MAX_TEMPLATEMENU_DLG       3
+
+
 typedef struct Prop_General_t
 {
   int      Zoom;
@@ -181,5 +186,19 @@ typedef struct Prop_DAV_t
   ThotBool toggleAwareness1;
   ThotBool toggleAwareness2;
 } Prop_DAV;
+
+
+typedef struct Prop_Templates_Path_t {
+  char Path[MAX_LENGTH];
+  struct Prop_Templates_Path_t* NextPath;
+}Prop_Templates_Path;
+
+typedef struct Prop_Templates_t
+{
+  ThotBool S_Templates;
+  Prop_Templates_Path* FirstPath;
+} Prop_Templates;
+
+
 
 #endif /* _MENUCONF.h */

@@ -6,6 +6,12 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void* AllocTemplateRepositoryListElement ( const char* path,
+                                                  void* prevElement );
+extern void FreeTemplateRepositoryList ( void* list );
+extern void GetTemplateRepositoryList ( void* list );
+extern void SetTemplateRepositoryList ( const void* list );
+extern void InitTemplates ( void );
 extern void NewTemplate ( Document doc,
                           View view );
 extern void CreateInstanceOfTemplate ( Document doc,
@@ -26,6 +32,12 @@ extern ThotBool ClosingInstance ( NotifyDialog* dialog );
 
 #else /* __STDC__ */
 
+extern void* AllocTemplateRepositoryListElement ( const char* path,
+                                                    void* prevElement );
+extern void FreeTemplateRepositoryList ( void* list );
+extern void GetTemplateRepositoryList ( void* list );
+extern void SetTemplateRepositoryList ( const void* list );
+extern void InitTemplates ( void );
 extern void NewTemplate ( Document doc,
                             View view );
 extern void CreateInstanceOfTemplate ( Document doc,

@@ -5,6 +5,8 @@
 #include "amaya.h"
 #include "document.h"
 
+#include "MENUconf.h"
+
 typedef void  *DicElement;
 
 //A record contains an element and its key.

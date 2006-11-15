@@ -57,6 +57,10 @@
 #include "davlibUI_f.h"
 #endif /* DAV */
 
+#ifdef TEMPLATES
+#include "templates_f.h"
+#endif  /* TEMPLATES */
+
 #ifdef _WINGUI
 #include "resource.h"
 #include "wininclude.h"
@@ -292,6 +296,15 @@ static AM_WIN_MenuText WIN_AnnotMenuText[] =
 int       DAVBase;
 Prop_DAV  GProp_DAV;
 #endif /* DAV */
+
+
+/* ============> Templates menu option */
+#ifdef TEMPLATES
+int            TemplatesBase;
+Prop_Templates GProp_Templates;
+#endif /* TEMPLATES */
+
+
 
 #include "HTMLsave_f.h"
 #include "init_f.h"
@@ -1569,7 +1582,6 @@ void GetGeneralConf (void)
   TtaGetEnvBoolean ("SHOW_TARGET", &(GProp_General.S_Targets));
   TtaGetEnvBoolean ("INSERT_NBSP", &(GProp_General.S_NBSP));
   TtaGetEnvBoolean ("SHOW_SEQUENCES", &(GProp_General.S_Shortcuts));
-  TtaGetEnvBoolean ("SHOW_TEMPLATES", &(GProp_General.S_Templates));
   GetEnvString ("HOME_PAGE", GProp_General.HomePage);
   GetEnvString ("LANG", GProp_General.DialogueLang);
   GetEnvString ("ACCESSKEY_MOD", ptr);
@@ -1797,32 +1809,6 @@ static void UpdateShowAddress ()
 #endif /* _WX */
 
 /*----------------------------------------------------------------------
-  UpdateShowAddress
-  Sets the show templates on all documents
-  ----------------------------------------------------------------------*/
-static void UpdateShowTemplates ()
-{  
-#ifdef TODO
-  int               doc;
-  DisplayMode     dispMode;
-  for (doc = 1; doc < DocumentTableLength; doc++)
-    {
-      /* Change the Display Mode to take into account the new presentation */
-      if (IsTemplateInstance (doc))
-        {
-          LoadInstanceOfTemplate(doc);
-          dispMode = TtaGetDisplayMode (doc);
-          if (dispMode != NoComputedDisplay)
-            {
-              TtaSetDisplayMode (doc, NoComputedDisplay);
-              TtaSetDisplayMode (doc, dispMode);
-            }
-        }
-    }
-#endif //TODO
-}
-
-/*----------------------------------------------------------------------
   SetGeneralConf
   Updates the registry General values and calls the General functions
   to take into account the changes
@@ -1873,10 +1859,10 @@ void SetGeneralConf (void)
 
   TtaSetEnvBoolean ("SHOW_SEQUENCES", GProp_General.S_Shortcuts, TRUE);
 
-  TtaGetEnvBoolean ("SHOW_TEMPLATES", &old);
-  TtaSetEnvBoolean ("SHOW_TEMPLATES", GProp_General.S_Templates, TRUE);
-  if (old != GProp_General.S_Templates)
-    UpdateShowTemplates ();
+//  TtaGetEnvBoolean ("SHOW_TEMPLATES", &old);
+//  TtaSetEnvBoolean ("SHOW_TEMPLATES", GProp_General.S_Templates, TRUE);
+//  if (old != GProp_General.S_Templates)
+//    UpdateShowTemplates ();
   
   TtaSetEnvBoolean ("FONT_ALIASING", GProp_General.S_NoAliasing, TRUE);
   TtaSetEnvBoolean ("ISO_DATE", GProp_General.S_DATE, TRUE);
@@ -4304,6 +4290,124 @@ void         AnnotConfMenu (Document document, View view)
 #endif /* ANNOTATIONS */
 }
 
+/**********************
+ ** Templates Menu
+ **********************/
+/*----------------------------------------------------------------------
+  UpdateShowTemplates
+  Sets the show templates on all documents
+  ----------------------------------------------------------------------*/
+static void UpdateShowTemplates ()
+{
+#ifdef TODO
+  int               doc;
+  DisplayMode     dispMode;
+  for (doc = 1; doc < DocumentTableLength; doc++)
+    {
+      /* Change the Display Mode to take into account the new presentation */
+      if (IsTemplateInstance (doc))
+        {
+          LoadInstanceOfTemplate(doc);
+          dispMode = TtaGetDisplayMode (doc);
+          if (dispMode != NoComputedDisplay)
+            {
+              TtaSetDisplayMode (doc, NoComputedDisplay);
+              TtaSetDisplayMode (doc, dispMode);
+            }
+        }
+    }
+#endif //TODO
+}
+
+
+/*----------------------------------------------------------------------
+  GetTemplateConf
+  Makes a copy of the current registry templates values
+  ----------------------------------------------------------------------*/
+void GetTemplatesConf (void){
+#ifdef TEMPLATES
+  TtaGetEnvBoolean ("SHOW_TEMPLATES", &(GProp_Templates.S_Templates));  
+  GetTemplateRepositoryList(&(GProp_Templates.FirstPath));
+#endif /* TEMPLATES */
+}
+
+/*----------------------------------------------------------------------
+  SetTemplatesConf
+  Updates the registry Templates values and calls the General functions
+  to take into account the changes
+  ----------------------------------------------------------------------*/
+void SetTemplatesConf (void){
+#ifdef TEMPLATES
+  ThotBool    old;
+  TtaGetEnvBoolean ("SHOW_TEMPLATES", &old);
+  TtaSetEnvBoolean ("SHOW_TEMPLATES", GProp_Templates.S_Templates, TRUE);
+  if (old != GProp_Templates.S_Templates)
+    UpdateShowTemplates ();
+  TtaSaveAppRegistry ();
+  
+  SetTemplateRepositoryList((const Prop_Templates_Path**)&(GProp_Templates.FirstPath));
+#endif /* TEMPLATES */
+}
+
+#ifdef TEMPLATES
+#ifdef _WX
+
+/*----------------------------------------------------------------------
+  GetDefaultTemplatesConf
+  Gets the registry default templates values.
+  ----------------------------------------------------------------------*/
+void GetDefaultTemplatesConf ()
+{
+  /* read the default values */
+  TtaGetDefEnvBoolean ("SHOW_TEMPLATES", &(GProp_Templates.S_Templates));
+  GetTemplateRepositoryList(&(GProp_Templates.FirstPath));
+}
+
+/*----------------------------------------------------------------------
+  TemplatesCallbackDialog
+  callback of the annotation configuration menu
+  ----------------------------------------------------------------------*/
+static void TemplatesCallbackDialog (int ref, int typedata, char *data)
+{
+    printf("TemplatesCallbackDialog : %d %d (%d)\n", ref, ref-TemplatesBase, (int)data);
+
+    long val;
+    if (ref==-1)
+    {
+    }
+    else
+    {
+        val = (long int) data;
+        switch (ref - TemplatesBase)
+        {
+            case TemplatesMenu:
+                switch (val)
+                {
+                    case 0: /* CANCEL */
+                        TtaDestroyDialogue (ref);
+                        break;
+                    case 1: /* OK */
+                        SetTemplatesConf();
+                        TtaDestroyDialogue (ref);
+                        break;
+                    case 2: /* DEFAULT */
+                        GetDefaultTemplatesConf();
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+}
+#endif /* _WX */
+#endif /* TEMPLATES */
+
+
+
 /*----------------------------------------------------------------------
   Returns a tab dialog reference (used into PreferenceDlgWX callbacks)
   ----------------------------------------------------------------------*/
@@ -4382,6 +4486,18 @@ int GetPrefDAVBase()
 #else /* DAV */
   return 0;
 #endif /* DAV */
+}
+
+/*----------------------------------------------------------------------
+  Returns a tab dialog reference (used into PreferenceDlgWX callbacks)
+  ----------------------------------------------------------------------*/
+int GetPrefTemplatesBase()
+{
+#ifdef TEMPLATES
+  return TemplatesBase;
+#else /* TEMPLATES */
+  return 0;
+#endif /* TEMPLATES */
 }
 
 /*----------------------------------------------------------------------
@@ -4609,6 +4725,33 @@ Prop_DAV GetProp_DAV()
 
 
 /*----------------------------------------------------------------------
+  Use to set the Amaya global variables (Templates preferences)
+  ----------------------------------------------------------------------*/
+void SetProp_Templates( const Prop_Templates * prop )
+{
+#ifdef TEMPLATES
+#ifdef _WX /* Normally no sence because templates requires wx.*/
+  GProp_Templates = *prop;
+#endif /* _WX */
+#endif /* TEMPLATES */
+}
+
+/*----------------------------------------------------------------------
+  Use to get the Amaya global variables (Templates preferences)
+  ----------------------------------------------------------------------*/
+Prop_Templates GetProp_Templates()
+{
+#if defined(TEMPLATES) && defined(_WX)
+  return GProp_Templates;
+#else /* _WX && TEMPLATES */
+  Prop_Templates prop;
+  memset(&prop, 0, sizeof(Prop_Templates) );
+  return prop;
+#endif /* _WX && TEMPLATES */
+}
+
+
+/*----------------------------------------------------------------------
   PreferenceMenu
   Build and display the preference dialog
   ----------------------------------------------------------------------*/
@@ -4655,6 +4798,12 @@ void PreferenceMenu (Document document, View view)
   /* ---> WebDAV Tab */
   GetDAVConf ();
 #endif /* DAV */
+#ifdef TEMPLATES
+  /* ---> Templates Tab */
+  GetTemplatesConf ();
+#endif /* TEMPLATES */
+
+
   ThotBool created = CreatePreferenceDlgWX ( PreferenceBase,
                                              TtaGetViewFrame (document, view),
                                              URL_list );
@@ -4711,6 +4860,9 @@ void InitConfMenu (void)
 #ifdef _WX
   /* create a new dialog reference for Preferences */
   PreferenceBase = TtaSetCallback( (Proc)PreferenceCallbackDialog, 1 );
+#ifdef TEMPLATES  
+  TemplatesBase = TtaSetCallback( (Proc)TemplatesCallbackDialog, MAX_TEMPLATEMENU_DLG );
+#endif /* TEMPLATES */  
 #endif /* _WX */
 
 #ifndef _WINGUI

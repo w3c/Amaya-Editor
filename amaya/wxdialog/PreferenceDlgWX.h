@@ -83,6 +83,22 @@ private:
   Prop_DAV GetValueDialog_DAV();
 
 
+  // "Templates" tab
+  void SetupLabelDialog_Templates();
+  void SetupDialog_Templates( const Prop_Templates & prop );
+  Prop_Templates GetValueDialog_Templates();
+  void OnTemplateChooseRepository(wxCommandEvent& event);
+  void OnTemplateAddRepository(wxCommandEvent& event);
+  void OnTemplateDelRepository(wxCommandEvent& event);
+  void OnTemplateMoveUpRepository(wxCommandEvent& event);
+  void OnTemplateMoveDownRepository(wxCommandEvent& event);
+  void OnUpdateTemplateAddRepository(wxUpdateUIEvent& event);
+  void OnUpdateTemplateDelRepository(wxUpdateUIEvent& event);
+  void OnUpdateTemplateMoveUpRepository(wxUpdateUIEvent& event);
+  void OnUpdateTemplateMoveDownRepository(wxUpdateUIEvent& event);
+  void OnTemplateRepositorySelected(wxCommandEvent& event);
+
+
   int GetPagePosFromXMLID( const wxString & xml_id );
 
   void OnOk( wxCommandEvent& event );

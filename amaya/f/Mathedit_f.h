@@ -186,6 +186,8 @@ extern void CreateMEULERGAMMA ( Document document,
                                 View view );
 extern void CreateMEXISTS ( Document document,
                             View view );
+extern void CreateMEXISTS2 ( Document document,
+                             View view );
 extern void CreateMEXPONENTIALE ( Document document,
                                   View view );
 extern void CreateMFACTORIAL ( Document document,
@@ -688,6 +690,8 @@ extern void CreateMEULERGAMMA ( Document document,
                                   View view );
 extern void CreateMEXISTS ( Document document,
                               View view );
+extern void CreateMEXISTS2 ( Document document,
+                               View view );
 extern void CreateMEXPONENTIALE ( Document document,
                                     View view );
 extern void CreateMFACTORIAL ( Document document,
