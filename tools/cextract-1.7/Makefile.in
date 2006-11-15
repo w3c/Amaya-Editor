@@ -8,14 +8,14 @@ THOTDIR = @top_srcdir@
 
 include ../../Options
 
-LIBS	= @LIBS@ @EXTRA_LIBS@ -lm
+LIBS	= @LIBS@ -lm
 
 prefix = @prefix@
 exec_prefix = @exec_prefix@
 bindir = @bindir@
 
 OBJS = \
-      	parse.o \
+	parse.o \
 	main.o \
 	io.o
 

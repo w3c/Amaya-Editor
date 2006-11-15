@@ -39,7 +39,7 @@
 #define THD_TRACE 1
 #endif
 
-#if defined(_GTK) || defined(_WX) || defined(_NOGUI)
+#if defined(_GTK) || defined(_WX)
 /* Private functions */
 static void         RequestRegisterReadXtevent (SOCKET);
 static void         RequestKillReadXtevent (SOCKET);
@@ -78,18 +78,11 @@ typedef struct sStatus {
   int except;
 } SocketStatus;
 #endif /* _WX */
-#if defined(_NOGUI)
-typedef struct sStatus {
-  int read;
-  int write;
-  int except;
-} SocketStatus;
-#endif /* #ifdef _NOGUI */
-#if defined(_GTK) || defined(_WX) || defined(_NOGUI)
+#if defined(_GTK) || defined(_WX)
 #define SOCK_TABLE_SIZE 67
 #define HASH(s) ((s) % SOCK_TABLE_SIZE)
 static SocketStatus persSockets[SOCK_TABLE_SIZE];
-#endif /* #if defined(_GTK) || defined(_WX) || defined(_NOGUI) */
+#endif /* defined(_GTK) || defined(_WX) */
 
 /*--------------------------------------------------------------------
   AHTCallback_bridge
@@ -419,7 +412,7 @@ int AHTEvent_unregister (SOCKET sock, HTEventType type)
   ----------------------------------------------------------------------*/
 void RequestKillAllXtevents (AHTReqContext * me)
 {
-#if defined(_GTK) || defined(_WX) || defined(_NOGUI)
+#if defined(_GTK) || defined(_WX)
   int sock = INVSOC;
 
   return;
@@ -441,7 +434,7 @@ void RequestKillAllXtevents (AHTReqContext * me)
   RequestKillReadXtevent (sock);
   RequestKillWriteXtevent (sock);
   RequestKillExceptXtevent (sock);
-#endif /* #if defined(_GTK) || defined(_WX) || defined(_NOGUI) */   
+#endif /* defined(_GTK) || defined(_WX) */   
 }
 
 /*----------------------------------------------------------------------
@@ -450,7 +443,7 @@ void RequestKillAllXtevents (AHTReqContext * me)
   ----------------------------------------------------------------------*/
 static void RequestRegisterReadXtevent (SOCKET sock)
 {
-#if defined(_GTK) || defined(_WX) || defined(_NOGUI)
+#if defined(_GTK) || defined(_WX)
   int v;
 
   v = HASH (sock);
@@ -474,7 +467,7 @@ static void RequestRegisterReadXtevent (SOCKET sock)
                  persSockets[v].read, sock);
 #endif /* DEBUG_LIBWWW */
     }
-#endif /* #if defined(_GTK) || defined(_WX) || defined(_NOGUI) */
+#endif /* defined(_GTK) || defined(_WX) */
 }
 
 /*----------------------------------------------------------------------
@@ -483,7 +476,7 @@ static void RequestRegisterReadXtevent (SOCKET sock)
   ----------------------------------------------------------------------*/
 static void RequestKillReadXtevent (SOCKET sock)
 {
-#if defined(_GTK) || defined(_WX) || defined(_NOGUI)
+#if defined(_GTK) || defined(_WX)
   int v;
 
   v = HASH (sock);
@@ -505,7 +498,7 @@ static void RequestKillReadXtevent (SOCKET sock)
 #endif /* _WX */
 
     }
-#endif /* #if defined(_GTK) || defined(_WX) || defined(_NOGUI) */  
+#endif /* defined(_GTK) || defined(_WX) */  
 }
 
 /*----------------------------------------------------------------------
@@ -514,7 +507,7 @@ static void RequestKillReadXtevent (SOCKET sock)
   ----------------------------------------------------------------------*/
 static void RequestRegisterWriteXtevent (SOCKET sock)
 {
-#if defined(_GTK) || defined(_WX) || defined(_NOGUI)
+#if defined(_GTK) || defined(_WX)
   int v;
 
   v = HASH (sock);
@@ -539,7 +532,7 @@ static void RequestRegisterWriteXtevent (SOCKET sock)
 #endif /* DEBUG_LIBWWW */
   
     }
-#endif /* #if defined(_GTK) || defined(_WX) || defined(_NOGUI) */  
+#endif /* defined(_GTK) || defined(_WX) */  
 }
 
 /*----------------------------------------------------------------------
@@ -549,7 +542,7 @@ static void RequestRegisterWriteXtevent (SOCKET sock)
   ----------------------------------------------------------------------*/
 static void RequestKillWriteXtevent (SOCKET sock)
 {
-#if defined(_GTK) || defined(_WX) || defined(_NOGUI)
+#if defined(_GTK) || defined(_WX)
   int v;
 
   v = HASH (sock);
@@ -572,7 +565,7 @@ static void RequestKillWriteXtevent (SOCKET sock)
 #endif /* _WX */
 
     }
-#endif /* #if defined(_GTK) || defined(_WX) || defined(_NOGUI) */  
+#endif /* defined(_GTK) || defined(_WX) */  
 }
 
 /*----------------------------------------------------------------------
@@ -581,7 +574,7 @@ static void RequestKillWriteXtevent (SOCKET sock)
   ----------------------------------------------------------------------*/
 static void RequestRegisterExceptXtevent (SOCKET sock)
 {
-#if defined(_GTK) || defined(_WX) || defined(_NOGUI)
+#if defined(_GTK) || defined(_WX)
   int v;
 
   v = HASH (sock);
@@ -606,7 +599,7 @@ static void RequestRegisterExceptXtevent (SOCKET sock)
                  persSockets[v].except, sock);
 #endif /* DEBUG_LIBWWW */
     }
-#endif /* #if defined(_GTK) || defined(_WX) || defined(_NOGUI) */   
+#endif /* defined(_GTK) || defined(_WX) */   
 }
 
 /*----------------------------------------------------------------------
@@ -616,7 +609,7 @@ static void RequestRegisterExceptXtevent (SOCKET sock)
   ----------------------------------------------------------------------*/
 static void RequestKillExceptXtevent (SOCKET sock)
 {
-#if defined(_GTK) || defined(_WX) || defined(_NOGUI)
+#if defined(_GTK) || defined(_WX)
   int v;
 
   v = HASH (sock);
@@ -637,7 +630,7 @@ static void RequestKillExceptXtevent (SOCKET sock)
       persSockets[v].except = 0;
 #endif /* _WX */
     }
-#endif /* #if defined(_GTK) || defined(_WX) || defined(_NOGUI) */
+#endif /* defined(_GTK) || defined(_WX) */
 }
 
 /*----------------------------------------------------------------------
@@ -661,9 +654,6 @@ struct _AmayaTimer {
 #ifdef _WX
   wxAmayaTimer * xt_timer;
 #endif /* _WX */
-#ifdef _NOGUI
-  unsigned int xt_timer;
-#endif /* #ifdef _NOGUI */  
 };
 typedef struct _AmayaTimer AmayaTimer;
 
@@ -766,12 +756,12 @@ void TimerCallbackWX( void * p_context )
   ----------------------------------------------------------------------*/
 void KillAllTimers (void)
 {
-#if defined(_GTK) || defined(_WX) || defined(_NOGUI)
+#if defined(_GTK) || defined(_WX)
   /* @@@ maybe add something else to kill the Xt things */
   if (Timers)
     HTList_delete (Timers);
   Timers = NULL;
-#endif /* #if defined(_GTK) || defined(_WX) || defined(_NOGUI) */
+#endif /* defined(_GTK) || defined(_WX) */
 }
 
 /*----------------------------------------------------------------------
@@ -779,7 +769,7 @@ void KillAllTimers (void)
   ----------------------------------------------------------------------*/
 void AMAYA_SetTimer (HTTimer *libwww_timer)
 {
-#if defined(_GTK) || defined(_WX) || defined(_NOGUI)
+#if defined(_GTK) || defined(_WX)
   HTList *cur, *last;
   AmayaTimer *me;
 
@@ -837,7 +827,7 @@ void AMAYA_SetTimer (HTTimer *libwww_timer)
   me->xt_timer->Start( me->libwww_timer->millis, TRUE );
 #endif /* _WX */
 
-#endif /* #if defined(_GTK) || defined(_WX) || defined(_NOGUI) */  
+#endif /* defined(_GTK) || defined(_WX) */  
 }
 
 /*----------------------------------------------------------------------
@@ -845,7 +835,7 @@ void AMAYA_SetTimer (HTTimer *libwww_timer)
   ----------------------------------------------------------------------*/
 void AMAYA_DeleteTimer (HTTimer *libwww_timer)
 {
-#if defined(_GTK) || defined(_WX) || defined(_NOGUI)
+#if defined(_GTK) || defined(_WX)
   HTList *cur, *last;
   AmayaTimer *me;
 
@@ -876,6 +866,6 @@ void AMAYA_DeleteTimer (HTTimer *libwww_timer)
       HTList_removeObject (Timers, me);
       TtaFreeMemory (me);
     }
-#endif /* #if defined(_GTK) || defined(_WX) || defined(_NOGUI) */
+#endif /* defined(_GTK) || defined(_WX) */
 }
 

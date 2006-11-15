@@ -262,10 +262,6 @@ Section "Amaya" SecAmaya
   File /r templates\*
   SetOutPath "$INSTDIR\Amaya\resources"
   File /r resources\*
-  SetOutPath "$INSTDIR\Amaya\plugintest"
-  File /r plugintest\*
-  SetOutPath "$INSTDIR\Amaya\pluginlib"
-  File /r pluginlib\*
   SetOutPath "$INSTDIR\Amaya\libpng"
   File /r libpng\*
   SetOutPath "$INSTDIR\Amaya\libjpeg"

@@ -66,7 +66,7 @@ include .depends
 # C files
 #
 .c.o :  
-	$(CXX) $(CXXFLAGS) $(AMAYA_ANNOT_OPTIONS) $(INCLUDES) $(OPTIONS) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(INCLUDES) $(OPTIONS) -c $< -o $@
 
 #
 # Structure schema compilation

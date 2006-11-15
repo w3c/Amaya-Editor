@@ -1123,16 +1123,16 @@ void ListAbsBoxes (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
         fprintf (fileDescriptor, " ");
       fprintf (fileDescriptor, "BorderColor Top:%d", pAb->AbTopBColor);
       if (pAb->AbTopBColor == -2)
-        fprintf (fileDescriptor, "(transp.)");
+        fprintf (fileDescriptor, "(transparent)");
       fprintf (fileDescriptor, ", Right:%d", pAb->AbRightBColor);
       if (pAb->AbRightBColor == -2)
-        fprintf (fileDescriptor, "(transp.)");
+        fprintf (fileDescriptor, "(transparent)");
       fprintf (fileDescriptor, ", Bottom:%d", pAb->AbBottomBColor);
       if (pAb->AbBottomBColor == -2)
-        fprintf (fileDescriptor, "(transp.)");
+        fprintf (fileDescriptor, "(transparent)");
       fprintf (fileDescriptor, ", Left:%d", pAb->AbLeftBColor);
       if (pAb->AbLeftBColor == -2)
-        fprintf (fileDescriptor, "(transp.)");
+        fprintf (fileDescriptor, "(transparent)");
 
       fprintf (fileDescriptor, "\n");
       for (j = 1; j <= Indent + 6; j++)
@@ -4289,7 +4289,8 @@ int TtaListStyleOfCurrentElement (Document document, FILE *fileDescriptor)
            pEl->ElLeafType == LtGraphics ||
            pEl->ElLeafType == LtPath ||
            pEl->ElLeafType == LtPolyLine ||
-           pEl->ElLeafType == LtSymbol))
+           pEl->ElLeafType == LtSymbol ||
+           pEl->ElLeafType == LtPicture))
         pEl = pEl->ElParent;
 
       while (pEl && TypeHasException (ExcHidden, pEl->ElTypeNumber,

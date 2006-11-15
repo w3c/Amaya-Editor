@@ -19,7 +19,7 @@ LIBPNG	   = libpng
 
 #MKP: adding davlib
 SUBDIRS	= @SUBDIRS@ tools thotlib batch drawlib indexlib annotlib amaya thot @DAVDIR@
-EXTRA_SUBDIRS= misc pluginlib $(LIBRAPTOR) $(REDLAND) $(LIBWWW) $(WX_BUILDDIR) $(GL_BUILDDIR)
+EXTRA_SUBDIRS= misc $(LIBRAPTOR) $(REDLAND) $(LIBWWW) $(WX_BUILDDIR) $(GL_BUILDDIR)
 
 prefix = @prefix@
 exec_prefix = @exec_prefix@

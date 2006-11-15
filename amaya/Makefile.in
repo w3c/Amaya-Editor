@@ -21,7 +21,7 @@ LIBS	=  $(AMAYA_ANNOT_LIBS) $(AMAYA_DAV_LIBS) \
            -L../thotlib -L.. -lThotEditor \
           $(AMAYA_OPTION_EXTRA_LIBS) $(IMGLIBS) $(EXPAT_LIBRARIES) \
 	  $(AMAYA_LIBWWW_LIBS) \
-	  @LIBS@ @EXTRA_LIBS@ $(GL_LIBRARIES) $(GTK_GL_LIBRARIES) $(FREETYPE_LIBRARIES) $(XFT_LIBRARIES) \
+	  @LIBS@ $(GL_LIBRARIES) $(GTK_GL_LIBRARIES) $(FREETYPE_LIBRARIES) $(XFT_LIBRARIES) \
           $(GTK_LIBRARIES) $(WX_LIBRARIES)
 
 AMAYA	= @top_srcdir@/amaya
@@ -112,7 +112,7 @@ amaya_comp_redland: @MAKEREDLAND@ force
 #include the fragment "amaya/Makefile.math" for math if configured in
 @math_frag@
 
-#include the fragment "annotlib//Makefile.annot" for annotations if configured in
+#include the fragment "annotlib/Makefile.annot" for annotations if configured in
 @annot_frag@
 
 #include the fragment "davlib/Makefile.dav" for webdav if configured in
@@ -132,7 +132,7 @@ amaya_comp_redland: @MAKEREDLAND@ force
 ALL_AMAYA_OPTIONS= $(AMAYA_OPTIONS) \
 	 $(AMAYA_LIBWWW_OPTIONS) \
 	 $(AMAYA_MATH_OPTIONS) $(AMAYA_SVG_OPTIONS)  $(AMAYA_TEMPLATES_OPTIONS) \
-	 $(AMAYA_ANNOT_OPTIONS) $(AMAYA_DAV_OPTIONS) $(EXPAT_OPTIONS) \
+	 $(AMAYA_ANNOT_OPTIONS) $(AMAYA_DAV_OPTIONS) $(EXPAT_OPTIONS)
 
 AMAYA_OPTION_INCLUDES= \
          $(AMAYA_LIBWWW_INCLUDES) $(AMAYA_MATH_INCLUDES) \

@@ -658,13 +658,13 @@ ThotBool  AHTReqContext_delete (AHTReqContext * me)
 	  
       if (me->error_stream != (char *) NULL)
         HT_FREE (me->error_stream);
-#if defined(_GTK) || defined(_WX) || defined(_NOGUI)
+#if defined(_GTK) || defined(_WX)
 #ifdef WWW_XWINDOWS	
       if (me->read_xtinput_id || me->write_xtinput_id ||
           me->except_xtinput_id)
         RequestKillAllXtevents(me);
 #endif /* WWW_XWINDOWS */
-#endif /* #if defined(_GTK) || defined(_WX) || defined(_NOGUI) */
+#endif /* defined(_GTK) || defined(_WX) */
        
       if (me->reqStatus == HT_ABORT)
         {
@@ -744,11 +744,11 @@ static void         Thread_deleteAll (void)
           {
             if (me->request)
               {
-#if defined(_GTK) || defined(_WX) || defined(_NOGUI)
+#if defined(_GTK) || defined(_WX)
 #ifdef WWW_XWINDOWS 
                 RequestKillAllXtevents (me);
 #endif /* WWW_XWINDOWS */
-#endif /* #if defined(_GTK) || defined(_WX) || defined(_NOGUI) */
+#endif /* defined(_GTK) || defined(_WX) */
                 if (!HTRequest_kill (me->request))
                   AHTReqContext_delete (me);
               }
@@ -1884,9 +1884,9 @@ static void         AHTNetInit (void)
   HTNet_addAfter (precondition_handler, NULL, NULL, HT_PRECONDITION_FAILED, HT_FILTER_MIDDLE);
 #endif /* AMAYA_LOST_UPDATE */
 
-#if defined(_GTK) || defined(_WX) || defined(_NOGUI)
+#if defined(_GTK) || defined(_WX)
   HTNet_addAfter (AHTLoadTerminate_handler, NULL, NULL, HT_ALL, HT_FILTER_LAST);
-#endif /* #if defined(_GTK) || defined(_WX) || defined(_NOGUI) */
+#endif /* defined(_GTK) || defined(_WX) */
   
   /**** for later ?? ****/
   /*  HTNet_addAfter(HTInfoFilter,NULL, NULL, HT_ALL, HT_FILTER_LATE); */
@@ -2018,7 +2018,7 @@ static void RecCleanCache (char *dirname)
   wxRmdir(wx_dir_name);
 #endif /* _WX */
 
-#if defined(_GTK) || defined(_NOGUI)
+#ifdef _GTK
   DIR *dp;
   struct stat st;
 #ifdef HAVE_DIRENT_H
@@ -2069,7 +2069,7 @@ static void RecCleanCache (char *dirname)
         }
     }
   closedir (dp);
-#endif /* #if defined(_GTK) || defined(_NOGUI) */
+#endif /* _GTK */
 }
 #endif /* AMAYA_WWW_CACHE */
 
@@ -2569,12 +2569,12 @@ void         QueryInit ()
   wxAmayaSocketEventLoop::InitSocketLib();
 #endif /* _WX */
 
-#if defined(_GTK) || defined(_WX) || defined(_NOGUI)
+#if defined(_GTK) || defined(_WX)
   HTEvent_setRegisterCallback ( AHTEvent_register);
   HTEvent_setUnregisterCallback (AHTEvent_unregister);
   HTTimer_registerSetTimerCallback ((BOOL (*)(HTTimer*)) AMAYA_SetTimer);
   HTTimer_registerDeleteTimerCallback ((BOOL (*)(HTTimer*))AMAYA_DeleteTimer);
-#endif /* #if defined(_GTK) || defined(_WX) || defined(_NOGUI) */
+#endif /* defined(_GTK) || defined(_WX) */
 
 #ifdef HTDEBUG
   /* an undocumented option for being able to generate an HTTP protocol
@@ -2804,11 +2804,11 @@ void QueryClose ()
      a non-existent Amaya window */
   HTEvent_setRegisterCallback ((HTEvent_registerCallback *) NULL);
   HTEvent_setUnregisterCallback ((HTEvent_unregisterCallback *) NULL);
-#if defined(_GTK) || defined(_WX) || defined(_NOGUI)
+#if defined(_GTK) || defined(_WX)
   /** need to erase all existing timers too **/
   HTTimer_registerSetTimerCallback (NULL);
   HTTimer_registerDeleteTimerCallback (NULL);
-#endif /* #if defined(_GTK) || defined(_WX) || defined(_NOGUI) */
+#endif /* defined(_GTK) || defined(_WX) */
   HTHost_setActivateRequestCallback (NULL);
   Thread_deleteAll ();
  
@@ -3824,14 +3824,14 @@ void StopAllRequests (int docid)
                         }
                       cur = Amaya->reqlist;
                     }
-#if defined(_GTK) || defined(_WX) || defined(_NOGUI)
+#if defined(_GTK) || defined(_WX)
 #ifdef WWW_XWINDOWS
                   /* to be on the safe side, remove all outstanding 
                      X events */
                   else 
                     RequestKillAllXtevents (me);
 #endif /* WWW_XWINDOWS */
-#endif /* #if defined(_GTK) || defined(_WX) || defined(_NOGUI) */
+#endif /* defined(_GTK) || defined(_WX) */
                 }
             }
           /* Delete remaining channels */
@@ -3965,7 +3965,7 @@ ThotBool CheckSingleInstance (char *pid_dir)
   return TRUE;
 #endif /* _WX */
 
-#if defined(_GTK) || defined(_NOGUI)
+#ifdef _GTK
   int instances;
   char *ptr;
   pid_t pid;
@@ -4030,7 +4030,7 @@ ThotBool CheckSingleInstance (char *pid_dir)
     }
   closedir (dp);
   return (instances == 0);
-#endif /* #if defined(_GTK) || defined(_NOGUI) */
+#endif /* _GTK */
 
 }
 

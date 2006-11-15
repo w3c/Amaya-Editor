@@ -212,7 +212,7 @@ dnl (tesselation is used for polygons with holes in it...)
 dnl gtkgl is for integration of opengl in GTK
 dnl freetype2 is for text drawing (fonts ...)
 dnl wxGLCanvas is for integration of opengl in wxWidgets (WX)
-+AC_ARG_WITH([gl],
+AC_ARG_WITH([gl],
    AC_HELP_STRING([--with-gl],[enable Opengl canvas (experimental)]),
    [case "${withval}" in
 	  yes) with_gl="yes" ;;
@@ -1258,13 +1258,13 @@ dnl
 dnl The options for each library or binary
 dnl
 
-THOT_OPTIONS="$OS_OPTIONS $GTK_OPTIONS $GL_OPTIONS $WX_OPTIONS $NOGUI_OPTIONS"
+THOT_OPTIONS="$OS_OPTIONS $GTK_OPTIONS $GL_OPTIONS $WX_OPTIONS"
+
+AMAYA_OPTIONS="$OS_OPTIONS $MATH_OPTIONS $SVG_OPTIONS $GENERIC_XML_OPTIONS $GTK_OPTIONS $GL_OPTIONS $WX_OPTIONS $TEMPLATES_OPTIONS"
+
 if test "$with_debug" = "yes" ; then
-  AMAYA_OPTIONS="$OS_OPTIONS $MATH_OPTIONS $SVG_OPTIONS $GENERIC_XML_OPTIONS $GTK_OPTIONS $GL_OPTIONS $WX_OPTIONS $NOGUI_OPTIONS $TEMPLATES_OPTIONS -DAMAYA_DEBUG"
-else
-  AMAYA_OPTIONS="$OS_OPTIONS $MATH_OPTIONS $SVG_OPTIONS $GENERIC_XML_OPTIONS $GTK_OPTIONS $GL_OPTIONS $WX_OPTIONS $NOGUI_OPTIONS $TEMPLATES_OPTIONS"
+  AMAYA_OPTIONS="$AMAYA_OPTIONS -DAMAYA_DEBUG"
 fi
-AMAYA_ANNOT_OPTIONS="$OS_OPTIONS $AMAYA_ANNOT_OPTIONS"
 
 if test "$with_wx" = "yes" ; then
   IMGLIBS=""
@@ -1272,7 +1272,6 @@ else
   IMGLIBS="-ljpeg -lpng -lz"
 fi
 
-EXTRA_LIBS=
 EXTRA_INCLUDES=
 
 # check for malloc.h
@@ -1353,7 +1352,6 @@ AC_SUBST(AMAYA_ANNOT_OPTIONS)
 AC_SUBST(AMAYA_ANNOT_INCLUDES)
 AC_SUBST(AMAYA_ANNOT_EXTRA_LIBS)
 AC_SUBST(IMGLIBS)
-AC_SUBST(EXTRA_LIBS)
 AC_SUBST(EXTRA_INCLUDES)
 
 AC_SUBST(DAVDIR)
@@ -1376,48 +1374,43 @@ dnl
 dnl Include the option Makefile.xxx fragment according to the configure options
 dnl
 
-    AC_SUBST_FILE(www_frag)
-    www_frag=$srcdir/amaya/Makefile.libwww
+www_frag=$srcdir/amaya/Makefile.libwww
+AC_SUBST_FILE(www_frag)
 
 if test "$with_math" = "no" ; then
-    AC_SUBST_FILE(math_frag)
     math_frag=/dev/null
 else
-    AC_SUBST_FILE(math_frag)
     math_frag=$srcdir/amaya/Makefile.math
 fi
+AC_SUBST_FILE(math_frag)
 
 if test "$with_svg" = "no" ; then
-    AC_SUBST_FILE(svg_frag)
     svg_frag=/dev/null
 else
-    AC_SUBST_FILE(svg_frag)
     svg_frag=$srcdir/amaya/Makefile.svg
 fi
+AC_SUBST_FILE(svg_frag)
 
 if test "$with_annot" = "yes" ; then
-    AC_SUBST_FILE(annot_frag)
     annot_frag=$srcdir/annotlib/Makefile.annot
 else
-    AC_SUBST_FILE(annot_frag)
     annot_frag=/dev/null
 fi
+AC_SUBST_FILE(annot_frag)
 
 if test "$with_dav" = "yes" ; then
-    AC_SUBST_FILE(dav_frag)
     dav_frag=$srcdir/davlib/Makefile.dav
 else
-    AC_SUBST_FILE(dav_frag)
     dav_frag=/dev/null
 fi
+AC_SUBST_FILE(dav_frag)
 
 if test "$with_templates" = "yes" ; then
-    AC_SUBST_FILE(templates_frag)
     templates_frag=$srcdir/amaya/Makefile.templates
 else
-    AC_SUBST_FILE(templates_frag)
     templates_frag=/dev/null
 fi
+AC_SUBST_FILE(templates_frag)
 
 dnl  ***************************************************************
 dnl
