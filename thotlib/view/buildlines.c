@@ -3883,7 +3883,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
                   org = prevLine->LiYOrg + prevLine->LiHorizRef
                     + lineSpacing - pLine->LiHorizRef;
                   if (org > pLine->LiYOrg ||
-                      (!prevLine->LiNoOverlap && !standard))
+                      (!prevLine->LiNoOverlap && !pLine->LiNoOverlap && !standard))
                     /* apply the rule of line spacing */
                     pLine->LiYOrg = org;
                 }
@@ -4792,7 +4792,7 @@ void EncloseInLine (PtrBox pBox, int frame, PtrAbstractBox pAb)
   PtrBox              box;
   PtrBox              pPieceBox;
   PtrBox              pBlock;
-  int                 ascent, descent, y, shift, delta;
+  int                 ascent, descent, y, shift;
   int                 i, h, top, bottom, left, right;
   int                 pos, linespacing, spacing;
   PtrLine             pLine, prevLine;
@@ -4802,6 +4802,7 @@ void EncloseInLine (PtrBox pBox, int frame, PtrAbstractBox pAb)
   GetExtraMargins (pBlock, NULL, frame, &top, &bottom, &left, &right);
   top += pBlock->BxTMargin + pBlock->BxTBorder + pBlock->BxTPadding;
   left += pBlock->BxLMargin + pBlock->BxLBorder + pBlock->BxLPadding;
+
   if (pBlock->BxType == BoBlock)
     linespacing = PixelValue (pAb->AbLineSpacing, pAb->AbLineSpacingUnit,
                               pAb, ViewFrameTable[frame - 1].FrMagnification);
@@ -4829,11 +4830,6 @@ void EncloseInLine (PtrBox pBox, int frame, PtrAbstractBox pAb)
           else if (pLine)
             {
               pNextLine = pLine->LiNext;
-              /* current delta with the next line */
-              if (pNextLine)
-                delta = pNextLine->LiYOrg - pLine->LiYOrg - pLine->LiHeight;
-              else
-                delta = 0;
               /* current limit of the line */
               y = pBlock->BxYOrg + pLine->LiYOrg + pLine->LiHeight;
               shift = 0;
@@ -4889,7 +4885,7 @@ void EncloseInLine (PtrBox pBox, int frame, PtrAbstractBox pAb)
                       prevLine = pLine->LiPrevious;
                       pos = prevLine->LiYOrg + prevLine->LiHeight;
                       i = prevLine->LiYOrg + prevLine->LiHorizRef + linespacing - pLine->LiHorizRef;
-                      if (i > pos || !prevLine->LiNoOverlap)
+                      if (i > pos || (!prevLine->LiNoOverlap && !pLine->LiNoOverlap))
                         /* apply the rule of line spacing */
                         pos =  i;
                       /* vertical shifting of the current line baseline */
