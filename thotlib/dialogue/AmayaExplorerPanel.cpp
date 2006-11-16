@@ -154,7 +154,7 @@ void AmayaExplorerPanel::OnDirTreeItemActivate(wxTreeEvent& event)
  *  the callbacks are assigned to an event type
  *----------------------------------------------------------------------*/
 BEGIN_EVENT_TABLE(AmayaExplorerPanel, AmayaSubPanel)
-  EVT_TREE_ITEM_ACTIVATED(XRCID("wxID_DIRCTRL_EXPLORER"), AmayaExplorerPanel::OnDirTreeItemActivate)
+  EVT_TREE_ITEM_ACTIVATED( wxID_ANY, AmayaExplorerPanel::OnDirTreeItemActivate)
 END_EVENT_TABLE()
 
 #endif /* #ifdef _WX */
