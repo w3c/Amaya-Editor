@@ -90,9 +90,14 @@ END_EVENT_TABLE()
   MyRef = ref;
 
 #ifndef DAV
+#ifndef TEMPLATES
+  wxNotebook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxNotebook);
+#endif
+#endif
+
+#ifndef DAV
   // invalid WebDAV Page
   int page_id = GetPagePosFromXMLID( _T("wxID_PAGE_DAV") );
-  wxNotebook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxNotebook);
   if (page_id)
     p_notebook->DeletePage(page_id );
 #endif /* DAV */
