@@ -56,7 +56,8 @@ NumDlgWX::NumDlgWX( int ref, int subref, wxWindow* parent,
   ----------------------------------------------------------------------*/
 NumDlgWX::~NumDlgWX()
 {
-  ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
+  if (MyRef != MathsDialogue + FormMaths)
+    ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
 }
 
 /*----------------------------------------------------------------------
@@ -68,8 +69,16 @@ void NumDlgWX::OnOk( wxCommandEvent& event )
 {
   // return the selected value
   int value = XRCCTRL(*this, "wxID_NUM", wxSpinCtrl)->GetValue( );
-  ThotCallback (m_SubRef, INTEGER_DATA, (char *)value);
-  ThotCallback (MyRef, INTEGER_DATA, (char*)1);
+  if (MyRef == MathsDialogue + FormMaths)
+    {
+      ThotCallback (MyRef, INTEGER_DATA, (char*)value);
+      TtaDestroyDialogue (MyRef);
+    }
+  else
+    {
+      ThotCallback (m_SubRef, INTEGER_DATA, (char *)value);
+      ThotCallback (MyRef, INTEGER_DATA, (char*)1);
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -79,7 +88,7 @@ void NumDlgWX::OnOk( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void NumDlgWX::OnCancel( wxCommandEvent& event )
 {
-  Close();
+  TtaDestroyDialogue (MyRef);
 }
 
 #endif /* _WX */

@@ -63,8 +63,11 @@ static ThotIcon   iconMathNo;
 #ifndef _WX
 static int      MathButton;
 static ThotIcon mIcons[14];
-#endif /* _WX */
 static ThotBool	InitMaths;
+#else /* _WX */
+static int Math_occurences = 1;
+#endif /* _WX */
+
 static ThotBool	IsLastDeletedElement = FALSE;
 static Element	LastDeletedElement = NULL;
 static Element  MathElementSelected = NULL;
@@ -1182,6 +1185,29 @@ void MathSelectionChanged (NotifyElement *event)
 }
 
 /*----------------------------------------------------------------------
+  GetOccurrences: asks and returns the number of occurrences
+  ----------------------------------------------------------------------*/
+static int GetOccurrences(int val, Document doc)
+{
+  ThotBool created;
+
+  Math_occurences = val;
+#ifdef _WX
+  created =  CreateNumDlgWX (MathsDialogue + FormMaths, 0,
+                             TtaGetViewFrame (doc, 1),
+                  "Number of occurences", "Number of occurences", val);
+  if (created)
+    {
+      TtaSetDialoguePosition ();
+      TtaShowDialogue (MathsDialogue + FormMaths, FALSE);
+      /* wait for an answer */
+      TtaWaitShowDialogue ();
+    }
+#endif  /* _WX */
+  return Math_occurences;
+}
+
+/*----------------------------------------------------------------------
   CreateMathConstruct
   Create a MathML construct at the current position
   According to the construct, other parameters can be sent to complete it. 
@@ -2065,7 +2091,7 @@ static void CreateMathConstruct (int construct, ...)
           /* Piecewise */
 
           /* ask how many the user want */
-          int number = 3;         
+          int number = GetOccurrences (3, doc);
           leaf = TtaGetFirstChild (el);
           child = leaf;
 
@@ -2202,7 +2228,7 @@ static void CreateMathConstruct (int construct, ...)
           if(symbol == 0)symbol_name = va_arg(varpos, unsigned char*);
 
           /* ask how many the user want */
-          int number = 5;
+          int number = GetOccurrences (5, doc);
 
           leaf = TtaGetFirstChild (el);
           child = leaf;
@@ -2219,7 +2245,7 @@ static void CreateMathConstruct (int construct, ...)
         {/* selector */
 
           /* ask number of coordonnates */
-          int number = 3;
+          int number = GetOccurrences (3, doc);
 
           child = TtaGetLastChild (el);
           leaf = TtaGetFirstChild (child);
@@ -2241,7 +2267,7 @@ static void CreateMathConstruct (int construct, ...)
           int number = va_arg(varpos, int);
           if(number != 2)
             {/* ask how many the user want */
-              number = 5;
+              number = GetOccurrences (5, doc);
             }
 
           new_ = SetMFencedAttributes(el, '(', ')', ',', doc);
@@ -2271,7 +2297,7 @@ static void CreateMathConstruct (int construct, ...)
         {/* set/list extension ; vectorrow */
           int ope = va_arg(varpos, int), clo = va_arg(varpos, int);
           /* ask how many the user want */
-          int number = 5;
+          int number = GetOccurrences (5, doc);
 
           new_ = SetMFencedAttributes(el, ope, clo, ';', doc);
           leaf = TtaGetFirstChild (new_);
@@ -2739,7 +2765,6 @@ static void CreateMathConstruct (int construct, ...)
                   selected = leaf;
                 }
             }
-
         }
     }
 
@@ -2768,6 +2793,7 @@ void MathElementCreated (NotifyElement *event)
     DocumentMeta[event->document]->compound = TRUE;
 }
 
+
 /*----------------------------------------------------------------------
   CallbackMaths: manage Maths dialogue events.
   ----------------------------------------------------------------------*/
@@ -2785,9 +2811,13 @@ static void CallbackMaths (int ref, int typedata, char *data)
   switch (ref)
     {
     case FormMaths:
+#ifdef _WX
+      Math_occurences = val;
+#else /* _WX */
       /* the user has clicked the DONE button in the Math dialog box */
       InitMaths = FALSE;
-      TtaDestroyDialogue (ref);	   
+      TtaDestroyDialogue (ref);   
+#endif /* _WX */
       break;
 
     case MenuMaths:
@@ -3260,7 +3290,6 @@ void CreateMDETERMINANT (Document document, View view)
   CreateMDETERMINANT2
   ----------------------------------------------------------------------*/
 void CreateMDETERMINANT2 (Document document, View view)
-
 {
   CreateMathConstruct (53, '|', '|', 0, 0);}
 

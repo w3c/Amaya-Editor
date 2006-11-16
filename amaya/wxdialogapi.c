@@ -1217,10 +1217,8 @@ ThotBool CreateNumDlgWX (int ref, int subref, ThotWindow parent,
   
   /* create the dialog */
   NumDlgWX * p_dlg = new NumDlgWX( ref, subref,
-				   parent,
-				   wx_title,
-				   wx_label,
-				   value );
+                                   parent, wx_title,
+                                   wx_label, value );
 
   if ( TtaRegisterWidgetWX( ref, p_dlg ) )
     /* the dialog has been sucesfully registred */
@@ -1233,5 +1231,5 @@ ThotBool CreateNumDlgWX (int ref, int subref, ThotWindow parent,
     }
 #else /* _WX */
   return FALSE;
-#endif /* _WX */  
+#endif /* _WX */
 }
