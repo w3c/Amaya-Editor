@@ -225,8 +225,11 @@
 #define TMSG_BUTTON_DT		220
 #define TMSG_BUTTON_DD		221
 #define TMSG_OBJECT		222
-#define CSSStyle		223
+#define TMSG_CSSStyle		223
 #define TMSG_EXPLORE		224
-#define TMSG_LIB_MSG_MAX		225
+#define TMSG_SplitHorizontally		225
+#define TMSG_SplitVertically		226
+#define TMSG_ShowPanel		227
+#define TMSG_LIB_MSG_MAX		228
 
 #endif

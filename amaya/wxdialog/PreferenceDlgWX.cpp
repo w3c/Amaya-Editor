@@ -88,11 +88,11 @@ END_EVENT_TABLE()
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("PreferenceDlgWX"));
   m_UrlList = url_list;
   MyRef = ref;
-  wxNotebook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxNotebook);
 
 #ifndef DAV
   // invalid WebDAV Page
   int page_id = GetPagePosFromXMLID( _T("wxID_PAGE_DAV") );
+  wxNotebook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxNotebook);
   if (page_id)
     p_notebook->DeletePage(page_id );
 #endif /* DAV */

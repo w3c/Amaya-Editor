@@ -15,7 +15,8 @@ class AmayaQuickSplitButton : public wxPanel
   typedef enum
     {
       wxAMAYA_QS_HORIZONTAL,
-      wxAMAYA_QS_VERTICAL
+      wxAMAYA_QS_VERTICAL,
+      wxAMAYA_QS_TOOLS
     } wxAmayaQuickSplitMode;
 
   AmayaQuickSplitButton( wxWindow * p_parent_window = NULL

@@ -3,6 +3,7 @@
 #include "wx/wx.h"
 #include "wx/tglbtn.h"
 #include "wx/string.h"
+#include "wx/splitter.h"
 
 #include "thot_gui.h"
 #include "thot_sys.h"

@@ -118,7 +118,7 @@ AmayaNormalWindow::AmayaNormalWindow (int window_id
   wxBoxSizer * p_SizerFrame = new wxBoxSizer ( wxHORIZONTAL );
 
   // create the quick split button used to show/hide the panel
-  m_pSplitPanelButton = new AmayaQuickSplitButton( p_TopParent, AmayaQuickSplitButton::wxAMAYA_QS_VERTICAL, 4 );
+  m_pSplitPanelButton = new AmayaQuickSplitButton( p_TopParent, AmayaQuickSplitButton::wxAMAYA_QS_TOOLS, 4 );
   p_SizerFrame->Add( m_pSplitPanelButton, 0, wxALL | wxEXPAND, 0 );
   m_pSplitPanelButton->ShowQuickSplitButton( true );
   

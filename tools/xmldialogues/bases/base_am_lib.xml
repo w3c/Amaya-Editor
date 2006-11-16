@@ -3055,7 +3055,7 @@
 <message xml:lang="cn">Object</message>
 <message xml:lang="tw">Object</message>
 </label>
-<label define="CSSStyle">
+<label define="TMSG_CSSStyle">
 <message xml:lang="en">CSS Style</message>
 <message xml:lang="fr">Style CSS</message>
 <message xml:lang="it">CSS Style</message>
@@ -3082,5 +3082,38 @@
 <message xml:lang="cn">文件</message>
 <message xml:lang="tw">文件</message>
 </label>
+<label define="TMSG_SplitHorizontally">
+<message xml:lang="en">Horizontal split/unsplit</message>
+<message xml:lang="fr">Partager/étendre en horizontal</message>
+<message xml:lang="es">Dividir horizontalmente</message>
+<message xml:lang="de">Ansicht horizontal teilen</message>
+<message xml:lang="it">Dividi la vista in orizzontale</message>
+<message xml:lang="hu">Vízszintes felosztás</message>
+<message xml:lang="ka">ხედის ჰორიზონტალური გაყოფა</message>
+<message xml:lang="ru">Разделить по горизонтали</message>
+<message xml:lang="cn">水平排列视图</message>
+<message xml:lang="tw">水平排列視圖</message></label>
+<label define="TMSG_SplitVertically">
+<message xml:lang="en">Vertical split/unsplit</message>
+<message xml:lang="fr">Partager/étendre verticalement</message>
+<message xml:lang="es">Dividir vista verticalmente</message>
+<message xml:lang="de">Ansicht vertikal teilen</message>
+<message xml:lang="it">Dividi la vista in verticale</message>
+<message xml:lang="hu">Függőleges felosztás</message>
+<message xml:lang="ka">ხედის ვერტიკალური გაყოფა</message>
+<message xml:lang="ru">Разделить по вертикали</message>
+<message xml:lang="cn">垂直排列视图</message>
+<message xml:lang="tw">垂直排列視圖</message></label>
+<label define="TMSG_ShowPanel">
+<message xml:lang="en">Show/hide tools</message>
+<message xml:lang="fr">Montrer/cacher les outils</message>
+<message xml:lang="es">Ventana de herramientas</message>
+<message xml:lang="de">Hilfsmittel anzeigen</message>
+<message xml:lang="it">Mostra strumenti</message>
+<message xml:lang="ru">Показать инструменты</message>
+<message xml:lang="hu">Eszközsor mutatása</message>
+<message xml:lang="ka">ხელსაწყოების ჩვენება</message>
+<message xml:lang="cn">显示工具栏</message>
+<message xml:lang="tw">顯示工具欄</message></label>
 <label define="TMSG_LIB_MSG_MAX"></label></messages>
 <!--end of base --></base>
