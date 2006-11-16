@@ -120,10 +120,20 @@ static int LoadTemplateRepositoryList (Prop_Templates_Path** list)
   sprintf (path, "%s%ctemplate-repositories.dat", homePath, DIR_SEP);
   
   file = TtaReadOpen ((char *)path);
-  c = (unsigned char*)path;
-  *c = EOS;
+  if (!file)
+  {
+    /* The config file dont exist, create it. */
+    file = TtaWriteOpen ((char *)path);
+    fprintf(file, "%s%ctemplates%cen\n", homePath, DIR_SEP, DIR_SEP);
+    TtaWriteClose (file);
+    /* Retry to open it.*/
+    file = TtaReadOpen ((char *)path);
+  }
+  
   if (file)
   {
+    c = (unsigned char*)path;
+    *c = EOS;
     while (TtaReadByte (file, c)){
       if (*c==13 || *c==EOL)
         *c = EOS;
