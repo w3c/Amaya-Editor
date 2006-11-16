@@ -41,6 +41,7 @@
 
 void OpenNewDocFromArgv( char * url );
 
+
 IMPLEMENT_DYNAMIC_CLASS(AmayaExplorerPanel, AmayaSubPanel)
 
 /*----------------------------------------------------------------------
@@ -50,8 +51,7 @@ IMPLEMENT_DYNAMIC_CLASS(AmayaExplorerPanel, AmayaSubPanel)
  *               TODO
   -----------------------------------------------------------------------*/
 AmayaExplorerPanel::AmayaExplorerPanel( wxWindow * p_parent_window, AmayaNormalWindow * p_parent_nwindow )
-  : AmayaSubPanel( p_parent_window, p_parent_nwindow, _T("wxID_PANEL_EXPLORER") ),
-  m_dirCtrl(NULL)
+  : AmayaSubPanel( p_parent_window, p_parent_nwindow, _T("wxID_PANEL_EXPLORER") )
 {
   char *s;
 
@@ -59,28 +59,21 @@ AmayaExplorerPanel::AmayaExplorerPanel( wxWindow * p_parent_window, AmayaNormalW
   RefreshToolTips();
   m_pTitleText->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_EXPLORE)));
   
-  wxPanel *panel = XRCCTRL(*this, "wxID_PANEL_CONTENT_DETACH", wxPanel);
-  wxSize sz = wxDefaultSize;
-  m_dirCtrl = new wxGenericDirCtrl(panel, wxID_ANY, wxDirDialogDefaultFolderStr,
-                                   wxDefaultPosition, sz,
-                                wxDIRCTRL_3D_INTERNAL|wxDIRCTRL_SELECT_FIRST|wxSUNKEN_BORDER|wxDIRCTRL_SHOW_FILTERS,
-                                APPFILENAMEFILTER);
-  wxSizer *sizer = new wxBoxSizer(wxVERTICAL);
-
+  wxGenericDirCtrl* dirCtrl = XRCCTRL(*this, "wxID_DIRCTRL_EXPLORER", wxGenericDirCtrl);
+  
   // Initial selection in the set of folders
+  wxString path;
   s = TtaGetEnvString ("EXPLORER_PATH");
   if (s)
-    {
-      m_dirCtrl->ExpandPath (TtaConvMessageToWX(s));
-    }
+  {
+    path = TtaConvMessageToWX(s);
+  }
   else
-    {
-      wxString wx_win_homedir = TtaGetHomeDir();
-      m_dirCtrl->ExpandPath (wx_win_homedir);
-    }
-  sizer->Add(m_dirCtrl, 1, wxEXPAND);
-  panel->SetSizer(sizer);
-  sizer->Fit(this);
+  {
+    path = TtaGetHomeDir();
+  }
+  dirCtrl->ExpandPath(path);
+    
   // register myself to the manager, so I will be avertised that another panel is floating ...
   m_pManager->RegisterSubPanel( this );
 }
@@ -145,13 +138,14 @@ bool AmayaExplorerPanel::IsActive()
   -----------------------------------------------------------------------*/
 void AmayaExplorerPanel::OnDirTreeItemActivate(wxTreeEvent& event)
 {
-    if(!m_dirCtrl->GetFilePath().IsEmpty())
-    {
-        char buffer[MAX_TXT_LEN];
-        strcpy(buffer, m_dirCtrl->GetFilePath().mb_str(wxConvUTF8));
-        TtaSetEnvString ("EXPLORER_PATH", buffer, TRUE);
-        OpenNewDocFromArgv(buffer);
-    }    
+  wxGenericDirCtrl* dirCtrl = XRCCTRL(*this, "wxID_DIRCTRL_EXPLORER", wxGenericDirCtrl);
+  if(!dirCtrl->GetFilePath().IsEmpty())
+  {
+    char buffer[MAX_TXT_LEN];
+    strcpy(buffer, dirCtrl->GetFilePath().mb_str(wxConvUTF8));
+    TtaSetEnvString ("EXPLORER_PATH", buffer, TRUE);
+    OpenNewDocFromArgv(buffer);
+  }
 }
 
 
@@ -160,7 +154,7 @@ void AmayaExplorerPanel::OnDirTreeItemActivate(wxTreeEvent& event)
  *  the callbacks are assigned to an event type
  *----------------------------------------------------------------------*/
 BEGIN_EVENT_TABLE(AmayaExplorerPanel, AmayaSubPanel)
-  EVT_TREE_ITEM_ACTIVATED(wxID_ANY, AmayaExplorerPanel::OnDirTreeItemActivate)
+  EVT_TREE_ITEM_ACTIVATED(XRCID("wxID_DIRCTRL_EXPLORER"), AmayaExplorerPanel::OnDirTreeItemActivate)
 END_EVENT_TABLE()
 
 #endif /* #ifdef _WX */

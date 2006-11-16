@@ -35,7 +35,6 @@ public:
   virtual void DoUpdate();
 
  protected:
-  wxGenericDirCtrl* m_dirCtrl;
   void OnDirTreeItemActivate(wxTreeEvent& event);
   DECLARE_EVENT_TABLE()
 };
