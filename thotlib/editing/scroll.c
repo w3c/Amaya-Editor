@@ -653,6 +653,10 @@ void ShowBox (int frame, PtrBox pBox, int position, int percent,
   else
     {
       RedrawFrameBottom (frame, dy, NULL);
+#ifdef _GL
+      /* to be sure the scrolled page has been displayed */
+      GL_Swap (frame);
+#endif /* _GL */
       /* Mise a jour des ascenseurs */
       if (scrollUpdate)
         UpdateScrollbars (frame);

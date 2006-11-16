@@ -8,8 +8,8 @@
 
 # neededforbuild  autoconf automake mmcore mmbase mmslib xpm libz libpng libjpeg
 
-%define version 8.52
-%define version_wx 9.52
+%define version 8.53
+%define version_wx 9.53
 
 Vendor:       W3C World Wide Web Consortium
 Distribution: W3C
