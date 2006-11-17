@@ -9,6 +9,11 @@
 extern void SetPositionConstraint ( BoxEdge localEdge,
                                     PtrBox pBox,
                                     int *val );
+extern int GetPixelValue ( int val,
+                           TypeUnit unit,
+                           int size,
+                           PtrAbstractBox pAb,
+                           int zoom );
 extern void ComputeRadius ( PtrAbstractBox pAb,
                             int frame,
                             ThotBool horizRef );
@@ -52,6 +57,11 @@ extern void ClearDimRelation ( PtrBox pBox,
 extern void SetPositionConstraint ( BoxEdge localEdge,
                                       PtrBox pBox,
                                       int *val );
+extern int GetPixelValue ( int val,
+                             TypeUnit unit,
+                             int size,
+                             PtrAbstractBox pAb,
+                             int zoom );
 extern void ComputeRadius ( PtrAbstractBox pAb,
                               int frame,
                               ThotBool horizRef );

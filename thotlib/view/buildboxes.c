@@ -2032,30 +2032,18 @@ static void AddFlow (PtrAbstractBox pAb, int frame)
           else
             w = h = 0;
 	  
-          if (pos->PnLeftUnit == UnPercent)
-            pFlow->FlXStart = PixelValue (pos->PnLeftDistance, UnPercent,
-                                          (PtrAbstractBox) w, 0);
-          else if (pos->PnLeftUnit != UnUndefined && pos->PnLeftUnit != UnAuto)
-            pFlow->FlXStart = PixelValue (pos->PnLeftDistance, pos->PnLeftUnit, pAb,
-                                          zoom);
-          else if (pos->PnRightUnit == UnPercent)
-            pFlow->FlXStart = -PixelValue (pos->PnRightDistance, UnPercent,
-                                           (PtrAbstractBox) w, 0);
+          if (pos->PnLeftUnit != UnUndefined && pos->PnLeftUnit != UnAuto)
+            pFlow->FlXStart = GetPixelValue (pos->PnLeftDistance, pos->PnLeftUnit,
+                                             w, pAb, zoom);
           else if (pos->PnRightUnit != UnUndefined && pos->PnRightUnit != UnAuto)
-            pFlow->FlXStart = -PixelValue (pos->PnRightDistance, pos->PnRightUnit, pAb,
-                                           zoom);
-          if (pos->PnTopUnit == UnPercent)
-            pFlow->FlYStart = PixelValue (pos->PnTopDistance, UnPercent,
-                                          (PtrAbstractBox) h, 0);
-          else if (pos->PnTopUnit != UnUndefined && pos->PnTopUnit != UnAuto)
-            pFlow->FlYStart = PixelValue (pos->PnTopDistance, pos->PnTopUnit, pAb,
-                                          zoom);
-          else if (pos->PnBottomUnit == UnPercent)
-            pFlow->FlYStart = -PixelValue (pos->PnBottomDistance, UnPercent,
-                                           (PtrAbstractBox) h, 0);
+            pFlow->FlXStart = -GetPixelValue (pos->PnRightDistance, pos->PnRightUnit,
+                                              w, pAb, zoom);
+          if (pos->PnTopUnit != UnUndefined && pos->PnTopUnit != UnAuto)
+            pFlow->FlYStart = GetPixelValue (pos->PnTopDistance, pos->PnTopUnit,
+                                             h, pAb, zoom);
           else if (pos->PnBottomUnit != UnUndefined && pos->PnBottomUnit != UnAuto)
-            pFlow->FlYStart = -PixelValue (pos->PnBottomDistance, pos->PnBottomUnit, pAb,
-                                           zoom);
+            pFlow->FlYStart = -GetPixelValue (pos->PnBottomDistance, pos->PnBottomUnit,
+                                              h, pAb, zoom);
         }
 #ifdef POSITIONING
       printf ("Adding flow x=%d y=%d\n",pFlow->FlXStart,pFlow->FlYStart);
@@ -4574,18 +4562,10 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
                   pLine = SearchLine (pBox, frame);
                   if (pLine)
                     {
-                      if (pPosAb->PosUnit == UnPercent)
-                        i = PixelValue (pPosAb->PosDistance, UnPercent,
-                                        (PtrAbstractBox) (pAb->AbBox->BxW), 0);
-                      else
-                        i = PixelValue (pPosAb->PosDistance,
-                                        pPosAb->PosUnit, pAb, zoom);
-                      if (pPosAb->PosDeltaUnit == UnPercent)
-                        i += PixelValue (pPosAb->PosDistDelta, UnPercent,
-                                         (PtrAbstractBox) (pAb->AbBox->BxW), 0);
-                      else
-                        i += PixelValue (pPosAb->PosDistDelta,
-                                         pPosAb->PosDeltaUnit, pAb, zoom);
+                      i = GetPixelValue (pPosAb->PosDistance,
+                                         pPosAb->PosUnit, pAb->AbBox->BxW, pAb, zoom);
+                      i += GetPixelValue (pPosAb->PosDistDelta,
+                                          pPosAb->PosDeltaUnit, pAb->AbBox->BxW, pAb, zoom);
                       pLine->LiYOrg += i;
                       EncloseInLine (pBox, frame, pAb->AbEnclosing);
                     }

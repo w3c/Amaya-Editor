@@ -3783,18 +3783,12 @@ void WidthPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
                         else
                           {
                             /* change the baseline */
-                            if (pPosAb->PosUnit == UnPercent)
-                              i = PixelValue (pPosAb->PosDistance, UnPercent,
-                                              (PtrAbstractBox) ((int)pAb->AbBox->BxW), 0);
-                            else
-                              i = PixelValue (pPosAb->PosDistance, pPosAb->PosUnit, pAb,
-                                              ViewFrameTable[frame - 1].FrMagnification);
-                            if (pPosAb->PosDeltaUnit == UnPercent)
-                              j = PixelValue (pPosAb->PosDistDelta, UnPercent,
-                                              (PtrAbstractBox) ((int)pAb->AbBox->BxW), 0);
-                            else
-                              j = PixelValue (pPosAb->PosDistDelta, pPosAb->PosDeltaUnit, pAb,
-                                              ViewFrameTable[frame - 1].FrMagnification);
+                            i = GetPixelValue (pPosAb->PosDistance, pPosAb->PosUnit,
+                                               pAb->AbBox->BxW, pAb,
+                                               ViewFrameTable[frame - 1].FrMagnification);
+                            j = GetPixelValue (pPosAb->PosDistDelta, pPosAb->PosDeltaUnit,
+                                               pAb->AbBox->BxW, pAb,
+                                               ViewFrameTable[frame - 1].FrMagnification);
                             if (pChildBox->BxType == BoMulScript &&
                                 pChildBox->BxNexChild)
                               pChildBox = pChildBox->BxNexChild;
@@ -4022,18 +4016,12 @@ void HeightPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
                         else
                           {
                             /* change the vertical axis */
-                            if (pPosAb->PosUnit == UnPercent)
-                              i = PixelValue (pPosAb->PosDistance, UnPercent, 
-                                              (PtrAbstractBox) ((int)pAb->AbBox->BxH), 0);
-                            else
-                              i = PixelValue (pPosAb->PosDistance, pPosAb->PosUnit, pAb,
-                                              ViewFrameTable[frame - 1].FrMagnification);
-                            if (pPosAb->PosDeltaUnit == UnPercent)
-                              j = PixelValue (pPosAb->PosDistDelta, UnPercent, 
-                                              (PtrAbstractBox) ((int)pAb->AbBox->BxH), 0);
-                            else
-                              j = PixelValue (pPosAb->PosDistDelta, pPosAb->PosDeltaUnit,
-                                              pAb, ViewFrameTable[frame - 1].FrMagnification);
+                            i = GetPixelValue (pPosAb->PosDistance, pPosAb->PosUnit,
+                                               pAb->AbBox->BxH, pAb,
+                                               ViewFrameTable[frame - 1].FrMagnification);
+                            j = GetPixelValue (pPosAb->PosDistDelta, pPosAb->PosDeltaUnit,
+                                               pAb->AbBox->BxH, pAb,
+                                               ViewFrameTable[frame - 1].FrMagnification);
                             if (pChildBox->BxType == BoMulScript &&
                                 pChildBox->BxNexChild)
                               pChildBox = pChildBox->BxNexChild;

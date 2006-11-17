@@ -509,6 +509,17 @@ void SetPositionConstraint (BoxEdge localEdge, PtrBox pBox, int *val)
       break;
     }
 }
+/*----------------------------------------------------------------------
+  GetPixelValue returns the pixel value according to the unit
+  ----------------------------------------------------------------------*/
+int GetPixelValue (int val, TypeUnit unit, int size, PtrAbstractBox pAb,
+                   int zoom)
+{
+  if (unit == UnPercent)
+    return PixelValue (val, unit, (PtrAbstractBox) size, 0);
+  else
+    return PixelValue (val, unit, pAb, zoom);
+}
 
 /*----------------------------------------------------------------------
   ComputeRadius updates the horizontal or vartical radius of a rectangle
@@ -520,21 +531,9 @@ void ComputeRadius (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 
   pBox = pAb->AbBox;
   if (horizRef)
-    {
-      if (pAb->AbRxUnit == UnPercent)
-        pBox->BxRx = PixelValue (pAb->AbRx, UnPercent, (PtrAbstractBox) (pBox->BxW), 0);
-      else
-        pBox->BxRx = PixelValue (pAb->AbRx, pAb->AbRxUnit, pAb,
-                                 ViewFrameTable[frame - 1].FrMagnification);
-    }
+    pBox->BxRx = GetPixelValue (pAb->AbRx, UnPercent, pBox->BxW, pAb, 0);
   else
-    {
-      if (pAb->AbRyUnit == UnPercent)
-        pBox->BxRy = PixelValue (pAb->AbRy, UnPercent, (PtrAbstractBox) (pBox->BxH), 0);
-      else
-        pBox->BxRy = PixelValue (pAb->AbRy, pAb->AbRyUnit, pAb,
-                                 ViewFrameTable[frame - 1].FrMagnification);
-    }
+    pBox->BxRy = GetPixelValue (pAb->AbRy, UnPercent, pBox->BxH, pAb, 0);
 }
 
 
@@ -751,49 +750,27 @@ void ComputeMBP (PtrAbstractBox pAb, int frame, ThotBool horizRef,
         dim = pBox->BxW;
 
       /* left margin */
-      if (pAb->AbLeftMarginUnit == UnPercent)
-        pBox->BxLMargin = PixelValue (pAb->AbLeftMargin, UnPercent,
-                                      (PtrAbstractBox) dim, 0);
-      else if (pAb->AbLeftMarginUnit != UnAuto)
-        pBox->BxLMargin = PixelValue (pAb->AbLeftMargin, pAb->AbLeftMarginUnit,
-                                      pAb, ViewFrameTable[frame - 1].FrMagnification);
+      if (pAb->AbLeftMarginUnit != UnAuto)
+        pBox->BxLMargin = GetPixelValue (pAb->AbLeftMargin, pAb->AbLeftMarginUnit, dim,
+                                         pAb, ViewFrameTable[frame - 1].FrMagnification);
       /* right margin */
-      if (pAb->AbRightMarginUnit == UnPercent)
-        pBox->BxRMargin = PixelValue (pAb->AbRightMargin, UnPercent,
-                                      (PtrAbstractBox) dim, 0);
-      else if (pAb->AbRightMarginUnit != UnAuto)
-        pBox->BxRMargin = PixelValue (pAb->AbRightMargin, pAb->AbRightMarginUnit,
-                                      pAb, ViewFrameTable[frame - 1].FrMagnification);
+      if (pAb->AbRightMarginUnit != UnAuto)
+        pBox->BxRMargin = GetPixelValue (pAb->AbRightMargin, pAb->AbRightMarginUnit, dim,
+                                         pAb, ViewFrameTable[frame - 1].FrMagnification);
 
       /* left padding */
-      if (pAb->AbLeftPaddingUnit == UnPercent)
-        pBox->BxLPadding = PixelValue (pAb->AbLeftPadding, UnPercent,
-                                       (PtrAbstractBox) dim, 0);
-      else
-        pBox->BxLPadding = PixelValue (pAb->AbLeftPadding, pAb->AbLeftPaddingUnit,
-                                       pAb, ViewFrameTable[frame - 1].FrMagnification);
+      pBox->BxLPadding = GetPixelValue (pAb->AbLeftPadding, pAb->AbLeftPaddingUnit, dim,
+                                        pAb, ViewFrameTable[frame - 1].FrMagnification);
       /* right padding */
-      if (pAb->AbRightPaddingUnit == UnPercent)
-        pBox->BxRPadding = PixelValue (pAb->AbRightPadding, UnPercent,
-                                       (PtrAbstractBox) dim, 0);
-      else
-        pBox->BxRPadding = PixelValue (pAb->AbRightPadding, pAb->AbRightPaddingUnit,
-                                       pAb, ViewFrameTable[frame - 1].FrMagnification);
+      pBox->BxRPadding = GetPixelValue (pAb->AbRightPadding, pAb->AbRightPaddingUnit, dim,
+                                        pAb, ViewFrameTable[frame - 1].FrMagnification);
 
       /* left border */
-      if (pAb->AbLeftBorderUnit == UnPercent)
-        pBox->BxLBorder = PixelValue (pAb->AbLeftBorder, UnPercent,
-                                      (PtrAbstractBox) dim, 0);
-      else
-        pBox->BxLBorder = PixelValue (pAb->AbLeftBorder, pAb->AbLeftBorderUnit,
-                                      pAb, ViewFrameTable[frame - 1].FrMagnification);
+      pBox->BxLBorder = GetPixelValue (pAb->AbLeftBorder, pAb->AbLeftBorderUnit, dim,
+                                       pAb, ViewFrameTable[frame - 1].FrMagnification);
       /* right border */
-      if (pAb->AbRightBorderUnit == UnPercent)
-        pBox->BxRBorder = PixelValue (pAb->AbRightBorder, UnPercent,
-                                      (PtrAbstractBox) dim, 0);
-      else
-        pBox->BxRBorder = PixelValue (pAb->AbRightBorder, pAb->AbRightBorderUnit,
-                                      pAb, ViewFrameTable[frame - 1].FrMagnification);
+      pBox->BxRBorder = GetPixelValue (pAb->AbRightBorder, pAb->AbRightBorderUnit, dim,
+                                       pAb, ViewFrameTable[frame - 1].FrMagnification);
 
       /* Manage auto margins */
       if (pAb->AbLeftMarginUnit == UnAuto || pAb->AbRightMarginUnit == UnAuto)
@@ -899,25 +876,15 @@ void ComputeMBP (PtrAbstractBox pAb, int frame, ThotBool horizRef,
       else
         {
           /* top margin */
-          if (pAb->AbTopMarginUnit == UnPercent)
-            pBox->BxTMargin = PixelValue (pAb->AbTopMargin, UnPercent,
-                                          (PtrAbstractBox) dim, 0);
-          else if (pAb->AbTopMarginUnit != UnAuto)
-            pBox->BxTMargin = PixelValue (pAb->AbTopMargin, pAb->AbTopMarginUnit,
-                                          pAb, ViewFrameTable[frame - 1].FrMagnification);
+          if (pAb->AbTopMarginUnit != UnAuto)
+            pBox->BxTMargin = GetPixelValue (pAb->AbTopMargin, pAb->AbTopMarginUnit, dim,
+                                             pAb, ViewFrameTable[frame - 1].FrMagnification);
           /* top padding */
-          if (pAb->AbTopPaddingUnit == UnPercent)
-            pBox->BxTPadding = PixelValue (pAb->AbTopPadding, UnPercent,
-                                           (PtrAbstractBox) dim, 0);
-          else
-            pBox->BxTPadding = PixelValue (pAb->AbTopPadding, pAb->AbTopPaddingUnit,
-                                           pAb, ViewFrameTable[frame - 1].FrMagnification);
+          pBox->BxTPadding = GetPixelValue (pAb->AbTopPadding, pAb->AbTopPaddingUnit, dim,
+                                            pAb, ViewFrameTable[frame - 1].FrMagnification);
           /* top border */
-          if (pAb->AbTopBorderUnit == UnPercent)
-            pBox->BxTBorder = PixelValue (pAb->AbTopBorder, UnPercent,
-                                      (PtrAbstractBox) dim, 0);
-          else
-            pBox->BxTBorder = PixelValue (pAb->AbTopBorder, pAb->AbTopBorderUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
+          pBox->BxTBorder = GetPixelValue (pAb->AbTopBorder, pAb->AbTopBorderUnit, dim,
+                                           pAb, ViewFrameTable[frame - 1].FrMagnification);
         }
 
       if (pAb->AbLeafType == LtCompound && pAb->AbTruncatedTail)
@@ -929,26 +896,15 @@ void ComputeMBP (PtrAbstractBox pAb, int frame, ThotBool horizRef,
       else
         {
           /* bottom margin */
-          if (pAb->AbBottomMarginUnit == UnPercent)
-            pBox->BxBMargin = PixelValue (pAb->AbBottomMargin, UnPercent,
-                                          (PtrAbstractBox) dim, 0);
-          else if (pAb->AbBottomMarginUnit != UnAuto)
-            pBox->BxBMargin = PixelValue (pAb->AbBottomMargin, pAb->AbBottomMarginUnit,
-                                          pAb, ViewFrameTable[frame - 1].FrMagnification);
+          if (pAb->AbBottomMarginUnit != UnAuto)
+            pBox->BxBMargin = GetPixelValue (pAb->AbBottomMargin, pAb->AbBottomMarginUnit, dim,
+                                             pAb, ViewFrameTable[frame - 1].FrMagnification);
           /* bottom padding */
-          if (pAb->AbBottomPaddingUnit == UnPercent)
-            pBox->BxBPadding = PixelValue (pAb->AbBottomPadding, UnPercent,
-                                           (PtrAbstractBox) dim, 0);
-          else
-            pBox->BxBPadding = PixelValue (pAb->AbBottomPadding, pAb->AbBottomPaddingUnit,
-                                           pAb, ViewFrameTable[frame - 1].FrMagnification);
+          pBox->BxBPadding = GetPixelValue (pAb->AbBottomPadding, pAb->AbBottomPaddingUnit, dim,
+                                            pAb, ViewFrameTable[frame - 1].FrMagnification);
           /* bottom border */
-          if (pAb->AbBottomBorderUnit == UnPercent)
-            pBox->BxBBorder = PixelValue (pAb->AbBottomBorder, UnPercent,
-                                          (PtrAbstractBox) dim, 0);
-          else
-            pBox->BxBBorder = PixelValue (pAb->AbBottomBorder, pAb->AbBottomBorderUnit,
-                                          pAb, ViewFrameTable[frame - 1].FrMagnification);
+          pBox->BxBBorder = GetPixelValue (pAb->AbBottomBorder, pAb->AbBottomBorderUnit, dim,
+                                           pAb, ViewFrameTable[frame - 1].FrMagnification);
         }
     }
 }
@@ -1042,31 +998,17 @@ ThotBool ComputePositioning (PtrBox pBox, int frame)
                   appl = TRUE;
                 }
             }
-          else if (pos->PnLeftUnit == UnPercent)
-            {
-              l = PixelValue (pos->PnLeftDistance, UnPercent, (PtrAbstractBox) w, 0);
-              appl = TRUE;
-            }
           else if (pos->PnLeftUnit != UnUndefined)
             {
-              l = PixelValue (pos->PnLeftDistance, pos->PnLeftUnit, pAb,
-                              ViewFrameTable[frame - 1].FrMagnification);
+              l = GetPixelValue (pos->PnLeftDistance, pos->PnLeftUnit, w, pAb,
+                                 ViewFrameTable[frame - 1].FrMagnification);
               appl = TRUE;
             }
           if (pos->PnRightUnit != UnAuto && pos->PnRightUnit != UnUndefined)
             {
-              if (pos->PnRightUnit == UnPercent)
-                {
-                  r = PixelValue (pos->PnRightDistance, UnPercent,
-                                  (PtrAbstractBox) w, 0);
-                  appr = TRUE;
-                }
-              else
-                {
-                  r = PixelValue (pos->PnRightDistance, pos->PnRightUnit, pAb,
-                                  ViewFrameTable[frame - 1].FrMagnification);
-                  appr = TRUE;
-                }
+              r = GetPixelValue (pos->PnRightDistance, pos->PnRightUnit, w, pAb,
+                                 ViewFrameTable[frame - 1].FrMagnification);
+              appr = TRUE;
             }
           if (pos->PnTopUnit == UnAuto)
             {
@@ -1076,31 +1018,17 @@ ThotBool ComputePositioning (PtrBox pBox, int frame)
                   appt = TRUE;
                 }
             }
-          else if (pos->PnTopUnit == UnPercent)
-            {
-              t = PixelValue (pos->PnTopDistance, UnPercent, (PtrAbstractBox) h, 0);
-              appt = TRUE;
-            }
           else if (pos->PnTopUnit != UnUndefined)
             {
-              t = PixelValue (pos->PnTopDistance, pos->PnTopUnit, pAb,
+              t = GetPixelValue (pos->PnTopDistance, pos->PnTopUnit, h, pAb,
                               ViewFrameTable[frame - 1].FrMagnification);
               appt = TRUE;
             }
           if (pos->PnBottomUnit != UnAuto && pos->PnBottomUnit != UnUndefined)
             {
-              if (pos->PnBottomUnit == UnPercent)
-                {
-                  b = PixelValue (pos->PnBottomDistance, UnPercent,
-                                  (PtrAbstractBox) h, 0);
-                  appb = TRUE;
-                }
-              else
-                {
-                  b = PixelValue (pos->PnBottomDistance, pos->PnBottomUnit, pAb,
-                                  ViewFrameTable[frame - 1].FrMagnification);
-                  appb = TRUE;
-                }
+              b = GetPixelValue (pos->PnBottomDistance, pos->PnBottomUnit, h, pAb,
+                                 ViewFrameTable[frame - 1].FrMagnification);
+              appb = TRUE;
             }
           
           /* Move also enclosed boxes */
@@ -1344,16 +1272,10 @@ void ComputePosRelation (AbPosition *rule, PtrBox pBox, int frame,
               refEdge = rule->PosRefEdge;
               localEdge = rule->PosEdge;
               /* Convert the distance value */
-              if (rule->PosUnit == UnPercent)
-                dist = PixelValue (rule->PosDistance, UnPercent, (PtrAbstractBox) x, 0);
-              else
-                dist = PixelValue (rule->PosDistance, rule->PosUnit, pAb,
-                                   ViewFrameTable[frame - 1].FrMagnification);
-              if (rule->PosDeltaUnit == UnPercent)
-                dist += PixelValue (rule->PosDistDelta, UnPercent, (PtrAbstractBox) x, 0);
-              else
-                dist += PixelValue (rule->PosDistDelta, rule->PosDeltaUnit, pAb,
+              dist = GetPixelValue (rule->PosDistance, rule->PosUnit, x, pAb,
                                     ViewFrameTable[frame - 1].FrMagnification);
+              dist += GetPixelValue (rule->PosDistDelta, rule->PosDeltaUnit, x, pAb,
+                                     ViewFrameTable[frame - 1].FrMagnification);
             }
           else
             {
@@ -1498,16 +1420,10 @@ void ComputePosRelation (AbPosition *rule, PtrBox pBox, int frame,
               refEdge = rule->PosRefEdge;
               localEdge = rule->PosEdge;
               /* Convert the distance value */
-              if (rule->PosUnit == UnPercent)
-                dist = PixelValue (rule->PosDistance, UnPercent, (PtrAbstractBox) y, 0);
-              else
-                dist = PixelValue (rule->PosDistance, rule->PosUnit, pAb,
-                                   ViewFrameTable[frame - 1].FrMagnification);
-              if (rule->PosDeltaUnit == UnPercent)
-                dist += PixelValue (rule->PosDistDelta, UnPercent, (PtrAbstractBox) y, 0);
-              else
-                dist += PixelValue (rule->PosDistDelta, rule->PosDeltaUnit, pAb,
+              dist = GetPixelValue (rule->PosDistance, rule->PosUnit, y, pAb,
                                     ViewFrameTable[frame - 1].FrMagnification);
+              dist += GetPixelValue (rule->PosDistDelta, rule->PosDeltaUnit, y, pAb,
+                                     ViewFrameTable[frame - 1].FrMagnification);
             }
           else
             {
@@ -2158,17 +2074,21 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
   PtrAbstractBox      pParentAb, pColumn, pChildAb;
   PtrElement          pEl, parent;
   PtrLine             pLine;
+  Positioning        *pos;
   OpRelation          op;
   AbDimension        *pDimAb;
   AbPosition         *pPosAb;
   int                 val, delta, i;
   int                 dx, dy, dim;
-  int                 t, b, l, r;
+  int                 t, b, l, r, zoom;
   ThotBool            inLine, isExtraFlow;
   ThotBool            defaultDim;
 
   pBox = pAb->AbBox;
+  zoom = ViewFrameTable[frame - 1].FrMagnification;
   pParentAb = pAb->AbEnclosing;
+  dx = dy = 0;
+  pos = pAb->AbPositioning;
   if (pParentAb)
     parent = pParentAb->AbElement;
   else
@@ -2186,19 +2106,19 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                    !pAb->AbWidth.DimIsPosition &&
                   (pAb->AbWidth.DimAbRef || pAb->AbWidth.DimValue != -1))
                 ;
-              else if (pAb->AbPositioning->PnLeftUnit != UnAuto &&
-                       pAb->AbPositioning->PnLeftUnit != UnUndefined &&
-                       pAb->AbPositioning->PnRightUnit != UnAuto &&
-                       pAb->AbPositioning->PnRightUnit != UnUndefined)
+              else if (pos->PnLeftUnit != UnAuto &&
+                       pos->PnLeftUnit != UnUndefined &&
+                       pos->PnRightUnit != UnAuto &&
+                       pos->PnRightUnit != UnUndefined)
                 {
                   /* width fixed by left and right position */
                   pAb->AbWidth.DimIsPosition = TRUE;
                   pAb->AbWidth.DimPosition.PosAbRef = pParentAb;
-                  pAb->AbWidth.DimPosition.PosDistance = pAb->AbPositioning->PnRightDistance;
+                  pAb->AbWidth.DimPosition.PosDistance = pos->PnRightDistance;
                   pAb->AbWidth.DimPosition.PosDistDelta = 0;
                   pAb->AbWidth.DimPosition.PosEdge = Right;
                   pAb->AbWidth.DimPosition.PosRefEdge = Right;
-                  pAb->AbWidth.DimPosition.PosUnit = pAb->AbPositioning->PnRightUnit;
+                  pAb->AbWidth.DimPosition.PosUnit = pos->PnRightUnit;
                   return FALSE;
                 }
               else if (!pAb->AbWidth.DimIsPosition &&
@@ -2211,8 +2131,8 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                   pAb->AbWidth.DimAbRef = pParentAb;
                   pAb->AbWidth.DimIsPosition = FALSE;
                   pAb->AbWidth.DimValue = 0;
-                  if (pAb->AbPositioning->PnAlgorithm == PnAbsolute ||
-                      pAb->AbPositioning->PnAlgorithm == PnFixed &&
+                  if (pos->PnAlgorithm == PnAbsolute ||
+                      pos->PnAlgorithm == PnFixed &&
                       pAb->AbWidth.DimUnit == UnAuto)
                     /* shrink does apply */
                     pBox->BxShrink = TRUE;
@@ -2220,10 +2140,10 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
             }
           if (!horizRef)
             {
-              if (pAb->AbPositioning->PnTopUnit != UnAuto &&
-                       pAb->AbPositioning->PnTopUnit != UnUndefined &&
-                       pAb->AbPositioning->PnBottomUnit != UnAuto &&
-                       pAb->AbPositioning->PnBottomUnit != UnUndefined)
+              if (pos->PnTopUnit != UnAuto &&
+                       pos->PnTopUnit != UnUndefined &&
+                       pos->PnBottomUnit != UnAuto &&
+                       pos->PnBottomUnit != UnUndefined)
                 {
                   /* inherit from an enclosing box */
                   pAb->AbHeight.DimIsPosition = FALSE;
@@ -2245,9 +2165,9 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
             }
         }
       else if (horizRef && pAb->AbWidth.DimUnit == UnAuto &&
-               pAb->AbLeafType == LtCompound && pAb->AbPositioning &&
-               (pAb->AbPositioning->PnAlgorithm == PnAbsolute ||
-                pAb->AbPositioning->PnAlgorithm == PnFixed))
+               pAb->AbLeafType == LtCompound && pos &&
+               (pos->PnAlgorithm == PnAbsolute ||
+                pos->PnAlgorithm == PnFixed))
         /* no explicit left or right rule but shrink does apply */
         pBox->BxShrink = TRUE;
       else if (horizRef && pParentAb && pParentAb->AbBox &&
@@ -2502,14 +2422,14 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
             }
           /* Compute the delta width that must be substract to 100% width or enclosing width */
           GetExtraMargins (pBox, NULL, frame, &t, &b, &l, &r);
-          dx = l + r;
+          dx += l + r;
           if (pBox->BxLMargin > 0)
             dx += pBox->BxLMargin;
           dx += pBox->BxLBorder + pBox->BxLPadding + pBox->BxRBorder + pBox->BxRPadding;
           if (pBox->BxRMargin > 0)
             dx += pBox->BxRMargin;
           /* Compute the delta height that must be substract to 100% height or enclosing height */
-          dy = t + b;
+          dy += t + b;
           if (pBox->BxTMargin > 0)
             dy += pBox->BxTMargin;
           dy += pBox->BxTBorder + pBox->BxTPadding + pBox->BxBBorder + pBox->BxBPadding;
@@ -2531,14 +2451,12 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                       if (pDimAb->DimValue < 0)
                         val += pDimAb->DimValue;
                       else if (pDimAb->DimUnit == UnPercent)
-                        val = PixelValue (pDimAb->DimValue, UnPercent,
-                                          (PtrAbstractBox) val, 0);
+                        val = PixelValue (pDimAb->DimValue, UnPercent, (PtrAbstractBox) val, 0);
                       else if (pDimAb->DimUnit == UnAuto)
-                        val = PixelValue (100, UnPercent,
-                                          (PtrAbstractBox) val, 0);
+                        val = PixelValue (100, UnPercent, (PtrAbstractBox) val, 0);
                       else
                         val = PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb,
-                                          ViewFrameTable[frame - 1].FrMagnification);
+                                          zoom);
                       if (pDimAb->DimValue < 0 || pDimAb->DimUnit == UnPercent ||
                           pDimAb->DimUnit == UnAuto)
                         /* the rule gives the outside value */
@@ -2557,13 +2475,10 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                       GetSizesFrame (frame, &i, &val);
                       if (pDimAb->DimValue < 0)
                         val += pDimAb->DimValue;
-                      else if (pDimAb->DimUnit == UnPercent)
-                        val = PixelValue (pDimAb->DimValue, UnPercent,
-                                          (PtrAbstractBox) val, 0);
                       else
                         /* explicit value */
-                        val = PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb,
-                                          ViewFrameTable[frame - 1].FrMagnification);
+                        val = GetPixelValue (pDimAb->DimValue, pDimAb->DimUnit, val, pAb,
+                                             zoom);
                       if (pDimAb->DimValue < 0 || pDimAb->DimUnit == UnPercent)
                         /* the rule gives the outside value */
                         val = val - dy;
@@ -2761,7 +2676,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                         {
                           /* explicit value */
                           val = PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb,
-                                            ViewFrameTable[frame - 1].FrMagnification);
+                                            zoom);
                         }
                       ResizeWidth (pBox, pBox, NULL, val - pBox->BxW, 0, 0, 0, frame, FALSE);
                     }
@@ -2819,7 +2734,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 			    
                           if (pRefBox)
                             {
-                              if (pDimAb->DimAbRef == pParentAb)
+                              if (pDimAb->DimAbRef == pParentAb || isExtraFlow)
                                 {
                                   /* inherited from the parent */
                                   /* same dimension? */
@@ -2833,6 +2748,17 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                                       pLine = SearchLine (pBox, frame);
                                       if (pLine)
                                         val = pLine->LiXMax;
+                                    }
+                                  if (pos)
+                                    {
+                                      if (pos->PnLeftUnit != UnUndefined &&
+                                          pos->PnLeftUnit != UnAuto)
+                                        dx += GetPixelValue (pos->PnLeftDistance, pos->PnLeftUnit,
+                                                             pRefBox->BxW, pAb, zoom);
+                                      else if (pos->PnRightUnit != UnUndefined &&
+                                               pos->PnRightUnit != UnAuto)
+                                        dx += GetPixelValue (pos->PnRightDistance, pos->PnRightUnit,
+                                                             pRefBox->BxW, pAb, zoom);
                                     }
                                 }
                               else
@@ -2853,7 +2779,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                                                   (PtrAbstractBox) val, 0);
                               else
                                 val += PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb,
-                                                   ViewFrameTable[frame - 1].FrMagnification);
+                                                   zoom);
                               /* the rule gives the outside value */
                               if (val >= dx)
                                 val = val - dx;
@@ -2940,7 +2866,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                         }
                       else
                         /* explicit value */
-                        val = PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
+                        val = PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb, zoom);
                       ResizeHeight (pBox, pBox, NULL, val - pBox->BxH, 0, 0, frame);
                     }
                   else
@@ -2985,7 +2911,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 			    
                               if (pRefBox != NULL)
                                 {
-                                  if (pDimAb->DimAbRef == pParentAb)
+                                  if (pDimAb->DimAbRef == pParentAb || isExtraFlow)
                                     {
                                       /* inherited from the parent */
                                       /* same dimension? */
@@ -2997,14 +2923,26 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                                       if (inLine && !pDimAb->DimSameDimension)
                                         {
                                           /* remove the indentation value  */
-                                          if (pParentAb->AbIndentUnit == UnPercent)
-                                            delta = PixelValue (pParentAb->AbIndent, UnPercent, (PtrAbstractBox) val, 0);
-                                          else
-                                            delta = PixelValue (pParentAb->AbIndent, pParentAb->AbIndentUnit, pParentAb, ViewFrameTable[frame - 1].FrMagnification);
+                                          delta = GetPixelValue (pParentAb->AbIndent,
+                                                                 pParentAb->AbIndentUnit,
+                                                                 val, pParentAb, zoom);
                                           if (pParentAb->AbIndent > 0)
                                             val -= delta;
                                           else if (pParentAb->AbIndent < 0)
                                             val += delta;
+                                        }
+                                      if (pos)
+                                        {
+                                          if (pos->PnTopUnit != UnUndefined &&
+                                              pos->PnTopUnit != UnAuto)
+                                            dy += GetPixelValue (pos->PnTopDistance,
+                                                                 pos->PnTopUnit,
+                                                                 pRefBox->BxH, pAb, zoom);
+                                          else if (pos->PnBottomUnit != UnUndefined &&
+                                                   pos->PnBottomUnit != UnAuto)
+                                            dy +=GetPixelValue (pos->PnBottomDistance,
+                                                                pos->PnBottomUnit,
+                                                                pRefBox->BxH, pAb, zoom);
                                         }
                                     }
                                   else
@@ -3017,10 +2955,8 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                                         val = pRefBox->BxWidth;
                                     }
 				
-                                  if (pDimAb->DimUnit == UnPercent)
-                                    val = PixelValue (pDimAb->DimValue, UnPercent, (PtrAbstractBox) val, 0);
-                                  else
-                                    val += PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
+                                  val += GetPixelValue (pDimAb->DimValue, pDimAb->DimUnit,
+                                                        val, pAb, zoom);
                                   /* the rule gives the outside value */
                                   val = val - dy;
                                   ResizeHeight (pBox, pBox, NULL, val - pBox->BxH, 0, 0, frame);
@@ -3127,18 +3063,10 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                     dim = 0;
                   else
                     dim = pAb->AbEnclosing->AbBox->BxW;
-                  if (pPosAb->PosUnit == UnPercent)
-                    delta = PixelValue (pPosAb->PosDistance, UnPercent,
-                                        (PtrAbstractBox) dim, 0);
-                  else
-                    delta = PixelValue (pPosAb->PosDistance, pPosAb->PosUnit,
-                                        pAb, ViewFrameTable[frame - 1].FrMagnification);
-                  if (pPosAb->PosDeltaUnit == UnPercent)
-                    delta += PixelValue (pPosAb->PosDistDelta, UnPercent,
-                                         (PtrAbstractBox) dim, 0);
-                  else
-                    delta += PixelValue (pPosAb->PosDistDelta, pPosAb->PosDeltaUnit,
-                                         pAb, ViewFrameTable[frame - 1].FrMagnification);
+                  delta = GetPixelValue (pPosAb->PosDistance, pPosAb->PosUnit, dim,
+                                         pAb, zoom);
+                  delta += GetPixelValue (pPosAb->PosDistDelta, pPosAb->PosDeltaUnit, dim,
+                                          pAb, zoom);
                 }
               val = pRefBox->BxXOrg + delta;
               switch (pPosAb->PosRefEdge)
@@ -3233,18 +3161,10 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                     dim = 0;
                   else
                     dim = pAb->AbEnclosing->AbBox->BxH;
-                  if (pPosAb->PosUnit == UnPercent)
-                    delta = PixelValue (pPosAb->PosDistance, UnPercent,
-                                        (PtrAbstractBox) dim, 0);
-                  else
-                    delta = PixelValue (pPosAb->PosDistance, pPosAb->PosUnit,
-                                        pAb, ViewFrameTable[frame - 1].FrMagnification);
-                  if (pPosAb->PosDeltaUnit == UnPercent)
-                    delta += PixelValue (pPosAb->PosDistDelta, UnPercent,
-                                         (PtrAbstractBox) dim, 0);
-                  else
-                    delta += PixelValue (pPosAb->PosDistDelta, pPosAb->PosDeltaUnit,
-                                         pAb, ViewFrameTable[frame - 1].FrMagnification);
+                  delta = GetPixelValue (pPosAb->PosDistance, pPosAb->PosUnit, dim,
+                                         pAb, zoom);
+                  delta += GetPixelValue (pPosAb->PosDistDelta, pPosAb->PosDeltaUnit, dim,
+                                          pAb, zoom);
                 }
               val = pRefBox->BxYOrg + delta;
               switch (pPosAb->PosRefEdge)
@@ -3314,11 +3234,10 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 void ComputeAxisRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool horizRef)
 {
   PtrBox              pRefBox;
-  PtrAbstractBox      pRefAb;
-  PtrAbstractBox      pAb;
+  PtrAbstractBox      pRefAb, pAb;
   BoxEdge             refEdge, localEdge;
   int                 x, y, dist;
-  int                 t, b, l, r;
+  int                 t, b, l, r, dim;
 
   pRefAb = rule.PosAbRef;
   pAb = pBox->BxAbstractBox;
@@ -3369,31 +3288,19 @@ void ComputeAxisRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool hori
       refEdge = rule.PosRefEdge;
       localEdge = rule.PosEdge;
       /* Convert the distance value */
-      if (rule.PosUnit == UnPercent)
+      dim = 0;
+      if (pAb->AbEnclosing && pAb->AbEnclosing->AbBox)
         {
           if (horizRef)
-            dist = PixelValue (rule.PosDistance, UnPercent,
-                               (PtrAbstractBox) ( pAb->AbEnclosing->AbBox->BxW), 0);
+            dim = pAb->AbEnclosing->AbBox->BxW;
           else
-            dist = PixelValue (rule.PosDistance, UnPercent,
-                               (PtrAbstractBox) (pAb->AbEnclosing->AbBox->BxH), 0);
+            dim = pAb->AbEnclosing->AbBox->BxH;
         }
-      else
-        dist = PixelValue (rule.PosDistance, rule.PosUnit, pAb,
-                           ViewFrameTable[frame - 1].FrMagnification);
-      if (rule.PosDeltaUnit == UnPercent)
-        {
-          if (horizRef)
-            dist += PixelValue (rule.PosDistDelta, UnPercent,
-                                (PtrAbstractBox) (pAb->AbEnclosing->AbBox->BxW), 0);
-          else
-            dist += PixelValue (rule.PosDistDelta, UnPercent,
-                                (PtrAbstractBox) (pAb->AbEnclosing->AbBox->BxH), 0);
-        }
-      else
-        dist += PixelValue (rule.PosDistDelta, rule.PosDeltaUnit, pAb,
+      dist = GetPixelValue (rule.PosDistance, rule.PosUnit, dim, pAb,
                             ViewFrameTable[frame - 1].FrMagnification);
-      
+      dist += GetPixelValue (rule.PosDistDelta, rule.PosDeltaUnit, dim, pAb,
+                             ViewFrameTable[frame - 1].FrMagnification);
+
       pRefBox = pRefAb->AbBox;
       if (pRefBox == NULL)
         {
