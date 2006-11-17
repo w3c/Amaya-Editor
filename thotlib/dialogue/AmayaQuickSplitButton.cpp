@@ -112,16 +112,20 @@ void AmayaQuickSplitButton::OnActivate( wxMouseEvent& event )
 void AmayaQuickSplitButton::ShowQuickSplitButton( bool show )
 {
   wxSize new_size;
-  if (m_Mode == wxAMAYA_QS_HORIZONTAL )
+  if (m_Mode == wxAMAYA_QS_HORIZONTAL)
+    {
     if (show)
       new_size = wxSize( GetSize().GetWidth(), m_Width );
     else
       new_size = wxSize( GetSize().GetWidth(), 0 );
-  else if (m_Mode == wxAMAYA_QS_VERTICAL )
+    }
+  else if (m_Mode == wxAMAYA_QS_VERTICAL || m_Mode == wxAMAYA_QS_TOOLS)
+    {
     if (show)
       new_size = wxSize( m_Width, GetSize().GetHeight() );
     else
       new_size = wxSize( 0, GetSize().GetHeight() );
+    }
 
   // re layout the top sizer and assign the new size
   wxSizer * p_SizerTop = GetContainingSizer();
