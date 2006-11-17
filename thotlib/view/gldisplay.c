@@ -1007,6 +1007,7 @@ void DrawRectangle (int frame, int thick, int style, int x, int y, int width,
     return;
 
   y += FrameTable[frame].FrTopMargin;
+  th = (float)thick /2.;
   /* pattern = 4 => we're drawing a math empty place*/
   if (pattern == 4)
     {
