@@ -5836,15 +5836,16 @@ void  ParseCSSRule (Element element, PSchema tsch, PresentationContext ctxt,
   while (*cssRule != EOS)
     {
       cssRule = SkipBlanksAndComments (cssRule);
-      if (*cssRule == '#')
+      if (*cssRule == ';' || *cssRule < 0x20 ||
+          *cssRule == 0xA0)
+        cssRule++;
+      else if (*cssRule < 0x41 || *cssRule > 0x7A ||
+          (*cssRule > 0x5A && *cssRule < 0x61))
         {
           end = SkipProperty (cssRule, FALSE);
           CSSParseError ("Invalid property", cssRule, end);
           cssRule = end; 
         }
-      else if (*cssRule < 0x41 || *cssRule > 0x7A ||
-          (*cssRule > 0x5A && *cssRule < 0x60))
-        cssRule++;
       else if (*cssRule != EOS)
         {
           found = FALSE;
