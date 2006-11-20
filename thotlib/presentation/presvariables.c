@@ -1339,7 +1339,7 @@ ThotBool NewVariable (int varNum, PtrSSchema pSS, PtrPSchema pSchP,
               (pEl->ElParent && pEl->ElStructSchema != pEl->ElParent->ElStructSchema))
             {
               uri = GiveCurrentNsUri (pDoc, pEl);
-              if (uri != NULL)
+              if (uri)
                 {
                   CopyStringToBuffer ((unsigned char *)" xmlns=\"", pAb->AbText, &l);
                   pAb->AbVolume += l;

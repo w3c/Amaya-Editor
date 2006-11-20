@@ -24,7 +24,7 @@ ELEMENTS
    MathML:
 	BEGIN
   ElemExport.Pre -> CheckValidProfile;
-  ElemPaste.Post -> ElementPasted;
+  ElemPaste.Post -> MathElementPasted;
 	END;
 
    DOCTYPE:

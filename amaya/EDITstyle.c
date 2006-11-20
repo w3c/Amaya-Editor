@@ -1785,6 +1785,8 @@ void ApplyClass (Document doc, View view)
 #endif /* _GTK */
 
   TtaGiveFirstSelectedElement (doc, &el, &firstSelectedChar, &lastSelectedChar);
+  if (DocumentURLs[doc] == NULL)
+    return;
   if (el)
     {
       /* if the selected element is read-only, do nothing */

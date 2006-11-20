@@ -187,6 +187,11 @@ ELEMENTS
 	ElemExport.Pre -> CheckGenerator;
 	END;
 
+   MathML:
+	BEGIN
+  ElemExport.Pre -> CheckValidProfile;
+  ElemPaste.Post -> MathElementPasted;
+	END;
 
 ATTRIBUTES
 

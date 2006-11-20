@@ -1835,7 +1835,10 @@ void InitFormAnswer (Document document, View view, const char *auth_realm,
                                 TtaGetViewFrame (document, view),
                                 (char *)auth_realm, server);
   if (created)
-    TtaShowDialogue (BaseDialog + FormAnswer, FALSE);
+    {
+      TtaSetDialoguePosition ();
+      TtaShowDialogue (BaseDialog + FormAnswer, FALSE);
+    }
   TtaWaitShowDialogue ();
 #endif /* _WX */
 #ifdef _WINGUI
@@ -2241,6 +2244,7 @@ static void InitOpenDocForm (Document doc, View view, char *name, char *title,
   ThotBool          remote;
 #ifdef _WX
   wxString          homedir;
+  ThotBool          created;
 #else /* _WX */
 #ifdef _WINDOWS
   char             *d;
@@ -2325,28 +2329,22 @@ static void InitOpenDocForm (Document doc, View view, char *name, char *title,
   CreateOpenDocDlgWindow (TtaGetViewFrame (doc, view), title, s, name,
                           DocSelect, DirSelect, docType);
 #endif /* _WINGUI */
-
 #ifdef _WX
-  {
-    ThotBool created;
-    /* here we pass also 'URL_list', because we want generate a combobox choice list */
-    created = CreateOpenDocDlgWX( BaseDialog + OpenForm,
-                                  TtaGetViewFrame (doc, view), title, URL_list, s, name,
-                                  DocSelect, DirSelect, docType, NewFile );
-    if (created)
-      {
-        TtaSetDialoguePosition ();
-        TtaShowDialogue (BaseDialog + OpenForm, TRUE);
-      }
-  }
+  /* here we pass also 'URL_list', because we want generate a combobox choice list */
+  created = CreateOpenDocDlgWX( BaseDialog + OpenForm,
+                                TtaGetViewFrame (doc, view), title, URL_list, s, name,
+                                DocSelect, DirSelect, docType, NewFile );
+  if (created)
+    {
+      TtaSetDialoguePosition ();
+      TtaShowDialogue (BaseDialog + OpenForm, TRUE);
+    }
 #endif /* _WX */
-
-#if defined(_GTK)
+#ifdef _GTK
   TtaSetTextForm (BaseDialog + URLName, s);
   TtaSetDialoguePosition ();
   TtaShowDialogue (BaseDialog + OpenForm, TRUE);
-#endif /* defined(_GTK) */
-  
+#endif /* _GTK */
 }
 
 /*----------------------------------------------------------------------

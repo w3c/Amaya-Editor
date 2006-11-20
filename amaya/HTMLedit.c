@@ -3256,6 +3256,14 @@ void CheckPastedElement (Element el, Document doc, int info, int position,
             }
         }
     }
+#ifdef _SVG
+  else if (!strcmp (name, "SVG") && elType.ElTypeNum == SVG_EL_SVG)
+    {
+      /* Set the MathML namespace declaration */
+      TtaSetUriSSchema (elType.ElSSchema, SVG_URI);
+      TtaSetANamespaceDeclaration (doc, el, NULL, SVG_URI);
+    }
+#endif /* _SVG */
 
   if (anchor)
     /* an anchor element has been pasted. Nested anchors are forbidden in HTML.

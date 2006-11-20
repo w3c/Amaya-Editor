@@ -6570,6 +6570,14 @@ void MathElementPasted (NotifyElement *event)
   elType = TtaGetElementType (event->element);
   if (elType.ElTypeNum == MathML_EL_MathML)
     {
+      /* Check pseudo-paragraphs */
+      parent = TtaGetParent (event->element);
+      if (parent)
+        {
+          elTypeParent = TtaGetElementType (parent);
+          if (!strcmp (TtaGetSSchemaName (elTypeParent.ElSSchema),  "HTML"))
+            CheckPseudoParagraph (event->element, doc);
+        }
       /* It is the <math> element */
       /* Set the IntDisplaystyle attribute according to the context */     
       SetDisplaystyleMathElement (event->element, doc);
@@ -6690,11 +6698,6 @@ ThotBool MathElementWillBeDeleted (NotifyElement *event)
         }
     }
   
-  /* Free the namespace declaration associated with the MathML root */
-  elType = TtaGetElementType (event->element);
-  if (elType.ElTypeNum == MathML_EL_MathML)
-    TtaFreeElemNamespaceDeclarations (event->document, event->element);
-      
   return FALSE; /* let Thot perform normal operation */
 }
 
@@ -6714,6 +6717,11 @@ void MathElementDeleted (NotifyElement *event)
   int		 i, newTypeNum;
   ThotBool      oldStructureChecking;
 
+  /* Free the namespace declaration associated with the MathML root */
+  elType = TtaGetElementType (LastDeletedElement);
+  if (elType.ElTypeNum == MathML_EL_MathML)
+    TtaFreeElemNamespaceDeclarations (event->document, LastDeletedElement);
+      
   if (event->info == 1 || event->info == 2)
     /* call from Undo command or Return key. Don't do anything */
     return;
