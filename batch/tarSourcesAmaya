@@ -115,7 +115,7 @@ ${LIBWWWDIR}/config/makexprt.pl \
 ${LIBWWWDIR}/config/missing \
 ${LIBWWWDIR}/config/mkinstalldirs \
 ${LIBWWWDIR}/config/winConfigure.pl \
-${LIBWWWDIR}/config/depcomp\
+${LIBWWWDIR}/config/depcomp \
 ${REDLANDDIR} \
 ${WXWIDGETS}/art \
 ${WXWIDGETS}/build \
@@ -459,11 +459,19 @@ ${WXWIDGETS} \
 ${MESA} \
 ${FREETYPE}
 
+echo "Generating only the externals librairies source tar file"
+$TAR $DEST/amaya-fullsrc-$AMAYAVERSION.tgz \
+${LIBWWWDIR} \
+${REDLANDDIR} \
+${WXWIDGETS} \
+${MESA} \
+${FREETYPE} \
+${AMAYADIR} 
 
 echo "Generating the complete source tar file"
 cd ..
 AMAYADIR=Amaya$AMAYAVERSION
-$TAR $DEST/amaya-fullsrc-$AMAYAVERSION.tgz \
+$TAR $DEST/amaya-sources-$AMAYAVERSION.tgz \
 ${AMAYADIR} 
 
 cd $TARDIR
