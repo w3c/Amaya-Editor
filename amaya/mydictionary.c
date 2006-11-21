@@ -17,6 +17,7 @@
 DicDictionary CreateDictionary ()
 {
 	DicDictionary dic = (DicDictionary)TtaGetMemory (sizeof (sDictionary));
+  memset (dic, 0, sizeof (sDictionary));
 	dic->first = NULL;
 	dic->iter = NULL;
 	return dic;
@@ -155,10 +156,11 @@ DicElement Add (DicDictionary dic, const char * key, const DicElement el)
 	if (!rec)
     {
       //The element should be the first
-      newRec          = (Record) TtaGetMemory (sizeof (sRecord));
-      newRec->key     = (char *) TtaStrdup (key);
+      newRec = (Record) TtaGetMemory (sizeof (sRecord));
+      memset (newRec, 0, sizeof (sRecord));
+      newRec->key = (char *) TtaStrdup (key);
       newRec->element = el;
-      newRec->next    = dic->first;
+      newRec->next = dic->first;
       dic->first = newRec;
     }
 
@@ -171,11 +173,12 @@ DicElement Add (DicDictionary dic, const char * key, const DicElement el)
 
 	else
     { //The element should be insered just after rec
-      newRec          = (Record) TtaGetMemory (sizeof (sRecord));
-      newRec->key     = (char *) TtaStrdup (key);
+      newRec = (Record) TtaGetMemory (sizeof (sRecord));
+      memset (newRec, 0, sizeof (sRecord));
+      newRec->key = (char *) TtaStrdup (key);
       newRec->element = el;
-      newRec->next    = rec->next;
-      rec->next       = newRec;
+      newRec->next = rec->next;
+      rec->next = newRec;
     }
 
 	return result;

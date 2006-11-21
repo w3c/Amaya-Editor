@@ -5395,7 +5395,7 @@ Document GetAmayaDoc (char *urlname, char *form_data,
                       Document doc, Document baseDoc, int method,
                       ThotBool history, TTcbf *cbf, void *ctx_cbf)
 {
-  Document            newdoc, refdoc;
+  Document            newdoc = 0, refdoc;
   CSSInfoPtr          css;
   PInfoPtr            pInfo;
   AmayaDoc_context   *ctx = NULL;

@@ -34,14 +34,14 @@ XTigerTemplate NewXTigerTemplate (const char *templatePath, const ThotBool addPr
 #ifdef TEMPLATES
 	XTigerTemplate t = (XTigerTemplate)TtaGetMemory (sizeof (_XTigerTemplate));
 	
-	t->isLibrary    = FALSE;
-	t->libraries    = CreateDictionary ();
-	t->elements		  = CreateDictionary ();
+	t->isLibrary = FALSE;
+	t->libraries = CreateDictionary ();
+	t->elements = CreateDictionary ();
 	t->simpleTypes	= CreateDictionary ();
-	t->components	  = CreateDictionary ();
-	t->unions		    = CreateDictionary ();
-	t->doc          = -1;
-  t->users        = 0;
+	t->components = CreateDictionary ();
+	t->unions = CreateDictionary ();
+	t->doc = -1;
+  t->users = 0;
   t->isPredefined = FALSE;
 
 	if (addPredefined)

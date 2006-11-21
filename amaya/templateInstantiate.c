@@ -108,6 +108,8 @@ void RegisterURLs(Document doc, Element el)
 void  CreateInstance(char *templatePath, char *instancePath)
 {
 #ifdef TEMPLATES
+  Document doc = 0;
+  DocumentType docType;
   ThotBool alreadyViewing = FALSE;
   int      alreadyOnDoc = 0;
 
@@ -116,8 +118,8 @@ void  CreateInstance(char *templatePath, char *instancePath)
     //The template must be loaded before calling this function
     return;
 
-  Document doc = GetTemplateDocument (t);
-  DocumentType docType = DocumentTypes[doc];
+  doc = GetTemplateDocument (t);
+  docType = DocumentTypes[doc];
   while (alreadyOnDoc < DocumentTableLength-1 && !alreadyViewing)
     {
       alreadyOnDoc++;
@@ -557,14 +559,15 @@ static void ParseTemplate (XTigerTemplate t, Element el, Document doc,
 {
 #ifdef TEMPLATES
 	AttributeType attType;
-	Attribute att;
-	Element aux; //Needed when deleting trees
-	char *name;
-	ElementType type = TtaGetElementType(el);
+	Attribute     att;
+	Element       aux, child; //Needed when deleting trees
+	char         *name;
+	ElementType   elType = TtaGetElementType (el);
 	
-	if (!strcmp (TtaGetSSchemaName(type.ElSSchema),"Template"))
+  name = TtaGetSSchemaName (elType.ElSSchema);
+	if (!strcmp (name, "Template"))
     {
-      switch(type.ElTypeNum)
+      switch(elType.ElTypeNum)
         {
         case Template_EL_head :
           //Remove it and all of its children
@@ -574,25 +577,25 @@ static void ParseTemplate (XTigerTemplate t, Element el, Document doc,
           break;
         case Template_EL_component :
           //Replace by a use				
-          attType.AttrSSchema = TtaGetElementType(el).ElSSchema;
+          attType.AttrSSchema = elType.ElSSchema;
           attType.AttrTypeNum = Template_ATTR_name;
           
-          name = GetAttributeStringValue(el, Template_ATTR_name);		  		  
-          TtaRemoveAttribute(el, TtaGetAttribute(el, attType), doc);
+          name = GetAttributeStringValue (el, Template_ATTR_name);		  		  
+          TtaRemoveAttribute (el, TtaGetAttribute (el, attType), doc);
           if (NeedAMenu (el, doc))
-            TtaChangeElementType(el, Template_EL_useEl);
+            TtaChangeElementType (el, Template_EL_useEl);
           else
-            TtaChangeElementType(el, Template_EL_useSimple);
+            TtaChangeElementType (el, Template_EL_useSimple);
           
           attType.AttrTypeNum = Template_ATTR_types;
-          att = TtaNewAttribute(attType);
-          TtaAttachAttribute(el, att, doc);
-          TtaSetAttributeText(att, name, el, doc);
+          att = TtaNewAttribute (attType);
+          TtaAttachAttribute (el, att, doc);
+          TtaSetAttributeText (att, name, el, doc);
           
           attType.AttrTypeNum = Template_ATTR_currentType;
-          att = TtaNewAttribute(attType);
-          TtaAttachAttribute(el, att, doc);		  
-          TtaSetAttributeText(att, name, el, doc);
+          att = TtaNewAttribute (attType);
+          TtaAttachAttribute (el, att, doc);		  
+          TtaSetAttributeText (att, name, el, doc);
           
           break;
         case Template_EL_option :
@@ -622,12 +625,12 @@ static void ParseTemplate (XTigerTemplate t, Element el, Document doc,
         }
     }
 	
-	Element child = TtaGetFirstChild(el);
-	while(child!=NULL)
+	child = TtaGetFirstChild (el);
+	while (child)
     {
       aux = child;
-      TtaNextSibling(&aux);
-      ParseTemplate(t, child, doc, loading);
+      TtaNextSibling (&aux);
+      ParseTemplate (t, child, doc, loading);
       child = aux;
     }
 #endif /* TEMPLATES */
@@ -714,6 +717,19 @@ void DoInstanceTemplate (char *templatename)
   strcat (buffer, "\"");
   TtaSetTextContent (text, (unsigned char*)buffer,  Latin_Script, doc);
   TtaSetStructureChecking (TRUE, doc);
+
+  // update the document title
+	if (!strcmp (s, "HTML"))
+    {
+      elType.ElTypeNum = HTML_EL_TITLE;
+      elFound = TtaSearchTypedElement (elType, SearchInTree, root);
+      if (elFound)
+        {
+          elFound = TtaGetFirstChild (elFound);
+          TtaSetTextContent (elFound, (unsigned char *)Answer_text,
+                             TtaGetDefaultLanguage (), doc);
+        }
+    }
 #endif /* TEMPLATES */
 }
 
