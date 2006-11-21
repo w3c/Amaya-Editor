@@ -1189,13 +1189,14 @@ void MathSelectionChanged (NotifyElement *event)
   ----------------------------------------------------------------------*/
 static int GetOccurrences(int val, Document doc)
 {
-  ThotBool created;
+#ifdef _WX
+  ThotBool  created;
+  char     *msg = TtaGetMessage (AMAYA, AM_NUMBER_OCCUR);
 
   Math_occurences = val;
-#ifdef _WX
   created =  CreateNumDlgWX (MathsDialogue + FormMaths, 0,
                              TtaGetViewFrame (doc, 1),
-                  "Number of occurences", "Number of occurences", val);
+                             msg, msg, val);
   if (created)
     {
       TtaSetDialoguePosition ();
@@ -1204,7 +1205,7 @@ static int GetOccurrences(int val, Document doc)
       TtaWaitShowDialogue ();
     }
 #endif  /* _WX */
-  return Math_occurences;
+  return val;
 }
 
 /*----------------------------------------------------------------------
@@ -6698,7 +6699,11 @@ ThotBool MathElementWillBeDeleted (NotifyElement *event)
         }
     }
   
-  return FALSE; /* let Thot perform normal operation */
+ /* Free the namespace declaration associated with the MathML root */
+  elType = TtaGetElementType (event->element);
+  if (elType.ElTypeNum == MathML_EL_MathML)
+    TtaFreeElemNamespaceDeclarations (event->document, event->element);
+   return FALSE; /* let Thot perform normal operation */
 }
 
 /*----------------------------------------------------------------------
@@ -6716,12 +6721,7 @@ void MathElementDeleted (NotifyElement *event)
   Attribute     attr;
   int		 i, newTypeNum;
   ThotBool      oldStructureChecking;
-
-  /* Free the namespace declaration associated with the MathML root */
-  elType = TtaGetElementType (LastDeletedElement);
-  if (elType.ElTypeNum == MathML_EL_MathML)
-    TtaFreeElemNamespaceDeclarations (event->document, LastDeletedElement);
-      
+     
   if (event->info == 1 || event->info == 2)
     /* call from Undo command or Return key. Don't do anything */
     return;

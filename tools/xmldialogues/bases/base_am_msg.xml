@@ -5196,4 +5196,7 @@
 <label define="AM_TEMPLATES">
 <message xml:lang="en">Templates</message>
 <message xml:lang="fr">Modèles</message></label>
+<label define="AM_NUMBER_OCCUR">
+<message xml:lang="en">Number of occurrences</message>
+<message xml:lang="fr">Nombre d'occurrences</message></label>
 <label define="AMAYA_MSG_MAX"></label></messages></base>
