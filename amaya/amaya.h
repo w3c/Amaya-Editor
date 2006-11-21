@@ -465,6 +465,7 @@ typedef enum
   docSVG,
   docMath,
   docXml,
+  docTemplate,
   docLibrary,
   docBookmark,
   docTypeMax
