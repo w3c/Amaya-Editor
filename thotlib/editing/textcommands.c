@@ -211,6 +211,8 @@ static void LocateLeafBox (int frame, View view, int x, int y, int xDelta,
            y + yDelta < pFrame->FrYOrg + pFrame->FrAbstractBox->AbBox->BxNext->BxYOrg)
     {
       /* try to select up to the top of the current displayed frame */
+      if (y + yDelta - pFrame->FrYOrg < -26)
+        VerticalScroll (frame, y + yDelta - pFrame->FrYOrg, TRUE);
       do
         {
           /* scroll as long as the top of the view is not reached */
@@ -233,6 +235,8 @@ static void LocateLeafBox (int frame, View view, int x, int y, int xDelta,
             y + yDelta > pFrame->FrAbstractBox->AbBox->BxPrevious->BxYOrg + pFrame->FrAbstractBox->AbBox->BxPrevious->BxHeight))
     {
       /* try to select down to the bottom of the current displayed frame */
+      if (y + yDelta - pFrame->FrYOrg - h > 26)
+        VerticalScroll (frame, y + yDelta - pFrame->FrYOrg - h, TRUE);
       do
         {
           /* scroll as long as the bottom of the view is not reached */
