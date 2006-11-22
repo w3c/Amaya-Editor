@@ -4221,7 +4221,7 @@ Document LoadDocument (Document doc, char *pathname,
           DocumentURLs[newdoc] = NULL;
         }
       /* if the document was already loaded, warn the user */
-      if (IsDocumentLoaded (s, form_data))
+      if (method != CE_TEMPLATE && IsDocumentLoaded (s, form_data))
         InitConfirm3L (newdoc, 1, TtaGetMessage (AMAYA, AM_DOUBLE_LOAD),
                        TtaGetMessage (AMAYA, AM_UNSAVE), NULL, FALSE);
       DocumentURLs[newdoc] = s;
