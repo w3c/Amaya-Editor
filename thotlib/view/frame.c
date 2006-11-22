@@ -209,7 +209,7 @@ void DefBoxRegion (int frame, PtrBox pBox, int xstart, int xstop,
                  pAb->AbPrevious &&
                  pAb->AbPrevious->AbPresentationBox)
             pAb = pAb->AbPrevious;
-          if (pAb->AbLeafType == LtGraphics)
+          if (pAb->AbLeafType == LtGraphics && pAb->AbBox)
             pBox = pAb->AbBox;
         }
 #ifdef _GL
@@ -231,7 +231,7 @@ void DefBoxRegion (int frame, PtrBox pBox, int xstart, int xstop,
                     pClipAb = pAb;
                   pAb = pAb->AbEnclosing;
                 }
-              if (pClipAb != pBox->BxAbstractBox)
+              if (pClipAb != pBox->BxAbstractBox && pClipAb->AbBox)
                 {
                   /* clip the enclosing limits */
                   xstart = xstop = ystart = ystop = -1;
@@ -349,7 +349,7 @@ void UpdateBoxRegion (int frame, PtrBox pBox, int dx, int dy, int dw, int dh)
                     pClipAb = pAb;
                   pAb = pAb->AbEnclosing;
                 }
-              if (pClipAb != pBox->BxAbstractBox)
+              if (pClipAb != pBox->BxAbstractBox && pClipAb->AbBox)
                 {
                   /* clip the enclosing limits */
                   dx = dy = dw = dh = 0;
