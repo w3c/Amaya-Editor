@@ -214,7 +214,6 @@ ThotBool CheckGenerator (NotifyElement *event)
   int                length;
   ElementType        elType;
 
-
   elType = TtaGetElementType (event->element);
   attrType.AttrSSchema = elType.ElSSchema;
   attrType.AttrTypeNum = HTML_ATTR_meta_name;
@@ -238,6 +237,7 @@ ThotBool CheckGenerator (NotifyElement *event)
               if (ptr == NULL)
                 /* it's not a pure Amaya document -> remove the meta element */
                 return TRUE;
+#ifdef IV
               else
                 {
                   /* update the version */
@@ -248,6 +248,7 @@ ThotBool CheckGenerator (NotifyElement *event)
                   TtaSetAttributeText (attr, buff, event->element,
                                        event->document);
                 }
+#endif /* IV */
             }
         }
     }
