@@ -577,7 +577,7 @@ void TtaRemoveFinalSpaces (Element element, Document document,
 {
   PtrElement          pEl, pElAsc;
   PtrTextBuffer       pBuf, pPrev;
-  int                 i, delta;
+  int                 i, delta, last;
   ThotBool            still;
 
   UserErrorCode = 0;
@@ -610,10 +610,23 @@ void TtaRemoveFinalSpaces (Element element, Document document,
         {
           while (still)
             {
-              /* there is almost one space at the end of the text element */
+              pPrev = pBuf->BuPrevious;
+              if (pPrev)
+                last = pPrev->BuLength - 1;
+              else
+                last = 0;
               i = pBuf->BuLength - 1;
+              /* there is almost one space at the end of the text element ? */
               while (i >= 0 &&
-                     (pBuf->BuContent[i] == SPACE || pBuf->BuContent[i] == EOL))
+                     (pBuf->BuContent[i] == SPACE ||
+                      pBuf->BuContent[i] == __CR__ || pBuf->BuContent[i] == EOL) &&
+                     // keep the last space
+                     ((i > 0 &&
+                       (pBuf->BuContent[i-1] == SPACE ||
+                        pBuf->BuContent[i-1] == __CR__ || pBuf->BuContent[i] == EOL)) ||
+                      (i == 0 && pPrev &&
+                       (pPrev->BuContent[last] == SPACE ||
+                        pPrev->BuContent[last] == __CR__ || pPrev->BuContent[last] == EOL))))
                 {
                   i--;
                   delta++;
@@ -622,7 +635,6 @@ void TtaRemoveFinalSpaces (Element element, Document document,
               if (still)
                 {
                   /* remove the last buffer */
-                  pPrev = pBuf->BuPrevious;
                   if (pPrev)
                     {
                       pPrev->BuNext = NULL;

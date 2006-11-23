@@ -80,6 +80,7 @@ static ThotBool     NewInsert;
 #include "memory_f.h"
 #include "picture_f.h"
 #include "presentationapi_f.h"
+#include "registry_f.h"
 #include "scroll_f.h"
 #include "structcommands_f.h"
 #include "structcreation_f.h"
@@ -2653,7 +2654,7 @@ ThotBool InsertChar (int frame, CHAR_T c, int keyboard)
   char                script, oldscript;
   ThotBool            beginOfBox, toDelete;
   ThotBool            toSplit, toSplitForScript = FALSE;
-  ThotBool            saveinsert, rtl;
+  ThotBool            saveinsert, rtl, insert_nbsp;
   ThotBool            notification = FALSE;
   ThotBool            status, selprev, selNext = FALSE;
 
@@ -2875,7 +2876,18 @@ ThotBool InsertChar (int frame, CHAR_T c, int keyboard)
                                       pBuffer = DeleteBuffer (pBuffer, frame);
                                   }
 			    
-                              /* Initialise la detruction d'un caractere */
+                              if (c == SPACE && pBuffer && pBuffer->BuLength)
+                                {
+                                  // A space is deleted
+                                  TtaGetEnvBoolean ("INSERT_NBSP", &insert_nbsp);
+                                  if (insert_nbsp &&
+                                      pBuffer->BuContent[pBuffer->BuLength-1] == NBSP)
+                                    {
+                                      pBuffer->BuContent[pBuffer->BuLength-1] = SPACE;
+                                      c = NBSP;
+                                    }
+                                }
+                              /* Now remove the character */
                               charsDelta = -1;
                               pix = 0;
                               adjust = 0;

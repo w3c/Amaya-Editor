@@ -1212,17 +1212,15 @@ Element XmlLastLeafInElement (Element el)
   RemoveTrailingSpaces
   Removes all trailing spaces at the end of the element.
   ----------------------------------------------------------------------*/
-static void      RemoveTrailingSpaces (Element el)
+static void RemoveTrailingSpaces (Element el)
 {
   int           length;
   ElementType   elType;
   Element       lastLeaf, lastChild;
-  AttributeType attrType;
-  Attribute     attr = NULL;
 
   /* Search the last leaf in the element's tree */
   lastLeaf = XmlLastLeafInElement (el);   
-  if (lastLeaf != NULL)
+  if (lastLeaf)
     {
       elType = TtaGetElementType (lastLeaf);
       if (elType.ElTypeNum == 1)
@@ -1230,29 +1228,12 @@ static void      RemoveTrailingSpaces (Element el)
         {
           length = TtaGetElementVolume (lastLeaf);
           if (length > 0)
-            {
-              /* Search for an Entity attribute  */
-              attrType.AttrSSchema = elType.ElSSchema;
-              if (strcmp ((char *)currentParserCtxt->SSchemaName, "HTML") == 0)
-                attrType.AttrTypeNum = HTML_ATTR_EntityName;
-              else if (strcmp ((char *)currentParserCtxt->SSchemaName,
-                               "MathML") == 0)
-                attrType.AttrTypeNum = MathML_ATTR_EntityName;
-              else
-                {
-                  attrType.AttrTypeNum = 0;
-                  attr = NULL;
-                }
-              if (attrType.AttrTypeNum != 0)
-                attr = TtaGetAttribute (lastLeaf, attrType);
-
-              /* Don't suppress trailing spaces for an entity element */
-              if (attr == NULL)
-                TtaRemoveFinalSpaces (lastLeaf, XMLcontext.doc,
-                                      RemoveTrailingSpace);
-            }
+            TtaRemoveFinalSpaces (lastLeaf, XMLcontext.doc,
+                                  RemoveTrailingSpace);
         }
     }
+
+  /* create an empty text element after the math element */
   if (strcmp ((char *)currentParserCtxt->SSchemaName, "HTML") == 0)
     {
       lastChild = TtaGetLastChild (el);
@@ -1260,7 +1241,7 @@ static void      RemoveTrailingSpaces (Element el)
         {
           elType = TtaGetElementType (lastChild);
           if (elType.ElTypeNum == MathML_EL_MathML &&
-              strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0)
+              !strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML"))
             /* the last child of this HTML element is a <math> element */
             {
               /* create an empty text element after the math element */

@@ -1714,19 +1714,27 @@ void CheckCSSLink (Element el, Document doc, SSchema schema)
   ----------------------------------------------------------------------*/
 static ThotBool RemoveEndingSpaces (Element el)
 {
-  int              length, nbspaces;
+  int              length;
   ElementType      elType;
   Element          lastLeaf;
-  char           lastChar[2];
   ThotBool         endingSpacesDeleted;
 
   endingSpacesDeleted = FALSE;
-  if (IsBlockElement (el))
+  elType = TtaGetElementType (el);
+  if (!TtaIsLeaf (elType))
     /* it's a block element. */
     {
       /* Search the last leaf in the element's tree */
       lastLeaf = LastLeafInElement (el);
-      if (lastLeaf != NULL)
+      if (elType.ElTypeNum == HTML_EL_Preformatted)
+        el = NULL;
+      else
+        {
+          // check if the element is within a preformatted
+          elType.ElTypeNum = HTML_EL_Preformatted;
+          el = TtaGetTypedAncestor (el, elType);
+        }
+      if (el == NULL && lastLeaf)
         {
           elType = TtaGetElementType (lastLeaf);
           if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
@@ -1734,31 +1742,7 @@ static ThotBool RemoveEndingSpaces (Element el)
             {
               length = TtaGetTextLength (lastLeaf);
               if (length > 0)
-                {
-                  /* count ending spaces */
-                  nbspaces = 0;
-                  do
-                    {
-                      TtaGiveSubString (lastLeaf, (unsigned char *)lastChar, length,
-                                        1);
-                      if (lastChar[0] == SPACE)
-                        {
-                          length--;
-                          nbspaces++;
-                        }
-                    }
-                  while (lastChar[0] == SPACE && length > 0);
-                  if (nbspaces > 0)
-                    {
-                      if (length == 0)
-                        /* empty TEXT element */
-                        TtaDeleteTree (lastLeaf, HTMLcontext.doc);
-                      else
-                        /* remove the ending spaces */
-                        TtaDeleteTextContent (lastLeaf, length + 1,
-                                              nbspaces, HTMLcontext.doc);
-                    }
-                }
+                TtaRemoveFinalSpaces (lastLeaf, HTMLcontext.doc, TRUE);
             }
         }
       endingSpacesDeleted = TRUE;

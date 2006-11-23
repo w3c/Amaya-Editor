@@ -3715,20 +3715,31 @@ void CheckNewLines (NotifyOnTarget *event)
                         selChanged = TRUE;
                       }
                 }
-              else
+              else if (insert_nbsp || prev)
                 /* Keep that space */
                 {
                   if (i > j)
                     content[j] = content[i];
                   j++;
                 }
+              else
+                // a space is removed
+                changed = TRUE;
             }
           else
             {
               if (content[j-1] != SPACE)
-                /* the previous character is not a space nor a newline.
-                   Keep that space */
-                content[j++] = SPACE;
+                {
+                  // the previous character is not a space nor a newline.
+                  if (i + 1 < length && content[i+1] == NBSP)
+                    {
+                    content[j++] = NBSP;
+                    changed = TRUE;
+                    }
+                  else
+                    // keep that space
+                    content[j++] = SPACE;
+                }
               else if (insert_nbsp)
                 {
                   /* replace the previous space by a nbsp */
