@@ -71,11 +71,14 @@ void VerticalScroll (int frame, int delta, int selection)
               add = FALSE;
               /* Au plus, la limite du document + le debordement vertical*/
               GetSizesFrame (frame, &lframe, &hframe);
+              max = srcbox->BxYOrg + srcbox->BxHeight - pFrame->FrYOrg - hframe;
+              if (!pAb->AbTruncatedTail && delta > max)
+                {
+                  JumpIntoView (frame, 100);
+                  return;
+                }
               if (pAb->AbTruncatedTail)
                 max = delta;
-              else
-                max = srcbox->BxYOrg + srcbox->BxHeight -
-                  pFrame->FrYOrg - hframe;
               if (pAb->AbTruncatedHead)
                 y = delta;
               else
@@ -228,13 +231,11 @@ void HorizontalScroll (int frame, int delta, int selection)
     }
 }
 
-
+#ifdef IV
 /*----------------------------------------------------------------------
-  ShowYPosition force la position du bord haut de la boi^te        
-  racine de la vue dans sa framee^tre.                    
-  La parame`tre frame de'signe la fenetree^tre de la vue. 
-  Le parame`tre y donne la position demande'e et le       
-  parame`tre haut la hauteur de la fenetree^tre.          
+  ShowYPosition forces the root box position in the frame.
+  The parameter y gives the requested poosition
+  The parameter height give the frame height
   ----------------------------------------------------------------------*/
 void ShowYPosition (int frame, int y, int height)
 {
@@ -298,7 +299,7 @@ void ShowYPosition (int frame, int y, int height)
         }
     }
 }
-
+#endif
 
 /*----------------------------------------------------------------------
   PositionAbsBox rend la position de l'image abstraite de la fenetre^tre      
@@ -574,7 +575,7 @@ void ComputeDisplayedChars (int frame, int *Xpos, int *Ypos, int *width, int *he
   0 for the top of the window
   1 for the middle of the window
   2 for the bottom of the window
-  When the postion = 0, percent give the percent from the top of the
+  When the position = 0, percent gives the percent from the top of the
   window.
   scrollUpdate is TRUE when scrollbars must be recomputed
   ----------------------------------------------------------------------*/
