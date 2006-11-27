@@ -1783,12 +1783,10 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
                 }
 #endif /* _GL */
             }
-          else if (c == 0x210E /* planckh */ ||
-                   c == 0x2146 /* DifferentialD */ ||
-                   c == 0x2147 /* ExponentialE */ ||
-                   c == 0x2148 /* ImaginaryI */)
-            {
 #ifdef _GL
+          else if (c >= 0x210E /* planckh */ &&
+                   c <= 0x22FF /* ImaginaryI */)
+            {
               /* use STIX fonts here */
               code = 'E';
               car = GetStixFontAndIndex (c, fontset, &pfont);
@@ -1805,7 +1803,13 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
                   else /* ExponentialE */
                     car = 101;
                 }
+            }
 #else /* _GL */
+          else if (c == 0x210E /* planckh */ ||
+                   c == 0x2146 /* DifferentialD */ ||
+                   c == 0x2147 /* ExponentialE */ ||
+                   c == 0x2148 /* ImaginaryI */)
+            {
               code = '1'; /* West Europe Latin */
               pfont = &(fontset->Font_1);
 #ifdef _WINDOWS
@@ -1821,8 +1825,8 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
                 c = 104;
               else /* ExponentialE */
                 c = 101;
-#endif /* _GL */
             }
+#endif /* _GL */
           else if (c == 0x152  /*oe*/     || c == 0x153  /*OE*/ ||
                    c == 0x178  /*ydiaeresis*/ ||
                    c == 0x2C6  /*circ*/   || c == 0x2DC  /*tilde*/ ||
