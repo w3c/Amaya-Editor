@@ -12,14 +12,13 @@ LIBZ = @LIBZ@
 include Options
 
 LIBWWW	   = libwww
-LIBRAPTOR  = libraptor
 REDLAND    = redland
 LIBJPEG	   = libjpeg
 LIBPNG	   = libpng
 
 #MKP: adding davlib
 SUBDIRS	= @SUBDIRS@ tools thotlib batch drawlib indexlib annotlib amaya thot @DAVDIR@
-EXTRA_SUBDIRS= misc $(LIBRAPTOR) $(REDLAND) $(LIBWWW) $(WX_BUILDDIR) $(GL_BUILDDIR)
+EXTRA_SUBDIRS= misc $(REDLAND) $(LIBWWW) $(WX_BUILDDIR) $(GL_BUILDDIR)
 
 prefix = @prefix@
 exec_prefix = @exec_prefix@
@@ -292,51 +291,6 @@ libwww_install : libwww_install_modules libwww_install_standard
 
 libwww : libwww_config libwww_make
 		@($(ECHO) "libwww is installed")
-
-#
-# Rules to build the raptor RDF package
-#
-
-libraptor_config: @MAKERAPTOR@ force
-	@(if [ ! -e "$(THOTDIR)/$(LIBRAPTOR)" ] ; then \
-	      $(ECHO) "Error raptor dir not found at $(THOTDIR)/$(LIBRAPTOR)" ; \
-	  fi)
-	@(if [ ! -e "$(THOTDIR)/$(LIBRAPTOR)/expat" ] ; then \
-	      libwwwdir="$(THOTDIR)/../$(LIBWWW)" ; \
-	      echo $$libwwwdir ; \
-	      $(LN_S) "$$libwwwdir/modules/expat" "$(THOTDIR)/$(LIBRAPTOR)/expat" ; \
-	  fi)
-	 @(if [ ! -d "$(LIBRAPTOR)" ] ; then \
-		$(MKDIR) $(LIBRAPTOR) ; \
-          fi)
-	 @(localdir=`pwd` ; raptordir="$$localdir/../$(LIBRAPTOR)" ; \
-	  cd $(LIBRAPTOR) ; unset LANG; \
-	  if [ ! -f Makefile -o ! -f config.h ] ; then \
-	  	CFLAGS="-I$$raptordir/expat/lib" \
-			$$raptordir/configure \
-			--build=@build_alias@ --host=@host_alias@ --target=@target_alias@ \
-			--without-shared \
-			--with-expat ; \
-		$(ECHO) "patching libraptor/libtool because -flat_namespace option is missing and do not compile on macosx" ; \
-		$(CP) libtool libtool.orig ; \
-		$(SED) "s/\(allow_undefined_flag=\"-undefined suppress\)/\1 -flat_namespace/" \
-			libtool.orig > libtool ; \
-		$(ECHO) "libraptor/libtool patched !" ; \
-		$(ECHO) "libraptor is configured" ; \
-	  fi)
-
-libraptor_make: @MAKERAPTOR@ force
-	@(localdir=`pwd`; \
-	  cd $(LIBRAPTOR) ; \
-	  if [ ! -e .libs/libraptor.a -a -e libraptor.la ] ; then \
-             $(RM) libraptor.la ; \
-          fi ; \
-	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS) -I$$localdir/../$(LIBRAPTOR)/expat/lib " \
-		  CPPFLAGS="$(CPPFLAGS)" \
-	)
-
-libraptor: @MAKERAPTOR@ libraptor_config libraptor_make
-	@($(ECHO) "libraptor is installed")
 
 #
 # Rules to build the redland RDF library
