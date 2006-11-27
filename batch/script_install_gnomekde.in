@@ -64,7 +64,7 @@ $ECHO "Name=Amaya @APP_VER@" >> $GNOMEKDEDIR/applications/amaya-@APP_VER@.deskto
 $ECHO "Comment=Edit the Web" >> $GNOMEKDEDIR/applications/amaya-@APP_VER@.desktop
 $ECHO "Comment[fr]=Editez le Web" >> $GNOMEKDEDIR/applications/amaya-@APP_VER@.desktop
 $ECHO "Categories=Application;Network;Development;" >> $GNOMEKDEDIR/applications/amaya-@APP_VER@.desktop
-$ECHO "Exec=$PREFIX/$AMAYA_INSTALLDIR/$AMAYAGUI/bin/amaya %u" >> $GNOMEKDEDIR/applications/amaya-@APP_VER@.desktop
+$ECHO "Exec=env XLIB_SKIP_ARGB_VISUALS=1 $PREFIX/$AMAYA_INSTALLDIR/$AMAYAGUI/bin/amaya %u" >> $GNOMEKDEDIR/applications/amaya-@APP_VER@.desktop
 $ECHO "Icon=amaya-@APP_VER@.png" >> $GNOMEKDEDIR/applications/amaya-@APP_VER@.desktop
 $ECHO "Terminal=false" >> $GNOMEKDEDIR/applications/amaya-@APP_VER@.desktop
 $ECHO "Type=Application" >> $GNOMEKDEDIR/applications/amaya-@APP_VER@.desktop
