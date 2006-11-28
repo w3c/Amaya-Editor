@@ -12,9 +12,6 @@ extern void VerticalScroll ( int frame,
 extern void HorizontalScroll ( int frame,
                                int delta,
                                int selection );
-extern void ShowYPosition ( int frame,
-                            int y,
-                            int height );
 extern int PositionAbsBox ( int frame,
                             int *nbCharBegin,
                             int *nbCharEnd,
@@ -44,9 +41,6 @@ extern void VerticalScroll ( int frame,
 extern void HorizontalScroll ( int frame,
                                  int delta,
                                  int selection );
-extern void ShowYPosition ( int frame,
-                              int y,
-                              int height );
 extern int PositionAbsBox ( int frame,
                               int *nbCharBegin,
                               int *nbCharEnd,

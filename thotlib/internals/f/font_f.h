@@ -32,9 +32,6 @@ extern int LogicalValue ( int val,
                           int zoom );
 extern int FontBase ( ThotFont font );
 extern int BoxFontBase ( SpecFont specfont );
-extern int CharRelSize ( int height,
-                         unsigned char symb,
-                         int n );
 extern int FontRelSize ( int size );
 extern int ThotFontPointSize ( int size );
 extern void GetFontIdentifier ( char script,
@@ -115,9 +112,6 @@ extern int LogicalValue ( int val,
                             int zoom );
 extern int FontBase ( ThotFont font );
 extern int BoxFontBase ( SpecFont specfont );
-extern int CharRelSize ( int height,
-                           unsigned char symb,
-                           int n );
 extern int FontRelSize ( int size );
 extern int ThotFontPointSize ( int size );
 extern void GetFontIdentifier ( char script,

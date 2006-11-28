@@ -37,6 +37,7 @@
 
 #include "font_f.h"
 #include "stix_f.h"
+#include "units_f.h"
 
 #define THOT_EXPORT extern
 #include "boxes_tv.h"
@@ -261,6 +262,7 @@ static void DrawCompoundBraceStix (int frame, int x, int y, int l, int h,
 
   fillChar = 0x50;
   size = size + (size * ViewFrameTable[frame-1].FrMagnification / 10);
+  size = PixelToPoint (size);
   font = (ThotFont)LoadStixFont (8, size);
   xm = x + ((l - CharacterWidth (topChar, font)) / 2);
   yf = y + CharacterAscent (topChar, font);
@@ -354,6 +356,7 @@ static void DrawCompoundExtendedStix (int frame, int x, int y, int l, int h,
   ThotFont        font;
 
   size = size + (size * ViewFrameTable[frame-1].FrMagnification / 10);
+  size = PixelToPoint (size);
   font = (ThotFont)LoadStixFont (8, size);
   if (l < 0)
     xm = x;
@@ -468,7 +471,8 @@ void DrawStixIntegral (int frame, int x, int y, int l, int h,
   int             delta;
   ThotFont        font;
 
-  font = (ThotFont)LoadStixFont (6, CharRelSize (h, 0x21, 6));
+  size = PixelToPoint (h);
+  font = (ThotFont)LoadStixFont (6, size);
   if (CharacterHeight (0x21, font) > (3 * h) / 4 ||
       (type != 0 && type != 2))
     {
@@ -526,10 +530,10 @@ void DrawStixIntegral (int frame, int x, int y, int l, int h,
    ----------------------------------------------------------------------*/
 static int StixIntegralWidth (int height, int type)
 {
-  int i = 0, size;
+  int             i = 0, size;
   ThotFont        font;
   
-  size = CharRelSize (height, 0x21, 6);
+  size = PixelToPoint (height);
   font = (ThotFont)LoadStixFont (6, size);  
   if (height < LOW_CHAR)
     {
@@ -577,7 +581,8 @@ void DrawStixBracket (int frame, int x, int y, int l, int h,
   unsigned char   symb;
   ThotFont        font;
 
-  font = (ThotFont)LoadStixFont (7, CharRelSize (h, 36, 7));
+  size = PixelToPoint (h);
+  font = (ThotFont)LoadStixFont (7, size);
   if (CharacterHeight (33, font) > (3 * h) / 4)
     {
       /*  write a single Esstix 7 character: 
@@ -622,7 +627,7 @@ void DrawStixBracket (int frame, int x, int y, int l, int h,
    ----------------------------------------------------------------------*/
 static int StixBracketWidth (int height, SpecFont font)
 {
-  int             i;
+  int             i, size;
   ThotFont        pfont;
 
   GetFontAndIndexFromSpec (32, font, &pfont);
@@ -631,7 +636,8 @@ static int StixBracketWidth (int height, SpecFont font)
     i = CharacterWidth ('(', pfont);
   else
     {
-      pfont = (ThotFont)LoadStixFont (7, CharRelSize (height, 36, 7));
+      size = PixelToPoint (height);
+      pfont = (ThotFont)LoadStixFont (7, size);
       if (height < LOW_HEIGHT)
         i = CharacterWidth (63, pfont);
       else if (height < MID_HEIGHT)
@@ -647,9 +653,7 @@ static int StixBracketWidth (int height, SpecFont font)
   on direction)
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-void DrawStixPointyBracket (int frame,
-                            int x, int y,
-                            int l, int h,
+void DrawStixPointyBracket (int frame, int x, int y, int l, int h,
                             int direction, int size, int fg)
 {
   unsigned char   symb;
@@ -658,7 +662,8 @@ void DrawStixPointyBracket (int frame,
   if (fg < 0)
     return;
 
-  font = (ThotFont)LoadStixFont (7, CharRelSize (h, 41, 7));
+  size = PixelToPoint (h);
+  font = (ThotFont)LoadStixFont (7, size);
   /*  write a single Esstix 7 character:
       61 normal
       33 2 line
@@ -690,15 +695,16 @@ void DrawStixPointyBracket (int frame,
 /* ----------------------------------------------------------------------
    StixPointyBracketWidth
    ----------------------------------------------------------------------*/
-static int StixPointyBracketWidth (int height)
+static int StixPointyBracketWidth (int h)
 {
-  int i;
+  int             i, size;
   ThotFont        font;
 
-  font = (ThotFont)LoadStixFont (7, CharRelSize (height, 41, 7));  
-  if (height < LOW_HEIGHT)
+  size = PixelToPoint (h);
+  font = (ThotFont)LoadStixFont (7, size);  
+  if (h < LOW_HEIGHT)
     i = CharacterWidth (67, font);
-  else if (height < MID_HEIGHT)
+  else if (h < MID_HEIGHT)
     i = CharacterWidth (41, font);
   else 
     i = CharacterWidth (54, font);
@@ -715,7 +721,8 @@ void DrawStixParenthesis (int frame, int x, int y, int l, int h,
   unsigned char   symb;
   ThotFont        font;
 
-  font = (ThotFont)LoadStixFont (7, CharRelSize (h, 33, 7));
+  size = PixelToPoint (h);
+  font = (ThotFont)LoadStixFont (7, size);
   if (CharacterHeight (33, font) > (3 * h) / 4)
     {
       /*  write a single Esstix 7 character: 
@@ -761,7 +768,7 @@ void DrawStixParenthesis (int frame, int x, int y, int l, int h,
    ----------------------------------------------------------------------*/
 static int StixParenthesisWidth (int height, SpecFont font)
 {
-  int          i;
+  int          i, size;
   ThotFont     pfont;
 
   GetFontAndIndexFromSpec (32, font, &pfont);
@@ -770,7 +777,8 @@ static int StixParenthesisWidth (int height, SpecFont font)
     i = CharacterWidth ('(', pfont);
   else
     {
-      pfont = (ThotFont)LoadStixFont (7, CharRelSize (height, 33, 7));  
+      size = PixelToPoint (height);
+      pfont = (ThotFont)LoadStixFont (7, size);  
       if (height < LOW_HEIGHT)
         i = CharacterWidth (61, pfont);
       else if (height < MID_HEIGHT)
@@ -791,7 +799,8 @@ void DrawStixBrace (int frame, int x, int y, int l, int h,
   unsigned char   symb;
   ThotFont        font;
 
-  font = (ThotFont)LoadStixFont (7, CharRelSize (h, 38, 7));
+  size = PixelToPoint (h);
+  font = (ThotFont)LoadStixFont (7, size);
   if (CharacterHeight (38, font) > (3 * h) / 4)
     {
       /*  write a single Esstix 7 character: 
@@ -836,7 +845,7 @@ void DrawStixBrace (int frame, int x, int y, int l, int h,
    ----------------------------------------------------------------------*/
 static int StixBraceWidth (int height, SpecFont font)
 {
-  int i;
+  int             i, size;
   ThotFont        pfont;
 
   GetFontAndIndexFromSpec (32, font, &pfont);
@@ -845,7 +854,8 @@ static int StixBraceWidth (int height, SpecFont font)
     i = CharacterWidth ('(', pfont);
   else
     {
-      pfont = (ThotFont)LoadStixFont (7, CharRelSize (height, 38, 7));
+      size = PixelToPoint (height);
+      pfont = (ThotFont)LoadStixFont (7, size);
       if (height < LOW_HEIGHT)
         i = CharacterWidth (65, pfont);
       else if (height < MID_HEIGHT)
@@ -865,8 +875,8 @@ static void DrawCompoundHorizBraceStix (int frame, int x, int y, int l, int h,
                                         int size, int fg,
                                         int leftChar, int middleChar, int rightChar)
 {
-  int             fillChar, baseline, lWidth, mWidth, rWidth, fWidth,
-    xMiddleChar, gap, xf1, xf2;
+  int             fillChar, baseline, lWidth, mWidth, rWidth, fWidth;
+  int             xMiddleChar, gap, xf1, xf2;
   ThotFont        font;
 
   fillChar = 0x43;
@@ -1068,6 +1078,7 @@ void GiveStixSize (ThotFont pfont, PtrAbstractBox pAb, int *width,
 void GetMathFontFromChar (char typesymb, SpecFont fontset, void **font,
                           int size)
 {
+  size = PixelToPoint (size);
   switch (typesymb)
     {
       /*integral, union...*/
