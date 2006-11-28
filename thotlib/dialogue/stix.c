@@ -61,6 +61,24 @@ typedef struct _MapEntry {
   unsigned char MapIndex;
 } MapEntry;
 
+/* Mapping of Unicode symbols (0x3D0-0x3FF) to esstix fonts */
+int Stix_Greek_Start = 0x3D0;
+MapEntry     Stix_Greek [] = {
+  /* 3Dx */ {0, 0x00}, {11, 0x77}, {11, 0x59}, {0, 0x00},
+  {0, 0x00}, {0, 0x00}, {11, 0x36}, {9, 0x38},
+  {0, 0x00}, {0, 0x00}, {0, 0x00}, {0, 0x00},
+  {0, 0x00}, {0, 0x00}, {0, 0x00}, {0, 0x00},
+  /* 3Ex */ {0, 0x00}, {0, 0x00}, {0, 0x00}, {0, 0x00},
+  {0, 0x00}, {0, 0x00}, {0, 0x00}, {0, 0x00},
+  {0, 0x00}, {0, 0x00}, {0, 0x00}, {0, 0x00},
+  {0, 0x00}, {0, 0x00}, {0, 0x00}, {0, 0x00},
+  /* 3Fx */ {11, 0x38}, {11, 0x39}, {0, 0x00}, {0, 0x00},
+  {0, 0x00}, {0, 0x00}, {0, 0x00}, {0, 0x00},
+  {0, 0x00}, {0, 0x00}, {0, 0x00}, {0, 0x00},
+  {0, 0x00}, {0, 0x00}, {0, 0x00}, {0, 0x00}
+};
+#define Stix_Greek_length sizeof(Stix_Symbs) / sizeof(MapEntry)
+
 /* Mapping of Unicode symbols (0x2100-0x213f) to esstix fonts */
 int Stix_Symbs_Start = 0x2100;
 MapEntry     Stix_Symbs [] = {
@@ -198,7 +216,7 @@ MapEntry     Stix_MathOp2 [] = {
   /* 232x */ {0, 0x00}, {0, 0x00}, {0, 0x00}, {0, 0x00},
   {0, 0x00}, {0, 0x00}, {0, 0x00}, {0, 0x00},
   {0, 0x00}, {7, 0x43}, {7, 0x44}, {0, 0x00},
-  {0, 0x00}, {0, 0x00}, {0, 0x00}, {0, 0x00},
+  {0, 0x00}, {0, 0x00}, {0, 0x00}, {0, 0x00}
 };
 #define Stix_MathOp2_length sizeof(Stix_MathOp2) / sizeof(MapEntry)
 
@@ -1098,7 +1116,13 @@ int GetStixFontAndIndex (int c, SpecFont fontset, ThotFont **font)
   int                frame;
   unsigned int       mask;
 #endif /* _GL */
-  if (c >= Stix_Symbs_Start && c < (int) (Stix_Symbs_Start + Stix_Symbs_length))
+  if (c >= Stix_Greek_Start && c < (int) (Stix_Greek_Start + Stix_Greek_length))
+    {
+      entry = Stix_Greek[c - Stix_Greek_Start];
+      index = (int) (entry.MapIndex);
+      face = (int) (entry.MapFont);
+    }
+  else if (c >= Stix_Symbs_Start && c < (int) (Stix_Symbs_Start + Stix_Symbs_length))
     {
       entry = Stix_Symbs[c - Stix_Symbs_Start];
       index = (int) (entry.MapIndex);
