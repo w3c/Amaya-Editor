@@ -720,14 +720,14 @@ static void AddParenthesis (Element el, Document doc)
 void InsertEmptyConstruct (Element *el, int TypeNum, Document doc)
 {
   ElementType newType;
-  Element empty;
+  Element     empty;
 
-  newType = TtaGetElementType (el[0]);
+  newType = TtaGetElementType (*el);
   newType.ElTypeNum = TypeNum;
 
-  empty = TtaNewTree (doc, newType,"");
-  TtaInsertSibling(empty, el[0], FALSE, doc);
-  el[0] = empty;
+  empty = TtaNewTree (doc, newType, "");
+  TtaInsertSibling (empty, *el, FALSE, doc);
+  *el = empty;
 }
 
 /*----------------------------------------------------------------------
@@ -741,16 +741,16 @@ void InsertSymbol (Element *el, int TypeNum, int symbol, Document doc)
   CHAR_T text[2];
   ThotBool OldStructureChecking = TtaGetStructureChecking (doc);
 
-  newType = TtaGetElementType (el[0]);
+  newType = TtaGetElementType (*el);
   newType.ElTypeNum = TypeNum;
 
   op = TtaNewElement (doc, newType);
-  TtaInsertSibling(op, el[0], FALSE, doc);
+  TtaInsertSibling (op, *el, FALSE, doc);
 
   /* Memo Fred : The symbol have to be SYMBOL_UNIT to be stretchable, but not all the symbols can take this type
      I have to study it a little more... */
 
-  if(symbol == '{' || symbol == '|')
+  if (symbol == '{' || symbol == '|')
     {
       newType.ElTypeNum = MathML_EL_SYMBOL_UNIT;
       child = TtaNewElement (doc, newType);
@@ -769,14 +769,13 @@ void InsertSymbol (Element *el, int TypeNum, int symbol, Document doc)
       TtaSetBufferContent (child, text, TtaGetLanguageIdFromScript('L'), doc);
     }
 
-  el[0] = op;
+  *el = op;
 }
 
 /*----------------------------------------------------------------------
   AttachIntVertStretch
   attach an IntVertStretch attribute to the element el
   ----------------------------------------------------------------------*/
-
 void AttachIntVertStretch(Element el, Document doc)
 {
   ElementType elType = TtaGetElementType (el);
@@ -786,7 +785,7 @@ void AttachIntVertStretch(Element el, Document doc)
   attrType.AttrSSchema = elType.ElSSchema;
   attrType.AttrTypeNum = MathML_ATTR_IntVertStretch;
   attr = TtaGetAttribute (el, attrType);
-  if(!attr)
+  if (!attr)
     {
       attrType.AttrTypeNum = MathML_ATTR_IntVertStretch;
       attr = TtaNewAttribute (attrType);
@@ -830,7 +829,7 @@ void CreateNewMtable (Element el, int NumberCols, int NumberRows, Document doc)
   newType = TtaGetElementType (el);
   elType.ElSSchema = newType.ElSSchema;
 
-  if(newType.ElTypeNum != MathML_EL_MTABLE)
+  if (newType.ElTypeNum != MathML_EL_MTABLE)
     {
       /* If the selection isn't in a MTABLE, create any */
       newType.ElTypeNum = MathML_EL_MTABLE;
@@ -942,7 +941,7 @@ Element SetMFencedAttributes(Element fenced, unsigned char ope, unsigned char cl
   /* Attach open, close and separators attributes */
   attrType.AttrSSchema = elType.ElSSchema;
 
-  if(ope != '(')
+  if (ope != '(')
     {
       attrType.AttrTypeNum = MathML_ATTR_open;
       attr =  TtaNewAttribute (attrType);
@@ -953,7 +952,7 @@ Element SetMFencedAttributes(Element fenced, unsigned char ope, unsigned char cl
       TtaSetAttributeText (attr, (char *)text, fenced, doc);
     }
 
-  if(clo != ')')
+  if (clo != ')')
     {
       attrType.AttrTypeNum = MathML_ATTR_close;
       attr =  TtaNewAttribute (attrType);
@@ -964,7 +963,7 @@ Element SetMFencedAttributes(Element fenced, unsigned char ope, unsigned char cl
       TtaSetAttributeText (attr, (char *)text, fenced, doc);
     }
 
-  if(sep != ',')
+  if (sep != ',')
     {
       attrType.AttrTypeNum = MathML_ATTR_separators;
       attr =  TtaNewAttribute (attrType);
@@ -998,7 +997,8 @@ static void InitializeNewConstruct (Element el, int NumberRows, int NumberCols,
   elType.ElSSchema = newType.ElSSchema;
 
   /* If the new element is a mtable, create this table */
-  if(newType.ElTypeNum == MathML_EL_MTABLE)CreateNewMtable (el, NumberRows, NumberCols, doc);
+  if (newType.ElTypeNum == MathML_EL_MTABLE)
+    CreateNewMtable (el, NumberRows, NumberCols, doc);
 
   /* if the new element is a mspace, create a width attribute  with a default value */
   if (newType.ElTypeNum == MathML_EL_MSPACE)
@@ -1015,8 +1015,9 @@ static void InitializeNewConstruct (Element el, int NumberRows, int NumberCols,
   /* if the new element is a child of a FencedExpression element,
      create the associated FencedSeparator elements */
   parent = TtaGetParent (el);
-  elType = TtaGetElementType (parent);  if (elType.ElTypeNum == MathML_EL_FencedExpression &&
-                                            elType.ElSSchema == newType.ElSSchema)
+  elType = TtaGetElementType (parent);
+  if (elType.ElTypeNum == MathML_EL_FencedExpression &&
+      elType.ElSSchema == newType.ElSSchema)
     RegenerateFencedSeparators (parent, doc, TRUE);
 
   /* insert placeholders before and/or after the new element if
@@ -1216,8 +1217,8 @@ static int GetOccurrences(int val, Document doc)
 static void CreateMathConstruct (int construct, ...)
 {
   Document           doc;
-  Element            sibling, el, row, child, leaf, new_, next, foreignObj,
-    altText, selected, op;
+  Element            sibling, el, row, child, leaf, new_, next, foreignObj;
+  Element            altText, selected, op, previous;
   ElementType        newType, elType, parentType;
   Attribute          attr;
   AttributeType      attrType;
@@ -1229,10 +1230,10 @@ static void CreateMathConstruct (int construct, ...)
   int                c1, i, len, profile, selectedchild;
   va_list            varpos;
   ThotBool           oldStructureChecking;
-  ThotBool	         before, ParBlock, emptySel, ok, insertSibling,
-    displayTableForm, registered;
+  ThotBool	         before, ParBlock, emptySel, ok, insertSibling;
+  ThotBool           displayTableForm, registered;
   
-  if(construct==0)
+  if (construct == 0)
     return;
   /* Prepare to read other variables */
   va_start(varpos,construct);
@@ -1659,7 +1660,7 @@ static void CreateMathConstruct (int construct, ...)
             }
         }
     }
-  
+  // Generate a new construct inside/before/after the sibling element
   elType = TtaGetElementType (sibling);
   newType.ElSSchema = mathSchema;
   selectedchild = 0;
@@ -1982,7 +1983,7 @@ static void CreateMathConstruct (int construct, ...)
             {  
               TtaGiveFirstSelectedElement (doc, &child, &c1, &i);
               /* complete the creation if necessary */
-              if(construct == 26 || construct == 30)
+              if (construct == 26 || construct == 30)
                 {
                   /* Accents ; exposant */
                   int symbol = va_arg(varpos, int);
@@ -2011,11 +2012,11 @@ static void CreateMathConstruct (int construct, ...)
           leaf = TtaGetFirstChild (el);
           new_ = leaf;
           InsertEmptyConstruct(&new_, msubsup ? MathML_EL_MSUBSUP : MathML_EL_MUNDER, doc);
-          TtaRemoveTree (leaf, doc);
-
+          TtaDeleteTree (leaf, doc);
           child = TtaGetFirstChild (new_);
    
-          if(msubsup)AttachIntVertStretch(new_, doc);
+          if (msubsup)
+            AttachIntVertStretch(new_, doc);
 
           selected = child;
           TtaNextSibling (&selected);
@@ -2023,9 +2024,9 @@ static void CreateMathConstruct (int construct, ...)
           leaf = TtaGetFirstChild (child);
           op = leaf;
           InsertSymbol (&op, MathML_EL_MO, 8747, doc);
-          TtaRemoveTree (leaf, doc);
+          TtaDeleteTree (leaf, doc);
 
-          InsertEmptyConstruct(&new_, MathML_EL_MROW, doc);
+          InsertEmptyConstruct (&new_, MathML_EL_MROW, doc);
         }
       else if (construct == 21)
         {
@@ -2036,18 +2037,18 @@ static void CreateMathConstruct (int construct, ...)
           InsertEmptyConstruct(&child, MathML_EL_MUNDEROVER, doc);
           new_ = child;
           InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
-          TtaRemoveTree (leaf, doc);
+          TtaDeleteTree (leaf, doc);
 
           new_ = TtaGetFirstChild (new_);
           leaf = TtaGetFirstChild (new_);
           op = leaf;
           InsertSymbol (&op, MathML_EL_MO, symbol, doc);
-          TtaRemoveTree (leaf, doc);
+          TtaDeleteTree (leaf, doc);
 
           selected = new_;
           TtaNextSibling (&selected);
         }
-      else if(construct == 22)
+      else if (construct == 22)
         {
           /* Simple Symbol ; Simple Text */
           int symbol = va_arg(varpos, int);
@@ -2055,10 +2056,11 @@ static void CreateMathConstruct (int construct, ...)
           leaf = TtaGetFirstChild (el);
           child = leaf;
 
-          if(symbol == 0)InsertText (&child, MathML_EL_MI, va_arg(varpos, unsigned char*), doc);
-          else InsertSymbol (&child, MathML_EL_MI, symbol, doc);
-
-          TtaRemoveTree (leaf, doc);
+          if (symbol == 0)
+            InsertText (&child, MathML_EL_MI, va_arg(varpos, unsigned char*), doc);
+          else
+            InsertSymbol (&child, MathML_EL_MI, symbol, doc);
+          TtaDeleteTree (leaf, doc);
 
           /* create a caret */
           newType.ElTypeNum = MathML_EL_TEXT_UNIT;
@@ -2073,16 +2075,16 @@ static void CreateMathConstruct (int construct, ...)
           int symbol = va_arg(varpos, int);
           leaf = TtaGetFirstChild (el);
           child = leaf;
-          InsertEmptyConstruct(&child, MathML_EL_MUNDER, doc);
+          InsertEmptyConstruct (&child, MathML_EL_MUNDER, doc);
           new_ = child;
-          InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
-          TtaRemoveTree (leaf, doc);
+          InsertEmptyConstruct (&child, MathML_EL_MROW, doc);
+          TtaDeleteTree (leaf, doc);
 
           new_ = TtaGetFirstChild (new_);
           leaf = TtaGetFirstChild (new_);
           op = leaf;
           InsertSymbol (&op, MathML_EL_MO, symbol, doc);
-          TtaRemoveTree (leaf, doc);
+          TtaDeleteTree (leaf, doc);
 
           selected = new_;
           TtaNextSibling (&selected);
@@ -2097,31 +2099,35 @@ static void CreateMathConstruct (int construct, ...)
           child = leaf;
 
           InsertSymbol (&child, MathML_EL_MF, '{', doc);
-          AttachIntVertStretch(child, doc);
+          AttachIntVertStretch (child, doc);
 
-          InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
-          TtaRemoveTree (leaf, doc);
+          InsertEmptyConstruct (&child, MathML_EL_MROW, doc);
+          TtaDeleteTree (leaf, doc);
 
-          leaf = TtaGetFirstChild (child);TtaRemoveTree (leaf, doc);
+          leaf = TtaGetFirstChild (child);TtaDeleteTree (leaf, doc);
           CreateNewMtable (child, 1, number, doc);
           selected = SelectMtableCell(child, 0, 0);
         } 
-      else if(construct == 26 || construct == 30 || construct == 31 || construct == 33)
+      else if (construct == 26 || construct == 30 || construct == 31 || construct == 33)
         {
           /* Accents ; Exposant ; Symbol sub ; Symbol under */
           int symbol = va_arg(varpos, int);
-          if (selectedchild == 1) child = TtaGetFirstChild (el); else child = TtaGetLastChild (el); 
+          if (selectedchild == 1)
+            child = TtaGetFirstChild (el);
+          else
+            child = TtaGetLastChild (el); 
           leaf = TtaGetFirstChild (child);
           child = leaf;
 
           /* -1 : for the inverse construct where exposant is a number */
-          if(symbol <=0)
+          if (symbol <=0)
             InsertText (&child, ((symbol == -1) ? MathML_EL_MN : MathML_EL_MI), va_arg(varpos, unsigned char*), doc);
-          else InsertSymbol (&child, MathML_EL_MI, symbol, doc);
+          else
+            InsertSymbol (&child, MathML_EL_MI, symbol, doc);
 
-          TtaRemoveTree (leaf, doc);
+          TtaDeleteTree (leaf, doc);
         }
-      else if(construct == 27)
+      else if (construct == 27)
         {
           /* Binary operation/relation */
           int symbol = va_arg(varpos, int);
@@ -2130,41 +2136,47 @@ static void CreateMathConstruct (int construct, ...)
 
           InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
 
-          if(symbol == 0)InsertText (&child, MathML_EL_MO, va_arg(varpos, unsigned char*), doc);
-          else InsertSymbol (&child, MathML_EL_MO, symbol, doc);
+          if (symbol == 0)
+            InsertText (&child, MathML_EL_MO, va_arg(varpos, unsigned char*), doc);
+          else
+            InsertSymbol (&child, MathML_EL_MO, symbol, doc);
         
           InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
 
-          TtaRemoveTree (leaf, doc);
+          TtaDeleteTree (leaf, doc);
         }
-      else if(construct == 23)
+      else if (construct == 23)
         {
           /* Unary operation/relation */
           int par, symbol = va_arg(varpos, int);
           leaf = TtaGetFirstChild (el);
           child = leaf;
 
-          if(symbol != '!')
+          if (symbol != '!')
             {
-              if(symbol == 0)InsertText (&child, MathML_EL_MO, va_arg(varpos, unsigned char*), doc);
-              else InsertSymbol (&child, MathML_EL_MO, symbol, doc);
+              if (symbol == 0)
+                InsertText (&child, MathML_EL_MO, va_arg(varpos, unsigned char*), doc);
+              else 
+                InsertSymbol (&child, MathML_EL_MO, symbol, doc);
             }
 
           par = va_arg(varpos, int);
-          if(par)InsertSymbol (&child, MathML_EL_MF, '(', doc);
+          if (par)
+            InsertSymbol (&child, MathML_EL_MF, '(', doc);
           InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
-          if(par)InsertSymbol (&child, MathML_EL_MF, ')', doc);
+          if (par)
+            InsertSymbol (&child, MathML_EL_MF, ')', doc);
 
-          if(symbol == '!')
+          if (symbol == '!')
             {
               InsertSymbol (&child, MathML_EL_MO, symbol, doc);
               selectedchild = 0;
             }
 
-          TtaRemoveTree (leaf, doc);
-          if(par)selectedchild = 2;
+          TtaDeleteTree (leaf, doc);
+          if (par)selectedchild = 2;
         }
-      else if(construct == 28)
+      else if (construct == 28)
         {
           /* Congru */
           leaf = TtaGetFirstChild (el);
@@ -2175,58 +2187,60 @@ static void CreateMathConstruct (int construct, ...)
           InsertSymbol (&child, MathML_EL_MF, '(', doc);
           InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
           InsertSymbol (&child, MathML_EL_MF, ')', doc);
-          TtaRemoveTree (leaf, doc);
+          TtaDeleteTree (leaf, doc);
         }
-      else if(construct == 29)
+      else if (construct == 29)
         {
           /* Forall, exists */
           leaf = TtaGetFirstChild (el);
           child = leaf;
           InsertSymbol (&child, MathML_EL_MO, va_arg(varpos, int), doc);
-          if(va_arg(varpos, int))
+          if (va_arg(varpos, int))
             {
             InsertSymbol (&child, MathML_EL_MO, '!', doc);
             selectedchild = 2;
             }
           InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
           InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
-          TtaRemoveTree (leaf, doc);
+          TtaDeleteTree (leaf, doc);
         }
-      else if(construct == 32)
+      else if (construct == 32)
         {/* combination */
           child = SetMFencedAttributes(el, '(', ')', 0, doc);
 
           leaf = TtaGetFirstChild (child);
           CreateNewMtable (child, 1, 2, doc);
           selected = SelectMtableCell(child, 0, 1);
-          TtaRemoveTree (leaf, doc);
+          TtaDeleteTree (leaf, doc);
         }
-      else if(construct == 34 || construct == 41)
+      else if (construct == 34 || construct == 41)
         {
           /* operator with an under element and an empty square after */
           leaf = TtaGetFirstChild (el);
           child = leaf;
           InsertEmptyConstruct (&child, (construct == 34 ? MathML_EL_MUNDER : MathML_EL_MSUB), doc);
 
-          TtaRemoveTree (leaf, doc);
+          TtaDeleteTree (leaf, doc);
 
           new_ = TtaGetFirstChild (child); 
           selected = TtaGetLastChild(child);
 
           leaf = TtaGetFirstChild (new_);
           op = leaf;
-          if(construct == 34)InsertText (&op, MathML_EL_MO, va_arg(varpos, unsigned char*), doc);
-          else InsertSymbol (&op, MathML_EL_MO, va_arg(varpos, int), doc);
-          TtaRemoveTree (leaf, doc);
+          if (construct == 34)
+            InsertText (&op, MathML_EL_MO, va_arg(varpos, unsigned char*), doc);
+          else
+            InsertSymbol (&op, MathML_EL_MO, va_arg(varpos, int), doc);
+          TtaDeleteTree (leaf, doc);
 
           InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
         }
-      else if(construct == 35)
+      else if (construct == 35)
         {
           /* n-ary operation/relation */
           int symbol = va_arg(varpos, int);
           unsigned char *symbol_name;
-          if(symbol == 0)symbol_name = va_arg(varpos, unsigned char*);
+          if (symbol == 0)symbol_name = va_arg(varpos, unsigned char*);
 
           /* ask how many the user want */
           int number = GetOccurrences (5, doc);
@@ -2234,15 +2248,17 @@ static void CreateMathConstruct (int construct, ...)
           leaf = TtaGetFirstChild (el);
           child = leaf;
           InsertEmptyConstruct (&child, MathML_EL_MROW, doc);
-          TtaRemoveTree (leaf, doc);
+          TtaDeleteTree (leaf, doc);
           for(i = 0 ; i < number; i++)
             {
-              if(symbol == 0)InsertText (&child, MathML_EL_MO, symbol_name, doc);
-              else InsertSymbol (&child, MathML_EL_MO, symbol, doc);
+              if (symbol == 0)
+                InsertText (&child, MathML_EL_MO, symbol_name, doc);
+              else
+                InsertSymbol (&child, MathML_EL_MO, symbol, doc);
               InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
             }
         }
-      else if(construct == 36)
+      else if (construct == 36)
         {/* selector */
 
           /* ask number of coordonnates */
@@ -2252,21 +2268,22 @@ static void CreateMathConstruct (int construct, ...)
           leaf = TtaGetFirstChild (child);
           child = leaf;
           InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
-          TtaRemoveTree (leaf, doc);
+          TtaDeleteTree (leaf, doc);
 
           leaf = TtaGetFirstChild (child);
           child = leaf;
-          for(i = 0 ; i < number; i++)
+          for (i = 0 ; i < number; i++)
             {
-              if(i)InsertSymbol (&child, MathML_EL_MO, ',', doc);          
+              if (i)
+                InsertSymbol (&child, MathML_EL_MO, ',', doc);          
               InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
             }
-          TtaRemoveTree (leaf, doc);
+          TtaDeleteTree (leaf, doc);
         }
-      else if(construct == 37)
+      else if (construct == 37)
         {/* couple,  n-uple */
           int number = va_arg(varpos, int);
-          if(number != 2)
+          if (number != 2)
             {/* ask how many the user want */
               number = GetOccurrences (5, doc);
             }
@@ -2275,26 +2292,27 @@ static void CreateMathConstruct (int construct, ...)
           leaf = TtaGetFirstChild (new_);
           child = leaf;
           InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
-          TtaRemoveTree (leaf, doc);
+          TtaDeleteTree (leaf, doc);
           selected = child;
-          for(i = 1 ; i < number; i++)InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
+          for (i = 1 ; i < number; i++)
+            InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
 
           CreateFencedSeparators (new_, doc, FALSE);
         }
-      else if(construct == 38)
+      else if (construct == 38)
         {/* set/list separation */
           int ope = va_arg(varpos, int), clo = va_arg(varpos, int);
           new_ = SetMFencedAttributes(el, ope, clo, '|', doc);
           leaf = TtaGetFirstChild (new_);
           child = leaf;
           InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
-          TtaRemoveTree (leaf, doc);
+          TtaDeleteTree (leaf, doc);
           selected = child;
           InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
 
           CreateFencedSeparators (new_, doc, FALSE);
         }
-      else if(construct == 39)
+      else if (construct == 39)
         {/* set/list extension ; vectorrow */
           int ope = va_arg(varpos, int), clo = va_arg(varpos, int);
           /* ask how many the user want */
@@ -2304,23 +2322,24 @@ static void CreateMathConstruct (int construct, ...)
           leaf = TtaGetFirstChild (new_);
           child = leaf;
           InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
-          TtaRemoveTree (leaf, doc);
+          TtaDeleteTree (leaf, doc);
           selected = child;
-          for(i = 1 ; i < number; i++)InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
+          for (i = 1 ; i < number; i++)
+            InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
 
           CreateFencedSeparators (new_, doc, FALSE);
         }
-      else if(construct == 40)
+      else if (construct == 40)
         {/* card/abs/floor/ceiling */
           int ope = va_arg(varpos, int), clo = va_arg(varpos, int);
           leaf = TtaGetFirstChild (el);
           child = leaf;
           InsertSymbol (&child, MathML_EL_MO, ope, doc);
-          TtaRemoveTree (leaf, doc);
+          TtaDeleteTree (leaf, doc);
           InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
           InsertSymbol (&child, MathML_EL_MO, clo, doc);
         }
-      else if(construct == 42)
+      else if (construct == 42)
         {/* fence2 */
           unsigned char ope, clo;
           /* ask the user what characters he wants */
@@ -2328,11 +2347,11 @@ static void CreateMathConstruct (int construct, ...)
           leaf = TtaGetFirstChild (el);
           child = leaf;
           InsertSymbol (&child, MathML_EL_MO, ope, doc);
-          TtaRemoveTree (leaf, doc);
+          TtaDeleteTree (leaf, doc);
           InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
           InsertSymbol (&child, MathML_EL_MO, clo, doc);
         }
-      else if(construct == 43)
+      else if (construct == 43)
         {
           /* diagonalintersection ; limtendsto ; tendstotendsto */
           int symbol = va_arg(varpos, int);
@@ -2341,27 +2360,31 @@ static void CreateMathConstruct (int construct, ...)
           leaf = TtaGetFirstChild (child);
           child = leaf;
 
-          if(symbol == 0)InsertText (&child, MathML_EL_MO, va_arg(varpos, unsigned char*), doc);
-          else InsertSymbol (&child, MathML_EL_MO, symbol, doc);
+          if (symbol == 0)
+            InsertText (&child, MathML_EL_MO, va_arg(varpos, unsigned char*), doc);
+          else
+            InsertSymbol (&child, MathML_EL_MO, symbol, doc);
 
-          TtaRemoveTree (leaf, doc);
+          TtaDeleteTree (leaf, doc);
 
           child = TtaGetLastChild (el); 
           leaf = TtaGetFirstChild (child);
           child = leaf;
           InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
-          TtaRemoveTree (leaf, doc);
+          TtaDeleteTree (leaf, doc);
 
           leaf = TtaGetFirstChild (child);
           child = leaf;
           InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
-          if(symbol2 == 0)InsertText (&child, MathML_EL_MO, va_arg(varpos, unsigned char*), doc);
-          else InsertSymbol (&child, MathML_EL_MO, symbol2, doc);
+          if (symbol2 == 0)
+            InsertText (&child, MathML_EL_MO, va_arg(varpos, unsigned char*), doc);
+          else
+            InsertSymbol (&child, MathML_EL_MO, symbol2, doc);
           InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
 
-          TtaRemoveTree (leaf, doc);
+          TtaDeleteTree (leaf, doc);
         }
-      else if(construct == 44)
+      else if (construct == 44)
         { /* elementary classical functions */
           leaf = TtaGetFirstChild (el);
           child = leaf;
@@ -2369,9 +2392,9 @@ static void CreateMathConstruct (int construct, ...)
           InsertSymbol(&child, MathML_EL_MI, 'f', doc);
           InsertSymbol (&child, MathML_EL_MO, 8289, doc); // apply function 
           InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
-          TtaRemoveTree (leaf, doc);
+          TtaDeleteTree (leaf, doc);
         }
-      else if(construct == 45)
+      else if (construct == 45)
         { /* lambda constuct */
           leaf = TtaGetFirstChild (el);
           child = leaf;
@@ -2381,20 +2404,20 @@ static void CreateMathConstruct (int construct, ...)
           InsertSymbol(&child, MathML_EL_MO, ',', doc);
           InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
           InsertSymbol(&child, MathML_EL_MF, ')', doc);
-          TtaRemoveTree (leaf, doc);
+          TtaDeleteTree (leaf, doc);
         }
-      else if(construct == 46)
+      else if (construct == 46)
         { /* quotient */
           leaf = TtaGetFirstChild (el);
           child = leaf;
           InsertSymbol (&child, MathML_EL_MO, 8970, doc);
-          TtaRemoveTree (leaf, doc);
+          TtaDeleteTree (leaf, doc);
           InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
           InsertSymbol(&child, MathML_EL_MO, '/', doc);
           InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
           InsertSymbol (&child, MathML_EL_MO, 8971, doc);
         }
-      else if(construct == 47)
+      else if (construct == 47)
         { /* map construct */
 
           /* a blank for the name of the function */
@@ -2402,14 +2425,14 @@ static void CreateMathConstruct (int construct, ...)
           child = leaf;
           InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
           selected = TtaGetFirstChild(child);
-          TtaRemoveTree (leaf, doc);
+          TtaDeleteTree (leaf, doc);
 
           InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
-          leaf = TtaGetFirstChild (child);TtaRemoveTree (leaf, doc);
+          leaf = TtaGetFirstChild (child);TtaDeleteTree (leaf, doc);
           InsertSymbol (&child, MathML_EL_MO, '|', doc);
           AttachIntVertStretch(child, doc);
           InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
-          leaf = TtaGetFirstChild (child);TtaRemoveTree (leaf, doc);
+          leaf = TtaGetFirstChild (child);TtaDeleteTree (leaf, doc);
           CreateNewMtable (child, 1, 2, doc);
 
           /* first arrow */ 
@@ -2419,7 +2442,7 @@ static void CreateMathConstruct (int construct, ...)
           InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
           InsertSymbol (&child, MathML_EL_MO, 8594, doc);
           InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
-          TtaRemoveTree (leaf, doc);
+          TtaDeleteTree (leaf, doc);
 
           /* second arrow */
           leaf = SelectMtableCell(new_, 0, 1);
@@ -2427,18 +2450,18 @@ static void CreateMathConstruct (int construct, ...)
           InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
           InsertSymbol (&child, MathML_EL_MO, 8614, doc);
           InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
-          TtaRemoveTree (leaf, doc);
+          TtaDeleteTree (leaf, doc);
         }
-      else if(construct == 48)
+      else if (construct == 48)
         { /* complexcartesian */
           int ibefore = va_arg(varpos, int); 
           leaf = TtaGetFirstChild (el);
           child = leaf;
 
           InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
-          TtaRemoveTree (leaf, doc);
+          TtaDeleteTree (leaf, doc);
           InsertSymbol(&child, MathML_EL_MO, '+', doc);
-          if(ibefore)
+          if (ibefore)
             {
               InsertSymbol(&child, MathML_EL_MI, 8520, doc); // i
               InsertSymbol (&child, MathML_EL_MO, 8290, doc);// invisible times
@@ -2451,19 +2474,19 @@ static void CreateMathConstruct (int construct, ...)
               InsertSymbol(&child, MathML_EL_MI, 8520, doc); // i
             }
         }
-      else if(construct == 49)
+      else if (construct == 49)
         { /* complexpolar */
           new_ = TtaGetFirstChild (el);
           leaf = TtaGetFirstChild (new_);
           child = leaf;
           InsertSymbol(&child, MathML_EL_MI, 8494, doc); // e
-          TtaRemoveTree (leaf, doc);
+          TtaDeleteTree (leaf, doc);
 
           new_ = TtaGetLastChild (el);
           leaf = TtaGetFirstChild(new_);
           child = leaf;
           InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
-          TtaRemoveTree (leaf, doc);
+          TtaDeleteTree (leaf, doc);
 
           leaf = TtaGetFirstChild(child);
           child = leaf;
@@ -2471,36 +2494,36 @@ static void CreateMathConstruct (int construct, ...)
           InsertSymbol (&child, MathML_EL_MO, 8290, doc);// invisible times
           InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
           selected = TtaGetFirstChild(child);
-          TtaRemoveTree (leaf, doc);
+          TtaDeleteTree (leaf, doc);
         }
-      else if(construct == 50)
+      else if (construct == 50)
         { /* diff ; partialdiff */
           int symbol = va_arg(varpos, int);
 
           leaf = TtaGetFirstChild (TtaGetFirstChild (el));
           child = leaf;
           InsertEmptyConstruct (&child, MathML_EL_MROW, doc);
-          TtaRemoveTree (leaf, doc);
+          TtaDeleteTree (leaf, doc);
 
           leaf = TtaGetFirstChild(child);
           child = leaf;
           InsertSymbol (&child, MathML_EL_MO, symbol, doc);
           InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
           selected = child;
-          TtaRemoveTree (leaf, doc);
+          TtaDeleteTree (leaf, doc);
 
           leaf = TtaGetFirstChild (TtaGetLastChild (el));
           child = leaf;
           InsertEmptyConstruct (&child, MathML_EL_MROW, doc);
-          TtaRemoveTree (leaf, doc);
+          TtaDeleteTree (leaf, doc);
 
           leaf = TtaGetFirstChild(child);
           child = leaf;
           InsertSymbol (&child, MathML_EL_MO, symbol, doc);
           InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
-          TtaRemoveTree (leaf, doc);
+          TtaDeleteTree (leaf, doc);
         }
-      else if(construct== 51)
+      else if (construct== 51)
         { /* partialdiff2 */
           int symbol = 8706;
           /* ask the user the degree of derivation of the function f and of the variables of f*/
@@ -2508,27 +2531,27 @@ static void CreateMathConstruct (int construct, ...)
           leaf = TtaGetFirstChild (TtaGetFirstChild (el));
           child = leaf;
           InsertEmptyConstruct (&child, MathML_EL_MROW, doc);
-          TtaRemoveTree (leaf, doc);
+          TtaDeleteTree (leaf, doc);
 
           leaf = TtaGetFirstChild(child);
           child = leaf;
           InsertSymbol (&child, MathML_EL_MO, symbol, doc);
           InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
           selected = child;
-          TtaRemoveTree (leaf, doc);
+          TtaDeleteTree (leaf, doc);
 
           leaf = TtaGetFirstChild (TtaGetLastChild (el));
           child = leaf;
           InsertEmptyConstruct (&child, MathML_EL_MROW, doc);
-          TtaRemoveTree (leaf, doc);
+          TtaDeleteTree (leaf, doc);
 
           leaf = TtaGetFirstChild(child);
           child = leaf;
           InsertSymbol (&child, MathML_EL_MO, symbol, doc);
           InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
-          TtaRemoveTree (leaf, doc);
+          TtaDeleteTree (leaf, doc);
         }
-      else if(construct== 52)
+      else if (construct== 52)
         { /* integral */
           //DoubleContourIntegral 8751
           //Integral 8747
@@ -2541,9 +2564,9 @@ static void CreateMathConstruct (int construct, ...)
           InsertSymbol (&child, MathML_EL_MO, symbol, doc);
           InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
           selected = TtaGetFirstChild(child);
-          TtaRemoveTree (leaf, doc);
+          TtaDeleteTree (leaf, doc);
         }
-      else if(construct== 53)
+      else if (construct== 53)
         { /* vectorrow ; vectorcolomn ; matrix ; determinant2 */
           int ope = va_arg(varpos, int), clo = va_arg(varpos, int);
           int lx = va_arg(varpos, int), ly = va_arg(varpos, int);
@@ -2551,21 +2574,21 @@ static void CreateMathConstruct (int construct, ...)
           child = SetMFencedAttributes(el, ope, clo, ',', doc);
         
           /* ask the user the number of rows and colomns */
-          if(lx == 0)lx = 3;
-          if(ly == 0)ly = 3;
+          if (lx == 0) lx = 3;
+          if (ly == 0) ly = 3;
 
           /* mtable */
-          leaf = TtaGetFirstChild (child);TtaRemoveTree (leaf, doc);
+          leaf = TtaGetFirstChild (child);TtaDeleteTree (leaf, doc);
           CreateNewMtable (child, lx, ly, doc);
           selected = SelectMtableCell(child, 0, 0);
         }
-      else if(construct == 54)
+      else if (construct == 54)
         {/* curl ; div ; grad ; laplacian */
           int nabla = 8711;
           int symbol = va_arg(varpos, int);
           leaf = TtaGetFirstChild (el);
           child = leaf;
-          if(symbol == 1)
+          if (symbol == 1)
             {/* Laplacian */
               Element leaf2, child2;
               InsertEmptyConstruct(&child, MathML_EL_MSUP, doc);
@@ -2573,30 +2596,31 @@ static void CreateMathConstruct (int construct, ...)
               leaf2 = TtaGetFirstChild (TtaGetFirstChild (child));
               child2 = leaf2;
               InsertSymbol (&child2, MathML_EL_MO, nabla, doc);
-              TtaRemoveTree (leaf2, doc);
+              TtaDeleteTree (leaf2, doc);
           
               leaf2 = TtaGetFirstChild(TtaGetLastChild (child));
               child2 = leaf2;
               InsertSymbol (&child2, MathML_EL_MN, '2', doc);
-              TtaRemoveTree (leaf2, doc);
+              TtaDeleteTree (leaf2, doc);
             }
           else
             {/* curl ; div ; grad */
               InsertSymbol (&child, MathML_EL_MO, nabla, doc);
-              if(symbol != 0)InsertSymbol (&child, MathML_EL_MO, symbol, doc);
+              if (symbol != 0)
+                InsertSymbol (&child, MathML_EL_MO, symbol, doc);
             }
 
           InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
           selected = TtaGetFirstChild(child);
-          TtaRemoveTree (leaf, doc);
+          TtaDeleteTree (leaf, doc);
         }
-      else if(construct == 55)
+      else if (construct == 55)
         {/* variance */
           leaf = TtaGetFirstChild (el);
           child = leaf;
           InsertSymbol (&child, MathML_EL_MO, 963, doc);
           InsertEmptyConstruct(&child, MathML_EL_MSUP, doc);
-          TtaRemoveTree (leaf, doc);
+          TtaDeleteTree (leaf, doc);
 
           {
             Element child2;
@@ -2604,7 +2628,7 @@ static void CreateMathConstruct (int construct, ...)
             leaf = TtaGetFirstChild (TtaGetFirstChild (child));
             child2 = leaf;
             InsertEmptyConstruct(&child2, MathML_EL_MROW, doc);
-            TtaRemoveTree (leaf, doc);
+            TtaDeleteTree (leaf, doc);
 
             leaf = TtaGetFirstChild (child2);
             child2 = leaf; 
@@ -2612,23 +2636,23 @@ static void CreateMathConstruct (int construct, ...)
             InsertEmptyConstruct(&child2, MathML_EL_MROW, doc);
             selected = TtaGetFirstChild(child2);
             InsertSymbol (&child2, MathML_EL_MF, ')', doc);
-            TtaRemoveTree (leaf, doc);
+            TtaDeleteTree (leaf, doc);
 
             leaf = TtaGetFirstChild(TtaGetLastChild (child));
             child2 = leaf;
             InsertSymbol (&child2, MathML_EL_MN, '2', doc);
-            TtaRemoveTree (leaf, doc);
+            TtaDeleteTree (leaf, doc);
           }
         
         }
-      else if(construct == 56)
+      else if (construct == 56)
         {/* moment */
           leaf = TtaGetFirstChild (el);
           child = leaf;
           InsertSymbol (&child, MathML_EL_MO, 9001, doc);
           InsertEmptyConstruct(&child, MathML_EL_MSUP, doc);
           InsertSymbol (&child, MathML_EL_MO, 9002, doc);
-          TtaRemoveTree (leaf, doc);
+          TtaDeleteTree (leaf, doc);
         }
 
       /* do not check the Thot abstract tree against the structure */
@@ -2647,7 +2671,7 @@ static void CreateMathConstruct (int construct, ...)
           else
             sibling = TtaGetLastChild (row);
           
-          if (sibling == NULL /*&& construct != 20 && construct != 21 <-- This can cause a crash */)
+          if (sibling == NULL)
             {
               if (elType.ElTypeNum == MathML_EL_MathML)
                 /* empty MATH element. Insert the new element as a child */
@@ -2665,31 +2689,57 @@ static void CreateMathConstruct (int construct, ...)
                       TtaRegisterElementCreate (el, doc);
                       TtaRegisterElementDelete (row, doc);
                     }
-                  TtaRemoveTree (row, doc);
+                  TtaDeleteTree (row, doc);
                 }
             }
           else
             {
               /* check whether the selected element is a Construct */
-              elType = TtaGetElementType (sibling);
-              if ((elType.ElTypeNum == MathML_EL_Construct ||
-                   elType.ElTypeNum == MathML_EL_Construct1) &&
-                  elType.ElSSchema == mathSchema)
+              parentType = TtaGetElementType (sibling);
+              if (elType.ElTypeNum == MathML_EL_MROW &&
+                  (parentType.ElTypeNum == MathML_EL_Construct ||
+                   parentType.ElTypeNum == MathML_EL_Construct1) &&
+                  parentType.ElSSchema == mathSchema)
                 {
-                  /* replace the Construct element */
+                  next = sibling;
+                  previous = sibling;
+                  TtaNextSibling (&next);
+                  TtaPreviousSibling (&previous);
+                  if (next == NULL && previous == NULL)
+                    // replace the row instead of the construct
+                    sibling = TtaGetParent (sibling);
                   TtaInsertSibling (el, sibling, FALSE, doc);
-                  TtaRemoveTree (sibling, doc);
+                  if (!registered)
+                    {
+                      TtaRegisterElementCreate (el, doc);
+                      TtaRegisterElementDelete (sibling, doc);
+                    }
+                  TtaDeleteTree (sibling, doc);
                 }
               else
-                TtaInsertSibling (el, sibling, before, doc);
-              if (!registered)
-                TtaRegisterElementCreate (el, doc);
+                {
+                  TtaInsertSibling (el, sibling, before, doc);
+                  if (!registered)
+                    TtaRegisterElementCreate (el, doc);
+                }
             }
         }
       else if ((elType.ElTypeNum == MathML_EL_Construct ||
                 elType.ElTypeNum == MathML_EL_Construct1) &&
                elType.ElSSchema == mathSchema)
         {
+          next = sibling;
+          previous = sibling;
+          TtaNextSibling (&next);
+          TtaPreviousSibling (&previous);
+          if (next == NULL && previous == NULL)
+            {
+              row = TtaGetParent (sibling);
+              parentType = TtaGetElementType (row);
+              if (parentType.ElTypeNum == MathML_EL_MROW &&
+                  parentType.ElSSchema == mathSchema)
+                sibling = row;
+            }
           /* replace the Construct element */
           TtaInsertSibling (el, sibling, FALSE, doc);
           if (!registered)
@@ -2697,7 +2747,7 @@ static void CreateMathConstruct (int construct, ...)
               TtaRegisterElementCreate (el, doc);
               TtaRegisterElementDelete (sibling, doc);
             }
-          TtaRemoveTree (sibling, doc);
+          TtaDeleteTree (sibling, doc);
         }
       else
         {
@@ -2714,12 +2764,18 @@ static void CreateMathConstruct (int construct, ...)
       
       TtaSetDocumentModified (doc);
 
+      if (op)
+        {
+          MathSetAttributes (op, doc, NULL);
+          /* enlarge the symbol according to the context */
+          CheckLargeOp (op, doc);
+        }
       if (construct == 20 || construct == 21 || construct == 24)
         {
           /* move the limits of the MSUBSUP element if it's appropriate */
           SetIntMovelimitsAttr (el, doc);
-          /* enlarge the symbol according to the context */
-          if (op)CheckLargeOp (op, doc);
+          // if (op)
+          // CheckLargeOp (op, doc);
         }
       else if (ParBlock)
         /* the user wants to create a parenthesized block */
@@ -2727,7 +2783,6 @@ static void CreateMathConstruct (int construct, ...)
         AddParenthesis (el, doc);
 
       InitializeNewConstruct (el, NumberRows, NumberCols, !registered, doc);
-
       TtaSetDisplayMode (doc, dispMode);
       /* check the Thot abstract tree against the structure schema. */
       TtaSetStructureChecking (oldStructureChecking, doc);
@@ -2744,23 +2799,24 @@ static void CreateMathConstruct (int construct, ...)
       else
         { /* select a child in the new element */
 
-          if(selectedchild == -1)
+          if (selectedchild == -1)
             {/* select the child pointed by selected if possible */
-              if(selected)TtaSelectElement (doc, selected);
+              if (selected)
+                TtaSelectElement (doc, selected);
             }
           else
             {/* select the child number "selectedchild" in el */
               child = TtaGetFirstChild (el);
-              for(i=0;i<selectedchild;i++)TtaNextSibling (&child);
-
+              for (i=0;i<selectedchild;i++)
+                TtaNextSibling (&child);
               leaf = NULL;
-              while (child != NULL)
+              while (child)
                 {
                   leaf = child;
                   child = TtaGetFirstChild (child);
                 }
 
-              if(leaf)
+              if (leaf)
                 { 
                   TtaSelectElement (doc, leaf);
                   selected = leaf;
@@ -2777,7 +2833,6 @@ static void CreateMathConstruct (int construct, ...)
     }
 
   TtaCloseUndoSequence (doc);
-
   va_end(varpos);
 }
 
