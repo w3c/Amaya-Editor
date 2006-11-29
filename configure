@@ -13616,21 +13616,19 @@ fi
 
 if test "$with_mesa" = "yes" ; then
   # --------- compile Mesa library (opengl) --------------- #
+  OLDDIR=`pwd`
+  GL_BUILDDIR="${OLDDIR}/Mesa"
 
   # check that sources of Mesa exists
   if test ! -f ../../Mesa/Makefile ; then
     { { echo "$as_me:$LINENO: error: Mesa library sources not found (opengl). Please download Mesa sources (http://www.mesa3d.org/) or remove --with-gl option !" >&5
 echo "$as_me: error: Mesa library sources not found (opengl). Please download Mesa sources (http://www.mesa3d.org/) or remove --with-gl option !" >&2;}
    { (exit 1); exit 1; }; }
-  fi
-
-  OLDDIR=`pwd`
-  GL_BUILDDIR="${OLDDIR}/Mesa"
 
   echo "---> Install Mesa library into ${GL_BUILDDIR}"
-
   mkdir -p ${GL_BUILDDIR}
   cp -r ../../Mesa/* ${GL_BUILDDIR}
+  fi
 
   echo "---> Install Mesa library into ${GL_BUILDDIR} - DONE"
 
