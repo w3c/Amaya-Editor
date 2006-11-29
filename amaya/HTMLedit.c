@@ -3574,10 +3574,19 @@ void CheckNewLines (NotifyOnTarget *event)
     /* the current selection is not within this element. Don't care about
        the selection */
     selEl = NULL;
-  length = TtaGetElementVolume (leaf);
-  content = (CHAR_T *)TtaGetMemory ((length + 1) * sizeof(CHAR_T));
-  TtaGiveBufferContent (leaf, content, length, &lang);
-  content[length] = EOS;
+  elType = TtaGetElementType (leaf);
+  if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+    {
+      length = TtaGetElementVolume (leaf);
+      content = (CHAR_T *)TtaGetMemory ((length + 1) * sizeof(CHAR_T));
+      TtaGiveBufferContent (leaf, content, length, &lang);
+      content[length] = EOS;
+    }
+  else
+    {
+      length = 0;
+      content = NULL;
+    }
   changed = FALSE;
   selChanged = FALSE;
   prevCharEOL = FALSE;
