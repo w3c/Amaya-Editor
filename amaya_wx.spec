@@ -24,9 +24,10 @@ BuildRoot:    /var/tmp/%{name}-buildroot
 
 Summary:      Web Browser/Editor from the World Wide Web Consortium
 Version:      %{version}
-Source: ftp://ftp.w3.org/pub/amaya/amaya-src-%{version}.tgz
-Source1: ftp://ftp.w3.org/pub/amaya/amaya-lib-src-%{version}.tgz
-# Patch: amaya-src-%{version}.diff
+Source:       amaya-fullsrc-%{version}.tgz
+#Source:      ftp://ftp.w3.org/pub/amaya/amaya-src-%{version}.tgz
+#Source1:     ftp://ftp.w3.org/pub/amaya/amaya-lib-src-%{version}.tgz
+# Patch:      amaya-src-%{version}.diff
 %description
 
 Amaya is a complete Web authoring tool with some browsing 
@@ -107,4 +108,6 @@ make install prefix=$RPM_BUILD_ROOT/usr/share
 /bin/ln -f -s /usr/bin/amaya_wx /usr/bin/amaya
 %postun
 rm -f /usr/bin/amaya
+rm -f /usr/applications/Amaya-%{version}.desktop
+rm -f /usr/pixmaps/amaya-%{version}.png
 
