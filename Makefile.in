@@ -324,22 +324,13 @@ redland_config: @MAKEREDLAND@ force
 			--build=@build_alias@ --host=@host_alias@ --target=@target_alias@ \
 			--disable-shared \
 			--without-bdb \
-	 		--enable-parsers=raptor \
 	 		--with-raptor=internal \
 			--with-xml-parser=expat \
 			--with-www=none \
 			--without-libwww \
 			--without-openssl-digests \
-			--without-mysql ; \
+			--without-mysql ;\
 		$(ECHO) "redland is configured" ; \
-	        cd raptor ; \
-		if [ ! -e raptor_config.h.org ] ; then \
-		  $(ECHO) "Patching the raptor_config.h file to avoid including glib2-0" ; \
-	          $(CP) raptor_config.h raptor_config.h.orig ; \
-	          $(SED) "s/\(\#define HAVE_G_UTF8_NORMALIZE 1\)/\/* \1 *\//" \
-			  raptor_config.h.orig > raptor_config.h ; \
-		  $(ECHO) "Raptor is patched" ; \
-		fi ; \
 	  fi)
 
 

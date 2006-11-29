@@ -1119,9 +1119,9 @@ if test "$with_redland" = "yes" ; then
 	AMAYA_ANNOT_OPTIONS="$AMAYA_ANNOT_OPTIONS -DAM_REDLAND"
 	if test "$with_system_redland" != "yes" ; then
 		AMAYA_RAPTOR_SRC="amaya_comp_redland"
-		AMAYA_ANNOT_OPTIONS="$AMAYA_ANNOT_OPTIONS -I\$(THOTDIR)/../redland/librdf -I\$(THOTDIR)/../redland/raptor"
-		AMAYA_RAPTOR_LIBS="../redland/librdf/.libs/librdf.a ../redland/raptor/.libs/libraptor.a"
-		AMAYA_RAPTOR_INCLUDES="-I\$(THOTDIR)/../redland/librdf -I\$(THOTDIR)/../redland/raptor"
+		AMAYA_ANNOT_OPTIONS="$AMAYA_ANNOT_OPTIONS -I\$(THOTDIR)/../redland/librdf -I\$(THOTDIR)/../redland/raptor/src "
+		AMAYA_RAPTOR_LIBS="../redland/librdf/.libs/librdf.a ../redland/raptor/src/.libs/libraptor.a"
+		AMAYA_RAPTOR_INCLUDES="-I\$(THOTDIR)/../redland/librdf -I\$(THOTDIR)/../redland/raptor/src"
 	else
 		MAKEREDLAND=['#']
 		AMAYA_RAPTOR_SRC=
