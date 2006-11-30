@@ -2790,9 +2790,8 @@ ThotBool CanReplaceCurrentDocument (Document doc, View view)
   if (DocumentTypes[doc] == docLog || DocumentTypes[doc] == docSource)
     ret = TRUE;
   else if (TtaIsDocumentModified (doc) ||
-      (!Synchronizing &&
-       DocumentSource[doc] &&
-       TtaIsDocumentModified (DocumentSource[doc])))
+           (!Synchronizing && DocumentSource[doc] &&
+            TtaIsDocumentModified (DocumentSource[doc])))
     {
       TtaGetEnvBoolean ("IGNORE_UPDATES", &always_replace);
       if (always_replace)

@@ -515,7 +515,8 @@ static ThotBool FollowTheLink (Element anchor, Element elSource,
   FollowTheLink_context *ctx;
   ThotBool		            isHTML, history, readonly = FALSE;
 
-  if (Follow_exclusive)
+  if (Follow_exclusive || Synchronizing)
+    // there is already a current follow the link or a synchronizing
     return FALSE;
   else
     Follow_exclusive = TRUE;
