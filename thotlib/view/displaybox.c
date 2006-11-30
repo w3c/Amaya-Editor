@@ -301,7 +301,7 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
   PtrBox              ancestor;
   ThotBool            useStix;
 #ifdef _GL
-  int                 texture_id;
+  int                 texture_id = 0;
 #endif /* _GL */
 
   pFrame = &ViewFrameTable[frame - 1];
@@ -563,7 +563,8 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
               break;
             } 
 #ifdef _GL
-          StopTextureScale (texture_id);
+          if (texture_id)
+            StopTextureScale (texture_id);
 #endif /* _GL */
 
           if (pBox->BxEndOfBloc > 0)
@@ -1293,7 +1294,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
   ThotBool            blockbegin, withinSel = FALSE;
   ThotBool            hyphen, rtl, showSpecial = FALSE;
 #ifdef _GL
-  int                 texture_id;
+  int                 texture_id, showtab_id = 0, underline_id = 0;
 
   texture_id = SetTextureScale (IsBoxDeformed(pBox));
 #endif /* _GL */
@@ -1745,7 +1746,9 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
                       if (!Printing && transc == SHOWN_TAB)
                         {
 #ifdef _WX
-                          SetTextureScale (IsBoxDeformed(pBox));
+                          if (showtab_id)
+                            StopTextureScale (showtab_id);
+                          showtab_id = SetTextureScale (IsBoxDeformed(pBox));
                           DrawHorizontalLine (frame, 1, 5, x+2, y, lg-2, pBox->BxH, 2, BgSelColor);
 #else /* _WX */
                         DrawChar ((char)val, frame, x, y1, nextfont, BgSelColor);
@@ -1895,9 +1898,10 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
               if (pBox->BxUnderline)
                 {
 #ifdef _GL
-                  int tex_underline_id = SetTextureScale (IsBoxDeformed(pBox));
+                  if (underline_id)
+                    StopTextureScale (underline_id);
+                  underline_id = SetTextureScale (IsBoxDeformed(pBox));
                   DisplayUnderline (frame, x, y+t, pBox->BxH, pBox->BxUnderline, width, fg);
-                  StopTextureScale (tex_underline_id);
 #else /* _GL */
                   DisplayUnderline (frame, x, y+t, pBox->BxH, pBox->BxUnderline, width, fg);
 #endif /* _GL */
@@ -1906,6 +1910,10 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
             }
         } 
 #ifdef _GL
+      if (showtab_id)
+        StopTextureScale (showtab_id);
+      if (underline_id)
+        StopTextureScale (underline_id);
       StopTextureScale (texture_id);
 #endif /* _GL */
 

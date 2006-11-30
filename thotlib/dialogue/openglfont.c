@@ -979,9 +979,10 @@ static int ceil_pow2_minus_1(unsigned int x)
   ----------------------------------------------------------------------*/
 int SetTextureScale (ThotBool Scaled)
 {
+  int texture_id = 0;
+
   if (GL_NotInFeedbackMode () && !GL_TransText ())
     {
-      int texture_id;
       glEnable (GL_TEXTURE_2D);
       
       /* get a new identifier for the following font texture */
@@ -1011,9 +1012,8 @@ int SetTextureScale (ThotBool Scaled)
 #ifdef _WX
       wxASSERT_MSG( glIsTexture(texture_id), _T("created texture invalid") );
 #endif /* _WX */
-      return texture_id;
     }
-  return 0; /* 0 is a invalid texture identifier */
+  return texture_id; /* 0 is a invalid texture identifier */
 }
 
 /*----------------------------------------------------------------------

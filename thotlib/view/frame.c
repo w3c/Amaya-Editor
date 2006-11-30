@@ -51,6 +51,7 @@
 #include "registry.h"
 
 #ifdef _GL
+#include "openglfont.h"
 #if defined (_MACOS) && defined (_WX)
 #include <gl.h>
 #include <glu.h>
@@ -507,8 +508,11 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
   int                 wbg, hbg, pos;
   int                 w, h, view;
   int                 t, b, l, r;
+#ifdef _GL
+  int                 tex_bg_id = 0;
+#endif /* _GL */
   ThotBool            setWindow, isLast;
-  
+
   if (pBox == NULL || pFrom == NULL || pFrom->AbBox == NULL)
     return;
   else if (pFrom->AbElement == NULL ||
@@ -678,6 +682,11 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
                     (!pAb->AbEnclosing->AbEnclosing->AbFillBox &&
                      pAb->AbEnclosing->AbEnclosing->AbEnclosing == NULL)) /* body */);
     }
+
+#ifdef _GL
+  if (pFrom && pFrom->AbFillBox)
+    tex_bg_id = SetTextureScale (IsBoxDeformed(pBox));
+#endif /* _GL */
   if (setWindow)
     {
       /* get the maximum of the window size and the root box size */
@@ -822,6 +831,8 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
 
   /* remove shift due to relative positioning */
 #ifdef _GL
+  if (tex_bg_id)
+    StopTextureScale (tex_bg_id);
   pBox->BxClipX -= shiftx;
   pBox->BxClipY -= shifty;
 #endif /*_GL*/
