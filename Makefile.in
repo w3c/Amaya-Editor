@@ -323,6 +323,7 @@ redland_config: @MAKEREDLAND@ force
 			$$redlanddir/configure \
 			--build=@build_alias@ --host=@host_alias@ --target=@target_alias@ \
 			--disable-shared \
+			--disable-nfc-check \
 			--without-bdb \
 	 		--with-raptor=internal \
 			--with-xml-parser=expat \
