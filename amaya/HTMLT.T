@@ -1207,9 +1207,11 @@ RULES
 	NoLineBreak;
  	Create '<?';
 	{NoTranslation;}
-        IF Within BODY
+  IF Within Paragraph
 	Create '?>' after;
-	IF not Within BODY
+  IF Within List_Item
+	Create '?>' after;
+	IF not Within Paragraph and not Within List_Item
 	Create '?>\12' after;
 	END;
 

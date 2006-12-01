@@ -151,7 +151,10 @@ static Pic_Cache *PicCache = NULL;
 static void Free_Pic_Chache (Pic_Cache *Cache)
 {
   if (glIsTexture(Cache->texbind))
-    glDeleteTextures (1, (const GLuint*)&(Cache->texbind));
+    {
+      glDeleteTextures (1, (const GLuint*)&(Cache->texbind));
+      Cache->texbind = 0;
+    }
 #ifdef _PCLDEBUG
   printf ("\n Free Image %s from cache", Cache->filename);
 #endif /*_PCLDEBUG*/ 
@@ -497,8 +500,8 @@ static void GL_TextureBind (ThotPictInfo *img, ThotBool isPixmap,
       /* We have resized the picture to match a power of 2
          We don't want to see all the picture, just the w and h 
          portion*/
-      GL_w = (GLfloat) img->PicWidth/p2_w;
-      GL_h = (GLfloat) img->PicHeight/p2_h;
+      GL_w = (GLfloat) (img->PicWidth - img->PicShiftX)/(GLfloat)p2_w;
+      GL_h = (GLfloat) (img->PicHeight - img->PicShiftY)/(GLfloat)p2_h;
       if (GL_w < 0.1)
         GL_w = 0.1; // avoid nul value
       if (GL_h < 0.1)
@@ -1378,7 +1381,7 @@ static void ComputeBgPosition (int val, TypeUnit unit, int start, int end,
     {
       s_box = PixelValue (val, UnPercent, (PtrAbstractBox) (*d_box), 0);
       s_img = PixelValue (val, UnPercent, (PtrAbstractBox) (*d_img), 0);
-      if (s_box >= s_img)
+      if (s_box >= s_img - start)
         {
           // shift in the box
           s_box -= s_img;
@@ -1390,9 +1393,9 @@ static void ComputeBgPosition (int val, TypeUnit unit, int start, int end,
         {
           // shift in the image
           s_img -= s_box;
+          *d_img = *d_img - start - s_img;
           s_img -= start;
           *org_img = s_img;
-          *d_img -= s_img;
         }
     }
   else if (val >= 0)
@@ -1552,6 +1555,8 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
             box = pAb->AbBox;
         }
 
+if (imageDesc->PicFileName && strstr (imageDesc->PicFileName,"fond_colon"))
+printf ("LayoutPicture (%s)\n",imageDesc->PicFileName);
       // x,y,w,h define the area to be painted
       x = box->BxXOrg;
       y = box->BxYOrg;

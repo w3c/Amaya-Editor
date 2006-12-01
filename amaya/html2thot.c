@@ -472,7 +472,9 @@ static char        *BufferAttrValue = NULL;
 static int          LgBufferAttrValue = 0;
 static Element      CommentText = NULL;	  /* TEXT element of the current
                                              Comment element */
-static Element      ASPText = NULL;	  /* TEXT element of the current
+static Element      ASPText = NULL;	     /* TEXT element of the current
+                                             ASP element */
+static Element      PIText = NULL;	     /* TEXT element of the current
                                              ASP element */
 static ThotBool     UnknownTag = FALSE;	  /* the last start tag encountered is
                                              invalid */
@@ -3715,7 +3717,7 @@ static void         PutDashDash (char c)
 /*----------------------------------------------------------------------
   PutQuestionMark put a question mark in the current PI.
   ----------------------------------------------------------------------*/
-static void         PutQuestionMark (char c)
+static void PutQuestionMark (char c)
 {
   PutInBuffer ('?');
   PutInBuffer (c);
@@ -3814,18 +3816,100 @@ static void EndOfDoctypeDecl (char c)
 
 
 /*----------------------------------------------------------------------
-  EndOfPI	A Processing Instruction has been read
+  StartOfPI  Beginning of a HTML comment.
   ----------------------------------------------------------------------*/
-static void EndOfPI (char c)
+static void         StartOfPI (char c)
 {
-  /* useless test as the closing '?' isn't put into the buffer */
-  /*
-    if (LgBuffer && inputBuffer[LgBuffer - 1] != '?')
-    HTMLParseError (HTMLcontext.doc, "PI should be closed by \"?>\"", 0);
-  */
-  CloseBuffer ();
-  /* process the Processing Instruction available in inputBuffer */
-  /* printf ("PI: %s\n", inputBuffer); */
+  ElementType      elType;
+  Element          elPI, elPILine;
+
+  /* create a Thot element PI */
+  elType.ElSSchema = DocumentSSchema;
+  elType.ElTypeNum = HTML_EL_XMLPI;
+  elPI = TtaNewElement (HTMLcontext.doc, elType);
+  TtaSetElementLineNumber (elPI, NumberOfLinesRead);
+  InsertElement (&elPI);
+  /* create a PI_line element as the first child of */
+  /* element PI */
+  if (elPI != NULL)
+    {
+      elType.ElTypeNum = HTML_EL_PI_line;
+      elPILine = TtaNewElement (HTMLcontext.doc, elType);
+      TtaSetElementLineNumber (elPILine, NumberOfLinesRead);
+      TtaInsertFirstChild (&elPILine, elPI, HTMLcontext.doc);
+      /* create a TEXT element as the first child of element PI_line */
+      elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+      PIText = TtaNewElement (HTMLcontext.doc, elType);
+      TtaSetElementLineNumber (PIText, NumberOfLinesRead);
+      TtaInsertFirstChild (&PIText, elPILine, HTMLcontext.doc);
+      TtaSetTextContent (PIText, (unsigned char *)"", HTMLcontext.language,
+                         HTMLcontext.doc);
+    }
+  InitBuffer ();
+}
+
+/*----------------------------------------------------------------------
+  PutInPI    put character c in the current HTML comment.
+  ----------------------------------------------------------------------*/
+static void         PutInPI (unsigned char c)
+{
+  ElementType       elType;
+  Element           elPILine, prevElPILine;
+  
+  if (c != EOS)
+    {
+      if (!HTMLcontext.parsingCSS && ((int) c == EOL || (int) c == CR))
+        /* new line in a comment */
+        {
+          /* put the content of the inputBuffer into the current */
+          /* PI_line element */
+          CloseBuffer ();
+          TtaAppendTextContent (PIText, (unsigned char *)inputBuffer, HTMLcontext.doc);
+          InitBuffer ();
+          /* create a new PI_line element */
+          elType.ElSSchema = DocumentSSchema;
+          elType.ElTypeNum = HTML_EL_PI_line;
+          elPILine = TtaNewElement (HTMLcontext.doc, elType);
+          TtaSetElementLineNumber (elPILine, NumberOfLinesRead);
+          /* inserts the new PI_line element after the previous one */
+          prevElPILine = TtaGetParent (PIText);
+          TtaInsertSibling (elPILine, prevElPILine, FALSE, HTMLcontext.doc);
+          /* create a TEXT element as the first child of the new element
+             PI_line */
+          elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+          PIText = TtaNewElement (HTMLcontext.doc, elType);
+          TtaSetElementLineNumber (PIText, NumberOfLinesRead);
+          TtaInsertFirstChild (&PIText, elPILine, HTMLcontext.doc);
+          TtaSetTextContent (PIText, (unsigned char *)"", HTMLcontext.language, HTMLcontext.doc);
+        }
+      else
+        {
+          if (LgBuffer >= MaxBufferLength - 1)
+            {
+              CloseBuffer ();
+              TtaAppendTextContent (PIText, (unsigned char *)inputBuffer,
+                                    HTMLcontext.doc);
+              InitBuffer ();
+            }
+          inputBuffer[LgBuffer++] = c;
+        }
+    }
+}
+
+/*----------------------------------------------------------------------
+  EndOfPI    End of a HTML PI
+  ----------------------------------------------------------------------*/
+static void         EndOfPI (char c)
+{
+  if (LgBuffer > 0)
+    {
+      CloseBuffer ();
+      if (PIText != NULL)
+        TtaAppendTextContent (PIText, (unsigned char *)inputBuffer,
+                              HTMLcontext.doc);
+    }
+  PIText = NULL;
+  HTMLcontext.lastElementClosed = TRUE;
   InitBuffer ();
 }
 
@@ -3890,7 +3974,7 @@ static sourceTransition sourceAutomaton[] =
     {1, '%', (Proc) StartOfASP, 35},
     {1, '/', (Proc) Do_nothing, 3},
     {1, '!', (Proc) Do_nothing, 10},
-    {1, '?', (Proc) Do_nothing, 20},
+    {1, '?', (Proc) StartOfPI, 20},
     {1, '<', (Proc) Do_nothing, 18},
     {1, 'S', (Proc) PutLessAndSpace, 0},		/*   S = Space */
     {1, '*', (Proc) PutInBuffer, 2},
@@ -3978,17 +4062,14 @@ static sourceTransition sourceAutomaton[] =
     {19, '>', (Proc) PutLess, 0},
     {19, '*', (Proc) Do_nothing, 0},
     /* state 20: "<?" has been read; beginning of a Processing Instruction */
-    {20, 'S', (Proc) Do_nothing, 20},
-    {20, '?', (Proc) Do_nothing, 22},
-    {20, '*', (Proc) PutInBuffer, 21},
-    /* state 21: reading a Processing Instruction */
-    {21, '?', (Proc) Do_nothing, 22},
+    {20, '?', (Proc) Do_nothing, 21},
+    {20, '*', (Proc) PutInPI, 20},
+    /* state 21: reading the end of Processing Instruction? */
     {21, '>', (Proc) EndOfPI, 0},
-    {21, '*', (Proc) PutInBuffer, 21},
+    {21, '*', (Proc) PutQuestionMark, 20},
     /* state 22: a question mark has been read in a Processing Instruction */
     {22, '>', (Proc) EndOfPI, 0},
-    {22, '?', (Proc) PutInBuffer, 22},
-    {22, '*', (Proc) PutQuestionMark, 21},
+    {22, '*', (Proc) PutQuestionMark, 20},
     /* state 23: "<![*" has been read, wait for CDATA */
     {23, '[', (Proc) StartCData, 24},
     {23, '*', (Proc) PutInBuffer, 23},
@@ -4454,6 +4535,7 @@ static void HTMLparse (FILE * infile, char* HTMLbuf)
             {
               /* don't replace end of line by space in a doctype declaration */
               if (currentState != 12 && currentState != 15 &&
+                  currentState != 20 && currentState != 21 &&
                   currentState != 24 && currentState != 35)
                 {
                   /* don't change characters in comments */
@@ -4531,6 +4613,7 @@ static void HTMLparse (FILE * infile, char* HTMLbuf)
                 /* space character */
                 {
                   if (currentState == 12 || currentState == 35 ||
+                      currentState == 20 || currentState == 21 ||
                       (currentState == 0 &&
                        !Within (HTML_EL_Preformatted, DocumentSSchema) &&
                        !Within (HTML_EL_STYLE_, DocumentSSchema) &&
