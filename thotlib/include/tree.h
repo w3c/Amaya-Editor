@@ -1190,6 +1190,13 @@ extern void TtaAskFirstCreation ();
 extern ThotBool TtaHasHiddenException (ElementType elType);
 
 /* ----------------------------------------------------------------------
+   TtaHasNotElementException
+   Returns TRUE if the elType has the ExcNotAnElementNode exception
+   (Comments, PIs, etc)
+   ---------------------------------------------------------------------- */
+extern ThotBool TtaHasNotElementException (ElementType elType);
+
+/* ----------------------------------------------------------------------
    TtaHasInvisibleException
 
    Returns TRUE if the elType has the CreateNL exception

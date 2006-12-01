@@ -1192,6 +1192,17 @@ RULES
 	if not last create '\12' after;
 	END;
 
+ ASP_element: BEGIN
+	NoLineBreak;
+ 	Create '<%';
+	{NoTranslation;}
+	Create '>\12' after;
+	END;
+
+ ASP_line: BEGIN
+	if not last create '\12' after;
+	END;
+
  XMLPI: BEGIN
 	NoLineBreak;
  	Create '<?';

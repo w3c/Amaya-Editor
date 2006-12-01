@@ -2953,13 +2953,23 @@ Element TtaSearchNoPageBreak (Element element, ThotBool forward)
 
 /* ----------------------------------------------------------------------
    TtaHasHiddenException
-   Returns TRUE if the elType is defined by the document schema's
-   DTD. For example, elements with the hidden and exception
-   attributes are not included in the DTD.
+   Returns TRUE if the elType has the ExcHidden exception
+   (Not DTD elements)
    ---------------------------------------------------------------------- */
 ThotBool TtaHasHiddenException (ElementType elType)
 {
   return TypeHasException (ExcHidden, elType.ElTypeNum, 
+                           (PtrSSchema) elType.ElSSchema);
+}
+
+/* ----------------------------------------------------------------------
+   TtaHasNotElementException
+   Returns TRUE if the elType has the ExcNotAnElementNode exception
+   (Comments, PIs, etc)
+   ---------------------------------------------------------------------- */
+ThotBool TtaHasNotElementException (ElementType elType)
+{
+  return TypeHasException (ExcNotAnElementNode, elType.ElTypeNum, 
                            (PtrSSchema) elType.ElSSchema);
 }
 

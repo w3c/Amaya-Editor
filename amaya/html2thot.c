@@ -472,6 +472,8 @@ static char        *BufferAttrValue = NULL;
 static int          LgBufferAttrValue = 0;
 static Element      CommentText = NULL;	  /* TEXT element of the current
                                              Comment element */
+static Element      ASPText = NULL;	  /* TEXT element of the current
+                                             ASP element */
 static ThotBool     UnknownTag = FALSE;	  /* the last start tag encountered is
                                              invalid */
 static ThotBool     HTMLrootClosed = FALSE;
@@ -1991,6 +1993,42 @@ static void StopParsing (Document doc)
 }
 
 /*----------------------------------------------------------------------
+  InsertInvalidEl
+  create an Invalid_element element or a Unknown element.
+  badposition indicate whether the element type is unknown (FALSE) or the
+  tag position is incorrect (TRUE).
+  ----------------------------------------------------------------------*/
+static void InsertInvalidEl (char* content, ThotBool badposition)
+{
+  ElementType       elType;
+  Element           elInv, elText;
+
+  elType.ElSSchema = DocumentSSchema;
+  if (badposition)
+    elType.ElTypeNum = HTML_EL_Invalid_element;
+  else
+    elType.ElTypeNum = HTML_EL_Unknown_namespace;
+  elInv = TtaNewElement (HTMLcontext.doc, elType);
+  TtaSetElementLineNumber (elInv, NumberOfLinesRead);
+  InsertElement (&elInv);
+  if (elInv)
+    {
+      HTMLcontext.lastElementClosed = TRUE;
+      elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+      elText = TtaNewElement (HTMLcontext.doc, elType);
+      TtaSetElementLineNumber (elText, NumberOfLinesRead);
+      TtaInsertFirstChild (&elText, elInv, HTMLcontext.doc);
+      TtaSetTextContent (elText, (unsigned char *)content, HTMLcontext.language, HTMLcontext.doc);
+      InitBuffer ();
+      if (!UnknownTag)
+        /* close the end tag */
+        TtaAppendTextContent (elText, (unsigned char *)">", HTMLcontext.doc);
+      if (badposition)
+        TtaSetAccessRight (elInv, ReadOnly, HTMLcontext.doc);
+    }
+}
+
+/*----------------------------------------------------------------------
   EndOfStartTag   a ">" has been read. It indicates the end
   of a start tag.
   ----------------------------------------------------------------------*/
@@ -2014,8 +2052,8 @@ static void EndOfStartTag (char c)
           TtaAppendTextContent (elText, (unsigned char *)">", HTMLcontext.doc);
           InitBuffer ();
         }
+      UnknownTag = FALSE;
     }
-  UnknownTag = FALSE;
   if (HTMLcontext.lastElement && lastElemEntry != -1)
     {
       if (!strcmp (pHTMLGIMapping[lastElemEntry].XMLname, "pre") ||
@@ -2170,7 +2208,7 @@ static ThotBool     ContextOK (int entry)
 /*----------------------------------------------------------------------
   SpecialImplicitEnd
   ----------------------------------------------------------------------*/
-static void         SpecialImplicitEnd (int entry)
+static void SpecialImplicitEnd (int entry)
 {
   ElementType      elType;
 
@@ -2194,42 +2232,6 @@ static void         SpecialImplicitEnd (int entry)
                 CloseElement (GINumberStack[StackLevel - 1], entry, FALSE);
             }
         }
-}
-
-/*----------------------------------------------------------------------
-  InsertInvalidEl
-  create an Invalid_element element or a Unknown element.
-  badposition indicate whether the element type is unknown (FALSE) or the
-  tag position is incorrect (TRUE).
-  ----------------------------------------------------------------------*/
-static void InsertInvalidEl (char* content, ThotBool badposition)
-{
-  ElementType       elType;
-  Element           elInv, elText;
-
-  elType.ElSSchema = DocumentSSchema;
-  if (badposition)
-    elType.ElTypeNum = HTML_EL_Invalid_element;
-  else
-    elType.ElTypeNum = HTML_EL_Unknown_namespace;
-  elInv = TtaNewElement (HTMLcontext.doc, elType);
-  TtaSetElementLineNumber (elInv, NumberOfLinesRead);
-  InsertElement (&elInv);
-  if (elInv)
-    {
-      HTMLcontext.lastElementClosed = TRUE;
-      elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-      elText = TtaNewElement (HTMLcontext.doc, elType);
-      TtaSetElementLineNumber (elText, NumberOfLinesRead);
-      TtaInsertFirstChild (&elText, elInv, HTMLcontext.doc);
-      TtaSetTextContent (elText, (unsigned char *)content, HTMLcontext.language, HTMLcontext.doc);
-      InitBuffer ();
-      if (!UnknownTag)
-        /* close the end tag */
-        TtaAppendTextContent (elText, (unsigned char *)">", HTMLcontext.doc);
-      if (badposition)
-        TtaSetAccessRight (elInv, ReadOnly, HTMLcontext.doc);
-    }
 }
 
 /*----------------------------------------------------------------------
@@ -3594,9 +3596,107 @@ static void         EndOfComment (char c)
 }
 
 /*----------------------------------------------------------------------
+  StartOfASP  Beginning of a HTML ASP
+  ----------------------------------------------------------------------*/
+static void         StartOfASP (char c)
+{
+  ElementType      elType;
+  Element          elASP, elASPLine;
+
+  /* create a Thot element ASP */
+  elType.ElSSchema = DocumentSSchema;
+  elType.ElTypeNum = HTML_EL_ASP_element;
+  elASP = TtaNewElement (HTMLcontext.doc, elType);
+  TtaSetElementLineNumber (elASP, NumberOfLinesRead);
+  InsertElement (&elASP);
+  /* create a ASP_line element as the first child of */
+  /* element ASP */
+  if (elASP != NULL)
+    {
+      elType.ElTypeNum = HTML_EL_ASP_line;
+      elASPLine = TtaNewElement (HTMLcontext.doc, elType);
+      TtaSetElementLineNumber (elASPLine, NumberOfLinesRead);
+      TtaInsertFirstChild (&elASPLine, elASP, HTMLcontext.doc);
+      /* create a TEXT element as the first child of element ASP_line */
+      elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+      ASPText = TtaNewElement (HTMLcontext.doc, elType);
+      TtaSetElementLineNumber (ASPText, NumberOfLinesRead);
+      TtaInsertFirstChild (&ASPText, elASPLine, HTMLcontext.doc);
+      TtaSetTextContent (ASPText, (unsigned char *)"", HTMLcontext.language,
+                         HTMLcontext.doc);
+    }
+  InitBuffer ();
+}
+
+/*----------------------------------------------------------------------
+  PutInASP    put character c in the current HTML ASP
+  ----------------------------------------------------------------------*/
+static void         PutInASP (unsigned char c)
+{
+  ElementType       elType;
+  Element           elASPLine, prevElASPLine;
+  
+  if (c != EOS)
+    {
+      if (!HTMLcontext.parsingCSS && ((int) c == EOL || (int) c == CR))
+        /* new line in a ASP */
+        {
+          /* put the content of the inputBuffer into the current */
+          /* ASP_line element */
+          CloseBuffer ();
+          TtaAppendTextContent (ASPText, (unsigned char *)inputBuffer, HTMLcontext.doc);
+          InitBuffer ();
+          /* create a new ASP_line element */
+          elType.ElSSchema = DocumentSSchema;
+          elType.ElTypeNum = HTML_EL_ASP_line;
+          elASPLine = TtaNewElement (HTMLcontext.doc, elType);
+          TtaSetElementLineNumber (elASPLine, NumberOfLinesRead);
+          /* inserts the new ASP_line element after the previous one */
+          prevElASPLine = TtaGetParent (ASPText);
+          TtaInsertSibling (elASPLine, prevElASPLine, FALSE, HTMLcontext.doc);
+          /* create a TEXT element as the first child of the new element
+             ASP_line */
+          elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+          ASPText = TtaNewElement (HTMLcontext.doc, elType);
+          TtaSetElementLineNumber (ASPText, NumberOfLinesRead);
+          TtaInsertFirstChild (&ASPText, elASPLine, HTMLcontext.doc);
+          TtaSetTextContent (ASPText, (unsigned char *)"", HTMLcontext.language, HTMLcontext.doc);
+        }
+      else
+        {
+          if (LgBuffer >= MaxBufferLength - 1)
+            {
+              CloseBuffer ();
+              TtaAppendTextContent (ASPText, (unsigned char *)inputBuffer,
+                                    HTMLcontext.doc);
+              InitBuffer ();
+            }
+          inputBuffer[LgBuffer++] = c;
+        }
+    }
+}
+
+/*----------------------------------------------------------------------
+  EndOfASP    End of a HTML ASP
+  ----------------------------------------------------------------------*/
+static void EndOfASP (char c)
+{
+  if (LgBuffer > 0)
+    {
+      CloseBuffer ();
+      if (ASPText != NULL)
+        TtaAppendTextContent (ASPText, (unsigned char *)inputBuffer,
+                              HTMLcontext.doc);
+    }
+  ASPText = NULL;
+  HTMLcontext.lastElementClosed = TRUE;
+  InitBuffer ();
+}
+
+/*----------------------------------------------------------------------
   PutDash put a dash character in the current comment.
   ----------------------------------------------------------------------*/
-static void         PutDash (char c)
+static void PutDash (char c)
 {
   PutInComment ('-');
   PutInComment (c);
@@ -3787,6 +3887,7 @@ static sourceTransition sourceAutomaton[] =
     {0, '&', (Proc) StartOfEntity, -30},		/* call subautomaton 30 */
     {0, '*', (Proc) PutInBuffer, 0},	/*  * = any other character */
     /* state 1: '<' has been read */
+    {1, '%', (Proc) StartOfASP, 35},
     {1, '/', (Proc) Do_nothing, 3},
     {1, '!', (Proc) Do_nothing, 10},
     {1, '?', (Proc) Do_nothing, 20},
@@ -3919,6 +4020,12 @@ static sourceTransition sourceAutomaton[] =
     /* state 34: "&#x" has been read: reading an hexadecimal value */
     {34, ';', (Proc) EndOfHexEntity, -1},	/* return to calling state */
     {34, '*', (Proc) HexEntityChar, 34},
+    /* state 35: reading a ASP */
+    {35, '%', (Proc) PutInASP, 36},
+    {35, '*', (Proc) PutInASP, 35},
+    /* state 36: reading a ASP */
+    {36, '>', (Proc) EndOfASP, 0},
+    {36, '*', (Proc) PutInASP, 35},
 
     /* state 1000: fake state. End of automaton table */
     /* the next line must be the last one in the automaton declaration */
@@ -4347,7 +4454,7 @@ static void HTMLparse (FILE * infile, char* HTMLbuf)
             {
               /* don't replace end of line by space in a doctype declaration */
               if (currentState != 12 && currentState != 15 &&
-                  currentState != 24)
+                  currentState != 24 && currentState != 35)
                 {
                   /* don't change characters in comments */
                   if (currentState != 0)
@@ -4423,7 +4530,7 @@ static void HTMLparse (FILE * infile, char* HTMLbuf)
               if (charRead == SPACE)
                 /* space character */
                 {
-                  if (currentState == 12 ||
+                  if (currentState == 12 || currentState == 35 ||
                       (currentState == 0 &&
                        !Within (HTML_EL_Preformatted, DocumentSSchema) &&
                        !Within (HTML_EL_STYLE_, DocumentSSchema) &&
@@ -6562,7 +6669,7 @@ void CheckAbstractTree (Document doc)
       elType.ElSSchema = htmlSSchema;
       elType.ElTypeNum = HTML_EL_map;
       /* search all MAP elements in the document */
-      while (el != NULL)
+      while (el)
         {
           /* search the next MAP element in the abstract tree */
           el = TtaSearchTypedElement (elType, SearchForward, el);
@@ -6589,15 +6696,20 @@ void CheckAbstractTree (Document doc)
         }
 
       /* If element BODY is empty, create an empty element as a placeholder*/
-      if (elBody != NULL)
-        if (TtaGetFirstChild (elBody) == NULL)
-          {
-            newElType.ElSSchema = htmlSSchema;
-            newElType.ElTypeNum = HTML_EL_Element;
-            newEl = TtaNewElement (doc, newElType);
-            TtaInsertFirstChild (&newEl, elBody, doc);
-          }
-
+      if (elBody)
+        {
+          el = TtaGetFirstChild (elBody);
+          elType = TtaGetElementType (el);
+          while (el && TtaHasNotElementException(TtaGetElementType (el)))
+            TtaNextSibling (&el);
+          if (el == NULL)
+            {
+              newElType.ElSSchema = htmlSSchema;
+              newElType.ElTypeNum = HTML_EL_Element;
+              newEl = TtaNewElement (doc, newElType);
+              TtaInsertFirstChild (&newEl, elBody, doc);
+            }
+        }
       /* add additional checking here */
     }
 }

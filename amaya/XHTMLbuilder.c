@@ -364,6 +364,7 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
   if (!isInline)
     /* It's a block-level element. Is it within a character-level element? */
     if (elType.ElTypeNum != HTML_EL_Comment_ &&
+        elType.ElTypeNum != HTML_EL_ASP_element &&
         elType.ElTypeNum != HTML_EL_XMLPI)
       BlockInCharLevelElem (el);
 
@@ -745,7 +746,8 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
           elType = TtaGetElementType (child);
           if (elType.ElTypeNum == HTML_EL_FRAMESET ||
               elType.ElTypeNum == HTML_EL_FRAME ||
-              elType.ElTypeNum == HTML_EL_Comment_)
+              elType.ElTypeNum == HTML_EL_Comment_||
+              elType.ElTypeNum == HTML_EL_ASP_element)
             {
               /* create the Frames element if it does not exist */
               if (elFrames == NULL)

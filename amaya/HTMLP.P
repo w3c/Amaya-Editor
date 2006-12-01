@@ -673,6 +673,24 @@ BOXES
                 END;
         END;
 
+ ASP_S: BEGIN
+        Content: Text '<%';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                Visibility: Enclosing =;
+                END;
+        END;
+
+ ASP_E: BEGIN
+        Content: Text '>';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                Visibility: Enclosing =;
+                VertPos: HRef = Previous . HRef;
+                HorizPos: Left = Previous . Right;
+                END;
+        END;
+
  PI_S: BEGIN
         Content: Text '<?';
         Visibility: 0;
@@ -4122,16 +4140,20 @@ RULES
         if within Inserted_Text
                 Depth: Enclosing - 1;
         IN Structure_view BEGIN
-                if not within Comment_line and not within PI_line and
-                   not within DOCTYPE_line and not within CDATA_line
+                if not within Comment_line and not within ASP_line
+                   and not within PI_line
+                   and not within DOCTYPE_line and not within CDATA_line
                    BEGIN
                    HorizPos: Left = Enclosing . Left;
                    VertPos: Top = Previous . Bottom;
                    END;
-                if not within Invalid_element and not within Unknown_namespace
+                if not within Invalid_element
+                and not within Unknown_namespace
                 and not within XHTML_Unknown_namespace
                    Style: Enclosing =;
                 if within Comment_line
+                   HorizPos: Left = Previous . Right;
+                if within ASP_line
                    HorizPos: Left = Previous . Right;
                 if within PI_line
                    HorizPos: Left = Previous . Right;
@@ -4740,7 +4762,7 @@ RULES
   Comment\240:
         BEGIN
         Visibility: 0;
-  IN Structure_view BEGIN
+        IN Structure_view BEGIN
                 Visibility: Enclosing =;
                 Font: COMMENT_Font;
                 Style: COMMENT_Style;
@@ -4755,6 +4777,30 @@ RULES
         BEGIN
         if First CreateFirst(COMMENT_S);
         if Last CreateLast(COMMENT_E);
+        IN Structure_view BEGIN
+                Width: Enclosed . Width;
+                VertPos: Top = Previous . Bottom + 0.2;
+                END;
+        END;
+
+  ASP_element:
+        BEGIN
+        Visibility: 0;
+        IN Structure_view BEGIN
+                Visibility: Enclosing =;
+                Font: COMMENT_Font;
+                Style: COMMENT_Style;
+                Weight: COMMENT_Weight;
+                Foreground: COMMENT_Color;
+                Width: Enclosing . Width;
+                VertPos: Top = Previous . Bottom;
+                END;
+        END;
+
+  ASP_line:
+        BEGIN
+        if First CreateFirst(ASP_S);
+        if Last CreateLast(ASP_E);
         IN Structure_view BEGIN
                 Width: Enclosed . Width;
                 VertPos: Top = Previous . Bottom + 0.2;
@@ -7980,7 +8026,9 @@ ATTRIBUTES
            CreateAfter(VALUE_Invalid_attribute);
         if Anchor
            CreateBefore(VALUE_Invalid_attribute);
-        if not TEXT_UNIT and not PICTURE_UNIT and not Invalid_element and not Unknown_namespace and not Anchor
+        if not TEXT_UNIT and not PICTURE_UNIT
+           and not Invalid_element
+           and not Unknown_namespace and not Anchor
            CreateBefore(VALUE_Invalid_attribute);
         END;
 
@@ -8000,7 +8048,9 @@ ATTRIBUTES
            CreateAfter(UNKNOWN_E);
         if Anchor
            CreateBefore(VALUE_Unknown_attribute);
-        if not TEXT_UNIT and not PICTURE_UNIT and not Invalid_element and not Anchor and not XHTML_Unknown_namespace
+        if not TEXT_UNIT and not PICTURE_UNIT
+           and not Invalid_element and not Anchor
+           and not XHTML_Unknown_namespace
            CreateBefore(VALUE_Unknown_attribute);
         END;
 

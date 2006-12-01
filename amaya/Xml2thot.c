@@ -2368,6 +2368,7 @@ ThotBool  IsLeadingSpaceUseless (Element lastEl, Document doc,
                    // element
                    !strcmp (s, "HTML") &&
                    (lastElType.ElTypeNum == HTML_EL_Comment_ ||
+                    lastElType.ElTypeNum == HTML_EL_ASP_element ||
                     lastElType.ElTypeNum == HTML_EL_XMLPI))
             {
               /* Search the last significant sibling prior to a comment or a Pi */
@@ -2380,6 +2381,7 @@ ThotBool  IsLeadingSpaceUseless (Element lastEl, Document doc,
                   s = TtaGetSSchemaName (prevType.ElSSchema);
                   if (strcmp (s, "HTML") ||
                       prevType.ElTypeNum != HTML_EL_Comment_ &&
+                      prevType.ElTypeNum != HTML_EL_ASP_element &&
                       prevType.ElTypeNum != HTML_EL_XMLPI &&
                       prevType.ElTypeNum != HTML_EL_DOCTYPE)
                   // there is a previous element before

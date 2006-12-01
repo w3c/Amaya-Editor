@@ -53,12 +53,12 @@ STRUCT
         HEAD;
       ? BODY;        { only one of BODY, document type }
       ? FRAMESET;
-        END + (Invalid_element, Unknown_namespace, XHTML_Unknown_namespace, Comment\240, XMLPI, CDATA);
+        END + (Invalid_element, ASP_element, Unknown_namespace, XHTML_Unknown_namespace, Comment\240, XMLPI, CDATA);
         
   DOCTYPE = LIST OF (DOCTYPE_line = TEXT);
-        
-  Invalid_element = TEXT;
 
+  Invalid_element = TEXT;
+  ASP_element = LIST OF (ASP_line = TEXT);
   Unknown_namespace = TEXT;
 
   XHTML_Unknown_namespace = TEXT;
@@ -917,6 +917,8 @@ EXCEPT
         XMLPI:          ReturnCreateNL, NoSpellCheck, NoReplicate, NotAnElementNode;
         Comment\240:    ReturnCreateNL, NoSpellCheck, NoReplicate, NotAnElementNode;
         Comment_line:   Hidden, MarkupPreserve;
+        ASP_element:    ReturnCreateNL, NoSpellCheck, NoReplicate, NotAnElementNode;
+        ASP_line:   Hidden, MarkupPreserve;
         PI_line:        Hidden, MarkupPreserve;
         DOCTYPE:        NoCut, NoSpellCheck, NotAnElementNode;
         DOCTYPE_line:   Hidden, NoCut;

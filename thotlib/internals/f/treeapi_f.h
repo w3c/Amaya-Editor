@@ -135,6 +135,7 @@ extern Element TtaSearchOtherPairedElement ( Element element );
 extern Element TtaSearchNoPageBreak ( Element element,
                                       ThotBool forward );
 extern ThotBool TtaHasHiddenException ( ElementType elType );
+extern ThotBool TtaHasNotElementException ( ElementType elType );
 extern ThotBool TtaHasInvisibleException ( AttributeType attrType );
 extern ThotBool TtaHasReturnCreateNLException ( ElementType elType );
 
@@ -269,6 +270,7 @@ extern Element TtaSearchOtherPairedElement ( Element element );
 extern Element TtaSearchNoPageBreak ( Element element,
                                         ThotBool forward );
 extern ThotBool TtaHasHiddenException ( ElementType elType );
+extern ThotBool TtaHasNotElementException ( ElementType elType );
 extern ThotBool TtaHasInvisibleException ( AttributeType attrType );
 extern ThotBool TtaHasReturnCreateNLException ( ElementType elType );
 

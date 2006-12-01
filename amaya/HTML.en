@@ -23,6 +23,7 @@ PAGE_BREAK: Page_break
 HTML: html
 BODY: body
 Invalid_element: invalid element
+ASP_element: <%>
 Comment\240: Comment
 HEAD: head
 IMG: img

@@ -1024,6 +1024,8 @@ char *UpdateDocumentCharset (Document doc)
           TtaSetStructureChecking (oldStructureChecking, doc);
         }
     }
+  else if (charset == UNDEFINED_CHARSET)
+    strcat (charsetname, "iso-8859-1");
   return charsetname;
 }
 
