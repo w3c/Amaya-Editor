@@ -1024,8 +1024,6 @@ char *UpdateDocumentCharset (Document doc)
           TtaSetStructureChecking (oldStructureChecking, doc);
         }
     }
-  else if (charset == UNDEFINED_CHARSET)
-    strcat (charsetname, "iso-8859-1");
   return charsetname;
 }
 
@@ -1312,88 +1310,90 @@ void SetNamespacesAndDTD (Document doc)
                           attrText = (char *)TtaGetMemory (length + 1);
                           TtaGiveTextAttributeValue (attr, attrText, &length);
                           if (!strcasecmp (attrText, "content-type"))
-						  {
-							if (meta)
-						      // ther is a previous http-equiv meta
-                              TtaDeleteTree (el, doc);
-							else
-                              meta = el;
-						  }
+                            {
+                              if (meta)
+                                // there is a previous http-equiv meta
+                                TtaDeleteTree (el, doc);
+                              else
+                                meta = el;
+                            }
                           TtaFreeMemory (attrText);
                         }
-					  else
-					  {
-                        attr = TtaGetAttribute (el, attrType2);
-						if (attr == NULL)
-						  // a meta with only a content
-                          TtaDeleteTree (el, doc);                          
-					  }
+                      else
+                        {
+                          attr = TtaGetAttribute (el, attrType2);
+                          if (attr == NULL)
+                            // a meta with only a content
+                            TtaDeleteTree (el, doc);                          
+                        }
                     }
                     el = next;
                 }
-
-              if (!meta)
+              if (charsetname[0] != EOS )
                 {
-                  /* there is no meta element with a http-equiv attribute */
-                  /* create one at the begginning of the head */
-                  elType.ElSSchema = attrType.AttrSSchema;
-                  elType.ElTypeNum = HTML_EL_META;
-                  meta = TtaNewElement (doc, elType);
-                  /* do not insert the meta element yet. Wait for its
-                     attribute to be created, otherwise mandatory attributes
-                     will prompt the user with no reason */
-                  insertMeta = TRUE;
-                  attr = NULL;
-                }
-              if (!attr)
-                {
-                  attr = TtaNewAttribute (attrType);
-                  TtaAttachAttribute (meta, attr, doc);
-                }
-              TtaSetAttributeText (attr, "content-type", meta, doc);
-
-              attrType.AttrTypeNum = HTML_ATTR_meta_content;
-              attr = TtaGetAttribute (meta, attrType);
-              if (!DocumentMeta[doc] || !DocumentMeta[doc]->xmlformat)
-                /* must be text/html */
-                xhtml_mimetype = FALSE; 
-              else if (DocumentMeta[doc]->content_type == NULL)
-                {
-                  if (attr)
+                  if (!meta)
                     {
-                      length = TtaGetTextAttributeLength (attr);
-                      attrText = (char *)TtaGetMemory (length + 1);
-                      TtaGiveTextAttributeValue (attr, attrText, &length);
-                      if (!strncmp (attrText, "text/html", 9))
-                        xhtml_mimetype = FALSE;
-                      else
-                        xhtml_mimetype = TRUE;
-                      TtaFreeMemory (attrText);
+                      /* there is no meta element with a http-equiv attribute */
+                      /* create one at the begginning of the head */
+                      elType.ElSSchema = attrType.AttrSSchema;
+                      elType.ElTypeNum = HTML_EL_META;
+                      meta = TtaNewElement (doc, elType);
+                      /* do not insert the meta element yet. Wait for its
+                         attribute to be created, otherwise mandatory attributes
+                         will prompt the user with no reason */
+                      insertMeta = TRUE;
+                      attr = NULL;
                     }
+                  if (!attr)
+                    {
+                      attr = TtaNewAttribute (attrType);
+                      TtaAttachAttribute (meta, attr, doc);
+                    }
+                  TtaSetAttributeText (attr, "content-type", meta, doc);
+
+                  attrType.AttrTypeNum = HTML_ATTR_meta_content;
+                  attr = TtaGetAttribute (meta, attrType);
+                  if (!DocumentMeta[doc] || !DocumentMeta[doc]->xmlformat)
+                    /* must be text/html */
+                    xhtml_mimetype = FALSE; 
+                  else if (DocumentMeta[doc]->content_type == NULL)
+                    {
+                      if (attr)
+                        {
+                          length = TtaGetTextAttributeLength (attr);
+                          attrText = (char *)TtaGetMemory (length + 1);
+                          TtaGiveTextAttributeValue (attr, attrText, &length);
+                          if (!strncmp (attrText, "text/html", 9))
+                            xhtml_mimetype = FALSE;
+                          else
+                            xhtml_mimetype = TRUE;
+                          TtaFreeMemory (attrText);
+                        }
+                      else
+                        /* what default MIME type for the html document */
+                        TtaGetEnvBoolean ("ENABLE_XHTML_MIMETYPE", &xhtml_mimetype);
+                    }
+                  if (!attr)
+                    {
+                      attr = TtaNewAttribute (attrType);
+                      TtaAttachAttribute (meta, attr, doc);
+                    }
+                  /* all attributes have been attached to the element.
+                     We can insert it in the tree now */
+                  if (insertMeta)
+                    TtaInsertFirstChild (&meta, head, doc);
+                  if (DocumentMeta[doc] && DocumentMeta[doc]->content_type)
+                    strcpy (buffer, DocumentMeta[doc]->content_type);
+                  else if (xhtml_mimetype)
+                    strcpy (buffer, AM_XHTML_MIME_TYPE);
                   else
-                    /* what default MIME type for the html document */
-                    TtaGetEnvBoolean ("ENABLE_XHTML_MIMETYPE", &xhtml_mimetype);
-                }
-              if (!attr)
-                {
-                  attr = TtaNewAttribute (attrType);
-                  TtaAttachAttribute (meta, attr, doc);
-                }
-              /* all attributes have been attached to the element.
-                 We can insert it in the tree now */
-              if (insertMeta)
-                TtaInsertFirstChild (&meta, head, doc);
-              if (DocumentMeta[doc] && DocumentMeta[doc]->content_type)
-                strcpy (buffer, DocumentMeta[doc]->content_type);
-              else if (xhtml_mimetype)
-                strcpy (buffer, AM_XHTML_MIME_TYPE);
-              else
-                strcpy (buffer, "text/html");
-              if (charsetname[0] != EOS)
-                {
-                  strcat (buffer, "; charset=");
-                  strcat (buffer, charsetname);
-                  TtaSetAttributeText (attr, buffer, meta, doc);
+                    strcpy (buffer, "text/html");
+                  if (charsetname[0] != EOS)
+                    {
+                      strcat (buffer, "; charset=");
+                      strcat (buffer, charsetname);
+                      TtaSetAttributeText (attr, buffer, meta, doc);
+                    }
                 }
             }
         } 
