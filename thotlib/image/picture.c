@@ -1554,9 +1554,10 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
           if (pAb->AbLeafType == LtGraphics)
             box = pAb->AbBox;
         }
-
+#ifdef IV
 if (imageDesc->PicFileName && strstr (imageDesc->PicFileName,"fond_colon"))
 printf ("LayoutPicture (%s)\n",imageDesc->PicFileName);
+#endif
       // x,y,w,h define the area to be painted
       x = box->BxXOrg;
       y = box->BxYOrg;
