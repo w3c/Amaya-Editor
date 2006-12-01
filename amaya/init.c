@@ -1710,7 +1710,8 @@ static void TextURL (Document doc, View view, char *text)
             TtaFreeMemory (text);
           url = s;
         }
-
+      if (DocumentTypes[doc] == docSource)
+        doc = GetDocFromSource (doc);
       if (!DontReplaceOldDoc && !CanReplaceCurrentDocument (doc, view))
         {
           /* restore the previous value @@ */
