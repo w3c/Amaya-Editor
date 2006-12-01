@@ -116,7 +116,7 @@ static int LoadTemplateRepositoryList (Prop_Templates_Path** list)
   FreeTemplateRepositoryList(list);
   
   path = (char *) TtaGetMemory (MAX_LENGTH);
-  homePath       = TtaGetEnvString ("APP_HOME");
+  homePath       = TtaGetEnvString ("THOTDIR");
   sprintf (path, "%s%ctemplate-repositories.dat", homePath, DIR_SEP);
   
   file = TtaReadOpen ((char *)path);

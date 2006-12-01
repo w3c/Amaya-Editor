@@ -106,8 +106,9 @@ NewTemplateDocDlgWX::NewTemplateDocDlgWX ( int ref,
   // set the default templates directory
   XRCCTRL(*this, "wxID_TEMPLATEDIRNAME", wxTextCtrl)->SetValue(templateDir);
   // Update the template combobox with templates in directory "templateDir"
-  //UpdateTemplateFromDir ();
-  
+#if defined(_WINDOWS) || defined(_MACOS)
+  UpdateTemplateFromDir ();
+#endif /* _WINDOWS  || MACOS */
   // set the default instance path
   wxString homedir = TtaGetHomeDir();
   wxString filename = TtaConvMessageToWX("New.html");
