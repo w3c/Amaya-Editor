@@ -12,7 +12,7 @@
 <body xml:lang="en" lang="en">
 
 <div>
-<img alt="Amaya" src="../../resources/icons/22x22/logo.png" class="logo" />
+<img alt="Amaya" src="../../resources/icons/22x22/logo.png" class="logo" /> 
 
 <p class="nav"><a href="Manual.html.fr" accesskey="t"><img alt=""
 src="../../resources/icons/misc/up.png" /></a> <a href="Selecting.html.fr"
@@ -22,7 +22,7 @@ accesskey="n"><img alt="next" src="../../resources/icons/misc/right.png"
 
 <div class="toc">
 <ul>
-  <li><a href="#Naviguer">Naviguer avec Amaya</a>
+  <li><a href="#Naviguer">Naviguer avec Amaya</a> 
     <ul>
       <li><a href="#Activer">Activer un lien, parcourir les liens</a></li>
       <li><a href="#rapides">Accès rapides</a></li>
@@ -33,7 +33,7 @@ accesskey="n"><img alt="next" src="../../resources/icons/misc/right.png"
       <li><a href="#Contr">Commandes au clavier</a></li>
     </ul>
   </li>
-  <li><a href="#Utiliser">Utiliser les formulaires</a>
+  <li><a href="#Utiliser">Utiliser les formulaires</a> 
     <ul>
       <li><a href="#Menus">Menus simples</a></li>
       <li><a href="#Menus1">Menus à sélection multiple</a></li>
@@ -183,6 +183,11 @@ liens</a> plus vite.</p>
       document local, en spécifiant le nom d'un fichier qui n'existe pas
       encore.</p>
     </dd>
+  <dt>Explorateur de fichiers</dt>
+    <dd>Un explorateur de fichiers est affiché en haut de la fenêtre
+      d'Outils. Cet outil donne accès à tous les répertoires locaux. Un
+      simple clic permet d'ouvrir ou de fermer un répertoire et un double
+      clic sur un nom de fichier ouvre le document correspondant.</dd>
   <dt>Adresse du document courant</dt>
     <dd>Une zone affiche en haut de la fenêtre le nom du fichier ou l'URI du
       document courant. Vous pouvez saisir le nom d'un autre document (local
@@ -190,7 +195,7 @@ liens</a> plus vite.</p>
       sur la touche Enter quand le curseur se trouve dans cette zone pour
       activer le chargement du document. Cette commande peut aussi être
       utilisée pour créer un nouveau document local, en entrant le nom d'un
-      fichier qui n'existe pas encore.
+      fichier qui n'existe pas encore. 
       <p>Le bouton à la droite de cette zone affiche la liste des derniers
       documents chargés. Vous pouvez choisir un document dans cette liste. Ce
       document vient alors remplacer le document courant.</p>
@@ -306,7 +311,7 @@ est ensuite utilisable avec le clavier ou avec la souris.</p>
     <option>banane</option>
     <option>fraise</option>
   </select>
-</form>
+   </form>
 
 <p>Avec le clavier, passez d'une entrée à l'autre avec les touches flèches
 puis sélectionnez l'entrée courante avec la touche <strong>Enter</strong>.
@@ -338,6 +343,6 @@ inversement.</p>
     <option selected="selected">banane</option>
     <option>fraise</option>
   </select>
-</form>
+   </form>
 </body>
 </html>

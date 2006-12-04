@@ -3484,7 +3484,7 @@ void CreateMEXISTS2 (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMEXPONENTIALE (Document document, View view)
 {
-  CreateMathConstruct (22,8494);}
+  CreateMathConstruct (22, 8519/*8494*/);}
 /*----------------------------------------------------------------------
   CreateMFACTORIAL
   ----------------------------------------------------------------------*/
