@@ -1211,7 +1211,10 @@ RULES
 	Create '?>' after;
   IF Within List_Item
 	Create '?>' after;
+  IF Within TITLE
+	Create '?>' after;
 	IF not Within Paragraph and not Within List_Item
+  and not Within TITLE
 	Create '?>\12' after;
 	END;
 

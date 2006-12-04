@@ -1224,7 +1224,7 @@ void SetNamespacesAndDTD (Document doc)
             }
         }
 
-      if (xmlDecl)
+      if (xmlDecl && charsetname[0] != EOS)
         {
           /* generate the XML declaration */
           /* Check the Thot abstract tree against the structure schema. */
