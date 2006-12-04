@@ -145,6 +145,11 @@ ELEMENTS
 	ElemDelete.Pre -> DeleteColumn;
 	END;
 
+   tbody:
+	BEGIN
+	ElemDelete.Pre -> DeleteTBody;
+	END;
+
    Table_cell:
 	BEGIN
 	ElemNew.Post -> CellCreated;

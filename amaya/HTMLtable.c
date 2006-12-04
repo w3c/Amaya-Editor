@@ -2279,6 +2279,40 @@ static void ClearColumn (Element colhead, Document doc)
 }
 
 /*----------------------------------------------------------------------
+  DeleteDeleteTBody
+  A tbody will be deleted by the user.
+  ----------------------------------------------------------------------*/
+ThotBool DeleteTBody (NotifyElement * event)
+{
+  Element             el, sibling;
+  ElementType         elType;
+  Document            doc = event->document;
+
+  el = event->element;
+  sibling = el;
+  TtaNextSibling (&sibling);
+  elType = TtaGetElementType (sibling);
+  if (elType.ElTypeNum == HTML_EL_tbody)
+    return FALSE;		/* let Thot perform normal operation */
+  sibling = el;
+  TtaPreviousSibling (&sibling);
+  elType = TtaGetElementType (sibling);
+  if (elType.ElTypeNum == HTML_EL_tbody)
+    return FALSE;		/* let Thot perform normal operation */
+  // remove the table instead of the tbody
+  elType = TtaGetElementType (el);
+  elType.ElTypeNum = HTML_EL_Table_;
+  el = TtaGetTypedAncestor (el, elType);
+  if (el)
+    {
+      if (TtaPrepareUndo (doc))
+      TtaRegisterElementDelete (el, doc);
+      TtaDeleteTree (el, doc);
+    }
+  return TRUE;		/* don't let Thot perform normal operation */
+}
+
+/*----------------------------------------------------------------------
   DeleteColumn
   A column will be deleted by the user.
   ----------------------------------------------------------------------*/
