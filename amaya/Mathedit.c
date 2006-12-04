@@ -747,9 +747,6 @@ void InsertSymbol (Element *el, int TypeNum, int symbol, Document doc)
   op = TtaNewElement (doc, newType);
   TtaInsertSibling (op, *el, FALSE, doc);
 
-  /* Memo Fred : The symbol have to be SYMBOL_UNIT to be stretchable, but not all the symbols can take this type
-     I have to study it a little more... */
-
   if (symbol == '{' || symbol == '|')
     {
       newType.ElTypeNum = MathML_EL_SYMBOL_UNIT;
@@ -793,6 +790,29 @@ void AttachIntVertStretch(Element el, Document doc)
     }
   TtaSetAttributeValue (attr, MathML_ATTR_IntVertStretch_VAL_yes_, el, doc);
 }
+
+/*----------------------------------------------------------------------
+  AttachIntHorizStretch
+  attach an IntVertStretch attribute to the element el
+  ----------------------------------------------------------------------*/
+void AttachIntHorizStretch(Element el, Document doc)
+{
+  ElementType elType = TtaGetElementType (el);
+  Attribute          attr;
+  AttributeType      attrType;
+
+  attrType.AttrSSchema = elType.ElSSchema;
+  attrType.AttrTypeNum = MathML_ATTR_IntHorizStretch;
+  attr = TtaGetAttribute (el, attrType);
+  if (!attr)
+    {
+      attrType.AttrTypeNum = MathML_ATTR_IntHorizStretch;
+      attr = TtaNewAttribute (attrType);
+      TtaAttachAttribute (el, attr, doc);
+    }
+  TtaSetAttributeValue (attr, MathML_ATTR_IntHorizStretch_VAL_yes_, el, doc);
+}
+
 
 /*----------------------------------------------------------------------
   InsertText
@@ -1986,9 +2006,10 @@ static void CreateMathConstruct (int construct, ...)
               if (construct == 26 || construct == 30)
                 {
                   /* Accents ; exposant */
+                  int symboltype = (construct == 26 ? MathML_EL_MO : va_arg(varpos, int));
                   int symbol = va_arg(varpos, int);
                   leaf = child;
-                  InsertSymbol (&child, MathML_EL_MO, symbol, doc);
+                  InsertSymbol (&child, symboltype, symbol, doc);
                   TtaRemoveTree (leaf, doc);
                   selectedchild = -1;
                   selected = child;
@@ -2111,6 +2132,7 @@ static void CreateMathConstruct (int construct, ...)
       else if (construct == 26 || construct == 30 || construct == 31 || construct == 33)
         {
           /* Accents ; Exposant ; Symbol sub ; Symbol under */
+          int symboltype = (construct == 26 ? MathML_EL_MO : va_arg(varpos, int));
           int symbol = va_arg(varpos, int);
           if (selectedchild == 1)
             child = TtaGetFirstChild (el);
@@ -2119,11 +2141,10 @@ static void CreateMathConstruct (int construct, ...)
           leaf = TtaGetFirstChild (child);
           child = leaf;
 
-          /* -1 : for the inverse construct where exposant is a number */
           if (symbol <=0)
-            InsertText (&child, ((symbol == -1) ? MathML_EL_MN : MathML_EL_MI), va_arg(varpos, unsigned char*), doc);
+            InsertText (&child, symboltype, va_arg(varpos, unsigned char*), doc);
           else
-            InsertSymbol (&child, MathML_EL_MI, symbol, doc);
+            InsertSymbol (&child, symboltype, symbol, doc);
 
           TtaDeleteTree (leaf, doc);
         }
@@ -2774,8 +2795,8 @@ static void CreateMathConstruct (int construct, ...)
         {
           /* move the limits of the MSUBSUP element if it's appropriate */
           SetIntMovelimitsAttr (el, doc);
-          // if (op)
-          // CheckLargeOp (op, doc);
+           if (op)
+           CheckLargeOp (op, doc);
         }
       else if (ParBlock)
         /* the user wants to create a parenthesized block */
@@ -3184,7 +3205,7 @@ void CreateMNORM (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMALEPHSUB (Document document, View view)
 {
-  CreateMathConstruct (31,8501);}
+  CreateMathConstruct (31, MathML_EL_MI, 8501);}
 /*----------------------------------------------------------------------
   CreateMAND
   ----------------------------------------------------------------------*/
@@ -3438,7 +3459,7 @@ void CreateMEQUIVALENTBINARY (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMEQUIVALENTUNDER (Document document, View view)
 {
-  CreateMathConstruct (33, '~');}
+  CreateMathConstruct (33, MathML_EL_MO, '~');}
 /*----------------------------------------------------------------------
   CreateMEULERGAMMA
   ----------------------------------------------------------------------*/
@@ -3625,7 +3646,7 @@ void CreateMINTUNDER (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMINVERSE (Document document, View view)
 {
-  CreateMathConstruct (30, -1, "-1");}
+  CreateMathConstruct (30, MathML_EL_MN, -1, "-1");}
 /*----------------------------------------------------------------------
   CreateMISOMORPHIC
   ----------------------------------------------------------------------*/
@@ -3700,7 +3721,7 @@ void CreateMLAMBDA (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMLIM (Document document, View view)
 {
-  CreateMathConstruct (33, 0, "lim");}
+  CreateMathConstruct (33, MathML_EL_MO, 0, "lim");}
 
 /*----------------------------------------------------------------------
   CreateMLIMTENDSTO
@@ -3840,7 +3861,7 @@ void CreateMNUPLET (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMOMEGASUB (Document document, View view)
 {
-  CreateMathConstruct (31,969);}
+  CreateMathConstruct (31, MathML_EL_MI, 969);}
 /*----------------------------------------------------------------------
   CreateMOR
   ----------------------------------------------------------------------*/
@@ -3870,7 +3891,7 @@ void CreateMPARALLEL (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMORTHOGONALCOMPLEMENT (Document document, View view)
 {
-  CreateMathConstruct (30,8869);}
+  CreateMathConstruct (30, MathML_EL_MO, 8869);}
 /*----------------------------------------------------------------------
   CreateMOUTERPRODUCT
   ----------------------------------------------------------------------*/
@@ -4056,13 +4077,13 @@ void CreateMSUP2 (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMSUPMINUS (Document document, View view)
 {
-  CreateMathConstruct (30,'-');}
+  CreateMathConstruct (30, MathML_EL_MI, '-');}
 /*----------------------------------------------------------------------
   CreateMSUPPLUS
   ----------------------------------------------------------------------*/
 void CreateMSUPPLUS (Document document, View view)
 {
-  CreateMathConstruct (30,'+');}
+  CreateMathConstruct (30, MathML_EL_MI, '+');}
 /*----------------------------------------------------------------------
   CreateMSUPUNDER
   ----------------------------------------------------------------------*/
@@ -4074,7 +4095,7 @@ void CreateMSUPUNDER (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMTENDSTO (Document document, View view)
 {
-  CreateMathConstruct (33, 8594);}
+  CreateMathConstruct (33, MathML_EL_MO, 8594);}
 /*----------------------------------------------------------------------
   CreateMTENDSTOTENDSTO
   ----------------------------------------------------------------------*/
@@ -4098,7 +4119,7 @@ void CreateMTIMESBINARY (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMTRANSPOSE (Document document, View view)
 {
-  CreateMathConstruct (30,'t');}
+  CreateMathConstruct (30, MathML_EL_MO, 't');}
 /*----------------------------------------------------------------------
   CreateMTRUE
   ----------------------------------------------------------------------*/
