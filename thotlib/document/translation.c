@@ -225,6 +225,7 @@ static void ExportChar (wchar_t c, int fnum, char *outBuf, Document doc,
   PtrTSchema          pTSch;
   PtrDocument         pDoc;
   FILE               *fileDesc;
+  CHARSET             charset;
   unsigned char       tmp[2];
   unsigned char       mbc[50], *ptr;
   char               *entity;
@@ -233,8 +234,13 @@ static void ExportChar (wchar_t c, int fnum, char *outBuf, Document doc,
   int                 len, lineLen;
   Name                tsEOL, tsTranslEOL;
 
-  nb_bytes2write = 0;
   pDoc = LoadedDocument[doc - 1];
+  if (pDoc->DocDefaultCharset)
+    // export entities when the charset is not explicit
+    charset = US_ASCII;
+  else
+    charset = pDoc->DocCharset;
+  nb_bytes2write = 0;
   if (translate)
     {
       if (c == START_ENTITY)
@@ -287,8 +293,8 @@ static void ExportChar (wchar_t c, int fnum, char *outBuf, Document doc,
             }
         }
       /* translate the input character */
-      else if ((c > 127 && pDoc->DocCharset == US_ASCII) ||
-               (c > 255 && pDoc->DocCharset == ISO_8859_1))
+      else if ((c > 127 && charset == US_ASCII) ||
+               (c > 255 && charset == ISO_8859_1))
         {
           /* generate an entity into an ASCII or ISO_8859_1 file */
           if (DocumentHasDocType && GetEntityFunction)
@@ -311,7 +317,7 @@ static void ExportChar (wchar_t c, int fnum, char *outBuf, Document doc,
           nb_bytes2write = strlen ((char *)mbc);
           mbc[nb_bytes2write++] = ';';
         }
-      else if (pDoc->DocCharset == UTF_8)
+      else if (charset == UTF_8)
         {
           /* UTF-8 encoding */
           ptr = mbc;
@@ -321,7 +327,7 @@ static void ExportChar (wchar_t c, int fnum, char *outBuf, Document doc,
         {
           /* other encodings */
           nb_bytes2write = 1;
-          mbc[0] = TtaGetCharFromWC ((wchar_t) c, pDoc->DocCharset);
+          mbc[0] = TtaGetCharFromWC ((wchar_t) c, charset);
           if (mbc[0] == EOS && c != EOS)
             {
               /* generate an entity */
@@ -584,7 +590,10 @@ static ThotBool CheckDate (unsigned char c, int fnum, char *outBuf,
       else
         {
           /* generate the current date */
-          TtaGetTime (tm, pDoc->DocCharset);
+          if (pDoc->DocDefaultCharset)
+            TtaGetTime (tm, US_ASCII);
+          else
+            TtaGetTime (tm, pDoc->DocCharset);
           for (index = 0; tm[index] != EOS; index++)
             ExportChar ((wchar_t) tm[index], fnum, outBuf, doc,
                         FALSE, FALSE, FALSE);
