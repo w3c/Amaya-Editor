@@ -609,19 +609,6 @@ static void SetInsert (PtrAbstractBox *pAb, int *frame, LeafType nat, ThotBool d
         *pAb = pBox->BxAbstractBox;
 
       pSelAb = *pAb;
-      if (pSelAb && pSelAb->AbPresentationBox)
-        {
-          // adjust the selection
-          if (del)
-            while (pSelAb->AbPrevious && pSelAb->AbPresentationBox &&
-                   pSelAb->AbElement == pSelAb->AbPrevious->AbElement)
-              pSelAb = pSelAb->AbPrevious;
-          else
-            while (pSelAb->AbNext && pSelAb->AbPresentationBox &&
-                   pSelAb->AbElement == pSelAb->AbNext->AbElement)
-              pSelAb = pSelAb->AbNext;
-        }
-
       if (pSelAb)
         {
           /* deplace l'insertion avant le pave selectionne pour detruire */
