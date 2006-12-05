@@ -735,7 +735,11 @@ void MapEntityByCode (int entityValue, Document doc, ThotBool withMath,
   int         i;
 
   /* Select the right table */
-  ptr = XhtmlEntityTable;
+  if (withMath)
+    /* look for in the Math entities table */
+    ptr = MathEntityTable;
+  else
+    ptr = XhtmlEntityTable;
   if (ptr)
     {
       /* look for in the HTML entities table */
@@ -751,9 +755,9 @@ void MapEntityByCode (int entityValue, Document doc, ThotBool withMath,
               i--;
               *entityName = (char *) (ptr[i].charName);
             }
-          else if (withMath && ptr != MathEntityTable)
+          else if (withMath && ptr != XhtmlEntityTable)
             /* look for in the Math entities table */
-            ptr = MathEntityTable;
+            ptr = XhtmlEntityTable;
           else
             {
               *entityName = NULL;

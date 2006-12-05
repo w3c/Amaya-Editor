@@ -299,7 +299,7 @@ static void ExportChar (wchar_t c, int fnum, char *outBuf, Document doc,
           /* generate an entity into an ASCII or ISO_8859_1 file */
           if (DocumentHasDocType && GetEntityFunction)
             (*(Proc4)GetEntityFunction) ((void *)c, (void *)doc,
-                                         (void *)WithMath,(void *)&entity);
+                                         (void *)(WithMath && entityName),(void *)&entity);
           else
             entity = NULL;
           mbc[0] = '&';
@@ -1107,7 +1107,7 @@ static void TranslateLeaf (PtrElement pEl, ThotBool transChar,
                   }
                 pBufT = pBufT->BuNext;
               }
-          else if (pTSch != NULL)
+          else if (pTSch)
             /* effectue les traductions de caracteres selon la table */
             TranslateText (pBufT, pTSch, pTransAlph, lineBreak, fnum,
                            doc, FALSE, entityName, markupPreserve);

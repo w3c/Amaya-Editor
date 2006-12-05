@@ -1224,6 +1224,7 @@ static int GetOccurrences(int val, Document doc)
       TtaShowDialogue (MathsDialogue + FormMaths, FALSE);
       /* wait for an answer */
       TtaWaitShowDialogue ();
+      val = Math_occurences;
     }
 #endif  /* _WX */
   return val;
@@ -2500,7 +2501,7 @@ static void CreateMathConstruct (int construct, ...)
           new_ = TtaGetFirstChild (el);
           leaf = TtaGetFirstChild (new_);
           child = leaf;
-          InsertSymbol(&child, MathML_EL_MI, 8494, doc); // e
+          InsertSymbol(&child, MathML_EL_MI, 8519, doc); // e
           TtaDeleteTree (leaf, doc);
 
           new_ = TtaGetLastChild (el);
@@ -2595,8 +2596,8 @@ static void CreateMathConstruct (int construct, ...)
           child = SetMFencedAttributes(el, ope, clo, ',', doc);
         
           /* ask the user the number of rows and colomns */
-          if (lx == 0) lx = 3;
-          if (ly == 0) ly = 3;
+          if (lx == 0) lx = GetOccurrences (3, doc);
+          if (ly == 0) ly = GetOccurrences (3, doc);
 
           /* mtable */
           leaf = TtaGetFirstChild (child);TtaDeleteTree (leaf, doc);
@@ -3484,7 +3485,7 @@ void CreateMEXISTS2 (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMEXPONENTIALE (Document document, View view)
 {
-  CreateMathConstruct (22, 8519/*8494*/);}
+  CreateMathConstruct (22, 8519);}
 /*----------------------------------------------------------------------
   CreateMFACTORIAL
   ----------------------------------------------------------------------*/

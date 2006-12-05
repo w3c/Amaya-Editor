@@ -1137,18 +1137,24 @@ void SetNamespacesAndDTD (Document doc)
   doctype = TtaSearchTypedElement (elType, SearchInTree, docEl);
 
   /* check if the compound document requests a DOCTYPE declaration */
-  if ((useMathML || useSVG || useHTML || useXML) && DocumentMeta[doc]->xmlformat)
+  if (DocumentMeta[doc]->xmlformat)
     {
       profile = TtaGetDocumentProfile(doc);
       if (DocumentTypes[doc] == docHTML && doctype)
         {
           /* Create a XHTML + MathML + SVG doctype */
-          if ((useMathML || useSVG) && profile == L_Xhtml11)
+          if ((useMathML || useSVG) &&
+              (profile == L_Xhtml11 || profile == L_Transitional))
             {
               CreateDoctype (doc, doctype, L_Xhtml11, useMathML, useSVG);
               /* it's not necessary to generate the math PI */
               mathPI = FALSE;
             }
+          else if ((useMathML || useSVG) && doctype)
+            /* remove the current doctype */
+            TtaDeleteTree (doctype, doc);
+          else
+            CreateDoctype (doc, doctype, L_Xhtml11, useMathML, useSVG);
         }
       else if (doctype)
         /* remove the current doctype */

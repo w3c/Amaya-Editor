@@ -802,7 +802,15 @@ void DrawStixBrace (int frame, int x, int y, int l, int h,
   unsigned char   symb;
   ThotFont        font;
 
-  size = PixelToPoint (h);
+#ifdef _GL
+  size = PixelToPoint ((3 * h) / 4);
+  font = (ThotFont)LoadStixFont (7, size);
+  if (direction == 0)
+    symb = 38;
+  else
+    symb = 40;
+  DrawCenteredStixChar (font, symb, x, y, l, h, fg, frame);
+#else /* _GL */
   font = (ThotFont)LoadStixFont (7, size);
   if (CharacterHeight (38, font) > (3 * h) / 4)
     {
@@ -841,6 +849,7 @@ void DrawStixBrace (int frame, int x, int y, int l, int h,
     else
       /* draw a closing brace */
       DrawCompoundBraceStix (frame, x, y, l, h, size, fg, 0x53, 0x54, 0x55);
+#endif /* _GL */
 }
 
 /* ----------------------------------------------------------------------
