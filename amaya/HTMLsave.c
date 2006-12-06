@@ -1143,21 +1143,23 @@ void SetNamespacesAndDTD (Document doc)
       if (DocumentTypes[doc] == docHTML && doctype)
         {
           /* Create a XHTML + MathML + SVG doctype */
-          if ((useMathML || useSVG) &&
-              (profile == L_Xhtml11 || profile == L_Transitional))
+          if ((useMathML || useSVG) && !useXML && profile == L_Xhtml11)
             {
               CreateDoctype (doc, doctype, L_Xhtml11, useMathML, useSVG);
               /* it's not necessary to generate the math PI */
               mathPI = FALSE;
             }
-          else if ((useMathML || useSVG) && doctype)
+          else if (useMathML || useSVG || useXML)
             /* remove the current doctype */
             TtaDeleteTree (doctype, doc);
           else
-            CreateDoctype (doc, doctype, L_Xhtml11, useMathML, useSVG);
+            // regenerate the doctype with the right profile
+            CreateDoctype (doc, doctype, profile, useMathML, useSVG);
         }
-      else if (doctype)
-        /* remove the current doctype */
+      else if (doctype &&
+               ((useSVG && (useMathML || useHTML || useXML)) ||
+                (useXML && (useMathML || useHTML || useSVG))))
+        /* several namespaces: remove the current doctype */
         TtaDeleteTree (doctype, doc);
     }
    
@@ -1219,6 +1221,9 @@ void SetNamespacesAndDTD (Document doc)
                     }
                   else if (strstr (buffer, "mathml.xsl"))
                     {
+                      if (!mathPI)
+                        // this PI must be removed
+                        TtaDeleteTree (elFound, doc);
                       /* it's not necessary to generate the math PI */
                       mathPI = FALSE;
                       elFound = NULL;
