@@ -62,6 +62,11 @@ static ThotBool          IgnoreDate = FALSE;
 static unsigned char     DateString[10];
 static int               DateIndex = 0;
 
+static ThotBool          RCSDollar = FALSE;
+static ThotBool          RCSMarker = FALSE;
+static unsigned char     RCSString[512];
+static int               RCSIndex = 0;
+
 /* number of output files in use */
 static int          NOutFiles = 0;
 /* the output files */
@@ -570,6 +575,7 @@ void TtaGetTime (char *s, CHARSET charset)
     }
 }
 
+#ifdef LC
 /*----------------------------------------------------------------------
   CheckDate checks if the current date should be generated
   Returns TRUE if the character must be skipped.
@@ -647,7 +653,130 @@ static ThotBool CheckDate (unsigned char c, int fnum, char *outBuf,
     }
   return FALSE;
 }
+#endif /* LC */
 
+/*----------------------------------------------------------------------
+  CheckRCS checks if the current date should be generated and avoid
+  to break the content of an RCS keyword.
+  Returns TRUE if the character must be skipped.
+  ----------------------------------------------------------------------*/
+static ThotBool CheckRCS (unsigned char c, int fnum, char *outBuf,
+                           Document doc)
+{
+  PtrDocument pDoc;
+  char        tm[DATESTRLEN];
+  int         index;
+
+  pDoc = LoadedDocument[doc - 1];
+
+  if (StartDate)
+    {
+      if (c == '-' || c == '>' || c == SPACE)
+	{
+	  /* keep this character */
+	  return FALSE;
+	}
+      else
+        {
+          /* generate the current date */
+          if (pDoc->DocDefaultCharset)
+            TtaGetTime (tm, US_ASCII);
+          else
+            TtaGetTime (tm, pDoc->DocCharset);
+          for (index = 0; tm[index] != EOS; index++)
+            ExportChar ((wchar_t) tm[index], fnum, outBuf, doc,
+                        FALSE, FALSE, FALSE);
+          StartDate = FALSE;
+          IgnoreDate = TRUE;
+        }
+    }
+
+  if (c == '$')
+    {
+      /* start/stop the analyse */
+      if (IgnoreDate)
+        /* close the previous date parsing */
+        IgnoreDate = FALSE;
+      if (!RCSDollar)
+	{
+	  RCSDollar = TRUE;
+	  RCSIndex = 0;
+	}
+      else
+	{
+	  RCSDollar = FALSE;
+	  RCSMarker = FALSE;
+	  RCSIndex = 0;
+	  ExportChar ((wchar_t) c, fnum, outBuf, doc, FALSE, FALSE, FALSE);
+	  return TRUE;
+	}
+    }
+  else if (RCSMarker)
+    {
+      ExportChar ((wchar_t) c, fnum, outBuf, doc, FALSE, FALSE, FALSE);
+      return TRUE;
+    }
+  else if (RCSDollar)
+    {
+      if (IgnoreDate)
+        {
+          if (c == '<')
+            {
+              /* implicit closing of the date parsing */
+              IgnoreDate = FALSE;
+              StartDollar = FALSE;
+            }
+          else
+            /* it's a character of the previous date */
+            return TRUE;
+        }
+      else if (c == ':' || c == '=')
+        {
+          if (RCSDollar && RCSIndex > 0 &&
+	      ((!strncasecmp ((char *)RCSString, "Author", RCSIndex)) ||
+	       (!strncasecmp ((char *)RCSString, "Header", RCSIndex)) ||
+	       (!strncasecmp ((char *)RCSString, "Id", RCSIndex)) ||
+	       (!strncasecmp ((char *)RCSString, "Locker", RCSIndex)) ||
+	       (!strncasecmp ((char *)RCSString, "Log", RCSIndex)) ||
+	       (!strncasecmp ((char *)RCSString, "Name", RCSIndex)) ||
+	       (!strncasecmp ((char *)RCSString, "RCSfile", RCSIndex)) ||
+	       (!strncasecmp ((char *)RCSString, "Revision", RCSIndex)) ||
+	       (!strncasecmp ((char *)RCSString, "Source", RCSIndex)) ||
+	       (!strncasecmp ((char *)RCSString, "State", RCSIndex))))
+	    {
+	      /* following characters will be skipped until the $ */
+	      RCSMarker = TRUE;
+	    }
+	  else if (!StartDate && RCSIndex > 0 &&
+		   !strncasecmp ((char *)RCSString, "Date", RCSIndex))
+	    {
+	      /* following characters will be skipped until the $ or EOL or EOS */
+	      StartDate = TRUE;
+	    }
+	  else
+	    {
+	      RCSDollar = FALSE;
+	      RCSMarker = FALSE;
+	      return FALSE;
+ 	    }
+          ExportChar ((wchar_t) c, fnum, outBuf, doc, FALSE, FALSE, FALSE);
+	  return TRUE;
+        }
+      else if (c == EOS || c == EOL || RCSIndex > 8)
+        {
+          /* stop the analyse of the date */
+          RCSDollar = FALSE;
+	  RCSMarker = FALSE;
+          StartDate = FALSE;
+          IgnoreDate = FALSE;
+        }
+      else
+	{
+	  RCSString[RCSIndex++] = c;
+	}
+    }
+  return FALSE;
+}
 
 /*----------------------------------------------------------------------
   PutChar writes the character c on the terminal or into the file buffer
@@ -663,8 +792,14 @@ static void PutChar (wchar_t c, int fnum, char *outBuf, Document doc,
                      ThotBool entityName)
 {
   /* detect if the generation of a date is requested */
+#ifdef LC
   if (fnum > 0 && CheckDate ((unsigned char) c, fnum, outBuf, doc))
     /* remove the previous date */
+    return;
+  else
+    ExportChar (c, fnum, outBuf, doc, lineBreak, translate, entityName);
+#endif /* LC */
+  if (fnum > 0 && CheckRCS ((unsigned char) c, fnum, outBuf, doc))
     return;
   else
     ExportChar (c, fnum, outBuf, doc, lineBreak, translate, entityName);
