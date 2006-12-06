@@ -985,7 +985,6 @@ void DisplayPolyLine (PtrBox pBox, int frame, ThotBool selected,
       width = pBox->BxW;
       if (width < 0)
         width = 0;
-      
       /* Style and thickness of the line */
       i = GetLineWeight (pAb, frame);
       switch (pAb->AbLineStyle)
@@ -2279,7 +2278,6 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin,
       InitPrintBox ();
 #endif /* _GL */
     }
-  
   /* is the box selected? */
   selfsel = pAb->AbSelected;
   /* Search for the enclosing box */
@@ -2317,7 +2315,7 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin,
                         glIsList(box->DisplayList),
                         _T("GLBUG - DisplayBox : glIsList returns false"));
 #endif /* _WX */
-          if (!(box->VisibleModification) && 
+          if (!(box->VisibleModification) &&
               box->DisplayList && glIsList (box->DisplayList))
             {
               glCallList (box->DisplayList);

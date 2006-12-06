@@ -112,7 +112,6 @@
 #define P2(N) (N*N)
 
 
-#define	MAX_STACK	50
 #define	MIDDLE_OF(v1, v2) (((v1)+(v2))/2.0)
 #define ALLOC_POINTS    300
 #define MESA
@@ -812,32 +811,32 @@ void ComputeBoundingBox (PtrBox box, int frame, int xmin, int xmax,
       size = glRenderMode (GL_RENDER);
       NotFeedBackMode = TRUE;
       if (size > 0)
-	{
-	  /* the box is displayed */
-	  if (size > FEEDBUFFERSIZE)
-	    size = FEEDBUFFERSIZE;
-
-	  box->BxClipX = -1;
-	  box->BxClipY = -1;
-	  getboundingbox (size, feedBuffer, frame,
-			  &box->BxClipX,
-			  &box->BxClipY,
-			  &box->BxClipW,
-			  &box->BxClipH);    
-    
-	  box->BxBoundinBoxComputed = TRUE; 
-	}
+        {
+          /* the box is displayed */
+          if (size > FEEDBUFFERSIZE)
+            size = FEEDBUFFERSIZE;
+          
+          box->BxClipX = -1;
+          box->BxClipY = -1;
+          getboundingbox (size, feedBuffer, frame,
+                          &box->BxClipX,
+                          &box->BxClipY,
+                          &box->BxClipW,
+                          &box->BxClipH);    
+          
+          box->BxBoundinBoxComputed = TRUE; 
+        }
       else
-	{
-	  /* the box is not displayed */
-	  pFrame = &ViewFrameTable[frame - 1];
-	  /* */
-	  box->BxClipX = box->BxXOrg - (pFrame->FrXOrg?pFrame->FrXOrg:pFrame->OldFrXOrg);
-	  box->BxClipY = box->BxYOrg - (pFrame->FrYOrg?pFrame->FrYOrg:pFrame->OldFrYOrg);
-	  box->BxClipW = box->BxW;
-	  box->BxClipH = box->BxH;
-	  box->BxBoundinBoxComputed = FALSE; 
-	}   
+        {
+          /* the box is not displayed */
+          pFrame = &ViewFrameTable[frame - 1];
+          /* */
+          box->BxClipX = box->BxXOrg - (pFrame->FrXOrg?pFrame->FrXOrg:pFrame->OldFrXOrg);
+          box->BxClipY = box->BxYOrg - (pFrame->FrYOrg?pFrame->FrYOrg:pFrame->OldFrYOrg);
+          box->BxClipW = box->BxW;
+          box->BxClipH = box->BxH;
+          box->BxBoundinBoxComputed = FALSE; 
+        }   
     }
 #endif /* _GL */
 }
@@ -866,17 +865,17 @@ void ComputeFilledBox (PtrBox box, int frame, int xmin, int xmax,
       size = glRenderMode (GL_RENDER);
       NotFeedBackMode = TRUE;
       if (size > 0)
-	{
-	  box->BxClipX = -1;
-	  box->BxClipY = -1;
-	  getboundingbox (size, feedBuffer, frame,
-			  &box->BxClipX,
-			  &box->BxClipY,
-			  &box->BxClipW,
-			  &box->BxClipH);     
-	  box->BxBoundinBoxComputed = TRUE; 
-	  /* printBuffer (size, feedBuffer); */
-	}
+        {
+          box->BxClipX = -1;
+          box->BxClipY = -1;
+          getboundingbox (size, feedBuffer, frame,
+                          &box->BxClipX,
+                          &box->BxClipY,
+                          &box->BxClipW,
+                          &box->BxClipH);     
+          box->BxBoundinBoxComputed = TRUE; 
+          /* printBuffer (size, feedBuffer); */
+        }
     }
 }
 

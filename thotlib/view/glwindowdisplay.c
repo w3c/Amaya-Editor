@@ -202,7 +202,7 @@ ThotBool GL_Err()
       g_print ("\n%s :", (char*) gluErrorString (errCode));
 #endif /*_GTK*/
 #ifdef _WX
-      DisplayConfirmMessage ((char*) gluErrorString (errCode));
+      printf ("GL_Err: %s\n",(char*) gluErrorString (errCode));
 #endif /*_WX*/
 #ifdef _WINGUI
       WinErrorBox (NULL, (char*) gluErrorString (errCode));

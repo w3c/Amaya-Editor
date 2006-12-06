@@ -107,7 +107,6 @@
 /*for int  => (((int)N)<<1)*/
 #define P2(N) (N*N)
 
-#define	MAX_STACK	50
 #define	MIDDLE_OF(v1, v2) (((v1)+(v2))/2.0)
 #define ALLOC_POINTS    300
 

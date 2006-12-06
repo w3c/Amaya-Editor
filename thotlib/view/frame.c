@@ -62,18 +62,14 @@
 #include <math.h>
 #include "glwindowdisplay.h"
 
-#ifdef _GL_DEBUG
-static int counter=0;
-#endif /* _GL_DEBUG */
+static int Matrix_counter = 0;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 static void IfPushMatrix (PtrAbstractBox pAb)
 {
   if (pAb->AbElement->ElSystemOrigin || pAb->AbElement->ElTransform)
     {
-#ifdef _GL_DEBUG
-      counter++;
-#endif /* _GL_DEBUG */
+      Matrix_counter++;
       glPushMatrix ();
     }
 }
@@ -84,13 +80,15 @@ static void IfPopMatrix (PtrAbstractBox pAb)
 {
   if (pAb->AbElement->ElSystemOrigin || pAb->AbElement->ElTransform)
     {
+      if (Matrix_counter > 0)
+        {
+          Matrix_counter--;
+          glPopMatrix ();
+        }
 #ifdef _GL_DEBUG
-      if (counter > 0)
-        counter--;
       else
-        printf ("Error PopMatrix (%d)\n",counter);
+        printf ("Error PopMatrix (%d)\n",Matrix_counter);
 #endif /* _GL_DEBUG */
-      glPopMatrix ();
     }
 }
 #endif /*_GL*/
@@ -1659,7 +1657,7 @@ PtrBox DisplayAllBoxes (int frame, PtrFlow pFlow,
                 selected = pAb->AbSelected;
 #ifdef _GL
               if (pAb->AbElement && not_g_opacity_displayed)
-                { 
+                {
                   if (formatted)
                     {
                       /* If the coord sys origin is translated, 
@@ -1680,7 +1678,7 @@ PtrBox DisplayAllBoxes (int frame, PtrFlow pFlow,
                           systemOriginRoot = pAb->AbBox;
                           /*Need to Get REAL computed COORD ORIG
                             instead of Computing Bounding Boxes forever...
-                            As it's am "optimisation it'll come later :
+                            As it's an "optimisation it'll come later :
                             if computed, no more compute, use synbounding, 
                             else compute if near screen"*/
                           if (pFrame->FrXOrg || pFrame->FrYOrg)
@@ -1714,6 +1712,7 @@ PtrBox DisplayAllBoxes (int frame, PtrFlow pFlow,
                                 }
                               else
                                 {
+#ifdef IV
                                   if (pAb->AbBox->Post_computed_Pic)
                                     {
                                       FreeGlTextureNoCache (pAb->AbBox->Post_computed_Pic);
@@ -1724,6 +1723,7 @@ PtrBox DisplayAllBoxes (int frame, PtrFlow pFlow,
                                                         y_min, y_max, TRUE);
                                   ClearOpaqueGroup (pAb, frame, x_min, x_max,
                                                     y_min, y_max);
+#endif
                                 }
                             }
                           else if (pAb->AbFirstEnclosed)
@@ -1882,7 +1882,7 @@ PtrBox DisplayAllBoxes (int frame, PtrFlow pFlow,
                                        pBox->BxXOrg + pBox->BxWidth + pBox->BxEndOfBloc >= x_min &&
                                        pBox->BxXOrg <= x_max)
 #endif /* _GL */
-                                  DisplayBox (pBox, frame, xmin, xmax, ymin, ymax, pFlow, selected);
+                                DisplayBox (pBox, frame, xmin, xmax, ymin, ymax, pFlow, selected);
                             }
                         }
                     }  	      
@@ -1905,8 +1905,10 @@ PtrBox DisplayAllBoxes (int frame, PtrFlow pFlow,
               not_g_opacity_displayed &&
 #endif /* _GL */
               (pAb == root || !IsFlow (pAb->AbBox, frame)))
+            {
             // go down
             pAb = pAb->AbFirstEnclosed;
+            }
           else
             {
               // go next or up
@@ -1921,8 +1923,7 @@ PtrBox DisplayAllBoxes (int frame, PtrFlow pFlow,
                     {
                       OpacityAndTransformNext (pAb, plane, frame, x_min, x_max,
                                                y_min, y_max, not_in_feedback);
-                      if (not_g_opacity_displayed)
-                        IfPopMatrix (pAb);
+                      IfPopMatrix (pAb);
                       OriginSystemExit (pAb, pFrame, plane, &xOrg, &yOrg, 
                                         clipXOfFirstCoordSys, clipYOfFirstCoordSys);
                     }
