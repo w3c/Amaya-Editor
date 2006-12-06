@@ -62,13 +62,18 @@
 #include <math.h>
 #include "glwindowdisplay.h"
 
-//static int counter=0;
+#ifdef _GL_DEBUG
+static int counter=0;
+#endif /* _GL_DEBUG */
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 static void IfPushMatrix (PtrAbstractBox pAb)
 {
   if (pAb->AbElement->ElSystemOrigin || pAb->AbElement->ElTransform)
     {
+#ifdef _GL_DEBUG
+      counter++;
+#endif /* _GL_DEBUG */
       glPushMatrix ();
     }
 }
@@ -79,6 +84,12 @@ static void IfPopMatrix (PtrAbstractBox pAb)
 {
   if (pAb->AbElement->ElSystemOrigin || pAb->AbElement->ElTransform)
     {
+#ifdef _GL_DEBUG
+      if (counter > 0)
+        counter--;
+      else
+        printf ("Error PopMatrix (%d)\n",counter);
+#endif /* _GL_DEBUG */
       glPopMatrix ();
     }
 }
@@ -1910,7 +1921,8 @@ PtrBox DisplayAllBoxes (int frame, PtrFlow pFlow,
                     {
                       OpacityAndTransformNext (pAb, plane, frame, x_min, x_max,
                                                y_min, y_max, not_in_feedback);
-                      IfPopMatrix (pAb);
+                      if (not_g_opacity_displayed)
+                        IfPopMatrix (pAb);
                       OriginSystemExit (pAb, pFrame, plane, &xOrg, &yOrg, 
                                         clipXOfFirstCoordSys, clipYOfFirstCoordSys);
                     }

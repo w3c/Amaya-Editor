@@ -366,7 +366,7 @@ ThotBool GL_DrawAll ()
                             }
 #ifdef _GL_DEBUG
                         GL_Err ();
-#endif
+#endif /* _GL_DEBUG */
                       }
                   }
             }

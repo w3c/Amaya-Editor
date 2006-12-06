@@ -192,7 +192,7 @@ void populate_path_proportion (void *anim_info)
 
   animated = (Animated_Element *) (anim_info);
   pop_path = (AnimPath *) animated->from;
-  points = (ThotPoint *) TtaGetMemory (ALLOC_POINTS * sizeof(ThotPoint));
+  //points = (ThotPoint *) TtaGetMemory (ALLOC_POINTS * sizeof(ThotPoint));
   points = BuildPolygonForPath (((PtrPathSeg) (pop_path->FirstPathSeg)), 
                                 Animated_Frame,
                                 &npoints, 

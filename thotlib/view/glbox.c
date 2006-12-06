@@ -723,7 +723,7 @@ ThotBool GL_prepare (int frame)
 void GL_Swap (int frame)
 {
   if (frame >= 0 && frame < MAX_FRAME && SwapOK[frame] && NeedRedraw (frame))
-    {   
+    {
       glDisable (GL_SCISSOR_TEST);
 #ifdef _WINGUI
       if (FrRef[frame])
@@ -743,9 +743,9 @@ void GL_Swap (int frame)
       if (FrameTable[frame].WdFrame)
       {
 #ifdef _GL_DEBUG
-	TTALOGDEBUG_1( TTA_LOG_DRAW, _T("GL_Swap: frame=%d"), frame );
+        TTALOGDEBUG_1( TTA_LOG_DRAW, _T("GL_Swap: frame=%d"), frame );
 #endif /* _GL_DEBUG */
-	FrameTable[frame].WdFrame->SwapBuffers();
+        FrameTable[frame].WdFrame->SwapBuffers();
       }
 #endif /* _WX */
       glEnable (GL_SCISSOR_TEST); 
