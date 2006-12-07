@@ -89,12 +89,9 @@ END_EVENT_TABLE()
   m_UrlList = url_list;
   MyRef = ref;
 
-#ifndef DAV
-#ifndef TEMPLATES
+#if !defined(DAV) || !defined(TEMPLATES)
   wxNotebook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxNotebook);
-#endif
-#endif
-
+#endif /* DAV || TEMPLATES */
 #ifndef DAV
   // invalid WebDAV Page
   int page_id = GetPagePosFromXMLID( _T("wxID_PAGE_DAV") );
@@ -119,7 +116,6 @@ END_EVENT_TABLE()
 #ifdef DAV
   SetupLabelDialog_DAV();
 #endif /* DAV */
-
 #ifdef TEMPLATES
   SetupLabelDialog_Templates();
 #else /* TEMPLATES */
