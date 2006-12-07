@@ -2823,7 +2823,14 @@ ThotBool CanReplaceCurrentDocument (Document doc, View view)
                         TtaGetMessage (LIB, TMSG_BUTTON_SAVE));
         }
       if (UserAnswer)
-        SaveDocument (doc, view);
+        {
+          if (DocumentSource[doc] && !TtaIsDocumentUpdated (doc) &&
+              TtaIsDocumentUpdated (DocumentSource[doc]))
+            // the last updated version is the document source
+            SaveDocument (DocumentSource[doc], view);
+          else
+            SaveDocument (doc, view);
+        }
       else if (ExtraChoice)
         {
           TtaSetDocumentUnmodified (doc);
