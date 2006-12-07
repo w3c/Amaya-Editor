@@ -2033,13 +2033,12 @@ static void CreateMathConstruct (int construct, ...)
           int msubsup = va_arg(varpos, int);
           leaf = TtaGetFirstChild (el);
           new_ = leaf;
-          InsertEmptyConstruct(&new_, msubsup ? MathML_EL_MSUBSUP : MathML_EL_MUNDER, doc);
+          InsertEmptyConstruct(&new_, msubsup ? MathML_EL_MSUBSUP : MathML_EL_MSUB, doc);
           TtaDeleteTree (leaf, doc);
           child = TtaGetFirstChild (new_);
    
-          if (msubsup)
-            AttachIntVertStretch(new_, doc);
-
+          //if (msubsup)
+          AttachIntVertStretch(new_, doc);
           selected = child;
           TtaNextSibling (&selected);
 
@@ -2796,8 +2795,8 @@ static void CreateMathConstruct (int construct, ...)
         {
           /* move the limits of the MSUBSUP element if it's appropriate */
           SetIntMovelimitsAttr (el, doc);
-           if (op)
-           CheckLargeOp (op, doc);
+          //if (op)
+          //CheckLargeOp (op, doc);
         }
       else if (ParBlock)
         /* the user wants to create a parenthesized block */
