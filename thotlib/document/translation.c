@@ -4198,6 +4198,8 @@ static char* ExportAttrNsPrefix (Document doc, PtrElement pNode,
   int              i;
   char            *ns_prefix = NULL;
 
+  if (pNode->ElTerminal)
+    return (ns_prefix);
   pDoc = LoadedDocument[doc - 1];
   if (pNode->ElStructSchema == pAttr->AeAttrSSchema)
     /* The attribute belongs to the same namespace than the element */
@@ -4255,6 +4257,8 @@ static char* ExportElemNsPrefix (Document doc, PtrElement pNode)
   int              i;
   char            *ns_prefix = NULL;
 
+  if (pNode->ElTerminal)
+    return (ns_prefix);
   pDoc = LoadedDocument[doc - 1];
   if (pDoc->DocNsUriDecl == NULL)
     /* There is no namespace declaration for this document */
@@ -4329,6 +4333,8 @@ static void ExportNsDeclaration (Document doc, PtrElement pNode)
   PtrDocument      pDoc;
   int              i, fnum;
 
+  if (pNode->ElTerminal)
+    return;
   fnum = 1; /* main output file */
   pDoc = LoadedDocument[doc - 1];
   if (pDoc->DocNsUriDecl == NULL)

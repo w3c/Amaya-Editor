@@ -260,8 +260,9 @@ void DefBoxRegion (int frame, PtrBox pBox, int xstart, int xstop,
           (pBox->BxAbstractBox->AbLeafType == LtGraphics ||
            pBox->BxAbstractBox->AbLeafType == LtPolyLine ||
            pBox->BxAbstractBox->AbLeafType == LtPath ||
-           TypeHasException (ExcIsImg, pEl->ElTypeNumber, pEl->ElStructSchema) ||
-           TypeHasException (ExcIsTable, pEl->ElTypeNumber, pEl->ElStructSchema)))
+           (pEl &&
+            (TypeHasException (ExcIsImg, pEl->ElTypeNumber, pEl->ElStructSchema) ||
+             TypeHasException (ExcIsTable, pEl->ElTypeNumber, pEl->ElStructSchema)))))
         k = EXTRA_GRAPH;
 
       x1 = pBox->BxXOrg;
@@ -378,8 +379,9 @@ void UpdateBoxRegion (int frame, PtrBox pBox, int dx, int dy, int dw, int dh)
           (pBox->BxAbstractBox->AbLeafType == LtGraphics ||
            pBox->BxAbstractBox->AbLeafType == LtPolyLine ||
            pBox->BxAbstractBox->AbLeafType == LtPath ||
-           TypeHasException (ExcIsImg, pEl->ElTypeNumber, pEl->ElStructSchema) ||
-           TypeHasException (ExcIsTable, pEl->ElTypeNumber, pEl->ElStructSchema)))
+           (pEl &&
+            (TypeHasException (ExcIsImg, pEl->ElTypeNumber, pEl->ElStructSchema) ||
+             TypeHasException (ExcIsTable, pEl->ElTypeNumber, pEl->ElStructSchema)))))
         /* increase the redisplay area due to control points */
         cpoints = EXTRA_GRAPH;
 

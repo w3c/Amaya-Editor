@@ -21,483 +21,483 @@ DEFAULT
 ELEMENTS
 
   IMG:
-	BEGIN
-	ElemNew.Post -> UpdateSRCattribute;
-	ElemTextModify.Post -> UpdateSRCattribute;
-	ElemSelect.Pre -> SelectPicture;
-	ElemDelete.Pre -> DeletePicture;
-	END;
+        BEGIN
+        ElemNew.Post -> UpdateSRCattribute;
+        ElemTextModify.Post -> UpdateSRCattribute;
+        ElemSelect.Pre -> SelectPicture;
+        ElemDelete.Pre -> DeletePicture;
+        END;
 
   Image_Input:
-	BEGIN
-	ElemNew.Post -> UpdateSRCattribute;
-	ElemTextModify.Post -> UpdateSRCattribute;
-	ElemSelect.Pre -> SelectPicture;
-	ElemDelete.Pre -> DeletePicture;
-	END;
+        BEGIN
+        ElemNew.Post -> UpdateSRCattribute;
+        ElemTextModify.Post -> UpdateSRCattribute;
+        ElemSelect.Pre -> SelectPicture;
+        ElemDelete.Pre -> DeletePicture;
+        END;
 
   Object:
-	BEGIN
-	ElemNew.Post -> UpdateSRCattribute;
-	ElemTextModify.Post -> UpdateSRCattribute;
-	ElemSelect.Pre -> SelectPicture;
-	ElemDelete.Pre -> DeletePicture;
-	END;
+        BEGIN
+        ElemNew.Post -> UpdateSRCattribute;
+        ElemTextModify.Post -> UpdateSRCattribute;
+        ElemSelect.Pre -> SelectPicture;
+        ElemDelete.Pre -> DeletePicture;
+        END;
 
    TEXT_UNIT:
-	ElemTextModify.Post -> CheckNewLines;
+        ElemTextModify.Post -> CheckNewLines;
 
    DOCTYPE:
-	ElemMenu.Pre -> HTMLElementTypeInMenu;
+        ElemMenu.Pre -> HTMLElementTypeInMenu;
    Element:
-	ElemMenu.Pre -> HTMLElementTypeInMenu;
+        ElemMenu.Pre -> HTMLElementTypeInMenu;
    Heading:
-	ElemMenu.Pre -> HTMLElementTypeInMenu;
+        ElemMenu.Pre -> HTMLElementTypeInMenu;
    Font:
-	ElemMenu.Pre -> HTMLElementTypeInMenu;
+        ElemMenu.Pre -> HTMLElementTypeInMenu;
    Phrase:
-	ElemMenu.Pre -> HTMLElementTypeInMenu;
+        ElemMenu.Pre -> HTMLElementTypeInMenu;
    ElemOrParam:
-	ElemMenu.Pre -> HTMLElementTypeInMenu;
+        ElemMenu.Pre -> HTMLElementTypeInMenu;
    Block:
-	ElemMenu.Pre -> HTMLElementTypeInMenu;
+        ElemMenu.Pre -> HTMLElementTypeInMenu;
    List_:
-	ElemMenu.Pre -> HTMLElementTypeInMenu;
+        ElemMenu.Pre -> HTMLElementTypeInMenu;
    Form_Element:
-	ElemMenu.Pre -> HTMLElementTypeInMenu;
+        ElemMenu.Pre -> HTMLElementTypeInMenu;
    Option_item:
-	ElemMenu.Pre -> HTMLElementTypeInMenu;
+        ElemMenu.Pre -> HTMLElementTypeInMenu;
    Input:
-	ElemMenu.Pre -> HTMLElementTypeInMenu;
+        ElemMenu.Pre -> HTMLElementTypeInMenu;
    Input_Text:
-	ElemMenu.Pre -> HTMLElementTypeInMenu;
+        ElemMenu.Pre -> HTMLElementTypeInMenu;
    Col_elem:
-	ElemMenu.Pre -> HTMLElementTypeInMenu;
+        ElemMenu.Pre -> HTMLElementTypeInMenu;
    Table_cell:
-	ElemMenu.Pre -> HTMLElementTypeInMenu;
+        ElemMenu.Pre -> HTMLElementTypeInMenu;
    ElemOrArea:
-	ElemMenu.Pre -> HTMLElementTypeInMenu;
+        ElemMenu.Pre -> HTMLElementTypeInMenu;
    FrameElem:
-	ElemMenu.Pre -> HTMLElementTypeInMenu;
+        ElemMenu.Pre -> HTMLElementTypeInMenu;
    ruby:
-	ElemMenu.Pre -> HTMLElementTypeInMenu;
+        ElemMenu.Pre -> HTMLElementTypeInMenu;
    RtOrRtWithPar:
-	ElemMenu.Pre -> HTMLElementTypeInMenu;
+        ElemMenu.Pre -> HTMLElementTypeInMenu;
    RtWithPar:
-	ElemMenu.Pre -> HTMLElementTypeInMenu;
+        ElemMenu.Pre -> HTMLElementTypeInMenu;
    AnyLink:
-	ElemMenu.Pre -> HTMLElementTypeInMenu;
+        ElemMenu.Pre -> HTMLElementTypeInMenu;
    XLink:
-	ElemMenu.Pre -> HTMLElementTypeInMenu;
+        ElemMenu.Pre -> HTMLElementTypeInMenu;
 
    LINK:
-	BEGIN
-	ElemDelete.Pre -> DeleteLink;
-	END;
+        BEGIN
+        ElemDelete.Pre -> DeleteLink;
+        END;
 
    MAP:
-	BEGIN
-	ElemDelete.Pre -> DeleteMap;
-	END;
+        BEGIN
+        ElemDelete.Pre -> DeleteMap;
+        END;
 
    Text_Input:
-	BEGIN
-	ElemTextModify.Pre -> SaveDocumentStatus;
-	ElemTextModify.Post -> RestoreDocumentStatus;
-	ElemReturn.Pre -> HandleReturn;
-	END;
+        BEGIN
+        ElemTextModify.Pre -> SaveDocumentStatus;
+        ElemTextModify.Post -> RestoreDocumentStatus;
+        ElemReturn.Pre -> HandleReturn;
+        END;
 
    Password_Input:
-	BEGIN
-	ElemTextModify.Pre -> SaveDocumentStatus;
-	ElemTextModify.Post -> RestoreDocumentStatus;
-	ElemReturn.Pre -> HandleReturn;
-	END;
+        BEGIN
+        ElemTextModify.Pre -> SaveDocumentStatus;
+        ElemTextModify.Post -> RestoreDocumentStatus;
+        ElemReturn.Pre -> HandleReturn;
+        END;
 
    Text_Area:
-	BEGIN
-	ElemTextModify.Pre -> SaveDocumentStatus;
-	ElemTextModify.Post -> RestoreDocumentStatus;
-	END;
+        BEGIN
+        ElemTextModify.Pre -> SaveDocumentStatus;
+        ElemTextModify.Post -> RestoreDocumentStatus;
+        END;
 
    File_Input:
-	BEGIN
-	ElemTextModify.Pre -> SaveDocumentStatus;
-	ElemTextModify.Post -> RestoreDocumentStatus;
-	ElemReturn.Pre -> HandleReturn;
-	END;
+        BEGIN
+        ElemTextModify.Pre -> SaveDocumentStatus;
+        ElemTextModify.Post -> RestoreDocumentStatus;
+        ElemReturn.Pre -> HandleReturn;
+        END;
 
    TITLE:
-	ElemTextModify.Post -> TitleModified;
+        ElemTextModify.Post -> TitleModified;
 
    Table_:
-	BEGIN
-	ElemNew.Post -> TableCreated;
-	ElemPaste.Post -> TablePasted;
-	END;
+        BEGIN
+        ElemNew.Post -> TableCreated;
+        ElemPaste.Post -> TablePasted;
+        END;
 
    Table_body:
-	ElemDelete.Post -> TablebodyDeleted;
+        ElemDelete.Post -> TablebodyDeleted;
 
    Column_head:
-	BEGIN
-	ElemPaste.Post -> ColumnPasted;
-	ElemDelete.Pre -> DeleteColumn;
-	END;
+        BEGIN
+        ElemPaste.Post -> ColumnPasted;
+        ElemDelete.Pre -> DeleteColumn;
+        END;
 
    tbody:
-	BEGIN
-	ElemDelete.Pre -> DeleteTBody;
-	END;
+        BEGIN
+        ElemDelete.Pre -> DeleteTBody;
+        END;
 
    Table_cell:
-	BEGIN
-	ElemNew.Post -> CellCreated;
-	ElemPaste.Post -> CellPasted;
-	END;
+        BEGIN
+        ElemNew.Post -> CellCreated;
+        ElemPaste.Post -> CellPasted;
+        END;
 
    Data_cell:
-	BEGIN
-	ElemNew.Post -> CellCreated;
-	ElemPaste.Post -> CellPasted;
-	END;
+        BEGIN
+        ElemNew.Post -> CellCreated;
+        ElemPaste.Post -> CellPasted;
+        END;
 
    Heading_cell:
-	BEGIN
-	ElemNew.Post -> CellCreated;
-	ElemPaste.Post -> CellPasted;
-	END;
+        BEGIN
+        ElemNew.Post -> CellCreated;
+        ElemPaste.Post -> CellPasted;
+        END;
 
    Table_row:
-	BEGIN
-	ElemNew.Post -> RowCreated;
-	ElemPaste.Post -> RowPasted;
-	ElemDelete.Pre -> DeleteRow;
-	ElemDelete.Post -> RowDeleted;
-	END;
+        BEGIN
+        ElemNew.Post -> RowCreated;
+        ElemPaste.Post -> RowPasted;
+        ElemDelete.Pre -> DeleteRow;
+        ElemDelete.Post -> RowDeleted;
+        END;
 
    SCRIPT_:
-	ElemTab.Pre -> AcceptTab;
+        ElemTab.Pre -> AcceptTab;
 
    STYLE_:
-	BEGIN
-	ElemTab.Pre -> AcceptTab;
-	ElemTextModify.Pre -> ChangeStyle;
-	ElemTextModify.Post -> StyleChanged;
-	ElemDelete.Pre -> DeleteStyle;
-	END;
+        BEGIN
+        ElemTab.Pre -> AcceptTab;
+        ElemTextModify.Pre -> ChangeStyle;
+        ElemTextModify.Post -> StyleChanged;
+        ElemDelete.Pre -> DeleteStyle;
+        END;
 
    META:
-	BEGIN
-	ElemExport.Pre -> CheckGenerator;
-	END;
+        BEGIN
+        ElemExport.Pre -> CheckGenerator;
+        END;
 
    MathML:
-	BEGIN
-  ElemExport.Pre -> CheckValidProfile;
-  ElemPaste.Post -> MathElementPasted;
-	END;
+        BEGIN
+        ElemExport.Pre -> CheckValidProfile;
+        ElemPaste.Post -> MathElementPasted;
+        END;
 
 ATTRIBUTES
 
    SRC:
-	BEGIN
-	AttrModify.Post -> SRCattrModified;
-	END;
+        BEGIN
+        AttrModify.Post -> SRCattrModified;
+        END;
    HREF_:
-	BEGIN
-	AttrDelete.Pre -> CheckMandatory;
-	END;
+        BEGIN
+        AttrDelete.Pre -> CheckMandatory;
+        END;
    coords:
-     	BEGIN
-      	AttrModify.Post -> CoordsModified;
-      	END;
+        BEGIN
+        AttrModify.Post -> CoordsModified;
+        END;
       
    x_coord:
-     	BEGIN
-      	AttrModify.Post -> GraphicsModified;
-     	END;
+        BEGIN
+        AttrModify.Post -> GraphicsModified;
+        END;
      
    y_coord:
-     	BEGIN
-      	AttrModify.Post -> GraphicsModified;
-     	END;
+        BEGIN
+        AttrModify.Post -> GraphicsModified;
+        END;
 
    Width__:
-	BEGIN
-	AttrCreate.Pre ->  StoreWidth;
-	AttrCreate.Post -> AttrWidthModified;
-	AttrModify.Pre ->  StoreWidth;
-	AttrModify.Post -> AttrWidthModified;
-	AttrDelete.Pre ->  AttrWidthDelete;	
-	END;
+        BEGIN
+        AttrCreate.Pre ->  StoreWidth;
+        AttrCreate.Post -> AttrWidthModified;
+        AttrModify.Pre ->  StoreWidth;
+        AttrModify.Post -> AttrWidthModified;
+        AttrDelete.Pre ->  AttrWidthDelete;        
+        END;
 
    IntWidthPxl:
-   	BEGIN
-	AttrModify.Pre ->  StoreWidth;
-   	AttrModify.Post -> GraphicsModified;
-    	END;
+           BEGIN
+        AttrModify.Pre ->  StoreWidth;
+           AttrModify.Post -> GraphicsModified;
+            END;
    
    Height_:
-   	BEGIN
-	AttrCreate.Pre ->  StoreHeight;
-	AttrCreate.Post -> AttrHeightModified;
-	AttrModify.Pre ->  StoreHeight;
-	AttrModify.Post -> AttrHeightModified;
-	AttrDelete.Pre ->  AttrHeightDelete;	
-   	END;
+           BEGIN
+        AttrCreate.Pre ->  StoreHeight;
+        AttrCreate.Post -> AttrHeightModified;
+        AttrModify.Pre ->  StoreHeight;
+        AttrModify.Post -> AttrHeightModified;
+        AttrDelete.Pre ->  AttrHeightDelete;        
+           END;
     
    IntHeightPxl:
-   	BEGIN
-	AttrModify.Pre ->  StoreHeight;
-   	AttrModify.Post -> GraphicsModified;
-   	END;
+           BEGIN
+        AttrModify.Pre ->  StoreHeight;
+           AttrModify.Post -> GraphicsModified;
+           END;
 
    Area_Size:
-   	BEGIN
-	AttrCreate.Post -> AttrAreaSizeModified;
-	AttrModify.Post -> AttrAreaSizeModified;
-	AttrDelete.Pre ->  AttrAreaSizeDelete;	
-   	END;
+           BEGIN
+        AttrCreate.Post -> AttrAreaSizeModified;
+        AttrModify.Post -> AttrAreaSizeModified;
+        AttrDelete.Pre ->  AttrAreaSizeDelete;        
+           END;
    
    colspan_:
-	BEGIN
-	AttrCreate.Post -> ColspanCreated;
-	AttrModify.Pre ->  RegisterColspan;
-	AttrModify.Post -> ColspanModified;
-	AttrDelete.Pre ->  RegisterColspan;
-	AttrDelete.Post -> ColspanDeleted;
-	END;
+        BEGIN
+        AttrCreate.Post -> ColspanCreated;
+        AttrModify.Pre ->  RegisterColspan;
+        AttrModify.Post -> ColspanModified;
+        AttrDelete.Pre ->  RegisterColspan;
+        AttrDelete.Post -> ColspanDeleted;
+        END;
 
    rowspan_:
-	BEGIN
-	AttrCreate.Post -> RowspanCreated;
-	AttrModify.Pre ->  RegisterRowspan;
-	AttrModify.Post -> RowspanModified;
-	AttrDelete.Pre ->  RegisterRowspan;
-	AttrDelete.Post -> RowspanDeleted;
-	END;
+        BEGIN
+        AttrCreate.Post -> RowspanCreated;
+        AttrModify.Pre ->  RegisterRowspan;
+        AttrModify.Post -> RowspanModified;
+        AttrDelete.Pre ->  RegisterRowspan;
+        AttrDelete.Post -> RowspanDeleted;
+        END;
 
    NAME:
-	BEGIN
-	AttrMenu.Pre ->    AttrNAMEinMenu;
-	AttrExport.Pre ->  CheckValidID;	
-	AttrCreate.Post -> UpdateAttrNAME;
-	AttrModify.Post -> UpdateAttrNAME;	
-	AttrDelete.Pre ->  CheckMandatory;
-	END;
+        BEGIN
+        AttrMenu.Pre ->    AttrNAMEinMenu;
+        AttrExport.Pre ->  CheckValidID;        
+        AttrCreate.Post -> UpdateAttrNAME;
+        AttrModify.Post -> UpdateAttrNAME;        
+        AttrDelete.Pre ->  CheckMandatory;
+        END;
 
    Font_size:
-	BEGIN
-	AttrCreate.Post -> AttrFontSizeCreated;
-	AttrModify.Post -> AttrFontSizeCreated;
-	AttrDelete.Pre ->  AttrFontSizeDelete;	
-	END;
+        BEGIN
+        AttrCreate.Post -> AttrFontSizeCreated;
+        AttrModify.Post -> AttrFontSizeCreated;
+        AttrDelete.Pre ->  AttrFontSizeDelete;        
+        END;
 
    color:
-	BEGIN
-	AttrCreate.Post -> AttrColorCreated;
-	AttrModify.Post -> AttrColorCreated;
-	AttrDelete.Pre ->  AttrColorDelete;	
-	END;
+        BEGIN
+        AttrCreate.Post -> AttrColorCreated;
+        AttrModify.Post -> AttrColorCreated;
+        AttrDelete.Pre ->  AttrColorDelete;        
+        END;
 
    TextColor:
-	BEGIN
-	AttrCreate.Post -> AttrColorCreated;
-	AttrModify.Post -> AttrColorCreated;
-	AttrDelete.Pre ->  AttrColorDelete;	
-	END;
+        BEGIN
+        AttrCreate.Post -> AttrColorCreated;
+        AttrModify.Post -> AttrColorCreated;
+        AttrDelete.Pre ->  AttrColorDelete;        
+        END;
    BackgroundColor:
-	BEGIN
-	AttrCreate.Post -> AttrColorCreated;
-	AttrModify.Post -> AttrColorCreated;
-	AttrDelete.Pre ->  AttrColorDelete;	
-	END;
+        BEGIN
+        AttrCreate.Post -> AttrColorCreated;
+        AttrModify.Post -> AttrColorCreated;
+        AttrDelete.Pre ->  AttrColorDelete;        
+        END;
    background_:
-	BEGIN
-	AttrCreate.Post -> AttrColorCreated;
-	AttrModify.Post -> AttrColorCreated;
-	AttrDelete.Pre ->  AttrColorDelete;	
-	END;
+        BEGIN
+        AttrCreate.Post -> AttrColorCreated;
+        AttrModify.Post -> AttrColorCreated;
+        AttrDelete.Pre ->  AttrColorDelete;        
+        END;
    LinkColor:
-	BEGIN
-	AttrCreate.Post -> AttrColorCreated;
-	AttrModify.Post -> AttrColorCreated;
-	AttrDelete.Pre ->  AttrColorDelete;	
-	END;
+        BEGIN
+        AttrCreate.Post -> AttrColorCreated;
+        AttrModify.Post -> AttrColorCreated;
+        AttrDelete.Pre ->  AttrColorDelete;        
+        END;
    VisitedLinkColor:
-	BEGIN
-	AttrCreate.Post -> AttrColorCreated;
-	AttrModify.Post -> AttrColorCreated;
-	AttrDelete.Pre ->  AttrColorDelete;	
-	END;
+        BEGIN
+        AttrCreate.Post -> AttrColorCreated;
+        AttrModify.Post -> AttrColorCreated;
+        AttrDelete.Pre ->  AttrColorDelete;        
+        END;
    ActiveLinkColor:   
-	BEGIN
-	AttrCreate.Post -> AttrColorCreated;
-	AttrModify.Post -> AttrColorCreated;
-	AttrDelete.Pre ->  AttrColorDelete;
-	END;
+        BEGIN
+        AttrCreate.Post -> AttrColorCreated;
+        AttrModify.Post -> AttrColorCreated;
+        AttrDelete.Pre ->  AttrColorDelete;
+        END;
 
    script_language:
-	AttrMenu.Pre ->    AttrScriptLanguageinMenu;
+        AttrMenu.Pre ->    AttrScriptLanguageinMenu;
 
    Language:
-	BEGIN
-	AttrCreate.Post -> AttrLangCreated;
-	AttrDelete.Pre  -> AttrLangShouldBeDeleted;
-	AttrDelete.Post -> AttrLangDeleted;
-	AttrModify.Pre ->  AttrLangModified;
-	END;
+        BEGIN
+        AttrCreate.Post -> AttrLangCreated;
+        AttrDelete.Pre  -> AttrLangShouldBeDeleted;
+        AttrDelete.Post -> AttrLangDeleted;
+        AttrModify.Pre ->  AttrLangModified;
+        END;
 
    ID:
-	BEGIN
-	AttrCreate.Post -> UpdateAttrID;
-	AttrModify.Post -> UpdateAttrID;	
-	AttrDelete.Post -> UpdateAttrID;
-	END;
+        BEGIN
+        AttrCreate.Post -> UpdateAttrID;
+        AttrModify.Post -> UpdateAttrID;        
+        AttrDelete.Post -> UpdateAttrID;
+        END;
 
    xmlid:
-	BEGIN
-	AttrCreate.Post -> UpdateAttrID;
-	AttrModify.Post -> UpdateAttrID;	
-	AttrDelete.Post -> UpdateAttrID;
-	END;
+        BEGIN
+        AttrCreate.Post -> UpdateAttrID;
+        AttrModify.Post -> UpdateAttrID;        
+        AttrDelete.Post -> UpdateAttrID;
+        END;
 
    Class:
-	BEGIN
-	AttrCreate.Post -> AttrClassChanged;
-	AttrModify.Post -> AttrClassChanged;
-	AttrDelete.Post -> AttrClassChanged;
-	END;
+        BEGIN
+        AttrCreate.Post -> AttrClassChanged;
+        AttrModify.Post -> AttrClassChanged;
+        AttrDelete.Post -> AttrClassChanged;
+        END;
 
    Style\240:
-	BEGIN
-	AttrCreate.Post -> UpdateStylePost;
-	AttrModify.Pre ->  UpdateStyleDelete;
-	AttrModify.Post -> UpdateStylePost;
-	AttrDelete.Pre ->  UpdateStyleDelete;
-	AttrDelete.Post -> GlobalAttrDeleted;
-	END;
+        BEGIN
+        AttrCreate.Post -> UpdateStylePost;
+        AttrModify.Pre ->  UpdateStyleDelete;
+        AttrModify.Post -> UpdateStylePost;
+        AttrDelete.Pre ->  UpdateStyleDelete;
+        AttrDelete.Post -> GlobalAttrDeleted;
+        END;
    media:
-	BEGIN
-	AttrCreate.Post -> AttrMediaChanged;
-	AttrModify.Post -> AttrMediaChanged;
-	AttrDelete.Post -> AttrMediaChanged;
-	END;
+        BEGIN
+        AttrCreate.Post -> AttrMediaChanged;
+        AttrModify.Post -> AttrMediaChanged;
+        AttrDelete.Post -> AttrMediaChanged;
+        END;
 
    Title:
-	BEGIN
-	AttrCreate.Post -> GlobalAttrCreated;
-	AttrDelete.Post -> GlobalAttrDeleted;
-	END;
+        BEGIN
+        AttrCreate.Post -> GlobalAttrCreated;
+        AttrDelete.Post -> GlobalAttrDeleted;
+        END;
 
    dir:
-	BEGIN
-	AttrCreate.Post -> GlobalAttrCreated;
-	AttrDelete.Post -> GlobalAttrDeleted;
-	END;
+        BEGIN
+        AttrCreate.Post -> GlobalAttrCreated;
+        AttrDelete.Post -> GlobalAttrDeleted;
+        END;
 
    Start:
-	BEGIN
-	AttrCreate.Post -> AttrStartChanged;
-	AttrModify.Post -> AttrStartChanged;
-	AttrDelete.Post -> AttrStartChanged;
-	END;
+        BEGIN
+        AttrCreate.Post -> AttrStartChanged;
+        AttrModify.Post -> AttrStartChanged;
+        AttrDelete.Post -> AttrStartChanged;
+        END;
 
    ItemValue:
-	BEGIN
-	AttrCreate.Post -> AttrItemValueChanged;
-	AttrModify.Post -> AttrItemValueChanged;
-	AttrDelete.Post -> AttrItemValueChanged;
-	END;
+        BEGIN
+        AttrCreate.Post -> AttrItemValueChanged;
+        AttrModify.Post -> AttrItemValueChanged;
+        AttrDelete.Post -> AttrItemValueChanged;
+        END;
 
    xml_space:
-	BEGIN
-	AttrCreate.Post -> GlobalAttrCreated;
-	AttrDelete.Post -> GlobalAttrDeleted;
-	END;
+        BEGIN
+        AttrCreate.Post -> GlobalAttrCreated;
+        AttrDelete.Post -> GlobalAttrDeleted;
+        END;
 
    onclick:
-	BEGIN
-	AttrCreate.Post -> GlobalAttrCreated;
-	AttrDelete.Post -> GlobalAttrDeleted;
-	END;
+        BEGIN
+        AttrCreate.Post -> GlobalAttrCreated;
+        AttrDelete.Post -> GlobalAttrDeleted;
+        END;
    ondblclick:
-	BEGIN
-	AttrCreate.Post -> GlobalAttrCreated;
-	AttrDelete.Post -> GlobalAttrDeleted;
-	END;
+        BEGIN
+        AttrCreate.Post -> GlobalAttrCreated;
+        AttrDelete.Post -> GlobalAttrDeleted;
+        END;
    onmousedown:
-	BEGIN
-	AttrCreate.Post -> GlobalAttrCreated;
-	AttrDelete.Post -> GlobalAttrDeleted;
-	END;
+        BEGIN
+        AttrCreate.Post -> GlobalAttrCreated;
+        AttrDelete.Post -> GlobalAttrDeleted;
+        END;
    onmouseup:
-	BEGIN
-	AttrCreate.Post -> GlobalAttrCreated;
-	AttrDelete.Post -> GlobalAttrDeleted;
-	END;
+        BEGIN
+        AttrCreate.Post -> GlobalAttrCreated;
+        AttrDelete.Post -> GlobalAttrDeleted;
+        END;
    onmouseover:
-	BEGIN
-	AttrCreate.Post -> GlobalAttrCreated;
-	AttrDelete.Post -> GlobalAttrDeleted;
-	END;
+        BEGIN
+        AttrCreate.Post -> GlobalAttrCreated;
+        AttrDelete.Post -> GlobalAttrDeleted;
+        END;
    onmousemove:
-	BEGIN
-	AttrCreate.Post -> GlobalAttrCreated;
-	AttrDelete.Post -> GlobalAttrDeleted;
-	END;
+        BEGIN
+        AttrCreate.Post -> GlobalAttrCreated;
+        AttrDelete.Post -> GlobalAttrDeleted;
+        END;
    onmouseout:
-	BEGIN
-	AttrCreate.Post -> GlobalAttrCreated;
-	AttrDelete.Post -> GlobalAttrDeleted;
-	END;
+        BEGIN
+        AttrCreate.Post -> GlobalAttrCreated;
+        AttrDelete.Post -> GlobalAttrDeleted;
+        END;
    onkeypress:
-	BEGIN
-	AttrCreate.Post -> GlobalAttrCreated;
-	AttrDelete.Post -> GlobalAttrDeleted;
-	END;
+        BEGIN
+        AttrCreate.Post -> GlobalAttrCreated;
+        AttrDelete.Post -> GlobalAttrDeleted;
+        END;
    onkeydown:
-	BEGIN
-	AttrCreate.Post -> GlobalAttrCreated;
-	AttrDelete.Post -> GlobalAttrDeleted;
-	END;
+        BEGIN
+        AttrCreate.Post -> GlobalAttrCreated;
+        AttrDelete.Post -> GlobalAttrDeleted;
+        END;
    onkeyup:
-	BEGIN
-	AttrCreate.Post -> GlobalAttrCreated;
-	AttrDelete.Post -> GlobalAttrDeleted;
-	END;
+        BEGIN
+        AttrCreate.Post -> GlobalAttrCreated;
+        AttrDelete.Post -> GlobalAttrDeleted;
+        END;
 
    Selected:
-	BEGIN
-	AttrCreate.Post -> UpdateAttrSelected;
-	AttrModify.Post -> UpdateAttrSelected;
-	AttrDelete.Post -> AttrSelectedDeleted;	
-	END;
+        BEGIN
+        AttrCreate.Post -> UpdateAttrSelected;
+        AttrModify.Post -> UpdateAttrSelected;
+        AttrDelete.Post -> AttrSelectedDeleted;        
+        END;
 
    Multiple:
-	AttrDelete.Post -> UpdateAttrSelected;
+        AttrDelete.Post -> UpdateAttrSelected;
 
    Checked:
-	BEGIN
-	AttrDelete.Pre ->  DeleteAttrSelected;	
-	END;
+        BEGIN
+        AttrDelete.Pre ->  DeleteAttrSelected;        
+        END;
 
    accesskey:
-	BEGIN
-	AttrCreate.Post -> AddAccessKey;
-	AttrModify.Pre -> RemoveAccessKey;
-	AttrModify.Post -> AddAccessKey;
-	AttrDelete.Pre -> RemoveAccessKey;	
-	END;
+        BEGIN
+        AttrCreate.Post -> AddAccessKey;
+        AttrModify.Pre -> RemoveAccessKey;
+        AttrModify.Post -> AddAccessKey;
+        AttrDelete.Pre -> RemoveAccessKey;        
+        END;
 
    EntityName:
-	BEGIN
-	AttrExport.Pre ->  CheckValidEntity;
-	END;
+        BEGIN
+        AttrExport.Pre ->  CheckValidEntity;
+        END;
 
   USEMAP:
-	BEGIN
-	AttrExport.Pre ->  CheckUSEMAP;
-	END;
+        BEGIN
+        AttrExport.Pre ->  CheckUSEMAP;
+        END;
 END

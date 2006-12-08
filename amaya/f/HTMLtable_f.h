@@ -6,6 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern ThotBool WithinLastPastedCell ( Element el );
 extern Element GetSiblingRow ( Element row,
                                ThotBool before,
                                ThotBool inMath );
@@ -47,6 +48,7 @@ extern void CellCreated ( NotifyElement * event );
 extern void CellPasted ( NotifyElement * event );
 extern ThotBool DeleteRow ( NotifyElement *event );
 extern void RowDeleted ( NotifyElement *event );
+extern ThotBool DeleteTBody ( NotifyElement * event );
 extern ThotBool DeleteColumn ( NotifyElement * event );
 extern void ColumnDeleted ( NotifyElement *event );
 extern void ColumnPasted ( NotifyElement * event );
@@ -89,6 +91,7 @@ extern void RowspanDeleted ( NotifyAttribute * event );
 
 #else /* __STDC__ */
 
+extern ThotBool WithinLastPastedCell ( Element el );
 extern Element GetSiblingRow ( Element row,
                                  ThotBool before,
                                  ThotBool inMath );
@@ -130,6 +133,7 @@ extern void CellCreated ( NotifyElement * event );
 extern void CellPasted ( NotifyElement * event );
 extern ThotBool DeleteRow ( NotifyElement *event );
 extern void RowDeleted ( NotifyElement *event );
+extern ThotBool DeleteTBody ( NotifyElement * event );
 extern ThotBool DeleteColumn ( NotifyElement * event );
 extern void ColumnDeleted ( NotifyElement *event );
 extern void ColumnPasted ( NotifyElement * event );

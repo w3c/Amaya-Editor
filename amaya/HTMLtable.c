@@ -26,8 +26,25 @@
 
 static Element      CurrentColumn = NULL;
 static Element      CurrentTable = NULL;
+static Element      LastPastedEl = NULL; // last pasted table element
 static int          PreviousColspan;
 static int          PreviousRowspan;
+
+/*----------------------------------------------------------------------
+  WithinLastPastedCell
+  returns TRUE if the element is within the last pasted cell
+  ----------------------------------------------------------------------*/
+ThotBool WithinLastPastedCell (Element el)
+{
+  if (TtaIsAncestor (el, LastPastedEl))
+    return TRUE;
+  else
+    {
+      // forget about that LastPastedEl
+      LastPastedEl = NULL;
+      return FALSE;
+    }
+}
 
 /*----------------------------------------------------------------------
   GetSiblingRow
@@ -753,6 +770,7 @@ ThotBool RemoveColumn (Element colhead, Document doc, ThotBool ifEmpty,
   int                 rowType, colspan;
   ThotBool            empty, span;
 
+  LastPastedEl = NULL;
   empty = FALSE; /* return TRUE if the column is deleted */
   if (colhead == NULL)
     return (empty);
@@ -1959,7 +1977,7 @@ void CellCreated (NotifyElement * event)
 }
 
 /*----------------------------------------------------------------------
-  CellPasted                                              
+  CellPasted
   ----------------------------------------------------------------------*/
 void CellPasted (NotifyElement * event)
 {
@@ -1972,6 +1990,7 @@ void CellPasted (NotifyElement * event)
   ThotBool            inMath;
 
   cell = event->element;
+  LastPastedEl = cell;
   doc = event->document;
   elType = TtaGetElementType (cell);
   inMath = TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema ("MathML", doc));
@@ -2120,6 +2139,7 @@ ThotBool DeleteRow (NotifyElement *event)
   int                 rowspan, newRowspan;
   ThotBool            inMath;
 
+  LastPastedEl = NULL;
   row = event->element;
   doc = event->document;
   elType = TtaGetElementType (row);
@@ -2193,6 +2213,7 @@ static void ClearColumn (Element colhead, Document doc)
   int                 rowspan, colspan, rs, cs;
   ThotBool            span, inMath;
 
+  LastPastedEl = NULL;
   elType = TtaGetElementType (colhead);
   elType.ElTypeNum = HTML_EL_Table_;
   table = TtaGetTypedAncestor (colhead, elType);
@@ -2288,6 +2309,7 @@ ThotBool DeleteTBody (NotifyElement * event)
   ElementType         elType;
   Document            doc = event->document;
 
+  LastPastedEl = NULL;
   el = event->element;
   sibling = el;
   TtaNextSibling (&sibling);
@@ -2353,6 +2375,7 @@ void ColumnPasted (NotifyElement * event)
   ThotBool        inMath, span;
 
   CurrentColumn = event->element;
+  LastPastedEl = CurrentColumn;
   prevColhead = CurrentColumn;
   TtaPreviousSibling (&prevColhead);
   if (prevColhead)
@@ -2406,6 +2429,7 @@ void TableCreated (NotifyElement * event)
   if (CurrentTable != event->element)
     {
       CurrentTable = event->element;
+      LastPastedEl = NULL;
     }
 }
 
@@ -2423,6 +2447,7 @@ void TablePasted (NotifyElement * event)
   int                 border, len;
 
   el = event->element;
+  LastPastedEl = el;
   doc = event->document;
   elType = TtaGetElementType (el);
   attrType.AttrSSchema = elType.ElSSchema;
@@ -2905,6 +2930,7 @@ void RowPasted (NotifyElement * event)
   ThotBool            inMath, cellLinked, closeCurrentCell;
 
   row = event->element;   /* the pasted row */
+  LastPastedEl = row;
   doc = event->document;
   elType = TtaGetElementType (row);
   inMath = TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema ("MathML", doc));

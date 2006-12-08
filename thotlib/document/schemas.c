@@ -2766,6 +2766,9 @@ void SetNamespaceDeclaration (PtrDocument pDoc, PtrElement element,
   PtrNsUriDescr   uriDecl;
   ThotBool        found;
 
+  if (element->ElTerminal)
+    // don't set a namespace for terminal elements
+    return;
   uriDecl = NULL;
   found = FALSE;
   if (pDoc->DocNsUriDecl)

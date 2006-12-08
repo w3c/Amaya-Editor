@@ -74,7 +74,7 @@
 </svg>
 </div>
 
-<h1>Bienvenue à Amaya 9.52</h1>
+<h1>Bienvenue à Amaya 9.53</h1>
 
 <p>Amaya est un client Web qui sert à la fois de navigateur et d'outil
 d'édition. Il a été conçu par le <a href="http://www.w3.org/">W3C</a> et l'<a
@@ -96,7 +96,7 @@ l'aide de feuilles de style CSS.</p>
       etc.) s'appliqueront à ces éléments structurés.</dd>
   <dt>Un document peut être édité à travers plusieurs vues synchronisées</dt>
     <dd>Le menu Vues vous permet d'ouvrir la vue Structure, Source, etc. Un
-      clic sur la ligne rouge ouvre ou ferme la seconde vue.</dd>
+      clic sur la ligne en bas ou à droite ouvre ou ferme la seconde vue.</dd>
   <dt>Un document peut être publié directement sur un serveur Web</dt>
     <dd>Avec la méthode http PUT vous pouvez écrire sur un serveur à
       condition que vous y soyez autorisé.</dd>
@@ -107,7 +107,7 @@ l'aide de feuilles de style CSS.</p>
   <dt>Amaya offre des commandes avancées</dt>
     <dd>Comme la numérotation des sections, la génération d'une table des
       matières, l'insertion d'une date de mis à jour, la transformation de
-      structure.</dd>
+      structure (voir Edition &gt; Transformer).</dd>
   <dt></dt>
 </dl>
 

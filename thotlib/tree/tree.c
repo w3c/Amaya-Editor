@@ -3264,8 +3264,9 @@ PtrElement CopyTree (PtrElement pSource, PtrDocument pDocSource,
               /* copies the attributes */
               CopyAttributes (pSource, pEl, pDocSource, pDocCopy, checkAttr,
                               copyRef);
-              // copy namespaces if needed
-              CopyNamespaceDeclarations (pDocSource, pSource, pDocCopy, pEl);
+              if (!pEl->ElTerminal)
+                // copy namespaces if needed
+                CopyNamespaceDeclarations (pDocSource, pSource, pDocCopy, pEl);
               /* copy the specific presentation rules */
               CopyPresRules (pSource, pEl);	
               if (shareRef)

@@ -49,6 +49,7 @@ static int          OldHeight;
 #include "HTMLedit_f.h"
 #include "HTMLimage_f.h"
 #include "HTMLpresentation_f.h"
+#include "HTMLtable_f.h"
 #include "html2thot_f.h"
 #include "init_f.h"
 #include "Mathedit_f.h"
@@ -3158,19 +3159,21 @@ void CheckPastedElement (Element el, Document doc, int info, int position,
   if (!by_ref && !ElementOKforProfile (el, doc))
     return;
 
-  /* Check pseudo-paragraphs */
-  CheckPseudoParagraph (el, doc);
+  elType = TtaGetElementType (el);
+  name = TtaGetSSchemaName (elType.ElSSchema);
+  if (elType.ElTypeNum != HTML_EL_Paragraph || strcmp (name, "HTML") ||
+      !WithinLastPastedCell (el))
+    /* Check pseudo-paragraphs */
+    CheckPseudoParagraph (el, doc);
 
   /* Check attribute NAME or ID in order to make sure that its value */
   /* is unique in the document, except if we are including an external
      document referred by an <object> or <embed> element. In this case, there
      is no need to check IDs as the included document will never be changed
      nor saved */
-  elType = TtaGetElementType (el);
   if (elType.ElTypeNum > 0)
     MakeUniqueName (el, doc, TRUE, TRUE);
 
-  name = TtaGetSSchemaName (elType.ElSSchema);
   anchor = NULL;
   if (!strcmp (name, "HTML"))
     {

@@ -15,6 +15,8 @@ extern void InsertSymbol ( Element *el,
                            Document doc );
 extern void AttachIntVertStretch ( Element el,
                                    Document doc );
+extern void AttachIntHorizStretch ( Element el,
+                                    Document doc );
 extern void InsertText ( Element *el,
                          int TypeNum,
                          unsigned char *text,
@@ -519,6 +521,8 @@ extern void InsertSymbol ( Element *el,
                              Document doc );
 extern void AttachIntVertStretch ( Element el,
                                      Document doc );
+extern void AttachIntHorizStretch ( Element el,
+                                      Document doc );
 extern void InsertText ( Element *el,
                            int TypeNum,
                            unsigned char *text,
