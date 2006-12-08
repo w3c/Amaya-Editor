@@ -124,11 +124,13 @@ void AmayaStatusBar::EnableLogError( bool enable )
     {
       m_pLogErrorButton->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_LIB_ERROR_DOC)));
       m_pLogErrorButton->SetBitmapLabel(m_LogErrorBmp_Red);
+      m_pLogErrorButton->SetBitmapDisabled(m_LogErrorBmp_Red);
     }
   else
     {
       m_pLogErrorButton->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_LIB_NOERROR_DOC)));
       m_pLogErrorButton->SetBitmapLabel(m_LogErrorBmp_Green);
+      m_pLogErrorButton->SetBitmapDisabled(m_LogErrorBmp_Green);
     }
 }
 
