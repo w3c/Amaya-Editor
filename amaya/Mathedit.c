@@ -2259,12 +2259,12 @@ static void CreateMathConstruct (int construct, ...)
       else if (construct == 35)
         {
           /* n-ary operation/relation */
-          int symbol = va_arg(varpos, int);
+          int number, symbol = va_arg(varpos, int);
           unsigned char *symbol_name;
           if (symbol == 0)symbol_name = va_arg(varpos, unsigned char*);
 
           /* ask how many the user want */
-          int number = GetOccurrences (5, doc);
+          number = GetOccurrences (5, doc);
 
           leaf = TtaGetFirstChild (el);
           child = leaf;
