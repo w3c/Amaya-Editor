@@ -56,6 +56,9 @@ if test ! -d $GNOMEKDEDIR/applications ; then
   exit
 fi
 
+# --- creating /usr/bin/amaya-version
+$ECHO "Exec=env XLIB_SKIP_ARGB_VISUALS=1 $PREFIX/$AMAYA_INSTALLDIR/$AMAYAGUI/bin/amaya %u" >> usr/bin/amaya-@APP_VER@
+
 # --- creating amaya-version.desktop
 $ECHO "--> Creating $GNOMEKDEDIR/applications/amaya-@APP_VER@.desktop file"
 $ECHO "[Desktop Entry]" > $GNOMEKDEDIR/applications/amaya-@APP_VER@.desktop
