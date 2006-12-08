@@ -1222,8 +1222,11 @@ void SetNamespacesAndDTD (Document doc)
                   else if (strstr (buffer, "mathml.xsl"))
                     {
                       if (!mathPI)
-                        // this PI must be removed
-                        TtaDeleteTree (elFound, doc);
+                        {
+                          if (el)
+                            // this PI must be removed
+                            TtaDeleteTree (el, doc);
+                        }
                       /* it's not necessary to generate the math PI */
                       mathPI = FALSE;
                       elFound = NULL;
