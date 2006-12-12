@@ -4198,7 +4198,7 @@ static char* ExportAttrNsPrefix (Document doc, PtrElement pNode,
   int              i;
   char            *ns_prefix = NULL;
 
-  if (pNode->ElTerminal)
+  if (pNode == NULL || pNode->ElTerminal)
     return (ns_prefix);
   pDoc = LoadedDocument[doc - 1];
   if (pNode->ElStructSchema == pAttr->AeAttrSSchema)
@@ -4257,7 +4257,7 @@ static char* ExportElemNsPrefix (Document doc, PtrElement pNode)
   int              i;
   char            *ns_prefix = NULL;
 
-  if (pNode->ElTerminal)
+  if (pNode == NULL || pNode->ElTerminal)
     return (ns_prefix);
   pDoc = LoadedDocument[doc - 1];
   if (pDoc->DocNsUriDecl == NULL)
@@ -4333,7 +4333,7 @@ static void ExportNsDeclaration (Document doc, PtrElement pNode)
   PtrDocument      pDoc;
   int              i, fnum;
 
-  if (pNode->ElTerminal)
+  if (pNode == NULL || pNode->ElTerminal)
     return;
   fnum = 1; /* main output file */
   pDoc = LoadedDocument[doc - 1];

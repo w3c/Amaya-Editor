@@ -3382,7 +3382,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
   PtrLine             pLine;
   PtrAbstractBox      pCurrentAb, pCell, pBlock, pParent, curr, table, pChild;
   PtrBox              pNextBox, pCurrentBox = NULL;
-  PtrBox              pMainBox, pLastBox, pBox, box;
+  PtrBox              pMainBox, pLastBox, pBox, box = NULL;
   PtrElement          pEl;
   TypeUnit            unit;
   ThotPictInfo       *imageDesc;
@@ -4216,7 +4216,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
               // update all dimensions due to the ratio
               pAb->AbWidthChange = TRUE;
               pAb->AbHeightChange = TRUE;
-              // Need to update update the width/height of the enclosed PICTURE
+              // Need to update the width/height of the enclosed PICTURE
               pChild = pAb->AbFirstEnclosed;
               found = FALSE;
               while (!found && pChild)
@@ -4231,7 +4231,8 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
                   else
                     pChild = pChild->AbNext;
                 }
-              box = pChild->AbBox;
+              if (found)
+                box = pChild->AbBox;
             }
         }
       else
