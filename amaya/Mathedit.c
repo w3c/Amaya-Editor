@@ -730,6 +730,36 @@ void InsertEmptyConstruct (Element *el, int TypeNum, Document doc)
   *el = empty;
 }
 
+/* InsertNumber */
+void InsertNumber (Element *el, int value, Document doc)
+{
+  int i;
+  ElementType newType;
+  Element     child, child2;
+  /* convert number to string ... maybe would have to be improve */
+  char str[4];
+  CHAR_T text[5];
+  value = value % 10000;
+  sprintf(str,"%d",value);
+  for(i = 0; i < strlen(str); i++)text[i] = str[i];
+  text[i] = EOS;
+  /**********/
+
+  newType = TtaGetElementType (*el);
+  newType.ElTypeNum = MathML_EL_MN;
+
+  child = TtaNewTree (doc, newType, "");
+  TtaInsertSibling (child, *el, FALSE, doc);
+
+  newType.ElTypeNum = MathML_EL_TEXT_UNIT;
+  child2 = TtaNewElement (doc, newType);
+  TtaInsertFirstChild (&child2, child, doc);
+  TtaSetBufferContent (child2, text, TtaGetLanguageIdFromScript('L'), doc);
+
+  *el = child;
+}
+
+
 /*----------------------------------------------------------------------
   InsertSymbol
   Insert a symbol after an element
@@ -1208,7 +1238,7 @@ void MathSelectionChanged (NotifyElement *event)
 /*----------------------------------------------------------------------
   GetOccurrences: asks and returns the number of occurrences
   ----------------------------------------------------------------------*/
-static int GetOccurrences(int val, Document doc)
+static int GetOccurrences(int val, int mini, Document doc)
 {
 #ifdef _WX
   ThotBool  created;
@@ -1227,6 +1257,9 @@ static int GetOccurrences(int val, Document doc)
       val = Math_occurences;
     }
 #endif  /* _WX */
+
+/* check if val is between mini and maxi (-1 = unbounded) */
+if((mini != -1) && (val < mini))val = mini;
   return val;
 }
 
@@ -1484,7 +1517,7 @@ static void CreateMathConstruct (int construct, ...)
       
       if (elType.ElSSchema == mathSchema &&
           elType.ElTypeNum == MathML_EL_MathML)
-        /* the current selection is the MathML root element */
+        /* the current selection is the MathML root element */
         {
           /* search the first or last child of the MathML root element */
           if (before)
@@ -2114,8 +2147,8 @@ static void CreateMathConstruct (int construct, ...)
         {
           /* Piecewise */
 
-          /* ask how many the user want */
-          int number = GetOccurrences (3, doc);
+          /* ask how many the user wants */
+          int number = GetOccurrences (3, 2, doc);
           leaf = TtaGetFirstChild (el);
           child = leaf;
 
@@ -2263,8 +2296,8 @@ static void CreateMathConstruct (int construct, ...)
           unsigned char *symbol_name;
           if (symbol == 0)symbol_name = va_arg(varpos, unsigned char*);
 
-          /* ask how many the user want */
-          number = GetOccurrences (5, doc);
+          /* ask how many the user wants */
+          number = GetOccurrences (5, 1, doc);
 
           leaf = TtaGetFirstChild (el);
           child = leaf;
@@ -2283,7 +2316,7 @@ static void CreateMathConstruct (int construct, ...)
         {/* selector */
 
           /* ask number of coordonnates */
-          int number = GetOccurrences (3, doc);
+          int number = GetOccurrences (3, 1, doc);
 
           child = TtaGetLastChild (el);
           leaf = TtaGetFirstChild (child);
@@ -2296,7 +2329,7 @@ static void CreateMathConstruct (int construct, ...)
           for (i = 0 ; i < number; i++)
             {
               if (i)
-                InsertSymbol (&child, MathML_EL_MO, ',', doc);          
+                InsertSymbol (&child, MathML_EL_MO, 8203, doc); // invisible comma          
               InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
             }
           TtaDeleteTree (leaf, doc);
@@ -2305,8 +2338,8 @@ static void CreateMathConstruct (int construct, ...)
         {/* couple,  n-uple */
           int number = va_arg(varpos, int);
           if (number != 2)
-            {/* ask how many the user want */
-              number = GetOccurrences (5, doc);
+            {/* ask how many the user wants */
+              number = GetOccurrences (3, 2, doc);
             }
 
           new_ = SetMFencedAttributes(el, '(', ')', ',', doc);
@@ -2336,8 +2369,8 @@ static void CreateMathConstruct (int construct, ...)
       else if (construct == 39)
         {/* set/list extension ; vectorrow */
           int ope = va_arg(varpos, int), clo = va_arg(varpos, int);
-          /* ask how many the user want */
-          int number = GetOccurrences (5, doc);
+          /* ask how many the user wants */
+          int number = GetOccurrences (5, 1, doc);
 
           new_ = SetMFencedAttributes(el, ope, clo, ';', doc);
           leaf = TtaGetFirstChild (new_);
@@ -2546,21 +2579,12 @@ static void CreateMathConstruct (int construct, ...)
         }
       else if (construct== 51)
         { /* partialdiff2 */
-          int symbol = 8706;
-          /* ask the user the degree of derivation of the function f and of the variables of f*/
+          int symboldiff = 8706, degree = 0, numbervar;
 
-          leaf = TtaGetFirstChild (TtaGetFirstChild (el));
-          child = leaf;
-          InsertEmptyConstruct (&child, MathML_EL_MROW, doc);
-          TtaDeleteTree (leaf, doc);
-
-          leaf = TtaGetFirstChild(child);
-          child = leaf;
-          InsertSymbol (&child, MathML_EL_MO, symbol, doc);
-          InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
-          selected = child;
-          TtaDeleteTree (leaf, doc);
-
+          /* ask the user about the number of variables that have to be differentiated */
+          numbervar = GetOccurrences (1, 1, doc);
+  
+          /* ask the user about the degree of derivation of each variable */
           leaf = TtaGetFirstChild (TtaGetLastChild (el));
           child = leaf;
           InsertEmptyConstruct (&child, MathML_EL_MROW, doc);
@@ -2568,8 +2592,65 @@ static void CreateMathConstruct (int construct, ...)
 
           leaf = TtaGetFirstChild(child);
           child = leaf;
-          InsertSymbol (&child, MathML_EL_MO, symbol, doc);
+
+          for(i = 0; i < numbervar; i++)
+             {
+             int degreevar = GetOccurrences (2, 1, doc);
+             degree += degreevar;
+             if(degreevar == 1)
+               {
+               InsertSymbol (&child, MathML_EL_MO, symboldiff, doc);
+               }
+             else
+               {
+               Element leaf2, child2;
+               InsertEmptyConstruct(&child, MathML_EL_MSUP, doc);
+
+               leaf2 = TtaGetFirstChild (TtaGetFirstChild (child));
+               child2 = leaf2;
+               InsertSymbol (&child2, MathML_EL_MO, symboldiff, doc);
+               TtaDeleteTree (leaf2, doc);
+
+               leaf2 = TtaGetFirstChild (TtaGetLastChild (child));
+               child2 = leaf2;
+               InsertNumber (&child2, degreevar, doc);
+               TtaDeleteTree (leaf2, doc);
+               }
+             InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
+             }
+          TtaDeleteTree (leaf, doc);
+
+          /* set the degree of derivation */
+          leaf = TtaGetFirstChild (TtaGetFirstChild (el));
+          child = leaf;
+          InsertEmptyConstruct (&child, MathML_EL_MROW, doc);
+          TtaDeleteTree (leaf, doc);
+
+          leaf = TtaGetFirstChild(child);
+          child = leaf;
+
+          if(degree == 1)
+            {          
+            InsertSymbol (&child, MathML_EL_MO, symboldiff, doc);
+            }
+          else
+            {
+            Element leaf2, child2;
+            InsertEmptyConstruct(&child, MathML_EL_MSUP, doc);
+
+            leaf2 = TtaGetFirstChild (TtaGetFirstChild (child));
+            child2 = leaf2;
+            InsertSymbol (&child2, MathML_EL_MO, symboldiff, doc);
+            TtaDeleteTree (leaf2, doc);
+
+            leaf2 = TtaGetFirstChild (TtaGetLastChild (child));
+            child2 = leaf2;
+            InsertNumber (&child2, degree, doc);
+            TtaDeleteTree (leaf2, doc);
+            }
+
           InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
+          selected = child;
           TtaDeleteTree (leaf, doc);
         }
       else if (construct== 52)
@@ -2595,8 +2676,8 @@ static void CreateMathConstruct (int construct, ...)
           child = SetMFencedAttributes(el, ope, clo, ',', doc);
         
           /* ask the user the number of rows and colomns */
-          if (lx == 0) lx = GetOccurrences (3, doc);
-          if (ly == 0) ly = GetOccurrences (3, doc);
+          if (lx == 0) lx = GetOccurrences (3, 1, doc);
+          if (ly == 0) ly = GetOccurrences (3, 1, doc);
 
           /* mtable */
           leaf = TtaGetFirstChild (child);TtaDeleteTree (leaf, doc);
@@ -5752,7 +5833,7 @@ static void ParseMathString (Element theText, Element theElem, Document doc)
                Create a separate element */
             separate = TRUE;
           else if (i == totLen)
-            /* end of string. Create an element anyway */
+            /* end of string. Create an element anyway */
             separate = TRUE;
           else if (mathType[i-1] == (char)MathML_EL_MO && text[i-1] != ' ' &&
                    text[i] != ' ')

@@ -9,6 +9,7 @@ MV="@MV@"
 RM="@RM@ -f"
 LN_S="@LN_S@"
 MKDIR="@MKDIR@"
+CHMOD="/bin/chmod a+x"
 ECHO="@ECHO@"
 
 # test parameters
@@ -57,7 +58,9 @@ if test ! -d $GNOMEKDEDIR/applications ; then
 fi
 
 # --- creating /usr/bin/amaya-version
-$ECHO "Exec=env XLIB_SKIP_ARGB_VISUALS=1 $PREFIX/$AMAYA_INSTALLDIR/$AMAYAGUI/bin/amaya %u" >> usr/bin/amaya-@APP_VER@
+$ECHO "#!/bin/sh" >> /usr/bin/amaya
+$ECHO "env XLIB_SKIP_ARGB_VISUALS=1 $PREFIX/$AMAYA_INSTALLDIR/$AMAYAGUI/bin/amaya \${1+"\$@"}" >> /usr/bin/amaya
+$CHMOD /usr/bin/amaya
 
 # --- creating amaya-version.desktop
 $ECHO "--> Creating $GNOMEKDEDIR/applications/amaya-@APP_VER@.desktop file"

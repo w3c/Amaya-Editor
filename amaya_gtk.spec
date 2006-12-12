@@ -96,9 +96,7 @@ make install prefix=$RPM_BUILD_ROOT/usr/share
 /usr/share/Amaya-%{version}/
 %post 
 /bin/ln -f -s /usr/share/Amaya-%{version}/gtk/bin/amaya /usr/bin/amaya_gtk
-/bin/ln -f -s /usr/bin/amaya_gtk /usr/bin/amaya
 %postun
-rm -f /usr/bin/amaya
 rm -f /usr/applications/Amaya-%{version}.desktop
 rm -f /usr/pixmaps/amaya-%{version}.png
 
