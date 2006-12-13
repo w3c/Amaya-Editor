@@ -4271,6 +4271,11 @@ Document LoadDocument (Document doc, char *pathname,
         }
       else if (charsetname[0] != EOS)
         DocumentMeta[newdoc]->charset = TtaStrdup (charsetname);
+      else if (docType == docCSS || docType == docText)
+        {
+          TtaSetDocumentCharset (newdoc, ISO_8859_1, FALSE);
+          DocumentMeta[newdoc]->charset = TtaStrdup ("iso-8859-1");
+        }
 
       /*
       ** copy some HTTP headers to the metadata 
