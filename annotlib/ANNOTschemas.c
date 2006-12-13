@@ -443,7 +443,7 @@ void SCHEMA_ReadSchema (Document doc, char *namespace_URI)
 			  AMAYA_SYNC | AMAYA_FLUSH_REQUEST,
 			  NULL,
 			  NULL, 
-			  (void (*)(int, int, char*, char*, const AHTHeaders*, void*)) ReadSchema_callback,
+			  (void (*)(int, int, char*, char*, char*, const AHTHeaders*, void*)) ReadSchema_callback,
 			  (void *) ctx,
 			  NO,
 			  "application/xml");

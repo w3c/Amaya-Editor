@@ -741,7 +741,7 @@ static void ANNOT_Load2 (Document doc, View view, AnnotLoadMode mode)
 			      AMAYA_ASYNC | AMAYA_FLUSH_REQUEST,
 			      NULL,
 			      NULL, 
-			      (void (*)(int, int, char*, char*, const AHTHeaders*, void*))  RemoteLoad_callback,
+			      (void (*)(int, int, char*, char*, char*, const AHTHeaders*, void*))  RemoteLoad_callback,
 			      (void *) ctx,
 			      NO,
 			      "application/xml");
@@ -1305,7 +1305,7 @@ void ANNOT_Post (Document doc, View view)
 			  AMAYA_FILE_POST | AMAYA_ASYNC | AMAYA_FLUSH_REQUEST,
 			  NULL,
 			  NULL, 
-			  (void (*)(int, int, char*, char*, const AHTHeaders*, void*))ANNOT_Post_callback,
+			  (void (*)(int, int, char*, char*, char*, const AHTHeaders*, void*))ANNOT_Post_callback,
 			  (void *) ctx,
 			  NO,
 			  NULL);
@@ -1340,7 +1340,7 @@ void ANNOT_Post (Document doc, View view)
 			      AMAYA_FILE_POST | AMAYA_ASYNC | AMAYA_FLUSH_REQUEST,
 			      NULL,
 			      NULL, 
-			      (void (*)(int, int, char*, char*, const AHTHeaders*, void*))  ANNOT_Post_callback,
+			      (void (*)(int, int, char*, char*, char*, const AHTHeaders*, void*))  ANNOT_Post_callback,
 			      (void *) ctx,
 			      NO,
 			      NULL);
@@ -1353,7 +1353,7 @@ void ANNOT_Post (Document doc, View view)
 	  
 	  res = PutObjectWWW (doc, rdf_file, url, "application/xml", ctx->remoteAnnotIndex,
 			      AMAYA_SIMPLE_PUT | AMAYA_SYNC | AMAYA_NOCACHE |  AMAYA_FLUSH_REQUEST,
-			      (void (*)(int, int, char*, char*, const AHTHeaders*, void*))  ANNOT_Post_callback, (void *) ctx);
+			      (void (*)(int, int, char*, char*, char*, const AHTHeaders*, void*))  ANNOT_Post_callback, (void *) ctx);
 	}
     }
 
@@ -1614,7 +1614,7 @@ ThotBool Annot_RaiseSourceDoc (NotifyElement *event)
     }
   targetDocument = GetAmayaDoc (url, NULL, rel_doc,
 				doc_annot, (ClickEvent)method, FALSE, 
-				(void (*)(int, int, char*, char*, const AHTHeaders*, void*)) Annot_RaiseSourceDoc_callback,
+				(void (*)(int, int, char*, char*, char*, const AHTHeaders*, void*)) Annot_RaiseSourceDoc_callback,
 				(void *) ctx);
 
   /* don't let Thot perform the normal operation */
@@ -1975,7 +1975,7 @@ void ANNOT_Delete (Document doc, View view)
 			      AMAYA_ASYNC | AMAYA_DELETE | AMAYA_FLUSH_REQUEST,
 			      NULL,
 			      NULL, 
-			      (void (*)(int, int, char*, char*, const AHTHeaders*, void*))  ANNOT_Delete_callback,
+			      (void (*)(int, int, char*, char*, char*, const AHTHeaders*, void*))  ANNOT_Delete_callback,
 			      (void *) ctx,
 			      NO,
 			      NULL);

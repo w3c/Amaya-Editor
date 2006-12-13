@@ -9,6 +9,9 @@
 extern void InsertEmptyConstruct ( Element *el,
                                    int TypeNum,
                                    Document doc );
+extern void InsertNumber ( Element *el,
+                           int value,
+                           Document doc );
 extern void InsertSymbol ( Element *el,
                            int TypeNum,
                            int symbol,
@@ -515,6 +518,9 @@ extern void HandleColAndRowAlignAttributes ( Element row,
 extern void InsertEmptyConstruct ( Element *el,
                                      int TypeNum,
                                      Document doc );
+extern void InsertNumber ( Element *el,
+                             int value,
+                             Document doc );
 extern void InsertSymbol ( Element *el,
                              int TypeNum,
                              int symbol,

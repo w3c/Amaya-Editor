@@ -4400,11 +4400,11 @@ Document LoadDocument (Document doc, char *pathname,
   Reload_callback
   The urlName is encoded with the default charset.
   ----------------------------------------------------------------------*/
-void Reload_callback (int doc, int status, char *urlName,
-                      char *outputfile, AHTHeaders *http_headers,
-                      void * context)
+void Reload_callback (int doc, int status, char *urlName, char *outputfile, 
+                      char *proxyName, AHTHeaders *http_headers, void * context)
+                     
 {
-  Document          newdoc;
+  Document           newdoc;
   char              *tempfile;
   char              *documentname;
   char              *form_data;
@@ -4644,11 +4644,11 @@ void Reload (Document doc, View view)
       /* load the document from the Web */
       toparse = GetObjectWWW (doc, 0, pathname, form_data, tempfile, 
                               mode,
-                              NULL, NULL, (void (*)(int, int, char*, char*, const AHTHeaders*, void*)) Reload_callback, 
+                              NULL, NULL, (void (*)(int, int, char*, char*, char*, const AHTHeaders*, void*)) Reload_callback, 
                               (void *) ctx, YES, NULL);
     }
   else if (TtaFileExist (pathname))
-    Reload_callback (doc, 0, pathname, tempfile, NULL, (void *) ctx);
+    Reload_callback (doc, 0, pathname, tempfile, NULL, NULL, (void *) ctx);
 
   TtaFreeMemory (tempfile);
   TtaFreeMemory (pathname);
@@ -5162,9 +5162,8 @@ ThotBool ViewToClose (NotifyDialog *event)
 /*----------------------------------------------------------------------
   The urlName is encoded with the default charset.
   ----------------------------------------------------------------------*/
-void GetAmayaDoc_callback (int newdoc, int status, char *urlName,
-                           char *outputfile, AHTHeaders *http_headers,
-                           void * context)
+void GetAmayaDoc_callback (int newdoc, int status, char *urlName, char *outputfile,
+                           char *proxyName, AHTHeaders *http_headers, void * context)
 {
   Element             elFound;
   Document            doc;
@@ -5174,6 +5173,7 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName,
   int                 method;
   void               *ctx_cbf;
   char                tempdocument[MAX_LENGTH];
+  char                proxymsg[MAX_LENGTH];
   char               *tempfile;
   char               *target;
   char               *pathname;
@@ -5323,7 +5323,14 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName,
               if (!s)
                 s = "";
               sprintf (tempdocument, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), pathname);
-              InitConfirm3L (newdoc, 1, tempdocument, s, NULL, FALSE);
+              if (proxyName != NULL)
+		{
+		  strcpy (proxymsg, "Used proxy: ");
+		  strcat (proxymsg, proxyName);
+		  InitConfirm3L (newdoc, 1, tempdocument, s, proxymsg, FALSE);
+		}
+	      else
+		InitConfirm3L (newdoc, 1, tempdocument, s, NULL, FALSE);
             }
         }
 
@@ -5359,7 +5366,7 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName,
 
   /*** if stopped_flag == true, how to deal with cbf? */
   if (cbf)
-    (*cbf) (newdoc, status, pathname, tempfile, NULL, ctx_cbf);
+    (*cbf) (newdoc, status, pathname, tempfile, NULL, NULL, ctx_cbf);
 
 
 #ifdef DAV
@@ -5685,7 +5692,7 @@ Document GetAmayaDoc (char *urlname, char *form_data,
               if ((css == NULL) || (css != NULL && newdoc == doc))
                 toparse =  GetObjectWWW (newdoc, refdoc, initial_url, form_data,
                                          tempfile, mode, NULL, NULL,
-                                         (void (*)(int, int, char*, char*, const AHTHeaders*, void*)) GetAmayaDoc_callback,
+                                         (void (*)(int, int, char*, char*, char*, const AHTHeaders*, void*)) GetAmayaDoc_callback,
                                          (void *) ctx, YES, content_type);
               else
                 {
@@ -5694,8 +5701,8 @@ Document GetAmayaDoc (char *urlname, char *form_data,
                                 TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED), NULL);
                   /* just take a copy of the local temporary file */
                   strcpy (tempfile, css->localName);
-                  GetAmayaDoc_callback (newdoc, 0, initial_url,
-                                        tempfile, NULL, (void *) ctx);
+                  GetAmayaDoc_callback (newdoc, 0, initial_url, tempfile,
+                                        NULL, NULL, (void *) ctx);
                   TtaHandlePendingEvents ();
                 }
             }
@@ -5706,7 +5713,7 @@ Document GetAmayaDoc (char *urlname, char *form_data,
                             TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED),
                             NULL);
               GetAmayaDoc_callback (newdoc, 0, initial_url, tempfile,
-                                    NULL, (void *) ctx);
+                                    NULL, NULL, (void *) ctx);
               TtaHandlePendingEvents ();
             }
         }
@@ -5716,7 +5723,7 @@ Document GetAmayaDoc (char *urlname, char *form_data,
       /* following a local link */
       TtaSetStatus (newdoc, 1, TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED), NULL);
       ctx->local_link = 1;
-      GetAmayaDoc_callback (newdoc, 0, initial_url, tempfile, NULL, (void *) ctx);
+      GetAmayaDoc_callback (newdoc, 0, initial_url, tempfile, NULL, NULL, (void *) ctx);
       TtaHandlePendingEvents ();
     }
   
@@ -5730,7 +5737,7 @@ Document GetAmayaDoc (char *urlname, char *form_data,
       if (ctx)
         TtaFreeMemory (ctx);
       if (cbf)
-        (*cbf) (newdoc, -1, initial_url, tempfile, NULL, ctx_cbf);
+        (*cbf) (newdoc, -1, initial_url, tempfile, NULL, NULL, ctx_cbf);
       /* Free the memory associated with the context */
       TtaFreeMemory (target);
       TtaFreeMemory (documentname);

@@ -2950,7 +2950,7 @@ void InvokeGetObjectWWW_callback (int docid, char *urlName,
     return;
   
   (*terminate_cbf) (docid, status, urlName, outputfile,
-                    NULL, context_tcbf);  
+                    NULL, NULL, context_tcbf);  
 }
 
 
@@ -3813,7 +3813,7 @@ void StopAllRequests (int docid)
                           if (me->terminate_cbf)
                             (*me->terminate_cbf) (me->docid, -1, me->urlName,
                                                   me->outputfile,
-                                                  NULL,
+                                                  NULL, NULL,
                                                   me->context_tcbf);
 			   
                           if (async_flag) 

@@ -1293,7 +1293,7 @@ static ThotBool GetIncludedDocuments (Element el, Element link,
                   SetStopButton (doc);
                   newdoc = GetAmayaDoc (utf8path, NULL, IncludedDocument,
                                         doc, CE_MAKEBOOK, FALSE, 
-                                        (void (*)(int, int, char*, char*, const AHTHeaders*, void*)) GetIncludedDocuments_callback,
+                                        (void (*)(int, int, char*, char*, char*, const AHTHeaders*, void*)) GetIncludedDocuments_callback,
                                         (void *) ctx);
                   found = TRUE;
                 }

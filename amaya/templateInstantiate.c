@@ -204,7 +204,7 @@ void InstantiateTemplate (Document doc, char *templatename, char *docname,
       ctx->docType = docType;
 		
       GetAmayaDoc (templatename, NULL, doc, doc, CE_MAKEBOOK, FALSE, 
-                   (void (*)(int, int, char*, char*, const AHTHeaders*, void*)) InstantiateTemplate_callback,
+                   (void (*)(int, int, char*, char*, char*, const AHTHeaders*, void*)) InstantiateTemplate_callback,
                    (void *) ctx);
     }
 	else

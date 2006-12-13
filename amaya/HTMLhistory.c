@@ -479,7 +479,7 @@ void GotoPreviousHTML (Document doc, View view)
     {
       StopTransfer (doc, 1);
       GetAmayaDoc (url, form_data, doc, doc, method, FALSE,
-                   (void (*)(int, int, char*, char*, const AHTHeaders*, void*))
+                   (void (*)(int, int, char*, char*, char*, const AHTHeaders*, void*))
                    GotoPreviousHTML_callback,(void *) ctx);
       /* out of the critic section */
       Back_Forward = FALSE;
@@ -646,7 +646,7 @@ void GotoNextHTML (Document doc, View view)
     {
       StopTransfer (doc, 1);
       GetAmayaDoc (url, form_data, doc, doc, method, FALSE,
-                   (void (*)(int, int, char*, char*, const AHTHeaders*, void*)) GotoNextHTML_callback, (void *) ctx);
+                   (void (*)(int, int, char*, char*, char*, const AHTHeaders*, void*)) GotoNextHTML_callback, (void *) ctx);
       /* out of the critic section */
       Back_Forward = FALSE;
     }

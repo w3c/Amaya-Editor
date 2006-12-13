@@ -214,7 +214,7 @@ void LoadTemplate (Document doc, char* templatename)
 
       DontReplaceOldDoc = TRUE;
       newdoc = GetAmayaDoc (templatename, NULL, doc, doc, CE_TEMPLATE, FALSE, 
-                            (void (*)(int, int, char*, char*, const AHTHeaders*, void*)) LoadTemplate_callback,
+                            (void (*)(int, int, char*, char*, char*, const AHTHeaders*, void*)) LoadTemplate_callback,
                             (void *) ctx);
       if (newdoc)
         DocumentTypes[newdoc] = docTemplate;

@@ -90,8 +90,8 @@ typedef void   TIcbf (Document doc, int status, char *urlName,
 		      void *context);
 
 typedef void  TTcbf (Document doc, int status, char *urlName,
-                     char *outputfile, const AHTHeaders *http_headers,
-                     void *context);
+                     char *outputfile, char *proxyName,
+                     const AHTHeaders *http_headers, void *context);
 
 /* How are Network accesses provided ? */
 #include "libwww.h"

@@ -218,7 +218,7 @@ void  ProcessTerminateRequest (HTRequest *request, HTResponse *response,
     {
       if (AmayaIsAlive ()  && me->terminate_cbf)
         (*me->terminate_cbf) (me->docid, 0, me->urlName, me->outputfile,
-                              &(me->http_headers), me->context_tcbf);
+                              NULL, &(me->http_headers), me->context_tcbf);
 
     }
   else if (me->reqStatus == HT_ABORT)
@@ -227,7 +227,7 @@ void  ProcessTerminateRequest (HTRequest *request, HTResponse *response,
     {
       if (AmayaIsAlive () && me->terminate_cbf)
         (*me->terminate_cbf) (me->docid, -1, me->urlName, me->outputfile,
-                              &(me->http_headers), me->context_tcbf);
+                              NULL, &(me->http_headers), me->context_tcbf);
       if (me->outputfile && me->outputfile[0] != EOS)
         {
           TtaFileUnlink (me->outputfile);
@@ -239,7 +239,7 @@ void  ProcessTerminateRequest (HTRequest *request, HTResponse *response,
       /* there was an error */
       if (AmayaIsAlive () && me->terminate_cbf)
         (*me->terminate_cbf) (me->docid, -2, me->urlName, me->outputfile,
-                              &(me->http_headers), me->context_tcbf);
+                              (char *)HTRequest_proxy (request), &(me->http_headers), me->context_tcbf);
       
       if (me->outputfile && me->outputfile[0] != EOS)
         {

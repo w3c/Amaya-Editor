@@ -666,7 +666,7 @@ static ThotBool FollowTheLink (Element anchor, Element elSource,
               /* Load the new document */
               targetDocument = GetAmayaDoc (pathname, NULL, reldoc, doc, 
                                             method, history, 
-                                            (void (*)(int, int, char*, char*, const AHTHeaders*, void*)) FollowTheLink_callback,
+                                            (void (*)(int, int, char*, char*, char*, const AHTHeaders*, void*)) FollowTheLink_callback,
                                             (void *) ctx);
               if (readonly)
                 {

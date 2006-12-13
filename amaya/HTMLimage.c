@@ -787,10 +787,8 @@ void SetContainerImageName (char *imagefile)
   HandleImageLoaded is the callback procedure when the image is loaded	
   from the web.						
   ----------------------------------------------------------------------*/
-static void HandleImageLoaded (int doc, int status, char *urlName,
-                               char *outputfile,
-                               AHTHeaders *http_headers,
-                               void * context)
+static void HandleImageLoaded (int doc, int status, char *urlName, char *outputfile,
+                               char *proxyname, AHTHeaders *http_headers, void * context)
 {
   FetchImage_context *FetchImage_ctx;
   LoadedImageDesc    *desc;
@@ -937,9 +935,8 @@ static void HandleImageLoaded (int doc, int status, char *urlName,
   libWWWImageLoaded is the libWWW callback procedure when the image
   is loaded from the web.
   ----------------------------------------------------------------------*/
-static void libWWWImageLoaded (int doc, int status, char *urlName,
-                               char *outputfile, AHTHeaders *http_headers,
-                               void * context)
+static void libWWWImageLoaded (int doc, int status, char *urlName, char *outputfile,
+			       char *proxyname, AHTHeaders *http_headers, void * context)
 {
   if (doc == 0 || DocumentURLs[doc])
     {
@@ -954,8 +951,7 @@ static void libWWWImageLoaded (int doc, int status, char *urlName,
 #endif /* _GL */
       
       /* rename the local file of the image */
-      HandleImageLoaded (doc, status, urlName, outputfile, http_headers,
-                         context);
+      HandleImageLoaded (doc, status, urlName, outputfile, NULL, http_headers, context);
     }
 }
 
@@ -1135,7 +1131,7 @@ ThotBool FetchImage (Document doc, Element el, char *imageURI, int flags,
                                                           TtaGetDefaultCharset ());
               i = GetObjectWWW (doc, doc, utf8pathname, NULL, tempfile,
                                 newflags, NULL, NULL,
-                                (void (*)(int, int, char*, char*, const AHTHeaders*, void*)) libWWWImageLoaded,
+                                (void (*)(int, int, char*, char*, char*, const AHTHeaders*, void*)) libWWWImageLoaded,
                                 (void *) FetchImage_ctx, NO, NULL);
               if (i != -1) 
                 desc->status = IMAGE_LOADED;
