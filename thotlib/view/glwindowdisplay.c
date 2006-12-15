@@ -1298,7 +1298,8 @@ AnimTime ComputeThotCurrentTime (int frame)
 }
 
 /* flag used to display only once opengl status (version, renderer ...)*/
-static ThotBool DisplayOpenGLStatus = TRUE;
+static ThotBool DisplayOpenGLStatus = FALSE;
+/* Put back this boolean to TRUE to have the OpenGL Status at launching */
  
 #define GLU_ERROR_MSG "\nSorry, Amaya requires GLU 1.2 or later.\n"
 /*----------------------------------------------------------------------
