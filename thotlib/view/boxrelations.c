@@ -2088,7 +2088,10 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
   zoom = ViewFrameTable[frame - 1].FrMagnification;
   pParentAb = pAb->AbEnclosing;
   dx = dy = 0;
-  pos = pAb->AbPositioning;
+  if (pAb->AbLeafType == LtCompound)
+    pos = pAb->AbPositioning;
+  else
+    pos = NULL;
   if (pParentAb)
     parent = pParentAb->AbElement;
   else
