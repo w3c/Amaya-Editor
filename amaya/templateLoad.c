@@ -150,9 +150,8 @@ void ParseDeclarations (XTigerTemplate t, Element el)
 /*----------------------------------------------------------------------
   LoadTemplate_callback: Called after loading a template.
   ----------------------------------------------------------------------*/
-void LoadTemplate_callback (int newdoc, int status,  char *urlName,
-                            char *outputfile, AHTHeaders *http_headers,
-                            void * context)
+void LoadTemplate_callback (int newdoc, int status,  char *urlName, char *outputfile,
+                            char *proxyName, AHTHeaders *http_headers, void * context)
 {	
 #ifdef TEMPLATES 
 #ifdef AMAYA_DEBUG 
