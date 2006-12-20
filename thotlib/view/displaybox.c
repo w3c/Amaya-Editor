@@ -966,7 +966,6 @@ void DisplayPolyLine (PtrBox pBox, int frame, ThotBool selected,
   /* If no point is defined, no need to draw it */
   if (pBox->BxBuffer == NULL || pBox->BxNChars <= 1)
     return;
-
   /* Transform the polyline if the box size has changed */
   PolyTransform (pBox, frame);
   pAb = pBox->BxAbstractBox;
@@ -1333,7 +1332,8 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
   if (mbox == pBox)
     blockbegin = TRUE;
   else if (mbox->BxFirstLine == NULL ||
-           (mbox->BxType != BoBlock && mbox->BxType != BoFloatBlock))
+           (mbox->BxType != BoBlock &&
+            mbox->BxType != BoFloatBlock && mbox->BxType != BoCellBlock))
     blockbegin = TRUE;
   else if (pBox->BxType == BoComplete && mbox->BxFirstLine->LiFirstBox == pBox)
     blockbegin = TRUE;
@@ -2315,13 +2315,13 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin,
                         glIsList(box->DisplayList),
                         _T("GLBUG - DisplayBox : glIsList returns false"));
 #endif /* _WX */
-          if (!(box->VisibleModification) &&
+          if (!box->VisibleModification &&
               box->DisplayList && glIsList (box->DisplayList))
             {
               glCallList (box->DisplayList);
               return;
             }
-          else if (GL_NotInFeedbackMode ())
+            else if (box->VisibleModification || GL_NotInFeedbackMode ())
             {      
               if (glIsList (box->DisplayList))
                 glDeleteLists (box->DisplayList, 1);

@@ -462,7 +462,8 @@ static ThotBool CloseTextInsertionWithControl (ThotBool toNotify)
                 {
                   pBox = pBox->BxAbstractBox->AbEnclosing->AbBox;
                   if (pBox->BxType == BoBlock ||
-                      pBox->BxType == BoFloatBlock)
+                      pBox->BxType == BoFloatBlock ||
+                      pBox->BxType == BoCellBlock)
                     {
                       LastInsertParagraph = pBox->BxAbstractBox;
                       LastInsertElement = LastInsertParagraph->AbElement;
@@ -2541,7 +2542,8 @@ ThotBool ContentEditing (int editType)
           /* we have to propage the position to children */
           savePropagate = Propagate;
           Propagate = ToChildren;
-          pBlock = SearchEnclosingType (pBox->BxAbstractBox, BoBlock, BoFloatBlock);
+          pBlock = SearchEnclosingType (pBox->BxAbstractBox, BoBlock,
+                                        BoFloatBlock, BoCellBlock);
           if (pBlock)
             RecomputeLines (pBlock, NULL, NULL, frame);
           UpdateColumnWidth (pCell, NULL, frame);
@@ -3230,7 +3232,8 @@ ThotBool InsertChar (int frame, CHAR_T c, int keyboard)
                       /* check now if the script changes */
                       if  (toSplitForScript)
                         {
-                          pBlock = SearchEnclosingType (pAb, BoBlock, BoFloatBlock);
+                          pBlock = SearchEnclosingType (pAb, BoBlock,
+                                                        BoFloatBlock, BoCellBlock);
                           oldscript = pSelBox->BxScript;
                           if (previousChars == 0)
                             {
@@ -3292,7 +3295,8 @@ ThotBool InsertChar (int frame, CHAR_T c, int keyboard)
                           savePropagate = Propagate;
                           Propagate = ToChildren;
                           if (!toSplitForScript)
-                            pBlock = SearchEnclosingType (pAb, BoBlock, BoFloatBlock);
+                            pBlock = SearchEnclosingType (pAb, BoBlock,
+                                                          BoFloatBlock, BoCellBlock);
                           if (pBlock)
                             RecomputeLines (pBlock, NULL, NULL, frame);
                           if (LastInsertCell)

@@ -611,7 +611,8 @@ void ShowBox (int frame, PtrBox pBox, int position, int percent,
         {
           pBlock = pBox->BxAbstractBox;
           while (pBlock && pBlock->AbBox->BxType != BoBlock &&
-                 pBlock->AbBox->BxType != BoFloatBlock)
+                 pBlock->AbBox->BxType != BoFloatBlock &&
+                 pBlock->AbBox->BxType != BoCellBlock)
             pBlock = pBlock->AbEnclosing;
         }
     }

@@ -556,9 +556,9 @@ ThotBool SetPageBreakPosition (PtrAbstractBox pAb, int *page)
 
   /* look at if there is a table ancestor */
   if (pAb->AbBox->BxType == BoTable)
-    table = SearchEnclosingType (pAb->AbEnclosing, BoTable, BoFloatBlock);
+    table = SearchEnclosingType (pAb->AbEnclosing, BoTable, BoFloatBlock, BoCellBlock);
   else
-    table = SearchEnclosingType (pAb, BoTable, BoFloatBlock);
+    table = SearchEnclosingType (pAb, BoTable, BoFloatBlock, BoCellBlock);
   /* Tant que la limite de page change on recalcule */
   /* quelles sont les boites coupees */
   while (result)
@@ -665,7 +665,8 @@ void AddBoxTranslations (PtrAbstractBox pAb, int visibility, int frame,
               {
                 if (pChildBox->BxHorizFlex &&
                     (pChildBox->BxType == BoBlock ||
-                     pChildBox->BxType == BoFloatBlock))
+                     pChildBox->BxType == BoFloatBlock ||
+                     pChildBox->BxType == BoCellBlock))
                   /* need to recheck the parent height */
                   checkHeight = TRUE;
 

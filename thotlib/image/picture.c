@@ -299,9 +299,9 @@ void FreeGlTextureNoCache (void *imageDesc)
   if (img->TextureBind && glIsTexture (img->TextureBind))
     {      
       glDeleteTextures (1,  (GLuint*)&(img->TextureBind));
-#ifdef _PCLDEBUG
+#ifdef _TRACE_GL_PICTURE
       printf ("\n Image %s Freed", img->PicFileName);      
-#endif /*_PCLDEBUG*/
+#endif /* _TRACE_GL_PICTURE */
       img->TextureBind = 0;
       img->TexCoordW = 0;
       img->TexCoordH = 0;
@@ -324,7 +324,7 @@ void FreeGlTexture (void *imagedesc)
     /* il y a peut etre un probleme en amont : peut etre que la texture est desalouee misterieusement par une autre fonction ... sous mandrake opengl dit que la texture est ok et sous debian il dit qu'elle n'est pas valide */
     {
 #ifdef _TRACE_GL_PICTURE
-      printf ( "FreeGlTexture :\n\tfilename=%s\n\twidth=%d theight=%d\n\tTexU=%f TexV=%f TexBind=%d\n\n", 
+      printf ( "FreeGlTexture: filename=%s width=%d height=%d\n\tTexU=%f TexV=%f TexBind=%d\n", 
                img->PicFileName,
                img->PicWidth,
                img->PicHeight,
@@ -440,8 +440,7 @@ static void GL_TextureBind (ThotPictInfo *img, ThotBool isPixmap,
   GLint		      Mode;
   
   /* Put texture in 3d card memory */
-  if (!glIsTexture (img->TextureBind) &&
-      img->PicWidth && img->PicHeight &&
+  if (!glIsTexture (img->TextureBind) && img->PicWidth && img->PicHeight &&
       (img->PicPixmap || !isPixmap))
     {
       /* OpenGL requires power 2 dimensions */
@@ -545,22 +544,19 @@ static void GL_TextureBind (ThotPictInfo *img, ThotBool isPixmap,
             }
         }
       else
-        {
-          /* create a texture whose sizes are power of 2*/
-          glTexImage2D (GL_TEXTURE_2D, 0, Mode, p2_w, p2_h, 0, Mode, 
-                        GL_UNSIGNED_BYTE, NULL);
-        }
+        /* create a texture whose sizes are power of 2*/
+        glTexImage2D (GL_TEXTURE_2D, 0, Mode, p2_w, p2_h, 0, Mode, 
+                      GL_UNSIGNED_BYTE, NULL);
 #ifdef _GL_DEBUG
       GL_Err ();
 #endif
-
       if (!Printing)
         img->PicPixmap = NULL;
       img->TexCoordW = GL_w;
       img->TexCoordH = GL_h;
 
 #ifdef _TRACE_GL_PICTURE
-      printf ( "GL_TextureBind :\n\tfilename=%s\n\twidth=%d\n\theight=%d\n\tTexU=%f\n\tTexV=%f\n\tTexBind=%d\n\tIsPixMap=%s\n", 
+      printf ( "GL_TextureBind: filename=%s width=%d height=%d\n\tTexU=%f TexV=%f TexBind=%d IsPixMap=%s\n", 
                img->PicFileName,
                img->PicWidth,
                img->PicHeight,
@@ -687,7 +683,7 @@ void GL_TextureMap (ThotPictInfo *desc, int x, int y, int w, int h, int frame)
   else
     {
 #ifdef _TRACE_GL_PICTURE
-      printf ( "GL_TextureMap :\n\tfilename=%s\n\twidth=%d\n\theight=%d\n\tTexU=%f\n\tTexV=%f\n\tTexBind=%d\n\tNotInFeedbackMode=%s\n", 
+      printf ( "GL_TextureMap: filename=%s width=%d height=%d\n\tTexU=%f TexV=%f TexBind=%d NotInFeedbackMode=%s\n", 
                desc->PicFileName,
                desc->PicWidth,
                desc->PicHeight,
@@ -809,13 +805,12 @@ static ThotBool LimitBoundingBoxToClip (int *x, int *y,
       *height += Clipy - *y;
       *y = Clipy;
     }  
-  if ((*x + *width) > (Clipx+ClipW))
-    *width = (Clipx+ClipW) - *x;
-  if ((*y + *height) > (Clipy+ClipH))
-    *height = (Clipy+ClipH) - *y;  
+  if (*x + *width > Clipx + ClipW)
+    *width = Clipx + ClipW - *x;
+  if (*y + *height > Clipy + ClipH)
+    *height = Clipy + ClipH - *y;  
 
-  if (*x >= 0 && *y >= 0 && 
-      *width > 0 && *height > 0)      
+  if (*x >= 0 && *y >= 0 && *width > 0 && *height > 0)      
     return TRUE;    
   else
     return FALSE;  
@@ -879,19 +874,14 @@ void DisplayOpaqueGroup (PtrAbstractBox pAb, int frame,
           GL_SetFillOpacity (1000);     
           GL_SetOpacity (1000);
           GL_SetStrokeOpacity (1000);
-	  
           GL_TextureMap ((ThotPictInfo*)pAb->AbBox->Pre_computed_Pic,  
-                         x, y, width, height, frame); 
-	  
+          x, y, width, height, frame);
         }
       GL_SetFillOpacity (pAb->AbOpacity);
       GL_SetOpacity (pAb->AbOpacity);
       GL_SetStrokeOpacity (pAb->AbOpacity);
-
-     
       GL_TextureMap ((ThotPictInfo*)pAb->AbBox->Post_computed_Pic,
                      x, y, width, height, frame);
-
       GL_SetFillOpacity (1000);
       GL_SetOpacity (1000);
       GL_SetStrokeOpacity (1000);
@@ -977,8 +967,7 @@ void OpaqueGroupTexturize (PtrAbstractBox pAb, int frame,
   if (GetAbsoluteBoundingBox (pAb, &x, &y, &width, &height, 
                               frame, xmin, xmax, ymin, ymax))
     {
-      y = FrameTable[frame].FrHeight
-        + FrameTable[frame].FrTopMargin
+      y = FrameTable[frame].FrHeight + FrameTable[frame].FrTopMargin
         - (y + height);
       if (Is_Pre)
         pAb->AbBox->Pre_computed_Pic = Group_shot (x, y, width, height,
@@ -995,14 +984,13 @@ void OpaqueGroupTexturize (PtrAbstractBox pAb, int frame,
   DisplayGradient displays gradients
   t, b, l, and r give top, bottom, left and right extra margins.
   ----------------------------------------------------------------------*/
-ThotBool DisplayGradient (PtrAbstractBox pAb, PtrBox box,
-                          int frame, ThotBool selected,
-                          int t, int b, int l, int r)
+ThotBool DisplayGradient (PtrAbstractBox pAb, PtrBox box, int frame,
+                          ThotBool selected, int t, int b, int l, int r)
 {
 #ifdef _GL
-  GradDef            *gradient;
+  GradDef           *gradient;
   int                x, y, width, height;
-  unsigned char      *pattern;
+  unsigned char     *pattern;
 
   gradient = (GradDef *)pAb->AbElement->ElParent->ElGradient;
   if (gradient->next == NULL)
@@ -1056,7 +1044,8 @@ ThotBool DisplayGradient (PtrAbstractBox pAb, PtrBox box,
   glStencilOp (GL_KEEP, GL_KEEP, GL_KEEP);
 
   /*then draw the gradient*/
-  GL_TextureMap ((ThotPictInfo*)box->Pre_computed_Pic, x, y, width, height, frame);
+  GL_TextureMap ((ThotPictInfo*)box->Pre_computed_Pic, x, y,
+                 width, height, frame);
 
   /* disable stenciling, */
   glStencilFunc (GL_NOTEQUAL, 1, 1);
@@ -2595,7 +2584,8 @@ void *Group_shot (int x, int y, int width, int height, int frame, ThotBool is_rg
 
   if (GL_prepare (frame))
     {
-      imageDesc = (ThotPictInfo *)malloc (sizeof (ThotPictInfo));  
+      imageDesc = (ThotPictInfo *)malloc (sizeof (ThotPictInfo));
+      memset (imageDesc, 0, sizeof (ThotPictInfo));
       imageDesc->PicFileName = TtaStrdup("testing");
       imageDesc->RGBA = TRUE;
       imageDesc->PicWidth = width;

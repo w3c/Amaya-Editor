@@ -1731,7 +1731,8 @@ void ClearFloats (PtrBox pBox)
   PtrFloat            pfloat;
 
   if (pBox &&
-      (pBox->BxType == BoBlock || pBox->BxType == BoFloatBlock))
+      (pBox->BxType == BoBlock ||
+       pBox->BxType == BoFloatBlock || pBox->BxType == BoCellBlock))
     {
       /* free floating contexts */
       while (pBox->BxLeftFloat)
@@ -1768,7 +1769,8 @@ void ClearAFloat (PtrAbstractBox pAb)
       pAb = pAb->AbEnclosing;
       while (pAb && pAb->AbBox &&
              pAb->AbBox->BxType != BoBlock &&
-             pAb->AbBox->BxType != BoFloatBlock)
+             pAb->AbBox->BxType != BoFloatBlock &&
+             pAb->AbBox->BxType != BoCellBlock)
         pAb = pAb->AbEnclosing;
       if (pAb && pAb->AbBox)
         {
@@ -1943,13 +1945,15 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
                    pAbRef->AbBox->BxType == BoGhost))))));
   if (!variable && pBox && pAb &&
       pBlock->BxType == BoFloatBlock && pBox->BxType == BoBlock &&
+      pBlock->BxType == BoCellBlock &&
       pAbRef == NULL && pAb->AbWidth.DimValue == -1)
     /* it's an extensible block of lines */
     variable = TRUE;
 
   /* minimum width needed to format the line */
   if (variable &&
-      (pBox->BxType == BoBlock || pBox->BxType == BoFloatBlock ||
+      (pBox->BxType == BoBlock ||
+       pBox->BxType == BoFloatBlock || pBox->BxType == BoCellBlock ||
        pBox->BxType == BoTable))
     {
       width = pBox->BxMinWidth;
@@ -2403,6 +2407,7 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
                     }
                   else if ((pNextBox->BxType == BoBlock ||
                             pNextBox->BxType == BoFloatBlock ||
+                            pNextBox->BxType == BoCellBlock ||
                             pNextBox->BxType == BoTable) &&
                            pNextBox->BxAbstractBox->AbDisplay == 'I' &&
                            maxWidth < val)
@@ -2436,7 +2441,8 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
           else if (pAbRef == NULL &&
                     pNextBox->BxAbstractBox->AbWidth.DimValue == -1 &&
                    (pNextBox->BxType == BoBlock ||
-                    pNextBox->BxType == BoFloatBlock) &&
+                    pNextBox->BxType == BoFloatBlock ||
+                    pNextBox->BxType == BoCellBlock) &&
                    pNextBox->BxCycles == 0)
             // recheck as the max could changed
             RecomputeLines (pNextBox->BxAbstractBox, NULL, pBlock, frame);
@@ -2550,7 +2556,8 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
             {
               /* the whole box can be inserted in the line */
               if (pNextBox->BxType == BoBlock ||
-                  pNextBox->BxType == BoFloatBlock)
+                  pNextBox->BxType == BoFloatBlock ||
+                  pNextBox->BxType == BoCellBlock)
                 wordWidth = pNextBox->BxMinWidth;
               else if (pNextBox->BxAbstractBox->AbLeafType != LtText &&
                        !pNextBox->BxAbstractBox->AbWidth.DimIsPosition &&
@@ -2653,7 +2660,8 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
               /* cannot break the box */
               pBox = pNextBox;	/* it's also the last box */
               if (pBox->BxType == BoBlock ||
-                  pBox->BxType == BoFloatBlock)
+                  pBox->BxType == BoFloatBlock ||
+                  pBox->BxType == BoCellBlock)
                 wordWidth = pBox->BxMinWidth;
               else if (!pBox->BxAbstractBox->AbWidth.DimIsPosition &&
                        pBox->BxAbstractBox->AbHorizEnclosing &&
@@ -3607,7 +3615,8 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
   isExtraFlow = ExtraFlow (pBox, frame);
   if (pBox->BxShrink && pBox->BxRuleWidth)
     maxWidth = pBox->BxRuleWidth;
-  else if ((pAb->AbWidth.DimUnit == UnAuto || pBox->BxType == BoFloatBlock) &&
+  else if ((pAb->AbWidth.DimUnit == UnAuto ||
+            pBox->BxType == BoFloatBlock || pBox->BxType == BoCellBlock) &&
       pParent)
     {
       /* limit to the enclosing box */
@@ -4304,7 +4313,8 @@ void RemoveLines (PtrBox pBox, int frame, PtrLine pFirstLine,
 
   pLine = pFirstLine;
   if (pLine &&
-      (pBox->BxType == BoBlock || pBox->BxType == BoFloatBlock))
+      (pBox->BxType == BoBlock ||
+       pBox->BxType == BoFloatBlock || pBox->BxType == BoCellBlock))
     {
       if (pLine->LiFirstPiece &&
           (pLine->LiFirstBox->BxType == BoScript ||
@@ -4450,7 +4460,8 @@ ThotBool RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox,
               pBox->BxMinWidth > pAb->AbEnclosing->AbBox->BxMinWidth &&
               pAb->AbEnclosing->AbWidth.DimAbRef &&
               (pAb->AbEnclosing->AbBox->BxType == BoBlock ||
-               pAb->AbEnclosing->AbBox->BxType == BoFloatBlock))
+               pAb->AbEnclosing->AbBox->BxType == BoFloatBlock ||
+               pAb->AbEnclosing->AbBox->BxType == BoCellBlock))
             pAb->AbEnclosing->AbBox->BxMinWidth = pBox->BxMinWidth;
         }
       else
@@ -4615,7 +4626,8 @@ void UpdateLineBlock (PtrAbstractBox pAb, PtrLine pLine, PtrBox pBox,
               RecomputeLines (pAb, NULL, NULL, frame);
             }
           else if ((pDimAb->DimUnit == UnAuto ||
-                    pParentBox->BxType == BoFloatBlock) &&
+                    pParentBox->BxType == BoFloatBlock ||
+                    pParentBox->BxType == BoCellBlock) &&
                    pParentBox->BxW + xDelta < pParentBox->BxRuleWidth)
             {
               /* The block  width must be recomputed */
@@ -4776,7 +4788,8 @@ void UpdateLineBlock (PtrAbstractBox pAb, PtrLine pLine, PtrBox pBox,
     }
   else if (pParentBox &&
            (pParentBox->BxType == BoBlock ||
-            pParentBox->BxType == BoFloatBlock))
+            pParentBox->BxType == BoFloatBlock ||
+            pParentBox->BxType == BoCellBlock))
     /* it could be an empty block of lines */
     RecomputeLines (pAb, pLine, NULL, frame);   
 }

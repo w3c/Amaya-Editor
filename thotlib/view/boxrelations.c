@@ -593,7 +593,9 @@ static int GetGhostSize (PtrBox pBox, ThotBool horizontal, PtrBox pBlock)
                         dim += pChild->AbBox->BxHeight;
                     }
                   if (!pChild->AbPresentationBox &&
-                      ((horizontal && pParent->AbBox->BxType == BoFloatBlock) ||
+                      ((horizontal &&
+                        (pParent->AbBox->BxType == BoFloatBlock ||
+                         pParent->AbBox->BxType == BoCellBlock)) ||
                        (!horizontal && pParent->AbBox->BxType == BoBlock)))
                     /* the first child gives the size */
                     return dim;
@@ -780,6 +782,7 @@ void ComputeMBP (PtrAbstractBox pAb, int frame, ThotBool horizRef,
               pParent && evalAuto &&
               pParent->BxType != BoBlock &&
               pParent->BxType != BoFloatBlock &&
+              pParent->BxType != BoCellBlock &&
               pParent->BxType != BoGhost &&
               pParent->BxType != BoFloatGhost &&
               pParent->BxW >= dim)
@@ -2384,6 +2387,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                   (pParentAb->AbBox &&
                    (pParentAb->AbBox->BxType == BoBlock ||
                     pParentAb->AbBox->BxType == BoFloatBlock ||
+                    pParentAb->AbBox->BxType == BoCellBlock ||
                     pParentAb->AbBox->BxType == BoGhost)))
                 {
                   /* all child heights depend on the parent height */
@@ -2497,6 +2501,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                          (pParentAb->AbBox &&
                           (pParentAb->AbBox->BxType == BoBlock ||
                            pParentAb->AbBox->BxType == BoFloatBlock ||
+                           pParentAb->AbBox->BxType == BoCellBlock ||
                            pParentAb->AbBox->BxType == BoGhost ||
                            pParentAb->AbBox->BxType == BoFloatGhost))));
               if (horizRef)
@@ -3328,7 +3333,8 @@ void ComputeAxisRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool hori
       pBox->BxType == BoGhost ||
       pBox->BxType == BoFloatGhost ||
       pBox->BxType == BoBlock ||
-      pBox->BxType == BoFloatBlock)
+      pBox->BxType == BoFloatBlock ||
+      pBox->BxType == BoCellBlock)
     {
       GetExtraMargins (pBox, NULL, frame, &t, &b, &l, &r);
       x = pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding + l;

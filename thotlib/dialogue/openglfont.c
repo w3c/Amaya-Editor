@@ -984,31 +984,19 @@ int SetTextureScale (ThotBool Scaled)
   if (GL_NotInFeedbackMode () && !GL_TransText ())
     {
       glEnable (GL_TEXTURE_2D);
-      
       /* get a new identifier for the following font texture */
       glGenTextures (1, (GLuint*)&(texture_id));
-      /* set the allocated texture id to the current used texture (setup opengl state machine to use this texture) */
-      glBindTexture (GL_TEXTURE_2D, 
-                     texture_id);
-
-      glTexParameteri (GL_TEXTURE_2D,
-                       GL_TEXTURE_MIN_FILTER,
-                       GL_NEAREST);
-  
-      glTexParameteri (GL_TEXTURE_2D,
-                       GL_TEXTURE_MAG_FILTER,
+      /* set the allocated texture id to the current used texture
+         (setup opengl state machine to use this texture) */
+      glBindTexture (GL_TEXTURE_2D, texture_id);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
                        ((Scaled)?GL_LINEAR:GL_NEAREST));
-      glTexParameteri (GL_TEXTURE_2D,
-                       GL_TEXTURE_WRAP_S,
-                       GL_CLAMP);
-      glTexParameteri (GL_TEXTURE_2D,
-                       GL_TEXTURE_WRAP_T,
-                       GL_CLAMP); 
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP); 
       /* does current Color modify texture no = GL_REPLACE, 
          else => GL_MODULATE, GL_DECAL, ou GL_BLEND */
-      glTexEnvi (GL_TEXTURE_ENV,
-                 GL_TEXTURE_ENV_MODE,
-                 GL_MODULATE);
+      glTexEnvi (GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 #ifdef _WX
       wxASSERT_MSG( glIsTexture(texture_id), _T("created texture invalid") );
 #endif /* _WX */

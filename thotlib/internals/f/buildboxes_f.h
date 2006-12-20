@@ -49,7 +49,8 @@ extern ThotBool CheckMBP ( PtrAbstractBox pAb,
                            ThotBool evalAuto );
 extern PtrAbstractBox SearchEnclosingType ( PtrAbstractBox pAb,
                                             BoxType type1,
-                                            BoxType type2 );
+                                            BoxType type2,
+                                            BoxType type3 );
 extern PtrLine SearchLine ( PtrBox pBox,
                             int frame );
 extern void BoxUpdate ( PtrBox pBox,
@@ -124,7 +125,8 @@ extern ThotBool CheckMBP ( PtrAbstractBox pAb,
                              ThotBool evalAuto );
 extern PtrAbstractBox SearchEnclosingType ( PtrAbstractBox pAb,
                                               BoxType type1,
-                                              BoxType type2 );
+                                              BoxType type2,
+                                              BoxType type3 );
 extern PtrLine SearchLine ( PtrBox pBox,
                               int frame );
 extern void BoxUpdate ( PtrBox pBox,

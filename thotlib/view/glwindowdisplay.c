@@ -330,11 +330,14 @@ void GL_SetForeground (int fg, ThotBool fillstyle)
 {
   unsigned short  red, green, blue;
   GLubyte         us_opac;
+
   if (fillstyle)
     us_opac = FillOpacity;
   else
-    us_opac = StrokeOpacity;
-  TtaGiveThotRGB (fg, &red, &green, &blue);
+    {
+      us_opac = StrokeOpacity;
+    }
+   TtaGiveThotRGB (fg, &red, &green, &blue);
   glColor4ub ((GLubyte) red,  (GLubyte) green, (GLubyte) blue, (GLubyte) us_opac);    
 }
 

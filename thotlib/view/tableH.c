@@ -546,7 +546,7 @@ static void CheckRowHeights (PtrAbstractBox table, int frame)
             {
               box = cell->AbBox;
               /* get the first row */
-              row = SearchEnclosingType (cell, BoRow, BoRow);
+              row = SearchEnclosingType (cell, BoRow, BoRow, BoRow);
               j = 0;
               while (j < irow && row != rowList[j])
                 j++;
@@ -1675,7 +1675,7 @@ static ThotBool SetTableWidths (PtrAbstractBox table, int frame)
   if (change)
     {
       /* trasmit the min and max widths to the enclosing paragraph */
-      pAb = SearchEnclosingType (table, BoBlock, BoFloatBlock);
+      pAb = SearchEnclosingType (table, BoBlock, BoFloatBlock, BoFloatBlock);
       if (pAb && pAb->AbBox)
         {
           pBox = pAb->AbBox;
@@ -1690,7 +1690,7 @@ static ThotBool SetTableWidths (PtrAbstractBox table, int frame)
           if (cell)
             {
               /* propagate changes to the enclosing table */
-              row = SearchEnclosingType (cell, BoRow, BoRow);
+              row = SearchEnclosingType (cell, BoRow, BoRow, BoRow);
               if (row  && row->AbBox)
                 pAb = (PtrAbstractBox) row->AbBox->BxTable;
               if (pAb && pAb->AbBox)
@@ -1783,7 +1783,7 @@ void UpdateCellHeight (PtrAbstractBox cell, int frame)
     return;
 
   /* get row and table elements */
-  row = SearchEnclosingType (cell, BoRow, BoRow);
+  row = SearchEnclosingType (cell, BoRow, BoRow, BoRow);
   if (row  && row->AbBox)
     {
       table = (PtrAbstractBox) row->AbBox->BxTable;
@@ -1871,7 +1871,7 @@ void UpdateColumnWidth (PtrAbstractBox cell, PtrAbstractBox col, int frame)
   else if (cell && cell->AbBox)
     {
       /* get row and table elements */
-      row = SearchEnclosingType (cell, BoRow, BoRow);
+      row = SearchEnclosingType (cell, BoRow, BoRow, BoRow);
       if (row  && row->AbBox)
         table = (PtrAbstractBox) row->AbBox->BxTable;
       /* if the cell is row spanned update its rowspan value */
@@ -1929,7 +1929,7 @@ void UpdateTable (PtrAbstractBox table, PtrAbstractBox col,
           pAb = (PtrAbstractBox) col->AbBox->BxTable;
           if (pAb == NULL)
             {
-              pAb = SearchEnclosingType (col, BoTable, BoTable);
+              pAb = SearchEnclosingType (col, BoTable, BoTable, BoTable);
               /* during table building each column needs a minimum width */
               if (col->AbBox->BxWidth < 20)
                 ResizeWidth (col->AbBox, col->AbBox, NULL, 20 - col->AbBox->BxWidth,
@@ -1940,7 +1940,7 @@ void UpdateTable (PtrAbstractBox table, PtrAbstractBox col,
         {
           pAb = (PtrAbstractBox) row->AbBox->BxTable;
           if (pAb == NULL)
-            pAb = SearchEnclosingType (row, BoTable, BoTable);
+            pAb = SearchEnclosingType (row, BoTable, BoTable, BoTable);
         }
       else
         pAb = NULL;

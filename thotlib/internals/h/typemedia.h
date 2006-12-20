@@ -83,6 +83,7 @@ typedef enum
   BoRow,
   BoColumn,
   BoCell,
+  BoCellBlock,
   BoFloatBlock,
   BoFloatGhost
 } BoxType;

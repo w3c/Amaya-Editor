@@ -672,8 +672,7 @@ void GL_BackBufferRegionSwapping (int x, int y, int width, int height,
 
 #endif /*_WINGUI*/
 /*----------------------------------------------------------------------
-  GL_NotInFeedbackMode : if all openGL operation are
-  permitted or not.		    
+  GL_NotInFeedbackMode: if all openGL operations are permitted or not.		    
   ----------------------------------------------------------------------*/
 ThotBool GL_NotInFeedbackMode ()
 {

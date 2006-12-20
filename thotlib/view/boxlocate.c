@@ -2109,6 +2109,7 @@ static ThotBool     CanBeTranslated (PtrAbstractBox pAb, int frame,
     ok = FALSE;
   else if ( pParentAb->AbBox->BxType == BoBlock ||
             pParentAb->AbBox->BxType == BoFloatBlock ||
+            pParentAb->AbBox->BxType == BoCellBlock ||
             pParentAb->AbBox->BxType == BoGhost ||
             pParentAb->AbBox->BxType == BoFloatGhost)
     /* box displayed in block of lines */
@@ -2428,6 +2429,7 @@ static ThotBool   CanBeResized (PtrAbstractBox pAb, int frame,
   else if (pAb->AbLeafType == LtText &&
            (pParentAb->AbBox->BxType == BoBlock ||
             pParentAb->AbBox->BxType == BoFloatBlock ||
+            pParentAb->AbBox->BxType == BoCellBlock ||
             pParentAb->AbBox->BxType == BoGhost ||
             pParentAb->AbBox->BxType == BoFloatGhost))
     /* text box displayed in block of lines */
