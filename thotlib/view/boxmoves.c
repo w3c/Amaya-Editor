@@ -2517,7 +2517,7 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta,
                             WidthPack (pAb, pSourceBox, frame);
                         }
                     }
-                  else if (pAb->AbBox->BxType == BoTable)
+                  else if (pAb->AbBox && pAb->AbBox->BxType == BoTable)
                     RecordEnclosing (pAb->AbBox, TRUE);
                 }
               else if (!pCurrentAb->AbNew &&
