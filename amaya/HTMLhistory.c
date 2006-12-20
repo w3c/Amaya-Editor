@@ -291,9 +291,8 @@ ThotBool HasNextDoc (Document doc)
   GotoPreviousHTML_callback
   This function is called when the document is loaded
   ----------------------------------------------------------------------*/
-void GotoPreviousHTML_callback (int newdoc, int status, char *urlName,
-                                char *outputfile, AHTHeaders *http_headers,
-                                void * context)
+void GotoPreviousHTML_callback (int newdoc, int status, char *urlName, char *outputfile,
+				char *proxyName, AHTHeaders *http_headers, void * context)
 {
   Document             doc;
   Element	       el;
@@ -474,7 +473,7 @@ void GotoPreviousHTML (Document doc, View view)
   /* is it the current document ? */     
   if (DocumentURLs[doc] && !strcmp (url, DocumentURLs[doc]) && same_form_data)
     /* it's just a move in the same document */
-    GotoPreviousHTML_callback (doc, 0, url, NULL, NULL, (void *) ctx);
+    GotoPreviousHTML_callback (doc, 0, url, NULL, NULL, NULL, (void *) ctx);
   else
     {
       StopTransfer (doc, 1);
@@ -490,9 +489,8 @@ void GotoPreviousHTML (Document doc, View view)
   GotoNextHTML_callback
   This function is called when the document is loaded
   ----------------------------------------------------------------------*/
-void GotoNextHTML_callback (int newdoc, int status, char *urlName,
-                            char *outputfile, AHTHeaders *http_headers,
-                            void * context)
+void GotoNextHTML_callback (int newdoc, int status, char *urlName, char *outputfile,
+			    char *proxyName, AHTHeaders *http_headers, void * context)
 {
   Element	       el;
   Document             doc;
@@ -641,7 +639,7 @@ void GotoNextHTML (Document doc, View view)
   /* is it the current document ? */
   if (DocumentURLs[doc] && !strcmp (url, DocumentURLs[doc]) && same_form_data)
     /* it's just a move in the same document */
-    GotoNextHTML_callback (doc, 0, url, NULL, NULL, (void *) ctx);
+    GotoNextHTML_callback (doc, 0, url, NULL, NULL, NULL, (void *) ctx);
   else
     {
       StopTransfer (doc, 1);

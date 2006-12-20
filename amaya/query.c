@@ -2949,8 +2949,7 @@ void InvokeGetObjectWWW_callback (int docid, char *urlName,
   if (!terminate_cbf)
     return;
   
-  (*terminate_cbf) (docid, status, urlName, outputfile,
-                    NULL, NULL, context_tcbf);  
+  (*terminate_cbf) (docid, status, urlName, outputfile, NULL, NULL, context_tcbf);  
 }
 
 

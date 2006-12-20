@@ -1142,7 +1142,8 @@ static void CloseMakeBook (Document document)
   ----------------------------------------------------------------------*/
 void   GetIncludedDocuments_callback (int newdoc, int status, 
                                       char *urlName,
-                                      char *outputfile, 
+                                      char *outputfile,
+				      char *proxyName, 
                                       AHTHeaders *http_headers,
                                       void * context)
 {

@@ -173,9 +173,8 @@ void  CreateInstance(char *templatePath, char *instancePath)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void InstantiateTemplate_callback (int newdoc, int status,  char *urlName,
-                                   char *outputfile, AHTHeaders *http_headers,
-                                   void * context)
+void InstantiateTemplate_callback (int newdoc, int status,  char *urlName, char *outputfile,
+				   char *proxyName, AHTHeaders *http_headers, void * context)
 {
 #ifdef TEMPLATES
 	InstantiateCtxt *ctx = (InstantiateCtxt*)context;
