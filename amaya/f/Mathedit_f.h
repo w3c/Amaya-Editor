@@ -16,6 +16,10 @@ extern void InsertSymbol ( Element *el,
                            int TypeNum,
                            int symbol,
                            Document doc );
+extern void InsertSymbolUnit ( Element *el,
+                               int TypeNum,
+                               int symbol,
+                               Document doc );
 extern void AttachIntVertStretch ( Element el,
                                    Document doc );
 extern void AttachIntHorizStretch ( Element el,
@@ -53,6 +57,10 @@ extern void CreateMSQRT ( Document document,
                           View view );
 extern void CreateMENCLOSE ( Document document,
                              View view );
+extern void CreateMENCLOSE2 ( Document document,
+                              View view );
+extern void CreateMPHANTOM ( Document document,
+                             View view );
 extern void CreateMFRAC ( Document document,
                           View view );
 extern void CreateMSUBSUP ( Document document,
@@ -69,6 +77,10 @@ extern void CreateMOVER ( Document document,
                           View view );
 extern void CreateMOVERARROW ( Document doc,
                                View view );
+extern void CreateMOVERBRACE ( Document doc,
+                               View view );
+extern void CreateMUNDERBRACE ( Document doc,
+                                View view );
 extern void CreateMOVERBAR ( Document doc,
                              View view );
 extern void CreateMOVERBREVE ( Document doc,
@@ -161,6 +173,8 @@ extern void CreateMDIAGONALINTERSECTION ( Document document,
                                           View view );
 extern void CreateMDIFF ( Document document,
                           View view );
+extern void CreateMDIFF3 ( Document document,
+                           View view );
 extern void CreateMDIFF2 ( Document document,
                            View view );
 extern void CreateMDIRECTSUM ( Document document,
@@ -525,6 +539,10 @@ extern void InsertSymbol ( Element *el,
                              int TypeNum,
                              int symbol,
                              Document doc );
+extern void InsertSymbolUnit ( Element *el,
+                                 int TypeNum,
+                                 int symbol,
+                                 Document doc );
 extern void AttachIntVertStretch ( Element el,
                                      Document doc );
 extern void AttachIntHorizStretch ( Element el,
@@ -562,6 +580,10 @@ extern void CreateMSQRT ( Document document,
                             View view );
 extern void CreateMENCLOSE ( Document document,
                                View view );
+extern void CreateMENCLOSE2 ( Document document,
+                                View view );
+extern void CreateMPHANTOM ( Document document,
+                               View view );
 extern void CreateMFRAC ( Document document,
                             View view );
 extern void CreateMSUBSUP ( Document document,
@@ -578,6 +600,10 @@ extern void CreateMOVER ( Document document,
                             View view );
 extern void CreateMOVERARROW ( Document doc,
                                  View view );
+extern void CreateMOVERBRACE ( Document doc,
+                                 View view );
+extern void CreateMUNDERBRACE ( Document doc,
+                                  View view );
 extern void CreateMOVERBAR ( Document doc,
                                View view );
 extern void CreateMOVERBREVE ( Document doc,
@@ -670,6 +696,8 @@ extern void CreateMDIAGONALINTERSECTION ( Document document,
                                             View view );
 extern void CreateMDIFF ( Document document,
                             View view );
+extern void CreateMDIFF3 ( Document document,
+                             View view );
 extern void CreateMDIFF2 ( Document document,
                              View view );
 extern void CreateMDIRECTSUM ( Document document,
