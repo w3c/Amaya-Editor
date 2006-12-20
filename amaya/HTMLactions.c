@@ -332,8 +332,8 @@ void CheckUniqueName (Element el, Document doc, Attribute attr,
   This function is called when the document is loaded
   ----------------------------------------------------------------------*/
 void FollowTheLink_callback (int targetDocument, int status, char *urlName,
-                             char *outputfile, AHTHeaders *http_headers,
-                             void *context)
+                             char *outputfile, char *proxyname,
+                             AHTHeaders *http_headers, void *context)
 {
   Element             elFound=NULL;
   ElementType         elType;
@@ -571,7 +571,7 @@ static ThotBool FollowTheLink (Element anchor, Element elSource,
           /* the target element is part of the same document */
           targetDocument = doc;
           /* manually invoke the callback */
-          FollowTheLink_callback (targetDocument, 0, NULL, NULL, NULL, 
+          FollowTheLink_callback (targetDocument, 0, NULL, NULL, NULL, NULL, 
                                   (void *) ctx);
         }
       else
@@ -666,7 +666,8 @@ static ThotBool FollowTheLink (Element anchor, Element elSource,
               /* Load the new document */
               targetDocument = GetAmayaDoc (pathname, NULL, reldoc, doc, 
                                             method, history, 
-                                            (void (*)(int, int, char*, char*, char*, const AHTHeaders*, void*)) FollowTheLink_callback,
+                                            (void (*)(int, int, char*, char*, char*,
+                                                      const AHTHeaders*, void*)) FollowTheLink_callback,
                                             (void *) ctx);
               if (readonly)
                 {
