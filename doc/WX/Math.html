@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<?xml-stylesheet type="text/xsl" href="pmathml.xsl"?>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
@@ -83,7 +82,7 @@ this element allows you to set the width of the space.</p>
 <p id="next">The next item, Character (<code>&amp;xxx;</code>) , enables you
 to enter a character that is not available on the keyboard. It displays a
 dialog where you have to enter the character name (for instance
-<code>alpha</code> for the Greek character &alpha;).</p>
+<code>alpha</code> for the Greek character &#x3b1;).</p>
 
 <p>Commands InvisibleTimes and ApplyFunction are used to enter the
 corresponding invisible characters.</p>
@@ -93,27 +92,160 @@ enable you to create new constructs within a formula. If the insertion point
 is not in a formula, Amaya first creates a <code>math</code> element to
 accept the new construct. The available constructs are:</p>
 <ul>
-  <li>Root with index, <code>mroot</code> in MathML: x + 1 3</li>
-  <li>Square root, <code>msqrt</code>: x + 1</li>
-  <li>Enclose, <code>menclose</code>: 1234</li>
-  <li>Fraction, <code>mfrac</code>: 1 x + 1</li>
-  <li>Expression with subscript and superscript, <code>msubsup</code>: x i +
-    1 nor &int;0&infin; </li>
-  <li>Expression with a subscript, <code>msub</code>: x i</li>
-  <li>Expression with a superscript, <code>msup</code>: x n</li>
-  <li>Expression with under- and overscript, <code>munderover</code>: &sum; i
-    = 1 n</li>
-  <li>Expression with underscript, <code>munder</code>: x ¯</li>
-  <li>Expression with overscript, <code>mover</code>: x &rarr; maps to y</li>
-  <li>Expression within parentheses, <code>mrow</code>: ( a + b )</li>
+  <li>Root with index, <code>mroot</code> in MathML: <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
+      <mroot>
+        <mrow>
+          <mi>x</mi>
+          <mspace width=".2em"/>
+          <mo>+</mo>
+          <mn>1</mn>
+        </mrow>
+        <mn>3</mn>
+      </mroot>
+    </math></li>
+  <li>Square root, <code>msqrt</code>: <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
+      <msqrt>
+        <mrow>
+          <mi>x</mi>
+          <mo>+</mo>
+          <mn>1</mn>
+        </mrow>
+      </msqrt>
+    </math></li>
+  <li>Enclose, <code>menclose</code>: <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
+      <menclose>
+        <mn>1234</mn>
+      </menclose>
+    </math></li>
+  <li>Fraction, <code>mfrac</code>: <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
+      <mfrac>
+        <mn>1</mn>
+        <mrow>
+          <mi>x</mi>
+          <mo>+</mo>
+          <mn>1</mn>
+        </mrow>
+      </mfrac>
+    </math></li>
+  <li>Expression with subscript and superscript, <code>msubsup</code>: <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
+      <msubsup>
+        <mi>x</mi>
+        <mrow>
+          <mi>i</mi>
+          <mo>+</mo>
+          <mn>1</mn>
+        </mrow>
+        <mi>n</mi>
+      </msubsup>
+    </math>or <math xmlns="http://www.w3.org/1998/Math/MathML">
+      <mrow>
+        <msubsup>
+          <mo largeop="true">&#x222b;</mo>
+          <mn>0</mn>
+          <mo>&#x221e;</mo>
+        </msubsup>
+        <mo> </mo>
+      </mrow>
+    </math></li>
+  <li>Expression with a subscript, <code>msub</code>: <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
+      <msub>
+        <mi>x</mi>
+        <mi>i</mi>
+      </msub>
+    </math></li>
+  <li>Expression with a superscript, <code>msup</code>: <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
+      <msup>
+        <mi>x</mi>
+        <mi>n</mi>
+      </msup>
+    </math></li>
+  <li>Expression with under- and overscript, <code>munderover</code>: <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
+      <munderover>
+        <mo movablelimits="false">&#x2211;</mo>
+        <mrow>
+          <mi>i</mi>
+          <mo>=</mo>
+          <mn>1</mn>
+        </mrow>
+        <mi>n</mi>
+      </munderover>
+    </math></li>
+  <li>Expression with underscript, <code>munder</code>: <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
+      <munder>
+        <mi>x</mi>
+        <mo>Â¯</mo>
+      </munder>
+    </math></li>
+  <li>Expression with overscript, <code>mover</code>: <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
+      <mrow>
+        <mi>x</mi>
+        <mover>
+          <mo>&#x2192;</mo>
+          <mtext>maps to</mtext>
+        </mover>
+        <mi>y</mi>
+      </mrow>
+    </math></li>
+  <li>Expression within parentheses, <code>mrow</code>: <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
+      <mrow>
+        <mo fence="true">(</mo>
+        <mrow>
+          <mi>a</mi>
+          <mo>+</mo>
+          <mi>b</mi>
+        </mrow>
+        <mo fence="true">)</mo>
+      </mrow>
+    </math></li>
   <li>Expression with prescripts and tensor indices,
-    <code>mmultiscripts</code>: X i j kl</li>
+    <code>mmultiscripts</code>: <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
+      <mmultiscripts>
+        <mi>X</mi>
+        <mi>i</mi>
+        <mi>j</mi>
+        <mprescripts/>
+        <mi>k</mi>
+        <mi>l</mi>
+      </mmultiscripts>
+    </math></li>
 </ul>
 
 <p>The <strong>XML/Matrices</strong> menu allows you to create and edit
 matrices:</p>
 <ul>
-  <li>Matrix or table, <code>mtable</code>: a bcd</li>
+  <li>Matrix or table, <code>mtable</code>: <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
+      <mtable>
+        <mtr>
+          <mtd>
+            <mi>a</mi>
+          </mtd>
+          <mtd>
+            <mi>b</mi>
+          </mtd>
+        </mtr>
+        <mtr>
+          <mtd>
+            <mi>c</mi>
+          </mtd>
+          <mtd>
+            <mi>d</mi>
+          </mtd>
+        </mtr>
+      </mtable>
+    </math></li>
 </ul>
 
 <p>You can create a matrix with the first command of this menu or with the
@@ -150,7 +282,17 @@ style="font-size:11.0pt;font-family:&#34;Courier New&#34;;">mi</span></span>
 (identifier), and <span class="code"><span
 style="font-size:11.0pt;font-family:&#34;Courier New&#34;;">mtext</span></span>.</p>
 
-<p>For example, to enter the formula x = 2 a + b </p>
+<p>For example, to enter the formula <math
+xmlns="http://www.w3.org/1998/Math/MathML">
+  <mrow>
+    <mi>x</mi>
+    <mo>=</mo>
+    <mn>2</mn>
+    <mi>a</mi>
+    <mo>+</mo>
+    <mi>b</mi>
+  </mrow>
+</math></p>
 <ol>
   <li>If you are not in a mathematical expression, choose <strong>XML/New
     formula (math)</strong>. 
@@ -187,11 +329,33 @@ specification</a> for more details.</p>
 
 <p>When entering brackets as in the following expression:</p>
 
-<p>f ( x ) = 1 x </p>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>f</mi>
+  <mrow>
+    <mo>(</mo>
+    <mi>x</mi>
+    <mo>)</mo>
+  </mrow>
+  <mo>=</mo>
+  <mfrac>
+    <mn>1</mn>
+    <mi>x</mi>
+  </mfrac>
+</math></p>
 
 <p>typing the sequence <code>f(x)= ...</code> would lead to:</p>
 
-<p>f ( x ) = 1 x </p>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>f</mi>
+  <mo>(</mo>
+  <mi>x</mi>
+  <mo>)</mo>
+  <mo>=</mo>
+  <mfrac>
+    <mn>1</mn>
+    <mi>x</mi>
+  </mfrac>
+</math></p>
 
 <p>Instead, choose <strong>Math Constructs/Parentheses</strong> from the
 <strong>XML</strong> menu or select the Parentheses button on the Maths
@@ -239,10 +403,23 @@ the math elements, and their contents.</p>
 view.</p>
 
 <p>The Structure view is especially helpful to avoid ambiguity. For example,
-in the equation below, placing the cursor after character b , it is not clear
-whether you wish to add something within the square root or after it.</p>
+in the equation below, placing the cursor after character <math
+xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>b</mi>
+</math>, it is not clear whether you wish to add something within the square
+root or after it.</p>
 
-<p>x = a + b + 1 </p>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>x</mi>
+  <mo>=</mo>
+  <msqrt>
+    <mi>a</mi>
+    <mo>+</mo>
+    <mi>b</mi>
+  </msqrt>
+  <mo>+</mo>
+  <mn>1</mn>
+</math></p>
 
 <p>Selecting (or checking) in the Structure view avoids any misselections.
 You can also check the status line at the bottom of the main window.</p>
@@ -255,7 +432,26 @@ unidirectional hyperlinks are available in Amaya, but you can associate a
 link with any part of a formula. For example, the fraction in the formula
 below is a link to the W3C home page:</p>
 
-<p>y = 1 x 2 + 1 </p>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mrow>
+    <mi>y</mi>
+    <mo>=</mo>
+    <mfrac xmlns:xlink="http://www.w3.org/1999/xlink"
+    xlink:href="http://www.w3.org/">
+      <mn>1</mn>
+      <msqrt>
+        <mrow>
+          <msup>
+            <mi>x</mi>
+            <mn>2</mn>
+          </msup>
+          <mo>+</mo>
+          <mn>1</mn>
+        </mrow>
+      </msqrt>
+    </mfrac>
+  </mrow>
+</math></p>
 
 <p>Double-clicking or right-clicking any character within the fraction loads
 the W3C home page.</p>
