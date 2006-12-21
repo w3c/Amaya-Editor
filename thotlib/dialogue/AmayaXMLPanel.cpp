@@ -102,7 +102,6 @@ void AmayaXMLPanel::RefreshToolTips()
 void AmayaXMLPanel::SendDataToPanel( AmayaParams& p )
 {
   int nb_el = (int)p.param1;
-#ifdef EK
   if(nb_el==-1){
     DLList list = (DLList) p.param2;
     DLList reflist = DLList_GetRefList(list, (Container_CompareFunction)ElemListElement_Compare);
@@ -135,41 +134,6 @@ void AmayaXMLPanel::SendDataToPanel( AmayaParams& p )
     DLList_Destroy(reflist);
     
   }
-#else /* EK */
-  const char  *listBuffer = (char *)p.param2;
-  const char  *currentEl = (char *)p.param3;
-  intptr_t     ref = (intptr_t)p.param4;
-  
-  m_XMLRef = ref;
-  
-  /* fill the list */
-  m_pXMLList->Clear();
-  int i = 0;
-  int index = 0;
-  int sel = 0;
-  if (nb_el == 0)
-	return;
-  while (i < nb_el && listBuffer[index] != EOS)
-    {
-      m_pXMLList->Append( TtaConvMessageToWX( &listBuffer[index] ) );
-      if (!strcmp (&listBuffer[index], currentEl))
-	/* current selected item */
-	  sel = i;
-      index += strlen (&listBuffer[index]) + 1; /* one entry length */
-      i++;
-    }
-
-  /* select the wanted item */
-  m_pXMLList->SetSelection(sel);
-  if (currentEl[0] != EOS)
-    m_pXMLList->SetStringSelection(TtaConvMessageToWX(currentEl));
-
-  /* recalculate layout */
-  GetParent()->GetParent()->Layout();
-  GetParent()->Layout();
-  Layout();
-  m_pPanelContentDetach->Layout();
-#endif /* EK */  
 }
 
 /*----------------------------------------------------------------------

@@ -507,9 +507,6 @@ void TtcHolophrast (Document document, View view)
       /* met a jour les menus qui dependent de la selection dans toutes */
       /* les vues ouvertes */
       PrepareSelectionMenu ();
-#ifndef EK
-      BuildSelectionMessage ();
-#endif /* EK */
       if (ThotLocalActions[T_chselect] != NULL)
         (*(Proc1)ThotLocalActions[T_chselect]) ((void *)pDoc);
       if (ThotLocalActions[T_chattr] != NULL)

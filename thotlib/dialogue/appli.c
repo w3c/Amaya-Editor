@@ -1632,9 +1632,7 @@ void DisplaySelMessage (char *text, PtrDocument pDoc)
       /* recupere le document concerne */
       doc = IdentDocument(pDoc);
 #ifdef _WX
-//#ifndef EK
         TtaSetStatus ((Document) doc, 1, text, NULL);
-//#endif /* EK */
 #else /* _WX */
       for (view = 1; view <= MAX_VIEW_DOC; view++)
         TtaSetStatus ((Document) doc, view, text, NULL);
@@ -1730,7 +1728,6 @@ void TtaSetStatus (Document document, View view, char *text, char *name)
   ----------------------------------------------------------------------*/
 void TtaSetStatusSelectedElement(Document document, View view, Element elem)
 {
-#ifdef EK
 #ifdef _WX
   int frame;
   
@@ -1746,7 +1743,6 @@ void TtaSetStatusSelectedElement(Document document, View view, Element elem)
     }
   }
 #endif /* _WX */
-#endif /* EK */
 }
 
 

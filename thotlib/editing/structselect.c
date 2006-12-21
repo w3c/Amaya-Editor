@@ -1755,9 +1755,6 @@ void SelectStringInAttr (PtrDocument pDoc, PtrAbstractBox pAb, int firstChar,
             }
         }
       PrepareSelectionMenu ();
-#ifndef EK      
-      BuildSelectionMessage ();
-#endif /* EK */
       if (ThotLocalActions[T_chselect] != NULL)
         (*(Proc1)ThotLocalActions[T_chselect]) ((void *)pDoc);
       if (ThotLocalActions[T_chattr] != NULL)
@@ -1866,9 +1863,6 @@ static void SelectStringOrPosition (PtrDocument pDoc, PtrElement pEl,
           if (SelectionUpdatesMenus && oldFirstSelEl != FirstSelectedElement)
             {
               PrepareSelectionMenu ();
-#ifndef EK
-              BuildSelectionMessage ();
-#endif /* EK */
               if (ThotLocalActions[T_chselect] != NULL)
                 (*(Proc1)ThotLocalActions[T_chselect]) ((void *)pDoc);
               if (ThotLocalActions[T_chattr] != NULL)
@@ -2087,9 +2081,6 @@ void SelectElement (PtrDocument pDoc, PtrElement pEl, ThotBool begin, ThotBool c
       if (SelectionUpdatesMenus)
         {
           PrepareSelectionMenu ();
-#ifndef EK
-          BuildSelectionMessage ();
-#endif /* EK */
           if (ThotLocalActions[T_chselect] != NULL)
             (*(Proc1)ThotLocalActions[T_chselect]) ((void *)pDoc);
           if (ThotLocalActions[T_chattr] != NULL)
@@ -2494,9 +2485,6 @@ static void DoExtendSelection (PtrElement pEl, int rank, ThotBool fixed,
                oldLastEl != LastSelectedElement))
             {
               PrepareSelectionMenu ();
-#ifndef EK
-              BuildSelectionMessage ();
-#endif /*EK */
               if (ThotLocalActions[T_chselect] != NULL)
                 (*(Proc1)ThotLocalActions[T_chselect]) (
                                                         (void *)SelectedDocument);
@@ -3515,10 +3503,6 @@ static void SelColumn (PtrElement column)
     }
   WholeColumnSelected = TRUE;
   SelectedColumn = column;
-#ifndef EK
-  /* update the selection message */  
-  BuildSelectionMessage ();
-#endif /* EK */
 }
 
 /*----------------------------------------------------------------------

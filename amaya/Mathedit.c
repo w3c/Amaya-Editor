@@ -1256,10 +1256,8 @@ void MathSelectionChanged (NotifyElement *event)
             }
         }
     }
-#ifdef EK
   UpdateXmlElementListTool(event->element,event->document);
   TtaSetStatusSelectedElement(event->document, 1, event->element);
-#endif /* EK */
 }
 
 /*----------------------------------------------------------------------

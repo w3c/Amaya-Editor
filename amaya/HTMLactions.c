@@ -1499,7 +1499,6 @@ ThotBool AnnotSimpleClick (NotifyElement *event)
   ----------------------------------------------------------------------*/
 void UpdateXmlElementListTool (Element el, Document doc)
 {
-#ifdef EK
 #ifdef TEMPLATES
   if(IsTemplateInstanceDocument(doc))
   {
@@ -1518,7 +1517,6 @@ void UpdateXmlElementListTool (Element el, Document doc)
   {
     TtaRefreshElementMenu(doc, 1);
   }
-#endif /* EK */
 }
 
 
@@ -3021,10 +3019,8 @@ void SelectionChanged (NotifyElement *event)
   /* update the displayed style information */
   SynchronizeAppliedStyle (event);
   UnFrameMath ();
-#ifdef EK
   UpdateXmlElementListTool(event->element,event->document);
   TtaSetStatusSelectedElement(event->document, 1, event->element);
-#endif /* EK */
 
   SelectionChanging = FALSE;
 }
