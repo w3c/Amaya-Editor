@@ -183,6 +183,10 @@ SOURCE=..\..\thotlib\dialogue\AmayaPanel.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\thotlib\dialogue\AmayaPathControl.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\thotlib\dialogue\AmayaPopupList.cpp
 # End Source File
 # Begin Source File
@@ -355,6 +359,10 @@ SOURCE=..\..\thotlib\base\config.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\thotlib\base\containers.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\thotlib\content\content.c
 # End Source File
 # Begin Source File
@@ -408,6 +416,10 @@ SOURCE=..\..\thotlib\document\documentapi.c
 # Begin Source File
 
 SOURCE=..\..\thotlib\editing\editcommands.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\thotlib\dialogue\Elemlist.c
 # End Source File
 # Begin Source File
 
