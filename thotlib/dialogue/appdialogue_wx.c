@@ -666,8 +666,9 @@ void TtaRefreshMenuItemStats( int doc_id, Menu_Ctl * ptrmenu, int menu_item_id )
   /* refresh every entry */
   while (ptrmenu)
     {
+      if (!ptrmenu->MenuContext)
+	  {
       ptritem = ptrmenu->ItemsList;
-      
       item_nb = 0;      
       while (item_nb < ptrmenu->ItemsNb)
         {
@@ -711,7 +712,7 @@ void TtaRefreshMenuItemStats( int doc_id, Menu_Ctl * ptrmenu, int menu_item_id )
           
           item_nb++;
         }
-      
+      }
       ptrmenu = ptrmenu->NextMenu;
     }
 #endif /* _WX */

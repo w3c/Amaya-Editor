@@ -65,7 +65,9 @@ void AmayaPathControl::SetSelection(Element elem)
       wxString name = TtaConvMessageToWX(TtaGetElementTypeName(TtaGetElementType(elem)));
       dc.GetTextExtent(name, &rect.width, &rect.height);
       AmayaPathControlItem* item = new AmayaPathControlItem;
-      *item = (AmayaPathControlItem){name, elem, rect};
+	  item->label = name;
+      item->elem = elem;
+	  item->rect = rect;
       m_items.Append(item);
     }    
     elem = parent;

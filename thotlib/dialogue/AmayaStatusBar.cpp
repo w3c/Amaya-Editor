@@ -114,7 +114,7 @@ void AmayaStatusBar::OnSize(wxSizeEvent& event)
                           rect.y + (rect.height - size.y) / 2);
 
   GetFieldRect(Field_Path, rect);
-  m_pathCtrl->SetSize(rect);
+  m_pathCtrl->SetSize(rect.x, rect.y, rect.width, rect.height);
 
   event.Skip();
 }
