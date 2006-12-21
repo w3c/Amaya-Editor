@@ -44,8 +44,13 @@
 #ifdef XML_GENERIC
 #include "Xmlbuilder_f.h"
 #endif /* XML_GENERIC */
+
+#include "Elemlist.h"
+
 #ifdef TEMPLATES
 #include "MENUconf.h"
+#include "templates.h"
+#include "Elemlist.h"
 #include "Templatebuilder_f.h"
 #include "templates_f.h"
 #endif /* TEMPLATES */

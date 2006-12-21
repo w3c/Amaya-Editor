@@ -57,7 +57,11 @@
 #include "davlibUI_f.h"
 #endif /* DAV */
 
+
 #ifdef TEMPLATES
+#include "templates.h"
+#include "containers.h"
+#include "Elemlist.h"
 #include "templates_f.h"
 #endif  /* TEMPLATES */
 

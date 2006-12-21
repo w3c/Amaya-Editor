@@ -24,12 +24,20 @@
 #ifdef _SVG
 #include "SVG.h"
 #endif /* _SVG */
+
+
 #ifdef TEMPLATES
+#include "templates.h"
+
+#include "containers.h"
+#include "Elemlist.h"
+#include "insertelem_f.h"
+
 #include "Template.h"
+#include "templates_f.h"
 #endif /* TEMPLATES */
 
 #include "XML.h"
-
 #include "anim_f.h"
 #include "css_f.h"
 #include "init_f.h"
@@ -68,6 +76,7 @@
 #include "appdialogue_wx.h"
 #include "paneltypes_wx.h"
 #endif /* _WX */
+
 
 /* Some prototypes */
 static ThotBool     FollowTheLink (Element anchor, Element elSource,
@@ -1036,7 +1045,7 @@ static void DisplayUrlAnchor (Element element, Document document)
 }
 
 /*----------------------------------------------------------------------
-  DoAction activates the current element from the keyborad
+  DoAction activates the current element from the keyboard
   ----------------------------------------------------------------------*/
 void DoAction (Document doc, View view)
 {
@@ -1415,6 +1424,7 @@ ThotBool SimpleClick (NotifyElement *event)
 /*----------------------------------------------------------------------
   SimpleLClick     The user has clicked an element.         
   ----------------------------------------------------------------------*/
+extern void TtaSetStatusSelectedElement(Document document, View view, Element elem);
 ThotBool SimpleLClick (NotifyElement *event)
 {
 #ifdef _SVG
@@ -1479,6 +1489,36 @@ ThotBool AnnotSimpleClick (NotifyElement *event)
   ANNOT_SelectSourceDoc (event->document, event->element);
 #endif /* ANNOTATIONS */
   return SimpleClick (event);
+}
+
+
+/*----------------------------------------------------------------------
+  UpdateXmlElementListTool update the content of the XML element list tool.
+  doc : Current document.
+  el : Selected element.
+  ----------------------------------------------------------------------*/
+void UpdateXmlElementListTool (Element el, Document doc)
+{
+#ifdef EK
+#ifdef TEMPLATES
+  if(IsTemplateInstanceDocument(doc))
+  {
+    if(!IsTemplateElement(el))
+      el = GetFirstTemplateParentElement(el);
+    
+    DLList list = InsertableElement_Update(doc, el, FALSE);
+ 
+    AmayaParams    p = {-1, list, NULL, NULL};
+    
+    TtaSendDataToPanel( WXAMAYA_PANEL_XML, p );
+    
+  }
+  else
+#endif /* TEMPLATE */
+  {
+    TtaRefreshElementMenu(doc, 1);
+  }
+#endif /* EK */
 }
 
 
@@ -2981,6 +3021,11 @@ void SelectionChanged (NotifyElement *event)
   /* update the displayed style information */
   SynchronizeAppliedStyle (event);
   UnFrameMath ();
+#ifdef EK
+  UpdateXmlElementListTool(event->element,event->document);
+  TtaSetStatusSelectedElement(event->document, 1, event->element);
+#endif /* EK */
+
   SelectionChanging = FALSE;
 }
 

@@ -73,7 +73,11 @@ AmayaExplorerPanel::AmayaExplorerPanel( wxWindow * p_parent_window, AmayaNormalW
     path = TtaGetHomeDir();
   }
   dirCtrl->ExpandPath(path);
-    
+  dirCtrl->SetFilter(APPFILENAMEFILTER);
+  dirCtrl->GetFilterListCtrl()->FillFilterList(APPFILENAMEFILTER, 0);
+  
+  dirCtrl->DoResize();
+  
   // register myself to the manager, so I will be avertised that another panel is floating ...
   m_pManager->RegisterSubPanel( this );
 }

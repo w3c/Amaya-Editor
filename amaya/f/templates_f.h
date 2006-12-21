@@ -6,6 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern ThotBool IsTemplateInstanceDocument ( Document doc );
 extern void* AllocTemplateRepositoryListElement ( const char* path,
                                                   void* prevElement );
 extern void FreeTemplateRepositoryList ( void* list );
@@ -29,9 +30,12 @@ extern ThotBool RepeatButtonClicked ( NotifyElement *event );
 extern void OpeningInstance ( char *fileName,
                               Document doc );
 extern ThotBool ClosingInstance ( NotifyDialog* dialog );
+extern ThotBool IsTemplateElement ( Element elem );
+extern Element GetFirstTemplateParentElement ( Element elem );
 
 #else /* __STDC__ */
 
+extern ThotBool IsTemplateInstanceDocument ( Document doc );
 extern void* AllocTemplateRepositoryListElement ( const char* path,
                                                     void* prevElement );
 extern void FreeTemplateRepositoryList ( void* list );
@@ -55,6 +59,8 @@ extern ThotBool RepeatButtonClicked ( NotifyElement *event );
 extern void OpeningInstance ( char *fileName,
                                 Document doc );
 extern ThotBool ClosingInstance ( NotifyDialog* dialog );
+extern ThotBool IsTemplateElement ( Element elem );
+extern Element GetFirstTemplateParentElement ( Element elem );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

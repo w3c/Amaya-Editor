@@ -93,6 +93,7 @@ static ThotBool TtAppVersion_IsInit = FALSE;
 #include "appdialogue_wx.h"
 #include "message_wx.h"
 #include "AmayaScrollBar.h"
+#include "AmayaStatusBar.h"
 #endif /* _WX */
 #ifdef _GTK
 #include "gtk-functions.h"
@@ -1613,7 +1614,8 @@ void TtaRaiseView (Document document, View view)
 
 /*----------------------------------------------------------------------
   DisplaySelMessage affiche la se'lection donne'e en parame`tre (texte) dans 
-  la fenetre active.                                            
+  la fenetre active.
+  @todo Supprimer tous les appels à cette fonction                                            
   ----------------------------------------------------------------------*/
 void DisplaySelMessage (char *text, PtrDocument pDoc)
 {
@@ -1630,7 +1632,9 @@ void DisplaySelMessage (char *text, PtrDocument pDoc)
       /* recupere le document concerne */
       doc = IdentDocument(pDoc);
 #ifdef _WX
+//#ifndef EK
         TtaSetStatus ((Document) doc, 1, text, NULL);
+//#endif /* EK */
 #else /* _WX */
       for (view = 1; view <= MAX_VIEW_DOC; view++)
         TtaSetStatus ((Document) doc, view, text, NULL);
@@ -1720,6 +1724,30 @@ void TtaSetStatus (Document document, View view, char *text, char *name)
     }
 }
 
+
+/*----------------------------------------------------------------------
+  TtaSetStatusSelectedElement Set the current selected element in the status bar.
+  ----------------------------------------------------------------------*/
+void TtaSetStatusSelectedElement(Document document, View view, Element elem)
+{
+#ifdef EK
+#ifdef _WX
+  int frame;
+  
+  frame = GetWindowNumber (document, view);
+  if (frame == 0)
+    /* try to display in document 1 */
+    frame = GetWindowNumber (1, view);
+
+  if (FrameTable[frame].WdFrame){
+    AmayaWindow* window = wxDynamicCast(wxGetTopLevelParent(FrameTable[frame].WdFrame), AmayaWindow);
+    if(window!=NULL){
+      ((AmayaStatusBar*)window->GetStatusBar())->SetSelectedElement( elem );
+    }
+  }
+#endif /* _WX */
+#endif /* EK */
+}
 
 
 #ifdef _WINGUI

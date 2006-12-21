@@ -48,8 +48,8 @@ void AddUnionDeclaration (XTigerTemplate t, Element el)
 	include   = GetAttributeStringValue (el, Template_ATTR_includeAt);
 	exclude   = GetAttributeStringValue (el, Template_ATTR_exclude);
 	NewUnion (t, name, 
-           CreateDictionaryFromList (include), 
-           CreateDictionaryFromList (exclude));
+           Dictionary_CreateFromList (include), 
+           Dictionary_CreateFromList (exclude));
 	
   TtaFreeMemory (name);
 	TtaFreeMemory (include);
@@ -94,15 +94,15 @@ void CheckTypesAttribute (XTigerTemplate t, Element el)
 	DicDictionary dic;
 
 	types = GetAttributeStringValue (el, Template_ATTR_types);
-	dic = CreateDictionaryFromList (types);
+	dic = Dictionary_CreateFromList (types);
 	
-	for (First (dic); !IsDone (dic); Next (dic))
-		if ( GetDeclaration (t, CurrentKey (dic)) == NULL)
+	for (Dictionary_First (dic); !Dictionary_IsDone (dic); Dictionary_Next (dic))
+		if ( GetDeclaration (t, Dictionary_CurrentKey (dic)) == NULL)
 			//TODO_XTIGER We must add the current namespace
-			NewElement (t, CurrentKey (dic));
+			NewElement (t, Dictionary_CurrentKey (dic));
 	
 	TtaFreeMemory (types);
-	CleanDictionary (dic);
+	Dictionary_Clean (dic);
 #endif /* TEMPLATES */
 }
 
@@ -150,8 +150,9 @@ void ParseDeclarations (XTigerTemplate t, Element el)
 /*----------------------------------------------------------------------
   LoadTemplate_callback: Called after loading a template.
   ----------------------------------------------------------------------*/
-void LoadTemplate_callback (int newdoc, int status,  char *urlName, char *outputfile,
-                            char *proxyName, AHTHeaders *http_headers, void * context)
+void LoadTemplate_callback (int newdoc, int status,  char *urlName,
+                            char *outputfile, char* proxyName,
+                            AHTHeaders *http_headers, void * context)
 {	
 #ifdef TEMPLATES 
 #ifdef AMAYA_DEBUG 
@@ -205,7 +206,7 @@ void LoadTemplate (Document doc, char* templatename)
 	TtaFreeMemory (document);
 
 	//If types are not loaded we load the template and we parse it
-	if (!Get (Templates_Dic, templatename))
+	if (!Dictionary_Get (Templates_Dic, templatename))
     {	
       //Creation of the callback context
       TemplateCtxt *ctx	= (TemplateCtxt *)TtaGetMemory (sizeof (TemplateCtxt));

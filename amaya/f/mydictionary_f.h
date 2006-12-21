@@ -6,63 +6,63 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern DicDictionary CreateDictionary ( void );
-extern void CleanDictionary ( DicDictionary dic );
-extern Record Find ( DicDictionary dic,
-                     const char * key );
-extern Record FindPrevious ( DicDictionary dic,
-                             const char * key,
-                             ThotBool *isFirst );
-extern Record FindPreviousElement ( DicDictionary dic,
-                                    const DicElement el,
-                                    ThotBool *isFirst );
-extern DicElement Add ( DicDictionary dic,
-                        const char * key,
-                        const DicElement el );
-extern DicElement Remove ( DicDictionary dic,
-                           const char * key );
-extern DicElement RemoveElement ( DicDictionary dic,
-                                  const DicElement el );
-extern DicElement Get ( DicDictionary dic,
-                        const char * key );
-extern void First ( DicDictionary dic );
-extern void Next ( DicDictionary dic );
-extern ThotBool IsDone ( const DicDictionary dic );
-extern char* CurrentKey ( const DicDictionary dic );
-extern void* CurrentElement ( const DicDictionary dic );
-extern ThotBool IsEmpty ( const DicDictionary dic );
+extern DicDictionary Dictionary_Create ( void );
+extern void Dictionary_Clean ( DicDictionary dic );
+extern Record Dictionary_Find ( DicDictionary dic,
+                                const char * key );
+extern Record Dictionary_FindPrevious ( DicDictionary dic,
+                                        const char * key,
+                                        ThotBool *isFirst );
+extern Record Dictionary_FindPreviousElement ( DicDictionary dic,
+                                               const DicElement el,
+                                               ThotBool *isFirst );
+extern DicElement Dictionary_Add ( DicDictionary dic,
+                                   const char * key,
+                                   const DicElement el );
+extern DicElement Dictionary_Remove ( DicDictionary dic,
+                                      const char * key );
+extern DicElement Dictionary_RemoveElement ( DicDictionary dic,
+                                             const DicElement el );
+extern DicElement Dictionary_Get ( DicDictionary dic,
+                                   const char * key );
+extern void Dictionary_First ( DicDictionary dic );
+extern void Dictionary_Next ( DicDictionary dic );
+extern ThotBool Dictionary_IsDone ( const DicDictionary dic );
+extern char* Dictionary_CurrentKey ( const DicDictionary dic );
+extern void* Dictionary_CurrentElement ( const DicDictionary dic );
+extern ThotBool Dictionary_IsEmpty ( const DicDictionary dic );
 extern ThotBool isEOSorWhiteSpace ( const char c );
-extern DicDictionary CreateDictionaryFromList ( const char *list );
+extern DicDictionary Dictionary_CreateFromList ( const char *list );
 
 #else /* __STDC__ */
 
-extern DicDictionary CreateDictionary ( void );
-extern void CleanDictionary ( DicDictionary dic );
-extern Record Find ( DicDictionary dic,
-                       const char * key );
-extern Record FindPrevious ( DicDictionary dic,
-                               const char * key,
-                               ThotBool *isFirst );
-extern Record FindPreviousElement ( DicDictionary dic,
-                                      const DicElement el,
-                                      ThotBool *isFirst );
-extern DicElement Add ( DicDictionary dic,
-                          const char * key,
-                          const DicElement el );
-extern DicElement Remove ( DicDictionary dic,
-                             const char * key );
-extern DicElement RemoveElement ( DicDictionary dic,
-                                    const DicElement el );
-extern DicElement Get ( DicDictionary dic,
-                          const char * key );
-extern void First ( DicDictionary dic );
-extern void Next ( DicDictionary dic );
-extern ThotBool IsDone ( const DicDictionary dic );
-extern char* CurrentKey ( const DicDictionary dic );
-extern void* CurrentElement ( const DicDictionary dic );
-extern ThotBool IsEmpty ( const DicDictionary dic );
+extern DicDictionary Dictionary_Create ( void );
+extern void Dictionary_Clean ( DicDictionary dic );
+extern Record Dictionary_Find ( DicDictionary dic,
+                                  const char * key );
+extern Record Dictionary_FindPrevious ( DicDictionary dic,
+                                          const char * key,
+                                          ThotBool *isFirst );
+extern Record Dictionary_FindPreviousElement ( DicDictionary dic,
+                                                 const DicElement el,
+                                                 ThotBool *isFirst );
+extern DicElement Dictionary_Add ( DicDictionary dic,
+                                     const char * key,
+                                     const DicElement el );
+extern DicElement Dictionary_Remove ( DicDictionary dic,
+                                        const char * key );
+extern DicElement Dictionary_RemoveElement ( DicDictionary dic,
+                                               const DicElement el );
+extern DicElement Dictionary_Get ( DicDictionary dic,
+                                     const char * key );
+extern void Dictionary_First ( DicDictionary dic );
+extern void Dictionary_Next ( DicDictionary dic );
+extern ThotBool Dictionary_IsDone ( const DicDictionary dic );
+extern char* Dictionary_CurrentKey ( const DicDictionary dic );
+extern void* Dictionary_CurrentElement ( const DicDictionary dic );
+extern ThotBool Dictionary_IsEmpty ( const DicDictionary dic );
 extern ThotBool isEOSorWhiteSpace ( const char c );
-extern DicDictionary CreateDictionaryFromList ( const char *list );
+extern DicDictionary Dictionary_CreateFromList ( const char *list );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

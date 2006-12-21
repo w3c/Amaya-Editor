@@ -50,6 +50,7 @@
 #include "AmayaScrollBar.h"
 #include "AmayaFileDropTarget.h"
 #include "AmayaApp.h"
+#include "AmayaStatusBar.h"
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaFrame, wxPanel)
 
@@ -786,7 +787,7 @@ void AmayaFrame::SetStatusBarText( const wxString & text )
         return;
       
       // the main statusbar text is replaced by the current frame one
-      wxStatusBar * p_statusbar = p_window->GetStatusBar();
+      AmayaStatusBar * p_statusbar = wxDynamicCast(p_window->GetStatusBar(), AmayaStatusBar);
       if ( p_statusbar )
         {
           p_statusbar->SetStatusText( m_StatusBarText );

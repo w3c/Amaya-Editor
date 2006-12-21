@@ -123,7 +123,7 @@ ThotBool NeedAMenu (Element el, Document doc)
     res = TRUE;
   else
     {
-      t = (XTigerTemplate) Get (Templates_Dic, DocumentMeta[doc]->template_url);
+      t = (XTigerTemplate) Dictionary_Get (Templates_Dic, DocumentMeta[doc]->template_url);
       if (t)
         {
           dec = GetDeclaration (t, types);

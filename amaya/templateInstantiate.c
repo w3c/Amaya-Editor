@@ -3,6 +3,8 @@
 #define THOT_EXPORT extern
 #include "templateDeclarations.h"
 
+#include "Elemlist.h"
+
 #include "EDITimage_f.h"
 #include "HTMLactions_f.h"
 #include "HTMLsave_f.h"
@@ -113,7 +115,7 @@ void  CreateInstance(char *templatePath, char *instancePath)
   ThotBool alreadyViewing = FALSE;
   int      alreadyOnDoc = 0;
 
-  XTigerTemplate t = (XTigerTemplate)Get (Templates_Dic, templatePath);
+  XTigerTemplate t = (XTigerTemplate)Dictionary_Get (Templates_Dic, templatePath);
   if (t == NULL)
     //The template must be loaded before calling this function
     return;
@@ -648,7 +650,7 @@ void DoInstanceTemplate (char *templatename)
   Document        doc;
 
 	//Instantiate all elements
-	t = (XTigerTemplate) Get (Templates_Dic, templatename);
+	t = (XTigerTemplate) Dictionary_Get (Templates_Dic, templatename);
   doc = GetTemplateDocument (t);
 	root =	TtaGetMainRoot (doc);
 	ParseTemplate (t, root, doc, FALSE);
@@ -742,9 +744,9 @@ void PreInstantiateComponents(XTigerTemplate t)
   DicDictionary components = GetComponents(t);
   Declaration comp;
 
-  for(First(components);!IsDone(components);Next(components))
+  for(Dictionary_First(components);!Dictionary_IsDone(components);Dictionary_Next(components))
     {
-      comp = (Declaration) CurrentElement(components);
+      comp = (Declaration) Dictionary_CurrentElement(components);
       ParseTemplate(t, GetComponentContent(comp), GetTemplateDocument(t), TRUE);
     }
 #endif /* TEMPLATES */

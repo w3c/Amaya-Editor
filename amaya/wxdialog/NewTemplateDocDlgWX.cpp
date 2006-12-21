@@ -5,8 +5,12 @@
 #include "wx/string.h"
 #include "wx/arrstr.h"
 #include "wx/dir.h"
+#include "application.h"
 #include "AmayaApp.h"
 #include "NewTemplateDocDlgWX.h"
+
+#include "Elemlist.h"
+#include "containers.h"
 
 #define THOT_EXPORT extern
 #include "amaya.h"
@@ -14,12 +18,15 @@
 #include "message_wx.h"
 #include "thot_sys.h"
 #include "init_f.h"
+#include "templates.h"
 #include "templates_f.h"
 #include "registry_wx.h"
 
 static int      MyRef = 0;
 static int      Mydoc = 0;
 static int      Waiting = 0;
+
+
 
 //-----------------------------------------------------------------------------
 // Event table: connect the events to the handler functions to process them

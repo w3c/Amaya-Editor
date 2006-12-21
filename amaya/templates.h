@@ -7,6 +7,8 @@
 
 #include "MENUconf.h"
 
+#define TEMPLATE_SSHEMA_NAME  "Template"
+
 typedef void  *DicElement;
 
 //A record contains an element and its key.

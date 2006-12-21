@@ -44,6 +44,8 @@ extern ThotBool SimpleClick ( NotifyElement *event );
 extern ThotBool SimpleLClick ( NotifyElement *event );
 extern ThotBool SimpleRClick ( NotifyElement *event );
 extern ThotBool AnnotSimpleClick ( NotifyElement *event );
+extern void UpdateXmlElementListTool ( Element el,
+                                       Document doc );
 extern void UpdateTitle ( Element el,
                           Document doc );
 extern void CloseLogs ( Document doc );
@@ -113,6 +115,8 @@ extern ThotBool SimpleClick ( NotifyElement *event );
 extern ThotBool SimpleLClick ( NotifyElement *event );
 extern ThotBool SimpleRClick ( NotifyElement *event );
 extern ThotBool AnnotSimpleClick ( NotifyElement *event );
+extern void UpdateXmlElementListTool ( Element el,
+                                         Document doc );
 extern void UpdateTitle ( Element el,
                             Document doc );
 extern void CloseLogs ( Document doc );

@@ -224,6 +224,7 @@ void HasNatures (Document document, ThotBool *useMathML, ThotBool *useSVG)
   Generic function which searchs in the Element Mapping table, selected
   by the parameter XMLtype, the entry XMLname and returns the corresponding
   Thot element type.
+  If SSchema is specified (not NULL)in elType, only it is searched.
   Returns:
   - ElTypeNum and ElSSchema into elType  ElTypeNum = 0 if not found.
   - content information about this entry

@@ -32,6 +32,7 @@ AmayaAppInstance::AmayaAppInstance( AmayaApp * p_amaya_app ) :
   m_InstanceName = wxString::Format(_T(".")+m_pAmayaApp->GetAppName()+_T("-%s"),
                                     wxGetUserId().c_str());
   m_ServicePort = wxFileName::GetHomeDir();
+  std::cout << "service port : " << m_ServicePort.mb_str(*wxConvCurrent) << std::endl;
   m_ServicePort.Append( _T("/.amaya-check-instance"));
 #endif /* _WINDOWS */
   if (!A_multiple)

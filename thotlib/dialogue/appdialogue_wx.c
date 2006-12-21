@@ -215,7 +215,7 @@ int TtaMakeWindow( int x, int y, int w, int h, int kind, int parent_window_id )
   WindowTable[window_id].WdWindow = p_window;
   WindowTable[window_id].FrWidth  = p_window->GetSize().GetWidth();
   WindowTable[window_id].FrHeight = p_window->GetSize().GetHeight();
-  WindowTable[window_id].WdStatus = p_window->GetStatusBar();
+  WindowTable[window_id].WdStatus = p_window->GetAmayaStatusBar();
 
   // setup window panel
   AmayaPanel * p_panel = p_window->GetAmayaPanel();

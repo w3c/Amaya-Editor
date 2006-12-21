@@ -55,6 +55,9 @@ extern void TtaSetStatus ( Document document,
                            View view,
                            char *text,
                            char *name );
+extern void TtaSetStatusSelectedElement ( Document document,
+                                          View view,
+                                          Element elem );
 extern ThotBool FrameButtonDownCallback ( int frame,
                                           int thot_button_id,
                                           int thot_mod_mask,
@@ -168,6 +171,9 @@ extern void TtaSetStatus ( Document document,
                              View view,
                              char *text,
                              char *name );
+extern void TtaSetStatusSelectedElement ( Document document,
+                                            View view,
+                                            Element elem );
 extern ThotBool FrameButtonDownCallback ( int frame,
                                             int thot_button_id,
                                             int thot_mod_mask,

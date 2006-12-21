@@ -30,10 +30,30 @@
 
 #endif /* TEMPLATES */
 
+
+#include "fetchXMLname_f.h"
 #include "MENUconf.h"
+
+#include "containers.h"
+#include "Elemlist.h"
+
 
 /* Paths from which looking for templates.*/
 static Prop_Templates_Path *TemplateRepositoryPaths;
+
+
+/*----------------------------------------------------------------------
+  IsTemplateInstanceDocument: Test if a document is a template instance
+  doc : Document to test
+  return : TRUE if the document is a template instance
+  ----------------------------------------------------------------------*/
+ThotBool IsTemplateInstanceDocument(Document doc){
+#ifdef TEMPLATES
+  return (DocumentMeta[doc]!=NULL) && (DocumentMeta[doc]->template_url!=NULL);
+#else  /* TEMPLATES */
+  return false;
+#endif /* TEMPLATES */
+}
 
 /*----------------------------------------------------------------------
   AllocTemplateRepositoryListElement: alloc an element for the list of template repositories.
@@ -238,6 +258,9 @@ void InitTemplates ()
 
 
 
+
+
+
 /*----------------------------------------------------------------------
   NewTemplate: Create the "new document from template" dialog
   ----------------------------------------------------------------------*/
@@ -292,6 +315,13 @@ void CreateInstanceOfTemplate (Document doc, char *templatename, char *docname)
 }
 
 /*----------------------------------------------------------------------
+  giveItems : Lists type items from string
+  example : "one two three" is extracted to {one, two, three}
+  note : item type are setted to SimpleTypeNat
+  text : text from which list items
+  size : size of text in characters
+  items : address of exctracted item list
+  nbitems : items number in items list
   ----------------------------------------------------------------------*/
 void giveItems (char *text, int size, struct menuType **items, int *nbitems)
 {
@@ -403,7 +433,7 @@ void UseCreated (NotifyElement *event)
     /* this Use element has already some content. It has already been
        instanciated */
     return;
-  t = (XTigerTemplate) Get (Templates_Dic, DocumentMeta[doc]->template_url);
+  t = (XTigerTemplate) Dictionary_Get (Templates_Dic, DocumentMeta[doc]->template_url);
   if (!t)
     return; // no template ?!?!
   InstantiateUse (t, el, doc, TRUE);
@@ -435,7 +465,7 @@ ThotBool UseButtonClicked (NotifyElement *event)
     return FALSE; /* let Thot perform normal operation */
 
 	doc = event->document;
-  t = (XTigerTemplate) Get (Templates_Dic, DocumentMeta[doc]->template_url);
+  t = (XTigerTemplate) Dictionary_Get (Templates_Dic, DocumentMeta[doc]->template_url);
   if (!t)
     return FALSE; /* let Thot perform normal operation */
 
@@ -579,7 +609,7 @@ ThotBool OptionButtonClicked (NotifyElement *event)
   if (!grandChild)
     /* the "use" element is empty. Instantiate it */
     {
-      t = (XTigerTemplate) Get (Templates_Dic, DocumentMeta[doc]->template_url);
+      t = (XTigerTemplate) Dictionary_Get (Templates_Dic, DocumentMeta[doc]->template_url);
       if (!t)
         return FALSE; // no template ?!?!
       InstantiateUse (t, child, doc, TRUE);
@@ -623,7 +653,7 @@ ThotBool RepeatButtonClicked (NotifyElement *event)
   if (view != 1)
     return FALSE; /* let Thot perform normal operation */
   doc = event->document;
-  t = (XTigerTemplate) Get (Templates_Dic, DocumentMeta[doc]->template_url);
+  t = (XTigerTemplate) Dictionary_Get (Templates_Dic, DocumentMeta[doc]->template_url);
   if (!t)
     return FALSE; // no template ?!?!
 
@@ -718,11 +748,11 @@ void OpeningInstance (char *fileName, Document doc)
               DocumentMeta[doc]->template_url = TtaStrdup (content);
               if (Templates_Dic == NULL)
                 InitializeTemplateEnvironment ();
-              t = (XTigerTemplate) Get (Templates_Dic, content);
+              t = (XTigerTemplate) Dictionary_Get (Templates_Dic, content);
               if (!t)
                 {
                   LoadTemplate (0, content);
-                  t = (XTigerTemplate) Get (Templates_Dic, content);
+                  t = (XTigerTemplate) Dictionary_Get (Templates_Dic, content);
                 }
               AddUser (t);
             }
@@ -746,11 +776,46 @@ ThotBool ClosingInstance(NotifyDialog* dialog)
   char *turl = DocumentMeta[dialog->document]->template_url;
   if (turl)
     {
-      XTigerTemplate t = (XTigerTemplate) Get (Templates_Dic, turl);
+      XTigerTemplate t = (XTigerTemplate) Dictionary_Get (Templates_Dic, turl);
       if (t)
         RemoveUser (t);
       TtaFreeMemory (turl);
     }
 #endif /* TEMPLATES */
   return FALSE;
+}
+
+
+/*----------------------------------------------------------------------
+  GetFirstTemplateParentElement
+  Return the first element wich has "Template" as SShema name or null if none.
+  ----------------------------------------------------------------------*/
+ThotBool IsTemplateElement(Element elem)
+{
+#ifdef TEMPLATES
+  return strcmp(TtaGetSSchemaName(TtaGetElementType(elem).ElSSchema)
+                                                    , TEMPLATE_SSHEMA_NAME)==0;
+#else
+  return FALSE;
+#endif /* TEMPLATES */
+}
+
+
+/*----------------------------------------------------------------------
+  GetFirstTemplateParentElement
+  Return the first element wich has "Template" as SShema name or null if none.
+  ----------------------------------------------------------------------*/
+Element GetFirstTemplateParentElement(Element elem)
+{
+#ifdef TEMPLATES
+  elem = TtaGetParent(elem);
+  while(elem!=NULL && strcmp(TtaGetSSchemaName(TtaGetElementType(elem).ElSSchema)
+                                                    , TEMPLATE_SSHEMA_NAME)!=0)
+  {
+    elem = TtaGetParent(elem);
+  }
+  return elem;
+#else
+  return NULL;
+#endif /* TEMPLATES */
 }

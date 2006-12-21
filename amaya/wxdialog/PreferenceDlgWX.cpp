@@ -19,6 +19,8 @@
 #include "MENUconf_f.h"
 #include "registry_wx.h"
 #include "PreferenceDlgWX.h"
+#include "templates.h"
+#include "Elemlist.h"
 #include "templates_f.h"
 
 bool PreferenceDlgWX::m_OnApplyLock = FALSE;

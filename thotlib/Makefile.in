@@ -173,7 +173,7 @@ DISPLAY_OBJ = \
 	view/displayview.o \
 	view/frame.o \
 	view/hyphen.o \
-        view/tesse.o \
+	view/tesse.o \
 	view/glgradient.o \
 	dialogue/glglyph.o \
 	dialogue/openglfont.o \
@@ -184,6 +184,7 @@ DISPLAY_OBJ = \
 EDITOR_OBJ = \
 	base/alloca.o \
 	base/config.o \
+	base/containers.o \
 	base/thotmsg.o \
 	base/structlist.o \
 	content/contentapi.o \
@@ -222,6 +223,7 @@ EDITOR_OBJ = \
 	dialogue/AmayaFileDropTarget.o \
 	dialogue/AmayaSpeCharPanel.o \
 	dialogue/AmayaStatsThread.o \
+	dialogue/AmayaPathControl.o \
 	dialogue/appdialogue_wx.o \
 	dialogue/callback.o\
 	dialogue/callbackinit.o \
@@ -234,6 +236,7 @@ EDITOR_OBJ = \
 	dialogue/context.o \
 	dialogue/creationmenu.o \
 	dialogue/dialogapi.o \
+	dialogue/Elemlist.o \
 	dialogue/geom.o \
 	dialogue/input.o \
 	dialogue/interface.o \

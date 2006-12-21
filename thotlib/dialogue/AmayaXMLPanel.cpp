@@ -31,6 +31,8 @@
 #include "inites_f.h"
 #include "presentmenu_f.h"
 
+#include "Elemlist.h"
+
 #include "AmayaXMLPanel.h"
 #include "AmayaNormalWindow.h"
 #include "AmayaFloatingPanel.h"
@@ -99,7 +101,41 @@ void AmayaXMLPanel::RefreshToolTips()
   -----------------------------------------------------------------------*/
 void AmayaXMLPanel::SendDataToPanel( AmayaParams& p )
 {
-  int          nb_el = (int)p.param1;
+  int nb_el = (int)p.param1;
+#ifdef EK
+  if(nb_el==-1){
+    DLList list = (DLList) p.param2;
+    DLList reflist = DLList_GetRefList(list, (Container_CompareFunction)ElemListElement_Compare);
+    ForwardIterator iter = DLList_GetForwardIterator(reflist);
+    ContainerNode node;
+    ElemListElement elem;
+
+    m_pXMLList->Clear();    
+    node = ForwardIterator_GetFirst(iter);
+    while(node)
+    {
+      elem = (ElemListElement)node->elem;
+      
+      wxString str = TtaConvMessageToWX(ElemListElement_GetName(elem));
+      
+      if(elem->typeClass==LanguageElement)
+      {
+        str.Prepend(TtaConvMessageToWX( TtaGetSSchemaName(elem->elem.element.type.ElSSchema)) + wxT(":"));
+      }
+      if(elem->comment)
+      {
+        str.append(wxT(" (") + TtaConvMessageToWX( elem->comment) + wxT(")"));
+      }
+      
+      m_pXMLList->Append( str );
+      node = ForwardIterator_GetNext(iter);
+    }
+    
+    TtaFreeMemory(iter);
+    DLList_Destroy(reflist);
+    
+  }
+#else /* EK */
   const char  *listBuffer = (char *)p.param2;
   const char  *currentEl = (char *)p.param3;
   intptr_t     ref = (intptr_t)p.param4;
@@ -133,6 +169,7 @@ void AmayaXMLPanel::SendDataToPanel( AmayaParams& p )
   GetParent()->Layout();
   Layout();
   m_pPanelContentDetach->Layout();
+#endif /* EK */  
 }
 
 /*----------------------------------------------------------------------
@@ -142,14 +179,14 @@ void AmayaXMLPanel::SendDataToPanel( AmayaParams& p )
   -----------------------------------------------------------------------*/
 void AmayaXMLPanel::DoUpdate()
 {
-  AmayaSubPanel::DoUpdate();
-
-  // refresh the liste when the panel is expanded or detached.
-  Document doc;
-  View view;
-  TtaGetActiveView( &doc, &view );
-  if (doc > 0)
-    TtaRefreshElementMenu( doc, view );
+//  AmayaSubPanel::DoUpdate();
+//
+//  // refresh the liste when the panel is expanded or detached.
+//  Document doc;
+//  View view;
+//  TtaGetActiveView( &doc, &view );
+//  if (doc > 0)
+//    TtaRefreshElementMenu( doc, view );
 }
 
 /*----------------------------------------------------------------------

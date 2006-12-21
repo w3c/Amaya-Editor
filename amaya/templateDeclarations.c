@@ -35,19 +35,19 @@ XTigerTemplate NewXTigerTemplate (const char *templatePath, const ThotBool addPr
 	XTigerTemplate t = (XTigerTemplate)TtaGetMemory (sizeof (_XTigerTemplate));
 	
 	t->isLibrary = FALSE;
-	t->libraries = CreateDictionary ();
-	t->elements = CreateDictionary ();
-	t->simpleTypes	= CreateDictionary ();
-	t->components = CreateDictionary ();
-	t->unions = CreateDictionary ();
+	t->libraries = Dictionary_Create ();
+	t->elements = Dictionary_Create ();
+	t->simpleTypes	= Dictionary_Create ();
+	t->components = Dictionary_Create ();
+	t->unions = Dictionary_Create ();
 	t->doc = -1;
   t->users = 0;
   t->isPredefined = FALSE;
 
 	if (addPredefined)
-		AddLibraryDeclarations (t,(XTigerTemplate)Get (Templates_Dic, PREDEFINED_LIB));	
+		AddLibraryDeclarations (t,(XTigerTemplate)Dictionary_Get (Templates_Dic, PREDEFINED_LIB));	
 
-	Add (Templates_Dic, templatePath, t);
+	Dictionary_Add (Templates_Dic, templatePath, t);
 
 	return t;
 #else
@@ -121,7 +121,7 @@ XTigerTemplate CreatePredefinedTypesLibrary ()
 	NewUnion (lib, UNION_ANYCOMPONENT, NULL, NULL);
 	NewUnion (lib, UNION_ANYSIMPLE, NULL, NULL);
 	NewUnion (lib, UNION_ANYELEMENT, NULL, NULL);
-	NewUnion (lib, UNION_ANY, CreateDictionaryFromList (UNION_ANY_DEFINITION), NULL);
+	NewUnion (lib, UNION_ANY, Dictionary_CreateFromList (UNION_ANY_DEFINITION), NULL);
   lib->isPredefined = TRUE;
 	return lib;
 #else
@@ -135,8 +135,8 @@ XTigerTemplate CreatePredefinedTypesLibrary ()
 void InitializeTemplateEnvironment ()
 {
 #ifdef TEMPLATES
-	Templates_Dic = CreateDictionary ();
-	Add (Templates_Dic, PREDEFINED_LIB, CreatePredefinedTypesLibrary ());	
+	Templates_Dic = Dictionary_Create ();
+	Dictionary_Add (Templates_Dic, PREDEFINED_LIB, CreatePredefinedTypesLibrary ());	
 #endif /* TEMPLATES */
 }
 
@@ -149,9 +149,9 @@ void FreeTemplateEnvironment ()
   XTigerTemplate t;
 
   if (Templates_Dic)
-    for (First (Templates_Dic);!IsDone (Templates_Dic);Next (Templates_Dic))
+    for (Dictionary_First (Templates_Dic);!Dictionary_IsDone (Templates_Dic);Dictionary_Next (Templates_Dic))
       {
-        t = (XTigerTemplate)CurrentElement (Templates_Dic);
+        t = (XTigerTemplate)Dictionary_CurrentElement (Templates_Dic);
         TtaCloseDocument (t->doc);
       }
 #endif
@@ -170,16 +170,16 @@ void AddDeclaration (XTigerTemplate t, Declaration dec)
       switch (dec->nature)
         {
         case SimpleTypeNat:
-          Add (t->simpleTypes, dec->name, dec);
+          Dictionary_Add (t->simpleTypes, dec->name, dec);
           break;
         case XmlElementNat:
-          Add (t->elements, dec->name, dec);
+          Dictionary_Add (t->elements, dec->name, dec);
           break;
         case ComponentNat:
-          Add (t->components, dec->name, dec);
+          Dictionary_Add (t->components, dec->name, dec);
           break;
         case UnionNat:
-          Add (t->unions, dec->name, dec);
+          Dictionary_Add (t->unions, dec->name, dec);
           break;
         default:
           //Impossible
@@ -221,18 +221,18 @@ void NewUnion (const XTigerTemplate t, const char *name,
 	Declaration dec = NewDeclaration (t, name, UnionNat);
 	Declaration aux;
 	
-	dec->unionType.include = CreateDictionary ();
-	dec->unionType.exclude = CreateDictionary ();
+	dec->unionType.include = Dictionary_Create ();
+	dec->unionType.exclude = Dictionary_Create ();
 
 	//We initialize include
 	if (include)
     {
-      for (First (include); !IsDone (include); Next (include))
+      for (Dictionary_First (include); !Dictionary_IsDone (include); Dictionary_Next (include))
         {
-          aux = GetDeclaration (t, CurrentKey (include));
+          aux = GetDeclaration (t, Dictionary_CurrentKey (include));
           if (aux == NULL) //Unknown type > a new XML element
-            NewElement (t, CurrentKey (include));
-          Add (dec->unionType.include, aux->name, aux);
+            NewElement (t, Dictionary_CurrentKey (include));
+          Dictionary_Add (dec->unionType.include, aux->name, aux);
         }
       TtaFreeMemory (include);
     }
@@ -240,12 +240,12 @@ void NewUnion (const XTigerTemplate t, const char *name,
 	//We initialize exclude
 	if (exclude)
     {
-      for (First(exclude); !IsDone (exclude); Next (exclude))
+      for (Dictionary_First(exclude); !Dictionary_IsDone (exclude); Dictionary_Next (exclude))
         {
-          aux = GetDeclaration (t, CurrentKey (exclude));
+          aux = GetDeclaration (t, Dictionary_CurrentKey (exclude));
           if (aux == NULL) //Unknown type > a new XML element
-            NewElement (t, CurrentKey (exclude));
-          Add (dec->unionType.exclude, aux->name, aux);
+            NewElement (t, Dictionary_CurrentKey (exclude));
+          Dictionary_Add (dec->unionType.exclude, aux->name, aux);
         }
       TtaFreeMemory (exclude);
     }
@@ -281,13 +281,13 @@ void FreeDeclaration (Declaration dec)
 Declaration GetDeclaration (const XTigerTemplate t, const char *name)
 {
 #ifdef TEMPLATES
-	Declaration dec = (Declaration)Get (t->simpleTypes, name);	
+	Declaration dec = (Declaration)Dictionary_Get (t->simpleTypes, name);	
 	if (dec) return dec;
-	dec = (Declaration)Get (t->components, name);
+	dec = (Declaration)Dictionary_Get (t->components, name);
 	if (dec) return dec;
-	dec = (Declaration)Get (t->elements, name);
+	dec = (Declaration)Dictionary_Get (t->elements, name);
 	if (dec) return dec;
-	dec = (Declaration)Get (t->unions, name);
+	dec = (Declaration)Dictionary_Get (t->unions, name);
 	return dec;
 #else
 	return NULL;
@@ -306,61 +306,61 @@ void FreeXTigerTemplate (XTigerTemplate t)
 
 	dic = t->libraries;
 
-	for (First (dic); !IsDone (dic); Next (dic))
-    RemoveUser ((XTigerTemplate)CurrentElement (dic));
+	for (Dictionary_First (dic); !Dictionary_IsDone (dic); Dictionary_Next (dic))
+    RemoveUser ((XTigerTemplate)Dictionary_CurrentElement (dic));
 
-	CleanDictionary (dic);
+	Dictionary_Clean (dic);
 
 	//Cleaning the components
 	dic = t->components;
-	for (First (dic); !IsDone (dic); Next (dic))
+	for (Dictionary_First (dic); !Dictionary_IsDone (dic); Dictionary_Next (dic))
     {
-      dec = (Declaration)CurrentElement (dic);
+      dec = (Declaration)Dictionary_CurrentElement (dic);
       //Deleting only types defined by the template (not the imported ones)
       if (dec->declaredIn == t)
         TtaFreeMemory (dec);
     }
-	CleanDictionary (dic);
+	Dictionary_Clean (dic);
 
 	//Cleaning the elements
 	dic = t->elements;
-	for (First (dic); !IsDone (dic); Next (dic))
+	for (Dictionary_First (dic); !Dictionary_IsDone (dic); Dictionary_Next (dic))
     {
-      dec = (Declaration)CurrentElement (dic);
+      dec = (Declaration)Dictionary_CurrentElement (dic);
       //Deleting only types defined by the template (not the imported ones)
       if (dec->declaredIn == t)
         TtaFreeMemory (dec);
     }
-	CleanDictionary (dic);
+	Dictionary_Clean (dic);
 
 	//Cleaning the simple types
 	dic = t->simpleTypes;
-	for (First (dic); !IsDone (dic); Next (dic))
+	for (Dictionary_First (dic); !Dictionary_IsDone (dic); Dictionary_Next (dic))
     {
-      dec = (Declaration)CurrentElement (dic);
+      dec = (Declaration)Dictionary_CurrentElement (dic);
       //Deleting only types defined by the template (not the imported ones)
       if (dec->declaredIn == t)
         TtaFreeMemory (dec);
     }
-	CleanDictionary (dic);
+	Dictionary_Clean (dic);
 
 	//Cleaning the unions
 	dic = t->unions;
-	for (First (dic); !IsDone (dic); Next (dic))
+	for (Dictionary_First (dic); !Dictionary_IsDone (dic); Dictionary_Next (dic))
     {
-      dec = (Declaration)CurrentElement (dic);
+      dec = (Declaration)Dictionary_CurrentElement (dic);
       //Deleting only types defined by the template (not the imported ones)
       if (dec->declaredIn == t)
         TtaFreeMemory (dec);
     }
-	CleanDictionary (dic);
+	Dictionary_Clean (dic);
 
   //Freeing the document
   FreeDocumentResource (t->doc);
   TtcCloseDocument (t->doc, 0);
 
   //Removing the template of the dictionary
-  RemoveElement (Templates_Dic, t);
+  Dictionary_RemoveElement (Templates_Dic, t);
 
   //Freeing the template
 	TtaFreeMemory (t);
@@ -376,26 +376,26 @@ void AddLibraryDeclarations (XTigerTemplate t, XTigerTemplate lib)
 	DicDictionary from = lib->elements;	
 	DicDictionary to = t->elements;
 	
-	for (First (from); !IsDone (from); Next (from))
-		Add (to, CurrentKey (from), CurrentElement (from));
+	for (Dictionary_First (from); !Dictionary_IsDone (from); Dictionary_Next (from))
+		Dictionary_Add (to, Dictionary_CurrentKey (from), Dictionary_CurrentElement (from));
 	
 	from = lib->components;	
 	to = t->components;
 	
-	for (First (from); !IsDone (from); Next (from))
-		Add (to, CurrentKey (from), CurrentElement (from));
+	for (Dictionary_First (from); !Dictionary_IsDone (from); Dictionary_Next (from))
+		Dictionary_Add (to, Dictionary_CurrentKey (from), Dictionary_CurrentElement (from));
 	
 	from = lib->unions;	
 	to = t->unions;
 	
-	for (First (from); !IsDone (from); Next (from))
-		Add (to, CurrentKey (from), CurrentElement (from));
+	for (Dictionary_First (from); !Dictionary_IsDone (from); Dictionary_Next (from))
+		Dictionary_Add (to, Dictionary_CurrentKey (from), Dictionary_CurrentElement (from));
 	
 	from = lib->simpleTypes;	
 	to = t->simpleTypes;
 	
-	for (First (from); !IsDone (from); Next (from))
-		Add (to, CurrentKey (from), CurrentElement (from));
+	for (Dictionary_First (from); !Dictionary_IsDone (from); Dictionary_Next (from))
+		Dictionary_Add (to, Dictionary_CurrentKey (from), Dictionary_CurrentElement (from));
 #endif /* TEMPLATES */
 }
 
@@ -416,13 +416,13 @@ void PrintUnion (Declaration dec, int indent, XTigerTemplate t, FILE *file)
 	
 	
 	dic = dec->unionType.include;
-	if (!IsEmpty (dic))
+	if (!Dictionary_IsEmpty (dic))
     {
       fprintf (file, "\n%sINCLUDE",indentation);
 		
-      for (First (dic);!IsDone (dic);Next (dic))
+      for (Dictionary_First (dic);!Dictionary_IsDone (dic);Dictionary_Next (dic))
         {
-          aux = (Declaration) CurrentElement (dic);
+          aux = (Declaration) Dictionary_CurrentElement (dic);
           switch (aux->nature)
             {
             case SimpleTypeNat:
@@ -445,13 +445,13 @@ void PrintUnion (Declaration dec, int indent, XTigerTemplate t, FILE *file)
     }
 	
 	dic = dec->unionType.exclude;
-	if (!IsEmpty (dic))
+	if (!Dictionary_IsEmpty (dic))
     {
       fprintf (file, "\n%sEXCLUDE",indentation);
 		
-      for (First (dic);!IsDone (dic);Next (dic))
+      for (Dictionary_First (dic);!Dictionary_IsDone (dic);Dictionary_Next (dic))
         {
-          aux = (Declaration) CurrentElement (dic);
+          aux = (Declaration) Dictionary_CurrentElement (dic);
           switch (aux->nature)
             {
             case SimpleTypeNat:
@@ -488,22 +488,22 @@ void PrintDeclarations (XTigerTemplate t, FILE *file)
 	fprintf (file, "SIMPLE TYPES\n");
 	fprintf (file, "------------");
 	aux = t->simpleTypes;
-	for (First (aux);!IsDone (aux);Next (aux))
+	for (Dictionary_First (aux);!Dictionary_IsDone (aux);Dictionary_Next (aux))
     {
-      dec = (Declaration) CurrentElement (aux);
+      dec = (Declaration) Dictionary_CurrentElement (aux);
       fprintf (file, "\n%s ",dec->name);
       if (dec->declaredIn!=t)
         fprintf (file, "*");
     }
 	
 	aux = t->elements;
-	if (!IsEmpty (aux))
+	if (!Dictionary_IsEmpty (aux))
     {
       fprintf (file, "\n\nXML ELEMENTS\n");
       fprintf (file, "------------");	
-      for (First (aux);!IsDone (aux);Next (aux))
+      for (Dictionary_First (aux);!Dictionary_IsDone (aux);Dictionary_Next (aux))
         {
-          dec = (Declaration) CurrentElement (aux);
+          dec = (Declaration) Dictionary_CurrentElement (aux);
           fprintf (file,"\n%s ",dec->name);
           if (dec->declaredIn!=t)
             fprintf (file, "*");
@@ -511,13 +511,13 @@ void PrintDeclarations (XTigerTemplate t, FILE *file)
     }
 	
 	aux = t->components;
-	if (!IsEmpty (aux))
+	if (!Dictionary_IsEmpty (aux))
     {
       fprintf (file, "\n\nCOMPONENTS\n");
       fprintf (file, "----------");	
-      for (First (aux);!IsDone (aux);Next (aux))
+      for (Dictionary_First (aux);!Dictionary_IsDone (aux);Dictionary_Next (aux))
         {
-          dec = (Declaration) CurrentElement (aux);
+          dec = (Declaration) Dictionary_CurrentElement (aux);
           fprintf (file,"\n%s ",dec->name);
           if (dec->declaredIn!=t)
             fprintf (file, "*");
@@ -528,13 +528,13 @@ void PrintDeclarations (XTigerTemplate t, FILE *file)
     }
 	
 	aux = t->unions;
-	if (!IsEmpty (aux))
+	if (!Dictionary_IsEmpty (aux))
     {
       fprintf (file, "\n\nUNIONS\n");
       fprintf (file, "------");
-      for (First (aux);!IsDone (aux);Next (aux))
+      for (Dictionary_First (aux);!Dictionary_IsDone (aux);Dictionary_Next (aux))
         {
-          dec = (Declaration) CurrentElement (aux);
+          dec = (Declaration) Dictionary_CurrentElement (aux);
           fprintf (file,"\n%s ",dec->name);
           if (dec->declaredIn!=t)
             fprintf (file, "*");
@@ -576,29 +576,29 @@ void RedefineSpecialUnions (XTigerTemplate t)
   un = GetDeclaration (t,UNION_ANYSIMPLE);
   //TODO: Check that it is actually the good declaration and not a newer one
   un->unionType.include = t->simpleTypes;
-  un->unionType.exclude = CreateDictionary ();
+  un->unionType.exclude = Dictionary_Create ();
   
   un = GetDeclaration (t,UNION_ANYCOMPONENT);
   //TODO: Check that it is actually the good declaration and not a newer one
   un->unionType.include = t->components;
-  un->unionType.exclude = CreateDictionary ();
+  un->unionType.exclude = Dictionary_Create ();
 
   un = GetDeclaration (t,UNION_ANYELEMENT);
   //TODO: Check that it is actually the good declaration and not a newer one
   un->unionType.include = t->elements;
-  un->unionType.exclude = CreateDictionary ();
+  un->unionType.exclude = Dictionary_Create ();
   
   un = GetDeclaration (t,UNION_ANY);
   //TODO: Check that it is actually the good declaration and not a newer one
   dic = t->unions;
-  for (First (dic);!IsDone (dic);Next (dic))
+  for (Dictionary_First (dic);!Dictionary_IsDone (dic);Dictionary_Next (dic))
     {
-      Add (un->unionType.include, CurrentKey (dic), CurrentElement (dic));
+      Dictionary_Add (un->unionType.include, Dictionary_CurrentKey (dic), Dictionary_CurrentElement (dic));
     }
 
   //No recursive inclusion
-  Remove (un->unionType.include, UNION_ANY);
-  un->unionType.exclude = CreateDictionary ();
+  Dictionary_Remove (un->unionType.include, UNION_ANY);
+  un->unionType.exclude = Dictionary_Create ();
 
 #endif /* TEMPLATES */
 }

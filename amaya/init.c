@@ -35,6 +35,8 @@
 #include "templateDeclarations_f.h"
 #endif /* TEMPLATES */
 
+#include "containers.h"
+#include "insertelem_f.h"
 /*
 * A VIRER SUREMENT PAR LA SUITE
 *
@@ -7783,6 +7785,8 @@ void InitAmaya (NotifyEvent * event)
 #ifdef TEMPLATES
   InitTemplates();
 #endif
+
+  InsertableElement_Init();
 
   URL_list = NULL;
   URL_list_len = 0;
