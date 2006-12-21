@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
@@ -16,7 +16,7 @@
 <body xml:lang="en" lang="en">
 
 <div>
-<img alt="Amaya" src="../../resources/icons/22x22/logo.png" class="logo" />
+<img alt="Amaya" src="../../resources/icons/22x22/logo.png" class="logo" /> 
 
 <p class="nav"><a href="Views.html" accesskey="p"><img alt="previous"
 src="../../resources/icons/misc/left.png" /></a> <a href="Manual.html"
@@ -43,8 +43,27 @@ documents are available:</p>
   <li>At the prompt, type the URI or the local path name of the new document
     (a default name is assigned to the document if no name is specified). You
     can use the file browser to find a local directory.</li>
-  <li>Choose the location of the new document : current tab, new tab or new
-    window</li>
+  <li>Choose the location of the new document : Replace current, In new tab
+    or In new Window.</li>
+  <li>If you are creating a new XHTML document:
+    <ul>
+      <li>The <strong>Title</strong> of this new document is requested. It
+        could be changed later.</li>
+      <li>You may specify the <strong>Document profile</strong> of the new
+        created document (XHTML Transitional, XHTML 1.1, XHTML strict, XHTML
+        basic, HTML transitional, Compound document).
+        <p>If you plan to create a XHTML document including either MathML or
+        SVG elements (Compound document), it is recommended to create a
+        document file with a <code>.xml</code> suffix.</p>
+      </li>
+    </ul>
+  </li>
+  <li>Select a <strong>charset</strong> to encode strings of the document.
+    Pay attention, this <strong>charset</strong> should be selected in
+    accordance with the Web server that will serve the document.<br />
+    By default <code>.html</code> pages are served with
+    <code>iso-8859-1</code> and <code>.xml</code> pages are served with
+    <code>utf-8</code>.</li>
   <li>Click <strong>Open</strong>. A new document opens, and a root element
     is created.</li>
 </ol>

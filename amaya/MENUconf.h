@@ -107,6 +107,7 @@ typedef struct Prop_General_t
   ThotBool S_NBSP;
   ThotBool S_Shortcuts;
   ThotBool S_Templates;
+  ThotBool WarnCTab;
 } Prop_General;
 
 typedef struct Prop_Browse_t
@@ -118,7 +119,7 @@ typedef struct Prop_Browse_t
   ThotBool DoubleClick;
   ThotBool EnableFTP;
   ThotBool BgImages;
-  ThotBool WarnCTab;
+  ThotBool WarnIDs;
   char     ScreenType[MAX_LENGTH];
   char     LanNeg[MAX_LENGTH];
   int      DoubleClickDelay; /* not used ? */
@@ -132,6 +133,7 @@ typedef struct Prop_Publish_t
   ThotBool LostUpdateCheck;
   ThotBool ExportCRLF;
   ThotBool VerifyPublish;
+  ThotBool GenerateMathPI;
   int      ExportLength;
   char     SafePutRedirect[MAX_LENGTH];
   char     CharsetType[MAX_LENGTH];

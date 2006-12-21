@@ -392,3 +392,5 @@
 390 **Template repositories
 391 **Templates
 392 **Number of occurrences
+393 **Check duplicated IDs
+394 **Add the xsl stylesheet for MathML elements

@@ -5199,4 +5199,10 @@
 <label define="AM_NUMBER_OCCUR">
 <message xml:lang="en">Number of occurrences</message>
 <message xml:lang="fr">Nombre d'occurrences</message></label>
+<label define="AM_WARNIDS">
+<message xml:lang="en">Check duplicated IDs</message>
+<message xml:lang="fr">Vérifier les IDs dupliqués</message></label>
+<label define="AM_MATHPI">
+<message xml:lang="en">Add the xsl stylesheet for MathML elements</message>
+<message xml:lang="fr">Ajouter la feuille xsl pour les éléments MathML</message></label>
 <label define="AMAYA_MSG_MAX"></label></messages></base>

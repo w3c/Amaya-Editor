@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
 <head>
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
@@ -12,16 +12,13 @@
 <body xml:lang="fr" lang="fr">
 
 <div>
-<img alt="Amaya" src="../../resources/icons/22x22/logo.png" class="logo" />
-
+<img alt="Amaya" src="../../resources/icons/22x22/logo.png" class="logo" /> 
 
 <p class="nav"><a href="Document.html.fr" accesskey="p"><img alt="previous"
-src="../../resources/icons/misc/left.png" />
-</a> <a href="Manual.html.fr" accesskey="t"><img alt="top"
-src="../../resources/icons/misc/up.png" />
-</a> <a href="Attributes.html.fr" accesskey="n"><img alt="next"
-src="../../resources/icons/misc/right.png" />
-</a></p>
+src="../../resources/icons/misc/left.png" /> </a> <a href="Manual.html.fr"
+accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /> </a>
+<a href="Attributes.html.fr" accesskey="n"><img alt="next"
+src="../../resources/icons/misc/right.png" /> </a></p>
 </div>
 
 <div class="toc">
@@ -30,7 +27,7 @@ src="../../resources/icons/misc/right.png" />
   <li><a href="#Point">Point d'insertion</a></li>
   <li><a href="#Sous-menu">Sous-menu Structure</a></li>
   <li><a href="#L1179">Eléments créés automatiquement</a></li>
-  <li><a href="#touche">La touche Enter (ou Return)</a>
+  <li><a href="#touche">La touche Enter (ou Return)</a> 
     <ul>
       <li><a href="#end-anchor">Sortir des ancres ou des chaînes d'éléments
         de style</a></li>
@@ -62,51 +59,43 @@ courante.</p>
 <ul>
   <li>insérer (ou remplacer la sélection courante par) un élément XHTML :
     division (<img alt="Bouton Division"
-    src="../../resources/icons/16x16/XHTML_Div.png" />
-     ), titres (<img alt="Bouton Titre niveau 1"
-    src="../../resources/icons/16x16/XHTML_H1.png" />
-     ,<img alt="Bouton Titre niveau 2"
-    src="../../resources/icons/16x16/XHTML_H2.png" />
-     ,<img alt="Bouton Titre niveau 3"
-    src="../../resources/icons/16x16/XHTML_H3.png" />
-     ), table (<img alt="Bouton Table"
-    src="../../resources/icons/16x16/XHTML_Table.png" />
-     ), ancre cible ou element cible (<img alt="Bouton Cible"
-    src="../../resources/icons/16x16/XHTML_Target.png" />
-     ), ancre lien (<img alt="Bouton Lien"
-    src="../../resources/icons/16x16/XHTML_Link.png" />
-     ), liste (<img alt="Bouton Liste"
-    src="../../resources/icons/16x16/XHTML_Bullet.png" />
-     ), liste numérotée (<img alt="Bouton Liste numérotée"
-    src="../../resources/icons/16x16/XHTML_Num.png" />
-     ), liste de définitions (<img alt="Bouton Liste de définitions"
-    src="../../resources/icons/16x16/XHTML_DL.png" />
-     ), terme de définition (<img alt="Bouton Terme"
-    src="../../resources/icons/16x16/XHTML_DT.png" />
-     ), définition (<img alt="Bouton Définition"
-    src="../../resources/icons/16x16/XHTML_DD.png" />
-     ), image (<img alt="Bouton Image"
-    src="../../resources/icons/16x16/XHTML_Image.png" />
-     ), objet (<img alt="Bouton Objet"
-    src="../../resources/icons/16x16/XHTML_object.png" />
-     ).</li>
+    src="../../resources/icons/16x16/XHTML_Div.png" /> ), titres (<img
+    alt="Bouton Titre niveau 1"
+    src="../../resources/icons/16x16/XHTML_H1.png" /> ,<img
+    alt="Bouton Titre niveau 2"
+    src="../../resources/icons/16x16/XHTML_H2.png" /> ,<img
+    alt="Bouton Titre niveau 3"
+    src="../../resources/icons/16x16/XHTML_H3.png" /> ), table (<img
+    alt="Bouton Table" src="../../resources/icons/16x16/XHTML_Table.png" />
+    ), ancre cible ou element cible (<img alt="Bouton Cible"
+    src="../../resources/icons/16x16/XHTML_Target.png" /> ), ancre lien (<img
+    alt="Bouton Lien" src="../../resources/icons/16x16/XHTML_Link.png" /> ),
+    liste (<img alt="Bouton Liste"
+    src="../../resources/icons/16x16/XHTML_Bullet.png" /> ), liste numérotée
+    (<img alt="Bouton Liste numérotée"
+    src="../../resources/icons/16x16/XHTML_Num.png" /> ), liste de
+    définitions (<img alt="Bouton Liste de définitions"
+    src="../../resources/icons/16x16/XHTML_DL.png" /> ), terme de définition
+    (<img alt="Bouton Terme" src="../../resources/icons/16x16/XHTML_DT.png"
+    /> ), définition (<img alt="Bouton Définition"
+    src="../../resources/icons/16x16/XHTML_DD.png" /> ), image (<img
+    alt="Bouton Image" src="../../resources/icons/16x16/XHTML_Image.png" />
+    ), objet (<img alt="Bouton Objet"
+    src="../../resources/icons/16x16/XHTML_object.png" /> ).</li>
   <li>ouvrir/fermer (ou englober la sélection courante par) un élément
     <em>inline</em> de XHTML: <em>mise en évidence</em> (<img
     src="../../resources/icons/16x16/XHTML_I.png"
-    alt="Bouton Mise en evidence" />
-     ), <strong>important</strong> (<img
-    src="../../resources/icons/16x16/XHTML_B.png" alt="Bouton Important" />
-     ) <code>code</code> (<img src="../../resources/icons/16x16/XHTML_T.png"
-    alt="Bouton Code" />
-     ), <ins>insertion</ins> (<img alt="Bouton Insertion"
-    src="../../resources/icons/16x16/XHTML_ins.png" />
-     ), and <del>suppression</del> (<img alt="Bouton Suppression"
-    src="../../resources/icons/16x16/XHTML_del.png" />
-     ), <sup>exposant</sup> (<img alt="Bouton Exposant"
-    src="../../resources/icons/16x16/XHTML_sup.png" />
-     ), and <sub>indice</sub> (<img alt="Bouton Indice"
-    src="../../resources/icons/16x16/XHTML_sub.png" />
-     ).</li>
+    alt="Bouton Mise en evidence" /> ), <strong>important</strong> (<img
+    src="../../resources/icons/16x16/XHTML_B.png" alt="Bouton Important" /> )
+    <code>code</code> (<img src="../../resources/icons/16x16/XHTML_T.png"
+    alt="Bouton Code" /> ), <ins>insertion</ins> (<img alt="Bouton Insertion"
+    src="../../resources/icons/16x16/XHTML_ins.png" /> ), and
+    <del>suppression</del> (<img alt="Bouton Suppression"
+    src="../../resources/icons/16x16/XHTML_del.png" /> ), <sup>exposant</sup>
+    (<img alt="Bouton Exposant"
+    src="../../resources/icons/16x16/XHTML_sup.png" /> ), and
+    <sub>indice</sub> (<img alt="Bouton Indice"
+    src="../../resources/icons/16x16/XHTML_sub.png" /> ).</li>
 </ul>
 
 <p>Pour plus d'information <a href="HTML.html.fr">voir la liste de tous les
@@ -127,18 +116,17 @@ position choisie à cause des contraintes imposées par les langages HTML, SVG
 ou MathML. Amaya tente alors de créer l'élément à l'endroit le plus proche
 possible. Par exemple, si le point d'insertion se trouve à la fin de la
 dernière ligne d'un paragraphe quand vous cliquez sur le bouton <img
-src="../../resources/icons/16x16/XHTML_H2.png" alt="H2" />
- , Amaya ne crée pas la nouvelle en-tête à cette position (elle serait
-invalide) mais après le paragraphe, à la position valide la plus proche.</p>
+src="../../resources/icons/16x16/XHTML_H2.png" alt="H2" /> , Amaya ne crée
+pas la nouvelle en-tête à cette position (elle serait invalide) mais après le
+paragraphe, à la position valide la plus proche.</p>
 
 <p>Dans d'autres cas, Amaya modifie la structure existante pour créer
 l'élément désiré tout en respectant les contraintes du langage. Si le point
 d'insertion est quelque part dans un item de liste (li) quand vous créez une
 en-tête (avec le bouton <img src="../../resources/icons/16x16/XHTML_H2.png"
-alt="H2" />
- de la palette ou à partir du menu), l'item et la liste à laquelle il
-appartient sont automatiquement divisés afin de créer l'en-tête demandé et de
-se conformer aux contraintes du langage HTML.</p>
+alt="H2" /> de la palette ou à partir du menu), l'item et la liste à laquelle
+il appartient sont automatiquement divisés afin de créer l'en-tête demandé et
+de se conformer aux contraintes du langage HTML.</p>
 
 <h3 id="Sous-menu"><a name="Structure" id="Structure">Sous-menu
 Structure</a></h3>
@@ -221,10 +209,10 @@ rapidement des structures complexes emboîtées.</p>
 
 <p>Considérez par exemple la structure suivante :</p>
 <ol>
-  <li>Le premier item dans le plus haut niveau de la liste.
+  <li>Le premier item dans le plus haut niveau de la liste. 
     <p>Un paragraphe dans le premier item.</p>
   </li>
-  <li>Le second item.
+  <li>Le second item. 
     <ol type="a">
       <li>Le premier item dans la liste emboîtée.</li>
       <li>Le second item dans la liste emboîtée.</li>
@@ -237,8 +225,7 @@ rapidement des structures complexes emboîtées.</p>
 <ol>
   <li>Créez d'abord une liste numérotée avec un premier item, par exemple en
     cliquant sur le bouton <img alt="Numbered List "
-    src="../../resources/icons/16x16/XHTML_Num.png" />
-     .</li>
+    src="../../resources/icons/16x16/XHTML_Num.png" /> .</li>
   <li>Tapez le contenu de la première ligne et pressez la touche
     <kbd>Enter</kbd> : cela crée un nouveau paragraphe dans l'item de
   liste.</li>
@@ -249,7 +236,7 @@ rapidement des structures complexes emboîtées.</p>
   <li>A la fin de la première ligne de l'item 2, créez une liste nouvelle
     avec son premier item (cliquez par exemple sur le bouton <img
     alt="Numbered List " src="../../resources/icons/16x16/XHTML_Num.png" />
-     ). La nouvelle liste sera automatiquement emboîtée.</li>
+    ). La nouvelle liste sera automatiquement emboîtée.</li>
   <li>Entrez le contenu du premier item de la nouvelle liste et créez l'item
     b en appuyant deux fois sur la touche <kbd>Enter</kbd> à la fin de l'item
     a.</li>
@@ -344,17 +331,19 @@ au chargement, sauf s'ils sont explicitement préservés.</p>
 
 <p>L'auteur d'un document peut vouloir spécifier son intention de préserver
 tous les caractères pour certains éléments. Pour cela, il peut utiliser
-l'attribut <code>xml:space</code> <strong></strong>ou l'élément
-<code>pre</code> (ce dernier pour des documents XHTML uniquement). Deux
-valeurs sont possibles pour l'attribut <code>xml:space</code> :
-"<code>default</code>" et "<code>preserve</code>". La valeur
-"<code>default</code>" applique le traitement des blancs par défaut défini
-pour la DTD du document. Dans Amaya, le traitement par défaut supprime les
-blancs non significatif pour les DTD supportées (voir ci-dessus). La valeur
-"<code>preserve</code>" indique à Amaya de préserver tous les caractères, à
-l'exception du premier caractère qui suit immédiatement la fin de la balise
-de l'élément portant l'attribut si ce caractère est une fin de ligne.
-L'attribut <code>xml:space</code> s'applique à tous les éléments à
+l'attribut <code>xml:space</code> ou l'élément <code>pre</code> (ce dernier
+pour des documents XHTML uniquement). Deux valeurs sont possibles pour
+l'attribut <code>xml:space</code> : "<code>default</code>" et
+"<code>preserve</code>".</p>
+<ul>
+  <li>La valeur "<code>default</code>" applique le traitement des blancs par
+    défaut défini pour la DTD du document. </li>
+  <li>La valeur "<code>preserve</code>" indique à Amaya de préserver tous les
+    caractères, à l'exception du premier caractère qui suit immédiatement la
+    balise de fin de l'élément portant cet attribut. </li>
+</ul>
+
+<p>L'attribut <code>xml:space</code> s'applique à tous les éléments à
 l'intérieur du contenu de l'élément porteur de la déclaration, à moins qu'il
 ne soit annulé par l'apparition d'un autre attribut <code>xml:space</code>.
 Concernant la DTD XHTML, l'élément <code>pre</code> induit le même
@@ -363,15 +352,24 @@ comportement que l'attribut xml:space avec la valeur "preserve".</p>
 <p>Le traitement des blancs est appliqué par Amaya lors du chargement d'un
 document et lors de l'édition de celui-ci. Par exemple, le code source
 suivant:</p>
-<pre><code>    &lt;p&gt;Amaya supprime les&lt;strong&gt; blancs non significatifs &lt;/strong&gt;au chargement&lt;/p&gt;</code></pre>
+<pre>    &lt;p&gt;Amaya supprime les&lt;strong&gt; blancs non significatifs &lt;/strong&gt;au chargement&lt;/p&gt;</pre>
 
 <p>donnera:</p>
-<pre><code>    Amaya supprime les</code><code><strong>blancs non significatif</strong></code><code><strong>s</strong>au chargement</code></pre>
+<pre>    Amaya supprime les<strong>blancs non significatif</strong><strong>s</strong>au chargement</pre>
 
 <p>car les blancs de début et de fin de l'élément <code>strong</code> sont
 considérés comme non significatifs et sont donc supprimés. La forme correcte
 aurait été:</p>
-<pre><code>    &lt;p&gt;Amaya supprime les &lt;strong&gt;blancs non significatifs&lt;/strong&gt; au chargement&lt;/p&gt;</code></pre>
+<pre>    &lt;p&gt;Amaya supprime les &lt;strong&gt;blancs non significatifs&lt;/strong&gt; au chargement&lt;/p&gt;</pre>
+
+<p class="Note">Dans Amaya, le traitement par défaut supprime les blancs non
+significatifs.<br />
+Il est possible de demander de "Garder les espaces multiples" dans le
+dialogue des <a href="Configure.html.fr#Enable">Préférences</a>. Dans ce cas,
+Amaya va remplacer les blancs non significatifs amenés à disparaître par des
+blancs non sécables.</p>
+
+<p></p>
 </div>
 </body>
 </html>

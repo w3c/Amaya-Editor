@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
@@ -13,41 +13,38 @@
 <body xml:lang="en" lang="en">
 
 <div>
-<img alt="Amaya" src="../../resources/icons/22x22/logo.png" class="logo" />
-
+<img alt="Amaya" src="../../resources/icons/22x22/logo.png" class="logo" /> 
 
 <p class="nav"><a href="Annotations.html" accesskey="p"><img alt="previous"
-src="../../resources/icons/misc/left.png" />
-</a> <a href="Manual.html" accesskey="t"><img alt="top"
-src="../../resources/icons/misc/up.png" />
-</a> <a href="ShortCuts.html" accesskey="n"><img alt="next"
-src="../../resources/icons/misc/right.png" />
-</a></p>
+src="../../resources/icons/misc/left.png" /> </a> <a href="Manual.html"
+accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /> </a>
+<a href="ShortCuts.html" accesskey="n"><img alt="next"
+src="../../resources/icons/misc/right.png" /> </a></p>
 </div>
 
 <div class="toc">
 <ul>
-  <li><a href="#Configuring">Configuring Amaya</a>
+  <li><a href="#Configuring">Configuring Amaya</a> 
     <ul>
       <li><a href="#more">One or more Amaya Instances</a></li>
       <li><a href="#About">About Configuration Directory and File
-        Conventions</a>
+        Conventions</a> 
         <ul>
           <li><a href="#config">The config Directory</a></li>
           <li><a href="#AmayaHome">The AmayaHome Directory</a></li>
           <li><a href="#AmayaTemp">The AmayaTemp Directory</a></li>
         </ul>
       </li>
-      <li><a href="#Menu">Menu Preferences</a>
+      <li><a href="#Menu">Menu Preferences</a> 
         <ul>
-          <li><a href="#General">General Preferences</a>
+          <li><a href="#General">General Preferences</a> 
             <ul>
               <li><a href="#Check">Check boxes</a></li>
               <li><a href="#Font">Font and language options</a></li>
               <li><a href="#Access">Access keys</a></li>
             </ul>
           </li>
-          <li><a href="#Browsing">Browsing Preferences</a>
+          <li><a href="#Browsing">Browsing Preferences</a> 
             <ul>
               <li><a href="#Opening">Opening location</a></li>
               <li><a href="#Check1">Check boxes</a></li>
@@ -56,7 +53,7 @@ src="../../resources/icons/misc/right.png" />
               Preferences</a></li>
             </ul>
           </li>
-          <li><a href="#Publishing">Publishing Preferences</a>
+          <li><a href="#Publishing">Publishing Preferences</a> 
             <ul>
               <li><a href="#Charset">Charset for new documents</a></li>
               <li><a href="#Check2">Check boxes</a></li>
@@ -66,7 +63,7 @@ src="../../resources/icons/misc/right.png" />
                 domains</a></li>
             </ul>
           </li>
-          <li><a href="#Cache">Cache Preferences</a>
+          <li><a href="#Cache">Cache Preferences</a> 
             <ul>
               <li><a href="#Check3">Check boxes</a></li>
               <li><a href="#Cache1">Cache directory</a></li>
@@ -75,7 +72,7 @@ src="../../resources/icons/misc/right.png" />
               <li><a href="#Flush">Flush cache</a></li>
             </ul>
           </li>
-          <li><a href="#Proxy">Proxy Preferences</a>
+          <li><a href="#Proxy">Proxy Preferences</a> 
             <ul>
               <li><a href="#Proxy1">Proxy domain list</a></li>
             </ul>
@@ -85,7 +82,7 @@ src="../../resources/icons/misc/right.png" />
           <li><a href="#Configurin1">Configuring Annotation Settings</a></li>
           <li><a href="#Annotation">Annotation user</a></li>
           <li><a href="#Annotation1">Annotation post server</a></li>
-          <li><a href="#Annotation2">Annotation servers</a>
+          <li><a href="#Annotation2">Annotation servers</a> 
             <ul>
               <li><a href="#Check4">Check boxes</a></li>
             </ul>
@@ -412,9 +409,9 @@ pasting form an external application. When that option is active, Amaya keeps
 lines in the source application. If not active, <code>newline</code>
 characters are replaced by spaces. This option is immediately effective.</p>
 
-<p><strong>Keep multiple spaces.</strong> When that option is active, Amaya
-generates no-break spaces to keep multiple inserted spaces. This option is
-immediately effective.</p>
+<p id="Keep"><strong>Keep multiple spaces.</strong> When that option is
+active, Amaya generates no-break spaces to keep multiple inserted spaces.
+This option is immediately effective.</p>
 
 <p><strong>Generate backup files.</strong> When that option is active, Amaya
 generates a backup file for each edited document, after a given volume of
@@ -484,6 +481,10 @@ preference.</p>
 <p>The options below can be toggled on or off by clicking the check box next
 to an option name. A mark in the box indicates that the option is active.</p>
 
+<p><strong>Check duplicated IDs</strong>. Request to check duplicated IDs
+when loading a document. That option will increase the reading time of
+documents.</p>
+
 <p><strong>Load images.</strong> Controls whether images should be loaded.
 This option is immediately effective.</p>
 
@@ -533,6 +534,12 @@ redirections on specified domains. These options are explained below.</p>
 
 <p>The options below can be toggled on or off by clicking the check box next
 to an option name. A mark in the box indicates that the option is active.</p>
+
+<p><strong>Add the xsl stylesheet for MathML elements</strong>. Generate a
+call to a xsl stylesheet able to transform included MathML elements into
+external objects. This xsl stylesheet was developed by the MathML working
+group to make Internet Explorer able to display this kind of compound
+documents.</p>
 
 <p><strong>Use the application/xhtml+xml MIME type for XHTML
 documents.</strong> This option, if enabled, associated the new, official
