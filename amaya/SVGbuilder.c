@@ -41,7 +41,7 @@
   content of element named elementName.
   This element type appear with an 'X' in the ElemMappingTable.
   ----------------------------------------------------------------------*/
-void      SVGGetDTDName (char *DTDname, char *elementName)
+void SVGGetDTDName (char *DTDname, char *elementName)
 {
   if (strcmp (elementName, "math") == 0)
     strcpy (DTDname, "MathML");
@@ -530,6 +530,7 @@ void CopyUseContent (Element el, Document doc, char *href)
   ----------------------------------------------------------------------*/
 static void CheckHrefAttr (Element el, Document doc)
 {
+  Element              root;
   SSchema              XLinkSSchema;
   AttributeType        attrType;
   Attribute            attr;
@@ -540,6 +541,8 @@ static void CheckHrefAttr (Element el, Document doc)
   if (XLinkSSchema)
     /* the XLink namespace is used in that document */
     {
+      root = TtaGetRootElement (doc);
+      TtaSetANamespaceDeclaration (doc, root, "xlink", XLink_URI);
       attrType.AttrSSchema = XLinkSSchema;
       attrType.AttrTypeNum = XLink_ATTR_href_;
       attr = TtaGetAttribute (el, attrType);

@@ -1049,7 +1049,7 @@ void SetNamespacesAndDTD (Document doc)
   char          buffer[300];
   char         *attrText;
   int           length, profile, pi_type;
-  ThotBool      useMathML, useSVG, useHTML, useXML, mathPI;
+  ThotBool      useMathML, useSVG, useHTML, useXML, mathPI, useXLink;
   ThotBool      xmlDecl, xhtml_mimetype, insertMeta;
 
   insertMeta = FALSE;
@@ -1057,6 +1057,7 @@ void SetNamespacesAndDTD (Document doc)
   useHTML = FALSE;
   useSVG = FALSE;
   useXML = FALSE;
+  useXLink = FALSE;
   nature = NULL;
   doctype = NULL; /* no DOCTYPE */
   elDecl = NULL;
@@ -1094,6 +1095,8 @@ void SetNamespacesAndDTD (Document doc)
                   useXML = TRUE;
                 else if (!strcmp (ptr, "HTML"))
                   useHTML = TRUE;
+                else if (!strcmp (ptr, "XLink"))
+                  useXLink = TRUE;
               }
           }
       }
@@ -1103,6 +1106,9 @@ void SetNamespacesAndDTD (Document doc)
   /* a PI is generated when the XHTML document includes math elements and
      doesn't include a DOCTYPE */
   mathPI = useMathML && DocumentMeta[doc]->xmlformat;
+  if (mathPI)
+    // check if the user wants to generate this mathPI
+    TtaGetEnvBoolean ("GENERATE_MATHPI", &mathPI);
 
   /* check if the document has a DOCTYPE declaration */
 #ifdef ANNOTATIONS
@@ -1143,7 +1149,7 @@ void SetNamespacesAndDTD (Document doc)
       if (DocumentTypes[doc] == docHTML && doctype)
         {
           /* Create a XHTML + MathML + SVG doctype */
-          if ((useMathML || useSVG) && !useXML && profile == L_Xhtml11)
+          if ((useMathML || useSVG) && !useXML && !useXLink && profile == L_Xhtml11)
             {
               CreateDoctype (doc, doctype, L_Xhtml11, useMathML, useSVG);
               /* it's not necessary to generate the math PI */
@@ -1157,8 +1163,8 @@ void SetNamespacesAndDTD (Document doc)
             CreateDoctype (doc, doctype, profile, useMathML, useSVG);
         }
       else if (doctype &&
-               ((useSVG && (useMathML || useHTML || useXML)) ||
-                (useXML && (useMathML || useHTML || useSVG))))
+               ((useSVG && (useMathML || useHTML || useXML || useXLink)) ||
+                (useXML && (useMathML || useHTML || useSVG || useXLink))))
         /* several namespaces: remove the current doctype */
         TtaDeleteTree (doctype, doc);
     }
