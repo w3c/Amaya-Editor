@@ -69,7 +69,7 @@ typedef struct _SimpleType
 typedef struct _Component
 {
 	Element        content;
-} Component;
+} Component_;
 
 typedef struct _Union
 {
@@ -89,7 +89,7 @@ struct _Declaration
 	union
 	{
 		SimpleType   simpleType;
-		Component    componentType;
+		Component_   componentType;
 		Union        unionType;
 		XmlElement   elementType;
 	};
