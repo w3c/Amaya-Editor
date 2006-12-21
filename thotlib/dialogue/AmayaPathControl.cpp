@@ -156,7 +156,7 @@ void AmayaPathControlItem::Draw(wxDC& dc, bool isFocused)
     if(isFocused)
     {
       wxColour col = dc.GetTextForeground();
-      dc.SetTextForeground(wxSystemSettings::GetColour(isFocused?wxSYS_COLOUR_HIGHLIGHTTEXT:wxSYS_COLOUR_MENUTEXT));
+      dc.SetTextForeground(/*wxSystemSettings::GetColour(isFocused?wxSYS_COLOUR_HIGHLIGHTTEXT:wxSYS_COLOUR_MENUTEXT)*/ wxColour(255, 0, 0));
       dc.DrawText(label, rect.x, rect.y);
       dc.SetTextForeground(col);
     }
