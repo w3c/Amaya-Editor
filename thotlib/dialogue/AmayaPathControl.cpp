@@ -27,6 +27,9 @@
 
 
 #include <wx/tooltip.h>
+#include <wx/listimpl.cpp>
+WX_DEFINE_LIST(AmayaPathControlItemList);
+
 
 /*------------------------------------------------------------------------------
   ----------------------------------------------------------------------------*/
@@ -47,7 +50,9 @@ void AmayaPathControl::SetSelection(Element elem)
   
   wxRect rect;
   
+  m_items.DeleteContents(true);
   m_items.clear();
+  
   m_focused = NULL;
   while(elem!=NULL)
   {
@@ -59,7 +64,9 @@ void AmayaPathControl::SetSelection(Element elem)
     {
       wxString name = TtaConvMessageToWX(TtaGetElementTypeName(TtaGetElementType(elem)));
       dc.GetTextExtent(name, &rect.width, &rect.height);
-      m_items.push_back((AmayaPathControlItem){name, elem, rect});
+      AmayaPathControlItem* item = new AmayaPathControlItem;
+      *item = (AmayaPathControlItem){name, elem, rect};
+      m_items.Append(item);
     }    
     elem = parent;
   }
@@ -79,10 +86,10 @@ void AmayaPathControl::OnDraw(wxPaintEvent& event)
   
   int x = 0;
   bool bIsFirst = true;
-  std::vector<AmayaPathControlItem>::reverse_iterator iter = m_items.rbegin();
-  while(iter!=m_items.rend())
+  wxAmayaPathControlItemListNode *node = m_items.GetLast();
+  while(node!=NULL)
   {
-    if(iter->rect.x>=0)
+    if(node->GetData()->rect.x>=0)
     {
       if(!bIsFirst)
       {
@@ -91,10 +98,10 @@ void AmayaPathControl::OnDraw(wxPaintEvent& event)
       }
       else
         bIsFirst = false;
-      iter->Draw(dc, &*iter==m_focused);
-      x += iter->rect.width;
+      node->GetData()->Draw(dc, node->GetData()==m_focused);
+      x += node->GetData()->rect.width;
     }
-    iter++;
+    node = node->GetPrevious();
   }
 }
 
@@ -108,43 +115,42 @@ void AmayaPathControl::PreCalcPositions()
   dc.GetTextExtent(sep, &szSep.x, &szSep.y);
 
   int cx = 0;
-  std::vector<AmayaPathControlItem>::reverse_iterator iter;
-
-  iter = m_items.rbegin();
-  while(iter!=m_items.rend())
+  wxAmayaPathControlItemListNode *node;
+  node = m_items.GetLast();
+  while(node!=NULL)
   {
-    iter->rect.x = cx;
-    cx += iter->rect.width + szSep.x + 4;    
-    iter++;
+    node->GetData()->rect.x = cx;
+    cx += node->GetData()->rect.width + szSep.x + 4;    
+    node = node->GetPrevious();
   }
 
   if(cx>sz.x){
     cx -= sz.x;
-    iter = m_items.rbegin();
-    while(iter!=m_items.rend())
+    node = m_items.GetLast();
+    while(node!=NULL)
     {
-      iter->rect.x -= cx;
-      iter++;
+      node->GetData()->rect.x -= cx;
+      node = node->GetPrevious();
     }
     
-    iter = m_items.rbegin();
-    while(iter!=m_items.rend() && iter->rect.x<0)
+    node = m_items.GetLast();
+    while(node!=NULL && node->GetData()->rect.x<0)
     {
-      iter++;
+      node = node->GetPrevious();
     }
-    if(iter!=m_items.rend())
+    if(node!=NULL)
     {
-      cx = iter->rect.x;
-      while(iter!=m_items.rend())
+      cx = node->GetData()->rect.x;
+      while(node!=NULL)
       {
-        iter->rect.x -= cx;
-        iter++;
+        node->GetData()->rect.x -= cx;
+        node = node->GetPrevious();
       }
     }
   }
 }
 
-void AmayaPathControl::AmayaPathControlItem::Draw(wxDC& dc, bool isFocused)
+void AmayaPathControlItem::Draw(wxDC& dc, bool isFocused)
 {
   if(rect.x>=0){
     if(isFocused)
@@ -174,20 +180,20 @@ void AmayaPathControl::OnMouseMove(wxMouseEvent& event)
   if(!m_focused || (pos.x<m_focused->rect.x) || (pos.x>m_focused->rect.x+m_focused->rect.width))
   {
     m_focused = NULL;
-      
-    std::vector<AmayaPathControlItem>::iterator iter = m_items.begin();
-    while(iter!=m_items.end())
+    
+    wxAmayaPathControlItemListNode *node = m_items.GetLast();
+    while(node!=NULL)
     {
-      if(iter->rect.x>=0)
+      if(node->GetData()->rect.x>=0)
       {
-        if((pos.x>=iter->rect.x) && (pos.x<=iter->rect.x+iter->rect.width))
+        if((pos.x>=node->GetData()->rect.x) && (pos.x<=node->GetData()->rect.x+node->GetData()->rect.width))
         {
-          m_focused = &*iter;
+          m_focused = node->GetData();
           Refresh();
           return;
         }
       }
-      iter++;
+      node = node->GetPrevious();
     }
     Refresh();
   }
@@ -206,18 +212,18 @@ void AmayaPathControl::OnMouseLeave(wxMouseEvent& WXUNUSED(event))
 void AmayaPathControl::OnMouseLeftUp(wxMouseEvent& event)
 {
   wxPoint pos = event.GetPosition();
-  std::vector<AmayaPathControlItem>::iterator iter = m_items.begin();
-  while(iter!=m_items.end())
+  wxAmayaPathControlItemListNode *node = m_items.GetLast();
+  while(node)
   {
-    if(iter->rect.x>=0)
+    if(node->GetData()->rect.x>=0)
     {
-      if((pos.x>=iter->rect.x) && (pos.x<=iter->rect.x+iter->rect.width))
+      if((pos.x>=node->GetData()->rect.x) && (pos.x<=node->GetData()->rect.x+node->GetData()->rect.width))
       {
-        TtaSelectElement(TtaGetDocument(iter->elem), iter->elem);
+        TtaSelectElement(TtaGetDocument(node->GetData()->elem), node->GetData()->elem);
         return;
       }
     }
-    iter++;
+    node = node->GetPrevious();
   }  
 }
 

@@ -4,23 +4,27 @@
 
 #include <wx/wx.h>
 #include <wx/control.h>
-#include <vector>
+#include <wx/list.h>
+
+class AmayaPathControlItem
+{
+public:
+  wxString label;
+  Element  elem;
+  wxRect   rect;
+  
+  void Draw(wxDC& dc, bool isFocused);
+};
+
+WX_DECLARE_LIST(AmayaPathControlItem, AmayaPathControlItemList);
+
 
 /**
  * Control displaying the path (in the document) of the current selection.
  */
 class AmayaPathControl : public wxControl{
 private:
-  class AmayaPathControlItem
-  {
-  public:
-    wxString label;
-    Element  elem;
-    wxRect   rect;
-    
-    void Draw(wxDC& dc, bool isFocused);
-  };
-  std::vector<AmayaPathControlItem> m_items;
+  AmayaPathControlItemList m_items;
   AmayaPathControlItem* m_focused;
     
 public:
