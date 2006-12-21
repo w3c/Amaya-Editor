@@ -649,8 +649,8 @@ static Element GetItemElement (Element input)
 /*-----------------------------------------------------------------------
   -----------------------------------------------------------------------*/
 static void FollowBookmark_callback (Document doc, int status, char *urlName, 
-				     char *outputfile, const AHTHeaders *http_headers,
-				     void *ctx)
+				     char *outputfile, char *proxyname,
+					 const AHTHeaders *http_headers, void *ctx)
 {
   TtaFreeMemory ((char *) ctx);
 }
