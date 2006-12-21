@@ -8318,6 +8318,43 @@ void AmayaCloseTab (Document doc, View view)
 }
 
 /*----------------------------------------------------------------------
+  CloseOtherTabs close all tabs but selected
+  ----------------------------------------------------------------------*/
+void CloseOtherTabs(Document doc, View view){
+#ifdef _WX
+  int page_id       = -1;
+  int page_position = 0;
+  int window_id     = 0;
+  
+  window_id = TtaGetDocumentWindowId( doc, view );
+  /* Get the window id and page id of current document and
+     close the corresponding page */
+  TtaGetDocumentPageId( doc, view, &page_id, &page_position );
+  TtaCloseAllPageButThis( window_id, page_id );
+#endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
+  NewTab open a new tab with an empty page
+  ----------------------------------------------------------------------*/
+void NewTab(Document doc, View view){
+}
+
+/*----------------------------------------------------------------------
+  RefreshTab force the page to refresh
+  ----------------------------------------------------------------------*/
+void RefreshTab(Document doc, View view){
+}
+
+/*----------------------------------------------------------------------
+  RefreshAllTabs force all pages to refresh
+  ----------------------------------------------------------------------*/
+void RefreshAllTabs(Document doc, View view){
+}
+
+
+
+/*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void AmayaCloseWindow (Document doc, View view)
 {

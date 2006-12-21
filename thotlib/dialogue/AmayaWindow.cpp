@@ -155,6 +155,16 @@ bool AmayaWindow::ClosePage( int position )
 
 /*----------------------------------------------------------------------
  *       Class:  AmayaWindow
+ *      Method:  CloseAllButPage
+ * Description:  ferme toutes les pages sauf une
+  -----------------------------------------------------------------------*/
+bool AmayaWindow::CloseAllButPage( int position )
+{
+  return false;
+}
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaWindow
  *      Method:  GetPage
  * Description:  search the page at given position
   -----------------------------------------------------------------------*/

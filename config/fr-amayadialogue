@@ -70,259 +70,263 @@
 68 Fermer l'onglet(&C)
 69 Fermer la fenêtre(&W)
 70 Quitter Amaya(&X)
-71 &Défaire
-72 &Refaire
-73 Cou&per
-74 &Copier
-75 Co&ller
-76 Dé&truire
-77 &Insérer
-78 &Ajouter
-79 Rec&hercher...
-80 Vérifier &orthographe...
-81 Transfor&mer...
-82 Aller à
-83 Élément parent
-84 Premier fils
-85 Élément précédent
-86 Élément suivant
-87 &Préférences
-88 &Préférences
-89 &Générales...
-90 &Navigation...
-91 P&ublication...
-92 &Cache...
-93 Pro&xy...
-94 C&ouleurs...
-95 Géo&métrie...
-96 Annotations
-97 C&oopération
-98 Changer le titre...
-99 En-tête
-100 Titre niveau 1 (h1)
-101 Titre niveau 2 (h2)
-102 Titre niveau 3 (h3)
-103 Titre niveau 4 (h4)
-104 Titre niveau 5 (h5)
-105 Titre niveau 6 (h6)
-106 Liste
-107 Liste non ordonnée (ul)
-108 Liste ordonnée (ol)
-109 Liste de définitions (dl)
-110 Terme (dt)
-111 Définition (dd)
-112 Formulaire
-113 Insérer un formulaire (form)
-114 Bouton (input)
-115 Bouton bascule (input)
-116 Sélecteur fichier (input)
-117 Contrôle caché (input)
-118 Image (input)...
-119 Mot de passe (input)
-120 Bouton radio (input)
-121 Réinitialisation (input)
-122 Soumission (input)
-123 Saisie de texte (input)
-124 Groupe de champs (fieldset)
-125 Étiquette (label)
-126 Menu (option)
-127 Sous-menu (optgroup)
-128 Zone de texte (textarea)
-129 Objet
-130 Objet (object)
-131 Paramètre (param)
-132 Table
-133 table
-134 Légende (caption)
-135 colgroup
-136 Colonne (col)
-137 Têtière (thead)
-138 Corps (tbody)
-139 Pied (tfoot)
-140 Changer en cellule (td)
-141 Changer en cellule titre (th)
-142 Joindre avec la cellule de droite
-143 Joindre avec la cellule au-dessous
-144 Réduire extension horizontale
-145 Réduire extension verticale
-146 Sélectionner la ligne
-147 Insérer une ligne
-148 Ajouter une ligne
-149 Sélectionner la colonne
-150 Insérer une colonne
-151 Ajouter une colonne
-152 Coller avant
-153 Coller après
-154 Plan
-155 Insérer un plan (map)
-156 Cercle (area)
-157 Polygone (area)
-158 Rectangle (area)
-159 &Structure
-160 style
-161 Commentaire
-162 base
-163 meta
-164 Lien (link)
-165 script
-166 noscript
-167 Paragraphe (p)
-168 Préformaté (pre)
-169 Adresse (address)
-170 Trait horizontal (hr)
-171 Image (img)...
-172 Saut de ligne (br)
-173 Division (div)
-174 Citation (blockquote)
-175 Cadre en ligne (iframe)
-176 ruby
-177 Types information
-178 Accent (em)
-179 Force (strong)
-180 Citation (cite)
-181 Définition (dfn)
-182 Code (code)
-183 Variable (var)
-184 Exemple (samp)
-185 Clavier (kbd)
-186 Abréviation (abbr)
-187 Acronyme (acronym)
-188 Insertion (ins)
-189 Suppression (del)
-190 Éléments caractères
-191 Italique (i)
-192 Gras (b)
-193 Télétype (tt)
-194 Gros (big)
-195 Petit (small)
-196 Indice (sub)
-197 Exposant (sup)
-198 Citation (q)
-199 BiDi (bdo)
-200 &Numéroter les sections
-201 &Ajouter table des matières
-202 Insérer date de mise à jour
-203 &Construire un livre
-204 Nouvelle formule (math)
-205 &Eléments de base
-206 Texte (mtext)
-207 Identificateur (mi)
-208 Nombre (mn)
-209 Opérateur (mo)
-210 Espace (mspace)
-211 Caractère (&&xxx;)
-212 InvisibleTimes
-213 ApplyFunction
-214 &Constructions
-215 Racine (mroot)
-216 Racine carrée (msqrt)
-217 Englobe (menclose)
-218 Fraction (mfrac)
-219 Indice et exposant (msubsup)
-220 Indice (msub)
-221 Exposant (msup)
-222 Dessous et dessus (munderover)
-223 Dessous (munder)
-224 Dessus (mover)
-225 Parenthèses (mrow)
-226 Multiscripts (mmultiscripts)
-227 &Matrices
-228 Nouvelle matrice (mtable)
-229 Joindre avec la cellule de droite
-230 Joindre avec la cellule au-dessous
-231 Réduire extension horizontale
-232 Réduire extension verticale
-233 Sélectionner la ligne
-234 Insérer une ligne
-235 Ajouter une ligne
-236 Sélectionner la colonne
-237 Insérer une colonne
-238 Ajouter une colonne
-239 Coller avant
-240 Coller après
-241 Montrer la librairie SVG
-242 Ajouter à la librairie SVG
-243 Commentaire
-244 Éléments XML...
-245 Copier l'adresse
-246 Coller l'adresse
-247 &Lier la cible créée
-248 &Créer/changer lien...
-249 Créer ci&ble
-250 &Détruire ancre
-251 &Ajouter/Retirer des attributs ID...
-252 &Montrer outils
-253 &Plein écran
-254 Montrer &boutons
-255 Montrer a&dresse
-256 Montrer les &zones actives
-257 Montrer les &cibles
-258 Grossir
-259 Réduire
-260 Montrer la vue &formatée
-261 Montrer la &structure
-262 Montrer le s&ource
-263 Montrer les lie&ns
-264 Montrer la vue &alternée
-265 Montrer la table des &matières
-266 Montrer la ligne de temps
-267 Partager horizontalement
-268 Partager verticalement
-269 Style de &caractères...
-270 C&ouleurs...
-271 &Style CSS...
-272 &Format...
-273 &Image de fond...
-274 Créer une &règle...
-275 A&ppliquer une classe...
-276 Montrer le style appliqué...
-277 &Ajouter...
-278 O&uvrir...
-279 &Désactiver...
-280 R&éactiver...
-281 Re&tirer...
-282 Annoter la sélection
-283 Annoter le document
-284 Déplacer sur la sélection
-285 Sauver la sélection comme &XPointer
-286 Déplacer sur le XPointer enregistré
-287 Répondre à l'annotation
-288 Enregister sur le serveur
-289 Détruire
-290 Charger annotations
-291 Personnaliser la requête...
-292 Filtrer local...
-293 Verrouiller la ressource...
-294 Déverrouiller la ressource...
-295 Visualiser les propriétés de la ressource...
-296 Copier les informations du verrou...
-297 Verrouillé ?
-298 À propos de Amaya
-299 À propos de Amaya au W3C
-300 Index
-301 Navigation
-302 Vues
-303 Sélection
-304 Document
-305 Création
-306 Attributs
-307 Caractères
-308 Transformer
-309 Liens
-310 Tables
-311 Zones actives
-312 Math
-313 Graphiques
-314 Support XML
-315 Feuilles de style
-316 Chercher
-317 Corriger
-318 Publier
-319 WebDAV
-320 Imprimer
-321 Numéroter
-322 Construire un livre
-323 Annotations
-324 Configurer Amaya
-325 Raccourcis clavier
-326 Accessibilité d'Amaya
+71 Nouvel onglet
+72 Recharger l'onglet
+73 Recharger tous les onglets
+74 Fermer les autres onglets
+75 &Défaire
+76 &Refaire
+77 Cou&per
+78 &Copier
+79 Co&ller
+80 Dé&truire
+81 &Insérer
+82 &Ajouter
+83 Rec&hercher...
+84 Vérifier &orthographe...
+85 Transfor&mer...
+86 Aller à
+87 Élément parent
+88 Premier fils
+89 Élément précédent
+90 Élément suivant
+91 &Préférences
+92 &Préférences
+93 &Générales...
+94 &Navigation...
+95 P&ublication...
+96 &Cache...
+97 Pro&xy...
+98 C&ouleurs...
+99 Géo&métrie...
+100 Annotations
+101 C&oopération
+102 Changer le titre...
+103 En-tête
+104 Titre niveau 1 (h1)
+105 Titre niveau 2 (h2)
+106 Titre niveau 3 (h3)
+107 Titre niveau 4 (h4)
+108 Titre niveau 5 (h5)
+109 Titre niveau 6 (h6)
+110 Liste
+111 Liste non ordonnée (ul)
+112 Liste ordonnée (ol)
+113 Liste de définitions (dl)
+114 Terme (dt)
+115 Définition (dd)
+116 Formulaire
+117 Insérer un formulaire (form)
+118 Bouton (input)
+119 Bouton bascule (input)
+120 Sélecteur fichier (input)
+121 Contrôle caché (input)
+122 Image (input)...
+123 Mot de passe (input)
+124 Bouton radio (input)
+125 Réinitialisation (input)
+126 Soumission (input)
+127 Saisie de texte (input)
+128 Groupe de champs (fieldset)
+129 Étiquette (label)
+130 Menu (option)
+131 Sous-menu (optgroup)
+132 Zone de texte (textarea)
+133 Objet
+134 Objet (object)
+135 Paramètre (param)
+136 Table
+137 table
+138 Légende (caption)
+139 colgroup
+140 Colonne (col)
+141 Têtière (thead)
+142 Corps (tbody)
+143 Pied (tfoot)
+144 Changer en cellule (td)
+145 Changer en cellule titre (th)
+146 Joindre avec la cellule de droite
+147 Joindre avec la cellule au-dessous
+148 Réduire extension horizontale
+149 Réduire extension verticale
+150 Sélectionner la ligne
+151 Insérer une ligne
+152 Ajouter une ligne
+153 Sélectionner la colonne
+154 Insérer une colonne
+155 Ajouter une colonne
+156 Coller avant
+157 Coller après
+158 Plan
+159 Insérer un plan (map)
+160 Cercle (area)
+161 Polygone (area)
+162 Rectangle (area)
+163 &Structure
+164 style
+165 Commentaire
+166 base
+167 meta
+168 Lien (link)
+169 script
+170 noscript
+171 Paragraphe (p)
+172 Préformaté (pre)
+173 Adresse (address)
+174 Trait horizontal (hr)
+175 Image (img)...
+176 Saut de ligne (br)
+177 Division (div)
+178 Citation (blockquote)
+179 Cadre en ligne (iframe)
+180 ruby
+181 Types information
+182 Accent (em)
+183 Force (strong)
+184 Citation (cite)
+185 Définition (dfn)
+186 Code (code)
+187 Variable (var)
+188 Exemple (samp)
+189 Clavier (kbd)
+190 Abréviation (abbr)
+191 Acronyme (acronym)
+192 Insertion (ins)
+193 Suppression (del)
+194 Éléments caractères
+195 Italique (i)
+196 Gras (b)
+197 Télétype (tt)
+198 Gros (big)
+199 Petit (small)
+200 Indice (sub)
+201 Exposant (sup)
+202 Citation (q)
+203 BiDi (bdo)
+204 &Numéroter les sections
+205 &Ajouter table des matières
+206 Insérer date de mise à jour
+207 &Construire un livre
+208 Nouvelle formule (math)
+209 &Eléments de base
+210 Texte (mtext)
+211 Identificateur (mi)
+212 Nombre (mn)
+213 Opérateur (mo)
+214 Espace (mspace)
+215 Caractère (&&xxx;)
+216 InvisibleTimes
+217 ApplyFunction
+218 &Constructions
+219 Racine (mroot)
+220 Racine carrée (msqrt)
+221 Englobe (menclose)
+222 Fraction (mfrac)
+223 Indice et exposant (msubsup)
+224 Indice (msub)
+225 Exposant (msup)
+226 Dessous et dessus (munderover)
+227 Dessous (munder)
+228 Dessus (mover)
+229 Parenthèses (mrow)
+230 Multiscripts (mmultiscripts)
+231 &Matrices
+232 Nouvelle matrice (mtable)
+233 Joindre avec la cellule de droite
+234 Joindre avec la cellule au-dessous
+235 Réduire extension horizontale
+236 Réduire extension verticale
+237 Sélectionner la ligne
+238 Insérer une ligne
+239 Ajouter une ligne
+240 Sélectionner la colonne
+241 Insérer une colonne
+242 Ajouter une colonne
+243 Coller avant
+244 Coller après
+245 Montrer la librairie SVG
+246 Ajouter à la librairie SVG
+247 Commentaire
+248 Éléments XML...
+249 Copier l'adresse
+250 Coller l'adresse
+251 &Lier la cible créée
+252 &Créer/changer lien...
+253 Créer ci&ble
+254 &Détruire ancre
+255 &Ajouter/Retirer des attributs ID...
+256 &Montrer outils
+257 &Plein écran
+258 Montrer &boutons
+259 Montrer a&dresse
+260 Montrer les &zones actives
+261 Montrer les &cibles
+262 Grossir
+263 Réduire
+264 Montrer la vue &formatée
+265 Montrer la &structure
+266 Montrer le s&ource
+267 Montrer les lie&ns
+268 Montrer la vue &alternée
+269 Montrer la table des &matières
+270 Montrer la ligne de temps
+271 Partager horizontalement
+272 Partager verticalement
+273 Style de &caractères...
+274 C&ouleurs...
+275 &Style CSS...
+276 &Format...
+277 &Image de fond...
+278 Créer une &règle...
+279 A&ppliquer une classe...
+280 Montrer le style appliqué...
+281 &Ajouter...
+282 O&uvrir...
+283 &Désactiver...
+284 R&éactiver...
+285 Re&tirer...
+286 Annoter la sélection
+287 Annoter le document
+288 Déplacer sur la sélection
+289 Sauver la sélection comme &XPointer
+290 Déplacer sur le XPointer enregistré
+291 Répondre à l'annotation
+292 Enregister sur le serveur
+293 Détruire
+294 Charger annotations
+295 Personnaliser la requête...
+296 Filtrer local...
+297 Verrouiller la ressource...
+298 Déverrouiller la ressource...
+299 Visualiser les propriétés de la ressource...
+300 Copier les informations du verrou...
+301 Verrouillé ?
+302 À propos de Amaya
+303 À propos de Amaya au W3C
+304 Index
+305 Navigation
+306 Vues
+307 Sélection
+308 Document
+309 Création
+310 Attributs
+311 Caractères
+312 Transformer
+313 Liens
+314 Tables
+315 Zones actives
+316 Math
+317 Graphiques
+318 Support XML
+319 Feuilles de style
+320 Chercher
+321 Corriger
+322 Publier
+323 WebDAV
+324 Imprimer
+325 Numéroter
+326 Construire un livre
+327 Annotations
+328 Configurer Amaya
+329 Raccourcis clavier
+330 Accessibilité d'Amaya

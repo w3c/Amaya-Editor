@@ -98,7 +98,12 @@ MENUS
 	File button:BCloseWindow -> AmayaCloseWindow;
 	File button:BExit -> AmayaClose icon:exit.png;
 
-	Context_ button:BOpenDoc -> OpenDoc icon:open.png;
+	Context_ button:BNewTab -> NewTab icon:open.png;
+	Context_ Separator;
+	Context_ button:BRefreshTab -> RefreshTab icon:reload.png;
+	Context_ button:BRefreshAllTabs -> RefreshAllTabs icon:reload.png;
+	Context_ button:BCloseOtherTabs -> CloseOtherTabs icon:close_tab.png;
+	Context_ Separator;
 	Context_ button:BCloseTab -> AmayaCloseTab icon:close_tab.png;
 
 	Edit_ button:BUndo -> TtcUndo icon:undo.png;

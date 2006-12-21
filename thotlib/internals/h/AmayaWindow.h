@@ -114,6 +114,7 @@ class AmayaWindow : public wxFrame
   virtual bool           AttachPage( int position, AmayaPage * p_page );
   virtual bool           DetachPage( int position );
   virtual bool           ClosePage( int position );
+  virtual bool           CloseAllButPage( int position );
   virtual AmayaPage *    GetPage( int position ) const;
   virtual int            GetPageCount() const;
 

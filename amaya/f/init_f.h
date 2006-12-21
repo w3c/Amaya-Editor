@@ -185,6 +185,14 @@ extern void MakeIDMenu ( Document doc,
 extern void CheckAmayaClosed ( void );
 extern void AmayaCloseTab ( Document doc,
                             View view );
+extern void CloseOtherTabs ( Document doc,
+                             View view );
+extern void NewTab ( Document doc,
+                     View view );
+extern void RefreshTab ( Document doc,
+                         View view );
+extern void RefreshAllTabs ( Document doc,
+                             View view );
 extern void AmayaCloseWindow ( Document doc,
                                View view );
 extern void AmayaClose ( Document document,
@@ -388,6 +396,14 @@ extern void MakeIDMenu ( Document doc,
 extern void CheckAmayaClosed ( void );
 extern void AmayaCloseTab ( Document doc,
                               View view );
+extern void CloseOtherTabs ( Document doc,
+                               View view );
+extern void NewTab ( Document doc,
+                       View view );
+extern void RefreshTab ( Document doc,
+                           View view );
+extern void RefreshAllTabs ( Document doc,
+                               View view );
 extern void AmayaCloseWindow ( Document doc,
                                  View view );
 extern void AmayaClose ( Document document,

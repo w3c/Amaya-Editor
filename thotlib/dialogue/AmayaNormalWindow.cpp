@@ -277,6 +277,33 @@ bool AmayaNormalWindow::ClosePage( int page_id )
 
 /*----------------------------------------------------------------------
  *       Class:  AmayaNormalWindow
+ *      Method:  CloseAllButPage
+ * Description:  ferme toutes les pages sauf une
+  -----------------------------------------------------------------------*/
+bool AmayaNormalWindow::CloseAllButPage( int position )
+{
+  m_pNotebook->SetSelection(position);
+  AmayaPage* sel = (AmayaPage*) m_pNotebook->GetPage(position);
+  int pos;
+  bool dummy = false;
+  for(pos = m_pNotebook->GetPageCount()-1; pos>=0; pos--)
+  {
+    AmayaPage* page = (AmayaPage*) GetPage(pos);
+    if(page!=sel)
+    {
+      page->DoClose(dummy);
+      if(page->IsClosed())
+      {
+        m_pNotebook->DeletePage(pos);
+        m_pNotebook->UpdatePageId();
+      }
+    }    
+  }
+  return true;
+}
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaNormalWindow
  *      Method:  GetPage
  * Description:  search the page at given position
   -----------------------------------------------------------------------*/

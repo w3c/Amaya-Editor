@@ -321,6 +321,10 @@ SaveDocumentAs
 ShowLogFile
 StopTransfer
 AmayaCloseTab
+NewTab
+RefreshTab
+RefreshAllTabs
+CloseOtherTabs
 AmayaCloseWindow
 ReadAsUTF_8
 ReadAsISO_8859_1
