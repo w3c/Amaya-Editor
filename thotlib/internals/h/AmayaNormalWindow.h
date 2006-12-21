@@ -104,6 +104,7 @@ class AmayaNormalWindow : public AmayaWindow
   void OnSplitterDClick( wxSplitterEvent& event );
   void OnSplitterPosChanged( wxSplitterEvent& event );
   void OnSplitPanelButton( wxCommandEvent& event );
+  void OnNotebookPageChanged( wxNotebookEvent& event );
 
   AmayaPanel *      m_pPanel;     // current selected panel
   AmayaNotebook *   m_pNotebook;         // tabs container

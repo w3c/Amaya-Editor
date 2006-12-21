@@ -60,6 +60,7 @@ AmayaStatusBar::AmayaStatusBar( wxWindow * p_parent )
   : wxStatusBar(p_parent, wxID_ANY)
     ,m_LogErrorBmp_Green(TtaGetResourcePathWX( WX_RESOURCES_ICON_16X16, "ledgreen.png"), wxBITMAP_TYPE_PNG)
     ,m_LogErrorBmp_Red(TtaGetResourcePathWX( WX_RESOURCES_ICON_16X16, "ledred.png"), wxBITMAP_TYPE_PNG)
+    ,m_pathCtrl(NULL)
 {
   TTALOGDEBUG_0( TTA_LOG_DIALOG, _T("AmayaStatusBar::AmayaStatusBar"));
 
@@ -145,7 +146,8 @@ void AmayaStatusBar::EnableLogError( bool enable )
   ----------------------------------------------------------------------*/
 void AmayaStatusBar::SetSelectedElement(Element elem)
 {
-  m_pathCtrl->SetSelection(elem);
+  if(m_pathCtrl)
+    m_pathCtrl->SetSelection(elem);
 }
 
 /*----------------------------------------------------------------------

@@ -11,6 +11,7 @@
 #include "wx/wfstream.h"
 #include "wx/menu.h"
 #include "wx/splitter.h"
+#include "wx/notebook.h"
 
 class AmayaPanel;
 class AmayaPage;

@@ -66,7 +66,8 @@ AmayaNormalWindow::AmayaNormalWindow (int window_id
                                       ,const wxSize&  size
                                       ,int kind
                                       ) : 
-  AmayaWindow( window_id, p_parent_window, pos, size, kind )
+  AmayaWindow( window_id, p_parent_window, pos, size, kind ),
+  m_pStatusBar(NULL)
 {
   // initialize default slashbar position
   TtaSetEnvInt("SLASH_PANEL_POS", 195, FALSE);
@@ -299,6 +300,7 @@ bool AmayaNormalWindow::CloseAllButPage( int position )
       }
     }    
   }
+  sel->SetSelected( TRUE );
   return true;
 }
 
@@ -764,6 +766,30 @@ void AmayaNormalWindow::RefreshShowPanelToggleMenu()
 }
 
 /*----------------------------------------------------------------------
+ *       Class:  AmayaNormalWindow
+ *      Method:  OnNotebookPageChanged
+ * Description:  is called when the notebook changes of page.
+  -----------------------------------------------------------------------*/
+void AmayaNormalWindow::OnNotebookPageChanged( wxNotebookEvent& event )
+{
+  AmayaStatusBar* status = GetAmayaStatusBar();
+  if(status){
+    Document   doc;
+    View       view;
+    FrameToView (TtaGiveActiveFrame(), &doc, &view);
+    Element elem = 0;
+    int first, last;
+    if(doc)
+      TtaGiveFirstSelectedElement(doc, &elem, &first, &last);
+    if(elem)
+      status->SetSelectedElement(elem);
+    else
+      status->SetSelectedElement(NULL);
+  }
+}
+
+
+/*----------------------------------------------------------------------
  *  this is where the event table is declared
  *  the callbacks are assigned to an event type
  *----------------------------------------------------------------------*/
@@ -771,13 +797,14 @@ BEGIN_EVENT_TABLE(AmayaNormalWindow, AmayaWindow)
   EVT_MENU_OPEN(  AmayaNormalWindow::OnMenuOpen )
   EVT_MENU_CLOSE( AmayaNormalWindow::OnMenuClose )
   EVT_MENU_HIGHLIGHT_ALL( AmayaNormalWindow::OnMenuHighlight )
-  EVT_MENU( -1,   AmayaNormalWindow::OnMenuItem ) 
+  EVT_MENU(wxID_ANY,   AmayaNormalWindow::OnMenuItem ) 
   //  EVT_CLOSE(      AmayaNormalWindow::OnClose )
 
-  EVT_SPLITTER_SASH_POS_CHANGED( -1, 	AmayaNormalWindow::OnSplitterPosChanged )
-  EVT_SPLITTER_DCLICK( -1, 		AmayaNormalWindow::OnSplitterDClick )
+  EVT_SPLITTER_SASH_POS_CHANGED(wxID_ANY, 	AmayaNormalWindow::OnSplitterPosChanged )
+  EVT_SPLITTER_DCLICK(wxID_ANY, 		AmayaNormalWindow::OnSplitterDClick )
 
-  EVT_BUTTON( -1,                       AmayaNormalWindow::OnSplitPanelButton)
+  EVT_BUTTON( wxID_ANY,                       AmayaNormalWindow::OnSplitPanelButton)
+  EVT_NOTEBOOK_PAGE_CHANGED( wxID_ANY, AmayaNormalWindow::OnNotebookPageChanged )
 END_EVENT_TABLE()
 
 #endif /* #ifdef _WX */

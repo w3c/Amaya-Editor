@@ -188,7 +188,7 @@ void AmayaNotebook::OnPageChanged(wxNotebookEvent& event)
         }
       page_id++;
     }
-  
+    
   event.Skip();
 }
 
