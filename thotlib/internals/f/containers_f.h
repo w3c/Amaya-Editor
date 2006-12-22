@@ -59,8 +59,8 @@ extern ContainerElement HashMap_Get ( HashMap map,
                                       HashMapKey key );
 extern ContainerElement HashMap_Remove ( HashMap map,
                                          HashMapKey key );
-extern void HashMap_Destroy ( HashMap map,
-                              HashMapKey key );
+extern void HashMap_DestroyElement ( HashMap map,
+                                     HashMapKey key );
 extern ForwardIterator HashMap_GetForwardIterator ( HashMap map );
 extern HashMap PointerHashMap_Create ( Container_DestroyElementFunction destroy,
                                        int nbNodes );
@@ -127,7 +127,7 @@ extern ContainerElement HashMap_Get ( HashMap map,
 extern ContainerElement HashMap_Remove ( HashMap map,
                                            HashMapKey key );
 extern void HashMap_DestroyElement ( HashMap map,
-                                HashMapKey key );
+                                       HashMapKey key );
 extern ForwardIterator HashMap_GetForwardIterator ( HashMap map );
 extern HashMap PointerHashMap_Create ( Container_DestroyElementFunction destroy,
                                          int nbNodes );
