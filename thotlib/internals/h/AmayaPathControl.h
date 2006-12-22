@@ -26,7 +26,7 @@ class AmayaPathControl : public wxControl{
 private:
   AmayaPathControlItemList m_items;
   AmayaPathControlItem* m_focused;
-    
+  int m_height;
 public:
   AmayaPathControl(wxWindow* parent, wxWindowID id,
               const wxPoint& pos = wxDefaultPosition,

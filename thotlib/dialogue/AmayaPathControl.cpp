@@ -36,7 +36,8 @@ WX_DEFINE_LIST(AmayaPathControlItemList);
 AmayaPathControl::AmayaPathControl(wxWindow* parent, wxWindowID id,
                             const wxPoint& pos, const wxSize& size, long style):
 wxControl(parent, id, pos, size, style),
-m_focused(NULL)
+m_focused(NULL),
+m_height(0)
 {
 }
 
@@ -54,6 +55,7 @@ void AmayaPathControl::SetSelection(Element elem)
   m_items.clear();
   
   m_focused = NULL;
+  m_height = 0;
   while(elem!=NULL)
   {
     Element parent = TtaGetParent(elem);
@@ -69,6 +71,8 @@ void AmayaPathControl::SetSelection(Element elem)
       item->elem = elem;
 	  item->rect = rect;
       m_items.Append(item);
+    if(rect.height>m_height)
+      m_height = rect.height;
     }    
     elem = parent;
   }
@@ -88,6 +92,7 @@ void AmayaPathControl::OnDraw(wxPaintEvent& event)
   
   int x = 0;
   bool bIsFirst = true;
+  int y = (sz.y-m_height)/2;
   wxAmayaPathControlItemListNode *node = m_items.GetLast();
   while(node!=NULL)
   {
@@ -95,7 +100,7 @@ void AmayaPathControl::OnDraw(wxPaintEvent& event)
     {
       if(!bIsFirst)
       {
-        dc.DrawText(sep, x+2, 0);
+        dc.DrawText(sep, x+2, y);
         x += szSep.x + 4;
       }
       else
@@ -111,6 +116,7 @@ void AmayaPathControl::PreCalcPositions()
 {
   wxClientDC dc(this);
   wxSize sz = GetClientSize();
+  int y = (sz.y-m_height)/2;
 
   static wxString sep = wxT("/"); 
   wxSize szSep;
@@ -122,6 +128,7 @@ void AmayaPathControl::PreCalcPositions()
   while(node!=NULL)
   {
     node->GetData()->rect.x = cx;
+    node->GetData()->rect.y = y;
     cx += node->GetData()->rect.width + szSep.x + 4;    
     node = node->GetPrevious();
   }
