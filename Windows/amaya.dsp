@@ -239,6 +239,10 @@ SOURCE=..\amaya\init.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\amaya\insertelem.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\amaya\libmanag.c
 # End Source File
 # Begin Source File
