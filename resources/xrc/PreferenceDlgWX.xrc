@@ -161,6 +161,11 @@
                           <option>1</option>
                           <flag>wxALL|wxEXPAND</flag>
                         </object>
+                        <object class="sizeritem">
+                          <object class="wxCheckBox" name="wxID_CHECK_WARNCTAB">
+                            <label>*Avertir quand plusieurs onglets sont fermes*</label>
+                          </object>
+                        </object>
                       </object>
                       <option>1</option>
                       <flag>wxALL|wxEXPAND</flag>
@@ -201,29 +206,8 @@
                   <object class="wxBoxSizer">
                     <orient>wxVERTICAL</orient>
                     <object class="sizeritem">
-                      <object class="wxRadioBox" name="wxID_RADIO_OPENLOC">
-                        <label>*Ouvrir les nouveaux documents dans*</label>
-                        <content>
-                          <item>*Remplacer dans le document courant</item>
-                          <item>*Nouvel onglet (pas encode disponible sous Mac)</item>
-                          <item>*Dans une nouvelle fenetre*</item>
-                        </content>
-                        <size>400,-1</size>
-                        <style>wxRA_SPECIFY_COLS</style>
-                      </object>
-                      <option>1</option>
-                      <flag>wxEXPAND</flag>
-                    </object>
-                  </object>
-                  <flag>wxTOP|wxBOTTOM|wxLEFT|wxEXPAND</flag>
-                  <border>10</border>
-                </object>
-                <object class="sizeritem">
-                  <object class="wxBoxSizer">
-                    <orient>wxVERTICAL</orient>
-                    <object class="sizeritem">
-                      <object class="wxCheckBox" name="wxID_CHECK_WARNCTAB">
-                        <label>*Avertir quand plusieurs onglets sont fermes*</label>
+                      <object class="wxCheckBox" name="wxID_CHECK_WARNIDS">
+                        <label>*Avertir quand un ID est duplique*</label>
                       </object>
                     </object>
                     <object class="sizeritem">
@@ -261,31 +245,59 @@
                   <object class="wxBoxSizer">
                     <orient>wxHORIZONTAL</orient>
                     <object class="sizeritem">
-                      <object class="wxStaticText" name="wxID_LABEL_SCREEN">
-                        <label>*Type d ecran courant*</label>
+                      <object class="wxBoxSizer">
+                        <orient>wxVERTICAL</orient>
+                        <object class="sizeritem">
+                          <object class="wxRadioBox" name="wxID_RADIO_OPENLOC">
+                            <label>*Ouvrir les nouveaux documents dans*</label>
+                            <content>
+                              <item>*Remplacer dans le document courant</item>
+                              <item>*Nouvel onglet (pas encode disponible sous Mac)</item>
+                              <item>*Dans une nouvelle fenetre*</item>
+                            </content>
+                            <size>400,-1</size>
+                            <style>wxRA_SPECIFY_COLS</style>
+                          </object>
+                          <option>1</option>
+                          <flag>wxEXPAND</flag>
+                        </object>
                       </object>
-                      <option>0</option>
-                      <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                    </object>
-                    <object class="spacer">
-                      <size>10,0</size>
+                      <flag>wxTOP|wxBOTTOM|wxLEFT|wxEXPAND</flag>
+                      <border>10</border>
                     </object>
                     <object class="sizeritem">
-                      <object class="wxChoice" name="wxID_CHOICE_SCREEN">
-                        <content>
-                          <item>handheld</item>
-                          <item>print</item>
-                          <item>projection</item>
-                          <item>screen</item>
-                          <item>tty</item>
-                          <item>tv</item>
-                        </content>
+                      <object class="wxBoxSizer">
+                        <orient>wxHORIZONTAL</orient>
+                        <object class="spacer">
+                          <size>10,0</size>
+                        </object>
+                        <object class="sizeritem">
+                          <object class="wxStaticText" name="wxID_LABEL_SCREEN">
+                            <label>*Type d ecran courant*</label>
+                            <size>150,-1</size>
+                          </object>
+                          <option>0</option>
+                          <flag>wxALIGN_CENTRE_VERTICAL</flag>
+                        </object>
+                        <object class="spacer">
+                          <size>10,0</size>
+                        </object>
+                        <object class="sizeritem">
+                          <object class="wxChoice" name="wxID_CHOICE_SCREEN">
+                            <content>
+                              <item>handheld</item>
+                              <item>print</item>
+                              <item>projection</item>
+                              <item>screen</item>
+                              <item>tty</item>
+                              <item>tv</item>
+                            </content>
+                          </object>
+                        </object>
                       </object>
+                      <border>10</border>
                     </object>
                   </object>
-                  <option>0</option>
-                  <flag>wxBOTTOM|wxLEFT|wxEXPAND</flag>
-                  <border>10</border>
                 </object>
                 <object class="sizeritem">
                   <object class="wxBoxSizer">
@@ -375,6 +387,11 @@
                 <object class="sizeritem">
                   <object class="wxBoxSizer">
                     <orient>wxVERTICAL</orient>
+                    <object class="sizeritem">
+                      <object class="wxCheckBox" name="wxID_CHECK_MATHPI">
+                        <label>*Engendrer la processing instruction MathML*</label>
+                      </object>
+                    </object>
                     <object class="sizeritem">
                       <object class="wxCheckBox" name="wxID_CHECK_XHTML">
                         <label>*Utiliser le type MIME application/xhtml+xml pour les documents XHTML*</label>
