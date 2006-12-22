@@ -47,8 +47,8 @@ extern void Container_DeleteNode(Container container, ContainerNode node);
 /**
  * Genric forward iterator.
  * @{ */
-struct sForwardIterator;
-typedef struct sForwardIterator *ForwardIterator;
+//struct sForwardIterator;
+typedef struct _sForwardIterator *ForwardIterator;
 
 /** Generic GetFirst function */
 typedef ContainerNode (*ForwardIterator_GetFirstFunction)(ForwardIterator iter);
@@ -58,14 +58,14 @@ typedef ContainerNode (*ForwardIterator_GetNextFunction)(ForwardIterator iter);
 /**
  * Generic forward iterator.
  */
-struct sForwardIterator
+typedef struct _sForwardIterator
 {
   Container container;
   ContainerNode currentNode;
   ForwardIterator_GetFirstFunction getFirst;
   ForwardIterator_GetNextFunction getNext;
 
-};
+} sForwardIterator;
 
 #ifndef __CEXTRACT__
 extern ForwardIterator ForwardIterator_Create(Container container,
@@ -88,23 +88,25 @@ extern ContainerNode ForwardIterator_GetNext(ForwardIterator iter);
  * Double linked list node.
  * Derived from generic container node (same first members).
  */
-typedef struct sDLListNode
+typedef struct _sDLListNode *DLListNode;
+typedef struct _sDLListNode
 {
   ContainerElement  elem;
-  sDLListNode*      next;
-  sDLListNode*      prev;
-} *DLListNode;
+  DLListNode      next;
+  DLListNode      prev;
+} sDLListNode;
 
 /**
  * Double linked list
  * Derived from generic container (same first members).
  */
-typedef struct sDLList
+typedef struct _sDLList *DLList;
+typedef struct _sDLList
 {
     Container_DestroyElementFunction destroyElement;
     DLListNode first;
     DLListNode last;
-} *DLList;
+} sDLList;
 
 
 #ifndef __CEXTRACT__
@@ -141,13 +143,14 @@ typedef void* HashMapKey;
  * Hash map node.
  * Based on list node. 
  */
-typedef struct sHashMapNode
+typedef struct _sHashMapNode *HashMapNode;
+typedef struct _sHashMapNode
 {
   ContainerElement  elem;
-  sHashMapNode*     next;
-  sHashMapNode*     prev;
+  HashMapNode     next;
+  HashMapNode     prev;
   HashMapKey        key;
-} *HashMapNode;
+}sHashMapNode;
 
 
 /**
@@ -155,7 +158,7 @@ typedef struct sHashMapNode
  * Each keynode is a list.
  * Derived from list.
  */
-typedef struct sDLList sHashMapKeyNode, *HashMapKeyNode;
+typedef struct _sDLList sHashMapKeyNode, *HashMapKeyNode;
 
 /**
  * Hash map hash key function.
@@ -176,7 +179,8 @@ typedef int (*HashMap_CompareKeyFunction)(HashMapKey, HashMapKey);
  * Hash map
  * Derived from generic container (same first members).
  */
-typedef struct sHashMap
+typedef struct _sHashMap *HashMap;
+typedef struct _sHashMap
 {
   Container_DestroyElementFunction destroyElement;
   HashMap_DestroyKeyFunction       destroyKey;
@@ -185,7 +189,7 @@ typedef struct sHashMap
   HashMapKeyNode* nodes;
   int nbNodes;
   
-}*HashMap;
+}sHashMap;
 
 #ifndef __CEXTRACT__
 extern HashMap HashMap_Create(Container_DestroyElementFunction destroy,
@@ -197,7 +201,7 @@ extern ThotBool         HashMap_IsEmpty(HashMap map);
 extern ContainerElement HashMap_Set(HashMap map, HashMapKey key, ContainerElement elem);
 extern ContainerElement HashMap_Get(HashMap map, HashMapKey key);
 extern ContainerElement HashMap_Remove(HashMap map, HashMapKey key);
-extern void             HashMap_Destroy(HashMap map, HashMapKey key);
+extern void             HashMap_DestroyElement(HashMap map, HashMapKey key);
 extern ForwardIterator  HashMap_GetForwardIterator(HashMap map);
 #endif /* __CEXTRACT__ */
 /** @} */

@@ -51,7 +51,7 @@ ThotBool IsTemplateInstanceDocument(Document doc){
 #ifdef TEMPLATES
   return (DocumentMeta[doc]!=NULL) && (DocumentMeta[doc]->template_url!=NULL);
 #else  /* TEMPLATES */
-  return false;
+  return FALSE;
 #endif /* TEMPLATES */
 }
 

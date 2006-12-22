@@ -320,6 +320,7 @@ void DLList_Swap(DLList list, DLListNode node1, DLListNode node2)
              prev2 = node2->prev, 
              next1 = node1->next,
              next2 = node2->next;
+  DLListNode node;
   node1->next = next2;
   node1->prev = prev2;
   node2->next = next1;
@@ -330,7 +331,7 @@ void DLList_Swap(DLList list, DLListNode node1, DLListNode node2)
   if(next2==NULL)
     list->last = node1;
     
-  DLListNode node = node2;
+  node = node2;
   node2 = node1;
   node1 = node;
 }
@@ -559,10 +560,10 @@ ContainerElement HashMap_Set(HashMap map, HashMapKey key, ContainerElement elem)
 {
   HashMapKeyNode keynode = HashMap_GetHashMapKeyNode(map, key, TRUE);
   HashMapNode node = (HashMapNode)keynode->first;
+  ContainerElement old = NULL;
   while(node!=NULL && map->compare(key, node->key)!=0)
     node = (HashMapNode)node->next;
 
-  ContainerElement old = NULL;
   if(node!=NULL)
   {
     old = node->elem;
@@ -595,7 +596,7 @@ ContainerElement HashMap_Set(HashMap map, HashMapKey key, ContainerElement elem)
  */
 HashMapNode HashMap_Find(HashMap map, HashMapKey key)
 {
-  HashMapKeyNode keynode = HashMap_GetHashMapKeyNode(map, key, false);
+  HashMapKeyNode keynode = HashMap_GetHashMapKeyNode(map, key, FALSE);
   if(keynode!=NULL)
   {
     HashMapNode node = (HashMapNode)keynode->first;
@@ -629,7 +630,7 @@ ContainerElement HashMap_Get(HashMap map, HashMapKey key)
  */
 ContainerElement HashMap_Remove(HashMap map, HashMapKey key)
 {
-  HashMapKeyNode keynode = HashMap_GetHashMapKeyNode(map, key, false);  
+  HashMapKeyNode keynode = HashMap_GetHashMapKeyNode(map, key, FALSE);  
   if(keynode!=NULL)
   {
     HashMapNode node = (HashMapNode)keynode->first;
@@ -651,9 +652,9 @@ ContainerElement HashMap_Remove(HashMap map, HashMapKey key)
  * Destroy an element from the hash map.
  * Both stored element and key are destroyed.
  */
-void HashMap_Destroy(HashMap map, HashMapKey key)
+void HashMap_DestroyElement(HashMap map, HashMapKey key)
 {
-  HashMapKeyNode keynode = HashMap_GetHashMapKeyNode(map, key, false);
+  HashMapKeyNode keynode = HashMap_GetHashMapKeyNode(map, key, FALSE);
   if(keynode!=NULL)
   {
     HashMapNode node = (HashMapNode)keynode->first;

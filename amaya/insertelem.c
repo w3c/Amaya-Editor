@@ -40,14 +40,14 @@
 #include "parser.h"
 #include "fetchXMLname_f.h"
 
-
-typedef struct sInsertableElementList
+typedef struct _sInsertableElementList *InsertableElementList;
+typedef struct _sInsertableElementList
 {
   /** Current selected element.*/
   Element elem;
   /** Insertable element list.*/
   DLList list;
-}*InsertableElementList;
+} sInsertableElementList;
 
 
 static HashMap InsertableElementMap = NULL;
@@ -172,9 +172,9 @@ static void FillUnionResolvedPossibleElement(XTigerTemplate t, const char* name,
     {
       ElementType elType = {0,0};
       char*       mappedName;
-      char*       content;
+      char       content;
       ThotBool    checkProfile;
-      MapXMLElementType(xmlType, dec->name, &elType, &mappedName, content, &checkProfile, TtaGetDocument(elem));
+      MapXMLElementType(xmlType, dec->name, &elType, &mappedName, &content, &checkProfile, TtaGetDocument(elem));
       if(elType.ElTypeNum!=0)
       {
         DLList_Append(list, ElemListElement_CreateLanguageElement(level, elType, resolvedPath, elem));
@@ -239,6 +239,9 @@ static void FillInsertableElementFromElemAttribute(XTigerTemplate t, Element ele
   ----------------------------------------------------------------------*/
 static void FillInsertableElemList(Document doc, Element elem, DLList list)
 {
+  int level;
+  ThotBool cont;
+
   if(elem){
     if(doc==0)
       doc = TtaGetDocument(elem);
@@ -247,8 +250,8 @@ static void FillInsertableElemList(Document doc, Element elem, DLList list)
     XTigerTemplate   t = (XTigerTemplate) Dictionary_Get (Templates_Dic, DocumentMeta[doc]->template_url);
 #endif/* TEMPLATES */
 
-    int level = 0;
-    ThotBool cont = TRUE;
+    level = 0;
+    cont = TRUE;
     
     while(elem!=NULL && cont)
     {
@@ -322,9 +325,10 @@ DLList InsertableElement_GetList(Document doc)
   ----------------------------------------------------------------------*/
 DLList InsertableElement_Update(Document doc, Element el, ThotBool force)
 {
+  InsertableElementList list;
   if(doc==0)
     doc= TtaGetDocument(el);
-  InsertableElementList list = (InsertableElementList) HashMap_Get(InsertableElementMap, (void*)doc);
+  list = (InsertableElementList) HashMap_Get(InsertableElementMap, (void*)doc);
   if(list==NULL)
   {
     list = InsertableElementList_Create(0, DLList_Create());
