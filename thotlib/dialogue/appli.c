@@ -1742,6 +1742,8 @@ void TtaSetStatusSelectedElement(Document document, View view, Element elem)
       ((AmayaStatusBar*)window->GetStatusBar())->SetSelectedElement( elem );
     }
   }
+#else  /* _WX */
+  BuildSelectionMessage();
 #endif /* _WX */
 }
 
