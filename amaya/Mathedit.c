@@ -1196,7 +1196,7 @@ void ClearMathFrame (Document doc)
   MathSelectionChanged
   A new element has been selected. Synchronize selection in source view.      
   ----------------------------------------------------------------------*/
-extern void TtaSetStatusSelectedElement(Document document, View view, Element elem);
+
 void MathSelectionChanged (NotifyElement *event)
 {
   Element          el;

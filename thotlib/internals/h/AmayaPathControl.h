@@ -30,7 +30,7 @@ private:
 public:
   AmayaPathControl(wxWindow* parent, wxWindowID id,
               const wxPoint& pos = wxDefaultPosition,
-              const wxSize& size = wxDefaultSize, long style = wxRAISED_BORDER);
+              const wxSize& size = wxDefaultSize, long style = 0);
   virtual ~AmayaPathControl();
   
   /**

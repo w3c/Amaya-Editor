@@ -1424,7 +1424,6 @@ ThotBool SimpleClick (NotifyElement *event)
 /*----------------------------------------------------------------------
   SimpleLClick     The user has clicked an element.         
   ----------------------------------------------------------------------*/
-extern void TtaSetStatusSelectedElement(Document document, View view, Element elem);
 ThotBool SimpleLClick (NotifyElement *event)
 {
 #ifdef _SVG
@@ -3019,9 +3018,11 @@ void SelectionChanged (NotifyElement *event)
   /* update the displayed style information */
   SynchronizeAppliedStyle (event);
   UnFrameMath ();
-  UpdateXmlElementListTool(event->element,event->document);
-  TtaSetStatusSelectedElement(event->document, 1, event->element);
-
+  if (DocumentTypes[event->document]!=docLog)
+  {
+    UpdateXmlElementListTool(event->element,event->document);
+    TtaSetStatusSelectedElement(event->document, 1, event->element);
+  }
   SelectionChanging = FALSE;
 }
 

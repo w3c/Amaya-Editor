@@ -8344,6 +8344,7 @@ void NewTab(Document doc, View view){
   RefreshTab force the page to refresh
   ----------------------------------------------------------------------*/
 void RefreshTab(Document doc, View view){
+  Reload(doc, view);
 }
 
 /*----------------------------------------------------------------------

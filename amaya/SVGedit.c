@@ -191,6 +191,9 @@ void GraphicsSelectionChanged (NotifyElement * event)
   /* update the displayed style information */
   SynchronizeAppliedStyle (event);
   UnFrameMath ();
+  
+  UpdateXmlElementListTool(event->element,event->document);
+  TtaSetStatusSelectedElement(event->document, 1, event->element);
 }
 
 /*----------------------------------------------------------------------

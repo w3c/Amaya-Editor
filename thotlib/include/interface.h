@@ -272,6 +272,11 @@ extern int TtaSetCallback (void (*callbakProcedure) (), int set);
 extern void TtaSetStatus (Document document, View view, char *text, char *name);
 
 /*----------------------------------------------------------------------
+  TtaSetStatusSelectedElement Set the current selected element in the status bar.
+  ----------------------------------------------------------------------*/
+extern void TtaSetStatusSelectedElement(Document document, View view, Element elem);
+
+/*----------------------------------------------------------------------
    TtaGetViewFrame retourne le widget du frame de la vue document.    
   ----------------------------------------------------------------------*/
 extern ThotWidget TtaGetViewFrame (Document document, View view);
