@@ -58,7 +58,8 @@ if test ! -d $GNOMEKDEDIR/applications ; then
 fi
 
 # --- creating /usr/bin/amaya-version
-$ECHO "#!/bin/sh" >> /usr/bin/amaya
+$RM /usr/bin/amaya
+$ECHO "#!/bin/sh" > /usr/bin/amaya
 $ECHO "env XLIB_SKIP_ARGB_VISUALS=1 $PREFIX/$AMAYA_INSTALLDIR/$AMAYAGUI/bin/amaya \${1+"\$@"}" >> /usr/bin/amaya
 $CHMOD /usr/bin/amaya
 
