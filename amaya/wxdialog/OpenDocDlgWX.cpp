@@ -418,7 +418,6 @@ void OpenDocDlgWX::OnProfileSelected( wxCommandEvent& event )
       strncpy( buffer, (const char*)url.mb_str(wxConvUTF8), MAX_LENGTH - 1);
       buffer[MAX_LENGTH - 1] = EOS;
       TtaExtractSuffix (buffer, suffix);
-printf ("suffix=%s\n", suffix);
       if (iscompound)
         {
           if (strcmp (suffix, "xml"))
