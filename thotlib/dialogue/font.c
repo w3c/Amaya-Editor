@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2005
+ *  (c) COPYRIGHT INRIA, 1996-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1686,8 +1686,7 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
   car = EOS;
   if (fontset)
     {
-      if (c == ZERO_SPACE ||
-          c == EOL || c == BREAK_LINE ||
+      if (c == EOL || c == BREAK_LINE ||
           c == SPACE || c == TAB ||
           c == NEW_LINE || c == UNBREAKABLE_SPACE ||
           c == EN_QUAD || c == EM_QUAD ||
@@ -1706,6 +1705,7 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
           /* 0 -> FF */
           *font = fontset->Font_1;
           car = (int) c;
+          code = 1;
         }
       else if (c == 0x202A /* lre */ || c == 0x200B /* zwsp*/ ||
                c == 0x200C /* zwnj*/ || c == 0x200D /* zwj */ ||
@@ -1713,7 +1713,10 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
                c == 0x202B /* rle */ || c == 0x202C /* pdf */ || 
                c == 0x202D /* lro */ || c == 0x202E /* rlo */ ||
                c == 0x2061 /*ApplyFunction*/ || c == 0x2062 /*InvisibleTimes*/)
-        car =  INVISIBLE_CHAR;
+        {
+          c =  INVISIBLE_CHAR;
+          code = '1';
+        }
       else
         {
           if (c >= 0x370 && c < 0x3FF)
@@ -1781,13 +1784,13 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
                   code = '1'; /* West Europe Latin */
                   pfont = &(fontset->Font_1);
                   if (c == 0x2148 /* ImaginaryI */)
-                    car = 105;
+                    c = 105;
                   else if (c == 0x2146 /* DifferentialD */)
-                    car = 100;
+                    c = 100;
                   else if (c == 0x210E /* planckh */)
-                    car = 104;
+                    c = 104;
                   else /* ExponentialE */
-                    car = 101;
+                    c = 101;
                 }
             }
 #else /* _GL */
@@ -2073,7 +2076,7 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
           if (*font == NULL ||
               (*font == DialogFont && code != '1'))
             {
-              car = UNDISPLAYED_UNICODE;
+              c = UNDISPLAYED_UNICODE;
               *font = NULL;
             }
           else if (code == 'Z' || code == '6')
@@ -2086,7 +2089,7 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
 #endif /* _GL */
         }
     }   
-  if (car == EOS)
+  if (car == EOS && (code == 'E' || code == 'G'))
     {
       /* generate a square */
       car = UNDISPLAYED_UNICODE;

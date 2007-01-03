@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2005
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -3018,7 +3018,7 @@ void SelectionChanged (NotifyElement *event)
   /* update the displayed style information */
   SynchronizeAppliedStyle (event);
   UnFrameMath ();
-  if (DocumentTypes[event->document]!=docLog)
+  if (DocumentTypes[event->document] != docLog)
   {
     UpdateXmlElementListTool(event->element,event->document);
     TtaSetStatusSelectedElement(event->document, 1, event->element);
