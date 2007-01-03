@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resource version="2.3.0.1" xmlns="http://www.wxwindows.org/wxxrc">
+  <object class="wxDialog" name="SelectOperatorDlgWX">
+    <title></title>
+    <centered>1</centered>
+    <style>wxDEFAULT_DIALOG_STYLE|wxSTAY_ON_TOP|wxRESIZE_BORDER|wxNO_3D|wxTAB_TRAVERSAL</style>
+    <object class="wxBoxSizer">
+      <orient>wxVERTICAL</orient>
+      <object class="spacer">
+        <size>0,10</size>
+      </object>
+      <object class="sizeritem">
+        <object class="wxStaticText" name="wxID_LABEL">
+          <label>*Select the type of operator*</label>
+        </object>
+      </object>
+      <object class="spacer">
+        <size>0,10</size>
+      </object>
+      <object class="sizeritem">
+        <object class="wxGridSizer">
+          <cols>3</cols>
+          <object class="sizeritem">
+            <object class="wxBitmapButton" name="wxID_OPERATOR0">
+              <bitmap>../icons/misc/MATHML_operator0.png</bitmap>
+              <tooltip>operation repeated n times</tooltip>
+            </object>
+            <flag>wxALL</flag>
+            <border>1</border>
+          </object>
+          <object class="sizeritem">
+            <object class="wxBitmapButton" name="wxID_OPERATOR1">
+              <bitmap>../icons/misc/MATHML_operator1.png</bitmap>
+              <tooltip>operation on a family indexed by integers</tooltip>
+            </object>
+            <flag>wxALL</flag>
+            <border>1</border>
+          </object>
+          <object class="sizeritem">
+            <object class="wxBitmapButton" name="wxID_OPERATOR2">
+              <bitmap>../icons/misc/MATHML_operator2.png</bitmap>
+              <tooltip></tooltip>
+              <tooltip>operation on a family indexed by a set</tooltip>
+            </object>
+            <flag>wxALL</flag>
+            <border>1</border>
+          </object>
+        </object>
+        <flag>wxALIGN_CENTRE</flag>
+      </object>
+      <object class="spacer">
+        <size>0,10</size>
+      </object>
+    </object>
+  </object>
+</resource>

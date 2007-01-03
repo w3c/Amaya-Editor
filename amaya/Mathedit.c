@@ -104,8 +104,6 @@ ThotWidget CatWidget(int ref);
 typedef char     functName[10];
 static  functName  functionName[] =
   {
-    "Imaginary",
-    "Real",
     "arccosh",
     "arccos",
     "arccoth",
@@ -119,6 +117,8 @@ static  functName  functionName[] =
     "arctanh",
     "arctan",
     "arg",
+    "card",
+    "codomain",
     "cosh",
     "cos",
     "coth",
@@ -128,8 +128,12 @@ static  functName  functionName[] =
     "curl",
     "det",
     "div",
+    "domain",
+    "exp",
     "gcd",
     "grad",
+    "image",
+    "lcm",
     "lim",
     "log",
     "ln",
@@ -673,45 +677,6 @@ static void RegenerateFencedSeparators (Element el, Document doc, ThotBool recor
   CreateFencedSeparators (el, doc, record);
 }
 
-/*----------------------------------------------------------------------
-  AddParenthesis
-  Create two MF element at the beginning and at the end of the MROW element el.
-  ----------------------------------------------------------------------*/
-static void AddParenthesis (Element el, Document doc)
-{
-  Element     child, fence, symbol, next;
-  ElementType elType, symbType;
-
-  if (!el)return;
-  child = TtaGetFirstChild (el);
-  if (child)
-    {
-      elType = TtaGetElementType (el);
-      elType.ElTypeNum = MathML_EL_MF;
-      fence = TtaNewElement (doc, elType);
-      TtaInsertSibling (fence, child, TRUE, doc);
-      symbType.ElSSchema = elType.ElSSchema;
-      symbType.ElTypeNum = MathML_EL_SYMBOL_UNIT;
-      symbol = TtaNewElement (doc, symbType);
-      TtaSetGraphicsShape (symbol, '(', doc);
-      TtaInsertFirstChild (&symbol, fence, doc);
-
-      next = child;
-      do
-        {
-          TtaNextSibling (&next);
-          if (next)
-            child = next;
-        }
-      while (next);
-      fence = TtaNewElement (doc, elType);
-      TtaInsertSibling (fence, child, FALSE, doc);
-      symbol = TtaNewElement (doc, symbType);
-      TtaSetGraphicsShape (symbol, ')', doc);
-      TtaInsertFirstChild (&symbol, fence, doc);
-    }
-}
-
 
 /*----------------------------------------------------------------------
   InsertEmptyConstruct
@@ -820,9 +785,8 @@ void AttachIntVertStretch(Element el, Document doc)
   ElementType elType = TtaGetElementType (el);
   Attribute          attr;
   AttributeType      attrType;
-  ThotBool      oldStructureChecking;
+  ThotBool      oldStructureChecking = TtaGetStructureChecking (doc);
 
-  oldStructureChecking = TtaGetStructureChecking (doc);
   TtaSetStructureChecking (FALSE, doc);
 
   attrType.AttrSSchema = elType.ElSSchema;
@@ -847,9 +811,8 @@ void AttachIntHorizStretch(Element el, Document doc)
   ElementType elType = TtaGetElementType (el);
   Attribute          attr;
   AttributeType      attrType;
-  ThotBool      oldStructureChecking;
+  ThotBool      oldStructureChecking = TtaGetStructureChecking (doc);
 
-  oldStructureChecking = TtaGetStructureChecking (doc);
   TtaSetStructureChecking (FALSE, doc);
 
   attrType.AttrSSchema = elType.ElSSchema;
@@ -1196,7 +1159,6 @@ void ClearMathFrame (Document doc)
   MathSelectionChanged
   A new element has been selected. Synchronize selection in source view.      
   ----------------------------------------------------------------------*/
-
 void MathSelectionChanged (NotifyElement *event)
 {
   Element          el;
@@ -1256,8 +1218,6 @@ void MathSelectionChanged (NotifyElement *event)
             }
         }
     }
-  UpdateXmlElementListTool(event->element,event->document);
-  TtaSetStatusSelectedElement(event->document, 1, event->element);
 }
 
 /*----------------------------------------------------------------------
@@ -1309,11 +1269,9 @@ static void CreateMathConstruct (int construct, ...)
   int                c1, i, len, profile, selectedchild;
   va_list            varpos;
   ThotBool           oldStructureChecking;
-  ThotBool	         before, ParBlock, emptySel, ok, insertSibling;
+  ThotBool	         before, emptySel, ok, insertSibling;
   ThotBool           displayTableForm, registered;
   
-  if (construct == 0)
-    return;
   /* Prepare to read other variables */
   va_start(varpos,construct);
        
@@ -1322,15 +1280,16 @@ static void CreateMathConstruct (int construct, ...)
     {
       /* no selection. Nothing to do */
       TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NO_INSERT_POINT);
+      va_end(varpos);
       return;
     }
-  if (!TtaGetDocumentAccessMode (doc))
-    return;
+
   profile = TtaGetDocumentProfile (doc);
   if (profile == L_Strict || profile == L_Basic)
     {
       /* cannot insert here */
       TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NOT_ALLOWED);
+      va_end(varpos);
       return;
     }
   else if (DocumentTypes[doc] != docMath && DocumentMeta[doc])
@@ -1394,10 +1353,12 @@ static void CreateMathConstruct (int construct, ...)
                     event.element = new_;
                     MathSelectionChanged (&event);
                     TtaCloseUndoSequence (doc);
+                    va_end(varpos);
                     return;
                   }
               }
             TtaCreateElement (newType, doc);
+
             /* Get the <math> element that has been created */
             TtaGiveFirstSelectedElement (doc, &el, &c1, &i);
             elType = TtaGetElementType (el);
@@ -1415,9 +1376,16 @@ static void CreateMathConstruct (int construct, ...)
                 /* Set the MathML namespace declaration */
                 elType = TtaGetElementType (el);
                 TtaSetUriSSchema (elType.ElSSchema, MathML_URI);
+
+            /*!!!!!!!!!!!!!
+              There is a bug if the selecting point is in the source : the namespace is not put as an attribute
+              but as a text.
+            !!!!!!!!!!!!!*/
+
                 TtaSetANamespaceDeclaration (doc, el, NULL, MathML_URI);
               }
           }
+        va_end(varpos);
         return;
       }
 
@@ -1689,6 +1657,7 @@ static void CreateMathConstruct (int construct, ...)
             {
               TtaSetDisplayMode (doc, dispMode);
               TtaCloseUndoSequence (doc);
+              va_end(varpos);
               return;
             }
           else
@@ -1734,6 +1703,7 @@ static void CreateMathConstruct (int construct, ...)
                   event.element = sibling;
                   MathSelectionChanged (&event);
                   TtaCloseUndoSequence (doc);
+                  va_end(varpos);
                   return;
                 }
             }
@@ -1743,7 +1713,6 @@ static void CreateMathConstruct (int construct, ...)
   elType = TtaGetElementType (sibling);
   newType.ElSSchema = mathSchema;
   selectedchild = 0;
-  ParBlock = FALSE;
   switch (construct)
     {
     case 1:	/* create a Math element */
@@ -1777,10 +1746,8 @@ static void CreateMathConstruct (int construct, ...)
     case 10:
       newType.ElTypeNum = MathML_EL_MOVER;
       break;
-    case 11:/* Parenthesis ; mrow */
+    case 11: /* mrow */
       newType.ElTypeNum = MathML_EL_MROW;
-      selectedchild = va_arg(varpos, int);
-      ParBlock = (selectedchild == 1);
       break;
     case 12:
       newType.ElTypeNum = MathML_EL_MMULTISCRIPTS;
@@ -1828,6 +1795,7 @@ static void CreateMathConstruct (int construct, ...)
             {
               TtaSetDisplayMode (doc, dispMode);
               TtaCloseUndoSequence (doc);
+              va_end(varpos);
               return;
             }
         }
@@ -1864,7 +1832,7 @@ static void CreateMathConstruct (int construct, ...)
       child = TtaGetFirstChild (el);
       break;
 
-    case 20: /* Integral msubsup; Integral under */
+    case 20: /* Integral msubsup; Integral sub */
       newType.ElTypeNum = MathML_EL_MROW;
       selectedchild = -1;
       break;
@@ -1885,7 +1853,7 @@ static void CreateMathConstruct (int construct, ...)
       selectedchild = -1;
       break;
 
-    case 25: /* Piecewise */
+    case 25: /* Piecewise ; VerticalBrace */
       newType.ElTypeNum = MathML_EL_MROW;
       selectedchild = -1;
       break;  
@@ -1950,8 +1918,8 @@ static void CreateMathConstruct (int construct, ...)
       selectedchild = 1;
       break;
 
-    case 39: /* set/list extension ; vectorrow */
-      newType.ElTypeNum = MathML_EL_MFENCED;
+    case 39: /* parenthesis ; interval ; fence2 ; set/list extension */
+      newType.ElTypeNum = MathML_EL_MROW;
       selectedchild = -1;
       break;
 
@@ -1963,11 +1931,6 @@ static void CreateMathConstruct (int construct, ...)
     case 41: /* operator with a sub element and an empty square after */
       newType.ElTypeNum = MathML_EL_MROW;
       selectedchild = -1;
-      break;
-
-    case 42: /* fence2 */
-      newType.ElTypeNum = MathML_EL_MROW;
-      selectedchild = 1;
       break;
 
     case 43: /* diagonalintersection ; limtendsto ; tendstotendsto */
@@ -2012,11 +1975,6 @@ static void CreateMathConstruct (int construct, ...)
 
     case 51: /* partialdiff2 */
       newType.ElTypeNum = MathML_EL_MFRAC;
-      selectedchild = -1;
-      break;
-
-    case 52: /* integral2 */
-      newType.ElTypeNum = MathML_EL_MROW;
       selectedchild = -1;
       break;
 
@@ -2067,6 +2025,7 @@ static void CreateMathConstruct (int construct, ...)
 
     default:
       TtaCloseUndoSequence (doc);
+      va_end(varpos);
       return;
     }
   
@@ -2135,11 +2094,43 @@ static void CreateMathConstruct (int construct, ...)
         }
       if (construct == 20)
         {
-          /* Integral msubsup ; Integral under */
-          int msubsup = va_arg(varpos, int);
+          /* Integral msubsup ; Integral sub ; Integral2 */
+          int symbol = va_arg(varpos, int), type;
+          if(symbol == -1)
+            {
+            /* ask the type of integral */
+            int number, contour;
+            number = GetOccurrences (1, 1, doc);
+            contour = GetOccurrences (0, 0, doc);
+            type = GetOccurrences (0, 0, doc);if(type > 1)type = 1;
+            if(!contour)
+              {
+              switch(number)
+                {
+                case 1: symbol = 8747; break;
+                case 2: symbol = 8748; break;
+                case 3: symbol = 8749; break;
+                default: symbol = 8747; break;
+                }
+              }
+            else
+              {
+              switch(number)
+                {
+                case 1: symbol = 8750; break;
+                case 2: symbol = 8751; break;
+                case 3: symbol = 8752; break;
+                default: symbol = 8750; break;
+                }
+              }
+            }
+          else
+            type = va_arg(varpos, int);
+
           leaf = TtaGetFirstChild (el);
+          child = leaf;
           new_ = leaf;
-          InsertEmptyConstruct(&new_, msubsup ? MathML_EL_MSUBSUP : MathML_EL_MSUB, doc);
+          InsertEmptyConstruct(&new_, type ? MathML_EL_MSUBSUP : MathML_EL_MSUB, doc);
           TtaDeleteTree (leaf, doc);
           child = TtaGetFirstChild (new_);
    
@@ -2149,7 +2140,7 @@ static void CreateMathConstruct (int construct, ...)
 
           leaf = TtaGetFirstChild (child);
           op = leaf;
-          InsertSymbolUnit(&op, MathML_EL_MO, 'i', doc);
+          InsertSymbol(&op, MathML_EL_MO, symbol, doc);
           TtaDeleteTree (leaf, doc);
 
           InsertEmptyConstruct (&new_, MathML_EL_MROW, doc);
@@ -2291,7 +2282,7 @@ static void CreateMathConstruct (int construct, ...)
         }
       else if (construct == 25)
         {
-          /* Piecewise */
+          /* Piecewise ; VerticalBrace */
 
           /* ask how many the user wants */
           int number = GetOccurrences (3, 2, doc);
@@ -2470,21 +2461,37 @@ static void CreateMathConstruct (int construct, ...)
           CreateFencedSeparators (new_, doc, FALSE);
         }
       else if (construct == 39)
-        {/* set/list extension ; vectorrow */
-          int ope = va_arg(varpos, int), clo = va_arg(varpos, int);
-          /* ask how many the user wants */
-          int number = GetOccurrences (5, 1, doc);
+        {/* parenthesis ; interval ; fence2 ; set/list extension */
+          int ope = va_arg(varpos, int), clo = va_arg(varpos, int), sep = va_arg(varpos, int), number = va_arg(varpos, int);
+          if(ope == -1 && clo == -1)
+            {
+            /* get types of open/close symbols selected in the panel */
+            ope = '(';
+            clo = ')';
+            }
+          if(sep == -1 )
+            {
+            /* get types of open/close symbols selected in the panel */
+            sep = ',';
+            }
+          if(number == -1)
+            {
+            /* ask how many the user wants */
+            number = GetOccurrences (5, 1, doc);
+            }
 
-          new_ = SetMFencedAttributes(el, ope, clo, ';', doc);
-          leaf = TtaGetFirstChild (new_);
+          leaf = TtaGetFirstChild (el);
           child = leaf;
-          InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
+          InsertSymbolUnit (&child, MathML_EL_MF, ope, doc);
           TtaDeleteTree (leaf, doc);
-          selected = child;
-          for (i = 1 ; i < number; i++)
+          
+          for (i = 0 ; i < number; i++)
+            {
+            if(i)InsertSymbol (&child, MathML_EL_MO, sep, doc);
             InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
-
-          CreateFencedSeparators (new_, doc, FALSE);
+            if(!i)selected = TtaGetFirstChild (child);
+            }
+          InsertSymbolUnit (&child, MathML_EL_MF, clo, doc);
         }
       else if (construct == 40)
         {/* card/abs/floor/ceiling */
@@ -2495,18 +2502,6 @@ static void CreateMathConstruct (int construct, ...)
           TtaDeleteTree (leaf, doc);
           InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
           InsertSymbol (&child, MathML_EL_MO, clo, doc);
-        }
-      else if (construct == 42)
-        {/* fence2 */
-          unsigned char ope, clo;
-          /* ask the user what characters he wants */
-          ope = '[';clo=']';
-          leaf = TtaGetFirstChild (el);
-          child = leaf;
-          InsertSymbolUnit (&child, MathML_EL_MO, ope, doc);
-          TtaDeleteTree (leaf, doc);
-          InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
-          InsertSymbolUnit (&child, MathML_EL_MO, clo, doc);
         }
       else if (construct == 43)
         {
@@ -2550,10 +2545,10 @@ static void CreateMathConstruct (int construct, ...)
         }
       else if (construct == 44)
         { /* elementary classical functions */
+          unsigned char *function_name = va_arg(varpos, unsigned char*);
           leaf = TtaGetFirstChild (el);
           child = leaf;
-          //InsertText (&child, MathML_EL_MO, name, doc);
-          InsertSymbol(&child, MathML_EL_MI, 'f', doc);
+          InsertText (&child, MathML_EL_MI, function_name, doc);
           InsertSymbol (&child, MathML_EL_MO, 8289, doc); // apply function 
           InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
           TtaDeleteTree (leaf, doc);
@@ -2772,21 +2767,6 @@ static void CreateMathConstruct (int construct, ...)
 
           InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
           selected = child;
-          TtaDeleteTree (leaf, doc);
-        }
-      else if (construct== 52)
-        { /* integral */
-          //DoubleContourIntegral 8751
-          //Integral 8747
-          // cirfnint 10768
-          //iiiint", 10764
-          //iiint", 8749
-          int symbol = 8751;
-          leaf = TtaGetFirstChild (el);
-          child = leaf;
-          InsertSymbol (&child, MathML_EL_MO, symbol, doc);
-          InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
-          selected = TtaGetFirstChild(child);
           TtaDeleteTree (leaf, doc);
         }
       else if (construct== 53)
@@ -3084,10 +3064,6 @@ static void CreateMathConstruct (int construct, ...)
           //if (op)
           //CheckLargeOp (op, doc);
         }
-      else if (ParBlock)
-        /* the user wants to create a parenthesized block */
-        /* create two MF elements, as the first and last child of the newMROW */
-        AddParenthesis (el, doc);
 
       InitializeNewConstruct (el, NumberRows, NumberCols, !registered, doc);
       TtaSetDisplayMode (doc, dispMode);
@@ -3444,15 +3420,31 @@ void CreateMOVERFROWN (Document doc, View view)
   ----------------------------------------------------------------------*/
 void CreateMPARENTHESIS (Document document, View view)
 {
-  CreateMathConstruct (11, 1);
+  CreateMathConstruct (39, '(', ')', ',', 1);
 }
+
+/*----------------------------------------------------------------------
+  CreateMINTERVAL
+  ----------------------------------------------------------------------*/
+void CreateMINTERVAL (Document document, View view)
+{
+  CreateMathConstruct (39, -1, -1, ';', 2);
+}
+
+/*----------------------------------------------------------------------
+  CreateMFENCE
+  ----------------------------------------------------------------------*/
+void CreateMFENCE (Document document, View view)
+{
+  CreateMathConstruct (39, -1, -1, -1, -1);}
+
 
 /*----------------------------------------------------------------------
   CreateMROW
   ----------------------------------------------------------------------*/
 void CreateMROW (Document document, View view)
 {
-  CreateMathConstruct (11, 0);
+  CreateMathConstruct (11);
 }
 
 /*----------------------------------------------------------------------
@@ -3478,7 +3470,7 @@ void CreateMTABLE (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMIntegral (Document doc, View view)
 {
-  CreateMathConstruct (20, TRUE);
+  CreateMathConstruct (20, 8747, TRUE);
 }
 
 
@@ -3587,7 +3579,7 @@ void CreateMCEILING (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMCODOMAIN (Document document, View view)
 {
-  CreateMathConstruct (23, 0, "codom", TRUE);}
+  CreateMathConstruct (23, 0, "codomain", TRUE);}
 /*----------------------------------------------------------------------
   CreateMCOMBINATION
   ----------------------------------------------------------------------*/
@@ -3729,13 +3721,7 @@ void CreateMDIVIDE (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMDOMAIN (Document document, View view)
 {
-  CreateMathConstruct (23, 0, "dom", TRUE);}
-/*----------------------------------------------------------------------
-  CreateMCLASSICALFUNCTIONS
-  ----------------------------------------------------------------------*/
-void CreateMCLASSICALFUNCTIONS (Document document, View view)
-{
-  CreateMathConstruct (44);}
+  CreateMathConstruct (23, 0, "domain", TRUE);}
 /*----------------------------------------------------------------------
   CreateMEMPTYSET
   ----------------------------------------------------------------------*/
@@ -3822,12 +3808,6 @@ void CreateMFALSE (Document document, View view)
 {
   CreateMathConstruct (24, 0, "False");}
 /*----------------------------------------------------------------------
-  CreateMFENCE
-  ----------------------------------------------------------------------*/
-void CreateMFENCE (Document document, View view)
-{
-  CreateMathConstruct (42);}
-/*----------------------------------------------------------------------
   CreateMFLOOR
   ----------------------------------------------------------------------*/
 void CreateMFLOOR (Document document, View view)
@@ -3880,7 +3860,7 @@ void CreateMIDENT (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMIMAGE (Document document, View view)
 {
-  CreateMathConstruct (23, 0, "img", TRUE);}
+  CreateMathConstruct (23, 0, "image", TRUE);}
 /*----------------------------------------------------------------------
   CreateMIMAGINARY
   ----------------------------------------------------------------------*/
@@ -3928,7 +3908,7 @@ void CreateMINFUNDER (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMINT2 (Document document, View view)
 {
-  CreateMathConstruct (52);}
+  CreateMathConstruct (20, -1);}
 /*----------------------------------------------------------------------
   CreateMINTEGERS
   ----------------------------------------------------------------------*/
@@ -3958,7 +3938,7 @@ void CreateMINTERSECTUNDER (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMINTUNDER (Document document, View view)
 {
-  CreateMathConstruct (20, FALSE);}
+  CreateMathConstruct (20, 8747, FALSE);}
 /*----------------------------------------------------------------------
   CreateMINVERSE
   ----------------------------------------------------------------------*/
@@ -3976,7 +3956,7 @@ void CreateMISOMORPHIC (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMLISTEXTENSION (Document document, View view)
 {
-  CreateMathConstruct (39, '[', ']');}
+  CreateMathConstruct (39, '[', ']', ';', -1);}
 /*----------------------------------------------------------------------
   CreateMLCM
   ----------------------------------------------------------------------*/
@@ -4240,6 +4220,14 @@ void CreateMPI (Document document, View view)
 void CreateMPIECEWISE (Document document, View view)
 {
   CreateMathConstruct (25);}
+
+/*----------------------------------------------------------------------
+  CreateMVERTICALBRACE
+  ----------------------------------------------------------------------*/
+void CreateMVERTICALBRACE (Document document, View view)
+{
+  CreateMathConstruct (25);}
+
 /*----------------------------------------------------------------------
   CreateMPLUS
   ----------------------------------------------------------------------*/
@@ -4353,7 +4341,7 @@ void CreateMSETDIFF (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMSETEXTENSION (Document document, View view)
 {
-  CreateMathConstruct (39, '{', '}');}
+  CreateMathConstruct (39, '{', '}', ';', -1);}
 /*----------------------------------------------------------------------
   CreateMSETSEPARATION
   ----------------------------------------------------------------------*/
@@ -4504,6 +4492,169 @@ void CreateMXOR (Document document, View view)
 void CreateMXORBINARY (Document document, View view)
 {
   CreateMathConstruct (27, 0, "xor");}
+
+/*----------------------------------------------------------------------
+  CreateMARCCOS
+  ----------------------------------------------------------------------*/
+void CreateMARCCOS (Document document, View view)
+{
+CreateMathConstruct (44, "arccos");}
+/*----------------------------------------------------------------------
+  CreateMARCCOSH
+  ----------------------------------------------------------------------*/
+void CreateMARCCOSH (Document document, View view)
+{
+CreateMathConstruct (44, "arccosh");}
+/*----------------------------------------------------------------------
+  CreateMARCCOT
+  ----------------------------------------------------------------------*/
+void CreateMARCCOT (Document document, View view)
+{
+CreateMathConstruct (44, "arccot");}
+/*----------------------------------------------------------------------
+  CreateMARCCOTH
+  ----------------------------------------------------------------------*/
+void CreateMARCCOTH (Document document, View view)
+{
+CreateMathConstruct (44, "arccoth");}
+/*----------------------------------------------------------------------
+  CreateMARCCSC
+  ----------------------------------------------------------------------*/
+void CreateMARCCSC (Document document, View view)
+{
+CreateMathConstruct (44, "arccsc");}
+/*----------------------------------------------------------------------
+  CreateMARCCSCH
+  ----------------------------------------------------------------------*/
+void CreateMARCCSCH (Document document, View view)
+{
+CreateMathConstruct (44, "arccsch");}
+/*----------------------------------------------------------------------
+  CreateMARCSEC
+  ----------------------------------------------------------------------*/
+void CreateMARCSEC (Document document, View view)
+{
+CreateMathConstruct (44, "arcsec");}
+/*----------------------------------------------------------------------
+  CreateMARCSECH
+  ----------------------------------------------------------------------*/
+void CreateMARCSECH (Document document, View view)
+{
+CreateMathConstruct (44, "arcsech");}
+/*----------------------------------------------------------------------
+  CreateMARCSIN
+  ----------------------------------------------------------------------*/
+void CreateMARCSIN (Document document, View view)
+{
+CreateMathConstruct (44, "arcsin");}
+/*----------------------------------------------------------------------
+  CreateMARCSINH
+  ----------------------------------------------------------------------*/
+void CreateMARCSINH (Document document, View view)
+{
+CreateMathConstruct (44, "arcsinh");}
+/*----------------------------------------------------------------------
+  CreateMARCTAN
+  ----------------------------------------------------------------------*/
+void CreateMARCTAN (Document document, View view)
+{
+CreateMathConstruct (44, "arctan");}
+/*----------------------------------------------------------------------
+  CreateMARCTANH
+  ----------------------------------------------------------------------*/
+void CreateMARCTANH (Document document, View view)
+{
+CreateMathConstruct (44, "arctanh");}
+/*----------------------------------------------------------------------
+  CreateMCOS
+  ----------------------------------------------------------------------*/
+void CreateMCOS (Document document, View view)
+{
+CreateMathConstruct (44, "cos");}
+/*----------------------------------------------------------------------
+  CreateMCOSH
+  ----------------------------------------------------------------------*/
+void CreateMCOSH (Document document, View view)
+{
+CreateMathConstruct (44, "cosh");}
+/*----------------------------------------------------------------------
+  CreateMCOT
+  ----------------------------------------------------------------------*/
+void CreateMCOT (Document document, View view)
+{
+CreateMathConstruct (44, "cot");}
+/*----------------------------------------------------------------------
+  CreateMCOTH
+  ----------------------------------------------------------------------*/
+void CreateMCOTH (Document document, View view)
+{
+CreateMathConstruct (44, "coth");}
+/*----------------------------------------------------------------------
+  CreateMCSC
+  ----------------------------------------------------------------------*/
+void CreateMCSC (Document document, View view)
+{
+CreateMathConstruct (44, "csc");}
+/*----------------------------------------------------------------------
+  CreateMCSCH
+  ----------------------------------------------------------------------*/
+void CreateMCSCH (Document document, View view)
+{
+CreateMathConstruct (44, "csch");}
+/*----------------------------------------------------------------------
+  CreateMEXP
+  ----------------------------------------------------------------------*/
+void CreateMEXP (Document document, View view)
+{
+CreateMathConstruct (44, "exp");}
+/*----------------------------------------------------------------------
+  CreateMLN
+  ----------------------------------------------------------------------*/
+void CreateMLN (Document document, View view)
+{
+CreateMathConstruct (44, "ln");}
+/*----------------------------------------------------------------------
+  CreateMLOG
+  ----------------------------------------------------------------------*/
+void CreateMLOG (Document document, View view)
+{
+CreateMathConstruct (44, "log");}
+/*----------------------------------------------------------------------
+  CreateMSEC
+  ----------------------------------------------------------------------*/
+void CreateMSEC (Document document, View view)
+{
+CreateMathConstruct (44, "sec");}
+/*----------------------------------------------------------------------
+  CreateMSECH
+  ----------------------------------------------------------------------*/
+void CreateMSECH (Document document, View view)
+{
+CreateMathConstruct (44, "sech");}
+/*----------------------------------------------------------------------
+  CreateMSIN
+  ----------------------------------------------------------------------*/
+void CreateMSIN (Document document, View view)
+{
+CreateMathConstruct (44, "sin");}
+/*----------------------------------------------------------------------
+  CreateMSINH
+  ----------------------------------------------------------------------*/
+void CreateMSINH (Document document, View view)
+{
+CreateMathConstruct (44, "sinh");}
+/*----------------------------------------------------------------------
+  CreateMTAN
+  ----------------------------------------------------------------------*/
+void CreateMTAN (Document document, View view)
+{
+CreateMathConstruct (44, "tan");}
+/*----------------------------------------------------------------------
+  CreateMTANH
+  ----------------------------------------------------------------------*/
+void CreateMTANH (Document document, View view)
+{
+CreateMathConstruct (44, "tanh");}
 
 
 /*----------------------------------------------------------------------
