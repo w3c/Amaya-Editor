@@ -208,7 +208,7 @@ retirer la fraction: mfrac{?(num:*),?(den:*)};
 !!! Sub and Sup Transformations
 
 !surroud an element with a subsup
-ajouer subscript et superscript:*;
+ajouter subscript et superscript:*;
 	{
 	* > msubsup:*;
 	* > msubsup:none%;
@@ -252,7 +252,7 @@ retirer le subscript: msub{base:*,?sub:*};
 	}
 
 !surroud an element with a sup
-ajouter le superscript:*;
+ajouter un superscript:*;
 	{
 	* > msup:*;
 	* > msup:none %;
@@ -288,7 +288,7 @@ subsup:msub{base:*,sub:*} | msup{base:*,sup:*};
 	}
 
 !change msubsup into munderover
-change into munderover: msubsup{base:*,sub:*,sup:*};
+changer en munderover: msubsup{base:*,sub:*,sup:*};
   {
   base > munderover:*;
   sub > munderover:*;
@@ -298,7 +298,7 @@ change into munderover: msubsup{base:*,sub:*,sup:*};
 !!! Under and Over transformations
 
 !surroud an element with a underover
-add under and over:*;
+ajouter under and over:*;
 	{
 	* > munderover:*;
 	* > munderover:none %;
@@ -314,7 +314,7 @@ retirer le under and over:munderover{base:*,?under:*,?over:*};
 	}
  
 !surroud an element with a over
-add over:*;
+ajouter un over:*;
 	{
 	* > mover:*;
 	* > mover:none %;
@@ -348,5 +348,3 @@ changer en msubsup: munderover{base:*,under:*,over:*};
   under > msubsup:*;
   over > msubsup:*;
   }
-
-

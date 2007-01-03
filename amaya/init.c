@@ -2399,11 +2399,15 @@ void OpenNew (Document document, View view, int docType, int docProfile)
   Answer_text[0] = EOS;
   if (NewDocType == docHTML)
     {
-      /* will scan html documents */
-      strcpy (ScanFilter, "*.*htm*");
 #ifdef _WX
-      InitOpenDocForm (document, view, "New.html",
-                       TtaGetMessage (AMAYA, AM_NEW_HTML), docHTML);
+      char *s = TtaGetEnvString ("XHTML_Profile");
+      char *compound = TtaGetMessage (AMAYA, AM_COMPOUND_DOCUMENT);
+      if (s && compound && !strcmp (s, compound))
+        InitOpenDocForm (document, view, "New.xml",
+                         TtaGetMessage (AMAYA, AM_NEW_HTML), docHTML);
+      else
+        InitOpenDocForm (document, view, "New.html",
+                         TtaGetMessage (AMAYA, AM_NEW_HTML), docHTML);
 #else /* _WX */
       if (docProfile == L_Basic)
         InitOpenDocForm (document, view, "New.html",
@@ -2418,6 +2422,8 @@ void OpenNew (Document document, View view, int docType, int docProfile)
         InitOpenDocForm (document, view, "New.html",
                          TtaGetMessage (AMAYA, AM_NEW_HTML11), docHTML);
 #endif /* _WX */
+      /* will scan html documents */
+      strcpy (ScanFilter, "*.*htm*");
     }
   else if (NewDocType == docMath)
     {
@@ -6162,18 +6168,24 @@ void CallbackDialogue (int ref, int typedata, char *data)
       /* only used by WX version to get back the new profile */
       if (NewDocType == docHTML)
         {
-          if (!strstr (data, "XHTML"))
-            NewXML = FALSE;
-          if (strstr (data, "Strict"))
-            NewDocProfile = L_Strict;
-          else if (strstr (data, "Basic"))
-            NewDocProfile = L_Basic;
-          else if (strstr (data, "Transitional"))
-            NewDocProfile = L_Transitional;
-          else if (NewXML)
-            NewDocProfile = L_Xhtml11;
+          char *compound = TtaGetMessage (AMAYA, AM_COMPOUND_DOCUMENT);
+          if (data && compound && !strcmp (data, compound))
+            NewDocProfile = L_Other;
           else
-            NewDocProfile = L_Transitional;	    
+            {
+              if (!strstr (data, "XHTML"))
+                NewXML = FALSE;
+              if (strstr (data, "Strict"))
+                NewDocProfile = L_Strict;
+              else if (strstr (data, "Basic"))
+                NewDocProfile = L_Basic;
+              else if (strstr (data, "Transitional"))
+                NewDocProfile = L_Transitional;
+              else if (NewXML)
+                NewDocProfile = L_Xhtml11;
+              else
+                NewDocProfile = L_Transitional;
+            }
         }
       break;
     case URLName:

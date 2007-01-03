@@ -15,6 +15,7 @@
 static int      Waiting = 0;
 static int      MyRef = 0;
 static ThotBool Mandatory_title = FALSE;
+static char    *compound_string;
 
 //-----------------------------------------------------------------------------
 // Event table: connect the events to the handler functions to process them
@@ -59,6 +60,7 @@ OpenDocDlgWX::OpenDocDlgWX( int ref, wxWindow* parent, const wxString & title,
   // waiting for a return
   Waiting = 1;
   MyRef = ref;
+  compound_string = TtaGetMessage(AMAYA,AM_COMPOUND_DOCUMENT);
 
   // update dialog labels with given ones
   SetTitle( title );
@@ -104,6 +106,7 @@ OpenDocDlgWX::OpenDocDlgWX( int ref, wxWindow* parent, const wxString & title,
           // Get the last selected profile
           XRCCTRL(*this, "wxID_PROFILE_LABEL", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_XML_PROFILE)));
           s = TtaGetEnvString ("XHTML_Profile");
+          XRCCTRL(*this, "wxID_PROFILE", wxComboBox)->Append(TtaConvMessageToWX(compound_string));
           if (s && s[0] != EOS)
             XRCCTRL(*this, "wxID_PROFILE", wxComboBox)->SetValue(TtaConvMessageToWX(s));
           else
@@ -401,6 +404,39 @@ void OpenDocDlgWX::OnURLSelected( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void OpenDocDlgWX::OnProfileSelected( wxCommandEvent& event )
 {
+  wxString     url;
+  char         buffer[MAX_LENGTH], suffix[MAX_LENGTH];
+  ThotBool     iscompound;
+
+  wxString value = XRCCTRL(*this, "wxID_PROFILE", wxComboBox)->GetValue( );
+  if (!value.IsEmpty())
+    {
+      strcpy (buffer, (const char*)value.mb_str(wxConvUTF8));
+      iscompound = !strcmp (buffer, compound_string);
+      url = XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->GetValue( );
+      // check the suffix
+      strncpy( buffer, (const char*)url.mb_str(wxConvUTF8), MAX_LENGTH - 1);
+      buffer[MAX_LENGTH - 1] = EOS;
+      TtaExtractSuffix (buffer, suffix);
+printf ("suffix=%s\n", suffix);
+      if (iscompound)
+        {
+          if (strcmp (suffix, "xml"))
+            {
+              strcat (buffer, ".xml");
+              XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetValue(TtaConvMessageToWX(buffer));
+            }
+          
+          // check the charset
+          XRCCTRL(*this, "wxID_CHOICE_CHARSET", wxChoice)->SetStringSelection(TtaConvMessageToWX("utf-8"));
+        }
+      else if (!strcmp (suffix, "xml"))
+        {
+          strcat (buffer, ".html");
+          XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetValue(TtaConvMessageToWX(buffer));
+        }
+
+    }
 }
 
 

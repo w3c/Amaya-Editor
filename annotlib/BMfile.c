@@ -16,6 +16,7 @@
 /* general includes */
 #include "annotlib.h"
 #include "redland.h"
+#include "rdf_heuristics.h"
 
 /* bookmarks includes */
 #include "bookmarks.h"

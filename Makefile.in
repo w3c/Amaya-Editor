@@ -13,8 +13,6 @@ include Options
 
 LIBWWW	   = libwww
 REDLAND    = redland
-LIBJPEG	   = libjpeg
-LIBPNG	   = libpng
 
 #MKP: adding davlib
 SUBDIRS	= @SUBDIRS@ tools thotlib batch drawlib indexlib annotlib amaya thot @DAVDIR@

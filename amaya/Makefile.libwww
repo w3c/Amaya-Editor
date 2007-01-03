@@ -21,20 +21,20 @@ AMAYA_LIBWWW_OPTION_LIBS=
 #MKP: added -lwwwdav
 AMAYA_LIBWWW_LIBS= \
 		-L../$(LIBWWW)/Library/src/.libs \
-			-lwwwapp \
-			-lwwwhttp \
 			$(LIBWWW_RDF_PARSER) \
+			-lwwwzip \
+			-lwwwapp \
 			-lwwwhtml \
+			-lwwwhttp \
 			-lwwwmime \
-			-lwwwcache \
-			-lwwwstream \
+			-lwwwftp \
 			-lwwwfile \
 			-lwwwdir \
+			-lwwwcache \
+			-lwwwstream \
 			-lwwwtrans \
 			-lwwwcore \
 			-lwwwutils \
-			-lwwwzip \
-			-lwwwftp \
 			$(WWWDAV) \
 		-L../$(LIBWWW)/modules/md5/.libs \
 			-lmd5 \

@@ -5205,4 +5205,7 @@
 <label define="AM_MATHPI">
 <message xml:lang="en">Add the xsl stylesheet for MathML elements</message>
 <message xml:lang="fr">Ajouter la feuille xsl pour les éléments MathML</message></label>
+<label define="AM_COMPOUND_DOCUMENT">
+<message xml:lang="en">Compound document</message>
+<message xml:lang="fr">Document composé</message></label>
 <label define="AMAYA_MSG_MAX"></label></messages></base>
