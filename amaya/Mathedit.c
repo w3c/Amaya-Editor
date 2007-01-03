@@ -1218,6 +1218,8 @@ void MathSelectionChanged (NotifyElement *event)
             }
         }
     }
+    UpdateXmlElementListTool(event->element,event->document);
+    TtaSetStatusSelectedElement(event->document, 1, event->element);
 }
 
 /*----------------------------------------------------------------------
@@ -1283,7 +1285,10 @@ static void CreateMathConstruct (int construct, ...)
       va_end(varpos);
       return;
     }
-
+  if (DocumentTypes[doc] == docSource ||
+      DocumentTypes[doc] == docText || DocumentTypes[doc] == docLog)
+    // cannot apply to a text file
+    return;
   profile = TtaGetDocumentProfile (doc);
   if (profile == L_Strict || profile == L_Basic)
     {
