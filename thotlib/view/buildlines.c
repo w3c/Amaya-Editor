@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2005
+ *  (c) COPYRIGHT INRIA, 1996-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1944,8 +1944,8 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
                   (pAbRef == pBlock->BxAbstractBox ||
                    pAbRef->AbBox->BxType == BoGhost))))));
   if (!variable && pBox && pAb &&
-      pBlock->BxType == BoFloatBlock && pBox->BxType == BoBlock &&
-      pBlock->BxType == BoCellBlock &&
+      (pBlock->BxType == BoFloatBlock || pBlock->BxType == BoCellBlock) &&
+      pBox->BxType == BoBlock &&
       pAbRef == NULL && pAb->AbWidth.DimValue == -1)
     /* it's an extensible block of lines */
     variable = TRUE;

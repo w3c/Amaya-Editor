@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2005
+ *  (c) COPYRIGHT INRIA, 1996-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1394,7 +1394,8 @@ void GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width,
                     *width = val;
                 }
               else if ((pChildBox->BxType == BoBlock ||
-                        pChildBox->BxType == BoFloatBlock) &&
+                        pChildBox->BxType == BoFloatBlock ||
+                        pChildBox->BxType == BoCellBlock) &&
                        !ExtraFlow (pChildBox, frame) &&
                       *width < pChildBox->BxXOrg + pChildBox->BxMinWidth)
                     *width = pChildBox->BxXOrg + pChildBox->BxMinWidth;
@@ -2120,6 +2121,7 @@ static void AddFloatingBox (PtrAbstractBox pAb, int frame, ThotBool left)
             pParent = pParent->AbEnclosing;
           while (pParent && pParent->AbBox &&
                  (pParent->AbBox->BxType != BoFloatBlock &&
+                  pParent->AbBox->BxType != BoCellBlock &&
                   pParent->AbBox->BxType != BoBlock &&
                   pParent->AbBox->BxType != BoFloatGhost))
             {
@@ -2368,11 +2370,9 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
               else if (inlineChildren)
                 {
                   /* block of lines */
-#ifdef IV
                   if (boxType == BoCell)
                     boxType = BoCellBlock;
                   else
-#endif
                     boxType = BoBlock;
                   inlineFloatC = FALSE;
                   pBox->BxType = boxType;
@@ -2381,11 +2381,9 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
                 }
               else if (inlineFloatC)
                 {
-#ifdef IV
                   if (boxType == BoCell)
                     boxType = BoCellBlock;
                   else
-#endif
                     boxType = BoFloatBlock;
                   inlineChildren = FALSE;
                   pBox->BxType = boxType;
