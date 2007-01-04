@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2005
+ *  (c) COPYRIGHT INRIA, 1996-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -3731,7 +3731,8 @@ void WidthPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
                           i = pChildBox->BxXOrg + pChildBox->BxWidth;
                       }
                     else if (pChildBox->BxXOrg < x ||
-                             pChildAb->AbHorizPos.PosDistance < 0)
+                             (pChildAb->AbHorizPos.PosDistance < 0 &&
+                              pChildAb->AbHorizPos.PosRefEdge == Left))
                       /* don't take into account negative origins */
                       i = x + pChildBox->BxWidth;
                     else

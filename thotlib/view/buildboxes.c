@@ -1385,7 +1385,8 @@ void GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width,
                 {
                   /* the width of that box doesn't depend on the enclosing */
                   if (pChildBox->BxXOrg < x ||
-                      pChildAb->AbHorizPos.PosDistance < 0)
+                      (pChildAb->AbHorizPos.PosDistance < 0 &&
+                       pChildAb->AbHorizPos.PosRefEdge == Left))
                     val = x + pChildBox->BxWidth;
                   else
                     val = pChildBox->BxXOrg + pChildBox->BxWidth;
