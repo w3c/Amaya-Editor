@@ -261,9 +261,10 @@ typedef enum _ClickEvent {
 #define MAX_CSS_REF     4
 
 #define FormMaths 0
-#define MenuMaths 1
-#define MenuMaths1 2
-#define MAX_MATHS  3
+#define FormMathOperator 1
+#define MenuMaths 2
+#define MenuMaths1 3
+#define MAX_MATHS  4
 
 #define FormGraph 0
 #define MenuGraph 1

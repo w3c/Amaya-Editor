@@ -65,7 +65,10 @@ static int      MathButton;
 static ThotIcon mIcons[14];
 static ThotBool	InitMaths;
 #else /* _WX */
+/* Global variables for dialogues */
 static int Math_occurences = 1;
+static int Math_OperatorType = 0;
+//static int Math_fence_attributes[3];
 #endif /* _WX */
 
 static ThotBool	IsLastDeletedElement = FALSE;
@@ -1251,6 +1254,31 @@ if(val < mini)val = mini;
 }
 
 /*----------------------------------------------------------------------
+  GetOperatorType
+  ----------------------------------------------------------------------*/
+static int GetOperatorType(Document doc)
+{
+  char valeur = 0;
+#ifdef _WX
+  ThotBool  created;
+  char     *msg = TtaGetMessage (AMAYA, AM_NUMBER_OCCUR);
+  Math_OperatorType = 0;
+
+  created = CreateSelectOperatorDlgWX(MathsDialogue + FormMathOperator, TtaGetViewFrame (doc, 1), msg, msg);
+  if (created)
+    {
+      TtaSetDialoguePosition ();
+      TtaShowDialogue (MathsDialogue + FormMathOperator, FALSE);
+      /* wait for an answer */
+      TtaWaitShowDialogue ();
+    }
+#endif  /* _WX */
+
+  valeur = Math_OperatorType;
+  return valeur;
+}
+
+/*----------------------------------------------------------------------
   CreateMathConstruct
   Create a MathML construct at the current position
   According to the construct, other parameters can be sent to complete it. 
@@ -1274,15 +1302,11 @@ static void CreateMathConstruct (int construct, ...)
   ThotBool	         before, emptySel, ok, insertSibling;
   ThotBool           displayTableForm, registered;
   
-  /* Prepare to read other variables */
-  va_start(varpos,construct);
-       
   doc = TtaGetSelectedDocument ();
   if (doc == 0 || !TtaGetDocumentAccessMode (doc))
     {
       /* no selection. Nothing to do */
       TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NO_INSERT_POINT);
-      va_end(varpos);
       return;
     }
   if (DocumentTypes[doc] == docSource ||
@@ -1294,7 +1318,6 @@ static void CreateMathConstruct (int construct, ...)
     {
       /* cannot insert here */
       TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NOT_ALLOWED);
-      va_end(varpos);
       return;
     }
   else if (DocumentTypes[doc] != docMath && DocumentMeta[doc])
@@ -1358,7 +1381,6 @@ static void CreateMathConstruct (int construct, ...)
                     event.element = new_;
                     MathSelectionChanged (&event);
                     TtaCloseUndoSequence (doc);
-                    va_end(varpos);
                     return;
                   }
               }
@@ -1381,16 +1403,9 @@ static void CreateMathConstruct (int construct, ...)
                 /* Set the MathML namespace declaration */
                 elType = TtaGetElementType (el);
                 TtaSetUriSSchema (elType.ElSSchema, MathML_URI);
-
-            /*!!!!!!!!!!!!!
-              There is a bug if the selecting point is in the source : the namespace is not put as an attribute
-              but as a text.
-            !!!!!!!!!!!!!*/
-
                 TtaSetANamespaceDeclaration (doc, el, NULL, MathML_URI);
               }
           }
-        va_end(varpos);
         return;
       }
 
@@ -1662,7 +1677,6 @@ static void CreateMathConstruct (int construct, ...)
             {
               TtaSetDisplayMode (doc, dispMode);
               TtaCloseUndoSequence (doc);
-              va_end(varpos);
               return;
             }
           else
@@ -1708,12 +1722,14 @@ static void CreateMathConstruct (int construct, ...)
                   event.element = sibling;
                   MathSelectionChanged (&event);
                   TtaCloseUndoSequence (doc);
-                  va_end(varpos);
                   return;
                 }
             }
         }
     }
+  /* Prepare to read other variables */
+  va_start(varpos,construct);
+
   // Generate a new construct inside/before/after the sibling element
   elType = TtaGetElementType (sibling);
   newType.ElSSchema = mathSchema;
@@ -2159,7 +2175,7 @@ static void CreateMathConstruct (int construct, ...)
 
           if(type == -1)
             {/* ask the user about the way the symbol have to be displayed */
-            type = GetOccurrences (0, 0, doc);
+            type = GetOperatorType(doc);
             if(type > 2)type = 0;
             }
        
@@ -3157,6 +3173,16 @@ static void CallbackMaths (int ref, int typedata, char *data)
     case FormMaths:
 #ifdef _WX
       Math_occurences = val;
+#else /* _WX */
+      /* the user has clicked the DONE button in the Math dialog box */
+      InitMaths = FALSE;
+      TtaDestroyDialogue (ref);   
+#endif /* _WX */
+      break;
+
+    case FormMathOperator:
+#ifdef _WX
+      Math_OperatorType = 0;
 #else /* _WX */
       /* the user has clicked the DONE button in the Math dialog box */
       InitMaths = FALSE;

@@ -1,4 +1,3 @@
-
 #ifdef _WX
 #include "wx/wx.h"
 #include "file_filters.h"
@@ -36,6 +35,7 @@
   #include "wxdialog/PreferenceDlgWX.h"
   #include "wxdialog/PrintDlgWX.h"
   #include "wxdialog/SaveAsDlgWX.h"
+  #include "wxdialog/SelectOperatorDlgWX.h"
   #include "wxdialog/SearchDlgWX.h"
   #include "wxdialog/SpellCheckDlgWX.h"
   #include "wxdialog/StyleDlgWX.h"
@@ -132,6 +132,49 @@ wxArrayString BuildWX_URL_List( const char * url_list )
 #endif /* _WX */
 
 
+
+/*----------------------------------------------------------------------
+  CreateSelectOperatorDlgWX
+  params:
+    + the thotlib catalog reference
+    + parent : parent window
+    + title : dialog title
+    + label : the message to show at dialog center
+  returns:
+    + true : the dialogue has been created
+    + false : error, nothing is created
+  ----------------------------------------------------------------------*/
+ThotBool CreateSelectOperatorDlgWX ( int ref, ThotWindow parent,
+				  char *title, char *label)
+{
+#ifdef _WX
+  /* check if the dialog is alredy open */
+  if (TtaRaiseDialogue (ref))
+    return FALSE;
+
+  wxString wx_label = TtaConvMessageToWX( label );
+  wxString wx_title = TtaConvMessageToWX( TtaGetMessage (LIB, TMSG_LIB_CONFIRM) );
+
+  SelectOperatorDlgWX * p_dlg = new SelectOperatorDlgWX(
+      ref, /* thotlib catalog reference */
+      parent, /* parent window */
+      wx_title, /* title */
+      wx_label); /* message */
+
+  if ( TtaRegisterWidgetWX( ref, p_dlg ) )
+      /* the dialog has been sucessfully registred */
+      return TRUE;
+  else
+    {
+      /* an error occured during registration */
+      p_dlg->Destroy();
+      return FALSE;
+    }
+#else /* _WX */
+  return FALSE;
+#endif /* _WX */
+}
+
 /*----------------------------------------------------------------------
   CreateInitConfirmDlgWX create the dialog for document changes
   (save/not save) comfirmation.
@@ -183,11 +226,11 @@ ThotBool CreateInitConfirmDlgWX ( int ref, ThotWindow parent,
       wx_label, wx_label2, wx_label3 ); /* message label2 */
 
   if ( TtaRegisterWidgetWX( ref, p_dlg ) )
-      /* the dialog has been sucesfully registred */
+      /* the dialog has been sucessfully registred */
       return TRUE;
   else
     {
-      /* an error occured durring registration */
+      /* an error occured during registration */
       p_dlg->Destroy();
       return FALSE;
     }
@@ -1208,7 +1251,7 @@ ThotBool CreateNumDlgWX (int ref, int subref, ThotWindow parent,
                          const char *title, const char *label, int value)
 {
 #ifdef _WX
-  /* check if the dialog is alredy open */
+  /* check if the dialog is already open */
   if (TtaRaiseDialogue (ref))
     return FALSE;
 
@@ -1221,11 +1264,11 @@ ThotBool CreateNumDlgWX (int ref, int subref, ThotWindow parent,
                                    wx_label, value );
 
   if ( TtaRegisterWidgetWX( ref, p_dlg ) )
-    /* the dialog has been sucesfully registred */
+    /* the dialog has been sucessfully registred */
     return TRUE;
   else
     {
-      /* an error occured durring registration */
+      /* an error occured during registration */
       p_dlg->Destroy();
       return FALSE;
     }

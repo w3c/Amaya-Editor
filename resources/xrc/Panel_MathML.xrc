@@ -67,8 +67,7 @@
                                                 <object class="wxBoxSizer">
                                                   <orient>wxVERTICAL</orient>
                                                   <object class="sizeritem">
-                                                    <object class="wxBoxSizer">
-                                                      <orient>wxHORIZONTAL</orient>
+                                                    <object class="wxGridSizer">
                                                       <object class="sizeritem">
                                                         <object class="wxBitmapButton" name="wxID_PANEL_MATH_BMATH">
                                                           <bitmap>../icons/16x16/MATHML_Bmath.png</bitmap>
@@ -76,152 +75,6 @@
                                                         <flag>wxALL</flag>
                                                         <border>1</border>
                                                       </object>
-                                                      <object class="spacer">
-                                                        <size>3</size>
-                                                      </object>
-                                                      <object class="sizeritem">
-                                                        <object class="wxStaticText">
-                                                          <label>markup : </label>
-                                                          <font>
-                                                            <size>8</size>
-                                                            <family>default</family>
-                                                            <style>normal</style>
-                                                            <weight>normal</weight>
-                                                            <underlined>0</underlined>
-                                                          </font>
-                                                        </object>
-                                                        <flag>wxALL|wxALIGN_CENTRE_VERTICAL</flag>
-                                                      </object>
-                                                      <object class="sizeritem">
-                                                        <object class="wxChoice" name="wxID_PANEL_MATH_MARKUP">
-                                                          <content>
-                                                            <item>presentation</item>
-                                                          </content>
-                                                          <selection>0</selection>
-                                                          <font>
-                                                            <size>7</size>
-                                                            <family>default</family>
-                                                            <style>normal</style>
-                                                            <weight>normal</weight>
-                                                            <underlined>0</underlined>
-                                                          </font>
-                                                        </object>
-                                                        <border>1</border>
-                                                      </object>
-                                                    </object>
-                                                  </object>
-                                                  <object class="sizeritem">
-                                                    <object class="wxBoxSizer">
-                                                      <orient>wxHORIZONTAL</orient>
-                                                      <object class="sizeritem">
-                                                        <object class="wxGridSizer">
-                                                          <cols>3</cols>
-                                                          <object class="sizeritem">
-                                                            <object class="wxChoice" name="wxID_PANEL_MATH_LEFT">
-                                                              <content>
-                                                                <item>(</item>
-                                                                <item>[</item>
-                                                                <item>{</item>
-                                                                <item>&lt;</item>
-                                                                <item>|</item>
-                                                                <item>)</item>
-                                                                <item>]</item>
-                                                                <item>}</item>
-                                                                <item>&gt;</item>
-                                                              </content>
-                                                              <selection>0</selection>
-                                                              <size>40,28</size>
-                                                              <font>
-                                                                <size>7</size>
-                                                                <family>default</family>
-                                                                <style>normal</style>
-                                                                <weight>normal</weight>
-                                                                <underlined>0</underlined>
-                                                              </font>
-                                                            </object>
-                                                            <flag>wxADJUST_MINSIZE|wxFIXED_MINSIZE</flag>
-                                                          </object>
-                                                          <object class="sizeritem">
-                                                            <object class="wxChoice" name="wxID_PANEL_MATH_SEPARATORS">
-                                                              <content>
-                                                                <item>,</item>
-                                                                <item>;</item>
-                                                                <item>|</item>
-                                                                <item>/</item>
-                                                                <item>\</item>
-                                                                <item>:</item>
-                                                                <item>.</item>
-                                                                <item>-</item>
-                                                              </content>
-                                                              <selection>0</selection>
-                                                              <size>40,28</size>
-                                                              <font>
-                                                                <size>7</size>
-                                                                <family>default</family>
-                                                                <style>normal</style>
-                                                                <weight>normal</weight>
-                                                                <underlined>0</underlined>
-                                                              </font>
-                                                            </object>
-                                                            <flag>wxADJUST_MINSIZE</flag>
-                                                          </object>
-                                                          <object class="sizeritem">
-                                                            <object class="wxChoice" name="wxID_PANEL_MATH_RIGHT">
-                                                              <content>
-                                                                <item>)</item>
-                                                                <item>]</item>
-                                                                <item>}</item>
-                                                                <item>&gt;</item>
-                                                                <item>|</item>
-                                                                <item>(</item>
-                                                                <item>[</item>
-                                                                <item>{</item>
-                                                                <item>&lt;</item>
-                                                              </content>
-                                                              <selection>0</selection>
-                                                              <size>40,28</size>
-                                                              <font>
-                                                                <size>7</size>
-                                                                <family>default</family>
-                                                                <style>normal</style>
-                                                                <weight>normal</weight>
-                                                                <underlined>0</underlined>
-                                                              </font>
-                                                            </object>
-                                                            <flag>wxADJUST_MINSIZE</flag>
-                                                          </object>
-                                                        </object>
-                                                      </object>
-                                                      <object class="sizeritem">
-                                                        <object class="wxGridSizer">
-                                                          <cols>3</cols>
-                                                          <object class="sizeritem">
-                                                            <object class="wxBitmapButton" name="wxID_PANEL_MATH_PARENTHESIS">
-                                                              <bitmap>../icons/16x16/MATHML_parenthesis.png</bitmap>
-                                                              <tooltip>parenthesis</tooltip>
-                                                            </object>
-                                                            <flag>wxALL</flag>
-                                                          </object>
-                                                          <object class="sizeritem">
-                                                            <object class="wxBitmapButton" name="wxID_PANEL_MATH_INTERVAL">
-                                                              <bitmap>../icons/16x16/MATHML_interval.png</bitmap>
-                                                              <tooltip>interval</tooltip>
-                                                            </object>
-                                                            <flag>wxALL</flag>
-                                                          </object>
-                                                          <object class="sizeritem">
-                                                            <object class="wxBitmapButton" name="wxID_PANEL_MATH_FENCE">
-                                                              <bitmap>../icons/16x16/MATHML_fence.png</bitmap>
-                                                              <tooltip>fence</tooltip>
-                                                            </object>
-                                                            <flag>wxALL</flag>
-                                                          </object>
-                                                        </object>
-                                                      </object>
-                                                    </object>
-                                                  </object>
-                                                  <object class="sizeritem">
-                                                    <object class="wxBoxSizer">
                                                       <object class="sizeritem">
                                                         <object class="wxBitmapButton" name="wxID_PANEL_MATH_MROW">
                                                           <bitmap>../icons/16x16/MATHML_mrow.png</bitmap>
@@ -234,6 +87,35 @@
                                                         <object class="wxBitmapButton" name="wxID_PANEL_MATH_MPHANTOM">
                                                           <bitmap>../icons/16x16/MATHML_mphantom.png</bitmap>
                                                           <tooltip>mphantom</tooltip>
+                                                        </object>
+                                                        <flag>wxALL</flag>
+                                                        <border>1</border>
+                                                      </object>
+                                                      <object class="sizeritem">
+                                                        <object class="wxBitmapButton" name="wxID_PANEL_MATH_PARENTHESIS">
+                                                          <bitmap>../icons/16x16/MATHML_parenthesis.png</bitmap>
+                                                          <tooltip>parenthesis</tooltip>
+                                                        </object>
+                                                        <flag>wxALL</flag>
+                                                      </object>
+                                                      <object class="sizeritem">
+                                                        <object class="wxBitmapButton" name="wxID_PANEL_MATH_INTERVAL">
+                                                          <bitmap>../icons/16x16/MATHML_interval.png</bitmap>
+                                                          <tooltip>interval</tooltip>
+                                                        </object>
+                                                        <flag>wxALL</flag>
+                                                      </object>
+                                                      <object class="sizeritem">
+                                                        <object class="wxBitmapButton" name="wxID_PANEL_MATH_FENCE">
+                                                          <bitmap>../icons/16x16/MATHML_fence.png</bitmap>
+                                                          <tooltip>fence</tooltip>
+                                                        </object>
+                                                        <flag>wxALL</flag>
+                                                      </object>
+                                                      <object class="sizeritem">
+                                                        <object class="wxBitmapButton" name="wxID_PANEL_MATH_MTABLE">
+                                                          <bitmap>../icons/16x16/MATHML_matrix.png</bitmap>
+                                                          <tooltip>mtable</tooltip>
                                                         </object>
                                                         <flag>wxALL</flag>
                                                         <border>1</border>
@@ -254,11 +136,27 @@
                                                         <flag>wxALL</flag>
                                                         <border>1</border>
                                                       </object>
-                                                      <orient>wxHORIZONTAL</orient>
+                                                      <cols>7</cols>
                                                       <object class="sizeritem">
-                                                        <object class="wxBitmapButton" name="wxID_PANEL_MATH_MTABLE">
-                                                          <bitmap>../icons/16x16/MATHML_matrix.png</bitmap>
-                                                          <tooltip>mtable</tooltip>
+                                                        <object class="wxBitmapButton" name="wxID_PANEL_MATH_SELECTOR">
+                                                          <bitmap>../icons/16x16/MATHML_selector.png</bitmap>
+                                                          <tooltip>selector</tooltip>
+                                                        </object>
+                                                        <flag>wxALL</flag>
+                                                        <border>1</border>
+                                                      </object>
+                                                      <object class="sizeritem">
+                                                        <object class="wxBitmapButton" name="wxID_PANEL_MATH_PIECEWISE">
+                                                          <bitmap>../icons/16x16/MATHML_piecewise.png</bitmap>
+                                                          <tooltip>piecewise</tooltip>
+                                                        </object>
+                                                        <flag>wxALL</flag>
+                                                        <border>1</border>
+                                                      </object>
+                                                      <object class="sizeritem">
+                                                        <object class="wxBitmapButton" name="wxID_PANEL_MATH_VERTICALBRACE">
+                                                          <bitmap>../icons/16x16/MATHML_verticalbrace.png</bitmap>
+                                                          <tooltip>vertical brace</tooltip>
                                                         </object>
                                                         <flag>wxALL</flag>
                                                         <border>1</border>
@@ -466,30 +364,6 @@
                                                         <object class="wxBitmapButton" name="wxID_PANEL_MATH_UNDERBRACE">
                                                           <bitmap>../icons/16x16/MATHML_underbrace.png</bitmap>
                                                           <tooltip>underbrace</tooltip>
-                                                        </object>
-                                                        <flag>wxALL</flag>
-                                                        <border>1</border>
-                                                      </object>
-                                                      <object class="sizeritem">
-                                                        <object class="wxBitmapButton" name="wxID_PANEL_MATH_PIECEWISE">
-                                                          <bitmap>../icons/16x16/MATHML_piecewise.png</bitmap>
-                                                          <tooltip>piecewise</tooltip>
-                                                        </object>
-                                                        <flag>wxALL</flag>
-                                                        <border>1</border>
-                                                      </object>
-                                                      <object class="sizeritem">
-                                                        <object class="wxBitmapButton" name="wxID_PANEL_MATH_VERTICALBRACE">
-                                                          <bitmap>../icons/16x16/MATHML_verticalbrace.png</bitmap>
-                                                          <tooltip>vertical brace</tooltip>
-                                                        </object>
-                                                        <flag>wxALL</flag>
-                                                        <border>1</border>
-                                                      </object>
-                                                      <object class="sizeritem">
-                                                        <object class="wxBitmapButton" name="wxID_PANEL_MATH_SELECTOR">
-                                                          <bitmap>../icons/16x16/MATHML_selector.png</bitmap>
-                                                          <tooltip>selector</tooltip>
                                                         </object>
                                                         <flag>wxALL</flag>
                                                         <border>1</border>

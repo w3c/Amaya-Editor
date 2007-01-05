@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resource version="2.3.0.1" xmlns="http://www.wxwindows.org/wxxrc">
+  <object class="wxDialog" name="SelectFenceAttributesDlgWX">
+    <title></title>
+    <centered>1</centered>
+    <style>wxDEFAULT_DIALOG_STYLE|wxSTAY_ON_TOP|wxRESIZE_BORDER|wxNO_3D|wxTAB_TRAVERSAL</style>
+    <object class="wxBoxSizer">
+      <orient>wxVERTICAL</orient>
+      <object class="spacer">
+        <size>0,10</size>
+      </object>
+      <object class="sizeritem">
+        <object class="wxStaticText" name="wxID_LABEL">
+          <label>*Select open, separators and close symbols*</label>
+        </object>
+      </object>
+      <object class="spacer">
+        <size>0,10</size>
+      </object>
+      <object class="sizeritem">
+        <object class="wxGridSizer">
+          <cols>3</cols>
+          <object class="sizeritem">
+            <object class="wxChoice" name="wxID_PANEL_MATH_LEFT">
+              <content>
+                <item>(</item>
+                <item>[</item>
+                <item>{</item>
+                <item>&lt;</item>
+                <item>|</item>
+                <item>)</item>
+                <item>]</item>
+                <item>}</item>
+                <item>&gt;</item>
+              </content>
+              <selection>0</selection>
+              <size>50,30</size>
+            </object>
+          </object>
+          <object class="sizeritem">
+            <object class="wxChoice" name="wxID_PANEL_MATH_SEPARATORS">
+              <content>
+                <item>,</item>
+                <item>;</item>
+                <item>|</item>
+                <item>/</item>
+                <item>\</item>
+                <item>:</item>
+                <item>.</item>
+                <item>-</item>
+              </content>
+              <selection>0</selection>
+              <size>50,30</size>
+              <font>
+                <size>12</size>
+                <family>default</family>
+                <style>normal</style>
+                <weight>normal</weight>
+                <underlined>0</underlined>
+              </font>
+            </object>
+          </object>
+          <object class="sizeritem">
+            <object class="wxChoice" name="wxID_PANEL_MATH_RIGHT">
+              <content>
+                <item>)</item>
+                <item>]</item>
+                <item>}</item>
+                <item>&gt;</item>
+                <item>|</item>
+                <item>(</item>
+                <item>[</item>
+                <item>{</item>
+                <item>&lt;</item>
+              </content>
+              <selection>0</selection>
+              <size>50,30</size>
+            </object>
+          </object>
+        </object>
+        <flag>wxALIGN_CENTRE</flag>
+      </object>
+      <object class="spacer">
+        <size>0,10</size>
+      </object>
+      <object class="sizeritem">
+        <object class="wxButton" name="wxID_INTEGRAL_INSERT">
+          <label>*insert*</label>
+        </object>
+        <flag>wxALL|wxALIGN_CENTRE</flag>
+      </object>
+    </object>
+  </object>
+</resource>

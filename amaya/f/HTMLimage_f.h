@@ -22,10 +22,6 @@ extern void UpdateImageMap ( Element image,
                              Document doc,
                              int oldWidth,
                              int oldHeight );
-extern void SetAttrOnElement ( Document doc,
-                               Element el,
-                               int attrNum,
-                               int value );
 extern void DisplayImage ( Document doc,
                            Element el,
                            LoadedImageDesc *desc,
@@ -64,10 +60,6 @@ extern void UpdateImageMap ( Element image,
                                Document doc,
                                int oldWidth,
                                int oldHeight );
-extern void SetAttrOnElement ( Document doc,
-                                 Element el,
-                                 int attrNum,
-                                 int value );
 extern void DisplayImage ( Document doc,
                              Element el,
                              LoadedImageDesc *desc,
