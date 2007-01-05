@@ -1601,6 +1601,7 @@ void ComputePosRelation (AbPosition *rule, PtrBox pBox, int frame,
         {
 #ifdef _GL
           if (pRefAb &&
+              !pRefAb->AbPresentationBox &&
               pRefAb->AbElement &&
               pRefAb->AbElement->ElSystemOrigin && 
               pRefAb->AbNext != pAb &&

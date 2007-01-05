@@ -1,6 +1,6 @@
-	{ Presentation Schema for MathML.
+        { Presentation Schema for MathML.
 
-	  I. Vatton			June 1997	}
+          I. Vatton                        1997-2007        }
 
 
 PRESENTATION MathML;
@@ -76,67 +76,67 @@ DEFAULT
    FillOpacity: Enclosing =;
    StrokeOpacity: Enclosing =;
    IN Structure_view BEGIN
-	VertPos: Top = Previous . Bottom;
-	HorizPos: Left = Enclosing . Left;
-	END;
+        VertPos: Top = Previous . Bottom;
+        HorizPos: Left = Enclosing . Left;
+        END;
    IN Alternate_view
-	Visibility: 0;
+        Visibility: 0;
    END;
 
 BOXES
 
  ElementName: BEGIN
         Content: (ElemName);
-	Visibility: 0;
-	IN Structure_view BEGIN
-		Size: TAG_FONTSIZE;
-		Font: TAG_Font;
-		Style: TAG_Style; Weight: TAG_Weight;
-		Visibility: TAG_Visibility;  Foreground: TAG_Color;
-		END;
-	END;
+        Visibility: 0;
+        IN Structure_view BEGIN
+                Size: TAG_FONTSIZE;
+                Font: TAG_Font;
+                Style: TAG_Style; Weight: TAG_Weight;
+                Visibility: TAG_Visibility;  Foreground: TAG_Color;
+                END;
+        END;
 
  VerticalLine: BEGIN
-	Content: Graphics 'W';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		VertPos: Top = Creator . Top;
-		HorizPos: Left = Enclosing . Left;
-		Height: Creator . Height;
-		Width: 1.1;
-	        HorizRef: * . Bottom;
-		LineWeight: 1 pt;
-		Visibility: TAG_Visibility;  Foreground: TAG_Color;
-		END;
-	END;
+        Content: Graphics 'W';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                VertPos: Top = Creator . Top;
+                HorizPos: Left = Enclosing . Left;
+                Height: Creator . Height;
+                Width: 1.1;
+                HorizRef: * . Bottom;
+                LineWeight: 1 pt;
+                Visibility: TAG_Visibility;  Foreground: TAG_Color;
+                END;
+        END;
 
  Prescripts: BEGIN
         Content: Text 'prescripts';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		Size: TAG_FONTSIZE;
-		Font: TAG_Font;
-		Style: TAG_Style; Weight: TAG_Weight;
-		Visibility: TAG_Visibility;  Foreground: TAG_Color;
-		END;
-	END;
+        Visibility: 0;
+        IN Structure_view BEGIN
+                Size: TAG_FONTSIZE;
+                Font: TAG_Font;
+                Style: TAG_Style; Weight: TAG_Weight;
+                Visibility: TAG_Visibility;  Foreground: TAG_Color;
+                END;
+        END;
 
  NONE_S: BEGIN
-	Content: Text 'none';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		Size: TAG_FONTSIZE;
-		Font: TAG_Font;
-		Style: TAG_Style; Weight: TAG_Weight;
-		Visibility: TAG_Visibility;  Foreground: TAG_Color;
-		END;
-	END;
+        Content: Text 'none';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                Size: TAG_FONTSIZE;
+                Font: TAG_Font;
+                Style: TAG_Style; Weight: TAG_Weight;
+                Visibility: TAG_Visibility;  Foreground: TAG_Color;
+                END;
+        END;
 
  QuestionMark: BEGIN
-	Content: Text '?';
-	IN Structure_view
-		Visibility: 0;
-	END;
+        Content: Text '?';
+        IN Structure_view
+                Visibility: 0;
+        END;
 
 {   A T T R I B U T E S   }
 
@@ -177,28 +177,28 @@ BOXES
         END;
 
   UnknownAttrValue: BEGIN
-	Content: (AttributeValue);
-	Visibility: 0;
-	IN Structure_view BEGIN
+        Content: (AttributeValue);
+        Visibility: 0;
+        IN Structure_view BEGIN
                 HorizPos: Left = Previous . Right;
                 VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
+                Size: TAG_FONTSIZE;
                 Font: INVALID_Font;
-		Style: INVALID_Style;
-		Visibility: INVALID_Visibility;
-		Foreground: INVALID_Color;
-		END;	
-	END;
+                Style: INVALID_Style;
+                Visibility: INVALID_Visibility;
+                Foreground: INVALID_Color;
+                END;        
+        END;
 
  AltValue: BEGIN
-	Content: (AttributeValue);
-	IN Structure_view
-		Visibility: 0;
-	END;
+        Content: (AttributeValue);
+        IN Structure_view
+                Visibility: 0;
+        END;
 
  ATTR_xml_space_default: BEGIN
-	Content: Text ' xml:space=default';
-	Visibility: 0;
+        Content: Text ' xml:space=default';
+        Visibility: 0;
         IN Structure_view BEGIN
                 HorizPos: Left = Previous . Right;
                 VertPos: HRef = Previous . HRef;
@@ -212,23 +212,23 @@ BOXES
         Content: (EntityName);
         Visibility: 0;
         IN Structure_view BEGIN
-                Visibility: Enclosing =;	
-		Size: DOC_FONTSIZE;
-		if NOT within XMLcomment_line AND NOT within XMLPI_line
-		   BEGIN
-		   HorizPos: Left = Enclosing . Left;
-		   VertPos: Top = Previous . Bottom;
-		   END;
-		if within XMLcomment_line
-		   HorizPos: Left = Previous . Right;
-		if within XMLPI_line
-		   HorizPos: Left = Previous . Right;
+                Visibility: Enclosing =;        
+                Size: DOC_FONTSIZE;
+                if NOT within XMLcomment_line AND NOT within XMLPI_line
+                   BEGIN
+                   HorizPos: Left = Enclosing . Left;
+                   VertPos: Top = Previous . Bottom;
+                   END;
+                if within XMLcomment_line
+                   HorizPos: Left = Previous . Right;
+                if within XMLPI_line
+                   HorizPos: Left = Previous . Right;
                 END;
         END;
  
  ATTR_xml_space_preserve: BEGIN
-	Content: Text ' xml:space=preserve';
-	Visibility: 0;
+        Content: Text ' xml:space=preserve';
+        Visibility: 0;
         IN Structure_view BEGIN
                 HorizPos: Left = Previous . Right;
                 VertPos: HRef = Previous . HRef;
@@ -238,125 +238,125 @@ BOXES
                 END;
         END;
 
- Bar:	{ fraction bar }
-	BEGIN
-	LineWeight: Creator =;
-	Height: 0.1;
+ Bar:        { fraction bar }
+        BEGIN
+        LineWeight: Creator =;
+        Height: 0.1;
         Width: Enclosing . Width;
-	HorizPos: Left = Enclosing . Left;
-	Content: Graphics 'h';	{ horizontal bar }
-	LineStyle: Solid;
-	Background: Creator =;
-	Foreground: Creator =;
-	IN Structure_view
-		Visibility: 0;
-	END;
+        HorizPos: Left = Enclosing . Left;
+        Content: Graphics 'h';        { horizontal bar }
+        LineStyle: Solid;
+        Background: Creator =;
+        Foreground: Creator =;
+        IN Structure_view
+                Visibility: 0;
+        END;
 
- BevelledBar:	{ fraction bar, bevelled style }
-	BEGIN
-	LineWeight: 1 pt;
-	Height: Enclosing . Height - 0.2;
+ BevelledBar:        { fraction bar, bevelled style }
+        BEGIN
+        LineWeight: 1 pt;
+        Height: Enclosing . Height - 0.2;
         Width: 0.6 ;
-	HorizPos: Left = Numerator . Right - 0.1;
-	VertPos: Top = Enclosing . Top + 0.1;
-	Content: Graphics '/';	{ diagonal bar }
-	LineStyle: Solid;
-	Background: Creator =;
-	Foreground: Creator =;
-	IN Structure_view
-		Visibility: 0;
-	END;
+        HorizPos: Left = Numerator . Right - 0.1;
+        VertPos: Top = Enclosing . Top + 0.1;
+        Content: Graphics '/';        { diagonal bar }
+        LineStyle: Solid;
+        Background: Creator =;
+        Foreground: Creator =;
+        IN Structure_view
+                Visibility: 0;
+        END;
 
  RootSymbol:
-	BEGIN
-	LineWeight: 1 pt;
-	Width: RootBase . Width + ROOT_OFFSET;
-	Height: RootBase . Height + 0.1;
-	VertPos: Top = RootBase . Top - 0.1;
-	HorizPos: Left = RootBase . Left - ROOT_OFFSET;
-	Content: Symbol 'r';		{ root symbol }
-	LineStyle: Solid;
-	Background: Creator =;
-	Foreground: Creator =;
-	IN Structure_view
-		Visibility: 0;
-	END;
+        BEGIN
+        LineWeight: 1 pt;
+        Width: RootBase . Width + ROOT_OFFSET;
+        Height: RootBase . Height + 0.1;
+        VertPos: Top = RootBase . Top - 0.1;
+        HorizPos: Left = RootBase . Left - ROOT_OFFSET;
+        Content: Symbol 'r';                { root symbol }
+        LineStyle: Solid;
+        Background: Creator =;
+        Foreground: Creator =;
+        IN Structure_view
+                Visibility: 0;
+        END;
 
  SqrtSymbol:
-	BEGIN
-	LineWeight: 1 pt;
-	Height: Enclosing . Height;
-	Width: SqrtBase . Width + ROOT_OFFSET;
-	VertPos: Top = Enclosing . Top;
-	HorizPos: Left = Enclosing . Left;
-	{HorizPos: Left = SqrtBase . Left - ROOT_OFFSET;}
-	Content: Symbol 'r';		{ root symbol }
-	LineStyle: Solid;
-	Background: Creator =;
-	Foreground: Creator =;
-	IN Structure_view
-		Visibility: 0;
-	END;
+        BEGIN
+        LineWeight: 1 pt;
+        Height: Enclosing . Height;
+        Width: SqrtBase . Width + ROOT_OFFSET;
+        VertPos: Top = Enclosing . Top;
+        HorizPos: Left = Enclosing . Left;
+        {HorizPos: Left = SqrtBase . Left - ROOT_OFFSET;}
+        Content: Symbol 'r';                { root symbol }
+        LineStyle: Solid;
+        Background: Creator =;
+        Foreground: Creator =;
+        IN Structure_view
+                Visibility: 0;
+        END;
 
  RadicalSymbol:
-	BEGIN
-	LineWeight: 1 pt;
-	Height: Creator . Height;
-	Width: Creator . Width;
-	VertPos: Top = Creator . Top;
-	HorizPos: Left = Creator . Left;
-	Content: Symbol 'r';		{ root symbol }
-	LineStyle: Solid;
-	Background: Creator =;
-	Foreground: Creator =;
-	IN Structure_view
-		Visibility: 0;
-	END;
+        BEGIN
+        LineWeight: 1 pt;
+        Height: Creator . Height;
+        Width: Creator . Width;
+        VertPos: Top = Creator . Top;
+        HorizPos: Left = Creator . Left;
+        Content: Symbol 'r';                { root symbol }
+        LineStyle: Solid;
+        Background: Creator =;
+        Foreground: Creator =;
+        IN Structure_view
+                Visibility: 0;
+        END;
 
  OpeningQuote: BEGIN
- 	Content: Text '"';
-	Style: Creator =;
-	Weight: Creator =;
-	Size: Creator =;
-	Foreground: Creator =;
-	Background: Creator =;
-	IN Structure_view
-		Visibility: 0;
-	END;
+         Content: Text '"';
+        Style: Creator =;
+        Weight: Creator =;
+        Size: Creator =;
+        Foreground: Creator =;
+        Background: Creator =;
+        IN Structure_view
+                Visibility: 0;
+        END;
 
  ClosingQuote: BEGIN
- 	Content: Text '"';
- 	Content: Text '"';
-	Style: Creator =;
-	Weight: Creator =;
-	Size: Creator =;
-	Foreground: Creator =;
-	Background: Creator =;
-	IN Structure_view
-		Visibility: 0;
-	END;
+         Content: Text '"';
+         Content: Text '"';
+        Style: Creator =;
+        Weight: Creator =;
+        Size: Creator =;
+        Foreground: Creator =;
+        Background: Creator =;
+        IN Structure_view
+                Visibility: 0;
+        END;
 
  LeftQuote: BEGIN
- 	Content: (lquote);
-	Style: Creator =;
-	Weight: Creator =;
-	Size: Creator =;
-	Foreground: Creator =;
-	Background: Creator =;
-	IN Structure_view
-		Visibility: 0;
-	END;
+         Content: (lquote);
+        Style: Creator =;
+        Weight: Creator =;
+        Size: Creator =;
+        Foreground: Creator =;
+        Background: Creator =;
+        IN Structure_view
+                Visibility: 0;
+        END;
 
  RightQuote: BEGIN
- 	Content: (rquote);
-	Style: Creator =;
-	Weight: Creator =;
-	Size: Creator =;
-	Foreground: Creator =;
-	Background: Creator =;
-	IN Structure_view
-		Visibility: 0;
-	END;
+         Content: (rquote);
+        Style: Creator =;
+        Weight: Creator =;
+        Size: Creator =;
+        Foreground: Creator =;
+        Background: Creator =;
+        IN Structure_view
+                Visibility: 0;
+        END;
 
  Comment_Start:
         BEGIN
@@ -373,8 +373,8 @@ BOXES
         Visibility: 0;
         IN Structure_view BEGIN
                 Visibility: Enclosing =;
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
                 END;
         END;
 
@@ -395,259 +395,259 @@ BOXES
         IN Structure_view BEGIN
                 Visibility: Enclosing =;
                 Foreground: TAG_Color;
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
                 END;
         END;
 
  CDATA_S: BEGIN
-	Content: Text '<![CDATA[';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		Visibility: Enclosing =;
-		Foreground: TAG_Color;
-		END;
-	END;
+        Content: Text '<![CDATA[';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                Visibility: Enclosing =;
+                Foreground: TAG_Color;
+                END;
+        END;
 
  CDATA_E: BEGIN
-	Content: Text ']]>';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		Visibility: Enclosing =;
-		Foreground: TAG_Color;
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		END;
-	END;
+        Content: Text ']]>';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                Visibility: Enclosing =;
+                Foreground: TAG_Color;
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                END;
+        END;
 
  Unknown_End: BEGIN
-	Content: Text '>';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		Visibility: Enclosing =;
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: INVALID_Style;
-		Foreground: Creator =;
-		END;
-	END;
+        Content: Text '>';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                Visibility: Enclosing =;
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: INVALID_Style;
+                Foreground: Creator =;
+                END;
+        END;
 
  IndexBox: BEGIN
-	Content: Picture 'AmayaSrcSyncIndex.gif';
-	HorizPos: Left = Root . Left;
-	VertPos: Top = Creator . Top;
-	VertOverflow : Yes;
-	HorizOverflow : Yes;
-	Inline: No;
-	Visibility: Creator =;
-	IN Structure_view
-		Visibility: 0;
-	IN Alternate_view
-		Visibility: 0;
-	END;
+        Content: Picture 'AmayaSrcSyncIndex.gif';
+        HorizPos: Left = Root . Left;
+        VertPos: Top = Creator . Top;
+        VertOverflow : Yes;
+        HorizOverflow : Yes;
+        Inline: No;
+        Visibility: Creator =;
+        IN Structure_view
+                Visibility: 0;
+        IN Alternate_view
+                Visibility: 0;
+        END;
 
  SolidRowLine: BEGIN
-	HorizPos: Left = Creator . Left;
-	VertPos: Bottom = Enclosing . Bottom;
-	Height: 1 pt;
-	LineWeight: 1 pt;
-	Width: Creator . Width;
-	HorizOverflow: yes;
-	VertOverflow: yes;
-	Content: Graphics 'h';	{ horizontal bar }
-	LineStyle: Solid;
-	Background: Creator =;
-	Foreground: GrandFather =;	{ same color as the MTABLE element }
-	IN Structure_view
-		Visibility: 0;
-	END;
+        HorizPos: Left = Creator . Left;
+        VertPos: Bottom = Enclosing . Bottom;
+        Height: 1 pt;
+        LineWeight: 1 pt;
+        Width: Creator . Width;
+        HorizOverflow: yes;
+        VertOverflow: yes;
+        Content: Graphics 'h';        { horizontal bar }
+        LineStyle: Solid;
+        Background: Creator =;
+        Foreground: GrandFather =;        { same color as the MTABLE element }
+        IN Structure_view
+                Visibility: 0;
+        END;
  DashedRowLine: BEGIN
-	HorizPos: Left = Creator . Left;
-	VertPos: Bottom = Enclosing . Bottom;
-	Height: 1 pt;
-	LineWeight: 1 pt;
-	Width: Creator . Width;
-	HorizOverflow: yes;
-	VertOverflow: yes;
-	Content: Graphics 'h';	{ horizontal bar }
-	LineStyle: Dotted;
-	Background: Creator =;
-	Foreground: GrandFather =;	{ same color as the MTABLE element }
-	IN Structure_view
-		Visibility: 0;
-	END;
+        HorizPos: Left = Creator . Left;
+        VertPos: Bottom = Enclosing . Bottom;
+        Height: 1 pt;
+        LineWeight: 1 pt;
+        Width: Creator . Width;
+        HorizOverflow: yes;
+        VertOverflow: yes;
+        Content: Graphics 'h';        { horizontal bar }
+        LineStyle: Dotted;
+        Background: Creator =;
+        Foreground: GrandFather =;        { same color as the MTABLE element }
+        IN Structure_view
+                Visibility: 0;
+        END;
  SolidColumnLine: BEGIN
-	HorizPos: Left = Creator . Right;
-	VertPos: Top = Enclosing . Top;
-	Height: Enclosing . Height;
-	LineWeight: 1 pt;
-	Width: 1 px;
-	HorizOverflow: yes;
-	VertOverflow: yes;
-	Content: Graphics 'v';	{ vertical bar }
-	LineStyle: Solid;
-	Background: Creator =;
-	Foreground: GrandFather =;	{ same color as the MTABLE element }
-	IN Structure_view
-		Visibility: 0;
-	END;
+        HorizPos: Left = Creator . Right;
+        VertPos: Top = Enclosing . Top;
+        Height: Enclosing . Height;
+        LineWeight: 1 pt;
+        Width: 1 px;
+        HorizOverflow: yes;
+        VertOverflow: yes;
+        Content: Graphics 'v';        { vertical bar }
+        LineStyle: Solid;
+        Background: Creator =;
+        Foreground: GrandFather =;        { same color as the MTABLE element }
+        IN Structure_view
+                Visibility: 0;
+        END;
  DashedColumnLine: BEGIN
-	HorizPos: Left = Creator . Right;
-	VertPos: Top = Enclosing . Top;
-	Height: Enclosing . Height;
-	LineWeight: 1 pt;
-	Width: 1 px;
-	HorizOverflow: yes;
-	VertOverflow: yes;
-	Content: Graphics 'v';	{ vertical bar }
-	LineStyle: Dotted;
-	Background: Creator =;
-	Foreground: GrandFather =;	{ same color as the MTABLE element }
-	IN Structure_view
-		Visibility: 0;
-	END;
+        HorizPos: Left = Creator . Right;
+        VertPos: Top = Enclosing . Top;
+        Height: Enclosing . Height;
+        LineWeight: 1 pt;
+        Width: 1 px;
+        HorizOverflow: yes;
+        VertOverflow: yes;
+        Content: Graphics 'v';        { vertical bar }
+        LineStyle: Dotted;
+        Background: Creator =;
+        Foreground: GrandFather =;        { same color as the MTABLE element }
+        IN Structure_view
+                Visibility: 0;
+        END;
  SolidRowLineExt: BEGIN
-	HorizPos: Left = Creator . Left;
-	VertPos: Bottom = Creator . Bottom;
-	Height: 1 pt;
-	LineWeight: 1 pt;
-	Width: Creator . Width;
-	HorizOverflow: yes;
-	VertOverflow: yes;
-	Content: Graphics 'h';	{ horizontal bar }
-	LineStyle: Solid;
-	Background: Creator =;
-	Foreground: GrandFather =;	{ same color as the MTABLE element }
-	IN Structure_view
-		Visibility: 0;
-	END;
+        HorizPos: Left = Creator . Left;
+        VertPos: Bottom = Creator . Bottom;
+        Height: 1 pt;
+        LineWeight: 1 pt;
+        Width: Creator . Width;
+        HorizOverflow: yes;
+        VertOverflow: yes;
+        Content: Graphics 'h';        { horizontal bar }
+        LineStyle: Solid;
+        Background: Creator =;
+        Foreground: GrandFather =;        { same color as the MTABLE element }
+        IN Structure_view
+                Visibility: 0;
+        END;
  DashedRowLineExt: BEGIN
-	HorizPos: Left = Creator . Left;
-	VertPos: Bottom = Creator . Bottom;
-	Height: 1 pt;
-	LineWeight: 1 pt;
-	Width: Creator . Width;
-	HorizOverflow: yes;
-	VertOverflow: yes;
-	Content: Graphics 'h';	{ horizontal bar }
-	LineStyle: Dotted;
-	Background: Creator =;
-	Foreground: GrandFather =;	{ same color as the MTABLE element }
-	IN Structure_view
-		Visibility: 0;
-	END;
+        HorizPos: Left = Creator . Left;
+        VertPos: Bottom = Creator . Bottom;
+        Height: 1 pt;
+        LineWeight: 1 pt;
+        Width: Creator . Width;
+        HorizOverflow: yes;
+        VertOverflow: yes;
+        Content: Graphics 'h';        { horizontal bar }
+        LineStyle: Dotted;
+        Background: Creator =;
+        Foreground: GrandFather =;        { same color as the MTABLE element }
+        IN Structure_view
+                Visibility: 0;
+        END;
  SolidColumnLineExt: BEGIN
-	HorizPos: Left = Creator . Right;
-	VertPos: Top = Enclosing . Top;
-	Height: Creator . Height;
-	LineWeight: 1 pt;
-	Width: 1 px;
-	HorizOverflow: yes;
-	VertOverflow: yes;
-	Content: Graphics 'v';	{ vertical bar }
-	LineStyle: Solid;
-	Background: Creator =;
-	Foreground: GrandFather =;	{ same color as the MTABLE element }
-	IN Structure_view
-		Visibility: 0;
-	END;
+        HorizPos: Left = Creator . Right;
+        VertPos: Top = Enclosing . Top;
+        Height: Creator . Height;
+        LineWeight: 1 pt;
+        Width: 1 px;
+        HorizOverflow: yes;
+        VertOverflow: yes;
+        Content: Graphics 'v';        { vertical bar }
+        LineStyle: Solid;
+        Background: Creator =;
+        Foreground: GrandFather =;        { same color as the MTABLE element }
+        IN Structure_view
+                Visibility: 0;
+        END;
  DashedColumnLineExt: BEGIN
-	HorizPos: Left = Creator . Right;
-	VertPos: Top = Enclosing . Top;
-	Height: Creator . Height;
-	LineWeight: 1 pt;
-	Width: 1 px;
-	HorizOverflow: yes;
-	VertOverflow: yes;
-	Content: Graphics 'v';	{ vertical bar }
-	LineStyle: Dotted;
-	Background: Creator =;
-	Foreground: GrandFather =;	{ same color as the MTABLE element }
-	IN Structure_view
-		Visibility: 0;
-	END;
+        HorizPos: Left = Creator . Right;
+        VertPos: Top = Enclosing . Top;
+        Height: Creator . Height;
+        LineWeight: 1 pt;
+        Width: 1 px;
+        HorizOverflow: yes;
+        VertOverflow: yes;
+        Content: Graphics 'v';        { vertical bar }
+        LineStyle: Dotted;
+        Background: Creator =;
+        Foreground: GrandFather =;        { same color as the MTABLE element }
+        IN Structure_view
+                Visibility: 0;
+        END;
 
 RULES
 
    Document:
-	BEGIN
+        BEGIN
         Width: Enclosing . Width;
-	HorizPos: Left = Enclosing . Left;
-	MarginLeft: 3 em;
-	VertPos: Top = Enclosing . Top + 0.5 cm;
-	Font: Times;
-	IN Structure_view BEGIN
-	        Font: Helvetica;
-		Width: Enclosing . Width;
-		HorizPos: Left = Enclosing . Left;
-		MarginLeft: 0.5;
-		Visibility: 10;
-		END;
-	END;
+        HorizPos: Left = Enclosing . Left;
+        MarginLeft: 3 em;
+        VertPos: Top = Enclosing . Top + 0.5 cm;
+        Font: Times;
+        IN Structure_view BEGIN
+                Font: Helvetica;
+                Width: Enclosing . Width;
+                HorizPos: Left = Enclosing . Left;
+                MarginLeft: 0.5;
+                Visibility: 10;
+                END;
+        END;
 
    MathML:
-	BEGIN
-	Style: Roman;
-	CreateBefore(ElementName);
-	CreateWith(VerticalLine);
-	PageBreak: No;
-	LineBreak: No;
-	LineWeight: 1 pt;
-	Direction: ltr;
-	VertPos: Top = Previous . Bottom;
-	HorizPos: Left = Enclosing . Left;
+        BEGIN
+        Style: Roman;
+        CreateBefore(ElementName);
+        CreateWith(VerticalLine);
+        PageBreak: No;
+        LineBreak: No;
+        LineWeight: 1 pt;
+        Direction: ltr;
+        VertPos: Top = Previous . Bottom;
+        HorizPos: Left = Enclosing . Left;
         HorizRef: Enclosed not ElemWithAttr IntVertStretch . HRef;
         { the following rules draw a transprent frame around the formula }
-	{ this frame is painted when the selection is within the formula }
-	{ see attribute IntSelected }
-	BorderTopWidth: 1 px;
-	BorderTopStyle: Solid;
-	BorderTopColor: transparent;
-	BorderRightWidth: 1 px;
-	BorderRightStyle: Solid;
-	BorderRightColor: transparent;
-	BorderBottomWidth: 1 px;
-	BorderBottomStyle: Solid;
-	BorderBottomColor: transparent;
-	BorderLeftWidth: 1 px;
-	BorderLeftStyle: Solid;
-	BorderLeftColor: transparent;
-	IN Structure_view BEGIN
-		Width: Enclosing . Width - STRUCT_INDENT;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		Size: Enclosing =;
-	     	BorderTopStyle: None;
-	     	BorderRightStyle: None;
-	     	BorderBottomStyle: None;
-	     	BorderLeftStyle: None;
-		END;
-	IN Alternate_view
-		BEGIN
-		Size: Enclosing =;
-		Visibility: Enclosing =;
-		Height: 0;
-		END;
-	END;
+        { this frame is painted when the selection is within the formula }
+        { see attribute IntSelected }
+        BorderTopWidth: 1 px;
+        BorderTopStyle: Solid;
+        BorderTopColor: transparent;
+        BorderRightWidth: 1 px;
+        BorderRightStyle: Solid;
+        BorderRightColor: transparent;
+        BorderBottomWidth: 1 px;
+        BorderBottomStyle: Solid;
+        BorderBottomColor: transparent;
+        BorderLeftWidth: 1 px;
+        BorderLeftStyle: Solid;
+        BorderLeftColor: transparent;
+        IN Structure_view BEGIN
+                Width: Enclosing . Width - STRUCT_INDENT;
+                HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+                Size: Enclosing =;
+                BorderTopStyle: None;
+                BorderRightStyle: None;
+                BorderBottomStyle: None;
+                BorderLeftStyle: None;
+                END;
+        IN Alternate_view
+                BEGIN
+                Size: Enclosing =;
+                Visibility: Enclosing =;
+                Height: 0;
+                END;
+        END;
 
    XMLcomment:
         BEGIN
         Visibility: 0;
         IN Structure_view BEGIN
-		Visibility: Enclosing =;
+                Visibility: Enclosing =;
                 Width: Enclosing . Width ;
                 Foreground: COMMENT_Color;
                 END;
         END;
 
    XMLcomment_line:
-	BEGIN
+        BEGIN
         IF First CreateFirst(Comment_Start);
         IF Last CreateLast(Comment_End);
         IN Structure_view BEGIN
-		HorizPos: Left = Enclosing . Left;
-        	VertPos: Top = Previous . Bottom + 0.2;
-        	Width: Enclosed . Width;
+                HorizPos: Left = Enclosing . Left;
+                VertPos: Top = Previous . Bottom + 0.2;
+                Width: Enclosed . Width;
                 END;
         END;
 
@@ -655,649 +655,649 @@ RULES
         BEGIN
         Visibility: 0;
         IN Structure_view BEGIN
-		Visibility: Enclosing =;
+                Visibility: Enclosing =;
                 Width: Enclosing . Width ;
                 END;
         END;
 
    XMLPI_line:
-	BEGIN
+        BEGIN
         IF First CreateFirst(PI_Start);
         IF Last CreateLast(PI_End);
         IN Structure_view BEGIN
-		HorizPos: Left = Enclosing . Left;
-        	VertPos: Top = Previous . Bottom + 0.2;
-        	Width: Enclosed . Width;
+                HorizPos: Left = Enclosing . Left;
+                VertPos: Top = Previous . Bottom + 0.2;
+                Width: Enclosed . Width;
                 END;
         END;
 
   DOCTYPE:
-	BEGIN
-	Visibility: 0;
-	IN Structure_view BEGIN
-		Visibility: Enclosing =;
+        BEGIN
+        Visibility: 0;
+        IN Structure_view BEGIN
+                Visibility: Enclosing =;
                 Width: Enclosing . Width ;
-		Foreground: TAG_Color;
-		END;
-	END;
+                Foreground: TAG_Color;
+                END;
+        END;
 
   DOCTYPE_line:
-	BEGIN
-	Visibility: 0;
-	IN Structure_view BEGIN
-		Visibility: Enclosing =;
-		Width: Enclosed . Width;
-		VertPos: Top = Previous . Bottom;
-		END;
-	END;
+        BEGIN
+        Visibility: 0;
+        IN Structure_view BEGIN
+                Visibility: Enclosing =;
+                Width: Enclosed . Width;
+                VertPos: Top = Previous . Bottom;
+                END;
+        END;
 
   CDATA:
-	BEGIN
-	Visibility: Enclosing =;
-	IN Structure_view BEGIN
-		Width: Enclosing . Width;
-		END;
-	END;
+        BEGIN
+        Visibility: Enclosing =;
+        IN Structure_view BEGIN
+                Width: Enclosing . Width;
+                END;
+        END;
 
   CDATA_line:
-	BEGIN
-	Visibility: Enclosing =;
-	HorizPos: Left = Enclosing . Left;
-	IF First CreateFirst(CDATA_S);
-	IF Last CreateLast(CDATA_E);
-	IN Structure_view BEGIN
-		Width: Enclosed . Width;
-		END;
-	END;
+        BEGIN
+        Visibility: Enclosing =;
+        HorizPos: Left = Enclosing . Left;
+        IF First CreateFirst(CDATA_S);
+        IF Last CreateLast(CDATA_E);
+        IN Structure_view BEGIN
+                Width: Enclosed . Width;
+                END;
+        END;
 
    Unknown_namespace:
-	BEGIN
-	Visibility: 0;
-	if NOT AnyAttributes
-	  CreateAfter(Unknown_End);
-	IN Structure_view BEGIN
-		Visibility: Enclosing =;
-		Size: TAG_FONTSIZE;
-		Style: INVALID_Style;
-		Weight: INVALID_Weight;
-		Foreground: INVALID_Color;
-		Font: INVALID_Font;
-		END;
-	END;
+        BEGIN
+        Visibility: 0;
+        if NOT AnyAttributes
+          CreateAfter(Unknown_End);
+        IN Structure_view BEGIN
+                Visibility: Enclosing =;
+                Size: TAG_FONTSIZE;
+                Style: INVALID_Style;
+                Weight: INVALID_Weight;
+                Foreground: INVALID_Color;
+                Font: INVALID_Font;
+                END;
+        END;
  
    MROW:
-	BEGIN
-	CreateBefore(ElementName);
-	CreateWith(VerticalLine);
+        BEGIN
+        CreateBefore(ElementName);
+        CreateWith(VerticalLine);
         HorizRef: Enclosed not ElemWithAttr IntVertStretch . HRef;
-	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
-	IN Structure_view BEGIN
-		Size: DOC_FONTSIZE;
-		Width: Enclosing . Width - STRUCT_INDENT;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		Font: Helvetica;
-		END;
-  	END;
+        VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
+        IN Structure_view BEGIN
+                Size: DOC_FONTSIZE;
+                Width: Enclosing . Width - STRUCT_INDENT;
+                HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+                Font: Helvetica;
+                END;
+          END;
 
    Construct:
-	BEGIN
-	if empty and immediately within MSubscript
-		CreateFirst (NONE_S);
-	if empty and immediately within MSuperscript
-		CreateFirst (NONE_S);
-	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
-	Fillpattern: gray2;
-	LineWeight: 0;	{ do not draw the outline }
-	ShowBox;
-	if not immediately within MSubscript and
-	   not immediately within MSuperscript
-		Width: 0.5;
-	IN Structure_view BEGIN
-		Width: Enclosing . Width;
-		Height: Enclosed . Height;
-		HorizPos: Left = Enclosing . Left;
-		END;
-  	END;
+        BEGIN
+        if empty and immediately within MSubscript
+                CreateFirst (NONE_S);
+        if empty and immediately within MSuperscript
+                CreateFirst (NONE_S);
+        VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
+        Fillpattern: gray2;
+        LineWeight: 0;        { do not draw the outline }
+        ShowBox;
+        if not immediately within MSubscript and
+           not immediately within MSuperscript
+                Width: 0.5;
+        IN Structure_view BEGIN
+                Width: Enclosing . Width;
+                Height: Enclosed . Height;
+                HorizPos: Left = Enclosing . Left;
+                END;
+          END;
 
    Construct1:
-	BEGIN
+        BEGIN
         Height: 1;
-	Width: Enclosed . Width;
-	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
-	Fillpattern: nopattern;
-	LineWeight: 0;	{ do not draw the outline }
-	ShowBox;
-	IN Structure_view BEGIN
-		Width: Enclosing . Width;
-		Height: Enclosed . Height;
-		HorizPos: Left = Enclosing . Left;
-		END;
-  	END;
+        Width: Enclosed . Width;
+        VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
+        Fillpattern: nopattern;
+        LineWeight: 0;        { do not draw the outline }
+        ShowBox;
+        IN Structure_view BEGIN
+                Width: Enclosing . Width;
+                Height: Enclosed . Height;
+                HorizPos: Left = Enclosing . Left;
+                END;
+          END;
 
    MSQRT:
         BEGIN
-	CreateFirst(SqrtSymbol);
-	CreateBefore(ElementName);
-	CreateWith(VerticalLine);
-	HorizRef: Enclosed SqrtBase . HRef ;
-	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
-	if immediately within SqrtBase
-	    { add some space between the horizontal bar of nested root symbols }
-	    PaddingTop: 0.15;
-	Gather: Yes;
-	IN Structure_view BEGIN
-		Size: DOC_FONTSIZE;
-		Width: Enclosing . Width - STRUCT_INDENT;
-		Height: Enclosed . Height;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		PaddingTop: 0;
-		Font: Helvetica;
-		END;
-  	END;
+        CreateFirst(SqrtSymbol);
+        CreateBefore(ElementName);
+        CreateWith(VerticalLine);
+        HorizRef: Enclosed SqrtBase . HRef ;
+        VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
+        if immediately within SqrtBase
+            { add some space between the horizontal bar of nested root symbols }
+            PaddingTop: 0.15;
+        Gather: Yes;
+        IN Structure_view BEGIN
+                Size: DOC_FONTSIZE;
+                Width: Enclosing . Width - STRUCT_INDENT;
+                Height: Enclosed . Height;
+                HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+                PaddingTop: 0;
+                Font: Helvetica;
+                END;
+          END;
 
    MENCLOSE:
         BEGIN
-	CreateBefore(ElementName);
-	CreateWith(VerticalLine);
+        CreateBefore(ElementName);
+        CreateWith(VerticalLine);
         HorizRef: Enclosed . HRef;
-	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
-	BorderTopWidth: 1 pt;
-	BorderLeftWidth: 1 pt;
-	BorderTopStyle: Solid;
-	BorderLeftStyle: Solid;
-	BorderTopColor: Foreground;
-	BorderLeftColor: Foreground;
-	PaddingLeft: 0.2;
-	MarginLeft: 0.2;
-	IN Structure_view BEGIN
-		Size: DOC_FONTSIZE;
-		Width: Enclosing . Width - STRUCT_INDENT;
-		VertPos: Top =  Previous . Bottom;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		Font: Helvetica;
-		BorderTopWidth: 0;
-		BorderLeftWidth: 0;
-		PaddingLeft: Enclosing =;
-		MarginLeft: Enclosing =;
-		END;
-  	END;
+        VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
+        BorderTopWidth: 1 pt;
+        BorderLeftWidth: 1 pt;
+        BorderTopStyle: Solid;
+        BorderLeftStyle: Solid;
+        BorderTopColor: Foreground;
+        BorderLeftColor: Foreground;
+        PaddingLeft: 0.2;
+        MarginLeft: 0.2;
+        IN Structure_view BEGIN
+                Size: DOC_FONTSIZE;
+                Width: Enclosing . Width - STRUCT_INDENT;
+                VertPos: Top =  Previous . Bottom;
+                HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+                Font: Helvetica;
+                BorderTopWidth: 0;
+                BorderLeftWidth: 0;
+                PaddingLeft: Enclosing =;
+                MarginLeft: Enclosing =;
+                END;
+          END;
 
    MROOT:
         BEGIN
-	CreateFirst(RootSymbol);
-	CreateBefore(ElementName);
-	CreateWith(VerticalLine);
-	HorizRef: Enclosed RootBase . HRef ;
-	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
-	Gather: Yes;
-	IN Structure_view BEGIN
-		Size: DOC_FONTSIZE;
-		Width: Enclosing . Width - STRUCT_INDENT;
-		Height: Enclosed . Height;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		Font: Helvetica;
-		END;
-  	END;
+        CreateFirst(RootSymbol);
+        CreateBefore(ElementName);
+        CreateWith(VerticalLine);
+        HorizRef: Enclosed RootBase . HRef ;
+        VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
+        Gather: Yes;
+        IN Structure_view BEGIN
+                Size: DOC_FONTSIZE;
+                Width: Enclosing . Width - STRUCT_INDENT;
+                Height: Enclosed . Height;
+                HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+                Font: Helvetica;
+                END;
+          END;
 
    Index:
-   	BEGIN
-	HorizRef: Enclosed . HRef;
-   	HorizPos: Left = Enclosing . Left;
-	VertPos: HRef = RootBase . Top + 0.5;
-	Width: ROOT_OFFSET min;
-   	Size: Enclosing * 50 %;
-	IN Structure_view BEGIN
-		Size: Enclosing =;
-		Width: Enclosing . Width;
-		Height: Enclosed . Height;
-		END;
-   	END;
-	
-   RootBase:	
+           BEGIN
+        HorizRef: Enclosed . HRef;
+           HorizPos: Left = Enclosing . Left;
+        VertPos: HRef = RootBase . Top + 0.5;
+        Width: ROOT_OFFSET min;
+           Size: Enclosing * 50 %;
+        IN Structure_view BEGIN
+                Size: Enclosing =;
+                Width: Enclosing . Width;
+                Height: Enclosed . Height;
+                END;
+           END;
+        
+   RootBase:        
         BEGIN
-	VertPos: Top = Enclosing . Top + 0.1;
-	HorizPos: Left = Index . Right + 0.2;
-	IN Structure_view BEGIN
-		Width: Enclosing . Width;
-		Height: Enclosed . Height;
-		END;
-  	END;
+        VertPos: Top = Enclosing . Top + 0.1;
+        HorizPos: Left = Index . Right + 0.2;
+        IN Structure_view BEGIN
+                Width: Enclosing . Width;
+                Height: Enclosed . Height;
+                END;
+          END;
 
-   SqrtBase:	
+   SqrtBase:        
         BEGIN
-	VertPos: Top = Enclosing . Top + 0.1;
-	HorizPos: Left = Enclosing . Left + ROOT_OFFSET;
-	IN Structure_view BEGIN
-		Width: Enclosing . Width;
-		Height: Enclosed . Height;
-		END;
-  	END;
+        VertPos: Top = Enclosing . Top + 0.1;
+        HorizPos: Left = Enclosing . Left + ROOT_OFFSET;
+        IN Structure_view BEGIN
+                Width: Enclosing . Width;
+                Height: Enclosed . Height;
+                END;
+          END;
 
    MFRAC:
-	BEGIN
-	CreateBefore(ElementName);
-	CreateWith(VerticalLine);
-	CreateFirst (Bar);
-	LineWeight: 0.5 pt;
-	HorizRef: Enclosed Bar . Bottom + 0.1;
-	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
+        BEGIN
+        CreateBefore(ElementName);
+        CreateWith(VerticalLine);
+        CreateFirst (Bar);
+        LineWeight: 0.5 pt;
+        HorizRef: Enclosed Bar . Bottom + 0.1;
+        VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
         if within Superscript
-		Size: Enclosing * SMALLER;
+                Size: Enclosing * SMALLER;
         if within Subscript
-		Size: Enclosing * SMALLER;
+                Size: Enclosing * SMALLER;
         if within MSubscript
-		Size: Enclosing * SMALLER;
+                Size: Enclosing * SMALLER;
         if within MSuperscript
-		Size: Enclosing * SMALLER;
-	Gather: Yes;
-	IN Structure_view BEGIN
-		Size: DOC_FONTSIZE;
-		Width: Enclosing . Width - STRUCT_INDENT;
-		Height: Enclosed . Height;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		END;
-	END;
+                Size: Enclosing * SMALLER;
+        Gather: Yes;
+        IN Structure_view BEGIN
+                Size: DOC_FONTSIZE;
+                Width: Enclosing . Width - STRUCT_INDENT;
+                Height: Enclosed . Height;
+                HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+                END;
+        END;
 
    BevelledMFRAC:
-	BEGIN
-	CreateBefore(ElementName);
-	CreateWith(VerticalLine);
-	CreateFirst (BevelledBar);
-	HorizRef: Enclosed Numerator . HRef + 0.4;
-	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
-	Gather: Yes;
-	IN Structure_view BEGIN
-		Size: DOC_FONTSIZE;
-		Width: Enclosing . Width - STRUCT_INDENT;
-		Height: Enclosed . Height;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		END;
-	END;
+        BEGIN
+        CreateBefore(ElementName);
+        CreateWith(VerticalLine);
+        CreateFirst (BevelledBar);
+        HorizRef: Enclosed Numerator . HRef + 0.4;
+        VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
+        Gather: Yes;
+        IN Structure_view BEGIN
+                Size: DOC_FONTSIZE;
+                Width: Enclosing . Width - STRUCT_INDENT;
+                Height: Enclosed . Height;
+                HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+                END;
+        END;
 
    Numerator:
-	BEGIN
+        BEGIN
         if Immediately within BevelledMFRAC
-	   BEGIN
-	   HorizRef: Enclosed . HRef;
-	   VertPos: nil;
-	   HorizPos: Left = Enclosing . Left;
-	   END;
+           BEGIN
+           HorizRef: Enclosed . HRef;
+           VertPos: nil;
+           HorizPos: Left = Enclosing . Left;
+           END;
         if Immediately within MFRAC
-	   BEGIN
-	   HorizRef: * . Top;
-	   VertPos: Bottom = Bar . Top;
-	   HorizPos: VMiddle = Bar . VMiddle;
-	   END;
-	IN Structure_view BEGIN
-		Width: Enclosing . Width;
-		Height: Enclosed . Height;
-		END;
-	END;
+           BEGIN
+           HorizRef: * . Top;
+           VertPos: Bottom = Bar . Top;
+           HorizPos: VMiddle = Bar . VMiddle;
+           END;
+        IN Structure_view BEGIN
+                Width: Enclosing . Width;
+                Height: Enclosed . Height;
+                END;
+        END;
 
    Denominator:
         BEGIN
         if immediately within BevelledMFRAC
-	   BEGIN
-	   HorizRef: Enclosed . HRef;
-	   HorizPos: Left = BevelledBar . Right - 0.1;
-	   VertPos: HRef = Numerator . HRef + 0.8;
-	   END;
+           BEGIN
+           HorizRef: Enclosed . HRef;
+           HorizPos: Left = BevelledBar . Right - 0.1;
+           VertPos: HRef = Numerator . HRef + 0.8;
+           END;
         if immediately within MFRAC
-	   BEGIN
-	   HorizRef: * . Top;
-	   HorizPos: VMiddle = Bar . VMiddle;
-	   VertPos: Top = Bar . Bottom;
-	   END;
-	IN Structure_view BEGIN
-		Width: Enclosing . Width;
-		Height: Enclosed . Height;
-		END;
-	END;
+           BEGIN
+           HorizRef: * . Top;
+           HorizPos: VMiddle = Bar . VMiddle;
+           VertPos: Top = Bar . Bottom;
+           END;
+        IN Structure_view BEGIN
+                Width: Enclosing . Width;
+                Height: Enclosed . Height;
+                END;
+        END;
 
    MFENCED:
         BEGIN
-	CreateBefore(ElementName);
-	CreateWith(VerticalLine);
-	HorizRef: Enclosed FencedExpression . HRef ;
-	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
-	Gather: Yes;
-	IN Structure_view BEGIN
-		Width: Enclosing . Width - STRUCT_INDENT;
-		Height: Enclosed . Height;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		END;
-  	END;
+        CreateBefore(ElementName);
+        CreateWith(VerticalLine);
+        HorizRef: Enclosed FencedExpression . HRef ;
+        VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
+        Gather: Yes;
+        IN Structure_view BEGIN
+                Width: Enclosing . Width - STRUCT_INDENT;
+                Height: Enclosed . Height;
+                HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+                END;
+          END;
 
    FencedExpression:
         BEGIN
-	HorizRef: Enclosed . HRef;
-	VertPos: Nil;
-	Gather: Yes;
-	IN Structure_view BEGIN
-		Width: Enclosing . Width;
-		Height: Enclosed . Height;
-		HorizPos: Left = Enclosing . Left;
-		END;
-  	END;
+        HorizRef: Enclosed . HRef;
+        VertPos: Nil;
+        Gather: Yes;
+        IN Structure_view BEGIN
+                Width: Enclosing . Width;
+                Height: Enclosed . Height;
+                HorizPos: Left = Enclosing . Left;
+                END;
+          END;
 
    FencedSeparator:
-	BEGIN
-	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
-	IN Structure_view
-		Visibility: 0;
-	END;
+        BEGIN
+        VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
+        IN Structure_view
+                Visibility: 0;
+        END;
 
    OpeningFence:
         BEGIN
-	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
-	HorizRef: Enclosed . HRef;
-	Height: Enclosing . Height;
-	HorizPos: Left = Enclosing . Left;
-	Gather: Yes;
-	IN Structure_view
-		Visibility: 0;
-	END;
+        VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
+        HorizRef: Enclosed . HRef;
+        Height: Enclosing . Height;
+        HorizPos: Left = Enclosing . Left;
+        Gather: Yes;
+        IN Structure_view
+                Visibility: 0;
+        END;
 
    ClosingFence:
         BEGIN
-	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
-	HorizRef: Enclosed . HRef;
-	Height: Enclosing . Height;
-	HorizPos: Left = Previous . Right;
-	Gather: Yes;
-	IN Structure_view
-		Visibility: 0;
-	END;
+        VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
+        HorizRef: Enclosed . HRef;
+        Height: Enclosing . Height;
+        HorizPos: Left = Previous . Right;
+        Gather: Yes;
+        IN Structure_view
+                Visibility: 0;
+        END;
 
    MSUBSUP:
         BEGIN
-	CreateBefore(ElementName);
-	CreateWith(VerticalLine);
-	Gather: Yes;
-	HorizRef: Enclosed  Base. HRef;
-	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
-	IN Structure_view BEGIN
-		Size: DOC_FONTSIZE;
-		Width: Enclosing . Width - STRUCT_INDENT;
-		Height: Enclosed . Height;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		END;
-	END;
+        CreateBefore(ElementName);
+        CreateWith(VerticalLine);
+        Gather: Yes;
+        HorizRef: Enclosed  Base. HRef;
+        VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
+        IN Structure_view BEGIN
+                Size: DOC_FONTSIZE;
+                Width: Enclosing . Width - STRUCT_INDENT;
+                Height: Enclosed . Height;
+                HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+                END;
+        END;
 
    MSUB:
         BEGIN
-	CreateBefore(ElementName);
-	CreateWith(VerticalLine);
-	Gather: Yes;
-	HorizRef: Enclosed  Base. HRef;
-	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
-	IN Structure_view BEGIN
-		Size: DOC_FONTSIZE;
-		Width: Enclosing . Width - STRUCT_INDENT;
-		Height: Enclosed . Height;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		END;
-	END;
+        CreateBefore(ElementName);
+        CreateWith(VerticalLine);
+        Gather: Yes;
+        HorizRef: Enclosed  Base. HRef;
+        VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
+        IN Structure_view BEGIN
+                Size: DOC_FONTSIZE;
+                Width: Enclosing . Width - STRUCT_INDENT;
+                Height: Enclosed . Height;
+                HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+                END;
+        END;
 
    MSUP:
         BEGIN
-	CreateBefore(ElementName);
-	CreateWith(VerticalLine);
-	Gather: Yes;
-	HorizRef: Enclosed  Base. HRef;
-	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
-	IN Structure_view BEGIN
-		Size: DOC_FONTSIZE;
-		Width: Enclosing . Width - STRUCT_INDENT;
-		Height: Enclosed . Height;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		END;
-	END;
+        CreateBefore(ElementName);
+        CreateWith(VerticalLine);
+        Gather: Yes;
+        HorizRef: Enclosed  Base. HRef;
+        VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
+        IN Structure_view BEGIN
+                Size: DOC_FONTSIZE;
+                Width: Enclosing . Width - STRUCT_INDENT;
+                Height: Enclosed . Height;
+                HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+                END;
+        END;
 
    Base:
-	BEGIN
-	VertPos: NIL;
-	HorizPos: Left = Enclosing . Left;
-	IN Structure_view BEGIN
-		Width: Enclosing . Width;
-		Height: Enclosed . Height;
-		END;
-	END;
+        BEGIN
+        VertPos: NIL;
+        HorizPos: Left = Enclosing . Left;
+        IN Structure_view BEGIN
+                Width: Enclosing . Width;
+                Height: Enclosed . Height;
+                END;
+        END;
 
    Superscript:
-	BEGIN
-	Size: Enclosing * SCRIPTSIZEMULTIPLIER;
-	HorizPos: Left = Base . Right + 0.1;
-	VertPos: Bottom = Base . Top + 0.9;
-	IN Structure_view BEGIN
-		Size: Enclosing =;
-		Width: Enclosing . Width;
-		Height: Enclosed . Height;
+        BEGIN
+        Size: Enclosing * SCRIPTSIZEMULTIPLIER;
+        HorizPos: Left = Base . Right + 0.1;
+        VertPos: Bottom = Base . Top + 0.9;
+        IN Structure_view BEGIN
+                Size: Enclosing =;
+                Width: Enclosing . Width;
+                Height: Enclosed . Height;
                 VertPos: Top = Previous . Bottom;
                 HorizPos: Left = Enclosing . Left;
-		END;
-	END;
+                END;
+        END;
 
    Subscript:
-	BEGIN
-	Size: Enclosing * SCRIPTSIZEMULTIPLIER;
-	HorizPos: Left = Base . Right;
-	VertPos: Top = Base . Bottom - 0.7;
-	IN Structure_view BEGIN
-		Size: Enclosing =;
-		Width: Enclosing . Width;
-		Height: Enclosed . Height;
+        BEGIN
+        Size: Enclosing * SCRIPTSIZEMULTIPLIER;
+        HorizPos: Left = Base . Right;
+        VertPos: Top = Base . Bottom - 0.7;
+        IN Structure_view BEGIN
+                Size: Enclosing =;
+                Width: Enclosing . Width;
+                Height: Enclosed . Height;
                 VertPos: Top = Previous . Bottom;
                 HorizPos: Left = Enclosing . Left;
-		END;
-	END;
+                END;
+        END;
 
    MUNDER:
         BEGIN
-	CreateBefore(ElementName);
-	CreateWith(VerticalLine);
-	Gather: Yes;
-	HorizRef: Enclosed UnderOverBase . HRef;
-	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
-	IN Structure_view BEGIN
-		Size: DOC_FONTSIZE;
-		Width: Enclosing . Width - STRUCT_INDENT;
-		Height: Enclosed . Height;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		END;
-	END;
+        CreateBefore(ElementName);
+        CreateWith(VerticalLine);
+        Gather: Yes;
+        HorizRef: Enclosed UnderOverBase . HRef;
+        VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
+        IN Structure_view BEGIN
+                Size: DOC_FONTSIZE;
+                Width: Enclosing . Width - STRUCT_INDENT;
+                Height: Enclosed . Height;
+                HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+                END;
+        END;
 
    MOVER:
         BEGIN
-	CreateBefore(ElementName);
-	CreateWith(VerticalLine);
-	Gather: Yes;
-	HorizRef: Enclosed UnderOverBase . HRef;
-	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
-	IN Structure_view BEGIN
-		Size: DOC_FONTSIZE;
-		Width: Enclosing . Width - STRUCT_INDENT;
-		Height: Enclosed . Height;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		END;
-	END;
+        CreateBefore(ElementName);
+        CreateWith(VerticalLine);
+        Gather: Yes;
+        HorizRef: Enclosed UnderOverBase . HRef;
+        VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
+        IN Structure_view BEGIN
+                Size: DOC_FONTSIZE;
+                Width: Enclosing . Width - STRUCT_INDENT;
+                Height: Enclosed . Height;
+                HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+                END;
+        END;
 
    MUNDEROVER:
         BEGIN
-	CreateBefore(ElementName);
-	CreateWith(VerticalLine);
-	Gather: Yes;
-	HorizRef: Enclosed UnderOverBase . HRef;
-	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
-	IN Structure_view BEGIN
-		Size: DOC_FONTSIZE;
-		Width: Enclosing . Width - STRUCT_INDENT;
-		Height: Enclosed . Height;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		END;
-	END;
+        CreateBefore(ElementName);
+        CreateWith(VerticalLine);
+        Gather: Yes;
+        HorizRef: Enclosed UnderOverBase . HRef;
+        VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
+        IN Structure_view BEGIN
+                Size: DOC_FONTSIZE;
+                Width: Enclosing . Width - STRUCT_INDENT;
+                Height: Enclosed . Height;
+                HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+                END;
+        END;
 
    UnderOverBase:
-	BEGIN
-	VertPos: NIL;
-	HorizPos: VMiddle = Enclosing . VMiddle;
-	IN Structure_view BEGIN
-		Width: Enclosing . Width;
-		Height: Enclosed . Height;
-		END;
-	END;
+        BEGIN
+        VertPos: NIL;
+        HorizPos: VMiddle = Enclosing . VMiddle;
+        IN Structure_view BEGIN
+                Width: Enclosing . Width;
+                Height: Enclosed . Height;
+                END;
+        END;
 
    Underscript:
-	BEGIN
-	Size: Enclosing * SCRIPTSIZEMULTIPLIER;
-	HorizRef: * . Top;
-	HorizPos: VMiddle = Enclosing . VMiddle;
-	VertPos: Top = UnderOverBase . Bottom;
-	IN Structure_view BEGIN
-		Size: Enclosing =;
-		Width: Enclosing . Width;
-		Height: Enclosed . Height;
-		END;
-	END;
+        BEGIN
+        Size: Enclosing * SCRIPTSIZEMULTIPLIER;
+        HorizRef: * . Top;
+        HorizPos: VMiddle = Enclosing . VMiddle;
+        VertPos: Top = UnderOverBase . Bottom;
+        IN Structure_view BEGIN
+                Size: Enclosing =;
+                Width: Enclosing . Width;
+                Height: Enclosed . Height;
+                END;
+        END;
 
    Overscript:
-	BEGIN
-	Size: Enclosing * SCRIPTSIZEMULTIPLIER;
-	HorizRef: * . Top;
-	HorizPos: VMiddle = Enclosing . VMiddle;
-	VertPos: Bottom = UnderOverBase . Top;
-	IN Structure_view BEGIN
-		Size: Enclosing =;
-		Width: Enclosing . Width;
-		Height: Enclosed . Height;
-		END;
-	END;
+        BEGIN
+        Size: Enclosing * SCRIPTSIZEMULTIPLIER;
+        HorizRef: * . Top;
+        HorizPos: VMiddle = Enclosing . VMiddle;
+        VertPos: Bottom = UnderOverBase . Top;
+        IN Structure_view BEGIN
+                Size: Enclosing =;
+                Width: Enclosing . Width;
+                Height: Enclosed . Height;
+                END;
+        END;
 
    MMULTISCRIPTS:
         BEGIN
-	CreateBefore(ElementName);
-	CreateWith(VerticalLine);
-	Gather: Yes;
-	HorizRef: Enclosed MultiscriptBase . HRef;
-	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
-	IN Structure_view BEGIN
-		Size: DOC_FONTSIZE;
-		Width: Enclosing . Width - STRUCT_INDENT;
-		Height: Enclosed . Height;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		END;
-	END;
+        CreateBefore(ElementName);
+        CreateWith(VerticalLine);
+        Gather: Yes;
+        HorizRef: Enclosed MultiscriptBase . HRef;
+        VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
+        IN Structure_view BEGIN
+                Size: DOC_FONTSIZE;
+                Width: Enclosing . Width - STRUCT_INDENT;
+                Height: Enclosed . Height;
+                HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+                END;
+        END;
 
    MultiscriptBase:
-	BEGIN
-	VertPos: NIL;
-	HorizPos: NIL;
-	IN Structure_view BEGIN
-		Width: Enclosing . Width;
-		Height: Enclosed . Height;
-		END;
-	END;
+        BEGIN
+        VertPos: NIL;
+        HorizPos: NIL;
+        IN Structure_view BEGIN
+                Width: Enclosing . Width;
+                Height: Enclosed . Height;
+                END;
+        END;
 
    PostscriptPairs:
-	BEGIN
-	Size: Enclosing * SCRIPTSIZEMULTIPLIER;
-	HorizRef: * . Top;
-	HorizPos: Left = MultiscriptBase . Right;
-	Height: MultiscriptBase . Height + 0.6;
-	VertPos: Top = MultiscriptBase . Top - 0.3;
-	IN Structure_view BEGIN
-		Size: Enclosing =;
-		Width: Enclosing . Width;
-		Height: Enclosed . Height;
-		END;
-	END;
+        BEGIN
+        Size: Enclosing * SCRIPTSIZEMULTIPLIER;
+        HorizRef: * . Top;
+        HorizPos: Left = MultiscriptBase . Right;
+        Height: MultiscriptBase . Height + 0.6;
+        VertPos: Top = MultiscriptBase . Top - 0.3;
+        IN Structure_view BEGIN
+                Size: Enclosing =;
+                Width: Enclosing . Width;
+                Height: Enclosed . Height;
+                END;
+        END;
 
    PrescriptPairs:
-	BEGIN
-	CreateBefore(Prescripts);
-	Size: Enclosing * SCRIPTSIZEMULTIPLIER;
-	HorizRef: * . Top;
-	HorizPos: Right = MultiscriptBase . Left;
-	Height: MultiscriptBase . Height + 0.6;
-	VertPos: Top = MultiscriptBase . Top - 0.3;
-	IN Structure_view BEGIN
-		Size: Enclosing =;
-		Width: Enclosing . Width;
-		Height: Enclosed . Height;
-		END;
-	END;
+        BEGIN
+        CreateBefore(Prescripts);
+        Size: Enclosing * SCRIPTSIZEMULTIPLIER;
+        HorizRef: * . Top;
+        HorizPos: Right = MultiscriptBase . Left;
+        Height: MultiscriptBase . Height + 0.6;
+        VertPos: Top = MultiscriptBase . Top - 0.3;
+        IN Structure_view BEGIN
+                Size: Enclosing =;
+                Width: Enclosing . Width;
+                Height: Enclosed . Height;
+                END;
+        END;
 
    PrescriptPair:
-	BEGIN
-	HorizRef: * . Top;
-	HorizPos: Left = Previous . Right + 0.1;
-	VertPos: Top = Enclosing . Top;
-	Height: Enclosing . Height;
-	IN Structure_view BEGIN
-		Width: Enclosing . Width;
-		Height: Enclosed . Height;
-		END;
-	END;
+        BEGIN
+        HorizRef: * . Top;
+        HorizPos: Left = Previous . Right + 0.1;
+        VertPos: Top = Enclosing . Top;
+        Height: Enclosing . Height;
+        IN Structure_view BEGIN
+                Width: Enclosing . Width;
+                Height: Enclosed . Height;
+                END;
+        END;
 
    PostscriptPair:
-	BEGIN
-	HorizRef: * . Top;
-	HorizPos: Left = Previous . Right + 0.1;
-	VertPos: Top = Enclosing . Top;
-	Height: Enclosing . Height;
-	IN Structure_view BEGIN
-		Width: Enclosing . Width;
-		Height: Enclosed . Height;
-		END;
-	END;
+        BEGIN
+        HorizRef: * . Top;
+        HorizPos: Left = Previous . Right + 0.1;
+        VertPos: Top = Enclosing . Top;
+        Height: Enclosing . Height;
+        IN Structure_view BEGIN
+                Width: Enclosing . Width;
+                Height: Enclosed . Height;
+                END;
+        END;
 
    MSubscript:
-	BEGIN
-	HorizRef: * . Top;
-	HorizPos: Left = Enclosing . Left;
-	VertPos: Bottom = Enclosing . Bottom;
-	IN Structure_view BEGIN
-		Width: Enclosing . Width;
-		Height: Enclosed . Height;
-		END;
-	END;
+        BEGIN
+        HorizRef: * . Top;
+        HorizPos: Left = Enclosing . Left;
+        VertPos: Bottom = Enclosing . Bottom;
+        IN Structure_view BEGIN
+                Width: Enclosing . Width;
+                Height: Enclosed . Height;
+                END;
+        END;
 
    MSuperscript:
-	BEGIN
-	HorizRef: * . Top;
-	HorizPos: Left = Enclosing . Left;
-	VertPos: Top = Enclosing . Top;
-	IN Structure_view BEGIN
-		Width: Enclosing . Width;
-		Height: Enclosed . Height;
-		END;
-	END;
+        BEGIN
+        HorizRef: * . Top;
+        HorizPos: Left = Enclosing . Left;
+        VertPos: Top = Enclosing . Top;
+        IN Structure_view BEGIN
+                Width: Enclosing . Width;
+                Height: Enclosed . Height;
+                END;
+        END;
 
    MTABLE:
-	BEGIN
-	Gather: Yes;
-	LineBreak: No;
-	PageBreak: No;
-	HorizRef: * . HMiddle + 0.3;
-	CreateBefore(ElementName);
-	CreateWith(VerticalLine);
-	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
-	IN Structure_view BEGIN
-		Size: DOC_FONTSIZE;
-		Width: Enclosing . Width - STRUCT_INDENT;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		END;	
-	END;
+        BEGIN
+        Gather: Yes;
+        LineBreak: No;
+        PageBreak: No;
+        HorizRef: * . HMiddle + 0.3;
+        CreateBefore(ElementName);
+        CreateWith(VerticalLine);
+        VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
+        IN Structure_view BEGIN
+                Size: DOC_FONTSIZE;
+                Width: Enclosing . Width - STRUCT_INDENT;
+                HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+                END;        
+        END;
 
    MTable_head:
-	BEGIN
-	HorizRef: * . Top;
-	HorizPos: Left = Enclosing . Left;
-	VertPos: Top = Enclosing . Top;
-	Width: Enclosed . Width;
-	IN Structure_view
-		Visibility: 0;
-	END;
+        BEGIN
+        HorizRef: * . Top;
+        HorizPos: Left = Enclosing . Left;
+        VertPos: Top = Enclosing . Top;
+        Width: Enclosed . Width;
+        IN Structure_view
+                Visibility: 0;
+        END;
 
    MColumn_head:
         BEGIN
@@ -1317,1662 +1317,1690 @@ RULES
         END;
 
    MTable_body:
-	BEGIN
-	HorizPos: Left = Enclosing . Left;
-	VertPos: Top = Previous . Bottom;
-	IN Structure_view BEGIN
-		Size: DOC_FONTSIZE;
-		Width: Enclosing . Width;
-		HorizPos: Left = Enclosing . Left;
-		END;	
-	END;
+        BEGIN
+        HorizPos: Left = Enclosing . Left;
+        VertPos: Top = Previous . Bottom;
+        IN Structure_view BEGIN
+                Size: DOC_FONTSIZE;
+                Width: Enclosing . Width;
+                HorizPos: Left = Enclosing . Left;
+                END;        
+        END;
 
    MTR:
-	BEGIN
-	CreateBefore(ElementName);
-	CreateWith(VerticalLine);
-	HorizPos: Left = Enclosing . Left;
-	VertPos: Top = Previous . Bottom;
-	IN Structure_view BEGIN
-		Size: DOC_FONTSIZE;
-		Width: Enclosing . Width - STRUCT_INDENT;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		END;		
-	END;
+        BEGIN
+        CreateBefore(ElementName);
+        CreateWith(VerticalLine);
+        HorizPos: Left = Enclosing . Left;
+        VertPos: Top = Previous . Bottom;
+        IN Structure_view BEGIN
+                Size: DOC_FONTSIZE;
+                Width: Enclosing . Width - STRUCT_INDENT;
+                HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+                END;                
+        END;
 
    MLABELEDTR:
-	BEGIN
-	CreateBefore(ElementName);
-	CreateWith(VerticalLine);
-	HorizPos: Left = Enclosing . Left;
-	VertPos: Top = Previous . Bottom;
-	IN Structure_view BEGIN
-		Size: DOC_FONTSIZE;
-		Width: Enclosing . Width - STRUCT_INDENT;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		END;		
-	END;
+        BEGIN
+        CreateBefore(ElementName);
+        CreateWith(VerticalLine);
+        HorizPos: Left = Enclosing . Left;
+        VertPos: Top = Previous . Bottom;
+        IN Structure_view BEGIN
+                Size: DOC_FONTSIZE;
+                Width: Enclosing . Width - STRUCT_INDENT;
+                HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+                END;                
+        END;
 
    RowLabel:
-	BEGIN
-	HorizPos: Right = Root . Right - 0.5 cm;
-	IN Structure_view BEGIN
-		Size: DOC_FONTSIZE;
-		Width: Enclosing . Width;
-		HorizPos: Left = Enclosing . Left;
-		END;		
-	END;
+        BEGIN
+        HorizPos: Right = Root . Right - 0.5 cm;
+        IN Structure_view BEGIN
+                Size: DOC_FONTSIZE;
+                Width: Enclosing . Width;
+                HorizPos: Left = Enclosing . Left;
+                END;                
+        END;
 
    LabelCell:
-	BEGIN
-	CreateBefore(ElementName);
-	CreateWith(VerticalLine);
-	IN Structure_view BEGIN
-		Size: DOC_FONTSIZE;
-		Width: Enclosing . Width - STRUCT_INDENT;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		END;		
-	END;
+        BEGIN
+        CreateBefore(ElementName);
+        CreateWith(VerticalLine);
+        IN Structure_view BEGIN
+                Size: DOC_FONTSIZE;
+                Width: Enclosing . Width - STRUCT_INDENT;
+                HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+                END;                
+        END;
 
    MTD:
-	BEGIN
-   	VertPos: HRef = Previous AnyElem . HRef;
-	CreateBefore(ElementName);
-	CreateWith(VerticalLine);
-	PaddingRight: 0.35;
-	PaddingLeft: 0.35;
-	PaddingTop: 0.3 ex;
-	PaddingBottom: 0.3 ex;
-	IN Structure_view BEGIN
-		Size: DOC_FONTSIZE;
-		Width: Enclosing . Width - STRUCT_INDENT;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		PaddingRight: 0;
-		PaddingLeft: 0;
-		PaddingTop: 0;
-		PaddingBottom: 0;
-		END;		
-	END;
+        BEGIN
+           VertPos: HRef = Previous AnyElem . HRef;
+        CreateBefore(ElementName);
+        CreateWith(VerticalLine);
+        PaddingRight: 0.35;
+        PaddingLeft: 0.35;
+        PaddingTop: 0.3 ex;
+        PaddingBottom: 0.3 ex;
+        IN Structure_view BEGIN
+                Size: DOC_FONTSIZE;
+                Width: Enclosing . Width - STRUCT_INDENT;
+                HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+                PaddingRight: 0;
+                PaddingLeft: 0;
+                PaddingTop: 0;
+                PaddingBottom: 0;
+                END;                
+        END;
 
    CellWrapper:
-	BEGIN
-	VertPos: Top = Enclosing . Top;
-	HorizPos: VMiddle = Enclosing . VMiddle;
-	IN Structure_view BEGIN
-		HorizPos: Left = Enclosing . Left;
-		Width: Enclosing . Width;
-		END;		
-	END;
+        BEGIN
+        VertPos: Top = Enclosing . Top;
+        HorizPos: VMiddle = Enclosing . VMiddle;
+        IN Structure_view BEGIN
+                HorizPos: Left = Enclosing . Left;
+                Width: Enclosing . Width;
+                END;                
+        END;
 
    MALIGNGROUP:
-	BEGIN
-	CreateBefore(ElementName);
-	Visibility: 0;
-	IN Structure_view BEGIN
-		Visibility: Enclosing =;
-		Size: DOC_FONTSIZE;
-		VertPos: Top =  Previous . Bottom;
-		Height: 0;
-		END;		
-	END;
+        BEGIN
+        CreateBefore(ElementName);
+        Visibility: 0;
+        IN Structure_view BEGIN
+                Visibility: Enclosing =;
+                Size: DOC_FONTSIZE;
+                VertPos: Top =  Previous . Bottom;
+                Height: 0;
+                END;                
+        END;
 
    MALIGNMARK:
-	BEGIN
-	CreateBefore(ElementName);
-	Visibility: 0;
-	IN Structure_view BEGIN
-		Visibility: Enclosing =;
-		Size: DOC_FONTSIZE;
-		VertPos: Top =  Previous . Bottom;
-		Height: 0;
-		END;		
-	END;
+        BEGIN
+        CreateBefore(ElementName);
+        Visibility: 0;
+        IN Structure_view BEGIN
+                Visibility: Enclosing =;
+                Size: DOC_FONTSIZE;
+                VertPos: Top =  Previous . Bottom;
+                Height: 0;
+                END;                
+        END;
 
    MTEXT:
-	BEGIN
-	CreateBefore(ElementName);
-	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
-	IN Structure_view BEGIN
-		Size: DOC_FONTSIZE;
-		VertPos: Top =  Previous . Top;
-		HorizPos: Left = Previous . Right + 0.5;
-		Width: Enclosed . Width;
-		END;
-	END;
+        BEGIN
+        CreateBefore(ElementName);
+        VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
+        IN Structure_view BEGIN
+                Size: DOC_FONTSIZE;
+                VertPos: Top =  Previous . Top;
+                HorizPos: Left = Previous . Right + 0.5;
+                Width: Enclosed . Width;
+                END;
+        END;
 
    MI:
-	BEGIN
-	CreateBefore(ElementName);
-	Style: Italics;
-	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
-	IN Structure_view BEGIN
-		Size: DOC_FONTSIZE;
-		Style: Enclosing =;
-		VertPos: Top =  Previous . Top;
-		HorizPos: Left = Previous . Right + 0.5;
-		Width: Enclosed . Width;
-		END;
-	END;
+        BEGIN
+        CreateBefore(ElementName);
+        Style: Italics;
+        VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
+        IN Structure_view BEGIN
+                Size: DOC_FONTSIZE;
+                Style: Enclosing =;
+                VertPos: Top =  Previous . Top;
+                HorizPos: Left = Previous . Right + 0.5;
+                Width: Enclosed . Width;
+                END;
+        END;
 
    MF:
-	BEGIN
-	CreateBefore(ElementName);
-	Height: 1;
-	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
-	IN Structure_view BEGIN
-		Size: DOC_FONTSIZE;
-		VertPos: Top =  Previous . Top;
-		HorizPos: Left = Previous . Right + 0.5;
-		Width: Enclosed . Width;
-		END;
-	END;
+        BEGIN
+        CreateBefore(ElementName);
+        Height: 1;
+        VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
+        IN Structure_view BEGIN
+                Size: DOC_FONTSIZE;
+                VertPos: Top =  Previous . Top;
+                HorizPos: Left = Previous . Right + 0.5;
+                Width: Enclosed . Width;
+                END;
+        END;
 
    MO:
-	BEGIN
-	CreateBefore(ElementName);
-	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
-	IN Structure_view BEGIN
-		Size: DOC_FONTSIZE;
-		VertPos: Top =  Previous . Top;
-		HorizPos: Left = Previous . Right + 0.5;
-		Width: Enclosed . Width;
-		END;
-	END;
+        BEGIN
+        CreateBefore(ElementName);
+        VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
+        IN Structure_view BEGIN
+                Size: DOC_FONTSIZE;
+                VertPos: Top =  Previous . Top;
+                HorizPos: Left = Previous . Right + 0.5;
+                Width: Enclosed . Width;
+                END;
+        END;
 
    MN:
-	BEGIN
-	CreateBefore(ElementName);
-	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
-	IN Structure_view BEGIN
-		Size: DOC_FONTSIZE;
-		VertPos: Top =  Previous . Top;
-		HorizPos: Left = Previous . Right + 0.5;
-		Width: Enclosed . Width;
-		END;
-	END;
+        BEGIN
+        CreateBefore(ElementName);
+        VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
+        IN Structure_view BEGIN
+                Size: DOC_FONTSIZE;
+                VertPos: Top =  Previous . Top;
+                HorizPos: Left = Previous . Right + 0.5;
+                Width: Enclosed . Width;
+                END;
+        END;
 
    MS:
-	BEGIN
-	CreateBefore(ElementName);
-	CreateWith(VerticalLine);
-	if not lquote CreateFirst (OpeningQuote);
-	if not rquote CreateLast (ClosingQuote);
-	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
-	IN Structure_view BEGIN
-		Size: DOC_FONTSIZE;
-		VertPos: Top =  Previous . Bottom;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		Width: Enclosed . Width;
-		END;
-	END;
+        BEGIN
+        CreateBefore(ElementName);
+        CreateWith(VerticalLine);
+        if not lquote CreateFirst (OpeningQuote);
+        if not rquote CreateLast (ClosingQuote);
+        VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
+        IN Structure_view BEGIN
+                Size: DOC_FONTSIZE;
+                VertPos: Top =  Previous . Bottom;
+                HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+                Width: Enclosed . Width;
+                END;
+        END;
 
    C_Empty:
-	Visibility: 0;
+        Visibility: 0;
 
    C_Space:
-	BEGIN
-	Width: 0;
-	IN Structure_view 
-		Visibility: 0;
-	END;
+        BEGIN
+        Width: 0;
+        IN Structure_view 
+                Visibility: 0;
+        END;
 
    MSPACE:
-	BEGIN
-	CreateBefore(ElementName);
-	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
-	IN Structure_view BEGIN
-		Size: DOC_FONTSIZE;
-		VertPos: Top =  Previous . Bottom;
-		Height: 0;
-		END;
-	END;
+        BEGIN
+        CreateBefore(ElementName);
+        VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
+        IN Structure_view BEGIN
+                Size: DOC_FONTSIZE;
+                VertPos: Top =  Previous . Bottom;
+                Height: 0;
+                END;
+        END;
 
    MSTYLE:
-	BEGIN
-	CreateBefore(ElementName);
-	CreateWith(VerticalLine);
+        BEGIN
+        CreateBefore(ElementName);
+        CreateWith(VerticalLine);
         HorizRef: Enclosed . HRef;
-	VertPos: HRef = Previous . HRef;
-	IN Structure_view BEGIN
-		Size: DOC_FONTSIZE;
-		Width: Enclosing . Width - STRUCT_INDENT;
-		VertPos: Top =  Previous . Bottom;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		Font: Helvetica;
-		END;
-  	END;
+        VertPos: HRef = Previous . HRef;
+        IN Structure_view BEGIN
+                Size: DOC_FONTSIZE;
+                Width: Enclosing . Width - STRUCT_INDENT;
+                VertPos: Top =  Previous . Bottom;
+                HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+                Font: Helvetica;
+                END;
+          END;
 
    MERROR:
-	BEGIN
-	CreateBefore(ElementName);
-	CreateWith(VerticalLine);
-	Foreground: Red;
+        BEGIN
+        CreateBefore(ElementName);
+        CreateWith(VerticalLine);
+        Foreground: Red;
         HorizRef: Enclosed . HRef;
-	VertPos: HRef = Previous . HRef;
-	IN Structure_view BEGIN
-		Foreground: Enclosing =;
-		Size: DOC_FONTSIZE;
-		Width: Enclosing . Width - STRUCT_INDENT;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		VertPos: Top =  Previous . Bottom;
-		Font: Helvetica;
-		END;
-  	END;
+        VertPos: HRef = Previous . HRef;
+        IN Structure_view BEGIN
+                Foreground: Enclosing =;
+                Size: DOC_FONTSIZE;
+                Width: Enclosing . Width - STRUCT_INDENT;
+                HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+                VertPos: Top =  Previous . Bottom;
+                Font: Helvetica;
+                END;
+          END;
 
    MPADDED:
-	BEGIN
-	CreateBefore(ElementName);
-	CreateWith(VerticalLine);
+        BEGIN
+        CreateBefore(ElementName);
+        CreateWith(VerticalLine);
         HorizRef: Enclosed . HRef;
-	VertPos: HRef = Previous . HRef;
-	IN Structure_view BEGIN
-		Foreground: Enclosing =;
-		Size: DOC_FONTSIZE;
-		Width: Enclosing . Width - STRUCT_INDENT;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		Font: Helvetica;
-		VertPos: Top =  Previous . Bottom;
-		END;
-  	END;
+        VertPos: HRef = Previous . HRef;
+        IN Structure_view BEGIN
+                Foreground: Enclosing =;
+                Size: DOC_FONTSIZE;
+                Width: Enclosing . Width - STRUCT_INDENT;
+                HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+                Font: Helvetica;
+                VertPos: Top =  Previous . Bottom;
+                END;
+          END;
 
    MPHANTOM:
-	BEGIN
-	CreateBefore(ElementName);
-	CreateWith(VerticalLine);
-	Foreground: Transparent;
+        BEGIN
+        CreateBefore(ElementName);
+        CreateWith(VerticalLine);
+        Foreground: Transparent;
         HorizRef: Enclosed . HRef;
-	VertPos: HRef = Previous . HRef;
-	IN Structure_view BEGIN
-		Foreground: Enclosing =;
-		Size: DOC_FONTSIZE;
-		Width: Enclosing . Width - STRUCT_INDENT;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		VertPos: Top =  Previous . Bottom;
-		Font: Helvetica;
-		END;
-  	END;
+        VertPos: HRef = Previous . HRef;
+        IN Structure_view BEGIN
+                Foreground: Enclosing =;
+                Size: DOC_FONTSIZE;
+                Width: Enclosing . Width - STRUCT_INDENT;
+                HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+                VertPos: Top =  Previous . Bottom;
+                Font: Helvetica;
+                END;
+          END;
 
    MGLYPH:
-	BEGIN
-	CreateBefore(ElementName);
-	if not alt
-	   CreateFirst (QuestionMark);
-	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
-	IN Structure_view BEGIN
-		Size: DOC_FONTSIZE;
-		VertPos: Top =  Previous . Top;
-		Height: 0;
-		END;
-	END;
+        BEGIN
+        CreateBefore(ElementName);
+        if not alt
+           CreateFirst (QuestionMark);
+        VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
+        IN Structure_view BEGIN
+                Size: DOC_FONTSIZE;
+                VertPos: Top =  Previous . Top;
+                Height: 0;
+                END;
+        END;
 
    MACTION:
-	BEGIN
-	CreateBefore(ElementName);
-	CreateWith(VerticalLine);
+        BEGIN
+        CreateBefore(ElementName);
+        CreateWith(VerticalLine);
         HorizRef: Enclosed . HRef;
-	VertPos: HRef = Previous . HRef;
-	IN Structure_view BEGIN
-		Foreground: Enclosing =;
-		Size: DOC_FONTSIZE;
-		Width: Enclosing . Width - STRUCT_INDENT;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		Font: Helvetica;
-		END;
-  	END;
+        VertPos: HRef = Previous . HRef;
+        IN Structure_view BEGIN
+                Foreground: Enclosing =;
+                Size: DOC_FONTSIZE;
+                Width: Enclosing . Width - STRUCT_INDENT;
+                HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+                Font: Helvetica;
+                END;
+          END;
 
    SEMANTICS:
-	BEGIN
-	CreateBefore(ElementName);
-	CreateWith(VerticalLine);
+        BEGIN
+        CreateBefore(ElementName);
+        CreateWith(VerticalLine);
         HorizRef: Enclosed not ElemWithAttr IntVertStretch . HRef;
-	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
-	IN Structure_view BEGIN
-		Foreground: Enclosing =;
-		Size: DOC_FONTSIZE;
-		Width: Enclosing . Width - STRUCT_INDENT;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		Font: Helvetica;
-		END;
-  	END;
+        VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
+        IN Structure_view BEGIN
+                Foreground: Enclosing =;
+                Size: DOC_FONTSIZE;
+                Width: Enclosing . Width - STRUCT_INDENT;
+                HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+                Font: Helvetica;
+                END;
+          END;
 
    ANNOTATION:
-	BEGIN
-	CreateBefore(ElementName);
-	CreateWith(VerticalLine);
-	Visibility: 0;
-	IN Structure_view BEGIN
-		Visibility: Enclosing =;
-		Foreground: Enclosing =;
-		Size: DOC_FONTSIZE;
-		Width: Enclosing . Width - STRUCT_INDENT;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		Font: Helvetica;
-		END;
-  	END;
+        BEGIN
+        CreateBefore(ElementName);
+        CreateWith(VerticalLine);
+        Visibility: 0;
+        IN Structure_view BEGIN
+                Visibility: Enclosing =;
+                Foreground: Enclosing =;
+                Size: DOC_FONTSIZE;
+                Width: Enclosing . Width - STRUCT_INDENT;
+                HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+                Font: Helvetica;
+                END;
+          END;
 
    ANNOTATION_XML:
-	BEGIN
-	CreateBefore(ElementName);
-	CreateWith(VerticalLine);
-	Visibility: Enclosing =;
-	Width: Enclosed . Width;
-	Height: Enclosed . Height;
-	IN Structure_view BEGIN
-		Visibility: Enclosing =;
-		Foreground: Enclosing =;
-		Size: DOC_FONTSIZE;
-		Width: Enclosing . Width - STRUCT_INDENT;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		Font: Helvetica;
-		END;
-  	END;
+        BEGIN
+        CreateBefore(ElementName);
+        CreateWith(VerticalLine);
+        Visibility: Enclosing =;
+        Width: Enclosed . Width;
+        Height: Enclosed . Height;
+        IN Structure_view BEGIN
+                Visibility: Enclosing =;
+                Foreground: Enclosing =;
+                Size: DOC_FONTSIZE;
+                Width: Enclosing . Width - STRUCT_INDENT;
+                HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+                Font: Helvetica;
+                END;
+          END;
 
    SYMBOL_UNIT:
-	BEGIN
-	if within UnderOverBase
-	   BEGIN
-	   Height: 1;
-	   HorizRef: * . HMiddle + 0.2;
-	   END;
-	if not within UnderOverBase
-	   Height: Enclosing . Height;
-	Width: Enclosed . Width;
-	VertPos: Nil;
-	HorizPos: Left = Previous . Right;
-	IN Structure_view BEGIN
-		Size: DOC_FONTSIZE;
-		Height: 1;
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		END;
-	END;
+        BEGIN
+        if within UnderOverBase
+           BEGIN
+           Height: 1;
+           HorizRef: * . HMiddle + 0.2;
+           END;
+        if not within UnderOverBase
+           Height: Enclosing . Height;
+        Width: Enclosed . Width;
+        VertPos: Nil;
+        HorizPos: Left = Previous . Right;
+        IN Structure_view BEGIN
+                Size: DOC_FONTSIZE;
+                Height: 1;
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                END;
+        END;
 
    GRAPHICS_UNIT:
-	BEGIN
-	Height: Enclosing . Height;
-	Width: Enclosed . Width;
-	VertPos: Nil;
-	HorizPos: Nil;
-	IN Structure_view BEGIN
-		Size: DOC_FONTSIZE;
-		Height: 1;
-		Width: 1;
-		HorizPos: Left = Enclosing . Left;
-		VertPos: Top = Previous . Bottom;
-		END;
-	END;
+        BEGIN
+        Height: Enclosing . Height;
+        Width: Enclosed . Width;
+        VertPos: Nil;
+        HorizPos: Nil;
+        IN Structure_view BEGIN
+                Size: DOC_FONTSIZE;
+                Height: 1;
+                Width: 1;
+                HorizPos: Left = Enclosing . Left;
+                VertPos: Top = Previous . Bottom;
+                END;
+        END;
 
    TEXT_UNIT:
-	BEGIN
-	VertRef: Enclosed . VRef;
-	LineBreak: Yes;
-	IF immediately within MF
-	   VertPos: HMiddle = Enclosing . HMiddle;
-	IN Structure_view BEGIN
-		IF immediately within MGLYPH
-		   Visibility: 0;
-		IF NOT within DOCTYPE_line AND NOT within CDATA_line
-		   BEGIN
-		   HorizPos: Left = Previous . Right;
-                   VertPos: HRef = Previous . HRef;
-		   END;
-		IF within DOCTYPE_line
+        BEGIN
+        VertRef: Enclosed . VRef;
+        LineBreak: Yes;
+        IF immediately within MF
+           VertPos: HMiddle = Enclosing . HMiddle;
+        IN Structure_view BEGIN
+                IF immediately within MGLYPH
+                   Visibility: 0;
+                IF NOT within DOCTYPE_line AND NOT within CDATA_line
                    BEGIN
-		   HorizPos: Left = Previous . Right;
-                   END;
-		IF within CDATA_line
-                   BEGIN
-		   HorizPos: Left = Previous . Right;
+                   HorizPos: Left = Previous . Right;
                    VertPos: HRef = Previous . HRef;
                    END;
-		Size: DOC_FONTSIZE;
-		END;
-	END;
+                IF within DOCTYPE_line
+                   BEGIN
+                   HorizPos: Left = Previous . Right;
+                   END;
+                IF within CDATA_line
+                   BEGIN
+                   HorizPos: Left = Previous . Right;
+                   VertPos: HRef = Previous . HRef;
+                   END;
+                Size: DOC_FONTSIZE;
+                END;
+        END;
 
 ATTRIBUTES
 
   Language:
-	BEGIN
-	IF Root and RealLang
-	    BEGIN
-	    CreateBefore(AttrName);
-	    CreateBefore(AttrValue);
-	    END;
-	IF not Root
-	    BEGIN
-	    CreateBefore(AttrName);
-	    CreateBefore(AttrValue);
-	    END;
-	END;
+        BEGIN
+        IF Root and RealLang
+            BEGIN
+            CreateBefore(AttrName);
+            CreateBefore(AttrValue);
+            END;
+        IF not Root
+            BEGIN
+            CreateBefore(AttrName);
+            CreateBefore(AttrValue);
+            END;
+        END;
 
   class:
-	BEGIN
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-	END;
+        BEGIN
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        END;
 
   style\240:
-	BEGIN
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-	END;
+        BEGIN
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        END;
 
   id:
-	BEGIN
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-	END;
+        BEGIN
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        END;
 
   xref:
-	BEGIN
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-	END;
+        BEGIN
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        END;
 
   other:
-	BEGIN
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-	END;
+        BEGIN
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        END;
 
   xml_space = xml_space_default:
-	CreateBefore(ATTR_xml_space_default);
+        CreateBefore(ATTR_xml_space_default);
   xml_space = xml_space_preserve:
-	CreateBefore(ATTR_xml_space_preserve);
+        CreateBefore(ATTR_xml_space_preserve);
 
   Highlight:
-	BEGIN
+        BEGIN
         if TEXT_UNIT
-	   CreateAfter (IndexBox);
+           CreateAfter (IndexBox);
         if SYMBOL_UNIT
-	   CreateAfter (IndexBox);
+           CreateAfter (IndexBox);
         if PICTURE_UNIT
-	   CreateAfter (IndexBox);
-	if not TEXT_UNIT and not SYMBOL_UNIT and not PICTURE_UNIT
-	   CreateLast (IndexBox);
-	END;
+           CreateAfter (IndexBox);
+        if not TEXT_UNIT and not SYMBOL_UNIT and not PICTURE_UNIT
+           CreateLast (IndexBox);
+        END;
 
   Unknown_attribute:
-	BEGIN
-	if TEXT_UNIT
-	   CreateBefore(UnknownAttrValue);
-	if PICTURE_UNIT
-	   CreateBefore(UnknownAttrValue);
-	if Unknown_namespace
-	   CreateAfter(UnknownAttrValue);
-	if Unknown_namespace and LastAttr
-	   CreateAfter(Unknown_End);
-	if NOT TEXT_UNIT and NOT PICTURE_UNIT and NOT Unknown_namespace
-  	   CreateBefore(UnknownAttrValue);
-	END;
+        BEGIN
+        if TEXT_UNIT
+           CreateBefore(UnknownAttrValue);
+        if PICTURE_UNIT
+           CreateBefore(UnknownAttrValue);
+        if Unknown_namespace
+           CreateAfter(UnknownAttrValue);
+        if Unknown_namespace and LastAttr
+           CreateAfter(Unknown_End);
+        if NOT TEXT_UNIT and NOT PICTURE_UNIT and NOT Unknown_namespace
+             CreateBefore(UnknownAttrValue);
+        END;
 
   EntityName:
-	BEGIN
-	CreateBefore(VALUE_EntityName);
-	IN Structure_view
-		BEGIN
-		Visibility: 1;
-		VertPos: Top = Previous VALUE_EntityName . Bottom;
-		END;
-	END;
+        BEGIN
+        CreateBefore(VALUE_EntityName);
+        IN Structure_view
+                BEGIN
+                Visibility: 1;
+                VertPos: Top = Previous VALUE_EntityName . Bottom;
+                END;
+        END;
 
   macros:
-	BEGIN
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-	END;
+        BEGIN
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        END;
 
   display_ = inline_:
-	CreateBefore(AttrNameAndValue);
+        CreateBefore(AttrNameAndValue);
 
   display_ = block_:
-	BEGIN
-	CreateBefore(AttrNameAndValue);
-	HorizPos: VMiddle = Enclosing . VMiddle;
-	END;
+        BEGIN
+        CreateBefore(AttrNameAndValue);
+        HorizPos: VMiddle = Enclosing . VMiddle;
+        END;
 
   IntDisplaystyle(MFRAC) = true:
-	Size: Enclosing =;
+        Size: Enclosing =;
   IntDisplaystyle(MFRAC) = false:
-	BEGIN
-	if within MFRAC
-		BEGIN
-		Size: Enclosing * SCRIPTSIZEMULTIPLIER;
-		HorizRef: Enclosed Bar . Bottom + 0.2;
-		END;
-	if within BevelledMFRAC
-		BEGIN
-		Size: Enclosing * SCRIPTSIZEMULTIPLIER;
-		HorizRef: Enclosed Bar . Bottom + 0.2;
-		END;
-	END;
+        BEGIN
+        if within MFRAC
+                BEGIN
+                Size: Enclosing * SCRIPTSIZEMULTIPLIER;
+                HorizRef: Enclosed Bar . Bottom + 0.2;
+                END;
+        if within BevelledMFRAC
+                BEGIN
+                Size: Enclosing * SCRIPTSIZEMULTIPLIER;
+                HorizRef: Enclosed Bar . Bottom + 0.2;
+                END;
+        END;
 
   IntMovelimits(UnderOverBase):
-	HorizPos: Left = Enclosing . Left;
+        HorizPos: Left = Enclosing . Left;
   IntMovelimits(Overscript):
-	BEGIN
-	VertPos: Bottom = UnderOverBase . Top + 0.6;
-	HorizPos: Left = UnderOverBase . Right;
-	IN Structure_view BEGIN
+        BEGIN
+        VertPos: Bottom = UnderOverBase . Top + 0.6;
+        HorizPos: Left = UnderOverBase . Right;
+        IN Structure_view BEGIN
                 VertPos: Top = Previous . Bottom;
                 HorizPos: Left = Enclosing . Left;
-		END;
-	END;
+                END;
+        END;
   IntMovelimits(Underscript):
-	BEGIN
-	VertPos: Top = UnderOverBase . Bottom - 0.7;
-	HorizPos: Left = UnderOverBase . Right;
-	IN Structure_view BEGIN
+        BEGIN
+        VertPos: Top = UnderOverBase . Bottom - 0.7;
+        HorizPos: Left = UnderOverBase . Right;
+        IN Structure_view BEGIN
                 VertPos: Top = Previous . Bottom;
                 HorizPos: Left = Enclosing . Left;
-		END;
-	END;
+                END;
+        END;
 
   overflow:
-	CreateBefore(AttrNameAndValue);
+        CreateBefore(AttrNameAndValue);
 
   altimg:
-	BEGIN
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-	END;
+        BEGIN
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        END;
 
   alttext:
-	BEGIN
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-	END;
+        BEGIN
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        END;
 
   IntSelected:
-	BEGIN
-	BorderTopColor: Red;
-	BorderRightColor: Red;
-	BorderBottomColor: Red;
-	BorderLeftColor: Red;
-	END;
+        BEGIN
+        BorderTopColor: Red;
+        BorderRightColor: Red;
+        BorderBottomColor: Red;
+        BorderLeftColor: Red;
+        END;
 
   fontsize:
-	BEGIN
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-	{ aspect set by function MathMLAttrToStyleProperty }
-	IN Structure_view
-		Size: Enclosing =;
-	END;
+        BEGIN
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        { aspect set by function MathMLAttrToStyleProperty }
+        IN Structure_view
+                Size: Enclosing =;
+        END;
 
   fontweight = normal_:
-	BEGIN
-	Weight: normal;
-	CreateBefore(AttrNameAndValue);
-	IN Structure_view
-		Weight: Enclosing =;
-	END;
+        BEGIN
+        Weight: normal;
+        CreateBefore(AttrNameAndValue);
+        IN Structure_view
+                Weight: Enclosing =;
+        END;
   fontweight = bold_:
-	BEGIN
-	Weight: Bold;
-	CreateBefore(AttrNameAndValue);
-	IN Structure_view
-		Weight: Enclosing =;
-	END;
+        BEGIN
+        Weight: Bold;
+        CreateBefore(AttrNameAndValue);
+        IN Structure_view
+                Weight: Enclosing =;
+        END;
 
   fontstyle = normal_:
-	BEGIN
-	Style: roman;
-	CreateBefore(AttrNameAndValue);
-	IN Structure_view
-		Style: Enclosing =;
-	END;
+        BEGIN
+        Style: roman;
+        CreateBefore(AttrNameAndValue);
+        IN Structure_view
+                Style: Enclosing =;
+        END;
   fontstyle = italic:
-	BEGIN
-	Style: Italics;
-	CreateBefore(AttrNameAndValue);
-	IN Structure_view
-		Style: Enclosing =;
-	END;
+        BEGIN
+        Style: Italics;
+        CreateBefore(AttrNameAndValue);
+        IN Structure_view
+                Style: Enclosing =;
+        END;
 
   fontfamily:
-	BEGIN
-	{ aspect set by function MathAttrFontfamilyCreated }
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-	IN Structure_view
-		Font: Enclosing =;
-	END;
+        BEGIN
+        { aspect set by function MathAttrFontfamilyCreated }
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        IN Structure_view
+                Font: Enclosing =;
+        END;
 
   color:
-	BEGIN
-	{ aspect set by function MathAttrColorCreated }
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-	IN Structure_view
-		Foreground: Enclosing =;
-	END;
+        BEGIN
+        { aspect set by function MathAttrColorCreated }
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        IN Structure_view
+                Foreground: Enclosing =;
+        END;
 
   mathvariant = normal_:
-	BEGIN
-	CreateBefore(AttrNameAndValue);
-	Font: times;
+        BEGIN
+        CreateBefore(AttrNameAndValue);
+        Font: times;
         Style: roman;
-	Weight: normal;
-	IN Structure_view
-		BEGIN
-		Font: Enclosing =;
-		Weight: Enclosing =;
-		END;
-	END;
+        Weight: normal;
+        IN Structure_view
+                BEGIN
+                Font: Enclosing =;
+                Weight: Enclosing =;
+                END;
+        END;
   mathvariant = bold_:
-	BEGIN
-	CreateBefore(AttrNameAndValue);
-	Font: times;
-	Style: roman;
-	Weight: bold;
-	IN Structure_view
-		BEGIN
-		Font: Enclosing =;
-		Style: Enclosing =;
-		Weight: Enclosing =;
-		END;
-	END;
+        BEGIN
+        CreateBefore(AttrNameAndValue);
+        Font: times;
+        Style: roman;
+        Weight: bold;
+        IN Structure_view
+                BEGIN
+                Font: Enclosing =;
+                Style: Enclosing =;
+                Weight: Enclosing =;
+                END;
+        END;
   mathvariant = italic:
-	BEGIN
-	CreateBefore(AttrNameAndValue);
-	Font: times;
-	Style: italics;
-	Weight: normal;
-	IN Structure_view
-		BEGIN
-		Font: Enclosing =;
-		Style: Enclosing =;
-		Weight: Enclosing =;
-		END;
-	END;
+        BEGIN
+        CreateBefore(AttrNameAndValue);
+        Font: times;
+        Style: italics;
+        Weight: normal;
+        IN Structure_view
+                BEGIN
+                Font: Enclosing =;
+                Style: Enclosing =;
+                Weight: Enclosing =;
+                END;
+        END;
   mathvariant = bold_italic:
-	BEGIN
-	CreateBefore(AttrNameAndValue);
-	Font: times;
-	Style: italics;
-	Weight: bold;
-	IN Structure_view
-		BEGIN
-		Font: Enclosing =;
-		Style: Enclosing =;
-		Weight: Enclosing =;
-		END;
-	END;
+        BEGIN
+        CreateBefore(AttrNameAndValue);
+        Font: times;
+        Style: italics;
+        Weight: bold;
+        IN Structure_view
+                BEGIN
+                Font: Enclosing =;
+                Style: Enclosing =;
+                Weight: Enclosing =;
+                END;
+        END;
   mathvariant = double_struck:
-	BEGIN
-	CreateBefore(AttrNameAndValue);
-	Font: times;	{*** double-struck ***}
-	Style: roman;
-	Weight: normal;
-	IN Structure_view
-		BEGIN
-		Font: Enclosing =;
-		Style: Enclosing =;
-		Weight: Enclosing =;
-		END;
-	END;
+        BEGIN
+        CreateBefore(AttrNameAndValue);
+        Font: times;        {*** double-struck ***}
+        Style: roman;
+        Weight: normal;
+        IN Structure_view
+                BEGIN
+                Font: Enclosing =;
+                Style: Enclosing =;
+                Weight: Enclosing =;
+                END;
+        END;
   mathvariant = bold_fraktur:
-	BEGIN
-	CreateBefore(AttrNameAndValue);
-	Font: times;   {*** fraktur ***}
-	Style: roman;
-	Weight: bold;
-	IN Structure_view
-		BEGIN
-		Font: Enclosing =;
-		Style: Enclosing =;
-		Weight: Enclosing =;
-		END;
-	END;
+        BEGIN
+        CreateBefore(AttrNameAndValue);
+        Font: times;   {*** fraktur ***}
+        Style: roman;
+        Weight: bold;
+        IN Structure_view
+                BEGIN
+                Font: Enclosing =;
+                Style: Enclosing =;
+                Weight: Enclosing =;
+                END;
+        END;
   mathvariant = script_:
-	BEGIN
-	CreateBefore(AttrNameAndValue);
-	Font: times;    {*** script ***}
-	Style: roman;
-	Weight: normal;
-	IN Structure_view
-		BEGIN
-		Font: Enclosing =;
-		Style: Enclosing =;
-		Weight: Enclosing =;
-		END;
-	END;
+        BEGIN
+        CreateBefore(AttrNameAndValue);
+        Font: times;    {*** script ***}
+        Style: roman;
+        Weight: normal;
+        IN Structure_view
+                BEGIN
+                Font: Enclosing =;
+                Style: Enclosing =;
+                Weight: Enclosing =;
+                END;
+        END;
   mathvariant = bold_script:
-	BEGIN
-	CreateBefore(AttrNameAndValue);
-	Font: times;	{*** script ***}
-	Style: roman;
-	Weight: bold;
-	IN Structure_view
-		BEGIN
-		Font: Enclosing =;
-		Style: Enclosing =;
-		Weight: Enclosing =;
-		END;
-	END;
+        BEGIN
+        CreateBefore(AttrNameAndValue);
+        Font: times;        {*** script ***}
+        Style: roman;
+        Weight: bold;
+        IN Structure_view
+                BEGIN
+                Font: Enclosing =;
+                Style: Enclosing =;
+                Weight: Enclosing =;
+                END;
+        END;
   mathvariant = fraktur:
-	BEGIN
-	CreateBefore(AttrNameAndValue);
-	Font: times;	{*** fraktur ***}
-	Style: roman;
-	Weight: normal;
-	IN Structure_view
-		BEGIN
-		Font: Enclosing =;
-		Style: Enclosing =;
-		Weight: Enclosing =;
-		END;
-	END;
+        BEGIN
+        CreateBefore(AttrNameAndValue);
+        Font: times;        {*** fraktur ***}
+        Style: roman;
+        Weight: normal;
+        IN Structure_view
+                BEGIN
+                Font: Enclosing =;
+                Style: Enclosing =;
+                Weight: Enclosing =;
+                END;
+        END;
   mathvariant = sans_serif:
-	BEGIN
-	CreateBefore(AttrNameAndValue);
-	Font: helvetica;
-	Style: roman;
-	Weight: normal;
-	IN Structure_view
-		BEGIN
-		Font: Enclosing =;
-		Style: Enclosing =;
-		Weight: Enclosing =;
-		END;
-	END;
+        BEGIN
+        CreateBefore(AttrNameAndValue);
+        Font: helvetica;
+        Style: roman;
+        Weight: normal;
+        IN Structure_view
+                BEGIN
+                Font: Enclosing =;
+                Style: Enclosing =;
+                Weight: Enclosing =;
+                END;
+        END;
   mathvariant = bold_sans_serif:
-	BEGIN
-	CreateBefore(AttrNameAndValue);
-	Font: helvetica;
-	Style: roman;
-	Weight: bold;
-	IN Structure_view
-		BEGIN
-		Font: Enclosing =;
-		Style: Enclosing =;
-		Weight: Enclosing =;
-		END;
-	END;
+        BEGIN
+        CreateBefore(AttrNameAndValue);
+        Font: helvetica;
+        Style: roman;
+        Weight: bold;
+        IN Structure_view
+                BEGIN
+                Font: Enclosing =;
+                Style: Enclosing =;
+                Weight: Enclosing =;
+                END;
+        END;
   mathvariant = sans_serif_italic:
-	BEGIN
-	CreateBefore(AttrNameAndValue);
-	Font: helvetica;
-	Style: italics;
-	Weight: normal;
-	IN Structure_view
-		BEGIN
-		Font: Enclosing =;
-		Style: Enclosing =;
-		Weight: Enclosing =;
-		END;
-	END;
+        BEGIN
+        CreateBefore(AttrNameAndValue);
+        Font: helvetica;
+        Style: italics;
+        Weight: normal;
+        IN Structure_view
+                BEGIN
+                Font: Enclosing =;
+                Style: Enclosing =;
+                Weight: Enclosing =;
+                END;
+        END;
   mathvariant = sans_serif_bold_italic:
-	BEGIN
-	CreateBefore(AttrNameAndValue);
-	Font: helvetica;
-	Style: italics;
-	Weight: bold;
-	IN Structure_view
-		BEGIN
-		Font: Enclosing =;
-		Style: Enclosing =;
-		Weight: Enclosing =;
-		END;
-	END;
+        BEGIN
+        CreateBefore(AttrNameAndValue);
+        Font: helvetica;
+        Style: italics;
+        Weight: bold;
+        IN Structure_view
+                BEGIN
+                Font: Enclosing =;
+                Style: Enclosing =;
+                Weight: Enclosing =;
+                END;
+        END;
   mathvariant = monospace:
-	BEGIN
-	CreateBefore(AttrNameAndValue);
-	Font: courier;
-	Style: roman;
-	Weight: normal;
-	IN Structure_view
-		BEGIN
-		Font: Enclosing =;
-		Style: Enclosing =;
-		Weight: Enclosing =;
-		END;
-	END;
+        BEGIN
+        CreateBefore(AttrNameAndValue);
+        Font: courier;
+        Style: roman;
+        Weight: normal;
+        IN Structure_view
+                BEGIN
+                Font: Enclosing =;
+                Style: Enclosing =;
+                Weight: Enclosing =;
+                END;
+        END;
 
   mathsize:
-	BEGIN
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-	END;
+        BEGIN
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        END;
 
   mathcolor:
-	BEGIN
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-	END;
+        BEGIN
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        END;
 
   mathbackground:
-	BEGIN
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-	END;
+        BEGIN
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        END;
 
   form:
-	CreateBefore(AttrNameAndValue);
+        CreateBefore(AttrNameAndValue);
  
   fence:
-	CreateBefore(AttrNameAndValue);
+        CreateBefore(AttrNameAndValue);
 
   separator:
-	CreateBefore(AttrNameAndValue);
+        CreateBefore(AttrNameAndValue);
  
   lspace:
-	BEGIN
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-	END;
+        BEGIN
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        END;
  
   rspace:
-	BEGIN
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-	END;
+        BEGIN
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        END;
 
   stretchy:
-	CreateBefore(AttrNameAndValue);
+        CreateBefore(AttrNameAndValue);
  
   symmetric:
-	CreateBefore(AttrNameAndValue);
+        CreateBefore(AttrNameAndValue);
  
   maxsize:
-	BEGIN
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-	END;
+        BEGIN
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        END;
  
   minsize:
-	BEGIN
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-	END;
+        BEGIN
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        END;
  
   largeop:
-	CreateBefore(AttrNameAndValue);
+        CreateBefore(AttrNameAndValue);
  
   movablelimits:
-	CreateBefore(AttrNameAndValue);
+        CreateBefore(AttrNameAndValue);
  
   accent:
-	CreateBefore(AttrNameAndValue);
+        CreateBefore(AttrNameAndValue);
 
   lquote:
-	BEGIN
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-	CreateFirst(LeftQuote);
-	END;
+        BEGIN
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        CreateFirst(LeftQuote);
+        END;
 
   rquote:
-	BEGIN
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-	CreateLast(RightQuote);
-	END;
+        BEGIN
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        CreateLast(RightQuote);
+        END;
 
   width\240:
-	BEGIN
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-	END;
+        BEGIN
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        END;
 
   height\240:
-	BEGIN
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-	END;
+        BEGIN
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        END;
 
   depth\240:
-	BEGIN
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-	END;
+        BEGIN
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        END;
 
   linebreak_:
-	CreateBefore(AttrNameAndValue);
+        CreateBefore(AttrNameAndValue);
   
   linethickness:
-	BEGIN
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-	END;
+        BEGIN
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        END;
 
   numalign (Numerator) = left\240:
-	if not immediately within BevelledMFRAC
-	   HorizPos: Left = Enclosing . Left;
+        if not immediately within BevelledMFRAC
+           HorizPos: Left = Enclosing . Left;
   numalign (Numerator) = center\240:
-	if not immediately within BevelledMFRAC
-	   HorizPos: VMiddle = Bar . VMiddle;
+        if not immediately within BevelledMFRAC
+           HorizPos: VMiddle = Bar . VMiddle;
   numalign (Numerator) = right\240:
-	if not immediately within BevelledMFRAC
-	   HorizPos: Right = Enclosing . Right;
+        if not immediately within BevelledMFRAC
+           HorizPos: Right = Enclosing . Right;
   numalign:
-	CreateBefore(AttrNameAndValue);
+        CreateBefore(AttrNameAndValue);
 
   denomalign (Denominator) = left\240:
-	if not immediately within BevelledMFRAC
-	   HorizPos: Left = Enclosing . Left;
+        if not immediately within BevelledMFRAC
+           HorizPos: Left = Enclosing . Left;
   denomalign (Denominator) = center\240:
-	if not immediately within BevelledMFRAC
-	   HorizPos: VMiddle = Bar . VMiddle;
+        if not immediately within BevelledMFRAC
+           HorizPos: VMiddle = Bar . VMiddle;
   denomalign (Denominator) = right\240:
-	if not immediately within BevelledMFRAC
-	   HorizPos: Right = Enclosing . Right;
+        if not immediately within BevelledMFRAC
+           HorizPos: Right = Enclosing . Right;
   denomalign:
-	CreateBefore(AttrNameAndValue);
+        CreateBefore(AttrNameAndValue);
 
   bevelled:
-	CreateBefore(AttrNameAndValue);
+        CreateBefore(AttrNameAndValue);
 
   notation = longdiv:
-	BEGIN
-	CreateBefore(AttrNameAndValue);
-	BorderTopWidth: 1 pt;
-	BorderLeftWidth: 1 pt;
-	BorderRightWidth: 0;
-	BorderTopStyle: Solid;
-	BorderLeftStyle: Solid;
-	BorderTopColor: Foreground;
-	BorderLeftColor: Foreground;
-	PaddingRight: 0;
-	MarginRight: 0;
-	PaddingLeft: 0.2;
-	MarginLeft: 0.2;
-	IN Structure_view
-		BEGIN
-		BorderTopWidth: Enclosing =;
-		BorderLeftWidth: Enclosing =;
-		PaddingLeft: Enclosing =;
-		MarginLeft: Enclosing =;
-		END;
-	END;
+        BEGIN
+        CreateBefore(AttrNameAndValue);
+        BorderTopWidth: 1 pt;
+        BorderLeftWidth: 1 pt;
+        BorderRightWidth: 0;
+        BorderTopStyle: Solid;
+        BorderLeftStyle: Solid;
+        BorderTopColor: Foreground;
+        BorderLeftColor: Foreground;
+        PaddingRight: 0;
+        MarginRight: 0;
+        PaddingLeft: 0.2;
+        MarginLeft: 0.2;
+        IN Structure_view
+                BEGIN
+                BorderTopWidth: Enclosing =;
+                BorderLeftWidth: Enclosing =;
+                PaddingLeft: Enclosing =;
+                MarginLeft: Enclosing =;
+                END;
+        END;
   notation = actuarial:
-	BEGIN
-	CreateBefore(AttrNameAndValue);
-	BorderTopWidth: 1 pt;
-	BorderRightWidth: 1 pt;
-	BorderLeftWidth: 0 pt;
-	BorderTopStyle: Solid;
-	BorderRightStyle: Solid;
-	BorderTopColor: Foreground;
-	BorderRightColor: Foreground;
-	PaddingRight: 0.2;
-	MarginRight: 0.2;
-	PaddingLeft: 0;
-	MarginLeft: 0;
-	IN Structure_view
-		BEGIN
-		BorderTopWidth: Enclosing =;
-		BorderRightWidth: Enclosing =;
-		PaddingRight: Enclosing =;
-		MarginLeft: Enclosing =;
-		END;
-	END;
+        BEGIN
+        CreateBefore(AttrNameAndValue);
+        BorderTopWidth: 1 pt;
+        BorderRightWidth: 1 pt;
+        BorderLeftWidth: 0 pt;
+        BorderTopStyle: Solid;
+        BorderRightStyle: Solid;
+        BorderTopColor: Foreground;
+        BorderRightColor: Foreground;
+        PaddingRight: 0.2;
+        MarginRight: 0.2;
+        PaddingLeft: 0;
+        MarginLeft: 0;
+        IN Structure_view
+                BEGIN
+                BorderTopWidth: Enclosing =;
+                BorderRightWidth: Enclosing =;
+                PaddingRight: Enclosing =;
+                MarginLeft: Enclosing =;
+                END;
+        END;
   notation = radical:
-	BEGIN
-	CreateBefore(AttrNameAndValue);
-	CreateBefore(RadicalSymbol);
-	PaddingLeft: ROOT_OFFSET;
-	VertPos: HRef = Previous not RadicalSymbol . HRef;
-	HorizPos: Left = Previous not RadicalSymbol . Right;
-	Gather: Yes;
-	BorderTopWidth: 0;
-	BorderLeftWidth: 0;
-	MarginLeft: 0;
-	IN Structure_view
-		BEGIN
-		VertPos: Top = Previous . Bottom;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		PaddingLeft: Enclosing =;
-		END;
-	END;
+        BEGIN
+        CreateBefore(AttrNameAndValue);
+        CreateBefore(RadicalSymbol);
+        PaddingLeft: ROOT_OFFSET;
+        VertPos: HRef = Previous not RadicalSymbol . HRef;
+        HorizPos: Left = Previous not RadicalSymbol . Right;
+        Gather: Yes;
+        BorderTopWidth: 0;
+        BorderLeftWidth: 0;
+        MarginLeft: 0;
+        IN Structure_view
+                BEGIN
+                VertPos: Top = Previous . Bottom;
+                HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+                PaddingLeft: Enclosing =;
+                END;
+        END;
 
   scriptlevel:
-	BEGIN
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-	END;
+        BEGIN
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        END;
 
   scriptsizemultiplier:
-	BEGIN
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-	END;
+        BEGIN
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        END;
 
   scriptminsize:
-	BEGIN
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-	END;
+        BEGIN
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        END;
 
   background\240:
-	BEGIN
-	{ aspect set by function MathAttrBackgroundCreated }
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-	END;
+        BEGIN
+        { aspect set by function MathAttrBackgroundCreated }
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        END;
 
   open:
-	BEGIN
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-	END;
+        BEGIN
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        END;
 
   close:
-	BEGIN
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-	END;
+        BEGIN
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        END;
 
   separators:
-	BEGIN
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-	END;
+        BEGIN
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        END;
 
   subscriptshift:
-	BEGIN
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-	END;
+        BEGIN
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        END;
   subscriptshift (Subscript):
-	BEGIN
-	{ the actual distance between the two HRefs is set by a Thot
-	  VertPos presentation rule associated with the Superscript
+        BEGIN
+        { the actual distance between the two HRefs is set by a Thot
+          VertPos presentation rule associated with the Superscript
           element. See function MathMLScriptShift }
-	VertPos: HRef = Base . HRef;
+        VertPos: HRef = Base . HRef;
         IN Structure_view
-	   VertPos: Top = Previous . Bottom;
-	END;
+           VertPos: Top = Previous . Bottom;
+        END;
 
   superscriptshift:
-	BEGIN
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-	END;
+        BEGIN
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        END;
   superscriptshift (Superscript):
-	BEGIN
-	{ the actual distance between the two HRefs is set by a Thot
-	  VertPos presentation rule associated with the Superscript
+        BEGIN
+        { the actual distance between the two HRefs is set by a Thot
+          VertPos presentation rule associated with the Superscript
           element. See function MathMLScriptShift }
-	VertPos: HRef = Base . HRef;
+        VertPos: HRef = Base . HRef;
         IN Structure_view
-	   VertPos: Top = Previous . Bottom;
-	END;
+           VertPos: Top = Previous . Bottom;
+        END;
 
   accentunder:
-	CreateBefore(AttrNameAndValue);
+        CreateBefore(AttrNameAndValue);
 
   align = top_:
-	BEGIN
-	CreateBefore(AttrNameAndValue);
-	HorizRef: * . Top;
-	END;
+        BEGIN
+        CreateBefore(AttrNameAndValue);
+        HorizRef: * . Top;
+        END;
   align = bottom_:
-	BEGIN
-	CreateBefore(AttrNameAndValue);
-	HorizRef: * . Bottom;
-	END;
+        BEGIN
+        CreateBefore(AttrNameAndValue);
+        HorizRef: * . Bottom;
+        END;
   align = center:
-	BEGIN
-	CreateBefore(AttrNameAndValue);
-	HorizRef: * . HMiddle;
-	END;
+        BEGIN
+        CreateBefore(AttrNameAndValue);
+        HorizRef: * . HMiddle;
+        END;
   align = baseline:
-	BEGIN
-	CreateBefore(AttrNameAndValue);
-	HorizRef: * . HMiddle;
-	END;
+        BEGIN
+        CreateBefore(AttrNameAndValue);
+        HorizRef: * . HMiddle;
+        END;
   align = axis:
-	BEGIN
-	CreateBefore(AttrNameAndValue);
-	HorizRef: * . HMiddle + 0.15;
-	END;
+        BEGIN
+        CreateBefore(AttrNameAndValue);
+        HorizRef: * . HMiddle + 0.15;
+        END;
 
   rowalign:
-	BEGIN
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-	END;
+        BEGIN
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        END;
 
   rowalign_mtr:
         CreateBefore(AttrNameAndValue);
 
   IntRowAlign(MTD) = IntTop:
-	BEGIN
-	VertPos: Top = Enclosing . Top;
-	IN Structure_view
-		VertPos: Top = Previous . Bottom;
-	END;
+        BEGIN
+        VertPos: Top = Enclosing . Top;
+        IN Structure_view
+                VertPos: Top = Previous . Bottom;
+        END;
   IntRowAlign(MTD) = IntBottom:
-	BEGIN
-	VertPos: Bottom = Enclosing . Bottom;
-	IN Structure_view
-		VertPos: Top = Previous . Bottom;
-	END;
+        BEGIN
+        VertPos: Bottom = Enclosing . Bottom;
+        IN Structure_view
+                VertPos: Top = Previous . Bottom;
+        END;
   IntRowAlign(MTD) = IntCenter:
-	BEGIN
-	VertPos: HMiddle = Enclosing . HMiddle;
-	IN Structure_view
-		VertPos: Top = Previous . Bottom;
-	END;
+        BEGIN
+        VertPos: HMiddle = Enclosing . HMiddle;
+        IN Structure_view
+                VertPos: Top = Previous . Bottom;
+        END;
   IntRowAlign(MTD) = IntBaseline:
-	BEGIN
-	VertPos: HRef = Previous AnyElem . HRef;
-	IN Structure_view
-		VertPos: Top = Previous . Bottom;
-	END;
+        BEGIN
+        VertPos: HRef = Previous AnyElem . HRef;
+        IN Structure_view
+                VertPos: Top = Previous . Bottom;
+        END;
   IntRowAlign(MTD) = IntAxis:
-	BEGIN
-	VertPos: HRef = Enclosing . HRef;
-	IN Structure_view
-		VertPos: Top = Previous . Bottom;
-	END;
+        BEGIN
+        VertPos: HRef = Enclosing . HRef;
+        IN Structure_view
+                VertPos: Top = Previous . Bottom;
+        END;
 
   columnalign:
-	BEGIN
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-	END;
+        BEGIN
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        END;
 
   columnalign_mtd:
-	CreateBefore(AttrNameAndValue);
+        CreateBefore(AttrNameAndValue);
 
   IntColAlign(CellWrapper) = IntLeft:
-	HorizPos: Left = Enclosing . Left;
+        HorizPos: Left = Enclosing . Left;
   IntColAlign(CellWrapper) = IntCenter:
-	BEGIN
-	HorizPos: VMiddle = Enclosing . VMiddle;
-	IN Structure_view
-		HorizPos: Left = Enclosing . Left;
-	END;
+        BEGIN
+        HorizPos: VMiddle = Enclosing . VMiddle;
+        IN Structure_view
+                HorizPos: Left = Enclosing . Left;
+        END;
   IntColAlign(CellWrapper) = IntRight:
-	BEGIN
-	HorizPos: Right = Enclosing . Right;
-	IN Structure_view
-		HorizPos: Left = Enclosing . Left;
-	END;
+        BEGIN
+        HorizPos: Right = Enclosing . Right;
+        IN Structure_view
+                HorizPos: Left = Enclosing . Left;
+        END;
 
   groupalign:
-	BEGIN
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-	END;
+        BEGIN
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        END;
 
   groupalign_malgr:
-	CreateBefore(AttrNameAndValue);
+        CreateBefore(AttrNameAndValue);
 
   alignmentscope:
-	BEGIN
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-	END;
+        BEGIN
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        END;
 
   columnwidth:
-	BEGIN
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-	END;
+        BEGIN
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        END;
 
   rowspacing:
-	BEGIN
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-	END;
+        BEGIN
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        END;
 
   columnspacing:
-	BEGIN
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-	END;
+        BEGIN
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        END;
 
   rowlines:
-	BEGIN
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-	END;
+        BEGIN
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        END;
 
   columnlines:
-	BEGIN
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-	END;
+        BEGIN
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        END;
 
   frame = none\240:
-	CreateBefore(AttrNameAndValue);
+        CreateBefore(AttrNameAndValue);
   frame = solid\240:
-	BEGIN
-	CreateBefore(AttrNameAndValue);
-	BorderTopWidth: 1 pt;
-	BorderRightWidth: 1 pt;
-	BorderBottomWidth: 1 pt;
-	BorderLeftWidth: 1 pt;
-	BorderTopStyle: Solid;
-	BorderRightStyle: Solid;
-	BorderBottomStyle: Solid;
-	BorderLeftStyle: Solid;
-	PaddingTop: 0.5 ex;
-	PaddingBottom: 0.5 ex;
-	PaddingRight: 0.4;
-	PaddingLeft: 0.4;
-	END;
+        BEGIN
+        CreateBefore(AttrNameAndValue);
+        BorderTopWidth: 1 pt;
+        BorderRightWidth: 1 pt;
+        BorderBottomWidth: 1 pt;
+        BorderLeftWidth: 1 pt;
+        BorderTopStyle: Solid;
+        BorderRightStyle: Solid;
+        BorderBottomStyle: Solid;
+        BorderLeftStyle: Solid;
+        BorderTopColor: Foreground;
+        BorderRightColor: Foreground;
+        BorderLeftColor: Foreground;
+        BorderBottomColor: Foreground;
+        PaddingTop: 0.5 ex;
+        PaddingBottom: 0.5 ex;
+        PaddingRight: 0.4;
+        PaddingLeft: 0.4;
+        IN Structure_view BEGIN
+                BorderTopWidth: 0;
+                BorderRightWidth: 0;
+                BorderLeftWidth: 0;
+                BorderBottomWidth: 0;
+                PaddingTop: 0;
+                PaddingBottom: 0;
+                PaddingRight: 0;
+                PaddingLeft: 0;
+                END;
+        END;
   frame = dashed\240:
-	BEGIN
-	CreateBefore(AttrNameAndValue);
-	BorderTopWidth: 1 pt;
-	BorderRightWidth: 1 pt;
-	BorderBottomWidth: 1 pt;
-	BorderLeftWidth: 1 pt;
-	BorderTopStyle: Dashed;
-	BorderRightStyle: Dashed;
-	BorderBottomStyle: Dashed;
-	BorderLeftStyle: Dashed;
-	PaddingTop: 0.5 ex;
-	PaddingBottom: 0.5 ex;
-	PaddingRight: 0.4;
-	PaddingLeft: 0.4;
-	END;
+        BEGIN
+        CreateBefore(AttrNameAndValue);
+        BorderTopWidth: 1 pt;
+        BorderRightWidth: 1 pt;
+        BorderBottomWidth: 1 pt;
+        BorderLeftWidth: 1 pt;
+        BorderTopStyle: Dashed;
+        BorderRightStyle: Dashed;
+        BorderBottomStyle: Dashed;
+        BorderLeftStyle: Dashed;
+        BorderTopColor: Foreground;
+        BorderRightColor: Foreground;
+        BorderLeftColor: Foreground;
+        BorderBottomColor: Foreground;
+        PaddingTop: 0.5 ex;
+        PaddingBottom: 0.5 ex;
+        PaddingRight: 0.4;
+        PaddingLeft: 0.4;
+        IN Structure_view BEGIN
+                BorderTopWidth: 0;
+                BorderRightWidth: 0;
+                BorderLeftWidth: 0;
+                BorderBottomWidth: 0;
+                PaddingTop: 0;
+                PaddingBottom: 0;
+                PaddingRight: 0;
+                PaddingLeft: 0;
+                END;
+        END;
 
   framespacing:
-	BEGIN
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-	END;
+        BEGIN
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        END;
 
   equalrows:
-	CreateBefore(AttrNameAndValue);
+        CreateBefore(AttrNameAndValue);
 
   equalcolumns:
-	CreateBefore(AttrNameAndValue);
+        CreateBefore(AttrNameAndValue);
 
   displaystyle:
-	CreateBefore(AttrNameAndValue);
-	{ style is actually set by attribute IntDisplaystyle }
+        CreateBefore(AttrNameAndValue);
+        { style is actually set by attribute IntDisplaystyle }
 
   side:
-	CreateBefore(AttrNameAndValue);
+        CreateBefore(AttrNameAndValue);
   side(RowLabel) = left\240:
-	BEGIN
-	HorizPos: Left = Root . Left + 0.5 cm;
-	IN Structure_view
-		HorizPos: Left = Enclosing . Left;
-	END;
+        BEGIN
+        HorizPos: Left = Root . Left + 0.5 cm;
+        IN Structure_view
+                HorizPos: Left = Enclosing . Left;
+        END;
   side(RowLabel) = right\240:
-	BEGIN
-	HorizPos: Right = Root . Right - 0.5 cm;
-	IN Structure_view
-		HorizPos: Left = Enclosing . Left;
-	END;
+        BEGIN
+        HorizPos: Right = Root . Right - 0.5 cm;
+        IN Structure_view
+                HorizPos: Left = Enclosing . Left;
+        END;
   side(RowLabel) = leftoverlap:
-	BEGIN
-	HorizPos: Left = Root . Left + 0.5 cm;
-	IN Structure_view
-		HorizPos: Left = Enclosing . Left;
-	END;
+        BEGIN
+        HorizPos: Left = Root . Left + 0.5 cm;
+        IN Structure_view
+                HorizPos: Left = Enclosing . Left;
+        END;
   side(RowLabel) = rightoverlap:
-	BEGIN
-	HorizPos: Right = Root . Right - 0.5 cm;
-	IN Structure_view
-		HorizPos: Left = Enclosing . Left;
-	END;
+        BEGIN
+        HorizPos: Right = Root . Right - 0.5 cm;
+        IN Structure_view
+                HorizPos: Left = Enclosing . Left;
+        END;
 
   minlabelspacing:
-	BEGIN
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-	END;
+        BEGIN
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        END;
 
   alt:
-	BEGIN
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-	if MGLYPH
-	   CreateFirst (AltValue);
-	END;
+        BEGIN
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        if MGLYPH
+           CreateFirst (AltValue);
+        END;
 
   index:
-	BEGIN
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-	END;
+        BEGIN
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        END;
 
   definitionURL:
-	BEGIN
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-	END;
+        BEGIN
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        END;
 
   encoding:
-	BEGIN
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-	END;
+        BEGIN
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        END;
 
   actiontype:
-	BEGIN
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-	END;
+        BEGIN
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        END;
 
   selection:
-	BEGIN
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-	END;
+        BEGIN
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        END;
 
   rowspan\240:
-	BEGIN
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-	END;
+        BEGIN
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        END;
 
   columnspan:
-	BEGIN
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-	END;
+        BEGIN
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        END;
 
   edge:
-	CreateBefore(AttrNameAndValue);
+        CreateBefore(AttrNameAndValue);
 
   IntPlaceholder:
-	BEGIN
-	Fillpattern: nopattern;
-	Width: Enclosed . Width;
-	END;
+        BEGIN
+        Fillpattern: nopattern;
+        Width: Enclosed . Width;
+        END;
 
   IntFontstyle = IntNormal:
-	BEGIN
-	Style: roman;
-	IN Structure_view
-		Style: Enclosing =;
-	END;
+        BEGIN
+        Style: roman;
+        IN Structure_view
+                Style: Enclosing =;
+        END;
   IntFontstyle = IntItalic:
-	BEGIN
-	Style: Italics;
-	IN Structure_view
-		Style: Enclosing =;
-	END;
+        BEGIN
+        Style: Italics;
+        IN Structure_view
+                Style: Enclosing =;
+        END;
 
   IntVertStretch:
-	BEGIN
-	if MO
-		BEGIN
-		Height: Next not Construct . Height;
-		VertPos: Top = Next not Construct . Top;
-		END;
-	if MF
-		BEGIN
-		Height: Enclosing . Height;
-		VertPos: Top =  Enclosing . Top;
-		END;
-	if OpeningFence
-		BEGIN
-		Height: Enclosing . Height;
-		VertPos: Top =  Enclosing . Top;
-		END;
-	if ClosingFence
-		BEGIN
-		Height: Enclosing . Height;
-		VertPos: Top =  Enclosing . Top;
-		END;
-	if FencedSeparator
-		BEGIN
-		Height: Enclosing . Height;
-		VertPos: Top =  Enclosing . Top;
-		END;
-	if MSUBSUP
-		BEGIN
-		Height: Next not Construct . Height + 1.2;
-		VertPos: Top = Next not Construct . Top - 0.6;
-		END;
-	if MSUB
-		BEGIN
-		Height: Next not Construct . Height + 0.5;
-		VertPos: Top = Next not Construct . Top;
-		END;
-	if MSUP
-		BEGIN
-		Height: Next not Construct . Height + 0.5;
-		VertPos: Top = Next not Construct . Top - 0.5;
-		END;
-	if MUNDEROVER
-		BEGIN
-		Height: Next not Construct . Height + 1.6;
-		VertPos: Top = Next not Construct . Top - 0.8;
-		END;
-	if MUNDER
-		BEGIN
-		Height: Next not Construct . Height + 0.8;
-		VertPos: Top = Next not Construct . Top;
-		END;
-	if MOVER
-		BEGIN
-		Height: Next not Construct . Height + 0.8;
-		VertPos: Top = Next not Construct . Top - 0.8;
-		END;
-	if MTD
-		BEGIN
-		Height: Enclosing . Height;
-		VertPos: Top = Enclosing . Top;
-		VertOverflow: yes;
-		END;
-	IN Structure_view BEGIN
-		Height: Enclosed . Height;
-		VertPos: Top = Previous . Bottom;
-		END;
-	END;
+        BEGIN
+        if MO
+                BEGIN
+                Height: Next not Construct . Height;
+                VertPos: Top = Next not Construct . Top;
+                END;
+        if MF
+                BEGIN
+                Height: Enclosing . Height;
+                VertPos: Top =  Enclosing . Top;
+                END;
+        if OpeningFence
+                BEGIN
+                Height: Enclosing . Height;
+                VertPos: Top =  Enclosing . Top;
+                END;
+        if ClosingFence
+                BEGIN
+                Height: Enclosing . Height;
+                VertPos: Top =  Enclosing . Top;
+                END;
+        if FencedSeparator
+                BEGIN
+                Height: Enclosing . Height;
+                VertPos: Top =  Enclosing . Top;
+                END;
+        if MSUBSUP
+                BEGIN
+                Height: Next not Construct . Height + 1.2;
+                VertPos: Top = Next not Construct . Top - 0.6;
+                END;
+        if MSUB
+                BEGIN
+                Height: Next not Construct . Height + 0.5;
+                VertPos: Top = Next not Construct . Top;
+                END;
+        if MSUP
+                BEGIN
+                Height: Next not Construct . Height + 0.5;
+                VertPos: Top = Next not Construct . Top - 0.5;
+                END;
+        if MUNDEROVER
+                BEGIN
+                Height: Next not Construct . Height + 1.6;
+                VertPos: Top = Next not Construct . Top - 0.8;
+                END;
+        if MUNDER
+                BEGIN
+                Height: Next not Construct . Height + 0.8;
+                VertPos: Top = Next not Construct . Top;
+                END;
+        if MOVER
+                BEGIN
+                Height: Next not Construct . Height + 0.8;
+                VertPos: Top = Next not Construct . Top - 0.8;
+                END;
+        if MTD
+                BEGIN
+                Height: Enclosing . Height;
+                VertPos: Top = Enclosing . Top;
+                VertOverflow: yes;
+                END;
+        IN Structure_view BEGIN
+                Height: Enclosed . Height;
+                VertPos: Top = Previous . Bottom;
+                END;
+        END;
   IntVertStretch (Superscript):
-	BEGIN
-	VertPos: Top = Enclosing . Top;
-	HorizPos: Left = Base . Right + 0.1;
-	IN Structure_view BEGIN
+        BEGIN
+        VertPos: Top = Enclosing . Top;
+        HorizPos: Left = Base . Right + 0.1;
+        IN Structure_view BEGIN
                 VertPos: Top = Previous . Bottom;
                 HorizPos: Left = Enclosing . Left;
-		END;
-	END;
+                END;
+        END;
   IntVertStretch (Subscript):
-	BEGIN
-	VertPos: Bottom = Enclosing . Bottom;
-	HorizPos: Left = Base . Right - 0.3;
-	IN Structure_view BEGIN
+        BEGIN
+        VertPos: Bottom = Enclosing . Bottom;
+        HorizPos: Left = Base . Right - 0.3;
+        IN Structure_view BEGIN
                 VertPos: Top = Previous . Bottom;
                 HorizPos: Left = Enclosing . Left;
-		END;
-	END;
+                END;
+        END;
   IntVertStretch (Base):
-	BEGIN
-	IF within MSUBSUP BEGIN
-		Height: Enclosing . Height - 0.8;
-		VertPos: Top = Enclosing . Top + 0.4;
-		END;
-	IF within MSUB BEGIN
-		Height: Enclosing . Height - 0.5;
-		VertPos: Top = Enclosing . Top;
-		END;
-	IF within MSUP BEGIN
-		Height: Enclosing . Height - 0.5;
-		VertPos: Top = Enclosing . Top + 0.5;
-		END;
-	IN Structure_view BEGIN
-		Height: Enclosed . Height;
-		VertPos: Top = Enclosing . Top;
-		END;
-	END;
+        BEGIN
+        IF within MSUBSUP BEGIN
+                Height: Enclosing . Height - 0.8;
+                VertPos: Top = Enclosing . Top + 0.4;
+                END;
+        IF within MSUB BEGIN
+                Height: Enclosing . Height - 0.5;
+                VertPos: Top = Enclosing . Top;
+                END;
+        IF within MSUP BEGIN
+                Height: Enclosing . Height - 0.5;
+                VertPos: Top = Enclosing . Top + 0.5;
+                END;
+        IN Structure_view BEGIN
+                Height: Enclosed . Height;
+                VertPos: Top = Enclosing . Top;
+                END;
+        END;
   IntVertStretch (UnderOverBase):
-	BEGIN
-{***}	VertPos: Top = Enclosing . Top + 0.8;
-{***}	Height:  Enclosing . Height - 1.6;
-{****	VertPos: Top = Overscript . Bottom;
-	Height: Bottom = Underscript . Top; ****}
-	IN Structure_view BEGIN
-		Height: Enclosed . Height;
-		VertPos: Top = Enclosing . Top;
-		END;
-	END;
+        BEGIN
+{***}        VertPos: Top = Enclosing . Top + 0.8;
+{***}        Height:  Enclosing . Height - 1.6;
+{****        VertPos: Top = Overscript . Bottom;
+        Height: Bottom = Underscript . Top; ****}
+        IN Structure_view BEGIN
+                Height: Enclosed . Height;
+                VertPos: Top = Enclosing . Top;
+                END;
+        END;
   IntVertStretch (Overscript):
-	BEGIN
-	VertPos: Top = Enclosing . Top;
-	IN Structure_view
-		VertPos: Top = Previous . Bottom;
-	END;
+        BEGIN
+        VertPos: Top = Enclosing . Top;
+        IN Structure_view
+                VertPos: Top = Previous . Bottom;
+        END;
   IntVertStretch (Underscript):
-	BEGIN
-	VertPos: Bottom = Enclosing . Bottom;	
-	IN Structure_view
-		VertPos: Top = Previous . Bottom;
-	END;
+        BEGIN
+        VertPos: Bottom = Enclosing . Bottom;        
+        IN Structure_view
+                VertPos: Top = Previous . Bottom;
+        END;
   IntVertStretch (CellWrapper):
-	BEGIN
-	VertPos: Top = Enclosing . Top;
-	Height: Enclosing . Height;
-	IN Structure_view
-		Height: Enclosed . Height;
-	END;
+        BEGIN
+        VertPos: Top = Enclosing . Top;
+        Height: Enclosing . Height;
+        IN Structure_view
+                Height: Enclosed . Height;
+        END;
   IntVertStretch (MO):
-	BEGIN
-	IF immediately within UnderOverBase
-		BEGIN
-		Height: Enclosing . Height;
-		VertPos: Top = Enclosing . Top;
-		HorizRef: * . HMiddle + 0.3;
-		END;
-	IF immediately within Base
-		BEGIN
-		Height: Enclosing . Height;
-		VertPos: Top = Enclosing . Top;
-		HorizRef: * . HMiddle + 0.3;
-		END;
-	IF immediately within CellWrapper
-		BEGIN
-		Height: Enclosing . Height;
-		VertPos: Top = Enclosing . Top;
-		HorizRef: * . HMiddle + 0.3;
-		END;
-	IN Structure_view BEGIN
-		Height: Enclosed . Height;
-		VertPos: Top = Previous . Bottom;
-		HorizRef: Enclosed . HRef;
-		END;
-	END;
+        BEGIN
+        IF immediately within UnderOverBase
+                BEGIN
+                Height: Enclosing . Height;
+                VertPos: Top = Enclosing . Top;
+                HorizRef: * . HMiddle + 0.3;
+                END;
+        IF immediately within Base
+                BEGIN
+                Height: Enclosing . Height;
+                VertPos: Top = Enclosing . Top;
+                HorizRef: * . HMiddle + 0.3;
+                END;
+        IF immediately within CellWrapper
+                BEGIN
+                Height: Enclosing . Height;
+                VertPos: Top = Enclosing . Top;
+                HorizRef: * . HMiddle + 0.3;
+                END;
+        IN Structure_view BEGIN
+                Height: Enclosed . Height;
+                VertPos: Top = Previous . Bottom;
+                HorizRef: Enclosed . HRef;
+                END;
+        END;
   IntVertStretch (SYMBOL_UNIT):
-	BEGIN
-	Height: Enclosing . Height;
-	VertPos: Top = Enclosing . Top;
-	IN Structure_view BEGIN
-		Height: 1;
-		HorizPos: Left = Enclosing . Left;
-		VertPos: Top = Previous . Bottom;
-		END;
-	END;
+        BEGIN
+        Height: Enclosing . Height;
+        VertPos: Top = Enclosing . Top;
+        IN Structure_view BEGIN
+                Height: 1;
+                HorizPos: Left = Enclosing . Left;
+                VertPos: Top = Previous . Bottom;
+                END;
+        END;
 
   IntAddSpace = nospace:
-	BEGIN
-	PaddingLeft: 0;
-	PaddingRight: 0;
-	END;
+        BEGIN
+        PaddingLeft: 0;
+        PaddingRight: 0;
+        END;
   IntAddSpace = spacebefore:
-	BEGIN
-	PaddingLeft: OPERATOR_SPACE;
-	PaddingRight: 0;
-	IN Structure_view
-		PaddingLeft: 0;
-	END;
+        BEGIN
+        PaddingLeft: OPERATOR_SPACE;
+        PaddingRight: 0;
+        IN Structure_view
+                PaddingLeft: 0;
+        END;
   IntAddSpace = spaceafter:
-	BEGIN
+        BEGIN
         PaddingLeft: 0;
         PaddingRight: OPERATOR_SPACE;
-	IN Structure_view
-		PaddingRight: 0;
-	END;
+        IN Structure_view
+                PaddingRight: 0;
+        END;
   IntAddSpace = both_:
-	BEGIN
+        BEGIN
         if not within Subscript  and not within Superscript and
            not within Overscript and not within Underscript and
-	   not within MSubscript and not within MSuperscript
-	   BEGIN
-	   PaddingLeft: OPERATOR_SPACE;
-	   PaddingRight: OPERATOR_SPACE;
-	   END;
-	IN Structure_view
-		BEGIN
-		PaddingLeft: 0;
-		PaddingRight: 0;
-		END;
-	END;
+           not within MSubscript and not within MSuperscript
+           BEGIN
+           PaddingLeft: OPERATOR_SPACE;
+           PaddingRight: OPERATOR_SPACE;
+           END;
+        IN Structure_view
+                BEGIN
+                PaddingLeft: 0;
+                PaddingRight: 0;
+                END;
+        END;
 
   IntHorizStretch:
-	BEGIN
+        BEGIN
         Width: Enclosing . Width;
-	HorizPos: Left = Enclosing . Left;
-	if Overscript
-	   Size: Enclosing =;
-	if Underscript
-	   Size: Enclosing =;
-	END;
+        HorizPos: Left = Enclosing . Left;
+        if Overscript
+           Size: Enclosing =;
+        if Underscript
+           Size: Enclosing =;
+        END;
   IntHorizStretch (SYMBOL_UNIT):
-	BEGIN
-	Height: Enclosed . Height;
-	Width: Enclosing . Width;
-	HorizPos: Left = Enclosing . Left;
-	IN Structure_view BEGIN
-		HorizPos: Left = Enclosing . Left;
-		Height: 1;
-		Width: 1.5;
-		END;
-	END;
+        BEGIN
+        Height: Enclosed . Height;
+        Width: Enclosing . Width;
+        HorizPos: Left = Enclosing . Left;
+        IN Structure_view BEGIN
+                HorizPos: Left = Enclosing . Left;
+                Height: 1;
+                Width: 1.5;
+                END;
+        END;
 
   MRef_column:
-	BEGIN
-	Width: Referred . Width;
+        BEGIN
+        Width: Referred . Width;
         HorizPos: Left = Referred . Left;
         IN Structure_view BEGIN
                 Width: Enclosing . Width - STRUCT_INDENT;
                 HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-                END;	
-	END;
+                END;        
+        END;
 
  MColExt:
-	BEGIN
-	Width: Right = Referred . Right;
-	IN Structure_view
-		Width: Enclosing . Width;
-	IN Alternate_view BEGIN
-		Width: Right = Enclosing . Right;
-		HorizPos: Left = Previous . Left + STRUCT_INDENT;
-		END;
-	END;
+        BEGIN
+        Width: Right = Referred . Right;
+        IN Structure_view
+                Width: Enclosing . Width;
+        IN Alternate_view BEGIN
+                Width: Right = Enclosing . Right;
+                HorizPos: Left = Previous . Left + STRUCT_INDENT;
+                END;
+        END;
 
  MRowExt:
-	BEGIN
-	VertOverflow: Yes;
-	VertPos: Top = Enclosing . Top;
-	Height: Bottom = Referred . Bottom;
-	IN Structure_view BEGIN
-		Height: Enclosed . Height;
-		VertOverflow: No;
-		END;	
-	IN Alternate_view BEGIN
-		Height: Enclosed . Height;
-		VertOverflow: No;
-		END;	
-	END;
+        BEGIN
+        VertOverflow: Yes;
+        VertPos: Top = Enclosing . Top;
+        Height: Bottom = Referred . Bottom;
+        IN Structure_view BEGIN
+                Height: Enclosed . Height;
+                VertOverflow: No;
+                END;        
+        IN Alternate_view BEGIN
+                Height: Enclosed . Height;
+                VertOverflow: No;
+                END;        
+        END;
 
  MLineBelow = solid_:
         createafter (SolidRowLine);
  MLineBelow = dashed_:
         createafter (DashedRowLine);
  MLineOnTheRight = solid_:
- 	createafter (SolidColumnLine);
+         createafter (SolidColumnLine);
  MLineOnTheRight = dashed_:
- 	createafter (DashedColumnLine);
+         createafter (DashedColumnLine);
  MLineBelowExt = solid_:
         createafter (SolidRowLineExt);
  MLineBelowExt = dashed_:
         createafter (DashedRowLineExt);
  MLineOnTheRightExt = solid_:
- 	createafter (SolidColumnLineExt);
+         createafter (SolidColumnLineExt);
  MLineOnTheRightExt = dashed_:
- 	createafter (DashedColumnLineExt);
+         createafter (DashedColumnLineExt);
 
 END

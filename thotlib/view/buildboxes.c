@@ -3717,6 +3717,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
             {
               if (FrameTable[frame].FrView == 1 &&
                   (pBox->BxXOrg || pBox->BxYOrg) &&
+                  !pAb->AbPresentationBox &&
                   pAb->AbElement->ElSystemOrigin)
                 {
                   pBox->BxClipX = 0;

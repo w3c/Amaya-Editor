@@ -1224,6 +1224,7 @@ void XMoveAllEnclosed (PtrBox pBox, int delta, int frame)
 
 #ifdef _GL 
               if (pBox->BxXOrg && FrameTable[frame].FrView == 1 &&
+                  !pAb->AbPresentationBox &&
                   pAb->AbElement->ElSystemOrigin)
                 delta = 0;
 #endif /* _GL */
@@ -1372,6 +1373,7 @@ void YMoveAllEnclosed (PtrBox pBox, int delta, int frame)
 
 #ifdef _GL 
               if (pBox->BxYOrg && FrameTable[frame].FrView == 1 &&
+                  !pAb->AbPresentationBox &&
                   pAb->AbElement->ElSystemOrigin)
                 delta = 0;
 #endif /* _GL */

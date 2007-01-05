@@ -212,6 +212,7 @@ void DefBoxRegion (int frame, PtrBox pBox, int xstart, int xstop,
   PtrAbstractBox      pAb;
 #ifdef _GL
   PtrAbstractBox      pClipAb;
+  ThotBool            formatted;
 #endif /* _GL */
   PtrElement          pEl = NULL;
   int                 x1, x2, y1, y2, k;
@@ -231,31 +232,28 @@ void DefBoxRegion (int frame, PtrBox pBox, int xstart, int xstop,
             pBox = pAb->AbBox;
         }
 #ifdef _GL
-      if (FrameTable[frame].FrView == 1)
+      formatted = (FrameTable[frame].FrView == 1 && pAb->AbPSchema &&
+                   pAb->AbPSchema->PsStructName &&
+                   strcmp (pAb->AbPSchema->PsStructName, "TextFile"));
+      if (formatted)
         {
           /* clip on the enclosing box that changes the System origin */
-          if (pAb)
-            pEl = pAb->AbElement;
-          if (pAb && pEl && pEl->ElStructSchema &&
-              strcmp (pEl->ElStructSchema->SsName, "TextFile"))
+          pClipAb = pAb;
+          /* the box could be included within a SVG element */
+          while (pAb)
             {
-              pClipAb = pAb;
-              /* the box could be included within a SVG element */
-              while (pAb)
-                {
-                  if (pAb->AbElement &&
-                      pAb->AbBox &&
-                      pAb->AbElement->ElSystemOrigin)
-                    pClipAb = pAb;
-                  pAb = pAb->AbEnclosing;
-                }
-              if (pClipAb != pBox->BxAbstractBox && pClipAb->AbBox)
-                {
-                  /* clip the enclosing limits */
-                  xstart = xstop = ystart = ystop = -1;
-                  pBox = pClipAb->AbBox;
-                  k = EXTRA_GRAPH;
-                }
+              if (pAb->AbElement &&
+                  pAb->AbBox &&
+                  pAb->AbElement->ElSystemOrigin)
+                pClipAb = pAb;
+              pAb = pAb->AbEnclosing;
+            }
+          if (pClipAb != pBox->BxAbstractBox && pClipAb->AbBox)
+            {
+              /* clip the enclosing limits */
+              xstart = xstop = ystart = ystop = -1;
+              pBox = pClipAb->AbBox;
+              k = EXTRA_GRAPH;
             }
         }
 #endif /* _GL */
@@ -342,6 +340,7 @@ void UpdateBoxRegion (int frame, PtrBox pBox, int dx, int dy, int dw, int dh)
   PtrAbstractBox      pAb;
 #ifdef _GL
   PtrAbstractBox      pClipAb;
+  ThotBool            formatted;
 #endif /* _GL */
   PtrElement          pEl = NULL;
   int                 x1, x2, y1, y2, cpoints, caret;
@@ -351,30 +350,27 @@ void UpdateBoxRegion (int frame, PtrBox pBox, int dx, int dy, int dw, int dh)
     {
       pAb = pBox->BxAbstractBox;
 #ifdef _GL
-      if (FrameTable[frame].FrView == 1)
+      formatted = (FrameTable[frame].FrView == 1 && pAb->AbPSchema &&
+                   pAb->AbPSchema->PsStructName &&
+                   strcmp (pAb->AbPSchema->PsStructName, "TextFile"));
+      if (formatted)
         {
           /* clip on the enclosing box that changes the System origin */
-          if (pAb)
-            pEl = pAb->AbElement;
-          if (pAb && pEl && pEl->ElStructSchema &&
-              strcmp (pEl->ElStructSchema->SsName, "TextFile"))
+          pClipAb = pAb;
+          while (pAb)
             {
-              pClipAb = pAb;
-              while (pAb)
-                {
-                  if (pAb->AbElement &&
-                      pAb->AbBox &&
-                      pAb->AbElement->ElSystemOrigin)
-                    pClipAb = pAb;
-                  pAb = pAb->AbEnclosing;
-                }
-              if (pClipAb != pBox->BxAbstractBox && pClipAb->AbBox)
-                {
-                  /* clip the enclosing limits */
-                  dx = dy = dw = dh = 0;
-                  pBox = pClipAb->AbBox;
-                  cpoints = EXTRA_GRAPH;
-                }
+              if (pAb->AbElement &&
+                  pAb->AbBox &&
+                  pAb->AbElement->ElSystemOrigin)
+                pClipAb = pAb;
+              pAb = pAb->AbEnclosing;
+            }
+          if (pClipAb != pBox->BxAbstractBox && pClipAb->AbBox)
+            {
+              /* clip the enclosing limits */
+              dx = dy = dw = dh = 0;
+              pBox = pClipAb->AbBox;
+              cpoints = EXTRA_GRAPH;
             }
         }
 #endif /* _GL */
@@ -790,7 +786,7 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
             // display an IMG as a PICTURE element
             DisplayPointSelection (frame, pBox, 0);
 #ifdef _GL
-          else if (pFrom->AbElement->ElSystemOrigin)
+          else if (FrameTable[frame].FrView == 1 && pFrom->AbElement->ElSystemOrigin)
             DrawRectangle (frame, 0, 0, 0, 0, width, height, 0, BgSelColor, 2);
 #endif /* _GL */  
           else
@@ -962,13 +958,11 @@ void GetBoxTransformedCoord (PtrAbstractBox pAbSeeked, int frame,
   plane = 65536;
   nextplane = plane - 1;
   pAb = pFrame->FrAbstractBox;
-  if (FrameTable[frame].FrView == 1 && pAb->AbPSchema &&
-      pAb->AbPSchema->PsStructName &&
-      strcmp (pAb->AbPSchema->PsStructName, "TextFile"))
-    formatted = TRUE;
-  else
+  formatted = (FrameTable[frame].FrView == 1 && pAb->AbPSchema &&
+               pAb->AbPSchema->PsStructName &&
+               strcmp (pAb->AbPSchema->PsStructName, "TextFile"));
+  if (!formatted)
     {
-      formatted = FALSE;
       *lowerx += pFrame->FrXOrg;
       *higherx += pFrame->FrXOrg;
       *y += pFrame->FrYOrg;
@@ -994,38 +988,35 @@ void GetBoxTransformedCoord (PtrAbstractBox pAbSeeked, int frame,
               pBox = pAb->AbBox;
               if (pAb->AbElement && pAb->AbDepth == plane)
                 { 
-                  if (formatted)
+                  if (formatted && IfPushMatrix (pAb))
                     {
                       /* If the coord sys origin is translated, 
                          it must be before any other transfromation*/
-                      if (IfPushMatrix (pAb))
+                      if (pAb->AbElement->ElSystemOrigin)
                         {
-                          if (pAb->AbElement->ElSystemOrigin)
+                          is_transformed = TRUE;
+                          DisplayBoxTransformation (pAb->AbElement->ElTransform, 
+                                                    pFrame->FrXOrg, pFrame->FrYOrg);
+                        }
+                      /* Normal transformation*/
+                      if (pAb->AbElement->ElTransform)
+                        {
+                          is_transformed = TRUE;
+                          DisplayTransformation (frame, 
+                                                 pAb->AbElement->ElTransform, 
+                                                 pBox->BxWidth, 
+                                                 pBox->BxHeight);
+                        }
+                      if (pAb->AbElement->ElSystemOrigin)
+                        { 
+                          if (pFrame->FrXOrg ||pFrame->FrYOrg)
                             {
-                              is_transformed = TRUE;
-                              DisplayBoxTransformation (pAb->AbElement->ElTransform, 
-                                                        pFrame->FrXOrg, pFrame->FrYOrg);
-                            }
-                          /* Normal transformation*/
-                          if (pAb->AbElement->ElTransform)
-                            {
-                              is_transformed = TRUE;
-                              DisplayTransformation (frame, 
-                                                     pAb->AbElement->ElTransform, 
-                                                     pBox->BxWidth, 
-                                                     pBox->BxHeight);
-                            }
-                          if (pAb->AbElement->ElSystemOrigin)
-                            { 
-                              if (pFrame->FrXOrg ||pFrame->FrYOrg)
-                                {
-                                  OldXOrg = pFrame->FrXOrg;
-                                  OldYOrg = pFrame->FrYOrg;
-                                  pFrame->FrXOrg = 0;
-                                  pFrame->FrYOrg = 0;
-                                  ClipXOfFirstCoordSys = pBox->BxClipX;
-                                  ClipYOfFirstCoordSys = pBox->BxClipY;
-                                }
+                              OldXOrg = pFrame->FrXOrg;
+                              OldYOrg = pFrame->FrYOrg;
+                              pFrame->FrXOrg = 0;
+                              pFrame->FrYOrg = 0;
+                              ClipXOfFirstCoordSys = pBox->BxClipX;
+                              ClipYOfFirstCoordSys = pBox->BxClipY;
                             }
                         }
                     }
@@ -1299,14 +1290,11 @@ static void ComputeBoundingBoxes (int frame, int xmin, int xmax, int ymin, int y
   Clipy = -1; 
   Clipw = 0; 
   Cliph = 0;  
-  if (FrameTable[frame].FrView == 1 &&
-      pInitAb &&
-      pInitAb->AbPSchema &&
-      pInitAb->AbPSchema->PsStructName &&
-      (strcmp (pInitAb->AbPSchema->PsStructName, "TextFile") != 0))
-    formatted = TRUE;
-  else
-    formatted = FALSE;
+  formatted = (FrameTable[frame].FrView == 1 &&
+               pInitAb &&
+               pInitAb->AbPSchema &&
+               pInitAb->AbPSchema->PsStructName &&
+               (strcmp (pInitAb->AbPSchema->PsStructName, "TextFile") != 0));
   while (plane != nextplane && pInitAb->AbFirstEnclosed)
     /* there is a new plane to display */
     {
@@ -1320,20 +1308,17 @@ static void ComputeBoundingBoxes (int frame, int xmin, int xmax, int ymin, int y
             {
               /* box in the current plane */
               pBox = pAb->AbBox;
-              if (pAb->AbElement && formatted)
+              if (pAb->AbElement && formatted && IfPushMatrix (pAb))
                 {
-                  if (IfPushMatrix (pAb))
-                    {
-                      if (pAb->AbElement->ElSystemOrigin)
-                        DisplayBoxTransformation (pAb->AbElement->ElTransform, 
-                                                  pFrame->FrXOrg, 
-                                                  pFrame->FrYOrg);
-                      if (pAb->AbElement->ElTransform)
-                        DisplayTransformation (frame,
-                                               pAb->AbElement->ElTransform, 
-                                               pBox->BxWidth, 
-                                               pBox->BxHeight);
-                    }     
+                  if (pAb->AbElement->ElSystemOrigin)
+                    DisplayBoxTransformation (pAb->AbElement->ElTransform, 
+                                              pFrame->FrXOrg, 
+                                              pFrame->FrYOrg);
+                  if (pAb->AbElement->ElTransform)
+                    DisplayTransformation (frame,
+                                           pAb->AbElement->ElTransform, 
+                                           pBox->BxWidth, 
+                                           pBox->BxHeight);
                 }
               if (pAb->AbOpacity != 1000
                   && !TypeHasException (ExcIsGroup, pAb->AbElement->ElTypeNumber,
@@ -1449,7 +1434,7 @@ static void ComputeBoundingBoxes (int frame, int xmin, int xmax, int ymin, int y
                 }
 
               if (pAb->AbElement && formatted)
-                  IfPopMatrix (pAb);
+                IfPopMatrix (pAb);
 
               /* X and Y is the smallest of all enclosed boxes*/
               if (pBox->BxBoundinBoxComputed)
@@ -1654,49 +1639,46 @@ PtrBox DisplayAllBoxes (int frame, PtrFlow pFlow,
 #ifdef _GL
               if (pAb->AbElement && not_g_opacity_displayed)
                 {
-                  if (formatted)
+                  if (formatted && IfPushMatrix (pAb))
                     {
                       /* If the coord sys origin is translated, 
                          it must be before any other transformation */
-                      if (IfPushMatrix (pAb))
+                      if (pAb->AbElement->ElSystemOrigin)
+                        DisplayBoxTransformation (pAb->AbElement->ElTransform, 
+                                                  pFrame->FrXOrg, pFrame->FrYOrg);
+                      /* Normal transformation*/
+                      if (pAb->AbElement->ElTransform)
+                        DisplayTransformation (frame,
+                                               pAb->AbElement->ElTransform, 
+                                               pBox->BxWidth, pBox->BxHeight);
+                      if (pAb->AbElement->ElSystemOrigin &&
+                          /* skip boxes already managed */
+                          !IsParentBox (systemOriginRoot, pAb->AbBox))
                         {
-                          if (pAb->AbElement->ElSystemOrigin)
-                            DisplayBoxTransformation (pAb->AbElement->ElTransform, 
-                                                      pFrame->FrXOrg, pFrame->FrYOrg);
-                          /* Normal transformation*/
-                          if (pAb->AbElement->ElTransform)
-                            DisplayTransformation (frame,
-                                                   pAb->AbElement->ElTransform, 
-                                                   pBox->BxWidth, pBox->BxHeight);
-                          if (pAb->AbElement->ElSystemOrigin &&
-                              /* skip boxes already managed */
-                              !IsParentBox (systemOriginRoot, pAb->AbBox))
+                          systemOriginRoot = pAb->AbBox;
+                          /*Need to Get REAL computed COORD ORIG
+                            instead of Computing Bounding Boxes forever...
+                            As it's an "optimisation it'll come later :
+                            if computed, no more compute, use synbounding, 
+                            else compute if near screen"*/
+                          if (pFrame->FrXOrg || pFrame->FrYOrg)
                             {
-                              systemOriginRoot = pAb->AbBox;
-                              /*Need to Get REAL computed COORD ORIG
-                                instead of Computing Bounding Boxes forever...
-                                As it's an "optimisation it'll come later :
-                                if computed, no more compute, use synbounding, 
-                                else compute if near screen"*/
-                              if (pFrame->FrXOrg || pFrame->FrYOrg)
-                                {
-                                  pFrame->OldFrXOrg = pFrame->FrXOrg;
-                                  pFrame->OldFrYOrg = pFrame->FrYOrg;
-                                  xOrg = pFrame->FrXOrg;
-                                  yOrg = pFrame->FrYOrg;
-                                  pFrame->FrXOrg = 0;
-                                  pFrame->FrYOrg = 0;
-                                  ComputeBoundingBoxes (frame, x_min, x_max,
-                                                        y_min, y_max, pAb,
-                                                        show_bgimage);
-                                  clipXOfFirstCoordSys = pBox->BxClipX;
-                                  clipYOfFirstCoordSys = pBox->BxClipY;
-                                }
-                              else
-                                ComputeBoundingBoxes (frame, x_min, x_max,
-                                                      y_min, y_max, pAb,
-                                                      show_bgimage);
+                              pFrame->OldFrXOrg = pFrame->FrXOrg;
+                              pFrame->OldFrYOrg = pFrame->FrYOrg;
+                              xOrg = pFrame->FrXOrg;
+                              yOrg = pFrame->FrYOrg;
+                              pFrame->FrXOrg = 0;
+                              pFrame->FrYOrg = 0;
+                              ComputeBoundingBoxes (frame, x_min, x_max,
+                                                    y_min, y_max, pAb,
+                                                    show_bgimage);
+                              clipXOfFirstCoordSys = pBox->BxClipX;
+                              clipYOfFirstCoordSys = pBox->BxClipY;
                             }
+                          else
+                            ComputeBoundingBoxes (frame, x_min, x_max,
+                                                  y_min, y_max, pAb,
+                                                  show_bgimage);
                         }
 
                       if (pAb->AbOpacity != 1000 &&  not_in_feedback)
@@ -1992,19 +1974,21 @@ void ComputeChangedBoundingBoxes (int frame)
   int                 l, h;
   int                 OldXOrg, OldYOrg, ClipXOfFirstCoordSys, ClipYOfFirstCoordSys;
   ThotBool            updateStatus;
-  ThotBool            show_bgimage;
+  ThotBool            show_bgimage, formatted;
    
 
   // Check if background images should be displayed
   TtaGetEnvBoolean ("ENABLE_BG_IMAGES", &show_bgimage);
   /*if (show_bgimage)
     TtaGetEnvBoolean ("LOAD_IMAGES", &show_bgimage);*/
-
   updateStatus = FrameUpdating;
   FrameUpdating = TRUE;  
   pFrame = &ViewFrameTable[frame - 1];
   // @@@@ TODO: check positioned boxes
   pAb = pFrame->FrAbstractBox;
+  formatted =  (FrameTable[frame].FrView == 1 && pAb->AbPSchema &&
+                pAb->AbPSchema->PsStructName &&
+                strcmp (pAb->AbPSchema->PsStructName, "TextFile"));
   root = pAb;
   if (pAb == NULL)
     return;
@@ -2039,7 +2023,7 @@ void ComputeChangedBoundingBoxes (int frame)
                 {
                   /* If the coord sys origin is translated, 
                      it must be before any other transformation*/
-                  if (IfPushMatrix (pAb))
+                  if (formatted && IfPushMatrix (pAb))
                     {
                       if (pAb->AbElement->ElSystemOrigin)
                         DisplayBoxTransformation (pAb->AbElement->ElTransform, 
@@ -2108,7 +2092,7 @@ void ComputeChangedBoundingBoxes (int frame)
                 {
                   if (pAb->AbDepth == plane)
                     {
-                      if (IfPopMatrix (pAb))
+                      if (formatted && IfPopMatrix (pAb))
                         OriginSystemExit (pAb, pFrame, plane,
                                           &OldXOrg, &OldYOrg, 
                                         ClipXOfFirstCoordSys,
