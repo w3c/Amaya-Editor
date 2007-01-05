@@ -109,6 +109,9 @@
 #define ExcIsGroup 346
 #define ExcSpacePreserve 347
 
+/* Template exceptions */
+#define ExcGiveName 348
+
 /* SpellCheck exception */
 #define ExcNoSpellCheck 400
 

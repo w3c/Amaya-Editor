@@ -1,5 +1,5 @@
       { Structure Schema for XTiger Templates
-	  Francesc Campoy Flores     31/03/2006 }
+        Francesc Campoy Flores & I. Vatton    January 2007 }
 
 	
 STRUCTURE Template;
@@ -40,7 +40,7 @@ STRUCT
 
   folder = ANY - ( head, union, import, component );
 
-  repeat ( ATTR id = TEXT; minOccurs = TEXT; maxOccurs = TEXT; currentOccurs =
+  repeat ( ATTR ref = TEXT; minOccurs = TEXT; maxOccurs = TEXT; currentOccurs =
   	TEXT; title ) =
   	LIST OF ( Repetition =
 		  CASE OF
@@ -53,20 +53,20 @@ STRUCT
 		    END);
 
 
-  option ( ATTR id )
+  option ( ATTR ref )
   	= ANY - ( head, union, import, component );
   
-  useEl ( ATTR id; types = TEXT; currentType = TEXT; title )
+  useEl ( ATTR ref; types = TEXT; currentType = TEXT; title )
      = ANY - ( head, union, import, component );
 
-  useSimple ( ATTR id; types; currentType; title )
+  useSimple ( ATTR ref; types; currentType; title )
      = ANY - ( head, union, import, component );
 
-  bag ( ATTR id; types ) 
+  bag ( ATTR ref; types ) 
      =  ANY - ( head, union, import, component );
 
   attribute ( ATTR 
-    name; 
+    ref_name = TEXT; 
     type = integerVal, decimal, string, listVal; 
     useAt = TEXT; 
     defaultAt = TEXT; 
@@ -75,11 +75,13 @@ STRUCT
     title ) = CONSTANT C_CR; {It is always empty}
 
 EXCEPT
-  repeat: NoReplicate;
-  option: NoReplicate;
+  repeat:             NoReplicate, NoBreakByReturn;
+  option:             NoReplicate, NoBreakByReturn;
   {Hiding unkown and language attributes}
-	Unknown_attribute	: Invisible;
-	Language :          Invisible;
+	Unknown_attribute:  Invisible;
+	Language:           Invisible;
   types :             DuplicateAttr;
+  currentType:        Invisible, GiveName;
+  ref:                Invisible;
 	
 END

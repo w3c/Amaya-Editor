@@ -248,7 +248,6 @@ void AmayaNotebook::OnContextMenu( wxContextMenuEvent & event )
       PopupMenu (p_menu, ScreenToClient(point));
 #endif /* _MACOS */
     }
-
   //  event.Skip();
 }
 
@@ -263,6 +262,8 @@ int AmayaNotebook::GetMContextFrame()
 }
 
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void AmayaNotebook::OnMouseLeftDown(wxMouseEvent& event)
 {
   m_ptDrag = event.GetPosition();
@@ -270,6 +271,8 @@ void AmayaNotebook::OnMouseLeftDown(wxMouseEvent& event)
   event.Skip();
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void AmayaNotebook::OnMouseLeftUp(wxMouseEvent& event)
 {
   m_isDragging = false;
@@ -277,25 +280,28 @@ void AmayaNotebook::OnMouseLeftUp(wxMouseEvent& event)
   event.Skip();
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void AmayaNotebook::OnMouseDragging(wxMouseEvent& event)
 {
   wxPoint pos = event.GetPosition();
   int cx = pos.x-m_ptDrag.x,
       cy = pos.y-m_ptDrag.y;
   
-  if(event.Dragging()/* && !m_isDragging*/)
-  {
+  if (event.Dragging()/* && !m_isDragging*/)
+    {
     printf("dragging !!\n");
 //    wxMessageBox(wxT("Dragging !!!"));
-//    if(cx>8 || cx<-8 || cy>8 || cy<-8)
+//    if (cx>8 || cx<-8 || cy>8 || cy<-8)
 //    {
 //      m_isDragging = true;
 //      wxMessageBox(wxT("Dragging !!!"));
 //    }
-  }else{
-    printf("moving !!\n");
+    }
+  else
+    {
 //    wxMessageBox(wxT("Moving !!!"));
-  }
+    }
   event.Skip();
 }
 

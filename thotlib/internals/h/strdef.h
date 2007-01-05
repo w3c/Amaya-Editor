@@ -121,7 +121,8 @@
 #define KWD_IsMap 	1200
 #define KWD_DuplicateAttr 	1201
 #define KWD_PseudoParag 	1202
-#define KWD_Root 	1203
+#define KWD_GiveName 	1203
+#define KWD_Root 	1204
 
 /*  RULES  */
 

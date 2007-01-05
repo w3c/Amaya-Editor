@@ -249,13 +249,8 @@ Element SearchNAMEattribute (Document doc, char *nameVal, Attribute ignoreAtt,
       if (attrType.AttrSSchema)
         {
           /* search all elements having an attribute ID (defined in the XTiger schema) */
-          attrType.AttrTypeNum = Template_ATTR_id;
+          attrType.AttrTypeNum = Template_ATTR_name;
           elFound = GetElemWithAttr (doc, attrType, nameVal, ignoreAtt, ignoreEl);
-		  if(!elFound) {
-		    /* search all elements having an attribute NAME (defined in the XTiger schema) */
-            attrType.AttrTypeNum = Template_ATTR_name;
-            elFound = GetElemWithAttr (doc, attrType, nameVal, ignoreAtt, ignoreEl);
-		  }
         }
 
     }

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2005
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -2266,26 +2266,6 @@ ThotBool MakeUniqueName (Element el, Document doc, ThotBool doIt,
       attrType.AttrTypeNum = SVG_ATTR_id;
     }
 #endif /* _SVG */
-#ifdef TEMPLATES
-  else if (!strcmp(name, "Template"))
-    {
-      //TODO : Check if NAME and ID must be different.
-      /* it's an element from Template namespace, look for the
-         id attribute from the same namespace */
-      attrIDType.AttrTypeNum = Template_ATTR_id;
-      attrID = TtaGetAttribute (el, attrIDType);
-      if (attrID)
-        /* the element has a id attribute. Check it too */
-        checkXMLID = TRUE;
-      /* it's an element from Template namespace, look for the
-         id attribute from the same namespace */
-      attrIDType.AttrTypeNum = Template_ATTR_name;
-      attrID = TtaGetAttribute (el, attrIDType);
-      if (attrID)
-        /* the element has a id attribute. Check it too */
-        checkXMLID = TRUE;
-    }
-#endif /* TEMPLATES */
   else
 #ifdef XML_GENERIC
     attrType.AttrTypeNum = XML_ATTR_xmlid;

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1998-2005
+ *  (c) COPYRIGHT INRIA and W3C, 1998-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -175,21 +175,21 @@ void TemplateElementComplete (ParserData *context, Element el, int *error)
           if (!NeedAMenu (el, doc))
             TtaChangeTypeOfElement (el, doc, Template_EL_useSimple);
         }
-      //CheckMandatoryAttribute (el, doc, Template_ATTR_id);
+      //CheckMandatoryAttribute (el, doc, Template_ATTR_ref);
       CheckMandatoryAttribute (el, doc, Template_ATTR_types);
       // unlock children
       TtaSetAccessRight (el, ReadWrite, doc);
       break;
 
     case Template_EL_bag:
-      //CheckMandatoryAttribute (el, doc, Template_ATTR_id);
+      //CheckMandatoryAttribute (el, doc, Template_ATTR_ref);
       CheckMandatoryAttribute (el, doc, Template_ATTR_types);
       // unlock children
       TtaSetAccessRight (el, ReadWrite, doc);
       break;
 
     case Template_EL_attribute:
-      CheckMandatoryAttribute (el, doc, Template_ATTR_name);
+      CheckMandatoryAttribute (el, doc, Template_ATTR_ref_name);
       break;
 
     case Template_EL_option :
@@ -248,23 +248,19 @@ void UnknownTemplateNameSpace (ParserData *context, Element *unknownEl,
   ----------------------------------------------------------------------*/
 void TemplateAttributeComplete (Attribute attr, Element el, Document doc)
 {
-	//TODO : The attribute attribute name is not unique!!
-	/*
-    AttributeType	attrType;
-    int            attrKind;
-    TtaGiveAttributeType  (attr, &attrType, &attrKind);
-    switch (attrType.AttrTypeNum)
+  AttributeType	attrType;
+  int            attrKind;
+
+  TtaGiveAttributeType  (attr, &attrType, &attrKind);
+  switch (attrType.AttrTypeNum)
     {
-    case Template_ATTR_id:
-    CheckUniqueName (el, doc, attr, attrType);
-    break;
-    case Template_ATTR_name:
-    CheckUniqueName (el, doc, attr, attrType);
-    break;
+    case Template_ATTR_ref:
+      break;
+    case Template_ATTR_ref_name:
+      break;
     default:
-    break;
+      break;
     }
-  */
 }
 
 

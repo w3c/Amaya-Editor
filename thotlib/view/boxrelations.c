@@ -1230,8 +1230,7 @@ void ComputePosRelation (AbPosition *rule, PtrBox pBox, int frame,
       return;
     }
   else if (pRefAb && pRefAb->AbBox &&
-           (pRefAb->AbBox->BxType == BoGhost ||
-            pRefAb->AbBox->BxType == BoFloatGhost))
+           pRefAb->AbBox->BxType == BoGhost)
     {
       /* the box position is computed by the line formatter */
       if (horizRef)
@@ -1239,6 +1238,23 @@ void ComputePosRelation (AbPosition *rule, PtrBox pBox, int frame,
       else
         pAb->AbVertPosChange = FALSE;
       return;
+    }
+  else if (pRefAb && pRefAb->AbBox &&
+           (pRefAb->AbBox->BxType == BoFloatGhost ||
+            pRefAb->AbBox->BxType == BoGhost))
+    {
+      // get a valid child
+      while (pRefAb && pRefAb->AbBox &&
+             pRefAb->AbBox->BxType == BoFloatGhost)
+        {
+          pRefAb = pRefAb->AbFirstEnclosed;
+          if (rule->PosRefEdge == Right || rule->PosRefEdge == Bottom)
+            {
+              // look for the last sibling
+              while (pRefAb && pRefAb->AbNext)
+                pRefAb = pRefAb->AbNext;
+            }
+        }
     }
 
   if (horizRef)
@@ -1285,7 +1301,7 @@ void ComputePosRelation (AbPosition *rule, PtrBox pBox, int frame,
               /* there is an enclosing box */
               pRefAb = GetPosRelativeAb (pAb, horizRef);
               /* Si oui -> A droite de sa boite */
-              if (pRefAb != NULL && rule->PosUnit != UnPercent)
+              if (pRefAb && rule->PosUnit != UnPercent)
                 {
                   /* At the right of the previous */
                   sibling = TRUE;

@@ -146,7 +146,7 @@ void AmayaStatusBar::EnableLogError( bool enable )
   ----------------------------------------------------------------------*/
 void AmayaStatusBar::SetSelectedElement(Element elem)
 {
-  if(m_pathCtrl)
+  if (m_pathCtrl)
     m_pathCtrl->SetSelection(elem);
 }
 

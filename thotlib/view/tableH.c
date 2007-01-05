@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA 1997-2005
+ *  (c) COPYRIGHT INRIA 1997-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -852,7 +852,7 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
 #endif
         }
     }
-  else if (min + sum + sumPercent >= width /*&& (freely || pCell == NULL)*/)
+  else if (min + sum + sumPercent >= width)
     {
 #ifdef TAB_DEBUG
       printf ("Minimum Widths ...\n");

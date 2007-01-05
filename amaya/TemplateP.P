@@ -1,5 +1,5 @@
-	{ Presentation Schema for Templates.
-	  A. Tollenaere		& I. Vatton July 2005 }
+    { Presentation Schema for Templates.
+      A. Tollenaere & I. Vatton    January 2007 }
 
 
 PRESENTATION Template;

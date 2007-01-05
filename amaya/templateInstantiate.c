@@ -246,7 +246,7 @@ static void InstantiateAttribute (XTigerTemplate t, Element el, Document doc)
     }
   // get the "name" and "default" attributes
   nameType.AttrSSchema = defaultType.AttrSSchema = TtaGetSSchema (TEMPLATE_SCHEMA_NAME, doc);
-  nameType.AttrTypeNum = Template_ATTR_name;
+  nameType.AttrTypeNum = Template_ATTR_ref_name;
   defaultType.AttrTypeNum = Template_ATTR_defaultAt;
   nameAttr = TtaGetAttribute (el, nameType);
   defAttr = TtaGetAttribute (el, defaultType);
@@ -290,7 +290,7 @@ static void InstantiateAttribute (XTigerTemplate t, Element el, Document doc)
 #ifdef TEMPLATES
 /*----------------------------------------------------------------------
   ProcessAttr
-  Look for all "attribute" elements in the subtree and instanciate them
+  Look for all "attribute" elements in the subtree and instantiate them
   ----------------------------------------------------------------------*/
 static void ProcessAttr (XTigerTemplate t, Element el, Document doc)
 {
