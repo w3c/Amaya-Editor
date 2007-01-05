@@ -12,6 +12,7 @@ extern DLList InsertableElement_GetList ( Document doc );
 extern DLList InsertableElement_Update ( Document doc,
                                          Element el,
                                          ThotBool force );
+extern void InsertableElement_DoInsertElement ( void* el );
 
 #else /* __STDC__ */
 
@@ -21,6 +22,7 @@ extern DLList InsertableElement_GetList ( Document doc );
 extern DLList InsertableElement_Update ( Document doc,
                                            Element el,
                                            ThotBool force );
+extern void InsertableElement_DoInsertElement ( void* el );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

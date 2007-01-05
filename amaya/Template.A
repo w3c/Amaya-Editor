@@ -20,6 +20,7 @@ ELEMENTS
       BEGIN
          ElemNew.Pre -> UseToBeCreated;
          ElemNew.Post -> UseCreated;
+         ElemLClick.Pre -> RepeatButtonClicked;
       END;
    repeat :
       BEGIN

@@ -49,6 +49,7 @@ IMPLEMENT_DYNAMIC_CLASS(AmayaXMLPanel, AmayaSubPanel)
 AmayaXMLPanel::AmayaXMLPanel( wxWindow * p_parent_window, AmayaNormalWindow * p_parent_nwindow )
   : AmayaSubPanel( p_parent_window, p_parent_nwindow, _T("wxID_PANEL_XML") )
     ,m_XMLRef(0)
+    ,m_fnCallback(NULL)
 {
   // setup labels
   RefreshToolTips();
@@ -103,6 +104,8 @@ void AmayaXMLPanel::RefreshToolTips()
 void AmayaXMLPanel::SendDataToPanel( AmayaParams& p )
 {
   int nb_el = (int)p.param1;
+  m_fnCallback = (void*) p.param3;
+  
   if(nb_el==-1){
     DLList list = (DLList) p.param2;
     DLList reflist = DLList_GetRefList(list, (Container_CompareFunction)ElemListElement_Compare);
@@ -127,7 +130,7 @@ void AmayaXMLPanel::SendDataToPanel( AmayaParams& p )
         str.append(wxT(" (") + TtaConvMessageToWX( elem->comment) + wxT(")"));
       }
       
-      m_pXMLList->Append( str );
+      m_pXMLList->Append( str , (void*)elem);
       node = ForwardIterator_GetNext(iter);
     }
     
@@ -171,7 +174,19 @@ bool AmayaXMLPanel::IsActive()
   -----------------------------------------------------------------------*/
 void AmayaXMLPanel::OnApply( wxCommandEvent& event )
 {
+  ElemListElement elem = NULL;
+  
   ThotCallback(m_XMLRef, INTEGER_DATA, (char*) 1);
+  
+  if(m_pXMLList && m_pXMLList->GetSelection()!=wxNOT_FOUND)
+  {
+    elem = (ElemListElement)m_pXMLList->GetClientData(m_pXMLList->GetSelection());
+    if(elem){
+      printf("must insert : %s !\n", ElemListElement_GetName(elem));
+      if(m_fnCallback)
+        ((ElemListElement_DoInsertElementFunction)m_fnCallback)(elem);
+    }
+  }
 }
 
 /*----------------------------------------------------------------------

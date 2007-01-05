@@ -43,6 +43,7 @@ class AmayaXMLPanel : public AmayaSubPanel
  protected:
   wxListBox *    m_pXMLList;
   int m_XMLRef;
+  void* m_fnCallback;
 };
 
 #endif // __AMAYAXMLPANEL_H__

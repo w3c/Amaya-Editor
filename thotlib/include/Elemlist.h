@@ -53,6 +53,8 @@ typedef struct sElemListElement{
   Element     refElem;
 } *ElemListElement;
 
+typedef void (*ElemListElement_DoInsertElementFunction)(ElemListElement);
+
 #ifndef __CEXTRACT__
 extern DLList ElemList_Create();
 

@@ -1506,7 +1506,7 @@ void UpdateXmlElementListTool (Element el, Document doc)
     
     DLList list = InsertableElement_Update(doc, el, FALSE);
  
-    AmayaParams    p = {-1, list, NULL, NULL};
+    AmayaParams    p = {-1, list, (void*)InsertableElement_DoInsertElement, NULL};
     
     TtaSendDataToPanel( WXAMAYA_PANEL_XML, p );
     

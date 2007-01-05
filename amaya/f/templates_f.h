@@ -24,6 +24,17 @@ extern void giveItems ( char *text,
                         int *nbitems );
 extern ThotBool UseToBeCreated ( NotifyElement *event );
 extern void UseCreated ( NotifyElement *event );
+extern void Template_InsertUseChildren ( Document doc,
+                                         Element el,
+                                         Declaration dec );
+extern void Template_InsertRepeatChildAfter ( Document doc,
+                                              Element el,
+                                              Declaration decl,
+                                              Element elPrev );
+extern void Template_InsertRepeatChild ( Document doc,
+                                         Element el,
+                                         Declaration decl,
+                                         int pos );
 extern ThotBool UseButtonClicked ( NotifyElement *event );
 extern ThotBool OptionButtonClicked ( NotifyElement *event );
 extern ThotBool RepeatButtonClicked ( NotifyElement *event );
@@ -53,6 +64,17 @@ extern void giveItems ( char *text,
                           int *nbitems );
 extern ThotBool UseToBeCreated ( NotifyElement *event );
 extern void UseCreated ( NotifyElement *event );
+extern void Template_InsertUseChildren ( Document doc,
+                                           Element el,
+                                           Declaration dec );
+extern void Template_InsertRepeatChildAfter ( Document doc,
+                                                Element el,
+                                                Declaration decl,
+                                                Element elPrev );
+extern void Template_InsertRepeatChild ( Document doc,
+                                           Element el,
+                                           Declaration decl,
+                                           int pos );
 extern ThotBool UseButtonClicked ( NotifyElement *event );
 extern ThotBool OptionButtonClicked ( NotifyElement *event );
 extern ThotBool RepeatButtonClicked ( NotifyElement *event );

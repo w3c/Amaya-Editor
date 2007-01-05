@@ -203,6 +203,20 @@ BOXES
 		Visibility: 0;
 	END;
 
+ RepeatUse: BEGIN
+	Content: Picture 'xtigerrepeat.png';
+	HorizPos: Left = Previous . Left;
+	VertPos: Top = Previous . Bottom;
+	MarginTop: 0 px;
+	MarginBottom: 0 px;
+	MarginLeft: 0 px;
+	MarginRight: 0 px;
+  Inline: No;
+	Depth: Creator - 2;
+	IN Structure_view
+		Visibility: 0;
+	END;
+
 RULES
 
   head:
@@ -366,6 +380,8 @@ RULES
 		  BorderBottomColor: 	Blue;
 		  BorderRightColor: 	Blue;
       END;
+    if immediately within repeat
+      CreateAfter(RepeatUse);
 		PaddingRight: 			2 px;
 		PaddingLeft: 				3 px;
 		PaddingTop: 				2 px;
@@ -415,6 +431,8 @@ RULES
 		  PaddingTop: 				2 px;
 		  PaddingBottom: 			2 px;
       END;
+    if immediately within repeat
+      CreateAfter(RepeatUse);
   	IN Structure_view BEGIN
 			BorderTopWidth: 0;
 			BorderLeftWidth: 0;

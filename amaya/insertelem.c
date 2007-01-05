@@ -220,7 +220,7 @@ static void FillInsertableTemplateElementFromStringList(XTigerTemplate t, Elemen
   FillInsertableElementFromElemAttribute
   Fill an element list with all possible elements from an attribute list.
   ----------------------------------------------------------------------*/
-static void FillInsertableElementFromElemAttribute(XTigerTemplate t, Element elem, int attrib, DLList list, int level)
+static void FillInsertableElementFromElemAttribute(XTigerTemplate t, Element elem, Element refelem, int attrib, DLList list, int level)
 {
   ElementType     type = TtaGetElementType(elem);
   AttributeType   attributeType = {type.ElSSchema, attrib};
@@ -228,7 +228,7 @@ static void FillInsertableElementFromElemAttribute(XTigerTemplate t, Element ele
   int             size = TtaGetTextAttributeLength (att);
   char*           types = (char *) TtaGetMemory (size+1); 
   TtaGiveTextAttributeValue (att, types, &size);
-  FillInsertableTemplateElementFromStringList(t, elem, types, list, level);
+  FillInsertableTemplateElementFromStringList(t, refelem, types, list, level);
 }
 #endif/* TEMPLATES */
 
@@ -267,11 +267,13 @@ static void FillInsertableElemList(Document doc, Element elem, DLList list)
           switch(childType.ElTypeNum)
           {
             case Template_EL_useEl:
+              FillInsertableElementFromElemAttribute(t, child, elem, Template_ATTR_types, list, level);
+              break;
             case Template_EL_useSimple:
-              FillInsertableElementFromElemAttribute(t, child, Template_ATTR_types, list, level);
+              FillInsertableElementFromElemAttribute(t, child, elem, Template_ATTR_types, list, level);
               break;
             case Template_EL_bag:
-              FillInsertableElementFromElemAttribute(t, child, Template_ATTR_types, list, level);
+              FillInsertableElementFromElemAttribute(t, child, elem, Template_ATTR_types, list, level);
               break;
             default:
               break;
@@ -281,12 +283,12 @@ static void FillInsertableElemList(Document doc, Element elem, DLList list)
         case Template_EL_useEl:
           // Fill for xt:use only if have no child.
           if(TtaGetFirstChild(elem)==NULL){
-            FillInsertableElementFromElemAttribute(t, elem, Template_ATTR_types, list, level);
+            FillInsertableElementFromElemAttribute(t, elem, elem, Template_ATTR_types, list, level);
             cont = FALSE;
           }
           break;
         case Template_EL_bag:
-          FillInsertableElementFromElemAttribute(t, elem, Template_ATTR_types, list, level);
+          FillInsertableElementFromElemAttribute(t, elem, elem, Template_ATTR_types, list, level);
           cont = FALSE;
           break;
 #endif /*TEMPLATES */
@@ -342,4 +344,31 @@ DLList InsertableElement_Update(Document doc, Element el, ThotBool force)
   return list->list;
 }
 
-
+/*----------------------------------------------------------------------
+  InsertableElement_DoInsertElement
+  Insert the specified element.
+  @param el Element to insert (ElemListElement)
+  ----------------------------------------------------------------------*/
+void InsertableElement_DoInsertElement(void* el)
+{
+  ElemListElement elem = (ElemListElement)el;
+  
+  Element ref = elem->refElem;
+  ElementType refType = TtaGetElementType(ref);
+  
+  Document doc = TtaGetDocument(ref);
+  
+  printf("insert %s into %s\n", ElemListElement_GetName(elem), TtaGetElementTypeName(refType));
+  switch(refType.ElTypeNum)
+  {
+#ifdef TEMPLATES
+    case Template_EL_repeat:
+      if(elem->typeClass==DefinedComponent)
+        Template_InsertRepeatChild(doc, ref, (Declaration)elem->elem.component.declaration, -1);
+      break;
+#endif /* TEMPLATES */
+    default:
+      break;
+  }
+  
+}
