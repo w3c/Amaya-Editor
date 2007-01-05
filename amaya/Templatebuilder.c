@@ -21,6 +21,11 @@
 #include "parser.h"
 #include "registry.h"
 #include "style.h"
+
+#include "containers.h"
+#include "insertelem_f.h"
+
+
 #include "templates.h"
 #include "templateDeclarations.h"
 

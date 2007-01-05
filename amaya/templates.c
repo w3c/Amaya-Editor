@@ -14,6 +14,9 @@
 #include "amaya.h"
 #include "document.h"
 
+#include "containers.h"
+#include "Elemlist.h"
+
 #ifdef TEMPLATES
 #include "Template.h"
 #include "templates.h"
@@ -34,9 +37,6 @@
 
 #include "fetchXMLname_f.h"
 #include "MENUconf.h"
-
-#include "containers.h"
-#include "Elemlist.h"
 
 
 /* Paths from which looking for templates.*/
@@ -751,6 +751,34 @@ static int QueryMenu(Document doc, char* items)
   return ReturnOption;
 }
 
+static char* QueryStringFromMenu(Document doc, char* items)
+{
+  int nbitems, size;
+  struct menuType *itemlist;
+  char *menuString;
+  char *result = NULL;
+  
+  size = strlen(items);
+  giveItems (items, size, &itemlist, &nbitems);
+  menuString = createMenuString (itemlist, nbitems);
+  TtaNewScrollPopup (BaseDialog + OptionMenu, TtaGetViewFrame (doc, 1), NULL, 
+                     nbitems, menuString , NULL, false, 'L');
+  TtaFreeMemory (menuString);
+  ReturnOption = -1;
+  TtaShowDialogue (BaseDialog + OptionMenu, FALSE);
+  TtaWaitShowProcDialogue ();
+  TtaDestroyDialogue (BaseDialog + OptionMenu);
+  
+  if(ReturnOption!=-1)
+  {
+    result = TtaStrdup(itemlist[ReturnOption].label);
+  }
+  
+  TtaFreeMemory (itemlist);
+  return result;
+}
+
+
 /*----------------------------------------------------------------------
   RepeatButtonClicked
   Called when a repeat button is clicked.
@@ -789,79 +817,52 @@ ThotBool RepeatButtonClicked (NotifyElement *event)
   Document        doc = event->document;
   Element         el = event->element;
   ElementType     elType;
-  
-  Element         repeatEl;
+  XTigerTemplate  t;
+  Declaration     decl;
+  Element         repeatEl = el;
+  Element         firstEl;
+  Element         newEl = NULL;
   char*           types;
+  ThotBool        oldStructureChecking;
   
   TtaCancelSelection(doc);
-
+  
+  t = (XTigerTemplate) Dictionary_Get (Templates_Dic, DocumentMeta[doc]->template_url);
   elType = TtaGetElementType(el);
   while(elType.ElTypeNum!=Template_EL_repeat)
   {
-    el = TtaGetParent(el);
-    if(el==NULL)
+    repeatEl = TtaGetParent(repeatEl);
+    if(repeatEl==NULL)
       break;
-    elType = TtaGetElementType(el);
+    elType = TtaGetElementType(repeatEl);
   }
-  if(el)
+  if(repeatEl)
   {
-    repeatEl = el;
-    el = TtaGetFirstChild(repeatEl);
-    types = GetAttributeStringValue(el, Template_ATTR_types);
-    printf("Types : %s\n", types);
+    firstEl = TtaGetFirstChild(repeatEl);
+    types = GetAttributeStringValue(firstEl, Template_ATTR_types);
+    
+    char* listtypes = Template_ExpandTypes(t, types);
+    char* result = QueryStringFromMenu(doc, listtypes);
+    if(result)
+    {
+      decl = GetDeclaration(t, result);
+      if(decl)
+      {
+        oldStructureChecking = TtaGetStructureChecking (doc);
+        TtaSetStructureChecking (FALSE, doc);
+        
+        if(el==repeatEl)
+          newEl = Template_InsertRepeatChildAfter(doc, repeatEl, decl, NULL);
+        else
+          newEl = Template_InsertRepeatChildAfter(doc, repeatEl, decl, el);
+        
+        TtaSetStructureChecking (oldStructureChecking, doc);
+        TtaSelectElement (doc, newEl);
+      }
+    }
+    TtaFreeMemory(listtypes);
+    TtaFreeMemory(result);
   }
-  
-  
-  
-/*** EK ***/
-/* Si c'est un use, alors on ajoute apres, sinon on ajoute avant. */
-//	types = "begining end";	
-//	size = strlen (types);
-//	giveItems (types, size, &items, &nbitems);
-//	menuString = createMenuString (items, nbitems);
-//	TtaNewScrollPopup (BaseDialog + OptionMenu, TtaGetViewFrame (doc, 1), NULL, 
-//                     nbitems, menuString , NULL, false, 'L');
-//	TtaFreeMemory (menuString);
-//  ReturnOption = -1; // no selection yet
-//	TtaShowDialogue (BaseDialog + OptionMenu, FALSE);
-//	TtaWaitShowProcDialogue ();
-//	TtaDestroyDialogue (BaseDialog + OptionMenu);
-//  TtaFreeMemory (items);
-//  el = event->element;
-//  if (ReturnOption == 0 || ReturnOption == 1)
-//    {
-//      child = TtaGetFirstChild (el);
-//      if (child)
-//        {
-//          elt = TtaGetElementType (el);
-//          elt1 = TtaGetElementType (child);
-//          if (elt.ElSSchema == elt1.ElSSchema)
-//            {
-//              if (elt1.ElTypeNum == Template_EL_useEl ||
-//                  elt1.ElTypeNum == Template_EL_useSimple)
-//                newEl = InstantiateUse (t, child, doc, FALSE);
-//              else if (elt1.ElTypeNum == Template_EL_folder)
-//                newEl = TtaCopyTree (child, doc, doc, el);
-//              else
-//                newEl = NULL;
-//              if (newEl)
-//                {
-//                  oldStructureChecking = TtaGetStructureChecking (doc);
-//                  TtaSetStructureChecking (FALSE, doc);
-//                  if (ReturnOption == 0)
-//                    TtaInsertFirstChild (&newEl, el, doc);
-//                  else
-//                    {
-//                      child = TtaGetLastChild (el);
-//                      TtaInsertSibling (newEl, child, FALSE, doc);
-//                      el = newEl;
-//                    }
-//                  TtaSetStructureChecking (oldStructureChecking, doc);
-//                }
-//            }
-//        }
-//    }
-//  TtaSelectElement (doc, el);
   return TRUE; /* don't let Thot perform normal operation */
 #endif /* TEMPLATES */
 	return TRUE;

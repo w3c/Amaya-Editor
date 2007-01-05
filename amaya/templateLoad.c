@@ -1,5 +1,12 @@
 #include "templates.h"
 
+#include "thot_sys.h"
+#include "tree.h"
+#include "document.h"
+#include "containers.h"
+#include "insertelem_f.h"
+
+
 #define THOT_EXPORT extern
 #include "templateDeclarations.h"
 

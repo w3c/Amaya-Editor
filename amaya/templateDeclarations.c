@@ -5,10 +5,17 @@
  */
 
 #ifdef TEMPLATES
+#include "thot_sys.h"
+#include "tree.h"
+#include "document.h"
+#include "containers.h"
+#include "insertelem_f.h"
+
 #include "templates.h"
 #include "mydictionary_f.h"
 #include "templateDeclarations_f.h"
 #include "HTMLactions_f.h"
+
 
 #define UNION_ANY            "any"
 #define UNION_ANYCOMPONENT   "anyComponent"
@@ -221,8 +228,9 @@ void NewUnion (const XTigerTemplate t, const char *name,
 	Declaration dec = NewDeclaration (t, name, UnionNat);
 	Declaration aux;
 	
-	dec->unionType.include = Dictionary_Create ();
-	dec->unionType.exclude = Dictionary_Create ();
+	dec->unionType.include  = Dictionary_Create ();
+	dec->unionType.exclude  = Dictionary_Create ();
+  dec->unionType.expanded = NULL;
 
 	//We initialize include
 	if (include)
@@ -253,6 +261,8 @@ void NewUnion (const XTigerTemplate t, const char *name,
 	AddDeclaration (t, dec);
 #endif /* TEMPLATES */
 }
+
+
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -667,3 +677,155 @@ void RemoveUser (XTigerTemplate t)
 #endif /* TEMPLATES */
 }
 
+/*----------------------------------------------------------------------
+  Template_ExpandUnion
+  Expand union definition if not already done.
+  All included union are expanded and excluded elements are removed.
+  @param t Template which embed the union
+  @param decl Declaration of the union to expand.
+  @return The expanded dict.
+  ----------------------------------------------------------------------*/
+DicDictionary Template_ExpandUnion(XTigerTemplate t, Declaration decl)
+{
+#ifdef TEMPLATES
+  if(decl->unionType.expanded==NULL)
+  {
+    DicDictionary  expanded = Dictionary_Create();
+    Record rec;
+    
+    /* Insert all included descendants.*/
+    rec = decl->unionType.include->first;
+    while(rec)
+    {
+      Declaration child = (Declaration) rec->element;
+      if(child->nature==UnionNat)
+      {
+        DicDictionary children = Template_ExpandUnion(t, child);
+        Record recChildren = children->first;
+        while(recChildren)
+        {
+          Declaration granchild = (Declaration) recChildren->element;
+          if(!Dictionary_Get(expanded, granchild->name))
+          {
+            Dictionary_Add(expanded, granchild->name, (DicElement)granchild);
+          }          
+          recChildren = recChildren->next;
+        }
+        
+      }
+      else
+      {
+        if(!Dictionary_Get(expanded, child->name))
+        {
+          Dictionary_Add(expanded, child->name, (DicElement)child);
+        }
+      }
+      rec = rec->next;
+    }
+    
+    /* Remove all excluded descendants. */
+    rec = decl->unionType.exclude->first;
+    while(rec)
+    {
+      Declaration child = (Declaration) rec->element;
+      if(child)
+        Dictionary_Remove(expanded, child->name);
+      rec = rec->next;
+    }
+    decl->unionType.expanded = expanded;
+  }
+  return decl->unionType.expanded;
+#else /* TEMPLATES */
+  return NULL;
+#endif /* TEMPLATES */
+}
+
+/*----------------------------------------------------------------------
+  Template_ExpandTypes
+  Expand a type list with resolving unions.
+  @param t Template
+  @param types String in which look for types.
+  @return The resolved type string.
+  ----------------------------------------------------------------------*/
+char* Template_ExpandTypes(XTigerTemplate t, char* types)
+{
+#ifdef TEMPLATES
+  DicDictionary dico = Dictionary_Create();
+  Record rec;
+  Declaration   decl;
+  int   len  = strlen(types);
+  char* type = (char*)TtaGetMemory(len+1);
+  int   pos = 0,
+        cur = 0;
+  char* result;
+  int   resLen;
+
+  /* Fill a dict with all finded declarations */
+  while(pos<=len)
+  {
+    if(types[pos]==' ' || pos==len)
+    {
+      if(cur>0)
+      {
+        type[cur] = 0;
+        decl = GetDeclaration(t, type);
+        if(decl)
+        {
+          if(decl->nature==UnionNat)
+          {
+            DicDictionary unionDecl = Template_ExpandUnion(t, decl);
+            Record recChildren = unionDecl->first;
+            while(recChildren)
+            {
+              if(!Dictionary_Get(dico, recChildren->key))
+              {
+                Dictionary_Add(dico, recChildren->key, (DicElement) recChildren->element);
+              }
+              recChildren = recChildren->next;
+            }
+          }
+          else
+          {
+            if(!Dictionary_Get(dico, type))
+            {
+              Dictionary_Add(dico, type, (DicElement) decl);
+            }
+          }
+        }
+      }
+      cur = 0;
+    }
+    else
+    {
+      type[cur++] = types[pos];
+    }
+    pos++;
+  }
+  
+  /* Fill a string with results.*/
+  resLen = 0;
+  rec = dico->first;
+  while(rec)
+  {
+    resLen += strlen(((Declaration)rec->element)->name) + 1;
+    rec = rec-> next;
+  }
+  result = (char*) TtaGetMemory(resLen+1);
+  pos = 0;
+  rec = dico->first;
+  while(rec)
+  {
+    strcpy(result+pos, ((Declaration)rec->element)->name);
+    pos += strlen(((Declaration)rec->element)->name);
+    result[pos] = ' ';
+    pos++;
+    rec = rec-> next;
+  }
+  result[pos] = 0;
+  
+  Dictionary_Clean(dico);
+  return result;
+#else /* TEMPLATES */
+  return NULL;
+#endif /* TEMPLATES */
+}

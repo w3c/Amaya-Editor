@@ -41,7 +41,6 @@ void Dictionary_Clean (DicDictionary dic)
   TtaFreeMemory (dic);
 }
 
-
 /*----------------------------------------------------------------------
   Returns the Record with the passed key or the Record which would be
   before if there is no Record with that key.

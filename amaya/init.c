@@ -30,13 +30,15 @@
 #include "profiles.h"
 #include "MENUconf.h"
 
+
+#include "containers.h"
+#include "insertelem_f.h"
+
 #ifdef TEMPLATES
 #include "templates.h"
 #include "templateDeclarations_f.h"
 #endif /* TEMPLATES */
 
-#include "containers.h"
-#include "insertelem_f.h"
 /*
 * A VIRER SUREMENT PAR LA SUITE
 *

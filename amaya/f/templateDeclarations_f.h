@@ -48,6 +48,10 @@ extern void SetTemplateDocument ( XTigerTemplate t,
                                   Document doc );
 extern void AddUser ( XTigerTemplate t );
 extern void RemoveUser ( XTigerTemplate t );
+extern DicDictionary Template_ExpandUnion ( XTigerTemplate t,
+                                            Declaration decl );
+extern char* Template_ExpandTypes ( XTigerTemplate t,
+                                    char* types );
 
 #else /* __STDC__ */
 
@@ -93,6 +97,10 @@ extern void SetTemplateDocument ( XTigerTemplate t,
                                     Document doc );
 extern void AddUser ( XTigerTemplate t );
 extern void RemoveUser ( XTigerTemplate t );
+extern DicDictionary Template_ExpandUnion ( XTigerTemplate t,
+                                              Declaration decl );
+extern char* Template_ExpandTypes ( XTigerTemplate t,
+                                      char* types );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -73,8 +73,9 @@ typedef struct _Component
 
 typedef struct _Union
 {
-	DicDictionary  include; //Dictionary<Declaration>
-	DicDictionary  exclude; //Dictionary<Declaration>
+	DicDictionary  include;  //Dictionary<Declaration>
+	DicDictionary  exclude;  //Dictionary<Declaration>
+  DicDictionary  expanded; //Dictionary<Declaration>
 } Union;
 
 /* Structure of a declaration */
