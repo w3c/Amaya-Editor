@@ -543,7 +543,7 @@ void UpdateImageMap (Element image, Document doc, int oldWidth, int oldHeight)
   int attrNum	: the attribut identifier
   int value	: the attribut value
   ----------------------------------------------------------------------*/
-void SetAttrOnElement ( Document doc, Element el, int attrNum, int value )
+static void SetAttrOnElement ( Document doc, Element el, int attrNum, int value )
 {
   AttributeType attrType;
   Attribute	attr;
@@ -561,7 +561,7 @@ void SetAttrOnElement ( Document doc, Element el, int attrNum, int value )
       TtaAttachAttribute (el, attr, doc);
     }
   else
-    /* changee the attribute value */
+    /* change the attribute value */
     TtaSetAttributeValue (attr, value, el, doc);
 
   if (!docModified)
@@ -580,9 +580,10 @@ void SetAttrOnElement ( Document doc, Element el, int attrNum, int value )
 void DisplayImage (Document doc, Element el, LoadedImageDesc *desc,
                        char *localfile, char *mime_type)
 {
-  ElementType         elType;
-  ElementType         parentType;
+  ElementType         elType, parentType;
   Element             parent;
+  AttributeType       attrType;
+  Attribute           attr;
   int                 i;
   DocumentType        thotType;
   PicType             picType;
@@ -678,12 +679,12 @@ void DisplayImage (Document doc, Element el, LoadedImageDesc *desc,
             }
         }
  
-      /* If image load failed show the alt text*/
+      /* If image load failed show the alternate text or content */
+      parent = TtaGetParent (el);
+      parentType = TtaGetElementType (parent);
       if ((desc && desc->status == IMAGE_NOT_LOADED) ||
           (desc == NULL && !TtaFileExist (originalName)))
         {
-          parent = TtaGetParent (el);
-          parentType = TtaGetElementType (parent);
           if (parentType.ElTypeNum == HTML_EL_Object ||
               parentType.ElTypeNum == HTML_EL_Embed_)
             /* it's an image into an object -> display object content */
@@ -694,6 +695,17 @@ void DisplayImage (Document doc, Element el, LoadedImageDesc *desc,
             /* it's an image -> display image alt text */
             SetAttrOnElement (doc, parent, HTML_ATTR_NoImages, 1);
         }
+      else
+        /* image successfuly loaded */
+        if (parentType.ElTypeNum == HTML_EL_Object)
+          /* remove attribute NoObjects from the Object element */
+          {
+            attrType.AttrSSchema = parentType.ElSSchema;
+            attrType.AttrTypeNum = HTML_ATTR_NoObjects;
+            attr = TtaGetAttribute (parent, attrType);
+            if (attr)
+              TtaRemoveAttribute (parent, attr, doc);
+          }
 
       if (is_svg)
         {

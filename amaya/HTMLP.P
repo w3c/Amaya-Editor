@@ -5274,8 +5274,6 @@ ATTRIBUTES
         BEGIN
         if Immediately within Object
             Visibility: 0;
-        if Immediately within IMG
-            Visibility: 0;
         if within Embed_
             Visibility: 0;
         END;

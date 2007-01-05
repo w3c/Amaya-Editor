@@ -420,17 +420,17 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
             {
               data = (char *)TtaGetMemory (length + 1);
               TtaGiveTextAttributeValue (attr, data, &length);
-              if (!isImage)
-                if (!strcmp (&data[length-3], "mml") ||
-                    !strcmp (&data[length-3], "gif") ||
-                    !strcmp (&data[length-3], "jpg") ||
-                    !strcmp (&data[length-4], "jpeg") ||
-                    !strcmp (&data[length-3], "png") ||
-                    !strcmp (&data[length-3], "svg") ||
-                    !strcmp (&data[length-4], "svgz") ||
-                    !strcmp (&data[length-3], "htm") ||
-                    !strcmp (&data[length-4], "html") ||
-                    !strcmp (&data[length-3], "xml"))
+              if (!isImage && length >= 5)
+                if (!strcmp (&data[length-4], ".mml") ||
+                    !strcmp (&data[length-4], ".gif") ||
+                    !strcmp (&data[length-4], ".jpg") ||
+                    !strcmp (&data[length-5], ".jpeg") ||
+                    !strcmp (&data[length-4], ".png") ||
+                    !strcmp (&data[length-4], ".svg") ||
+                    !strcmp (&data[length-5], ".svgz") ||
+                    !strcmp (&data[length-4], ".htm") ||
+                    !strcmp (&data[length-5], ".html") ||
+                    !strcmp (&data[length-4], ".xml"))
                   isImage = TRUE;
             }
         }
@@ -512,6 +512,18 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
       if (child)
         /* the object element has at least 1 child element */
         {
+          /* put an attribute NoObjects on the Object element: this attribute
+             will be removed when and if the actual object is loaded (see
+             module HTMLimage.c */
+          attrType.AttrTypeNum = HTML_ATTR_NoObjects;
+          attr = TtaGetAttribute (el, attrType);
+          if (!attr)
+            {
+              attr = TtaNewAttribute (attrType);
+              TtaSetAttributeValue (attr, 1, el, doc);
+              TtaAttachAttribute (el, attr, doc);
+            }
+
           content = NULL;
           desc = child;
           elType = TtaGetElementType (desc);
