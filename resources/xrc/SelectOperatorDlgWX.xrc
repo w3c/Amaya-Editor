@@ -3,16 +3,18 @@
   <object class="wxDialog" name="SelectOperatorDlgWX">
     <title></title>
     <centered>1</centered>
-    <style>wxDEFAULT_DIALOG_STYLE|wxSTAY_ON_TOP|wxRESIZE_BORDER|wxNO_3D|wxTAB_TRAVERSAL</style>
+    <style>wxDEFAULT_DIALOG_STYLE|wxSTAY_ON_TOP|wxRESIZE_BORDER|wxNO_3D</style>
     <object class="wxBoxSizer">
       <orient>wxVERTICAL</orient>
       <object class="spacer">
         <size>0,10</size>
       </object>
       <object class="sizeritem">
-        <object class="wxStaticText" name="wxID_LABEL">
+        <object class="wxStaticText" name="wxID_Operator">
           <label>*Select the type of operator*</label>
         </object>
+        <option>0</option>
+        <border>5</border>
       </object>
       <object class="spacer">
         <size>0,10</size>
@@ -23,6 +25,7 @@
           <object class="sizeritem">
             <object class="wxBitmapButton" name="wxID_OPERATOR0">
               <bitmap>../icons/misc/MATHML_operator0.png</bitmap>
+              <focus></focus>
               <tooltip>operation repeated n times</tooltip>
             </object>
             <flag>wxALL</flag>
@@ -31,6 +34,7 @@
           <object class="sizeritem">
             <object class="wxBitmapButton" name="wxID_OPERATOR1">
               <bitmap>../icons/misc/MATHML_operator1.png</bitmap>
+              <focus></focus>
               <tooltip>operation on a family indexed by integers</tooltip>
             </object>
             <flag>wxALL</flag>
@@ -40,6 +44,7 @@
             <object class="wxBitmapButton" name="wxID_OPERATOR2">
               <bitmap>../icons/misc/MATHML_operator2.png</bitmap>
               <tooltip></tooltip>
+              <focus></focus>
               <tooltip>operation on a family indexed by a set</tooltip>
             </object>
             <flag>wxALL</flag>

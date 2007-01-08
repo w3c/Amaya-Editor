@@ -19,9 +19,9 @@ class SelectOperatorDlgWX : public AmayaDialog
 public:    
   // Constructor.
   SelectOperatorDlgWX( int ref,
-		    wxWindow* parent,
-		    const wxString & title,
-		    const wxString & label);
+                       wxWindow* parent,
+                       const wxString & title,
+                       const wxString & label);
   virtual ~SelectOperatorDlgWX();
 
 private:

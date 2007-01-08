@@ -1249,7 +1249,7 @@ static int GetOccurrences(int val, int mini, Document doc)
 #endif  /* _WX */
 
 /* check if val is more than mini */
-if(val < mini)val = mini;
+if (val < mini)val = mini;
   return val;
 }
 
@@ -1258,13 +1258,13 @@ if(val < mini)val = mini;
   ----------------------------------------------------------------------*/
 static int GetOperatorType(Document doc)
 {
-  char valeur = 0;
 #ifdef _WX
   ThotBool  created;
-  char     *msg = TtaGetMessage (AMAYA, AM_NUMBER_OCCUR);
+  char     *msg = TtaGetMessage (AMAYA, AM_SELECT_OPERATOR);
   Math_OperatorType = 0;
 
-  created = CreateSelectOperatorDlgWX(MathsDialogue + FormMathOperator, TtaGetViewFrame (doc, 1), msg, msg);
+  created = CreateSelectOperatorDlgWX(MathsDialogue + FormMathOperator,
+                                      TtaGetViewFrame (doc, 1), msg, msg);
   if (created)
     {
       TtaSetDialoguePosition ();
@@ -1272,10 +1272,10 @@ static int GetOperatorType(Document doc)
       /* wait for an answer */
       TtaWaitShowDialogue ();
     }
+  return Math_OperatorType;
+#else  /* _WX */
+  return 0;
 #endif  /* _WX */
-
-  valeur = Math_OperatorType;
-  return valeur;
 }
 
 /*----------------------------------------------------------------------
@@ -2076,7 +2076,7 @@ static void CreateMathConstruct (int construct, ...)
                   selected = child;
                   TtaSelectElement (doc, selected);
                 }
-              else if(construct == 59 || construct == 60)
+              else if (construct == 59 || construct == 60)
                 {/* accents with a horizontal strech */
                 int symbol = va_arg(varpos, int);
                 child = TtaGetParent (child);
@@ -2117,14 +2117,14 @@ static void CreateMathConstruct (int construct, ...)
         {
           /* Integral msubsup ; Integral sub ; Integral2 */
           int symbol = va_arg(varpos, int), type;
-          if(symbol == -1)
+          if (symbol == -1)
             {
             /* ask the type of integral */
             int number, contour;
             number = GetOccurrences (1, 1, doc);
             contour = GetOccurrences (0, 0, doc);
-            type = GetOccurrences (0, 0, doc);if(type > 1)type = 1;
-            if(!contour)
+            type = GetOccurrences (0, 0, doc);if (type > 1)type = 1;
+            if (!contour)
               {
               switch(number)
                 {
@@ -2171,31 +2171,35 @@ static void CreateMathConstruct (int construct, ...)
           /* n-ary operation/relation */
           int number, type = va_arg(varpos, int), symbol = va_arg(varpos, int);
           unsigned char *symbol_name;
-          if (symbol == 0)symbol_name = va_arg(varpos, unsigned char*);
+          if (symbol == 0)
+            symbol_name = va_arg(varpos, unsigned char*);
 
-          if(type == -1)
+          if (type == -1)
             {/* ask the user about the way the symbol have to be displayed */
             type = GetOperatorType(doc);
-            if(type > 2)type = 0;
+            if (type > 2)
+              type = 0;
             }
        
-          if(type > 0)
+          if (type > 1)
             {/* change the plus and times symbols by sum and prod */
-            if(symbol == '+')symbol = 8721;
-            else if(symbol == 215)symbol = 8719;
+            if (symbol == '+')
+              symbol = 8721;
+            else if (symbol == 215)
+              symbol = 8719;
             }
 
-          switch(type)
+          switch (type)
             {
-            case 0:
-              /* ask how many the user wants */
-              number = GetOccurrences (5, 1, doc);
-
+            case 1:
               leaf = TtaGetFirstChild (el);
               child = leaf;
               InsertEmptyConstruct (&child, MathML_EL_MROW, doc);
               TtaDeleteTree (leaf, doc);
-              for(i = 0 ; i < number; i++)
+              selected = child;
+              /* ask how many the user wants */
+              number = GetOccurrences (5, 1, doc);
+              for (i = 0 ; i < number; i++)
                 {
                   if (symbol == 0)
                     InsertText (&child, MathML_EL_MO, symbol_name, doc);
@@ -2204,7 +2208,7 @@ static void CreateMathConstruct (int construct, ...)
                   InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
                 }
             break;
-            case 1:
+            case 2:
               /* Operation on a family indexed by (i = ... to ...) */
               leaf = TtaGetFirstChild (el);
               child = leaf;
@@ -2216,17 +2220,17 @@ static void CreateMathConstruct (int construct, ...)
               new_ = TtaGetFirstChild (new_);
               leaf = TtaGetFirstChild (new_);
               op = leaf;
-                  if (symbol == 0)
-                    InsertText (&op, MathML_EL_MO, symbol_name, doc);
-                  else
-                    InsertSymbol (&op, MathML_EL_MO, symbol, doc);
+              if (symbol == 0)
+                InsertText (&op, MathML_EL_MO, symbol_name, doc);
+              else
+                InsertSymbol (&op, MathML_EL_MO, symbol, doc);
               TtaDeleteTree (leaf, doc);
 
               selected = new_;
               TtaNextSibling (&selected);
               construct = 21;
             break;
-            case 2:
+            case 3:
               /* Operation on a family indexed by a set */
               leaf = TtaGetFirstChild (el);
               child = leaf;
@@ -2238,10 +2242,10 @@ static void CreateMathConstruct (int construct, ...)
               new_ = TtaGetFirstChild (new_);
               leaf = TtaGetFirstChild (new_);
               op = leaf;
-                  if (symbol == 0)
-                    InsertText (&op, MathML_EL_MO, symbol_name, doc);
-                  else
-                    InsertSymbol (&op, MathML_EL_MO, symbol, doc);
+              if (symbol == 0)
+                InsertText (&op, MathML_EL_MO, symbol_name, doc);
+              else
+                InsertSymbol (&op, MathML_EL_MO, symbol, doc);
               TtaDeleteTree (leaf, doc);
 
               selected = new_;
@@ -2330,7 +2334,7 @@ static void CreateMathConstruct (int construct, ...)
           else
             child = TtaGetLastChild (el); 
 
-          if(construct == 33 && symbol == 'R')
+          if (construct == 33 && symbol == 'R')
             {/* tendsto */
             AttachIntHorizStretch(child,doc);
             leaf = TtaGetFirstChild (child);
@@ -2484,18 +2488,18 @@ static void CreateMathConstruct (int construct, ...)
       else if (construct == 39)
         {/* parenthesis ; interval ; fence2 ; set/list extension */
           int ope = va_arg(varpos, int), clo = va_arg(varpos, int), sep = va_arg(varpos, int), number = va_arg(varpos, int);
-          if(ope == -1 && clo == -1)
+          if (ope == -1 && clo == -1)
             {
             /* get types of open/close symbols selected in the panel */
             ope = '(';
             clo = ')';
             }
-          if(sep == -1 )
+          if (sep == -1 )
             {
             /* get types of open/close symbols selected in the panel */
             sep = ',';
             }
-          if(number == -1)
+          if (number == -1)
             {
             /* ask how many the user wants */
             number = GetOccurrences (5, 1, doc);
@@ -2508,9 +2512,9 @@ static void CreateMathConstruct (int construct, ...)
           
           for (i = 0 ; i < number; i++)
             {
-            if(i)InsertSymbol (&child, MathML_EL_MO, sep, doc);
+            if (i)InsertSymbol (&child, MathML_EL_MO, sep, doc);
             InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
-            if(!i)selected = TtaGetFirstChild (child);
+            if (!i)selected = TtaGetFirstChild (child);
             }
           InsertSymbolUnit (&child, MathML_EL_MF, clo, doc);
         }
@@ -2530,7 +2534,7 @@ static void CreateMathConstruct (int construct, ...)
           int symbol = va_arg(varpos, int);
           int symbol2 = va_arg(varpos, int);
           child = TtaGetFirstChild (el); 
-          if(symbol == 'R')AttachIntHorizStretch(child,doc);
+          if (symbol == 'R')AttachIntHorizStretch(child,doc);
 
           leaf = TtaGetFirstChild (child);
           child = leaf;
@@ -2734,7 +2738,7 @@ static void CreateMathConstruct (int construct, ...)
              /* ask the user about the degree of derivation of each variable */
              int degreevar = GetOccurrences (2, 1, doc);
              degree += degreevar;
-             if(degreevar == 1)
+             if (degreevar == 1)
                {
                InsertSymbol (&child, MathML_EL_MO, symboldiff, doc);
                }
@@ -2766,7 +2770,7 @@ static void CreateMathConstruct (int construct, ...)
           leaf = TtaGetFirstChild(child);
           child = leaf;
 
-          if(degree == 1)
+          if (degree == 1)
             {          
             InsertSymbol (&child, MathML_EL_MO, symboldiff, doc);
             }
@@ -2911,7 +2915,7 @@ static void CreateMathConstruct (int construct, ...)
           leaf = TtaGetFirstChild(child);
           child = leaf;
 
-          if(degree == 1)
+          if (degree == 1)
             {          
             InsertSymbol (&child, MathML_EL_MO, symboldiff, doc);
             }
@@ -3176,17 +3180,16 @@ static void CallbackMaths (int ref, int typedata, char *data)
 #else /* _WX */
       /* the user has clicked the DONE button in the Math dialog box */
       InitMaths = FALSE;
-      TtaDestroyDialogue (ref);   
+      //TtaDestroyDialogue (ref);   
 #endif /* _WX */
       break;
 
     case FormMathOperator:
 #ifdef _WX
-      Math_OperatorType = 0;
+      Math_OperatorType = val;
 #else /* _WX */
       /* the user has clicked the DONE button in the Math dialog box */
       InitMaths = FALSE;
-      TtaDestroyDialogue (ref);   
 #endif /* _WX */
       break;
 

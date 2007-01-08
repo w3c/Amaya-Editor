@@ -32,18 +32,20 @@ END_EVENT_TABLE()
   returns:
   ----------------------------------------------------------------------*/
 SelectOperatorDlgWX::SelectOperatorDlgWX( int ref, wxWindow* parent,
-                                    const wxString & title, const wxString & label) :
+                                          const wxString & title,
+                                          const wxString & label) :
   AmayaDialog( parent, ref )
 {
 
+  wxXmlResource::Get()->LoadDialog(this, parent, wxT("SelectOperatorDlgWX"));
   // waiting for a return
   Waiting = 1;
   MyRef = ref;
 
-  wxXmlResource::Get()->LoadDialog(this, parent, wxT("SelectOperatorDlgWX"));
   // update dialog labels with given ones
   SetTitle( title );
-  XRCCTRL(*this, "wxID_LABEL", wxStaticText)->SetLabel( label );
+  XRCCTRL(*this, "wxID_Operator", wxStaticText)->SetLabel( label );
+  // fill initial value
   Fit();
   Refresh();
   SetAutoLayout( TRUE );
@@ -54,10 +56,6 @@ SelectOperatorDlgWX::SelectOperatorDlgWX( int ref, wxWindow* parent,
   ----------------------------------------------------------------------*/
 SelectOperatorDlgWX::~SelectOperatorDlgWX()
 {
-  if (Waiting)
-    {
-      TtaDestroyDialogue (MyRef);
-    }
 }
 
 /*----------------------------------------------------------------------
@@ -65,17 +63,35 @@ SelectOperatorDlgWX::~SelectOperatorDlgWX()
   ----------------------------------------------------------------------*/
 void SelectOperatorDlgWX::OnOperator0( wxCommandEvent& event )
 {
-  ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
+  if (!Waiting)
+    return;
+  Waiting = 0;
+  ThotCallback (MyRef, INTEGER_DATA, (char*) 1);
+  TtaDestroyDialogue (MyRef);
 }
 
+/*----------------------------------------------------------------------
+  Return the number of button clicked on
+  ----------------------------------------------------------------------*/
 void SelectOperatorDlgWX::OnOperator1( wxCommandEvent& event )
 {
-  ThotCallback (MyRef, INTEGER_DATA, (char*) 1);
+  if (!Waiting)
+    return;
+  Waiting = 0;
+  ThotCallback (MyRef, INTEGER_DATA, (char*) 2);
+  TtaDestroyDialogue (MyRef);
 }
 
+/*----------------------------------------------------------------------
+  Return the number of button clicked on
+  ----------------------------------------------------------------------*/
 void SelectOperatorDlgWX::OnOperator2( wxCommandEvent& event )
 {
-  ThotCallback (MyRef, INTEGER_DATA, (char*) 2);
+  if (!Waiting)
+    return;
+  Waiting = 0;
+  ThotCallback (MyRef, INTEGER_DATA, (char*) 3);
+  TtaDestroyDialogue (MyRef);
 }
 
 /*----------------------------------------------------------------------
@@ -86,8 +102,11 @@ void SelectOperatorDlgWX::OnOperator2( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void SelectOperatorDlgWX::OnClose(wxCloseEvent& event)
 {
- if (Waiting)
-   ThotCallback (MyRef, INTEGER_DATA, (char*) 0); 
+  if (!Waiting)
+    return;
+  Waiting = 0;
+  ThotCallback (MyRef, INTEGER_DATA, (char*) 0); 
+  TtaDestroyDialogue (MyRef);
 }
 
 #endif /* _WX */
