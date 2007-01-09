@@ -45,7 +45,7 @@ ElemListElement ElemListElement_CreateLanguageElement(int level, ElementType typ
   elem->elem.element.type = type;
   elem->elem.element.name = NULL;
   if (comment)
-    elem->comment = strdup(comment);
+    elem->comment = TtaStrdup(comment);
   else
     elem->comment = NULL;
   elem->refElem = refElem;
@@ -64,9 +64,9 @@ ElemListElement ElemListElement_CreateBaseType(int level, const char* name,
 {
   ElemListElement elem = (ElemListElement)TtaGetMemory (sizeof(sElemListElement));
   elem->typeClass = BaseType;
-  elem->elem.baseTypeName = strdup(name);
+  elem->elem.baseTypeName = TtaStrdup(name);
   if (comment)
-    elem->comment = strdup(comment);
+    elem->comment = TtaStrdup(comment);
   else
     elem->comment = NULL;
   elem->refElem = refElem;
@@ -90,7 +90,7 @@ ElemListElement ElemListElement_CreateComponent(int level, const char* name,
   elem->elem.component.name = name;
   elem->elem.component.declaration = declaration;
   if (comment)
-    elem->comment = strdup(comment);
+    elem->comment = TtaStrdup(comment);
   else
     elem->comment = NULL;
   elem->refElem = refElem;

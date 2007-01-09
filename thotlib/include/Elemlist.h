@@ -19,7 +19,8 @@ typedef enum
 /**
  * A list of element.
  */
-typedef struct sElemListElement{
+typedef struct _sElemListElement *ElemListElement;
+typedef struct _sElemListElement{
   /** Level of insertion.
    * Smaller is more prioritary.*/
   int         level;
@@ -51,7 +52,7 @@ typedef struct sElemListElement{
   /** Linked element.
    * Element to which apply (insert/change type) the new element.*/
   Element     refElem;
-} *ElemListElement;
+} sElemListElement;
 
 typedef void (*ElemListElement_DoInsertElementFunction)(ElemListElement);
 
