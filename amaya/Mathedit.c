@@ -2177,11 +2177,9 @@ static void CreateMathConstruct (int construct, ...)
           if (type == -1)
             {/* ask the user about the way the symbol have to be displayed */
             type = GetOperatorType(doc);
-            if (type > 2)
-              type = 0;
             }
        
-          if (type > 1)
+          if (type >= 1)
             {/* change the plus and times symbols by sum and prod */
             if (symbol == '+')
               symbol = 8721;
@@ -2191,7 +2189,7 @@ static void CreateMathConstruct (int construct, ...)
 
           switch (type)
             {
-            case 1:
+            case 0:
               leaf = TtaGetFirstChild (el);
               child = leaf;
               InsertEmptyConstruct (&child, MathML_EL_MROW, doc);
@@ -2208,7 +2206,7 @@ static void CreateMathConstruct (int construct, ...)
                   InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
                 }
             break;
-            case 2:
+            case 1:
               /* Operation on a family indexed by (i = ... to ...) */
               leaf = TtaGetFirstChild (el);
               child = leaf;
@@ -2230,7 +2228,7 @@ static void CreateMathConstruct (int construct, ...)
               TtaNextSibling (&selected);
               construct = 21;
             break;
-            case 3:
+            case 2:
               /* Operation on a family indexed by a set */
               leaf = TtaGetFirstChild (el);
               child = leaf;

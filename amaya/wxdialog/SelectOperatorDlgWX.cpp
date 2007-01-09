@@ -66,7 +66,7 @@ void SelectOperatorDlgWX::OnOperator0( wxCommandEvent& event )
   if (!Waiting)
     return;
   Waiting = 0;
-  ThotCallback (MyRef, INTEGER_DATA, (char*) 1);
+  ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
   TtaDestroyDialogue (MyRef);
 }
 
@@ -78,7 +78,7 @@ void SelectOperatorDlgWX::OnOperator1( wxCommandEvent& event )
   if (!Waiting)
     return;
   Waiting = 0;
-  ThotCallback (MyRef, INTEGER_DATA, (char*) 2);
+  ThotCallback (MyRef, INTEGER_DATA, (char*) 1);
   TtaDestroyDialogue (MyRef);
 }
 
@@ -90,7 +90,7 @@ void SelectOperatorDlgWX::OnOperator2( wxCommandEvent& event )
   if (!Waiting)
     return;
   Waiting = 0;
-  ThotCallback (MyRef, INTEGER_DATA, (char*) 3);
+  ThotCallback (MyRef, INTEGER_DATA, (char*) 2);
   TtaDestroyDialogue (MyRef);
 }
 
