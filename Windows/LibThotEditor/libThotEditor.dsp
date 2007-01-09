@@ -262,6 +262,10 @@ SOURCE=..\..\thotlib\editing\editcommands.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\thotlib\dialogue\Elemlist.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\thotlib\image\epshandler.c
 # End Source File
 # Begin Source File
