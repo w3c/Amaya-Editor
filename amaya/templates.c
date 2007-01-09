@@ -16,10 +16,11 @@
 
 #include "containers.h"
 #include "Elemlist.h"
+#include "templates.h"
+
 
 #ifdef TEMPLATES
 #include "Template.h"
-#include "templates.h"
 #include "templateDeclarations.h"
 #include "templateUtils_f.h"
 
@@ -732,6 +733,7 @@ ThotBool OptionButtonClicked (NotifyElement *event)
 	return TRUE;
 }
 
+#ifdef TEMPLATES
 static int QueryMenu(Document doc, char* items)
 {
   int nbitems, size;
@@ -778,7 +780,7 @@ static char* QueryStringFromMenu(Document doc, char* items)
   TtaFreeMemory (itemlist);
   return result;
 }
-
+#endif /* TEMPLATES */
 
 /*----------------------------------------------------------------------
   RepeatButtonClicked
@@ -792,29 +794,6 @@ static char* QueryStringFromMenu(Document doc, char* items)
 ThotBool RepeatButtonClicked (NotifyElement *event)
 {
 #ifdef TEMPLATES
-//  XTigerTemplate   t;
-//	Document         doc;
-//  Element          el, child, newEl;
-//  ElementType      elt, elt1;
-//	int              nbitems, size;
-//	struct menuType *items;
-//  char            *types, *menuString;
-//  ThotBool          oldStructureChecking;
-//  View            view;
-//
-//  TtaGetActiveView (&doc, &view);
-//  if (view != 1)
-//    return FALSE; /* let Thot perform normal operation */
-//  doc = event->document;
-//  t = (XTigerTemplate) Dictionary_Get (Templates_Dic, DocumentMeta[doc]->template_url);
-//  if (!t)
-//    return FALSE; // no template ?!?!
-//
-//  TtaCancelSelection (doc);
-//  
-//  int i = QueryMenu(doc, "begin middle end");
-//  printf("query : %d\n", i);
-//  
   Document        doc = event->document;
   Element         el = event->element;
   ElementType     elType;
