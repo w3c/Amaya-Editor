@@ -4134,10 +4134,10 @@ Document LoadDocument (Document doc, char *pathname,
             }
         }
       else
-	  {
-		DocumentTypes[doc] = docType;
-        newdoc = doc;
-	  }
+        {
+          DocumentTypes[doc] = docType;
+          newdoc = doc;
+        }
 
       if (docType == docImage)
         /* create an HTML container */
@@ -4225,7 +4225,7 @@ Document LoadDocument (Document doc, char *pathname,
       if (realdocname)
         s = TtaStrdup (realdocname);
       else
-      s = TtaStrdup (pathname);
+        s = TtaStrdup (pathname);
       if (DocumentURLs[newdoc] != NULL)
         {
           TtaFreeMemory (DocumentURLs[newdoc]);
@@ -4254,6 +4254,9 @@ Document LoadDocument (Document doc, char *pathname,
       DocumentSource[newdoc] = 0;
       DocumentMeta[newdoc]->xmlformat = isXML;
       DocumentMeta[newdoc]->compound = FALSE;
+
+      /* Clear the current status path */
+      TtaSetStatusSelectedElement(newdoc, 1, NULL);
 
       /* Set character encoding */
       DocumentMeta[newdoc]->charset = NULL;

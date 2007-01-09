@@ -98,7 +98,8 @@ void FreeTemplateRepositoryList (void* list)
   src : address of the list (address of the first element).
   dst : address where copy the list
   ----------------------------------------------------------------------*/
-static void CopyTemplateRepositoryList (const Prop_Templates_Path** src, Prop_Templates_Path** dst)
+static void CopyTemplateRepositoryList (const Prop_Templates_Path** src,
+                                        Prop_Templates_Path** dst)
 {
   Prop_Templates_Path *element=NULL, *current=NULL;
   

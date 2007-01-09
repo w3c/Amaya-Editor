@@ -1729,21 +1729,23 @@ void TtaSetStatus (Document document, View view, char *text, char *name)
 void TtaSetStatusSelectedElement(Document document, View view, Element elem)
 {
 #ifdef _WX
-  int frame;
+  AmayaWindow  *window;
+  int           frame;
   
   frame = GetWindowNumber (document, view);
   if (frame == 0)
     /* try to display in document 1 */
     frame = GetWindowNumber (1, view);
 
-  if (FrameTable[frame].WdFrame){
-    AmayaWindow* window = wxDynamicCast(wxGetTopLevelParent(FrameTable[frame].WdFrame), AmayaWindow);
-    if(window!=NULL){
+  if (FrameTable[frame].WdFrame)
+    {
+    window = wxDynamicCast(wxGetTopLevelParent(FrameTable[frame].WdFrame), AmayaWindow);
+    if (window)
       ((AmayaStatusBar*)window->GetStatusBar())->SetSelectedElement( elem );
-    }
   }
 #else  /* _WX */
-  BuildSelectionMessage();
+  if (elem)
+    BuildSelectionMessage();
 #endif /* _WX */
 }
 

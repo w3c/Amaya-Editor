@@ -46,7 +46,6 @@ protected:
   void OnMouseEnter(wxMouseEvent& event);
   void OnMouseLeave(wxMouseEvent& event);
   void OnMouseLeftUp(wxMouseEvent& event);
-  void PreCalcPositions();
 };
 
 
