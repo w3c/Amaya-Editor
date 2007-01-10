@@ -240,7 +240,7 @@ static void InstantiateAttribute (XTigerTemplate t, Element el, Document doc)
   if (useAttr)
     // there is a "use" attribute. Check its value
     {
-      text = GetAttributeStringValue (el, useAttr);
+      text = GetAttributeStringValue (el, useAttr, NULL);
       if (text && strcmp (text, "optional") == 0)
         return;
     }
@@ -252,7 +252,7 @@ static void InstantiateAttribute (XTigerTemplate t, Element el, Document doc)
   defAttr = TtaGetAttribute (el, defaultType);
   if (nameAttr)
     {
-      text = GetAttributeStringValue (el, nameAttr);
+      text = GetAttributeStringValue (el, nameAttr, NULL);
       if (text)
         {
           elType = TtaGetElementType (parent);
@@ -266,7 +266,7 @@ static void InstantiateAttribute (XTigerTemplate t, Element el, Document doc)
               TtaAttachAttribute (parent, attr, doc);
               if (defAttr)
                 {
-                  text = GetAttributeStringValue (el, defAttr);
+                  text = GetAttributeStringValue (el, defAttr, NULL);
                   TtaSetAttributeText(attr, text, parent, doc);
                   TtaFreeMemory(text);
                   // if it's a src arttribute for an image, load the image
@@ -329,7 +329,7 @@ Element InstantiateUse (XTigerTemplate t, Element el, Document doc,
 
   /* get the value of the "types" attribute */
   cont = NULL;
-  elType = TtaGetElementType (el);
+/*  elType = TtaGetElementType (el);
 	att.AttrSSchema = elType.ElSSchema;
 	att.AttrTypeNum = Template_ATTR_types;
 	at = TtaGetAttribute (el, att);
@@ -337,11 +337,14 @@ Element InstantiateUse (XTigerTemplate t, Element el, Document doc,
     return NULL;
 	size = TtaGetTextAttributeLength (at);
 	types = (char *) TtaGetMemory (size+1);	
-	TtaGiveTextAttributeValue (at, types, &size);
+	TtaGiveTextAttributeValue (at, types, &size);*/
+  
+  types = GetAttributeStringValue(el, Template_ATTR_types, &size);
   giveItems (types, size, &items, &nbitems);
   // No structure checking
   oldStructureChecking = TtaGetStructureChecking (doc);
   TtaSetStructureChecking (FALSE, doc);
+  
   if (nbitems == 1)
     /* only one type in the "types" attribute */
     {
@@ -441,7 +444,7 @@ void InstantiateRepeat (XTigerTemplate t, Element el, Document doc)
   //Get the values
   if (minAtt)
     {
-      text = GetAttributeStringValue(el, minAtt);
+      text = GetAttributeStringValue(el, minAtt, NULL);
       if (text)
         {
           minVal = atoi(text);
@@ -456,7 +459,7 @@ void InstantiateRepeat (XTigerTemplate t, Element el, Document doc)
 
   if (maxAtt)
     {
-      text = GetAttributeStringValue (el, maxAtt);
+      text = GetAttributeStringValue (el, maxAtt, NULL);
       if (text)
         {
           if (!strcmp (text, "*"))
@@ -474,7 +477,7 @@ void InstantiateRepeat (XTigerTemplate t, Element el, Document doc)
 
   if (curAtt)
     {
-      text = GetAttributeStringValue(el, curAtt);
+      text = GetAttributeStringValue(el, curAtt, NULL);
       if (text)
         {
           curVal = atoi(text);
@@ -581,7 +584,7 @@ static void ParseTemplate (XTigerTemplate t, Element el, Document doc,
           attType.AttrSSchema = elType.ElSSchema;
           attType.AttrTypeNum = Template_ATTR_name;
           
-          name = GetAttributeStringValue (el, Template_ATTR_name);		  		  
+          name = GetAttributeStringValue (el, Template_ATTR_name, NULL);		  		  
           TtaRemoveAttribute (el, TtaGetAttribute (el, attType), doc);
           if (NeedAMenu (el, doc))
             TtaChangeElementType (el, Template_EL_useEl);

@@ -632,7 +632,12 @@ ThotBool RepeatButtonClicked (NotifyElement *event)
   Element         newEl = NULL;
   char*           types;
   ThotBool        oldStructureChecking;
+  View            view;
   
+  TtaGetActiveView (&doc, &view);
+  if (view != 1)
+    return FALSE; /* let Thot perform normal operation */
+
   TtaCancelSelection(doc);
   
   t = (XTigerTemplate) Dictionary_Get (Templates_Dic, DocumentMeta[doc]->template_url);
@@ -647,7 +652,7 @@ ThotBool RepeatButtonClicked (NotifyElement *event)
   if(repeatEl)
   {
     firstEl = TtaGetFirstChild(repeatEl);
-    types = GetAttributeStringValue(firstEl, Template_ATTR_types);
+    types = GetAttributeStringValue(firstEl, Template_ATTR_types, NULL);
     
     char* listtypes = Template_ExpandTypes(t, types);
     char* result = QueryStringFromMenu(doc, listtypes);
@@ -694,6 +699,11 @@ ThotBool UseButtonClicked (NotifyElement *event)
   Element         newEl = NULL;
   char*           types;
   ThotBool        oldStructureChecking;
+  View            view;
+
+  TtaGetActiveView (&doc, &view);
+  if (view != 1)
+    return FALSE; /* let Thot perform normal operation */
   
   TtaCancelSelection(doc);
   
@@ -709,7 +719,7 @@ ThotBool UseButtonClicked (NotifyElement *event)
   }
   else
   {
-    types = GetAttributeStringValue(el, Template_ATTR_types);
+    types = GetAttributeStringValue(el, Template_ATTR_types, NULL);
 
     char* listtypes = Template_ExpandTypes(t, types);
     char* result = QueryStringFromMenu(doc, listtypes);
@@ -729,7 +739,6 @@ ThotBool UseButtonClicked (NotifyElement *event)
     }
     TtaFreeMemory(listtypes);
     TtaFreeMemory(result);
-    printf("empty use\n");
   }
   
   return TRUE;

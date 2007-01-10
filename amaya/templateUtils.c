@@ -30,7 +30,7 @@ char *GetSchemaFromDocType (DocumentType docType)
 /*----------------------------------------------------------------------
 Returns the value of a string attribute 
 ----------------------------------------------------------------------*/
-char *GetAttributeStringValue (Element el, int att)
+char *GetAttributeStringValue (Element el, int att, int* sz)
 {
 #ifdef TEMPLATES
 	AttributeType attType;
@@ -42,6 +42,8 @@ char *GetAttributeStringValue (Element el, int att)
 	int size = TtaGetTextAttributeLength(attribute);
 	char *aux = (char*) TtaGetMemory(size+1);
 	TtaGiveTextAttributeValue (attribute, aux, &size);
+  if(sz)
+    *sz = size;
 	return aux;
 #else
 	return '\0';
@@ -51,12 +53,14 @@ char *GetAttributeStringValue (Element el, int att)
 /*----------------------------------------------------------------------
 Returns the value of a string attribute 
 ----------------------------------------------------------------------*/
-char *GetAttributeStringValue (Element el, Attribute attribute)
+char *GetAttributeStringValue (Element el, Attribute attribute, int* sz)
 {
 #ifdef TEMPLATES
 	int size = TtaGetTextAttributeLength(attribute);
 	char *aux = (char*) TtaGetMemory(size+1);
 	TtaGiveTextAttributeValue (attribute, aux, &size);
+  if(sz)
+    *sz = size;
 	return aux;
 #else
 	return '\0';
