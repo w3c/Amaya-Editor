@@ -41,44 +41,53 @@ m_height(0)
 {
 }
 
+/*----------------------------------------------------------------------
+  -----------------------------------------------------------------------*/
 AmayaPathControl::~AmayaPathControl()
 {
 }
 
+/*----------------------------------------------------------------------
+  -----------------------------------------------------------------------*/
 void AmayaPathControl::SetSelection(Element elem)
 {
-  wxClientDC dc(this);
-  
-  wxRect rect;
+  wxClientDC  dc(this);
+  PtrElement  pEl = (PtrElement)elem;
+  ElementType elType;
+  wxString    name;
+  wxRect      rect;
   
   m_items.DeleteContents(true);
   m_items.clear();
   
   m_focused = NULL;
   m_height = 0;
-  while(elem!=NULL)
-  {
-    Element parent = TtaGetParent(elem);
-    
-    PtrElement ptr = (PtrElement)elem;
+  while (pEl)
+  {  
     /** @see BuildSelectionMessage () */
-    if(parent && !HiddenType(ptr) && (!ptr->ElTerminal || (ptr->ElLeafType!=LtText && ptr->ElLeafType!=LtPicture)))
+    if (pEl->ElParent &&
+	    !HiddenType(pEl) &&
+		(!pEl->ElTerminal ||
+		(pEl->ElLeafType!=LtText && pEl->ElLeafType!=LtPicture)))
     {
-      wxString name = TtaConvMessageToWX(TtaGetElementTypeName(TtaGetElementType(elem)));
+      elType = TtaGetElementType(Element(pEl));
+      name = TtaConvMessageToWX(TtaGetElementTypeName(elType));
       dc.GetTextExtent(name, &rect.width, &rect.height);
       AmayaPathControlItem* item = new AmayaPathControlItem;
 	  item->label = name;
-      item->elem = elem;
+      item->elem = Element(pEl);
 	  item->rect = rect;
       m_items.Append(item);
     if(rect.height>m_height)
       m_height = rect.height;
     }    
-    elem = parent;
+    pEl = pEl->ElParent;
   }
   Refresh();
 }  
 
+/*----------------------------------------------------------------------
+  -----------------------------------------------------------------------*/
 void AmayaPathControl::OnDraw(wxPaintEvent& event)
 {
   PreCalcPositions();
@@ -89,80 +98,102 @@ void AmayaPathControl::OnDraw(wxPaintEvent& event)
   static wxString sep = wxT("/"); 
   wxSize szSep;
   dc.GetTextExtent(sep, &szSep.x, &szSep.y);
+  szSep.x += 4;
+  static wxString dots = wxT("..."); 
+  wxSize szDots;
+  dc.GetTextExtent(dots, &szDots.x, &szDots.y);
+  szDots.x += 4;
   
   int x = 0;
   bool bIsFirst = true;
   int y = (sz.y-m_height)/2;
   wxAmayaPathControlItemListNode *node = m_items.GetLast();
-  while(node!=NULL)
+  while (node)
   {
-    if(node->GetData()->rect.x>=0)
+    if (node->GetData()->rect.x >= 0)
     {
-      if(!bIsFirst)
+      if (!bIsFirst)
       {
         dc.DrawText(sep, x+2, y);
-        x += szSep.x + 4;
+        x += szSep.x;
       }
       else
         bIsFirst = false;
       node->GetData()->Draw(dc, node->GetData()==m_focused);
       x += node->GetData()->rect.width;
     }
+	else if (bIsFirst)
+	{
+      // display "..."
+      dc.DrawText(dots, x+2, y);
+      x = szDots.x;
+      bIsFirst = false;
+	}
+
     node = node->GetPrevious();
   }
 }
 
+/*----------------------------------------------------------------------
+  -----------------------------------------------------------------------*/
 void AmayaPathControl::PreCalcPositions()
 {
   wxClientDC dc(this);
   wxSize sz = GetClientSize();
-  int y = (sz.y-m_height)/2;
+  int y = (sz.y-m_height)/2, x, dx;
 
   static wxString sep = wxT("/"); 
   wxSize szSep;
   dc.GetTextExtent(sep, &szSep.x, &szSep.y);
+  szSep.x += 4;
+  static wxString dots = wxT("..."); 
+  wxSize szDots;
+  dc.GetTextExtent(dots, &szDots.x, &szDots.y);
+  szDots.x += 4;
 
   int cx = 0;
   wxAmayaPathControlItemListNode *node;
   node = m_items.GetLast();
-  while(node!=NULL)
+  while (node)
   {
     node->GetData()->rect.x = cx;
     node->GetData()->rect.y = y;
-    cx += node->GetData()->rect.width + szSep.x + 4;    
+    cx += node->GetData()->rect.width + szSep.x;    
     node = node->GetPrevious();
   }
 
-  if(cx>sz.x){
-    cx -= sz.x;
+  if (cx > sz.x)
+  {
+    dx = cx - sz.x + szDots.x;
+	// replace some nodes by ...
+	x = szDots.x;
     node = m_items.GetLast();
-    while(node!=NULL)
+    while (node)
     {
-      node->GetData()->rect.x -= cx;
-      node = node->GetPrevious();
-    }
-    
-    node = m_items.GetLast();
-    while(node!=NULL && node->GetData()->rect.x<0)
-    {
-      node = node->GetPrevious();
-    }
-    if(node!=NULL)
-    {
-      cx = node->GetData()->rect.x;
-      while(node!=NULL)
+	  
+      cx = node->GetData()->rect.x -dx;
+      if (cx < szDots.x)
+        // not displayed
+        node->GetData()->rect.x = cx;
+      else
       {
-        node->GetData()->rect.x -= cx;
-        node = node->GetPrevious();
-      }
+		// adding p '/' before
+        x += szSep.x;
+        node->GetData()->rect.x = x;
+        x += node->GetData()->rect.width;
+	  }
+       node = node->GetPrevious();
     }
   }
 }
 
+/*----------------------------------------------------------------------
+  -----------------------------------------------------------------------*/
 void AmayaPathControlItem::Draw(wxDC& dc, bool isFocused)
 {
-  if(rect.x>=0){
-    if(isFocused)
+  if (rect.x>=0)
+  {
+    if (isFocused)
     {
       wxColour col = dc.GetTextForeground();
       dc.SetTextForeground(/*wxSystemSettings::GetColour(isFocused?wxSYS_COLOUR_HIGHLIGHTTEXT:wxSYS_COLOUR_MENUTEXT)*/ wxColour(255, 0, 0));
@@ -177,16 +208,21 @@ void AmayaPathControlItem::Draw(wxDC& dc, bool isFocused)
 }
 
 
+/*----------------------------------------------------------------------
+  -----------------------------------------------------------------------*/
 void AmayaPathControl::OnSize(wxSizeEvent& event)
 {
   Refresh();
   event.Skip();
 }
 
+/*----------------------------------------------------------------------
+  -----------------------------------------------------------------------*/
 void AmayaPathControl::OnMouseMove(wxMouseEvent& event)
 {
   wxPoint pos = event.GetPosition();
-  if(!m_focused || (pos.x<m_focused->rect.x) || (pos.x>m_focused->rect.x+m_focused->rect.width))
+  if (!m_focused || pos.x < m_focused->rect.x ||
+	  pos.x > m_focused->rect.x+m_focused->rect.width)
   {
     m_focused = NULL;
     
@@ -195,7 +231,8 @@ void AmayaPathControl::OnMouseMove(wxMouseEvent& event)
     {
       if(node->GetData()->rect.x>=0)
       {
-        if((pos.x>=node->GetData()->rect.x) && (pos.x<=node->GetData()->rect.x+node->GetData()->rect.width))
+        if(pos.x >= node->GetData()->rect.x &&
+			pos.x <= node->GetData()->rect.x+node->GetData()->rect.width)
         {
           m_focused = node->GetData();
           Refresh();
@@ -208,27 +245,35 @@ void AmayaPathControl::OnMouseMove(wxMouseEvent& event)
   }
 }
 
+/*----------------------------------------------------------------------
+  -----------------------------------------------------------------------*/
 void AmayaPathControl::OnMouseEnter(wxMouseEvent& WXUNUSED(event))
 {
 }
 
+/*----------------------------------------------------------------------
+  -----------------------------------------------------------------------*/
 void AmayaPathControl::OnMouseLeave(wxMouseEvent& WXUNUSED(event))
 {
   m_focused = NULL;
   Refresh();
 }
 
+/*----------------------------------------------------------------------
+  -----------------------------------------------------------------------*/
 void AmayaPathControl::OnMouseLeftUp(wxMouseEvent& event)
 {
   wxPoint pos = event.GetPosition();
   wxAmayaPathControlItemListNode *node = m_items.GetLast();
-  while(node)
+  while (node)
   {
-    if(node->GetData()->rect.x>=0)
+    if (node->GetData()->rect.x >= 0)
     {
-      if((pos.x>=node->GetData()->rect.x) && (pos.x<=node->GetData()->rect.x+node->GetData()->rect.width))
+      if(pos.x >= node->GetData()->rect.x &&
+		  pos.x <= node->GetData()->rect.x+node->GetData()->rect.width)
       {
-        TtaSelectElement(TtaGetDocument(node->GetData()->elem), node->GetData()->elem);
+        TtaSelectElement (TtaGetDocument(node->GetData()->elem),
+			              node->GetData()->elem);
         return;
       }
     }
