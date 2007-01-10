@@ -76,10 +76,8 @@ extern void RemoveClipping (int frame);
 extern void UpdateScrollbars (int frame);
 
 
-extern int ThotInput (int frame,
-		      unsigned int value,
-		      int command,
-		      int mask, int key);
+extern int ThotInput (int frame, unsigned int value, int command,
+                      int mask, int key, ThotBool iskey);
 extern void FreeTranslations (void);
 extern void InitTranslations (char *appliname);
 

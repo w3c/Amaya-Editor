@@ -6,15 +6,12 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void CharTranslationWX ( int frame,
-                                int thot_mask,
-                                ThotKeySym thot_keysym,
-                                unsigned int value );
 extern int ThotInput ( int frame,
                        unsigned int value,
                        int command,
-                       int PicMask,
-                       int key );
+                       int modifiers,
+                       int key,
+                       ThotBool isKey );
 extern void FreeTranslations ( void );
 extern void TtaSetAccessKeyFunction ( Proc2 procedure );
 extern void TtaAddAccessKey ( Document doc,
@@ -31,15 +28,12 @@ extern void InitTranslations ( char *appliname );
 
 #else /* __STDC__ */
 
-extern void CharTranslationWX ( int frame,
-                                  int thot_mask,
-                                  ThotKeySym thot_keysym,
-                                  unsigned int value );
 extern int ThotInput ( int frame,
                          unsigned int value,
                          int command,
-                         int PicMask,
-                         int key );
+                         int modifiers,
+                         int key,
+                         ThotBool isKey );
 extern void FreeTranslations ( void );
 extern void TtaSetAccessKeyFunction ( Proc2 procedure );
 extern void TtaAddAccessKey ( Document doc,
