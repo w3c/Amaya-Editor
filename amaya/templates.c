@@ -561,182 +561,6 @@ Element Template_InsertRepeatChild(Document doc, Element el, Declaration decl, i
   }
 }
 
-
-/*----------------------------------------------------------------------
-  UseButtonClicked
-  Shows a menu with all the types that can be used in a use element.
-  ----------------------------------------------------------------------*/
-ThotBool UseButtonClicked (NotifyElement *event)
-{
-#ifdef TEMPLATES
-	Document         doc;
-	Element          el, comp;
-	ElementType      elType;
-	Attribute        att;
-	AttributeType    attributeType;
-  XTigerTemplate   t;
-  Declaration      dec;
-  Record           rec, first;
-	int              nbitems, size;
-	struct menuType *items;
-  char            *types, *menuString;
-  View            view;
-
-/*** EK ***/
-/* Si l'englobant est un use alors menu sélection.
- * Sinon c'est un repeat.*/
-
-  TtaGetActiveView (&doc, &view);
-  if (view != 1)
-    return FALSE; /* let Thot perform normal operation */
-
-	doc = event->document;
-  t = (XTigerTemplate) Dictionary_Get (Templates_Dic, DocumentMeta[doc]->template_url);
-  if (!t)
-    return FALSE; /* let Thot perform normal operation */
-
-	el = event->element;
-  if (TtaGetFirstChild (el))
-    /* this Use element has already some content. Do not do anything */
-    return FALSE; /* let Thot perform normal operation */
-
-	elType = TtaGetElementType (el);
-  // give the list of possible items
-	attributeType.AttrSSchema = elType.ElSSchema;
-	attributeType.AttrTypeNum = Template_ATTR_types;
-	att = TtaGetAttribute (el, attributeType);
-	size = TtaGetTextAttributeLength (att);
-	types = (char *) TtaGetMemory (size+1);	
-	TtaGiveTextAttributeValue (att, types, &size);
-	giveItems (types, size, &items, &nbitems);
-	TtaFreeMemory (types);
-
-  if (nbitems == 1)
-    {
-      dec = GetDeclaration (t, items[0].label);
-      /* if it's a union, display the menu of this union */
-      if (dec)
-        switch (dec->nature)
-          {
-          case SimpleTypeNat :
-            nbitems = 0;
-            break;
-          case XmlElementNat :
-            nbitems = 0;
-            break;
-          case ComponentNat :
-            nbitems = 0;
-            break;
-          case UnionNat :
-            first = dec->unionType.include->first;
-            rec = first;
-            /* count the number of elements in the union */
-            nbitems = 0;
-            while (rec)
-              {
-                nbitems++;
-                rec = rec->next;
-              }
-            if (nbitems > 0)
-              {
-                items = (menuType*) TtaGetMemory (sizeof (struct menuType)* nbitems);
-                rec = first;
-                nbitems = 0;
-                while (rec)
-                  {
-                    items[nbitems].label = (char *) TtaStrdup (rec->key);
-                    items[nbitems].type = SimpleTypeNat;  /* @@@@@ ???? @@@@@ */
-                    nbitems++;
-                    rec = rec->next;
-                  }
-              }
-            break;
-          default :
-            //Impossible
-            break;   
-          }
-    }
-  if (nbitems > 0)
-    {
-      TtaCancelSelection (doc);
-      menuString = createMenuString (items, nbitems);
-      TtaNewScrollPopup (BaseDialog + OptionMenu, TtaGetViewFrame (doc, 1),
-                         NULL, nbitems, menuString , NULL, false, 'L');
-      TtaFreeMemory (menuString);
-      ReturnOption = -1; // no selection yet
-      TtaShowDialogue (BaseDialog + OptionMenu, FALSE);
-      TtaWaitShowProcDialogue ();
-      TtaDestroyDialogue (BaseDialog + OptionMenu);
-      if (ReturnOption != -1)
-        dec = GetDeclaration (t, items[ReturnOption].label);
-      TtaFreeMemory (items);
-      if (ReturnOption == -1)
-        return FALSE;
-      if (dec)
-        {
-          Template_InsertUseChildren(doc, el, dec);
-        }
-    }
-  TtaSelectElement (doc, el);
-  return TRUE;
-#endif /* TEMPLATES */
-	return TRUE;
-}
-
-/*----------------------------------------------------------------------
-  OptionButtonClicked
-  ----------------------------------------------------------------------*/
-ThotBool OptionButtonClicked (NotifyElement *event)
-{
-#ifdef TEMPLATES
-  Element         child, grandChild, next;
-  ElementType     elType, elType1;
-  Document        doc;
-  XTigerTemplate  t;
-  View            view;
-
-  TtaGetActiveView (&doc, &view);
-  if (view != 1)
-    return FALSE; /* let Thot perform normal operation */
-  doc = event->document;
-  child = TtaGetFirstChild (event->element);
-  if (!child)
-    return FALSE; /* let Thot perform normal operation */
-  elType = TtaGetElementType (child);
-  elType1 = TtaGetElementType (event->element);
-  if ((elType.ElTypeNum != Template_EL_useEl &&
-       elType.ElTypeNum != Template_EL_useSimple) ||
-      elType.ElSSchema != elType1.ElSSchema)
-    return FALSE;
-
-  TtaCancelSelection (doc);
-  grandChild = TtaGetFirstChild (child);
-  if (!grandChild)
-    /* the "use" element is empty. Instantiate it */
-    {
-      t = (XTigerTemplate) Dictionary_Get (Templates_Dic, DocumentMeta[doc]->template_url);
-      if (!t)
-        return FALSE; // no template ?!?!
-      InstantiateUse (t, child, doc, TRUE);
-    }
-  else
-    /* remove the content of the "use" element */
-    {
-      do
-        {
-          next = grandChild;
-          TtaNextSibling (&next);
-          TtaDeleteTree (grandChild, doc);
-          grandChild = next;
-        }
-      while (next);
-    }
-  TtaSelectElement (doc, event->element);
-  return TRUE; /* don't let Thot perform normal operation */
-#endif /* TEMPLATES */
-	return TRUE;
-}
-
 #ifdef TEMPLATES
 static int QueryMenu(Document doc, char* items)
 {
@@ -849,7 +673,126 @@ ThotBool RepeatButtonClicked (NotifyElement *event)
   }
   return TRUE; /* don't let Thot perform normal operation */
 #endif /* TEMPLATES */
+  return TRUE;
+}
+
+/*----------------------------------------------------------------------
+  UseButtonClicked
+  Shows a menu with all the types that can be used in a use element.
+  ----------------------------------------------------------------------*/
+ThotBool UseButtonClicked (NotifyElement *event)
+{
+#ifdef TEMPLATES
+  Document        doc = event->document;
+  Element         el = event->element;
+  ElementType     elType;
+  XTigerTemplate  t;
+  Declaration     decl;
+  Element         useEl;
+  Element         repeatEl;
+  Element         firstEl;
+  Element         newEl = NULL;
+  char*           types;
+  ThotBool        oldStructureChecking;
+  
+  TtaCancelSelection(doc);
+  
+  t = (XTigerTemplate) Dictionary_Get (Templates_Dic, DocumentMeta[doc]->template_url);
+  if (!t)
+    return FALSE; /* let Thot perform normal operation */
+  elType = TtaGetElementType(el);
+
+  firstEl = TtaGetFirstChild(el);
+  if(firstEl)
+  {
+    RepeatButtonClicked(event);
+  }
+  else
+  {
+    types = GetAttributeStringValue(el, Template_ATTR_types);
+
+    char* listtypes = Template_ExpandTypes(t, types);
+    char* result = QueryStringFromMenu(doc, listtypes);
+    if(result)
+    {
+      decl = GetDeclaration(t, result);
+      if(decl)
+      {
+        oldStructureChecking = TtaGetStructureChecking (doc);
+        TtaSetStructureChecking (FALSE, doc);
+        
+        newEl = Template_InsertUseChildren(doc, el, decl);
+        
+        TtaSetStructureChecking (oldStructureChecking, doc);
+        TtaSelectElement (doc, newEl);
+      }
+    }
+    TtaFreeMemory(listtypes);
+    TtaFreeMemory(result);
+    printf("empty use\n");
+  }
+  
+  return TRUE;
+#endif /* TEMPLATES */
 	return TRUE;
+}
+
+
+
+
+
+/*----------------------------------------------------------------------
+  OptionButtonClicked
+  ----------------------------------------------------------------------*/
+ThotBool OptionButtonClicked (NotifyElement *event)
+{
+#ifdef TEMPLATES
+  Element         child, grandChild, next;
+  ElementType     elType, elType1;
+  Document        doc;
+  XTigerTemplate  t;
+  View            view;
+
+  TtaGetActiveView (&doc, &view);
+  if (view != 1)
+    return FALSE; /* let Thot perform normal operation */
+  doc = event->document;
+  child = TtaGetFirstChild (event->element);
+  if (!child)
+    return FALSE; /* let Thot perform normal operation */
+  elType = TtaGetElementType (child);
+  elType1 = TtaGetElementType (event->element);
+  if ((elType.ElTypeNum != Template_EL_useEl &&
+       elType.ElTypeNum != Template_EL_useSimple) ||
+      elType.ElSSchema != elType1.ElSSchema)
+    return FALSE;
+
+  TtaCancelSelection (doc);
+  grandChild = TtaGetFirstChild (child);
+  if (!grandChild)
+    /* the "use" element is empty. Instantiate it */
+    {
+      t = (XTigerTemplate) Dictionary_Get (Templates_Dic, DocumentMeta[doc]->template_url);
+      if (!t)
+        return FALSE; // no template ?!?!
+      InstantiateUse (t, child, doc, TRUE);
+    }
+  else
+    /* remove the content of the "use" element */
+    {
+      do
+        {
+          next = grandChild;
+          TtaNextSibling (&next);
+          TtaDeleteTree (grandChild, doc);
+          grandChild = next;
+        }
+      while (next);
+    }
+  TtaSelectElement (doc, event->element);
+  return TRUE; /* don't let Thot perform normal operation */
+#endif /* TEMPLATES */
+  return TRUE;
 }
 
 
