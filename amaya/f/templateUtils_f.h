@@ -8,17 +8,21 @@
 
 extern char *GetSchemaFromDocType ( DocumentType docType );
 extern char *GetAttributeStringValue ( Element el,
-                                       int att );
+                                       int att,
+                                       int* sz );
 extern char *GetAttributeStringValue ( Element el,
-                                       Attribute attribute );
+                                       Attribute attribute,
+                                       int* sz );
 
 #else /* __STDC__ */
 
 extern char *GetSchemaFromDocType ( DocumentType docType );
 extern char *GetAttributeStringValue ( Element el,
-                                         int att );
+                                         int att,
+                                         int* sz );
 extern char *GetAttributeStringValue ( Element el,
-                                         Attribute attribute );
+                                         Attribute attribute,
+                                         int* sz );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
