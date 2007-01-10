@@ -4256,7 +4256,8 @@ Document LoadDocument (Document doc, char *pathname,
       DocumentMeta[newdoc]->compound = FALSE;
 
       /* Clear the current status path */
-      TtaSetStatusSelectedElement(newdoc, 1, NULL);
+	  if (docType != docLog)
+        TtaSetStatusSelectedElement(newdoc, 1, NULL);
 
       /* Set character encoding */
       DocumentMeta[newdoc]->charset = NULL;
