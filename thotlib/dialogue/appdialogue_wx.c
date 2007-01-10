@@ -2064,7 +2064,8 @@ ThotBool TtaHandleUnicodeKey (wxKeyEvent& event)
                 thotMask |= THOT_MOD_ALT;
               if (event.ShiftDown())
                 thotMask |= THOT_MOD_SHIFT; 
-              ret = ThotInput (TtaGiveActiveFrame(), thot_keysym, 0, thotMask, thot_keycode);
+              ret = ThotInput (TtaGiveActiveFrame(), thot_keysym, 0, thotMask,
+                               thot_keycode, FALSE);
               if (ret == 3)
                 {
                 /* if a simple caractere has been entred, give focus to canvas
@@ -2103,8 +2104,8 @@ ThotBool TtaHandleUnicodeKey (wxKeyEvent& event)
 ThotBool TtaHandleShortcutKey( wxKeyEvent& event )
 {
   wxChar thot_keysym = event.GetKeyCode();  
-  
-  int thotMask = 0;
+  int    thotMask = 0;
+
   if (event.CmdDown() || event.ControlDown())
     thotMask |= THOT_MOD_CTRL;
   if (event.AltDown())
@@ -2121,12 +2122,24 @@ ThotBool TtaHandleShortcutKey( wxKeyEvent& event )
   wxTextCtrl *     p_text_ctrl         = wxDynamicCast(p_win_focus, wxTextCtrl);
   wxComboBox *     p_combo_box         = wxDynamicCast(p_win_focus, wxComboBox);
   wxSpinCtrl *     p_spinctrl          = wxDynamicCast(p_win_focus, wxSpinCtrl);
-  if (( p_text_ctrl || p_combo_box || p_spinctrl )
-      && (event.CmdDown() &&
+  if (( p_text_ctrl || p_combo_box || p_spinctrl ) && event.CmdDown())
+      /* &&
           (thot_keysym == 'C' || thot_keysym == 'X' || thot_keysym == 'V' || thot_keysym == 'Z' ||
-           thot_keysym == 'c' || thot_keysym == 'x' || thot_keysym == 'v' || thot_keysym == 'z')) )
+          thot_keysym == 'c' || thot_keysym == 'x' || thot_keysym == 'v' || thot_keysym == 'z')) )*/
     {
-      event.Skip();
+      if (p_combo_box)
+        {
+          if (thot_keysym == 67) // Ctrl C
+            p_combo_box->Copy();
+          else if (thot_keysym == 86) // Ctrl V
+            p_combo_box->Paste();
+          else if (thot_keysym == 88) // Ctrl X
+            p_combo_box->Cut();
+          else if (thot_keysym == 90) // Ctrl Z
+            p_combo_box->Undo();
+        }
+      /*else
+        event.Skip();*/
       return true;      
     }
 
@@ -2139,8 +2152,7 @@ ThotBool TtaHandleShortcutKey( wxKeyEvent& event )
     }
   // on windows, CTRL+ALT is equivalent to ALTGR key
   if (!TtaIsSpecialKey(thot_keysym) &&
-      ((event.ControlDown() && !event.AltDown()) /*||
-       (event.AltDown() && !event.CmdDown() && (thot_keysym < 'A' || thot_keysym > 'Z'))*/))
+      event.ControlDown() && !event.AltDown())
        // this is for the Windows menu shortcuts, ALT+F => should open File menu
 #else /* _MACOS */
   // on windows, CTRL+ALT is equivalent to ALTGR key
@@ -2166,7 +2178,8 @@ ThotBool TtaHandleShortcutKey( wxKeyEvent& event )
             }
         }
       // Call the generic function for key events management
-      ThotInput (TtaGiveActiveFrame(), (int)thot_keysym, 0, thotMask, (int)thot_keysym);
+      ThotInput (TtaGiveActiveFrame(), (int)thot_keysym, 0, thotMask,
+                 (int)thot_keysym, TRUE);
       
       // try to redraw something because when a key in pressed a long time
       // the ThotInput action is repeted but nothing is shown on the screen 
@@ -2187,7 +2200,7 @@ ThotBool TtaHandleShortcutKey( wxKeyEvent& event )
     {
       /* it is now the turn of special key shortcuts : CTRL+RIGHT, CTRL+ENTER ...*/
       TTALOGDEBUG_1( TTA_LOG_KEYINPUT, _T("TtaHandleShortcutKey : special shortcut thot_keysym=%x"), thot_keysym );
-      ThotInput (TtaGiveActiveFrame(), thot_keysym, 0, thotMask, thot_keysym);
+      ThotInput (TtaGiveActiveFrame(), thot_keysym, 0, thotMask, thot_keysym, TRUE);
       
       // try to redraw something because when a key in pressed a long time
       // the ThotInput action is repeted but nothing is shown on the screen 
@@ -2202,7 +2215,7 @@ ThotBool TtaHandleShortcutKey( wxKeyEvent& event )
             thot_keysym == (int) WXK_F11 ||
             thot_keysym == (int) WXK_F12)
     {
-      ThotInput (TtaGiveActiveFrame(), thot_keysym, 0, thotMask, thot_keysym);
+      ThotInput (TtaGiveActiveFrame(), thot_keysym, 0, thotMask, thot_keysym, TRUE);
       
       // try to redraw something because when a key in pressed a long time
       // the ThotInput action is repeted but nothing is shown on the screen 
@@ -2303,7 +2316,7 @@ ThotBool TtaHandleSpecialKey( wxKeyEvent& event )
 
           TTALOGDEBUG_1( TTA_LOG_KEYINPUT, _T("TtaHandleSpecialKey: thot_keysym=%x"), thot_keysym);
           
-          ThotInput (TtaGiveActiveFrame(), thot_keysym, 0, thotMask, thot_keysym);
+          ThotInput (TtaGiveActiveFrame(), thot_keysym, 0, thotMask, thot_keysym, TRUE);
           
           // try to redraw something because when a key in pressed a long time
           // the ThotInput action is repeted but nothing is shown on the screen 

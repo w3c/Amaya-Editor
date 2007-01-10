@@ -640,7 +640,8 @@ ThotBool WIN_CharTranslation (HWND hWnd, int frame, UINT msg, WPARAM wParam,
     /* Return should generate a linefeed key
        Removing this test will break Ctrl Return */
     wParam = 0x0D;
-  ret = ThotInput (frame, (unsigned int) wParam, 0, keyboard_mask, wParam);
+  ret = ThotInput (frame, (unsigned int) wParam, 0, keyboard_mask,
+                   wParam, Special);
   return (ret == 1);
 }
 
@@ -733,15 +734,16 @@ gboolean CharTranslationGTK (GtkWidget *w, GdkEventKey* event, gpointer data)
           return FALSE;
         }
     }
-  if ( strlen(event->string) > 0 )
+  if (strlen(event->string) > 0)
     {
       /* event->string is encoded in system locale charset */
       CHARSET local_charset = TtaGetLocaleCharset();
-      wchar_t * value = TtaConvertByteToWC((unsigned char *)event->string, local_charset);
-      ThotInput (frame, (unsigned int)value[0], 0, PicMask, key);
+      wchar_t * value = TtaConvertByteToWC((unsigned char *)event->string,
+                                           local_charset);
+      ThotInput (frame, (unsigned int)value[0], 0, PicMask, key, FALSE);
     }
   else
-    ThotInput (frame, (unsigned int)EOS, 0, PicMask, key);
+    ThotInput (frame, (unsigned int)EOS, 0, PicMask, key, TRUE);
   gtk_signal_emit_stop_by_name (GTK_OBJECT(w), "key_press_event");
   return TRUE;
 }
@@ -874,60 +876,6 @@ gboolean KeyScrolledGTK (GtkWidget *w, GdkEvent* event, gpointer data)
 }
 #endif /* _GTK */
 
-/*----------------------------------------------------------------------
-  CharTranslationWX
-  WX front-end to the character translation and handling.
-  Decodes the WX key press event  and calls the generic character
-  handling function.
-  ----------------------------------------------------------------------*/
-void CharTranslationWX ( int frame, int thot_mask, ThotKeySym thot_keysym,
-                         unsigned int value )
-{
-#if 0
-#ifdef _WX
-  CHARSET             charset;
-  wchar_t            *str, *p;
-
-  Document            document;
-  View                view;
-
-#ifdef __WXDEBUG__
-  printf( "KeyPressed :%s\n", KeyName (thot_keysym) );
-#endif /* #ifdef __WXDEBUG__ */
-  
-  if (frame > MAX_FRAME)
-    frame = 0;
-  FrameToView (frame, &document, &view);
- 
-  if(thot_keysym == 0)
-    {
-      /******* Not sure this code makes sense */
-      charset = TtaGetCharset (TtaGetEnvString ("Default_Charset"));
-      if (charset != UNDEFINED_CHARSET)
-        {
-          str = TtaConvertByteToWC ((unsigned char*)&value, charset);
-          p = str;
-          while (*p)
-            {
-              if (MenuActionList[0].Call_Action)
-                (*(Proc3)MenuActionList[0].Call_Action) (
-                                                         (void *)document,
-                                                         (void *)view,
-                                                         (void *)*p);
-              p++;
-            }
-          TtaFreeMemory (str);
-          return FALSE;
-        }
-    }
-
-  ThotInput (frame, value, 0, thot_mask, thot_keysym);
-  
-  return TRUE;
-#endif /* _WX */
-#endif
-}
-
 
 /*----------------------------------------------------------------------
   APPKey send a message msg to the application.   
@@ -958,14 +906,15 @@ static ThotBool APPKey (int msg, PtrElement pEl, Document doc, ThotBool pre)
 
 /*----------------------------------------------------------------------
   ThotInput handles the unicode character v and the command command.
-  The parameter PicMask gives current modifiers.
+  The parameter modifiers gives current modifiers.
   Returns:
   - 0 when nothing is done
   - 1 when an access key is handled
   - 2 when an action is done
   - 3 when a character is inserted
   ----------------------------------------------------------------------*/
-int ThotInput (int frame, unsigned int value, int command, int PicMask, int key)
+int ThotInput (int frame, unsigned int value, int command, int modifiers,
+               int key, ThotBool isKey)
 {
   KEY                *ptr;
   Document            document;
@@ -974,15 +923,6 @@ int ThotInput (int frame, unsigned int value, int command, int PicMask, int key)
   int                 mainframe;
   int                 index = -1;
   ThotBool            found, done = FALSE;
-  
-#ifdef _WX
-  TTALOGDEBUG_5( TTA_LOG_KEYINPUT, _T("ThotInput: frame=%d\tvalue=%d\tcommand=%d\tPicMask=%d\tkey=%d"),
-                 frame,
-                 value,
-                 command,
-                 PicMask,
-                 key  );
-#endif /* _WX */
   
   modtype = THOT_NO_MOD;
   if (frame > MAX_FRAME)
@@ -994,6 +934,10 @@ int ThotInput (int frame, unsigned int value, int command, int PicMask, int key)
     found = TRUE;
   else
     {
+#ifdef _WX
+  TTALOGDEBUG_5( TTA_LOG_KEYINPUT, _T("ThotInput: frame=%d value=%d modifiers=%d key=%d isKey=%d"),
+                 frame, value, modifiers, key, isKey);
+#endif /* _WX */
       if (ClickIsDone == 1 &&
           (key == THOT_KEY_Escape || key == THOT_KEY_Delete))
         /* Amaya is waiting for a clickselection */
@@ -1006,21 +950,21 @@ int ThotInput (int frame, unsigned int value, int command, int PicMask, int key)
         }
       command = 0;	   
       /* Set the right indicator */
-      if (PicMask & THOT_MOD_CTRL)
+      if (modifiers & THOT_MOD_CTRL)
         {
-          if (PicMask & THOT_MOD_SHIFT)
+          if (modifiers & THOT_MOD_SHIFT)
             modtype = THOT_MOD_S_CTRL;
           else
             modtype = THOT_MOD_CTRL;
         }
-      else if (PicMask & THOT_MOD_ALT)
+      else if (modifiers & THOT_MOD_ALT)
         {
-          if (PicMask & THOT_MOD_SHIFT)
+          if (modifiers & THOT_MOD_SHIFT)
             modtype = THOT_MOD_S_ALT;
           else
             modtype = THOT_MOD_ALT;
         }
-      else if (PicMask & THOT_MOD_SHIFT)
+      else if (modifiers & THOT_MOD_SHIFT)
         modtype = THOT_MOD_SHIFT;
       else
         modtype = THOT_NO_MOD;
@@ -1110,7 +1054,7 @@ int ThotInput (int frame, unsigned int value, int command, int PicMask, int key)
                 {
 #ifdef _WINGUI
                   if (ptr->K_EntryCode == key
-                      && ptr->K_Special == Special)
+                      && ptr->K_Special == isKey)
 #endif /* _WINGUI */
 #if defined(_GTK) || defined(_WX)
                     if (ptr->K_EntryCode == key)
@@ -1137,12 +1081,7 @@ int ThotInput (int frame, unsigned int value, int command, int PicMask, int key)
   /* found, key */
   
   /* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
-#ifdef _WINGUI
-  if (Special && !found)
-#endif /* _WINGUI */
-#if defined(_GTK) || defined(_WX)
-    if (!found)
-#endif /* #if defined(_GTK) || defined(_WX) */
+  if (isKey && !found)
       {
         /* Handling special keys */
         switch (key)
