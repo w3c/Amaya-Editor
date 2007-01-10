@@ -79,15 +79,10 @@ class AmayaNotebook : public wxNotebook
   void OnPageChanging(wxNotebookEvent& event);
   void OnContextMenu( wxContextMenuEvent & event );
   void OnContextMenuItem( wxCommandEvent& event );
-  void OnMouseLeftDown(wxMouseEvent& event);
-  void OnMouseLeftUp(wxMouseEvent& event);
-  void OnMouseDragging(wxMouseEvent& event);
 
  protected:
   AmayaWindow *  m_pAmayaWindow; // amaya parent window
   int            m_MContextFrameId;
-  wxPoint        m_ptDrag;
-  bool           m_isDragging;  
 };
 
 #endif // __AMAYANOTEBOOK_H__

@@ -42,8 +42,6 @@ AmayaNotebook::AmayaNotebook( wxWindow * p_parent_window,
                  wxNB_MULTILINE /* only windows */ )
      ,m_pAmayaWindow( p_amaya_window )
      ,m_MContextFrameId(0)
-     ,m_ptDrag(wxDefaultPosition)
-     ,m_isDragging(false)
 {
   SetImageList( AmayaApp::GetDocumentIconList() );
 }
@@ -248,6 +246,7 @@ void AmayaNotebook::OnContextMenu( wxContextMenuEvent & event )
       PopupMenu (p_menu, ScreenToClient(point));
 #endif /* _MACOS */
     }
+
   //  event.Skip();
 }
 
@@ -262,48 +261,6 @@ int AmayaNotebook::GetMContextFrame()
 }
 
 
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-void AmayaNotebook::OnMouseLeftDown(wxMouseEvent& event)
-{
-  m_ptDrag = event.GetPosition();
-  m_isDragging = false;
-  event.Skip();
-}
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-void AmayaNotebook::OnMouseLeftUp(wxMouseEvent& event)
-{
-  m_isDragging = false;
-  m_ptDrag = wxDefaultPosition;
-  event.Skip();
-}
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-void AmayaNotebook::OnMouseDragging(wxMouseEvent& event)
-{
-  wxPoint pos = event.GetPosition();
-  int cx = pos.x-m_ptDrag.x,
-      cy = pos.y-m_ptDrag.y;
-  
-  if (event.Dragging()/* && !m_isDragging*/)
-    {
-    printf("dragging !!\n");
-//    wxMessageBox(wxT("Dragging !!!"));
-//    if (cx>8 || cx<-8 || cy>8 || cy<-8)
-//    {
-//      m_isDragging = true;
-//      wxMessageBox(wxT("Dragging !!!"));
-//    }
-    }
-  else
-    {
-//    wxMessageBox(wxT("Moving !!!"));
-    }
-  event.Skip();
-}
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -312,9 +269,6 @@ BEGIN_EVENT_TABLE(AmayaNotebook, wxNotebook)
   EVT_NOTEBOOK_PAGE_CHANGED(  -1, AmayaNotebook::OnPageChanged )
   EVT_NOTEBOOK_PAGE_CHANGING( -1, AmayaNotebook::OnPageChanging )
   EVT_CONTEXT_MENU(               AmayaNotebook::OnContextMenu )
-  EVT_LEFT_DOWN(AmayaNotebook::OnMouseLeftDown)
-  EVT_LEFT_UP(AmayaNotebook::OnMouseLeftUp)
-  EVT_MOTION(AmayaNotebook::OnMouseDragging)
-END_EVENT_TABLE()
+  END_EVENT_TABLE()
   
 #endif /* #ifdef _WX */
