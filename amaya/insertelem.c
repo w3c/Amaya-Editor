@@ -239,6 +239,11 @@ static void FillInsertableElementFromElemAttribute(XTigerTemplate t, Element ele
   ----------------------------------------------------------------------*/
 static void FillInsertableElemList(Document doc, Element elem, DLList list)
 {
+  ElementType   type;
+#ifdef TEMPLATES
+  Element       child;
+  ElementType   childType;
+#endif/* TEMPLATES */
   int level;
   ThotBool cont;
 
@@ -255,9 +260,7 @@ static void FillInsertableElemList(Document doc, Element elem, DLList list)
     
     while(elem!=NULL && cont)
     {
-      ElementType   type = TtaGetElementType(elem);
-      Element       child;
-      ElementType   childType;
+      type = TtaGetElementType(elem);
       switch(type.ElTypeNum)
       {
 #ifdef TEMPLATES

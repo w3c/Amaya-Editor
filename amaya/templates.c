@@ -480,6 +480,8 @@ Element Template_InsertUseChildren(Document doc, Element el, Declaration dec)
       //Impossible
       break;   
   }
+#else /* TEMPLATES */
+  return NULL;
 #endif /* TEMPLATES */
 }
 
@@ -521,6 +523,8 @@ Element Template_InsertRepeatChildAfter(Document doc, Element el, Declaration de
   }
   return use;
   
+#else /* TEMPLATES */
+  return NULL;
 #endif /* TEMPLATES */
 }
 
