@@ -533,7 +533,7 @@ void AmayaApp::OnChar(wxKeyEvent& event)
   AmayaWindow * p_window = TtaGetActiveWindow();
   if (p_window && p_window->IsActive())
   {
-    if(!TtaHandleUnicodeKey(event))
+    if (!TtaHandleUnicodeKey(event))
       event.Skip();
   }
   else

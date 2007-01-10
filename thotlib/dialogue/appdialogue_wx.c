@@ -2035,7 +2035,9 @@ ThotBool TtaHandleUnicodeKey (wxKeyEvent& event)
   int thot_keysym = event.GetUnicodeKey();
   int ret = 0;
 
-  if ((thot_keysym != 0) && !TtaIsSpecialKey(thot_keycode) &&
+  if (thot_keysym != 0 &&
+	  ((thot_keycode >= WXK_START && thot_keycode <= WXK_COMMAND) ||
+	  !TtaIsSpecialKey(thot_keycode)) &&
       (!event.CmdDown() || event.AltDown())
 #if !defined(_MACOS) && !defined(_WINDOWS)
        && !event.AltDown()
@@ -2121,8 +2123,8 @@ ThotBool TtaHandleShortcutKey( wxKeyEvent& event )
   wxSpinCtrl *     p_spinctrl          = wxDynamicCast(p_win_focus, wxSpinCtrl);
   if (( p_text_ctrl || p_combo_box || p_spinctrl )
       && (event.CmdDown() &&
-          (thot_keysym == 'C' || thot_keysym == 'X' || thot_keysym == 'V' ||
-           thot_keysym == 'c' || thot_keysym == 'x' || thot_keysym == 'v')) )
+          (thot_keysym == 'C' || thot_keysym == 'X' || thot_keysym == 'V' || thot_keysym == 'Z' ||
+           thot_keysym == 'c' || thot_keysym == 'x' || thot_keysym == 'v' || thot_keysym == 'z')) )
     {
       event.Skip();
       return true;      
@@ -2226,7 +2228,8 @@ ThotBool TtaHandleShortcutKey( wxKeyEvent& event )
 #ifdef _WX
 ThotBool TtaHandleSpecialKey( wxKeyEvent& event )
 {
-  if ( /*!event.CmdDown() &&*/ !event.AltDown() && TtaIsSpecialKey(event.GetKeyCode()))
+  if (!event.AltDown() &&
+	  TtaIsSpecialKey(event.GetKeyCode()))
     {
       int thot_keysym = event.GetKeyCode();  
       
