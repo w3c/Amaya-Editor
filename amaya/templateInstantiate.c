@@ -350,7 +350,7 @@ Element Template_GetNewXmlElementInstance(Document doc, Element parent, Declarat
 #ifdef TEMPLATES
   ElementType       elType;
 
-  GIType(decl->elementType.name, &elType, doc);
+  GIType(decl->name, &elType, doc);
   if(elType.ElTypeNum!=0)
   {
     newEl = TtaNewElement (doc, elType);
@@ -375,62 +375,6 @@ Element Template_GetNewComponentInstance(Document doc, Element parent, Declarati
 #ifdef TEMPLATES
   newEl = TtaCopyTree(decl->componentType.content, doc, doc, parent);
   ProcessAttr(decl->declaredIn, newEl, doc);
-#endif /* TEMPLATES */
-  return newEl;
-}
-
-
-
-/*----------------------------------------------------------------------
-  Template_GetNewUseInstance
-  Create an new instance of xt:use
-  @param dec Template declaration of the element to insert
-  @param parent Future parent element
-  @param doc Document
-  @return The new element
-  ----------------------------------------------------------------------*/
-Element Template_GetNewUseInstance(Document doc, Element parent, Declaration dec)
-{
-  Element           newEl = NULL;
-#ifdef TEMPLATES
-  ThotBool          oldStructureChecking;
-  ElementType       elType;
-  char* empty = " ";
-
-  oldStructureChecking = TtaGetStructureChecking (doc);
-  TtaSetStructureChecking (FALSE, doc);
-
-  elType = TtaGetElementType(parent);
-
-  switch (dec->nature)
-  {
-    case SimpleTypeNat :
-      elType.ElTypeNum = Template_EL_TEXT_UNIT;
-      newEl = TtaNewElement (doc, elType);
-      TtaInsertFirstChild (&newEl, parent, doc);
-      TtaSetTextContent (newEl, (unsigned char*) empty, 0, doc);
-      newEl = NULL;
-      break;
-
-      /* @@@@@ */
-      break;
-    case XmlElementNat :
-      /* @@@@@ */
-      break;
-    case ComponentNat :
-      /* copy element dec->componentType.content */
-      newEl = TtaCopyTree (dec->componentType.content, doc, doc, parent);
-      TtaInsertFirstChild (&newEl, parent, doc);
-      return newEl;
-      /* @@@@@ */
-      break;
-    case UnionNat :
-      /* @@@@@ */
-      break;
-    default :
-      //Impossible
-      break;   
-  }
 #endif /* TEMPLATES */
   return newEl;
 }
