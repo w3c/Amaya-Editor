@@ -329,7 +329,8 @@ Element InstantiateUse (XTigerTemplate t, Element el, Document doc,
 
   /* get the value of the "types" attribute */
   cont = NULL;
-/*  elType = TtaGetElementType (el);
+ elType = TtaGetElementType (el);
+ /*
 	att.AttrSSchema = elType.ElSSchema;
 	att.AttrTypeNum = Template_ATTR_types;
 	at = TtaGetAttribute (el, att);
