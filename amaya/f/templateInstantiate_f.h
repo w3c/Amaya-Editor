@@ -22,6 +22,18 @@ extern void InstantiateTemplate ( Document doc,
                                   char *docname,
                                   DocumentType docType,
                                   ThotBool loaded );
+extern Element Template_GetNewSimpleTypeInstance ( Document doc,
+                                                   Element parent,
+                                                   Declaration decl );
+extern Element Template_GetNewXmlElementInstance ( Document doc,
+                                                   Element parent,
+                                                   Declaration decl );
+extern Element Template_GetNewComponentInstance ( Document doc,
+                                                  Element parent,
+                                                  Declaration decl );
+extern Element Template_GetNewUseInstance ( Document doc,
+                                            Element parent,
+                                            Declaration dec );
 extern Element InstantiateUse ( XTigerTemplate t,
                                 Element el,
                                 Document doc,
@@ -50,6 +62,18 @@ extern void InstantiateTemplate ( Document doc,
                                     char *docname,
                                     DocumentType docType,
                                     ThotBool loaded );
+extern Element Template_GetNewSimpleTypeInstance ( Document doc,
+                                                     Element parent,
+                                                     Declaration decl );
+extern Element Template_GetNewXmlElementInstance ( Document doc,
+                                                     Element parent,
+                                                     Declaration decl );
+extern Element Template_GetNewComponentInstance ( Document doc,
+                                                    Element parent,
+                                                    Declaration decl );
+extern Element Template_GetNewUseInstance ( Document doc,
+                                              Element parent,
+                                              Declaration dec );
 extern Element InstantiateUse ( XTigerTemplate t,
                                   Element el,
                                   Document doc,

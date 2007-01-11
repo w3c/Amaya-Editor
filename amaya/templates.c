@@ -444,6 +444,7 @@ void UseCreated (NotifyElement *event)
 }
 
 
+
 /*----------------------------------------------------------------------
   Template_InsertUseChildren
   Insert children to a xt:use
@@ -451,27 +452,52 @@ void UseCreated (NotifyElement *event)
     direct child element (for union elements).
   @param el element (xt:use) in which insert a new element
   @param dec Template declaration of the element to insert
-  @return The inserted element
+  @return The inserted element (the xt:use element if insertion is multiple as component)
   ----------------------------------------------------------------------*/
 Element Template_InsertUseChildren(Document doc, Element el, Declaration dec)
 {
+  Element newEl   = NULL;
 #ifdef TEMPLATES
-  Element comp;
+  Element current = NULL;
+  Element child   = NULL;
+  char*     attrCurrentTypeValue;
+  Attribute attrCurrentType;
+  AttributeType attType;
 
   switch (dec->nature)
   {
-    case SimpleTypeNat :
-      /* @@@@@ */
+    case SimpleTypeNat:
+      newEl = Template_GetNewSimpleTypeInstance(doc, el, dec);
+      TtaInsertFirstChild(&newEl, el, doc);
       break;
-    case XmlElementNat :
-      /* @@@@@ */
+    case XmlElementNat:
+      newEl = Template_GetNewXmlElementInstance(doc, el, dec);
+      TtaInsertFirstChild(&newEl, el, doc);
       break;
-    case ComponentNat :
-      /* copy element dec->componentType.content */
-      comp = TtaCopyTree (dec->componentType.content, doc, doc, el);
-      TtaInsertFirstChild (&comp, el, doc);
-      return comp;
-      /* @@@@@ */
+    case ComponentNat:
+      newEl = Template_GetNewComponentInstance(doc, el, dec);
+      
+      /* Copy elements from new use to existing use. */
+      while((child = TtaGetFirstChild(newEl)))
+      {
+        TtaRemoveTree(child, doc);
+        if(current)
+        {
+          TtaInsertSibling(child, current, FALSE, doc);
+        }
+        else
+        {
+          TtaInsertFirstChild(&child, el, doc);      
+        }
+        current = child; 
+      }
+      
+      /* Copy currentType attribute. */
+      attrCurrentTypeValue = GetAttributeStringValue(newEl, Template_ATTR_currentType, NULL);
+      SetAttributeStringValue(el, Template_ATTR_currentType, attrCurrentTypeValue);
+      
+      TtaDeleteTree(newEl, doc);
+      newEl = el;
       break;
     case UnionNat :
       /* @@@@@ */
@@ -480,9 +506,8 @@ Element Template_InsertUseChildren(Document doc, Element el, Declaration dec)
       //Impossible
       break;   
   }
-#else /* TEMPLATES */
-  return NULL;
 #endif /* TEMPLATES */
+  return newEl;
 }
 
 

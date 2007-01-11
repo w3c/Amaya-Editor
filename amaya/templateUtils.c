@@ -26,6 +26,24 @@ char *GetSchemaFromDocType (DocumentType docType)
 	return "HTML";
 }
 
+/*----------------------------------------------------------------------
+Set the value of a string attribute 
+----------------------------------------------------------------------*/
+void SetAttributeStringValue (Element el, int att, char* value)
+{
+#ifdef TEMPLATES
+  Document doc = TtaGetDocument(el);
+
+  AttributeType attType;
+  attType.AttrSSchema = TtaGetElementType(el).ElSSchema;
+  attType.AttrTypeNum = att;
+  
+  Attribute attribute = TtaGetAttribute(el, attType);
+
+  TtaSetAttributeText(attribute, value, el, doc);
+#endif /* TEMPLATES */
+}
+
 
 /*----------------------------------------------------------------------
 Returns the value of a string attribute 

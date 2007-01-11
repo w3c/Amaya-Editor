@@ -7,6 +7,9 @@
 #ifdef __STDC__
 
 extern char *GetSchemaFromDocType ( DocumentType docType );
+extern void SetAttributeStringValue ( Element el,
+                                      int att,
+                                      char* value );
 extern char *GetAttributeStringValue ( Element el,
                                        int att,
                                        int* sz );
@@ -17,6 +20,9 @@ extern char *GetAttributeStringValue ( Element el,
 #else /* __STDC__ */
 
 extern char *GetSchemaFromDocType ( DocumentType docType );
+extern void SetAttributeStringValue ( Element el,
+                                        int att,
+                                        char* value );
 extern char *GetAttributeStringValue ( Element el,
                                          int att,
                                          int* sz );
