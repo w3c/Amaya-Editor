@@ -16,6 +16,7 @@ extern char *GetAttributeStringValue ( Element el,
 extern char *GetAttributeStringValue ( Element el,
                                        Attribute attribute,
                                        int* sz );
+extern Element GetFirstEditableElement ( Element el );
 
 #else /* __STDC__ */
 
@@ -29,6 +30,7 @@ extern char *GetAttributeStringValue ( Element el,
 extern char *GetAttributeStringValue ( Element el,
                                          Attribute attribute,
                                          int* sz );
+extern Element GetFirstEditableElement ( Element el );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

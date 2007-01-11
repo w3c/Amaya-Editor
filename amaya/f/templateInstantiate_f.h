@@ -31,9 +31,6 @@ extern Element Template_GetNewXmlElementInstance ( Document doc,
 extern Element Template_GetNewComponentInstance ( Document doc,
                                                   Element parent,
                                                   Declaration decl );
-extern Element Template_GetNewUseInstance ( Document doc,
-                                            Element parent,
-                                            Declaration dec );
 extern Element InstantiateUse ( XTigerTemplate t,
                                 Element el,
                                 Document doc,
@@ -71,9 +68,6 @@ extern Element Template_GetNewXmlElementInstance ( Document doc,
 extern Element Template_GetNewComponentInstance ( Document doc,
                                                     Element parent,
                                                     Declaration decl );
-extern Element Template_GetNewUseInstance ( Document doc,
-                                              Element parent,
-                                              Declaration dec );
 extern Element InstantiateUse ( XTigerTemplate t,
                                   Element el,
                                   Document doc,

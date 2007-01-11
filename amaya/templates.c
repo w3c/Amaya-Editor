@@ -506,6 +506,15 @@ Element Template_InsertUseChildren(Document doc, Element el, Declaration dec)
       //Impossible
       break;   
   }
+  
+//  /* Select the first modifiable element. */
+//  if(newEl)
+//  {
+//    child = GetFirstEditableElement(newEl);
+//    if(child)
+//      TtaSelectElement(doc, child);
+//  }
+  
 #endif /* TEMPLATES */
   return newEl;
 }
@@ -546,6 +555,7 @@ Element Template_InsertRepeatChildAfter(Document doc, Element el, Declaration de
   {
     TtaInsertSibling(use, useFirst, TRUE, doc);
   }
+  
   return use;
   
 #else /* TEMPLATES */
@@ -695,7 +705,12 @@ ThotBool RepeatButtonClicked (NotifyElement *event)
           newEl = Template_InsertRepeatChildAfter(doc, repeatEl, decl, el);
         
         TtaSetStructureChecking (oldStructureChecking, doc);
-        TtaSelectElement (doc, newEl);
+        
+        firstEl = GetFirstEditableElement(newEl);
+        if(firstEl)
+          TtaSelectElement (doc, firstEl);
+        else
+          TtaSelectElement (doc, newEl);
       }
     }
     TtaFreeMemory(listtypes);
@@ -759,7 +774,12 @@ ThotBool UseButtonClicked (NotifyElement *event)
         newEl = Template_InsertUseChildren(doc, el, decl);
         
         TtaSetStructureChecking (oldStructureChecking, doc);
-        TtaSelectElement (doc, newEl);
+        
+        firstEl = GetFirstEditableElement(newEl);
+        if(firstEl)
+          TtaSelectElement (doc, firstEl);
+        else
+          TtaSelectElement (doc, newEl);
       }
     }
     TtaFreeMemory(listtypes);

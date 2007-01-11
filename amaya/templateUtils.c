@@ -84,3 +84,25 @@ char *GetAttributeStringValue (Element el, Attribute attribute, int* sz)
 	return '\0';
 #endif /* TEMPLATES */
 }
+
+
+/*----------------------------------------------------------------------
+GetFirstEditableElement
+Returns the first descendant element which is modifiable.
+----------------------------------------------------------------------*/
+Element GetFirstEditableElement (Element el)
+{
+  Element res = NULL;
+  Element current = TtaGetFirstChild(el);
+  
+  while(!res && current)
+  {
+    res = GetFirstEditableElement(current);
+    TtaNextSibling(&current);
+  }
+  
+  if(!res && !TtaIsReadOnly(el))
+    res = el;
+  
+  return res;
+}
