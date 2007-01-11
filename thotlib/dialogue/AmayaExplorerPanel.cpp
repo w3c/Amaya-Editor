@@ -53,7 +53,8 @@ IMPLEMENT_DYNAMIC_CLASS(AmayaExplorerPanel, AmayaSubPanel)
 AmayaExplorerPanel::AmayaExplorerPanel( wxWindow * p_parent_window, AmayaNormalWindow * p_parent_nwindow )
   : AmayaSubPanel( p_parent_window, p_parent_nwindow, _T("wxID_PANEL_EXPLORER") )
 {
-  char *s;
+  char    *s;
+  wxString path;
 
   // setup labels
   RefreshToolTips();
@@ -62,17 +63,15 @@ AmayaExplorerPanel::AmayaExplorerPanel( wxWindow * p_parent_window, AmayaNormalW
   wxGenericDirCtrl* dirCtrl = XRCCTRL(*this, "wxID_DIRCTRL_EXPLORER", wxGenericDirCtrl);
   
   // Initial selection in the set of folders
-  wxString path;
   s = TtaGetEnvString ("EXPLORER_PATH");
   if (s)
-  {
     path = TtaConvMessageToWX(s);
-  }
   else
-  {
     path = TtaGetHomeDir();
-  }
   
+  dirCtrl->ExpandPath(path);
+  //dirCtrl->SetFilter(APPFILENAMEFILTER);
+  //dirCtrl->GetFilterListCtrl()->FillFilterList(APPFILENAMEFILTER, 0);
   dirCtrl->DoResize();
   
   // register myself to the manager, so I will be avertised that another panel is floating ...
