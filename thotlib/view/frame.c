@@ -1051,6 +1051,7 @@ void GetBoxTransformedCoord (PtrAbstractBox pAbSeeked, int frame,
                 {
                   if (formatted && pAb->AbDepth == plane)
                     {
+                      OpacityAndTransformNext (pAb, plane, frame, 0, 0, 0, 0, FALSE);
                       if (IfPopMatrix (pAb))
                         OriginSystemExit (pAb, pFrame, plane,
                                           &OldXOrg, &OldYOrg, 
@@ -1256,7 +1257,7 @@ static void SyncBoundingboxes (PtrAbstractBox pInitAb,
 static void ComputeBoundingBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
                                   PtrAbstractBox pInitAb, ThotBool show_bgimage)
 {
-  PtrAbstractBox      pAb, specAb;
+  PtrAbstractBox      pAb, specAb, child;
   PtrBox              pBox, box;
   PtrBox              topBox;
   ViewFrame          *pFrame;
@@ -1326,10 +1327,15 @@ static void ComputeBoundingBoxes (int frame, int xmin, int xmax, int ymin, int y
                 {
                   if (pAb->AbFirstEnclosed)
                     {
-                      pAb->AbFirstEnclosed->AbFillOpacity = pAb->AbOpacity;      
-                      pAb->AbFirstEnclosed->AbStrokeOpacity = pAb->AbOpacity; 
+                      child = pAb->AbFirstEnclosed;
+                      while (child)
+                        {
+                          child->AbFillOpacity = pAb->AbOpacity;      
+                          child->AbStrokeOpacity = pAb->AbOpacity;
+                          child = child->AbNext;
+                        } 
                     }
-                  else 
+                  else
                     {
                       pAb->AbFillOpacity = pAb->AbOpacity;      
                       pAb->AbStrokeOpacity = pAb->AbOpacity; 
@@ -2092,6 +2098,7 @@ void ComputeChangedBoundingBoxes (int frame)
                 {
                   if (pAb->AbDepth == plane)
                     {
+                      OpacityAndTransformNext (pAb, plane, frame, 0, 0, 0, 0, FALSE);
                       if (formatted && IfPopMatrix (pAb))
                         OriginSystemExit (pAb, pFrame, plane,
                                           &OldXOrg, &OldYOrg, 

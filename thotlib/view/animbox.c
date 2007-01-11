@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 2003-2005
+ *  (c) COPYRIGHT INRIA, 2003-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -369,7 +369,6 @@ static void ApplyOpacityToAllBoxes (PtrAbstractBox pAb, int result)
     {      
       pAb->AbBox->VisibleModification = TRUE;
       pAb->AbOpacity = result;
-
       /* test if it's a group*/
       if (!pAb->AbPresentationBox &&
           !TypeHasException (ExcIsGroup, pAb->AbElement->ElTypeNumber,
@@ -557,8 +556,7 @@ static void animate_box_set (PtrElement El,
     return;
   
   if (!strcasecmp (animated->AttrName, "opacity"))
-    {
-      
+    {  
       FrameToView (Animated_Frame, &doc, &view);
       pAb = El->ElAbstractBox[view - 1];
       if (pAb && pAb->AbFirstEnclosed)

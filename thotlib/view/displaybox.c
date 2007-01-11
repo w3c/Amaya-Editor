@@ -2321,7 +2321,7 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin,
               glCallList (box->DisplayList);
               return;
             }
-            else if (box->VisibleModification || GL_NotInFeedbackMode ())
+          else if (box->VisibleModification || GL_NotInFeedbackMode ())
             {      
               if (glIsList (box->DisplayList))
                 glDeleteLists (box->DisplayList, 1);

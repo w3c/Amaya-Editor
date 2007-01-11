@@ -93,6 +93,7 @@ BOXES
         HorizPos: Left = Enclosing . Left;
         VertPos: Top = Enclosing . Top;
         Visibility: 4;
+        Opacity: 100%;
         Depth: Creator - 2;
         IN Structure_view
                 Visibility: 0;
@@ -1910,7 +1911,8 @@ ATTRIBUTES
         BEGIN
         CreateBefore(AttrName);
         CreateBefore(AttrValue);
-        CreateFirst(Target_gif);
+        if SVG
+          CreateFirst(Target_gif);
         END;
 
   xml_base:
