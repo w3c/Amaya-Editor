@@ -51,11 +51,14 @@ AmayaPathControl::~AmayaPathControl()
   -----------------------------------------------------------------------*/
 void AmayaPathControl::SetSelection(Element elem)
 {
-  wxClientDC  dc(this);
-  PtrElement  pEl = (PtrElement)elem;
-  ElementType elType;
-  wxString    name;
-  wxRect      rect;
+  wxClientDC          dc(this);
+  PtrElement          pEl = (PtrElement)elem;
+  PtrAttribute        pAttr;
+  ElementType         elType;
+  wxString            name;
+  wxRect              rect;
+  int                 length;
+  char               *buffer = NULL;
   
   m_items.DeleteContents(true);
   m_items.clear();
@@ -63,26 +66,49 @@ void AmayaPathControl::SetSelection(Element elem)
   m_focused = NULL;
   m_height = 0;
   while (pEl)
-  {  
-    /** @see BuildSelectionMessage () */
-    if (pEl->ElParent &&
-	    !HiddenType(pEl) &&
-		(!pEl->ElTerminal ||
-		(pEl->ElLeafType!=LtText && pEl->ElLeafType!=LtPicture)))
-    {
-      elType = TtaGetElementType(Element(pEl));
-      name = TtaConvMessageToWX(TtaGetElementTypeName(elType));
-      dc.GetTextExtent(name, &rect.width, &rect.height);
-      AmayaPathControlItem* item = new AmayaPathControlItem;
-	  item->label = name;
-      item->elem = Element(pEl);
-	  item->rect = rect;
-      m_items.Append(item);
-    if(rect.height>m_height)
-      m_height = rect.height;
-    }    
-    pEl = pEl->ElParent;
-  }
+    {  
+      /** @see BuildSelectionMessage () */
+      if (pEl->ElParent &&
+          !HiddenType(pEl) &&
+          (!pEl->ElTerminal ||
+           (pEl->ElLeafType != LtText && pEl->ElLeafType != LtPicture)))
+        {
+          buffer = NULL;
+          if (pEl->ElStructSchema && pEl->ElStructSchema->SsName &&
+              !strcmp (pEl->ElStructSchema->SsName, "Template"))
+            {
+              pAttr = GetAttrElementWithException (ExcGiveName, pEl);
+              if (pAttr)
+                {
+                  length = TtaGetTextAttributeLength ((Attribute)pAttr);
+                  buffer = (char *)TtaGetMemory (length + 1);
+                  /* copy the NAME attribute into TargetName */
+                  TtaGiveTextAttributeValue ((Attribute)pAttr, buffer, &length);
+                }
+            }
+          if (buffer)
+            {
+              // replace the element name by the attribute value
+              name = TtaConvMessageToWX(buffer);
+              TtaFreeMemory (buffer);
+              buffer = NULL;
+            }
+          else
+            {
+              elType = TtaGetElementType(Element(pEl));
+              name = TtaConvMessageToWX(TtaGetElementTypeName(elType));
+            }
+          dc.GetTextExtent(name, &rect.width, &rect.height);
+          AmayaPathControlItem* item = new AmayaPathControlItem;
+          item->label = name;
+          item->elem = Element(pEl);
+          item->rect = rect;
+          m_items.Append(item);
+          if(rect.height>m_height)
+            m_height = rect.height;
+        }    
+      pEl = pEl->ElParent;
+    }
   Refresh();
 }  
 

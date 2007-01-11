@@ -100,6 +100,7 @@ void TemplateEntityCreated (unsigned char *entityValue, Language lang,
 
 /*----------------------------------------------------------------------
   NeedAMenu returns TRUE is a menu must be generated
+  and add the currentType is only one type is possible
   ----------------------------------------------------------------------*/
 ThotBool NeedAMenu (Element el, Document doc)
 {
@@ -113,9 +114,11 @@ ThotBool NeedAMenu (Element el, Document doc)
   char            *types, *ptr;
   ThotBool         res = FALSE;
 
+  // look for the list of types
   elType = TtaGetElementType (el);
   attributeType.AttrSSchema = elType.ElSSchema;
   if (elType.ElTypeNum == Template_EL_component)
+    // use the name of the component as a type
     attributeType.AttrTypeNum = Template_ATTR_name;
   else
     attributeType.AttrTypeNum = Template_ATTR_types;
@@ -125,6 +128,7 @@ ThotBool NeedAMenu (Element el, Document doc)
   TtaGiveTextAttributeValue (att, types, &size);
   ptr = strstr (types, " ");
   if (ptr)
+    // there are several types
     res = TRUE;
   else
     {
@@ -139,6 +143,21 @@ ThotBool NeedAMenu (Element el, Document doc)
                 res = TRUE;
             }
         }
+    }
+  // When only one type is possible add the currentType attribute
+  if (!res &&
+      (elType.ElTypeNum == Template_EL_useEl ||
+       elType.ElTypeNum == Template_EL_useSimple))
+    {
+      attributeType.AttrTypeNum = Template_ATTR_currentType;
+      att = TtaGetAttribute (el, attributeType);
+      if (!att)
+        {
+          // create this attribute
+          att = TtaNewAttribute (attributeType);
+          TtaAttachAttribute (el, att, doc);
+        }
+      TtaSetAttributeText(att, types, el, doc);
     }
   TtaFreeMemory (types);
   return res;
