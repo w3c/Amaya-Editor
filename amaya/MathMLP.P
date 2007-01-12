@@ -1829,6 +1829,8 @@ ATTRIBUTES
         BEGIN
         CreateBefore(AttrNameAndValue);
         HorizPos: VMiddle = Enclosing . VMiddle;
+        Display: Block;
+        Adjust: VMiddle;
         END;
 
   IntDisplaystyle(MFRAC) = true:
