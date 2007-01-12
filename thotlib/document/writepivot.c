@@ -1181,8 +1181,6 @@ void Externalise (BinFile pivFile, PtrElement *pEl, PtrDocument pDoc,
                       switch (Trans->TransType)
                         {
                         case PtElBoxTranslate:
-                        case PtElviewboxScale:
-                        case PtElviewboxTranslate:
                         case PtElScale:
                         case PtElAnimTranslate:
                         case PtElTranslate:
@@ -1207,6 +1205,14 @@ void Externalise (BinFile pivFile, PtrElement *pEl, PtrDocument pDoc,
                         case PtElSkewY:
                           PutFloat (pivFile, Trans->TrFactor);
                           break;	  
+                        case PtElViewBox:
+                          PutFloat (pivFile, Trans->VbXTranslate);
+                          PutFloat (pivFile, Trans->VbYTranslate);
+                          PutFloat (pivFile, Trans->VbWidth);
+                          PutFloat (pivFile, Trans->VbHeight);
+                          PutInteger (pivFile, Trans->VbAspectRatio);
+                          PutInteger (pivFile, Trans->VbMeetOrSlice);
+                          break;
                         default:
                           break;	  
                         }

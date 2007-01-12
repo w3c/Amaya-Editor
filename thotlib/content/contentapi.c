@@ -1922,8 +1922,6 @@ static void TransformAddition (PtrTransform Trans1, PtrTransform Trans2)
   switch (Trans2->TransType)
     {
     case PtElBoxTranslate:
-    case PtElviewboxScale:
-    case PtElviewboxTranslate:
     case PtElScale:
     case PtElTranslate:
       Trans1->XScale += Trans2->XScale;
@@ -1946,7 +1944,12 @@ static void TransformAddition (PtrTransform Trans1, PtrTransform Trans2)
     case PtElSkewY: 
       Trans1->TrFactor = Trans2->TrFactor;	  
       break;
-
+    case PtElViewBox:
+      Trans1->VbXTranslate += Trans2->VbXTranslate;
+      Trans1->VbYTranslate += Trans2->VbYTranslate;
+      Trans1->VbWidth += Trans2->VbWidth;
+      Trans1->VbHeight += Trans2->VbHeight;
+      break;
     default:
       break;
     }

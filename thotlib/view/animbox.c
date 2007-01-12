@@ -399,7 +399,7 @@ static void ApplyXToAllBoxes (PtrAbstractBox pAb, float result)
             Trans = GetTransformation (El->ElTransform, PtElTranslate); 	  
           if (Trans == NULL)
             {
-              Trans = (PtrTransform)TtaNewTransformTranslate (result, 0, FALSE);
+              Trans = (PtrTransform)TtaNewTransformTranslate (result, 0);
               FrameToView (Animated_Frame, &doc, &view);
               TtaReplaceTransform ((Element) El, Trans, doc); 
             }  
@@ -435,7 +435,7 @@ static void ApplyYToAllBoxes (PtrAbstractBox pAb, float result)
             Trans = GetTransformation (El->ElTransform, PtElTranslate); 	  
           if (Trans == NULL)
             {
-              Trans = (PtrTransform)TtaNewTransformTranslate (0, result, FALSE);
+              Trans = (PtrTransform)TtaNewTransformTranslate (0, result);
               FrameToView (Animated_Frame, &doc, &view);
               TtaReplaceTransform ((Element) El, Trans, doc); 
             }  
@@ -797,7 +797,7 @@ static void animate_box_transformation (PtrElement El,
       
       if (Trans == NULL)
         {
-          Trans = (PtrTransform)TtaNewTransformTranslate (tx, ty, FALSE);
+          Trans = (PtrTransform)TtaNewTransformTranslate (tx, ty);
           TtaReplaceTransform ((Element) El, Trans, doc); 
         }
       Trans->XScale = tx;
@@ -838,7 +838,7 @@ static void animate_box_transformation (PtrElement El,
       
       if (Trans == NULL)
         {
-          Trans = (PtrTransform)TtaNewTransformScale (tx, ty, FALSE);
+          Trans = (PtrTransform)TtaNewTransformScale (tx, ty);
           TtaReplaceTransform ((Element) El, Trans, doc); 
         }
 

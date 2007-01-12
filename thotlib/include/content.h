@@ -370,13 +370,14 @@ extern void TtaReplaceTransform (Element element, void *transform,
 extern void TtaAppendTransform (Element element, void *transform, 
 				Document document);
 
-extern void *TtaNewTransformScale (float x_scale, float y_scale, ThotBool viewbox);
-extern void *TtaNewTransformTranslate (float x, float y, ThotBool viewbox);
+extern void *TtaNewTransformScale (float x_scale, float y_scale);
+extern void *TtaNewTransformTranslate (float x, float y);
 extern void *TtaNewTransformRotate (float angle, float x_scale, float y_scale);
 extern void *TtaNewTransformSkewX (float factor);
 extern void *TtaNewTransformSkewY (float factor);
 extern void *TtaNewTransformMatrix (float a, float b, float c,
 				    float d, float e, float f);
+extern void *TtaNewTransformViewBox (float x, float y, float w, float h, int align, int meetOrSlice);
 
 extern void TtaFreeTransform (void *transform);
 

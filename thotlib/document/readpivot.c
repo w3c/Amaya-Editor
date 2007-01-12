@@ -2604,8 +2604,6 @@ PtrElement ReadTreePiv (BinFile pivFile, PtrSSchema pSSchema, PtrDocument pDoc,
                           switch (n1)
                             {
                             case PtElBoxTranslate:
-                            case PtElviewboxScale:
-                            case PtElviewboxTranslate:
                             case PtElScale:
                             case PtElAnimTranslate:
                             case PtElTranslate: 
@@ -2642,6 +2640,16 @@ PtrElement ReadTreePiv (BinFile pivFile, PtrSSchema pSSchema, PtrDocument pDoc,
                               TtaReadFloat (pivFile, &transvalue);
                               Trans->TrFactor = transvalue;
                               break;	  
+                            case PtElViewBox:
+                              TtaReadFloat (pivFile, &(Trans->VbXTranslate));
+                              TtaReadFloat (pivFile, &(Trans->VbYTranslate));
+                              TtaReadFloat (pivFile, &(Trans->VbWidth));
+                              TtaReadFloat (pivFile, &(Trans->VbHeight));
+                              TtaReadInteger (pivFile, &n1);
+                              Trans->VbAspectRatio = (ViewBoxAspectRatio)n1;
+                              TtaReadInteger (pivFile, &n1);
+                              Trans->VbMeetOrSlice = (ViewBoxMeetOrSlice)n1;
+                              break;
                             default:
                               break;	  
                             }  

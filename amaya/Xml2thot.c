@@ -388,7 +388,7 @@ static void    InitXmlParserContexts (void)
   ctxt->MapAttributeValue = (Proc) MapSVGAttributeValue;
   ctxt->CheckContext = (Proc) XmlCheckContext;
   ctxt->CheckInsert = (Proc) XmlCheckInsert;
-  ctxt->ElementCreated = NULL;
+  ctxt->ElementCreated =  (Proc) SVGElementCreated;
   ctxt->ElementComplete = (Proc) SVGElementComplete;
   ctxt->AttributeComplete = (Proc) SVGAttributeComplete;
   ctxt->GetDTDName = (Proc) SVGGetDTDName;

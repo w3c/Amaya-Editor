@@ -1712,14 +1712,32 @@ static void WrTransform (PtrTransform trans,  FILE *fileDescriptor)
           fprintf (fileDescriptor, " X=%2e, Y=%2e ", trans->XScale, trans->YScale);
           break;
 
-        case  PtElviewboxScale:
-          fprintf (fileDescriptor, "viewboxScale: ");
-          fprintf (fileDescriptor, " X=%2e, Y=%2e ", trans->XScale, trans->YScale);
-          break;
-
-        case PtElviewboxTranslate:
-          fprintf (fileDescriptor, "viewboxTranslate: ");
-          fprintf (fileDescriptor, " X=%2e, Y=%2e ", trans->XScale, trans->YScale);
+        case  PtElViewBox:
+          fprintf (fileDescriptor, "viewbox: x=%2e, y=%2e, w=%2e, h=%2e ",
+                   trans->VbXTranslate, trans->VbYTranslate,
+                   trans->VbWidth, trans->VbHeight);
+          switch (trans->VbAspectRatio)
+            {
+              case ArUnknown: fprintf (fileDescriptor, "? "); break;
+              case ArNone: fprintf (fileDescriptor, "none "); break;
+              case ArXMinYMin: fprintf (fileDescriptor, "xMinYMin "); break;
+              case ArXMidYMin: fprintf (fileDescriptor, "xMidYMin "); break;
+              case ArXMaxYMin: fprintf (fileDescriptor, "xMaxYMin "); break;
+              case ArXMinYMid: fprintf (fileDescriptor, "xMinYMid "); break;
+              case ArXMidYMid: fprintf (fileDescriptor, "xMidYMid "); break;
+              case ArXMaxYMid: fprintf (fileDescriptor, "xMaxYMid "); break;
+              case ArXMinYMax: fprintf (fileDescriptor, "xMinYMax "); break;
+              case ArXMidYMax: fprintf (fileDescriptor, "xMidYMax "); break;
+              case ArXMaxYMax: fprintf (fileDescriptor, "xMaxYMax "); break;
+              default: fprintf (fileDescriptor, "??"); break;
+            }
+          switch (trans->VbMeetOrSlice)
+            {
+              case MsUnknown: fprintf (fileDescriptor, "? "); break;
+              case MsMeet: fprintf (fileDescriptor, "meet "); break;
+              case MsSlice: fprintf (fileDescriptor, "slice "); break;
+              default: fprintf (fileDescriptor, "?? "); break;
+            }
           break;
 
         case  PtElScale:
@@ -1829,7 +1847,7 @@ static void ListBoxTree (PtrAbstractBox pAb, int frame, int Indent,
           if (pAb->AbElement->ElTransform)
             {
               fprintf (fileDescriptor, "\n");
-              for (j = 1; j <= Indent; j++)
+              for (j = 1; j <= Indent + 4; j++)
                 fprintf (fileDescriptor, " ");
               WrTransform (pAb->AbElement->ElTransform ,fileDescriptor);
             }

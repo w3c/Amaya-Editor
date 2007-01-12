@@ -341,14 +341,35 @@ typedef enum
   PtElTranslate,
   PtElAnimTranslate,
   PtElAnimRotate,
-  PtElviewboxScale,
-  PtElviewboxTranslate,
+  PtElViewBox,
   PtElBoxTranslate,
   PtElRotate,
   PtElMatrix,
   PtElSkewX,
   PtElSkewY
 } TransformType;
+
+typedef enum
+{
+  ArUnknown,
+  ArNone,
+  ArXMinYMin,
+  ArXMidYMin,
+  ArXMaxYMin,
+  ArXMinYMid,
+  ArXMidYMid,
+  ArXMaxYMid,
+  ArXMinYMax,
+  ArXMidYMax,
+  ArXMaxYMax
+} ViewBoxAspectRatio;
+
+typedef enum
+{
+  MsUnknown,
+  MsMeet,
+  MsSlice
+} ViewBoxMeetOrSlice;
 
 typedef struct _Transform *PtrTransform;
 
@@ -365,7 +386,7 @@ typedef struct _Transform
       float _XS;
       float _YS;
     } s0;
-    struct /*SkewX, SkewY*/
+    struct /* SkewX, SkewY */
     {
       float _Factor;
     } s1;
@@ -378,7 +399,16 @@ typedef struct _Transform
       float _Angle;
       float _XA;
       float _YA;
-    } s3;    
+    } s3;
+    struct /* Viewbox */
+    {
+      float VbXTranslate;
+      float VbYTranslate;
+      float VbWidth;
+      float VbHeight;
+      ViewBoxAspectRatio VbAspectRatio;
+      ViewBoxMeetOrSlice VbMeetOrSlice;
+    } s4;
   } u;
 } Transform;
 
@@ -395,6 +425,12 @@ typedef struct _Transform
 #define XRotate u.s3._XA
 #define YRotate u.s3._YA
 #define TrAngle u.s3._Angle
+#define VbXTranslate u.s4.VbXTranslate
+#define VbYTranslate u.s4.VbYTranslate
+#define VbWidth u.s4.VbWidth
+#define VbHeight u.s4.VbHeight
+#define VbAspectRatio u.s4.VbAspectRatio
+#define VbMeetOrSlice u.s4.VbMeetOrSlice
 
 /* Animation structures */
 typedef enum

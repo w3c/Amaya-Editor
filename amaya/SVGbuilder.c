@@ -975,21 +975,294 @@ void CreateCSSRules (Element el, Document doc)
 }
 
 /*----------------------------------------------------------------------
+  SkipBlanksAndComma skips all spaces, tabs, linefeeds, newlines and
+  commas at the beginning of the string and returns the pointer to the
+  new position. 
+  ----------------------------------------------------------------------*/
+static char *SkipBlanksAndComma (char *ptr)
+{
+  while (*ptr == SPACE || *ptr == BSPACE || *ptr == EOL ||
+         *ptr == TAB || *ptr == __CR__ || *ptr == ',')
+    ptr++;
+  return (ptr);
+}
+
+/*----------------------------------------------------------------------
+  GetFloat
+  Parse an integer or floating point number and skip to the next token.
+  Return the value of that number in number and moves ptr to the next
+  token to be parsed.
+  ----------------------------------------------------------------------*/
+static char *GetFloat (char *ptr, float* number)
+{
+  int      i;
+  char     *start, c;
+  float     val = 0.;
+  ThotBool negative, decimal, exponent, useDotForFloat;
+
+  /* test if the system uses dot or comma in the float syntax */
+  sscanf (".5", "%f", &val);
+  useDotForFloat = (val == 0.5);
+  negative = FALSE;
+  decimal = FALSE;
+  exponent = FALSE;
+  *number = 0.;
+  /* read the sign */
+  if (*ptr == '+')
+    ptr++;
+  else if (*ptr == '-')
+    {
+      ptr++;
+      negative = TRUE;
+    }
+
+  start = ptr;
+  /* read the integer part */
+  while (*ptr != EOS && *ptr >= '0' && *ptr <= '9')
+    ptr++;
+  if (*ptr == '.')
+    /* there is a decimal part */
+    {
+      if (!useDotForFloat)
+        *ptr = ',';
+      ptr++;
+      decimal = TRUE;
+      while (*ptr != EOS &&  *ptr >= '0' && *ptr <= '9')
+        ptr++;
+    }
+
+  if (*ptr == 'e' || *ptr == 'E')
+    /* there is an exponent, parse it */
+    {
+      exponent = TRUE;
+      ptr++;
+      /* read the sign of the exponent */
+      if (*ptr == '+')
+        ptr++;
+      else if (*ptr == '-')
+        ptr++;
+      while (*ptr != EOS &&  *ptr >= '0' && *ptr <= '9')
+        ptr++;
+    }
+  /* remove possible extra characters */
+  c = *ptr;
+	if (c != EOS)
+    *ptr = EOS;
+  if (exponent)
+    sscanf (start, "%e", number);
+  else if (decimal)
+    sscanf (start, "%f", number);
+  else
+    {
+      sscanf (start, "%d", &i);
+      *number = (float)i;
+    }
+
+  if (negative)
+    *number = - *number;
+  /* restore extra characters */
+  *ptr = c;
+
+  /* skip the following spaces */
+  while (*ptr != EOS &&
+         (*ptr == ',' || *ptr == SPACE || *ptr == BSPACE ||
+          *ptr == EOL    || *ptr == TAB   || *ptr == CR))
+    ptr++;
+  return (ptr);
+}
+
+/*----------------------------------------------------------------------
+  ParseviewBoxAttribute
+  Parse the value of a viewbox attribute
+  ----------------------------------------------------------------------*/
+static void ParseviewBoxAttribute (Attribute attr, Element el, Document doc,
+                                   float* x, float* y, float* width,
+                                   float* height, ThotBool delete_)
+{
+  int                  length;
+  char                *text, *ptr;
+
+  *x = 0;
+  *y = 0;
+  *width = 0;
+  *height = 0;
+  length = TtaGetTextAttributeLength (attr) + 2;
+  text = (char *)TtaGetMemory (length);
+  if (text)
+    {
+      /* get the value of the attribute */
+      TtaGiveTextAttributeValue (attr, text, &length);
+      /* parse the attribute value */
+      ptr = text;
+      if (*ptr != EOS)
+        {
+          /* skip space characters */
+          ptr = SkipBlanksAndComma (ptr);
+          ptr = GetFloat (ptr, x);
+          ptr = SkipBlanksAndComma (ptr);
+          ptr = GetFloat (ptr, y);
+          ptr = SkipBlanksAndComma (ptr);
+          ptr = GetFloat (ptr, width);
+          ptr = SkipBlanksAndComma (ptr);
+          ptr = GetFloat (ptr, height);
+        }       
+      TtaFreeMemory (text);
+    }
+}
+
+/*----------------------------------------------------------------------
+  ParsepreserveAspectRatioAttribute
+  Parse the value of a viewbox attribute
+  ----------------------------------------------------------------------*/
+static void ParsepreserveAspectRatioAttribute (Attribute attr, Element el,
+                                            Document doc, int* align,
+                                            int* meetOrSlice, ThotBool delete_)
+{
+  int                  length;
+  char                *text, *ptr;
+
+  length = TtaGetTextAttributeLength (attr) + 2;
+  text = (char *)TtaGetMemory (length);
+  *align = 0;
+  *meetOrSlice = 0;
+  if (text)
+    {
+      /* get the value attribute */
+      TtaGiveTextAttributeValue (attr, text, &length);
+      /* parse the attribute value */
+      ptr = text;
+      if (*ptr != EOS)
+        {
+          /* skip space characters */
+          ptr = TtaSkipBlanks (ptr);
+          if (!strncmp (ptr, "defer", 5))
+            /* ignore value "defer" */
+            {
+              ptr+= 5;
+              ptr = TtaSkipBlanks (ptr);
+            }
+          /* check the <align> value */
+          if (!strncmp (ptr, "none", 4))
+            {
+              *align = 1;
+              ptr += 4;
+            }
+          else if (!strncmp (ptr, "xMinYMin", 8))
+            {
+              *align = 2;
+              ptr += 8;
+            }
+          else if (!strncmp (ptr, "xMidYMin", 8))
+            {
+              *align = 3;
+              ptr += 8;
+            }
+          else if (!strncmp (ptr, "xMaxYMin", 8))
+            {
+              *align = 4;
+              ptr += 8;
+            }
+          else if (!strncmp (ptr, "xMinYMid", 8))
+            {
+              *align = 5;
+              ptr += 8;
+            }
+          else if (!strncmp (ptr, "xMidYMid", 8))
+            {
+              *align = 6;
+              ptr += 8;
+            }
+          else if (!strncmp (ptr, "xMaxYMid", 8))
+            {
+              *align = 7;
+              ptr += 8;
+            }
+          else if (!strncmp (ptr, "xMinYMax", 8))
+            {
+              *align = 8;
+              ptr += 8;
+            }
+          else if (!strncmp (ptr, "xMidYMax", 8))
+            {
+              *align = 9;
+              ptr += 8;
+            }
+          else if (!strncmp (ptr, "xMaxYMax", 8))
+            {
+              *align = 10;
+              ptr += 8;
+            }
+
+          if (*align > 1)
+            /* a valid <align> value was found, look for a <meetOrSlice>
+               value */
+            {
+              ptr = SkipBlanksAndComma (ptr);
+              if (!strncmp (ptr, "slice", 5))
+                *meetOrSlice = 2;
+              else
+                *meetOrSlice = 1; /* meet, default value */
+            }
+        }
+    }
+}
+
+/*----------------------------------------------------------------------
+  SVGElementCreated
+  The XML parser has just inserted a new element in the abstract tree,
+  with all its attributes, but without its children.
+  ----------------------------------------------------------------------*/
+void      SVGElementCreated (Element el, Document doc)
+{
+  ElementType		elType;
+  AttributeType attrType;
+  Attribute     attr;
+  float         vBX, vBY, vBWidth, vBHeight;
+  int           align, meetOrSlice;
+
+  elType = TtaGetElementType (el);
+  if (elType.ElTypeNum == SVG_EL_SVG)
+    /* process attributes preserveAspectRatio and viewBox */
+    {
+      attrType.AttrSSchema = elType.ElSSchema;
+      attrType.AttrTypeNum = SVG_ATTR_viewBox;
+      attr = TtaGetAttribute (el, attrType);
+      if (attr)
+        {
+          ParseviewBoxAttribute (attr, el, doc, &vBX, &vBY, &vBWidth,
+                                 &vBHeight, FALSE);
+          attrType.AttrTypeNum = SVG_ATTR_preserveAspectRatio;
+          attr = TtaGetAttribute (el, attrType);
+          if (attr)
+            ParsepreserveAspectRatioAttribute (attr, el, doc, &align,
+                                               &meetOrSlice, FALSE);
+          else
+            {
+              align = 6; /* preserveAspectRatio = xMidYMid by default */
+              meetOrSlice = 1; /* meet by default */
+            }
+          TtaInsertTransform (el, TtaNewTransformViewBox (vBX, vBY, vBWidth,
+                                           vBHeight, align, meetOrSlice), doc);
+        }
+    }
+}
+
+/*----------------------------------------------------------------------
   SVGElementComplete
   Check the Thot structure of the SVG element el.
   ----------------------------------------------------------------------*/
 void SVGElementComplete (ParserData *context, Element el, int *error)
 {
   Document             doc;   
-  ElementType		elType, parentType, newType;
-  Element		child, parent, new_, leaf;
+  ElementType		       elType, parentType, newType;
+  Element		           child, parent, new_, leaf;
   AttributeType        attrType;
   Attribute            attr;
   int                  length;
-  PRule		fillPatternRule, newPRule;
-  SSchema	        SVGSSchema;
+  PRule		             fillPatternRule, newPRule;
+  SSchema	             SVGSSchema;
   char                 *href;
-  ThotBool		closedShape;
+  ThotBool		         closedShape;
 
   *error = 0;
   doc = context->doc;
@@ -1190,90 +1463,6 @@ void UnknownSVGNameSpace (ParserData *context, Element *unknownEl,
       TtaSetTextContent (elText, (unsigned char *)content, context->language, context->doc);
       TtaSetAccessRight (elText, ReadOnly, context->doc);
     }
-}
-
-/*----------------------------------------------------------------------
-  GetFloat
-  Parse an integer or floating point number and skip to the next token.
-  Return the value of that number in number and moves ptr to the next
-  token to be parsed.
-  ----------------------------------------------------------------------*/
-static char *GetFloat (char *ptr, float* number)
-{
-  int      i;
-  char     *start, c;
-  float     val = 0.;
-  ThotBool negative, decimal, exponent, useDotForFloat;
-
-  /* test if the system uses dot or comma in the float syntax */
-  sscanf (".5", "%f", &val);
-  useDotForFloat = (val == 0.5);
-  negative = FALSE;
-  decimal = FALSE;
-  exponent = FALSE;
-  *number = 0.;
-  /* read the sign */
-  if (*ptr == '+')
-    ptr++;
-  else if (*ptr == '-')
-    {
-      ptr++;
-      negative = TRUE;
-    }
-
-  start = ptr;
-  /* read the integer part */
-  while (*ptr != EOS && *ptr >= '0' && *ptr <= '9')
-    ptr++;
-  if (*ptr == '.')
-    /* there is a decimal part */
-    {
-      if (!useDotForFloat)
-        *ptr = ',';
-      ptr++;
-      decimal = TRUE;
-      while (*ptr != EOS &&  *ptr >= '0' && *ptr <= '9')
-        ptr++;
-    }
-
-  if (*ptr == 'e' || *ptr == 'E')
-    /* there is an exponent, parse it */
-    {
-      exponent = TRUE;
-      ptr++;
-      /* read the sign of the exponent */
-      if (*ptr == '+')
-        ptr++;
-      else if (*ptr == '-')
-        ptr++;
-      while (*ptr != EOS &&  *ptr >= '0' && *ptr <= '9')
-        ptr++;
-    }
-  /* remove possible extra characters */
-  c = *ptr;
-	if (c != EOS)
-    *ptr = EOS;
-  if (exponent)
-    sscanf (start, "%e", number);
-  else if (decimal)
-    sscanf (start, "%f", number);
-  else
-    {
-      sscanf (start, "%d", &i);
-      *number = (float)i;
-    }
-
-  if (negative)
-    *number = - *number;
-  /* restore extra characters */
-  *ptr = c;
-
-  /* skip the following spaces */
-  while (*ptr != EOS &&
-         (*ptr == ',' || *ptr == SPACE || *ptr == BSPACE ||
-          *ptr == EOL    || *ptr == TAB   || *ptr == CR))
-    ptr++;
-  return (ptr);
 }
 
 /*----------------------------------------------------------------------
@@ -2128,51 +2317,7 @@ void ParsePointsAttribute (Attribute attr, Element el, Document doc)
 
   TtaSetDisplayMode (doc, dispMode);
 }
-/*----------------------------------------------------------------------
-  ParseviewBoxAttribute
-  Parse the value of a viewbox attribute
-  ----------------------------------------------------------------------*/
-void ParseviewBoxAttribute (Attribute attr, Element el, Document doc,
-                            ThotBool delete_)
-{
-  int                  length;
-  float                 x, y, width, height;
-  char                *text, *ptr;
-  ThotBool             error;
-  Element              leaf;
-   
-  leaf = el;
-  length = TtaGetTextAttributeLength (attr) + 2;
-  text = (char *)TtaGetMemory (length);
-  if (text)
-    {
-      /* get the content of the transform attribute */
-      TtaGiveTextAttributeValue (attr, text, &length);
-      /* parse the attribute content */
-      ptr = text;
-      error = FALSE;
-      if (*ptr != EOS)
-        {
-          /* skip space characters */
-          ptr = TtaSkipBlanks (ptr);
-          ptr = GetFloat (ptr, &x);
-          ptr = TtaSkipBlanks (ptr);
-          ptr = GetFloat (ptr, &y);
-          ptr = TtaSkipBlanks (ptr);
-          ptr = GetFloat (ptr, &width);
-          ptr = TtaSkipBlanks (ptr);
-          ptr = GetFloat (ptr, &height);
-          TtaInsertTransform (leaf, 
-                              TtaNewTransformScale (width, height, TRUE),
-                              doc);
-          TtaInsertTransform (leaf, 
-                              TtaNewTransformTranslate (x, y, TRUE),
-                              doc);/*Make sure transformation is first...*/
-	   
-        }       
-      TtaFreeMemory (text);
-    }
-}
+
 /*----------------------------------------------------------------------
   ParseTransformAttribute
   Parse the value of a transform attribute
@@ -2319,9 +2464,7 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
                   else
                     error = TRUE;
 #ifdef _GL
-                  TtaReplaceTransform (el, 
-                                       TtaNewTransformTranslate (x, y, FALSE),
-                                       doc);
+                  TtaReplaceTransform (el, TtaNewTransformTranslate (x, y), doc);
 #else /* _GL */
                   pval.typed_data.value = (int)y;
                   TtaSetStylePresentation (PRVertPos, el, NULL, ctxt, pval);
@@ -2357,8 +2500,7 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
 #ifdef _GL
                       TtaReplaceTransform (el, 
                                            TtaNewTransformScale (scaleX, 
-                                                                 scaleY,
-                                                                 FALSE),
+                                                                 scaleY),
                                            doc);
 #endif /* _GL */
                     }
@@ -3089,9 +3231,6 @@ void SVGAttributeComplete (Attribute attr, Element el, Document doc)
       break;
     case SVG_ATTR_transform:
       ParseTransformAttribute (attr, el, doc, FALSE);
-      break;
-    case SVG_ATTR_viewBox:
-      ParseviewBoxAttribute (attr, el, doc, FALSE);
       break;
     case SVG_ATTR_points:
       ParsePointsAttribute (attr, el, doc);
