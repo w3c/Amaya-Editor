@@ -1366,6 +1366,17 @@ void ChangeTitle (Document doc, View view)
       elType.ElTypeNum = HTML_EL_TITLE;
       el = TtaSearchTypedElement (elType, SearchForward, el);
       child = TtaGetFirstChild (el);
+#ifdef TEMPLATES
+      if (child)
+        {
+          elType = TtaGetElementType (child);
+          if ((elType.ElTypeNum == Template_EL_useEl ||
+               elType.ElTypeNum == Template_EL_useSimple) &&
+              !strcmp (TtaGetSSchemaName (elType.ElSSchema), "Template"))
+            // Ignore the template use element
+            child = TtaGetFirstChild (child);
+        }
+#endif /* TEMPLATES */
       if (child == NULL)
         {
           /* insert the text element */
@@ -1433,6 +1444,17 @@ void SetNewTitle (Document doc)
       elType.ElTypeNum = HTML_EL_TITLE;
       el = TtaSearchTypedElement (elType, SearchForward, el);
       child = TtaGetFirstChild (el);
+#ifdef TEMPLATES
+      if (child)
+        {
+          elType = TtaGetElementType (child);
+          if ((elType.ElTypeNum == Template_EL_useEl ||
+               elType.ElTypeNum == Template_EL_useSimple) &&
+              !strcmp (TtaGetSSchemaName (elType.ElSSchema), "Template"))
+            // Ignore the template use element
+            child = TtaGetFirstChild (child);
+        }
+#endif /* TEMPLATES */
       if (child)
         {
           TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);

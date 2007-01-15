@@ -110,10 +110,13 @@ void RegisterURLs(Document doc, Element el)
 void  CreateInstance(char *templatePath, char *instancePath)
 {
 #ifdef TEMPLATES
-  Document doc = 0;
+  Document     doc = 0;
   DocumentType docType;
-  ThotBool alreadyViewing = FALSE;
-  int      alreadyOnDoc = 0;
+  ElementType  elType;
+  Element      root, title, text;
+  char        *s;
+  int          alreadyOnDoc = 0;
+  ThotBool     alreadyViewing = FALSE;
 
   XTigerTemplate t = (XTigerTemplate)Dictionary_Get (Templates_Dic, templatePath);
   if (t == NULL)
@@ -121,7 +124,6 @@ void  CreateInstance(char *templatePath, char *instancePath)
     return;
 
   doc = GetTemplateDocument (t);
-  docType = DocumentTypes[doc];
   while (alreadyOnDoc < DocumentTableLength-1 && !alreadyViewing)
     {
       alreadyOnDoc++;
@@ -132,24 +134,59 @@ void  CreateInstance(char *templatePath, char *instancePath)
   if (!TtaPrepareUndo (doc))
     {
       TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
-      RegisterURLs (doc, TtaGetRootElement(doc));
+      root = TtaGetRootElement(doc);
+      elType = TtaGetElementType (root);
+      // get the target document type
+      s = TtaGetSSchemaName (elType.ElSSchema);
+      if (strcmp (s, "HTML") == 0)
+        docType = docHTML;
+      else if (strcmp (s, "SVG") == 0)
+        docType = docSVG;
+      else if (strcmp (s, "MathML") == 0)
+        docType = docMath;
+      else
+        docType = docXml;
+
+      RegisterURLs (doc, root);
       SetRelativeURLs (doc, instancePath);
       
       switch (docType)
         {
-        case docSVG :
+        case docSVG:
           TtaExportDocumentWithNewLineNumbers (doc, instancePath, "SVGT");
           break;
-        case docMath :
+        case docMath:
           TtaExportDocumentWithNewLineNumbers (doc, instancePath, "MathMLT");
           break;
-        case docHTML :
+        case docHTML:
+          // Initialize the document title
+          elType.ElTypeNum = HTML_EL_TITLE;
+          title = TtaSearchTypedElement (elType, SearchInTree, root);
+          text = TtaGetFirstChild (title);
+          while (text)
+            {
+              elType = TtaGetElementType (text);
+              if (elType.ElTypeNum == HTML_EL_TEXT_UNIT && Answer_text[0] != EOS)
+                {
+                  TtaSetTextContent (text, (unsigned char*)Answer_text,
+                                     TtaGetDefaultLanguage (), doc);
+                  text = NULL;
+                }
+              else if ((elType.ElTypeNum == Template_EL_useEl ||
+                        elType.ElTypeNum == Template_EL_useSimple) &&
+                       !strcmp (TtaGetSSchemaName (elType.ElSSchema), "Template"))
+                // Ignore the template use element
+                text = TtaGetFirstChild (text);
+              else
+                // Look for the first text child
+                TtaNextSibling (&text);
+            }
           if (TtaGetDocumentProfile(doc)==L_Xhtml11 || TtaGetDocumentProfile(doc)==L_Basic)
             TtaExportDocumentWithNewLineNumbers (doc, instancePath, "HTMLT11");
           else
             TtaExportDocumentWithNewLineNumbers (doc, instancePath, "HTMLTX");
           break;
-        default :
+        default:
           TtaExportDocumentWithNewLineNumbers (doc, instancePath, NULL);
           break;
         }

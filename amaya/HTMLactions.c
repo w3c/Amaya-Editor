@@ -1557,7 +1557,7 @@ void UpdateTitle (Element el, Document doc)
     }
 
   textElem = TtaGetFirstChild (el);
-  if (textElem != NULL)
+  if (textElem)
     {
       /* what is the length of the title? */
       length = 0;
@@ -1567,7 +1567,15 @@ void UpdateTitle (Element el, Document doc)
           elType = TtaGetElementType (next);
           if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
             length += TtaGetTextLength (next);
-          TtaNextSibling (&next);
+#ifdef TEMPLATES
+          if ((elType.ElTypeNum == Template_EL_useEl ||
+                    elType.ElTypeNum == Template_EL_useSimple) &&
+                   !strcmp (TtaGetSSchemaName (elType.ElSSchema), "Template"))
+            // Ignore the template use element
+            next = TtaGetFirstChild (next);
+          else
+#endif /* TEMPLATES */
+            TtaNextSibling (&next);
         }
       /* get the text of the title */
       length++;
@@ -1584,7 +1592,15 @@ void UpdateTitle (Element el, Document doc)
               TtaGiveTextContent (next, (unsigned char *)&text[i], &l, &lang);
               i += l;
             }
-          TtaNextSibling (&next);
+#ifdef TEMPLATES
+          if ((elType.ElTypeNum == Template_EL_useEl ||
+                    elType.ElTypeNum == Template_EL_useSimple) &&
+                   !strcmp (TtaGetSSchemaName (elType.ElSSchema), "Template"))
+            // Ignore the template use element
+            next = TtaGetFirstChild (next);
+          else
+#endif /* TEMPLATES */
+            TtaNextSibling (&next);
         }
       if (DocumentTypes[doc] != docSource)
         TtaChangeWindowTitle (doc, 0, text, UTF_8);
