@@ -2,6 +2,7 @@
 #
 # This script install Gnome/Kde integration for Amaya
 # Stephane Gully, 2005
+# Irene Vatton, 2007
 #
 
 CP="@CP@"

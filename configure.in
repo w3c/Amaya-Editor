@@ -10,7 +10,7 @@ dnl    GENERIC AUTOCONF STUFF : GUESS INFORMATIONS ON SYSTEM SETUP
 dnl
 dnl  ***************************************************************
 
-AC_PREREQ(2.53)
+AC_PREREQ(2.54)
 AC_INIT(thotlib/internals/h/constpiv.h)
 AC_REVISION
 
@@ -618,12 +618,12 @@ fi # with_wx = no
 
 # the wx version
 AMAYAWX_MAJVER=9
-AMAYAWX_MINVER=53
+AMAYAWX_MINVER=54
 AMAYAWX_SUBVER=0
 
 #the old version (to remove when switching on wx)
 AMAYA_MAJVER=8
-AMAYA_MINVER=53
+AMAYA_MINVER=54
 AMAYA_SUBVER=0
 
 if test "$with_wx" = "yes" ; then

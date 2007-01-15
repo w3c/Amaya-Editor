@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2005
+ *  (c) COPYRIGHT INRIA, 1996-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1328,6 +1328,8 @@ void ListAbsBoxes (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
             fprintf (fileDescriptor, " BLOCK");
           else if (pBox->BxType == BoFloatBlock)
             fprintf (fileDescriptor, " FLOAT_BLOCK");
+          else if (pBox->BxType == BoCellBlock)
+            fprintf (fileDescriptor, " CELL_BLOCK");
           else if (pBox->BxType == BoTable)
             fprintf (fileDescriptor, " TABLE");
           else if (pBox->BxType == BoColumn)
