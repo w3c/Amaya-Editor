@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1999-2005
+ *  (c) COPYRIGHT INRIA and W3C, 1999-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -4365,39 +4365,40 @@ void GetDefaultTemplatesConf ()
   ----------------------------------------------------------------------*/
 static void TemplatesCallbackDialog (int ref, int typedata, char *data)
 {
-    printf("TemplatesCallbackDialog : %d %d (%d)\n", ref, ref-TemplatesBase, (int)data);
-
-    long val;
-    if (ref==-1)
+  uintptr_t  val;
+#ifdef AMAYA_DEBUG
+  printf("TemplatesCallbackDialog : %d %d (%d)\n", ref, ref-TemplatesBase,
+         (uintptr_t)data);
+#endif /* AMAYA_DEBUG */
+  if (ref==-1)
     {
     }
-    else
+  else
     {
-        val = (long int) data;
-        switch (ref - TemplatesBase)
+      val = (uintptr_t) data;
+      switch (ref - TemplatesBase)
         {
-            case TemplatesMenu:
-                switch (val)
-                {
-                    case 0: /* CANCEL */
-                        TtaDestroyDialogue (ref);
-                        break;
-                    case 1: /* OK */
-                        SetTemplatesConf();
-                        TtaDestroyDialogue (ref);
-                        break;
-                    case 2: /* DEFAULT */
-                        GetDefaultTemplatesConf();
-                        break;
-                    default:
-                        break;
-                }
-                break;
+        case TemplatesMenu:
+          switch (val)
+            {
+            case 0: /* CANCEL */
+              TtaDestroyDialogue (ref);
+              break;
+            case 1: /* OK */
+              SetTemplatesConf();
+              TtaDestroyDialogue (ref);
+              break;
+            case 2: /* DEFAULT */
+              GetDefaultTemplatesConf();
+              break;
             default:
-                break;
+              break;
+            }
+          break;
+        default:
+          break;
         }
     }
-
 }
 #endif /* _WX */
 #endif /* TEMPLATES */
