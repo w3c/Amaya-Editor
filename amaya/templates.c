@@ -443,7 +443,76 @@ void UseCreated (NotifyElement *event)
 #endif /* TEMPLATES */
 }
 
+/*----------------------------------------------------------------------
+  Template_IncrementRepeatOccurNumber
+  Increment the number of occurs of a xt:repeat
+  @param el element (xt:repeat)
+  ----------------------------------------------------------------------*/
+void Template_IncrementRepeatOccurNumber(Element el)
+{
+#ifdef TEMPLATES
+  char* current;
+  char  newVal[8];
+  int curVal;
+  
+  current = GetAttributeStringValue(el, Template_ATTR_currentOccurs, NULL);
+  curVal = atoi(current);
+  curVal++;
+  TtaFreeMemory(current);
+  sprintf(newVal, "%d", curVal);
+  SetAttributeStringValue(el, Template_ATTR_currentOccurs, newVal);
+#endif /* TEMPLATES */
+}
 
+/*----------------------------------------------------------------------
+  Template_DecrementRepeatOccurNumber
+  Decrement the number of occurs of a xt:repeat
+  @param el element (xt:repeat)
+  ----------------------------------------------------------------------*/
+void Template_DecrementRepeatOccurNumber(Element el)
+{
+#ifdef TEMPLATES
+  char* current;
+  char  newVal[8];
+  int curVal;
+  
+  current = GetAttributeStringValue(el, Template_ATTR_currentOccurs, NULL);
+  curVal = atoi(current);
+  curVal--;
+  TtaFreeMemory(current);
+  sprintf(newVal, "%d", curVal);
+  SetAttributeStringValue(el, Template_ATTR_currentOccurs, newVal);
+#endif /* TEMPLATES */
+}
+
+
+/*----------------------------------------------------------------------
+  Template_CanInsertRepeatChild
+  Test if a xt:repeat child can be inserted (number between params min and max).
+  @param el element (xt:repeat) to test
+  @return True if an element can be inserted.
+  ----------------------------------------------------------------------*/
+ThotBool Template_CanInsertRepeatChild(Element el)
+{
+#ifdef TEMPLATES
+  char* max;
+  char* current;
+  int maxVal, curVal;
+  
+  max = GetAttributeStringValue(el, Template_ATTR_maxOccurs, NULL);
+  if(!strcmp(max, "*")){
+    return TRUE;
+  }
+
+  current = GetAttributeStringValue(el, Template_ATTR_currentOccurs, NULL);
+  curVal = atoi(current);
+  maxVal = atoi(max);
+
+  return curVal<maxVal;
+
+#endif /* TEMPLATES */
+  return FALSE;
+}
 
 /*----------------------------------------------------------------------
   Template_InsertUseChildren
@@ -461,8 +530,6 @@ Element Template_InsertUseChildren(Document doc, Element el, Declaration dec)
   Element current = NULL;
   Element child   = NULL;
   char*     attrCurrentTypeValue;
-  Attribute attrCurrentType;
-  AttributeType attType;
 
   switch (dec->nature)
   {
@@ -507,14 +574,6 @@ Element Template_InsertUseChildren(Document doc, Element el, Declaration dec)
       break;   
   }
   
-//  /* Select the first modifiable element. */
-//  if(newEl)
-//  {
-//    child = GetFirstEditableElement(newEl);
-//    if(child)
-//      TtaSelectElement(doc, child);
-//  }
-  
 #endif /* TEMPLATES */
   return newEl;
 }
@@ -536,8 +595,6 @@ Element Template_InsertRepeatChildAfter(Document doc, Element el, Declaration de
   Element useFirst; /* First xt:use of the repeat.*/
   Element use;      /* xt:use to insert.*/
   ElementType useType;  /* type of xt:use.*/
-  Attribute useTypesAttr; /* xt:types attribute.*/
-  AttributeType useTypesAttrType; /* Type of xt:types attribute.*/
   
   /* Copy xt:use with xt:types param */
   useFirst = TtaGetFirstChild(el);
@@ -555,6 +612,8 @@ Element Template_InsertRepeatChildAfter(Document doc, Element el, Declaration de
   {
     TtaInsertSibling(use, useFirst, TRUE, doc);
   }
+  
+  Template_IncrementRepeatOccurNumber(el);
   
   return use;
   
@@ -686,35 +745,48 @@ ThotBool RepeatButtonClicked (NotifyElement *event)
   }
   if(repeatEl)
   {
-    firstEl = TtaGetFirstChild(repeatEl);
-    types = GetAttributeStringValue(firstEl, Template_ATTR_types, NULL);
-    
-    char* listtypes = Template_ExpandTypes(t, types);
-    char* result = QueryStringFromMenu(doc, listtypes);
-    if(result)
+    if(Template_CanInsertRepeatChild(repeatEl))
     {
-      decl = GetDeclaration(t, result);
-      if(decl)
+      firstEl = TtaGetFirstChild(repeatEl);
+      types = GetAttributeStringValue(firstEl, Template_ATTR_types, NULL);
+      
+      char* listtypes = Template_ExpandTypes(t, types);
+      char* result = QueryStringFromMenu(doc, listtypes);
+      if(result)
       {
-        oldStructureChecking = TtaGetStructureChecking (doc);
-        TtaSetStructureChecking (FALSE, doc);
-        
-        if(el==repeatEl)
-          newEl = Template_InsertRepeatChildAfter(doc, repeatEl, decl, NULL);
-        else
-          newEl = Template_InsertRepeatChildAfter(doc, repeatEl, decl, el);
-        
-        TtaSetStructureChecking (oldStructureChecking, doc);
-        
-        firstEl = GetFirstEditableElement(newEl);
-        if(firstEl)
-          TtaSelectElement (doc, firstEl);
-        else
-          TtaSelectElement (doc, newEl);
+        decl = GetDeclaration(t, result);
+        if(decl)
+        {
+          oldStructureChecking = TtaGetStructureChecking (doc);
+          TtaSetStructureChecking (FALSE, doc);
+          
+          if(el==repeatEl)
+            newEl = Template_InsertRepeatChildAfter(doc, repeatEl, decl, NULL);
+          else
+            newEl = Template_InsertRepeatChildAfter(doc, repeatEl, decl, el);
+          
+          TtaSetStructureChecking (oldStructureChecking, doc);
+          
+          firstEl = GetFirstEditableElement(newEl);
+          if(firstEl)
+          {
+            TtaSelectElement (doc, firstEl);
+            TtaSetStatusSelectedElement(doc, view, firstEl);
+          }
+          else
+          {
+            TtaSelectElement (doc, newEl);
+            TtaSetStatusSelectedElement(doc, view, newEl);
+          }
+        }
       }
+      TtaFreeMemory(listtypes);
+      TtaFreeMemory(result);
     }
-    TtaFreeMemory(listtypes);
-    TtaFreeMemory(result);
+    else /* if(Template_CanInsertRepeatChild(repeatEl)) */
+    {
+      TtaSetStatus(doc, view, TtaGetMessage (AMAYA, AM_NUMBER_OCCUR_HAVE_MAX), NULL);
+    }
   }
   return TRUE; /* don't let Thot perform normal operation */
 #endif /* TEMPLATES */
@@ -733,8 +805,6 @@ ThotBool UseButtonClicked (NotifyElement *event)
   ElementType     elType;
   XTigerTemplate  t;
   Declaration     decl;
-  Element         useEl;
-  Element         repeatEl;
   Element         firstEl;
   Element         newEl = NULL;
   char*           types;
@@ -777,9 +847,15 @@ ThotBool UseButtonClicked (NotifyElement *event)
         
         firstEl = GetFirstEditableElement(newEl);
         if(firstEl)
+        {
           TtaSelectElement (doc, firstEl);
+          TtaSetStatusSelectedElement(doc, view, firstEl);
+        }
         else
+        {
           TtaSelectElement (doc, newEl);
+          TtaSetStatusSelectedElement(doc, view, newEl);
+        }
       }
     }
     TtaFreeMemory(listtypes);

@@ -392,7 +392,9 @@
 390 **Template repositories
 391 **Templates
 392 **Number of occurrences
-393 **Check duplicated IDs
-394 **Add the xsl stylesheet for MathML elements
-395 **Select the operator
-396 **Compound document
+393 **Already have the maximum number of occurrences
+394 **Already have the minimum number of occurrences
+395 **Check duplicated IDs
+396 **Add the xsl stylesheet for MathML elements
+397 **Select the operator
+398 **Compound document

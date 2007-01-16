@@ -392,7 +392,9 @@
 390 Répertoires de modèles
 391 Modèles
 392 Nombre d'occurrences
-393 Vérifier les IDs dupliqués
-394 Ajouter la feuille xsl pour les éléments MathML
-395 Choisir l'opérateur
-396 Document composé
+393 Nombre maximal d'occurrences atteint
+394 Nombre minimum d'occurrences atteint
+395 Vérifier les IDs dupliqués
+396 Ajouter la feuille xsl pour les éléments MathML
+397 Choisir l'opérateur
+398 Document composé

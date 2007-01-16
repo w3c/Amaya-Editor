@@ -5199,6 +5199,12 @@
 <label define="AM_NUMBER_OCCUR">
 <message xml:lang="en">Number of occurrences</message>
 <message xml:lang="fr">Nombre d'occurrences</message></label>
+<label define="AM_NUMBER_OCCUR_HAVE_MAX">
+<message xml:lang="en">Already have the maximum number of occurrences</message>
+<message xml:lang="fr">Nombre maximal d'occurrences atteint</message></label>
+<label define="AM_NUMBER_OCCUR_HAVE_MIN">
+<message xml:lang="en">Already have the minimum number of occurrences</message>
+<message xml:lang="fr">Nombre minimum d'occurrences atteint</message></label>
 <label define="AM_WARNIDS">
 <message xml:lang="en">Check duplicated IDs</message>
 <message xml:lang="fr">Vérifier les IDs dupliqués</message></label>

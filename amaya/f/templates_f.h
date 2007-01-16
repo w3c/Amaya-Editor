@@ -24,6 +24,9 @@ extern void giveItems ( char *text,
                         int *nbitems );
 extern ThotBool UseToBeCreated ( NotifyElement *event );
 extern void UseCreated ( NotifyElement *event );
+extern void Template_IncrementRepeatOccurNumber ( Element el );
+extern void Template_DecrementRepeatOccurNumber ( Element el );
+extern ThotBool Template_CanInsertRepeatChild ( Element el );
 extern Element Template_InsertUseChildren ( Document doc,
                                             Element el,
                                             Declaration dec );
@@ -64,6 +67,9 @@ extern void giveItems ( char *text,
                           int *nbitems );
 extern ThotBool UseToBeCreated ( NotifyElement *event );
 extern void UseCreated ( NotifyElement *event );
+extern void Template_IncrementRepeatOccurNumber ( Element el );
+extern void Template_DecrementRepeatOccurNumber ( Element el );
+extern ThotBool Template_CanInsertRepeatChild ( Element el );
 extern Element Template_InsertUseChildren ( Document doc,
                                               Element el,
                                               Declaration dec );
