@@ -1293,7 +1293,22 @@ void *TtaCopyTransform(void *void_pPa)
       current->TransType = pPa->TransType;    
       switch (pPa->TransType)
         {
+        case PtElScale:
+        case PtElTranslate:
+        case PtElAnimTranslate:
+          current->XScale = pPa->XScale;	  
+          current->YScale = pPa->YScale;	  
+          break;
+        case PtElViewBox:
+          current->VbXTranslate = pPa->VbXTranslate;
+          current->VbYTranslate = pPa->VbYTranslate;
+          current->VbWidth = pPa->VbWidth;
+          current->VbHeight = pPa->VbHeight;
+          current->VbAspectRatio = pPa->VbAspectRatio;
+          current->VbMeetOrSlice = pPa->VbMeetOrSlice;
+          break;
         case PtElRotate:
+        case PtElAnimRotate:
           current->XRotate = pPa->XRotate;	  
           current->YRotate = pPa->YRotate;	  
           current->TrAngle = pPa->TrAngle;
@@ -1311,8 +1326,6 @@ void *TtaCopyTransform(void *void_pPa)
           current->TrFactor = pPa->TrFactor;
           break;	  
         default:
-          current->XScale = pPa->XScale;	  
-          current->YScale = pPa->YScale;	  
           break;
         }	       
       if (pPa->Next)
