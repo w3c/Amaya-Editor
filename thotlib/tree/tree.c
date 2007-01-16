@@ -3477,6 +3477,14 @@ void CopyIncludedElem (PtrElement pEl, PtrDocument pDoc)
           CopyAttributes (pSource, pEl, pDoc, pDoc, TRUE, TRUE);
           /* we copy the specific presentation rules */
           CopyPresRules (pSource, pEl);
+#ifdef _GL
+          if (pSource->ElAnimation)
+            pEl->ElAnimation = TtaCopyAnim (pSource->ElAnimation);
+          if (pSource->ElTransform)
+            pEl->ElTransform = (Transform*)TtaCopyTransform (pSource->ElTransform);
+          /* if (pSource->ElGradient)
+             pEl->ElGradient = TtaCopyGradient (pSource->ElGradient); */
+#endif /* _GL */
           if (pEl->ElTerminal)
             switch (pSource->ElLeafType)
               {

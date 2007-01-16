@@ -1221,7 +1221,13 @@ void      SVGElementCreated (Element el, Document doc)
   int           align, meetOrSlice;
 
   elType = TtaGetElementType (el);
-  if (elType.ElTypeNum == SVG_EL_SVG)
+  if (elType.ElTypeNum == SVG_EL_SVG ||
+      elType.ElTypeNum == SVG_EL_symbol_ ||
+      elType.ElTypeNum == SVG_EL_image ||
+      elType.ElTypeNum == SVG_EL_foreignObject ||
+      elType.ElTypeNum == SVG_EL_marker ||
+      elType.ElTypeNum == SVG_EL_pattern ||
+      elType.ElTypeNum == SVG_EL_view)
     /* process attributes preserveAspectRatio and viewBox */
     {
       attrType.AttrSSchema = elType.ElSSchema;

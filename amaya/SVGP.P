@@ -391,8 +391,8 @@ RULES
         BEGIN
         CreateBefore (ElementName);
         CreateWith (VerticalLine);
-        Width: Enclosed . Width;
-        Height: Enclosed . Height;
+        Width: Enclosing . Width;
+        Height: Enclosing . Height;
         IN Structure_view BEGIN
                 if within use_
                     Visibility: 0;
@@ -404,7 +404,7 @@ RULES
         IN Alternate_view BEGIN
                 HorizPos: Left = Enclosing . Left + 0.8;
                 Width: Enclosing . Width - 0.8;
-                 END;
+                END;
         END;
 
    defs:
