@@ -14,6 +14,8 @@
 #include "amaya.h"
 #include "document.h"
 
+#include "undo.h"
+
 #include "containers.h"
 #include "Elemlist.h"
 #include "templates.h"
@@ -612,6 +614,8 @@ Element Template_InsertRepeatChildAfter(Document doc, Element el, Declaration de
   {
     TtaInsertSibling(use, useFirst, TRUE, doc);
   }
+
+  TtaRegisterElementCreate(use, doc);
   
   Template_IncrementRepeatOccurNumber(el);
   
@@ -656,6 +660,12 @@ Element Template_InsertRepeatChild(Document doc, Element el, Declaration decl, i
 }
 
 #ifdef TEMPLATES
+/*----------------------------------------------------------------------
+  QueryMenu
+  Show a context menu to query a choice.
+  @param items space-separated choice list string.
+  @return The choosed item 0-based index or -1 if none. 
+  ----------------------------------------------------------------------*/
 static int QueryMenu(Document doc, char* items)
 {
   int nbitems, size;
@@ -676,6 +686,12 @@ static int QueryMenu(Document doc, char* items)
   return ReturnOption;
 }
 
+/*----------------------------------------------------------------------
+  QueryStringFromMenu
+  Show a context menu to query a choice.
+  @param items space-separated choice list string.
+  @return The choosed item string or NULL if none.
+  ----------------------------------------------------------------------*/
 static char* QueryStringFromMenu(Document doc, char* items)
 {
   int nbitems, size;
@@ -757,14 +773,19 @@ ThotBool RepeatButtonClicked (NotifyElement *event)
         decl = GetDeclaration(t, result);
         if(decl)
         {
+          /* Prepare insertion.*/          
           oldStructureChecking = TtaGetStructureChecking (doc);
           TtaSetStructureChecking (FALSE, doc);
+          TtaOpenUndoSequence(doc, NULL, NULL, 0, 0);
           
+          /* Insert. */
           if(el==repeatEl)
             newEl = Template_InsertRepeatChildAfter(doc, repeatEl, decl, NULL);
           else
             newEl = Template_InsertRepeatChildAfter(doc, repeatEl, decl, el);
-          
+            
+          /* Finish insertion.*/
+          TtaCloseUndoSequence(doc);
           TtaSetStructureChecking (oldStructureChecking, doc);
           
           firstEl = GetFirstEditableElement(newEl);
@@ -802,6 +823,7 @@ ThotBool UseButtonClicked (NotifyElement *event)
 #ifdef TEMPLATES
   Document        doc = event->document;
   Element         el = event->element;
+  Element         child;
   ElementType     elType;
   XTigerTemplate  t;
   Declaration     decl;
@@ -838,11 +860,21 @@ ThotBool UseButtonClicked (NotifyElement *event)
       decl = GetDeclaration(t, result);
       if(decl)
       {
+        /* Prepare insertion.*/
         oldStructureChecking = TtaGetStructureChecking (doc);
         TtaSetStructureChecking (FALSE, doc);
+        TtaOpenUndoSequence(doc, NULL, NULL, 0, 0);
         
+        /* Insert */
         newEl = Template_InsertUseChildren(doc, el, decl);
         
+        for(child = TtaGetFirstChild(newEl); child; TtaNextSibling(&child))
+        {
+          TtaRegisterElementCreate(child, doc);
+        }
+        
+        /* Finish insertion. */
+        TtaCloseUndoSequence(doc);
         TtaSetStructureChecking (oldStructureChecking, doc);
         
         firstEl = GetFirstEditableElement(newEl);
