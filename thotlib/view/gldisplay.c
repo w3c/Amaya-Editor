@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2005
+ *  (c) COPYRIGHT INRIA, 1996-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1569,7 +1569,7 @@ void DrawPath (int frame, int thick, int style, int x, int y,
 
 /*----------------------------------------------------------------------
   DrawOval draw a rectangle with rounded corners.
-  Parameters fg, bg, and pattern are for drawing
+  ttern are for drawing
   color, background color and fill pattern.
   ----------------------------------------------------------------------*/
 void DrawOval (int frame, int thick, int style, int x, int y, int width,
@@ -1762,58 +1762,148 @@ void DrawEllips (int frame, int thick, int style, int x, int y, int width,
 }
 
 /*----------------------------------------------------------------------
-  DrawHorizontalLine draw a horizontal line aligned top center or bottom
-  depending on align value.
+  DrawHorizontalLine draw a horizontal line aligned top (0), center (1)
+  or bottom (2) depending on align value.
+  The style parameter is dotted (3), dashed (4), solid (5), etc.
   The parameter fg indicates the drawing color.
   ----------------------------------------------------------------------*/
 void DrawHorizontalLine (int frame, int thick, int style, int x, int y,
                          int l, int h, int align, int fg)
 {
+  ThotPoint           point[4];
   int        Y;
 
   if (thick > 0 && fg >= 0)
     {
       y += FrameTable[frame].FrTopMargin;
-
-      if (align == 1)
-        Y = y + (h - thick) / 2;
-      else if (align == 2)
-        Y = y + h - (thick + 1) / 2;
-      else
-        Y = y + thick / 2;
-
-      /* x += thick / 2; */
-      /*       l -= thick; */
+      if (style < 5)
+	{
+	  if (align == 1)
+	    Y = y + (h - thick) / 2;// middle
+	  else if (align == 2)
+	    Y = y + h - (thick + 1) / 2;// bottom
+	  else
+	    Y = y + thick / 2;// top
             
-      InitDrawing (style, thick, fg);
-      DoDrawOneLine (frame, x, Y, x + l, Y);
+	  InitDrawing (style, thick, fg);
+	  DoDrawOneLine (frame, x, Y, x + l, Y);
+	}
+      else
+	{
+	  thick--;
+	  if (align == 1)
+	    {
+	      // middle
+	      point[0].x = x;
+	      point[0].y = y + (h - thick) / 2;
+	      point[1].x = x + l;
+	      point[1].y = y + (h - thick) / 2;
+	      point[2].x = x + l;
+	      point[2].y = y + (h + thick) / 2;
+	      point[3].x = x;
+	      point[3].y = y + (h + thick) / 2;
+	    }
+	  else if (align == 2)
+	    {
+	      // bottom
+	      point[0].x = x + thick;
+	      point[0].y = y + h - thick;
+	      point[1].x = x + l - thick;
+	      point[1].y = y + h - thick;
+	      point[2].x = x + l;
+	      point[2].y = y + h;
+	      point[3].x = x;
+	      point[3].y = y + h;
+	    }
+	  else
+	    {
+	      // top
+	      point[0].x = x;
+	      point[0].y = y;
+	      point[1].x = x + l;
+	      point[1].y = y;
+	      point[2].x = x + l - thick;
+	      point[2].y = y + thick;
+	      point[3].x = x + thick;
+	      point[3].y = y + thick;
+	    }
+
+	  GL_SetForeground (fg, TRUE);
+	  GL_DrawPolygon (point, 4);
+	}
     }
 }
+
 /*----------------------------------------------------------------------
-  DrawVerticalLine draw a vertical line aligned left center or right
-  depending on align value.
-  parameter fg indicates the drawing color
+  DrawVerticalLine draw a vertical line aligned top (0), center (1)
+  or bottom (2) depending on align value.
+  The style parameter is dotted (3), dashed (4), solid (5), etc.
+  The parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
 void DrawVerticalLine (int frame, int thick, int style, int x, int y,
                        int l, int h, int align, int fg)
 {
+  ThotPoint           point[4];
   int        X;
 
   if (thick > 0 && fg >= 0)
     {
-      if (align == 1)
-        X = x + (l - thick) / 2;
-      else if (align == 2)
-        X = x + l - (thick + 1) / 2;
-      else
-        X = x + thick / 2;
-      
-      /* y += thick / 2; */
-      /*       h -= thick; */
-
       y += FrameTable[frame].FrTopMargin;
-      InitDrawing (style, thick, fg);
-      DoDrawOneLine (frame, X, y, X, y + h);
+      if (style < 5)
+	{
+	  if (align == 1)
+	    X = x + (l - thick) / 2;// midle
+	  else if (align == 2)
+	    X = x + l - (thick + 1) / 2;// right
+	  else
+	    X = x + thick / 2;// left
+            
+	  InitDrawing (style, thick, fg);
+	  DoDrawOneLine (frame, X, y, X, y + h);
+	}
+      else
+	{
+	  thick--;
+	  if (align == 1)
+	    {
+	      // midle
+	      point[0].x = x + (l - thick) / 2;
+	      point[0].y = y;
+	      point[1].x = x + (l + thick) / 2;
+	      point[1].y = y;
+	      point[2].x = x + (l + thick) / 2;
+	      point[2].y = y + h;
+	      point[3].x = x + (l - thick) / 2;
+	      point[3].y = y + h;
+	    }
+	  else if (align == 2)
+	    {
+	      // right
+	      point[0].x = x + l - thick;
+	      point[0].y = y + thick;
+	      point[1].x = x + l;
+	      point[1].y = y;
+	      point[2].x = x + l;
+	      point[2].y = y + h;
+	      point[3].x = x + l - thick;
+	      point[3].y = y + h - thick;
+	    }
+	  else
+	    {
+	      // left
+	      point[0].x = x;
+	      point[0].y = y;
+	      point[1].x = x + thick;
+	      point[1].y = y + thick;
+	      point[2].x = x + thick;
+	      point[2].y = y + h - thick;
+	      point[3].x = x;
+	      point[3].y = y + h;
+	    }
+      
+	  GL_SetForeground (fg, TRUE);
+	  GL_DrawPolygon (point, 4);
+	}
     }
 }
 
