@@ -31,78 +31,6 @@ typedef struct _InstantiateCtxt
 } InstantiateCtxt;
 #endif /* TEMPLATES */
 
-typedef struct _AttSearch
-{
-  int   att;
-  int   type;
-} AttSearch;
-
-static AttSearch    URL_attr_tab[] =
-  {
-    {HTML_ATTR_HREF_, XHTML_TYPE},
-    {HTML_ATTR_codebase, XHTML_TYPE},
-    {HTML_ATTR_Script_URL, XHTML_TYPE},
-    {HTML_ATTR_SRC, XHTML_TYPE},
-    {HTML_ATTR_data, XHTML_TYPE},
-    {HTML_ATTR_background_, XHTML_TYPE},
-    {HTML_ATTR_Style_, XHTML_TYPE},
-    {HTML_ATTR_cite, XHTML_TYPE},
-    //{XLink_ATTR_href_, XLINK_TYPE},
-    {MathML_ATTR_style_, MATH_TYPE},
-#ifdef _SVG
-    {SVG_ATTR_style_, SVG_TYPE},
-    {SVG_ATTR_xlink_href, SVG_TYPE}
-#endif
-  };
-
-/*----------------------------------------------------------------------
-  RegisterURLs
-  ----------------------------------------------------------------------*/
-void RegisterURLs(Document doc, Element el)
-{
-#ifdef TEMPLATES
-  SSchema             XHTMLSSchema, MathSSchema, SVGSSchema, XLinkSSchema;
-  AttributeType       attrType;
-  Attribute           attr;
-  int                 max;
-
-  XHTMLSSchema = TtaGetSSchema ("HTML", doc);
-  MathSSchema = TtaGetSSchema ("MathML", doc);
-  SVGSSchema = TtaGetSSchema ("SVG", doc);
-  XLinkSSchema = TtaGetSSchema ("XLink", doc);
-
-  max = sizeof (URL_attr_tab) / sizeof (AttSearch);
-
-  for(int i=0; i<max; i++)
-    {
-      attrType.AttrTypeNum = URL_attr_tab[i].att;
-      switch (URL_attr_tab[i].type)
-        {
-        case XHTML_TYPE:
-          attrType.AttrSSchema = XHTMLSSchema;
-          break;
-        case MATH_TYPE:
-          attrType.AttrSSchema = MathSSchema;
-          break;
-        case SVG_TYPE:
-          attrType.AttrSSchema = SVGSSchema;
-          break;
-        case XLINK_TYPE:
-          attrType.AttrSSchema = XLinkSSchema;
-          break;
-        default:
-          attrType.AttrSSchema = NULL;
-        }
-
-      attr = TtaGetAttribute(el, attrType);
-      if (attr!=NULL)      
-        TtaRegisterAttributeReplace(attr, el, doc);
-    }  
-
-  for (Element child = TtaGetFirstChild (el); child; TtaNextSibling (&child))
-    RegisterURLs (doc, child);
-#endif /* TEMPLATES*/
-}
 
 /*----------------------------------------------------------------------
   CreateInstance
@@ -147,7 +75,6 @@ void  CreateInstance(char *templatePath, char *instancePath)
       else
         docType = docXml;
 
-      RegisterURLs (doc, root);
       SetRelativeURLs (doc, instancePath);
       
       switch (docType)

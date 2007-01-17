@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2005
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -63,6 +63,9 @@ extern HINSTANCE    hInstance;
 #include "wxdialogapi_f.h"
 #include "appdialogue_wx.h"
 #endif /* _WX */
+#ifdef TEMPLATES
+#include "Template.h"
+#endif /* TEMPLATES */
 
 #define StdDefaultName "Overview.html"
 static char        *DefaultName;
@@ -390,13 +393,17 @@ ThotBool CheckValidID (NotifyAttribute *event)
 
 
 /*----------------------------------------------------------------------
-  SetRelativeURLs: try to make relative URLs within an HTML document.
+  SetRelativeURLs updates all URLs of the current document according to
+  the new path. If possible, new URLs will be relative to this new path.
   ----------------------------------------------------------------------*/
 void SetRelativeURLs (Document doc, char *newpath)
 {
   SSchema             XHTMLSSchema, MathSSchema, SVGSSchema, XLinkSSchema;
+#ifdef TEMPLATES
+  SSchema             TemplateSSchema = TtaGetSSchema ("Template", doc);
+#endif /* TEMPLATES */
   Element             el, root, content, next;
-  ElementType         elType;
+  ElementType         elType, contentType;
   Attribute           attr;
   AttributeType       attrType;
   Language            lang;
@@ -416,7 +423,7 @@ void SetRelativeURLs (Document doc, char *newpath)
   XLinkSSchema = TtaGetSSchema ("XLink", doc);
   root = TtaGetMainRoot (doc);
 
-  /* handle style elements */
+  /* Handle style elements */
   elType = TtaGetElementType (root);
   if (elType.ElSSchema == XHTMLSSchema || elType.ElSSchema == SVGSSchema)
     {
@@ -430,23 +437,55 @@ void SetRelativeURLs (Document doc, char *newpath)
     el = NULL;
   while (el)
     {
-      if (elType.ElTypeNum == HTML_EL_STYLE_)
-        content = TtaGetFirstChild (el);
-      else
-        content = NULL;
-      if (content != NULL)
+      /* this is a style element */
+      content = TtaGetFirstChild (el);
+      if (content)
+        {
+          contentType = TtaGetElementType (content);
+#ifdef TEMPLATES
+          if ((elType.ElTypeNum == Template_EL_useEl ||
+               elType.ElTypeNum == Template_EL_useSimple) &&
+              elType.ElSSchema == TemplateSSchema)
+            {
+              // Go inside the template use element
+              content = TtaGetFirstChild (content);
+              contentType = TtaGetElementType (content);
+            }
+#endif /* TEMPLATES */
+        }
+      if (content)
         {
           len = MAX_CSS_LENGTH;
-          TtaGiveTextContent (content, (unsigned char *)CSSbuffer, &len, &lang);
-          CSSbuffer[MAX_CSS_LENGTH] = EOS;
-          new_url = UpdateCSSBackgroundImage (DocumentURLs[doc], newpath,
-                                              NULL, CSSbuffer);
-          if (new_url != NULL)
+          if (contentType.ElTypeNum == HTML_EL_TEXT_UNIT)
+            // the style content is not inside a comment
+            next = content;
+          else
             {
-              /* register the modification to be able to undo it */
-              TtaRegisterElementReplace (content, doc);
-              TtaSetTextContent (content, (unsigned char *)new_url, lang, doc);
-              TtaFreeMemory (new_url);
+              // manange text units inside the comment
+              contentType.ElTypeNum = HTML_EL_TEXT_UNIT;
+              next = TtaSearchTypedElementInTree (contentType, SearchForward, next,
+                                                  content);
+            }
+
+          while (next)
+            {
+              TtaGiveTextContent (next, (unsigned char *)CSSbuffer, &len, &lang);
+              CSSbuffer[MAX_CSS_LENGTH] = EOS;
+              new_url = UpdateCSSBackgroundImage (DocumentURLs[doc], newpath,
+                                                  NULL, CSSbuffer);
+              if (new_url)
+                {
+                  /* register the modification to be able to undo it */
+                  TtaRegisterElementReplace (next, doc);
+                  TtaSetTextContent (next, (unsigned char *)new_url, lang, doc);
+                  TtaFreeMemory (new_url);
+                }
+              if (next == content)
+                next = NULL;
+              else
+                // next text unit
+                next = TtaSearchTypedElementInTree (contentType, SearchForward, next,
+                                                    content);
             }
         }
 
@@ -461,7 +500,7 @@ void SetRelativeURLs (Document doc, char *newpath)
         el = NULL;
     }
 
-  /* manage URLs and SRCs attributes */
+  /* Manage URLs and SRCs attributes */
   max = sizeof (URL_attr_tab) / sizeof (AttSearch);
   for (index = 0; index < max; index++)
     {
