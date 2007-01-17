@@ -1776,61 +1776,61 @@ void DrawHorizontalLine (int frame, int thick, int style, int x, int y,
   if (thick > 0 && fg >= 0)
     {
       y += FrameTable[frame].FrTopMargin;
-      if (style < 5)
-	{
-	  if (align == 1)
-	    Y = y + (h - thick) / 2;// middle
-	  else if (align == 2)
-	    Y = y + h - (thick + 1) / 2;// bottom
-	  else
-	    Y = y + thick / 2;// top
+      if (style < 5 || thick < 2)
+        {
+          if (align == 1)
+            Y = y + (h - thick) / 2;// middle
+          else if (align == 2)
+            Y = y + h - (thick + 1) / 2;// bottom
+          else
+            Y = y + thick / 2;// top
             
-	  InitDrawing (style, thick, fg);
-	  DoDrawOneLine (frame, x, Y, x + l, Y);
-	}
+          InitDrawing (style, thick, fg);
+          DoDrawOneLine (frame, x, Y, x + l, Y);
+        }
       else
-	{
-	  thick--;
-	  if (align == 1)
-	    {
-	      // middle
-	      point[0].x = x;
-	      point[0].y = y + (h - thick) / 2;
-	      point[1].x = x + l;
-	      point[1].y = y + (h - thick) / 2;
-	      point[2].x = x + l;
-	      point[2].y = y + (h + thick) / 2;
-	      point[3].x = x;
-	      point[3].y = y + (h + thick) / 2;
-	    }
-	  else if (align == 2)
-	    {
-	      // bottom
-	      point[0].x = x + thick;
-	      point[0].y = y + h - thick;
-	      point[1].x = x + l - thick;
-	      point[1].y = y + h - thick;
-	      point[2].x = x + l;
-	      point[2].y = y + h;
-	      point[3].x = x;
-	      point[3].y = y + h;
-	    }
-	  else
-	    {
-	      // top
-	      point[0].x = x;
-	      point[0].y = y;
-	      point[1].x = x + l;
-	      point[1].y = y;
-	      point[2].x = x + l - thick;
-	      point[2].y = y + thick;
-	      point[3].x = x + thick;
-	      point[3].y = y + thick;
-	    }
+        {
+          thick--;
+          if (align == 1)
+            {
+              // middle
+              point[0].x = x;
+              point[0].y = y + (h - thick) / 2;
+              point[1].x = x + l;
+              point[1].y = y + (h - thick) / 2;
+              point[2].x = x + l;
+              point[2].y = y + (h + thick) / 2;
+              point[3].x = x;
+              point[3].y = y + (h + thick) / 2;
+            }
+          else if (align == 2)
+            {
+              // bottom
+              point[0].x = x + thick;
+              point[0].y = y + h - thick;
+              point[1].x = x + l - thick;
+              point[1].y = y + h - thick;
+              point[2].x = x + l;
+              point[2].y = y + h;
+              point[3].x = x;
+              point[3].y = y + h;
+            }
+          else
+            {
+              // top
+              point[0].x = x;
+              point[0].y = y;
+              point[1].x = x + l;
+              point[1].y = y;
+              point[2].x = x + l - thick;
+              point[2].y = y + thick;
+              point[3].x = x + thick;
+              point[3].y = y + thick;
+            }
 
-	  GL_SetForeground (fg, TRUE);
-	  GL_DrawPolygon (point, 4);
-	}
+          GL_SetForeground (fg, TRUE);
+          GL_DrawPolygon (point, 4);
+        }
     }
 }
 
@@ -1849,61 +1849,61 @@ void DrawVerticalLine (int frame, int thick, int style, int x, int y,
   if (thick > 0 && fg >= 0)
     {
       y += FrameTable[frame].FrTopMargin;
-      if (style < 5)
-	{
-	  if (align == 1)
-	    X = x + (l - thick) / 2;// midle
-	  else if (align == 2)
-	    X = x + l - (thick + 1) / 2;// right
-	  else
-	    X = x + thick / 2;// left
+      if (style < 5 || thick < 2)
+        {
+          if (align == 1)
+            X = x + (l - thick) / 2;// midle
+          else if (align == 2)
+            X = x + l - (thick + 1) / 2;// right
+          else
+            X = x + thick / 2;// left
             
-	  InitDrawing (style, thick, fg);
-	  DoDrawOneLine (frame, X, y, X, y + h);
-	}
+          InitDrawing (style, thick, fg);
+          DoDrawOneLine (frame, X, y, X, y + h);
+        }
       else
-	{
-	  thick--;
-	  if (align == 1)
-	    {
-	      // midle
-	      point[0].x = x + (l - thick) / 2;
-	      point[0].y = y;
-	      point[1].x = x + (l + thick) / 2;
-	      point[1].y = y;
-	      point[2].x = x + (l + thick) / 2;
-	      point[2].y = y + h;
-	      point[3].x = x + (l - thick) / 2;
-	      point[3].y = y + h;
-	    }
-	  else if (align == 2)
-	    {
-	      // right
-	      point[0].x = x + l - thick;
-	      point[0].y = y + thick;
-	      point[1].x = x + l;
-	      point[1].y = y;
-	      point[2].x = x + l;
-	      point[2].y = y + h;
-	      point[3].x = x + l - thick;
-	      point[3].y = y + h - thick;
-	    }
-	  else
-	    {
-	      // left
-	      point[0].x = x;
-	      point[0].y = y;
-	      point[1].x = x + thick;
-	      point[1].y = y + thick;
-	      point[2].x = x + thick;
-	      point[2].y = y + h - thick;
-	      point[3].x = x;
-	      point[3].y = y + h;
-	    }
+        {
+          thick--;
+          if (align == 1)
+            {
+              // midle
+              point[0].x = x + (l - thick) / 2;
+              point[0].y = y;
+              point[1].x = x + (l + thick) / 2;
+              point[1].y = y;
+              point[2].x = x + (l + thick) / 2;
+              point[2].y = y + h;
+              point[3].x = x + (l - thick) / 2;
+              point[3].y = y + h;
+            }
+          else if (align == 2)
+            {
+              // right
+              point[0].x = x + l - thick;
+              point[0].y = y + thick;
+              point[1].x = x + l;
+              point[1].y = y;
+              point[2].x = x + l;
+              point[2].y = y + h;
+              point[3].x = x + l - thick;
+              point[3].y = y + h - thick;
+            }
+          else
+            {
+              // left
+              point[0].x = x;
+              point[0].y = y;
+              point[1].x = x + thick;
+              point[1].y = y + thick;
+              point[2].x = x + thick;
+              point[2].y = y + h - thick;
+              point[3].x = x;
+              point[3].y = y + h;
+            }
       
-	  GL_SetForeground (fg, TRUE);
-	  GL_DrawPolygon (point, 4);
-	}
+          GL_SetForeground (fg, TRUE);
+          GL_DrawPolygon (point, 4);
+        }
     }
 }
 
