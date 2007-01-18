@@ -4365,17 +4365,17 @@ void GetDefaultTemplatesConf ()
   ----------------------------------------------------------------------*/
 static void TemplatesCallbackDialog (int ref, int typedata, char *data)
 {
-  uintptr_t  val;
+  intptr_t  val;
 #ifdef AMAYA_DEBUG
   printf("TemplatesCallbackDialog : %d %d (%d)\n", ref, ref-TemplatesBase,
-         (uintptr_t)data);
+         (intptr_t)data);
 #endif /* AMAYA_DEBUG */
   if (ref==-1)
     {
     }
   else
     {
-      val = (uintptr_t) data;
+      val = (intptr_t) data;
       switch (ref - TemplatesBase)
         {
         case TemplatesMenu:
