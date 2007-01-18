@@ -1666,6 +1666,7 @@ static char *ParseCSSBorderRight (Element element, PSchema tsch,
       /* get the box color */
       best.typed_data.value = -1;
       best.typed_data.unit = UNIT_REL;
+      best.typed_data.real = FALSE;
       TtaSetStylePresentation (PRBorderRightColor, element, tsch, context, best);
     }
   return (cssRule);

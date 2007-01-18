@@ -166,7 +166,7 @@ static void SetChoiceValue (wxChoice *choice, char *value)
   ----------------------------------------------------------------------*/
 void StyleDlgWX::SetColorTextChanged (int id)
 {
-  wxString            value;
+  wxString            value, svalue;
   unsigned short      red;
   unsigned short      green;
   unsigned short      blue;
@@ -217,6 +217,13 @@ void StyleDlgWX::SetColorTextChanged (int id)
           TtaGiveRGB (buffer, &red, &green, &blue);
           wxColour col( red, green, blue );
           XRCCTRL(*this, "wxID_BUTTON_T_COLOR", wxBitmapButton)->SetBackgroundColour( col );
+          // initialize other values
+          svalue = XRCCTRL(*this, "wxID_CHOICE_T_STYLE", wxChoice)->GetStringSelection();
+          if (svalue.Len() == 0)
+            XRCCTRL(*this, "wxID_CHOICE_T_STYLE", wxChoice)->SetStringSelection(TtaConvMessageToWX("solid"));
+          value = XRCCTRL(*this, "wxID_COMBO_BTOP", wxComboBox)->GetValue();
+          if (value.Len() == 0)
+            XRCCTRL(*this, "wxID_COMBO_BTOP", wxComboBox)->SetValue(TtaConvMessageToWX( "medium" ));
         }
     }
   else if (id == bcolor_id)
@@ -230,6 +237,13 @@ void StyleDlgWX::SetColorTextChanged (int id)
           TtaGiveRGB (buffer, &red, &green, &blue);
           wxColour col( red, green, blue );
           XRCCTRL(*this, "wxID_BUTTON_B_COLOR", wxBitmapButton)->SetBackgroundColour( col );
+          // initialize other values
+          svalue = XRCCTRL(*this, "wxID_CHOICE_B_STYLE", wxChoice)->GetStringSelection();
+          if (svalue.Len() == 0)
+            XRCCTRL(*this, "wxID_CHOICE_B_STYLE", wxChoice)->SetStringSelection(TtaConvMessageToWX("solid"));
+          value = XRCCTRL(*this, "wxID_COMBO_BBOTTOM", wxComboBox)->GetValue();
+          if (value.Len() == 0)
+            XRCCTRL(*this, "wxID_COMBO_BBOTTOM", wxComboBox)->SetValue(TtaConvMessageToWX( "medium" ));
         }
     }
   else if (id == lcolor_id)
@@ -243,6 +257,13 @@ void StyleDlgWX::SetColorTextChanged (int id)
           TtaGiveRGB (buffer, &red, &green, &blue);
           wxColour col( red, green, blue );
           XRCCTRL(*this, "wxID_BUTTON_L_COLOR", wxBitmapButton)->SetBackgroundColour( col );
+          // initialize other values
+          svalue = XRCCTRL(*this, "wxID_CHOICE_L_STYLE", wxChoice)->GetStringSelection();
+          if (svalue.Len() == 0)
+            XRCCTRL(*this, "wxID_CHOICE_L_STYLE", wxChoice)->SetStringSelection(TtaConvMessageToWX("solid"));
+          value = XRCCTRL(*this, "wxID_COMBO_BLEFT", wxComboBox)->GetValue();
+          if (value.Len() == 0)
+            XRCCTRL(*this, "wxID_COMBO_BLEFT", wxComboBox)->SetValue(TtaConvMessageToWX( "medium" ));
         }
     }
   else if (id == rcolor_id)
@@ -256,6 +277,13 @@ void StyleDlgWX::SetColorTextChanged (int id)
           TtaGiveRGB (buffer, &red, &green, &blue);
           wxColour col( red, green, blue );
           XRCCTRL(*this, "wxID_BUTTON_R_COLOR", wxBitmapButton)->SetBackgroundColour( col );
+          // initialize other values
+          svalue = XRCCTRL(*this, "wxID_CHOICE_R_STYLE", wxChoice)->GetStringSelection();
+          if (svalue.Len() == 0)
+            XRCCTRL(*this, "wxID_CHOICE_R_STYLE", wxChoice)->SetStringSelection(TtaConvMessageToWX("solid"));
+          value = XRCCTRL(*this, "wxID_COMBO_BRIGHT", wxComboBox)->GetValue();
+          if (value.Len() == 0)
+            XRCCTRL(*this, "wxID_COMBO_BRIGHT", wxComboBox)->SetValue(TtaConvMessageToWX( "medium" ));
         }
     }
   else if (id == borderc_id)
@@ -269,6 +297,13 @@ void StyleDlgWX::SetColorTextChanged (int id)
           TtaGiveRGB (buffer, &red, &green, &blue);
           wxColour col( red, green, blue );
           XRCCTRL(*this, "wxID_BUTTON_BORDER_COLOR", wxBitmapButton)->SetBackgroundColour( col );
+          // initialize other values
+          svalue = XRCCTRL(*this, "wxID_CHOICE_BORDER_STYLE", wxChoice)->GetStringSelection();
+          if (svalue.Len() == 0)
+            XRCCTRL(*this, "wxID_CHOICE_BORDER_STYLE", wxChoice)->SetStringSelection(TtaConvMessageToWX("solid"));
+          value = XRCCTRL(*this, "wxID_COMBO_B", wxComboBox)->GetValue();
+          if (value.Len() == 0)
+            XRCCTRL(*this, "wxID_COMBO_B", wxComboBox)->SetValue(TtaConvMessageToWX( "medium" ));
         }
     }
 }

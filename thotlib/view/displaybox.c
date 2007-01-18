@@ -1953,9 +1953,8 @@ void DisplayBorders (PtrBox box, PtrAbstractBox pFrom, int frame,
   PtrBox              from;
   PtrAbstractBox      child;
   int                 color;
-  int                 t, b, l, r, pos, dim;
+  int                 t, b, l, r, pos;
   int                 xFrame, yFrame, height, width;
-  unsigned short      red, green, blue;
 
   if (pFrom == NULL || pFrom->AbBox == NULL ||
       pFrom->AbBox->BxType == BoCell)
@@ -2034,18 +2033,6 @@ void DisplayBorders (PtrBox box, PtrAbstractBox pFrom, int frame,
         color = pFrom->AbForeground;
       else
         color = pFrom->AbTopBColor;
-      if (pFrom->AbTopStyle == 10)
-        {
-          /* outset */
-          TtaGiveThotRGB (color, &red, &green, &blue);
-          color = TtaGetThotColor (red | 0xC0, green | 0xC0, blue | 0xC0);
-        }
-      else if (pFrom->AbTopStyle == 9)
-        {
-          /* inset */
-          TtaGiveThotRGB (color, &red, &green, &blue);
-          color = TtaGetThotColor (red & 0x3F, green & 0x3F, blue & 0x3F);
-        }
       DrawHorizontalLine (frame, t, pFrom->AbTopStyle, x, y,
                           w, t, 0, color, box);
     }
@@ -2057,18 +2044,6 @@ void DisplayBorders (PtrBox box, PtrAbstractBox pFrom, int frame,
         color = pFrom->AbForeground;
       else
         color = pFrom->AbLeftBColor;
-      if (pFrom->AbLeftStyle == 10)
-        {
-          /* outset */
-          TtaGiveThotRGB (color, &red, &green, &blue);
-          color = TtaGetThotColor (red | 0xC0, green | 0xC0, blue | 0xC0);
-        }
-      else if (pFrom->AbLeftStyle == 9)
-        {
-          /* inset */
-          TtaGiveThotRGB (color, &red, &green, &blue);
-          color = TtaGetThotColor (red & 0x3F, green & 0x3F, blue & 0x3F);
-        }
       DrawVerticalLine (frame, l, pFrom->AbLeftStyle, x, y,
                         l, h, 0, color, box);
     }
@@ -2080,18 +2055,6 @@ void DisplayBorders (PtrBox box, PtrAbstractBox pFrom, int frame,
         color = pFrom->AbForeground;
       else
         color = pFrom->AbBottomBColor;
-      if (pFrom->AbBottomStyle == 10)
-        {
-          /* outset */
-          TtaGiveThotRGB (color, &red, &green, &blue);
-          color = TtaGetThotColor (red & 0x3F, green & 0x3F, blue & 0x3F);
-        }
-      else if (pFrom->AbBottomStyle == 9)
-        {
-          /* inset */
-          TtaGiveThotRGB (color, &red, &green, &blue);
-          color = TtaGetThotColor (red | 0xC0, green | 0xC0, blue | 0xC0);
-        }
       DrawHorizontalLine (frame, b, pFrom->AbBottomStyle,
                           x, yFrame + height - eb - from->BxBBorder,
                           w, b, 2, color, box);
@@ -2104,18 +2067,6 @@ void DisplayBorders (PtrBox box, PtrAbstractBox pFrom, int frame,
         color = pFrom->AbForeground;
       else
         color = pFrom->AbRightBColor;
-      if (pFrom->AbRightStyle == 10)
-        {
-          /* outset */
-          TtaGiveThotRGB (color, &red, &green, &blue);
-          color = TtaGetThotColor (red & 0x3F, green & 0x3F, blue & 0x3F);
-        }
-      else if (pFrom->AbRightStyle == 9)
-        {
-          /* inset */
-          TtaGiveThotRGB (color, &red, &green, &blue);
-          color = TtaGetThotColor (red | 0xC0, green | 0xC0, blue | 0xC0);
-        }
       DrawVerticalLine (frame, r, pFrom->AbRightStyle,
                         xFrame + width - er - from->BxRBorder, y,
                         r, h, 2, color, box);

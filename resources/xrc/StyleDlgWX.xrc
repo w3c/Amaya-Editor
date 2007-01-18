@@ -863,6 +863,9 @@
                             <content>
                               <item/>
                               <item>auto</item>
+                              <item>medium</item>
+                              <item>thick</item>
+                              <item>thin</item>
                               <item>0px</item>
                               <item>0pt</item>
                               <item>0pc</item>
@@ -965,6 +968,9 @@
                             <content>
                               <item/>
                               <item>auto</item>
+                              <item>medium</item>
+                              <item>thick</item>
+                              <item>thin</item>
                               <item>0px</item>
                               <item>0pt</item>
                               <item>0pc</item>
@@ -1068,6 +1074,9 @@
                             <content>
                               <item/>
                               <item>auto</item>
+                              <item>medium</item>
+                              <item>thick</item>
+                              <item>thin</item>
                               <item>0px</item>
                               <item>0pt</item>
                               <item>0pc</item>
@@ -1171,6 +1180,9 @@
                             <content>
                               <item/>
                               <item>auto</item>
+                              <item>medium</item>
+                              <item>thick</item>
+                              <item>thin</item>
                               <item>0px</item>
                               <item>0pt</item>
                               <item>0pc</item>
@@ -1273,6 +1285,9 @@
                             <content>
                               <item/>
                               <item>auto</item>
+                              <item>medium</item>
+                              <item>thick</item>
+                              <item>thin</item>
                               <item>0px</item>
                               <item>0pt</item>
                               <item>0pc</item>
