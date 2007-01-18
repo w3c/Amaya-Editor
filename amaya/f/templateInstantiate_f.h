@@ -6,8 +6,6 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void RegisterURLs ( Document doc,
-                           Element el );
 extern void CreateInstance ( char *templatePath,
                              char *instancePath );
 extern void InstantiateTemplate_callback ( int newdoc,
@@ -43,8 +41,6 @@ extern void PreInstantiateComponents ( XTigerTemplate t );
 
 #else /* __STDC__ */
 
-extern void RegisterURLs ( Document doc,
-                             Element el );
 extern void CreateInstance ( char *templatePath,
                                char *instancePath );
 extern void InstantiateTemplate_callback ( int newdoc,

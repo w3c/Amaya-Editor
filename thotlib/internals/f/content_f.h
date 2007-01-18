@@ -66,8 +66,7 @@ extern void *TtaCopyTransform ( void *void_pPa );
 extern void *TtaNewBoxTransformTranslate ( float x,
                                            float y );
 extern void *TtaNewTransformTranslate ( float x,
-                                        float y,
-                                        ThotBool viewbox );
+                                        float y );
 extern void *TtaNewTransformAnimTranslate ( float x,
                                             float y );
 extern void *TtaNewTransformAnimRotate ( float angle,
@@ -79,8 +78,13 @@ extern void *TtaNewTransformRotate ( float angle,
 extern void *TtaNewTransformSkewX ( float factor );
 extern void *TtaNewTransformSkewY ( float factor );
 extern void *TtaNewTransformScale ( float x_scale,
-                                    float y_scale,
-                                    ThotBool viewbox );
+                                    float y_scale );
+extern void *TtaNewTransformViewBox ( float x,
+                                      float y,
+                                      float w,
+                                      float h,
+                                      int align,
+                                      int meetOrSlice );
 extern void *TtaNewTransformMatrix ( float a,
                                      float b,
                                      float c,
@@ -150,8 +154,7 @@ extern void *TtaCopyTransform ( void *void_pPa );
 extern void *TtaNewBoxTransformTranslate ( float x,
                                              float y );
 extern void *TtaNewTransformTranslate ( float x,
-                                          float y,
-                                          ThotBool viewbox );
+                                          float y );
 extern void *TtaNewTransformAnimTranslate ( float x,
                                               float y );
 extern void *TtaNewTransformAnimRotate ( float angle,
@@ -163,8 +166,13 @@ extern void *TtaNewTransformRotate ( float angle,
 extern void *TtaNewTransformSkewX ( float factor );
 extern void *TtaNewTransformSkewY ( float factor );
 extern void *TtaNewTransformScale ( float x_scale,
-                                      float y_scale,
-                                      ThotBool viewbox );
+                                      float y_scale );
+extern void *TtaNewTransformViewBox ( float x,
+                                        float y,
+                                        float w,
+                                        float h,
+                                        int align,
+                                        int meetOrSlice );
 extern void *TtaNewTransformMatrix ( float a,
                                        float b,
                                        float c,

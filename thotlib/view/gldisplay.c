@@ -1768,10 +1768,10 @@ void DrawEllips (int frame, int thick, int style, int x, int y, int width,
   The parameter fg indicates the drawing color.
   ----------------------------------------------------------------------*/
 void DrawHorizontalLine (int frame, int thick, int style, int x, int y,
-                         int l, int h, int align, int fg)
+                         int l, int h, int align, int fg, PtrBox box)
 {
-  ThotPoint           point[4];
-  int        Y;
+  ThotPoint  point[4];
+  int        Y, left = x, right = x + l;
 
   if (thick > 0 && fg >= 0)
     {
@@ -1791,6 +1791,20 @@ void DrawHorizontalLine (int frame, int thick, int style, int x, int y,
       else
         {
           thick--;
+          if (box)
+            {
+              left = box->BxClipX + box->BxLMargin + box->BxLBorder;
+              right = box->BxClipX + box->BxClipW - box->BxRMargin - box->BxRBorder;
+            }
+          // check if the top of the box is displayed
+          if (left < x)
+            left = 0;
+          else
+            left = thick;
+          if (right > x + l)
+            right = 0;
+          else
+            right = thick;
           if (align == 1)
             {
               // middle
@@ -1806,9 +1820,9 @@ void DrawHorizontalLine (int frame, int thick, int style, int x, int y,
           else if (align == 2)
             {
               // bottom
-              point[0].x = x + thick;
+              point[0].x = x + left;
               point[0].y = y + h - thick;
-              point[1].x = x + l - thick;
+              point[1].x = x + l - right;
               point[1].y = y + h - thick;
               point[2].x = x + l;
               point[2].y = y + h;
@@ -1822,9 +1836,9 @@ void DrawHorizontalLine (int frame, int thick, int style, int x, int y,
               point[0].y = y;
               point[1].x = x + l;
               point[1].y = y;
-              point[2].x = x + l - thick;
+              point[2].x = x + l - right;
               point[2].y = y + thick;
-              point[3].x = x + thick;
+              point[3].x = x + left;
               point[3].y = y + thick;
             }
 
@@ -1841,10 +1855,10 @@ void DrawHorizontalLine (int frame, int thick, int style, int x, int y,
   The parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
 void DrawVerticalLine (int frame, int thick, int style, int x, int y,
-                       int l, int h, int align, int fg)
+                       int l, int h, int align, int fg, PtrBox box)
 {
-  ThotPoint           point[4];
-  int        X;
+  ThotPoint  point[4];
+  int        X, top = y, bottom = y + h;
 
   if (thick > 0 && fg >= 0)
     {
@@ -1864,6 +1878,20 @@ void DrawVerticalLine (int frame, int thick, int style, int x, int y,
       else
         {
           thick--;
+          if (box)
+            {
+              top = box->BxClipY + box->BxTMargin + box->BxTBorder;
+              bottom = box->BxClipY + box->BxClipH - box->BxBMargin - box->BxBBorder;
+            }
+          // check if the top of the box is displayed
+          if (top < y)
+            top = 0;
+          else
+            top = thick;
+          if (bottom > y + h)
+            bottom = 0;
+          else
+            bottom = thick;
           if (align == 1)
             {
               // midle
@@ -1880,13 +1908,13 @@ void DrawVerticalLine (int frame, int thick, int style, int x, int y,
             {
               // right
               point[0].x = x + l - thick;
-              point[0].y = y + thick;
+              point[0].y = y + top;
               point[1].x = x + l;
               point[1].y = y;
               point[2].x = x + l;
               point[2].y = y + h;
               point[3].x = x + l - thick;
-              point[3].y = y + h - thick;
+              point[3].y = y + h - bottom;
             }
           else
             {
@@ -1894,9 +1922,9 @@ void DrawVerticalLine (int frame, int thick, int style, int x, int y,
               point[0].x = x;
               point[0].y = y;
               point[1].x = x + thick;
-              point[1].y = y + thick;
+              point[1].y = y + top;
               point[2].x = x + thick;
-              point[2].y = y + h - thick;
+              point[2].y = y + h - bottom;
               point[3].x = x;
               point[3].y = y + h;
             }
@@ -1907,35 +1935,6 @@ void DrawVerticalLine (int frame, int thick, int style, int x, int y,
     }
 }
 
-/*----------------------------------------------------------------------
-  DrawDoubleVerticalLine draw a double vertical line aligned left center
-  or right depending on align value.
-  parameter fg indicates the drawing color
-  ----------------------------------------------------------------------*/
-void DrawDoubleVerticalLine (int frame, int thick, int style, int x, int y,
-                             int l, int h, int align, int fg)
-{
-  int        X;
-
-  if (thick > 0 && fg >= 0)
-    {
-      if (align == 1)
-        X = x + (l - thick) / 2;
-      else if (align == 2)
-        X = x + l - (thick + 1) / 2;
-      else
-        X = x + thick / 2;
-      
-      y += FrameTable[frame].FrTopMargin;
-
-      /* y += thick / 2; */
-      /*       h -= thick;   */
-
-      InitDrawing (style, thick, fg);
-      DoDrawOneLine (frame, X, y, X, y + h);
-      DoDrawOneLine (frame, X + (3 * thick), y, X + (3 * thick), y + h);
-    }
-}
 
 /*----------------------------------------------------------------------
   DrawHorizontalBrace draw a horizontal brace aligned top or bottom

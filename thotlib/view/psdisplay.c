@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2005
+ *  (c) COPYRIGHT INRIA, 1996-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1958,7 +1958,7 @@ void DrawEllipsFrame (int frame, int thick, int style, int x, int y,
    depending on align value.
   ----------------------------------------------------------------------*/
 void DrawHorizontalLine (int frame, int thick, int style, int x, int y,
-			 int l, int h, int align, int fg)
+                         int l, int h, int align, int fg, PtrBox box)
 {
 #ifndef _WX
    int                 xf, Y;
@@ -1974,20 +1974,27 @@ void DrawHorizontalLine (int frame, int thick, int style, int x, int y,
    /* Do we need to change the current color ? */
    CurrentColor (fout, fg);
 
-   if (align == 1)
-     Y = y + (h - thick) / 2;
-   else if (align == 2)
-     Y = y + h - thick / 2;
-   else
-     Y = y + thick / 2;
-   xf = x + l;
-   x = x;
-   Y = Y;
-   thick = thick;
-   fprintf (fout, "%d %d %d %d %d %d %d Seg\n",
-	    xf, -Y, x, -Y, style, thick, 2);
-#else /* _WX */
-   /* TODO : a faire si on porte la version non _GL de wxWidgets */
+  if (thick > 1 && style > 5)
+    {
+      if (align == 1)
+        DrawRectangle (frame, 1, style, x, y + (h - thick) / 2, l, thick, fg, fg, 2);
+      else if (align == 2)
+        DrawRectangle (frame, 1, style, x, y + h - thick, l, thick, fg, fg, 2);
+      else
+        DrawRectangle (frame, 1, style, x, y, l, thick, fg, fg, 2);
+    }
+  else
+    {
+      if (align == 1)
+        Y = y + (h - thick) / 2;
+      else if (align == 2)
+        Y = y + h - thick / 2;
+      else
+        Y = y + thick / 2;
+      xf = x + l;
+      fprintf (fout, "%d %d %d %d %d %d %d Seg\n",
+               xf, -Y, x, -Y, style, thick, 2);
+    }
 #endif /* _WX */
 }
 
@@ -2049,7 +2056,7 @@ void DrawHorizontalBrace (int frame, int thick, int style, int x, int y,
    depending on align value.
   ----------------------------------------------------------------------*/
 void DrawVerticalLine (int frame, int thick, int style, int x, int y,
-		       int l, int h, int align, int fg)
+                       int l, int h, int align, int fg, PtrBox box)
 {
 #ifndef _WX
    int                 X, yf;
@@ -2065,59 +2072,27 @@ void DrawVerticalLine (int frame, int thick, int style, int x, int y,
    fout = (FILE *) FrRef[frame];
    /* Do we need to change the current color ? */
    CurrentColor (fout, fg);
-   if (align == 1)
-      X = x + (l - thick) / 2;
-   else if (align == 2)
-      X = x + l - thick / 2;
-   else
-      X = x + thick / 2;
-   yf = y + h;
-   y = y;
-   X = X;
-   thick = thick;
+  if (thick > 1 && style > 5)
+    {
+      if (align == 1)
+        DrawRectangle (frame, 1, style, x + (l - thick) / 2, y, thick, h, fg, fg, 2);
+      else if (align == 2)
+        DrawRectangle (frame, 1, style, x + l - thick, y, thick, h, fg, fg, 2);
+      else
+        DrawRectangle (frame, 1, style, x, y, thick, h, fg, fg, 2);
+    }
+  else
+    {
+      if (align == 1)
+        X = x + (l - thick) / 2;
+      else if (align == 2)
+        X = x + l - thick / 2;
+      else
+        X = x + thick / 2;
+      yf = y + h;
       fprintf (fout, "%d %d %d %d %d %d %d Seg\n",
-	       X, -yf, X, -y, style, thick, 2);
-#else /* _WX */
-   /* TODO : a faire si on porte la version non _GL de wxWidgets */
-#endif /* _WX */
-}
-
-
-/*----------------------------------------------------------------------
-   DrawDoubleVerticalLine draw a doubled vertical line aligned left center
-   or right depending on align value.
-  ----------------------------------------------------------------------*/
-void DrawDoubleVerticalLine (int frame, int thick, int style, int x, int y,
-			     int l, int h, int align, int fg)
-{
-#ifndef _WX
-   int                 X, yf;
-   FILE               *fout;
-
-   if (y < 0)
-      return;
-
-   y += FrameTable[frame].FrTopMargin;
-   if (thick <= 0 || fg < 0)
-      return;
-
-   fout = (FILE *) FrRef[frame];
-   /* Do we need to change the current color ? */
-   CurrentColor (fout, fg);
-   if (align == 1)
-      X = x + (l - thick) / 2;
-   else if (align == 2)
-      X = x + l - thick / 2;
-   else
-      X = x + thick / 2;
-   yf = y + h;
-   y = y;
-   X = X;
-   thick = thick;
-      fprintf (fout, "%d %d %d %d %d %d %d Seg\n",
-	       X, -yf, X, -y, style, thick, 2);
-#else /* _WX */
-   /* TODO : a faire si on porte la version non _GL de wxWidgets */
+               X, -yf, X, -y, style, thick, 2);
+    }
 #endif /* _WX */
 }
 

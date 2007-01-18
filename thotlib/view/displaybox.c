@@ -421,7 +421,7 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
                 DrawIntegral (frame, i, xd, yd, width, height, 2, font, fg);
               break;
             case 'h':
-              DrawHorizontalLine (frame, i, 5, xd, yd, width, height, 1, fg);
+              DrawHorizontalLine (frame, i, 5, xd, yd, width, height, 1, fg, pBox);
               break;
             case 'i':
               if (useStix)
@@ -447,11 +447,10 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
                 DrawHorizontalBrace (frame, i, 5, xd, yd, width, height, 1,fg);
               break;
             case 'v':
-              DrawVerticalLine (frame, i, 5, xd, yd, width, height, 1, fg);
+              DrawVerticalLine (frame, i, 5, xd, yd, width, height, 1, fg, pBox);
               break;
             case 'D':
-              DrawDoubleVerticalLine (frame, i, 5, xd, yd, width, height, 1,
-                                      fg);
+              DrawVerticalLine (frame, i, 6, xd, yd, width, height, 1, fg, pBox);
               break;
             case 'I':
               DrawIntersection (frame, xd, yd, width, height, font, fg);
@@ -539,7 +538,7 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
                                    fg);
               break;
             case '|':
-              DrawVerticalLine (frame, i, 5, xd, yd, width, height, 1, fg);
+              DrawVerticalLine (frame, i, 5, xd, yd, width, height, 1, fg, pBox);
               break;
             case '?':
             case UNDISPLAYED_UNICODE:
@@ -734,8 +733,7 @@ void  DisplayGraph (PtrBox pBox, int frame, ThotBool selected,
       switch (pAb->AbRealShape)
         {
         case '0':
-          DrawRectangle (frame, 0, 0, xd, yd, width, height, fg,
-                         bg, pat);
+          DrawRectangle (frame, 0, 0, xd, yd, width, height, fg, bg, pat);
           break;
         case '1':
         case '2':
@@ -777,22 +775,22 @@ void  DisplayGraph (PtrBox pBox, int frame, ThotBool selected,
           DrawEllips (frame, i, style, xd, yd, width, height, fg, bg, pat);
           break;
         case 'h':
-          DrawHorizontalLine (frame, i, style, xd, yd, width, height, 1, fg);
+          DrawHorizontalLine (frame, i, style, xd, yd, width, height, 1, fg, pBox);
           break;
         case 't':
-          DrawHorizontalLine (frame, i, style, xd, yd, width, height, 0, fg);
+          DrawHorizontalLine (frame, i, style, xd, yd, width, height, 0, fg, pBox);
           break;
         case 'b':
-          DrawHorizontalLine (frame, i, style, xd, yd, width, height, 2, fg);
+          DrawHorizontalLine (frame, i, style, xd, yd, width, height, 2, fg, pBox);
           break;
         case 'v':
-          DrawVerticalLine (frame, i, style, xd, yd, width, height, 1, fg);
+          DrawVerticalLine (frame, i, style, xd, yd, width, height, 1, fg, pBox);
           break;
         case 'l':
-          DrawVerticalLine (frame, i, style, xd, yd, width, height, 0, fg);
+          DrawVerticalLine (frame, i, style, xd, yd, width, height, 0, fg, pBox);
           break;
         case 'r':
-          DrawVerticalLine (frame, i, style, xd, yd, width, height, 2, fg);
+          DrawVerticalLine (frame, i, style, xd, yd, width, height, 2, fg, pBox);
           break;
         case '/':
           DrawSlash (frame, i, style, xd, yd, width, height, 0, fg);
@@ -1748,7 +1746,8 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
                           if (showtab_id)
                             StopTextureScale (showtab_id);
                           showtab_id = SetTextureScale (IsBoxDeformed(pBox));
-                          DrawHorizontalLine (frame, 1, 5, x+2, y, lg-2, pBox->BxH, 2, BgSelColor);
+                          DrawHorizontalLine (frame, 1, 5, x+2, y, lg-2, pBox->BxH,
+                                              2, BgSelColor, pBox);
 #else /* _WX */
                         DrawChar ((char)val, frame, x, y1, nextfont, BgSelColor);
 #endif /* _WX */
@@ -2036,220 +2035,90 @@ void DisplayBorders (PtrBox box, PtrAbstractBox pFrom, int frame,
       else
         color = pFrom->AbTopBColor;
       if (pFrom->AbTopStyle == 10)
-	{
-	  /* outset */
-	  TtaGiveThotRGB (color, &red, &green, &blue);
-	  color = TtaGetThotColor (red | 0xC0, green | 0xC0, blue | 0xC0);
-	}
-      else if (pFrom->AbTopStyle == 9)
-	{
-	/* inset */
-	  TtaGiveThotRGB (color, &red, &green, &blue);
-	  color = TtaGetThotColor (red & 0x3F, green & 0x3F, blue & 0x3F);
-	}
-      /* the top border is visible */
-      switch (pFrom->AbTopStyle)
         {
-        case 8: /* ridge */
-        case 7: /* groove */
-        case 6: /* double */
-          /* top line */
-          DrawHorizontalLine (frame, 1, 5,
-                              x, yFrame + from->BxTMargin + t,
-                              w, 1,
-                              0, color);
-          /* the width of the bottom line depends on the visibility of
-             vertical borders */
-          dim = w;
-          pos = x;
-          if (l > 0)
-            {
-              pos += l;
-              dim -= l;
-            }
-          if (r > 0)
-            dim -= r;
-          /* bottom line */
-          if (t < h)
-            DrawHorizontalLine (frame, 1, 5,
-                                pos, yFrame + from->BxTMargin  + t + from->BxTBorder,
-                                dim, 1,
-                                2, color);
-          break;
-        default:
-          DrawHorizontalLine (frame, t, pFrom->AbTopStyle,
-                              x, y,
-                              w, t,
-                              0, color);
-          break;
+          /* outset */
+          TtaGiveThotRGB (color, &red, &green, &blue);
+          color = TtaGetThotColor (red | 0xC0, green | 0xC0, blue | 0xC0);
         }
+      else if (pFrom->AbTopStyle == 9)
+        {
+          /* inset */
+          TtaGiveThotRGB (color, &red, &green, &blue);
+          color = TtaGetThotColor (red & 0x3F, green & 0x3F, blue & 0x3F);
+        }
+      DrawHorizontalLine (frame, t, pFrom->AbTopStyle, x, y,
+                          w, t, 0, color, box);
     }
   if (from->BxLBorder && pFrom->AbLeftStyle > 2 &&
       pFrom->AbLeftBColor != -2 && l > 0)
     {
+      /* the left border is visible */
       if (pFrom->AbLeftBColor == -1)
         color = pFrom->AbForeground;
       else
         color = pFrom->AbLeftBColor;
       if (pFrom->AbLeftStyle == 10)
-	{
-	  /* outset */
-	  TtaGiveThotRGB (color, &red, &green, &blue);
-	  color = TtaGetThotColor (red | 0xC0, green | 0xC0, blue | 0xC0);
-	}
-      else if (pFrom->AbLeftStyle == 9)
-	{
-	/* inset */
-	  TtaGiveThotRGB (color, &red, &green, &blue);
-	  color = TtaGetThotColor (red & 0x3F, green & 0x3F, blue & 0x3F);
-	}
-       /* the left border is visible */
-      switch (pFrom->AbTopStyle)
         {
-        case 8: /* ridge */
-        case 7: /* groove */
-        case 6: /* double */
-          /* left line */
-          DrawVerticalLine (frame, 1, 5,
-                            xFrame + from->BxLMargin + l, y,
-                            1, h,
-                            0, color);
-          /* the width of the right line depends on the visibility of
-             horizontal borders */
-          dim = h;
-          pos = y;
-          if (t > 0)
-            {
-              pos += t;
-              dim -= t;
-            }
-          if (b > 0)
-            dim -= b;
-          /* rigth line */
-          DrawVerticalLine (frame, 1, 5,
-                            xFrame + from->BxLMargin + l + from->BxLBorder, pos,
-                            1, dim,
-                            2, color);
-          break;
-         default:
-          DrawVerticalLine (frame, l, pFrom->AbLeftStyle,
-                            x, y,
-                            l, h,
-                            0, color);
-          break;
+          /* outset */
+          TtaGiveThotRGB (color, &red, &green, &blue);
+          color = TtaGetThotColor (red | 0xC0, green | 0xC0, blue | 0xC0);
         }
+      else if (pFrom->AbLeftStyle == 9)
+        {
+          /* inset */
+          TtaGiveThotRGB (color, &red, &green, &blue);
+          color = TtaGetThotColor (red & 0x3F, green & 0x3F, blue & 0x3F);
+        }
+      DrawVerticalLine (frame, l, pFrom->AbLeftStyle, x, y,
+                        l, h, 0, color, box);
     }
   if (from->BxBBorder && pFrom->AbBottomStyle > 2 &&
       pFrom->AbBottomBColor != -2 && b > 0)
     {
-       if (pFrom->AbBottomBColor == -1)
+      /* the bottom border is visible */
+      if (pFrom->AbBottomBColor == -1)
         color = pFrom->AbForeground;
       else
         color = pFrom->AbBottomBColor;
       if (pFrom->AbBottomStyle == 10)
-	{
-	  /* outset */
-	  TtaGiveThotRGB (color, &red, &green, &blue);
-	  color = TtaGetThotColor (red & 0x3F, green & 0x3F, blue & 0x3F);
-	}
-      else if (pFrom->AbBottomStyle == 9)
-	{
-	/* inset */
-	  TtaGiveThotRGB (color, &red, &green, &blue);
-	  color = TtaGetThotColor (red | 0xC0, green | 0xC0, blue | 0xC0);
-	}
-      /* the bottom border is visible */
-      switch (pFrom->AbBottomStyle)
         {
-        case 8: /* ridge */
-        case 7: /* groove */
-        case 6: /* double */
-          /* top line */
-          /* the width of the bottom line depends on the visibility of
-             vertical borders */
-          dim = w;
-          pos = x;
-          if (l > 0)
-            {
-              pos += l;
-              dim -= l;
-            }
-          if (r > 0)
-            dim -= r;
-          /* bottom line */
-          DrawHorizontalLine (frame, 1, 5,
-                              pos, yFrame + height - eb - from->BxBBorder,
-                              dim, 1,
-                              0, color);
-          /* bottom line */
-          if (b < h)
-            DrawHorizontalLine (frame, 1, 5,
-                                x, yFrame + height - eb,
-                                w, 1,
-                                2, color);
-          break;
-        default:
-          DrawHorizontalLine (frame, b, pFrom->AbBottomStyle,
-                              x, yFrame + height - eb - from->BxBBorder,
-                              w, b,
-                              2, color);
-          break;
+          /* outset */
+          TtaGiveThotRGB (color, &red, &green, &blue);
+          color = TtaGetThotColor (red & 0x3F, green & 0x3F, blue & 0x3F);
         }
+      else if (pFrom->AbBottomStyle == 9)
+        {
+          /* inset */
+          TtaGiveThotRGB (color, &red, &green, &blue);
+          color = TtaGetThotColor (red | 0xC0, green | 0xC0, blue | 0xC0);
+        }
+      DrawHorizontalLine (frame, b, pFrom->AbBottomStyle,
+                          x, yFrame + height - eb - from->BxBBorder,
+                          w, b, 2, color, box);
     }
   if (from->BxRBorder && pFrom->AbRightStyle > 2 &&
       pFrom->AbRightBColor != -2 && r > 0)
     {
+      /* the right border is visible */
       if (pFrom->AbRightBColor == -1)
         color = pFrom->AbForeground;
       else
         color = pFrom->AbRightBColor;
       if (pFrom->AbRightStyle == 10)
-	{
-	  /* outset */
-	  TtaGiveThotRGB (color, &red, &green, &blue);
-	  color = TtaGetThotColor (red & 0x3F, green & 0x3F, blue & 0x3F);
-	}
-      else if (pFrom->AbRightStyle == 9)
-	{
-	/* inset */
-	  TtaGiveThotRGB (color, &red, &green, &blue);
-	  color = TtaGetThotColor (red | 0xC0, green | 0xC0, blue | 0xC0);
-	}
-      /* the right border is visible */
-      switch (pFrom->AbRightStyle)
         {
-        case 8: /* ridge */
-        case 7: /* groove */
-        case 6: /* double */
-          /* the width of the left line depends on the visibility of
-             horizontal borders */
-          dim = h;
-          pos = y;
-          if (t > 0)
-            {
-              pos += t;
-              dim -= t;
-            }
-          if (b > 0)
-            dim -= b;
-          /* left line */
-          DrawVerticalLine (frame, 1, 5,
-                            xFrame + width - er - from->BxRBorder,
-                            pos, 1, dim,
-                            0, color);
-          /* rigth line */
-          DrawVerticalLine (frame, 1, 5,
-                            xFrame + width - er, y,
-                            1, h,
-                            2, color);
-          break;
-        default:
-          DrawVerticalLine (frame, r, pFrom->AbRightStyle,
-                            xFrame + width - er - from->BxRBorder, y,
-                            r, h,
-                            2, color);
-          break;
+          /* outset */
+          TtaGiveThotRGB (color, &red, &green, &blue);
+          color = TtaGetThotColor (red & 0x3F, green & 0x3F, blue & 0x3F);
         }
+      else if (pFrom->AbRightStyle == 9)
+        {
+          /* inset */
+          TtaGiveThotRGB (color, &red, &green, &blue);
+          color = TtaGetThotColor (red | 0xC0, green | 0xC0, blue | 0xC0);
+        }
+      DrawVerticalLine (frame, r, pFrom->AbRightStyle,
+                        xFrame + width - er - from->BxRBorder, y,
+                        r, h, 2, color, box);
     }
 }
 

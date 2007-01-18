@@ -84,10 +84,6 @@ extern void ParseBaselineShiftAttribute ( Attribute attr,
 extern void ParsePointsAttribute ( Attribute attr,
                                    Element el,
                                    Document doc );
-extern void ParseviewBoxAttribute ( Attribute attr,
-                                    Element el,
-                                    Document doc,
-                                    ThotBool delete_ );
 extern void ParseTransformAttribute ( Attribute attr,
                                       Element el,
                                       Document doc,
@@ -189,10 +185,6 @@ extern void ParseBaselineShiftAttribute ( Attribute attr,
 extern void ParsePointsAttribute ( Attribute attr,
                                      Element el,
                                      Document doc );
-extern void ParseviewBoxAttribute ( Attribute attr,
-                                      Element el,
-                                      Document doc,
-                                      ThotBool delete_ );
 extern void ParseTransformAttribute ( Attribute attr,
                                         Element el,
                                         Document doc,

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2005
+ *  (c) COPYRIGHT INRIA, 1996-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -2271,7 +2271,7 @@ void DrawEllips (int frame, int thick, int style, int x, int y, int width,
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
 void DrawHorizontalLine (int frame, int thick, int style, int x, int y,
-                         int l, int h, int align, int fg)
+                         int l, int h, int align, int fg, PtrBox box)
 {
   int        Y;
 
@@ -2282,15 +2282,25 @@ void DrawHorizontalLine (int frame, int thick, int style, int x, int y,
     return;
 #endif /* _WIN_PRINT */
   y += FrameTable[frame].FrTopMargin;
-  if (align == 1)
-    Y = y + h / 2;
-  else if (align == 2)
-    Y = y + h - (thick + 1) / 2;
+  if (thick > 1 && style > 5)
+    {
+      if (align == 1)
+        DrawRectangle (frame, 1, style, x, y + (h - thick) / 2, l, thick, fg, fg, 2);
+      else if (align == 2)
+        DrawRectangle (frame, 1, style, x, y + h - thick, l, thick, fg, fg, 2);
+      else
+        DrawRectangle (frame, 1, style, x, y, l, thick, fg, fg, 2);
+    }
   else
-    Y = y + thick / 2;
-  
-  DrawOneLine (frame, thick, style, x + thick / 2, Y, 
-               x + l - (thick + 1) / 2, Y, fg);
+    {
+      if (align == 1)
+        Y = y + h / 2;
+      else if (align == 2)
+        Y = y + h - (thick + 1) / 2;
+      else
+        Y = y + thick / 2;
+      DrawOneLine (frame, thick, style, x + thick / 2, Y, x + l - (thick + 1) / 2, Y, fg);
+    }
 }
 /*----------------------------------------------------------------------
   DrawVerticalLine draw a vertical line aligned left center or right
@@ -2298,7 +2308,7 @@ void DrawHorizontalLine (int frame, int thick, int style, int x, int y,
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
 void DrawVerticalLine (int frame, int thick, int style, int x, int y, int l,
-                       int h, int align, int fg)
+                       int h, int align, int fg, PtrBox box)
 {
   int        X;
 
@@ -2310,48 +2320,27 @@ void DrawVerticalLine (int frame, int thick, int style, int x, int y, int l,
 #endif /* _WIN_PRINT */
 
   y += FrameTable[frame].FrTopMargin;
-  if (align == 1)
-    X = x + thick / 2;
-  else if (align == 2)
-    X = x + l - (thick + 1) / 2;
+  if (thick > 1 && style > 5)
+    {
+      if (align == 1)
+        DrawRectangle (frame, 1, style, x + (l - thick) / 2, y, thick, h, fg, fg, 2);
+      else if (align == 2)
+        DrawRectangle (frame, 1, style, x + l - thick, y, thick, h, fg, fg, 2);
+      else
+        DrawRectangle (frame, 1, style, x, y, thick, h, fg, fg, 2);
+    }
   else
-    X = x + thick / 2;
-
-  /*if (thick > 1 && style == 5)
-    DrawRectangle (frame, 1, style, X - thick / 2, y, thick,
-    h, fg, fg, 2);
-    else*/
-  DrawOneLine (frame, thick, style, X, y + thick / 2, X, y + h - (thick + 1) / 2, fg);
+    {
+      if (align == 1)
+        X = x + thick / 2;
+      else if (align == 2)
+        X = x + l - (thick + 1) / 2;
+      else
+        X = x + thick / 2;
+      DrawOneLine (frame, thick, style, X, y + thick / 2, X, y + h - (thick + 1) / 2, fg);
+    }
 }
 
-/*----------------------------------------------------------------------
-  DrawDoubleVerticalLine draw a double vertical line aligned left center or
-  right depending on align value.
-  parameter fg indicates the drawing color
-  ----------------------------------------------------------------------*/
-void DrawDoubleVerticalLine (int frame, int thick, int style, int x, int y,
-                             int l, int h, int align, int fg)
-{
-  int        X;
-
-  if (thick == 0 || fg < 0)
-    return;
-#ifdef _WIN_PRINT
-  if (y < 0)
-    return;
-#endif /* _WIN_PRINT */
-
-  y += FrameTable[frame].FrTopMargin;
-  if (align == 1)
-    X = x + l / 2;
-  else if (align == 2)
-    X = x + l;
-  else
-    X = x;
-  DrawOneLine (frame, thick, style, X, y, X, y + h, fg);
-  X = X + (3 * thick);
-  DrawOneLine (frame, thick, style, X, y, X, y + h, fg);
-}
 /*----------------------------------------------------------------------
   DrawHorizontalBrace draw a horizontal brace aligned top
   or bottom depending on align value.

@@ -115,7 +115,8 @@ static void SetComboValue (wxComboBox *combo, char *value)
   while (*ptr2 != EOS && *ptr2 != ';')
     ptr2++;
   c = *ptr2;
-  *ptr2 = EOS;
+  if (c != EOS)
+    *ptr2 = EOS;
   combo->SetStringSelection (TtaConvMessageToWX (ptr1));
 //  combo->SetValue (TtaConvMessageToWX (ptr1));
   // check if the value is already in the combo list
@@ -132,7 +133,8 @@ static void SetComboValue (wxComboBox *combo, char *value)
       combo->SetValue (TtaConvMessageToWX (ptr1));
     }
     TtaFreeMemory (buffer);
-  *ptr2 = c;
+  if (c != EOS)
+    *ptr2 = c;
 }
 
 /*----------------------------------------------------------------------
@@ -151,9 +153,11 @@ static void SetChoiceValue (wxChoice *choice, char *value)
   while (*ptr2 != EOS && *ptr2 != ';')
     ptr2++;
   c = *ptr2;
-  *ptr2 = EOS;
+  if (c != EOS)
+    *ptr2 = EOS;
   choice->SetStringSelection(TtaConvMessageToWX( ptr1 ));
-  *ptr2 = c;
+  if (c != EOS)
+    *ptr2 = c;
 }
 
 /*----------------------------------------------------------------------
