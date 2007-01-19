@@ -2140,8 +2140,17 @@ ThotBool TtaHandleShortcutKey( wxKeyEvent& event )
           else if (thot_keysym == 90) // Ctrl Z
             p_combo_box->Undo();
         }
-      /*else
-        event.Skip();*/
+      else if (p_text_ctrl)
+        {
+          if (thot_keysym == 67) // Ctrl C
+            p_text_ctrl->Copy();
+          else if (thot_keysym == 86) // Ctrl V
+            p_text_ctrl->Paste();
+          else if (thot_keysym == 88) // Ctrl X
+            p_text_ctrl->Cut();
+          else if (thot_keysym == 90) // Ctrl Z
+            p_text_ctrl->Undo();
+        }
       return true;      
     }
 
