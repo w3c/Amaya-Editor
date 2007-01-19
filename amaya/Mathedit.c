@@ -68,7 +68,7 @@ static ThotBool	InitMaths;
 /* Global variables for dialogues */
 static int Math_occurences = 1;
 static int Math_OperatorType = 0;
-//static int Math_fence_attributes[3];
+static char *Math_fence_attributes[3];
 #endif /* _WX */
 
 static ThotBool	IsLastDeletedElement = FALSE;
@@ -1226,18 +1226,48 @@ void MathSelectionChanged (NotifyElement *event)
 }
 
 /*----------------------------------------------------------------------
-  GetOccurrences: asks and returns the number of occurrences
+  GetFenceAttributes
   ----------------------------------------------------------------------*/
-static int GetOccurrences(int val, int mini, Document doc)
+static void GetFenceAttributes(Document doc)
 {
 #ifdef _WX
   ThotBool  created;
-  char     *msg = TtaGetMessage (AMAYA, AM_NUMBER_OCCUR);
+  
+  created = CreateSelectFenceAttributesDlgWX(MathsDialogue + FormMathFenceAttributes, TtaGetViewFrame (doc, 1));
+  if (created)
+    {
+      TtaSetDialoguePosition ();
+      TtaShowDialogue (MathsDialogue + FormMathFenceAttributes, FALSE);
+      /* wait for an answer */
+      TtaWaitShowDialogue ();
+    }
+#endif  /* _WX */
+}
+
+/*----------------------------------------------------------------------
+  SetFenceAttributes
+  attr : 0, 1 or 2 : open, separators, close
+  ----------------------------------------------------------------------*/
+/*static void SetFenceAttributes(Document doc, int attr)
+  {
+  if(Math_fence_attributes[attr])
+    TtaFreeMemory (Math_fence_attributes[attr]);
+
+  }*/
+
+/*----------------------------------------------------------------------
+  GetOccurrences: asks and returns the number of occurrences
+  ----------------------------------------------------------------------*/
+static int GetOccurrences(Document doc, char *label, int val, int mini)
+{
+#ifdef _WX
+  ThotBool  created;
+  char *title = TtaGetMessage (AMAYA, AM_NUMBER_OCCUR);
 
   Math_occurences = val;
   created =  CreateNumDlgWX (MathsDialogue + FormMaths, 0,
                              TtaGetViewFrame (doc, 1),
-                             msg, msg, val);
+                             title, label, val);
   if (created)
     {
       TtaSetDialoguePosition ();
@@ -1260,11 +1290,9 @@ static int GetOperatorType(Document doc)
 {
 #ifdef _WX
   ThotBool  created;
-  char     *msg = TtaGetMessage (AMAYA, AM_SELECT_OPERATOR);
   Math_OperatorType = 0;
 
-  created = CreateSelectOperatorDlgWX(MathsDialogue + FormMathOperator,
-                                      TtaGetViewFrame (doc, 1), msg, msg);
+  created = CreateSelectOperatorDlgWX(MathsDialogue + FormMathOperator, TtaGetViewFrame (doc, 1));
   if (created)
     {
       TtaSetDialoguePosition ();
@@ -2121,9 +2149,10 @@ static void CreateMathConstruct (int construct, ...)
             {
             /* ask the type of integral */
             int number, contour;
-            number = GetOccurrences (1, 1, doc);
-            contour = GetOccurrences (0, 0, doc);
-            type = GetOccurrences (0, 0, doc);if (type > 1)type = 1;
+            number = GetOccurrences (doc, TtaGetMessage (AMAYA, AM_NUMBER_OCCUR), 1, 1);
+            contour = GetOccurrences (doc, TtaGetMessage (AMAYA, AM_NUMBER_OCCUR), 0, 0);
+            type = GetOccurrences (doc, TtaGetMessage (AMAYA, AM_NUMBER_OCCUR), 0, 0);
+            if (type > 1)type = 1;
             if (!contour)
               {
               switch(number)
@@ -2196,7 +2225,7 @@ static void CreateMathConstruct (int construct, ...)
               TtaDeleteTree (leaf, doc);
               selected = child;
               /* ask how many the user wants */
-              number = GetOccurrences (5, 1, doc);
+              number = GetOccurrences (doc, TtaGetMessage (AMAYA, AM_NUMBER_OPERATORS), 5, 1);
               for (i = 0 ; i < number; i++)
                 {
                   if (symbol == 0)
@@ -2308,7 +2337,7 @@ static void CreateMathConstruct (int construct, ...)
           /* Piecewise ; VerticalBrace */
 
           /* ask how many the user wants */
-          int number = GetOccurrences (3, 2, doc);
+          int number = GetOccurrences (doc, TtaGetMessage (AMAYA, AM_ROWS), 3, 2);
           leaf = TtaGetFirstChild (el);
           child = leaf;
 
@@ -2433,7 +2462,7 @@ static void CreateMathConstruct (int construct, ...)
         {/* selector */
 
           /* ask number of coordonnates */
-          int number = GetOccurrences (2, 1, doc);
+          int number = GetOccurrences (doc,  TtaGetMessage (AMAYA, AM_NUMBER_COORDONNATES), 2, 1);
 
           child = TtaGetLastChild (el);
           leaf = TtaGetFirstChild (child);
@@ -2456,7 +2485,7 @@ static void CreateMathConstruct (int construct, ...)
           int number = va_arg(varpos, int);
           if (number != 2)
             {/* ask how many the user wants */
-              number = GetOccurrences (3, 2, doc);
+              number = GetOccurrences (doc,  TtaGetMessage (AMAYA, AM_NUMBER_NUPLE), 3, 2);
             }
 
           new_ = SetMFencedAttributes(el, '(', ')', ',', doc);
@@ -2496,11 +2525,12 @@ static void CreateMathConstruct (int construct, ...)
             {
             /* get types of open/close symbols selected in the panel */
             sep = ',';
+            GetFenceAttributes (doc);
             }
           if (number == -1)
             {
             /* ask how many the user wants */
-            number = GetOccurrences (5, 1, doc);
+            number = GetOccurrences (doc,  TtaGetMessage (AMAYA, AM_NUMBER_ELEMENTS), 5, 1);
             }
 
           leaf = TtaGetFirstChild (el);
@@ -2580,7 +2610,7 @@ static void CreateMathConstruct (int construct, ...)
         { /* lambda constuct */
 
           /* ask the number of variables */
-          int numbervar = GetOccurrences (1, 1, doc);
+          int numbervar = GetOccurrences (doc,  TtaGetMessage (AMAYA, AM_NUMBER_VARIABLES), 2, 1);
           leaf = TtaGetFirstChild (el);
           child = leaf;
           InsertSymbol(&child, MathML_EL_MI, 955, doc);// lambda
@@ -2701,7 +2731,7 @@ static void CreateMathConstruct (int construct, ...)
           child = leaf;
           InsertSymbol (&child, MathML_EL_MO, symbol, doc);
           InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
-          selected = child;
+          selected = TtaGetFirstChild(child);
           TtaDeleteTree (leaf, doc);
 
           leaf = TtaGetFirstChild (TtaGetLastChild (el));
@@ -2720,7 +2750,7 @@ static void CreateMathConstruct (int construct, ...)
           int symboldiff = 8706, degree = 0, numbervar;
 
           /* ask the user about the number of variables that have to be differentiated */
-          numbervar = GetOccurrences (1, 1, doc);
+          numbervar = GetOccurrences (doc,  TtaGetMessage (AMAYA, AM_NUMBER_VARIABLES), 1, 1);
   
           /* Denominator */
           leaf = TtaGetFirstChild (TtaGetLastChild (el));
@@ -2734,7 +2764,11 @@ static void CreateMathConstruct (int construct, ...)
           for(i = 0; i < numbervar; i++)
              {
              /* ask the user about the degree of derivation of each variable */
-             int degreevar = GetOccurrences (2, 1, doc);
+             char buffer[50];
+             int degreevar;
+             sprintf (buffer, TtaGetMessage (AMAYA, AM_DEGREE_VARIABLE), i + 1);
+             degreevar = GetOccurrences (doc, buffer, 1, 1);
+             
              degree += degreevar;
              if (degreevar == 1)
                {
@@ -2789,7 +2823,7 @@ static void CreateMathConstruct (int construct, ...)
             }
 
           InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
-          selected = child;
+          selected = TtaGetFirstChild(child);
           TtaDeleteTree (leaf, doc);
         }
       else if (construct== 53)
@@ -2800,8 +2834,8 @@ static void CreateMathConstruct (int construct, ...)
           child = SetMFencedAttributes(el, ope, clo, ',', doc);
         
           /* ask the user the number of rows and colomns */
-          if (lx == 0) lx = GetOccurrences (3, 1, doc);
-          if (ly == 0) ly = GetOccurrences (3, 1, doc);
+          if (lx == 0) lx = GetOccurrences (doc, TtaGetMessage (AMAYA, AM_COLS), 3, 1);
+          if (ly == 0) ly = GetOccurrences (doc, TtaGetMessage (AMAYA, AM_ROWS), 3, 1);
 
           /* mtable */
           leaf = TtaGetFirstChild (child);TtaDeleteTree (leaf, doc);
@@ -2902,7 +2936,7 @@ static void CreateMathConstruct (int construct, ...)
       else if (construct == 58)
         {/* diffential */
           /* ask the user about the degree of diffentiation */
-          int symboldiff = 8518, degree = GetOccurrences (2, 0, doc);
+          int symboldiff = 8518, degree = GetOccurrences (doc, TtaGetMessage (AMAYA, AM_DEGREE), 2, 0);
 
           /* Numerator */
           leaf = TtaGetFirstChild (TtaGetFirstChild (el));
@@ -2934,7 +2968,7 @@ static void CreateMathConstruct (int construct, ...)
             }
 
           InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
-          selected = child;
+          selected = TtaGetFirstChild(child);
           TtaDeleteTree (leaf, doc);
 
           /* Denominator */
@@ -3185,6 +3219,14 @@ static void CallbackMaths (int ref, int typedata, char *data)
     case FormMathOperator:
 #ifdef _WX
       Math_OperatorType = val;
+#else /* _WX */
+      /* the user has clicked the DONE button in the Math dialog box */
+      InitMaths = FALSE;
+#endif /* _WX */
+      break;
+
+    case FormMathFenceAttributes:
+#ifdef _WX
 #else /* _WX */
       /* the user has clicked the DONE button in the Math dialog box */
       InitMaths = FALSE;

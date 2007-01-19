@@ -262,9 +262,14 @@ typedef enum _ClickEvent {
 
 #define FormMaths 0
 #define FormMathOperator 1
-#define MenuMaths 2
-#define MenuMaths1 3
-#define MAX_MATHS  4
+#define FormMathFenceAttributes 2
+#define MathAttributeOpen 3
+#define MathAttributeSeparators 4
+#define MathAttributeClose 5
+
+#define MenuMaths 6
+#define MenuMaths1 7
+#define MAX_MATHS  8
 
 #define FormGraph 0
 #define MenuGraph 1

@@ -228,6 +228,7 @@ AMAYA_OBJ = \
 	wxdialog/SaveAsDlgWX.o \
 	wxdialog/SearchDlgWX.o \
 	wxdialog/SelectOperatorDlgWX.o \
+	wxdialog/SelectFenceAttributesDlgWX.o \
 	wxdialog/SpellCheckDlgWX.o \
 	wxdialog/StyleDlgWX.o \
 	wxdialog/TextDlgWX.o \

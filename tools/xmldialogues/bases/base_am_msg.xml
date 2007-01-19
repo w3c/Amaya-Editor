@@ -5200,10 +5200,10 @@
 <message xml:lang="en">Number of occurrences</message>
 <message xml:lang="fr">Nombre d'occurrences</message></label>
 <label define="AM_NUMBER_OCCUR_HAVE_MAX">
-<message xml:lang="en">Already have the maximum number of occurrences</message>
+<message xml:lang="en">Maximum number of occurrences reached</message>
 <message xml:lang="fr">Nombre maximal d'occurrences atteint</message></label>
 <label define="AM_NUMBER_OCCUR_HAVE_MIN">
-<message xml:lang="en">Already have the minimum number of occurrences</message>
+<message xml:lang="en">Minimum number of occurrences reached</message>
 <message xml:lang="fr">Nombre minimum d'occurrences atteint</message></label>
 <label define="AM_WARNIDS">
 <message xml:lang="en">Check duplicated IDs</message>
@@ -5211,9 +5211,52 @@
 <label define="AM_MATHPI">
 <message xml:lang="en">Add the xsl stylesheet for MathML elements</message>
 <message xml:lang="fr">Ajouter la feuille xsl pour les éléments MathML</message></label>
-<label define="AM_SELECT_OPERATOR">
-<message xml:lang="en">Select the operator</message>
-<message xml:lang="fr">Choisir l'opérateur</message></label>
+<label define="AM_SELECT_OPERATOR_TITLE">
+<message xml:lang="en">Insert operator</message>
+<message xml:lang="fr">Insérer opérateur</message>
+<message xml:lang="es">Insertar operador</message>
+</label>
+<label define="AM_SELECT_OPERATOR_LABEL">
+<message xml:lang="en">Select the way the operator has to be displayed:</message>
+<message xml:lang="fr">Choisir la façon dont l'opérateur doit être affiché :</message>
+<message xml:lang="es">Seleccionar la manera con la que el operador debe ser visualizado :</message>
+</label>
+<label define="AM_SELECT_FENCE_TITLE">
+<message xml:lang="en">Attributes of the fence</message>
+<message xml:lang="fr">Attributs du fences</message>
+</label>
+<label define="AM_SELECT_FENCE_LABEL">
+<message xml:lang="en">Select open, separators and close symbols:</message>
+<message xml:lang="fr">Choisir les symboles ouvrants, séparateurs et fermants :</message>
+</label>
+<label define="AM_NUMBER_OPERATORS">
+<message xml:lang="en">Number of operator symbols?</message>
+<message xml:lang="fr">Nombre de symboles opérateur ?</message>
+</label>
+<label define="AM_NUMBER_COORDONNATES">
+<message xml:lang="en">Number of coordonnates?</message>
+<message xml:lang="fr">Nombre de coordonnées ?</message>
+</label>
+<label define="AM_NUMBER_NUPLE">
+<message xml:lang="en">Length of the N-uple?</message>
+<message xml:lang="fr">Longueur du N-tuplet ?</message>
+</label>
+<label define="AM_NUMBER_ELEMENTS">
+<message xml:lang="en">Number of elements?</message>
+<message xml:lang="fr">Nombre d'éléments ?</message>
+</label>
+<label define="AM_NUMBER_VARIABLES">
+<message xml:lang="en">Number of variables?</message>
+<message xml:lang="fr">Nombre de variables ?</message>
+</label>
+<label define="AM_DEGREE">
+<message xml:lang="en">Degree?</message>
+<message xml:lang="fr">Degré ?</message>
+</label>
+<label define="AM_DEGREE_VARIABLE">
+<message xml:lang="en">Degree of the variable number %d?</message>
+<message xml:lang="fr">Degré de la variable numéro %d ?</message>
+</label>
 <label define="AM_COMPOUND_DOCUMENT">
 <message xml:lang="en">Compound document</message>
 <message xml:lang="fr">Document composé</message></label>

@@ -35,6 +35,7 @@
   #include "wxdialog/PreferenceDlgWX.h"
   #include "wxdialog/PrintDlgWX.h"
   #include "wxdialog/SaveAsDlgWX.h"
+  #include "wxdialog/SelectFenceAttributesDlgWX.h"
   #include "wxdialog/SelectOperatorDlgWX.h"
   #include "wxdialog/SearchDlgWX.h"
   #include "wxdialog/SpellCheckDlgWX.h"
@@ -104,11 +105,10 @@ void  DisplayStyleValue (char *property, char *start_value, char *end_value)
       if (end_value)
         {
           c = *end_value;
-          if (c != EOS)
-            *end_value = EOS;
+          *end_value = EOS;
         }
       Style_dlg->SetValue (property, start_value);
-      if (c != EOS && end_value)
+      if (end_value)
         *end_value = c;
     }
 #endif /* _WX */
@@ -139,28 +139,21 @@ wxArrayString BuildWX_URL_List( const char * url_list )
   params:
     + the thotlib catalog reference
     + parent : parent window
-    + title : dialog title
-    + label : the message to show at dialog center
   returns:
     + true : the dialogue has been created
     + false : error, nothing is created
   ----------------------------------------------------------------------*/
-ThotBool CreateSelectOperatorDlgWX ( int ref, ThotWindow parent,
-				  char *title, char *label)
+ThotBool CreateSelectOperatorDlgWX ( int ref, ThotWindow parent)
 {
 #ifdef _WX
   /* check if the dialog is alredy open */
   if (TtaRaiseDialogue (ref))
     return FALSE;
 
-  wxString wx_label = TtaConvMessageToWX( label );
-  wxString wx_title = TtaConvMessageToWX( TtaGetMessage (LIB, TMSG_LIB_CONFIRM) );
 
   SelectOperatorDlgWX * p_dlg = new SelectOperatorDlgWX(
       ref, /* thotlib catalog reference */
-      parent, /* parent window */
-      wx_title, /* title */
-      wx_label); /* message */
+      parent/* parent window */);
 
   if ( TtaRegisterWidgetWX( ref, p_dlg ) )
       /* the dialog has been sucessfully registred */
@@ -175,6 +168,42 @@ ThotBool CreateSelectOperatorDlgWX ( int ref, ThotWindow parent,
   return FALSE;
 #endif /* _WX */
 }
+
+/*----------------------------------------------------------------------
+  CreateSelectFenceAttributesDlgWX
+  params:
+    + the thotlib catalog reference
+    + parent : parent window
+  returns:
+    + true : the dialogue has been created
+    + false : error, nothing is created
+  ----------------------------------------------------------------------*/
+ThotBool CreateSelectFenceAttributesDlgWX ( int ref, ThotWindow parent)
+{
+#ifdef _WX
+  /* check if the dialog is alredy open */
+  if (TtaRaiseDialogue (ref))
+    return FALSE;
+
+
+  SelectFenceAttributesDlgWX * p_dlg = new SelectFenceAttributesDlgWX(
+      ref, /* thotlib catalog reference */
+      parent/* parent window */);
+
+  if ( TtaRegisterWidgetWX( ref, p_dlg ) )
+      /* the dialog has been sucessfully registred */
+      return TRUE;
+  else
+    {
+      /* an error occured during registration */
+      p_dlg->Destroy();
+      return FALSE;
+    }
+#else /* _WX */
+  return FALSE;
+#endif /* _WX */
+}
+
 
 /*----------------------------------------------------------------------
   CreateInitConfirmDlgWX create the dialog for document changes

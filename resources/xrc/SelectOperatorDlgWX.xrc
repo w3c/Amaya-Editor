@@ -26,7 +26,6 @@
             <object class="wxBitmapButton" name="wxID_OPERATOR0">
               <bitmap>../icons/misc/MATHML_operator0.png</bitmap>
               <focus></focus>
-              <tooltip>operation repeated n times</tooltip>
             </object>
             <flag>wxALL</flag>
             <border>1</border>
@@ -35,7 +34,6 @@
             <object class="wxBitmapButton" name="wxID_OPERATOR1">
               <bitmap>../icons/misc/MATHML_operator1.png</bitmap>
               <focus></focus>
-              <tooltip>operation on a family indexed by integers</tooltip>
             </object>
             <flag>wxALL</flag>
             <border>1</border>
@@ -45,7 +43,6 @@
               <bitmap>../icons/misc/MATHML_operator2.png</bitmap>
               <tooltip></tooltip>
               <focus></focus>
-              <tooltip>operation on a family indexed by a set</tooltip>
             </object>
             <flag>wxALL</flag>
             <border>1</border>

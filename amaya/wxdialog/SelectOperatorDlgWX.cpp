@@ -31,9 +31,7 @@ END_EVENT_TABLE()
     + label : the message to show at dialog center
   returns:
   ----------------------------------------------------------------------*/
-SelectOperatorDlgWX::SelectOperatorDlgWX( int ref, wxWindow* parent,
-                                          const wxString & title,
-                                          const wxString & label) :
+SelectOperatorDlgWX::SelectOperatorDlgWX( int ref, wxWindow* parent) :
   AmayaDialog( parent, ref )
 {
 
@@ -43,8 +41,8 @@ SelectOperatorDlgWX::SelectOperatorDlgWX( int ref, wxWindow* parent,
   MyRef = ref;
 
   // update dialog labels with given ones
-  SetTitle( title );
-  XRCCTRL(*this, "wxID_Operator", wxStaticText)->SetLabel( label );
+  SetTitle(  TtaConvMessageToWX(TtaGetMessage (AMAYA, AM_SELECT_OPERATOR_TITLE)) );
+  XRCCTRL(*this, "wxID_Operator", wxStaticText)-> SetLabel( TtaConvMessageToWX(TtaGetMessage (AMAYA, AM_SELECT_OPERATOR_LABEL)) );
   // fill initial value
   Fit();
   Refresh();
