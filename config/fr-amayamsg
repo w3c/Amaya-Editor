@@ -396,5 +396,15 @@
 394 Nombre minimum d'occurrences atteint
 395 Vérifier les IDs dupliqués
 396 Ajouter la feuille xsl pour les éléments MathML
-397 Choisir l'opérateur
-398 Document composé
+397 Insérer opérateur
+398 Choisir la façon dont l'opérateur doit être affiché :
+399 Attributs du fences
+400 Choisir les symboles ouvrants, séparateurs et fermants :
+401 Nombre de symboles opérateur ?
+402 Nombre de coordonnées ?
+403 Longueur du N-tuplet ?
+404 Nombre d'éléments ?
+405 Nombre de variables ?
+406 Degré ?
+407 Degré de la variable numéro %d ?
+408 Document composé

@@ -392,9 +392,19 @@
 390 Template repositories
 391 Templates
 392 Number of occurrences
-393 Already have the maximum number of occurrences
-394 Already have the minimum number of occurrences
+393 Maximum number of occurrences reached
+394 Minimum number of occurrences reached
 395 Check duplicated IDs
 396 Add the xsl stylesheet for MathML elements
-397 Select the operator
-398 Compound document
+397 Insert operator
+398 Select the way the operator has to be displayed:
+399 Attributes of the fence
+400 Select open, separators and close symbols:
+401 Number of operator symbols?
+402 Number of coordonnates?
+403 Length of the N-uple?
+404 Number of elements?
+405 Number of variables?
+406 Degree?
+407 Degree of the variable number %d?
+408 Compound document

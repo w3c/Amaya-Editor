@@ -340,7 +340,7 @@ void AmayaNormalWindow::DoClose(bool & veto)
 {
   m_IsClosing = TRUE;
 
-  // Ask the notebook to close its pages
+   // Ask the notebook to close its pages
   if (m_pNotebook)
     m_pNotebook->DoClose( veto );
 
