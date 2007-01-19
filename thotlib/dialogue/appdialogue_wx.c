@@ -2038,7 +2038,8 @@ ThotBool TtaHandleUnicodeKey (wxKeyEvent& event)
   int ret = 0;
 
   if (thot_keysym != 0 &&
-	  ((thot_keycode >= WXK_START && thot_keycode <= WXK_COMMAND) ||
+	  ((thot_keysym >= WXK_START && thot_keysym <= WXK_COMMAND) ||
+	  (thot_keysym >= WXK_NUMPAD0 && thot_keysym <= WXK_NUMPAD9) ||
 	  !TtaIsSpecialKey(thot_keycode)) &&
       (!event.CmdDown() || event.AltDown())
 #if !defined(_MACOS) && !defined(_WINDOWS)
@@ -2291,30 +2292,16 @@ ThotBool TtaHandleSpecialKey( wxKeyEvent& event )
       
       if (p_win_focus)
         TTALOGDEBUG_1( TTA_LOG_FOCUS, _T("focus = %s"), p_win_focus->GetClassInfo()->GetClassName())
-        else
-          TTALOGDEBUG_0( TTA_LOG_FOCUS, _T("no focus"))
+      else
+        TTALOGDEBUG_0( TTA_LOG_FOCUS, _T("no focus"))
               
-            /* do not allow special key outside the canvas */
-            if (!p_gl_canvas && !p_splitter && !p_notebook && !p_scrollbar && proceed_key )
-              {
-                event.Skip();
-                return true;      
-              }
-      
-#if 0
-      /* j'ai supprime cette partir du code car qd le notebook a le focus (c'est assez aleatoire...),
-       * tous les caracteres speciaux ne peuvent pas etre entres car il sont captures par le notbook
-       * en commentant cette partie du code, je laisse passer touts les caracteres qd le notebook a le focus. */
-#ifdef _WINDOWS
-      /* on windows, when the notebook is focused, the RIGHT and LEFT key are forwarded to wxWidgets,
-         we must ignore it */
-      if ( p_notebook && proceed_key )
-        {
+      /* do not allow special key outside the canvas */
+      if (!p_gl_canvas && !p_splitter && !p_notebook && !p_scrollbar && proceed_key )
+	  {
           event.Skip();
-          return true;
-        }
-#endif /* _WINDOWS */
-#endif /* 0 */
+          return true;      
+	  }
+      
       if ( proceed_key )
         {
           int thotMask = 0;
@@ -2354,13 +2341,16 @@ ThotBool TtaHandleSpecialKey( wxKeyEvent& event )
 #ifdef _WX
 ThotBool TtaIsSpecialKey( int wx_keycode )
 {
-  return ( wx_keycode == WXK_BACK ||
-           wx_keycode == WXK_TAB  ||
-           wx_keycode == WXK_RETURN ||
-           wx_keycode == WXK_ESCAPE ||
-           /*wx_keycode == WXK_INSERT  ||*/
-           wx_keycode == WXK_DELETE ||
-           (wx_keycode >= WXK_START && wx_keycode <= WXK_COMMAND)
+  if (wx_keycode >= WXK_NUMPAD0 && wx_keycode <= WXK_NUMPAD9)
+    return TRUE;
+  else
+    return ( wx_keycode == WXK_BACK ||
+             wx_keycode == WXK_TAB  ||
+             wx_keycode == WXK_RETURN ||
+             wx_keycode == WXK_ESCAPE ||
+             /*wx_keycode == WXK_INSERT  ||*/
+             wx_keycode == WXK_DELETE ||
+             (wx_keycode >= WXK_START && wx_keycode <= WXK_COMMAND)
            );
 }
 #endif /* _WX */
