@@ -1500,6 +1500,8 @@ int TtaGetFrameId( int window_id, int page_id, int position )
 void TtaCloseWindow( int window_id )
 {
 #ifdef _WX
+  // handle all pending events before closing the current window
+  TtaHandlePendingEvents ();
   AmayaWindow * p_window = TtaGetWindowFromId(window_id);
   if (p_window)
     p_window->Close();

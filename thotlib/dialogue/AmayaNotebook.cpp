@@ -88,7 +88,8 @@ void AmayaNotebook::DoClose(bool & veto)
           DeletePage(page_id);
           
           // maybe something has been removed so update the ids
-          UpdatePageId();
+          if (GetPageCount() > 0)
+            UpdatePageId();
           
           /* wait for pending events :
              if a page is deleted, it throws notebookevent */
