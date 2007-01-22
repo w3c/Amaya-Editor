@@ -1279,6 +1279,7 @@ static void FetchImages (Document doc, int flags, Element elSubTree,
               
           /* Load only wanted elements (images, objects) :
            * this could be changed into preferences menu (browsing) */
+          el = elFound;
           elType = TtaGetElementType (el);
           name = TtaGetSSchemaName (elType.ElSSchema);
           parent = TtaGetParent (el);
@@ -1353,7 +1354,6 @@ static void FetchImages (Document doc, int flags, Element elSubTree,
                }
            }
               
-          el = elFound;
           attr = attrFound;
         }
     }
