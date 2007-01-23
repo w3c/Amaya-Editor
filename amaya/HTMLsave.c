@@ -1530,7 +1530,6 @@ ThotBool ParseWithNewDoctype (Document doc, char *localFile, char *tempdir,
   charsetname[0] = EOS;
   CheckDocHeader (localFile, &xmlDec, &withDoctype, &isXML, &useMath, &isKnown,
                   &parsingLevel, &charset, charsetname, &thotType);
-  
   /* Store the new document type */
   TtaSetDocumentProfile (ext_doc, new_doctype);
 
@@ -1574,6 +1573,13 @@ ThotBool ParseWithNewDoctype (Document doc, char *localFile, char *tempdir,
       /* Remove the previous doctype if it exists */
       docEl = TtaGetMainRoot (ext_doc);
       elType = TtaGetElementType (docEl);
+      if (xmlDec && !xml_doctype && DocumentTypes[doc] == docHTML)
+        {
+          // remove the xml declaration
+          elType.ElTypeNum = HTML_EL_XMLPI;
+          eltype = TtaSearchTypedElement (elType, SearchInTree, docEl);
+          TtaDeleteTree (eltype, ext_doc);
+        }
       /* Search the doctype declaration according to the main schema */
       if (new_doctype == L_Basic || new_doctype == L_Strict ||
           new_doctype == L_Xhtml11 || new_doctype == L_Transitional)
