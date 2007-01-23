@@ -497,7 +497,11 @@ RULES
 	Create 'img';
 	Create Attributes;
 	if empty
-	  Create ' />';
+#ifdef XML
+		Create ' />';
+#else
+		Create '>';
+#endif
 	if not empty
 		BEGIN
 	Create '>';
