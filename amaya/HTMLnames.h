@@ -172,7 +172,11 @@ AttributeMapping XHTMLAttributeMappingTable[] =
    {"align", "thead", 'A', HTML_ATTR_Cell_align, L_StrictValue},
    {"align", "tr", 'A', HTML_ATTR_Cell_align, L_StrictValue},
    {"alink", "body", 'A', HTML_ATTR_ActiveLinkColor, L_TransitionalValue},
-   {"alt", "", 'A', HTML_ATTR_ALT, L_BasicValue},
+   {"alt", "applet", 'A', HTML_ATTR_ALT, L_TransitionalValue},
+   {"alt", "area", 'A', HTML_ATTR_ALT, L_StrictValue},
+   {"alt", "embed", 'A', HTML_ATTR_ALT, L_TransitionalValue},
+   {"alt", "img", 'A', HTML_ATTR_ALT, L_BasicValue},
+   {"alt", "input", 'A', HTML_ATTR_ALT, L_BasicValue},
    {"archive", "", 'A', HTML_ATTR_archive, L_BasicValue},
    {"axis", "", 'A', HTML_ATTR_axis, L_BasicValue},
 
