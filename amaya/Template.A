@@ -6,6 +6,8 @@ DEFAULT
 	  ElemClick.Pre -> SimpleClick;
 	  ElemRClick.Pre -> SimpleRClick;
 	  ElemLClick.Pre -> SimpleLClick;
+	  ElemNew.Pre -> NonTemplateElementWillBeCreated;
+	  ElemDelete.Pre -> TemplateElementWillBeDeleted;
    END;
    
 ELEMENTS

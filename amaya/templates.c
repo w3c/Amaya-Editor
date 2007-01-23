@@ -414,6 +414,9 @@ ThotBool UseToBeCreated (NotifyElement *event)
 
   el = event->element;
   doc = event->document;
+  
+  printf("UseToBeCreated\n");
+  
   /* is there a limit to the number of elements in the xt:repeat ? */
   /* @@@@@ */
 #endif /* TEMPLATES */
@@ -441,6 +444,7 @@ void UseCreated (NotifyElement *event)
   t = (XTigerTemplate) Dictionary_Get (Templates_Dic, DocumentMeta[doc]->template_url);
   if (!t)
     return; // no template ?!?!
+
   InstantiateUse (t, el, doc, TRUE);
 #endif /* TEMPLATES */
 }
@@ -514,70 +518,6 @@ ThotBool Template_CanInsertRepeatChild(Element el)
 
 #endif /* TEMPLATES */
   return FALSE;
-}
-
-/*----------------------------------------------------------------------
-  Template_InsertUseChildren
-  Insert children to a xt:use
-  The dec parameter must be valid and will not be verified. It must be a
-    direct child element (for union elements).
-  @param el element (xt:use) in which insert a new element
-  @param dec Template declaration of the element to insert
-  @return The inserted element (the xt:use element if insertion is multiple as component)
-  ----------------------------------------------------------------------*/
-Element Template_InsertUseChildren(Document doc, Element el, Declaration dec)
-{
-  Element newEl   = NULL;
-#ifdef TEMPLATES
-  Element current = NULL;
-  Element child   = NULL;
-  char*     attrCurrentTypeValue;
-
-  switch (dec->nature)
-  {
-    case SimpleTypeNat:
-      newEl = Template_GetNewSimpleTypeInstance(doc, el, dec);
-      TtaInsertFirstChild(&newEl, el, doc);
-      break;
-    case XmlElementNat:
-      newEl = Template_GetNewXmlElementInstance(doc, el, dec);
-      TtaInsertFirstChild(&newEl, el, doc);
-      break;
-    case ComponentNat:
-      newEl = Template_GetNewComponentInstance(doc, el, dec);
-      
-      /* Copy elements from new use to existing use. */
-      while((child = TtaGetFirstChild(newEl)))
-      {
-        TtaRemoveTree(child, doc);
-        if(current)
-        {
-          TtaInsertSibling(child, current, FALSE, doc);
-        }
-        else
-        {
-          TtaInsertFirstChild(&child, el, doc);      
-        }
-        current = child; 
-      }
-      
-      /* Copy currentType attribute. */
-      attrCurrentTypeValue = GetAttributeStringValue(newEl, Template_ATTR_currentType, NULL);
-      SetAttributeStringValue(el, Template_ATTR_currentType, attrCurrentTypeValue);
-      
-      TtaDeleteTree(newEl, doc);
-      newEl = el;
-      break;
-    case UnionNat :
-      /* @@@@@ */
-      break;
-    default :
-      //Impossible
-      break;   
-  }
-  
-#endif /* TEMPLATES */
-  return newEl;
 }
 
 
@@ -1068,3 +1008,50 @@ Element GetFirstTemplateParentElement(Element elem)
   return NULL;
 #endif /* TEMPLATES */
 }
+
+/*----------------------------------------------------------------------
+  NonTemplateElementWillBeCreated
+  Processed when an element will be created in a template context.
+  ----------------------------------------------------------------------*/
+ThotBool NonTemplateElementWillBeCreated (NotifyElement *event)
+{
+  printf("NonTemplateElementWillBeCreated : ");
+#ifdef TEMPLATES  
+  Element     elem   = event->element;
+  ElementType elType = TtaGetElementType(elem);
+  Element     parent = TtaGetParent(elem);
+  ElementType parentType   = TtaGetElementType(parent);
+  Element     gdparent     = TtaGetParent(parent);
+  ElementType gdparentType = TtaGetElementType(gdparent);
+  
+ 
+  printf("%s %s/", TtaGetSSchemaName(gdparentType.ElSSchema), TtaGetElementTypeName(gdparentType));
+  printf("%s %s/", TtaGetSSchemaName(parentType.ElSSchema), TtaGetElementTypeName(parentType));
+  printf("%s %s", TtaGetSSchemaName(elType.ElSSchema), TtaGetElementTypeName(elType));
+    
+  printf("\n");
+
+//  if(parentType.ElTypeNum==Template_EL_bag)
+//  {
+//    printf("Do it !\n");
+//    return TRUE;
+//  }
+//  
+//  return FALSE;
+  return TRUE;
+#else /* TEMPLATES */
+  return FALSE;  
+#endif /* TEMPLATES*/
+}
+
+/*----------------------------------------------------------------------
+  TemplateElementWillBeDeleted
+  Processed when an element will be deleted in a template context.
+  ----------------------------------------------------------------------*/
+ThotBool TemplateElementWillBeDeleted (NotifyElement *event)
+{
+  printf("TemplateElementWillBeDeleted\n");
+  return FALSE;
+}
+
+

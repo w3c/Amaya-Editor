@@ -63,7 +63,7 @@ STRUCT
      = ANY - ( head, union, import, component );
 
   bag ( ATTR ref; types ) 
-     =  ANY - ( head, union, import, component );
+     =  LIST OF ANY - ( head, union, import, component );
 
   attribute ( ATTR 
     ref_name = TEXT; 

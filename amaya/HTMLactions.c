@@ -1516,7 +1516,7 @@ void UpdateXmlElementListTool (Element el, Document doc)
 
 /*----------------------------------------------------------------------
   UpdateTitle update the content of the Title field on top of the 
-  main window, according to the contents of element el.   
+  main window, according to the contents of element el.
   ----------------------------------------------------------------------*/
 void UpdateTitle (Element el, Document doc)
 {

@@ -27,9 +27,6 @@ extern void UseCreated ( NotifyElement *event );
 extern void Template_IncrementRepeatOccurNumber ( Element el );
 extern void Template_DecrementRepeatOccurNumber ( Element el );
 extern ThotBool Template_CanInsertRepeatChild ( Element el );
-extern Element Template_InsertUseChildren ( Document doc,
-                                            Element el,
-                                            Declaration dec );
 extern Element Template_InsertRepeatChildAfter ( Document doc,
                                                  Element el,
                                                  Declaration decl,
@@ -46,6 +43,8 @@ extern void OpeningInstance ( char *fileName,
 extern ThotBool ClosingInstance ( NotifyDialog* dialog );
 extern ThotBool IsTemplateElement ( Element elem );
 extern Element GetFirstTemplateParentElement ( Element elem );
+extern ThotBool NonTemplateElementWillBeCreated ( NotifyElement *event );
+extern ThotBool TemplateElementWillBeDeleted ( NotifyElement *event );
 
 #else /* __STDC__ */
 
@@ -70,9 +69,6 @@ extern void UseCreated ( NotifyElement *event );
 extern void Template_IncrementRepeatOccurNumber ( Element el );
 extern void Template_DecrementRepeatOccurNumber ( Element el );
 extern ThotBool Template_CanInsertRepeatChild ( Element el );
-extern Element Template_InsertUseChildren ( Document doc,
-                                              Element el,
-                                              Declaration dec );
 extern Element Template_InsertRepeatChildAfter ( Document doc,
                                                    Element el,
                                                    Declaration decl,
@@ -89,6 +85,8 @@ extern void OpeningInstance ( char *fileName,
 extern ThotBool ClosingInstance ( NotifyDialog* dialog );
 extern ThotBool IsTemplateElement ( Element elem );
 extern Element GetFirstTemplateParentElement ( Element elem );
+extern ThotBool NonTemplateElementWillBeCreated ( NotifyElement *event );
+extern ThotBool TemplateElementWillBeDeleted ( NotifyElement *event );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

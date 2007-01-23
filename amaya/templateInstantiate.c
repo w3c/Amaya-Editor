@@ -345,6 +345,83 @@ Element Template_GetNewComponentInstance(Document doc, Element parent, Declarati
 
 
 /*----------------------------------------------------------------------
+  Template_InsertUseChildren
+  Insert children to a xt:use
+  The dec parameter must be valid and will not be verified. It must be a
+    direct child element (for union elements).
+  @param el element (xt:use) in which insert a new element
+  @param dec Template declaration of the element to insert
+  @return The inserted element (the xt:use element if insertion is multiple as component)
+  ----------------------------------------------------------------------*/
+Element Template_InsertUseChildren(Document doc, Element el, Declaration dec)
+{
+  Element newEl   = NULL;
+#ifdef TEMPLATES
+  Element current = NULL;
+  Element child   = NULL;
+  char*     attrCurrentTypeValue;
+
+  switch (dec->nature)
+  {
+    case SimpleTypeNat:
+      newEl = Template_GetNewSimpleTypeInstance(doc, el, dec);
+      TtaInsertFirstChild(&newEl, el, doc);
+      break;
+    case XmlElementNat:
+      newEl = Template_GetNewXmlElementInstance(doc, el, dec);
+      TtaInsertFirstChild(&newEl, el, doc);
+      break;
+    case ComponentNat:
+      newEl = Template_GetNewComponentInstance(doc, el, dec);
+      
+      /* Copy elements from new use to existing use. */
+      while((child = TtaGetFirstChild(newEl)))
+      {
+        TtaRemoveTree(child, doc);
+        if(current)
+        {
+          TtaInsertSibling(child, current, FALSE, doc);
+        }
+        else
+        {
+          TtaInsertFirstChild(&child, el, doc);      
+        }
+        current = child; 
+      }
+      
+      /* Copy currentType attribute. */
+      attrCurrentTypeValue = GetAttributeStringValue(newEl, Template_ATTR_currentType, NULL);
+      SetAttributeStringValue(el, Template_ATTR_currentType, attrCurrentTypeValue);
+      
+      TtaDeleteTree(newEl, doc);
+      newEl = el;
+      break;
+    case UnionNat :
+      /* Nothing to do.*/
+//                elType.ElTypeNum = Template_EL_useEl;
+//                cont = TtaNewElement (doc, elType);
+//                if (cont)
+//                  {
+//                    TtaSetAccessRight (cont, ReadWrite, doc);
+//                    at = TtaNewAttribute (att);
+//                    if (at)
+//                      {
+//                        TtaAttachAttribute (cont, at, doc);
+//                        TtaSetAttributeText(at, types, cont, doc);
+//                      }
+//                  }
+      /* @@@@@ */
+      break;
+    default :
+      //Impossible
+      break;   
+  }
+  
+#endif /* TEMPLATES */
+  return newEl;
+}
+
+/*----------------------------------------------------------------------
   InstantiateUse
   ----------------------------------------------------------------------*/
 Element InstantiateUse (XTigerTemplate t, Element el, Document doc,
@@ -376,68 +453,7 @@ Element InstantiateUse (XTigerTemplate t, Element el, Document doc,
     {
       dec = GetDeclaration (t, items[0].label);
       if (dec)
-        switch(dec->nature)
-          {
-          case SimpleTypeNat :
-            elType.ElTypeNum = Template_EL_TEXT_UNIT;
-            cont = TtaNewElement (doc, elType);
-            TtaInsertFirstChild (&cont, el, doc);
-            TtaSetTextContent (cont, (unsigned char*) empty, 0, doc);
-            cont = NULL;
-            break;
-          case XmlElementNat :
-            GIType (dec->name, &elType, doc);
-            cont = TtaNewElement (doc, elType);
-            if (insert)
-              TtaInsertFirstChild (&cont, el, doc);
-            break;
-          case ComponentNat :
-            cont = TtaCopyTree (dec->componentType.content, doc, doc, el);
-            ProcessAttr (t, cont, doc);
-            if (insert)
-              {
-                prev = NULL;
-                child = TtaGetFirstChild (cont);
-                while (child)
-                  {
-                    next = child;
-                    TtaNextSibling (&next);
-                    TtaRemoveTree (child, doc);
-                    if (prev)
-                      TtaInsertSibling (child, prev, FALSE, doc);
-                    else
-                      TtaInsertFirstChild (&child, el, doc);
-                    prev = child;
-                    child = next;
-                  }
-                TtaDeleteTree (cont, doc);
-                cont = el;
-              }
-            break;
-          case UnionNat :
-            if (!insert)
-              /* the user has clicked a "repeat" button and wants to create
-                 a new instance of the repeated element. Just create the
-                 use element */
-              {
-                elType.ElTypeNum = Template_EL_useEl;
-                cont = TtaNewElement (doc, elType);
-                if (cont)
-                  {
-                    TtaSetAccessRight (cont, ReadWrite, doc);
-                    at = TtaNewAttribute (att);
-                    if (at)
-                      {
-                        TtaAttachAttribute (cont, at, doc);
-                        TtaSetAttributeText(at, types, cont, doc);
-                      }
-                  }
-              }
-            break;
-          default :
-            //Impossible
-            break;   
-          }
+        cont = Template_InsertUseChildren(doc, el, dec);
     }
   TtaFreeMemory(types);
   TtaSetStructureChecking (oldStructureChecking, doc);
