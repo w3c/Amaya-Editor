@@ -2048,10 +2048,17 @@ static void EndOfStartTag (char c)
       if (HTMLcontext.lastElement)
         {
           CloseBuffer ();
-          elText = TtaGetLastChild (HTMLcontext.lastElement);
-          if (LgBuffer > 0)
-            TtaAppendTextContent (elText, (unsigned char *)inputBuffer, HTMLcontext.doc);
-          TtaAppendTextContent (elText, (unsigned char *)">", HTMLcontext.doc);
+          elType = TtaGetElementType (HTMLcontext.lastElement);
+          if (elType.ElTypeNum == HTML_EL_Invalid_element ||
+              elType.ElTypeNum == HTML_EL_Unknown_namespace)
+            {
+              elText = TtaGetLastChild (HTMLcontext.lastElement);
+              if (LgBuffer > 0)
+                TtaAppendTextContent (elText, (unsigned char *)inputBuffer,
+                                      HTMLcontext.doc);
+              TtaAppendTextContent (elText, (unsigned char *)">",
+                                    HTMLcontext.doc);
+            }
           InitBuffer ();
         }
       UnknownTag = FALSE;
@@ -2805,9 +2812,15 @@ static void EndOfAttrName (char c)
   CloseBuffer ();
   if (UnknownTag && HTMLcontext.lastElement)
     {
-      elText = TtaGetLastChild (HTMLcontext.lastElement);
-      TtaAppendTextContent (elText, (unsigned char *)" ", HTMLcontext.doc);
-      TtaAppendTextContent (elText, (unsigned char *)inputBuffer, HTMLcontext.doc);
+      elType = TtaGetElementType (HTMLcontext.lastElement);
+      if (elType.ElTypeNum == HTML_EL_Invalid_element ||
+          elType.ElTypeNum == HTML_EL_Unknown_namespace)
+        {
+          elText = TtaGetLastChild (HTMLcontext.lastElement);
+          TtaAppendTextContent (elText, (unsigned char *)" ", HTMLcontext.doc);
+          TtaAppendTextContent (elText, (unsigned char *)inputBuffer,
+                                HTMLcontext.doc);
+        }
       InitBuffer ();
       lastAttrEntry = NULL;
       return;
@@ -3019,6 +3032,7 @@ static ThotBool   isAttrValueTruncated;
 static void         EndOfAttrValue (char c)
 {
   Element             elText;
+  ElementType         elType;
   char               *newBufferAttrValue;
   int                 lg;
 
@@ -3056,9 +3070,16 @@ static void         EndOfAttrValue (char c)
       
       if (UnknownTag && HTMLcontext.lastElement)
         {
-          elText = TtaGetLastChild (HTMLcontext.lastElement);
-          TtaAppendTextContent (elText, (unsigned char *)"=", HTMLcontext.doc);
-          TtaAppendTextContent (elText, (unsigned char *)inputBuffer, HTMLcontext.doc);
+          elType = TtaGetElementType (HTMLcontext.lastElement);
+          if (elType.ElTypeNum == HTML_EL_Invalid_element ||
+              elType.ElTypeNum == HTML_EL_Unknown_namespace)
+            {
+              elText = TtaGetLastChild (HTMLcontext.lastElement);
+              TtaAppendTextContent (elText, (unsigned char *)"=",
+                                    HTMLcontext.doc);
+              TtaAppendTextContent (elText, (unsigned char *)inputBuffer,
+                                    HTMLcontext.doc);
+            }
           InitBuffer ();
           lastAttrEntry = NULL;
           return;
