@@ -1210,7 +1210,7 @@ void PreferenceDlgWX::SetupLabelDialog_Templates()
   ----------------------------------------------------------------------*/
 void PreferenceDlgWX::SetupDialog_Templates( const Prop_Templates & prop)
 {
-  printf("PreferenceDlgWX::SetupDialog_Templates : %d\n", prop.S_Templates);
+  //printf("PreferenceDlgWX::SetupDialog_Templates : %d\n", prop.S_Templates);
   XRCCTRL(*this, "wxID_CHECK_SHOWTEMPLATES", wxCheckBox)->SetValue( prop.S_Templates );
   
   wxListBox *box = XRCCTRL(*this, "wxID_LIST_TEMPLATE_REPOSITORIES", wxListBox);
