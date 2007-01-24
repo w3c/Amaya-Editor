@@ -1,4 +1,4 @@
-	{ I. Vatton 	 1994-2003  }
+	{ I. Vatton 	 1994-2007  }
 
 { Variables used in ifdefs: PAGE, BLACK_WHITE, US_PAPER, LINK_NUMBER, LANDSDSCAPE}
 
@@ -2721,7 +2721,7 @@ RULES
         END;
 
  Object_Content: BEGIN
-        Width: auto {Enclosing . Width};
+        Width: Enclosing . Width;
         Height: Enclosing . Height;
         VertPos: Top = Enclosing . Top;
         HorizPos: Left = Enclosing . Left;
@@ -4027,6 +4027,11 @@ RULES
  External_Object_Content: BEGIN
         LineBreak: No;
         PageBreak: No;
+        if Immediately within Object BEGIN
+                Width: Enclosing . Width;
+                Height: Enclosing . Height;
+                VertPos: Top = Enclosing . Top;
+                END;
         IN Structure_view
                 Visibility: 0;
         IN Alternate_view

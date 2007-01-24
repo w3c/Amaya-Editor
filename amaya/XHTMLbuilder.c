@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2005
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -432,6 +432,33 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
                     !strcmp (&data[length-5], ".html") ||
                     !strcmp (&data[length-4], ".xml"))
                   isImage = TRUE;
+            }
+        }
+      else
+        {
+          attrType.AttrTypeNum = HTML_ATTR_classid;
+          attr = TtaGetAttribute (el, attrType);
+          if (attr)
+            /* the object has a data attribute */
+            {
+              length = TtaGetTextAttributeLength (attr);
+              if (length > 0)
+                {
+                  data = (char *)TtaGetMemory (length + 1);
+                  TtaGiveTextAttributeValue (attr, data, &length);
+                  if (!isImage && length >= 5)
+                    if (!strcmp (&data[length-4], ".mml") ||
+                        !strcmp (&data[length-4], ".gif") ||
+                        !strcmp (&data[length-4], ".jpg") ||
+                        !strcmp (&data[length-5], ".jpeg") ||
+                        !strcmp (&data[length-4], ".png") ||
+                        !strcmp (&data[length-4], ".svg") ||
+                        !strcmp (&data[length-5], ".svgz") ||
+                        !strcmp (&data[length-4], ".htm") ||
+                        !strcmp (&data[length-5], ".html") ||
+                        !strcmp (&data[length-4], ".xml"))
+                      isImage = TRUE;
+                }
             }
         }
       picture = NULL;     /* no PICTURE element yet */
