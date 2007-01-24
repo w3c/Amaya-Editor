@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2005
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1026,7 +1026,6 @@ ThotBool FetchImage (Document doc, Element el, char *imageURI, int flags,
   imageName = NULL;
   attr = NULL;
   FetchImage_ctx = NULL;
-
   update = FALSE;
   ret = TRUE;
   if (el || extra)

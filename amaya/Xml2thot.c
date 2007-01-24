@@ -5387,8 +5387,9 @@ void ParseExternalDocument (char *fileName, char *originalName, Element el,
     {
       /* Fetch and display the recursive images */
       /* modify the net status */
-      /* DocNetworkStatus[doc] = AMAYA_NET_ACTIVE; */
+      DocNetworkStatus[doc] = AMAYA_NET_ACTIVE;
       FetchAndDisplayImages (doc, AMAYA_LOAD_IMAGE, extEl);
+      DocNetworkStatus[doc] = AMAYA_NET_INACTIVE;
       /* Make the external element not editable */
       TtaSetAccessRight (extEl, ReadOnly, doc);
     }
