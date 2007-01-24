@@ -2791,6 +2791,9 @@ void GetBrowseConf (void)
   TtaGetEnvBoolean ("ENABLE_FTP", &val);
   AHTFTPURL_flag_set (val);
   GetEnvString ("SCREEN_TYPE", GProp_Browse.ScreenType);
+  if (GProp_Browse.ScreenType[0] == EOS)
+    // no current selection
+    strcpy (GProp_Browse.ScreenType, "screen");
   TtaGetEnvInt ("DOUBLECLICKDELAY", &(GProp_Browse.DoubleClickDelay));
   GetEnvString ("ACCEPT_LANGUAGES", GProp_Browse.LanNeg);
   TtaGetEnvInt ("MAX_URL_LIST", &(GProp_Browse.MaxURL));
@@ -3105,6 +3108,7 @@ static void BrowseCallbackDialog (int ref, int typedata, char *data)
                     {
                       /* redisplay documents after these changes */
                       strcpy (InitScreen, GProp_Browse.ScreenType);
+                      TtaSetEnvString ("SCREEN_TYPE", InitScreen, TRUE);
                       SetBrowseConf ();
                       ApplyConfigurationChanges ();
                     }
