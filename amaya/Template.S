@@ -63,7 +63,7 @@ STRUCT
      = ANY - ( head, union, import, component );
 
   bag ( ATTR ref; types ) 
-     =  LIST OF ANY - ( head, union, import, component );
+     =  LIST OF (ANY) - ( head, union, import, component );
 
   attribute ( ATTR 
     ref_name = TEXT; 
@@ -75,8 +75,11 @@ STRUCT
     title ) = CONSTANT C_CR; {It is always empty}
 
 EXCEPT
-  repeat:             NoReplicate, NoBreakByReturn;
-  option:             NoReplicate, NoBreakByReturn;
+  useEl:              NoReplicate, NoBreakByReturn, NoCreate;
+  useSimple:          NoReplicate, NoBreakByReturn, NoCreate;
+  repeat:             NoReplicate, NoBreakByReturn, NoCreate;
+  option:             NoReplicate, NoBreakByReturn, NoCreate;
+  bag:                NoReplicate, NoBreakByReturn, NoCreate, ParagraphBreak;
   {Hiding unkown and language attributes}
 	Unknown_attribute:  Invisible;
 	Language:           Invisible;

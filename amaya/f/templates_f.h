@@ -43,7 +43,7 @@ extern void OpeningInstance ( char *fileName,
 extern ThotBool ClosingInstance ( NotifyDialog* dialog );
 extern ThotBool IsTemplateElement ( Element elem );
 extern Element GetFirstTemplateParentElement ( Element elem );
-extern ThotBool NonTemplateElementWillBeCreated ( NotifyElement *event );
+extern ThotBool TemplateElementWillBeCreated ( NotifyElement *event );
 extern ThotBool TemplateElementWillBeDeleted ( NotifyElement *event );
 
 #else /* __STDC__ */
@@ -85,7 +85,7 @@ extern void OpeningInstance ( char *fileName,
 extern ThotBool ClosingInstance ( NotifyDialog* dialog );
 extern ThotBool IsTemplateElement ( Element elem );
 extern Element GetFirstTemplateParentElement ( Element elem );
-extern ThotBool NonTemplateElementWillBeCreated ( NotifyElement *event );
+extern ThotBool TemplateElementWillBeCreated ( NotifyElement *event );
 extern ThotBool TemplateElementWillBeDeleted ( NotifyElement *event );
 
 #endif /* __STDC__ */

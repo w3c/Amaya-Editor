@@ -1010,38 +1010,42 @@ Element GetFirstTemplateParentElement(Element elem)
 }
 
 /*----------------------------------------------------------------------
-  NonTemplateElementWillBeCreated
+  TemplateElementWillBeCreated
   Processed when an element will be created in a template context.
   ----------------------------------------------------------------------*/
-ThotBool NonTemplateElementWillBeCreated (NotifyElement *event)
+ThotBool TemplateElementWillBeCreated (NotifyElement *event)
 {
-  printf("NonTemplateElementWillBeCreated : ");
 #ifdef TEMPLATES  
-  Element     elem   = event->element;
-  ElementType elType = TtaGetElementType(elem);
+  Element     elem = event->element;
+  ElementType elType;
   Element     parent = TtaGetParent(elem);
-  ElementType parentType   = TtaGetElementType(parent);
-  Element     gdparent     = TtaGetParent(parent);
-  ElementType gdparentType = TtaGetElementType(gdparent);
-  
- 
-  printf("%s %s/", TtaGetSSchemaName(gdparentType.ElSSchema), TtaGetElementTypeName(gdparentType));
-  printf("%s %s/", TtaGetSSchemaName(parentType.ElSSchema), TtaGetElementTypeName(parentType));
-  printf("%s %s", TtaGetSSchemaName(elType.ElSSchema), TtaGetElementTypeName(elType));
-    
-  printf("\n");
+  SSchema     templateSSchema = TtaGetSSchema ("Template", event->document);
 
-//  if(parentType.ElTypeNum==Template_EL_bag)
-//  {
-//    printf("Do it !\n");
-//    return TRUE;
-//  }
-//  
-//  return FALSE;
-  return TRUE;
-#else /* TEMPLATES */
-  return FALSE;  
+  if (templateSSchema == NULL)
+    return FALSE; // let Thot do the job
+printf("TemplateElementWillBeCreated------------- \n");
+  while (elem)
+    {
+      elType = TtaGetElementType(elem);
+printf(" %s_%s\n", TtaGetSSchemaName(elType.ElSSchema), TtaGetElementTypeName(elType));
+      if (elType.ElSSchema == templateSSchema)
+        {
+          if (elem == event->element)
+            return FALSE; // do change allowed
+          else if (elType.ElTypeNum == Template_EL_useEl ||
+                   elType.ElTypeNum == Template_EL_useSimple)
+            {
+              return FALSE; // let Thot do the job
+            }
+          else  if (elType.ElTypeNum == Template_EL_bag)
+            return FALSE; // let Thot do the job
+        }
+      else
+        elem = TtaGetParent(elem);
+    }
 #endif /* TEMPLATES*/
+printf ("-------------\n");
+  return FALSE;
 }
 
 /*----------------------------------------------------------------------
