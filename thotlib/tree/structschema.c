@@ -765,7 +765,7 @@ RConstruct          GetElementConstruct (PtrElement pEl, int *nComp)
   agregat entre l'element et cet ancetre. Rend cet ancetre ou	
   NULL si ce n'est pas le cas.					
   ----------------------------------------------------------------------*/
-PtrElement          AncestorList (PtrElement pEl)
+PtrElement AncestorList (PtrElement pEl)
 {
   ThotBool            stop;
   RConstruct          constr;
@@ -2496,7 +2496,7 @@ ThotBool CanSplitElement (PtrElement firstEl, int firstChar,
               /* on cherche d'abord si un element ascendant
                  possede une exception ParagraphBreak */
               pE = firstEl->ElParent;
-              while (pE != NULL && *pList == NULL)
+              while (pE && *pList == NULL)
                 {
                   if (TypeHasException (ExcParagraphBreak,
                                         pE->ElTypeNumber, pE->ElStructSchema))
@@ -2532,12 +2532,12 @@ ThotBool CanSplitElement (PtrElement firstEl, int firstChar,
                     }
                 }
             }
-          if (*pList != NULL &&
+          if (*pList &&
               TypeHasException (ExcNoCreate,
                                 (*pList)->ElFirstChild->ElTypeNumber,
                                 (*pList)->ElFirstChild->ElStructSchema))
             *pList = NULL;
-          if (*pList != NULL && !CanChangeNumberOfElem (*pList, 1))
+          if (*pList && !CanChangeNumberOfElem (*pList, 1))
             *pList = NULL;
         }
       else
@@ -2582,7 +2582,7 @@ ThotBool CanSplitElement (PtrElement firstEl, int firstChar,
             }
         }
     }
-  if (*pList != NULL)
+  if (*pList)
     {
       /* cherche l'element de plus haut niveau a dupliquer */
       pE = (*pEl)->ElParent;
@@ -2601,5 +2601,5 @@ ThotBool CanSplitElement (PtrElement firstEl, int firstChar,
           *pEl = NULL;
         }
     }
-  return (*pList != NULL);
+  return (*pList);
 }

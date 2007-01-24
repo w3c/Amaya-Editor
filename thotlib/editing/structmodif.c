@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2005
+ *  (c) COPYRIGHT INRIA, 1996-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -881,12 +881,12 @@ ThotBool BreakElement (PtrElement pElReplicate, PtrElement pSplitEl,
   if (!pDoc->DocReadOnly)
     {
       doc = IdentDocument (pDoc);
-      if (pSplitEl != NULL)
+      if (pSplitEl)
         {
           firstSel = pSplitEl;
           firstChar = splitIndex;
         }
-      if (pElReplicate != NULL)
+      if (pElReplicate)
         {
           if (pElReplicate->ElTypeNumber == pElReplicate->ElStructSchema->SsRootElem)
             /* that's the root element. Don't duplicate it */

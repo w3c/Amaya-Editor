@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2005
+ *  (c) COPYRIGHT INRIA, 1996-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1768,6 +1768,7 @@ void TtcCreateElement (Document doc, View view)
           /* La selection commence-t-elle en tete ou en queue d'element? */
           selBegin = FALSE;
           selEnd = FALSE;
+          ok = TRUE;
           if (firstSel == lastSel)
             /* only one element selected */
             {
@@ -1854,8 +1855,12 @@ void TtcCreateElement (Document doc, View view)
                   return;
                 }
               else
+                {
+                  ok = FALSE;
+                  pListEl = NULL;
                 /* remove operation from history */
                 CancelLastEditFromHistory (pDoc);
+                }
             }
 
           /* on cherche l'element CsList ascendant qui permet de creer un */
@@ -1863,7 +1868,7 @@ void TtcCreateElement (Document doc, View view)
           if (lastSel->ElTerminal && lastSel->ElLeafType == LtPageColBreak)
             /* on ne duplique pas les sauts de pages */
             pListEl = NULL;
-          else
+          else if (ok)
             {
               if (lastSel->ElParent &&
                   GetElementConstruct (lastSel->ElParent, &nComp) == CsAny)
@@ -1909,7 +1914,7 @@ void TtcCreateElement (Document doc, View view)
             }
 
           /* verifie si les elements a doubler portent l'exception NoCreate */
-          if (pListEl != NULL)
+          if (pListEl)
             {
               pE = lastSel;
               pElReplicate = NULL;
@@ -1942,7 +1947,7 @@ void TtcCreateElement (Document doc, View view)
                 }
             }
 
-          if (pListEl != NULL)
+          if (pListEl)
             {
               /* verifie si la selection est en fin ou debut de paragraphe */
               if (selEnd && pElReplicate)
@@ -1964,10 +1969,10 @@ void TtcCreateElement (Document doc, View view)
             }
         }
       /* verifie que la liste ne depasse pas deja la longueur maximum */
-      if (pListEl != NULL)
+      if (pListEl)
         if (!CanChangeNumberOfElem (pListEl, 1))
           pListEl = NULL;
-      if (pListEl != NULL || pAggregEl != NULL)
+      if (pListEl || pAggregEl)
         {
           if (pListEl == NULL)
             pListEl = pAggregEl;
@@ -1992,7 +1997,7 @@ void TtcCreateElement (Document doc, View view)
             /* l'application refuse */
             pListEl = NULL;
         }
-      if (pListEl != NULL)
+      if (pListEl)
         {
           ok = !ElementIsReadOnly (pListEl);
           if (ok && pElDelete != NULL)
