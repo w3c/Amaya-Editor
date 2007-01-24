@@ -1271,7 +1271,6 @@ static void FetchImages (Document doc, int flags, Element elSubTree,
         {
           /* search the next element having an attribute SRC */
           elNext = el;
-          // if (elSubTree == NULL)
           TtaSearchAttributes (attrType1, attrType2,
                                SearchForward, elNext, &elFound, &attrFound);
           if (elSubTree && elFound && !TtaIsAncestor (elFound, elSubTree))
@@ -1279,7 +1278,6 @@ static void FetchImages (Document doc, int flags, Element elSubTree,
               
           /* Load only wanted elements (images, objects) :
            * this could be changed into preferences menu (browsing) */
-          el = elFound;
           elType = TtaGetElementType (el);
           name = TtaGetSSchemaName (elType.ElSSchema);
           parent = TtaGetParent (el);
@@ -1342,18 +1340,27 @@ static void FetchImages (Document doc, int flags, Element elSubTree,
                    {
                      // manage the included PICTURE element
                      elType.ElTypeNum = HTML_EL_PICTURE_UNIT;
+                     pic = NULL;
                      pic = TtaSearchTypedElement (elType, SearchInTree, el);
-                     FetchImage (doc, pic, NULL, flags, NULL, NULL);
+                     if (pic)
+                       {
+                         if (pic == elFound)
+                           // look for th next image
+                           TtaSearchAttributes (attrType1, attrType2, SearchForward,
+                                                pic, &elFound, &attrFound);
+                         FetchImage (doc, pic, NULL, flags, NULL, NULL);
+                       }
                    }
                }
              else
                {
-                 /* this element is an IMAGE */
+                 /* this element is an PICTURE UNIT */
                  if (loadImages)
                    FetchImage (doc, el, NULL, flags, NULL, NULL);
                }
            }
               
+          el = elFound;
           attr = attrFound;
         }
     }
