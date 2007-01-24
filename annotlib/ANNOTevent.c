@@ -45,11 +45,9 @@
 #endif /* BOOKMARKS */
 
 /* RDF parser */
-#ifdef AM_REDLAND
-#ifndef BOOKMARKS
+#if defined(ANNOTATIONS) && !defined(BOOKMARKS)
 #include "raptor.h"
 #endif /* BOOKMARKS */
-#endif /* AM_REDLAND */
 
 #define DEFAULT_ALGAE_QUERY "w3c_algaeQuery=(ask '((?p ?s ?o)) :collect '(?p ?s ?o))"
 

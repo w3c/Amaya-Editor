@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1999-2005
+ *  (c) COPYRIGHT MIT and INRIA, 1999-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  * 
  */
@@ -57,13 +57,6 @@ extern "C" {
 #include "Annot.h"
 #include "XLink.h"
 
-#if 0
-#ifdef _WINGUI
-#define TMPDIR "TMP"
-#else
-#define TMPDIR "TMPDIR"
-#endif /* _WINGUI */
-#endif
 
 /* ------------------------------------------------------------
    Global tables implementations
