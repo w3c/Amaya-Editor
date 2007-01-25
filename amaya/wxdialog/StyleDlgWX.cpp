@@ -957,6 +957,7 @@ void StyleDlgWX::OnValueChanged( wxCommandEvent& event )
             {
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_COMBO_SIZE", wxComboBox)->SetValue(value);
+              XRCCTRL(*this, "wxID_COMBO_SIZE", wxComboBox)->SetInsertionPoint (1);
             }
         }
     }
@@ -971,6 +972,7 @@ void StyleDlgWX::OnValueChanged( wxCommandEvent& event )
             {
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_COMBO_LINE", wxComboBox)->SetValue(value);
+              XRCCTRL(*this, "wxID_COMBO_LINE", wxComboBox)->SetInsertionPoint (1);
             }
         }
     }
@@ -985,6 +987,7 @@ void StyleDlgWX::OnValueChanged( wxCommandEvent& event )
             {
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_COMBO_INDENT", wxComboBox)->SetValue(value);
+              XRCCTRL(*this, "wxID_COMBO_INDENT", wxComboBox)->SetInsertionPoint (1);
             }
         }
     }
@@ -999,6 +1002,7 @@ void StyleDlgWX::OnValueChanged( wxCommandEvent& event )
             {
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_COMBO_VALIGN", wxComboBox)->SetValue(value);
+              XRCCTRL(*this, "wxID_COMBO_VALIGN", wxComboBox)->SetInsertionPoint (1);
             }
         }
     }
@@ -1013,6 +1017,7 @@ void StyleDlgWX::OnValueChanged( wxCommandEvent& event )
             {
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_COMBO_WORD", wxComboBox)->SetValue(value);
+              XRCCTRL(*this, "wxID_COMBO_WORD", wxComboBox)->SetInsertionPoint (1);
             }
         }
     }
@@ -1027,6 +1032,7 @@ void StyleDlgWX::OnValueChanged( wxCommandEvent& event )
             {
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_COMBO_LETTER", wxComboBox)->SetValue(value);
+              XRCCTRL(*this, "wxID_COMBO_LETTER", wxComboBox)->SetInsertionPoint (1);
             }
         }
     }
@@ -1041,6 +1047,7 @@ void StyleDlgWX::OnValueChanged( wxCommandEvent& event )
             {
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_COMBO_BGHPOS", wxComboBox)->SetValue(value);
+              XRCCTRL(*this, "wxID_COMBO_BGHPOS", wxComboBox)->SetInsertionPoint (1);
             }
         }
     }
@@ -1055,6 +1062,7 @@ void StyleDlgWX::OnValueChanged( wxCommandEvent& event )
             {
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_COMBO_BGVPOS", wxComboBox)->SetValue(value);
+              XRCCTRL(*this, "wxID_COMBO_BGVPOS", wxComboBox)->SetInsertionPoint (1);
             }
         }
     }
@@ -1069,6 +1077,7 @@ void StyleDlgWX::OnValueChanged( wxCommandEvent& event )
             {
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_COMBO_BTOP", wxComboBox)->SetValue(value);
+              XRCCTRL(*this, "wxID_COMBO_BTOP", wxComboBox)->SetInsertionPoint (1);
               // initialize other values
               svalue = XRCCTRL(*this, "wxID_CHOICE_T_STYLE", wxChoice)->GetStringSelection();
               if (svalue.Len() == 0)
@@ -1093,6 +1102,7 @@ void StyleDlgWX::OnValueChanged( wxCommandEvent& event )
             {
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_COMBO_BBOTTOM", wxComboBox)->SetValue(value);
+              XRCCTRL(*this, "wxID_COMBO_BBOTTOM", wxComboBox)->SetInsertionPoint (1);
               svalue = XRCCTRL(*this, "wxID_CHOICE_B_STYLE", wxChoice)->GetStringSelection();
               if (svalue.Len() == 0)
                 XRCCTRL(*this, "wxID_CHOICE_B_STYLE", wxChoice)->SetStringSelection(TtaConvMessageToWX( "solid" ));
@@ -1115,6 +1125,7 @@ void StyleDlgWX::OnValueChanged( wxCommandEvent& event )
             {
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_COMBO_BLEFT", wxComboBox)->SetValue(value);
+              XRCCTRL(*this, "wxID_COMBO_BLEFT", wxComboBox)->SetInsertionPoint (1);
               // initialize other values
               svalue = XRCCTRL(*this, "wxID_CHOICE_L_STYLE", wxChoice)->GetStringSelection();
               if (svalue.Len() == 0)
@@ -1138,6 +1149,7 @@ void StyleDlgWX::OnValueChanged( wxCommandEvent& event )
             {
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_COMBO_BRIGHT", wxComboBox)->SetValue(value);
+              XRCCTRL(*this, "wxID_COMBO_BRIGHT", wxComboBox)->SetInsertionPoint (1);
               // initialize other values
               svalue = XRCCTRL(*this, "wxID_CHOICE_R_STYLE", wxChoice)->GetStringSelection();
               if (svalue.Len() == 0)
@@ -1161,6 +1173,7 @@ void StyleDlgWX::OnValueChanged( wxCommandEvent& event )
             {
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_COMBO_B", wxComboBox)->SetValue(value);
+              XRCCTRL(*this, "wxID_COMBO_B", wxComboBox)->SetInsertionPoint (1);
               // initialize other values
               svalue = XRCCTRL(*this, "wxID_CHOICE_BORDER_STYLE", wxChoice)->GetStringSelection();
               if (svalue.Len() == 0)
@@ -1184,6 +1197,7 @@ void StyleDlgWX::OnValueChanged( wxCommandEvent& event )
             {
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_COMBO_MTOP", wxComboBox)->SetValue(value);
+              XRCCTRL(*this, "wxID_COMBO_MTOP", wxComboBox)->SetInsertionPoint (1);
             }
         }
     }
@@ -1198,6 +1212,7 @@ void StyleDlgWX::OnValueChanged( wxCommandEvent& event )
             {
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_COMBO_PTOP", wxComboBox)->SetValue(value);
+              XRCCTRL(*this, "wxID_COMBO_PTOP", wxComboBox)->SetInsertionPoint (1);
             }
         }
     }
@@ -1212,6 +1227,7 @@ void StyleDlgWX::OnValueChanged( wxCommandEvent& event )
             {
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_COMBO_MBOTTOM", wxComboBox)->SetValue(value);
+              XRCCTRL(*this, "wxID_COMBO_MBOTTOM", wxComboBox)->SetInsertionPoint (1);
             }
         }
     }
@@ -1226,6 +1242,7 @@ void StyleDlgWX::OnValueChanged( wxCommandEvent& event )
             {
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_COMBO_PBOTTOM", wxComboBox)->SetValue(value);
+              XRCCTRL(*this, "wxID_COMBO_PBOTTOM", wxComboBox)->SetInsertionPoint (1);
             }
         }
     }
@@ -1240,6 +1257,7 @@ void StyleDlgWX::OnValueChanged( wxCommandEvent& event )
             {
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_COMBO_MLEFT", wxComboBox)->SetValue(value);
+              XRCCTRL(*this, "wxID_COMBO_MLEFT", wxComboBox)->SetInsertionPoint (1);
             }
         }
     }
@@ -1254,6 +1272,7 @@ void StyleDlgWX::OnValueChanged( wxCommandEvent& event )
             {
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_COMBO_PLEFT", wxComboBox)->SetValue(value);
+              XRCCTRL(*this, "wxID_COMBO_PLEFT", wxComboBox)->SetInsertionPoint (1);
             }
         }
     }
@@ -1268,6 +1287,7 @@ void StyleDlgWX::OnValueChanged( wxCommandEvent& event )
             {
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_COMBO_MRIGHT", wxComboBox)->SetValue(value);
+              XRCCTRL(*this, "wxID_COMBO_MRIGHT", wxComboBox)->SetInsertionPoint (1);
             }
         }
     }
@@ -1282,6 +1302,7 @@ void StyleDlgWX::OnValueChanged( wxCommandEvent& event )
             {
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_COMBO_PRIGHT", wxComboBox)->SetValue(value);
+              XRCCTRL(*this, "wxID_COMBO_PRIGHT", wxComboBox)->SetInsertionPoint (1);
             }
         }
     }
@@ -1296,6 +1317,7 @@ void StyleDlgWX::OnValueChanged( wxCommandEvent& event )
             {
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_COMBO_MARGIN", wxComboBox)->SetValue(value);
+              XRCCTRL(*this, "wxID_COMBO_MARGIN", wxComboBox)->SetInsertionPoint (1);
             }
         }
     }
@@ -1310,6 +1332,7 @@ void StyleDlgWX::OnValueChanged( wxCommandEvent& event )
             {
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_COMBO_PADDING", wxComboBox)->SetValue(value);
+              XRCCTRL(*this, "wxID_COMBO_PADDING", wxComboBox)->SetInsertionPoint (1);
             }
         }
     }
@@ -1324,6 +1347,7 @@ void StyleDlgWX::OnValueChanged( wxCommandEvent& event )
             {
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_COMBO_WIDTH", wxComboBox)->SetValue(value);
+              XRCCTRL(*this, "wxID_COMBO_WIDTH", wxComboBox)->SetInsertionPoint (1);
             }
         }
     }
@@ -1338,6 +1362,7 @@ void StyleDlgWX::OnValueChanged( wxCommandEvent& event )
             {
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_COMBO_HEIGHT", wxComboBox)->SetValue(value);
+              XRCCTRL(*this, "wxID_COMBO_HEIGHT", wxComboBox)->SetInsertionPoint (1);
             }
         }
     }
@@ -1352,6 +1377,7 @@ void StyleDlgWX::OnValueChanged( wxCommandEvent& event )
             {
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_COMBO_TOP", wxComboBox)->SetValue(value);
+              XRCCTRL(*this, "wxID_COMBO_TOP", wxComboBox)->SetInsertionPoint (1);
             }
         }
     }
@@ -1366,6 +1392,7 @@ void StyleDlgWX::OnValueChanged( wxCommandEvent& event )
             {
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_COMBO_BOTTOM", wxComboBox)->SetValue(value);
+              XRCCTRL(*this, "wxID_COMBO_BOTTOM", wxComboBox)->SetInsertionPoint (1);
             }
         }
     }
@@ -1380,6 +1407,7 @@ void StyleDlgWX::OnValueChanged( wxCommandEvent& event )
             {
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_COMBO_LEFT", wxComboBox)->SetValue(value);
+              XRCCTRL(*this, "wxID_COMBO_LEFT", wxComboBox)->SetInsertionPoint (1);
             }
         }
     }
@@ -1394,6 +1422,7 @@ void StyleDlgWX::OnValueChanged( wxCommandEvent& event )
             {
               value = TtaConvMessageToWX(buffer);
               XRCCTRL(*this, "wxID_COMBO_RIGHT", wxComboBox)->SetValue(value);
+              XRCCTRL(*this, "wxID_COMBO_RIGHT", wxComboBox)->SetInsertionPoint (1);
             }
         }
     }

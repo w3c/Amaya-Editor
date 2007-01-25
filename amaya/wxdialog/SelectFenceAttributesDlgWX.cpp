@@ -18,11 +18,8 @@ static int MyRef = 0;
 // Event table: connect the events to the handler functions to process them
 //-----------------------------------------------------------------------------
 BEGIN_EVENT_TABLE(SelectFenceAttributesDlgWX, AmayaDialog)
-  EVT_TEXT_ENTER( XRCID("wxID_ATTRIBUTE_OPEN"),     SelectFenceAttributesDlgWX::OnOpenOk )
   EVT_COMBOBOX( XRCID("wxID_ATTRIBUTE_OPEN"),       SelectFenceAttributesDlgWX::OnOpenSelected )
-  EVT_TEXT_ENTER( XRCID("wxID_ATTRIBUTE_SEPARATORS"), SelectFenceAttributesDlgWX::OnSeparatorsOk )
   EVT_COMBOBOX( XRCID("wxID_ATTRIBUTE_SEPARATORS"),   SelectFenceAttributesDlgWX::OnSeparatorsSelected )
-  EVT_TEXT_ENTER( XRCID("wxID_ATTRIBUTE_CLOSE"),     SelectFenceAttributesDlgWX::OnCloseOk )
   EVT_COMBOBOX( XRCID("wxID_ATTRIBUTE_CLOSE"),       SelectFenceAttributesDlgWX::OnCloseSelected )
   EVT_BUTTON( XRCID("wxID_INSERT"), SelectFenceAttributesDlgWX::OnInsert )
 END_EVENT_TABLE()
@@ -43,8 +40,8 @@ SelectFenceAttributesDlgWX::SelectFenceAttributesDlgWX( int ref, wxWindow* paren
 
   // update dialog labels with given ones
   SetTitle( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_SELECT_FENCE_TITLE) ));
-  XRCCTRL(*this, "wxID_LABEL", wxStaticText)-> SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_SELECT_FENCE_LABEL) ));
-  XRCCTRL(*this, "wxID_INSERT", wxButton)-> SetLabel( TtaConvMessageToWX( TtaGetMessage(LIB,TMSG_INSERT) ));
+  XRCCTRL(*this, "wxID_LABEL", wxStaticText)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_SELECT_FENCE_LABEL) ));
+  XRCCTRL(*this, "wxID_INSERT", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(LIB,TMSG_INSERT) ));
 
 #ifndef _MACOS
   // give focus to ...
@@ -60,6 +57,14 @@ SelectFenceAttributesDlgWX::SelectFenceAttributesDlgWX( int ref, wxWindow* paren
   ----------------------------------------------------------------------*/
 SelectFenceAttributesDlgWX::~SelectFenceAttributesDlgWX()
 {
+  if (Waiting)
+    {
+      Waiting = 0;
+      ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
+    }
+  else
+    // clean up the dialog context
+    TtaDestroyDialogue( MyRef );
 }
 
 /*----------------------------------------------------------------------
@@ -70,59 +75,59 @@ void SelectFenceAttributesDlgWX::OnOpenSelected( wxCommandEvent& event )
   XRCCTRL(*this, "wxID_ATTRIBUTE_OPEN", wxComboBox)->SetInsertionPointEnd();
 }
 
+/*----------------------------------------------------------------------
+  OnSeparatorsSelected
+  ----------------------------------------------------------------------*/
 void SelectFenceAttributesDlgWX::OnSeparatorsSelected( wxCommandEvent& event )
 {
   XRCCTRL(*this, "wxID_ATTRIBUTE_SEPARATORS", wxComboBox)->SetInsertionPointEnd();
 }
 
+/*----------------------------------------------------------------------
+  OnCloseSelected
+  ----------------------------------------------------------------------*/
 void SelectFenceAttributesDlgWX::OnCloseSelected( wxCommandEvent& event )
 {
   XRCCTRL(*this, "wxID_ATTRIBUTE_CLOSE", wxComboBox)->SetInsertionPointEnd();
 }
 
-/*----------------------------------------------------------------------
-  OnOk called when the user validates his selection
-  ----------------------------------------------------------------------*/
-void SelectFenceAttributesDlgWX::OnOpenOk( wxCommandEvent& event )
-{
-  wxString url = XRCCTRL(*this, "wxID_ATTRIBUTE_OPEN", wxComboBox)->GetValue( );
-  Waiting = 0;
-  char buffer[MAX_LENGTH];
-  wxASSERT( url.Len() < MAX_LENGTH );
-  strcpy( buffer, (const char*)url.mb_str(wxConvUTF8) );
-  ThotCallback (MathsDialogue + MathAttributeOpen, STRING_DATA, (char *)buffer);
-  ThotCallback (MyRef, INTEGER_DATA, (char*)1);
-}
-void SelectFenceAttributesDlgWX::OnSeparatorsOk( wxCommandEvent& event )
-{
-  wxString url = XRCCTRL(*this, "wxID_ATTRIBUTE_SEPARATORS", wxComboBox)->GetValue( );
-  Waiting = 0;
-  char buffer[MAX_LENGTH];
-  wxASSERT( url.Len() < MAX_LENGTH );
-  strcpy( buffer, (const char*)url.mb_str(wxConvUTF8) );
-  ThotCallback (MathsDialogue + MathAttributeSeparators, STRING_DATA, (char *)buffer);
-  ThotCallback (MyRef, INTEGER_DATA, (char*)2);
-}
-void SelectFenceAttributesDlgWX::OnCloseOk( wxCommandEvent& event )
-{
-  wxString url = XRCCTRL(*this, "wxID_ATTRIBUTE_CLOSE", wxComboBox)->GetValue( );
-  Waiting = 0;
-  char buffer[MAX_LENGTH];
-  wxASSERT( url.Len() < MAX_LENGTH );
-  strcpy( buffer, (const char*)url.mb_str(wxConvUTF8) );
-  ThotCallback (MathsDialogue + MathAttributeClose, STRING_DATA, (char *)buffer);
-  ThotCallback (MyRef, INTEGER_DATA, (char*)3);
-}
 
 /*----------------------------------------------------------------------
   Close the window
   ----------------------------------------------------------------------*/
 void SelectFenceAttributesDlgWX::OnInsert( wxCommandEvent& event )
 {
+  wxString      string;
+  int           value;
   if (!Waiting)
     return;
   Waiting = 0;
-  ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
+
+  // return open symbol
+  string = XRCCTRL(*this, "wxID_ATTRIBUTE_OPEN", wxComboBox)->GetValue( );
+  if (string.Len() > 0)
+    {
+      value = (int)string.GetChar(0);
+      ThotCallback (MathsDialogue + MathAttributeOpen, STRING_DATA, (char *)value);
+    }
+
+  // return open separators
+  string = XRCCTRL(*this, "wxID_ATTRIBUTE_SEPARATORS", wxComboBox)->GetValue( );
+  if (string.Len() > 0)
+    {
+      value = (int)string.GetChar(0);
+      ThotCallback (MathsDialogue + MathAttributeSeparators, STRING_DATA, (char *)value);
+    }
+
+  // return open symbol
+  string = XRCCTRL(*this, "wxID_ATTRIBUTE_CLOSE", wxComboBox)->GetValue( );
+  if (string.Len() > 0)
+    {
+      value = (int)string.GetChar(0);
+      ThotCallback (MathsDialogue + MathAttributeClose, STRING_DATA, (char *)value);
+    }
+
+  ThotCallback (MyRef, INTEGER_DATA, (char*) 1);
   TtaDestroyDialogue (MyRef);
 }
 

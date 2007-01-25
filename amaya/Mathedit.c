@@ -69,6 +69,7 @@ static ThotBool	InitMaths;
 static int Math_occurences = 1;
 static int Math_OperatorType = 0;
 static char *Math_fence_attributes[3];
+static int Math_open, Math_close, Math_sep;
 #endif /* _WX */
 
 static ThotBool	IsLastDeletedElement = FALSE;
@@ -1324,7 +1325,9 @@ static void CreateMathConstruct (int construct, ...)
   char              *name;
   Language           lang;
   DisplayMode        dispMode;
-  int                c1, i, len, profile, selectedchild;
+  int                c1, i, len, profile, selectedchild, lx, ly;
+  int                number, contour, type, symbol, symbol2, symboltype;
+  int                degree, degreevar, nabla, ibefore, par, symboldiff;
   va_list            varpos;
   ThotBool           oldStructureChecking;
   ThotBool	         before, emptySel, ok, insertSibling;
@@ -2095,8 +2098,8 @@ static void CreateMathConstruct (int construct, ...)
               if (construct == 26 || construct == 30)
                 {
                   /* Accents ; exposant */
-                  int symboltype = (construct == 26 ? MathML_EL_MO : va_arg(varpos, int));
-                  int symbol = va_arg(varpos, int);
+                  symboltype = (construct == 26 ? MathML_EL_MO : va_arg(varpos, int));
+                  symbol = va_arg(varpos, int);
                   leaf = child;
                   InsertSymbol (&child, symboltype, symbol, doc);
                   TtaRemoveTree (leaf, doc);
@@ -2106,7 +2109,7 @@ static void CreateMathConstruct (int construct, ...)
                 }
               else if (construct == 59 || construct == 60)
                 {/* accents with a horizontal strech */
-                int symbol = va_arg(varpos, int);
+                symbol = va_arg(varpos, int);
                 child = TtaGetParent (child);
                 AttachIntHorizStretch(child,doc);
 
@@ -2144,11 +2147,10 @@ static void CreateMathConstruct (int construct, ...)
       if (construct == 20)
         {
           /* Integral msubsup ; Integral sub ; Integral2 */
-          int symbol = va_arg(varpos, int), type;
+          symbol = va_arg(varpos, int);
           if (symbol == -1)
             {
             /* ask the type of integral */
-            int number, contour;
             number = GetOccurrences (doc, TtaGetMessage (AMAYA, AM_NUMBER_OCCUR), 1, 1);
             contour = GetOccurrences (doc, TtaGetMessage (AMAYA, AM_NUMBER_OCCUR), 0, 0);
             type = GetOccurrences (doc, TtaGetMessage (AMAYA, AM_NUMBER_OCCUR), 0, 0);
@@ -2198,7 +2200,8 @@ static void CreateMathConstruct (int construct, ...)
       else if (construct == 21 || construct == 22)
         {
           /* n-ary operation/relation */
-          int number, type = va_arg(varpos, int), symbol = va_arg(varpos, int);
+          type = va_arg(varpos, int);
+          symbol = va_arg(varpos, int);
           unsigned char *symbol_name;
           if (symbol == 0)
             symbol_name = va_arg(varpos, unsigned char*);
@@ -2284,7 +2287,7 @@ static void CreateMathConstruct (int construct, ...)
       else if (construct == 23)
         {
           /* Unary operation/relation */
-          int par, symbol = va_arg(varpos, int);
+          symbol = va_arg(varpos, int);
           leaf = TtaGetFirstChild (el);
           child = leaf;
 
@@ -2315,10 +2318,8 @@ static void CreateMathConstruct (int construct, ...)
       else if (construct == 24)
         {
           /* Simple Symbol ; Simple Text */
-          int symbol = va_arg(varpos, int);
-          int len;
+          symbol = va_arg(varpos, int);
           leaf = el;
-
           if (symbol == 0)
             InsertText (&el, MathML_EL_MI, va_arg(varpos, unsigned char*), doc);
           else
@@ -2337,7 +2338,7 @@ static void CreateMathConstruct (int construct, ...)
           /* Piecewise ; VerticalBrace */
 
           /* ask how many the user wants */
-          int number = GetOccurrences (doc, TtaGetMessage (AMAYA, AM_ROWS), 3, 2);
+          number = GetOccurrences (doc, TtaGetMessage (AMAYA, AM_ROWS), 3, 2);
           leaf = TtaGetFirstChild (el);
           child = leaf;
 
@@ -2354,8 +2355,8 @@ static void CreateMathConstruct (int construct, ...)
       else if (construct == 26 || construct == 30 || construct == 31 || construct == 33)
         {
           /* Accents ; Exposant ; Symbol sub ; Symbol under */
-          int symboltype = (construct == 26 ? MathML_EL_MO : va_arg(varpos, int));
-          int symbol = va_arg(varpos, int);
+          symboltype = (construct == 26 ? MathML_EL_MO : va_arg(varpos, int));
+          symbol = va_arg(varpos, int);
           if (selectedchild == 1)
             child = TtaGetFirstChild (el);
           else
@@ -2384,7 +2385,7 @@ static void CreateMathConstruct (int construct, ...)
       else if (construct == 27)
         {
           /* Binary operation/relation */
-          int symbol = va_arg(varpos, int);
+          symbol = va_arg(varpos, int);
           leaf = TtaGetFirstChild (el);
           child = leaf;
 
@@ -2462,7 +2463,7 @@ static void CreateMathConstruct (int construct, ...)
         {/* selector */
 
           /* ask number of coordonnates */
-          int number = GetOccurrences (doc,  TtaGetMessage (AMAYA, AM_NUMBER_COORDONNATES), 2, 1);
+          number = GetOccurrences (doc, TtaGetMessage (AMAYA, AM_NUMBER_COORDONNATES), 2, 1);
 
           child = TtaGetLastChild (el);
           leaf = TtaGetFirstChild (child);
@@ -2482,7 +2483,7 @@ static void CreateMathConstruct (int construct, ...)
         }
       else if (construct == 37)
         {/* couple,  n-uple */
-          int number = va_arg(varpos, int);
+          number = va_arg(varpos, int);
           if (number != 2)
             {/* ask how many the user wants */
               number = GetOccurrences (doc,  TtaGetMessage (AMAYA, AM_NUMBER_NUPLE), 3, 2);
@@ -2501,8 +2502,9 @@ static void CreateMathConstruct (int construct, ...)
         }
       else if (construct == 38)
         {/* set/list separation */
-          int ope = va_arg(varpos, int), clo = va_arg(varpos, int);
-          new_ = SetMFencedAttributes(el, ope, clo, '|', doc);
+          Math_open = va_arg(varpos, int);
+          Math_close = va_arg(varpos, int);
+          new_ = SetMFencedAttributes(el, Math_open, Math_close, '|', doc);
           leaf = TtaGetFirstChild (new_);
           child = leaf;
           InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
@@ -2514,17 +2516,20 @@ static void CreateMathConstruct (int construct, ...)
         }
       else if (construct == 39)
         {/* parenthesis ; interval ; fence2 ; set/list extension */
-          int ope = va_arg(varpos, int), clo = va_arg(varpos, int), sep = va_arg(varpos, int), number = va_arg(varpos, int);
-          if (ope == -1 && clo == -1)
+          Math_open = va_arg(varpos, int);
+          Math_close = va_arg(varpos, int);
+          Math_sep = va_arg(varpos, int);
+          number = va_arg(varpos, int);
+          if (Math_open == -1 && Math_close == -1)
             {
             /* get types of open/close symbols selected in the panel */
-            ope = '(';
-            clo = ')';
+            Math_open = '(';
+            Math_close = ')';
             }
-          if (sep == -1 )
+          if (Math_sep == -1 )
             {
             /* get types of open/close symbols selected in the panel */
-            sep = ',';
+            Math_sep = ',';
             GetFenceAttributes (doc);
             }
           if (number == -1)
@@ -2535,35 +2540,38 @@ static void CreateMathConstruct (int construct, ...)
 
           leaf = TtaGetFirstChild (el);
           child = leaf;
-          InsertSymbolUnit (&child, MathML_EL_MF, ope, doc);
+          InsertSymbolUnit (&child, MathML_EL_MF, Math_open, doc);
           TtaDeleteTree (leaf, doc);
           
           for (i = 0 ; i < number; i++)
             {
-            if (i)InsertSymbol (&child, MathML_EL_MO, sep, doc);
+            if (i)
+              InsertSymbol (&child, MathML_EL_MO, Math_sep, doc);
             InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
-            if (!i)selected = TtaGetFirstChild (child);
+            if (!i)
+              selected = TtaGetFirstChild (child);
             }
-          InsertSymbolUnit (&child, MathML_EL_MF, clo, doc);
+          InsertSymbolUnit (&child, MathML_EL_MF, Math_close, doc);
         }
       else if (construct == 40)
         {/* card/abs/floor/ceiling */
-          int ope = va_arg(varpos, int), clo = va_arg(varpos, int);
+          Math_open = va_arg(varpos, int);
+          Math_close = va_arg(varpos, int);
           leaf = TtaGetFirstChild (el);
           child = leaf;
-          InsertSymbol (&child, MathML_EL_MO, ope, doc);
+          InsertSymbol (&child, MathML_EL_MO, Math_open, doc);
           TtaDeleteTree (leaf, doc);
           InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
-          InsertSymbol (&child, MathML_EL_MO, clo, doc);
+          InsertSymbol (&child, MathML_EL_MO, Math_close, doc);
         }
       else if (construct == 43)
         {
           /* diagonalintersection ; limtendsto ; tendstotendsto */
-          int symbol = va_arg(varpos, int);
-          int symbol2 = va_arg(varpos, int);
+          symbol = va_arg(varpos, int);
+          symbol2 = va_arg(varpos, int);
           child = TtaGetFirstChild (el); 
-          if (symbol == 'R')AttachIntHorizStretch(child,doc);
-
+          if (symbol == 'R')
+            AttachIntHorizStretch(child,doc);
           leaf = TtaGetFirstChild (child);
           child = leaf;
 
@@ -2610,7 +2618,7 @@ static void CreateMathConstruct (int construct, ...)
         { /* lambda constuct */
 
           /* ask the number of variables */
-          int numbervar = GetOccurrences (doc,  TtaGetMessage (AMAYA, AM_NUMBER_VARIABLES), 2, 1);
+          number = GetOccurrences (doc, TtaGetMessage (AMAYA, AM_NUMBER_VARIABLES), 2, 1);
           leaf = TtaGetFirstChild (el);
           child = leaf;
           InsertSymbol(&child, MathML_EL_MI, 955, doc);// lambda
@@ -2623,7 +2631,7 @@ static void CreateMathConstruct (int construct, ...)
           InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
           TtaDeleteTree (leaf, doc);
           selected = child;
-          for (i = 1 ; i <= numbervar; i++)
+          for (i = 1 ; i <= number; i++)
             InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
 
           CreateFencedSeparators (new_, doc, FALSE);
@@ -2676,7 +2684,7 @@ static void CreateMathConstruct (int construct, ...)
         }
       else if (construct == 48)
         { /* complexcartesian */
-          int ibefore = va_arg(varpos, int); 
+          ibefore = va_arg(varpos, int); 
           leaf = TtaGetFirstChild (el);
           child = leaf;
 
@@ -2720,8 +2728,7 @@ static void CreateMathConstruct (int construct, ...)
         }
       else if (construct == 50)
         { /* diff ; partialdiff */
-          int symbol = va_arg(varpos, int);
-
+          symbol = va_arg(varpos, int);
           leaf = TtaGetFirstChild (TtaGetFirstChild (el));
           child = leaf;
           InsertEmptyConstruct (&child, MathML_EL_MROW, doc);
@@ -2747,10 +2754,10 @@ static void CreateMathConstruct (int construct, ...)
         }
       else if (construct== 51)
         { /* partialdiff2 */
-          int symboldiff = 8706, degree = 0, numbervar;
-
+          symboldiff = 8706;
+          degree = 0;
           /* ask the user about the number of variables that have to be differentiated */
-          numbervar = GetOccurrences (doc,  TtaGetMessage (AMAYA, AM_NUMBER_VARIABLES), 1, 1);
+          number = GetOccurrences (doc, TtaGetMessage (AMAYA, AM_NUMBER_VARIABLES), 1, 1);
   
           /* Denominator */
           leaf = TtaGetFirstChild (TtaGetLastChild (el));
@@ -2761,14 +2768,12 @@ static void CreateMathConstruct (int construct, ...)
           leaf = TtaGetFirstChild(child);
           child = leaf;
 
-          for(i = 0; i < numbervar; i++)
+          for(i = 0; i < number; i++)
              {
              /* ask the user about the degree of derivation of each variable */
              char buffer[50];
-             int degreevar;
              sprintf (buffer, TtaGetMessage (AMAYA, AM_DEGREE_VARIABLE), i + 1);
-             degreevar = GetOccurrences (doc, buffer, 1, 1);
-             
+             degree = GetOccurrences (doc, buffer, 1, 1);
              degree += degreevar;
              if (degreevar == 1)
                {
@@ -2828,14 +2833,17 @@ static void CreateMathConstruct (int construct, ...)
         }
       else if (construct== 53)
         { /* vectorrow ; vectorcolomn ; matrix ; determinant2 */
-          int ope = va_arg(varpos, int), clo = va_arg(varpos, int);
-          int lx = va_arg(varpos, int), ly = va_arg(varpos, int);
-
-          child = SetMFencedAttributes(el, ope, clo, ',', doc);
+          Math_open = va_arg(varpos, int);
+          Math_close = va_arg(varpos, int);
+          lx = va_arg(varpos, int);
+          ly = va_arg(varpos, int);
+          child = SetMFencedAttributes(el, Math_open, Math_close, ',', doc);
         
           /* ask the user the number of rows and colomns */
-          if (lx == 0) lx = GetOccurrences (doc, TtaGetMessage (AMAYA, AM_COLS), 3, 1);
-          if (ly == 0) ly = GetOccurrences (doc, TtaGetMessage (AMAYA, AM_ROWS), 3, 1);
+          if (lx == 0)
+            lx = GetOccurrences (doc, TtaGetMessage (AMAYA, AM_COLS), 3, 1);
+          if (ly == 0)
+            ly = GetOccurrences (doc, TtaGetMessage (AMAYA, AM_ROWS), 3, 1);
 
           /* mtable */
           leaf = TtaGetFirstChild (child);TtaDeleteTree (leaf, doc);
@@ -2844,8 +2852,8 @@ static void CreateMathConstruct (int construct, ...)
         }
       else if (construct == 54)
         {/* curl ; div ; grad ; laplacian */
-          int nabla = 8711;
-          int symbol = va_arg(varpos, int);
+          nabla = 8711;
+          symbol = va_arg(varpos, int);
           leaf = TtaGetFirstChild (el);
           child = leaf;
           if (symbol == 1)
@@ -2936,7 +2944,8 @@ static void CreateMathConstruct (int construct, ...)
       else if (construct == 58)
         {/* diffential */
           /* ask the user about the degree of diffentiation */
-          int symboldiff = 8518, degree = GetOccurrences (doc, TtaGetMessage (AMAYA, AM_DEGREE), 2, 0);
+          symboldiff = 8518;
+          degree = GetOccurrences (doc, TtaGetMessage (AMAYA, AM_DEGREE), 2, 0);
 
           /* Numerator */
           leaf = TtaGetFirstChild (TtaGetFirstChild (el));
@@ -2986,7 +2995,7 @@ static void CreateMathConstruct (int construct, ...)
         }
       else if (construct == 59 || construct == 60)
         {/* accents with a horizontal strech */
-        int symbol = va_arg(varpos, int);
+        symbol = va_arg(varpos, int);
         child = TtaGetLastChild(el);
         AttachIntHorizStretch(child,doc);
 
@@ -3212,7 +3221,6 @@ static void CallbackMaths (int ref, int typedata, char *data)
 #else /* _WX */
       /* the user has clicked the DONE button in the Math dialog box */
       InitMaths = FALSE;
-      //TtaDestroyDialogue (ref);   
 #endif /* _WX */
       break;
 
@@ -3225,11 +3233,21 @@ static void CallbackMaths (int ref, int typedata, char *data)
 #endif /* _WX */
       break;
 
-    case FormMathFenceAttributes:
+    case MathAttributeOpen:
 #ifdef _WX
-#else /* _WX */
-      /* the user has clicked the DONE button in the Math dialog box */
-      InitMaths = FALSE;
+      Math_open = val;
+#endif /* _WX */
+      break;
+
+    case MathAttributeSeparators:
+#ifdef _WX
+      Math_sep = val;
+#endif /* _WX */
+      break;
+
+    case MathAttributeClose:
+#ifdef _WX
+      Math_close = val;
 #endif /* _WX */
       break;
 

@@ -12,15 +12,14 @@
       <object class="sizeritem">
         <object class="wxStaticText" name="wxID_LABEL">
           <label>*Select open, separators and close symbols*</label>
-          <size>400,20</size>
+          <size>350,20</size>
         </object>
       </object>
       <object class="spacer">
         <size>0,10</size>
       </object>
       <object class="sizeritem">
-        <object class="wxGridSizer">
-          <cols>3</cols>
+        <object class="wxBoxSizer">
           <object class="sizeritem">
             <object class="wxComboBox" name="wxID_ATTRIBUTE_OPEN">
               <content>
@@ -37,6 +36,9 @@
               <selection>0</selection>
               <size>60,30</size>
             </object>
+          </object>
+          <object class="spacer">
+            <size>3,0</size>
           </object>
           <object class="sizeritem">
             <object class="wxComboBox" name="wxID_ATTRIBUTE_SEPARATORS">
@@ -61,6 +63,9 @@
               </font>
             </object>
           </object>
+          <object class="spacer">
+            <size>3,0</size>
+          </object>
           <object class="sizeritem">
             <object class="wxComboBox" name="wxID_ATTRIBUTE_CLOSE">
               <content>
@@ -78,6 +83,7 @@
               <size>60,30</size>
             </object>
           </object>
+          <orient>wxHORIZONTAL</orient>
         </object>
         <flag>wxALIGN_CENTRE</flag>
       </object>
@@ -87,8 +93,10 @@
       <object class="sizeritem">
         <object class="wxButton" name="wxID_INSERT">
           <label>*insert*</label>
+          <default>1</default>
         </object>
-        <flag>wxALL|wxALIGN_CENTRE</flag>
+        <flag>wxALL|wxALIGN_RIGHT</flag>
+        <border>5</border>
       </object>
     </object>
   </object>
