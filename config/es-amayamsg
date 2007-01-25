@@ -389,22 +389,22 @@
 387 Elemento desconocido
 388 %d elementos actualizados
 389 El título es obligatorio
-390 **Template repositories
-391 **Templates
-392 **Number of occurrences
-393 **Maximum number of occurrences reached
-394 **Minimum number of occurrences reached
-395 **Check duplicated IDs
-396 **Add the xsl stylesheet for MathML elements
+390 Repertorios de los modelos
+391 Modelos
+392 Número de ocurrencias
+393 Número máximo de ocurrencias alcanzado
+394 Número mínimo de ocurrencias alcanzado
+395 Verificar los IDs duplicados
+396 Agregar la hoja xsl para los elementos MathML
 397 Insertar operador
-398 Seleccionar la manera con la que el operador debe ser visualizado :
-399 **Attributes of the fence
-400 **Select open, separators and close symbols:
-401 **Number of operator symbols?
-402 **Number of coordonnates?
-403 **Length of the N-uple?
-404 **Number of elements?
-405 **Number of variables?
-406 **Degree?
-407 **Degree of the variable number %d?
-408 **Compound document
+398 Seleccionar la manera cuya el operador debe ser visualizado
+399 Atributos del fence
+400 Seleccionar los símbolos arbriendos, separadores y cerrandos
+401 Número de símbolos operadores
+402 Número de coordenadas
+403 Largo del N-
+404 Número de elementos
+405 Número de variables
+406 Grado
+407 Grado de la variable %d
+408 Documento compuesto

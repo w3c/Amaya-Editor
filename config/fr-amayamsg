@@ -397,14 +397,14 @@
 395 Vérifier les IDs dupliqués
 396 Ajouter la feuille xsl pour les éléments MathML
 397 Insérer opérateur
-398 Choisir la façon dont l'opérateur doit être affiché :
-399 Attributs du fences
-400 Choisir les symboles ouvrants, séparateurs et fermants :
-401 Nombre de symboles opérateur ?
-402 Nombre de coordonnées ?
-403 Longueur du N-tuplet ?
-404 Nombre d'éléments ?
-405 Nombre de variables ?
-406 Degré ?
-407 Degré de la variable numéro %d ?
+398 Choisir la façon dont l'opérateur doit être affiché
+399 Attributs du fence
+400 Choisir les symboles ouvrants, séparateurs et fermants
+401 Nombre de symboles opérateurs
+402 Nombre de coordonnées
+403 Longueur du N-uplet
+404 Nombre d'éléments
+405 Nombre de variables
+406 Degré
+407 Degré de la variable numéro %d
 408 Document composé
