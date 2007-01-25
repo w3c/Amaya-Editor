@@ -69,9 +69,9 @@ static ThotBool	InitMaths;
 static int Math_occurences = 1;
 static int Math_OperatorType = 0;
 static char *Math_fence_attributes[3];
-static int Math_open, Math_close, Math_sep;
 #endif /* _WX */
 
+static int Math_open, Math_close, Math_sep;
 static ThotBool	IsLastDeletedElement = FALSE;
 static Element	LastDeletedElement = NULL;
 static Element  MathElementSelected = NULL;
