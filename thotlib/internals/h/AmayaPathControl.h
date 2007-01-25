@@ -12,7 +12,7 @@ public:
   wxString label;
   Element  elem;
   wxRect   rect;
-  
+  bool     isXTiger;
   void Draw(wxDC& dc, bool isFocused);
 };
 

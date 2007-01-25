@@ -59,6 +59,7 @@ void AmayaPathControl::SetSelection(Element elem)
   wxRect              rect;
   int                 length;
   char               *buffer = NULL;
+  bool                xtiger;
   
   m_items.DeleteContents(true);
   m_items.clear();
@@ -74,8 +75,9 @@ void AmayaPathControl::SetSelection(Element elem)
            (pEl->ElLeafType != LtText && pEl->ElLeafType != LtPicture)))
         {
           buffer = NULL;
-          if (pEl->ElStructSchema && pEl->ElStructSchema->SsName &&
-              !strcmp (pEl->ElStructSchema->SsName, "Template"))
+          xtiger = (pEl->ElStructSchema && pEl->ElStructSchema->SsName &&
+                    !strcmp (pEl->ElStructSchema->SsName, "Template"));
+          if (xtiger)
             {
               pAttr = GetAttrElementWithException (ExcGiveName, pEl);
               if (pAttr)
@@ -103,8 +105,9 @@ void AmayaPathControl::SetSelection(Element elem)
           item->label = name;
           item->elem = Element(pEl);
           item->rect = rect;
-          m_items.Append(item);
-          if(rect.height>m_height)
+          item->isXTiger = xtiger;
+           m_items.Append(item);
+          if (rect.height > m_height)
             m_height = rect.height;
         }    
       pEl = pEl->ElParent;
@@ -145,7 +148,7 @@ void AmayaPathControl::OnDraw(wxPaintEvent& event)
             }
           else
             bIsFirst = false;
-          node->GetData()->Draw(dc, node->GetData()==m_focused);
+          node->GetData()->Draw(dc, node->GetData() == m_focused);
           x += node->GetData()->rect.width;
         }
       else if (bIsFirst)
@@ -217,12 +220,19 @@ void AmayaPathControl::PreCalcPositions()
   -----------------------------------------------------------------------*/
 void AmayaPathControlItem::Draw(wxDC& dc, bool isFocused)
 {
-  if (rect.x>=0)
+  if (rect.x >= 0)
   {
     if (isFocused)
     {
       wxColour col = dc.GetTextForeground();
-      dc.SetTextForeground(/*wxSystemSettings::GetColour(isFocused?wxSYS_COLOUR_HIGHLIGHTTEXT:wxSYS_COLOUR_MENUTEXT)*/ wxColour(255, 0, 0));
+      dc.SetTextForeground(wxColour(255, 0, 0));
+      dc.DrawText(label, rect.x, rect.y);
+      dc.SetTextForeground(col);
+    }
+    else if (isXTiger)
+    {
+      wxColour col = dc.GetTextForeground();
+      dc.SetTextForeground(wxColour(25, 142, 25));
       dc.DrawText(label, rect.x, rect.y);
       dc.SetTextForeground(col);
     }
