@@ -2768,7 +2768,7 @@ static void CreateMathConstruct (int construct, ...)
              /* ask the user about the degree of derivation of each variable */
              char buffer[50];
              sprintf (buffer, TtaGetMessage (AMAYA, AM_DEGREE_VARIABLE), i + 1);
-             degree = GetOccurrences (doc, buffer, 1, 1);
+             degreevar = GetOccurrences (doc, buffer, 1, 1);
              degree += degreevar;
              if (degreevar == 1)
                {
