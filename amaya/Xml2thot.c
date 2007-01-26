@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2005
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -24,6 +24,7 @@
 #include "fetchHTMLname.h"
 #include "document.h"
 
+#include "AHTURLTools_f.h"
 #include "HTMLactions_f.h"
 #include "HTMLedit_f.h"
 #include "HTMLimage_f.h"
@@ -5988,7 +5989,7 @@ void StartXmlParser (Document doc, char *fileName,
       /* Check the Thot abstract tree for XHTML documents */
       if (isXHTML)
         {
-          CheckAbstractTree (XMLcontext.doc);
+          CheckAbstractTree (XMLcontext.doc, IsXTiger (documentName));
           if (MapAreas[doc])
             ChangeAttrOnRoot (doc, HTML_ATTR_ShowAreas);
         }

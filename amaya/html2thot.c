@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2005
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -21,6 +21,7 @@
 #include "parser.h"
 #include "zlib.h"
 
+#include "AHTURLTools_f.h"
 #include "css_f.h"
 #include "fetchHTMLname_f.h"
 #include "fetchXMLname_f.h"
@@ -1292,7 +1293,7 @@ void BlockInCharLevelElem (Element el)
   document if el is a leaf and is not allowed to be a child of element parent.
   Return TRUE if element *el has been inserted in the tree.
   ----------------------------------------------------------------------*/
-static ThotBool     CheckSurrounding (Element * el, Element parent)
+static ThotBool CheckSurrounding (Element * el, Element parent)
 {
   ElementType      parentType, newElType, elType, ancestorType;
   Element          newEl, ancestor, prev, prevprev;
@@ -6106,8 +6107,9 @@ static Element ParentOfType (Element el, int typeNum)
 /*----------------------------------------------------------------------
   CheckAbstractTree
   Check the Thot abstract tree and create the missing elements.
+  The parameter isXTiger is TRUE when parsing a XTiger template.
   ----------------------------------------------------------------------*/
-void CheckAbstractTree (Document doc)
+void CheckAbstractTree (Document doc, ThotBool isXTiger)
 {
   ElementType	elType, newElType, headElType;
   Element	elRoot;
@@ -6602,152 +6604,155 @@ void CheckAbstractTree (Document doc)
             }
         }
 
-      /* create a surrounding element Definition_List for each sequence */
-      /* of elements Definition_Item which are not in a Definition_List */
-      el = TtaGetFirstChild (elRoot);
-      if (el != NULL)
+      if (!isXTiger)
         {
-          /* search all elements Definition_Item in the document */
-          while (el != NULL)
+          /* create a surrounding element Definition_List for each sequence */
+          /* of elements Definition_Item which are not in a Definition_List */
+          el = TtaGetFirstChild (elRoot);
+          if (el != NULL)
             {
-              elType.ElSSchema = htmlSSchema;
-              elType.ElTypeNum = HTML_EL_Definition_Item;
-              el = TtaSearchTypedElement (elType, SearchForward, el);
-              if (el != NULL)
-                /* an element Definition_Item has been found */
+              /* search all elements Definition_Item in the document */
+              while (el != NULL)
                 {
-                  if (!ParentOfType (el, HTML_EL_Definition_List))
-                  /* this Definition_Item is not a child of a Definition_List*/
+                  elType.ElSSchema = htmlSSchema;
+                  elType.ElTypeNum = HTML_EL_Definition_Item;
+                  el = TtaSearchTypedElement (elType, SearchForward, el);
+                  if (el != NULL)
+                    /* an element Definition_Item has been found */
                     {
-                      /* search all immediate Definition_Item siblings */
-                      firstEntry = el;
-                      do
+                      if (!ParentOfType (el, HTML_EL_Definition_List))
+                        /* this Definition_Item is not a child of a Definition_List*/
                         {
-                          lastEntry = el;
-                          TtaNextSibling (&el);
-                          if (el == NULL)
-                            elType.ElTypeNum = 0;
-                          else
-                            elType = TtaGetElementType (el);
-                        }
-                      while (elType.ElSSchema == htmlSSchema &&
-                             (elType.ElTypeNum == HTML_EL_Definition_Item ||
-                              elType.ElTypeNum == HTML_EL_Invalid_element ||
-                              elType.ElTypeNum == HTML_EL_Comment_ ||
-                              elType.ElTypeNum == HTML_EL_XMLPI));
-                      /* create a Definition_List element before the */
-                      /* first Definition_Item element */
-                      newElType.ElSSchema = htmlSSchema;
-                      newElType.ElTypeNum = HTML_EL_Definition_List;
-                      glossary = TtaNewElement (doc, newElType);
-                      TtaInsertSibling (glossary, firstEntry, TRUE, doc);
-                      /* move the Definition_Item elements as children */
-                      /* of the new Definition_List element */
-                      nextEl = firstEntry;
-                      TtaNextSibling (&nextEl);
-                      TtaRemoveTree (firstEntry, doc);
-                      TtaInsertFirstChild (&firstEntry, glossary, doc);
-                      if (lastEntry != firstEntry)
-                        {
-                          prevEl = firstEntry;
+                          /* search all immediate Definition_Item siblings */
+                          firstEntry = el;
                           do
                             {
-                              child = nextEl;
-                              TtaNextSibling (&nextEl);
-                              TtaRemoveTree (child, doc);
-                              TtaInsertSibling (child, prevEl, FALSE, doc);
-                              prevEl = child;
+                              lastEntry = el;
+                              TtaNextSibling (&el);
+                              if (el == NULL)
+                                elType.ElTypeNum = 0;
+                              else
+                                elType = TtaGetElementType (el);
                             }
-                          while (nextEl != NULL && child != lastEntry);
+                          while (elType.ElSSchema == htmlSSchema &&
+                                 (elType.ElTypeNum == HTML_EL_Definition_Item ||
+                                  elType.ElTypeNum == HTML_EL_Invalid_element ||
+                                  elType.ElTypeNum == HTML_EL_Comment_ ||
+                                  elType.ElTypeNum == HTML_EL_XMLPI));
+                          /* create a Definition_List element before the */
+                          /* first Definition_Item element */
+                          newElType.ElSSchema = htmlSSchema;
+                          newElType.ElTypeNum = HTML_EL_Definition_List;
+                          glossary = TtaNewElement (doc, newElType);
+                          TtaInsertSibling (glossary, firstEntry, TRUE, doc);
+                          /* move the Definition_Item elements as children */
+                          /* of the new Definition_List element */
+                          nextEl = firstEntry;
+                          TtaNextSibling (&nextEl);
+                          TtaRemoveTree (firstEntry, doc);
+                          TtaInsertFirstChild (&firstEntry, glossary, doc);
+                          if (lastEntry != firstEntry)
+                            {
+                              prevEl = firstEntry;
+                              do
+                                {
+                                  child = nextEl;
+                                  TtaNextSibling (&nextEl);
+                                  TtaRemoveTree (child, doc);
+                                  TtaInsertSibling (child, prevEl, FALSE, doc);
+                                  prevEl = child;
+                                }
+                              while (nextEl != NULL && child != lastEntry);
+                            }
+                          /* starting element for the next search of a */
+                          /* Definition_Item */
+                          el = lastEntry;
                         }
-                      /* starting element for the next search of a */
-                      /* Definition_Item */
-                      el = lastEntry;
                     }
                 }
             }
-        }
 
-      /* create a surrounding element Unnumbered_List for each sequence */
-      /* of elements List_Item which are not in a Unnumbered_List, a */
-      /* Numbered_List, a Menu, or a Directory */
-      el = TtaGetFirstChild (elRoot);
-      if (el != NULL)
-        {
-          /* search all elements List_Item in the document */
-          do
+          /* create a surrounding element Unnumbered_List for each sequence */
+          /* of elements List_Item which are not in a Unnumbered_List, a */
+          /* Numbered_List, a Menu, or a Directory */
+          el = TtaGetFirstChild (elRoot);
+          if (el != NULL)
             {
-              elType.ElSSchema = htmlSSchema;
-              elType.ElTypeNum = HTML_EL_List_Item;
-              el = TtaSearchTypedElement (elType, SearchForward, el);
-              if (el != NULL)
-                /* an element List_Item has been found */
+              /* search all elements List_Item in the document */
+              do
                 {
-                  parent = TtaGetParent (el);
-                  elType = TtaGetElementType (parent);
-#ifdef TEMPLATES
-                  /* if its parent is a Template element, skip it */
-                  while (strcmp(TtaGetSSchemaName(elType.ElSSchema),"Template") == 0)
+                  elType.ElSSchema = htmlSSchema;
+                  elType.ElTypeNum = HTML_EL_List_Item;
+                  el = TtaSearchTypedElement (elType, SearchForward, el);
+                  if (el != NULL)
+                    /* an element List_Item has been found */
                     {
-                      parent = TtaGetParent (parent);
+                      parent = TtaGetParent (el);
                       elType = TtaGetElementType (parent);
-                    }
-#endif /* TEMPLATES */
-                  if (elType.ElSSchema != htmlSSchema ||
-                      (elType.ElTypeNum != HTML_EL_Unnumbered_List &&
-                       elType.ElTypeNum != HTML_EL_Numbered_List &&
-                       elType.ElTypeNum != HTML_EL_Menu &&
-                       elType.ElTypeNum != HTML_EL_Directory))
-                    /* this List_Item is not within a list */
-                    {
-                      /* search all immediate List_Item siblings */
-                      firstEntry = el;
-                      do
+#ifdef TEMPLATES
+                      /* if its parent is a Template element, skip it */
+                      while (strcmp(TtaGetSSchemaName(elType.ElSSchema),"Template") == 0)
                         {
-                          lastEntry = el;
-                          TtaNextSibling (&el);
-                          if (el == NULL)
-                            elType.ElTypeNum = 0;
-                          else
-                            elType = TtaGetElementType (el);
+                          parent = TtaGetParent (parent);
+                          elType = TtaGetElementType (parent);
                         }
-                      while (elType.ElSSchema == htmlSSchema &&
-                             (elType.ElTypeNum == HTML_EL_List_Item ||
-                              elType.ElTypeNum == HTML_EL_Invalid_element ||
-                              elType.ElTypeNum == HTML_EL_Comment_ ||
-                              elType.ElTypeNum == HTML_EL_XMLPI));
-                      /* create a HTML_EL_Unnumbered_List element before
-                         the first List_Item element */
-                      newElType.ElSSchema = htmlSSchema;
-                      newElType.ElTypeNum = HTML_EL_Unnumbered_List;
-                      list = TtaNewElement (doc, newElType);
-                      TtaInsertSibling (list, firstEntry, TRUE, doc);
-                      /* move the List_Item elements as children of */
-                      /* the new HTML_EL_Unnumbered_List element */
-                      nextEl = firstEntry;
-                      TtaNextSibling (&nextEl);
-                      TtaRemoveTree (firstEntry, doc);
-                      TtaInsertFirstChild (&firstEntry, list, doc);
-                      if (lastEntry != firstEntry)
+#endif /* TEMPLATES */
+                      if (elType.ElSSchema != htmlSSchema ||
+                          (elType.ElTypeNum != HTML_EL_Unnumbered_List &&
+                           elType.ElTypeNum != HTML_EL_Numbered_List &&
+                           elType.ElTypeNum != HTML_EL_Menu &&
+                           elType.ElTypeNum != HTML_EL_Directory))
+                        /* this List_Item is not within a list */
                         {
-                          prevEl = firstEntry;
+                          /* search all immediate List_Item siblings */
+                          firstEntry = el;
                           do
                             {
-                              child = nextEl;
-                              TtaNextSibling (&nextEl);
-                              TtaRemoveTree (child, doc);
-                              TtaInsertSibling (child, prevEl, FALSE, doc);
-                              prevEl = child;
+                              lastEntry = el;
+                              TtaNextSibling (&el);
+                              if (el == NULL)
+                                elType.ElTypeNum = 0;
+                              else
+                                elType = TtaGetElementType (el);
                             }
-                          while (nextEl != NULL && child != lastEntry);
+                          while (elType.ElSSchema == htmlSSchema &&
+                                 (elType.ElTypeNum == HTML_EL_List_Item ||
+                                  elType.ElTypeNum == HTML_EL_Invalid_element ||
+                                  elType.ElTypeNum == HTML_EL_Comment_ ||
+                                  elType.ElTypeNum == HTML_EL_XMLPI));
+                          /* create a HTML_EL_Unnumbered_List element before
+                             the first List_Item element */
+                          newElType.ElSSchema = htmlSSchema;
+                          newElType.ElTypeNum = HTML_EL_Unnumbered_List;
+                          list = TtaNewElement (doc, newElType);
+                          TtaInsertSibling (list, firstEntry, TRUE, doc);
+                          /* move the List_Item elements as children of */
+                          /* the new HTML_EL_Unnumbered_List element */
+                          nextEl = firstEntry;
+                          TtaNextSibling (&nextEl);
+                          TtaRemoveTree (firstEntry, doc);
+                          TtaInsertFirstChild (&firstEntry, list, doc);
+                          if (lastEntry != firstEntry)
+                            {
+                              prevEl = firstEntry;
+                              do
+                                {
+                                  child = nextEl;
+                                  TtaNextSibling (&nextEl);
+                                  TtaRemoveTree (child, doc);
+                                  TtaInsertSibling (child, prevEl, FALSE, doc);
+                                  prevEl = child;
+                                }
+                              while (nextEl != NULL && child != lastEntry);
+                            }
+                          /* starting element for the next search of a
+                             List_Item */
+                          el = lastEntry;
                         }
-                      /* starting element for the next search of a
-                         List_Item */
-                      el = lastEntry;
                     }
                 }
+              while (el);
             }
-          while (el);
         }
 
       /* merge sibling Text elements with same attributes */
@@ -7292,7 +7297,7 @@ void StartParser (Document doc, char *fileName,
               el = TtaGetParent (el);
             }
           /* check the Thot abstract tree */
-          CheckAbstractTree (HTMLcontext.doc);
+          CheckAbstractTree (HTMLcontext.doc, IsXTiger (documentName));
           // now load the user style sheet
           if (!external_doc)
             LoadUserStyleSheet (doc);

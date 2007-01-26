@@ -703,6 +703,42 @@ ThotBool IsXMLName (const char *path)
 }
 
 /*----------------------------------------------------------------------
+  IsXTiger                                                        
+  returns TRUE if path points to an XTiger resource.
+  ----------------------------------------------------------------------*/
+ThotBool IsXTiger (const char *path)
+{
+  char        *temppath;
+  char        *suffix;
+  ThotBool    ret;
+
+  if (!path)
+    return (FALSE);
+
+  temppath = TtaStrdup ((char *)path);
+  suffix = (char *)TtaGetMemory (strlen (path) + 1);
+  TtaExtractSuffix (temppath, suffix);
+
+  if (!strcasecmp (suffix, "xtd"))
+    ret = TRUE;
+  else if (!strcmp (suffix, "gz"))
+    {
+      /* take into account compressed files */
+      TtaExtractSuffix (temppath, suffix);       
+      if (!strcasecmp (suffix, "xtd"))
+        ret = TRUE;
+      else
+        ret = FALSE;
+    }
+  else
+    ret = FALSE;
+
+  TtaFreeMemory (temppath);
+  TtaFreeMemory (suffix);
+  return (ret);
+}
+
+/*----------------------------------------------------------------------
   IsUndisplayedName                                                         
   returns TRUE if path points to an undisplayed resource.
   ----------------------------------------------------------------------*/

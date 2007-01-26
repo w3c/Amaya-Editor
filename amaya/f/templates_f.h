@@ -37,6 +37,7 @@ extern Element Template_InsertRepeatChild ( Document doc,
                                             int pos );
 extern ThotBool RepeatButtonClicked ( NotifyElement *event );
 extern ThotBool UseButtonClicked ( NotifyElement *event );
+extern ThotBool UseSimpleButtonClicked ( NotifyElement *event );
 extern ThotBool OptionButtonClicked ( NotifyElement *event );
 extern void OpeningInstance ( char *fileName,
                               Document doc );
@@ -79,6 +80,7 @@ extern Element Template_InsertRepeatChild ( Document doc,
                                               int pos );
 extern ThotBool RepeatButtonClicked ( NotifyElement *event );
 extern ThotBool UseButtonClicked ( NotifyElement *event );
+extern ThotBool UseSimpleButtonClicked ( NotifyElement *event );
 extern ThotBool OptionButtonClicked ( NotifyElement *event );
 extern void OpeningInstance ( char *fileName,
                                 Document doc );
