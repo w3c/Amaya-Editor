@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2005
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -664,11 +664,22 @@ void NotFoundDoc (char *url, Document doc)
   char                 tempfile[MAX_LENGTH];
   char                *charsetName;
   CHARSET              charset;
-  ThotBool             xhtml_mimetype;
+  ThotBool             xhtml_mimetype, empty;
 
   pathname = (char *)TtaGetMemory (MAX_LENGTH);
   documentname = (char *)TtaGetMemory (MAX_LENGTH);
+  // check if the user wants to open an empty document
+#ifdef _WINDOWS
+  sprintf (pathname, "%s\\empty", TtaGetEnvString ("THOTDIR"));
+#else /* _WINDOWS */
+  sprintf (pathname, "%s/empty", TtaGetEnvString ("THOTDIR"));
+#endif /* _WINDOWS */
+  empty = !strcmp (pathname, url);
   NormalizeURL (url, 0, pathname, documentname, NULL);
+  if (empty)
+    {
+      strcpy (url, "empty");
+    }
   if (doc == 0 || DontReplaceOldDoc)
     {
       doc = InitDocAndView (doc,
@@ -727,139 +738,143 @@ void NotFoundDoc (char *url, Document doc)
       DocumentMeta[doc]->charset = TtaStrdup ("iso-8859-1");
     }
 
-  elType = TtaGetElementType (docEl);
-  attrType.AttrSSchema = elType.ElSSchema;
-
-  /*-------------  New XHTML document ------------*/
-  /* force the XML parsing */
-  DocumentMeta[doc]->xmlformat = TRUE;
-  DocumentMeta[doc]->compound = FALSE;
-  TtaGetEnvBoolean ("ENABLE_XHTML_MIMETYPE", &xhtml_mimetype);
-  if (xhtml_mimetype)
-    DocumentMeta[doc]->content_type = TtaStrdup (AM_XHTML_MIME_TYPE);
+  if (empty)
+    root = docEl;
   else
-    DocumentMeta[doc]->content_type = TtaStrdup ("text/html");
-
-  /* create the DOCTYPE element corresponding to the document's profile */
-  elType.ElTypeNum = HTML_EL_DOCTYPE;
-  doctype = TtaSearchTypedElement (elType, SearchInTree, docEl);
-  if (doctype)
-    TtaDeleteTree (doctype, doc);
-  /* Load user's style sheet */
-  LoadUserStyleSheet (doc);
-
-  /* Set the namespace declaration */
-  elType.ElTypeNum = HTML_EL_HTML;
-  root = TtaSearchTypedElement (elType, SearchInTree, docEl);
-  TtaSetUriSSchema (elType.ElSSchema, XHTML_URI);
-  TtaSetANamespaceDeclaration (doc, root, NULL, XHTML_URI);
-
-  /* attach an attribute PrintURL to the root element */
-  attrType.AttrTypeNum = HTML_ATTR_PrintURL;
-  attr = TtaNewAttribute (attrType);
-  TtaAttachAttribute (root, attr, doc);
-
-  s = (char *)TtaConvertByteToMbs ((unsigned char *)TtaGetMessage (LIB, TMSG_NOT_FOUND),
-                                   TtaGetDefaultCharset ());
-  /* create a default title if there is no content in the TITLE element */
-  elType.ElTypeNum = HTML_EL_TITLE;
-  title = TtaSearchTypedElement (elType, SearchInTree, root);
-  text = TtaGetFirstChild (title);
-  if (text && TtaGetTextLength (text) == 0)
-    TtaSetTextContent (text, (unsigned char*)s, language, doc);
-  UpdateTitle (title, doc);
-
-  elType.ElTypeNum = HTML_EL_HEAD;
-  head = TtaSearchTypedElement (elType, SearchInTree, root);
-
-  /* create a Document_URL element as the first child of HEAD */
-  elType.ElTypeNum = HTML_EL_Document_URL;
-  el = TtaSearchTypedElement (elType, SearchInTree, head);
-  if (el == NULL)
     {
-      /* there is no Document_URL element, create one */
-      el = TtaNewElement (doc, elType);
-      TtaInsertFirstChild (&el, head, doc);
-    }
-  /* prevent the user from editing this element */
-  TtaSetAccessRight (el, ReadOnly, doc);
-  /* element Document_URL already exists */
-  text = TtaGetFirstChild (el);
-  if (text == NULL)
-    {
+      elType = TtaGetElementType (docEl);
+      attrType.AttrSSchema = elType.ElSSchema;
+
+      /*-------------  New XHTML document ------------*/
+      /* force the XML parsing */
+      DocumentMeta[doc]->xmlformat = TRUE;
+      DocumentMeta[doc]->compound = FALSE;
+      TtaGetEnvBoolean ("ENABLE_XHTML_MIMETYPE", &xhtml_mimetype);
+      if (xhtml_mimetype)
+        DocumentMeta[doc]->content_type = TtaStrdup (AM_XHTML_MIME_TYPE);
+      else
+        DocumentMeta[doc]->content_type = TtaStrdup ("text/html");
+
+      /* create the DOCTYPE element corresponding to the document's profile */
+      elType.ElTypeNum = HTML_EL_DOCTYPE;
+      doctype = TtaSearchTypedElement (elType, SearchInTree, docEl);
+      if (doctype)
+        TtaDeleteTree (doctype, doc);
+      /* Load user's style sheet */
+      LoadUserStyleSheet (doc);
+
+      /* Set the namespace declaration */
+      elType.ElTypeNum = HTML_EL_HTML;
+      root = TtaSearchTypedElement (elType, SearchInTree, docEl);
+      TtaSetUriSSchema (elType.ElSSchema, XHTML_URI);
+      TtaSetANamespaceDeclaration (doc, root, NULL, XHTML_URI);
+
+      /* attach an attribute PrintURL to the root element */
+      attrType.AttrTypeNum = HTML_ATTR_PrintURL;
+      attr = TtaNewAttribute (attrType);
+      TtaAttachAttribute (root, attr, doc);
+
+      s = (char *)TtaConvertByteToMbs ((unsigned char *)TtaGetMessage (LIB, TMSG_NOT_FOUND),
+                                       TtaGetDefaultCharset ());
+      /* create a default title if there is no content in the TITLE element */
+      elType.ElTypeNum = HTML_EL_TITLE;
+      title = TtaSearchTypedElement (elType, SearchInTree, root);
+      text = TtaGetFirstChild (title);
+      if (text && TtaGetTextLength (text) == 0)
+        TtaSetTextContent (text, (unsigned char*)s, language, doc);
+      UpdateTitle (title, doc);
+
+      elType.ElTypeNum = HTML_EL_HEAD;
+      head = TtaSearchTypedElement (elType, SearchInTree, root);
+
+      /* create a Document_URL element as the first child of HEAD */
+      elType.ElTypeNum = HTML_EL_Document_URL;
+      el = TtaSearchTypedElement (elType, SearchInTree, head);
+      if (el == NULL)
+        {
+          /* there is no Document_URL element, create one */
+          el = TtaNewElement (doc, elType);
+          TtaInsertFirstChild (&el, head, doc);
+        }
+      /* prevent the user from editing this element */
+      TtaSetAccessRight (el, ReadOnly, doc);
+      /* element Document_URL already exists */
+      text = TtaGetFirstChild (el);
+      if (text == NULL)
+        {
+          elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+          text = TtaNewElement (doc, elType);
+          TtaInsertFirstChild (&text, el, doc);
+        }
+      if (url && text)
+        TtaSetTextContent (text, (unsigned char*)url, language, doc);
+
+      /* create a META element in the HEAD with name="generator" */
+      /* and content="Amaya" */
+      child = TtaGetLastChild (head);
+      elType.ElTypeNum = HTML_EL_META;
+      meta = TtaNewElement (doc, elType);
+      attrType.AttrTypeNum = HTML_ATTR_meta_name;
+      attr = TtaNewAttribute (attrType);
+      TtaAttachAttribute (meta, attr, doc);
+      TtaSetAttributeText (attr, "generator", meta, doc);
+      attrType.AttrTypeNum = HTML_ATTR_meta_content;
+      attr = TtaNewAttribute (attrType);
+      TtaAttachAttribute (meta, attr, doc);
+      strcpy (tempfile, TtaGetAppName());
+      strcat (tempfile, " ");
+      strcat (tempfile, TtaGetAppVersion());
+      strcat (tempfile, ", see http://www.w3.org/Amaya/");
+      TtaSetAttributeText (attr, tempfile, meta, doc);
+      TtaInsertSibling (meta, child, FALSE, doc);
+
+      /* create a BODY element if there is not */
+      elType.ElTypeNum = HTML_EL_BODY;
+      body = TtaSearchTypedElement (elType, SearchInTree, root);
+      if (!body)
+        {
+          body = TtaNewTree (doc, elType, "");
+          TtaInsertSibling (body, head, FALSE, doc);
+        }
+
+      /* Search the first element in the BODY to set initial selection */
+      elType.ElTypeNum = HTML_EL_Element;
+      el = TtaSearchTypedElement (elType, SearchInTree, body);
+      /* Create a H1 */
+      elType.ElTypeNum = HTML_EL_H1;
+      child = TtaNewElement (doc, elType);
+      TtaInsertSibling (child, el, TRUE, doc);
+      /* Create a text */
       elType.ElTypeNum = HTML_EL_TEXT_UNIT;
       text = TtaNewElement (doc, elType);
-      TtaInsertFirstChild (&text, el, doc);
-    }
-  if (url && text)
-    TtaSetTextContent (text, (unsigned char*)url, language, doc);
-
-  /* create a META element in the HEAD with name="generator" */
-  /* and content="Amaya" */
-  child = TtaGetLastChild (head);
-  elType.ElTypeNum = HTML_EL_META;
-  meta = TtaNewElement (doc, elType);
-  attrType.AttrTypeNum = HTML_ATTR_meta_name;
-  attr = TtaNewAttribute (attrType);
-  TtaAttachAttribute (meta, attr, doc);
-  TtaSetAttributeText (attr, "generator", meta, doc);
-  attrType.AttrTypeNum = HTML_ATTR_meta_content;
-  attr = TtaNewAttribute (attrType);
-  TtaAttachAttribute (meta, attr, doc);
-  strcpy (tempfile, TtaGetAppName());
-  strcat (tempfile, " ");
-  strcat (tempfile, TtaGetAppVersion());
-  strcat (tempfile, ", see http://www.w3.org/Amaya/");
-  TtaSetAttributeText (attr, tempfile, meta, doc);
-  TtaInsertSibling (meta, child, FALSE, doc);
-
-  /* create a BODY element if there is not */
-  elType.ElTypeNum = HTML_EL_BODY;
-  body = TtaSearchTypedElement (elType, SearchInTree, root);
-  if (!body)
-    {
-      body = TtaNewTree (doc, elType, "");
-      TtaInsertSibling (body, head, FALSE, doc);
-    }
-
-  /* Search the first element in the BODY to set initial selection */
-  elType.ElTypeNum = HTML_EL_Element;
-  el = TtaSearchTypedElement (elType, SearchInTree, body);
-  /* Create a H1 */
-  elType.ElTypeNum = HTML_EL_H1;
-  child = TtaNewElement (doc, elType);
-  TtaInsertSibling (child, el, TRUE, doc);
-  /* Create a text */
-  elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-  text = TtaNewElement (doc, elType);
-  TtaSetTextContent (text, (unsigned char*)s, language, doc);
-  TtaInsertFirstChild (&text, child, doc);
-  /* Create a paragraph */
-  elType.ElTypeNum = HTML_EL_Paragraph;
-  child = TtaNewElement (doc, elType);
-  TtaInsertSibling (child, el, TRUE, doc);
-  /* Create a text */
-  TtaFreeMemory (s);
-  s = (char *)TtaConvertByteToMbs ((unsigned char *)TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
-                                   TtaGetDefaultCharset ());
-  elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-  text = TtaNewElement (doc, elType);
-  if (s)
-    {
-      pathname = (char *)TtaGetMemory (strlen (s) + strlen (url) + 1);
-      sprintf (pathname, s, url);
-      TtaSetTextContent (text, (unsigned char*)pathname, language, doc);
-      TtaFreeMemory (pathname);
+      TtaSetTextContent (text, (unsigned char*)s, language, doc);
+      TtaInsertFirstChild (&text, child, doc);
+      /* Create a paragraph */
+      elType.ElTypeNum = HTML_EL_Paragraph;
+      child = TtaNewElement (doc, elType);
+      TtaInsertSibling (child, el, TRUE, doc);
+      /* Create a text */
       TtaFreeMemory (s);
-    }
-  TtaInsertFirstChild (&text, child, doc);
+      s = (char *)TtaConvertByteToMbs ((unsigned char *)TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
+                                       TtaGetDefaultCharset ());
+      elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+      text = TtaNewElement (doc, elType);
+      if (s)
+        {
+          pathname = (char *)TtaGetMemory (strlen (s) + strlen (url) + 1);
+          sprintf (pathname, s, url);
+          TtaSetTextContent (text, (unsigned char*)pathname, language, doc);
+          TtaFreeMemory (pathname);
+          TtaFreeMemory (s);
+        }
+      TtaInsertFirstChild (&text, child, doc);
       
-  /* set the initial selection */
-  UpdateContextSensitiveMenus (doc);
-  /* Activate show areas */
-  if (MapAreas[doc])
-    ChangeAttrOnRoot (doc, HTML_ATTR_ShowAreas);
-
+      /* set the initial selection */
+      UpdateContextSensitiveMenus (doc);
+      /* Activate show areas */
+      if (MapAreas[doc])
+        ChangeAttrOnRoot (doc, HTML_ATTR_ShowAreas);
+    }
   /* Update the Doctype menu */
   UpdateDoctypeMenu (doc);
   /* the document should be saved */

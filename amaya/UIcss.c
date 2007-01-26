@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2005
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -390,8 +390,8 @@ void UpdateStyleSheet (char *url, char *tempdoc)
   PInfoPtr            pInfo, refInfo, nextInfo;
   DisplayMode         dispMode;
   Element             el;
-  int		      position;
-  int		      distance;
+  int		              position;
+  int		              distance;
   ThotBool            found;
 
   css = CSSList;

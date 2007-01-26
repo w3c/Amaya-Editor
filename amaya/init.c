@@ -7693,8 +7693,8 @@ void InitAmaya (NotifyEvent * event)
   SavedDocumentURL = NULL;
   /* set path on current directory */
 #ifdef _WX
-  wxString homedir = TtaGetHomeDir();
-  strcpy(DirectoryName, (const char *)homedir.mb_str(wxConvUTF8));
+  wxString homedir = TtaGetHomeDir ();
+  strcpy (DirectoryName, (const char *)homedir.mb_str(wxConvUTF8));
 #else /* _WX */
 #ifdef _WINDOWS
   s = getenv ("HOMEDRIVE");
@@ -8338,7 +8338,8 @@ void AmayaCloseTab (Document doc, View view)
 /*----------------------------------------------------------------------
   CloseOtherTabs close all tabs but selected
   ----------------------------------------------------------------------*/
-void CloseOtherTabs(Document doc, View view){
+void CloseOtherTabs( Document doc, View view)
+{
 #ifdef _WX
   int page_id       = -1;
   int page_position = 0;
@@ -8347,30 +8348,72 @@ void CloseOtherTabs(Document doc, View view){
   window_id = TtaGetDocumentWindowId( doc, view );
   /* Get the window id and page id of current document and
      close the corresponding page */
-  TtaGetDocumentPageId( doc, view, &page_id, &page_position );
-  TtaCloseAllPageButThis( window_id, page_id );
+  TtaGetDocumentPageId (doc, view, &page_id, &page_position);
+  TtaCloseAllPageButThis (window_id, page_id);
 #endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
   NewTab open a new tab with an empty page
   ----------------------------------------------------------------------*/
-void NewTab(Document doc, View view){
+void NewTab (Document doc, View view)
+{
+#ifdef _WX
+  char  *s = (char *)TtaGetMemory (MAX_LENGTH);
+#ifdef _WINDOWS
+  sprintf (s, "%s\\empty", TtaGetEnvString ("THOTDIR"));
+#else /* _WINDOWS */
+  sprintf (s, "%s/empty", TtaGetEnvString ("THOTDIR"));
+#endif /* _WINDOWS */
+  /* load an empty document */
+  ThotCallback (BaseDialog + URLName,  STRING_DATA, s);
+  DontReplaceOldDoc = TRUE;
+  InNewWindow       = FALSE;
+  ThotCallback (BaseDialog + OpenForm, INTEGER_DATA, (char*)1);
+  TtaFreeMemory (s);
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
   RefreshTab force the page to refresh
   ----------------------------------------------------------------------*/
-void RefreshTab(Document doc, View view){
-  Reload(doc, view);
+void RefreshTab (Document doc, View view)
+{
+  DisplayMode         dispMode;
+
+  dispMode = TtaGetDisplayMode (doc);
+  if (dispMode == DisplayImmediately)
+    {
+      TtaSetDisplayMode (doc, NoComputedDisplay);
+      RedisplayDoc (doc);
+      TtaSetDisplayMode (doc, dispMode);
+      //TtaPlay (doc, 1);
+    }
 }
 
 /*----------------------------------------------------------------------
   RefreshAllTabs force all pages to refresh
   ----------------------------------------------------------------------*/
-void RefreshAllTabs(Document doc, View view){
+void RefreshAllTabs (Document doc, View view)
+{
+#ifdef _WX
+  int      i;
+  int      ref_id = 0, window_id;
+  
+  ref_id = TtaGetDocumentWindowId (doc, view);
+  if (ref_id == 0)
+    return;
+  for (i = 1; i < MAX_DOCUMENTS; i++)
+    {
+      if (DocumentURLs[i])
+        {
+          window_id = TtaGetDocumentWindowId (i, 1);
+          if (window_id == ref_id)
+            RefreshTab (i, 1);
+        }
+    }
+#endif /* _WX */
 }
-
 
 
 /*----------------------------------------------------------------------
@@ -8487,7 +8530,9 @@ void AddURLInCombobox (char *pathname, char *form_data, ThotBool keep)
   if (!keep || file)
     {
       /* put the new url */
-      strcpy (URL_list, url);
+      if (strcmp (url, "empty"))
+        // empty is a keyword to display an empty document    
+        strcpy (URL_list, url);
       if (keep)
         {
           if (encoding != UTF_8)
