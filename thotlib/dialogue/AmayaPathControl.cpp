@@ -302,19 +302,21 @@ void AmayaPathControl::OnMouseLeftUp(wxMouseEvent& event)
   wxPoint pos = event.GetPosition();
   wxAmayaPathControlItemListNode *node = m_items.GetLast();
   while (node)
-  {
-    if (node->GetData()->rect.x >= 0)
     {
-      if(pos.x >= node->GetData()->rect.x &&
-		  pos.x <= node->GetData()->rect.x+node->GetData()->rect.width)
-      {
-        TtaSelectElement (TtaGetDocument(node->GetData()->elem),
-			              node->GetData()->elem);
-        return;
-      }
-    }
-    node = node->GetPrevious();
-  }  
+      if (node->GetData()->rect.x >= 0)
+        {
+          if(pos.x >= node->GetData()->rect.x &&
+             pos.x <= node->GetData()->rect.x+node->GetData()->rect.width)
+            {
+              TtaSelectElement (TtaGetDocument(node->GetData()->elem),
+                                node->GetData()->elem);
+              TtaRedirectFocus ();
+              return;
+            }
+        }
+      node = node->GetPrevious();
+    }  
+  TtaRedirectFocus ();
 }
 
 
