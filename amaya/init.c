@@ -1697,7 +1697,7 @@ static void TextURL (Document doc, View view, char *text)
   ThotBool          change, updated;
 
   updated = FALSE;
-  if (text)
+  if (text && text[0] != EOS)
     {
       /* remove any trailing '\n' chars that may have gotten there
          after a cut and paste */
