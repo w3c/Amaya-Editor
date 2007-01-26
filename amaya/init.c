@@ -8533,6 +8533,8 @@ void AddURLInCombobox (char *pathname, char *form_data, ThotBool keep)
       if (strcmp (url, "empty"))
         // empty is a keyword to display an empty document    
         strcpy (URL_list, url);
+      else
+        URL_list[0] = EOS;
       if (keep)
         {
           if (encoding != UTF_8)

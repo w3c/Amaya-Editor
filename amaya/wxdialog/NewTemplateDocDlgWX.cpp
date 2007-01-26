@@ -299,13 +299,23 @@ void NewTemplateDocDlgWX::OnCreateButton( wxCommandEvent& event )
       title = XRCCTRL(*this, "wxID_TITLE", wxTextCtrl)->GetValue( );
       if (title.Len() == 0)
         {
-          int end_slash_pos = value.Find(DIR_SEP, true);
-          m_LockUpdateFlag = true;
-          title = value.SubString(end_slash_pos+1, value.Length());
-          m_LockUpdateFlag = false;
-          strncpy( buffer, (const char*)title.mb_str(wxConvUTF8), MAX_LENGTH - 1);
-          buffer[MAX_LENGTH - 1] = EOS;
-          ThotCallback (BaseDialog + TitleText,  STRING_DATA, (char *)buffer);
+          if (Waiting == 1)
+            {
+              // request the title
+              XRCCTRL(*this, "wxID_ERROR", wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage (AMAYA, AM_MISSING_TITLE)));
+              Waiting = 2;
+              return;
+            }
+          else
+            {
+              int end_slash_pos = value.Find(DIR_SEP, true);
+              m_LockUpdateFlag = true;
+              title = value.SubString(end_slash_pos+1, value.Length());
+              m_LockUpdateFlag = false;
+              strncpy( buffer, (const char*)title.mb_str(wxConvUTF8), MAX_LENGTH - 1);
+              buffer[MAX_LENGTH - 1] = EOS;
+              ThotCallback (BaseDialog + TitleText,  STRING_DATA, (char *)buffer);
+            }
         }
       else
         {
