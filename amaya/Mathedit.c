@@ -68,7 +68,6 @@ static ThotBool	InitMaths;
 /* Global variables for dialogues */
 static int Math_occurences = 1;
 static int Math_OperatorType = 0;
-static char *Math_fence_attributes[3];
 #endif /* _WX */
 
 static int Math_open, Math_close, Math_sep;
@@ -2520,15 +2519,11 @@ static void CreateMathConstruct (int construct, ...)
           Math_close = va_arg(varpos, int);
           Math_sep = va_arg(varpos, int);
           number = va_arg(varpos, int);
-          if (Math_open == -1 && Math_close == -1)
+          if (Math_open == -1 || Math_close == -1 || Math_sep == -1)
             {
             /* get types of open/close symbols selected in the panel */
             Math_open = '(';
             Math_close = ')';
-            }
-          if (Math_sep == -1 )
-            {
-            /* get types of open/close symbols selected in the panel */
             Math_sep = ',';
             GetFenceAttributes (doc);
             }

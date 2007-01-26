@@ -18,10 +18,8 @@ static int MyRef = 0;
 // Event table: connect the events to the handler functions to process them
 //-----------------------------------------------------------------------------
 BEGIN_EVENT_TABLE(SelectFenceAttributesDlgWX, AmayaDialog)
-  EVT_COMBOBOX( XRCID("wxID_ATTRIBUTE_OPEN"),       SelectFenceAttributesDlgWX::OnOpenSelected )
-  EVT_COMBOBOX( XRCID("wxID_ATTRIBUTE_SEPARATORS"),   SelectFenceAttributesDlgWX::OnSeparatorsSelected )
-  EVT_COMBOBOX( XRCID("wxID_ATTRIBUTE_CLOSE"),       SelectFenceAttributesDlgWX::OnCloseSelected )
-  EVT_BUTTON( XRCID("wxID_INSERT"), SelectFenceAttributesDlgWX::OnInsert )
+  EVT_BUTTON( XRCID("wxID_INSERT"),      SelectFenceAttributesDlgWX::OnInsert )
+  EVT_CLOSE( SelectFenceAttributesDlgWX::OnClose )
 END_EVENT_TABLE()
 
 /*----------------------------------------------------------------------
@@ -43,11 +41,6 @@ SelectFenceAttributesDlgWX::SelectFenceAttributesDlgWX( int ref, wxWindow* paren
   XRCCTRL(*this, "wxID_LABEL", wxStaticText)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_SELECT_FENCE_LABEL) ));
   XRCCTRL(*this, "wxID_INSERT", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(LIB,TMSG_INSERT) ));
 
-#ifndef _MACOS
-  // give focus to ...
-  XRCCTRL(*this, "wxID_ATTRIBUTE_OPEN", wxComboBox)->SetFocus();
-#endif /* _MACOS */
-
   Refresh();
   SetAutoLayout( TRUE );
 }
@@ -57,38 +50,6 @@ SelectFenceAttributesDlgWX::SelectFenceAttributesDlgWX( int ref, wxWindow* paren
   ----------------------------------------------------------------------*/
 SelectFenceAttributesDlgWX::~SelectFenceAttributesDlgWX()
 {
-  if (Waiting)
-    {
-      Waiting = 0;
-      ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
-    }
-  else
-    // clean up the dialog context
-    TtaDestroyDialogue( MyRef );
-}
-
-/*----------------------------------------------------------------------
-  OnSelected new value selected
-  ----------------------------------------------------------------------*/
-void SelectFenceAttributesDlgWX::OnOpenSelected( wxCommandEvent& event )
-{
-  XRCCTRL(*this, "wxID_ATTRIBUTE_OPEN", wxComboBox)->SetInsertionPointEnd();
-}
-
-/*----------------------------------------------------------------------
-  OnSeparatorsSelected
-  ----------------------------------------------------------------------*/
-void SelectFenceAttributesDlgWX::OnSeparatorsSelected( wxCommandEvent& event )
-{
-  XRCCTRL(*this, "wxID_ATTRIBUTE_SEPARATORS", wxComboBox)->SetInsertionPointEnd();
-}
-
-/*----------------------------------------------------------------------
-  OnCloseSelected
-  ----------------------------------------------------------------------*/
-void SelectFenceAttributesDlgWX::OnCloseSelected( wxCommandEvent& event )
-{
-  XRCCTRL(*this, "wxID_ATTRIBUTE_CLOSE", wxComboBox)->SetInsertionPointEnd();
 }
 
 
@@ -104,7 +65,7 @@ void SelectFenceAttributesDlgWX::OnInsert( wxCommandEvent& event )
   Waiting = 0;
 
   // return open symbol
-  string = XRCCTRL(*this, "wxID_ATTRIBUTE_OPEN", wxComboBox)->GetValue( );
+  string = XRCCTRL(*this, "wxID_ATTRIBUTE_OPEN", wxChoice)->GetStringSelection( );
   if (string.Len() > 0)
     {
       value = (int)string.GetChar(0);
@@ -112,7 +73,7 @@ void SelectFenceAttributesDlgWX::OnInsert( wxCommandEvent& event )
     }
 
   // return open separators
-  string = XRCCTRL(*this, "wxID_ATTRIBUTE_SEPARATORS", wxComboBox)->GetValue( );
+  string = XRCCTRL(*this, "wxID_ATTRIBUTE_SEPARATORS", wxChoice)->GetStringSelection( );
   if (string.Len() > 0)
     {
       value = (int)string.GetChar(0);
@@ -120,7 +81,7 @@ void SelectFenceAttributesDlgWX::OnInsert( wxCommandEvent& event )
     }
 
   // return open symbol
-  string = XRCCTRL(*this, "wxID_ATTRIBUTE_CLOSE", wxComboBox)->GetValue( );
+  string = XRCCTRL(*this, "wxID_ATTRIBUTE_CLOSE", wxChoice)->GetStringSelection( );
   if (string.Len() > 0)
     {
       value = (int)string.GetChar(0);
@@ -128,6 +89,21 @@ void SelectFenceAttributesDlgWX::OnInsert( wxCommandEvent& event )
     }
 
   ThotCallback (MyRef, INTEGER_DATA, (char*) 1);
+  TtaDestroyDialogue (MyRef);
+}
+
+/*----------------------------------------------------------------------
+  OnClose
+  called when the window manager closes the dialog
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+void SelectFenceAttributesDlgWX::OnClose(wxCloseEvent& event)
+{
+  if (!Waiting)
+    return;
+  Waiting = 0;
+  ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
   TtaDestroyDialogue (MyRef);
 }
 

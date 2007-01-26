@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resource version="2.3.0.1" xmlns="http://www.wxwindows.org/wxxrc">
   <object class="wxDialog" name="SelectFenceAttributesDlgWX">
-    <title></title>
+    <title>Select Fence Attributes</title>
     <centered>1</centered>
-    <style>wxDEFAULT_DIALOG_STYLE|wxSTAY_ON_TOP|wxRESIZE_BORDER|wxNO_3D|wxTAB_TRAVERSAL</style>
+    <style>wxDEFAULT_DIALOG_STYLE|wxSTAY_ON_TOP|wxRESIZE_BORDER|wxTAB_TRAVERSAL</style>
     <object class="wxBoxSizer">
       <orient>wxVERTICAL</orient>
       <object class="spacer">
@@ -21,7 +21,7 @@
       <object class="sizeritem">
         <object class="wxBoxSizer">
           <object class="sizeritem">
-            <object class="wxComboBox" name="wxID_ATTRIBUTE_OPEN">
+            <object class="wxChoice" name="wxID_ATTRIBUTE_OPEN">
               <content>
                 <item>(</item>
                 <item>[</item>
@@ -34,14 +34,15 @@
                 <item>&gt;</item>
               </content>
               <selection>0</selection>
-              <size>60,30</size>
+              <size>60,-1</size>
             </object>
+            <flag>wxEXPAND</flag>
           </object>
           <object class="spacer">
             <size>3,0</size>
           </object>
           <object class="sizeritem">
-            <object class="wxComboBox" name="wxID_ATTRIBUTE_SEPARATORS">
+            <object class="wxChoice" name="wxID_ATTRIBUTE_SEPARATORS">
               <content>
                 <item>,</item>
                 <item>;</item>
@@ -53,7 +54,7 @@
                 <item>-</item>
               </content>
               <selection>0</selection>
-              <size>60,30</size>
+              <size>60,-1</size>
               <font>
                 <size>12</size>
                 <family>default</family>
@@ -62,12 +63,13 @@
                 <underlined>0</underlined>
               </font>
             </object>
+            <flag>wxEXPAND</flag>
           </object>
           <object class="spacer">
             <size>3,0</size>
           </object>
           <object class="sizeritem">
-            <object class="wxComboBox" name="wxID_ATTRIBUTE_CLOSE">
+            <object class="wxChoice" name="wxID_ATTRIBUTE_CLOSE">
               <content>
                 <item>)</item>
                 <item>]</item>
@@ -80,11 +82,13 @@
                 <item>&lt;</item>
               </content>
               <selection>0</selection>
-              <size>60,30</size>
+              <size>60,-1</size>
             </object>
+            <flag>wxEXPAND</flag>
           </object>
           <orient>wxHORIZONTAL</orient>
         </object>
+        <option>1</option>
         <flag>wxALIGN_CENTRE</flag>
       </object>
       <object class="spacer">
