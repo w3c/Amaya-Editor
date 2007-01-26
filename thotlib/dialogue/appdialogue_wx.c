@@ -312,8 +312,18 @@ static void BuildPopdownWX ( int window_id, Menu_Ctl *ptrmenu, ThotMenu p_menu )
   wxMenu *     p_submenu = NULL;
   int          max_item_label_lg = 0;
   wxString     label;
-  
+  wxString     menu_label;
+
   wxASSERT (p_menu);
+
+#if defined (_MACOS) 
+   if (ptrmenu->MenuHelp)
+      {
+        menu_label = TtaConvMessageToWX(TtaGetMessage (THOT, ptrmenu->MenuID));
+        wxApp::s_macHelpMenuTitleName = menu_label;
+      }
+#endif /* _MACOS */
+
   /* first of all check for the largest menuitem label */
   while (item_nb < ptrmenu->ItemsNb)
     {
@@ -460,8 +470,13 @@ static void TtaMakeWindowMenuBar( int window_id )
             WindowTable[window_id].MenuAttr = ptrmenu->MenuID;
           else if (ptrmenu->MenuSelect) 
             WindowTable[window_id].MenuSelect = ptrmenu->MenuID;
-          else if (ptrmenu->MenuHelp) 
-            WindowTable[window_id].MenuHelp = ptrmenu->MenuID;
+          else if (ptrmenu->MenuHelp)
+            { 
+               WindowTable[window_id].MenuHelp = ptrmenu->MenuID;
+#if defined (_MACOS) 
+             // wxApp::s_macHelpMenuTitleName = "Aide";
+#endif /* _MACOS */ 
+             }
           
           /* Now create the menu's widgets and hangs it to our p_menu */
           BuildPopdownWX( window_id, ptrmenu, p_menu );
