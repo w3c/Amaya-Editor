@@ -1338,10 +1338,10 @@ static void TranslateLeaf (PtrElement pEl, ThotBool transChar,
                         c = 0x2191; /* upwards arrow */
                         break;
                       case '<':
-                        c = 0x27E8; /* mathematical left angle bracket */
+                        c = 0x2329; /* mathematical left angle bracket */
                         break;
                       case '>':
-                        c = 0x27E9; /* mathematical right angle bracket */
+                        c = 0x232A; /* mathematical right angle bracket */
                         break;
                       case '|':
                         c = 0x2223; /* divides */
