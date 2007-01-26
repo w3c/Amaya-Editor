@@ -2601,5 +2601,5 @@ ThotBool CanSplitElement (PtrElement firstEl, int firstChar,
           *pEl = NULL;
         }
     }
-  return (*pList);
+  return (*pList != NULL);
 }
