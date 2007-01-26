@@ -104,12 +104,26 @@ void CheckTypesAttribute (XTigerTemplate t, Element el)
 	dic = Dictionary_CreateFromList (types);
 	
 	for (Dictionary_First (dic); !Dictionary_IsDone (dic); Dictionary_Next (dic))
-		if ( GetDeclaration (t, Dictionary_CurrentKey (dic)) == NULL)
+		if ( Template_GetDeclaration (t, Dictionary_CurrentKey (dic)) == NULL)
 			//TODO_XTIGER We must add the current namespace
 			NewElement (t, Dictionary_CurrentKey (dic));
 	
 	TtaFreeMemory (types);
 	Dictionary_Clean (dic);
+#endif /* TEMPLATES */
+}
+
+/*----------------------------------------------------------------------
+  AddHeadParameters
+  Add template parameter (version and templateVersion) to the template descriptor.
+  ----------------------------------------------------------------------*/
+void AddHeadParameters(XTigerTemplate t, Element el)
+{
+#ifdef TEMPLATES
+  t->version = GetAttributeStringValue(el, Template_ATTR_version, NULL);
+  t->templateVersion = GetAttributeStringValue(el, Template_ATTR_templateVersion, NULL);
+  
+  printf("AddHeadParameters : %s - %s\n", t->version, t->templateVersion);
 #endif /* TEMPLATES */
 }
 
@@ -124,6 +138,9 @@ void ParseDeclarations (XTigerTemplate t, Element el)
     {
       switch (type.ElTypeNum)
         {
+        case Template_EL_head:
+          AddHeadParameters(t,el);
+          break;
         case Template_EL_component:
           AddComponentDeclaration (t,el);
           break;

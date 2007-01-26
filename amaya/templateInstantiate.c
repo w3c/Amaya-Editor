@@ -289,10 +289,10 @@ Element Template_GetNewSimpleTypeInstance(Document doc, Element parent, Declarat
 #ifdef TEMPLATES
   ElementType       elType;
   char             *empty = " ";
-  
-  elType = TtaGetElementType(parent);
+  elType.ElSSchema = TtaGetSSchema(TEMPLATE_SSHEMA_NAME, doc);
   elType.ElTypeNum = Template_EL_TEXT_UNIT;
   newEl = TtaNewElement (doc, elType);
+  
   TtaSetTextContent (newEl, (unsigned char*) empty, 0, doc);
 
 #endif 
@@ -360,7 +360,8 @@ Element Template_InsertUseChildren(Document doc, Element el, Declaration dec)
   Element current = NULL;
   Element child   = NULL;
   char*     attrCurrentTypeValue;
-
+  ElementType elType;
+  
   switch (dec->nature)
   {
     case SimpleTypeNat:
@@ -428,15 +429,12 @@ Element InstantiateUse (XTigerTemplate t, Element el, Document doc,
                         ThotBool insert)
 {
 #ifdef TEMPLATES
-	Element          cont, child, prev, next;
+	Element          cont;
   ElementType      elType;
-	Attribute        at;
-	AttributeType    att;
   Declaration      dec;
   int              size, nbitems;
   struct menuType  *items;
   char             *types;
-  char             *empty = " ";
   ThotBool          oldStructureChecking;
 
   /* get the value of the "types" attribute */
@@ -451,7 +449,7 @@ Element InstantiateUse (XTigerTemplate t, Element el, Document doc,
   if (nbitems == 1)
     /* only one type in the "types" attribute */
     {
-      dec = GetDeclaration (t, items[0].label);
+      dec = Template_GetDeclaration (t, items[0].label);
       if (dec)
         cont = Template_InsertUseChildren(doc, el, dec);
     }
@@ -760,7 +758,15 @@ void DoInstanceTemplate (char *templatename)
   text = TtaGetFirstChild (elFound);
   strcpy (buffer, "xtiger template=\"");
   strcat (buffer, templatename);
+  strcat (buffer, "\" version=\"");
+  strcat (buffer, t->version);
   strcat (buffer, "\"");
+  if(t->templateVersion)
+  {
+    strcat (buffer, " templateVersion=\"");
+    strcat (buffer, t->templateVersion);
+    strcat (buffer, "\"");
+  }
   TtaSetTextContent (text, (unsigned char*)buffer,  Latin_Script, doc);
   TtaSetStructureChecking (TRUE, doc);
 

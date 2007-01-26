@@ -135,7 +135,7 @@ ThotBool NeedAMenu (Element el, Document doc)
       t = (XTigerTemplate) Dictionary_Get (Templates_Dic, DocumentMeta[doc]->template_url);
       if (t)
         {
-          dec = GetDeclaration (t, types);
+          dec = Template_GetDeclaration (t, types);
           if (dec && dec->nature == UnionNat)
             {
               rec = dec->unionType.include->first;
@@ -178,6 +178,7 @@ void TemplateElementComplete (ParserData *context, Element el, int *error)
   switch  (elType.ElTypeNum)
     {
     case Template_EL_head:
+      CheckMandatoryAttribute (el, doc, Template_ATTR_version);
       break;
 
     case Template_EL_component:

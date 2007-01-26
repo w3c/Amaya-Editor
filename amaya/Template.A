@@ -22,7 +22,7 @@ ELEMENTS
       BEGIN
          ElemNew.Pre -> UseToBeCreated;
          ElemNew.Post -> UseCreated;
-         ElemLClick.Pre -> RepeatButtonClicked;
+         ElemLClick.Pre -> UseSimpleButtonClicked;
       END;
    repeat :
       BEGIN

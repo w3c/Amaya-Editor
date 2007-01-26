@@ -16,6 +16,8 @@ extern void AddImportedLibrary ( XTigerTemplate t,
                                  Element el );
 extern void CheckTypesAttribute ( XTigerTemplate t,
                                   Element el );
+extern void AddHeadParameters ( XTigerTemplate t,
+                                Element el );
 extern void ParseDeclarations ( XTigerTemplate t,
                                 Element el );
 extern void LoadTemplate_callback ( int newdoc,
@@ -40,6 +42,8 @@ extern void AddImportedLibrary ( XTigerTemplate t,
                                    Element el );
 extern void CheckTypesAttribute ( XTigerTemplate t,
                                     Element el );
+extern void AddHeadParameters ( XTigerTemplate t,
+                                  Element el );
 extern void ParseDeclarations ( XTigerTemplate t,
                                   Element el );
 extern void LoadTemplate_callback ( int newdoc,

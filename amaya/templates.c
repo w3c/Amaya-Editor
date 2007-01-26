@@ -710,7 +710,7 @@ ThotBool RepeatButtonClicked (NotifyElement *event)
       char* result = QueryStringFromMenu(doc, listtypes);
       if(result)
       {
-        decl = GetDeclaration(t, result);
+        decl = Template_GetDeclaration(t, result);
         if(decl)
         {
           /* Prepare insertion.*/          
@@ -797,7 +797,7 @@ ThotBool UseButtonClicked (NotifyElement *event)
     char* result = QueryStringFromMenu(doc, listtypes);
     if(result)
     {
-      decl = GetDeclaration(t, result);
+      decl = Template_GetDeclaration(t, result);
       if(decl)
       {
         /* Prepare insertion.*/
@@ -812,6 +812,9 @@ ThotBool UseButtonClicked (NotifyElement *event)
         {
           TtaRegisterElementCreate(child, doc);
         }
+        
+        TtaChangeTypeOfElement(el, doc, Template_EL_useSimple);
+        TtaRegisterElementTypeChange(el, Template_EL_useEl, doc);
         
         /* Finish insertion. */
         TtaCloseUndoSequence(doc);
@@ -840,8 +843,18 @@ ThotBool UseButtonClicked (NotifyElement *event)
 }
 
 
-
-
+/*----------------------------------------------------------------------
+  UseSimpleButtonClicked
+  ----------------------------------------------------------------------*/
+ThotBool UseSimpleButtonClicked (NotifyElement *event)
+{
+#ifdef TEMPLATES
+  ElementType parentType = TtaGetElementType(TtaGetParent(event->element));
+  if(parentType.ElTypeNum == Template_EL_repeat)
+    return RepeatButtonClicked(event);
+#endif /* TEMPLATES */  
+  return FALSE;
+}
 
 /*----------------------------------------------------------------------
   OptionButtonClicked
@@ -905,7 +918,7 @@ void OpeningInstance (char *fileName, Document doc)
 {
 #ifdef TEMPLATES
   XTigerTemplate   t;
-  char            *content, *ptr;
+  char            *content, *ptr, *begin;
   gzFile           stream;
   char             buffer[2000];
   int              res;
@@ -917,34 +930,59 @@ void OpeningInstance (char *fileName, Document doc)
       if (res >= 0)
         {
           buffer[res] = EOS;
-          ptr = strstr (buffer, "<?xtiger");
-          if (ptr)
-            ptr = strstr (ptr, "template");
-          if (ptr)
-            ptr = strstr (ptr, "=");
-          if (ptr)
-            ptr = strstr (ptr, "\"");
-          if (ptr)
-            {
-              // template URI
-              content = &ptr[1];
-              ptr = strstr (content, "\"");
-            }
-          if (ptr)
-            {
-              *ptr = EOS;
-              //Get now the template URI
-              DocumentMeta[doc]->template_url = TtaStrdup (content);
-              if (Templates_Dic == NULL)
-                InitializeTemplateEnvironment ();
-              t = (XTigerTemplate) Dictionary_Get (Templates_Dic, content);
-              if (!t)
-                {
-                  LoadTemplate (0, content);
-                  t = (XTigerTemplate) Dictionary_Get (Templates_Dic, content);
-                }
-              AddUser (t);
-            }
+          begin = strstr (buffer, "<?xtiger");
+          
+          if(begin)
+          {
+            // Search for template version
+            ptr = strstr (begin, "templateVersion");
+            if (ptr)
+              ptr = strstr (ptr, "=");
+            if (ptr)
+              ptr = strstr (ptr, "\"");
+            if (ptr)
+              {
+                // template URI
+                content = &ptr[1];
+                ptr = strstr (content, "\"");
+              }
+            if (ptr)
+              {
+                *ptr = EOS;
+                //Get now the template URI
+                DocumentMeta[doc]->template_version = TtaStrdup (content);
+                *ptr = '"';
+              }
+           
+            // Search for template uri
+            ptr = strstr (begin, "template");
+            if (ptr && ptr[8] != 'V')
+              ptr = strstr (ptr, "=");
+            if (ptr)
+              ptr = strstr (ptr, "\"");
+            if (ptr)
+              {
+                // template URI
+                content = &ptr[1];
+                ptr = strstr (content, "\"");
+              }
+            if (ptr)
+              {
+                *ptr = EOS;
+                //Get now the template URI
+                DocumentMeta[doc]->template_url = TtaStrdup (content);
+                if (Templates_Dic == NULL)
+                  InitializeTemplateEnvironment ();
+                t = (XTigerTemplate) Dictionary_Get (Templates_Dic, content);
+                if (!t)
+                  {
+                    LoadTemplate (0, content);
+                    t = (XTigerTemplate) Dictionary_Get (Templates_Dic, content);
+                  }
+                AddUser (t);
+                *ptr = '"';
+              }
+          }
         }
     }
   TtaGZClose (stream);
@@ -1009,42 +1047,59 @@ Element GetFirstTemplateParentElement(Element elem)
 #endif /* TEMPLATES */
 }
 
+
 /*----------------------------------------------------------------------
   TemplateElementWillBeCreated
   Processed when an element will be created in a template context.
   ----------------------------------------------------------------------*/
 ThotBool TemplateElementWillBeCreated (NotifyElement *event)
 {
-#ifdef TEMPLATES  
-  Element     elem = event->element;
-  ElementType elType;
-  Element     parent = TtaGetParent(elem);
+#ifdef TEMPLATES
+  ElementType elType = event->elementType;
+  Element     parent = event->element;
+  ElementType parentType = TtaGetElementType(parent);
+  Element     ancestor;
+  ElementType ancestorType;
+
   SSchema     templateSSchema = TtaGetSSchema ("Template", event->document);
 
   if (templateSSchema == NULL)
     return FALSE; // let Thot do the job
-printf("TemplateElementWillBeCreated------------- \n");
-  while (elem)
-    {
-      elType = TtaGetElementType(elem);
-printf(" %s_%s\n", TtaGetSSchemaName(elType.ElSSchema), TtaGetElementTypeName(elType));
-      if (elType.ElSSchema == templateSSchema)
-        {
-          if (elem == event->element)
-            return FALSE; // do change allowed
-          else if (elType.ElTypeNum == Template_EL_useEl ||
-                   elType.ElTypeNum == Template_EL_useSimple)
-            {
-              return FALSE; // let Thot do the job
-            }
-          else  if (elType.ElTypeNum == Template_EL_bag)
-            return FALSE; // let Thot do the job
-        }
-      else
-        elem = TtaGetParent(elem);
-    }
+  
+  
+  
+  
+  printf("TemplateElementWillBeCreated %s:%s\n", TtaGetSSchemaName(elType.ElSSchema), TtaGetElementTypeName(elType));
+  printf("    ^^ %s:%s\n", TtaGetSSchemaName(parentType.ElSSchema), TtaGetElementTypeName(parentType));
+  return FALSE;
+
+//
+//  // A xt:use within a xt:repeat
+//  if((elType.ElTypeNum==Template_EL_useSimple || elType.ElTypeNum==Template_EL_useEl) && parentType.ElTypeNum==Template_EL_repeat)
+//  {
+//      printf("    Intend to insert xt:repeat element\n");
+//      return !Template_CanInsertRepeatChild(parent);
+//  }
+//  else
+//  {
+//    ancestor = parent;
+//    while (ancestor)
+//    {
+//      ancestorType = TtaGetElementType(ancestor);
+//      printf("    >> %s:%s\n", TtaGetSSchemaName(ancestorType.ElSSchema), TtaGetElementTypeName(ancestorType));
+//      if (ancestorType.ElSSchema == templateSSchema && ancestorType.ElTypeNum == Template_EL_bag)
+//      {
+//        char* types = GetAttributeStringValue(ancestor, Template_ATTR_types, NULL);
+//        ThotBool b = Template_CanInsertElementInBag(event->document, elType, types); 
+//        printf("    Intend to insert xt:bag element : %s\n", b?"TRUE":"FALSE");
+//        return !b;
+//      }
+//      ancestor = TtaGetParent(ancestor);
+//    }
+//  }
+//  // Can not insert.
+//  return TRUE;
 #endif /* TEMPLATES*/
-printf ("-------------\n");
   return FALSE;
 }
 
@@ -1055,6 +1110,7 @@ printf ("-------------\n");
 ThotBool TemplateElementWillBeDeleted (NotifyElement *event)
 {
   printf("TemplateElementWillBeDeleted\n");
+  
   return FALSE;
 }
 

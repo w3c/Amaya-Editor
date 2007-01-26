@@ -170,7 +170,7 @@ void FreeTemplateEnvironment ()
 void AddDeclaration (XTigerTemplate t, Declaration dec)
 {
 #ifdef TEMPLATES
-	Declaration old = GetDeclaration (t, dec->name);
+	Declaration old = Template_GetDeclaration (t, dec->name);
 	
 	if (old==NULL) //New type, not a redefinition
     {
@@ -237,7 +237,7 @@ void NewUnion (const XTigerTemplate t, const char *name,
     {
       for (Dictionary_First (include); !Dictionary_IsDone (include); Dictionary_Next (include))
         {
-          aux = GetDeclaration (t, Dictionary_CurrentKey (include));
+          aux = Template_GetDeclaration (t, Dictionary_CurrentKey (include));
           if (aux == NULL) //Unknown type > a new XML element
             NewElement (t, Dictionary_CurrentKey (include));
           Dictionary_Add (dec->unionType.include, aux->name, aux);
@@ -250,7 +250,7 @@ void NewUnion (const XTigerTemplate t, const char *name,
     {
       for (Dictionary_First(exclude); !Dictionary_IsDone (exclude); Dictionary_Next (exclude))
         {
-          aux = GetDeclaration (t, Dictionary_CurrentKey (exclude));
+          aux = Template_GetDeclaration (t, Dictionary_CurrentKey (exclude));
           if (aux == NULL) //Unknown type > a new XML element
             NewElement (t, Dictionary_CurrentKey (exclude));
           Dictionary_Add (dec->unionType.exclude, aux->name, aux);
@@ -287,8 +287,12 @@ void FreeDeclaration (Declaration dec)
 }
 
 /*----------------------------------------------------------------------
+  Template_GetDeclaration
+  Find a declaration in a specified template and return it.
+  @param t Template in which search the declaration
+  @param name Declaration name to find.
   ----------------------------------------------------------------------*/
-Declaration GetDeclaration (const XTigerTemplate t, const char *name)
+Declaration Template_GetDeclaration (const XTigerTemplate t, const char *name)
 {
 #ifdef TEMPLATES
 	Declaration dec = (Declaration)Dictionary_Get (t->simpleTypes, name);	
@@ -583,22 +587,22 @@ void RedefineSpecialUnions (XTigerTemplate t)
   DicDictionary dic;
 
   //We get the old definition to modify it 
-  un = GetDeclaration (t,UNION_ANYSIMPLE);
+  un = Template_GetDeclaration (t,UNION_ANYSIMPLE);
   //TODO: Check that it is actually the good declaration and not a newer one
   un->unionType.include = t->simpleTypes;
   un->unionType.exclude = Dictionary_Create ();
   
-  un = GetDeclaration (t,UNION_ANYCOMPONENT);
+  un = Template_GetDeclaration (t,UNION_ANYCOMPONENT);
   //TODO: Check that it is actually the good declaration and not a newer one
   un->unionType.include = t->components;
   un->unionType.exclude = Dictionary_Create ();
 
-  un = GetDeclaration (t,UNION_ANYELEMENT);
+  un = Template_GetDeclaration (t,UNION_ANYELEMENT);
   //TODO: Check that it is actually the good declaration and not a newer one
   un->unionType.include = t->elements;
   un->unionType.exclude = Dictionary_Create ();
   
-  un = GetDeclaration (t,UNION_ANY);
+  un = Template_GetDeclaration (t,UNION_ANY);
   //TODO: Check that it is actually the good declaration and not a newer one
   dic = t->unions;
   for (Dictionary_First (dic);!Dictionary_IsDone (dic);Dictionary_Next (dic))
@@ -768,7 +772,7 @@ char* Template_ExpandTypes(XTigerTemplate t, char* types)
       if(cur>0)
       {
         type[cur] = 0;
-        decl = GetDeclaration(t, type);
+        decl = Template_GetDeclaration(t, type);
         if(decl)
         {
           if(decl->nature==UnionNat)
@@ -829,3 +833,37 @@ char* Template_ExpandTypes(XTigerTemplate t, char* types)
   return NULL;
 #endif /* TEMPLATES */
 }
+
+
+
+/**----------------------------------------------------------------------
+  Template_CanInsertElementInBag
+  Test if an element can be insert in a bag
+  @param  
+  ----------------------------------------------------------------------*/
+ThotBool Template_CanInsertElementInBag(Document doc, ElementType type, char* bagTypes)
+{
+  ThotBool res = FALSE;
+#ifdef TEMPLATES
+//  SSchema templateSSchema = TtaGetSSchema ("Template", doc);
+  XTigerTemplate  t = (XTigerTemplate) Dictionary_Get (Templates_Dic, DocumentMeta[doc]->template_url);
+  char* types;
+  char* elTypeName;
+  
+  if (t)
+  {
+    DumpDeclarations(t);
+    
+    types = Template_ExpandTypes(t, bagTypes);
+    elTypeName = TtaGetElementTypeName(type);
+//    printf("Find '%s' in '%s'\n", elTypeName, types);
+    if(strstr(types, elTypeName))
+      res = TRUE;
+    TtaFreeMemory(types);
+  }
+  return TRUE;
+  /* @todo fixme : union expansion */
+#endif /* TEMPLATES */
+  return res;
+}
+

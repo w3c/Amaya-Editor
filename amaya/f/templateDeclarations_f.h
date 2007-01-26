@@ -28,8 +28,8 @@ extern void NewUnion ( const XTigerTemplate t,
 extern void NewElement ( const XTigerTemplate t,
                          const char *name );
 extern void FreeDeclaration ( Declaration dec );
-extern Declaration GetDeclaration ( const XTigerTemplate t,
-                                    const char *name );
+extern Declaration Template_GetDeclaration ( const XTigerTemplate t,
+                                             const char *name );
 extern void FreeXTigerTemplate ( XTigerTemplate t );
 extern void AddLibraryDeclarations ( XTigerTemplate t,
                                      XTigerTemplate lib );
@@ -52,6 +52,9 @@ extern DicDictionary Template_ExpandUnion ( XTigerTemplate t,
                                             Declaration decl );
 extern char* Template_ExpandTypes ( XTigerTemplate t,
                                     char* types );
+extern ThotBool Template_CanInsertElementInBag ( Document doc,
+                                                 ElementType type,
+                                                 char* bagTypes );
 
 #else /* __STDC__ */
 
@@ -77,8 +80,8 @@ extern void NewUnion ( const XTigerTemplate t,
 extern void NewElement ( const XTigerTemplate t,
                            const char *name );
 extern void FreeDeclaration ( Declaration dec );
-extern Declaration GetDeclaration ( const XTigerTemplate t,
-                                      const char *name );
+extern Declaration Template_GetDeclaration ( const XTigerTemplate t,
+                                               const char *name );
 extern void FreeXTigerTemplate ( XTigerTemplate t );
 extern void AddLibraryDeclarations ( XTigerTemplate t,
                                        XTigerTemplate lib );
@@ -101,6 +104,9 @@ extern DicDictionary Template_ExpandUnion ( XTigerTemplate t,
                                               Declaration decl );
 extern char* Template_ExpandTypes ( XTigerTemplate t,
                                       char* types );
+extern ThotBool Template_CanInsertElementInBag ( Document doc,
+                                                   ElementType type,
+                                                   char* bagTypes );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -108,7 +108,7 @@ void InsertableElement_Final()
   ----------------------------------------------------------------------*/
 static void FillUnionResolvedPossibleElement(XTigerTemplate t, const char* name, Element elem, const char* resolvedPath,  DLList list, int level)
 {
-  Declaration dec = GetDeclaration (t, name);
+  Declaration dec = Template_GetDeclaration (t, name);
   if(dec->declaredIn->isPredefined)
   {
     DLList_Append(list, ElemListElement_CreateComponent(level, dec->name, (void*)dec, resolvedPath, elem));

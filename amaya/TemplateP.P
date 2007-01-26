@@ -545,12 +545,6 @@ ATTRIBUTES
 	CreateBefore(AttrValue);
 	END;    
 
-  title:
-  BEGIN
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-	END;    
-	
   includeAt:
   BEGIN
 	CreateBefore(AttrName);

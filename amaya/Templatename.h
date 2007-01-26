@@ -34,10 +34,12 @@ static AttributeMapping TemplateAttributeMappingTable[] =
    {"name", "", 'A', Template_ATTR_name, L_OtherValue},   
    {"ref", "", 'A', Template_ATTR_ref, L_OtherValue},
    {"src", "", 'A', Template_ATTR_src, L_OtherValue},
-   {"title", "", 'A', Template_ATTR_title, L_OtherValue},   
+   {"templateVersion", "head", 'A', Template_ATTR_templateVersion, L_OtherValue},
+/*   {"title", "", 'A', Template_ATTR_title, L_OtherValue},*/   
    {"type", "", 'A', Template_ATTR_type, L_OtherValue},   
    {"types", "", 'A', Template_ATTR_types, L_OtherValue},
    {"use", "", 'A', Template_ATTR_useAt, L_OtherValue},
+   {"version", "head", 'A', Template_ATTR_version, L_OtherValue},
    {"", "", EOS, 0, L_OtherValue}	  /* Last entry. Mandatory */
 };
 

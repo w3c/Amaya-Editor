@@ -171,15 +171,6 @@ ATTRIBUTES
       create DoubleQuote;
     end;
 
-  title :
-    begin
-      create SAN;
-      create 'title=';
-      create DoubleQuote;
-      create title;
-      create DoubleQuote;
-    end;
-	
   includeAt :
     begin
       create SAN;

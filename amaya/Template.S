@@ -26,22 +26,21 @@ STRUCT
       attribute;
     END;
 
-  head = LIST OF ( 
-    Declaration = CASE OF
+  head ( ATTR version = TEXT; templateVersion = TEXT ) = 
+    LIST OF ( Declaration = CASE OF
       component;
       union;
       import;
     END
    );
 
-  component ( ATTR name = TEXT; title = TEXT ) = ANY - ( head, union, import );
-  union ( ATTR name; includeAt = TEXT; exclude = TEXT; title ) = CONSTANT C_CR; {It is always empty}
+  component ( ATTR name = TEXT ) = ANY - ( head, union, import );
+  union ( ATTR name; includeAt = TEXT; exclude = TEXT ) = CONSTANT C_CR; {It is always empty}
   import ( ATTR src = TEXT ) = CONSTANT C_CR; {It is always empty}
 
   folder = ANY - ( head, union, import, component );
 
-  repeat ( ATTR ref = TEXT; minOccurs = TEXT; maxOccurs = TEXT; currentOccurs =
-  	TEXT; title ) =
+  repeat ( ATTR ref = TEXT; minOccurs = TEXT; maxOccurs = TEXT; currentOccurs = TEXT ) =
   	LIST OF ( Repetition =
 		  CASE OF
 		    useEl;
@@ -56,10 +55,10 @@ STRUCT
   option ( ATTR ref )
   	= ANY - ( head, union, import, component );
   
-  useEl ( ATTR ref; types = TEXT; currentType = TEXT; title )
+  useEl ( ATTR ref; types = TEXT; currentType = TEXT )
      = ANY - ( head, union, import, component );
 
-  useSimple ( ATTR ref; types; currentType; title )
+  useSimple ( ATTR ref; types )
      = ANY - ( head, union, import, component );
 
   bag ( ATTR ref; types ) 
@@ -72,7 +71,7 @@ STRUCT
     defaultAt = TEXT; 
     fixed = TEXT; 
     values = TEXT;
-    title ) = CONSTANT C_CR; {It is always empty}
+    ) = CONSTANT C_CR; {It is always empty}
 
 EXCEPT
   useEl:              NoReplicate, NoBreakByReturn, NoCreate;
@@ -84,7 +83,9 @@ EXCEPT
 	Unknown_attribute:  Invisible;
 	Language:           Invisible;
   types :             DuplicateAttr;
-  currentType:        Invisible, GiveName;
-  ref:                Invisible;
+  currentType:        Invisible;
+  ref:                Invisible, GiveName;
+  ref_name:		  GiveName;
+  name:			  GiveName;
 	
 END
