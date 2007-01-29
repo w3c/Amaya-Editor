@@ -1589,6 +1589,9 @@ void TtaSetURLBar( int frame_id,
                    void (*      procedure)() )
 {
 #ifdef _WX
+  const    char *ptr, *ptr1;
+  wxString urltoappend, firsturl;
+
   if (!FrameTable[frame_id].WdFrame || FrameTable[frame_id].FrWindowId == -1)
     return;
   AmayaWindow * p_window = WindowTable[FrameTable[frame_id].FrWindowId].WdWindow;
@@ -1607,8 +1610,6 @@ void TtaSetURLBar( int frame_id,
   p_window->EmptyURLBar();
 
   /* Append URL from url list to the urlbar */
-  const char *ptr, *ptr1;
-  wxString urltoappend;
   ptr = listUrl;
   /* function will stop on double EOS */
   if (listUrl)
@@ -1618,14 +1619,20 @@ void TtaSetURLBar( int frame_id,
           ptr1 = ptr;
           while (*ptr1 != EOS)
             ptr1++;
-          urltoappend = TtaConvMessageToWX( ptr );
+          if (!strcmp (ptr, "empty"))
+            urltoappend = TtaConvMessageToWX( "" );
+          else
+            urltoappend = TtaConvMessageToWX( ptr );
           p_window->AppendURL( urltoappend );
           ptr = ptr1 + 1;
         }
     }
 
   /* the first url in the list is the used one for the current frame */
-  wxString firsturl = TtaConvMessageToWX( listUrl );
+  if (!strcmp (listUrl, "empty"))
+    firsturl = TtaConvMessageToWX( "" );
+  else
+    firsturl = TtaConvMessageToWX( listUrl );
 
   /* setup the internal frame variable used to remember the frame's url string
    * this string is temporary and is updated each times the user modify the string.

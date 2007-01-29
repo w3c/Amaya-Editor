@@ -37,6 +37,7 @@
   #include "wxdialog/SaveAsDlgWX.h"
   #include "wxdialog/SelectFenceAttributesDlgWX.h"
   #include "wxdialog/SelectOperatorDlgWX.h"
+  #include "wxdialog/SelectIntegralDlgWX.h"
   #include "wxdialog/SearchDlgWX.h"
   #include "wxdialog/SpellCheckDlgWX.h"
   #include "wxdialog/StyleDlgWX.h"
@@ -187,6 +188,41 @@ ThotBool CreateSelectFenceAttributesDlgWX ( int ref, ThotWindow parent)
 
 
   SelectFenceAttributesDlgWX * p_dlg = new SelectFenceAttributesDlgWX(
+      ref, /* thotlib catalog reference */
+      parent/* parent window */);
+
+  if ( TtaRegisterWidgetWX( ref, p_dlg ) )
+      /* the dialog has been sucessfully registred */
+      return TRUE;
+  else
+    {
+      /* an error occured during registration */
+      p_dlg->Destroy();
+      return FALSE;
+    }
+#else /* _WX */
+  return FALSE;
+#endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
+  CreateSelectIntegralDlgWX
+  params:
+    + the thotlib catalog reference
+    + parent : parent window
+  returns:
+    + true : the dialogue has been created
+    + false : error, nothing is created
+  ----------------------------------------------------------------------*/
+ThotBool CreateSelectIntegralDlgWX ( int ref, ThotWindow parent)
+{
+#ifdef _WX
+  /* check if the dialog is alredy open */
+  if (TtaRaiseDialogue (ref))
+    return FALSE;
+
+
+  SelectIntegralDlgWX * p_dlg = new SelectIntegralDlgWX(
       ref, /* thotlib catalog reference */
       parent/* parent window */);
 

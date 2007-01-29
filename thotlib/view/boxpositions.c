@@ -740,7 +740,12 @@ void AddBoxTranslations (PtrAbstractBox pAb, int visibility, int frame,
                     y_move = FALSE;
                     newY = FALSE;
                   }
-		
+#ifdef IV
+if (!strcmp (pChildAb->AbElement->ElLabel, "L169"))
+  printf ("AddBoxTranslations L169 x=%d + %d\n",pChildBox->BxXOrg,x);
+if (!strcmp (pChildAb->AbElement->ElLabel, "L170"))
+  printf ("AddBoxTranslations L170 x=%d + %d\n",pChildBox->BxXOrg,x);
+#endif
                 /* decale la boite positionnee en X dans l'englobante */
                 if (horizRef && newX)
                   {

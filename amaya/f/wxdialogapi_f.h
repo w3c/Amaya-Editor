@@ -15,6 +15,8 @@ extern ThotBool CreateSelectOperatorDlgWX ( int ref,
                                             ThotWindow parent );
 extern ThotBool CreateSelectFenceAttributesDlgWX ( int ref,
                                                    ThotWindow parent );
+extern ThotBool CreateSelectIntegralDlgWX ( int ref,
+                                            ThotWindow parent );
 extern ThotBool CreateInitConfirmDlgWX ( int ref,
                                          ThotWindow parent,
                                          char *title,
@@ -165,6 +167,8 @@ extern ThotBool CreateSelectOperatorDlgWX ( int ref,
                                               ThotWindow parent );
 extern ThotBool CreateSelectFenceAttributesDlgWX ( int ref,
                                                      ThotWindow parent );
+extern ThotBool CreateSelectIntegralDlgWX ( int ref,
+                                              ThotWindow parent );
 extern ThotBool CreateInitConfirmDlgWX ( int ref,
                                            ThotWindow parent,
                                            char *title,

@@ -5226,6 +5226,14 @@
 <message xml:lang="en">Select the way the operator has to be displayed</message>
 <message xml:lang="fr">Choisir la façon dont l'opérateur doit être affiché</message>
 <message xml:lang="es">Seleccionar la manera cuya el operador debe ser visualizado</message></label>
+<label define="AM_SELECT_INTEGRAL_TITLE">
+<message xml:lang="en">Insert an integral</message>
+<message xml:lang="fr">Insérer une intégrale</message>
+<message xml:lang="es">Insertar una integral</message></label>
+<label define="AM_SELECT_INTEGRAL_LABEL">
+<message xml:lang="en">Select the type of integral</message>
+<message xml:lang="fr">Choisir le type d'intégrale</message>
+<message xml:lang="es">Seleccionar el tipo de integral</message></label>
 <label define="AM_SELECT_FENCE_TITLE">
 <message xml:lang="en">Attributes of the fence</message>
 <message xml:lang="fr">Attributs du fence</message>

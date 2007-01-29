@@ -4788,6 +4788,8 @@ void ShowSource (Document doc, View view)
       DocumentTypes[doc] != docMath)
     /* it's not an HTML or an XML document */
     return;
+  if (!strcmp (DocumentURLs[doc], "empty"))
+    return;
   if (DocumentSource[doc])
     /* the source code of this document is already shown */
     /* raise its window */
@@ -4968,6 +4970,8 @@ void ShowStructure (Document doc, View view)
   int                 x, y, w, h;
   char                structureName[30];
 
+  if (!strcmp (DocumentURLs[doc], "empty"))
+    return;
   if (DocumentTypes[doc] == docSource)
     /* work on the formatted document */
     doc = GetDocFromSource (doc);
@@ -5003,6 +5007,8 @@ void ShowAlternate (Document doc, View view)
   View                altView;
   int                 x, y, w, h;
 
+  if (!strcmp (DocumentURLs[doc], "empty"))
+    return;
   if (DocumentTypes[doc] == docSource)
     /* work on the formatted document */
     doc = GetDocFromSource (doc);
@@ -5040,6 +5046,8 @@ void ShowLinks (Document doc, View view)
   View                linksView;
   int                 x, y, w, h;
 
+  if (!strcmp (DocumentURLs[doc], "empty"))
+    return;
   if (DocumentTypes[doc] == docSource)
     /* work on the formatted document */
     doc = GetDocFromSource (doc);
@@ -5077,6 +5085,8 @@ void ShowToC (Document doc, View view)
   View                tocView;
   int                 x, y, w, h;
 
+  if (!strcmp (DocumentURLs[doc], "empty"))
+    return;
   if (DocumentTypes[doc] == docSource)
     /* work on the formatted document */
     doc = GetDocFromSource (doc);
@@ -8489,8 +8499,8 @@ void AmayaClose (Document document, View view)
   ----------------------------------------------------------------------*/
 void AddURLInCombobox (char *pathname, char *form_data, ThotBool keep)
 {
-  char          *urlstring, *app_home, *ptr, *url;
-  int            i, j, len, nb, end;
+  char          *urlstring, *app_home, *old_list, *url;
+  int            i, j, len, nb, end, max;
   FILE          *file = NULL;
   unsigned char *localname;
   CHARSET        encoding;
@@ -8516,7 +8526,7 @@ void AddURLInCombobox (char *pathname, char *form_data, ThotBool keep)
   encoding = TtaGetLocaleCharset();
 #endif /* _WX */
   /* keep the previous list */
-  ptr = URL_list;
+  old_list = URL_list;
   /* create a new list */
   len = strlen (url) + 1;
   i = 0;
@@ -8526,15 +8536,15 @@ void AddURLInCombobox (char *pathname, char *form_data, ThotBool keep)
   URL_list = (char *)TtaGetMemory (URL_list_len);  
   if (keep)
     file = TtaWriteOpen (urlstring);
+
   *urlstring = EOS;
   if (!keep || file)
     {
       /* put the new url */
-      if (strcmp (url, "empty"))
+      if (!strcmp (url, "empty"))
         // empty is a keyword to display an empty document    
-        strcpy (URL_list, url);
-      else
-        URL_list[0] = EOS;
+        keep = FALSE; // never keep an empty file
+      strcpy (URL_list, url);
       if (keep)
         {
           if (encoding != UTF_8)
@@ -8546,27 +8556,29 @@ void AddURLInCombobox (char *pathname, char *form_data, ThotBool keep)
           else
             fprintf (file, "\"%s\"\n", url);
         }
-      if (ptr && *ptr != EOS)
+
+      max = GetMaxURLList();
+      if (old_list && old_list[i] != EOS)
         {
           /* now write other urls */
-          while (ptr[i] != EOS && nb < GetMaxURLList())
+          while (old_list[i] != EOS && nb < max)
             {
-              end = strlen (&ptr[i]) + 1;
+              end = strlen (&old_list[i]) + 1;
               if ((URL_list_keep || i != 0) &&
-                  (end != len || strncmp (url, &ptr[i], len)))
+                  (end != len || strncmp (url, &old_list[i], len)))
                 {
                   /* add the newline between two urls */
-                  strcpy (&URL_list[j], &ptr[i]);
+                  strcpy (&URL_list[j], &old_list[i]);
                   if (keep)
                     {
                       if (encoding != UTF_8)
                         {
-                          localname = TtaConvertMbsToByte ((unsigned char *)&ptr[i], encoding);
+                          localname = TtaConvertMbsToByte ((unsigned char *)&old_list[i], encoding);
                           fprintf (file, "\"%s\"\n", localname);
                           TtaFreeMemory (localname);
                         }
                       else
-                        fprintf (file, "\"%s\"\n", &ptr[i]);
+                        fprintf (file, "\"%s\"\n", &old_list[i]);
                     }
                   j += end;
                   nb++;
@@ -8580,7 +8592,7 @@ void AddURLInCombobox (char *pathname, char *form_data, ThotBool keep)
       if (keep)
         TtaWriteClose (file);
     }
-  TtaFreeMemory (ptr);
+  TtaFreeMemory (old_list);
   TtaFreeMemory (urlstring);
   TtaFreeMemory (url);
 }

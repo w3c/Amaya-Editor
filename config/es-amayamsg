@@ -398,13 +398,15 @@
 396 Agregar la hoja xsl para los elementos MathML
 397 Insertar operador
 398 Seleccionar la manera cuya el operador debe ser visualizado
-399 Atributos del fence
-400 Seleccionar los símbolos arbriendos, separadores y cerrandos
-401 Número de símbolos operadores
-402 Número de coordenadas
-403 Largo del N-
-404 Número de elementos
-405 Número de variables
-406 Grado
-407 Grado de la variable %d
-408 Documento compuesto
+399 Insertar una integral
+400 Seleccionar el tipo de integral
+401 Atributos del fence
+402 Seleccionar los símbolos arbriendos, separadores y cerrandos
+403 Número de símbolos operadores
+404 Número de coordenadas
+405 Largo del N-
+406 Número de elementos
+407 Número de variables
+408 Grado
+409 Grado de la variable %d
+410 Documento compuesto

@@ -8,7 +8,7 @@
 
 # neededforbuild  autoconf automake mmcore mmbase mmslib xpm libz libpng libjpeg
 
-%define version 9.53
+%define version 9.54
 
 Vendor:       W3C World Wide Web Consortium
 Distribution: W3C
@@ -91,9 +91,6 @@ export HOME=`pwd`
 #make all
 make
 %install
-if [ -e /usr/bin/amaya ] ; then
-  rm -f /usr/bin/amaya
-fi
 cd linux
 make install prefix=$RPM_BUILD_ROOT/usr/share
 # Gnome/Kde integration

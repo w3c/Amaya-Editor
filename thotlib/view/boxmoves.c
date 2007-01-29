@@ -1162,6 +1162,10 @@ void XMoveAllEnclosed (PtrBox pBox, int delta, int frame)
         }
       else if (pAb)
         {
+if (!strcmp (pAb->AbElement->ElLabel, "L169"))
+  printf ("XMoveAll L169 x=%d + %d\n",pBox->BxXOrg,delta);
+if (!strcmp (pAb->AbElement->ElLabel, "L170"))
+  printf ("XMoveAll L170 x=%d + %d\n",pBox->BxXOrg,delta);
 #ifdef _GL
           pBox->VisibleModification = TRUE;
 #endif /* _GL */
@@ -2124,6 +2128,10 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta,
             pBox->BxRuleWidth = pBox->BxW;
           /* outside width */
           pBox->BxWidth = pBox->BxWidth + delta + diff;
+if (!strcmp (pCurrentAb->AbElement->ElLabel, "L169"))
+  printf ("ResizeWidth L169 x=%d + %d delta=%d\n",pBox->BxXOrg,orgTrans,delta);
+if (!strcmp (pCurrentAb->AbElement->ElLabel, "L170"))
+  printf ("ResizeWidth L170 x=%d + %d delta=%d\n",pBox->BxXOrg,orgTrans,delta);
           pBox->BxXOrg += orgTrans;
 
           if (pBox->BxType == BoPicture || pCurrentAb->AbLeafType == LtGraphics)
@@ -3223,6 +3231,10 @@ void XMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
         }
       else
         {
+if (!strcmp (pCurrentAb->AbElement->ElLabel, "L169"))
+  printf ("XMove L169 x=%d + %d\n",pBox->BxXOrg,delta);
+if (!strcmp (pCurrentAb->AbElement->ElLabel, "L170"))
+  printf ("XMove L170 x=%d + %d\n",pBox->BxXOrg,delta);
           pBox->BxXOrg += delta;
           if (pBox->BxType == BoMulScript &&
               (pCurrentAb->AbNotInLine || !SearchLine (pBox, frame)))

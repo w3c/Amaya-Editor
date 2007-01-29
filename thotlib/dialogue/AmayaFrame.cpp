@@ -598,42 +598,6 @@ wxString AmayaFrame::GetFrameURL()
     }
 }
 
-#if 0
-/*----------------------------------------------------------------------
- *       Class:  AmayaFrame
- *      Method:  SetFrameEnableURL
- * Description:  force the urlbar to be enable or disable for the current frame
- *               exemple : the source vue of a document doen't have an urlbar
-  -----------------------------------------------------------------------*/
-void AmayaFrame::SetFrameEnableURL( bool urlenabled )
-{
-  m_FrameUrlEnable = urlenabled;
-
-  // update the window url if the frame is active
-  if ( IsActive() && GetWindowParent() )
-    GetWindowParent()->SetEnableURL( GetFrameEnableURL() );
-}
-
-/*----------------------------------------------------------------------
- *       Class:  AmayaFrame
- *      Method:  GetFrameEnableURL
- * Description:  get the frame url status (enable or disable)
- *               exemple : the source vue of a document doen't have an urlbar
-  -----------------------------------------------------------------------*/
-bool AmayaFrame::GetFrameEnableURL( )
-{
-  if (GetMasterFrameId() == GetFrameId())
-    return m_FrameUrlEnable;
-  else
-    {
-      AmayaFrame * p_frame = TtaGetFrameFromId(GetMasterFrameId());
-      if (p_frame)
-        return p_frame->m_FrameUrlEnable;
-      else
-        return m_FrameUrlEnable;
-    }
-}
-#endif /* 0 */
 
 /*----------------------------------------------------------------------
  *       Class:  AmayaFrame
@@ -675,9 +639,15 @@ void AmayaFrame::DoClose( bool & veto)
 
 }
 
+/*----------------------------------------------------------------------
+  -----------------------------------------------------------------------*/
 void AmayaFrame::SetActive( bool active )
 {
-  // do nothing if the frame stat doesnt change
+  wxString  url;
+  int       doc_id;
+  int       frame_id;
+
+ // do nothing if the frame stat doesnt change
   //if (m_IsActive == active)
   //  return;
 	
@@ -687,11 +657,12 @@ void AmayaFrame::SetActive( bool active )
   if ( !IsActive() )
     return;
 
+  frame_id = GetFrameId();
   // update internal thotlib global var : ActiveFrame
-  ChangeSelFrame(GetFrameId());
+  ChangeSelFrame(frame_id);
   
   // refresh the document's menu bar
-  int doc_id = FrameTable[GetFrameId()].FrDoc;
+  doc_id = FrameTable[frame_id].FrDoc;
   TtaRefreshTopMenuStats( doc_id, -1 );
   TtaRefreshMenuItemStats( doc_id, NULL, -1 );
 
@@ -708,19 +679,23 @@ void AmayaFrame::SetActive( bool active )
   UpdateFrameIcon();
 
   // this frame is active update its page
-  AmayaPage *   p_page   = GetPageParent();
+  AmayaPage *p_page   = GetPageParent();
   if (p_page && p_window)
     {
       p_page->SetActiveFrame( this );
 
       // setup the right frame url into the main window urlbar
-      p_window->SetURL( GetFrameURL() );
+      url = GetFrameURL();
+      if (url.Len() != 0 || FrameTable[frame_id].FrPagePos != 2)
+        p_window->SetURL( GetFrameURL() );
 
       // setup the enable/disable state of the toolbar buttons
-      //      p_window->SetWindowEnableToolBarButtons( GetFrameId() );
+      //      p_window->SetWindowEnableToolBarButtons(frame_id );
     }
 }
 
+/*----------------------------------------------------------------------
+  -----------------------------------------------------------------------*/
 bool AmayaFrame::IsActive()
 {
   return m_IsActive;

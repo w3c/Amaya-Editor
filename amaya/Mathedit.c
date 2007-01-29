@@ -64,13 +64,15 @@ static ThotIcon   iconMathNo;
 static int      MathButton;
 static ThotIcon mIcons[14];
 static ThotBool	InitMaths;
+
 #else /* _WX */
 /* Global variables for dialogues */
 static int Math_occurences = 1;
 static int Math_OperatorType = 0;
+static int Math_open, Math_close, Math_sep;
+static int Math_integral_number, Math_integral_contour, Math_integral_type;
 #endif /* _WX */
 
-static int Math_open, Math_close, Math_sep;
 static ThotBool	IsLastDeletedElement = FALSE;
 static Element	LastDeletedElement = NULL;
 static Element  MathElementSelected = NULL;
@@ -1226,6 +1228,26 @@ void MathSelectionChanged (NotifyElement *event)
 }
 
 /*----------------------------------------------------------------------
+  GetIntegralType
+  ----------------------------------------------------------------------*/
+static void GetIntegralType(Document doc)
+{
+#ifdef _WX
+  ThotBool  created;
+  
+  created = CreateSelectIntegralDlgWX(MathsDialogue + FormMathIntegral,
+                                      TtaGetViewFrame (doc, 1));
+  if (created)
+    {
+      TtaSetDialoguePosition ();
+      TtaShowDialogue (MathsDialogue + FormMathIntegral, FALSE);
+      /* wait for an answer */
+      TtaWaitShowDialogue ();
+    }
+#endif  /* _WX */
+}
+
+/*----------------------------------------------------------------------
   GetFenceAttributes
   ----------------------------------------------------------------------*/
 static void GetFenceAttributes(Document doc)
@@ -1233,7 +1255,8 @@ static void GetFenceAttributes(Document doc)
 #ifdef _WX
   ThotBool  created;
   
-  created = CreateSelectFenceAttributesDlgWX(MathsDialogue + FormMathFenceAttributes, TtaGetViewFrame (doc, 1));
+  created = CreateSelectFenceAttributesDlgWX(MathsDialogue + FormMathFenceAttributes,
+                                             TtaGetViewFrame (doc, 1));
   if (created)
     {
       TtaSetDialoguePosition ();
@@ -1243,17 +1266,6 @@ static void GetFenceAttributes(Document doc)
     }
 #endif  /* _WX */
 }
-
-/*----------------------------------------------------------------------
-  SetFenceAttributes
-  attr : 0, 1 or 2 : open, separators, close
-  ----------------------------------------------------------------------*/
-/*static void SetFenceAttributes(Document doc, int attr)
-  {
-  if(Math_fence_attributes[attr])
-    TtaFreeMemory (Math_fence_attributes[attr]);
-
-  }*/
 
 /*----------------------------------------------------------------------
   GetOccurrences: asks and returns the number of occurrences
@@ -1292,7 +1304,8 @@ static int GetOperatorType(Document doc)
   ThotBool  created;
   Math_OperatorType = 0;
 
-  created = CreateSelectOperatorDlgWX(MathsDialogue + FormMathOperator, TtaGetViewFrame (doc, 1));
+  created = CreateSelectOperatorDlgWX(MathsDialogue + FormMathOperator,
+                                      TtaGetViewFrame (doc, 1));
   if (created)
     {
       TtaSetDialoguePosition ();
@@ -1325,8 +1338,8 @@ static void CreateMathConstruct (int construct, ...)
   Language           lang;
   DisplayMode        dispMode;
   int                c1, i, len, profile, selectedchild, lx, ly;
-  int                number, contour, type, symbol, symbol2, symboltype;
-  int                degree, degreevar, nabla, ibefore, par, symboldiff;
+  int                symbol, symbol2, symboltype;
+  int                number, type, degree, degreevar, nabla, ibefore, par, symboldiff;
   va_list            varpos;
   ThotBool           oldStructureChecking;
   ThotBool	         before, emptySel, ok, insertSibling;
@@ -2150,13 +2163,12 @@ static void CreateMathConstruct (int construct, ...)
           if (symbol == -1)
             {
             /* ask the type of integral */
-            number = GetOccurrences (doc, TtaGetMessage (AMAYA, AM_NUMBER_OCCUR), 1, 1);
-            contour = GetOccurrences (doc, TtaGetMessage (AMAYA, AM_NUMBER_OCCUR), 0, 0);
-            type = GetOccurrences (doc, TtaGetMessage (AMAYA, AM_NUMBER_OCCUR), 0, 0);
-            if (type > 1)type = 1;
-            if (!contour)
+            GetIntegralType(doc);
+            if (Math_integral_type > 3)
+              Math_integral_type = 1;
+            if (!MathIntegralContour)
               {
-              switch(number)
+              switch(Math_integral_number)
                 {
                 case 1: symbol = 8747; break;
                 case 2: symbol = 8748; break;
@@ -2176,12 +2188,12 @@ static void CreateMathConstruct (int construct, ...)
               }
             }
           else
-            type = va_arg(varpos, int);
+            Math_integral_type = va_arg(varpos, int);
 
           leaf = TtaGetFirstChild (el);
           child = leaf;
           new_ = leaf;
-          InsertEmptyConstruct(&new_, type ? MathML_EL_MSUBSUP : MathML_EL_MSUB, doc);
+          InsertEmptyConstruct(&new_, Math_integral_type ? MathML_EL_MSUBSUP : MathML_EL_MSUB, doc);
           TtaDeleteTree (leaf, doc);
           child = TtaGetFirstChild (new_);
    
@@ -2752,7 +2764,7 @@ static void CreateMathConstruct (int construct, ...)
           symboldiff = 8706;
           degree = 0;
           /* ask the user about the number of variables that have to be differentiated */
-          number = GetOccurrences (doc, TtaGetMessage (AMAYA, AM_NUMBER_VARIABLES), 1, 1);
+          number = GetOccurrences (doc, TtaGetMessage (AMAYA, AM_NUMBER_VARIABLES), 2, 1);
   
           /* Denominator */
           leaf = TtaGetFirstChild (TtaGetLastChild (el));
@@ -3228,23 +3240,31 @@ static void CallbackMaths (int ref, int typedata, char *data)
 #endif /* _WX */
       break;
 
-    case MathAttributeOpen:
 #ifdef _WX
+    case MathAttributeOpen:
       Math_open = val;
-#endif /* _WX */
       break;
 
     case MathAttributeSeparators:
-#ifdef _WX
       Math_sep = val;
-#endif /* _WX */
       break;
 
     case MathAttributeClose:
-#ifdef _WX
       Math_close = val;
-#endif /* _WX */
       break;
+
+    case MathIntegralNumber:
+      Math_integral_number = val;
+      break;
+
+    case MathIntegralContour:
+      Math_integral_contour = val;
+      break;
+
+    case MathIntegralType:
+      Math_integral_type = val;
+      break;
+#endif /* _WX */
 
     case MenuMaths:
       /* the user has selected an entry in the math menu */
