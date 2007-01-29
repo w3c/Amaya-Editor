@@ -100,6 +100,7 @@ NewTemplateDocDlgWX::NewTemplateDocDlgWX ( int ref,
   XRCCTRL(*this, "wxID_OK", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_OPEN_URL) ));
   XRCCTRL(*this, "wxID_CLEAR", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_CLEAR) ));
   XRCCTRL(*this, "wxID_CANCEL", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(LIB,TMSG_CANCEL) ));
+  XRCCTRL(*this, "wxID_ERROR", wxStaticText)->SetLabel(TtaConvMessageToWX(""));
 
   // set the default WHERE_TO_OPEN value : in new tab
   int where_to_open_doc;
