@@ -3032,6 +3032,9 @@ void SelectionChanged (NotifyElement *event)
   if (DocumentTypes[event->document] != docLog)
   {
     UpdateXmlElementListTool(event->element,event->document);
+#ifdef _WX
+    TtaSetStatus (event->document, 1, "  ", NULL);
+#endif /* _WX */
     TtaSetStatusSelectedElement(event->document, 1, event->element);
   }
   SelectionChanging = FALSE;
