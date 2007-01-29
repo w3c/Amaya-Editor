@@ -242,7 +242,7 @@ void NewUnion (const XTigerTemplate t, const char *name,
             NewElement (t, Dictionary_CurrentKey (include));
           Dictionary_Add (dec->unionType.include, aux->name, aux);
         }
-      TtaFreeMemory (include);
+      Dictionary_Clean (include);
     }
 	
 	//We initialize exclude
@@ -255,7 +255,7 @@ void NewUnion (const XTigerTemplate t, const char *name,
             NewElement (t, Dictionary_CurrentKey (exclude));
           Dictionary_Add (dec->unionType.exclude, aux->name, aux);
         }
-      TtaFreeMemory (exclude);
+      Dictionary_Clean (exclude);
     }
 
 	AddDeclaration (t, dec);

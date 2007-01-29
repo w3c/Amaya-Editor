@@ -32,14 +32,18 @@ Set the value of a string attribute
 void SetAttributeStringValue (Element el, int att, char* value)
 {
 #ifdef TEMPLATES
-  Document doc = TtaGetDocument(el);
-
+  Document      doc = TtaGetDocument(el);
   AttributeType attType;
+  Attribute     attribute;
+
   attType.AttrSSchema = TtaGetElementType(el).ElSSchema;
   attType.AttrTypeNum = att;
-  
-  Attribute attribute = TtaGetAttribute(el, attType);
-
+  attribute = TtaGetAttribute(el, attType);
+  if (attribute == NULL)
+    {
+      attribute = TtaNewAttribute (attType);
+      TtaAttachAttribute(el, attribute, doc);
+    }
   TtaSetAttributeText(attribute, value, el, doc);
 #endif /* TEMPLATES */
 }
