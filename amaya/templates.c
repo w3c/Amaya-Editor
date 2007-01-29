@@ -461,12 +461,15 @@ void Template_IncrementRepeatOccurNumber(Element el)
   char  newVal[8];
   int curVal;
   
-  current = GetAttributeStringValue(el, Template_ATTR_currentOccurs, NULL);
-  curVal = atoi(current);
-  curVal++;
-  TtaFreeMemory(current);
-  sprintf(newVal, "%d", curVal);
-  SetAttributeStringValue(el, Template_ATTR_currentOccurs, newVal);
+  current = GetAttributeStringValueFromNum(el, Template_ATTR_currentOccurs, NULL);
+  if(current)
+  {
+    curVal = atoi(current);
+    curVal++;
+    TtaFreeMemory(current);
+    sprintf(newVal, "%d", curVal);
+    SetAttributeStringValue(el, Template_ATTR_currentOccurs, newVal);
+  }
 #endif /* TEMPLATES */
 }
 
@@ -482,12 +485,15 @@ void Template_DecrementRepeatOccurNumber(Element el)
   char  newVal[8];
   int curVal;
   
-  current = GetAttributeStringValue(el, Template_ATTR_currentOccurs, NULL);
-  curVal = atoi(current);
-  curVal--;
-  TtaFreeMemory(current);
-  sprintf(newVal, "%d", curVal);
-  SetAttributeStringValue(el, Template_ATTR_currentOccurs, newVal);
+  current = GetAttributeStringValueFromNum(el, Template_ATTR_currentOccurs, NULL);
+  if(current)
+  {
+    curVal = atoi(current);
+    curVal--;
+    TtaFreeMemory(current);
+    sprintf(newVal, "%d", curVal);
+    SetAttributeStringValue(el, Template_ATTR_currentOccurs, newVal);
+  }
 #endif /* TEMPLATES */
 }
 
@@ -504,18 +510,37 @@ ThotBool Template_CanInsertRepeatChild(Element el)
   char* max;
   char* current;
   int maxVal, curVal;
+  Element child;
   
-  max = GetAttributeStringValue(el, Template_ATTR_maxOccurs, NULL);
-  if(!strcmp(max, "*")){
-    return TRUE;
+  max = GetAttributeStringValueFromNum(el, Template_ATTR_maxOccurs, NULL);
+  if(max)
+  {
+    if(!strcmp(max, "*")){
+      TtaFreeMemory(max);
+      return TRUE;
+    }
+    maxVal = atoi(max);
+    TtaFreeMemory(max);
+
+    current = GetAttributeStringValueFromNum(el, Template_ATTR_currentOccurs, NULL);
+    if(current)
+    {
+      curVal = atoi(current);
+      TtaFreeMemory(current);
+    }
+    else
+    {
+      curVal = 0;
+      for(child = TtaGetFirstChild(el); child; TtaNextSibling(&child))
+      {
+        curVal++;
+      }
+    }
+  
+    return curVal<maxVal;
   }
-
-  current = GetAttributeStringValue(el, Template_ATTR_currentOccurs, NULL);
-  curVal = atoi(current);
-  maxVal = atoi(max);
-
-  return curVal<maxVal;
-
+  else
+    return TRUE;
 #endif /* TEMPLATES */
   return FALSE;
 }
@@ -683,6 +708,9 @@ ThotBool RepeatButtonClicked (NotifyElement *event)
   char*           types;
   ThotBool        oldStructureChecking;
   View            view;
+  char*           listtypes;
+  char*           result;
+
   
   TtaGetActiveView (&doc, &view);
   if (view != 1)
@@ -704,43 +732,46 @@ ThotBool RepeatButtonClicked (NotifyElement *event)
     if(Template_CanInsertRepeatChild(repeatEl))
     {
       firstEl = TtaGetFirstChild(repeatEl);
-      types = GetAttributeStringValue(firstEl, Template_ATTR_types, NULL);
-      
-      char* listtypes = Template_ExpandTypes(t, types);
-      char* result = QueryStringFromMenu(doc, listtypes);
-      if(result)
+      types = GetAttributeStringValueFromNum(firstEl, Template_ATTR_types, NULL);
+      if(types)
       {
-        decl = Template_GetDeclaration(t, result);
-        if(decl)
+        listtypes = Template_ExpandTypes(t, types);
+        result = QueryStringFromMenu(doc, listtypes);
+        if(result)
         {
-          /* Prepare insertion.*/          
-          oldStructureChecking = TtaGetStructureChecking (doc);
-          TtaSetStructureChecking (FALSE, doc);
-          TtaOpenUndoSequence(doc, NULL, NULL, 0, 0);
-          
-          /* Insert. */
-          if(el==repeatEl)
-            newEl = Template_InsertRepeatChildAfter(doc, repeatEl, decl, NULL);
-          else
-            newEl = Template_InsertRepeatChildAfter(doc, repeatEl, decl, el);
+          decl = Template_GetDeclaration(t, result);
+          if(decl)
+          {
+            /* Prepare insertion.*/          
+            oldStructureChecking = TtaGetStructureChecking (doc);
+            TtaSetStructureChecking (FALSE, doc);
+            TtaOpenUndoSequence(doc, NULL, NULL, 0, 0);
             
-          /* Finish insertion.*/
-          TtaCloseUndoSequence(doc);
-          TtaSetStructureChecking (oldStructureChecking, doc);
-          
-          firstEl = GetFirstEditableElement(newEl);
-          if(firstEl)
-          {
-            TtaSelectElement (doc, firstEl);
-            TtaSetStatusSelectedElement(doc, view, firstEl);
-          }
-          else
-          {
-            TtaSelectElement (doc, newEl);
-            TtaSetStatusSelectedElement(doc, view, newEl);
+            /* Insert. */
+            if(el==repeatEl)
+              newEl = Template_InsertRepeatChildAfter(doc, repeatEl, decl, NULL);
+            else
+              newEl = Template_InsertRepeatChildAfter(doc, repeatEl, decl, el);
+              
+            /* Finish insertion.*/
+            TtaCloseUndoSequence(doc);
+            TtaSetStructureChecking (oldStructureChecking, doc);
+            
+            firstEl = GetFirstEditableElement(newEl);
+            if(firstEl)
+            {
+              TtaSelectElement (doc, firstEl);
+              TtaSetStatusSelectedElement(doc, view, firstEl);
+            }
+            else
+            {
+              TtaSelectElement (doc, newEl);
+              TtaSetStatusSelectedElement(doc, view, newEl);
+            }
           }
         }
       }
+      TtaFreeMemory(types);
       TtaFreeMemory(listtypes);
       TtaFreeMemory(result);
     }
@@ -772,6 +803,8 @@ ThotBool UseButtonClicked (NotifyElement *event)
   char*           types;
   ThotBool        oldStructureChecking;
   View            view;
+  char*           listtypes;
+  char*           result;
 
   TtaGetActiveView (&doc, &view);
   if (view != 1)
@@ -791,48 +824,51 @@ ThotBool UseButtonClicked (NotifyElement *event)
   }
   else
   {
-    types = GetAttributeStringValue(el, Template_ATTR_types, NULL);
-
-    char* listtypes = Template_ExpandTypes(t, types);
-    char* result = QueryStringFromMenu(doc, listtypes);
-    if(result)
+    types = GetAttributeStringValueFromNum(el, Template_ATTR_types, NULL);
+    if(types)
     {
-      decl = Template_GetDeclaration(t, result);
-      if(decl)
+      listtypes = Template_ExpandTypes(t, types);
+      result = QueryStringFromMenu(doc, listtypes);
+      if(result)
       {
-        /* Prepare insertion.*/
-        oldStructureChecking = TtaGetStructureChecking (doc);
-        TtaSetStructureChecking (FALSE, doc);
-        TtaOpenUndoSequence(doc, NULL, NULL, 0, 0);
-        
-        /* Insert */
-        newEl = Template_InsertUseChildren(doc, el, decl);
-        
-        for(child = TtaGetFirstChild(newEl); child; TtaNextSibling(&child))
+        decl = Template_GetDeclaration(t, result);
+        if(decl)
         {
-          TtaRegisterElementCreate(child, doc);
-        }
-        
-        TtaChangeTypeOfElement(el, doc, Template_EL_useSimple);
-        TtaRegisterElementTypeChange(el, Template_EL_useEl, doc);
-        
-        /* Finish insertion. */
-        TtaCloseUndoSequence(doc);
-        TtaSetStructureChecking (oldStructureChecking, doc);
-        
-        firstEl = GetFirstEditableElement(newEl);
-        if(firstEl)
-        {
-          TtaSelectElement (doc, firstEl);
-          TtaSetStatusSelectedElement(doc, view, firstEl);
-        }
-        else
-        {
-          TtaSelectElement (doc, newEl);
-          TtaSetStatusSelectedElement(doc, view, newEl);
+          /* Prepare insertion.*/
+          oldStructureChecking = TtaGetStructureChecking (doc);
+          TtaSetStructureChecking (FALSE, doc);
+          TtaOpenUndoSequence(doc, NULL, NULL, 0, 0);
+          
+          /* Insert */
+          newEl = Template_InsertUseChildren(doc, el, decl);
+          
+          for(child = TtaGetFirstChild(newEl); child; TtaNextSibling(&child))
+          {
+            TtaRegisterElementCreate(child, doc);
+          }
+          
+          TtaChangeTypeOfElement(el, doc, Template_EL_useSimple);
+          TtaRegisterElementTypeChange(el, Template_EL_useEl, doc);
+          
+          /* Finish insertion. */
+          TtaCloseUndoSequence(doc);
+          TtaSetStructureChecking (oldStructureChecking, doc);
+          
+          firstEl = GetFirstEditableElement(newEl);
+          if(firstEl)
+          {
+            TtaSelectElement (doc, firstEl);
+            TtaSetStatusSelectedElement(doc, view, firstEl);
+          }
+          else
+          {
+            TtaSelectElement (doc, newEl);
+            TtaSetStatusSelectedElement(doc, view, newEl);
+          }
         }
       }
     }
+    TtaFreeMemory(types);
     TtaFreeMemory(listtypes);
     TtaFreeMemory(result);
   }
@@ -1002,12 +1038,19 @@ ThotBool ClosingInstance(NotifyDialog* dialog)
 
   char *turl = DocumentMeta[dialog->document]->template_url;
   if (turl)
-    {
-      XTigerTemplate t = (XTigerTemplate) Dictionary_Get (Templates_Dic, turl);
-      if (t)
-        RemoveUser (t);
-      TtaFreeMemory (turl);
-    }
+  {
+    XTigerTemplate t = (XTigerTemplate) Dictionary_Get (Templates_Dic, turl);
+    if (t)
+      RemoveUser (t);
+    TtaFreeMemory (turl);
+    DocumentMeta[dialog->document]->template_url = NULL;
+  }
+  
+  if(DocumentMeta[dialog->document]->template_version)
+  {
+    TtaFreeMemory(DocumentMeta[dialog->document]->template_version);
+    DocumentMeta[dialog->document]->template_version = NULL;
+  }
 #endif /* TEMPLATES */
   return FALSE;
 }
@@ -1058,8 +1101,8 @@ ThotBool TemplateElementWillBeCreated (NotifyElement *event)
   ElementType elType = event->elementType;
   Element     parent = event->element;
   ElementType parentType = TtaGetElementType(parent);
-  Element     ancestor;
-  ElementType ancestorType;
+//  Element     ancestor;
+//  ElementType ancestorType;
 
   SSchema     templateSSchema = TtaGetSSchema ("Template", event->document);
 
@@ -1089,7 +1132,7 @@ ThotBool TemplateElementWillBeCreated (NotifyElement *event)
 //      printf("    >> %s:%s\n", TtaGetSSchemaName(ancestorType.ElSSchema), TtaGetElementTypeName(ancestorType));
 //      if (ancestorType.ElSSchema == templateSSchema && ancestorType.ElTypeNum == Template_EL_bag)
 //      {
-//        char* types = GetAttributeStringValue(ancestor, Template_ATTR_types, NULL);
+//        char* types = GetAttributeStringValueFromNum(ancestor, Template_ATTR_types, NULL);
 //        ThotBool b = Template_CanInsertElementInBag(event->document, elType, types); 
 //        printf("    Intend to insert xt:bag element : %s\n", b?"TRUE":"FALSE");
 //        return !b;

@@ -160,7 +160,9 @@ void FreeTemplateEnvironment ()
       {
         t = (XTigerTemplate)Dictionary_CurrentElement (Templates_Dic);
         TtaCloseDocument (t->doc);
+        FreeXTigerTemplate(t);
       }
+      
 #endif
 }
 

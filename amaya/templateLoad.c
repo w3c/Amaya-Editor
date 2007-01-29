@@ -36,10 +36,12 @@ void AddElementDeclaration (XTigerTemplate t, Element el)
 #ifdef TEMPLATES
 	char *name;
 
-	name = GetAttributeStringValue (el, Template_ATTR_name, NULL);
-	NewElement (t, name);
-	if (name)
+	name = GetAttributeStringValueFromNum (el, Template_ATTR_name, NULL);
+  if(name)
+  {
+    NewElement (t, name);
     TtaFreeMemory (name);
+  }
 #endif /* TEMPLATES */
 }
 
@@ -51,13 +53,15 @@ void AddUnionDeclaration (XTigerTemplate t, Element el)
 #ifdef TEMPLATES
 	char *name, *include, *exclude;
 	
-	name	  = GetAttributeStringValue (el, Template_ATTR_name, NULL);
-	include   = GetAttributeStringValue (el, Template_ATTR_includeAt, NULL);
-	exclude   = GetAttributeStringValue (el, Template_ATTR_exclude, NULL);
-	NewUnion (t, name, 
-           Dictionary_CreateFromList (include), 
-           Dictionary_CreateFromList (exclude));
-	
+	name	  = GetAttributeStringValueFromNum (el, Template_ATTR_name, NULL);
+	include   = GetAttributeStringValueFromNum (el, Template_ATTR_includeAt, NULL);
+	exclude   = GetAttributeStringValueFromNum (el, Template_ATTR_exclude, NULL);
+  if(name && include)
+  {
+  	NewUnion (t, name, 
+             Dictionary_CreateFromList (include), 
+             Dictionary_CreateFromList (exclude));
+  }
   TtaFreeMemory (name);
 	TtaFreeMemory (include);
 	TtaFreeMemory (exclude);
@@ -72,8 +76,9 @@ void AddComponentDeclaration (XTigerTemplate t, Element el)
 #ifdef TEMPLATES
 	char *name;
 	
-	name = GetAttributeStringValue (el, Template_ATTR_name, NULL);
-	NewComponent (t, name, el);	
+	name = GetAttributeStringValueFromNum (el, Template_ATTR_name, NULL);
+  if(name)
+  	NewComponent (t, name, el);	
 	TtaFreeMemory (name);
 #endif /* TEMPLATES */
 }
@@ -100,16 +105,19 @@ void CheckTypesAttribute (XTigerTemplate t, Element el)
 	char *types;
 	DicDictionary dic;
 
-	types = GetAttributeStringValue (el, Template_ATTR_types, NULL);
-	dic = Dictionary_CreateFromList (types);
-	
-	for (Dictionary_First (dic); !Dictionary_IsDone (dic); Dictionary_Next (dic))
-		if ( Template_GetDeclaration (t, Dictionary_CurrentKey (dic)) == NULL)
-			//TODO_XTIGER We must add the current namespace
-			NewElement (t, Dictionary_CurrentKey (dic));
-	
-	TtaFreeMemory (types);
-	Dictionary_Clean (dic);
+	types = GetAttributeStringValueFromNum (el, Template_ATTR_types, NULL);
+  if(types)
+  {
+  	dic = Dictionary_CreateFromList (types);
+  	
+  	for (Dictionary_First (dic); !Dictionary_IsDone (dic); Dictionary_Next (dic))
+  		if ( Template_GetDeclaration (t, Dictionary_CurrentKey (dic)) == NULL)
+  			//TODO_XTIGER We must add the current namespace
+  			NewElement (t, Dictionary_CurrentKey (dic));
+  	
+  	TtaFreeMemory (types);
+  	Dictionary_Clean (dic);
+  }
 #endif /* TEMPLATES */
 }
 
@@ -120,8 +128,8 @@ void CheckTypesAttribute (XTigerTemplate t, Element el)
 void AddHeadParameters(XTigerTemplate t, Element el)
 {
 #ifdef TEMPLATES
-  t->version = GetAttributeStringValue(el, Template_ATTR_version, NULL);
-  t->templateVersion = GetAttributeStringValue(el, Template_ATTR_templateVersion, NULL);
+  t->version = GetAttributeStringValueFromNum(el, Template_ATTR_version, NULL);
+  t->templateVersion = GetAttributeStringValueFromNum(el, Template_ATTR_templateVersion, NULL);
   
   printf("AddHeadParameters : %s - %s\n", t->version, t->templateVersion);
 #endif /* TEMPLATES */

@@ -52,7 +52,7 @@ void SetAttributeStringValue (Element el, int att, char* value)
 /*----------------------------------------------------------------------
 Returns the value of a string attribute 
 ----------------------------------------------------------------------*/
-char *GetAttributeStringValue (Element el, int att, int* sz)
+char *GetAttributeStringValueFromNum (Element el, int att, int* sz)
 {
 #ifdef TEMPLATES
 	AttributeType attType;
@@ -68,7 +68,7 @@ char *GetAttributeStringValue (Element el, int att, int* sz)
     *sz = size;
 	return aux;
 #else
-	return '\0';
+	return NULL;
 #endif /* TEMPLATES */
 }
 
@@ -85,7 +85,7 @@ char *GetAttributeStringValue (Element el, Attribute attribute, int* sz)
     *sz = size;
 	return aux;
 #else
-	return '\0';
+	return NULL;
 #endif /* TEMPLATES */
 }
 

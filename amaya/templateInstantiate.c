@@ -205,9 +205,16 @@ static void InstantiateAttribute (XTigerTemplate t, Element el, Document doc)
     // there is a "use" attribute. Check its value
     {
       text = GetAttributeStringValue (el, useAttr, NULL);
-      if (text && strcmp (text, "optional") == 0)
+      if(!text)
         return;
+      if(strcmp (text, "optional") == 0)
+      {
+        TtaFreeMemory(text);
+        return;
+      }
+      TtaFreeMemory(text);
     }
+    
   // get the "name" and "default" attributes
   nameType.AttrSSchema = defaultType.AttrSSchema = TtaGetSSchema (TEMPLATE_SCHEMA_NAME, doc);
   nameType.AttrTypeNum = Template_ATTR_ref_name;
@@ -231,7 +238,8 @@ static void InstantiateAttribute (XTigerTemplate t, Element el, Document doc)
               if (defAttr)
                 {
                   text = GetAttributeStringValue (el, defAttr, NULL);
-                  TtaSetAttributeText(attr, text, parent, doc);
+                  if(text)
+                    TtaSetAttributeText(attr, text, parent, doc);
                   TtaFreeMemory(text);
                   // if it's a src arttribute for an image, load the image
                   if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") &&
@@ -391,9 +399,12 @@ Element Template_InsertUseChildren(Document doc, Element el, Declaration dec)
       }
       
       /* Copy currentType attribute. */
-      attrCurrentTypeValue = GetAttributeStringValue(newEl, Template_ATTR_currentType, NULL);
-      SetAttributeStringValue(el, Template_ATTR_currentType, attrCurrentTypeValue);
-      
+      attrCurrentTypeValue = GetAttributeStringValueFromNum(newEl, Template_ATTR_currentType, NULL);
+      if(attrCurrentTypeValue)
+      {
+        SetAttributeStringValue(el, Template_ATTR_currentType, attrCurrentTypeValue);
+        TtaFreeMemory(attrCurrentTypeValue);
+      }
       TtaDeleteTree(newEl, doc);
       newEl = el;
       break;
@@ -440,7 +451,9 @@ Element InstantiateUse (XTigerTemplate t, Element el, Document doc,
   /* get the value of the "types" attribute */
   cont = NULL;
   elType = TtaGetElementType (el);
-  types = GetAttributeStringValue(el, Template_ATTR_types, &size);
+  types = GetAttributeStringValueFromNum(el, Template_ATTR_types, &size);
+  if(!types)
+    return NULL;
   giveItems (types, size, &items, &nbitems);
   // No structure checking
   oldStructureChecking = TtaGetStructureChecking (doc);
@@ -454,6 +467,7 @@ Element InstantiateUse (XTigerTemplate t, Element el, Document doc,
         cont = Template_InsertUseChildren(doc, el, dec);
     }
   TtaFreeMemory(types);
+  TtaFreeMemory(items);
   TtaSetStructureChecking (oldStructureChecking, doc);
   return cont;
 #endif /* TEMPLATES */
@@ -624,7 +638,7 @@ static void ParseTemplate (XTigerTemplate t, Element el, Document doc,
           attType.AttrSSchema = elType.ElSSchema;
           attType.AttrTypeNum = Template_ATTR_name;
           
-          name = GetAttributeStringValue (el, Template_ATTR_name, NULL);		  		  
+          name = GetAttributeStringValueFromNum (el, Template_ATTR_name, NULL);		  		  
           TtaRemoveAttribute (el, TtaGetAttribute (el, attType), doc);
           if (NeedAMenu (el, doc))
             TtaChangeElementType (el, Template_EL_useEl);
@@ -634,12 +648,14 @@ static void ParseTemplate (XTigerTemplate t, Element el, Document doc,
           attType.AttrTypeNum = Template_ATTR_types;
           att = TtaNewAttribute (attType);
           TtaAttachAttribute (el, att, doc);
-          TtaSetAttributeText (att, name, el, doc);
+          if(name)
+            TtaSetAttributeText (att, name, el, doc);
           
           attType.AttrTypeNum = Template_ATTR_currentType;
           att = TtaNewAttribute (attType);
-          TtaAttachAttribute (el, att, doc);		  
-          TtaSetAttributeText (att, name, el, doc);
+          TtaAttachAttribute (el, att, doc);
+          if(name)
+            TtaSetAttributeText (att, name, el, doc);
           
           break;
         case Template_EL_option :
