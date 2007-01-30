@@ -47,13 +47,27 @@ if test $AMAYAOS = "MACOSX" ; then
   $MKDIR $PREFIX/Amaya.app
   $MKDIR $PREFIX/Amaya.app/Contents
   $MKDIR $PREFIX/Amaya.app/Contents/MacOS
-	$MKDIR $PREFIX/Amaya.app/Contents/Resources
-	$MV $PREFIX/$AMAYA_INSTALLDIR $PREFIX/Amaya.app/Contents/MacOS/
-	cd $PREFIX/Amaya.app/Contents/MacOS/ && $LN_S $AMAYA_INSTALLDIR/$AMAYAGUI/bin/amaya . && cd -
-	$SED -e "s/IDENTIFIER/`echo $AMAYA_INSTALLDIR | $SED -e 's,\.\./,,g' | $SED -e 's,/,.,g'`/" \
-		   -e "s/EXECUTABLE/amaya/" \
-			 -e "s/VERSION/@APP_VER@/" \
-			 $AMAYA_SOURCEBINDIR/../../resources/bundle/Info.plist.in >$PREFIX/Amaya.app/Contents/Info.plist
+  $MKDIR $PREFIX/Amaya.app/Contents/Resources
+  $MKDIR $PREFIX/Amaya.app/Contents/Resources/en.lproj
+  $MKDIR $PREFIX/Amaya.app/Contents/Resources/fr.lproj
+  $MKDIR $PREFIX/Amaya.app/Contents/Resources/de.lproj
+  $MKDIR $PREFIX/Amaya.app/Contents/Resources/it.lproj
+  $MKDIR $PREFIX/Amaya.app/Contents/Resources/tr.lproj
+  $MKDIR $PREFIX/Amaya.app/Contents/Resources/es.lproj
+  $MKDIR $PREFIX/Amaya.app/Contents/Resources/pt.lproj
+  $MKDIR $PREFIX/Amaya.app/Contents/Resources/fi.lproj
+  $MKDIR $PREFIX/Amaya.app/Contents/Resources/ru.lproj
+  $MKDIR $PREFIX/Amaya.app/Contents/Resources/hu.lproj
+  $MKDIR $PREFIX/Amaya.app/Contents/Resources/ka.lproj
+  $MKDIR $PREFIX/Amaya.app/Contents/Resources/zh_CN.lproj
+  $MKDIR $PREFIX/Amaya.app/Contents/Resources/zh_TW.lproj
+  $MKDIR $PREFIX/Amaya.app/Contents/Resources/no.lproj
+  $MV $PREFIX/$AMAYA_INSTALLDIR $PREFIX/Amaya.app/Contents/MacOS/
+  cd $PREFIX/Amaya.app/Contents/MacOS/ && $LN_S $AMAYA_INSTALLDIR/$AMAYAGUI/bin/amaya . && cd -
+  $SED -e "s/IDENTIFIER/`echo $AMAYA_INSTALLDIR | $SED -e 's,\.\./,,g' | $SED -e 's,/,.,g'`/" \
+ 	-e "s/EXECUTABLE/amaya/" \
+	-e "s/VERSION/@APP_VER@/" \
+	 $AMAYA_SOURCEBINDIR/../../resources/bundle/Info.plist.in >$PREFIX/Amaya.app/Contents/Info.plist
 	$ECHO -n "APPL????" >$PREFIX/Amaya.app/Contents/PkgInfo
 	$CP -f $AMAYA_SOURCEBINDIR/../../resources/bundle/amaya.icns $PREFIX/Amaya.app/Contents/Resources/amaya.icns
 fi
