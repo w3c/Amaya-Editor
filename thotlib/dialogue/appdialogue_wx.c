@@ -1629,7 +1629,7 @@ void TtaSetURLBar( int frame_id,
     }
 
   /* the first url in the list is the used one for the current frame */
-  if (!strcmp (listUrl, "empty"))
+  if (listUrl && !strcmp (listUrl, "empty"))
     firsturl = TtaConvMessageToWX( "" );
   else
     firsturl = TtaConvMessageToWX( listUrl );

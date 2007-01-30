@@ -69,10 +69,10 @@ static ThotBool	InitMaths;
 /* Global variables for dialogues */
 static int Math_occurences = 1;
 static int Math_OperatorType = 0;
-static int Math_open, Math_close, Math_sep;
-static int Math_integral_number, Math_integral_contour, Math_integral_type;
 #endif /* _WX */
 
+static int Math_open, Math_close, Math_sep;
+static int Math_integral_number, Math_integral_contour, Math_integral_type;
 static ThotBool	IsLastDeletedElement = FALSE;
 static Element	LastDeletedElement = NULL;
 static Element  MathElementSelected = NULL;

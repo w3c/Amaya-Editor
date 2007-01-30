@@ -47,7 +47,7 @@ REDLANDDIR=redland
 WXWIDGETS=wxWidgets
 MESA=Mesa
 FREETYPE=freetype
-TAR="tar czvfh "
+TAR="tar czfh "
 UNTAR="tar xvzf"
 TMP=$DEST/Amaya$AMAYAVERSION
 
@@ -138,7 +138,7 @@ ${WXWIDGETS}/*.sh \
 ${MESA} \
 ${FREETYPE}
 
-$TAR $DEST/amaya-tmp-$AMAYAVERSION.tgz \
+tar czvfh $DEST/amaya-tmp-$AMAYAVERSION.tgz \
 ${AMAYADIR}/resources/icons/16x16/*.ico \
 ${AMAYADIR}/resources/icons/22x22/*.ico \
 ${AMAYADIR}/resources/icons/misc/*.ico \
@@ -442,8 +442,8 @@ ${AMAYADIR}/tools/cextract-1.7/xtract.h
 
 mkdir $TMP
 cd $TMP
-tar xvzf $DEST/amaya-tmp-$AMAYAVERSION.tgz
-tar xvzf $DEST/libs-tmp-$AMAYAVERSION.tgz
+tar xzf $DEST/amaya-tmp-$AMAYAVERSION.tgz
+tar xzf $DEST/libs-tmp-$AMAYAVERSION.tgz
 \rm -r */CVS */*/CVS */*/*/CVS */*/*/*/CVS */*/*/*/*/CVS */*/*/*/*/*/CVS */*/*/*/*/*/*/CVS */*/*/*/*/*/*/*/CVS
 
 echo "Generating the minimum source tar file from $AMAYADIR"
@@ -461,12 +461,12 @@ ${FREETYPE}
 
 echo "Generating only the externals librairies source tar file"
 $TAR $DEST/amaya-fullsrc-$AMAYAVERSION.tgz \
+${AMAYADIR} \
 ${LIBWWWDIR} \
 ${REDLANDDIR} \
 ${WXWIDGETS} \
 ${MESA} \
-${FREETYPE} \
-${AMAYADIR} 
+${FREETYPE} 
 
 echo "Generating the complete source tar file"
 cd ..
@@ -475,6 +475,6 @@ $TAR $DEST/amaya-sources-$AMAYAVERSION.tgz \
 ${AMAYADIR} 
 
 cd $TARDIR
-\rm -r $TMP
+#\rm -r $TMP
 \rm $DEST/amaya-tmp-$AMAYAVERSION.tgz
 \rm $DEST/libs-tmp-$AMAYAVERSION.tgz
