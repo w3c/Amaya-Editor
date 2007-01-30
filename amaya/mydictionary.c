@@ -199,6 +199,8 @@ DicElement Dictionary_Remove (DicDictionary dic, const char * key)
 	Record rec = Dictionary_FindPrevious (dic, key, &isFirst);
 	if (isFirst)
     {
+      if(dic->iter==dic->first)
+        dic->iter = dic->first->next; 
       aux = dic->first;
       dic->first = aux->next;
     }
@@ -232,6 +234,8 @@ DicElement Dictionary_RemoveElement (DicDictionary dic, const DicElement el)
 	Record rec = Dictionary_FindPreviousElement (dic, el, &isFirst);
 	if (isFirst)
     {
+      if(dic->iter==dic->first)
+        dic->iter = dic->first->next; 
       aux = dic->first;
       dic->first = aux->next;
     }
