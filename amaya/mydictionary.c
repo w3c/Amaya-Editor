@@ -1,4 +1,11 @@
 /*
+ *
+ *  COPYRIGHT INRIA and W3C, 2006-2007
+ *  Please first read the full copyright statement in file COPYRIGHT.
+ *
+ */
+
+/*
  *  FILE   : mydictionary.c
  *  AUTHOR : Francesc Campoy Flores
 
@@ -37,8 +44,8 @@ void Dictionary_Clean (DicDictionary dic)
       TtaFreeMemory (rec->key);
       rec->key = NULL;
       rec->element = NULL;
-      TtaFreeMemory (old);
       rec = rec->next;
+      TtaFreeMemory (old);
     }
   	dic->first = NULL;
   	dic->iter = NULL;

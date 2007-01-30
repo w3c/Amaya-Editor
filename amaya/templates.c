@@ -513,25 +513,26 @@ ThotBool Template_CanInsertRepeatChild(Element el)
   Element child;
   
   max = GetAttributeStringValueFromNum(el, Template_ATTR_maxOccurs, NULL);
-  if(max)
+  if (max)
   {
-    if(!strcmp(max, "*")){
-      TtaFreeMemory(max);
-      return TRUE;
-    }
-    maxVal = atoi(max);
-    TtaFreeMemory(max);
+    if(!strcmp(max, "*"))
+      {
+        TtaFreeMemory(max);
+        return TRUE;
+      }
+    maxVal = atoi (max);
+    TtaFreeMemory (max);
 
     current = GetAttributeStringValueFromNum(el, Template_ATTR_currentOccurs, NULL);
-    if(current)
+    if (current)
     {
-      curVal = atoi(current);
-      TtaFreeMemory(current);
+      curVal = atoi (current);
+      TtaFreeMemory (current);
     }
     else
     {
       curVal = 0;
-      for(child = TtaGetFirstChild(el); child; TtaNextSibling(&child))
+      for (child = TtaGetFirstChild(el); child; TtaNextSibling(&child))
       {
         curVal++;
       }

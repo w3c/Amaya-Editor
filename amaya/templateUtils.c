@@ -1,3 +1,10 @@
+/*
+ *
+ *  COPYRIGHT INRIA and W3C, 2006-2007
+ *  Please first read the full copyright statement in file COPYRIGHT.
+ *
+ */
+
 #include "templates.h"
 
 /*----------------------------------------------------------------------
@@ -36,6 +43,8 @@ void SetAttributeStringValue (Element el, int att, char* value)
   AttributeType attType;
   Attribute     attribute;
 
+  if (doc == 0)
+    return;
   attType.AttrSSchema = TtaGetElementType(el).ElSSchema;
   attType.AttrTypeNum = att;
   attribute = TtaGetAttribute(el, attType);

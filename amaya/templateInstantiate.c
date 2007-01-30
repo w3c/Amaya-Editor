@@ -1,3 +1,10 @@
+/*
+ *
+ *  COPYRIGHT INRIA and W3C, 2006-2007
+ *  Please first read the full copyright statement in file COPYRIGHT.
+ *
+ */
+
 #include "templates.h"
 
 #define THOT_EXPORT extern
@@ -332,27 +339,6 @@ Element Template_GetNewXmlElementInstance(Document doc, Element parent, Declarat
 }
 
 /*----------------------------------------------------------------------
-  Template_GetNewComponentInstance
-  Create an new instance of xt:use/Component
-  The decl attribute must embed Component declaration (no validation).
-  The returned element is the xt:use of the element.
-  @param decl Declaration of new element
-  @param parent Future parent element
-  @param doc Document
-  @return The new element
-  ----------------------------------------------------------------------*/
-Element Template_GetNewComponentInstance(Document doc, Element parent, Declaration decl)
-{
-  Element           newEl = NULL;
-#ifdef TEMPLATES
-  newEl = TtaCopyTree(decl->componentType.content, doc, doc, parent);
-  ProcessAttr(decl->declaredIn, newEl, doc);
-#endif /* TEMPLATES */
-  return newEl;
-}
-
-
-/*----------------------------------------------------------------------
   Template_InsertUseChildren
   Insert children to a xt:use
   The dec parameter must be valid and will not be verified. It must be a
@@ -363,48 +349,41 @@ Element Template_GetNewComponentInstance(Document doc, Element parent, Declarati
   ----------------------------------------------------------------------*/
 Element Template_InsertUseChildren(Document doc, Element el, Declaration dec)
 {
-  Element newEl   = NULL;
+  Element     newEl   = NULL;
 #ifdef TEMPLATES
-  Element current = NULL;
-  Element child   = NULL;
-  char*     attrCurrentTypeValue;
-  ElementType elType;
+  Element     current = NULL;
+  Element     child   = NULL;
+  //char       *attrCurrentTypeValue;
+  //ElementType elType;
   
   switch (dec->nature)
   {
     case SimpleTypeNat:
       newEl = Template_GetNewSimpleTypeInstance(doc, el, dec);
-      TtaInsertFirstChild(&newEl, el, doc);
+      TtaInsertFirstChild (&newEl, el, doc);
       break;
     case XmlElementNat:
       newEl = Template_GetNewXmlElementInstance(doc, el, dec);
-      TtaInsertFirstChild(&newEl, el, doc);
+      TtaInsertFirstChild (&newEl, el, doc);
       break;
     case ComponentNat:
-      newEl = Template_GetNewComponentInstance(doc, el, dec);
+      newEl = TtaCopyTree(dec->componentType.content, doc, doc, el);
+      ProcessAttr (dec->declaredIn, newEl, doc);
       
       /* Copy elements from new use to existing use. */
       while((child = TtaGetFirstChild(newEl)))
       {
-        TtaRemoveTree(child, doc);
+        TtaRemoveTree (child, doc);
         if(current)
-        {
-          TtaInsertSibling(child, current, FALSE, doc);
-        }
+          TtaInsertSibling (child, current, FALSE, doc);
         else
-        {
-          TtaInsertFirstChild(&child, el, doc);      
-        }
+          TtaInsertFirstChild (&child, el, doc);      
         current = child; 
       }
       
       /* Copy currentType attribute. */
-      attrCurrentTypeValue = GetAttributeStringValueFromNum(newEl, Template_ATTR_currentType, NULL);
-      if(attrCurrentTypeValue)
-      {
-        SetAttributeStringValue(el, Template_ATTR_currentType, attrCurrentTypeValue);
-        TtaFreeMemory(attrCurrentTypeValue);
-      }
+      //attrCurrentTypeValue = GetAttributeStringValue (el, Template_ATTR_currentType, NULL);
+      //SetAttributeStringValue (el, Template_ATTR_currentType, attrCurrentTypeValue);
       TtaDeleteTree(newEl, doc);
       newEl = el;
       break;

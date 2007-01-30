@@ -1,6 +1,6 @@
 /*
  *
- *  COPYRIGHT INRIA and W3C, 1996-2005
+ *  COPYRIGHT INRIA and W3C, 1996-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -53,6 +53,8 @@ typedef struct _sInsertableElementList
 static HashMap InsertableElementMap = NULL;
 
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 static InsertableElementList InsertableElementList_Create(Element elem, DLList list)
 {
   InsertableElementList lst = (InsertableElementList)TtaGetMemory(sizeof(sInsertableElementList));
@@ -72,7 +74,6 @@ static void InsertableElementList_Destroy(InsertableElementList list)
   InsertableElement_Init
   Initialize the module.
   ----------------------------------------------------------------------*/
-
 void InsertableElement_Init()
 {
   if(!InsertableElementMap)
@@ -83,7 +84,6 @@ void InsertableElement_Init()
   InsertableElement_Final
   Finalize the module.
   ----------------------------------------------------------------------*/
-
 void InsertableElement_Final()
 {
   if(InsertableElementMap)
@@ -94,10 +94,7 @@ void InsertableElement_Final()
 }
 
 
-
-
 #ifdef TEMPLATES
-
 /*----------------------------------------------------------------------
   FillUnionResolvedPossibleElement
   Fill an element list with all possible element, resolving them if union.
@@ -106,16 +103,20 @@ void InsertableElement_Final()
   @param resolvedPath Path of different succesive union name.
   @param list List to fill.
   ----------------------------------------------------------------------*/
-static void FillUnionResolvedPossibleElement(XTigerTemplate t, const char* name, Element elem, const char* resolvedPath,  DLList list, int level)
+static void FillUnionResolvedPossibleElement(XTigerTemplate t, const char* name,
+                                             Element elem, const char* resolvedPath,
+                                             DLList list, int level)
 {
   Declaration dec = Template_GetDeclaration (t, name);
   if(dec->declaredIn->isPredefined)
   {
-    DLList_Append(list, ElemListElement_CreateComponent(level, dec->name, (void*)dec, resolvedPath, elem));
+    DLList_Append(list, ElemListElement_CreateComponent(level, dec->name,
+                                                        (void*)dec, resolvedPath, elem));
   }
   else if(dec->nature==ComponentNat)
   {
-    DLList_Append(list, ElemListElement_CreateComponent(level, dec->name, (void*)dec, resolvedPath, elem));
+    DLList_Append(list, ElemListElement_CreateComponent(level, dec->name, (void*)dec,
+                                                        resolvedPath, elem));
   }
   else if(dec->nature==UnionNat)
   {
@@ -174,7 +175,8 @@ static void FillUnionResolvedPossibleElement(XTigerTemplate t, const char* name,
       char*       mappedName;
       char       content;
       ThotBool    checkProfile;
-      MapXMLElementType(xmlType, dec->name, &elType, &mappedName, &content, &checkProfile, TtaGetDocument(elem));
+      MapXMLElementType(xmlType, dec->name, &elType, &mappedName, &content,
+                        &checkProfile, TtaGetDocument(elem));
       if(elType.ElTypeNum!=0)
       {
         DLList_Append(list, ElemListElement_CreateLanguageElement(level, elType, resolvedPath, elem));
@@ -188,7 +190,9 @@ static void FillUnionResolvedPossibleElement(XTigerTemplate t, const char* name,
   FillInsertableTemplateElementFromStringList
   Fill an element list with all possible elements extracted from a stringlist.
     ----------------------------------------------------------------------*/
-static void FillInsertableTemplateElementFromStringList(XTigerTemplate t, Element refelem, const char* strlist, DLList list, int level)
+static void FillInsertableTemplateElementFromStringList(XTigerTemplate t,
+                                                        Element refelem, const char* strlist,
+                                                        DLList list, int level)
 {
   int             pos = 0,
                   offset = 0;
@@ -220,15 +224,19 @@ static void FillInsertableTemplateElementFromStringList(XTigerTemplate t, Elemen
   FillInsertableElementFromElemAttribute
   Fill an element list with all possible elements from an attribute list.
   ----------------------------------------------------------------------*/
-static void FillInsertableElementFromElemAttribute(XTigerTemplate t, Element elem, Element refelem, int attrib, DLList list, int level)
+static void FillInsertableElementFromElemAttribute(XTigerTemplate t,
+                                                   Element elem, Element refelem,
+                                                   int attrib, DLList list, int level)
 {
   ElementType     type = TtaGetElementType(elem);
   AttributeType   attributeType = {type.ElSSchema, attrib};
   Attribute       att = TtaGetAttribute (elem, attributeType);
   int             size = TtaGetTextAttributeLength (att);
   char*           types = (char *) TtaGetMemory (size+1); 
+
   TtaGiveTextAttributeValue (att, types, &size);
-  FillInsertableTemplateElementFromStringList(t, refelem, types, list, level);
+  FillInsertableTemplateElementFromStringList (t, refelem, types, list, level);
+  TtaFreeMemory (types);
 }
 #endif/* TEMPLATES */
 
@@ -239,10 +247,11 @@ static void FillInsertableElementFromElemAttribute(XTigerTemplate t, Element ele
   ----------------------------------------------------------------------*/
 static void FillInsertableElemList(Document doc, Element elem, DLList list)
 {
-  ElementType   type;
+  ElementType      type;
 #ifdef TEMPLATES
-  Element       child;
-  ElementType   childType;
+  Element          child;
+  ElementType      childType;
+  XTigerTemplate   t;
 #endif/* TEMPLATES */
   int level;
   ThotBool cont;
@@ -252,7 +261,7 @@ static void FillInsertableElemList(Document doc, Element elem, DLList list)
       doc = TtaGetDocument(elem);
 
 #ifdef TEMPLATES
-    XTigerTemplate   t = (XTigerTemplate) Dictionary_Get (Templates_Dic, DocumentMeta[doc]->template_url);
+    t = (XTigerTemplate) Dictionary_Get (Templates_Dic, DocumentMeta[doc]->template_url);
 #endif/* TEMPLATES */
 
     level = 0;
@@ -270,13 +279,16 @@ static void FillInsertableElemList(Document doc, Element elem, DLList list)
           switch(childType.ElTypeNum)
           {
             case Template_EL_useEl:
-              FillInsertableElementFromElemAttribute(t, child, elem, Template_ATTR_types, list, level);
+              FillInsertableElementFromElemAttribute(t, child, elem,
+                                                     Template_ATTR_types, list, level);
               break;
             case Template_EL_useSimple:
-              FillInsertableElementFromElemAttribute(t, child, elem, Template_ATTR_types, list, level);
+              FillInsertableElementFromElemAttribute(t, child, elem,
+                                                     Template_ATTR_types, list, level);
               break;
             case Template_EL_bag:
-              FillInsertableElementFromElemAttribute(t, child, elem, Template_ATTR_types, list, level);
+              FillInsertableElementFromElemAttribute(t, child, elem,
+                                                     Template_ATTR_types, list, level);
               break;
             default:
               break;
@@ -286,12 +298,14 @@ static void FillInsertableElemList(Document doc, Element elem, DLList list)
         case Template_EL_useEl:
           // Fill for xt:use only if have no child.
           if(TtaGetFirstChild(elem)==NULL){
-            FillInsertableElementFromElemAttribute(t, elem, elem, Template_ATTR_types, list, level);
+            FillInsertableElementFromElemAttribute(t, elem, elem,
+                                                   Template_ATTR_types, list, level);
             cont = FALSE;
           }
           break;
         case Template_EL_bag:
-          FillInsertableElementFromElemAttribute(t, elem, elem, Template_ATTR_types, list, level);
+          FillInsertableElementFromElemAttribute(t, elem, elem,
+                                                 Template_ATTR_types, list, level);
           cont = FALSE;
           break;
 #endif /*TEMPLATES */
@@ -314,7 +328,7 @@ static void FillInsertableElemList(Document doc, Element elem, DLList list)
 DLList InsertableElement_GetList(Document doc)
 {
   InsertableElementList list = (InsertableElementList) HashMap_Get(InsertableElementMap, (void*)doc);
-  if(list!=NULL)
+  if (list)
     return list->list;
   else
     return NULL;
@@ -360,8 +374,9 @@ void InsertableElement_DoInsertElement(void* el)
   ElementType refType = TtaGetElementType(ref);
   
   Document doc = TtaGetDocument(ref);
-  
+#ifdef AMAYA_DEBUG
   printf("insert %s into %s\n", ElemListElement_GetName(elem), TtaGetElementTypeName(refType));
+#endif /* AMAYA_DEBUG */
   switch(refType.ElTypeNum)
   {
 #ifdef TEMPLATES
