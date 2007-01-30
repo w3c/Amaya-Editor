@@ -209,6 +209,8 @@ DicElement Dictionary_Remove (DicDictionary dic, const char * key)
     {
       aux = rec->next;
       rec->next = aux->next;
+      if(dic->iter==rec)
+        dic->iter = aux->next; 
     }
 
 	TtaFreeMemory (aux->key);
@@ -240,6 +242,8 @@ DicElement Dictionary_RemoveElement (DicDictionary dic, const DicElement el)
     {
       aux = rec->next;
       rec->next = aux->next;
+      if(dic->iter==rec)
+        dic->iter = aux->next; 
     }
 
 	TtaFreeMemory (aux->key);
