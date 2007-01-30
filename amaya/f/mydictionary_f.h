@@ -23,6 +23,7 @@ extern DicElement Dictionary_Remove ( DicDictionary dic,
                                       const char * key );
 extern DicElement Dictionary_RemoveElement ( DicDictionary dic,
                                              const DicElement el );
+extern Record Dictionary_GetLastRecord ( DicDictionary dic );
 extern DicElement Dictionary_Get ( DicDictionary dic,
                                    const char * key );
 extern void Dictionary_First ( DicDictionary dic );
@@ -53,6 +54,7 @@ extern DicElement Dictionary_Remove ( DicDictionary dic,
                                         const char * key );
 extern DicElement Dictionary_RemoveElement ( DicDictionary dic,
                                                const DicElement el );
+extern Record Dictionary_GetLastRecord ( DicDictionary dic );
 extern DicElement Dictionary_Get ( DicDictionary dic,
                                      const char * key );
 extern void Dictionary_First ( DicDictionary dic );

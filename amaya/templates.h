@@ -37,6 +37,7 @@ typedef struct _XTigerTemplate *XTigerTemplate;
 //Private structure of a template
 struct _XTigerTemplate
 {	
+  char*           name;           //Template name
   char*           version;        //Version of XTiger language
   char*           templateVersion;//Version of template
   ThotBool        isLibrary;			//Is this a library? (otherway it's a template)

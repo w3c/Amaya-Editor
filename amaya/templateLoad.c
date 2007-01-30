@@ -130,8 +130,6 @@ void AddHeadParameters(XTigerTemplate t, Element el)
 #ifdef TEMPLATES
   t->version = GetAttributeStringValueFromNum(el, Template_ATTR_version, NULL);
   t->templateVersion = GetAttributeStringValueFromNum(el, Template_ATTR_templateVersion, NULL);
-  
-  printf("AddHeadParameters : %s - %s\n", t->version, t->templateVersion);
 #endif /* TEMPLATES */
 }
 

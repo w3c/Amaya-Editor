@@ -27,18 +27,23 @@ DicDictionary Dictionary_Create ()
   ----------------------------------------------------------------------*/
 void Dictionary_Clean (DicDictionary dic)
 {
-	Record rec = dic->first;
-	Record old;
-	while (rec)
+  if(dic)
+  {
+  	Record rec = dic->first;
+  	Record old;
+  	while (rec)
     {
-      free (rec->key);
       old = rec;
-	  rec = rec->next;
-      free (old);
+      TtaFreeMemory (rec->key);
+      rec->key = NULL;
+      rec->element = NULL;
+      TtaFreeMemory (old);
+      rec = rec->next;
     }
-	dic->first = NULL;
-	dic->iter = NULL;
-  TtaFreeMemory (dic);
+  	dic->first = NULL;
+  	dic->iter = NULL;
+    TtaFreeMemory (dic);
+  }
 }
 
 /*----------------------------------------------------------------------
@@ -246,6 +251,23 @@ DicElement Dictionary_RemoveElement (DicDictionary dic, const DicElement el)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
+Record Dictionary_GetLastRecord(DicDictionary dic)
+{
+  Record rec, last = NULL;
+  
+  rec = dic->first;
+  while(rec)
+  {
+    last = rec;
+    rec = rec->next;
+  }
+
+  return last;
+}
+
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 DicElement Dictionary_Get (DicDictionary dic, const char * key)
 {
   if (!key)
@@ -310,6 +332,8 @@ ThotBool Dictionary_IsEmpty (const DicDictionary dic)
 {
 	return !dic->first;
 }
+
+
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/

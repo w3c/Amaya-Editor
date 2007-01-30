@@ -41,6 +41,9 @@ XTigerTemplate NewXTigerTemplate (const char *templatePath, const ThotBool addPr
 #ifdef TEMPLATES
 	XTigerTemplate t = (XTigerTemplate)TtaGetMemory (sizeof (_XTigerTemplate));
 	
+  t->name = TtaStrdup(templatePath);
+  t->version = NULL;
+  t->templateVersion = NULL;
 	t->isLibrary = FALSE;
 	t->libraries = Dictionary_Create ();
 	t->elements = Dictionary_Create ();
@@ -154,14 +157,18 @@ void FreeTemplateEnvironment ()
 {
 #ifdef TEMPLATES
   XTigerTemplate t;
+  Record rec;
 
-  if (Templates_Dic)
-    for (Dictionary_First (Templates_Dic);!Dictionary_IsDone (Templates_Dic);Dictionary_Next (Templates_Dic))
-      {
-        t = (XTigerTemplate)Dictionary_CurrentElement (Templates_Dic);
-        TtaCloseDocument (t->doc);
-        FreeXTigerTemplate(t);
-      }
+//  if (Templates_Dic)
+//  {
+//    for (Dictionary_First (Templates_Dic);!Dictionary_IsDone (Templates_Dic);Dictionary_Next (Templates_Dic))
+//      {
+//        t = (XTigerTemplate)Dictionary_CurrentElement (Templates_Dic);
+//        printf("Free : %s\n", Dictionary_CurrentKey(Templates_Dic));
+//        TtaCloseDocument (t->doc);
+//        FreeXTigerTemplate(t);
+//      }
+//  }
       
 #endif
 }
@@ -272,18 +279,59 @@ void NewElement (const XTigerTemplate t, const char *name)
 {
 #ifdef TEMPLATES
 	Declaration dec = NewDeclaration (t, name, XmlElementNat);
+  dec->elementType.name = TtaStrdup(name);
 	AddDeclaration (t, dec);
 #endif /* TEMPLATES */
 }
 
 /*----------------------------------------------------------------------
+  FreeDeclaration
+  Remove declaration from its template dictionary and free it.
   ----------------------------------------------------------------------*/
 void FreeDeclaration (Declaration dec)
 {
 #ifdef TEMPLATES
-	//TODO: remove it from its dictionary
-	//TODO: clean dictionaries etc.
+
+  printf("FreeDeclaration : %s\n", dec->name);
+
+  /* Free its content. */
+  if(dec->nature==XmlElementNat)
+  {
+    TtaFreeMemory(dec->elementType.name);
+    dec->elementType.name = NULL;
+  }
+  else if(dec->nature==ComponentNat)
+  {
+    TtaDeleteTree(dec->componentType.content, TtaGetDocument(dec->componentType.content));
+    dec->componentType.content = NULL;
+  }
+  else if(dec->nature==UnionNat)
+  {
+    Dictionary_Clean(dec->unionType.include);
+    dec->unionType.include = NULL;
+    Dictionary_Clean(dec->unionType.exclude);
+    dec->unionType.exclude = NULL;
+    Dictionary_Clean(dec->unionType.expanded);
+    dec->unionType.expanded = NULL;
+    
+  }
+
+  /* Remove it from its template dictionary. */
+  if(dec->declaredIn)
+  {
+    if(dec->nature==SimpleTypeNat)
+      Dictionary_RemoveElement(dec->declaredIn->simpleTypes, dec);
+    else if(dec->nature==XmlElementNat)
+      Dictionary_RemoveElement(dec->declaredIn->elements, dec);
+    else if(dec->nature==ComponentNat)
+      Dictionary_RemoveElement(dec->declaredIn->components, dec);
+    else if(dec->nature==UnionNat)
+      Dictionary_RemoveElement(dec->declaredIn->unions, dec);
+    dec->declaredIn = NULL;
+  }
+  
 	TtaFreeMemory (dec->name);
+  dec->name = NULL;
 	TtaFreeMemory (dec);
 #endif /* TEMPLATES */
 }
@@ -320,11 +368,22 @@ void FreeXTigerTemplate (XTigerTemplate t)
 	DicDictionary  dic;
 	Declaration    dec;
 
-	dic = t->libraries;
+  //Cleaning the unions
+  dic = t->unions;
+  for (Dictionary_First (dic); !Dictionary_IsDone (dic); Dictionary_Next (dic))
+    {
+      dec = (Declaration)Dictionary_CurrentElement (dic);
+      //Deleting only types defined by the template (not the imported ones)
+      if (dec->declaredIn == t)
+        FreeDeclaration(dec);
+    }
+  Dictionary_Clean (dic);
 
+
+  /* Cleanning library dependancies. */
+	dic = t->libraries;
 	for (Dictionary_First (dic); !Dictionary_IsDone (dic); Dictionary_Next (dic))
     RemoveUser ((XTigerTemplate)Dictionary_CurrentElement (dic));
-
 	Dictionary_Clean (dic);
 
 	//Cleaning the components
@@ -334,7 +393,7 @@ void FreeXTigerTemplate (XTigerTemplate t)
       dec = (Declaration)Dictionary_CurrentElement (dic);
       //Deleting only types defined by the template (not the imported ones)
       if (dec->declaredIn == t)
-        TtaFreeMemory (dec);
+        FreeDeclaration(dec);
     }
 	Dictionary_Clean (dic);
 
@@ -345,7 +404,7 @@ void FreeXTigerTemplate (XTigerTemplate t)
       dec = (Declaration)Dictionary_CurrentElement (dic);
       //Deleting only types defined by the template (not the imported ones)
       if (dec->declaredIn == t)
-        TtaFreeMemory (dec);
+        FreeDeclaration(dec);
     }
 	Dictionary_Clean (dic);
 
@@ -356,18 +415,7 @@ void FreeXTigerTemplate (XTigerTemplate t)
       dec = (Declaration)Dictionary_CurrentElement (dic);
       //Deleting only types defined by the template (not the imported ones)
       if (dec->declaredIn == t)
-        TtaFreeMemory (dec);
-    }
-	Dictionary_Clean (dic);
-
-	//Cleaning the unions
-	dic = t->unions;
-	for (Dictionary_First (dic); !Dictionary_IsDone (dic); Dictionary_Next (dic))
-    {
-      dec = (Declaration)Dictionary_CurrentElement (dic);
-      //Deleting only types defined by the template (not the imported ones)
-      if (dec->declaredIn == t)
-        TtaFreeMemory (dec);
+        FreeDeclaration(dec);
     }
 	Dictionary_Clean (dic);
 
