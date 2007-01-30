@@ -3746,7 +3746,7 @@ Document LoadDocument (Document doc, char *pathname,
       if (isXML)
         {
           /* it seems to be a XML document */
-          if (DocumentTypes[doc] == docLibrary)
+          if (DocumentTypes[doc] == docLibrary && thotType == docHTML)
             docType = docLibrary;
           else
             docType = thotType;

@@ -883,6 +883,17 @@ void CallbackLibrary (int ref, int typedata, char *data)
 }
 
 /*----------------------------------------------------------------------
+  CloseLibrary
+  ----------------------------------------------------------------------*/
+void CloseLibrary (Document doc)
+{
+#ifdef _SVG
+  LibraryDocDocument = 0;
+  LibraryDocElement = NULL;
+#endif /* _SVG */
+}
+
+/*----------------------------------------------------------------------
   CreateNewLibraryDialog
   Initialize create new catalogue form
   ----------------------------------------------------------------------*/

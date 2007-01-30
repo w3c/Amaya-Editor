@@ -1711,6 +1711,10 @@ void FreeDocumentResource (Document doc)
           /* remove the Parsing errors file */
           RemoveParsingErrors (doc);
           ClearMathFrame (doc);
+#ifdef _SVG
+          if (DocumentTypes[doc] == docLibrary)
+            CloseLibrary (doc);
+#endif /* _SVG */
 #ifdef ANNOTATIONS
           ANNOT_FreeDocumentResource (doc);
 #endif /* ANNOTATIONS */

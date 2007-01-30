@@ -13,6 +13,7 @@ extern void AddNewModelIntoLibraryForm ( Document doc,
 extern void CallbackLibrary ( int ref,
                               int typedata,
                               char *data );
+extern void CloseLibrary ( Document doc );
 extern void CreateNewLibraryDialog ( Document doc,
                                      View view );
 extern void ShowLibraryBrowser ( void );
@@ -96,6 +97,7 @@ extern void AddNewModelIntoLibraryForm ( Document doc,
 extern void CallbackLibrary ( int ref,
                                 int typedata,
                                 char *data );
+extern void CloseLibrary ( Document doc );
 extern void CreateNewLibraryDialog ( Document doc,
                                        View view );
 extern void ShowLibraryBrowser ( void );
