@@ -36,7 +36,7 @@
 
 /* implement panel array */
 #define THOT_EXPORT
-#include "panel_tv.h"
+#include "paneltypes_wx.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern

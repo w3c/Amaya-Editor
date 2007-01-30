@@ -28,7 +28,7 @@
 
 #define THOT_EXPORT extern
 #include "frame_tv.h"
-#include "panel_tv.h"
+#include "paneltypes_wx.h"
 
 #include "AmayaSubPanel.h"
 #include "AmayaExplorerPanel.h"

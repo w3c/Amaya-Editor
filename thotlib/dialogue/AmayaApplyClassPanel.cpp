@@ -26,7 +26,7 @@
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
 #include "frame_tv.h"
-#include "panel_tv.h"
+#include "paneltypes_wx.h"
 #include "colors_f.h"
 #include "inites_f.h"
 #include "presentmenu_f.h"
