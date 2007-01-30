@@ -159,16 +159,15 @@ void FreeTemplateEnvironment ()
   XTigerTemplate t;
   Record rec;
 
-//  if (Templates_Dic)
-//  {
-//    for (Dictionary_First (Templates_Dic);!Dictionary_IsDone (Templates_Dic);Dictionary_Next (Templates_Dic))
-//      {
-//        t = (XTigerTemplate)Dictionary_CurrentElement (Templates_Dic);
-//        printf("Free : %s\n", Dictionary_CurrentKey(Templates_Dic));
-//        TtaCloseDocument (t->doc);
-//        FreeXTigerTemplate(t);
-//      }
-//  }
+  if (Templates_Dic)
+  {
+    for (Dictionary_First (Templates_Dic);!Dictionary_IsDone (Templates_Dic);Dictionary_Next (Templates_Dic))
+      {
+        t = (XTigerTemplate)Dictionary_CurrentElement (Templates_Dic);
+        TtaCloseDocument (t->doc);
+        FreeXTigerTemplate(t);
+      }
+  }
       
 #endif
 }
@@ -292,8 +291,6 @@ void FreeDeclaration (Declaration dec)
 {
 #ifdef TEMPLATES
 
-  printf("FreeDeclaration : %s\n", dec->name);
-
   /* Free its content. */
   if(dec->nature==XmlElementNat)
   {
@@ -305,7 +302,7 @@ void FreeDeclaration (Declaration dec)
     TtaDeleteTree(dec->componentType.content, TtaGetDocument(dec->componentType.content));
     dec->componentType.content = NULL;
   }
-  else if(dec->nature==UnionNat)
+  else if(dec->nature==UnionNat && !dec->declaredIn->isPredefined)
   {
     Dictionary_Clean(dec->unionType.include);
     dec->unionType.include = NULL;
@@ -316,19 +313,6 @@ void FreeDeclaration (Declaration dec)
     
   }
 
-  /* Remove it from its template dictionary. */
-  if(dec->declaredIn)
-  {
-    if(dec->nature==SimpleTypeNat)
-      Dictionary_RemoveElement(dec->declaredIn->simpleTypes, dec);
-    else if(dec->nature==XmlElementNat)
-      Dictionary_RemoveElement(dec->declaredIn->elements, dec);
-    else if(dec->nature==ComponentNat)
-      Dictionary_RemoveElement(dec->declaredIn->components, dec);
-    else if(dec->nature==UnionNat)
-      Dictionary_RemoveElement(dec->declaredIn->unions, dec);
-    dec->declaredIn = NULL;
-  }
   
 	TtaFreeMemory (dec->name);
   dec->name = NULL;
@@ -427,6 +411,7 @@ void FreeXTigerTemplate (XTigerTemplate t)
   Dictionary_RemoveElement (Templates_Dic, t);
 
   //Freeing the template
+  TtaFreeMemory(t->name);
 	TtaFreeMemory (t);
 #endif /* TEMPLATES */
 }
