@@ -35,7 +35,8 @@ extern Element InstantiateUse ( XTigerTemplate t,
                                 ThotBool insert );
 extern void InstantiateRepeat ( XTigerTemplate t,
                                 Element el,
-                                Document doc );
+                                Document doc,
+                                ThotBool registerUndo );
 extern void DoInstanceTemplate ( char *templatename );
 extern void PreInstantiateComponents ( XTigerTemplate t );
 
@@ -70,7 +71,8 @@ extern Element InstantiateUse ( XTigerTemplate t,
                                   ThotBool insert );
 extern void InstantiateRepeat ( XTigerTemplate t,
                                   Element el,
-                                  Document doc );
+                                  Document doc,
+                                  ThotBool registerUndo );
 extern void DoInstanceTemplate ( char *templatename );
 extern void PreInstantiateComponents ( XTigerTemplate t );
 

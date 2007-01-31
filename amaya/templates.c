@@ -61,6 +61,21 @@ ThotBool IsTemplateInstanceDocument(Document doc)
 }
 
 /*----------------------------------------------------------------------
+  IsTemplateDocument: Test if a document is a template (not an instance)
+  doc : Document to test
+  return : TRUE if the document is an instance
+  ----------------------------------------------------------------------*/
+ThotBool IsTemplateDocument(Document doc)
+{
+#ifdef TEMPLATES
+  return (DocumentMeta[doc]!=NULL) && (DocumentMeta[doc]->template_url==NULL);
+#else  /* TEMPLATES */
+  return FALSE;
+#endif /* TEMPLATES */
+}
+
+
+/*----------------------------------------------------------------------
   AllocTemplateRepositoryListElement: allocates an element for the list
   of template repositories.
   path : path of the new element
@@ -317,6 +332,7 @@ void CreateInstanceOfTemplate (Document doc, char *templatename, char *docname)
 
 #endif /* TEMPLATES */
 }
+
 
 
 /*----------------------------------------------------------------------
@@ -748,6 +764,10 @@ ThotBool RepeatButtonClicked (NotifyElement *event)
   TtaGetActiveView (&doc, &view);
   if (view != 1)
     return FALSE; /* let Thot perform normal operation */
+
+
+  printf("Template url : %s\n", DocumentMeta[doc]->template_url);
+
 
   TtaCancelSelection(doc);
   
@@ -1191,6 +1211,7 @@ ThotBool TemplateElementWillBeDeleted (NotifyElement *event)
   Document       doc = event->document;
   Element        elem = event->element;
   Element        xtElem, parent;
+  Element        sibling;
   ElementType    xtType;
   char*          type;
   Declaration    dec;
@@ -1207,40 +1228,53 @@ ThotBool TemplateElementWillBeDeleted (NotifyElement *event)
   if(xtElem)
   {
     xtType = TtaGetElementType(xtElem);
-    if(xtType.ElSSchema==templateSSchema)
-    {
-      t = (XTigerTemplate) Dictionary_Get (Templates_Dic, DocumentMeta[doc]->template_url);
+    t = (XTigerTemplate) Dictionary_Get (Templates_Dic, DocumentMeta[doc]->template_url);
 
-      if(xtType.ElTypeNum==Template_EL_bag)
-        return FALSE; // xt:bag always allow remove children.
-      else if(xtType.ElTypeNum==Template_EL_useSimple || xtType.ElTypeNum==Template_EL_useEl)
-      {
-        parent = TtaGetParent(elem);
-        if(xtElem==parent){
-          //TODO replace current xt:use child element by its initial content (reset element)
-          return TRUE; // Cant remove use direct child. It is mandatory.
-        }
-        type = GetAttributeStringValueFromNum(xtElem, Template_ATTR_currentType, NULL);
-        dec = Template_GetDeclaration(t, type);
-        TtaFreeMemory(type);
-        if(dec->nature == XmlElementNat)
-          return FALSE; // Can remove element only if in xt:use current type is base language element. 
-        else
-          return TRUE;
-      }
-      else if(xtType.ElTypeNum==Template_EL_repeat)
-      {
-        printf("Must remove xt:repeat element and validate xt:repeat content.\n");
-        TtaRemoveTree(elem, doc);
-        TtaDeleteTree(elem, doc);
-        //InstantiateRepeat(t, xtType, doc);
+    if(xtType.ElTypeNum==Template_EL_bag)
+      return FALSE; // xt:bag always allow remove children.
+    else if(xtType.ElTypeNum==Template_EL_useSimple || xtType.ElTypeNum==Template_EL_useEl)
+    {
+      parent = TtaGetParent(elem);
+      if(xtElem!=parent){
+      type = GetAttributeStringValueFromNum(xtElem, Template_ATTR_currentType, NULL);
+      dec = Template_GetDeclaration(t, type);
+      TtaFreeMemory(type);
+      if(dec->nature == XmlElementNat)
+        return FALSE; // Can remove element only if in xt:use current type is base language element. 
+      else
+        return TRUE;
       }
     }
+    else if(xtType.ElTypeNum==Template_EL_repeat)
+    {
+      sibling = TtaGetSuccessor(elem);
+      TtaRegisterElementDelete(elem, doc);
+      TtaDeleteTree(elem, doc);
+      InstantiateRepeat(t, xtElem, doc, TRUE);
+      TtaSelectElement(doc, sibling);
+      return TRUE;
+    }
   }
+  
+  //TODO Test if current element is use or repeat.
+  // Because if an element is delete and it is the unique child of its parent,
+  // the parent intends to destroy itself. 
+  
   return TRUE;
 #else /* TEMPLATES */
   return FALSE;
 #endif /* TEMPLATES */
 }
 
-
+/*----------------------------------------------------------------------
+  CurrentTypeWillBeExported
+  Check if the xt:currentType attribute can be exported
+  ----------------------------------------------------------------------*/
+ThotBool CurrentTypeWillBeExported (NotifyAttribute *event)
+{
+#ifdef TEMPLATES
+  if(IsTemplateDocument(event->document))
+    return TRUE;
+#endif /* TEMPLATES */
+  return FALSE;
+}

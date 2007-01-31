@@ -453,8 +453,11 @@ Element InstantiateUse (XTigerTemplate t, Element el, Document doc,
 }
 
 /*----------------------------------------------------------------------
+  InstantiateRepeat
+  Check for min and max param and validate xt:repeat element content.
+  @param registerUndo True to register undo creation sequences.
   ----------------------------------------------------------------------*/
-void InstantiateRepeat (XTigerTemplate t, Element el, Document doc)
+void InstantiateRepeat (XTigerTemplate t, Element el, Document doc, ThotBool registerUndo)
 {
 #ifdef TEMPLATES
   int            curVal,  minVal,  maxVal;
@@ -532,6 +535,8 @@ void InstantiateRepeat (XTigerTemplate t, Element el, Document doc)
       sprintf(text,"%d",minVal);
       TtaAttachAttribute(el, minAtt, doc);
       TtaSetAttributeText(minAtt, text, el, doc);
+      if(registerUndo)
+        TtaRegisterAttributeCreate(minAtt, el, doc);
     }
 
   if (!maxAtt)
@@ -543,6 +548,8 @@ void InstantiateRepeat (XTigerTemplate t, Element el, Document doc)
         sprintf(text,"*");
       TtaAttachAttribute(el, maxAtt, doc);      
       TtaSetAttributeText(maxAtt, text, el, doc);
+      if(registerUndo)
+        TtaRegisterAttributeCreate(maxAtt, el, doc);
     }
 
   if (!curAtt)
@@ -551,6 +558,8 @@ void InstantiateRepeat (XTigerTemplate t, Element el, Document doc)
       sprintf(text,"%d",curVal);
       TtaAttachAttribute(el, curAtt, doc);
       TtaSetAttributeText(curAtt, text, el, doc);
+      if(registerUndo)
+        TtaRegisterAttributeCreate(curAtt, el, doc);
     }
 
   if (text)
@@ -582,6 +591,8 @@ void InstantiateRepeat (XTigerTemplate t, Element el, Document doc)
       //Create a new child
       newChild = TtaCopyTree(child, doc, doc, el);
       TtaInsertSibling(newChild, child, FALSE, doc);
+      if(registerUndo)
+        TtaRegisterElementCreate(newChild, doc);
       child = newChild;
       childrenCount++;
     }
@@ -657,7 +668,7 @@ static void ParseTemplate (XTigerTemplate t, Element el, Document doc,
             InstantiateAttribute (t, el, doc);
           break;
         case Template_EL_repeat :
-          InstantiateRepeat (t, el, doc);
+          InstantiateRepeat (t, el, doc, FALSE);
           break;
         default :
           break;

@@ -7,6 +7,7 @@
 #ifdef __STDC__
 
 extern ThotBool IsTemplateInstanceDocument ( Document doc );
+extern ThotBool IsTemplateDocument ( Document doc );
 extern void* AllocTemplateRepositoryListElement ( const char* path,
                                                   void* prevElement );
 extern void FreeTemplateRepositoryList ( void* list );
@@ -48,10 +49,13 @@ extern ThotBool IsTemplateElement ( Element elem );
 extern Element GetFirstTemplateParentElement ( Element elem );
 extern ThotBool TemplateElementWillBeCreated ( NotifyElement *event );
 extern ThotBool TemplateElementWillBeDeleted ( NotifyElement *event );
+extern ThotBool CurrentTypeWillBeExported ( NotifyAttribute *event );
+extern ThotBool CurrentTypeWillBeCreated ( NotifyAttribute *event );
 
 #else /* __STDC__ */
 
 extern ThotBool IsTemplateInstanceDocument ( Document doc );
+extern ThotBool IsTemplateDocument ( Document doc );
 extern void* AllocTemplateRepositoryListElement ( const char* path,
                                                     void* prevElement );
 extern void FreeTemplateRepositoryList ( void* list );
@@ -93,6 +97,8 @@ extern ThotBool IsTemplateElement ( Element elem );
 extern Element GetFirstTemplateParentElement ( Element elem );
 extern ThotBool TemplateElementWillBeCreated ( NotifyElement *event );
 extern ThotBool TemplateElementWillBeDeleted ( NotifyElement *event );
+extern ThotBool CurrentTypeWillBeExported ( NotifyAttribute *event );
+extern ThotBool CurrentTypeWillBeCreated ( NotifyAttribute *event );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

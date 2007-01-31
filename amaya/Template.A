@@ -32,5 +32,11 @@ ELEMENTS
       BEGIN
          ElemLClick.Pre -> OptionButtonClicked;
       END;
-      
+
+ATTRIBUTES
+   currentType :
+      BEGIN
+         AttrExport.Pre -> CurrentTypeWillBeExported;
+      END;
+   
 END

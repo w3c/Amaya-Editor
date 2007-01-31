@@ -695,7 +695,8 @@ void SetTemplateDocument (XTigerTemplate t, Document doc)
 void AddUser (XTigerTemplate t)
 {
 #ifdef TEMPLATES
-  t->users++;
+  if(t)
+    t->users++;
 #endif /* TEMPLATES */
 }
 
