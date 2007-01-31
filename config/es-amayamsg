@@ -389,24 +389,23 @@
 387 Elemento desconocido
 388 %d elementos actualizados
 389 El título es obligatorio
-390 Repertorios de los modelos
-391 Modelos
-392 Número de ocurrencias
-393 Número máximo de ocurrencias alcanzado
-394 Número mínimo de ocurrencias alcanzado
-395 Verificar los IDs duplicados
-396 Agregar la hoja xsl para los elementos MathML
-397 Insertar operador
-398 Seleccionar la manera cuya el operador debe ser visualizado
-399 Insertar una integral
-400 Seleccionar el tipo de integral
-401 Atributos del fence
-402 Seleccionar los símbolos arbriendos, separadores y cerrandos
-403 Número de símbolos operadores
-404 Número de coordenadas
-405 Largo del N-
-406 Número de elementos
-407 Número de variables
-408 Grado
-409 Grado de la variable %d
-410 Documento compuesto
+390 Modelos
+391 Número de ocurrencias
+392 Número máximo de ocurrencias alcanzado
+393 Número mínimo de ocurrencias alcanzado
+394 Verificar los IDs duplicados
+395 Agregar la hoja xsl para los elementos MathML
+396 Insertar operador
+397 Seleccionar la manera cuya el operador debe ser visualizado
+398 Insertar una integral
+399 Seleccionar el tipo de integral
+400 Atributos del fence
+401 Seleccionar los símbolos arbriendos, separadores y cerrandos
+402 Número de símbolos operadores
+403 Número de coordenadas
+404 Largo del N-
+405 Número de elementos
+406 Número de variables
+407 Grado
+408 Grado de la variable %d
+409 Documento compuesto

@@ -14,7 +14,7 @@
 #include "templateDeclarations_f.h"
 #include "templateUtils_f.h"
 #include "templateInstantiate_f.h"
-
+#include "AHTURLTools_f.h"
 #include "HTMLactions_f.h"
 #include "init_f.h"
 
@@ -25,6 +25,8 @@
 typedef struct _TemplateCtxt
 {
 	char			*templatePath;
+  char      *docname;
+  ThotBool   dontReplace;
 } TemplateCtxt;
 #endif
 
@@ -184,13 +186,15 @@ void LoadTemplate_callback (int newdoc, int status,  char *urlName,
                             char *outputfile, char* proxyName,
                             AHTHeaders *http_headers, void * context)
 {	
-#ifdef TEMPLATES 
+#ifdef TEMPLATES
+  char         *docname = NULL, *templatename;
 #ifdef AMAYA_DEBUG 
-	char localname[MAX_LENGTH];
-	FILE *file;
+	char          localname[MAX_LENGTH];
+	FILE         *file;
 #endif /* AMAYA_DEBUG */
-  Element el;
+  Element       el;
 	TemplateCtxt *ctx = (TemplateCtxt*)context;
+  ThotBool      dontReplace = ctx->dontReplace;
 	
 	XTigerTemplate t = NewXTigerTemplate (ctx->templatePath, TRUE);
   SetTemplateDocument (t, newdoc);
@@ -209,31 +213,49 @@ void LoadTemplate_callback (int newdoc, int status,  char *urlName,
 	TtaListAbstractTree (TtaGetMainRoot (newdoc), file);
 	TtaWriteClose (file);
 #endif
-
-  DoInstanceTemplate (ctx->templatePath);
-  TtaFreeMemory (ctx->templatePath);
+  templatename = ctx->templatePath;
+  docname = ctx->docname;
   TtaFreeMemory (ctx);
+  DoInstanceTemplate (templatename);
+  if (newdoc)
+    DocumentTypes[newdoc] = docTemplate;
+  DontReplaceOldDoc = dontReplace;
+  CreateInstance (templatename, docname);
+  TtaFreeMemory (templatename);
+  TtaFreeMemory (docname);
 #endif /* TEMPLATES */
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void LoadTemplate (Document doc, char* templatename)
+void LoadTemplate (Document doc, char* templatename, char *docname)
 {
 #ifdef TEMPLATES
-  Document newdoc;
-	char			*directory, *document;
+  Document      newdoc = 0;
+	char			   *s, *directory, *document;
 	unsigned int	size = strlen (templatename) + 1;
-	
-	//Stores the template path for show it in next instanciation forms
-	directory	= (char*) TtaGetMemory (size);
-	document	= (char*) TtaGetMemory (size);
 
-	TtaExtractName (templatename, directory, document);	
-	TtaSetEnvString ("TEMPLATES_DIRECTORY", directory, TRUE);
+  if (!IsW3Path (docname) && TtaFileExist (docname))
+    {
+      s = (char *)TtaGetMemory (strlen (docname) +
+                                strlen (TtaGetMessage (AMAYA, AM_OVERWRITE_CHECK)) + 2);
+      sprintf (s, TtaGetMessage (AMAYA, AM_OVERWRITE_CHECK), docname);
+      InitConfirm (0, 0, s);
+      TtaFreeMemory (s);      
+      if (!UserAnswer)
+        return;
+    }    
 
-	TtaFreeMemory (directory);
-	TtaFreeMemory (document);
+  if (!IsW3Path (templatename))
+    {
+      //Stores the template path for show it in next instanciation forms
+      directory	= (char*) TtaGetMemory (size);
+      s	= (char*) TtaGetMemory (size);
+      TtaExtractName (templatename, directory, s);	
+      TtaSetEnvString ("TEMPLATES_DIRECTORY", directory, TRUE);
+      TtaFreeMemory (directory);
+      TtaFreeMemory (s);
+    }
 
 	//If types are not loaded we load the template and we parse it
 	if (!Dictionary_Get (Templates_Dic, templatename))
@@ -241,13 +263,17 @@ void LoadTemplate (Document doc, char* templatename)
       //Creation of the callback context
       TemplateCtxt *ctx	= (TemplateCtxt *)TtaGetMemory (sizeof (TemplateCtxt));
       ctx->templatePath	= TtaStrdup (templatename);
-
+      ctx->docname = TtaStrdup (docname);
+      ctx->dontReplace = DontReplaceOldDoc;
       DontReplaceOldDoc = TRUE;
-      newdoc = GetAmayaDoc (templatename, NULL, doc, doc, CE_TEMPLATE, FALSE, 
+      newdoc = GetAmayaDoc (templatename, NULL, 0, 0, CE_TEMPLATE, FALSE, 
                             (void (*)(int, int, char*, char*, char*, const AHTHeaders*, void*)) LoadTemplate_callback,
                             (void *) ctx);
-      if (newdoc)
-        DocumentTypes[newdoc] = docTemplate;
+    }
+  else
+    {
+      // the template is already loaded
+      CreateInstance (templatename, docname);
     }
 #endif /* TEMPLATES */
 }

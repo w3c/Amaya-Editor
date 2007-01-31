@@ -5190,10 +5190,6 @@
 <message xml:lang="de">Der Titel muss angegeben werden</message>
 <message xml:lang="it">Il titolo è obbligatorio</message>
 <message xml:lang="es">El título es obligatorio</message></label>
-<label define="AM_TEMPLATE_REPOSITORIES">
-<message xml:lang="en">Template repositories</message>
-<message xml:lang="fr">Répertoires de modèles</message>
-<message xml:lang="es">Repertorios de los modelos</message></label>
 <label define="AM_TEMPLATES">
 <message xml:lang="en">Templates</message>
 <message xml:lang="fr">Modèles</message>

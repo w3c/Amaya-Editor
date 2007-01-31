@@ -51,7 +51,8 @@ static Prop_Templates_Path *TemplateRepositoryPaths;
   doc : Document to test
   return : TRUE if the document is a template instance
   ----------------------------------------------------------------------*/
-ThotBool IsTemplateInstanceDocument(Document doc){
+ThotBool IsTemplateInstanceDocument(Document doc)
+{
 #ifdef TEMPLATES
   return (DocumentMeta[doc]!=NULL) && (DocumentMeta[doc]->template_url!=NULL);
 #else  /* TEMPLATES */
@@ -116,13 +117,14 @@ static void CopyTemplateRepositoryList (const Prop_Templates_Path** src,
     current = *dst;
   }
 
-  while (element){
+  while (element)
+    {
     current->NextPath = (Prop_Templates_Path*) TtaGetMemory (sizeof(Prop_Templates_Path));
     current = current->NextPath; 
     current->NextPath = NULL;
     strcpy(current->Path, element->Path);
     element = element->NextPath;
-  }
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -142,14 +144,14 @@ static int LoadTemplateRepositoryList (Prop_Templates_Path** list)
   
   path = (char *) TtaGetMemory (MAX_LENGTH);
   homePath       = TtaGetEnvString ("APP_HOME");
-  sprintf (path, "%s%ctemplate-repositories.dat", homePath, DIR_SEP);
+  sprintf (path, "%s%ctemplates.dat", homePath, DIR_SEP);
   
   file = TtaReadOpen ((char *)path);
   if (!file)
   {
     /* The config file dont exist, create it. */
     file = TtaWriteOpen ((char *)path);
-    fprintf(file, "%s%ctemplates%cen\n", homePath, DIR_SEP, DIR_SEP);
+    fprintf (file, "%s%ctemplate.xtd\n", homePath, DIR_SEP);
     TtaWriteClose (file);
     /* Retry to open it.*/
     file = TtaReadOpen ((char *)path);
@@ -213,7 +215,7 @@ static void SaveTemplateRepositoryList (const Prop_Templates_Path** list)
 
   path = (char *) TtaGetMemory (MAX_LENGTH);
   homePath       = TtaGetEnvString ("APP_HOME");
-  sprintf (path, "%s%ctemplate-repositories.dat", homePath, DIR_SEP);
+  sprintf (path, "%s%ctemplates.dat", homePath, DIR_SEP);
 
   file = TtaWriteOpen ((char *)path);
   c = (unsigned char*)path;
@@ -262,10 +264,6 @@ void InitTemplates ()
 }
 
 
-
-
-
-
 /*----------------------------------------------------------------------
   NewTemplate: Create the "new document from template" dialog
   ----------------------------------------------------------------------*/
@@ -290,34 +288,6 @@ void NewTemplate (Document doc, View view)
 #endif /* TEMPLATES */
 }
 
-/*----------------------------------------------------------------------
-  Load a template and create the instance file - update images and 
-  stylesheets related to the template.
-  ----------------------------------------------------------------------*/
-void CreateInstanceOfTemplate (Document doc, char *templatename, char *docname)
-{
-#ifdef TEMPLATES
-
-  char *s;
-  ThotBool dontReplace = DontReplaceOldDoc;
-
-  if (!IsW3Path (docname) && TtaFileExist (docname))
-    {
-      s = (char *)TtaGetMemory (strlen (docname) +
-                                strlen (TtaGetMessage (AMAYA, AM_OVERWRITE_CHECK)) + 2);
-      sprintf (s, TtaGetMessage (AMAYA, AM_OVERWRITE_CHECK), docname);
-      InitConfirm (0, 0, s);
-      TtaFreeMemory (s);      
-      if (!UserAnswer)
-        return;
-    }    
-
-  LoadTemplate (0, templatename);
-  DontReplaceOldDoc = dontReplace;
-  CreateInstance (templatename, docname);
-  
-#endif /* TEMPLATES */
-}
 
 /*----------------------------------------------------------------------
   giveItems : Lists type items from string
@@ -415,7 +385,9 @@ ThotBool UseToBeCreated (NotifyElement *event)
   el = event->element;
   doc = event->document;
   
+#ifdef AMAYA_DEBUG
   printf("UseToBeCreated\n");
+#endif /* AMAYA_DEBUG */
   
   /* is there a limit to the number of elements in the xt:repeat ? */
   /* @@@@@ */
@@ -1013,7 +985,7 @@ void OpeningInstance (char *fileName, Document doc)
                 t = (XTigerTemplate) Dictionary_Get (Templates_Dic, content);
                 if (!t)
                   {
-                    LoadTemplate (0, content);
+                    LoadTemplate (0, content, fileName);
                     t = (XTigerTemplate) Dictionary_Get (Templates_Dic, content);
                   }
                 AddUser (t);
@@ -1110,11 +1082,10 @@ ThotBool TemplateElementWillBeCreated (NotifyElement *event)
   if (templateSSchema == NULL)
     return FALSE; // let Thot do the job
   
-  
-  
-  
+#ifdef AMAYA_DEBUG 
   printf("TemplateElementWillBeCreated %s:%s\n", TtaGetSSchemaName(elType.ElSSchema), TtaGetElementTypeName(elType));
   printf("    ^^ %s:%s\n", TtaGetSSchemaName(parentType.ElSSchema), TtaGetElementTypeName(parentType));
+#endif /* AMAYA_DEBUG */
   return FALSE;
 
 //
@@ -1153,7 +1124,9 @@ ThotBool TemplateElementWillBeCreated (NotifyElement *event)
   ----------------------------------------------------------------------*/
 ThotBool TemplateElementWillBeDeleted (NotifyElement *event)
 {
+#ifdef AMAYA_DEBUG 
   printf("TemplateElementWillBeDeleted\n");
+#endif /* AMAYA_DEBUG */
   
   return FALSE;
 }

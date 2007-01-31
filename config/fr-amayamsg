@@ -389,24 +389,23 @@
 387 Elément inconnu
 388 %d éléments changés
 389 Le titre est obligatoire
-390 Répertoires de modèles
-391 Modèles
-392 Nombre d'occurrences
-393 Nombre maximal d'occurrences atteint
-394 Nombre minimum d'occurrences atteint
-395 Vérifier les IDs dupliqués
-396 Ajouter la feuille xsl pour les éléments MathML
-397 Insérer opérateur
-398 Choisir la façon dont l'opérateur doit être affiché
-399 Insérer une intégrale
-400 Choisir le type d'intégrale
-401 Attributs du fence
-402 Choisir les symboles ouvrants, séparateurs et fermants
-403 Nombre de symboles opérateurs
-404 Nombre de coordonnées
-405 Longueur du N-uplet
-406 Nombre d'éléments
-407 Nombre de variables
-408 Degré
-409 Degré de la variable numéro %d
-410 Document composé
+390 Modèles
+391 Nombre d'occurrences
+392 Nombre maximal d'occurrences atteint
+393 Nombre minimum d'occurrences atteint
+394 Vérifier les IDs dupliqués
+395 Ajouter la feuille xsl pour les éléments MathML
+396 Insérer opérateur
+397 Choisir la façon dont l'opérateur doit être affiché
+398 Insérer une intégrale
+399 Choisir le type d'intégrale
+400 Attributs du fence
+401 Choisir les symboles ouvrants, séparateurs et fermants
+402 Nombre de symboles opérateurs
+403 Nombre de coordonnées
+404 Longueur du N-uplet
+405 Nombre d'éléments
+406 Nombre de variables
+407 Degré
+408 Degré de la variable numéro %d
+409 Document composé

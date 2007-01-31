@@ -1202,9 +1202,10 @@ void PreferenceDlgWX::SetupLabelDialog_Templates()
     p_notebook->SetPageText( page_id, TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_TEMPLATES)));
 
   XRCCTRL(*this, "wxID_CHECK_SHOWTEMPLATES", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_SHOW_TEMPLATES)));
-  
+  XRCCTRL(*this, "wxID_BUTTON_CHOOSE_TEMPLATE_REPOSITORY", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_SEL)));
+  XRCCTRL(*this, "wxID_BUTTON_ADD_TEMPLATE_REPOSITORY", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_APPLY_BUTTON)));
   wxStaticBoxSizer *sz = (wxStaticBoxSizer*)XRCCTRL(*this, "wxID_PAGE_TEMPLATES", wxPanel)->GetSizer()->GetItem((size_t)0)->GetSizer();
-  sz->GetStaticBox()->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_TEMPLATE_REPOSITORIES)));
+  sz->GetStaticBox()->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_TEMPLATES)));
 }
 
 /*----------------------------------------------------------------------
@@ -1235,7 +1236,7 @@ Prop_Templates PreferenceDlgWX::GetValueDialog_Templates()
 {
   wxString            value;
   Prop_Templates      prop;
-  Prop_Templates_Path *element=NULL;
+  Prop_Templates_Path *element = NULL;
 
   memset( &prop, 0, sizeof(Prop_Templates) );
   prop.S_Templates = XRCCTRL(*this, "wxID_CHECK_SHOWTEMPLATES", wxCheckBox)->GetValue();
@@ -1254,9 +1255,9 @@ Prop_Templates PreferenceDlgWX::GetValueDialog_Templates()
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void PreferenceDlgWX::OnTemplateChooseRepository(wxCommandEvent& event){
+void PreferenceDlgWX::OnTemplateChooseRepository(wxCommandEvent& event)
+{
   static const wxString home = TtaGetHomeDir();
-  
   
   wxString path = XRCCTRL(*this, "wxID_TEXT_NEW_TEMPLATE_REPOSITORY", wxTextCtrl)->GetValue();
   if(!path.IsEmpty())
@@ -1274,20 +1275,25 @@ void PreferenceDlgWX::OnTemplateChooseRepository(wxCommandEvent& event){
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void PreferenceDlgWX::OnTemplateAddRepository(wxCommandEvent& event){
+void PreferenceDlgWX::OnTemplateAddRepository(wxCommandEvent& event)
+{
   wxListBox *box = XRCCTRL(*this, "wxID_LIST_TEMPLATE_REPOSITORIES", wxListBox);
   box->Append(XRCCTRL(*this, "wxID_TEXT_NEW_TEMPLATE_REPOSITORY", wxTextCtrl)->GetValue());
   box->SetSelection(box->GetCount()-1);
 }
 
-void PreferenceDlgWX::OnUpdateTemplateAddRepository(wxUpdateUIEvent& event){
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void PreferenceDlgWX::OnUpdateTemplateAddRepository(wxUpdateUIEvent& event)
+{
   event.Enable(!XRCCTRL(*this, "wxID_TEXT_NEW_TEMPLATE_REPOSITORY", wxTextCtrl)->GetValue().IsEmpty());
 }
 
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void PreferenceDlgWX::OnTemplateDelRepository(wxCommandEvent& event){
+void PreferenceDlgWX::OnTemplateDelRepository(wxCommandEvent& event)
+{
   wxListBox *box = XRCCTRL(*this, "wxID_LIST_TEMPLATE_REPOSITORIES", wxListBox);
   int sel = box->GetSelection();
   if(sel!=wxNOT_FOUND)
@@ -1296,13 +1302,17 @@ void PreferenceDlgWX::OnTemplateDelRepository(wxCommandEvent& event){
   }
 }
 
-void PreferenceDlgWX::OnUpdateTemplateDelRepository(wxUpdateUIEvent& event){
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void PreferenceDlgWX::OnUpdateTemplateDelRepository(wxUpdateUIEvent& event)
+{
   event.Enable(XRCCTRL(*this, "wxID_LIST_TEMPLATE_REPOSITORIES", wxListBox)->GetSelection()!=wxNOT_FOUND);
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void PreferenceDlgWX::OnTemplateMoveUpRepository(wxCommandEvent& event){
+void PreferenceDlgWX::OnTemplateMoveUpRepository(wxCommandEvent& event)
+{
   wxListBox *box = XRCCTRL(*this, "wxID_LIST_TEMPLATE_REPOSITORIES", wxListBox);
   int sel = box->GetSelection();
   if (sel!=wxNOT_FOUND && sel>0)
@@ -1314,7 +1324,10 @@ void PreferenceDlgWX::OnTemplateMoveUpRepository(wxCommandEvent& event){
   }
 }
 
-void PreferenceDlgWX::OnUpdateTemplateMoveUpRepository(wxUpdateUIEvent& event){
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void PreferenceDlgWX::OnUpdateTemplateMoveUpRepository(wxUpdateUIEvent& event)
+{
   wxListBox *box = XRCCTRL(*this, "wxID_LIST_TEMPLATE_REPOSITORIES", wxListBox);
   event.Enable(box->GetSelection()!=wxNOT_FOUND && box->GetSelection()!=0);
 }
@@ -1322,7 +1335,8 @@ void PreferenceDlgWX::OnUpdateTemplateMoveUpRepository(wxUpdateUIEvent& event){
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void PreferenceDlgWX::OnTemplateMoveDownRepository(wxCommandEvent& event){
+void PreferenceDlgWX::OnTemplateMoveDownRepository(wxCommandEvent& event)
+{
   wxListBox *box = XRCCTRL(*this, "wxID_LIST_TEMPLATE_REPOSITORIES", wxListBox);
   int sel = box->GetSelection();
   if (sel!=wxNOT_FOUND && sel<(int)box->GetCount()-2)
@@ -1334,7 +1348,10 @@ void PreferenceDlgWX::OnTemplateMoveDownRepository(wxCommandEvent& event){
   }
 }
 
-void PreferenceDlgWX::OnUpdateTemplateMoveDownRepository(wxUpdateUIEvent& event){
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void PreferenceDlgWX::OnUpdateTemplateMoveDownRepository(wxUpdateUIEvent& event)
+{
   wxListBox *box = XRCCTRL(*this, "wxID_LIST_TEMPLATE_REPOSITORIES", wxListBox);
   event.Enable(box->GetSelection()!=wxNOT_FOUND && box->GetSelection()!=(int)box->GetCount()-1);
 }

@@ -4324,7 +4324,8 @@ static void UpdateShowTemplates ()
   GetTemplateConf
   Makes a copy of the current registry templates values
   ----------------------------------------------------------------------*/
-void GetTemplatesConf (void){
+void GetTemplatesConf (void)
+{
 #ifdef TEMPLATES
   TtaGetEnvBoolean ("SHOW_TEMPLATES", &(GProp_Templates.S_Templates));  
   GetTemplateRepositoryList(&(GProp_Templates.FirstPath));
@@ -4336,7 +4337,8 @@ void GetTemplatesConf (void){
   Updates the registry Templates values and calls the General functions
   to take into account the changes
   ----------------------------------------------------------------------*/
-void SetTemplatesConf (void){
+void SetTemplatesConf (void)
+{
 #ifdef TEMPLATES
   ThotBool    old;
   TtaGetEnvBoolean ("SHOW_TEMPLATES", &old);

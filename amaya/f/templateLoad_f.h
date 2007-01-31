@@ -28,7 +28,8 @@ extern void LoadTemplate_callback ( int newdoc,
                                     AHTHeaders *http_headers,
                                     void * context );
 extern void LoadTemplate ( Document doc,
-                           char* templatename );
+                           char* templatename,
+                           char *docname );
 
 #else /* __STDC__ */
 
@@ -54,7 +55,8 @@ extern void LoadTemplate_callback ( int newdoc,
                                       AHTHeaders *http_headers,
                                       void * context );
 extern void LoadTemplate ( Document doc,
-                             char* templatename );
+                             char* templatename,
+                             char *docname );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

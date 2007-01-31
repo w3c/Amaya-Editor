@@ -5491,17 +5491,19 @@ Document GetAmayaDoc (char *urlname, char *form_data,
     docType = docSVG;
   else if (IsCSSName (documentname))
     docType = docCSS;
-  else if (IsTextName (documentname))
-    docType = docText;
-#ifdef XML_GENERIC
+#ifdef TEMPLATES
+  else if (IsXTiger (documentname))
+    // @@@@ by default it's a HTML document
+    docType = docHTML;
+#endif /* TEMPLATES */
   else if (IsXMLName (documentname))
-  {
-    docType = docXml;
-	//TODO Check that urlname is a valid URL
-    CheckDocHeader(urlname, &xmlDec, &withDoctype, &isXML, &useMath, &isKnown,
-                   &parsingLevel, &doc_charset, charsetname, (DocumentType*)&docType);
-  }
-#endif /* XML_GENERIC */
+    {
+      docType = docXml;
+      //TODO Check that urlname is a valid URL
+      if (!IsW3Path (urlname))
+        CheckDocHeader(urlname, &xmlDec, &withDoctype, &isXML, &useMath, &isKnown,
+                       &parsingLevel, &doc_charset, charsetname, (DocumentType*)&docType);
+    }
 #ifdef _SVG
   else if (IsLibraryName (documentname))
     docType = docLibrary;
@@ -5510,6 +5512,8 @@ Document GetAmayaDoc (char *urlname, char *form_data,
     docType = docCSS;
   else if (method == CE_LOG)
     docType = docLog;
+  else if (IsTextName (documentname))
+    docType = docText;
   else
     docType = docHTML;
   

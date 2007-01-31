@@ -19,8 +19,9 @@
 #include "thot_sys.h"
 #include "init_f.h"
 #include "templates.h"
-#include "templates_f.h"
+#include "templateLoad_f.h"
 #include "registry_wx.h"
+#include "MENUconf_f.h"
 
 static int      MyRef = 0;
 static int      Mydoc = 0;
@@ -80,6 +81,7 @@ NewTemplateDocDlgWX::NewTemplateDocDlgWX ( int ref,
   Mydoc = doc;
   // update dialog labels with given ones
   SetTitle( title );
+  GetTemplatesConf ();
 
   //XRCCTRL(*this, "wxID_LABEL_TEMPLATE", wxStaticText)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_TEMPLATE) ));
   XRCCTRL(*this, "wxID_LABEL_TEMPLATEDIRNAME", wxStaticText)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_DIRECTORY) ));
@@ -113,10 +115,13 @@ NewTemplateDocDlgWX::NewTemplateDocDlgWX ( int ref,
 
   // set the default templates directory
   XRCCTRL(*this, "wxID_TEMPLATEDIRNAME", wxTextCtrl)->SetValue(templateDir);
+
+
   // Update the template combobox with templates in directory "templateDir"
 #if defined(_WINDOWS) || defined(_MACOS)
   UpdateTemplateFromDir ();
 #endif /* _WINDOWS  || MACOS */
+
   // set the default instance path
   wxString homedir = TtaGetHomeDir();
   wxString filename = TtaConvMessageToWX("New.html");
@@ -199,21 +204,35 @@ void NewTemplateDocDlgWX::OnInstanceFilenameButton( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void NewTemplateDocDlgWX::UpdateTemplateFromDir ()
 {
+  Prop_Templates prop = GetProp_Templates();
+  Prop_Templates_Path* path = prop.FirstPath;
+
   if (!m_LockUpdateFlag)
     {
       m_LockUpdateFlag = true;
       wxString dir_value = XRCCTRL(*this, "wxID_TEMPLATEDIRNAME", wxTextCtrl)->GetValue();
+      if (!dir_value.StartsWith(_T("http")))
+        {
+          // get the directory list when it is a local directory
 #ifdef _WINDOWS
-      if (dir_value.IsEmpty())
-        dir_value = _T("C:\\");
+          if (dir_value.IsEmpty())
+            dir_value = _T("C:\\");
 #endif /* _WINDOWS */
-      if (dir_value.Last() != m_DirSep)
-        dir_value += m_DirSep;
-      XRCCTRL(*this, "wxID_TEMPLATEFILENAME", wxComboBox)->Clear();
-      XRCCTRL(*this, "wxID_TEMPLATEFILENAME", wxComboBox)->SetValue( TtaConvMessageToWX(""));
-      wxArrayString templateList;
-      wxDir::GetAllFiles(dir_value, &templateList, _T("*.xtd"), wxDIR_FILES);
-      XRCCTRL(*this, "wxID_TEMPLATEFILENAME", wxComboBox)->Append( templateList );
+          if (dir_value.Last() != m_DirSep)
+            dir_value += m_DirSep;
+          XRCCTRL(*this, "wxID_TEMPLATEFILENAME", wxComboBox)->Clear();
+          XRCCTRL(*this, "wxID_TEMPLATEFILENAME", wxComboBox)->SetValue( TtaConvMessageToWX(""));
+          wxArrayString templateList;
+          wxDir::GetAllFiles(dir_value, &templateList, _T("*.xtd"), wxDIR_FILES);
+          XRCCTRL(*this, "wxID_TEMPLATEFILENAME", wxComboBox)->Append( templateList );
+        }
+      // adding paths form preferences
+      while (path)
+        {
+          XRCCTRL(*this, "wxID_TEMPLATEFILENAME", wxComboBox)->Append(TtaConvMessageToWX(path->Path));
+          path = path->NextPath;
+        }
+
       //XRCCTRL(*this, "wxID_TEMPLATEFILENAME", wxComboBox)->SetSelection (0);
        m_LockUpdateFlag = false;
    }
@@ -289,7 +308,7 @@ void NewTemplateDocDlgWX::OnCreateButton( wxCommandEvent& event )
   value = XRCCTRL(*this, "wxID_TEMPLATEFILENAME", wxComboBox)->GetValue( );
   strncpy (temp, (const char*)value.mb_str(wxConvUTF8), MAX_LENGTH - 1);
   temp[MAX_LENGTH - 1] = EOS;
-  if (TtaFileExist(temp))
+  if (!strncmp (temp, "http:", 5) || TtaFileExist(temp))
     {
       // get the doc instance path
       value = XRCCTRL (*this, "wxID_INSTANCEFILENAME", wxTextCtrl)->GetValue();
@@ -332,7 +351,7 @@ void NewTemplateDocDlgWX::OnCreateButton( wxCommandEvent& event )
       // give the new url to amaya (to do url completion)
       ThotCallback (BaseDialog + URLName, STRING_DATA, (char *)docname);  
       
-      CreateInstanceOfTemplate (Mydoc, temp, docname);
+      LoadTemplate (Mydoc, temp, docname);
       TtaDestroyDialogue (MyRef);
     }
   else

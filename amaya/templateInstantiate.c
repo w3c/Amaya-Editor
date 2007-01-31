@@ -754,14 +754,17 @@ void DoInstanceTemplate (char *templatename)
   strcpy (buffer, "xtiger template=\"");
   strcat (buffer, templatename);
   strcat (buffer, "\" version=\"");
-  strcat (buffer, t->version);
+  if (t->version)
+    strcat (buffer, t->version);
+  else
+    strcat (buffer, "0.8");
   strcat (buffer, "\"");
   if(t->templateVersion)
-  {
-    strcat (buffer, " templateVersion=\"");
-    strcat (buffer, t->templateVersion);
-    strcat (buffer, "\"");
-  }
+    {
+      strcat (buffer, " templateVersion=\"");
+      strcat (buffer, t->templateVersion);
+      strcat (buffer, "\"");
+    }
   TtaSetTextContent (text, (unsigned char*)buffer,  Latin_Script, doc);
   TtaSetStructureChecking (TRUE, doc);
 
