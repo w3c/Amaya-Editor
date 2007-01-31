@@ -25,8 +25,6 @@
 typedef struct _TemplateCtxt
 {
 	char			*templatePath;
-  char      *docname;
-  ThotBool   dontReplace;
 } TemplateCtxt;
 #endif
 
@@ -179,6 +177,7 @@ void ParseDeclarations (XTigerTemplate t, Element el)
 #endif /* TEMPLATES */
 }
 
+static ThotBool Waiting_template = FALSE;
 /*----------------------------------------------------------------------
   LoadTemplate_callback: Called after loading a template.
   ----------------------------------------------------------------------*/
@@ -187,42 +186,39 @@ void LoadTemplate_callback (int newdoc, int status,  char *urlName,
                             AHTHeaders *http_headers, void * context)
 {	
 #ifdef TEMPLATES
-  char         *docname = NULL, *templatename;
+  char         *templatename = NULL;
 #ifdef AMAYA_DEBUG 
 	char          localname[MAX_LENGTH];
 	FILE         *file;
 #endif /* AMAYA_DEBUG */
   Element       el;
 	TemplateCtxt *ctx = (TemplateCtxt*)context;
-  ThotBool      dontReplace = ctx->dontReplace;
 	
-	XTigerTemplate t = NewXTigerTemplate (ctx->templatePath, TRUE);
-  SetTemplateDocument (t, newdoc);
-	el = TtaGetMainRoot (newdoc);
-	ParseDeclarations  (t, el);
-	RedefineSpecialUnions (t);
-	PreInstantiateComponents (t);
+  if (newdoc)
+    {
+      // the template is now loaded
+      XTigerTemplate t = NewXTigerTemplate (ctx->templatePath, TRUE);
+      SetTemplateDocument (t, newdoc);
+      el = TtaGetMainRoot (newdoc);
+      ParseDeclarations  (t, el);
+      RedefineSpecialUnions (t);
+      PreInstantiateComponents (t);
   
 #ifdef AMAYA_DEBUG	
-	DumpDeclarations (t);
-  strcpy (localname, TempFileDirectory);
-  strcat (localname, DIR_STR);
-  strcat (localname, "template.debug");
-  file = TtaWriteOpen (localname);
-  
-	TtaListAbstractTree (TtaGetMainRoot (newdoc), file);
-	TtaWriteClose (file);
+      DumpDeclarations (t);
+      strcpy (localname, TempFileDirectory);
+      strcat (localname, DIR_STR);
+      strcat (localname, "template.debug");
+      file = TtaWriteOpen (localname);
+      TtaListAbstractTree (TtaGetMainRoot (newdoc), file);
+      TtaWriteClose (file);
 #endif
-  templatename = ctx->templatePath;
-  docname = ctx->docname;
-  TtaFreeMemory (ctx);
-  DoInstanceTemplate (templatename);
-  if (newdoc)
-    DocumentTypes[newdoc] = docTemplate;
-  DontReplaceOldDoc = dontReplace;
-  CreateInstance (templatename, docname);
-  TtaFreeMemory (templatename);
-  TtaFreeMemory (docname);
+      templatename = ctx->templatePath;
+      TtaFreeMemory (ctx);
+      DoInstanceTemplate (templatename);
+      DocumentTypes[newdoc] = docTemplate;
+    }
+  Waiting_template = FALSE;
 #endif /* TEMPLATES */
 }
 
@@ -263,17 +259,49 @@ void LoadTemplate (Document doc, char* templatename, char *docname)
       //Creation of the callback context
       TemplateCtxt *ctx	= (TemplateCtxt *)TtaGetMemory (sizeof (TemplateCtxt));
       ctx->templatePath	= TtaStrdup (templatename);
-      ctx->docname = TtaStrdup (docname);
-      ctx->dontReplace = DontReplaceOldDoc;
       DontReplaceOldDoc = TRUE;
+      Waiting_template = TRUE;
       newdoc = GetAmayaDoc (templatename, NULL, 0, 0, CE_TEMPLATE, FALSE, 
                             (void (*)(int, int, char*, char*, char*, const AHTHeaders*, void*)) LoadTemplate_callback,
                             (void *) ctx);
+      while (Waiting_template)
+        TtaHandlePendingEvents ();
     }
-  else
+#endif /* TEMPLATES */
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void LoadTemplate (Document doc, char* templatename)
+{
+#ifdef TEMPLATES
+  Document      newdoc = 0;
+	char			   *s, *directory;
+	unsigned int	size = strlen (templatename) + 1;
+
+  if (!IsW3Path (templatename))
     {
-      // the template is already loaded
-      CreateInstance (templatename, docname);
+      //Stores the template path for show it in next instanciation forms
+      directory	= (char*) TtaGetMemory (size);
+      s	= (char*) TtaGetMemory (size);
+      TtaExtractName (templatename, directory, s);	
+      TtaSetEnvString ("TEMPLATES_DIRECTORY", directory, TRUE);
+      TtaFreeMemory (directory);
+      TtaFreeMemory (s);
+    }
+
+	//If types are not loaded we load the template and we parse it
+	if (!Dictionary_Get (Templates_Dic, templatename))
+    {	
+      //Creation of the callback context
+      TemplateCtxt *ctx	= (TemplateCtxt *)TtaGetMemory (sizeof (TemplateCtxt));
+      ctx->templatePath	= TtaStrdup (templatename);
+      Waiting_template = TRUE;
+      newdoc = GetAmayaDoc (templatename, NULL, 0, 0, CE_TEMPLATE, FALSE, 
+                            (void (*)(int, int, char*, char*, char*, const AHTHeaders*, void*)) LoadTemplate_callback,
+                            (void *) ctx);
+      while (Waiting_template)
+        TtaHandlePendingEvents ();
     }
 #endif /* TEMPLATES */
 }

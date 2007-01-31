@@ -19,7 +19,7 @@
 #include "thot_sys.h"
 #include "init_f.h"
 #include "templates.h"
-#include "templateLoad_f.h"
+#include "templates_f.h"
 #include "registry_wx.h"
 #include "MENUconf_f.h"
 
@@ -351,7 +351,7 @@ void NewTemplateDocDlgWX::OnCreateButton( wxCommandEvent& event )
       // give the new url to amaya (to do url completion)
       ThotCallback (BaseDialog + URLName, STRING_DATA, (char *)docname);  
       
-      LoadTemplate (Mydoc, temp, docname);
+      CreateInstanceOfTemplate (Mydoc, temp, docname);
       TtaDestroyDialogue (MyRef);
     }
   else

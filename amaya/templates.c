@@ -61,7 +61,8 @@ ThotBool IsTemplateInstanceDocument(Document doc)
 }
 
 /*----------------------------------------------------------------------
-  AllocTemplateRepositoryListElement: alloc an element for the list of template repositories.
+  AllocTemplateRepositoryListElement: allocates an element for the list
+  of template repositories.
   path : path of the new element
   return : address of the new element
   ----------------------------------------------------------------------*/
@@ -284,6 +285,35 @@ void NewTemplate (Document doc, View view)
       TtaSetDialoguePosition ();
       TtaShowDialogue (BaseDialog + OpenTemplate, TRUE);
     }
+
+#endif /* TEMPLATES */
+}
+
+/*----------------------------------------------------------------------
+  Load a template and create the instance file - update images and 
+  stylesheets related to the template.
+  ----------------------------------------------------------------------*/
+void CreateInstanceOfTemplate (Document doc, char *templatename, char *docname)
+{
+#ifdef TEMPLATES
+
+  char *s;
+  ThotBool dontReplace = DontReplaceOldDoc;
+
+  if (!IsW3Path (docname) && TtaFileExist (docname))
+    {
+      s = (char *)TtaGetMemory (strlen (docname) +
+                                strlen (TtaGetMessage (AMAYA, AM_OVERWRITE_CHECK)) + 2);
+      sprintf (s, TtaGetMessage (AMAYA, AM_OVERWRITE_CHECK), docname);
+      InitConfirm (0, 0, s);
+      TtaFreeMemory (s);
+      if (!UserAnswer)
+        return;
+    }
+
+  LoadTemplate (0, templatename);
+  DontReplaceOldDoc = dontReplace;
+  CreateInstance (templatename, docname);
 
 #endif /* TEMPLATES */
 }
@@ -952,6 +982,9 @@ ThotBool OptionButtonClicked (NotifyElement *event)
 
 
 /*----------------------------------------------------------------------
+  OpeningInstance checks if it is a template instance needs.
+  If it's an instance and the template is not loaded, load it into a
+  temporary file
   ----------------------------------------------------------------------*/
 void OpeningInstance (char *fileName, Document doc)
 {
@@ -1015,7 +1048,7 @@ void OpeningInstance (char *fileName, Document doc)
                 t = (XTigerTemplate) Dictionary_Get (Templates_Dic, content);
                 if (!t)
                   {
-                    LoadTemplate (0, content, fileName);
+                    LoadTemplate (doc, content);
                     t = (XTigerTemplate) Dictionary_Get (Templates_Dic, content);
                   }
                 AddUser (t);

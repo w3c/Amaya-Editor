@@ -30,6 +30,8 @@ extern void LoadTemplate_callback ( int newdoc,
 extern void LoadTemplate ( Document doc,
                            char* templatename,
                            char *docname );
+extern void LoadTemplate ( Document doc,
+                           char* templatename );
 
 #else /* __STDC__ */
 
@@ -57,6 +59,8 @@ extern void LoadTemplate_callback ( int newdoc,
 extern void LoadTemplate ( Document doc,
                              char* templatename,
                              char *docname );
+extern void LoadTemplate ( Document doc,
+                             char* templatename );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
