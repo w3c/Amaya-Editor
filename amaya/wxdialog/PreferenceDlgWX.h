@@ -87,16 +87,16 @@ private:
   void SetupLabelDialog_Templates();
   void SetupDialog_Templates( const Prop_Templates & prop );
   Prop_Templates GetValueDialog_Templates();
-  void OnTemplateChooseRepository(wxCommandEvent& event);
-  void OnTemplateAddRepository(wxCommandEvent& event);
-  void OnTemplateDelRepository(wxCommandEvent& event);
-  void OnTemplateMoveUpRepository(wxCommandEvent& event);
-  void OnTemplateMoveDownRepository(wxCommandEvent& event);
-  void OnUpdateTemplateAddRepository(wxUpdateUIEvent& event);
-  void OnUpdateTemplateDelRepository(wxUpdateUIEvent& event);
-  void OnUpdateTemplateMoveUpRepository(wxUpdateUIEvent& event);
-  void OnUpdateTemplateMoveDownRepository(wxUpdateUIEvent& event);
-  void OnTemplateRepositorySelected(wxCommandEvent& event);
+  void OnTemplateChoose(wxCommandEvent& event);
+  void OnTemplateAdd(wxCommandEvent& event);
+  void OnTemplateDel(wxCommandEvent& event);
+  void OnTemplateMoveUp(wxCommandEvent& event);
+  void OnTemplateMoveDown(wxCommandEvent& event);
+  void OnUpdateTemplateAdd(wxUpdateUIEvent& event);
+  void OnUpdateTemplateDel(wxUpdateUIEvent& event);
+  void OnUpdateTemplateMoveUp(wxUpdateUIEvent& event);
+  void OnUpdateTemplateMoveDown(wxUpdateUIEvent& event);
+  void OnTemplateSelected(wxCommandEvent& event);
 
 
   int GetPagePosFromXMLID( const wxString & xml_id );

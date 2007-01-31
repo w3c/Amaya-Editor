@@ -1130,7 +1130,7 @@
                           <object class="wxBoxSizer">
                             <orient>wxVERTICAL</orient>
                             <object class="sizeritem">
-                              <object class="wxBitmapButton" name="wxID_BUTTON_DELETE_TEMPLATE_REPOSITORY">
+                              <object class="wxBitmapButton" name="wxID_BUTTON_DELETE_TEMPLATE">
                                 <bitmap>../icons/16x16/editdelete.png</bitmap>
                               </object>
                               <option>1</option>
@@ -1144,13 +1144,13 @@
                               <border>4</border>
                             </object>
                             <object class="sizeritem">
-                              <object class="wxBitmapButton" name="wxID_BUTTON_MOVEUP_TEMPLATE_REPOSITORY">
+                              <object class="wxBitmapButton" name="wxID_BUTTON_MOVEUP_TEMPLATE">
                                 <bitmap>../icons/16x16/up.png</bitmap>
                               </object>
                               <option>1</option>
                             </object>
                             <object class="sizeritem">
-                              <object class="wxBitmapButton" name="wxID_BUTTON_MOVEDOWN_TEMPLATE_REPOSITORY">
+                              <object class="wxBitmapButton" name="wxID_BUTTON_MOVEDOWN_TEMPLATE">
                                 <bitmap>../icons/16x16/down.png</bitmap>
                               </object>
                               <option>1</option>
@@ -1167,16 +1167,16 @@
                       <object class="wxBoxSizer">
                         <orient>wxHORIZONTAL</orient>
                         <object class="sizeritem">
-                          <object class="wxTextCtrl" name="wxID_TEXT_NEW_TEMPLATE_REPOSITORY"/>
+                          <object class="wxTextCtrl" name="wxID_TEXT_NEW_TEMPLATE"/>
                           <option>1</option>
                         </object>
                         <object class="sizeritem">
-                          <object class="wxBitmapButton" name="wxID_BUTTON_CHOOSE_TEMPLATE_REPOSITORY">
+                          <object class="wxBitmapButton" name="wxID_BUTTON_CHOOSE_TEMPLATE">
                             <bitmap>../icons/16x16/open.png</bitmap>
                           </object>
                         </object>
                         <object class="sizeritem">
-                          <object class="wxBitmapButton" name="wxID_BUTTON_ADD_TEMPLATE_REPOSITORY">
+                          <object class="wxBitmapButton" name="wxID_BUTTON_ADD_TEMPLATE">
                             <bitmap>../icons/16x16/ok.png</bitmap>
                           </object>
                         </object>
