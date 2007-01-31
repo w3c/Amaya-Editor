@@ -158,7 +158,7 @@ ATTRIBUTES
       create SAN;
       create 'name=';
       create DoubleQuote;
-      create name;
+      create ref_name;
       create DoubleQuote;
     end;
 
@@ -167,7 +167,7 @@ ATTRIBUTES
       create SAN;
       create 'ref=';
       create DoubleQuote;
-      create name;
+      create ref;
       create DoubleQuote;
     end;
 
