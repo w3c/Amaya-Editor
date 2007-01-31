@@ -293,20 +293,20 @@ static void FillInsertableElemList(Document doc, Element elem, DLList list)
             default:
               break;
           }
-          cont = FALSE;
+          cont = TRUE;
           break;
         case Template_EL_useEl:
           // Fill for xt:use only if have no child.
           if(TtaGetFirstChild(elem)==NULL){
             FillInsertableElementFromElemAttribute(t, elem, elem,
                                                    Template_ATTR_types, list, level);
-            cont = FALSE;
+            cont = TRUE;
           }
           break;
         case Template_EL_bag:
           FillInsertableElementFromElemAttribute(t, elem, elem,
                                                  Template_ATTR_types, list, level);
-          cont = FALSE;
+          cont = TRUE;
           break;
 #endif /*TEMPLATES */
         default:
@@ -342,7 +342,7 @@ DLList InsertableElement_GetList(Document doc)
   @param force No dont force the refresh of the list if the element is already selected.
   @return List of insertable elements.
   ----------------------------------------------------------------------*/
-DLList InsertableElement_Update(Document doc, Element el, ThotBool force)
+DLList InsertableElement_Update(Document doc, Element el)
 {
   InsertableElementList list;
   if(doc==0)
@@ -353,11 +353,11 @@ DLList InsertableElement_Update(Document doc, Element el, ThotBool force)
     list = InsertableElementList_Create(0, DLList_Create());
     HashMap_Set(InsertableElementMap, (void*)doc, list);
   }
-  if(force || list->elem!=el){
-    DLList_Empty(list->list);
-    FillInsertableElemList(doc, el, list->list);
-    list->elem = el;
-  }
+  
+  DLList_Empty(list->list);
+  FillInsertableElemList(doc, el, list->list);
+  list->elem = el;
+
   return list->list;
 }
 

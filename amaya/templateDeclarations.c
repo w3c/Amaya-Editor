@@ -214,14 +214,8 @@ void AddDeclaration (XTigerTemplate t, Declaration dec)
 void NewComponent (XTigerTemplate t, const char *name, const Element el)
 {
 #ifdef TEMPLATES
-	/*if (t->doc < 0)
-		doc = CreateDocumentOfType (el);*/
-
 	Declaration dec = NewDeclaration (t, name, ComponentNat);
-	dec->componentType.content = el;
-  // TODO	dec->componentType.content = TtaCopyTree (el, TtaGetDocument (el), ;
-  dec->componentType.content = TtaCopyTree (dec->componentType.content,
-                                            TtaGetDocument (dec->componentType.content),
+  dec->componentType.content = TtaCopyTree (el, TtaGetDocument (el),
                                             TtaGetDocument (el), el);
 	AddDeclaration (t, dec);
 #endif /* TEMPLATES */

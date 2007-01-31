@@ -1499,7 +1499,7 @@ void UpdateXmlElementListTool (Element el, Document doc)
     if(!IsTemplateElement(el))
       el = GetFirstTemplateParentElement(el);
     
-    DLList list = InsertableElement_Update(doc, el, FALSE);
+    DLList list = InsertableElement_Update(doc, el);
  
     AmayaParams    p = {-1, list, (void*)InsertableElement_DoInsertElement, NULL};
     
@@ -3033,6 +3033,7 @@ void SelectionChanged (NotifyElement *event)
   /* update the displayed style information */
   SynchronizeAppliedStyle (event);
   UnFrameMath ();
+  
   if (DocumentTypes[event->document] != docLog)
   {
     UpdateXmlElementListTool(event->element,event->document);

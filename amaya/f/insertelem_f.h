@@ -10,8 +10,7 @@ extern void InsertableElement_Init ( void );
 extern void InsertableElement_Final ( void );
 extern DLList InsertableElement_GetList ( Document doc );
 extern DLList InsertableElement_Update ( Document doc,
-                                         Element el,
-                                         ThotBool force );
+                                         Element el );
 extern void InsertableElement_DoInsertElement ( void* el );
 
 #else /* __STDC__ */
@@ -20,8 +19,7 @@ extern void InsertableElement_Init ( void );
 extern void InsertableElement_Final ( void );
 extern DLList InsertableElement_GetList ( Document doc );
 extern DLList InsertableElement_Update ( Document doc,
-                                           Element el,
-                                           ThotBool force );
+                                           Element el );
 extern void InsertableElement_DoInsertElement ( void* el );
 
 #endif /* __STDC__ */
