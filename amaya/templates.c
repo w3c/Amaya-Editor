@@ -290,6 +290,36 @@ void NewTemplate (Document doc, View view)
 
 
 /*----------------------------------------------------------------------
+  PreventReloadingTemplate
+  Prevent reloading a template.
+  You must call AllowReloadingTemplate when finish.
+  Usefull for reload an instance without reloading the template.
+  ----------------------------------------------------------------------*/
+void PreventReloadingTemplate(char* template_url)
+{
+#ifdef TEMPLATES
+  XTigerTemplate t = (XTigerTemplate) Dictionary_Get (Templates_Dic, template_url);
+  if(t)
+    t->users++;
+#endif /* TEMPLATES */
+}
+
+/*----------------------------------------------------------------------
+  AllowReloadingTemplate
+  Allow reloading a template.
+  You must call it after each PreventReloadingTemplate call.
+  ----------------------------------------------------------------------*/
+void AllowReloadingTemplate(char* template_url)
+{
+#ifdef TEMPLATES
+  XTigerTemplate t = (XTigerTemplate) Dictionary_Get (Templates_Dic, template_url);
+  if(t)
+    t->users--;  
+#endif /* TEMPLATES */  
+}
+
+
+/*----------------------------------------------------------------------
   giveItems : Lists type items from string
   example : "one two three" is extracted to {one, two, three}
   note : item type are setted to SimpleTypeNat
@@ -1124,11 +1154,60 @@ ThotBool TemplateElementWillBeCreated (NotifyElement *event)
   ----------------------------------------------------------------------*/
 ThotBool TemplateElementWillBeDeleted (NotifyElement *event)
 {
-#ifdef AMAYA_DEBUG 
-  printf("TemplateElementWillBeDeleted\n");
-#endif /* AMAYA_DEBUG */
+#ifdef TEMPLATES
+  Document       doc = event->document;
+  Element        elem = event->element;
+  Element        xtElem, parent;
+  ElementType    xtType;
+  char*          type;
+  Declaration    dec;
+  SSchema        templateSSchema = TtaGetSSchema ("Template", event->document);
+  XTigerTemplate t;
+
+  printf("TemplateElementWillBeDeleted : %s\n", TtaGetElementTypeName(TtaGetElementType(elem)));
   
+  if (templateSSchema == NULL)
+    return FALSE; // let Thot do the job
+  
+  
+  xtElem = GetFirstTemplateParentElement(elem);
+  if(xtElem)
+  {
+    xtType = TtaGetElementType(xtElem);
+    if(xtType.ElSSchema==templateSSchema)
+    {
+      t = (XTigerTemplate) Dictionary_Get (Templates_Dic, DocumentMeta[doc]->template_url);
+
+      if(xtType.ElTypeNum==Template_EL_bag)
+        return FALSE; // xt:bag always allow remove children.
+      else if(xtType.ElTypeNum==Template_EL_useSimple || xtType.ElTypeNum==Template_EL_useEl)
+      {
+        parent = TtaGetParent(elem);
+        if(xtElem==parent){
+          //TODO replace current xt:use child element by its initial content (reset element)
+          return TRUE; // Cant remove use direct child. It is mandatory.
+        }
+        type = GetAttributeStringValueFromNum(xtElem, Template_ATTR_currentType, NULL);
+        dec = Template_GetDeclaration(t, type);
+        TtaFreeMemory(type);
+        if(dec->nature == XmlElementNat)
+          return FALSE; // Can remove element only if in xt:use current type is base language element. 
+        else
+          return TRUE;
+      }
+      else if(xtType.ElTypeNum==Template_EL_repeat)
+      {
+        printf("Must remove xt:repeat element and validate xt:repeat content.\n");
+        TtaRemoveTree(elem, doc);
+        TtaDeleteTree(elem, doc);
+        //InstantiateRepeat(t, xtType, doc);
+      }
+    }
+  }
+  return TRUE;
+#else /* TEMPLATES */
   return FALSE;
+#endif /* TEMPLATES */
 }
 
 

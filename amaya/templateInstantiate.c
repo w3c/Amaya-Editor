@@ -332,7 +332,7 @@ Element Template_GetNewXmlElementInstance(Document doc, Element parent, Declarat
   GIType(decl->name, &elType, doc);
   if(elType.ElTypeNum!=0)
   {
-    newEl = TtaNewElement (doc, elType);
+    newEl = TtaNewTree (doc, elType, NULL);
   }
 #endif /* TEMPLATES */
   return newEl;

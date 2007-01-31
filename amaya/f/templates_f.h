@@ -15,6 +15,11 @@ extern void SetTemplateRepositoryList ( const void* list );
 extern void InitTemplates ( void );
 extern void NewTemplate ( Document doc,
                           View view );
+extern void CreateInstanceOfTemplate ( Document doc,
+                                       char *templatename,
+                                       char *docname );
+extern void PreventReloadingTemplate ( char* template_url );
+extern void AllowReloadingTemplate ( char* template_url );
 extern void giveItems ( char *text,
                         int size,
                         struct menuType **items,
@@ -55,6 +60,11 @@ extern void SetTemplateRepositoryList ( const void* list );
 extern void InitTemplates ( void );
 extern void NewTemplate ( Document doc,
                             View view );
+extern void CreateInstanceOfTemplate ( Document doc,
+                                         char *templatename,
+                                         char *docname );
+extern void PreventReloadingTemplate ( char* template_url );
+extern void AllowReloadingTemplate ( char* template_url );
 extern void giveItems ( char *text,
                           int size,
                           struct menuType **items,
