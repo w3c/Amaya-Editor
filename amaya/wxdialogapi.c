@@ -988,7 +988,7 @@ ThotBool CreateDocInfoDlgWX (int ref, ThotWindow parent, int doc)
 /*-----------------------------------------------------------------------
  CreateHRefDlgWX
  Used to :
-  - Dictionary_Add CSS file
+  - Add CSS file
   - Create/Modify a link
  ------------------------------------------------------------------------*/
 ThotBool CreateHRefDlgWX (int ref, ThotWindow parent,
