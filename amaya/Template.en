@@ -20,3 +20,5 @@ useAt: use
 defaultAt : default
 useEl: use
 useSimple: use
+ref: name
+ref_name: name

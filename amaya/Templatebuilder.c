@@ -142,7 +142,7 @@ ThotBool NeedAMenu (Element el, Document doc)
           if (dec && dec->nature == UnionNat)
             {
               rec = dec->unionType.include->first;
-              if (rec->next)
+              if (rec && rec->next)
                 res = TRUE;
             }
         }

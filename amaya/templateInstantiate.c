@@ -304,13 +304,12 @@ Element Template_GetNewSimpleTypeInstance(Document doc, Element parent, Declarat
 #ifdef TEMPLATES
   ElementType       elType;
   char             *empty = " ";
+
   elType.ElSSchema = TtaGetSSchema(TEMPLATE_SSHEMA_NAME, doc);
   elType.ElTypeNum = Template_EL_TEXT_UNIT;
   newEl = TtaNewElement (doc, elType);
-  
   TtaSetTextContent (newEl, (unsigned char*) empty, 0, doc);
-
-#endif 
+#endif /* TEMPLATES */
   return newEl;
 }
 
@@ -329,8 +328,8 @@ Element Template_GetNewXmlElementInstance(Document doc, Element parent, Declarat
 #ifdef TEMPLATES
   ElementType       elType;
 
-  GIType(decl->name, &elType, doc);
-  if(elType.ElTypeNum!=0)
+  GIType (decl->name, &elType, doc);
+  if (elType.ElTypeNum != 0)
   {
     newEl = TtaNewTree (doc, elType, "");
   }

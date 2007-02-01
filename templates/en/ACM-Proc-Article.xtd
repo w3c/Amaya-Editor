@@ -29,8 +29,8 @@
     <xt:component name="codeExample">
       <div class="example">
         <xt:attribute name="id" use="optional"/>
-        <pre><xt:use types="string" name="example_code">Some code</xt:use></pre>
-        <p><xt:use types="string" name="example_caption">Caption</xt:use></p>
+        <pre><xt:use types="string" name="code">Some code</xt:use></pre>
+        <p><xt:use types="string" name="caption">Caption</xt:use></p>
       </div>
     </xt:component>
 
@@ -41,20 +41,20 @@
     <xt:component name="refbook">
       <p class="refbook">
         <xt:repeat minOccurs="1">
-          <xt:use types="bibauthor" name="book_author" />
+          <xt:use types="bibauthor" name="author" />
         </xt:repeat>
-        <span class="title"><xt:use types="string" name="book_title">Book title</xt:use></span>,
-        <span class="pub"><xt:use types="string" name="book_publisher">Publisher</xt:use></span>
+        <span class="title"><xt:use types="string" name="title">Book title</xt:use></span>,
+        <span class="pub"><xt:use types="string" name="publisher">Publisher</xt:use></span>
       </p>
     </xt:component>
 
     <xt:component name="refarticle">
       <p class="refarticle">
         <xt:repeat minOccurs="1">
-          <xt:use types="bibauthor" name="article_author"/>
+          <xt:use types="bibauthor" name="author"/>
         </xt:repeat>
-        <span class="title"><xt:use types="string" name="article_title">Article title</xt:use></span>,
-        <span class="conf"><xt:use types="string" name="article_conf">Conference</xt:use></span>
+        <span class="title"><xt:use types="string" name="title">Article title</xt:use></span>,
+        <span class="conf"><xt:use types="string" name="conf">Conference</xt:use></span>
       </p>
     </xt:component>
 

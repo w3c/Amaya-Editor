@@ -165,7 +165,7 @@ ATTRIBUTES
   ref :
     begin
       create SAN;
-      create 'ref=';
+      create 'name=';
       create DoubleQuote;
       create ref;
       create DoubleQuote;
@@ -285,6 +285,24 @@ ATTRIBUTES
       create 'values=';
       create DoubleQuote;
       create values;
+      create DoubleQuote;
+    end;
+
+  version :
+    begin
+      create SAN;
+      create 'version=';
+      create DoubleQuote;
+      create version;
+      create DoubleQuote;
+    end;
+
+  templateVersion :
+    begin
+      create SAN;
+      create 'templateVersion=';
+      create DoubleQuote;
+      create templateVersion;
       create DoubleQuote;
     end;
 

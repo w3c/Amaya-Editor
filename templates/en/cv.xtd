@@ -9,16 +9,16 @@
   <meta name="template_id" content="amaya-cv-en-0.1" />
   <link rel="stylesheet" type="text/css" href="cv.css" />
 
-  <xt:head>
+  <xt:head version="0.8" versionTemplate="0.9">
       <xt:component name="training">
         <dt class="date"><xt:use types="string" name="t_date">
           2004 - 2005</xt:use></dt>
         <dd class="content">
-          <strong class="label"><xt:use types="string" name="t_description">
+          <strong class="label"><xt:use types="string" name="description">
           Activity description</xt:use></strong>
-          <span class="comment"><xt:use types="string" name="t_comment">
+          <span class="comment"><xt:use types="string" name="comment">
           Comments</xt:use></span>
-          <span class="location"><xt:use types="string" name="t_location">
+          <span class="location"><xt:use types="string" name="location">
           Location..</xt:use></span>
         </dd>
       </xt:component>

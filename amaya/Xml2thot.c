@@ -2412,8 +2412,6 @@ ThotBool  IsLeadingSpaceUseless (Element lastEl, Document doc,
                     elType.ElTypeNum == SVG_EL_tspan))
             removeLeadingSpaces = FALSE;
 #endif /* _SVG */
-          else if (!strcmp (name, "Template"))
-            removeLeadingSpaces = FALSE;
         }
     }
   else

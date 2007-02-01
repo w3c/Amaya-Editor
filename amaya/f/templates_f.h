@@ -50,7 +50,6 @@ extern Element GetFirstTemplateParentElement ( Element elem );
 extern ThotBool TemplateElementWillBeCreated ( NotifyElement *event );
 extern ThotBool TemplateElementWillBeDeleted ( NotifyElement *event );
 extern ThotBool CurrentTypeWillBeExported ( NotifyAttribute *event );
-extern ThotBool CurrentTypeWillBeCreated ( NotifyAttribute *event );
 
 #else /* __STDC__ */
 
@@ -98,7 +97,6 @@ extern Element GetFirstTemplateParentElement ( Element elem );
 extern ThotBool TemplateElementWillBeCreated ( NotifyElement *event );
 extern ThotBool TemplateElementWillBeDeleted ( NotifyElement *event );
 extern ThotBool CurrentTypeWillBeExported ( NotifyAttribute *event );
-extern ThotBool CurrentTypeWillBeCreated ( NotifyAttribute *event );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
