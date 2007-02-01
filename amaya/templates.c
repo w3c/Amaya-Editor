@@ -1024,7 +1024,22 @@ ThotBool OptionButtonClicked (NotifyElement *event)
   return TRUE;
 }
 
-
+/*----------------------------------------------------------------------
+  CheckTemplate checks if the template of the instance is loaded
+  ----------------------------------------------------------------------*/
+void CheckTemplate (Document doc)
+{
+#ifdef TEMPLATES
+  if (DocumentMeta[doc] && DocumentMeta[doc]->template_url &&
+      !Dictionary_Get (Templates_Dic, DocumentMeta[doc]->template_url))
+    {
+      // the template cannot be loaded
+      TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_READONLY);
+      TtaSetDocumentAccessMode (doc, 1);
+      TtaSetAccessRight (TtaGetRootElement (doc), ReadOnly, doc);
+    }
+#endif /* TEMPLATES */
+}
 
 /*----------------------------------------------------------------------
   OpeningInstance checks if it is a template instance needs.

@@ -42,6 +42,7 @@ extern ThotBool RepeatButtonClicked ( NotifyElement *event );
 extern ThotBool UseButtonClicked ( NotifyElement *event );
 extern ThotBool UseSimpleButtonClicked ( NotifyElement *event );
 extern ThotBool OptionButtonClicked ( NotifyElement *event );
+extern void CheckTemplate ( Document doc );
 extern void OpeningInstance ( char *fileName,
                               Document doc );
 extern ThotBool ClosingInstance ( NotifyDialog* dialog );
@@ -89,6 +90,7 @@ extern ThotBool RepeatButtonClicked ( NotifyElement *event );
 extern ThotBool UseButtonClicked ( NotifyElement *event );
 extern ThotBool UseSimpleButtonClicked ( NotifyElement *event );
 extern ThotBool OptionButtonClicked ( NotifyElement *event );
+extern void CheckTemplate ( Document doc );
 extern void OpeningInstance ( char *fileName,
                                 Document doc );
 extern ThotBool ClosingInstance ( NotifyDialog* dialog );

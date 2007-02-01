@@ -65,7 +65,7 @@ static InsertableElementList InsertableElementList_Create(Element elem, DLList l
 
 static void InsertableElementList_Destroy(InsertableElementList list)
 {
-  if(list->list)
+  if (list->list)
     DLList_Destroy(list->list);
   TtaFreeMemory(list);
 }
@@ -76,7 +76,7 @@ static void InsertableElementList_Destroy(InsertableElementList list)
   ----------------------------------------------------------------------*/
 void InsertableElement_Init()
 {
-  if(!InsertableElementMap)
+  if (!InsertableElementMap)
     InsertableElementMap = PointerHashMap_Create((Container_DestroyElementFunction)InsertableElementList_Destroy, 32);
 }
 
@@ -86,7 +86,7 @@ void InsertableElement_Init()
   ----------------------------------------------------------------------*/
 void InsertableElement_Final()
 {
-  if(InsertableElementMap)
+  if (InsertableElementMap)
   {
     HashMap_Destroy(InsertableElementMap);
     InsertableElementMap = NULL;
@@ -108,17 +108,19 @@ static void FillUnionResolvedPossibleElement(XTigerTemplate t, const char* name,
                                              DLList list, int level)
 {
   Declaration dec = Template_GetDeclaration (t, name);
-  if(dec->declaredIn->isPredefined)
+  if (dec == NULL)
+    return;
+  if (dec->declaredIn->isPredefined)
   {
     DLList_Append(list, ElemListElement_CreateComponent(level, dec->name,
                                                         (void*)dec, resolvedPath, elem));
   }
-  else if(dec->nature==ComponentNat)
+  else if (dec->nature==ComponentNat)
   {
     DLList_Append(list, ElemListElement_CreateComponent(level, dec->name, (void*)dec,
                                                         resolvedPath, elem));
   }
-  else if(dec->nature==UnionNat)
+  else if (dec->nature==UnionNat)
   {
     DLList tempList = ElemList_Create();
     
@@ -126,10 +128,10 @@ static void FillUnionResolvedPossibleElement(XTigerTemplate t, const char* name,
     Record rec = first;
     
     int len1 = 0 , len2 = strlen(dec->name);
-    if(resolvedPath!=NULL)
+    if (resolvedPath!=NULL)
       len1 = strlen(resolvedPath);
     char* newPath = (char*)TtaGetMemory(len1+len2+2);
-    if(len1>0)
+    if (len1>0)
     {
       strcpy(newPath, resolvedPath);
       newPath[len1] = '/';
@@ -160,7 +162,7 @@ static void FillUnionResolvedPossibleElement(XTigerTemplate t, const char* name,
     
     /** todo Remove excluded elements.*/
   }
-  else if(dec->nature==SimpleTypeNat)
+  else if (dec->nature==SimpleTypeNat)
   {
     DLList_Append(list, ElemListElement_CreateBaseType(level, dec->name, resolvedPath, elem));
     /* Do nothing. */
@@ -177,7 +179,7 @@ static void FillUnionResolvedPossibleElement(XTigerTemplate t, const char* name,
       ThotBool    checkProfile;
       MapXMLElementType(xmlType, dec->name, &elType, &mappedName, &content,
                         &checkProfile, TtaGetDocument(elem));
-      if(elType.ElTypeNum!=0)
+      if (elType.ElTypeNum!=0)
       {
         DLList_Append(list, ElemListElement_CreateLanguageElement(level, elType, resolvedPath, elem));
         break;
@@ -200,9 +202,9 @@ static void FillInsertableTemplateElementFromStringList(XTigerTemplate t,
   char* types = strdup(strlist);
   while(pos<size)
   {
-    if(isEOSorWhiteSpace(types[pos]))
+    if (isEOSorWhiteSpace(types[pos]))
     {
-      if(pos>offset)
+      if (pos>offset)
       {
         types[pos] = 0;
         FillUnionResolvedPossibleElement(t, types+offset, refelem, NULL, list, level);
@@ -211,7 +213,7 @@ static void FillInsertableTemplateElementFromStringList(XTigerTemplate t,
     }
     pos++;
   } 
-  if(pos>offset)
+  if (pos>offset)
   {
     types[pos] = 0;
     FillUnionResolvedPossibleElement(t, types+offset, refelem, NULL, list, level);
@@ -256,8 +258,8 @@ static void FillInsertableElemList(Document doc, Element elem, DLList list)
   int level;
   ThotBool cont;
 
-  if(elem){
-    if(doc==0)
+  if (elem){
+    if (doc==0)
       doc = TtaGetDocument(elem);
 
 #ifdef TEMPLATES
@@ -297,7 +299,7 @@ static void FillInsertableElemList(Document doc, Element elem, DLList list)
           break;
         case Template_EL_useEl:
           // Fill for xt:use only if have no child.
-          if(TtaGetFirstChild(elem)==NULL){
+          if (TtaGetFirstChild(elem)==NULL){
             FillInsertableElementFromElemAttribute(t, elem, elem,
                                                    Template_ATTR_types, list, level);
             cont = TRUE;
@@ -345,10 +347,10 @@ DLList InsertableElement_GetList(Document doc)
 DLList InsertableElement_Update(Document doc, Element el)
 {
   InsertableElementList list;
-  if(doc==0)
+  if (doc==0)
     doc= TtaGetDocument(el);
   list = (InsertableElementList) HashMap_Get(InsertableElementMap, (void*)doc);
-  if(list==NULL)
+  if (list==NULL)
   {
     list = InsertableElementList_Create(0, DLList_Create());
     HashMap_Set(InsertableElementMap, (void*)doc, list);
@@ -381,7 +383,7 @@ void InsertableElement_DoInsertElement(void* el)
   {
 #ifdef TEMPLATES
     case Template_EL_repeat:
-      if(elem->typeClass==DefinedComponent)
+      if (elem->typeClass==DefinedComponent)
         Template_InsertRepeatChild(doc, ref, (Declaration)elem->elem.component.declaration, -1);
       break;
 #endif /* TEMPLATES */

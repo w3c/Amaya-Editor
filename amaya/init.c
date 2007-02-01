@@ -36,15 +36,10 @@
 
 #ifdef TEMPLATES
 #include "templates.h"
+#include "templates_f.h"
 #include "templateDeclarations_f.h"
 #endif /* TEMPLATES */
 
-/*
-* A VIRER SUREMENT PAR LA SUITE
-*
-*
-*
-**/
 #ifdef _GTK
   #include "gtkdialogapi.h"
   extern char      LostPicturePath [MAX_LENGTH];
@@ -5304,6 +5299,9 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName, char *outputfi
             CleanUpParsingErrors ();
           else
             CheckParsingErrors (newdoc);
+#ifdef TEMPLATES
+          CheckTemplate (newdoc);
+#endif /* TEMPLATES */
         }
       else
         {

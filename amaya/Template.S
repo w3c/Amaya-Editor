@@ -38,8 +38,6 @@ STRUCT
   union ( ATTR name; includeAt = TEXT; exclude = TEXT ) = CONSTANT C_CR; {It is always empty}
   import ( ATTR src = TEXT ) = CONSTANT C_CR; {It is always empty}
 
-  folder = ANY - ( head, union, import, component );
-
   repeat ( ATTR ref = TEXT; minOccurs = TEXT; maxOccurs = TEXT; currentOccurs = TEXT ) =
   	LIST OF ( Repetition =
 		  CASE OF
@@ -48,7 +46,6 @@ STRUCT
 	    	option;
 		    repeat;
 		    bag;
-		    folder;
 		    END);
 
 
@@ -84,8 +81,8 @@ EXCEPT
 	Language:           Invisible;
   types :             DuplicateAttr;
   currentType:        Invisible;
-  ref:                Invisible, GiveName;
-  ref_name:		  GiveName;
-  name:			  GiveName;
+  ref:                GiveName;
+  ref_name:		        GiveName;
+  name:			          GiveName;
 	
 END

@@ -222,7 +222,6 @@ RULES
   head:
     BEGIN
     Visibility: 0;
-    CreateBefore(ElementName);
   	CreateWith(VerticalLine);
   	IN Structure_view BEGIN
       Visibility: Enclosing =;
@@ -234,7 +233,6 @@ RULES
     
   component:
 		BEGIN
-		Visibility: 0;
 	  CreateBefore(ElementName);
 	  CreateWith(VerticalLine);
   	IN Structure_view BEGIN
@@ -270,46 +268,6 @@ RULES
 		  VertPos: Top = Previous . Bottom;
 		  END;
 	 END;
-
-  folder: 
-	BEGIN
-		Width: auto{Enclosing . Width};
-		Height: auto{Enclosing . Height};
-		MarginTop: 3 px;
-		VertPos: Top 			= 		Previous AnyElem . Bottom;
-		HorizPos: Left 			=		Enclosing . Left;
-{		BorderTopWidth: 	 	1 px;
-		BorderLeftWidth: 		1 px;
-		BorderBottomWidth		: 		1 px;
-		BorderRightWidth		: 		1 px;
-		BorderTopStyle: 		Dotted;
-		BorderLeftStyle: 		Dotted;
-		BorderBottomStyle		:	 	Dotted;
-		BorderRightStyle		:	 	Dotted;
-		BorderTopColor:		Violet;
-		BorderLeftColor: 		Violet;
-		BorderBottomColor		:	 	Violet;
-		BorderRightColor		:	 	Violet;
-		PaddingRight:		2 px;
-		PaddingLeft	:		2 px;
-		PaddingTop	:		2 px;
-		PaddingBottom:		2 px;}
-		IN Structure_view
-		BEGIN
-			BorderTopStyle		: 		None;
-			BorderLeftStyle		: 		None;
-			BorderBottomStyle	:	 	None;
-			BorderRightStyle	:	 	None;
-			PaddingRight		:		0 px;
-			PaddingLeft:		0 px;
-			PaddingTop:		0 px;
-			PaddingBottom		:		0 px;
-			BorderTopWidth		:	 	0 px;
-			BorderLeftWidth		:		0 px;
-			BorderBottomWidth	:	 	0 px;
-			BorderRightWidth	:	 	0 px;					
-		END;
-	END;
 
   bag:
 		BEGIN
@@ -545,6 +503,18 @@ ATTRIBUTES
 	CreateBefore(AttrValue);
 	END;    
 
+  ref:
+  BEGIN
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
+	END;    
+
+  ref_name:
+  BEGIN
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
+	END;    
+
   includeAt:
   BEGIN
 	CreateBefore(AttrName);
@@ -617,6 +587,18 @@ ATTRIBUTES
 	END;    
 
   values:
+  BEGIN
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
+	END;    
+
+  version:
+  BEGIN
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
+	END;    
+
+  templateVersion:
   BEGIN
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
