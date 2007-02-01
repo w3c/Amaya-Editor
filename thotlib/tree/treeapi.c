@@ -194,7 +194,7 @@ Element TtaNewTree (Document document, ElementType elementType, char* label)
     {
       element = NewSubtree (elementType.ElTypeNum, (PtrSSchema) (elementType.ElSSchema),
                             LoadedDocument[document - 1], TRUE, TRUE, TRUE,
-                            (ThotBool)(*label == EOS));
+                            (ThotBool)(label == NULL || *label == EOS));
       if (element->ElStructSchema->SsRule->SrElem[element->ElTypeNumber - 1]->SrConstruct == CsPairedElement)
         if (!element->ElStructSchema->SsRule->SrElem[element->ElTypeNumber - 1]->SrFirstOfPair)
           element->ElPairIdent = 0;
