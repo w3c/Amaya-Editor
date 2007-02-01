@@ -200,15 +200,15 @@ void TemplateElementComplete (ParserData *context, Element el, int *error)
           if (!NeedAMenu (el, doc))
             TtaChangeTypeOfElement (el, doc, Template_EL_useSimple);
         }
-      //CheckMandatoryAttribute (el, doc, Template_ATTR_ref);
       CheckMandatoryAttribute (el, doc, Template_ATTR_types);
+      CheckMandatoryAttribute (el, doc, Template_ATTR_ref);
       // unlock children
       TtaSetAccessRight (el, ReadWrite, doc);
       break;
 
     case Template_EL_bag:
-      //CheckMandatoryAttribute (el, doc, Template_ATTR_ref);
       CheckMandatoryAttribute (el, doc, Template_ATTR_types);
+      CheckMandatoryAttribute (el, doc, Template_ATTR_ref);
       // unlock children
       TtaSetAccessRight (el, ReadWrite, doc);
       break;
@@ -279,6 +279,9 @@ void TemplateAttributeComplete (Attribute attr, Element el, Document doc)
   TtaGiveAttributeType  (attr, &attrType, &attrKind);
   switch (attrType.AttrTypeNum)
     {
+    case Template_ATTR_name:
+      CheckUniqueName (el, doc, attr, attrType);
+      break;
     case Template_ATTR_ref:
       break;
     case Template_ATTR_ref_name:

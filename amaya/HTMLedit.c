@@ -2288,6 +2288,19 @@ ThotBool MakeUniqueName (Element el, Document doc, ThotBool doIt,
       attrType.AttrTypeNum = SVG_ATTR_id;
     }
 #endif /* _SVG */
+#ifdef TEMPLATES
+  else if (!strcmp(name, "Template"))
+    {
+      /* it's an element from the SVG namespace, look for the
+         id attribute from the same namespace */
+      attrIDType.AttrTypeNum = Template_ATTR_name;
+      attrID = TtaGetAttribute (el, attrIDType);
+      if (attrID)
+        /* the element has a name attribute. Check it too */
+        checkXMLID = TRUE;
+      attrType.AttrTypeNum = Template_ATTR_name;
+    }
+#endif /* TEMPLATES */
   else
 #ifdef XML_GENERIC
     attrType.AttrTypeNum = XML_ATTR_xmlid;

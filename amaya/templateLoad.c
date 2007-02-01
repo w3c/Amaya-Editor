@@ -222,53 +222,6 @@ void LoadTemplate_callback (int newdoc, int status,  char *urlName,
 #endif /* TEMPLATES */
 }
 
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-void LoadTemplate (Document doc, char* templatename, char *docname)
-{
-#ifdef TEMPLATES
-  Document      newdoc = 0;
-	char			   *s, *directory, *document;
-	unsigned int	size = strlen (templatename) + 1;
-
-  if (!IsW3Path (docname) && TtaFileExist (docname))
-    {
-      s = (char *)TtaGetMemory (strlen (docname) +
-                                strlen (TtaGetMessage (AMAYA, AM_OVERWRITE_CHECK)) + 2);
-      sprintf (s, TtaGetMessage (AMAYA, AM_OVERWRITE_CHECK), docname);
-      InitConfirm (0, 0, s);
-      TtaFreeMemory (s);      
-      if (!UserAnswer)
-        return;
-    }    
-
-  if (!IsW3Path (templatename))
-    {
-      //Stores the template path for show it in next instanciation forms
-      directory	= (char*) TtaGetMemory (size);
-      s	= (char*) TtaGetMemory (size);
-      TtaExtractName (templatename, directory, s);	
-      TtaSetEnvString ("TEMPLATES_DIRECTORY", directory, TRUE);
-      TtaFreeMemory (directory);
-      TtaFreeMemory (s);
-    }
-
-	//If types are not loaded we load the template and we parse it
-	if (!Dictionary_Get (Templates_Dic, templatename))
-    {	
-      //Creation of the callback context
-      TemplateCtxt *ctx	= (TemplateCtxt *)TtaGetMemory (sizeof (TemplateCtxt));
-      ctx->templatePath	= TtaStrdup (templatename);
-      DontReplaceOldDoc = TRUE;
-      Waiting_template = TRUE;
-      newdoc = GetAmayaDoc (templatename, NULL, 0, 0, CE_TEMPLATE, FALSE, 
-                            (void (*)(int, int, char*, char*, char*, const AHTHeaders*, void*)) LoadTemplate_callback,
-                            (void *) ctx);
-      while (Waiting_template)
-        TtaHandlePendingEvents ();
-    }
-#endif /* TEMPLATES */
-}
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
