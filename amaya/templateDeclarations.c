@@ -178,8 +178,10 @@ void FreeTemplateEnvironment ()
 void AddDeclaration (XTigerTemplate t, Declaration dec)
 {
 #ifdef TEMPLATES
+  if(!t)
+    return;
+
 	Declaration old = Template_GetDeclaration (t, dec->name);
-	
 	if (old==NULL) //New type, not a redefinition
     {
       switch (dec->nature)
@@ -214,6 +216,9 @@ void AddDeclaration (XTigerTemplate t, Declaration dec)
 void NewComponent (XTigerTemplate t, const char *name, const Element el)
 {
 #ifdef TEMPLATES
+  if(!t)
+    return;
+
 	Declaration dec = NewDeclaration (t, name, ComponentNat);
   dec->componentType.content = TtaCopyTree (el, TtaGetDocument (el),
                                             TtaGetDocument (el), el);
@@ -227,6 +232,9 @@ void NewUnion (const XTigerTemplate t, const char *name,
                DicDictionary include, DicDictionary exclude)
 {
 #ifdef TEMPLATES
+  if(!t)
+    return;
+
 	Declaration dec = NewDeclaration (t, name, UnionNat);
 	Declaration aux;
 	
@@ -271,6 +279,9 @@ void NewUnion (const XTigerTemplate t, const char *name,
 void NewElement (const XTigerTemplate t, const char *name)
 {
 #ifdef TEMPLATES
+  if(!t)
+    return;
+
 	Declaration dec = NewDeclaration (t, name, XmlElementNat);
   dec->elementType.name = TtaStrdup(name);
 	AddDeclaration (t, dec);
@@ -306,7 +317,6 @@ void FreeDeclaration (Declaration dec)
     dec->unionType.expanded = NULL;
     
   }
-
   
 	TtaFreeMemory (dec->name);
   dec->name = NULL;
@@ -323,6 +333,9 @@ void FreeDeclaration (Declaration dec)
 Declaration Template_GetDeclaration (const XTigerTemplate t, const char *name)
 {
 #ifdef TEMPLATES
+  if(!t)
+    return NULL;
+
 	Declaration dec = (Declaration)Dictionary_Get (t->simpleTypes, name);	
 	if (dec) return dec;
 	dec = (Declaration)Dictionary_Get (t->components, name);
@@ -345,6 +358,9 @@ void FreeXTigerTemplate (XTigerTemplate t)
 #ifdef TEMPLATES
 	DicDictionary  dic;
 	Declaration    dec;
+
+  if(!t)
+    return;
 
   //Cleaning the unions
   dic = t->unions;
@@ -416,6 +432,9 @@ void FreeXTigerTemplate (XTigerTemplate t)
 void AddLibraryDeclarations (XTigerTemplate t, XTigerTemplate lib)
 {	
 #ifdef TEMPLATES
+  if(!t)
+    return;
+
 	DicDictionary from = lib->elements;	
 	DicDictionary to = t->elements;
 	
@@ -451,6 +470,9 @@ void PrintUnion (Declaration dec, int indent, XTigerTemplate t, FILE *file)
 	Declaration    aux;
 	char*		   indentation;
 	int 		   i=0;
+  
+  if(!t)
+    return;
 	
 	indentation = (char*) TtaGetMemory (indent*sizeof (char)+1);
 	for (i = 0; i < indent; i++)
@@ -528,6 +550,9 @@ void PrintDeclarations (XTigerTemplate t, FILE *file)
 	DicDictionary  aux;
 	Declaration    dec;
 	
+  if(!t)
+    return;
+  
 	fprintf (file, "SIMPLE TYPES\n");
 	fprintf (file, "------------");
 	aux = t->simpleTypes;
@@ -595,6 +620,9 @@ void DumpDeclarations (XTigerTemplate t)
 	char localname[MAX_LENGTH];
 	FILE *file;
 
+  if(!t)
+    return;
+
   strcpy (localname, TempFileDirectory);
   strcat (localname, DIR_STR);
   strcat (localname, "templateDecl.debug");
@@ -614,6 +642,9 @@ void RedefineSpecialUnions (XTigerTemplate t)
 #ifdef TEMPLATES
   Declaration un;
   DicDictionary dic;
+
+  if(!t)
+    return;
 
   //We get the old definition to modify it 
   un = Template_GetDeclaration (t,UNION_ANYSIMPLE);
@@ -651,10 +682,11 @@ void RedefineSpecialUnions (XTigerTemplate t)
 DicDictionary GetComponents (XTigerTemplate t)
 {
 #ifdef TEMPLATES
-  return t->components;
-#else
-  return NULL;
+  if(t)
+    return t->components;
+  else
 #endif /* TEMPLATES */
+    return NULL;
 }
 
 /*----------------------------------------------------------------------
@@ -675,10 +707,11 @@ Element GetComponentContent (Declaration d)
 Document GetTemplateDocument (XTigerTemplate t)
 {
 #ifdef TEMPLATES
-  return t->doc;
-#else
-  return NULL;
+  if(t)
+    return t->doc;
+  else
 #endif /* TEMPLATES */
+    return NULL;
 }
 
 /*----------------------------------------------------------------------
@@ -686,7 +719,8 @@ Document GetTemplateDocument (XTigerTemplate t)
 void SetTemplateDocument (XTigerTemplate t, Document doc)
 {
 #ifdef TEMPLATES
-  t->doc = doc;
+  if(t)
+    t->doc = doc;
 #endif /* TEMPLATES */
 }
 
@@ -705,9 +739,12 @@ void AddUser (XTigerTemplate t)
 void RemoveUser (XTigerTemplate t)
 {
 #ifdef TEMPLATES
-  t->users--;
-  if (t->users == 0 && !t->isPredefined)
-    FreeXTigerTemplate (t);  
+  if(t)
+  {
+    t->users--;
+    if (t->users == 0 && !t->isPredefined)
+      FreeXTigerTemplate (t);
+  }  
 #endif /* TEMPLATES */
 }
 
@@ -722,56 +759,59 @@ void RemoveUser (XTigerTemplate t)
 DicDictionary Template_ExpandUnion(XTigerTemplate t, Declaration decl)
 {
 #ifdef TEMPLATES
-  if(decl->unionType.expanded==NULL)
+  if(t)
   {
-    DicDictionary  expanded = Dictionary_Create();
-    Record rec;
-    
-    /* Insert all included descendants.*/
-    rec = decl->unionType.include->first;
-    while(rec)
+    if(decl->unionType.expanded==NULL)
     {
-      Declaration child = (Declaration) rec->element;
-      if(child->nature==UnionNat)
+      DicDictionary  expanded = Dictionary_Create();
+      Record rec;
+      
+      /* Insert all included descendants.*/
+      rec = decl->unionType.include->first;
+      while(rec)
       {
-        DicDictionary children = Template_ExpandUnion(t, child);
-        Record recChildren = children->first;
-        while(recChildren)
+        Declaration child = (Declaration) rec->element;
+        if(child->nature==UnionNat)
         {
-          Declaration granchild = (Declaration) recChildren->element;
-          if(!Dictionary_Get(expanded, granchild->name))
+          DicDictionary children = Template_ExpandUnion(t, child);
+          Record recChildren = children->first;
+          while(recChildren)
           {
-            Dictionary_Add(expanded, granchild->name, (DicElement)granchild);
-          }          
-          recChildren = recChildren->next;
+            Declaration granchild = (Declaration) recChildren->element;
+            if(!Dictionary_Get(expanded, granchild->name))
+            {
+              Dictionary_Add(expanded, granchild->name, (DicElement)granchild);
+            }          
+            recChildren = recChildren->next;
+          }
+          
         }
-        
-      }
-      else
-      {
-        if(!Dictionary_Get(expanded, child->name))
+        else
         {
-          Dictionary_Add(expanded, child->name, (DicElement)child);
+          if(!Dictionary_Get(expanded, child->name))
+          {
+            Dictionary_Add(expanded, child->name, (DicElement)child);
+          }
         }
+        rec = rec->next;
       }
-      rec = rec->next;
+      
+      /* Remove all excluded descendants. */
+      rec = decl->unionType.exclude->first;
+      while(rec)
+      {
+        Declaration child = (Declaration) rec->element;
+        if(child)
+          Dictionary_Remove(expanded, child->name);
+        rec = rec->next;
+      }
+      decl->unionType.expanded = expanded;
     }
-    
-    /* Remove all excluded descendants. */
-    rec = decl->unionType.exclude->first;
-    while(rec)
-    {
-      Declaration child = (Declaration) rec->element;
-      if(child)
-        Dictionary_Remove(expanded, child->name);
-      rec = rec->next;
-    }
-    decl->unionType.expanded = expanded;
+    return decl->unionType.expanded;
   }
-  return decl->unionType.expanded;
-#else /* TEMPLATES */
-  return NULL;
+  else
 #endif /* TEMPLATES */
+    return NULL;
 }
 
 /*----------------------------------------------------------------------
@@ -784,84 +824,87 @@ DicDictionary Template_ExpandUnion(XTigerTemplate t, Declaration decl)
 char* Template_ExpandTypes(XTigerTemplate t, char* types)
 {
 #ifdef TEMPLATES
-  DicDictionary dico = Dictionary_Create();
-  Record rec;
-  Declaration   decl;
-  int   len  = strlen(types);
-  char* type = (char*)TtaGetMemory(len+1);
-  int   pos = 0,
-        cur = 0;
-  char* result;
-  int   resLen;
-
-  /* Fill a dict with all finded declarations */
-  while(pos<=len)
+  if(t)
   {
-    if(types[pos]==' ' || pos==len)
+    DicDictionary dico = Dictionary_Create();
+    Record rec;
+    Declaration   decl;
+    int   len  = strlen(types);
+    char* type = (char*)TtaGetMemory(len+1);
+    int   pos = 0,
+          cur = 0;
+    char* result;
+    int   resLen;
+  
+    /* Fill a dict with all finded declarations */
+    while(pos<=len)
     {
-      if(cur>0)
+      if(types[pos]==' ' || pos==len)
       {
-        type[cur] = 0;
-        decl = Template_GetDeclaration(t, type);
-        if(decl)
+        if(cur>0)
         {
-          if(decl->nature==UnionNat)
+          type[cur] = 0;
+          decl = Template_GetDeclaration(t, type);
+          if(decl)
           {
-            DicDictionary unionDecl = Template_ExpandUnion(t, decl);
-            Record recChildren = unionDecl->first;
-            while(recChildren)
+            if(decl->nature==UnionNat)
             {
-              if(!Dictionary_Get(dico, recChildren->key))
+              DicDictionary unionDecl = Template_ExpandUnion(t, decl);
+              Record recChildren = unionDecl->first;
+              while(recChildren)
               {
-                Dictionary_Add(dico, recChildren->key, (DicElement) recChildren->element);
+                if(!Dictionary_Get(dico, recChildren->key))
+                {
+                  Dictionary_Add(dico, recChildren->key, (DicElement) recChildren->element);
+                }
+                recChildren = recChildren->next;
               }
-              recChildren = recChildren->next;
             }
-          }
-          else
-          {
-            if(!Dictionary_Get(dico, type))
+            else
             {
-              Dictionary_Add(dico, type, (DicElement) decl);
+              if(!Dictionary_Get(dico, type))
+              {
+                Dictionary_Add(dico, type, (DicElement) decl);
+              }
             }
           }
         }
+        cur = 0;
       }
-      cur = 0;
+      else
+      {
+        type[cur++] = types[pos];
+      }
+      pos++;
     }
-    else
+    
+    /* Fill a string with results.*/
+    resLen = 0;
+    rec = dico->first;
+    while(rec)
     {
-      type[cur++] = types[pos];
+      resLen += strlen(((Declaration)rec->element)->name) + 1;
+      rec = rec-> next;
     }
-    pos++;
+    result = (char*) TtaGetMemory(resLen+1);
+    pos = 0;
+    rec = dico->first;
+    while(rec)
+    {
+      strcpy(result+pos, ((Declaration)rec->element)->name);
+      pos += strlen(((Declaration)rec->element)->name);
+      result[pos] = ' ';
+      pos++;
+      rec = rec-> next;
+    }
+    result[pos] = 0;
+    
+    Dictionary_Clean(dico);
+    return result;
   }
-  
-  /* Fill a string with results.*/
-  resLen = 0;
-  rec = dico->first;
-  while(rec)
-  {
-    resLen += strlen(((Declaration)rec->element)->name) + 1;
-    rec = rec-> next;
-  }
-  result = (char*) TtaGetMemory(resLen+1);
-  pos = 0;
-  rec = dico->first;
-  while(rec)
-  {
-    strcpy(result+pos, ((Declaration)rec->element)->name);
-    pos += strlen(((Declaration)rec->element)->name);
-    result[pos] = ' ';
-    pos++;
-    rec = rec-> next;
-  }
-  result[pos] = 0;
-  
-  Dictionary_Clean(dico);
-  return result;
-#else /* TEMPLATES */
-  return NULL;
+  else
 #endif /* TEMPLATES */
+    return NULL;
 }
 
 

@@ -114,6 +114,9 @@ ThotBool NeedAMenu (Element el, Document doc)
   char            *types, *ptr;
   ThotBool         res = FALSE;
 
+  if(!TtaGetDocumentAccessMode(doc))
+    return FALSE;
+
   // look for the list of types
   elType = TtaGetElementType (el);
   attributeType.AttrSSchema = elType.ElSSchema;

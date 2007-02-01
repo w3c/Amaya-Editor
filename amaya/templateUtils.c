@@ -43,7 +43,7 @@ void SetAttributeStringValue (Element el, int att, char* value)
   AttributeType attType;
   Attribute     attribute;
 
-  if (doc == 0)
+  if (doc == 0 || !TtaGetDocumentAccessMode(doc))
     return;
   attType.AttrSSchema = TtaGetElementType(el).ElSSchema;
   attType.AttrTypeNum = att;

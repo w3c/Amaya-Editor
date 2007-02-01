@@ -332,7 +332,7 @@ Element Template_GetNewXmlElementInstance(Document doc, Element parent, Declarat
   GIType(decl->name, &elType, doc);
   if(elType.ElTypeNum!=0)
   {
-    newEl = TtaNewTree (doc, elType, NULL);
+    newEl = TtaNewTree (doc, elType, "");
   }
 #endif /* TEMPLATES */
   return newEl;
@@ -356,58 +356,60 @@ Element Template_InsertUseChildren(Document doc, Element el, Declaration dec)
   //char       *attrCurrentTypeValue;
   //ElementType elType;
   
-  switch (dec->nature)
+  if(TtaGetDocumentAccessMode(doc))
   {
-    case SimpleTypeNat:
-      newEl = Template_GetNewSimpleTypeInstance(doc, el, dec);
-      TtaInsertFirstChild (&newEl, el, doc);
-      break;
-    case XmlElementNat:
-      newEl = Template_GetNewXmlElementInstance(doc, el, dec);
-      TtaInsertFirstChild (&newEl, el, doc);
-      break;
-    case ComponentNat:
-      newEl = TtaCopyTree(dec->componentType.content, doc, doc, el);
-      ProcessAttr (dec->declaredIn, newEl, doc);
-      
-      /* Copy elements from new use to existing use. */
-      while((child = TtaGetFirstChild(newEl)))
-      {
-        TtaRemoveTree (child, doc);
-        if(current)
-          TtaInsertSibling (child, current, FALSE, doc);
-        else
-          TtaInsertFirstChild (&child, el, doc);      
-        current = child; 
-      }
-      
-      /* Copy currentType attribute. */
-      //attrCurrentTypeValue = GetAttributeStringValue (el, Template_ATTR_currentType, NULL);
-      //SetAttributeStringValue (el, Template_ATTR_currentType, attrCurrentTypeValue);
-      TtaDeleteTree(newEl, doc);
-      newEl = el;
-      break;
-    case UnionNat :
-      /* Nothing to do.*/
-//                elType.ElTypeNum = Template_EL_useEl;
-//                cont = TtaNewElement (doc, elType);
-//                if (cont)
-//                  {
-//                    TtaSetAccessRight (cont, ReadWrite, doc);
-//                    at = TtaNewAttribute (att);
-//                    if (at)
-//                      {
-//                        TtaAttachAttribute (cont, at, doc);
-//                        TtaSetAttributeText(at, types, cont, doc);
-//                      }
-//                  }
-      /* @@@@@ */
-      break;
-    default :
-      //Impossible
-      break;   
-  }
-  
+    switch (dec->nature)
+    {
+      case SimpleTypeNat:
+        newEl = Template_GetNewSimpleTypeInstance(doc, el, dec);
+        TtaInsertFirstChild (&newEl, el, doc);
+        break;
+      case XmlElementNat:
+        newEl = Template_GetNewXmlElementInstance(doc, el, dec);
+        TtaInsertFirstChild (&newEl, el, doc);
+        break;
+      case ComponentNat:
+        newEl = TtaCopyTree(dec->componentType.content, doc, doc, el);
+        ProcessAttr (dec->declaredIn, newEl, doc);
+        
+        /* Copy elements from new use to existing use. */
+        while((child = TtaGetFirstChild(newEl)))
+        {
+          TtaRemoveTree (child, doc);
+          if(current)
+            TtaInsertSibling (child, current, FALSE, doc);
+          else
+            TtaInsertFirstChild (&child, el, doc);      
+          current = child; 
+        }
+        
+        /* Copy currentType attribute. */
+        //attrCurrentTypeValue = GetAttributeStringValue (el, Template_ATTR_currentType, NULL);
+        //SetAttributeStringValue (el, Template_ATTR_currentType, attrCurrentTypeValue);
+        TtaDeleteTree(newEl, doc);
+        newEl = el;
+        break;
+      case UnionNat :
+        /* Nothing to do.*/
+  //                elType.ElTypeNum = Template_EL_useEl;
+  //                cont = TtaNewElement (doc, elType);
+  //                if (cont)
+  //                  {
+  //                    TtaSetAccessRight (cont, ReadWrite, doc);
+  //                    at = TtaNewAttribute (att);
+  //                    if (at)
+  //                      {
+  //                        TtaAttachAttribute (cont, at, doc);
+  //                        TtaSetAttributeText(at, types, cont, doc);
+  //                      }
+  //                  }
+        /* @@@@@ */
+        break;
+      default :
+        //Impossible
+        break;   
+    }
+  }  
 #endif /* TEMPLATES */
   return newEl;
 }
@@ -419,13 +421,16 @@ Element InstantiateUse (XTigerTemplate t, Element el, Document doc,
                         ThotBool insert)
 {
 #ifdef TEMPLATES
-	Element          cont;
+	Element          cont = NULL;
   ElementType      elType;
   Declaration      dec;
   int              size, nbitems;
   struct menuType  *items;
   char             *types;
   ThotBool          oldStructureChecking;
+
+  if(!t)
+    return NULL;
 
   /* get the value of the "types" attribute */
   cont = NULL;
@@ -449,6 +454,8 @@ Element InstantiateUse (XTigerTemplate t, Element el, Document doc,
   TtaFreeMemory(items);
   TtaSetStructureChecking (oldStructureChecking, doc);
   return cont;
+#else /* TEMPLATES */
+  return NULL;
 #endif /* TEMPLATES */
 }
 
@@ -464,6 +471,9 @@ void InstantiateRepeat (XTigerTemplate t, Element el, Document doc, ThotBool reg
   Attribute      curAtt,  minAtt,  maxAtt;
   AttributeType  curType, minType, maxType;
   char           *text;
+
+  if(!t)
+    return;
 
   //Preparing types
   curType.AttrSSchema = TtaGetSSchema (TEMPLATE_SCHEMA_NAME, doc);
@@ -612,6 +622,9 @@ static void ParseTemplate (XTigerTemplate t, Element el, Document doc,
 	char         *name;
 	ElementType   elType = TtaGetElementType (el);
 	
+  if(!t)
+    return;
+  
   name = TtaGetSSchemaName (elType.ElSSchema);
 	if (!strcmp (name, "Template"))
     {
@@ -700,6 +713,9 @@ void DoInstanceTemplate (char *templatename)
 
 	//Instantiate all elements
 	t = (XTigerTemplate) Dictionary_Get (Templates_Dic, templatename);
+  if(!t)
+    return;
+  
   doc = GetTemplateDocument (t);
 	root =	TtaGetMainRoot (doc);
 	ParseTemplate (t, root, doc, FALSE);
@@ -801,6 +817,9 @@ void DoInstanceTemplate (char *templatename)
 void PreInstantiateComponents(XTigerTemplate t)
 {
 #ifdef TEMPLATES 
+  if(!t)
+    return;
+
   DicDictionary components = GetComponents(t);
   Declaration comp;
 

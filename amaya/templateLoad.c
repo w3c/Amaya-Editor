@@ -36,6 +36,9 @@ void AddElementDeclaration (XTigerTemplate t, Element el)
 #ifdef TEMPLATES
 	char *name;
 
+  if(!t)
+    return;
+
 	name = GetAttributeStringValueFromNum (el, Template_ATTR_name, NULL);
   if(name)
   {
@@ -52,6 +55,9 @@ void AddUnionDeclaration (XTigerTemplate t, Element el)
 {
 #ifdef TEMPLATES
 	char *name, *include, *exclude;
+  
+  if(!t)
+    return;
 	
 	name	  = GetAttributeStringValueFromNum (el, Template_ATTR_name, NULL);
 	include   = GetAttributeStringValueFromNum (el, Template_ATTR_includeAt, NULL);
@@ -75,6 +81,9 @@ void AddComponentDeclaration (XTigerTemplate t, Element el)
 {
 #ifdef TEMPLATES
 	char *name;
+  
+  if(!t)
+    return;
 	
 	name = GetAttributeStringValueFromNum (el, Template_ATTR_name, NULL);
   if(name)
@@ -90,9 +99,12 @@ void AddImportedLibrary (XTigerTemplate t, Element el)
 {
 #ifdef TEMPLATES
 #ifdef TODO_XTIGER
-	XTigerTemplate lib = NULL;
-	//Load the library
-	AddLibraryDeclarations (t,lib);
+  if(t)
+  {
+  	XTigerTemplate lib = NULL;
+  	//Load the library
+  	AddLibraryDeclarations (t,lib);
+  }
 #endif
 #endif /* TEMPLATES */
 }
@@ -104,6 +116,9 @@ void CheckTypesAttribute (XTigerTemplate t, Element el)
 #ifdef TEMPLATES
 	char *types;
 	DicDictionary dic;
+  
+  if(!t)
+    return;
 
 	types = GetAttributeStringValueFromNum (el, Template_ATTR_types, NULL);
   if(types)
@@ -128,6 +143,9 @@ void CheckTypesAttribute (XTigerTemplate t, Element el)
 void AddHeadParameters(XTigerTemplate t, Element el)
 {
 #ifdef TEMPLATES
+  if(!t)
+    return;
+
   t->version = GetAttributeStringValueFromNum(el, Template_ATTR_version, NULL);
   t->templateVersion = GetAttributeStringValueFromNum(el, Template_ATTR_templateVersion, NULL);
 #endif /* TEMPLATES */
@@ -137,8 +155,11 @@ void AddHeadParameters(XTigerTemplate t, Element el)
   ----------------------------------------------------------------------*/
 void ParseDeclarations (XTigerTemplate t, Element el)
 {
-#ifdef TEMPLATES	
+#ifdef TEMPLATES
 	ElementType type = TtaGetElementType (el);
+  
+  if(!t)
+    return;
 	
 	if (!strcmp (TtaGetSSchemaName (type.ElSSchema),"Template"))
     {

@@ -479,12 +479,13 @@ ThotBool UseToBeCreated (NotifyElement *event)
 void UseCreated (NotifyElement *event)
 {
 #ifdef TEMPLATES
-	Document         doc;
-	Element          el;
+	Document         doc = event->document;
+	Element          el = event->element;
   XTigerTemplate   t;
 
-	doc = event->document;
-  el = event->element;
+  if(!TtaGetDocumentAccessMode(doc))
+    return;
+
   if (TtaGetFirstChild (el))
     /* this Use element has already some content. It has already been
        instanciated */
@@ -612,6 +613,9 @@ Element Template_InsertRepeatChildAfter(Document doc, Element el, Declaration de
   Element use;      /* xt:use to insert.*/
   ElementType useType;  /* type of xt:use.*/
   
+  if(!TtaGetDocumentAccessMode(doc))
+    return NULL;
+
   /* Copy xt:use with xt:types param */
   useFirst = TtaGetFirstChild(el);
   useType = TtaGetElementType(useFirst);
@@ -652,6 +656,9 @@ Element Template_InsertRepeatChildAfter(Document doc, Element el, Declaration de
   ----------------------------------------------------------------------*/
 Element Template_InsertRepeatChild(Document doc, Element el, Declaration decl, int pos)
 {
+  if(!TtaGetDocumentAccessMode(doc))
+    return NULL;
+  
   if(pos==0)
   {
     return Template_InsertRepeatChildAfter(doc, el, decl, NULL);
@@ -686,6 +693,9 @@ static int QueryMenu(Document doc, char* items)
   struct menuType *itemlist;
   char *menuString;
   
+  if(!TtaGetDocumentAccessMode(doc))
+    return -1;
+  
   size = strlen(items);
   giveItems (items, size, &itemlist, &nbitems);
   menuString = createMenuString (itemlist, nbitems);
@@ -712,6 +722,9 @@ static char* QueryStringFromMenu(Document doc, char* items)
   struct menuType *itemlist;
   char *menuString;
   char *result = NULL;
+  
+  if(!TtaGetDocumentAccessMode(doc))
+    return NULL;
   
   size = strlen(items);
   giveItems (items, size, &itemlist, &nbitems);
@@ -760,6 +773,8 @@ ThotBool RepeatButtonClicked (NotifyElement *event)
   char*           listtypes;
   char*           result;
 
+  if(!TtaGetDocumentAccessMode(doc))
+    return TRUE;
   
   TtaGetActiveView (&doc, &view);
   if (view != 1)
@@ -859,6 +874,9 @@ ThotBool UseButtonClicked (NotifyElement *event)
   char*           listtypes;
   char*           result;
 
+  if(!TtaGetDocumentAccessMode(doc))
+    return TRUE;
+    
   TtaGetActiveView (&doc, &view);
   if (view != 1)
     return FALSE; /* let Thot perform normal operation */
@@ -938,6 +956,9 @@ ThotBool UseButtonClicked (NotifyElement *event)
 ThotBool UseSimpleButtonClicked (NotifyElement *event)
 {
 #ifdef TEMPLATES
+  if(!TtaGetDocumentAccessMode(event->document))
+    return TRUE;
+
   ElementType parentType = TtaGetElementType(TtaGetParent(event->element));
   if(parentType.ElTypeNum == Template_EL_repeat)
     return RepeatButtonClicked(event);
@@ -957,9 +978,13 @@ ThotBool OptionButtonClicked (NotifyElement *event)
   XTigerTemplate  t;
   View            view;
 
+  if(!TtaGetDocumentAccessMode(event->document))
+    return TRUE;
+
   TtaGetActiveView (&doc, &view);
   if (view != 1)
     return FALSE; /* let Thot perform normal operation */
+
   doc = event->document;
   child = TtaGetFirstChild (event->element);
   if (!child)
@@ -1162,6 +1187,9 @@ ThotBool TemplateElementWillBeCreated (NotifyElement *event)
 
   SSchema     templateSSchema = TtaGetSSchema ("Template", event->document);
 
+  if(!TtaGetDocumentAccessMode(event->document))
+    return TRUE;
+
   if (templateSSchema == NULL)
     return FALSE; // let Thot do the job
   
@@ -1218,6 +1246,9 @@ ThotBool TemplateElementWillBeDeleted (NotifyElement *event)
   SSchema        templateSSchema = TtaGetSSchema ("Template", event->document);
   XTigerTemplate t;
 
+  if(!TtaGetDocumentAccessMode(event->document))
+    return TRUE;
+
   printf("TemplateElementWillBeDeleted : %s\n", TtaGetElementTypeName(TtaGetElementType(elem)));
   
   if (templateSSchema == NULL)
@@ -1273,6 +1304,10 @@ ThotBool TemplateElementWillBeDeleted (NotifyElement *event)
 ThotBool CurrentTypeWillBeExported (NotifyAttribute *event)
 {
 #ifdef TEMPLATES
+
+  if(!TtaGetDocumentAccessMode(event->document))
+    return TRUE;
+
   if(IsTemplateDocument(event->document))
     return TRUE;
 #endif /* TEMPLATES */
