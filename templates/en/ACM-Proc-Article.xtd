@@ -15,7 +15,7 @@
   <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
   <link rel="stylesheet" type="text/css" href="ACM-Proc-Article.css" />
 
-  <xt:head version="0.8" templateVersion="0.9">
+  <xt:head version="0.8" templateVersion="1.0">
     <xt:component name="figure">
       <div class="topfigure">
         <xt:attribute name="id" use="optional"/>
@@ -35,12 +35,12 @@
     </xt:component>
 
     <xt:component name="bibauthor">
-      <span class="bibauthor"><xt:use types="string" name="author">Author</xt:use></span>,
+      <span class="bibauthor"><xt:use types="string" name="name">Author</xt:use></span>,
     </xt:component>
 
     <xt:component name="refbook">
       <p class="refbook">
-        <xt:repeat minOccurs="1">
+        <xt:repeat minOccurs="1" name="authors">
           <xt:use types="bibauthor" name="author" />
         </xt:repeat>
         <span class="title"><xt:use types="string" name="title">Book title</xt:use></span>,
@@ -50,7 +50,7 @@
 
     <xt:component name="refarticle">
       <p class="refarticle">
-        <xt:repeat minOccurs="1">
+        <xt:repeat minOccurs="1" name="authors">
           <xt:use types="bibauthor" name="author"/>
         </xt:repeat>
         <span class="title"><xt:use types="string" name="title">Article title</xt:use></span>,
@@ -64,12 +64,12 @@
 
     <xt:component name="refreport">
       <p class="refreport">
-        <xt:repeat minOccurs="1">
-          <xt:use types="bibauthor" name="report_author"/>
+        <xt:repeat minOccurs="1" name="authors">
+          <xt:use types="bibauthor" name="author"/>
         </xt:repeat>
-        <span class="title"><xt:use types="string" name="report_title">Report title</xt:use></span>
-        <xt:option name="optional_report_url">
-           <xt:use types="reporturl" name="report_url" />
+        <span class="title"><xt:use types="string" name="title">Report title</xt:use></span>
+        <xt:option name="report_url">
+           <xt:use types="reporturl" name="url" />
         </xt:option>
       </p>
     </xt:component>
@@ -86,33 +86,33 @@
 
     <xt:component name="author">
       <p class="vcard">
-        <xt:option name="optional_photo">
+        <xt:option name="portrait">
           <xt:use types="portrait" name="photo"/>
         </xt:option>
        <br />
         <span class="fn">
-          <xt:use types="string" name="author_name">Author name</xt:use>
+          <xt:use types="string" name="name">Author name</xt:use>
         </span>
         <br />
         <span class="addr">
-          <xt:use types="string" name="author_address">Address line 1<br />
+          <xt:use types="string" name="address">Address line 1<br />
                                    line 2...</xt:use>
         </span>
         <br/>
         <span class="email">
-          <xt:use types="string" name="author_email">email</xt:use>
+          <xt:use types="string" name="email">email</xt:use>
         </span>
       </p>
     </xt:component>
 
     <xt:component name="subsubcategory">
        &#x2014;
-       <span class="catlevel4"><xt:use types="string" name="other_names">name, name</xt:use></span>
+       <span class="catlevel4"><xt:use types="string" name="names">name, name</xt:use></span>
     </xt:component>
 
     <xt:component name="subcategory">
-      <span class="catlevel3"><xt:use types="string" name="sub_category_name">name</xt:use></span>
-      <xt:option name="optional_sub_category">
+      <span class="catlevel3"><xt:use types="string" name="name">name</xt:use></span>
+      <xt:option name="optional">
         <xt:use types="subsubcategory" name="sub_sub_category" />
       </xt:option>
     </xt:component>
@@ -120,8 +120,8 @@
     <xt:component name="category">
       <p class="category">
         <span class="catnumlevel1and2"><xt:use types="string" name="NUM">X</xt:use>.<xt:use types="string" name="num">n</xt:use></span>
-        [<span class="catnamelevel1and2"><xt:use types="string" name="category_name">Name</xt:use></span>]:
-        <xt:repeat minOccurs="1">
+        [<span class="catnamelevel1and2"><xt:use types="string" name="name">Name</xt:use></span>]:
+        <xt:repeat minOccurs="1" name="list">
           <xt:use types="subcategory" name="sub_category" />
         </xt:repeat>
       </p>
@@ -130,9 +130,9 @@
     <xt:component name="section">
       <div class="section">
         <h2>
-          <xt:use types="string" name="section_heading">SECTION HEADING</xt:use>
+          <xt:use types="string" name="heading">SECTION HEADING</xt:use>
         </h2>
-        <xt:bag types="anyElement codeExample figure" name="section_body">
+        <xt:bag types="anyElement codeExample figure" name="body">
           <p>First paragraph of section ...</p>
         </xt:bag>
       </div>
@@ -144,9 +144,9 @@
 <body>
 
 <p class="conferenceinfo">
-  <span class="conferencename"><xt:use types="string" name="conference_name">Conference
+  <span class="conferencename"><xt:use types="string" name="name">Conference
     name</xt:use>,</span>
-  <span class="conferencedateandloc"><xt:use types="string" name="conference_date">Month days, year,
+  <span class="conferencedateandloc"><xt:use types="string" name="date">Month days, year,
     city, country</xt:use>.</span>
   Copyright
   <span class="copyrightyear"><xt:use types="string" name="copyright_year">year</xt:use></span>
@@ -157,8 +157,8 @@
 <h1><xt:use types="string" name="article_title">Article Title</xt:use></h1>
 
 <div class="authors">
-  <xt:repeat minOccurs="1" name="list_of_authors">
-    <xt:use types="author" name="an_author" />
+  <xt:repeat minOccurs="1" name="authors">
+    <xt:use types="author" name="author" />
   </xt:repeat>
 </div>
 
