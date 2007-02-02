@@ -167,7 +167,7 @@ static int LoadTemplateRepositoryList (Prop_Templates_Path** list)
   {
     /* The config file dont exist, create it. */
     file = TtaWriteOpen ((char *)path);
-    fprintf (file, "%s%ctemplate.xtd\n", homePath, DIR_SEP);
+    fprintf (file, "http://wam.inrialpes.fr/software/amaya/cv.xtd\n", homePath, DIR_SEP);
     TtaWriteClose (file);
     /* Retry to open it.*/
     file = TtaReadOpen ((char *)path);
@@ -815,7 +815,6 @@ ThotBool RepeatButtonClicked (NotifyElement *event)
             oldStructureChecking = TtaGetStructureChecking (doc);
             TtaSetStructureChecking (FALSE, doc);
             TtaOpenUndoSequence(doc, NULL, NULL, 0, 0);
-            
             /* Insert. */
             if (el==repeatEl)
               newEl = Template_InsertRepeatChildAfter(doc, repeatEl, decl, NULL);
@@ -824,6 +823,7 @@ ThotBool RepeatButtonClicked (NotifyElement *event)
               
             /* Finish insertion.*/
             TtaCloseUndoSequence(doc);
+            TtaSetDocumentModified (doc);
             TtaSetStructureChecking (oldStructureChecking, doc);
             
             firstEl = GetFirstEditableElement(newEl);
@@ -924,6 +924,7 @@ ThotBool UseButtonClicked (NotifyElement *event)
           
           /* Finish insertion. */
           TtaCloseUndoSequence(doc);
+          TtaSetDocumentModified (doc);
           TtaSetStructureChecking (oldStructureChecking, doc);
           
           firstEl = GetFirstEditableElement(newEl);

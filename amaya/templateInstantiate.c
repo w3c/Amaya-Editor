@@ -212,9 +212,9 @@ static void InstantiateAttribute (XTigerTemplate t, Element el, Document doc)
     // there is a "use" attribute. Check its value
     {
       text = GetAttributeStringValue (el, useAttr, NULL);
-      if(!text)
+      if (!text)
         return;
-      if(strcmp (text, "optional") == 0)
+      if (strcmp (text, "optional") == 0)
       {
         TtaFreeMemory(text);
         return;
@@ -245,7 +245,7 @@ static void InstantiateAttribute (XTigerTemplate t, Element el, Document doc)
               if (defAttr)
                 {
                   text = GetAttributeStringValue (el, defAttr, NULL);
-                  if(text)
+                  if (text)
                     TtaSetAttributeText(attr, text, parent, doc);
                   TtaFreeMemory(text);
                   // if it's a src arttribute for an image, load the image
@@ -355,7 +355,7 @@ Element Template_InsertUseChildren(Document doc, Element el, Declaration dec)
   //char       *attrCurrentTypeValue;
   //ElementType elType;
   
-  if(TtaGetDocumentAccessMode(doc))
+  if (TtaGetDocumentAccessMode(doc))
   {
     switch (dec->nature)
     {
@@ -375,7 +375,7 @@ Element Template_InsertUseChildren(Document doc, Element el, Declaration dec)
         while((child = TtaGetFirstChild(newEl)))
         {
           TtaRemoveTree (child, doc);
-          if(current)
+          if (current)
             TtaInsertSibling (child, current, FALSE, doc);
           else
             TtaInsertFirstChild (&child, el, doc);      
@@ -428,14 +428,14 @@ Element InstantiateUse (XTigerTemplate t, Element el, Document doc,
   char             *types;
   ThotBool          oldStructureChecking;
 
-  if(!t)
+  if (!t)
     return NULL;
 
   /* get the value of the "types" attribute */
   cont = NULL;
   elType = TtaGetElementType (el);
   types = GetAttributeStringValueFromNum(el, Template_ATTR_types, &size);
-  if(!types)
+  if (!types)
     return NULL;
   giveItems (types, size, &items, &nbitems);
   // No structure checking
@@ -471,7 +471,7 @@ void InstantiateRepeat (XTigerTemplate t, Element el, Document doc, ThotBool reg
   AttributeType  curType, minType, maxType;
   char           *text;
 
-  if(!t)
+  if (!t)
     return;
 
   //Preparing types
@@ -544,7 +544,7 @@ void InstantiateRepeat (XTigerTemplate t, Element el, Document doc, ThotBool reg
       sprintf(text,"%d",minVal);
       TtaAttachAttribute(el, minAtt, doc);
       TtaSetAttributeText(minAtt, text, el, doc);
-      if(registerUndo)
+      if (registerUndo)
         TtaRegisterAttributeCreate(minAtt, el, doc);
     }
 
@@ -557,7 +557,7 @@ void InstantiateRepeat (XTigerTemplate t, Element el, Document doc, ThotBool reg
         sprintf(text,"*");
       TtaAttachAttribute(el, maxAtt, doc);      
       TtaSetAttributeText(maxAtt, text, el, doc);
-      if(registerUndo)
+      if (registerUndo)
         TtaRegisterAttributeCreate(maxAtt, el, doc);
     }
 
@@ -567,7 +567,7 @@ void InstantiateRepeat (XTigerTemplate t, Element el, Document doc, ThotBool reg
       sprintf(text,"%d",curVal);
       TtaAttachAttribute(el, curAtt, doc);
       TtaSetAttributeText(curAtt, text, el, doc);
-      if(registerUndo)
+      if (registerUndo)
         TtaRegisterAttributeCreate(curAtt, el, doc);
     }
 
@@ -600,7 +600,7 @@ void InstantiateRepeat (XTigerTemplate t, Element el, Document doc, ThotBool reg
       //Create a new child
       newChild = TtaCopyTree(child, doc, doc, el);
       TtaInsertSibling(newChild, child, FALSE, doc);
-      if(registerUndo)
+      if (registerUndo)
         TtaRegisterElementCreate(newChild, doc);
       child = newChild;
       childrenCount++;
@@ -621,7 +621,7 @@ static void ParseTemplate (XTigerTemplate t, Element el, Document doc,
 	char         *name;
 	ElementType   elType = TtaGetElementType (el);
 	
-  if(!t)
+  if (!t)
     return;
   
   name = TtaGetSSchemaName (elType.ElSSchema);
@@ -636,29 +636,34 @@ static void ParseTemplate (XTigerTemplate t, Element el, Document doc,
           return;
           break;
         case Template_EL_component :
-          //Replace by a use				
+          // remove the name attribute
           attType.AttrSSchema = elType.ElSSchema;
           attType.AttrTypeNum = Template_ATTR_name;
-          
           name = GetAttributeStringValueFromNum (el, Template_ATTR_name, NULL);		  		  
           TtaRemoveAttribute (el, TtaGetAttribute (el, attType), doc);
+          // replace the component by a use
           if (NeedAMenu (el, doc))
             TtaChangeElementType (el, Template_EL_useEl);
           else
             TtaChangeElementType (el, Template_EL_useSimple);
-          
+          // generate the types attribute
           attType.AttrTypeNum = Template_ATTR_types;
           att = TtaNewAttribute (attType);
           TtaAttachAttribute (el, att, doc);
-          if(name)
+          if (name)
             TtaSetAttributeText (att, name, el, doc);
-          
+          // generate the title attribute
+          attType.AttrTypeNum = Template_ATTR_title;
+          att = TtaNewAttribute (attType);
+          TtaAttachAttribute (el, att, doc);
+          if (name)
+            TtaSetAttributeText (att, name, el, doc);
+          // generate the currentType attribute
           attType.AttrTypeNum = Template_ATTR_currentType;
           att = TtaNewAttribute (attType);
           TtaAttachAttribute (el, att, doc);
-          if(name)
+          if (name)
             TtaSetAttributeText (att, name, el, doc);
-          
           break;
         case Template_EL_option :
           aux = NULL;
@@ -712,7 +717,7 @@ void DoInstanceTemplate (char *templatename)
 
 	//Instantiate all elements
 	t = (XTigerTemplate) Dictionary_Get (Templates_Dic, templatename);
-  if(!t)
+  if (!t)
     return;
   
   doc = GetTemplateDocument (t);
@@ -785,7 +790,7 @@ void DoInstanceTemplate (char *templatename)
   else
     strcat (buffer, "0.8");
   strcat (buffer, "\"");
-  if(t->templateVersion)
+  if (t->templateVersion)
     {
       strcat (buffer, " templateVersion=\"");
       strcat (buffer, t->templateVersion);
@@ -813,10 +818,10 @@ void DoInstanceTemplate (char *templatename)
   PreInstantiateComponents: Instantiates all components in order to improve
   editing.
   ----------------------------------------------------------------------*/
-void PreInstantiateComponents(XTigerTemplate t)
+void PreInstantiateComponents (XTigerTemplate t)
 {
 #ifdef TEMPLATES 
-  if(!t)
+  if (!t)
     return;
 
   DicDictionary components = GetComponents(t);

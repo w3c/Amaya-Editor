@@ -30,6 +30,8 @@ extern void NewElement ( const XTigerTemplate t,
 extern void FreeDeclaration ( Declaration dec );
 extern Declaration Template_GetDeclaration ( const XTigerTemplate t,
                                              const char *name );
+extern Declaration Template_GetSimpleTypeDeclaration ( const XTigerTemplate t,
+                                                       const char *name );
 extern void FreeXTigerTemplate ( XTigerTemplate t );
 extern void AddLibraryDeclarations ( XTigerTemplate t,
                                      XTigerTemplate lib );
@@ -55,6 +57,11 @@ extern char* Template_ExpandTypes ( XTigerTemplate t,
 extern ThotBool Template_CanInsertElementInBag ( Document doc,
                                                  ElementType type,
                                                  char* bagTypes );
+extern ThotBool Template_CanInsertElementInUse ( Document doc,
+                                                 ElementType type,
+                                                 char* useType,
+                                                 Element parent,
+                                                 int position );
 
 #else /* __STDC__ */
 
@@ -82,6 +89,8 @@ extern void NewElement ( const XTigerTemplate t,
 extern void FreeDeclaration ( Declaration dec );
 extern Declaration Template_GetDeclaration ( const XTigerTemplate t,
                                                const char *name );
+extern Declaration Template_GetSimpleTypeDeclaration ( const XTigerTemplate t,
+                                                         const char *name );
 extern void FreeXTigerTemplate ( XTigerTemplate t );
 extern void AddLibraryDeclarations ( XTigerTemplate t,
                                        XTigerTemplate lib );
@@ -107,6 +116,11 @@ extern char* Template_ExpandTypes ( XTigerTemplate t,
 extern ThotBool Template_CanInsertElementInBag ( Document doc,
                                                    ElementType type,
                                                    char* bagTypes );
+extern ThotBool Template_CanInsertElementInUse ( Document doc,
+                                                   ElementType type,
+                                                   char* useType,
+                                                   Element parent,
+                                                   int position );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
