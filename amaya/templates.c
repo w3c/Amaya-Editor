@@ -682,35 +682,6 @@ Element Template_InsertRepeatChild(Document doc, Element el, Declaration decl, i
 
 #ifdef TEMPLATES
 /*----------------------------------------------------------------------
-  QueryMenu
-  Show a context menu to query a choice.
-  @param items space-separated choice list string.
-  @return The choosed item 0-based index or -1 if none. 
-  ----------------------------------------------------------------------*/
-static int QueryMenu(Document doc, char* items)
-{
-  int nbitems, size;
-  struct menuType *itemlist;
-  char *menuString;
-  
-  if (!TtaGetDocumentAccessMode(doc))
-    return -1;
-  
-  size = strlen(items);
-  giveItems (items, size, &itemlist, &nbitems);
-  menuString = createMenuString (itemlist, nbitems);
-  TtaNewScrollPopup (BaseDialog + OptionMenu, TtaGetViewFrame (doc, 1), NULL, 
-                     nbitems, menuString , NULL, false, 'L');
-  TtaFreeMemory (menuString);
-  ReturnOption = -1;
-  TtaShowDialogue (BaseDialog + OptionMenu, FALSE);
-  TtaWaitShowProcDialogue ();
-  TtaDestroyDialogue (BaseDialog + OptionMenu);
-  TtaFreeMemory (itemlist);
-  return ReturnOption;
-}
-
-/*----------------------------------------------------------------------
   QueryStringFromMenu
   Show a context menu to query a choice.
   @param items space-separated choice list string.
@@ -1205,13 +1176,16 @@ ThotBool TemplateElementWillBeCreated (NotifyElement *event)
   char*       types;
   ThotBool    b;
 
+  if(event->info==1)
+    return FALSE;
+
   if (!TtaGetDocumentAccessMode(event->document))
     return TRUE;
 
   templateSSchema = TtaGetSSchema ("Template", event->document);
   if (templateSSchema == NULL)
     return FALSE; // let Thot do the job
-  
+
 #ifdef AMAYA_DEBUG 
   printf("TemplateElementWillBeCreated %s:%s:%d\n", TtaGetSSchemaName(elType.ElSSchema), TtaGetElementTypeName(elType), elType.ElTypeNum);
   printf("    ^^ %s:%s\n", TtaGetSSchemaName(parentType.ElSSchema), TtaGetElementTypeName(parentType));
@@ -1243,10 +1217,16 @@ ThotBool TemplateElementWillBeCreated (NotifyElement *event)
     {
       types = GetAttributeStringValueFromNum(ancestor, Template_ATTR_currentType, NULL);
       b = Template_CanInsertElementInUse(event->document, elType, types, parent, event->position); 
-      return !b;      
+      return !b;
       
     }
   }
+  
+  if(elType.ElSSchema==templateSSchema && elType.ElTypeNum==Template_EL_TEXT_UNIT)
+  {
+    return FALSE;
+  }
+  
   // Can not insert.
   return TRUE;
 #endif /* TEMPLATES*/
@@ -1267,12 +1247,16 @@ ThotBool TemplateElementWillBeDeleted (NotifyElement *event)
   ElementType    xtType;
   char*          type;
   Declaration    dec;
-  SSchema        templateSSchema = TtaGetSSchema ("Template", event->document);
+  SSchema        templateSSchema;
   XTigerTemplate t;
+
+  if(event->info==1)
+    return FALSE;
 
   if (!TtaGetDocumentAccessMode(event->document))
     return TRUE;
 
+  templateSSchema = TtaGetSSchema ("Template", event->document);
   if (templateSSchema == NULL)
     return FALSE; // let Thot do the job
   

@@ -164,8 +164,6 @@ void FreeTemplateEnvironment ()
 {
 #ifdef TEMPLATES
   XTigerTemplate t;
-  Record rec;
-
   if (Templates_Dic)
   {
     for (Dictionary_First (Templates_Dic);!Dictionary_IsDone (Templates_Dic);Dictionary_Next (Templates_Dic))
@@ -733,7 +731,7 @@ Document GetTemplateDocument (XTigerTemplate t)
     return t->doc;
   else
 #endif /* TEMPLATES */
-    return NULL;
+    return 0;
 }
 
 /*----------------------------------------------------------------------
@@ -973,8 +971,6 @@ ThotBool Template_CanInsertElementInUse (Document doc, ElementType type, char* u
 #ifdef TEMPLATES
   XTigerTemplate  t;
   Element         elem;
-  Declaration     dec;
-  
   t = (XTigerTemplate) Dictionary_Get (Templates_Dic, DocumentMeta[doc]->template_url);
   if (t && useType)
   {
