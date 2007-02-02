@@ -298,6 +298,8 @@ void DefBoxRegion (int frame, PtrBox pBox, int xstart, int xstop,
         {
           if (pBox->BxTMargin < 0)
             y1 += pBox->BxTMargin;
+          else
+            y1 -= 1; // due to dashed borders
           y2 += pBox->BxHeight;
         }
       else

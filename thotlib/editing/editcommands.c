@@ -2647,11 +2647,9 @@ ThotBool InsertChar (int frame, CHAR_T c, int keyboard)
   LeafType            nat;
   Propagation         savePropagate;
   int                 xx, xDelta, adjust;
-  int                 spacesDelta;
-  int                 topY, bottomY;
-  int                 charsDelta, pix;
-  int                 visib, zoom;
-  int                 ind;
+  int                 spacesDelta, charsDelta, pix;
+  int                 topY, bottomY, visib, zoom;
+  int                 t, b, l, r, ind;
   int                 previousChars, previousInd, previousPos;
   char                script, oldscript;
   ThotBool            beginOfBox, toDelete;
@@ -3108,16 +3106,17 @@ ThotBool InsertChar (int frame, CHAR_T c, int keyboard)
                               pViewSelEnd->VsIndBuf++;
                             }
 			  
-                          /* ==> La boite entiere n'est plus vide */
+                          /* ==> The complete box is no longer empty */
                           if (pSelBox->BxNChars == 0 &&
                               pSelBox->BxType == BoComplete)
                             {
                               /* Mise a jour des marques */
+                              GetExtraMargins (pSelBox, NULL, frame, &t, &b, &l, &r);
                               xDelta = BoxCharacterWidth (c, font);
-                              pViewSel->VsXPos = xDelta;
+                              pViewSel->VsXPos = xDelta + l;
                               pViewSel->VsIndBox = charsDelta;
                               pViewSel->VsNSpaces = spacesDelta;
-                              pViewSelEnd->VsXPos = xDelta + 2;
+                              pViewSelEnd->VsXPos = pViewSel->VsXPos + 2;
                               pViewSelEnd->VsIndBox = charsDelta;
                               pViewSelEnd->VsNSpaces = spacesDelta;
                               /* Le caractere insere' est un Ctrl Return ? */
@@ -3132,9 +3131,9 @@ ThotBool InsertChar (int frame, CHAR_T c, int keyboard)
                               DefBoxRegion (frame, pSelBox, -1, -1, -1, -1);
 			      
                               /* Prepare la mise a jour de la boite */
-                              xDelta -= pSelBox->BxWidth;
+                              xDelta = xDelta + l + r - pSelBox->BxWidth;
                             }
-                          /* ==> Insertion d'un caractere entre deux boites */
+                          /* ==> Insert a chacracter between 2 boxes */
                           else if (previousChars > pSelBox->BxNChars ||
                                    /* ==> ou d'un blanc en fin de boite      */
                                    (c == SPACE &&
