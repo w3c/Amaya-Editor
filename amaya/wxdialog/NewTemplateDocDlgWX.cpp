@@ -204,37 +204,46 @@ void NewTemplateDocDlgWX::OnInstanceFilenameButton( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void NewTemplateDocDlgWX::UpdateTemplateFromDir ()
 {
-  Prop_Templates prop = GetProp_Templates();
-  Prop_Templates_Path* path = prop.FirstPath;
+  Prop_Templates       prop = GetProp_Templates();
+  Prop_Templates_Path *path = prop.FirstPath;
+  wxArrayString        templateList;
+  wxString             value;
+  bool                 initialized = false;
 
   if (!m_LockUpdateFlag)
     {
       m_LockUpdateFlag = true;
-      wxString dir_value = XRCCTRL(*this, "wxID_TEMPLATEDIRNAME", wxTextCtrl)->GetValue();
-      if (!dir_value.StartsWith(_T("http")))
-        {
-          // get the directory list when it is a local directory
-#ifdef _WINDOWS
-          if (dir_value.IsEmpty())
-            dir_value = _T("C:\\");
-#endif /* _WINDOWS */
-          if (dir_value.Last() != m_DirSep)
-            dir_value += m_DirSep;
-          XRCCTRL(*this, "wxID_TEMPLATEFILENAME", wxComboBox)->Clear();
-          XRCCTRL(*this, "wxID_TEMPLATEFILENAME", wxComboBox)->SetValue( TtaConvMessageToWX(""));
-          wxArrayString templateList;
-          wxDir::GetAllFiles(dir_value, &templateList, _T("*.xtd"), wxDIR_FILES);
-          XRCCTRL(*this, "wxID_TEMPLATEFILENAME", wxComboBox)->Append( templateList );
-        }
-      // adding paths form preferences
+      XRCCTRL(*this, "wxID_TEMPLATEFILENAME", wxComboBox)->Clear();
+      XRCCTRL(*this, "wxID_TEMPLATEFILENAME", wxComboBox)->SetValue( TtaConvMessageToWX(""));
       while (path)
         {
-          XRCCTRL(*this, "wxID_TEMPLATEFILENAME", wxComboBox)->Append(TtaConvMessageToWX(path->Path));
+		  value = TtaConvMessageToWX(path->Path);
+          XRCCTRL(*this, "wxID_TEMPLATEFILENAME", wxComboBox)->Append(value);
+		  if (!initialized)
+		  {
+            XRCCTRL(*this, "wxID_TEMPLATEFILENAME", wxComboBox)->SetStringSelection(value);
+            initialized = true;
+		  }
           path = path->NextPath;
         }
 
-      //XRCCTRL(*this, "wxID_TEMPLATEFILENAME", wxComboBox)->SetSelection (0);
-       m_LockUpdateFlag = false;
+      value = XRCCTRL(*this, "wxID_TEMPLATEDIRNAME", wxTextCtrl)->GetValue();
+      if (!value.StartsWith(_T("http")))
+        {
+          // get the directory list when it is a local directory
+#ifdef _WINDOWS
+          if (value.IsEmpty())
+            value = _T("C:\\");
+#endif /* _WINDOWS */
+          if (value.Last() != m_DirSep)
+            value += m_DirSep;
+          wxDir::GetAllFiles(value, &templateList, _T("*.xtd"), wxDIR_FILES);
+          XRCCTRL(*this, "wxID_TEMPLATEFILENAME", wxComboBox)->Append( templateList );
+          if (!initialized && !templateList.IsEmpty())
+            XRCCTRL(*this, "wxID_TEMPLATEFILENAME", wxComboBox)->SetStringSelection(templateList.Item(0));
+        }
+      // adding paths form preferences
+      m_LockUpdateFlag = false;
    }
 }
 
@@ -395,7 +404,7 @@ void NewTemplateDocDlgWX::OnCancelButton( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void NewTemplateDocDlgWX::OnClose( wxCloseEvent& event )
 {
-  //TtaDestroyDialogue (MyRef);  
+  TtaDestroyDialogue (MyRef);  
 }
 
 /*----------------------------------------------------------------------
