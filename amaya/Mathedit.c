@@ -1335,6 +1335,7 @@ static void CreateMathConstruct (int construct, ...)
   NotifyElement      event;
   SSchema            docSchema, mathSchema;
   char              *name;
+  unsigned char     *symbol_name;
   Language           lang;
   DisplayMode        dispMode;
   int                c1, i, len, profile, selectedchild, lx, ly;
@@ -2178,7 +2179,7 @@ static void CreateMathConstruct (int construct, ...)
               }
             else
               {
-              switch(number)
+              switch(Math_integral_number)
                 {
                 case 1: symbol = 8750; break;
                 case 2: symbol = 8751; break;
@@ -2213,7 +2214,6 @@ static void CreateMathConstruct (int construct, ...)
           /* n-ary operation/relation */
           type = va_arg(varpos, int);
           symbol = va_arg(varpos, int);
-          unsigned char *symbol_name;
           if (symbol == 0)
             symbol_name = va_arg(varpos, unsigned char*);
 
