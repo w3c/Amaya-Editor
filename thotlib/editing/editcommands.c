@@ -2262,7 +2262,17 @@ ThotBool ContentEditing (int editType)
                        FirstSelectedElement &&
                        (editType == TEXT_CUT || editType == TEXT_DEL ||
                         editType == TEXT_SUP || editType == TEXT_COPY))
-                pAb = NULL;
+                {
+                  // xt:use is equivalent to a text selection
+                  if (FirstSelectedElement != LastSelectedElement ||
+                      pAb->AbLeafType != LtText ||
+                      FirstSelectedElement == NULL ||
+                      FirstSelectedElement->ElStructSchema == NULL ||
+                      strcmp (FirstSelectedElement->ElStructSchema->SsName, "Template") ||
+                      pAb->AbElement->ElParent != FirstSelectedElement ||
+                      pAb->AbElement->ElNext)
+                  pAb = NULL;
+                }
               else if ((pAb->AbLeafType == LtText && editType == TEXT_INSERT)||
                        pAb->AbLeafType == LtCompound || /*le pave est compose*/
                        pAb->AbLeafType == LtPageColBreak) /* marque de page */

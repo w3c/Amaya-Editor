@@ -33,6 +33,10 @@ ELEMENTS
          ElemLClick.Pre -> OptionButtonClicked;
       END;
 
+
+   TEXT_UNIT:
+        ElemTextModify.Post -> CheckNewLines;
+
 ATTRIBUTES
    currentType :
       BEGIN
