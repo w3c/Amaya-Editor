@@ -1198,49 +1198,56 @@ ThotBool TemplateElementWillBeCreated (NotifyElement *event)
   ElementType elType = event->elementType;
   Element     parent = event->element;
   ElementType parentType = TtaGetElementType(parent);
-//  Element     ancestor;
-//  ElementType ancestorType;
-
-  SSchema     templateSSchema = TtaGetSSchema ("Template", event->document);
+  Element     ancestor;
+  ElementType ancestorType;
+  SSchema     templateSSchema;
+  char*       types;
+  ThotBool    b;
 
   if (!TtaGetDocumentAccessMode(event->document))
     return TRUE;
 
+  templateSSchema = TtaGetSSchema ("Template", event->document);
   if (templateSSchema == NULL)
     return FALSE; // let Thot do the job
   
 #ifdef AMAYA_DEBUG 
-  printf("TemplateElementWillBeCreated %s:%s\n", TtaGetSSchemaName(elType.ElSSchema), TtaGetElementTypeName(elType));
+  printf("TemplateElementWillBeCreated %s:%s:%d\n", TtaGetSSchemaName(elType.ElSSchema), TtaGetElementTypeName(elType), elType.ElTypeNum);
   printf("    ^^ %s:%s\n", TtaGetSSchemaName(parentType.ElSSchema), TtaGetElementTypeName(parentType));
 #endif /* AMAYA_DEBUG */
-  return FALSE;
 
-//
-//  // A xt:use within a xt:repeat
-//  if ((elType.ElTypeNum==Template_EL_useSimple || elType.ElTypeNum==Template_EL_useEl) && parentType.ElTypeNum==Template_EL_repeat)
-//  {
-//      printf("    Intend to insert xt:repeat element\n");
-//      return !Template_CanInsertRepeatChild(parent);
-//  }
-//  else
-//  {
-//    ancestor = parent;
-//    while (ancestor)
-//    {
-//      ancestorType = TtaGetElementType(ancestor);
-//      printf("    >> %s:%s\n", TtaGetSSchemaName(ancestorType.ElSSchema), TtaGetElementTypeName(ancestorType));
-//      if (ancestorType.ElSSchema == templateSSchema && ancestorType.ElTypeNum == Template_EL_bag)
-//      {
-//        char* types = GetAttributeStringValueFromNum(ancestor, Template_ATTR_types, NULL);
-//        ThotBool b = Template_CanInsertElementInBag(event->document, elType, types); 
-//        printf("    Intend to insert xt:bag element : %s\n", b?"TRUE":"FALSE");
-//        return !b;
-//      }
-//      ancestor = TtaGetParent(ancestor);
-//    }
-//  }
-//  // Can not insert.
-//  return TRUE;
+
+  // Fisrt, test if in a xt:bag or in a base-element xt:use
+  if(parentType.ElSSchema==templateSSchema)
+    ancestor = parent;
+  else
+    ancestor = GetFirstTemplateParentElement(parent);
+
+  if(ancestor)
+  {
+    ancestorType = TtaGetElementType(ancestor);
+
+#ifdef AMAYA_DEBUG 
+  printf("    <> %s:%s\n", TtaGetSSchemaName(ancestorType.ElSSchema), TtaGetElementTypeName(ancestorType));
+#endif /* AMAYA_DEBUG */
+
+    if(ancestorType.ElTypeNum==Template_EL_bag)
+    {
+      types = GetAttributeStringValueFromNum(ancestor, Template_ATTR_types, NULL);
+      b = Template_CanInsertElementInBag(event->document, elType, types);
+      TtaFreeMemory(types);
+      return !b;      
+    }
+    else if(ancestorType.ElTypeNum==Template_EL_useSimple || ancestorType.ElTypeNum==Template_EL_useEl)
+    {
+      types = GetAttributeStringValueFromNum(ancestor, Template_ATTR_currentType, NULL);
+      b = Template_CanInsertElementInUse(event->document, elType, types, parent, event->position); 
+      return !b;      
+      
+    }
+  }
+  // Can not insert.
+  return TRUE;
 #endif /* TEMPLATES*/
   return FALSE;
 }
@@ -1265,8 +1272,6 @@ ThotBool TemplateElementWillBeDeleted (NotifyElement *event)
   if (!TtaGetDocumentAccessMode(event->document))
     return TRUE;
 
-  printf("TemplateElementWillBeDeleted : %s\n", TtaGetElementTypeName(TtaGetElementType(elem)));
-  
   if (templateSSchema == NULL)
     return FALSE; // let Thot do the job
   

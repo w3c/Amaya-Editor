@@ -356,6 +356,21 @@ Declaration Template_GetDeclaration (const XTigerTemplate t, const char *name)
 #endif /* TEMPLATES */
 }
 
+/*----------------------------------------------------------------------
+  Template_GetSimpleTypeDeclaration
+  Find a declaration of a simple type in a specified template and return it.
+  @param t Template in which search the declaration
+  @param name Declaration name to find.
+  ----------------------------------------------------------------------*/
+Declaration Template_GetSimpleTypeDeclaration (const XTigerTemplate t, const char *name)
+{
+#ifdef TEMPLATES
+  if(t)
+     return (Declaration)Dictionary_Get (t->simpleTypes, name); 
+  else
+#endif /* TEMPLATES */
+    return NULL;
+}
 
 /*----------------------------------------------------------------------
   Free all the space used by a template (also its dictionaries)
@@ -919,7 +934,6 @@ char* Template_ExpandTypes (XTigerTemplate t, char* types)
 /**----------------------------------------------------------------------
   Template_CanInsertElementInBag
   Test if an element can be insert in a bag
-  @param  
   ----------------------------------------------------------------------*/
 ThotBool Template_CanInsertElementInBag (Document doc, ElementType type, char* bagTypes)
 {
@@ -932,7 +946,7 @@ ThotBool Template_CanInsertElementInBag (Document doc, ElementType type, char* b
   t = (XTigerTemplate) Dictionary_Get (Templates_Dic, DocumentMeta[doc]->template_url);
   if (t)
   {
-    DumpDeclarations(t);
+//    DumpDeclarations(t);
     
     types = Template_ExpandTypes(t, bagTypes);
     elTypeName = TtaGetElementTypeName(type);
@@ -944,5 +958,42 @@ ThotBool Template_CanInsertElementInBag (Document doc, ElementType type, char* b
   /* @todo fixme : union expansion */
 #endif /* TEMPLATES */
   return res;
+}
+
+/**----------------------------------------------------------------------
+  Template_CanInsertElementInUse
+  Test if an element can be insert in a use child element.
+  @param type Type of element to insert.
+  @param useType Type of use into which insert element.
+  @param parent Parent of the new element.
+  @param position Position where insert element.
+  ----------------------------------------------------------------------*/
+ThotBool Template_CanInsertElementInUse (Document doc, ElementType type, char* useType, Element parent, int position)
+{
+#ifdef TEMPLATES
+  XTigerTemplate  t;
+  Element         elem;
+  Declaration     dec;
+  
+  t = (XTigerTemplate) Dictionary_Get (Templates_Dic, DocumentMeta[doc]->template_url);
+  if (t && useType)
+  {
+    // Allow only simple type element.
+    if(Template_GetSimpleTypeDeclaration(t, useType))
+    {
+      if(position==0)
+        return TtaCanInsertFirstChild(type, parent, doc);
+      else
+      {
+        for(elem = TtaGetFirstChild(parent); position>0 && elem; position--, TtaNextSibling(&elem));
+        if(elem)
+        {
+          return TtaCanInsertSibling(type, elem, FALSE, doc);
+        }
+      }       
+    }
+  }
+#endif /* TEMPLATES */
+  return FALSE;
 }
 
