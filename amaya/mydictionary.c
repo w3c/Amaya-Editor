@@ -285,15 +285,14 @@ Record Dictionary_GetLastRecord(DicDictionary dic)
   ----------------------------------------------------------------------*/
 DicElement Dictionary_Get (DicDictionary dic, const char * key)
 {
+  Record rec;
+
   if (!key)
     return NULL;
-
-	Record rec = Dictionary_Find (dic,key);
-	
+  rec = Dictionary_Find (dic,key);
 	if (!rec)
     return NULL;
-
-	if (strcmp (rec->key,key) == 0)
+	else if (strcmp (rec->key, key) == 0)
 		return rec->element;
 	else
 		return NULL;

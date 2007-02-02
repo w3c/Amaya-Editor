@@ -1,4 +1,11 @@
 /*
+ *
+ *  COPYRIGHT INRIA and W3C, 1996-2007
+ *  Please first read the full copyright statement in file COPYRIGHT.
+ *
+ */
+
+/*
  *  FILE  : templateDeclarations.c
  *  DESC  : Declaration structures and creators for XTiger types.
  *  AUTHOR: Francesc Campoy Flores
@@ -178,7 +185,7 @@ void FreeTemplateEnvironment ()
 void AddDeclaration (XTigerTemplate t, Declaration dec)
 {
 #ifdef TEMPLATES
-  if(!t)
+  if (!t)
     return;
 
 	Declaration old = Template_GetDeclaration (t, dec->name);
@@ -216,7 +223,7 @@ void AddDeclaration (XTigerTemplate t, Declaration dec)
 void NewComponent (XTigerTemplate t, const char *name, const Element el)
 {
 #ifdef TEMPLATES
-  if(!t)
+  if (!t)
     return;
 
 	Declaration dec = NewDeclaration (t, name, ComponentNat);
@@ -232,7 +239,7 @@ void NewUnion (const XTigerTemplate t, const char *name,
                DicDictionary include, DicDictionary exclude)
 {
 #ifdef TEMPLATES
-  if(!t)
+  if (!t)
     return;
 
 	Declaration dec = NewDeclaration (t, name, UnionNat);
@@ -279,7 +286,7 @@ void NewUnion (const XTigerTemplate t, const char *name,
 void NewElement (const XTigerTemplate t, const char *name)
 {
 #ifdef TEMPLATES
-  if(!t)
+  if (!t)
     return;
 
 	Declaration dec = NewDeclaration (t, name, XmlElementNat);
@@ -297,17 +304,17 @@ void FreeDeclaration (Declaration dec)
 #ifdef TEMPLATES
 
   /* Free its content. */
-  if(dec->nature==XmlElementNat)
+  if (dec->nature==XmlElementNat)
   {
     TtaFreeMemory(dec->elementType.name);
     dec->elementType.name = NULL;
   }
-  else if(dec->nature==ComponentNat)
+  else if (dec->nature==ComponentNat)
   {
     TtaDeleteTree(dec->componentType.content, TtaGetDocument(dec->componentType.content));
     dec->componentType.content = NULL;
   }
-  else if(dec->nature==UnionNat && !dec->declaredIn->isPredefined)
+  else if (dec->nature==UnionNat && !dec->declaredIn->isPredefined)
   {
     Dictionary_Clean(dec->unionType.include);
     dec->unionType.include = NULL;
@@ -333,7 +340,7 @@ void FreeDeclaration (Declaration dec)
 Declaration Template_GetDeclaration (const XTigerTemplate t, const char *name)
 {
 #ifdef TEMPLATES
-  if(!t)
+  if (!t)
     return NULL;
 
 	Declaration dec = (Declaration)Dictionary_Get (t->simpleTypes, name);	
@@ -359,7 +366,7 @@ void FreeXTigerTemplate (XTigerTemplate t)
 	DicDictionary  dic;
 	Declaration    dec;
 
-  if(!t)
+  if (!t)
     return;
 
   //Cleaning the unions
@@ -432,7 +439,7 @@ void FreeXTigerTemplate (XTigerTemplate t)
 void AddLibraryDeclarations (XTigerTemplate t, XTigerTemplate lib)
 {	
 #ifdef TEMPLATES
-  if(!t)
+  if (!t)
     return;
 
 	DicDictionary from = lib->elements;	
@@ -471,7 +478,7 @@ void PrintUnion (Declaration dec, int indent, XTigerTemplate t, FILE *file)
 	char*		   indentation;
 	int 		   i=0;
   
-  if(!t)
+  if (!t)
     return;
 	
 	indentation = (char*) TtaGetMemory (indent*sizeof (char)+1);
@@ -550,7 +557,7 @@ void PrintDeclarations (XTigerTemplate t, FILE *file)
 	DicDictionary  aux;
 	Declaration    dec;
 	
-  if(!t)
+  if (!t)
     return;
   
 	fprintf (file, "SIMPLE TYPES\n");
@@ -620,7 +627,7 @@ void DumpDeclarations (XTigerTemplate t)
 	char localname[MAX_LENGTH];
 	FILE *file;
 
-  if(!t)
+  if (!t)
     return;
 
   strcpy (localname, TempFileDirectory);
@@ -643,7 +650,7 @@ void RedefineSpecialUnions (XTigerTemplate t)
   Declaration un;
   DicDictionary dic;
 
-  if(!t)
+  if (!t)
     return;
 
   //We get the old definition to modify it 
@@ -682,7 +689,7 @@ void RedefineSpecialUnions (XTigerTemplate t)
 DicDictionary GetComponents (XTigerTemplate t)
 {
 #ifdef TEMPLATES
-  if(t)
+  if (t)
     return t->components;
   else
 #endif /* TEMPLATES */
@@ -707,7 +714,7 @@ Element GetComponentContent (Declaration d)
 Document GetTemplateDocument (XTigerTemplate t)
 {
 #ifdef TEMPLATES
-  if(t)
+  if (t)
     return t->doc;
   else
 #endif /* TEMPLATES */
@@ -719,7 +726,7 @@ Document GetTemplateDocument (XTigerTemplate t)
 void SetTemplateDocument (XTigerTemplate t, Document doc)
 {
 #ifdef TEMPLATES
-  if(t)
+  if (t)
     t->doc = doc;
 #endif /* TEMPLATES */
 }
@@ -729,7 +736,7 @@ void SetTemplateDocument (XTigerTemplate t, Document doc)
 void AddUser (XTigerTemplate t)
 {
 #ifdef TEMPLATES
-  if(t)
+  if (t)
     t->users++;
 #endif /* TEMPLATES */
 }
@@ -739,7 +746,7 @@ void AddUser (XTigerTemplate t)
 void RemoveUser (XTigerTemplate t)
 {
 #ifdef TEMPLATES
-  if(t)
+  if (t)
   {
     t->users--;
     if (t->users == 0 && !t->isPredefined)
@@ -759,9 +766,9 @@ void RemoveUser (XTigerTemplate t)
 DicDictionary Template_ExpandUnion(XTigerTemplate t, Declaration decl)
 {
 #ifdef TEMPLATES
-  if(t)
+  if (t)
   {
-    if(decl->unionType.expanded==NULL)
+    if (decl->unionType.expanded==NULL)
     {
       DicDictionary  expanded = Dictionary_Create();
       Record rec;
@@ -771,14 +778,14 @@ DicDictionary Template_ExpandUnion(XTigerTemplate t, Declaration decl)
       while(rec)
       {
         Declaration child = (Declaration) rec->element;
-        if(child->nature==UnionNat)
+        if (child->nature==UnionNat)
         {
           DicDictionary children = Template_ExpandUnion(t, child);
           Record recChildren = children->first;
           while(recChildren)
           {
             Declaration granchild = (Declaration) recChildren->element;
-            if(!Dictionary_Get(expanded, granchild->name))
+            if (!Dictionary_Get(expanded, granchild->name))
             {
               Dictionary_Add(expanded, granchild->name, (DicElement)granchild);
             }          
@@ -788,7 +795,7 @@ DicDictionary Template_ExpandUnion(XTigerTemplate t, Declaration decl)
         }
         else
         {
-          if(!Dictionary_Get(expanded, child->name))
+          if (!Dictionary_Get(expanded, child->name))
           {
             Dictionary_Add(expanded, child->name, (DicElement)child);
           }
@@ -801,7 +808,7 @@ DicDictionary Template_ExpandUnion(XTigerTemplate t, Declaration decl)
       while(rec)
       {
         Declaration child = (Declaration) rec->element;
-        if(child)
+        if (child)
           Dictionary_Remove(expanded, child->name);
         rec = rec->next;
       }
@@ -821,10 +828,10 @@ DicDictionary Template_ExpandUnion(XTigerTemplate t, Declaration decl)
   @param types String in which look for types.
   @return The resolved type string.
   ----------------------------------------------------------------------*/
-char* Template_ExpandTypes(XTigerTemplate t, char* types)
+char* Template_ExpandTypes (XTigerTemplate t, char* types)
 {
 #ifdef TEMPLATES
-  if(t)
+  if (t)
   {
     DicDictionary dico = Dictionary_Create();
     Record rec;
@@ -839,21 +846,21 @@ char* Template_ExpandTypes(XTigerTemplate t, char* types)
     /* Fill a dict with all finded declarations */
     while(pos<=len)
     {
-      if(types[pos]==' ' || pos==len)
+      if (types[pos]==' ' || pos==len)
       {
-        if(cur>0)
+        if (cur>0)
         {
           type[cur] = 0;
           decl = Template_GetDeclaration(t, type);
-          if(decl)
+          if (decl)
           {
-            if(decl->nature==UnionNat)
+            if (decl->nature==UnionNat)
             {
               DicDictionary unionDecl = Template_ExpandUnion(t, decl);
               Record recChildren = unionDecl->first;
               while(recChildren)
               {
-                if(!Dictionary_Get(dico, recChildren->key))
+                if (!Dictionary_Get(dico, recChildren->key))
                 {
                   Dictionary_Add(dico, recChildren->key, (DicElement) recChildren->element);
                 }
@@ -862,7 +869,7 @@ char* Template_ExpandTypes(XTigerTemplate t, char* types)
             }
             else
             {
-              if(!Dictionary_Get(dico, type))
+              if (!Dictionary_Get(dico, type))
               {
                 Dictionary_Add(dico, type, (DicElement) decl);
               }
@@ -914,23 +921,22 @@ char* Template_ExpandTypes(XTigerTemplate t, char* types)
   Test if an element can be insert in a bag
   @param  
   ----------------------------------------------------------------------*/
-ThotBool Template_CanInsertElementInBag(Document doc, ElementType type, char* bagTypes)
+ThotBool Template_CanInsertElementInBag (Document doc, ElementType type, char* bagTypes)
 {
   ThotBool res = FALSE;
 #ifdef TEMPLATES
-//  SSchema templateSSchema = TtaGetSSchema ("Template", doc);
-  XTigerTemplate  t = (XTigerTemplate) Dictionary_Get (Templates_Dic, DocumentMeta[doc]->template_url);
+  XTigerTemplate  t;
   char* types;
   char* elTypeName;
   
+  t = (XTigerTemplate) Dictionary_Get (Templates_Dic, DocumentMeta[doc]->template_url);
   if (t)
   {
     DumpDeclarations(t);
     
     types = Template_ExpandTypes(t, bagTypes);
     elTypeName = TtaGetElementTypeName(type);
-//    printf("Find '%s' in '%s'\n", elTypeName, types);
-    if(strstr(types, elTypeName))
+    if (strstr(types, elTypeName))
       res = TRUE;
     TtaFreeMemory(types);
   }

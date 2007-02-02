@@ -10,28 +10,28 @@
   <link rel="stylesheet" type="text/css" href="cv.css" />
   <xt:head version="0.8" templateVersion="1.0">
     <xt:component name="training">
-      <dt class="date"><xt:use types="string" name="date">2004 -
+      <dt class="date"><xt:use types="string" title="date">2004 -
       2005</xt:use></dt>
         <dd class="content"><strong class="label"><xt:use types="string"
-          name="description">Activity description</xt:use></strong> <span
+          title="description">Activity description</xt:use></strong> <span
           class="comment"><xt:use types="string"
-          name="comment">Comments</xt:use></span> <span
+          title="comment">Comments</xt:use></span> <span
           class="location"><xt:use types="string"
-          name="location">Location..</xt:use></span> </dd>
+          title="location">Location..</xt:use></span> </dd>
     </xt:component>
   </xt:head>
 </head>
 
 <body>
 <p class="info"><strong class="name"><xt:use types="string"
-  name="full_name">Name</xt:use></strong><br />
+  title="full_name">Name</xt:use></strong><br />
 <span class="birth_day">Date of birth: <xt:use types="number"
-name="birth_day">../../..</xt:use></span></p>
+title="birth_day">../../..</xt:use></span></p>
 <address class="address">
-  <xt:use types="string" name="address">Address's body</xt:use><br />
-  Tel: <xt:use types="string" name="phone">number</xt:use><br />
+  <xt:use types="string" title="address">Address's body</xt:use><br />
+  Tel: <xt:use types="string" title="phone">number</xt:use><br />
   <a class="email"><xt:attribute name="href" default="mailto:email@serveur"/>
-  e-mail: <xt:use types="string" name="e-mail">email@server</xt:use></a> 
+  e-mail: <xt:use types="string" title="e-mail">email@server</xt:use></a> 
 </address>
 <map id="menu" title="Menu" class="menu">
   <a class="entry" href="#Objectives">Objectives</a><a class="entry"
@@ -44,16 +44,16 @@ name="birth_day">../../..</xt:use></span></p>
 
 <div class="field">
 <h1 id="Objectives">Objectives</h1>
-<xt:repeat name="objectives">
-  <xt:use types="p" name="description"><p>Objectives description.</p>
+<xt:repeat title="objectives">
+  <xt:use types="p" title="description"><p>Objectives description.</p>
   </xt:use></xt:repeat>
 </div>
 
 <div class="field">
 <h1 id="Education">Education and training</h1>
 <dl>
-  <xt:repeat minOccurs="1" name="training">
-    <xt:use types="training" name="item">
+  <xt:repeat minOccurs="1" title="training">
+    <xt:use types="training" title="item">
 </xt:use></xt:repeat>
 </dl>
 </div>
@@ -61,15 +61,15 @@ name="birth_day">../../..</xt:use></span></p>
 <div class="field">
 <h1 id="Employment">Employment and placements</h1>
 <dl>
-  <xt:repeat minOccurs="1" name="placements">
+  <xt:repeat minOccurs="1" title="placements">
     <xt:component name="employment">
-      <dt class="date"><xt:use types="string" name="date">June-July
+      <dt class="date"><xt:use types="string" title="date">June-July
       2004</xt:use></dt>
         <dd class="content"><strong class="label"><xt:use types="string"
-          name="description">Description</xt:use></strong> <span
+          title="description">Description</xt:use></strong> <span
           class="location"><xt:use types="string"
-          name="location">Location</xt:use></span> <a
-          href="http://url"><xt:use types="string" name="url">Associated
+          title="location">Location</xt:use></span> <a
+          href="http://url"><xt:use types="string" title="url">Associated
           URL</xt:use></a> </dd>
     </xt:component>
   </xt:repeat>
@@ -79,10 +79,10 @@ name="birth_day">../../..</xt:use></span></p>
 <div class="field">
 <h1 id="Languages">Languages</h1>
 <dl>
-  <xt:repeat minOccurs="1" name="languages">
+  <xt:repeat minOccurs="1" title="languages">
     <xt:component name="pratice">
-      <dt><xt:use types="string" name="language">English</xt:use></dt>
-        <dd><xt:use types="anyElement" name="pratice_level">Level's
+      <dt><xt:use types="string" title="language">English</xt:use></dt>
+        <dd><xt:use types="anyElement" title="pratice_level">Level's
             description</xt:use></dd>
     </xt:component>
   </xt:repeat>
@@ -91,15 +91,15 @@ name="birth_day">../../..</xt:use></span></p>
 
 <div class="field">
 <h1 id="Skill">Skills</h1>
-<xt:repeat minOccurs="1" name="skills">
-  <xt:use types="p" name="a_skill"><p>Description of knowlegdes</p>
+<xt:repeat minOccurs="1" title="skills">
+  <xt:use types="p" title="a_skill"><p>Description of knowlegdes</p>
   </xt:use></xt:repeat>
 </div>
 
 <div class="field">
 <h1 id="Interest">Interests</h1>
-<xt:repeat minOccurs="1" name="interests">
-  <xt:use types="p" name="description"><p>Other informations</p>
+<xt:repeat minOccurs="1" title="interests">
+  <xt:use types="p" title="description"><p>Other informations</p>
   </xt:use></xt:repeat>
 </div>
 </div>

@@ -162,12 +162,12 @@ ATTRIBUTES
       create DoubleQuote;
     end;
 
-  ref :
+  title :
     begin
       create SAN;
-      create 'name=';
+      create 'title=';
       create DoubleQuote;
-      create ref;
+      create title;
       create DoubleQuote;
     end;
 

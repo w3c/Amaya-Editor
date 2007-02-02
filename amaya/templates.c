@@ -123,7 +123,7 @@ static void CopyTemplateRepositoryList (const Prop_Templates_Path** src,
 {
   Prop_Templates_Path *element=NULL, *current=NULL;
   
-  if(*src!=NULL)
+  if (*src!=NULL)
   {
     *dst = (Prop_Templates_Path*) TtaGetMemory (sizeof(Prop_Templates_Path));
     (*dst)->NextPath = NULL;
@@ -345,7 +345,7 @@ void PreventReloadingTemplate(char* template_url)
 {
 #ifdef TEMPLATES
   XTigerTemplate t = (XTigerTemplate) Dictionary_Get (Templates_Dic, template_url);
-  if(t)
+  if (t)
     t->users++;
 #endif /* TEMPLATES */
 }
@@ -359,7 +359,7 @@ void AllowReloadingTemplate(char* template_url)
 {
 #ifdef TEMPLATES
   XTigerTemplate t = (XTigerTemplate) Dictionary_Get (Templates_Dic, template_url);
-  if(t)
+  if (t)
     t->users--;  
 #endif /* TEMPLATES */  
 }
@@ -483,7 +483,7 @@ void UseCreated (NotifyElement *event)
 	Element          el = event->element;
   XTigerTemplate   t;
 
-  if(!TtaGetDocumentAccessMode(doc))
+  if (!TtaGetDocumentAccessMode(doc))
     return;
 
   if (TtaGetFirstChild (el))
@@ -511,7 +511,7 @@ void Template_IncrementRepeatOccurNumber(Element el)
   int curVal;
   
   current = GetAttributeStringValueFromNum(el, Template_ATTR_currentOccurs, NULL);
-  if(current)
+  if (current)
   {
     curVal = atoi(current);
     curVal++;
@@ -535,7 +535,7 @@ void Template_DecrementRepeatOccurNumber(Element el)
   int curVal;
   
   current = GetAttributeStringValueFromNum(el, Template_ATTR_currentOccurs, NULL);
-  if(current)
+  if (current)
   {
     curVal = atoi(current);
     curVal--;
@@ -564,7 +564,7 @@ ThotBool Template_CanInsertRepeatChild(Element el)
   max = GetAttributeStringValueFromNum(el, Template_ATTR_maxOccurs, NULL);
   if (max)
   {
-    if(!strcmp(max, "*"))
+    if (!strcmp(max, "*"))
       {
         TtaFreeMemory(max);
         return TRUE;
@@ -613,7 +613,7 @@ Element Template_InsertRepeatChildAfter(Document doc, Element el, Declaration de
   Element use;      /* xt:use to insert.*/
   ElementType useType;  /* type of xt:use.*/
   
-  if(!TtaGetDocumentAccessMode(doc))
+  if (!TtaGetDocumentAccessMode(doc))
     return NULL;
 
   /* Copy xt:use with xt:types param */
@@ -624,7 +624,7 @@ Element Template_InsertRepeatChildAfter(Document doc, Element el, Declaration de
   Template_InsertUseChildren(doc, use, decl);
 
   /* insert it */
-  if(elPrev)
+  if (elPrev)
   {
     TtaInsertSibling(use, elPrev, FALSE, doc);
   }
@@ -656,14 +656,14 @@ Element Template_InsertRepeatChildAfter(Document doc, Element el, Declaration de
   ----------------------------------------------------------------------*/
 Element Template_InsertRepeatChild(Document doc, Element el, Declaration decl, int pos)
 {
-  if(!TtaGetDocumentAccessMode(doc))
+  if (!TtaGetDocumentAccessMode(doc))
     return NULL;
   
-  if(pos==0)
+  if (pos==0)
   {
     return Template_InsertRepeatChildAfter(doc, el, decl, NULL);
   }
-  else if(pos==-1)
+  else if (pos==-1)
   {
     return Template_InsertRepeatChildAfter(doc, el, decl, TtaGetLastChild(el));
   }
@@ -671,7 +671,7 @@ Element Template_InsertRepeatChild(Document doc, Element el, Declaration decl, i
   {
     Element elem = TtaGetFirstChild(el);
     pos--;
-    while(pos>0)
+    while (pos>0)
     {
       TtaNextSibling(&elem);
       pos--;
@@ -693,7 +693,7 @@ static int QueryMenu(Document doc, char* items)
   struct menuType *itemlist;
   char *menuString;
   
-  if(!TtaGetDocumentAccessMode(doc))
+  if (!TtaGetDocumentAccessMode(doc))
     return -1;
   
   size = strlen(items);
@@ -723,9 +723,10 @@ static char* QueryStringFromMenu(Document doc, char* items)
   char *menuString;
   char *result = NULL;
   
-  if(!TtaGetDocumentAccessMode(doc))
+  if (!TtaGetDocumentAccessMode(doc))
     return NULL;
-  
+  if (items == NULL)
+    return NULL;
   size = strlen(items);
   giveItems (items, size, &itemlist, &nbitems);
   menuString = createMenuString (itemlist, nbitems);
@@ -737,7 +738,7 @@ static char* QueryStringFromMenu(Document doc, char* items)
   TtaWaitShowProcDialogue ();
   TtaDestroyDialogue (BaseDialog + OptionMenu);
   
-  if(ReturnOption!=-1)
+  if (ReturnOption!=-1)
   {
     result = TtaStrdup(itemlist[ReturnOption].label);
   }
@@ -773,42 +774,42 @@ ThotBool RepeatButtonClicked (NotifyElement *event)
   char*           listtypes;
   char*           result;
 
-  if(!TtaGetDocumentAccessMode(doc))
+  if (!TtaGetDocumentAccessMode(doc))
     return TRUE;
   
   TtaGetActiveView (&doc, &view);
   if (view != 1)
     return FALSE; /* let Thot perform normal operation */
 
-
+#ifdef AMAYA_DEBUG
   printf("Template url : %s\n", DocumentMeta[doc]->template_url);
-
+#endif/* AMAYA_DEBUG */
 
   TtaCancelSelection(doc);
   
   t = (XTigerTemplate) Dictionary_Get (Templates_Dic, DocumentMeta[doc]->template_url);
   elType = TtaGetElementType(el);
-  while(elType.ElTypeNum!=Template_EL_repeat)
+  while (elType.ElTypeNum!=Template_EL_repeat)
   {
     repeatEl = TtaGetParent(repeatEl);
-    if(repeatEl==NULL)
+    if (repeatEl==NULL)
       break;
     elType = TtaGetElementType(repeatEl);
   }
-  if(repeatEl)
+  if (repeatEl)
   {
-    if(Template_CanInsertRepeatChild(repeatEl))
+    if (Template_CanInsertRepeatChild(repeatEl))
     {
       firstEl = TtaGetFirstChild(repeatEl);
       types = GetAttributeStringValueFromNum(firstEl, Template_ATTR_types, NULL);
-      if(types)
+      if (types)
       {
         listtypes = Template_ExpandTypes(t, types);
         result = QueryStringFromMenu(doc, listtypes);
-        if(result)
+        if (result)
         {
           decl = Template_GetDeclaration(t, result);
-          if(decl)
+          if (decl)
           {
             /* Prepare insertion.*/          
             oldStructureChecking = TtaGetStructureChecking (doc);
@@ -816,7 +817,7 @@ ThotBool RepeatButtonClicked (NotifyElement *event)
             TtaOpenUndoSequence(doc, NULL, NULL, 0, 0);
             
             /* Insert. */
-            if(el==repeatEl)
+            if (el==repeatEl)
               newEl = Template_InsertRepeatChildAfter(doc, repeatEl, decl, NULL);
             else
               newEl = Template_InsertRepeatChildAfter(doc, repeatEl, decl, el);
@@ -826,7 +827,7 @@ ThotBool RepeatButtonClicked (NotifyElement *event)
             TtaSetStructureChecking (oldStructureChecking, doc);
             
             firstEl = GetFirstEditableElement(newEl);
-            if(firstEl)
+            if (firstEl)
             {
               TtaSelectElement (doc, firstEl);
               TtaSetStatusSelectedElement(doc, view, firstEl);
@@ -843,7 +844,7 @@ ThotBool RepeatButtonClicked (NotifyElement *event)
       TtaFreeMemory(listtypes);
       TtaFreeMemory(result);
     }
-    else /* if(Template_CanInsertRepeatChild(repeatEl)) */
+    else /* if (Template_CanInsertRepeatChild(repeatEl)) */
     {
       TtaSetStatus(doc, view, TtaGetMessage (AMAYA, AM_NUMBER_OCCUR_HAVE_MAX), NULL);
     }
@@ -874,7 +875,7 @@ ThotBool UseButtonClicked (NotifyElement *event)
   char*           listtypes;
   char*           result;
 
-  if(!TtaGetDocumentAccessMode(doc))
+  if (!TtaGetDocumentAccessMode(doc))
     return TRUE;
     
   TtaGetActiveView (&doc, &view);
@@ -889,21 +890,21 @@ ThotBool UseButtonClicked (NotifyElement *event)
   elType = TtaGetElementType(el);
 
   firstEl = TtaGetFirstChild(el);
-  if(firstEl)
+  if (firstEl)
   {
     RepeatButtonClicked(event);
   }
   else
   {
     types = GetAttributeStringValueFromNum(el, Template_ATTR_types, NULL);
-    if(types)
+    if (types)
     {
       listtypes = Template_ExpandTypes(t, types);
       result = QueryStringFromMenu(doc, listtypes);
-      if(result)
+      if (result)
       {
         decl = Template_GetDeclaration(t, result);
-        if(decl)
+        if (decl)
         {
           /* Prepare insertion.*/
           oldStructureChecking = TtaGetStructureChecking (doc);
@@ -926,7 +927,7 @@ ThotBool UseButtonClicked (NotifyElement *event)
           TtaSetStructureChecking (oldStructureChecking, doc);
           
           firstEl = GetFirstEditableElement(newEl);
-          if(firstEl)
+          if (firstEl)
           {
             TtaSelectElement (doc, firstEl);
             TtaSetStatusSelectedElement(doc, view, firstEl);
@@ -956,11 +957,11 @@ ThotBool UseButtonClicked (NotifyElement *event)
 ThotBool UseSimpleButtonClicked (NotifyElement *event)
 {
 #ifdef TEMPLATES
-  if(!TtaGetDocumentAccessMode(event->document))
+  if (!TtaGetDocumentAccessMode(event->document))
     return TRUE;
 
   ElementType parentType = TtaGetElementType(TtaGetParent(event->element));
-  if(parentType.ElTypeNum == Template_EL_repeat)
+  if (parentType.ElTypeNum == Template_EL_repeat)
     return RepeatButtonClicked(event);
 #endif /* TEMPLATES */  
   return FALSE;
@@ -978,7 +979,7 @@ ThotBool OptionButtonClicked (NotifyElement *event)
   XTigerTemplate  t;
   View            view;
 
-  if(!TtaGetDocumentAccessMode(event->document))
+  if (!TtaGetDocumentAccessMode(event->document))
     return TRUE;
 
   TtaGetActiveView (&doc, &view);
@@ -1034,9 +1035,9 @@ void CheckTemplate (Document doc)
       !Dictionary_Get (Templates_Dic, DocumentMeta[doc]->template_url))
     {
       // the template cannot be loaded
-      TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_READONLY);
-      TtaSetDocumentAccessMode (doc, 1);
+      InitConfirm (doc, 1, TtaGetMessage (AMAYA, AM_BAD_TEMPLATE));
       TtaSetAccessRight (TtaGetRootElement (doc), ReadOnly, doc);
+      TtaSetDocumentAccessMode (doc, 0); // document readonly
     }
 #endif /* TEMPLATES */
 }
@@ -1064,7 +1065,7 @@ void OpeningInstance (char *fileName, Document doc)
           buffer[res] = EOS;
           begin = strstr (buffer, "<?xtiger");
           
-          if(begin)
+          if (begin)
           {
             // Search for template version
             ptr = strstr (begin, "templateVersion");
@@ -1142,7 +1143,7 @@ ThotBool ClosingInstance(NotifyDialog* dialog)
     DocumentMeta[dialog->document]->template_url = NULL;
   }
   
-  if(DocumentMeta[dialog->document]->template_version)
+  if (DocumentMeta[dialog->document]->template_version)
   {
     TtaFreeMemory(DocumentMeta[dialog->document]->template_version);
     DocumentMeta[dialog->document]->template_version = NULL;
@@ -1175,7 +1176,7 @@ Element GetFirstTemplateParentElement(Element elem)
 {
 #ifdef TEMPLATES
   elem = TtaGetParent(elem);
-  while(elem!=NULL && strcmp(TtaGetSSchemaName(TtaGetElementType(elem).ElSSchema)
+  while (elem!=NULL && strcmp(TtaGetSSchemaName(TtaGetElementType(elem).ElSSchema)
                                                     , TEMPLATE_SSHEMA_NAME)!=0)
   {
     elem = TtaGetParent(elem);
@@ -1202,7 +1203,7 @@ ThotBool TemplateElementWillBeCreated (NotifyElement *event)
 
   SSchema     templateSSchema = TtaGetSSchema ("Template", event->document);
 
-  if(!TtaGetDocumentAccessMode(event->document))
+  if (!TtaGetDocumentAccessMode(event->document))
     return TRUE;
 
   if (templateSSchema == NULL)
@@ -1216,7 +1217,7 @@ ThotBool TemplateElementWillBeCreated (NotifyElement *event)
 
 //
 //  // A xt:use within a xt:repeat
-//  if((elType.ElTypeNum==Template_EL_useSimple || elType.ElTypeNum==Template_EL_useEl) && parentType.ElTypeNum==Template_EL_repeat)
+//  if ((elType.ElTypeNum==Template_EL_useSimple || elType.ElTypeNum==Template_EL_useEl) && parentType.ElTypeNum==Template_EL_repeat)
 //  {
 //      printf("    Intend to insert xt:repeat element\n");
 //      return !Template_CanInsertRepeatChild(parent);
@@ -1261,7 +1262,7 @@ ThotBool TemplateElementWillBeDeleted (NotifyElement *event)
   SSchema        templateSSchema = TtaGetSSchema ("Template", event->document);
   XTigerTemplate t;
 
-  if(!TtaGetDocumentAccessMode(event->document))
+  if (!TtaGetDocumentAccessMode(event->document))
     return TRUE;
 
   printf("TemplateElementWillBeDeleted : %s\n", TtaGetElementTypeName(TtaGetElementType(elem)));
@@ -1271,27 +1272,27 @@ ThotBool TemplateElementWillBeDeleted (NotifyElement *event)
   
   
   xtElem = GetFirstTemplateParentElement(elem);
-  if(xtElem)
+  if (xtElem)
   {
     xtType = TtaGetElementType(xtElem);
     t = (XTigerTemplate) Dictionary_Get (Templates_Dic, DocumentMeta[doc]->template_url);
 
-    if(xtType.ElTypeNum==Template_EL_bag)
+    if (xtType.ElTypeNum==Template_EL_bag)
       return FALSE; // xt:bag always allow remove children.
-    else if(xtType.ElTypeNum==Template_EL_useSimple || xtType.ElTypeNum==Template_EL_useEl)
+    else if (xtType.ElTypeNum==Template_EL_useSimple || xtType.ElTypeNum==Template_EL_useEl)
     {
       parent = TtaGetParent(elem);
-      if(xtElem!=parent){
+      if (xtElem!=parent){
       type = GetAttributeStringValueFromNum(xtElem, Template_ATTR_currentType, NULL);
       dec = Template_GetDeclaration(t, type);
       TtaFreeMemory(type);
-      if(dec->nature == XmlElementNat)
+      if (dec->nature == XmlElementNat)
         return FALSE; // Can remove element only if in xt:use current type is base language element. 
       else
         return TRUE;
       }
     }
-    else if(xtType.ElTypeNum==Template_EL_repeat)
+    else if (xtType.ElTypeNum==Template_EL_repeat)
     {
       sibling = TtaGetSuccessor(elem);
       TtaRegisterElementDelete(elem, doc);
@@ -1320,10 +1321,10 @@ ThotBool CurrentTypeWillBeExported (NotifyAttribute *event)
 {
 #ifdef TEMPLATES
 
-  if(!TtaGetDocumentAccessMode(event->document))
+  if (!TtaGetDocumentAccessMode(event->document))
     return TRUE;
 
-  if(IsTemplateDocument(event->document))
+  if (IsTemplateDocument(event->document))
     return TRUE;
 #endif /* TEMPLATES */
   return FALSE;
