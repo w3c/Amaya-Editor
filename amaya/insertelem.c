@@ -386,6 +386,9 @@ void InsertableElement_DoInsertElement(void* el)
       if (elem->typeClass==DefinedComponent)
         Template_InsertRepeatChild(doc, ref, (Declaration)elem->elem.component.declaration, -1);
       break;
+    case Template_EL_bag:
+      Template_InsertBagChild(doc, ref, (Declaration)elem->elem.component.declaration);
+      break;
 #endif /* TEMPLATES */
     default:
       break;

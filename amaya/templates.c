@@ -656,7 +656,8 @@ Element Template_InsertRepeatChildAfter(Document doc, Element el, Declaration de
   ----------------------------------------------------------------------*/
 Element Template_InsertRepeatChild(Document doc, Element el, Declaration decl, int pos)
 {
-  if (!TtaGetDocumentAccessMode(doc))
+#ifdef TEMPLATE
+  if (!TtaGetDocumentAccessMode(doc) || !decl)
     return NULL;
   
   if (pos==0)
@@ -678,7 +679,58 @@ Element Template_InsertRepeatChild(Document doc, Element el, Declaration decl, i
     }
     return Template_InsertRepeatChildAfter(doc, el, decl, elem);
   }
+#else /* TEMPLATE */
+  return NULL;
+#endif /* TEMPLATE */
 }
+
+
+/*----------------------------------------------------------------------
+  Template_InsertBagChild
+  Insert a child to a xt:bag at the current insertion point.
+  The decl parameter must be valid and will not be verified.
+  @param el element (xt:bag) in which insert a new element
+  @param decl Template declaration of the element to insert
+  @return The inserted element
+  ----------------------------------------------------------------------*/
+void Template_InsertBagChild(Document doc, Element el, Declaration decl)
+{
+#ifdef TEMPLATES
+  Element sel;
+  ElementType newElType, selType;
+  int start, end;
+
+  if (!TtaGetDocumentAccessMode(doc) || !decl)
+    return;
+  
+  TtaGiveFirstSelectedElement(doc, &sel, &start, &end);
+  
+  
+  if (TtaIsAncestor(sel, el))
+  {
+    newElType.ElSSchema = TtaGetSSchema (TEMPLATE_SSHEMA_NAME, doc);
+    if(decl->nature==UnionNat)
+      newElType.ElTypeNum = Template_EL_useEl;
+    else
+      newElType.ElTypeNum = Template_EL_useSimple;
+    
+    TtaInsertElement(newElType, doc);
+    
+    TtaGiveFirstSelectedElement(doc, &sel, &start, &end);
+    if(sel)
+    {
+      selType = TtaGetElementType(sel);
+      if(selType.ElSSchema==newElType.ElSSchema && selType.ElTypeNum==Template_EL_useSimple)
+      {
+        Template_InsertUseChildren(doc, sel, decl);
+      }
+    }
+    // TODO : here here here
+
+  }
+#endif /* TEMPLATES */
+}
+
 
 #ifdef TEMPLATES
 /*----------------------------------------------------------------------
@@ -1208,6 +1260,10 @@ ThotBool TemplateElementWillBeCreated (NotifyElement *event)
 
     if(ancestorType.ElTypeNum==Template_EL_bag)
     {
+      if(elType.ElSSchema==templateSSchema &&
+          (elType.ElTypeNum==Template_EL_useSimple || elType.ElTypeNum==Template_EL_useEl))
+        return FALSE;
+
       types = GetAttributeStringValueFromNum(ancestor, Template_ATTR_types, NULL);
       b = Template_CanInsertElementInBag(event->document, elType, types);
       TtaFreeMemory(types);

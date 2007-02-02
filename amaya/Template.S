@@ -71,8 +71,8 @@ STRUCT
     ) = CONSTANT C_CR; {It is always empty}
 
 EXCEPT
-  useEl:              NoReplicate, NoBreakByReturn, NoCreate;
-  useSimple:          NoReplicate, NoBreakByReturn, NoCreate;
+  useEl:              NoReplicate, NoBreakByReturn;
+  useSimple:          NoReplicate, NoBreakByReturn;
   repeat:             NoReplicate, NoBreakByReturn, NoCreate;
   option:             NoReplicate, NoBreakByReturn, NoCreate;
   bag:                NoReplicate, NoBreakByReturn, NoCreate, ParagraphBreak;

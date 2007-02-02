@@ -38,6 +38,9 @@ extern Element Template_InsertRepeatChild ( Document doc,
                                             Element el,
                                             Declaration decl,
                                             int pos );
+extern void Template_InsertBagChild ( Document doc,
+                                      Element el,
+                                      Declaration decl );
 extern ThotBool RepeatButtonClicked ( NotifyElement *event );
 extern ThotBool UseButtonClicked ( NotifyElement *event );
 extern ThotBool UseSimpleButtonClicked ( NotifyElement *event );
@@ -86,6 +89,9 @@ extern Element Template_InsertRepeatChild ( Document doc,
                                               Element el,
                                               Declaration decl,
                                               int pos );
+extern void Template_InsertBagChild ( Document doc,
+                                        Element el,
+                                        Declaration decl );
 extern ThotBool RepeatButtonClicked ( NotifyElement *event );
 extern ThotBool UseButtonClicked ( NotifyElement *event );
 extern ThotBool UseSimpleButtonClicked ( NotifyElement *event );
