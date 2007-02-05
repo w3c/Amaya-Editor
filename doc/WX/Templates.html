@@ -15,64 +15,72 @@
 
 <h2>1. What is a template?</h2>
 
-<p>A template is a skeleton representing a given type of document, expressed
-in the format of the final documents to be produced (XHTML, for instance).
-The format of the final documents is called the target language and must be
-an XML language. It's useful to generate multiple similar documents.</p>
+<p>Templates are used to produce multiple documents of the same type. A
+template is a skeleton representing a given type of document, expressed in
+the format of the final documents to be produced (XHTML, for instance). The
+format of the final documents is called the target language and must be an
+XML language.</p>
 
-<p>The skeleton contains some statements, expressed in the XTiger (eXtensible
-Templates for Interactive Guided Editing of Resources) language, that specify
-how this minimal document can evolve and grow, while keeping in line with the
-intended type of the final document. Some parts of the template may be
-frozen, if they have to appear as is in the final document. Some parts may be
-changed when producing the final document, some others may be added either
-freely or under some constraints.</p>
+<p>In a template, the skeleton document contains some statements, expressed
+in the XTiger (eXtensible Templates for Interactive Guided Editing of
+Resources) language, that specify how this minimal document can evolve and
+grow, while keeping in line with the intended type of the final document.
+Documents produced from this skelton following the XTiger statements are
+called <em>instances</em> of the template. Some parts of the template may be
+frozen, if they have to appear as is in the document instances. Some parts
+may be changed when producing an instance document, some others may be added
+either freely or under some constraints.</p>
 
-<p>A template must be a xml document with a .xtd extension.</p>
+<p>A template must be a XML document with the <code>.xtd</code> extension.</p>
 
 <p>A template comes often with a set of resources (images, style sheets,
-and/or scripts). A template could be stored in the local file system or on a
-remote web server.</p>
+and/or scripts). A template is a web resource, that can be stored in the
+local file system or on a remote web server.</p>
 
 <h2>2. Selecting a template</h2>
 
-<p>Amaya comes with two template examples in the local directory
-Amaya/templates/en.</p>
+<p>Amaya comes with a few templates in local directory Amaya/templates/en.</p>
 
-<p>The user is free to create his own templates where he wants. Today, no
-specific support is provided yet for that.</p>
+<p>You are free to create new templates and to store them anywhere, in the
+local file system or remotely. However, in the current version of Amaya, no
+specific support is provided for creating or updating templates.</p>
 
-<p>There is a Templates section in Amaya Preferences to let the user register
-the list of templates he wants to use. If the template is local, he can use
-the browse button to select the right file. The user can remove a template
-form that list or change the order list.</p>
+<p>There is a Templates section in the Preferences dialogue
+(Edit&gt;Preferences). Use it to register the templates that are proposed
+when a user creates a new document. When registering a local template, a file
+browser can be used from the browse button to locate and select the file to
+be added to the list. The buttons on the right side of the list are used to
+remove a template from the list or to change the order of templates in the
+list.</p>
 
-<p>The user can also look for a template just at the moment he wants to
-create a document instance from a template.</p>
+<p>Registering templates in this list is not mandatory. When you create a new
+document instance, you can also choose a template that is not in that
+list.</p>
 
 <h2>3. Creating a document instance</h2>
 
-<p>The New &gt; From template entry in the File menu, displays a dialog form
-where the user can select:</p>
+<p>To create a new document instance from a template, use entry
+New&gt;From_template in the File menu. It displays a dialogue box where you
+can select:</p>
 <ul>
-  <li>The directory where the template is located if it is a local file and
-    the template is not already registered in the list of templates</li>
-  <li>The template itself. The user can select in the current list or insert
-    a new template URI</li>
-  <li>The URI of the new created document instance</li>
-  <li>Where to open the new created document (Replace current, In new tab, In
-    new window)</li>
-  <li>The Title of the new created document</li>
+  <li>The directory where the template is located if it is a local file that
+    is not registered in the list of templates</li>
+  <li>The template itself, either by selecting in the list of registered
+    templates or by typing the URI/file name of a template that is not in the
+    list</li>
+  <li>The URI/file name of the document instance you want to create</li>
+  <li>Where to open the new document (Replace current, In new tab, In new
+    window)</li>
+  <li>The Title of the new document (this is mandatory)</li>
 </ul>
 
-<p id="PI">When a user creates a document from a template, the new document
-instance is created as a copy of the template. However, the
-<code>xt:head</code> element with its type definitions is kept by the editor,
-but it is not copied in the document instance, as type definitions are
-intended to be shared.</p>
+<p>@@@ Remove the next two paragraphs @@@</p>
 
-<p id="PI1">The template is linked to the new instance by a processing
-instruction:<br />
+<p id="PI">When you create a document from a template, the new document
+instance is generated as a copy of the template. However, the
+<code>xt:head</code> element with its type definitions is kept by the editor,
+but it is not copied in the instance.However, the template is linked to the
+new instance by a processing instruction:<br />
 <code>&lt;?xtiger template="URI/of/the/template.xtd" version="0.8"
 templateVersion="xx" ?&gt;<code></code></code><br />
 which is inserted at the beginning of the instance, in the same way CSS style
@@ -89,54 +97,74 @@ XTiger elements use the XTiger namespace
 <code>http://wam.inrialpes.fr/xtiger</code> and so are ignored by
 browsers.</p>
 
-<p>When the document instance is displayed, Amaya shows limits of XTiger
-elements</p>
+<p>@@@ up to here @@@</p>
+
+<h2>4. Visualizing templates</h2>
+
+<p>When a document instance is displayed, Amaya shows the XTiger elements
+under the form of colored frames that enclose XHTML elements.</p>
 <ul>
-  <li>A use is delimited by a dashed blue box</li>
-  <li>A bag is delimited by a dashed green box</li>
-  <li>A repeat is delimited by a dashed pink box</li>
-  <li>An option is delimited by a dashed yellow box</li>
-  <li>The attribute element is not displayed as it only impact the list of
-    attributes</li>
+  <li>A use element is shown as a dashed blue box</li>
+  <li>A bag element is shown as a dashed green box</li>
+  <li>A repeat element is shown as a dashed purple box</li>
+  <li>An option element is shown as a dashed yellow box</li>
+  <li>The attribute element is not displayed as it only impacts the Alist
+    ofttributes menu.</li>
 </ul>
 
-<p>Amaya displays at the bottom of the document window an active selection
-path which is updated each times the user change the selection in the
-displayed document. To make the perception of the template structure easier,
-XTiger elements are displayed in green. Instead of displaying the text use,
-bag, and repeat the name attached to these elements by the template
-creator.</p>
+<p>The XTiger elements can also be seen in the structure view. Open it with
+the Show_structure entry of the View menu. In this view, XTiger elements are
+displayed in green, while the XHTML elements are in blue. XTiger elements are
+also shown in the Source view, but with no special color.</p>
 
-<h2>4. Editing a document instance</h2>
+<p>Another way to understand the nesting of XTiger elements with XHTML
+elements is the selection path displayed at the bottom of the document
+window. It is the list of all elements in the structure of the document from
+the root element to the current selection. It is updated each times the
+selection is changed. In this path, XTiger elements are displayed in green
+and XHTML elements in black. For XTiger elements, it is not the name of the
+element that is displayed there (use, bag, repeat, etc.) but the title of
+these elements, as declared in the template.</p>
 
-<p>No editing is allowed outside use, bag, repeat and option boxes.</p>
+<h2>5. Editing a document instance</h2>
 
-<p>In a repeat box (pink) , Amaya allows to create a new child (use) or to
-delete an existing child. These editings are controlled by a minimum and a
-maximum of occurrences defined by the template. When the creation of a new
-child is allowed, the user can click on one of + icons to pop up a contextual
-menu that shows what can be inserted at that position. By clicking in that
-popup menu, the user create a new child of the corresponding type. Sometimes
-there is only one item in the popup menu. If the user clicks outside the
+<p>Editing is allowed only inside the use, bag, repeat and option elements,
+i.e. within the colored dashed boxes. The rest of the document is the fixed
+part of the template that can not be modified.</p>
+
+<p>In a <code>repeat</code> box (purple), you can create a new instance of
+the repeated structure or you can delete one. This is controlled by the
+template, which may impose a minimum and/or a maximum number of occurrences
+of the repeated structure. When creating new occurences is allowed, click one
+of the purple '+' icons to create a new occurence at that location. You get a
+pop up menu that tells you what can be inserted at that position. By clicking
+in that popup menu, you create a new occurence of the corresponding type. The
+template may offer only one type of structure. The popup menu then offers a
+single entry, to clearly state what will be created. If you click outside the
 menu, nothing is created.</p>
 
-<p>In an option box (yellow) , the user can only remove or add the option
-content by clicking on the <em>v</em> icon.</p>
+<p><code>option</code> boxes (yellow) display a 'tick' icon in the top left
+corner. If the box is empty, clicking this icon creates the optional
+structure. It the optional structure is already present, this removes it.</p>
 
-<p>When a use (blue) gives the choice between several possible types, a &gt;
-icon is displayed. By clicking on this icon, the user can select one of these
-possible types. In that case sub-elements are generated and the icon
-disappears. When sub-elements are generated, the user can freely update their
-content.</p>
+<p>Most <code>use</code> elements (blue) allow you just to enter free text or
+to freely replace/edit existing text. Other <code>use</code> elements offer a
+choice between different types of elements that can be inserted at that
+position. In that case, a triangle icon is displayed in the top lect corner
+of the box. By clicking this icon, you can select one of the allowed types
+through a popup menu. When you have chosen a type, the corresponding
+structure is generated and you can freely edit their content.</p>
 
-<p>In a bag box (green), the user can insert all elements he wants using the
-standard Amaya user interface. Not allowed elements are greyed in tools and
-menus of the user interface (not implemented yet).</p>
+<p>In a <code>bag</code> box (green), you insert any number of elements of
+the types specified by the template. When you want to insert a XHTML element,
+do it the usual way. It may happen that some elements are not allowed by the
+template. These elements are greyed out in the menus (in the current version,
+this feature is not implemented, but prohibited elements are not created).</p>
 
-<h4>4.1. Adding/choosing components</h4>
+<h4>5.1. Adding/choosing components</h4>
 
-<p>XTiger components are specific elements which cannot be proposed by
-standard Amaya menus and tools.</p>
+<p>Templates introduce new structures (called components and unions) built
+from XHTML elements. The</p>
 
 <p>The "XML element types" tool panel is used to list XTiger components that
 may be inserted at the current position of the document instance.</p>
@@ -144,16 +172,16 @@ may be inserted at the current position of the document instance.</p>
 <p>When a user wants to insert a component, he has to select an item of the
 list and click the Apply button. This concerns mainly XTiger bag content.</p>
 
-<h4>4.2. Enter/Return key within repeat element</h4>
+<h4>5.2. Enter/Return key within repeat element</h4>
 
 <p>When a XTiger repeat sub-element is selected (or if the end of the element
 has been reached) and the Return key is pressed, the classic behavior is to
 add a paragraph after. The XTiger behavior is to add a new child after the
 current repeat child, provided the maximum of repeat occurrences is not
-reached. The type of the  type of the new added child is the same as the
+reached. The type of the type of the new added child is the same as the
 current selected child.</p>
 
-<h4>4.3. Backspace/Delete key within repeat element</h4>
+<h4>5.3. Backspace/Delete key within repeat element</h4>
 
 <p>When a XTiger sub-element is empty or fully selected and the backspace or
 delete key is pressed, the element is deleted, provided the minimum of repeat
