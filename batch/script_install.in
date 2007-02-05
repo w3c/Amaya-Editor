@@ -1,7 +1,7 @@
 #!/bin/sh
 #
 # This script install Amaya to a given location
-# Stephane Gully, 2005
+# Stephane Gully, I. Vatton 2005-2007
 #
 
 CP="@CP@"
@@ -58,7 +58,6 @@ if test ! -d $PREFIX/$AMAYA_INSTALLDIR/annotlib ; then $MKDIR $PREFIX/$AMAYA_INS
 if test ! -d $PREFIX/$AMAYA_INSTALLDIR/fonts ; then $MKDIR $PREFIX/$AMAYA_INSTALLDIR/fonts ; fi
 if test ! -d $PREFIX/$AMAYA_INSTALLDIR/dicopar ; then $MKDIR $PREFIX/$AMAYA_INSTALLDIR/dicopar ; fi
 if test ! -d $PREFIX/$AMAYA_INSTALLDIR/doc ; then $MKDIR $PREFIX/$AMAYA_INSTALLDIR/doc ; fi
-if test ! -d $PREFIX/$AMAYA_INSTALLDIR/templates ; then $MKDIR $PREFIX/$AMAYA_INSTALLDIR/templates ; fi
 if test ! -d $PREFIX/$AMAYA_INSTALLDIR/$AMAYAGUI ; then $MKDIR $PREFIX/$AMAYA_INSTALLDIR/$AMAYAGUI ; fi
 if test ! -d $PREFIX/$AMAYA_INSTALLDIR/$AMAYAGUI/bin ; then $MKDIR $PREFIX/$AMAYA_INSTALLDIR/$AMAYAGUI/bin ; fi
 if test ! -d $PREFIX/$AMAYA_INSTALLDIR/davlib ; then $MKDIR $PREFIX/$AMAYA_INSTALLDIR/davlib ; fi
@@ -169,8 +168,5 @@ $CP -r $AMAYA_SOURCEBINDIR/../../doc/images $PREFIX/$AMAYA_INSTALLDIR/doc/
 $CP -r $AMAYA_SOURCEBINDIR/../../doc/html $PREFIX/$AMAYA_INSTALLDIR/doc/
 $CP -r $AMAYA_SOURCEBINDIR/../../doc/WX $PREFIX/$AMAYA_INSTALLDIR/doc/
 
-$ECHO "--> Installing data in $PREFIX/$AMAYA_INSTALLDIR/templates/..."
-$CP -r $AMAYA_SOURCEBINDIR/../../templates/en $PREFIX/$AMAYA_INSTALLDIR/templates/
-$CP -r $AMAYA_SOURCEBINDIR/../../templates/fr $PREFIX/$AMAYA_INSTALLDIR/templates/
 
 $ECHO "-- Installing $AMAYA_INSTALLDIR done --"
