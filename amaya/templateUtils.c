@@ -57,6 +57,32 @@ void SetAttributeStringValue (Element el, int att, char* value)
 #endif /* TEMPLATES */
 }
 
+/*----------------------------------------------------------------------
+Set the value of a string attribute and registering it in undo sequence.
+----------------------------------------------------------------------*/
+void SetAttributeStringValueWithUndo (Element el, int att, char* value)
+{
+#ifdef TEMPLATES
+  Document      doc = TtaGetDocument(el);
+  AttributeType attType;
+  Attribute     attribute;
+
+  if (doc == 0 || !TtaGetDocumentAccessMode(doc))
+    return;
+  attType.AttrSSchema = TtaGetElementType(el).ElSSchema;
+  attType.AttrTypeNum = att;
+  attribute = TtaGetAttribute(el, attType);
+  if (attribute == NULL)
+    {
+      attribute = TtaNewAttribute (attType);
+      TtaAttachAttribute(el, attribute, doc);
+      TtaRegisterAttributeCreate(attribute, el, doc);
+    }
+  TtaSetAttributeText(attribute, value, el, doc);
+  TtaRegisterAttributeReplace(attribute, el, doc);
+#endif /* TEMPLATES */
+}
+
 
 /*----------------------------------------------------------------------
 Returns the value of a string attribute 

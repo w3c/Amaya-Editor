@@ -449,6 +449,7 @@ Element InstantiateUse (XTigerTemplate t, Element el, Document doc,
       if (dec)
         cont = Template_InsertUseChildren(doc, el, dec);
     }
+
   TtaFreeMemory(types);
   TtaFreeMemory(items);
   TtaSetStructureChecking (oldStructureChecking, doc);

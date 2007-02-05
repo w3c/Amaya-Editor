@@ -371,11 +371,11 @@ DLList InsertableElement_Update(Document doc, Element el)
 void InsertableElement_DoInsertElement(void* el)
 {
   ElemListElement elem = (ElemListElement)el;
-  
   Element ref = elem->refElem;
   ElementType refType = TtaGetElementType(ref);
-  
   Document doc = TtaGetDocument(ref);
+  Element   newEl = NULL;
+
 #ifdef AMAYA_DEBUG
   printf("insert %s into %s\n", ElemListElement_GetName(elem), TtaGetElementTypeName(refType));
 #endif /* AMAYA_DEBUG */
@@ -384,14 +384,18 @@ void InsertableElement_DoInsertElement(void* el)
 #ifdef TEMPLATES
     case Template_EL_repeat:
       if (elem->typeClass==DefinedComponent)
-        Template_InsertRepeatChild(doc, ref, (Declaration)elem->elem.component.declaration, -1);
+        newEl = Template_InsertRepeatChild(doc, ref, (Declaration)elem->elem.component.declaration, -1);
       break;
     case Template_EL_bag:
-      Template_InsertBagChild(doc, ref, (Declaration)elem->elem.component.declaration);
+      newEl = Template_InsertBagChild(doc, ref, (Declaration)elem->elem.component.declaration);
       break;
 #endif /* TEMPLATES */
     default:
       break;
   }
-  
+  if(newEl)
+  {
+    TtaSelectElement(doc, newEl);
+    TtaSetStatusSelectedElement(doc, 1, newEl);
+  }
 }

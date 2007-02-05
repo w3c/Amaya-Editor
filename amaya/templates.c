@@ -465,8 +465,8 @@ ThotBool UseToBeCreated (NotifyElement *event)
   printf("UseToBeCreated\n");
 #endif /* AMAYA_DEBUG */
   
-  /* is there a limit to the number of elements in the xt:repeat ? */
-  /* @@@@@ */
+  /** TODO is there a limit to the number of elements in the xt:repeat ? */
+
 #endif /* TEMPLATES */
   return FALSE; /* let Thot perform normal operation */
 }
@@ -479,10 +479,15 @@ ThotBool UseToBeCreated (NotifyElement *event)
 void UseCreated (NotifyElement *event)
 {
 #ifdef TEMPLATES
-	Document         doc = event->document;
-	Element          el = event->element;
-  XTigerTemplate   t;
-
+	Document        doc = event->document;
+	Element         el = event->element;
+  Element         parent;
+  Element         first;
+  ElementType     parentType;
+  XTigerTemplate  t;
+  SSchema         templateSSchema;
+  char*           types;
+  
   if (!TtaGetDocumentAccessMode(doc))
     return;
 
@@ -490,9 +495,28 @@ void UseCreated (NotifyElement *event)
     /* this Use element has already some content. It has already been
        instanciated */
     return;
+
   t = (XTigerTemplate) Dictionary_Get (Templates_Dic, DocumentMeta[doc]->template_url);
   if (!t)
     return; // no template ?!?!
+
+  templateSSchema = TtaGetSSchema (TEMPLATE_SSHEMA_NAME, doc);
+  parent = TtaGetParent(el);
+  parentType = TtaGetElementType(parent);
+  
+  if(parentType.ElSSchema==templateSSchema && parentType.ElTypeNum==Template_EL_repeat)
+  {
+    first = TtaGetFirstChild(parent);
+    if(first)
+    {
+      types = GetAttributeStringValueFromNum(first, Template_ATTR_types, NULL);
+      if(types)
+      {
+        SetAttributeStringValueWithUndo(el, Template_ATTR_types, types);
+        TtaFreeMemory(types);
+      }
+    }
+  }
 
   InstantiateUse (t, el, doc, TRUE);
 #endif /* TEMPLATES */
@@ -693,7 +717,7 @@ Element Template_InsertRepeatChild(Document doc, Element el, Declaration decl, i
   @param decl Template declaration of the element to insert
   @return The inserted element
   ----------------------------------------------------------------------*/
-void Template_InsertBagChild(Document doc, Element el, Declaration decl)
+Element Template_InsertBagChild(Document doc, Element el, Declaration decl)
 {
 #ifdef TEMPLATES
   Element sel;
@@ -701,10 +725,9 @@ void Template_InsertBagChild(Document doc, Element el, Declaration decl)
   int start, end;
 
   if (!TtaGetDocumentAccessMode(doc) || !decl)
-    return;
+    return NULL;
   
   TtaGiveFirstSelectedElement(doc, &sel, &start, &end);
-  
   
   if (TtaIsAncestor(sel, el))
   {
@@ -715,20 +738,26 @@ void Template_InsertBagChild(Document doc, Element el, Declaration decl)
       newElType.ElTypeNum = Template_EL_useSimple;
     
     TtaInsertElement(newElType, doc);
-    
     TtaGiveFirstSelectedElement(doc, &sel, &start, &end);
     if(sel)
     {
       selType = TtaGetElementType(sel);
+      
+      TtaUnselect(doc);
+      
       if(selType.ElSSchema==newElType.ElSSchema && selType.ElTypeNum==Template_EL_useSimple)
       {
+        SetAttributeStringValueWithUndo(sel, Template_ATTR_types, decl->name);
+        SetAttributeStringValueWithUndo(sel, Template_ATTR_title, decl->name);
         Template_InsertUseChildren(doc, sel, decl);
       }
+      
+      return sel;
     }
-    // TODO : here here here
-
+    
   }
 #endif /* TEMPLATES */
+  return NULL;
 }
 
 
@@ -888,6 +917,7 @@ ThotBool UseButtonClicked (NotifyElement *event)
   Element         el = event->element;
   Element         child;
   ElementType     elType;
+  Attribute       attr;
   XTigerTemplate  t;
   Declaration     decl;
   Element         firstEl;
@@ -944,6 +974,9 @@ ThotBool UseButtonClicked (NotifyElement *event)
           
           TtaChangeTypeOfElement(el, doc, Template_EL_useSimple);
           TtaRegisterElementTypeChange(el, Template_EL_useEl, doc);
+          
+          /* xt:currentType attribute.*/
+          SetAttributeStringValueWithUndo(el, Template_ATTR_currentType, result);
           
           /* Finish insertion. */
           TtaCloseUndoSequence(doc);
@@ -1300,7 +1333,7 @@ ThotBool TemplateElementWillBeDeleted (NotifyElement *event)
   Element        elem = event->element;
   Element        xtElem, parent;
   Element        sibling;
-  ElementType    xtType;
+  ElementType    xtType, elType;
   char*          type;
   Declaration    dec;
   SSchema        templateSSchema;
@@ -1312,30 +1345,55 @@ ThotBool TemplateElementWillBeDeleted (NotifyElement *event)
   if (!TtaGetDocumentAccessMode(event->document))
     return TRUE;
 
-  templateSSchema = TtaGetSSchema ("Template", event->document);
+  templateSSchema = TtaGetSSchema (TEMPLATE_SSHEMA_NAME, event->document);
   if (templateSSchema == NULL)
     return FALSE; // let Thot do the job
   
+#ifdef AMAYA_DEBUG 
+  elType = TtaGetElementType(elem);
+  printf("TemplateElementWillBeDeleted %s:%s:%d\n", TtaGetSSchemaName(elType.ElSSchema), TtaGetElementTypeName(elType), elType.ElTypeNum);
+#endif /* AMAYA_DEBUG */
   
   xtElem = GetFirstTemplateParentElement(elem);
   if (xtElem)
   {
     xtType = TtaGetElementType(xtElem);
+    
+#ifdef AMAYA_DEBUG
+  printf("  xt: %s:%s:%d\n", TtaGetSSchemaName(xtType.ElSSchema), TtaGetElementTypeName(xtType), xtType.ElTypeNum);
+#endif /* AMAYA_DEBUG */
+
     t = (XTigerTemplate) Dictionary_Get (Templates_Dic, DocumentMeta[doc]->template_url);
 
     if (xtType.ElTypeNum==Template_EL_bag)
-      return FALSE; // xt:bag always allow remove children.
+    {
+      elType = TtaGetElementType(elem);
+      if(elType.ElSSchema==templateSSchema &&
+        (elType.ElTypeNum==Template_EL_useSimple || elType.ElTypeNum==Template_EL_useEl))
+      {
+        // Remove element manually.
+        TtaOpenUndoSequence(doc, elem, elem, 0, 0);
+        TtaRegisterElementDelete(elem, doc);
+        TtaDeleteTree(elem, doc);
+        TtaCloseUndoSequence(doc);
+        return TRUE;
+      }
+      else
+        return FALSE; // xt:bag always allow remove children.
+    }
     else if (xtType.ElTypeNum==Template_EL_useSimple || xtType.ElTypeNum==Template_EL_useEl)
     {
       parent = TtaGetParent(elem);
-      if (xtElem!=parent){
-      type = GetAttributeStringValueFromNum(xtElem, Template_ATTR_currentType, NULL);
-      dec = Template_GetDeclaration(t, type);
-      TtaFreeMemory(type);
-      if (dec->nature == XmlElementNat)
-        return FALSE; // Can remove element only if in xt:use current type is base language element. 
-      else
-        return TRUE;
+      if (xtElem!=parent)
+      {
+        type = GetAttributeStringValueFromNum(xtElem, Template_ATTR_currentType, NULL);
+        dec = Template_GetDeclaration(t, type);
+        TtaFreeMemory(type);
+        
+        if (dec && dec->nature == XmlElementNat)
+          return FALSE; // Can remove element only if in xt:use current type is base language element. 
+        else
+          return TRUE;
       }
     }
     else if (xtType.ElTypeNum==Template_EL_repeat)
