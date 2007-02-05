@@ -3572,6 +3572,9 @@ void CheckNewLines (NotifyOnTarget *event)
               TtaFreeMemory (content);
               return;
             }
+          else if (!strcmp(name, "Template"))
+            /* just skip ancestors that are template elements */
+            ancestor = TtaGetParent (ancestor);
           else
             ancestor = NULL;  /* not an HTML element */
         }
