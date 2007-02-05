@@ -10,6 +10,9 @@ extern char *GetSchemaFromDocType ( DocumentType docType );
 extern void SetAttributeStringValue ( Element el,
                                       int att,
                                       char* value );
+extern void SetAttributeStringValueWithUndo ( Element el,
+                                              int att,
+                                              char* value );
 extern char *GetAttributeStringValueFromNum ( Element el,
                                               int att,
                                               int* sz );
@@ -24,6 +27,9 @@ extern char *GetSchemaFromDocType ( DocumentType docType );
 extern void SetAttributeStringValue ( Element el,
                                         int att,
                                         char* value );
+extern void SetAttributeStringValueWithUndo ( Element el,
+                                                int att,
+                                                char* value );
 extern char *GetAttributeStringValueFromNum ( Element el,
                                                 int att,
                                                 int* sz );

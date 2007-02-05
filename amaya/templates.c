@@ -680,7 +680,7 @@ Element Template_InsertRepeatChildAfter(Document doc, Element el, Declaration de
   ----------------------------------------------------------------------*/
 Element Template_InsertRepeatChild(Document doc, Element el, Declaration decl, int pos)
 {
-#ifdef TEMPLATE
+#ifdef TEMPLATES
   if (!TtaGetDocumentAccessMode(doc) || !decl)
     return NULL;
   
@@ -703,9 +703,9 @@ Element Template_InsertRepeatChild(Document doc, Element el, Declaration decl, i
     }
     return Template_InsertRepeatChildAfter(doc, el, decl, elem);
   }
-#else /* TEMPLATE */
+#else /* TEMPLATES */
   return NULL;
-#endif /* TEMPLATE */
+#endif /* TEMPLATES */
 }
 
 
