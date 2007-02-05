@@ -2282,13 +2282,12 @@ void DeleteNextChar (int frame, PtrElement pEl, ThotBool before)
             pParent = NULL;
         }
     }
-  while (pParent != NULL && pSibling == NULL);
+  while (pParent && pSibling == NULL);
 
   if (pParent == NULL || pSibling == NULL)
     return;
 
   /* We do nothing if the parent or the sibling elements are read-only */
-
   if (TtaIsReadOnly((Element) pParent) || TtaIsReadOnly((Element) pSibling))
     return;
 
@@ -2337,7 +2336,7 @@ void DeleteNextChar (int frame, PtrElement pEl, ThotBool before)
         pE = pE->ElParent;
     }
 
-  if (pSibling != NULL && pParent != pEl && pElem != NULL)
+  if (pSibling && pParent != pEl && pElem)
     {
       if (pSibling->ElTerminal)
         /* don't merge a structured element with a text string */
@@ -2466,7 +2465,8 @@ void DeleteNextChar (int frame, PtrElement pEl, ThotBool before)
                     else
                       SelectString (pDoc, pSibling, 1, 0);
                     /* simulate a delete */
-                    TtcDeleteSelection (IdentDocument (pDoc), 0);
+                    ContentEditing (TEXT_DEL);
+                    //TtcDeleteSelection (IdentDocument (pDoc), 0);
                   }
               else if (strcmp (pSibling->ElStructSchema->SsName, "SVG"))
                 /* don't delete a graphic element when the user enters
