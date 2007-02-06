@@ -1308,8 +1308,12 @@ ThotBool TemplateElementWillBeCreated (NotifyElement *event)
       TtaFreeMemory(types);
       return !b;      
     }
-    else if(ancestorType.ElTypeNum==Template_EL_useSimple || ancestorType.ElTypeNum==Template_EL_useEl)
+    else if(ancestorType.ElTypeNum==Template_EL_useSimple ||
+            ancestorType.ElTypeNum==Template_EL_useEl)
     {
+      // only check the use child
+      if (ancestor != parent)
+        return  FALSE; // let Thot do the job
       types = GetAttributeStringValueFromNum(ancestor, Template_ATTR_currentType, NULL);
       b = Template_CanInsertElementInUse(event->document, elType, types, parent, event->position); 
       return !b;
