@@ -63,7 +63,6 @@ void AmayaPathControl::SetSelection(Element elem)
   
   m_items.DeleteContents(true);
   m_items.clear();
-  
   m_focused = NULL;
   m_height = 0;
   while (pEl)

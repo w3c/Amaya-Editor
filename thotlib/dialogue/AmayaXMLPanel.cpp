@@ -119,18 +119,28 @@ void AmayaXMLPanel::SendDataToPanel( AmayaParams& p )
     {
       elem = (ElemListElement)node->elem;
       
-      wxString str = TtaConvMessageToWX(ElemListElement_GetName(elem));
-      
-      if(elem->typeClass==LanguageElement)
+// TODO removed code because not showing other than DefinedComponent
+//      wxString str = TtaConvMessageToWX(ElemListElement_GetName(elem));
+//      if(elem->typeClass==LanguageElement)
+//      {
+//        str.Prepend(TtaConvMessageToWX( TtaGetSSchemaName(elem->elem.element.type.ElSSchema)) + wxT(":"));
+//      }
+//      if(elem->comment)
+//      {
+//        str.append(wxT(" (") + TtaConvMessageToWX( elem->comment) + wxT(")"));
+//      }
+//      m_pXMLList->Append( str , (void*)elem);
+
+      if(elem && elem->typeClass==DefinedComponent)
       {
-        str.Prepend(TtaConvMessageToWX( TtaGetSSchemaName(elem->elem.element.type.ElSSchema)) + wxT(":"));
+        wxString str = TtaConvMessageToWX(ElemListElement_GetName(elem));
+        if(elem->comment)
+        {
+          str.append(wxT(" (") + TtaConvMessageToWX( elem->comment) + wxT(")"));
+        }
+        m_pXMLList->Append( str , (void*)elem);
       }
-      if(elem->comment)
-      {
-        str.append(wxT(" (") + TtaConvMessageToWX( elem->comment) + wxT(")"));
-      }
-      
-      m_pXMLList->Append( str , (void*)elem);
+
       node = ForwardIterator_GetNext(iter);
     }
     
