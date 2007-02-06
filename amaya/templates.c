@@ -823,8 +823,8 @@ ThotBool RepeatButtonClicked (NotifyElement *event)
   char*           types;
   ThotBool        oldStructureChecking;
   View            view;
-  char*           listtypes;
-  char*           result;
+  char*           listtypes = NULL;
+  char*           result = NULL;
 
   if (!TtaGetDocumentAccessMode(doc))
     return TRUE;
