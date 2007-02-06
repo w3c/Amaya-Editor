@@ -949,6 +949,9 @@ ThotBool Template_CanInsertElementInBag (Document doc, ElementType type, char* b
   if (TtaIsLeaf (type))
     // accept all basic elements ????
     return TRUE;
+  if (!strcmp (bagTypes, "anyElement"))
+      // accept "anyElement"
+    return TRUE;
   t = (XTigerTemplate) Dictionary_Get (Templates_Dic, DocumentMeta[doc]->template_url);
   if (t)
   {
