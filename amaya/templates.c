@@ -167,7 +167,7 @@ static int LoadTemplateRepositoryList (Prop_Templates_Path** list)
   {
     /* The config file dont exist, create it. */
     file = TtaWriteOpen ((char *)path);
-    fprintf (file, "http://wam.inrialpes.fr/software/amaya/cv.xtd\n", homePath, DIR_SEP);
+    fprintf (file, "http://www.w3.org/Amaya/Templates/cv.xtd\n", homePath, DIR_SEP);
     TtaWriteClose (file);
     /* Retry to open it.*/
     file = TtaReadOpen ((char *)path);
