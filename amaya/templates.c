@@ -1262,7 +1262,7 @@ ThotBool TemplateElementWillBeCreated (NotifyElement *event)
   if (!TtaGetDocumentAccessMode(event->document))
     return TRUE;
 
-  templateSSchema = TtaGetSSchema ("Template", event->document);
+  templateSSchema = TtaGetSSchema (TEMPLATE_SSHEMA_NAME, event->document);
   if (templateSSchema == NULL)
     return FALSE; // let Thot do the job
 
@@ -1382,6 +1382,7 @@ ThotBool TemplateElementWillBeDeleted (NotifyElement *event)
       sibling = TtaGetSuccessor(elem);
       TtaRegisterElementDelete(elem, doc);
       TtaDeleteTree(elem, doc);
+      Template_DecrementRepeatOccurNumber(xtElem);
       InstantiateRepeat(t, xtElem, doc, TRUE);
       TtaSelectElement(doc, sibling);
       return TRUE;

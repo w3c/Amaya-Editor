@@ -417,7 +417,7 @@ Element Template_InsertUseChildren(Document doc, Element el, Declaration dec)
   InstantiateUse
   ----------------------------------------------------------------------*/
 Element InstantiateUse (XTigerTemplate t, Element el, Document doc,
-                        ThotBool insert)
+                        ThotBool registerUndo)
 {
 #ifdef TEMPLATES
 	Element          cont = NULL;
@@ -447,7 +447,15 @@ Element InstantiateUse (XTigerTemplate t, Element el, Document doc,
     {
       dec = Template_GetDeclaration (t, items[0].label);
       if (dec)
+      {
         cont = Template_InsertUseChildren(doc, el, dec);
+        if(cont)
+        {
+          TtaChangeTypeOfElement (el, doc, Template_EL_useSimple);
+          if(registerUndo)
+            TtaRegisterElementTypeChange(el, Template_EL_useEl, doc);
+        }
+      }
     }
 
   TtaFreeMemory(types);
@@ -470,7 +478,7 @@ void InstantiateRepeat (XTigerTemplate t, Element el, Document doc, ThotBool reg
   int            curVal,  minVal,  maxVal;
   Attribute      curAtt,  minAtt,  maxAtt;
   AttributeType  curType, minType, maxType;
-  char           *text;
+  char           *text, *types = NULL, *title=NULL;
 
   if (!t)
     return;
@@ -595,17 +603,32 @@ void InstantiateRepeat (XTigerTemplate t, Element el, Document doc, ThotBool reg
     return;  
 
   child = TtaGetLastChild(el);
+  types = GetAttributeStringValueFromNum(child, Template_ATTR_types, NULL);
+  title = GetAttributeStringValueFromNum(child, Template_ATTR_title, NULL);
+  
 
   while(childrenCount < curVal)
     {
-      //Create a new child
-      newChild = TtaCopyTree(child, doc, doc, el);
+      ElementType newElType;
+      newElType.ElSSchema = TtaGetSSchema (TEMPLATE_SCHEMA_NAME, doc);
+      newElType.ElTypeNum = Template_EL_useEl;
+      newChild = TtaNewElement(doc, newElType);
+      
+      // Insert it
       TtaInsertSibling(newChild, child, FALSE, doc);
+      SetAttributeStringValueWithUndo(newChild, Template_ATTR_types, types);
+      SetAttributeStringValueWithUndo(newChild, Template_ATTR_title, title);
+      
+      InstantiateUse(t, newChild, doc, TRUE);
+      
       if (registerUndo)
         TtaRegisterElementCreate(newChild, doc);
       child = newChild;
       childrenCount++;
     }
+    
+    TtaFreeMemory(types);
+    TtaFreeMemory(title);
 #endif /* TEMPLATES */
 }
 
@@ -679,7 +702,7 @@ static void ParseTemplate (XTigerTemplate t, Element el, Document doc,
              supposed to contain a valid instance. This should be
              checked, though */
           if (!TtaGetFirstChild (el))
-            InstantiateUse (t, el, doc, TRUE);
+            InstantiateUse (t, el, doc, FALSE);
           break;
         case Template_EL_attribute :
           if (!loading)
