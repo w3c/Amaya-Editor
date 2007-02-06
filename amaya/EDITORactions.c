@@ -1646,6 +1646,18 @@ ThotBool HTMLelementAllowed (Document doc)
   
   elType = TtaGetElementType (el);
   s = TtaGetSSchemaName (elType.ElSSchema);
+
+  ancestor = el;
+  while (ancestor && !strcmp (s, "Template"))
+    {
+      ancestor = TtaGetParent (ancestor);
+      if (ancestor)
+        {
+          elType = TtaGetElementType (ancestor);
+          s = TtaGetSSchemaName (elType.ElSSchema);
+        }
+    }
+
   if (strcmp (s, "HTML") == 0)
     /* within an HTML element */
     return TRUE;
