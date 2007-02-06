@@ -29,6 +29,9 @@
 #endif /* SVG */
 #ifdef TEMPLATES
 #include "Template.h"
+#include "templates.h"
+#include "templates_f.h"
+#include "templateDeclarations_f.h"
 #endif /* TEMPLATES */
 
 static char        *TargetDocumentURL = NULL;
@@ -458,10 +461,13 @@ void GenerateInlineElement (int eType, int aType, char * data)
   DisplayMode     dispMode;
   ThotBool	      doit, split, before, charlevel, inside, done;
   ThotBool        lastChanged, parse, open, selpos, isPict = FALSE;
+  SSchema         templateSSchema;
 
   doc = TtaGetSelectedDocument();
   if (doc)
     {
+
+
       if (DocumentTypes[doc] == docText ||
           DocumentTypes[doc] == docCSS ||
           DocumentTypes[doc] == docSource)
@@ -471,6 +477,27 @@ void GenerateInlineElement (int eType, int aType, char * data)
           /* give current position */
           TtaGiveFirstSelectedElement (doc, &firstSel, &firstchar, &i);
           TtaGiveLastSelectedElement (doc, &lastSel, &j, &lastchar);
+          
+#ifdef TEMPLATES
+          /* Verify if template allow this element.*/
+          templateSSchema = TtaGetSSchema (TEMPLATE_SSHEMA_NAME, doc);
+          if(templateSSchema)
+          {
+            parent = GetFirstTemplateParentElement(firstSel);
+            elType.ElSSchema = TtaGetSSchema ("HTML", doc);
+            elType.ElTypeNum = eType;
+            if(parent)
+            {
+              parentType = TtaGetElementType(parent);
+              if(parentType.ElSSchema==templateSSchema && parentType.ElTypeNum==Template_EL_bag)
+              {
+                if(!Template_CanInsertElementInBag(doc, elType, parent))
+                  return;
+              }
+            }
+          }
+#endif /* TEMPLATES */
+          
           if (TtaIsReadOnly (firstSel))
             {
               /* the selected element is read-only */

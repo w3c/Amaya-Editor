@@ -57,6 +57,9 @@ extern char* Template_ExpandTypes ( XTigerTemplate t,
 extern ThotBool Template_CanInsertElementInBag ( Document doc,
                                                  ElementType type,
                                                  char* bagTypes );
+extern ThotBool Template_CanInsertElementInBag ( Document doc,
+                                                 ElementType type,
+                                                 Element bag );
 extern ThotBool Template_CanInsertElementInUse ( Document doc,
                                                  ElementType type,
                                                  char* useType,
@@ -116,6 +119,9 @@ extern char* Template_ExpandTypes ( XTigerTemplate t,
 extern ThotBool Template_CanInsertElementInBag ( Document doc,
                                                    ElementType type,
                                                    char* bagTypes );
+extern ThotBool Template_CanInsertElementInBag ( Document doc,
+                                                   ElementType type,
+                                                   Element bag );
 extern ThotBool Template_CanInsertElementInUse ( Document doc,
                                                    ElementType type,
                                                    char* useType,

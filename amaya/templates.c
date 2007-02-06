@@ -1211,8 +1211,8 @@ ThotBool ClosingInstance(NotifyDialog* dialog)
 
 
 /*----------------------------------------------------------------------
-  GetFirstTemplateParentElement
-  Return the first element wich has "Template" as SShema name or null if none.
+  IsTemplateElement
+  Test if an element is template.
   ----------------------------------------------------------------------*/
 ThotBool IsTemplateElement(Element elem)
 {
@@ -1276,7 +1276,6 @@ ThotBool TemplateElementWillBeCreated (NotifyElement *event)
   printf("    ^^ %s:%s\n", TtaGetSSchemaName(parentType.ElSSchema), TtaGetElementTypeName(parentType));
 #endif /* AMAYA_DEBUG */
 
-
   // Fisrt, test if in a xt:bag or in a base-element xt:use
   if(parentType.ElSSchema==templateSSchema)
     ancestor = parent;
@@ -1299,6 +1298,13 @@ ThotBool TemplateElementWillBeCreated (NotifyElement *event)
 
       types = GetAttributeStringValueFromNum(ancestor, Template_ATTR_types, NULL);
       b = Template_CanInsertElementInBag(event->document, elType, types);
+#ifdef AMAYA_DEBUG 
+      if(b)
+        printf("      -> Yes I can\n");
+      else
+        printf("      -> No I cant\n");
+#endif /* AMAYA_DEBUG */
+      
       TtaFreeMemory(types);
       return !b;      
     }

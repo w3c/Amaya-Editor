@@ -18,9 +18,11 @@
 #include "containers.h"
 #include "insertelem_f.h"
 
+#include "Template.h"
 #include "templates.h"
 #include "mydictionary_f.h"
 #include "templateDeclarations_f.h"
+#include "templateUtils_f.h"
 #include "HTMLactions_f.h"
 
 
@@ -944,19 +946,50 @@ ThotBool Template_CanInsertElementInBag (Document doc, ElementType type, char* b
   t = (XTigerTemplate) Dictionary_Get (Templates_Dic, DocumentMeta[doc]->template_url);
   if (t)
   {
-//    DumpDeclarations(t);
-    
     types = Template_ExpandTypes(t, bagTypes);
     elTypeName = TtaGetElementTypeName(type);
-    if (strstr(types, elTypeName))
+    if (strstr(types, elTypeName)) // Test for components or direct element types
       res = TRUE;
+    else
+    {
+    }
     TtaFreeMemory(types);
   }
-  return TRUE;
-  /* @todo fixme : union expansion */
 #endif /* TEMPLATES */
   return res;
 }
+
+/**----------------------------------------------------------------------
+  Template_CanInsertElementInBagElement
+  Test if an element can be insert in a bag
+  ----------------------------------------------------------------------*/
+ThotBool Template_CanInsertElementInBag (Document doc, ElementType type, Element bag)
+{
+  ThotBool res = FALSE;
+#ifdef TEMPLATES
+  XTigerTemplate  t;
+  char* types, *bagTypes;
+  char* elTypeName;
+  
+  t = (XTigerTemplate) Dictionary_Get (Templates_Dic, DocumentMeta[doc]->template_url);
+  if (t && bag)
+  {
+    bagTypes = GetAttributeStringValueFromNum(bag, Template_ATTR_types, NULL);
+    types = Template_ExpandTypes(t, bagTypes);
+    elTypeName = TtaGetElementTypeName(type);
+    if (strstr(types, elTypeName)) // Test for components or direct element types
+      res = TRUE;
+    else
+    {
+    }
+    TtaFreeMemory(bagTypes);
+    TtaFreeMemory(types);
+  }
+#endif /* TEMPLATES */
+  return res;
+}
+
+
 
 /**----------------------------------------------------------------------
   Template_CanInsertElementInUse
