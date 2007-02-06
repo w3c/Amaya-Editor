@@ -112,8 +112,8 @@ static void FillUnionResolvedPossibleElement(XTigerTemplate t, const char* name,
     return;
   if (dec->declaredIn->isPredefined)
   {
-    DLList_Append(list, ElemListElement_CreateComponent(level, dec->name,
-                                                        (void*)dec, resolvedPath, elem));
+//    DLList_Append(list, ElemListElement_CreateComponent(level, dec->name,
+//                                                        (void*)dec, resolvedPath, elem));
   }
   else if (dec->nature==ComponentNat)
   {
@@ -375,24 +375,31 @@ void InsertableElement_DoInsertElement(void* el)
   ElementType refType = TtaGetElementType(ref);
   Document doc = TtaGetDocument(ref);
   Element   newEl = NULL;
+  SSchema   templateSSchema;
 
 #ifdef AMAYA_DEBUG
   printf("insert %s into %s\n", ElemListElement_GetName(elem), TtaGetElementTypeName(refType));
 #endif /* AMAYA_DEBUG */
-  switch(refType.ElTypeNum)
-  {
+
 #ifdef TEMPLATES
-    case Template_EL_repeat:
-      if (elem->typeClass==DefinedComponent)
-        newEl = Template_InsertRepeatChild(doc, ref, (Declaration)elem->elem.component.declaration, -1);
-      break;
-    case Template_EL_bag:
-      newEl = Template_InsertBagChild(doc, ref, (Declaration)elem->elem.component.declaration);
-      break;
-#endif /* TEMPLATES */
-    default:
-      break;
+  templateSSchema = TtaGetSSchema("Template", doc);
+  if(templateSSchema && refType.ElSSchema==templateSSchema)
+  {
+    switch(refType.ElTypeNum)
+    {
+      case Template_EL_repeat:
+        if (elem->typeClass==DefinedComponent)
+          newEl = Template_InsertRepeatChild(doc, ref, (Declaration)elem->elem.component.declaration, -1);
+        break;
+      case Template_EL_bag:
+        newEl = Template_InsertBagChild(doc, ref, (Declaration)elem->elem.component.declaration);
+        break;
+      default:
+        break;
+    }
   }
+#endif /* TEMPLATES */
+
   if(newEl)
   {
     TtaSelectElement(doc, newEl);
