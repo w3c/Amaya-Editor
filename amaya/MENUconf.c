@@ -413,7 +413,6 @@ void InitAmayaDefEnv (void)
   TtaSetDefEnvString ("LOAD_OBJECTS", "yes", FALSE);
   TtaSetDefEnvString ("LOAD_CSS", "yes", FALSE);
   TtaSetDefEnvString ("VERIFY_PUBLISH", "no", FALSE);
-  TtaSetDefEnvString ("ENABLE_LOST_UPDATE_CHECK", "yes", FALSE);
   TtaSetDefEnvString ("DEFAULTNAME", "Overview.html", FALSE);
   TtaSetDefEnvString ("FontMenuSize", "12", FALSE);
   TtaSetDefEnvString ("ENABLE_DOUBLECLICK", "yes", FALSE);
@@ -427,7 +426,7 @@ void InitAmayaDefEnv (void)
   /* network configuration */
   TtaSetDefEnvString ("ENABLE_XHTML_MIMETYPE", "no", FALSE);
   TtaSetDefEnvString ("SAFE_PUT_REDIRECT", "", FALSE);
-  TtaSetDefEnvString ("ENABLE_LOST_UPDATE_CHECK", "yes", FALSE);
+  TtaSetDefEnvString ("ENABLE_LOST_UPDATE_CHECK", "no", FALSE);
   TtaSetDefEnvString ("ENABLE_PIPELINING", "yes", FALSE);
   TtaSetDefEnvString ("NET_EVENT_TIMEOUT", "60000", FALSE);
   TtaSetDefEnvString ("PERSIST_CX_TIMEOUT", "60", FALSE);
@@ -2375,10 +2374,8 @@ static void GetDefaultPublishConf ()
 {
   GetDefEnvToggle ("ENABLE_XHTML_MIMETYPE", &(GProp_Publish.UseXHTMLMimeType), 
                    PublishBase + mTogglePublish, 0);
-  GetDefEnvToggle ("ENABLE_LOST_UPDATE_CHECK", &(GProp_Publish.LostUpdateCheck), 
-                   PublishBase + mTogglePublish, 1);
-  GetDefEnvToggle ("VERIFY_PUBLISH", &(GProp_Publish.VerifyPublish),
-                   PublishBase + mTogglePublish, 2);
+  GProp_Publish.LostUpdateCheck = FALSE;
+  GProp_Publish.VerifyPublish = FALSE;
   GetDefEnvToggle ("EXPORT_CRLF", &(GProp_Publish.ExportCRLF),
                    PublishBase + mTogglePublish, 3);
   GProp_Publish.GenerateMathPI = FALSE;
