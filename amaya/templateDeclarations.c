@@ -175,7 +175,7 @@ void FreeTemplateEnvironment ()
         FreeXTigerTemplate(t);
       }
   }
-      
+  Dictionary_Clean(Templates_Dic);
 #endif
 }
 
@@ -443,6 +443,8 @@ void FreeXTigerTemplate (XTigerTemplate t)
   Dictionary_RemoveElement (Templates_Dic, t);
 
   //Freeing the template
+  TtaFreeMemory(t->version);
+  TtaFreeMemory(t->templateVersion);
   TtaFreeMemory(t->name);
 	TtaFreeMemory (t);
 #endif /* TEMPLATES */
@@ -922,6 +924,7 @@ char* Template_ExpandTypes (XTigerTemplate t, char* types)
     result[pos] = 0;
     
     Dictionary_Clean(dico);
+    TtaFreeMemory(type);
     return result;
   }
   else

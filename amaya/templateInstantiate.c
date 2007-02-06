@@ -423,7 +423,7 @@ Element InstantiateUse (XTigerTemplate t, Element el, Document doc,
 	Element          cont = NULL;
   ElementType      elType;
   Declaration      dec;
-  int              size, nbitems;
+  int              size, nbitems, i;
   struct menuType  *items;
   char             *types;
   ThotBool          oldStructureChecking;
@@ -459,6 +459,10 @@ Element InstantiateUse (XTigerTemplate t, Element el, Document doc,
     }
 
   TtaFreeMemory(types);
+  
+  
+  for(i=0; i<nbitems; i++)
+    TtaFreeMemory(items[i].label);
   TtaFreeMemory(items);
   TtaSetStructureChecking (oldStructureChecking, doc);
   return cont;
@@ -688,6 +692,7 @@ static void ParseTemplate (XTigerTemplate t, Element el, Document doc,
           TtaAttachAttribute (el, att, doc);
           if (name)
             TtaSetAttributeText (att, name, el, doc);
+          TtaFreeMemory(name);
           break;
         case Template_EL_option :
           aux = NULL;
@@ -796,6 +801,7 @@ void DoInstanceTemplate (char *templatename)
       strcat (buffer, "\"");
       TtaSetTextContent (text, (unsigned char*)buffer,  Latin_Script, doc);
       TtaSetStructureChecking (TRUE, doc);
+      TtaFreeMemory(charsetname);
     }
   
   /* generate the XTiger PI */
