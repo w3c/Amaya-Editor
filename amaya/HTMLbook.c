@@ -1693,7 +1693,7 @@ void SectionNumbering (Document doc, View view)
   ----------------------------------------------------------------------*/
 void MakeToc (Document doc, View view)
 {
-  Element             el, new_, *list, parent, copy, srce, child, prev;
+  Element             el, new_, *list, parent, copy, srce, child, prev, ancest;
   Element             toc, lH2, lH3, lH4, lH5, lH6, item;
   ElementType         elType, searchedType1, searchedType2;
   ElementType         searchedType3, searchedType4, searchedType5;
@@ -1728,7 +1728,22 @@ void MakeToc (Document doc, View view)
   s = TtaGetSSchemaName (elType.ElSSchema);
   if (strcmp (s, "HTML"))
     /* not within HTML element */
-    return;
+    {
+      /* skip ancestors that are Template elements */
+      ancest = el;
+      while (ancest && !strcmp (s, "Template"))
+        {
+          ancest = TtaGetParent (ancest);
+          if (ancest)
+            {
+              elType = TtaGetElementType (ancest);
+              s = TtaGetSSchemaName (elType.ElSSchema);
+            }
+        }
+      if (strcmp (s, "HTML"))
+        return;
+    }
+
   if (!HTMLelementAllowed (doc))
     /* the creation of an HTML element is not allowed here */
     return;
