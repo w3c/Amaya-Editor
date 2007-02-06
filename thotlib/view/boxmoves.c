@@ -3115,6 +3115,11 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
                   + BoxCharacterWidth (0xf3, font) / 2;
               ResizeWidth (pBox, NULL, NULL, i - pBox->BxW, 0, 0, 0, frame, FALSE);
               break;		
+            case 't':	/* triple integral */
+              if (i == 0)
+                i = BoxCharacterWidth (0xf3, font) * 2;
+              ResizeWidth (pBox, NULL, NULL, i - pBox->BxW, 0, 0, 0, frame, FALSE);
+              break;		
             case 'i':	/* integral */
             case 'c':	/* circle integral */
               if (i == 0)

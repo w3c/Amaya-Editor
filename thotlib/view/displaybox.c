@@ -439,6 +439,12 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
             case 'r':
               DrawRadical (frame, i, xd, yd, width, height, font, fg);
               break;
+            case 't': // triple
+              if (useStix)
+                DrawStixIntegral (frame, xd, yd, width, height, 3, size, fg);
+              else
+                DrawIntegral (frame, i, xd, yd, width, height, 3, font, fg);
+              break;
             case 'u':
               if (useStix)
                 DrawStixHorizontalBrace (frame, xd, yd, width, height, 1, size,
