@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
@@ -14,7 +14,7 @@
 <body xml:lang="en" lang="en">
 
 <div>
-<img alt="Amaya" src="../../resources/icons/22x22/logo.png" class="logo" />
+<img alt="Amaya" src="../../resources/icons/22x22/logo.png" class="logo" /> 
 
 <p class="nav"><a href="Browsing.html" accesskey="p"><img alt="previous"
 src="../../resources/icons/misc/left.png" /></a> <a href="Manual.html"
@@ -25,9 +25,10 @@ src="../../resources/icons/misc/right.png" /></a></p>
 
 <div class="toc">
 <ul>
-  <li><a href="#Selecting">Selecting</a>
+  <li><a href="#Selecting">Selecting</a> 
     <ul>
       <li><a href="#Selecting1">Selecting with the Mouse</a></li>
+      <li><a href="#Selecting5">Selecting with the active path</a></li>
       <li><a href="#Selecting2">Selecting with the Keyboard</a></li>
       <li><a href="#Selecting3">Selecting Images</a></li>
       <li><a href="#Selecting4">Selecting in the Structure View</a></li>
@@ -43,14 +44,14 @@ src="../../resources/icons/misc/right.png" /></a></p>
 selection using the keyboard or the mouse, as described below.</p>
 
 <p>No matter how you make the current selection, Amaya displays the type of
-the first selected element at the bottom of the window, followed by the types
+the first selected element at the bottom of the window, preceded by the types
 of the enclosing elements in the structure. This may be helpful when the
 document structure is complex.</p>
 
 <p>For example, selecting a word in this sentence means that the status bar
 reads</p>
 
-<p><samp>text \ p \ div \ body \ html</samp></p>
+<p><samp>html/body/div/p</samp></p>
 
 <p>meaning that the thing selected is some text within a <code>p</code>
 element, which is within a <code>div</code> element in the <code>body</code>
@@ -59,7 +60,7 @@ of the <code>html</code> document.</p>
 <p>Selecting <strong>this structure element</strong> (for example click on
 the word structure, then press <kbd>F2</kbd> gives</p>
 
-<p><samp>strong \ p \ div \ body \ html</samp></p>
+<p><samp>html/body/div/p/strong</samp></p>
 
 <h3 id="Selecting1">Selecting with the Mouse</h3>
 <ul>
@@ -79,6 +80,22 @@ the word structure, then press <kbd>F2</kbd> gives</p>
   <li>To select a structure element, click within the element you want and
     then select the desired structure level via the keyboard as described
     below</li>
+</ul>
+
+<h3 id="Selecting5">Selecting with the active path</h3>
+<ul>
+  <li>To set the insertion point, click with the left mouse button.<br />
+  </li>
+  <li>Click on a path element to select an ancestor (and everything in
+    them).<br />
+    By example by cliking on the div element, the enclosing division will be
+    selected 
+    <p><samp>html/body/<span style="color: #ff0000;">div</span>/p/strong<br />
+    </samp></p>
+  </li>
+  <li>When the selection is changed this way, the path is not updated and the
+    user may adjust the final selection on an eclosing of a child
+  element.</li>
 </ul>
 
 <h3 id="Selecting2">Selecting with the Keyboard</h3>

@@ -53,7 +53,7 @@ TtcNextElement
 
 <Editor_WX>
 +config_WX
-#+templates
++templates
 +browsing_WX
 +edit_WX
 HelpLocal

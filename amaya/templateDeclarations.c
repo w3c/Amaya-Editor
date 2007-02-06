@@ -943,16 +943,20 @@ ThotBool Template_CanInsertElementInBag (Document doc, ElementType type, char* b
   char* types;
   char* elTypeName;
   
+  if (TtaIsLeaf (type))
+    // accept all basic elements ????
+    return TRUE;
   t = (XTigerTemplate) Dictionary_Get (Templates_Dic, DocumentMeta[doc]->template_url);
   if (t)
   {
     types = Template_ExpandTypes(t, bagTypes);
     elTypeName = TtaGetElementTypeName(type);
-    if (strstr(types, elTypeName)) // Test for components or direct element types
+    if (strstr(types, elTypeName))
+      // Test for components or direct element types
       res = TRUE;
     else
-    {
-    }
+      {
+      }
     TtaFreeMemory(types);
   }
 #endif /* TEMPLATES */

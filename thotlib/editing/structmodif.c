@@ -967,7 +967,7 @@ ThotBool BreakElement (PtrElement pElReplicate, PtrElement pSplitEl,
                         /* modifie le volume des paves contenant la 1ere
                            partie du texte */
                         for (view = 0; view < MAX_VIEW_DOC; view++)
-                          if (pNext->ElTextLength > 0)
+                          if (pNext && pNext->ElTextLength > 0)
                             UpdateAbsBoxVolume (pEl, view, pDoc);
                       pPrev = pEl;
                       nextChar = 1;

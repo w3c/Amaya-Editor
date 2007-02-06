@@ -7,13 +7,50 @@
   content="application/xhtml+xml; charset=iso-8859-1" />
   <title>Amaya XTiger User Interface Specification</title>
   <meta name="generator" content="amaya 9.53, see http://www.w3.org/Amaya/" />
+  <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body>
-<h1>Templates in Amaya</h1>
-<hr />
 
-<h2>1. What is a template?</h2>
+<div>
+<img alt="Amaya" src="../../resources/icons/22x22/logo.png" class="logo" /> 
+
+<p class="nav"><a href="HTML.html" accesskey="p"><img alt="previous"
+src="../../resources/icons/misc/left.png" /></a> <a href="Manual.html"
+accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a>
+<a href="Creating.html" accesskey="n"><img alt="next"
+src="../../resources/icons/misc/right.png" /></a></p>
+</div>
+
+<div class="toc">
+<ul>
+  <li><a href="#Templates">Templates in Amaya</a>
+    <ul>
+      <li><a href="#What">What is a template?</a></li>
+      <li><a href="#Selecting">Selecting templates</a></li>
+      <li><a href="#Creating">Creating a document instance</a></li>
+      <li><a href="#Visualizin">Visualizing template elements</a></li>
+      <li><a href="#Editing">Editing a document instance</a>
+        <ul>
+          <li><a href="#Editing1">Editing in a <code>repeat</code>
+          element</a></li>
+          <li><a href="#Editing2">Editing in an <code>option</code>
+            element</a></li>
+          <li><a href="#Editing3">Editing in a <code>use</code>
+          element</a></li>
+          <li><a href="#Editing4">Editing in a <code>bag</code>
+          element</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+</div>
+
+<div>
+<h2 id="Templates">Templates in Amaya</h2>
+
+<h3 id="What">What is a template?</h3>
 
 <p>Templates are used to produce multiple documents of the same type. A
 template is a skeleton representing a given type of document, expressed in
@@ -37,7 +74,7 @@ either freely or under some constraints.</p>
 sheets, scripts). A template is a web resource, that can be stored in the
 local file system or shared on a remote web server.</p>
 
-<h2>2. Selecting templates</h2>
+<h3 id="Selecting">Selecting templates</h3>
 
 <p>You can create your own templates, using the XTiger language. However, in
 the current version of Amaya, no specific support is provided for creating or
@@ -61,7 +98,7 @@ order of templates in the list.</p>
 document instance, you can also choose a template that is not in that
 list.</p>
 
-<h2>3. Creating a document instance</h2>
+<h3 id="Creating">Creating a document instance</h3>
 
 <p>To create a new document instance from a template, use entry
 New&gt;From_template in the File menu. It displays a dialogue box where you
@@ -78,7 +115,7 @@ can select:</p>
   <li>The Title of the new document (this is mandatory)</li>
 </ul>
 
-<h2>4. Visualizing template elements</h2>
+<h3 id="Visualizin">Visualizing template elements</h3>
 
 <p>When a document instance is displayed, Amaya shows the XTiger elements
 under the form of colored frames that enclose XHTML elements.</p>
@@ -105,13 +142,13 @@ green and XHTML elements in black. For XTiger elements, it is not the name of
 the element that is displayed there (use, bag, repeat, option) but the title
 of these elements, as declared in the template.</p>
 
-<h2>5. Editing a document instance</h2>
+<h3 id="Editing">Editing a document instance</h3>
 
 <p>Editing is allowed only inside the repeat, option, use, and bag elements,
 i.e. within the colored dashed boxes. The rest of the document is the fixed
 part of the template and can not be modified.</p>
 
-<h3>5.1 Editing in a <code>repeat</code> element</h3>
+<h4 id="Editing1">Editing in a <code>repeat</code> element</h4>
 
 <p>In a <code>repeat</code> box (purple), you can create a new instance of
 the repeated structure or you can delete one. This is controlled by the
@@ -136,13 +173,13 @@ selected when pressing the Return key.</p>
 or Delete key is pressed, the element is deleted, provided the minimum of
 occurrences is not reached.</p>
 
-<h3>5.2 Editing in an <code>option</code> element</h3>
+<h4 id="Editing2">Editing in an <code>option</code> element</h4>
 
 <p><code>option</code> boxes (yellow) display a 'tick' icon in the top left
 corner. If the box is empty, clicking this icon creates the optional
 structure. It the optional structure is already present, this removes it.</p>
 
-<h3>5.3 Editing in a <code>use</code> element</h3>
+<h4 id="Editing3">Editing in a <code>use</code> element</h4>
 
 <p>Most <code>use</code> elements (blue) allow you just to enter free text or
 to freely replace/edit existing text. Other <code>use</code> elements offer a
@@ -152,7 +189,7 @@ of the box. By clicking this icon, you can select one of the allowed types
 through a pop-up menu. When you have chosen a type, the corresponding
 structure is generated and you can freely edit their content.</p>
 
-<h3>5.4 Editing in a <code>bag</code> element</h3>
+<h4 id="Editing4">Editing in a <code>bag</code> element</h4>
 
 <p>In a <code>bag</code> box (green), you insert any number of elements of
 the types specified by the template. When you want to insert a XHTML element,
@@ -165,5 +202,6 @@ elements. The "XML element types" panel lists them and allows you to insert
 them in bags (green boxes). For inserting a component at the current
 position, select its name in the panel and click the Apply button at the
 bottom of the panel. You can also double-click its name.</p>
+</div>
 </body>
 </html>

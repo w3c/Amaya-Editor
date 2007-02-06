@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
@@ -12,7 +12,7 @@
 <body xml:lang="fr" lang="fr">
 
 <div>
-<img alt="Amaya" src="../../resources/icons/22x22/logo.png" class="logo" />
+<img alt="Amaya" src="../../resources/icons/22x22/logo.png" class="logo" /> 
 
 <p class="nav"><a href="Browsing.html.fr" accesskey="p"><img alt="previous"
 src="../../resources/icons/misc/left.png" /></a> <a href="Manual.html.fr"
@@ -23,9 +23,10 @@ src="../../resources/icons/misc/right.png" /></a></p>
 
 <div class="toc">
 <ul>
-  <li><a href="#L58">Sélectionner</a>
+  <li><a href="#L58">Sélectionner</a> 
     <ul>
       <li><a href="#L94">Sélectionner avec la souris</a></li>
+      <li><a href="#L302">Sélectionner avec le chemin actif</a></li>
       <li><a href="#L115">Sélectionner avec le clavier</a></li>
       <li><a href="#L227">Sélectionner des images</a></li>
       <li><a href="#L252">Sélectionner dans la vue structure</a></li>
@@ -41,14 +42,14 @@ src="../../resources/icons/misc/right.png" /></a></p>
 courante peut être changée de différentes manières.</p>
 
 <p>Quelle que soit la manière dont vous effectuez la sélection, le type du
-premier élément sélectionné est affiché en bas de la fenêtre. Il est suivi
+premier élément sélectionné est affiché en bas de la fenêtre. Il est précédé
 par les types des éléments qui l'englobent dans la structure du document.
 Cela peut être utile quand la structure du document est complexe.</p>
 
 <p>Par exemple, la sélection d'un mot dans cette phrase visualise la
 sélection :</p>
 
-<p><samp style="color: #B20000">text \ p \ div \ body \ html</samp></p>
+<p><samp style="color: #B20000">html/body/div/p</samp></p>
 
 <p>ce qui signifie que ce qui est sélectionné est du texte dans un élément
 <code>p</code> qui est dans une division (<code>div</code>), elle-même dans
@@ -57,7 +58,7 @@ le corps (<code>body</code>) du document <code>html</code>.</p>
 <p>La sélection de <strong>cet élément de structure</strong> (par exemple
 cliquez sur le mot structure, puis pressez <kbd>F2</kbd>) donne :</p>
 
-<p><samp style="color: #B20000">strong \ p \ div \ body \ html</samp></p>
+<p><samp style="color: #B20000">html/body/div/p/strong</samp></p>
 
 <h3 id="L94">Sélectionner avec la souris</h3>
 <ul>
@@ -75,6 +76,22 @@ cliquez sur le mot structure, puis pressez <kbd>F2</kbd>) donne :</p>
   <li>Pour sélectionner un élément de structure, sélectionnez n'importe quel
     caractère de l'élément puis sélectionnez le niveau de structure désiré
     avec le clavier comme décrit plus bas.</li>
+</ul>
+
+<h3 id="L302">Sélectionner avec le chemin actif</h3>
+<ul>
+  <li>Pour placer le point d'insertion, cliquez avec le bouton gauche de la
+    souris.</li>
+  <li>Cliquez sur un élément du chemin pour sélectionner un ancêtre (et tout
+    son contenu).<br />
+    Par exemple en cliquant sur l'élément div, la division englobante sera
+    sélectionnée 
+    <p><samp>html/body/<span style="color: #ff0000;">div</span>/p/strong<br />
+    </samp></p>
+  </li>
+  <li>Quand la sélection est ainsi modifiée, le chemin n'est pas mis à jour
+    et l'utilisateur peut ajuster la sélection sur l'englobant ou un
+  fils.</li>
 </ul>
 
 <h3 id="L115">Sélectionner avec le clavier</h3>
