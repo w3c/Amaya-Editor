@@ -24,6 +24,7 @@
 #ifdef TEMPLATES
 #include "Template.h"
 #include "templateDeclarations.h"
+#include "templates_f.h"
 #include "templateUtils_f.h"
 
 #include "mydictionary_f.h"
@@ -167,7 +168,7 @@ static int LoadTemplateRepositoryList (Prop_Templates_Path** list)
   {
     /* The config file dont exist, create it. */
     file = TtaWriteOpen ((char *)path);
-    fprintf (file, "http://www.w3.org/Amaya/Templates/cv.xtd\n", homePath, DIR_SEP);
+    fprintf (file, "http://www.w3.org/Amaya/Templates/cv.xtd\n");
     TtaWriteClose (file);
     /* Retry to open it.*/
     file = TtaReadOpen ((char *)path);
@@ -455,18 +456,17 @@ static char *createMenuString (const struct menuType* items, const int nbItems)
 ThotBool UseToBeCreated (NotifyElement *event)
 {
 #ifdef TEMPLATES
-  Element        el;
-	Document       doc;
-
-  el = event->element;
-  doc = event->document;
-  
-#ifdef AMAYA_DEBUG
-  printf("UseToBeCreated\n");
-#endif /* AMAYA_DEBUG */
-  
-  /** TODO is there a limit to the number of elements in the xt:repeat ? */
-
+  ElementType   parentType;
+  SSchema       templateSSchema = TtaGetSSchema (TEMPLATE_SSHEMA_NAME, event->document);  
+  if(templateSSchema)
+  {
+    parentType = TtaGetElementType(event->element);
+    if(parentType.ElSSchema==templateSSchema && parentType.ElTypeNum==Template_EL_repeat)
+    {
+      return !Template_CanInsertRepeatChild(event->element);
+    }
+    return TemplateElementWillBeCreated(event);
+  }
 #endif /* TEMPLATES */
   return FALSE; /* let Thot perform normal operation */
 }
@@ -833,10 +833,6 @@ ThotBool RepeatButtonClicked (NotifyElement *event)
   if (view != 1)
     return FALSE; /* let Thot perform normal operation */
 
-#ifdef AMAYA_DEBUG
-  printf("Template url : %s\n", DocumentMeta[doc]->template_url);
-#endif/* AMAYA_DEBUG */
-
   TtaCancelSelection(doc);
   
   t = (XTigerTemplate) Dictionary_Get (Templates_Dic, DocumentMeta[doc]->template_url);
@@ -917,7 +913,6 @@ ThotBool UseButtonClicked (NotifyElement *event)
   Element         el = event->element;
   Element         child;
   ElementType     elType;
-  Attribute       attr;
   XTigerTemplate  t;
   Declaration     decl;
   Element         firstEl;
@@ -1271,11 +1266,6 @@ ThotBool TemplateElementWillBeCreated (NotifyElement *event)
   if (templateSSchema == NULL)
     return FALSE; // let Thot do the job
 
-#ifdef AMAYA_DEBUG 
-  printf("TemplateElementWillBeCreated %s:%s:%d\n", TtaGetSSchemaName(elType.ElSSchema), TtaGetElementTypeName(elType), elType.ElTypeNum);
-  printf("    ^^ %s:%s\n", TtaGetSSchemaName(parentType.ElSSchema), TtaGetElementTypeName(parentType));
-#endif /* AMAYA_DEBUG */
-
   // Fisrt, test if in a xt:bag or in a base-element xt:use
   if(parentType.ElSSchema==templateSSchema)
     ancestor = parent;
@@ -1286,10 +1276,6 @@ ThotBool TemplateElementWillBeCreated (NotifyElement *event)
   {
     ancestorType = TtaGetElementType(ancestor);
 
-#ifdef AMAYA_DEBUG 
-  printf("    <> %s:%s\n", TtaGetSSchemaName(ancestorType.ElSSchema), TtaGetElementTypeName(ancestorType));
-#endif /* AMAYA_DEBUG */
-
     if(ancestorType.ElTypeNum==Template_EL_bag)
     {
       if(elType.ElSSchema==templateSSchema &&
@@ -1298,12 +1284,6 @@ ThotBool TemplateElementWillBeCreated (NotifyElement *event)
 
       types = GetAttributeStringValueFromNum(ancestor, Template_ATTR_types, NULL);
       b = Template_CanInsertElementInBag(event->document, elType, types);
-#ifdef AMAYA_DEBUG 
-      if(b)
-        printf("      -> Yes I can\n");
-      else
-        printf("      -> No I cant\n");
-#endif /* AMAYA_DEBUG */
       
       TtaFreeMemory(types);
       return !b;      
@@ -1358,21 +1338,12 @@ ThotBool TemplateElementWillBeDeleted (NotifyElement *event)
   templateSSchema = TtaGetSSchema (TEMPLATE_SSHEMA_NAME, event->document);
   if (templateSSchema == NULL)
     return FALSE; // let Thot do the job
-  
-#ifdef AMAYA_DEBUG 
-  elType = TtaGetElementType(elem);
-  printf("TemplateElementWillBeDeleted %s:%s:%d\n", TtaGetSSchemaName(elType.ElSSchema), TtaGetElementTypeName(elType), elType.ElTypeNum);
-#endif /* AMAYA_DEBUG */
-  
+
   xtElem = GetFirstTemplateParentElement(elem);
   if (xtElem)
   {
     xtType = TtaGetElementType(xtElem);
     
-#ifdef AMAYA_DEBUG
-  printf("  xt: %s:%s:%d\n", TtaGetSSchemaName(xtType.ElSSchema), TtaGetElementTypeName(xtType), xtType.ElTypeNum);
-#endif /* AMAYA_DEBUG */
-
     t = (XTigerTemplate) Dictionary_Get (Templates_Dic, DocumentMeta[doc]->template_url);
 
     if (xtType.ElTypeNum==Template_EL_bag)
