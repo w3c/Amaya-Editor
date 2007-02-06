@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2005
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -2330,6 +2330,7 @@ ThotBool DeleteTBody (NotifyElement * event)
       if (TtaPrepareUndo (doc))
       TtaRegisterElementDelete (el, doc);
       TtaDeleteTree (el, doc);
+      TtaSetDocumentModified (doc);
     }
   return TRUE;		/* don't let Thot perform normal operation */
 }
