@@ -121,6 +121,7 @@
                     <item>*Repleace current one*</item>
                     <item>*In new window*</item>
                   </content>
+                  <size>250,-1</size>
                   <style>wxRA_SPECIFY_COLS</style>
                 </object>
               </object>
