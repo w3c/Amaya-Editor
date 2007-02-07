@@ -377,6 +377,8 @@ Declaration Template_GetSimpleTypeDeclaration (const XTigerTemplate t, const cha
     return NULL;
 }
 
+
+
 /*----------------------------------------------------------------------
   Free all the space used by a template (also its dictionaries)
   ----------------------------------------------------------------------*/
@@ -960,9 +962,9 @@ ThotBool Template_IsElementTypeAllowed(ElementType type, Declaration decl)
         name = TtaGetElementTypeName(type);
         return !strcmp(name, decl->name);
       case UnionNat:
-        if(!strcmp(decl->name, "any")) /* Allow all. */
+        if(!strcmp(decl->name, UNION_ANY)) /* Allow all. */
           return TRUE;
-        if(!strcmp(decl->name, "anyElement")) /* Allow all elements. */
+        if(!strcmp(decl->name, UNION_ANYELEMENT)) /* Allow all elements. */
           return TRUE;
       
         can = FALSE;
@@ -1000,16 +1002,32 @@ ThotBool Template_IsTypeAllowed(const char* type, Declaration decl)
 #ifdef TEMPLATES
   ThotBool      can;
   Record        rec;
+  Declaration   declType;
 
   if(decl)
   {
     switch(decl->nature)
     {
       case UnionNat:
-        if(!strcmp(decl->name, "any")) /* Allow all. */
+        if(!strcmp(decl->name, UNION_ANY)) /* Allow all. */
           return TRUE;
-        if(!strcmp(decl->name, "anyElement")) /* Allow all elements. */
+
+        if(!strcmp(decl->name, UNION_ANYELEMENT)) /* Allow all elements. */
+        {
+          declType = (Declaration)Dictionary_Get (decl->declaredIn->elements, type);
           return TRUE;
+        }
+        if(!strcmp(decl->name, UNION_ANYCOMPONENT)) /* Allow all components. */
+        {
+          declType = (Declaration)Dictionary_Get (decl->declaredIn->components, type);
+          return TRUE;
+        }
+        if(!strcmp(decl->name, UNION_ANYSIMPLE)) /* Allow all components. */
+        {
+          declType = (Declaration)Dictionary_Get (decl->declaredIn->simpleTypes, type);
+          return TRUE;
+        }
+        
       
         can = FALSE;
         for(rec = decl->unionType.include->first; rec && !can; rec = rec->next)
