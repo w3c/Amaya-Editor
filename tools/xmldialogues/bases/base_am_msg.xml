@@ -5142,7 +5142,8 @@
 <message xml:lang="it">Non posso trovare l'host</message>
 <message xml:lang="hu">Az állomás nem található</message>
 <message xml:lang="cn">无法定位主机</message>
-<message xml:lang="tw">無法定位主機</message></label>
+<message xml:lang="tw">無法定位主機</message>
+</label>
 <label define="AM_DOC_CHANGED">
 <message xml:lang="en">Document has changed (412)</message>
 <message xml:lang="fr">Document modifié (412)</message>
@@ -5151,7 +5152,8 @@
 <message xml:lang="it">Il documento è stato modificato (412)</message>
 <message xml:lang="hu">A dokumentum megváltozott (412)</message>
 <message xml:lang="cn">文档已被改变 (412)</message>
-<message xml:lang="tw">文檔已被改變 (412)</message></label>
+<message xml:lang="tw">文檔已被改變 (412)</message>
+</label>
 <label define="AM_CONFLICT">
 <message xml:lang="en">Conflict with the current state of the resource</message>
 <message xml:lang="fr">Conflit avec l'état de la ressource</message>
@@ -5160,7 +5162,8 @@
 <message xml:lang="it">Conflitto con lo stato attuale della risorsa</message>
 <message xml:lang="hu">Ellentmondás az erőforrás jelenlegi állapotával</message>
 <message xml:lang="cn">与当前资源的状态冲突</message>
-<message xml:lang="tw">與當前資源的狀態沖突</message></label>
+<message xml:lang="tw">與當前資源的狀態沖突</message>
+</label>
 <label define="AM_INVALID_SELECTION">
 <message xml:lang="en">Invalid selection</message>
 <message xml:lang="fr">Sélection invalide</message>
@@ -5169,15 +5172,17 @@
 <message xml:lang="it">Selezione non valida</message>
 <message xml:lang="hu">Érvénytelen kijelölés</message>
 <message xml:lang="cn">无效选择区域</message>
-<message xml:lang="tw">無效選擇區域</message></label>
+<message xml:lang="tw">無效選擇區域</message>
+</label>
 <label define="AM_INVALID_ELEMENT">
 <message xml:lang="en">Unknown element</message>
 <message xml:lang="fr">Elément inconnu</message>
 <message xml:lang="es">Elemento desconocido</message>
 <message xml:lang="de">Unbekanntes Element</message>
 <message xml:lang="cn">未知元素</message>
-<message xml:lang="tw">未知元素</message></label>
+<message xml:lang="tw">未知元素</message>
 <message xml:lang="hu">Ismeretlen elem</message>
+</label>
 <label define="AM_CHANGE_NUMBER">
 <message xml:lang="en">%d updated elements</message>
 <message xml:lang="fr">%d éléments changés</message>
@@ -5247,9 +5252,10 @@
 <label define="AM_SELECT_OPERATOR_LABEL">
 <message xml:lang="en">Select the way the operator has to be displayed</message>
 <message xml:lang="fr">Choisir la façon dont l'opérateur doit être affiché</message>
-<message xml:lang="es">Seleccionar la manera cuya el operador debe ser visualizado</message></label>
+<message xml:lang="es">Seleccionar la manera cuya el operador debe ser visualizado</message>
 <message xml:lang="de">Wählen der Art der Operatordarstellung</message>
 <message xml:lang="hu">Válassza ki a műveleti jel megjelenítési módját</message>
+</label>
 <label define="AM_SELECT_INTEGRAL_TITLE">
 <message xml:lang="en">Insert an integral</message>
 <message xml:lang="fr">Insérer une intégrale</message>
@@ -5272,8 +5278,8 @@
 <message xml:lang="hu">Szögletes zárójel attribútumai</message>
 </label>
 <label define="AM_SELECT_FENCE_LABEL">
-<message xml:lang="en">Select open, separators and close symbols</message>
-<message xml:lang="fr">Choisir les symboles ouvrants, séparateurs et fermants</message>
+<message xml:lang="en">Select open, separator and close symbols</message>
+<message xml:lang="fr">Choisir les symboles ouvrant, séparateur et fermant</message>
 <message xml:lang="es">Seleccionar los símbolos arbriendos, separadores y cerrandos</message>
 <message xml:lang="de">Wählen der Eröffungs-, Trennungs- und Schließungssymbole</message>
 <message xml:lang="hu">Válassza ki a nyitó, elválasztó és záró jeleket</message>

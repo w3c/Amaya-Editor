@@ -386,8 +386,7 @@
 384 A dokumentum megváltozott (412)
 385 Ellentmondás az erőforrás jelenlegi állapotával
 386 Érvénytelen kijelölés
-387 **Unknown element
-388 Ismeretlen elem
+387 Ismeretlen elem
 388 %d frissített elem
 389 The title is mandatory
 390 Sablonok
@@ -397,8 +396,7 @@
 394 Többszörös azonosító ellenőrzése
 395 Adja hozzá az xsl stíluslapot a MathML elemekhez
 396 Műveleti jel beillesztése
-397 **Select the way the operator has to be displayed
-398 Válassza ki a műveleti jel megjelenítési módját
+397 Válassza ki a műveleti jel megjelenítési módját
 398 Integrál beillesztése
 399 Válassza ki az integrál típusát
 400 Szögletes zárójel attribútumai
