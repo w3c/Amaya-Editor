@@ -1003,28 +1003,28 @@
 <message xml:lang="en">New tab</message>
 <message xml:lang="fr">Nouvel onglet</message>
 <message xml:lang="es">Nueva pestaña</message>
-<message xml:lang="de">Einen neuen Reiter erstellen</message>
+<message xml:lang="de">Eine neue Registerkarte erstellen</message>
 <message xml:lang="hu">Új fül</message>
 </label>
 <label define="BRefreshTab">
 <message xml:lang="en">Refresh tab</message>
 <message xml:lang="fr">Recharger l'onglet</message>
 <message xml:lang="es">Actualizar pestaña</message>
-<message xml:lang="de">Reiter aktualisieren</message>
+<message xml:lang="de">Registerkarte aktualisieren</message>
 <message xml:lang="hu">Fül frissítése</message>
 </label>
 <label define="BRefreshAllTabs">
 <message xml:lang="en">Refresh all tabs</message>
 <message xml:lang="fr">Recharger tous les onglets</message>
 <message xml:lang="es">Actualizar todas las pestañas</message>
-<message xml:lang="de">Alle Reiter aktualisieren</message>
+<message xml:lang="de">Alle Registerkarten aktualisieren</message>
 <message xml:lang="hu">Minden fül frissítése</message>
 </label>
 <label define="BCloseOtherTabs">
 <message xml:lang="en">Close other tabs</message>
 <message xml:lang="fr">Fermer les autres onglets</message>
 <message xml:lang="es">Cerrar las otras pestañas</message>
-<message xml:lang="de">Alle übrigen Reiter schließen</message>
+<message xml:lang="de">Alle übrigen Registerkarten schließen</message>
 <message xml:lang="hu">Többi fül bezárása</message>
 </label>
 <label define="BUndo">
@@ -3349,7 +3349,9 @@
 <message xml:lang="de">Internetadresse kopieren</message>
 <message xml:lang="ru">Копировать расположение</message>
 <message xml:lang="cn">复制地址</message>
-<message xml:lang="tw">復制地址</message></label>
+<message xml:lang="tw">復制地址</message>
+<message xml:lang="hu">Hely másolása</message>
+</label>
 <label define="BPasteLocation">
 <message xml:lang="en">Paste location</message>
 <message xml:lang="fr">Coller l'adresse</message>
@@ -3358,7 +3360,9 @@
 <message xml:lang="de">Internetadresse einfügen</message>
 <message xml:lang="ru">Вставить расположение</message>
 <message xml:lang="cn">粘贴地址</message>
-<message xml:lang="tw">粘貼地址</message></label>
+<message xml:lang="tw">粘貼地址</message>
+<message xml:lang="hu">Hely beillesztése</message>
+</label>
 <label define="BLinkTarget">
 <message xml:lang="en">&amp;Link to previous target</message>
 <message xml:lang="fr">&amp;Lier la cible créée</message>

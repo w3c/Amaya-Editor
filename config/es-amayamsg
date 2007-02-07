@@ -11,7 +11,7 @@
 9 Nueva hoja de estilo CSS
 10 Desde plantilla
 11 Abrir documento
-12 Abrir en pestaña nueva
+12 En nueva pestañas
 13 Abrir en ventana nueva
 14 Limpiar
 15 Clic
@@ -361,51 +361,50 @@
 359 Carpeta
 360 Archivo
 361 Reemplazar actual
-362 En nueva pestañas
-363 En nueva ventana
-364 Anti-aliasing
-365 Formato de fecha ISO
-366 Ubicación de nuevos documentos
-367 Abrir localización
-368 Avisar cuando se cierren mútiples pestañas
-369 Número máximo de URLs en el historial
-370 Borrar historial
-371 Mostrar todos los atajos
-372 Longitud de línea (0 = valor predeterminado)
-373 Plantilla
-374 Guardar como...
-375 No se encuentra la plantilla
-376 Mostrar cajas de plantilla
-377 Aplicar cierra el diálogo
-378 No permitido en este documento
-379 Elemento protegido
-380 La selección no debe cruzar un elemento de este tipo
-381 No hay encabezado tras la selección
-382 Guardar de todas formas
-383 Servidor no encontrado
-384 El documento ha sido modificado (412)
-385 Conflicto con el estado actual del recurso
-386 Selección invalida
-387 Elemento desconocido
-388 %d elementos actualizados
-389 El título es obligatorio
-390 Modelos
-391 Número de ocurrencias
-392 Número máximo de ocurrencias alcanzado
-393 Número mínimo de ocurrencias alcanzado
-394 Verificar los IDs duplicados
-395 Agregar la hoja xsl para los elementos MathML
-396 Insertar operador
-397 Seleccionar la manera cuya el operador debe ser visualizado
-398 Insertar una integral
-399 Seleccionar el tipo de integral
-400 Atributos del fence
-401 Seleccionar los símbolos arbriendos, separadores y cerrandos
-402 Número de símbolos operadores
-403 Número de coordenadas
-404 Largo del N-
-405 Número de elementos
-406 Número de variables
-407 Grado
-408 Grado de la variable %d
-409 Documento compuesto
+362 En nueva ventana
+363 Anti-aliasing
+364 Formato de fecha ISO
+365 Ubicación de nuevos documentos
+366 Abrir localización
+367 Avisar cuando se cierren mútiples pestañas
+368 Número máximo de URLs en el historial
+369 Borrar historial
+370 Mostrar todos los atajos
+371 Longitud de línea (0 = valor predeterminado)
+372 Plantilla
+373 Guardar como...
+374 No se encuentra la plantilla
+375 Mostrar cajas de plantilla
+376 Aplicar cierra el diálogo
+377 No permitido en este documento
+378 Elemento protegido
+379 La selección no debe cruzar un elemento de este tipo
+380 No hay encabezado tras la selección
+381 Guardar de todas formas
+382 Servidor no encontrado
+383 El documento ha sido modificado (412)
+384 Conflicto con el estado actual del recurso
+385 Selección invalida
+386 Elemento desconocido
+387 %d elementos actualizados
+388 El título es obligatorio
+389 Modelos
+390 Número de ocurrencias
+391 Número máximo de ocurrencias alcanzado
+392 Número mínimo de ocurrencias alcanzado
+393 Verificar los IDs duplicados
+394 Agregar la hoja xsl para los elementos MathML
+395 Insertar operador
+396 Seleccionar la manera cuya el operador debe ser visualizado
+397 Insertar una integral
+398 Seleccionar el tipo de integral
+399 Atributos del fence
+400 Seleccionar los símbolos arbriendos, separadores y cerrandos
+401 Número de símbolos operadores
+402 Número de coordenadas
+403 Largo del N-
+404 Número de elementos
+405 Número de variables
+406 Grado
+407 Grado de la variable %d
+408 Documento compuesto

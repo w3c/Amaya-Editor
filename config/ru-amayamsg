@@ -11,7 +11,7 @@
 9 Новая CSS таблица стилей...
 10 Из шаблона
 11 Открыть документ...
-12 Открыть в новой панели
+12 В новой панели
 13 Открыть в новом окне...
 14 Очистить
 15 Щёлкнуть
@@ -361,51 +361,50 @@
 359 Директория
 360 Файл
 361 Заменить уже открытый документ
-362 В новой панели
-363 В новом окне
-364 Анти-алиасинг (сглаживание)
-365 ISO формат даты (гггг-мм-дд)
-366 Расположение нового документа
-367 Расположение открываемого документа
-368 Предупреждать о попытке закрытия нескольких панелей
-369 Максимально допустимое число URL в истории соединений
-370 Очистить список URL
-371 Показывать все ярлыки
-372 Длина линии (По умолчанию = 0)
-373 Шаблон
-374 Сохранить документа как ...
-375 Шаблон не найден
-376 Показывать блоки шаблонов
-377 Для завершения процесса использовать диалоговое окно
-378 В этом документе не разрешено
-379 Защищенный элемент
-380 Выбранное не должно пересекаться с элементом этого типа
-381 Не найдено никаких заголовков после выбранного
-382 **Save anyway
-383 **Cannot locate host
-384 **Document has changed (412)
-385 **Conflict with the current state of the resource
-386 **Invalid selection
-387 **Unknown element
-388 **%d updated elements
-389 **The title is mandatory
-390 **Templates
-391 **Number of occurrences
-392 **Maximum number of occurrences reached
-393 **Minimum number of occurrences reached
-394 **Check duplicated IDs
-395 **Add the xsl stylesheet for MathML elements
-396 **Insert operator
-397 **Select the way the operator has to be displayed
-398 **Insert an integral
-399 **Select the type of integral
-400 **Attributes of the fence
-401 **Select open, separator and close symbols
-402 **Number of operator symbols
-403 **Number of coordinates
-404 **Length of the N-tuples
-405 **Number of elements
-406 **Number of variables
-407 **Degree
-408 **Degree of the variable number %d
-409 **Compound document
+362 В новом окне
+363 Анти-алиасинг (сглаживание)
+364 ISO формат даты (гггг-мм-дд)
+365 Расположение нового документа
+366 Расположение открываемого документа
+367 Предупреждать о попытке закрытия нескольких панелей
+368 Максимально допустимое число URL в истории соединений
+369 Очистить список URL
+370 Показывать все ярлыки
+371 Длина линии (По умолчанию = 0)
+372 Шаблон
+373 Сохранить документа как ...
+374 Шаблон не найден
+375 Показывать блоки шаблонов
+376 Для завершения процесса использовать диалоговое окно
+377 В этом документе не разрешено
+378 Защищенный элемент
+379 Выбранное не должно пересекаться с элементом этого типа
+380 Не найдено никаких заголовков после выбранного
+381 **Save anyway
+382 **Cannot locate host
+383 **Document has changed (412)
+384 **Conflict with the current state of the resource
+385 **Invalid selection
+386 **Unknown element
+387 **%d updated elements
+388 **The title is mandatory
+389 **Templates
+390 **Number of occurrences
+391 **Maximum number of occurrences reached
+392 **Minimum number of occurrences reached
+393 **Check duplicated IDs
+394 **Add the xsl stylesheet for MathML elements
+395 **Insert operator
+396 **Select the way the operator has to be displayed
+397 **Insert an integral
+398 **Select the type of integral
+399 **Attributes of the fence
+400 **Select open, separator and close symbols
+401 **Number of operator symbols
+402 **Number of coordinates
+403 **Length of the N-tuples
+404 **Number of elements
+405 **Number of variables
+406 **Degree
+407 **Degree of the variable number %d
+408 **Compound document

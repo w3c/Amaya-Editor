@@ -209,7 +209,7 @@
 207 Tájolása
 208 Álló
 209 Fekvő
-210 **Keep multiple spaces
+210 Többszörös szóköz megtartása
 211 Hiba a forráskódban
 212 Végzetes hiba - Javítsa ki a forráskódot
 213 Próbálja a 'Fájl/Kényszerített karakter kódolás' menüt
@@ -361,51 +361,50 @@
 359 Mappa
 360 Fájl
 361 Jelenlegi cseréje
-362 Új lapon
-363 Új ablakban
-364 Élsimítás
-365 Dátum ISO formátuma
-366 Dokumentumok új helye
-367 Hely megnyitása
-368 Több lap bezárásakor figyelmeztetés
-369 URL-ek legnagyobb száma az előzménylistában
-370 URL lista törlése
-371 Minden gyorsbillentyű mutatása
-372 Rögzített sorhossz (0 = alapérték)
-373 Sablon
-374 Dokumentum mentése másként...
-375 A sablon nem található
-376 A sablon dobozainak mutatása
-377 Az Alkalmaz gomb bezárja a párbeszédablakot
-378 Ebben a dokumentumban nem engedélyezett
-379 Védett elem
-380 A kijelölés nem érinthet ilyen típusú elemet
-381 No heading found after the selection
-382 Mentés így is
-383 Az állomás nem található
-384 A dokumentum megváltozott (412)
-385 Ellentmondás az erőforrás jelenlegi állapotával
-386 Érvénytelen kijelölés
-387 Ismeretlen elem
-388 %d frissített elem
-389 The title is mandatory
-390 Sablonok
-391 Előfordulások száma
-392 Elértük az előfordulások legnagyobb számát
-393 Elértük az előfordulások legkisebb számát
-394 Többszörös azonosító ellenőrzése
-395 Adja hozzá az xsl stíluslapot a MathML elemekhez
-396 Műveleti jel beillesztése
-397 Válassza ki a műveleti jel megjelenítési módját
-398 Integrál beillesztése
-399 Válassza ki az integrál típusát
-400 Szögletes zárójel attribútumai
-401 Válassza ki a nyitó, elválasztó és záró jeleket
-402 Műveleti jelek száma
-403 Coordináták száma
-404 N-esek hossza
-405 Elemek száma
-406 Változók száma
-407 Rend
-408 A változó rendje (%d)
-409 Összetett dokumentum
+362 Új ablakban
+363 Élsimítás
+364 Dátum ISO formátuma
+365 Dokumentumok új helye
+366 Hely megnyitása
+367 Több lap bezárásakor figyelmeztetés
+368 URL-ek legnagyobb száma az előzménylistában
+369 URL lista törlése
+370 Minden gyorsbillentyű mutatása
+371 Rögzített sorhossz (0 = alapérték)
+372 Sablon
+373 Dokumentum mentése másként...
+374 A sablon nem található
+375 A sablon dobozainak mutatása
+376 Az Alkalmaz gomb bezárja a párbeszédablakot
+377 Ebben a dokumentumban nem engedélyezett
+378 Védett elem
+379 A kijelölés nem érinthet ilyen típusú elemet
+380 No heading found after the selection
+381 Mentés így is
+382 Az állomás nem található
+383 A dokumentum megváltozott (412)
+384 Ellentmondás az erőforrás jelenlegi állapotával
+385 Érvénytelen kijelölés
+386 Ismeretlen elem
+387 %d frissített elem
+388 A cím kötelező
+389 Sablonok
+390 Előfordulások száma
+391 Elértük az előfordulások legnagyobb számát
+392 Elértük az előfordulások legkisebb számát
+393 Többszörös azonosító ellenőrzése
+394 Adja hozzá az xsl stíluslapot a MathML elemekhez
+395 Műveleti jel beillesztése
+396 Válassza ki a műveleti jel megjelenítési módját
+397 Integrál beillesztése
+398 Válassza ki az integrál típusát
+399 Szögletes zárójel attribútumai
+400 Válassza ki a nyitó, elválasztó és záró jeleket
+401 Műveleti jelek száma
+402 Coordináták száma
+403 N-esek hossza
+404 Elemek száma
+405 Változók száma
+406 Rend
+407 A változó rendje (%d)
+408 Összetett dokumentum

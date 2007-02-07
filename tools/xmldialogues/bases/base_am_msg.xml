@@ -183,15 +183,15 @@
 <message xml:lang="ka">დოკუმენტის გახსნა...</message>
 <message xml:lang="cn">打开文档</message>
 <message xml:lang="tw">打開文檔</message></label>
-<label define="AM_OPEN_IN_NEW_TAB">
+<label define="AM_INNEWTAB">
 <message xml:lang="en">In new tab</message>
 <message xml:lang="fr">Dans un nouvel onglet</message>
-<message xml:lang="it">Apri tab</message>
-<message xml:lang="es">Abrir en pestaña nueva</message>
-<message xml:lang="de">Öffnen (neues &amp;Registerkarte)</message>
-<message xml:lang="ru">Открыть в новой панели</message>
+<message xml:lang="it">In un nuovo tab</message>
+<message xml:lang="es">En nueva pestañas</message>
+<message xml:lang="de">Auf neuer Registerkarte</message>
+<message xml:lang="ru">В новой панели</message>
 <message xml:lang="hu">Új lapon</message>
-<message xml:lang="ka">გახსნა ახალ დაფაზე</message>
+<message xml:lang="ka">ახალ დაფაზე</message>
 <message xml:lang="cn">在新标签页打开</message>
 <message xml:lang="tw">在新標簽頁打開</message></label>
 <label define="AM_OPEN_IN_NEW_WINDOW">
@@ -2932,7 +2932,9 @@
 <message xml:lang="en">Keep multiple spaces</message>
 <message xml:lang="fr">Garder les espaces multiples</message>
 <message xml:lang="es">Mantener espaciado múltiple</message>
-<message xml:lang="de">Mehrfache Leerzeichen erhalten</message></label>
+<message xml:lang="de">Mehrfache Leerzeichen erhalten</message>
+<message xml:lang="hu">Többszörös szóköz megtartása</message>
+</label>
 <label define="AM_XML_RETRY">
 <message xml:lang="en">Error(s) in the source code</message>
 <message xml:lang="fr">Erreur(s) dans le code source</message>
@@ -2941,7 +2943,8 @@
 <message xml:lang="it">Errori nel codice sorgente</message>
 <message xml:lang="hu">Hiba a forráskódban</message>
 <message xml:lang="cn">Error(s) in the source code</message>
-<message xml:lang="tw">Error(s) in the source code</message></label>
+<message xml:lang="tw">Error(s) in the source code</message>
+</label>
 <label define="AM_XML_ERROR">
 <message xml:lang="en">Fatal error - Fix the source code to continue</message>
 <message xml:lang="fr">Erreur fatale - Corriger le code source pour continuer</message>
@@ -4905,18 +4908,8 @@
 <message xml:lang="ka">მიმდინარის შეცვლა</message>
 <message xml:lang="ru">Заменить уже открытый документ</message>
 <message xml:lang="cn">在当前位置</message>
-<message xml:lang="tw">在當前位置</message></label>
-<label define="AM_INNEWTAB">
-<message xml:lang="en">In new tab</message>
-<message xml:lang="fr">Dans un nouvel onglet</message>
-<message xml:lang="es">En nueva pestañas</message>
-<message xml:lang="de">In neuer Seite</message>
-<message xml:lang="it">In un nuovo tab</message>
-<message xml:lang="hu">Új lapon</message>
-<message xml:lang="ka">ახალ დაფაზე</message>
-<message xml:lang="ru">В новой панели</message>
-<message xml:lang="cn">在新的标签页</message>
-<message xml:lang="tw">在新的標簽頁</message></label>
+<message xml:lang="tw">在當前位置</message>
+</label>
 <label define="AM_INNEWWINDOW">
 <message xml:lang="en">In new Window</message>
 <message xml:lang="fr">Dans une nouvelle fenêtre</message>
@@ -4927,7 +4920,8 @@
 <message xml:lang="ka">ახალ ფანჯარაში</message>
 <message xml:lang="ru">В новом окне</message>
 <message xml:lang="cn">在新的窗口</message>
-<message xml:lang="tw">在新的窗口</message></label>
+<message xml:lang="tw">在新的窗口</message>
+</label>
 <label define="AM_NOALIASING">
 <message xml:lang="en">Anti-aliasing</message>
 <message xml:lang="fr">Anti-aliasing</message>
@@ -4979,7 +4973,7 @@
 <message xml:lang="en">Warn when closing multiple tabs</message>
 <message xml:lang="fr">Avertir avant de fermer plusieurs onglets</message>
 <message xml:lang="es">Avisar cuando se cierren mútiples pestañas</message>
-<message xml:lang="de">Warnen, wenn mehrere Seiten geschlossen werden</message>
+<message xml:lang="de">Warnen, falls mehrere Registerkarten geschlossen werden sollen</message>
 <message xml:lang="it">Avviso quando si chiudono pi tab</message>
 <message xml:lang="hu">Több lap bezárásakor figyelmeztetés</message>
 <message xml:lang="ka">გაფრთხილება რამდენიმე დაფის დახურვისას</message>
@@ -5198,7 +5192,7 @@
 <message xml:lang="de">Der Titel muss angegeben werden</message>
 <message xml:lang="it">Il titolo è obbligatorio</message>
 <message xml:lang="es">El título es obligatorio</message>
-<message xml:lang="hu">The title is mandatory</message>
+<message xml:lang="hu">A cím kötelező</message>
 </label>
 <label define="AM_TEMPLATES">
 <message xml:lang="en">Templates</message>

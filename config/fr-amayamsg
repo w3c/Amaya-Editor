@@ -361,51 +361,50 @@
 359 Répertoire
 360 Fichier
 361 Remplacer le document
-362 Dans un nouvel onglet
-363 Dans une nouvelle fenêtre
-364 Anti-aliasing
-365 Date au format ISO
-366 Ouvrir les nouveaux documents dans
-367 Endroit d'ouverture
-368 Avertir avant de fermer plusieurs onglets
-369 Nombre max d'url dans l'historique
-370 Vider la liste des urls
-371 Montrer tous les raccourcis
-372 Longueur de ligne fixée (0 = valeur par défaut)
-373 Modèle
-374 Enregistrer le document sous...
-375 Le modèle n'existe pas
-376 Montrer les cadres des modèles
-377 Appliquer ferme le dialogue
-378 Non autorisé dans ce document
-379 Element protégé
-380 La sélection ne peut pas traverser un élément de ce type
-381 Pas d'en-tête trouvé après la sélection
-382 Sauver quand même
-383 Serveur inconnu
-384 Document modifié (412)
-385 Conflit avec l'état de la ressource
-386 Sélection invalide
-387 Elément inconnu
-388 %d éléments changés
-389 Le titre est obligatoire
-390 Modèles
-391 Nombre d'occurrences
-392 Nombre maximal d'occurrences atteint
-393 Nombre minimum d'occurrences atteint
-394 Vérifier les IDs dupliqués
-395 Ajouter la feuille xsl pour les éléments MathML
-396 Insérer opérateur
-397 Choisir la façon dont l'opérateur doit être affiché
-398 Insérer une intégrale
-399 Choisir le type d'intégrale
-400 Attributs du fence
-401 Choisir les symboles ouvrant, séparateur et fermant
-402 Nombre de symboles opérateurs
-403 Nombre de coordonnées
-404 Longueur du N-uplet
-405 Nombre d'éléments
-406 Nombre de variables
-407 Degré
-408 Degré de la variable numéro %d
-409 Document composé
+362 Dans une nouvelle fenêtre
+363 Anti-aliasing
+364 Date au format ISO
+365 Ouvrir les nouveaux documents dans
+366 Endroit d'ouverture
+367 Avertir avant de fermer plusieurs onglets
+368 Nombre max d'url dans l'historique
+369 Vider la liste des urls
+370 Montrer tous les raccourcis
+371 Longueur de ligne fixée (0 = valeur par défaut)
+372 Modèle
+373 Enregistrer le document sous...
+374 Le modèle n'existe pas
+375 Montrer les cadres des modèles
+376 Appliquer ferme le dialogue
+377 Non autorisé dans ce document
+378 Element protégé
+379 La sélection ne peut pas traverser un élément de ce type
+380 Pas d'en-tête trouvé après la sélection
+381 Sauver quand même
+382 Serveur inconnu
+383 Document modifié (412)
+384 Conflit avec l'état de la ressource
+385 Sélection invalide
+386 Elément inconnu
+387 %d éléments changés
+388 Le titre est obligatoire
+389 Modèles
+390 Nombre d'occurrences
+391 Nombre maximal d'occurrences atteint
+392 Nombre minimum d'occurrences atteint
+393 Vérifier les IDs dupliqués
+394 Ajouter la feuille xsl pour les éléments MathML
+395 Insérer opérateur
+396 Choisir la façon dont l'opérateur doit être affiché
+397 Insérer une intégrale
+398 Choisir le type d'intégrale
+399 Attributs du fence
+400 Choisir les symboles ouvrant, séparateur et fermant
+401 Nombre de symboles opérateurs
+402 Nombre de coordonnées
+403 Longueur du N-uplet
+404 Nombre d'éléments
+405 Nombre de variables
+406 Degré
+407 Degré de la variable numéro %d
+408 Document composé

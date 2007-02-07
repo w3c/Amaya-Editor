@@ -11,7 +11,7 @@
 9 Formatvorlage
 10 Schablone
 11 Öffnen
-12 Öffnen (neues &Registerkarte)
+12 Auf neuer Registerkarte
 13 Öffnen (neues Fenster)
 14 Zurücksetzen
 15 Klick
@@ -361,51 +361,50 @@
 359 Verzeichnis
 360 Datei
 361 Aktuelle Seite ersetzen
-362 In neuer Seite
-363 In neuem Fenster
-364 Anti-aliasing
-365 ISO-Datumsformat
-366 Ort für neue Dokumente
-367 Ort zum Öffnen
-368 Warnen, wenn mehrere Seiten geschlossen werden
-369 Die maximale Anzahl an URLs in der History ist erreicht
-370 URL-Liste löschen
-371 Alle Tastaturkürzel anzeigen
-372 Feste Zeilenlänge (0 = Standardwert)
-373 Vorlage
-374 Dokument speichern als...
-375 Vorlage konnte nicht gefunden werden
-376 Vorlagenumrisse anzeigen
-377 Mit "Anwenden" wird der Dialog geschlossen
-378 In diesem Dokument nicht möglich
-379 Geschütztes Element
-380 Die Auswahl darf ein solches Element nicht treffen
-381 Der aktuellen Auswahl folgen keine Titel
-382 Trotzdem sichern
-383 Der Host konnte nicht gefunden werden
-384 Das Dokument wurde verändert (412)
-385 Es besteht ein Konflikt mit dem aktuellen Status der Ressource
-386 Die Auswahl ist ungültig
-387 Unbekanntes Element
-388 %d aktualisierte Elemente
-389 Der Titel muss angegeben werden
-390 Vorlagen
-391 Häufigkeit des Auftretens
-392 Die maximal mögliche Zahl des Auftretens wurde erreicht
-393 Die minimal mögliche Zahl des Auftretens wurde erreicht
-394 Überprüfen doppelter IDs
-395 Füge XSL-Form für MathML-Elemente hinzu
-396 Einfügen eines Operators
-397 Wählen der Art der Operatordarstellung
-398 Einfügen eines Integrals
-399 Auswählen des Integraltyps
-400 Attribute für die Grenzen
-401 Wählen der Eröffungs-, Trennungs- und Schließungssymbole
-402 Anzahl der Operatorsymbole
-403 Anzahl der Koordinaten
-404 Länge der n-Tupel
-405 Anzahl der Elemente
-406 Anzahl der Variablen
-407 Grad
-408 Grad der Variable mit Nummer %d
-409 Mischdokument
+362 In neuem Fenster
+363 Anti-aliasing
+364 ISO-Datumsformat
+365 Ort für neue Dokumente
+366 Ort zum Öffnen
+367 Warnen, falls mehrere Registerkarten geschlossen werden sollen
+368 Die maximale Anzahl an URLs in der History ist erreicht
+369 URL-Liste löschen
+370 Alle Tastaturkürzel anzeigen
+371 Feste Zeilenlänge (0 = Standardwert)
+372 Vorlage
+373 Dokument speichern als...
+374 Vorlage konnte nicht gefunden werden
+375 Vorlagenumrisse anzeigen
+376 Mit "Anwenden" wird der Dialog geschlossen
+377 In diesem Dokument nicht möglich
+378 Geschütztes Element
+379 Die Auswahl darf ein solches Element nicht treffen
+380 Der aktuellen Auswahl folgen keine Titel
+381 Trotzdem sichern
+382 Der Host konnte nicht gefunden werden
+383 Das Dokument wurde verändert (412)
+384 Es besteht ein Konflikt mit dem aktuellen Status der Ressource
+385 Die Auswahl ist ungültig
+386 Unbekanntes Element
+387 %d aktualisierte Elemente
+388 Der Titel muss angegeben werden
+389 Vorlagen
+390 Häufigkeit des Auftretens
+391 Die maximal mögliche Zahl des Auftretens wurde erreicht
+392 Die minimal mögliche Zahl des Auftretens wurde erreicht
+393 Überprüfen doppelter IDs
+394 Füge XSL-Form für MathML-Elemente hinzu
+395 Einfügen eines Operators
+396 Wählen der Art der Operatordarstellung
+397 Einfügen eines Integrals
+398 Auswählen des Integraltyps
+399 Attribute für die Grenzen
+400 Wählen der Eröffungs-, Trennungs- und Schließungssymbole
+401 Anzahl der Operatorsymbole
+402 Anzahl der Koordinaten
+403 Länge der n-Tupel
+404 Anzahl der Elemente
+405 Anzahl der Variablen
+406 Grad
+407 Grad der Variable mit Nummer %d
+408 Mischdokument
