@@ -25,8 +25,8 @@ extern void NewUnion ( const XTigerTemplate t,
                        const char *name,
                        DicDictionary include,
                        DicDictionary exclude );
-extern void NewElement ( const XTigerTemplate t,
-                         const char *name );
+extern Declaration NewElement ( const XTigerTemplate t,
+                                const char *name );
 extern void FreeDeclaration ( Declaration dec );
 extern Declaration Template_GetDeclaration ( const XTigerTemplate t,
                                              const char *name );
@@ -97,8 +97,8 @@ extern void NewUnion ( const XTigerTemplate t,
                          const char *name,
                          DicDictionary include,
                          DicDictionary exclude );
-extern void NewElement ( const XTigerTemplate t,
-                           const char *name );
+extern Declaration NewElement ( const XTigerTemplate t,
+                                  const char *name );
 extern void FreeDeclaration ( Declaration dec );
 extern Declaration Template_GetDeclaration ( const XTigerTemplate t,
                                                const char *name );

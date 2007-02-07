@@ -256,8 +256,9 @@ void NewUnion (const XTigerTemplate t, const char *name,
         {
           aux = Template_GetDeclaration (t, Dictionary_CurrentKey (include));
           if (aux == NULL) //Unknown type > a new XML element
-            NewElement (t, Dictionary_CurrentKey (include));
-          Dictionary_Add (dec->unionType.include, aux->name, aux);
+            aux = NewElement (t, Dictionary_CurrentKey (include));
+          if(aux)
+            Dictionary_Add (dec->unionType.include, aux->name, aux);
         }
       Dictionary_Clean (include);
     }
@@ -269,8 +270,9 @@ void NewUnion (const XTigerTemplate t, const char *name,
         {
           aux = Template_GetDeclaration (t, Dictionary_CurrentKey (exclude));
           if (aux == NULL) //Unknown type > a new XML element
-            NewElement (t, Dictionary_CurrentKey (exclude));
-          Dictionary_Add (dec->unionType.exclude, aux->name, aux);
+            aux = NewElement (t, Dictionary_CurrentKey (exclude));
+          if(aux)
+            Dictionary_Add (dec->unionType.exclude, aux->name, aux);
         }
       Dictionary_Clean (exclude);
     }
@@ -283,15 +285,18 @@ void NewUnion (const XTigerTemplate t, const char *name,
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void NewElement (const XTigerTemplate t, const char *name)
+Declaration NewElement (const XTigerTemplate t, const char *name)
 {
 #ifdef TEMPLATES
-  if (!t)
-    return;
+  if(!t)
+    return NULL;
 
 	Declaration dec = NewDeclaration (t, name, XmlElementNat);
   dec->elementType.name = TtaStrdup(name);
 	AddDeclaration (t, dec);
+  return dec;
+#else /* TEMPLATES */
+  return NULL;
 #endif /* TEMPLATES */
 }
 
