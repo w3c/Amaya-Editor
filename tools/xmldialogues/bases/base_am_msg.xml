@@ -5177,97 +5177,161 @@
 <message xml:lang="de">Unbekanntes Element</message>
 <message xml:lang="cn">未知元素</message>
 <message xml:lang="tw">未知元素</message></label>
+<message xml:lang="hu">Ismeretlen elem</message>
 <label define="AM_CHANGE_NUMBER">
 <message xml:lang="en">%d updated elements</message>
 <message xml:lang="fr">%d éléments changés</message>
 <message xml:lang="es">%d elementos actualizados</message>
 <message xml:lang="de">%d aktualisierte Elemente</message>
 <message xml:lang="cn">%d 个已更新元素</message>
-<message xml:lang="tw">%d 个已更新元素</message></label>
+<message xml:lang="tw">%d 个已更新元素</message>
+<message xml:lang="hu">%d frissített elem</message>
+</label>
 <label define="AM_MISSING_TITLE">
 <message xml:lang="en">The title is mandatory</message>
 <message xml:lang="fr">Le titre est obligatoire</message>
 <message xml:lang="de">Der Titel muss angegeben werden</message>
 <message xml:lang="it">Il titolo è obbligatorio</message>
-<message xml:lang="es">El título es obligatorio</message></label>
+<message xml:lang="es">El título es obligatorio</message>
+<message xml:lang="hu">The title is mandatory</message>
+</label>
 <label define="AM_TEMPLATES">
 <message xml:lang="en">Templates</message>
 <message xml:lang="fr">Modèles</message>
-<message xml:lang="es">Modelos</message></label>
+<message xml:lang="es">Modelos</message>
+<message xml:lang="de">Vorlagen</message>
+<message xml:lang="hu">Sablonok</message>
+</label>
 <label define="AM_NUMBER_OCCUR">
 <message xml:lang="en">Number of occurrences</message>
 <message xml:lang="fr">Nombre d'occurrences</message>
-<message xml:lang="es">Número de ocurrencias</message></label>
+<message xml:lang="es">Número de ocurrencias</message>
+<message xml:lang="de">Häufigkeit des Auftretens</message>
+<message xml:lang="hu">Előfordulások száma</message>
+</label>
 <label define="AM_NUMBER_OCCUR_HAVE_MAX">
 <message xml:lang="en">Maximum number of occurrences reached</message>
 <message xml:lang="fr">Nombre maximal d'occurrences atteint</message>
-<message xml:lang="es">Número máximo de ocurrencias alcanzado</message></label>
+<message xml:lang="es">Número máximo de ocurrencias alcanzado</message>
+<message xml:lang="de">Die maximal mögliche Zahl des Auftretens wurde erreicht</message>
+<message xml:lang="hu">Elértük az előfordulások legnagyobb számát</message>
+</label>
 <label define="AM_NUMBER_OCCUR_HAVE_MIN">
 <message xml:lang="en">Minimum number of occurrences reached</message>
 <message xml:lang="fr">Nombre minimum d'occurrences atteint</message>
-<message xml:lang="es">Número mínimo de ocurrencias alcanzado</message></label>
+<message xml:lang="es">Número mínimo de ocurrencias alcanzado</message>
+<message xml:lang="de">Die minimal mögliche Zahl des Auftretens wurde erreicht</message>
+<message xml:lang="hu">Elértük az előfordulások legkisebb számát</message>
+</label>
 <label define="AM_WARNIDS">
 <message xml:lang="en">Check duplicated IDs</message>
 <message xml:lang="fr">Vérifier les IDs dupliqués</message>
-<message xml:lang="es">Verificar los IDs duplicados</message></label>
+<message xml:lang="es">Verificar los IDs duplicados</message>
+<message xml:lang="de">Überprüfen doppelter IDs</message>
+<message xml:lang="hu">Többszörös azonosító ellenőrzése</message>
+</label>
 <label define="AM_MATHPI">
 <message xml:lang="en">Add the xsl stylesheet for MathML elements</message>
 <message xml:lang="fr">Ajouter la feuille xsl pour les éléments MathML</message>
-<message xml:lang="es">Agregar la hoja xsl para los elementos MathML</message></label>
+<message xml:lang="es">Agregar la hoja xsl para los elementos MathML</message>
+<message xml:lang="de">Füge XSL-Form für MathML-Elemente hinzu</message>
+<message xml:lang="hu">Adja hozzá az xsl stíluslapot a MathML elemekhez</message>
+</label>
 <label define="AM_SELECT_OPERATOR_TITLE">
 <message xml:lang="en">Insert operator</message>
 <message xml:lang="fr">Insérer opérateur</message>
-<message xml:lang="es">Insertar operador</message></label>
+<message xml:lang="es">Insertar operador</message>
+<message xml:lang="de">Einfügen eines Operators</message>
+<message xml:lang="hu">Műveleti jel beillesztése</message>
+</label>
 <label define="AM_SELECT_OPERATOR_LABEL">
 <message xml:lang="en">Select the way the operator has to be displayed</message>
 <message xml:lang="fr">Choisir la façon dont l'opérateur doit être affiché</message>
 <message xml:lang="es">Seleccionar la manera cuya el operador debe ser visualizado</message></label>
+<message xml:lang="de">Wählen der Art der Operatordarstellung</message>
+<message xml:lang="hu">Válassza ki a műveleti jel megjelenítési módját</message>
 <label define="AM_SELECT_INTEGRAL_TITLE">
 <message xml:lang="en">Insert an integral</message>
 <message xml:lang="fr">Insérer une intégrale</message>
-<message xml:lang="es">Insertar una integral</message></label>
+<message xml:lang="es">Insertar una integral</message>
+<message xml:lang="de">Einfügen eines Integrals</message>
+<message xml:lang="hu">Integrál beillesztése</message>
+</label>
 <label define="AM_SELECT_INTEGRAL_LABEL">
 <message xml:lang="en">Select the type of integral</message>
 <message xml:lang="fr">Choisir le type d'intégrale</message>
-<message xml:lang="es">Seleccionar el tipo de integral</message></label>
+<message xml:lang="es">Seleccionar el tipo de integral</message>
+<message xml:lang="de">Auswählen des Integraltyps</message>
+<message xml:lang="hu">Válassza ki az integrál típusát</message>
+</label>
 <label define="AM_SELECT_FENCE_TITLE">
 <message xml:lang="en">Attributes of the fence</message>
 <message xml:lang="fr">Attributs du fence</message>
-<message xml:lang="es">Atributos del fence</message></label>
+<message xml:lang="es">Atributos del fence</message>
+<message xml:lang="de">Attribute für die Grenzen</message>
+<message xml:lang="hu">Szögletes zárójel attribútumai</message>
+</label>
 <label define="AM_SELECT_FENCE_LABEL">
 <message xml:lang="en">Select open, separators and close symbols</message>
 <message xml:lang="fr">Choisir les symboles ouvrants, séparateurs et fermants</message>
-<message xml:lang="es">Seleccionar los símbolos arbriendos, separadores y cerrandos</message></label>
+<message xml:lang="es">Seleccionar los símbolos arbriendos, separadores y cerrandos</message>
+<message xml:lang="de">Wählen der Eröffungs-, Trennungs- und Schließungssymbole</message>
+<message xml:lang="hu">Válassza ki a nyitó, elválasztó és záró jeleket</message>
+</label>
 <label define="AM_NUMBER_OPERATORS">
 <message xml:lang="en">Number of operator symbols</message>
 <message xml:lang="fr">Nombre de symboles opérateurs</message>
-<message xml:lang="es">Número de símbolos operadores</message></label>
+<message xml:lang="es">Número de símbolos operadores</message>
+<message xml:lang="de">Anzahl der Operatorsymbole</message>
+<message xml:lang="hu">Műveleti jelek száma</message>
+</label>
 <label define="AM_NUMBER_COORDONNATES">
-<message xml:lang="en">Number of coordonnates</message>
+<message xml:lang="en">Number of coordinates</message>
 <message xml:lang="fr">Nombre de coordonnées</message>
-<message xml:lang="es">Número de coordenadas</message></label>
+<message xml:lang="es">Número de coordenadas</message>
+<message xml:lang="de">Anzahl der Koordinaten</message>
+<message xml:lang="hu">Coordináták száma</message>
+</label>
 <label define="AM_NUMBER_NUPLE">
 <message xml:lang="en">Length of the N-tuples</message>
 <message xml:lang="fr">Longueur du N-uplet</message>
-<message xml:lang="es">Largo del N-</message></label>
+<message xml:lang="es">Largo del N-</message>
+<message xml:lang="de">Länge der n-Tupel</message>
+<message xml:lang="hu">N-esek hossza</message>
+</label>
 <label define="AM_NUMBER_ELEMENTS">
 <message xml:lang="en">Number of elements</message>
 <message xml:lang="fr">Nombre d'éléments</message>
-<message xml:lang="es">Número de elementos</message></label>
+<message xml:lang="es">Número de elementos</message>
+<message xml:lang="de">Anzahl der Elemente</message>
+<message xml:lang="hu">Elemek száma</message>
+</label>
 <label define="AM_NUMBER_VARIABLES">
 <message xml:lang="en">Number of variables</message>
 <message xml:lang="fr">Nombre de variables</message>
-<message xml:lang="es">Número de variables</message></label>
+<message xml:lang="es">Número de variables</message>
+<message xml:lang="de">Anzahl der Variablen</message>
+<message xml:lang="hu">Változók száma</message>
+</label>
 <label define="AM_DEGREE">
 <message xml:lang="en">Degree</message>
 <message xml:lang="fr">Degré</message>
-<message xml:lang="es">Grado</message></label>
+<message xml:lang="es">Grado</message>
+<message xml:lang="de">Grad</message>
+<message xml:lang="hu">Rend</message>
+</label>
 <label define="AM_DEGREE_VARIABLE">
 <message xml:lang="en">Degree of the variable number %d</message>
 <message xml:lang="fr">Degré de la variable numéro %d</message>
-<message xml:lang="es">Grado de la variable %d</message></label>
+<message xml:lang="es">Grado de la variable %d</message>
+<message xml:lang="de">Grad der Variable mit Nummer %d</message>
+<message xml:lang="hu">A változó rendje (%d)</message>
+</label>
 <label define="AM_COMPOUND_DOCUMENT">
 <message xml:lang="en">Compound document</message>
 <message xml:lang="fr">Document composé</message>
-<message xml:lang="es">Documento compuesto</message></label>
+<message xml:lang="es">Documento compuesto</message>
+<message xml:lang="de">Mischdokument</message>
+<message xml:lang="hu">Összetett dokumentum</message>
+</label>
 <label define="AMAYA_MSG_MAX"></label></messages></base>

@@ -70,10 +70,10 @@
 68 &Cerrar pestaña
 69 Cerrar ventana(&W)
 70 Salir de Amaya(&X)
-71 **New tab
-72 **Refresh tab
-73 **Refresh all tabs
-74 **Close other tabs
+71 Nueva pestaña
+72 Actualizar pestaña
+73 Actualizar todas las pestañas
+74 Cerrar las otras pestañas
 75 &Deshacer
 76 &Rehacer
 77 Cor&tar

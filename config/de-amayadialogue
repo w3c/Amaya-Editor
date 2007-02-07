@@ -70,10 +70,10 @@
 68 Registerkarte schließen(&C)
 69 Schließen(&W)
 70 Beenden(&X)
-71 **New tab
-72 **Refresh tab
-73 **Refresh all tabs
-74 **Close other tabs
+71 Einen neuen Reiter erstellen
+72 Reiter aktualisieren
+73 Alle Reiter aktualisieren
+74 Alle übrigen Reiter schließen
 75 Rückgängig
 76 Erneut
 77 Ausschneiden

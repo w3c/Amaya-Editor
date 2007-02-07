@@ -389,23 +389,24 @@
 387 Unbekanntes Element
 388 %d aktualisierte Elemente
 389 Der Titel muss angegeben werden
-390 **Templates
-391 **Number of occurrences
-392 **Maximum number of occurrences reached
-393 **Minimum number of occurrences reached
-394 **Check duplicated IDs
-395 **Add the xsl stylesheet for MathML elements
-396 **Insert operator
+390 Vorlagen
+391 Häufigkeit des Auftretens
+392 Die maximal mögliche Zahl des Auftretens wurde erreicht
+393 Die minimal mögliche Zahl des Auftretens wurde erreicht
+394 Überprüfen doppelter IDs
+395 Füge XSL-Form für MathML-Elemente hinzu
+396 Einfügen eines Operators
 397 **Select the way the operator has to be displayed
-398 **Insert an integral
-399 **Select the type of integral
-400 **Attributes of the fence
-401 **Select open, separators and close symbols
-402 **Number of operator symbols
-403 **Number of coordonnates
-404 **Length of the N-tuples
-405 **Number of elements
-406 **Number of variables
-407 **Degree
-408 **Degree of the variable number %d
-409 **Compound document
+398 Wählen der Art der Operatordarstellung
+398 Einfügen eines Integrals
+399 Auswählen des Integraltyps
+400 Attribute für die Grenzen
+401 Wählen der Eröffungs-, Trennungs- und Schließungssymbole
+402 Anzahl der Operatorsymbole
+403 Anzahl der Koordinaten
+404 Länge der n-Tupel
+405 Anzahl der Elemente
+406 Anzahl der Variablen
+407 Grad
+408 Grad der Variable mit Nummer %d
+409 Mischdokument

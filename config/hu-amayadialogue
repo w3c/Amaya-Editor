@@ -70,10 +70,10 @@
 68 Lap bezárása(&C)
 69 Ablak bezárása(&W)
 70 Kilépés az Amayából(&X)
-71 **New tab
-72 **Refresh tab
-73 **Refresh all tabs
-74 **Close other tabs
+71 Új fül
+72 Fül frissítése
+73 Minden fül frissítése
+74 Többi fül bezárása
 75 &Visszavon
 76 &Újra
 77 &Kivágás

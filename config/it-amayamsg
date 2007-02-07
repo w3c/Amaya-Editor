@@ -403,7 +403,7 @@
 400 **Attributes of the fence
 401 **Select open, separators and close symbols
 402 **Number of operator symbols
-403 **Number of coordonnates
+403 **Number of coordinates
 404 **Length of the N-tuples
 405 **Number of elements
 406 **Number of variables
