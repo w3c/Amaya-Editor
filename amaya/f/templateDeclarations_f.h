@@ -54,12 +54,22 @@ extern DicDictionary Template_ExpandUnion ( XTigerTemplate t,
                                             Declaration decl );
 extern char* Template_ExpandTypes ( XTigerTemplate t,
                                     char* types );
+extern ThotBool Template_IsElementTypeAllowed ( ElementType type,
+                                                Declaration decl );
+extern ThotBool Template_IsTypeAllowed ( const char* type,
+                                         Declaration decl );
 extern ThotBool Template_CanInsertElementInBag ( Document doc,
                                                  ElementType type,
                                                  char* bagTypes );
-extern ThotBool Template_CanInsertElementInBag ( Document doc,
-                                                 ElementType type,
-                                                 Element bag );
+extern ThotBool Template_CanInsertTypeInBag ( Document doc,
+                                              const char* type,
+                                              char* bagTypes );
+extern ThotBool Template_CanInsertElementInBagElement ( Document doc,
+                                                        ElementType type,
+                                                        Element bag );
+extern ThotBool Template_CanInsertElementInBagElement ( Document doc,
+                                                        const char* type,
+                                                        Element bag );
 extern ThotBool Template_CanInsertElementInUse ( Document doc,
                                                  ElementType type,
                                                  char* useType,
@@ -116,12 +126,22 @@ extern DicDictionary Template_ExpandUnion ( XTigerTemplate t,
                                               Declaration decl );
 extern char* Template_ExpandTypes ( XTigerTemplate t,
                                       char* types );
+extern ThotBool Template_IsElementTypeAllowed ( ElementType type,
+                                                  Declaration decl );
+extern ThotBool Template_IsTypeAllowed ( const char* type,
+                                           Declaration decl );
 extern ThotBool Template_CanInsertElementInBag ( Document doc,
                                                    ElementType type,
                                                    char* bagTypes );
-extern ThotBool Template_CanInsertElementInBag ( Document doc,
-                                                   ElementType type,
-                                                   Element bag );
+extern ThotBool Template_CanInsertTypeInBag ( Document doc,
+                                                const char* type,
+                                                char* bagTypes );
+extern ThotBool Template_CanInsertElementInBagElement ( Document doc,
+                                                          ElementType type,
+                                                          Element bag );
+extern ThotBool Template_CanInsertElementInBagElement ( Document doc,
+                                                          const char* type,
+                                                          Element bag );
 extern ThotBool Template_CanInsertElementInUse ( Document doc,
                                                    ElementType type,
                                                    char* useType,

@@ -32,7 +32,7 @@ extern Element Template_InsertUseChildren ( Document doc,
 extern Element InstantiateUse ( XTigerTemplate t,
                                 Element el,
                                 Document doc,
-                                ThotBool insert );
+                                ThotBool registerUndo );
 extern void InstantiateRepeat ( XTigerTemplate t,
                                 Element el,
                                 Document doc,
@@ -68,7 +68,7 @@ extern Element Template_InsertUseChildren ( Document doc,
 extern Element InstantiateUse ( XTigerTemplate t,
                                   Element el,
                                   Document doc,
-                                  ThotBool insert );
+                                  ThotBool registerUndo );
 extern void InstantiateRepeat ( XTigerTemplate t,
                                   Element el,
                                   Document doc,

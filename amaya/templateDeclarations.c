@@ -933,6 +933,103 @@ char* Template_ExpandTypes (XTigerTemplate t, char* types)
 }
 
 
+/**----------------------------------------------------------------------
+  Template_IsElementTypeAllowed
+  Test if an element is allowed by a declaration.
+  @param type Type of element to search.
+  @param decl Declaration where search element type.
+  @return TRUE if type is allowed and alse if not.
+  ----------------------------------------------------------------------*/
+ThotBool Template_IsElementTypeAllowed(ElementType type, Declaration decl)
+{
+#ifdef TEMPLATES
+  ThotBool      can;
+  Record        rec;
+  char          *name;
+
+  if(decl)
+  {
+    switch(decl->nature)
+    {
+      case XmlElementNat:
+        name = TtaGetElementTypeName(type);
+        return !strcmp(name, decl->name);
+      case UnionNat:
+        if(!strcmp(decl->name, "any")) /* Allow all. */
+          return TRUE;
+        if(!strcmp(decl->name, "anyElement")) /* Allow all elements. */
+          return TRUE;
+      
+        can = FALSE;
+        for(rec = decl->unionType.include->first; rec && !can; rec = rec->next)
+          can = Template_IsElementTypeAllowed(type, (Declaration)rec->element);
+        if(can)
+        {
+          for(rec = decl->unionType.exclude->first; rec; rec = rec->next)
+          {
+            if(Template_IsElementTypeAllowed(type, (Declaration)rec->element))
+            {
+              can = FALSE;
+              break;
+            }
+          }
+        }        
+        return can;
+      default:
+        break;
+    }
+  }
+#endif /* TEMPLATES */
+  return FALSE;
+}
+
+/**----------------------------------------------------------------------
+  Template_IsTypeAllowed
+  Test if a type is allowed by a declaration.
+  @param type Type name of element to search.
+  @param decl Declaration where search element type.
+  @return TRUE if type is allowed and alse if not.
+  ----------------------------------------------------------------------*/
+ThotBool Template_IsTypeAllowed(const char* type, Declaration decl)
+{
+#ifdef TEMPLATES
+  ThotBool      can;
+  Record        rec;
+
+  if(decl)
+  {
+    switch(decl->nature)
+    {
+      case UnionNat:
+        if(!strcmp(decl->name, "any")) /* Allow all. */
+          return TRUE;
+        if(!strcmp(decl->name, "anyElement")) /* Allow all elements. */
+          return TRUE;
+      
+        can = FALSE;
+        for(rec = decl->unionType.include->first; rec && !can; rec = rec->next)
+          can = Template_IsTypeAllowed(type, (Declaration)rec->element);
+        if(can)
+        {
+          for(rec = decl->unionType.exclude->first; rec; rec = rec->next)
+          {
+            if(Template_IsTypeAllowed(type, (Declaration)rec->element))
+            {
+              can = FALSE;
+              break;
+            }
+          }
+        }        
+        return can;
+      default:
+        return !strcmp(type, decl->name);
+    }
+  }
+#endif /* TEMPLATES */
+  return FALSE;
+}
+
+
 
 /**----------------------------------------------------------------------
   Template_CanInsertElementInBag
@@ -943,62 +1040,105 @@ ThotBool Template_CanInsertElementInBag (Document doc, ElementType type, char* b
   ThotBool res = FALSE;
 #ifdef TEMPLATES
   XTigerTemplate  t;
-  char* types;
-  char* elTypeName;
+  DicDictionary dico;
+  Declaration decl;
+  Record rec;
   
-  if (TtaIsLeaf (type))
-    // accept all basic elements ????
-    return TRUE;
-  if (!strcmp (bagTypes, "anyElement"))
-      // accept "anyElement"
-    return TRUE;
   t = (XTigerTemplate) Dictionary_Get (Templates_Dic, DocumentMeta[doc]->template_url);
   if (t)
   {
-    types = Template_ExpandTypes(t, bagTypes);
-    elTypeName = TtaGetElementTypeName(type);
-    if (strstr(types, elTypeName))
-      // Test for components or direct element types
-      res = TRUE;
-    else
+    dico = Dictionary_CreateFromList(bagTypes);
+    for(rec = dico->first; rec && !res; rec = rec->next)
+    {
+      decl = Template_GetDeclaration(t, rec->key);
+      if(Template_IsElementTypeAllowed(type, decl))
       {
+        res = TRUE;
+        break;
       }
-    TtaFreeMemory(types);
+    }
+    Dictionary_Clean(dico);
   }
 #endif /* TEMPLATES */
   return res;
 }
 
 /**----------------------------------------------------------------------
-  Template_CanInsertElementInBagElement
-  Test if an element can be insert in a bag
+  Template_CanInsertTypeInBag
+  Test if something  can be insert in a bag
   ----------------------------------------------------------------------*/
-ThotBool Template_CanInsertElementInBag (Document doc, ElementType type, Element bag)
+ThotBool Template_CanInsertTypeInBag (Document doc, const char* type, char* bagTypes)
 {
   ThotBool res = FALSE;
 #ifdef TEMPLATES
   XTigerTemplate  t;
-  char* types, *bagTypes;
-  char* elTypeName;
+  DicDictionary dico;
+  Declaration decl;
+  Record rec;
   
   t = (XTigerTemplate) Dictionary_Get (Templates_Dic, DocumentMeta[doc]->template_url);
-  if (t && bag)
+  if (t)
   {
-    bagTypes = GetAttributeStringValueFromNum(bag, Template_ATTR_types, NULL);
-    types = Template_ExpandTypes(t, bagTypes);
-    elTypeName = TtaGetElementTypeName(type);
-    if (strstr(types, elTypeName)) // Test for components or direct element types
-      res = TRUE;
-    else
+    dico = Dictionary_CreateFromList(bagTypes);
+    for(rec = dico->first; rec && !res; rec = rec->next)
     {
+      decl = Template_GetDeclaration(t, rec->key);
+      if(Template_IsTypeAllowed(type, decl))
+      {
+        res = TRUE;
+        break;
+      }
     }
-    TtaFreeMemory(bagTypes);
-    TtaFreeMemory(types);
+    Dictionary_Clean(dico);
   }
 #endif /* TEMPLATES */
   return res;
 }
 
+
+/**----------------------------------------------------------------------
+  Template_CanInsertElementInBagElement
+  Test if an element can be insert in a bag
+  ----------------------------------------------------------------------*/
+ThotBool Template_CanInsertElementInBagElement (Document doc, ElementType type, Element bag)
+{
+  ThotBool res = FALSE;
+#ifdef TEMPLATES
+  XTigerTemplate  t;
+  char *bagTypes;
+  
+  t = (XTigerTemplate) Dictionary_Get (Templates_Dic, DocumentMeta[doc]->template_url);
+  if (t && bag)
+  {
+    bagTypes = GetAttributeStringValueFromNum(bag, Template_ATTR_types, NULL);
+    res = Template_CanInsertElementInBag(doc, type, bagTypes);
+    TtaFreeMemory(bagTypes);
+  }
+#endif /* TEMPLATES */
+  return res;
+}
+
+/**----------------------------------------------------------------------
+  Template_CanInsertTypeInBagElement
+  Test if something can be insert in a bag
+  ----------------------------------------------------------------------*/
+ThotBool Template_CanInsertElementInBagElement (Document doc, const char* type, Element bag)
+{
+  ThotBool res = FALSE;
+#ifdef TEMPLATES
+  XTigerTemplate  t;
+  char *bagTypes;
+  
+  t = (XTigerTemplate) Dictionary_Get (Templates_Dic, DocumentMeta[doc]->template_url);
+  if (t && bag)
+  {
+    bagTypes = GetAttributeStringValueFromNum(bag, Template_ATTR_types, NULL);
+    res = Template_CanInsertTypeInBag(doc, type, bagTypes);
+    TtaFreeMemory(bagTypes);
+  }
+#endif /* TEMPLATES */
+  return res;
+}
 
 
 /**----------------------------------------------------------------------

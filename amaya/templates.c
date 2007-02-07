@@ -1281,12 +1281,7 @@ ThotBool TemplateElementWillBeCreated (NotifyElement *event)
       if(elType.ElSSchema==templateSSchema &&
           (elType.ElTypeNum==Template_EL_useSimple || elType.ElTypeNum==Template_EL_useEl))
         return FALSE;
-
-      types = GetAttributeStringValueFromNum(ancestor, Template_ATTR_types, NULL);
-      b = Template_CanInsertElementInBag(event->document, elType, types);
-      
-      TtaFreeMemory(types);
-      return !b;      
+      return !Template_CanInsertElementInBagElement(event->document, elType, ancestor);      
     }
     else if(ancestorType.ElTypeNum==Template_EL_useSimple ||
             ancestorType.ElTypeNum==Template_EL_useEl)

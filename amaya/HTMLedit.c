@@ -491,7 +491,7 @@ void GenerateInlineElement (int eType, int aType, char * data)
               parentType = TtaGetElementType(parent);
               if(parentType.ElSSchema==templateSSchema && parentType.ElTypeNum==Template_EL_bag)
               {
-                if(!Template_CanInsertElementInBag(doc, elType, parent))
+                if(!Template_CanInsertElementInBagElement(doc, elType, parent))
                   return;
               }
             }
