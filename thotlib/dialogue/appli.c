@@ -1649,7 +1649,7 @@ void DisplaySelMessage (char *text, PtrDocument pDoc)
 void TtaSetStatus (Document document, View view, char *text, char *name)
 {
   int                 frame, length;
-  char                *s;
+  char                *s = NULL;
 
 #ifdef _GTK
   gchar * title_string;
@@ -1661,64 +1661,44 @@ void TtaSetStatus (Document document, View view, char *text, char *name)
     {
       /* clean up old message */
       OldMsgSelect[0] = EOS;
-
       frame = GetWindowNumber (document, view);
       if (frame == 0)
         /* try to display in document 1 */
         frame = GetWindowNumber (1, view);
       if (frame != 0)
 #ifndef _WX
-        if (FrameTable[frame].WdStatus != 0)
+      if (FrameTable[frame].WdStatus != 0)
 #endif /* _WX */
-          {
-            length = strlen (text) + 1;
-            if (name)
-              length += strlen (name);
-            s = (char *)TtaGetMemory (length);
+        {
+          if (name == NULL)
+            name = "";
+          length = strlen (text) + strlen (name) + 1;
+          s = (char *)TtaGetMemory (length);
+          sprintf (s, text, name);
 #ifdef _WINGUI
-            if (name)
-              /* text est un format */
-              sprintf (s, text, name);
-            else
-              strncpy (s, text, length);
-            
-            SendMessage (FrameTable[frame].WdStatus, SB_SETTEXT, (WPARAM) 0, (LPARAM) s);
-            SendMessage (FrameTable[frame].WdStatus, WM_PAINT, (WPARAM) 0, (LPARAM) 0);
+          SendMessage (FrameTable[frame].WdStatus, SB_SETTEXT, (WPARAM) 0, (LPARAM) s);
+          SendMessage (FrameTable[frame].WdStatus, WM_PAINT, (WPARAM) 0, (LPARAM) 0);
 #endif /* _WINGUI */
 #ifdef _GTK
-            if (name)
-              {
-                /* text est un format */
-                sprintf (s, text, name);
-                title_string = s;
-              }
-            else
-              title_string = text;
-            gtk_statusbar_pop (GTK_STATUSBAR(FrameTable[frame].WdStatus),
-                               (intptr_t)gtk_object_get_data (GTK_OBJECT(FrameTable[frame].WdStatus), "MainSerie"));
-            gtk_statusbar_push (GTK_STATUSBAR(FrameTable[frame].WdStatus),
-                                (intptr_t)gtk_object_get_data (GTK_OBJECT(FrameTable[frame].WdStatus), "MainSerie"),
-                                title_string);
-            gtk_widget_show_all (GTK_WIDGET(FrameTable[frame].WdStatus));
+          title_string = s;
+          gtk_statusbar_pop (GTK_STATUSBAR(FrameTable[frame].WdStatus),
+                             (intptr_t)gtk_object_get_data (GTK_OBJECT(FrameTable[frame].WdStatus), "MainSerie"));
+          gtk_statusbar_push (GTK_STATUSBAR(FrameTable[frame].WdStatus),
+                              (intptr_t)gtk_object_get_data (GTK_OBJECT(FrameTable[frame].WdStatus), "MainSerie"),
+                              title_string);
+          gtk_widget_show_all (GTK_WIDGET(FrameTable[frame].WdStatus));
 #endif /* _GTK */
-            
 #ifdef _WX
-            if (name)
-              /* text est un format */
-              sprintf (s, text, name);
-            else
-              strncpy (s, text, length);
-            
-            /* 
-             * do not use the FrameTable[frame].WdStatus field because it's simplier
-             * to update only the frame's parent window
-             */
-            if (FrameTable[frame].WdFrame)
-              FrameTable[frame].WdFrame->SetStatusBarText( TtaConvMessageToWX( s ) );
+          /* 
+           * do not use the FrameTable[frame].WdStatus field because it's simplier
+           * to update only the frame's parent window
+           */
+          if (FrameTable[frame].WdFrame)
+            FrameTable[frame].WdFrame->SetStatusBarText( TtaConvMessageToWX( s ) );
 #endif /* _WX */
-            
-            TtaFreeMemory (s);
-          }
+          TtaFreeMemory (s);
+          s = NULL;
+        }
     }
 }
 
@@ -1739,10 +1719,10 @@ void TtaSetStatusSelectedElement(Document document, View view, Element elem)
 
   if (FrameTable[frame].WdFrame)
     {
-    window = wxDynamicCast(wxGetTopLevelParent(FrameTable[frame].WdFrame), AmayaWindow);
-    if (window)
-      ((AmayaStatusBar*)window->GetStatusBar())->SetSelectedElement( elem );
-  }
+      window = wxDynamicCast(wxGetTopLevelParent(FrameTable[frame].WdFrame), AmayaWindow);
+      if (window)
+        ((AmayaStatusBar*)window->GetStatusBar())->SetSelectedElement( elem );
+    }
 #else  /* _WX */
   if (elem)
     BuildSelectionMessage();
