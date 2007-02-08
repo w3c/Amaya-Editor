@@ -222,7 +222,6 @@ void LoadTemplate_callback (int newdoc, int status,  char *urlName,
       SetTemplateDocument (t, newdoc);
       el = TtaGetMainRoot (newdoc);
       ParseDeclarations  (t, el);
-      RedefineSpecialUnions (t);
       PreInstantiateComponents (t);
   
 #ifdef AMAYA_DEBUG	

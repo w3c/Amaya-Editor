@@ -42,7 +42,6 @@ extern void PrintUnion ( Declaration dec,
 extern void PrintDeclarations ( XTigerTemplate t,
                                 FILE *file );
 extern void DumpDeclarations ( XTigerTemplate t );
-extern void RedefineSpecialUnions ( XTigerTemplate t );
 extern DicDictionary GetComponents ( XTigerTemplate t );
 extern Element GetComponentContent ( Declaration d );
 extern Document GetTemplateDocument ( XTigerTemplate t );
@@ -114,7 +113,6 @@ extern void PrintUnion ( Declaration dec,
 extern void PrintDeclarations ( XTigerTemplate t,
                                   FILE *file );
 extern void DumpDeclarations ( XTigerTemplate t );
-extern void RedefineSpecialUnions ( XTigerTemplate t );
 extern DicDictionary GetComponents ( XTigerTemplate t );
 extern Element GetComponentContent ( Declaration d );
 extern Document GetTemplateDocument ( XTigerTemplate t );

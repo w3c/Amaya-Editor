@@ -666,49 +666,6 @@ void DumpDeclarations (XTigerTemplate t)
 }
 
 /*----------------------------------------------------------------------
-  RedefineSpecialUnions: Redefines predefined unions: any, anySimple, etc 
-  ----------------------------------------------------------------------*/
-void RedefineSpecialUnions (XTigerTemplate t)
-{
-#ifdef TEMPLATES
-  Declaration un;
-  DicDictionary dic;
-
-  if (!t)
-    return;
-
-  //We get the old definition to modify it 
-  un = Template_GetDeclaration (t,UNION_ANYSIMPLE);
-  //TODO: Check that it is actually the good declaration and not a newer one
-  un->unionType.include = t->simpleTypes;
-  un->unionType.exclude = Dictionary_Create ();
-  
-  un = Template_GetDeclaration (t,UNION_ANYCOMPONENT);
-  //TODO: Check that it is actually the good declaration and not a newer one
-  un->unionType.include = t->components;
-  un->unionType.exclude = Dictionary_Create ();
-
-  un = Template_GetDeclaration (t,UNION_ANYELEMENT);
-  //TODO: Check that it is actually the good declaration and not a newer one
-  un->unionType.include = t->elements;
-  un->unionType.exclude = Dictionary_Create ();
-  
-  un = Template_GetDeclaration (t,UNION_ANY);
-  //TODO: Check that it is actually the good declaration and not a newer one
-  dic = t->unions;
-  for (Dictionary_First (dic);!Dictionary_IsDone (dic);Dictionary_Next (dic))
-    {
-      Dictionary_Add (un->unionType.include, Dictionary_CurrentKey (dic), Dictionary_CurrentElement (dic));
-    }
-
-  //No recursive inclusion
-  Dictionary_Remove (un->unionType.include, UNION_ANY);
-  un->unionType.exclude = Dictionary_Create ();
-
-#endif /* TEMPLATES */
-}
-
-/*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 DicDictionary GetComponents (XTigerTemplate t)
 {
