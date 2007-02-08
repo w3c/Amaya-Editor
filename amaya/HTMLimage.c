@@ -1023,6 +1023,7 @@ ThotBool FetchImage (Document doc, Element el, char *imageURI, int flags,
 
   pathname[0] = EOS;
   tempfile[0] = EOS;
+  utf8pathname = NULL;
   imageName = NULL;
   attr = NULL;
   FetchImage_ctx = NULL;

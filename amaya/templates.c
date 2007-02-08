@@ -330,7 +330,6 @@ void CreateInstanceOfTemplate (Document doc, char *templatename, char *docname)
   LoadTemplate (0, templatename);
   DontReplaceOldDoc = dontReplace;
   CreateInstance (templatename, docname);
-
 #endif /* TEMPLATES */
 }
 
@@ -1079,6 +1078,7 @@ ThotBool OptionButtonClicked (NotifyElement *event)
 
 /*----------------------------------------------------------------------
   CheckTemplate checks if the template of the instance is loaded
+  Return TRUE if the template is loaded
   ----------------------------------------------------------------------*/
 void CheckTemplate (Document doc)
 {

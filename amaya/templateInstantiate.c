@@ -55,8 +55,11 @@ void  CreateInstance(char *templatePath, char *instancePath)
 
   XTigerTemplate t = (XTigerTemplate)Dictionary_Get (Templates_Dic, templatePath);
   if (t == NULL)
-    //The template must be loaded before calling this function
-    return;
+    {
+      // the template cannot be loaded
+      InitConfirm (doc, 1, TtaGetMessage (AMAYA, AM_BAD_TEMPLATE));
+      return;
+    }
 
   doc = GetTemplateDocument (t);
   while (alreadyOnDoc < DocumentTableLength-1 && !alreadyViewing)

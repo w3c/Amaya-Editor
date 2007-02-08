@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2005
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  * 
  */
@@ -620,7 +620,9 @@ ThotBool  AHTReqContext_delete (AHTReqContext * me)
 #endif   
 
 #ifdef DAV /* if there is a DAV context object, delete it */
-      if (me->dav_context) AHTDAVContext_delete ((AHTDAVContext*)me->dav_context);
+      if (me->dav_context)
+        AHTDAVContext_delete ((AHTDAVContext*)me->dav_context);
+      me->dav_context = NULL;
 #endif /* DAV */
 
       if (Amaya->reqlist)
@@ -635,6 +637,7 @@ ThotBool  AHTReqContext_delete (AHTReqContext * me)
             {
               HTList_removeObject (Amaya->docid_status, (void *) docid_status);
               TtaFreeMemory ((void *) docid_status);
+              docid_status = NULL;
             }
         }
 
@@ -645,7 +648,7 @@ ThotBool  AHTReqContext_delete (AHTReqContext * me)
          AHTFWriter_FREE (HTRequest_outputStream (me->request));
       */
       HTRequest_delete (me->request);
-       
+      me->request = NULL;
       if (me->output && me->output != stdout)
         {	
 #ifdef DEBUG_LIBWWW       
@@ -658,6 +661,7 @@ ThotBool  AHTReqContext_delete (AHTReqContext * me)
 	  
       if (me->error_stream != (char *) NULL)
         HT_FREE (me->error_stream);
+      me->error_stream = NULL;
 #if defined(_GTK) || defined(_WX)
 #ifdef WWW_XWINDOWS	
       if (me->read_xtinput_id || me->write_xtinput_id ||
@@ -665,7 +669,7 @@ ThotBool  AHTReqContext_delete (AHTReqContext * me)
         RequestKillAllXtevents(me);
 #endif /* WWW_XWINDOWS */
 #endif /* defined(_GTK) || defined(_WX) */
-       
+      
       if (me->reqStatus == HT_ABORT)
         {
           if (me->outputfile && me->outputfile[0] != EOS)
@@ -675,45 +679,47 @@ ThotBool  AHTReqContext_delete (AHTReqContext * me)
             }
         }
        
+      if (me->urlName)
+        TtaFreeMemory (me->urlName);
+      me->urlName = NULL;
       if ((me->mode & AMAYA_ASYNC) || (me->mode & AMAYA_IASYNC))
         /* for the ASYNC mode, free the memory we allocated in GetObjectWWW
            or in PutObjectWWW */
         {
-          if (me->urlName)
-            TtaFreeMemory (me->urlName);
           if (me->outputfile)
             TtaFreeMemory (me->outputfile);
+          me->outputfile = NULL;
         }
 
       /* the real name to which we are publishing */
       if (me->default_put_name)
         TtaFreeMemory (me->default_put_name);
-
+      me->default_put_name = NULL;
       /* @@ temp change for the %esc conversion */
-      if (me->method == METHOD_PUT && me->urlName)
-        TtaFreeMemory (me->urlName);
-
+      /*if (me->method == METHOD_PUT && me->urlName)
+        {
+          TtaFreeMemory (me->urlName);
+          me->urlName = NULL;
+          }*/
       if (me->formdata)
         HTAssocList_delete (me->formdata);
-
+      me->formdata = NULL;
       /* erase the response headers */
       HTTP_headers_delete (me->http_headers);
        
 #ifdef ANNOTATIONS
       if (me->document)
         TtaFreeMemory (me->document);
+      me->document = NULL;
 #endif /* ANNOTATIONS */
 
       if (me->refdocUrl)
         TtaFreeMemory (me->refdocUrl);
-
+      me->refdocUrl = NULL;
       /* to trace bugs */
       memset ((void *) me, 0, sizeof (AHTReqContext));
-       
       TtaFreeMemory ((void *) me);
-       
       Amaya->open_requests--;
-       
       return TRUE;
     }
   return FALSE;
@@ -724,7 +730,7 @@ ThotBool  AHTReqContext_delete (AHTReqContext * me)
   Thread_deleteAll
   this function deletes the whole list of active threads.           
   ----------------------------------------------------------------------*/
-static void         Thread_deleteAll (void)
+static void Thread_deleteAll (void)
 {
   HTList             *cur;
   AHTReqContext      *me;
@@ -793,7 +799,8 @@ int                 AHTOpen_file (HTRequest * request)
   if (HTRequest_outputStream (me->request)) 
     {
 #ifdef DEBUG_LIBWWW
-      fprintf(stderr, "AHTOpen_file: output stream already existed for url %s\n", me->urlName);
+      fprintf(stderr, "AHTOpen_file: output stream already existed for url %s\n",
+              me->urlName);
 #endif /* DEBUG_LIBWWW */      
       return HT_OK;
     }
@@ -808,7 +815,8 @@ int                 AHTOpen_file (HTRequest * request)
     {
       me->outputfile[0] = EOS;	/* file could not be opened */
 #ifdef DEBUG_LIBWWW
-      fprintf(stderr, "AHTOpen_file: couldn't open output stream for url %s\n", me->urlName);
+      fprintf(stderr, "AHTOpen_file: couldn't open output stream for url %s\n",
+              me->urlName);
 #endif
       TtaSetStatus (me->docid, 1,
                     TtaGetMessage (AMAYA, AM_CANNOT_CREATE_FILE),
@@ -1005,6 +1013,7 @@ static int redirection_handler (HTRequest *request, HTResponse *response,
               if (me->method != METHOD_PUT)
                 AHTRequest_setRefererHeader (me);
               TtaFreeMemory (escape_src);
+              escape_src = NULL;
             }
           else
             ref = NULL;
@@ -1013,6 +1022,7 @@ static int redirection_handler (HTRequest *request, HTResponse *response,
             {
               HTAnchor_setPhysical (HTAnchor_parent (new_anchor), ref);
               TtaFreeMemory (ref);
+              ref = NULL;
             }
           else
             return HT_OK; /* We can't redirect anymore */
@@ -1030,8 +1040,8 @@ static int redirection_handler (HTRequest *request, HTResponse *response,
       else
         {
           /* it's a SYNC mode, so we should keep the urlName */
-          strncpy (me->urlName, urlAdr, MAX_LENGTH - 1);
-          me->urlName[MAX_LENGTH - 1] = EOS;
+          TtaFreeMemory (me->urlName);
+          me->urlName = TtaStrdup (urlAdr);
         }
       ChopURL (me->status_urlName, me->urlName);
 
@@ -1047,7 +1057,8 @@ static int redirection_handler (HTRequest *request, HTResponse *response,
             {
               /* Are we writing to a file? */
 #ifdef DEBUG_LIBWWW
-              fprintf (stderr, "redirection_handler: New URL is  %s, closing FILE %p\n", me->urlName, me->output); 
+              fprintf (stderr, "redirection_handler: New URL is  %s, closing FILE %p\n",
+                       me->urlName, me->output); 
 #endif 
               TtaReadClose (me->output);
               me->output = NULL;
@@ -1055,8 +1066,8 @@ static int redirection_handler (HTRequest *request, HTResponse *response,
         }
        
       /* tell the user what we're doing */
-      TtaSetStatus (me->docid, 1,
-                    TtaGetMessage (AMAYA, AM_RED_FETCHING), me->status_urlName); 
+      TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_RED_FETCHING),
+                    me->status_urlName);
       /*
       ** launch the request
       */
@@ -1075,7 +1086,7 @@ static int redirection_handler (HTRequest *request, HTResponse *response,
        
       /* search lock information for the new url */
       if (me->method == METHOD_POST || me->method == METHOD_PUT) 
-        DAVAddIfHeader (me,me->urlName);
+        DAVAddIfHeader (me, me->urlName);
 #endif /* DAV */      
        
       if (me->method == METHOD_POST || me->method == METHOD_PUT)
@@ -1273,7 +1284,7 @@ static int check_handler (HTRequest * request, HTResponse * response,
       /* MKP: try to add an "If" header (lock information) 
        *      Such header will be added only if there is a
        *      lock information in the local base. */
-      DAVAddIfHeader (me,me->urlName);   
+      DAVAddIfHeader (me, me->urlName);   
 #endif /* DAV */
 
 
@@ -1502,14 +1513,10 @@ static int terminate_handler (HTRequest *request, HTResponse *response,
                   me->status_urlName);
    
   /* don't remove or Xt will hang up during the PUT */
-  if (AmayaIsAlive ()  && ((me->method == METHOD_POST) ||
-                           (me->method == METHOD_PUT)))
-    {
-      PrintTerminateStatus (me, status);
-    } 
-
+  if (AmayaIsAlive ()  &&
+      (me->method == METHOD_POST || me->method == METHOD_PUT))
+    PrintTerminateStatus (me, status);
   ProcessTerminateRequest (request, response, context, status);
-   
   /* stop here */
   return HT_ERROR;
 }
@@ -1537,7 +1544,7 @@ int AHTLoadTerminate_handler (HTRequest *request, HTResponse *response,
       docid_status = GetDocIdStatus (me->docid,
                                      Amaya->docid_status);
 
-      if (docid_status != NULL && docid_status->counter > 1)
+      if (docid_status && docid_status->counter > 1)
         TtaSetStatus (me->docid, 1, 
                       TtaGetMessage (AMAYA, AM_ELEMENT_LOADED),
                       me->status_urlName);
@@ -3176,7 +3183,6 @@ int GetObjectWWW (int docid, int refdoc, char *urlName, char *formdata,
   /* for the async. request modes, we need to have our
      own copy of outputfile and urlname
   */
-
   if ((mode & AMAYA_ASYNC) || (mode & AMAYA_IASYNC)) 
     {
       l = strlen (outputfile);
@@ -3191,35 +3197,25 @@ int GetObjectWWW (int docid, int refdoc, char *urlName, char *formdata,
       else
         me->urlName = (char *)TtaGetMemory (MAX_LENGTH + 2);
       strcpy (me->urlName, urlName);
-      /* TODO: a tester que ca marche bien avec WX */
-#ifdef _WINDOWS
-      /* force windows ASYNC requests to always be non preemptive */
       HTRequest_setPreemptive (me->request, NO);
-#endif /*_WINDOWS */
     } /* AMAYA_ASYNC mode */ 
   else 
-#ifdef _WINDOWS
     {
       me->outputfile = outputfile;
-      me->urlName = urlName;
+      me->urlName = TtaStrdup (urlName);
+#ifdef _WINDOWS
       /* force windows SYNC requests to always be non preemptive */
       HTRequest_setPreemptive (me->request, YES);
+#else /* _WINDOWS */
+      /***
+          In order to take into account the stop button, 
+          the requests will be always asynchronous, however, if mode=AMAYA_SYNC,
+          we will loop until the document has been received or a stop signal
+          generated
+      ****/
+      HTRequest_setPreemptive (me->request, NO);
+#endif /* _WINDOWS */
     }
-#endif /* !_WINDOWS */
-   
-#if defined(_UNIX)
-  {
-    me->outputfile = outputfile;
-    me->urlName = urlName;
-  }
-  /***
-      In order to take into account the stop button, 
-      the requests will be always asynchronous, however, if mode=AMAYA_SYNC,
-      we will loop until the document has been received or a stop signal
-      generated
-  ****/
-  HTRequest_setPreemptive (me->request, NO);
-#endif /* #if defined(_UNIX) */
 
   /*
   ** Make sure that the first request is flushed immediately and not
@@ -3229,7 +3225,7 @@ int GetObjectWWW (int docid, int refdoc, char *urlName, char *formdata,
     HTRequest_setFlush(me->request, YES);
   HTRequest_setFlush(me->request, YES);
 
-  /* prepare the URLname that will be displayed in teh status bar */
+  /* prepare the URLname that will be displayed in the status bar */
   ChopURL (me->status_urlName, me->urlName);
   TtaSetStatus (me->docid, 1, 
                 TtaGetMessage (AMAYA, AM_FETCHING),
@@ -3698,7 +3694,8 @@ int PutObjectWWW (int docid, char *fileName, char *urlName,
 
   /* prepare the URLname that will be displayed in the status bar */
   ChopURL (me->status_urlName, me->urlName);
-  TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_REMOTE_SAVING), me->status_urlName);
+  TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_REMOTE_SAVING),
+                me->status_urlName);
 
    
 #ifdef DAV
@@ -3785,7 +3782,8 @@ void StopAllRequests (int docid)
               if (AmayaIsAlive ())
                 {
 #ifdef DEBUG_LIBWWW
-                  fprintf (stderr,"StopRequest: killing req %p, url %s, status %d\n", me, me->urlName, me->reqStatus);
+                  fprintf (stderr,"StopRequest: killing req %p, url %s, status %d\n", me,
+                           me->urlName, me->reqStatus);
 #endif /* DEBUG_LIBWWW */
 		   
                   if (me->reqStatus != HT_END && me->reqStatus != HT_ABORT)

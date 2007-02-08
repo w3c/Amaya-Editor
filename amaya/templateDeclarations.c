@@ -443,8 +443,11 @@ void FreeXTigerTemplate (XTigerTemplate t)
 	Dictionary_Clean (dic);
 
   //Freeing the document
-  FreeDocumentResource (t->doc);
-  TtcCloseDocument (t->doc, 0);
+  if (t->doc)
+    {
+      FreeDocumentResource (t->doc);
+      TtcCloseDocument (t->doc, 0);
+    }
 
   //Removing the template of the dictionary
   Dictionary_RemoveElement (Templates_Dic, t);
