@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2005
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1911,12 +1911,28 @@ void MakeToc (Document doc, View view)
                   while (srce)
                     {
                       copyType = TtaGetElementType (srce);
-                      if (copyType.ElTypeNum == HTML_EL_Anchor &&
+                      s = TtaGetSSchemaName (copyType.ElSSchema);
+                      while (srce && !TtaIsLeaf (copyType) &&
+                             !strcmp (s, "Template"))
+                        {
+                          /* copy the anchor contents instead of the anchor */
+                          if (parent == NULL)
+                            parent = srce;
+                          srce = TtaGetFirstChild (srce);
+                          if (srce)
+                            {
+                              copyType = TtaGetElementType (srce);
+                              s = TtaGetSSchemaName (copyType.ElSSchema);
+                            }
+                        }
+                      if (srce &&
+                          copyType.ElTypeNum == HTML_EL_Anchor &&
                           copyType.ElSSchema == elType.ElSSchema)
                         {
                           /* copy the anchor contents instead of the anchor */
-                          parent = srce;
-                          srce = TtaGetFirstChild (parent);
+                          if (parent == NULL)
+                            parent = srce;
+                          srce = TtaGetFirstChild (srce);
                         }
                       if (srce)
                         {
