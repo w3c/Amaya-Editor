@@ -3617,7 +3617,7 @@ void TtcInsertChar (Document doc, View view, CHAR_T c)
   ViewSelection      *pViewSel;
   DisplayMode         dispMode;
   PtrDocument         pDoc;
-  PtrElement          firstEl, lastEl;
+  PtrElement          firstEl, lastEl, pEl;
   int                 firstChar, lastChar;
   int                 frame;
   ThotBool            lock;
@@ -3694,9 +3694,35 @@ void TtcInsertChar (Document doc, View view, CHAR_T c)
                                   firstEl->ElStructSchema) ||
                !TypeHasException (ExcIsBreak, firstEl->ElTypeNumber,
                                   firstEl->ElStructSchema)))
+            {
+              if (firstEl == lastEl &&
+                  !firstEl->ElTerminal &&
+                  firstEl->ElStructSchema &&
+                  !strcmp (firstEl->ElStructSchema->SsName, "Template"))
+                {
+                  // try to move the selection to children
+                  do
+                    {
+                      firstEl = firstEl->ElFirstChild;
+                    }
+                  while (firstEl && !firstEl->ElTerminal &&
+                         firstEl->ElStructSchema &&
+                         !strcmp (firstEl->ElStructSchema->SsName, "Template"));
+                  if (firstEl)
+                    {
+                      SelectElement (pDoc, firstEl, TRUE, FALSE);
+                      pEl = firstEl->ElNext;
+                      if (pEl)
+                        {
+                          while (pEl->ElNext)
+                            pEl = pEl->ElNext;
+                          ExtendSelection (pEl, pEl->ElVolume, FALSE, FALSE, FALSE);
+                        }
+                    }
+                }
             /* delete the current selection */
             ContentEditing (TEXT_SUP);
-
+            }
           InsertChar (frame, c, -1);
           if (!lock)
             /* unlock table formatting */
