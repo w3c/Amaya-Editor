@@ -2,7 +2,7 @@
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20000303 Stylable//EN"   "http://www.w3.org/TR/2000/03/WD-SVG-20000303/DTD/svg-20000303-stylable.dtd">
 <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200">
   <g id="forward"
-    style="stroke:#000000;stroke-miterlimit:4;">
+    style="stroke:#000000;">
      <path style="stroke:none;"
           d="M0,100.477c0,55.403,45.074,100.477,100.477,100.477s100.477-45.073,100.477-100.477C200.954,45.074,155.88,0,100.477,0S0,45.074,0,100.477z"/>
      <path
