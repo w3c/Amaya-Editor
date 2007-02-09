@@ -3470,6 +3470,9 @@ void TtaInsertAnyElement (Document document, ThotBool before)
       else if (pSelDoc->DocReadOnly)
         /* the document can not be modified */
         return;
+      else if (firstSel && ElementIsReadOnly (firstSel->ElParent))
+        /* the parent can not be modified */
+        return;
       else
         {
           if (before)

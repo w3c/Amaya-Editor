@@ -896,10 +896,10 @@ PtrElement      ParentAny (PtrElement pEl)
   est un composant optionnel d'agregat ou un composant d'un	
   agregat non ordonne'.						
   ----------------------------------------------------------------------*/
-void                SRuleForSibling (PtrDocument pDoc, PtrElement pEl,
-                                     ThotBool before, int distance,
-                                     int *typeNum, PtrSSchema * pSS,
-                                     ThotBool * list, ThotBool * optional)
+void SRuleForSibling (PtrDocument pDoc, PtrElement pEl,
+                      ThotBool before, int distance,
+                      int *typeNum, PtrSSchema *pSS,
+                      ThotBool * list, ThotBool * optional)
 {
   int                 i;
   PtrElement          pE;
@@ -922,8 +922,16 @@ void                SRuleForSibling (PtrDocument pDoc, PtrElement pEl,
           /* Teste si l'element pointe par pEl est un element de liste */
           /* ou d'agregat */
           {
-            *typeNum = pEl->ElParent->ElTypeNumber;
-            *pSS = pEl->ElParent->ElStructSchema;
+            // skip Template elements
+            pE = pEl;
+            do
+              {
+                pE = pE->ElParent;
+               *typeNum = pE->ElTypeNumber;
+                *pSS = pE->ElStructSchema;
+              }
+            while (pE->ElParent && *pSS && (*pSS)->SsName &&
+                   !strcmp ((*pSS)->SsName, "Template"));
             ListOrAggregateRule (pDoc, pEl, typeNum, pSS);
             pEquivEl = pEl;
           }
@@ -1150,9 +1158,9 @@ void                SRuleForSibling (PtrDocument pDoc, PtrElement pEl,
   Retourne typeNum = 0 et pSS = NULL s'il s'agit d'une reference	
   non typee : CsReference(Any)					
   ----------------------------------------------------------------------*/
-void                ReferredType (PtrElement pRefEl, PtrAttribute pRefAttr,
-                                  PtrSSchema * pSS, int *typeNum,
-                                  PtrDocument pDoc)
+void ReferredType (PtrElement pRefEl, PtrAttribute pRefAttr,
+                   PtrSSchema * pSS, int *typeNum,
+                   PtrDocument pDoc)
 {
   int                 referredNature;
   PtrSRule            pRule;
