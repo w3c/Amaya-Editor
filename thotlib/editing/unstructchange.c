@@ -1567,7 +1567,14 @@ void TtcCreateElement (Document doc, View view)
                     GetElementConstruct (pParent->ElParent, &nComp) == CsAny)
                   pListEl = pParent->ElParent;
                 else
-                  pListEl = AncestorList (pParent);
+                  {
+                    pAncest = pParent;
+                    /* ignore the next Template ancestors */
+                    while (pAncest->ElParent && pAncest->ElParent->ElStructSchema &&
+                           !strcmp (pAncest->ElParent->ElStructSchema->SsName, "Template"))
+                      pAncest = pAncest->ElParent;
+                    pListEl = AncestorList (pAncest);
+                  }
                 if (TypeHasException (ExcNoBreakByReturn,pParent->ElTypeNumber,
                                       pParent->ElStructSchema))
                   /* the parent element can't be split with the Return key.
@@ -1683,8 +1690,16 @@ void TtcCreateElement (Document doc, View view)
                             pElDelete = pElem;
                             createAfter = TRUE;
                             pElReplicate = pParent;
-                            while (pElReplicate->ElParent != pListEl)
-                              pElReplicate = pElReplicate->ElParent;
+                            pAncest = pElReplicate->ElParent;
+                            while (pAncest && pAncest->ElStructSchema &&
+                                   !strcmp (pAncest->ElStructSchema->SsName, "Template"))
+                              pAncest = pAncest->ElParent;
+
+                            while (pAncest != pListEl)
+                              {
+                                pElReplicate = pAncest;
+                                pAncest = pAncest->ElParent;
+                              }
                           }
                       }
                     else if (pElem->ElNext && !pElem->ElPrevious &&
@@ -1698,8 +1713,16 @@ void TtcCreateElement (Document doc, View view)
                         pElDelete = pElem;
                         createAfter = FALSE;
                         pElReplicate = pParent;
-                        while (pElReplicate->ElParent != pListEl)
-                          pElReplicate = pElReplicate->ElParent;
+                            pAncest = pElReplicate->ElParent;
+                            while (pAncest && pAncest->ElStructSchema &&
+                                   !strcmp (pAncest->ElStructSchema->SsName, "Template"))
+                              pAncest = pAncest->ElParent;
+
+                            while (pAncest != pListEl)
+                              {
+                                pElReplicate = pAncest;
+                                pAncest = pAncest->ElParent;
+                              }
                       }
                     else if (!TypeHasException (ExcNoCreate,
                                                 pParent->ElTypeNumber,
@@ -1739,7 +1762,12 @@ void TtcCreateElement (Document doc, View view)
                   }
                 if (list && pListEl == NULL)
                   {
-                    pListEl = AncestorList (pElem);
+                    pAncest = pElem;
+                    /* ignore the next Template ancestors */
+                    while (pAncest->ElParent && pAncest->ElParent->ElStructSchema &&
+                           !strcmp (pAncest->ElParent->ElStructSchema->SsName, "Template"))
+                      pAncest = pAncest->ElParent;
+                    pListEl = AncestorList (pAncest);
                     if (pListEl != NULL)
                       if (!TypeHasException (ExcNoCreate,
                                              pElem->ElTypeNumber,
