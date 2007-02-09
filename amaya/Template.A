@@ -8,6 +8,7 @@ DEFAULT
 	  ElemLClick.Pre -> SimpleLClick;
 	  ElemNew.Pre -> TemplateElementWillBeCreated;
 	  ElemDelete.Pre -> TemplateElementWillBeDeleted;
+    AttrMenu.Pre ->    TemplateAttrInMenu;
    END;
    
 ELEMENTS

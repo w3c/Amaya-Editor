@@ -1410,3 +1410,19 @@ ThotBool CurrentTypeWillBeExported (NotifyAttribute *event)
 #endif /* TEMPLATES */
   return FALSE;
 }
+
+/*----------------------------------------------------------------------
+  TemplateAttrInMenu
+  Called by Thot when building the Attributes menu for template elements.
+  ----------------------------------------------------------------------*/
+ThotBool TemplateAttrInMenu (NotifyAttribute * event)
+{
+#ifdef TEMPLATES
+  // Prevent from showing attributes for template instance but not templates.
+  if(IsTemplateInstanceDocument(event->document))
+    return TRUE;
+  else
+#endif /* TEMPLATES */
+    return FALSE;
+}
+
