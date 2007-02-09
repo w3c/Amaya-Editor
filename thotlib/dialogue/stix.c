@@ -1058,15 +1058,15 @@ void GiveStixSize (ThotFont pfont, PtrAbstractBox pAb, int *width,
     {
     case 'd':	/* double integral */
       *width = StixIntegralWidth (*height, 2);
-      //*height *= 2;
       break;
     case 'i':	/* integral */
       *width = StixIntegralWidth (*height, 0);
-      //*height *= 2;
       break;
     case 'c':	/* circle integral */
       *width = StixIntegralWidth (*height, 1);
-      //*height *= 2;
+      break;
+    case 't':	/* circle integral */
+      *width = StixIntegralWidth (*height, 3);
       break;
     case '(':
     case ')':
@@ -1098,6 +1098,10 @@ void GiveStixSize (ThotFont pfont, PtrAbstractBox pAb, int *width,
       *height = hfont;
       break;
 #endif
+    default:
+      // like an integral
+      *width = StixIntegralWidth (*height, 0);
+      break;
     }
 }
 

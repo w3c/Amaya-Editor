@@ -82,9 +82,9 @@ void SelectIntegralDlgWX::OnInsert( wxCommandEvent& event )
   value = XRCCTRL(*this, "wxID_INTEGRAL_CONTOUR", wxChoice)->GetStringSelection();
   strcpy(buffer, (const char*)value.mb_str(wxConvUTF8) );
   if (!strcmp (buffer, "contour"))
-    val = 2;
-  else
     val = 1;
+  else
+    val = 0;
   ThotCallback (MathsDialogue + MathIntegralContour, INTEGER_DATA, (char *)val);
 
   // return open symbol
@@ -93,7 +93,7 @@ void SelectIntegralDlgWX::OnInsert( wxCommandEvent& event )
   if (!strcmp (buffer, "msubsup"))
     val = 1;
   else
-    val = 2;
+    val = 0;
   ThotCallback (MathsDialogue + MathIntegralType, INTEGER_DATA, (char *)val);
 
   ThotCallback (MyRef, INTEGER_DATA, (char*) 1);

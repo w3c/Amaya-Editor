@@ -32,6 +32,7 @@
                 <item>double</item>
                 <item>triple</item>
               </content>
+              <selection>0</selection>
             </object>
             <flag>wxEXPAND</flag>
           </object>
@@ -46,6 +47,7 @@
                 <item>normal</item>
                 <item>contour</item>
               </content>
+              <selection>0</selection>
             </object>
             <flag>wxEXPAND</flag>
           </object>
@@ -60,6 +62,7 @@
                 <item>msubsup</item>
                 <item>msub</item>
               </content>
+              <selection>0</selection>
             </object>
           </object>
         </object>

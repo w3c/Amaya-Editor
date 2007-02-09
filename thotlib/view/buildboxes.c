@@ -732,23 +732,22 @@ void GiveSymbolSize (PtrAbstractBox pAb, int *width, int *height)
         case 'c':	/*integrale curviligne */
         case 'i':	/*integrale */
           *width = BoxCharacterWidth (243, font);
-          //*height = hfont;
           break;
         case 'd':	/*integrale double */
           *width = BoxCharacterWidth (243, font) +
             BoxCharacterWidth (243, font) / 2;
-          //*height = hfont;
+          break;
+        case 't':	/*integrale triple */
+          *width = BoxCharacterWidth (243, font) * 2;
           break;
         case 'r':	/* root */
           *width = hfont;
-          //*height = hfont * 2;
           break;
         case 'S':	/*sigma */
         case 'P':	/*pi */
         case 'I':	/*intersection */
         case 'U':	/*union */
           *width = BoxCharacterWidth (229, font);
-          //*height = hfont;
           break;
         case 'L':       /* left arrow */
         case 'h':       /* horizontal bar */
@@ -768,20 +767,16 @@ void GiveSymbolSize (PtrAbstractBox pAb, int *width, int *height)
         case '{':
         case '}':
           *width = BoxCharacterWidth (230, font);
-          //*height = hfont;
-          break;
+           break;
         case '<':
         case '>':
-          *width = BoxCharacterWidth (241, font);
-          //*height = hfont;
+          *width = BoxCharacterWidth (241, font) * 2;
           break;
         case '|':       /* vertical bar */
           *width = BoxCharacterWidth (124, font);  /* | */
-          //*height = hfont;	  
           break;
         case 'D':       /* double vertical bar */
           *width = 3 * BoxCharacterWidth (124, font);  /* | */
-          //*height = hfont;	  
           break;
         case '^':
         case 'v':
@@ -790,11 +785,9 @@ void GiveSymbolSize (PtrAbstractBox pAb, int *width, int *height)
           break;
         case '?':
           *width = BoxCharacterWidth (63, font);   /* ? */
-          //*height = hfont;
           break;
         default:
           *width = BoxCharacterWidth (SPACE, font);
-          //*height = hfont;
           break;
         }
     }

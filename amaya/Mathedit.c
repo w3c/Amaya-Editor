@@ -2165,16 +2165,14 @@ static void CreateMathConstruct (int construct, ...)
             {
             /* ask the type of integral */
             GetIntegralType(doc);
-            if (Math_integral_type > 3)
-              Math_integral_type = 1;
-            if (!MathIntegralContour)
+
+            if (!Math_integral_contour)
               {
               switch(Math_integral_number)
                 {
                 case 1: symbol = 8747; break;
                 case 2: symbol = 8748; break;
-                case 3: symbol = 8749; break;
-                default: symbol = 8747; break;
+                default: symbol = 8749; break;
                 }
               }
             else
@@ -2183,8 +2181,7 @@ static void CreateMathConstruct (int construct, ...)
                 {
                 case 1: symbol = 8750; break;
                 case 2: symbol = 8751; break;
-                case 3: symbol = 8752; break;
-                default: symbol = 8750; break;
+                default: symbol = 8752; break;
                 }
               }
             }
@@ -2458,7 +2455,7 @@ static void CreateMathConstruct (int construct, ...)
           TtaDeleteTree (leaf, doc);
 
           new_ = TtaGetFirstChild (child); 
-          selected = TtaGetLastChild(child);
+          selected = TtaGetFirstChild (TtaGetLastChild(child));
 
           leaf = TtaGetFirstChild (new_);
           op = leaf;
@@ -2847,10 +2844,18 @@ static void CreateMathConstruct (int construct, ...)
           child = SetMFencedAttributes(el, Math_open, Math_close, ',', doc);
         
           /* ask the user the number of rows and colomns */
-          if (lx == 0)
+          if(lx == -1 || ly == -1)
+            {/* lx = ly */
             lx = GetOccurrences (doc, TtaGetMessage (AMAYA, AM_COLS), 3, 1);
-          if (ly == 0)
-            ly = GetOccurrences (doc, TtaGetMessage (AMAYA, AM_ROWS), 3, 1);
+            ly = lx;
+            }
+          else
+            {
+            if (lx == 0)
+              lx = GetOccurrences (doc, TtaGetMessage (AMAYA, AM_COLS), 3, 1);
+            if (ly == 0)
+              ly = GetOccurrences (doc, TtaGetMessage (AMAYA, AM_ROWS), 3, 1);
+            }
 
           /* mtable */
           leaf = TtaGetFirstChild (child);TtaDeleteTree (leaf, doc);
@@ -3779,7 +3784,7 @@ void CreateMDETERMINANT (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMDETERMINANT2 (Document document, View view)
 {
-  CreateMathConstruct (53, '|', '|', 0, 0);}
+  CreateMathConstruct (53, '|', '|', -1, -1);}
 
 /*----------------------------------------------------------------------
   CreateMDIAGONALINTERSECTION
