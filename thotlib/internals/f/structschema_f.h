@@ -93,7 +93,8 @@ extern PtrElement CreateDescendant ( int typeNum,
                                      PtrDocument pDoc,
                                      PtrElement *pLeaf,
                                      int descTypeNum,
-                                     PtrSSchema pDescSS );
+                                     PtrSSchema pDescSS,
+                                     PtrElement pParent );
 extern SSchema TtaGetSchemaExtension ( Document document,
                                        char *NomExtension );
 extern SRule *ExtensionRule ( PtrSSchema pSS,
@@ -205,7 +206,8 @@ extern PtrElement CreateDescendant ( int typeNum,
                                        PtrDocument pDoc,
                                        PtrElement *pLeaf,
                                        int descTypeNum,
-                                       PtrSSchema pDescSS );
+                                       PtrSSchema pDescSS,
+                                       PtrElement pParent );
 extern SSchema TtaGetSchemaExtension ( Document document,
                                          char *NomExtension );
 extern SRule *ExtensionRule ( PtrSSchema pSS,

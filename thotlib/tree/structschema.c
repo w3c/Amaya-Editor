@@ -1945,7 +1945,11 @@ void InsertChildFirst (PtrElement pEl, PtrElement pChild,
 }
 
 /*----------------------------------------------------------------------
-  CreateDescendant  Cherche a creer, pour un element defini par la	
+  CreateDescendant  tres to create a child of the pParent element
+  according to the typeNum rule of the pSS schema definition until an
+  element of the descTypeNum in pDescSS is created.
+
+  Cherche a creer, pour un element defini par la	
   regle typeNum du schema de structure pSS, une descendance	
   jusqu'a un element de type descTypeNum defini dans le schema de	
   structure pDescSS.						
@@ -1957,7 +1961,7 @@ void InsertChildFirst (PtrElement pEl, PtrElement pChild,
   ----------------------------------------------------------------------*/
 PtrElement CreateDescendant (int typeNum, PtrSSchema pSS,
                              PtrDocument pDoc, PtrElement *pLeaf,
-                             int descTypeNum, PtrSSchema pDescSS)
+                             int descTypeNum, PtrSSchema pDescSS, PtrElement pParent)
 {
   PtrElement          pEl, pDesc, pEl1, pEl2;
   int                 i, j;
@@ -2004,7 +2008,7 @@ PtrElement CreateDescendant (int typeNum, PtrSSchema pSS,
               {
                 pEl = CreateDescendant (pRule1->SrSSchemaNat->SsRootElem,
                                         pRule1->SrSSchemaNat, pDoc, pLeaf,
-                                        descTypeNum, pDescSS);
+                                        descTypeNum, pDescSS, pParent);
                 if (pEl != NULL)
                   if (pEl->ElTypeNumber != pRule1->SrSSchemaNat->SsRootElem)
                     /* cree un element du type de la regle racine */
@@ -2023,7 +2027,7 @@ PtrElement CreateDescendant (int typeNum, PtrSSchema pSS,
             else
               {
                 pEl = CreateDescendant (pRule1->SrIdentRule, pSS, pDoc, pLeaf,
-                                        descTypeNum, pDescSS);
+                                        descTypeNum, pDescSS, pParent);
                 if (pEl != NULL)
                   /* on a effectivement cree une descendance */
                   if (pEl->ElTypeNumber != pRule1->SrIdentRule)
@@ -2045,8 +2049,23 @@ PtrElement CreateDescendant (int typeNum, PtrSSchema pSS,
 	       
             break;
           case CsList:
-            pEl = CreateDescendant (pRule1->SrListItem, pSS, pDoc, pLeaf,
-                                    descTypeNum, pDescSS);
+            if (pSS && pSS->SsName && !strcmp (pSS->SsName, "Template"))
+              {
+                // look for an enclosing CsList constructor
+                pEl1 = pParent->ElParent;
+                while (pEl1 && pSS && pSS->SsName && !strcmp (pSS->SsName, "Template"))
+                  {
+                    pSS = pEl1->ElStructSchema;
+                    typeNum = pEl1->ElTypeNumber;
+                    pRule1 = pSS->SsRule->SrElem[typeNum - 1];
+                  }
+                if (descTypeNum == 1)
+                  // update the schema of the inserted text unit
+                  pDescSS = pSS;
+              }
+            if (pRule1)
+              pEl = CreateDescendant (pRule1->SrListItem, pSS, pDoc, pLeaf,
+                                      descTypeNum, pDescSS, pParent);
             if (pEl != NULL)
               {
                 pRule2 = pSS->SsRule->SrElem[pRule1->SrListItem - 1];
@@ -2105,7 +2124,7 @@ PtrElement CreateDescendant (int typeNum, PtrSSchema pSS,
                   {
                     if (pSS->SsRule->SrElem[i++]->SrConstruct == CsNatureSchema)
                       pEl = CreateDescendant (i, pSS, pDoc, pLeaf,
-                                              descTypeNum, pDescSS);
+                                              descTypeNum, pDescSS, pParent);
                   }
                 while (pEl == NULL && i < pSS->SsNRules);
               }
@@ -2116,7 +2135,7 @@ PtrElement CreateDescendant (int typeNum, PtrSSchema pSS,
                 pDesc = NULL;
                 do
                   pDesc = CreateDescendant (pRule1->SrChoice[i++], pSS, pDoc,
-                                            pLeaf, descTypeNum, pDescSS);
+                                            pLeaf, descTypeNum, pDescSS, pParent);
                 while (pDesc == NULL && i < pRule1->SrNChoices);
                 if (pDesc != NULL)
                   {
@@ -2157,14 +2176,14 @@ PtrElement CreateDescendant (int typeNum, PtrSSchema pSS,
               for (i = 0; pDesc == NULL && i < pRule1->SrNComponents; i++)
                 if (!pRule1->SrOptComponent[i])
                   pDesc = CreateDescendant (pRule1->SrComponent[i], pSS, pDoc,
-                                            pLeaf, descTypeNum, pDescSS);
+                                            pLeaf, descTypeNum, pDescSS, pParent);
             if (pDesc == NULL)
               /* on n'a rien pu creer en ne prenant que les composants */
               /* obligatoires, on essaie maintenant les composants optionnels */
               for (i = 0; pDesc == NULL && i < pRule1->SrNComponents; i++)
                 if (pRule1->SrOptComponent[i])
                   pDesc = CreateDescendant (pRule1->SrComponent[i], pSS, pDoc,
-                                            pLeaf, descTypeNum, pDescSS);
+                                            pLeaf, descTypeNum, pDescSS, pParent);
             if (pDesc != NULL)
               /* on a pu creer une descendance */
               {

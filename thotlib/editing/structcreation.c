@@ -692,7 +692,7 @@ PtrAbstractBox CreateALeaf (PtrAbstractBox pAB, int *frame, LeafType leafType,
                   else
                     pE = CreateDescendant (pEl->ElTypeNumber,
                                            pEl->ElStructSchema, pDoc, &pLeaf,
-                                           lType, pEl->ElStructSchema);
+                                           lType, pEl->ElStructSchema, pEl);
                   if (pE != NULL)
                     {
                       CancelSelection ();

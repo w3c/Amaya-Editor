@@ -553,7 +553,7 @@ static Element CreateDescent (Document document, Element element,
           firstCreated = CreateDescendant (pEl->ElTypeNumber, pEl->ElStructSchema,
                                            LoadedDocument[document - 1], &lastCreated,
                                            elementType.ElTypeNum,
-                                           (PtrSSchema) (elementType.ElSSchema));
+                                           (PtrSSchema) (elementType.ElSSchema), pEl);
       if (firstCreated != NULL)
         {
           if (firstCreated->ElNext != NULL &&

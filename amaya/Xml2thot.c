@@ -1037,11 +1037,18 @@ static void  XhtmlCheckInsert (Element *el, Element  parent,
       /* Search the ancestor that is not a character level element */
       ancestor = parent;
       ancestorType = TtaGetElementType (ancestor);
-      if (strcmp (TtaGetSSchemaName (ancestorType.ElSSchema), "HTML") != 0)
+      while (ancestor &&
+             !strcmp (TtaGetSSchemaName (ancestorType.ElSSchema), "Template"))
+        {
+          // skip template ancestors
+          ancestor =  TtaGetParent (ancestor);
+          ancestorType = TtaGetElementType (ancestor);
+        }
+      if (strcmp (TtaGetSSchemaName (ancestorType.ElSSchema), "HTML"))
         /* parent is not a HTML element */
         return;
 
-      while (ancestor != NULL &&
+      while (ancestor &&
              IsXMLElementInline (ancestorType, doc))
         {
           ancestor = TtaGetParent (ancestor);
