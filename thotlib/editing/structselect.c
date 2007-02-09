@@ -2726,7 +2726,7 @@ void SelectElementWithEvent (PtrDocument pDoc, PtrElement pEl,
   Document            doc;
   int                 pos;
 
-  if (pDoc != NULL && pEl != NULL)
+  if (pDoc && pEl)
     {
       pos = 0;
       SelectableAncestor (&pEl, &pos);

@@ -17,6 +17,7 @@
 #include "logdebug.h"
 #include "selection.h"
 
+#include "callback_f.h"
 #include "exceptions_f.h"
 #include "structschema_f.h"
 #include "structselect_f.h"
@@ -294,12 +295,17 @@ void AmayaPathControl::OnMouseLeave(wxMouseEvent& WXUNUSED(event))
   Refresh();
 }
 
+extern void SynchronizeAppliedStyle (NotifyElement *event);
 /*----------------------------------------------------------------------
   -----------------------------------------------------------------------*/
 void AmayaPathControl::OnMouseLeftUp(wxMouseEvent& event)
 {
-  wxPoint pos = event.GetPosition();
+  NotifyElement       notifyEl;
+  Document            doc;
+  PtrElement          pEl;
+  wxPoint             pos = event.GetPosition();
   wxAmayaPathControlItemListNode *node = m_items.GetLast();
+
   while (node)
     {
       if (node->GetData()->rect.x >= 0)
@@ -307,10 +313,22 @@ void AmayaPathControl::OnMouseLeftUp(wxMouseEvent& event)
           if(pos.x >= node->GetData()->rect.x &&
              pos.x <= node->GetData()->rect.x+node->GetData()->rect.width)
             {
-              TtaSelectElement (TtaGetDocument(node->GetData()->elem),
-                                node->GetData()->elem);
-              TtaRedirectFocus ();
-              return;
+              doc = TtaGetDocument(node->GetData()->elem);
+              if (doc)
+                {
+                  TtaSelectElement (doc, node->GetData()->elem);
+                  TtaRedirectFocus ();
+                  /* WARNING: just update applied style */
+                  notifyEl.event = TteElemSelect;
+                  notifyEl.document = doc;
+                  notifyEl.element = node->GetData()->elem;
+                  notifyEl.info = 0; /* not sent by undo */
+                  notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
+                  notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
+                  notifyEl.position = 0;
+                  SynchronizeAppliedStyle (&notifyEl);
+                  return;
+                }
             }
         }
       node = node->GetPrevious();
@@ -319,6 +337,8 @@ void AmayaPathControl::OnMouseLeftUp(wxMouseEvent& event)
 }
 
 
+/*----------------------------------------------------------------------
+  -----------------------------------------------------------------------*/
 BEGIN_EVENT_TABLE(AmayaPathControl, wxControl)
   EVT_PAINT(AmayaPathControl::OnDraw)
   EVT_SIZE(AmayaPathControl::OnSize)
