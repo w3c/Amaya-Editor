@@ -29,6 +29,7 @@ extern XmlEntity *pMathEntityTable;
 #define MaxMsgLength 200
 
 #include "HTMLactions_f.h"
+#include "XHTMLbuilder_f.h"
 #include "HTMLtable_f.h"
 #include "Mathedit_f.h"
 #include "styleparser_f.h"
@@ -4148,6 +4149,9 @@ void      MathMLElementComplete (ParserData *context, Element el, int *error)
           /* it's a ANNOTATION_XML element */
           /* Evaluate what direct child element to be rendered */
           EvaluateChildRendering (el, doc);
+          break;
+        case MathML_EL_MGLYPH:
+          CheckMandatoryAttribute (el, doc, MathML_ATTR_alt);
           break;
         default:
           break;
