@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
 <head>
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
@@ -13,7 +13,7 @@
 <body xml:lang="fr" lang="fr">
 
 <div>
-<img alt="Amaya" src="../../resources/icons/22x22/logo.png" class="logo" />
+<img alt="Amaya" src="../../resources/icons/22x22/logo.png" class="logo" /> 
 
 <p class="nav"><a href="Xml.html.fr" accesskey="p"><img alt="previous"
 src="../../resources/icons/misc/left.png" /></a> <a href="Manual.html.fr"
@@ -26,7 +26,7 @@ src="../../resources/icons/misc/right.png" /></a></p>
 <ul>
   <li><a href="#L2881">Créer des propriétés CSS</a></li>
   <li><a href="#feuilles1">Les feuilles de style CSS externes et
-    utilisateur</a>
+    utilisateur</a> 
     <ul>
       <li><a href="#L90">Gérer des feuilles de style CSS externes</a></li>
     </ul>
@@ -35,7 +35,7 @@ src="../../resources/icons/misc/right.png" /></a></p>
   <li><a href="#Associer">Associer une classe à un élément</a></li>
   <li><a href="#L554">Créer un style générique pour un élément ou une
     classe</a></li>
-  <li><a href="#L613">Créer des éléments de style HTML</a>
+  <li><a href="#L613">Créer des éléments de style HTML</a> 
     <ul>
       <li><a href="#Types">Eléments type information</a></li>
       <li><a href="#L895">Eléments caractère</a></li>
@@ -108,7 +108,7 @@ permettent de contrôler les feuilles de style CSS externes et de
 l'utilisateur :</p>
 <ul>
   <li>La commande <strong>Ajouter</strong> permet de lier une nouvelle
-    feuille de style CSS à un document courant.
+    feuille de style CSS à un document courant. 
     <p>Cette commande fait apparaître une boîte de dialogue :</p>
     <ul>
       <li>Si la feuille CSS cible est visualisée dans une autre fenêtre
@@ -126,17 +126,17 @@ l'utilisateur :</p>
     <p></p>
   </li>
   <li>La commande <strong>Ouvrir</strong> permet d'ouvrir une des feuilles de
-    style CSS appliquées au document courant.
+    style CSS appliquées au document courant. 
     <p></p>
   </li>
   <li>La commande <strong>Désactiver</strong> permet de supprimer les effets
     d'une des feuilles de style actives du document courant. Cette commande
-    n'affecte en rien le lien CSS dans le document.
+    n'affecte en rien le lien CSS dans le document. 
     <p></p>
   </li>
   <li>La commande <strong>Réactiver</strong> permet de rétablir les effets
     d'une des feuilles de style CSS désactivées du document courant. Cette
-    commande n'affecte en rien le lien CSS dans le document.
+    commande n'affecte en rien le lien CSS dans le document. 
     <p></p>
   </li>
   <li>La commande <strong>Retirer</strong> permet de retirer une des feuilles
@@ -163,8 +163,13 @@ courante.</p>
 <p>L'utilisateur peut afficher le source CSS qui engendre chaque propriété en
 double (ou simple) cliquant sur la propriété. Aussi longtemps que la fenêtre
 est ouverte, Amaya met à jour le contenu de la fenêtre quand la sélection
-change. En appuyant sur la touche <code>F2</code>, l'utilisateur peut ainsi
-voir les propriétés CSS appliquées aux éléments englobants.</p>
+change.</p>
+
+<p>En appuyant sur la touche <kbd>F2</kbd>, l'utilisateur peut ainsi voir les
+propriétés CSS appliquées aux éléments englobants. Quand l'utilisateur
+modifie la sélection en sélectionnant dans le chemin de la barre d'état
+affiché en bas de la fenêtre, les propriétés CSS appliquées sont aussi mises
+à jour.</p>
 
 <h3 id="Associer">Associer une classe à un élément</h3>
 
@@ -203,14 +208,14 @@ comme un autre attribut).</p>
 <p class="ProcedureCaption">Pour retirer la classe d'un élément :</p>
 <ul>
   <li>Vous pouvez éditer l'attribut <strong>class</strong> dans l'outils
-    <strong>Attributs</strong>.
+    <strong>Attributs</strong>. 
     <p>Quand l'élément est sélectionné, vous cliquez sur le [X] de l'entrée
     pour supprimer l'attribut <strong>class</strong>, ou vous cliquez sur
     l'entrée et éditez sa valeur puis confirmez avec le bouton appliquer
     (<img alt="ok" src="../../resources/icons/16x16/ok.png" /> ).</p>
   </li>
   <li>Vous pouvez aussi retirer ou éditer l'attribut <strong>class</strong>
-    dans la vue structure.
+    dans la vue structure. 
     <p>Pour retirer l'attribut <strong>class</strong>, vous cliquez dans la
     valeur, <code>F2</code> pour sélectionner la valeur entière, puis deux
     <code>Delete</code> pour détruire l'attribut.</p>
@@ -228,7 +233,7 @@ une classe :</p>
 <ol>
   <li>Sélectionnez l'élément que vous désirez utiliser comme modèle. Par
     défaut la sélection est mise sur la chaîne de caractères, et vous devez
-    utiliser la touche F2 pour sélectionner l''élément englobant.
+    utiliser la touche F2 pour sélectionner l''élément englobant. 
     <p class="Note"><strong>Note</strong> : Vous devez sélectionner un seul
     élément et cet élément doit avoir un attribut <code>style</code>.</p>
     <p></p>
@@ -238,11 +243,11 @@ une classe :</p>
     liste de sélecteurs CSS. Cette liste inclus toutes les classes qui sont
     définies pour le document courant (y compris les classes définies par les
     feuilles de style liées au document), ainsi que le type de l'élément
-    auquel le style est associé.
+    auquel le style est associé. 
     <p></p>
   </li>
   <li>Choisissez un sélecteur dans cette liste ou entrez un nouveau nom de
-    classe et cliquer sur le bouton <strong>Confirmer</strong>.
+    classe et cliquer sur le bouton <strong>Confirmer</strong>. 
     <p>Le style de l'élément sélectionné est désormais associé au sélecteur
     choisi et l'attribut <code>style</code> est supprimé pour l'élément
     sélectionné. Son contenu est déplacé à l'élément <code>STYLE</code>, dans
@@ -272,7 +277,8 @@ qui définissent des styles abstraits.</p>
 information :</p>
 <ol>
   <li>Sélectionnez tout d'abord une chaîne de caractères dans votre page.</li>
-  <li>Choisissez une commande dans ce menu <strong>Types information</strong>.
+  <li>Choisissez une commande dans ce menu <strong>Types
+    information</strong>. 
     <p>La chaîne de caractères sélectionnée reçoit le style correspondant.</p>
   </li>
 </ol>
@@ -296,7 +302,7 @@ alt="Bouton Suppression" src="../../resources/icons/16x16/XHTML_del.png" />
 <ol>
   <li>Sélectionnez tout d'abord une chaîne de caractères dans votre page.</li>
   <li>Choisissez une commande dans ce menu <strong>Eléments
-    caractères</strong>.
+    caractères</strong>. 
     <p>La chaîne de caractères sélectionnée reçoit le style correspondant.</p>
   </li>
 </ol>

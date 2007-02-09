@@ -26,7 +26,8 @@ src="../../resources/icons/misc/right.png" /></a></p>
   <li><a href="#L58">Sélectionner</a> 
     <ul>
       <li><a href="#L94">Sélectionner avec la souris</a></li>
-      <li><a href="#L302">Sélectionner avec le chemin actif</a></li>
+      <li><a href="#L302">Sélectionner avec le chemin de la barre
+      d'état</a></li>
       <li><a href="#L115">Sélectionner avec le clavier</a></li>
       <li><a href="#L227">Sélectionner des images</a></li>
       <li><a href="#L252">Sélectionner dans la vue structure</a></li>
@@ -78,7 +79,7 @@ cliquez sur le mot structure, puis pressez <kbd>F2</kbd>) donne :</p>
     avec le clavier comme décrit plus bas.</li>
 </ul>
 
-<h3 id="L302">Sélectionner avec le chemin actif</h3>
+<h3 id="L302">Sélectionner avec le chemin de la barre d'état</h3>
 <ul>
   <li>Pour placer le point d'insertion, cliquez avec le bouton gauche de la
     souris.</li>
@@ -90,8 +91,8 @@ cliquez sur le mot structure, puis pressez <kbd>F2</kbd>) donne :</p>
     </samp></p>
   </li>
   <li>Quand la sélection est ainsi modifiée, le chemin n'est pas mis à jour
-    et l'utilisateur peut ajuster la sélection sur l'englobant ou un
-  fils.</li>
+    pour que l'utilisateur puisse ajuster la sélection sur un ancêtre ou un
+    fils.</li>
 </ul>
 
 <h3 id="L115">Sélectionner avec le clavier</h3>
