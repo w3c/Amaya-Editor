@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2005
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -335,6 +335,26 @@ void MovePRule (PRule presRule, Element fromEl, Element toEl, Document doc,
       newPRule = TtaNewPRuleForView (PRShowBox, 1, doc);
       TtaAttachPRule (toEl, newPRule, doc);
     }
+}
+
+
+/*----------------------------------------------------------------------
+  SetStyleOfLog applies style rules to a log document
+  ----------------------------------------------------------------------*/
+void SetStyleOfLog (Document doc)
+{
+#ifdef _WX
+  PRule       newPRule;
+  Element     root;
+
+  root = TtaGetMainRoot (doc);
+  if (root)
+    {
+      newPRule = TtaNewPRuleForView (PRSize, 1, doc);
+      TtaAttachPRule (root, newPRule, doc);
+      TtaSetPRuleValue (root, newPRule, 10, doc);
+    }
+#endif /* _WX */
 }
 
 

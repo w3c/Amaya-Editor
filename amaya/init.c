@@ -227,6 +227,7 @@ extern int       menu_item;
 #include "HTMLedit_f.h"
 #include "HTMLhistory_f.h"
 #include "HTMLimage_f.h"
+#include "HTMLpresentation_f.h"
 #include "HTMLsave_f.h"
 #include "HTMLtable_f.h"
 #include "html2thot_f.h"
@@ -2949,15 +2950,23 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
       DocumentTypes[doc] = docType;
       /* open the main view */
       if (docType == docLog)
-        /* without menu bar */
-        mainView = TtaOpenMainView (doc, DocumentTypeNames[docType], x, y, w, h, FALSE, FALSE,
-                                    window_id, page_id, page_position);
+        {
+          /* without menu bar */
+          mainView = TtaOpenMainView (doc, DocumentTypeNames[docType], x, y,
+                                      w, h, FALSE, FALSE,
+                                      window_id, page_id, page_position);
+          if (docType == docLog)
+            // apply style attached to log files
+            SetStyleOfLog (doc);
+        }
       else if (docType == docLibrary && method == CE_RELATIVE)
         /* without menu bar */
-        mainView = TtaOpenMainView (doc, DocumentTypeNames[docType], x, y, w, h, FALSE, TRUE,
+        mainView = TtaOpenMainView (doc, DocumentTypeNames[docType], x, y,
+                                    w, h, FALSE, TRUE,
                                     window_id, page_id, page_position);
       else
-        mainView = TtaOpenMainView (doc, DocumentTypeNames[docType], x, y, w, h, TRUE, TRUE,
+        mainView = TtaOpenMainView (doc, DocumentTypeNames[docType], x, y,
+                                    w, h, TRUE, TRUE,
                                     window_id, page_id, page_position);
       if (mainView == 0)
         {

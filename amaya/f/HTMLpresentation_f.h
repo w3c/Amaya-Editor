@@ -27,6 +27,7 @@ extern void MovePRule ( PRule presRule,
                         Element toEl,
                         Document doc,
                         ThotBool showBoxAllowed );
+extern void SetStyleOfLog ( Document doc );
 extern void SetStyleAttribute ( Document doc,
                                 Element elem );
 extern ThotBool ChangePRule ( NotifyPresentation *event );
@@ -59,6 +60,7 @@ extern void MovePRule ( PRule presRule,
                           Element toEl,
                           Document doc,
                           ThotBool showBoxAllowed );
+extern void SetStyleOfLog ( Document doc );
 extern void SetStyleAttribute ( Document doc,
                                   Element elem );
 extern ThotBool ChangePRule ( NotifyPresentation *event );
