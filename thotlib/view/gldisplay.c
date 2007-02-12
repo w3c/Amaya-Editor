@@ -2059,6 +2059,25 @@ void DrawVerticalLine (int frame, int thick, int style, int x, int y,
     }
 }
 
+/*----------------------------------------------------------------------
+  DrawHat draw a hat aligned top
+  The parameter fg indicates the drawing color.
+  ----------------------------------------------------------------------*/
+void DrawHat (int frame, int thick, int style, int x, int y,
+                          int l, int h, int align, int fg)
+{
+  int        Y;
+
+  if (thick > 0 && fg >= 0)
+    {
+      y += FrameTable[frame].FrTopMargin;
+      y += (h - thick) / 2;
+      Y = y + (h - thick) / 2;
+      InitDrawing (style, thick, fg);
+      DoDrawOneLine (frame, x, Y, x + (l / 2), y);
+      DoDrawOneLine (frame, x + (l / 2), y, x + l - thick, Y);
+    }
+}
 
 /*----------------------------------------------------------------------
   DrawHorizontalBrace draw a horizontal brace aligned top or bottom

@@ -1109,7 +1109,7 @@
                                                       <object class="sizeritem">
                                                         <object class="wxBitmapButton" name="wxID_PANEL_MATH_FACTORIAL">
                                                           <bitmap>../icons/16x16/MATHML_factorial.png</bitmap>
-                                                          <tooltip>combination</tooltip>
+                                                          <tooltip>factorial</tooltip>
                                                         </object>
                                                         <flag>wxALL</flag>
                                                         <border>1</border>

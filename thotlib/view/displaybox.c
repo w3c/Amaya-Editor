@@ -423,6 +423,11 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
             case 'h':
               DrawHorizontalLine (frame, i, 5, xd, yd, width, height, 1, fg, pBox);
               break;
+#ifdef _GL
+            case 'H':
+              DrawHat (frame, i, 5, xd, yd, width, height, 1,fg);
+              break;
+#endif /* _GL */
             case 'i':
               if (useStix)
                 DrawStixIntegral (frame, xd, yd, width, height, 0, size, fg);

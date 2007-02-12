@@ -2198,6 +2198,7 @@ static void CreateMathConstruct (int construct, ...)
           AttachIntVertStretch(new_, doc);
           selected = child;
           TtaNextSibling (&selected);
+          selected = TtaGetFirstChild (selected);
 
           leaf = TtaGetFirstChild (child);
           op = leaf;
@@ -2266,6 +2267,7 @@ static void CreateMathConstruct (int construct, ...)
 
               selected = new_;
               TtaNextSibling (&selected);
+              selected = TtaGetFirstChild(selected);
               construct = 21;
             break;
             case 2:
@@ -2288,6 +2290,7 @@ static void CreateMathConstruct (int construct, ...)
 
               selected = new_;
               TtaNextSibling (&selected);
+              selected = TtaGetFirstChild(selected);
               construct = 21;
             break;
             }
@@ -3515,7 +3518,7 @@ void CreateMOVERDOT (Document doc, View view)
 }
 void CreateMOVERHAT (Document doc, View view)
 {
-  CreateMathConstruct (26, 770);
+  CreateMathConstruct (59, 'H');
 }
 void CreateMOVERTILDE (Document doc, View view)
 {

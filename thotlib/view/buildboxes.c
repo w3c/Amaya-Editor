@@ -770,6 +770,7 @@ void GiveSymbolSize (PtrAbstractBox pAb, int *width, int *height)
            break;
         case '<':
         case '>':
+        case 'H':
           *width = BoxCharacterWidth (241, font) * 2;
           break;
         case '|':       /* vertical bar */

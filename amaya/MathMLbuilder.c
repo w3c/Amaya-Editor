@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2005
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -977,6 +977,8 @@ void SetSingleIntHorizStretchAttr (Element el, Document doc, Element* selEl)
                               text[0] == 0x0332 || text[0] == 0x2212)
                             /* a horizontal line in the middle of the box */
                             c = 'h'; 
+                          else if (text[0] == 0x302)
+                            c = 'H'; /* Hat */
                           else  if (text[0] == 0x2190)
                             c = 'L';  /* arrow left */
                           else if (text[0] == 0x2192)

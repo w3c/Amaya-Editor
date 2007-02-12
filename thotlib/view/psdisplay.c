@@ -1998,6 +1998,31 @@ void DrawHorizontalLine (int frame, int thick, int style, int x, int y,
 #endif /* _WX */
 }
 
+/*----------------------------------------------------------------------
+  DrawHat draw a hat aligned top
+  The parameter fg indicates the drawing color.
+  ----------------------------------------------------------------------*/
+void DrawHat (int frame, int thick, int style, int x, int y,
+              int l, int h, int align, int fg)
+{
+  int                 xf, xm, Y;
+  FILE               *fout;
+
+  if (thick > 0 && fg >= 0)
+    {
+      y += FrameTable[frame].FrTopMargin;
+      y += (h - thick) / 2;
+      Y = y + (h - thick) / 2;
+      xf = x + l;
+      xm = x + (l / 2);
+      fout = (FILE *) FrRef[frame];
+      /* Do we need to change the current color ? */
+      CurrentColor (fout, fg);
+      fprintf (fout, "%d %d %d %d %d %d %d Seg\n",
+	       xm, -(y), xm, -Y, style, thick, 2);
+    }
+}
+
 
 /*----------------------------------------------------------------------
    DrawHorizontalBrace draw a horizontal brace aligned top or bottom
@@ -2022,7 +2047,6 @@ void DrawHorizontalBrace (int frame, int thick, int style, int x, int y,
   Y = y + (h - thick / 2);
   xf = x + l;
   xm = x + (l / 2);
-  x = x;
   if (align == 0)
     /* Over brace */
     {

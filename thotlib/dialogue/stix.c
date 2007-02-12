@@ -476,14 +476,14 @@ void DrawStixIntegral (int frame, int x, int y, int l, int h,
 
   size = PixelToPoint (h);
   font = (ThotFont)LoadStixFont (6, size);
-  if (CharacterHeight (0x21, font) > (3 * h) / 4 ||
-      (type != 0 && type != 2))
+  if (CharacterHeight (0x21, font) > (3 * h) / 4 || type == 1 || type == 4 || type == 5)
     {
       /* Integrals using esstix6 charmap
          52 - => 3x text 3 line eq
          33 - => 2x text 2 line eq
          69 - => 1x text for oneline eq */
       /* display a single glyph */
+
       if (type == 0 || type == 2 || type == 3)
         {
           if (h < LOW_CHAR)
@@ -503,10 +503,11 @@ void DrawStixIntegral (int frame, int x, int y, int l, int h,
           DrawStixChar (font, symb, x+delta, y, h, fg, frame);
         }
       if (type == 3)		
-        /* double integral, display the second integral sign */
+        /* triple integral, display the third integral sign */
         {
           DrawStixChar (font, symb, x+delta+delta, y, h, fg, frame);
         }
+
       if (type == 1)	
         /* contour integral */
         {
@@ -516,6 +517,30 @@ void DrawStixIntegral (int frame, int x, int y, int l, int h,
             symb = 0x23;
           else
             symb = 0x35;
+          DrawStixChar (font, symb, x, y, h, fg, frame);
+        }
+
+      if (type == 4)	
+        /* double contour integral */
+        {
+          if (h < LOW_CHAR)
+            symb = 0x48;
+          else if (h < MID_CHAR)
+            symb = 0x25;
+          else
+            symb = 0x37;
+          DrawStixChar (font, symb, x, y, h, fg, frame);
+        }
+
+      if (type == 5)	
+        /* triple contour integral */
+        {
+          if (h < LOW_CHAR)
+            symb = 0x49;
+          else if (h < MID_CHAR)
+            symb = 0x26;
+          else
+            symb = 0x39;
           DrawStixChar (font, symb, x, y, h, fg, frame);
         }
     }
