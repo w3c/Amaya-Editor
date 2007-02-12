@@ -1295,6 +1295,9 @@ static void TranslateLeaf (PtrElement pEl, ThotBool transChar,
                       case 'h':
                         c = 0x00AF; /* overline */
                         break;
+                      case 'H':
+                        c = 0x0302; /* hat */
+                        break;
                       case 'i':
                         c = 0x222B; /* integral */
                         break;
