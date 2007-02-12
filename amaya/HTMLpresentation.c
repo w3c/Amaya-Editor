@@ -352,7 +352,7 @@ void SetStyleOfLog (Document doc)
     {
       newPRule = TtaNewPRuleForView (PRSize, 1, doc);
       TtaAttachPRule (root, newPRule, doc);
-      TtaSetPRuleValue (root, newPRule, 10, doc);
+      TtaSetPRuleValue (root, newPRule, 11, doc);
     }
 #endif /* _WX */
 }

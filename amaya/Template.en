@@ -20,3 +20,4 @@ defaultAt : default
 useEl: use
 useSimple: use
 ref_name: name
+title: label

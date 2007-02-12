@@ -165,7 +165,7 @@ ATTRIBUTES
   title :
     begin
       create SAN;
-      create 'title=';
+      create 'label=';
       create DoubleQuote;
       create title;
       create DoubleQuote;
