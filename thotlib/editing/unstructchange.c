@@ -1902,7 +1902,14 @@ void TtcCreateElement (Document doc, View view)
                   GetElementConstruct (lastSel->ElParent, &nComp) == CsAny)
                 pListEl = lastSel->ElParent;
               else
-                pListEl = AncestorList (lastSel);
+                {
+                  pAncest = lastSel;
+                  /* ignore the next Template ancestors */
+                  while (pAncest->ElParent && pAncest->ElParent->ElStructSchema &&
+                         !strcmp (pAncest->ElParent->ElStructSchema->SsName, "Template"))
+                    pAncest = pAncest->ElParent;
+                  pListEl = AncestorList (pAncest);
+                }
               /* si c'est la fin d'une liste de Textes on remonte */
               if (pListEl != NULL)
                 {
@@ -1918,7 +1925,14 @@ void TtcCreateElement (Document doc, View view)
                           GetElementConstruct (pListEl->ElParent, &nComp) == CsAny)
                         pListEl = pListEl->ElParent;
                       else
-                        pListEl = AncestorList (pListEl);
+                        {
+                          pAncest = pListEl;
+                          /* ignore the next Template ancestors */
+                          while (pAncest->ElParent && pAncest->ElParent->ElStructSchema &&
+                                 !strcmp (pAncest->ElParent->ElStructSchema->SsName, "Template"))
+                            pAncest = pAncest->ElParent;
+                        pListEl = AncestorList (pAncest);
+                        }
                     }
                 }
               else
@@ -1958,7 +1972,9 @@ void TtcCreateElement (Document doc, View view)
                       pE = pE->ElParent;
                     }
                 }
-              while (pE != pListEl && pListEl != NULL && pE != NULL);
+              while (pE != pListEl && pListEl != NULL && pE != NULL &&
+                    (pE->ElStructSchema &&
+                     strcmp (pE->ElStructSchema->SsName, "Template")));
 
               /* a priori, on creera le meme type d'element */
               if (pElReplicate)
@@ -2112,7 +2128,9 @@ void TtcCreateElement (Document doc, View view)
                                      TRUE, TRUE, TRUE, TRUE);
                   DuplicateAttrWithExc (pNew, lastSel);
                   pE = lastSel;
-                  while (pE->ElParent != pListEl)
+                  while (pE->ElParent != pListEl && pE->ElParent &&
+                         pE->ElParent->ElStructSchema &&
+                         strcmp (pE->ElParent->ElStructSchema->SsName, "Template"))
                     {
                       pE = pE->ElParent;
                       pAncest = ReplicateElement (pE, pDoc);

@@ -927,6 +927,74 @@ ThotBool RemoveColumn (Element colhead, Document doc, ThotBool ifEmpty,
   return (empty);
 }
 
+/*----------------------------------------------------------------------
+  NextRow
+  return the next row. Takes into account possible Template elements
+  enclosing the given row or the next one.
+  ----------------------------------------------------------------------*/
+static Element NextRow (Element row)
+{
+  Element       next, child, ancestor, prev;
+  ElementType   elType;
+
+  next = row;
+  TtaNextSibling (&next);
+  if (next)
+    {
+      elType = TtaGetElementType (next);
+      if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "Template"))
+        /* the next sibling is not a Template element. Keep it */
+        return next;
+      else
+        /* it's a Template element. Look for its descendant that is not
+           a Template element */
+        {
+          child = next;
+          do
+            {
+              child = TtaGetFirstChild (child);
+              if (child)
+                elType = TtaGetElementType (child);
+            }
+          while (child &&
+                 !strcmp (TtaGetSSchemaName (elType.ElSSchema), "Template"));
+          return child;
+        }
+    }
+  else
+    /* no sibling. If the ancestor is a Tepmlate element, find the last
+       ancestor that is a Template element and take its next sibling */
+    {
+      ancestor = TtaGetParent (row);
+      prev = NULL;
+      while (ancestor)
+        {
+          elType = TtaGetElementType (ancestor);
+          if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "Template"))
+            /* this ancestor is not a Template element */
+            {
+              /* take the sibling of the previous ancestor */
+              if (prev)
+                {
+                  next = prev;
+                  TtaNextSibling (&next);
+                }
+              else
+                next = NULL;
+              ancestor = NULL;
+            }
+          else
+            {
+              /* this ancestor is a Template element. Remember it and get the
+                 next ancestor */
+              prev = ancestor;
+              ancestor = TtaGetParent (ancestor);
+            }
+        }
+    }
+  return next;
+}
+
 #define MAX_COLS 100
 /*----------------------------------------------------------------------
   CheckAllRows
@@ -1011,8 +1079,7 @@ void CheckAllRows (Element table, Document doc, ThotBool placeholder,
       group = TtaGetParent (row);
       while (row)
         {
-          nextRow = row;
-          TtaNextSibling (&nextRow);
+          nextRow = NextRow (row);
           elType = TtaGetElementType (row);
           if ((!inMath && elType.ElTypeNum == rowType) ||
               (inMath && (elType.ElTypeNum == MathML_EL_MTR ||

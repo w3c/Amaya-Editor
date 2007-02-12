@@ -1314,7 +1314,9 @@ static ThotBool CheckSurrounding (Element * el, Element parent)
       /* the element to be inserted is a character string */
       /* Search the ancestor that is not a character level element */
       ancestor = parent;
-      while (ancestor != NULL && IsCharacterLevelElement (ancestor))
+      while (ancestor != NULL && 
+             (IsCharacterLevelElement (ancestor) ||
+              !strcmp (TtaGetSSchemaName (TtaGetElementType(ancestor).ElSSchema), "Template")))
         ancestor = TtaGetParent (ancestor);
       if (ancestor != NULL)
         {

@@ -1354,7 +1354,7 @@ ThotBool AllowedSibling (PtrElement pEl, PtrDocument pDoc,
 {
   PtrSSchema          pAscSS;
   PtrSRule            pRule;
-  PtrElement          pEl1;
+  PtrElement          pEl1, pAsc;
   ThotBool            ok;
   ThotBool            isPageBrOrIncl;
   ThotBool            optional;
@@ -1453,8 +1453,18 @@ ThotBool AllowedSibling (PtrElement pEl, PtrDocument pDoc,
               {
                 /* Teste si l'element pointe par pEl est un element de */
                 /* liste ou d'agregat */
-                ascTypeNum = pEl->ElParent->ElTypeNumber;
-                pAscSS = pEl->ElParent->ElStructSchema;
+                pAsc = pEl->ElParent;
+                ascTypeNum = pAsc->ElTypeNumber;
+                pAscSS = pAsc->ElStructSchema;
+                while (pAscSS && pAsc && !strcmp (pAscSS->SsName, "Template"))
+                  {
+                    pAsc = pAsc->ElParent;
+                    if (pAsc)
+                      {
+                        ascTypeNum = pAsc->ElTypeNumber;
+                        pAscSS = pAsc->ElStructSchema;
+                      }
+                  }
                 if (pAscSS->SsRule->SrElem[ascTypeNum - 1]->SrConstruct == CsAny)
                   /* the parent element does not put any constraint on its
                      content */
