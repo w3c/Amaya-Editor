@@ -222,7 +222,12 @@ RULES
   head:
     BEGIN
     Visibility: 0;
+	  CreateBefore(ElementName);
   	CreateWith(VerticalLine);
+    Width: auto{Enclosing . Width};
+    Height: auto{Enclosing . Height};
+    VertPos: Top = 			Previous ElementName. Bottom;
+    HorizPos: Left =		Enclosing . Left;
   	IN Structure_view BEGIN
       Visibility: Enclosing =;
 		  HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
