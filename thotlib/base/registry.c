@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2005
+ *  (c) COPYRIGHT INRIA, 1996-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -98,11 +98,13 @@ static char         *AppNameW;
 static char          CurrentDir[MAX_PATH];
 static char         *Thot_Dir;
 
-#ifndef _WINDOWS
+#ifdef COMPILED_IN_THOTDIR
 char  UCOMPILED_IN_THOTDIR[MAX_TXT_LEN];
-char  UCOMPILED_IN_THOTDIR2[MAX_TXT_LEN];
+#endif /* COMPILED_IN_THOTDIR */
+
+#ifdef MACHINE
 char  UMACHINE[MAX_TXT_LEN];
-#endif  /* _WINDOWS */         
+#endif  /* MACHINE */
 
 PathBuffer execname;
 PathBuffer path;
@@ -1428,17 +1430,6 @@ void TtaInitializeAppRegistry (char *appArgv0)
           AddRegisterEntry ("System", "THOTDIR", UCOMPILED_IN_THOTDIR,
                             REGISTRY_INSTALL, TRUE);
         } 
-#else /* COMPILED_IN_THOTDIR */
-#ifdef COMPILED_IN_THOTDIR2
-      /* Check a compiled-in value */
-      else if (IsThotDir (UCOMPILED_IN_THOTDIR2))
-        {
-          strcpy (UCOMPILED_IN_THOTDIR2, COMPILED_IN_THOTDIR2);
-          strcpy (execname, COMPILED_IN_THOTDIR2);
-          AddRegisterEntry ("System", "THOTDIR", UCOMPILED_IN_THOTDIR2,
-                            REGISTRY_INSTALL, TRUE);
-        }
-#endif /* COMPILED_IN_THOTDIR2 */
 #endif /* COMPILED_IN_THOTDIR */
       else
         {
