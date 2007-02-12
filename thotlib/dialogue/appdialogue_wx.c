@@ -1043,7 +1043,8 @@ ThotBool TtaAttachFrame( int frame_id, int window_id, int page_id, int position 
     {
       AmayaPage * p_page = p_window->GetPage(page_id);
       wxASSERT_MSG(p_page, _T("TtaAttachFrame: the page doesn't exists"));
-      
+      if (p_page == NULL)
+        return FALSE;
       /* now detach the old frame -> unsplit the page */
       //  p_page->DetachFrame( position );
       
