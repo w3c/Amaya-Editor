@@ -75,6 +75,7 @@ static ThotBool     TextFormat;
 static AttSearch    URL_attr_tab[] = {
   {HTML_ATTR_HREF_, XHTML_TYPE},
   {HTML_ATTR_codebase, XHTML_TYPE},
+  {HTML_ATTR_script_src, XHTML_TYPE},
   {HTML_ATTR_Script_URL, XHTML_TYPE},
   {HTML_ATTR_SRC, XHTML_TYPE},
   {HTML_ATTR_data, XHTML_TYPE},
