@@ -1659,6 +1659,8 @@ void CloseLogs (Document doc)
   -----------------------------------------------------------------------*/
 void FocusChanged (Document doc)
 {
+#ifdef LC 
+/* Temporary disabled to go round a crash on Mac OSX with the Show Applied Style window */
   int		     i;
 
   if ( DocumentTypes[doc] == docSource)
@@ -1686,6 +1688,7 @@ void FocusChanged (Document doc)
         /* restore the default document type */
         DocumentTypes[i] = docFree;
       }
+#endif /* LC */
 }
 
 /*----------------------------------------------------------------------
