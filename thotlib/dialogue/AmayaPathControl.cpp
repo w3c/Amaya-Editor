@@ -310,7 +310,8 @@ void AmayaPathControl::OnMouseLeftUp(wxMouseEvent& event)
     {
       if (node->GetData()->rect.x >= 0)
         {
-          if(pos.x >= node->GetData()->rect.x &&
+          pEl = (PtrElement)node->GetData()->elem;
+          if (pos.x >= node->GetData()->rect.x &&
              pos.x <= node->GetData()->rect.x+node->GetData()->rect.width)
             {
               doc = TtaGetDocument(node->GetData()->elem);
@@ -321,7 +322,7 @@ void AmayaPathControl::OnMouseLeftUp(wxMouseEvent& event)
                   /* WARNING: just update applied style */
                   notifyEl.event = TteElemSelect;
                   notifyEl.document = doc;
-                  notifyEl.element = node->GetData()->elem;
+                  notifyEl.element = (Element)pEl;
                   notifyEl.info = 0; /* not sent by undo */
                   notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
                   notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
