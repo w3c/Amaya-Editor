@@ -1695,7 +1695,7 @@ void TtcCreateElement (Document doc, View view)
                                    !strcmp (pAncest->ElStructSchema->SsName, "Template"))
                               pAncest = pAncest->ElParent;
 
-                            while (pAncest != pListEl)
+                            while (pAncest && pAncest != pListEl)
                               {
                                 pElReplicate = pAncest;
                                 pAncest = pAncest->ElParent;
