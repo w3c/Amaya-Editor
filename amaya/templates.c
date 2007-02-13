@@ -1290,7 +1290,8 @@ ThotBool TemplateElementWillBeCreated (NotifyElement *event)
       if (ancestor != parent)
         return  FALSE; // let Thot do the job
       types = GetAttributeStringValueFromNum(ancestor, Template_ATTR_currentType, NULL);
-      b = Template_CanInsertElementInUse(event->document, elType, types, parent, event->position); 
+      b = Template_CanInsertElementInUse(event->document, elType, types, parent, event->position);
+      TtaFreeMemory(types);
       return !b;
       
     }

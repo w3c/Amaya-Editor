@@ -212,7 +212,6 @@ void AddDeclaration (XTigerTemplate t, Declaration dec)
     }
 	else //A redefinition. Using the old memory zone to keep consistent pointers
     {
-      //TODO CopyDeclarationInto (dec, old);
       TtaFreeMemory (dec);
     }
 #endif /* TEMPLATES */
@@ -466,11 +465,13 @@ void FreeXTigerTemplate (XTigerTemplate t)
 void AddLibraryDeclarations (XTigerTemplate t, XTigerTemplate lib)
 {	
 #ifdef TEMPLATES
-  if (!t)
+  DicDictionary from, to;
+  
+  if (!t || !lib)
     return;
 
-	DicDictionary from = lib->elements;	
-	DicDictionary to = t->elements;
+	from = lib->elements;	
+	to = t->elements;
 	
 	for (Dictionary_First (from); !Dictionary_IsDone (from); Dictionary_Next (from))
 		Dictionary_Add (to, Dictionary_CurrentKey (from), Dictionary_CurrentElement (from));
