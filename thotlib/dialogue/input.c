@@ -1721,6 +1721,16 @@ void InitTranslations (char *appliname)
                   if (i > 0 && transText[i] == ':')
                     transText[i] = EOS;
                 }
+#ifdef _WINGUI
+			  if (mod1 & THOT_MOD_CTRL)
+			  {
+				  // ctrl + and ctrl - are never sent to the application
+				if (transText[0] == '-' ||
+					transText[0] == '+' ||
+					transText[0] == '=')
+			      mod1 = mod1 - THOT_MOD_CTRL + THOT_MOD_ALT;
+			  }
+#endif /* _WINGUI */
               /* convert to keysym for the automata */
               key1 = SpecialKey (transText, (mod1 & THOT_MOD_SHIFT) != 0, &isSpecialKey1);
 
