@@ -86,6 +86,7 @@ ElemListElement ElemListElement_CreateComponent(int level, const char* name,
                                                 const char* comment, Element refElem)
 {
   ElemListElement elem = (ElemListElement)TtaGetMemory (sizeof(sElemListElement));
+  memset (elem, 0, sizeof(sElemListElement));
   elem->typeClass = DefinedComponent;
   elem->elem.component.name = name;
   elem->elem.component.declaration = declaration;
