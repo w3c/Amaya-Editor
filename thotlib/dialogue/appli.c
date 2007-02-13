@@ -2737,7 +2737,8 @@ ThotBool FrameButtonDClickCallback( int frame, int thot_button_id,
 #if !defined (_WINDOWS) && !defined (_MACOS)
         /* a word is probably selected, copy it into clipboard */
         FrameToView (frame, &document, &view);
-        DoCopyToClipboard (document, view, FALSE, TRUE);
+        if (document && view)
+          DoCopyToClipboard (document, view, FALSE, TRUE);
 #endif /* _WINDOWS */
       }
       break;
