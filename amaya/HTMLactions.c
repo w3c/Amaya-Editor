@@ -1677,6 +1677,12 @@ void FocusChanged (Document doc)
         TtaFreeMemory (DocumentURLs[i]);
         DocumentURLs[i] = NULL;
         DocumentSource[i] = 0;
+        if (DocumentMeta[i])
+          {
+            DocumentMetaClear (DocumentMeta[i]);
+            TtaFreeMemory (DocumentMeta[i]);
+            DocumentMeta[i] = NULL;
+          }
         /* restore the default document type */
         DocumentTypes[i] = docFree;
       }
