@@ -391,7 +391,7 @@
                     <orient>wxVERTICAL</orient>
                     <object class="sizeritem">
                       <object class="wxCheckBox" name="wxID_CHECK_MATHPI">
-                        <label>*Engendrer la processing instruction MathML*</label>
+                        <label>*Engendrer la processing instruction vers la feuille xslt  pour MathML*</label>
                       </object>
                     </object>
                     <object class="sizeritem">
