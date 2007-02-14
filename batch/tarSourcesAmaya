@@ -473,6 +473,6 @@ $TAR $DEST/amaya-sources-$AMAYAVERSION.tgz \
 ${AMAYADIR} 
 
 cd $TARDIR
-#\rm -r $TMP
+\rm -r $TMP
 \rm $DEST/amaya-tmp-$AMAYAVERSION.tgz
 \rm $DEST/libs-tmp-$AMAYAVERSION.tgz
