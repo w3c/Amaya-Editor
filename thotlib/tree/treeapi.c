@@ -1268,7 +1268,9 @@ void TtaSetAccessRight (Element element, AccessRight right, Document document)
                 RedisplayNewElement (document, (PtrElement) element, NULL, TRUE, FALSE);
               else
                 {
+                  // make the management of loaded objects too long
                   SaveDisplayMode = TtaGetDisplayMode (document);
+#ifdef IV
                   if (SaveDisplayMode != NoComputedDisplay
                       && (newAccessRight == ReadOnly ||
                           newAccessRight == ReadWrite))
@@ -1286,9 +1288,10 @@ void TtaSetAccessRight (Element element, AccessRight right, Document document)
                       if (SaveDisplayMode != DeferredDisplay)
                         TtaSetDisplayMode (document, SaveDisplayMode);
                     }
+#endif /* IV */
                 }
             }
-#endif
+#endif /* NODISPLAY */
         }
     }
 }
