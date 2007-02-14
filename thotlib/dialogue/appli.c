@@ -1670,11 +1670,17 @@ void TtaSetStatus (Document document, View view, char *text, char *name)
       if (FrameTable[frame].WdStatus != 0)
 #endif /* _WX */
         {
+          length = strlen (text) + 1;
           if (name == NULL)
-            name = "";
-          length = strlen (text) + strlen (name) + 1;
-          s = (char *)TtaGetMemory (length);
-          sprintf (s, text, name);
+            {
+              s = (char *)TtaGetMemory (length);
+              sprintf (s, "%s", text);
+            }
+          else
+            {
+              s = (char *)TtaGetMemory (length + strlen (name));
+              sprintf (s, text, name);
+            }
 #ifdef _WINGUI
           SendMessage (FrameTable[frame].WdStatus, SB_SETTEXT, (WPARAM) 0, (LPARAM) s);
           SendMessage (FrameTable[frame].WdStatus, WM_PAINT, (WPARAM) 0, (LPARAM) 0);
