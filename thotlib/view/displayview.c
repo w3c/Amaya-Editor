@@ -656,111 +656,6 @@ static void RebuildImage (PtrDocument pDoc)
 
 
 /*----------------------------------------------------------------------
-  ChangeAbsBoxModifAttrIntoView change les booleens AbCanBeModified et AbReadOnly   
-  dans tous les paves de l'element pEl qui appartiennent a la vue 
-  vue. newAbsModif donne la nouvelle valeur de AbCanBeModified,          
-  reaffiche indique si on veut reafficher.                        
-  ----------------------------------------------------------------------*/
-static void  ChangeAbsBoxModifAttrIntoView (PtrElement pEl, int view,
-                                            ThotBool newAbsModif,
-                                            ThotBool redisplay)
-{
-  PtrAbstractBox      pAb, pAbbChild;
-  ThotBool            stop;
-
-  pAb = pEl->ElAbstractBox[view - 1];
-  if (pAb != NULL)
-    {
-      stop = FALSE;
-      while (!stop)
-        if (pAb->AbElement != pEl)
-          /* ce n'est pas un pave de l'element, on arrete */
-          stop = TRUE;
-        else
-          /* c'est un pave de l'element, on le traite */
-          {
-            pAb->AbReadOnly = !newAbsModif;
-            if (redisplay)
-              pAb->AbAspectChange = TRUE;
-            if (!pAb->AbPresentationBox)
-              /* c'est le pave principal de l'element */
-              {
-                /* les paves de presentation restent non modifiables */
-                pAb->AbCanBeModified = newAbsModif;
-                /* traite les paves de presentation crees par Create et */
-                /* CreateLast */
-                pAbbChild = pAb->AbFirstEnclosed;
-                while (pAbbChild != NULL)
-                  {
-                    if (pAbbChild->AbElement == pEl)
-                      /* c'est un pave de l'element */
-                      {
-                        pAbbChild->AbReadOnly = !newAbsModif;
-                        if (redisplay)
-                          pAbbChild->AbAspectChange = TRUE;
-                      }
-                    pAbbChild = pAbbChild->AbNext;
-                  }
-              }
-            if (pAb->AbNext != NULL)
-              /* passe au pave suivant */
-              pAb = pAb->AbNext;
-            else
-              stop = TRUE;
-          }
-    }
-}
-
-
-/*----------------------------------------------------------------------
-  ChangeAbsBoxModif change les booleens AbCanBeModified et AbReadOnly dans 
-  tous les paves existants de l'element pEl et de sa descendance. 
-  ----------------------------------------------------------------------*/
-void                ChangeAbsBoxModif (PtrElement pEl, Document document,
-                                       ThotBool newAbsModif)
-{
-  PtrDocument         pDoc;
-  int                 view;
-  PtrElement          pChild;
-
-  pDoc = LoadedDocument[document - 1];
-  if (pDoc == NULL)
-    return;
-  /* si le document n'a pas de schema de presentation, on ne fait rien */
-  if (PresentationSchema (pDoc->DocSSchema, pDoc) == NULL)
-    return;
-  /* si le document est en mode de non calcul de l'image, on ne fait rien */
-  if (documentDisplayMode[document - 1] == NoComputedDisplay)
-    return;
-  /* demande au mediateur si une couleur est associee a ReadOnly */
-  /* si oui, il faut reafficher les paves modifie's */
-  /* on traite toutes les vues du document */
-  for (view = 1; view <= MAX_VIEW_DOC; view++)
-    {
-      /* on traite tous les paves de l'element dans cette vue */
-      ChangeAbsBoxModifAttrIntoView (pEl, view, newAbsModif, TRUE);
-      if (pEl->ElAbstractBox[view - 1] != NULL)
-        RedispAbsBox (pEl->ElAbstractBox[view - 1],
-                      LoadedDocument[document - 1]);
-    }
-  /* on fait reafficher pour visualiser le changement de couleur */
-  AbstractImageUpdated (LoadedDocument[document - 1]);
-  RedisplayCommand (document);
-  /* meme traitement pour les fils qui heritent les droits d'acces */
-  if (!pEl->ElTerminal)
-    {
-      pChild = pEl->ElFirstChild;
-      while (pChild != NULL)
-        {
-          if (pChild->ElAccess == Inherited)
-            ChangeAbsBoxModif (pChild, document, newAbsModif);
-          pChild = pChild->ElNext;
-        }
-    }
-}
-
-
-/*----------------------------------------------------------------------
   RedisplayDefaultPresentation                                              
   ----------------------------------------------------------------------*/
 void  RedisplayDefaultPresentation (Document document, PtrElement pEl,
@@ -794,7 +689,7 @@ void  RedisplayDefaultPresentation (Document document, PtrElement pEl,
   HideElement "desaffiche" un element qui devient invisible       
   mais n'est pas detruit.                                         
   ----------------------------------------------------------------------*/
-void                HideElement (PtrElement pEl, Document document)
+void HideElement (PtrElement pEl, Document document)
 {
   PtrDocument         pDoc;
   PtrElement          pChild;

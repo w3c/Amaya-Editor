@@ -1197,7 +1197,6 @@ void TtaSetAccessRight (Element element, AccessRight right, Document document)
 #ifndef NODISPLAY
   AccessRight         oldAccessRight;
   AccessRight         newAccessRight = ReadWrite;
-  DisplayMode         SaveDisplayMode;
 #endif
 
   UserErrorCode = 0;
@@ -1266,30 +1265,6 @@ void TtaSetAccessRight (Element element, AccessRight right, Document document)
               else if (oldAccessRight == Hidden)
                 /* The element is not hiddden, Creating its abstract boxes */
                 RedisplayNewElement (document, (PtrElement) element, NULL, TRUE, FALSE);
-              else
-                {
-                  // make the management of loaded objects too long
-                  SaveDisplayMode = TtaGetDisplayMode (document);
-#ifdef IV
-                  if (SaveDisplayMode != NoComputedDisplay
-                      && (newAccessRight == ReadOnly ||
-                          newAccessRight == ReadWrite))
-                    /* change AbCanBeModified in all abstract boxes except if it's
-                       without image calculation mode */
-                    {
-                      /* We set the deferred displaying mode */
-                      if (SaveDisplayMode != DeferredDisplay)
-                        TtaSetDisplayMode (document, DeferredDisplay);
-                      /* change AbCanBeModified for all abstract boxes */
-                      ChangeAbsBoxModif ((PtrElement) element, document,
-                                         (ThotBool)(newAccessRight == ReadWrite));
-                      /* Restore the display mode of the document */
-                      /* Redisplay if the mode is immediat display */
-                      if (SaveDisplayMode != DeferredDisplay)
-                        TtaSetDisplayMode (document, SaveDisplayMode);
-                    }
-#endif /* IV */
-                }
             }
 #endif /* NODISPLAY */
         }
