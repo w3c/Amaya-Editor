@@ -241,6 +241,9 @@ bool AmayaNormalWindow::ClosePage( int page_id )
   AmayaPage * p_page  = NULL;
   int old_page_id = 0;
 
+  // flush all pending events
+  wxTheApp->Yield();
+
   if (m_pNotebook == NULL)
     return true;
   if (m_pNotebook)

@@ -271,6 +271,8 @@ int AmayaApp::OnExit()
   m_pAmayaInstance = NULL;
   // flush the clipboard in order to keep current text for further use in other applications
   wxTheClipboard->Flush();
+  // flush all pending events
+  Yield();
 
   // stop network loop
   m_SocketEventLoop->Stop();
