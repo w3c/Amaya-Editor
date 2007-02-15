@@ -54,6 +54,7 @@ XTigerTemplate NewXTigerTemplate (const char *templatePath, const ThotBool addPr
   t->version = NULL;
   t->templateVersion = NULL;
 	t->isLibrary = FALSE;
+  t->isLoaded = FALSE;
 	t->libraries = Dictionary_Create ();
 	t->elements = Dictionary_Create ();
 	t->simpleTypes	= Dictionary_Create ();
@@ -89,6 +90,26 @@ XTigerTemplate NewXTigerLibrary (const char *templatePath, const ThotBool addPre
 	return NULL;
 #endif /* TEMPLATES */
 }
+
+/*----------------------------------------------------------------------
+  Look for a XTiger library
+  ----------------------------------------------------------------------*/
+XTigerTemplate LookForXTigerLibrary (const char *templatePath)
+{ 
+#ifdef TEMPLATES
+  XTigerTemplate t = NULL;
+  
+  t = (XTigerTemplate) Dictionary_Get(Templates_Dic, templatePath);
+  if(!t)
+  {
+    t = NewXTigerLibrary(templatePath, FALSE);
+  }
+  return t;
+#else
+  return NULL;
+#endif /* TEMPLATES */
+}
+
 
 
 /*----------------------------------------------------------------------
@@ -530,12 +551,12 @@ void PrintUnion (Declaration dec, int indent, XTigerTemplate t, FILE *file)
             case ComponentNat:
               fprintf (file, "\n%s+ %s ",indentation,aux->name);
               if (aux->declaredIn!=t)
-                fprintf (file, "*");
+                fprintf (file, " (decalred in %s)", aux->declaredIn->name);
               break;
             case UnionNat:
               fprintf (file, "\n%s+ %s ",indentation,aux->name);
               if (aux->declaredIn!=t)
-                fprintf (file, "*");
+                fprintf (file, " (decalred in %s)", aux->declaredIn->name);
               PrintUnion (aux, indent+1, t, file);
             default:
               //impossible
@@ -559,12 +580,12 @@ void PrintUnion (Declaration dec, int indent, XTigerTemplate t, FILE *file)
             case ComponentNat:			
               fprintf (file, "\n%s- %s ",indentation,aux->name);
               if (aux->declaredIn!=t)
-                fprintf (file, "*");
+                fprintf (file, " (decalred in %s)", aux->declaredIn->name);
               break;
             case UnionNat:
               fprintf (file, "\n%s- %s ",indentation,aux->name);
               if (aux->declaredIn!=t)
-                fprintf (file, "*");
+                fprintf (file, " (decalred in %s)", aux->declaredIn->name);
               PrintUnion (aux, indent+1, t, file);
             default:
               //impossible
@@ -596,7 +617,7 @@ void PrintDeclarations (XTigerTemplate t, FILE *file)
       dec = (Declaration) Dictionary_CurrentElement (aux);
       fprintf (file, "\n%s ",dec->name);
       if (dec->declaredIn!=t)
-        fprintf (file, "*");
+        fprintf (file, " (decalred in %s)", dec->declaredIn->name);
     }
 	
 	aux = t->elements;
@@ -609,7 +630,7 @@ void PrintDeclarations (XTigerTemplate t, FILE *file)
           dec = (Declaration) Dictionary_CurrentElement (aux);
           fprintf (file,"\n%s ",dec->name);
           if (dec->declaredIn!=t)
-            fprintf (file, "*");
+            fprintf (file, " (decalred in %s)", dec->declaredIn->name);
         }
     }
 	
@@ -623,7 +644,7 @@ void PrintDeclarations (XTigerTemplate t, FILE *file)
           dec = (Declaration) Dictionary_CurrentElement (aux);
           fprintf (file,"\n%s ",dec->name);
           if (dec->declaredIn!=t)
-            fprintf (file, "*");
+            fprintf (file, " (decalred in %s)", dec->declaredIn->name);
           fprintf (file,"\n********************\n");
           TtaListAbstractTree (dec->componentType.content, file);
           fprintf (file,"********************\n");
@@ -640,10 +661,45 @@ void PrintDeclarations (XTigerTemplate t, FILE *file)
           dec = (Declaration) Dictionary_CurrentElement (aux);
           fprintf (file,"\n%s ",dec->name);
           if (dec->declaredIn!=t)
-            fprintf (file, "*");
+            fprintf (file, " (decalred in %s)", dec->declaredIn->name);
           PrintUnion (dec, 1, t, file);
         }
     }
+#endif /* TEMPLATES */
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void DumpAllDeclarations()
+{
+#ifdef TEMPLATES
+  char localname[MAX_LENGTH];
+  FILE *file;
+
+  XTigerTemplate t;
+  Record rec;
+  
+  strcpy (localname, TempFileDirectory);
+  strcat (localname, DIR_STR);
+  strcat (localname, "templateAllDecl.debug");
+  file = TtaWriteOpen (localname);
+
+  
+  for(rec = Templates_Dic->first; rec; rec=rec->next)
+  {
+    t = (XTigerTemplate)rec->element;
+    if(t)
+    {
+      fprintf(file, "################################################################################\n");
+      fprintf(file, "## Template declaration for \"%s\" (%d) :\n", t->name, t->doc);
+      fprintf(file, "################################################################################\n");
+      PrintDeclarations(t, file);
+      fprintf(file, "\n################################################################################\n");
+      fprintf(file, "################################################################################\n\n");
+    }
+  }
+
+  TtaWriteClose (file);
 #endif /* TEMPLATES */
 }
 

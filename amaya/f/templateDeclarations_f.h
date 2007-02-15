@@ -10,6 +10,7 @@ extern XTigerTemplate NewXTigerTemplate ( const char *templatePath,
                                           const ThotBool addPredefined );
 extern XTigerTemplate NewXTigerLibrary ( const char *templatePath,
                                          const ThotBool addPredefined );
+extern XTigerTemplate LookForXTigerLibrary ( const char *templatePath );
 extern void NewSimpleType ( XTigerTemplate t,
                             const char *name,
                             SimpleTypeType xtype );
@@ -41,6 +42,7 @@ extern void PrintUnion ( Declaration dec,
                          FILE *file );
 extern void PrintDeclarations ( XTigerTemplate t,
                                 FILE *file );
+extern void DumpAllDeclarations ( void );
 extern void DumpDeclarations ( XTigerTemplate t );
 extern DicDictionary GetComponents ( XTigerTemplate t );
 extern Element GetComponentContent ( Declaration d );
@@ -81,6 +83,7 @@ extern XTigerTemplate NewXTigerTemplate ( const char *templatePath,
                                             const ThotBool addPredefined );
 extern XTigerTemplate NewXTigerLibrary ( const char *templatePath,
                                            const ThotBool addPredefined );
+extern XTigerTemplate LookForXTigerLibrary ( const char *templatePath );
 extern void NewSimpleType ( XTigerTemplate t,
                               const char *name,
                               SimpleTypeType xtype );
@@ -112,6 +115,7 @@ extern void PrintUnion ( Declaration dec,
                            FILE *file );
 extern void PrintDeclarations ( XTigerTemplate t,
                                   FILE *file );
+extern void DumpAllDeclarations ( void );
 extern void DumpDeclarations ( XTigerTemplate t );
 extern DicDictionary GetComponents ( XTigerTemplate t );
 extern Element GetComponentContent ( Declaration d );

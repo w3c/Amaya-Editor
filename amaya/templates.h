@@ -42,6 +42,7 @@ struct _XTigerTemplate
   char*           templateVersion;//Version of template
   ThotBool        isLibrary;			//Is this a library? (otherway it's a template)
   ThotBool        isPredefined;   //Is this the predefined library
+  ThotBool        isLoaded;       //Is the template is loaded ?
   DicDictionary   libraries;			//Imported libraries
   DicDictionary   simpleTypes;		//All simple types declared in the document
   DicDictionary   elements;				//All element types declared in the document

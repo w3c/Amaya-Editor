@@ -674,6 +674,7 @@ ThotBool IsXMLName (const char *path)
   if (!strcasecmp (suffix, "xml") ||
       !strcasecmp (suffix, "xht") ||
       !strcasecmp (suffix, "xtd") ||
+      !strcasecmp (suffix, "xtl") ||
       !strcmp (suffix, "xhtm") ||
       !strcmp (suffix, "xhtml") ||
       !strcmp (suffix, "smi") ||
@@ -686,6 +687,7 @@ ThotBool IsXMLName (const char *path)
       if (!strcasecmp (suffix, "xml") ||
           !strcasecmp (suffix, "xht") ||
           !strcasecmp (suffix, "xtd") ||
+          !strcasecmp (suffix, "xtl") ||
           !strcmp (suffix, "xhtm") ||
           !strcmp (suffix, "xhtml") ||
           !strcmp (suffix, "smi") |
@@ -719,13 +721,13 @@ ThotBool IsXTiger (const char *path)
   suffix = (char *)TtaGetMemory (strlen (path) + 1);
   TtaExtractSuffix (temppath, suffix);
 
-  if (!strcasecmp (suffix, "xtd"))
+  if (!strcasecmp (suffix, "xtd") || !strcasecmp (suffix, "xtl"))
     ret = TRUE;
   else if (!strcmp (suffix, "gz"))
     {
       /* take into account compressed files */
       TtaExtractSuffix (temppath, suffix);       
-      if (!strcasecmp (suffix, "xtd"))
+      if (!strcasecmp (suffix, "xtd") || !strcasecmp (suffix, "xtl"))
         ret = TRUE;
       else
         ret = FALSE;
