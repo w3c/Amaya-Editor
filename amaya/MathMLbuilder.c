@@ -1210,6 +1210,16 @@ void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
                                 c = 't';
                               else if (text[i] == 0x222E)
                                 c = 'c';
+                              else if (text[i] == 0x222F)
+                                c = 'e';
+                              else if (text[i] == 0x2230)
+                                c = 'f';
+                              else if (text[i] == 0x2231)
+                                c = '1';
+                              else if (text[i] == 0x2232)
+                                c = '2';
+                              else if (text[i] == 0x2233)
+                                c = '3';
                               else if (text[i] == 0x2191)
                                 c = '^';
                               else if (text[i] == 0x2193)
@@ -1251,6 +1261,8 @@ void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
                                           text[0] != 0x222C &&
                                           text[0] != 0x222D &&
                                           text[0] != 0x222E &&
+                                          text[0] != 0x222F &&
+                                          text[0] != 0x2230 &&
                                           text[0] != 0x2191 &&
                                           text[0] != 0x2193)
                                         /* not a stretchable symbol */

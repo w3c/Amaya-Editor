@@ -408,43 +408,73 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
 
           switch (pBox->BxAbstractBox->AbShape)
             {
-            case 'c':
+            case '1':/* Clockwise Integral */
+              if (useStix)
+                DrawStixIntegral (frame, xd, yd, width, height, 6, size, fg);
+              else
+                DrawIntegral (frame, i, xd, yd, width, height, 6, font, fg);
+              break;
+            case '2':/* Clockwise Contour Integral */
+              if (useStix)
+                DrawStixIntegral (frame, xd, yd, width, height, 7, size, fg);
+              else
+                DrawIntegral (frame, i, xd, yd, width, height, 7, font, fg);
+              break;
+            case '3':/* Counter Clockwise Contour Integral */
+              if (useStix)
+                DrawStixIntegral (frame, xd, yd, width, height, 8, size, fg);
+              else
+                DrawIntegral (frame, i, xd, yd, width, height, 8, font, fg);
+              break;
+            case 'c':/* contour integral */
               if (useStix)
                 DrawStixIntegral (frame, xd, yd, width, height, 1, size, fg);
               else
                 DrawIntegral (frame, i, xd, yd, width, height, 1, font, fg);
               break;
-            case 'd':
+            case 'd':/* double integral */
               if (useStix)
                 DrawStixIntegral (frame, xd, yd, width, height, 2, size, fg);
               else
                 DrawIntegral (frame, i, xd, yd, width, height, 2, font, fg);
               break;
-            case 'h':
+            case 'e':/* double contour integral */
+              if (useStix)
+                DrawStixIntegral (frame, xd, yd, width, height, 4, size, fg);
+              else
+                DrawIntegral (frame, i, xd, yd, width, height, 4, font, fg);
+              break;
+            case 'f':/* triple contour integral */
+              if (useStix)
+                DrawStixIntegral (frame, xd, yd, width, height, 5, size, fg);
+              else
+                DrawIntegral (frame, i, xd, yd, width, height, 5, font, fg);
+              break;
+            case 'h':/* horizontal line */
               DrawHorizontalLine (frame, i, 5, xd, yd, width, height, 1, fg, pBox);
               break;
 #ifdef _GL
-            case 'H':
+            case 'H':/* Hat */
               DrawHat (frame, i, 5, xd, yd, width, height, 1,fg);
               break;
 #endif /* _GL */
-            case 'i':
+            case 'i':/* integral */ 
               if (useStix)
                 DrawStixIntegral (frame, xd, yd, width, height, 0, size, fg);
               else
                 DrawIntegral (frame, i, xd, yd, width, height, 0, font, fg);
               break;
-            case 'o':
+            case 'o':/* horizontal brace */
               if (useStix)
                 DrawStixHorizontalBrace (frame, xd, yd, width, height, 0, size,
                                          fg);
               else
                 DrawHorizontalBrace (frame, i, 5, xd, yd, width, height, 0,fg);
               break;
-            case 'r':
+            case 'r':/* radical */
               DrawRadical (frame, i, xd, yd, width, height, font, fg);
               break;
-            case 't': // triple
+            case 't': /* triple integral */
               if (useStix)
                 DrawStixIntegral (frame, xd, yd, width, height, 3, size, fg);
               else

@@ -1286,11 +1286,23 @@ static void TranslateLeaf (PtrElement pEl, ThotBool transChar,
                   else
                     switch (ci)
                       {
-                      case 'c':
-                        c = 0x222E; /* contour integral */
+                      case '1':
+                        c = 0x2231; /* Clockwise Integral */
+                        break;
+                      case '2':
+                        c = 0x2232; /* Clockwise Contour Integral */
+                        break;
+                      case '3':
+                        c = 0x2133; /* Counter Clockwise Contour Integral */
                         break;
                       case 'd':
                         c = 0x222C; /* double integral */
+                        break;
+                      case 'e':
+                        c = 0x222F; /* double contour integral */
+                        break;
+                      case 'f':
+                        c = 0x2230; /* triple contour integral */
                         break;
                       case 'h':
                         c = 0x00AF; /* overline */

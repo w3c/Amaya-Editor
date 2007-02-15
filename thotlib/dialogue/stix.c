@@ -543,6 +543,39 @@ void DrawStixIntegral (int frame, int x, int y, int l, int h,
             symb = 0x39;
           DrawStixChar (font, symb, x, y, h, fg, frame);
         }
+      if (type == 6)	
+        /* Clockwise Integral */
+        {
+          if (h < LOW_CHAR)
+            symb = 0x2B;
+          else if (h < MID_CHAR)
+            symb = 0x3C;
+          else
+            symb = 0x4D;
+          DrawStixChar (font, symb, x, y, h, fg, frame);
+        }
+      if (type == 7)	
+        /* Clockwise Contour Integral */
+        {
+          if (h < LOW_CHAR)
+            symb = 0x2A;
+          else if (h < MID_CHAR)
+            symb = 0x3B;
+          else
+            symb = 0x4C;
+          DrawStixChar (font, symb, x, y, h, fg, frame);
+        }
+      if (type == 8)	
+        /* triple contour integral */
+        {
+          if (h < LOW_CHAR)
+            symb = 0x1F;
+          else if (h < MID_CHAR)
+            symb = 0x3A;
+          else
+            symb = 0x4B;
+          DrawStixChar (font, symb, x, y, h, fg, frame);
+        }
     }
   else
     /* very high character. Display it with several components from the
@@ -582,21 +615,33 @@ static int StixIntegralWidth (int height, int type)
           if (type == 3)
             i += i/2; /* triple integral, drawn as 3 single integrals */
         }
-      else if (type == 1)
-        i = CharacterWidth (0x46, font);
+      else
+        {
+          i = CharacterWidth (0x46, font);
+          if (type == 4)
+            i *= 2;
+          if (type == 5)
+            i *= 3;
+        }
     }
   else if (height < MID_CHAR)
     {
       if (type == 0 || type == 2 || type == 3)
         {
           i = CharacterWidth (0x21, font);
-          if (type == 2)
-            i += i/4;
-          if (type == 3)
-            i += i/2;
+          if (type == 4)
+            i *= 2;
+          if (type == 5)
+            i *= 3;
         }
-      else if (type == 1)
-        i = CharacterWidth (0x23, font);
+      else
+        {
+          i = CharacterWidth (0x23, font);
+          if (type == 4)
+            i += i/2;
+          if (type == 5)
+            i += i;
+        }
     }
   else 
     {
@@ -608,8 +653,14 @@ static int StixIntegralWidth (int height, int type)
           if (type == 3)
             i += i/2;
         }
-      else if (type == 1)
-        i = CharacterWidth (0x35, font);
+      else
+        {
+          i = CharacterWidth (0x35, font);
+          if (type == 4)
+            i += i/4;
+          if (type == 5)
+            i += i/2;
+        }
     }
   return i;
 }
@@ -1033,8 +1084,23 @@ int GetMathFontWidth (char shape, SpecFont font, int height)
     {
       switch (shape)
         {
+        case '1':	/* Clockwise Integral */
+          i = StixIntegralWidth (height, 6);
+          break;
+        case '2':	/* Clockwise Contour Integral */
+          i = StixIntegralWidth (height, 7);
+          break;
+        case '3':	/* Counter Clockwise Contour Integral */
+          i = StixIntegralWidth (height, 8);
+          break;
         case 'd':	/* double integral */
           i = StixIntegralWidth (height, 2);
+          break;
+        case 'e':	/* double contour integral */
+          i = StixIntegralWidth (height, 4);
+          break;
+        case 'f':	/* triple contour integral */
+          i = StixIntegralWidth (height, 5);
           break;
         case 'i':	/* integral */
           i = StixIntegralWidth (height, 0);
@@ -1081,8 +1147,23 @@ void GiveStixSize (ThotFont pfont, PtrAbstractBox pAb, int *width,
   *height = hfont;
   switch (pAb->AbShape)
     {
+    case '1':	/* Clockwise Integral */
+      *width = StixIntegralWidth (*height, 6);
+      break;
+    case '2':	/* Clockwise Contour Integral */
+      *width = StixIntegralWidth (*height, 7);
+      break;
+    case '3':	/* Counter Clockwise Contour Integral */
+      *width = StixIntegralWidth (*height, 8);
+      break;
     case 'd':	/* double integral */
       *width = StixIntegralWidth (*height, 2);
+      break;
+    case 'e':	/* double contour integral */
+      *width = StixIntegralWidth (*height, 4);
+      break;
+    case 'f':	/* triple contour integral */
+      *width = StixIntegralWidth (*height, 5);
       break;
     case 'i':	/* integral */
       *width = StixIntegralWidth (*height, 0);
@@ -1141,9 +1222,14 @@ void GetMathFontFromChar (char typesymb, SpecFont fontset, void **font,
   switch (typesymb)
     {
       /*integral, union...*/
+    case '1':
+    case '2':
+    case '3':
     case 'i':
     case 'c':
     case 'd':	  
+    case 'e':	  
+    case 'f':	  
     case 't':	  
     case 'I':
     case 'U':

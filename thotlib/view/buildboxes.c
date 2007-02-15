@@ -731,14 +731,19 @@ void GiveSymbolSize (PtrAbstractBox pAb, int *width, int *height)
         {
         case 'c':	/*integrale curviligne */
         case 'i':	/*integrale */
-          *width = BoxCharacterWidth (243, font);
+          *width = BoxCharacterWidth (0xf3, font);
           break;
         case 'd':	/*integrale double */
-          *width = BoxCharacterWidth (243, font) +
-            BoxCharacterWidth (243, font) / 2;
+        case '1':	/* Clockwise Integral */
+        case '2':	/* ClockwiseContourIntegral */
+        case '3':	/* CounterClockwiseContourIntegral */
+          *width = BoxCharacterWidth (0xf3, font) * 3 / 2;
           break;
+        case 'f':	/* triple contour integral */
+          *width = BoxCharacterWidth (0xf3, font) * 5 / 2;
+        case 'e':	/* double contour integral */
         case 't':	/*integrale triple */
-          *width = BoxCharacterWidth (243, font) * 2;
+          *width = BoxCharacterWidth (0xf3, font) * 2;
           break;
         case 'r':	/* root */
           *width = hfont;
@@ -766,26 +771,26 @@ void GiveSymbolSize (PtrAbstractBox pAb, int *width, int *height)
         case ']':
         case '{':
         case '}':
-          *width = BoxCharacterWidth (230, font);
+          *width = BoxCharacterWidth (0xe6, font);
            break;
         case '<':
         case '>':
         case 'H':
-          *width = BoxCharacterWidth (241, font) * 2;
+          *width = BoxCharacterWidth (0xf1, font) * 2;
           break;
         case '|':       /* vertical bar */
-          *width = BoxCharacterWidth (124, font);  /* | */
+          *width = BoxCharacterWidth (0x7c, font);  /* | */
           break;
         case 'D':       /* double vertical bar */
-          *width = 3 * BoxCharacterWidth (124, font);  /* | */
+          *width = BoxCharacterWidth (0x7c, font) * 3;  /* | */
           break;
         case '^':
         case 'v':
         case 'V':
-          *width = BoxCharacterWidth (109, font);	/* 'm' */
+          *width = BoxCharacterWidth (0x6c, font);	/* 'm' */
           break;
         case '?':
-          *width = BoxCharacterWidth (63, font);   /* ? */
+          *width = BoxCharacterWidth (0x3f, font);   /* ? */
           break;
         default:
           *width = BoxCharacterWidth (SPACE, font);

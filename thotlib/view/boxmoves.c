@@ -3109,33 +3109,63 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
                                 pBox->BxAbstractBox->AbEnclosing->AbBox->BxFont, pBox->BxH);
           switch (pCurrentAb->AbShape)
             {
-            case 'd':	/* double integral */
-              if (i == 0)
-                i = BoxCharacterWidth (0xf3, font)
-                  + BoxCharacterWidth (0xf3, font) / 2;
-              ResizeWidth (pBox, NULL, NULL, i - pBox->BxW, 0, 0, 0, frame, FALSE);
-              break;		
-            case 't':	/* triple integral */
-              if (i == 0)
-                i = BoxCharacterWidth (0xf3, font) * 2;
-              ResizeWidth (pBox, NULL, NULL, i - pBox->BxW, 0, 0, 0, frame, FALSE);
-              break;		
             case 'i':	/* integral */
             case 'c':	/* circle integral */
               if (i == 0)
                 i = BoxCharacterWidth (0xf3, font);
               ResizeWidth (pBox, NULL, NULL, i - pBox->BxW, 0, 0, 0, frame, FALSE);
               break;
+            case 'd':	/* double integral */
+            case '1':	/* Clockwise Integral */
+            case '2':	/* ClockwiseContourIntegral */
+            case '3':	/* CounterClockwiseContourIntegral */
+              if (i == 0)
+                i = BoxCharacterWidth (0xf3, font) * 3 / 2;
+              ResizeWidth (pBox, NULL, NULL, i - pBox->BxW, 0, 0, 0, frame, FALSE);
+              break;		
+            case 'f':	/* triple contour integral */
+              if (i == 0)
+                i = BoxCharacterWidth (0xf3, font) * 5 / 2;
+              ResizeWidth (pBox, NULL, NULL, i - pBox->BxW, 0, 0, 0, frame, FALSE);
+              break;		
+            case 'e':	/* double contour integral */
+            case 't':	/* triple integral */
+              if (i == 0)
+                i = BoxCharacterWidth (0xf3, font) * 2;
+              ResizeWidth (pBox, NULL, NULL, i - pBox->BxW, 0, 0, 0, frame, FALSE);
+              break;		
             case '(':
             case ')':
             case '{':
             case '}':
             case '[':
             case ']':
-            case '<':
-            case '>':
               if (i == 0)
                 i = BoxCharacterWidth (0xe6, font);
+              ResizeWidth (pBox, NULL, NULL, i - pBox->BxW, 0, 0, 0, frame, FALSE);
+              break;
+            case '<':
+            case '>':
+            case 'H':
+              if (i == 0)
+                i = BoxCharacterWidth (0xf1, font);
+              ResizeWidth (pBox, NULL, NULL, i - pBox->BxW, 0, 0, 0, frame, FALSE);
+              break;
+            case '|':       /* vertical bar */
+              if (i == 0)
+                i = BoxCharacterWidth (0x7c, font);  /* | */
+              ResizeWidth (pBox, NULL, NULL, i - pBox->BxW, 0, 0, 0, frame, FALSE);
+              break;
+            case 'D':       /* double vertical bar */
+              if (i == 0)
+                i = BoxCharacterWidth (0x7c, font) * 3;  /* | */
+              ResizeWidth (pBox, NULL, NULL, i - pBox->BxW, 0, 0, 0, frame, FALSE);
+              break;
+            case '^':
+            case 'v':
+            case 'V':
+              if (i == 0)
+                i  = BoxCharacterWidth (0x6c, font);	/* 'm' */
               ResizeWidth (pBox, NULL, NULL, i - pBox->BxW, 0, 0, 0, frame, FALSE);
               break;
             default:
