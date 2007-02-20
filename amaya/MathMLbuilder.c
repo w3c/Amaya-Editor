@@ -983,6 +983,14 @@ void SetSingleIntHorizStretchAttr (Element el, Document doc, Element* selEl)
                             c = 'k'; /* Hacek */
                           else if (text[0] == 0x2DC)
                             c = 'T'; /* Diacritical Tilde */
+                          else  if (text[0] == 0x294E)
+                            c = '4';  /* double vector */
+                          else  if (text[0] == 0x21BC)
+                            c = '5';  /* left vector */
+                          else  if (text[0] == 0x21C0)
+                            c = '6';  /* right vector */
+                          else  if (text[0] == 0x2194)
+                            c = 'A';  /* horizontal double arrow */
                           else  if (text[0] == 0x2190)
                             c = 'L';  /* arrow left */
                           else if (text[0] == 0x2192)
@@ -2122,23 +2130,35 @@ void      CheckFence (Element el, Document doc)
                               attr = TtaGetAttribute (el, attrType);
                               if (attr)
                                 TtaSetAttributeValue (attr,
-                                                      MathML_ATTR_IntVertStretch_VAL_yes_,
-                                                      el, doc);
+                                           MathML_ATTR_IntVertStretch_VAL_yes_,
+                                           el, doc);
                               else
                                 {
                                   attr = TtaNewAttribute (attrType);
                                   TtaSetAttributeValue (attr,
-                                                        MathML_ATTR_IntVertStretch_VAL_yes_,
-                                                        el, doc);
+                                           MathML_ATTR_IntVertStretch_VAL_yes_,
+                                           el, doc);
                                   TtaAttachAttribute (el, attr, doc);
                                 }
                             }
                           /* create a new content for the MF element */
                           elType.ElTypeNum = MathML_EL_SYMBOL_UNIT;
-                          if (text[0] == 9002)
-                            c = '>';    /* RightAngleBracket */
-                          else if (text[0] == 9001)
+                          if (text[0] == 0x2329)
                             c = '<';    /* LeftAngleBracket */
+                          else if (text[0] == 0x232a)
+                            c = '>';    /* RightAngleBracket */
+                          else if (text[0] == 0x301a)
+                            c = 1;    /* LeftDoubleBracket */
+                          else if (text[0] == 0x301b)
+                            c = 2;    /* RightDoubleBracket */
+                          else if (text[0] == 0x2308)
+                            c = 3;    /* LeftCeiling */
+                          else if (text[0] == 0x2309)
+                            c = 4;    /* RightCeiling */
+                          else if (text[0] == 0x230a)
+                            c = 5;    /* LeftFloor */
+                          else if (text[0] == 0x230b)
+                            c = 6;    /* RightFloor */
                           else
                             c = (char) text[0];
                           content = TtaNewElement (doc, elType);

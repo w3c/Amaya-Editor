@@ -2916,9 +2916,29 @@ static ThotBool ShowTextLine (Element el, Document doc)
                   css = SearchCSS (0, s, NULL, &pInfo);
                   if (css)
                     {
+                      if ( DocumentTypes[doc] == docLog)
+                        {
+                          otherDoc = DocumentSource[doc];
+                          /* close the window of the log file */
+                          TtaCloseDocument (doc);
+                          TtaFreeMemory (DocumentURLs[doc]);
+                          DocumentURLs[doc] = NULL;
+                          DocumentSource[doc] = 0;
+                          if (DocumentMeta[doc])
+                            {
+                              DocumentMetaClear (DocumentMeta[doc]);
+                              TtaFreeMemory (DocumentMeta[doc]);
+                              DocumentMeta[doc] = NULL;
+                            }
+                          /* restore the default document type */
+                          DocumentTypes[doc] = docFree;
+                        }
+                      else
+                        otherDoc = doc;
 #ifdef _WX
                       LoadDefaultOpeningLocation (TRUE); // in new frame
-                      otherDoc = GetAmayaDoc (s, NULL, DocumentSource[doc], DocumentSource[doc], CE_CSS,
+                      otherDoc = GetAmayaDoc (s, NULL, otherDoc,
+                                              DocumentSource[doc], CE_CSS,
                                               FALSE, NULL, NULL);
 #else /* _WX */
                       otherDoc = GetAmayaDoc (s, NULL, 0, 0, CE_CSS,
