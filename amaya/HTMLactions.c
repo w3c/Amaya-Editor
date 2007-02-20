@@ -1659,7 +1659,6 @@ void CloseLogs (Document doc)
   -----------------------------------------------------------------------*/
 void FocusChanged (Document doc)
 {
-#ifdef LC 
 /* Temporary disabled to go round a crash on Mac OSX with the Show Applied Style window */
   int		     i;
 
@@ -1688,7 +1687,6 @@ void FocusChanged (Document doc)
         /* restore the default document type */
         DocumentTypes[i] = docFree;
       }
-#endif /* LC */
 }
 
 /*----------------------------------------------------------------------
@@ -2834,6 +2832,7 @@ void GotoLine (Document doc, int line, int index, ThotBool selpos)
                 }
               else
                 TtaSelectElement (doc, el);
+              // display the char index
               sprintf (message, "char %d", index);
               TtaSetStatus (doc, 1, message, NULL);
             }
@@ -2848,7 +2847,7 @@ void GotoLine (Document doc, int line, int index, ThotBool selpos)
   -----------------------------------------------------------------------*/
 static ThotBool ShowTextLine (Element el, Document doc)
 {
-  Document	      otherDoc = 0;
+  Document	          otherDoc = 0;
   Element             otherEl;
   Language            lang;
   CSSInfoPtr          css;
@@ -2916,28 +2915,9 @@ static ThotBool ShowTextLine (Element el, Document doc)
                   css = SearchCSS (0, s, NULL, &pInfo);
                   if (css)
                     {
-                      if ( DocumentTypes[doc] == docLog)
-                        {
-                          otherDoc = DocumentSource[doc];
-                          /* close the window of the log file */
-                          TtaCloseDocument (doc);
-                          TtaFreeMemory (DocumentURLs[doc]);
-                          DocumentURLs[doc] = NULL;
-                          DocumentSource[doc] = 0;
-                          if (DocumentMeta[doc])
-                            {
-                              DocumentMetaClear (DocumentMeta[doc]);
-                              TtaFreeMemory (DocumentMeta[doc]);
-                              DocumentMeta[doc] = NULL;
-                            }
-                          /* restore the default document type */
-                          DocumentTypes[doc] = docFree;
-                        }
-                      else
-                        otherDoc = doc;
 #ifdef _WX
                       LoadDefaultOpeningLocation (TRUE); // in new frame
-                      otherDoc = GetAmayaDoc (s, NULL, otherDoc,
+                      otherDoc = GetAmayaDoc (s, NULL, DocumentSource[doc],
                                               DocumentSource[doc], CE_CSS,
                                               FALSE, NULL, NULL);
 #else /* _WX */
@@ -2958,6 +2938,7 @@ static ThotBool ShowTextLine (Element el, Document doc)
     }
   else
     return FALSE; /* let Thot perform normal operation */
+
 }
 
 /*----------------------------------------------------------------------
@@ -3054,23 +3035,55 @@ void CheckSynchronize (NotifyElement *event)
   ----------------------------------------------------------------------*/
 void SelectionChanged (NotifyElement *event)
 {
+  Element             child, el = event->element;
+  ElementType         elType;
+  Document            doc = event->document;
+  char                message[50];
+  int                 i, index = 0;
+
   if (SelectionChanging)
     return;
   SelectionChanging = TRUE;
+
   CheckSynchronize (event);
   TtaSelectView (SelectionDoc, 1);
   /* update the displayed style information */
   SynchronizeAppliedStyle (event);
   UnFrameMath ();
   
-  if (DocumentTypes[event->document] != docLog)
-  {
-    UpdateXmlElementListTool(event->element,event->document);
+  if (DocumentTypes[doc] != docLog)
+    {
+      if (DocumentTypes[doc] != docSource && DocumentTypes[doc] != docCSS)
+        {
+          // update the XML list
+          UpdateXmlElementListTool (el, doc);
+          TtaSetStatus (doc, 1, "  ", NULL);
+        }
 #ifdef _WX
-    TtaSetStatus (event->document, 1, "  ", NULL);
+      else
+        {
+          // manage the selection in source or css file
+          TtaGiveFirstSelectedElement (doc, &child, &index, &i);
+          elType = TtaGetElementType (el);
+          child = el;
+          if (elType.ElTypeNum == TextFile_EL_TEXT_UNIT)
+            {
+              TtaPreviousSibling (&child);
+              while (child && child != el)
+                {
+                  index += TtaGetElementVolume (child);
+                  TtaPreviousSibling (&child);
+                }
+              // display the char index
+              sprintf (message, "char %d", index);
+              TtaSetStatus (doc, 1, message, NULL);
+            }
+          else
+            TtaSetStatus (doc, 1, "  ", NULL);
+        }
 #endif /* _WX */
-    TtaSetStatusSelectedElement(event->document, 1, event->element);
-  }
+      TtaSetStatusSelectedElement(doc, 1, el);
+    }
   SelectionChanging = FALSE;
 }
 

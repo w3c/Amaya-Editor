@@ -60,7 +60,7 @@ void AmayaPathControl::SetSelection(Element elem)
   wxRect              rect;
   int                 length;
   char               *buffer = NULL;
-  bool                xtiger;
+  bool                xtiger, file = false;
   
   m_items.DeleteContents(true);
   m_items.clear();
@@ -79,6 +79,7 @@ void AmayaPathControl::SetSelection(Element elem)
                     !strcmp (pEl->ElStructSchema->SsName, "Template"));
           if (xtiger)
             {
+              // replace the element name byt the attribute value
               pAttr = GetAttrElementWithException (ExcGiveName, pEl);
               if (pAttr)
                 {
@@ -86,6 +87,17 @@ void AmayaPathControl::SetSelection(Element elem)
                   buffer = (char *)TtaGetMemory (length + 1);
                   /* copy the NAME attribute into TargetName */
                   TtaGiveTextAttributeValue ((Attribute)pAttr, buffer, &length);
+                }
+            }
+          else
+            {
+              // display the line number
+              file = (pEl->ElStructSchema && pEl->ElStructSchema->SsName &&
+                      !strcmp (pEl->ElStructSchema->SsName, "TextFile"));
+              if (file)
+                {
+                  buffer = (char *)TtaGetMemory (20);
+                  sprintf (buffer, "Line: %d", pEl->ElLineNb);
                 }
             }
           if (buffer)
@@ -109,8 +121,12 @@ void AmayaPathControl::SetSelection(Element elem)
            m_items.Append(item);
           if (rect.height > m_height)
             m_height = rect.height;
-        }    
-      pEl = pEl->ElParent;
+        }
+      if (file)
+        // don't display the hierarchy
+        pEl = NULL;
+      else
+        pEl = pEl->ElParent;
     }
   Refresh();
 }  

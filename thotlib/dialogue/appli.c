@@ -3535,17 +3535,23 @@ void ChangeFrameTitle (int frame, unsigned char *text, CHARSET encoding)
   ----------------------------------------------------------------------*/
 void ChangeSelFrame (int frame)
 {
-  Document            doc;
+  Document            doc, olddoc;
   View                view;
+  int                 oldframe;
+
   if (ActiveFrame != frame)
     {
       CloseTextInsertion ();
+      oldframe = ActiveFrame;
+      FrameToView (oldframe, &olddoc, &view);
       ActiveFrame = frame;
       FrameToView (frame, &doc, &view);
       // set the new focus
       if (ChangeFocusFunction &&
           doc && LoadedDocument[doc-1]->DocTypeName &&
-          strcmp (LoadedDocument[doc-1]->DocTypeName, "log"))
+          strcmp (LoadedDocument[doc-1]->DocTypeName, "log") &&
+          olddoc && LoadedDocument[olddoc-1]->DocTypeName &&
+          strcmp (LoadedDocument[olddoc-1]->DocTypeName, "log"))
         (*(Proc1)ChangeFocusFunction) ((void *) doc);
 #ifdef _WX
       /* update the class list */
