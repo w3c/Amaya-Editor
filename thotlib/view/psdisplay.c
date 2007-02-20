@@ -809,6 +809,14 @@ void DrawIntersection (int frame, int x, int y, int l, int h, ThotFont font,
 #endif /* _WX */
 }
 
+/*----------------------------------------------------------------------
+  DrawArrow draw a vector
+  -----------------------------------------------------------------------*/
+void DrawVector (int frame, int thick, int style, int x, int y, int l,
+                 int h, int orientation, int fg)
+{
+}
+
 
 /*----------------------------------------------------------------------
    DrawArrow draw an arrow following the indicated direction in degrees :

@@ -668,9 +668,10 @@ static int StixIntegralWidth (int height, int type)
 /*----------------------------------------------------------------------
   DrawStixBracket draw an opening or closing bracket (depending on direction)
   parameter fg indicates the drawing color
+  type : 0 = Bracket ; 1 = DoubleBracket ; 2 = Ceiling ; 3 = Floor
   ----------------------------------------------------------------------*/
 void DrawStixBracket (int frame, int x, int y, int l, int h,
-                      int direction, int size, int fg)
+                      int direction, int type, int size, int fg)
 {
   unsigned char   symb;
   ThotFont        font;
@@ -679,41 +680,100 @@ void DrawStixBracket (int frame, int x, int y, int l, int h,
   font = (ThotFont)LoadStixFont (7, size);
   if (CharacterHeight (33, font) > (3 * h) / 4)
     {
-      /*  write a single Esstix 7 character: 
-          63 normal
-          36 2 line
-          50 3 line  */
+      /*  write a single Esstix 7 character : normal, 2 line or 3 lines */
       if (h < LOW_CHAR )
         {
           if (direction == 0)
-            symb = 63;
+            {
+            switch(type)
+              {
+              case 0 :symb = 63;break;
+              case 1 :symb = 69;break;
+              case 2 :symb = 81;break;
+              default:symb = 80;break;
+              }
+            }
           else
-            symb = 64;
+            {
+            switch(type)
+              {
+              case 0 :symb = 64;break;
+              case 1 :symb = 70;break;
+              case 2 :symb = 83;break;
+              default:symb = 82;break;
+              }
+            }
         }
       else if (h < MID_CHAR)
         {
           if (direction == 0)
-            symb = 36;
+            {
+            switch(type)
+              {
+              case 0 :symb = 36;break;
+              case 1 :symb = 43;break;
+              case 2 :symb = 81;break;
+              default:symb = 80;break;
+              }
+            }
           else
-            symb = 37;
+            {
+            switch(type)
+              {
+              case 0 :symb = 37;break;
+              case 1 :symb = 44;break;
+              case 2 :symb = 83;break;
+              default:symb = 82;break;
+              }
+            }
         }
       else
         {
           if (direction == 0)
-            symb = 50;
+            {
+            switch(type)
+              {
+              case 0 :symb = 50;break;
+              case 1 :symb = 56;break;
+              case 2 :symb = 81;break;
+              default:symb = 80;break;
+              }
+            }
           else
-            symb = 51;
+            {
+            switch(type)
+              {
+              case 0 :symb = 51;break;
+              case 1 :symb = 57;break;
+              case 2 :symb = 83;break;
+              default:symb = 82;break;
+              }
+            }
         }
       DrawCenteredStixChar (font, symb, x, y, l, h, fg, frame);
     }
   else
     /* very high character. Display it with several components */
     if (direction == 0)
-      /* draw an opening bracket */
-      DrawCompoundExtendedStix (frame, x, y, l, h, size, fg, 0x49, 0x4a, 0x4b);
+      { /* draw an opening bracket */
+      switch(type)
+        {
+        case 0 :DrawCompoundExtendedStix (frame, x, y, l, h, size, fg, 0x49, 0x4a, 0x4b);break;
+        case 1 :DrawCompoundExtendedStix (frame, x, y, l, h, size, fg, 0x49, 0x4a, 0x4b);break;
+        case 2 :DrawCompoundExtendedStix (frame, x, y, l, h, size, fg, 0x49, 0x4a, 0x4b);break;
+        default :DrawCompoundExtendedStix (frame, x, y, l, h, size, fg, 0x49, 0x4a, 0x4b);break;
+        }
+      }
     else
-      /* draw a closing bracket */
-      DrawCompoundExtendedStix (frame, x, y, l, h, size, fg, 0x4c, 0x4d, 0x4e);
+      { /* draw a closing bracket */
+      switch(type)
+        {
+        case 0 :DrawCompoundExtendedStix (frame, x, y, l, h, size, fg, 0x4c, 0x4d, 0x4e);break;
+        case 1 :DrawCompoundExtendedStix (frame, x, y, l, h, size, fg, 0x49, 0x4a, 0x4b);break;
+        case 2 :DrawCompoundExtendedStix (frame, x, y, l, h, size, fg, 0x49, 0x4a, 0x4a);break;
+        default :DrawCompoundExtendedStix (frame, x, y, l, h, size, fg, 0x4a, 0x4a, 0x4b);break;
+        }
+      }
 }
 
 /* ----------------------------------------------------------------------
@@ -1121,6 +1181,12 @@ int GetMathFontWidth (char shape, SpecFont font, int height)
           break;
         case '[':
         case ']':
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+        case 5:
+        case 6:
           i = StixBracketWidth (height, font);	
           break;
         case '<':
@@ -1184,6 +1250,12 @@ void GiveStixSize (ThotFont pfont, PtrAbstractBox pAb, int *width,
       break;
     case '[':
     case ']':
+    case 1:
+    case 2:
+    case 3:
+    case 4:
+    case 5:
+    case 6:
       *width = StixBracketWidth (*height, pAb->AbBox->BxFont);	
       break;
     case '<':
@@ -1241,6 +1313,12 @@ void GetMathFontFromChar (char typesymb, SpecFont fontset, void **font,
     case '}':
     case '[':
     case ']':
+    case 1:
+    case 2:
+    case 3:
+    case 4:
+    case 5:
+    case 6:
       if (size > 2)
         *font = LoadStixFont (7, size);
       break;

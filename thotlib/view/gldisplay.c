@@ -526,20 +526,12 @@ static void ArrowDrawing (int frame, int x1, int y1, int x2, int y2,
 }
 
 /*----------------------------------------------------------------------
-  DrawArrow draw an arrow following the indicated direction in degrees :
-  0 (right arrow), 45, 90, 135, 180,
-  225, 270 ou 315.
-  parameter fg indicates the drawing color
-  ----------------------------------------------------------------------*/
-void DrawArrow (int frame, int thick, int style, int x, int y, int l, int h,
-                int orientation, int fg)
+  DrawArrow draw a vector */
+void DrawVector (int frame, int thick, int style, int x, int y, int l, int h, int orientation, int fg)
 {
-  int                 xm, ym, xf, yf;
+  int                 xm, ym, xf, yf, D = thick + 5;
 
-  if (fg < 0)
-    return;
-  if (thick <= 0)
-    return;
+  if (fg < 0 || thick <= 0)return;
   y += FrameTable[frame].FrTopMargin;
   xm = x + ((l - thick) / 2);
   xf = x + l - 1;
@@ -547,7 +539,55 @@ void DrawArrow (int frame, int thick, int style, int x, int y, int l, int h,
   yf = y + h - 1;
 
   InitDrawing (style, thick, fg);
-  if (orientation == 0)
+
+  if (orientation == -1)
+    {
+      /* draw a double vector */
+      DoDrawOneLine (frame, x, ym, xf, ym);
+      DoDrawOneLine (frame, x, ym, x + D, ym - D);
+      DoDrawOneLine (frame, xf - D, ym - D, xf, ym);
+    }
+  else if (orientation == 0)
+    {
+      /* draw a right vector */
+      DoDrawOneLine (frame, x, ym, xf, ym);
+      DoDrawOneLine (frame, xf - D, ym - D, xf, ym);
+    }
+  else if (orientation == 180)
+    {
+      /* draw a left vector */
+      DoDrawOneLine (frame, x, ym, xf, ym);
+      DoDrawOneLine (frame, x, ym, x + D, ym - D);
+    }
+}
+
+
+/*----------------------------------------------------------------------
+  DrawArrow draw an arrow following the indicated direction in degrees :
+  0 (right arrow), 45, 90, 135, 180, 225, 270 ou 315.
+  parameter fg indicates the drawing color
+  ----------------------------------------------------------------------*/
+void DrawArrow (int frame, int thick, int style, int x, int y, int l, int h,
+                int orientation, int fg)
+{
+  int                 xm, ym, xf, yf;
+
+  if (fg < 0 || thick <= 0)return;
+  y += FrameTable[frame].FrTopMargin;
+  xm = x + ((l - thick) / 2);
+  xf = x + l - 1;
+  ym = y + ((h - thick) / 2);
+  yf = y + h - 1;
+
+  InitDrawing (style, thick, fg);
+  if (orientation == -1)
+    {
+      /* draw a double horizontal arrow */
+      DoDrawOneLine (frame, x, ym, xf, ym);
+      ArrowDrawing (frame, x, ym, xf, ym, thick, fg);
+      ArrowDrawing (frame, xf, ym, x, ym, thick, fg);
+    }
+  else if (orientation == 0)
     {
       /* draw a right arrow */
       DoDrawOneLine (frame, x, ym, xf, ym);

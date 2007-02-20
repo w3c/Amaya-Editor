@@ -408,6 +408,31 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
 
           switch (pBox->BxAbstractBox->AbShape)
             {
+            case 1: /* LeftDoubleBracket */
+              if (useStix)
+                DrawStixBracket (frame, xd, yd, width, height, 0, 1, size, fg);
+              break;
+            case 2: /* RightDoubleBracket */
+              if (useStix)
+                DrawStixBracket (frame, xd, yd, width, height, 1, 1, size, fg);
+              break;
+            case 3: /* LeftFloor */
+              if (useStix)
+                DrawStixBracket (frame, xd, yd, width, height, 0, 2, size, fg);
+              break;
+            case 4: /* RightFloor */
+              if (useStix)
+                DrawStixBracket (frame, xd, yd, width, height, 1, 2, size, fg);
+              break;
+            case 5: /* LeftCeiling */
+              if (useStix)
+                DrawStixBracket (frame, xd, yd, width, height, 0, 3, size, fg);
+              break;
+            case 6: /* RightCeiling */
+              if (useStix)
+                DrawStixBracket (frame, xd, yd, width, height, 1, 3, size, fg);
+              break;
+
             case '1':/* Clockwise Integral */
               if (useStix)
                 DrawStixIntegral (frame, xd, yd, width, height, 6, size, fg);
@@ -427,6 +452,18 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
                 DrawIntegral (frame, i, xd, yd, width, height, 8, font, fg);
               break;
 #ifdef _GL
+            case '4':
+              DrawVector (frame, i, 5, xd, yd, width, height, -1, fg);
+              break;
+            case '5':
+              DrawVector (frame, i, 5, xd, yd, width, height, 180, fg);
+              break;
+            case '6':
+              DrawVector (frame, i, 5, xd, yd, width, height, 0, fg);
+              break;
+            case 'A':
+              DrawArrow (frame, i, 5, xd, yd, width, height, -1, fg);
+              break;
             case 'b':/* horizontal bracket */
                 DrawHorizontalBracket (frame, i, 5, xd, yd, width, height, 0,fg);
               break;
@@ -574,14 +611,14 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
               break;
             case '[':
               if (useStix)
-                DrawStixBracket (frame, xd, yd, width, height, 0, size, fg);
+                DrawStixBracket (frame, xd, yd, width, height, 0, 0, size, fg);
               else
                 DrawBracket (frame, i, xd, yd, width, height, 0, font, fg,
                              baseline);
               break;
             case ']':
               if (useStix)
-                DrawStixBracket (frame, xd, yd, width, height, 1, size, fg);
+                DrawStixBracket (frame, xd, yd, width, height, 1, 0, size, fg);
               else
                 DrawBracket (frame, i, xd, yd, width, height, 1, font, fg,
                              baseline);

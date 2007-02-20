@@ -1286,6 +1286,25 @@ static void TranslateLeaf (PtrElement pEl, ThotBool transChar,
                   else
                     switch (ci)
                       {
+                      case 1:
+                        c = 0x301a; /* LeftDoubleBracket */
+                        break;
+                      case 2:
+                        c = 0x301b; /* RightDoubleBracket */
+                        break;
+                      case 3:
+                        c = 0x2308; /* LeftCeiling */
+                        break;
+                      case 4:
+                        c = 0x2309; /* RightCeiling */
+                        break;
+                      case 5:
+                        c = 0x230a; /* LeftFloor */
+                        break;
+                      case 6:
+                        c = 0x230b; /* RightFloor */
+                        break;
+
                       case '1':
                         c = 0x2231; /* Clockwise Integral */
                         break;
@@ -1293,13 +1312,28 @@ static void TranslateLeaf (PtrElement pEl, ThotBool transChar,
                         c = 0x2232; /* Clockwise Contour Integral */
                         break;
                       case '3':
-                        c = 0x2133; /* Counter Clockwise Contour Integral */
+                        c = 0x2233; /* Counter Clockwise Contour Integral */
+                        break;
+                      case '4':  /* double vector */
+                        c = 0x294E;
+                        break;
+                      case '5':  /* left vector */
+                        c = 0x21BC;
+                       break;
+                      case '6':  /* right vector */
+                        c = 0x21C0;
+                        break;
+                      case 'A':  /* horizontal double arrow */
+                          c = 0x2194;
                         break;
                       case 'b':
                         c = 0x23B4; /* Over bracket */
                         break;
                       case 'B':
                         c = 0x23B5; /* Under bracket */
+                        break;
+                      case 'c':
+                        c = 0x222E; /* contour integral */
                         break;
                       case 'd':
                         c = 0x222C; /* double integral */

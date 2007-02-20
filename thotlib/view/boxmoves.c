@@ -3140,6 +3140,12 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
             case '}':
             case '[':
             case ']':
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+            case 5:
+            case 6:
               if (i == 0)
                 i = BoxCharacterWidth (0xe6, font);
               ResizeWidth (pBox, NULL, NULL, i - pBox->BxW, 0, 0, 0, frame, FALSE);
