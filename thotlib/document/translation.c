@@ -59,8 +59,6 @@ AnOutputFile;
 static ThotBool          StartDollar = FALSE;
 static ThotBool          StartDate = FALSE;
 static ThotBool          IgnoreDate = FALSE;
-static unsigned char     DateString[10];
-static int               DateIndex = 0;
 
 static ThotBool          RCSDollar = FALSE;
 static ThotBool          RCSMarker = FALSE;
@@ -576,6 +574,8 @@ void TtaGetTime (char *s, CHARSET charset)
 }
 
 #ifdef LC
+static unsigned char     DateString[10];
+static int               DateIndex = 0;
 /*----------------------------------------------------------------------
   CheckDate checks if the current date should be generated
   Returns TRUE if the character must be skipped.
@@ -1295,6 +1295,12 @@ static void TranslateLeaf (PtrElement pEl, ThotBool transChar,
                       case '3':
                         c = 0x2133; /* Counter Clockwise Contour Integral */
                         break;
+                      case 'b':
+                        c = 0x23B4; /* Over bracket */
+                        break;
+                      case 'B':
+                        c = 0x23B5; /* Under bracket */
+                        break;
                       case 'd':
                         c = 0x222C; /* double integral */
                         break;
@@ -1313,8 +1319,17 @@ static void TranslateLeaf (PtrElement pEl, ThotBool transChar,
                       case 'i':
                         c = 0x222B; /* integral */
                         break;
+                      case 'k':
+                        c = 0x02C7; /* hacek */
+                        break;
                       case 'o':
                         c = 0xFE37; /* over brace */
+                        break;
+                      case 'p':
+                        c = 0xFE35; /* over parenthesis */
+                        break;
+                      case 'q':
+                        c = 0xFE36; /* under parenthesis */
                         break;
                       case 'r':
                         c = 0x221A; /* square root */
@@ -1345,6 +1360,9 @@ static void TranslateLeaf (PtrElement pEl, ThotBool transChar,
                         break;
                       case 't':
                         c = 0x222D; /* triple integral */
+                        break;
+                      case 'T':
+                          c = 0x2DC; /* Diacritical Tilde */
                         break;
                       case 'U':
                         c = 0x22C3; /* n-ary union */

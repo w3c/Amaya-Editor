@@ -195,7 +195,7 @@ XmlEntity  MathEntityTable[] =
 	{"Int", 8748},
 	{"Integral", 8747},
 	{"Intersection", 8898},
-	{"InvisibleComma", 8203},
+	{"InvisibleComma", 8291},
 	{"InvisibleTimes", 8290},
 	{"Iogon", 302},
 	{"Iopf", 120128},

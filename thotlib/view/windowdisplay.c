@@ -2361,6 +2361,24 @@ void DrawHat (int frame, int thick, int style, int x, int y,
 }
 
 /*----------------------------------------------------------------------
+  DrawTilde draw a hat aligned top
+  The parameter fg indicates the drawing color.
+  ----------------------------------------------------------------------*/
+void DrawTilde (int frame, int thick, int style, int x, int y, int l, int h, int fg)
+{
+}
+
+/*----------------------------------------------------------------------
+  DrawHorizontalBrace draw a horizontal brace aligned top or bottom
+  depending on align value.
+  The parameter fg indicates the drawing color.
+  ----------------------------------------------------------------------*/
+void DrawHorizontalParenthesis (int frame, int thick, int style, int x, int y,
+                          int l, int h, int align, int fg)
+{
+}
+
+/*----------------------------------------------------------------------
   DrawHorizontalBrace draw a horizontal brace aligned top
   or bottom depending on align value.
   parameter fg indicates the drawing color
@@ -2395,7 +2413,15 @@ void DrawHorizontalBrace (int frame, int thick, int style, int x, int y,
     }
 }
 
-
+/*----------------------------------------------------------------------
+  DrawHorizontalBracket draw a horizontal brace aligned top or bottom
+  depending on align value.
+  The parameter fg indicates the drawing color.
+  ----------------------------------------------------------------------*/
+void DrawHorizontalBracket (int frame, int thick, int style, int x, int y,
+                          int l, int h, int align, int fg)
+{
+}
 
 /*----------------------------------------------------------------------
   DrawSlash draw a slash or backslash depending on direction.

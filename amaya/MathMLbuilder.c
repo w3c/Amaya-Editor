@@ -979,6 +979,10 @@ void SetSingleIntHorizStretchAttr (Element el, Document doc, Element* selEl)
                             c = 'h'; 
                           else if (text[0] == 0x302)
                             c = 'H'; /* Hat */
+                          else if (text[0] == 0x2C7)
+                            c = 'k'; /* Hacek */
+                          else if (text[0] == 0x2DC)
+                            c = 'T'; /* Diacritical Tilde */
                           else  if (text[0] == 0x2190)
                             c = 'L';  /* arrow left */
                           else if (text[0] == 0x2192)
@@ -987,6 +991,14 @@ void SetSingleIntHorizStretchAttr (Element el, Document doc, Element* selEl)
                             c = 'o';  /* Over brace */
                           else if (text[0] == 0xFE38)
                             c = 'u';  /* Under brace */
+                          else if (text[0] == 0xFE35)
+                            c = 'p';  /* Over parenthesis */
+                          else if (text[0] == 0xFE36)
+                            c = 'q';  /* Under parenthesis */
+                          else if (text[0] == 0x23B4)
+                            c = 'b';  /* Over bracket */
+                          else if (text[0] == 0x23B5)
+                            c = 'B';  /* Under bracket */
                           if (c != EOS)
                             doit = TRUE;
                         }
@@ -2110,14 +2122,14 @@ void      CheckFence (Element el, Document doc)
                               attr = TtaGetAttribute (el, attrType);
                               if (attr)
                                 TtaSetAttributeValue (attr,
-                                           MathML_ATTR_IntVertStretch_VAL_yes_,
-                                           el, doc);
+                                                      MathML_ATTR_IntVertStretch_VAL_yes_,
+                                                      el, doc);
                               else
                                 {
                                   attr = TtaNewAttribute (attrType);
                                   TtaSetAttributeValue (attr,
-                                           MathML_ATTR_IntVertStretch_VAL_yes_,
-                                           el, doc);
+                                                        MathML_ATTR_IntVertStretch_VAL_yes_,
+                                                        el, doc);
                                   TtaAttachAttribute (el, attr, doc);
                                 }
                             }

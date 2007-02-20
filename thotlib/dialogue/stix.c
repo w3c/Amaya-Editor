@@ -540,7 +540,7 @@ void DrawStixIntegral (int frame, int x, int y, int l, int h,
           else if (h < MID_CHAR)
             symb = 0x26;
           else
-            symb = 0x39;
+            symb = 0x38;
           DrawStixChar (font, symb, x, y, h, fg, frame);
         }
       if (type == 6)	
@@ -566,7 +566,7 @@ void DrawStixIntegral (int frame, int x, int y, int l, int h,
           DrawStixChar (font, symb, x, y, h, fg, frame);
         }
       if (type == 8)	
-        /* triple contour integral */
+        /* Counter Clockwise Contour integral */
         {
           if (h < LOW_CHAR)
             symb = 0x1F;

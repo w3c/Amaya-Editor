@@ -2147,9 +2147,6 @@ static void CreateMathConstruct (int construct, ...)
         int notation = va_arg(varpos, int);
         if (notation == 1)
           {/* actuarial */
-          Attribute          attr;
-          AttributeType      attrType;
-
           attrType.AttrSSchema = elType.ElSSchema;
           attrType.AttrTypeNum = MathML_ATTR_notation;
           attr = TtaNewAttribute (attrType);
@@ -2440,12 +2437,20 @@ static void CreateMathConstruct (int construct, ...)
           TtaDeleteTree (leaf, doc);
         }
       else if (construct == 32)
-        {/* combination */
+      {/* combination */
           child = SetMFencedAttributes(el, '(', ')', ',', doc);
 
-          leaf = TtaGetFirstChild (child);
-          CreateNewMtable (child, 1, 2, doc);
-          selected = SelectMtableCell(child, 0, 1);
+          leaf = TtaGetFirstChild (child); 
+          child = leaf;
+          InsertEmptyConstruct (&child, MathML_EL_MFRAC, doc);
+          attrType.AttrSSchema = elType.ElSSchema;
+          attrType.AttrTypeNum = MathML_ATTR_linethickness;
+          attr = TtaNewAttribute (attrType);
+          TtaAttachAttribute (child, attr, doc);
+          TtaSetAttributeText (attr, "0", child, doc);
+          MathMLlinethickness (doc, child, "0");
+        
+          selected = TtaGetFirstChild (TtaGetFirstChild (child));
           TtaDeleteTree (leaf, doc);
         }
       else if (construct == 34 || construct == 41)
@@ -2487,7 +2492,7 @@ static void CreateMathConstruct (int construct, ...)
           for (i = 0 ; i < number; i++)
             {
               if (i)
-                InsertSymbol (&child, MathML_EL_MO, 8203, doc); // invisible comma          
+                InsertSymbol (&child, MathML_EL_MO, 8291, doc); // invisible comma          
               InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
             }
           TtaDeleteTree (leaf, doc);

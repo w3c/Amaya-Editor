@@ -2063,20 +2063,72 @@ void DrawVerticalLine (int frame, int thick, int style, int x, int y,
   DrawHat draw a hat aligned top
   The parameter fg indicates the drawing color.
   ----------------------------------------------------------------------*/
-void DrawHat (int frame, int thick, int style, int x, int y,
-                          int l, int h, int align, int fg)
+void DrawHat (int frame, int thick, int style, int x, int y, int l, int h, int fg, int direction)
 {
-  int        Y;
+int Y;
+
+h -= thick;
+l -= thick;
 
   if (thick > 0 && fg >= 0)
     {
-      y += FrameTable[frame].FrTopMargin;
-      y += (h - thick) / 2;
-      Y = y + (h - thick) / 2;
+      y += FrameTable[frame].FrTopMargin + h / 2;
+      Y = y + direction * h / 2;
       InitDrawing (style, thick, fg);
-      DoDrawOneLine (frame, x, Y, x + (l / 2), y);
-      DoDrawOneLine (frame, x + (l / 2), y, x + l - thick, Y);
+      DoDrawOneLine (frame, x, Y, x + l/2, y);
+      DoDrawOneLine (frame, x + l/2, y, x + l, Y);
     }
+}
+
+/*----------------------------------------------------------------------
+  DrawTilde draw a hat aligned top
+  The parameter fg indicates the drawing color.
+  ----------------------------------------------------------------------*/
+void DrawTilde (int frame, int thick, int style, int x, int y, int l, int h, int fg)
+{
+int X, Y1, Y2, Xmax, Ymax;
+
+h -= thick;
+l -= thick;
+
+  if (thick > 0 && fg >= 0)
+    {
+      Xmax = 10;
+      Ymax = h / 3;
+      y += FrameTable[frame].FrTopMargin + h / 2;
+      InitDrawing (style, thick, fg);
+
+      for(X = 1, Y1 = 0; X <= Xmax; X++)
+        {     
+        Y2 = Ymax*DSIN(X*M_PI_DOUBLE/Xmax);
+        DoDrawOneLine (frame, x + (X-1)*l/Xmax, y + Y1, x + X*l/Xmax, y + Y2);
+        Y1 = Y2;
+        }
+      
+    }
+}
+
+/*----------------------------------------------------------------------
+  DrawHorizontalBrace draw a horizontal brace aligned top or bottom
+  depending on align value.
+  The parameter fg indicates the drawing color.*/
+
+void DrawHorizontalParenthesis (int frame, int thick, int style, int x, int y,
+                          int l, int h, int align, int fg)
+{
+h -= thick;
+l -= thick;
+x += thick / 2;
+y +=  FrameTable[frame].FrTopMargin;
+y += thick / 2;
+
+  if (thick > 0 && fg >= 0)
+   {
+   InitDrawing (style, thick, fg);
+   if(align)GL_DrawArc(x, y + h, l, -h, 0, 180, FALSE);
+   else GL_DrawArc(x, y, l, h, 0, 180, FALSE);
+   }
+
 }
 
 /*----------------------------------------------------------------------
@@ -2107,6 +2159,37 @@ void DrawHorizontalBrace (int frame, int thick, int style, int x, int y,
         {
           DoDrawOneLine (frame, x, Y, x, y);
           DoDrawOneLine (frame, x + (l / 2), Y, x + (l / 2), y + h);
+          DoDrawOneLine (frame, x + l - thick, Y, x + l - thick, y);
+        }
+    }
+}
+
+/*----------------------------------------------------------------------
+  DrawHorizontalBracket draw a horizontal brace aligned top or bottom
+  depending on align value.
+  The parameter fg indicates the drawing color.
+  ----------------------------------------------------------------------*/
+void DrawHorizontalBracket (int frame, int thick, int style, int x, int y,
+                          int l, int h, int align, int fg)
+{
+  int        Y;
+
+  if (thick > 0 && fg >= 0)
+    {
+      y += FrameTable[frame].FrTopMargin;
+      Y = y + (h - thick) / 2;
+      InitDrawing (style, thick, fg);
+      DoDrawOneLine (frame, x, Y, x + l, Y);
+      if (align == 0)
+        /* Over bracket */
+        {
+          DoDrawOneLine (frame, x, Y, x, y + h);
+          DoDrawOneLine (frame, x + l - thick, Y, x + l - thick, y + h);
+        }
+      else
+        /* Under bracket */
+        {
+          DoDrawOneLine (frame, x, Y, x, y);
           DoDrawOneLine (frame, x + l - thick, Y, x + l - thick, y);
         }
     }

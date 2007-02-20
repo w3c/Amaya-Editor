@@ -131,8 +131,7 @@ UnicodeFallbackEntry	UnicodeFallbackTable[] =
     /* ensp     */ {8194, 1130}, /* en space, U+2002 ISOpub */
     /* emsp     */ {8195, 1160}, /* em space, U+2003 ISOpub */
     /* thinsp   */ {8201, 1129}, /* thin space, U+2009 ISOpub */
-    /*InvisibleComa*/ {8203, 1129}, /* thin space, U+2009 ISOpub */
-    /* zwnj     */ {8204, 1063}, /* zero width non-joiner, U+200C NEW RFC 2070 */
+       /* zwnj     */ {8204, 1063}, /* zero width non-joiner, U+200C NEW RFC 2070 */
     /* zwj      */ {8205, 1063}, /* zero width joiner, U+200D NEW RFC 2070 */
     /* lrm      */ {8206, 1063}, /* left-to-right mark, U+200E NEW RFC 2070 */
     /* rlm      */ {8207, 1063}, /* right-to-left mark, U+200F NEW RFC 2070 */
@@ -164,6 +163,7 @@ UnicodeFallbackEntry	UnicodeFallbackTable[] =
     /* frasl    */ {8260, 164},  /* fraction slash, U+2044 NEW */
     /*ApplyFunction*/ {8289, 1129}, /* thin space, U+2009 ISOpub */
     /*InvisibleTimes*/ {8290, 1129}, /* thin space, U+2009 ISOpub */
+    /*InvisibleComa*/ {8291, 1129}, /* thin space, U+2009 ISOpub */
     /* euro     */ {8364, 2206}, /* euro sign, U+20AC NEW */
     /*TripleDot */ {8411, 188},  /* tdot, U+20DB ISOtech */
     /* image    */ {8465, 193},  /* blackletter capital I = imaginary part,  U+2111 ISOamso */
