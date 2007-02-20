@@ -2829,9 +2829,13 @@ void GotoLine (Document doc, int line, int index, ThotBool selpos)
                     TtaSelectString (doc, child, i, i-1);
                   else
                     TtaSelectString (doc, child, i, i);
+                  TtaSetStatusSelectedElement(doc, 1, child);
                 }
               else
+                {
                 TtaSelectElement (doc, el);
+                TtaSetStatusSelectedElement(doc, 1, el);
+                }
               // display the char index
               sprintf (message, "char %d", index);
               TtaSetStatus (doc, 1, message, NULL);
