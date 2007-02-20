@@ -1124,7 +1124,6 @@ ThotBool NewVariable (int varNum, PtrSSchema pSS, PtrPSchema pSchP,
   PtrElement          pEl;
   Counter            *pCo1;
   char                number[20];
-  char               *uri;
   PtrTextBuffer       pBTN, pBTA, pBTAPrec;
 
   /* sauve temporairement le contenu de ce pave de presentation */
@@ -1332,7 +1331,7 @@ ThotBool NewVariable (int varNum, PtrSSchema pSS, PtrPSchema pSchP,
           pEl = pAb->AbElement;
           CopyStringToBuffer ((unsigned char *)pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrName, pAb->AbText, &l);
           pAb->AbVolume += l;
-	    
+#ifdef IV	    
           /* Show the namespace declaration for the root element and */
           /* when an element is not in the same namespace than its parent */
           if (pEl->ElStructSchema->SsRootElem == pEl->ElTypeNumber ||
@@ -1349,6 +1348,7 @@ ThotBool NewVariable (int varNum, PtrSSchema pSS, PtrPSchema pSchP,
                   pAb->AbVolume += l;
                 }
             }
+#endif
           break;
 
         case VarAttrName:
