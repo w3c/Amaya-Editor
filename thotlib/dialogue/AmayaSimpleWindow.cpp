@@ -83,7 +83,7 @@ AmayaSimpleWindow::~AmayaSimpleWindow()
   -----------------------------------------------------------------------*/
 void AmayaSimpleWindow::OnClose(wxCloseEvent& event)
 {
-  if(m_pFrame)
+  if (m_pFrame)
   {
     int  frame_id = m_pFrame->GetFrameId();
     bool bClose;
@@ -102,7 +102,8 @@ void AmayaSimpleWindow::OnClose(wxCloseEvent& event)
       m_pFrame = NULL;
     }
   }
-  Destroy();
+  else
+    Destroy();
 }
 
 /*----------------------------------------------------------------------
