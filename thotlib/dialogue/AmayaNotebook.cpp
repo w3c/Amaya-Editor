@@ -61,8 +61,6 @@ AmayaNotebook::~AmayaNotebook()
 bool AmayaNotebook::ClosePage(int page_id)
 {
   AmayaPage *page = (AmayaPage*)GetPage( page_id );
-  int        old_page_id = GetSelection();
-  
   page->Hide();
   
   if(page->Close())
@@ -223,7 +221,7 @@ void AmayaNotebook::OnPageChanged(wxNotebookEvent& event)
     }
 
   // Get the selected page
-  if(event.GetSelection()<GetPageCount() && event.GetSelection()>=0)
+  if(event.GetSelection()<(int)GetPageCount() && event.GetSelection()>=0)
   {
     AmayaPage * p_selected_page = (AmayaPage *)GetPage(event.GetSelection());
   

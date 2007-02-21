@@ -233,10 +233,6 @@ bool AmayaNormalWindow::DetachPage( int position )
  -----------------------------------------------------------------------*/
 bool AmayaNormalWindow::ClosePage( int page_id )
 {
-  bool dummy = false;
-  AmayaPage * p_page  = NULL;
-  int old_page_id = 0;
-
   // flush all pending events
   wxTheApp->Yield();
 
