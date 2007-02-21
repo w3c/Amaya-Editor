@@ -15,10 +15,9 @@
  *
  */
 #ifdef _GL
-
 #ifdef _GTK
 #include <gtkgl/gtkglarea.h>
-#endif /* #ifdef _GTK */
+#endif /* _GTK */
 
 #ifdef _WINGUI
 #include <windows.h>
@@ -526,8 +525,10 @@ static void ArrowDrawing (int frame, int x1, int y1, int x2, int y2,
 }
 
 /*----------------------------------------------------------------------
-  DrawArrow draw a vector */
-void DrawVector (int frame, int thick, int style, int x, int y, int l, int h, int orientation, int fg)
+  DrawArrow draw a vector
+  ----------------------------------------------------------------------*/
+void DrawVector (int frame, int thick, int style, int x, int y, int l,
+                 int h, int orientation, int fg)
 {
   int                 xm, ym, xf, yf, D = thick + 5;
 
@@ -1753,7 +1754,7 @@ void DrawOval (int frame, int thick, int style, int x, int y, int width,
   if (thick > 0 && fg >= 0)
     {
       InitDrawing (style, thick, fg);
-      for (i=0;i<4;i++)
+      for (i=0; i < 4 ;i++)
         GL_DrawArc (xarc[i].x, xarc[i].y, 
                     xarc[i].width, xarc[i].height, 
                     xarc[i].angle1, xarc[i].angle2,
@@ -2103,7 +2104,8 @@ void DrawVerticalLine (int frame, int thick, int style, int x, int y,
   DrawHat draw a hat aligned top
   The parameter fg indicates the drawing color.
   ----------------------------------------------------------------------*/
-void DrawHat (int frame, int thick, int style, int x, int y, int l, int h, int fg, int direction)
+void DrawHat (int frame, int thick, int style, int x, int y, int l, int h,
+              int fg, int direction)
 {
 int Y;
 
@@ -2126,11 +2128,10 @@ l -= thick;
   ----------------------------------------------------------------------*/
 void DrawTilde (int frame, int thick, int style, int x, int y, int l, int h, int fg)
 {
-int X, Y1, Y2, Xmax, Ymax;
+  int X, Y1, Y2, Xmax, Ymax;
 
-h -= thick;
-l -= thick;
-
+  h -= thick;
+  l -= thick;
   if (thick > 0 && fg >= 0)
     {
       Xmax = 10;
@@ -2144,31 +2145,30 @@ l -= thick;
         DoDrawOneLine (frame, x + (X-1)*l/Xmax, y + Y1, x + X*l/Xmax, y + Y2);
         Y1 = Y2;
         }
-      
     }
 }
 
 /*----------------------------------------------------------------------
   DrawHorizontalBrace draw a horizontal brace aligned top or bottom
   depending on align value.
-  The parameter fg indicates the drawing color.*/
-
+  The parameter fg indicates the drawing color.
+  ----------------------------------------------------------------------*/
 void DrawHorizontalParenthesis (int frame, int thick, int style, int x, int y,
                           int l, int h, int align, int fg)
 {
-h -= thick;
-l -= thick;
-x += thick / 2;
-y +=  FrameTable[frame].FrTopMargin;
-y += thick / 2;
-
+  h -= thick;
+  l -= thick;
+  x += thick / 2;
+  y +=  FrameTable[frame].FrTopMargin;
+  y += thick / 2;
   if (thick > 0 && fg >= 0)
-   {
-   InitDrawing (style, thick, fg);
-   if(align)GL_DrawArc(x, y + h, l, -h, 0, 180, FALSE);
-   else GL_DrawArc(x, y, l, h, 0, 180, FALSE);
-   }
-
+    {
+      InitDrawing (style, thick, fg);
+      if (align)
+        GL_DrawArc(x, y + h, l, -h, 0, 180, FALSE);
+      else
+        GL_DrawArc(x, y, l, h, 0, 180, FALSE);
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -2179,27 +2179,83 @@ y += thick / 2;
 void DrawHorizontalBrace (int frame, int thick, int style, int x, int y,
                           int l, int h, int align, int fg)
 {
-  int        Y;
+  ThotSegment         seg[6];
+  int                 Y, X;
 
   if (thick > 0 && fg >= 0)
     {
       y += FrameTable[frame].FrTopMargin;
       Y = y + (h - thick) / 2;
-      InitDrawing (style, thick, fg);
-      DoDrawOneLine (frame, x, Y, x + l, Y);
+      X = x + (l / 2);
       if (align == 0)
         /* Over brace */
         {
-          DoDrawOneLine (frame, x, Y, x, y + h);
-          DoDrawOneLine (frame, x + (l / 2), Y, x + (l / 2), y);
-          DoDrawOneLine (frame, x + l - thick, Y, x + l - thick, y + h);
+          seg[0].x1 = x;
+          seg[0].y1 = y + h;
+          seg[0].x2 = x + thick;
+          seg[0].y2 = Y;
+
+          seg[1].x1 = seg[0].x2;
+          seg[1].y1 = seg[0].y2;
+          seg[1].x2 = X - thick;
+          seg[1].y2 = Y;
+
+          seg[2].x1 = seg[1].x2;
+          seg[2].y1 = seg[1].y2;
+          seg[2].x2 = X;
+          seg[2].y2 = y;
+
+          seg[3].x1 = seg[2].x2;
+          seg[3].y1 = seg[2].y2;
+          seg[3].x2 = X + thick;
+          seg[3].y2 = Y;
+
+          seg[4].x1 = seg[3].x2;
+          seg[4].y1 = seg[3].y2;
+          seg[4].x2 = x + l - thick;
+          seg[4].y2 = Y;
+
+          seg[5].x1 = seg[4].x2;
+          seg[5].y1 = seg[4].y2;
+          seg[5].x2 = x + l;
+          seg[5].y2 = y + h;
+          InitDrawing (style, thick, fg);
+          GL_DrawSegments (seg, 6);
         }
       else
-        /* Underbrace */
+        /* Under brace */
         {
-          DoDrawOneLine (frame, x, Y, x, y);
-          DoDrawOneLine (frame, x + (l / 2), Y, x + (l / 2), y + h);
-          DoDrawOneLine (frame, x + l - thick, Y, x + l - thick, y);
+          seg[0].x1 = x;
+          seg[0].y1 = y;
+          seg[0].x2 = x + thick;
+          seg[0].y2 = Y;
+
+          seg[1].x1 = seg[0].x2;
+          seg[1].y1 = seg[0].y2;
+          seg[1].x2 = X - thick;
+          seg[1].y2 = Y;
+
+          seg[2].x1 = seg[1].x2;
+          seg[2].y1 = seg[1].y2;
+          seg[2].x2 = X;
+          seg[2].y2 = y + h;
+
+          seg[3].x1 = seg[2].x2;
+          seg[3].y1 = seg[2].y2;
+          seg[3].x2 = X + thick;
+          seg[3].y2 = Y;
+
+          seg[4].x1 = seg[3].x2;
+          seg[4].y1 = seg[3].y2;
+          seg[4].x2 = x + l - thick;
+          seg[4].y2 = Y;
+
+          seg[5].x1 = seg[4].x2;
+          seg[5].y1 = seg[4].y2;
+          seg[5].x2 = x + l;
+          seg[5].y2 = y;
+          InitDrawing (style, thick, fg);
+          GL_DrawSegments (seg, 6);
         }
     }
 }

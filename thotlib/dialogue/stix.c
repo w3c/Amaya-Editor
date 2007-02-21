@@ -1111,6 +1111,8 @@ void DrawStixHorizontalBrace (int frame, int x, int y, int l, int h,
   ThotFont        font;
 
   size = size + (size * ViewFrameTable[frame-1].FrMagnification / 10);
+  if (size <= 0)
+    size = 1;
   font = (ThotFont)LoadStixFont (7, size);
   if (l < 2 * CharacterWidth (0x54, font))
     /*  write a single Esstix 7 character */
@@ -1181,6 +1183,8 @@ int GetMathFontWidth (char shape, SpecFont font, int height)
           break;
         case '[':
         case ']':
+        case 'o':       /* overbrace */
+        case 'u':       /* underbrace */
         case 1:
         case 2:
         case 3:

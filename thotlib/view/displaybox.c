@@ -353,10 +353,13 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
 #endif
         if (StixExist && font == NULL && pBox->BxH > 0)
           {
+            /*if (pBox->BxH > 10)
+              size = pBox->BxH - 5;
+              else*/
+            size = pBox->BxH;
             GetMathFontFromChar (pBox->BxAbstractBox->AbShape,
                                  pBox->BxFont,
-                                 (void **) &font,
-                                 FontRelSize (pBox->BxH-5));
+                                 (void **) &font, size);
             if (font)
               useStix = TRUE;
           }
