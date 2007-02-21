@@ -85,7 +85,6 @@ public:
 
   void         SetActiveFrame( const AmayaFrame * p_frame );
   AmayaFrame * GetActiveFrame() const;
-//  wxString GetPageTitle();
   
   void SetNotebookParent( AmayaNotebook * p_notebook );
   AmayaNotebook * GetNotebookParent();
@@ -106,14 +105,12 @@ public:
 
   wxSplitterWindow * GetSplitterWindow();
 
+  bool CleanUp();
+
  protected:
   void AdjustSplitterPos( int height = -1, int width = -1 );
   void RefreshShowPanelToggleMenu();
 
- public:
-  void DoClose( bool & veto );
-  
- protected:
   DECLARE_EVENT_TABLE()
   void OnSplitterPosChanged( wxSplitterEvent& event );
   void OnSplitterPosChanging( wxSplitterEvent& event );
@@ -125,6 +122,8 @@ public:
   void OnPaint( wxPaintEvent& event );
 
   void OnContextMenu( wxContextMenuEvent & event );
+
+  void OnClose(wxCloseEvent& event);
   
   wxSplitterWindow * m_pSplitterWindow;
   AmayaQuickSplitButton * m_pSplitButtonBottom; // button used to quickly split the frame horizontaly

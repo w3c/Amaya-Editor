@@ -1154,8 +1154,6 @@ ThotBool TtaDestroyFrame( int frame_id )
   wxASSERT(p_frame);
   if (!p_frame)
     return FALSE;
-  
-  p_frame->FreeFrame();
 
   return TRUE;
 #else /* _WX */

@@ -50,7 +50,6 @@
 #include "AmayaCallback.h"
 #include "AmayaToolBar.h"
 #include "AmayaQuickSplitButton.h"
-/*#include "AmayaSubPanelManager.h"*/
 #include "AmayaStatusBar.h"
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaNormalWindow, AmayaWindow)
@@ -151,9 +150,6 @@ IMPLEMENT_DYNAMIC_CLASS(AmayaNormalWindow, AmayaWindow)
  -----------------------------------------------------------------------*/
 AmayaNormalWindow::~AmayaNormalWindow()
 {
-  if (m_pStatusBar)
-    delete m_pStatusBar;
-  m_pStatusBar = NULL;
 }
 
 /*----------------------------------------------------------------------
@@ -246,46 +242,16 @@ bool AmayaNormalWindow::ClosePage( int page_id )
 
   if (m_pNotebook == NULL)
     return true;
-  if (m_pNotebook)
-    old_page_id = m_pNotebook->GetSelection(); 
-  p_page = GetPage( page_id );
-  // close it
-  if (p_page == NULL)
-    return true;
-  p_page->DoClose(dummy);
-  if (p_page->IsClosed())
+  else
+  {
+    if(m_pNotebook->ClosePage(page_id))
     {
-      m_pNotebook->DeletePage(page_id);
-      m_pNotebook->UpdatePageId();
-      //TtaHandlePendingEvents ();
-      
-      // we force old_page_id to regivefocus to the last active page before the close
-      old_page_id--; // a page has been deleted so the old page position should be -1
-      if (old_page_id < 0)
-        old_page_id = 0;
-      if (old_page_id >= (int)m_pNotebook->GetPageCount())
-        old_page_id = m_pNotebook->GetPageCount()-1;
-      if (old_page_id >= 0)
-        m_pNotebook->SetSelection( old_page_id );
-
-      // here GetSelection should return the right value acording to SetSelection above.
-      if (m_pNotebook->GetSelection() >= 0)
-        {
-          AmayaPage * p_selected_page = (AmayaPage *)m_pNotebook->GetPage(m_pNotebook->GetSelection());
-          if (p_selected_page)
-            {
-              p_selected_page->SetSelected( TRUE );
-	      
-              // try to avoid refresh because it forces a total canvas redraw (it's not very optimized)
-              // the page need a refresh to repaint its canvas
-              //p_selected_page->Refresh();
-            }
-        }
-
+      /** \todo Test if no more page is present on the window.*/
       return true;
     }
-  else
-    return false;
+    else
+      return false;
+  }
 }
 
 /*----------------------------------------------------------------------
@@ -295,25 +261,10 @@ bool AmayaNormalWindow::ClosePage( int page_id )
  -----------------------------------------------------------------------*/
 bool AmayaNormalWindow::CloseAllButPage( int position )
 {
-  m_pNotebook->SetSelection(position);
-  AmayaPage* sel = (AmayaPage*) m_pNotebook->GetPage(position);
-  int pos;
-  bool dummy = false;
-  for(pos = m_pNotebook->GetPageCount()-1; pos>=0; pos--)
-    {
-      AmayaPage* page = (AmayaPage*) GetPage(pos);
-      if(page!=sel)
-        {
-          page->DoClose(dummy);
-          if(page->IsClosed())
-            {
-              m_pNotebook->DeletePage(pos);
-              m_pNotebook->UpdatePageId();
-            }
-        }    
-    }
-  sel->SetSelected( TRUE );
-  return true;
+  if(m_pNotebook)
+    return m_pNotebook->CloseAllButPage(position);
+  else
+    return false;
 }
 
 /*----------------------------------------------------------------------
@@ -345,24 +296,25 @@ int AmayaNormalWindow::GetPageCount() const
 
 /*----------------------------------------------------------------------
  *       Class:  AmayaNormalWindow
- *      Method:  DoClose
- * Description:  close every pages contained by the notebook
- -----------------------------------------------------------------------*/
-void AmayaNormalWindow::DoClose(bool & veto)
+ *      Method:  OnClose
+ * Description:  Intercept the CLOSE event and prevent it if ncecessary.
+  -----------------------------------------------------------------------*/
+void AmayaNormalWindow::OnClose(wxCloseEvent& event)
 {
-  m_IsClosing = TRUE;
-
-  // Ask the notebook to close its pages
-  if (m_pNotebook)
-    m_pNotebook->DoClose( veto );
-  m_pNotebook = NULL;
-  // simulate a idle event to force the windows to be closed
-  // (maybe a bug in wxWindow)
-  wxIdleEvent idle_event;
-  wxPostEvent(this, idle_event);
-
-  m_IsClosing = FALSE;
+  if(m_pNotebook)
+  {
+    // Intend to close the notebook
+    if(!m_pNotebook->Close())
+    {
+      event.Veto();
+      return;
+    }
+    m_pNotebook->Destroy();
+    m_pNotebook = NULL;
+  }
+  Destroy();
 }
+
 
 /*----------------------------------------------------------------------
  *       Class:  AmayaNormalWindow
@@ -562,28 +514,11 @@ AmayaToolBar * AmayaNormalWindow::GetAmayaToolBar()
  -----------------------------------------------------------------------*/
 void AmayaNormalWindow::CleanUp()
 {
-  bool dummy = false;
-  int         page_id = 0;
-  AmayaPage * p_page  = NULL;
-  while ( page_id < GetPageCount() )
-    {
-      p_page = GetPage( page_id );
-      if ( !p_page->GetFrame(1) && !p_page->GetFrame(2) )
-        {
-          // the page do not have anymore frames !
-          // close it
-          p_page->DoClose(dummy);
-          m_pNotebook->DeletePage(page_id);
-          m_pNotebook->UpdatePageId();
-          TtaHandlePendingEvents ();
-        }
-      else
-        page_id++;
-    }
+  if(m_pNotebook)
+    m_pNotebook->CleanUp();
 
-  // now check that notebook is not empty
-  if (GetPageCount() == 0)
-    DoClose(dummy);
+  if(GetPageCount()==0)
+    Close();
 }
 
 /*----------------------------------------------------------------------
@@ -809,8 +744,9 @@ BEGIN_EVENT_TABLE(AmayaNormalWindow, AmayaWindow)
   EVT_MENU_OPEN(  AmayaNormalWindow::OnMenuOpen )
   EVT_MENU_CLOSE( AmayaNormalWindow::OnMenuClose )
   EVT_MENU_HIGHLIGHT_ALL( AmayaNormalWindow::OnMenuHighlight )
-  EVT_MENU(wxID_ANY,   AmayaNormalWindow::OnMenuItem ) 
-  //  EVT_CLOSE(      AmayaNormalWindow::OnClose )
+  EVT_MENU(wxID_ANY,   AmayaNormalWindow::OnMenuItem )
+   
+  EVT_CLOSE(AmayaNormalWindow::OnClose )
 
   EVT_SPLITTER_SASH_POS_CHANGED(wxID_ANY, 	AmayaNormalWindow::OnSplitterPosChanged )
   EVT_SPLITTER_DCLICK(wxID_ANY, 		AmayaNormalWindow::OnSplitterDClick )

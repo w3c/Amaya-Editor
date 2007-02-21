@@ -92,7 +92,7 @@ class AmayaNormalWindow : public AmayaWindow
   void OpenPanel();
   virtual void RefreshShowPanelToggleMenu();
 
-  virtual void DoClose( bool & veto );
+//  virtual void DoClose( bool & veto );
 
  protected:
   DECLARE_EVENT_TABLE()
@@ -105,6 +105,8 @@ class AmayaNormalWindow : public AmayaWindow
   void OnSplitterPosChanged( wxSplitterEvent& event );
   void OnSplitPanelButton( wxCommandEvent& event );
   void OnNotebookPageChanged( wxNotebookEvent& event );
+
+  void OnClose(wxCloseEvent& event);
 
   AmayaPanel *      m_pPanel;     // current selected panel
   AmayaNotebook *   m_pNotebook;         // tabs container

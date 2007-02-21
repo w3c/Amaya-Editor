@@ -238,9 +238,6 @@ AmayaFrame * AmayaPage::AttachFrame( AmayaFrame * p_frame, int position )
       //      m_pSplitButtonBottom->ShowQuickSplitButton( false );
     }
   
-  // try to avoid refresh because it forces a total canvas redraw (it's not very optimized)
-  //p_frame->Refresh();
-
   SetAutoLayout(TRUE);
 
   // remember the last open view
@@ -332,16 +329,6 @@ AmayaFrame * AmayaPage::DetachFrame( int position )
       //      m_pSplitButtonBottom->ShowQuickSplitButton( true );
     }
   
-  // simulate a size event to refresh the canvas ...
-  // this is usefull when a document is modified and there is many open views :
-  // if nothing is done here when a view is detached from the page, a undraw
-  // zone appears into the canvas on the other frame...
-  // this is not very clean but it works (maybe try to remove this on further wxWidgets version)
-  if (p_other_frame && p_other_frame->GetCanvas())
-    {
-      wxSizeEvent event( p_other_frame->GetCanvas()->GetSize() );
-      wxPostEvent(p_other_frame->GetCanvas(), event );
-    }
 
   // check if there is no more frame in the page
   // if there is no more frame, the master frame must be erased 
@@ -468,13 +455,13 @@ wxSplitterWindow * AmayaPage::GetSplitterWindow()
   -----------------------------------------------------------------------*/
 void AmayaPage::DoSplitUnsplit()
 {
+    AmayaFrame * p_frame = GetFrame(1);
+    Document document = FrameTable[p_frame->GetFrameId()].FrDoc;
+    View view         = FrameTable[p_frame->GetFrameId()].FrView;
+
   if (!m_pSplitterWindow->IsSplit())
     {
       // TODO: montrer la meme vue que la premiere frame
-      AmayaFrame * p_frame = GetFrame(1);
-      Document document = FrameTable[p_frame->GetFrameId()].FrDoc;
-      View view         = FrameTable[p_frame->GetFrameId()].FrView;
-      
       if ( !strcmp(m_LastOpenViewName, "Formatted_view") )
         TtaExecuteMenuAction ("ShowSource", document, view, FALSE);
       else if ( !strcmp(m_LastOpenViewName, "Links_view") )
@@ -488,8 +475,8 @@ void AmayaPage::DoSplitUnsplit()
     }
   else
     {
-      bool dummy = false;
-      m_pBottomFrame->DoClose(dummy);
+      if(m_pBottomFrame)
+        m_pBottomFrame->Close();
     }
 }
 
@@ -646,59 +633,53 @@ void AmayaPage::AdjustSplitterPos( int height, int width )
     m_pSplitterWindow->SetSashPosition( (int)new_slash_pos );
 }
 
+
 /*----------------------------------------------------------------------
  *       Class:  AmayaPage
- *      Method:  DoClose
- * Description:  called when the AmayaPage is closed.
- *               just call generic callbacks to close top frame and bottom frame
+ *      Method:  OnClose
+ * Description:  Intercept the CLOSE event and prevent it if ncecessary.
   -----------------------------------------------------------------------*/
-void AmayaPage::DoClose(bool & veto)
+void AmayaPage::OnClose(wxCloseEvent& event)
 {
-  TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaPage::DoClose topframe=%d bottomframe=%d"),
+  TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaPage::OnClose topframe=%d bottomframe=%d"),
                  m_pTopFrame ? m_pTopFrame->GetFrameId() : -1,
                  m_pBottomFrame ? m_pBottomFrame->GetFrameId() : -1 );
   
-  /* I suppose the page will be closed */
-  /* but it can be override to FALSE if the top or bottom frame has been modified */
-  m_IsClosed = TRUE;
+  bool bCanTop = true;
+  bool bCanBottom = true;
   
-  int frame_id = 0;
-  AmayaFrame * p_AmayaFrame = NULL;
-  // Kill top frame
-  if ( m_pTopFrame )
+  if(m_pTopFrame)
+  {
+    if(!m_pTopFrame->Close())
     {
-      p_AmayaFrame = m_pTopFrame;
-      frame_id     = m_pTopFrame->GetFrameId();
-      
-      // try to close the frame : the user can choose to close or not with a dialog
-      p_AmayaFrame->DoClose( veto );
-      
-      // if the user doesn't want to close then just reattach the frame
-      if ( !TtaFrameIsClosed (frame_id) )
-        {
-          // if the frame didnt die, just re-attach it
-          AttachFrame(p_AmayaFrame, 1);
-          m_IsClosed = FALSE;
-        }
+      m_pTopFrame = NULL;
+      bCanTop = false;
     }
+  }
+  if(m_pBottomFrame)
+  {
+    if(!m_pBottomFrame->Close())
+    {
+      m_pBottomFrame = NULL;
+      bCanTop = false;
+    }
+  }
   
-  // Kill bottom frame
-  if ( m_pBottomFrame )
-    { 
-      p_AmayaFrame = m_pBottomFrame;
-      frame_id     = m_pBottomFrame->GetFrameId();
-      // try to close the frame : the user can choose to close or not with a dialog
-      p_AmayaFrame->DoClose( veto );
-      
-      // if the user don't want to close then just reattach the frame
-      if ( !TtaFrameIsClosed (frame_id) )
-        {
-          // if the frame didnt die, just re-attach it
-          AttachFrame(p_AmayaFrame, 2);
-          m_IsClosed = FALSE;
-        }
-      
-    }
+  if(!(bCanTop&&bCanBottom))
+  {
+    event.Veto();
+  }
+}
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaPage
+ *      Method:  CleanUp
+ * Description:  check that there is no empty pages
+ *      Return:  true if the page can be removed from parent
+  -----------------------------------------------------------------------*/
+bool AmayaPage::CleanUp()
+{
+  return (!m_pTopFrame && !m_pBottomFrame);
 }
 
 /*----------------------------------------------------------------------
@@ -967,12 +948,9 @@ BEGIN_EVENT_TABLE(AmayaPage, wxPanel)
   EVT_SPLITTER_UNSPLIT( -1, 		AmayaPage::OnSplitterUnsplit )
   
   EVT_SIZE( 				AmayaPage::OnSize )
-  //  EVT_CLOSE( 				AmayaPage::OnClose )
-  //  EVT_PAINT(                            AmayaPage::OnPaint )  
+  EVT_CLOSE( 				AmayaPage::OnClose )
 
   EVT_BUTTON( -1,                       AmayaPage::OnSplitButton)
-
-  //  EVT_CONTEXT_MENU(                     AmayaPage::OnContextMenu )
 
 END_EVENT_TABLE()
 

@@ -78,58 +78,31 @@ AmayaSimpleWindow::~AmayaSimpleWindow()
 
 /*----------------------------------------------------------------------
  *       Class:  AmayaSimpleWindow
- *      Method:  OnCloseButton
- * Description:  just close the window
+ *      Method:  OnClose
+ * Description:  Intercept the CLOSE event and prevent it if ncecessary.
   -----------------------------------------------------------------------*/
-void AmayaSimpleWindow::OnCloseButton(wxCommandEvent& event)
+void AmayaSimpleWindow::OnClose(wxCloseEvent& event)
 {
-  bool dummy = false;
-  // just close this window
-  if (m_pFrame)
-    DoClose(dummy);
-}
-
-/*----------------------------------------------------------------------
- *       Class:  AmayaSimpleWindow
- *      Method:  DoClose
- * Description:  just close the window
-  -----------------------------------------------------------------------*/
-void AmayaSimpleWindow::DoClose(bool& veto)
-{
-  // do nothing if the windows is allready closing itself
-  if ( m_IsClosing )
-    return;
-  
-  m_IsClosing = TRUE;
-  
-  // try to close the contained frame
-  if ( m_pFrame )
+  if(m_pFrame)
+  {
+    int  frame_id = m_pFrame->GetFrameId();
+    bool bClose;
+    
+    // Query close contained frame
+    bClose   = m_pFrame->Close();
+    if ( !TtaFrameIsClosed (frame_id) || !bClose)
     {
-      // Ask the notebook to close its pages
-      int frame_id     = m_pFrame->GetFrameId();  
-      // try to close the frame : the user can choose to close or not with a dialog
-      m_pFrame->DoClose( veto );
-      
-      // if the user don't want to close then just reattach the frame
-      if ( !TtaFrameIsClosed (frame_id) )
-        {
-          // if the frame didnt die, just re-attach it
-          AttachFrame( m_pFrame );
-        }
-      else
-        {
-          m_pFrame = NULL;
-          veto = FALSE;
-        }
+      // if the frame didnt die, just re-attach it
+      AttachFrame( m_pFrame );
+      event.Veto();
+      return;
     }
-  else
-    veto = FALSE;
-
-  // the frame is closed, just close the window
-  if (!veto)
-    Close();
-
-  m_IsClosing = FALSE; 
+    else
+    {
+      m_pFrame = NULL;
+    }
+  }
+  Destroy();
 }
 
 /*----------------------------------------------------------------------
@@ -194,10 +167,7 @@ AmayaFrame * AmayaSimpleWindow::DetachFrame()
       m_pFrame = NULL;
     }
 
-  // if we detach the frame form a simple window, it's because we want to kill the window
-  // so close it
-  bool dummy = false;
-  DoClose(dummy);
+  Close();
 
   return p_frame;
 }
@@ -209,10 +179,8 @@ AmayaFrame * AmayaSimpleWindow::DetachFrame()
   -----------------------------------------------------------------------*/
 void AmayaSimpleWindow::CleanUp()
 {
-  bool dummy = false;
-  // now check that the frame exist
   if (!m_pFrame)
-    DoClose(dummy);
+      Close();
 }
 
 /*----------------------------------------------------------------------
@@ -220,8 +188,7 @@ void AmayaSimpleWindow::CleanUp()
  *  the callbacks are assigned to an event type
  *----------------------------------------------------------------------*/
 BEGIN_EVENT_TABLE(AmayaSimpleWindow, AmayaWindow)
-  //  EVT_CLOSE(      AmayaSimpleWindow::OnClose )
-  //  EVT_BUTTON( -1, AmayaSimpleWindow::OnCloseButton )
+  EVT_CLOSE(AmayaSimpleWindow::OnClose )
 END_EVENT_TABLE()
 
 #endif /* #ifdef _WX */
