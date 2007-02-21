@@ -4098,14 +4098,14 @@ static sourceTransition sourceAutomaton[] =
     {23, '[', (Proc) StartCData, 24},
     {23, '*', (Proc) PutInBuffer, 23},
     /* state 24: "<![CDATA[" has been read: read its contents */
-    {24, ']', (Proc) Do_nothing, 25},
+    {24, ']', (Proc) PutInBuffer, 25},
     {24, '\n', (Proc) EndOfCDataLine, 24},
     {24, '*', (Proc) PutInBuffer, 24},
     /* state 25: "]" has been read: check the second "]" */
-    {25, ']', (Proc) Do_nothing, 26},
+    {25, ']', (Proc) PutInBuffer, 26},
     {25, '*', (Proc) PutInBuffer, 24},
     /* state 26: "]]" has been read: check the end of CDATA */
-    {26, ']', (Proc) Do_nothing, 26},
+    {26, ']', (Proc) PutInBuffer, 26},
     {26, '>', (Proc) EndOfCData, 0},
     {26, '*', (Proc) PutInBuffer, 24},
 
