@@ -3758,7 +3758,7 @@ static void EndOfDoctypeDecl (char c)
   unsigned char  *buffer;
 
   CloseBuffer ();
-  buffer = (unsigned char*)TtaGetMemory (strlen ((char *)inputBuffer) + 4);
+  buffer = (unsigned char*)TtaGetMemory (strlen ((char *)inputBuffer) + 20);
   strcpy ((char *)buffer, (char *)"<!DOCTYPE ");
   j = strlen ((char *)buffer);
   /* process the Doctype declaration available in inputBuffer */
@@ -4098,13 +4098,16 @@ static sourceTransition sourceAutomaton[] =
     {23, '[', (Proc) StartCData, 24},
     {23, '*', (Proc) PutInBuffer, 23},
     /* state 24: "<![CDATA[" has been read: read its contents */
-    {24, '>', (Proc) Do_nothing, 0},
-    {24, ']', (Proc) Do_nothing, 24},
+    {24, ']', (Proc) Do_nothing, 25},
     {24, '\n', (Proc) EndOfCDataLine, 24},
     {24, '*', (Proc) PutInBuffer, 24},
-    /* state 25: "]" has been read: check the end of CDATA */
-    {25, ']', (Proc) EndOfCData, 24},
-    {25, '*', (Proc) PutInBuffer, -1},
+    /* state 25: "]" has been read: check the second "]" */
+    {25, ']', (Proc) Do_nothing, 26},
+    {25, '*', (Proc) PutInBuffer, 24},
+    /* state 26: "]]" has been read: check the end of CDATA */
+    {26, ']', (Proc) Do_nothing, 26},
+    {26, '>', (Proc) EndOfCData, 0},
+    {26, '*', (Proc) PutInBuffer, 24},
 
     /* sub automaton for reading entities in various contexts */
     /* state -1 means "return to calling state" */
