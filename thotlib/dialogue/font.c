@@ -1712,7 +1712,8 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
                c == 0x200E /* lrm */ || c == 0x200F /* rlm */ ||
                c == 0x202B /* rle */ || c == 0x202C /* pdf */ || 
                c == 0x202D /* lro */ || c == 0x202E /* rlo */ ||
-               c == 0x2061 /*ApplyFunction*/ || c == 0x2062 /*InvisibleTimes*/)
+               c == 0x2061 /*ApplyFunction*/ ||
+               c == 0x2062 /*InvisibleTimes*/ || c == 0x2063 /*InvisibleComma*/)
         {
           c =  INVISIBLE_CHAR;
           code = '1';
