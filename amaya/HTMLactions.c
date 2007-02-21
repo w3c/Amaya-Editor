@@ -2734,7 +2734,7 @@ void SynchronizeSourceView (NotifyElement *event)
               TtaNextSibling (&el);
             }
         }
-      sprintf (message, "char %d", firstChar);
+      sprintf (message, "Character: %d", firstChar);
       TtaSetStatus (doc, 1, message, NULL);
     }
 }
@@ -2837,7 +2837,7 @@ void GotoLine (Document doc, int line, int index, ThotBool selpos)
                 TtaSetStatusSelectedElement(doc, 1, el);
                 }
               // display the char index
-              sprintf (message, "char %d", index);
+              sprintf (message, "Character: %d", index);
               TtaSetStatus (doc, 1, message, NULL);
             }
         }
@@ -3079,7 +3079,7 @@ void SelectionChanged (NotifyElement *event)
                   TtaPreviousSibling (&child);
                 }
               // display the char index
-              sprintf (message, "char %d", index);
+              sprintf (message, "Character: %d", index);
               TtaSetStatus (doc, 1, message, NULL);
             }
           else
