@@ -2096,7 +2096,7 @@ static void CreateMathConstruct (int construct, ...)
   
   if (!emptySel)
     /* selection is not empty.
-       Try to transform it into the requested type*/
+       Try to transform it into the requested type */
     {
       if (!(construct < 20 || construct == 26 || construct == 30 || construct == 36 || construct == 59))
         emptySel = TRUE; /* constructions with no "natural" insert point for the selection */
@@ -2121,7 +2121,7 @@ static void CreateMathConstruct (int construct, ...)
                   TtaSelectElement (doc, selected);
                 }
               else if (construct == 59 || construct == 60)
-                {/* accents with a horizontal strech */
+                {/* accents with a horizontal stretch */
                 symbol = va_arg(varpos, int);
                 child = TtaGetParent (child);
                 AttachIntHorizStretch(child,doc);
@@ -2213,12 +2213,12 @@ static void CreateMathConstruct (int construct, ...)
             symbol_name = va_arg(varpos, unsigned char*);
 
           if (type == -1)
-            {/* ask the user about the way the symbol have to be displayed */
+            {/* ask the user about the way the symbol has to be displayed */
             type = GetOperatorType(doc);
             }
        
           if (type >= 1)
-            {/* change the plus and times symbols by sum and prod */
+            {/* change the plus and times symbols to sum and prod */
             if (symbol == '+')
               symbol = 8721;
             else if (symbol == 215)
@@ -2232,7 +2232,7 @@ static void CreateMathConstruct (int construct, ...)
               child = leaf;
               InsertEmptyConstruct (&child, MathML_EL_MROW, doc);
               TtaDeleteTree (leaf, doc);
-              selected = child;
+              selected = TtaGetFirstChild (child);
               /* ask how many the user wants */
               number = GetOccurrences (doc, TtaGetMessage (AMAYA, AM_NUMBER_OPERATORS), 5, 1);
               for (i = 0 ; i < number; i++)
@@ -5269,7 +5269,8 @@ static ThotBool MathMoveForward ()
   Document      doc;
   Element       el, nextEl, leaf, ancestor, sibling, selected;
   ElementType   elType, successorType;
-  int           firstChar, lastChar, len;
+  AttributeType attrType;
+  int           firstChar, lastChar, len, i;
   NotifyElement event;
   ThotBool      done, found, ok;
 
@@ -5299,9 +5300,36 @@ static ThotBool MathMoveForward ()
         }
     }
   if (!done)
+    /* get the following element in the tree structure */
     {
-      /* get the following element in the tree structure */
-      nextEl = TtaGetSuccessor (el);
+      /* if there is an empty Construct leaf among the next few elements,
+         choose it  */
+      sibling = el;
+      nextEl = NULL;
+      for (i = 1; i < 4 && sibling && !nextEl; i++)
+        {
+          sibling = TtaGetFirstLeaf(TtaGetSuccessor (sibling));
+          if (sibling)
+            {
+              successorType = TtaGetElementType (sibling);
+              if (strcmp (TtaGetSSchemaName(successorType.ElSSchema),"MathML"))
+                /* we are no longer in the math expression. Do not go further*/
+                sibling = NULL;
+              else
+                if (successorType.ElTypeNum == MathML_EL_Construct ||
+                    successorType.ElTypeNum == MathML_EL_Construct1)
+                  /* this an empy construct */
+                  {
+                    attrType.AttrSSchema = successorType.ElSSchema;
+                    attrType.AttrTypeNum = MathML_ATTR_IntPlaceholder;
+                    if (!TtaGetAttribute (sibling, attrType))
+                      /* and it is not a placeholder. Take it. */
+                      nextEl = sibling;
+                  }
+            }
+        }
+      if (!nextEl)
+        nextEl = TtaGetSuccessor (el);
       /* skip comments */
       if (nextEl)
         {
