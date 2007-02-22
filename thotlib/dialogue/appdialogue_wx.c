@@ -2151,6 +2151,8 @@ ThotBool TtaHandleShortcutKey( wxKeyEvent& event )
           (thot_keysym == 'C' || thot_keysym == 'X' || thot_keysym == 'V' || thot_keysym == 'Z' ||
           thot_keysym == 'c' || thot_keysym == 'x' || thot_keysym == 'v' || thot_keysym == 'z')) )*/
     {
+#ifndef _WINDOWS
+	  // Windows already intercepts the command
       if (p_combo_box)
         {
           if (thot_keysym == 67) // Ctrl C
@@ -2173,6 +2175,7 @@ ThotBool TtaHandleShortcutKey( wxKeyEvent& event )
           else if (thot_keysym == 90) // Ctrl Z
             p_text_ctrl->Undo();
         }
+#endif /* _WINDOWS */
       return true;      
     }
 
