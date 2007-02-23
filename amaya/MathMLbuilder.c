@@ -973,40 +973,78 @@ void SetSingleIntHorizStretchAttr (Element el, Document doc, Element* selEl)
                           len = 2;
                           TtaGiveBufferContent (textEl, text, len, &lang);
                           script = TtaGetScript (lang);
-                          if (text[0] == '-' || text[0] == '_' || text[0] == 0xAF ||
-                              text[0] == 0x0332 || text[0] == 0x2212)
+                          switch(text[0])
+                            {
+                                case 0x2196: /* UpperLeftArrow */
+                                  c = 7;
+                                break;
+                                case 0x2197: /* UpperRightArrow */
+                                  c = 8;
+                                break;
+                                case 0x2198: /* LowerRightArrow */
+                                  c = 9;
+                                break;
+                                case 0x2199: /* LowerLeftArrow */
+                                  c = 10;
+                                break;
+
+                            case '-':
+                            case '_':
+                            case 0xAF:
+                            case 0x0332:
+                            case 0x2212:
                             /* a horizontal line in the middle of the box */
-                            c = 'h'; 
-                          else if (text[0] == 0x302)
-                            c = 'H'; /* Hat */
-                          else if (text[0] == 0x2C7)
-                            c = 'k'; /* Hacek */
-                          else if (text[0] == 0x2DC)
-                            c = 'T'; /* Diacritical Tilde */
-                          else  if (text[0] == 0x294E)
-                            c = '4';  /* double vector */
-                          else  if (text[0] == 0x21BC)
-                            c = '5';  /* left vector */
-                          else  if (text[0] == 0x21C0)
-                            c = '6';  /* right vector */
-                          else  if (text[0] == 0x2194)
-                            c = 'A';  /* horizontal double arrow */
-                          else  if (text[0] == 0x2190)
-                            c = 'L';  /* arrow left */
-                          else if (text[0] == 0x2192)
-                            c = 'R';  /* arrow right */
-                          else if (text[0] == 0xFE37)
-                            c = 'o';  /* Over brace */
-                          else if (text[0] == 0xFE38)
-                            c = 'u';  /* Under brace */
-                          else if (text[0] == 0xFE35)
-                            c = 'p';  /* Over parenthesis */
-                          else if (text[0] == 0xFE36)
-                            c = 'q';  /* Under parenthesis */
-                          else if (text[0] == 0x23B4)
-                            c = 'b';  /* Over bracket */
-                          else if (text[0] == 0x23B5)
-                            c = 'B';  /* Under bracket */
+                              c = 'h'; 
+                            break;
+                            case 0x302:
+                              c = 'H'; /* Hat */
+                            break;
+                            case 0x2C7:
+                              c = 'k'; /* Hacek */
+                            break;
+                            case 0x2DC:
+                              c = 'T'; /* Diacritical Tilde */
+                            break;
+                            case 0x294E:
+                              c = '4';  /* double vector */
+                              break;
+                            case 0x21BC:
+                              c = '5';  /* left vector */
+                            break;
+                            case 0x21C0:
+                              c = '6';  /* right vector */
+                            break;
+                            case 0x2194:
+                              c = 'A';  /* horizontal double arrow */
+                            break;
+                            case 0x2190:
+                              c = 'L';  /* arrow left */
+                            break;
+                            case 0x2192:
+                              c = 'R';  /* arrow right */
+                            break;
+                            case 0xFE37:
+                              c = 'o';  /* Over brace */
+                            break;
+                            case 0xFE38:
+                              c = 'u';  /* Under brace */
+                            break;
+                            case 0xFE35:
+                              c = 'p';  /* Over parenthesis */
+                            break;
+                            case 0xFE36:
+                              c = 'q';  /* Under parenthesis */
+                            break;
+                            case 0x23B4:
+                              c = 'b';  /* Over bracket */
+                            break;
+                            case 0x23B5:
+                              c = 'B';  /* Under bracket */
+                            break;
+                            default:
+                            break;
+                            }
+
                           if (c != EOS)
                             doit = TRUE;
                         }
@@ -1198,12 +1236,16 @@ void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
                   script = TtaGetScript (lang);
                   stretchable = TRUE;
                   for (i = 0; i < len; i++)
-                    if ((text[i] < 0x222B || text[i] > 0x2233) &&
-                        text[i] != 0x2191 && text[i] != 0x2193 &&
-                        text[i] != 0x2195 &&
-                        text[i] != 0x21D1 && text[i] != 0x21D3 &&
-                        text[i] != 0x21D5)
-                      /* accept only symbols like simple integral, double or
+                    if ((text[i] < 0x222B || text[i] > 0x2233) && /* Integrals */
+                        text[i] != 0x2191 && text[i] != 0x2193 && /* Up and Down arrows */
+                        text[i] != 0x2195 && /* UpDownArrow */
+                        text[i] != 0x2196 && /* UpperLeftArrow */
+                        text[i] != 0x2197 && /* UpperRightArrow */
+                        text[i] != 0x2198 && /* LowerRightArrow */
+                        text[i] != 0x2199 && /* LowerLeftArrow */
+                        text[i] != 0x21D1 && text[i] != 0x21D3 &&  /* UpDouble and DownDouble arrows */
+                        text[i] != 0x21D5 /* UpDownDoubleArrow */
+                       )/* accept only symbols like simple integral, double or
                          triple integral, contour integral, etc. or vertical
                          arrows (add more arrows *****) */
                       stretchable = FALSE;
@@ -1221,29 +1263,57 @@ void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
                           elType.ElTypeNum = MathML_EL_SYMBOL_UNIT;
                           for (i = 0; i < len; i++)
                             {
-                              c = (unsigned char) text[i];
-                              if (text[i] == 0x222B)
-                                c = 'i';
-                              else if (text[i] == 0x222C)
-                                c = 'd';
-                              else if (text[i] == 0x222D)
-                                c = 't';
-                              else if (text[i] == 0x222E)
-                                c = 'c';
-                              else if (text[i] == 0x222F)
-                                c = 'e';
-                              else if (text[i] == 0x2230)
-                                c = 'f';
-                              else if (text[i] == 0x2231)
-                                c = '1';
-                              else if (text[i] == 0x2232)
-                                c = '2';
-                              else if (text[i] == 0x2233)
-                                c = '3';
-                              else if (text[i] == 0x2191)
-                                c = '^';
-                              else if (text[i] == 0x2193)
-                                c = 'V';
+                              switch(text[i])
+                                {
+                                case 0x2196: /* UpperLeftArrow */
+                                  c = 7;
+                                break;
+                                case 0x2197: /* UpperRightArrow */
+                                  c = 8;
+                                break;
+                                case 0x2198: /* LowerRightArrow */
+                                  c = 9;
+                                break;
+                                case 0x2199: /* LowerLeftArrow */
+                                  c = 10;
+                                break;
+                                case 0x222B: /* integral */
+                                  c = 'i';
+                                break;
+                                case 0x222C: /* double integral */
+                                  c = 'd';
+                                break;
+                                case 0x222D: /* triple integral */
+                                  c = 't';
+                                break;
+                                case 0x222E: /* contour integral */
+                                  c = 'c';
+                                break;
+                                case 0x222F: /* double contour integral */
+                                  c = 'e';
+                                break;
+                                case 0x2230: /* triple contour integral */
+                                  c = 'f';
+                                break;
+                                case 0x2231: /* Clockwise Integral */
+                                  c = '1';
+                                break;
+                                case 0x2232: /* Clockwise Contour Integral */
+                                  c = '2';
+                                break;
+                                case 0x2233: /* Counter Clockwise Contour Integral */
+                                  c = '3';
+                                break;
+                                case 0x2191: /* UpArrow */
+                                  c = '^';
+                                break;
+                                case 0x2193: /* DownArrow */
+                                  c = 'V';
+                                break;
+                                default:
+                                  c = (unsigned char) text[i];
+                                break;
+                                }
                               symbolEl = TtaNewElement (doc, elType);
                               TtaSetGraphicsShape (symbolEl, c, doc);
                               TtaInsertSibling (symbolEl, textEl, TRUE,doc);

@@ -741,7 +741,7 @@ void DrawVector (int frame, int thick, int style, int x, int y, int l,
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
 void DrawArrow (int frame, int thick, int style, int x, int y, int l, int h,
-                int orientation, int fg)
+                int orientation, int type, int fg)
 {
   int                 xm, ym, xf, yf;
 

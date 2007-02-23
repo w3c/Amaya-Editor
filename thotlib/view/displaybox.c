@@ -435,6 +435,19 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
               if (useStix)
                 DrawStixBracket (frame, xd, yd, width, height, 1, 3, size, fg);
               break;
+            case 7: /* UpperLeftArrow */
+              DrawArrow (frame, i, 5, xd, yd, width, height, 135, 0, fg);
+              break;
+            case 8: /* UpperRightArrow */
+              DrawArrow (frame, i, 5, xd, yd, width, height, 45, 0, fg);
+              break;
+            case 9: /* LowerRightArrow */
+              DrawArrow (frame, i, 5, xd, yd, width, height, 315, 0, fg);
+              break;
+            case 10: /* LowerLeftArrow */
+              DrawArrow (frame, i, 5, xd, yd, width, height, 225, 0, fg);
+              break;
+
 
             case '1':/* Clockwise Integral */
               if (useStix)
@@ -456,16 +469,16 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
               break;
 #ifdef _GL
             case '4':
-              DrawVector (frame, i, 5, xd, yd, width, height, -1, fg);
+              DrawArrow (frame, i, 5, xd, yd, width, height, -1, 7, fg);
               break;
             case '5':
-              DrawVector (frame, i, 5, xd, yd, width, height, 180, fg);
+              DrawArrow (frame, i, 5, xd, yd, width, height, 180, 7, fg);
               break;
             case '6':
-              DrawVector (frame, i, 5, xd, yd, width, height, 0, fg);
+              DrawArrow (frame, i, 5, xd, yd, width, height, 0, 7, fg);
               break;
             case 'A':
-              DrawArrow (frame, i, 5, xd, yd, width, height, -1, fg);
+              DrawArrow (frame, i, 5, xd, yd, width, height, -1, 0, fg);
               break;
             case 'b':/* horizontal bracket */
                 DrawHorizontalBracket (frame, i, 5, xd, yd, width, height, 0,fg);
@@ -556,13 +569,13 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
               DrawIntersection (frame, xd, yd, width, height, font, fg);
               break;
             case 'L':
-              DrawArrow (frame, i, 5, xd, yd, width, height, 180, fg);
+              DrawArrow (frame, i, 5, xd, yd, width, height, 180, 0, fg);
               break;
             case 'P':
               DrawPi (frame, xd, yd, width, height, font, fg);
               break;
             case 'R':
-              DrawArrow (frame, i, 5, xd, yd, width, height, 0, fg);
+              DrawArrow (frame, i, 5, xd, yd, width, height, 0, 0, fg);
               break;
             case 'S':
               if (useStix)
@@ -579,10 +592,10 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
               DrawUnion (frame, xd, yd, width, height, font, fg);
               break;
             case 'V':
-              DrawArrow (frame, i, 5, xd, yd, width, height, 270, fg);
+              DrawArrow (frame, i, 5, xd, yd, width, height, 270, 0, fg);
               break;
-            case '^':
-              DrawArrow (frame, i, 5, xd, yd, width, height, 90, fg);
+            case '^': /* UpArrow */
+              DrawArrow (frame, i, 5, xd, yd, width, height, 90, 0, fg);
               break;
             case '(':
               if (useStix)
@@ -904,28 +917,28 @@ void  DisplayGraph (PtrBox pBox, int frame, ThotBool selected,
           DrawSlash (frame, i, style, xd, yd, width, height, 1, fg);
           break;
         case '>':
-          DrawArrow (frame, i, style, xd, yd, width, height, 0, fg);
+          DrawArrow (frame, i, style, xd, yd, width, height, 0, 0, fg);
           break;
         case 'E':
-          DrawArrow (frame, i, style, xd, yd, width, height, 45, fg);
+          DrawArrow (frame, i, style, xd, yd, width, height, 45, 0, fg);
           break;
         case '^':
-          DrawArrow (frame, i, style, xd, yd, width, height, 90, fg);
+          DrawArrow (frame, i, style, xd, yd, width, height, 90, 0, fg);
           break;
         case 'O':
-          DrawArrow (frame, i, style, xd, yd, width, height, 135, fg);
+          DrawArrow (frame, i, style, xd, yd, width, height, 135, 0, fg);
           break;
         case '<':
-          DrawArrow (frame, i, style, xd, yd, width, height, 180, fg);
+          DrawArrow (frame, i, style, xd, yd, width, height, 180, 0, fg);
           break;
         case 'o':
-          DrawArrow (frame, i, style, xd, yd, width, height, 225, fg);
+          DrawArrow (frame, i, style, xd, yd, width, height, 225, 0, fg);
           break;
         case 'V':
-          DrawArrow (frame, i, style, xd, yd, width, height, 270, fg);
+          DrawArrow (frame, i, style, xd, yd, width, height, 270, 0, fg);
           break;
         case 'e':
-          DrawArrow (frame, i, style, xd, yd, width, height, 315, fg);
+          DrawArrow (frame, i, style, xd, yd, width, height, 315, 0, fg);
           break;
 	    
         case 'P':

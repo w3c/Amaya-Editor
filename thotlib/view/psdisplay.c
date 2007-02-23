@@ -824,7 +824,7 @@ void DrawVector (int frame, int thick, int style, int x, int y, int l,
    225, 270 ou 315.
   ----------------------------------------------------------------------*/
 void DrawArrow (int frame, int thick, int style, int x, int y, int l,
-		int h, int direction, int fg)
+		int h, int direction, int type, int fg)
 {
 #ifndef _WX
    int                 xm, ym, xf, yf, lg;

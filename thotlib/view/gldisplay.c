@@ -521,117 +521,184 @@ static void ArrowDrawing (int frame, int x1, int y1, int x2, int y2,
   point[2].y = yd;
 
   GL_DrawPolygon (point, 3);
-    
 }
 
 /*----------------------------------------------------------------------
-  DrawArrow draw a vector
-  ----------------------------------------------------------------------*/
-void DrawVector (int frame, int thick, int style, int x, int y, int l,
-                 int h, int orientation, int fg)
-{
-  int                 xm, ym, xf, yf, D = thick + 5;
-
-  if (fg < 0 || thick <= 0)return;
-  y += FrameTable[frame].FrTopMargin;
-  xm = x + ((l - thick) / 2);
-  xf = x + l - 1;
-  ym = y + ((h - thick) / 2);
-  yf = y + h - 1;
-
-  InitDrawing (style, thick, fg);
-
-  if (orientation == -1)
-    {
-      /* draw a double vector */
-      DoDrawOneLine (frame, x, ym, xf, ym);
-      DoDrawOneLine (frame, x, ym, x + D, ym - D);
-      DoDrawOneLine (frame, xf - D, ym - D, xf, ym);
-    }
-  else if (orientation == 0)
-    {
-      /* draw a right vector */
-      DoDrawOneLine (frame, x, ym, xf, ym);
-      DoDrawOneLine (frame, xf - D, ym - D, xf, ym);
-    }
-  else if (orientation == 180)
-    {
-      /* draw a left vector */
-      DoDrawOneLine (frame, x, ym, xf, ym);
-      DoDrawOneLine (frame, x, ym, x + D, ym - D);
-    }
-}
-
-
-/*----------------------------------------------------------------------
-  DrawArrow draw an arrow following the indicated direction in degrees :
-  0 (right arrow), 45, 90, 135, 180, 225, 270 ou 315.
-  parameter fg indicates the drawing color
+  DrawArrow draw an arrow.
+  orientation in degrees : 0 (right arrow), 45, 90, 135, 180, 225, 270 ou 315.
+  type : 0 = Arrow, 1 = Arrow with opposite directions, 2 = DoubleArrow,
+         3 = DoubleArrow with opposite directions
+         4 = two arrows with opposite directions, 5 = TeeArrow, 6 = ArrowBar
+         7 = Vector,  8 = Vector with opposite directions, 9 = TeeVector,
+         10 = VectorBar, 
+         11 = two vectors with opposite directions = Equilibrium
+         12 = ReverseVector, 13 = ReverseVector with opposite directions,
+         14 = TeeReverseVector, 15 = ReverseVectorBar
+         
+  fg : drawing color
   ----------------------------------------------------------------------*/
 void DrawArrow (int frame, int thick, int style, int x, int y, int l, int h,
-                int orientation, int fg)
+                int orientation, int type, int fg)
 {
-  int                 xm, ym, xf, yf;
+  int                 xm, ym, xf, yf, D1, D2;
 
   if (fg < 0 || thick <= 0)return;
+  InitDrawing (style, thick, fg);
+
   y += FrameTable[frame].FrTopMargin;
   xm = x + ((l - thick) / 2);
   xf = x + l - 1;
   ym = y + ((h - thick) / 2);
   yf = y + h - 1;
 
-  InitDrawing (style, thick, fg);
-  if (orientation == -1)
+  D1 = thick + 5;
+
+  /* Vector or ReverseVector */
+  if(type >= 12 && type <= 15)D2 = -D1; else D2 = D1;
+
+  /* Draw a Tee (type = 9, 14) or a Bar (type = 10, 15)  */
+  if(type == 9 || type == 10 || type == 14 || type == 15)
     {
-      /* draw a double horizontal arrow */
-      DoDrawOneLine (frame, x, ym, xf, ym);
-      ArrowDrawing (frame, x, ym, xf, ym, thick, fg);
-      ArrowDrawing (frame, xf, ym, x, ym, thick, fg);
+    switch(orientation)
+      {
+      case 0:
+        if(type == 9 || type == 14)DoDrawOneLine (frame, x, ym - D1, x, ym + D1);
+        else DoDrawOneLine (frame, xf, ym - D1, xf, ym + D1);
+      break;
+      case 90:
+        if(type == 9 || type == 14)DoDrawOneLine (frame, xm - D1, yf, xm + D1, yf);
+        else DoDrawOneLine (frame, xm - D1, y, xm + D1, y);
+      break;
+      case 180:
+        if(type == 9 || type == 14)DoDrawOneLine (frame, xf, ym - D1, xf, ym + D1);
+        else DoDrawOneLine (frame, x, ym - D1, x, ym + D1);
+      break;
+      case 270:
+        if(type == 9 || type == 14)DoDrawOneLine (frame, xm - D1, y, xm + D1, y);
+        else DoDrawOneLine (frame, xm - D1, yf, xm + D1, yf);
+      break;
+      default:
+      break;
+      }
     }
-  else if (orientation == 0)
+
+  switch(type)
     {
-      /* draw a right arrow */
-      DoDrawOneLine (frame, x, ym, xf, ym);
-      ArrowDrawing (frame, x, ym, xf, ym, thick, fg);
+    case 0: /* Arrow */
+    case 5: /* TeeArrow */
+    case 6: /* ArrowBar */
+      switch(orientation)
+        {
+        case 0:
+          /* draw a right arrow */
+          DoDrawOneLine (frame, x, ym, xf, ym);
+          ArrowDrawing (frame, x, ym, xf, ym, thick, fg);
+        break;
+        case 45:
+          DoDrawOneLine (frame, x, yf, xf - thick + 1, y);
+          ArrowDrawing (frame, x, yf, xf - thick + 1, y, thick, fg);
+        break;
+        case 90:
+          /* draw a bottom-up arrow */
+          DoDrawOneLine (frame, xm, y, xm, yf);
+          ArrowDrawing (frame, xm, yf, xm, y, thick, fg);
+        break;
+        case  135:
+          DoDrawOneLine (frame, x, y, xf - thick + 1, yf);
+          ArrowDrawing (frame, xf - thick + 1, yf, x, y, thick, fg);
+        break;
+        case 180:
+          /* draw a left arrow */
+          DoDrawOneLine (frame, x, ym, xf, ym);
+          ArrowDrawing (frame, xf, ym, x, ym, thick, fg);
+        break;
+        case 225:
+          DoDrawOneLine (frame, x, yf, xf - thick + 1, y);
+          ArrowDrawing (frame, xf - thick + 1, y, x, yf, thick, fg);
+        break;
+        case 270:
+          /* draw a top-down arrow */
+          DoDrawOneLine (frame, xm, y, xm, yf);
+          ArrowDrawing (frame, xm, y, xm, yf, thick, fg);
+        break;
+        case 315:
+          DoDrawOneLine (frame, x, y, xf - thick + 1, yf);
+          ArrowDrawing (frame, x, y, xf - thick + 1, yf, thick, fg);
+        break;
+        default:
+        break;
+        }
+    break;
+
+    case 1: /* Arrow with opposite directions */
+      switch(orientation)
+        {
+        case 0:
+          DoDrawOneLine (frame, x, ym, xf, ym);
+          ArrowDrawing (frame, x, ym, xf, ym, thick, fg);
+          ArrowDrawing (frame, xf, ym, x, ym, thick, fg);
+        break;
+
+        case 90:
+          DoDrawOneLine (frame, xm, y, xm, yf);
+          ArrowDrawing (frame, xm, yf, xm, y, thick, fg);
+          ArrowDrawing (frame, xm, y, xm, yf, thick, fg);
+        break;
+
+        default:
+        break;
+        }
+    break;
+
+    case 7: /* Vector */
+    case 9: /* TeeVector */
+    case 10: /* VectorBar */
+    case 12: /* ReverseVector */
+    case 14: /* TeeReverseVector*/ 
+    case 15: /* ReverseVectorBar */
+      switch(orientation)
+        {
+        case 0:
+          DoDrawOneLine (frame, x, ym, xf, ym);
+          DoDrawOneLine (frame, xf - D1, ym - D2, xf, ym);
+        break;
+        case 90:
+          DoDrawOneLine (frame, xm, y, xm, yf);
+          DoDrawOneLine (frame, xm, y, xm - D2, y + D1);
+        break;
+        case 180:
+          DoDrawOneLine (frame, x, ym, xf, ym);
+          DoDrawOneLine (frame, x, ym, x + D1, ym - D2);
+        break;
+        case 270:
+          DoDrawOneLine (frame, xm, y, xm, yf);
+          DoDrawOneLine (frame, xm, y, xm - D2, yf - D1);
+        break;
+        default:
+        break;
+        }
+    break;
+
+    case 8: /* Vector with opposite directions */
+    case 13: /* ReverseVector with opposite directions */
+      switch(orientation)
+        {
+        case 0:
+          DoDrawOneLine (frame, x, ym, xf, ym);
+          DoDrawOneLine (frame, xf - D1, ym - D2, xf, ym);
+          DoDrawOneLine (frame, x, ym, x + D1, ym - D2);
+        break;
+
+        default:
+        break;
+        }
+    break;
+
+    default:
+    break;
     }
-  else if (orientation == 45)
-    {
-      DoDrawOneLine (frame, x, yf, xf - thick + 1, y);
-      ArrowDrawing (frame, x, yf, xf - thick + 1, y, thick, fg);
-    }
-  else if (orientation == 90)
-    {
-      /* draw a bottom-up arrow */
-      DoDrawOneLine (frame, xm, y, xm, yf);
-      ArrowDrawing (frame, xm, yf, xm, y, thick, fg);
-    }
-  else if (orientation == 135)
-    {
-      DoDrawOneLine (frame, x, y, xf - thick + 1, yf);
-      ArrowDrawing (frame, xf - thick + 1, yf, x, y, thick, fg);
-    }
-  else if (orientation == 180)
-    {
-      /* draw a left arrow */
-      DoDrawOneLine (frame, x, ym, xf, ym);
-      ArrowDrawing (frame, xf, ym, x, ym, thick, fg);
-    }
-  else if (orientation == 225)
-    {
-      DoDrawOneLine (frame, x, yf, xf - thick + 1, y);
-      ArrowDrawing (frame, xf - thick + 1, y, x, yf, thick, fg);
-    }
-  else if (orientation == 270)
-    {
-      /* draw a top-down arrow */
-      DoDrawOneLine (frame, xm, y, xm, yf);
-      ArrowDrawing (frame, xm, y, xm, yf, thick, fg);
-    }
-  else if (orientation == 315)
-    {
-      DoDrawOneLine (frame, x, y, xf - thick + 1, yf);
-      ArrowDrawing (frame, x, y, xf - thick + 1, yf, thick, fg);
-    }
+
+
 }
 
 /*----------------------------------------------------------------------
@@ -2141,7 +2208,7 @@ void DrawTilde (int frame, int thick, int style, int x, int y, int l, int h, int
 
       for(X = 1, Y1 = 0; X <= Xmax; X++)
         {     
-        Y2 = Ymax*DSIN(X*M_PI_DOUBLE/Xmax);
+        Y2 = Ymax * (int) DSIN (X*M_PI_DOUBLE/Xmax);
         DoDrawOneLine (frame, x + (X-1)*l/Xmax, y + Y1, x + X*l/Xmax, y + Y2);
         Y1 = Y2;
         }

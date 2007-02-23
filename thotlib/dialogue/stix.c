@@ -569,7 +569,7 @@ void DrawStixIntegral (int frame, int x, int y, int l, int h,
         /* Counter Clockwise Contour integral */
         {
           if (h < LOW_CHAR)
-            symb = 0x1F;
+            symb = 0x29;
           else if (h < MID_CHAR)
             symb = 0x3A;
           else

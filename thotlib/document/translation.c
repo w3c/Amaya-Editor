@@ -1304,6 +1304,19 @@ static void TranslateLeaf (PtrElement pEl, ThotBool transChar,
                       case 6:
                         c = 0x230b; /* RightFloor */
                         break;
+                      case 0x2196: /* UpperLeftArrow */
+                        c = 7;
+                      break;
+                      case 8: /* UpperRightArrow */
+                        c = 0x2197;
+                      break;
+                      case 9: /* LowerRightArrow */
+                        c = 0x2198;
+                      break;
+                      case 10: /* LowerLeftArrow */
+                        c = 0x2199;
+                      break;
+
 
                       case '1':
                         c = 0x2231; /* Clockwise Integral */
