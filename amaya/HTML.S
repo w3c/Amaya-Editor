@@ -164,6 +164,8 @@ STRUCT
         FIELDSET;                                                { FIELDSET }
         Address;                                                { ADDRESS }
         IMG;                                                          { IMG }
+        INS;
+        DEL;
         Object;                                                        { OBJECT }
         Applet;                                                        { APPLET }
         MathML;                                                  { MATH }
@@ -209,8 +211,6 @@ STRUCT
                 BEGIN
                 Embed_Content;
                 END;
-        INS;
-        DEL;
         Template;           { XTiger }
         END;
 
@@ -406,12 +406,12 @@ STRUCT
   INS                                                                { INS }
      (ATTR cite; datetime = Text; InternalLink; ExternalLink) =
          { cite  datetime }
-        Block;
+        LIST OF (Element);
 
   DEL                                                                { DEL }
      (ATTR cite; datetime; InternalLink; ExternalLink) =
          { cite  datetime }
-        Block;
+        LIST OF (Element);
 
   ins                                                                { INS }
      (ATTR cite; datetime; InternalLink; ExternalLink) =
