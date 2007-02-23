@@ -328,7 +328,19 @@ AmayaFrame * AmayaPage::DetachFrame( int position )
       /* show again the split button */
       //      m_pSplitButtonBottom->ShowQuickSplitButton( true );
     }
-  
+
+#ifdef _WINDOWS
+  // simulate a size event to refresh the canvas ...
+  // this is usefull when a document is modified and there is many open views :
+  // if nothing is done here when a view is detached from the page, a undraw
+  // zone appears into the canvas on the other frame...
+  // this is not very clean but it works (maybe try to remove this on further wxWidgets version)
+  if (p_other_frame && p_other_frame->GetCanvas())
+    {
+      wxSizeEvent event( p_other_frame->GetCanvas()->GetSize() );
+      wxPostEvent(p_other_frame->GetCanvas(), event );
+    }
+#endif /* _WINDOWS */
 
   // check if there is no more frame in the page
   // if there is no more frame, the master frame must be erased 
@@ -456,6 +468,8 @@ wxSplitterWindow * AmayaPage::GetSplitterWindow()
 void AmayaPage::DoSplitUnsplit()
 {
     AmayaFrame * p_frame = GetFrame(1);
+    if (p_frame == NULL)
+      return;
     Document document = FrameTable[p_frame->GetFrameId()].FrDoc;
     View view         = FrameTable[p_frame->GetFrameId()].FrView;
 
