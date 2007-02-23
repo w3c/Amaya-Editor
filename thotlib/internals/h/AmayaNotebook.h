@@ -69,11 +69,9 @@ class AmayaNotebook : public wxNotebook
   int GetMContextFrame();
 
   void UpdatePageId();
-  
-  bool ClosePage(int page_id);
-  bool CloseAllButPage(int position);
 
-  void CleanUp();
+  // DoClose must be public because AmayaNormalWindow call it
+  void DoClose( bool & veto );
 
  protected:
   DECLARE_EVENT_TABLE()
@@ -81,8 +79,6 @@ class AmayaNotebook : public wxNotebook
   void OnPageChanging(wxNotebookEvent& event);
   void OnContextMenu( wxContextMenuEvent & event );
   void OnContextMenuItem( wxCommandEvent& event );
-
-  void OnClose(wxCloseEvent& event);
 
  protected:
   AmayaWindow *  m_pAmayaWindow; // amaya parent window

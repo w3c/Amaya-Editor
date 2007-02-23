@@ -88,6 +88,7 @@ class AmayaWindow : public wxFrame
   static void   DoAmayaAction( int command, int doc, int view );
   
   void          SetMenuBar( wxMenuBar * p_menu_bar );
+  bool          IsClosing();
   int		        GetWindowId() { return m_WindowId; }
   void          SetWindowId( int window_id ) { m_WindowId = window_id; }
   int           GetKind() const { return m_Kind; }
@@ -99,6 +100,8 @@ class AmayaWindow : public wxFrame
   virtual AmayaFrame * GetActiveFrame() const;
 
   virtual void ToggleFullScreen();
+
+  virtual void DoClose( bool & veto );
 
   // --------------------------------------------- //
   // WXAMAYAWINDOW_NORMAL interface
@@ -141,6 +144,7 @@ class AmayaWindow : public wxFrame
   
  protected:
   DECLARE_EVENT_TABLE()
+  void OnClose( wxCloseEvent& event );
   void OnSize( wxSizeEvent& event );
   void OnIdle( wxIdleEvent& event );
   void OnActivate( wxActivateEvent & event );
@@ -149,6 +153,8 @@ class AmayaWindow : public wxFrame
  protected:
   int               m_Kind;               // window kind
   int               m_WindowId;           // amaya window id
+  bool              m_IsClosing;
+  bool              m_ShouldCleanUp;
   static int        m_ActiveWindowId;
   int               m_ActiveFrameId;
   bool              m_MustCheckFocusIsNotLost;

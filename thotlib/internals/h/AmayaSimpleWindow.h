@@ -17,7 +17,7 @@
  *                  + Close button
  * 
  * +[AmayaSimpleWindow]----------------------------------+
- * |+[AmayaFrame]---------------------------------------+|
+ * |+[AmayaFrame----------------------------------------+|
  * ||                                                   ||
  * ||                                                   ||
  * ||           OpenGL canvas                           ||
@@ -25,6 +25,9 @@
  * ||                                                   ||
  * ||                                                   ||
  * ||                                                   ||
+ * |+---------------------------------------------------+|
+ * |+---------------------------------------------------+|
+ * || Buttons                                           ||
  * |+---------------------------------------------------+|
  * +-----------------------------------------------------+
  *       Author:  Stephane GULLY
@@ -34,14 +37,13 @@
  */
 class AmayaSimpleWindow : public AmayaWindow
 {
-public:
+ public:
   DECLARE_DYNAMIC_CLASS(AmayaSimpleWindow)
 
   AmayaSimpleWindow ( int             window_id = -1
 		      ,wxWindow *     frame = NULL
 		      ,const wxPoint& pos  = wxDefaultPosition
 		      ,const wxSize&  size = wxDefaultSize );
-
   virtual ~AmayaSimpleWindow();
 
   virtual AmayaFrame * GetActiveFrame() const;
@@ -50,13 +52,14 @@ public:
   bool         AttachFrame( AmayaFrame * p_frame );
   AmayaFrame * DetachFrame();
 
-protected:
-  void OnClose(wxCloseEvent& event);
+  virtual void DoClose( bool & veto );
 
+ protected:
+  void OnCloseButton(wxCommandEvent& event);
   void OnSplitterUnsplit( wxSplitterEvent& event );
   void OnSize( wxSizeEvent& event );
 
-protected:
+ protected:
   DECLARE_EVENT_TABLE()
 
   AmayaFrame *      m_pFrame;             // for simple window
