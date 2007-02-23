@@ -2069,6 +2069,8 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
                       elType.ElTypeNum != HTML_EL_BR &&
                       elType.ElTypeNum != HTML_EL_simple_ruby &&
                       elType.ElTypeNum != HTML_EL_complex_ruby &&
+                      elType.ElTypeNum != HTML_EL_ins &&
+                      elType.ElTypeNum != HTML_EL_del &&
                       elType.ElTypeNum != HTML_EL_IFRAME)
                     noAnchor = TRUE;
                   else if (!createLink &&
@@ -2937,7 +2939,7 @@ void RegisterURLSavedElements (Document doc)
     TtaFreeMemory (SavedDocumentURL);
   SavedDocumentURL = GetBaseURL (doc);
   /* Paste functions in the table menu could be active now */
-  UpdateContextSensitiveMenus (doc);
+  UpdateContextSensitiveMenus (doc, 1);
 }
 
 /*----------------------------------------------------------------------
@@ -3864,6 +3866,8 @@ void CheckNewLines (NotifyOnTarget *event)
       elType.ElTypeNum == HTML_EL_Cite ||
       elType.ElTypeNum == HTML_EL_ABBR ||
       elType.ElTypeNum == HTML_EL_ACRONYM ||
+      elType.ElTypeNum == HTML_EL_ins||
+      elType.ElTypeNum == HTML_EL_del ||
       elType.ElTypeNum == HTML_EL_rb)
     /* we are within an inline element */
     {
@@ -4784,7 +4788,7 @@ void SetOnOffAcronym (Document document, View view)
   ----------------------------------------------------------------------*/
 void SetOnOffINS (Document document, View view)
 {
-  SetCharFontOrPhrase (document, HTML_EL_INS);
+  SetCharFontOrPhrase (document, HTML_EL_ins);
 }
 
 
@@ -4793,7 +4797,7 @@ void SetOnOffINS (Document document, View view)
   ----------------------------------------------------------------------*/
 void SetOnOffDEL (Document document, View view)
 {
-  SetCharFontOrPhrase (document, HTML_EL_DEL);
+  SetCharFontOrPhrase (document, HTML_EL_del);
 }
 
 

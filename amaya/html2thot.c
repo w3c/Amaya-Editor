@@ -303,7 +303,7 @@ static int          CharLevelElement[] =
     HTML_EL_Keyboard, HTML_EL_Variable_, HTML_EL_Cite, HTML_EL_ABBR,
     HTML_EL_ACRONYM,
     HTML_EL_Font_, HTML_EL_Quotation, HTML_EL_Subscript, HTML_EL_Superscript,
-    HTML_EL_Span, HTML_EL_BDO, HTML_EL_INS, HTML_EL_DEL,
+    HTML_EL_Span, HTML_EL_BDO, HTML_EL_ins, HTML_EL_del,
     HTML_EL_IMG, HTML_EL_Input,
     HTML_EL_Option, HTML_EL_OptGroup, HTML_EL_Option_Menu,
     HTML_EL_Text_Input, HTML_EL_Password_Input, HTML_EL_File_Input,
@@ -322,6 +322,7 @@ static int          BlockLevelElement[] =
     HTML_EL_H1, HTML_EL_H2, HTML_EL_H3, HTML_EL_H4, HTML_EL_H5, HTML_EL_H6,
     HTML_EL_Paragraph, HTML_EL_Pseudo_paragraph, HTML_EL_Text_Area,
     HTML_EL_Term, HTML_EL_Address, HTML_EL_LEGEND, HTML_EL_CAPTION,
+    HTML_EL_INS, HTML_EL_DEL,
     0};
 
 /* start tags that imply the end of a current element */
@@ -2622,7 +2623,13 @@ static void EndOfCDataLine (char c)
   ----------------------------------------------------------------------*/
 static void EndOfCData (char c)
 {
+  ElementType         elType;
+
   CloseCDataLine (c);
+  HTMLcontext.lastElementClosed = TRUE;
+  elType.ElSSchema = DocumentSSchema;
+  elType.ElTypeNum = HTML_EL_CDATA;
+  HTMLcontext.lastElement = TtaGetTypedAncestor (HTMLcontext.lastElement, elType);
 }
 
 /*----------------------------------------------------------------------
@@ -3526,7 +3533,7 @@ static void         PutLessAndSpace (char c)
 /*----------------------------------------------------------------------
   StartOfComment  Beginning of a HTML comment.
   ----------------------------------------------------------------------*/
-static void         StartOfComment (char c)
+static void StartOfComment (char c)
 {
   ElementType      elType;
   Element          elComment, elCommentLine;
@@ -3559,7 +3566,7 @@ static void         StartOfComment (char c)
 /*----------------------------------------------------------------------
   PutInComment    put character c in the current HTML comment.
   ----------------------------------------------------------------------*/
-static void         PutInComment (unsigned char c)
+static void PutInComment (unsigned char c)
 {
   ElementType       elType;
   Element           elCommentLine, prevElCommentLine;
@@ -3607,7 +3614,7 @@ static void         PutInComment (unsigned char c)
 /*----------------------------------------------------------------------
   EndOfComment    End of a HTML comment.
   ----------------------------------------------------------------------*/
-static void         EndOfComment (char c)
+static void EndOfComment (char c)
 {
   if (LgBuffer > 0)
     {
@@ -3624,7 +3631,7 @@ static void         EndOfComment (char c)
 /*----------------------------------------------------------------------
   StartOfASP  Beginning of a HTML ASP
   ----------------------------------------------------------------------*/
-static void         StartOfASP (char c)
+static void StartOfASP (char c)
 {
   ElementType      elType;
   Element          elASP, elASPLine;
@@ -3657,7 +3664,7 @@ static void         StartOfASP (char c)
 /*----------------------------------------------------------------------
   PutInASP    put character c in the current HTML ASP
   ----------------------------------------------------------------------*/
-static void         PutInASP (unsigned char c)
+static void PutInASP (unsigned char c)
 {
   ElementType       elType;
   Element           elASPLine, prevElASPLine;
@@ -4096,7 +4103,12 @@ static sourceTransition sourceAutomaton[] =
     {22, '*', (Proc) PutQuestionMark, 20},
     /* state 23: "<![*" has been read, wait for CDATA */
     {23, '[', (Proc) StartCData, 24},
-    {23, '*', (Proc) PutInBuffer, 23},
+    {23, 'C', (Proc) PutInBuffer, 23},
+    {23, 'D', (Proc) PutInBuffer, 23},
+    {23, 'A', (Proc) PutInBuffer, 23},
+    {23, 'T', (Proc) PutInBuffer, 23},
+    {23, ']', (Proc) PutInBuffer, -1},
+    {23, '*', (Proc) PutInBuffer, 15},
     /* state 24: "<![CDATA[" has been read: read its contents */
     {24, ']', (Proc) PutInBuffer, 25},
     {24, '\n', (Proc) EndOfCDataLine, 24},
@@ -6117,13 +6129,12 @@ static Element ParentOfType (Element el, int typeNum)
 void CheckAbstractTree (Document doc, ThotBool isXTiger)
 {
   ElementType	elType, newElType, headElType;
-  Element	elRoot;
-  Element	el, elHead, elBody, elFrameset, elNoframes, nextEl, newEl,
-    prevEl, lastChild, firstTerm, lastTerm, termList, child,
-		parent, firstDef, lastDef, defList, firstEntry, lastEntry,
-    glossary, list, elText, previous;
-  ThotBool	ok, moved;
-  SSchema       htmlSSchema;
+  Element	    elRoot, glossary, list, elText, previous;
+  Element	    el, elHead, elBody, elFrameset, elNoframes, nextEl, newEl;
+  Element	    prevEl, lastChild, firstTerm, lastTerm, termList, child;
+	Element		  parent, firstDef, lastDef, defList, firstEntry, lastEntry;
+  ThotBool	  ok, moved;
+  SSchema     htmlSSchema;
 
   /* the root HTML element only accepts elements HEAD, BODY, FRAMESET
      Comment and PI as children */

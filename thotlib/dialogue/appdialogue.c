@@ -770,6 +770,7 @@ int FindMenuActionFromMenuItemID (Menu_Ctl * ptrmenu, int item_id)
 
 /*----------------------------------------------------------------------
   TtaExecuteMenuActionFromActionId execute the corresponding menu action.
+  When force is TRUE the action is called even if it's not active.
   ----------------------------------------------------------------------*/
 void TtaExecuteMenuActionFromActionId (int action_id, Document doc,
                                        View view, ThotBool force)

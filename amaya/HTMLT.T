@@ -1,4 +1,4 @@
-		{ Author: I. Vatton 	 1994-2002  }
+		{ Author: I. Vatton 	 1994-2007  }
 
 { If variable XML is set, the document is saved in the XHTML syntax.
   Otherwise, it is saved in plain HTML }
@@ -538,6 +538,24 @@ RULES
 	END;
 
  DEL:	BEGIN
+	create SOT;
+	Create 'del';
+	Create Attributes;
+	Create '>';
+	create SCT after;
+	Create 'del>' After;
+	END;
+
+ ins:	BEGIN
+	create SOT;
+	Create 'ins';
+	Create Attributes;
+	Create '>';
+	create SCT after;
+	Create 'ins>' After;
+	END;
+
+ del:	BEGIN
 	create SOT;
 	Create 'del';
 	Create Attributes;
@@ -1239,7 +1257,7 @@ RULES
 	NoLineBreak;
 	Create '<![CDATA[';
 	NoTranslation;
-	Create ']]>\12' After;
+	Create ']]>' After;
 	END;
 
  CDATA_line:

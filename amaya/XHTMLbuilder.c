@@ -50,7 +50,7 @@ static int          NoTextChild[] =
     HTML_EL_MAP, HTML_EL_map, HTML_EL_Applet,
     HTML_EL_Object, HTML_EL_IFRAME, HTML_EL_NOFRAMES,
     HTML_EL_Division, HTML_EL_Center, HTML_EL_NOSCRIPT,
-    HTML_EL_Data_cell, HTML_EL_Heading_cell,
+    HTML_EL_Data_cell, HTML_EL_Heading_cell, HTML_EL_INS, HTML_EL_DEL,
     0};
 
 /* Define a pointer to let parser functions access the HTML entity table */
@@ -329,6 +329,20 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
   isInline = IsXMLElementInline (elType, doc);
   newElType.ElSSchema = elType.ElSSchema;
 
+  if (elType.ElTypeNum == HTML_EL_ins ||
+      elType.ElTypeNum == HTML_EL_del)
+    {
+      child = TtaGetFirstChild (el);
+      if (IsBlockElement (child))
+        {
+          // change the element type
+          if (elType.ElTypeNum == HTML_EL_ins)
+            TtaChangeTypeOfElement (el, doc, HTML_EL_INS);
+          else
+            TtaChangeTypeOfElement (el, doc, HTML_EL_DEL);
+          isInline = FALSE;
+        }
+    }
   if (elType.ElTypeNum == HTML_EL_Paragraph ||
       elType.ElTypeNum == HTML_EL_Address ||
       elType.ElTypeNum == HTML_EL_H1 ||

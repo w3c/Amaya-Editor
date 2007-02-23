@@ -2778,7 +2778,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
         }
       /* remove the current selection */
       TtaUnselect (doc);
-      UpdateContextSensitiveMenus (doc);
+      UpdateContextSensitiveMenus (doc, 1);
 #ifdef _WX
       HideHSplitToggle (doc, 1);
       HideVSplitToggle (doc, 1);

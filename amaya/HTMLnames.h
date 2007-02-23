@@ -29,7 +29,8 @@ static ElemMapping    XHTMLElemMappingTable[] =
    {"colgroup", SPACE, HTML_EL_COLGROUP, L_StrictValue, FALSE},
    {"col", SPACE, HTML_EL_COL, L_StrictValue, FALSE},
    {"dd", SPACE, HTML_EL_Definition, L_BasicValue, FALSE},
-   {"del", SPACE, HTML_EL_DEL, L_StrictValue, TRUE},
+   {"del", SPACE, HTML_EL_del, L_StrictValue, TRUE}, /* inline */
+   {"del", SPACE, HTML_EL_DEL, L_StrictValue, TRUE}, /* block */
    {"dfn", SPACE, HTML_EL_Def, L_BasicValue, TRUE},
    {"dir", SPACE, HTML_EL_Directory, L_StrictValue, FALSE},
    {"div", SPACE, HTML_EL_Division, L_BasicValue, FALSE},
@@ -68,7 +69,8 @@ static ElemMapping    XHTMLElemMappingTable[] =
    {"input", 'E', HTML_EL_Reset_Input, L_BasicValue, TRUE},
    {"input", 'E', HTML_EL_Button_Input, L_BasicValue, TRUE},
    {"input", 'E', HTML_EL_Hidden_Input, L_BasicValue, TRUE},
-   {"ins", SPACE, HTML_EL_INS, L_StrictValue, TRUE},
+   {"ins", SPACE, HTML_EL_ins, L_StrictValue, TRUE}, /* inline */
+   {"ins", SPACE, HTML_EL_INS, L_StrictValue, TRUE}, /* block */
    {"isindex", 'E', HTML_EL_ISINDEX, L_TransitionalValue, FALSE},
    {"kbd", SPACE, HTML_EL_Keyboard, L_BasicValue, TRUE},
    {"label", SPACE, HTML_EL_LABEL, L_BasicValue, TRUE},

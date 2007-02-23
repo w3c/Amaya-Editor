@@ -80,6 +80,8 @@ extern Element TtaGetCommonAncestor ( Element element1,
                                       Element element2 );
 extern Element TtaGetTypedAncestor ( Element element,
                                      ElementType ancestorType );
+extern Element TtaGetExactTypedAncestor ( Element element,
+                                          ElementType ancestorType );
 extern ThotBool TtaIsExtensionElement ( Element element );
 extern ThotBool TtaIsTranscludedElement ( Element element );
 extern char *TtaGetElementTypeName ( ElementType elementType );
@@ -215,6 +217,8 @@ extern Element TtaGetCommonAncestor ( Element element1,
                                         Element element2 );
 extern Element TtaGetTypedAncestor ( Element element,
                                        ElementType ancestorType );
+extern Element TtaGetExactTypedAncestor ( Element element,
+                                            ElementType ancestorType );
 extern ThotBool TtaIsExtensionElement ( Element element );
 extern ThotBool TtaIsTranscludedElement ( Element element );
 extern char *TtaGetElementTypeName ( ElementType elementType );

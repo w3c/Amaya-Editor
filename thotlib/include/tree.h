@@ -580,6 +580,18 @@ extern Element TtaGetCommonAncestor (Element element1, Element element2);
    ---------------------------------------------------------------------- */
 extern Element TtaGetTypedAncestor (Element element, ElementType ancestorType);
 
+
+/* ----------------------------------------------------------------------
+   TtaGetExactTypedAncestor
+   Returns the first ancestor of the exact given type for a given element.
+   Parameters:
+   element: the element whose ancestor is asked.
+   ancestorType: type of the asked ancestor.
+   Return value:
+   the ancestor, or NULL if there is no ancestor of that type.
+   ---------------------------------------------------------------------- */
+extern Element TtaGetExactTypedAncestor (Element element, ElementType ancestorType);
+
 /* ----------------------------------------------------------------------
    TtaGetElementType
 

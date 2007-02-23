@@ -2762,7 +2762,7 @@ RULES
                 END;
         END;
 
- INS:        BEGIN
+ ins:        BEGIN
         CreateBefore(ElementName);
         CreateWith(VerticalLine);
         HorizPos: Left = Previous . Right;
@@ -2785,7 +2785,7 @@ RULES
                 END;
         END;
 
- DEL:        BEGIN
+ del:        BEGIN
         CreateBefore(ElementName);
         CreateWith(VerticalLine);
         HorizPos: Left = Previous . Right;
@@ -4675,6 +4675,50 @@ RULES
                 VertPos: Top = Previous . Bottom;
         END;
 
+ INS:        BEGIN
+        CreateBefore(ElementName);
+        CreateWith(VerticalLine);
+        Width: auto{Enclosing . Width};
+        Display: Block;
+        VertPos: Top = Previous not MAP . Bottom;
+        MarginTop: 0;
+        Background: LightYellow2;
+        FillPattern: backgroundcolor;
+        ShowBox;
+        IN Structure_view BEGIN
+                Background: Enclosing =;
+                Foreground: Enclosing =;
+                Width: Enclosing . Width - STRUCT_INDENT;
+                HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+                VertPos: Top = Previous . Bottom;
+                Style: Enclosing =;
+                END;
+        IN Alternate_view BEGIN
+                Background: Enclosing =;
+                Foreground: Enclosing =;
+                Style: Italics;
+                VertPos: Top = Previous . Bottom;
+                END;
+        END;
+
+ DEL:        BEGIN
+        CreateBefore(ElementName);
+        CreateWith(VerticalLine);
+        Width: auto{Enclosing . Width};
+        Display: Block;
+        VertPos: Top = Previous not MAP . Bottom;
+        MarginTop: 0;
+        Underline: CrossedOut;
+        IN Structure_view BEGIN
+                Width: Enclosing . Width - STRUCT_INDENT;
+                HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+                VertPos: Top = Previous . Bottom;
+                Underline: Enclosing =;
+                END;
+        IN Alternate_view
+                VertPos: Top = Previous . Bottom;
+        END;
+
   Center:
         BEGIN
         CreateBefore(ElementName);
@@ -4859,6 +4903,8 @@ RULES
         Visibility: Enclosing =;
         LineBreak: no;
         MarginBottom: 0.4;
+        CreateFirst(CDATA_S);
+        CreateLast(CDATA_E);
         IN Structure_view BEGIN
                 Width: Enclosing . Width;
                 MarginBottom: 0;
@@ -4869,8 +4915,8 @@ RULES
         BEGIN
         Visibility: Enclosing =;
         HorizPos: Left = Enclosing . Left;
-        IF First CreateFirst(CDATA_S);
-        IF Last CreateLast(CDATA_E);
+        {IF First CreateFirst(CDATA_S);
+        IF Last CreateLast(CDATA_E);}
         IN Structure_view BEGIN
                 Width: Enclosed . Width;
                 END;

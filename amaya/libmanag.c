@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2005
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2007
  *
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
@@ -1291,9 +1291,9 @@ Document CreateNewLibraryFile (char *libUrl, char *libtitle)
   EnableStyleElement (newLibraryDoc, style);
 
   if (SelectionDoc != 0)
-    UpdateContextSensitiveMenus (SelectionDoc);
+    UpdateContextSensitiveMenus (SelectionDoc, 1);
   SelectionDoc = newLibraryDoc;
-  UpdateContextSensitiveMenus (newLibraryDoc);
+  UpdateContextSensitiveMenus (newLibraryDoc, 1);
   /* Activate show areas */
   if (MapAreas[newLibraryDoc])
     ChangeAttrOnRoot (newLibraryDoc, HTML_ATTR_ShowAreas);

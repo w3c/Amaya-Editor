@@ -506,9 +506,9 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile,
       /* set the initial selection */
       TtaSelectElement (doc, el);
       if (SelectionDoc != 0)
-        UpdateContextSensitiveMenus (SelectionDoc);
+        UpdateContextSensitiveMenus (SelectionDoc, 1);
       SelectionDoc = doc;
-      UpdateContextSensitiveMenus (doc);
+      UpdateContextSensitiveMenus (doc, 1);
       /* Activate show areas */
       if (MapAreas[doc])
         ChangeAttrOnRoot (doc, HTML_ATTR_ShowAreas);
@@ -541,9 +541,9 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile,
       /* set the initial selection */
       TtaSelectElement (doc, el);
       if (SelectionDoc != 0)
-        UpdateContextSensitiveMenus (SelectionDoc);
+        UpdateContextSensitiveMenus (SelectionDoc, 1);
       SelectionDoc = doc;
-      UpdateContextSensitiveMenus (doc);
+      UpdateContextSensitiveMenus (doc, 1);
     }
   else if (docType == docSVG)
     {
@@ -590,9 +590,9 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile,
       /* set the initial selection */
       TtaSelectElement (doc, el);
       if (SelectionDoc != 0)
-        UpdateContextSensitiveMenus (SelectionDoc);
+        UpdateContextSensitiveMenus (SelectionDoc, 1);
       SelectionDoc = doc;
-      UpdateContextSensitiveMenus (doc);
+      UpdateContextSensitiveMenus (doc, 1);
     }
   else
     {
@@ -870,7 +870,7 @@ void NotFoundDoc (char *url, Document doc)
       TtaInsertFirstChild (&text, child, doc);
       
       /* set the initial selection */
-      UpdateContextSensitiveMenus (doc);
+      UpdateContextSensitiveMenus (doc, 1);
       /* Activate show areas */
       if (MapAreas[doc])
         ChangeAttrOnRoot (doc, HTML_ATTR_ShowAreas);
@@ -1726,17 +1726,21 @@ ThotBool HTMLelementAllowed (Document doc)
 /*----------------------------------------------------------------------
   CreateHTMLelement
   ----------------------------------------------------------------------*/
-void CreateHTMLelement (int typeNum, Document document)
+void CreateHTMLelement (int typeNum, Document doc)
 {
+  DisplayMode         dispMode;
   ElementType         elType;
 
-  if (HTMLelementAllowed (document))
+  if (HTMLelementAllowed (doc))
     {
-      TtaSetDisplayMode (document, SuspendDisplay);
-      elType.ElSSchema = TtaGetSSchema ("HTML", document);
+      dispMode = TtaGetDisplayMode (doc);
+      if (dispMode == DisplayImmediately)
+        TtaSetDisplayMode (doc, SuspendDisplay);
+      elType.ElSSchema = TtaGetSSchema ("HTML", doc);
       elType.ElTypeNum = typeNum;
-      TtaCreateElement (elType, document);
-      TtaSetDisplayMode (document, DisplayImmediately);
+      TtaCreateElement (elType, doc);
+      if (dispMode == DisplayImmediately)
+        TtaSetDisplayMode (doc, dispMode);
     }
 }
 
@@ -2245,7 +2249,7 @@ void DoTableCreation (Document document)
     }
   TtaUnlockTableFormatting ();
   TtaSetDisplayMode (document, DisplayImmediately);
-  UpdateContextSensitiveMenus (document);
+  UpdateContextSensitiveMenus (document, 1);
 }
 
 /*----------------------------------------------------------------------

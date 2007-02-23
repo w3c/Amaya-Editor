@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA 1998-2005
+ *  (c) COPYRIGHT INRIA 1998-2007
  *  Please read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1503,6 +1503,9 @@ void TtcUndo (Document doc, View view)
     TtaUnlockTableFormatting ();
   if (dispMode != DeferredDisplay)
     TtaSetDisplayMode (doc, dispMode);
+
+  // Perhaps some contextual menus change
+  TtaExecuteMenuAction ("UpdateContextSensitiveMenus", doc, 1, TRUE);
 }
 
 /*----------------------------------------------------------------------
@@ -1568,5 +1571,8 @@ void TtcRedo (Document doc, View view)
   pDoc->DocEditSequence = FALSE;
   if (dispMode != DeferredDisplay)
     TtaSetDisplayMode (doc, dispMode);
+
+  // Perhaps some contextual menus change
+  TtaExecuteMenuAction ("UpdateContextSensitiveMenus", doc, 1, TRUE);
 }
 

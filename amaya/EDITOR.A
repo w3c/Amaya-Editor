@@ -408,6 +408,7 @@ FUNCTIONS
   ShowVSplitToggle,
   HideHSplitToggle,
   HideVSplitToggle,
+  UpdateContextSensitiveMenus,
   CreateMIntegral,
   CreateMSum,
   CreateMOVERARROW,

@@ -52,7 +52,8 @@ extern void CloseLogs ( Document doc );
 extern void FocusChanged ( Document doc );
 extern void FreeDocumentResource ( Document doc );
 extern void DocumentClosed ( NotifyDialog * event );
-extern void UpdateContextSensitiveMenus ( Document doc );
+extern void UpdateContextSensitiveMenus ( Document doc,
+                                          View view );
 extern void ResetHighlightedElement ( void );
 extern void SynchronizeSourceView ( NotifyElement *event );
 extern void GetCurrentLine ( Document doc,
@@ -123,7 +124,8 @@ extern void CloseLogs ( Document doc );
 extern void FocusChanged ( Document doc );
 extern void FreeDocumentResource ( Document doc );
 extern void DocumentClosed ( NotifyDialog * event );
-extern void UpdateContextSensitiveMenus ( Document doc );
+extern void UpdateContextSensitiveMenus ( Document doc,
+                                            View view );
 extern void ResetHighlightedElement ( void );
 extern void SynchronizeSourceView ( NotifyElement *event );
 extern void GetCurrentLine ( Document doc,

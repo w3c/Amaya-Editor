@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1999-2005
+ *  (c) COPYRIGHT MIT and INRIA, 1999-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  * 
  */
@@ -889,7 +889,7 @@ void ANNOT_Create (Document doc, View view, AnnotMode mode)
   ANNOT_InitDocumentStructure (doc, doc_annot, annot, mode);
 
   /* turn on/off entries in the menu bar */
-  UpdateContextSensitiveMenus (doc);
+  UpdateContextSensitiveMenus (doc, 1);
 
   /* show the thread in the source document */
 #ifdef ANNOT_ON_ANNOT

@@ -221,7 +221,7 @@ void AmayaNotebook::OnPageChanged(wxNotebookEvent& event)
     }
 
   // Get the selected page
-  if(event.GetSelection()<(int)GetPageCount() && event.GetSelection()>=0)
+  if(event.GetSelection() < (int)GetPageCount() && event.GetSelection() >= 0)
   {
     AmayaPage * p_selected_page = (AmayaPage *)GetPage(event.GetSelection());
   

@@ -1655,8 +1655,7 @@ Element             TtaGetCommonAncestor (Element element1, Element element2)
    Return value:
    the ancestor, or NULL if there is no ancestor of that type.
    ---------------------------------------------------------------------- */
-Element             TtaGetTypedAncestor (Element element,
-                                         ElementType ancestorType)
+Element TtaGetTypedAncestor (Element element, ElementType ancestorType)
 {
   PtrElement          ancestor;
 
@@ -1675,6 +1674,39 @@ Element             TtaGetTypedAncestor (Element element,
 }
 
 /* ----------------------------------------------------------------------
+   TtaGetExactTypedAncestor
+   Returns the first ancestor of the exact given type for a given element.
+   Parameters:
+   element: the element whose ancestor is asked.
+   ancestorType: type of the asked ancestor.
+   Return value:
+   the ancestor, or NULL if there is no ancestor of that type.
+   ---------------------------------------------------------------------- */
+Element TtaGetExactTypedAncestor (Element element, ElementType ancestorType)
+{
+  PtrElement          ancestor;
+
+  UserErrorCode = 0;
+  ancestor = NULL;
+  if (element == NULL || ancestorType.ElSSchema == NULL)
+    TtaError (ERR_invalid_parameter);
+  else if (ancestorType.ElTypeNum > ((PtrSSchema) (ancestorType.ElSSchema))->SsNRules
+           || ancestorType.ElTypeNum < 1)
+    TtaError (ERR_invalid_element_type);
+  else
+    {
+      ancestor = (PtrElement)element;
+      while (ancestor && ancestorType.ElTypeNum != ancestor->ElTypeNumber)
+        {
+          ancestor = GetTypedAncestor (ancestor->ElParent,
+                                       ancestorType.ElTypeNum,
+                                       (PtrSSchema) (ancestorType.ElSSchema));
+        }
+    }
+  return ((Element) ancestor);
+}
+
+/* ----------------------------------------------------------------------
    TtaIsExtensionElement
    Returns true if the element is from an extension schema
    Parameter:
@@ -1682,7 +1714,7 @@ Element             TtaGetTypedAncestor (Element element,
    Return value:
    true or false.
    ---------------------------------------------------------------------- */
-ThotBool            TtaIsExtensionElement (Element element)
+ThotBool TtaIsExtensionElement (Element element)
 {
 
   UserErrorCode = 0;
