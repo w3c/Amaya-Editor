@@ -101,20 +101,30 @@ void ImageDlgWX::OnOpenButton( wxCommandEvent& event )
 
   // get the current alt
   wxString alt = XRCCTRL(*this, "wxID_ALT", wxTextCtrl)->GetValue( );
-  wxASSERT( alt.Len() < 512 );
-  strcpy( Alt, (const char*)alt.mb_str(wxConvUTF8) );
-  // give the new url to amaya (to do url completion)
-  ThotCallback (BaseImage + ImageAlt,  STRING_DATA, (char *)Alt );
+  if (alt.Len() == 0)
+    {
+      if (Waiting == 1)
+        {
+          // request an alternate
+          XRCCTRL(*this, "wxID_MANDATORY", wxStaticText)->SetLabel( TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_ALT_MISSING) ));
+          Waiting = 2;
+          return;
+        }
+      else
+        ThotCallback (BaseImage + ImageAlt,  STRING_DATA, "");
+    }
 
-  if (Alt[0] == EOS)
-    XRCCTRL(*this, "wxID_MANDATORY", wxStaticText)->SetLabel( TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_ALT_MISSING) ));
   else
-     {
-      // load the image
-      // return done
-      Waiting = 0;
-      ThotCallback (MyRef, INTEGER_DATA, (char*)1);
-     }
+    {
+      strncpy ( Alt, (const char*)alt.mb_str(wxConvUTF8), 512);
+      Alt[511] = EOS;
+      ThotCallback (BaseImage + ImageAlt,  STRING_DATA, (char *)Alt );
+    }
+
+  // load the image
+  // return done
+  Waiting = 0;
+  ThotCallback (MyRef, INTEGER_DATA, (char*)1);
 }
 
 /*----------------------------------------------------------------------

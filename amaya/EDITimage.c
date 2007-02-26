@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2005
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -139,14 +139,14 @@ void CallbackImage (int ref, int typedata, char *data)
           TtaDestroyDialogue (ref);
           ImgDocument = 0;
         }
+#ifdef _GTK
       else if (ref == BaseImage + FormImage && ImgAlt[0] == EOS)
         {
           /* IMG element without ALT attribute: error message */
-#ifdef _GTK
           TtaNewLabel (BaseImage + ImageLabel4, RefFormImage,
                        TtaGetMessage (AMAYA, AM_ALT_MISSING));
-#endif /* _GTK */
         }
+#endif /* _GTK */
       else
         {
           TtaDestroyDialogue (ref);
