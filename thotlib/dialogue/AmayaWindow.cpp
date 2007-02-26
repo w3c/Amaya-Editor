@@ -78,8 +78,6 @@ AmayaWindow::AmayaWindow (  int window_id
              -1, _T(""), pos, size, style ),
     m_Kind( kind ),
     m_WindowId( window_id ),
-    m_IsClosing( FALSE ),
-    m_ShouldCleanUp( false ),
     m_ActiveFrameId( 0 ),
     m_MustCheckFocusIsNotLost( false ),
     m_pMenuBar(NULL)
@@ -256,16 +254,6 @@ void AmayaWindow::EmptyURLBar()
 
 /*----------------------------------------------------------------------
  *       Class:  AmayaWindow
- *      Method:  IsClosing
- * Description:  return true if the window is going to be closed
-  -----------------------------------------------------------------------*/
-bool AmayaWindow::IsClosing()
-{
-  return m_IsClosing;
-}
-
-/*----------------------------------------------------------------------
- *       Class:  AmayaWindow
  *      Method:  SetMenuBar
  * Description:  override the wxFrame::SetMenuBar methode to remember the menubar for fullscreen mode
   -----------------------------------------------------------------------*/
@@ -352,13 +340,6 @@ void AmayaWindow::CleanUp()
   -----------------------------------------------------------------------*/
 void AmayaWindow::OnIdle( wxIdleEvent& event )
 {
-  if (m_ShouldCleanUp)
-    {
-      m_ShouldCleanUp = false;
-      /* now check that there is no empty pages */
-      TtaCleanUpWindow( GetWindowId() );
-    }
-
   // this flag is used to process on idle time the possible lost focus
   // it can not be procced in OnActivate callback because the wxWindow::FindFocus is allways NULL (bug)
   if (m_MustCheckFocusIsNotLost)
@@ -505,31 +486,6 @@ void AmayaWindow::OnChar(wxKeyEvent& event)
         event.Skip();
 }
 
-
-/*----------------------------------------------------------------------
- *       Class:  AmayaWindow
- *      Method:  DoClose
- * Description:  basic abstract implementation to override
-  -----------------------------------------------------------------------*/
-void AmayaWindow::DoClose( bool & veto )
-{
-}
-
-/*----------------------------------------------------------------------
- *       Class:  AmayaWindow
- *      Method:  OnClose
- * Description:  just close the window
-  -----------------------------------------------------------------------*/
-void AmayaWindow::OnClose(wxCloseEvent& event)
-{
-  bool veto = false;
-  DoClose( veto );
-  if (veto)
-    event.Veto();
-  else
-    event.Skip();
-}
-
 /*----------------------------------------------------------------------
  *       Class:  AmayaWindow
  *      Method:  DnAmayaAction
@@ -576,7 +532,6 @@ void AmayaWindow::OnAmayaAction( wxCommandEvent& event )
  *  the callbacks are assigned to an event type
  *----------------------------------------------------------------------*/
 BEGIN_EVENT_TABLE(AmayaWindow, wxFrame)
-  EVT_CLOSE(     AmayaWindow::OnClose )
   EVT_SIZE(      AmayaWindow::OnSize )
   EVT_IDLE(      AmayaWindow::OnIdle ) // Process a wxEVT_IDLE event  
   EVT_ACTIVATE(  AmayaWindow::OnActivate )

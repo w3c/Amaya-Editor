@@ -115,14 +115,13 @@ public:
   bool SwapBuffers();
 #endif // #ifdef _GL
 
-  void DoClose( bool& veto );
-
 protected:
   DECLARE_EVENT_TABLE()
   void OnMouse( wxMouseEvent& event );
   void OnSize( wxSizeEvent& event );
   void OnIdle( wxIdleEvent& event );
   void OnContextMenu( wxContextMenuEvent & event );
+  void OnClose(wxCloseEvent& event);
 
   int          m_FrameId;        // amaya frame id
   bool         m_IsActive;
@@ -143,8 +142,6 @@ protected:
   
   AmayaScrollBar *   m_pScrollBarH;
   AmayaScrollBar *   m_pScrollBarV;
-
-  //  AmayaTextGraber * m_pTextGraber;
 };
 
 #endif // __AMAYAFRAME_H__

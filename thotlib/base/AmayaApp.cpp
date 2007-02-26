@@ -129,7 +129,10 @@ bool AmayaApp::OnInit()
       if (wxApp::argc % 2 == 0)
         /* The last argument in the command line is the document to be opened */
         url = wxApp::argv[wxApp::argc-1];
-      m_pAmayaInstance->SendURLToOtherAmayaInstance( url );
+      if(m_pAmayaInstance->SendURLToOtherAmayaInstance( url ))
+        printf("yes, it have been sent\n");
+      else
+        printf("no I cant sent it\n");
       return false;
     }
   else

@@ -39,7 +39,8 @@ AmayaNotebook::AmayaNotebook( wxWindow * p_parent_window,
                  wxTAB_TRAVERSAL |
                  wxCLIP_CHILDREN |
                  wxFULL_REPAINT_ON_RESIZE |
-                 wxNB_MULTILINE /* only windows */ )
+                 wxNB_MULTILINE /* only windows */,
+                 wxT("AmayaNotebook") )
      ,m_pAmayaWindow( p_amaya_window )
      ,m_MContextFrameId(0)
 {
@@ -54,60 +55,111 @@ AmayaNotebook::~AmayaNotebook()
 
 /*----------------------------------------------------------------------
   Class:  AmayaNotebook
-  Method:  DoClose
-  Description:  called when the AmayaNotebook is closed.
-  just forward close event to each AmayaPage
+  Method:  ClosePage
+  Description: Close a page.
+  Return: false if cant close it.
  -----------------------------------------------------------------------*/
-void AmayaNotebook::DoClose(bool & veto)
+bool AmayaNotebook::ClosePage(int page_id)
 {
-  /* if this boolean is set to false, the window must not be closed */
-  bool close_window = true; 
+  AmayaPage *page = (AmayaPage*)GetPage( page_id );
+  page->Hide();
+  
+  if(page->Close())
+  {
+    DeletePage(page_id);
+    /** \todo Update selection with old selection page. */
+    UpdatePageId();    
+    return true;
+  }
+  else
+  {
+    page->Show();
+    return false;
+  }
+}
 
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaNotebook
+ *      Method:  CloseAllButPage
+ * Description:  Close all notebook pages but not one.
+ -----------------------------------------------------------------------*/
+bool AmayaNotebook::CloseAllButPage(int position)
+{
+  int pos;
+  AmayaPage* sel = (AmayaPage*) GetPage(position);
+  
+  // Set the selection to avoid focus change.
+  SetSelection(position);
+  
+  for(pos = GetPageCount()-1; pos>=0; pos--)
+  {
+    AmayaPage* page = (AmayaPage*) GetPage(pos);
+    if(page!=sel)
+    {
+      if(page->Close())
+        DeletePage(pos);
+    }    
+  }
+  UpdatePageId();
+  sel->SetSelected( TRUE );
+  return true;
+}
+
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaNotebook
+ *      Method:  CleanUp
+ * Description:  check that there is no empty pages
+ -----------------------------------------------------------------------*/
+void AmayaNotebook::CleanUp()
+{
+  int pos;
+  
+  for(pos=GetPageCount()-1; pos>0; pos--)
+  {
+    AmayaPage *page = (AmayaPage*) GetPage(pos);
+    if(page->CleanUp())
+    {
+      page->Close(true);
+      DeletePage(pos);
+    }
+  }
+  UpdatePageId();
+}
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaNotebook
+ *      Method:  OnClose
+ * Description:  Intercept the CLOSE event and prevent it if ncecessary.
+  -----------------------------------------------------------------------*/
+void AmayaNotebook::OnClose(wxCloseEvent& event)
+{
   /* show a warning if there is more than one tab */
   if (GetPageCount() > 1 && AmayaConfirmCloseTab::DoesUserWantToShowMe())
+  {
+    AmayaConfirmCloseTab dlg(this, GetPageCount());
+    if ( dlg.ShowModal() != wxID_OK)
     {
-      AmayaConfirmCloseTab dlg(this, GetPageCount());
-      if (dlg.ShowModal() != wxID_OK)
-        {
-          veto = TRUE; /* user do not want to close */
-          return;
-        }        
-    }
+      event.Veto();
+      return;
+    }        
+  }
 
-  unsigned int page_id = 0;
-  while ( page_id < GetPageCount() )
+  int page_id = 0;
+  for(page_id=GetPageCount()-1; page_id>=0; page_id--)
+  {
+    AmayaPage * page = (AmayaPage *)GetPage(page_id);
+    if(page->Close())
     {
-      AmayaPage * p_page = (AmayaPage *)GetPage(page_id);
-      p_page->DoClose(veto);
-      close_window &= p_page->IsClosed();
-      
-      /* really delete the page if the document has been closed */
-      if (p_page->IsClosed())
-        {
-          //RemovePage(page_id);
-          DeletePage(page_id);
-          
-          // maybe something has been removed so update the ids
-          if (GetPageCount() > 0)
-            UpdatePageId();
-          
-          /* wait for pending events :
-             if a page is deleted, it throws notebookevent */
-          TtaHandlePendingEvents();
-          /*
-            while ( wxTheApp->Pending() )
-            wxTheApp->Dispatch();
-          */
-        }
-      else
-        page_id++;
+      DeletePage(page_id);
     }
-  
-  /* there is still open pages ? */
-  if (close_window)
-    veto = FALSE; /* everything is closed => close the window */
-  else
-    veto = TRUE; /* still an opened page => keep the window open */
+  }
+  if(GetPageCount() > 0)
+  {
+    UpdatePageId();
+    event.Veto();
+  }
 }
 
 /*----------------------------------------------------------------------
@@ -142,6 +194,7 @@ void AmayaNotebook::UpdatePageId()
  *               Processes a wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGING event.
  *               This event can be vetoed.
  -----------------------------------------------------------------------*/
+#ifdef __WXDEBUG__
 void AmayaNotebook::OnPageChanging(wxNotebookEvent& event)
 {
   TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaNotebook::OnPageChanging : old=%d, new=%d"),
@@ -149,6 +202,7 @@ void AmayaNotebook::OnPageChanging(wxNotebookEvent& event)
                  event.GetSelection() );
   event.Skip();
 }
+#endif /* __WXDEBUG__ */
 
 /*----------------------------------------------------------------------
  *       Class:  AmayaNotebook
@@ -163,33 +217,35 @@ void AmayaNotebook::OnPageChanged(wxNotebookEvent& event)
 
   // do not change the page if this is the same as old one
   // this case can occure when notebook's pages are deleted ...
-  if ( event.GetOldSelection() == event.GetSelection() || m_pAmayaWindow->IsClosing() )
+  if ( event.GetOldSelection() == event.GetSelection() )
     {
       event.Skip();
       return;
     }
 
   // Get the selected page
-  AmayaPage * p_selected_page = (AmayaPage *)GetPage(event.GetSelection());
-
-  // Update every page
-  // important work is done when SetSelected is called :
-  // + window title is updated in order to match current selected page
-  unsigned int page_id = 0;
-  while ( page_id < GetPageCount() )
-    {
-      AmayaPage * p_page = (AmayaPage *)GetPage(page_id);
-      if ( !p_page->IsClosed() && p_page == p_selected_page )
-        {
-          p_page->SetSelected( TRUE );
-        }
-      else
-        {
-          p_page->SetSelected( FALSE );
-        }
-      page_id++;
-    }
-    
+  if(event.GetSelection() < (int)GetPageCount() && event.GetSelection() >= 0)
+  {
+    AmayaPage * p_selected_page = (AmayaPage *)GetPage(event.GetSelection());
+  
+    // Update every page
+    // important work is done when SetSelected is called :
+    // + window title is updated in order to match current selected page
+    unsigned int page_id = 0;
+    while ( page_id < GetPageCount() )
+      {
+        AmayaPage * p_page = (AmayaPage *)GetPage(page_id);
+        if ( !p_page->IsClosed() && p_page == p_selected_page )
+          {
+            p_page->SetSelected( TRUE );
+          }
+        else
+          {
+            p_page->SetSelected( FALSE );
+          }
+        page_id++;
+      }
+  }    
   event.Skip();
 }
 
@@ -266,10 +322,12 @@ int AmayaNotebook::GetMContextFrame()
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 BEGIN_EVENT_TABLE(AmayaNotebook, wxNotebook)
-  //  EVT_CLOSE(	                  AmayaNotebook::OnClose )
+  EVT_CLOSE( AmayaNotebook::OnClose )
   EVT_NOTEBOOK_PAGE_CHANGED(  -1, AmayaNotebook::OnPageChanged )
+#ifdef __WXDEBUG__  
   EVT_NOTEBOOK_PAGE_CHANGING( -1, AmayaNotebook::OnPageChanging )
+#endif /* __WXDEBUG__ */
   EVT_CONTEXT_MENU(               AmayaNotebook::OnContextMenu )
-  END_EVENT_TABLE()
+END_EVENT_TABLE()
   
 #endif /* #ifdef _WX */

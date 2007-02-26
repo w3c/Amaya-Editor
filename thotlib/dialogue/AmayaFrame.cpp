@@ -66,7 +66,7 @@ IMPLEMENT_DYNAMIC_CLASS(AmayaFrame, wxPanel)
 #ifndef _WINDOWS
               | wxRAISED_BORDER
 #endif /* _WINDOWS */
-              )
+              , wxT("AmayaFrame"))
      ,m_FrameId( frame_id )
      ,m_IsActive( FALSE )
      ,m_ToDestroy( FALSE )
@@ -623,20 +623,21 @@ AmayaWindow * AmayaFrame::GetWindowParent()
   return TtaGetWindowFromId( TtaGetFrameWindowParentId(GetFrameId()) );
 }
 
-void AmayaFrame::DoClose( bool & veto)
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaFrame
+ *      Method:  OnClose
+ * Description:  Intercept the CLOSE event and prevent it if ncecessary.
+  -----------------------------------------------------------------------*/
+void AmayaFrame::OnClose(wxCloseEvent& event)
 {
-  TTALOGDEBUG_1( TTA_LOG_DIALOG, _T("AmayaFrame::DoClose: frame=%d"), m_FrameId);
-  
-  // raise the frame just before closing it
-  // so the user can see what it's beeing closed 
-  if ( GetPageParent() )
-    GetPageParent()->RaisePage();
+  TTALOGDEBUG_1( TTA_LOG_DIALOG, _T("AmayaFrame::OnClose: frame=%d"), m_FrameId);
 
   PtrDocument         pDoc;
   int                 view;
   GetDocAndView (m_FrameId, &pDoc, &view);
+  /** \todo See what follow : */
   CloseView (pDoc, view);
-
 }
 
 /*----------------------------------------------------------------------
@@ -797,9 +798,6 @@ void AmayaFrame::FreeFrame()
   -----------------------------------------------------------------------*/
 void AmayaFrame::OnIdle( wxIdleEvent& event )
 {
-  //  if ( m_ToDestroy )
-  //    Destroy();
-  //  else
   event.Skip();
 }
 
@@ -847,8 +845,7 @@ int AmayaFrame::GetMasterFrameId()
  *    + AmayaFrame::OnScroll is assigned to a scroll event 
  *----------------------------------------------------------------------*/
 BEGIN_EVENT_TABLE(AmayaFrame, wxPanel)
-  //  EVT_CLOSE( 		AmayaFrame::OnClose )
-  //  EVT_SIZE( 		AmayaFrame::OnSize )
+  EVT_CLOSE( 		AmayaFrame::OnClose )
   EVT_IDLE(             AmayaFrame::OnIdle ) // Process a wxEVT_IDLE event
   EVT_CONTEXT_MENU(     AmayaFrame::OnContextMenu )
 END_EVENT_TABLE()

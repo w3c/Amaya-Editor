@@ -18,7 +18,7 @@ class AmayaAppInstance
   virtual ~AmayaAppInstance();
   
   bool IsAnotherAmayaRunning();
-  void SendURLToOtherAmayaInstance(const wxString & url);
+  bool SendURLToOtherAmayaInstance(const wxString & url);
   void StartURLGrabberServer();
   void RegisterOpenURLCallback( OpenURLCallback callback );
   void CallOpenURLCallback( char * url );

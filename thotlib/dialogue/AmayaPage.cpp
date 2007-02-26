@@ -60,7 +60,7 @@ IMPLEMENT_DYNAMIC_CLASS(AmayaPage, wxPanel)
  *   ]
   -----------------------------------------------------------------------*/
 AmayaPage::AmayaPage( wxWindow * p_parent_window, AmayaWindow * p_amaya_parent_window )
-  :  wxPanel( p_parent_window, -1 )
+  :  wxPanel( p_parent_window, -1, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, wxT("AmayaPage"))
   ,m_pNoteBookParent( NULL )
   ,m_pWindowParent( p_amaya_parent_window )
   ,m_SlashRatio( 0.5 )
@@ -110,7 +110,7 @@ AmayaPage::AmayaPage( wxWindow * p_parent_window, AmayaWindow * p_amaya_parent_w
   m_pSplitterWindow->SetMinimumPaneSize( 50 );
 
   // Create a dummy panel to initilize the splitter window with something
-  m_DummyPanel = new wxPanel( m_pSplitterWindow );
+  m_DummyPanel = new wxPanel( m_pSplitterWindow, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, wxT("Empty default panel"));
   m_pSplitterWindow->Initialize( m_DummyPanel );
 
   // initialize the last open view name
@@ -179,17 +179,17 @@ AmayaFrame * AmayaPage::AttachFrame( AmayaFrame * p_frame, int position )
   // remember what is the oldframe
   AmayaFrame * oldframe = *pp_frame_container;
   if (p_frame == NULL || p_frame == oldframe )
-    {
-      if (!m_pSplitterWindow->IsSplit())
-      	{
-	  // on passe ici qd on essaye de charger un nouveau document dans la meme fenetre
-	  // je ne sais pas si c necessaire de forcer le split
-	  // de toute facon si on le fait il faut verifier que le top et le bottom ne sont pas null
-	  // m_pSplitterWindow->SplitHorizontally( m_pTopFrame, m_pBottomFrame );
-      	  AdjustSplitterPos();
-      	}
-      return NULL;
-    }
+  {
+    if (!m_pSplitterWindow->IsSplit())
+  	{
+  	  // on passe ici qd on essaye de charger un nouveau document dans la meme fenetre
+  	  // je ne sais pas si c necessaire de forcer le split
+  	  // de toute facon si on le fait il faut verifier que le top et le bottom ne sont pas null
+  	  // m_pSplitterWindow->SplitHorizontally( m_pTopFrame, m_pBottomFrame );
+    	  AdjustSplitterPos();
+  	}
+    return NULL;
+  }
 
   /* p_frame is the new top frame */  
   *pp_frame_container = p_frame;
@@ -198,28 +198,27 @@ AmayaFrame * AmayaPage::AttachFrame( AmayaFrame * p_frame, int position )
   if (oldframe != NULL)
     ok = m_pSplitterWindow->ReplaceWindow( oldframe, p_frame );
   else if (m_pBottomFrame == NULL || m_pTopFrame == NULL)
-    {
-      ok = m_pSplitterWindow->ReplaceWindow( m_DummyPanel, p_frame );
-      m_DummyPanel->Destroy();
-      m_DummyPanel = NULL;
-    }
+  {
+    ok = m_pSplitterWindow->ReplaceWindow( m_DummyPanel, p_frame );
+    m_DummyPanel->Hide();
+  }
   else
-    {
-      AmayaFrame * p_frame = GetFrame(1);
-      Document document = FrameTable[p_frame->GetFrameId()].FrDoc;
-      View view         = FrameTable[p_frame->GetFrameId()].FrView;
-      if (m_pSplitterWindow->GetSplitMode() == wxSPLIT_VERTICAL)
-	{
-	  ok = m_pSplitterWindow->SplitVertically( m_pTopFrame, m_pBottomFrame );
-	  TtaExecuteMenuAction ("ShowVSplitToggle", document, view, FALSE);
-	}
-      else
-	{
-	  ok = m_pSplitterWindow->SplitHorizontally( m_pTopFrame, m_pBottomFrame );
-	  TtaExecuteMenuAction ("ShowHSplitToggle", document, view, FALSE);
-	}
-      AdjustSplitterPos();
-    }
+  {
+    AmayaFrame * p_frame = GetFrame(1);
+    Document document = FrameTable[p_frame->GetFrameId()].FrDoc;
+    View view         = FrameTable[p_frame->GetFrameId()].FrView;
+    if (m_pSplitterWindow->GetSplitMode() == wxSPLIT_VERTICAL)
+  	{
+  	  ok = m_pSplitterWindow->SplitVertically( m_pTopFrame, m_pBottomFrame );
+  	  TtaExecuteMenuAction ("ShowVSplitToggle", document, view, FALSE);
+  	}
+    else
+  	{
+  	  ok = m_pSplitterWindow->SplitHorizontally( m_pTopFrame, m_pBottomFrame );
+  	  TtaExecuteMenuAction ("ShowHSplitToggle", document, view, FALSE);
+  	}
+    AdjustSplitterPos();
+  }
   wxASSERT_MSG(ok, _T("AmayaPage::AttachFrame -> Impossible d'attacher la frame") );
 
   // update old and new AmayaFrame parents
@@ -232,15 +231,12 @@ AmayaFrame * AmayaPage::AttachFrame( AmayaFrame * p_frame, int position )
   if (p_frame)
     p_frame->SetFrameTitle(p_frame->GetFrameTitle());
 
-  if ( m_pTopFrame && m_pBottomFrame )
-    {
-      /* hide the split button */
-      //      m_pSplitButtonBottom->ShowQuickSplitButton( false );
-    }
+//  if ( m_pTopFrame && m_pBottomFrame )
+//  {
+//    /* hide the split button */
+//    //      m_pSplitButtonBottom->ShowQuickSplitButton( false );
+//  }
   
-  // try to avoid refresh because it forces a total canvas redraw (it's not very optimized)
-  //p_frame->Refresh();
-
   SetAutoLayout(TRUE);
 
   // remember the last open view
@@ -290,13 +286,14 @@ AmayaFrame * AmayaPage::DetachFrame( int position )
     {
       // The frame is alone and can't be unsplit
       // => replace it with a dummy panel
-      m_DummyPanel = new wxPanel( m_pSplitterWindow );
+//      m_DummyPanel = new wxPanel( m_pSplitterWindow );
+      m_DummyPanel->Show();
 #ifdef __WXDEBUG__
       bool isReplaced = m_pSplitterWindow->ReplaceWindow( oldframe, m_DummyPanel );
+      wxASSERT_MSG( isReplaced, _T("La frame n'a pas pu etre remplacee") );
 #else /* __WXDEBUG__ */
       m_pSplitterWindow->ReplaceWindow( oldframe, m_DummyPanel );
 #endif /* __WXDEBUG__ */
-      wxASSERT_MSG( isReplaced, _T("La frame n'a pas pu etre remplacee") );
     }
 
   if (oldframe)
@@ -331,7 +328,8 @@ AmayaFrame * AmayaPage::DetachFrame( int position )
       /* show again the split button */
       //      m_pSplitButtonBottom->ShowQuickSplitButton( true );
     }
-  
+
+#ifdef _WINDOWS
   // simulate a size event to refresh the canvas ...
   // this is usefull when a document is modified and there is many open views :
   // if nothing is done here when a view is detached from the page, a undraw
@@ -342,6 +340,7 @@ AmayaFrame * AmayaPage::DetachFrame( int position )
       wxSizeEvent event( p_other_frame->GetCanvas()->GetSize() );
       wxPostEvent(p_other_frame->GetCanvas(), event );
     }
+#endif /* _WINDOWS */
 
   // check if there is no more frame in the page
   // if there is no more frame, the master frame must be erased 
@@ -468,13 +467,15 @@ wxSplitterWindow * AmayaPage::GetSplitterWindow()
   -----------------------------------------------------------------------*/
 void AmayaPage::DoSplitUnsplit()
 {
+    AmayaFrame * p_frame = GetFrame(1);
+    if (p_frame == NULL)
+      return;
+    Document document = FrameTable[p_frame->GetFrameId()].FrDoc;
+    View view         = FrameTable[p_frame->GetFrameId()].FrView;
+
   if (!m_pSplitterWindow->IsSplit())
     {
       // TODO: montrer la meme vue que la premiere frame
-      AmayaFrame * p_frame = GetFrame(1);
-      Document document = FrameTable[p_frame->GetFrameId()].FrDoc;
-      View view         = FrameTable[p_frame->GetFrameId()].FrView;
-      
       if ( !strcmp(m_LastOpenViewName, "Formatted_view") )
         TtaExecuteMenuAction ("ShowSource", document, view, FALSE);
       else if ( !strcmp(m_LastOpenViewName, "Links_view") )
@@ -488,8 +489,11 @@ void AmayaPage::DoSplitUnsplit()
     }
   else
     {
-      bool dummy = false;
-      m_pBottomFrame->DoClose(dummy);
+	  FrameToView(TtaGiveActiveFrame(), &document, &view);
+	  TtaExecuteMenuAction("Synchronize", document, view, TRUE);
+
+	  if(m_pBottomFrame)
+        m_pBottomFrame->Close();
     }
 }
 
@@ -512,17 +516,6 @@ void AmayaPage::DoSwitchHoriVert()
       AdjustSplitterPos();
       TtaCheckLostFocus(); // sometimes the focus is lost at this point
     }
-}
-
-
-/*----------------------------------------------------------------------
- *       Class:  AmayaPage
- *      Method:  OnSplitterPosChanging
- * Description:  this method is called when the splitter position start to change its position
-  -----------------------------------------------------------------------*/
-void AmayaPage::OnSplitterPosChanging( wxSplitterEvent& event )
-{
-  event.Skip();
 }
 
 /*----------------------------------------------------------------------
@@ -646,24 +639,22 @@ void AmayaPage::AdjustSplitterPos( int height, int width )
     m_pSplitterWindow->SetSashPosition( (int)new_slash_pos );
 }
 
+
 /*----------------------------------------------------------------------
  *       Class:  AmayaPage
- *      Method:  DoClose
- * Description:  called when the AmayaPage is closed.
- *               just call generic callbacks to close top frame and bottom frame
+ *      Method:  OnClose
+ * Description:  Intercept the CLOSE event and prevent it if ncecessary.
   -----------------------------------------------------------------------*/
-void AmayaPage::DoClose(bool & veto)
+void AmayaPage::OnClose(wxCloseEvent& event)
 {
-  TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaPage::DoClose topframe=%d bottomframe=%d"),
+  TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaPage::OnClose topframe=%d bottomframe=%d"),
                  m_pTopFrame ? m_pTopFrame->GetFrameId() : -1,
                  m_pBottomFrame ? m_pBottomFrame->GetFrameId() : -1 );
   
-  /* I suppose the page will be closed */
-  /* but it can be override to FALSE if the top or bottom frame has been modified */
   m_IsClosed = TRUE;
-  
   int frame_id = 0;
   AmayaFrame * p_AmayaFrame = NULL;
+
   // Kill top frame
   if ( m_pTopFrame )
     {
@@ -671,7 +662,7 @@ void AmayaPage::DoClose(bool & veto)
       frame_id     = m_pTopFrame->GetFrameId();
       
       // try to close the frame : the user can choose to close or not with a dialog
-      p_AmayaFrame->DoClose( veto );
+      p_AmayaFrame->Close();
       
       // if the user doesn't want to close then just reattach the frame
       if ( !TtaFrameIsClosed (frame_id) )
@@ -681,14 +672,14 @@ void AmayaPage::DoClose(bool & veto)
           m_IsClosed = FALSE;
         }
     }
-  
+
   // Kill bottom frame
-  if ( m_pBottomFrame )
+  if ( m_pBottomFrame && m_IsClosed)
     { 
       p_AmayaFrame = m_pBottomFrame;
       frame_id     = m_pBottomFrame->GetFrameId();
       // try to close the frame : the user can choose to close or not with a dialog
-      p_AmayaFrame->DoClose( veto );
+      p_AmayaFrame->Close();
       
       // if the user don't want to close then just reattach the frame
       if ( !TtaFrameIsClosed (frame_id) )
@@ -699,16 +690,23 @@ void AmayaPage::DoClose(bool & veto)
         }
       
     }
+
+  if(!m_IsClosed)
+  {
+	  event.Veto();
+  }
+
 }
 
 /*----------------------------------------------------------------------
  *       Class:  AmayaPage
- *      Method:  OnPaint
- * Description:  nothing is done
+ *      Method:  CleanUp
+ * Description:  check that there is no empty pages
+ *      Return:  true if the page can be removed from parent
   -----------------------------------------------------------------------*/
-void AmayaPage::OnPaint( wxPaintEvent& event )
+bool AmayaPage::CleanUp()
 {
-  event.Skip(FALSE);
+  return (!m_pTopFrame && !m_pBottomFrame);
 }
 
 /*----------------------------------------------------------------------
@@ -923,16 +921,6 @@ void AmayaPage::RaisePage()
 
 /*----------------------------------------------------------------------
  *       Class:  AmayaPage
- *      Method:  
- * Description:  
-  -----------------------------------------------------------------------*/
-void AmayaPage::OnContextMenu( wxContextMenuEvent & event )
-{
-  event.Skip();
-}
-
-/*----------------------------------------------------------------------
- *       Class:  AmayaPage
  *      Method:  RefreshSplitToggleMenu()
  * Description:  is called to toggle on/off the "Show/Hide panel" menu item depeding on
  *               the panel showing state.
@@ -961,18 +949,14 @@ int AmayaPage::GetMasterFrameId()
  *  the callbacks are assigned to an event type
  *----------------------------------------------------------------------*/
 BEGIN_EVENT_TABLE(AmayaPage, wxPanel)
-  EVT_SPLITTER_SASH_POS_CHANGING( -1, 	AmayaPage::OnSplitterPosChanging )
   EVT_SPLITTER_SASH_POS_CHANGED( -1, 	AmayaPage::OnSplitterPosChanged )
   EVT_SPLITTER_DCLICK( -1, 		AmayaPage::OnSplitterDClick )
   EVT_SPLITTER_UNSPLIT( -1, 		AmayaPage::OnSplitterUnsplit )
   
   EVT_SIZE( 				AmayaPage::OnSize )
-  //  EVT_CLOSE( 				AmayaPage::OnClose )
-  //  EVT_PAINT(                            AmayaPage::OnPaint )  
+  EVT_CLOSE( 				AmayaPage::OnClose )
 
   EVT_BUTTON( -1,                       AmayaPage::OnSplitButton)
-
-  //  EVT_CONTEXT_MENU(                     AmayaPage::OnContextMenu )
 
 END_EVENT_TABLE()
 
