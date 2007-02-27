@@ -101,8 +101,7 @@ make install prefix=$RPM_BUILD_ROOT/usr/share
 /usr/share/applications/
 /usr/share/Amaya/
 %post
-/bin/ln -f -s /usr/share/Amaya/wx/bin/amaya /usr/bin/amaya_wx
-#/bin/ln -f -s /usr/bin/amaya_wx /usr/bin/amaya
+/bin/ln -f -s /usr/share/Amaya/wx/bin/amaya /usr/bin/amaya
 %postun
 rm -f /usr/bin/amaya
 rm -f /usr/applications/Amaya.desktop
