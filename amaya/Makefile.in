@@ -36,12 +36,12 @@ comp_annot: $(amaya_comp_annot)
 # specific entry point check the dependancies
 #
 
-amaya : directories ../thotlib/libThotEditor.a amaya_schemas amaya_src ../bin/amaya
+amaya : directories ../thotlib/libThotEditor.a amaya_schemas amaya_src ../bin/amaya_bin
 
 #
 # General entry point everything should have compiled correctly
 #
-all : directories amaya_schemas amaya_src ../bin/amaya ../bin/print
+all : directories amaya_schemas amaya_src ../bin/amaya_bin ../bin/print
 
 clean :
 	$(RM) *.o *.h *.c EDITOR* HTML* TextFile* MathML* SVG* Timeline* XLink* XML* logo.* *.a
@@ -501,10 +501,10 @@ EDITORAPP.c : @srcdir@/EDITOR.A
 	../bin/app $(ALL_AMAYA_OPTIONS) EDITOR.A
 
 # amaya application
-../bin/amaya : $(AMAYA_OBJ) $(AMAYA_OPTION_OBJ) $(AMAYA_LIBS)
+../bin/amaya_bin : $(AMAYA_OBJ) $(AMAYA_OPTION_OBJ) $(AMAYA_LIBS)
 	@(if test ! -d ../bin ; then $(MKDIR) ../bin ; fi)
-	$(LD) $(LDFLAGS) -o ../bin/amaya $(AMAYA_OBJ) $(AMAYA_OPTION_OBJ) libCSS.a $(LIBS)
-	@$(ECHO) "====>" amaya is done
+	$(LD) $(LDFLAGS) -o ../bin/amaya_bin $(AMAYA_OBJ) $(AMAYA_OPTION_OBJ) libCSS.a $(LIBS)
+	@$(ECHO) "====>" amaya_bin is done
 
 ../bin/print :
 	@(cd ../thotlib ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)" print)

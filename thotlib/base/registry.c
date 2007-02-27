@@ -1351,9 +1351,12 @@ void TtaInitializeAppRegistry (char *appArgv0)
 #endif /* HAVE_LSTAT */
 #ifdef _UNIX
   /* amaya_exe is FALSE when running a compiler */
-  amaya_exe = (strlen (execname) > 4 &&
-               (!strcasecmp (&execname[strlen (execname)-5], "amaya") ||
-                !strcasecmp (&execname[strlen (execname)-5], "print")));
+  dir_end = &execname[strlen (execname)-1];
+  while (dir_end > execname && dir_end[-1] != DIR_SEP)
+    dir_end--;
+  amaya_exe = (strlen (dir_end) > 4 &&
+               (!strstr (dir_end, "amaya") ||
+               !strstr (dir_end, "print")));
 #endif /* _UNIX */
    
 #ifdef DEBUG_REGISTRY
@@ -1362,7 +1365,7 @@ void TtaInitializeAppRegistry (char *appArgv0)
    
   /* get the THOTDIR for this application. It's under a bin dir */
   dir_end = execname;
-  while (*dir_end) /* go to the ending NUL */
+  while (*dir_end) /* go to the ending NULL */
     dir_end++;
    
   /* remove the application name */

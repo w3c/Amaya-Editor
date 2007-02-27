@@ -66,15 +66,11 @@ if test ! -d $PREFIX/$AMAYA_INSTALLDIR/config/libconfig ; then $MKDIR $PREFIX/$A
 # install binaries
 $ECHO "--> Installing binaries"
 $INSTALL_BIN $AMAYA_SOURCEBINDIR/amaya $PREFIX/$AMAYA_INSTALLDIR/$AMAYAGUI/bin
+$INSTALL_BIN $AMAYA_SOURCEBINDIR/amaya_bin $PREFIX/$AMAYA_INSTALLDIR/$AMAYAGUI/bin
 $INSTALL_BIN $AMAYA_SOURCEBINDIR/print $PREFIX/$AMAYA_INSTALLDIR/$AMAYAGUI/bin
-$RM $BINDIR/amaya-$AMAYAGUI
-#$LN_S $PREFIX/$AMAYA_INSTALLDIR/$AMAYAGUI/bin/amaya $BINDIR/amaya-$AMAYAGUI
-$ECHO "Exec=env XLIB_SKIP_ARGB_VISUALS=1 $PREFIX/$AMAYA_INSTALLDIR/$AMAYAGUI/bin/amaya %u" >> $BINDIR/amaya-$AMAYAGUI
-$RM $BINDIR/amaya
-#$LN_S $BINDIR/amaya-$AMAYAGUI $BINDIR/amaya
+$LN_S $PREFIX/$AMAYA_INSTALLDIR/$AMAYAGUI/bin/amaya $BINDIR/amaya
 
 $ECHO "--> Installing data"
-
 AMAYAFILES="*.STR *.conf *.trans* *.en *.gif *.png *.PRS *.TRA AmayaPage.html AmayaPage.html.* AmayaPage_WX.html AmayaPage_WX.html.* *.css Amaya.svg"
 CONFIGFILES="XKeysymDB unix-thot.rc amaya.keyboard amaya.kb amaya.kb-mac amaya.profiles *-amayadialogue *-amayamsg *-libdialogue amaya.emacs annot.schemas *.rdf fonts.* gtkrc"
 LIBCONFIGFILES="*.css *.png *.lhtml *.svg"

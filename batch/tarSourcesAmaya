@@ -267,6 +267,7 @@ ${AMAYADIR}/Makefile.in \
 ${AMAYADIR}/install-sh \
 ${AMAYADIR}/stamp-h.in \
 ${AMAYADIR}/Options.in \
+${AMAYADIR}/batch/amaya.in \
 ${AMAYADIR}/batch/script_*.in \
 ${AMAYADIR}/batch/Makefile.in \
 ${AMAYADIR}/batch/tarAmaya \

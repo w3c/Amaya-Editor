@@ -8,13 +8,13 @@
 
 # neededforbuild  autoconf automake mmcore mmbase mmslib xpm libz libpng libjpeg
 
-%define version 9.54
+%define version 9.55
 
 Vendor:       W3C World Wide Web Consortium
 Distribution: W3C
 Name:         amaya_wx
 Release:      1
-Copyright:    Copyright 1995-2006 (MIT) (INRIA), (L)GPL compatible
+Copyright:    Copyright 1995-2007 (MIT) (INRIA), (L)GPL compatible
 Group:        X11/Applications/Networking
 URL:          http://www.w3.org/Amaya/
 Autoreqprov:  on
@@ -42,8 +42,8 @@ Authors:
     Vincent.Quint@inria.fr, Laurent.Carcone@w3.org
 
 %changelog
-* Thu Oct 26 2006 Irene Vatton <Irene.Vatton@inrialpes.fr>
-  Introduction of the AmayaV.R directory in the fullsrc tar file
+* Mon Feb 26 2007 Irene Vatton <Irene.Vatton@inrialpes.fr>
+  Introduction of a script to launch amaya
 * Fri Sep 2 2005  Irene Vatton <Irene.Vatton@w3.org>
   and Stephane Gully
   Gnome/Kde integration
@@ -99,12 +99,12 @@ make install prefix=$RPM_BUILD_ROOT/usr/share
 %doc README.amaya
 /usr/share/pixmaps/
 /usr/share/applications/
-/usr/share/Amaya-%{version}/
+/usr/share/Amaya/
 %post
-/bin/ln -f -s /usr/share/Amaya-%{version}/wx/bin/amaya /usr/bin/amaya_wx
+/bin/ln -f -s /usr/share/Amaya/wx/bin/amaya /usr/bin/amaya_wx
 #/bin/ln -f -s /usr/bin/amaya_wx /usr/bin/amaya
 %postun
 rm -f /usr/bin/amaya
-rm -f /usr/applications/Amaya-%{version}.desktop
-rm -f /usr/pixmaps/amaya-%{version}.png
+rm -f /usr/applications/Amaya.desktop
+rm -f /usr/pixmaps/amaya.png
 

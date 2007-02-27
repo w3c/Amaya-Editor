@@ -2,7 +2,7 @@
 #
 # This script install Gnome/Kde integration for Amaya
 # Stephane Gully, 2005
-# Irene Vatton, 2007
+# Update Irene Vatton, 2007
 #
 
 CP="@CP@"
@@ -10,7 +10,6 @@ MV="@MV@"
 RM="@RM@ -f"
 LN_S="@LN_S@"
 MKDIR="@MKDIR@"
-CHMOD="/bin/chmod a+x"
 ECHO="@ECHO@"
 
 # test parameters
@@ -58,28 +57,22 @@ if test ! -d $GNOMEKDEDIR/applications ; then
   exit
 fi
 
-# --- creating /usr/bin/amaya-version
-$RM /usr/bin/amaya
-$ECHO -e "#\041/bin/sh" > /usr/bin/amaya
-$ECHO "env XLIB_SKIP_ARGB_VISUALS=1 $PREFIX/$AMAYA_INSTALLDIR/$AMAYAGUI/bin/amaya \${1+"\$@"}" >> /usr/bin/amaya
-$CHMOD /usr/bin/amaya
+# --- creating amaya.desktop
+$ECHO "--> Creating $GNOMEKDEDIR/applications/amaya.desktop file"
+$ECHO "[Desktop Entry]" > $GNOMEKDEDIR/applications/amaya.desktop
+$ECHO "Encoding=UTF-8" >> $GNOMEKDEDIR/applications/amaya.desktop
+$ECHO "Name=Amaya" >> $GNOMEKDEDIR/applications/amaya.desktop
+$ECHO "Comment=Edit the Web" >> $GNOMEKDEDIR/applications/amaya.desktop
+$ECHO "Comment[fr]=Editez le Web" >> $GNOMEKDEDIR/applications/amaya.desktop
+$ECHO "Categories=Application;Network;Development;" >> $GNOMEKDEDIR/applications/amaya.desktop
+$ECHO "Exec=env XLIB_SKIP_ARGB_VISUALS=1 $PREFIX/$AMAYA_INSTALLDIR/$AMAYAGUI/bin/amaya_bin %u" >> $GNOMEKDEDIR/applications/amaya.desktop
+$ECHO "Icon=amaya.png" >> $GNOMEKDEDIR/applications/amaya.desktop
+$ECHO "Terminal=false" >> $GNOMEKDEDIR/applications/amaya.desktop
+$ECHO "Type=Application" >> $GNOMEKDEDIR/applications/amaya.desktop
+$ECHO "MimeType=text/html;text/xml;application/xhtml+xml;application/xml" >> $GNOMEKDEDIR/applications/amaya.desktop
 
-# --- creating amaya-version.desktop
-$ECHO "--> Creating $GNOMEKDEDIR/applications/amaya-@APP_VER@.desktop file"
-$ECHO "[Desktop Entry]" > $GNOMEKDEDIR/applications/amaya-@APP_VER@.desktop
-$ECHO "Encoding=UTF-8" >> $GNOMEKDEDIR/applications/amaya-@APP_VER@.desktop
-$ECHO "Name=Amaya @APP_VER@" >> $GNOMEKDEDIR/applications/amaya-@APP_VER@.desktop
-$ECHO "Comment=Edit the Web" >> $GNOMEKDEDIR/applications/amaya-@APP_VER@.desktop
-$ECHO "Comment[fr]=Editez le Web" >> $GNOMEKDEDIR/applications/amaya-@APP_VER@.desktop
-$ECHO "Categories=Application;Network;Development;" >> $GNOMEKDEDIR/applications/amaya-@APP_VER@.desktop
-$ECHO "Exec=env XLIB_SKIP_ARGB_VISUALS=1 $PREFIX/$AMAYA_INSTALLDIR/$AMAYAGUI/bin/amaya %u" >> $GNOMEKDEDIR/applications/amaya-@APP_VER@.desktop
-$ECHO "Icon=amaya-@APP_VER@.png" >> $GNOMEKDEDIR/applications/amaya-@APP_VER@.desktop
-$ECHO "Terminal=false" >> $GNOMEKDEDIR/applications/amaya-@APP_VER@.desktop
-$ECHO "Type=Application" >> $GNOMEKDEDIR/applications/amaya-@APP_VER@.desktop
-$ECHO "MimeType=text/html;text/xml;application/xhtml+xml;application/xml" >> $GNOMEKDEDIR/applications/amaya-@APP_VER@.desktop
-
-# --- creating amaya-version.png
-$ECHO "--> Creating $GNOMEKDEDIR/pixmaps/amaya-@APP_VER@.png"
-$CP $AMAYA_SOURCEBINDIR/../../resources/bundle/logo.png $GNOMEKDEDIR/pixmaps/amaya-@APP_VER@.png
+# --- creating amaya.png
+$ECHO "--> Creating $GNOMEKDEDIR/pixmaps/amaya.png"
+$CP $AMAYA_SOURCEBINDIR/../../resources/bundle/logo.png $GNOMEKDEDIR/pixmaps/amaya.png
 
 $ECHO "-- Installing Gnome/Kde integration for $AMAYA_INSTALLDIR into $GNOMEKDEDIR done --"

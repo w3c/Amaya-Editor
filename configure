@@ -13921,7 +13921,7 @@ fi # with_wx = no
 
 # the wx version
 AMAYAWX_MAJVER=9
-AMAYAWX_MINVER=54
+AMAYAWX_MINVER=55
 AMAYAWX_SUBVER=0
 
 #the old version (to remove when switching on wx)
@@ -14945,7 +14945,7 @@ if test "${VPATHOPT}" = "" ; then
 	VPATHOPT="VPATH"
 fi
 
-AMAYA_INSTALLDIR="Amaya-${APP_VER}"
+AMAYA_INSTALLDIR="Amaya"
 
 
 
@@ -15031,6 +15031,7 @@ make_output="Makefile Options.orig:Options.in tools/Makefile \
        tools/mkdep/Makefile \
        tools/cextract-1.7/Makefile thotlib/Makefile \
        thotlib/include/Makefile batch/Makefile \
+       bin/amaya:../batch/amaya.in \
        script_install:../batch/script_install.in \
        script_install_gnomekde:../batch/script_install_gnomekde.in \
        script_install_macosxbundle:../batch/script_install_macosxbundle.in \
@@ -16397,6 +16398,9 @@ if test -f script_install_macosxbundle ; then
 fi
 if test -f script_uninstall ; then
    chmod a+x script_uninstall
+fi
+if test -f bin/amaya ; then
+   chmod a+x bin/amaya
 fi
  ;;
   esac
