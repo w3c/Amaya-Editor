@@ -859,10 +859,9 @@ if test -n "$ac_init_help"; then
 Optional Features:
   --disable-FEATURE       do not include FEATURE (same as --enable-FEATURE=no)
   --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
-  --enable-system-wx try the wxWidgets system library
+  --enable-system-wx      try the wxWidgets system library
   --disable-svg           disable SVG support
   --disable-annot         disable Annotations support
-  --enable-bookmarks      enable experimental bookmark support
   --enable-system-redland try the redland RDF system library
   --disable-templates     disable experimental templates support
   --disable-generic-xml   disable Generic XML support
@@ -870,15 +869,14 @@ Optional Features:
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
   --without-PACKAGE       do not use PACKAGE (same as --with-PACKAGE=no)
-  --with-gl               enable Opengl canvas (experimental)
-  --with-gtk              use GTK GUI toolkit
-  --with-wx               use wxWidgets GUI toolkit
-  --with-mesa         enable canvas with software OpenGL implementation (Mesa)
+  --with-gl               enable canvas with hardware OpenGL implementation
+
+  --with-mesa             enable canvas with software OpenGL implementation (default)
   --with-wxdebug          compiles wxWidgets with debuging options
   --with-wxsrcdir=...     compiles Amaya with a specific wxWidgets sources path
   --with-graphiclibs      use static libjpeg, libpng.
-  --with-debug          compiles Amaya with debuging options (-g)
-  --with-dav              enable WebDAV support (experimental)
+  --with-debug            compiles Amaya with debuging options (-g)
+  --with-dav              enable WebDAV support (default)
 
 Some influential environment variables:
   CC          C compiler command
@@ -14561,7 +14559,7 @@ else
   with_svg="yes"
 fi;
 
-##########################Annotations and Bookmarks Support####################
+##########################Annotations Support####################
 # Check whether --enable-annot or --disable-annot was given.
 if test "${enable_annot+set}" = set; then
   enableval="$enable_annot"
@@ -14576,40 +14574,9 @@ else
   with_annot="yes"
 fi;
 
-# Check whether --enable-bookmarks or --disable-bookmarks was given.
-if test "${enable_bookmarks+set}" = set; then
-  enableval="$enable_bookmarks"
-  case "${enableval}" in
-	  yes) with_bookmarks="yes" ;;
-	  no)  with_bookmarks="no" ;;
-	  *) { { echo "$as_me:$LINENO: error: bad value ${enableval} for --enable-bookmarks" >&5
-echo "$as_me: error: bad value ${enableval} for --enable-bookmarks" >&2;}
-   { (exit 1); exit 1; }; } ;;
-	esac
-else
-  with_bookmarks="no"
-fi;
 
-#if the directory containing Annotlib
-#and Bookmarks is not present,
-#don't try to build them
-if test ! -f $srcdir/annotlib/Makefile.in ; then
-	{ echo "$as_me:$LINENO: WARNING: Annotation makefile not found !!" >&5
-echo "$as_me: WARNING: Annotation makefile not found !!" >&2;}
-	{ echo "$as_me:$LINENO: WARNING: Disabling Annotations build !" >&5
-echo "$as_me: WARNING: Disabling Annotations build !" >&2;}
-	with_annot="no"
-	with_bookmarks="no"
-fi
-
-if test "$with_bookmarks" = "yes" -a "$with_annot" = "no" ; then
-   { echo "$as_me:$LINENO: WARNING: Disabling bookmarks build as annotations are disabled !" >&5
-echo "$as_me: WARNING: Disabling bookmarks build as annotations are disabled !" >&2;}
-   with_bookmarks="no"
-fi
-
-#annot and bookmarks need Redland
-if test "$with_annot" = "yes" -o "$with_bookmarks" = "yes" ; then
+#annot need Redland
+if test "$with_annot" = "yes" ; then
 	with_redland="yes"
 else
 	with_redland="no"
@@ -14726,7 +14693,7 @@ fi
 
 #At this point, we know everything about Redland,
 #so either set the variables we will need later,
-#ot disable Annotations and Bookmarks
+#or disable Annotations
 if test "$with_redland" = "yes" ; then
 	AMAYA_ANNOT_OPTIONS="$AMAYA_ANNOT_OPTIONS -DAM_REDLAND"
 	if test "$with_system_redland" != "yes" ; then
@@ -14746,18 +14713,11 @@ if test "$with_redland" = "yes" ; then
        fi
 else
 	with_annot="no"
-	with_bookmarks="no"
 fi
 
-#Bookmarks require some specific flags
-if test "$with_bookmarks" = "yes" ; then
-	ANNOTLIB_COMPILE_BM=
-	AMAYA_ANNOT_OPTIONS="$AMAYA_ANNOT_OPTIONS -DBOOKMARKS"
-else
-	ANNOTLIB_COMPILE_BM='#'
-fi
+ANNOTLIB_COMPILE_BM='#'
 
-###################End of Annotations and Bookmarks Support####################
+###################End of Annotations Support####################
 
 
 # Check whether --enable-templates or --disable-templates was given.
@@ -16455,9 +16415,6 @@ if test "$build_amaya" = "yes" ; then
 	else
 	  echo Amaya configured with the Redland RDF library \(system\)
 	fi
-    fi
-    if test "$with_bookmarks" = "yes" ; then
-	echo Amaya configured with bookmarks support \(experimental\)
     fi
     if test "$with_templates" = "yes" ; then
 	echo Amaya configured with templates support \(experimental\)
