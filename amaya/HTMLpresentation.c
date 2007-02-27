@@ -160,6 +160,7 @@ void DeleteSpanIfNoAttr (Element el, Document doc, Element *firstChild,
             }
           TtaDeleteTree (span, doc);
           TtaSelectElement (doc, *firstChild);
+          TtaSetStatusSelectedElement(doc, 1, *firstChild);
         }
     }
 }
@@ -220,6 +221,7 @@ void  AttrToSpan (Element elem, Attribute attr, Document doc)
           TtaRegisterAttributeDelete (attr, elem, doc);
           TtaRemoveAttribute (elem, attr, doc);
           TtaSelectElement (doc, elem);
+          TtaSetStatusSelectedElement(doc, 1, elem);
         }
     }
 }
