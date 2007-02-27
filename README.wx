@@ -59,7 +59,7 @@ you must follow http://www.w3.org/Amaya/User/Autoconf.html instructions.
 run the configure like this
 #mkdir WX
 #cd WX
-#../configure --with-wx
+#../configure
 
 On Windows, open the amaya.dsw that is in the "WindowsWX" subdirectory 
 of source distribution, and follow the instructions at 

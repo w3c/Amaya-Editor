@@ -254,9 +254,7 @@ ${AMAYADIR}/libpng/zlib/README \
 ${AMAYADIR}/libpng/zlib/*.c \
 ${AMAYADIR}/libpng/zlib/*.h \
 ${AMAYADIR}/libpng/zlib/descrip.mms \
-${AMAYADIR}/README.amaya \
 ${AMAYADIR}/README \
-${AMAYADIR}/README.gl \
 ${AMAYADIR}/README.wx \
 ${AMAYADIR}/config.guess \
 ${AMAYADIR}/config.h.in \
