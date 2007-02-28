@@ -28,7 +28,6 @@ class AmayaApp : public wxApp
 public:
   void RegisterOpenURLCallback( OpenURLCallback callback );
   void CallOpenURLCallback( char * url );
-
   int FilterEvent(wxEvent& event);
 
 #ifdef _GL

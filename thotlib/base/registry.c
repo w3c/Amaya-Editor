@@ -621,6 +621,14 @@ char *TtaGetEnvString (char *name)
 #ifdef DEBUG_REGISTRY
           fprintf (stderr, "TtaGetEnvString(\"%s\") = %s\n", name, cour->value);
 #endif
+#ifdef _WX
+          if (!strcmp (name, "LANG"))
+            {
+              int lang = TtaGetSystemLanguage();
+              // get the system language
+              return TtaGetISO639Code(lang);
+            }
+#endif /* _WX */
           return (cour->value);
         }
       cour = cour->next;

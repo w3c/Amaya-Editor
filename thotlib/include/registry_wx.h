@@ -13,6 +13,7 @@ typedef enum
 
 extern wxString TtaGetResourcePathWX( wxResourceType type, const char * filename );
 extern wxString TtaGetHomeDir();
+extern int TtaGetSystemLanguage( );
 
 #endif /* _WX */
 

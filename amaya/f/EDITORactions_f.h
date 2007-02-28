@@ -6,21 +6,21 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void NewXHTML ( Document document,
+extern void NewXHTML ( Document doc,
                        View view );
-extern void NewXHTMLBasic ( Document document,
+extern void NewXHTMLBasic ( Document doc,
                             View view );
-extern void NewXHTMLStrict ( Document document,
+extern void NewXHTMLStrict ( Document doc,
                              View view );
-extern void NewXHTML11 ( Document document,
+extern void NewXHTML11 ( Document doc,
                          View view );
-extern void NewXHTMLTransitional ( Document document,
+extern void NewXHTMLTransitional ( Document doc,
                                    View view );
-extern void NewMathML ( Document document,
+extern void NewMathML ( Document doc,
                         View view );
-extern void NewSVG ( Document document,
+extern void NewSVG ( Document doc,
                      View view );
-extern void NewCss ( Document document,
+extern void NewCss ( Document doc,
                      View view );
 extern void CreateDoctype ( Document doc,
                             Element doctype,
@@ -34,39 +34,39 @@ extern void InitializeNewDoc ( char *url,
                                ThotBool isXML );
 extern void NotFoundDoc ( char *url,
                           Document doc );
-extern void RemoveDoctype ( Document document,
+extern void RemoveDoctype ( Document doc,
                             View view );
-extern void AddDoctype ( Document document,
+extern void AddDoctype ( Document doc,
                          View view );
-extern void CreateDoctypeXhtml11 ( Document document,
+extern void CreateDoctypeXhtml11 ( Document doc,
                                    View view );
-extern void CreateDoctypeXhtmlTransitional ( Document document,
+extern void CreateDoctypeXhtmlTransitional ( Document doc,
                                              View view );
-extern void CreateDoctypeXhtmlStrict ( Document document,
+extern void CreateDoctypeXhtmlStrict ( Document doc,
                                        View view );
-extern void CreateDoctypeXhtmlBasic ( Document document,
+extern void CreateDoctypeXhtmlBasic ( Document doc,
                                       View view );
-extern void CreateDoctypeHtmlTransitional ( Document document,
+extern void CreateDoctypeHtmlTransitional ( Document doc,
                                             View view );
-extern void CreateDoctypeHtmlStrict ( Document document,
+extern void CreateDoctypeHtmlStrict ( Document doc,
                                       View view );
-extern void CreateDoctypeMathML ( Document document,
+extern void CreateDoctypeMathML ( Document doc,
                                   View view );
-extern void CreateDoctypeSVG ( Document document,
+extern void CreateDoctypeSVG ( Document doc,
                                View view );
-extern void PasteBuffer ( Document document,
+extern void PasteBuffer ( Document doc,
                           View view );
-extern void SpellCheck ( Document document,
+extern void SpellCheck ( Document doc,
                          View view );
-extern void CreateBreak ( Document document,
+extern void CreateBreak ( Document doc,
                           View view );
-extern void CreateBase ( Document document,
+extern void CreateBase ( Document doc,
                          View view );
-extern void CreateMeta ( Document document,
+extern void CreateMeta ( Document doc,
                          View view );
-extern void CreateLinkInHead ( Document document,
+extern void CreateLinkInHead ( Document doc,
                                View view );
-extern void CreateStyle ( Document document,
+extern void CreateStyle ( Document doc,
                           View view );
 extern void CreateComment ( Document doc,
                             View view );
@@ -77,50 +77,50 @@ extern void CreateScript ( Document doc,
 extern ThotBool HTMLelementAllowed ( Document doc );
 extern void CreateHTMLelement ( int typeNum,
                                 Document doc );
-extern void CreateParagraph ( Document document,
+extern void CreateParagraph ( Document doc,
                               View view );
-extern void CreateHeading1 ( Document document,
+extern void CreateHeading1 ( Document doc,
                              View view );
-extern void CreateHeading2 ( Document document,
+extern void CreateHeading2 ( Document doc,
                              View view );
-extern void CreateHeading3 ( Document document,
+extern void CreateHeading3 ( Document doc,
                              View view );
-extern void CreateHeading4 ( Document document,
+extern void CreateHeading4 ( Document doc,
                              View view );
-extern void CreateHeading5 ( Document document,
+extern void CreateHeading5 ( Document doc,
                              View view );
-extern void CreateHeading6 ( Document document,
+extern void CreateHeading6 ( Document doc,
                              View view );
 extern void CreateMap ( Document doc,
                         View view );
-extern void CreateList ( Document document,
+extern void CreateList ( Document doc,
                          View view );
-extern void CreateNumberedList ( Document document,
+extern void CreateNumberedList ( Document doc,
                                  View view );
-extern void CreateDefinitionList ( Document document,
+extern void CreateDefinitionList ( Document doc,
                                    View view );
-extern void CreateDefinitionTerm ( Document document,
+extern void CreateDefinitionTerm ( Document doc,
                                    View view );
-extern void CreateDefinitionDef ( Document document,
+extern void CreateDefinitionDef ( Document doc,
                                   View view );
-extern void CreateHorizontalRule ( Document document,
+extern void CreateHorizontalRule ( Document doc,
                                    View view );
-extern void CreateBlockQuote ( Document document,
+extern void CreateBlockQuote ( Document doc,
                                View view );
-extern void CreatePreformatted ( Document document,
+extern void CreatePreformatted ( Document doc,
                                  View view );
-extern void CreateRuby ( Document document,
+extern void CreateRuby ( Document doc,
                          View view );
-extern void CreateAddress ( Document document,
+extern void CreateAddress ( Document doc,
                             View view );
-extern void DoTableCreation ( Document document );
-extern void CreateTable ( Document document,
+extern void DoTableCreation ( Document doc );
+extern void CreateTable ( Document doc,
                           View view );
-extern void CreateCaption ( Document document,
+extern void CreateCaption ( Document doc,
                             View view );
-extern void CreateColgroup ( Document document,
+extern void CreateColgroup ( Document doc,
                              View view );
-extern void CreateCol ( Document document,
+extern void CreateCol ( Document doc,
                         View view );
 extern void ChangeToDataCell ( Document doc,
                                View view );
@@ -156,11 +156,11 @@ extern void CreateTBody ( Document doc,
                           View view );
 extern void CreateTFoot ( Document doc,
                           View view );
-extern Element GetEnclosingForm ( Document document,
+extern Element GetEnclosingForm ( Document doc,
                                   View view );
 extern void CreateForm ( Document doc,
                          View view );
-extern void CreateFieldset ( Document document,
+extern void CreateFieldset ( Document doc,
                              View view );
 extern void CreateToggle ( Document doc,
                            View view );
@@ -171,7 +171,7 @@ extern void AttrSelectedDeleted ( NotifyAttribute * event );
 extern ThotBool DeleteAttrSelected ( NotifyAttribute * event );
 extern void CreateOption ( Document doc,
                            View view );
-extern void CreateOptGroup ( Document document,
+extern void CreateOptGroup ( Document doc,
                              View view );
 extern void CreateTextInput ( Document doc,
                               View view );
@@ -193,13 +193,13 @@ extern void CreateSubmit ( Document doc,
                            View view );
 extern void CreateReset ( Document doc,
                           View view );
-extern void CreateDivision ( Document document,
+extern void CreateDivision ( Document doc,
                              View view );
-extern void CreateNOSCRIPT ( Document document,
+extern void CreateNOSCRIPT ( Document doc,
                              View view );
-extern void CreateIFrame ( Document document,
+extern void CreateIFrame ( Document doc,
                            View view );
-extern void CreateParameter ( Document document,
+extern void CreateParameter ( Document doc,
                               View view );
 extern void CreateOrChangeLink ( Document doc,
                                  View view );
@@ -240,56 +240,56 @@ extern void PostAnnotation ( Document doc,
                              View view );
 extern void DeleteAnnotation ( Document doc,
                                View view );
-extern void FilterAnnot ( Document document,
+extern void FilterAnnot ( Document doc,
                           View view );
-extern void MoveAnnotationXPtr ( Document document,
+extern void MoveAnnotationXPtr ( Document doc,
                                  View view );
-extern void MoveAnnotationSel ( Document document,
+extern void MoveAnnotationSel ( Document doc,
                                 View view );
-extern void ReplyToAnnotation ( Document document,
+extern void ReplyToAnnotation ( Document doc,
                                 View view );
-extern void CustomQuery ( Document document,
+extern void CustomQuery ( Document doc,
                           View view );
-extern void BookmarkFile ( Document document,
+extern void BookmarkFile ( Document doc,
                            View view );
-extern void EditTopics ( Document document,
+extern void EditTopics ( Document doc,
                          View view );
-extern void AddSeparator ( Document document,
+extern void AddSeparator ( Document doc,
                            View view );
-extern void ViewBookmarks ( Document document,
+extern void ViewBookmarks ( Document doc,
                             View view );
-extern void MoveItem ( Document document,
+extern void MoveItem ( Document doc,
                        View view );
-extern void LockDocument ( Document document,
+extern void LockDocument ( Document doc,
                            View view );
-extern void UnlockDocument ( Document document,
+extern void UnlockDocument ( Document doc,
                              View view );
-extern void PropDocument ( Document document,
+extern void PropDocument ( Document doc,
                            View view );
-extern void CopyLockInformation ( Document document,
+extern void CopyLockInformation ( Document doc,
                                   View view );
-extern void CooperationConfig ( Document document,
+extern void CooperationConfig ( Document doc,
                                 View view );
-extern void LockIndicator ( Document document,
+extern void LockIndicator ( Document doc,
                             View view );
 
 #else /* __STDC__ */
 
-extern void NewXHTML ( Document document,
+extern void NewXHTML ( Document doc,
                          View view );
-extern void NewXHTMLBasic ( Document document,
+extern void NewXHTMLBasic ( Document doc,
                               View view );
-extern void NewXHTMLStrict ( Document document,
+extern void NewXHTMLStrict ( Document doc,
                                View view );
-extern void NewXHTML11 ( Document document,
+extern void NewXHTML11 ( Document doc,
                            View view );
-extern void NewXHTMLTransitional ( Document document,
+extern void NewXHTMLTransitional ( Document doc,
                                      View view );
-extern void NewMathML ( Document document,
+extern void NewMathML ( Document doc,
                           View view );
-extern void NewSVG ( Document document,
+extern void NewSVG ( Document doc,
                        View view );
-extern void NewCss ( Document document,
+extern void NewCss ( Document doc,
                        View view );
 extern void CreateDoctype ( Document doc,
                               Element doctype,
@@ -303,39 +303,39 @@ extern void InitializeNewDoc ( char *url,
                                  ThotBool isXML );
 extern void NotFoundDoc ( char *url,
                             Document doc );
-extern void RemoveDoctype ( Document document,
+extern void RemoveDoctype ( Document doc,
                               View view );
-extern void AddDoctype ( Document document,
+extern void AddDoctype ( Document doc,
                            View view );
-extern void CreateDoctypeXhtml11 ( Document document,
+extern void CreateDoctypeXhtml11 ( Document doc,
                                      View view );
-extern void CreateDoctypeXhtmlTransitional ( Document document,
+extern void CreateDoctypeXhtmlTransitional ( Document doc,
                                                View view );
-extern void CreateDoctypeXhtmlStrict ( Document document,
+extern void CreateDoctypeXhtmlStrict ( Document doc,
                                          View view );
-extern void CreateDoctypeXhtmlBasic ( Document document,
+extern void CreateDoctypeXhtmlBasic ( Document doc,
                                         View view );
-extern void CreateDoctypeHtmlTransitional ( Document document,
+extern void CreateDoctypeHtmlTransitional ( Document doc,
                                               View view );
-extern void CreateDoctypeHtmlStrict ( Document document,
+extern void CreateDoctypeHtmlStrict ( Document doc,
                                         View view );
-extern void CreateDoctypeMathML ( Document document,
+extern void CreateDoctypeMathML ( Document doc,
                                     View view );
-extern void CreateDoctypeSVG ( Document document,
+extern void CreateDoctypeSVG ( Document doc,
                                  View view );
-extern void PasteBuffer ( Document document,
+extern void PasteBuffer ( Document doc,
                             View view );
-extern void SpellCheck ( Document document,
+extern void SpellCheck ( Document doc,
                            View view );
-extern void CreateBreak ( Document document,
+extern void CreateBreak ( Document doc,
                             View view );
-extern void CreateBase ( Document document,
+extern void CreateBase ( Document doc,
                            View view );
-extern void CreateMeta ( Document document,
+extern void CreateMeta ( Document doc,
                            View view );
-extern void CreateLinkInHead ( Document document,
+extern void CreateLinkInHead ( Document doc,
                                  View view );
-extern void CreateStyle ( Document document,
+extern void CreateStyle ( Document doc,
                             View view );
 extern void CreateComment ( Document doc,
                               View view );
@@ -346,50 +346,50 @@ extern void CreateScript ( Document doc,
 extern ThotBool HTMLelementAllowed ( Document doc );
 extern void CreateHTMLelement ( int typeNum,
                                   Document doc );
-extern void CreateParagraph ( Document document,
+extern void CreateParagraph ( Document doc,
                                 View view );
-extern void CreateHeading1 ( Document document,
+extern void CreateHeading1 ( Document doc,
                                View view );
-extern void CreateHeading2 ( Document document,
+extern void CreateHeading2 ( Document doc,
                                View view );
-extern void CreateHeading3 ( Document document,
+extern void CreateHeading3 ( Document doc,
                                View view );
-extern void CreateHeading4 ( Document document,
+extern void CreateHeading4 ( Document doc,
                                View view );
-extern void CreateHeading5 ( Document document,
+extern void CreateHeading5 ( Document doc,
                                View view );
-extern void CreateHeading6 ( Document document,
+extern void CreateHeading6 ( Document doc,
                                View view );
 extern void CreateMap ( Document doc,
                           View view );
-extern void CreateList ( Document document,
+extern void CreateList ( Document doc,
                            View view );
-extern void CreateNumberedList ( Document document,
+extern void CreateNumberedList ( Document doc,
                                    View view );
-extern void CreateDefinitionList ( Document document,
+extern void CreateDefinitionList ( Document doc,
                                      View view );
-extern void CreateDefinitionTerm ( Document document,
+extern void CreateDefinitionTerm ( Document doc,
                                      View view );
-extern void CreateDefinitionDef ( Document document,
+extern void CreateDefinitionDef ( Document doc,
                                     View view );
-extern void CreateHorizontalRule ( Document document,
+extern void CreateHorizontalRule ( Document doc,
                                      View view );
-extern void CreateBlockQuote ( Document document,
+extern void CreateBlockQuote ( Document doc,
                                  View view );
-extern void CreatePreformatted ( Document document,
+extern void CreatePreformatted ( Document doc,
                                    View view );
-extern void CreateRuby ( Document document,
+extern void CreateRuby ( Document doc,
                            View view );
-extern void CreateAddress ( Document document,
+extern void CreateAddress ( Document doc,
                               View view );
-extern void DoTableCreation ( Document document );
-extern void CreateTable ( Document document,
+extern void DoTableCreation ( Document doc );
+extern void CreateTable ( Document doc,
                             View view );
-extern void CreateCaption ( Document document,
+extern void CreateCaption ( Document doc,
                               View view );
-extern void CreateColgroup ( Document document,
+extern void CreateColgroup ( Document doc,
                                View view );
-extern void CreateCol ( Document document,
+extern void CreateCol ( Document doc,
                           View view );
 extern void ChangeToDataCell ( Document doc,
                                  View view );
@@ -425,11 +425,11 @@ extern void CreateTBody ( Document doc,
                             View view );
 extern void CreateTFoot ( Document doc,
                             View view );
-extern Element GetEnclosingForm ( Document document,
+extern Element GetEnclosingForm ( Document doc,
                                     View view );
 extern void CreateForm ( Document doc,
                            View view );
-extern void CreateFieldset ( Document document,
+extern void CreateFieldset ( Document doc,
                                View view );
 extern void CreateToggle ( Document doc,
                              View view );
@@ -440,7 +440,7 @@ extern void AttrSelectedDeleted ( NotifyAttribute * event );
 extern ThotBool DeleteAttrSelected ( NotifyAttribute * event );
 extern void CreateOption ( Document doc,
                              View view );
-extern void CreateOptGroup ( Document document,
+extern void CreateOptGroup ( Document doc,
                                View view );
 extern void CreateTextInput ( Document doc,
                                 View view );
@@ -462,13 +462,13 @@ extern void CreateSubmit ( Document doc,
                              View view );
 extern void CreateReset ( Document doc,
                             View view );
-extern void CreateDivision ( Document document,
+extern void CreateDivision ( Document doc,
                                View view );
-extern void CreateNOSCRIPT ( Document document,
+extern void CreateNOSCRIPT ( Document doc,
                                View view );
-extern void CreateIFrame ( Document document,
+extern void CreateIFrame ( Document doc,
                              View view );
-extern void CreateParameter ( Document document,
+extern void CreateParameter ( Document doc,
                                 View view );
 extern void CreateOrChangeLink ( Document doc,
                                    View view );
@@ -509,37 +509,37 @@ extern void PostAnnotation ( Document doc,
                                View view );
 extern void DeleteAnnotation ( Document doc,
                                  View view );
-extern void FilterAnnot ( Document document,
+extern void FilterAnnot ( Document doc,
                             View view );
-extern void MoveAnnotationXPtr ( Document document,
+extern void MoveAnnotationXPtr ( Document doc,
                                    View view );
-extern void MoveAnnotationSel ( Document document,
+extern void MoveAnnotationSel ( Document doc,
                                   View view );
-extern void ReplyToAnnotation ( Document document,
+extern void ReplyToAnnotation ( Document doc,
                                   View view );
-extern void CustomQuery ( Document document,
+extern void CustomQuery ( Document doc,
                             View view );
-extern void BookmarkFile ( Document document,
+extern void BookmarkFile ( Document doc,
                              View view );
-extern void EditTopics ( Document document,
+extern void EditTopics ( Document doc,
                            View view );
-extern void AddSeparator ( Document document,
+extern void AddSeparator ( Document doc,
                              View view );
-extern void ViewBookmarks ( Document document,
+extern void ViewBookmarks ( Document doc,
                               View view );
-extern void MoveItem ( Document document,
+extern void MoveItem ( Document doc,
                          View view );
-extern void LockDocument ( Document document,
+extern void LockDocument ( Document doc,
                              View view );
-extern void UnlockDocument ( Document document,
+extern void UnlockDocument ( Document doc,
                                View view );
-extern void PropDocument ( Document document,
+extern void PropDocument ( Document doc,
                              View view );
-extern void CopyLockInformation ( Document document,
+extern void CopyLockInformation ( Document doc,
                                     View view );
-extern void CooperationConfig ( Document document,
+extern void CooperationConfig ( Document doc,
                                   View view );
-extern void LockIndicator ( Document document,
+extern void LockIndicator ( Document doc,
                               View view );
 
 #endif /* __STDC__ */

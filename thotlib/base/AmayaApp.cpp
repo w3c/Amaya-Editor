@@ -514,6 +514,7 @@ void AmayaApp::RegisterOpenURLCallback( void (*callback) (void *) )
   m_pAmayaInstance->RegisterOpenURLCallback( callback );  
 }
 
+
 /*----------------------------------------------------------------------
  *       Class:  AmayaApp
  *      Method:  CallOpenURLCallback

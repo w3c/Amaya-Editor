@@ -88,6 +88,18 @@ wxString TtaGetResourcePathWX( wxResourceType type, const char * filename )
 }
 
 /*----------------------------------------------------------------------
+  TtaGetSystemLanguage
+  this function returns the system language
+  -----------------------------------------------------------------------*/
+int TtaGetSystemLanguage( )
+{
+  int m_Lang = 0;
+
+  m_Lang = wxLocale::GetSystemLanguage();
+  return m_Lang;
+}
+
+/*----------------------------------------------------------------------
   TtaGetHomeDir - 
   this function returns the user homedir
   on windows something like : C:\Doc... adn.. settings\username

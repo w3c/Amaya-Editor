@@ -7,6 +7,7 @@
 #ifdef __STDC__
 
 extern char *TtaGetLanguageNameFromCode ( char *code );
+extern char *TtaGetISO639Code ( int val );
 extern char *GetListOfLanguages ( char *buffer,
                                   int length,
                                   char *languageCode,
@@ -37,6 +38,7 @@ extern ThotBool TtaExistPatternList ( Language languageId );
 #else /* __STDC__ */
 
 extern char *TtaGetLanguageNameFromCode ( char *code );
+extern char *TtaGetISO639Code ( int val );
 extern char *GetListOfLanguages ( char *buffer,
                                     int length,
                                     char *languageCode,

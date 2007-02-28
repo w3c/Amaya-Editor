@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2005
+ *  (c) COPYRIGHT INRIA, 1996-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -27,7 +27,7 @@ static char         Langbuffer1[2 * MAX_NAME_LENGTH];
 static char         Langbuffer2[2 * MAX_NAME_LENGTH];
 static char         CodeBuffer[2 * MAX_NAME_LENGTH];
 static int          breakPoints[MAX_POINT_COUP];
-static char         StandardLANG[3];
+static char         StandardLANG[3] = {EOS,EOS,EOS};
 static char        *dictPath;	/* Environment variable DICOPAR */
 int                 FreeEntry;
 
@@ -41,7 +41,7 @@ typedef struct _ISO639entry
     aLangName	code;
   }
 ISO639entry;
-
+// Table used to interpret wxLanguage
 static ISO639entry	ISO639table[] =
 {
 	{"Abkhazian",      "ab"},
@@ -51,12 +51,32 @@ static ISO639entry	ISO639table[] =
 	{"Albanian",       "sq"},
 	{"Amharic",        "am"},
 	{"Arabic",         "ar"},
+	{"Arabic",         "ar"},
+	{"Arabic",         "ar"},
+	{"Arabic",         "ar"},
+	{"Arabic",         "ar"},
+	{"Arabic",         "ar"},
+	{"Arabic",         "ar"},
+	{"Arabic",         "ar"},
+	{"Arabic",         "ar"},
+	{"Arabic",         "ar"},
+	{"Arabic",         "ar"},
+	{"Arabic",         "ar"},
+	{"Arabic",         "ar"},
+	{"Arabic",         "ar"},
+	{"Arabic",         "ar"},
+	{"Arabic",         "ar"},
+	{"Arabic",         "ar"},
+	{"Arabic",         "ar"},
 	{"Armenian",       "hy"},
 	{"Assamese",       "as"},
 	{"Aymara",         "ay"},
 	{"Azerbaijani",    "az"},
+	{"Azerbaijani",    "az"},
+	{"Azerbaijani",    "az"},
 	{"Bashkir",        "ba"},
 	{"Basque",         "eu"},
+	{"Belarussian",    "be"},
 	{"Bengali",        "bn"},
 	{"Bangla",         "bn"},
 	{"Bhutani",        "dz"},
@@ -65,15 +85,36 @@ static ISO639entry	ISO639table[] =
 	{"Breton",         "br"},
 	{"Bulgarian",      "bg"},
 	{"Burmese",        "my"},
-	{"Byelorussian",   "be"},
 	{"Cambodian",      "km"},
 	{"Catalan",        "ca"},
+	{"Chinese",        "zh"},
+	{"Chinese",        "zh"},
+	{"Chinese",        "zh"},
+	{"Chinese",        "zh"},
+	{"Chinese",        "zh"},
+	{"Chinese",        "zh"},
 	{"Chinese",        "zh"},
 	{"Corsican",       "co"},
 	{"Croatian",       "hr"},
 	{"Czech",          "cs"},
 	{"Danish",         "da"},
 	{"Dutch",          "nl"},
+	{"Dutch",          "nl"},
+	{"English",        "en"},
+	{"English",        "en"},
+	{"English",        "en"},
+	{"English",        "en"},
+	{"English",        "en"},
+	{"English",        "en"},
+	{"English",        "en"},
+	{"English",        "en"},
+	{"English",        "en"},
+	{"English",        "en"},
+	{"English",        "en"},
+	{"English",        "en"},
+	{"English",        "en"},
+	{"English",        "en"},
+	{"English",        "en"},
 	{"English",        "en"},
 	{"Esperanto",      "eo"},
 	{"Estonian",       "et"},
@@ -81,9 +122,19 @@ static ISO639entry	ISO639table[] =
 	{"Fiji",           "fj"},
 	{"Finnish",        "fi"},
 	{"French",         "fr"},
+	{"French",         "fr"},
+	{"French",         "fr"},
+	{"French",         "fr"},
+	{"French",         "fr"},
+	{"French",         "fr"},
 	{"Frisian",        "fy"},
 	{"Galician",       "gl"},
 	{"Georgian",       "ka"},
+	{"German",         "de"},
+	{"German",         "de"},
+	{"German",         "de"},
+	{"German",         "de"},
+	{"German",         "de"},
 	{"German",         "de"},
 	{"Greek",          "el"},
 	{"Greenlandic",    "kl"},
@@ -101,26 +152,31 @@ static ISO639entry	ISO639table[] =
 	{"Inupiak",        "ik"},
 	{"Irish",          "ga"},
 	{"Italian",        "it"},
+	{"Italian",        "it"},
 	{"Japanese",       "ja"},
 	{"Javanese",       "jv"},
 	{"Kannada",        "kn"},
 	{"Kashmiri",       "ks"},
 	{"Kazakh",         "kk"},
+	{"Kazakh",         "kk"},
+	{"Kazakh",         "kk"},
 	{"Kinyarwanda",    "rw"},
 	{"Kirghiz",        "ky"},
 	{"Kurundi",        "rn"},
+	{"Konkani",        "ko"},
 	{"Korean",         "ko"},
 	{"Kurdish",        "ku"},
 	{"Laothian",       "lo"},
 	{"Latin",          "la"},
 	{"Latvian",        "lv"},
-	{"Lettish",        "lv"},
 	{"Lingala",        "ln"},
 	{"Lithuanian",     "lt"},
 	{"Macedonian",     "mk"},
 	{"Malagasy",       "mg"},
 	{"Malay",          "ms"},
 	{"Malayalam",      "ml"},
+	{"Malay",          "ms"},
+	{"Malay",          "ms"},
 	{"Maltese",        "mt"},
 	{"Maori",          "mi"},
 	{"Marathi",        "mr"},
@@ -129,25 +185,29 @@ static ISO639entry	ISO639table[] =
 	{"Nauru",          "na"},
 	{"Nepali",         "ne"},
 	{"Norwegian",      "no"},
-	/*{"Occitan",        "oc"},*/
-	/*{"Oriya",          "or"},*/
-	/*{"Pashto",         "ps"},*/
-	/*{"Pushto",         "ps"},*/
-	{"Persian",        "fa"},
+	{"Norwegian",      "no"},
+	{"Occitan",        "oc"},
+	{"Oriya",          "or"},
+	{"Oromo",          "or"},
+	{"Pashto",         "ps"},
 	{"Polish",         "pl"},
 	{"Portuguese",     "pt"},
-	/*{"Punjabi",        "pa"},*/
-	/*{"Quechua",        "qu"},*/
-	/*{"Rhaeto-romance", "rm"},*/
+	{"Portuguese",     "pt"},
+	{"Punjabi",        "pa"},
+	{"Quechua",        "qu"},
+	{"Rhaeto-romance", "rm"},
 	{"Romanian",       "ro"},
+	{"Russian",        "ru"},
 	{"Russian",        "ru"},
 	{"Samoan",         "sm"},
 	{"Sangho",         "sg"},
 	{"Sanskrit",       "sa"},
-	/*{"Scots gaelic",   "gd"},*/
+	{"Scots gaelic",   "gd"},
 	{"Serbian",        "sr"},
-	/*{"Serbo-croatian", "sh"},*/
-	/*{"Sesotho",        "st"},*/
+	{"Serbian",        "sr"},
+	{"Serbian",        "sr"},
+	{"Serbo-croatian", "sh"},
+	{"Sesotho",        "st"},
 	{"Setswana",       "tn"},
 	{"Shona",          "sn"},
 	{"Sindhi",         "sd"},
@@ -157,8 +217,29 @@ static ISO639entry	ISO639table[] =
 	{"Slovenian",      "sl"},
 	{"Somali",         "so"},
 	{"Spanish",        "es"},
+	{"Spanish",        "es"},
+	{"Spanish",        "es"},
+	{"Spanish",        "es"},
+	{"Spanish",        "es"},
+	{"Spanish",        "es"},
+	{"Spanish",        "es"},
+	{"Spanish",        "es"},
+	{"Spanish",        "es"},
+	{"Spanish",        "es"},
+	{"Spanish",        "es"},
+	{"Spanish",        "es"},
+	{"Spanish",        "es"},
+	{"Spanish",        "es"},
+	{"Spanish",        "es"},
+	{"Spanish",        "es"},
+	{"Spanish",        "es"},
+	{"Spanish",        "es"},
+	{"Spanish",        "es"},
+	{"Spanish",        "es"},
+	{"Spanish",        "es"},
 	{"Sundanese",      "su"},
 	{"Swahili",        "sw"},
+	{"Swedish",        "sv"},
 	{"Swedish",        "sv"},
 	{"Tagalog",        "tl"},
 	{"Tajik",          "tg"},
@@ -176,6 +257,10 @@ static ISO639entry	ISO639table[] =
 	{"Uigur",          "ug"},
 	{"Ukrainian",      "uk"},
 	{"Urdu",           "ur"},
+	{"Urdu",           "ur"},
+	{"Urdu",           "ur"},
+	{"Uzbek",          "uz"},
+	{"Uzbek",          "uz"},
 	{"Uzbek",          "uz"},
 	{"Vietnamese",     "vi"},
 	{"Volapuk",        "vo"},
@@ -208,6 +293,23 @@ char *TtaGetLanguageNameFromCode (char *code)
 	strcpy (Langbuffer, (const char *)ISO639table[i].fullName);
     }
   return Langbuffer;
+}
+
+/*----------------------------------------------------------------------
+   TtaGetISO639Code
+   Returns the language code in the ISO639 table
+  ----------------------------------------------------------------------*/
+char *TtaGetISO639Code (int val)
+{
+  int                 max;
+
+  max = sizeof (ISO639table) / sizeof(ISO639entry);
+  if (val < 2 || val >= max)
+    return "en";
+  else if (ISO639table[val].code[0] != EOS)
+    return (char *)(ISO639table[val].code);
+  else
+    return "en";
 }
 
 
@@ -624,18 +726,22 @@ Language TtaGetLanguageIdFromName (char *name)
    a string of 2 chars.
   ----------------------------------------------------------------------*/
 char *TtaGetVarLANG ()
-{ 
-   char   *langEVar = TtaGetEnvString ("LANG");
+{
+   char   *langEVar;
 
-   if (langEVar == NULL)
-     strcpy (StandardLANG, "en");
-   else if (!strcmp (langEVar, "C") ||
-	    !strcasecmp (langEVar, "iso_8859_1"))
-     strcpy (StandardLANG, "fr");
-   else
+   if (StandardLANG[0] == EOS)
      {
-       strncpy (StandardLANG, langEVar, 2);
-       StandardLANG[2] = EOS;
+       langEVar = TtaGetEnvString ("LANG");
+       if (langEVar == NULL)
+         strcpy (StandardLANG, "en");
+       else if (!strcmp (langEVar, "C") ||
+                !strcasecmp (langEVar, "iso_8859_1"))
+         strcpy (StandardLANG, "fr");
+       else
+         {
+           strncpy (StandardLANG, langEVar, 2);
+           StandardLANG[2] = EOS;
+         }
      }
    return (StandardLANG);
 }

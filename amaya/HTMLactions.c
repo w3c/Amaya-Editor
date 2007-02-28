@@ -2855,7 +2855,7 @@ void GotoLine (Document doc, int line, int index, ThotBool selpos)
               else
                 {
                 TtaSelectElement (doc, el);
-                TtaSetStatusSelectedElement(doc, 1, el);
+                TtaSetStatusSelectedElement (doc, 1, el);
                 }
               // display the char index
               sprintf (message, "Character: %d", index);
