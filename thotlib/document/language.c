@@ -329,27 +329,31 @@ char *GetListOfLanguages (char *buffer, int length, char *languageCode,
 
   *nbItem = 0;
   *defItem = -1;
-   for (i = 0; ISO639table[i].code[0] != EOS; i++)
-     {
-       l = strlen ((const char *)ISO639table[i].fullName) + 1;
-       if (l > 1 && l < length)
-	 {
-	   if (*defItem < 0 && languageCode && languageCode[0] != EOS &&
-	       strcasecmp ((const char *)ISO639table[i].code, languageCode) == 0)
-	     /* position of the selected language in the list */
-	       *defItem = i;
-	   (*nbItem)++;
-	   strcpy (buffer, (const char *)ISO639table[i].fullName);
-	   buffer = buffer + l;
-	   length -= l;
-	 }
-       else
-	 break;
-     }
-   if (*defItem >= 0)
-     return (char *)ISO639table[*defItem].fullName;
-   else
-     return (char *)NULL;
+  for (i = 0; ISO639table[i].code[0] != EOS; i++)
+    {
+      if (i == 0 ||
+          strcmp ((char *)ISO639table[i].code, (char *)ISO639table[i-1].code))
+        {
+      l = strlen ((const char *)ISO639table[i].fullName) + 1;
+      if (l > 1 && l < length)
+        {
+          if (*defItem < 0 && languageCode && languageCode[0] != EOS &&
+              strcasecmp ((const char *)ISO639table[i].code, languageCode) == 0)
+            /* position of the selected language in the list */
+            *defItem = i;
+          (*nbItem)++;
+          strcpy (buffer, (const char *)ISO639table[i].fullName);
+          buffer = buffer + l;
+          length -= l;
+        }
+      else
+        break;
+        }
+    }
+  if (*defItem >= 0)
+    return (char *)ISO639table[*defItem].fullName;
+  else
+    return (char *)NULL;
 }
 
 /*----------------------------------------------------------------------
