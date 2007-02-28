@@ -692,10 +692,12 @@ void AmayaPage::OnClose(wxCloseEvent& event)
     }
 
   if(!m_IsClosed)
-  {
-	  event.Veto();
-  }
-
+    event.Veto();
+#ifdef _MACOS
+  // On Mac OS the event is not automatically sent to the notebook
+  else
+    m_pNoteBookParent->AdvanceSelection(true);
+#endif /* _MACOS */
 }
 
 /*----------------------------------------------------------------------
