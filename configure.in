@@ -1389,14 +1389,12 @@ make_output="Makefile Options.orig:Options.in tools/Makefile \
        tools/mkdep/Makefile \
        tools/cextract-1.7/Makefile thotlib/Makefile \
        thotlib/include/Makefile batch/Makefile \
-       bin/amaya:../batch/amaya.in \
        script_install:../batch/script_install.in \
        script_install_gnomekde:../batch/script_install_gnomekde.in \
        script_install_macosxbundle:../batch/script_install_macosxbundle.in \
        script_uninstall:../batch/script_uninstall.in"
 
 if test "$build_amaya" = "yes" ; then
-
     make_output="$make_output amaya/Makefile"
     EXTRA_MAKEFILE_IN="$srcdir/amaya/Makefile.in \
     $srcdir/amaya/Makefile.libwww"
@@ -1427,9 +1425,17 @@ dnl
 echo timestamp > stamp-h
 
 dnl
+dnl Generate the script
+dnl
+if test ! "$AMAYAOS" = "MACOSX" ; then
+    cp ../batch/amaya.in bin/amaya
+    chmod a+x bin/amaya
+fi
+
+
+dnl
 dnl Check for an upgrade in the Options numbers
 dnl
-
 if test -f Options ; then
    oldversion=`grep Version Options`
    newversion=`grep Version Options.orig`
@@ -1451,9 +1457,6 @@ if test -f script_install_macosxbundle ; then
 fi
 if test -f script_uninstall ; then
    chmod a+x script_uninstall
-fi
-if test -f bin/amaya ; then
-   chmod a+x bin/amaya
 fi
 ])
 
