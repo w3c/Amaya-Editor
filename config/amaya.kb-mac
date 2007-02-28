@@ -270,6 +270,9 @@ Shift Ctrl <Key>M , Shift Ctrl <Key>Y:   CreateMIN()
 Shift Ctrl <Key>M , Ctrl <Key>y:         CreateMSUBSETBINARY()
 Shift Ctrl <Key>M , Shift Ctrl <Key>Z:   CreateMINTEGERS()
 
+#Open
+Ctrl <Key>n                        NewXHTML()
+
 #Forms and Open
 Ctrl <Key>o , Ctrl <Key>a:         CreateTextArea() 
 Ctrl <Key>o , Ctrl <Key>b:         CreatePushButton() 
