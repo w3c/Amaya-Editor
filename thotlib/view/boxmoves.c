@@ -3152,7 +3152,6 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
               break;
             case '<':
             case '>':
-            case 'H':
               if (i == 0)
                 i = BoxCharacterWidth (0xf1, font);
               ResizeWidth (pBox, NULL, NULL, i - pBox->BxW, 0, 0, 0, frame, FALSE);
@@ -3167,9 +3166,36 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
                 i = BoxCharacterWidth (0x7c, font) * 3;  /* | */
               ResizeWidth (pBox, NULL, NULL, i - pBox->BxW, 0, 0, 0, frame, FALSE);
               break;
-            case '^':
+
             case 'v':
-            case 'V':
+            case '^': /* UpArrow */
+            case 'V': /* DownArrow */
+            case 155: /* UpDownArrow */
+            case 161: /* UpTeeArrow */
+            case 163: /* DownTeeArrow */
+            case 166: /* RightUpVector */
+            case 167: /* LeftUpVector */
+            case 170: /* RightDownVector */
+            case 171: /* LeftDownVector */
+            case 173: /* UpArrowDownArrow */
+            case 176: /* DoubleUpArrow */
+            case 178: /* DoubleDownArrow */
+            case 180: /* DoubleUpDownArrow */
+            case 183: /* DownArrowUpArrow */
+            case 190: /* UpArrowBar */
+            case 191: /* DownArrowBar */
+            case 193: /* RightUpDownVector */
+            case 195: /* LeftUpDownVector */
+            case 198: /* RightUpVectorBar */
+            case 199: /* RightDownVectorBar */
+            case 202: /* LeftUpVectorBar */
+            case 203: /* LeftDownVectorBar */
+            case 206: /* RightUpTeeVector */
+            case 207: /* RightDownTeeVector */
+            case 210: /* LeftUpTeeVector */
+            case 211: /* LeftDownTeeVector */
+            case 212: /* UpEquilibrium */
+            case 213: /* ReverseUpEquilibrium */
               if (i == 0)
                 i  = BoxCharacterWidth (0x6c, font);	/* 'm' */
               ResizeWidth (pBox, NULL, NULL, i - pBox->BxW, 0, 0, 0, frame, FALSE);

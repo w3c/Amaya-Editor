@@ -556,25 +556,25 @@ void DrawArrow (int frame, int thick, int style, int x, int y, int l, int h,
   /* Vector or ReverseVector */
   if(type >= 12 && type <= 15)D2 = -D1; else D2 = D1;
 
-  /* Draw a Tee (type = 9, 14) or a Bar (type = 10, 15)  */
-  if(type == 9 || type == 10 || type == 14 || type == 15)
+  /* Draw a Tee (type = 5, 9, 14) or a Bar (type = 6, 10, 15)  */
+  if(type == 5 || type == 6 || type == 9 || type == 10 || type == 14 || type == 15)
     {
     switch(orientation)
       {
       case 0:
-        if(type == 9 || type == 14)DoDrawOneLine (frame, x, ym - D1, x, ym + D1);
+        if(type == 5 || type == 9 || type == 14)DoDrawOneLine (frame, x, ym - D1, x, ym + D1);
         else DoDrawOneLine (frame, xf, ym - D1, xf, ym + D1);
       break;
       case 90:
-        if(type == 9 || type == 14)DoDrawOneLine (frame, xm - D1, yf, xm + D1, yf);
+        if(type == 5 || type == 9 || type == 14)DoDrawOneLine (frame, xm - D1, yf, xm + D1, yf);
         else DoDrawOneLine (frame, xm - D1, y, xm + D1, y);
       break;
       case 180:
-        if(type == 9 || type == 14)DoDrawOneLine (frame, xf, ym - D1, xf, ym + D1);
+        if(type == 5 || type == 9 || type == 14)DoDrawOneLine (frame, xf, ym - D1, xf, ym + D1);
         else DoDrawOneLine (frame, x, ym - D1, x, ym + D1);
       break;
       case 270:
-        if(type == 9 || type == 14)DoDrawOneLine (frame, xm - D1, y, xm + D1, y);
+        if(type == 5 || type == 9 || type == 14)DoDrawOneLine (frame, xm - D1, y, xm + D1, y);
         else DoDrawOneLine (frame, xm - D1, yf, xm + D1, yf);
       break;
       default:
@@ -650,6 +650,97 @@ void DrawArrow (int frame, int thick, int style, int x, int y, int l, int h,
         }
     break;
 
+    case 2: /* DoubleArrow */
+      switch(orientation)
+        {
+        case 0:
+          DoDrawOneLine (frame, x, ym - D1/2, xf - D1/2, ym - D1/2);
+          DoDrawOneLine (frame, x, ym + D1/2, xf - D1/2, ym + D1/2);
+          DoDrawOneLine (frame, xf - D1, ym - D1, xf, ym);
+          DoDrawOneLine (frame, xf - D1, ym + D1, xf, ym);
+        break;
+        case 90:
+          DoDrawOneLine (frame, xm + D1/2, y + D1/2, xm + D1/2, yf);
+          DoDrawOneLine (frame, xm - D1/2, y + D1/2, xm - D1/2, yf);
+          DoDrawOneLine (frame, xm, y, xm - D1, y + D1);
+          DoDrawOneLine (frame, xm, y, xm + D1, y + D1);
+        break;
+        case 180:
+          DoDrawOneLine (frame, x + D1/2, ym + D1/2, xf, ym + D1/2);
+          DoDrawOneLine (frame, x + D1/2, ym - D1/2, xf, ym - D1/2);
+          DoDrawOneLine (frame, x, ym, x + D1, ym - D1);
+          DoDrawOneLine (frame, x, ym, x + D1, ym + D1);
+        break;
+        case 270:
+          DoDrawOneLine (frame, xm + D1/2, y, xm + D1/2, yf - D1/2);
+          DoDrawOneLine (frame, xm - D1/2, y, xm - D1/2, yf - D1/2);
+          DoDrawOneLine (frame, xm, yf, xm - D1, yf - D1);
+          DoDrawOneLine (frame, xm, yf, xm + D1, yf - D1);
+        break;
+
+        default:
+        break;
+        }
+    break;
+
+    case 3: /* DoubleArrow with opposite directions */
+      switch(orientation)
+        {
+        case 0:
+          DoDrawOneLine (frame, x + D1/2, ym - D1/2, xf - D1/2, ym - D1/2);
+          DoDrawOneLine (frame, x + D1/2, ym + D1/2, xf - D1/2, ym + D1/2);
+          DoDrawOneLine (frame, xf - D1, ym - D1, xf, ym);
+          DoDrawOneLine (frame, xf - D1, ym + D1, xf, ym);
+          DoDrawOneLine (frame, x, ym, x + D1, ym - D1);
+          DoDrawOneLine (frame, x, ym, x + D1, ym + D1);
+        break;
+        case 90:
+          DoDrawOneLine (frame, xm + D1/2, y + D1/2, xm + D1/2, yf - D1/2);
+          DoDrawOneLine (frame, xm - D1/2, y + D1/2, xm - D1/2, yf - D1/2);
+          DoDrawOneLine (frame, xm, y, xm - D1, y + D1);
+          DoDrawOneLine (frame, xm, y, xm + D1, y + D1);
+          DoDrawOneLine (frame, xm, yf, xm - D1, yf - D1);
+          DoDrawOneLine (frame, xm, yf, xm + D1, yf - D1);
+        break;
+
+        default:
+        break;
+        }
+    break;
+
+    case 4: /* two arrows with opposite directions */
+      switch(orientation)
+        {
+        case 0:
+          DoDrawOneLine (frame, x, ym - D1/2, xf, ym - D1/2);
+          ArrowDrawing (frame, x, ym - D1/2, xf, ym - D1/2, thick, fg);
+          DoDrawOneLine (frame, x, ym + D1/2, xf, ym + D1/2);
+          ArrowDrawing (frame, xf, ym + D1/2, x, ym + D1/2, thick, fg);
+        break;
+        case 90:
+          DoDrawOneLine (frame, xm - D1/2, y, xm - D1/2, yf);
+          ArrowDrawing (frame, xm - D1/2, yf, xm - D1/2, y, thick, fg);
+          DoDrawOneLine (frame, xm + D1/2, y, xm + D1/2, yf);
+          ArrowDrawing (frame, xm + D1/2, y, xm + D1/2, yf, thick, fg);
+        break;
+        case 180:
+          DoDrawOneLine (frame, x, ym + D1/2, xf, ym + D1/2);
+          ArrowDrawing (frame, x, ym + D1/2, xf, ym + D1/2, thick, fg);
+          DoDrawOneLine (frame, x, ym - D1/2, xf, ym - D1/2);
+          ArrowDrawing (frame, xf, ym - D1/2, x, ym - D1/2, thick, fg);
+        break;
+        case 270:
+          DoDrawOneLine (frame, xm + D1/2, y, xm + D1/2, yf);
+          ArrowDrawing (frame, xm + D1/2, yf, xm + D1/2, y, thick, fg);
+          DoDrawOneLine (frame, xm - D1/2, y, xm - D1/2, yf);
+          ArrowDrawing (frame, xm - D1/2, y, xm - D1/2, yf, thick, fg);
+        break;
+        default:
+        break;
+        }
+    break;
+
+
     case 7: /* Vector */
     case 9: /* TeeVector */
     case 10: /* VectorBar */
@@ -672,7 +763,7 @@ void DrawArrow (int frame, int thick, int style, int x, int y, int l, int h,
         break;
         case 270:
           DoDrawOneLine (frame, xm, y, xm, yf);
-          DoDrawOneLine (frame, xm, y, xm - D2, yf - D1);
+          DoDrawOneLine (frame, xm, yf, xm - D2, yf - D1);
         break;
         default:
         break;
@@ -685,10 +776,37 @@ void DrawArrow (int frame, int thick, int style, int x, int y, int l, int h,
         {
         case 0:
           DoDrawOneLine (frame, x, ym, xf, ym);
+          DoDrawOneLine (frame, x, ym, xf, ym);
+          DoDrawOneLine (frame, x + D1, ym - D2, x, ym);
           DoDrawOneLine (frame, xf - D1, ym - D2, xf, ym);
-          DoDrawOneLine (frame, x, ym, x + D1, ym - D2);
+        break;
+        case 90:
+          DoDrawOneLine (frame, xm, y, xm, yf);
+          DoDrawOneLine (frame, xm, y, xm, yf);
+          DoDrawOneLine (frame, xm, y, xm - D2, y + D1);
+          DoDrawOneLine (frame, xm, yf, xm - D2, yf - D1);
         break;
 
+        default:
+        break;
+        }
+    break;
+
+    case 11: /* two arrows with opposite directions */
+      switch(orientation)
+        {
+        case 90:
+          DoDrawOneLine (frame, xm - D1/2, y, xm - D1/2, yf);
+          DoDrawOneLine (frame, xm - D1/2, y, xm - D1/2 - D2, y + D1);
+          DoDrawOneLine (frame, xm + D1/2, y, xm + D1/2, yf);
+          DoDrawOneLine (frame, xm + D1/2, yf, xm + D1/2 + D1, yf - D1);
+        break;
+        case 270:
+          DoDrawOneLine (frame, xm + D1/2, y, xm + D1/2, yf);
+          DoDrawOneLine (frame, xm + D1/2, y, xm + D1/2 + D1, y + D1);
+          DoDrawOneLine (frame, xm - D1/2, y, xm - D1/2, yf);
+          DoDrawOneLine (frame, xm - D1/2, yf, xm - D1/2 - D1, yf - D1);
+        break;
         default:
         break;
         }
@@ -697,8 +815,6 @@ void DrawArrow (int frame, int thick, int style, int x, int y, int l, int h,
     default:
     break;
     }
-
-
 }
 
 /*----------------------------------------------------------------------

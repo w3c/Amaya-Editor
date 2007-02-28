@@ -975,19 +975,6 @@ void SetSingleIntHorizStretchAttr (Element el, Document doc, Element* selEl)
                           script = TtaGetScript (lang);
                           switch(text[0])
                             {
-                                case 0x2196: /* UpperLeftArrow */
-                                  c = 7;
-                                break;
-                                case 0x2197: /* UpperRightArrow */
-                                  c = 8;
-                                break;
-                                case 0x2198: /* LowerRightArrow */
-                                  c = 9;
-                                break;
-                                case 0x2199: /* LowerLeftArrow */
-                                  c = 10;
-                                break;
-
                             case '-':
                             case '_':
                             case 0xAF:
@@ -1004,24 +991,6 @@ void SetSingleIntHorizStretchAttr (Element el, Document doc, Element* selEl)
                             break;
                             case 0x2DC:
                               c = 'T'; /* Diacritical Tilde */
-                            break;
-                            case 0x294E:
-                              c = '4';  /* double vector */
-                              break;
-                            case 0x21BC:
-                              c = '5';  /* left vector */
-                            break;
-                            case 0x21C0:
-                              c = '6';  /* right vector */
-                            break;
-                            case 0x2194:
-                              c = 'A';  /* horizontal double arrow */
-                            break;
-                            case 0x2190:
-                              c = 'L';  /* arrow left */
-                            break;
-                            case 0x2192:
-                              c = 'R';  /* arrow right */
                             break;
                             case 0xFE37:
                               c = 'o';  /* Over brace */
@@ -1041,6 +1010,103 @@ void SetSingleIntHorizStretchAttr (Element el, Document doc, Element* selEl)
                             case 0x23B5:
                               c = 'B';  /* Under bracket */
                             break;
+
+                            case 0x2190: /* LeftArrow */
+                              c = 'L';
+                            break;
+                            case 0x2192: /* RightArrow */
+                              c = 'R';
+                            break;
+                            case 0x2194: /* LeftRightArrow */
+                              c = 'A';
+                            break;
+                            case 0x21A4: /* LeftTeeArrow */
+                              c = 160;
+                            break;
+                            case 0x21A6: /* RightTeeArrow */
+                              c = 162;
+                            break;
+                            case 0x21BC: /* LeftVector */
+                              c = 164;
+                            break;
+                            case 0x21BD: /* DownLeftVector */
+                              c = 165;
+                            break;
+                            case 0x21C0: /* RightVector */
+                              c = 168;
+                            break;
+                            case 0x21C1: /* DownRightVector */
+                              c = 169;
+                            break;
+                            case 0x21C4: /* RightArrowLeftArrow */
+                              c = 172;
+                            break;
+                            case 0x21C6: /* LeftArrowRightArrow */
+                              c = 174;
+                            break;
+                            case 0x21D0: /* DoubleLeftArrow */
+                              c = 175;
+                            break;
+                            case 0x21D2: /* DoubleRightArrow */
+                              c = 177;
+                            break;
+                            case 0x21D4: /* DoubleLeftRightArrow */
+                              c = 179;
+                            break;
+                            case 0x21E4: /* LeftArrowBar */
+                              c = 181;
+                            break;
+                            case 0x21E5: /* RightArrowBar */
+                              c = 182;
+                            break;
+                            case 0x27F5: /* LongLeftArrow */
+                              c = 184;
+                            break;
+                            case 0x27F6: /* LongRightArrow */
+                              c = 185;
+                            break;
+                            case 0x27F7: /* LongLeftRightArrow */
+                              c = 186;
+                            break;
+                            case 0x27F8: /* DoubleLongLeftArrow */
+                              c = 187;
+                            break;
+                            case 0x27F9: /* DoubleLongRightArrow */
+                              c = 188;
+                            break;
+                            case 0x27FA: /* DoubleLongLeftRightArrow */
+                              c = 189;
+                            break;
+                            case 0x294E : /* LeftRightVector */
+                              c = 192;
+                            break;
+                            case 0x2950: /* DownLeftRightVector */
+                              c = 194;
+                            break;
+                            case 0x2952: /* LeftVectorBar */
+                              c = 196;
+                            break;
+                            case 0x2953: /* RightVectorBar */
+                              c = 197;
+                            break;
+                            case 0x2956: /* DownLeftVectorBar */
+                              c = 200;
+                            break;
+                            case 0x2957: /* DownRightVectorBar */
+                              c = 201;
+                            break;                            case 0x295A: /* LeftTeeVector */
+                              c = 204;
+                            break;
+                            case 0x295B: /* RightTeeVector */
+                              c = 205;
+                            break;
+                            case 0x295E: /* DownLeftTeeVector */
+                              c = 208;
+                            break;
+                            case 0x295F: /* DownRightTeeVector */
+                              c = 209;
+                            break;
+
                             default:
                             break;
                             }
@@ -1236,16 +1302,38 @@ void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
                   script = TtaGetScript (lang);
                   stretchable = TRUE;
                   for (i = 0; i < len; i++)
-                    if ((text[i] < 0x222B || text[i] > 0x2233) && /* Integrals */
-                        text[i] != 0x2191 && text[i] != 0x2193 && /* Up and Down arrows */
-                        text[i] != 0x2195 && /* UpDownArrow */
-                        text[i] != 0x2196 && /* UpperLeftArrow */
-                        text[i] != 0x2197 && /* UpperRightArrow */
-                        text[i] != 0x2198 && /* LowerRightArrow */
-                        text[i] != 0x2199 && /* LowerLeftArrow */
-                        text[i] != 0x21D1 && text[i] != 0x21D3 &&  /* UpDouble and DownDouble arrows */
-                        text[i] != 0x21D5 /* UpDownDoubleArrow */
-                       )/* accept only symbols like simple integral, double or
+                    if (!(
+                       (text[i] >= 0x222B && text[i] <= 0x2233) || /* Integrals */
+                       text[i] == 0x2191  || /* UpArrow */
+                       text[i] == 0x2193  || /* DownArrow */
+                       text[i] == 0x2195 || /* UpDownArrow */
+                       (text[i] >= 0x2196 && text[i] <= 2199) || /* diagonal arrows */
+                       text[i] == 0x21A5 || /* UpTeeArrow */
+                       text[i] == 0x21A7 || /* DownTeeArrow */
+                       text[i] == 0x21BE || /* RightUpVector */
+                       text[i] == 0x21BF || /* LeftUpVector */
+                       text[i] == 0x21C2 || /* RightDownVector */
+                       text[i] == 0x21C3 || /* LeftDownVector */
+                       text[i] == 0x21C5 || /* UpArrowDownArrow */
+                       text[i] == 0x21D1 || /* DoubleUpArrow */
+                       text[i] == 0x21D3 || /* DoubleDownArrow */
+                       text[i] == 0x21D5 || /* DoubleUpDownArrow */
+                       text[i] == 0x21F5 || /* DownArrowUpArrow */
+                       text[i] == 0x2912 || /* UpArrowBar */
+                       text[i] == 0x2913 || /* DownArrowBar */
+                       text[i] == 0x294F || /* RightUpDownVector */
+                       text[i] == 0x2951 || /* LeftUpDownVector */
+                       text[i] == 0x2954 || /* RightUpVectorBar */
+                       text[i] == 0x2955 || /* RightDownVectorBar */
+                       text[i] == 0x2958 || /* LeftUpVectorBar */
+                       text[i] == 0x2959 || /* LeftDownVectorBar */
+                       text[i] == 0x295C || /* RightUpTeeVector */
+                       text[i] == 0x295D || /* RightDownTeeVector */
+                       text[i] == 0x2960 || /* LeftUpTeeVector */
+                       text[i] == 0x2961 || /* LeftDownTeeVector */
+                       text[i] == 0x296E || /* UpEquilibrium */
+                       text[i] == 0x296F    /* ReverseUpEquilibrium */
+                       ))/* accept only symbols like simple integral, double or
                          triple integral, contour integral, etc. or vertical
                          arrows (add more arrows *****) */
                       stretchable = FALSE;
@@ -1265,18 +1353,6 @@ void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
                             {
                               switch(text[i])
                                 {
-                                case 0x2196: /* UpperLeftArrow */
-                                  c = 7;
-                                break;
-                                case 0x2197: /* UpperRightArrow */
-                                  c = 8;
-                                break;
-                                case 0x2198: /* LowerRightArrow */
-                                  c = 9;
-                                break;
-                                case 0x2199: /* LowerLeftArrow */
-                                  c = 10;
-                                break;
                                 case 0x222B: /* integral */
                                   c = 'i';
                                 break;
@@ -1304,12 +1380,104 @@ void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
                                 case 0x2233: /* Counter Clockwise Contour Integral */
                                   c = '3';
                                 break;
+
                                 case 0x2191: /* UpArrow */
                                   c = '^';
                                 break;
                                 case 0x2193: /* DownArrow */
                                   c = 'V';
                                 break;
+                                case 0x2195: /* UpDownArrow */
+                                  c = 155;
+                                break;
+                                case 0x2196: /* UpperLeftArrow */
+                                  c = 156;
+                                break;
+                                case 0x2197: /* UpperRightArrow */
+                                  c = 157;
+                                break;
+                                case 0x2198: /* LowerRightArrow */
+                                  c = 158;
+                                break;
+                                case 0x2199: /* LowerLeftArrow */
+                                  c = 159;
+                                break;
+                                case 0x21A5: /* UpTeeArrow */
+                                  c = 161;
+                                break;
+                                case 0x21A7: /* DownTeeArrow */
+                                  c = 163;
+                                break;
+                                case 0x21BE: /* RightUpVector */
+                                  c = 166;
+                                break;
+                                case 0x21BF: /* LeftUpVector */
+                                  c = 167;
+                                break;
+                                case 0x21C2: /* RightDownVector */
+                                  c = 170;
+                                break;
+                                case 0x21C3: /* LeftDownVector */
+                                  c = 171;
+                                break;
+                                case 0x21C5: /* UpArrowDownArrow */
+                                  c = 173;
+                                break;
+                                case 0x21D1: /* DoubleUpArrow */
+                                  c = 176;
+                                break;
+                                case 0x21D3: /* DoubleDownArrow */
+                                  c = 178;
+                                break;
+                                case 0x21D5: /* DoubleUpDownArrow */
+                                  c = 180;
+                                break;
+                                case 0x21F5: /* DownArrowUpArrow */
+                                  c = 183;
+                                break;
+                                case 0x2912: /* UpArrowBar */
+                                  c = 190;
+                                break;
+                                case 0x2913 : /* DownArrowBar */
+                                  c = 191;
+                                break;
+                                case 0x294F: /* RightUpDownVector */
+                                  c = 193;
+                                break;
+                                case 0x2951: /* LeftUpDownVector */
+                                  c = 195;
+                                break;
+                                case 0x2954: /* RightUpVectorBar */
+                                  c = 198;
+                                break;
+                                case 0x2955: /* RightDownVectorBar */
+                                  c = 199;
+                                break;
+                                case 0x2958: /* LeftUpVectorBar */
+                                  c = 202;
+                                break;
+                                case 0x2959: /* LeftDownVectorBar */
+                                  c = 203;
+                                break;
+                                case 0x295C: /* RightUpTeeVector */
+                                  c = 206;
+                                break;
+                                case 0x295D: /* RightDownTeeVector */
+                                  c = 207;
+                                break;
+                                case 0x2960: /* LeftUpTeeVector */
+                                  c = 210;
+                                break;
+                                case 0x2961: /* LeftDownTeeVector */
+                                  c = 211;
+                                break;
+                                case 0x296E: /* UpEquilibrium */
+                                  c = 212;
+                                break;
+                                case 0x296F: /* ReverseUpEquilibrium */
+                                  c = 213;
+                                break;
+
                                 default:
                                   c = (unsigned char) text[i];
                                 break;

@@ -754,14 +754,48 @@ void GiveSymbolSize (PtrAbstractBox pAb, int *width, int *height)
         case 'U':	/*union */
           *width = BoxCharacterWidth (229, font);
           break;
-        case 'L':       /* left arrow */
-        case 'h':       /* horizontal bar */
-        case 'R':       /* right arrow */
-          *width = *height;
-          *height = hfont / 2;
-          break;
-        case 'o':       /* overbrace */
-        case 'u':       /* underbrace */
+        case 'b': /* Over bracket */
+        case 'B': /* Under bracket */
+        case 'h': /* overline */
+        case 'H': /* hat */
+        case 'k': /* hacek */
+        case 'o': /* over brace */
+        case 'p': /* over parenthesis */
+        case 'q': /* under parenthesis */
+        case 'u': /* under brace */
+        case 'T': /* Diacritical Tilde */
+        case 'L': /* LeftArrow */
+        case 'R': /* RightArrow */
+        case 'A': /* LeftRightArrow */
+        case 160: /* LeftTeeArrow */
+        case 162: /* RightTeeArrow */
+        case 164: /* LeftVector */
+        case 165: /* DownLeftVector */
+        case 168: /* RightVector */
+        case 169: /* DownRightVector */
+        case 172: /* RightArrowLeftArrow */
+        case 174: /* LeftArrowRightArrow */
+        case 175: /* DoubleLeftArrow */
+        case 177: /* DoubleRightArrow */
+        case 179: /* DoubleLeftRightArrow */
+        case 181: /* LeftArrowBar */
+        case 182: /* RightArrowBar */
+        case 184: /* LongLeftArrow */
+        case 185: /* LongRightArrow */
+        case 186: /* LongLeftRightArrow */
+        case 187: /* DoubleLongLeftArrow */
+        case 188: /* DoubleLongRightArrow */
+        case 189: /* DoubleLongLeftRightArrow */
+        case 192: /* LeftRightVector */
+        case 194: /* DownLeftRightVector */
+        case 196: /* LeftVectorBar */
+        case 197: /* RightVectorBar */
+        case 200: /* DownLeftVectorBar */
+        case 201: /* DownRightVectorBar */
+        case 204: /* LeftTeeVector */
+        case 205: /* RightTeeVector */
+        case 208: /* DownLeftTeeVector */
+        case 209: /* DownRightTeeVector */
           *width = *height;
           *height = hfont / 2;
           break;
@@ -781,7 +815,6 @@ void GiveSymbolSize (PtrAbstractBox pAb, int *width, int *height)
            break;
         case '<':
         case '>':
-        case 'H':
           *width = BoxCharacterWidth (0xf1, font) * 2;
           break;
         case '|':       /* vertical bar */
@@ -790,9 +823,36 @@ void GiveSymbolSize (PtrAbstractBox pAb, int *width, int *height)
         case 'D':       /* double vertical bar */
           *width = BoxCharacterWidth (0x7c, font) * 3;  /* | */
           break;
-        case '^':
+
         case 'v':
-        case 'V':
+        case '^': /* UpArrow */
+        case 'V': /* DownArrow */
+        case 155: /* UpDownArrow */
+        case 161: /* UpTeeArrow */
+        case 163: /* DownTeeArrow */
+        case 166: /* RightUpVector */
+        case 167: /* LeftUpVector */
+        case 170: /* RightDownVector */
+        case 171: /* LeftDownVector */
+        case 173: /* UpArrowDownArrow */
+        case 176: /* DoubleUpArrow */
+        case 178: /* DoubleDownArrow */
+        case 180: /* DoubleUpDownArrow */
+        case 183: /* DownArrowUpArrow */
+        case 190: /* UpArrowBar */
+        case 191: /* DownArrowBar */
+        case 193: /* RightUpDownVector */
+        case 195: /* LeftUpDownVector */
+        case 198: /* RightUpVectorBar */
+        case 199: /* RightDownVectorBar */
+        case 202: /* LeftUpVectorBar */
+        case 203: /* LeftDownVectorBar */
+        case 206: /* RightUpTeeVector */
+        case 207: /* RightDownTeeVector */
+        case 210: /* LeftUpTeeVector */
+        case 211: /* LeftDownTeeVector */
+        case 212: /* UpEquilibrium */
+        case 213: /* ReverseUpEquilibrium */
           *width = BoxCharacterWidth (0x6c, font);	/* 'm' */
           break;
         case '?':

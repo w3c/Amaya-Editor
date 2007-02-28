@@ -1304,19 +1304,6 @@ static void TranslateLeaf (PtrElement pEl, ThotBool transChar,
                       case 6:
                         c = 0x230b; /* RightFloor */
                         break;
-                      case 0x2196: /* UpperLeftArrow */
-                        c = 7;
-                      break;
-                      case 8: /* UpperRightArrow */
-                        c = 0x2197;
-                      break;
-                      case 9: /* LowerRightArrow */
-                        c = 0x2198;
-                      break;
-                      case 10: /* LowerLeftArrow */
-                        c = 0x2199;
-                      break;
-
 
                       case '1':
                         c = 0x2231; /* Clockwise Integral */
@@ -1326,18 +1313,6 @@ static void TranslateLeaf (PtrElement pEl, ThotBool transChar,
                         break;
                       case '3':
                         c = 0x2233; /* Counter Clockwise Contour Integral */
-                        break;
-                      case '4':  /* double vector */
-                        c = 0x294E;
-                        break;
-                      case '5':  /* left vector */
-                        c = 0x21BC;
-                       break;
-                      case '6':  /* right vector */
-                        c = 0x21C0;
-                        break;
-                      case 'A':  /* horizontal double arrow */
-                          c = 0x2194;
                         break;
                       case 'b':
                         c = 0x23B4; /* Over bracket */
@@ -1393,14 +1368,8 @@ static void TranslateLeaf (PtrElement pEl, ThotBool transChar,
                       case 'I':
                         c = 0x22C2; /* n-ary intersection */
                         break;
-                      case 'L':
-                        c = 0x2190; /* leftwards arrow */
-                        break;
                       case 'P':
                         c = 0x220F; /* n-ary product */
-                        break;
-                      case 'R':
-                        c = 0x2192; /* rightwards arrow */
                         break;
                       case 'S':
                         c = 0x2211; /* n-ary summation */
@@ -1414,12 +1383,6 @@ static void TranslateLeaf (PtrElement pEl, ThotBool transChar,
                       case 'U':
                         c = 0x22C3; /* n-ary union */
                         break;
-                      case 'V':
-                        c = 0x2193; /* downwards arrow */
-                        break;
-                      case '^':
-                        c = 0x2191; /* upwards arrow */
-                        break;
                       case '<':
                         c = 0x2329; /* mathematical left angle bracket */
                         break;
@@ -1429,6 +1392,200 @@ static void TranslateLeaf (PtrElement pEl, ThotBool transChar,
                       case '|':
                         c = 0x2223; /* divides */
                         break;
+
+                      case 'L': /* LeftArrow */
+                        c = 0x2190;
+                      break;
+                      case '^': /* UpArrow */
+                        c = 0x2191;
+                      break;
+                      case 'R': /* RightArrow */
+                        c = 0x2192;
+                      break;
+                      case 'V': /* DownArrow */
+                        c = 0x2193;
+                      break;
+                      case 'A': /* LeftRightArrow */
+                        c = 0x2194;
+                      break;
+                      case 155: /* UpDownArrow */
+                        c = 0x2195;
+                      break;
+                      case 156: /* UpperLeftArrow */
+                        c = 0x2196;
+                      break;
+                      case 157: /* UpperRightArrow */
+                        c = 0x2197;
+                      break;
+                      case 158: /* LowerRightArrow */
+                        c = 0x2198;
+                      break;
+                      case 159: /* LowerLeftArrow */
+                        c = 0x2199;
+                      break;
+                      case 160: /* LeftTeeArrow */
+                        c = 0x21A4;
+                      break;
+                      case 161: /* UpTeeArrow */
+                        c = 0x21A5;
+                      break;
+                      case 162: /* RightTeeArrow */
+                        c = 0x21A6;
+                      break;
+                      case 163: /* DownTeeArrow */
+                        c = 0x21A7;
+                      break;
+                      case 164: /* LeftVector */
+                        c = 0x21BC;
+                      break;
+                      case 165: /* DownLeftVector */
+                        c = 0x21BD;
+                      break;
+                      case 166: /* RightUpVector */
+                        c = 0x21BE;
+                      break;
+                      case 167: /* LeftUpVector */
+                        c = 0x21BF;
+                      break;
+                      case 168: /* RightVector */
+                        c = 0x21C0;
+                      break;
+                      case 169: /* DownRightVector */
+                        c = 0x21C1;
+                      break;
+                      case 170: /* RightDownVector */
+                        c = 0x21C2;
+                      break;
+                      case 171: /* LeftDownVector */
+                        c = 0x21C3;
+                      break;
+                      case 172: /* RightArrowLeftArrow */
+                        c = 0x21C4;
+                      break;
+                      case 173: /* UpArrowDownArrow */
+                        c = 0x21C5;
+                      break;
+                      case 174: /* LeftArrowRightArrow */
+                        c = 0x21C6;
+                      break;
+                      case 175: /* DoubleLeftArrow */
+                        c = 0x21D0;
+                      break;
+                      case 176: /* DoubleUpArrow */
+                        c = 0x21D1;
+                      break;
+                      case 177: /* DoubleRightArrow */
+                        c = 0x21D2;
+                      break;
+                      case 178: /* DoubleDownArrow */
+                        c = 0x21D3;
+                      break;
+                      case 179: /* DoubleLeftRightArrow */
+                        c = 0x21D4;
+                      break;
+                      case 180: /* DoubleUpDownArrow */
+                        c = 0x21D5;
+                      break;
+                      case 181: /* LeftArrowBar */
+                        c = 0x21E4;
+                      break;
+                      case 182: /* RightArrowBar */
+                        c = 0x21E5;
+                      break;
+                      case 183: /* DownArrowUpArrow */
+                        c = 0x21F5;
+                      break;
+                      case 184: /* LongLeftArrow */
+                        c = 0x27F5;
+                      break;
+                      case 185: /* LongRightArrow */
+                        c = 0x27F6;
+                      break;
+                      case 186: /* LongLeftRightArrow */
+                        c = 0x27F7;
+                      break;
+                      case 187: /* DoubleLongLeftArrow */
+                        c = 0x27F8;
+                      break;
+                      case 188: /* DoubleLongRightArrow */
+                        c = 0x27F9;
+                      break;
+                      case 189: /* DoubleLongLeftRightArrow */
+                        c = 0x27FA;
+                      break;
+                      case 190: /* UpArrowBar */
+                        c = 0x2912;
+                      break;
+                      case 191: /* DownArrowBar */
+                        c = 0x2913;
+                      break;
+                      case 192: /* LeftRightVector */
+                        c = 0x294E;
+                      break;
+                      case 193: /* RightUpDownVector */
+                        c = 0x294F;
+                      break;
+                      case 194: /* DownLeftRightVector */
+                        c = 0x2950;
+                      break;
+                      case 195: /* LeftUpDownVector */
+                        c = 0x2951;
+                      break;
+                      case 196: /* LeftVectorBar */
+                        c = 0x2952;
+                      break;
+                      case 197: /* RightVectorBar */
+                        c = 0x2953;
+                      break;
+                      case 198: /* RightUpVectorBar */
+                        c = 0x2954;
+                      break;
+                      case 199: /* RightDownVectorBar */
+                        c = 0x2955;
+                      break;
+                      case 200: /* DownLeftVectorBar */
+                        c = 0x2956;
+                      break;
+                      case 201: /* DownRightVectorBar */
+                        c = 0x2957;
+                      break;
+                      case 202: /* LeftUpVectorBar */
+                        c = 0x2958;
+                      break;
+                      case 203: /* LeftDownVectorBar */
+                        c = 0x2959;
+                      break;
+                      case 204: /* LeftTeeVector */
+                        c = 0x295A;
+                      break;
+                      case 205: /* RightTeeVector */
+                        c = 0x295B;
+                      break;
+                      case 206: /* RightUpTeeVector */
+                        c = 0x295C;
+                      break;
+                      case 207: /* RightDownTeeVector */
+                        c = 0x295D;
+                      break;
+                      case 208: /* DownLeftTeeVector */
+                        c = 0x295E;
+                      break;
+                      case 209: /* DownRightTeeVector */
+                        c = 0x295F;
+                      break;
+                      case 210: /* LeftUpTeeVector */
+                        c = 0x2960;
+                      break;
+                      case 211: /* LeftDownTeeVector */
+                        c = 0x2961;
+                      break;
+                      case 212: /* UpEquilibrium */
+                        c = 0x296E;
+                      break;
+                      case 213: /* ReverseUpEquilibrium */
+                        c = 0x296F;
+                      break;
+
                       default:
                         c = (CHAR_T)ci;
                       }

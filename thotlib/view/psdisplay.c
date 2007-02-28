@@ -810,18 +810,21 @@ void DrawIntersection (int frame, int x, int y, int l, int h, ThotFont font,
 }
 
 /*----------------------------------------------------------------------
-  DrawArrow draw a vector
-  -----------------------------------------------------------------------*/
-void DrawVector (int frame, int thick, int style, int x, int y, int l,
-                 int h, int orientation, int fg)
-{
-}
+  DrawArrow draw an arrow.
+  orientation in degrees : 0 (right arrow), 45, 90, 135, 180, 225, 270 ou 315.
 
+  type : 0 = Arrow, 1 = Arrow with opposite directions, 2 = DoubleArrow,
+         3 = DoubleArrow with opposite directions
+         4 = two arrows with opposite directions, 5 = TeeArrow, 6 = ArrowBar
+         7 = Vector,  8 = Vector with opposite directions, 9 = TeeVector,
+         10 = VectorBar, 
+         11 = two vectors with opposite directions = Equilibrium
+         12 = ReverseVector, 13 = ReverseVector with opposite directions,
+         14 = TeeReverseVector, 15 = ReverseVectorBar
 
-/*----------------------------------------------------------------------
-   DrawArrow draw an arrow following the indicated direction in degrees :
-   0 (right arrow), 45, 90, 135, 180,
-   225, 270 ou 315.
+  parameter type is not taken into account here, always draw a arrow.
+         
+  fg : drawing color
   ----------------------------------------------------------------------*/
 void DrawArrow (int frame, int thick, int style, int x, int y, int l,
 		int h, int direction, int type, int fg)
