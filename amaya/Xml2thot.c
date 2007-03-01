@@ -6036,13 +6036,10 @@ void StartXmlParser (Document doc, char *fileName,
       TtaSetStructureChecking (TRUE, doc);
       DocumentSSchema = NULL;
     }
-#ifdef TODO
-  if (IsTemplateInstance(doc))
-    LoadInstanceOfTemplate(doc);
-#endif /* TODO */
 
+  // if some included HTML elements affected HTML variables
+  ClearHTMLParser (); 
   TtaSetDocumentUnmodified (doc);
-
 }
 
 /* end of module */

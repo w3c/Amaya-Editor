@@ -7088,6 +7088,29 @@ void ParseExternalHTMLDoc (Document doc, FILE * infile, CHARSET charset, char *e
 }
 
 /*-------------------------------------------------------------------------------
+  ClearHTMLParser 
+  Clear all parser variables
+  ------------------------------------------------------------------------------*/
+void ClearHTMLParser ()
+{
+  FirstElemToBeChecked = NULL;
+  LastElemToBeChecked = NULL;
+  lastElemEntry = 0;
+  lastAttribute = NULL;
+  lastAttrElement = NULL;
+  lastAttrEntry = NULL;
+  UnknownAttr = FALSE;
+  ReadingAnAttrValue = FALSE;
+  CommentText = NULL;
+  UnknownTag = FALSE;
+  LastCharInWorkBuffer = 0;
+  FileBuffer[0] = EOS;
+  LgEntityName = 0;
+  EntityTableEntry = 0;
+  CharRank = 0;
+}
+
+/*-------------------------------------------------------------------------------
   StartParser 
   Loads the file Directory/htmlFileName for displaying the document documentName.
   The parameter pathURL gives the original (local or distant)
