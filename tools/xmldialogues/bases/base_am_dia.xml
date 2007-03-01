@@ -2780,8 +2780,8 @@
 <message xml:lang="cn">区域统计(&amp;S)</message>
 <message xml:lang="tw">區域統計(&amp;S)</message></label>
 <label define="BMakeToc">
-<message xml:lang="en">&amp;Add Table of contents</message>
-<message xml:lang="fr">&amp;Ajouter table des matières</message>
+<message xml:lang="en">&amp;Generate Table of contents</message>
+<message xml:lang="fr">&amp;Engendrer table des matières</message>
 <message xml:lang="es">&amp;Generar índice de materias</message>
 <message xml:lang="ru">Создать оглавление</message>
 <message xml:lang="de">Inhaltsverzeichnis erzeugen</message>

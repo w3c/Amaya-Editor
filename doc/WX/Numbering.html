@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <title>Numbering Sections and Table of Contents</title>
   <style type="text/css">
  </style>
@@ -13,7 +13,7 @@
 <body xml:lang="en" lang="en">
 
 <div>
-<img alt="Amaya" src="../../resources/icons/22x22/logo.png" class="logo" />
+<img alt="Amaya" src="../../resources/icons/22x22/logo.png" class="logo" /> 
 
 <p class="nav"><a href="Printing.html" accesskey="p"><img alt="previous"
 src="../../resources/icons/misc/left.png" /></a> <a href="Manual.html"
@@ -36,8 +36,9 @@ document itself and previous generated numbers are removed, each times the
 <h1>Table of Contents</h1>
 
 <p>The <strong>XHTML&gt;Generate Table of contents</strong> command collects
-all following <code>H2</code>to<code>H6</code> elements in the document to
-generate a table of contents at the current position.</p>
+all following <code>H2</code> to <code>H6</code> elements in the document to
+generate a table of contents at the current position. It updates the current
+one if the selection is already a table of contents.</p>
 
 <p>This command adds:</p>
 <ul>
@@ -46,7 +47,7 @@ generate a table of contents at the current position.</p>
   <li>A division with a "toc" <code>class</code> attribute value and a
     cascade of unnumbered lists at the current position.</li>
   <li>A list item for each H2 to H6 element including a link which points to
-    the corresponding element.
+    the corresponding element. 
     <p>The link element contents is a copy of the Hi element. If the Hi
     element is numbered, this number is also copied.</p>
   </li>
