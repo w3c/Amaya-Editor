@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2005
+ *  (c) COPYRIGHT INRIA, 1996-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -894,7 +894,7 @@ void LoadNatureSchema (PtrSSchema pSS, char *PSchName, int rule, char *schURI,
   PtrSSchema     pNatureSS;
 #ifndef NODISPLAY
   ThotBool       loaded;
-  char          *pUriName;
+  char          *pUriName = NULL;
   int            l;
 #endif
 
@@ -923,6 +923,7 @@ void LoadNatureSchema (PtrSSchema pSS, char *PSchName, int rule, char *schURI,
               strcpy (pUriName, pNatureSS->SsName);
               strcat (pUriName, "P");
               loaded = LoadPresentationSchema (pUriName, pNatureSS, pDoc);
+              TtaFreeMemory (pUriName);
             }
           else
             {

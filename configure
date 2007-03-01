@@ -16334,7 +16334,7 @@ echo "$as_me: executing $ac_dest commands" >&6;}
 
 echo timestamp > stamp-h
 
-if test ! "$AMAYAOS" = "MACOSX" ; then
+if test "$AMAYAOS" != "MACOSX" ; then
     cp ../batch/amaya.in bin/amaya
     chmod a+x bin/amaya
 fi

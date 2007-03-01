@@ -27,7 +27,6 @@ static char         Langbuffer1[2 * MAX_NAME_LENGTH];
 static char         Langbuffer2[2 * MAX_NAME_LENGTH];
 static char         CodeBuffer[2 * MAX_NAME_LENGTH];
 static int          breakPoints[MAX_POINT_COUP];
-static char         StandardLANG[3] = {EOS,EOS,EOS};
 static char        *dictPath;	/* Environment variable DICOPAR */
 int                 FreeEntry;
 
@@ -731,23 +730,7 @@ Language TtaGetLanguageIdFromName (char *name)
   ----------------------------------------------------------------------*/
 char *TtaGetVarLANG ()
 {
-   char   *langEVar;
-
-   if (StandardLANG[0] == EOS)
-     {
-       langEVar = TtaGetEnvString ("LANG");
-       if (langEVar == NULL)
-         strcpy (StandardLANG, "en");
-       else if (!strcmp (langEVar, "C") ||
-                !strcasecmp (langEVar, "iso_8859_1"))
-         strcpy (StandardLANG, "fr");
-       else
-         {
-           strncpy (StandardLANG, langEVar, 2);
-           StandardLANG[2] = EOS;
-         }
-     }
-   return (StandardLANG);
+  return TtaGetEnvString ("LANG");
 }
 
 /*----------------------------------------------------------------------
@@ -761,6 +744,7 @@ Language TtaGetDefaultLanguage ()
 {
    return TtaGetLanguageIdFromName (TtaGetVarLANG ());
 }
+
 
 /*----------------------------------------------------------------------
    TtaGetLanguageIdFromScript

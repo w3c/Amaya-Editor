@@ -1427,7 +1427,7 @@ echo timestamp > stamp-h
 dnl
 dnl Generate the script
 dnl
-if test ! "$AMAYAOS" = "MACOSX" ; then
+if test "$AMAYAOS" != "MACOSX" ; then
     cp ../batch/amaya.in bin/amaya
     chmod a+x bin/amaya
 fi

@@ -46,6 +46,7 @@
 
 #include "applicationapi_f.h"
 #include "fileaccess_f.h"
+#include "language_f.h"
 #include "memory_f.h"
 #include "platform_f.h"
 #include "uconvert_f.h"
@@ -97,6 +98,7 @@ static char         *AppRegistryEntryAppli = (char*) 0;
 static char         *AppNameW;
 static char          CurrentDir[MAX_PATH];
 static char         *Thot_Dir;
+static char          StandardLANG[3] = {EOS,EOS,EOS};
 
 #ifdef COMPILED_IN_THOTDIR
 char  UCOMPILED_IN_THOTDIR[MAX_TXT_LEN];
@@ -579,6 +581,12 @@ char *TtaGetEnvString (char *name)
   if (!strcasecmp (name, "cwd") || !strcasecmp (name, "pwd"))
     return (getcwd (&CurrentDir[0], sizeof(CurrentDir)));
 
+  // shortcut to get the current language
+  if (!strcmp (name, "LANG") && StandardLANG[0] != EOS)
+    {
+      return (StandardLANG);
+    }
+
   /* first lookup in the System defaults */
   cour = AppRegistryEntry;
   while (cour != NULL)
@@ -598,37 +606,44 @@ char *TtaGetEnvString (char *name)
   cour = AppRegistryEntry;
   while (cour != NULL)
     {
-      if (!strcasecmp (cour->appli, AppRegistryEntryAppli)      && 
+      if (!strcasecmp (cour->appli, AppRegistryEntryAppli) && 
           !strcmp (cour->name, name) && cour->value[0] != EOS && 
           cour->level == REGISTRY_USER)
         {
 #ifdef DEBUG_REGISTRY
           fprintf (stderr, "TtaGetEnvString(\"%s\") = %s\n", name, cour->value);
 #endif
+          if (!strcmp (name, "LANG"))
+            {
+              strncpy (StandardLANG, (char *)cour->value, 2);
+              StandardLANG[2] = EOS;
+            }
           return (cour->value);
         }
       cour = cour->next;
     }
 
   /* then lookup in the application defaults */
+#ifdef _WX
+  if (!strcmp (name, "LANG"))
+    {
+      int lang = TtaGetSystemLanguage();
+      // get the platform language
+      strncpy (StandardLANG, TtaGetISO639Code(lang), 2);
+      StandardLANG[2] = EOS;
+      return (StandardLANG);
+    }
+#endif /* _WX */
   cour = AppRegistryEntry;
   while (cour != NULL)
     {
-      if (!strcasecmp (cour->appli, AppRegistryEntryAppli)      && 
+      if (!strcasecmp (cour->appli, AppRegistryEntryAppli) && 
           !strcmp (cour->name, name) && cour->value[0] != EOS && 
           cour->level == REGISTRY_SYSTEM)
         {
 #ifdef DEBUG_REGISTRY
           fprintf (stderr, "TtaGetEnvString(\"%s\") = %s\n", name, cour->value);
 #endif
-#ifdef _WX
-          if (!strcmp (name, "LANG"))
-            {
-              int lang = TtaGetSystemLanguage();
-              // get the system language
-              return TtaGetISO639Code(lang);
-            }
-#endif /* _WX */
           return (cour->value);
         }
       cour = cour->next;
@@ -638,7 +653,8 @@ char *TtaGetEnvString (char *name)
   cour = AppRegistryEntry;
   while (cour != NULL)
     {
-      if (!strcasecmp (cour->appli, THOT_LIB_DEFAULTNAME) && !strcmp (cour->name, name) && cour->value[0] != EOS)
+      if (!strcasecmp (cour->appli, THOT_LIB_DEFAULTNAME) &&
+          !strcmp (cour->name, name) && cour->value[0] != EOS)
         {
 #ifdef DEBUG_REGISTRY
           fprintf (stderr, "TtaGetEnvString(\"%s\") = %s\n", name, cour->value);
@@ -653,9 +669,13 @@ char *TtaGetEnvString (char *name)
    * Hopefully this will be stored to the user registry
    * next time it will be saved.
    */
+  if (!strcmp (name, "LANG"))
+    {
+     strcpy (StandardLANG, "en");
+     return (StandardLANG);
+    }
 
   value = getenv (name);
-
   if (value == NULL)
     TtaSetEnvString (name, "", FALSE); 
   else
@@ -717,7 +737,11 @@ void TtaSetEnvString (char *name, char *value, int overwrite)
   /* make sure that value isn't NULL */
   if (!tmp)
     tmp = "";
-   
+  if (!strcmp (name, "LANG") && value && overwrite)
+  {
+    strncpy (StandardLANG, value, 2);
+    StandardLANG[2] = EOS;
+  }
   AddRegisterEntry (AppRegistryEntryAppli, name, tmp, REGISTRY_USER, overwrite);
 }
 
@@ -814,12 +838,23 @@ char *TtaGetDefEnvString (char *name)
   if (!strcasecmp (name, "cwd") || !strcasecmp (name, "pwd"))
     return (getcwd (&CurrentDir[0], sizeof(CurrentDir)));
 
+#ifdef _WX
+  if (!strcmp (name, "LANG"))
+    {
+      int lang = TtaGetSystemLanguage();
+      // get the platform language
+      strncpy (StandardLANG, TtaGetISO639Code(lang), 2);
+      StandardLANG[2] = EOS;
+      return (StandardLANG);
+    }
+#endif /* _WX */
+
   /* First lookup in the System defaults */
   cour = AppRegistryEntry;
   while (cour != NULL)
     {
-      if (!strcasecmp (cour->appli, "System") && !strcmp (cour->name, name) 
-          && cour->level == REGISTRY_SYSTEM && cour->value[0] != EOS)
+      if (!strcasecmp (cour->appli, "System") && !strcmp (cour->name, name) &&
+          cour->level == REGISTRY_SYSTEM && cour->value[0] != EOS)
         {
 #ifdef DEBUG_REGISTRY
           fprintf (stderr, "TtaGetDefEnvString(\"%s\") = %s\n", name, cour->value);
@@ -833,9 +868,9 @@ char *TtaGetDefEnvString (char *name)
   cour = AppRegistryEntry;
   while (cour != NULL)
     {
-      if (!strcasecmp (cour->appli, AppRegistryEntryAppli) 
-          && !strcmp (cour->name, name) 
-          && cour->level == REGISTRY_SYSTEM && cour->value[0] != EOS)
+      if (!strcasecmp (cour->appli, AppRegistryEntryAppli) &&
+          !strcmp (cour->name, name) &&
+          cour->level == REGISTRY_SYSTEM && cour->value[0] != EOS)
         {
 #ifdef DEBUG_REGISTRY
           fprintf (stderr, "TtaGetDefEnvString(\"%s\") = %s\n", name, cour->value);
@@ -849,9 +884,9 @@ char *TtaGetDefEnvString (char *name)
   cour = AppRegistryEntry;
   while (cour != NULL)
     {
-      if (!strcasecmp (cour->appli, THOT_LIB_DEFAULTNAME) 
-          && !strcmp (cour->name, name) 
-          && cour->level == REGISTRY_SYSTEM && cour->value[0] != EOS)
+      if (!strcasecmp (cour->appli, THOT_LIB_DEFAULTNAME) &&
+          !strcmp (cour->name, name) &&
+          cour->level == REGISTRY_SYSTEM && cour->value[0] != EOS)
         {
 #ifdef DEBUG_REGISTRY
           fprintf (stderr, "TtaGetDefEnvString(\"%s\") = %s\n", name, cour->value);

@@ -86,7 +86,7 @@ extern char *TtaGetVarLANG (void);
    TtaGetISO639Code
    Returns the language code in the ISO639 table
   ----------------------------------------------------------------------*/
-extern char *TtaGetISO639Code (int val);
+extern char *TtaGetISO639Code (int code);
 
 /*----------------------------------------------------------------------
    TtaGetDefaultLanguage
