@@ -218,7 +218,7 @@ static unsigned char *ReadPng (FILE *pfFile, unsigned int *width, unsigned int *
     TtaFreeMemory (ppbRowPointers);
     ppbRowPointers = NULL; 
     /* clean up after the read, and free any memory allocated */
-    png_read_destroy (png_ptr, info_ptr, (png_info*) NULL);
+    //png_read_destroy (png_ptr, info_ptr, (png_info*) NULL);
     /* Free all of the memory associated with the png_ptr and info_ptr */
     png_destroy_read_struct (&png_ptr, &info_ptr, (png_infopp)NULL);
     return pixels;
