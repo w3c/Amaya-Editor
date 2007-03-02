@@ -11,6 +11,8 @@ extern Attribute TtaGetSelectedAttribute ( void );
 extern ThotBool TtaIsColumnRowSelected ( Document document );
 extern void TtaSelectElement ( Document document,
                                Element selectedElement );
+extern void TtaSelectElementWithoutPath ( Document document,
+                                          Element selectedElement );
 extern void TtaSelectView ( Document document,
                             View view );
 extern Document TtaGetSelectedDocument ( void );
@@ -52,6 +54,8 @@ extern Attribute TtaGetSelectedAttribute ( void );
 extern ThotBool TtaIsColumnRowSelected ( Document document );
 extern void TtaSelectElement ( Document document,
                                  Element selectedElement );
+extern void TtaSelectElementWithoutPath ( Document document,
+                                            Element selectedElement );
 extern void TtaSelectView ( Document document,
                               View view );
 extern Document TtaGetSelectedDocument ( void );

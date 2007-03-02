@@ -1075,7 +1075,7 @@ void   TtaSetDisplayMode (Document doc, DisplayMode newDisplayMode)
                       else if (NewDocSelection[doc - 1].SDFirstChar == 0 &&
                                NewDocSelection[doc - 1].SDLastChar == 0)
                         /* whole element selected */
-                        SelectElement (pDoc, pEl, TRUE, TRUE);
+                        SelectElement (pDoc, pEl, TRUE, TRUE, TRUE);
                       else
                         /* partial selection */
                         SelectString (pDoc, pEl,

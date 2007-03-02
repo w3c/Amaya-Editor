@@ -109,14 +109,56 @@ void TtaSelectElement (Document document, Element selectedElement)
     {
       dispMode = TtaGetDisplayMode (document);
       if (dispMode == DisplayImmediately)
+        {
         if (selectedElement == NULL)
           /* Abort the selection */
           ResetSelection (LoadedDocument[document - 1]);
         else
-          SelectElement (LoadedDocument[document - 1],
-                         (PtrElement) selectedElement, TRUE, FALSE);
+          {
+            SelectElement (LoadedDocument[document - 1],
+                           (PtrElement) selectedElement, TRUE, FALSE, TRUE);
+#ifdef _WX
+            // update the status bar
+            TtaSetStatusSelectedElement (document, 1, selectedElement);
+#endif /* _WX */
+          }
+        }
       else
         NewSelection (document, selectedElement, NULL, 0, 0);
+    }
+}
+
+/*----------------------------------------------------------------------
+  TtaSelectElementWithoutPath
+
+  Selects a single element but don't update the selection path.
+  The element is highlighted in all views
+  where it can be displayed. If it cannot be displayed in any existing
+  view, a new view is eventually open for displaying it.
+  Parameters:
+  document: the document containing the element to be
+  selected.
+  selectedElement: the element to be selected. NULL for cancelling the
+  selection in the document.
+  ----------------------------------------------------------------------*/
+void TtaSelectElementWithoutPath (Document document, Element selectedElement)
+{
+  DisplayMode         dispMode;
+
+  UserErrorCode = 0;
+  if (selectedElement && ((PtrElement) selectedElement)->ElParent == NULL)
+    TtaError (ERR_invalid_parameter);
+  /* Checks the parameter document */
+  else if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else
+    {
+      dispMode = TtaGetDisplayMode (document);
+      if (dispMode == DisplayImmediately && selectedElement)
+        SelectElement (LoadedDocument[document - 1],
+                       (PtrElement) selectedElement, TRUE, FALSE, FALSE);
     }
 }
 
@@ -214,8 +256,10 @@ void  TtaSelectString (Document document, Element textElement,
     {
       dispMode = TtaGetDisplayMode (document);
       if (dispMode == DisplayImmediately)
-        SelectString (LoadedDocument[document - 1],
-                      (PtrElement) textElement, firstCharacter, lastCharacter);
+        {
+          SelectString (LoadedDocument[document - 1],
+                        (PtrElement) textElement, firstCharacter, lastCharacter);
+        }
       else
         NewSelection (document, textElement, NULL, firstCharacter, lastCharacter);
     }

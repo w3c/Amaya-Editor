@@ -2507,7 +2507,7 @@ void DeleteNextChar (int frame, PtrElement pEl, ThotBool before)
                     /* set selection before the first character of the
                        string */
                     if (pSibling->ElVolume == 0)
-                      SelectElement (pDoc, pSibling, FALSE, FALSE);
+                      SelectElement (pDoc, pSibling, FALSE, FALSE, TRUE);
                     else
                       SelectString (pDoc, pSibling, 1, 0);
                     /* simulate a delete */
@@ -2519,7 +2519,7 @@ void DeleteNextChar (int frame, PtrElement pEl, ThotBool before)
                    Backspace at the beginning of a svg:text element */
                 {
                   /* set selection before the first character of the string */
-                  SelectElement (pDoc, pSibling, FALSE, FALSE);
+                  SelectElement (pDoc, pSibling, FALSE, FALSE, TRUE);
                   /* and delete the selected element */
                   CutCommand (FALSE, FALSE);
                 }
@@ -2723,29 +2723,35 @@ void DeleteNextChar (int frame, PtrElement pEl, ThotBool before)
             {
               pSel = FirstLeaf (pSel);
               if (!pSel->ElTerminal)
-                SelectElement (pDoc, pSel, TRUE, TRUE);
+                SelectElement (pDoc, pSel, TRUE, TRUE, TRUE);
               else if (pSel->ElLeafType == LtText)
+                {
                 if (before)
                   MoveCaret (pDoc, pSel, 1);
                 else
                   MoveCaret (pDoc, pSel, pSel->ElTextLength + 1);
+                }
               else if (pSel->ElLeafType != LtPairedElem)
-                SelectElement (pDoc, pSel, TRUE, TRUE);
+                SelectElement (pDoc, pSel, TRUE, TRUE, TRUE);
               else if (pSel->ElPrevious != NULL)
+                {
                 if (pSel->ElPrevious->ElTerminal &&
                     pSel->ElPrevious->ElLeafType == LtText)
                   MoveCaret (pDoc, pSel->ElPrevious,
                              pSel->ElPrevious->ElTextLength + 1);
                 else
-                  SelectElement (pDoc, pSel->ElPrevious, TRUE, TRUE);
+                  SelectElement (pDoc, pSel->ElPrevious, TRUE, TRUE, TRUE);
+                }
               else if (pSel->ElNext != NULL)
+                {
                 if (pSel->ElNext->ElTerminal &&
                     pSel->ElNext->ElLeafType == LtText)
                   MoveCaret (pDoc, pSel->ElNext, 1);
                 else
-                  SelectElement (pDoc, pSel->ElNext, TRUE, TRUE);
+                  SelectElement (pDoc, pSel->ElNext, TRUE, TRUE, TRUE);
+                }
               else
-                SelectElement (pDoc, pSel->ElParent, TRUE, TRUE);
+                SelectElement (pDoc, pSel->ElParent, TRUE, TRUE, TRUE);
             }
           else
             /* the first element moved is empty. Select the closest
@@ -2757,7 +2763,7 @@ void DeleteNextChar (int frame, PtrElement pEl, ThotBool before)
                   if (pSel->ElTerminal && pSel->ElLeafType == LtText)
                     MoveCaret (pDoc, pSel, pSel->ElTextLength + 1);
                   else
-                    SelectElement (pDoc, pSel, TRUE, TRUE);
+                    SelectElement (pDoc, pSel, TRUE, TRUE, TRUE);
                 }
               else if (pSel->ElNext != NULL)
                 {
@@ -2765,10 +2771,10 @@ void DeleteNextChar (int frame, PtrElement pEl, ThotBool before)
                   if (pSel->ElTerminal && pSel->ElLeafType == LtText)
                     MoveCaret (pDoc, pSel, 1);
                   else
-                    SelectElement (pDoc, pSel, TRUE, TRUE);
+                    SelectElement (pDoc, pSel, TRUE, TRUE, TRUE);
                 }
               else
-                SelectElement (pDoc, pSel, TRUE, TRUE);
+                SelectElement (pDoc, pSel, TRUE, TRUE, TRUE);
             }
         }
       /* end of command: close history sequence */

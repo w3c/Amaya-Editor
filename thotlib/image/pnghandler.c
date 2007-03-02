@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2005
+ *  (c) COPYRIGHT INRIA, 1996-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -213,7 +213,7 @@ static unsigned char *ReadPng (FILE *pfFile, unsigned int *width, unsigned int *
     /* depending on interlacing, reading the data*/
     for (i = 0; i < passes; i++)
       for (j = 0; j < (*height); j++)
-	png_read_row (png_ptr, ppbRowPointers[j], NULL);
+        png_read_row (png_ptr, ppbRowPointers[j], NULL);
     png_read_end(png_ptr, NULL);
     TtaFreeMemory (ppbRowPointers);
     ppbRowPointers = NULL; 

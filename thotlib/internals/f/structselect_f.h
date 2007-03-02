@@ -59,7 +59,8 @@ extern void SelectString ( PtrDocument pDoc,
 extern void SelectElement ( PtrDocument pDoc,
                             PtrElement pEl,
                             ThotBool begin,
-                            ThotBool check );
+                            ThotBool check,
+                            ThotBool withPath );
 extern void ExtendSelection ( PtrElement pEl,
                               int rank,
                               ThotBool fixed,
@@ -156,7 +157,8 @@ extern void SelectString ( PtrDocument pDoc,
 extern void SelectElement ( PtrDocument pDoc,
                               PtrElement pEl,
                               ThotBool begin,
-                              ThotBool check );
+                              ThotBool check,
+                              ThotBool withPath );
 extern void ExtendSelection ( PtrElement pEl,
                                 int rank,
                                 ThotBool fixed,

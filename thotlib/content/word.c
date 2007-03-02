@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2005
+ *  (c) COPYRIGHT INRIA, 1996-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -223,17 +223,17 @@ void RestoreAfterSearch ()
   if (endChar > 0)
     {
       if (FirstCharSDomain > 0)
-	{
-	  if (FirstElSDomain == LastElSDomain)
-	    prevLen = endChar;
-	  else
-	    prevLen = 0;
-	  SelectString (DocSDomain, FirstElSDomain,
-			FirstCharSDomain, prevLen);
-	}
+        {
+          if (FirstElSDomain == LastElSDomain)
+            prevLen = endChar;
+          else
+            prevLen = 0;
+          SelectString (DocSDomain, FirstElSDomain,
+                        FirstCharSDomain, prevLen);
+        }
       else
-	SelectElement (DocSDomain, FirstElSDomain, TRUE, TRUE);
-     }
+        SelectElement (DocSDomain, FirstElSDomain, TRUE, TRUE, TRUE);
+    }
    
   if (LastElSDomain != FirstElSDomain && LastElSDomain != NULL)
     ExtendSelection (LastElSDomain, endChar, TRUE, FALSE, FALSE);

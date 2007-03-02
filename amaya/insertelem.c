@@ -164,7 +164,8 @@ static void FillUnionResolvedPossibleElement(XTigerTemplate t, const char* name,
   }
   else if (dec->nature==SimpleTypeNat)
   {
-    DLList_Append(list, ElemListElement_CreateBaseType(level, dec->name, resolvedPath, elem));
+    DLList_Append(list, ElemListElement_CreateBaseType(level, dec->name, resolvedPath,
+                                                       elem));
     /* Do nothing. */
   }
   else
@@ -181,7 +182,8 @@ static void FillUnionResolvedPossibleElement(XTigerTemplate t, const char* name,
                         &checkProfile, TtaGetDocument(elem));
       if (elType.ElTypeNum!=0)
       {
-        DLList_Append(list, ElemListElement_CreateLanguageElement(level, elType, resolvedPath, elem));
+        DLList_Append(list, ElemListElement_CreateLanguageElement(level, elType,
+                                                                  resolvedPath, elem));
         break;
       }
     }
@@ -193,7 +195,8 @@ static void FillUnionResolvedPossibleElement(XTigerTemplate t, const char* name,
   Fill an element list with all possible elements extracted from a stringlist.
     ----------------------------------------------------------------------*/
 static void FillInsertableTemplateElementFromStringList(XTigerTemplate t,
-                                                        Element refelem, const char* strlist,
+                                                        Element refelem,
+                                                        const char* strlist,
                                                         DLList list, int level)
 {
   int             pos = 0,
@@ -329,7 +332,8 @@ static void FillInsertableElemList(Document doc, Element elem, DLList list)
   ----------------------------------------------------------------------*/
 DLList InsertableElement_GetList(Document doc)
 {
-  InsertableElementList list = (InsertableElementList) HashMap_Get(InsertableElementMap, (void*)doc);
+  InsertableElementList list = (InsertableElementList) HashMap_Get(InsertableElementMap,
+                                                                   (void*)doc);
   if (list)
     return list->list;
   else
@@ -378,7 +382,8 @@ void InsertableElement_DoInsertElement(void* el)
   SSchema   templateSSchema;
 
 #ifdef AMAYA_DEBUG
-  printf("insert %s into %s\n", ElemListElement_GetName(elem), TtaGetElementTypeName(refType));
+  printf("insert %s into %s\n", ElemListElement_GetName(elem),
+         TtaGetElementTypeName(refType));
 #endif /* AMAYA_DEBUG */
 
 #ifdef TEMPLATES
@@ -389,10 +394,13 @@ void InsertableElement_DoInsertElement(void* el)
     {
       case Template_EL_repeat:
         if (elem->typeClass==DefinedComponent)
-          newEl = Template_InsertRepeatChild(doc, ref, (Declaration)elem->elem.component.declaration, -1);
+          newEl = Template_InsertRepeatChild(doc, ref,
+                                             (Declaration)elem->elem.component.declaration,
+                                             -1);
         break;
       case Template_EL_bag:
-        newEl = Template_InsertBagChild(doc, ref, (Declaration)elem->elem.component.declaration);
+        newEl = Template_InsertBagChild(doc, ref,
+                                        (Declaration)elem->elem.component.declaration);
         break;
       default:
         break;
@@ -400,9 +408,6 @@ void InsertableElement_DoInsertElement(void* el)
   }
 #endif /* TEMPLATES */
 
-  if(newEl)
-  {
+  if (newEl)
     TtaSelectElement(doc, newEl);
-    TtaSetStatusSelectedElement(doc, 1, newEl);
-  }
 }

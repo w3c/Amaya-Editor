@@ -1054,7 +1054,7 @@ void HighlightAttrSelection (PtrDocument pDoc, PtrElement pEl,
           DocSelectedAttr = NULL;
           FirstSelectedCharInAttr = 0;
           LastSelectedCharInAttr = 0;
-          SelectElement (pDoc, pEl, TRUE, FALSE);
+          SelectElement (pDoc, pEl, TRUE, FALSE, TRUE);
         }
     }
 }
@@ -1716,7 +1716,7 @@ void SelectStringInAttr (PtrDocument pDoc, PtrAbstractBox pAb, int firstChar,
     /* the string to be selected is in a copy element */
     /* Select the whole element. SelectElement will select the first */
     /* ancestor that is not a copy */
-    SelectElement (pDoc, pEl, TRUE, TRUE);
+    SelectElement (pDoc, pEl, TRUE, TRUE, TRUE);
   else
     {
       DocSelectedAttr = pDoc;
@@ -1798,7 +1798,7 @@ static void SelectStringOrPosition (PtrDocument pDoc, PtrElement pEl,
         /* the string to be selected is in a copy or holophrasted element */
         /* select that element: SelectElement will select the first */
         /* that can be selected */
-        SelectElement (pDoc, pEl, TRUE, TRUE);
+        SelectElement (pDoc, pEl, TRUE, TRUE, TRUE);
       else
         {
           oldFirstSelEl = FirstSelectedElement;
@@ -1879,6 +1879,11 @@ static void SelectStringOrPosition (PtrDocument pDoc, PtrElement pEl,
               if (SelectionUpdatesMenus)
                 if (ThotLocalActions[T_chsplit] != NULL)
                   (*(Proc1)ThotLocalActions[T_chsplit]) ((void *)pDoc);
+#ifdef _WX
+          // update the status bar
+          TtaSetStatusSelectedElement (IdentDocument (pDoc), 1,
+                                       (Element) FirstSelectedElement);
+#endif /* _WX */
         }
     }
 }
@@ -1923,13 +1928,15 @@ void SelectString (PtrDocument pDoc, PtrElement pEl, int firstChar, int lastChar
   If this element is not supposed to be shown to the user, its first or
   last child is selected instead, depending on parameter begin, except
   when check is FALSE.
+  When withPath is TRUE, the status bar is updated.
   ----------------------------------------------------------------------*/
-void SelectElement (PtrDocument pDoc, PtrElement pEl, ThotBool begin, ThotBool check)
+void SelectElement (PtrDocument pDoc, PtrElement pEl, ThotBool begin,
+                    ThotBool check, ThotBool withPath)
 {
   PtrElement          pAncest, pE;
   ThotBool            stop, elVisible;
 
-  if (pEl != NULL && pDoc != NULL && pEl->ElStructSchema != NULL &&
+  if (pEl && pDoc && pEl->ElStructSchema &&
       pEl != pDoc->DocDocElement) /* do not select the Document element */
     {
       if (check)
@@ -2065,7 +2072,7 @@ void SelectElement (PtrDocument pDoc, PtrElement pEl, ThotBool begin, ThotBool c
             }
         }
       
-      if (FirstSelectedElement != NULL && FirstSelectedElement->ElTerminal)
+      if (FirstSelectedElement && FirstSelectedElement->ElTerminal)
         {
           /* if a symbol is selected, display the symbol palette */
           /****** if (FirstSelectedElement->ElLeafType == LtSymbol)
@@ -2086,6 +2093,12 @@ void SelectElement (PtrDocument pDoc, PtrElement pEl, ThotBool begin, ThotBool c
           if (ThotLocalActions[T_chattr] != NULL)
             (*(Proc1)ThotLocalActions[T_chattr]) ((void *)pDoc);
         }
+#ifdef _WX
+      if (withPath)
+        // update the status bar
+        TtaSetStatusSelectedElement (IdentDocument (pDoc), 1,
+                                     (Element) FirstSelectedElement);
+#endif /* _WX */
     }
 }
 
@@ -2582,7 +2595,7 @@ static void ReverseSelect (PtrElement pEl, PtrDocument pDoc, ThotBool highlight)
   Parameter last indicates if it's the last element added to the current
   selection.
   ----------------------------------------------------------------------*/
-void           AddInSelection (PtrElement pEl, ThotBool last)
+void AddInSelection (PtrElement pEl, ThotBool last)
 {
   int                 i;
   ThotBool            ok;
@@ -2603,7 +2616,7 @@ void           AddInSelection (PtrElement pEl, ThotBool last)
                      FirstSelectedElement->ElLeafType == LtPath) &&
                     SelectedPointInPolyline > 0)))
                 SelectElement (SelectedDocument, FirstSelectedElement, TRUE,
-                               TRUE);
+                               TRUE, TRUE);
               SelectedElement[0] = FirstSelectedElement;
               NSelectedElements = 1;
             }
@@ -2740,7 +2753,7 @@ void SelectElementWithEvent (PtrDocument pDoc, PtrElement pEl,
       notifyEl.position = 0;
       if (!CallEventType ((NotifyEvent *) & notifyEl, TRUE))
         {
-          SelectElement (pDoc, pEl, begin, check);
+          SelectElement (pDoc, pEl, begin, check, TRUE);
           notifyEl.event = TteElemSelect;
           notifyEl.document = doc;
           notifyEl.element = (Element) pEl;
@@ -3779,7 +3792,6 @@ void TtcParentElement (Document document, View view)
   SelectAround (1);
 }
 
-
 /*----------------------------------------------------------------------
   TtcPreviousElement
   Select the element preceding the first selected element
@@ -3788,7 +3800,6 @@ void TtcPreviousElement (Document document, View view)
 {
   SelectAround (2);
 }
-
 
 /*----------------------------------------------------------------------
   TtcNextElement

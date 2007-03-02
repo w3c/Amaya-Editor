@@ -1305,7 +1305,7 @@ void SelectRange (PtrDocument pDoc, PtrElement firstSel, PtrElement lastSel,
 
   /* set the new selection */
   if (!firstSel->ElTerminal)
-    SelectElement (pDoc, firstSel, TRUE, TRUE);
+    SelectElement (pDoc, firstSel, TRUE, TRUE, TRUE);
   else if (firstChar > 1)
     {
       if (firstSel == lastSel)
@@ -1315,7 +1315,7 @@ void SelectRange (PtrDocument pDoc, PtrElement firstSel, PtrElement lastSel,
       SelectString (pDoc, firstSel, firstChar, prevLen);
     }
   else if ((lastChar == 0 && firstChar == 0) || lastSel != firstSel)
-    SelectElement (pDoc, firstSel, TRUE, TRUE);
+    SelectElement (pDoc, firstSel, TRUE, TRUE, TRUE);
   else
     SelectString (pDoc, firstSel, 1, lastChar);
 

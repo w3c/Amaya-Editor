@@ -1223,8 +1223,8 @@ void MathSelectionChanged (NotifyElement *event)
             }
         }
     }
-    UpdateXmlElementListTool(event->element,event->document);
-    TtaSetStatusSelectedElement(event->document, 1, event->element);
+    UpdateXmlElementListTool (event->element,event->document);
+    TtaSetStatusSelectedElement (event->document, 1, event->element);
 }
 
 /*----------------------------------------------------------------------
@@ -1235,8 +1235,8 @@ static void GetIntegralType(Document doc)
 #ifdef _WX
   ThotBool  created;
   
-  created = CreateSelectIntegralDlgWX(MathsDialogue + FormMathIntegral,
-                                      TtaGetViewFrame (doc, 1));
+  created = CreateSelectIntegralDlgWX (MathsDialogue + FormMathIntegral,
+                                       TtaGetViewFrame (doc, 1));
   if (created)
     {
       TtaSetDialoguePosition ();

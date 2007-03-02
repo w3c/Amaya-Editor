@@ -53,6 +53,21 @@ extern void TtaSelectWord (Element element, int pos, Document doc, View view);
 extern void TtaSelectElement (Document document, Element selectedElement);
 
 /*----------------------------------------------------------------------
+  TtaSelectElementWithoutPath
+
+  Selects a single element but don't update the selection path.
+  The element is highlighted in all views
+  where it can be displayed. If it cannot be displayed in any existing
+  view, a new view is eventually open for displaying it.
+  Parameters:
+  document: the document containing the element to be
+  selected.
+  selectedElement: the element to be selected. NULL for cancelling the
+  selection in the document.
+  ----------------------------------------------------------------------*/
+extern void TtaSelectElementWithoutPath (Document document, Element selectedElement);
+
+/*----------------------------------------------------------------------
    TtaGetSelectedDocument returns the current selected document
   ----------------------------------------------------------------------*/
 extern Document TtaGetSelectedDocument ();

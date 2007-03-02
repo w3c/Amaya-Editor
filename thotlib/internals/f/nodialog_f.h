@@ -116,8 +116,9 @@ extern int TtaGetElementLineNumber ( Element element );
 extern void TtaClearViewSelections ( void );
 extern void SelectElement ( PtrDocument pDoc,
                             PtrElement pEl,
-                            ThotBool Debut,
-                            ThotBool Controle );
+                            ThotBool begin,
+                            ThotBool check,
+                            ThotBool withPath );
 extern void ComputeViewSelMarks ( ViewSelection * marque,
                                   int frame );
 extern void HighlightSelection ( ThotBool DebVisible,
@@ -284,8 +285,9 @@ extern int TtaGetElementLineNumber ( Element element );
 extern void TtaClearViewSelections ( void );
 extern void SelectElement ( PtrDocument pDoc,
                               PtrElement pEl,
-                              ThotBool Debut,
-                              ThotBool Controle );
+                              ThotBool begin,
+                              ThotBool check,
+                              ThotBool withPath );
 extern void ComputeViewSelMarks ( ViewSelection * marque,
                                     int frame );
 extern void HighlightSelection ( ThotBool DebVisible,

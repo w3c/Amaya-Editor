@@ -505,7 +505,6 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile,
       el = TtaSearchTypedElement (elType, SearchInTree, body);
       /* set the initial selection */
       TtaSelectElement (doc, el);
-      TtaSetStatusSelectedElement(doc, 1, el);
       if (SelectionDoc != 0)
         UpdateContextSensitiveMenus (SelectionDoc, 1);
       SelectionDoc = doc;
@@ -541,7 +540,6 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile,
       el = TtaSearchTypedElement (elType, SearchInTree, docEl);
       /* set the initial selection */
       TtaSelectElement (doc, el);
-      TtaSetStatusSelectedElement(doc, 1, el);
       if (SelectionDoc != 0)
         UpdateContextSensitiveMenus (SelectionDoc, 1);
       SelectionDoc = doc;
@@ -591,7 +589,6 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile,
       el = TtaGetLastLeaf (docEl);
       /* set the initial selection */
       TtaSelectElement (doc, el);
-      TtaSetStatusSelectedElement(doc, 1, el);
       if (SelectionDoc != 0)
         UpdateContextSensitiveMenus (SelectionDoc, 1);
       SelectionDoc = doc;
@@ -639,7 +636,6 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile,
       el = TtaGetLastChild (el);
       /* set the initial selection */
       TtaSelectElement (doc, el);
-      TtaSetStatusSelectedElement(doc, 1, el);
       SelectionDoc = doc;
     }
 
@@ -1198,10 +1194,7 @@ void CreateBreak (Document doc, View view)
           el = TtaGetFirstChild (parent);
         }
       if (el == NULL)
-        {
         TtaSelectElement (doc, parent);
-        TtaSetStatusSelectedElement(doc, 1, parent);
-        }
       else
         {
           elType = TtaGetElementType (el);
@@ -1209,7 +1202,6 @@ void CreateBreak (Document doc, View view)
             TtaSelectString (doc, el, 1, 0);
           else
             TtaSelectString (doc, el, 0, 0);
-          TtaSetStatusSelectedElement(doc, 1, el);
         }
     }
 }
@@ -1314,10 +1306,7 @@ void CreateBase (Document doc, View view)
 
   el = InsertWithinHead (doc, view, HTML_EL_BASE);
   if (el)
-    {
     TtaSelectElement (doc, el);
-    TtaSetStatusSelectedElement(doc, 1, el);
-    }
 #ifdef _WX
   TtaRedirectFocus();
 #endif /* _WX */
@@ -1331,10 +1320,7 @@ void CreateMeta (Document doc, View view)
 
   el = InsertWithinHead (doc, view, HTML_EL_META);
   if (el)
-    {
     TtaSelectElement (doc, el);
-    TtaSetStatusSelectedElement(doc, 1, el);
-    }
 #ifdef _WX
   TtaRedirectFocus();
 #endif /* _WX */
@@ -1384,15 +1370,9 @@ void CreateStyle (Document doc, View view)
       TtaSetAttributeText (attr, "text/css", el, doc);
       child = TtaGetFirstChild (el);
       if (child)
-        {
         TtaSelectElement (doc, child);
-        TtaSetStatusSelectedElement(doc, 1, child);
-        }
       else
-        {
         TtaSelectElement (doc, el);
-        TtaSetStatusSelectedElement(doc, 1, el);
-        }
     }
 #ifdef _WX
   TtaRedirectFocus();
@@ -1534,7 +1514,6 @@ void CreateDate (Document doc, View view)
       TtaRegisterElementCreate (text, doc);
       TtaCloseUndoSequence (doc);
       TtaSelectElement (doc, el);
-      TtaSetStatusSelectedElement(doc, 1, el);
     }
 }
 
@@ -1633,15 +1612,9 @@ void CreateScript (Document doc, View view)
           child = TtaGetFirstChild (el);
         }
       if (child)
-        {
-          TtaSelectElement (doc, child);
-          TtaSetStatusSelectedElement(doc, 1, child);
-        }
+        TtaSelectElement (doc, child);
       else
-        {
         TtaSelectElement (doc, el);
-        TtaSetStatusSelectedElement(doc, 1, el);
-        }
     }
   TtaCloseUndoSequence (doc);
 #ifdef _WX
@@ -1862,7 +1835,6 @@ void CreateMap (Document doc, View view)
   TtaInsertFirstChild (&el, p, doc);
   TtaRegisterElementCreate (map, doc);
   TtaSelectElement (doc, el);
-  TtaSetStatusSelectedElement (doc, 1, el);
   TtaSetStructureChecking (oldStructureChecking, doc);
   // it should include a link
   CreateOrChangeLink (doc, view);
@@ -2168,10 +2140,7 @@ void CreateRuby (Document doc, View view)
       TtaSetDisplayMode (doc, dispMode);
       /* update the selection */
       if (selEl)
-        {
         TtaSelectElement (doc, selEl);
-        TtaSetStatusSelectedElement (doc, 1, selEl);
-        }
     }
 }
 
@@ -2258,7 +2227,6 @@ void DoTableCreation (Document doc)
         TtaChangeTypeOfElement (cell, doc, HTML_EL_Data_cell);
       child = TtaGetFirstLeaf (cell);
       TtaSelectElement (doc, child);
-      TtaSetStatusSelectedElement (doc, 1, child);
 
       while (NumberCols > 1)
         {
@@ -2391,7 +2359,6 @@ void CreateCaption (Document doc, View view)
                        tp create a caption element there */
                     el = TtaGetFirstChild (el);
                   TtaSelectElement (doc, el);
-                  TtaSetStatusSelectedElement (doc, 1, el);
                 }
             }
           if (!caption)
@@ -2434,15 +2401,9 @@ void CreateColgroup (Document doc, View view)
               /* update the selection */
               child = TtaGetFirstChild (el);
               if (child == NULL)
-                {
                 TtaSelectElement (doc, el);
-                TtaSetStatusSelectedElement (doc, 1, el);
-                }
               else
-                {
                 TtaSelectElement (doc, child);
-                TtaSetStatusSelectedElement (doc, 1, child);
-                }
             }
           else
             {
@@ -2478,7 +2439,6 @@ void CreateColgroup (Document doc, View view)
                   TtaInsertFirstChild (&child, el, doc);
                   /* update the selection */
                   TtaSelectElement (doc, child);
-                  TtaSetStatusSelectedElement (doc, 1, child);
                 }
             }
         }
@@ -2512,7 +2472,6 @@ void CreateCol (Document doc, View view)
               TtaInsertFirstChild (&child, el, doc);
               /* update the selection */
               TtaSelectElement (doc, child);
-              TtaSetStatusSelectedElement (doc, 1, child);
             }
           if (elType.ElTypeNum == HTML_EL_COL)
             {
@@ -2524,7 +2483,6 @@ void CreateCol (Document doc, View view)
               TtaInsertSibling (el, child, FALSE, doc);
               /* update the selection */
               TtaSelectElement (doc, el);
-              TtaSetStatusSelectedElement (doc, 1, el);
             }
           else
             {
@@ -2554,10 +2512,7 @@ void CreateCol (Document doc, View view)
                     }
                   /* move the selection if there is no extension */
                   if (TtaIsSelectionEmpty ())
-                    {
                     TtaSelectElement (doc, child);
-                    TtaSetStatusSelectedElement (doc, 1, child);
-                    }
                   /* create the COL element */
                   elType.ElTypeNum = HTML_EL_COL;
                   TtaCreateElement (elType, doc);
@@ -3318,7 +3273,6 @@ static void CreateRow (Document doc, View view, ThotBool before)
       TtaCloseUndoSequence (doc);
       el = TtaGetFirstLeaf (elNew);
       TtaSelectElement (doc, el);
-      TtaSetStatusSelectedElement (doc, 1, el);
       TtaSetDisplayMode (doc, dispMode);
       TtaSetDocumentModified (doc);
     }
@@ -3441,7 +3395,6 @@ void PasteBefore (Document doc, View view)
         TtaSelectString (doc, el, 1, 0);
       else
         TtaSelectElement (doc, el);
-      TtaSetStatusSelectedElement (doc, 1, el);
       TtcPaste (doc, view);
       TtaCloseUndoSequence (doc);
     }
@@ -3475,7 +3428,6 @@ void PasteAfter (Document doc, View view)
         }
       else
         TtaSelectElement (doc, el);
-      TtaSetStatusSelectedElement (doc, 1, el);
       TtcPaste (doc, view);
       TtaCloseUndoSequence (doc);
     }
@@ -3581,7 +3533,6 @@ void CreateTHead (Document doc, View view)
           TtaRegisterElementCreate (elNew, doc);
           el = TtaGetFirstLeaf (row);
           TtaSelectElement (doc, el);
-          TtaSetStatusSelectedElement (doc, 1, el);
           TtaSetDisplayMode (doc, dispMode);
         }
       TtaCloseUndoSequence (doc);
@@ -3624,7 +3575,6 @@ void CreateTBody (Document doc, View view)
           el = TtaGetFirstLeaf (row);
           TtaSelectElement (doc, el);
           TtaSetDisplayMode (doc, dispMode);
-          TtaSetStatusSelectedElement (doc, 1, el);
         }
       TtaCloseUndoSequence (doc);
       TtaSetDocumentModified (doc);
@@ -3665,7 +3615,6 @@ void CreateTFoot (Document doc, View view)
           TtaRegisterElementCreate (elNew, doc);
           el = TtaGetFirstLeaf (row);
           TtaSelectElement (doc, el);
-          TtaSetStatusSelectedElement (doc, 1, el);
           TtaSetDisplayMode (doc, dispMode);
         }
       TtaCloseUndoSequence (doc);
@@ -3759,7 +3708,6 @@ static Element PrepareFormControl (Document doc, ThotBool *withinP)
                                      TtaGetDefaultLanguage (), doc);
                   /* set a caret after the new space */
                   TtaSelectString (doc, el, 2, 1);
-                  TtaSetStatusSelectedElement (doc, 1, el);
                 }
 	       
             }
@@ -3904,7 +3852,6 @@ static void CreateInputElement (Document doc, View view, int elInput)
                   elInput != HTML_EL_Option_Menu)
                 {
                 TtaSelectElement (doc, el);
-                TtaSetStatusSelectedElement(doc, 1, el);
                 }
             }
         }
@@ -3985,7 +3932,6 @@ void CreateOption (Document doc, View view)
       /* Select the text element within the option */
       el = TtaGetFirstChild (new_);
       TtaSelectElement (doc, el);
-      TtaSetStatusSelectedElement(doc, 1, el);
       TtaSelectView (doc, TtaGetViewFromName (doc, "Structure_view"));
     }
 }
@@ -4228,7 +4174,6 @@ void  CreateIFrame (Document doc, View view)
       child = TtaNewElement (doc, elType);
       TtaInsertFirstChild (&child, el, doc);
       TtaSelectElement (doc, child);
-      TtaSetStatusSelectedElement(doc, 1, child);
       TtaRegisterElementCreate (child, doc);
       TtaCloseUndoSequence (doc);
   }
@@ -4432,7 +4377,6 @@ void DoDeleteAnchor (Document doc, View view, ThotBool noCallback)
     }
   else
     TtaSelectElement (doc, firstSelectedElement);
-  TtaSetStatusSelectedElement(doc, 1, firstSelectedElement);
   if (firstSelectedElement != lastSelectedElement)
     TtaExtendSelection (doc, lastSelectedElement, lastSelectedChar);
 }

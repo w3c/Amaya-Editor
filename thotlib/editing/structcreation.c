@@ -674,7 +674,7 @@ PtrAbstractBox CreateALeaf (PtrAbstractBox pAB, int *frame, LeafType leafType,
               if (pEl->ElTerminal && SameLeafType (pEl->ElLeafType, leafType))
                 /* la feuille du type voulu existe deja */
                 {
-                  SelectElement (pDoc, pEl, FALSE, FALSE);
+                  SelectElement (pDoc, pEl, FALSE, FALSE, TRUE);
                   pLeaf = pEl;
                 }
               else

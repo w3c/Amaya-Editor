@@ -333,7 +333,7 @@ void AmayaPathControl::OnMouseLeftUp(wxMouseEvent& event)
               doc = TtaGetDocument(node->GetData()->elem);
               if (doc)
                 {
-                  TtaSelectElement (doc, node->GetData()->elem);
+                  TtaSelectElementWithoutPath (doc, node->GetData()->elem);
                   TtaRedirectFocus ();
                   /* WARNING: just update applied style */
                   notifyEl.event = TteElemSelect;

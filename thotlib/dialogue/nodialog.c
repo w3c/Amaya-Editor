@@ -365,7 +365,8 @@ void TtaClearViewSelections ()
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void SelectElement (PtrDocument pDoc, PtrElement pEl, ThotBool Debut, ThotBool Controle)
+void SelectElement (PtrDocument pDoc, PtrElement pEl,  ThotBool begin,
+                    ThotBool check, ThotBool withPath)
 {
 }
 

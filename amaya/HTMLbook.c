@@ -1801,7 +1801,10 @@ void MakeToc (Document doc, View view)
       if (attr)
         {
           if (found)
-            return;
+            {
+              TtaDisplaySimpleMessage (CONFIRM, LIB, TMSG_EL_RO);
+              return;
+            }
           else
             toc = ancest;
         }
@@ -1855,7 +1858,7 @@ void MakeToc (Document doc, View view)
                     TtaCloseUndoSequence (doc);
                   if (dispMode == DisplayImmediately)
                     TtaSetDisplayMode (doc, dispMode);
-                  //TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NOT_ALLOWED);
+                  TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NOT_ALLOWED);
                   return;
                 }
               if (toc)
@@ -2069,7 +2072,6 @@ void MakeToc (Document doc, View view)
             }
           else
             TtaSelectElement (doc, prev);
-          TtaSetStatusSelectedElement (doc, 1, prev);
         }
     }
 }

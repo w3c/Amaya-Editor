@@ -979,7 +979,7 @@ static void NewTextLanguage (PtrAbstractBox pAb, int charIndex, Language lang)
             ChangeLanguage (pDoc, pEl, lang, TRUE);
             AbstractImageUpdated (pDoc);
             RedisplayDocViews (pDoc);
-            SelectElement (pDoc, pEl, FALSE, FALSE);
+            SelectElement (pDoc, pEl, FALSE, FALSE, TRUE);
           }
       }
 }
@@ -2248,7 +2248,7 @@ ThotBool ContentEditing (int editType)
                       TtaRemoveAttribute ((Element) pEl, (Attribute) pAttr,
                                           doc);
                       CloseHistorySequence (pDoc);
-                      SelectElement (pDoc, pEl, FALSE, FALSE);
+                      SelectElement (pDoc, pEl, FALSE, FALSE, TRUE);
                     }
                   notifyAttr.attribute = NULL;
                   CallEventAttribute (&notifyAttr, FALSE);
@@ -3710,7 +3710,7 @@ void TtcInsertChar (Document doc, View view, CHAR_T c)
                          !strcmp (firstEl->ElStructSchema->SsName, "Template"));
                   if (firstEl)
                     {
-                      SelectElement (pDoc, firstEl, TRUE, FALSE);
+                      SelectElement (pDoc, firstEl, TRUE, FALSE, TRUE);
                       pEl = firstEl->ElNext;
                       if (pEl)
                         {

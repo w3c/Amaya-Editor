@@ -1109,7 +1109,6 @@ void GenerateInlineElement (int eType, int aType, char * data)
                 }
               TtaSetDisplayMode (doc, dispMode);
               TtaSelectElement (doc, firstSel);
-              TtaSetStatusSelectedElement(doc, 1, firstSel);
               if (lastSel != firstSel)
                  TtaExtendSelection (doc, lastSel, TtaGetElementVolume (lastSel) + 1);
               /* mark the document as modified */
@@ -2900,7 +2899,6 @@ void ElementDeleted (NotifyElement *event)
             }
           while (el);
           TtaSelectElement (event->document, child);
-          TtaSetStatusSelectedElement(event->document, 1, child);
         }
     }
   /* if the deleted element was the first child of a LI, transform

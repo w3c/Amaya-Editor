@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2005
+ *  (c) COPYRIGHT INRIA, 1996-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -358,7 +358,7 @@ void NewDocument (PtrDocument *pDoc, char *SSchemaName, char *docName,
 	       if (pEl)
 		 {
 	          pEl = FirstLeaf (pEl);
-	          SelectElement (*pDoc, pEl, TRUE, TRUE);
+	          SelectElement (*pDoc, pEl, TRUE, TRUE, TRUE);
 		 }
 	       }
 	    }
