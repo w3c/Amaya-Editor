@@ -5900,7 +5900,7 @@ void CheckBlocksInCharElem (Document doc)
   /* check all block-level elements whose parent 
      was a character-level element */
   elTBC = FirstElemToBeChecked;
-  while (elTBC != NULL)
+  while (elTBC)
     {
       el = elTBC->Elem;
       while (el != NULL)
@@ -7093,6 +7093,16 @@ void ParseExternalHTMLDoc (Document doc, FILE * infile, CHARSET charset, char *e
   ------------------------------------------------------------------------------*/
 void ClearHTMLParser ()
 {
+  PtrElemToBeChecked  elTBC;
+
+  /* clean up the list of ElemToBeChecked */
+  elTBC = FirstElemToBeChecked;
+  while (FirstElemToBeChecked)
+    {
+      LastElemToBeChecked = FirstElemToBeChecked->nextElemToBeChecked;
+      TtaFreeMemory (FirstElemToBeChecked);
+      FirstElemToBeChecked = LastElemToBeChecked;
+    }
   FirstElemToBeChecked = NULL;
   LastElemToBeChecked = NULL;
   lastElemEntry = 0;

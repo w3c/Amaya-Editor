@@ -328,22 +328,23 @@ void LoadTemplate (Document doc, char* templatename)
       t = ctx->t;
 
       Template_PreParseDeclarations(t, 0);
-
-      // Load dependancies
-      for(rec=t->libraries->first; rec; rec=rec->next)
-      {
-        Template_LoadXTigerTemplateLibrary((XTigerTemplate)rec->element);
-        AddLibraryDeclarations(t, (XTigerTemplate)rec->element);
-      }
-
-      Template_ParseDeclarations  (t, 0);
-      PreInstantiateComponents (t);
-
-      ctx->t->isLoaded = TRUE;
-
-      DoInstanceTemplate (TtaStrdup(ctx->templatePath));
-      DocumentTypes[ctx->newdoc] = docTemplate;
-      
+      if (t)
+        {
+          // Load dependancies
+          for (rec=t->libraries->first; rec; rec=rec->next)
+            {
+              Template_LoadXTigerTemplateLibrary((XTigerTemplate)rec->element);
+              AddLibraryDeclarations(t, (XTigerTemplate)rec->element);
+            }
+          
+          Template_ParseDeclarations  (t, 0);
+          PreInstantiateComponents (t);
+          
+          ctx->t->isLoaded = TRUE;
+          
+          DoInstanceTemplate (TtaStrdup(ctx->templatePath));
+          DocumentTypes[ctx->newdoc] = docTemplate;
+        }
       TtaFreeMemory(ctx->templatePath);
       TtaFreeMemory(ctx);
     }

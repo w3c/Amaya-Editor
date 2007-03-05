@@ -2913,6 +2913,7 @@ void BackUpDocs ()
   int             l;
 
   /* destroy the lock */
+#ifdef _WX
   ptr = TtaGetEnvString ("HOME");
   if (ptr)
     {
@@ -2921,8 +2922,10 @@ void BackUpDocs ()
 #else /* _WINDOWS */
       sprintf (pathname, "%s/.amaya-check-instance", ptr);
 #endif /* _WINDOWS */
-      TtaFileUnlink (pathname);
+      if (TtaFileExist (pathname))
+        TtaFileUnlink (pathname);
     }
+#endif /* _WX */
   /* check all modified documents */
   f = NULL;
   for (doc = 1; doc < DocumentTableLength; doc++)
