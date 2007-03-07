@@ -1715,8 +1715,9 @@ void TtaSetStatus (Document document, View view, char *text, char *name)
 void TtaSetStatusSelectedElement(Document document, View view, Element elem)
 {
 #ifdef _WX
-  AmayaWindow  *window;
-  int           frame;
+  AmayaWindow    *window;
+  AmayaStatusBar *statusbar;
+  int             frame;
   
   frame = GetWindowNumber (document, view);
   if (frame == 0)
@@ -1727,7 +1728,11 @@ void TtaSetStatusSelectedElement(Document document, View view, Element elem)
     {
       window = wxDynamicCast(wxGetTopLevelParent(FrameTable[frame].WdFrame), AmayaWindow);
       if (window)
-        ((AmayaStatusBar*)window->GetStatusBar())->SetSelectedElement( elem );
+        {
+          statusbar = wxDynamicCast(window->GetStatusBar(), AmayaStatusBar);
+          if (statusbar)
+            statusbar->SetSelectedElement (elem);
+        }
     }
 #else  /* _WX */
   if (elem)
