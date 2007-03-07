@@ -23,7 +23,9 @@
                 
                 
                 
+                
                 <item checked="1">href</item>
+                
                 
                 
                 
@@ -33,8 +35,10 @@
                 
                 
                 
+                
                 <item checked="0">class</item>
               </content>
+              <size>400,-1</size>
               <focused>1</focused>
             </object>
             <option>1</option>

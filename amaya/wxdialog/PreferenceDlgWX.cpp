@@ -6,7 +6,6 @@
 #include "wx/arrstr.h"
 #include "wx/spinctrl.h"
 #include "wx/notebook.h"
-#include "wx/xrc/xmlres.h"
 #include "wx/colordlg.h"
 #include "wx/listbox.h"
 #include "AmayaApp.h"

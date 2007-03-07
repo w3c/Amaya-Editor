@@ -204,7 +204,8 @@ typedef enum _ClickEvent {
 #define DocInfoLocation       477
 #define DocInfoDocTypeTitle   478
 #define DocInfoDocType        479
-#define MAX_REF         480
+#define CssDirSave            480
+#define MAX_REF         481
 
 #define FormPrint        1
 #define PrintOptions     2
@@ -367,6 +368,7 @@ THOT_EXPORT char      *SaveName;	/* saving name of the document      */
 THOT_EXPORT char       SaveFileName[MAX_LENGTH];	/* concatenation of SavePath+SaveName */
 THOT_EXPORT char      *ObjectName;	/* document name                    */
 THOT_EXPORT char      *SaveImgsURL;	/* where to save remote Images      */
+THOT_EXPORT char      *SaveCssURL;	/* where to save remote Images      */
 THOT_EXPORT char      *TargetName;
 THOT_EXPORT char      *SavingFile;	/* complete path or URL of the document */
 THOT_EXPORT char      *SavedDocumentURL;/* URL of the document that contained
@@ -418,6 +420,7 @@ THOT_EXPORT ThotBool   SaveAsHTML;
 THOT_EXPORT ThotBool   SaveAsXML;
 THOT_EXPORT ThotBool   SaveAsText;
 THOT_EXPORT ThotBool   CopyImages;	/* should we copy images in Save As */
+THOT_EXPORT ThotBool   CopyCss;         /* should we copy images in Save As */
 THOT_EXPORT ThotBool   UpdateURLs;	/* should we update URLs in Save As */
 THOT_EXPORT ThotBool   UserAnswer;
 THOT_EXPORT ThotBool   ExtraChoice;

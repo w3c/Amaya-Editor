@@ -12,7 +12,9 @@ extern ThotBool CheckUSEMAP ( NotifyAttribute *event );
 extern ThotBool CheckValidEntity ( NotifyAttribute *event );
 extern ThotBool CheckValidID ( NotifyAttribute *event );
 extern void SetRelativeURLs ( Document doc,
-                              char *newpath );
+                              char *newpath,
+                              ThotBool skipImages,
+                              ThotBool skipCSS );
 extern void InitSaveObjectForm ( Document document,
                                  View view,
                                  char *object,
@@ -66,7 +68,9 @@ extern ThotBool CheckUSEMAP ( NotifyAttribute *event );
 extern ThotBool CheckValidEntity ( NotifyAttribute *event );
 extern ThotBool CheckValidID ( NotifyAttribute *event );
 extern void SetRelativeURLs ( Document doc,
-                                char *newpath );
+                                char *newpath,
+                                ThotBool skipImages,
+                                ThotBool skipCSS );
 extern void InitSaveObjectForm ( Document document,
                                    View view,
                                    char *object,

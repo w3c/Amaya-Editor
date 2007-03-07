@@ -6,10 +6,17 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern char *UpdateCSSBackgroundImage ( char *oldpath,
-                                        char *newpath,
-                                        char *imgpath,
-                                        char *styleString );
+extern char *UpdateCSSURLs ( Document doc,
+                             char *oldpath,
+                             char *newpath,
+                             char *imgpath,
+                             char *styleString,
+                             ThotBool imgSave,
+                             ThotBool localimport );
+extern void UpdateStyleSheetContent ( Document doc,
+                                      char *cssfile,
+                                      char *oldpath,
+                                      char *newpath );
 extern ThotBool UpdateStyleDelete ( NotifyAttribute * event );
 extern ThotBool ChangeStyle ( NotifyOnTarget * event );
 extern ThotBool DeleteStyle ( NotifyElement *event );
@@ -51,10 +58,17 @@ extern void StyleCallbackDialogue ( int ref,
 
 #else /* __STDC__ */
 
-extern char *UpdateCSSBackgroundImage ( char *oldpath,
-                                          char *newpath,
-                                          char *imgpath,
-                                          char *styleString );
+extern char *UpdateCSSURLs ( Document doc,
+                               char *oldpath,
+                               char *newpath,
+                               char *imgpath,
+                               char *styleString,
+                               ThotBool imgSave,
+                               ThotBool localimport );
+extern void UpdateStyleSheetContent ( Document doc,
+                                        char *cssfile,
+                                        char *oldpath,
+                                        char *newpath );
 extern ThotBool UpdateStyleDelete ( NotifyAttribute * event );
 extern ThotBool ChangeStyle ( NotifyOnTarget * event );
 extern ThotBool DeleteStyle ( NotifyElement *event );

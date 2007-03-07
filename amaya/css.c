@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2005
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1093,8 +1093,8 @@ void LoadStyleSheet (char *url, Document doc, Element link, CSSInfoPtr css,
       if (len < 0)
         {
           TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempURL);
-	  TtaGZClose (res);
-	  ReadCSSRules (doc, refcss, tmpBuff, tempURL, 0, FALSE, NULL);
+          TtaGZClose (res);
+          ReadCSSRules (doc, refcss, tmpBuff, tempURL, 0, FALSE, NULL);
           TtaFreeMemory (tmpBuff);
           return;
         }

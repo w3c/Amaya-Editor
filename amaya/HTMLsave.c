@@ -396,8 +396,11 @@ ThotBool CheckValidID (NotifyAttribute *event)
 /*----------------------------------------------------------------------
   SetRelativeURLs updates all URLs of the current document according to
   the new path. If possible, new URLs will be relative to this new path.
+  When skipImages is TRUE Images src are not updated,
+  When skipCSS is TRUE CSS links are not updated,
   ----------------------------------------------------------------------*/
-void SetRelativeURLs (Document doc, char *newpath)
+void SetRelativeURLs (Document doc, char *newpath,
+                      ThotBool skipImages, ThotBool skipCSS)
 {
   SSchema             XHTMLSSchema, MathSSchema, SVGSSchema, XLinkSSchema;
 #ifdef TEMPLATES
@@ -411,9 +414,10 @@ void SetRelativeURLs (Document doc, char *newpath)
   char                old_url[MAX_LENGTH];
   char                oldpath[MAX_LENGTH];
   char                tempname[MAX_LENGTH];
+  char               *sStyle, *stringStyle;
   char               *new_url;
   int                 index, max;
-  int                 len;
+  int                 len, buflen;
 
 #ifdef AMAYA_DEBUG
   fprintf(stderr, "SetRelativeURLs\n");
@@ -456,7 +460,6 @@ void SetRelativeURLs (Document doc, char *newpath)
         }
       if (content)
         {
-          len = MAX_CSS_LENGTH;
           if (contentType.ElTypeNum == HTML_EL_TEXT_UNIT)
             // the style content is not inside a comment
             next = content;
@@ -470,17 +473,24 @@ void SetRelativeURLs (Document doc, char *newpath)
 
           while (next)
             {
-              TtaGiveTextContent (next, (unsigned char *)CSSbuffer, &len, &lang);
-              CSSbuffer[MAX_CSS_LENGTH] = EOS;
-              new_url = UpdateCSSBackgroundImage (DocumentURLs[doc], newpath,
-                                                  NULL, CSSbuffer);
-              if (new_url)
+              buflen = TtaGetTextLength (content) + 1;
+              stringStyle = (char *)TtaGetMemory (buflen);
+              TtaGiveTextContent (content, (unsigned char *)stringStyle, &buflen, &lang);
+              // No save images and no local import
+              sStyle = UpdateCSSURLs (doc, oldpath, newpath, NULL, stringStyle,
+                                      FALSE, FALSE);
+              if (sStyle)
                 {
                   /* register the modification to be able to undo it */
                   TtaRegisterElementReplace (next, doc);
-                  TtaSetTextContent (next, (unsigned char *)new_url, lang, doc);
-                  TtaFreeMemory (new_url);
+                  TtaSetTextContent (next, (unsigned char *)sStyle, lang, doc);
+                  TtaFreeMemory (sStyle);
                 }
+              else
+                // no change
+                TtaFreeMemory (stringStyle);
+
+                
               if (next == content)
                 next = NULL;
               else
@@ -533,10 +543,6 @@ void SetRelativeURLs (Document doc, char *newpath)
           elType = TtaGetElementType (el);
           if (elType.ElTypeNum != HTML_EL_BASE || elType.ElSSchema != XHTMLSSchema)
             {
-              /* get the URL contained in the attribute. */
-              len = MAX_LENGTH - 1;
-              TtaGiveTextAttributeValue (attr, old_url, &len);
-              old_url[MAX_LENGTH - 1] = EOS;
               if ((attrType.AttrTypeNum == HTML_ATTR_Style_ &&
                    attrType.AttrSSchema == XHTMLSSchema) ||
                   (attrType.AttrTypeNum == MathML_ATTR_style_ &&
@@ -544,31 +550,50 @@ void SetRelativeURLs (Document doc, char *newpath)
                   (attrType.AttrTypeNum == SVG_ATTR_style_  &&
                    attrType.AttrSSchema == SVGSSchema))
                 {
-                  /* manage background-image rule within style attribute */
-                  new_url = UpdateCSSBackgroundImage (DocumentURLs[doc],
-                                                      newpath, NULL, old_url);
-                  if (new_url != NULL)
+                  /* update URLs in the style attribute */
+                  buflen = TtaGetTextAttributeLength (attr) + 1;
+                  stringStyle = (char *)TtaGetMemory (buflen);
+                  TtaGiveTextAttributeValue (attr, stringStyle, &buflen);
+                  // No save images and no new local import
+                  sStyle = UpdateCSSURLs (doc, DocumentURLs[doc], newpath, NULL,
+                                      stringStyle, FALSE, FALSE);
+                  if (sStyle)
                     {
                       /* register the modification to be able to undo it */
                       TtaRegisterAttributeReplace (attr, el, doc);
+                      TtaSetAttributeText (attr, sStyle, el, doc);
+                      TtaFreeMemory (sStyle);
+                    }
+                  else
+                    // no change
+                    TtaFreeMemory (stringStyle);
+                }
+              else
+                {
+                  /* get the URL contained in the attribute. */
+                  len = MAX_LENGTH - 1;
+                  TtaGiveTextAttributeValue (attr, old_url, &len);
+                  old_url[MAX_LENGTH - 1] = EOS;
+                  if (old_url[0] != '#' &&
+                      // check if CSS links must be skipped
+                      (!skipCSS || !IsCSSName(old_url)) &&
+                      (!skipImages ||
+                       !((elType.ElTypeNum == HTML_EL_IMG &&
+                          elType.ElSSchema == XHTMLSSchema) ||
+                         (elType.ElTypeNum == SVG_EL_image  &&
+                          elType.ElSSchema == SVGSSchema))))
+                    {
+                      NormalizeURL (old_url, doc, oldpath, tempname, NULL);
+                      new_url = MakeRelativeURL (oldpath, newpath);
+#ifdef AMAYA_DEBUG
+fprintf(stderr, "Changed URL from %s to %s\n", old_url, new_url);
+#endif
+                      /* register the modification to be able to undo it */
+                      TtaRegisterAttributeReplace (attr, el, doc);
+                      /* save the new attribute value */
                       TtaSetAttributeText (attr, new_url, el, doc);
                       TtaFreeMemory (new_url);
                     }
-                }
-              /* save the new attribute value */
-              else if (old_url[0] != '#')
-                {
-                  NormalizeURL (old_url, doc, oldpath, tempname, NULL);
-                  new_url = MakeRelativeURL (oldpath, newpath);
-#ifdef AMAYA_DEBUG
-                  fprintf(stderr, "Changed URL from %s to %s\n", old_url,
-                          new_url);
-#endif
-                  /* register the modification to be able to undo it */
-                  TtaRegisterAttributeReplace (attr, el, doc);
-                  /* save the new attribute value */
-                  TtaSetAttributeText (attr, new_url, el, doc);
-                  TtaFreeMemory (new_url);
                 }
             }
           TtaSearchAttribute (attrType, SearchForward, el, &el, &attr);
@@ -719,7 +744,7 @@ static void InitSaveForm (Document document, View view, char *pathname)
     }
   created = CreateSaveAsDlgWX (BaseDialog + SaveForm,
                                TtaGetViewFrame (document, view), pathname,
-                               document, (bool)saveImgs);
+                               document, saveImgs);
   if (created)
     TtaShowDialogue (BaseDialog + SaveForm, FALSE);
 #endif /* _WX */
@@ -1846,7 +1871,7 @@ static ThotBool SaveDocumentLocally (Document doc, char *directoryName,
               /* remote to local */
               /* copy the copy from the cache to its new destination and
                  updated the pImage description (or maybe just erase it? */
-              pImage = SearchLoadedDocImage (doc, DocumentURLs[doc]);
+              pImage = SearchLoadedImageByURL (doc, DocumentURLs[doc]);
               if (pImage)
                 {
                   /* copy the file */
@@ -2182,7 +2207,7 @@ static ThotBool SaveDocumentThroughNet (Document doc, View view, char *url,
       /* export the new container using the image file name */
       TtaExportDocumentWithNewLineNumbers (doc, tempname, "HTMLTX");
       TtaFreeMemory (tempname);
-      pImage = SearchLoadedDocImage (doc, url);
+      pImage = SearchLoadedImageByURL (doc, url);
       tempname = TtaStrdup (pImage->localName);
     }
   res = 0;
@@ -3156,7 +3181,7 @@ static void DeleteDocImageContext (Document doc, char *url)
   if (!IsHTTPPath (url))
     return;
 
-  pImage = SearchLoadedDocImage (doc, url);
+  pImage = SearchLoadedImageByURL (doc, url);
   if (!pImage)
     /* nothing to be deleted */
     return;
@@ -3253,7 +3278,7 @@ static ThotBool UpdateDocImage (Document doc, ThotBool src_is_local,
       /* create the pImage descriptor if it doesn't exist
          and copy the file */
 
-      pImage = SearchLoadedDocImage (doc, newURL);
+      pImage = SearchLoadedImageByURL (doc, newURL);
       if (pImage)
         {
           /* copy the old file to the new location */
@@ -3271,7 +3296,7 @@ static ThotBool UpdateDocImage (Document doc, ThotBool src_is_local,
           if (IsHTTPPath (DocumentURLs[doc]))
             {
               /* remote to remote copy */
-              pImage = SearchLoadedDocImage (doc, DocumentURLs[doc]);
+              pImage = SearchLoadedImageByURL (doc, DocumentURLs[doc]);
               TtaFileCopy (pImage->localName, localName);
             }
           else
@@ -3323,13 +3348,10 @@ static void UpdateImages (Document doc, ThotBool src_is_local,
   char                tempfile[MAX_LENGTH];
   char                localpath[MAX_LENGTH];
   char                oldpath[MAX_LENGTH];
-  char                oldname[MAX_LENGTH];
   char                tempname[MAX_LENGTH];
   char                imgname[MAX_LENGTH];
   char                url[MAX_LENGTH];
-  char               *buf, *ptr;
-  char               *sStyle, *stringStyle;
-  char               *oldStyle;
+  char               *sStyle, *stringStyle, *buf;
   int                 buflen, max, index;
   ThotBool            copyref;
 
@@ -3399,122 +3421,24 @@ static void UpdateImages (Document doc, ThotBool src_is_local,
             content = NULL;
           if (content)
             {
-              buflen = MAX_CSS_LENGTH;
-              TtaGiveTextContent (content, (unsigned char *)CSSbuffer, &buflen, &lang);
-              CSSbuffer[MAX_CSS_LENGTH] = EOS;
-              url[0] = EOS;
-              tempname[0] = EOS;
-              sStyle = UpdateCSSBackgroundImage (oldpath, newURL, imgbase, CSSbuffer);
-              if (sStyle != NULL)
+              buflen = TtaGetTextLength (content) + 1;
+              stringStyle = (char *)TtaGetMemory (buflen);
+              TtaGiveTextContent (content, (unsigned char *)stringStyle, &buflen, &lang);
+              // Save images but no new local import
+              sStyle = UpdateCSSURLs (doc, oldpath, newURL, imgbase, stringStyle,
+                                      TRUE, FALSE);
+              if (sStyle)
                 {
-                  /* register the modification to be able to undo it */
+                  /* there is almost one change
+                     register the modification to be able to undo it */
                   TtaRegisterElementReplace (content, doc);
                   /* save this new style element string */
                   TtaSetTextContent (content, (unsigned char *)sStyle, lang, doc);
-
-                  /* current point in sStyle */
-                  stringStyle = sStyle;
-                  /* extract the first URL from the new style string */
-                  ptr = GetCSSBackgroundURL (stringStyle);
-                  oldStyle = CSSbuffer;
-                  while (ptr)
-                    {
-                      /* for next research */
-                      stringStyle = strstr (stringStyle, "url") + 3;
-                      strcpy (url, ptr);
-                      TtaFreeMemory (ptr);
-                      NormalizeURL (url, 0, tempname, imgname, newURL);
-
-                      /* extract the URL from the old style string */
-                      ptr = GetCSSBackgroundURL (oldStyle);
-                      if (ptr != NULL)
-                        {
-                          /* for next research */
-                          oldStyle = strstr (oldStyle, "url") + 3;
-                          NormalizeURL (ptr, 0, oldname, imgname, oldpath);
-                          TtaFreeMemory (ptr);
-
-                          /*
-                            At this point:
-                            - url gives the relative new image name
-                            - tempname gives the new image full name
-                            - oldname gives the old image full name
-                            - imgname contains the image file name
-                          */
-                          if (url[0] != EOS && oldname[0] != EOS)
-                            {
-                              if ((src_is_local) && (!dst_is_local))
-                                /* add the existing localfile to images list to be saved */
-                                AddLocalImage (oldname, imgname, tempname, doc, &pImage);
-			   
-                              /* mark the image descriptor or copy the file */
-                              if (dst_is_local)
-                                {
-                                  /* copy the file to the new location */
-                                  if (IsW3Path (oldname) || IsHTTPPath (oldpath))
-                                    {
-                                      /*
-                                        it was a remote image:
-                                        we use the local temporary name to do the copy
-                                      */  
-                                      strcpy (oldname, localpath);
-                                      strcat (oldname, imgname);
-                                      pImage = SearchLoadedImage (oldname, doc);
-                                      if (pImage && pImage->tempfile)
-                                        strcpy (oldname, pImage->tempfile);
-                                    }
-			       
-                                  if (imgbase[0] != EOS)
-                                    {
-                                      strcpy (tempfile, imgbase);
-                                      strcat (tempfile, DIR_STR);
-                                      strcat (tempfile, imgname);
-                                    }
-                                  else
-                                    {
-                                      strcpy (tempfile, SavePath);
-                                      strcat (tempfile, DIR_STR);
-                                      strcat (tempfile, imgname);
-                                    }
-                                  if (oldname)
-                                    TtaFileCopy (oldname, tempfile);
-                                }
-                              else
-                                {
-                                  /* save on a remote server */
-                                  if (IsW3Path (oldname) || IsHTTPPath (oldpath))
-                                    {
-                                      /*
-                                        it was a remote image:
-                                        get the image descriptor to prepare
-                                        the saving process
-                                      */
-                                      strcpy (tempfile, localpath);
-                                      strcat (tempfile, imgname);
-                                      pImage = SearchLoadedImage (tempfile, doc);
-                                      /* update the descriptor */
-                                      if (pImage)
-                                        {
-                                          /* image was already loaded */
-                                          if (pImage->originalName != NULL)
-                                            TtaFreeMemory (pImage->originalName);
-                                          pImage->originalName = TtaStrdup (tempname);
-                                          if (TtaFileExist(pImage->localName))
-                                            pImage->status = IMAGE_MODIFIED;
-                                          else
-                                            pImage->status = IMAGE_NOT_LOADED;
-                                          /*pImage->elImage = (struct _ElemImage *) content;*/
-                                        }
-                                    }
-                                  else
-                                    AddLocalImage (oldname, imgname, tempname, doc, &pImage);
-                                }
-                            }
-                        }
-                      ptr = GetCSSBackgroundURL (stringStyle);
-                    }
                   TtaFreeMemory (sStyle);
                 }
+              else
+                // no change
+                TtaFreeMemory (stringStyle);
             }
 
           // look for another style element
@@ -3559,7 +3483,7 @@ static void UpdateImages (Document doc, ThotBool src_is_local,
             {
               copyref = TRUE;
               /* look for a SVG_PICTURE_UNIT element */
-              if (el != NULL && attrType.AttrSSchema == SVGSSchema)
+              if (el && attrType.AttrSSchema == SVGSSchema)
                 {
                   elType = TtaGetElementType (el);
                   elType.ElTypeNum = SVG_EL_PICTURE_UNIT;
@@ -3576,9 +3500,8 @@ static void UpdateImages (Document doc, ThotBool src_is_local,
                   elType = TtaGetElementType (el);
                   buflen = MAX_LENGTH;
                   buf = (char *)TtaGetMemory (buflen);
-                  if (buf != NULL)
+                  if (buf)
                     {
-                      TtaGiveTextAttributeValue (attr, buf, &buflen);
                       if ((attrType.AttrTypeNum == HTML_ATTR_Style_ &&
                            attrType.AttrSSchema == XHTMLSSchema) ||
                           (attrType.AttrTypeNum == MathML_ATTR_style_ &&
@@ -3586,39 +3509,26 @@ static void UpdateImages (Document doc, ThotBool src_is_local,
                           (attrType.AttrTypeNum == SVG_ATTR_style_  &&
                            attrType.AttrSSchema == SVGSSchema))
                         {
-                          /* It's an attribute Style: look for url()*/
-                          url[0] = EOS;
-                          tempname[0] = EOS;
-                          ptr = UpdateCSSBackgroundImage (oldpath, newURL, imgbase, buf);
-                          if (ptr != NULL)
+                          buflen = TtaGetTextAttributeLength (attr) + 1;
+                          stringStyle = (char *)TtaGetMemory (buflen);
+                          TtaGiveTextAttributeValue (attr, stringStyle, &buflen);
+                          // Save images but no new local import
+                          sStyle = UpdateCSSURLs (doc, oldpath, newURL, imgbase, stringStyle,
+                                                  TRUE, FALSE);
+                          if (sStyle)
                             {
                               /* register the modification to be able to undo it */
                               TtaRegisterAttributeReplace (attr, el, doc);
                               /* save this new style attribute string */
-                              TtaSetAttributeText (attr, ptr, el, doc);
-                              strcpy (url, ptr);
-                              TtaFreeMemory (ptr);
-                              /* extract the URL from the new style string */
-                              ptr = GetCSSBackgroundURL (url);
-                              if (ptr != NULL)
-                                {
-                                  strcpy (url, ptr);
-                                  TtaFreeMemory (ptr);
-                                  NormalizeURL (url, 0, tempname, imgname, newURL);
-                                }
-                              /* extract the URL from the old style string */
-                              ptr = GetCSSBackgroundURL (buf);
-                              if (ptr != NULL)
-                                {
-                                  NormalizeURL (ptr, 0, buf, imgname, oldpath);
-                                  TtaFreeMemory (ptr);
-                                }
-                              else
-                                buf[0] = EOS;
+                              TtaSetAttributeText (attr, sStyle, el, doc);
+                              TtaFreeMemory (sStyle);
                             }
+                          else
+                            TtaFreeMemory (stringStyle);
                         }
                       else
                         {
+                          TtaGiveTextAttributeValue (attr, buf, &buflen);
                           /* extract the old image name and location */
                           strcpy (url, buf);
                           NormalizeURL (url, 0, buf, imgname, oldpath);
@@ -3638,6 +3548,7 @@ static void UpdateImages (Document doc, ThotBool src_is_local,
                           TtaRegisterAttributeReplace (attr, el, doc);
                           TtaSetAttributeText (attr, url, el, doc);
                         }
+
                       if (svgpic)
                         /* now work with the SVG picture element */
                         el = svgpic;
@@ -3733,6 +3644,189 @@ static void UpdateImages (Document doc, ThotBool src_is_local,
 
 
 /*----------------------------------------------------------------------
+  UpdateCss
+  if CopyCss is TRUE change all CSS links
+  If Css are saved locally, make the copy
+  else add them to the list of remote files to be copied.
+  The parameter cssbase gives the relative path of the new css directory.
+  The parameter newURL gives the new document URL (or local file).
+  ----------------------------------------------------------------------*/
+static void UpdateCss (Document doc, ThotBool src_is_local,
+                       ThotBool dst_is_local, char *cssbase, char *newURL)
+{
+  CSSInfoPtr          css, cssnext, cssnew, cssdone[20];
+  PInfoPtr            pInfo, pnext;
+  int                 buflen, res, index, i;
+  CSSmedia            media;
+  CSSCategory         category;
+  char                oldpath[MAX_LENGTH];
+  char                newpath[MAX_LENGTH];
+  char                cssname[MAX_LENGTH];
+  char                localname[MAX_LENGTH];
+  char                url[MAX_LENGTH], *s;
+  AttributeType       attrType;
+  ElementType         elType;
+  Attribute           attr;
+  Element             el;
+
+  for (index = 0; index < 20; index++)
+    cssdone[index] = NULL;
+  index = 0;
+  if (cssbase[0] != EOS)
+    {
+      /* add the separator if needed */
+      buflen = strlen (cssbase) - 1;
+      if (dst_is_local && !IsW3Path (cssbase))
+        {
+          if (cssbase[buflen] != DIR_SEP)
+            strcat (cssbase, DIR_STR);
+        }
+      else
+        {
+          if (cssbase[buflen] != URL_SEP)
+            strcat (cssbase, URL_STR);
+        }
+      // new path directory
+      NormalizeURL (cssbase, 0, newpath, cssname, newURL);
+    }
+  else
+    {
+      // new path directory
+      TtaExtractName (newURL, newpath, cssname);
+      /* add the separator if needed */
+      buflen = strlen (newpath) - 1;
+      if (dst_is_local && !IsW3Path (newpath))
+        {
+          if (newpath[buflen] != DIR_SEP)
+            strcat (newpath, DIR_STR);
+        }
+      else
+        {
+          if (newpath[buflen] != URL_SEP)
+            strcat (newpath, URL_STR);
+        }
+    }
+  
+  css = CSSList;
+  /* count the number of menu entries */
+  while (css)
+    {
+      cssnext = css->NextCSS;
+      pInfo = css->infos[doc];
+      while (pInfo)
+        {
+          pnext = pInfo->PiNext;
+          if (pInfo &&
+              pInfo->PiCategory != CSS_USER_STYLE &&
+              pInfo->PiCategory != CSS_DOCUMENT_STYLE)
+            {
+              /* Change all Picture SRC and prepare the saving process */
+              /* 
+               *                       \   newpath=local |  newpath=remote
+               * oldpath                \                |
+               * ------------------------|---------------|------------------
+               *        | old css=remote | .amaya->file  | update descriptor
+               *  local |----------------|---------------|------------------
+               *        | old css=local  | file->file    | add descriptor
+               * ------------------------|---------------|------------------
+               *        | old css=remote | .amaya->file  | update descriptor
+               * remote |----------------|---------------|------------------
+               *        | old css=local  |   xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+               * ------------------------|---------------|------------------
+               */
+              oldpath[0] = EOS;
+              localname[0] = EOS;
+              url[0] = EOS;
+              if (css->url)
+                strcpy (oldpath, css->url);
+              if (css->localName)
+                strcpy (localname, css->localName);
+              TtaExtractName (oldpath, url, cssname);
+              // update @import and images to point to future next resources
+              UpdateStyleSheetContent (0, localname, oldpath, newpath);
+              strcpy (url, newpath);
+              strcat (url, cssname);
+              el = pInfo->PiLink;
+              media = pInfo->PiMedia;
+              category = pInfo->PiCategory;
+              // copy the file
+              if (localname[0] != EOS)
+                {
+#ifdef AMAYA_DEBUG
+  fprintf(stderr, "UpdateCSS: from %s to %s\n", oldpath, url);
+#endif
+                  if (dst_is_local && localname)
+                    TtaFileCopy (localname, url);
+                  else
+                    {
+                      ActiveTransfer (doc);
+                      TtaHandlePendingEvents ();
+                      res = PutObjectWWW (doc, localname, url, "text/css", NULL,
+                                          AMAYA_SYNC | AMAYA_NOCACHE | AMAYA_FLUSH_REQUEST,
+                                          NULL, NULL);
+                      if (res)
+                        // report an error
+                        ;
+                    }
+                }
+              // update the link
+              UnlinkCSS (css, doc, el, TRUE, TRUE);
+              cssnew = AddCSS (0, doc, category, media, url, localname, el);
+              if (index < 20)
+                // this css entry is already managed
+                cssdone[index++] = cssnew;
+
+              if (el)
+                {
+                  elType = TtaGetElementType (el);
+                  if (elType.ElSSchema)
+                    {
+                      s = TtaGetSSchemaName (elType.ElSSchema);
+                      attrType.AttrSSchema = elType.ElSSchema;
+                      attrType.AttrTypeNum = 0;
+                      attr = NULL;
+                          // it could be a PI_line
+                      if (!strcmp (s, "HTML") && elType.ElTypeNum == HTML_EL_LINK)
+                        attrType.AttrTypeNum = HTML_ATTR_HREF_;
+                      /* save the new attr value */
+                      if (cssbase[0] != EOS)
+                        {
+                          /* compose the relative or absolute name */
+                          strcpy (url, cssbase);
+                          strcat (url, cssname);
+                        }
+                      else
+                        /* in same directory -> local name */
+                        strcpy (url, cssname);
+                      if (attrType.AttrTypeNum != 0)
+                        attr = TtaGetAttribute (el, attrType);
+                      if (attr)
+                        {
+                          /* register the modification to be able to undo it */
+                          TtaRegisterAttributeReplace (attr, el, doc);
+                          TtaSetAttributeText (attr, url, el, doc);
+                        }
+                      else
+                        /* todo */;
+                    }
+                }
+            }
+          pInfo = pnext;
+        }
+      css = cssnext;
+      // check if thi CSS is new generated
+      i = 0;
+      while (css && i < index)
+        {
+          if (css == cssdone[i])
+            css = css->NextCSS;
+          i++;
+        }
+    }
+}
+
+
+/*----------------------------------------------------------------------
   DoSaveAs
   This function is called when the user press the OK button on the
   Save As dialog. This is tricky, one must take care of a lot of
@@ -3750,8 +3844,8 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
   CHARSET             charset;
   char               *documentFile;
   char               *tempname, *oldLocal, *newLocal = NULL;
-  char               *imagePath, *base;
-  char                imgbase[MAX_LENGTH];
+  char               *imagePath = NULL, *cssPath = NULL, *base;
+  char                imgbase[MAX_LENGTH], cssbase[MAX_LENGTH];
   char                documentname[MAX_LENGTH];
   char                tempdir[MAX_LENGTH];
   char                msg[MAX_LENGTH];
@@ -3881,32 +3975,79 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
       else
         base = NULL;
       /* Create the base directory/url for the images output */
-      if (CopyImages && SaveImgsURL[0] != EOS)
+      imgbase[0] = EOS;
+      cssbase[0] = EOS;
+      if (CopyImages)
         {
-          if (base)
-            imagePath = MakeRelativeURL (SaveImgsURL, base);
-          else
-            imagePath = MakeRelativeURL (SaveImgsURL, documentFile);
-          if (imagePath != NULL)
+          if (SaveImgsURL[0] != EOS)
+            {
+              if (base)
+                imagePath = MakeRelativeURL (SaveImgsURL, base);
+              else
+                imagePath = MakeRelativeURL (SaveImgsURL, documentFile);
+            }
+          else if (base)
+            imagePath = MakeRelativeURL (SavePath, base);
+          if (imagePath)
             {
               strcpy (imgbase, imagePath);
               TtaFreeMemory (imagePath);
             }
-          else
-            imgbase[0] = EOS;
-	  
-          /* verify that the directory exists */
-          if (dst_is_local)
+        }
+
+      if (CopyCss)
+        {
+          if (SaveCssURL[0] != EOS)
             {
-              tempname = (char *)TtaGetMemory (MAX_LENGTH);
-              if (imgbase[0] != DIR_SEP)
+              if (base)
+                cssPath = MakeRelativeURL (SaveCssURL, base);
+              else
+                cssPath = MakeRelativeURL (SaveCssURL, documentFile);
+            }
+          else
+            cssPath = MakeRelativeURL (SavePath, base);
+          if (cssPath)
+            {
+              strcpy (cssbase, cssPath);
+              TtaFreeMemory (cssPath);
+            }
+        }
+
+      /* verify that the directory exists */
+      if (dst_is_local)
+        {
+          tempname = (char *)TtaGetMemory (MAX_LENGTH);
+          if (imgbase[0] != DIR_SEP)
+            {
+              strcpy (tempname, SavePath);
+              strcat (tempname, DIR_STR);
+              strcat (tempname, imgbase);
+            }
+          else
+            strcpy(tempname, imgbase);
+          ok = TtaCheckMakeDirectory (tempname, TRUE);
+          if (!ok)
+            {
+              sprintf (msg, TtaGetMessage (AMAYA, AM_CANNOT_SAVE), tempname);
+              InitInfo (NULL, msg);
+              TtaFreeMemory (tempname);
+              /* free base before returning*/
+              if (base)
+                TtaFreeMemory (base);
+              /* the user has to change the name of the images directory */
+              /* display the dialog box */
+              InitSaveForm (doc, 1, documentFile);
+            }
+          else
+            {
+              if (cssbase[0] != DIR_SEP)
                 {
                   strcpy (tempname, SavePath);
                   strcat (tempname, DIR_STR);
-                  strcat (tempname, imgbase);
+                  strcat (tempname, cssbase);
                 }
               else
-                strcpy(tempname, imgbase);
+                strcpy(tempname, cssbase);
               ok = TtaCheckMakeDirectory (tempname, TRUE);
               if (!ok)
                 {
@@ -3924,19 +4065,6 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
                 TtaFreeMemory (tempname);
             }
         }
-      else if (CopyImages)
-        {
-          if (base)
-            {
-              imagePath = MakeRelativeURL (SavePath, base);
-              strcpy (imgbase, imagePath);
-              TtaFreeMemory (imagePath);
-            }
-          else
-            imgbase[0] = EOS;
-        }
-      else
-        imgbase[0] = EOS;
     }
 
   /*
@@ -4008,10 +4136,10 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
             {
               if (base)
                 /* URLs are still relative to the document base */
-                SetRelativeURLs (doc, base);
+                SetRelativeURLs (doc, base, CopyImages, CopyCss);
               else
                 /* URLs are relative to the new document directory */
-                SetRelativeURLs (doc, documentFile);
+                SetRelativeURLs (doc, documentFile, CopyImages, CopyCss);
             }
           /* now free base */
           if (base)
@@ -4023,9 +4151,15 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
            */
           if (DocumentTypes[doc] == docImage)
             UpdateDocImage (doc, src_is_local, dst_is_local, documentFile);
-          else if (DocumentTypes[doc] != docMath &&
-                   DocumentTypes[doc] != docXml)
-            UpdateImages (doc, src_is_local, dst_is_local, imgbase, documentFile);
+          else
+            {
+              if (CopyImages &&
+                  DocumentTypes[doc] != docMath &&
+                  DocumentTypes[doc] != docXml)
+                UpdateImages (doc, src_is_local, dst_is_local, imgbase, documentFile);
+              if (CopyCss)
+                UpdateCss (doc, src_is_local, dst_is_local, cssbase, documentFile);
+            }
           toUndo = TtaCloseUndoSequence (doc);
           if (dst_is_local)
             /* Local to Local or Remote to Local */

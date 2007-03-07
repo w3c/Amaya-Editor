@@ -6620,6 +6620,14 @@ void CallbackDialogue (int ref, int typedata, char *data)
         strcpy (SaveImgsURL, data);
       break;
 
+    case CssDirSave:
+      /* Image directory */
+      if (!IsW3Path (data))
+        change = NormalizeFile (data, SaveCssURL, AM_CONV_NONE);
+      else
+        strcpy (SaveImgsURL, data);
+      break;
+
     case ConfirmSave:
       /* *********SaveConfirm********* */
       UserAnswer = (val == 1);
@@ -7433,6 +7441,7 @@ void FreeAmayaStructures ()
       TtaFreeMemory (SaveName);
       TtaFreeMemory (ObjectName);
       TtaFreeMemory (SaveImgsURL);
+      TtaFreeMemory (SaveCssURL);
       TtaFreeMemory (SavingFile);
       TtaFreeMemory (SavedDocumentURL);
       TtaFreeMemory (AttrHREFvalue);
@@ -7754,6 +7763,8 @@ void InitAmaya (NotifyEvent * event)
   ObjectName[0] = EOS;
   SaveImgsURL = (char *)TtaGetMemory (MAX_LENGTH);
   SaveImgsURL[0] = EOS;
+  SaveCssURL = (char *)TtaGetMemory (MAX_LENGTH);
+  SaveCssURL[0] = EOS;
   strcpy (ScanFilter, "*.*htm*");
   SaveAsHTML = TRUE;
   SaveAsXML = FALSE;

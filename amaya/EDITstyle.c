@@ -27,6 +27,7 @@
 #include "fetchHTMLname.h"
 
 #include "AHTURLTools_f.h"
+#include "EDITimage_f.h"
 #include "HTMLedit_f.h"
 #include "HTMLimage_f.h"
 #include "HTMLpresentation_f.h"
@@ -117,19 +118,20 @@ static void RemoveElementStyle (Element el, Document doc, ThotBool removeSpan)
   makes it relative to the newpath.
   oldpath = old document path
   newpath = new document path
-  Returns NULL or a new allocated styleString.
+  Returns NULL or a new allocated string.
+  styleString returns the last managed position
   ----------------------------------------------------------------------*/
-static char *UpdateCSSImport (char *oldpath, char *newpath, char *styleString)
+static char *UpdateCSSImport (char *oldpath, char *newpath, char **styleString)
 {
-  char               *b, *e, *ptr, *oldptr, *sString;
+  char               *b, *e, *newString, *oldptr, *sString;
   char                old_url[MAX_LENGTH];
   char                tempname[MAX_LENGTH];
   char                cssname[MAX_LENGTH];
   char               *new_url;
-  int                 len;
+  int                 len, newlen;
 
-  ptr = NULL;
-  sString = styleString;
+  newString = NULL;
+  sString = *styleString;
   b = strstr (sString, "@import");
   while (b)
     {
@@ -139,6 +141,13 @@ static char *UpdateCSSImport (char *oldpath, char *newpath, char *styleString)
       /*** Caution: Strings can either be written with double quotes or
            with single quotes. Only double quotes are handled here.
            Escaped quotes are not handled. See function SkipQuotedString */
+      if (!strncmp (b, "url", 3))
+        {
+          b += 3;
+          b = SkipBlanksAndComments (b);
+          if (*b == '(')
+            b++;
+        }
       if (*b == '"')
         {
           /* search the url end */
@@ -165,16 +174,21 @@ static char *UpdateCSSImport (char *oldpath, char *newpath, char *styleString)
           NormalizeURL (old_url, 0, tempname, cssname, oldpath);
           /* build the new full css name */
           new_url = MakeRelativeURL (tempname, newpath);
-	      
+	        newlen = strlen (new_url);
           /* generate the new style string */
-          if (ptr)
+          if (newlen > len)
             {
-              oldptr = ptr;
-              len = - len + strlen (oldptr) + strlen (new_url) + 1;
-              ptr = (char *)TtaGetMemory (len);	  
+              // a memory allocation is necessary
+              if (newString)
+                oldptr = newString;
+              else
+                oldptr = *styleString;
+
+              len = - len + strlen (oldptr) + newlen + 1;
+              newString = (char *)TtaGetMemory (len);	  
               len = (int)(b - oldptr);
-              strncpy (ptr, oldptr, len);
-              sString = &ptr[len];
+              strncpy (newString, oldptr, len);
+              sString = &newString[len];
               /* new name */
               strcpy (sString, new_url);
               /* following text */
@@ -183,15 +197,12 @@ static char *UpdateCSSImport (char *oldpath, char *newpath, char *styleString)
             }
           else
             {
-              len = - len + strlen (styleString) + strlen (new_url) + 1;
-              ptr = (char *)TtaGetMemory (len);
-              len = (int)(b - styleString);
-              strncpy (ptr, styleString, len);
-              sString = &ptr[len];
-              /* new name */
-              strcpy (sString, new_url);
-              /* following text */
-              strcat (sString, e);
+              // there is enough space
+              strncpy (b, new_url, newlen);
+              sString = &b[newlen];
+              if (newlen < len)
+                // reduce the size of the full string
+                strcpy (sString, e);
             }
           TtaFreeMemory (new_url);
         }
@@ -201,34 +212,41 @@ static char *UpdateCSSImport (char *oldpath, char *newpath, char *styleString)
       /* next background-image */
       b = strstr (sString, "@import"); 
     }
-  return (ptr);
+  // return the last parsed position
+  *styleString = sString;
+  return (newString);
 }
 
 /*----------------------------------------------------------------------
-  UpdateCSSBackgroundImage searches strings url() or url("") within
-  the styleString and makes it relative to the newpath.
-  oldpath = old document path
-  newpath = new document path
-  imgpath = new image directory
-  If the image is not moved, the imgpath has to be NULL else the new
-  image url is obtained by concatenation of imgpath and the image name.
+  UpdateCSSURLs searches strings url() or url("") within the styleString
+  and makes it relative to the newpath.
+  oldpath = the old CSS path
+  newpath = the new CSS path
+  imgpath = new relative path for images
+  imgSave is TRUE if images must be saved
+  localimport is TRUE if imported files become local to the CSS
+  A new image url is obtained by concatenation of imgpath and the image name.
   Returns NULL or a new allocated styleString.
   ----------------------------------------------------------------------*/
-char *UpdateCSSBackgroundImage (char *oldpath, char *newpath,
-                                char *imgpath, char *styleString)
+char *UpdateCSSURLs (Document doc, char *oldpath, char *newpath,
+                     char *imgpath, char *styleString,
+                     ThotBool imgSave, ThotBool localimport)
 {
-  char               *b, *e, *ptr, *oldptr, *sString;
+  LoadedImageDesc    *pImage;
+  char               *b, *e, *newString, *oldptr, *sString;
   char                old_url[MAX_LENGTH];
-  char                tempname[MAX_LENGTH];
+  char                new_url[MAX_LENGTH];
   char                imgname[MAX_LENGTH];
-  char               *new_url;
-  int                 len;
+  char                oldname[MAX_LENGTH];
+  char                newname[MAX_LENGTH];
+  int                 len, newlen;
+  ThotBool            src_is_local, dst_is_local;
 
-  ptr = UpdateCSSImport (oldpath, newpath, styleString);
-  if (ptr)
-    sString = ptr;
+  sString = styleString;
+  if (localimport)
+    newString = UpdateCSSImport ("", "", &sString);
   else
-    sString = styleString;
+    newString = UpdateCSSImport (oldpath, newpath, &sString);
   b = strstr (sString, "url");
   while (b)
     {
@@ -269,43 +287,101 @@ char *UpdateCSSBackgroundImage (char *oldpath, char *newpath,
           if (*e != EOS)
             {
               len = (int)(e - b);
-              strncpy (old_url, b, len);
-              old_url[len] = EOS;
-              /* get the old full image name */
-              NormalizeURL (old_url, 0, tempname, imgname, oldpath);
+              strncpy (oldname, b, len);
+              oldname[len] = EOS;
+              /* get the image name */
+              //TtaExtractName (oldname, newname, imgname);
+              // get the old full URL and the name of the image
+              NormalizeURL (oldname, 0, old_url, imgname, oldpath);
               /* build the new full image name */
-              if (imgpath != NULL)
-                NormalizeURL (imgname, 0, tempname, imgname, imgpath);
-              new_url = MakeRelativeURL (tempname, newpath);
-	      
+              if (imgpath)
+                strcpy (newname, imgpath);
+              else
+                newname[0] = EOS;
+              strcat (newname, imgname);
+              newlen = strlen (newname);
               /* generate the new style string */
-              if (ptr != NULL)
+              if (newlen > len)
                 {
-                  oldptr = ptr;
-                  len = - len + strlen (oldptr) + strlen (new_url) + 1;
-                  ptr = (char *)TtaGetMemory (len);	  
+                  // a memory allocation is necessary
+                  if (newString)
+                    oldptr = newString;
+                  else
+                    oldptr = styleString;
+ 
+                  len = - len + strlen (oldptr) + newlen + 1;
+                  newString = (char *)TtaGetMemory (len);	  
                   len = (int)(b - oldptr);
-                  strncpy (ptr, oldptr, len);
-                  sString = &ptr[len];
+                  strncpy (newString, oldptr, len);
+                  sString = &newString[len];
                   /* new name */
-                  strcpy (sString, new_url);
+                  strcpy (sString, newname);
                   /* following text */
                   strcat (sString, e);
                   TtaFreeMemory (oldptr);
                 }
               else
                 {
-                  len = - len + strlen (styleString) + strlen (new_url) + 1;
-                  ptr = (char *)TtaGetMemory (len);
-                  len = (int)(b - styleString);
-                  strncpy (ptr, styleString, len);
-                  sString = &ptr[len];
-                  /* new name */
-                  strcpy (sString, new_url);
-                  /* following text */
-                  strcat (sString, e);
+                  // there is enough space
+                  strncpy (b, newname, newlen);
+                  sString = &b[newlen];
+                  if (newlen < len)
+                    // reduce the size of the full string
+                    strcpy (sString, e);
+                  // note that a change is done
+                  if (newString == NULL)
+                    newString = styleString;
                 }
-              TtaFreeMemory (new_url);
+              if (imgSave && newname[0] != EOS && old_url[0] != EOS)
+                {
+                  // get the new full URL of the image
+                  NormalizeURL (newname, 0, new_url, imgname, newpath);
+                  src_is_local = !IsW3Path (old_url);
+                  dst_is_local = !IsW3Path (new_url);
+#ifdef AMAYA_DEBUG
+  fprintf(stderr, "Move image: from %s to %s\n", old_url, new_url);
+#endif
+                  /* mark the image descriptor or copy the file */
+                  if (dst_is_local)
+                    {
+                      /* copy the file to the new location */
+                      if (src_is_local)
+                        TtaFileCopy (old_url, new_url);
+                      else
+                        {
+                           /* it was a remote image:
+                             get the image descriptor to prepare the saving process */
+                          pImage = SearchLoadedImageByURL (doc, old_url);
+                          if (pImage && pImage->tempfile)
+                            TtaFileCopy (pImage->tempfile, new_url);
+                        }
+                    }
+                  else
+                    {
+                      /* save to a remote server */
+                      if (src_is_local)
+                        /* add the existing localfile to images list to be saved */
+                        AddLocalImage (old_url, imgname, new_url, doc, &pImage);
+                      else
+                        {
+                          /* it was a remote image:
+                             get the image descriptor to prepare the saving process */
+                          pImage = SearchLoadedImageByURL (doc, old_url);
+                          /* update the descriptor */
+                          if (pImage)
+                            {
+                              /* image was already loaded */
+                              if (pImage->originalName)
+                                TtaFreeMemory (pImage->originalName);
+                              pImage->originalName = TtaStrdup (new_url);
+                              if (TtaFileExist(pImage->localName))
+                                pImage->status = IMAGE_MODIFIED;
+                              else
+                                pImage->status = IMAGE_NOT_LOADED;
+                            }
+                        }
+                    }
+                }
             }
           else
             sString = b;
@@ -315,11 +391,81 @@ char *UpdateCSSBackgroundImage (char *oldpath, char *newpath,
       /* next background-image */
       b = strstr (sString, "url"); 
     }
-  return (ptr);
+  return (newString);
 }
 
 /*----------------------------------------------------------------------
-  UpdateStyleDelete : a style attribute will be deleted.            
+  UpdateStyleSheetContent opens a style sheet file to update included
+  @import and images to make them local to the stylesheet
+  cssfile = the css file to be updated
+  oldpath = old stylesheet path
+  newpath = new stylesheet path
+  ----------------------------------------------------------------------*/
+void UpdateStyleSheetContent (Document doc, char *cssfile, char *oldpath,
+                              char *newpath)
+{
+  gzFile              file;
+  BinFile             wfile;
+  char               *sStyle, *styleString, *ptr;
+  int                 lenBuff = 0;
+  int                 len;
+#define	              COPY_BUFFER_SIZE	1024
+  char                bufferRead[COPY_BUFFER_SIZE + 1];
+  ThotBool            endOfFile = FALSE;
+
+  if (oldpath == NULL || newpath == NULL)
+    return;
+  /* load the file in memory */
+  file = TtaGZOpen (cssfile);
+  if (file == NULL)
+    return;
+
+  // allocate the memory to load the stylesheet
+  while (!endOfFile)
+    {
+      len = gzread (file, bufferRead, COPY_BUFFER_SIZE);
+      if (len < COPY_BUFFER_SIZE)
+        endOfFile = TRUE;
+      lenBuff += len;
+    }
+  len = 0;
+  TtaGZClose (file);
+  if (lenBuff > 0)
+    {
+      styleString = (char *)TtaGetMemory (lenBuff + 1);
+      if (styleString == NULL)
+        return;
+
+      file = TtaGZOpen (cssfile);
+      len = gzread (file, styleString, lenBuff);
+      TtaGZClose (file);
+      // Now update @import and images
+      // imported css and images are now local to the stylesheet
+      sStyle = UpdateCSSURLs (doc, oldpath, newpath, "", styleString, TRUE, TRUE);
+      if (sStyle)
+        {
+          // Write the new css content
+          wfile = TtaWriteOpen (cssfile);
+          ptr = sStyle;
+          while (lenBuff > COPY_BUFFER_SIZE)
+            {
+              fwrite (ptr, COPY_BUFFER_SIZE, 1, wfile);
+              lenBuff -= COPY_BUFFER_SIZE;
+              ptr += COPY_BUFFER_SIZE;
+            }
+          if (lenBuff > 0)
+            fwrite (ptr, lenBuff, 1, wfile);
+          TtaWriteClose (wfile);
+          TtaFreeMemory (sStyle);
+        }
+      else
+        TtaFreeMemory (styleString);
+      return;
+    }
+}
+
+/*----------------------------------------------------------------------
+  UpdateStyleDelete: a style attribute will be deleted.            
   remove the existing style presentation.                      
   ----------------------------------------------------------------------*/
 ThotBool UpdateStyleDelete (NotifyAttribute * event)
@@ -652,15 +798,6 @@ void StyleChanged (NotifyOnTarget *event)
                       *ptr2 = EOS;
                       ApplyCSSRules (event->element, ptr1, event->document,
                                      TRUE);
-                      /**** update image contexts
-                            url1 = GetCSSBackgroundURL (ptr1);
-                            if (url1 != NUL)
-                            {
-                            sprintf (path, "%s%s%d%s", TempFileDirectory, DIR_STR,
-                            event->document, DIR_STR, url1);
-                            pImage = SearchLoadedImage (path, event->document);
-                            }
-                      ***/
                       *ptr2 = c;
                       ptr1 = ptr2;
                     }

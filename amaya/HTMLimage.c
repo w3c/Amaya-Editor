@@ -147,12 +147,12 @@ LoadedImageDesc *SearchLoadedImage (char *localpath, Document doc)
 }
 
 /*----------------------------------------------------------------------
-  SearchLoadedDocImage searches the image descriptor of a loaded image 
+  SearchLoadedImageByURL searches the image descriptor of a loaded image 
   using the docImage document id and the URL (there's only one such image
   per document).
   The function returns the descriptor entry or NULL.
   ----------------------------------------------------------------------*/
-LoadedImageDesc *SearchLoadedDocImage (Document doc, char *url)
+LoadedImageDesc *SearchLoadedImageByURL (Document doc, char *url)
 {
   LoadedImageDesc    *pImage;
   char               *ptr;
@@ -162,6 +162,9 @@ LoadedImageDesc *SearchLoadedDocImage (Document doc, char *url)
     {
       if (pImage->document == doc)
         {
+          if (url && !strcmp (pImage->originalName, url))
+            break;
+            
           ptr = pImage->originalName + sizeof ("internal:") - 1;
           if (!strcmp (ptr, url))
             break;

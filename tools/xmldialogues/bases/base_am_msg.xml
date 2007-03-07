@@ -5334,4 +5334,39 @@
 <message xml:lang="de">Mischdokument</message>
 <message xml:lang="hu">Összetett dokumentum</message>
 </label>
+<label define="AM_BCOPY_CSS">
+<message xml:lang="en">Copy Css style sheets</message>
+<message xml:lang="fr">Copier les feuilles de style Css</message>
+<message xml:lang="de">Css kopieren</message>
+<message xml:lang="it">Copia Css</message>
+<message xml:lang="tr">Css kopyala</message>
+<message xml:lang="es">Copiar Css</message>
+<message xml:lang="pt">Copiar Css</message>
+<message xml:lang="fi">Kopioi Css</message>
+<message xml:lang="ru">Копировать Css</message>
+<message xml:lang="hu">Képek Css</message>
+</label>
+<label define="AM_CSS_LOCATION">
+<message xml:lang="en">Css directory</message>
+<message xml:lang="fr">Répertoire des Css</message>
+<message xml:lang="de">Css Bilder</message>
+<message xml:lang="it">Directory delle CSS</message>
+<message xml:lang="tr">Css dizini</message>
+<message xml:lang="es">Directorio de Css</message>
+<message xml:lang="pt">Diretório de Css</message>
+<message xml:lang="fi">Css</message>
+<message xml:lang="ru">Css</message>
+<message xml:lang="hu">Css</message>
+<message xml:lang="ka">Css</message>
+<message xml:lang="cn">Css</message>
+<message xml:lang="tw">Css</message>
+</label>
+<label define="AM_QUICK_SAVE">
+<message xml:lang="en">Document</message>
+<message xml:lang="fr">Document</message>
+</label>
+<label define="AM_EXTENSION">
+<message xml:lang="en">Images &amp; Style</message>
+<message xml:lang="fr">Images &amp; Style</message>
+</label>
 <label define="AMAYA_MSG_MAX"></label></messages></base>

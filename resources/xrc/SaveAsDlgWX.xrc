@@ -1,228 +1,348 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resource version="2.3.0.1" xmlns="http://www.wxwindows.org/wxxrc">
   <object class="wxDialog" name="SaveAsDlgWX">
-    <title></title>
+    <title>CSS Style</title>
     <centered>1</centered>
-    <style>wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER</style>
+    <style>wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxNO_3D|wxTAB_TRAVERSAL|wxCLIP_CHILDREN</style>
     <object class="wxBoxSizer">
       <orient>wxVERTICAL</orient>
       <object class="sizeritem">
-        <object class="wxBoxSizer">
-          <orient>wxVERTICAL</orient>
-          <object class="sizeritem">
-            <object class="wxBoxSizer">
-              <orient>wxVERTICAL</orient>
-              <object class="sizeritem">
-                <object class="wxStaticText" name="wxID_DOC_LOCATION">
-                  <label>*Adresse du document*</label>
-                </object>
-                <flag>wxALL|wxEXPAND</flag>
-              </object>
-              <object class="spacer">
-                <size>0,5</size>
-              </object>
-              <object class="sizeritem">
-                <object class="wxBoxSizer">
-                  <orient>wxHORIZONTAL</orient>
-                  <object class="sizeritem">
-                    <object class="wxTextCtrl" name="wxID_DOC_LOCATION_CTRL">
-                      <size>450,-1</size>
-                      <focused>1</focused>
+        <object class="wxNotebook" name="wxID_NOTEBOOK">
+          <usenotebooksizer>1</usenotebooksizer>
+          <style platform="unix"></style>
+          <focused>1</focused>
+          <object class="notebookpage">
+            <label>*Quick Save As*</label>
+            <object class="wxPanel" name="wxID_PAGE_MAIN">
+              <object class="wxBoxSizer">
+                <orient>wxVERTICAL</orient>
+                <object class="sizeritem">
+                  <object class="wxBoxSizer">
+                    <orient>wxVERTICAL</orient>
+                    <object class="sizeritem">
+                      <object class="wxBoxSizer">
+                        <orient>wxVERTICAL</orient>
+                        <object class="sizeritem">
+                          <object class="wxStaticText" name="wxID_DOC_LOCATION">
+                            <label>*Adresse du document*</label>
+                          </object>
+                          <flag>wxALL|wxEXPAND</flag>
+                        </object>
+                        <object class="spacer">
+                          <size>0,20</size>
+                        </object>
+                        <object class="sizeritem">
+                          <object class="wxBoxSizer">
+                            <orient>wxHORIZONTAL</orient>
+                            <object class="sizeritem">
+                              <object class="wxTextCtrl" name="wxID_DOC_LOCATION_CTRL">
+                                <size>450,-1</size>
+                              </object>
+                              <option>1</option>
+                              <flag>wxEXPAND</flag>
+                            </object>
+                            <object class="spacer">
+                              <size>5,0</size>
+                            </object>
+                            <object class="sizeritem">
+                              <object class="wxBitmapButton" name="wxID_BROWSE">
+                                <bitmap stock_id="wxART_FILE_OPEN"></bitmap>
+                              </object>
+                            </object>
+                          </object>
+                          <option>0</option>
+                          <flag>wxALL|wxEXPAND</flag>
+                        </object>
+                        <object class="spacer">
+                          <size>0,10</size>
+                        </object>
+                        <object class="sizeritem">
+                          <object class="wxBoxSizer">
+                            <orient>wxHORIZONTAL</orient>
+                            <object class="sizeritem">
+                              <object class="wxBoxSizer">
+                                <orient>wxVERTICAL</orient>
+                                <object class="spacer">
+                                  <size>0,6</size>
+                                </object>
+                                <object class="sizeritem">
+                                  <object class="wxRadioBox" name="wxID_DOC_FORMAT">
+                                    <label>*Document Format*</label>
+                                    <content>
+                                      <item>HTML</item>
+                                      <item>XML</item>
+                                      <item>TEXT</item>
+                                    </content>
+                                    <size>200,-1</size>
+                                    <style>wxRA_SPECIFY_COLS</style>
+                                  </object>
+                                  <flag>wxALL|wxEXPAND</flag>
+                                </object>
+                              </object>
+                              <option>0</option>
+                              <flag>wxALL|wxEXPAND</flag>
+                            </object>
+                            <object class="sizeritem">
+                              <object class="wxBoxSizer">
+                                <orient>wxVERTICAL</orient>
+                                <object class="sizeritem">
+                                  <object class="wxStaticText" name="wxID_OPTIONS">
+                                    <label>*Options*</label>
+                                  </object>
+                                  <option>0</option>
+                                  <flag>wxEXPAND</flag>
+                                </object>
+                                <object class="spacer">
+                                  <size>0,4</size>
+                                </object>
+                                <object class="sizeritem">
+                                  <object class="wxStaticLine" name="wxID_STATICLINE"/>
+                                  <flag>wxALL|wxEXPAND</flag>
+                                </object>
+                                <object class="sizeritem">
+                                  <object class="wxCheckBox" name="wxID_TRANSFORM_URLS_CHK">
+                                    <label>*Transformer les URLs*</label>
+                                  </object>
+                                  <flag>wxALL|wxEXPAND</flag>
+                                </object>
+                                <object class="sizeritem">
+                                  <object class="wxCheckBox" name="wxID_CPY_IMAGES_CHK">
+                                    <label>*Copier les images*</label>
+                                  </object>
+                                  <flag>wxALL|wxEXPAND</flag>
+                                </object>
+                                <object class="sizeritem">
+                                  <object class="wxCheckBox" name="wxID_CPY_CSS_CHK">
+                                    <label>*Copier les feuillesde style*</label>
+                                  </object>
+                                  <flag>wxALL|wxEXPAND</flag>
+                                </object>
+                              </object>
+                              <option>1</option>
+                              <flag>wxALL|wxEXPAND</flag>
+                              <border>5</border>
+                            </object>
+                          </object>
+                          <flag>wxALL|wxEXPAND</flag>
+                        </object>
+                        <object class="spacer">
+                          <size>0,5</size>
+                        </object>
+                        <object class="sizeritem">
+                          <object class="wxBoxSizer">
+                            <orient>wxHORIZONTAL</orient>
+                            <object class="sizeritem">
+                              <object class="wxStaticText" name="wxID_CHARSET">
+                                <label>*Charset:*</label>
+                                <size>100,-1</size>
+                              </object>
+                              <option>0</option>
+                              <flag>wxALIGN_CENTRE_VERTICAL</flag>
+                              <border>5</border>
+                            </object>
+                            <object class="spacer">
+                              <size>10,0</size>
+                            </object>
+                            <object class="sizeritem">
+                              <object class="wxComboBox" name="wxID_CHARSET_CB">
+                                <content/>
+                                <size>100,-1</size>
+                                <style>wxCB_READONLY</style>
+                                <focused>1</focused>
+                              </object>
+                              <flag>wxALIGN_CENTRE_VERTICAL</flag>
+                            </object>
+                            <object class="spacer">
+                              <size>10,0</size>
+                            </object>
+                            <object class="sizeritem">
+                              <object class="wxBoxSizer">
+                                <orient>wxHORIZONTAL</orient>
+                                <object class="sizeritem">
+                                  <object class="wxStaticText" name="wxID_MIME_TYPE">
+                                    <label>*MIME Type:*</label>
+                                  </object>
+                                  <option>0</option>
+                                  <flag>wxALIGN_CENTRE_VERTICAL</flag>
+                                  <border>5</border>
+                                </object>
+                                <object class="spacer">
+                                  <size>5,0</size>
+                                </object>
+                                <object class="sizeritem">
+                                  <object class="wxComboBox" name="wxID_MIME_TYPE_CB">
+                                    <content/>
+                                    <size>200,-1</size>
+                                  </object>
+                                </object>
+                              </object>
+                              <option>0</option>
+                              <flag>wxALL|wxEXPAND</flag>
+                            </object>
+                          </object>
+                        </object>
+                        <object class="spacer">
+                          <size>0,5</size>
+                        </object>
+                      </object>
                     </object>
-                    <option>1</option>
-                    <flag>wxEXPAND</flag>
-                  </object>
-                  <object class="spacer">
-                    <size>5,0</size>
-                  </object>
-                  <object class="sizeritem">
-                    <object class="wxBitmapButton" name="wxID_BROWSE">
-                      <bitmap stock_id="wxART_FILE_OPEN"></bitmap>
+                    <object class="spacer">
+                      <size>20,0</size>
                     </object>
                   </object>
+                  <option>0</option>
+                  <flag>wxALL|wxEXPAND</flag>
+                  <border>10</border>
                 </object>
-                <option>1</option>
-                <flag>wxEXPAND</flag>
               </object>
+              <style>wxTAB_TRAVERSAL</style>
+              <focused>1</focused>
             </object>
-            <option>1</option>
-            <flag>wxALL|wxEXPAND</flag>
-            <border>4</border>
+            <selected>1</selected>
           </object>
-          <object class="sizeritem">
-            <object class="wxBoxSizer">
-              <orient>wxHORIZONTAL</orient>
-              <object class="sizeritem">
-                <object class="wxStaticText" name="wxID_IMG_LOCATION">
-                  <label>*Repertoire des images*</label>
-                  <size>150,-1</size>
+          <object class="notebookpage">
+            <label>*Advanced features *</label>
+            <object class="wxPanel" name="wxID_PAGE_EXTRA">
+              <object class="wxBoxSizer">
+                <orient>wxVERTICAL</orient>
+                <object class="sizeritem">
+                  <object class="wxBoxSizer">
+                    <orient>wxVERTICAL</orient>
+                    <object class="spacer">
+                      <size>0,10</size>
+                    </object>
+                    <object class="sizeritem">
+                      <object class="wxStaticText" name="wxID_IMG_LOCATION">
+                        <label>*Repertoire des images*</label>
+                        <size>150,-1</size>
+                      </object>
+                      <flag>wxEXPAND</flag>
+                    </object>
+                    <object class="spacer">
+                      <size>0,10</size>
+                    </object>
+                    <object class="sizeritem">
+                      <object class="wxBoxSizer">
+                        <orient>wxHORIZONTAL</orient>
+                        <object class="sizeritem">
+                          <object class="wxBoxSizer">
+                            <orient>wxHORIZONTAL</orient>
+                            <object class="sizeritem">
+                              <object class="wxTextCtrl" name="wxID_IMG_LOCATION_CTRL">
+                                <size>450,-1</size>
+                              </object>
+                              <option>1</option>
+                              <flag>wxEXPAND</flag>
+                            </object>
+                            <object class="spacer">
+                              <size>5,0</size>
+                            </object>
+                            <object class="sizeritem">
+                              <object class="wxBitmapButton" name="wxID_IMG_BROWSE">
+                                <bitmap stock_id="wxART_FOLDER"></bitmap>
+                              </object>
+                            </object>
+                          </object>
+                          <option>0</option>
+                          <flag>wxALL|wxEXPAND</flag>
+                        </object>
+                      </object>
+                      <option>0</option>
+                      <flag>wxALL|wxEXPAND</flag>
+                    </object>
+                    <object class="spacer">
+                      <size>0,20</size>
+                    </object>
+                    <object class="sizeritem">
+                      <object class="wxStaticText" name="wxID_CSS_LOCATION">
+                        <label>*Repertoire des CSS*</label>
+                        <size>150,-1</size>
+                      </object>
+                      <flag>wxEXPAND</flag>
+                    </object>
+                    <object class="spacer">
+                      <size>0,10</size>
+                    </object>
+                    <object class="sizeritem">
+                      <object class="wxBoxSizer">
+                        <orient>wxHORIZONTAL</orient>
+                        <object class="sizeritem">
+                          <object class="wxBoxSizer">
+                            <orient>wxHORIZONTAL</orient>
+                            <object class="sizeritem">
+                              <object class="wxTextCtrl" name="wxID_CSS_LOCATION_CTRL">
+                                <size>450,-1</size>
+                              </object>
+                              <option>1</option>
+                              <flag>wxEXPAND</flag>
+                            </object>
+                            <object class="spacer">
+                              <size>5,0</size>
+                            </object>
+                            <object class="sizeritem">
+                              <object class="wxBitmapButton" name="wxID_CSS_BROWSE">
+                                <bitmap stock_id="wxART_FOLDER"></bitmap>
+                              </object>
+                            </object>
+                          </object>
+                          <option>0</option>
+                          <flag>wxALL|wxEXPAND</flag>
+                        </object>
+                      </object>
+                      <option>0</option>
+                      <flag>wxALL|wxEXPAND</flag>
+                    </object>
+                  </object>
+                  <option>1</option>
+                  <flag>wxALL|wxEXPAND</flag>
+                  <border>10</border>
                 </object>
-                <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                <border>5</border>
               </object>
-              <object class="sizeritem">
-                <object class="wxTextCtrl" name="wxID_IMG_LOCATION_CTRL"/>
-                <option>1</option>
-                <flag>wxEXPAND</flag>
-                <minsize>300,-1</minsize>
-              </object>
-              <object class="spacer">
-                <size>5,0</size>
-              </object>
-              <object class="sizeritem">
-                <object class="wxBitmapButton" name="wxID_IMG_BROWSE">
-                  <bitmap stock_id="wxART_FOLDER"></bitmap>
-                </object>
-                <flag>wxRIGHT</flag>
-              </object>
+              <style>wxTAB_TRAVERSAL</style>
+              <focused>1</focused>
             </object>
-            <flag>wxRIGHT|wxEXPAND</flag>
-            <border>4</border>
-          </object>
-          <object class="spacer">
-            <size>0,5</size>
-          </object>
-          <object class="sizeritem">
-            <object class="wxBoxSizer">
-              <orient>wxHORIZONTAL</orient>
-              <object class="sizeritem">
-                <object class="wxBoxSizer">
-                  <orient>wxVERTICAL</orient>
-                  <object class="sizeritem">
-                    <object class="wxRadioBox" name="wxID_DOC_FORMAT">
-                      <label>*Document Format*</label>
-                      <content>
-                        <item>HTML</item>
-                        <item>XML</item>
-                        <item>Text</item>
-                      </content>
-                      <style>wxRA_SPECIFY_COLS</style>
-                    </object>
-                    <flag>wxALL|wxEXPAND</flag>
-                  </object>
-                </object>
-                <option>1</option>
-                <flag>wxALL|wxEXPAND</flag>
-                <border>5</border>
-              </object>
-              <object class="sizeritem">
-                <object class="wxBoxSizer">
-                  <orient>wxVERTICAL</orient>
-                  <object class="sizeritem">
-                    <object class="wxStaticText" name="wxID_OPTIONS">
-                      <label>*Options*</label>
-                    </object>
-                    <option>0</option>
-                    <flag>wxALL|wxEXPAND</flag>
-                  </object>
-                  <object class="spacer">
-                    <size>0,4</size>
-                  </object>
-                  <object class="sizeritem">
-                    <object class="wxStaticLine" name="wxID_STATICLINE"/>
-                    <flag>wxALL|wxEXPAND</flag>
-                  </object>
-                  <object class="spacer">
-                    <size>0,4</size>
-                  </object>
-                  <object class="sizeritem">
-                    <object class="wxCheckBox" name="wxID_CPY_IMAGES_CHK">
-                      <label>*Copier images*</label>
-                    </object>
-                    <flag>wxALL|wxEXPAND</flag>
-                  </object>
-                  <object class="sizeritem">
-                    <object class="wxCheckBox" name="wxID_TRANSFORM_URLS_CHK">
-                      <label>*Transformer les URL*</label>
-                    </object>
-                    <flag>wxALL|wxEXPAND</flag>
-                  </object>
-                </object>
-                <option>1</option>
-                <flag>wxALL|wxEXPAND</flag>
-                <border>5</border>
-              </object>
-            </object>
-            <flag>wxALL|wxEXPAND</flag>
-          </object>
-          <object class="sizeritem">
-            <object class="wxBoxSizer">
-              <orient>wxHORIZONTAL</orient>
-              <object class="sizeritem">
-                <object class="wxStaticText" name="wxID_CHARSET">
-                  <label>*Charset :*</label>
-                  <size>100,-1</size>
-                </object>
-                <option>0</option>
-                <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                <border>5</border>
-              </object>
-              <object class="sizeritem">
-                <object class="wxComboBox" name="wxID_CHARSET_CB">
-                  <content/>
-                  <size>100,-1</size>
-                  <style>wxCB_READONLY</style>
-                </object>
-                <flag>wxALIGN_CENTRE_VERTICAL</flag>
-              </object>
-              <object class="spacer">
-                <size>10,0</size>
-              </object>
-              <object class="sizeritem">
-                <object class="wxStaticText" name="wxID_MIME_TYPE">
-                  <label>*MIME Type :*</label>
-                </object>
-                <flag>wxALIGN_CENTRE_VERTICAL</flag>
-                <border>5</border>
-              </object>
-              <object class="sizeritem">
-                <object class="wxComboBox" name="wxID_MIME_TYPE_CB">
-                  <content/>
-                  <size>150,-1</size>
-                </object>
-                <option>1</option>
-                <flag>wxALL|wxEXPAND</flag>
-                <border>5</border>
-              </object>
-            </object>
-            <option>0</option>
-            <flag>wxALL|wxEXPAND</flag>
-            <border>5</border>
           </object>
         </object>
         <option>1</option>
         <flag>wxALL|wxEXPAND</flag>
         <border>5</border>
       </object>
+      <object class="spacer">
+        <size>0,5</size>
+      </object>
       <object class="sizeritem">
-        <option>0</option>
-        <flag>wxALL|wxALIGN_RIGHT|wxADJUST_MINSIZE</flag>
-        <border>5</border>
         <object class="wxBoxSizer">
           <orient>wxHORIZONTAL</orient>
+          <object class="spacer">
+            <size>0,0</size>
+            <option>1</option>
+          </object>
           <object class="sizeritem">
-            <flag>wxALL</flag>
             <object class="wxButton" name="wxID_SAVE">
               <label>*Confirm*</label>
               <default>1</default>
             </object>
-            <border>5</border>
+          </object>
+          <object class="spacer">
+            <size>5,0</size>
           </object>
           <object class="sizeritem">
             <object class="wxButton" name="wxID_CLEAR">
               <label>*Clear*</label>
             </object>
-            <flag>wxALL</flag>
-            <border>5</border>
+          </object>
+          <object class="spacer">
+            <size>5,0</size>
           </object>
           <object class="sizeritem">
-            <flag>wxALL</flag>
             <object class="wxButton" name="wxID_CANCEL">
               <label>*Cancel*</label>
             </object>
-            <border>5</border>
           </object>
         </object>
+        <option>0</option>
+        <flag>wxALL|wxEXPAND</flag>
+        <border>5</border>
       </object>
     </object>
   </object>
