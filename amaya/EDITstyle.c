@@ -438,6 +438,7 @@ void UpdateStyleSheetContent (Document doc, char *cssfile, char *oldpath,
 
       file = TtaGZOpen (cssfile);
       len = gzread (file, styleString, lenBuff);
+      styleString[lenBuff] = EOS;
       TtaGZClose (file);
       // Now update @import and images
       // imported css and images are now local to the stylesheet

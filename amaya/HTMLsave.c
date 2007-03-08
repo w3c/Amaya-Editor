@@ -3498,35 +3498,36 @@ static void UpdateImages (Document doc, ThotBool src_is_local,
               if (copyref)
                 {
                   elType = TtaGetElementType (el);
-                  buflen = MAX_LENGTH;
-                  buf = (char *)TtaGetMemory (buflen);
-                  if (buf)
+                  if ((attrType.AttrTypeNum == HTML_ATTR_Style_ &&
+                       attrType.AttrSSchema == XHTMLSSchema) ||
+                      (attrType.AttrTypeNum == MathML_ATTR_style_ &&
+                       attrType.AttrSSchema == MathSSchema) ||
+                      (attrType.AttrTypeNum == SVG_ATTR_style_  &&
+                       attrType.AttrSSchema == SVGSSchema))
                     {
-                      if ((attrType.AttrTypeNum == HTML_ATTR_Style_ &&
-                           attrType.AttrSSchema == XHTMLSSchema) ||
-                          (attrType.AttrTypeNum == MathML_ATTR_style_ &&
-                           attrType.AttrSSchema == MathSSchema) ||
-                          (attrType.AttrTypeNum == SVG_ATTR_style_  &&
-                           attrType.AttrSSchema == SVGSSchema))
+                      buflen = TtaGetTextAttributeLength (attr) + 1;
+                      stringStyle = (char *)TtaGetMemory (buflen);
+                      TtaGiveTextAttributeValue (attr, stringStyle, &buflen);
+                      // Save images but no new local import
+                      sStyle = UpdateCSSURLs (doc, oldpath, newURL, imgbase, stringStyle,
+                                              TRUE, FALSE);
+                      if (sStyle)
                         {
-                          buflen = TtaGetTextAttributeLength (attr) + 1;
-                          stringStyle = (char *)TtaGetMemory (buflen);
-                          TtaGiveTextAttributeValue (attr, stringStyle, &buflen);
-                          // Save images but no new local import
-                          sStyle = UpdateCSSURLs (doc, oldpath, newURL, imgbase, stringStyle,
-                                                  TRUE, FALSE);
-                          if (sStyle)
-                            {
-                              /* register the modification to be able to undo it */
-                              TtaRegisterAttributeReplace (attr, el, doc);
-                              /* save this new style attribute string */
-                              TtaSetAttributeText (attr, sStyle, el, doc);
-                              TtaFreeMemory (sStyle);
-                            }
-                          else
-                            TtaFreeMemory (stringStyle);
+                          /* register the modification to be able to undo it */
+                          TtaRegisterAttributeReplace (attr, el, doc);
+                          /* save this new style attribute string */
+                          TtaSetAttributeText (attr, sStyle, el, doc);
+                          TtaFreeMemory (sStyle);
                         }
                       else
+                        TtaFreeMemory (stringStyle);
+                    }
+                  else
+                    {
+                      buflen = MAX_LENGTH;
+                      buf = (char *)TtaGetMemory (buflen);
+                      buf[0] = EOS;
+                      if (buf)
                         {
                           TtaGiveTextAttributeValue (attr, buf, &buflen);
                           /* extract the old image name and location */
@@ -3547,93 +3548,93 @@ static void UpdateImages (Document doc, ThotBool src_is_local,
                           /* register the modification to be able to undo it */
                           TtaRegisterAttributeReplace (attr, el, doc);
                           TtaSetAttributeText (attr, url, el, doc);
-                        }
 
-                      if (svgpic)
-                        /* now work with the SVG picture element */
-                        el = svgpic;
-                      /*
-                        At this point:
-                        - url gives the relative new image name
-                        - tempname gives the new image full name
-                        - buf gives the old image full name
-                        - imgname contains the image file name
-                      */
-                      if (url[0] != EOS && buf[0] != EOS)
-                        {
+                          if (svgpic)
+                            /* now work with the SVG picture element */
+                            el = svgpic;
+                          /*
+                            At this point:
+                            - url gives the relative new image name
+                            - tempname gives the new image full name
+                            - buf gives the old image full name
+                            - imgname contains the image file name
+                          */
+                          if (url[0] != EOS && buf[0] != EOS)
+                            {
 #ifdef AMAYA_DEBUG
-                          fprintf(stderr, "     SRC from %s to %s\n", buf, url);
+                              fprintf(stderr, "     SRC from %s to %s\n", buf, url);
 #endif
-                          if (src_is_local && !dst_is_local)
-                            {
-                              /* add the localfile to the images list */
-                              AddLocalImage (buf, imgname, tempname, doc, &pImage);
-                              /* get image type */
-                              if (pImage)
-                                pImage->imageType = TtaGetPictureType (el);
-                            }
-                          /* mark the image descriptor or copy the file */
-                          if (dst_is_local)
-                            {
-                              /* do a file copy */
-                              if (IsW3Path (buf) || IsHTTPPath (oldpath))
+                              if (src_is_local && !dst_is_local)
                                 {
-                                  /*
-                                    it was a remote image:
-                                    we use the local temporary name to do the copy
-                                  */
-                                  strcpy (buf, localpath);
-                                  strcat (buf, imgname);
-                                  pImage = SearchLoadedImage (buf, doc);
+                                  /* add the localfile to the images list */
+                                  AddLocalImage (buf, imgname, tempname, doc, &pImage);
+                                  /* get image type */
                                   if (pImage)
-                                    strcpy (buf, pImage->tempfile);
+                                    pImage->imageType = TtaGetPictureType (el);
                                 }
-			       
-                              if (imgbase[0] != EOS)
-                                strcpy (tempfile, tempname);
-                              else
+                              /* mark the image descriptor or copy the file */
+                              if (dst_is_local)
                                 {
-                                  strcpy (tempfile, SavePath);
-                                  strcat (tempfile, DIR_STR);
-                                  strcat (tempfile, imgname);
-                                }
-                              TtaFileCopy (buf, tempfile);
-                            }
-                          else
-                            {
-                              /* save on a remote server */
-                              if (IsW3Path (buf) || IsHTTPPath (oldpath))
-                                {
-                                  /*
-                                    it was a remote image:
-                                    get the image descriptor to prepare
-                                    the saving process
-                                  */
-                                  strcpy (tempfile, localpath);
-                                  strcat (tempfile, imgname);
-                                  pImage = SearchLoadedImage (tempfile, doc);
-                                  /* update the descriptor */
-                                  if (pImage)
+                                  /* do a file copy */
+                                  if (IsW3Path (buf) || IsHTTPPath (oldpath))
                                     {
-                                      /* image was already loaded */
-                                      if (pImage->originalName != NULL)
-                                        TtaFreeMemory (pImage->originalName);
-                                      pImage->originalName = TtaStrdup (tempname);
-                                      if (TtaFileExist(pImage->tempfile))
-                                        pImage->status = IMAGE_MODIFIED;
-                                      else
-                                        pImage->status = IMAGE_NOT_LOADED;
-                                      /*pImage->elImage = (struct _ElemImage *) el;*/
+                                      /*
+                                        it was a remote image:
+                                        we use the local temporary name to do the copy
+                                      */
+                                      strcpy (buf, localpath);
+                                      strcat (buf, imgname);
+                                      pImage = SearchLoadedImage (buf, doc);
+                                      if (pImage)
+                                        strcpy (buf, pImage->tempfile);
                                     }
+			       
+                                  if (imgbase[0] != EOS)
+                                    strcpy (tempfile, tempname);
+                                  else
+                                    {
+                                      strcpy (tempfile, SavePath);
+                                      strcat (tempfile, DIR_STR);
+                                      strcat (tempfile, imgname);
+                                    }
+                                  TtaFileCopy (buf, tempfile);
                                 }
-#if 0 /* JK Not sure if this is needed (tempfile isn't initialized for local files */
                               else
-                                /* add the localfile to the images list */
-                                AddLocalImage (tempfile, imgname, tempname, doc, &pImage);
+                                {
+                                  /* save on a remote server */
+                                  if (IsW3Path (buf) || IsHTTPPath (oldpath))
+                                    {
+                                      /*
+                                        it was a remote image:
+                                        get the image descriptor to prepare
+                                        the saving process
+                                      */
+                                      strcpy (tempfile, localpath);
+                                      strcat (tempfile, imgname);
+                                      pImage = SearchLoadedImage (tempfile, doc);
+                                      /* update the descriptor */
+                                      if (pImage)
+                                        {
+                                          /* image was already loaded */
+                                          if (pImage->originalName != NULL)
+                                            TtaFreeMemory (pImage->originalName);
+                                          pImage->originalName = TtaStrdup (tempname);
+                                          if (TtaFileExist(pImage->tempfile))
+                                            pImage->status = IMAGE_MODIFIED;
+                                          else
+                                            pImage->status = IMAGE_NOT_LOADED;
+                                          /*pImage->elImage = (struct _ElemImage *) el;*/
+                                        }
+                                    }
+#if 0 /* JK Not sure if this is needed (tempfile isn't initialized for local files */
+                                  else
+                                    /* add the localfile to the images list */
+                                    AddLocalImage (tempfile, imgname, tempname, doc, &pImage);
 #endif
+                                }
                             }
+                          TtaFreeMemory (buf);
                         }
-                      TtaFreeMemory (buf);
                     }
                 }
               TtaSearchAttribute (attrType, SearchForward, el, &el, &attr);
