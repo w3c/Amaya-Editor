@@ -2087,6 +2087,10 @@ static char *ParseCSSListStyleType (Element element, PSchema tsch,
 
 /*----------------------------------------------------------------------
   ParseCSSUrl: parse an URL
+  Parse the url content (don't start with "url")
+  Return the next pointer in the CSS string
+  If a correct URL is found, it's returned in url (this string must
+  be freed)
   ----------------------------------------------------------------------*/
 static char *ParseCSSUrl (char *cssRule, char **url)
 {

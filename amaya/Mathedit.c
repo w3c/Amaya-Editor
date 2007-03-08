@@ -1988,7 +1988,7 @@ static void CreateMathConstruct (int construct, ...)
       selectedchild = -1;
       break;
 
-    case 40: /* abs/card/floor/ceiling */
+    case 40: /* vertical fence */
       newType.ElTypeNum = MathML_EL_MROW;
       selectedchild = 1;
       break;
@@ -2510,7 +2510,7 @@ static void CreateMathConstruct (int construct, ...)
           child = leaf;
           InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
           TtaDeleteTree (leaf, doc);
-          selected = child;
+          selected = TtaGetFirstChild(child);
           for (i = 1 ; i < number; i++)
             InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
 
@@ -2566,15 +2566,27 @@ static void CreateMathConstruct (int construct, ...)
           InsertSymbolUnit (&child, MathML_EL_MF, Math_close, doc);
         }
       else if (construct == 40)
-        {/* card/abs/floor/ceiling */
+        {/* vertical fence */
           Math_open = va_arg(varpos, int);
           Math_close = va_arg(varpos, int);
           leaf = TtaGetFirstChild (el);
           child = leaf;
-          InsertSymbol (&child, MathML_EL_MO, Math_open, doc);
-          TtaDeleteTree (leaf, doc);
-          InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
-          InsertSymbol (&child, MathML_EL_MO, Math_close, doc);
+          if(va_arg(varpos, int))
+            {/* stretchy = true */
+            InsertSymbolUnit (&child, MathML_EL_MO, Math_open, doc);
+            //AttachIntVertStretch(child, doc);
+            InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
+            InsertSymbolUnit (&child, MathML_EL_MO, Math_close, doc);
+            //AttachIntVertStretch(child, doc);
+            TtaDeleteTree (leaf, doc);
+            }
+          else
+            {/* stretchy = false */
+            InsertSymbol (&child, MathML_EL_MO, Math_open, doc);
+            TtaDeleteTree (leaf, doc);
+            InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
+            InsertSymbol (&child, MathML_EL_MO, Math_close, doc);
+            }
         }
       else if (construct == 43)
         {
@@ -3513,9 +3525,9 @@ void CreateMOVERBREVE (Document doc, View view)
 {
   CreateMathConstruct (26, 728);
 }
-void CreateMOVERCHECK (Document doc, View view)
+void CreateMOVERCHECK (Document doc, View view) // hacek
 {
-  CreateMathConstruct (26, 711);
+  CreateMathConstruct (59, 'k');
 }
 void CreateMOVERDOT (Document doc, View view)
 {
@@ -3527,11 +3539,11 @@ void CreateMOVERHAT (Document doc, View view)
 }
 void CreateMOVERTILDE (Document doc, View view)
 {
-  CreateMathConstruct (26, 8764);
+  CreateMathConstruct (59, 'T');
 }
-void CreateMOVERFROWN (Document doc, View view)
+void CreateMOVERFROWN (Document doc, View view) // overparenthesis
 {
-  CreateMathConstruct (26, 8994);
+  CreateMathConstruct (59, 'p');
 }
 
 
@@ -3615,13 +3627,13 @@ void CreateMMATRIX (Document doc, View view)
   ----------------------------------------------------------------------*/
 void CreateMABS (Document document, View view)
 {
-  CreateMathConstruct (40,'|','|');}
+  CreateMathConstruct (40,'|','|', TRUE);}
 /*----------------------------------------------------------------------
   CreateMNORM
   ----------------------------------------------------------------------*/
 void CreateMNORM (Document document, View view)
 {
-  CreateMathConstruct (40,8741,8741);}
+  CreateMathConstruct (40,8741,8741, FALSE);}
 /*----------------------------------------------------------------------
   CreateMALEPHSUB
   ----------------------------------------------------------------------*/
@@ -3669,7 +3681,7 @@ void CreateMARROW2 (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMCARD (Document document, View view)
 {
-  CreateMathConstruct (40,'|','|');}
+  CreateMathConstruct (40,'|','|', TRUE);}
 /*----------------------------------------------------------------------
   CreateMCARD2
   ----------------------------------------------------------------------*/
@@ -3693,7 +3705,7 @@ void CreateMCARTESIANPRODUCTBINARY (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMCEILING (Document document, View view)
 {
-  CreateMathConstruct (40, 8968, 8969);}
+  CreateMathConstruct (40, 5, 6, TRUE);}
 /*----------------------------------------------------------------------
   CreateMCODOMAIN
   ----------------------------------------------------------------------*/
@@ -3932,7 +3944,7 @@ void CreateMFALSE (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMFLOOR (Document document, View view)
 {
-  CreateMathConstruct (40, 8970, 8971);}
+  CreateMathConstruct (40, 3, 4, TRUE);}
 /*----------------------------------------------------------------------
   CreateMFORALL
   ----------------------------------------------------------------------*/
@@ -4171,7 +4183,7 @@ void CreateMMAXUNDER (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMMEAN (Document document, View view)
 {
-  CreateMathConstruct (40, 9001, 9002);}
+  CreateMathConstruct (40, '<', '>', TRUE);}
 /*----------------------------------------------------------------------
   CreateMMEDIAN
   ----------------------------------------------------------------------*/
@@ -8836,4 +8848,3 @@ void HandleColAndRowAlignAttributes (Element row, Document doc)
        applies that attribute again to the whole table */
     HandleColumnlinesAttribute (attr, table, doc, FALSE);
 }
-

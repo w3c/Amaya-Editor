@@ -455,15 +455,12 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
               else
                 DrawIntegral (frame, i, xd, yd, width, height, 8, font, fg);
               break;
-
-#ifdef _GL
             case 'b':/* horizontal bracket */
                 DrawHorizontalBracket (frame, i, 5, xd, yd, width, height, 0,fg);
               break;
             case 'B':/* horizontal bracket */
                 DrawHorizontalBracket (frame, i, 5, xd, yd, width, height, 1,fg);
               break;
-#endif /* _GL */
             case 'c':/* contour integral */
               if (useStix)
                 DrawStixIntegral (frame, xd, yd, width, height, 1, size, fg);
@@ -491,22 +488,18 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
             case 'h':/* horizontal line */
               DrawHorizontalLine (frame, i, 5, xd, yd, width, height, 1, fg, pBox);
               break;
-#ifdef _GL
             case 'H':/* Hat */
               DrawHat (frame, i, 5, xd, yd, width, height, fg, 1);
               break;
-#endif /* _GL */
             case 'i':/* integral */ 
               if (useStix)
                 DrawStixIntegral (frame, xd, yd, width, height, 0, size, fg);
               else
                 DrawIntegral (frame, i, xd, yd, width, height, 0, font, fg);
               break;
-#ifdef _GL
             case 'k':/* Hacek */
               DrawHat (frame, i, 5, xd, yd, width, height, fg,-1);
               break;
-#endif /* _GL */
             case 'o':/* horizontal brace */
               if (useStix)
                 DrawStixHorizontalBrace (frame, xd, yd, width, height, 0, size,
@@ -554,11 +547,9 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
               else
                 DrawSigma (frame, xd, yd, width, height, font, fg);
               break;
-#ifdef _GL
             case 'T':/* Diacritical Tilde */
               DrawTilde (frame, i, 5, xd, yd, width, height,fg);
               break;
-#endif /* _GL */
             case 'U':
               DrawUnion (frame, xd, yd, width, height, font, fg);
               break;

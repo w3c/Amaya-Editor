@@ -315,7 +315,7 @@
                                                       <object class="sizeritem">
                                                         <object class="wxBitmapButton" name="wxID_PANEL_MATH_OVERCHECK">
                                                           <bitmap>../icons/16x16/MATHML_overcheck.png</bitmap>
-                                                          <tooltip>overcheck</tooltip>
+                                                          <tooltip>hacek</tooltip>
                                                         </object>
                                                         <flag>wxALL</flag>
                                                         <border>1</border>
@@ -347,7 +347,7 @@
                                                       <object class="sizeritem">
                                                         <object class="wxBitmapButton" name="wxID_PANEL_MATH_OVERFROWN">
                                                           <bitmap>../icons/16x16/MATHML_overfrown.png</bitmap>
-                                                          <tooltip>overfrown</tooltip>
+                                                          <tooltip>overparenthesis</tooltip>
                                                         </object>
                                                         <flag>wxALL</flag>
                                                         <border>1</border>

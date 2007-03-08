@@ -2315,6 +2315,7 @@ void DrawTilde (int frame, int thick, int style, int x, int y, int l, int h, int
 
   h -= thick;
   l -= thick;
+
   if (thick > 0 && fg >= 0)
     {
       Xmax = 10;
@@ -2324,7 +2325,7 @@ void DrawTilde (int frame, int thick, int style, int x, int y, int l, int h, int
 
       for(X = 1, Y1 = 0; X <= Xmax; X++)
         {     
-        Y2 = Ymax * (int) DSIN (X*M_PI_DOUBLE/Xmax);
+        Y2 = (int)(((float) Ymax) * DSIN (X*M_PI_DOUBLE/Xmax));
         DoDrawOneLine (frame, x + (X-1)*l/Xmax, y + Y1, x + X*l/Xmax, y + Y2);
         Y1 = Y2;
         }

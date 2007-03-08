@@ -30,6 +30,22 @@
 #include "edit_tv.h"
 #include "thotcolor_tv.h"
 
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+#define M_PI_DOUBLE (6.2831853718027492)
+
+/* ((A)*(M_PI/180.0)) */
+#define DEG_TO_RAD(A)   ((float)A)/57.29577957795135
+#define RAD_TO_DEG(A)   ((float)A)*57.29577957795135
+
+/*If we should use a static table instead for
+  performance bottleneck...*/
+#define DCOS(A) ((float)cos (A))
+#define DSIN(A) ((float)sin (A))
+#define DACOS(A) ((float)acos (A))
+#define A_DEGREE 0.017453293
+
 #define ALLOC_POINTS    300
 
 #include "boxlocate_f.h"
@@ -2215,19 +2231,21 @@ void DrawHorizontalLine (int frame, int thick, int style, int x, int y,
   DrawHat draw a hat aligned top
   The parameter fg indicates the drawing color.
   ----------------------------------------------------------------------*/
-void DrawHat (int frame, int thick, int style, int x, int y,
-              int l, int h, int align, int fg)
+void DrawHat (int frame, int thick, int style, int x, int y, int l, int h,
+              int fg, int direction)
 {
-  int        Y;
+int Y;
+
+h -= thick;
+l -= thick;
 
   if (thick > 0 && fg >= 0)
     {
-      y += FrameTable[frame].FrTopMargin;
-      y += (h - thick) / 2;
-      Y = y + (h - thick) / 2;
+      y += FrameTable[frame].FrTopMargin + h / 2;
+      Y = y + direction * h / 2;
       InitDrawing (style, thick, fg);
-      DoDrawOneLine (frame, x, Y, x + (l / 2), y);
-      DoDrawOneLine (frame, x + (l / 2), y, x + l - thick, Y);
+      DoDrawOneLine (frame, x, Y, x + l/2, y);
+      DoDrawOneLine (frame, x + l/2, y, x + l, Y);
     }
 }
 
@@ -2237,6 +2255,25 @@ void DrawHat (int frame, int thick, int style, int x, int y,
   ----------------------------------------------------------------------*/
 void DrawTilde (int frame, int thick, int style, int x, int y, int l, int h, int fg)
 {
+  int X, Y1, Y2, Xmax, Ymax;
+
+  h -= thick;
+  l -= thick;
+
+  if (thick > 0 && fg >= 0)
+    {
+      Xmax = 10;
+      Ymax = h / 3;
+      y += FrameTable[frame].FrTopMargin + h / 2;
+      InitDrawing (style, thick, fg);
+
+      for(X = 1, Y1 = 0; X <= Xmax; X++)
+        {     
+        Y2 = (int)(((float) Ymax) * DSIN (X*M_PI_DOUBLE/Xmax));
+        DoDrawOneLine (frame, x + (X-1)*l/Xmax, y + Y1, x + X*l/Xmax, y + Y2);
+        Y1 = Y2;
+        }
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -2290,6 +2327,27 @@ void DrawHorizontalBrace (int frame, int thick, int style, int x, int y,
 void DrawHorizontalBracket (int frame, int thick, int style, int x, int y,
                           int l, int h, int align, int fg)
 {
+  int        Y;
+
+  if (thick > 0 && fg >= 0)
+    {
+      y += FrameTable[frame].FrTopMargin;
+      Y = y + (h - thick) / 2;
+      InitDrawing (style, thick, fg);
+      DoDrawOneLine (frame, x, Y, x + l, Y);
+      if (align == 0)
+        /* Over bracket */
+        {
+          DoDrawOneLine (frame, x, Y, x, y + h);
+          DoDrawOneLine (frame, x + l - thick, Y, x + l - thick, y + h);
+        }
+      else
+        /* Under bracket */
+        {
+          DoDrawOneLine (frame, x, Y, x, y);
+          DoDrawOneLine (frame, x + l - thick, Y, x + l - thick, y);
+        }
+    }
 }
 
 /*----------------------------------------------------------------------

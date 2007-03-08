@@ -2013,8 +2013,8 @@ void DrawHorizontalLine (int frame, int thick, int style, int x, int y,
   DrawHat draw a hat aligned top
   The parameter fg indicates the drawing color.
   ----------------------------------------------------------------------*/
-void DrawHat (int frame, int thick, int style, int x, int y,
-              int l, int h, int align, int fg)
+void DrawHat (int frame, int thick, int style, int x, int y, int l, int h,
+              int fg, int direction)
 {
   int                 xf, xm, Y;
   FILE               *fout;

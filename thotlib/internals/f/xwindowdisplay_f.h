@@ -254,8 +254,8 @@ extern void DrawHat ( int frame,
                       int y,
                       int l,
                       int h,
-                      int align,
-                      int fg );
+                      int fg,
+                      int direction );
 extern void DrawTilde ( int frame,
                         int thick,
                         int style,
@@ -624,8 +624,8 @@ extern void DrawHat ( int frame,
                         int y,
                         int l,
                         int h,
-                        int align,
-                        int fg );
+                        int fg,
+                        int direction );
 extern void DrawTilde ( int frame,
                           int thick,
                           int style,

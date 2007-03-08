@@ -3171,6 +3171,11 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
             case '^': /* UpArrow */
             case 'V': /* DownArrow */
             case 155: /* UpDownArrow */
+              if (i == 0)
+                i  = BoxCharacterWidth (0x6c, font);	/* 'm' */
+              ResizeWidth (pBox, NULL, NULL, i - pBox->BxW, 0, 0, 0, frame, FALSE);
+              break;
+
             case 161: /* UpTeeArrow */
             case 163: /* DownTeeArrow */
             case 166: /* RightUpVector */
@@ -3197,9 +3202,10 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
             case 212: /* UpEquilibrium */
             case 213: /* ReverseUpEquilibrium */
               if (i == 0)
-                i  = BoxCharacterWidth (0x6c, font);	/* 'm' */
+                i  = BoxCharacterWidth (SPACE, font) * 4;
               ResizeWidth (pBox, NULL, NULL, i - pBox->BxW, 0, 0, 0, frame, FALSE);
               break;
+
             default:
               break;
             }	 
