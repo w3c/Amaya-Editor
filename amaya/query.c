@@ -2660,8 +2660,8 @@ void         QueryInit ()
   ***/
 #endif
 
-  TtaGetEnvBoolean ("ENABLE_FTP", &FTPURL_flag);
-
+  //TtaGetEnvBoolean ("ENABLE_FTP", &FTPURL_flag);
+  FTPURL_flag = TRUE;
   /* Setting up different network parameters */
 
   /* Maximum number of simultaneous open sockets */

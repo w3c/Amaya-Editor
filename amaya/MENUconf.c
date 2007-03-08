@@ -2380,6 +2380,8 @@ static void GetDefaultPublishConf ()
                    PublishBase + mTogglePublish, 3);
   GProp_Publish.GenerateMathPI = FALSE;
   TtaSetEnvBoolean ("GENERATE_MATHPI", GProp_Publish.GenerateMathPI, TRUE);
+  GProp_Publish.LostUpdateCheck = FALSE;
+  TtaSetEnvBoolean ("ENABLE_LOST_UPDATE_CHECK", GProp_Publish.LostUpdateCheck, TRUE);
   TtaGetDefEnvInt ("EXPORT_LENGTH", &(GProp_Publish.ExportLength));
   GetDefEnvString ("DEFAULTNAME", GProp_Publish.DefaultName);
   GetDefEnvString ("SAFE_PUT_REDIRECT", GProp_Publish.SafePutRedirect);
@@ -2785,8 +2787,8 @@ void GetBrowseConf (void)
   TtaGetEnvBoolean ("LOAD_CSS", &(GProp_Browse.LoadCss));
   TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &(GProp_Browse.DoubleClick));
   TtaGetEnvBoolean ("CHECK_READ_IDS", &(GProp_Browse.WarnIDs));
-  TtaGetEnvBoolean ("ENABLE_FTP", &val);
-  AHTFTPURL_flag_set (val);
+  //TtaGetEnvBoolean ("ENABLE_FTP", &val);
+  AHTFTPURL_flag_set (TRUE);
   GetEnvString ("SCREEN_TYPE", GProp_Browse.ScreenType);
   if (GProp_Browse.ScreenType[0] == EOS)
     // no current selection

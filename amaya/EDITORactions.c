@@ -485,8 +485,6 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile,
       attr = TtaNewAttribute (attrType);
       TtaAttachAttribute (meta, attr, doc);
       strcpy (tempfile, "Amaya");
-      strcat (tempfile, " ");
-      strcat (tempfile, TtaGetAppVersion());
       strcat (tempfile, ", see http://www.w3.org/Amaya/");
       TtaSetAttributeText (attr, tempfile, meta, doc);
       TtaInsertSibling (meta, child, FALSE, doc);
