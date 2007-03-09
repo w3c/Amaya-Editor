@@ -1094,7 +1094,8 @@ void SetSingleIntHorizStretchAttr (Element el, Document doc, Element* selEl)
                             break;
                             case 0x2957: /* DownRightVectorBar */
                               c = 201;
-                            break;                            case 0x295A: /* LeftTeeVector */
+                            break;
+                            case 0x295A: /* LeftTeeVector */
                               c = 204;
                             break;
                             case 0x295B: /* RightTeeVector */
@@ -1111,7 +1112,8 @@ void SetSingleIntHorizStretchAttr (Element el, Document doc, Element* selEl)
                             break;
                             }
 
-                          if (c != EOS)
+                          if (c != EOS ||
+                              (text[0] >= 0x2196 && text[0] <= 0x2199)) /* diagonal arrows */
                             doit = TRUE;
                         }
                     }
@@ -1307,7 +1309,7 @@ void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
                        text[i] == 0x2191  || /* UpArrow */
                        text[i] == 0x2193  || /* DownArrow */
                        text[i] == 0x2195 || /* UpDownArrow */
-                       (text[i] >= 0x2196 && text[i] <= 2199) || /* diagonal arrows */
+                       (text[i] >= 0x2196 && text[i] <= 0x2199) || /* diagonal arrows */
                        text[i] == 0x21A5 || /* UpTeeArrow */
                        text[i] == 0x21A7 || /* DownTeeArrow */
                        text[i] == 0x21BE || /* RightUpVector */

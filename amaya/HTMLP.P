@@ -3013,7 +3013,8 @@ RULES
         Width: auto{Enclosing . Width};
         Display: Block;
         VertPos: Top = Previous not MAP . Bottom;
-        MarginTop: 0.5;
+        if not within Paragraph and not within Pseudo_paragraph and not within List_Item
+          MarginTop: 0.5;
         HorizPos: Left = Enclosing . Left;
         IN Structure_view BEGIN
                 MarginTop: 0;

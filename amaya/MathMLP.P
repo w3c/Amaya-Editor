@@ -2942,7 +2942,6 @@ ATTRIBUTES
         END;
   IntHorizStretch (SYMBOL_UNIT):
         BEGIN
-        Height: Enclosed . Height;
         Width: Enclosing . Width;
         HorizPos: Left = Enclosing . Left;
         IN Structure_view BEGIN
