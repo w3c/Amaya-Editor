@@ -438,6 +438,23 @@ void InitAmayaDefEnv (void)
   TtaSetDefEnvString ("PROXYDOMAIN_IS_ONLYPROXY", "no", FALSE);
   TtaSetDefEnvString ("MAX_CACHE_ENTRY_SIZE", "3", FALSE);
   TtaSetDefEnvString ("CACHE_SIZE", "10", FALSE);
+#ifdef _MACOS
+  ptr = TtaGetEnvString ("HOME");
+  if (ptr)
+  {
+    sprintf (s, "%s%cLibrary%cCaches", ptr, DIR_SEP, DIR_SEP);
+    if (TtaDirExists (s)) 
+    {
+      sprintf (s, "%s%cLibrary%cCaches%clibwww-cache", ptr, DIR_SEP, DIR_SEP, DIR_SEP);
+      TtaSetDefEnvString ("CACHE_DIR", s, FALSE);
+    }
+    else
+      TtaSetDefEnvString ("CACHE_DIR", "", FALSE);
+  }
+  else
+    TtaSetDefEnvString ("CACHE_DIR", "", FALSE);
+  TtaSetDefEnvString ("ENABLE_CACHE", "yes", FALSE);
+#else /* _MACOS */
   if (TempFileDirectory)
     {
       sprintf (s, "%s%clibwww-cache", TempFileDirectory, DIR_SEP);
@@ -449,6 +466,7 @@ void InitAmayaDefEnv (void)
       TtaSetDefEnvString ("CACHE_DIR", "", FALSE);
       TtaSetDefEnvString ("ENABLE_CACHE", "yes", FALSE);
     }
+#endif /* _MACOS */
   TtaSetDefEnvString ("CACHE_PROTECTED_DOCS", "yes", FALSE);
   TtaSetDefEnvString ("CACHE_DISCONNECTED_MODE", "no", FALSE);
   TtaSetDefEnvString ("CACHE_EXPIRE_IGNORE", "no", FALSE);

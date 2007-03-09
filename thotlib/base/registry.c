@@ -1228,7 +1228,7 @@ void TtaInitializeAppRegistry (char *appArgv0)
   char        filename[MAX_PATH];
   char       *my_path;
   char       *dir_end = NULL;
-  char       *appName;
+  char       *appName; 
   char       *ptr;
 #ifdef _WINGUI
   /* name in Windows NT 4 is 20 chars */
@@ -1245,7 +1245,12 @@ void TtaInitializeAppRegistry (char *appArgv0)
   char       *c_end;
 #endif /* _UNIX */
 #ifdef _MACOS
+#define       MACOSX_LIBRARY      "Library"
+#define       MACOSX_PREFERENCES  "Preferences"
   char        realexecname[MAX_LENGTH];
+  char        app_home_mac[MAX_PATH];
+  char        app_home_orig[MAX_PATH];
+  char        filename_orig[MAX_PATH];
 #endif /* _MACOS */
   int         execname_len;
   int         len, round;
@@ -1290,7 +1295,7 @@ void TtaInitializeAppRegistry (char *appArgv0)
   strcat (execname, DIR_STR);
   strcpy (realexecname, execname);
   strcat (realexecname, appArgv0);
-  printf ("realexecname '%s' \n", realexecname);
+  my_path = getenv("PATH");
 #endif /* _MACOS & _WX */
 #ifdef _WINDOWS
   if (appArgv0[0] == DIR_SEP || (appArgv0[1] == ':' && appArgv0[2] == DIR_SEP))
@@ -1637,7 +1642,20 @@ void TtaInitializeAppRegistry (char *appArgv0)
 #else /* _WINGUI */
 #ifdef _UNIX
       ptr = getenv ("HOME");
+#ifdef _MACOS
+      sprintf (app_home_mac, "%s%c%s%c%s%c",
+	 ptr, DIR_SEP, MACOSX_LIBRARY, DIR_SEP, MACOSX_PREFERENCES, DIR_SEP);
+      if (!TtaDirExists (app_home_mac))
+	  sprintf (app_home, "%s%c.%s", ptr, DIR_SEP, AppNameW); 
+      else	
+          {
+             sprintf (app_home, "%s%c%s%c%s%c%s",
+	     ptr, DIR_SEP, MACOSX_LIBRARY, DIR_SEP, MACOSX_PREFERENCES, DIR_SEP, AppNameW); 
+       	     sprintf (app_home_orig, "%s%c.%s", ptr, DIR_SEP, AppNameW); 
+          }
+#else /* _MACOS */
       sprintf (app_home, "%s%c.%s", ptr, DIR_SEP, AppNameW); 
+#endif /* _MACOS */
 #else /* _UNIX */
 
 #if defined(_WX) && defined(_WINDOWS)
@@ -1667,7 +1685,22 @@ void TtaInitializeAppRegistry (char *appArgv0)
   /* read the user's preferences (if they exist) */
   if (app_home && *app_home != EOS)
     {
+#ifdef _MACOS
+      if (!TtaDirExists (app_home_mac))
+          sprintf (filename, "%s%c%s", app_home, DIR_SEP, THOT_RC_FILENAME);
+      else
+      {	
+         sprintf (filename, "%s%c%s", app_home, DIR_SEP, THOT_RC_FILENAME);
+         if (!TtaFileExist (&filename[0]))
+            {
+	      /* The first time, the thot.rc file is copied from the previous location */
+              sprintf (filename_orig, "%s%c%s", app_home_orig, DIR_SEP, THOT_RC_FILENAME);
+              TtaFileCopy (filename_orig, filename);
+            }
+      }
+#else /* _MACOS */
       sprintf (filename, "%s%c%s", app_home, DIR_SEP, THOT_RC_FILENAME);
+#endif /* _MACOS */
       if (TtaFileExist (&filename[0]))
         {
 #ifdef DEBUG_REGISTRY
