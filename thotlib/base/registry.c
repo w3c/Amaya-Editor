@@ -1246,7 +1246,7 @@ void TtaInitializeAppRegistry (char *appArgv0)
 #endif /* _UNIX */
 #ifdef _MACOS
 #define       MACOSX_LIBRARY      "Library"
-#define       MACOSX_PREFERENCES  "Preferences"
+#define       MACOSX_PREFERENCES  "Application Support"
   char        realexecname[MAX_LENGTH];
   char        app_home_mac[MAX_PATH];
   char        app_home_orig[MAX_PATH];
