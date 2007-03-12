@@ -560,7 +560,7 @@ STRUCT
   FIELDSET =                                                        { FIELDSET }
         BEGIN
         LEGEND;
-        Basic_Set;
+        Fieldset_Content = LIST OF (Element);
         END;
 
   LEGEND                                                        { LEGEND }
@@ -1070,6 +1070,7 @@ EXCEPT
         IFRAME:         NoBreakByReturn, NoReplicate, NoSpellCheck;
         Iframe_Content: Hidden, NoSelect, NoCut, NoBreakByReturn;
         Iframe_Src_Content: Hidden, NoCut, NoSelect;
+        Fieldset_Content: Hidden, NoSelect, NoCut, NoBreakByReturn;
         is_css:         Invisible;
         Start:          StartCounter;
         ItemValue:      SetCounter;

@@ -309,7 +309,7 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
   Document       doc;   
   ElementType    elType, newElType, childType;
   Element        child, desc, leaf, prev, next, last,
-    elFrames, lastFrame, lastChild, parent, picture, content;
+    elFrames, lastFrame, lastChild, parent, picture, content, legend;
   Attribute      attr;
   AttributeType  attrType;
   SSchema        htmlSchema;
@@ -317,8 +317,7 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
   char           *text;
   char           lastChar[2];
   char           *name1, *data;
-  char           msgBuffer[MaxMsgLength];
-  int            lineNum, typenum, length;
+  int            typenum, length;
   ThotBool       isImage, isInline, clean;
 
   *error = 0;
@@ -700,6 +699,7 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
       /* Check the mandatory name attribute */
       CheckMandatoryAttribute (el, doc, HTML_ATTR_Param_name);
       break;
+
 
     case HTML_EL_IFRAME:	  /* it's an iframe */
       child = TtaGetFirstChild (el);
@@ -1148,21 +1148,77 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
       while (prev);
       break;
 
-    case HTML_EL_FIELDSET:
-       
+    case HTML_EL_FIELDSET:	  /* it's a fieldset */
       childType.ElTypeNum = 0;
       child = TtaGetFirstChild (el);
-      if (child != NULL)
-        childType = TtaGetElementType (child);
-      if (childType.ElTypeNum != HTML_EL_LEGEND)
+      if (!child)
+        /* empty fieldset. Create a legend and a Fieldset_Content */
         {
-          sprintf (msgBuffer, "The <fieldset> element requires <legend> as first child element");
-          lineNum = TtaGetElementLineNumber(el);
-          if (DocumentMeta[doc] && DocumentMeta[doc]->xmlformat)
-            XmlParseError (errorParsing, (unsigned char *)msgBuffer, lineNum);
+          elType.ElTypeNum = HTML_EL_LEGEND;
+          legend = TtaNewTree (doc, elType, "");
+          TtaInsertFirstChild (&legend, el, doc);
+          elType.ElTypeNum = HTML_EL_Fieldset_Content;
+          content = TtaNewTree (doc, elType, "");
+          TtaInsertSibling (content, legend, FALSE, doc);
+        }
+      else
+        /* is the legend element already created ? */
+        {
+          legend = NULL;
+          desc = child;
+          elType = TtaGetElementType (desc);
+          while (desc && elType.ElTypeNum != HTML_EL_LEGEND)
+            {
+              TtaNextSibling(&desc);
+              if (desc)
+                elType = TtaGetElementType (desc);
+            }
+          /* is it the legend element ? */
+          if (elType.ElTypeNum == HTML_EL_LEGEND)
+            legend = desc;
           else
-            HTMLParseError (doc, msgBuffer, lineNum);
-
+            {
+              /* create a legend element */
+              elType.ElTypeNum = HTML_EL_LEGEND;
+              legend = TtaNewTree (doc, elType, "");
+              TtaInsertFirstChild (&legend, el, doc);
+            }
+          
+          /* is the Fieldset_Content element already created ? */
+          content = NULL;
+          desc = child;
+          elType = TtaGetElementType (desc);
+          while (desc && elType.ElTypeNum != HTML_EL_Fieldset_Content)
+            {
+              TtaNextSibling(&desc);
+              if (desc)
+                elType = TtaGetElementType (desc);
+            }
+          /* is it the Fieldset_Content element ? */
+          if (elType.ElTypeNum == HTML_EL_Fieldset_Content)
+            content = desc;
+          else
+            {
+              /* create a Fieldset_Content element */
+              elType.ElTypeNum = HTML_EL_Fieldset_Content;
+              content = TtaNewTree (doc, elType, "");
+              TtaInsertSibling (content, legend, FALSE, doc);
+              desc = TtaGetFirstChild (content);
+              /* move previous existing children into the Fieldset_Content */
+              child = TtaGetLastChild(el);
+              while (child != content)
+                {
+                  elType = TtaGetElementType (child);
+                  TtaRemoveTree (child, doc);
+                  TtaInsertFirstChild (&child, content, doc);
+                  if (desc)
+                    {
+                      TtaDeleteTree (desc, doc);
+                      desc = NULL;
+                    }
+                  child = TtaGetLastChild(el);
+                }
+            }
         }
       break;
 

@@ -810,7 +810,7 @@ RULES
 	Create Attributes;
 	Create '>';
 	create SCT after;
-	Create 'legend>' After;
+	Create 'legend>\12' After;
 	END;
 
  LABEL: BEGIN
