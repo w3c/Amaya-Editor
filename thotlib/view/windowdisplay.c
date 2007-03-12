@@ -192,11 +192,11 @@ static void  DrawOneLine (int frame, int x1, int y1, int x2, int y2)
   HPEN     hOldPen;
   HDC      display;
 
-  if (thick == 0)
-    hPen = CreatePen (PS_NULL, thick, Draw_color);
+  if (Draw_thick == 0)
+    hPen = CreatePen (PS_NULL, Draw_thick, Draw_color);
   else
     {
-      switch (style)
+      switch (Draw_style)
         {
         case 3:
           hPen = CreatePen (PS_DOT, Draw_thick, Draw_color);
@@ -621,7 +621,7 @@ void DrawSigma (int frame, int x, int y, int l, int h, ThotFont font, int fg)
       DrawOneLine (frame, x, y + h - 2, xm, ym);
        
       /* Borders */
-      DrawOneLine (frame, x, y, x + l, y, fg);
+      DrawOneLine (frame, x, y, x + l, y);
       DrawOneLine (frame, x, y + h - 2, x + l, y + h - 2);
     }
 }
