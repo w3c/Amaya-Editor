@@ -5118,7 +5118,7 @@ void ParseExternalDocument (char *fileName, char *originalName, Element el,
   NotifyElement event;
   DisplayMode   dispMode;
   gzFile        infile;
-  int           parsingLevel;
+  int           parsingLevel, saveDocNet;
   char          charsetname[MAX_LENGTH];
   char          type[NAME_LENGTH];
   char         *extUseUri = NULL, *extUseId = NULL, *s = NULL, *htmlURL = NULL;
@@ -5400,9 +5400,10 @@ void ParseExternalDocument (char *fileName, char *originalName, Element el,
     {
       /* Fetch and display the recursive images */
       /* modify the net status */
+      saveDocNet = DocNetworkStatus[doc];
       DocNetworkStatus[doc] = AMAYA_NET_ACTIVE;
       FetchAndDisplayImages (doc, AMAYA_LOAD_IMAGE, extEl);
-      DocNetworkStatus[doc] = AMAYA_NET_INACTIVE;
+      DocNetworkStatus[doc] = saveDocNet;
       /* Make the external element not editable */
       TtaSetAccessRight (extEl, ReadOnly, doc);
     }
