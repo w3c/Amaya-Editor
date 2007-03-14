@@ -218,8 +218,8 @@ static char *UpdateCSSImport (char *oldpath, char *newpath, char **styleString)
 }
 
 /*----------------------------------------------------------------------
-  UpdateCSSURLs searches strings url() or url("") within the styleString
-  and makes it relative to the newpath.
+  UpdateCSSURLs searches url() or url("") within the styleString
+  and makes these urls relative to the newpath.
   oldpath = the old CSS path
   newpath = the new CSS path
   imgpath = new relative path for images
@@ -289,8 +289,6 @@ char *UpdateCSSURLs (Document doc, char *oldpath, char *newpath,
               len = (int)(e - b);
               strncpy (oldname, b, len);
               oldname[len] = EOS;
-              /* get the image name */
-              //TtaExtractName (oldname, newname, imgname);
               // get the old full URL and the name of the image
               NormalizeURL (oldname, 0, old_url, imgname, oldpath);
               /* build the new full image name */
@@ -300,88 +298,94 @@ char *UpdateCSSURLs (Document doc, char *oldpath, char *newpath,
                 newname[0] = EOS;
               strcat (newname, imgname);
               newlen = strlen (newname);
-              /* generate the new style string */
-              if (newlen > len)
+              if (newlen != len || strcmp (oldname, newname))
                 {
-                  // a memory allocation is necessary
-                  if (newString)
-                    oldptr = newString;
-                  else
-                    oldptr = styleString;
- 
-                  len = - len + strlen (oldptr) + newlen + 1;
-                  newString = (char *)TtaGetMemory (len);	  
-                  len = (int)(b - oldptr);
-                  strncpy (newString, oldptr, len);
-                  sString = &newString[len];
-                  /* new name */
-                  strcpy (sString, newname);
-                  /* following text */
-                  strcat (sString, e);
-                  TtaFreeMemory (oldptr);
-                }
-              else
-                {
-                  // there is enough space
-                  strncpy (b, newname, newlen);
-                  sString = &b[newlen];
-                  if (newlen < len)
-                    // reduce the size of the full string
-                    strcpy (sString, e);
-                  // note that a change is done
-                  if (newString == NULL)
-                    newString = styleString;
-                }
-              if (imgSave && newname[0] != EOS && old_url[0] != EOS)
-                {
-                  // get the new full URL of the image
-                  NormalizeURL (newname, 0, new_url, imgname, newpath);
-                  src_is_local = !IsW3Path (old_url);
-                  dst_is_local = !IsW3Path (new_url);
-#ifdef AMAYA_DEBUG
-  fprintf(stderr, "Move image: from %s to %s\n", old_url, new_url);
-#endif
-                  /* mark the image descriptor or copy the file */
-                  if (dst_is_local)
+                  /* generate the new style string */
+                  if (newlen > len)
                     {
-                      /* copy the file to the new location */
-                      if (src_is_local)
-                        TtaFileCopy (old_url, new_url);
+                      // a memory allocation is necessary
+                      if (newString)
+                        oldptr = newString;
                       else
-                        {
-                           /* it was a remote image:
-                             get the image descriptor to prepare the saving process */
-                          pImage = SearchLoadedImageByURL (doc, old_url);
-                          if (pImage && pImage->tempfile)
-                            TtaFileCopy (pImage->tempfile, new_url);
-                        }
+                        oldptr = styleString;
+ 
+                      len = - len + strlen (oldptr) + newlen + 1;
+                      newString = (char *)TtaGetMemory (len);	  
+                      len = (int)(b - oldptr);
+                      strncpy (newString, oldptr, len);
+                      sString = &newString[len];
+                      /* new name */
+                      strcpy (sString, newname);
+                      /* following text */
+                      strcat (sString, e);
+                      TtaFreeMemory (oldptr);
                     }
                   else
                     {
-                      /* save to a remote server */
-                      if (src_is_local)
-                        /* add the existing localfile to images list to be saved */
-                        AddLocalImage (old_url, imgname, new_url, doc, &pImage);
+                      // there is enough space
+                      strncpy (b, newname, newlen);
+                      sString = &b[newlen];
+                      if (newlen < len)
+                        // reduce the size of the full string
+                        strcpy (sString, e);
+                      // note that a change is done
+                      if (newString == NULL)
+                        newString = styleString;
+                    }
+                  if (imgSave && newname[0] != EOS && old_url[0] != EOS)
+                    {
+                      // get the new full URL of the image
+                      NormalizeURL (newname, 0, new_url, imgname, newpath);
+                      src_is_local = !IsW3Path (old_url);
+                      dst_is_local = !IsW3Path (new_url);
+#ifdef AMAYA_DEBUG
+  fprintf(stderr, "Move image: from %s to %s\n", old_url, new_url);
+#endif
+                      /* mark the image descriptor or copy the file */
+                      if (dst_is_local)
+                        {
+                          /* copy the file to the new location */
+                          if (src_is_local)
+                            TtaFileCopy (old_url, new_url);
+                          else
+                            {
+                              /* it was a remote image:
+                                 get the image descriptor to prepare the saving process */
+                              pImage = SearchLoadedImageByURL (doc, old_url);
+                              if (pImage && pImage->tempfile)
+                                TtaFileCopy (pImage->tempfile, new_url);
+                            }
+                        }
                       else
                         {
-                          /* it was a remote image:
-                             get the image descriptor to prepare the saving process */
-                          pImage = SearchLoadedImageByURL (doc, old_url);
-                          /* update the descriptor */
-                          if (pImage)
+                          /* save to a remote server */
+                          if (src_is_local)
+                            /* add the existing localfile to images list to be saved */
+                            AddLocalImage (old_url, imgname, new_url, doc, &pImage);
+                          else
                             {
-                              /* image was already loaded */
-                              if (pImage->originalName)
-                                TtaFreeMemory (pImage->originalName);
-                              pImage->originalName = TtaStrdup (new_url);
-                              if (TtaFileExist(pImage->localName))
-                                pImage->status = IMAGE_MODIFIED;
-                              else
-                                pImage->status = IMAGE_NOT_LOADED;
+                              /* it was a remote image:
+                                 get the image descriptor to prepare the saving process */
+                              pImage = SearchLoadedImageByURL (doc, old_url);
+                              /* update the descriptor */
+                              if (pImage)
+                                {
+                                  /* image was already loaded */
+                                  if (pImage->originalName)
+                                    TtaFreeMemory (pImage->originalName);
+                                  pImage->originalName = TtaStrdup (new_url);
+                                  if (TtaFileExist(pImage->localName))
+                                    pImage->status = IMAGE_MODIFIED;
+                                  else
+                                    pImage->status = IMAGE_NOT_LOADED;
+                                }
                             }
                         }
                     }
                 }
+              else
+                // no change: just skip this url
+                sString = &b[newlen];
             }
           else
             sString = b;

@@ -11,10 +11,21 @@ extern ThotBool CheckGenerator ( NotifyElement *event );
 extern ThotBool CheckUSEMAP ( NotifyAttribute *event );
 extern ThotBool CheckValidEntity ( NotifyAttribute *event );
 extern ThotBool CheckValidID ( NotifyAttribute *event );
+extern void LoadResource ( Document doc,
+                           char *url,
+                           char *localfile );
+extern char *UpdateResource ( Document doc,
+                              char *oldpath,
+                              char *newpath,
+                              char *relpath,
+                              char *sString,
+                              ThotBool saveResources,
+                              ThotBool isLink );
 extern void SetRelativeURLs ( Document doc,
                               char *newpath,
-                              ThotBool skipImages,
-                              ThotBool skipCSS );
+                              char *cssbase,
+                              ThotBool savedImages,
+                              ThotBool savedResources );
 extern void InitSaveObjectForm ( Document document,
                                  View view,
                                  char *object,
@@ -67,10 +78,21 @@ extern ThotBool CheckGenerator ( NotifyElement *event );
 extern ThotBool CheckUSEMAP ( NotifyAttribute *event );
 extern ThotBool CheckValidEntity ( NotifyAttribute *event );
 extern ThotBool CheckValidID ( NotifyAttribute *event );
+extern void LoadResource ( Document doc,
+                             char *url,
+                             char *localfile );
+extern char *UpdateResource ( Document doc,
+                                char *oldpath,
+                                char *newpath,
+                                char *relpath,
+                                char *sString,
+                                ThotBool saveResources,
+                                ThotBool isLink );
 extern void SetRelativeURLs ( Document doc,
                                 char *newpath,
-                                ThotBool skipImages,
-                                ThotBool skipCSS );
+                                char *cssbase,
+                                ThotBool savedImages,
+                                ThotBool savedResources );
 extern void InitSaveObjectForm ( Document document,
                                    View view,
                                    char *object,

@@ -81,7 +81,7 @@
 79 Salvo su disco ?
 80 Copia immagini
 81 Trasforma URL
-82 Collocazione del documento
+82 **Where to save
 83 Directory delle immagini
 84 Collocazione dell'oggetto
 85 CSS file
@@ -409,7 +409,8 @@
 406 **Degree
 407 **Degree of the variable number %d
 408 **Compound document
-409 Copia Css
-410 Directory delle CSS
-411 **Document
-412 **Images & Style
+409 **Copy style sheets and scripts
+410 **Where to save resources
+411 **Where to save imagess
+412 **Document
+413 **Images, Styles and Scripts

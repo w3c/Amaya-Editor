@@ -85,7 +85,7 @@ void  CreateInstance(char *templatePath, char *instancePath)
       else
         docType = docXml;
       // update all links
-      SetRelativeURLs (doc, instancePath, FALSE, FALSE);
+      SetRelativeURLs (doc, instancePath, "", FALSE, FALSE);
       
       switch (docType)
         {

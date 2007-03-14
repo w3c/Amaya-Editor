@@ -138,7 +138,7 @@ SaveAsDlgWX::SaveAsDlgWX( int ref, wxWindow* parent, const wxString & pathname,
       XRCCTRL(*this, "wxID_TRANSFORM_URLS_CHK", wxCheckBox)->SetValue(UpdateURLs);
 
       // Image directory
-      XRCCTRL(*this, "wxID_IMG_LOCATION", wxStaticText)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_IMAGES_LOCATION) ));
+      XRCCTRL(*this, "wxID_IMG_LOCATION", wxStaticText)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_WHERE_IMAGE) ));
       if (saveImgs)
         {
           int end_slash_pos = pathname.Find(DIR_SEP, true);
@@ -150,7 +150,7 @@ SaveAsDlgWX::SaveAsDlgWX( int ref, wxWindow* parent, const wxString & pathname,
         XRCCTRL(*this, "wxID_IMG_LOCATION_CTRL", wxTextCtrl)->SetEditable (false);
 
       // CSS directory
-      XRCCTRL(*this, "wxID_CSS_LOCATION", wxStaticText)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_CSS_LOCATION) ));
+      XRCCTRL(*this, "wxID_CSS_LOCATION", wxStaticText)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_WHERE_RESOURCE) ));
       XRCCTRL(*this, "wxID_CSS_LOCATION_CTRL", wxTextCtrl)->SetEditable (false);
     }
   

@@ -1154,19 +1154,16 @@
 <message xml:lang="cn">变换URL</message>
 <message xml:lang="tw">變換URL</message></label>
 <label define="AM_DOC_LOCATION">
-<message xml:lang="en">Document location</message>
-<message xml:lang="fr">Adresse du document</message>
-<message xml:lang="de">Dokument</message>
-<message xml:lang="it">Collocazione del documento</message>
+<message xml:lang="en">Where to save</message>
+<message xml:lang="fr">Où sauver</message>
 <message xml:lang="tr">Belgenin adresi</message>
-<message xml:lang="es">Ubicación de documento:</message>
 <message xml:lang="pt">Localização do documento</message>
 <message xml:lang="fi">Dokumentin sijainti</message>
 <message xml:lang="ru">Расположение документа</message>
-<message xml:lang="hu">Dokumentum helye</message>
 <message xml:lang="ka">დოკუმენტის ადგილმდებარეობა</message>
 <message xml:lang="cn">文档位置</message>
-<message xml:lang="tw">文檔位置</message></label>
+<message xml:lang="tw">文檔位置</message>
+</label>
 <label define="AM_IMAGES_LOCATION">
 <message xml:lang="en">Images directory</message>
 <message xml:lang="fr">Répertoire des images</message>
@@ -5335,38 +5332,24 @@
 <message xml:lang="hu">Összetett dokumentum</message>
 </label>
 <label define="AM_BCOPY_CSS">
-<message xml:lang="en">Copy Css style sheets</message>
-<message xml:lang="fr">Copier les feuilles de style Css</message>
-<message xml:lang="de">Css kopieren</message>
-<message xml:lang="it">Copia Css</message>
-<message xml:lang="tr">Css kopyala</message>
-<message xml:lang="es">Copiar Css</message>
-<message xml:lang="pt">Copiar Css</message>
-<message xml:lang="fi">Kopioi Css</message>
-<message xml:lang="ru">Копировать Css</message>
-<message xml:lang="hu">Képek Css</message>
+<message xml:lang="en">Copy style sheets and scripts</message>
+<message xml:lang="fr">Copier les styles et scripts</message>
 </label>
-<label define="AM_CSS_LOCATION">
-<message xml:lang="en">Css directory</message>
-<message xml:lang="fr">Répertoire des Css</message>
-<message xml:lang="de">Css Bilder</message>
-<message xml:lang="it">Directory delle CSS</message>
-<message xml:lang="tr">Css dizini</message>
-<message xml:lang="es">Directorio de Css</message>
-<message xml:lang="pt">Diretório de Css</message>
-<message xml:lang="fi">Css</message>
-<message xml:lang="ru">Css</message>
-<message xml:lang="hu">Css</message>
-<message xml:lang="ka">Css</message>
-<message xml:lang="cn">Css</message>
-<message xml:lang="tw">Css</message>
+<label define="AM_WHERE_RESOURCE">
+<message xml:lang="en">Where to save resources</message>
+<message xml:lang="fr">Où sauver les resources</message>
+</label>
+<label define="AM_WHERE_IMAGE">
+<message xml:lang="en">Where to save imagess</message>
+<message xml:lang="fr">Où sauver les images</message>
 </label>
 <label define="AM_QUICK_SAVE">
 <message xml:lang="en">Document</message>
 <message xml:lang="fr">Document</message>
 </label>
 <label define="AM_EXTENSION">
-<message xml:lang="en">Images &amp; Style</message>
-<message xml:lang="fr">Images &amp; Style</message>
+<message xml:lang="en">Images, Styles and Scripts</message>
+<message xml:lang="fr">Images, Styles et Scripts</message>
 </label>
-<label define="AMAYA_MSG_MAX"></label></messages></base>
+<label define="AMAYA_MSG_MAX"></label>
+</messages></base>

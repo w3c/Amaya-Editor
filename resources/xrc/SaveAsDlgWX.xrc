@@ -29,7 +29,7 @@
                           <flag>wxALL|wxEXPAND</flag>
                         </object>
                         <object class="spacer">
-                          <size>0,20</size>
+                          <size>0,5</size>
                         </object>
                         <object class="sizeritem">
                           <object class="wxBoxSizer">
@@ -219,7 +219,7 @@
                       <flag>wxEXPAND</flag>
                     </object>
                     <object class="spacer">
-                      <size>0,10</size>
+                      <size>0,5</size>
                     </object>
                     <object class="sizeritem">
                       <object class="wxBoxSizer">
@@ -261,7 +261,7 @@
                       <flag>wxEXPAND</flag>
                     </object>
                     <object class="spacer">
-                      <size>0,10</size>
+                      <size>0,5</size>
                     </object>
                     <object class="sizeritem">
                       <object class="wxBoxSizer">

@@ -81,7 +81,7 @@
 79 ¿Guardar en disco?
 80 Copiar imágenes
 81 Transformar URLs
-82 Ubicación de documento:
+82 **Where to save
 83 Directorio de imágenes:
 84 Ubicación de objeto
 85 Hojas de estilo enlazadas:
@@ -408,7 +408,8 @@
 406 Grado
 407 Grado de la variable %d
 408 Documento compuesto
-409 Copiar Css
-410 Directorio de Css
-411 **Document
-412 **Images & Style
+409 **Copy style sheets and scripts
+410 **Where to save resources
+411 **Where to save imagess
+412 **Document
+413 **Images, Styles and Scripts

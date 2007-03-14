@@ -69,7 +69,7 @@ ThotBool IsTemplateInstanceDocument(Document doc)
 ThotBool IsTemplateDocument(Document doc)
 {
 #ifdef TEMPLATES
-  return (DocumentMeta[doc]!=NULL) && (DocumentMeta[doc]->template_url==NULL);
+  return (DocumentMeta[doc] != NULL && DocumentMeta[doc]->template_url == NULL);
 #else  /* TEMPLATES */
   return FALSE;
 #endif /* TEMPLATES */
@@ -84,14 +84,16 @@ ThotBool IsTemplateDocument(Document doc)
   ----------------------------------------------------------------------*/
 void* AllocTemplateRepositoryListElement (const char* path, void* prevElement)
 {
-  Prop_Templates_Path *element = (Prop_Templates_Path*)TtaGetMemory (sizeof(Prop_Templates_Path));
-  element->NextPath = NULL;
-  strcpy (element->Path, path);
+  Prop_Templates_Path *element;
+
+  element  = (Prop_Templates_Path*)TtaGetMemory (sizeof(Prop_Templates_Path));
+  memset (element, 0, sizeof(Prop_Templates_Path));
+  strncpy (element->Path, path, MAX_LENGTH - 1);
   if (prevElement)
-  {
-    element->NextPath = ((Prop_Templates_Path*)prevElement)->NextPath;
-    ((Prop_Templates_Path*)prevElement)->NextPath = element;
-  }
+    {
+      element->NextPath = ((Prop_Templates_Path*)prevElement)->NextPath;
+      ((Prop_Templates_Path*)prevElement)->NextPath = element;
+    }
   return element;
 }
 
@@ -175,46 +177,47 @@ static int LoadTemplateRepositoryList (Prop_Templates_Path** list)
   }
   
   if (file)
-  {
-    c = (unsigned char*)path;
-    *c = EOS;
-    while (TtaReadByte (file, c)){
-      if (*c==13 || *c==EOL)
-        *c = EOS;
-      if (*c==EOS && c!=(unsigned char*)path )
-      {
-        element = (Prop_Templates_Path*) TtaGetMemory (sizeof(Prop_Templates_Path));
-        element->NextPath = NULL;
-        strcpy (element->Path, path);
-        
-        if (*list == NULL)
-          *list = element; 
-        else
-          current->NextPath = element;
-        current = element;
-        nb++;
-
-        c = (unsigned char*) path;
-        *c = EOS;
-      }
-      else
-        c++;
-    }
-    if (c!=(unsigned char*)path && *path!=EOS)
     {
-      element = (Prop_Templates_Path*) TtaGetMemory (sizeof(Prop_Templates_Path));
-      *(c+1) = EOS;
-      strcpy (element->Path, path);
-      element->NextPath = NULL;
+      c = (unsigned char*)path;
+      *c = EOS;
+      while (TtaReadByte (file, c))
+        {
+          if (*c == 13 || *c == EOL)
+            *c = EOS;
+          if (*c == EOS && c != (unsigned char*)path )
+            {
+              element = (Prop_Templates_Path*) TtaGetMemory (sizeof(Prop_Templates_Path));
+              element->NextPath = NULL;
+              strcpy (element->Path, path);
+        
+              if (*list == NULL)
+                *list = element; 
+              else
+                current->NextPath = element;
+              current = element;
+              nb++;
+
+              c = (unsigned char*) path;
+              *c = EOS;
+            }
+          else
+            c++;
+        }
+      if (c != (unsigned char*)path && *path != EOS)
+        {
+          element = (Prop_Templates_Path*) TtaGetMemory (sizeof(Prop_Templates_Path));
+          *(c+1) = EOS;
+          strcpy (element->Path, path);
+          element->NextPath = NULL;
       
-      if (*list == NULL)
-        *list = element; 
-      else
-        current->NextPath = element;
-      nb++;
+          if (*list == NULL)
+            *list = element; 
+          else
+            current->NextPath = element;
+          nb++;
+        }
+      TtaReadClose (file);
     }
-    TtaReadClose (file);
-  }
   TtaFreeMemory(path);
   return nb;
 }

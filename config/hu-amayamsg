@@ -81,7 +81,7 @@
 79 Lemezre mentés?
 80 Képek másolása
 81 URL-ek átalakítása
-82 Dokumentum helye
+82 **Where to save
 83 Képek mappája
 84 Objektum helye
 85 CSS fájlok
@@ -408,7 +408,8 @@
 406 Rend
 407 A változó rendje (%d)
 408 Összetett dokumentum
-409 Képek Css
-410 Css
-411 **Document
-412 **Images & Style
+409 **Copy style sheets and scripts
+410 **Where to save resources
+411 **Where to save imagess
+412 **Document
+413 **Images, Styles and Scripts

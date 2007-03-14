@@ -360,13 +360,13 @@ void LoadTemplate (Document doc, char* templatename)
   Load a library with all its dependancies.
   @param t Template of preimported library.
   ----------------------------------------------------------------------*/
-void Template_LoadXTigerTemplateLibrary(XTigerTemplate t)
+void Template_LoadXTigerTemplateLibrary (XTigerTemplate t)
 {
 #ifdef TEMPLATES
   Record rec;
   Document newdoc = 0;
   
-  if(t && !t->isLoaded)
+  if (t && !t->isLoaded)
   {
     // Load the document (look at LoadTemplate)
     TemplateCtxt *ctx = (TemplateCtxt *)TtaGetMemory (sizeof (TemplateCtxt));
@@ -374,7 +374,8 @@ void Template_LoadXTigerTemplateLibrary(XTigerTemplate t)
     ctx->isloaded = FALSE;
     ctx->t = t;
     newdoc = GetAmayaDoc (t->name, NULL, 0, 0, CE_TEMPLATE, FALSE, 
-                          (void (*)(int, int, char*, char*, char*, const AHTHeaders*, void*)) LoadTemplate_callback,
+                          (void (*)(int, int, char*, char*, char*,
+                                    const AHTHeaders*, void*)) LoadTemplate_callback,
                           (void *) ctx);
     while (!ctx->isloaded)
       TtaHandlePendingEvents ();
@@ -382,10 +383,10 @@ void Template_LoadXTigerTemplateLibrary(XTigerTemplate t)
     Template_PreParseDeclarations(t, 0);
 
     // Load dependancies
-    for(rec=t->libraries->first; rec; rec=rec->next)
+    for (rec = t->libraries->first; rec; rec = rec->next)
     {
-      Template_LoadXTigerTemplateLibrary((XTigerTemplate)rec->element);
-      AddLibraryDeclarations(t, (XTigerTemplate)rec->element);
+      Template_LoadXTigerTemplateLibrary ((XTigerTemplate)rec->element);
+      AddLibraryDeclarations (t, (XTigerTemplate)rec->element);
     }
 
     Template_ParseDeclarations  (t, 0);
@@ -398,7 +399,6 @@ void Template_LoadXTigerTemplateLibrary(XTigerTemplate t)
 
     TtaFreeMemory(ctx->templatePath);
     TtaFreeMemory(ctx);
-
   }  
 #endif /* TEMPLATES */
 }

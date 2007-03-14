@@ -2796,8 +2796,6 @@ void PublishConfMenu (Document document, View view)
   ----------------------------------------------------------------------*/
 void GetBrowseConf (void)
 {
-  ThotBool val;
-
   TtaGetEnvInt ("NEW_LOCATION", &(GProp_Browse.OpeningLocation));
   TtaGetEnvBoolean ("LOAD_IMAGES", &(GProp_Browse.LoadImages));
   TtaGetEnvBoolean ("LOAD_OBJECTS", &(GProp_Browse.LoadObjects));

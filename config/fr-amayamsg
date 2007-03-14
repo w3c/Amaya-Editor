@@ -81,7 +81,7 @@
 79 Sauvegarder sur le disque ?
 80 Copier les images
 81 Transformer les URL
-82 Adresse du document
+82 Où sauver
 83 Répertoire des images
 84 Adresse de l'objet
 85 Fichier CSS
@@ -408,7 +408,8 @@
 406 Degré
 407 Degré de la variable numéro %d
 408 Document composé
-409 Copier les feuilles de style Css
-410 Répertoire des Css
-411 Document
-412 Images & Style
+409 Copier les styles et scripts
+410 Où sauver les resources
+411 Où sauver les images
+412 Document
+413 Images, Styles et Scripts

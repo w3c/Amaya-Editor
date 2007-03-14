@@ -81,7 +81,7 @@
 79 Save to disk ?
 80 Copy Images
 81 Transform URLs
-82 Document location
+82 Where to save
 83 Images directory
 84 Object location
 85 CSS files
@@ -408,7 +408,8 @@
 406 Degree
 407 Degree of the variable number %d
 408 Compound document
-409 Copy Css style sheets
-410 Css directory
-411 Document
-412 Images & Style
+409 Copy style sheets and scripts
+410 Where to save resources
+411 Where to save imagess
+412 Document
+413 Images, Styles and Scripts

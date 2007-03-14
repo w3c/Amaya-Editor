@@ -81,7 +81,7 @@
 79 Speichern auf Festplatte?
 80 Bilder kopieren
 81 URIs transformieren
-82 Dokument
+82 **Where to save
 83 Bilder
 84 Objektadresse
 85 Formatvorlagen
@@ -408,7 +408,8 @@
 406 Grad
 407 Grad der Variable mit Nummer %d
 408 Mischdokument
-409 Css kopieren
-410 Css Bilder
-411 **Document
-412 **Images & Style
+409 **Copy style sheets and scripts
+410 **Where to save resources
+411 **Where to save imagess
+412 **Document
+413 **Images, Styles and Scripts
