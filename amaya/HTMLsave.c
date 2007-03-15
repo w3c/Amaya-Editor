@@ -71,6 +71,7 @@ extern HINSTANCE    hInstance;
 static char        *DefaultName;
 static char         tempSavedObject[MAX_LENGTH];
 static ThotBool     TextFormat;
+static ThotBool     Saving_lock = FALSE;
 /* list attributes checked for updating URLs */
 static AttSearch    URL_attr_tab[] = {
   {HTML_ATTR_HREF_, XHTML_TYPE},
@@ -987,11 +988,13 @@ void InitSaveObjectForm (Document document, View view, char *object,
                          char *pathname)
 {
 #ifndef _WINGUI
-  char                tempdir[MAX_LENGTH];
+  char           tempdir[MAX_LENGTH];
 #endif /* _WINGUI */
 
-  if (SavingDocument || SavingObject)
+  if (Saving_lock)
+    // there is a current saving operation
     return;
+
   SavingObject = document;
   strncpy (tempSavedObject, object, sizeof (tempSavedObject));
 #ifdef _GTK
@@ -1042,8 +1045,11 @@ void DoSaveObjectAs (void)
   int            res;
   ThotBool       dst_is_local;
    
-  if (SavingObject == 0)
+  if (Saving_lock)
+    // there is a current saving operation
     return;
+  // start the saving operation
+  Saving_lock = TRUE;
 
   /* @@ JK Testing to see if this part of the function is used elsewhere */
   /*
@@ -1065,6 +1071,7 @@ void DoSaveObjectAs (void)
                           | AMAYA_USE_PRECONDITIONS, NULL, NULL);
       if (res)
         {
+          Saving_lock = FALSE;
 #ifndef _WINGUI
           TtaSetDialoguePosition ();
           TtaShowDialogue (BaseDialog + SaveForm, FALSE);
@@ -1073,6 +1080,7 @@ void DoSaveObjectAs (void)
         }
       SavingObject = 0;
       SavingDocument = 0;
+      Saving_lock = FALSE;
       return;
     }
 
@@ -1091,6 +1099,7 @@ void DoSaveObjectAs (void)
           // redisplay Save form
           res = SavingObject;
           SavingObject = 0;
+          Saving_lock = FALSE;
           InitSaveObjectForm (res, 1, SavePath, ObjectName);
           return;
         }
@@ -1138,11 +1147,20 @@ void SaveDocumentAs (Document doc, View view)
   char                tempname[MAX_LENGTH];
   int                 i;
 
-  /* Protection against multiple invocations of this function */
-  if ((SavingDocument && SavingDocument != doc) || SavingObject)
-    return;
   if (DocumentURLs[doc] == 0)
     return;
+  /* Protection against multiple invocations of this function */
+  if (Saving_lock)
+    {
+      sprintf (tempname, TtaGetMessage (AMAYA, AM_CANNOT_SAVE), DocumentURLs[doc]);
+      InitInfo (NULL, tempname);
+      // there is a current saving operation
+      return;
+    }
+
+  if (SavingDocument || SavingObject)
+    // close the previous saving dialog
+    CallbackDialogue (BaseDialog + SaveForm, INTEGER_DATA, (char*) 0);
 
   TextFormat = (DocumentTypes[doc] == docText ||
                 DocumentTypes[doc] == docCSS ||
@@ -2907,6 +2925,13 @@ void SaveDocument (Document doc, View view)
   ThotBool            ok, newLineNumbers;
   ThotBool            with_suffix = FALSE;
 
+  if (DocumentURLs[doc] == 0)
+    return;
+
+  if (Saving_lock)
+    // there is a current saving operation
+    return;
+
   if (DocumentTypes[doc] == docAnnot) 
     {
 #ifdef ANNOTATIONS
@@ -2914,10 +2939,10 @@ void SaveDocument (Document doc, View view)
 #endif /* ANNOTATIONS */
       return;
     }
-  else if (SavingDocument != 0 || SavingObject != 0)
-    return;
-  else if (DocumentURLs[doc] == 0)
-    return;
+
+  if (SavingDocument || SavingObject)
+    // close the previous saving dialog
+    CallbackDialogue (BaseDialog + SaveForm, INTEGER_DATA, (char*) 0);
 
   TextFormat = (DocumentTypes[doc] == docText ||
                 DocumentTypes[doc] == docCSS ||
@@ -2931,6 +2956,7 @@ void SaveDocument (Document doc, View view)
       (xmlDoc == 0 || !TtaIsDocumentModified (xmlDoc)))
     {
       TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_NOTHING_TO_SAVE), "");
+      Saving_lock = FALSE;
       return;
     }
   SavingDocument = doc;
@@ -2944,23 +2970,25 @@ void SaveDocument (Document doc, View view)
     {
       /* add a compress warning */
       return;
-      tempname[i-2] = EOS;
+      /*tempname[i-2] = EOS;
       TtaFreeMemory (DocumentURLs[doc]);
-      DocumentURLs[doc] = TtaStrdup (tempname);
+      DocumentURLs[doc] = TtaStrdup (tempname);*/
     }
   else if (i > 1 && !strcmp (&tempname[i-1], ".Z"))
     {
       /* add a compress warning */
-      return;
-      tempname[i-1] = EOS;
+       return;
+      /*tempname[i-1] = EOS;
       TtaFreeMemory (DocumentURLs[doc]);
-      DocumentURLs[doc] = TtaStrdup (tempname);
+      DocumentURLs[doc] = TtaStrdup (tempname);*/
     }
 
 #ifdef AMAYA_DEBUG
   fprintf(stderr, "SaveDocument : %d to %s\n", doc, tempname);
 #endif
 
+  // start the saving operation
+  Saving_lock = TRUE;
   /* change display mode to avoid flicker due to callbacks executed when
      saving some elements, for instance META */
   dispMode = TtaGetDisplayMode (doc);
@@ -2999,9 +3027,10 @@ void SaveDocument (Document doc, View view)
         {
           // call Save As when there is no suffix
           SavingDocument = 0;
+          Saving_lock = FALSE;
           TtaSetDisplayMode (doc, dispMode);
           SaveDocumentAs (doc, view);
-          return;
+         return;
         }
 
       ptr = GetLocalPath (doc, DocumentURLs[doc]);
@@ -3054,8 +3083,10 @@ void SaveDocument (Document doc, View view)
 
   if (SavingDocument == 0)
     // the saving was discarded
+    Saving_lock = FALSE;
     return;
   SavingDocument = 0;
+  Saving_lock = FALSE;
   if (ok)
     {
       /* cancel the possible don't replace mark */
@@ -3241,7 +3272,8 @@ static ThotBool  AutoSaveDocument (Document doc, View view, char *local_url)
   ok = FALSE;
   if (DocumentTypes[doc] == docAnnot) 
     return (ok);
-  if (SavingDocument != 0 || SavingObject != 0)
+  if (Saving_lock)
+    // there is a current saving operation
     return (ok);
 
   TextFormat = (DocumentTypes[doc] == docText ||
@@ -4065,6 +4097,9 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
 
   if (SavingDocument == 0)
     return;
+  if (Saving_lock)
+    // there is a current saving operation
+    return;
 
   src_is_local = !IsW3Path (DocumentURLs[SavingDocument]);
   dst_is_local = !IsW3Path (SavePath);
@@ -4084,7 +4119,7 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
   documentFile = (char *)TtaGetMemory (MAX_LENGTH);
   strcpy (documentFile, SavePath);
   len = strlen (documentFile);
-  if (documentFile [len -1] != DIR_SEP && documentFile [len - 1] != '/')
+  if (len > 0 && documentFile [len -1] != DIR_SEP && documentFile [len - 1] != '/')
     {
       if (dst_is_local)
         {
@@ -4120,6 +4155,8 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
   else
     strcat (documentFile, SaveName);
 
+  // start the saving operation
+  Saving_lock = TRUE;
   doc = SavingDocument;
   // remove extra '/'
   len = strlen(SaveImgsURL);
@@ -4142,6 +4179,7 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
             {
               /* the user has to change the name of the saving file */
               /* display the dialog box */
+              Saving_lock = FALSE;
               InitSaveForm (doc, 1, documentFile);
               ok = FALSE;
             }
@@ -4154,6 +4192,7 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
           /* the user has to change the name of the images directory */
           /* display the dialog box */
           SavingDocument = 0;
+          Saving_lock = FALSE;
           InitSaveForm (doc, 1, documentFile);
           ok = FALSE;
         }
@@ -4269,6 +4308,7 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
                 TtaFreeMemory (base);
               /* the user has to change the name of the images directory */
               /* display the dialog box */
+              Saving_lock = FALSE;
               InitSaveForm (doc, 1, documentFile);
             }
           else
@@ -4292,6 +4332,7 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
                     TtaFreeMemory (base);
                   /* the user has to change the name of the images directory */
                   /* display the dialog box */
+                  Saving_lock = FALSE;
                   InitSaveForm (doc, 1, documentFile);
                 }
               else
@@ -4411,6 +4452,7 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
 
       /* the saving operation is finished now */
       SavingDocument = 0;
+      Saving_lock = FALSE;
       if (ok)
         {
           if (toUndo)

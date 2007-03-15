@@ -1660,7 +1660,6 @@ void CloseLogs (Document doc)
   -----------------------------------------------------------------------*/
 void FocusChanged (Document doc)
 {
-/* Temporary disabled to go round a crash on Mac OSX with the Show Applied Style window */
   int		     i;
 
   if ( DocumentTypes[doc] == docSource)
@@ -1674,7 +1673,7 @@ void FocusChanged (Document doc)
     if (DocumentURLs[i] && DocumentSource[i] != doc &&
         DocumentTypes[i] == docLog)
       {
-        /* close the window of the log file */
+        /* close this log file window */
         TtaCloseDocument (i);
         TtaFreeMemory (DocumentURLs[i]);
         DocumentURLs[i] = NULL;

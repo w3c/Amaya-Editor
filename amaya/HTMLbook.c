@@ -1794,6 +1794,8 @@ void MakeToc (Document doc, View view)
               TtaGiveTextAttributeValue(attr, value, &i);
               if (strcmp (value, "toc"))
                 attr = NULL;
+              TtaFreeMemory (value);
+              value = NULL;
             }
           else
             attr = NULL;

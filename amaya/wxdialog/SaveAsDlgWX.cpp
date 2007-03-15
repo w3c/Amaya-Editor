@@ -40,6 +40,7 @@ BEGIN_EVENT_TABLE(SaveAsDlgWX, AmayaDialog)
   EVT_TEXT( XRCID("wxID_CSS_LOCATION_CTRL"),     SaveAsDlgWX::OnCssLocation )
   EVT_COMBOBOX( XRCID("wxID_CHARSET_CB"),        SaveAsDlgWX::OnCharsetCbx )
   EVT_COMBOBOX( XRCID("wxID_MIME_TYPE_CB"),      SaveAsDlgWX::OnMimeTypeCbx )
+  EVT_CLOSE( SaveAsDlgWX::OnClose )
 END_EVENT_TABLE()
 
   /*----------------------------------------------------------------------
@@ -320,6 +321,15 @@ SaveAsDlgWX::~SaveAsDlgWX()
 }
 
 /*----------------------------------------------------------------------
+  OnClose
+  ----------------------------------------------------------------------*/
+void SaveAsDlgWX::OnClose( wxCloseEvent& event )
+{
+  Waiting = 0;
+  ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
+}
+
+/*----------------------------------------------------------------------
   OnConfirmButton called when clicking the Confirm button
   ----------------------------------------------------------------------*/
 void SaveAsDlgWX::OnConfirmButton( wxCommandEvent& event )
@@ -349,8 +359,8 @@ void SaveAsDlgWX::OnConfirmButton( wxCommandEvent& event )
         }
 
       // save callback
-      ThotCallback (MyRef, INTEGER_DATA, (char*) 1);
       Waiting = 0;
+      ThotCallback (MyRef, INTEGER_DATA, (char*) 1);
     }
 }
 
@@ -362,8 +372,8 @@ void SaveAsDlgWX::OnCancelButton( wxCommandEvent& event )
   //if (Waiting)
     {
       // a return is still requested
-      ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
       Waiting = 0;
+      ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
     }
 }
 

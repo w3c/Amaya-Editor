@@ -29,6 +29,7 @@ public:
 
 private:
     // Override base class functions of a wxDialog.
+  void OnClose( wxCloseEvent& event );
   void OnConfirmButton( wxCommandEvent& event );
   void OnCancelButton( wxCommandEvent& event );
   void OnBrowseButton( wxCommandEvent& event );

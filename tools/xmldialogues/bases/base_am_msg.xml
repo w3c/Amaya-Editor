@@ -5332,15 +5332,15 @@
 <message xml:lang="hu">Összetett dokumentum</message>
 </label>
 <label define="AM_BCOPY_CSS">
-<message xml:lang="en">Copy style sheets and scripts</message>
-<message xml:lang="fr">Copier les styles et scripts</message>
+<message xml:lang="en">Copy resources (styles and scripts)</message>
+<message xml:lang="fr">Copier les ressources (styles et scripts)</message>
 </label>
 <label define="AM_WHERE_RESOURCE">
 <message xml:lang="en">Where to save resources</message>
-<message xml:lang="fr">Où sauver les resources</message>
+<message xml:lang="fr">Où sauver les ressources</message>
 </label>
 <label define="AM_WHERE_IMAGE">
-<message xml:lang="en">Where to save imagess</message>
+<message xml:lang="en">Where to save images</message>
 <message xml:lang="fr">Où sauver les images</message>
 </label>
 <label define="AM_QUICK_SAVE">
