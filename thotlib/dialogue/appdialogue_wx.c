@@ -2149,9 +2149,6 @@ ThotBool TtaHandleShortcutKey( wxKeyEvent& event )
   wxComboBox *     p_combo_box         = wxDynamicCast(p_win_focus, wxComboBox);
   wxSpinCtrl *     p_spinctrl          = wxDynamicCast(p_win_focus, wxSpinCtrl);
   if (( p_text_ctrl || p_combo_box || p_spinctrl ) && event.CmdDown())
-      /* &&
-          (thot_keysym == 'C' || thot_keysym == 'X' || thot_keysym == 'V' || thot_keysym == 'Z' ||
-          thot_keysym == 'c' || thot_keysym == 'x' || thot_keysym == 'v' || thot_keysym == 'z')) )*/
     {
 #ifndef _WINDOWS
 	  // Windows already intercepts the command
@@ -2178,7 +2175,7 @@ ThotBool TtaHandleShortcutKey( wxKeyEvent& event )
             p_text_ctrl->Undo();
         }
 #endif /* _WINDOWS */
-      return true;      
+      return true;
     }
 
 #ifdef _MACOS

@@ -144,8 +144,11 @@ int GetFontFilename (char script, int family, int highlight, int size,
 #ifdef _WX
   if (GetFontFilenameFromConfig (script, family, highlight,  size, filename))
     return 1;
-  wxASSERT(FALSE); // should never append !
-  return 0;
+  else if (family > 1)
+    return GetFontFilename (script, 1, highlight, size, filename);
+  // wxASSERT(FALSE); // should never append !
+  else
+    return 0;
 #endif /* _WX */
 #endif /* #ifdef _WINDOWS */
 
