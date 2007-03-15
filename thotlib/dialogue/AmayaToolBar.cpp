@@ -66,6 +66,7 @@ AmayaToolBar::AmayaToolBar( wxWindow * p_parent, AmayaWindow * p_amaya_window_pa
   XRCCTRL(*this, "wxID_TOOL_STOP", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BUTTON_INTERRUPT)));
   XRCCTRL(*this, "wxID_TOOL_HOME", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BUTTON_HOME)));
   XRCCTRL(*this, "wxID_TOOL_SAVE", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BUTTON_SAVE)));
+  XRCCTRL(*this, "wxID_TOOL_OPEN", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage (LIB, TMSG_BUTTON_OPEN)));
   XRCCTRL(*this, "wxID_TOOL_PRINT", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BUTTON_PRINT)));
   XRCCTRL(*this, "wxID_TOOL_FIND", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BUTTON_SEARCH)));
   XRCCTRL(*this, "wxID_TOOL_CSS", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_CSSStyle)));
@@ -78,6 +79,7 @@ AmayaToolBar::AmayaToolBar( wxWindow * p_parent, AmayaWindow * p_amaya_window_pa
   XRCCTRL(*this, "wxID_TOOL_STOP", wxBitmapButton)->SetWindowStyle( wxNO_BORDER );
   XRCCTRL(*this, "wxID_TOOL_HOME", wxBitmapButton)->SetWindowStyle( wxNO_BORDER );
   XRCCTRL(*this, "wxID_TOOL_SAVE", wxBitmapButton)->SetWindowStyle( wxNO_BORDER );
+  XRCCTRL(*this, "wxID_TOOL_OPEN", wxBitmapButton)->SetWindowStyle( wxNO_BORDER );
   XRCCTRL(*this, "wxID_TOOL_PRINT", wxBitmapButton)->SetWindowStyle( wxNO_BORDER );
   XRCCTRL(*this, "wxID_TOOL_FIND", wxBitmapButton)->SetWindowStyle( wxNO_BORDER );
   XRCCTRL(*this, "wxID_TOOL_CSS", wxBitmapButton)->SetWindowStyle( wxNO_BORDER );
@@ -319,6 +321,19 @@ void AmayaToolBar::OnButton_Save( wxCommandEvent& event )
 
 /*----------------------------------------------------------------------
  *       Class:  AmayaToolBar
+ *      Method:  OnButton_Open
+ * Description:  
+  -----------------------------------------------------------------------*/
+void AmayaToolBar::OnButton_Open( wxCommandEvent& event )
+{
+  Document doc;
+  View view;
+  FrameToView (TtaGiveActiveFrame(), &doc, &view);
+  TtaExecuteMenuAction ("OpenDoc", doc, view, FALSE);
+}
+
+/*----------------------------------------------------------------------
+ *       Class:  AmayaToolBar
  *      Method:  OnButton_Print
  * Description:  
   -----------------------------------------------------------------------*/
@@ -394,6 +409,7 @@ BEGIN_EVENT_TABLE(AmayaToolBar, wxPanel)
   EVT_BUTTON( XRCID("wxID_TOOL_STOP"),           AmayaToolBar::OnButton_Stop )
   EVT_BUTTON( XRCID("wxID_TOOL_HOME"),           AmayaToolBar::OnButton_Home )
   EVT_BUTTON( XRCID("wxID_TOOL_SAVE"),           AmayaToolBar::OnButton_Save )
+  EVT_BUTTON( XRCID("wxID_TOOL_OPEN"),           AmayaToolBar::OnButton_Open )
   EVT_BUTTON( XRCID("wxID_TOOL_PRINT"),          AmayaToolBar::OnButton_Print )
   EVT_BUTTON( XRCID("wxID_TOOL_FIND"),           AmayaToolBar::OnButton_Find )
   EVT_BUTTON( XRCID("wxID_TOOL_CSS"),            AmayaToolBar::OnButton_CSS )

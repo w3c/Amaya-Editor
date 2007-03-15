@@ -192,38 +192,39 @@
 190 Adelante
 191 Actualizar
 192 Guardar
-193 Imprimir
-194 Buscar
-195 Inicio
-196 Énfasis (em)
-197 Enérgico (strong)
-198 Código (code)
-199 Imagen
-200 Cabecera nivel 1 (h1)
-201 Cabecera nivel 2 (h2)
-202 Cabecera nivel 3 (h3)
-203 Lista no ordenada (ul)
-204 Lista ordenada (ol)
-205 Lista de definición (dl)
-206 Enlace
-207 Tabla
-208 Va a cerrar %d pestañas abiertas. ¿Seguro que desea continuar?
-209 Avisarme cuando intente cerrar múltiples pestañas
-210 Cerrar pestañas
-211 Ningún error detectado
-212 Mostrar errores sintácticos
-213 Cajas
-214 División
-215 Destino
-216 Inserción
-217 Borrado
-218 Subíndice
-219 Superíndice
-220 Término
-221 Definición
-222 Objeto
-223 Estilo CSS
-224 Archivos
-225 Dividir horizontalmente
-226 Dividir vista verticalmente
-227 Ventana de herramientas
+193 Abrir documento
+194 Imprimir
+195 Buscar
+196 Inicio
+197 Énfasis (em)
+198 Enérgico (strong)
+199 Código (code)
+200 Imagen
+201 Cabecera nivel 1 (h1)
+202 Cabecera nivel 2 (h2)
+203 Cabecera nivel 3 (h3)
+204 Lista no ordenada (ul)
+205 Lista ordenada (ol)
+206 Lista de definición (dl)
+207 Enlace
+208 Tabla
+209 Va a cerrar %d pestañas abiertas. ¿Seguro que desea continuar?
+210 Avisarme cuando intente cerrar múltiples pestañas
+211 Cerrar pestañas
+212 Ningún error detectado
+213 Mostrar errores sintácticos
+214 Cajas
+215 División
+216 Destino
+217 Inserción
+218 Borrado
+219 Subíndice
+220 Superíndice
+221 Término
+222 Definición
+223 Objeto
+224 Estilo CSS
+225 Archivos
+226 Dividir horizontalmente
+227 Dividir vista verticalmente
+228 Ventana de herramientas

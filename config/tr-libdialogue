@@ -192,38 +192,39 @@
 190 Sonraki belge
 191 Yeniden yükle
 192 Kaydet
-193 Yazdır
-194 Ara
-195 Özel sayfa
-196 Vurgu
-197 Kuvvetli
-198 Kod
-199 Görüntü ekle
-200 Başlık 1
-201 Başlık 2
-202 Başlık 3
-203 Liste
-204 Numaralı liste
-205 Tanım listesi
-206 Bağlantı
-207 Tablo
-208 **You are about to close %d open tabs. Are you sure you want to continue?
-209 **Warn me when I attempt to close multiple tabs
-210 **Close tabs
-211 **No error detected
-212 Pars hatalarını göster
-213 **Boxes
-214 Bölme
-215 Yarat
-216 Araya Koy
-217 Sil
-218 Alt
-219 Üst
-220 Terim
-221 Tanım
-222 Nesne
-223 **CSS Style
-224 Dosyası
-225 **Horizontal split/unsplit
-226 **Vertical split/unsplit
-227 **Show/hide tools
+193 Belge aç
+194 Yazdır
+195 Ara
+196 Özel sayfa
+197 Vurgu
+198 Kuvvetli
+199 Kod
+200 Görüntü ekle
+201 Başlık 1
+202 Başlık 2
+203 Başlık 3
+204 Liste
+205 Numaralı liste
+206 Tanım listesi
+207 Bağlantı
+208 Tablo
+209 **You are about to close %d open tabs. Are you sure you want to continue?
+210 **Warn me when I attempt to close multiple tabs
+211 **Close tabs
+212 **No error detected
+213 Pars hatalarını göster
+214 **Boxes
+215 Bölme
+216 Yarat
+217 Araya Koy
+218 Sil
+219 Alt
+220 Üst
+221 Terim
+222 Tanım
+223 Nesne
+224 **CSS Style
+225 Dosyası
+226 **Horizontal split/unsplit
+227 **Vertical split/unsplit
+228 **Show/hide tools

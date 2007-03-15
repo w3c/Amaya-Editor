@@ -41,7 +41,7 @@ public:
   void OnButton_Reload( wxCommandEvent &event );
   void OnButton_Stop( wxCommandEvent &event );
   void OnButton_Home( wxCommandEvent &event );
-  void OnButton_Save( wxCommandEvent &event );
+  void OnButton_Save( wxCommandEvent &event );  void OnButton_Open( wxCommandEvent &event );
   void OnButton_Print( wxCommandEvent &event );
   void OnButton_Find( wxCommandEvent &event );
   void OnButton_CSS( wxCommandEvent &event );

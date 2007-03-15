@@ -2369,7 +2369,7 @@ void  OpenDoc (Document doc, View view)
       NewFile = FALSE;
        /* no specific type requested */
       InitOpenDocForm (doc, view, "",
-                       TtaGetMessage (AMAYA, AM_OPEN_DOCUMENT), docText);
+                       TtaGetMessage (LIB, TMSG_BUTTON_OPEN), docText);
 #ifndef _WX
     }
 #endif /* _WX */
