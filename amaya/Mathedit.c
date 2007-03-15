@@ -1038,7 +1038,7 @@ static void InitializeNewConstruct (Element el, int NumberRows, int NumberCols,
 
   /* If the new element is a mtable, create this table */
   if (newType.ElTypeNum == MathML_EL_MTABLE)
-    CreateNewMtable (el, NumberRows, NumberCols, doc);
+    CreateNewMtable (el, NumberCols, NumberRows, doc);
 
   /* if the new element is a mspace, create a width attribute  with a default value */
   if (newType.ElTypeNum == MathML_EL_MSPACE)

@@ -646,7 +646,7 @@ int SpecialCharBoxWidth (CHAR_T c)
       c == 0x202B /* rle */ || c == 0x202C /* pdf */ ||
       c == 0x202D /* lro */ || c == 0x202E /* rlo */ ||
       c == 0x2061 /* ApplyFunction */ ||
-      c == 0x2062 /* InvisibleTimes */)
+      c == 0x2062 /* InvisibleTimes */ || c == 0x2063 /*InvisibleComma*/)
     return 1;
   else
     return 0;
