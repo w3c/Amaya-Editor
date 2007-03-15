@@ -3081,12 +3081,11 @@ void SaveDocument (Document doc, View view)
   /* restore original display mode */
   TtaSetDisplayMode (doc, dispMode);
 
+  Saving_lock = FALSE;
   if (SavingDocument == 0)
     // the saving was discarded
-    Saving_lock = FALSE;
     return;
   SavingDocument = 0;
-  Saving_lock = FALSE;
   if (ok)
     {
       /* cancel the possible don't replace mark */
