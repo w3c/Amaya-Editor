@@ -57,7 +57,7 @@
                         <object class="sizeritem">
                           <object class="wxChoice" name="wxID_CHOICE_LG">
                             <content>
-                              <item></item>
+                              <item/>
                               <item>de (German)</item>
                               <item>en (English)</item>
                               <item>es (Spanish)</item>
@@ -72,8 +72,7 @@
                               <item>ru (Russian)</item>
                               <item>tr (Turkish)</item>
                               <item>zh-cn (Simplified Chinese)</item>
-                              <item>zh-tw (Traditional Chinese)</item>
-                            </content>
+                              <item>zh-tw (Traditional Chinese)</item></content>
                           </object>
                           <flag>wxLEFT|wxALIGN_CENTRE_VERTICAL</flag>
                           <border>5</border>
@@ -339,10 +338,13 @@
                       </object>
                       <flag>wxALIGN_CENTRE_VERTICAL</flag>
                     </object>
+                    <object class="spacer">
+                      <size>5,0</size>
+                    </object>
                     <object class="sizeritem">
                       <object class="wxButton" name="wxID_BUTTON_CLEARURL">
-                        <label>*Clear url history*</label>
-                        <size>120,-1</size>
+                        <label>*Clear all entries in the history of urls*</label>
+                        <size>210,-1</size>
                       </object>
                       <flag>wxLEFT|wxALIGN_CENTRE_VERTICAL</flag>
                       <border>5</border>
