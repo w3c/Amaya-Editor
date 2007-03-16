@@ -68,16 +68,6 @@ class="fixed">displayed that way.</span></p>
       <td>2007-03-12</td>
     </tr>
     <tr>
-      <td id="ED008">ED008</td>
-      <td>Amaya doesn't support a number of i18n features that one considers
-        to be basic these days (or didn't last time I looked) such as fonts
-        that I have on my system in
-        http://people.w3..org/rishida/articles/phrases</td>
-      <td>2006-01-26</td>
-      <td>R. Ishida</td>
-      <td></td>
-    </tr>
-    <tr>
       <td id="ED009">ED009</td>
       <td>If I have Arabic, Chinese, etc, characters in my text, the
         formatting becomes often awful, with characters on the top of one
@@ -304,6 +294,23 @@ class="fixed">displayed that way.</span></p>
     </tr>
     <tr>
       <td id="CSS021">CSS021</td>
+      <td>I'm seeing a crash when I link to a CSS file. It's consistently
+        reproducable.
+        <ol>
+          <li>Create an empty file "test.css".</li>
+          <li>Place "test.css" on a web server.</li>
+          <li>Create a new XHTML file in Amaya with the title test.</li>
+          <li>Select Style-&gt;Link... and type the URL of test.css.</li>
+          <li>Wait for 2 mins. After this period Amaya has locked up
+            unrecoverably.</li>
+        </ol>
+      </td>
+      <td>2007-03-12</td>
+      <td>L. Stringer</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td id="CSS022">CSS022</td>
       <td></td>
       <td></td>
       <td></td>
@@ -525,6 +532,6 @@ class="fixed">displayed that way.</span></p>
   </tbody>
 </table>
 <br />
-Date: <!--$date=-->2007-03-12<!--$-->
+Date: <!--$date=-->2007-03-16<!--$-->
  </body>
 </html>
