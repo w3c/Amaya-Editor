@@ -1084,6 +1084,7 @@ void DoSaveObjectAs (void)
       return;
     }
 
+  Saving_lock = FALSE;
   if (TtaFileExist (tempfile))
     {
       /* ask confirmation */
@@ -1099,7 +1100,6 @@ void DoSaveObjectAs (void)
           // redisplay Save form
           res = SavingObject;
           SavingObject = 0;
-          Saving_lock = FALSE;
           InitSaveObjectForm (res, 1, SavePath, ObjectName);
           return;
         }
