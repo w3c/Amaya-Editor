@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2005
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -28,6 +28,7 @@
 
 #include "AHTURLTools_f.h"
 #include "EDITimage_f.h"
+#include "HTMLactions_f.h"
 #include "HTMLedit_f.h"
 #include "HTMLimage_f.h"
 #include "HTMLpresentation_f.h"
@@ -713,6 +714,9 @@ void StyleChanged (NotifyOnTarget *event)
   pEnd = ptr1;
   braces = 0;
   dispMode = TtaGetDisplayMode (event->document);
+  RemoveParsingErrors (event->document);
+  // close attached log documents
+  CloseLogs (event->document);
   if (OldBuffer == NULL)
     {
       if (buffer)
@@ -835,6 +839,8 @@ void StyleChanged (NotifyOnTarget *event)
       OldBuffer = NULL;
     }
   TtaFreeMemory (buffer);
+  // check if an error is found in the new string
+  CheckParsingErrors (event->document);
 }
 
 

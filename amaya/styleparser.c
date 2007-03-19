@@ -5881,7 +5881,7 @@ void  ParseCSSRule (Element element, PSchema tsch, PresentationContext ctxt,
               cssRule = end;
             }
           else if (i == NB_CSSSTYLEATTRIBUTE)
-            cssRule = SkipProperty (cssRule, TRUE);
+            cssRule = SkipProperty (cssRule, !ctxt->destroy);
           else
             {
               /* update index and skip the ":" indicator if present */
@@ -7332,7 +7332,7 @@ void ApplyCSSRules (Element el, char *cssRule, Document doc, ThotBool destroy)
   TtaGetEnvBoolean ("LOAD_CSS", &loadcss);
   if (!loadcss)
     return;
-
+  LineNumber = TtaGetElementLineNumber (el);
   css = SearchCSS (doc, NULL, el, &pInfo);
   if (css == NULL)
     {
@@ -7344,7 +7344,8 @@ void ApplyCSSRules (Element el, char *cssRule, Document doc, ThotBool destroy)
     /* create the entry into the css context */
     pInfo = AddInfoCSS (doc, css, CSS_DOCUMENT_STYLE, CSS_ALL, el);
   if (pInfo->PiEnabled)
-    ParseStyleDeclaration (el, cssRule, doc, css, el, NULL, destroy); 
+    ParseStyleDeclaration (el, cssRule, doc, css, el, NULL, destroy);
+  LineNumber = -1;
 }
 
 /*----------------------------------------------------------------------

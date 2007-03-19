@@ -1214,7 +1214,7 @@ static Element InsertWithinHead (Document doc, View view, int elementT)
   ElementType         elType;
   Element             el, firstSel, lastSel, head, parent, new_, title;
   SSchema             docSchema;
-  int                 j, firstChar, lastChar;
+  int                 j, firstChar, lastChar, line;
   ThotBool            before;
 
   docSchema = TtaGetDocumentSSchema (doc);
@@ -1227,7 +1227,7 @@ static Element InsertWithinHead (Document doc, View view, int elementT)
       elType.ElTypeNum = HTML_EL_HEAD;
       el = TtaGetMainRoot (doc);
       head = TtaSearchTypedElement (elType, SearchForward, el);
-       
+      
       /* give current position */
       TtaGiveFirstSelectedElement (doc, &firstSel, &firstChar, &j);
       TtaGiveLastSelectedElement (doc, &lastSel, &j, &lastChar);
@@ -1283,6 +1283,9 @@ static Element InsertWithinHead (Document doc, View view, int elementT)
             return (NULL);
         }
       new_ = TtaNewTree (doc, elType, "");
+      // give the same line number as the current element
+      line = TtaGetElementLineNumber (el);
+      TtaSetElementLineNumber (new_, line);
       TtaInsertSibling (new_, el, before, doc);
       if (elementT != HTML_EL_SCRIPT_)
         {

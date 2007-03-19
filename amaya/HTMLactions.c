@@ -1632,7 +1632,7 @@ void CloseLogs (Document doc)
 {
   int		     i;
 
-  /* is there log documents linked to this document? */
+  /* are there log documents linked to this document? */
   if (doc)
     {
       for (i = 1; i < DocumentTableLength; i++)
@@ -1644,6 +1644,8 @@ void CloseLogs (Document doc)
             TtaCloseDocument (i);
             TtaFreeMemory (DocumentURLs[i]);
             DocumentURLs[i] = NULL;
+            RemoveParsingErrors (i);
+            if (DocumentTypes[i] != docLog)
             /* switch off the button Show Log file */
             TtaSetItemOff (doc, 1, File, BShowLogFile);
             if (DocumentSource[doc])
@@ -1746,6 +1748,8 @@ void FreeDocumentResource (Document doc)
         DocumentSource[doc] = 0;
       else
         {
+          /* switch off the button Show Log file */
+          TtaSetItemOff (doc, 1, File, BShowLogFile);
           RemoveDocCSSs (doc);
           /* free access keys table */
           TtaRemoveDocAccessKeys (doc);
@@ -1770,8 +1774,6 @@ void FreeDocumentResource (Document doc)
                     TtaCloseDocument (i);
                     TtaFreeMemory (DocumentURLs[i]);
                     DocumentURLs[i] = NULL;
-                    /* switch off the button Show Log file */
-                    TtaSetItemOff (doc, 1, File, BShowLogFile);
                   }
               }
           /* avoid to free images of backup documents */
