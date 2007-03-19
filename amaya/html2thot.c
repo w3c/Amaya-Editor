@@ -4927,7 +4927,7 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
       if (charRead != EOS)
         {
           /* a valid character has been read */
-          if (charRead == '@' && DocumentTypes[doc] == docLog)
+          if (charRead == '@' && DocumentTypes[doc] == docLog && LgBuffer == 0)
             {
               attrType.AttrTypeNum = TextFile_ATTR_IsLink;
               val = TextFile_ATTR_IsLink_VAL_Yes_;
