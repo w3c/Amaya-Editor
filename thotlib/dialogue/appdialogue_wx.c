@@ -1155,6 +1155,7 @@ ThotBool TtaDestroyFrame( int frame_id )
   if (!p_frame)
     return FALSE;
 
+  p_frame->Show();
   p_frame->FreeFrame();
 
   return TRUE;

@@ -488,7 +488,7 @@ void AmayaCanvas::Init()
 bool AmayaCanvas::IsParentFrameActive()
 {
   if (!m_pAmayaFrame)
-    return FALSE;
+    return false;
   
   AmayaWindow * p_window = m_pAmayaFrame->GetWindowParent();
   if (!p_window)
@@ -506,9 +506,10 @@ bool AmayaCanvas::IsParentFrameActive()
       {
         AmayaPage * p_page = m_pAmayaFrame->GetPageParent();
         if (!p_page)
-          return FALSE;
+          return false;
         // if we are closing the page, continue to draw into because maybe the page has been modified so a dialog is poped up
         // we need to draw the page else a gray page will be shown when the document was modified.
+        TTALOGDEBUG_1( TTA_LOG_DIALOG, _T("AmayaCanvas::IsParentFrameActive page = %d select = %d"), p_page->GetPageId(), p_page->IsSelected() );
         return (p_page->IsSelected() /*&& !p_page->IsClosed()*/);
       }      
       break;
