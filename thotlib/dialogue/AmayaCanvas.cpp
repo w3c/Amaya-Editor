@@ -422,7 +422,6 @@ void AmayaCanvas::OnMouseDown( wxMouseEvent& event )
   Method:  OnIdle
   Description:  call GL_DrawAll to draw opengl stuff (used for animations)
                 this is called everytime the system is idle
-                TODO y a surrement des choses a optimiser dans le coin 
   -----------------------------------------------------------------------*/
 void AmayaCanvas::OnIdle( wxIdleEvent& event )
 {

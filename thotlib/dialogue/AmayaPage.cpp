@@ -653,14 +653,16 @@ void AmayaPage::OnClose(wxCloseEvent& event)
   
   m_IsClosed = TRUE;
   int frame_id = 0;
+  int page_id = 0;
   AmayaFrame * p_AmayaFrame = NULL;
-
   // Kill top frame
   if ( m_pTopFrame )
     {
       p_AmayaFrame = m_pTopFrame;
       frame_id     = m_pTopFrame->GetFrameId();
-      
+      page_id = FrameTable[frame_id].FrPageId;
+      if (page_id > 0)
+        page_id--;
       // try to close the frame : the user can choose to close or not with a dialog
       p_AmayaFrame->Close();
       
@@ -678,6 +680,7 @@ void AmayaPage::OnClose(wxCloseEvent& event)
     { 
       p_AmayaFrame = m_pBottomFrame;
       frame_id     = m_pBottomFrame->GetFrameId();
+      page_id = FrameTable[frame_id].FrPageId;	
       // try to close the frame : the user can choose to close or not with a dialog
       p_AmayaFrame->Close();
       
@@ -693,11 +696,15 @@ void AmayaPage::OnClose(wxCloseEvent& event)
 
   if(!m_IsClosed)
     event.Veto();
-#ifdef _MACOS
-  // On Mac OS the event is not automatically sent to the notebook
   else
-    m_pNoteBookParent->AdvanceSelection(true);
-#endif /* _MACOS */
+    {
+      AmayaPage * p_page = (AmayaPage *)m_pNoteBookParent->GetPage(page_id);
+      p_page->SetSelected( TRUE );
+      //#ifdef _MACOS
+      // On Mac OS the event is not automatically sent to the notebook
+      m_pNoteBookParent->SetSelection(page_id);
+      //#endif /* _MACOS */
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -822,7 +829,7 @@ void AmayaPage::SetPageId( int page_id )
 	  // if this frame is owned by this page
 	  if (FrameTable[frame_id].FrPageId == m_PageId)
 	    {
-	      FrameTable[frame_id].FrPageId = page_id;	      
+	      FrameTable[frame_id].FrPageId = page_id;
 	    }
 	}
       frame_id++;
