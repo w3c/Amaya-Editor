@@ -598,7 +598,7 @@ void GL_DrawArc (float x, float y, float w, float h, int startAngle,
       else
         glBegin(GL_LINE_STRIP);
 
-      slices--;
+      //slices--;
       for (i = 0; i <= slices; i++)
         glVertex2d (x_cache[i], y_cache[i]);
       glEnd();
