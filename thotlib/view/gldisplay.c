@@ -1971,9 +1971,7 @@ void DrawEllips (int frame, int thick, int style, int x, int y, int width,
     {
       /* InitDrawing (style, thick, bg); */
       GL_SetForeground (bg, TRUE);
-      GL_DrawArc (x + thick/2, y + thick/2, 
-                  width - thick/2, height - thick/2, 
-                  0, 360, TRUE);
+      GL_DrawArc (x, y, width, height, 0, 360, TRUE);
     }
   /* Draw the border */
   if (thick > 0 && fg >= 0)
