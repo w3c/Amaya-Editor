@@ -95,7 +95,7 @@
 93 Gráfico
 94 Símbolo
 95 Imagem
-96 Tipo de elemento XML
+96 Elemento XML
 97 depois
 98 antes
 99 em torno de
@@ -175,7 +175,7 @@
 173 **Right
 174 **Center
 175 **Justify
-176 Applicar classe
+176 Classes
 177 Selecionar uma classe ou pseudo-classe
 178 Selecionar
 179 **Discard

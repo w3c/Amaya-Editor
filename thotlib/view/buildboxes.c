@@ -5285,7 +5285,7 @@ static ThotBool AnyFloatPosChange (PtrAbstractBox pAb)
 {
   ThotBool     found = FALSE;
 
-  if (pAb && !pAb->AbDead)
+  if (pAb && pAb->AbElement && !pAb->AbDead)
     {
       found = (pAb->AbFloatChange || pAb->AbPositionChange ||
                (pAb->AbNew && pAb->AbFloat != 'N'));
