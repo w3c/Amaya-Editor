@@ -2811,7 +2811,8 @@ void LoadPicture (int frame, PtrBox box, ThotPictInfo *imageDesc)
           /* intrinsic width and height */
 
           /* free the previous pixmap */
-          TtaFreeMemory (imageDesc->PicPixmap);
+          if (strcmp (imageDesc->PicFileName, LostPicturePath))
+            TtaFreeMemory (imageDesc->PicPixmap);
           imageDesc->PicPixmap = NULL;
           imageDesc->PicPixmap = (ThotPixmap) 
             (*(PictureHandlerTable[typeImage].Produce_Picture)) (
