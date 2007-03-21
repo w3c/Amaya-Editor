@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2007
+ *  (c) COPYRIGHT INRIA, 1996-2005
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -20,6 +20,10 @@
 #include "typemedia.h"
 #include "content.h"
 #include "zlib.h"
+
+#ifdef _WINGUI
+#include "lost.xpm"
+#endif /* _WINGUI */
 
 #include "picture.h"
 #include "frame.h"
@@ -69,6 +73,7 @@
 #include "glprint.h"
 #endif /* _GL */
 
+static ThotPixmap PictureLogo;
 #ifdef _GTK
 static ThotGC     tiledGC;
 #endif /* _GTK */
@@ -521,7 +526,7 @@ static void GL_TextureBind (ThotPictInfo *img, ThotBool isPixmap,
               glTexImage2D (GL_TEXTURE_2D, 0, Mode, p2_w, p2_h,
                             0, Mode, GL_UNSIGNED_BYTE,
                             (GLvoid *) img->PicPixmap);
-              if (img->PicPixmap && !Printing)
+              if (img->PicPixmap != PictureLogo && !Printing)
                 TtaFreeMemory (img->PicPixmap);
             }
           else
@@ -534,7 +539,7 @@ static void GL_TextureBind (ThotPictInfo *img, ThotBool isPixmap,
                                img->PicWidth, img->PicHeight, 
                                Mode, GL_UNSIGNED_BYTE,
                                (GLvoid *) img->PicPixmap);    
-              if (img->PicPixmap && !Printing)
+              if (img->PicPixmap != PictureLogo && !Printing)
                 TtaFreeMemory (img->PicPixmap);
             }
         }
@@ -1243,6 +1248,7 @@ static ThotBool Match_Format (int typeImage, char *fileName)
 void FreePixmap (ThotPixmap pixmap)
 {
   if (pixmap != NULL &&
+      pixmap != (ThotPixmap) PictureLogo &&
       pixmap != EpsfPictureLogo)
 #ifdef _GL
     TtaFreeMemory ((void *)pixmap);
@@ -1816,6 +1822,47 @@ Picture_Report PictureFileOk (char *fileName, int *typeImage)
   return status;
 }
 
+/*----------------------------------------------------------------------
+  Create The logo for lost pictures
+  ----------------------------------------------------------------------*/
+void CreateGifLogo ()
+{
+#if defined(_WINGUI) || defined (_GL) 
+  ThotPictInfo        *imageDesc;
+  unsigned long       Bgcolor = 0;
+  int                 xBox = 0, yBox = 0;
+  int                 wBox = 0, hBox = 0;
+  int                 width = 0, height = 0, index;
+  ThotPixmap          drw;
+  
+  imageDesc = (ThotPictInfo*)TtaGetMemory (sizeof (ThotPictInfo));
+  index = 0;
+  while (PictureIdType[index] != gif_type)
+    index++;
+  drw = (ThotPixmap)(*(PictureHandlerTable[index].Produce_Picture)) (
+                                                                     (void *)LostPicturePath,
+                                                                     (void *)imageDesc,
+                                                                     (void *)&xBox,
+                                                                     (void *)&yBox,
+                                                                     (void *)&wBox,
+                                                                     (void *)&hBox,
+                                                                     (void *)Bgcolor,
+                                                                     (void *)&width,
+                                                                     (void *)&height,
+                                                                     (void *)0 );
+  TtaFreeMemory (imageDesc);
+  PictureLogo = drw;
+#else /* #if defined(_WINGUI) || defined (_GL)  */
+#ifdef _GTK
+  GdkImlibImage      *im;
+
+  im = gdk_imlib_load_image (LostPicturePath);
+  gdk_imlib_render (im, 40, 40);
+  PictureLogo = gdk_imlib_copy_image (im);
+  TtaFreeMemory (im);
+#endif /*_GTK*/
+#endif /*_WIN && _GL*/
+}
 
 /*----------------------------------------------------------------------
   Private Initializations of picture handlers and the visual type 
@@ -2070,7 +2117,13 @@ void DrawPicture (PtrBox box, ThotPictInfo *imageDesc, int frame,
   picYOrg = 0;
 
   if (imageDesc->PicFileName == NULL || imageDesc->PicFileName[0] == EOS || 
-      box->BxAbstractBox->AbLeafType == LtCompound)
+      (box->BxAbstractBox->AbLeafType == LtCompound &&
+#ifdef _GL
+       !strcmp (imageDesc->PicFileName, LostPicturePath)
+#else /*_GL*/
+    imageDesc->PicPixmap == PictureLogo
+#endif /* _GL */
+       ))
     return;
 
 #ifdef _GL
@@ -2758,7 +2811,8 @@ void LoadPicture (int frame, PtrBox box, ThotPictInfo *imageDesc)
           /* intrinsic width and height */
 
           /* free the previous pixmap */
-          TtaFreeMemory (imageDesc->PicPixmap);
+          if (strcmp (imageDesc->PicFileName, LostPicturePath))
+            TtaFreeMemory (imageDesc->PicPixmap);
           imageDesc->PicPixmap = NULL;
           imageDesc->PicPixmap = (ThotPixmap) 
             (*(PictureHandlerTable[typeImage].Produce_Picture)) (
@@ -2792,13 +2846,22 @@ void LoadPicture (int frame, PtrBox box, ThotPictInfo *imageDesc)
      or format isn't supported*/
   if (imageDesc->PicPixmap == None && !glIsTexture (imageDesc->TextureBind))
     {
+      if (PictureLogo == None)
+        /* create a special logo for lost pictures */
+        CreateGifLogo ();
+      imageDesc->PicFileName = (char *)TtaGetMemory (strlen(LostPicturePath)+1);
+      strcpy (imageDesc->PicFileName,TtaStrdup (LostPicturePath));
+      imageDesc->PicType = 3;
+      imageDesc->PicPresent = RealSize;
+      imageDesc->PicPixmap = PictureLogo;
+      typeImage = gif_type;
       w = 40;
       wBox = 40;
+      
       h = 40;
       hBox = 40;
       imageDesc->PicWidth = w;
       imageDesc->PicHeight = h;
-      imageDesc->PicPixmap = NULL;
     }
   else if (w == 0 || h == 0)
     {
@@ -2842,10 +2905,12 @@ void LoadPicture (int frame, PtrBox box, ThotPictInfo *imageDesc)
   else
     imageDesc->RGBA = TRUE;
 
-  GL_TextureBind (imageDesc, TRUE, pAb->AbLeafType == LtPicture);
+  if (strcmp (imageDesc->PicFileName, LostPicturePath))
+    GL_TextureBind (imageDesc, TRUE, pAb->AbLeafType == LtPicture);
 #ifdef WITH_CACHE
   /* desactive the cache of images */
-  if (!strcasecmp ("AmayaSrcSyncIndex.gif", imageDesc->PicFileName))
+  if (strcmp (imageDesc->PicFileName, LostPicturePath) == 0 ||
+      strcasecmp ("AmayaSrcSyncIndex.gif", imageDesc->PicFileName) == 0)
     AddInPicCache (imageDesc, frame, TRUE); 
   else
     AddInPicCache (imageDesc, frame, FALSE);
@@ -2928,6 +2993,11 @@ void LoadPicture (int frame, PtrBox box, ThotPictInfo *imageDesc)
   if (status != Supported_Format)
     {
       pres = RealSize;
+#if defined (_GTK) || defined (_WINGUI)
+      if (PictureLogo == None)
+        /* create a special logo for lost pictures */
+        CreateGifLogo ();
+#endif 
 #ifdef _WINGUI
 #ifdef _WIN_PRINT
       if (TtDisplay == NULL)
@@ -2941,7 +3011,7 @@ void LoadPicture (int frame, PtrBox box, ThotPictInfo *imageDesc)
       imageDesc->PicHeight = 40;
       imageDesc->PicWidth = 40;
       imageDesc->PicPresent = pres;
-      drw = NULL;
+      drw = PictureLogo;
 #endif /* _WIN_PRINT */
 #endif  /* _WINGUI */
 #ifdef _GTK 
@@ -2949,7 +3019,7 @@ void LoadPicture (int frame, PtrBox box, ThotPictInfo *imageDesc)
       imageDesc->PicPresent = pres;
       imageDesc->PicHeight = 40;
       imageDesc->PicWidth = 40;
-      drw = NULL;
+      drw = (ThotPixmap) PictureLogo;
 #endif /*_GTK*/
       wBox = w = 40;
       hBox = h = 40;
@@ -3066,6 +3136,11 @@ void LoadPicture (int frame, PtrBox box, ThotPictInfo *imageDesc)
        
       if (drw == NULL)
         {
+#if defined (_GTK) || defined (_WINGUI)
+          if (PictureLogo == None)
+            /* create a special logo for lost pictures */
+            CreateGifLogo ();
+#endif 
 #ifdef _WINGUI
 #ifdef _WIN_PRINT
           if (TtDisplay == NULL)
@@ -3077,14 +3152,15 @@ void LoadPicture (int frame, PtrBox box, ThotPictInfo *imageDesc)
 #else /* _WIN_PRINT */
           imageDesc->PicType = 3;
           imageDesc->PicPresent = pres;
-          drw = NULL;
+          drw = PictureLogo;
 #endif /* _WIN_PRINT */
 #endif  /* _WINGUI */
 #ifdef _GTK 
           imageDesc->PicType = 3;
           imageDesc->PicPresent = pres;
-          drw = NULL;
-#endif /*_GTK*/
+          imageDesc->PicFileName = TtaStrdup (LostPicturePath);
+          drw = (ThotPixmap) PictureLogo;
+#endif /*_GTK*/   
           wBox = w = 40;
           hBox = h = 40;
         }
