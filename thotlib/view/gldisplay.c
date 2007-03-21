@@ -1929,25 +1929,24 @@ void DrawOval (int frame, int thick, int style, int x, int y, int width,
           GL_DrawArc (xarc[i].x + thick/4, xarc[i].y + thick/4, 
                       xarc[i].width - thick/4, xarc[i].height-thick/4, 
                       xarc[i].angle1, xarc[i].angle2,
-                      TRUE); 
+                      style, thick, bg, TRUE); 
         }
     }
 
   /* Draw the border */
   if (thick > 0 && fg >= 0)
     {
-      InitDrawing (style, thick, fg);
       for (i=0; i < 4 ;i++)
         GL_DrawArc (xarc[i].x, xarc[i].y, 
                     xarc[i].width, xarc[i].height, 
                     xarc[i].angle1, xarc[i].angle2,
-                    FALSE);
-      GL_DrawSegments (seg, 4);
+                    style, thick, fg, FALSE);
+      GL_DrawSegments (seg, 4, style, thick, fg);
     }
 }
 
 /*----------------------------------------------------------------------
-  DrawEllips draw an ellips (or a circle).
+  DrawEllips draw an ellipse (or a circle).
   Parameters fg, bg, and pattern are for drawing color, background color
   and fill pattern.
   ----------------------------------------------------------------------*/
@@ -1971,13 +1970,12 @@ void DrawEllips (int frame, int thick, int style, int x, int y, int width,
     {
       /* InitDrawing (style, thick, bg); */
       GL_SetForeground (bg, TRUE);
-      GL_DrawArc (x, y, width, height, 0, 360, TRUE);
+      GL_DrawArc (x, y, width, height, 0, 360, style, thick, bg, TRUE);
     }
   /* Draw the border */
   if (thick > 0 && fg >= 0)
     {
-      InitDrawing (style, thick, fg);
-      GL_DrawArc (x, y, width, height, 0, 360, FALSE);
+      GL_DrawArc (x, y, width, height, 0, 360, style, thick, fg, FALSE);
     }
 
 
@@ -2345,11 +2343,10 @@ void DrawHorizontalParenthesis (int frame, int thick, int style, int x, int y,
   y += thick / 2;
   if (thick > 0 && fg >= 0)
     {
-      InitDrawing (style, thick, fg);
       if (align)
-        GL_DrawArc(x, y + h, l, -h, 0, 180, FALSE);
+        GL_DrawArc(x, y + h, l, -h, 0, 180, style, thick, fg, FALSE);
       else
-        GL_DrawArc(x, y, l, h, 0, 180, FALSE);
+        GL_DrawArc(x, y, l, h, 0, 180, style, thick, fg, FALSE);
     }
 }
 
@@ -2401,8 +2398,7 @@ void DrawHorizontalBrace (int frame, int thick, int style, int x, int y,
           seg[5].y1 = seg[4].y2;
           seg[5].x2 = x + l;
           seg[5].y2 = y + h;
-          InitDrawing (style, thick, fg);
-          GL_DrawSegments (seg, 6);
+          GL_DrawSegments (seg, 6, style, thick, fg);
         }
       else
         /* Under brace */
@@ -2436,8 +2432,7 @@ void DrawHorizontalBrace (int frame, int thick, int style, int x, int y,
           seg[5].y1 = seg[4].y2;
           seg[5].x2 = x + l;
           seg[5].y2 = y;
-          InitDrawing (style, thick, fg);
-          GL_DrawSegments (seg, 6);
+          GL_DrawSegments (seg, 6, style, thick, fg);
         }
     }
 }
@@ -2689,25 +2684,24 @@ void DrawRectangleFrame (int frame, int thick, int style, int x, int y,
           GL_DrawArc	(xarc[i].x, xarc[i].y, 
                        xarc[i].width, xarc[i].height, 
                        xarc[i].angle1, xarc[i].angle2,
-                       TRUE);
+                       style, thick, bg, TRUE);
         }
     }
 
   /* Draw the border */
   if (thick > 0 && fg >= 0)
     {
-      InitDrawing (style, thick, fg);
       for (i = 0 ; i < 4; i++)
         {  
           GL_DrawArc (xarc[i].x, xarc[i].y, 
                       xarc[i].width, xarc[i].height, 
                       xarc[i].angle1, xarc[i].angle2,
-                      FALSE); 
+                      style, thick, fg, FALSE); 
         }
       if (arc2 < height / 2)
-        GL_DrawSegments(seg, 5);
+        GL_DrawSegments(seg, 5, style, thick, fg);
       else
-        GL_DrawSegments(seg, 4);
+        GL_DrawSegments(seg, 4, style, thick, fg);
     }
 }
 
@@ -2733,15 +2727,15 @@ void DrawEllipsFrame (int frame, int thick, int style, int x, int y,
   /* Fill in the rectangle */
   if (pattern == 2)
     {
-      GL_SetForeground (bg, TRUE);
-      GL_DrawArc (x, y, width, height, 0, 360, TRUE);
+      //GL_SetForeground (bg, TRUE);
+      GL_DrawArc (x, y, width, height, 0, 360, style, thick, bg, TRUE);
     }
 
   /* Draw the border */
   if (thick > 0 && fg >= 0)
     {
       InitDrawing (style, thick, fg);
-      GL_DrawArc(x, y, width, height, 0, 360, FALSE); 
+      GL_DrawArc(x, y, width, height, 0, 360, style, thick, fg, FALSE); 
       px7mm = (int)((7 * DOT_PER_INCH) / 25.4 + 0.5);
       if (height > 2 * px7mm)
         {

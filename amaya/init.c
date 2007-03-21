@@ -2409,10 +2409,10 @@ void OpenNew (Document document, View view, int docType, int docProfile)
       char *compound = TtaGetMessage (AMAYA, AM_COMPOUND_DOCUMENT);
       if (s && compound && !strcmp (s, compound))
         InitOpenDocForm (document, view, "New.xml",
-                         TtaGetMessage (AMAYA, AM_NEW_HTML), docHTML);
+                         TtaGetMessage (LIB, TMSG_BUTTON_NEW), docHTML);
       else
         InitOpenDocForm (document, view, "New.html",
-                         TtaGetMessage (AMAYA, AM_NEW_HTML), docHTML);
+                         TtaGetMessage (LIB, TMSG_BUTTON_NEW), docHTML);
 #else /* _WX */
       if (docProfile == L_Basic)
         InitOpenDocForm (document, view, "New.html",

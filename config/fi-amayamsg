@@ -1,414 +1,413 @@
 # encoding= latin1
 0 Tiedostot
 1 Avaa
-2 Uusi XHTML dokumentti
-3 Uusi XHTML 1.1 dokumentti
-4 Uusi XHTML 1.0 Transitional document
-5 Uusi XHTML 1.0 Strict document
-6 Uusi XHTML 1.0 Basic dokumentti
-7 Uusi MathML dokumentti
-8 Uusi SVG dokumentti
-9 Uusi CSS tyylitiedosto
-10 Valmiista mallista
-11 **In new tab
-12 Avaa uudessa ikkunass
-13 Tyhjennä
-14 **Click
-15 Tallennetaan: %s
-16 Määrittely
-17 URL
-18 Teksti
-19 Nimi
-20 Salasana
-21 Käytä luokkana
-22 Noudetaan %s
-23 Ei voida ladata %s
-24 Valmis!
-25 Valitse kohde
-26 Kelpaamaton kohde
-27 Syötä URL tai selaa
-28 Otsikko
-29 Muuta otsake
-30 **Document modified - Do you want to save it?
-31 Noudetaan välitetysti %s
-32 Havaittu liian monta välitystä
-33 Ei voida luoda paikallista tiedostoa %s
-34 Ei voida luoda hakemistoa %s
-35 Odotetaan vapaata rajapintaa
-36 Luetaan %s
-37 Kirjoitetaan %s
-38 Odotetaan yhteyttä
-39 Yhdistetään %s
-40 Etsitään %s
-41 Tuntematon tila
-42 Tunnistus ikkuna
-43 Syöttäkää tunnistetiedot
-44 Tunnistus epäonnistui %s
-45 %s ladattu, mutta ei luettavissa
-46 Tiedonsiirto keskeytetty!
-47 %s yhteyttä ei voi muodostaa. Yrittäkää myöhemmin uudelleen.
-48 %s ladattu
-49 Tallenetaan %s
-50 Ei voida tallentaa: %s
-51 Englantilaisen järjestelmän virhesanomat.
-52 Linkin kohde ei voi sisältää näitä elementtejä
-53 Ei voida luoda kohdetta kohteen sisälle
-54 Tälle URL:lle ei ole vielä GET-tukea: %s
-55 Tälle URL:lle ei ole vielä PUT-tukea:: %s
-56 Amayan tämä versio ei tue vielä tätä ominaisuutta
-57 Kirjoitus valmis %s
-58 Ei voinut normalisoida %s
-59 Ei voinut luoda väliaikaista hakemistoa %s
-60 Valintaa ei voi muuntaa
-61 Muunto epäonnistui
-62 ohjelmavirhe HTML.trans rivillä %s
-63 Matematiikka
-64 Grafiikka
-65 Tallenna nimellä
-66 Anna tunnistetiedot alueelle \'%s\' palvelimella \'%s\'
-67 Alue: %s
-68 Palvelin: %s
-69 Muokkain/Selain
-70 Pyynnön aikakatkaisu - Palvelin ei vastaa.
-71 %s on jo olemassa. Korvataanko?
-72 %s on muuttunut. Korvataanko?
-73 Taustakuva
-74 Taustakuvaa ei sallita tässä
-75 CSS
-76 **Saving will save following images too?
-77 URL:n tallennus epäonnistui
-78 Tallennetaanko levylle ?
-79 Kopioi kuvat
-80 Muuta URL:t
-81 Dokumentin sijainti
-82 Kuvahakemisto
-83 Elementin sijainti
-84 CSS tyylitiedostot
-85 Avaa CSS
-86 Poista käytöstä CSS
-87 Ota käyttöön CSS
-88 Poista CSS
-89 W3C:n Internetin muokkain/selain
-90 (ilmoita virheistä www-amaya@w3.org)
-91 Ei voi käsitellä osoitteita joissa on enemmän kuin %s merkkiä
-92 Vain oletus sallittu
-93 Linkkien päivitys: %s%% onnistui
-94 Ei mitään tallennettavaa
-95 toista-y
-96 Syöttäkää kayttäjätunnus:
-97 %d selvittämätön pyyntö
-98 Ei CSS-tiedostoa saatavilla
-99 **Don't save
-100 ei toistoa
-101 Dokumentilla ei ole nimeä. Tallennetaan nimellä:
-102 Pluginit
-103 Tuntematon virhe tallennettaessa URL:ää %s
-104 Palvelinyhteyden muodostus epäonnistui
-105 Pääsy tietoon %s on kielletty palvelimen toimesta
-106 Toiminto onnistui %s
-107 %s on luotu
-108 %s on päivitetty
-109 Toiminto suoritettu %s palautteella
-110 Palvelin ei ymmärrä pyyntöä
-111 Palvelimella ei ole uudempaa tietoa
-112 Tämä menettely on kielletty
-113 Tunnistus vaaditaan %s käsittelyyn
-114 Tarkistetaan ...
-115 Tallennus %s epäonnistui, Tallenetaanko levylle?
-116 Tallenne %s vaikuttaa virheelliseltä, ohita?
-117 URL %s välitetään edelleen %s, ohita?
-118 %s päivitys epäonnistui, ohita?
-119 Palvelinvirhe: %s
-120 Palvelin ei tue tätä pyyntöä
-121 Suodatin
-122 aktiiviset tiedonsiirrot
-123 jonottavat tiedonsiirrot
-124 Sisällysluettelo
-125 Linkkiluettelo
-126 Toistotila
-127 toista
-128 toista-x
-129 Amayan sammuttaminen epäonnistui. Haluatko palauttaa varmuuskopioidut dokumentit?
-130 Tunnistus epäonnistui, Yritä uudelleen?
-131 Toiminto välitetään. Haluatko jatkaa?
-132 Rivien lukumäärä
-133 Sarakkeiden lukumäärä
-134 Reunus
-135 Vuorottainen teksti
-136 Vuorottainen teksti on välttämätön
-137 Tulosta URL
-138 Käytä
-139 Oletus
-140 Tyhjennä välimuisti
-141 Välimuisti
-142 Käytä välimuistia
-143 Aseta suojatut tiedostot välimuistiin
-144 Katkaistu tila
-145 Ohita vanhentumiset: header
-146 Välimuistin sijainti
-147 Välimuistin koko (Mb)
-148 Välimuistiin tallennettavan tiedoston kokorajoitus (Mb)
-149 Välimuisti
-150 HTTP välityspalvelin (e.g., www.w3.org:1234)
-151 Välityspalvelimen domain luettelo (e.g., lists.w3.org)
-152 Yleiset
-153 Aloitussivu
-154 Painikevihjeen viive (ms)
-155 Kaksoisnapautuksen viive (ms)
-156 Valikon fonttikoko
-157 Fonttikoko
-158 Kielikoodi
-159 **Preserve lines when pasting
-160 **Generate backup files
-161 **Save geometry on exit
-162 Näytä taustakuvat
-163 Näytä painikerivi
-164 Näytä osoite
-165 Näytä kohteet
-166 Vienti CR/LF
-167 Selaus
-168 Lataa kuvat (img)
-169 Kaksoisklikkaus aktivoi linkin
-170 Julkaisu
-171 Käytä ETAGS:ia ja ennakkoehtoja
-172 Tarkista jokainen PUT suorittamalla GET
-173 Oletus nimi URL:lle jotka päättyvät '/'
-174 Geometria
-175 Tallenna nykyinen geometria
-176 Palauta oletus geometria
-177 Muutos tulee voimaan avatessasi uuden ikkunan
-178 Väri
-179 Dokumentin piirtoväri
-180 Dokumentin taustaväri
-181 Valikon piirtoväri
-182 Valikon taustaväri
-183 Välimuistin käynnistys epäonnistui.Välimuistin hakemisto on viallinen tai toinen Amaya-prosessi käyttää välimuistia.
-184 Luettelo valituista kielistä "fi, en":
-185 Muutokset tulevat voimaan Amayan uudelleenkäynnistämisen jälkeen.
-186 Salli automaattinen PUT-komentojen välitys näissä domaineissa
-187 Ohita tyylitiedostot
-188 Muunnoksen tyyppi
-189 (erota syötteet välilyönnein)
-190 Älä käytä välityspalvelinta näihin domaineihin
-191 Käytä vain välityspalvelinta näihin domaineihin
-192 Henkilön nimi
-193 Amaya käyttäjän hakemisto
-194 Väliaikaisten tiedostojen hakemisto
-195 Käytä palettia
-196 Kieliasetukset
-197 Huomautuksien
-198 Käyttäjän huomautukset
-199 Postipalvelimen huomautukset
-200 Palvelimien merkinnät
-201 Lataa paikalliset merkinnät automaattisesti
-202 Lataa etämerkinnät automaattisesti
-203 Poista etälataus käytöstä käynnistyksen yhteydessä (etätyötä varten)
-204 Valintaväri
-205 **Selection background color
-206 Suunta
-207 Pysty
-208 Vaaka
-209 **Keep multiple spaces
-210 **Error(s) in the source code
-211 **Fatal error - Fix the source code to continue
-212 **Try the 'File/Read as' entry
-213 Virheellisiä merkkejä
-214 Dokumentin profiili:
-215 Virhe - katso Tiedosto > Näytä käännösvirheet
-216 Amaya ei tue dokumentin tyyppiä
-217 Muokkaus ja tallennus muuttavat dokumentin tyypin
-218 Ei saatavilla
-219 Selaa
-220 Selaa tiedostoja
-221 Valinta
-222 Merkintä paikallissuodatusvalikko
-223 Näytä
-224 Piilota
-225 Näytä kaikki
-226 Piilota kaikki
-227 * tarkoittaa piilotettua, - tarkoittaa osittain piilotettua
-228 Suodatusvalinnat
-229 Tekijän mukaan
-230 Tyypin mukaan
-231 Palvelimen mukaan
-232 Access näppäimet
-233 Ohita
-234 Tyyli elementti
-235 Ei voi luoda XPointeria
-236 Mahdotonta liittää aloittavaa XPointeria sisäisesti lisättyyn elementtiin
-237 Mahdotonta liittää lopettavaa XPointeria sisäisesti lisättyyn elementtiin
-238 Merkinnän kohdepaikkaa ei löydy
-239 Merkintää ei voi siirtää toiseen dokumenttiin
-240 Et voi merkitä muutettua dokumenttia. Tallenna dokumentti ensin.
-241 Merkinnän käyttäjää ei valittu. Valitse käyttäjä Merkinnät/Määritä asetukset
-242 XPointerin luonti merkintää varten epäonnistui
-243 Uusi merkintä
-244 Merkinnän lähetys epäonnistui
-245 Merkinnän poisto epäonnistui
-246 Merkintä poistettu
-247 Merkintäluettelon lataus epäonnistui
-248 Virhe
-249 Valitse Charset
-250 Valitse MIME tyyppi
-251 Muuta Charset
-252 Muuta MIME tyypi
-253 Muuta
-254 Tämä dokumenttityyppi ei tue charset:iä
-255 Kohteen täytyy olla HTTP URL tämän valinna kanssa
-256 Virhe: epäkelpo MIME tyyppi
-257 Tuntematon
-258 Tyylit ohitetaan - katso Tiedosto > Näytä käännösvirheet
-259 Tämä dokumentti on avattu jo toiseen ikkunaan
-260 Tämän instanssin tallennus saattaa aiheuttaa kadonneen päivityksen ongelman
-261 **Adding or changing the doctype will remove some elements or attributes
-262 **Please confirm operation
-263 Käytä application/xhtml+xml MIME tyypiä XHTML dokumenttien yhteydessä
-264 **Charset for new documents
-265 Lukitus onnistui!
-266 Lukitus epäonnistui!
-267 Lukitaan %s...
-268 Dokumentti %s on lukittu!
-269 Dokumentin %s on lukinnut %s (aikakatkaisu %s)
-270 Korvataanko lukitustiedot?
-271 Kopioidaanko lukitustiedot?
-272 Yritä poistaa lukitus ensin...
-273 Lukituksen poisto onnistui!
-274 Lukituksen poisto epäonnistui!
-275 Poistetaan lukitus %s...
-276 Poistettu lukitus dokumentista: %s
-277 Poista lukitus dokumentista?
-278 Dokumentin ominaisuudet
-279 Dokumentin ominaisuuksia ei saatavilla
-280 Dokumentin ominaisuuksia ei ole väliaikaisesti saatavilla. Yritä myöhemmin uudelleen...
-281 Haetaan dokumentin ominaisuuksia...
-282 Tälle URL:lle ei ole WebDav-tukea %s
-283 Lukitustietojen tallennus paikallisesti epäonnistui
-284 Lukitustietojen poisto paikallisesti epäonnistui
-285 Tämä toiminto ei ole käytettävissä %s
-286 Pyyntö epäonnistui! Syy: Viallinen riippuvuus
-287 Pyyntö epäonnistui! Syy: %s
-288 Yritä uudelleen?
-289 WebDAV
-290 Käyttäjän henkilökohtainen linkki (URL)
-291 Käyttäjän WebDAV resurssi luettelo (URL URL)
-292 Lukituksen syvyys
-293 rajattomuus
-294 Lukituksen aikakatkaisu
-295 Rajaton
-296 Muu (Sekuntia)
-297 Lukitse ala
-298 yksinomainen
-299 jaettu
-300 Valvetila
-301 Yleinen valvetila
-302 Valvetila poistuttaessa
-303 Animaatio
-304 SVG Kirjasto
-305 Kopioi vaihtoehto
-306 Kopioi valinta
-307 Viittaa valintaan
-308 Lisää uusi malli kirjastoon
-309 Uuden SVG-tiedoston URL...
-310 Kirjaston nimi
-311 Kirjaston URL
-312 Luo kirjasto
-313 Selaa kirjastoa
-314 Luo tai etsi kirjasto
-315 Nykyinen valinta ei sisällä pelkästään SVG elementtejä. Valitse uudelleen.
-316 Kirjaston otsikko on pakollinen
-317 Siirrä kursoria dokumentissa määrittääksesi uuden avainkohdan...
-318 Avainkohta määritelty. Siirrä liukukytkintä määrittääksesi animaation keston...
-319 Valitse elementin alkuväri...
-320 Alkuväri määritelty. Siirrä liukukytkintä määrittääksesi animaation keston...
-321 Valitse loppuväri...
-322 Animaatio määritelty
-323 Animoitu määrittely
-324 Elementti ilman tunnusta
-325 **Add ID
-326 **Remove ID
-327 **Add/Remove IDs
-328 **Apply operation
-329 **Enter an element name
-330 **Apply CSS
-331 **Current screen type
-332 **New Topic
-333 **Bookmark Properties
-334 **Topic Properties
-335 **Topic hierarchy:
-336 Otsikko:
-337 **Recalls:
-338 **Author:
-339 **Created:
-340 **Last modified:
-341 **Description:
-342 **Please select an element
-343 **All CSS
-344 **CSS style rules applied to the <%s> element\n
-345 **Blue lines are links activated by a double (or a single) click\n
-346 **Load objects (object, embed, iframe)
-347 **No style rule for this element
-348 **No insert position defined. Please select first
-349 **Document information
-350 **Document Type
-351 **MIME Type
-352 **Charset
-353 **Content Length
-354 **Content Location
-355 Asetukset
-356 Merkki (&xxx;)
-357 **Create Object
-358 **Directory
-359 **File
-360 **Replace current
-361 **In new Window
-362 Anti-aliasing
-363 **ISO format for date
-364 **New documents location
-365 **Opening location
-366 **Warn when closing multiple tabs
-367 **Max url number in history
-368 **Clear url list
-369 **Display all shortcuts
-370 **Fixed line length (0 = default value)
-371 **Template
-372 **Save the document as...
-373 **Template not found
-374 **Show template's boxes
-375 **Apply closes the dialogue
-376 **Not allowed
-377 **Protected element
-378 **The selection should not cross an element of this type
-379 **No heading found
-380 **Save anyway
-381 **Cannot locate host
-382 **Document has changed (412)
-383 **Conflict with the current state of the resource
-384 **Invalid selection
-385 **Unknown element
-386 **%d updated elements
-387 **The title is mandatory
-388 **Templates
-389 **Number of occurrences
-390 **Maximum number of occurrences reached
-391 **Minimum number of occurrences reached
-392 **Check duplicated IDs
-393 **Add the xsl stylesheet for MathML elements
-394 **Insert operator
-395 **Select the way the operator has to be displayed
-396 **Insert an integral
-397 **Select the type of integral
-398 **Attributes of the fence
-399 **Select open, separator and close symbols
-400 **Number of operator symbols
-401 **Number of coordinates
-402 **Length of the N-tuples
-403 **Number of elements
-404 **Number of variables
-405 **Degree
-406 **Degree of the variable number %d
-407 **Compound document
-408 **Copy resources (styles and scripts)
-409 **Where to save resources
-410 **Where to save images
-411 **Document
-412 **Images, Styles and Scripts
+2 Uusi XHTML 1.1 dokumentti
+3 Uusi XHTML 1.0 Transitional document
+4 Uusi XHTML 1.0 Strict document
+5 Uusi XHTML 1.0 Basic dokumentti
+6 Uusi MathML dokumentti
+7 Uusi SVG dokumentti
+8 Uusi CSS tyylitiedosto
+9 Valmiista mallista
+10 **In new tab
+11 Avaa uudessa ikkunass
+12 Tyhjennä
+13 **Click
+14 Tallennetaan: %s
+15 Määrittely
+16 URL
+17 Teksti
+18 Nimi
+19 Salasana
+20 Käytä luokkana
+21 Noudetaan %s
+22 Ei voida ladata %s
+23 Valmis!
+24 Valitse kohde
+25 Kelpaamaton kohde
+26 Syötä URL tai selaa
+27 Otsikko
+28 Muuta otsake
+29 **Document modified - Do you want to save it?
+30 Noudetaan välitetysti %s
+31 Havaittu liian monta välitystä
+32 Ei voida luoda paikallista tiedostoa %s
+33 Ei voida luoda hakemistoa %s
+34 Odotetaan vapaata rajapintaa
+35 Luetaan %s
+36 Kirjoitetaan %s
+37 Odotetaan yhteyttä
+38 Yhdistetään %s
+39 Etsitään %s
+40 Tuntematon tila
+41 Tunnistus ikkuna
+42 Syöttäkää tunnistetiedot
+43 Tunnistus epäonnistui %s
+44 %s ladattu, mutta ei luettavissa
+45 Tiedonsiirto keskeytetty!
+46 %s yhteyttä ei voi muodostaa. Yrittäkää myöhemmin uudelleen.
+47 %s ladattu
+48 Tallenetaan %s
+49 Ei voida tallentaa: %s
+50 Englantilaisen järjestelmän virhesanomat.
+51 Linkin kohde ei voi sisältää näitä elementtejä
+52 Ei voida luoda kohdetta kohteen sisälle
+53 Tälle URL:lle ei ole vielä GET-tukea: %s
+54 Tälle URL:lle ei ole vielä PUT-tukea:: %s
+55 Amayan tämä versio ei tue vielä tätä ominaisuutta
+56 Kirjoitus valmis %s
+57 Ei voinut normalisoida %s
+58 Ei voinut luoda väliaikaista hakemistoa %s
+59 Valintaa ei voi muuntaa
+60 Muunto epäonnistui
+61 ohjelmavirhe HTML.trans rivillä %s
+62 Matematiikka
+63 Grafiikka
+64 Tallenna nimellä
+65 Anna tunnistetiedot alueelle \'%s\' palvelimella \'%s\'
+66 Alue: %s
+67 Palvelin: %s
+68 Muokkain/Selain
+69 Pyynnön aikakatkaisu - Palvelin ei vastaa.
+70 %s on jo olemassa. Korvataanko?
+71 %s on muuttunut. Korvataanko?
+72 Taustakuva
+73 Taustakuvaa ei sallita tässä
+74 CSS
+75 **Saving will save following images too?
+76 URL:n tallennus epäonnistui
+77 Tallennetaanko levylle ?
+78 Kopioi kuvat
+79 Muuta URL:t
+80 Dokumentin sijainti
+81 Kuvahakemisto
+82 Elementin sijainti
+83 CSS tyylitiedostot
+84 Avaa CSS
+85 Poista käytöstä CSS
+86 Ota käyttöön CSS
+87 Poista CSS
+88 W3C:n Internetin muokkain/selain
+89 (ilmoita virheistä www-amaya@w3.org)
+90 Ei voi käsitellä osoitteita joissa on enemmän kuin %s merkkiä
+91 Vain oletus sallittu
+92 Linkkien päivitys: %s%% onnistui
+93 Ei mitään tallennettavaa
+94 toista-y
+95 Syöttäkää kayttäjätunnus:
+96 %d selvittämätön pyyntö
+97 Ei CSS-tiedostoa saatavilla
+98 **Don't save
+99 ei toistoa
+100 Dokumentilla ei ole nimeä. Tallennetaan nimellä:
+101 Pluginit
+102 Tuntematon virhe tallennettaessa URL:ää %s
+103 Palvelinyhteyden muodostus epäonnistui
+104 Pääsy tietoon %s on kielletty palvelimen toimesta
+105 Toiminto onnistui %s
+106 %s on luotu
+107 %s on päivitetty
+108 Toiminto suoritettu %s palautteella
+109 Palvelin ei ymmärrä pyyntöä
+110 Palvelimella ei ole uudempaa tietoa
+111 Tämä menettely on kielletty
+112 Tunnistus vaaditaan %s käsittelyyn
+113 Tarkistetaan ...
+114 Tallennus %s epäonnistui, Tallenetaanko levylle?
+115 Tallenne %s vaikuttaa virheelliseltä, ohita?
+116 URL %s välitetään edelleen %s, ohita?
+117 %s päivitys epäonnistui, ohita?
+118 Palvelinvirhe: %s
+119 Palvelin ei tue tätä pyyntöä
+120 Suodatin
+121 aktiiviset tiedonsiirrot
+122 jonottavat tiedonsiirrot
+123 Sisällysluettelo
+124 Linkkiluettelo
+125 Toistotila
+126 toista
+127 toista-x
+128 Amayan sammuttaminen epäonnistui. Haluatko palauttaa varmuuskopioidut dokumentit?
+129 Tunnistus epäonnistui, Yritä uudelleen?
+130 Toiminto välitetään. Haluatko jatkaa?
+131 Rivien lukumäärä
+132 Sarakkeiden lukumäärä
+133 Reunus
+134 Vuorottainen teksti
+135 Vuorottainen teksti on välttämätön
+136 Tulosta URL
+137 Käytä
+138 Oletus
+139 Tyhjennä välimuisti
+140 Välimuisti
+141 Käytä välimuistia
+142 Aseta suojatut tiedostot välimuistiin
+143 Katkaistu tila
+144 Ohita vanhentumiset: header
+145 Välimuistin sijainti
+146 Välimuistin koko (Mb)
+147 Välimuistiin tallennettavan tiedoston kokorajoitus (Mb)
+148 Välimuisti
+149 HTTP välityspalvelin (e.g., www.w3.org:1234)
+150 Välityspalvelimen domain luettelo (e.g., lists.w3.org)
+151 Yleiset
+152 Aloitussivu
+153 Painikevihjeen viive (ms)
+154 Kaksoisnapautuksen viive (ms)
+155 Valikon fonttikoko
+156 Fonttikoko
+157 Kielikoodi
+158 **Preserve lines when pasting
+159 **Generate backup files
+160 **Save geometry on exit
+161 Näytä taustakuvat
+162 Näytä painikerivi
+163 Näytä osoite
+164 Näytä kohteet
+165 Vienti CR/LF
+166 Selaus
+167 Lataa kuvat (img)
+168 Kaksoisklikkaus aktivoi linkin
+169 Julkaisu
+170 Käytä ETAGS:ia ja ennakkoehtoja
+171 Tarkista jokainen PUT suorittamalla GET
+172 Oletus nimi URL:lle jotka päättyvät '/'
+173 Geometria
+174 Tallenna nykyinen geometria
+175 Palauta oletus geometria
+176 Muutos tulee voimaan avatessasi uuden ikkunan
+177 Väri
+178 Dokumentin piirtoväri
+179 Dokumentin taustaväri
+180 Valikon piirtoväri
+181 Valikon taustaväri
+182 Välimuistin käynnistys epäonnistui.Välimuistin hakemisto on viallinen tai toinen Amaya-prosessi käyttää välimuistia.
+183 Luettelo valituista kielistä "fi, en":
+184 Muutokset tulevat voimaan Amayan uudelleenkäynnistämisen jälkeen.
+185 Salli automaattinen PUT-komentojen välitys näissä domaineissa
+186 Ohita tyylitiedostot
+187 Muunnoksen tyyppi
+188 (erota syötteet välilyönnein)
+189 Älä käytä välityspalvelinta näihin domaineihin
+190 Käytä vain välityspalvelinta näihin domaineihin
+191 Henkilön nimi
+192 Amaya käyttäjän hakemisto
+193 Väliaikaisten tiedostojen hakemisto
+194 Käytä palettia
+195 Kieliasetukset
+196 Huomautuksien
+197 Käyttäjän huomautukset
+198 Postipalvelimen huomautukset
+199 Palvelimien merkinnät
+200 Lataa paikalliset merkinnät automaattisesti
+201 Lataa etämerkinnät automaattisesti
+202 Poista etälataus käytöstä käynnistyksen yhteydessä (etätyötä varten)
+203 Valintaväri
+204 **Selection background color
+205 Suunta
+206 Pysty
+207 Vaaka
+208 **Keep multiple spaces
+209 **Error(s) in the source code
+210 **Fatal error - Fix the source code to continue
+211 **Try the 'File/Read as' entry
+212 Virheellisiä merkkejä
+213 Dokumentin profiili:
+214 Virhe - katso Tiedosto > Näytä käännösvirheet
+215 Amaya ei tue dokumentin tyyppiä
+216 Muokkaus ja tallennus muuttavat dokumentin tyypin
+217 Ei saatavilla
+218 Selaa
+219 Selaa tiedostoja
+220 Valinta
+221 Merkintä paikallissuodatusvalikko
+222 Näytä
+223 Piilota
+224 Näytä kaikki
+225 Piilota kaikki
+226 * tarkoittaa piilotettua, - tarkoittaa osittain piilotettua
+227 Suodatusvalinnat
+228 Tekijän mukaan
+229 Tyypin mukaan
+230 Palvelimen mukaan
+231 Access näppäimet
+232 Ohita
+233 Tyyli elementti
+234 Ei voi luoda XPointeria
+235 Mahdotonta liittää aloittavaa XPointeria sisäisesti lisättyyn elementtiin
+236 Mahdotonta liittää lopettavaa XPointeria sisäisesti lisättyyn elementtiin
+237 Merkinnän kohdepaikkaa ei löydy
+238 Merkintää ei voi siirtää toiseen dokumenttiin
+239 Et voi merkitä muutettua dokumenttia. Tallenna dokumentti ensin.
+240 Merkinnän käyttäjää ei valittu. Valitse käyttäjä Merkinnät/Määritä asetukset
+241 XPointerin luonti merkintää varten epäonnistui
+242 Uusi merkintä
+243 Merkinnän lähetys epäonnistui
+244 Merkinnän poisto epäonnistui
+245 Merkintä poistettu
+246 Merkintäluettelon lataus epäonnistui
+247 Virhe
+248 Valitse Charset
+249 Valitse MIME tyyppi
+250 Muuta Charset
+251 Muuta MIME tyypi
+252 Muuta
+253 Tämä dokumenttityyppi ei tue charset:iä
+254 Kohteen täytyy olla HTTP URL tämän valinna kanssa
+255 Virhe: epäkelpo MIME tyyppi
+256 Tuntematon
+257 Tyylit ohitetaan - katso Tiedosto > Näytä käännösvirheet
+258 Tämä dokumentti on avattu jo toiseen ikkunaan
+259 Tämän instanssin tallennus saattaa aiheuttaa kadonneen päivityksen ongelman
+260 **Adding or changing the doctype will remove some elements or attributes
+261 **Please confirm operation
+262 Käytä application/xhtml+xml MIME tyypiä XHTML dokumenttien yhteydessä
+263 **Charset for new documents
+264 Lukitus onnistui!
+265 Lukitus epäonnistui!
+266 Lukitaan %s...
+267 Dokumentti %s on lukittu!
+268 Dokumentin %s on lukinnut %s (aikakatkaisu %s)
+269 Korvataanko lukitustiedot?
+270 Kopioidaanko lukitustiedot?
+271 Yritä poistaa lukitus ensin...
+272 Lukituksen poisto onnistui!
+273 Lukituksen poisto epäonnistui!
+274 Poistetaan lukitus %s...
+275 Poistettu lukitus dokumentista: %s
+276 Poista lukitus dokumentista?
+277 Dokumentin ominaisuudet
+278 Dokumentin ominaisuuksia ei saatavilla
+279 Dokumentin ominaisuuksia ei ole väliaikaisesti saatavilla. Yritä myöhemmin uudelleen...
+280 Haetaan dokumentin ominaisuuksia...
+281 Tälle URL:lle ei ole WebDav-tukea %s
+282 Lukitustietojen tallennus paikallisesti epäonnistui
+283 Lukitustietojen poisto paikallisesti epäonnistui
+284 Tämä toiminto ei ole käytettävissä %s
+285 Pyyntö epäonnistui! Syy: Viallinen riippuvuus
+286 Pyyntö epäonnistui! Syy: %s
+287 Yritä uudelleen?
+288 WebDAV
+289 Käyttäjän henkilökohtainen linkki (URL)
+290 Käyttäjän WebDAV resurssi luettelo (URL URL)
+291 Lukituksen syvyys
+292 rajattomuus
+293 Lukituksen aikakatkaisu
+294 Rajaton
+295 Muu (Sekuntia)
+296 Lukitse ala
+297 yksinomainen
+298 jaettu
+299 Valvetila
+300 Yleinen valvetila
+301 Valvetila poistuttaessa
+302 Animaatio
+303 SVG Kirjasto
+304 Kopioi vaihtoehto
+305 Kopioi valinta
+306 Viittaa valintaan
+307 Lisää uusi malli kirjastoon
+308 Uuden SVG-tiedoston URL...
+309 Kirjaston nimi
+310 Kirjaston URL
+311 Luo kirjasto
+312 Selaa kirjastoa
+313 Luo tai etsi kirjasto
+314 Nykyinen valinta ei sisällä pelkästään SVG elementtejä. Valitse uudelleen.
+315 Kirjaston otsikko on pakollinen
+316 Siirrä kursoria dokumentissa määrittääksesi uuden avainkohdan...
+317 Avainkohta määritelty. Siirrä liukukytkintä määrittääksesi animaation keston...
+318 Valitse elementin alkuväri...
+319 Alkuväri määritelty. Siirrä liukukytkintä määrittääksesi animaation keston...
+320 Valitse loppuväri...
+321 Animaatio määritelty
+322 Animoitu määrittely
+323 Elementti ilman tunnusta
+324 **Add ID
+325 **Remove ID
+326 **Add/Remove IDs
+327 **Apply operation
+328 **Enter an element name
+329 **Apply CSS
+330 **Current screen type
+331 **New Topic
+332 **Bookmark Properties
+333 **Topic Properties
+334 **Topic hierarchy:
+335 Otsikko:
+336 **Recalls:
+337 **Author:
+338 **Created:
+339 **Last modified:
+340 **Description:
+341 **Please select an element
+342 **All CSS
+343 **CSS style rules applied to the <%s> element\n
+344 **Blue lines are links activated by a double (or a single) click\n
+345 **Load objects (object, embed, iframe)
+346 **No style rule for this element
+347 **No insert position defined. Please select first
+348 **Document information
+349 **Document Type
+350 **MIME Type
+351 **Charset
+352 **Content Length
+353 **Content Location
+354 Asetukset
+355 Merkki (&xxx;)
+356 **Create Object
+357 **Directory
+358 **File
+359 **Replace current
+360 **In new Window
+361 Anti-aliasing
+362 **ISO format for date
+363 **New documents location
+364 **Opening location
+365 **Warn when closing multiple tabs
+366 **Max url number in history
+367 **Clear url list
+368 **Display all shortcuts
+369 **Fixed line length (0 = default value)
+370 **Template
+371 **Save the document as...
+372 **Template not found
+373 **Show template's boxes
+374 **Apply closes the dialogue
+375 **Not allowed
+376 **Protected element
+377 **The selection should not cross an element of this type
+378 **No heading found
+379 **Save anyway
+380 **Cannot locate host
+381 **Document has changed (412)
+382 **Conflict with the current state of the resource
+383 **Invalid selection
+384 **Unknown element
+385 **%d updated elements
+386 **The title is mandatory
+387 **Templates
+388 **Number of occurrences
+389 **Maximum number of occurrences reached
+390 **Minimum number of occurrences reached
+391 **Check duplicated IDs
+392 **Add the xsl stylesheet for MathML elements
+393 **Insert operator
+394 **Select the way the operator has to be displayed
+395 **Insert an integral
+396 **Select the type of integral
+397 **Attributes of the fence
+398 **Select open, separator and close symbols
+399 **Number of operator symbols
+400 **Number of coordinates
+401 **Length of the N-tuples
+402 **Number of elements
+403 **Number of variables
+404 **Degree
+405 **Degree of the variable number %d
+406 **Compound document
+407 **Copy resources (styles and scripts)
+408 **Where to save resources
+409 **Where to save images
+410 **Document
+411 **Images, Styles and Scripts

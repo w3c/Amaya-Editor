@@ -205,7 +205,7 @@ void InvertEllipse (int frame, int x, int y, int width, int height,
   if (w != None)
     {
 #ifdef _GL
-	  GL_DrawArc (x, y, width, height, 0, 360 * 64, FALSE);
+	  GL_DrawArc (x, y, width, height, 0, 360 * 64, FALSE, 5, 1, DefaultFColor);
 #else /*_GL*/
 #ifdef _WINGUI
 	  rgn = CreateEllipticRgn (x, y, x + width, y + height);

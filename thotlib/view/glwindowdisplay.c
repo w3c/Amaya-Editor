@@ -155,8 +155,8 @@
 /*for int  => (((int)N)<<1)*/
 #define P2(N) (N*N)
 /* Arc Precision Drawings */
-#define SLICES 360
-#define SLICES_SIZE 361
+#define SLICES 180
+#define SLICES_SIZE 181
 #define INTERVAL 0.02 /*1/FPS*/ /* should be 1/25 ... 1/50 */
 #define REALY(A) (A + FrameTable[frame].FrTopMargin)
 
@@ -503,10 +503,11 @@ void GL_DrawLine (int x1, int y1, int x2, int y2, ThotBool round)
 /*----------------------------------------------------------------------
   GL_DrawSegments
   ----------------------------------------------------------------------*/
-void GL_DrawSegments (ThotSegment *point, int npoints)
+void GL_DrawSegments (ThotSegment *point, int npoints, int style, int thick, int fg)
 {
   int i;
-  
+
+  InitDrawing (style, thick, fg);
   if (S_thick > 1)
     {
       glBegin (GL_POINTS); 
@@ -534,7 +535,7 @@ void GL_DrawSegments (ThotSegment *point, int npoints)
   GL_DrawArc : Draw an arc
   ----------------------------------------------------------------------*/
 void GL_DrawArc (float x, float y, float w, float h, int startAngle,
-                 int sweepAngle, ThotBool filled)
+                 int sweepAngle, int style, int thick, int fg, ThotBool filled)
 {
   GLint     i, slices;
   PRECISION angleOffset;
@@ -559,6 +560,7 @@ void GL_DrawArc (float x, float y, float w, float h, int startAngle,
 
   startAngle = startAngle;
   sweepAngle = sweepAngle;
+  InitDrawing (style, thick, fg);
  
   /* Cache is the vertex locations cache */
   angleOffset = (PRECISION) (startAngle / 180.0 * M_PI);
@@ -970,7 +972,7 @@ static void DisplayViewBoxTransformation (PtrTransform Trans, int Width, int Hei
                   if (Width != s_width)
                     x_trans = (Width - s_width) / 2;
                   if (Height != s_height)
-                    y_trans = (Height - s_height);                  
+                    y_trans = (Height - s_height);
                 }
               else if (Trans->VbAspectRatio == ArXMaxYMax)
                 {

@@ -192,39 +192,40 @@
 190 Következő dokumentum
 191 Újratöltés
 192 Mentés
-193 Dokumentum megnyitása
-194 Nyomtatás
-195 Keresés
-196 Kezdőlap
-197 Hangsúlyozott
-198 Vastag
-199 Kód
-200 Kép beillesztése
-201 1. szint
-202 2. szint
-203 3. szint
-204 Listajeles lista
-205 Számozott lista
-206 Meghatározás lista
-207 Kapocs
-208 Táblázat
-209 %d lap bezárására készül. Valóban folytatni kívánja?
-210 Figyelmeztessen több lap bezárásakor
-211 Lapok bezárása
-212 Nincs hiba
-213 Elemzési hibák mutatása
-214 Dobozok
-215 Felosztás
-216 Létrehozása
-217 &Beillesztés
-218 &Törlés
-219 &Alsó index
-220 &Felső index
-221 Szócikk
-222 Meghatározás
-223 Objektum
-224 CSS Stílus
-225 Fájl
-226 Vízszintes felosztás
-227 Függőleges felosztás
-228 Eszközsor mutatása
+193 Új XHTML dokumentum...
+194 Dokumentum megnyitása
+195 Nyomtatás
+196 Keresés
+197 Kezdőlap
+198 Hangsúlyozott
+199 Vastag
+200 Kód
+201 Kép beillesztése
+202 1. szint
+203 2. szint
+204 3. szint
+205 Listajeles lista
+206 Számozott lista
+207 Meghatározás lista
+208 Kapocs
+209 Táblázat
+210 %d lap bezárására készül. Valóban folytatni kívánja?
+211 Figyelmeztessen több lap bezárásakor
+212 Lapok bezárása
+213 Nincs hiba
+214 Elemzési hibák mutatása
+215 Dobozok
+216 Felosztás
+217 Létrehozása
+218 &Beillesztés
+219 &Törlés
+220 &Alsó index
+221 &Felső index
+222 Szócikk
+223 Meghatározás
+224 Objektum
+225 CSS Stílus
+226 Fájl
+227 Vízszintes felosztás
+228 Függőleges felosztás
+229 Eszközsor mutatása

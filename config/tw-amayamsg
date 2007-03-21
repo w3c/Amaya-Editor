@@ -1,414 +1,413 @@
 # encoding= utf8
 0 文件
 1 打開
-2 新建 XHTML 文檔
-3 新建 XHTML 1.1 文檔
-4 新建 XHTML 1.0 Transitional 文檔
-5 新建 XHTML 1.0 Strict 文檔
-6 新建 XHTML 1.0 Basic 文檔
-7 新建 MathML 文檔
-8 新建 SVG 文檔
-9 新建 CSS 樣式表
-10 來自模板
-11 在新標簽頁打開
-12 在新窗口打開
-13 清除
-14 點擊
-15 文檔 %s 已保存
-16 屬性
-17 URL
-18 文本文檔
-19 Name
-20 密碼
-21 作為 class 使用
-22 Fetching %s
-23 無法加載 %s
-24 完成!
-25 選擇目標
-26 無效目標
-27 插入 URI 或瀏覽文件
-28 標題
-29 更改標題
-30 文檔已更改，你希望保存更改嗎?
-31 Redirection fetching of %s
-32 檢測到過多重定向
-33 無法創建本地文件 %s
-34 無法創建目錄 %s
-35 正在等待可用的 socket
-36 正在讀取 %s
-37 正在寫入 %s
-38 正在等待連接
-39 正在連接 %s
-40 正在搜尋 %s
-41 未知狀態
-42 身份驗證對話框
-43 請驗證身份
-44 身份驗證失敗 %s
-45 %s 已加載，但無法獲取數據
-46 傳輸被中斷!
-47 %s 現在不可用, 請稍候重試
-48 %s 已加載
-49 正在保存 %s
-50 無法保存: %s
-51 中文系統錯誤消息
-52 anchor無法包含這些元素
-53 無法在 anchor 中創建 anchor
-54 對不起, 此類URL不支持 GET 方法: %s
-55 對不起, 此類URL不支持 PUT 方法: %s
-56 此版本 Amaya 尚不支持此特性
-57 結束寫入 %s
-58 無法標準化 %s
-59 無法創建臨時文件夾 %s
-60 所選區域無法應用變換
-61 變換失敗
-62 HTML語法錯誤 %s
-63 Maths
-64 圖形
-65 另存為
-66 Please authenticate for realm \'%s\' at server \'%s\'
-67 域: %s
-68 服務器: %s
-69 編輯器/瀏覽器
-70 請求超市 - 服務器無響應
-71 %s 已存在, 覆蓋嗎?
-72 %s 已改變, 覆蓋嗎?
-73 背景圖片
-74 此處無法使用背景圖片
-75 CSS
-76 同時保存這些圖片嗎?
-77 保存到URL失敗
-78 保存到磁盤嗎?
-79 復制圖片
-80 變換URL
-81 文檔位置
-82 圖片路徑
-83 對象未知
-84 CSS 文件
-85 打開 CSS 樣式表
-86 禁用 CSS 樣式表
-87 啟用 CSS 樣式表
-88 移除 CSS 樣式表
-89 W3C的網頁編輯器/瀏覽器
-90 (mail issues to www-amaya@w3.org)
-91 無法提交超過 %s 個字符的 URL
-92 只允許默認類型
-93 鏈接更新: %s% 已完成
-94 無任何更新被保存
-95 repeat-y
-96 請輸入用戶名:
-97 %d outstanding requests
-98 無可用 CSS 文件
-99 不保存
-100 no-repeat
-101 文檔尚未命名, 保存至:
-102 插件
-103 保存 URL 時發生未知錯誤: %s
-104 無法連接到服務器
-105 訪問 %s 已被服務器禁止
-106 操作 %s 已成功
-107 %s 已創建
-108 %s 已更新
-109 Operation completed with a %s status code
-110 服務器無法解析請求
-111 服務器沒有新的信息需要送回
-112 此方法被禁止
-113 Please authenticate to access %s
-114 正在驗證 ...
-115 保存到 %s 失敗, 保存到磁盤嗎?
-116 保存到 %s 似乎不正確, 忽略嗎?
-117 URL %s 重定向到 %s, 忽略嗎?
-118 重新載入 %s 失敗, 忽略嗎?
-119 服務器報告了一個錯誤: %s
-120 服務器不支持此請求方法
-121 過濾器
-122 active transfers
-123 queued transfers
-124 內容表格
-125 鏈接表格
-126 重復模式
-127 repeat
-128 repeat-x
-129 你上次的 Amaya 會話失敗, 希望重新載入備份文檔嗎?
-130 身份驗證失敗, 重試嗎?
-131 操作會被重定向, 繼續嗎?
-132 行數
-133 列數
-134 邊框
-135 代替文本
-136 必須使用代替文本
-137 打印 URL
-138 應用
-139 恢復默認值
-140 Flush 緩沖區
-141 緩存
-142 啟用緩存
-143 緩存保護文檔
-144 脫機模式
-145 忽略過期的 header
-146 緩存路徑
-147 緩存大小 (Mb)
-148 緩存入口大小 (Mb)
-149 代理
-150 HTTP 代理 (例如 www.w3.org:1234)
-151 代理域名列表 (e.g., lists.w3.org)
-152 一般
-153 主頁
-154 提示延遲 (毫秒)
-155 雙擊延遲 (毫秒)
-156 菜單字體大小
-157 字體大小(%)
-158 程序語言
-159 啟用行對行粘貼
-160 生成備份文件
-161 退出前保存窗口位置
-162 顯示背景圖片
-163 顯示按鈕欄
-164 顯示 ADDRESS
-165 顯示目標
-166 導出 CR/LF
-167 瀏覽
-168 載入圖片 (img)
-169 雙擊跟蹤鏈接
-170 發布
-171 使用ETAGS和前提
-172 為每個PUT驗證GET
-173 URL默認名稱 '/'
-174 窗口位置
-175 保存當前窗口位置
-176 恢復默認窗口位置
-177 改變會在新窗口內生效
-178 顏色
-179 文檔前景色
-180 文檔背景色
-181 菜單前景色
-182 菜單背景色
-183 無法啟用緩存, 你可能使用了無效的緩存目錄或有其他 Amaya 實例在使用該緩存
-184 語言偏好 (如 "en, fr"):
-185 當前改變會在重啟Amaya后生效
-186 允許以下域的自動實用 PUT 轉向
-187 忽略樣式表
-188 轉換類型
-189 (以空格分隔域名)
-190 對這些域名不啟用代理
-191 僅對這些域名啟用代理
-192 字符名稱
-193 Amaya 用戶目錄
-194 臨時目錄
-195 使用小面板
-196 語言協商
-197 注釋
-198 注釋和書簽作者
-199 注釋提交服務器
-200 注釋服務器
-201 自動加載本地注釋
-202 自動遠程本地注釋
-203 啟動時禁用遠程加載 (脫機工作時)
-204 選擇區域前景色
-205 選擇區域背景色
-206 Orientation
-207 Portrait
-208 Landscape
-209 **Keep multiple spaces
-210 Error(s) in the source code
-211 Fatal error - Fix the source code to continue
-212 Try the 'File/Read as' entry
-213 Invalid characters
-214 Document profile:
-215 Errors detected - see File > Show parsing errors
-216 The encoding of this document is not supported by Amaya
-217 Editing and saving this document will change its type
-218 Not available
-219 Browse
-220 File Browser
-221 Selection
-222 Annotation Local Filter Menu
-223 顯示錯誤
-224 隱藏
-225 顯示所有
-226 隱藏所有
-227 * 表示隱藏所有, - 表示部分隱藏
-228 過濾器選項
-229 By 作者
-230 By 類型
-231 By 服務器
-232 Access keys
-233 忽略
-234 Style 元素
-235 無法創建 XPointer
-236 Impossible to attach a start XPointer on an internal added element
-237 Impossible to attach an end XPointer on an internal added element
-238 未發現注釋移動的位置
-239 無法將注釋移到其他文檔
-240 注釋前請先保存該文檔
-241 未聲明注釋用戶, 請打開 注釋/配置 菜單
-242 無法為該注釋創建 XPointer
-243 創建新的注釋
-244 無法提交注釋
-245 無法刪除注釋
-246 注視已刪除
-247 無法加載注釋索引
-248 錯誤
-249 選擇字符編碼
-250 選擇 MIME 類型
-251 更改字符編碼
-252 更改 MIME 類型
-253 更改
-254 This type of document doesn't support charsets
-255 The target must be an HTTP URL to use this option
-256 錯誤: 無效 MIME 類型
-257 未知
-258 Styles are ignored - see File > Show parsing errors
-259 This document is already loaded in another Window
-260 Saving that instance may cause a lost update problem
-261 Adding or changing the doctype will remove some elements or attributes
-262 Please confirm operation
-263 對 XHTML 文檔使用 application/xhtml+xml MIME 類型
-264 新建文檔的字符集
-265 鎖定成功!
-266 鎖定失敗!
-267 鎖定 %s...
-268 文檔 %s 已鎖定!
-269 文檔 %s 已被 %s 鎖定 (過期時間 %s)
-270 覆蓋鎖定信息?
-271 復制鎖定信息?
-272 Try to unlock the document before...
-273 解鎖成功!
-274 解鎖失敗!
-275 解鎖 %s...
-276 文檔 %s 已解鎖!
-277 解鎖文檔嗎?
-278 文檔屬性
-279 文檔屬性無法獲得
-280 Document properties are temporarily unavailable. Try again later...
-281 Looking for document properties...
-282 Sorry, no WebDAV support for URLs of this type %s
-283 Failed to save lock info in the local base
-284 Failed to remove lok info from local base
-285 Sorry, this operation is not allowed for %s
-286 Request failed! Reason: Failed Dependency
-287 Request failed! Reason: %s
-288 再試一次?
-289 WebDAV
-290 用戶個人參考 (URL)
-291 用戶 WebDAV 資源列表 (URL URL)
-292 鎖定深度
-293 無限
-294 鎖定超時
-295 無限
-296 其他 (秒)
-297 鎖定范圍
-298 排除
-299 共享
-300 Awarenees
-301 一般感知
-302 退出時感知
-303 Animation
-304 SVG Library
-305 Copy option
-306 Copy selection
-307 Refer to selection
-308 向 library 添加新的模型
-309 URL of the new SVG file ...
-310 Library 標題
-311 Library URL
-312 創建 library
-313 瀏覽 library
-314 創建或搜索 library
-315 The selection includes no SVG elements. Please reselect
-316 The library title is mandatory
-317 Move the position cursor in edited document to define a new key position...
-318 Key position defined. Move the slider to define animation duration...
-319 Select starting color of element...
-320 Starting color defined. Move the slider to define animation duration...
-321 Select ending color...
-322 Animation defined.
-323 Animated attribute
-324 Element without ID
-325 添加 ID
-326 刪除 ID
-327 添加/刪除 ID
-328 應用操作
-329 輸入元素名稱
-330 應用 CSS 樣式表
-331 當前屏幕類型
-332 新建主題
-333 書簽屬性
-334 主題屬性
-335 Topic hierarchy:
-336 標題:
-337 Recalls:
-338 作者:
-339 創建:
-340 最后更改:
-341 描述:
-342 Please select an element
-343 所有 CSS 樣式表
-344 CSS樣式被應用于 <%s> 元素\n
-345 Blue lines are links activated by a double (or a single) click\n
-346 載入對象 (object, embed, iframe)
-347 No style rule for this element
-348 No insert position defined. Please select first
-349 Document information
-350 Document Type
-351 MIME 類型
-352 字符集
-353 Content Length
-354 Content Location
-355 使用偏好
-356 Character (&xxx;)
-357 創建對象
-358 目錄
-359 文件
-360 在當前位置
-361 在新的窗口
-362 Anti-aliasing
-363 ISO 格式日期
-364 新建文檔的位置
-365 打開位置
-366 關閉多個標簽頁是顯示警告
-367 歷史 URL 最大數量
-368 清空 URL 列表
-369 顯示所有快捷鍵
-370 固定行的長度 (0 為默認值)
-371 模板
-372 文檔另存為...
-373 未找到模板
-374 顯示模板
-375 應用后關閉對話框
-376 此文檔禁止
-377 被保護的元素
-378 選擇區域不應該跨域此類元素
-379 No heading found
-380 強制保存
-381 無法定位主機
-382 文檔已被改變 (412)
-383 與當前資源的狀態沖突
-384 無效選擇區域
-385 未知元素
-386 %d 个已更新元素
-387 **The title is mandatory
-388 **Templates
-389 **Number of occurrences
-390 **Maximum number of occurrences reached
-391 **Minimum number of occurrences reached
-392 **Check duplicated IDs
-393 **Add the xsl stylesheet for MathML elements
-394 **Insert operator
-395 **Select the way the operator has to be displayed
-396 **Insert an integral
-397 **Select the type of integral
-398 **Attributes of the fence
-399 **Select open, separator and close symbols
-400 **Number of operator symbols
-401 **Number of coordinates
-402 **Length of the N-tuples
-403 **Number of elements
-404 **Number of variables
-405 **Degree
-406 **Degree of the variable number %d
-407 **Compound document
-408 **Copy resources (styles and scripts)
-409 **Where to save resources
-410 **Where to save images
-411 **Document
-412 **Images, Styles and Scripts
+2 新建 XHTML 1.1 文檔
+3 新建 XHTML 1.0 Transitional 文檔
+4 新建 XHTML 1.0 Strict 文檔
+5 新建 XHTML 1.0 Basic 文檔
+6 新建 MathML 文檔
+7 新建 SVG 文檔
+8 新建 CSS 樣式表
+9 來自模板
+10 在新標簽頁打開
+11 在新窗口打開
+12 清除
+13 點擊
+14 文檔 %s 已保存
+15 屬性
+16 URL
+17 文本文檔
+18 Name
+19 密碼
+20 作為 class 使用
+21 Fetching %s
+22 無法加載 %s
+23 完成!
+24 選擇目標
+25 無效目標
+26 插入 URI 或瀏覽文件
+27 標題
+28 更改標題
+29 文檔已更改，你希望保存更改嗎?
+30 Redirection fetching of %s
+31 檢測到過多重定向
+32 無法創建本地文件 %s
+33 無法創建目錄 %s
+34 正在等待可用的 socket
+35 正在讀取 %s
+36 正在寫入 %s
+37 正在等待連接
+38 正在連接 %s
+39 正在搜尋 %s
+40 未知狀態
+41 身份驗證對話框
+42 請驗證身份
+43 身份驗證失敗 %s
+44 %s 已加載，但無法獲取數據
+45 傳輸被中斷!
+46 %s 現在不可用, 請稍候重試
+47 %s 已加載
+48 正在保存 %s
+49 無法保存: %s
+50 中文系統錯誤消息
+51 anchor無法包含這些元素
+52 無法在 anchor 中創建 anchor
+53 對不起, 此類URL不支持 GET 方法: %s
+54 對不起, 此類URL不支持 PUT 方法: %s
+55 此版本 Amaya 尚不支持此特性
+56 結束寫入 %s
+57 無法標準化 %s
+58 無法創建臨時文件夾 %s
+59 所選區域無法應用變換
+60 變換失敗
+61 HTML語法錯誤 %s
+62 Maths
+63 圖形
+64 另存為
+65 Please authenticate for realm \'%s\' at server \'%s\'
+66 域: %s
+67 服務器: %s
+68 編輯器/瀏覽器
+69 請求超市 - 服務器無響應
+70 %s 已存在, 覆蓋嗎?
+71 %s 已改變, 覆蓋嗎?
+72 背景圖片
+73 此處無法使用背景圖片
+74 CSS
+75 同時保存這些圖片嗎?
+76 保存到URL失敗
+77 保存到磁盤嗎?
+78 復制圖片
+79 變換URL
+80 文檔位置
+81 圖片路徑
+82 對象未知
+83 CSS 文件
+84 打開 CSS 樣式表
+85 禁用 CSS 樣式表
+86 啟用 CSS 樣式表
+87 移除 CSS 樣式表
+88 W3C的網頁編輯器/瀏覽器
+89 (mail issues to www-amaya@w3.org)
+90 無法提交超過 %s 個字符的 URL
+91 只允許默認類型
+92 鏈接更新: %s% 已完成
+93 無任何更新被保存
+94 repeat-y
+95 請輸入用戶名:
+96 %d outstanding requests
+97 無可用 CSS 文件
+98 不保存
+99 no-repeat
+100 文檔尚未命名, 保存至:
+101 插件
+102 保存 URL 時發生未知錯誤: %s
+103 無法連接到服務器
+104 訪問 %s 已被服務器禁止
+105 操作 %s 已成功
+106 %s 已創建
+107 %s 已更新
+108 Operation completed with a %s status code
+109 服務器無法解析請求
+110 服務器沒有新的信息需要送回
+111 此方法被禁止
+112 Please authenticate to access %s
+113 正在驗證 ...
+114 保存到 %s 失敗, 保存到磁盤嗎?
+115 保存到 %s 似乎不正確, 忽略嗎?
+116 URL %s 重定向到 %s, 忽略嗎?
+117 重新載入 %s 失敗, 忽略嗎?
+118 服務器報告了一個錯誤: %s
+119 服務器不支持此請求方法
+120 過濾器
+121 active transfers
+122 queued transfers
+123 內容表格
+124 鏈接表格
+125 重復模式
+126 repeat
+127 repeat-x
+128 你上次的 Amaya 會話失敗, 希望重新載入備份文檔嗎?
+129 身份驗證失敗, 重試嗎?
+130 操作會被重定向, 繼續嗎?
+131 行數
+132 列數
+133 邊框
+134 代替文本
+135 必須使用代替文本
+136 打印 URL
+137 應用
+138 恢復默認值
+139 Flush 緩沖區
+140 緩存
+141 啟用緩存
+142 緩存保護文檔
+143 脫機模式
+144 忽略過期的 header
+145 緩存路徑
+146 緩存大小 (Mb)
+147 緩存入口大小 (Mb)
+148 代理
+149 HTTP 代理 (例如 www.w3.org:1234)
+150 代理域名列表 (e.g., lists.w3.org)
+151 一般
+152 主頁
+153 提示延遲 (毫秒)
+154 雙擊延遲 (毫秒)
+155 菜單字體大小
+156 字體大小(%)
+157 程序語言
+158 啟用行對行粘貼
+159 生成備份文件
+160 退出前保存窗口位置
+161 顯示背景圖片
+162 顯示按鈕欄
+163 顯示 ADDRESS
+164 顯示目標
+165 導出 CR/LF
+166 瀏覽
+167 載入圖片 (img)
+168 雙擊跟蹤鏈接
+169 發布
+170 使用ETAGS和前提
+171 為每個PUT驗證GET
+172 URL默認名稱 '/'
+173 窗口位置
+174 保存當前窗口位置
+175 恢復默認窗口位置
+176 改變會在新窗口內生效
+177 顏色
+178 文檔前景色
+179 文檔背景色
+180 菜單前景色
+181 菜單背景色
+182 無法啟用緩存, 你可能使用了無效的緩存目錄或有其他 Amaya 實例在使用該緩存
+183 語言偏好 (如 "en, fr"):
+184 當前改變會在重啟Amaya后生效
+185 允許以下域的自動實用 PUT 轉向
+186 忽略樣式表
+187 轉換類型
+188 (以空格分隔域名)
+189 對這些域名不啟用代理
+190 僅對這些域名啟用代理
+191 字符名稱
+192 Amaya 用戶目錄
+193 臨時目錄
+194 使用小面板
+195 語言協商
+196 注釋
+197 注釋和書簽作者
+198 注釋提交服務器
+199 注釋服務器
+200 自動加載本地注釋
+201 自動遠程本地注釋
+202 啟動時禁用遠程加載 (脫機工作時)
+203 選擇區域前景色
+204 選擇區域背景色
+205 Orientation
+206 Portrait
+207 Landscape
+208 **Keep multiple spaces
+209 Error(s) in the source code
+210 Fatal error - Fix the source code to continue
+211 Try the 'File/Read as' entry
+212 Invalid characters
+213 Document profile:
+214 Errors detected - see File > Show parsing errors
+215 The encoding of this document is not supported by Amaya
+216 Editing and saving this document will change its type
+217 Not available
+218 Browse
+219 File Browser
+220 Selection
+221 Annotation Local Filter Menu
+222 顯示錯誤
+223 隱藏
+224 顯示所有
+225 隱藏所有
+226 * 表示隱藏所有, - 表示部分隱藏
+227 過濾器選項
+228 By 作者
+229 By 類型
+230 By 服務器
+231 Access keys
+232 忽略
+233 Style 元素
+234 無法創建 XPointer
+235 Impossible to attach a start XPointer on an internal added element
+236 Impossible to attach an end XPointer on an internal added element
+237 未發現注釋移動的位置
+238 無法將注釋移到其他文檔
+239 注釋前請先保存該文檔
+240 未聲明注釋用戶, 請打開 注釋/配置 菜單
+241 無法為該注釋創建 XPointer
+242 創建新的注釋
+243 無法提交注釋
+244 無法刪除注釋
+245 注視已刪除
+246 無法加載注釋索引
+247 錯誤
+248 選擇字符編碼
+249 選擇 MIME 類型
+250 更改字符編碼
+251 更改 MIME 類型
+252 更改
+253 This type of document doesn't support charsets
+254 The target must be an HTTP URL to use this option
+255 錯誤: 無效 MIME 類型
+256 未知
+257 Styles are ignored - see File > Show parsing errors
+258 This document is already loaded in another Window
+259 Saving that instance may cause a lost update problem
+260 Adding or changing the doctype will remove some elements or attributes
+261 Please confirm operation
+262 對 XHTML 文檔使用 application/xhtml+xml MIME 類型
+263 新建文檔的字符集
+264 鎖定成功!
+265 鎖定失敗!
+266 鎖定 %s...
+267 文檔 %s 已鎖定!
+268 文檔 %s 已被 %s 鎖定 (過期時間 %s)
+269 覆蓋鎖定信息?
+270 復制鎖定信息?
+271 Try to unlock the document before...
+272 解鎖成功!
+273 解鎖失敗!
+274 解鎖 %s...
+275 文檔 %s 已解鎖!
+276 解鎖文檔嗎?
+277 文檔屬性
+278 文檔屬性無法獲得
+279 Document properties are temporarily unavailable. Try again later...
+280 Looking for document properties...
+281 Sorry, no WebDAV support for URLs of this type %s
+282 Failed to save lock info in the local base
+283 Failed to remove lok info from local base
+284 Sorry, this operation is not allowed for %s
+285 Request failed! Reason: Failed Dependency
+286 Request failed! Reason: %s
+287 再試一次?
+288 WebDAV
+289 用戶個人參考 (URL)
+290 用戶 WebDAV 資源列表 (URL URL)
+291 鎖定深度
+292 無限
+293 鎖定超時
+294 無限
+295 其他 (秒)
+296 鎖定范圍
+297 排除
+298 共享
+299 Awarenees
+300 一般感知
+301 退出時感知
+302 Animation
+303 SVG Library
+304 Copy option
+305 Copy selection
+306 Refer to selection
+307 向 library 添加新的模型
+308 URL of the new SVG file ...
+309 Library 標題
+310 Library URL
+311 創建 library
+312 瀏覽 library
+313 創建或搜索 library
+314 The selection includes no SVG elements. Please reselect
+315 The library title is mandatory
+316 Move the position cursor in edited document to define a new key position...
+317 Key position defined. Move the slider to define animation duration...
+318 Select starting color of element...
+319 Starting color defined. Move the slider to define animation duration...
+320 Select ending color...
+321 Animation defined.
+322 Animated attribute
+323 Element without ID
+324 添加 ID
+325 刪除 ID
+326 添加/刪除 ID
+327 應用操作
+328 輸入元素名稱
+329 應用 CSS 樣式表
+330 當前屏幕類型
+331 新建主題
+332 書簽屬性
+333 主題屬性
+334 Topic hierarchy:
+335 標題:
+336 Recalls:
+337 作者:
+338 創建:
+339 最后更改:
+340 描述:
+341 Please select an element
+342 所有 CSS 樣式表
+343 CSS樣式被應用于 <%s> 元素\n
+344 Blue lines are links activated by a double (or a single) click\n
+345 載入對象 (object, embed, iframe)
+346 No style rule for this element
+347 No insert position defined. Please select first
+348 Document information
+349 Document Type
+350 MIME 類型
+351 字符集
+352 Content Length
+353 Content Location
+354 使用偏好
+355 Character (&xxx;)
+356 創建對象
+357 目錄
+358 文件
+359 在當前位置
+360 在新的窗口
+361 Anti-aliasing
+362 ISO 格式日期
+363 新建文檔的位置
+364 打開位置
+365 關閉多個標簽頁是顯示警告
+366 歷史 URL 最大數量
+367 清空 URL 列表
+368 顯示所有快捷鍵
+369 固定行的長度 (0 為默認值)
+370 模板
+371 文檔另存為...
+372 未找到模板
+373 顯示模板
+374 應用后關閉對話框
+375 此文檔禁止
+376 被保護的元素
+377 選擇區域不應該跨域此類元素
+378 No heading found
+379 強制保存
+380 無法定位主機
+381 文檔已被改變 (412)
+382 與當前資源的狀態沖突
+383 無效選擇區域
+384 未知元素
+385 %d 个已更新元素
+386 **The title is mandatory
+387 **Templates
+388 **Number of occurrences
+389 **Maximum number of occurrences reached
+390 **Minimum number of occurrences reached
+391 **Check duplicated IDs
+392 **Add the xsl stylesheet for MathML elements
+393 **Insert operator
+394 **Select the way the operator has to be displayed
+395 **Insert an integral
+396 **Select the type of integral
+397 **Attributes of the fence
+398 **Select open, separator and close symbols
+399 **Number of operator symbols
+400 **Number of coordinates
+401 **Length of the N-tuples
+402 **Number of elements
+403 **Number of variables
+404 **Degree
+405 **Degree of the variable number %d
+406 **Compound document
+407 **Copy resources (styles and scripts)
+408 **Where to save resources
+409 **Where to save images
+410 **Document
+411 **Images, Styles and Scripts

@@ -45,8 +45,8 @@
         <flag>wxEXPAND</flag>
       </object>
       <object class="sizeritem">
-        <object class="wxBitmapButton" name="wxID_TOOL_SAVE">
-          <bitmap>../icons/22x22/save.png</bitmap>
+        <object class="wxBitmapButton" name="wxID_TOOL_NEW">
+          <bitmap>../icons/22x22/new.png</bitmap>
           <style>wxBU_AUTODRAW|wxNO_BORDER</style>
         </object>
         <flag>wxALIGN_CENTRE</flag>
@@ -59,11 +59,24 @@
         <flag>wxALIGN_CENTRE</flag>
       </object>
       <object class="sizeritem">
+        <object class="wxBitmapButton" name="wxID_TOOL_SAVE">
+          <bitmap>../icons/22x22/save.png</bitmap>
+          <style>wxBU_AUTODRAW|wxNO_BORDER</style>
+        </object>
+        <flag>wxALIGN_CENTRE</flag>
+      </object>
+      <object class="sizeritem">
         <object class="wxBitmapButton" name="wxID_TOOL_PRINT">
           <bitmap>../icons/22x22/print.png</bitmap>
           <style>wxBU_AUTODRAW|wxNO_BORDER</style>
         </object>
         <flag>wxALIGN_CENTRE</flag>
+      </object>
+      <object class="sizeritem">
+        <object class="wxStaticLine">
+          <style>wxLI_VERTICAL</style>
+        </object>
+        <flag>wxEXPAND</flag>
       </object>
       <object class="sizeritem">
         <object class="wxBitmapButton" name="wxID_TOOL_FIND">

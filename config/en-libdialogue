@@ -192,39 +192,40 @@
 190 Next document
 191 Reload
 192 Save
-193 Open document
-194 Print
-195 Search
-196 Home
-197 Emphasis
-198 Strong
-199 Code
-200 Insert image
-201 Heading level 1
-202 Heading level 2
-203 Heading level 3
-204 Bulleted list
-205 Numbered list
-206 Definition list
-207 Link
-208 Table
-209 You are about to close %d open tabs. Are you sure you want to continue?
-210 Warn me when I attempt to close multiple tabs
-211 Close tabs
-212 No error detected
-213 Show parsing errors
-214 Boxes
-215 Division
-216 Target
-217 Insertion
-218 Deletion
-219 Subscript
-220 Superscript
-221 Term
-222 Definition
-223 Object
-224 CSS Style
-225 Files
-226 Horizontal split/unsplit
-227 Vertical split/unsplit
-228 Show/hide tools
+193 New XHTML document
+194 Open document
+195 Print
+196 Search
+197 Home
+198 Emphasis
+199 Strong
+200 Code
+201 Insert image
+202 Heading level 1
+203 Heading level 2
+204 Heading level 3
+205 Bulleted list
+206 Numbered list
+207 Definition list
+208 Link
+209 Table
+210 You are about to close %d open tabs. Are you sure you want to continue?
+211 Warn me when I attempt to close multiple tabs
+212 Close tabs
+213 No error detected
+214 Show parsing errors
+215 Boxes
+216 Division
+217 Target
+218 Insertion
+219 Deletion
+220 Subscript
+221 Superscript
+222 Term
+223 Definition
+224 Object
+225 CSS Style
+226 Files
+227 Horizontal split/unsplit
+228 Vertical split/unsplit
+229 Show/hide tools

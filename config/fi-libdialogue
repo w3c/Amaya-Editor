@@ -192,39 +192,40 @@
 190 Seuraava dokumentti
 191 Päivitä
 192 Tallenna
-193 Avaa dokumentti
-194 Tulosta
-195 Etsi
-196 Aloitussivu
-197 Korosta
-198 Lihavoi
-199 Koodi
-200 Syötä kuva
-201 Otsikkokoko 1
-202 Otsikkokoko 2
-203 Otsikkokoko 3
-204 Pisteellinen luettelo
-205 Numeroituluettelo
-206 Määrittelyluettelo
-207 Linkki
-208 Taulukko
-209 **You are about to close %d open tabs. Are you sure you want to continue?
-210 **Warn me when I attempt to close multiple tabs
-211 **Close tabs
-212 **No error detected
-213 Näytä käännösvirheet
-214 **Boxes
-215 Tyhjä rivi
-216 Kohde
-217 Lisäys
-218 Poisto
-219 Alaindeksi
-220 Yläindeksi
-221 Lopetus
-222 Määrittely
-223 Objekti
-224 **CSS Style
-225 Tiedostoja
-226 **Horizontal split/unsplit
-227 **Vertical split/unsplit
-228 **Show/hide tools
+193 Uusi XHTML dokumentti
+194 Avaa dokumentti
+195 Tulosta
+196 Etsi
+197 Aloitussivu
+198 Korosta
+199 Lihavoi
+200 Koodi
+201 Syötä kuva
+202 Otsikkokoko 1
+203 Otsikkokoko 2
+204 Otsikkokoko 3
+205 Pisteellinen luettelo
+206 Numeroituluettelo
+207 Määrittelyluettelo
+208 Linkki
+209 Taulukko
+210 **You are about to close %d open tabs. Are you sure you want to continue?
+211 **Warn me when I attempt to close multiple tabs
+212 **Close tabs
+213 **No error detected
+214 Näytä käännösvirheet
+215 **Boxes
+216 Tyhjä rivi
+217 Kohde
+218 Lisäys
+219 Poisto
+220 Alaindeksi
+221 Yläindeksi
+222 Lopetus
+223 Määrittely
+224 Objekti
+225 **CSS Style
+226 Tiedostoja
+227 **Horizontal split/unsplit
+228 **Vertical split/unsplit
+229 **Show/hide tools
