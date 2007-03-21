@@ -133,20 +133,19 @@
                             <orient>wxHORIZONTAL</orient>
                             <object class="sizeritem">
                               <object class="wxStaticText" name="wxID_CHARSET">
-                                <label>*Charset:*</label>
-                                <size>100,-1</size>
+                                <label>*Charset: *</label>
                               </object>
                               <option>0</option>
                               <flag>wxALIGN_CENTRE_VERTICAL</flag>
                               <border>5</border>
                             </object>
                             <object class="spacer">
-                              <size>10,0</size>
+                              <size>5,0</size>
                             </object>
                             <object class="sizeritem">
                               <object class="wxComboBox" name="wxID_CHARSET_CB">
                                 <content/>
-                                <size>100,-1</size>
+                                <size>120,-1</size>
                                 <style>wxCB_READONLY</style>
                                 <focused>1</focused>
                               </object>
