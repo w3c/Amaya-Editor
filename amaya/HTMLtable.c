@@ -3206,7 +3206,7 @@ void RowPasted (NotifyElement * event)
 static void MoveCellContents (Element nextCell, Element cell,
                               Element* previous, Document doc, ThotBool inMath)
 {
-  Element             child, nextChild;
+  Element             child, nextChild, prev;
   ElementType         elType;
 
   TtaRegisterElementDelete (nextCell, doc);
@@ -3219,6 +3219,20 @@ static void MoveCellContents (Element nextCell, Element cell,
       if (inMath)
         /* get the first element contained in the CellWrapper */
         child = TtaGetFirstChild (child);
+    }
+  /* in a HTML table, if previous is an empty Element and the content of the
+     next cell is not empty, delete the empty Element */
+  if (!inMath && child && *previous)
+    {
+      elType = TtaGetElementType (*previous);
+      if (elType.ElTypeNum == HTML_EL_Element)
+        if (TtaGetElementVolume (*previous) == 0)
+          {
+            TtaRegisterElementDelete (*previous, doc);
+            prev = *previous; TtaPreviousSibling (&prev);
+            TtaDeleteTree (*previous, doc);
+            *previous = prev;
+          }
     }
   /* move the contents of this cell to the cell whose attribute colspan
      has changed */
