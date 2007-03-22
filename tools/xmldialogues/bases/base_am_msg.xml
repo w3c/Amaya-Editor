@@ -5323,5 +5323,53 @@
 <message xml:lang="en">Images, Styles and Scripts</message>
 <message xml:lang="fr">Images, Styles et Scripts</message>
 </label>
+<label define="AM_EMAILS">
+<message xml:lang="en">Emails</message>
+<message xml:lang="fr">Courriels</message>
+</label>
+<label define="AM_EMAILS_PROPERTIES">
+<message xml:lang="en">Common parameters for sending mails :</message>
+<message xml:lang="fr">Paramètres pour l'envoi de courriels :</message>
+</label>
+<label define="AM_EMAILS_SERVER_ADDRESS">
+<message xml:lang="en">SMTP server address :</message>
+<message xml:lang="fr">Adresse du serveur SMTP :</message>
+</label>
+<label define="AM_EMAILS_SERVER_PORT">
+<message xml:lang="en">Server port :</message>
+<message xml:lang="fr">Port :</message>
+</label>
+<label define="AM_EMAILS_SERVER_DEFPORT">
+<message xml:lang="en">(25 by default)</message>
+<message xml:lang="fr">(25 par défaut)</message>
+</label>
+<label define="AM_EMAILS_TO_">
+<message xml:lang="en">To :</message>
+<message xml:lang="fr">Destinataires :</message>
+</label>
+<label define="AM_EMAILS_SEND_BY_MAIL">
+<message xml:lang="en">Send by mail</message>
+<message xml:lang="fr">Envoyer par courriel</message>
+</label>
+<label define="AM_EMAILS_SUBJECT_">
+<message xml:lang="en">Subject :</message>
+<message xml:lang="fr">Sujet :</message>
+</label>
+<label define="AM_EMAILS_SEND_AS_">
+<message xml:lang="en">Send as :</message>
+<message xml:lang="fr">Envoyer en tant que :</message>
+</label>
+<label define="AM_EMAILS_SEND_AS_MESSAGE">
+<message xml:lang="en">Message body</message>
+<message xml:lang="fr">Corps du message</message>
+</label>
+<label define="AM_EMAILS_SEND_AS_ATTACHMENT">
+<message xml:lang="en">Attachment</message>
+<message xml:lang="fr">Pièce jointe</message>
+</label>
+<label define="AM_EMAILS_SEND">
+<message xml:lang="en">Send</message>
+<message xml:lang="fr">Envoyer</message>
+</label>
 <label define="AMAYA_MSG_MAX"></label>
 </messages></base>
