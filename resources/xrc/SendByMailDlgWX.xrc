@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resource version="2.3.0.1" xmlns="http://www.wxwindows.org/wxxrc">
+  <object class="wxDialog" name="SendByMailDlgWX">
+    <title>*SendByMailDlgWX*</title>
+    <centered>1</centered>
+    <size>600,400</size>
+    <style>wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER</style>
+    <object class="wxBoxSizer">
+      <orient>wxVERTICAL</orient>
+      <object class="sizeritem">
+        <object class="wxSplitterWindow">
+          <object class="wxPanel">
+            <object class="wxBoxSizer">
+              <orient>wxVERTICAL</orient>
+              <object class="sizeritem">
+                <object class="wxBoxSizer">
+                  <orient>wxHORIZONTAL</orient>
+                  <object class="sizeritem">
+                    <object class="wxStaticText" name="wxID_LABEL_TO">
+                      <label>*Destinataires :*</label>
+                    </object>
+                    <flag>wxALIGN_LEFT|wxALIGN_CENTRE_VERTICAL</flag>
+                  </object>
+                  <object class="sizeritem">
+                    <object class="wxTextCtrl" name="wxID_EDIT_NEW_TO">
+                      <style>wxTE_PROCESS_ENTER|wxTE_LEFT</style>
+                    </object>
+                    <option>1</option>
+                    <flag>wxALL|wxEXPAND</flag>
+                    <border>4</border>
+                  </object>
+                </object>
+                <option>0</option>
+                <flag>wxEXPAND</flag>
+              </object>
+              <object class="sizeritem">
+                <object class="wxListBox" name="wxID_LIST_TO">
+                  <content/>
+                </object>
+                <option>1</option>
+                <flag>wxALL|wxEXPAND</flag>
+                <border>4</border>
+              </object>
+              <object class="sizeritem">
+                <object class="wxStaticLine"/>
+                <flag>wxALL|wxEXPAND</flag>
+                <border>4</border>
+              </object>
+              <object class="sizeritem">
+                <object class="wxBoxSizer">
+                  <orient>wxHORIZONTAL</orient>
+                  <object class="sizeritem">
+                    <object class="wxStaticText" name="wxID_LABEL_SUBJECT">
+                      <label>*Sujet :*</label>
+                    </object>
+                    <option>0</option>
+                    <flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTRE_VERTICAL</flag>
+                    <border>4</border>
+                  </object>
+                  <object class="sizeritem">
+                    <object class="wxTextCtrl" name="wxID_EDIT_SUBJECT"/>
+                    <option>1</option>
+                    <flag>wxALL|wxEXPAND</flag>
+                    <border>4</border>
+                  </object>
+                </object>
+                <flag>wxEXPAND</flag>
+              </object>
+              <object class="sizeritem">
+                <object class="wxRadioBox" name="wxID_RADIOBOX_SEND_CLASS">
+                  <label>*Envoyer en tant que :*</label>
+                  <content>
+                    <item>*Contenu*</item>
+                    <item>*Piece jointe*</item>
+                  </content>
+                </object>
+                <option>0</option>
+                <flag>wxALL|wxEXPAND</flag>
+                <border>4</border>
+              </object>
+            </object>
+          </object>
+          <orientation>horizontal</orientation>
+          <sashpos>200</sashpos>
+          <object class="wxTextCtrl" name="wxID_EDIT_MESSAGE">
+            <style>wxTE_MULTILINE</style>
+          </object>
+          <minsize>92</minsize>
+        </object>
+        <option>1</option>
+        <flag>wxALL|wxEXPAND</flag>
+        <border>4</border>
+        <minsize>400,400</minsize>
+      </object>
+      <object class="sizeritem">
+        <option>0</option>
+        <flag>wxTOP|wxALL|wxALIGN_RIGHT|wxADJUST_MINSIZE</flag>
+        <object class="wxBoxSizer">
+          <orient>wxHORIZONTAL</orient>
+          <object class="sizeritem">
+            <object class="wxButton" name="wxID_OK">
+              <label>*Send*</label>
+              <default>1</default>
+            </object>
+            <flag>wxALL</flag>
+          </object>
+          <object class="spacer">
+            <size>5,0</size>
+          </object>
+          <object class="sizeritem">
+            <flag>wxALL</flag>
+            <object class="wxButton" name="wxID_CANCEL">
+              <label>*Cancel*</label>
+            </object>
+          </object>
+        </object>
+        <border>4</border>
+        <minsize></minsize>
+      </object>
+    </object>
+  </object>
+</resource>

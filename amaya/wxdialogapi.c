@@ -39,6 +39,7 @@
   #include "wxdialog/SelectOperatorDlgWX.h"
   #include "wxdialog/SelectIntegralDlgWX.h"
   #include "wxdialog/SearchDlgWX.h"
+  #include "wxdialog/SendByMailDlgWX.h"
   #include "wxdialog/SpellCheckDlgWX.h"
   #include "wxdialog/StyleDlgWX.h"
   #include "wxdialog/TextDlgWX.h"
@@ -1141,6 +1142,44 @@ ThotBool CreatePreferenceDlgWX (int ref, ThotWindow parent,
 }
 
 /*-----------------------------------------------------------------------
+ CreateSendByMailDlgWX
+ Used to :
+  - Create the Send by mail Amaya dialog
+ ------------------------------------------------------------------------*/
+ThotBool CreateSendByMailDlgWX (int ref, ThotWindow parent,
+                        const char* rcptList, const char* subject,
+                        const char* message, ThotBool sendAttach)
+{
+#ifdef _WX
+  /* check if the dialog is alredy open */
+  if (TtaRaiseDialogue (ref))
+    return FALSE;
+
+  SendByMailDlgWX * p_dlg = new SendByMailDlgWX( ref, parent);
+  if ( TtaRegisterWidgetWX( ref, p_dlg ) )
+    {
+      /* the dialog has been sucesfully registred */
+      
+      p_dlg->SetSubject(TtaConvMessageToWX(subject));
+      p_dlg->SetMessage(TtaConvMessageToWX(message));
+      p_dlg->SendAsAttachment(sendAttach);
+//      p_dlg->SetRecipients(TtaConvMessageToWX(rcptList));
+      
+      return TRUE;
+    }
+  else
+    {
+      /* an error occured durring registration */
+      p_dlg->Destroy();
+      return FALSE;
+    }
+#else /* _WX */
+  return FALSE;
+#endif /* _WX */
+}
+
+
+/*-----------------------------------------------------------------------
  CreateSpellCheckDlgWX
  Used to :
   - Create the Spell Checker Amaya dialog
@@ -1342,3 +1381,4 @@ ThotBool CreateNumDlgWX (int ref, int subref, ThotWindow parent,
   return FALSE;
 #endif /* _WX */
 }
+

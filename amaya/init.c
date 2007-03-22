@@ -60,6 +60,9 @@
   #include "AmayaWindowIterator.h"
   #include "AmayaParams.h"
   
+  #include "wxdialog/SendByMailDlgWX.h"
+  #include "email.h"
+  
   extern XmlEntity *pMathEntityTable;
 #endif /* _WX */
 
@@ -9012,5 +9015,47 @@ void ClearURLList()
       /* empty url list on each windows */
       TtaEmptyURLBar( it.currentWindowId() );
     }
+#endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void SendByMail (Document document, View view)
+{
+#ifdef _WX
+//  char                 buff[MAX_LENGTH];
+//  ElementType          elType;
+//  Element              docEl, el, text;
+//  int                  len;
+//  Language             lang;
+//
+//  SendByMailDlgWX dlg(0, NULL);
+//
+//  if (DocumentTypes[document] == docHTML)
+//  {
+//    docEl = TtaGetMainRoot (document);
+//    elType = TtaGetElementType(docEl);
+//    elType.ElTypeNum = HTML_EL_TITLE;
+//    el = TtaSearchTypedElement (elType, SearchInTree, docEl);
+//    text = TtaGetFirstChild (el);
+//    len = TtaGetTextLength(text);
+//    if(len>0)
+//    {
+//      len = MAX_LENGTH-1;
+//      TtaGiveTextContent(text, (unsigned char*)buff, &len, &lang);
+//      buff[len] = 0;
+//    }
+//    else
+//      buff[0] = 0;
+//    dlg.SetSubject(TtaConvMessageToWX(buff));
+//  }
+//
+//  if(dlg.ShowModal()==wxID_OK)
+//  {
+//    printf("Rcpt : %s\n", dlg.GetRecipientList());
+//  }
+
+  TestSendMail();
+
 #endif /* _WX */
 }

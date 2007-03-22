@@ -213,6 +213,7 @@ bool AmayaApp::OnInit()
   wxXmlResource::Get()->Load( TtaGetResourcePathWX( WX_RESOURCES_XRC, "SelectOperatorDlgWX.xrc") );
   wxXmlResource::Get()->Load( TtaGetResourcePathWX( WX_RESOURCES_XRC, "SelectFenceAttributesDlgWX.xrc") );
   wxXmlResource::Get()->Load( TtaGetResourcePathWX( WX_RESOURCES_XRC, "SearchDlgWX.xrc") );
+  wxXmlResource::Get()->Load( TtaGetResourcePathWX( WX_RESOURCES_XRC, "SendByMailDlgWX.xrc") );
   wxXmlResource::Get()->Load( TtaGetResourcePathWX( WX_RESOURCES_XRC, "SpellCheckDlgWX.xrc") );
   wxXmlResource::Get()->Load( TtaGetResourcePathWX( WX_RESOURCES_XRC, "StyleDlgWX.xrc") ); 
   wxXmlResource::Get()->Load( TtaGetResourcePathWX( WX_RESOURCES_XRC, "TextDlgWX.xrc") ); 

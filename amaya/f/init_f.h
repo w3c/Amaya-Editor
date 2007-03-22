@@ -214,6 +214,8 @@ extern void LoadDefaultOpeningLocation ( ThotBool noReplace );
 extern int GetMaxURLList ( void );
 extern void SetMaxURLList ( int max );
 extern void ClearURLList ( void );
+extern void SendByMail ( Document document,
+                         View view );
 
 #else /* __STDC__ */
 
@@ -425,6 +427,8 @@ extern void LoadDefaultOpeningLocation ( ThotBool noReplace );
 extern int GetMaxURLList ( void );
 extern void SetMaxURLList ( int max );
 extern void ClearURLList ( void );
+extern void SendByMail ( Document document,
+                           View view );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

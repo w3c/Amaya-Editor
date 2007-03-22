@@ -125,6 +125,7 @@ END_EVENT_TABLE()
   if (templates_page_id)
     p_notebook->DeletePage(templates_page_id );  
 #endif /* TEMPLATES */
+  SetupLabelDialog_Emails();
 
   XRCCTRL(*this, "wxID_OK", wxButton)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_APPLY_BUTTON)));
   XRCCTRL(*this, "wxID_CANCEL", wxButton)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_DONE)));
@@ -146,6 +147,7 @@ END_EVENT_TABLE()
 #ifdef TEMPLATES
   SetupDialog_Templates( GetProp_Templates() );
 #endif /* TEMPLATES */
+  SetupDialog_Emails( GetProp_Emails() );
 
   // give focus to ...
   //  XRCCTRL(*this, "wxID_COMBOBOX_HOMEPAGE", wxComboBox)->SetFocus();
@@ -1369,6 +1371,53 @@ void PreferenceDlgWX::OnTemplateSelected(wxCommandEvent& event)
 
 #endif /* Templates */
 
+
+/************************************************************************/
+/* Emails tab                                                           */
+/************************************************************************/
+
+/*----------------------------------------------------------------------
+  SetupLabelDialog_Emails init labels
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+void PreferenceDlgWX::SetupLabelDialog_Emails()
+{
+  // Setup notebook tab names :
+  int page_id;
+  wxNotebook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxNotebook);
+  page_id = GetPagePosFromXMLID( _T("wxID_PAGE_EMAILS") );
+  if (page_id >= 0)
+    p_notebook->SetPageText( page_id, TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_EMAILS)));
+
+  XRCCTRL(*this, "wxID_LABEL_EMAIL", wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_EMAILS_PROPERTIES)));
+  XRCCTRL(*this, "wxID_LABEL_EMAIL_SERVER_ADDRESS", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_EMAILS_SERVER_ADDRESS)));
+  XRCCTRL(*this, "wxID_LABEL_EMAIL_SERVER_PORT", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_EMAILS_SERVER_PORT)));
+  XRCCTRL(*this, "wxID_LABEL_EMAIL_DEFAULT_SERVER_PORT", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_EMAILS_SERVER_DEFPORT)));
+  
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void PreferenceDlgWX::SetupDialog_Emails( const Prop_Emails & prop )
+{
+  XRCCTRL(*this, "wxID_VALUE_EMAIL_SERVER_ADDRESS", wxTextCtrl)->SetValue( TtaConvMessageToWX(prop.serverAddress) );
+  XRCCTRL(*this, "wxID_SPIN_EMAIL_SERVER_PORT", wxSpinCtrl)->SetValue( prop.serverPort );  
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+Prop_Emails PreferenceDlgWX::GetValueDialog_Emails()
+{
+  Prop_Emails prop;
+  wxString    value;
+  
+  memset( &prop, 0, sizeof(Prop_Emails) );
+  value = XRCCTRL(*this, "wxID_VALUE_EMAIL_SERVER_ADDRESS", wxTextCtrl)->GetValue();
+  strcpy( prop.serverAddress, (const char*)value.mb_str(wxConvUTF8) );
+  prop.serverPort = XRCCTRL(*this, "wxID_SPIN_EMAIL_SERVER_PORT", wxSpinCtrl)->GetValue();
+  return prop;
+}
 
 /************************************************************************/
 /* General events                                                       */

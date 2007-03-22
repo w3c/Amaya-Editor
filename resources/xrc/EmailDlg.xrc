@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resource version="2.3.0.1" xmlns="http://www.wxwindows.org/wxxrc">
+  <object class="wxDialog" name="EmailDlg">
+    <title></title>
+    <centered>1</centered>
+    <style>wxDEFAULT_DIALOG_STYLE|wxSTAY_ON_TOP|wxRESIZE_BORDER</style>
+    <object class="wxBoxSizer">
+      <orient>wxVERTICAL</orient>
+      <object class="sizeritem">
+        <object class="wxBoxSizer">
+          <orient>wxVERTICAL</orient>
+          <object class="sizeritem">
+            <object class="wxStaticText" name="wxID_SEARCH_FOR">
+              <label>Texte a chercher</label>
+            </object>
+          </object>
+          <object class="sizeritem">
+            <object class="wxTextCtrl" name="wxID_SEARCH_FOR_TXT">
+              <style>wxTE_PROCESS_ENTER</style>
+              <focused>1</focused>
+            </object>
+            <flag>wxEXPAND</flag>
+            <border>5</border>
+          </object>
+          <object class="sizeritem">
+            <object class="wxCheckBox" name="wxID_CHECK_CASE">
+              <label>Ignorer la casse</label>
+            </object>
+            <flag>wxALL</flag>
+            <border>2</border>
+          </object>
+          <object class="sizeritem">
+            <object class="wxStaticLine"/>
+            <flag>wxTOP|wxBOTTOM|wxEXPAND</flag>
+            <border>5</border>
+          </object>
+          <object class="sizeritem">
+            <object class="wxStaticText" name="wxID_REPLACE_BY">
+              <label>Texte de remplacement</label>
+            </object>
+          </object>
+          <object class="sizeritem">
+            <object class="wxTextCtrl" name="wxID_REPLACE_BY_TXT"/>
+            <flag>wxEXPAND</flag>
+            <border>5</border>
+          </object>
+          <object class="sizeritem">
+            <object class="wxBoxSizer">
+              <orient>wxHORIZONTAL</orient>
+              <object class="sizeritem">
+                <object class="wxRadioBox" name="wxID_REPLACE_BOX">
+                  <label>Remplacement</label>
+                  <content>
+                    <item>Sans remplacement</item>
+                    <item>Remplacement a la demande</item>
+                    <item>Remplacement automatique</item>
+                  </content>
+                  <style>wxRA_SPECIFY_COLS</style>
+                </object>
+              </object>
+              <object class="spacer">
+                <size>5,0</size>
+              </object>
+              <object class="sizeritem">
+                <object class="wxRadioBox" name="wxID_SEARCH_AREA_BOX">
+                  <label>Ou rechercher</label>
+                  <content>
+                    <item>Avant la selection</item>
+                    <item>Dans la selection</item>
+                    <item>Apres la selection</item>
+                    <item>Dans tout le document</item>
+                  </content>
+                  <style>wxRA_SPECIFY_COLS</style>
+                </object>
+              </object>
+            </object>
+            <option>1</option>
+            <flag>wxTOP|wxEXPAND</flag>
+            <border>5</border>
+          </object>
+        </object>
+        <option>1</option>
+        <flag>wxALL|wxEXPAND</flag>
+        <border>5</border>
+      </object>
+      <object class="spacer">
+        <size>0,0</size>
+      </object>
+      <object class="sizeritem">
+        <object class="wxStaticText" name="wxID_SEARCH_COMPLETE">
+          <label>The search replace command is now complete</label>
+          <fg>#7A1919</fg>
+        </object>
+        <flag>wxLEFT</flag>
+        <border>5</border>
+      </object>
+      <object class="sizeritem">
+        <option>0</option>
+        <flag>wxALL|wxALIGN_RIGHT|wxADJUST_MINSIZE</flag>
+        <border>5</border>
+        <object class="wxBoxSizer">
+          <orient>wxHORIZONTAL</orient>
+          <object class="sizeritem">
+            <flag>wxALL</flag>
+            <object class="wxButton" name="wxID_OK">
+              <label>OK</label>
+              <default>1</default>
+            </object>
+          </object>
+          <object class="spacer">
+            <size>10,0</size>
+          </object>
+          <object class="sizeritem">
+            <flag>wxALL</flag>
+            <object class="wxButton" name="wxID_CANCEL">
+              <label>CANCEL</label>
+            </object>
+          </object>
+        </object>
+      </object>
+    </object>
+  </object>
+</resource>

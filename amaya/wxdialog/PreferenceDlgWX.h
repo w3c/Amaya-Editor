@@ -99,6 +99,14 @@ private:
   void OnTemplateSelected(wxCommandEvent& event);
 
 
+  // "Emails" tab
+  void SetupLabelDialog_Emails();
+  void SetupDialog_Emails( const Prop_Emails & prop );
+  Prop_Emails GetValueDialog_Emails();
+
+
+
+
   int GetPagePosFromXMLID( const wxString & xml_id );
 
   void OnOk( wxCommandEvent& event );

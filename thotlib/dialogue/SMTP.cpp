@@ -444,10 +444,10 @@ wxString wxCmdLineProtocol::SendCommand(const wxString& request, bool* haveError
     if(haveError!=NULL)
         *haveError = false;
 
-//printf(">> %s\n", (const char*)wxConvLibc. request);
+printf(">> %s\n", (const char*)(request.mb_str(wxConvLibc)));
 
     /* Send request. */
-    wxSocketClient::Write(request.GetData(), request.Length());
+    wxSocketClient::Write(request.mb_str(wxConvLibc), request.Length());
     if(Error())
     {
         if(haveError!=NULL)
@@ -488,7 +488,7 @@ wxString wxCmdLineProtocol::SendCommand(const wxString& request, bool* haveError
                     wxString rep = m_buffer.Left(search);
                     m_buffer = m_buffer.Mid(search+2);
                     
-//                    printf("<< %s\n", (char*)rep.fn_str());
+                    printf("<< %s\n", (const char*)(rep.mb_str(wxConvLibc)));
                     
                     return rep;
                 }

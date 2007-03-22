@@ -89,6 +89,11 @@
 #define mToggleTemplatesFrame      2
 #define MAX_TEMPLATEMENU_DLG       3
 
+#define EmailsMenu               1
+#define mEmailsServerAddress     2
+#define mEmailsServerPort        3
+#define MAX_EMAILSMENU_DLG       4
+
 
 typedef struct Prop_General_t
 {
@@ -201,6 +206,10 @@ typedef struct Prop_Templates_t
   Prop_Templates_Path* FirstPath;
 } Prop_Templates;
 
-
+typedef struct Prop_Emails_t
+{
+  char serverAddress[MAX_LENGTH];
+  int  serverPort;
+} Prop_Emails;
 
 #endif /* _MENUCONF.h */

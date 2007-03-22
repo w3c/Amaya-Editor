@@ -1210,6 +1210,85 @@
               </object>
             </object>
           </object>
+          <object class="notebookpage">
+            <label>*Emails*</label>
+            <object class="wxPanel" name="wxID_PAGE_EMAILS">
+              <style>wxTAB_TRAVERSAL</style>
+              <object class="wxBoxSizer">
+                <orient>wxVERTICAL</orient>
+                <object class="sizeritem">
+                  <object class="wxStaticText" name="wxID_LABEL_EMAIL">
+                    <label>*Parametres pour l'envoi de courriels :*</label>
+                    <size></size>
+                  </object>
+                  <flag>wxEXPAND</flag>
+                  <border>4</border>
+                </object>
+                <object class="sizeritem">
+                  <object class="wxFlexGridSizer">
+                    <cols>2</cols>
+                    <rows>2</rows>
+                    <object class="sizeritem">
+                      <object class="wxStaticText" name="wxID_LABEL_EMAIL_SERVER_ADDRESS">
+                        <label>*Adresse du serveur :*</label>
+                        <style>wxALIGN_RIGHT</style>
+                      </object>
+                      <option>1</option>
+                      <flag>wxALL|wxEXPAND|wxALIGN_CENTRE_VERTICAL</flag>
+                      <border>4</border>
+                    </object>
+                    <object class="sizeritem">
+                      <object class="wxTextCtrl" name="wxID_VALUE_EMAIL_SERVER_ADDRESS">
+                        <style></style>
+                      </object>
+                      <option>1</option>
+                      <flag>wxALL|wxEXPAND</flag>
+                      <border>4</border>
+                    </object>
+                    <object class="sizeritem">
+                      <object class="wxStaticText" name="wxID_LABEL_EMAIL_SERVER_PORT">
+                        <label>*Port d'envoi :*</label>
+                        <style>wxALIGN_RIGHT</style>
+                      </object>
+                      <option>1</option>
+                      <flag>wxALL|wxEXPAND|wxALIGN_CENTRE_VERTICAL</flag>
+                      <border>4</border>
+                    </object>
+                    <object class="sizeritem">
+                      <object class="wxBoxSizer" name="wxID_SPIN_EMAIL_SERVER_PORT">
+                        <orient>wxHORIZONTAL</orient>
+                        <object class="sizeritem">
+                          <object class="wxSpinCtrl" name="wxID_SPIN_EMAIL_SERVER_PORT">
+                            <value>25</value>
+                            <min>1</min>
+                            <max>65535</max>
+                          </object>
+                          <option>1</option>
+                          <flag>wxEXPAND</flag>
+                        </object>
+                        <object class="sizeritem">
+                          <object class="wxStaticText" name="wxID_LABEL_EMAIL_DEFAULT_SERVER_PORT">
+                            <label>*(25 par defaut)*</label>
+                          </object>
+                          <option>0</option>
+                          <flag>wxALL|wxALIGN_CENTRE_VERTICAL</flag>
+                          <border>4</border>
+                        </object>
+                      </object>
+                      <option>1</option>
+                      <flag>wxALL|wxEXPAND</flag>
+                      <border>4</border>
+                    </object>
+                    <growablecols>1</growablecols>
+                    <growablecols>2</growablecols>
+                  </object>
+                  <option>0</option>
+                  <flag>wxALL|wxEXPAND</flag>
+                  <border>4</border>
+                </object>
+              </object>
+            </object>
+          </object>
         </object>
         <option>1</option>
         <flag>wxALL|wxEXPAND</flag>

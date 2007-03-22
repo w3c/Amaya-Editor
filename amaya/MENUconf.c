@@ -307,6 +307,10 @@ int            TemplatesBase;
 Prop_Templates GProp_Templates;
 #endif /* TEMPLATES */
 
+/* ============> Emails menu option */
+int            EmailsBase;
+Prop_Emails GProp_Emails;
+
 
 
 #include "HTMLsave_f.h"
@@ -2786,6 +2790,89 @@ void PublishConfMenu (Document document, View view)
 #endif /* !_WINGUI */
 }
 
+/**********************
+ ** Emails Menu
+ **********************/
+
+/*----------------------------------------------------------------------
+  GetEmailsConf
+  Makes a copy of the current registry templates values
+  ----------------------------------------------------------------------*/
+void GetEmailsConf (void)
+{
+    GetEnvString ("EMAILS_SMTP_SERVER", GProp_Emails.serverAddress);
+    TtaGetEnvInt ("EMAILS_SMTP_PORT", &(GProp_Emails.serverPort));
+}
+
+/*----------------------------------------------------------------------
+  SetEmailsConf
+  Updates the registry Emails values and calls the General functions
+  to take into account the changes
+  ----------------------------------------------------------------------*/
+void SetEmailsConf (void)
+{
+  TtaSetEnvInt ("EMAILS_SMTP_PORT", GProp_Emails.serverPort, TRUE);
+  TtaSetEnvString ("EMAILS_SMTP_SERVER", GProp_Emails.serverAddress, TRUE);
+
+  TtaSaveAppRegistry ();
+
+}
+
+#ifdef _WX
+
+/*----------------------------------------------------------------------
+  GetDefaultEmailsConf
+  Gets the registry default emails values.
+  ----------------------------------------------------------------------*/
+void GetDefaultEmailsConf ()
+{
+  TtaGetDefEnvInt ("EMAILS_SMTP_PORT", &(GProp_Emails.serverPort));
+  GetDefEnvString ("EMAILS_SMTP_SERVER", GProp_Emails.serverAddress);
+}
+
+/*----------------------------------------------------------------------
+  EmailsCallbackDialog
+  callback of the emails configuration menu
+  ----------------------------------------------------------------------*/
+static void EmailsCallbackDialog (int ref, int typedata, char *data)
+{
+  intptr_t  val;
+#ifdef AMAYA_DEBUG
+  printf("EmailsCallbackDialog : %d %d (%d)\n", ref, ref-TemplatesBase,
+         (intptr_t)data);
+#endif /* AMAYA_DEBUG */
+  if (ref==-1)
+    {
+    }
+  else
+    {
+      val = (intptr_t) data;
+      switch (ref - TemplatesBase)
+        {
+        case TemplatesMenu:
+          switch (val)
+            {
+            case 0: /* CANCEL */
+              TtaDestroyDialogue (ref);
+              break;
+            case 1: /* OK */
+              SetEmailsConf();
+              TtaDestroyDialogue (ref);
+              break;
+            case 2: /* DEFAULT */
+              GetDefaultEmailsConf();
+              break;
+            default:
+              break;
+            }
+          break;
+        default:
+          break;
+        }
+    }
+}
+#endif /* _WX */
+
 
 /**********************
  ** Browse menu
@@ -4767,6 +4854,32 @@ Prop_Templates GetProp_Templates()
   return prop;
 #endif /* _WX && TEMPLATES */
 }
+
+
+/*----------------------------------------------------------------------
+  Use to set the Amaya global variables (Emails preferences)
+  ----------------------------------------------------------------------*/
+void SetProp_Emails( const Prop_Emails * prop )
+{
+#ifdef _WX
+  GProp_Emails = *prop;
+#endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
+  Use to get the Amaya global variables (Emails preferences)
+  ----------------------------------------------------------------------*/
+Prop_Emails GetProp_Emails()
+{
+#ifdef _WX
+  return GProp_Emails;
+#else /* _WX */
+  Prop_Emails prop;
+  memset(&prop, 0, sizeof(Prop_Emails) );
+  return prop;
+#endif /* _WX */
+}
+
 
 
 /*----------------------------------------------------------------------

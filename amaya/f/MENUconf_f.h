@@ -21,6 +21,8 @@ extern void GeneralConfMenu ( Document document,
                               View view );
 extern void PublishConfMenu ( Document document,
                               View view );
+extern void GetEmailsConf ( void );
+extern void SetEmailsConf ( void );
 extern void GetBrowseConf ( void );
 extern void SetBrowseConf ( void );
 extern void ApplyConfigurationChanges ( void );
@@ -67,6 +69,8 @@ extern void SetProp_DAV ( const Prop_DAV * prop );
 extern Prop_DAV GetProp_DAV ( void );
 extern void SetProp_Templates ( const Prop_Templates * prop );
 extern Prop_Templates GetProp_Templates ( void );
+extern void SetProp_Emails ( const Prop_Emails * prop );
+extern Prop_Emails GetProp_Emails ( void );
 extern void PreferenceMenu ( Document document,
                              View view );
 extern void InitConfMenu ( void );
@@ -88,6 +92,8 @@ extern void GeneralConfMenu ( Document document,
                                 View view );
 extern void PublishConfMenu ( Document document,
                                 View view );
+extern void GetEmailsConf ( void );
+extern void SetEmailsConf ( void );
 extern void GetBrowseConf ( void );
 extern void SetBrowseConf ( void );
 extern void ApplyConfigurationChanges ( void );
@@ -134,6 +140,8 @@ extern void SetProp_DAV ( const Prop_DAV * prop );
 extern Prop_DAV GetProp_DAV ( void );
 extern void SetProp_Templates ( const Prop_Templates * prop );
 extern Prop_Templates GetProp_Templates ( void );
+extern void SetProp_Emails ( const Prop_Emails * prop );
+extern Prop_Emails GetProp_Emails ( void );
 extern void PreferenceMenu ( Document document,
                                View view );
 extern void InitConfMenu ( void );

@@ -91,6 +91,8 @@ MENUS
 	File.Doctype1 button:BDoctypeHtmlTransitional -> CreateDoctypeHtmlTransitional;
 	File.Doctype1 button:BDoctypeHtmlStrict -> CreateDoctypeHtmlStrict;
 	File Separator;
+	File button:BSendByMail	-> SendByMail;
+	File Separator;
 	File button:BSetUpandPrint -> SetupAndPrint icon:setup_and_print.png;
 	File button:BPrint -> PrintAs icon:print.png;
 	File Separator;
