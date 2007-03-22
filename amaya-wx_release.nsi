@@ -8,18 +8,18 @@
 ;General
 
   ;Name and file
-  !define VERSION "9.54"
-  Name "Amaya ${VERSION}"
+  !define VERSION "9.55"
+  Name "Amaya"
   OutFile "amaya-WinXP-${VERSION}.exe"
   
   ;Use lzma to compress (better than zip)
   SetCompressor lzma
 
   ;Default installation folder
-  InstallDir "$PROGRAMFILES\Amaya-${VERSION}"
+  InstallDir "$PROGRAMFILES\Amaya"
   
   ;Get installation folder from registry if available
-  InstallDirRegKey HKCU "Software\Amaya-${VERSION}" ""
+  InstallDirRegKey HKCU "Software\Amaya" ""
 
 ;--------------------------------
 ;Variables
@@ -36,7 +36,7 @@
 
   ;Remember the installer language
   !define MUI_LANGDLL_REGISTRY_ROOT "HKCU" 
-  !define MUI_LANGDLL_REGISTRY_KEY "Software\Amaya-${VERSION}" 
+  !define MUI_LANGDLL_REGISTRY_KEY "Software\Amaya" 
   !define MUI_LANGDLL_REGISTRY_VALUENAME "Installer Language"
 
 ;--------------------------------
@@ -48,7 +48,7 @@
 
   ;Start Menu Folder Page Configuration
   !define MUI_STARTMENUPAGE_REGISTRY_ROOT "HKCU" 
-  !define MUI_STARTMENUPAGE_REGISTRY_KEY "Software\Amaya-${VERSION}" 
+  !define MUI_STARTMENUPAGE_REGISTRY_KEY "Software\Amaya" 
   !define MUI_STARTMENUPAGE_REGISTRY_VALUENAME "Start Menu Folder"
   !insertmacro MUI_PAGE_STARTMENU Application $STARTMENU_FOLDER
 
@@ -72,8 +72,8 @@
   !insertmacro MUI_LANGUAGE "French"
   !insertmacro MUI_LANGUAGE "German"
   !insertmacro MUI_LANGUAGE "Spanish"
-;  !insertmacro MUI_LANGUAGE "SimpChinese"
-;  !insertmacro MUI_LANGUAGE "TradChinese"
+  !insertmacro MUI_LANGUAGE "SimpChinese"
+  !insertmacro MUI_LANGUAGE "TradChinese"
 ;  !insertmacro MUI_LANGUAGE "Japanese"
 ;  !insertmacro MUI_LANGUAGE "Korean"
   !insertmacro MUI_LANGUAGE "Italian"
@@ -141,9 +141,7 @@ Section "Amaya" SecAmaya
    lbl_notwinnt:
    ReadRegStr $R0 HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion" VersionNumber
  
-   StrCpy $R1 $R0 1
-   StrCmp $R1 '4' 0 lbl_error
- 
+    
    StrCpy $R1 $R0 3
  
    StrCmp $R1 '4.0' lbl_win32_95
@@ -170,7 +168,7 @@ Section "Amaya" SecAmaya
    StrCmp $R1 '5.0' lbl_winnt_2000
    StrCmp $R1 '5.1' lbl_winnt_XP
    StrCmp $R1 '5.2' lbl_winnt_2003
-   Goto lbl_error
+    Abort "Only WinXP/2k/NT are supported"
  
    lbl_winnt_x:
      StrCpy $R0 "NT $R0" 6
@@ -188,8 +186,6 @@ Section "Amaya" SecAmaya
      Strcpy $R0 '2003'
    Goto lbl_done
  
-   lbl_error:
-     Abort "Only WinXP/2k/NT are supported"
    lbl_done:
   ;XXXXXXXXXXXXXXXXXXXXXXXXXX
 
@@ -319,13 +315,13 @@ Section "Amaya" SecAmaya
   SetDetailsPrint listonly
 
   ;Store installation folder
-  WriteRegStr HKCU "Software\Amaya-${VERSION}" "" $INSTDIR 
-  WriteRegExpandStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Amaya-${VERSION}" "UninstallString" '"$INSTDIR\Uninstall.exe"'
-  WriteRegExpandStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Amaya-${VERSION}" "InstallLocation" "$INSTDIR"
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Amaya-${VERSION}" "DisplayName" "Amaya ${VERSION}"
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Amaya-${VERSION}" "DisplayIcon" "$INSTDIR\WindowsWX\bin\amaya.exe"
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Amaya-${VERSION}" "DisplayVersion" "${VERSION}"
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Amaya-${VERSION}" "URLInfoAbout" "http://www.w3.org/Amaya"
+  WriteRegStr HKCU "Software\Amaya" "" $INSTDIR 
+  WriteRegExpandStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Amaya" "UninstallString" '"$INSTDIR\Uninstall.exe"'
+  WriteRegExpandStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Amaya" "InstallLocation" "$INSTDIR"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Amaya" "DisplayName" "Amaya"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Amaya" "DisplayIcon" "$INSTDIR\WindowsWX\bin\amaya.exe"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Amaya" "DisplayVersion" "${VERSION}"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Amaya" "URLInfoAbout" "http://www.w3.org/Amaya"
 
   ; Associate files to amaya
   WriteRegStr HKCR "Amaya" "" "Amaya Files"
@@ -351,7 +347,7 @@ Section "Amaya" SecAmaya
   !insertmacro MUI_STARTMENU_WRITE_END
 
   ;Create desktop link
-  CreateShortCut "$DESKTOP\Amaya-${VERSION}.lnk" "$INSTDIR\WindowsWX\bin\amaya.exe"
+  CreateShortCut "$DESKTOP\Amaya.lnk" "$INSTDIR\WindowsWX\bin\amaya.exe"
 SectionEnd
 
 
@@ -460,14 +456,14 @@ Section "Uninstall"
   ;Uninstall Amaya for all users
   SetShellVarContext all
   
-  ReadRegStr $STARTMENU_FOLDER HKCU "Software\Amaya-${VERSION}" "Start Menu Folder"
+  ReadRegStr $STARTMENU_FOLDER HKCU "Software\Amaya" "Start Menu Folder"
   IfFileExists "$SMPROGRAMS\$STARTMENU_FOLDER\Amaya.lnk" amaya_smp_installed
     Goto amaya_smp_notinstalled
   amaya_smp_installed:
   Delete "$SMPROGRAMS\$STARTMENU_FOLDER\Amaya.lnk"
   Delete "$SMPROGRAMS\$STARTMENU_FOLDER\Uninstall.lnk"
   RMDir "$SMPROGRAMS\$STARTMENU_FOLDER"
-  Delete "$DESKTOP\Amaya-${VERSION}.lnk"
+  Delete "$DESKTOP\Amaya.lnk"
   amaya_smp_notinstalled:
 
   RMDir /r "$INSTDIR"
@@ -476,10 +472,10 @@ Section "Uninstall"
   DetailPrint "Deleting Registry Keys..."
   SetDetailsPrint listonly
 
-  DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Amaya-${VERSION}"
-  DeleteRegKey HKLM "Software\Amaya-${VERSION}"
+  DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Amaya"
+  DeleteRegKey HKLM "Software\Amaya"
   DeleteRegKey HKCR "Amaya"
-  DeleteRegKey HKCU "Software\Amaya-${VERSION}"
+  DeleteRegKey HKCU "Software\Amaya"
   ; uninstall files associations
   ; --> .html
   ReadRegStr $R0 HKCR ".html" ""
