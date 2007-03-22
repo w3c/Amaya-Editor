@@ -45,6 +45,7 @@ all : directories amaya_schemas amaya_src ../bin/amaya_bin ../bin/print
 
 clean :
 	$(RM) *.o *.h *.c EDITOR* HTML* TextFile* MathML* SVG* Timeline* XLink* XML* logo.* *.a
+	$(RM) $(AMAYA)/*.{STR,PRS,TRA}
 	(for dir in $(OBJDIRS) ; do $(RM) -r $$dir/*.o ; done)
 
 directories : force
@@ -173,7 +174,7 @@ HTML2THOT_LIBS= -L../thotlib/ -lThotKernel -L.. -lz
 
 amaya_schemas : compHTML compHTMLP compHTMLT compTextFile  compTextFileP compTextFileT compXLink compXLinkP compXLinkT compXML compXMLP compXMLT compHTMLA compTextFileA compXLinkA compXMLA $(svg_schema) $(math_schema) $(annot_schema) compEDITORA $(template_schema)
 
-amaya_src :  HTML.h $(AMAYA_SRC) $(MATH_SCHEMAS) $(SVG_SCHEMAS) $(TEMPLATES_SCHEMAS)
+amaya_src : amaya_schemas HTML.h $(AMAYA_SRC) $(MATH_SCHEMAS) $(SVG_SCHEMAS) $(TEMPLATES_SCHEMAS)
 
 #
 # Rule to build objects
@@ -231,6 +232,7 @@ AMAYA_OBJ = \
 	wxdialog/SelectFenceAttributesDlgWX.o \
 	wxdialog/SelectIntegralDlgWX.o \
 	wxdialog/SpellCheckDlgWX.o \
+	wxdialog/SendByMailDlgWX.o \
 	wxdialog/StyleDlgWX.o \
 	wxdialog/TextDlgWX.o \
 	wxdialog/TitleDlgWX.o \

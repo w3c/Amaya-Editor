@@ -15,8 +15,8 @@ LIBWWW	   = libwww
 REDLAND    = redland
 
 #MKP: adding davlib
-SUBDIRS	= @SUBDIRS@ tools thotlib batch drawlib indexlib annotlib amaya thot @DAVDIR@
-EXTRA_SUBDIRS= misc $(REDLAND) $(LIBWWW) $(WX_BUILDDIR) $(GL_BUILDDIR)
+SUBDIRS	= @SUBDIRS@ tools thotlib batch annotlib @DAVDIR@ amaya
+EXTRA_SUBDIRS= $(REDLAND) $(LIBWWW) $(WX_BUILDDIR) $(GL_BUILDDIR)
 
 prefix = @prefix@
 exec_prefix = @exec_prefix@
@@ -27,7 +27,7 @@ srcdir	= $(THOTDIR)
 
 default : tools gl @BUILDWXWIDGETS@ thotlib batch amaya_prog print_prog
 
-amaya : amaya_prog tools thotlib print_prog
+amaya : tools thotlib amaya_prog print_prog
 
 print : tools thotlib print_prog
 
@@ -64,12 +64,8 @@ print_prog: rebuild force bin/str
 	@(if test -d thotlib ; then cd thotlib ; \
   $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)" print ; fi)
 
-misc: rebuild force
-	@(if test -d misc ; then cd misc ; \
-	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)" all ; fi)
-
 all : rebuild
-	@(for dir in $(SUBDIRS) ;\
+	@(for dir in $(EXTRA_SUBDIRS) $(SUBDIRS) ;\
 	  do if test -d $$dir ; then cd $$dir ; \
 	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)" all ; \
 	  cd .. ; fi ;done )
@@ -109,19 +105,6 @@ update :
 commit :
 	@(cd $(THOTDIR) ; cvs commit)
 
-stubs:
-	@(cd javalib ; $(MAKE) stubs)
-
-classes: force
-	@(PWD=`pwd` ; PATH="$$PWD/bin:$$PATH" ; export PATH ; \
-	  if test -d $$PWD/$(THOTDIR) ; then CLASSES=$$PWD/$(THOTDIR)/classes;\
-	  else CLASSES=$(THOTDIR)/classes ; fi ; \
-	  CLASSPATH=".:$$CLASSES:$$CLASSES/classes.zip:$$CLASSES/thotlib.zip:$$CLASSES/jigsaw.zip:$$CLASSES/amaya.zip:$$CLASSES/biss.zip";export CLASSPATH;\
-	  cd $(THOTDIR)/classes ; $(MAKE) )
-
-zips: force
-	@(cd javalib ;  $(MAKE) zips);
-
 # 	@(PWD=`pwd` ; PATH="$$PWD/bin:$$PATH" ; export PATH ; \
 # 	  if test -d $$PWD/$(THOTDIR) ; then CLASSES=$$PWD/$(THOTDIR)/classes;\
 # 	  else CLASSES=$(THOTDIR)/classes ; fi ; \
@@ -150,19 +133,6 @@ proto : rebuild bin/cextract
 mkid : 
 	@(echo rebuilding $(THOTDIR)/ID reference file)
 	@(cd $(THOTDIR); mkid --lang-map=makes/id-lang.map . classes/org/w3c/*)
-
-#
-# Rule du rebuild the Thot schemas
-#
-
-bin/str : force
-	@(cd batch ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)" str prs tra printstr)
-
-schemas : rebuild bin/str
-	@(bindir=`pwd`/bin ; cd $(THOTDIR)/schemas ; \
-	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)" THOTDIR=".." THOTSCH="../schemas:../schemasOPERA" \
-	  COMPSCH="."  COMPSTR="$$bindir/str" COMPPRS="$$bindir/prs" \
-	  COMPTRA="$$bindir/tra" PRINTSTR="$$bindir/printstr" all)
 
 #
 # Rules to rebuild the libWWW package

@@ -230,12 +230,14 @@ EDITOR_OBJ = \
 	dialogue/appdialogue.o \
 	dialogue/appli.o \
 	dialogue/attrmenu.o \
+	dialogue/base64.o \
 	dialogue/browser.o \
 	dialogue/closedoc.o \
 	dialogue/colors.o \
 	dialogue/context.o \
 	dialogue/creationmenu.o \
 	dialogue/dialogapi.o \
+	dialogue/email.o \
 	dialogue/Elemlist.o \
 	dialogue/geom.o \
 	dialogue/input.o \
@@ -247,6 +249,7 @@ EDITOR_OBJ = \
 	dialogue/printmenu.o \
 	dialogue/searchmenu.o \
 	dialogue/selectmenu.o \
+	dialogue/SMTP.o \
 	document/docs.o \
 	document/views.o \
 	document/writedoc.o \

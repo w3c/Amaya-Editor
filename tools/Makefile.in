@@ -7,7 +7,7 @@
 
 include ../Options
 
-SUBDIRS = mkdep dns_daemon javastub cextract-1.7
+SUBDIRS = mkdep cextract-1.7
 
 @SET_MAKE@
 
