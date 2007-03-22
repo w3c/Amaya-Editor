@@ -51,6 +51,16 @@ enum wxMimeContentTransfertEncoding
 
 WX_DECLARE_STRING_HASH_MAP( wxString, wxMimeExtraParamMap ); 
 
+typedef struct{
+    size_t size;
+    void* data;
+} wxMimeSlot_BinaryContent;
+typedef struct{
+    wxFileName filename;
+    wxString   sendpath;
+} wxMimeSlot_FileContent;
+
+
 /**
  * MIME slot.
  */
@@ -71,14 +81,8 @@ protected:
 //    union
 //    {
         wxString m_textContent;
-        struct{
-            size_t size;
-            void* data;
-        }m_binaryContent;
-        struct{
-            wxFileName filename;
-            wxString   sendpath;
-        }m_fileContent;
+		wxMimeSlot_BinaryContent m_binaryContent;
+		wxMimeSlot_FileContent   m_fileContent;
         wxMultipartMimeContainer *m_mimeContent;
 //    };
 public:

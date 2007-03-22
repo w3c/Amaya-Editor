@@ -362,12 +362,14 @@ bool wxBase64DecOutputStream::Close(){
 //==========================================================================
 // wxBase64EncOutputStream
 //==========================================================================
-wxBase64EncOutputStream::wxBase64EncOutputStream(wxOutputStream& stream, int linesize):
+wxBase64EncOutputStream::wxBase64EncOutputStream(wxOutputStream& stream,
+												 int linesize):
 wxFilterOutputStream(stream),
-m_in((unsigned char [3]){0,0,0}),
 m_len(0),
 m_linesize(linesize),
-m_currline(0){
+m_currline(0)
+{
+ m_in[0] = m_in[1] = m_in[2] = 0;
 }
 
 void wxBase64EncOutputStream::RealWrite(const void *buffer, size_t size){

@@ -287,6 +287,10 @@ SOURCE=..\..\thotlib\presentation\attrpresent.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\thotlib\dialogue\base64.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\thotlib\view\boxlocate.c
 # End Source File
 # Begin Source File
@@ -420,6 +424,10 @@ SOURCE=..\..\thotlib\editing\editcommands.c
 # Begin Source File
 
 SOURCE=..\..\thotlib\dialogue\Elemlist.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\thotlib\dialogue\email.c
 # End Source File
 # Begin Source File
 
@@ -668,6 +676,10 @@ SOURCE=..\..\thotlib\content\searchref.c
 # Begin Source File
 
 SOURCE=..\..\thotlib\editing\selectionapi.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\thotlib\dialogue\SMTP.cpp
 # End Source File
 # Begin Source File
 

@@ -170,7 +170,8 @@ wxString wxMimeSlot::Generate()const
   wxString msg;
   msg << wxT("Content-Type: ") << m_contentType;
   
-  for(wxMimeExtraParamMap::const_iterator iter = m_contentTypeExtraParams.begin();iter!=m_contentTypeExtraParams.end(); iter++)
+  wxMimeExtraParamMap::const_iterator iter;
+  for(iter = m_contentTypeExtraParams.begin();iter!=m_contentTypeExtraParams.end(); iter++)
   {
     msg << wxT(";    ") << iter->first;
     if(!iter->second.IsEmpty())
@@ -209,7 +210,7 @@ wxString wxMimeSlot::Generate()const
   }
     msg << wxT("\r\n");
 
-  for(wxMimeExtraParamMap::const_iterator iter = m_extraParams.begin();iter!=m_extraParams.end(); iter++)
+  for(iter = m_extraParams.begin();iter!=m_extraParams.end(); iter++)
   {
     msg << iter->first;
     if(!iter->second.IsEmpty())
