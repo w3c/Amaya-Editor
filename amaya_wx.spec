@@ -96,7 +96,7 @@ make install prefix=$RPM_BUILD_ROOT/usr/share
 # Gnome/Kde integration
 ./script_install_gnomekde ./bin $RPM_BUILD_ROOT/usr/share /usr/share
 %files
-%doc README.amaya
+%doc README
 /usr/share/pixmaps/
 /usr/share/applications/
 /usr/share/Amaya/

@@ -696,7 +696,7 @@ void AmayaPage::OnClose(wxCloseEvent& event)
 
   if(!m_IsClosed)
     event.Veto();
-  else
+  else if (frame_id == TtaGiveActiveFrame ())
     {
       AmayaPage * p_page = (AmayaPage *)m_pNoteBookParent->GetPage(page_id);
       p_page->SetSelected( TRUE );
