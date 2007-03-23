@@ -34,6 +34,8 @@ bool wxQuotedPrintableOutputStream::Close()
 
 size_t wxQuotedPrintableOutputStream::OnSysWrite(const void *buffer, size_t size)
 {
+    wxString out;
+  
     wxStringTokenizer tkz(wxString((const char*)buffer, *wxConvCurrent, size), wxT("\n"));
     while(tkz.HasMoreTokens())
     {
@@ -46,7 +48,7 @@ size_t wxQuotedPrintableOutputStream::OnSysWrite(const void *buffer, size_t size
         // Process each character of the line.
         for(int j=0; j<(int)line.Len(); j++)
         {
-            unsigned char c = (unsigned char)line[j];
+            wxChar c = line[j];
             wxString newc;
             // Convert char if needed
             if(c<32 || c==61 || c>126)
@@ -54,29 +56,27 @@ size_t wxQuotedPrintableOutputStream::OnSysWrite(const void *buffer, size_t size
                 newc.Printf(wxT("=%02X"), c);
             }
             else
-                newc = wxChar(c);
+                newc = c;
+
             // Truncate if needed
-            if(m_offset+newc.Len()>76)
+            if(m_offset+newc.Length()>76)
             {
-                GetFilterOutputStream()->Write((void*)newpara.GetData(), newpara.Length());
-                GetFilterOutputStream()->Write("=\r\n", 3);
+                out << newpara << wxT("=\r\n");
                 newpara.Empty();
                 m_offset = 0;
             }
             newpara += newc;
-            m_offset += newc.Len();
+            m_offset += newc.Length();
         }
         m_offset = newpara.Length();
         if(!line.IsEmpty())
         {
-            GetFilterOutputStream()->Write((void*)newpara.GetData(), m_offset);
-            if(tkz.HasMoreTokens())
-                GetFilterOutputStream()->Write("\r\n", 2);
+            out << newpara << wxT("\r\n");
         }
     }
+    GetFilterOutputStream()->Write((const char*) out.mb_str(wxConvLibc), out.Length()); 
     return size;
 }
-
 
 //==========================================================================
 // wxMimeSlot
@@ -444,7 +444,7 @@ wxString wxCmdLineProtocol::SendCommand(const wxString& request, bool* haveError
     if(haveError!=NULL)
         *haveError = false;
 
-printf(">> %s\n", (const char*)(request.mb_str(wxConvLibc)));
+//printf(">> %s\n", (const char*)(request.mb_str(wxConvLibc)));
 
     /* Send request. */
     wxSocketClient::Write(request.mb_str(wxConvLibc), request.Length());
@@ -488,7 +488,7 @@ printf(">> %s\n", (const char*)(request.mb_str(wxConvLibc)));
                     wxString rep = m_buffer.Left(search);
                     m_buffer = m_buffer.Mid(search+2);
                     
-                    printf("<< %s\n", (const char*)(rep.mb_str(wxConvLibc)));
+//                    printf("<< %s\n", (const char*)(rep.mb_str(wxConvLibc)));
                     
                     return rep;
                 }

@@ -6,6 +6,8 @@
 #include "AmayaApp.h"
 #include "SendByMailDlgWX.h"
 
+#include <wx/valtext.h>
+
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "appdialogue_wx.h"
@@ -21,6 +23,7 @@ BEGIN_EVENT_TABLE(SendByMailDlgWX, AmayaDialog)
   EVT_LISTBOX(    XRCID("wxID_LIST_TO"),      SendByMailDlgWX::OnToItemSelected)
   EVT_MENU(       wxID_DELETE,                SendByMailDlgWX::OnSupprToItem)
   EVT_UPDATE_UI(  wxID_OK,                    SendByMailDlgWX::OnUpdateSendButton)
+  EVT_RADIOBOX(   XRCID("wxID_RADIOBOX_SEND_CLASS"), SendByMailDlgWX::OnChangeMessageClass)
 END_EVENT_TABLE()
 
 
@@ -59,6 +62,8 @@ SendByMailDlgWX::SendByMailDlgWX( int ref, wxWindow* parent) :
   wxAcceleratorTable accel(2, entries);
   m_tos->SetAcceleratorTable(accel);
 
+  UpdateMessageLabel();
+
   Layout();
   SetAutoLayout( TRUE );
 }
@@ -72,6 +77,18 @@ SendByMailDlgWX::~SendByMailDlgWX()
   ThotCallback (m_ref, INTEGER_DATA, (char*) 0);
 }
 
+void SendByMailDlgWX::UpdateMessageLabel()
+{
+  if(XRCCTRL(*this, "wxID_RADIOBOX_SEND_CLASS", wxRadioBox)->GetSelection()==0)
+  {
+    XRCCTRL(*this, "wxID_LABEL_MESSAGE",   wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_EMAILS_MESSAGE_ALTERN)) );
+  }
+  else
+  {
+    XRCCTRL(*this, "wxID_LABEL_MESSAGE",   wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_EMAILS_MESSAGE_BODY)) );
+  }
+}
+
 /*----------------------------------------------------------------------
   OnCancelButton called when clicking on cancel button
   ----------------------------------------------------------------------*/
@@ -81,12 +98,12 @@ void SendByMailDlgWX::OnCancelButton( wxCommandEvent& event )
   event.Skip();
 }
 
-void SendByMailDlgWX::OnNewToTextModified(wxCommandEvent& event)
+void SendByMailDlgWX::OnNewToTextModified(wxCommandEvent& WXUNUSED(event))
 {
   SetCurrentToItemText();
 }
 
-void SendByMailDlgWX::OnNewToEnterPressed(wxCommandEvent& event)
+void SendByMailDlgWX::OnNewToEnterPressed(wxCommandEvent& WXUNUSED(event))
 {
   SetCurrentToItemText();
   m_currTo = m_tos->Append(wxT(""));
@@ -116,6 +133,12 @@ void SendByMailDlgWX::OnUpdateSendButton(wxUpdateUIEvent& event)
 {
   event.Enable(m_tos->GetCount()>0);
 }
+
+void SendByMailDlgWX::OnChangeMessageClass(wxCommandEvent& WXUNUSED(event))
+{
+  UpdateMessageLabel();
+}
+
 
 /**----------------------------------------------------------------------
   SetCurrentToItemText

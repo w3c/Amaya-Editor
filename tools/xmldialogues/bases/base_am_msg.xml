@@ -5343,6 +5343,10 @@
 <message xml:lang="en">(25 by default)</message>
 <message xml:lang="fr">(25 par défaut)</message>
 </label>
+<label define="AM_EMAILS_FROM_">
+<message xml:lang="en">Sending address (from field) :</message>
+<message xml:lang="fr">Adresse d'envoi (champ expéditeur) :</message>
+</label>
 <label define="AM_EMAILS_TO_">
 <message xml:lang="en">To :</message>
 <message xml:lang="fr">Destinataires :</message>
@@ -5370,6 +5374,18 @@
 <label define="AM_EMAILS_SEND">
 <message xml:lang="en">Send</message>
 <message xml:lang="fr">Envoyer</message>
+</label>
+<label define="AM_EMAILS_NO_SERVER">
+<message xml:lang="en">The server address and port must be precised in the preference dialog.</message>
+<message xml:lang="fr">L'adresse et le port du serveur doivent être renseignés dans la boîte de dialogue des préférences.</message>
+</label>
+<label define="AM_EMAILS_MESSAGE_BODY">
+<message xml:lang="en">Message :</message>
+<message xml:lang="fr">Message :</message>
+</label>
+<label define="AM_EMAILS_MESSAGE_ALTERN">
+<message xml:lang="en">Alternate textual  message :</message>
+<message xml:lang="fr">Message textuel alternatif :</message>
 </label>
 <label define="AMAYA_MSG_MAX"></label>
 </messages></base>

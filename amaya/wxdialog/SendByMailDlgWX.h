@@ -40,6 +40,8 @@ public:
   
 
 private:
+  void UpdateMessageLabel();
+
     // Override base class functions of a wxDialog.
   void OnCancelButton( wxCommandEvent& event );
 
@@ -50,6 +52,8 @@ private:
   void OnSupprToItem(wxCommandEvent& event);
 
   void OnUpdateSendButton(wxUpdateUIEvent& event);
+  
+  void OnChangeMessageClass(wxCommandEvent& event);
 
   void SetCurrentToItemText();
 
@@ -61,7 +65,6 @@ private:
   
   wxListBox*  m_tos;
   wxTextCtrl* m_newto;
-
 };
 
 #endif  //__SENDBYMAILDLGWX_H__

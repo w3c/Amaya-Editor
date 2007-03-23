@@ -416,10 +416,14 @@
 414 Adresse du serveur SMTP :
 415 Port :
 416 (25 par défaut)
-417 Destinataires :
-418 Envoyer par courriel
-419 Sujet :
-420 Envoyer en tant que :
-421 Corps du message
-422 Pièce jointe
-423 Envoyer
+417 Adresse d'envoi (champ expéditeur) :
+418 Destinataires :
+419 Envoyer par courriel
+420 Sujet :
+421 Envoyer en tant que :
+422 Corps du message
+423 Pièce jointe
+424 Envoyer
+425 L'adresse et le port du serveur doivent être renseignés dans la boîte de dialogue des préférences.
+426 Message :
+427 Message textuel alternatif :

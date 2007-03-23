@@ -92,7 +92,8 @@
 #define EmailsMenu               1
 #define mEmailsServerAddress     2
 #define mEmailsServerPort        3
-#define MAX_EMAILSMENU_DLG       4
+#define mEmailsFromAddress       4
+#define MAX_EMAILSMENU_DLG       5
 
 
 typedef struct Prop_General_t
@@ -210,6 +211,7 @@ typedef struct Prop_Emails_t
 {
   char serverAddress[MAX_LENGTH];
   int  serverPort;
+  char fromAddress[MAX_LENGTH];
 } Prop_Emails;
 
 #endif /* _MENUCONF.h */

@@ -496,6 +496,11 @@ void InitAmayaDefEnv (void)
     TtaSetEnvBoolean ("ANNOT_RAUTOLOAD", FALSE, TRUE);
 #endif /* ANNOTATIONS */
 
+  /* Emails. */
+  TtaSetDefEnvString ("EMAILS_SMTP_SERVER", "", FALSE);
+  TtaSetDefEnvString ("EMAILS_SMTP_PORT", "25", FALSE);
+  TtaSetDefEnvString ("EMAILS_FROM_ADDRESS", "", FALSE);
+
   /* appearance */
 }
 
@@ -2796,12 +2801,13 @@ void PublishConfMenu (Document document, View view)
 
 /*----------------------------------------------------------------------
   GetEmailsConf
-  Makes a copy of the current registry templates values
+  Makes a copy of the current registry emails values
   ----------------------------------------------------------------------*/
 void GetEmailsConf (void)
 {
     GetEnvString ("EMAILS_SMTP_SERVER", GProp_Emails.serverAddress);
     TtaGetEnvInt ("EMAILS_SMTP_PORT", &(GProp_Emails.serverPort));
+    GetEnvString ("EMAILS_FROM_ADDRESS", GProp_Emails.fromAddress);
 }
 
 /*----------------------------------------------------------------------
@@ -2813,6 +2819,7 @@ void SetEmailsConf (void)
 {
   TtaSetEnvInt ("EMAILS_SMTP_PORT", GProp_Emails.serverPort, TRUE);
   TtaSetEnvString ("EMAILS_SMTP_SERVER", GProp_Emails.serverAddress, TRUE);
+  TtaSetEnvString ("EMAILS_FROM_ADDRESS", GProp_Emails.fromAddress, TRUE);
 
   TtaSaveAppRegistry ();
 
@@ -2828,6 +2835,7 @@ void GetDefaultEmailsConf ()
 {
   TtaGetDefEnvInt ("EMAILS_SMTP_PORT", &(GProp_Emails.serverPort));
   GetDefEnvString ("EMAILS_SMTP_SERVER", GProp_Emails.serverAddress);
+  GetDefEnvString ("EMAILS_FROM_ADDRESS", GProp_Emails.fromAddress);
 }
 
 /*----------------------------------------------------------------------
@@ -2837,19 +2845,15 @@ void GetDefaultEmailsConf ()
 static void EmailsCallbackDialog (int ref, int typedata, char *data)
 {
   intptr_t  val;
-#ifdef AMAYA_DEBUG
-  printf("EmailsCallbackDialog : %d %d (%d)\n", ref, ref-TemplatesBase,
-         (intptr_t)data);
-#endif /* AMAYA_DEBUG */
   if (ref==-1)
     {
     }
   else
     {
       val = (intptr_t) data;
-      switch (ref - TemplatesBase)
+      switch (ref - EmailsBase)
         {
-        case TemplatesMenu:
+        case EmailsMenu:
           switch (val)
             {
             case 0: /* CANCEL */
@@ -2860,7 +2864,7 @@ static void EmailsCallbackDialog (int ref, int typedata, char *data)
               TtaDestroyDialogue (ref);
               break;
             case 2: /* DEFAULT */
-              GetDefaultEmailsConf();
+//              GetDefaultEmailsConf();
               break;
             default:
               break;
@@ -4606,6 +4610,15 @@ int GetPrefTemplatesBase()
 }
 
 /*----------------------------------------------------------------------
+  Returns a tab dialog reference (used into PreferenceDlgWX callbacks)
+  ----------------------------------------------------------------------*/
+int GetPrefEmailsBase()
+{
+  return EmailsBase;
+}
+
+
+/*----------------------------------------------------------------------
   Use to set the Amaya global variables (General preferences)
   ----------------------------------------------------------------------*/
 void SetProp_General( const Prop_General * prop )
@@ -4933,6 +4946,7 @@ void PreferenceMenu (Document document, View view)
   GetTemplatesConf ();
 #endif /* TEMPLATES */
 
+  GetEmailsConf();
 
   ThotBool created = CreatePreferenceDlgWX ( PreferenceBase,
                                              TtaGetViewFrame (document, view),
@@ -4990,6 +5004,7 @@ void InitConfMenu (void)
 #ifdef _WX
   /* create a new dialog reference for Preferences */
   PreferenceBase = TtaSetCallback( (Proc)PreferenceCallbackDialog, 1 );
+  
 #ifdef TEMPLATES  
   TemplatesBase = TtaSetCallback( (Proc)TemplatesCallbackDialog, MAX_TEMPLATEMENU_DLG );
 #endif /* TEMPLATES */  
@@ -5013,4 +5028,7 @@ void InitConfMenu (void)
   InitDAVPreferences ();
 #endif /* DAV */
 #endif /* _WINGUI */
+
+
+  EmailsBase = TtaSetCallback( (Proc)EmailsCallbackDialog, MAX_EMAILSMENU_DLG );
 }

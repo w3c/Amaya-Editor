@@ -1394,7 +1394,7 @@ void PreferenceDlgWX::SetupLabelDialog_Emails()
   XRCCTRL(*this, "wxID_LABEL_EMAIL_SERVER_ADDRESS", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_EMAILS_SERVER_ADDRESS)));
   XRCCTRL(*this, "wxID_LABEL_EMAIL_SERVER_PORT", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_EMAILS_SERVER_PORT)));
   XRCCTRL(*this, "wxID_LABEL_EMAIL_DEFAULT_SERVER_PORT", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_EMAILS_SERVER_DEFPORT)));
-  
+  XRCCTRL(*this, "wxID_LABEL_EMAIL_FROM_ADDRESS", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_EMAILS_FROM_)));
 }
 
 /*----------------------------------------------------------------------
@@ -1403,6 +1403,7 @@ void PreferenceDlgWX::SetupDialog_Emails( const Prop_Emails & prop )
 {
   XRCCTRL(*this, "wxID_VALUE_EMAIL_SERVER_ADDRESS", wxTextCtrl)->SetValue( TtaConvMessageToWX(prop.serverAddress) );
   XRCCTRL(*this, "wxID_SPIN_EMAIL_SERVER_PORT", wxSpinCtrl)->SetValue( prop.serverPort );  
+  XRCCTRL(*this, "wxID_VALUE_EMAIL_FROM_ADDRESS", wxTextCtrl)->SetValue( TtaConvMessageToWX(prop.fromAddress) );
 }
 
 /*----------------------------------------------------------------------
@@ -1416,6 +1417,9 @@ Prop_Emails PreferenceDlgWX::GetValueDialog_Emails()
   value = XRCCTRL(*this, "wxID_VALUE_EMAIL_SERVER_ADDRESS", wxTextCtrl)->GetValue();
   strcpy( prop.serverAddress, (const char*)value.mb_str(wxConvUTF8) );
   prop.serverPort = XRCCTRL(*this, "wxID_SPIN_EMAIL_SERVER_PORT", wxSpinCtrl)->GetValue();
+  value = XRCCTRL(*this, "wxID_VALUE_EMAIL_FROM_ADDRESS", wxTextCtrl)->GetValue();
+  strcpy( prop.fromAddress, (const char*)value.mb_str(wxConvUTF8) );
+
   return prop;
 }
 
@@ -1477,6 +1481,11 @@ void PreferenceDlgWX::OnOk( wxCommandEvent& event )
   ThotCallback (GetPrefTemplatesBase() + TemplatesMenu, INTEGER_DATA, (char*) 1);
   FreeTemplateRepositoryList(&(prop_templates.FirstPath));
 #endif /* TEMPLATES */
+
+  Prop_Emails prop_emails = GetValueDialog_Emails();
+  SetProp_Emails( &prop_emails );
+  ThotCallback (GetPrefEmailsBase() + EmailsMenu, INTEGER_DATA, (char*) 1);
+
 
   ThotCallback (MyRef, INTEGER_DATA, (char*) 1);
 
@@ -1555,6 +1564,11 @@ void PreferenceDlgWX::OnDefault( wxCommandEvent& event )
       SetupDialog_Templates( GetProp_Templates() );
     }
 #endif /* TEMPLATES */
+  else if ( p_page->GetId() == wxXmlResource::GetXRCID(_T("wxID_PAGE_EMAILS")) )
+    {
+      ThotCallback (GetPrefEmailsBase() + EmailsMenu, INTEGER_DATA, (char*) 2);
+      SetupDialog_Emails( GetProp_Emails() );
+    }
 
   ThotCallback (MyRef, INTEGER_DATA, (char*) 2);
 }
@@ -1586,6 +1600,8 @@ void PreferenceDlgWX::OnCancel( wxCommandEvent& event )
 #ifdef TEMPLATES
   ThotCallback (GetPrefTemplatesBase() + TemplatesMenu, INTEGER_DATA, (char*) 0);
 #endif /* TEMPLATES */
+  ThotCallback (GetPrefEmailsBase() + EmailsMenu, INTEGER_DATA, (char*) 0);
+
   ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
   m_OnApplyLock = FALSE;
 }

@@ -417,10 +417,14 @@
 414 **SMTP server address :
 415 **Server port :
 416 **(25 by default)
-417 **To :
-418 **Send by mail
-419 **Subject :
-420 **Send as :
-421 **Message body
-422 **Attachment
-423 **Send
+417 **Sending address (from field) :
+418 **To :
+419 **Send by mail
+420 **Subject :
+421 **Send as :
+422 **Message body
+423 **Attachment
+424 **Send
+425 **The server address and port must be precised in the preference dialog.
+426 **Message :
+427 **Alternate textual  message :

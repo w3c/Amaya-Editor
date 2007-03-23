@@ -9018,44 +9018,88 @@ void ClearURLList()
 #endif /* _WX */
 }
 
+
+#include <wx/sstream.h>
+#include <wx/wfstream.h>
+#include "../thotlib/internals/h/SMTP.h"
+
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void SendByMail (Document document, View view)
 {
 #ifdef _WX
-//  char                 buff[MAX_LENGTH];
-//  ElementType          elType;
-//  Element              docEl, el, text;
-//  int                  len;
-//  Language             lang;
-//
-//  SendByMailDlgWX dlg(0, NULL);
-//
-//  if (DocumentTypes[document] == docHTML)
-//  {
-//    docEl = TtaGetMainRoot (document);
-//    elType = TtaGetElementType(docEl);
-//    elType.ElTypeNum = HTML_EL_TITLE;
-//    el = TtaSearchTypedElement (elType, SearchInTree, docEl);
-//    text = TtaGetFirstChild (el);
-//    len = TtaGetTextLength(text);
-//    if(len>0)
-//    {
-//      len = MAX_LENGTH-1;
-//      TtaGiveTextContent(text, (unsigned char*)buff, &len, &lang);
-//      buff[len] = 0;
-//    }
-//    else
-//      buff[0] = 0;
-//    dlg.SetSubject(TtaConvMessageToWX(buff));
-//  }
-//
-//  if(dlg.ShowModal()==wxID_OK)
-//  {
-//    printf("Rcpt : %s\n", dlg.GetRecipientList());
-//  }
+  char                 buff[MAX_LENGTH];
+  ElementType          elType;
+  Element              docEl, el, text;
+  int                  len;
+  Language             lang;
+  EMail                mail;
+  wxArrayString        arr;
+  int                  i;
+  SendByMailDlgWX dlg(0, NULL);
 
-  TestSendMail();
+  char* server = TtaGetEnvString("EMAILS_SMTP_SERVER");
+  char* from   = TtaGetEnvString("EMAILS_FROM_ADDRESS");
+  char* docPath, *docType, *docChar;
+  
+  int   port;
+
+
+  TtaGetEnvInt ("EMAILS_SMTP_PORT", &port);
+
+  if(server==NULL || from==NULL ||
+      strlen(server)==0 || strlen(from)==0 || port==0)
+  {
+    TtaDisplaySimpleMessage(INFO, AMAYA, AM_EMAILS_NO_SERVER);
+    // TODO Show the properties dialog at the "emails" tab.
+    return;
+  }
+
+
+  if (DocumentTypes[document] == docHTML)
+  {
+    docEl = TtaGetMainRoot (document);
+    elType = TtaGetElementType(docEl);
+    elType.ElTypeNum = HTML_EL_TITLE;
+    el = TtaSearchTypedElement (elType, SearchInTree, docEl);
+    text = TtaGetFirstChild (el);
+    len = TtaGetTextLength(text);
+    if(len>0)
+    {
+      len = MAX_LENGTH-1;
+      TtaGiveTextContent(text, (unsigned char*)buff, &len, &lang);
+      buff[len] = 0;
+    }
+    else
+      buff[0] = 0;
+    dlg.SetSubject(TtaConvMessageToWX(buff));
+  }
+
+  if(dlg.ShowModal()==wxID_OK)
+  {
+    mail = TtaNewEMail( (const char*)dlg.GetSubject().mb_str(wxConvUTF8),
+                          (const char*) dlg.GetMessage().mb_str(wxConvUTF8),
+                          from);
+    if(mail!=NULL)
+    {
+      arr = dlg.GetRecipients();
+      for(i=0; i<(int)arr.GetCount(); i++)
+      {
+        TtaAddEMailToRecipient(mail, (const char*) arr[i].mb_str(wxConvUTF8));
+      }
+      docPath = GetLocalPath(document, DocumentURLs[document]);
+      docType = DocumentMeta[document]->content_type;
+      docChar = DocumentMeta[document]->charset;
+
+      if(!TtaAddEMailAlternativeFile(mail, docType, docPath, docChar))
+      {
+//        printf("Cant attach alternative file.\n");
+      }
+      
+      TtaSendEMail(mail, server, port);
+    }
+    
+  }
 
 #endif /* _WX */
 }

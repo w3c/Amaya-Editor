@@ -82,10 +82,26 @@
           </object>
           <orientation>horizontal</orientation>
           <sashpos>200</sashpos>
-          <object class="wxTextCtrl" name="wxID_EDIT_MESSAGE">
-            <style>wxTE_MULTILINE</style>
-          </object>
           <minsize>92</minsize>
+          <object class="wxPanel">
+            <object class="wxBoxSizer">
+              <orient>wxVERTICAL</orient>
+              <object class="sizeritem">
+                <object class="wxStaticText" name="wxID_LABEL_MESSAGE">
+                  <label>*Message :*</label>
+                </object>
+                <flag>wxALL</flag>
+                <border>4</border>
+              </object>
+              <object class="sizeritem">
+                <object class="wxTextCtrl" name="wxID_EDIT_MESSAGE">
+                  <style>wxTE_AUTO_SCROLL|wxTE_MULTILINE</style>
+                </object>
+                <option>1</option>
+                <flag>wxEXPAND</flag>
+              </object>
+            </object>
+          </object>
         </object>
         <option>1</option>
         <flag>wxALL|wxEXPAND</flag>

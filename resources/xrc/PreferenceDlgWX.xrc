@@ -1281,6 +1281,23 @@
                     </object>
                     <growablecols>1</growablecols>
                     <growablecols>2</growablecols>
+                    <object class="sizeritem">
+                      <object class="wxStaticText" name="wxID_LABEL_EMAIL_FROM_ADDRESS">
+                        <label>*Adresse d'envoi :*</label>
+                        <style>wxALIGN_RIGHT</style>
+                      </object>
+                      <option>1</option>
+                      <flag>wxALL|wxEXPAND|wxALIGN_CENTRE_VERTICAL</flag>
+                      <border>4</border>
+                    </object>
+                    <object class="sizeritem">
+                      <object class="wxTextCtrl" name="wxID_VALUE_EMAIL_FROM_ADDRESS">
+                        <style></style>
+                      </object>
+                      <option>1</option>
+                      <flag>wxALL|wxEXPAND</flag>
+                      <border>4</border>
+                    </object>
                   </object>
                   <option>0</option>
                   <flag>wxALL|wxEXPAND</flag>
