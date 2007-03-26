@@ -100,7 +100,7 @@ MapEntry     Stix_Symbs [] = {
   {14, 0x63}, {0, 0x00}, {0, 0x00}, {0, 0x00},
   {0, 0x00}, {0, 0x00}, {0, 0x00}, {0, 0x00},
   /* 214x */ {12, 0x76}, {0, 0x00}, {0, 0x00}, {0, 0x00},
-  {0, 0x00}, {12, 0x76}, {0, 0x00}, {13, 0x65},
+  {0, 0x00}, {0, 0x00}, {0, 0x00}, {13, 0x65},
   {13, 0x69}, {0, 0x00}, {0, 0x00}, {0, 0x00}
 };
 #define Stix_Symbs_length sizeof(Stix_Symbs) / sizeof(MapEntry)
@@ -194,7 +194,7 @@ MapEntry     Stix_MathOp2 [] = {
   {4, 0x39}, {5, 0x49}, {0, 0x00}, {2, 0x76},
   {2, 0x77}, {0, 0x00}, {3, 0x3c}, {3, 0x3d},
   /* 22cx */ {2, 0x6f}, {2, 0x6e}, {2, 0x68}, {2, 0x67},
-  {0, 0x00}, {4, 0x2c}, {4, 0x2d}, {5, 0x4a},
+  {2, 0x3e}, {4, 0x2c}, {4, 0x2d}, {5, 0x4a},
   {5, 0x29}, {5, 0x26}, {5, 0x28}, {5, 0x2b},
   {5, 0x2a}, {4, 0xa3}, {2, 0x75}, {2, 0x74},
   /* 22dx */ {4, 0x36}, {4, 0x4c}, {2, 0x6a}, {2, 0x69},
@@ -251,6 +251,17 @@ MapEntry     Stix_GeomShapes [] = {
   {0, 0x00}, {0, 0x00}, {0, 0x00}, {0, 0x00}
 };
 #define Stix_GeomShapes_length sizeof(Stix_GeomShapes) / sizeof(MapEntry)
+
+/* Mapping of Unicode symbols (0xFE30-0xFE3F) to esstix fonts */
+int Stix_OverBrace_Start = 0xFE30;
+MapEntry     Stix_OverBrace [] = {
+  /* FE3x */ {0, 0x00}, {0, 0x00}, {0, 0x00}, {0, 0x00},
+  {0, 0x00}, {17, 0x54}, {17, 0x54}, {7, 0x55},
+  {7, 0x55}, {0, 0x00}, {0, 0x00}, {0, 0x00},
+  {0, 0x00}, {0, 0x00}, {0, 0x00}, {0, 0x00}
+};
+#define Stix_OverBrace_length sizeof(Stix_OverBrace) / sizeof(MapEntry)
+
 
 /*----------------------------------------------------------------------
   DrawCompoundBraceStix
@@ -1359,7 +1370,17 @@ int GetStixFontAndIndex (int c, SpecFont fontset, ThotFont **font)
   int                frame;
   unsigned int       mask;
 #endif /* _GL */
-  if (c >= Stix_Greek_Start && c < (int) (Stix_Greek_Start + Stix_Greek_length))
+  if (c == 0x2970) /* roundimplies */
+    {
+     index = (int) 0x49;
+     face = (int) 4;
+    }
+  else if (c == 0x20DB || c == 0x20DC) /* dots */
+    {
+     index = (int) (c - 0x20DB + 0x61);
+     face = (int) 17;
+    }
+  else if (c >= Stix_Greek_Start && c < (int) (Stix_Greek_Start + Stix_Greek_length))
     {
       entry = Stix_Greek[c - Stix_Greek_Start];
       index = (int) (entry.MapIndex);
@@ -1395,7 +1416,12 @@ int GetStixFontAndIndex (int c, SpecFont fontset, ThotFont **font)
       index = (int) (entry.MapIndex);
       face = (int) (entry.MapFont);
     }
-
+  else if (c >= Stix_OverBrace_Start && c < (int) (Stix_OverBrace_Start + Stix_OverBrace_length))
+    {
+      entry = Stix_OverBrace[c - Stix_OverBrace_Start];
+      index = (int) (entry.MapIndex);
+      face = (int) (entry.MapFont);
+    }
   if (face == 1)
     *font = &(fontset->SFont_1);
   else if (face == 2)

@@ -23,6 +23,7 @@
 #include "amaya.h"
 #include "css.h"
 #include "SVG.h"
+#include <png.h>
 
 static Document   ImgDocument;
 static int        RepeatValue;
@@ -1090,6 +1091,7 @@ void ComputeSRCattribute (Element el, Document doc, Document sourceDocument,
     TtaRegisterAttributeReplace (srcattr, pict, doc);
 }
 
+
 /*----------------------------------------------------------------------
   UpdateSRCattribute  creates or updates the SRC attribute value	
   when the contents of element IMG is set.		
@@ -1249,7 +1251,6 @@ void UpdateSRCattribute (NotifyOnTarget *event)
             TtaRegisterAttributeReplace (attr, elSRC, doc);
         }
     }
-
 
   /* search the SRC attribute */
   if (elType.ElTypeNum == HTML_EL_Object)
@@ -1586,14 +1587,14 @@ void  CreateObject (Document doc, View view)
   ----------------------------------------------------------------------*/
 void AddNewImage (Document doc, View view, ThotBool isInput)
 {
-  Element            firstSelEl, lastSelEl, parent, leaf;
+  Element            firstSelEl, lastSelEl, parent, leaf, el;
   ElementType        elType;
   Attribute          attr;
   AttributeType      attrType;
   NotifyOnTarget     event;
   char              *name, *value;
-  int                c1, i, j, cN, length;
-  ThotBool           oldStructureChecking;
+  int                c1, i, j, cN, length, width, height;
+  ThotBool           oldStructureChecking, newAttr;
 
   TtaGiveFirstSelectedElement (doc, &firstSelEl, &c1, &i); 
   if (firstSelEl == NULL)
@@ -1720,6 +1721,60 @@ void AddNewImage (Document doc, View view, ThotBool isInput)
               oldStructureChecking = TtaGetStructureChecking (doc);
               TtaSetStructureChecking (FALSE, doc);
               TtaCreateElement (elType, doc);
+
+              // check if the width, height attributes must be generated
+              TtaGiveFirstSelectedElement (doc, &el, &c1, &i); 
+              elType = TtaGetElementType (el);
+              if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
+                el = TtaGetParent (el);
+              attrType.AttrSSchema = elType.ElSSchema;
+              /* search informations about height and width */
+              width = 0; height = 0;
+              TtaGivePictureSize (el, &width, &height);
+              if (width > 0 && height > 0)
+                {
+                  /* attach height and width attributes to the image */
+                  TtaExtendUndoSequence (doc);
+                  value = (char *)TtaGetMemory (50);
+                  attrType.AttrTypeNum = HTML_ATTR_Width__;
+                  attr = TtaGetAttribute (el, attrType);
+                  if (attr == NULL)
+                    {
+                      newAttr = TRUE;
+                      attr = TtaNewAttribute (attrType);
+                      TtaAttachAttribute (el, attr, doc);
+                    }
+                  else
+                    newAttr = FALSE;
+                  sprintf (value, "%d", width);
+                  TtaSetAttributeText (attr, value, el, doc);
+                  TtaSetAttributeText (attr, value, el, doc);
+                  if (newAttr)
+                    TtaRegisterAttributeCreate (attr, el, doc);
+                  else
+                    TtaRegisterAttributeReplace (attr, el, doc);
+
+                  attrType.AttrTypeNum = HTML_ATTR_Height_;
+                  attr = TtaGetAttribute (el, attrType);
+                  if (attr == NULL)
+                    {
+                      newAttr = TRUE;
+                      attr = TtaNewAttribute (attrType);
+                      TtaAttachAttribute (el, attr, doc);
+                    }
+                  else
+                    newAttr = FALSE;
+                  sprintf (value, "%d", height);
+                  TtaSetAttributeText (attr, value, el, doc);
+                  TtaSetAttributeText (attr, value, el, doc);
+                  if (newAttr)
+                    TtaRegisterAttributeCreate (attr, el, doc);
+                  else
+                    TtaRegisterAttributeReplace (attr, el, doc);
+                  TtaFreeMemory (value);
+                  TtaCloseUndoSequence(doc);
+                  TtaUpdateAttrMenu (doc);
+                }
               TtaSetStructureChecking (oldStructureChecking, doc);
             }
         }

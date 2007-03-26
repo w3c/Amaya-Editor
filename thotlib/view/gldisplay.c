@@ -792,14 +792,26 @@ void DrawArrow (int frame, int thick, int style, int x, int y, int l, int h,
         }
     break;
 
-    case 11: /* two arrows with opposite directions */
+    case 11: /* two vectors with opposite directions */
       switch(orientation)
         {
+        case 0:
+          DoDrawOneLine (frame, x, ym - D1/2, xf, ym - D1/2);
+          DoDrawOneLine (frame, xf, ym - D1/2, xf - D1/2 - D1, ym - D1/2 - D1);
+          DoDrawOneLine (frame, x, ym + D1/2, xf, ym + D1/2);
+          DoDrawOneLine (frame, x, ym + D1/2, x + D1/2 + D1, ym + D1/2 + D1);
+        break;
         case 90:
           DoDrawOneLine (frame, xm - D1/2, y, xm - D1/2, yf);
           DoDrawOneLine (frame, xm - D1/2, y, xm - D1/2 - D2, y + D1);
           DoDrawOneLine (frame, xm + D1/2, y, xm + D1/2, yf);
           DoDrawOneLine (frame, xm + D1/2, yf, xm + D1/2 + D1, yf - D1);
+        break;
+        case 180:
+          DoDrawOneLine (frame, x, ym + D1/2, xf, ym + D1/2);
+          DoDrawOneLine (frame, xf, ym + D1/2, xf - D1/2 - D1, ym + D1/2 + D1);
+          DoDrawOneLine (frame, x, ym - D1/2, xf, ym - D1/2);
+          DoDrawOneLine (frame, x, ym - D1/2, x + D1/2 + D1, ym - D1/2 - D1);
         break;
         case 270:
           DoDrawOneLine (frame, xm + D1/2, y, xm + D1/2, yf);
@@ -2734,7 +2746,6 @@ void DrawEllipsFrame (int frame, int thick, int style, int x, int y,
   /* Draw the border */
   if (thick > 0 && fg >= 0)
     {
-      InitDrawing (style, thick, fg);
       GL_DrawArc(x, y, width, height, 0, 360, style, thick, fg, FALSE); 
       px7mm = (int)((7 * DOT_PER_INCH) / 25.4 + 0.5);
       if (height > 2 * px7mm)
@@ -2742,6 +2753,7 @@ void DrawEllipsFrame (int frame, int thick, int style, int x, int y,
           A = ((double) height - 2 * px7mm) / height;
           A = 1.0 - sqrt (1 - A * A);
           shiftX = (int)(width * A * 0.5 + 0.5);
+          InitDrawing (style, thick, fg);
           GL_DrawLine(x + shiftX, y + px7mm, x + width - shiftX, y + px7mm, TRUE);
         }
     }

@@ -1011,14 +1011,26 @@ void DrawArrow (int frame, int thick, int style, int x, int y, int l, int h,
         }
     break;
 
-    case 11: /* two arrows with opposite directions */
+    case 11: /* two vectors with opposite directions */
       switch(orientation)
         {
+        case 0:
+          DoDrawOneLine (frame, x, ym - D1/2, xf, ym - D1/2);
+          DoDrawOneLine (frame, xf, ym - D1/2, xf - D1/2 - D1, ym - D1/2 - D1);
+          DoDrawOneLine (frame, x, ym + D1/2, xf, ym + D1/2);
+          DoDrawOneLine (frame, x, ym + D1/2, x + D1/2 + D1, ym + D1/2 + D1);
+        break;
         case 90:
           DoDrawOneLine (frame, xm - D1/2, y, xm - D1/2, yf);
           DoDrawOneLine (frame, xm - D1/2, y, xm - D1/2 - D2, y + D1);
           DoDrawOneLine (frame, xm + D1/2, y, xm + D1/2, yf);
           DoDrawOneLine (frame, xm + D1/2, yf, xm + D1/2 + D1, yf - D1);
+        break;
+        case 180:
+          DoDrawOneLine (frame, x, ym + D1/2, xf, ym + D1/2);
+          DoDrawOneLine (frame, xf, ym + D1/2, xf - D1/2 - D1, ym + D1/2 + D1);
+          DoDrawOneLine (frame, x, ym - D1/2, xf, ym - D1/2);
+          DoDrawOneLine (frame, x, ym - D1/2, x + D1/2 + D1, ym - D1/2 - D1);
         break;
         case 270:
           DoDrawOneLine (frame, xm + D1/2, y, xm + D1/2, yf);

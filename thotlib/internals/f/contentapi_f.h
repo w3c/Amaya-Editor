@@ -168,6 +168,9 @@ extern void TtaSetAnimationTime ( void *anim_info,
                                   double duration );
 extern void TtaCopyPage ( Element destination,
                           Element source );
+extern void TtaGivePictureSize ( Element element,
+                                 int *width,
+                                 int *height );
 extern PicType TtaGetPictureType ( Element element );
 extern void TtaSetPictureType ( Element element,
                                 char *mime_type );
@@ -359,6 +362,9 @@ extern void TtaSetAnimationTime ( void *anim_info,
                                     double duration );
 extern void TtaCopyPage ( Element destination,
                             Element source );
+extern void TtaGivePictureSize ( Element element,
+                                   int *width,
+                                   int *height );
 extern PicType TtaGetPictureType ( Element element );
 extern void TtaSetPictureType ( Element element,
                                   char *mime_type );

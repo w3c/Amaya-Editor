@@ -411,6 +411,7 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
 
           switch (pBox->BxAbstractBox->AbShape)
             {
+            /* Fences */
             case 1: /* LeftDoubleBracket ; U0301A */
               if (useStix)
                 DrawStixBracket (frame, xd, yd, width, height, 0, 1, size, fg);
@@ -435,6 +436,83 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
               if (useStix)
                 DrawStixBracket (frame, xd, yd, width, height, 1, 3, size, fg);
               break;
+            case '(': /* c = 40 */
+              if (useStix)
+                DrawStixParenthesis (frame, xd, yd, width, height, 0, size,fg);
+              else
+                DrawParenthesis (frame, i, xd, yd, width, height, 0, font, fg,
+                                 baseline);
+              break;
+            case ')': /* c = 41 */
+              if (useStix)
+                DrawStixParenthesis (frame, xd, yd, width, height, 1, size,fg);
+              else
+                DrawParenthesis (frame, i, xd, yd, width, height, 1, font, fg,
+                                 baseline);
+              break;
+            case '{': /* c = 123 */
+              if (useStix)
+                DrawStixBrace (frame, xd, yd, width, height, 0, size, fg);
+              else
+                DrawBrace (frame, i, xd, yd, width, height, 0, font, fg,
+                           baseline);
+              break;
+            case '}': /* c = 125 */
+              if (useStix)
+                DrawStixBrace (frame, xd, yd, width, height, 1, size, fg);
+              else
+                DrawBrace (frame, i, xd, yd, width, height, 1, font, fg,
+                           baseline);
+              break;
+            case '[': /* c = 91 */
+              if (useStix)
+                DrawStixBracket (frame, xd, yd, width, height, 0, 0, size, fg);
+              else
+                DrawBracket (frame, i, xd, yd, width, height, 0, font, fg,
+                             baseline);
+              break;
+            case ']': /* c = 93 */
+              if (useStix)
+                DrawStixBracket (frame, xd, yd, width, height, 1, 0, size, fg);
+              else
+                DrawBracket (frame, i, xd, yd, width, height, 1, font, fg,
+                             baseline);
+              break;
+            case '<': /* c = 60 */
+              if (useStix)
+                DrawStixPointyBracket (frame, xd, yd, width, height, 0, size,
+                                       fg);
+              else
+                DrawPointyBracket (frame, i, xd, yd, width, height, 0, font,
+                                   fg);
+              break;
+            case '>': /* c = 62 */
+              if (useStix)
+                DrawStixPointyBracket (frame, xd, yd, width, height, 1, size,
+                                       fg);
+              else
+                DrawPointyBracket (frame, i, xd, yd, width, height, 1, font,
+                                   fg);
+              break;
+
+           /* Lines and bars */
+            case '|': /* c = 124 */
+            case 7 : /* VerticalSeparator ; U02758 */
+              DrawVerticalLine (frame, i, 5, xd, yd, width, height, 1, fg, pBox);
+              break;
+            case 8 : /* HorizontalLine ; U02500 */
+            case 9 : /* UnderBar ; U00332 */
+            case 10 : /* OverBar ; U000AF */
+            case '-': /* c = 45 */
+            case '_': /* c = 95 */
+            case 'h': /* c = 104 */
+              DrawHorizontalLine (frame, i, 5, xd, yd, width, height, 1, fg, pBox);
+              break;
+            case '/':
+            case '\\':
+                /* TODO */
+              break;
+
            /* START_ENTITY : c = 26 */
 
             case '1':/* Clockwise Integral */
@@ -484,9 +562,6 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
                 DrawStixIntegral (frame, xd, yd, width, height, 5, size, fg);
               else
                 DrawIntegral (frame, i, xd, yd, width, height, 5, font, fg);
-              break;
-            case 'h':/* horizontal line */
-              DrawHorizontalLine (frame, i, 5, xd, yd, width, height, 1, fg, pBox);
               break;
             case 'H':/* Hat */
               DrawHat (frame, i, 5, xd, yd, width, height, fg, 1);
@@ -552,67 +627,6 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
               break;
             case 'U':
               DrawUnion (frame, xd, yd, width, height, font, fg);
-              break;
-            case '(': /* c = 40 */
-              if (useStix)
-                DrawStixParenthesis (frame, xd, yd, width, height, 0, size,fg);
-              else
-                DrawParenthesis (frame, i, xd, yd, width, height, 0, font, fg,
-                                 baseline);
-              break;
-            case ')': /* c = 41 */
-              if (useStix)
-                DrawStixParenthesis (frame, xd, yd, width, height, 1, size,fg);
-              else
-                DrawParenthesis (frame, i, xd, yd, width, height, 1, font, fg,
-                                 baseline);
-              break;
-            case '{': /* c = 123 */
-              if (useStix)
-                DrawStixBrace (frame, xd, yd, width, height, 0, size, fg);
-              else
-                DrawBrace (frame, i, xd, yd, width, height, 0, font, fg,
-                           baseline);
-              break;
-            case '}': /* c = 125 */
-              if (useStix)
-                DrawStixBrace (frame, xd, yd, width, height, 1, size, fg);
-              else
-                DrawBrace (frame, i, xd, yd, width, height, 1, font, fg,
-                           baseline);
-              break;
-            case '[': /* c = 91 */
-              if (useStix)
-                DrawStixBracket (frame, xd, yd, width, height, 0, 0, size, fg);
-              else
-                DrawBracket (frame, i, xd, yd, width, height, 0, font, fg,
-                             baseline);
-              break;
-            case ']': /* c = 93 */
-              if (useStix)
-                DrawStixBracket (frame, xd, yd, width, height, 1, 0, size, fg);
-              else
-                DrawBracket (frame, i, xd, yd, width, height, 1, font, fg,
-                             baseline);
-              break;
-            case '<': /* c = 60 */
-              if (useStix)
-                DrawStixPointyBracket (frame, xd, yd, width, height, 0, size,
-                                       fg);
-              else
-                DrawPointyBracket (frame, i, xd, yd, width, height, 0, font,
-                                   fg);
-              break;
-            case '>': /* c = 62 */
-              if (useStix)
-                DrawStixPointyBracket (frame, xd, yd, width, height, 1, size,
-                                       fg);
-              else
-                DrawPointyBracket (frame, i, xd, yd, width, height, 1, font,
-                                   fg);
-              break;
-            case '|': /* c = 124 */
-              DrawVerticalLine (frame, i, 5, xd, yd, width, height, 1, fg, pBox);
               break;
 
          /* c = 150 to 213 : Display one of the 64 strechable arrows from
@@ -808,6 +822,12 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
               break;
             case 213: /* ReverseUpEquilibrium ; U0296F */
               DrawArrow (frame, i, 5, xd, yd, width, height, 270, 11, fg);
+              break;
+            case 214: /* Equilibrium ; U021CC */
+              DrawArrow (frame, i, 5, xd, yd, width, height, 0, 11, fg);
+              break;
+            case 215: /* ReverseEquilibrium ; U021CB */
+              DrawArrow (frame, i, 5, xd, yd, width, height, 180, 11, fg);
               break;
 
             case '?': /* c = 63 */

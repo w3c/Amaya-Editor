@@ -44,7 +44,8 @@ IMPLEMENT_DYNAMIC_CLASS(AmayaAttributePanel, AmayaSubPanel)
    * Description:  construct a panel (bookmarks, elements, attributes ...)
    *               TODO
    -----------------------------------------------------------------------*/
-  AmayaAttributePanel::AmayaAttributePanel( wxWindow * p_parent_window, AmayaNormalWindow * p_parent_nwindow )
+  AmayaAttributePanel::AmayaAttributePanel( wxWindow * p_parent_window,
+                                            AmayaNormalWindow * p_parent_nwindow )
     : AmayaSubPanel( p_parent_window, p_parent_nwindow, _T("wxID_PANEL_ATTRIBUTE") )
     ,m_pRBEnum(NULL)
     ,m_NbAttr(0)
@@ -642,7 +643,7 @@ void AmayaAttributePanel::OnApply( wxCommandEvent& event )
 }
 
 /*----------------------------------------------------------------------
-  OnAutoRefresh called when the user want to freeze/unfreeze the attribut panel
+  OnAutoRefresh called when the user wants to freeze/unfreeze the attribut panel
   params:
   returns:
   ----------------------------------------------------------------------*/

@@ -3123,15 +3123,15 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
                 i = BoxCharacterWidth (0xf3, font) * 3 / 2;
               ResizeWidth (pBox, NULL, NULL, i - pBox->BxW, 0, 0, 0, frame, FALSE);
               break;		
+            case 'e':	/* double contour integral */
+              if (i == 0)
+                i = BoxCharacterWidth (0xf3, font) * 2;
+              ResizeWidth (pBox, NULL, NULL, i - pBox->BxW, 0, 0, 0, frame, FALSE);
+              break;		
+            case 't':	/* triple integral */
             case 'f':	/* triple contour integral */
               if (i == 0)
                 i = BoxCharacterWidth (0xf3, font) * 5 / 2;
-              ResizeWidth (pBox, NULL, NULL, i - pBox->BxW, 0, 0, 0, frame, FALSE);
-              break;		
-            case 'e':	/* double contour integral */
-            case 't':	/* triple integral */
-              if (i == 0)
-                i = BoxCharacterWidth (0xf3, font) * 2;
               ResizeWidth (pBox, NULL, NULL, i - pBox->BxW, 0, 0, 0, frame, FALSE);
               break;		
             case '(':
@@ -3157,6 +3157,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
               ResizeWidth (pBox, NULL, NULL, i - pBox->BxW, 0, 0, 0, frame, FALSE);
               break;
             case '|':       /* vertical bar */
+            case 7:       /* VerticalSeparator ; U02758 */
               if (i == 0)
                 i = BoxCharacterWidth (0x7c, font);  /* | */
               ResizeWidth (pBox, NULL, NULL, i - pBox->BxW, 0, 0, 0, frame, FALSE);

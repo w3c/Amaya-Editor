@@ -1774,8 +1774,11 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
 #endif /* _GL */
             }
 #ifdef _GL
-          else if (c >= 0x210E /* planckh */ &&
-                   c <= 0x22FF /* ImaginaryI */)
+          else if ((c >= 0x210E /* planckh */ && c <= 0x22FF) /* ImaginaryI */
+                  || c == 0x20d2 || c == 0x2758 /* Vertical Bars */
+                  || c == 0x2A2F /* vector or cross product */
+                  || (c >= 0xfe35 && c <= 0xfe38) /* over braces / parenthesis */
+                  )
             {
               /* use STIX fonts here */
               code = 'E';
@@ -1784,8 +1787,16 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
                 {
                   code = '1'; /* West Europe Latin */
                   pfont = &(fontset->Font_1);
-                  if (c == 0x2148 /* ImaginaryI */)
+                  if (c == 0x20d2 || c == 0x2758 /* Vertical Bars */)
+                    c = '|';
+                  else if(c == 0x2216 /* set minus */)
+                    c = '\\';
+                  else if(c == 0x02A2F /* vector or cross product */)
+                    c = 215;
+                  else if (c == 0x2148 /* ImaginaryI */)
                     c = 105;
+                  else if (c == 0x2145 /* CapitalDifferentialD */)
+                    c = 68;
                   else if (c == 0x2146 /* DifferentialD */)
                     c = 100;
                   else if (c == 0x210E /* planckh */)
@@ -1796,9 +1807,14 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
             }
 #else /* _GL */
           else if (c == 0x210E /* planckh */ ||
+                   c == 0x2145 /* CapitalDifferentialD */ ||
                    c == 0x2146 /* DifferentialD */ ||
                    c == 0x2147 /* ExponentialE */ ||
-                   c == 0x2148 /* ImaginaryI */)
+                   c == 0x2148 /* ImaginaryI */
+                   || c == 0x20d2 || c == 0x2758 /* Vertical Bars */
+                   || c == 0x2216 /* set minus */)
+                   || c == 0x02A2F /* vector or cross product */)
+                   )
             {
               code = '1'; /* West Europe Latin */
               pfont = &(fontset->Font_1);
@@ -1807,8 +1823,16 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
 #else /* _WINDOWS */
               encoding = ISO_8859_1;
 #endif /* _WINDOWS */
-              if (c == 0x2148 /* ImaginaryI */)
+              if (c == 0x20d2 || c == 0x2758 /* Vertical Bars */)
+                c = '|';
+              else if(c == 0x2216) /* set minus */
+                c = '\\';
+              else if(c == 0x02A2F /* vector or cross product */)
+                c = 215;
+              else if (c == 0x2148 /* ImaginaryI */)
                 c = 105;
+              else if (c == 0x2146 /* CapitalDifferentialD */)
+                c = 68;
               else if (c == 0x2146 /* DifferentialD */)
                 c = 100;
               else if (c == 0x210E /* planckh */)
@@ -1922,7 +1946,9 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
                    c == 0x2663 ||  /* black club suit */
                    c == 0x2665 ||  /* black heart suit */
                    c == 0x2666 ||  /* black diamond suit */
-                   c == 0x192)     /* latin small letter f with hook */
+                   c == 0x192  ||  /* latin small letter f with hook */
+                   c == 0x2970     /* roundimplies */
+                                  )
             {
 #ifdef _GL
               if (c == 0x220F || c == 0x2211)

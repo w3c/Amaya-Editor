@@ -57,7 +57,8 @@ static ThotBool IsLargeOp (CHAR_T character, char script)
       character == 0x2297 || /* CircleTimes */
       character == 0x2210 || /* Coproduct */
       character == 0x220F || /* Product */
-      character == 0x22C2 ) /* Intersection */
+      character == 0x22C2 || /* Intersection */
+      character == 0x2299 )  /* CircleDot */
     /* it's a large operator */
     return TRUE;
   else
@@ -975,13 +976,14 @@ void SetSingleIntHorizStretchAttr (Element el, Document doc, Element* selEl)
                           script = TtaGetScript (lang);
                           switch(text[0])
                             {
-                            case '-':
-                            case '_':
-                            case 0xAF:
-                            case 0x0332:
-                            case 0x2212:
-                            /* a horizontal line in the middle of the box */
-                              c = 'h'; 
+                            case 0x2500: /* HorizontalLine */
+                              c = 8; 
+                            break;
+                            case 0x0332: /* UnderBar */
+                              c = 9;
+                            break;
+                            case 0xAF: /* OverBar */
+                              c = 10;
                             break;
                             case 0x302:
                               c = 'H'; /* Hat */
@@ -1106,6 +1108,12 @@ void SetSingleIntHorizStretchAttr (Element el, Document doc, Element* selEl)
                             break;
                             case 0x295F: /* DownRightTeeVector */
                               c = 209;
+                            break;
+                            case 0x21CC: /* Equilibrium */
+                              c = 214;
+                            break;
+                            case 0x21CB: /* ReverseEquilibrium */
+                              c = 215;
                             break;
 
                             default:
@@ -1334,7 +1342,8 @@ void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
                        text[i] == 0x2960 || /* LeftUpTeeVector */
                        text[i] == 0x2961 || /* LeftDownTeeVector */
                        text[i] == 0x296E || /* UpEquilibrium */
-                       text[i] == 0x296F    /* ReverseUpEquilibrium */
+                       text[i] == 0x296F || /* ReverseUpEquilibrium */
+                       text[i] == 0x2758    /* VerticalSeparator */
                        ))/* accept only symbols like simple integral, double or
                          triple integral, contour integral, etc. or vertical
                          arrows (add more arrows *****) */
@@ -1478,6 +1487,9 @@ void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
                                 break;
                                 case 0x296F: /* ReverseUpEquilibrium */
                                   c = 213;
+                                break;
+                                case 0x2758: /* VerticalSeparator ; U02758 */
+                                  c = 7;
                                 break;
 
                                 default:

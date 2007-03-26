@@ -550,7 +550,8 @@ LRESULT CALLBACK InitNumAttrDialogWndProc (ThotWindow hwnd, UINT iMsg,
   by the pAttr rule.
   required specifies if it's a required attribute
   currAttr gives the current value of the attribute
-  isRequiredDlg is true if the function must build a popup dlg for mandatory attributs (WX version)
+  isRequiredDlg is true if the function must build a popup dlg for
+  mandatory attributs (WX version)
   ----------------------------------------------------------------------*/
 static void MenuValues (TtAttribute * pAttr, ThotBool required,
                         PtrAttribute currAttr, PtrDocument pDoc, int view,

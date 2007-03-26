@@ -739,11 +739,12 @@ void GiveSymbolSize (PtrAbstractBox pAb, int *width, int *height)
         case '3':	/* CounterClockwiseContourIntegral */
           *width = BoxCharacterWidth (0xf3, font) * 3 / 2;
           break;
+        case 'e':	/* double contour integral */
+          *width = BoxCharacterWidth (0xf3, font) * 2;
+          break;
+        case 't':	/*integrale triple */
         case 'f':	/* triple contour integral */
           *width = BoxCharacterWidth (0xf3, font) * 5 / 2;
-        case 'e':	/* double contour integral */
-        case 't':	/*integrale triple */
-          *width = BoxCharacterWidth (0xf3, font) * 2;
           break;
         case 'r':	/* root */
           *width = hfont;
@@ -756,6 +757,11 @@ void GiveSymbolSize (PtrAbstractBox pAb, int *width, int *height)
           break;
         case 'b': /* Over bracket */
         case 'B': /* Under bracket */
+        case 8 : /* HorizontalLine ; U02500 */
+        case 9 : /* UnderBar ; U00332 */
+        case 10 : /* OverBar ; U000AF */
+        case '-':
+        case '_':
         case 'h': /* overline */
         case 'o': /* over brace */
         case 'p': /* over parenthesis */
@@ -798,6 +804,7 @@ void GiveSymbolSize (PtrAbstractBox pAb, int *width, int *height)
         case 205: /* RightTeeVector */
         case 208: /* DownLeftTeeVector */
         case 209: /* DownRightTeeVector */
+        case 214: /* DownRightTeeVector */
           *height = hfont;
           break;
         case '(':
@@ -5285,7 +5292,7 @@ static ThotBool AnyFloatPosChange (PtrAbstractBox pAb)
 {
   ThotBool     found = FALSE;
 
-  if (pAb && pAb->AbElement && !pAb->AbDead)
+  if (pAb && !pAb->AbDead)
     {
       found = (pAb->AbFloatChange || pAb->AbPositionChange ||
                (pAb->AbNew && pAb->AbFloat != 'N'));
