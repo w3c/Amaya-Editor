@@ -337,7 +337,7 @@ void GL_SetForeground (int fg, ThotBool fillstyle)
     us_opac = FillOpacity;
   else
     us_opac = StrokeOpacity;
-  if (fg != S_color || us_opac != Opacity)
+  //if (fg != S_color || us_opac != Opacity)
     {
       S_color = fg;
       Opacity = us_opac;
@@ -355,7 +355,7 @@ void GL_SetPicForeground ()
   GLubyte         us_opac;
 
   us_opac = (GLubyte) FillOpacity;
-  if (S_color != 0 || us_opac != Opacity)
+  // if (S_color != 0 || us_opac != Opacity)
     {
       S_color = 0;
       Opacity = us_opac;
@@ -370,7 +370,7 @@ void GL_SetPicForeground ()
   ----------------------------------------------------------------------*/
 void InitDrawing (int style, int thick, int fg)
 {
-  if ((GLfloat)thick != S_thick)
+  //if ((GLfloat)thick != S_thick)
     {
       S_thick = (double)thick;
       if (thick)

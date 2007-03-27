@@ -522,6 +522,7 @@ static void GL_TextureBind (ThotPictInfo *img, ThotBool isPixmap,
         {
           if ((int)p2_w < img->PicWidth || (int)p2_h < img->PicHeight)
             {
+	      //if (img->PicFileName && strstr (img->PicFileName,"w3c_main"))
               GL_MakeTextureSize (img, p2_w, p2_h);
               glTexImage2D (GL_TEXTURE_2D, 0, Mode, p2_w, p2_h,
                             0, Mode, GL_UNSIGNED_BYTE,
@@ -531,6 +532,7 @@ static void GL_TextureBind (ThotPictInfo *img, ThotBool isPixmap,
             }
           else
             {
+	      //if (img->PicFileName && strstr (img->PicFileName,"w3c_main"))
               /* create a texture whose sizes are power of 2*/
               glTexImage2D (GL_TEXTURE_2D, 0, Mode, p2_w, p2_h, 0, Mode, 
                             GL_UNSIGNED_BYTE, NULL);
@@ -1543,10 +1545,6 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
           if (pAb->AbLeafType == LtGraphics)
             box = pAb->AbBox;
         }
-#ifdef IV
-if (imageDesc->PicFileName && strstr (imageDesc->PicFileName,"fond_colon"))
-printf ("LayoutPicture (%s)\n",imageDesc->PicFileName);
-#endif
       // x,y,w,h define the area to be painted
       x = box->BxXOrg;
       y = box->BxYOrg;
@@ -2156,6 +2154,7 @@ void DrawPicture (PtrBox box, ThotPictInfo *imageDesc, int frame,
       imageDesc->PicWArea = w;
       imageDesc->PicHArea = h;
     }
+
   picWArea = imageDesc->PicWArea;
   picHArea = imageDesc->PicHArea;
   bgColor = box->BxAbstractBox->AbBackground;
@@ -2166,10 +2165,10 @@ void DrawPicture (PtrBox box, ThotPictInfo *imageDesc, int frame,
         DrawEpsBox (box, imageDesc, frame, epsflogo_width, epsflogo_height);
       else
         {
-#ifdef _TRACE_GL_BUGS_GLISTEXTURE
+#ifdef _TRACE_GL_PICTURE
           if (imageDesc->TextureBind)
             printf ( "GLBUG - DrawPicture : glIsTexture=%s\n", glIsTexture (imageDesc->TextureBind) ? "yes" : "no" );
-#endif /* _TRACE_GL_BUGS_GLISTEXTURE */
+#endif /* _TRACE_GL_PICTURE */
           if ((pres == ReScale && 
                (imageDesc->PicWArea != w || imageDesc->PicHArea != h)) ||
 #ifdef _GL
