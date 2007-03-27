@@ -23,7 +23,6 @@
 #include "amaya.h"
 #include "css.h"
 #include "SVG.h"
-#include <png.h>
 
 static Document   ImgDocument;
 static int        RepeatValue;
