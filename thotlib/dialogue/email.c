@@ -1,7 +1,3 @@
-
-#include "thot_sys.h"
-
-#include "email.h"
 #include "SMTP.h"
 
 #ifdef _WX
@@ -9,6 +5,9 @@
 #include <wx/sstream.h>
 #endif /* _WX */
 
+#include "thot_sys.h"
+#include "email.h"
+ 
 EMail TtaNewEMail(const char* subject, const char* text, const char* from)
 {
 #ifdef _WX
