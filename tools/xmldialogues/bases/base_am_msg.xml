@@ -5371,6 +5371,10 @@
 <message xml:lang="en">Attachment</message>
 <message xml:lang="fr">Pièce jointe</message>
 </label>
+<label define="AM_EMAILS_DONT_SEND">
+<message xml:lang="en">Don't send</message>
+<message xml:lang="fr">Ne pas envoyer</message>
+</label>
 <label define="AM_EMAILS_SEND">
 <message xml:lang="en">Send</message>
 <message xml:lang="fr">Envoyer</message>
@@ -5387,5 +5391,34 @@
 <message xml:lang="en">Alternate textual  message :</message>
 <message xml:lang="fr">Message textuel alternatif :</message>
 </label>
+<label define="AM_EMAILS_ERR_SERVER_RESPOND">
+<message xml:lang="en">The server is unreachable or does not respond.</message>
+<message xml:lang="fr">Le serveur est inaccessible ou ne répond pas.</message>
+</label>
+<label define="AM_EMAILS_ERR_SERVER_REJECT">
+<message xml:lang="en">The server has reject you.</message>
+<message xml:lang="fr">Le serveur vous a rejeté.</message>
+</label>
+<label define="AM_EMAILS_ERR_FROM_ADDR">
+<message xml:lang="en">The sender address is misformatted.</message>
+<message xml:lang="fr">L'adresse de l'envoyeur est mal formatée.</message>
+</label>
+<label define="AM_EMAILS_ERR_RCPT_ADDR">
+<message xml:lang="en">A recipient address is misformatted.</message>
+<message xml:lang="fr">L'adresse d'un destinataire est mal formatée.</message>
+</label>
+<label define="AM_EMAILS_ERR_BAD_CONTENT">
+<message xml:lang="en">The mail content is misformatted.</message>
+<message xml:lang="fr">Le contenu du courriel est mal formatée.</message>
+</label>
+<label define="AM_EMAILS_ERR_UNKNOW">
+<message xml:lang="en">The mail have not be sent.</message>
+<message xml:lang="fr">Le courriel n'a pas pu être envoyé.</message>
+</label>
+<label define="AM_EMAILS_SENT">
+<message xml:lang="en">Mail correctly sent.</message>
+<message xml:lang="fr">Le courriel a été envoyé.</message>
+</label>
+
 <label define="AMAYA_MSG_MAX"></label>
 </messages></base>

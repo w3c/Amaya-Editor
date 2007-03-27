@@ -424,7 +424,15 @@
 421 **Send as :
 422 **Message body
 423 **Attachment
-424 **Send
-425 **The server address and port must be precised in the preference dialog.
-426 **Message :
-427 **Alternate textual  message :
+424 **Don't send
+425 **Send
+426 **The server address and port must be precised in the preference dialog.
+427 **Message :
+428 **Alternate textual  message :
+429 **The server is unreachable or does not respond.
+430 **The server has reject you.
+431 **The sender address is misformatted.
+432 **A recipient address is misformatted.
+433 **The mail content is misformatted.
+434 **The mail have not be sent.
+435 **Mail correctly sent.
