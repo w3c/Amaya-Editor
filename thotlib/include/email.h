@@ -15,7 +15,18 @@ ThotBool TtaAddEMailAlternativeFile(EMail mail, const char* mimeType, const char
 ThotBool TtaAddEMailAttachmentFile(EMail mail, const char* mimeType, const char* filename);
 
 
-ThotBool TtaSendEMail(EMail mail, const char* serverAddress, int port);
+typedef enum _EmailErrorCode
+{
+  EMAIL_OK = 0,
+  EMAIL_SERVER_NOT_RESPOND,
+  EMAIL_SERVER_REJECT,
+  EMAIL_FROM_BAD_ADDRESS,
+  EMAIL_TO_BAD_ADDRESS,
+  EMAIL_BAD_CONTENT,
+  EMAIL_UNKNOW_ERROR
+}EmailErrorCode;
+
+ThotBool TtaSendEMail(EMail mail, const char* serverAddress, int port, int* error);
 
 
 #endif /*EMAIL_H_*/

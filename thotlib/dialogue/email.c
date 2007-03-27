@@ -75,10 +75,12 @@ ThotBool TtaAddEMailAttachmentFile(EMail mail, const char* mimeType, const char*
 }
 
 
-ThotBool TtaSendEMail(EMail mail, const char* serverAddress, int port)
+ThotBool TtaSendEMail(EMail mail, const char* serverAddress, int port, int* error)
 {
   ThotBool rep = FALSE;
 #ifdef _WX
+  long step;
+  long err;
   wxSMTP server;
   wxIPV4address addr;
   addr.Hostname(wxString(serverAddress, wxConvUTF8));
@@ -89,29 +91,35 @@ ThotBool TtaSendEMail(EMail mail, const char* serverAddress, int port)
     rep = TRUE;
   
   server.Close();
+  
+  if(rep==FALSE && error!=NULL)
+  {
+    err = server.GetLastError(&step);
+    printf("Error : %d / %d\n", err, step);
+    switch(step)
+    {
+      case wxSMTP_STEP_CONNECT:
+        *error = EMAIL_SERVER_NOT_RESPOND;
+        break;
+      case wxSMTP_STEP_HELLO:
+        *error = EMAIL_SERVER_REJECT;
+        break;
+      case wxSMTP_STEP_FROM:
+        *error = EMAIL_FROM_BAD_ADDRESS;
+        break;
+      case wxSMTP_STEP_RECIPIENT:
+        *error = EMAIL_TO_BAD_ADDRESS;
+        break;
+      case wxSMTP_STEP_DATA:
+      case wxSMTP_STEP_CONTENT:
+        *error = EMAIL_BAD_CONTENT;
+        break;
+      default:
+        *error = EMAIL_OK;
+        break;
+    }
+  }
+  
 #endif /* _WX */ 
   return rep; 
 }
-
-//
-//void TestSendMail()
-//{
-//    wxIPV4address addr;
-//    addr.Hostname(wxT("smtp-serv.inrialpes.fr"));
-//    addr.Service(25);
-//    
-//    wxSMTP smtp;
-//    smtp.Connect(addr);
-//
-//    wxEmailMessage message(wxT("Test of wxSMTP."), wxT("This is a test for sending mails."), wxT("emilien.kia@inrialpes.fr"));
-//    message.AddTo(wxT("emilien.kia@gmail.com"));
-//    message.AddTo(wxT("emilien.kia@inrialpes.fr"));
-//  
-//    message.AddAlternative(wxT("<html><body><h1>Bonjour</h1><p>Plop !</p></body></html>"), wxT("text/html"));
-//    message.AddFile(wxFileName(wxT("/home/kia/divers/cursor/cursor-16.png")), wxT("image/png"));
-//
-//  
-//    smtp.SendMail(message);
-//    
-//    smtp.Close();
-//}

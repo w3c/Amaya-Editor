@@ -9045,6 +9045,8 @@ void SendByMail (Document document, View view)
   char* docPath, *docType, *docChar;
   
   int   port;
+  int   error;
+  ThotBool retry = TRUE;
 
 
   TtaGetEnvInt ("EMAILS_SMTP_PORT", &port);
@@ -9077,31 +9079,66 @@ void SendByMail (Document document, View view)
     dlg.SetSubject(TtaConvMessageToWX(buff));
   }
 
-  if(dlg.ShowModal()==wxID_OK)
+  while(retry)
   {
-    mail = TtaNewEMail( (const char*)dlg.GetSubject().mb_str(wxConvUTF8),
-                          (const char*) dlg.GetMessage().mb_str(wxConvUTF8),
-                          from);
-    if(mail!=NULL)
+    if(dlg.ShowModal()==wxID_OK)
     {
-      arr = dlg.GetRecipients();
-      for(i=0; i<(int)arr.GetCount(); i++)
+      mail = TtaNewEMail( (const char*)dlg.GetSubject().mb_str(wxConvUTF8),
+                            (const char*) dlg.GetMessage().mb_str(wxConvUTF8),
+                            from);
+      if(mail!=NULL)
       {
-        TtaAddEMailToRecipient(mail, (const char*) arr[i].mb_str(wxConvUTF8));
-      }
-      docPath = GetLocalPath(document, DocumentURLs[document]);
-      docType = DocumentMeta[document]->content_type;
-      docChar = DocumentMeta[document]->charset;
-
-      if(!TtaAddEMailAlternativeFile(mail, docType, docPath, docChar))
-      {
-//        printf("Cant attach alternative file.\n");
+        arr = dlg.GetRecipients();
+        for(i=0; i<(int)arr.GetCount(); i++)
+        {
+          TtaAddEMailToRecipient(mail, (const char*) arr[i].mb_str(wxConvUTF8));
+        }
+        docPath = GetLocalPath(document, DocumentURLs[document]);
+        docType = DocumentMeta[document]->content_type;
+        docChar = DocumentMeta[document]->charset;
+  
+        if(dlg.SendAsAttachment())
+          TtaAddEMailAttachmentFile(mail, docType, docPath);
+        else if(dlg.SendAsContent())
+          TtaAddEMailAlternativeFile(mail, docType, docPath, docChar);
+        
+        error = 0;
+        if(TtaSendEMail(mail, server, port, &error))
+        {
+          TtaSetStatus(document, view, TtaGetMessage (AMAYA, AM_EMAILS_SENT), NULL);
+        }
       }
       
-      TtaSendEMail(mail, server, port);
+      printf("Result : %d\n", error);
+      
+      switch(error)
+      {
+        case EMAIL_OK:
+          retry = FALSE;
+          break;
+        case EMAIL_SERVER_NOT_RESPOND:
+          TtaDisplaySimpleMessage(INFO, AMAYA, AM_EMAILS_ERR_SERVER_RESPOND);
+          break;
+        case EMAIL_SERVER_REJECT:
+          TtaDisplaySimpleMessage(INFO, AMAYA, AM_EMAILS_ERR_SERVER_REJECT);
+          break;
+        case EMAIL_FROM_BAD_ADDRESS:
+          TtaDisplaySimpleMessage(INFO, AMAYA, AM_EMAILS_ERR_FROM_ADDR);
+          break;
+        case EMAIL_TO_BAD_ADDRESS:
+          TtaDisplaySimpleMessage(INFO, AMAYA, AM_EMAILS_ERR_RCPT_ADDR);
+          break;
+        case EMAIL_BAD_CONTENT:
+          TtaDisplaySimpleMessage(INFO, AMAYA, AM_EMAILS_ERR_BAD_CONTENT);
+          break;
+        default:
+          TtaDisplaySimpleMessage(INFO, AMAYA, AM_EMAILS_ERR_UNKNOW);
+          break;
+      }
+      
     }
-    
+    else
+      break;
   }
-
 #endif /* _WX */
 }

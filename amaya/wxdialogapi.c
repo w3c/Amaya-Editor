@@ -1162,7 +1162,6 @@ ThotBool CreateSendByMailDlgWX (int ref, ThotWindow parent,
       
       p_dlg->SetSubject(TtaConvMessageToWX(subject));
       p_dlg->SetMessage(TtaConvMessageToWX(message));
-      p_dlg->SendAsAttachment(sendAttach);
 //      p_dlg->SetRecipients(TtaConvMessageToWX(rcptList));
       
       return TRUE;

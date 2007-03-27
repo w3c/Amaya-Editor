@@ -30,7 +30,9 @@ public:
   void SetMessage(const wxString& message);
   
   bool SendAsAttachment()const;
-  void SendAsAttachment(bool attach);
+  bool SendAsContent()const;
+
+  void SetSendMode(int mode);
     
   wxArrayString  GetRecipients()const;
   void SetRecipients(const wxArrayString & rcpt);

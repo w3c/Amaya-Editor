@@ -275,6 +275,20 @@ public:
     virtual wxString GetMessageContent();
 };
 
+enum wxSMTP_STEP
+{
+  wxSMTP_STEP_UNKNOW,
+  wxSMTP_STEP_CONNECT,
+  wxSMTP_STEP_HELLO,
+  wxSMTP_STEP_FROM,
+  wxSMTP_STEP_RECIPIENT,
+  wxSMTP_STEP_DATA,
+  wxSMTP_STEP_CONTENT,
+  wxSMTP_STEP_QUIT,
+  wxSMTP_STEP_DONE
+};
+
+
 /** SMTP sender. */
 class wxSMTP : public wxCmdLineProtocol
 {
@@ -287,6 +301,8 @@ public:
     virtual bool Close();
 
     bool SendMail(wxEmailMessage& message);
+    
+    long GetLastError(long* step=NULL);
 protected:
     virtual bool SendHello();
     virtual bool SendQuit();
@@ -297,6 +313,9 @@ protected:
     
     static int GetResponseCode(const wxString& rep);
     virtual wxString SendCommand(const wxString& request, bool* haveError=NULL);
+    
+    long m_error;
+    long m_errorStep;
 };
 
 

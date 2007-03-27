@@ -667,12 +667,16 @@ wxString wxEmailMessage::GetMessageContent()
 // wxSMTP
 //==========================================================================
 wxSMTP::wxSMTP():
-wxCmdLineProtocol()
+wxCmdLineProtocol(),
+m_error(0),
+m_errorStep(wxSMTP_STEP_UNKNOW)
 {
 }
 
 bool wxSMTP::Connect(wxSockAddress& address, bool wait)
 {
+    m_errorStep = wxSMTP_STEP_CONNECT;
+
     wxCmdLineProtocol::Connect(address, wait);
     ReadLine();
     SendHello();
@@ -694,43 +698,50 @@ bool wxSMTP::Close()
 
 bool wxSMTP::SendHello()
 {
+    m_errorStep = wxSMTP_STEP_HELLO;
     wxIPV4address addr;
     wxString str;
     if(GetLocal(addr))
         str = addr.Hostname();
     else
         str = wxT("localhost");
-
-  bool err;
-
-    return GetResponseCode(SendCommand(wxT("HELO ")+str, &err))==220;
+    m_error = GetResponseCode(SendCommand(wxT("HELO ")+str));
+    return m_error==220;
 }
 
 bool wxSMTP::SendQuit()
 {
-    SendCommand(wxT("QUIT"));
-    ReadLine();
+    m_errorStep = wxSMTP_STEP_QUIT;
+    m_error = GetResponseCode(SendCommand(wxT("QUIT")));
     return true;
 }
 
 bool wxSMTP::SendFrom(const wxString& addr)
 {
-    return GetResponseCode(SendCommand(wxT("MAIL FROM: <")+addr+wxT(">")))==250;
+    m_errorStep = wxSMTP_STEP_FROM;
+    m_error = GetResponseCode(SendCommand(wxT("MAIL FROM: <")+addr+wxT(">")));
+    return m_error==250;
 }
 
 bool wxSMTP::SendTo(const wxString& addr)
 {
-    return GetResponseCode(SendCommand(wxT("RCPT TO: <")+addr+wxT(">")))==250;
+    m_errorStep = wxSMTP_STEP_RECIPIENT;
+    m_error = GetResponseCode(SendCommand(wxT("RCPT TO: <")+addr+wxT(">")));
+    return m_error==250;
 }
 
 bool wxSMTP::SendData()
 {
-    return GetResponseCode(SendCommand(wxT("DATA")))>0;
+    m_errorStep = wxSMTP_STEP_DATA;
+    m_error = GetResponseCode(SendCommand(wxT("DATA")));
+    return m_error==354;
 }
 
 bool wxSMTP::SendContent(const wxString& content)
 {
-    return GetResponseCode(SendCommand(content+wxT("\r\n.\r\n")))>0;
+    m_errorStep = wxSMTP_STEP_CONTENT;
+    m_error = GetResponseCode(SendCommand(content+wxT("\r\n.\r\n")));
+    return m_error==250;
 }
 
 bool wxSMTP::SendMail(wxEmailMessage& message)
@@ -747,7 +758,14 @@ bool wxSMTP::SendMail(wxEmailMessage& message)
     if(!SendData())
         return false;
     
-    return SendContent(message.GetMessageContent());
+    if(!SendContent(message.GetMessageContent()))
+    {
+      return false;
+    }
+    
+    m_errorStep = wxSMTP_STEP_DONE;
+    m_error = 0;
+    return true;
 }
 
 int wxSMTP::GetResponseCode(const wxString& rep)
@@ -778,6 +796,13 @@ wxString wxSMTP::SendCommand(const wxString& request, bool* haveError)
     
     return res;
 
+}
+
+long wxSMTP::GetLastError(long* step)
+{
+  if(step!=NULL)
+    *step = m_errorStep;
+  return m_error;
 }
 
 
