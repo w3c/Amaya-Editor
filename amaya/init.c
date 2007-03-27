@@ -9019,9 +9019,11 @@ void ClearURLList()
 }
 
 
+#ifdef _WX
 #include <wx/sstream.h>
 #include <wx/wfstream.h>
 #include "../thotlib/internals/h/SMTP.h"
+#endif /* _WX */
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/

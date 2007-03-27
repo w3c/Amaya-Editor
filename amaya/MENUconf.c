@@ -5030,5 +5030,7 @@ void InitConfMenu (void)
 #endif /* _WINGUI */
 
 
+#ifdef _WX
   EmailsBase = TtaSetCallback( (Proc)EmailsCallbackDialog, MAX_EMAILSMENU_DLG );
+#endif /* _WX */
 }
