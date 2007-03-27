@@ -15,7 +15,7 @@ EMail TtaNewEMail(const char* subject, const char* text, const char* from)
                                     wxString(text, wxConvUTF8),
                                     wxString(from, wxConvUTF8));
 #else /* _WX */
-  return NULL
+  return NULL;
 #endif /* _WX */
 }
 
