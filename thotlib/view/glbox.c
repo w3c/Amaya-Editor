@@ -1,16 +1,13 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2005
+ *  (c) COPYRIGHT INRIA, 1996-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
 /*
- * glbox.c : Handling of Double buffering 
- *           and Bounding box calculation, 
- *               with Opengl library both for
- *                   MS-Windows and
- *                   Unix
+ * glbox.c : Handling of Double buffering and Bounding box calculation, 
+ *           with Opengl library both for MS-Windows and Unix
  *
  * Author: P. Cheyrou-lagreze (INRIA)
  *

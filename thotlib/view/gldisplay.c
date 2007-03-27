@@ -111,6 +111,19 @@
 
 #define MESA
 
+
+/*----------------------------------------------------------------------
+  PixelValueDble : check if we need calculation
+  ----------------------------------------------------------------------*/
+static double PixelValueDble (int nb, int real_nb, int frame)
+{
+  if (ViewFrameTable[frame - 1].FrMagnification)
+    return (double) (nb + PixelValue (real_nb, UnPixel, NULL,
+                                      ViewFrameTable[frame - 1].FrMagnification));
+  else
+    return (double) (nb + real_nb);
+}
+
 /*----------------------------------------------------------------------
   FontOrig update and (x, y) location before DrawString
   accordingly to the ascent of the font used.
@@ -272,7 +285,7 @@ void DisplayUnderline (int frame, int x, int y, int h, int type,
 
       if (w == None)
         return;
-      thickness = (h / 20) + 1;
+      thickness = 1;
       y += FrameTable[frame].FrTopMargin;
       bottom = y + h - thickness;
       middle = y + h / 2;
@@ -491,7 +504,7 @@ static void ArrowDrawing (int frame, int x1, int y1, int x2, int y2,
   double              x, y, xb, yb, dx, dy, l, sina, cosa;
   int                 xc, yc, xd, yd;
   double              width, height;
-  ThotPoint           point[3];
+  ThotPoint           points[3];
 
   width = (double) (5 + thick);
   height = 10;
@@ -513,14 +526,14 @@ static void ArrowDrawing (int frame, int x1, int y1, int x2, int y2,
   yd = (int)(-x * sina + y * cosa + .5);
 
   /* draw */
-  point[0].x = x2;
-  point[0].y = y2;
-  point[1].x = xc;
-  point[1].y = yc;
-  point[2].x = xd;
-  point[2].y = yd;
+  points[0].x = x2;
+  points[0].y = y2;
+  points[1].x = xc;
+  points[1].y = yc;
+  points[2].x = xd;
+  points[2].y = yd;
 
-  GL_DrawPolygon (point, 3);
+  GL_DrawPolygon (points, 3);
 }
 
 /*----------------------------------------------------------------------
@@ -1280,7 +1293,7 @@ void DrawRectangle (int frame, int thick, int style, int x, int y, int width,
 void DrawDiamond (int frame, int thick, int style, int x, int y, int width,
                   int height, int fg, int bg, int pattern)
 {
-  ThotPoint           point[5];
+  ThotPoint           points[5];
 
   if (width > thick + 1)
     width = width - thick - 1;
@@ -1289,29 +1302,29 @@ void DrawDiamond (int frame, int thick, int style, int x, int y, int width,
   x += thick / 2;
   y = y + thick / 2 + FrameTable[frame].FrTopMargin;
 
-  point[0].x = x + (width / 2);
-  point[0].y = y;
-  point[4].x = point[0].x;
-  point[4].y = point[0].y;
-  point[1].x = x + width;
-  point[1].y = y + (height / 2);
-  point[2].x = point[0].x;
-  point[2].y = y + height;
-  point[3].x = x;
-  point[3].y = point[1].y;
+  points[0].x = x + (width / 2);
+  points[0].y = y;
+  points[4].x = points[0].x;
+  points[4].y = points[0].y;
+  points[1].x = x + width;
+  points[1].y = y + (height / 2);
+  points[2].x = points[0].x;
+  points[2].y = y + height;
+  points[3].x = x;
+  points[3].y = points[1].y;
 
   /* Fill in the diamond */
   if (pattern == 2)
     {
       LoadColor (bg);
-      GL_DrawPolygon (point, 5);
+      GL_DrawPolygon (points, 5);
     }
 
   /* Draw the border */
   if (thick > 0 && fg >= 0)
     {
       InitDrawing (style, thick, fg);
-      GL_DrawPolygon (point, 5);
+      GL_DrawPolygon (points, 5);
     }
 }
 
@@ -1331,7 +1344,6 @@ void DrawSegments (int frame, int thick, int style, int x, int y,
                    PtrTextBuffer buffer, int nb, int fg, int arrow, int bg,
                    int pattern)
 {
-  int                 k;
   ThotPoint          *points;
   int                 i, j;
   PtrTextBuffer       adbuff;
@@ -1348,20 +1360,14 @@ void DrawSegments (int frame, int thick, int style, int x, int y,
   j = 1;
   for (i = 1; i < nb; i++)
     {
-      if (j >= adbuff->BuLength &&
-          adbuff->BuNext != NULL)
+      if (j >= adbuff->BuLength && adbuff->BuNext != NULL)
         {
           /* Next buffer */
           adbuff = adbuff->BuNext;
           j = 0;
         }
-      points[i - 1].x = x + PixelValue (adbuff->BuPoints[j].XCoord,
-                                        UnPixel, NULL,
-                                        ViewFrameTable[frame - 1].FrMagnification);
-      points[i - 1].y = y + PixelValue (adbuff->BuPoints[j].YCoord,
-                                        UnPixel, NULL,
-                                        ViewFrameTable[frame - 1].FrMagnification);
-      //      printf("nb=%d XCoord=%d YCoord=%d\n", j, adbuff->BuPoints[j].XCoord, adbuff->BuPoints[j].YCoord );
+      points[i - 1].x = PixelValueDble (x, adbuff->BuPoints[j].XCoord, frame);
+      points[i - 1].y = PixelValueDble(y, adbuff->BuPoints[j].YCoord, frame);
       j++;
     }
   
@@ -1374,10 +1380,7 @@ void DrawSegments (int frame, int thick, int style, int x, int y,
   
   /* Draw the border */
   InitDrawing (style, thick, fg);
-  for (k=0; k< nb-2; k++)
-    GL_DrawLine((int)points[k].x, (int)points[k].y,
-                (int)points[k+1].x, (int)points[k+1].y, TRUE);
-  
+  GL_DrawLines (points, nb - 1);
   /* Forward arrow */
   if (arrow == 1 || arrow == 3)
     ArrowDrawing (frame,
@@ -1444,12 +1447,8 @@ void DrawPolygon (int frame, int thick, int style, int x, int y,
           adbuff = adbuff->BuNext;
           j = 0;
         }
-      points[i - 1].x = x + PixelValue (adbuff->BuPoints[j].XCoord,
-                                        UnPixel, NULL,
-                                        ViewFrameTable[frame - 1].FrMagnification);
-      points[i - 1].y = y + PixelValue (adbuff->BuPoints[j].YCoord,
-                                        UnPixel, NULL,
-                                        ViewFrameTable[frame - 1].FrMagnification);
+      points[i - 1].x = PixelValueDble (x, adbuff->BuPoints[j].XCoord, frame);
+      points[i - 1].y = PixelValueDble(y, adbuff->BuPoints[j].YCoord, frame);
       j++;
     }
   /* Close the polygon */
@@ -1495,21 +1494,13 @@ void DrawCurve (int frame, int thick, int style, int x, int y,
   adbuff = buffer;
   y += FrameTable[frame].FrTopMargin;
   j = 1;
-  x1 = (double) (x + PixelValue (adbuff->BuPoints[j].XCoord,
-                                 UnPixel, NULL,
-                                 ViewFrameTable[frame - 1].FrMagnification));
-  y1 = (double) (y + PixelValue (adbuff->BuPoints[j].YCoord,
-                                 UnPixel, NULL,
-                                 ViewFrameTable[frame - 1].FrMagnification));
+  x1 = PixelValueDble (x, adbuff->BuPoints[j].XCoord, frame);
+  y1 = PixelValueDble(y, adbuff->BuPoints[j].YCoord, frame);
   j++;
   cx1 = (controls[j].lx * 3 + x1 - x) / 4 + x;
   cy1 = (controls[j].ly * 3 + y1 - y) / 4 + y;
-  x2 = (double) (x + PixelValue (adbuff->BuPoints[j].XCoord,
-                                 UnPixel, NULL,
-                                 ViewFrameTable[frame - 1].FrMagnification));
-  y2 = (double) (y + PixelValue (adbuff->BuPoints[j].YCoord,
-                                 UnPixel, NULL,
-                                 ViewFrameTable[frame - 1].FrMagnification));
+  x2 = PixelValueDble (x, adbuff->BuPoints[j].XCoord, frame);
+  y2 = PixelValueDble(y, adbuff->BuPoints[j].YCoord, frame);
   cx2 = (controls[j].lx * 3 + x2 - x) / 4 + x;
   cy2 = (controls[j].ly * 3 + y2 - y) / 4 + y;
 
@@ -1540,12 +1531,8 @@ void DrawCurve (int frame, int thick, int style, int x, int y,
               adbuff = adbuff->BuNext;
               j = 0;
             }
-          x2 = (double) (x + PixelValue (adbuff->BuPoints[j].XCoord,
-                                         UnPixel, NULL,
-                                         ViewFrameTable[frame - 1].FrMagnification));
-          y2 = (double) (y + PixelValue (adbuff->BuPoints[j].YCoord,
-                                         UnPixel, NULL,
-                                         ViewFrameTable[frame - 1].FrMagnification));
+          x2 = PixelValueDble (x, adbuff->BuPoints[j].XCoord, frame);
+          y2 = PixelValueDble(y, adbuff->BuPoints[j].YCoord, frame);
           if (i == nb - 2)
             {
               cx1 = (controls[i].rx * 3 + x1 - x) / 4 + x;
@@ -1603,21 +1590,13 @@ void DrawSpline (int frame, int thick, int style, int x, int y,
   adbuff = buffer;
   y += FrameTable[frame].FrTopMargin;
   j = 1;
-  x1 = (double) (x + PixelValue (adbuff->BuPoints[j].XCoord,
-                                 UnPixel, NULL,
-                                 ViewFrameTable[frame - 1].FrMagnification));
-  y1 = (double) (y + PixelValue (adbuff->BuPoints[j].YCoord,
-                                 UnPixel, NULL,
-                                 ViewFrameTable[frame - 1].FrMagnification));
+  x1 = PixelValueDble (x, adbuff->BuPoints[j].XCoord, frame);
+  y1 = PixelValueDble(y, adbuff->BuPoints[j].YCoord, frame);
   cx1 = controls[j].rx + x;
   cy1 = controls[j].ry + y;
   j++;
-  x2 = (double) (x + PixelValue (adbuff->BuPoints[j].XCoord,
-                                 UnPixel, NULL,
-                                 ViewFrameTable[frame - 1].FrMagnification));
-  y2 = (double) (y + PixelValue (adbuff->BuPoints[j].YCoord,
-                                 UnPixel, NULL,
-                                 ViewFrameTable[frame - 1].FrMagnification));
+  x2 = PixelValueDble (x, adbuff->BuPoints[j].XCoord, frame);
+  y2 = PixelValueDble(y, adbuff->BuPoints[j].YCoord, frame);
   cx2 = controls[j].lx + x;
   cy2 = controls[j].ly + y;
 
@@ -1641,24 +1620,16 @@ void DrawSpline (int frame, int thick, int style, int x, int y,
               adbuff = adbuff->BuNext;
               j = 0;
             }
-          x2 = (double) (x + PixelValue (adbuff->BuPoints[j].XCoord,
-                                         UnPixel, NULL,
-                                         ViewFrameTable[frame - 1].FrMagnification));
-          y2 = (double) (y + PixelValue (adbuff->BuPoints[j].YCoord,
-                                         UnPixel, NULL,
-                                         ViewFrameTable[frame - 1].FrMagnification));
+          x2 = PixelValueDble (x, adbuff->BuPoints[j].XCoord, frame);
+          y2 = PixelValueDble(y, adbuff->BuPoints[j].YCoord, frame);
           cx2 = controls[i + 1].lx + x;
           cy2 = controls[i + 1].ly + y;
         }
       else
         {
           /* loop around the origin point */
-          x2 = (double) (x + PixelValue (buffer->BuPoints[1].XCoord,
-                                         UnPixel, NULL,
-                                         ViewFrameTable[frame - 1].FrMagnification));
-          y2 = (double) (y + PixelValue (buffer->BuPoints[1].YCoord,
-                                         UnPixel, NULL,
-                                         ViewFrameTable[frame - 1].FrMagnification));
+          x2 = PixelValueDble (x, adbuff->BuPoints[1].XCoord, frame);
+          y2 = PixelValueDble(y, adbuff->BuPoints[1].YCoord, frame);
           cx2 = controls[1].lx + x;
           cy2 = controls[1].ly + y;
         }
@@ -1707,18 +1678,6 @@ static void DoDrawMesh (int frame, int thick, int style,
       InitDrawing (style, thick, fg);
       MakeMeshLines (mesh);
     }
-}
-
-/*----------------------------------------------------------------------
-  PixelValueDble : check if we need calculation
-  ----------------------------------------------------------------------*/
-static double PixelValueDble (int nb, int real_nb, int frame)
-{
-  if (ViewFrameTable[frame - 1].FrMagnification)
-    return (double) (nb + PixelValue (real_nb, UnPixel, NULL,
-                                      ViewFrameTable[frame - 1].FrMagnification));
-  else
-    return (double) (nb + real_nb);
 }
 
 /*----------------------------------------------------------------------
@@ -1936,24 +1895,25 @@ void DrawOval (int frame, int thick, int style, int x, int y, int width,
 
       GL_SetForeground (bg, TRUE);
       GL_DrawPolygon (point, 13);
-      for (i=0;i<4;i++)
+      for (i = 0; i < 4; i++)
         {
           GL_DrawArc (xarc[i].x + thick/4, xarc[i].y + thick/4, 
                       xarc[i].width - thick/4, xarc[i].height-thick/4, 
                       xarc[i].angle1, xarc[i].angle2,
-                      style, thick, bg, TRUE); 
+                      TRUE); 
         }
     }
 
   /* Draw the border */
   if (thick > 0 && fg >= 0)
     {
-      for (i=0; i < 4 ;i++)
+      InitDrawing (style, thick, fg);
+      for (i = 0; i < 4 ;i++)
         GL_DrawArc (xarc[i].x, xarc[i].y, 
                     xarc[i].width, xarc[i].height, 
                     xarc[i].angle1, xarc[i].angle2,
-                    style, thick, fg, FALSE);
-      GL_DrawSegments (seg, 4, style, thick, fg);
+                    FALSE);
+      GL_DrawSegments (seg, 4);
     }
 }
 
@@ -1980,14 +1940,14 @@ void DrawEllips (int frame, int thick, int style, int x, int y, int width,
 
   if (pattern == 2 || (bg == fg && bg == pattern))
     {
-      /* InitDrawing (style, thick, bg); */
       GL_SetForeground (bg, TRUE);
-      GL_DrawArc (x, y, width, height, 0, 360, style, thick, bg, TRUE);
+      GL_DrawArc (x, y, width, height, 0, 360, TRUE);
     }
   /* Draw the border */
   if (thick > 0 && fg >= 0)
     {
-      GL_DrawArc (x, y, width, height, 0, 360, style, thick, fg, FALSE);
+      InitDrawing (style, thick, fg);
+      GL_DrawArc (x, y, width, height, 0, 360, FALSE);
     }
 
 
@@ -2355,10 +2315,11 @@ void DrawHorizontalParenthesis (int frame, int thick, int style, int x, int y,
   y += thick / 2;
   if (thick > 0 && fg >= 0)
     {
+      InitDrawing (style, thick, fg);
       if (align)
-        GL_DrawArc(x, y + h, l, -h, 0, 180, style, thick, fg, FALSE);
+        GL_DrawArc(x, y + h, l, -h, 0, 180, FALSE);
       else
-        GL_DrawArc(x, y, l, h, 0, 180, style, thick, fg, FALSE);
+        GL_DrawArc(x, y, l, h, 0, 180, FALSE);
     }
 }
 
@@ -2410,7 +2371,8 @@ void DrawHorizontalBrace (int frame, int thick, int style, int x, int y,
           seg[5].y1 = seg[4].y2;
           seg[5].x2 = x + l;
           seg[5].y2 = y + h;
-          GL_DrawSegments (seg, 6, style, thick, fg);
+          InitDrawing (style, thick, fg);
+          GL_DrawSegments (seg, 6);
         }
       else
         /* Under brace */
@@ -2444,7 +2406,8 @@ void DrawHorizontalBrace (int frame, int thick, int style, int x, int y,
           seg[5].y1 = seg[4].y2;
           seg[5].x2 = x + l;
           seg[5].y2 = y;
-          GL_DrawSegments (seg, 6, style, thick, fg);
+          InitDrawing (style, thick, fg);
+          GL_DrawSegments (seg, 6);
         }
     }
 }
@@ -2696,24 +2659,25 @@ void DrawRectangleFrame (int frame, int thick, int style, int x, int y,
           GL_DrawArc	(xarc[i].x, xarc[i].y, 
                        xarc[i].width, xarc[i].height, 
                        xarc[i].angle1, xarc[i].angle2,
-                       style, thick, bg, TRUE);
+                       TRUE);
         }
     }
 
   /* Draw the border */
   if (thick > 0 && fg >= 0)
     {
+      InitDrawing (style, thick, fg);
       for (i = 0 ; i < 4; i++)
         {  
           GL_DrawArc (xarc[i].x, xarc[i].y, 
                       xarc[i].width, xarc[i].height, 
                       xarc[i].angle1, xarc[i].angle2,
-                      style, thick, fg, FALSE); 
+                      FALSE); 
         }
       if (arc2 < height / 2)
-        GL_DrawSegments(seg, 5, style, thick, fg);
+        GL_DrawSegments(seg, 5);
       else
-        GL_DrawSegments(seg, 4, style, thick, fg);
+        GL_DrawSegments(seg, 4);
     }
 }
 
@@ -2727,6 +2691,7 @@ void DrawRectangleFrame (int frame, int thick, int style, int x, int y,
 void DrawEllipsFrame (int frame, int thick, int style, int x, int y,
                       int width, int height, int fg, int bg, int pattern)
 {
+  ThotPoint           point[2];
   int                 px7mm, shiftX;
   double              A;
 
@@ -2739,22 +2704,26 @@ void DrawEllipsFrame (int frame, int thick, int style, int x, int y,
   /* Fill in the rectangle */
   if (pattern == 2)
     {
-      //GL_SetForeground (bg, TRUE);
-      GL_DrawArc (x, y, width, height, 0, 360, style, thick, bg, TRUE);
+      GL_SetForeground (bg, TRUE);
+      GL_DrawArc (x, y, width, height, 0, 360, TRUE);
     }
 
   /* Draw the border */
   if (thick > 0 && fg >= 0)
     {
-      GL_DrawArc(x, y, width, height, 0, 360, style, thick, fg, FALSE); 
+      InitDrawing (style, thick, fg);
+      GL_DrawArc(x, y, width, height, 0, 360, FALSE); 
       px7mm = (int)((7 * DOT_PER_INCH) / 25.4 + 0.5);
       if (height > 2 * px7mm)
         {
           A = ((double) height - 2 * px7mm) / height;
           A = 1.0 - sqrt (1 - A * A);
           shiftX = (int)(width * A * 0.5 + 0.5);
-          InitDrawing (style, thick, fg);
-          GL_DrawLine(x + shiftX, y + px7mm, x + width - shiftX, y + px7mm, TRUE);
+          point[0].x = x + shiftX;
+          point[0].y = y + px7mm;
+          point[1].x = x + width - shiftX;
+          point[1].y = y + px7mm;
+          GL_DrawLines (point, 1);
         }
     }
 }

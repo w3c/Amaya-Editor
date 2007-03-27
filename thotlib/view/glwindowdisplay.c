@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2005
+ *  (c) COPYRIGHT INRIA, 1996-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -107,8 +107,6 @@
  * degrees to radians and so on...
  * All for EllipticSplit and/or GL_DrawArc
  */
-#define PRECISION float
-
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
 #endif
@@ -118,8 +116,8 @@
 #endif
 
 /* ((A)*(M_PI/180.0)) */
-#define DEG_TO_RAD(A)   ((PRECISION)A)/57.29577957795135
-#define RAD_TO_DEG(A)   ((PRECISION)A)*57.29577957795135
+#define DEG_TO_RAD(A)   ((GLfloat)A)/57.29577957795135
+#define RAD_TO_DEG(A)   ((GLfloat)A)*57.29577957795135
 
 #define GL_EPSILON                 5.e-3
 #define IS_ZERO(arg)                    (fabs(arg)<1.e-20)
@@ -162,10 +160,12 @@
 
 /*--------- STATICS ------*/
 /*Current Thickness*/
-static int      S_thick;
 static GLubyte  Opacity = 255;
 static GLubyte  FillOpacity = 255;
 static GLubyte  StrokeOpacity = 255;
+static GLfloat  S_thick = 0.;
+static int      S_style = 0;
+static int      S_color = -1;
 static int      X_Clip = 0;
 static int      Y_Clip = 0;
 static int      Width_Clip = 0;
@@ -261,7 +261,7 @@ void update_bg_colorGTK (int frame, int color)
   ----------------------------------------------------------------------*/
 void GL_SetOpacity (int opacity)
 {
-  Opacity = (GLubyte) ((opacity * 255)/1000);
+  FillOpacity = (GLubyte) ((opacity * 255)/1000);
 }
 
 /*----------------------------------------------------------------------
@@ -286,9 +286,11 @@ void GL_SetFillOpacity (int opacity)
 void GL_SetClipping (int x, int y, int width, int height)
 {
 #ifdef _WX
-  wxASSERT_MSG( x>=0 && y>=0 && width>=0 && height>=0, _T("GL_SetClipping : one clipping value is negative") );
+  wxASSERT_MSG( x>=0 && y>=0 && width>=0 && height>=0,
+                _T("GL_SetClipping : one clipping value is negative") );
 #endif /* _WX */
-  TTALOGDEBUG_4( TTA_LOG_DRAW, _T("GL_SetClipping : x=%d y=%d w=%d h=%d"), x, y, width, height );
+  TTALOGDEBUG_4( TTA_LOG_DRAW, _T("GL_SetClipping : x=%d y=%d w=%d h=%d"),
+                 x, y, width, height );
   glEnable (GL_SCISSOR_TEST);
   glScissor (x, y, width, height);
   if (Width_Clip == 0 && Height_Clip == 0)
@@ -334,11 +336,14 @@ void GL_SetForeground (int fg, ThotBool fillstyle)
   if (fillstyle)
     us_opac = FillOpacity;
   else
+    us_opac = StrokeOpacity;
+  if (fg != S_color || us_opac != Opacity)
     {
-      us_opac = StrokeOpacity;
+      S_color = fg;
+      Opacity = us_opac;
+      TtaGiveThotRGB (fg, &red, &green, &blue);
+      glColor4ub ((GLubyte) red,  (GLubyte) green, (GLubyte) blue, us_opac);
     }
-   TtaGiveThotRGB (fg, &red, &green, &blue);
-  glColor4ub ((GLubyte) red,  (GLubyte) green, (GLubyte) blue, (GLubyte) us_opac);    
 }
 
 
@@ -347,11 +352,17 @@ void GL_SetForeground (int fg, ThotBool fillstyle)
   ----------------------------------------------------------------------*/
 void GL_SetPicForeground ()
 {
-  unsigned short us_opac;
+  GLubyte         us_opac;
 
   us_opac = (GLubyte) FillOpacity;
-  glColor4ub ((GLubyte) 255, (GLubyte) 255, (GLubyte) 255, (GLubyte) us_opac);    
+  if (S_color != 0 || us_opac != Opacity)
+    {
+      S_color = 0;
+      Opacity = us_opac;
+      glColor4ub ((GLubyte) 255, (GLubyte) 255, (GLubyte) 255, us_opac);
+    }
 }
+
 
 /*----------------------------------------------------------------------
   InitDrawing update the Graphic Context accordingly to parameters.
@@ -359,48 +370,35 @@ void GL_SetPicForeground ()
   ----------------------------------------------------------------------*/
 void InitDrawing (int style, int thick, int fg)
 {
-  if (style >= 5)
+  if ((GLfloat)thick != S_thick)
     {
-      /* solid */
+      S_thick = (double)thick;
       if (thick)
         {
-          S_thick = thick;
-          glLineWidth ((GLfloat) thick); 
-          glPointSize ((GLfloat) thick); 
+          glLineWidth (S_thick); 
+          glPointSize (S_thick); 
         }
       else
         {
           glLineWidth ((GLfloat) 0.5); 
           glPointSize ((GLfloat) 0.5); 
         }
-      glDisable (GL_LINE_STIPPLE);
     }
-  else
+  if (style != S_style)
     {
-      if (thick)
+      if (style >= 5)
+        /* solid */
+        glDisable (GL_LINE_STIPPLE);
+      else
         {
-          S_thick = thick;
           if (style == 3)
             /* dotted */
-            {
-              glLineStipple (thick, 0x5555);
-              glEnable (GL_LINE_STIPPLE);
-            }
+            glLineStipple (thick, 0x5555);
           else
             /* dashed */
-            {
-              glLineStipple (thick, 0x1F1F);
-              glEnable (GL_LINE_STIPPLE);
-            }
-          glLineWidth ((GLfloat) thick); 
-          glPointSize ((GLfloat) thick); 
+            glLineStipple (thick, 0x1F1F);
+          glEnable (GL_LINE_STIPPLE);
         }
-      else
-        {
-          glLineWidth ((GLfloat) 0.5); 
-          glPointSize ((GLfloat) 0.5); 
-        }
-     
     }
  GL_SetForeground (fg, FALSE);
 }
@@ -482,37 +480,17 @@ void GL_DrawRectangle (int fg, float x, float y, float width, float height)
 }
 
 /*----------------------------------------------------------------------
-  GL_DrawLine
-  ----------------------------------------------------------------------*/
-void GL_DrawLine (int x1, int y1, int x2, int y2, ThotBool round)
-{
-  if (S_thick > 1 && round)
-    {
-      /* round line join*/
-      glBegin (GL_POINTS);
-      glVertex2i (x1, y1);
-      glVertex2i (x2, y2);
-      glEnd ();
-    }
-  glBegin (GL_LINES) ;
-  glVertex2i (x1, y1);
-  glVertex2i (x2, y2);
-  glEnd ();
-}
-
-/*----------------------------------------------------------------------
   GL_DrawSegments
   ----------------------------------------------------------------------*/
-void GL_DrawSegments (ThotSegment *point, int npoints, int style, int thick, int fg)
+void GL_DrawSegments (ThotSegment *point, int npoints)
 {
   int i;
 
-  InitDrawing (style, thick, fg);
-  if (S_thick > 1)
+  if (S_thick > 1.)
     {
       glBegin (GL_POINTS); 
-      for(i=0; i < npoints; i++) 
-        {
+      for (i = 0; i < npoints; i++)
+       {
           glVertex2f ((point + i)->x1 , 
                       (point + i)->y1);
           glVertex2f ((point + i)->x2 , 
@@ -521,8 +499,8 @@ void GL_DrawSegments (ThotSegment *point, int npoints, int style, int thick, int
       glEnd ();
     }
   glBegin (GL_LINES) ;
-  for(i=0; i < npoints; i++) 
-    {
+  for (i = 0; i < npoints; i++)
+   {
       glVertex2f ((point + i)->x1 , 
                   (point + i)->y1);
       glVertex2f ((point + i)->x2 , 
@@ -535,21 +513,21 @@ void GL_DrawSegments (ThotSegment *point, int npoints, int style, int thick, int
   GL_DrawArc : Draw an arc
   ----------------------------------------------------------------------*/
 void GL_DrawArc (float x, float y, float w, float h, int startAngle,
-                 int sweepAngle, int style, int thick, int fg, ThotBool filled)
+                 int sweepAngle, ThotBool filled)
 {
   GLint     i, slices;
-  PRECISION angleOffset;
-  PRECISION sinCache[SLICES_SIZE];
-  PRECISION cosCache[SLICES_SIZE];
-  PRECISION y_cache[SLICES_SIZE];
-  PRECISION x_cache[SLICES_SIZE];
-  PRECISION angle;
-  PRECISION fastx, fasty, width, height;
+  GLfloat   angleOffset;
+  GLfloat   sinCache[SLICES_SIZE];
+  GLfloat   cosCache[SLICES_SIZE];
+  GLfloat   y_cache[SLICES_SIZE];
+  GLfloat   x_cache[SLICES_SIZE];
+  GLfloat   angle;
+  GLfloat   fastx, fasty, width, height;
 
-  width  = ((PRECISION)w) / 2;
-  height = ((PRECISION)h) / 2;
-  fastx  = ((PRECISION)x) + width; 
-  fasty  = ((PRECISION)y) + height;
+  width  = ((GLfloat)w) / 2;
+  height = ((GLfloat)h) / 2;
+  fastx  = ((GLfloat)x) + width; 
+  fasty  = ((GLfloat)y) + height;
   if (w < 10 && h < 10)
     {
       glPointSize ((float)0.1);
@@ -560,15 +538,14 @@ void GL_DrawArc (float x, float y, float w, float h, int startAngle,
 
   startAngle = startAngle;
   sweepAngle = sweepAngle;
-  InitDrawing (style, thick, fg);
  
   /* Cache is the vertex locations cache */
-  angleOffset = (PRECISION) (startAngle / 180.0 * M_PI);
+  angleOffset = (GLfloat) (startAngle / 180.0 * M_PI);
   for (i = 0; i <= slices; i++) 
     {
-      angle = angleOffset + (PRECISION) ((M_PI * sweepAngle) / 180.0) * i / slices;
-      cosCache[i] = (PRECISION) DCOS(angle);
-      sinCache[i] = (PRECISION) DSIN(angle);
+      angle = angleOffset + (GLfloat) ((M_PI * sweepAngle) / 180.0) * i / slices;
+      cosCache[i] = (GLfloat) DCOS(angle);
+      sinCache[i] = (GLfloat) DSIN(angle);
     }
 
   if (fabs (sweepAngle - 360.0) < 0.0001) 
@@ -583,7 +560,7 @@ void GL_DrawArc (float x, float y, float w, float h, int startAngle,
       y_cache[i] = fasty - (height * sinCache[i]);
     }
 
-  if (filled)
+  if (filled || (S_thick >= width && S_thick >= height))
     {
       glBegin (GL_TRIANGLE_FAN);
       /* The center */
@@ -592,8 +569,7 @@ void GL_DrawArc (float x, float y, float w, float h, int startAngle,
         glVertex2d (x_cache[i], y_cache[i]);
       glEnd();
     }
-
-  if (!filled)
+  else
     {
       if (w < 20 && h < 20)
         glBegin(GL_POINTS);
@@ -611,25 +587,44 @@ void GL_DrawArc (float x, float y, float w, float h, int startAngle,
 
 /*----------------------------------------------------------------------
   GL_DrawLines
-  (Not static because used in geom.c)
+  npoints gives the number of points
   ----------------------------------------------------------------------*/
-void GL_DrawLines (ThotPoint *point, int npoints)
+void GL_DrawLines (ThotPoint *points, int npoints)
 {
   int i;
-  
-  if (S_thick > 1)
+
+ if (S_thick > 1.)
     {
       /* Joinning if a certain thickness ?*/
       glBegin (GL_POINTS); 
       for (i = 0; i<npoints; i++)
-        glVertex2dv ((double *) &point[i]);
+        glVertex2dv ((double *) &points[i]);
       glEnd (); 
     }
   glBegin (GL_LINE_STRIP);
   for (i = 0; i < npoints; i++)
-    glVertex2dv ((double *) &point[i]);
+    glVertex2dv ((double *) &points[i]);
   glEnd ();
   
+}
+
+/*----------------------------------------------------------------------
+  GL_DrawLine
+  ----------------------------------------------------------------------*/
+void GL_DrawLine (int x1, int y1, int x2, int y2, ThotBool round)
+{
+  if (S_thick > 1. && round)
+    {
+      /* round line join*/
+      glBegin (GL_POINTS);
+      glVertex2i (x1, y1);
+      glVertex2i (x2, y2);
+      glEnd ();
+    }
+  glBegin (GL_LINES) ;
+  glVertex2i (x1, y1);
+  glVertex2i (x2, y2);
+  glEnd ();
 }
 
 /*----------------------------------------------------------------------

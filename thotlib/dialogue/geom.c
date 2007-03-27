@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2005
+ *  (c) COPYRIGHT INRIA, 1996-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -205,7 +205,7 @@ void InvertEllipse (int frame, int x, int y, int width, int height,
   if (w != None)
     {
 #ifdef _GL
-	  GL_DrawArc (x, y, width, height, 0, 360 * 64, FALSE, 5, 1, DefaultFColor);
+	  GL_DrawArc (x, y, width, height, 0, 360 * 64, FALSE);
 #else /*_GL*/
 #ifdef _WINGUI
 	  rgn = CreateEllipticRgn (x, y, x + width, y + height);

@@ -1435,7 +1435,7 @@ void DisplayPath (PtrBox pBox, int frame, ThotBool selected,
           if (pFrame->FrSelectOnePosition)
             DisplayPointSelection (frame, pBox,
                                    pFrame->FrSelectionBegin.VsIndBox);
-          else if (pBox->BxNChars > 1)
+          else
             DisplayPointSelection (frame, pBox, 0);
         }
     }

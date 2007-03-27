@@ -62,8 +62,8 @@ void InitDrawing (int style, int thick, int fg);
 
 void GL_Point (int fg, float width, float x, float y);
 
-void GL_DrawLine (int x1, int y1, int x2, int y2, ThotBool Round);
-void GL_DrawLines (ThotPoint *point, int npoints);
+void GL_DrawLine (int x1, int y1, int x2, int y2, ThotBool round);
+void GL_DrawLines (ThotPoint *points, int npoints);
 
 void GL_DrawEmptyRectangle (int fg, 
 			    float x, float y, 
@@ -72,9 +72,9 @@ void GL_DrawEmptyRectangle (int fg,
 
 void GL_DrawRectangle (int fg, float x, float y, float width, float height);
 
-void GL_DrawSegments (ThotSegment *point, int npoints, int style, int thick, int fg);
+void GL_DrawSegments (ThotSegment *point, int npoints);
 void GL_DrawArc (float x, float y, float w, float h, 
-		 int angle1, int angle2, int style, int thick, int fg, ThotBool filled);
+		 int angle1, int angle2, ThotBool filled);
 
 void GL_DrawPolygon (ThotPoint *points, int npoints);
 

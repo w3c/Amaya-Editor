@@ -2173,7 +2173,8 @@ ThotBool RedrawFrameTop (int frame, int scroll)
     {
       pFrame->FrYOrg -= scroll;
 #ifdef _GL
-      SyncBoundingboxes (pFrame->FrAbstractBox, 0, -scroll, frame, pFrame->FrXOrg, pFrame->FrYOrg);
+      SyncBoundingboxes (pFrame->FrAbstractBox, 0, -scroll, frame,
+                         pFrame->FrXOrg, pFrame->FrYOrg);
 #endif /* _GL */
       top = pFrame->FrYOrg;
       bottom = top + h;

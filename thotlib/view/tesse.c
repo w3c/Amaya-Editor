@@ -196,12 +196,12 @@ void MeshNewPoint (double x, double y, void *v_path)
       size = path->maxpoints + ALLOC_POINTS;
       tmp = (ThotDblePoint*) TtaExpandMemory (path->npoints, size * sizeof(ThotDblePoint));
       if (tmp == 0)
-	return;
+        return;
       else
-	{
-	  path->npoints = tmp;
-	  path->maxpoints = size;
-	}
+        {
+          path->npoints = tmp;
+          path->maxpoints = size;
+        }
     }
   path->npoints[path->nsize].x = xd;
   path->npoints[path->nsize].y = yd;
