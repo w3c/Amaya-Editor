@@ -1812,8 +1812,8 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
                    c == 0x2147 /* ExponentialE */ ||
                    c == 0x2148 /* ImaginaryI */
                    || c == 0x20d2 || c == 0x2758 /* Vertical Bars */
-                   || c == 0x2216 /* set minus */)
-                   || c == 0x02A2F /* vector or cross product */)
+                   || c == 0x2216 /* set minus */
+                   || c == 0x02A2F /* vector or cross product */
                    )
             {
               code = '1'; /* West Europe Latin */
