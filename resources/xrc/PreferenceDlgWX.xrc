@@ -1216,13 +1216,19 @@
               <style>wxTAB_TRAVERSAL</style>
               <object class="wxBoxSizer">
                 <orient>wxVERTICAL</orient>
+                <object class="spacer">
+                  <size>0,10</size>
+                </object>
                 <object class="sizeritem">
                   <object class="wxStaticText" name="wxID_LABEL_EMAIL">
                     <label>*Parametres pour l'envoi de courriels :*</label>
-                    <size></size>
+                    <size>400,-1</size>
                   </object>
                   <flag>wxEXPAND</flag>
                   <border>4</border>
+                </object>
+                <object class="spacer">
+                  <size>0,10</size>
                 </object>
                 <object class="sizeritem">
                   <object class="wxFlexGridSizer">
@@ -1231,6 +1237,7 @@
                     <object class="sizeritem">
                       <object class="wxStaticText" name="wxID_LABEL_EMAIL_SERVER_ADDRESS">
                         <label>*Adresse du serveur :*</label>
+                        <size>150,-1</size>
                         <style>wxALIGN_RIGHT</style>
                       </object>
                       <option>1</option>
@@ -1248,6 +1255,7 @@
                     <object class="sizeritem">
                       <object class="wxStaticText" name="wxID_LABEL_EMAIL_SERVER_PORT">
                         <label>*Port d'envoi :*</label>
+                        <size>150,-1</size>
                         <style>wxALIGN_RIGHT</style>
                       </object>
                       <option>1</option>
@@ -1262,13 +1270,13 @@
                             <value>25</value>
                             <min>1</min>
                             <max>65535</max>
+                            <size>100,-1</size>
                           </object>
-                          <option>1</option>
-                          <flag>wxEXPAND</flag>
                         </object>
                         <object class="sizeritem">
                           <object class="wxStaticText" name="wxID_LABEL_EMAIL_DEFAULT_SERVER_PORT">
                             <label>*(25 par defaut)*</label>
+                            <size>100,-1</size>
                           </object>
                           <option>0</option>
                           <flag>wxALL|wxALIGN_CENTRE_VERTICAL</flag>
@@ -1284,10 +1292,11 @@
                     <object class="sizeritem">
                       <object class="wxStaticText" name="wxID_LABEL_EMAIL_FROM_ADDRESS">
                         <label>*Adresse d'envoi :*</label>
+                        <size>150,-1</size>
                         <style>wxALIGN_RIGHT</style>
                       </object>
                       <option>1</option>
-                      <flag>wxALL|wxEXPAND|wxALIGN_CENTRE_VERTICAL</flag>
+                      <flag>wxLEFT|wxRIGHT|wxEXPAND|wxALIGN_CENTRE_VERTICAL</flag>
                       <border>4</border>
                     </object>
                     <object class="sizeritem">

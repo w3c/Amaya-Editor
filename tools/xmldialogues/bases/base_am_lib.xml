@@ -938,8 +938,8 @@
 <message xml:lang="cn">颜色</message>
 <message xml:lang="tw">顏色</message></label>
 <label define="TMSG_XHTML">
-<message xml:lang="en">XHTML</message>
-<message xml:lang="fr">XHTML</message>
+<message xml:lang="en">XHTML Elements</message>
+<message xml:lang="fr">Eléments XHTML</message>
 <message xml:lang="de">XHTML</message>
 <message xml:lang="it">XHTML</message>
 <message xml:lang="tr">XHTML</message>

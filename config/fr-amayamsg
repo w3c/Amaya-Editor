@@ -411,12 +411,12 @@
 409 Où sauver les images
 410 Document
 411 Images, Styles et Scripts
-412 Courriels
+412 Courriel
 413 Paramètres pour l'envoi de courriels :
 414 Adresse du serveur SMTP :
 415 Port :
 416 (25 par défaut)
-417 Adresse d'envoi (champ expéditeur) :
+417 Adresse d'envoi (champ Expéditeur) :
 418 Destinataires :
 419 Envoyer par courriel
 420 Sujet :
@@ -425,13 +425,13 @@
 423 Pièce jointe
 424 Ne pas envoyer
 425 Envoyer
-426 L'adresse et le port du serveur doivent être renseignés dans la boîte de dialogue des préférences.
+426 L'adresse et le port du serveur doivent être renseignés dans les Préférences
 427 Message :
 428 Message textuel alternatif :
-429 Le serveur est inaccessible ou ne répond pas.
-430 Le serveur vous a rejeté.
-431 L'adresse de l'envoyeur est mal formatée.
-432 L'adresse d'un destinataire est mal formatée.
-433 Le contenu du courriel est mal formatée.
-434 Le courriel n'a pas pu être envoyé.
-435 Le courriel a été envoyé.
+429 Le serveur est inaccessible ou ne répond pas
+430 Le serveur vous a rejeté
+431 L'adresse de l'envoyeur est mal formatée
+432 L'adresse d'un destinataire est mal formatée
+433 Le contenu du courriel est mal formatée
+434 Courriel non envoyé
+435 Courriel envoyé

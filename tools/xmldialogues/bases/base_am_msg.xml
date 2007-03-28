@@ -1098,7 +1098,7 @@
 <message xml:lang="cn">保存到磁盘吗?</message>
 <message xml:lang="tw">保存到磁盤嗎?</message></label>
 <label define="AM_BCOPY_IMAGES">
-<message xml:lang="en">Copy Images</message>
+<message xml:lang="en">Copy images</message>
 <message xml:lang="fr">Copier les images</message>
 <message xml:lang="de">Bilder kopieren</message>
 <message xml:lang="it">Copia immagini</message>
@@ -5324,19 +5324,19 @@
 <message xml:lang="fr">Images, Styles et Scripts</message>
 </label>
 <label define="AM_EMAILS">
-<message xml:lang="en">Emails</message>
-<message xml:lang="fr">Courriels</message>
+<message xml:lang="en">Mail</message>
+<message xml:lang="fr">Courriel</message>
 </label>
 <label define="AM_EMAILS_PROPERTIES">
-<message xml:lang="en">Common parameters for sending mails :</message>
+<message xml:lang="en">Common parameters for sending mails:</message>
 <message xml:lang="fr">Paramètres pour l'envoi de courriels :</message>
 </label>
 <label define="AM_EMAILS_SERVER_ADDRESS">
-<message xml:lang="en">SMTP server address :</message>
+<message xml:lang="en">SMTP server address:</message>
 <message xml:lang="fr">Adresse du serveur SMTP :</message>
 </label>
 <label define="AM_EMAILS_SERVER_PORT">
-<message xml:lang="en">Server port :</message>
+<message xml:lang="en">Server port:</message>
 <message xml:lang="fr">Port :</message>
 </label>
 <label define="AM_EMAILS_SERVER_DEFPORT">
@@ -5344,11 +5344,11 @@
 <message xml:lang="fr">(25 par défaut)</message>
 </label>
 <label define="AM_EMAILS_FROM_">
-<message xml:lang="en">Sending address (from field) :</message>
-<message xml:lang="fr">Adresse d'envoi (champ expéditeur) :</message>
+<message xml:lang="en">Sending address (From field):</message>
+<message xml:lang="fr">Adresse d'envoi (champ Expéditeur) :</message>
 </label>
 <label define="AM_EMAILS_TO_">
-<message xml:lang="en">To :</message>
+<message xml:lang="en">To:</message>
 <message xml:lang="fr">Destinataires :</message>
 </label>
 <label define="AM_EMAILS_SEND_BY_MAIL">
@@ -5356,11 +5356,11 @@
 <message xml:lang="fr">Envoyer par courriel</message>
 </label>
 <label define="AM_EMAILS_SUBJECT_">
-<message xml:lang="en">Subject :</message>
+<message xml:lang="en">Subject:</message>
 <message xml:lang="fr">Sujet :</message>
 </label>
 <label define="AM_EMAILS_SEND_AS_">
-<message xml:lang="en">Send as :</message>
+<message xml:lang="en">Send as:</message>
 <message xml:lang="fr">Envoyer en tant que :</message>
 </label>
 <label define="AM_EMAILS_SEND_AS_MESSAGE">
@@ -5380,44 +5380,44 @@
 <message xml:lang="fr">Envoyer</message>
 </label>
 <label define="AM_EMAILS_NO_SERVER">
-<message xml:lang="en">The server address and port must be precised in the preference dialog.</message>
-<message xml:lang="fr">L'adresse et le port du serveur doivent être renseignés dans la boîte de dialogue des préférences.</message>
+<message xml:lang="en">The server address and port must be set in Preferences</message>
+<message xml:lang="fr">L'adresse et le port du serveur doivent être renseignés dans les Préférences</message>
 </label>
 <label define="AM_EMAILS_MESSAGE_BODY">
-<message xml:lang="en">Message :</message>
+<message xml:lang="en">Message:</message>
 <message xml:lang="fr">Message :</message>
 </label>
 <label define="AM_EMAILS_MESSAGE_ALTERN">
-<message xml:lang="en">Alternate textual  message :</message>
+<message xml:lang="en">Alternate textual  message:</message>
 <message xml:lang="fr">Message textuel alternatif :</message>
 </label>
 <label define="AM_EMAILS_ERR_SERVER_RESPOND">
-<message xml:lang="en">The server is unreachable or does not respond.</message>
-<message xml:lang="fr">Le serveur est inaccessible ou ne répond pas.</message>
+<message xml:lang="en">The server is unreachable or does not respond</message>
+<message xml:lang="fr">Le serveur est inaccessible ou ne répond pas</message>
 </label>
 <label define="AM_EMAILS_ERR_SERVER_REJECT">
-<message xml:lang="en">The server has reject you.</message>
-<message xml:lang="fr">Le serveur vous a rejeté.</message>
+<message xml:lang="en">The server has reject you</message>
+<message xml:lang="fr">Le serveur vous a rejeté</message>
 </label>
 <label define="AM_EMAILS_ERR_FROM_ADDR">
-<message xml:lang="en">The sender address is misformatted.</message>
-<message xml:lang="fr">L'adresse de l'envoyeur est mal formatée.</message>
+<message xml:lang="en">The sender address is misformatted</message>
+<message xml:lang="fr">L'adresse de l'envoyeur est mal formatée</message>
 </label>
 <label define="AM_EMAILS_ERR_RCPT_ADDR">
-<message xml:lang="en">A recipient address is misformatted.</message>
-<message xml:lang="fr">L'adresse d'un destinataire est mal formatée.</message>
+<message xml:lang="en">A recipient address is misformatted</message>
+<message xml:lang="fr">L'adresse d'un destinataire est mal formatée</message>
 </label>
 <label define="AM_EMAILS_ERR_BAD_CONTENT">
-<message xml:lang="en">The mail content is misformatted.</message>
-<message xml:lang="fr">Le contenu du courriel est mal formatée.</message>
+<message xml:lang="en">The mail content is misformatted</message>
+<message xml:lang="fr">Le contenu du courriel est mal formatée</message>
 </label>
 <label define="AM_EMAILS_ERR_UNKNOW">
-<message xml:lang="en">The mail have not be sent.</message>
-<message xml:lang="fr">Le courriel n'a pas pu être envoyé.</message>
+<message xml:lang="en">Mail not sent</message>
+<message xml:lang="fr">Courriel non envoyé</message>
 </label>
 <label define="AM_EMAILS_SENT">
-<message xml:lang="en">Mail correctly sent.</message>
-<message xml:lang="fr">Le courriel a été envoyé.</message>
+<message xml:lang="en">Mail sent</message>
+<message xml:lang="fr">Courriel envoyé</message>
 </label>
 
 <label define="AMAYA_MSG_MAX"></label>
