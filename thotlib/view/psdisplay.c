@@ -1969,7 +1969,8 @@ void DrawEllipsFrame (int frame, int thick, int style, int x, int y,
    depending on align value.
   ----------------------------------------------------------------------*/
 void DrawHorizontalLine (int frame, int thick, int style, int x, int y,
-                         int l, int h, int align, int fg, PtrBox box)
+                         int l, int h, int align, int fg, PtrBox box,
+                         ThotBool leftslice, ThotBool rightslice)
 {
 #ifndef _WX
    int                 xf, Y;
@@ -2117,7 +2118,8 @@ void DrawHorizontalBracket (int frame, int thick, int style, int x, int y,
    depending on align value.
   ----------------------------------------------------------------------*/
 void DrawVerticalLine (int frame, int thick, int style, int x, int y,
-                       int l, int h, int align, int fg, PtrBox box)
+                       int l, int h, int align, int fg, PtrBox box,
+                       ThotBool topslice, ThotBool bottomslice)
 {
 #ifndef _WX
    int                 X, yf;

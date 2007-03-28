@@ -2511,7 +2511,8 @@ void DrawEllips (int frame, int thick, int style, int x, int y, int width,
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
 void DrawHorizontalLine (int frame, int thick, int style, int x, int y,
-                         int l, int h, int align, int fg, PtrBox box)
+                         int l, int h, int align, int fg, PtrBox box,
+                         ThotBool leftslice, ThotBool rightslice)
 {
   int        Y;
 
@@ -2548,7 +2549,8 @@ void DrawHorizontalLine (int frame, int thick, int style, int x, int y,
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
 void DrawVerticalLine (int frame, int thick, int style, int x, int y, int l,
-                       int h, int align, int fg, PtrBox box)
+                       int h, int align, int fg, PtrBox box,
+                       ThotBool topslice, ThotBool bottomslice)
 {
   int        X;
 

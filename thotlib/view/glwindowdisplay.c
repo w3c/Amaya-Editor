@@ -160,12 +160,9 @@
 
 /*--------- STATICS ------*/
 /*Current Thickness*/
-static GLubyte  Opacity = 255;
 static GLubyte  FillOpacity = 255;
 static GLubyte  StrokeOpacity = 255;
 static GLfloat  S_thick = 0.;
-static int      S_style = 0;
-static int      S_color = -1;
 static int      X_Clip = 0;
 static int      Y_Clip = 0;
 static int      Width_Clip = 0;
@@ -337,13 +334,8 @@ void GL_SetForeground (int fg, ThotBool fillstyle)
     us_opac = FillOpacity;
   else
     us_opac = StrokeOpacity;
-  //if (fg != S_color || us_opac != Opacity)
-    {
-      S_color = fg;
-      Opacity = us_opac;
-      TtaGiveThotRGB (fg, &red, &green, &blue);
-      glColor4ub ((GLubyte) red,  (GLubyte) green, (GLubyte) blue, us_opac);
-    }
+  TtaGiveThotRGB (fg, &red, &green, &blue);
+  glColor4ub ((GLubyte) red,  (GLubyte) green, (GLubyte) blue, us_opac);
 }
 
 
@@ -355,12 +347,7 @@ void GL_SetPicForeground ()
   GLubyte         us_opac;
 
   us_opac = (GLubyte) FillOpacity;
-  // if (S_color != 0 || us_opac != Opacity)
-    {
-      S_color = 0;
-      Opacity = us_opac;
       glColor4ub ((GLubyte) 255, (GLubyte) 255, (GLubyte) 255, us_opac);
-    }
 }
 
 
@@ -370,35 +357,29 @@ void GL_SetPicForeground ()
   ----------------------------------------------------------------------*/
 void InitDrawing (int style, int thick, int fg)
 {
-  //if ((GLfloat)thick != S_thick)
+  S_thick = (double)thick;
+  if (thick)
     {
-      S_thick = (double)thick;
-      if (thick)
-        {
-          glLineWidth (S_thick); 
-          glPointSize (S_thick); 
-        }
-      else
-        {
-          glLineWidth ((GLfloat) 0.5); 
-          glPointSize ((GLfloat) 0.5); 
-        }
+      glLineWidth (S_thick); 
+      glPointSize (S_thick); 
     }
-  if (style != S_style)
+  else
     {
-      if (style >= 5)
-        /* solid */
-        glDisable (GL_LINE_STIPPLE);
+      glLineWidth ((GLfloat) 0.5); 
+      glPointSize ((GLfloat) 0.5); 
+    }
+  if (style >= 5)
+    /* solid */
+    glDisable (GL_LINE_STIPPLE);
+  else
+    {
+      if (style == 3)
+        /* dotted */
+        glLineStipple (thick, 0x5555);
       else
-        {
-          if (style == 3)
-            /* dotted */
-            glLineStipple (thick, 0x5555);
-          else
-            /* dashed */
-            glLineStipple (thick, 0x1F1F);
-          glEnable (GL_LINE_STIPPLE);
-        }
+        /* dashed */
+        glLineStipple (thick, 0x1F1F);
+      glEnable (GL_LINE_STIPPLE);
     }
  GL_SetForeground (fg, FALSE);
 }
@@ -515,26 +496,33 @@ void GL_DrawSegments (ThotSegment *point, int npoints)
 void GL_DrawArc (float x, float y, float w, float h, int startAngle,
                  int sweepAngle, ThotBool filled)
 {
-  GLint     i, slices;
+  int       i, slices, npoints, j;
   GLfloat   angleOffset;
   GLfloat   sinCache[SLICES_SIZE];
   GLfloat   cosCache[SLICES_SIZE];
-  GLfloat   y_cache[SLICES_SIZE];
-  GLfloat   x_cache[SLICES_SIZE];
-  GLfloat   angle;
-  GLfloat   fastx, fasty, width, height;
+  GLfloat   fastx, fasty, angle, thick;
+  GLfloat   wr, hr, width, height;
+  ThotPoint points[SLICES_SIZE * 2 + 1];
 
-  width  = ((GLfloat)w) / 2;
-  height = ((GLfloat)h) / 2;
+  // set external ray
+  width  = ((GLfloat)w) / 2.;
+  height = ((GLfloat)h) / 2.;
+  // set ellipse center
   fastx  = ((GLfloat)x) + width; 
   fasty  = ((GLfloat)y) + height;
+  thick = S_thick / 2.;
   if (w < 10 && h < 10)
-    {
-      glPointSize ((float)0.1);
       slices = 36;
-    }
   else
     slices = SLICES;
+
+  if (!filled && thick >= width && thick >= height)
+    {
+      // set external ray
+      filled = TRUE;
+      width += thick;
+      height += thick;
+    }
 
   startAngle = startAngle;
   sweepAngle = sweepAngle;
@@ -543,7 +531,7 @@ void GL_DrawArc (float x, float y, float w, float h, int startAngle,
   angleOffset = (GLfloat) (startAngle / 180.0 * M_PI);
   for (i = 0; i <= slices; i++) 
     {
-      angle = angleOffset + (GLfloat) ((M_PI * sweepAngle) / 180.0) * i / slices;
+      angle = angleOffset + (GLfloat) ((M_PI * sweepAngle) / 180.0) * i / ((GLfloat)slices);
       cosCache[i] = (GLfloat) DCOS(angle);
       sinCache[i] = (GLfloat) DSIN(angle);
     }
@@ -554,32 +542,47 @@ void GL_DrawArc (float x, float y, float w, float h, int startAngle,
       cosCache[slices] = cosCache[0];
     }
 
-  for (i = 0; i <= slices; i++)
-    {	
-      x_cache[i] = fastx + (width * cosCache[i]);
-      y_cache[i] = fasty - (height * sinCache[i]);
-    }
-
-  if (filled || (S_thick >= width && S_thick >= height))
+  if (filled)
     {
+      for (i = 0; i <= slices; i++)
+        {
+          points[i].x = fastx + (width * cosCache[i]);
+          points[i].y = fasty - (height * sinCache[i]);
+        }
+      points[i].x = points[0].x;
+      points[i].y = points[0].y;
+
       glBegin (GL_TRIANGLE_FAN);
       /* The center */
       glVertex2d (fastx, fasty);
       for (i = 0; i <= slices; i++)
-        glVertex2d (x_cache[i], y_cache[i]);
+        glVertex2d (points[i].x, points[i].y);
       glEnd();
     }
   else
     {
-      if (w < 20 && h < 20)
-        glBegin(GL_POINTS);
-      else
-        glBegin(GL_LINE_STRIP);
-
-      //slices--;
+      npoints = slices * 2 + 1;
+      if (thick < 1.)
+        thick = 1;
+      // set internal ray
+      wr = width + thick;
+      hr = height + thick;
+      j = npoints;
       for (i = 0; i <= slices; i++)
-        glVertex2d (x_cache[i], y_cache[i]);
-      glEnd();
+        {
+          // external arc
+          points[i].x = fastx + (width * cosCache[i]);
+          points[i].y = fasty - (height * sinCache[i]);
+          // internal arc
+          points[j].x = fastx + (wr * cosCache[i]);
+          points[j].y = fasty - (hr * sinCache[i]);
+          j--;
+        }
+      npoints++;
+      points[npoints].x = points[slices+1].x;
+      points[npoints].y = points[slices+1].y;
+      // display a not convex polygon
+      MakefloatMesh (points, npoints);
     }
 }
 

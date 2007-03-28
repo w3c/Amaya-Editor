@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 2003-2005
+ *  (c) COPYRIGHT INRIA, 2003-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -14,21 +14,21 @@
 #include <string.h>
 
 #ifdef _WINGUI
-  #include <windows.h>
+#include <windows.h>
 #endif /* _WINGUI */
 
 #ifdef _WX
-  #include "wx/wx.h"
+#include "wx/wx.h"
 #if defined (_MACOS) && defined (_WX)
-  #include <glu.h>
+#include <glu.h>
 #else /* _MACOS */
-  #include <GL/glu.h>
+#include <GL/glu.h>
 #endif /* _MACOS */
 #else /* _WX */
-  #ifdef _GL
-    #include <GL/gl.h>
-    #include <GL/glu.h>
-  #endif
+#ifdef _GL
+#include <GL/gl.h>
+#include <GL/glu.h>
+#endif
 #endif /* _WX */
 
 /*win32 GLU special*/
@@ -36,16 +36,6 @@
 #define CALLBACK
 #endif
 
-
-/* not needed if using Thot includes */
-/***************************/ 
-#ifndef FALSE
-#define FALSE 0
-#endif
-
-#ifndef TRUE
-#define TRUE 1
-#endif
 
 /*macro defining thotlib mechanism*/
 #define TtaGetMemory(A) malloc(A)
@@ -63,67 +53,28 @@
 #include "thot_gui.h"
 #include "typeint.h"
 
-#ifdef IV
-#ifdef _NOWAY
-/*Structure describing points 
-comming from the thotlib*/
-typedef struct _ThotPoint {
-  float  x;
-  float  y; 
-} ThotPoint;
-/***************************/
-
-/*Structure describing points 
-we need double precision here.*/
-typedef struct _ThotDblePoint {
-  double         x;
-  double         y; 
-  double         z;
-} ThotDblePoint;
-#endif /* IV */
-
-/*Structure describing points 
-resulting of tesselation
-(linked list)*/
-typedef struct _Mesh {
-  double          data[3];
-  struct _Mesh   *next;
-} Mesh_list;
-
-/*Structure describing a Path*/
-typedef struct _ThotPath {
-  ThotDblePoint      *npoints;  /* points array*/
-  int                *ncontour; /* Countour flag array*/
-  Mesh_list          *mesh_list;/*Contains points resulting of tesselation*/
-  int                nsize;     /*current number of points*/
-  int                maxpoints; /*max size of the npoints array*/
-  int                maxcont;   /*max size of the maxcont array*/
-  int                cont;      /*current number of countour*/
-  int                height;    /*height of path (needed for inversion)*/
-} ThotPath;
-#endif /* _NOWAY */
-
 #ifdef _GL
 /*----------------------------------------------------------------------
- myGL_Err : prints out GL errors during tesselation
+  myGL_Err : prints out GL errors during tesselation
   ----------------------------------------------------------------------*/
 void CALLBACK myGL_Err (GLenum errCode, ThotPath *path) 
 {
   if(errCode != GL_NO_ERROR)
     {
       printf ("\n%s : points :%i Contours : %i", 
-	      (char*) gluErrorString (errCode),
-	      path->nsize, path->cont);      
+              (char*) gluErrorString (errCode),
+              path->nsize, path->cont);      
     }
 }
+
 /*----------------------------------------------------------------------
   myCombine : Store New points computed by the tesselation mechanism.
   ----------------------------------------------------------------------*/
 void CALLBACK myCombine (GLdouble coords[3], 
-			 void *vertex_data[4], 
-			 GLfloat weight[4], 
-			 void **dataOut,
-			 ThotPath *path)
+                         void *vertex_data[4], 
+                         GLfloat weight[4], 
+                         void **dataOut,
+                         ThotPath *path)
 {
   Mesh_list *ptr;
   
@@ -131,7 +82,7 @@ void CALLBACK myCombine (GLdouble coords[3],
     {
       ptr = path->mesh_list;
       while (ptr->next) 
-	ptr = ptr->next;
+        ptr = ptr->next;
       ptr->next = (Mesh_list *)TtaGetMemory (sizeof (Mesh_list));
       ptr = ptr->next;
     }
@@ -147,6 +98,7 @@ void CALLBACK myCombine (GLdouble coords[3],
   *dataOut = ptr->data;
 }
 #endif /* _GL */
+
 /*----------------------------------------------------------------------
   MeshNewPoint : Allocate a new struct describing a path
   ----------------------------------------------------------------------*/
@@ -226,17 +178,17 @@ void CountourCountAdd (void *v_path)
   if (path->nsize > 0)
     {      
       if (path->cont >= (path->maxcont-1))
-	{
-	  size = path->maxcont + ALLOC_POINTS;
-	  tmp = (int*) TtaExpandMemory (path->ncontour, size * sizeof(int));
-	  if (tmp == 0)
-	    return;
-	  else
-	    {
-	      path->ncontour = tmp;
-	      path->maxcont = size;
-	    }
-	}
+        {
+          size = path->maxcont + ALLOC_POINTS;
+          tmp = (int*) TtaExpandMemory (path->ncontour, size * sizeof(int));
+          if (tmp == 0)
+            return;
+          else
+            {
+              path->ncontour = tmp;
+              path->maxcont = size;
+            }
+        }
       path->ncontour[path->cont] = path->nsize;
       (path->cont)++;
     }  
@@ -259,11 +211,11 @@ void FreeMesh (void *v_path)
       TtaFreeMemory (path->ncontour);
       ptr = path->mesh_list;
       while (ptr)
-	{
-	  tmp = ptr->next;
-	  TtaFreeMemory (ptr);
-	  ptr = tmp;
-	}
+        {
+          tmp = ptr->next;
+          TtaFreeMemory (ptr);
+          ptr = tmp;
+        }
       TtaFreeMemory (path);
     }  
 #endif /* _GL */
@@ -283,10 +235,10 @@ void MakeMeshLines  (void *v_path)
     {
       glBegin (GL_LINE_STRIP);
       while (p < path->ncontour[c])
-	{
-	  glVertex2dv ((double *) &(path->npoints[p].x));
-	  p++;
-	}   
+        {
+          glVertex2dv ((double *) &(path->npoints[p].x));
+          p++;
+        }   
       glEnd ();
       c++;      
     }  
@@ -311,9 +263,9 @@ void MakeMesh (void *v_path)
   if (tobj) 
     {
       /* Winding possibilities are :
-	 GLU_TESS_WINDING_ODD (= Classique) GLU_TESS_WINDING_NONZERO
-	 GLU_TESS_WINDING_POSITIVE          GLU_TESS_WINDING_NEGATIVE
-	 GLU_TESS_WINDING_ABS_GEQ_TWO */ 
+         GLU_TESS_WINDING_ODD (= Classique) GLU_TESS_WINDING_NONZERO
+         GLU_TESS_WINDING_POSITIVE          GLU_TESS_WINDING_NEGATIVE
+         GLU_TESS_WINDING_ABS_GEQ_TWO */ 
       gluTessCallback (tobj, GLU_TESS_BEGIN,     (void (CALLBACK*)()) glBegin);
       gluTessCallback (tobj, GLU_TESS_END,       (void (CALLBACK*)()) glEnd);  
       gluTessCallback (tobj, GLU_TESS_VERTEX,    (void (CALLBACK*)()) glVertex2dv);
@@ -326,24 +278,24 @@ void MakeMesh (void *v_path)
       gluTessNormal (tobj, 0.0f, 0.0f, 1.0f); 
       gluTessBeginPolygon (tobj, path);  
       while (c < path->cont)
-	{
-	  gluTessBeginContour (tobj);            
-	  while (p < path->ncontour[c])
-	    {
-	      d = (double *) &(path->npoints[p].x);
-	      gluTessVertex (tobj, d, d);
-	      p++;	  
-	    }    
-	  gluTessEndContour (tobj); 
-	  c++;      
-	}
+        {
+          gluTessBeginContour (tobj);            
+          while (p < path->ncontour[c])
+            {
+              d = (double *) &(path->npoints[p].x);
+              gluTessVertex (tobj, d, d);
+              p++;	  
+            }    
+          gluTessEndContour (tobj); 
+          c++;      
+        }
       gluTessEndPolygon (tobj);
       gluDeleteTess (tobj);
     }
 #endif /* _GL */
 }
 /*---------------------------------------------------------------
- MakefloatMesh : use this module for computing polygons of integer points
+  MakefloatMesh : use this module for computing polygons of points
   ----------------------------------------------------------------------*/
 void MakefloatMesh (ThotPoint *points, int npoints)
 {

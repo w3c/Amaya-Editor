@@ -1661,9 +1661,8 @@ void DrawSpline (int frame, int thick, int style, int x, int y,
 /*----------------------------------------------------------------------
   DoDrawMesh : Draw Path as lines or polygons
   ----------------------------------------------------------------------*/
-static void DoDrawMesh (int frame, int thick, int style,
-                        void *mesh, int fg, int bg,
-                        int pattern)
+static void DoDrawMesh (int frame, int thick, int style, void *mesh,
+                        int fg, int bg, int pattern)
 {
   /* Fill in the polygon */
   if (pattern == 2) 
@@ -1760,12 +1759,14 @@ void DrawPath (int frame, int thick, int style, int x, int y,
       /* free the table of points */
       FreeMesh (mesh);
     }  
+#ifdef _WX
+  // clean up the current path color
+  GL_SetForeground (-1, TRUE);
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
   DrawOval draw a rectangle with rounded corners.
-  ttern are for drawing
-  color, background color and fill pattern.
   ----------------------------------------------------------------------*/
 void DrawOval (int frame, int thick, int style, int x, int y, int width,
                int height, int rx, int ry, int fg, int bg, int pattern)
@@ -1925,20 +1926,16 @@ void DrawOval (int frame, int thick, int style, int x, int y, int width,
 void DrawEllips (int frame, int thick, int style, int x, int y, int width,
                  int height, int fg, int bg, int pattern)
 {
-   
- 
-   
   /* Fill in the rectangle */
   if (pattern != 2 && thick <= 0 && pattern != fg)
     return;
 
   if (pattern == fg)
     bg = fg;
- 
 
   y = y + FrameTable[frame].FrTopMargin;
-
-  if (pattern == 2 || (bg == fg && bg == pattern))
+  if ((pattern == 2 || (bg == fg && bg == pattern)) &&
+      thick < width && thick < height)
     {
       GL_SetForeground (bg, TRUE);
       GL_DrawArc (x, y, width, height, 0, 360, TRUE);
@@ -1954,13 +1951,15 @@ void DrawEllips (int frame, int thick, int style, int x, int y, int width,
 }
 
 /*----------------------------------------------------------------------
-  DrawHorizontalLine draw a horizontal line aligned top (0), center (1)
-  or bottom (2) depending on align value.
+  DrawHorizontalLine draw a horizontal line
+  align gives the current align top (0), middle(1), bottom(2):
+  leftslice and rightslice say if the left and right borders are sliced.
   The style parameter is dotted (3), dashed (4), solid (5), etc.
   The parameter fg indicates the drawing color.
   ----------------------------------------------------------------------*/
 void DrawHorizontalLine (int frame, int thick, int style, int x, int y,
-                         int l, int h, int align, int fg, PtrBox box)
+                         int l, int h, int align, int fg, PtrBox box,
+                         ThotBool leftslice, ThotBool rightslice)
 {
   ThotPoint           point[4];
   int                 Y, left = x, right = x + l;
@@ -2002,14 +2001,14 @@ void DrawHorizontalLine (int frame, int thick, int style, int x, int y,
               right = box->BxClipX + box->BxClipW - box->BxRMargin - box->BxRBorder;
             }
           // check if the top of the box is displayed
-          if (left < x)
-            left = 0;
-          else
+          if (leftslice)
             left = thick;
-          if (right > x + l)
-            right = 0;
           else
+            left = 0;
+          if (rightslice)
             right = thick;
+          else
+            right = 0;
           if (align == 1)
             {
               // middle
@@ -2103,13 +2102,15 @@ void DrawHorizontalLine (int frame, int thick, int style, int x, int y,
 }
 
 /*----------------------------------------------------------------------
-  DrawVerticalLine draw a vertical line aligned top (0), center (1)
-  or bottom (2) depending on align value.
+  DrawVerticalLine draw a vertical line
+  align gives the current align left (0), middle(1), right(2):
+  topslice and bottomslice say if the top and bottom borders are sliced.
   The style parameter is dotted (3), dashed (4), solid (5), etc.
   The parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
 void DrawVerticalLine (int frame, int thick, int style, int x, int y,
-                       int l, int h, int align, int fg, PtrBox box)
+                       int l, int h, int align, int fg, PtrBox box,
+                       ThotBool topslice, ThotBool bottomslice)
 {
   ThotPoint           point[4];
   int                 X, top = y, bottom = y + h;
@@ -2151,14 +2152,14 @@ void DrawVerticalLine (int frame, int thick, int style, int x, int y,
               bottom = box->BxClipY + box->BxClipH - box->BxBMargin - box->BxBBorder;
             }
           // check if the top of the box is displayed
-          if (top < y)
-            top = 0;
-          else
+          if (topslice)
             top = thick;
-          if (bottom > y + h)
-            bottom = 0;
           else
+            top = 0;
+          if (bottomslice)
             bottom = thick;
+          else
+            bottom = 0;
           if (align == 1)
             {
               // midle

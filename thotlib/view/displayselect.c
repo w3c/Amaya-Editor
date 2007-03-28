@@ -405,10 +405,6 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect)
             break;
           }
     }
-#ifdef _WX
-  // clean up the current selection color
-  GL_SetForeground (-1, TRUE);
-#endif /* _WX */
 }
 
 

@@ -266,7 +266,9 @@ extern void DrawHorizontalLine ( int frame,
                                  int h,
                                  int align,
                                  int fg,
-                                 PtrBox box );
+                                 PtrBox box,
+                                 ThotBool leftslice,
+                                 ThotBool rightslice );
 extern void DrawHat ( int frame,
                       int thick,
                       int style,
@@ -320,7 +322,9 @@ extern void DrawVerticalLine ( int frame,
                                int h,
                                int align,
                                int fg,
-                               PtrBox box );
+                               PtrBox box,
+                               ThotBool topslice,
+                               ThotBool bottomslice );
 extern void DrawPoints ( int frame,
                          int x,
                          int y,
@@ -607,7 +611,9 @@ extern void DrawHorizontalLine ( int frame,
                                    int h,
                                    int align,
                                    int fg,
-                                   PtrBox box );
+                                   PtrBox box,
+                                   ThotBool leftslice,
+                                   ThotBool rightslice );
 extern void DrawHat ( int frame,
                         int thick,
                         int style,
@@ -661,7 +667,9 @@ extern void DrawVerticalLine ( int frame,
                                  int h,
                                  int align,
                                  int fg,
-                                 PtrBox box );
+                                 PtrBox box,
+                                 ThotBool topslice,
+                                 ThotBool bottomslice );
 extern void DrawPoints ( int frame,
                            int x,
                            int y,
