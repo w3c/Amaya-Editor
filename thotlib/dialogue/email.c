@@ -85,6 +85,8 @@ ThotBool TtaSendEMail(EMail mail, const char* serverAddress, int port, int* erro
   wxIPV4address addr;
   addr.Hostname(wxString(serverAddress, wxConvUTF8));
   addr.Service(port);
+  
+  server.SetTimeout(10);
   server.Connect(addr);
 
   if(server.SendMail(*(wxEmailMessage*)mail))
