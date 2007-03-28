@@ -352,7 +352,7 @@ ReadAsEUC_JP
 ReadAsSHIFT_JIS
 TtcCopySelection
 TtcSearchText
-# SendByMail
+SendByMail
 
 ########### EDITING
 [edit]
