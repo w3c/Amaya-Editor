@@ -1759,10 +1759,6 @@ void DrawPath (int frame, int thick, int style, int x, int y,
       /* free the table of points */
       FreeMesh (mesh);
     }  
-#ifdef _WX
-  // clean up the current path color
-  GL_SetForeground (-1, TRUE);
-#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -1778,13 +1774,7 @@ void DrawOval (int frame, int thick, int style, int x, int y, int width,
   ThotSegment         seg[4];
   ThotPoint           point[13];
 
-  /* width -= thick; */
-  /*   height -= thick; */
-  /*   x += thick / 2; */
-  /*   y += thick / 2; */
-
   y += FrameTable[frame].FrTopMargin;
-
   /* radius of arcs */
   if (rx == 0 && ry != 0)
     rx = ry;
@@ -1851,6 +1841,7 @@ void DrawOval (int frame, int thick, int style, int x, int y, int width,
   seg[3].y1 = seg[1].y1;
   seg[3].y2 = seg[1].y2;
 
+  InitDrawing (style, thick, fg);
   /* Fill in the figure */
   if (pattern == 2)
     {
@@ -1908,7 +1899,6 @@ void DrawOval (int frame, int thick, int style, int x, int y, int width,
   /* Draw the border */
   if (thick > 0 && fg >= 0)
     {
-      InitDrawing (style, thick, fg);
       for (i = 0; i < 4 ;i++)
         GL_DrawArc (xarc[i].x, xarc[i].y, 
                     xarc[i].width, xarc[i].height, 
@@ -1946,8 +1936,6 @@ void DrawEllips (int frame, int thick, int style, int x, int y, int width,
       InitDrawing (style, thick, fg);
       GL_DrawArc (x, y, width, height, 0, 360, FALSE);
     }
-
-
 }
 
 /*----------------------------------------------------------------------

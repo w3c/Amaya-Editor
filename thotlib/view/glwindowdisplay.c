@@ -563,8 +563,10 @@ void GL_DrawArc (float x, float y, float w, float h, int startAngle,
     {
       npoints = slices * 2 + 1;
       if (thick < 1.)
-        thick = 1;
+        thick = 1.;
       // set internal ray
+      width -= thick;
+      height -= thick;
       wr = width + thick;
       hr = height + thick;
       j = npoints;
