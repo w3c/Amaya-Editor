@@ -1219,6 +1219,7 @@ void      SVGElementCreated (Element el, Document doc)
   Attribute     attr;
   float         vBX, vBY, vBWidth, vBHeight;
   int           align, meetOrSlice;
+  char          msgBuffer[100];
 
   elType = TtaGetElementType (el);
   if (elType.ElTypeNum == SVG_EL_SVG ||
@@ -1249,6 +1250,26 @@ void      SVGElementCreated (Element el, Document doc)
             }
           TtaInsertTransform (el, TtaNewTransformViewBox (vBX, vBY, vBWidth,
                                            vBHeight, align, meetOrSlice), doc);
+        }
+    }
+  else if (elType.ElTypeNum == SVG_EL_ellipse)
+    /* an ellipse. If attributes rx and/or ry are missing, create
+       a default presentation rule for the default value: 0 */
+    {
+      attrType.AttrSSchema = elType.ElSSchema;
+      attrType.AttrTypeNum = SVG_ATTR_rx;
+      attr = TtaGetAttribute (el, attrType);
+      if (!attr)
+        {
+          sprintf (msgBuffer, "Attribute rx mandatory in ellipse");
+          XmlParseError (errorParsing, (unsigned char *)msgBuffer, 0);
+        }
+      attrType.AttrTypeNum = SVG_ATTR_ry;
+      attr = TtaGetAttribute (el, attrType);
+      if (!attr)
+        {
+          sprintf (msgBuffer, "Attribute ry mandatory in ellipse");
+          XmlParseError (errorParsing, (unsigned char *)msgBuffer, 0);
         }
     }
 }
@@ -2096,7 +2117,7 @@ ThotBool ParseWidthHeightAttribute (Attribute attr, Element el, Document doc,
   if (delete_)
     /* attribute deleted */
     if (ruleType != PRXRadius && ruleType != PRYRadius)
-      /* attribute madatory. Do not delete */
+      /* attribute mandatory. Do not delete */
       ret = TRUE;
     else
       {
@@ -2127,20 +2148,6 @@ ThotBool ParseWidthHeightAttribute (Attribute attr, Element el, Document doc,
         pval.typed_data.unit = UNIT_PX;
       if (pval.typed_data.unit != UNIT_INVALID)
         {
-          if (ruleType != PRXRadius && ruleType != PRYRadius)
-            /* it's not attribute ry or ry for a rectangle */
-            {
-              if (pval.typed_data.value == 0)
-                /* a value of 0 disables rendering of this element */
-                ruleType = PRVisibility;
-              else
-                {
-                  /* if there was a value of 0 previously, enable rendering */
-                  ctxt->destroy = TRUE;
-                  TtaSetStylePresentation (PRVisibility, el, NULL, ctxt, pval);
-                  ctxt->destroy = FALSE;
-                }
-            }
           if ((elType.ElTypeNum == SVG_EL_ellipse ||
                elType.ElTypeNum == SVG_EL_circle_) &&
               (attrType.AttrTypeNum == SVG_ATTR_r ||
