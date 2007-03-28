@@ -7967,7 +7967,7 @@ void MathAttrColorCreated (NotifyAttribute *event)
         length = BUFLEN - 1;
       if (length > 0)
         TtaGiveTextAttributeValue (event->attribute, value, &length);  
-      HTMLSetForegroundColor (event->document, event->element, 0, value);
+      HTMLSetForegroundColor (event->document, event->element, 2000, value);
       TtaFreeMemory (value);
     }
 }
@@ -8038,7 +8038,7 @@ void MathAttrBackgroundCreated (NotifyAttribute *event)
         length = BUFLEN - 1;
       if (length > 0)
         TtaGiveTextAttributeValue (event->attribute, value, &length);  
-      HTMLSetBackgroundColor (event->document, event->element, 0, value);
+      HTMLSetBackgroundColor (event->document, event->element, 2000, value);
       TtaFreeMemory (value);
     }
 }

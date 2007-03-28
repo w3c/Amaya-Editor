@@ -225,7 +225,7 @@ void ParseCSSequivAttribute (int attrType, Attribute attr, Element el,
 
   /* parse the equivalent CSS rule */
   if (css_command[0] != EOS)
-    ParseHTMLSpecificStyle (el, css_command, doc, 200, delete_);
+    ParseHTMLSpecificStyle (el, css_command, doc, 2000, delete_);
   if (text)
     TtaFreeMemory (text);
 }
@@ -920,7 +920,7 @@ void SetTextAnchor (Attribute attr, Element el, Document doc, ThotBool delete_)
         ctxt->type = PositionRight;
       else
         ctxt->type = PositionLeft;
-      ctxt->cssSpecificity = 200;
+      ctxt->cssSpecificity = 2000;
       ctxt->important = FALSE;
       ctxt->destroy = FALSE;
       SetTextAnchorTree (el, ctxt, SvgSSchema, attr);
@@ -1896,7 +1896,7 @@ void UpdatePositionOfPoly (Element el, Document doc, int minX, int minY,
   leaf = TtaGetFirstChild (el);  /* Thot Graphic element */
   ctxt = TtaGetSpecificStyleContext (doc);
   /* the specific presentation is not a CSS rule */
-  ctxt->cssSpecificity = 200;
+  ctxt->cssSpecificity = 2000;
   ctxt->destroy = FALSE;
   pval.typed_data.unit = UNIT_PX;
 
@@ -2053,7 +2053,7 @@ void ParseCoordAttribute (Attribute attr, Element el, Document doc)
             return;
           ctxt = TtaGetSpecificStyleContext (doc);
           /* the specific presentation is not a CSS rule */
-          ctxt->cssSpecificity = 200;
+          ctxt->cssSpecificity = 2000;
           ctxt->destroy = FALSE;
           ctxt->important = important;
           TtaSetStylePresentation (ruleType, el, NULL, ctxt, pval);
@@ -2092,7 +2092,7 @@ ThotBool ParseWidthHeightAttribute (Attribute attr, Element el, Document doc,
     }
   ctxt = TtaGetSpecificStyleContext (doc);
   /* the specific presentation is not a CSS rule */
-  ctxt->cssSpecificity = 200;
+  ctxt->cssSpecificity = 2000;
   ctxt->destroy = FALSE;
   /* decide of the presentation rule to be created or updated */
   TtaGiveAttributeType (attr, &attrType, &attrKind);
@@ -2241,7 +2241,7 @@ void ParseBaselineShiftAttribute (Attribute attr, Element el, Document doc,
         }
       ctxt = TtaGetSpecificStyleContext (doc);
       /* the specific presentation is not a CSS rule */
-      ctxt->cssSpecificity = 200;
+      ctxt->cssSpecificity = 2000;
       ctxt->destroy = delete_;
       TtaSetStylePresentation (PRHorizRef, el, NULL, ctxt, pval);
       TtaFreeMemory (ctxt);
@@ -2417,7 +2417,7 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
                       pval.typed_data.real = FALSE;
                       pval.typed_data.mainValue = TRUE;
                       ctxt = TtaGetSpecificStyleContext (doc);
-                      ctxt->cssSpecificity = 200; /* this is not a CSS rule */
+                      ctxt->cssSpecificity = 2000; /* this is not a CSS rule */
                       ctxt->destroy = delete_;
                       /****** process values a, b, c, d *****/
                       /* value e specifies an horizontal translation */
@@ -2458,7 +2458,7 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
                   pval.typed_data.value = (int)x;
                   pval.typed_data.mainValue = TRUE;
                   ctxt = TtaGetSpecificStyleContext (doc);
-                  ctxt->cssSpecificity = 200;     /* this is not a CSS rule */
+                  ctxt->cssSpecificity = 2000;     /* this is not a CSS rule */
                   ctxt->destroy = delete_;
                   TtaSetStylePresentation (PRHorizPos, el, NULL, ctxt, pval);
 #endif /* _GL */

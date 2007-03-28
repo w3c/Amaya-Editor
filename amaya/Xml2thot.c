@@ -3258,7 +3258,7 @@ static void EndOfXmlAttributeValue (char *attrValue)
           /* It's a style attribute */
           if (HTMLStyleAttribute)
             ParseHTMLSpecificStyle (XMLcontext.lastElement, attrValue,
-                                    XMLcontext.doc, 100, FALSE);
+                                    XMLcontext.doc, 1000, FALSE);
 	   
           /* it's a LANG attribute value */
           if (attrType.AttrTypeNum == 1)

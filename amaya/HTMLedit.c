@@ -966,7 +966,7 @@ void GenerateInlineElement (int eType, int aType, char * data)
                           TtaRegisterElementCreate (in_line, doc);
                           if (parse)
                             // apply CSS properties
-                            ParseHTMLSpecificStyle (in_line, data, doc, 200, FALSE);
+                            ParseHTMLSpecificStyle (in_line, data, doc, 1000, FALSE);
                         }
                       else if (in_line && charlevel)
                         {
@@ -1026,7 +1026,7 @@ void GenerateInlineElement (int eType, int aType, char * data)
                                           TtaRegisterAttributeCreate (newAttr, child, doc);
                                           if (parse)
                                             // apply CSS properties
-                                            ParseHTMLSpecificStyle (child, data, doc, 200, FALSE);
+                                            ParseHTMLSpecificStyle (child, data, doc, 1000, FALSE);
                                         }
                                       else
                                         {
@@ -1081,7 +1081,7 @@ void GenerateInlineElement (int eType, int aType, char * data)
                                             }
                                           if (parse)
                                             // apply CSS properties
-                                            ParseHTMLSpecificStyle (child, name, doc, 200, FALSE);
+                                            ParseHTMLSpecificStyle (child, name, doc, 1000, FALSE);
                                           TtaFreeMemory (name);
                                         }
                                     }
@@ -4397,13 +4397,13 @@ void AttrColorCreated (NotifyAttribute * event)
     TtaGiveTextAttributeValue (event->attribute, value, &length);
 
   if (event->attributeType.AttrTypeNum == HTML_ATTR_BackgroundColor)
-    HTMLSetBackgroundColor (event->document, event->element, 0, value);
+    HTMLSetBackgroundColor (event->document, event->element, 2000, value);
   else if (event->attributeType.AttrTypeNum == HTML_ATTR_background_)
     HTMLSetBackgroundImage (event->document, event->element, REPEAT,
-                            0, value, FALSE);
+                            2000, value, FALSE);
   else if (event->attributeType.AttrTypeNum == HTML_ATTR_color ||
            event->attributeType.AttrTypeNum == HTML_ATTR_TextColor)
-    HTMLSetForegroundColor (event->document, event->element, 0, value);
+    HTMLSetForegroundColor (event->document, event->element, 2000, value);
   else if (event->attributeType.AttrTypeNum == HTML_ATTR_LinkColor)
     HTMLSetAlinkColor (event->document, event->element, value);
   else if (event->attributeType.AttrTypeNum == HTML_ATTR_VisitedLinkColor)

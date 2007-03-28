@@ -2199,7 +2199,7 @@ void DoTableCreation (Document doc)
           /* check if we have to load CSS */
           TtaGetEnvBoolean ("LOAD_CSS", &loadcss);
           if (loadcss)
-            ParseHTMLSpecificStyle (el, stylebuff, doc, 200, FALSE);
+            ParseHTMLSpecificStyle (el, stylebuff, doc, 1000, FALSE);
 #endif /* IV */
         }
       else if (attr && TBorder == 0)

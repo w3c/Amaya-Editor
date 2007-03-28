@@ -4531,7 +4531,7 @@ void SetFontfamily (Document doc, Element el, char *value)
   char           css_command[buflen+20];
  
   sprintf (css_command, "font-family: %s", value);
-  ParseHTMLSpecificStyle (el, css_command, doc, 0, FALSE);
+  ParseHTMLSpecificStyle (el, css_command, doc, 2000, FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -4551,7 +4551,7 @@ void MathMLlinethickness (Document doc, Element el, char *value)
   else if (strcmp (value, "thick") == 0)
     strcpy (value, "2pt");
   sprintf (css_command, "stroke-width: %s", value);
-  ParseHTMLSpecificStyle (el, css_command, doc, 0, FALSE);
+  ParseHTMLSpecificStyle (el, css_command, doc, 2000, FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -4601,7 +4601,7 @@ void MathMLAttrToStyleProperty (Document doc, Element el, char *value,
         }
       break;
     }
-  ParseHTMLSpecificStyle (el, css_command, doc, 0, FALSE);
+  ParseHTMLSpecificStyle (el, css_command, doc, 2000, FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -4922,10 +4922,10 @@ void MathMLAttributeComplete (Attribute attr, Element el, Document doc)
               depAttrType.AttrSSchema = attrType.AttrSSchema ;
               depAttrType.AttrTypeNum = MathML_ATTR_mathcolor;
               if (!TtaGetAttribute (el, depAttrType))
-                HTMLSetForegroundColor (doc, el, 0, value);
+                HTMLSetForegroundColor (doc, el, 2000, value);
               break;
             case MathML_ATTR_mathcolor:
-              HTMLSetForegroundColor (doc, el, 0, value);
+              HTMLSetForegroundColor (doc, el, 2000, value);
               break;
             case MathML_ATTR_background_:
               /* deprecated attribute */
@@ -4934,10 +4934,10 @@ void MathMLAttributeComplete (Attribute attr, Element el, Document doc)
               depAttrType.AttrSSchema = attrType.AttrSSchema;
               depAttrType.AttrTypeNum = MathML_ATTR_mathbackground;
               if (!TtaGetAttribute (el, depAttrType))
-                HTMLSetBackgroundColor (doc, el, 0, value);
+                HTMLSetBackgroundColor (doc, el, 2000, value);
               break;
             case MathML_ATTR_mathbackground:
-              HTMLSetBackgroundColor (doc, el, 0, value);
+              HTMLSetBackgroundColor (doc, el, 2000, value);
               break;
             case MathML_ATTR_fontfamily:
               SetFontfamily (doc, el, value);

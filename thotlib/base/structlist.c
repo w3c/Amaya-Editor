@@ -4178,7 +4178,12 @@ void DisplayPRule (PtrPRule rule, FILE *fileDescriptor,
 
   if (rule == NULL)
     return;
-  if (rule->PrSpecificity != 200 && rule->PrCSSLine == 0)
+  if (rule->PrSpecificity == 2000)
+    /* this is not really a CSS style rule, but the equivalent of an
+       HTML, SVG or MathML attribute */
+    return;
+  /* if there is no number for the source line, don't do anything */
+  if (rule->PrCSSLine == 0)
     return;
 
   PRuleToPresentationSetting (rule, &setting, pSchP);
@@ -4260,7 +4265,7 @@ void DisplayPRule (PtrPRule rule, FILE *fileDescriptor,
       fprintf (fileDescriptor, " ");
       l++;
     }
-  if (rule->PrSpecificity == 200)
+  if (rule->PrSpecificity == 1000)
     fprintf (fileDescriptor, "line %d, style attribute\n", rule->PrCSSLine);
   else if (rule->PrCSSURL)
     fprintf (fileDescriptor, "line %d, file %s\n", rule->PrCSSLine,

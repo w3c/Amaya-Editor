@@ -5986,7 +5986,7 @@ void  ParseCSSRule (Element element, PSchema tsch, PresentationContext ctxt,
   not really a CSS rule.
   ----------------------------------------------------------------------*/
 void  ParseHTMLSpecificStyle (Element el, char *cssRule, Document doc,
-                              int specificity, ThotBool destroy)
+                             int specificity, ThotBool destroy)
 {
   DisplayMode         dispMode;
   PresentationContext ctxt;
