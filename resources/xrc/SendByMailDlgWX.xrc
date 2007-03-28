@@ -74,6 +74,8 @@
                     <item>*Piece jointe*</item>
                     <item>*Ne pas envoyer*</item>
                   </content>
+                  <dimension>3</dimension>
+                  <style>wxRA_SPECIFY_COLS</style>
                 </object>
                 <option>0</option>
                 <flag>wxALL|wxEXPAND</flag>

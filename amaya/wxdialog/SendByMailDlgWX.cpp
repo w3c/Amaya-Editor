@@ -67,6 +67,7 @@ SendByMailDlgWX::SendByMailDlgWX( int ref, wxWindow* parent) :
 
   Layout();
   SetAutoLayout( TRUE );
+  SetSize(600, 400);
 }
 
 /*----------------------------------------------------------------------
