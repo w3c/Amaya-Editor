@@ -97,7 +97,7 @@ ThotBool TtaSendEMail(EMail mail, const char* serverAddress, int port, int* erro
   if(rep==FALSE && error!=NULL)
   {
     err = server.GetLastError(&step);
-    printf("Error : %d / %d\n", err, step);
+//    printf("Error : %d / %d\n", err, step);
     switch(step)
     {
       case wxSMTP_STEP_CONNECT:
