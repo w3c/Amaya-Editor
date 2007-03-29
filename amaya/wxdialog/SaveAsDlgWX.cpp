@@ -495,8 +495,10 @@ void SaveAsDlgWX::OnClearButton( wxCommandEvent& event )
 {
   ThotCallback (MyRef, INTEGER_DATA, (char*) 3);
   XRCCTRL(*this, "wxID_DOC_LOCATION_CTRL", wxTextCtrl)->SetValue(TtaConvMessageToWX( SavePath));
-  XRCCTRL(*this, "wxID_IMG_LOCATION_CTRL", wxTextCtrl)->SetValue(TtaConvMessageToWX(""));
-  XRCCTRL(*this, "wxID_CSS_LOCATION_CTRL", wxTextCtrl)->SetValue(TtaConvMessageToWX(""));
+  if (MysaveImgs)
+    XRCCTRL(*this, "wxID_IMG_LOCATION_CTRL", wxTextCtrl)->SetValue(TtaConvMessageToWX(""));
+  if (MysaveCss)
+    XRCCTRL(*this, "wxID_CSS_LOCATION_CTRL", wxTextCtrl)->SetValue(TtaConvMessageToWX(""));
 }
 
 /*----------------------------------------------------------------------
