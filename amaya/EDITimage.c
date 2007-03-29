@@ -1592,7 +1592,7 @@ void AddNewImage (Document doc, View view, ThotBool isInput)
   AttributeType      attrType;
   NotifyOnTarget     event;
   char              *name, *value;
-  int                c1, i, j, cN, length, width, height;
+  int                c1, i, j, cN, length, width, height, w, h;
   ThotBool           oldStructureChecking, newAttr;
 
   TtaGiveFirstSelectedElement (doc, &firstSelEl, &c1, &i); 
@@ -1745,31 +1745,36 @@ void AddNewImage (Document doc, View view, ThotBool isInput)
                     }
                   else
                     newAttr = FALSE;
-                  sprintf (value, "%d", width);
-                  TtaSetAttributeText (attr, value, el, doc);
+                  // check if the image is larger than the window
+                  TtaGiveWindowSize (doc, 1, UnPixel, &w, &h);
+                  if (width < w)
+                    sprintf (value, "%d", width);
+                  else
+                    strcpy (value, "100%");
                   TtaSetAttributeText (attr, value, el, doc);
                   if (newAttr)
                     TtaRegisterAttributeCreate (attr, el, doc);
                   else
                     TtaRegisterAttributeReplace (attr, el, doc);
-
-                  attrType.AttrTypeNum = HTML_ATTR_Height_;
-                  attr = TtaGetAttribute (el, attrType);
-                  if (attr == NULL)
+                  if (width < w)
                     {
-                      newAttr = TRUE;
-                      attr = TtaNewAttribute (attrType);
-                      TtaAttachAttribute (el, attr, doc);
+                      attrType.AttrTypeNum = HTML_ATTR_Height_;
+                      attr = TtaGetAttribute (el, attrType);
+                      if (attr == NULL)
+                        {
+                          newAttr = TRUE;
+                          attr = TtaNewAttribute (attrType);
+                          TtaAttachAttribute (el, attr, doc);
+                        }
+                      else
+                        newAttr = FALSE;
+                      sprintf (value, "%d", height);
+                      TtaSetAttributeText (attr, value, el, doc);
+                      if (newAttr)
+                        TtaRegisterAttributeCreate (attr, el, doc);
+                      else
+                        TtaRegisterAttributeReplace (attr, el, doc);
                     }
-                  else
-                    newAttr = FALSE;
-                  sprintf (value, "%d", height);
-                  TtaSetAttributeText (attr, value, el, doc);
-                  TtaSetAttributeText (attr, value, el, doc);
-                  if (newAttr)
-                    TtaRegisterAttributeCreate (attr, el, doc);
-                  else
-                    TtaRegisterAttributeReplace (attr, el, doc);
                   TtaFreeMemory (value);
                   TtaCloseUndoSequence(doc);
                   TtaUpdateAttrMenu (doc);
