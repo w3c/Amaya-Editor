@@ -988,7 +988,32 @@ static Element NextRow (Element row)
               /* this ancestor is a Template element. Remember it and get the
                  next ancestor */
               prev = ancestor;
-              ancestor = TtaGetParent (ancestor);
+              next = ancestor;
+              TtaNextSibling (&next);
+              if (!next)
+                ancestor = TtaGetParent (ancestor);
+              else
+                {
+                  elType = TtaGetElementType (next);
+                  if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "Template"))
+                    /* not a template element */
+                    ancestor = NULL;
+                  else
+                    /* it's a Template element. Look for its first descendant
+                       that is not a Template element */
+                    {
+                      child = next;
+                      do
+                        {
+                          child = TtaGetFirstChild (child);
+                          if (child)
+                            elType = TtaGetElementType (child);
+                        }
+                      while (child &&
+                             !strcmp (TtaGetSSchemaName (elType.ElSSchema), "Template"));
+                      return child;
+                    } 
+                }
             }
         }
     }

@@ -2667,7 +2667,7 @@ static ThotBool ChangeTypeOfElements (PtrElement firstEl, PtrElement lastEl,
                           CancelLastEditFromHistory (pDoc);
                       }
                   }
-                if (!done)
+                if (!done && pEl)
                   {
                     /* on essaie de changer le type du pere si on est sur
                        un fils unique */
