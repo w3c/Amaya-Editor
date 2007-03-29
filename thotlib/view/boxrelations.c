@@ -531,9 +531,9 @@ void ComputeRadius (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 
   pBox = pAb->AbBox;
   if (horizRef)
-    pBox->BxRx = GetPixelValue (pAb->AbRx, UnPercent, pBox->BxW, pAb, 0);
+    pBox->BxRx = GetPixelValue (pAb->AbRx, pAb->AbRxUnit, pBox->BxW, pAb, 0);
   else
-    pBox->BxRy = GetPixelValue (pAb->AbRy, UnPercent, pBox->BxH, pAb, 0);
+    pBox->BxRy = GetPixelValue (pAb->AbRy, pAb->AbRyUnit, pBox->BxH, pAb, 0);
 }
 
 

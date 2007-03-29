@@ -500,28 +500,28 @@ void GL_DrawArc (float x, float y, float w, float h, int startAngle,
   GLfloat   angleOffset;
   GLfloat   sinCache[SLICES_SIZE];
   GLfloat   cosCache[SLICES_SIZE];
-  GLfloat   fastx, fasty, angle, thick;
-  GLfloat   wr, hr, width, height;
+  GLfloat   cx, cy, angle, halfthick;
+  GLfloat   wr, hr, rx, ry;
   ThotPoint points[SLICES_SIZE * 2 + 1];
 
+  halfthick = S_thick / 2.;
   // set external ray
-  width  = ((GLfloat)w) / 2.;
-  height = ((GLfloat)h) / 2.;
+  rx  = ((GLfloat)w) / 2.;
+  ry = ((GLfloat)h) / 2.;
   // set ellipse center
-  fastx  = ((GLfloat)x) + width; 
-  fasty  = ((GLfloat)y) + height;
-  thick = S_thick / 2.;
+  cx  = ((GLfloat)x) + rx; 
+  cy  = ((GLfloat)y) + ry;
   if (w < 10 && h < 10)
       slices = 36;
   else
     slices = SLICES;
 
-  if (!filled && thick >= width && thick >= height)
+  if (!filled && halfthick >= rx && halfthick >= ry)
     {
       // set external ray
       filled = TRUE;
-      width += thick;
-      height += thick;
+      rx += halfthick;
+      ry += halfthick;
     }
 
   startAngle = startAngle;
@@ -546,15 +546,15 @@ void GL_DrawArc (float x, float y, float w, float h, int startAngle,
     {
       for (i = 0; i <= slices; i++)
         {
-          points[i].x = fastx + (width * cosCache[i]);
-          points[i].y = fasty - (height * sinCache[i]);
+          points[i].x = cx + (rx * cosCache[i]);
+          points[i].y = cy - (ry * sinCache[i]);
         }
       points[i].x = points[0].x;
       points[i].y = points[0].y;
 
       glBegin (GL_TRIANGLE_FAN);
       /* The center */
-      glVertex2d (fastx, fasty);
+      glVertex2d (cx, cy);
       for (i = 0; i <= slices; i++)
         glVertex2d (points[i].x, points[i].y);
       glEnd();
@@ -562,22 +562,22 @@ void GL_DrawArc (float x, float y, float w, float h, int startAngle,
   else
     {
       npoints = slices * 2 + 1;
-      if (thick < 1.)
-        thick = 1.;
+      if (halfthick < 1.)
+        halfthick = 1.;
       // set internal ray
-      width -= thick;
-      height -= thick;
-      wr = width + thick;
-      hr = height + thick;
+      rx -= halfthick;
+      ry -= halfthick;
+      wr = rx + S_thick;
+      hr = ry + S_thick;
       j = npoints;
       for (i = 0; i <= slices; i++)
         {
           // external arc
-          points[i].x = fastx + (width * cosCache[i]);
-          points[i].y = fasty - (height * sinCache[i]);
+          points[i].x = cx + (rx * cosCache[i]);
+          points[i].y = cy - (ry * sinCache[i]);
           // internal arc
-          points[j].x = fastx + (wr * cosCache[i]);
-          points[j].y = fasty - (hr * sinCache[i]);
+          points[j].x = cx + (wr * cosCache[i]);
+          points[j].y = cy - (hr * sinCache[i]);
           j--;
         }
       npoints++;

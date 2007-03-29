@@ -11,48 +11,12 @@
 void GL_Win32ContextClose (int frame, HWND hwndClient);
 void GL_Win32ContextInit (HWND hwndClient, int frame);
 
-typedef struct _XSegment {
-	int x1;
-	int y1;
-	int x2;
-	int y2;		
-} XSegment;
-
-typedef struct _XArc {
-	int x;
-	int y;
-	int width;
-	int height;		
-	int angle1;
-	int angle2;
-} XArc;
-
 void SetupPixelFormatPrintGL (HDC hDC, int frame);
 void initwgl (HDC hDC, int frame);
 void closewgl (HDC hDC, int frame);
 void GL_SetupPixelFormat (HDC hDC);
 
 #endif /*_WINGUI*/
-
-#ifdef _GTK
-
-gboolean GL_DrawCallback (ThotWidget widget, 
-			  GdkEventExpose *event, 
-			  gpointer data);
-gboolean  GL_Init (ThotWidget widget, 
-		   GdkEventExpose *event, 
-		   gpointer data);
-gboolean GL_FocusIn (ThotWidget widget, 
-		     GdkEventExpose *event, 
-		     gpointer data);
-gboolean GL_FocusOut (ThotWidget widget, 
-		      GdkEventExpose *event, 
-		      gpointer data);
-gboolean  GL_Destroy (ThotWidget widget, 
-		      GdkEventExpose *event, 
-		      gpointer data);
-#endif /*_GTK*/
-
 
 int glMatroxBUG (int frame, int x, int y, int width, int height);
 
@@ -74,7 +38,7 @@ void GL_DrawRectangle (int fg, float x, float y, float width, float height);
 
 void GL_DrawSegments (ThotSegment *point, int npoints);
 void GL_DrawArc (float x, float y, float w, float h, 
-		 int angle1, int angle2, ThotBool filled);
+                 int angle1, int angle2, ThotBool filled);
 
 void GL_DrawPolygon (ThotPoint *points, int npoints);
 
