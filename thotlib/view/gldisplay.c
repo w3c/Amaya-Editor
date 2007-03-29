@@ -1783,16 +1783,31 @@ void DrawOval (int frame, int thick, int style, int x, int y, int width,
 
   y += FrameTable[frame].FrTopMargin;
   /* radius of arcs */
-  if (rx == 0 && ry != 0)
-    rx = ry;
-  else if (ry == 0 && rx != 0)
-    ry = rx;
   rayx = width / 2.;
-  if ((float)rx < rayx)
+  if (rayx > (float)rx)
     rayx = (float)rx;
   rayy = height / 2.;
-  if ((float)ry < rayy)
+  if (rayy > (float)ry)
     rayy = (float)ry;
+
+  if (rx == 0 && ry)
+    {
+      // radius must be equal
+      rayx = width / 2.;
+      if (rayy > rayx)
+        rayy = rayx;
+      else
+        rayx = rayy;
+    }
+  else if (ry == 0 && rx)
+    {
+      // radius must be equal
+      rayy = height / 2.;
+      if (rayx > rayy)
+        rayx = rayy;
+      else
+        rayy = rayx;
+    }
   // arcs diameter
   dx = rayx * 2;
   dy = rayy * 2;
@@ -1894,12 +1909,15 @@ void DrawOval (int frame, int thick, int style, int x, int y, int width,
       GL_SetForeground (bg, TRUE);
       GL_DrawPolygon (point, 13);
 
-      for (i = 0; i < 4; i++)
+      if (rayx || rayy )
         {
-          GL_DrawArc (xarc[i].x, xarc[i].y, 
-                      xarc[i].width, xarc[i].height, 
-                      xarc[i].angle1, xarc[i].angle2,
-                      TRUE); 
+          for (i = 0; i < 4; i++)
+            {
+              GL_DrawArc (xarc[i].x, xarc[i].y, 
+                          xarc[i].width, xarc[i].height, 
+                          xarc[i].angle1, xarc[i].angle2,
+                          TRUE); 
+            }
         }
     }
 
