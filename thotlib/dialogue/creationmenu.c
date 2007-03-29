@@ -186,6 +186,7 @@ static ThotBool UpdateXMLMenu (Document doc, View view)
           if (firstSel->ElTerminal && firstSel->ElParent)
             firstSel = firstSel->ElParent;
           typeNum = firstSel->ElTypeNumber;
+          pSS = firstSel->ElStructSchema;
           p.param3 = (void*)(pSS->SsRule->SrElem[typeNum - 1]->SrName);
         }
       else

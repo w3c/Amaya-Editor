@@ -2043,7 +2043,8 @@ void TtcCreateElement (Document doc, View view)
         }
       if (pListEl)
         {
-          ok = !ElementIsReadOnly (pListEl);
+          //ok = !ElementIsReadOnly (pListEl);
+          ok = !ElementIsReadOnly (pElReplicate->ElParent);
           if (ok && pElDelete != NULL)
             /* on va detruire un sous arbre vide. */
             /* envoie l'evenement ElemDelete.Pre */
