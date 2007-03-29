@@ -32,6 +32,7 @@ fi
 INSTALL_DATA="@INSTALL@ -m 444"
 INSTALL_BIN="@INSTALL@ -m 755"
 AMAYA_INSTALLDIR="@AMAYA_INSTALLDIR@"
+AMAYA_APP_DIR="@AMAYA_INSTALLDIR@@APP_VER@"
 AMAYAGUI="@AMAYAGUI@"
 AMAYAOS="@AMAYAOS@"
 
@@ -63,8 +64,8 @@ if test $AMAYAOS = "MACOSX" ; then
   $MKDIR $PREFIX/Amaya.app/Contents/Resources/zh_CN.lproj
   $MKDIR $PREFIX/Amaya.app/Contents/Resources/zh_TW.lproj
   $MKDIR $PREFIX/Amaya.app/Contents/Resources/no.lproj
-  $MV $PREFIX/$AMAYA_INSTALLDIR $PREFIX/Amaya.app/Contents/MacOS/
-  cd $PREFIX/Amaya.app/Contents/MacOS/ && $LN_S $AMAYA_INSTALLDIR/$AMAYAGUI/bin/amaya_bin amaya && cd -
+  $MV $PREFIX/$AMAYA_INSTALLDIR $PREFIX/Amaya.app/Contents/MacOS/$AMAYA_APP_DIR
+  cd $PREFIX/Amaya.app/Contents/MacOS/ && $LN_S $AMAYA_APP_DIR/$AMAYAGUI/bin/amaya_bin amaya && cd -
   $SED -e "s/IDENTIFIER/`echo $AMAYA_INSTALLDIR | $SED -e 's,\.\./,,g' | $SED -e 's,/,.,g'`/" \
  	-e "s/EXECUTABLE/amaya/" \
 	-e "s/VERSION/@APP_VER@/" \
