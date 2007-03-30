@@ -437,7 +437,7 @@ Element InstantiateUse (XTigerTemplate t, Element el, Document doc,
   /* get the value of the "types" attribute */
   cont = NULL;
   elType = TtaGetElementType (el);
-  types = GetAttributeStringValueFromNum(el, Template_ATTR_types, &size);
+  types = GetAttributeStringValueFromNum (el, Template_ATTR_types, &size);
   if (!types)
     return NULL;
   giveItems (types, size, &items, &nbitems);
@@ -452,19 +452,17 @@ Element InstantiateUse (XTigerTemplate t, Element el, Document doc,
       if (dec)
       {
         cont = Template_InsertUseChildren(doc, el, dec);
-        if(cont)
+        if (cont)
         {
           TtaChangeTypeOfElement (el, doc, Template_EL_useSimple);
-          if(registerUndo)
-            TtaRegisterElementTypeChange(el, Template_EL_useEl, doc);
+          if (registerUndo)
+            TtaRegisterElementTypeChange (el, Template_EL_useEl, doc);
         }
       }
     }
-
-  TtaFreeMemory(types);
+  TtaFreeMemory (types);
   
-  
-  for(i=0; i<nbitems; i++)
+  for (i = 0; i < nbitems; i++)
     TtaFreeMemory(items[i].label);
   TtaFreeMemory(items);
   TtaSetStructureChecking (oldStructureChecking, doc);
@@ -482,10 +480,13 @@ Element InstantiateUse (XTigerTemplate t, Element el, Document doc,
 void InstantiateRepeat (XTigerTemplate t, Element el, Document doc, ThotBool registerUndo)
 {
 #ifdef TEMPLATES
-  int            curVal,  minVal,  maxVal;
+  Element        child, newChild;
   Attribute      curAtt,  minAtt,  maxAtt;
   AttributeType  curType, minType, maxType;
   char           *text, *types = NULL, *title=NULL;
+  int            curVal,  minVal,  maxVal;
+  int            childrenCount;
+
 
   if (!t)
     return;
@@ -552,48 +553,43 @@ void InstantiateRepeat (XTigerTemplate t, Element el, Document doc, ThotBool reg
     curVal = minVal;
 
   text = (char*)TtaGetMemory(MAX_LENGTH);
-
   //Create non existing attributes
   if (!minAtt)
     {      
-      minAtt = TtaNewAttribute(minType);
-      sprintf(text,"%d",minVal);
-      TtaAttachAttribute(el, minAtt, doc);
-      TtaSetAttributeText(minAtt, text, el, doc);
+      minAtt = TtaNewAttribute (minType);
+      sprintf (text, "%d", minVal);
+      TtaAttachAttribute (el, minAtt, doc);
+      TtaSetAttributeText (minAtt, text, el, doc);
       if (registerUndo)
-        TtaRegisterAttributeCreate(minAtt, el, doc);
+        TtaRegisterAttributeCreate (minAtt, el, doc);
     }
 
   if (!maxAtt)
     {  
-      maxAtt = TtaNewAttribute(maxType);
-      if (maxVal<INT_MAX)
-        sprintf(text,"%d",maxVal);
+      maxAtt = TtaNewAttribute (maxType);
+      if (maxVal < INT_MAX)
+        sprintf(text, "%d", maxVal);
       else
-        sprintf(text,"*");
-      TtaAttachAttribute(el, maxAtt, doc);      
-      TtaSetAttributeText(maxAtt, text, el, doc);
+        sprintf (text, "*");
+      TtaAttachAttribute (el, maxAtt, doc);      
+      TtaSetAttributeText (maxAtt, text, el, doc);
       if (registerUndo)
-        TtaRegisterAttributeCreate(maxAtt, el, doc);
+        TtaRegisterAttributeCreate (maxAtt, el, doc);
     }
 
   if (!curAtt)
     {
-      curAtt = TtaNewAttribute(curType);
-      sprintf(text,"%d",curVal);
-      TtaAttachAttribute(el, curAtt, doc);
-      TtaSetAttributeText(curAtt, text, el, doc);
+      curAtt = TtaNewAttribute (curType);
+      sprintf (text,"%d",curVal);
+      TtaAttachAttribute (el, curAtt, doc);
+      TtaSetAttributeText (curAtt, text, el, doc);
       if (registerUndo)
-        TtaRegisterAttributeCreate(curAtt, el, doc);
+        TtaRegisterAttributeCreate (curAtt, el, doc);
     }
-
   if (text)
     TtaFreeMemory(text);
 
   //We must have currentOccurs children
-  Element  child, newChild;
-  int      childrenCount;
-
   child = TtaGetFirstChild(el);
   if (!child)
     //Error : a repeat must have at least one child which will be the model
@@ -610,21 +606,19 @@ void InstantiateRepeat (XTigerTemplate t, Element el, Document doc, ThotBool reg
     return;  
 
   child = TtaGetLastChild(el);
-  types = GetAttributeStringValueFromNum(child, Template_ATTR_types, NULL);
-  title = GetAttributeStringValueFromNum(child, Template_ATTR_title, NULL);
-  
-
-  while(childrenCount < curVal)
+  types = GetAttributeStringValueFromNum (child, Template_ATTR_types, NULL);
+  title = GetAttributeStringValueFromNum (child, Template_ATTR_title, NULL);
+  while (childrenCount < curVal)
     {
       ElementType newElType;
       newElType.ElSSchema = TtaGetSSchema (TEMPLATE_SCHEMA_NAME, doc);
       newElType.ElTypeNum = Template_EL_useEl;
-      newChild = TtaNewElement(doc, newElType);
+      newChild = TtaNewElement (doc, newElType);
       
       // Insert it
-      TtaInsertSibling(newChild, child, FALSE, doc);
-      SetAttributeStringValueWithUndo(newChild, Template_ATTR_types, types);
-      SetAttributeStringValueWithUndo(newChild, Template_ATTR_title, title);
+      TtaInsertSibling (newChild, child, FALSE, doc);
+      SetAttributeStringValueWithUndo (newChild, Template_ATTR_types, types);
+      SetAttributeStringValueWithUndo (newChild, Template_ATTR_title, title);
       
       InstantiateUse(t, newChild, doc, TRUE);
       
@@ -634,8 +628,8 @@ void InstantiateRepeat (XTigerTemplate t, Element el, Document doc, ThotBool reg
       childrenCount++;
     }
     
-    TtaFreeMemory(types);
-    TtaFreeMemory(title);
+  TtaFreeMemory (types);
+  TtaFreeMemory (title);
 #endif /* TEMPLATES */
 }
 

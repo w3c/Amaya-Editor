@@ -1749,7 +1749,7 @@ void AddNewImage (Document doc, View view, ThotBool isInput)
                   TtaGiveWindowSize (doc, 1, UnPixel, &w, &h);
                   if (width < w)
                     sprintf (value, "%d", width);
-                  else
+                 else
                     strcpy (value, "100%");
                   TtaSetAttributeText (attr, value, el, doc);
                   if (newAttr)
@@ -1775,6 +1775,9 @@ void AddNewImage (Document doc, View view, ThotBool isInput)
                       else
                         TtaRegisterAttributeReplace (attr, el, doc);
                     }
+                  else
+                    // generate the internal attribute to apply %
+                    CreateAttrWidthPercentPxl (value, el, doc, width);
                   TtaFreeMemory (value);
                   TtaCloseUndoSequence(doc);
                   TtaUpdateAttrMenu (doc);
