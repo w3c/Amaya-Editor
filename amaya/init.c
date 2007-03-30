@@ -9203,7 +9203,7 @@ void SendByMail (Document document, View view)
   
   wxArrayString files;
   wxDir::GetAllFiles(wxString(temppath, wxConvUTF8), &files, wxT(""), wxDIR_FILES);
-  for(int i=0; i<(int)files.GetCount(); i++)
+  for (i = 0; i < (int)files.GetCount(); i++)
   {
     wxRemoveFile(files[i]);
   }

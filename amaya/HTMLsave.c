@@ -570,9 +570,6 @@ fprintf(stderr, "Move file: from %s to %s\n", old_url, new_url);
                       res = PutObjectWWW (doc, old_url, new_url, "text/javascript", NULL,
                                           AMAYA_SYNC | AMAYA_NOCACHE | AMAYA_FLUSH_REQUEST,
                                           NULL, NULL);
-                      if (res)
-                        // report an error
-                        ;
                     }
                   if (!src_is_local)
                     // remove the temporay file
@@ -3997,9 +3994,6 @@ static void UpdateCss (Document doc, ThotBool src_is_local,
                       res = PutObjectWWW (doc, localname, url, "text/css", NULL,
                                           AMAYA_SYNC | AMAYA_NOCACHE | AMAYA_FLUSH_REQUEST,
                                           NULL, NULL);
-                      if (res)
-                        // report an error
-                        ;
                     }
                 }
               // update the link
