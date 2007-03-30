@@ -161,7 +161,11 @@ static ThotBool UpdateXMLMenu (Document doc, View view)
       pDoc = LoadedDocument[doc - 1];
       if (GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar, &lastChar) &&
           pSelDoc == pDoc && firstSel)
-        pSS = firstSel->ElStructSchema;
+        {
+          if (firstSel->ElTerminal && firstSel->ElParent)
+            firstSel = firstSel->ElParent;
+          pSS = firstSel->ElStructSchema;
+        }
       else
         {
           // the selection is not within this document
@@ -177,16 +181,13 @@ static ThotBool UpdateXMLMenu (Document doc, View view)
         /* build the menu only for generic XML schemas */
         nbItem = BuildElementSelector (pDoc, pSS, menuBuf);
 
-      /* generate the form with two buttons Isert and Done */
+      /* generate the form with two buttons Insert and Done */
 #ifdef _WX 
       p.param1 = nbItem;
       p.param2 = (void*)menuBuf;
       if (firstSel && nbItem)
         {
-          if (firstSel->ElTerminal && firstSel->ElParent)
-            firstSel = firstSel->ElParent;
           typeNum = firstSel->ElTypeNumber;
-          pSS = firstSel->ElStructSchema;
           p.param3 = (void*)(pSS->SsRule->SrElem[typeNum - 1]->SrName);
         }
       else

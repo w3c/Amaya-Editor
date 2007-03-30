@@ -1963,7 +1963,7 @@ void InsertChildFirst (PtrElement pEl, PtrElement pChild,
 }
 
 /*----------------------------------------------------------------------
-  CreateDescendant  tres to create a child of the pParent element
+  CreateDescendant  tries to create a child of the pParent element
   according to the typeNum rule of the pSS schema definition until an
   element of the descTypeNum in pDescSS is created.
 
@@ -2151,10 +2151,26 @@ PtrElement CreateDescendant (int typeNum, PtrSSchema pSS,
               {
                 i = 0;
                 pDesc = NULL;
+                // @@@@@ check current choice types before CreateDescendant
                 do
-                  pDesc = CreateDescendant (pRule1->SrChoice[i++], pSS, pDoc,
-                                            pLeaf, descTypeNum, pDescSS, pParent);
+                  {
+                    if (SameSRules (pRule1->SrChoice[i], pSS, descTypeNum, pDescSS))
+                      /* c'est un element du type voulu, on le cree */
+                      {
+                        pDesc = NewSubtree (descTypeNum, pDescSS, pDoc, FALSE, TRUE, TRUE, TRUE);
+                        *pLeaf = pDesc;
+                      }
+                    i++;
+                   }
                 while (pDesc == NULL && i < pRule1->SrNChoices);
+                if (pDesc == NULL)
+                  {
+                    i = 0;
+                    do
+                      pDesc = CreateDescendant (pRule1->SrChoice[i++], pSS, pDoc,
+                                                pLeaf, descTypeNum, pDescSS, pParent);
+                    while (pDesc == NULL && i < pRule1->SrNChoices);
+                  }
                 if (pDesc != NULL)
                   {
                     /* une descendance possible du type voulu */

@@ -4803,7 +4803,7 @@ void RebuildConcreteImage (int frame, ThotBool scrollUpdate)
       /* Box widths may change and the scroll must be recomputed */
       AnyWidthUpdate = TRUE;
       pAb = pFrame->FrAbstractBox;
-      if (pAb->AbBox)
+      if (pAb->AbBox && pAb->AbElement)
         {
           /* get the first visible abstract box and its current position */
           GetSizesFrame (frame, &width, &height);

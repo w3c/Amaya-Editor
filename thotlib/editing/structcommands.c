@@ -2231,7 +2231,8 @@ static ThotBool DoSurround (PtrElement firstEl, PtrElement lastEl,
       pElSurround = NewSubtree (typeNum, pSS, pDoc, FALSE, TRUE, TRUE, TRUE);
       pRoot = pElSurround;
       unit = FALSE;
-      if (strcmp (pElSurround->ElStructSchema->SsName,
+      if (strcmp (pEl1->ElParent->ElStructSchema->SsName, "Template") &&
+          strcmp (pElSurround->ElStructSchema->SsName,
                   pEl1->ElParent->ElStructSchema->SsName))
         {
           /* cet element appartient a un schema de structure different de */
@@ -2671,7 +2672,7 @@ static ThotBool ChangeTypeOfElements (PtrElement firstEl, PtrElement lastEl,
                   {
                     /* on essaie de changer le type du pere si on est sur
                        un fils unique */
-                    if (pEl->ElPrevious == NULL && pEl->ElNext == NULL)
+                    if (pEl && pEl->ElPrevious == NULL && pEl->ElNext == NULL)
                       pEl = pEl->ElParent;
                     else
                       pEl = NULL;
