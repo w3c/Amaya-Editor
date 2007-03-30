@@ -3,5 +3,9 @@
 # Script to launchs amaya_bin
 # Irene Vatton, 2007
 #
-DIR_NAME=`dirname $0`
-env XLIB_SKIP_ARGB_VISUALS=1 $DIR_NAME/amaya_bin ${1+$@}
+
+AMAYA_INSTALLDIR="@AMAYA_INSTALLDIR@"
+PREFIX=@prefix@
+AMAYAGUI="@AMAYAGUI@"
+
+env XLIB_SKIP_ARGB_VISUALS=1 $PREFIX/$AMAYA_INSTALLDIR/$AMAYAGUI/bin/amaya_bin ${1+$@}

@@ -1415,6 +1415,17 @@ if test "$build_amaya" = "yes" ; then
 
 fi
 
+dnl
+dnl Generate the script
+dnl
+if test "$AMAYAOS" != "MACOSX" ; then
+    if test ! -d bin ; then
+      mkdir -p bin
+    fi
+    make_output="$make_output bin/amaya:../batch/amaya.in"
+    chmod a+x bin/amaya
+fi
+
 AC_SUBST(EXTRA_MAKEFILE_IN)
 AC_OUTPUT($make_output , [
 dnl
@@ -1423,15 +1434,6 @@ dnl Makefile(s) dump ...
 dnl
 
 echo timestamp > stamp-h
-
-dnl
-dnl Generate the script
-dnl
-if test "$AMAYAOS" != "MACOSX" ; then
-    cp ../batch/amaya.in bin/amaya
-    chmod a+x bin/amaya
-fi
-
 
 dnl
 dnl Check for an upgrade in the Options numbers

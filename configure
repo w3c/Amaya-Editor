@@ -15017,6 +15017,14 @@ if test "$build_amaya" = "yes" ; then
 
 fi
 
+if test "$AMAYAOS" != "MACOSX" ; then
+    if test ! -d bin ; then
+      mkdir -p bin
+    fi
+    make_output="$make_output bin/amaya:../batch/amaya.in"
+    chmod a+x bin/amaya
+fi
+
 
           ac_config_files="$ac_config_files $make_output"
           ac_config_commands="$ac_config_commands default"
@@ -16333,12 +16341,6 @@ echo "$as_me: executing $ac_dest commands" >&6;}
     default )
 
 echo timestamp > stamp-h
-
-if test "$AMAYAOS" != "MACOSX" ; then
-    cp ../batch/amaya.in bin/amaya
-    chmod a+x bin/amaya
-fi
-
 
 if test -f Options ; then
    oldversion=`grep Version Options`
