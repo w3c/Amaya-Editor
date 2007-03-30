@@ -2423,7 +2423,7 @@ PtrElement NewSubtree (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
   PtrTextBuffer       pBu1;
   PtrSSchema          pExtSSch;
 
-  if (typeNum == 0)
+  if (typeNum == 0 || typeNum > pSS->SsNRules)
     return NULL;
   pEl = NULL;			/* no element has been (yet) created */
   if (Root)
