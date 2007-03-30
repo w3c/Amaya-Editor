@@ -1423,7 +1423,6 @@ if test "$AMAYAOS" != "MACOSX" ; then
       mkdir -p bin
     fi
     make_output="$make_output bin/amaya:../batch/amaya.in"
-    chmod a+x bin/amaya
 fi
 
 AC_SUBST(EXTRA_MAKEFILE_IN)
@@ -1461,6 +1460,13 @@ if test -f script_uninstall ; then
    chmod a+x script_uninstall
 fi
 ])
+
+dnl
+dnl Generate the script
+dnl
+if test "$AMAYAOS" != "MACOSX" ; then
+    chmod a+x bin/amaya
+fi
 
 if test "$build_amaya" = "yes" ; then
     echo Amaya $AMAYA_VER configured
