@@ -439,28 +439,12 @@ wxString wxMultipartMimeContainer::Generate()const
 // wxCmdLineProtocol
 //==========================================================================
 
-wxString wxCmdLineProtocol::SendCommand(const wxString& request, bool* haveError)
+wxString wxCmdLineProtocol::SendCommand(wxString request, bool* haveError)
 {
-    if(haveError!=NULL)
-        *haveError = false;
-
-//printf(">> %s\n", (const char*)(request.mb_str(wxConvLibc)));
-
-    /* Send request. */
-    wxSocketClient::Write(request.mb_str(wxConvLibc), request.Length());
-    if(Error())
-    {
-        if(haveError!=NULL)
-            *haveError = true;
-        return wxT("");
-    }
-    wxSocketClient::Write("\r\n", 2);
-    if(Error())
-    {
-        if(haveError!=NULL)
-            *haveError = true;
-        return wxT("");
-    }
+    wxStringInputStream stmin(request << wxT("\r\n"));
+    wxSocketOutputStream stmout(*this);
+    stmout.Write(stmin);
+    stmout.Close();
 
     /* Wait for a response. */    
     const int buffsize = 256; 
@@ -487,8 +471,6 @@ wxString wxCmdLineProtocol::SendCommand(const wxString& request, bool* haveError
                 {
                     wxString rep = m_buffer.Left(search);
                     m_buffer = m_buffer.Mid(search+2);
-                    
-//                    printf("<< %s\n", (const char*)(rep.mb_str(wxConvLibc)));
                     
                     return rep;
                 }

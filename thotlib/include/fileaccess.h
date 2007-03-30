@@ -150,6 +150,7 @@ extern ThotBool TtaCheckMakeDirectory (char *name, ThotBool recursive);
   ----------------------------------------------------------------------*/
 extern ThotBool TtaIsW3Path (char *path);
 
+
 #endif /* __CEXTRACT__ */
 #endif /* _FILEACCESS_H_ */
 

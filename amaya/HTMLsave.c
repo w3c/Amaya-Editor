@@ -4618,3 +4618,48 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
     }
   TtaFreeMemory (documentFile);
 }
+
+
+/*----------------------------------------------------------------------
+  SaveTempCopy
+  SaveTempCopy saves a document to a local temporary directory.
+  Saves images and stylesheets.
+  ----------------------------------------------------------------------*/
+ThotBool SaveTempCopy (Document doc, const char* dstdir)
+{
+  char buff[MAX_LENGTH];
+  char* oldURL;
+  
+  oldURL = TtaStrdup(DocumentURLs[doc]);
+  
+  if (Saving_lock)
+    // there is a current saving operation
+    return FALSE;
+    
+
+  SavingDocument = doc;
+  
+  if(!TtaCheckMakeDirectory ((char*)dstdir, TRUE))
+    return FALSE;
+  
+  SavePath = TtaStrdup(dstdir);
+  SaveName = (char *)TtaGetMemory (MAX_LENGTH);
+  
+  TtaExtractName (DocumentURLs[doc], buff, SaveName);
+  
+  if(SaveName[0]==0)
+  {
+    DefaultName = TtaGetEnvString ("DEFAULTNAME");
+    if (DefaultName == NULL || *DefaultName == EOS)
+      DefaultName = StdDefaultName;
+    strcpy(SaveName, DefaultName);
+  }
+  
+  CopyImages = TRUE;
+  CopyCss    = TRUE;
+  UpdateURLs = FALSE;
+  
+  DoSaveAs(NULL, NULL);
+
+  return TRUE;
+}

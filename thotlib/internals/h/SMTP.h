@@ -187,7 +187,7 @@ public:
      * \param haveError Address of an error flag, set to true if an error has occurs.
      * \return The returned response message.
      */
-    virtual wxString SendCommand(const wxString& request, bool* haveError=NULL);
+    virtual wxString SendCommand(wxString request, bool* haveError=NULL);
     
     /**
      * Wait for a response line without sending any request.

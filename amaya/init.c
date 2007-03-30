@@ -9022,8 +9022,46 @@ void ClearURLList()
 #ifdef _WX
 #include <wx/sstream.h>
 #include <wx/wfstream.h>
+#include <wx/dir.h>
 #include "../thotlib/internals/h/SMTP.h"
 #endif /* _WX */
+
+/*----------------------------------------------------------------------
+ * Retrieve a valid temporary directory path.
+ * Dont create the file, just assumes that it doesnt exist and can be created. 
+ * The returned value must be deleted.
+ * Returns NULL if any problem occurs.
+ * Dont use mktemp because doesnt exist on windows
+  ----------------------------------------------------------------------*/
+char* CreateTempDirectory(const char* name)
+{
+  static int i = 0, len;
+  char                 buff[MAX_LENGTH];
+  char                 temppath[MAX_LENGTH];
+  
+  strcpy(temppath, TtaGetEnvString ("APP_TMPDIR"));
+  len = strlen(temppath);
+  if(len==0)
+    return NULL;
+  if(temppath[len]!=DIR_SEP)
+  {
+    temppath[len] = DIR_SEP;
+    temppath[len+1] = 0;
+    
+  }
+  
+  while(i<10000)
+  {
+    sprintf(buff, "%s%s%04d", temppath, name, i);
+    if(!TtaCheckDirectory(buff))
+    {
+      if(TtaCheckMakeDirectory(buff, TRUE))
+        return TtaStrdup(buff);
+    }
+    i++;
+  }
+  return NULL;
+}
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -9039,6 +9077,8 @@ void SendByMail (Document document, View view)
   wxArrayString        arr;
   int                  i;
   SendByMailDlgWX dlg(0, NULL);
+  
+  char* temppath = CreateTempDirectory("sendmail/");
 
   char* server = TtaGetEnvString("EMAILS_SMTP_SERVER");
   char* from   = TtaGetEnvString("EMAILS_FROM_ADDRESS");
@@ -9047,7 +9087,6 @@ void SendByMail (Document document, View view)
   int   port;
   int   error;
   ThotBool retry = TRUE;
-
 
   TtaGetEnvInt ("EMAILS_SMTP_PORT", &port);
 
@@ -9059,6 +9098,9 @@ void SendByMail (Document document, View view)
     return;
   }
 
+  Synchronize(document, view); 
+
+  SaveTempCopy(document, temppath);
 
   if (DocumentTypes[document] == docHTML)
   {
@@ -9097,10 +9139,28 @@ void SendByMail (Document document, View view)
         docType = DocumentMeta[document]->content_type;
         docChar = DocumentMeta[document]->charset;
   
+        // Send document as attachment
         if(dlg.SendAsAttachment())
           TtaAddEMailAttachmentFile(mail, docType, docPath);
+        // Send document as mail message
         else if(dlg.SendAsContent())
           TtaAddEMailAlternativeFile(mail, docType, docPath, docChar);
+        
+        // Send all attached files (images, css ...) as attachments.
+        if(dlg.SendAsAttachment()||dlg.SendAsContent())
+        {
+          wxFileName    msgName(wxString(docPath, wxConvUTF8));
+          wxArrayString files;
+          wxDir::GetAllFiles(wxString(temppath, wxConvLibc), &files, wxT(""), wxDIR_FILES);
+          for(int i=0; i<(int)files.GetCount(); i++)
+          {
+            wxFileName filename(files[i]);
+            if(filename.GetFullName()!=msgName.GetFullName())
+            {
+              TtaAddEMailAttachmentFile(mail, "", (const char*)filename.GetFullPath().mb_str(wxConvUTF8));
+            }
+          }
+        }
         
         error = 0;
         if(TtaSendEMail(mail, server, port, &error))
@@ -9108,9 +9168,7 @@ void SendByMail (Document document, View view)
           TtaSetStatus(document, view, TtaGetMessage (AMAYA, AM_EMAILS_SENT), NULL);
         }
       }
-      
-      printf("Result : %d\n", error);
-      
+
       switch(error)
       {
         case EMAIL_OK:
@@ -9140,5 +9198,17 @@ void SendByMail (Document document, View view)
     else
       break;
   }
+  
+  // Remove temp dir content.
+  
+  wxArrayString files;
+  wxDir::GetAllFiles(wxString(temppath, wxConvUTF8), &files, wxT(""), wxDIR_FILES);
+  for(int i=0; i<(int)files.GetCount(); i++)
+  {
+    wxRemoveFile(files[i]);
+  }
+  
+  wxRmdir(wxString(temppath, wxConvUTF8));
+  
 #endif /* _WX */
 }

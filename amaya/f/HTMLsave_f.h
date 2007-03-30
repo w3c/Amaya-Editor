@@ -71,6 +71,8 @@ extern void GenerateAutoSavedDoc ( Document doc );
 extern ThotBool DocumentToSave ( NotifyDialog *event );
 extern void DoSaveAs ( char *user_charset,
                        char *user_mimetype );
+extern ThotBool SaveTempCopy ( Document doc,
+                               const char* dstdir );
 
 #else /* __STDC__ */
 
@@ -139,6 +141,8 @@ extern void GenerateAutoSavedDoc ( Document doc );
 extern ThotBool DocumentToSave ( NotifyDialog *event );
 extern void DoSaveAs ( char *user_charset,
                          char *user_mimetype );
+extern ThotBool SaveTempCopy ( Document doc,
+                                 const char* dstdir );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -1145,18 +1145,3 @@ ThotBool TtaIsW3Path (char *path)
     return FALSE;
   return TRUE;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
