@@ -9133,7 +9133,10 @@ void SendByMail (Document document, View view)
         arr = dlg.GetRecipients();
         for(i=0; i<(int)arr.GetCount(); i++)
         {
-          TtaAddEMailToRecipient(mail, (const char*) arr[i].mb_str(wxConvUTF8));
+          wxString rcpt = arr[i];
+          rcpt.Trim(true).Trim(false);
+          if(!rcpt.IsEmpty())
+            TtaAddEMailToRecipient(mail, (const char*) rcpt.mb_str(wxConvUTF8));
         }
         docPath = GetLocalPath(document, DocumentURLs[document]);
         docType = DocumentMeta[document]->content_type;
