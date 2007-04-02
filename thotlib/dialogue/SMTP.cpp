@@ -776,8 +776,9 @@ bool wxSMTP::SendContent(wxEmailMessage& message)
     
     {
     wxSocketOutputStream out(*this);
-    wxDebugOutputStream dbg(out);
-    message.Write(dbg);
+//    wxDebugOutputStream dbg(out);
+//    message.Write(dbg);
+      message.Write(out);
     }
 
     m_error = GetResponseCode(SendCommand(wxT(".\r\n")));
