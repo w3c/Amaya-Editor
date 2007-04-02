@@ -145,6 +145,11 @@ m_dataType(wxMimeSlotContentFile)
         m_fileContent.sendpath = sendPath;
     else
         m_fileContent.sendpath = filename.GetFullName();
+
+    if(contentType==wxT("text/plain") || contentType==wxT("text/html"))
+    {
+      m_transfertEncoding = wxMIME_CONTENT_TRANSFERT_ENCONDING_QUOTED_PRINTABLE;
+    }
 }
 
 
@@ -262,6 +267,14 @@ bool wxMimeSlot::Write(wxOutputStream& out)const
         case wxMimeSlotContentFile: // File
             switch(te)
             {
+                case wxMIME_CONTENT_TRANSFERT_ENCONDING_QUOTED_PRINTABLE:
+                {
+                    wxFileInputStream file(m_fileContent.filename.GetFullPath());
+                    wxQuotedPrintableOutputStream qp(out);
+                    qp.Write(file);
+                    qp.Close();
+                    break;
+                }
                 case wxMIME_CONTENT_TRANSFERT_ENCONDING_BASE64:
                 {
                     wxFileInputStream file(m_fileContent.filename.GetFullPath());
