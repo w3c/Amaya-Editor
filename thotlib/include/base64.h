@@ -78,13 +78,11 @@ protected:
     unsigned char m_in[3];
     int m_len;
     
-    int m_linesize, m_currline;
-    
-    void RealWrite(const void *buffer, size_t size);
+ 
     virtual size_t OnSysWrite(const void *buffer, size_t size);
     
 public:
-    wxBase64EncOutputStream(wxOutputStream& stream, int linesize=72);
+    wxBase64EncOutputStream(wxOutputStream& stream);
     virtual ~wxBase64EncOutputStream(){Close();}
     bool Close();
 };
@@ -100,6 +98,22 @@ typedef class wxBase64DecInputStream wxBase64InputStream;
  */
 typedef class wxBase64EncOutputStream wxBase64OutputStream;
 
+
+/**
+ * Special output stream which inserts end-of-line regulary.
+ */
+class wxEndOfLineOutputStream : public wxFilterOutputStream{
+protected:
+  int m_size;
+  int m_len;
+  char* m_buffer;
+  
+  virtual size_t OnSysWrite(const void *buffer, size_t size);
+public:
+  wxEndOfLineOutputStream(wxOutputStream& stream, int linesize=72);
+  virtual ~wxEndOfLineOutputStream();
+  bool Close();
+};
 
 #endif /*BASE64_H_*/
 #endif /* _WX */

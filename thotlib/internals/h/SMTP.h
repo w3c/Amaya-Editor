@@ -23,6 +23,25 @@ public:
     bool Close();
 };
 
+/**
+ * Debug output stream
+ */
+class wxDebugOutputStream : public wxFilterOutputStream{
+protected:
+    virtual size_t OnSysWrite(const void *buffer, size_t size)
+    {
+      printf("(%05d) >> %s\n",  size, (const char*)buffer);
+      GetFilterOutputStream()->Write(buffer, size);
+      return size;
+    }
+public:
+    wxDebugOutputStream(wxOutputStream& stream):wxFilterOutputStream(stream){}
+    virtual ~wxDebugOutputStream(){Close();}
+    bool Close(){return wxFilterOutputStream::Close();}
+};
+
+
+
 class wxMultipartMimeContainer;
 
 /**
@@ -94,7 +113,7 @@ public:
     wxMimeSlot(wxMultipartMimeContainer* mime);
     virtual ~wxMimeSlot();
     
-    virtual wxString Generate()const;
+    virtual bool Write(wxOutputStream& out)const;
     virtual wxMimeContentTransfertEncoding GetAutoContentTransfertEncoding()const;
 
     void SetContentType(const wxString& contentType){m_contentType = contentType;}
@@ -137,8 +156,8 @@ public:
     wxMultipartMimeContainer(const wxString& contentType=wxMIMETYPE_MULTIPART_MIXED, const wxString& boundary=wxT(""), const wxString message=wxT(""));
     virtual ~wxMultipartMimeContainer();
 
-    virtual wxString Generate()const;
     virtual wxString GenerateBoundary()const;
+    virtual bool Write(wxOutputStream& out)const;
 
     wxString GetMessage()const{return m_message;}
   wxString GetContentType()const{return m_contentType;}
@@ -232,7 +251,9 @@ public:
      * \return The wxMimeSlot node. 
      */
     wxNode* AddFile(const wxFileName& fileName, wxString mimeType = wxT(""), bool bInline=false);
+    
     wxNode* AddAlternative(const wxString data, const wxString& mimeType = wxT("text/plain"));
+    wxNode* AddAlternativeFile(const wxFileName& fileName, wxString mimeType = wxT("text/plain"));
 
     /**
      * Adds an additional recipient. You can add as many recipients
@@ -269,10 +290,11 @@ public:
      */
     wxString GetRecipient(int index)const{return m_rcptArray[index];}
     
+
     /**
-     * Get the message content.
+     * Write the message to a stream.
      */
-    virtual wxString GetMessageContent();
+    virtual bool Write(wxOutputStream& out);
 };
 
 enum wxSMTP_STEP
@@ -309,7 +331,8 @@ protected:
     virtual bool SendFrom(const wxString& addr);
     virtual bool SendTo(const wxString& addr);
     virtual bool SendData();
-    virtual bool SendContent(const wxString& content);
+    
+    virtual bool SendContent(wxEmailMessage& message);
     
     static int GetResponseCode(const wxString& rep);
     virtual wxString SendCommand(const wxString& request, bool* haveError=NULL);

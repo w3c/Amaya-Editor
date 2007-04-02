@@ -362,35 +362,11 @@ bool wxBase64DecOutputStream::Close(){
 //==========================================================================
 // wxBase64EncOutputStream
 //==========================================================================
-wxBase64EncOutputStream::wxBase64EncOutputStream(wxOutputStream& stream,
-												 int linesize):
+wxBase64EncOutputStream::wxBase64EncOutputStream(wxOutputStream& stream):
 wxFilterOutputStream(stream),
-m_len(0),
-m_linesize(linesize),
-m_currline(0)
+m_len(0)
 {
  m_in[0] = m_in[1] = m_in[2] = 0;
-}
-
-void wxBase64EncOutputStream::RealWrite(const void *buffer, size_t size){
-    if(m_currline+(int)size<m_linesize)
-    {
-        GetFilterOutputStream()->Write(buffer, size);
-    }
-    else if(m_currline+(int)size==m_linesize)
-    {
-        GetFilterOutputStream()->Write(buffer, size);
-        GetFilterOutputStream()->Write("\r\n", 2);
-    }
-    else
-    {
-        int diff = m_currline+size-m_linesize;
-        GetFilterOutputStream()->Write(buffer, diff);
-        GetFilterOutputStream()->Write("\r\n", 2);
-        GetFilterOutputStream()->Write((void*)(((char*)buffer)+diff), size-diff);
-    }
-    m_currline+=size;
-    m_currline%=m_linesize;
 }
 
 size_t wxBase64EncOutputStream::OnSysWrite(const void *buffer, size_t size){
@@ -406,7 +382,7 @@ size_t wxBase64EncOutputStream::OnSysWrite(const void *buffer, size_t size){
                 in[1] = ((unsigned char*)buffer)[0];
                 in[2] = ((unsigned char*)buffer)[1];
                 encodeblock(in, out, 3);
-                RealWrite((void*)out, 4);
+                GetFilterOutputStream()->Write((void*)out, 4);
                 count+=3;
                 offset = 2;
                 break;
@@ -415,7 +391,7 @@ size_t wxBase64EncOutputStream::OnSysWrite(const void *buffer, size_t size){
                 in[1] = m_in[2];
                 in[2] = ((unsigned char*)buffer)[0];
                 encodeblock(in, out, 3);
-                RealWrite((void*)out, 4);
+                GetFilterOutputStream()->Write((void*)out, 4);
                 count+=3;
                 offset = 1;
                 break;
@@ -427,7 +403,7 @@ size_t wxBase64EncOutputStream::OnSysWrite(const void *buffer, size_t size){
     while(size-offset>=3){
         unsigned char* tab = ((unsigned char*)buffer)+offset;
         encodeblock(tab, out, 3);
-        RealWrite((void*)out, 4);
+        GetFilterOutputStream()->Write((void*)out, 4);
         count+=4;
         offset+=3;
     }
@@ -456,17 +432,74 @@ bool wxBase64EncOutputStream::Close(){
     switch(m_len){
         case 1:
             encodeblock(&m_in[2], out, 1);
-            RealWrite((void*)out, 4);
+            GetFilterOutputStream()->Write((void*)out, 4);
             break;
         case 2:
             encodeblock(&m_in[1], out, 2);
-            RealWrite((void*)out, 4);
+            GetFilterOutputStream()->Write((void*)out, 4);
             break;
         default:
             break;
     }
     m_len = 0;
     return wxFilterOutputStream::Close();
+}
+
+
+//==========================================================================
+// wxEndOfLineOutputStream
+//==========================================================================
+wxEndOfLineOutputStream::wxEndOfLineOutputStream(wxOutputStream& stream, int linesize):
+wxFilterOutputStream(stream),
+m_size(linesize),
+m_len(0),
+m_buffer(NULL)
+{
+  m_buffer = new char[linesize + 2]; // size of line + crlf
+  m_buffer[linesize]   = '\r';
+  m_buffer[linesize+1] = '\n';
+}
+
+wxEndOfLineOutputStream::~wxEndOfLineOutputStream()
+{
+  Close();
+  if(m_buffer!=NULL)
+  {
+    delete m_buffer;
+    m_buffer = NULL;
+  }
+}
+
+bool wxEndOfLineOutputStream::Close(){
+  if(m_len>0)
+  {
+    GetFilterOutputStream()->Write(m_buffer, m_len);
+  }
+  return wxFilterOutputStream::Close();
+}
+
+size_t wxEndOfLineOutputStream::OnSysWrite(const void *buffer, size_t size)
+{
+  const char*  buff = (const char*)buffer;
+  size_t sz = size;
+
+  while(m_len+(int)sz>=m_size)
+  {
+    int diff = m_size-m_len;
+    memcpy(m_buffer+m_len, buff, diff);
+    GetFilterOutputStream()->Write(m_buffer, m_size+2);
+    m_len = 0;
+    sz    -= diff;
+    buff  += diff;
+  }
+
+  if(sz>0)
+  {
+    // bufferize 
+    memcpy(m_buffer+m_len, buff, sz);
+    m_len += sz;
+  }
+  return size;
 }
 
 #endif /* _WX */

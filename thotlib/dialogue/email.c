@@ -54,11 +54,7 @@ void TtaAddEMailAlternative(EMail mail, const char* mimeType, const char* conten
 ThotBool TtaAddEMailAlternativeFile(EMail mail, const char* mimeType, const char* filename, const char* charset)
 {
 #ifdef _WX
-  wxFileInputStream in(wxString(filename, wxConvUTF8));
-  wxStringOutputStream out;
-  out.Write(in);
-  out.Close();
-  wxNode* node = ((wxEmailMessage*)mail)->AddAlternative(out.GetString(), wxString(mimeType, wxConvUTF8));
+  wxNode* node = ((wxEmailMessage*)mail)->AddAlternativeFile(wxFileName(wxString(filename, wxConvUTF8)), wxString(mimeType, wxConvUTF8));
   if(node && charset && charset[0]!=0)
   {
     ((wxMimeSlot*)node->GetData())->SetContentTypeExtraParam(wxT("charset"), wxString(charset, wxConvUTF8));
@@ -70,7 +66,7 @@ ThotBool TtaAddEMailAlternativeFile(EMail mail, const char* mimeType, const char
 ThotBool TtaAddEMailAttachmentFile(EMail mail, const char* mimeType, const char* filename)
 {
 #ifdef _WX  
-  return (((wxEmailMessage*)mail)->AddFile(wxString(filename, wxConvUTF8), wxString(mimeType, wxConvUTF8), false))!=NULL;
+  return (((wxEmailMessage*)mail)->AddFile(wxString(filename, wxConvUTF8), wxString(mimeType, wxConvUTF8), true))!=NULL;
 #endif /* _WX */  
 }
 
@@ -88,7 +84,6 @@ ThotBool TtaSendEMail(EMail mail, const char* serverAddress, int port, int* erro
   
 //  server.SetTimeout(10);
   server.Connect(addr);
-
   if(server.SendMail(*(wxEmailMessage*)mail))
     rep = TRUE;
   

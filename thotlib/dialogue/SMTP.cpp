@@ -162,11 +162,12 @@ wxMimeSlot::~wxMimeSlot()
 {
 }
 
-wxString wxMimeSlot::Generate()const
+bool wxMimeSlot::Write(wxOutputStream& out)const
 {
     if(m_dataType==wxMimeSlotContentMime)
-        return m_mimeContent->Generate();
+        return m_mimeContent->Write(out);
     
+    // Write the header.
   wxString msg;
   msg << wxT("Content-Type: ") << m_contentType;
   
@@ -220,7 +221,11 @@ wxString wxMimeSlot::Generate()const
 
     // Empty line head/content separator.
     msg << wxT("\r\n");
+
+    // Flush the header.    
+    out.Write((const char*)msg.mb_str(wxConvLibc), msg.Length());
     
+    // Treat the content.
     switch(m_dataType)
     {
         case wxMimeSlotContentMime: // Already returned.
@@ -230,26 +235,27 @@ wxString wxMimeSlot::Generate()const
             {
                 case wxMIME_CONTENT_TRANSFERT_ENCONDING_QUOTED_PRINTABLE:
                 {
-                    wxStringOutputStream out;
-                    wxQuotedPrintableOutputStream stm(out);
+                    wxString str;
+                    wxStringOutputStream stm;
+                    wxQuotedPrintableOutputStream qp(out);
                     wxStringInputStream  in(m_textContent);
-                    stm.Write(in);
-                    stm.Close();
-                    msg << out.GetString();
+                    qp.Write(in);
+                    qp.Close();
+                    str = stm.GetString();
+                    out.Write((const char*) str.mb_str(wxConvLibc), str.Length());
                     break;
                 }
                 case wxMIME_CONTENT_TRANSFERT_ENCONDING_BASE64:
                 {
-                    wxStringOutputStream out;
-                    wxBase64EncOutputStream stm(out);
-                    wxStringInputStream  in(m_textContent);
-                    stm.Write(in);
-                    stm.Close();
-                    msg << out.GetString();
+                    wxEndOfLineOutputStream eol(out);
+                    wxBase64EncOutputStream base64(eol);
+                    base64.Write((const char*)m_textContent.mb_str(wxConvLibc), m_textContent.Length());
+                    base64.Close();
+                    
                     break;
                 }
                 default:
-                    msg << m_textContent;
+                    out.Write((const char*)m_textContent.mb_str(wxConvLibc), m_textContent.Length());
                     break;
             }
             break;
@@ -258,14 +264,11 @@ wxString wxMimeSlot::Generate()const
             {
                 case wxMIME_CONTENT_TRANSFERT_ENCONDING_BASE64:
                 {
-                    wxStringOutputStream out;
-                    wxBase64EncOutputStream stm(out);
                     wxFileInputStream file(m_fileContent.filename.GetFullPath());
-
-                    stm.Write(file);
-                    stm.Close();
-                    
-                    msg << out.GetString();
+                    wxEndOfLineOutputStream eol(out);
+                    wxBase64EncOutputStream base64(eol);
+                    base64.Write(file);
+                    base64.Close();
                     break;
                 }
                 default:
@@ -279,11 +282,10 @@ wxString wxMimeSlot::Generate()const
             {
                 case wxMIME_CONTENT_TRANSFERT_ENCONDING_BASE64:
                 {
-                    wxStringOutputStream out;
-                    wxBase64EncOutputStream stm(out);
-                    stm.Write(m_binaryContent.data, m_binaryContent.size);
-                    stm.Close();
-                    msg << out.GetString();
+                    wxEndOfLineOutputStream eol(out);
+                    wxBase64EncOutputStream base64(eol);
+                    base64.Write(m_binaryContent.data, m_binaryContent.size);
+                    base64.Close();
                     break;
                 }
                 default:
@@ -293,8 +295,9 @@ wxString wxMimeSlot::Generate()const
             break;
     }
     
-  return msg;
+  return true;
 }
+
 
 wxMimeContentTransfertEncoding wxMimeSlot::GetAutoContentTransfertEncoding()const
 {
@@ -398,18 +401,16 @@ wxString wxMultipartMimeContainer::GenerateBoundary()const
     return wxT("part") + ll.ToString();
 }
 
-
-wxString wxMultipartMimeContainer::Generate()const
+bool wxMultipartMimeContainer::Write(wxOutputStream& out)const
 {
     wxString msg;
-    msg << wxT("Content-type: ") << m_contentType;
     
+    // Bufferize the header
+    msg << wxT("Content-type: ") << m_contentType;
     wxString boundary = m_boundary;
     if(boundary.IsEmpty())
-        boundary = GenerateBoundary();
-    
+        boundary = GenerateBoundary();    
     msg << wxT(";\r\n    boundary=\"") << boundary << wxT("\"\r\n"); 
-    
     for(wxMimeExtraParamMap::const_iterator iter = m_contentTypeExtraParams.begin();iter!=m_contentTypeExtraParams.end(); iter++)
     {
         msg << wxT("; ") << iter->first;
@@ -417,22 +418,26 @@ wxString wxMultipartMimeContainer::Generate()const
             msg << wxT("=") << iter->second;
         msg << wxT("\r\n");
     }
-
     msg << wxT("\r\n") << m_message << wxT("\r\n");
+    // Flush the header.
+    out.Write((const char*)msg.mb_str(wxConvLibc), msg.Length());
     
-    // Empty line head/content separator.
+    
+    // Stream the content.
     for(wxNode* node=GetFirst(); node; node=node->GetNext())
     {
-        msg << wxT("--") << boundary << wxT("\r\n");
+        msg = wxT("--") + boundary + wxT("\r\n");
+        out.Write((const char*)msg.mb_str(wxConvLibc), msg.Length());
         wxMimeSlot* slot = (wxMimeSlot*) node->GetData();
-        msg << slot->Generate();
-        msg << wxT("\r\n");
+        slot->Write(out);
+        msg = wxT("\r\n");
+        out.Write((const char*)msg.mb_str(wxConvLibc), msg.Length());
     }
-        msg << wxT("--") << boundary << wxT("--\r\n");
+    msg = wxT("--") + boundary + wxT("--\r\n");
+    out.Write((const char*)msg.mb_str(wxConvLibc), msg.Length());
     
-    return msg;
+    return true;
 }
-
 
 
 //==========================================================================
@@ -441,6 +446,8 @@ wxString wxMultipartMimeContainer::Generate()const
 
 wxString wxCmdLineProtocol::SendCommand(wxString request, bool* haveError)
 {
+//  printf(">> %d : %s\n", request.Length(), (const char*)request.mb_str(wxConvLibc));
+  
     wxStringInputStream stmin(request << wxT("\r\n"));
     wxSocketOutputStream stmout(*this);
     stmout.Write(stmin);
@@ -471,7 +478,7 @@ wxString wxCmdLineProtocol::SendCommand(wxString request, bool* haveError)
                 {
                     wxString rep = m_buffer.Left(search);
                     m_buffer = m_buffer.Mid(search+2);
-                    
+//printf("<< %s\n", (const char*)rep.mb_str(wxConvLibc));                
                     return rep;
                 }
             }
@@ -549,10 +556,34 @@ wxNode* wxEmailMessage::AddFile(const wxFileName& fileName, wxString mimeType, b
     return NULL;
 }
 
+wxNode* wxEmailMessage::AddAlternativeFile(const wxFileName& fileName, wxString mimeType)
+{
+    if(fileName.FileExists())
+    {
+        if(mimeType.IsEmpty())
+        {
+            wxFileType* type = wxTheMimeTypesManager->GetFileTypeFromExtension(fileName.GetExt());
+            if(type)
+            {
+                if(!type->GetMimeType(&mimeType))
+                    mimeType = wxT("application/octet-stream");
+            }
+        }
+        wxNode *node = m_alternatives.Append(fileName, wxT(""), mimeType);
+        if(node)
+        {
+            ((wxMimeSlot*)node->GetData())->SetExtraParam(wxT("Content-Disposition"), wxT("inline"));
+        }
+        return node;
+    }
+    return NULL;  
+}
+
 wxNode* wxEmailMessage::AddAlternative(const wxString data, const wxString& mimeType)
 {
     return m_alternatives.Append(mimeType, data);
 }
+
 
 void wxEmailMessage::AddRecipient(const wxString& address)
 {
@@ -577,7 +608,7 @@ void wxEmailMessage::AddBcc(const wxString& address)
     m_rcptArray.Add(address);
 }
 
-wxString wxEmailMessage::GetMessageContent()
+bool wxEmailMessage::Write(wxOutputStream& out)
 {
     wxString msg;
     msg << wxT("From: ") << m_from << wxT("\r\n");
@@ -611,18 +642,25 @@ wxString wxEmailMessage::GetMessageContent()
     {
         msg << wxT("Subject: ") << m_subject << wxT("\r\n");
     }
+    out.Write((const char*)msg.mb_str(wxConvLibc), msg.Length());
 
+
+    msg.Empty();
     if(m_attachements.IsEmpty())
     {
         if(m_alternatives.IsEmpty())
         {
-            msg << m_text + wxT("\r\n");
+            msg = m_text + wxT("\r\n");
+            out.Write((const char*)msg.mb_str(wxConvLibc), msg.Length());
+            return true;
         }
         else
         {
             m_alternatives.Prepend(wxT("text/plain"), m_text);
             m_alternatives.SetMessage(wxT("This is a multi-part message in MIME format."));
-            msg << wxT("MIME-version: 1.0\r\n") << m_alternatives.Generate();
+            msg << wxT("MIME-version: 1.0\r\n");
+            out.Write((const char*)msg.mb_str(wxConvLibc), msg.Length());
+            return m_alternatives.Write(out);
         }
     }
     else
@@ -638,11 +676,11 @@ wxString wxEmailMessage::GetMessageContent()
             m_attachements.Prepend(&m_alternatives);
         }
         
-        msg << wxT("MIME-version: 1.0\r\n") << m_attachements.Generate();
+        msg = wxT("MIME-version: 1.0\r\n");
+        out.Write((const char*)msg.mb_str(wxConvLibc), msg.Length());
+        return m_attachements.Write(out);
         
     }
-
-    return msg;
 }
 
 //==========================================================================
@@ -719,10 +757,17 @@ bool wxSMTP::SendData()
     return m_error==354;
 }
 
-bool wxSMTP::SendContent(const wxString& content)
+bool wxSMTP::SendContent(wxEmailMessage& message)
 {
     m_errorStep = wxSMTP_STEP_CONTENT;
-    m_error = GetResponseCode(SendCommand(content+wxT("\r\n.\r\n")));
+    
+    {
+    wxSocketOutputStream out(*this);
+    wxDebugOutputStream dbg(out);
+    message.Write(dbg);
+    }
+
+    m_error = GetResponseCode(SendCommand(wxT(".\r\n")));
     return m_error==250;
 }
 
@@ -740,10 +785,12 @@ bool wxSMTP::SendMail(wxEmailMessage& message)
     if(!SendData())
         return false;
     
-    if(!SendContent(message.GetMessageContent()))
+    if(!SendContent(message))
     {
       return false;
     }
+    return true;
+    
     
     m_errorStep = wxSMTP_STEP_DONE;
     m_error = 0;
