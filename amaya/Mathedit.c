@@ -1344,7 +1344,7 @@ static void CreateMathConstruct (int construct, ...)
   va_list            varpos;
   ThotBool           oldStructureChecking;
   ThotBool	         before, emptySel, ok, insertSibling;
-  ThotBool           displayTableForm, registered;
+  ThotBool           displayTableForm, registered, insertedMath = FALSE;
   
   doc = TtaGetSelectedDocument ();
   if (doc == 0 || !TtaGetDocumentAccessMode (doc))
@@ -1737,6 +1737,8 @@ static void CreateMathConstruct (int construct, ...)
               else
                 /* insert the new Math element as a child element */
                 TtaInsertFirstChild (&el, sibling, doc);
+              // a new Math element is now inserted
+              insertedMath = TRUE;
               leaf = NULL;
               if (elType.ElTypeNum == MathML_EL_MathML)
                 {
@@ -1860,6 +1862,9 @@ static void CreateMathConstruct (int construct, ...)
             {
               TtaSetDisplayMode (doc, dispMode);
               TtaCloseUndoSequence (doc);
+              // remove the inserted math element
+              if (insertedMath)
+                TtaUndoNoRedo (doc);
               va_end(varpos);
               return;
             }
@@ -2091,6 +2096,9 @@ static void CreateMathConstruct (int construct, ...)
     default:
       TtaSetDisplayMode (doc, dispMode);
       TtaCloseUndoSequence (doc);
+      // remove the inserted math element
+      if (insertedMath)
+        TtaUndoNoRedo (doc);
       va_end(varpos);
       return;
     }
@@ -2168,6 +2176,9 @@ static void CreateMathConstruct (int construct, ...)
               {
               TtaSetDisplayMode (doc, dispMode);
               TtaCloseUndoSequence (doc);
+              // remove the inserted math element
+              if (insertedMath)
+                TtaUndoNoRedo (doc);
               va_end(varpos);
               return;
               }
@@ -2229,6 +2240,9 @@ static void CreateMathConstruct (int construct, ...)
               {
               TtaSetDisplayMode (doc, dispMode);
               TtaCloseUndoSequence (doc);
+              // remove the inserted math element
+              if (insertedMath)
+                TtaUndoNoRedo (doc);
               va_end(varpos);
               return;
               }
@@ -2257,6 +2271,9 @@ static void CreateMathConstruct (int construct, ...)
                 { /* the user decided to abort the command */
                 TtaSetDisplayMode (doc, dispMode);
                 TtaCloseUndoSequence (doc);
+                // remove the inserted math element
+                if (insertedMath)
+                  TtaUndoNoRedo (doc);
                 va_end(varpos);
                 return;
                 }
@@ -2377,6 +2394,9 @@ static void CreateMathConstruct (int construct, ...)
             {/* the user decided to abort the command */
             TtaSetDisplayMode (doc, dispMode);
             TtaCloseUndoSequence (doc);
+            // remove the inserted math element
+            if (insertedMath)
+              TtaUndoNoRedo (doc);
             va_end(varpos);
             return;
             }
@@ -2429,7 +2449,6 @@ static void CreateMathConstruct (int construct, ...)
           symbol = va_arg(varpos, int);
           leaf = TtaGetFirstChild (el);
           child = leaf;
-
           InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
 
           if (symbol == 0)
@@ -2438,7 +2457,6 @@ static void CreateMathConstruct (int construct, ...)
             InsertSymbol (&child, MathML_EL_MO, symbol, doc);
         
           InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
-
           TtaDeleteTree (leaf, doc);
         }
       else if (construct == 28)
@@ -2517,6 +2535,9 @@ static void CreateMathConstruct (int construct, ...)
             { /* the user decided to abort the command */
             TtaSetDisplayMode (doc, dispMode);
             TtaCloseUndoSequence (doc);
+            // remove the inserted math element
+            if (insertedMath)
+              TtaUndoNoRedo (doc);
             va_end(varpos);
             return;
             }
@@ -2547,6 +2568,9 @@ static void CreateMathConstruct (int construct, ...)
                 {  /* the user decided to abort the command */
                 TtaSetDisplayMode (doc, dispMode);
                 TtaCloseUndoSequence (doc);
+                // remove the inserted math element
+                if (insertedMath)
+                  TtaUndoNoRedo (doc);
                 va_end(varpos);
                 return;
                 }
@@ -2594,6 +2618,9 @@ static void CreateMathConstruct (int construct, ...)
               {  /* the user decided to abort the command */
               TtaSetDisplayMode (doc, dispMode);
               TtaCloseUndoSequence (doc);
+              // remove the inserted math element
+              if (insertedMath)
+                TtaUndoNoRedo (doc);
               va_end(varpos);
               return;
               }
@@ -2608,6 +2635,9 @@ static void CreateMathConstruct (int construct, ...)
               {  /* the user decided to abort the command */
               TtaSetDisplayMode (doc, dispMode);
               TtaCloseUndoSequence (doc);
+              // remove the inserted math element
+              if (insertedMath)
+                TtaUndoNoRedo (doc);
               va_end(varpos);
               return;
               }
@@ -2710,6 +2740,9 @@ static void CreateMathConstruct (int construct, ...)
             {  /* the user decided to abort the command */
             TtaSetDisplayMode (doc, dispMode);
             TtaCloseUndoSequence (doc);
+            // remove the inserted math element
+            if (insertedMath)
+              TtaUndoNoRedo (doc);
             va_end(varpos);
             return;
             }
@@ -2856,6 +2889,9 @@ static void CreateMathConstruct (int construct, ...)
             {  /* the user decided to abort the command */
             TtaSetDisplayMode (doc, dispMode);
             TtaCloseUndoSequence (doc);
+            // remove the inserted math element
+            if (insertedMath)
+              TtaUndoNoRedo (doc);
             va_end(varpos);
             return;
             }
@@ -2879,6 +2915,9 @@ static void CreateMathConstruct (int construct, ...)
                {  /* the user decided to abort the command */
                TtaSetDisplayMode (doc, dispMode);
                TtaCloseUndoSequence (doc);
+               // remove the inserted math element
+               if (insertedMath)
+                 TtaUndoNoRedo (doc);
                va_end(varpos);
                return;
                }
@@ -2956,6 +2995,9 @@ static void CreateMathConstruct (int construct, ...)
               {  /* the user decided to abort the command */
               TtaSetDisplayMode (doc, dispMode);
               TtaCloseUndoSequence (doc);
+              // remove the inserted math element
+              if (insertedMath)
+                TtaUndoNoRedo (doc);
               va_end(varpos);
               return;
               }
@@ -2970,6 +3012,9 @@ static void CreateMathConstruct (int construct, ...)
                 {  /* the user decided to abort the command */
                 TtaSetDisplayMode (doc, dispMode);
                 TtaCloseUndoSequence (doc);
+                // remove the inserted math element
+                if (insertedMath)
+                  TtaUndoNoRedo (doc);
                 va_end(varpos);
                return;
                 }
@@ -2982,6 +3027,9 @@ static void CreateMathConstruct (int construct, ...)
                 {  /* the user decided to abort the command */
                 TtaSetDisplayMode (doc, dispMode);
                 TtaCloseUndoSequence (doc);
+                // remove the inserted math element
+                if (insertedMath)
+                  TtaUndoNoRedo (doc);
                 va_end(varpos);
                return;
                 }
@@ -3093,6 +3141,9 @@ static void CreateMathConstruct (int construct, ...)
             {  /* the user decided to abort the command */
             TtaSetDisplayMode (doc, dispMode);
             TtaCloseUndoSequence (doc);
+            // remove the inserted math element
+            if (insertedMath)
+              TtaUndoNoRedo (doc);
             va_end(varpos);
             return;
             }
@@ -3107,9 +3158,7 @@ static void CreateMathConstruct (int construct, ...)
           child = leaf;
 
           if (degree == 1)
-            {          
             InsertSymbol (&child, MathML_EL_MO, symboldiff, doc);
-            }
           else
             {
             Element leaf2, child2;
