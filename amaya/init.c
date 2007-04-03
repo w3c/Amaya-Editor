@@ -6456,7 +6456,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
             }
           TtaDestroyDialogue (BaseDialog + SaveForm);
           if (SavingDocument)
-            DoSaveAs (UserCharset, UserMimeType);
+            DoSaveAs (UserCharset, UserMimeType, FALSE);
           else if (SavingObject)
             {
               DoSaveObjectAs ();
@@ -9071,37 +9071,30 @@ void SendByMail (Document document, View view)
   char                 buff[MAX_LENGTH];
   ElementType          elType;
   Element              docEl, el, text;
-  int                  len;
+  int                  len, i;
   Language             lang;
   EMail                mail;
   wxArrayString        arr;
-  int                  i;
-  SendByMailDlgWX dlg(0, NULL);
-  
-  char* temppath = CreateTempDirectory("sendmail/");
-
-  char* server = TtaGetEnvString("EMAILS_SMTP_SERVER");
-  char* from   = TtaGetEnvString("EMAILS_FROM_ADDRESS");
-  char* docPath, *docType, *docChar;
-  
-  int   port;
-  int   error;
-  ThotBool retry = TRUE;
+  SendByMailDlgWX      dlg(0, NULL); 
+  char                *temppath = CreateTempDirectory ("sendmail/");
+  char                *server = TtaGetEnvString ("EMAILS_SMTP_SERVER");
+  char                *from   = TtaGetEnvString ("EMAILS_FROM_ADDRESS");
+  char                *docPath, *docType, *docChar;  
+  int                  port;
+  int                  error;
+  ThotBool             retry = TRUE;
 
   TtaGetEnvInt ("EMAILS_SMTP_PORT", &port);
-
-  if(server==NULL || from==NULL ||
-      strlen(server)==0 || strlen(from)==0 || port==0)
+  if (server == NULL || from == NULL ||
+      strlen(server) == 0 || strlen(from) == 0 || port == 0)
   {
-    TtaDisplaySimpleMessage(INFO, AMAYA, AM_EMAILS_NO_SERVER);
+    TtaDisplaySimpleMessage (INFO, AMAYA, AM_EMAILS_NO_SERVER);
     // TODO Show the properties dialog at the "emails" tab.
     return;
   }
 
   Synchronize(document, view); 
-
   SaveTempCopy(document, temppath);
-
   if (DocumentTypes[document] == docHTML)
   {
     docEl = TtaGetMainRoot (document);
@@ -9110,7 +9103,7 @@ void SendByMail (Document document, View view)
     el = TtaSearchTypedElement (elType, SearchInTree, docEl);
     text = TtaGetFirstChild (el);
     len = TtaGetTextLength(text);
-    if(len>0)
+    if (len > 0)
     {
       len = MAX_LENGTH-1;
       TtaGiveTextContent(text, (unsigned char*)buff, &len, &lang);
@@ -9123,53 +9116,50 @@ void SendByMail (Document document, View view)
 
   while(retry)
   {
-    if(dlg.ShowModal()==wxID_OK)
+    if (dlg.ShowModal() == wxID_OK)
     {
-      mail = TtaNewEMail( (const char*)dlg.GetSubject().mb_str(wxConvUTF8),
-                            (const char*) dlg.GetMessage().mb_str(wxConvUTF8),
-                            from);
-      if(mail!=NULL)
+      mail = TtaNewEMail ((const char*)dlg.GetSubject().mb_str(wxConvUTF8),
+                          (const char*) dlg.GetMessage().mb_str(wxConvUTF8),
+                          from);
+      if (mail)
       {
         arr = dlg.GetRecipients();
-        for(i=0; i<(int)arr.GetCount(); i++)
+        for (i = 0; i < (int)arr.GetCount(); i++)
         {
           wxString rcpt = arr[i];
           rcpt.Trim(true).Trim(false);
-          if(!rcpt.IsEmpty())
-            TtaAddEMailToRecipient(mail, (const char*) rcpt.mb_str(wxConvUTF8));
+          if (!rcpt.IsEmpty ())
+            TtaAddEMailToRecipient (mail, (const char*) rcpt.mb_str(wxConvUTF8));
         }
-        docPath = GetLocalPath(document, DocumentURLs[document]);
+        docPath = GetLocalPath (document, DocumentURLs[document]);
         docType = DocumentMeta[document]->content_type;
         docChar = DocumentMeta[document]->charset;
   
         // Send document as attachment
-        if(dlg.SendAsAttachment())
-          TtaAddEMailAttachmentFile(mail, docType, docPath);
+        if (dlg.SendAsAttachment ())
+          TtaAddEMailAttachmentFile (mail, docType, docPath);
         // Send document as mail message
-        else if(dlg.SendAsContent())
+        else if (dlg.SendAsContent ())
           TtaAddEMailAlternativeFile(mail, docType, docPath, docChar);
         
         // Send all attached files (images, css ...) as attachments.
-        if(dlg.SendAsAttachment()||dlg.SendAsContent())
+        if (dlg.SendAsAttachment () || dlg.SendAsContent ())
         {
-          wxFileName    msgName(wxString(docPath, wxConvUTF8));
+          wxFileName    msgName (wxString(docPath, wxConvUTF8));
           wxArrayString files;
-          wxDir::GetAllFiles(wxString(temppath, wxConvLibc), &files, wxT(""), wxDIR_FILES);
-          for(int i=0; i<(int)files.GetCount(); i++)
+          wxDir::GetAllFiles (wxString(temppath, wxConvLibc), &files, wxT(""), wxDIR_FILES);
+          for (i = 0; i < (int)files.GetCount(); i++)
           {
             wxFileName filename(files[i]);
-            if(filename.GetFullName()!=msgName.GetFullName())
-            {
-              TtaAddEMailAttachmentFile(mail, "", (const char*)filename.GetFullPath().mb_str(wxConvUTF8));
-            }
+            if (filename.GetFullName() != msgName.GetFullName())
+              TtaAddEMailAttachmentFile(mail, "",
+                                        (const char*)filename.GetFullPath().mb_str(wxConvUTF8));
           }
         }
         
         error = 0;
-        if(TtaSendEMail(mail, server, port, &error))
-        {
-          TtaSetStatus(document, view, TtaGetMessage (AMAYA, AM_EMAILS_SENT), NULL);
-        }
+        if (TtaSendEMail (mail, server, port, &error))
+          TtaSetStatus (document, view, TtaGetMessage (AMAYA, AM_EMAILS_SENT), NULL);
       }
 
       switch(error)
@@ -9196,22 +9186,17 @@ void SendByMail (Document document, View view)
           TtaDisplaySimpleMessage(INFO, AMAYA, AM_EMAILS_ERR_UNKNOW);
           break;
       }
-      
     }
     else
       break;
   }
   
   // Remove temp dir content.
-  
   wxArrayString files;
   wxDir::GetAllFiles(wxString(temppath, wxConvUTF8), &files, wxT(""), wxDIR_FILES);
   for (i = 0; i < (int)files.GetCount(); i++)
-  {
     wxRemoveFile(files[i]);
-  }
   
-  wxRmdir(wxString(temppath, wxConvUTF8));
-  
+  wxRmdir(wxString(temppath, wxConvUTF8));  
 #endif /* _WX */
 }

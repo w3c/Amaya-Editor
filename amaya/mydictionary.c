@@ -128,7 +128,8 @@ Record Dictionary_FindPrevious (DicDictionary dic, const char * key, ThotBool *i
   in the linked list.
   !null !isFirst : if the element key has been found returns the previous element.
   ----------------------------------------------------------------------*/
-Record Dictionary_FindPreviousElement (DicDictionary dic, const DicElement el, ThotBool *isFirst)
+Record Dictionary_FindPreviousElement (DicDictionary dic, const DicElement el,
+                                       ThotBool *isFirst)
 {
 	Record rec        = dic->first;
 	Record precedent  = NULL;

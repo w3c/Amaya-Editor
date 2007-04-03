@@ -85,7 +85,7 @@ void  CreateInstance(char *templatePath, char *instancePath)
       else
         docType = docXml;
       // update all links
-      SetRelativeURLs (doc, instancePath, "", FALSE, FALSE);
+      SetRelativeURLs (doc, instancePath, "", FALSE, FALSE, FALSE);
       
       switch (docType)
         {
@@ -428,7 +428,7 @@ Element InstantiateUse (XTigerTemplate t, Element el, Document doc,
   Declaration      dec;
   int              size, nbitems, i;
   struct menuType  *items;
-  char             *types;
+  char             *types, *text = NULL;
   ThotBool          oldStructureChecking;
 
   if (!t)
@@ -460,6 +460,7 @@ Element InstantiateUse (XTigerTemplate t, Element el, Document doc,
         }
       }
     }
+  TtaFreeMemory (text);
   TtaFreeMemory (types);
   
   for (i = 0; i < nbitems; i++)
@@ -483,7 +484,7 @@ void InstantiateRepeat (XTigerTemplate t, Element el, Document doc, ThotBool reg
   Element        child, newChild;
   Attribute      curAtt,  minAtt,  maxAtt;
   AttributeType  curType, minType, maxType;
-  char           *text, *types = NULL, *title=NULL;
+  char           *text, *types = NULL, *title = NULL;
   int            curVal,  minVal,  maxVal;
   int            childrenCount;
 

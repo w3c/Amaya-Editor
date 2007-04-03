@@ -413,18 +413,20 @@ void LoadResource (Document doc, char *url, char *localfile)
   oldpath = the old path
   newpath = the new path
   relpath = new relative path for files
-  el refers the element that link this resource
-  saveResources is TRUE if resources except CSS (scripts) must be saved
-  isLink is TRUE if the string is a link attribute
+  el refers the element that link this resource.
+  saveResources is TRUE if resources except CSS (scripts) must be saved.
+  isLink is TRUE if the string is a link attribute.
+  fullCopy is TRUE if local resources must be copied.
   A new url is obtained by concatenation of relpath and the file name.
   Returns NULL or a new allocated sString.
   ----------------------------------------------------------------------*/
 char *UpdateResource (Document doc, char *oldpath, char *newpath,
                       char *relpath, char *sString, Element el,
-                      ThotBool saveResources, ThotBool isLink)
+                      ThotBool saveResources, ThotBool isLink, ThotBool fullCopy)
 {
   CSSInfoPtr          css;
   PInfoPtr            pInfo;
+  ElementType         elType;
   char               *b, *e, *newString, *oldptr;
   char                old_url[MAX_LENGTH];
   char                new_url[MAX_LENGTH];
@@ -471,6 +473,9 @@ char *UpdateResource (Document doc, char *oldpath, char *newpath,
       oldname[len] = EOS;
       // get the old full URL and the name of the file
       NormalizeURL (oldname, 0, old_url, filename, oldpath);
+      if ((fullCopy || IsW3Path (newpath)) && !toSave &&
+          !IsW3Path (oldpath) && !IsW3Path (old_url))
+        toSave = TRUE;
       if (isCSS)
         {
           pInfo = NULL;
@@ -539,44 +544,51 @@ fprintf(stderr, "Changed URL from %s to %s\n", oldname, newname);
               if (newString == NULL)
                 newString = sString;
             }
-          if (toSave && newname[0] != EOS && old_url[0] != EOS)
-            {
-              // get the new full URL of the file
-              NormalizeURL (newname, 0, new_url, filename, newpath);
-              src_is_local = !IsW3Path (old_url);
-              dst_is_local = !IsW3Path (new_url);
+        }
+
+      if (toSave)
+        {
+          // don't save picture units (it's done for the enclosing image)
+          elType = TtaGetElementType (el);
+          toSave = (elType.ElTypeNum != HTML_EL_PICTURE_UNIT);
+        }
+      if (toSave && newname[0] != EOS && old_url[0] != EOS)
+        {
+          // get the new full URL of the file
+          NormalizeURL (newname, 0, new_url, filename, newpath);
+          src_is_local = !IsW3Path (old_url);
+          dst_is_local = !IsW3Path (new_url);
 #ifdef AMAYA_DEBUG
 fprintf(stderr, "Move file: from %s to %s\n", old_url, new_url);
 #endif
-              if (!src_is_local)
-                {
-                  // load the file first
-                  tempdocument = GetLocalPath (0, old_url);
-                  LoadResource (doc, old_url, tempdocument);
-                  strcpy (old_url, tempdocument);
-                }
-              if (old_url[0] != EOS && TtaFileExist (old_url))
-                {
-                  if (dst_is_local)
-                    {
-                      /* copy the file to the new location */
-                      TtaFileCopy (old_url, new_url);
-                    }
-                  else
-                    {
-                      /* save to a remote server */
-                      ActiveTransfer (doc);
-                      TtaHandlePendingEvents ();
-                      res = PutObjectWWW (doc, old_url, new_url, "text/javascript", NULL,
-                                          AMAYA_SYNC | AMAYA_NOCACHE | AMAYA_FLUSH_REQUEST,
-                                          NULL, NULL);
-                    }
-                  if (!src_is_local)
-                    // remove the temporay file
-                    TtaFileUnlink (tempdocument);
-                }
-              TtaFreeMemory (tempdocument);
+          if (!src_is_local)
+            {
+              // load the file first
+              tempdocument = GetLocalPath (0, old_url);
+              LoadResource (doc, old_url, tempdocument);
+              strcpy (old_url, tempdocument);
             }
+          if (old_url[0] != EOS && TtaFileExist (old_url))
+            {
+              if (dst_is_local)
+                {
+                  /* copy the file to the new location */
+                  TtaFileCopy (old_url, new_url);
+                }
+              else
+                {
+                  /* save to a remote server */
+                  ActiveTransfer (doc);
+                  TtaHandlePendingEvents ();
+                  res = PutObjectWWW (doc, old_url, new_url, "text/javascript", NULL,
+                                      AMAYA_SYNC | AMAYA_NOCACHE | AMAYA_FLUSH_REQUEST,
+                                      NULL, NULL);
+                }
+              if (!src_is_local)
+                // remove the temporay file
+                TtaFileUnlink (tempdocument);
+            }
+          TtaFreeMemory (tempdocument);
         }
     }
   return newString;
@@ -588,9 +600,11 @@ fprintf(stderr, "Move file: from %s to %s\n", old_url, new_url);
   cssbase points to the directory where resource (CSS + scripts) are stored.
   When savedImages is TRUE Images src are not updated,
   When savedResources is TRUE CSS links are not updated as they are saved.
+  fullCopy is TRUE if local resources must be copied.
   ----------------------------------------------------------------------*/
 void SetRelativeURLs (Document doc, char *newpath, char *cssbase,
-                      ThotBool savedImages, ThotBool savedResources)
+                      ThotBool savedImages, ThotBool savedResources,
+                      ThotBool fullCopy)
 {
   SSchema             XHTMLSSchema, MathSSchema, SVGSSchema, XLinkSSchema;
 #ifdef TEMPLATES
@@ -710,7 +724,7 @@ void SetRelativeURLs (Document doc, char *newpath, char *cssbase,
               else
                 // Update the XML PI content
                 newString = UpdateResource (doc, oldpath, newpath, cssbase, orgString,
-                                            el, savedResources, FALSE);
+                                            el, savedResources, FALSE, fullCopy);
               if (newString)
                 {
                   /* register the modification to be able to undo it */
@@ -808,7 +822,8 @@ void SetRelativeURLs (Document doc, char *newpath, char *cssbase,
                            elType.ElSSchema != SVGSSchema))))
                 {
                   newString = UpdateResource (doc, oldpath, newpath, cssbase,
-                                              orgString, el, savedResources, TRUE);
+                                              orgString, el, savedResources,
+                                              TRUE, fullCopy);
                   if (newString)
                     {
                       
@@ -4059,8 +4074,10 @@ static void UpdateCss (Document doc, ThotBool src_is_local,
   Save As dialog. This is tricky, one must take care of a lot of
   parameters, whether initial and final location are local or remote
   and recomputes URLs accordingly.
+  When tempSave is TRUE the new document is not registered
+  fullCopy is TRUE if local resources must be copied.
   ----------------------------------------------------------------------*/
-void DoSaveAs (char *user_charset, char *user_mimetype)
+void DoSaveAs (char *user_charset, char *user_mimetype, ThotBool fullCopy)
 {
   NotifyElement       event;
   Document            doc;
@@ -4362,21 +4379,21 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
             old_mimetype = DocumentMeta[doc]->content_type;
           DocumentMeta[doc]->content_type = TtaStrdup (user_mimetype);
         }
-
+      
       /* save the previous content_location */
       if (DocumentMeta[doc]->content_location) 
         {
           old_content_location = DocumentMeta[doc]->content_location;
           DocumentMeta[doc]->content_location = NULL;
         }
-
+      
       /* save the previous full content_location */
       if (DocumentMeta[doc]->full_content_location) 
         {
           old_full_content_location = DocumentMeta[doc]->full_content_location;
           DocumentMeta[doc]->full_content_location = NULL;
         }
-
+      
       /* change display mode to avoid flicker due to callbacks executed when
          saving some elements, for instance META */
       dispMode = TtaGetDisplayMode (doc);
@@ -4403,15 +4420,17 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
             {
               if (base)
                 /* URLs are still relative to the document base */
-                SetRelativeURLs (doc, base, cssbase, CopyImages, CopyCss);
+                SetRelativeURLs (doc, base, cssbase,
+                                 CopyImages, CopyCss, fullCopy);
               else
                 /* URLs are relative to the new document directory */
-                SetRelativeURLs (doc, documentFile, cssbase, CopyImages, CopyCss);
+                SetRelativeURLs (doc, documentFile, cssbase,
+                                 CopyImages, CopyCss, fullCopy);
             }
           /* now free base */
           if (base)
             TtaFreeMemory (base);
-	  
+
           /* Change the document URL and if CopyImage is TRUE change all
            * picture SRC attribute. If pictures are saved locally, make the
            * copy else add them to the list of remote images to be copied.
@@ -4446,7 +4465,7 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
       /* the saving operation is finished now */
       SavingDocument = 0;
       Saving_lock = FALSE;
-      if (ok)
+      if (ok && !fullCopy)
         {
           if (toUndo)
             TtaCancelLastRegisteredSequence (doc);
@@ -4571,8 +4590,11 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
           */
           if (toUndo)
             TtaUndoNoRedo (doc);
-          sprintf (msg, TtaGetMessage (AMAYA, AM_CANNOT_SAVE), documentFile);
-          InitInfo (NULL, msg);
+          if (!ok)
+            {
+              sprintf (msg, TtaGetMessage (AMAYA, AM_CANNOT_SAVE), documentFile);
+              InitInfo (NULL, msg);
+            }
           /* restore the previous status of the document */
           if (DocumentTypes[doc] == docImage)
             {
@@ -4604,8 +4626,9 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
           if (old_full_content_location && DocumentMeta[doc]->full_content_location)
             TtaFreeMemory (DocumentMeta[doc]->full_content_location);
           DocumentMeta[doc]->full_content_location = old_full_content_location;
-          /* propose to save a second time */
-          SaveDocumentAs(doc, 1);
+          if (!ok)
+            /* propose to save a second time */
+            SaveDocumentAs(doc, 1);
         }
       TtaFreeMemory (oldLocal);
       TtaFreeMemory (newLocal);
@@ -4615,7 +4638,6 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
 
 
 /*----------------------------------------------------------------------
-  SaveTempCopy
   SaveTempCopy saves a document to a local temporary directory.
   Saves images and stylesheets.
   ----------------------------------------------------------------------*/
@@ -4649,11 +4671,11 @@ ThotBool SaveTempCopy (Document doc, const char* dstdir)
     strcpy(SaveName, DefaultName);
   }
   
-  CopyImages = TRUE;
-  CopyCss    = TRUE;
-  UpdateURLs = FALSE;
+  CopyImages = FALSE;
+  CopyCss    = FALSE;
+  UpdateURLs = TRUE; // just copy local resources
   
-  DoSaveAs(NULL, NULL);
+  DoSaveAs(NULL, NULL, TRUE);
 
   return TRUE;
 }

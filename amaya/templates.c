@@ -460,14 +460,13 @@ ThotBool UseToBeCreated (NotifyElement *event)
 #ifdef TEMPLATES
   ElementType   parentType;
   SSchema       templateSSchema = TtaGetSSchema (TEMPLATE_SSHEMA_NAME, event->document);  
-  if(templateSSchema)
+  if (templateSSchema)
   {
-    parentType = TtaGetElementType(event->element);
-    if(parentType.ElSSchema==templateSSchema && parentType.ElTypeNum==Template_EL_repeat)
-    {
-      return !Template_CanInsertRepeatChild(event->element);
-    }
-    return TemplateElementWillBeCreated(event);
+    parentType = TtaGetElementType (event->element);
+    if (parentType.ElSSchema == templateSSchema &&
+        parentType.ElTypeNum == Template_EL_repeat)
+      return !Template_CanInsertRepeatChild (event->element);
+    return TemplateElementWillBeCreated (event);
   }
 #endif /* TEMPLATES */
   return FALSE; /* let Thot perform normal operation */
@@ -488,7 +487,7 @@ void UseCreated (NotifyElement *event)
   ElementType     parentType;
   XTigerTemplate  t;
   SSchema         templateSSchema;
-  char*           types;
+  char*           types, *text = NULL;
   
   if (!TtaGetDocumentAccessMode(doc))
     return;
@@ -506,16 +505,23 @@ void UseCreated (NotifyElement *event)
   parent = TtaGetParent(el);
   parentType = TtaGetElementType(parent);
   
-  if(parentType.ElSSchema==templateSSchema && parentType.ElTypeNum==Template_EL_repeat)
+  if (parentType.ElSSchema == templateSSchema &&
+      parentType.ElTypeNum == Template_EL_repeat)
   {
-    first = TtaGetFirstChild(parent);
-    if(first)
+    first = TtaGetFirstChild (parent);
+    if (first)
     {
-      types = GetAttributeStringValueFromNum(first, Template_ATTR_types, NULL);
-      if(types)
+      types = GetAttributeStringValueFromNum (first, Template_ATTR_types, NULL);
+      if (types)
       {
-        SetAttributeStringValueWithUndo(el, Template_ATTR_types, types);
-        TtaFreeMemory(types);
+        SetAttributeStringValueWithUndo (el, Template_ATTR_types, types);
+        text = GetAttributeStringValueFromNum (el, Template_ATTR_title, NULL);
+        SetAttributeStringValueWithUndo (first, Template_ATTR_title, text);
+        TtaFreeMemory (text);
+        text = GetAttributeStringValueFromNum (el, Template_ATTR_currentType, NULL);
+        SetAttributeStringValueWithUndo (first, Template_ATTR_currentType, text);
+        TtaFreeMemory (text);
+        TtaFreeMemory (types);
       }
     }
   }

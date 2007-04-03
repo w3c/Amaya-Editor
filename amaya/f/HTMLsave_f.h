@@ -21,12 +21,14 @@ extern char *UpdateResource ( Document doc,
                               char *sString,
                               Element el,
                               ThotBool saveResources,
-                              ThotBool isLink );
+                              ThotBool isLink,
+                              ThotBool fullCopy );
 extern void SetRelativeURLs ( Document doc,
                               char *newpath,
                               char *cssbase,
                               ThotBool savedImages,
-                              ThotBool savedResources );
+                              ThotBool savedResources,
+                              ThotBool fullCopy );
 extern void InitSaveObjectForm ( Document document,
                                  View view,
                                  char *object,
@@ -70,7 +72,8 @@ extern void RemoveAutoSavedDoc ( Document doc );
 extern void GenerateAutoSavedDoc ( Document doc );
 extern ThotBool DocumentToSave ( NotifyDialog *event );
 extern void DoSaveAs ( char *user_charset,
-                       char *user_mimetype );
+                       char *user_mimetype,
+                       ThotBool fullCopy );
 extern ThotBool SaveTempCopy ( Document doc,
                                const char* dstdir );
 
@@ -91,12 +94,14 @@ extern char *UpdateResource ( Document doc,
                                 char *sString,
                                 Element el,
                                 ThotBool saveResources,
-                                ThotBool isLink );
+                                ThotBool isLink,
+                                ThotBool fullCopy );
 extern void SetRelativeURLs ( Document doc,
                                 char *newpath,
                                 char *cssbase,
                                 ThotBool savedImages,
-                                ThotBool savedResources );
+                                ThotBool savedResources,
+                                ThotBool fullCopy );
 extern void InitSaveObjectForm ( Document document,
                                    View view,
                                    char *object,
@@ -140,7 +145,8 @@ extern void RemoveAutoSavedDoc ( Document doc );
 extern void GenerateAutoSavedDoc ( Document doc );
 extern ThotBool DocumentToSave ( NotifyDialog *event );
 extern void DoSaveAs ( char *user_charset,
-                         char *user_mimetype );
+                         char *user_mimetype,
+                         ThotBool fullCopy );
 extern ThotBool SaveTempCopy ( Document doc,
                                  const char* dstdir );
 
