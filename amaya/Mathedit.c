@@ -67,7 +67,7 @@ static ThotBool	InitMaths;
 
 #else /* _WX */
 /* Global variables for dialogues */
-static int Math_occurences = 1;
+static int Math_occurences = 0;
 static int Math_OperatorType = 0;
 #endif /* _WX */
 
@@ -101,7 +101,7 @@ static Document DocMathElementSelected = 0;
 #include "XLinkedit_f.h"
 
 #ifdef _GTK
-/* used for teh close palette callback*/
+/* used for the close palette callback*/
 ThotWidget CatWidget(int ref);
 #endif/*  _GTK */
 
@@ -706,14 +706,12 @@ void InsertNumber (Element *el, int value, Document doc)
   unsigned short i;
   ElementType newType;
   Element     child, child2;
-  /* convert number to string ... maybe would have to be improve */
-  char str[4];
-  CHAR_T text[5];
-  value = value % 10000;
+  char str[50];
+  CHAR_T text[50];
+
   sprintf(str,"%d",value);
   for(i = 0; i < strlen(str); i++)text[i] = str[i];
   text[i] = EOS;
-  /**********/
 
   newType = TtaGetElementType (*el);
   newType.ElTypeNum = MathML_EL_MN;
@@ -724,7 +722,7 @@ void InsertNumber (Element *el, int value, Document doc)
   newType.ElTypeNum = MathML_EL_TEXT_UNIT;
   child2 = TtaNewElement (doc, newType);
   TtaInsertFirstChild (&child2, child, doc);
-  TtaSetBufferContent (child2, text, TtaGetLanguageIdFromScript('L'), doc);
+  TtaSetBufferContent (child2, (CHAR_T *)text, TtaGetLanguageIdFromScript('L'), doc);
 
   *el = child;
 }
@@ -1273,7 +1271,7 @@ static void GetFenceAttributes(Document doc)
 static int GetOccurrences(Document doc, char *label, int val, int mini)
 {
 #ifdef _WX
-  ThotBool  created;
+  ThotBool created;
   char *title = TtaGetMessage (AMAYA, AM_NUMBER_OCCUR);
 
   Math_occurences = val;
@@ -1288,11 +1286,13 @@ static int GetOccurrences(Document doc, char *label, int val, int mini)
       TtaWaitShowDialogue ();
       val = Math_occurences;
     }
+  else val = 0;
 #endif  /* _WX */
 
 /* check if val is more than mini */
-if (val < mini)val = mini;
-  return val;
+if (val < mini && val > 0)val = mini;
+
+return val;
 }
 
 /*----------------------------------------------------------------------
@@ -2089,6 +2089,7 @@ static void CreateMathConstruct (int construct, ...)
       break;
 
     default:
+      TtaSetDisplayMode (doc, dispMode);
       TtaCloseUndoSequence (doc);
       va_end(varpos);
       return;
@@ -2139,7 +2140,7 @@ static void CreateMathConstruct (int construct, ...)
 
   if (emptySel)
     {
-      TtaUnselect (doc);
+      //TtaUnselect (doc);
       el = TtaNewTree (doc, newType, "");
 
       if (construct == 18)
@@ -2162,6 +2163,14 @@ static void CreateMathConstruct (int construct, ...)
             {
             /* ask the type of integral */
             GetIntegralType(doc);
+            if(Math_integral_number == 0)
+              /* the user decided to abort the command */
+              {
+              TtaSetDisplayMode (doc, dispMode);
+              TtaCloseUndoSequence (doc);
+              va_end(varpos);
+              return;
+              }
 
             if (!Math_integral_contour)
               {
@@ -2215,6 +2224,15 @@ static void CreateMathConstruct (int construct, ...)
           if (type == -1)
             {/* ask the user about the way the symbol has to be displayed */
             type = GetOperatorType(doc);
+            if(type == 0)
+              /* the user decided to abort the command */
+              {
+              TtaSetDisplayMode (doc, dispMode);
+              TtaCloseUndoSequence (doc);
+              va_end(varpos);
+              return;
+              }
+            else type--;
             }
        
           if (type >= 1)
@@ -2235,6 +2253,14 @@ static void CreateMathConstruct (int construct, ...)
               selected = TtaGetFirstChild (child);
               /* ask how many the user wants */
               number = GetOccurrences (doc, TtaGetMessage (AMAYA, AM_NUMBER_OPERATORS), 5, 1);
+              if(number == 0) 
+                { /* the user decided to abort the command */
+                TtaSetDisplayMode (doc, dispMode);
+                TtaCloseUndoSequence (doc);
+                va_end(varpos);
+                return;
+                }
+
               for (i = 0 ; i < number; i++)
                 {
                   if (symbol == 0)
@@ -2347,6 +2373,13 @@ static void CreateMathConstruct (int construct, ...)
 
           /* ask how many the user wants */
           number = GetOccurrences (doc, TtaGetMessage (AMAYA, AM_ROWS), 3, 2);
+          if(number == 0)
+            {/* the user decided to abort the command */
+            TtaSetDisplayMode (doc, dispMode);
+            TtaCloseUndoSequence (doc);
+            va_end(varpos);
+            return;
+            }
           leaf = TtaGetFirstChild (el);
           child = leaf;
 
@@ -2480,6 +2513,13 @@ static void CreateMathConstruct (int construct, ...)
 
           /* ask number of coordonnates */
           number = GetOccurrences (doc, TtaGetMessage (AMAYA, AM_NUMBER_COORDONNATES), 2, 1);
+          if(number == 0)
+            { /* the user decided to abort the command */
+            TtaSetDisplayMode (doc, dispMode);
+            TtaCloseUndoSequence (doc);
+            va_end(varpos);
+            return;
+            }
 
           child = TtaGetLastChild (el);
           leaf = TtaGetFirstChild (child);
@@ -2503,6 +2543,13 @@ static void CreateMathConstruct (int construct, ...)
           if (number != 2)
             {/* ask how many the user wants */
               number = GetOccurrences (doc,  TtaGetMessage (AMAYA, AM_NUMBER_NUPLE), 3, 2);
+              if(number == 0)
+                {  /* the user decided to abort the command */
+                TtaSetDisplayMode (doc, dispMode);
+                TtaCloseUndoSequence (doc);
+                va_end(varpos);
+                return;
+                }
             }
 
           new_ = SetMFencedAttributes(el, '(', ')', ',', doc);
@@ -2543,11 +2590,27 @@ static void CreateMathConstruct (int construct, ...)
             Math_close = ')';
             Math_sep = ',';
             GetFenceAttributes (doc);
+            if (Math_open == 0)
+              {  /* the user decided to abort the command */
+              TtaSetDisplayMode (doc, dispMode);
+              TtaCloseUndoSequence (doc);
+              va_end(varpos);
+              return;
+              }
             }
+
+
           if (number == -1)
             {
             /* ask how many the user wants */
             number = GetOccurrences (doc,  TtaGetMessage (AMAYA, AM_NUMBER_ELEMENTS), 5, 1);
+            if(number == 0)
+              {  /* the user decided to abort the command */
+              TtaSetDisplayMode (doc, dispMode);
+              TtaCloseUndoSequence (doc);
+              va_end(varpos);
+              return;
+              }
             }
 
           leaf = TtaGetFirstChild (el);
@@ -2643,6 +2706,13 @@ static void CreateMathConstruct (int construct, ...)
 
           /* ask the number of variables */
           number = GetOccurrences (doc, TtaGetMessage (AMAYA, AM_NUMBER_VARIABLES), 2, 1);
+          if(number == 0)
+            {  /* the user decided to abort the command */
+            TtaSetDisplayMode (doc, dispMode);
+            TtaCloseUndoSequence (doc);
+            va_end(varpos);
+            return;
+            }
           leaf = TtaGetFirstChild (el);
           child = leaf;
           InsertSymbol(&child, MathML_EL_MI, 955, doc);// lambda
@@ -2782,7 +2852,14 @@ static void CreateMathConstruct (int construct, ...)
           degree = 0;
           /* ask the user about the number of variables that have to be differentiated */
           number = GetOccurrences (doc, TtaGetMessage (AMAYA, AM_NUMBER_VARIABLES), 2, 1);
-  
+          if(number == 0)
+            {  /* the user decided to abort the command */
+            TtaSetDisplayMode (doc, dispMode);
+            TtaCloseUndoSequence (doc);
+            va_end(varpos);
+            return;
+            }
+
           /* Denominator */
           leaf = TtaGetFirstChild (TtaGetLastChild (el));
           child = leaf;
@@ -2798,6 +2875,14 @@ static void CreateMathConstruct (int construct, ...)
              char buffer[50];
              sprintf (buffer, TtaGetMessage (AMAYA, AM_DEGREE_VARIABLE), i + 1);
              degreevar = GetOccurrences (doc, buffer, 1, 1);
+             if(degreevar == 0)
+               {  /* the user decided to abort the command */
+               TtaSetDisplayMode (doc, dispMode);
+               TtaCloseUndoSequence (doc);
+               va_end(varpos);
+               return;
+               }
+
              degree += degreevar;
              if (degreevar == 1)
                {
@@ -2867,14 +2952,40 @@ static void CreateMathConstruct (int construct, ...)
           if(lx == -1 || ly == -1)
             {/* lx = ly */
             lx = GetOccurrences (doc, TtaGetMessage (AMAYA, AM_COLS), 3, 1);
+            if(lx == 0)
+              {  /* the user decided to abort the command */
+              TtaSetDisplayMode (doc, dispMode);
+              TtaCloseUndoSequence (doc);
+              va_end(varpos);
+              return;
+              }
             ly = lx;
             }
           else
             {
             if (lx == 0)
+              {
               lx = GetOccurrences (doc, TtaGetMessage (AMAYA, AM_COLS), 3, 1);
+              if(lx == 0)
+                {  /* the user decided to abort the command */
+                TtaSetDisplayMode (doc, dispMode);
+                TtaCloseUndoSequence (doc);
+                va_end(varpos);
+               return;
+                }
+              }
+  
             if (ly == 0)
+              {
               ly = GetOccurrences (doc, TtaGetMessage (AMAYA, AM_ROWS), 3, 1);
+              if(ly == 0)
+                {  /* the user decided to abort the command */
+                TtaSetDisplayMode (doc, dispMode);
+                TtaCloseUndoSequence (doc);
+                va_end(varpos);
+               return;
+                }
+              }
             }
 
           /* mtable */
@@ -2978,6 +3089,13 @@ static void CreateMathConstruct (int construct, ...)
           /* ask the user about the degree of diffentiation */
           symboldiff = 8518;
           degree = GetOccurrences (doc, TtaGetMessage (AMAYA, AM_DEGREE), 2, 0);
+          if(degree == 0)
+            {  /* the user decided to abort the command */
+            TtaSetDisplayMode (doc, dispMode);
+            TtaCloseUndoSequence (doc);
+            va_end(varpos);
+            return;
+            }
 
           /* Numerator */
           leaf = TtaGetFirstChild (TtaGetFirstChild (el));
@@ -3038,7 +3156,6 @@ static void CreateMathConstruct (int construct, ...)
         TtaDeleteTree (leaf, doc);
         selected = TtaGetFirstChild (TtaGetFirstChild (el));
         }
-         
 
       /* do not check the Thot abstract tree against the structure */
       /* schema while changing the structure */
@@ -3289,6 +3406,13 @@ static void CallbackMaths (int ref, int typedata, char *data)
     case MathIntegralType:
       Math_integral_type = val;
       break;
+
+    case FormMathIntegral:
+      if(val == 0)Math_integral_number = 0;
+      break;
+
+    case FormMathFenceAttributes:
+      if(val == 0)Math_open = 0;
 #endif /* _WX */
 
     case MenuMaths:

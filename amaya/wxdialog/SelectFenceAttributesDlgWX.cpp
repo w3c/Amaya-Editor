@@ -19,6 +19,7 @@ static int MyRef = 0;
 //-----------------------------------------------------------------------------
 BEGIN_EVENT_TABLE(SelectFenceAttributesDlgWX, AmayaDialog)
   EVT_BUTTON( XRCID("wxID_INSERT"),      SelectFenceAttributesDlgWX::OnInsert )
+  EVT_BUTTON( XRCID("wxID_CANCEL"),  SelectFenceAttributesDlgWX::OnCancel )
   EVT_CLOSE( SelectFenceAttributesDlgWX::OnClose )
 END_EVENT_TABLE()
 
@@ -40,6 +41,7 @@ SelectFenceAttributesDlgWX::SelectFenceAttributesDlgWX( int ref, wxWindow* paren
   SetTitle( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_SELECT_FENCE_TITLE) ));
   XRCCTRL(*this, "wxID_LABEL", wxStaticText)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_SELECT_FENCE_LABEL) ));
   XRCCTRL(*this, "wxID_INSERT", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(LIB,TMSG_INSERT) ));
+  XRCCTRL(*this, "wxID_CANCEL", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_CANCEL) ));
 
   Refresh();
   SetAutoLayout( TRUE );
@@ -102,6 +104,20 @@ void SelectFenceAttributesDlgWX::OnClose(wxCloseEvent& event)
 {
   if (!Waiting)
     return;
+  Waiting = 0;
+  ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
+  TtaDestroyDialogue (MyRef);
+}
+
+/*----------------------------------------------------------------------
+  OnCancel
+  called when the window manager closes the dialog
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+void SelectFenceAttributesDlgWX::OnCancel(wxCommandEvent& event)
+{
+  if (!Waiting)return;
   Waiting = 0;
   ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
   TtaDestroyDialogue (MyRef);

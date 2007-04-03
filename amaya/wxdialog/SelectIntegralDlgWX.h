@@ -26,7 +26,7 @@ private:
     // Override base class functions of a wxDialog.
   void OnInsert( wxCommandEvent& event );
   void OnClose( wxCloseEvent& event);
-
+  void OnCancel( wxCommandEvent& event );
   // Any class wishing to process wxWindows events must use this macro
   DECLARE_EVENT_TABLE()
     

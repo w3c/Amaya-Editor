@@ -74,14 +74,26 @@
         <size>0,20</size>
       </object>
       <object class="sizeritem">
-        <object class="wxButton" name="wxID_INTEGRAL_INSERT">
-          <label>*insert*</label>
-          <default>1</default>
+        <object class="wxBoxSizer">
+          <orient>wxHORIZONTAL</orient>
+          <object class="sizeritem">
+            <object class="wxButton" name="wxID_INSERT">
+              <label>*insert*</label>
+              <default>1</default>
+            </object>
+            <border>5</border>
+          </object>
+          <object class="sizeritem">
+            <object class="wxButton" name="wxID_CANCEL">
+              <label>*cancel*</label>
+              <default>1</default>
+            </object>
+            <border>5</border>
+          </object>
         </object>
-        <option>1</option>
-        <flag>wxALL|wxALIGN_RIGHT</flag>
-        <border>5</border>
+        <flag>wxALL|wxALIGN_CENTRE</flag>
       </object>
+
     </object>
   </object>
 </resource>

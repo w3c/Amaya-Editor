@@ -18,7 +18,8 @@ static int MyRef = 0;
 // Event table: connect the events to the handler functions to process them
 //-----------------------------------------------------------------------------
 BEGIN_EVENT_TABLE(SelectIntegralDlgWX, AmayaDialog)
-  EVT_BUTTON( XRCID("wxID_INTEGRAL_INSERT"), SelectIntegralDlgWX::OnInsert )
+  EVT_BUTTON( XRCID("wxID_INSERT"),      SelectIntegralDlgWX::OnInsert )
+  EVT_BUTTON( XRCID("wxID_CANCEL"),      SelectIntegralDlgWX::OnCancel )
   EVT_CLOSE( SelectIntegralDlgWX::OnClose )
 END_EVENT_TABLE()
 
@@ -39,7 +40,8 @@ SelectIntegralDlgWX::SelectIntegralDlgWX( int ref, wxWindow* parent) :
   // update dialog labels with given ones
   SetTitle( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_SELECT_INTEGRAL_TITLE) ));
   XRCCTRL(*this, "wxID_LABEL", wxStaticText)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_SELECT_INTEGRAL_LABEL) ));
-  XRCCTRL(*this, "wxID_INTEGRAL_INSERT", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(LIB,TMSG_INSERT) ));
+  XRCCTRL(*this, "wxID_INSERT", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(LIB,TMSG_INSERT) ));
+  XRCCTRL(*this, "wxID_CANCEL", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_CANCEL) ));
 
   
   Refresh();
@@ -110,6 +112,20 @@ void SelectIntegralDlgWX::OnClose(wxCloseEvent& event)
 {
   if (!Waiting)
     return;
+  Waiting = 0;
+  ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
+  TtaDestroyDialogue (MyRef);
+}
+
+/*----------------------------------------------------------------------
+  OnCancel
+  called when the window manager closes the dialog
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+void SelectIntegralDlgWX::OnCancel(wxCommandEvent& event)
+{
+  if (!Waiting)return;
   Waiting = 0;
   ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
   TtaDestroyDialogue (MyRef);

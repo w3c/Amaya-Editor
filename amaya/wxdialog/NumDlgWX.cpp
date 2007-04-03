@@ -88,7 +88,9 @@ void NumDlgWX::OnOk( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void NumDlgWX::OnCancel( wxCommandEvent& event )
 {
-  TtaDestroyDialogue (MyRef);
+if (MyRef == MathsDialogue + FormMaths)ThotCallback (MyRef, INTEGER_DATA, (char*)0);
+
+TtaDestroyDialogue (MyRef);
 }
 
 #endif /* _WX */
