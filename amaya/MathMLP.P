@@ -1376,7 +1376,7 @@ RULES
 
    MTD:
         BEGIN
-           VertPos: HRef = Previous AnyElem . HRef;
+        VertPos: HRef = Previous AnyElem . HRef;
         CreateBefore(ElementName);
         CreateWith(VerticalLine);
         PaddingRight: 0.35;

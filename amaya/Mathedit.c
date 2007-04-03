@@ -2148,7 +2148,7 @@ static void CreateMathConstruct (int construct, ...)
 
   if (emptySel)
     {
-      //TtaUnselect (doc);
+      TtaUnselect (doc);
       el = TtaNewTree (doc, newType, "");
 
       if (construct == 18)
@@ -2208,7 +2208,7 @@ static void CreateMathConstruct (int construct, ...)
           leaf = TtaGetFirstChild (el);
           child = leaf;
           new_ = leaf;
-          InsertEmptyConstruct(&new_, Math_integral_type ? MathML_EL_MSUBSUP : MathML_EL_MSUB, doc);
+          InsertEmptyConstruct (&new_, Math_integral_type ? MathML_EL_MSUBSUP : MathML_EL_MSUB, doc);
           TtaDeleteTree (leaf, doc);
           child = TtaGetFirstChild (new_);
    
