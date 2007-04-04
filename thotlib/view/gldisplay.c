@@ -1977,7 +1977,7 @@ void DrawHorizontalLine (int frame, int thick, int style, int x, int y,
   ThotPoint           point[4];
   int                 Y, left = x, right = x + l;
   int                 light = fg, dark = fg;
-  unsigned short      red, green, blue;
+  unsigned short      red, green, blue, sl = 50, sd = 100;
 
   if (thick > 0 && fg >= 0)
     {
@@ -1985,8 +1985,16 @@ void DrawHorizontalLine (int frame, int thick, int style, int x, int y,
         {
           /*  */
           TtaGiveThotRGB (fg, &red, &green, &blue);
-          dark = TtaGetThotColor (red & 0xCF, green & 0xCF, blue & 0xCF);
-          light = TtaGetThotColor (red | 0xC0, green | 0xC0, blue | 0xC0);
+          if (red < sd) sd = red;
+          if (green < sd) sd = green;
+          if (blue < sd) sd = blue;
+          dark = TtaGetThotColor (red - sd, green - sd, blue - sd);
+          if (red + sl > 254) red = 255 - sl;
+          if (green + sl > 254) green = 255 - sl;
+          if (blue + sl > 254) blue = 255 - sl;
+          light = TtaGetThotColor (red + sl, green + sl, blue + sl);
+          //dark = TtaGetThotColor (red & 0xCF, green & 0xCF, blue & 0xCF);
+          //light = TtaGetThotColor (red | 0xC0, green | 0xC0, blue | 0xC0);
         }
 
       y += FrameTable[frame].FrTopMargin;
@@ -2128,7 +2136,7 @@ void DrawVerticalLine (int frame, int thick, int style, int x, int y,
   ThotPoint           point[4];
   int                 X, top = y, bottom = y + h;
   int                 light = fg, dark = fg;
-  unsigned short      red, green, blue;
+  unsigned short      red, green, blue , sl = 50, sd = 100;
 
   if (thick > 0 && fg >= 0)
     {
@@ -2136,8 +2144,14 @@ void DrawVerticalLine (int frame, int thick, int style, int x, int y,
         {
           /*  */
           TtaGiveThotRGB (fg, &red, &green, &blue);
-          dark = TtaGetThotColor (red & 0xCF, green & 0xCF, blue & 0xCF);
-          light = TtaGetThotColor (red | 0xC0, green | 0xC0, blue | 0xC0);
+          if (red < sd) sd = red;
+          if (green < sd) sd = green;
+          if (blue < sd) sd = blue;
+          dark = TtaGetThotColor (red - sd, green - sd, blue - sd);
+          if (red + sl > 254) red = 255 - sl;
+          if (green + sl > 254) green = 255 - sl;
+          if (blue + sl > 254) blue = 255 - sl;
+          light = TtaGetThotColor (red + sl, green + sl, blue + sl);
         }
 
       y += FrameTable[frame].FrTopMargin;
