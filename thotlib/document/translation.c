@@ -573,87 +573,6 @@ void TtaGetTime (char *s, CHARSET charset)
     }
 }
 
-#ifdef LC
-static unsigned char     DateString[10];
-static int               DateIndex = 0;
-/*----------------------------------------------------------------------
-  CheckDate checks if the current date should be generated
-  Returns TRUE if the character must be skipped.
-  ----------------------------------------------------------------------*/
-static ThotBool CheckDate (unsigned char c, int fnum, char *outBuf,
-                           Document doc)
-{
-  PtrDocument pDoc;
-  char        tm[DATESTRLEN];
-  int         index;
-
-  pDoc = LoadedDocument[doc - 1];
-  if (StartDate)
-    {
-      if (c == '-' || c == '>' || c == SPACE)
-        /* keep this character */
-        return FALSE;
-      else
-        {
-          /* generate the current date */
-          if (pDoc->DocDefaultCharset)
-            TtaGetTime (tm, US_ASCII);
-          else
-            TtaGetTime (tm, pDoc->DocCharset);
-          for (index = 0; tm[index] != EOS; index++)
-            ExportChar ((wchar_t) tm[index], fnum, outBuf, doc,
-                        FALSE, FALSE, FALSE);
-          StartDate = FALSE;
-          IgnoreDate = TRUE;
-        }
-    }
-
-  if (c == '$')
-    {
-      /* start/stop the analyse of the date */
-      if (!StartDollar || DateIndex == 4)
-        StartDollar = !StartDollar;
-      else
-        StartDollar = TRUE;
-      if (IgnoreDate)
-        /* close the previous date parsing */
-        IgnoreDate = FALSE;
-      DateIndex = 0;
-    }
-  else if (StartDollar)
-    {
-      if (IgnoreDate)
-        {
-          if (c == '<')
-            {
-              /* implicit closing of the date parsing */
-              IgnoreDate = FALSE;
-              StartDollar = FALSE;
-            }
-          else
-            /* it's a character of the previous date */
-            return TRUE;
-        }
-      else if (c == ':' || c == '=')
-        {
-          if (!StartDate && DateIndex > 0 &&
-              !strncasecmp ((char *)DateString, "Date", DateIndex))
-            /* following characters will be skipped until the $ or EOL or EOS */
-            StartDate = TRUE;
-        }
-      else if (c == EOS || c == EOL || DateIndex > 4)
-        {
-          /* stop the analyse of the date */
-          StartDollar = FALSE;
-          StartDate = FALSE;
-          IgnoreDate = FALSE;
-        }
-      else if (c != SPACE)
-        DateString[DateIndex++] = c;
-    }
-  return FALSE;
-}
-#endif /* LC */
 
 /*----------------------------------------------------------------------
   CheckRCS checks if the current date should be generated and avoid
@@ -792,13 +711,6 @@ static void PutChar (wchar_t c, int fnum, char *outBuf, Document doc,
                      ThotBool entityName)
 {
   /* detect if the generation of a date is requested */
-#ifdef LC
-  if (fnum > 0 && CheckDate ((unsigned char) c, fnum, outBuf, doc))
-    /* remove the previous date */
-    return;
-  else
-    ExportChar (c, fnum, outBuf, doc, lineBreak, translate, entityName);
-#endif /* LC */
   if (fnum > 0 && CheckRCS ((unsigned char) c, fnum, outBuf, doc))
     return;
   else
@@ -1303,6 +1215,9 @@ static void TranslateLeaf (PtrElement pEl, ThotBool transChar,
                         break;
                       case 6:
                         c = 0x230b; /* RightFloor */
+                        break;
+                      case 7:
+                        c = 0x2758; /* VerticalSeparator */
                         break;
 
                       case '1':

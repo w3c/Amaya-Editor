@@ -1574,10 +1574,4 @@ TextTRANSLATE
 	'\76' -> '&gt;'; 	{ greater-than sign, U+003E ISOnum }
 	END;
 
-
-GRAPHTRANSLATE
-	BEGIN
-	'v'	-> '|';
-	END;
-
 END
