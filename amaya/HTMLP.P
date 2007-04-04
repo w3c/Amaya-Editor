@@ -2721,8 +2721,8 @@ RULES
         END;
 
  Object_Content: BEGIN
-        Width: Enclosing . Width;
-        Height: Enclosing . Height;
+        Width: auto {Enclosed . Width};
+        Height: Enclosed . Height;
         VertPos: Top = Enclosing . Top;
         HorizPos: Left = Enclosing . Left;
         Visibility: 0;
@@ -5331,8 +5331,14 @@ ATTRIBUTES
         END;
  NoObjects(Object_Content):
         BEGIN
-         if not within HEAD
-            Visibility: Enclosing =;
+        if not within HEAD BEGIN
+           Visibility: Enclosing =;
+           
+           END;
+        END;
+ NoObjects(External_Object):
+        BEGIN
+        Visibility: 0;
         END;
  NoObjects(Iframe_Src_Content):
         BEGIN
