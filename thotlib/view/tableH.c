@@ -42,9 +42,10 @@ typedef struct _LockRelations
 static PtrLockRelations  DifferedChecks = NULL;
 static PtrLockRelations  ActiveChecks = NULL;
 static PtrAbstractBox    CheckedTable = NULL;
+static PtrAbstractBox    UpdatedParentTable = NULL;
 static ThotBool          Lock = FALSE;
-static ThotBool          DoUnlock1 = FALSE;
-static ThotBool          DoUnlock2 = FALSE;
+static ThotBool          DoUnlock1 = FALSE; // first unlock pass
+static ThotBool          DoUnlock2 = FALSE; // second unlock pass
 
 #include "appli_f.h"
 #include "attributes_f.h"
@@ -179,8 +180,14 @@ static ThotBool IsDifferredTable (PtrAbstractBox table, PtrAbstractBox cell,
             }
           else if (pLockRel->LockRTable[i] == table &&
                    (pLockRel->LockRCell[i] == NULL || pLockRel->LockRCell[i] == cell))
-            /* the table is already registered */
-            return TRUE;
+            {
+              /* the table is already registered */
+              if (DoUnlock2 && CheckedTable && ref == -1 &&
+                  UpdatedParentTable == NULL)
+                // the table is already checked but must be updated
+                UpdatedParentTable = table;
+              return TRUE;
+            }
           else if (DoUnlock1 && pLockRel->LockRTable[i] &&
                    !IsParentBox (table->AbBox, pLockRel->LockRTable[i]->AbBox))
             /* another differed table is enclosed by the same table */
@@ -1759,7 +1766,7 @@ static ThotBool SetCellWidths (PtrAbstractBox cell, PtrAbstractBox table,
             /* register a new differed table */
             DifferFormatting (table, cell, frame);
         }
-      else if (!IsDifferredTable (table, cell, frame))
+      else //if (!IsDifferredTable (table, cell, frame))
         /* something changed in the cell, check any table change */
         SetTableWidths (table, frame);
     }
@@ -1883,9 +1890,6 @@ void UpdateColumnWidth (PtrAbstractBox cell, PtrAbstractBox col, int frame)
       if (Lock)
         /* the table formatting is locked */
         DifferFormatting (table, cell, frame);
-      else if (IsDifferredTable (table, NULL, frame))
-        /* the table will be managed later */
-        return;
       else if (cell && cell->AbBox)
         {
           /* there a change within a specific cell */
@@ -1895,6 +1899,9 @@ void UpdateColumnWidth (PtrAbstractBox cell, PtrAbstractBox col, int frame)
               if (table->AbBox->BxCycles > 0)
                 printf ("table in progress\n");
 #endif
+              if (IsDifferredTable (table, NULL, frame))
+                /* the table will be managed later */
+                return;
               /* Now check the table size */
               CheckTableWidths (table, frame, TRUE);
               CheckRowHeights (table, frame);
@@ -2147,6 +2154,12 @@ void TtaUnlockTableFormatting ()
                   CheckTableWidths (table, pLockRel->LockRFrame[i], FALSE);
                   /* need to propagate to enclosing boxes */
                   ComputeEnclosing (pLockRel->LockRFrame[i]);
+                  while (UpdatedParentTable)
+                    {
+                      CheckedTable = UpdatedParentTable;
+                      UpdatedParentTable = NULL;
+                      CheckTableWidths (CheckedTable, pLockRel->LockRFrame[i], FALSE);
+                    }
                 }
               /* next entry */
               i++;
