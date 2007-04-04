@@ -4573,7 +4573,7 @@ static void ExportNsDeclaration (Document doc, PtrElement pNode)
   PtrDocument      pDoc;
   int              i, fnum;
 
-  if (pNode == NULL || pNode->ElTerminal)
+  if (pNode == NULL || pNode->ElTerminal || ElementIsHidden (pNode))
     return;
   fnum = 1; /* main output file */
   pDoc = LoadedDocument[doc - 1];

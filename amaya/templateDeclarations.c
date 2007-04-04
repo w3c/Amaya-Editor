@@ -329,14 +329,14 @@ void FreeDeclaration (Declaration dec)
 #ifdef TEMPLATES
 
   /* Free its content. */
-  if (dec->nature==XmlElementNat)
+  if (dec->nature == XmlElementNat)
   {
-    TtaFreeMemory(dec->elementType.name);
+    TtaFreeMemory (dec->elementType.name);
     dec->elementType.name = NULL;
   }
-  else if (dec->nature==ComponentNat)
+  else if (dec->nature == ComponentNat)
   {
-    TtaDeleteTree(dec->componentType.content, TtaGetDocument(dec->componentType.content));
+    TtaDeleteTree (dec->componentType.content, TtaGetDocument(dec->componentType.content));
     dec->componentType.content = NULL;
   }
   else if (dec->nature==UnionNat && !dec->declaredIn->isPredefined)

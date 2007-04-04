@@ -2692,31 +2692,31 @@ void ChangeGenericSchemaNames (char *sSchemaUri, char *sSchemaName, PtrDocument 
 static void AddANewNamespacePrefix (PtrDocument pDoc, PtrElement element,
                                     char *nsPrefix, PtrNsUriDescr uriDecl)
 {
-  PtrNsPrefixDescr   newPrefixDecl, lastPrefixDecl, prevPrefixDecl;
+  PtrNsPrefixDescr   newDecl, lastDecl, prevDecl;
 
-  lastPrefixDecl = uriDecl->NsPtrPrefix;
-  prevPrefixDecl = lastPrefixDecl;
-  while (lastPrefixDecl)
+  lastDecl = uriDecl->NsPtrPrefix;
+  prevDecl = NULL;
+  while (lastDecl)
     {
-      if (lastPrefixDecl->NsPrefixElem == element)
+      if (lastDecl->NsPrefixElem == element)
         /* avoid to duplicate a declaration for the same element */
         return;
-      prevPrefixDecl = lastPrefixDecl;
-      lastPrefixDecl = lastPrefixDecl->NsNextPrefixDecl;   
+      prevDecl = lastDecl;
+      lastDecl = lastDecl->NsNextPrefixDecl;   
     }
 
-  newPrefixDecl = (PtrNsPrefixDescr) TtaGetMemory (sizeof (NsPrefixDescr));
-  if (newPrefixDecl == NULL)
+  newDecl = (PtrNsPrefixDescr) TtaGetMemory (sizeof (NsPrefixDescr));
+  if (newDecl == NULL)
     return;
-  memset (newPrefixDecl, 0, sizeof (NsPrefixDescr));
+  memset (newDecl, 0, sizeof (NsPrefixDescr));
   if (nsPrefix)
-    newPrefixDecl->NsPrefixName = (char *)TtaStrdup (nsPrefix);
-  newPrefixDecl->NsPrefixElem = element;
+    newDecl->NsPrefixName = (char *)TtaStrdup (nsPrefix);
+  newDecl->NsPrefixElem = element;
 
-  if (uriDecl->NsPtrPrefix == NULL)
-    uriDecl->NsPtrPrefix = newPrefixDecl;
+  if (prevDecl == NULL)
+    uriDecl->NsPtrPrefix = newDecl;
   else
-    prevPrefixDecl->NsNextPrefixDecl = newPrefixDecl;
+    prevDecl->NsNextPrefixDecl = newDecl;
   
   return;
 }
@@ -2767,8 +2767,8 @@ void SetNamespaceDeclaration (PtrDocument pDoc, PtrElement element,
   PtrNsUriDescr   uriDecl;
   ThotBool        found;
 
-  if (element == NULL || element->ElTerminal)
-    // don't set a namespace for terminal elements
+  if (element == NULL || element->ElTerminal || ElementIsHidden (element))
+    // don't set a namespace for terminal and hidden elements
     return;
   uriDecl = NULL;
   found = FALSE;
@@ -2809,6 +2809,108 @@ void SetNamespaceDeclaration (PtrDocument pDoc, PtrElement element,
   else
     /* Add a new prefix/element declaration */
     AddANewNamespacePrefix (pDoc, element, nsPrefix, uriDecl);
+}
+
+/*----------------------------------------------------------------------
+  RemoveNamespaceDeclaration removes a namespace declaration
+  ----------------------------------------------------------------------*/
+void RemoveNamespaceDeclaration (PtrDocument pDoc, PtrElement element)
+{
+  PtrNsUriDescr     uriDecl, prevUri;
+  PtrNsPrefixDescr  prefixDecl, prevDecl;
+
+  if (pDoc == NULL || element == NULL ||
+      element->ElTerminal || ElementIsHidden (element))
+    // don't set a namespace for terminal and hidden elements
+    return;
+  prevUri = NULL;
+  uriDecl = pDoc->DocNsUriDecl;
+  if (uriDecl)
+    {
+      /* Search if this uri has been already declared */
+      while (uriDecl)
+        {
+          if (uriDecl->NsUriSSchema == element->ElStructSchema)
+            {
+              // It's the uri of the element, check the list of elements
+              prefixDecl = uriDecl->NsPtrPrefix;
+              prevDecl = NULL;
+              while (prefixDecl)
+                {
+                  if (prefixDecl->NsPrefixElem == element)
+                    {
+                      if (prevDecl)
+                        prevDecl->NsNextPrefixDecl = prefixDecl->NsNextPrefixDecl;
+                      else
+                        {
+                          // it was the fist entry for this uri
+                          uriDecl->NsPtrPrefix = prefixDecl->NsNextPrefixDecl;
+                          if (uriDecl->NsPtrPrefix == NULL)
+                            {
+                              // no more entry for this uri, remove this declaration
+                              if (prevUri)
+                                prevUri->NsNextUriDecl = uriDecl->NsNextUriDecl;
+                              else
+                                pDoc->DocNsUriDecl = uriDecl->NsNextUriDecl;
+                              TtaFreeMemory (uriDecl);
+                            }
+                        }
+                      TtaFreeMemory (prefixDecl);
+                      return;
+                    }
+                  prevDecl = prefixDecl;
+                  prefixDecl = prefixDecl->NsNextPrefixDecl;
+                }
+              return;
+            }
+          // next uri declaration
+          prevUri = uriDecl;
+          uriDecl = prevUri->NsNextUriDecl;
+        }
+    }
+
+}
+
+/*----------------------------------------------------------------------
+  ReplaceNamespaceDeclaration replaces an element in a namespace
+  declaration
+  ----------------------------------------------------------------------*/
+void ReplaceNamespaceDeclaration (PtrDocument pDoc, PtrElement oldEl,
+                                 PtrElement newEl)
+{
+  PtrNsUriDescr     uriDecl;
+  PtrNsPrefixDescr  prefixDecl;
+
+  if (pDoc == NULL || oldEl == NULL ||
+      oldEl->ElTerminal || ElementIsHidden (oldEl))
+    // don't set a namespace for terminal and hidden elements
+    return;
+  uriDecl = pDoc->DocNsUriDecl;
+  if (uriDecl)
+    {
+      /* Search if this uri has been already declared */
+      while (uriDecl)
+        {
+          if (uriDecl->NsUriSSchema == oldEl->ElStructSchema)
+            {
+              // It's the uri of the element, check the list of elements
+              prefixDecl = uriDecl->NsPtrPrefix;
+              while (prefixDecl)
+                {
+                  if (prefixDecl->NsPrefixElem == oldEl)
+                    {
+                      prefixDecl->NsPrefixElem = newEl;
+                      return;
+                    }
+                  prefixDecl = prefixDecl->NsNextPrefixDecl;
+                }
+              return;
+            }
+          // next uri declaration
+          uriDecl = uriDecl->NsNextUriDecl;
+        }
+    }
+
 }
 
 /*----------------------------------------------------------------------

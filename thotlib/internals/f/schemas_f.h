@@ -105,6 +105,11 @@ extern void SetNamespaceDeclaration ( PtrDocument pDoc,
                                       PtrElement element,
                                       char *nsPrefix,
                                       char *NsUri );
+extern void RemoveNamespaceDeclaration ( PtrDocument pDoc,
+                                         PtrElement element );
+extern void ReplaceNamespaceDeclaration ( PtrDocument pDoc,
+                                          PtrElement oldEl,
+                                          PtrElement newEl );
 extern void CopyNamespaceDeclarations ( PtrDocument docSource,
                                         PtrElement elSource,
                                         PtrDocument docTarget,
@@ -213,6 +218,11 @@ extern void SetNamespaceDeclaration ( PtrDocument pDoc,
                                         PtrElement element,
                                         char *nsPrefix,
                                         char *NsUri );
+extern void RemoveNamespaceDeclaration ( PtrDocument pDoc,
+                                           PtrElement element );
+extern void ReplaceNamespaceDeclaration ( PtrDocument pDoc,
+                                            PtrElement oldEl,
+                                            PtrElement newEl );
 extern void CopyNamespaceDeclarations ( PtrDocument docSource,
                                           PtrElement elSource,
                                           PtrDocument docTarget,
