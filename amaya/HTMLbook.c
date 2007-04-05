@@ -1843,9 +1843,9 @@ void MakeToc (Document doc, View view)
         {
           if (toc == NULL)
             {
-              /* genetate the enclosing division */
+              /* generate the enclosing division */
               elType.ElTypeNum = HTML_EL_Division;
-              TtaCreateElement (elType, doc);
+              TtaInsertElement (elType, doc);
               TtaGiveFirstSelectedElement (doc, &child, &firstChar, &i);
               if (child != ancest)
                 {
