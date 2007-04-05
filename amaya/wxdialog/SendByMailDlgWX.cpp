@@ -7,23 +7,32 @@
 #include "SendByMailDlgWX.h"
 
 #include <wx/valtext.h>
+#include <wx/tokenzr.h>
+#include <wx/recguard.h>
+
 
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "appdialogue_wx.h"
 #include "message_wx.h"
 
+#define MAX_LAST_RCPT_COUNT 24
+
 //-----------------------------------------------------------------------------
 // Event table: connect the events to the handler functions to process them
 //-----------------------------------------------------------------------------
 BEGIN_EVENT_TABLE(SendByMailDlgWX, AmayaDialog)
   EVT_BUTTON(     XRCID("wxID_CANCEL"),       SendByMailDlgWX::OnCancelButton)
-  EVT_TEXT(       XRCID("wxID_EDIT_NEW_TO"),  SendByMailDlgWX::OnNewToTextModified)
-  EVT_TEXT_ENTER( XRCID("wxID_EDIT_NEW_TO"),  SendByMailDlgWX::OnNewToEnterPressed)
+  EVT_TEXT(       XRCID("wxID_COMBO_NEW_TO"),  SendByMailDlgWX::OnNewToTextModified)
+  EVT_TEXT_ENTER( XRCID("wxID_COMBO_NEW_TO"),  SendByMailDlgWX::OnNewToEnterPressed)
+  
   EVT_LISTBOX(    XRCID("wxID_LIST_TO"),      SendByMailDlgWX::OnToItemSelected)
   EVT_MENU(       wxID_DELETE,                SendByMailDlgWX::OnSupprToItem)
   EVT_UPDATE_UI(  wxID_OK,                    SendByMailDlgWX::OnUpdateSendButton)
   EVT_RADIOBOX(   XRCID("wxID_RADIOBOX_SEND_CLASS"), SendByMailDlgWX::OnChangeMessageClass)
+  
+  EVT_BUTTON(wxID_OK,     SendByMailDlgWX::OnCloseDialog)
+  EVT_BUTTON(wxID_CANCEL, SendByMailDlgWX::OnCloseDialog)
 END_EVENT_TABLE()
 
 
@@ -47,15 +56,15 @@ SendByMailDlgWX::SendByMailDlgWX( int ref, wxWindow* parent) :
   XRCCTRL(*this, "wxID_LABEL_TO",   wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_EMAILS_TO_)) );
   XRCCTRL(*this, "wxID_LABEL_SUBJECT",   wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_EMAILS_SUBJECT_)) );
   XRCCTRL(*this, "wxID_RADIOBOX_SEND_CLASS",   wxRadioBox)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_EMAILS_SEND_AS_)) );
-  XRCCTRL(*this, "wxID_RADIOBOX_SEND_CLASS",   wxRadioBox)->SetString(0, TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_EMAILS_SEND_AS_MESSAGE)) );
-  XRCCTRL(*this, "wxID_RADIOBOX_SEND_CLASS",   wxRadioBox)->SetString(1, TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_EMAILS_SEND_AS_ATTACHMENT)) );
+  XRCCTRL(*this, "wxID_RADIOBOX_SEND_CLASS",   wxRadioBox)->SetString(0, TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_EMAILS_SEND_AS_ATTACHMENT)) );
+  XRCCTRL(*this, "wxID_RADIOBOX_SEND_CLASS",   wxRadioBox)->SetString(1, TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_EMAILS_SEND_AS_MESSAGE)) );
   XRCCTRL(*this, "wxID_RADIOBOX_SEND_CLASS",   wxRadioBox)->SetString(2, TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_EMAILS_DONT_SEND)) );
 
   XRCCTRL(*this, "wxID_CANCEL", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB,TMSG_CANCEL) ));
   XRCCTRL(*this, "wxID_OK", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_EMAILS_SEND) ));
 
   m_tos   = XRCCTRL(*this, "wxID_LIST_TO",     wxListBox);
-  m_newto = XRCCTRL(*this, "wxID_EDIT_NEW_TO", wxTextCtrl);
+  m_newto = XRCCTRL(*this, "wxID_COMBO_NEW_TO", wxComboBox);
 
   wxAcceleratorEntry entries[2];
   entries[0].Set(wxACCEL_NORMAL,  WXK_DELETE, wxID_DELETE);
@@ -64,6 +73,11 @@ SendByMailDlgWX::SendByMailDlgWX( int ref, wxWindow* parent) :
   m_tos->SetAcceleratorTable(accel);
 
   UpdateMessageLabel();
+
+  LoadRecentList();
+  
+  FillRecentAddress();
+  m_newto->SetValue(wxT(""));
 
   Layout();
   SetAutoLayout( TRUE );
@@ -81,7 +95,7 @@ SendByMailDlgWX::~SendByMailDlgWX()
 
 void SendByMailDlgWX::UpdateMessageLabel()
 {
-  if(XRCCTRL(*this, "wxID_RADIOBOX_SEND_CLASS", wxRadioBox)->GetSelection()==0)
+  if(XRCCTRL(*this, "wxID_RADIOBOX_SEND_CLASS", wxRadioBox)->GetSelection()==1)
   {
     XRCCTRL(*this, "wxID_LABEL_MESSAGE",   wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_EMAILS_MESSAGE_ALTERN)) );
   }
@@ -103,11 +117,13 @@ void SendByMailDlgWX::OnCancelButton( wxCommandEvent& event )
 void SendByMailDlgWX::OnNewToTextModified(wxCommandEvent& WXUNUSED(event))
 {
   SetCurrentToItemText();
+  SuggestAddress();
 }
 
 void SendByMailDlgWX::OnNewToEnterPressed(wxCommandEvent& WXUNUSED(event))
 {
   SetCurrentToItemText();
+  AddAddressToRecentList(m_newto->GetValue());
   m_currTo = m_tos->Append(wxT(""));
   m_tos->SetSelection(m_currTo);
   m_newto->Clear();
@@ -164,6 +180,51 @@ void SendByMailDlgWX::SetCurrentToItemText()
   }
 }
 
+void SendByMailDlgWX::SuggestAddress()
+{
+  long from, to;
+  wxString str = m_newto->GetValue();
+  m_newto->GetSelection(&from, &to);
+  if(from+1==(int)str.Length())
+  {
+    if(str.Length()>2)
+    {
+      int i;
+      for(i=0; i<(int)m_rcptArray.GetCount(); i++)
+      {
+        if(m_rcptArray[i].StartsWith((const wxChar*)str))
+        {
+          m_newto->SetValue(m_rcptArray[i]);
+          m_newto->SetSelection(str.Length(), -1);
+          break;
+        }
+      }
+    }
+  }
+}
+
+void SendByMailDlgWX::AddAddressToRecentList(const wxString& addr)
+{
+  if(!addr.IsEmpty())
+  {
+    int pos = m_rcptArray.Index(addr);
+    if(pos!=wxNOT_FOUND)
+      m_rcptArray.RemoveAt(pos);
+    m_rcptArray.Insert(addr, 0);
+    if(m_rcptArray.GetCount()>MAX_LAST_RCPT_COUNT)
+    {
+      m_rcptArray.RemoveAt(m_rcptArray.GetCount()-1);
+    }
+    FillRecentAddress();
+  }
+}
+
+void SendByMailDlgWX::FillRecentAddress()
+{
+  m_newto->Clear();
+  m_newto->Append(m_rcptArray);
+}
+
 wxString SendByMailDlgWX::GetSubject()const
 {
   return XRCCTRL(*this, "wxID_EDIT_SUBJECT",   wxTextCtrl)->GetValue();
@@ -186,12 +247,12 @@ void SendByMailDlgWX::SetMessage(const wxString& message)
 
 bool SendByMailDlgWX::SendAsAttachment()const
 {
-  return XRCCTRL(*this, "wxID_RADIOBOX_SEND_CLASS",   wxRadioBox)->GetSelection()==1;
+  return XRCCTRL(*this, "wxID_RADIOBOX_SEND_CLASS",   wxRadioBox)->GetSelection()==0;
 }
 
 bool SendByMailDlgWX::SendAsContent()const
 {
-  return XRCCTRL(*this, "wxID_RADIOBOX_SEND_CLASS",   wxRadioBox)->GetSelection()==0;
+  return XRCCTRL(*this, "wxID_RADIOBOX_SEND_CLASS",   wxRadioBox)->GetSelection()==1;
 }
 
 void SendByMailDlgWX::SetSendMode(int mode)
@@ -226,5 +287,43 @@ wxString SendByMailDlgWX::GetRecipientList()const
   return str;
 }
 
+void SendByMailDlgWX::SaveRecentList()
+{
+  /* Save m_rcptArray .*/
+  int i;
+  if(m_rcptArray.GetCount()>0)
+  {
+    wxString str = m_rcptArray[0];
+    for(i=1; i<(int)m_rcptArray.GetCount(); i++)
+    {
+      str << wxT("|") << m_rcptArray[i];
+    }
+    TtaSetEnvString("EMAILS_LAST_RCPT", (char*)(const char*)str.mb_str(wxConvUTF8), TRUE);
+  }
+}
+
+void SendByMailDlgWX::LoadRecentList()
+{
+  char* lastRcpt = TtaGetEnvString ("EMAILS_LAST_RCPT");
+  if(lastRcpt)
+  {
+    wxString rcpts(lastRcpt, wxConvUTF8);
+    wxStringTokenizer tkz(wxString(rcpts, wxConvUTF8), wxT("|"));
+    while ( tkz.HasMoreTokens() )
+    {
+      m_rcptArray.Add(tkz.GetNextToken());
+    }
+  }
+  if(m_rcptArray.GetCount()==0)
+  {
+    m_rcptArray.Add(wxString(TtaGetEnvString ("EMAILS_FROM_ADDRESS"), wxConvUTF8));
+  }
+}
+
+void SendByMailDlgWX::OnCloseDialog(wxCommandEvent& event)
+{
+  SaveRecentList();
+  event.Skip();
+}
 
 #endif /* _WX */

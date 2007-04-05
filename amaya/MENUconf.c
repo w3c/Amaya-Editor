@@ -500,6 +500,7 @@ void InitAmayaDefEnv (void)
   TtaSetDefEnvString ("EMAILS_SMTP_SERVER", "", FALSE);
   TtaSetDefEnvString ("EMAILS_SMTP_PORT", "25", FALSE);
   TtaSetDefEnvString ("EMAILS_FROM_ADDRESS", "", FALSE);
+  TtaSetDefEnvString ("EMAILS_LAST_RCPT", "", FALSE);
 
   /* appearance */
 }

@@ -39,7 +39,7 @@ public:
   
   wxString GetRecipientList()const;
   
-  
+  void AddAddressToRecentList(const wxString& addr);
 
 private:
   void UpdateMessageLabel();
@@ -49,6 +49,8 @@ private:
 
   void OnNewToTextModified(wxCommandEvent& event);
   void OnNewToEnterPressed(wxCommandEvent& event);
+  
+  
   void OnToItemSelected(wxCommandEvent& event);
 
   void OnSupprToItem(wxCommandEvent& event);
@@ -58,15 +60,23 @@ private:
   void OnChangeMessageClass(wxCommandEvent& event);
 
   void SetCurrentToItemText();
+  void SuggestAddress();
+  void FillRecentAddress();
+  void SaveRecentList();
+  void LoadRecentList();
+  
+  void OnCloseDialog(wxCommandEvent& event);
 
  // Any class wishing to process wxWindows events must use this macro
   DECLARE_EVENT_TABLE()
-private:
+
   int m_ref;
   int m_currTo;
   
+  wxArrayString m_rcptArray;
+  
   wxListBox*  m_tos;
-  wxTextCtrl* m_newto;
+  wxComboBox* m_newto;
 };
 
 #endif  //__SENDBYMAILDLGWX_H__

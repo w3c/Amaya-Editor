@@ -22,8 +22,9 @@
                     <flag>wxALIGN_LEFT|wxALIGN_CENTRE_VERTICAL</flag>
                   </object>
                   <object class="sizeritem">
-                    <object class="wxTextCtrl" name="wxID_EDIT_NEW_TO">
-                      <style>wxTE_PROCESS_ENTER|wxTE_LEFT</style>
+                    <object class="wxComboBox" name="wxID_COMBO_NEW_TO">
+                      <content/>
+                      <style></style>
                     </object>
                     <option>1</option>
                     <flag>wxALL|wxEXPAND</flag>
@@ -70,8 +71,8 @@
                 <object class="wxRadioBox" name="wxID_RADIOBOX_SEND_CLASS">
                   <label>*Envoyer en tant que :*</label>
                   <content>
-                    <item>*Contenu*</item>
                     <item>*Piece jointe*</item>
+                    <item>*Contenu*</item>
                     <item>*Ne pas envoyer*</item>
                   </content>
                   <dimension>3</dimension>
