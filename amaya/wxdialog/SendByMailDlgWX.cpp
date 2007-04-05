@@ -185,8 +185,7 @@ void SendByMailDlgWX::SuggestAddress()
   long from, to;
   long id = wxNOT_FOUND;
   wxString str = m_newto->GetValue();
-  m_newto->GetSelection(&from, &to);
-  if(from+1==(int)str.Length())
+  if(m_newto->GetInsertionPoint()==m_newto->GetLastPosition())
   {
     if(str.Length()>2)
     {
