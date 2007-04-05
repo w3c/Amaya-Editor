@@ -183,6 +183,7 @@ void SendByMailDlgWX::SetCurrentToItemText()
 void SendByMailDlgWX::SuggestAddress()
 {
   long from, to;
+  long id = wxNOT_FOUND;
   wxString str = m_newto->GetValue();
   m_newto->GetSelection(&from, &to);
   if(from+1==(int)str.Length())
@@ -194,10 +195,15 @@ void SendByMailDlgWX::SuggestAddress()
       {
         if(m_rcptArray[i].StartsWith((const wxChar*)str))
         {
-          m_newto->SetValue(m_rcptArray[i]);
-          m_newto->SetSelection(str.Length(), -1);
-          break;
+          if(id!=wxNOT_FOUND)
+            return; // More than one choice, dont do anything
+          id = i;
         }
+      }
+      if(id!=wxNOT_FOUND)
+      {
+        m_newto->SetValue(m_rcptArray[id]);
+        m_newto->SetSelection(str.Length(), -1);
       }
     }
   }
