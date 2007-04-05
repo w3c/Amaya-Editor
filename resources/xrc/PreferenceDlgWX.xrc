@@ -7,10 +7,9 @@
     <object class="wxBoxSizer">
       <orient>wxVERTICAL</orient>
       <object class="sizeritem">
-        <object class="wxNotebook" name="wxID_NOTEBOOK">
-          <usenotebooksizer>1</usenotebooksizer>
-          <style platform="unix">wxNB_LEFT</style>
-          <object class="notebookpage">
+        <object class="wxListbook" name="wxID_NOTEBOOK">
+          <style platform="unix">wxLB_LEFT</style>
+          <object class="listbookpage">
             <label>*Generale/Editeur*</label>
             <object class="wxPanel" name="wxID_PAGE_GENERAL">
               <object class="wxBoxSizer">
@@ -198,7 +197,7 @@
             </object>
             <selected>1</selected>
           </object>
-          <object class="notebookpage">
+          <object class="listbookpage">
             <label>*Navigation*</label>
             <object class="wxPanel" name="wxID_PAGE_BROWSE">
               <style>wxTAB_TRAVERSAL</style>
@@ -356,7 +355,7 @@
               </object>
             </object>
           </object>
-          <object class="notebookpage">
+          <object class="listbookpage">
             <label>*Publication*</label>
             <object class="wxPanel" name="wxID_PAGE_PUBLISH">
               <object class="wxBoxSizer">
@@ -491,7 +490,7 @@
               </object>
             </object>
           </object>
-          <object class="notebookpage">
+          <object class="listbookpage">
             <label>*Cache*</label>
             <object class="wxPanel" name="wxID_PAGE_CACHE">
               <object class="wxBoxSizer">
@@ -621,7 +620,7 @@
               <style>wxTAB_TRAVERSAL</style>
             </object>
           </object>
-          <object class="notebookpage">
+          <object class="listbookpage">
             <label>*Proxy*</label>
             <object class="wxPanel" name="wxID_PAGE_PROXY">
               <object class="wxBoxSizer">
@@ -692,7 +691,7 @@
               <style>wxTAB_TRAVERSAL</style>
             </object>
           </object>
-          <object class="notebookpage">
+          <object class="listbookpage">
             <label>*Couleurs*</label>
             <object class="wxPanel" name="wxID_PAGE_COLOR">
               <object class="wxBoxSizer">
@@ -818,7 +817,7 @@
               <style>wxTAB_TRAVERSAL</style>
             </object>
           </object>
-          <object class="notebookpage">
+          <object class="listbookpage">
             <label>*Geometrie*</label>
             <object class="wxPanel" name="wxID_PAGE_GEOMETRY">
               <object class="wxBoxSizer">
@@ -873,7 +872,7 @@
               <style>wxTAB_TRAVERSAL</style>
             </object>
           </object>
-          <object class="notebookpage">
+          <object class="listbookpage">
             <label>*Annotations*</label>
             <object class="wxPanel" name="wxID_PAGE_ANNOT">
               <object class="wxBoxSizer">
@@ -971,7 +970,7 @@
               <style>wxTAB_TRAVERSAL</style>
             </object>
           </object>
-          <object class="notebookpage">
+          <object class="listbookpage">
             <label>*WebDAV*</label>
             <object class="wxPanel" name="wxID_PAGE_DAV">
               <object class="wxBoxSizer">
@@ -1108,7 +1107,7 @@
               <style>wxTAB_TRAVERSAL</style>
             </object>
           </object>
-          <object class="notebookpage">
+          <object class="listbookpage">
             <label>*Templates*</label>
             <object class="wxPanel" name="wxID_PAGE_TEMPLATES">
               <style>wxTAB_TRAVERSAL</style>
@@ -1210,7 +1209,7 @@
               </object>
             </object>
           </object>
-          <object class="notebookpage">
+          <object class="listbookpage">
             <label>*Emails*</label>
             <object class="wxPanel" name="wxID_PAGE_EMAILS">
               <style>wxTAB_TRAVERSAL</style>
@@ -1222,7 +1221,7 @@
                 <object class="sizeritem">
                   <object class="wxStaticText" name="wxID_LABEL_EMAIL">
                     <label>*Parametres pour l'envoi de courriels :*</label>
-                    <size>400,-1</size>
+                    <size>300,-1</size>
                   </object>
                   <flag>wxEXPAND</flag>
                   <border>4</border>

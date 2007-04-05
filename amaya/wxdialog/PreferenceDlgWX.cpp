@@ -6,6 +6,7 @@
 #include "wx/arrstr.h"
 #include "wx/spinctrl.h"
 #include "wx/notebook.h"
+#include "wx/listbook.h"
 #include "wx/colordlg.h"
 #include "wx/listbox.h"
 #include "AmayaApp.h"
@@ -30,7 +31,7 @@ static int MyRef = 0;
 //-----------------------------------------------------------------------------
 BEGIN_EVENT_TABLE(PreferenceDlgWX, AmayaDialog)
 
-  EVT_NOTEBOOK_PAGE_CHANGED( XRCID("wxID_NOTEBOOK"), PreferenceDlgWX::OnPageChanged )
+  EVT_LISTBOOK_PAGE_CHANGED( XRCID("wxID_NOTEBOOK"), PreferenceDlgWX::OnPageChanged )
   EVT_BUTTON( XRCID("wxID_OK"),           PreferenceDlgWX::OnOk )
   EVT_BUTTON( XRCID("wxID_DEFAULT"),      PreferenceDlgWX::OnDefault )
   EVT_BUTTON( XRCID("wxID_CANCEL"),       PreferenceDlgWX::OnCancel )
@@ -91,7 +92,7 @@ END_EVENT_TABLE()
   MyRef = ref;
 
 #if !defined(DAV) || !defined(TEMPLATES)
-  wxNotebook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxNotebook);
+  wxListbook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxListbook);
 #endif /* DAV || TEMPLATES */
 #ifndef DAV
   // invalid WebDAV Page
@@ -176,7 +177,7 @@ PreferenceDlgWX::~PreferenceDlgWX()
   ----------------------------------------------------------------------*/
 int PreferenceDlgWX::GetPagePosFromXMLID( const wxString & xml_id )
 {
-  wxNotebook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxNotebook);
+  wxListbook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxListbook);
   wxPanel *    p_page     = (wxPanel *)FindWindow(wxXmlResource::GetXRCID(xml_id));
   int          page_id    = 0;
   bool         found      = false;
@@ -197,9 +198,9 @@ int PreferenceDlgWX::GetPagePosFromXMLID( const wxString & xml_id )
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void PreferenceDlgWX::OnPageChanged( wxNotebookEvent& event )
+void PreferenceDlgWX::OnPageChanged( wxListbookEvent& event )
 {
-  wxNotebook *p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxNotebook);
+  wxListbook *p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxListbook);
   wxPanel *p_new_page = (wxPanel *)((event.GetSelection()>=0 && p_notebook)?p_notebook->GetPage(event.GetSelection()):NULL);
 
   if(!m_IsInitialized || !p_new_page || !XRCCTRL(*this,"wxID_OK",wxButton) ||
@@ -239,7 +240,7 @@ void PreferenceDlgWX::SetupLabelDialog_General()
 {
   // Setup notebook tab names :
   int page_id;
-  wxNotebook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxNotebook);
+  wxListbook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxListbook);
   page_id = GetPagePosFromXMLID( _T("wxID_PAGE_GENERAL") );
   if (page_id >= 0)
     p_notebook->SetPageText( page_id, TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_GENERAL_MENU)) );
@@ -397,7 +398,7 @@ void PreferenceDlgWX::SetupLabelDialog_Browse()
 {
   // Setup notebook tab names :
   int page_id;
-  wxNotebook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxNotebook);
+  wxListbook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxListbook);
   page_id = GetPagePosFromXMLID( _T("wxID_PAGE_BROWSE") );
   if (page_id >= 0)
     p_notebook->SetPageText( page_id, TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_BROWSE_MENU)) );
@@ -483,7 +484,7 @@ void PreferenceDlgWX::SetupLabelDialog_Publish()
 {
   // Setup notebook tab names :
   int page_id;
-  wxNotebook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxNotebook);
+  wxListbook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxListbook);
   page_id = GetPagePosFromXMLID( _T("wxID_PAGE_PUBLISH") );
   if (page_id >= 0)
     p_notebook->SetPageText( page_id, TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_PUBLISH_MENU)) );
@@ -567,7 +568,7 @@ void PreferenceDlgWX::SetupLabelDialog_Cache()
 {
   // Setup notebook tab names :
   int page_id;
-  wxNotebook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxNotebook);
+  wxListbook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxListbook);
   page_id = GetPagePosFromXMLID( _T("wxID_PAGE_CACHE") );
   if (page_id >= 0)
     p_notebook->SetPageText( page_id, TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_CACHE_MENU)) );
@@ -666,7 +667,7 @@ void PreferenceDlgWX::SetupLabelDialog_Proxy()
 {
   // Setup notebook tab names :
   int page_id;
-  wxNotebook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxNotebook);
+  wxListbook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxListbook);
   page_id = GetPagePosFromXMLID( _T("wxID_PAGE_PROXY") );
   if (page_id >= 0)
     p_notebook->SetPageText( page_id, TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_PROXY_MENU)) );
@@ -731,7 +732,7 @@ void PreferenceDlgWX::SetupLabelDialog_Color()
 {
   // Setup notebook tab names :
   int page_id;
-  wxNotebook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxNotebook);
+  wxListbook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxListbook);
   page_id = GetPagePosFromXMLID( _T("wxID_PAGE_COLOR") );
   if (page_id >= 0)
     p_notebook->SetPageText( page_id, TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_COLOR_MENU)) );
@@ -948,7 +949,7 @@ void PreferenceDlgWX::SetupLabelDialog_Geometry()
   ThotBool val;
 
   // Setup notebook tab names :
-  wxNotebook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxNotebook);
+  wxListbook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxListbook);
   page_id = GetPagePosFromXMLID( _T("wxID_PAGE_GEOMETRY") );
   if (page_id >= 0)
     p_notebook->SetPageText( page_id, TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_GEOMETRY_MENU)) );
@@ -1009,7 +1010,7 @@ void PreferenceDlgWX::SetupLabelDialog_Annot()
 {
   // Setup notebook tab names :
   int page_id;
-  wxNotebook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxNotebook);
+  wxListbook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxListbook);
   page_id = GetPagePosFromXMLID( _T("wxID_PAGE_ANNOT") );
   if (page_id >= 0)
     p_notebook->SetPageText( page_id, TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_ANNOT_CONF_MENU)) );
@@ -1080,7 +1081,7 @@ void PreferenceDlgWX::SetupLabelDialog_DAV()
 {
   // Setup notebook tab names :
   int page_id;
-  wxNotebook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxNotebook);
+  wxListbook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxListbook);
   page_id = GetPagePosFromXMLID( _T("wxID_PAGE_DAV") );
   if (page_id >= 0)
     p_notebook->SetPageText( page_id, TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_DAV_PREFERENCES)) );
@@ -1197,7 +1198,7 @@ void PreferenceDlgWX::SetupLabelDialog_Templates()
 {
   // Setup notebook tab names :
   int page_id;
-  wxNotebook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxNotebook);
+  wxListbook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxListbook);
   page_id = GetPagePosFromXMLID( _T("wxID_PAGE_TEMPLATES") );
   if (page_id >= 0)
     p_notebook->SetPageText( page_id, TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_TEMPLATES)));
@@ -1385,7 +1386,7 @@ void PreferenceDlgWX::SetupLabelDialog_Emails()
 {
   // Setup notebook tab names :
   int page_id;
-  wxNotebook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxNotebook);
+  wxListbook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxListbook);
   page_id = GetPagePosFromXMLID( _T("wxID_PAGE_EMAILS") );
   if (page_id >= 0)
     p_notebook->SetPageText( page_id, TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_EMAILS)));
@@ -1503,7 +1504,7 @@ void PreferenceDlgWX::OnOk( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void PreferenceDlgWX::OnDefault( wxCommandEvent& event )
 {
-  wxNotebook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxNotebook);
+  wxListbook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxListbook);
   wxWindow * p_page = (wxWindow *) (p_notebook->GetSelection() != -1) ? p_notebook->GetPage(p_notebook->GetSelection()) : NULL;
 
   if (!p_page)

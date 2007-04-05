@@ -7,6 +7,8 @@
 // Headers
 //-----------------------------------------------------------------------------
 #include "wx/notebook.h"
+#include "wx/listbook.h"
+
 #include "AmayaDialog.h"
 #include "MENUconf.h"
 
@@ -112,7 +114,7 @@ private:
   void OnOk( wxCommandEvent& event );
   void OnCancel( wxCommandEvent& event );
   void OnDefault( wxCommandEvent& event );
-  void OnPageChanged( wxNotebookEvent& event );
+  void OnPageChanged( wxListbookEvent& event );
   void OnClose(wxCloseEvent& event);
 
   // Any class wishing to process wxWindows events must use this macro
