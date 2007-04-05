@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1998-2005
+ *  (c) COPYRIGHT INRIA and W3C, 1998-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -33,6 +33,7 @@
 #include "html2thot_f.h"
 #include "HTMLactions_f.h"
 #include "styleparser_f.h"
+#include "SVGbuilder_f.h"
 #include "Xml2thot_f.h"
 
 /*----------------------------------------------------------------------
@@ -104,7 +105,8 @@ void ParseCSSequivAttribute (int attrType, Attribute attr, Element el,
 #define buflen 200
   char               css_command[buflen+20];
   int                length, val = 0;
-  char               *text;
+  float              value;
+  char              *text;
 
   text = NULL;
   /* get the value of the attribute */
@@ -211,13 +213,31 @@ void ParseCSSequivAttribute (int attrType, Attribute attr, Element el,
       sprintf (css_command, "text-decoration: %s", text);
       break;
     case SVG_ATTR_opacity_:
-      sprintf (css_command, "opacity: %s", text);
+      value = ParseFloatAttribute (attr);
+      if (value > 1.0)
+        sprintf (css_command, "opacity: 1.0");
+      else if (value < 0)
+        sprintf (css_command, "opacity: 0.0");
+      else
+        sprintf (css_command, "opacity: %s", text);
       break;
     case SVG_ATTR_stroke_opacity:
-      sprintf (css_command, "stroke-opacity: %s", text);
+      value = ParseFloatAttribute (attr);
+      if (value > 1.0)
+        sprintf (css_command, "stroke-opacity: 1.0");
+      else if (value < 0)
+        sprintf (css_command, "stroke-opacity: 0.0");
+      else
+        sprintf (css_command, "stroke-opacity: %s", text);
       break;
     case SVG_ATTR_fill_opacity:
-      sprintf (css_command, "fill-opacity: %s", text);
+      value = ParseFloatAttribute (attr);
+      if (value > 1.0)
+        sprintf (css_command, "fill-opacity: 1.0");
+      else if (value < 0)
+        sprintf (css_command, "fill-opacity: 0.0");
+      else
+        sprintf (css_command, "fill-opacity: %s", text);
       break;
     default:
       break;
@@ -3177,6 +3197,7 @@ int ParseIntAttribute (Attribute attr)
     }
   return 0;
 }
+
 /*----------------------------------------------------------------------
   ParseFloatAttrbute : 
   Parse the value of a float data attribute

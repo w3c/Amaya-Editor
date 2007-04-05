@@ -347,7 +347,7 @@ void GL_SetPicForeground ()
   GLubyte         us_opac;
 
   us_opac = (GLubyte) FillOpacity;
-      glColor4ub ((GLubyte) 255, (GLubyte) 255, (GLubyte) 255, us_opac);
+  glColor4ub ((GLubyte) 255, (GLubyte) 255, (GLubyte) 255, us_opac);
 }
 
 
@@ -408,40 +408,28 @@ void GL_VideoInvert (int width, int height, int x, int y)
 void  GL_DrawEmptyRectangle (int fg, float x, float y, float width,
                              float height, float thick)
 { 
-  GL_SetForeground (fg, TRUE);
-  if (IS_ZERO (thick - 1))
-    {      
-      glBegin (GL_LINE_LOOP);
-      glVertex2f (x, y);
-      glVertex2f (x + width, y);
-      glVertex2f (x +  width, y + height);
-      glVertex2f (x, y + height);
-    }
-  else
-    {
-      thick = thick / 2;
-      glBegin (GL_QUADS);
-
-      glVertex2f (x - thick, y - thick);
-      glVertex2f (x + thick + width, y - thick);
-      glVertex2f (x + thick + width, y + thick);
-      glVertex2f (x - thick, y + thick);
-
-      glVertex2f (x - thick, y - thick + height);
-      glVertex2f (x + thick + width, y - thick + height);
-      glVertex2f (x + thick + width, y + thick + height);
-      glVertex2f (x - thick, y + thick + height);
-
-      glVertex2f (x - thick, y - thick);
-      glVertex2f (x + thick, y - thick);
-      glVertex2f (x + thick, y + thick + height);
-      glVertex2f (x - thick, y + thick + height);
-
-      glVertex2f (x - thick + width, y - thick);
-      glVertex2f (x + thick + width, y - thick);
-      glVertex2f (x + thick + width, y + thick + height);
-      glVertex2f (x - thick + width, y + thick + height);
-    }
+  thick = thick / 2.;
+  glBegin (GL_QUADS);
+  
+  glVertex2f (x - thick, y - thick);
+  glVertex2f (x + thick + width, y - thick);
+  glVertex2f (x + thick + width, y + thick);
+  glVertex2f (x - thick, y + thick);
+  
+  glVertex2f (x - thick, y - thick + height);
+  glVertex2f (x + thick + width, y - thick + height);
+  glVertex2f (x + thick + width, y + thick + height);
+  glVertex2f (x - thick, y + thick + height);
+  
+  glVertex2f (x - thick, y - thick);
+  glVertex2f (x + thick, y - thick);
+  glVertex2f (x + thick, y + thick + height);
+  glVertex2f (x - thick, y + thick + height);
+  
+  glVertex2f (x - thick + width, y - thick);
+  glVertex2f (x + thick + width, y - thick);
+  glVertex2f (x + thick + width, y + thick + height);
+  glVertex2f (x - thick + width, y + thick + height);
   glEnd ();
 }
 

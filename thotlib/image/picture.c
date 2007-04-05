@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2005
+ *  (c) COPYRIGHT INRIA, 1996-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -873,20 +873,20 @@ void DisplayOpaqueGroup (PtrAbstractBox pAb, int frame,
 
       if (do_display_background)
         {
-          GL_SetFillOpacity (1000);     
+          //GL_SetFillOpacity (1000);
           GL_SetOpacity (1000);
-          GL_SetStrokeOpacity (1000);
-          GL_TextureMap ((ThotPictInfo*)pAb->AbBox->Pre_computed_Pic,  
+          //GL_SetStrokeOpacity (1000);
+          GL_TextureMap ((ThotPictInfo*)pAb->AbBox->Pre_computed_Pic,
           x, y, width, height, frame);
         }
-      GL_SetFillOpacity (pAb->AbOpacity);
+      //GL_SetFillOpacity (pAb->AbOpacity);
       GL_SetOpacity (pAb->AbOpacity);
-      GL_SetStrokeOpacity (pAb->AbOpacity);
+      //GL_SetStrokeOpacity (pAb->AbOpacity);
       GL_TextureMap ((ThotPictInfo*)pAb->AbBox->Post_computed_Pic,
                      x, y, width, height, frame);
-      GL_SetFillOpacity (1000);
+      //GL_SetFillOpacity (1000);
       GL_SetOpacity (1000);
-      GL_SetStrokeOpacity (1000);
+      //GL_SetStrokeOpacity (1000);
 
       glLoadMatrixd (m);      
       TtaFreeMemory (m);      
