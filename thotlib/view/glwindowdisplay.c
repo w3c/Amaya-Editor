@@ -976,8 +976,8 @@ static void DisplayViewBoxTransformation (PtrTransform Trans, int Width, int Hei
           if (x_scale != 1 || y_scale != 1)
             is_scaled = TRUE;
 
-          x_trans += Trans->VbXTranslate;  
-          y_trans += Trans->VbYTranslate;
+          x_trans -= Trans->VbXTranslate * x_scale;  
+          y_trans -= Trans->VbYTranslate * y_scale;
           if (x_trans != 0 || y_trans != 0)
             is_translated = TRUE;
         }
