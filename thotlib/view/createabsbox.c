@@ -997,7 +997,7 @@ static ThotBool ElemHasCondAttribute (PtrElement pEl, PtrCondition pCond,
                                     }
                                   else if (pCond->CoTextMatch == CoMatch)
                                     /* the whole attribute value must be equal */
-                                    found = attrVal[j + i] == EOS;
+                                    found = (attrVal[j + i] == EOS && j == 0);
                                 }
                               /* prepare next search */
                               j++;

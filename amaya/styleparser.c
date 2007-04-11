@@ -6523,6 +6523,8 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
                   attrnames[0] = deb;
                   attrnums[0] = 0;
                   attrlevels[0] = 0;
+                  attrvals[0] = NULL;
+                  attrmatch[0] = Txtmatch;
                   specificity += 10;
                   /* check matching */
                   selector = SkipBlanksAndComments (selector);
