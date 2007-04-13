@@ -872,8 +872,13 @@ static void DisplayViewBoxTransformation (PtrTransform Trans, int Width, int Hei
     {
       if (Trans->TransType == PtElViewBox)
         {
-          x_scale = (double) (Width / Trans->VbWidth);
-          y_scale = (double) (Height / Trans->VbHeight);
+          /* if it's an image with only a preserveAspectRatio attribute and no
+             viewBox attribute, Trans->VbWidth and Trans->VbHeight are negative
+             and the real size of the image should be used instead (TODO) */
+          if (Trans->VbWidth > 0)
+            x_scale = (double) (Width / Trans->VbWidth);
+          if (Trans->VbHeight > 0)
+            y_scale = (double) (Height / Trans->VbHeight);
           if (Trans->VbAspectRatio == ArNone)
             /* Do not force uniform scaling: the element's bounding box exactly
                matches the viewport rectangle */

@@ -182,28 +182,40 @@ void ParseCSSequivAttribute (int attrType, Attribute attr, Element el,
           break;
         case SVG_ATTR_font_weight_VAL_bold_:
           sprintf (css_command, "font-weight: bold");
+          break;
         case SVG_ATTR_font_weight_VAL_bolder:
           sprintf (css_command, "font-weight: bolder");
+          break;
         case SVG_ATTR_font_weight_VAL_lighter:
           sprintf (css_command, "font-weight: lighter");
+          break;
         case SVG_ATTR_font_weight_VAL_w100:
           sprintf (css_command, "font-weight: 100");
+          break;
         case SVG_ATTR_font_weight_VAL_w200:
           sprintf (css_command, "font-weight: 200");
+          break;
         case SVG_ATTR_font_weight_VAL_w300:
           sprintf (css_command, "font-weight: 300");
+          break;
         case SVG_ATTR_font_weight_VAL_w400:
           sprintf (css_command, "font-weight: 400");
+          break;
         case SVG_ATTR_font_weight_VAL_w500:
           sprintf (css_command, "font-weight: 500");
+          break;
         case SVG_ATTR_font_weight_VAL_w600:
           sprintf (css_command, "font-weight: 600");
+          break;
         case SVG_ATTR_font_weight_VAL_w700:
           sprintf (css_command, "font-weight: 700");
+          break;
         case SVG_ATTR_font_weight_VAL_w800:
           sprintf (css_command, "font-weight: 800");
+          break;
         case SVG_ATTR_font_weight_VAL_w900:
           sprintf (css_command, "font-weight: 900");
+          break;
         case SVG_ATTR_font_weight_VAL_inherit:
           sprintf (css_command, "font-weight: inherit");
           break;
@@ -1131,10 +1143,10 @@ static void ParseviewBoxAttribute (Attribute attr, Element el, Document doc,
 }
 
 /*----------------------------------------------------------------------
-  ParsepreserveAspectRatioAttribute
+  ParsePreserveAspectRatioAttribute
   Parse the value of a viewbox attribute
   ----------------------------------------------------------------------*/
-static void ParsepreserveAspectRatioAttribute (Attribute attr, Element el,
+static void ParsePreserveAspectRatioAttribute (Attribute attr, Element el,
                                             Document doc, int* align,
                                             int* meetOrSlice, ThotBool delete_)
 {
@@ -1236,7 +1248,7 @@ void      SVGElementCreated (Element el, Document doc)
 {
   ElementType		elType;
   AttributeType attrType;
-  Attribute     attr;
+  Attribute     attr, attrViewBox, attrAspectRatio;
   float         vBX, vBY, vBWidth, vBHeight;
   int           align, meetOrSlice;
   char          msgBuffer[100];
@@ -1253,22 +1265,28 @@ void      SVGElementCreated (Element el, Document doc)
     {
       attrType.AttrSSchema = elType.ElSSchema;
       attrType.AttrTypeNum = SVG_ATTR_viewBox;
-      attr = TtaGetAttribute (el, attrType);
-      if (attr)
+      attrViewBox = TtaGetAttribute (el, attrType);
+      if (attrViewBox || elType.ElTypeNum == SVG_EL_image)
         {
-          ParseviewBoxAttribute (attr, el, doc, &vBX, &vBY, &vBWidth,
-                                 &vBHeight, FALSE);
+          if (attrViewBox)
+            ParseviewBoxAttribute (attrViewBox, el, doc, &vBX, &vBY, &vBWidth,
+                                   &vBHeight, FALSE);
+          else
+            {
+              vBX = 0; vBY = 0; vBWidth = -1; vBHeight = -1;
+            }
           attrType.AttrTypeNum = SVG_ATTR_preserveAspectRatio;
-          attr = TtaGetAttribute (el, attrType);
-          if (attr)
-            ParsepreserveAspectRatioAttribute (attr, el, doc, &align,
-                                               &meetOrSlice, FALSE);
+          attrAspectRatio = TtaGetAttribute (el, attrType);
+          if (attrAspectRatio)
+            ParsePreserveAspectRatioAttribute (attrAspectRatio, el, doc,
+                                               &align, &meetOrSlice, FALSE);
           else
             {
               align = 6; /* preserveAspectRatio = xMidYMid by default */
               meetOrSlice = 1; /* meet by default */
             }
-          TtaInsertTransform (el, TtaNewTransformViewBox (vBX, vBY, vBWidth,
+          if (attrViewBox || attrAspectRatio)
+            TtaInsertTransform (el, TtaNewTransformViewBox (vBX, vBY, vBWidth,
                                            vBHeight, align, meetOrSlice), doc);
         }
     }

@@ -3373,47 +3373,47 @@ static char *ParseACSSFontWeight (Element element, PSchema tsch,
     {
       if (!strncasecmp (cssRule, "100", 3))
         {
-          weight.typed_data.value = -3;
+          weight.typed_data.value = -4;
           cssRule = SkipWord (cssRule);
         }
       else if (!strncasecmp (cssRule, "200", 3))
         {
-          weight.typed_data.value = -2;
+          weight.typed_data.value = -3;
           cssRule = SkipWord (cssRule);
         }
       else if (!strncasecmp (cssRule, "300", 3))
         {
-          weight.typed_data.value = -1;
+          weight.typed_data.value = -2;
           cssRule = SkipWord (cssRule);
         }
       else if (!strncasecmp (cssRule, "400", 3))
         {
-          weight.typed_data.value = 0;
+          weight.typed_data.value = -1;
           cssRule = SkipWord (cssRule);
         }
       else if (!strncasecmp (cssRule, "500", 3))
         {
-          weight.typed_data.value = +1;
+          weight.typed_data.value = 0;
           cssRule = SkipWord (cssRule);
         }
       else if (!strncasecmp (cssRule, "600", 3))
         {
-          weight.typed_data.value = +2;
+          weight.typed_data.value = +1;
           cssRule = SkipWord (cssRule);
         }
       else if (!strncasecmp (cssRule, "700", 3))
         {
-          weight.typed_data.value = +3;
+          weight.typed_data.value = +2;
           cssRule = SkipWord (cssRule);
         }
       else if (!strncasecmp (cssRule, "800", 3))
         {
-          weight.typed_data.value = +4;
+          weight.typed_data.value = +3;
           cssRule = SkipWord (cssRule);
         }
       else if (!strncasecmp (cssRule, "900", 3))
         {
-          weight.typed_data.value = +5;
+          weight.typed_data.value = +4;
           cssRule = SkipWord (cssRule);
         }
     }
@@ -3432,12 +3432,16 @@ static char *ParseACSSFontWeight (Element element, PSchema tsch,
       weight.typed_data.unit = VALUE_INHERIT;
       cssRule += 7;
     }
-  else if (!strncasecmp (cssRule, "bolder", 6) ||
-           !strncasecmp (cssRule, "lighter", 7))
+  else if (!strncasecmp (cssRule, "bolder", 6))
     {
-      /* not implemented */
+      weight.typed_data.value = +2;
       cssRule = SkipWord (cssRule);
-      return (cssRule);
+    }
+
+  else if (!strncasecmp (cssRule, "lighter", 7))
+    {
+      weight.typed_data.value = -1;
+      cssRule = SkipWord (cssRule);
     }
   else
     return (cssRule);
