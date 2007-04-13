@@ -169,7 +169,8 @@ STRUCT
               contentScriptType = text;
               contentStyleType = text;
               RealLang = Yes_;
-              Charset = text)
+              Charset = text;
+              UnresolvedRef = Yes_)
         = LIST OF (GraphicsElement) + (XMLcomment, XMLPI, CDATA,
                                        Unknown_namespace);
 
@@ -2521,6 +2522,7 @@ EXCEPT
    Namespace:                Invisible;
    RealLang:                Invisible;
    Charset:                  Invisible;
+   UnresolvedRef:     Invisible;
    Timeline_cross:    MoveResize, NoResize, HighlightChildren, NoShowBox, NoCut;
    { the following attributes are made invisible to prevent the Attributes
      menu from becoming too long }

@@ -2405,6 +2405,7 @@ void UsePasted (NotifyElement * event)
   Attribute	attr;
   int           length;
   char          *href;
+  ThotBool      ok;
 
   /* first, get the xlink:href attribute */
   elType = TtaGetElementType (event->element);
@@ -2418,7 +2419,7 @@ void UsePasted (NotifyElement * event)
       length = TtaGetTextAttributeLength (attr);
       href = (char *)TtaGetMemory (length + 1);
       TtaGiveTextAttributeValue (attr, href, &length);
-      CopyUseContent (event->element, event->document, href);
+      ok = CopyUseContent (event->element, event->document, href);
       TtaFreeMemory (href);
     }
   /* Check attribute NAME or ID in order to make sure that its value */
@@ -2434,6 +2435,7 @@ void AttrXlinkHrefChanged (NotifyAttribute *event)
   ElementType   elType;
   char         *text;
   int           length;
+  ThotBool      ok;
 
   length = TtaGetTextAttributeLength (event->attribute);
   if (length <= 0)
@@ -2447,7 +2449,7 @@ void AttrXlinkHrefChanged (NotifyAttribute *event)
                          text);
   else if (elType.ElTypeNum == SVG_EL_use_ ||
            elType.ElTypeNum == SVG_EL_tref)
-    CopyUseContent (event->element, event->document, text);
+    ok = CopyUseContent (event->element, event->document, text);
   TtaFreeMemory (text);
 }
 

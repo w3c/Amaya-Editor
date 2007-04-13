@@ -463,8 +463,9 @@ void CopyTRefContent (Element source, Element el, Document doc)
   CopyUseContent
   Copy the subtree pointed by the href URI as a subtree of element el,
   which is of type use or tref.
+  Return TRUE is successful.
   ----------------------------------------------------------------------*/
-void CopyUseContent (Element el, Document doc, char *href)
+ThotBool CopyUseContent (Element el, Document doc, char *href)
 {
   Element              source, curEl, copy, child, nextChild, elFound;
   ElementType          elType;
@@ -510,7 +511,9 @@ void CopyUseContent (Element el, Document doc, char *href)
         /* search forward if not found */
         direction = SearchForward;
       }
-  if (source)
+  if (!source)
+    return FALSE;
+  else
     /* the element to be copied in the use or tref element has been found */
     {
       /* remove the old copy if there is one */
@@ -552,6 +555,7 @@ void CopyUseContent (Element el, Document doc, char *href)
       if (oldStructureChecking)
         TtaSetStructureChecking (oldStructureChecking, doc);
     }
+  return TRUE;
 }
 
 /*----------------------------------------------------------------------
@@ -1313,6 +1317,44 @@ void      SVGElementCreated (Element el, Document doc)
 }
 
 /*----------------------------------------------------------------------
+  InstanciateUseElements
+  Find all "use" element in the subtree of element el and instanciate
+  those with no child.
+  ----------------------------------------------------------------------*/
+static void InstanciateUseElements (Element el, Document doc)
+{
+  Element       use;
+  ElementType   elType;
+  Attribute     attr;
+  AttributeType attrType;
+  int           length;
+  char          *href;
+
+  elType = TtaGetElementType (el);
+  elType.ElTypeNum = SVG_EL_use_;
+  attrType.AttrSSchema = elType.ElSSchema;
+  attrType.AttrTypeNum = SVG_ATTR_xlink_href;
+  use = el;
+  do
+    {
+      use = TtaSearchTypedElementInTree (elType, SearchForward, el, use);
+      if (use && !TtaGetFirstChild (use))
+        {
+          attr = TtaGetAttribute (use, attrType);
+          if (attr)
+            {
+              length = TtaGetTextAttributeLength (attr);
+              href = (char *)TtaGetMemory (length + 1);
+              TtaGiveTextAttributeValue (attr, href, &length);
+              CopyUseContent (use, doc, href);
+              TtaFreeMemory (href);
+            }
+        }
+    }
+  while (use);
+}
+
+/*----------------------------------------------------------------------
   SVGElementComplete
   Check the Thot structure of the SVG element el.
   ----------------------------------------------------------------------*/
@@ -1320,14 +1362,14 @@ void SVGElementComplete (ParserData *context, Element el, int *error)
 {
   Document             doc;   
   ElementType		       elType, parentType, newType;
-  Element		           child, parent, new_, leaf;
+  Element		           child, parent, new_, leaf, root, prev;
   AttributeType        attrType;
   Attribute            attr;
   int                  length;
   PRule		             fillPatternRule, newPRule;
   SSchema	             SVGSSchema;
   char                 *href;
-  ThotBool		         closedShape;
+  ThotBool		         closedShape, ok;
 
   *error = 0;
   doc = context->doc;
@@ -1415,10 +1457,23 @@ void SVGElementComplete (ParserData *context, Element el, int *error)
       switch (elType.ElTypeNum)
         {	 
         case SVG_EL_foreignObject:
-        case SVG_EL_SVG:
         case SVG_EL_symbol_:
           /* case SVG_EL_view: */
           TtaSetElCoordinateSystem (el);
+          break;
+
+        case SVG_EL_SVG:
+          TtaSetElCoordinateSystem (el);
+          /* if the SVG element has a UnresolvedRef attribute, process all
+             use elements in the subtree that have not been instanciated yet */
+          attrType.AttrSSchema = elType.ElSSchema;
+          attrType.AttrTypeNum = SVG_ATTR_UnresolvedRef;
+          attr = TtaGetAttribute (el, attrType);
+          if (attr)
+            {
+              InstanciateUseElements (el, doc);
+              TtaRemoveAttribute (el, attr, doc);
+            } 
           break;
 
         case SVG_EL_image:
@@ -1456,8 +1511,49 @@ void SVGElementComplete (ParserData *context, Element el, int *error)
               length = TtaGetTextAttributeLength (attr);
               href = (char *)TtaGetMemory (length + 1);
               TtaGiveTextAttributeValue (attr, href, &length);
-              CopyUseContent (el, doc, href);
+              ok = CopyUseContent (el, doc, href);
               TtaFreeMemory (href);
+              if (!ok)
+                /* the referred element was not found. It may be a forward
+                   reference to an element that has not been parsed yet.
+                   We should retry when the document is complete. */
+                {
+                  /* find the root of the current SVG tree */
+                  root = NULL;
+                  parent = TtaGetParent (el);
+                  while (parent && !root)
+                    {
+                      parentType = TtaGetElementType (parent);
+                      prev = parent;
+                      parent = TtaGetParent (parent);
+                      if (parentType.ElSSchema == elType.ElSSchema &&
+                          parentType.ElTypeNum == SVG_EL_SVG)
+                        /* this is an SVG element */
+                        if (parent)
+                          {
+                            parentType = TtaGetElementType (parent);
+                            if (parentType.ElTypeNum == SVG_EL_Document)
+                              /* its parent is the root of the document */
+                              root = prev;
+                            else if (parentType.ElSSchema != elType.ElSSchema)
+                              /* its parent is in a different namespace */
+                              root = prev;
+                          }
+                    }
+                  if (root)
+                    /* put a UnresolvedRef attribute on the root if it is not
+                       present yet */
+                    {
+                      attrType.AttrSSchema = elType.ElSSchema;
+                      attrType.AttrTypeNum = SVG_ATTR_UnresolvedRef;
+                      attr = TtaGetAttribute (root, attrType);
+                      if (!attr)
+                        {
+                          attr = TtaNewAttribute (attrType);
+                          TtaAttachAttribute (root, attr, doc);
+                        }
+                    } 
+                }
             }
           break;
 
