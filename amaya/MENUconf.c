@@ -2821,9 +2821,7 @@ void SetEmailsConf (void)
   TtaSetEnvInt ("EMAILS_SMTP_PORT", GProp_Emails.serverPort, TRUE);
   TtaSetEnvString ("EMAILS_SMTP_SERVER", GProp_Emails.serverAddress, TRUE);
   TtaSetEnvString ("EMAILS_FROM_ADDRESS", GProp_Emails.fromAddress, TRUE);
-
   TtaSaveAppRegistry ();
-
 }
 
 #ifdef _WX
@@ -2862,10 +2860,10 @@ static void EmailsCallbackDialog (int ref, int typedata, char *data)
               break;
             case 1: /* OK */
               SetEmailsConf();
-              TtaDestroyDialogue (ref);
+              //TtaDestroyDialogue (ref);
               break;
             case 2: /* DEFAULT */
-//              GetDefaultEmailsConf();
+              //GetDefaultEmailsConf();
               break;
             default:
               break;
@@ -4453,8 +4451,7 @@ void SetTemplatesConf (void)
   if (old != GProp_Templates.S_Templates)
     UpdateShowTemplates ();
   TtaSaveAppRegistry ();
-  
-  SetTemplateRepositoryList((const Prop_Templates_Path**)&(GProp_Templates.FirstPath));
+  //SetTemplateRepositoryList((const Prop_Templates_Path**)&(GProp_Templates.FirstPath));
 #endif /* TEMPLATES */
 }
 
@@ -4499,7 +4496,7 @@ static void TemplatesCallbackDialog (int ref, int typedata, char *data)
               break;
             case 1: /* OK */
               SetTemplatesConf();
-              TtaDestroyDialogue (ref);
+              //TtaDestroyDialogue (ref);
               break;
             case 2: /* DEFAULT */
               GetDefaultTemplatesConf();
@@ -4912,9 +4909,10 @@ void PreferenceMenu (Document document, View view)
   /* keep initial values to detect an change */
   InitOpeningLocation = GProp_Browse.OpeningLocation;
   InitLoadImages = GProp_Browse.LoadImages;
-  InitLoadObjects =GProp_Browse. LoadObjects;
+  InitLoadObjects = GProp_Browse. LoadObjects;
   InitBgImages = GProp_Browse.BgImages;
   InitLoadCss = GProp_Browse.LoadCss;
+  strcpy (InitScreen, GProp_Browse.ScreenType);
 
   /* ---> Publish Tab */
   GetPublishConf ();

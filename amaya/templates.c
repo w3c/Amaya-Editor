@@ -35,17 +35,13 @@
 #include "init_f.h"
 #include "wxdialogapi_f.h"
 #include "AHTURLTools_f.h"
-
 #endif /* TEMPLATES */
-
 
 #include "fetchXMLname_f.h"
 #include "MENUconf.h"
 
-
 /* Paths from which looking for templates.*/
 static Prop_Templates_Path *TemplateRepositoryPaths;
-
 
 /*----------------------------------------------------------------------
   IsTemplateInstanceDocument: Test if a document is a template instance
@@ -104,14 +100,14 @@ void* AllocTemplateRepositoryListElement (const char* path, void* prevElement)
   ----------------------------------------------------------------------*/
 void FreeTemplateRepositoryList (void* list)
 {
-  Prop_Templates_Path** l = (Prop_Templates_Path**) list;
-  
-  Prop_Templates_Path* element = *l;
+  Prop_Templates_Path **l = (Prop_Templates_Path**) list;
+  Prop_Templates_Path  *element = *l;
+
   l = NULL;
   while (element)
   {
     Prop_Templates_Path* next = element->NextPath;
-    TtaFreeMemory(element);
+    TtaFreeMemory (element);
     element = next;
   }
 }
@@ -126,7 +122,7 @@ static void CopyTemplateRepositoryList (const Prop_Templates_Path** src,
 {
   Prop_Templates_Path *element=NULL, *current=NULL;
   
-  if (*src!=NULL)
+  if (*src)
   {
     *dst = (Prop_Templates_Path*) TtaGetMemory (sizeof(Prop_Templates_Path));
     (*dst)->NextPath = NULL;
@@ -159,12 +155,13 @@ static int LoadTemplateRepositoryList (Prop_Templates_Path** list)
   int nb = 0;
   FILE *file;
   
-  FreeTemplateRepositoryList(list);
-  
+  //clean up the curent list
+  FreeTemplateRepositoryList (list);
+
+  // open the file
   path = (char *) TtaGetMemory (MAX_LENGTH);
   homePath       = TtaGetEnvString ("APP_HOME");
   sprintf (path, "%s%ctemplates.dat", homePath, DIR_SEP);
-  
   file = TtaReadOpen ((char *)path);
   if (!file)
   {
@@ -178,6 +175,7 @@ static int LoadTemplateRepositoryList (Prop_Templates_Path** list)
   
   if (file)
     {
+      // read the file
       c = (unsigned char*)path;
       *c = EOS;
       while (TtaReadByte (file, c))
@@ -280,7 +278,7 @@ void SetTemplateRepositoryList (const void* list)
 void InitTemplates ()
 {
   TtaSetEnvBoolean ("SHOW_TEMPLATES", TRUE, FALSE);
-  LoadTemplateRepositoryList(&TemplateRepositoryPaths);
+  LoadTemplateRepositoryList (&TemplateRepositoryPaths);
 }
 
 
@@ -290,14 +288,13 @@ void InitTemplates ()
 void NewTemplate (Document doc, View view)
 {
 #ifdef TEMPLATES
-  char        *templateDir = TtaGetEnvString ("TEMPLATES_DIRECTORY");
   ThotBool     created;
 
   if (Templates_Dic == NULL)
     InitializeTemplateEnvironment ();
   created = CreateNewTemplateDocDlgWX (BaseDialog + OpenTemplate,
                                       /*TtaGetViewFrame (doc, view)*/NULL, doc,
-                                      TtaGetMessage (AMAYA, AM_NEW_TEMPLATE),templateDir);
+                                      TtaGetMessage (AMAYA, AM_NEW_TEMPLATE));
   
   if (created)
     {

@@ -88,7 +88,8 @@ private:
   // "Templates" tab
   void SetupLabelDialog_Templates();
   void SetupDialog_Templates( const Prop_Templates & prop );
-  Prop_Templates GetValueDialog_Templates();
+  void UpdateTemplateList();
+  void GetValueDialog_Templates();
   void OnTemplateChoose(wxCommandEvent& event);
   void OnTemplateAdd(wxCommandEvent& event);
   void OnTemplateDel(wxCommandEvent& event);

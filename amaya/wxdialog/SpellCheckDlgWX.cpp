@@ -121,7 +121,7 @@ SpellCheckDlgWX::SpellCheckDlgWX( int ref, int base, wxWindow* parent,
   XRCCTRL(*this, "wxID_SPELL_FINISHED", wxStaticText)->SetLabel(TtaConvMessageToWX( "" ));
 
   // buttons
-  XRCCTRL(*this, "wxID_CANCEL", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_DONE) ));
+  XRCCTRL(*this, "wxID_CANCEL", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_CANCEL) ));
   XRCCTRL(*this, "wxID_SEARCH_SKIP_BUTTON", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_Pass_Without) ));
   XRCCTRL(*this, "wxID_SKIP_DIC_BUTTON", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_Pass_With) ));
   XRCCTRL(*this, "wxID_REPLACE_NEXT_BUTTON", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_Replace_Without) ));

@@ -38,8 +38,7 @@ extern ThotBool CreateOpenDocDlgWX ( int ref,
 extern ThotBool CreateNewTemplateDocDlgWX ( int ref,
                                             ThotWindow parent,
                                             Document doc,
-                                            const char *title,
-                                            const char *templateDir );
+                                            const char *title );
 extern ThotBool CreateImageDlgWX ( int ref,
                                    ThotWindow parent,
                                    const char *title,
@@ -196,8 +195,7 @@ extern ThotBool CreateOpenDocDlgWX ( int ref,
 extern ThotBool CreateNewTemplateDocDlgWX ( int ref,
                                               ThotWindow parent,
                                               Document doc,
-                                              const char *title,
-                                              const char *templateDir );
+                                              const char *title );
 extern ThotBool CreateImageDlgWX ( int ref,
                                      ThotWindow parent,
                                      const char *title,

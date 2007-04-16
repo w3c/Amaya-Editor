@@ -8,7 +8,7 @@
       <orient>wxVERTICAL</orient>
       <object class="sizeritem">
         <object class="wxListbook" name="wxID_NOTEBOOK">
-          <style platform="unix">wxLB_LEFT</style>
+          <style>wxLB_LEFT|wxNO_BORDER</style>
           <object class="listbookpage">
             <label>*Generale/Editeur*</label>
             <object class="wxPanel" name="wxID_PAGE_GENERAL">
@@ -171,21 +171,17 @@
                       <option>1</option>
                       <flag>wxALL|wxEXPAND</flag>
                     </object>
-                    <object class="spacer">
-                      <size>10,0</size>
-                    </object>
                     <object class="sizeritem">
                       <object class="wxRadioBox" name="wxID_RADIO_QUICKAXX">
-                        <label>*Acces rapides*</label>
+                        <label>*Acces liens rapides*</label>
                         <content>
                           <item>Alt</item>
                           <item>Ctrl</item>
                           <item>Ignorer</item>
                         </content>
+                        <size>110,-1</size>
                         <style>wxRA_SPECIFY_COLS</style>
                       </object>
-                      <option>1</option>
-                      <flag>wxALL</flag>
                     </object>
                   </object>
                   <option>0</option>
@@ -256,7 +252,7 @@
                               <item>*Nouvel onglet (pas encode disponible sous Mac)</item>
                               <item>*Dans une nouvelle fenetre*</item>
                             </content>
-                            <size>400,-1</size>
+                            <size>250,-1</size>
                             <style>wxRA_SPECIFY_COLS</style>
                           </object>
                           <option>1</option>
@@ -306,7 +302,7 @@
                     <object class="sizeritem">
                       <object class="wxStaticText" name="wxID_LABEL_LANNEGLISTLG">
                         <label>*Liste des langues preferees comme fr en   :*</label>
-                        <size>280,-1</size>
+                        <size>250,-1</size>
                       </object>
                       <flag>wxRIGHT</flag>
                       <border>2</border>
@@ -326,7 +322,7 @@
                     <object class="sizeritem">
                       <object class="wxStaticText" name="wxID_LABEL_MAXURL">
                         <label>*Urls number in history :*</label>
-                        <size>280,-1</size>
+                        <size>250,-1</size>
                       </object>
                       <flag>wxRIGHT|wxALIGN_CENTRE_VERTICAL</flag>
                       <border>5</border>
@@ -343,7 +339,7 @@
                     <object class="sizeritem">
                       <object class="wxButton" name="wxID_BUTTON_CLEARURL">
                         <label>*Clear all entries in the history of urls*</label>
-                        <size>210,-1</size>
+                        <size>200,-1</size>
                       </object>
                       <flag>wxLEFT|wxALIGN_CENTRE_VERTICAL</flag>
                       <border>5</border>
@@ -1221,7 +1217,7 @@
                 <object class="sizeritem">
                   <object class="wxStaticText" name="wxID_LABEL_EMAIL">
                     <label>*Parametres pour l'envoi de courriels :*</label>
-                    <size>300,-1</size>
+                    <size>250,-1</size>
                   </object>
                   <flag>wxEXPAND</flag>
                   <border>4</border>
@@ -1236,7 +1232,7 @@
                     <object class="sizeritem">
                       <object class="wxStaticText" name="wxID_LABEL_EMAIL_SERVER_ADDRESS">
                         <label>*Adresse du serveur :*</label>
-                        <size>150,-1</size>
+                        <size>220,-1</size>
                         <style>wxALIGN_RIGHT</style>
                       </object>
                       <option>1</option>
@@ -1245,16 +1241,17 @@
                     </object>
                     <object class="sizeritem">
                       <object class="wxTextCtrl" name="wxID_VALUE_EMAIL_SERVER_ADDRESS">
+                        <size>200,-1</size>
                         <style></style>
                       </object>
                       <option>1</option>
-                      <flag>wxALL|wxEXPAND</flag>
+                      <flag>wxALL</flag>
                       <border>4</border>
                     </object>
                     <object class="sizeritem">
                       <object class="wxStaticText" name="wxID_LABEL_EMAIL_SERVER_PORT">
                         <label>*Port d'envoi :*</label>
-                        <size>150,-1</size>
+                        <size>200,-1</size>
                         <style>wxALIGN_RIGHT</style>
                       </object>
                       <option>1</option>
@@ -1269,13 +1266,13 @@
                             <value>25</value>
                             <min>1</min>
                             <max>65535</max>
-                            <size>100,-1</size>
+                            <size>50,-1</size>
                           </object>
                         </object>
                         <object class="sizeritem">
                           <object class="wxStaticText" name="wxID_LABEL_EMAIL_DEFAULT_SERVER_PORT">
                             <label>*(25 par defaut)*</label>
-                            <size>100,-1</size>
+                            <size>150,-1</size>
                           </object>
                           <option>0</option>
                           <flag>wxALL|wxALIGN_CENTRE_VERTICAL</flag>
@@ -1291,19 +1288,20 @@
                     <object class="sizeritem">
                       <object class="wxStaticText" name="wxID_LABEL_EMAIL_FROM_ADDRESS">
                         <label>*Adresse d'envoi :*</label>
-                        <size>150,-1</size>
+                        <size>220,-1</size>
                         <style>wxALIGN_RIGHT</style>
                       </object>
                       <option>1</option>
-                      <flag>wxLEFT|wxRIGHT|wxEXPAND|wxALIGN_CENTRE_VERTICAL</flag>
+                      <flag>wxALL|wxEXPAND|wxALIGN_CENTRE_VERTICAL</flag>
                       <border>4</border>
                     </object>
                     <object class="sizeritem">
                       <object class="wxTextCtrl" name="wxID_VALUE_EMAIL_FROM_ADDRESS">
+                        <size>200,-1</size>
                         <style></style>
                       </object>
                       <option>1</option>
-                      <flag>wxALL|wxEXPAND</flag>
+                      <flag>wxALL</flag>
                       <border>4</border>
                     </object>
                   </object>
@@ -1323,7 +1321,7 @@
         <object class="wxBoxSizer">
           <orient>wxHORIZONTAL</orient>
           <object class="spacer">
-            <size>450,0</size>
+            <size>200,0</size>
             <option>1</option>
           </object>
           <object class="sizeritem">

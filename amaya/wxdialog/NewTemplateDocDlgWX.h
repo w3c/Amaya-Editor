@@ -23,7 +23,6 @@ public:
 		       wxWindow* parent,
 		       int doc,
 		       const wxString & title,
-		       const wxString & templateDir,
 		       const wxString & filter,
 		       int * p_last_used_filter
 		       );
@@ -38,20 +37,15 @@ private:
   void OnClearButton( wxCommandEvent& event );
   void OnCancelButton( wxCommandEvent& event );
   void OnClose( wxCloseEvent& event );
-
   void OnInstanceFilenameButton( wxCommandEvent& event );
   void OnDirNameButton ( wxCommandEvent& event );
-
   void OnTemplatenameSelected ( wxCommandEvent& event );
-
-  void OnText_TemplateDirName( wxCommandEvent& event );
   void OnText_InstanceDirName( wxCommandEvent& event );
   void OnText_InstanceFilename( wxCommandEvent& event );
   void OnText_Combobox( wxCommandEvent& event );
 
  private:
-
-  void UpdateTemplateFromDir();
+  void UpdateTemplateList ();
   void UpdateInstanceFromDir ();
   void UpdateInstanceFromString(const wxString & full_path);
   void UpdateDirFromString( const wxString & full_path);

@@ -135,8 +135,8 @@ extern void CopyTRefContent ( Element source,
                                 Element el,
                                 Document doc );
 extern ThotBool CopyUseContent ( Element el,
-                                 Document doc,
-                                 char *href );
+                                   Document doc,
+                                   char *href );
 extern void EvaluateTestAttrs ( Element el,
                                   Document doc );
 extern void SetTextAnchor ( Attribute attr,

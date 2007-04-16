@@ -404,7 +404,7 @@ ThotBool CreateOpenDocDlgWX ( int ref, ThotWindow parent, const char *title,
   returns:
   ----------------------------------------------------------------------*/
 ThotBool CreateNewTemplateDocDlgWX (int ref,  ThotWindow parent, Document doc,
-                                    const char *title, const char *templateDir)
+                                    const char *title)
 {
 #if defined(TEMPLATES) && defined(_WX)
   /* check if the dialog is alredy open */
@@ -413,13 +413,11 @@ ThotBool CreateNewTemplateDocDlgWX (int ref,  ThotWindow parent, Document doc,
   
   wxString wx_title = TtaConvMessageToWX( title );
   wxString wx_filter = TtaConvMessageToWX("All files (*.*)\0*.*\0");
-  wxString wx_templateDir = TtaConvMessageToWX( templateDir );
   
   NewTemplateDocDlgWX * p_dlg = new NewTemplateDocDlgWX( ref,
                                                          parent,
                                                          doc,
                                                          wx_title,
-                                                         wx_templateDir,
                                                          wx_filter,
                                                          &g_Last_used_filter
                                                          );

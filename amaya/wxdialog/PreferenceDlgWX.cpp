@@ -129,7 +129,7 @@ END_EVENT_TABLE()
   SetupLabelDialog_Emails();
 
   XRCCTRL(*this, "wxID_OK", wxButton)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_APPLY_BUTTON)));
-  XRCCTRL(*this, "wxID_CANCEL", wxButton)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_DONE)));
+  XRCCTRL(*this, "wxID_CANCEL", wxButton)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_CANCEL)));
   XRCCTRL(*this, "wxID_DEFAULT", wxButton)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_DEFAULT_BUTTON)));
 
   // load current values and send it to the dialog
@@ -1190,7 +1190,7 @@ Prop_DAV PreferenceDlgWX::GetValueDialog_DAV()
 #ifdef TEMPLATES
 
 /*----------------------------------------------------------------------
-  SetupLabelDialog_Templates init labels
+  SetupLabelDialog_Templates inits template labels
   params:
   returns:
   ----------------------------------------------------------------------*/
@@ -1211,47 +1211,56 @@ void PreferenceDlgWX::SetupLabelDialog_Templates()
 }
 
 /*----------------------------------------------------------------------
-  SetupDialog_Templates init labels
+  SetupDialog_Templates inits template dialog
   params:
   returns:
   ----------------------------------------------------------------------*/
 void PreferenceDlgWX::SetupDialog_Templates( const Prop_Templates & prop)
 {
-  //printf("PreferenceDlgWX::SetupDialog_Templates : %d\n", prop.S_Templates);
   XRCCTRL(*this, "wxID_CHECK_SHOWTEMPLATES", wxCheckBox)->SetValue( prop.S_Templates );
-  
   wxListBox *box = XRCCTRL(*this, "wxID_LIST_TEMPLATE_REPOSITORIES", wxListBox);
   Prop_Templates_Path* path = prop.FirstPath;
   while (path)
-  {
-    box->Append(TtaConvMessageToWX(path->Path));
-    path = path->NextPath;
-  }
+    {
+      box->Append(TtaConvMessageToWX(path->Path));
+      path = path->NextPath;
+    }
 }
 
 /*----------------------------------------------------------------------
-  GetValueDialog_Templates init labels
+  UpdateTemplateList updates the current list of templates
   params:
   returns:
   ----------------------------------------------------------------------*/
-Prop_Templates PreferenceDlgWX::GetValueDialog_Templates()
+void PreferenceDlgWX::UpdateTemplateList()
 {
-  wxString            value;
-  Prop_Templates      prop;
+  wxString             value;
+  Prop_Templates       prop = GetProp_Templates();
   Prop_Templates_Path *element = NULL;
+  wxListBox           *box;
+  int                  i;
 
-  memset( &prop, 0, sizeof(Prop_Templates) );
-  prop.S_Templates = XRCCTRL(*this, "wxID_CHECK_SHOWTEMPLATES", wxCheckBox)->GetValue();
-  
-  wxListBox *box = XRCCTRL(*this, "wxID_LIST_TEMPLATE_REPOSITORIES", wxListBox);
-  int i;
-  for (i=0; i<(int)box->GetCount(); i++)
-  {
+  FreeTemplateRepositoryList(&(prop.FirstPath));
+  box = XRCCTRL(*this, "wxID_LIST_TEMPLATE_REPOSITORIES", wxListBox);
+  for (i = 0; i < (int)box->GetCount(); i++)
+    {
     element = (Prop_Templates_Path*) AllocTemplateRepositoryListElement( (const char*) box->GetString(i).mb_str(*wxConvCurrent), element);
-    if (i==0)
+    if (i == 0)
        prop.FirstPath = element;
-  }
-  return prop;
+    }
+  SetTemplateRepositoryList ((const Prop_Templates_Path**)&(prop.FirstPath));
+}
+
+/*----------------------------------------------------------------------
+  GetValueDialog_Templates gets the show template indicator
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+void PreferenceDlgWX::GetValueDialog_Templates()
+{
+  Prop_Templates       prop = GetProp_Templates();
+
+  prop.S_Templates = XRCCTRL(*this, "wxID_CHECK_SHOWTEMPLATES", wxCheckBox)->GetValue();
 }
 
 
@@ -1266,7 +1275,6 @@ void PreferenceDlgWX::OnTemplateChoose(wxCommandEvent& event)
   if(!path.IsEmpty())
     path.Replace(wxT("~"), home);
   
-  // wxString dir = wxDirSelector(wxT("*Choose a folder*"), path);
   p_dlg = new wxFileDialog(this,
                            TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_OPEN_URL) ),
                            _T(""), _T(""), _T("Templates (*.xtd)|*.xtd"),
@@ -1286,6 +1294,9 @@ void PreferenceDlgWX::OnTemplateAdd(wxCommandEvent& event)
   wxListBox *box = XRCCTRL(*this, "wxID_LIST_TEMPLATE_REPOSITORIES", wxListBox);
   box->Append(XRCCTRL(*this, "wxID_TEXT_NEW_TEMPLATE", wxTextCtrl)->GetValue());
   box->SetSelection(box->GetCount()-1);
+
+  // Update the list of templates
+  UpdateTemplateList();
 }
 
 /*----------------------------------------------------------------------
@@ -1302,9 +1313,11 @@ void PreferenceDlgWX::OnTemplateDel(wxCommandEvent& event)
 {
   wxListBox *box = XRCCTRL(*this, "wxID_LIST_TEMPLATE_REPOSITORIES", wxListBox);
   int sel = box->GetSelection();
-  if(sel!=wxNOT_FOUND)
+  if (sel != wxNOT_FOUND)
   {
     box->Delete(sel);
+    // Update the list of templates
+    UpdateTemplateList();
   }
 }
 
@@ -1312,7 +1325,8 @@ void PreferenceDlgWX::OnTemplateDel(wxCommandEvent& event)
   ----------------------------------------------------------------------*/
 void PreferenceDlgWX::OnUpdateTemplateDel(wxUpdateUIEvent& event)
 {
-  event.Enable(XRCCTRL(*this, "wxID_LIST_TEMPLATE_REPOSITORIES", wxListBox)->GetSelection()!=wxNOT_FOUND);
+  event.Enable(XRCCTRL(*this, "wxID_LIST_TEMPLATE_REPOSITORIES",
+                       wxListBox)->GetSelection() != wxNOT_FOUND);
 }
 
 /*----------------------------------------------------------------------
@@ -1327,6 +1341,8 @@ void PreferenceDlgWX::OnTemplateMoveUp(wxCommandEvent& event)
     box->Delete(sel);
     box->Insert(str, sel-1);
     box->SetSelection(sel-1);
+    // Update the list of templates
+    UpdateTemplateList();
   }
 }
 
@@ -1335,7 +1351,7 @@ void PreferenceDlgWX::OnTemplateMoveUp(wxCommandEvent& event)
 void PreferenceDlgWX::OnUpdateTemplateMoveUp(wxUpdateUIEvent& event)
 {
   wxListBox *box = XRCCTRL(*this, "wxID_LIST_TEMPLATE_REPOSITORIES", wxListBox);
-  event.Enable(box->GetSelection()!=wxNOT_FOUND && box->GetSelection()!=0);
+  event.Enable (box->GetSelection() != wxNOT_FOUND && box->GetSelection() !=0 );
 }
 
 
@@ -1351,6 +1367,8 @@ void PreferenceDlgWX::OnTemplateMoveDown(wxCommandEvent& event)
     box->Delete(sel);
     box->Insert(str, sel+1);
     box->SetSelection(sel+1);
+    // Update the list of templates
+    UpdateTemplateList();
   }
 }
 
@@ -1359,17 +1377,16 @@ void PreferenceDlgWX::OnTemplateMoveDown(wxCommandEvent& event)
 void PreferenceDlgWX::OnUpdateTemplateMoveDown(wxUpdateUIEvent& event)
 {
   wxListBox *box = XRCCTRL(*this, "wxID_LIST_TEMPLATE_REPOSITORIES", wxListBox);
-  event.Enable(box->GetSelection()!=wxNOT_FOUND && box->GetSelection()!=(int)box->GetCount()-1);
+  event.Enable (box->GetSelection() != wxNOT_FOUND && box->GetSelection() != (int)box->GetCount()-1);
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void PreferenceDlgWX::OnTemplateSelected(wxCommandEvent& event)
 {
-  if(event.IsSelection())
+  if (event.IsSelection())
     XRCCTRL(*this, "wxID_TEXT_NEW_TEMPLATE", wxTextCtrl)->SetValue(event.GetString());
 }
-
 #endif /* Templates */
 
 
@@ -1477,19 +1494,16 @@ void PreferenceDlgWX::OnOk( wxCommandEvent& event )
 #endif /* DAV */
 
 #ifdef TEMPLATES
-  Prop_Templates prop_templates = GetValueDialog_Templates();
-  SetProp_Templates( &prop_templates );
+  // not necessary to update the list
+  GetValueDialog_Templates();
   ThotCallback (GetPrefTemplatesBase() + TemplatesMenu, INTEGER_DATA, (char*) 1);
-  FreeTemplateRepositoryList(&(prop_templates.FirstPath));
 #endif /* TEMPLATES */
 
   Prop_Emails prop_emails = GetValueDialog_Emails();
   SetProp_Emails( &prop_emails );
   ThotCallback (GetPrefEmailsBase() + EmailsMenu, INTEGER_DATA, (char*) 1);
 
-
   ThotCallback (MyRef, INTEGER_DATA, (char*) 1);
-
   XRCCTRL(*this, "wxID_CANCEL", wxButton)->Enable();
   m_OnApplyLock = FALSE;
 
@@ -1570,7 +1584,6 @@ void PreferenceDlgWX::OnDefault( wxCommandEvent& event )
       ThotCallback (GetPrefEmailsBase() + EmailsMenu, INTEGER_DATA, (char*) 2);
       SetupDialog_Emails( GetProp_Emails() );
     }
-
   ThotCallback (MyRef, INTEGER_DATA, (char*) 2);
 }
 

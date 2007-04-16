@@ -20,31 +20,6 @@
                     <object class="wxBoxSizer">
                       <orient>wxHORIZONTAL</orient>
                       <object class="sizeritem">
-                        <object class="wxStaticText" name="wxID_LABEL_TEMPLATEDIRNAME">
-                          <label>*Browse for template directory*</label>
-                        </object>
-                        <flag>wxRIGHT|wxALIGN_CENTRE_VERTICAL</flag>
-                        <border>4</border>
-                      </object>
-                      <object class="sizeritem">
-                        <object class="wxTextCtrl" name="wxID_TEMPLATEDIRNAME"/>
-                        <option>1</option>
-                        <flag>wxEXPAND</flag>
-                      </object>
-                      <object class="sizeritem">
-                        <object class="wxBitmapButton" name="wxID_BUTTON_TEMPLATEDIR">
-                          <bitmap stock_id="wxART_FOLDER"></bitmap>
-                          <tooltip>Browse Template directory</tooltip>
-                        </object>
-                      </object>
-                    </object>
-                    <flag>wxBOTTOM|wxEXPAND</flag>
-                    <border>4</border>
-                  </object>
-                  <object class="sizeritem">
-                    <object class="wxBoxSizer">
-                      <orient>wxHORIZONTAL</orient>
-                      <object class="sizeritem">
                         <object class="wxComboBox" name="wxID_TEMPLATEFILENAME">
                           <content/>
                           <size>300, -1</size>
@@ -52,10 +27,18 @@
                         <option>1</option>
                         <flag>wxEXPAND</flag>
                       </object>
+                      <object class="spacer">
+                        <size>5,0</size>
+                      </object>
+                      <object class="sizeritem">
+                        <object class="wxBitmapButton" name="wxID_BUTTON_TEMPLATE">
+                          <bitmap stock_id="wxART_FILE_OPEN"></bitmap>
+                          <tooltip>Browse Template directory</tooltip>
+                        </object>
+                      </object>
                     </object>
-                    <option>1</option>
-                    <flag>wxEXPAND</flag>
-                    <border>0</border>
+                    <flag>wxBOTTOM|wxEXPAND</flag>
+                    <border>4</border>
                   </object>
                 </object>
                 <flag>wxALL|wxEXPAND</flag>
