@@ -1327,20 +1327,20 @@ static int GetOperatorType(Document doc)
 static void CreateMathConstruct (int construct, ...)
 {
   Document           doc;
-  Element            sibling, el, row, child, leaf, new_, next, foreignObj;
+  Element            sibling, el, row, child, child2, leaf, leaf2, new_, next, foreignObj;
   Element            altText, selected, op, previous;
   ElementType        newType, elType, parentType;
   Attribute          attr;
   AttributeType      attrType;
   NotifyElement      event;
   SSchema            docSchema, mathSchema;
-  char              *name;
+  char              *name, *tmptext;
   unsigned char     *symbol_name;
   Language           lang;
   DisplayMode        dispMode;
   int                c1, i, len, profile, selectedchild, lx, ly;
   int                symbol, symbol2, symboltype;
-  int                number, type, degree, degreevar, nabla, ibefore, par, symboldiff;
+  int                number, type, degree, degreevar, ibefore, par;
   va_list            varpos;
   ThotBool           oldStructureChecking;
   ThotBool	         before, emptySel, ok, insertSibling;
@@ -1998,7 +1998,7 @@ static void CreateMathConstruct (int construct, ...)
       selectedchild = 1;
       break;
 
-    case 41: /* operator with a sub element and an empty square after */
+    case 41: /* operator with a sub element and an empty square after (inf, max, min, sup, complementsub) */
       newType.ElTypeNum = MathML_EL_MROW;
       selectedchild = -1;
       break;
@@ -2153,8 +2153,7 @@ static void CreateMathConstruct (int construct, ...)
 
       if (construct == 18)
         {
-        int notation = va_arg(varpos, int);
-        if (notation == 1)
+        if (va_arg(varpos, int) == 1)
           {/* actuarial */
           attrType.AttrSSchema = elType.ElSSchema;
           attrType.AttrTypeNum = MathML_ATTR_notation;
@@ -2233,7 +2232,8 @@ static void CreateMathConstruct (int construct, ...)
             symbol_name = va_arg(varpos, unsigned char*);
 
           if (type == -1)
-            {/* ask the user about the way the symbol has to be displayed */
+            {
+            /* ask the user about the way the symbol has to be displayed */
             type = GetOperatorType(doc);
             if(type == 0)
               /* the user decided to abort the command */
@@ -2247,16 +2247,12 @@ static void CreateMathConstruct (int construct, ...)
               return;
               }
             else type--;
+
+            /* replace the large operator by a small symbol if necessary */
+            symbol2 = va_arg(varpos, int);
+            if(type == 0)symbol = symbol2;
             }
        
-          if (type >= 1)
-            {/* change the plus and times symbols to sum and prod */
-            if (symbol == '+')
-              symbol = 8721;
-            else if (symbol == 215)
-              symbol = 8719;
-            }
-
           switch (type)
             {
             case 0:
@@ -2348,6 +2344,9 @@ static void CreateMathConstruct (int construct, ...)
                 InsertText (&child, MathML_EL_MO, va_arg(varpos, unsigned char*), doc);
               else 
                 InsertSymbol (&child, MathML_EL_MO, symbol, doc);
+
+              /* Union unary */
+              if(symbol == 0x22C3)op = child;
             }
 
           par = va_arg(varpos, int);
@@ -2506,7 +2505,7 @@ static void CreateMathConstruct (int construct, ...)
         }
       else if (construct == 34 || construct == 41)
         {
-          /* operator with an under element and an empty square after */
+          /* operator with an under element and an empty square after (inf, max, min, sup, complementsub) */
           leaf = TtaGetFirstChild (el);
           child = leaf;
           InsertEmptyConstruct (&child, (construct == 34 ? MathML_EL_MUNDER : MathML_EL_MSUB), doc);
@@ -2517,11 +2516,11 @@ static void CreateMathConstruct (int construct, ...)
           selected = TtaGetFirstChild (TtaGetLastChild(child));
 
           leaf = TtaGetFirstChild (new_);
-          op = leaf;
+          child2 = leaf;
           if (construct == 34)
-            InsertText (&op, MathML_EL_MO, va_arg(varpos, unsigned char*), doc);
+            InsertText (&child2, MathML_EL_MO, va_arg(varpos, unsigned char*), doc);
           else
-            InsertSymbol (&op, MathML_EL_MO, va_arg(varpos, int), doc);
+            InsertSymbol (&child2, MathML_EL_MO, va_arg(varpos, int), doc);
           TtaDeleteTree (leaf, doc);
 
           InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
@@ -2723,10 +2722,9 @@ static void CreateMathConstruct (int construct, ...)
         }
       else if (construct == 44)
         { /* elementary classical functions */
-          unsigned char *function_name = va_arg(varpos, unsigned char*);
           leaf = TtaGetFirstChild (el);
           child = leaf;
-          InsertText (&child, MathML_EL_MI, function_name, doc);
+          InsertText (&child, MathML_EL_MI, va_arg(varpos, unsigned char*), doc);
           InsertSymbol (&child, MathML_EL_MO, 8289, doc); // apply function 
           InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
           TtaDeleteTree (leaf, doc);
@@ -2881,7 +2879,7 @@ static void CreateMathConstruct (int construct, ...)
         }
       else if (construct== 51)
         { /* partialdiff2 */
-          symboldiff = 8706;
+          symbol2 = 8706;
           degree = 0;
           /* ask the user about the number of variables that have to be differentiated */
           number = GetOccurrences (doc, TtaGetMessage (AMAYA, AM_NUMBER_VARIABLES), 2, 1);
@@ -2905,14 +2903,17 @@ static void CreateMathConstruct (int construct, ...)
           leaf = TtaGetFirstChild(child);
           child = leaf;
 
+          tmptext = (char *)TtaGetMemory (50);
+
           for(i = 0; i < number; i++)
              {
              /* ask the user about the degree of derivation of each variable */
-             char buffer[50];
-             sprintf (buffer, TtaGetMessage (AMAYA, AM_DEGREE_VARIABLE), i + 1);
-             degreevar = GetOccurrences (doc, buffer, 1, 1);
+             sprintf (tmptext, TtaGetMessage (AMAYA, AM_DEGREE_VARIABLE), i + 1);
+             degreevar = GetOccurrences (doc, tmptext, 1, 1);
+
              if(degreevar == 0)
                {  /* the user decided to abort the command */
+               TtaFreeMemory (tmptext);
                TtaSetDisplayMode (doc, dispMode);
                TtaCloseUndoSequence (doc);
                // remove the inserted math element
@@ -2925,16 +2926,15 @@ static void CreateMathConstruct (int construct, ...)
              degree += degreevar;
              if (degreevar == 1)
                {
-               InsertSymbol (&child, MathML_EL_MO, symboldiff, doc);
+               InsertSymbol (&child, MathML_EL_MO, symbol2, doc);
                }
              else
                {
-               Element leaf2, child2;
                InsertEmptyConstruct(&child, MathML_EL_MSUP, doc);
 
                leaf2 = TtaGetFirstChild (TtaGetFirstChild (child));
                child2 = leaf2;
-               InsertSymbol (&child2, MathML_EL_MO, symboldiff, doc);
+               InsertSymbol (&child2, MathML_EL_MO, symbol2, doc);
                TtaDeleteTree (leaf2, doc);
 
                leaf2 = TtaGetFirstChild (TtaGetLastChild (child));
@@ -2944,6 +2944,8 @@ static void CreateMathConstruct (int construct, ...)
                }
              InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
              }
+
+          TtaFreeMemory (tmptext);
           TtaDeleteTree (leaf, doc);
 
           /* Numerator */
@@ -2957,16 +2959,15 @@ static void CreateMathConstruct (int construct, ...)
 
           if (degree == 1)
             {          
-            InsertSymbol (&child, MathML_EL_MO, symboldiff, doc);
+            InsertSymbol (&child, MathML_EL_MO, symbol2, doc);
             }
           else
             {
-            Element leaf2, child2;
             InsertEmptyConstruct(&child, MathML_EL_MSUP, doc);
 
             leaf2 = TtaGetFirstChild (TtaGetFirstChild (child));
             child2 = leaf2;
-            InsertSymbol (&child2, MathML_EL_MO, symboldiff, doc);
+            InsertSymbol (&child2, MathML_EL_MO, symbol2, doc);
             TtaDeleteTree (leaf2, doc);
 
             leaf2 = TtaGetFirstChild (TtaGetLastChild (child));
@@ -3043,18 +3044,17 @@ static void CreateMathConstruct (int construct, ...)
         }
       else if (construct == 54)
         {/* curl ; div ; grad ; laplacian */
-          nabla = 8711;
+          symbol2 = 8711;
           symbol = va_arg(varpos, int);
           leaf = TtaGetFirstChild (el);
           child = leaf;
           if (symbol == 1)
             {/* Laplacian */
-              Element leaf2, child2;
               InsertEmptyConstruct(&child, MathML_EL_MSUP, doc);
 
               leaf2 = TtaGetFirstChild (TtaGetFirstChild (child));
               child2 = leaf2;
-              InsertSymbol (&child2, MathML_EL_MO, nabla, doc);
+              InsertSymbol (&child2, MathML_EL_MO, symbol2, doc);
               TtaDeleteTree (leaf2, doc);
           
               leaf2 = TtaGetFirstChild(TtaGetLastChild (child));
@@ -3064,7 +3064,7 @@ static void CreateMathConstruct (int construct, ...)
             }
           else
             {/* curl ; div ; grad */
-              InsertSymbol (&child, MathML_EL_MO, nabla, doc);
+              InsertSymbol (&child, MathML_EL_MO, symbol2, doc);
               if (symbol != 0)
                 InsertSymbol (&child, MathML_EL_MO, symbol, doc);
             }
@@ -3082,8 +3082,6 @@ static void CreateMathConstruct (int construct, ...)
           TtaDeleteTree (leaf, doc);
 
           {
-            Element child2;
-
             leaf = TtaGetFirstChild (TtaGetFirstChild (child));
             child2 = leaf;
             InsertEmptyConstruct(&child2, MathML_EL_MROW, doc);
@@ -3135,7 +3133,7 @@ static void CreateMathConstruct (int construct, ...)
       else if (construct == 58)
         {/* diffential */
           /* ask the user about the degree of diffentiation */
-          symboldiff = 8518;
+          symbol2 = 8518;
           degree = GetOccurrences (doc, TtaGetMessage (AMAYA, AM_DEGREE), 2, 0);
           if(degree == 0)
             {  /* the user decided to abort the command */
@@ -3158,15 +3156,14 @@ static void CreateMathConstruct (int construct, ...)
           child = leaf;
 
           if (degree == 1)
-            InsertSymbol (&child, MathML_EL_MO, symboldiff, doc);
+            InsertSymbol (&child, MathML_EL_MO, symbol2, doc);
           else
             {
-            Element leaf2, child2;
             InsertEmptyConstruct(&child, MathML_EL_MSUP, doc);
 
             leaf2 = TtaGetFirstChild (TtaGetFirstChild (child));
             child2 = leaf2;
-            InsertSymbol (&child2, MathML_EL_MO, symboldiff, doc);
+            InsertSymbol (&child2, MathML_EL_MO, symbol2, doc);
             TtaDeleteTree (leaf2, doc);
 
             leaf2 = TtaGetFirstChild (TtaGetLastChild (child));
@@ -3188,7 +3185,7 @@ static void CreateMathConstruct (int construct, ...)
           leaf = TtaGetFirstChild(child);
           child = leaf;
 
-          InsertSymbol (&child, MathML_EL_MO, symboldiff, doc);
+          InsertSymbol (&child, MathML_EL_MO, symbol2, doc);
           InsertEmptyConstruct(&child, MathML_EL_MROW, doc);
           TtaDeleteTree (leaf, doc);
         }
@@ -3325,10 +3322,7 @@ static void CreateMathConstruct (int construct, ...)
         {
           /* move the limits of the MSUBSUP element if it's appropriate */
           SetIntMovelimitsAttr (el, doc);
-          //if (op)
-          //CheckLargeOp (op, doc);
         }
-
       InitializeNewConstruct (el, NumberRows, NumberCols, !registered, doc);
       TtaSetDisplayMode (doc, dispMode);
       /* check the Thot abstract tree against the structure schema. */
@@ -3784,7 +3778,7 @@ void CreateMIntegral (Document doc, View view)
   ----------------------------------------------------------------------*/
 void CreateMSum (Document doc, View view)
 {
-  CreateMathConstruct (21, 1, 8721);
+  CreateMathConstruct (21, 1, 0x2211);
 }
 
 /*----------------------------------------------------------------------
@@ -3818,13 +3812,13 @@ void CreateMALEPHSUB (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMAND (Document document, View view)
 {
-  CreateMathConstruct (22, -1, 8743);}
+  CreateMathConstruct (22, -1, 0x22c0, 0x2227);}
 /*----------------------------------------------------------------------
   CreateMANDBINARY
   ----------------------------------------------------------------------*/
 void CreateMANDBINARY (Document document, View view)
 {
-  CreateMathConstruct (27, 8743);}
+  CreateMathConstruct (27, 0x2227);}
 /*----------------------------------------------------------------------
   CreateMAPPROX
   ----------------------------------------------------------------------*/
@@ -3866,7 +3860,7 @@ void CreateMCARD2 (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMCARTESIANPRODUCT (Document document, View view)
 {
-  CreateMathConstruct (22, -1, 215);}
+  CreateMathConstruct (22, -1, 0x220F, 215);}
 /*----------------------------------------------------------------------
   CreateMCARTESIANPRODUCTBINARY
   ----------------------------------------------------------------------*/
@@ -3903,7 +3897,7 @@ void CreateMCOMPLEMENT (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMCOMPLEMENTSUB (Document document, View view)
 {
-  CreateMathConstruct (41, 8705);}
+  CreateMathConstruct (41, 8705);} 
 /*----------------------------------------------------------------------
   CreateMCOMPLEXCARTESIAN
   ----------------------------------------------------------------------*/
@@ -4207,7 +4201,7 @@ void CreateMINFINITY (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMINFUNDER (Document document, View view)
 {
-  CreateMathConstruct (34, "inf");}
+  CreateMathConstruct (34, "inf");} 
 /*----------------------------------------------------------------------
   CreateMINT2
   ----------------------------------------------------------------------*/
@@ -4225,19 +4219,19 @@ void CreateMINTEGERS (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMINTERSECT (Document document, View view)
 {
-  CreateMathConstruct (22, -1, 8898);}
+  CreateMathConstruct (22, -1, 0x22C2, 0x2229);}
 /*----------------------------------------------------------------------
   CreateMINTERSECTBINARY
   ----------------------------------------------------------------------*/
 void CreateMINTERSECTBINARY (Document document, View view)
 {
-  CreateMathConstruct (27, 8898);}
+  CreateMathConstruct (27, 0x2229);}
 /*----------------------------------------------------------------------
   CreateMINTERSECTUNDER
   ----------------------------------------------------------------------*/
 void CreateMINTERSECTUNDER (Document document, View view)
 {
-  CreateMathConstruct (21, 2, 8898);}
+  CreateMathConstruct (21, 2, 0x22C2);}
 /*----------------------------------------------------------------------
   CreateMINTUNDER
   ----------------------------------------------------------------------*/
@@ -4350,7 +4344,7 @@ void CreateMMAX (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMMAXUNDER (Document document, View view)
 {
-  CreateMathConstruct (34, "max");}
+  CreateMathConstruct (34, "max");} 
 /*----------------------------------------------------------------------
   CreateMMEAN
   ----------------------------------------------------------------------*/
@@ -4374,7 +4368,7 @@ void CreateMMIN (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMMINUNDER (Document document, View view)
 {
-  CreateMathConstruct (34, "min");}
+  CreateMathConstruct (34, "min");} 
 /*----------------------------------------------------------------------
   CreateMMINUSBINARY
   ----------------------------------------------------------------------*/
@@ -4470,13 +4464,13 @@ void CreateMOMEGASUB (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMOR (Document document, View view)
 {
-  CreateMathConstruct (22, -1, 8744);}
+  CreateMathConstruct (22, -1, 0x22c1, 0x2228);}
 /*----------------------------------------------------------------------
   CreateMORBINARY
   ----------------------------------------------------------------------*/
 void CreateMORBINARY (Document document, View view)
 {
-  CreateMathConstruct (27, 8744);}
+  CreateMathConstruct (27, 0x2228);}
 /*----------------------------------------------------------------------
   CreateMORTHOGONAL
   ----------------------------------------------------------------------*/
@@ -4538,7 +4532,7 @@ void CreateMVERTICALBRACE (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMPLUS (Document document, View view)
 {
-  CreateMathConstruct (22, -1, '+');}
+  CreateMathConstruct (22, -1, 0x2211, '+');}
 /*----------------------------------------------------------------------
   CreateMPOWER
   ----------------------------------------------------------------------*/
@@ -4562,13 +4556,13 @@ void CreateMPRIMES (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMPRODUNDER (Document document, View view)
 {
-  CreateMathConstruct (21, 2, 8719);}
+  CreateMathConstruct (21, 2, 0x220F);}
 /*----------------------------------------------------------------------
   CreateMPRODUNDEROVER
   ----------------------------------------------------------------------*/
 void CreateMPRODUNDEROVER (Document document, View view)
 {
-  CreateMathConstruct (21, 1, 8719);}
+  CreateMathConstruct (21, 1, 0x220F);}
 /*----------------------------------------------------------------------
   CreateMPRSUBSET
   ----------------------------------------------------------------------*/
@@ -4676,7 +4670,7 @@ void CreateMSUBSETBINARY (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMSUMUNDER (Document document, View view)
 {
-  CreateMathConstruct (21, 2, 8721);}
+  CreateMathConstruct (21, 2, 0x2211);}
 /*----------------------------------------------------------------------
   CreateMSUP2
   ----------------------------------------------------------------------*/
@@ -4718,7 +4712,7 @@ void CreateMTENDSTOTENDSTO (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMTIMES (Document document, View view)
 {
-  CreateMathConstruct (22, -1, 215);}
+  CreateMathConstruct (22, -1, 0x220F, 215);}
 /*----------------------------------------------------------------------
   CreateMTIMESBINARY
   ----------------------------------------------------------------------*/
@@ -4742,25 +4736,25 @@ void CreateMTRUE (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMUNION (Document document, View view)
 {
-  CreateMathConstruct (22, -1, 8899);}
+  CreateMathConstruct (22, -1, 0x22C3, 0x222A);}
 /*----------------------------------------------------------------------
   CreateMUNIONUNARY
   ----------------------------------------------------------------------*/
 void CreateMUNIONUNARY (Document document, View view)
 {
-  CreateMathConstruct (23, 8899, FALSE);}
+  CreateMathConstruct (23, 0x22C3, FALSE);}
 /*----------------------------------------------------------------------
   CreateMUNIONUNDER
   ----------------------------------------------------------------------*/
 void CreateMUNIONUNDER (Document document, View view)
 {
-  CreateMathConstruct (21, 2, 8899);}
+  CreateMathConstruct (21, 2, 0x22C3);}
 /*----------------------------------------------------------------------
   CreateMUNIONBINARY
   ----------------------------------------------------------------------*/
 void CreateMUNIONBINARY (Document document, View view)
 {
-  CreateMathConstruct (27, 8899);}
+  CreateMathConstruct (27, 0x222A);}
 /*----------------------------------------------------------------------
   CreateMVARIANCE
   ----------------------------------------------------------------------*/
@@ -4789,7 +4783,7 @@ void CreateMVECTORCOLUMN (Document document, View view)
   CreateMXOR
   ----------------------------------------------------------------------*/
 void CreateMXOR (Document document, View view)
-{CreateMathConstruct (22, -1, 0, "xor");}
+{CreateMathConstruct (22, -1, 0, "xor", 0);}
 
 /*----------------------------------------------------------------------
   CreateMXORBINARY
