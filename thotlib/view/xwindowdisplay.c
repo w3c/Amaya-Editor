@@ -2208,10 +2208,11 @@ void DrawEllips (int frame, int thick, int style, int x, int y, int width,
   DrawHorizontalLine draw a horizontal line aligned top center or bottom
   depending on align value.
   The parameter fg indicates the drawing color.
+  leftslice and rightslice say if the left and right borders are sliced.
   ----------------------------------------------------------------------*/
 void DrawHorizontalLine (int frame, int thick, int style, int x, int y,
                          int l, int h, int align, int fg, PtrBox box,
-                         ThotBool leftslice, ThotBool rightslice)
+                         int leftslice, int rightslice)
 {
   int        Y;
 
@@ -2367,10 +2368,11 @@ void DrawHorizontalBracket (int frame, int thick, int style, int x, int y,
   DrawVerticalLine draw a vertical line aligned left center or right
   depending on align value.
   parameter fg indicates the drawing color
+  topslice and bottomslice say if the top and bottom borders are sliced.
   ----------------------------------------------------------------------*/
 void DrawVerticalLine (int frame, int thick, int style, int x, int y,
                        int l, int h, int align, int fg, PtrBox box,
-                       ThotBool topslice, ThotBool bottomslice)
+                       int topslice, int bottomslice)
 {
   int        X;
 

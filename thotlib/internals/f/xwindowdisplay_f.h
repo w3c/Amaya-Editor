@@ -247,8 +247,8 @@ extern void DrawHorizontalLine ( int frame,
                                  int align,
                                  int fg,
                                  PtrBox box,
-                                 ThotBool leftslice,
-                                 ThotBool rightslice );
+                                 int leftslice,
+                                 int rightslice );
 extern void DrawHat ( int frame,
                       int thick,
                       int style,
@@ -303,8 +303,8 @@ extern void DrawVerticalLine ( int frame,
                                int align,
                                int fg,
                                PtrBox box,
-                               ThotBool topslice,
-                               ThotBool bottomslice );
+                               int topslice,
+                               int bottomslice );
 extern void DrawSlash ( int frame,
                         int thick,
                         int style,
@@ -621,8 +621,8 @@ extern void DrawHorizontalLine ( int frame,
                                    int align,
                                    int fg,
                                    PtrBox box,
-                                   ThotBool leftslice,
-                                   ThotBool rightslice );
+                                   int leftslice,
+                                   int rightslice );
 extern void DrawHat ( int frame,
                         int thick,
                         int style,
@@ -677,8 +677,8 @@ extern void DrawVerticalLine ( int frame,
                                  int align,
                                  int fg,
                                  PtrBox box,
-                                 ThotBool topslice,
-                                 ThotBool bottomslice );
+                                 int topslice,
+                                 int bottomslice );
 extern void DrawSlash ( int frame,
                           int thick,
                           int style,

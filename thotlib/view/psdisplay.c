@@ -1965,12 +1965,13 @@ void DrawEllipsFrame (int frame, int thick, int style, int x, int y,
 
 
 /*----------------------------------------------------------------------
-   DrawHorizontalLine draw a horizontal line aligned top center or bottom
-   depending on align value.
+  DrawHorizontalLine draw a horizontal line aligned top center or bottom
+  depending on align value.
+  leftslice and rightslice say if the left and right borders are sliced.
   ----------------------------------------------------------------------*/
 void DrawHorizontalLine (int frame, int thick, int style, int x, int y,
                          int l, int h, int align, int fg, PtrBox box,
-                         ThotBool leftslice, ThotBool rightslice)
+                         int leftslice, int rightslice)
 {
 #ifndef _WX
    int                 xf, Y;
@@ -2114,12 +2115,13 @@ void DrawHorizontalBracket (int frame, int thick, int style, int x, int y,
 }
 
 /*----------------------------------------------------------------------
-   DrawVerticalLine draw a vertical line aligned left center or right
-   depending on align value.
+  DrawVerticalLine draw a vertical line aligned left center or right
+  depending on align value.
+  topslice and bottomslice say if the top and bottom borders are sliced.
   ----------------------------------------------------------------------*/
 void DrawVerticalLine (int frame, int thick, int style, int x, int y,
                        int l, int h, int align, int fg, PtrBox box,
-                       ThotBool topslice, ThotBool bottomslice)
+                       int topslice, int bottomslice)
 {
 #ifndef _WX
    int                 X, yf;

@@ -1972,7 +1972,7 @@ void DrawEllips (int frame, int thick, int style, int x, int y, int width,
   ----------------------------------------------------------------------*/
 void DrawHorizontalLine (int frame, int thick, int style, int x, int y,
                          int l, int h, int align, int fg, PtrBox box,
-                         ThotBool leftslice, ThotBool rightslice)
+                         int leftslice, int rightslice)
 {
   ThotPoint           point[4];
   int                 Y, left = x, right = x + l;
@@ -2012,24 +2012,23 @@ void DrawHorizontalLine (int frame, int thick, int style, int x, int y,
         }
       else
         {
-          if (style == 7 || style == 8)
-            thick = thick / 2; // groove, ridge
-          else
-            thick--; // solid, outset inset, double
-          if (box)
-            {
-              left = box->BxClipX + box->BxLMargin + box->BxLBorder;
-              right = box->BxClipX + box->BxClipW - box->BxRMargin - box->BxRBorder;
-            }
           // check if the top of the box is displayed
-          if (leftslice)
-            left = thick;
+          left = leftslice;
+          right = rightslice;
+          if (style == 7 || style == 8)
+            {
+              thick = thick / 2; // groove, ridge
+              left = left / 2;
+              right = right / 2;
+            }
           else
-            left = 0;
-          if (rightslice)
-            right = thick;
-          else
-            right = 0;
+            {
+              thick--; // solid, outset inset, double
+              if (left)
+                left--;
+              if (right)
+                right--;
+            }
           if (align == 1)
             {
               // middle
@@ -2131,7 +2130,7 @@ void DrawHorizontalLine (int frame, int thick, int style, int x, int y,
   ----------------------------------------------------------------------*/
 void DrawVerticalLine (int frame, int thick, int style, int x, int y,
                        int l, int h, int align, int fg, PtrBox box,
-                       ThotBool topslice, ThotBool bottomslice)
+                       int topslice, int bottomslice)
 {
   ThotPoint           point[4];
   int                 X, top = y, bottom = y + h;
@@ -2169,27 +2168,26 @@ void DrawVerticalLine (int frame, int thick, int style, int x, int y,
         }
       else
         {
-          if (style == 7 || style == 8)
-            thick = thick / 2; // groove, ridge
-          else
-            thick--; // solid, outset, inset style
-          if (box)
-            {
-              top = box->BxClipY + box->BxTMargin + box->BxTBorder;
-              bottom = box->BxClipY + box->BxClipH - box->BxBMargin - box->BxBBorder;
-            }
           // check if the top of the box is displayed
-          if (topslice)
-            top = thick;
+          top = topslice;
+          bottom = bottomslice;
+          if (style == 7 || style == 8)
+            {
+              thick = thick / 2; // groove, ridge
+              top = top / 2;
+              bottom = bottom / 2;
+            }
           else
-            top = 0;
-          if (bottomslice)
-            bottom = thick;
-          else
-            bottom = 0;
+            {
+              thick--; // solid, outset, inset style
+              if (top)
+                top--;
+              if (bottom)
+                bottom--;
+            }
           if (align == 1)
             {
-              // midle
+               // midle
               point[0].x = x + (l - thick) / 2;
               point[0].y = y;
               point[1].x = x + (l + thick) / 2;

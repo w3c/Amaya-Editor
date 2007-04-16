@@ -496,7 +496,7 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
             case '|': /* c = 124 */
             case 7 : /* VerticalSeparator ; U02758 */
               DrawVerticalLine (frame, i, 5, xd, yd, width, height, 1, fg, pBox,
-                                FALSE, FALSE);
+                                0, 0);
               break;
             case 8 : /* HorizontalLine ; U02500 */
             case 9 : /* UnderBar ; U00332 */
@@ -505,7 +505,7 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
             case '_': /* c = 95 */
             case 'h': /* c = 104 */
               DrawHorizontalLine (frame, i, 5, xd, yd, width, height, 1, fg, pBox,
-                                  FALSE, FALSE);
+                                  0, 0);
               break;
             case '/':
             case '\\':
@@ -605,11 +605,11 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
               break;
             case 'v':
               DrawVerticalLine (frame, i, 5, xd, yd, width, height, 1, fg, pBox,
-                                FALSE, FALSE);
+                                0, 0);
               break;
             case 'D':
               DrawVerticalLine (frame, i, 6, xd, yd, width, height, 1, fg, pBox,
-                                FALSE, FALSE);
+                                0, 0);
               break;
             case 'I':
               DrawIntersection (frame, xd, yd, width, height, font, fg);
@@ -1065,27 +1065,27 @@ void  DisplayGraph (PtrBox pBox, int frame, ThotBool selected,
           break;
         case 'h':
           DrawHorizontalLine (frame, i, style, xd, yd, width, height, 1, fg, pBox,
-                              FALSE, FALSE);
+                              0, 0);
           break;
         case 't':
           DrawHorizontalLine (frame, i, style, xd, yd, width, height, 0, fg, pBox,
-                              FALSE, FALSE);
+                              0, 0);
           break;
         case 'b':
           DrawHorizontalLine (frame, i, style, xd, yd, width, height, 2, fg, pBox,
-                              FALSE, FALSE);
+                              0, 0);
           break;
         case 'v':
           DrawVerticalLine (frame, i, style, xd, yd, width, height, 1, fg, pBox,
-                            FALSE, FALSE);
+                            0, 0);
           break;
         case 'l':
           DrawVerticalLine (frame, i, style, xd, yd, width, height, 0, fg, pBox,
-                            FALSE, FALSE);
+                            0, 0);
           break;
         case 'r':
           DrawVerticalLine (frame, i, style, xd, yd, width, height, 2, fg, pBox,
-                            FALSE, FALSE);
+                            0, 0);
           break;
         case '/':
           DrawSlash (frame, i, style, xd, yd, width, height, 0, fg);
@@ -2042,7 +2042,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
                             StopTextureScale (showtab_id);
                           showtab_id = SetTextureScale (IsBoxDeformed(pBox));
                           DrawHorizontalLine (frame, 1, 5, x+2, y, lg-2, pBox->BxH,
-                                              2, BgSelColor, pBox, FALSE, FALSE);
+                                              2, BgSelColor, pBox, 0, 0);
 #else /* _WX */
                         DrawChar ((char)val, frame, x, y1, nextfont, BgSelColor);
 #endif /* _WX */
@@ -2330,7 +2330,7 @@ void DisplayBorders (PtrBox box, PtrAbstractBox pFrom, int frame,
         color = pFrom->AbTopBColor;
       DrawHorizontalLine (frame, t, pFrom->AbTopStyle, x, y,
                           w, t, 0, color, box,
-                          (ThotBool)(l > 0), (ThotBool)(r > 0));
+                          l, r);
     }
   if (from->BxLBorder && pFrom->AbLeftStyle > 2 &&
       pFrom->AbLeftBColor != -2 && l > 0)
@@ -2342,7 +2342,7 @@ void DisplayBorders (PtrBox box, PtrAbstractBox pFrom, int frame,
         color = pFrom->AbLeftBColor;
       DrawVerticalLine (frame, l, pFrom->AbLeftStyle, x, y,
                         l, h, 0, color, box,
-                        (ThotBool)(t > 0), (ThotBool)(b > 0));
+                        t , b);
     }
   if (from->BxBBorder && pFrom->AbBottomStyle > 2 &&
       pFrom->AbBottomBColor != -2 && b > 0)
@@ -2355,7 +2355,7 @@ void DisplayBorders (PtrBox box, PtrAbstractBox pFrom, int frame,
       DrawHorizontalLine (frame, b, pFrom->AbBottomStyle,
                           x, yFrame + height - eb - from->BxBBorder,
                           w, b, 2, color, box,
-                          (ThotBool)(l > 0), (ThotBool)(r > 0));
+                          l, r);
     }
   if (from->BxRBorder && pFrom->AbRightStyle > 2 &&
       pFrom->AbRightBColor != -2 && r > 0)
@@ -2368,7 +2368,7 @@ void DisplayBorders (PtrBox box, PtrAbstractBox pFrom, int frame,
       DrawVerticalLine (frame, r, pFrom->AbRightStyle,
                         xFrame + width - er - from->BxRBorder, y,
                         r, h, 2, color, box,
-                        (ThotBool)(t > 0), (ThotBool)(b > 0));
+                        t, b);
     }
 }
 
