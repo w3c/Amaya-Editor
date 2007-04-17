@@ -391,9 +391,9 @@ ThotBool CheckValidID (NotifyAttribute *event)
 
 
 /*----------------------------------------------------------------------
-  LoadResource loads a resource file
+  LoadADocResource loads a resource file
   ----------------------------------------------------------------------*/
-void LoadResource (Document doc, char *url, char *localfile)
+static void LoadADocResource (Document doc, char *url, char *localfile)
 {
   int                 toparse;
 
@@ -565,7 +565,7 @@ fprintf(stderr, "Move file: from %s to %s\n", old_url, new_url);
             {
               // load the file first
               tempdocument = GetLocalPath (0, old_url);
-              LoadResource (doc, old_url, tempdocument);
+              LoadADocResource (doc, old_url, tempdocument);
               strcpy (old_url, tempdocument);
             }
           if (old_url[0] != EOS && TtaFileExist (old_url))

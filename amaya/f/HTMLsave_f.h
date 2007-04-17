@@ -11,9 +11,6 @@ extern ThotBool CheckGenerator ( NotifyElement *event );
 extern ThotBool CheckUSEMAP ( NotifyAttribute *event );
 extern ThotBool CheckValidEntity ( NotifyAttribute *event );
 extern ThotBool CheckValidID ( NotifyAttribute *event );
-extern void LoadResource ( Document doc,
-                           char *url,
-                           char *localfile );
 extern char *UpdateResource ( Document doc,
                               char *oldpath,
                               char *newpath,
@@ -84,9 +81,6 @@ extern ThotBool CheckGenerator ( NotifyElement *event );
 extern ThotBool CheckUSEMAP ( NotifyAttribute *event );
 extern ThotBool CheckValidEntity ( NotifyAttribute *event );
 extern ThotBool CheckValidID ( NotifyAttribute *event );
-extern void LoadResource ( Document doc,
-                             char *url,
-                             char *localfile );
 extern char *UpdateResource ( Document doc,
                                 char *oldpath,
                                 char *newpath,
