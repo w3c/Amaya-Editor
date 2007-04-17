@@ -129,16 +129,20 @@ bool AmayaApp::OnInit()
       if (wxApp::argc % 2 == 0)
         /* The last argument in the command line is the document to be opened */
         url = wxApp::argv[wxApp::argc-1];
-      if(m_pAmayaInstance->SendURLToOtherAmayaInstance( url ))
-        printf("yes, it have been sent\n");
+      if (m_pAmayaInstance->SendURLToOtherAmayaInstance( url ))
+        {
+          //printf("yes, it have been sent\n");
+          return false;
+        }
       else
-        printf("no I cant sent it\n");
-      return false;
+        {
+          // start a new instance anyway
+          m_pAmayaInstance->StartURLGrabberServer();
+        }
     }
   else
-    {
-      m_pAmayaInstance->StartURLGrabberServer();
-    }  
+    m_pAmayaInstance->StartURLGrabberServer();
+
   //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 #ifdef _GL
   // try to find a good configuration for opengl
@@ -257,9 +261,7 @@ bool AmayaApp::OnInit()
       return false;
     }
   else
-    {
-      m_pAmayaInstance->StartURLGrabberServer();
-    }
+    m_pAmayaInstance->StartURLGrabberServer();
 #endif /* IV */
   m_AmayaIsInit = true;
   

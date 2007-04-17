@@ -146,11 +146,8 @@ bool AmayaAppInstance::SendURLToOtherAmayaInstance(const wxString & url)
   -----------------------------------------------------------------------*/
 void AmayaAppInstance::StartURLGrabberServer()
 {
-  if (!IsAnotherAmayaRunning())
-    {
-      m_pURLGrabberServer = new AmayaURLGrabberServer(m_ServiceTopic);
-      m_pURLGrabberServer->Create(m_ServicePort);
-    }
+  m_pURLGrabberServer = new AmayaURLGrabberServer(m_ServiceTopic);
+  m_pURLGrabberServer->Create(m_ServicePort);
 }
 
 /*----------------------------------------------------------------------
@@ -160,7 +157,8 @@ void AmayaAppInstance::StartURLGrabberServer()
   -----------------------------------------------------------------------*/
 void AmayaAppInstance::RegisterOpenURLCallback( OpenURLCallback callback )
 {
-  m_pURLGrabberServer->RegisterOpenURLCallback(callback);
+  if (m_pURLGrabberServer)
+    m_pURLGrabberServer->RegisterOpenURLCallback(callback);
 }
 
 /*----------------------------------------------------------------------
