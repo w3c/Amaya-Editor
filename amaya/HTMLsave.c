@@ -408,7 +408,7 @@ static void LoadADocResource (Document doc, char *url, char *localfile)
 }
 
 /*----------------------------------------------------------------------
-  UpdateResource searches ".css" and ".js" urls within the sString
+  UpdateDocResource searches ".css" and ".js" urls within the sString
   and makes these urls relative to the newpath.
   oldpath = the old path
   newpath = the new path
@@ -420,9 +420,9 @@ static void LoadADocResource (Document doc, char *url, char *localfile)
   A new url is obtained by concatenation of relpath and the file name.
   Returns NULL or a new allocated sString.
   ----------------------------------------------------------------------*/
-char *UpdateResource (Document doc, char *oldpath, char *newpath,
-                      char *relpath, char *sString, Element el,
-                      ThotBool saveResources, ThotBool isLink, ThotBool fullCopy)
+char *UpdateDocResource (Document doc, char *oldpath, char *newpath,
+                         char *relpath, char *sString, Element el,
+                         ThotBool saveResources, ThotBool isLink, ThotBool fullCopy)
 {
   CSSInfoPtr          css;
   PInfoPtr            pInfo;
@@ -723,8 +723,8 @@ void SetRelativeURLs (Document doc, char *newpath, char *cssbase,
                                         FALSE, FALSE);
               else
                 // Update the XML PI content
-                newString = UpdateResource (doc, oldpath, newpath, cssbase, orgString,
-                                            el, savedResources, FALSE, fullCopy);
+                newString = UpdateDocResource (doc, oldpath, newpath, cssbase, orgString,
+                                               el, savedResources, FALSE, fullCopy);
               if (newString)
                 {
                   /* register the modification to be able to undo it */
@@ -821,9 +821,9 @@ void SetRelativeURLs (Document doc, char *newpath, char *cssbase,
                           (elType.ElTypeNum != SVG_EL_PICTURE_UNIT  ||
                            elType.ElSSchema != SVGSSchema))))
                 {
-                  newString = UpdateResource (doc, oldpath, newpath, cssbase,
-                                              orgString, el, savedResources,
-                                              TRUE, fullCopy);
+                  newString = UpdateDocResource (doc, oldpath, newpath, cssbase,
+                                                 orgString, el, savedResources,
+                                                 TRUE, fullCopy);
                   if (newString)
                     {
                       

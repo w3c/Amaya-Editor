@@ -11,15 +11,15 @@ extern ThotBool CheckGenerator ( NotifyElement *event );
 extern ThotBool CheckUSEMAP ( NotifyAttribute *event );
 extern ThotBool CheckValidEntity ( NotifyAttribute *event );
 extern ThotBool CheckValidID ( NotifyAttribute *event );
-extern char *UpdateResource ( Document doc,
-                              char *oldpath,
-                              char *newpath,
-                              char *relpath,
-                              char *sString,
-                              Element el,
-                              ThotBool saveResources,
-                              ThotBool isLink,
-                              ThotBool fullCopy );
+extern char *UpdateDocResource ( Document doc,
+                                 char *oldpath,
+                                 char *newpath,
+                                 char *relpath,
+                                 char *sString,
+                                 Element el,
+                                 ThotBool saveResources,
+                                 ThotBool isLink,
+                                 ThotBool fullCopy );
 extern void SetRelativeURLs ( Document doc,
                               char *newpath,
                               char *cssbase,
@@ -81,15 +81,15 @@ extern ThotBool CheckGenerator ( NotifyElement *event );
 extern ThotBool CheckUSEMAP ( NotifyAttribute *event );
 extern ThotBool CheckValidEntity ( NotifyAttribute *event );
 extern ThotBool CheckValidID ( NotifyAttribute *event );
-extern char *UpdateResource ( Document doc,
-                                char *oldpath,
-                                char *newpath,
-                                char *relpath,
-                                char *sString,
-                                Element el,
-                                ThotBool saveResources,
-                                ThotBool isLink,
-                                ThotBool fullCopy );
+extern char *UpdateDocResource ( Document doc,
+                                   char *oldpath,
+                                   char *newpath,
+                                   char *relpath,
+                                   char *sString,
+                                   Element el,
+                                   ThotBool saveResources,
+                                   ThotBool isLink,
+                                   ThotBool fullCopy );
 extern void SetRelativeURLs ( Document doc,
                                 char *newpath,
                                 char *cssbase,
