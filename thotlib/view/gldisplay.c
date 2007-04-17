@@ -1975,7 +1975,7 @@ void DrawHorizontalLine (int frame, int thick, int style, int x, int y,
                          int leftslice, int rightslice)
 {
   ThotPoint           point[4];
-  int                 Y, left = x, right = x + l;
+  int                 Y, left, right;
   int                 light = fg, dark = fg;
   unsigned short      red, green, blue, sl = 50, sd = 100;
 
@@ -1993,8 +1993,6 @@ void DrawHorizontalLine (int frame, int thick, int style, int x, int y,
           if (green + sl > 254) green = 255 - sl;
           if (blue + sl > 254) blue = 255 - sl;
           light = TtaGetThotColor (red + sl, green + sl, blue + sl);
-          //dark = TtaGetThotColor (red & 0xCF, green & 0xCF, blue & 0xCF);
-          //light = TtaGetThotColor (red | 0xC0, green | 0xC0, blue | 0xC0);
         }
 
       y += FrameTable[frame].FrTopMargin;
@@ -2284,11 +2282,10 @@ void DrawVerticalLine (int frame, int thick, int style, int x, int y,
 void DrawHat (int frame, int thick, int style, int x, int y, int l, int h,
               int fg, int direction)
 {
-int Y;
+  int Y;
 
-h -= thick;
-l -= thick;
-
+  h -= thick;
+  l -= thick;
   if (thick > 0 && fg >= 0)
     {
       y += FrameTable[frame].FrTopMargin + h / 2;
@@ -2309,7 +2306,6 @@ void DrawTilde (int frame, int thick, int style, int x, int y, int l, int h, int
 
   h -= thick;
   l -= thick;
-
   if (thick > 0 && fg >= 0)
     {
       Xmax = 10;

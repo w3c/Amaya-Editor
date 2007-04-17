@@ -231,41 +231,41 @@ static void Transcode (FILE *fout, int encoding, unsigned char car)
   ----------------------------------------------------------------------*/
 static void FillWithPattern (FILE *fout, int fg, int bg, int pattern)
 {
-   unsigned short      red;
-   unsigned short      green;
-   unsigned short      blue;
-   float               fact;
+  unsigned short      red;
+  unsigned short      green;
+  unsigned short      blue;
+  float               fact;
 
-   fact = 255;
-   /* Do the current stroke need to be filled ? */
-   if (pattern == 0)
-      /* no filling */
-      fprintf (fout, "0\n");
-   else if (pattern == 1)
-     {
-	/* Ask for the RedGreenBlue values */
-	TtaGiveThotRGB (fg, &red, &green, &blue);
-	/* Emit the Postscript command */
-	fprintf (fout, "%f %f %f -1\n", ((float) red) / fact,
-		 ((float) green) / fact, ((float) blue) / fact);
-     }
-   else if (pattern == 2)
-     {
-	/* Ask for the RedGreenBlue values */
-	TtaGiveThotRGB (bg, &red, &green, &blue);
-	/* Emit the Postscript command */
-	fprintf (fout, "%f %f %f -1\n", ((float) red) / fact,
-		 ((float) green) / fact, ((float) blue) / fact);
-     }
-   else if (pattern >= 10)
-     {
-	/* Use of a fill pattern */
-	/*fprintf(fout, "<d1e3c5885c3e1d88> 8 "); */
-	fprintf (fout, "<%s> 8\n", Patterns_PS[pattern - 10]);
-     }
-   else
-      /* Shade of grey */
-      fprintf (fout, "%d\n", pattern - 2);
+  fact = 255;
+  /* Do the current stroke need to be filled ? */
+  if (pattern == 0)
+    /* no filling */
+    fprintf (fout, "0\n");
+  else if (pattern == 1)
+    {
+      /* Ask for the RedGreenBlue values */
+      TtaGiveThotRGB (fg, &red, &green, &blue);
+      /* Emit the Postscript command */
+      fprintf (fout, "%f %f %f -1\n", ((float) red) / fact,
+               ((float) green) / fact, ((float) blue) / fact);
+    }
+  else if (pattern == 2)
+    {
+      /* Ask for the RedGreenBlue values */
+      TtaGiveThotRGB (bg, &red, &green, &blue);
+      /* Emit the Postscript command */
+      fprintf (fout, "%f %f %f -1\n", ((float) red) / fact,
+               ((float) green) / fact, ((float) blue) / fact);
+    }
+  else if (pattern >= 10)
+    {
+      /* Use of a fill pattern */
+      /*fprintf(fout, "<d1e3c5885c3e1d88> 8 "); */
+      fprintf (fout, "<%s> 8\n", Patterns_PS[pattern - 10]);
+    }
+  else
+    /* Shade of grey */
+    fprintf (fout, "%d\n", pattern - 2);
 }
 
 /*----------------------------------------------------------------------
@@ -1299,11 +1299,11 @@ void DrawPolygon (int frame, int thick, int style, int x, int y,
   for (i = 1; i < nb; i++)
     {
       if (j >= adbuff->BuLength && adbuff->BuNext != NULL)
-	{
-	  /* Next buffer */
-	  adbuff = adbuff->BuNext;
-	  j = 0;
-	}
+        {
+          /* Next buffer */
+          adbuff = adbuff->BuNext;
+          j = 0;
+        }
       /* Coordinate for next point */
       xp = (float) (PixelValue (adbuff->BuPoints[j].XCoord, UnPixel, NULL, 0) + x);
       yp = (float) (PixelValue (adbuff->BuPoints[j].YCoord, UnPixel, NULL, 0) + y);
@@ -1313,7 +1313,7 @@ void DrawPolygon (int frame, int thick, int style, int x, int y,
   /* Extra characteristics for drawing */
   fprintf (fout, "%d %d %d  Poly\n", style, thick, nb - 1);
 #else /* _WX */
-   /* TODO : a faire si on porte la version non _GL de wxWidgets */
+  /* TODO : a faire si on porte la version non _GL de wxWidgets */
 #endif /* _WX */
 }
 
@@ -1974,29 +1974,36 @@ void DrawHorizontalLine (int frame, int thick, int style, int x, int y,
                          int leftslice, int rightslice)
 {
 #ifndef _WX
-   int                 xf, Y;
-   FILE               *fout;
+  ThotPoint           point[4];
+  FILE               *fout;
+  int                 xf, Y, left, right;
+  int                 light = fg, dark = fg;
+  unsigned short      red, green, blue, sl = 50, sd = 100;
 
-   if (y < 0)
-     return;
-   y += FrameTable[frame].FrTopMargin;
-   if (thick <= 0 || fg < 0)
-     return;
+  if (y < 0)
+    return;
+  y += FrameTable[frame].FrTopMargin;
+  if (thick <= 0 || fg < 0)
+    return;
 
-   fout = (FILE *) FrRef[frame];
-   /* Do we need to change the current color ? */
-   CurrentColor (fout, fg);
-
-  if (thick > 1 && style > 5)
+  if (style > 6 && align != 1)
     {
-      if (align == 1)
-        DrawRectangle (frame, 1, style, x, y + (h - thick) / 2, l, thick, fg, fg, 2);
-      else if (align == 2)
-        DrawRectangle (frame, 1, style, x, y + h - thick, l, thick, fg, fg, 2);
-      else
-        DrawRectangle (frame, 1, style, x, y, l, thick, fg, fg, 2);
+      /*  */
+      TtaGiveThotRGB (fg, &red, &green, &blue);
+      if (red < sd) sd = red;
+      if (green < sd) sd = green;
+      if (blue < sd) sd = blue;
+      dark = TtaGetThotColor (red - sd, green - sd, blue - sd);
+      if (red + sl > 254) red = 255 - sl;
+      if (green + sl > 254) green = 255 - sl;
+      if (blue + sl > 254) blue = 255 - sl;
+      light = TtaGetThotColor (red + sl, green + sl, blue + sl);
     }
-  else
+
+  fout = (FILE *) FrRef[frame];
+  /* Do we need to change the current color ? */
+  CurrentColor (fout, fg);
+  if (style < 5 || thick < 2)
     {
       if (align == 1)
         Y = y + (h - thick) / 2;
@@ -2007,6 +2014,295 @@ void DrawHorizontalLine (int frame, int thick, int style, int x, int y,
       xf = x + l;
       fprintf (fout, "%d %d %d %d %d %d %d Seg\n",
                xf, -Y, x, -Y, style, thick, 2);
+    }
+  else
+    {
+      // check if the top of the box is displayed
+      left = leftslice;
+      right = rightslice;
+      if (style == 7 || style == 8)
+        {
+          thick = thick / 2; // groove, ridge
+          left = left / 2;
+          right = right / 2;
+        }
+      else
+        {
+          thick--; // solid, outset inset, double
+          if (left)
+            left--;
+          if (right)
+            right--;
+        }
+
+      if (align == 1)
+        {
+          // middle
+          point[0].x = x;
+          point[0].y = y + (h - thick) / 2;
+          point[1].x = x + l;
+          point[1].y = y + (h - thick) / 2;
+          point[2].x = x + l;
+          point[2].y = y + (h + thick) / 2;
+          point[3].x = x;
+          point[3].y = y + (h + thick) / 2;
+        }
+      else if (align == 2)
+        {
+          // bottom
+          if (style == 7 || style == 9)
+            // groove or inset
+            fg = light;
+          else if (style == 8 || style == 10)
+            // ridge or outset
+            fg = dark;
+          point[0].x = x + left;
+          point[0].y = y + h - thick;
+          point[1].x = x + l - right;
+          point[1].y = y + h - thick;
+          point[2].x = x + l;
+          point[2].y = y + h;
+          point[3].x = x;
+          point[3].y = y + h;
+        }
+      else
+        {
+          // top
+          if (style == 7 || style == 9)
+            // groove or inset
+            fg = dark;
+          else if (style == 8 || style == 10)
+            fg = light;
+          point[0].x = x;
+          point[0].y = y;
+          point[1].x = x + l;
+          point[1].y = y;
+          point[2].x = x + l - right;
+          point[2].y = y + thick;
+          point[3].x = x + left;
+          point[3].y = y + thick;
+        }
+
+      if (style == 6)
+        {
+          // double style
+          fprintf (fout, "%d %d %d %d %d %d %d Seg\n",
+                   point[0].x, -point[0].y, point[1].x, -point[1].y, style, thick, 2);
+          fprintf (fout, "%d %d %d %d %d %d %d Seg\n",
+                   point[3].x, -point[3].y, point[2].x, -point[2].y, style, thick, 2);
+        }
+      else
+        {
+          FillWithPattern (fout, fg, fg, 2);
+          // draw the polygon
+          fprintf (fout, "%f %f\n", (float)point[0].x, (float)-point[0].y);
+          fprintf (fout, "%f %f\n", (float)point[1].x, (float)-point[1].y);
+          fprintf (fout, "%f %f\n", (float)point[2].x, (float)-point[2].y);
+          fprintf (fout, "%f %f\n", (float)point[3].x, (float)-point[3].y);
+          fprintf (fout, "%d %d %d  Poly\n", style, thick, 4);
+          if (align != 1 && (style == 7 || style == 8))
+            {
+              // invert light and dark
+              if (fg == dark)
+                fg = light;
+              else
+                fg = dark;
+              if (align == 0)
+                {
+                  // top
+                  point[0].x = point[3].x + left;
+                  point[0].y = point[3].y + thick;
+                  point[1].x = point[2].x - right;
+                  point[1].y = point[2].y + thick;
+                }
+              else
+                {
+                  // bottom
+                  point[2].x = point[1].x + left;
+                  point[2].y = point[1].y - thick;
+                  point[3].x = point[0].x - right;
+                  point[3].y = point[0].y - thick;
+                }
+              FillWithPattern (fout, fg, fg, 2);
+              // draw the polygon
+              fprintf (fout, "%f %f\n", (float)point[0].x, (float)-point[0].y);
+              fprintf (fout, "%f %f\n", (float)point[1].x, (float)-point[1].y);
+              fprintf (fout, "%f %f\n", (float)point[2].x, (float)-point[2].y);
+              fprintf (fout, "%f %f\n", (float)point[3].x, (float)-point[3].y);
+              fprintf (fout, "%d %d %d  Poly\n", style, thick, 4);
+            }
+        }
+    }
+#endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
+  DrawVerticalLine draw a vertical line aligned left center or right
+  depending on align value.
+  topslice and bottomslice say if the top and bottom borders are sliced.
+  ----------------------------------------------------------------------*/
+void DrawVerticalLine (int frame, int thick, int style, int x, int y,
+                       int l, int h, int align, int fg, PtrBox box,
+                       int topslice, int bottomslice)
+{
+#ifndef _WX
+  ThotPoint           point[4];
+  FILE               *fout;
+  int                 X, yf, top, bottom;
+  int                 light = fg, dark = fg;
+  unsigned short      red, green, blue, sl = 50, sd = 100;
+
+  if (y < 0)
+    return;
+  y += FrameTable[frame].FrTopMargin;
+  if (thick <= 0 || fg < 0)
+    return;
+
+  if (style > 6 && align != 1)
+    {
+      /*  */
+      TtaGiveThotRGB (fg, &red, &green, &blue);
+      if (red < sd) sd = red;
+      if (green < sd) sd = green;
+      if (blue < sd) sd = blue;
+      dark = TtaGetThotColor (red - sd, green - sd, blue - sd);
+      if (red + sl > 254) red = 255 - sl;
+      if (green + sl > 254) green = 255 - sl;
+      if (blue + sl > 254) blue = 255 - sl;
+      light = TtaGetThotColor (red + sl, green + sl, blue + sl);
+    }
+
+  fout = (FILE *) FrRef[frame];
+  /* Do we need to change the current color ? */
+  CurrentColor (fout, fg);
+  if (style < 5 || thick < 2)
+    {
+      if (align == 1)
+        X = x + (l - thick) / 2;
+      else if (align == 2)
+        X = x + l - thick / 2;
+      else
+        X = x + thick / 2;
+      yf = y + h;
+      fprintf (fout, "%d %d %d %d %d %d %d Seg\n",
+               X, -yf, X, -y, style, thick, 2);
+    }
+  else
+    {
+      // check if the top of the box is displayed
+      top = topslice;
+      bottom = bottomslice;
+      if (style == 7 || style == 8)
+        {
+          thick = thick / 2; // groove, ridge
+          top = top / 2;
+          bottom = bottom / 2;
+        }
+      else
+        {
+          thick--; // solid, outset, inset style
+          if (top)
+            top--;
+          if (bottom)
+            bottom--;
+        }
+      if (align == 1)
+        {
+          // midle
+          point[0].x = x + (l - thick) / 2;
+          point[0].y = y;
+          point[1].x = x + (l + thick) / 2;
+          point[1].y = y;
+          point[2].x = x + (l + thick) / 2;
+          point[2].y = y + h;
+          point[3].x = x + (l - thick) / 2;
+          point[3].y = y + h;
+        }
+      else if (align == 2)
+        {
+          // right
+          if (style == 7 || style == 9)
+            // groove or inset
+            fg = light;
+          else if (style == 8 || style == 10)
+            // ridge or outset
+            fg = dark;
+          point[0].x = x + l - thick;
+          point[0].y = y + top;
+          point[1].x = x + l;
+          point[1].y = y;
+          point[2].x = x + l;
+          point[2].y = y + h;
+          point[3].x = x + l - thick;
+          point[3].y = y + h - bottom;
+        }
+      else
+        {
+          // left
+          if (style == 7 || style == 9)
+            // groove or inset
+            fg = dark;
+          else if (style == 8 || style == 10)
+            // ridge or outset
+            fg = light;
+          point[0].x = x;
+          point[0].y = y;
+          point[1].x = x + thick;
+          point[1].y = y + top;
+          point[2].x = x + thick;
+          point[2].y = y + h - bottom;
+          point[3].x = x;
+          point[3].y = y + h;
+        }
+      if (style == 6)
+        {
+          // double style
+          fprintf (fout, "%d %d %d %d %d %d %d Seg\n",
+                   point[0].x, -point[0].y, point[1].x, -point[1].y, style, thick, 2);
+          fprintf (fout, "%d %d %d %d %d %d %d Seg\n",
+                   point[3].x, -point[3].y, point[2].x, -point[2].y, style, thick, 2);
+        }
+      else
+        {
+          FillWithPattern (fout, fg, fg, 2);
+          // draw the polygon
+          fprintf (fout, "%f %f\n", (float)point[0].x, (float)-point[0].y);
+          fprintf (fout, "%f %f\n", (float)point[1].x, (float)-point[1].y);
+          fprintf (fout, "%f %f\n", (float)point[2].x, (float)-point[2].y);
+          fprintf (fout, "%f %f\n", (float)point[3].x, (float)-point[3].y);
+          fprintf (fout, "%d %d %d  Poly\n", style, thick, 4);
+           if (align != 1 && (style == 7 || style == 8))
+            {
+              // invert light and dark
+              if (fg == dark)
+                fg = light;
+              else
+                fg = dark;
+              if (align == 0)
+                {
+                  // left
+                  point[0].x = point[1].x + thick;
+                  point[0].y = point[1].y + top;
+                  point[3].x = point[2].x + thick;
+                  point[3].y = point[2].y - bottom;
+                }
+              else
+                {
+                  // right
+                  point[1].x = point[0].x - thick;
+                  point[1].y = point[0].y + top;
+                  point[2].x = point[3].x - thick;
+                  point[2].y = point[3].y - bottom;
+                }
+              FillWithPattern (fout, fg, fg, 2);
+              // draw the polygon
+              fprintf (fout, "%f %f\n", (float)point[0].x, (float)-point[0].y);
+              fprintf (fout, "%f %f\n", (float)point[1].x, (float)-point[1].y);
+              fprintf (fout, "%f %f\n", (float)point[2].x, (float)-point[2].y);
+              fprintf (fout, "%f %f\n", (float)point[3].x, (float)-point[3].y);
+              fprintf (fout, "%d %d %d  Poly\n", style, thick, 4);
+            }
+        }
     }
 #endif /* _WX */
 }
@@ -2112,53 +2408,6 @@ void DrawHorizontalBrace (int frame, int thick, int style, int x, int y,
 void DrawHorizontalBracket (int frame, int thick, int style, int x, int y,
                           int l, int h, int align, int fg)
 {
-}
-
-/*----------------------------------------------------------------------
-  DrawVerticalLine draw a vertical line aligned left center or right
-  depending on align value.
-  topslice and bottomslice say if the top and bottom borders are sliced.
-  ----------------------------------------------------------------------*/
-void DrawVerticalLine (int frame, int thick, int style, int x, int y,
-                       int l, int h, int align, int fg, PtrBox box,
-                       int topslice, int bottomslice)
-{
-#ifndef _WX
-   int                 X, yf;
-   FILE               *fout;
-
-   if (y < 0)
-      return;
-
-   y += FrameTable[frame].FrTopMargin;
-   if (thick <= 0 || fg < 0)
-      return;
-
-   fout = (FILE *) FrRef[frame];
-   /* Do we need to change the current color ? */
-   CurrentColor (fout, fg);
-  if (thick > 1 && style > 5)
-    {
-      if (align == 1)
-        DrawRectangle (frame, 1, style, x + (l - thick) / 2, y, thick, h, fg, fg, 2);
-      else if (align == 2)
-        DrawRectangle (frame, 1, style, x + l - thick, y, thick, h, fg, fg, 2);
-      else
-        DrawRectangle (frame, 1, style, x, y, thick, h, fg, fg, 2);
-    }
-  else
-    {
-      if (align == 1)
-        X = x + (l - thick) / 2;
-      else if (align == 2)
-        X = x + l - thick / 2;
-      else
-        X = x + thick / 2;
-      yf = y + h;
-      fprintf (fout, "%d %d %d %d %d %d %d Seg\n",
-               X, -yf, X, -y, style, thick, 2);
-    }
-#endif /* _WX */
 }
 
 

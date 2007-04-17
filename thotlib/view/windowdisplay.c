@@ -703,7 +703,8 @@ void DrawIntersection (int frame, int x, int y, int l, int h,
       SelectClipRgn (display, clipRgn);
 #endif /* _WIN_PRINT */
       hOldPen = SelectObject (display, hPen);
-      Arc (display, x + 1, y + arc , x + l - 2, y, x + 1, y + arc, x + l - 2, y - arc);
+      // box + start and end points
+      Arc (display, x, y, x + l, y + arc, x + 1, y + arc, x + l - 2, y + arc);
       SelectObject (display, hOldPen);
       DeleteObject (hPen);
     }
@@ -751,7 +752,8 @@ void DrawUnion (int frame, int x, int y, int l, int h, ThotFont font, int fg)
       SelectClipRgn (display, clipRgn);
 #endif /* _WIN_PRINT */
       hOldPen = SelectObject (display, hPen);
-      Arc (display, x + 1, y - arc , x + l - 2, y, x + 1, y - arc, x + l - 2, y - arc);
+      // box + start and end points
+      Arc (display, x, y - arc , x + l, y, x + 1, y - arc, x + l - 2, y - arc);
       SelectObject (display, hOldPen);
       DeleteObject (hPen);
     }
@@ -2546,7 +2548,16 @@ void DrawHorizontalLine (int frame, int thick, int style, int x, int y,
                          int l, int h, int align, int fg, PtrBox box,
                          int leftslice, int rightslice)
 {
-  int        Y;
+  ThotPoint           point[4];
+  int                 Y, left, right;
+  int                 light = fg, dark = fg;
+  unsigned short      red, green, blue, sl = 50, sd = 100;
+  HPEN                hPen;
+  HPEN                hOldPen;
+  HDC                 display;
+  LOGBRUSH            logBrush;
+  HBRUSH              hBrush = NULL;
+  HBRUSH              hOldBrush;
 
   if (thick <= 0 || fg < 0)
     return;
@@ -2554,26 +2565,167 @@ void DrawHorizontalLine (int frame, int thick, int style, int x, int y,
   if (y < 0)
     return;
 #endif /* _WIN_PRINT */
+
+  if (style > 6 && align != 1)
+    {
+      /*  */
+      TtaGiveThotRGB (fg, &red, &green, &blue);
+      if (red < sd) sd = red;
+      if (green < sd) sd = green;
+      if (blue < sd) sd = blue;
+      dark = TtaGetThotColor (red - sd, green - sd, blue - sd);
+      if (red + sl > 254) red = 255 - sl;
+      if (green + sl > 254) green = 255 - sl;
+      if (blue + sl > 254) blue = 255 - sl;
+      light = TtaGetThotColor (red + sl, green + sl, blue + sl);
+    }
+
   y += FrameTable[frame].FrTopMargin;
-  if (thick > 1 && style > 5)
+  if (style < 5 || thick < 2)
     {
       if (align == 1)
-        DrawRectangle (frame, 1, style, x, y + (h - thick) / 2, l, thick, fg, fg, 2);
+        Y = y + (h - thick) / 2;// middle
       else if (align == 2)
-        DrawRectangle (frame, 1, style, x, y + h - thick, l, thick, fg, fg, 2);
+        Y = y + h - (thick + 1) / 2;// bottom
       else
-        DrawRectangle (frame, 1, style, x, y, l, thick, fg, fg, 2);
+        Y = y + thick / 2;// top
+          
+      InitDrawing (style, thick, fg);
+      DoDrawOneLine (frame, x, Y, x + l, Y);
     }
   else
     {
-      if (align == 1)
-        Y = y + h / 2;
-      else if (align == 2)
-        Y = y + h - (thick + 1) / 2;
+      // check if the top of the box is displayed
+      left = leftslice;
+      right = rightslice;
+      if (style == 7 || style == 8)
+        {
+          thick = thick / 2; // groove, ridge
+          left = left / 2;
+          right = right / 2;
+        }
       else
-        Y = y + thick / 2;
-      InitDrawing (style, thick, fg);
-      DrawOneLine (frame, x + thick / 2, Y, x + l - (thick + 1) / 2, Y);
+        {
+          thick--; // solid, outset inset, double
+          if (left)
+            left--;
+          if (right)
+            right--;
+        }
+      if (align == 1)
+        {
+          // middle
+          point[0].x = x;
+          point[0].y = y + (h - thick) / 2;
+          point[1].x = x + l;
+          point[1].y = y + (h - thick) / 2;
+          point[2].x = x + l;
+          point[2].y = y + (h + thick) / 2;
+          point[3].x = x;
+          point[3].y = y + (h + thick) / 2;
+        }
+      else if (align == 2)
+        {
+          // bottom
+          if (style == 7 || style == 9)
+            // groove or inset
+            fg = light;
+          else if (style == 8 || style == 10)
+            // ridge or outset
+            fg = dark;
+          point[0].x = x + left;
+          point[0].y = y + h - thick;
+          point[1].x = x + l - right;
+          point[1].y = y + h - thick;
+          point[2].x = x + l;
+          point[2].y = y + h;
+          point[3].x = x;
+          point[3].y = y + h;
+        }
+      else
+        {
+          // top
+          if (style == 7 || style == 9)
+            // groove or inset
+            fg = dark;
+          else if (style == 8 || style == 10)
+            fg = light;
+          point[0].x = x;
+          point[0].y = y;
+          point[1].x = x + l;
+          point[1].y = y;
+          point[2].x = x + l - right;
+          point[2].y = y + thick;
+          point[3].x = x + left;
+          point[3].y = y + thick;
+        }
+
+      if (style == 6)
+        {
+          // double style
+          InitDrawing (5, 1, fg);
+          DoDrawOneLine (frame, (int)point[0].x, (int)point[0].y,
+                         (int)point[1].x, (int)point[1].y);
+          DoDrawOneLine (frame, (int)point[3].x, (int)point[3].y,
+                         (int)point[2].x, (int)point[2].y);
+        }
+      else
+        {
+#ifdef _WIN_PRINT
+          display = TtPrinterDC;
+#else  /* _WIN_PRINT */
+          display = TtDisplay;
+          SelectClipRgn (display, clipRgn);
+#endif /* _WIN_PRINT */
+          logBrush.lbColor = ColorPixel (bg);
+          logBrush.lbStyle = BS_SOLID;
+          hBrush = CreateBrushIndirect (&logBrush); 
+          /* fill the polygon */
+          hPen = CreatePen (PS_NULL, thick, ColorPixel (fg));
+          hOldPen = SelectObject (display, hPen);
+          hOldBrush = SelectObject (display, hBrush);
+          Polygon (display, points, 4);
+          SelectObject (display, hOldPen);
+          DeleteObject (hPen);
+          SelectObject (display, hOldBrush);
+          DeleteObject (hBrush);
+          if (align != 1 && (style == 7 || style == 8))
+            {
+              // invert light and dark
+              if (fg == dark)
+                fg = light;
+              else
+                fg = dark;
+              if (align == 0)
+                {
+                  // top
+                  point[0].x = point[3].x + left;
+                  point[0].y = point[3].y + thick;
+                  point[1].x = point[2].x - right;
+                  point[1].y = point[2].y + thick;
+                }
+              else
+                {
+                  // bottom
+                  point[2].x = point[1].x + left;
+                  point[2].y = point[1].y - thick;
+                  point[3].x = point[0].x - right;
+                  point[3].y = point[0].y - thick;
+                }
+              logBrush.lbColor = ColorPixel (bg);
+              logBrush.lbStyle = BS_SOLID;
+              hBrush = CreateBrushIndirect (&logBrush); 
+              /* fill the polygon */
+              hPen = CreatePen (PS_NULL, thick, ColorPixel (fg));
+              hOldPen = SelectObject (display, hPen);
+              hOldBrush = SelectObject (display, hBrush);
+              Polygon (display, points, 4);
+              SelectObject (display, hOldPen);
+              DeleteObject (hPen);
+              SelectObject (display, hOldBrush);
+              DeleteObject (hBrush);
+            }
+        }
     }
 }
 /*----------------------------------------------------------------------
@@ -2586,7 +2738,16 @@ void DrawVerticalLine (int frame, int thick, int style, int x, int y, int l,
                        int h, int align, int fg, PtrBox box,
                        int topslice, int bottomslice)
 {
-  int        X;
+  ThotPoint           point[4];
+  int                 X, top = y, bottom = y + h;
+  int                 light = fg, dark = fg;
+  unsigned short      red, green, blue , sl = 50, sd = 100;
+  HPEN                hPen;
+  HPEN                hOldPen;
+  HDC                 display;
+  LOGBRUSH            logBrush;
+  HBRUSH              hBrush = NULL;
+  HBRUSH              hOldBrush;
 
   if (thick <= 0 || fg < 0)
     return;
@@ -2595,26 +2756,166 @@ void DrawVerticalLine (int frame, int thick, int style, int x, int y, int l,
     return;
 #endif /* _WIN_PRINT */
 
+  if (style > 6 && align != 1)
+    {
+      /*  */
+      TtaGiveThotRGB (fg, &red, &green, &blue);
+      if (red < sd) sd = red;
+      if (green < sd) sd = green;
+      if (blue < sd) sd = blue;
+      dark = TtaGetThotColor (red - sd, green - sd, blue - sd);
+      if (red + sl > 254) red = 255 - sl;
+      if (green + sl > 254) green = 255 - sl;
+      if (blue + sl > 254) blue = 255 - sl;
+      light = TtaGetThotColor (red + sl, green + sl, blue + sl);
+    }
+
   y += FrameTable[frame].FrTopMargin;
-  if (thick > 1 && style > 5)
+  if (style < 5 || thick < 2)
     {
       if (align == 1)
-        DrawRectangle (frame, 1, style, x + (l - thick) / 2, y, thick, h, fg, fg, 2);
+        X = x + (l - thick) / 2;// midle
       else if (align == 2)
-        DrawRectangle (frame, 1, style, x + l - thick, y, thick, h, fg, fg, 2);
+        X = x + l - (thick + 1) / 2;// right
       else
-        DrawRectangle (frame, 1, style, x, y, thick, h, fg, fg, 2);
+        X = x + thick / 2;// left
+            
+      InitDrawing (style, thick, fg);
+      DoDrawOneLine (frame, X, y, X, y + h);
     }
   else
     {
-      if (align == 1)
-        X = x + thick / 2;
-      else if (align == 2)
-        X = x + l - (thick + 1) / 2;
+      // check if the top of the box is displayed
+      top = topslice;
+      bottom = bottomslice;
+      if (style == 7 || style == 8)
+        {
+          thick = thick / 2; // groove, ridge
+          top = top / 2;
+          bottom = bottom / 2;
+        }
       else
-        X = x + thick / 2;
-      InitDrawing (style, thick, fg);
-      DrawOneLine (frame, X, y + thick / 2, X, y + h - (thick + 1) / 2);
+        {
+          thick--; // solid, outset, inset style
+          if (top)
+            top--;
+          if (bottom)
+            bottom--;
+        }
+      if (align == 1)
+        {
+          // midle
+          point[0].x = x + (l - thick) / 2;
+          point[0].y = y;
+          point[1].x = x + (l + thick) / 2;
+          point[1].y = y;
+          point[2].x = x + (l + thick) / 2;
+          point[2].y = y + h;
+          point[3].x = x + (l - thick) / 2;
+          point[3].y = y + h;
+        }
+      else if (align == 2)
+        {
+          // right
+          if (style == 7 || style == 9)
+            // groove or inset
+            fg = light;
+          else if (style == 8 || style == 10)
+            // ridge or outset
+            fg = dark;
+          point[0].x = x + l - thick;
+          point[0].y = y + top;
+          point[1].x = x + l;
+          point[1].y = y;
+          point[2].x = x + l;
+          point[2].y = y + h;
+          point[3].x = x + l - thick;
+          point[3].y = y + h - bottom;
+        }
+      else
+        {
+          // left
+          if (style == 7 || style == 9)
+            // groove or inset
+            fg = dark;
+          else if (style == 8 || style == 10)
+            // ridge or outset
+            fg = light;
+          point[0].x = x;
+          point[0].y = y;
+          point[1].x = x + thick;
+          point[1].y = y + top;
+          point[2].x = x + thick;
+          point[2].y = y + h - bottom;
+          point[3].x = x;
+          point[3].y = y + h;
+        }
+      if (style == 6)
+        {
+          // double style
+          InitDrawing (5, 1, fg);
+          DoDrawOneLine (frame, (int)point[0].x, (int)point[0].y,
+                         (int)point[3].x, (int)point[3].y);
+          DoDrawOneLine (frame, (int)point[1].x, (int)point[1].y,
+                         (int)point[2].x, (int)point[2].y);
+        }
+      else
+        {
+#ifdef _WIN_PRINT
+          display = TtPrinterDC;
+#else  /* _WIN_PRINT */
+          display = TtDisplay;
+          SelectClipRgn (display, clipRgn);
+#endif /* _WIN_PRINT */
+          logBrush.lbColor = ColorPixel (bg);
+          logBrush.lbStyle = BS_SOLID;
+          hBrush = CreateBrushIndirect (&logBrush); 
+          /* fill the polygon */
+          hPen = CreatePen (PS_NULL, thick, ColorPixel (fg));
+          hOldPen = SelectObject (display, hPen);
+          hOldBrush = SelectObject (display, hBrush);
+          Polygon (display, points, 4);
+          SelectObject (display, hOldPen);
+          DeleteObject (hPen);
+          SelectObject (display, hOldBrush);
+          DeleteObject (hBrush);
+          if (align != 1 && (style == 7 || style == 8))
+            {
+              // invert light and dark
+              if (fg == dark)
+                fg = light;
+              else
+                fg = dark;
+              if (align == 0)
+                {
+                  // left
+                  point[0].x = point[1].x + thick;
+                  point[0].y = point[1].y + top;
+                  point[3].x = point[2].x + thick;
+                  point[3].y = point[2].y - bottom;
+                }
+              else
+                {
+                  // right
+                  point[1].x = point[0].x - thick;
+                  point[1].y = point[0].y + top;
+                  point[2].x = point[3].x - thick;
+                  point[2].y = point[3].y - bottom;
+                }
+              logBrush.lbColor = ColorPixel (bg);
+              logBrush.lbStyle = BS_SOLID;
+              hBrush = CreateBrushIndirect (&logBrush); 
+              /* fill the polygon */
+              hPen = CreatePen (PS_NULL, thick, ColorPixel (fg));
+              hOldPen = SelectObject (display, hPen);
+              hOldBrush = SelectObject (display, hBrush);
+              Polygon (display, points, 4);
+              SelectObject (display, hOldPen);
+              DeleteObject (hPen);
+              SelectObject (display, hOldBrush);
+              DeleteObject (hBrush);
+            }
+        }
     }
 }
 
@@ -2625,11 +2926,10 @@ void DrawVerticalLine (int frame, int thick, int style, int x, int y, int l,
 void DrawHat (int frame, int thick, int style, int x, int y, int l, int h,
               int fg, int direction)
 {
-int Y;
+  int Y;
 
-h -= thick;
-l -= thick;
-
+  h -= thick;
+  l -= thick;
   if (thick > 0 && fg >= 0)
     {
       y += FrameTable[frame].FrTopMargin + h / 2;
@@ -2650,7 +2950,6 @@ void DrawTilde (int frame, int thick, int style, int x, int y, int l, int h, int
 
   h -= thick;
   l -= thick;
-
   if (thick > 0 && fg >= 0)
     {
       Xmax = 10;
@@ -2676,6 +2975,37 @@ void DrawTilde (int frame, int thick, int style, int x, int y, int l, int h, int
 void DrawHorizontalParenthesis (int frame, int thick, int style, int x, int y,
                           int l, int h, int align, int fg)
 {
+  int         xf, yf;
+  HPEN        hPen;
+  HPEN        hOldPen;
+  HDC         display;
+
+  h -= thick;
+  l -= thick;
+  xf = x + l - thick / 2;
+  yf = y + h - thick / 2;
+  x += thick / 2;
+  y +=  FrameTable[frame].FrTopMargin;
+  y += thick / 2;
+  if (thick > 0 && fg >= 0)
+    {
+#ifdef _WIN_PRINT
+      display = TtPrinterDC;
+#else /* _WIN_PRINT */
+      display = TtDisplay;
+      SelectClipRgn (display, clipRgn);
+#endif /* _WIN_PRINT */
+      hOldPen = SelectObject (display, hPen);
+      InitDrawing (style, thick, fg);
+      if (align)
+        // box + start and end points
+        Arc (display, x, y, xf, yf, x, yf, xf, yf);
+      else
+        // box + start and end points
+        Arc (display, x, y, xf, yf, x, y, xf, y);
+      SelectObject (display, hOldPen);
+      DeleteObject (hPen);
+    }
 }
 
 /*----------------------------------------------------------------------
