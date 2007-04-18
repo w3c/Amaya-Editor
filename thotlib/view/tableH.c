@@ -979,6 +979,8 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
         extra = (pixels + n / 2) / n;
       else
         extra = pixels;
+      // ignore extra pixels which will be added
+      delta -= pixels;
       for (cRef = 0; cRef < cNumber; cRef++)
         {
           box = colBox[cRef]->AbBox;
