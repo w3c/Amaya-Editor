@@ -15,6 +15,7 @@
 #include "EDITimage_f.h"
 #include "HTMLactions_f.h"
 #include "HTMLsave_f.h"
+#include "HTMLtable_f.h"
 #include "init_f.h"
 #include "mydictionary_f.h"
 #include "templates_f.h"
@@ -340,6 +341,51 @@ Element Template_GetNewXmlElementInstance(Document doc, Element parent, Declarat
   return newEl;
 }
 
+
+/*----------------------------------------------------------------------
+  InsertWithNotify applies pre and post functions when inserting the new
+  element el after child (if not NULL) or as first child of parent.
+  ----------------------------------------------------------------------*/
+Element InsertWithNotify (Element el, Element child, Element parent, Document doc)
+{
+  ElementType      elType;
+  NotifyElement    event;
+  char            *name;
+  ThotBool         isRow = FALSE, isCell = FALSE;
+
+  elType = TtaGetElementType (el);
+  name = TtaGetSSchemaName (elType.ElSSchema);
+  isCell = ((!strcmp (name,"HTML") &&
+             elType.ElTypeNum == HTML_EL_Data_cell ||
+             elType.ElTypeNum == HTML_EL_Heading_cell) ||
+            (!strcmp (name,"MathML") && elType.ElTypeNum == MathML_EL_MTD));
+  isRow = ((!strcmp (name,"HTML") && elType.ElTypeNum == HTML_EL_Table_row) ||
+           (!strcmp (name,"MathML") &&
+            (elType.ElTypeNum == MathML_EL_MTR ||
+             elType.ElTypeNum == MathML_EL_MLABELEDTR)));
+  if (child)
+    TtaInsertSibling (el, child, FALSE, doc);
+  else
+    TtaInsertFirstChild (&el, parent, doc);
+
+  if (isCell)
+    {
+      // a cell is created
+      //NewCell (el, doc, FALSE, FALSE, TRUE);
+    }
+  else if (isRow)
+    {
+      // a row is created
+      event.element = el;
+      event.document = doc;
+      RowPasted (&event);
+    }
+  //else
+  // TtaNotifySubTree (TteElemNew, doc, el, FALSE);
+  return el;
+}
+
+
 /*----------------------------------------------------------------------
   Template_InsertUseChildren
   Insert children to a xt:use
@@ -351,10 +397,10 @@ Element Template_GetNewXmlElementInstance(Document doc, Element parent, Declarat
   ----------------------------------------------------------------------*/
 Element Template_InsertUseChildren(Document doc, Element el, Declaration dec)
 {
-  Element     newEl   = NULL;
+  Element     newEl = NULL;
 #ifdef TEMPLATES
   Element     current = NULL;
-  Element     child   = NULL;
+  Element     child = NULL;
   //char       *attrCurrentTypeValue;
   //ElementType elType;
   
@@ -364,24 +410,20 @@ Element Template_InsertUseChildren(Document doc, Element el, Declaration dec)
     {
       case SimpleTypeNat:
         newEl = Template_GetNewSimpleTypeInstance(doc, el, dec);
-        TtaInsertFirstChild (&newEl, el, doc);
+        newEl = InsertWithNotify (newEl, NULL, el, doc);
         break;
       case XmlElementNat:
         newEl = Template_GetNewXmlElementInstance(doc, el, dec);
-        TtaInsertFirstChild (&newEl, el, doc);
+        newEl = InsertWithNotify (newEl, NULL, el, doc);
         break;
       case ComponentNat:
         newEl = TtaCopyTree(dec->componentType.content, doc, doc, el);
-        ProcessAttr (dec->declaredIn, newEl, doc);
-        
+        ProcessAttr (dec->declaredIn, newEl, doc);        
         /* Copy elements from new use to existing use. */
-        while((child = TtaGetFirstChild(newEl)))
+        while ((child = TtaGetFirstChild(newEl)))
         {
           TtaRemoveTree (child, doc);
-          if (current)
-            TtaInsertSibling (child, current, FALSE, doc);
-          else
-            TtaInsertFirstChild (&child, el, doc);      
+          child = InsertWithNotify (child, current, el, doc);
           current = child; 
         }
         
@@ -620,11 +662,10 @@ void InstantiateRepeat (XTigerTemplate t, Element el, Document doc, ThotBool reg
       TtaInsertSibling (newChild, child, FALSE, doc);
       SetAttributeStringValueWithUndo (newChild, Template_ATTR_types, types);
       SetAttributeStringValueWithUndo (newChild, Template_ATTR_title, title);
-      
-      InstantiateUse(t, newChild, doc, TRUE);
+      InstantiateUse (t, newChild, doc, TRUE);
       
       if (registerUndo)
-        TtaRegisterElementCreate(newChild, doc);
+        TtaRegisterElementCreate (newChild, doc);
       child = newChild;
       childrenCount++;
     }
@@ -807,7 +848,7 @@ void DoInstanceTemplate (char *templatename)
   TtaSetStructureChecking (FALSE, doc);
   elType.ElTypeNum = pi_type;
   piElem = TtaNewTree (doc, elType, "");
-  TtaInsertSibling(piElem, doctype, FALSE, doc);
+  TtaInsertSibling (piElem, doctype, FALSE, doc);
   elFound = TtaGetFirstChild (piElem);
   text = TtaGetFirstChild (elFound);
   strcpy (buffer, "xtiger template=\"");

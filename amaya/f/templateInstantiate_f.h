@@ -26,6 +26,10 @@ extern Element Template_GetNewSimpleTypeInstance ( Document doc,
 extern Element Template_GetNewXmlElementInstance ( Document doc,
                                                    Element parent,
                                                    Declaration decl );
+extern Element InsertWithNotify ( Element el,
+                                  Element child,
+                                  Element parent,
+                                  Document doc );
 extern Element Template_InsertUseChildren ( Document doc,
                                             Element el,
                                             Declaration dec );
@@ -62,6 +66,10 @@ extern Element Template_GetNewSimpleTypeInstance ( Document doc,
 extern Element Template_GetNewXmlElementInstance ( Document doc,
                                                      Element parent,
                                                      Declaration decl );
+extern Element InsertWithNotify ( Element el,
+                                    Element child,
+                                    Element parent,
+                                    Document doc );
 extern Element Template_InsertUseChildren ( Document doc,
                                               Element el,
                                               Declaration dec );

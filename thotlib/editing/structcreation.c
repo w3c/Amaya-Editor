@@ -20,6 +20,7 @@
 #include "libmsg.h"
 #include "message.h"
 #include "typemedia.h"
+#include "application.h"
 #include "fileaccess.h"
 #include "picture.h"
 #include "appaction.h"
@@ -93,6 +94,7 @@ static ThotBool     createPasteMenuOK;
 #include "structselect_f.h"
 #include "structschema_f.h"
 #include "tableH_f.h"
+#include "thotmsg_f.h"
 #include "tree_f.h"
 #include "undo_f.h"
 #include "views_f.h"
@@ -160,6 +162,29 @@ void NotifySubTree (APPevent appEvent, PtrDocument pDoc, PtrElement pEl,
             pChild = pNext;
           }
       }
+}
+
+/*----------------------------------------------------------------------
+  TtaNotifySubTree sends an event appEvent.Pre or appEvent.Post for the
+  element elem of the document doc and if necessary all its children.
+  The parameter pre says if the notification is before or after the action.
+  Returns TRUE if pre is TRUE and the application refuses the operation  
+  ----------------------------------------------------------------------*/
+ThotBool TtaNotifySubTree (APPevent appEvent, Document doc, Element elem,
+                           ThotBool pre)
+{
+  UserErrorCode = 0;
+  if (elem == NULL)
+    TtaError (ERR_invalid_parameter);
+  else if (doc < 1 || doc > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (pre)
+    return SendEventSubTree (appEvent, LoadedDocument[doc - 1], (PtrElement)elem,
+                             0, 0, FALSE, FALSE);
+  else
+    NotifySubTree (appEvent, LoadedDocument[doc - 1], (PtrElement)elem,
+                   0, 0, FALSE, FALSE);
+  return FALSE;
 }
 
 /*----------------------------------------------------------------------

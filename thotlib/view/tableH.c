@@ -1020,13 +1020,14 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
           /* update the new inside width */
           if (addPixels && pixels > 0)
             {
-              if (pixels > extra && extra > 0)
+              if (pixels > extra && extra > 0 && cRef < cNumber - 1)
                 {
                   i += extra;
                   pixels -= extra;
                 }
               else
                 {
+                  // get all extra pixels
                   i += pixels;
                   pixels = 0;
                 }

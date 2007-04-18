@@ -635,11 +635,12 @@ ThotBool Template_CanInsertRepeatChild(Element el)
   @param elPrev Element (xt:use) after which insert the new elem, NULL if first.
   @return The inserted element 
   ----------------------------------------------------------------------*/
-Element Template_InsertRepeatChildAfter(Document doc, Element el, Declaration decl, Element elPrev)
+Element Template_InsertRepeatChildAfter(Document doc, Element el,
+                                        Declaration decl, Element elPrev)
 {
 #ifdef TEMPLATES
-  Element useFirst; /* First xt:use of the repeat.*/
-  Element use;      /* xt:use to insert.*/
+  Element     useFirst; /* First xt:use of the repeat.*/
+  Element     use;      /* xt:use to insert.*/
   ElementType useType;  /* type of xt:use.*/
   
   if (!TtaGetDocumentAccessMode(doc))
@@ -650,24 +651,16 @@ Element Template_InsertRepeatChildAfter(Document doc, Element el, Declaration de
   useType = TtaGetElementType(useFirst);
   use = TtaCopyElement(useFirst, doc, doc, el);
 
-  Template_InsertUseChildren(doc, use, decl);
-
   /* insert it */
   if (elPrev)
-  {
     TtaInsertSibling(use, elPrev, FALSE, doc);
-  }
   else
-  {
     TtaInsertSibling(use, useFirst, TRUE, doc);
-  }
+  Template_InsertUseChildren(doc, use, decl);
 
   TtaRegisterElementCreate(use, doc);
-  
   Template_IncrementRepeatOccurNumber(el);
-  
   return use;
-  
 #else /* TEMPLATES */
   return NULL;
 #endif /* TEMPLATES */
@@ -689,23 +682,19 @@ Element Template_InsertRepeatChild(Document doc, Element el, Declaration decl, i
   if (!TtaGetDocumentAccessMode(doc) || !decl)
     return NULL;
   
-  if (pos==0)
-  {
-    return Template_InsertRepeatChildAfter(doc, el, decl, NULL);
-  }
-  else if (pos==-1)
-  {
-    return Template_InsertRepeatChildAfter(doc, el, decl, TtaGetLastChild(el));
-  }
+  if (pos == 0)
+    return Template_InsertRepeatChildAfter (doc, el, decl, NULL);
+  else if (pos == -1)
+    return Template_InsertRepeatChildAfter (doc, el, decl, TtaGetLastChild(el));
   else
   {
     Element elem = TtaGetFirstChild(el);
     pos--;
-    while (pos>0)
-    {
-      TtaNextSibling(&elem);
-      pos--;
-    }
+    while (pos > 0)
+      {
+        TtaNextSibling(&elem);
+        pos--;
+      }
     return Template_InsertRepeatChildAfter(doc, el, decl, elem);
   }
 #else /* TEMPLATES */
@@ -756,7 +745,6 @@ Element Template_InsertBagChild(Document doc, Element el, Declaration decl)
         SetAttributeStringValueWithUndo(sel, Template_ATTR_title, decl->name);
         Template_InsertUseChildren(doc, sel, decl);
       }
-      
       return sel;
     }
     

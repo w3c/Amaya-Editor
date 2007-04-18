@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996-2005
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -62,6 +62,8 @@ extern void         TteConnectAction (int id, Proc procedure);
 extern void         TtaSetBackup (Proc procedure);
 extern void         TtaSetAutoSave (Proc1 procedure);
 extern void         TtaSetDocStatusUpdate (Proc procedure);
+extern ThotBool     TtaNotifySubTree (APPevent appEvent, Document doc, Element elem,
+                                      ThotBool pre);
 extern void         TteZeroMenu ();
 extern void         TteOpenMainWindow (char *name);
 extern void         TteInitMenus (char *name, int number);

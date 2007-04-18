@@ -13,6 +13,10 @@ extern void NotifySubTree ( APPevent appEvent,
                             int info,
                             ThotBool inTable,
                             ThotBool inRow );
+extern ThotBool TtaNotifySubTree ( APPevent appEvent,
+                                   Document doc,
+                                   Element elem,
+                                   ThotBool pre );
 extern void InsertOption ( PtrElement pEl,
                            PtrElement *pOption,
                            PtrDocument pDoc );
@@ -86,6 +90,10 @@ extern void NotifySubTree ( APPevent appEvent,
                               int info,
                               ThotBool inTable,
                               ThotBool inRow );
+extern ThotBool TtaNotifySubTree ( APPevent appEvent,
+                                     Document doc,
+                                     Element elem,
+                                     ThotBool pre );
 extern void InsertOption ( PtrElement pEl,
                              PtrElement *pOption,
                              PtrDocument pDoc );
