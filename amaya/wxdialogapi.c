@@ -774,7 +774,8 @@ ThotBool CreateSaveObject (int ref, ThotWindow parent, char* objectname)
   returns:
   ----------------------------------------------------------------------*/
 ThotBool CreateAuthentDlgWX (int ref, ThotWindow parent,
-                             char *auth_realm, char *server)
+                             char *auth_realm, char *server,
+			     char *name, char *pwd)
 {
 #ifdef _WX
   /* check if the dialog is alredy open */
@@ -783,7 +784,8 @@ ThotBool CreateAuthentDlgWX (int ref, ThotWindow parent,
 
   AuthentDlgWX * p_dlg = new AuthentDlgWX( ref,
 					   parent,
-					   auth_realm, server);
+					   auth_realm, server,
+					   name, pwd);
   if ( TtaRegisterWidgetWX( ref, p_dlg ) )
       /* the dialog has been sucesfully registred */
       return TRUE;

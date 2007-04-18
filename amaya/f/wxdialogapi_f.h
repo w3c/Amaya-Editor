@@ -85,7 +85,9 @@ extern ThotBool CreateSaveObject ( int ref,
 extern ThotBool CreateAuthentDlgWX ( int ref,
                                      ThotWindow parent,
                                      char *auth_realm,
-                                     char *server );
+                                     char *server,
+                                     char *name,
+                                     char *pwd );
 extern ThotBool CreateCSSDlgWX ( int ref,
                                  int subref,
                                  ThotWindow parent,
@@ -242,7 +244,9 @@ extern ThotBool CreateSaveObject ( int ref,
 extern ThotBool CreateAuthentDlgWX ( int ref,
                                        ThotWindow parent,
                                        char *auth_realm,
-                                       char *server );
+                                       char *server,
+                                       char *name,
+                                       char *pwd );
 extern ThotBool CreateCSSDlgWX ( int ref,
                                    int subref,
                                    ThotWindow parent,

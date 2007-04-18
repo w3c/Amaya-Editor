@@ -97,6 +97,32 @@ extern void HelpShortCuts ( Document document,
                             View view );
 extern void HelpAccess ( Document document,
                          View view );
+extern void WritePasswordTable ( void );
+extern void NewPasswordTable ( char *realm,
+                               char *server,
+                               char *name,
+                               char *pwd,
+                               int i_auth,
+                               ThotBool user );
+extern void RemovePasswordTable ( int i_auth,
+                                  ThotBool user );
+extern void GetPasswordTable ( int i_auth,
+                               char* name,
+                               char *passwd );
+extern int SearchPasswordTable ( const char *realm,
+                                 char *server );
+extern void encodeblock ( unsigned char in[3],
+                          unsigned char out[4],
+                          int len );
+extern void encode ( char *inbuf,
+                     char *outbuf );
+extern void decodeblock ( unsigned char in[4],
+                          unsigned char out[3] );
+extern void decode ( char *inbuf,
+                     char *outbuf );
+extern int EncodeBuf ( char *inbuf,
+                       char *outbuf,
+                       ThotBool opt );
 
 #else /* __STDC__ */
 
@@ -191,6 +217,32 @@ extern void HelpShortCuts ( Document document,
                               View view );
 extern void HelpAccess ( Document document,
                            View view );
+extern void WritePasswordTable ( void );
+extern void NewPasswordTable ( char *realm,
+                                 char *server,
+                                 char *name,
+                                 char *pwd,
+                                 int i_auth,
+                                 ThotBool user );
+extern void RemovePasswordTable ( int i_auth,
+                                    ThotBool user );
+extern void GetPasswordTable ( int i_auth,
+                                 char* name,
+                                 char *passwd );
+extern int SearchPasswordTable ( const char *realm,
+                                   char *server );
+extern void encodeblock ( unsigned char in[3],
+                            unsigned char out[4],
+                            int len );
+extern void encode ( char *inbuf,
+                       char *outbuf );
+extern void decodeblock ( unsigned char in[4],
+                            unsigned char out[3] );
+extern void decode ( char *inbuf,
+                       char *outbuf );
+extern int EncodeBuf ( char *inbuf,
+                         char *outbuf,
+                         ThotBool opt );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -117,7 +117,6 @@ int             Window_Curs;
 char            DocToOpen[MAX_LENGTH];
 #endif /* _WINGUI */
 
-
 static int          AmayaInitialized = 0;
 static ThotBool     NewFile = FALSE;
 static int          NewDocType = 0;
@@ -1792,15 +1791,23 @@ void SetWindowTitle (Document sourceDoc, Document targetDoc, View view)
     UpdateTitle (title, sourceDoc);
 }
 
+
 /*----------------------------------------------------------------------
   InitFormAnswer
   Dialogue form for answering text, user name and password
   ----------------------------------------------------------------------*/
 void InitFormAnswer (Document document, View view, const char *auth_realm,
-                     char *server)
+                     char *server, int i_auth)
 {
+  char      name[MAX_LENGTH];
+  char      passwd[MAX_LENGTH];
+  
 #ifdef _GTK
   char *label;
+
+  name[0] = EOS;
+  passwd[0] = EOS;
+  GetPasswordTable (i_auth, &name[0], &passwd[0]);
 
   TtaNewForm (BaseDialog + FormAnswer, TtaGetViewFrame (document, view), 
               TtaGetMessage (AMAYA, AM_GET_AUTHENTICATION),
@@ -1839,12 +1846,17 @@ void InitFormAnswer (Document document, View view, const char *auth_realm,
       TtaWaitShowDialogue ();
     }
 #endif /* _GTK */
+
 #ifdef _WX
-  ThotBool created;
+  ThotBool  created;
+
+  name[0] = EOS;
+  passwd[0] = EOS;
+  GetPasswordTable (i_auth, &name[0], &passwd[0]);
 
   created = CreateAuthentDlgWX (BaseDialog + FormAnswer,
                                 TtaGetViewFrame (document, view),
-                                (char *)auth_realm, server);
+                                (char *)auth_realm, server, name, passwd); 
   if (created)
     {
       TtaSetDialoguePosition ();
@@ -4787,8 +4799,8 @@ void ShowSource (Document doc, View view)
   CHARSET          charset;
   char            *localFile;
   char            *s;
-  char  	    documentname[MAX_LENGTH];
-  char  	    tempdir[MAX_LENGTH];
+  char  	   documentname[MAX_LENGTH];
+  char  	   tempdir[MAX_LENGTH];
   Document         sourceDoc;
   NotifyElement    event;
 
@@ -7478,6 +7490,9 @@ void FreeAmayaStructures ()
       FreeTemplateEnvironment ();
 #endif /* TEMPLATES */
 
+      /* Write and free password table  */
+      WritePasswordTable ();
+
       FreeAmayaCache (); 
     }
 }
@@ -8326,7 +8341,7 @@ void MakeIDMenu (Document doc, View view)
 }
 
 /*----------------------------------------------------------------------
-  CheckAmayaClosed closes the application when there is any more
+  CheckAmayaClosed closes the application when there is no more
   opened document
   ----------------------------------------------------------------------*/
 void CheckAmayaClosed ()
@@ -8519,6 +8534,7 @@ void AmayaClose (Document document, View view)
 #ifdef _SVG
   SVGLIB_FreeDocumentResource ();
 #endif /* _SVG */
+
   TtaQuit ();
 #endif /* _WX */
 }
@@ -9200,3 +9216,5 @@ void SendByMail (Document document, View view)
   wxRmdir(wxString(temppath, wxConvUTF8));  
 #endif /* _WX */
 }
+
+

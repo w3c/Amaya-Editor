@@ -7,7 +7,7 @@
 
 /*
  *
- * Authors: V. Quint, J. Kahan, I. Vatton
+ * Authors: V. Quint, J. Kahan, I. Vatton, L. Carcone
  *
  */
 
@@ -67,6 +67,17 @@ static anHistory    DocHistory[DocumentTableLength];
 /* current position in the history of each window */
 static int          DocHistoryIndex[DocumentTableLength];
 static ThotBool     Back_Forward = FALSE;
+
+/* Table of passwords */
+#define MAX_PM_TABLE   50
+static char     *PM_Server[MAX_PM_TABLE];
+static char     *PM_Realm[MAX_PM_TABLE];
+static char     *PM_Name[MAX_PM_TABLE];
+static char     *PM_Passwd[MAX_PM_TABLE];
+static int PM_Index = 0;
+static int PM_Save = FALSE;
+
+#define S_FILE "2906642345.s"
 
 /*----------------------------------------------------------------------
   InitDocHistory
@@ -1201,3 +1212,509 @@ void HelpAccess (Document document, View view)
 {
   DisplayHelp (document, ACCESS);
 }
+
+/*----------------------  Password Manager -----------------------------*/
+
+/*----------------------------------------------------------------------
+  LoadPasswordTable
+  Initialize the table of passwords
+  ----------------------------------------------------------------------*/
+static void LoadPasswordTable ()
+{
+  unsigned char   c;
+  char            pathname[MAX_LENGTH];
+  char            line[MAX_TXT_LEN];
+  FILE           *file;
+  int             len;
+  ThotBool        endfile, ok;
+  char            inbuf[MAX_LENGTH], outbuf[MAX_LENGTH];
+  char            server[MAX_LENGTH], realm[MAX_LENGTH];
+  char            name[MAX_LENGTH], passwd[MAX_LENGTH];
+
+
+  /* Initialization */
+  memset (PM_Server, 0, MAX_PM_TABLE);
+  memset (PM_Realm, 0, MAX_PM_TABLE);
+  memset (PM_Name, 0, MAX_PM_TABLE);
+  memset (PM_Passwd, 0, MAX_PM_TABLE);
+  PM_Save = FALSE;
+  PM_Index = 0;
+
+  /* Read the password file and store the records */
+  /* Open the password file */
+  file = NULL;
+  sprintf (pathname, "%s%c%s", TempFileDirectory, DIR_SEP, S_FILE);
+  file = TtaReadOpen (pathname);
+  if (file == NULL)
+    {
+      return;
+    }
+
+  endfile = FALSE;
+  ok  = TRUE;
+  while (!endfile)
+    {
+      server[0]=EOS;
+      realm[0]=EOS;
+      name[0]=EOS;
+      passwd[0]=EOS;
+
+      /* 1st line */
+      len = 0;
+      while (!endfile && TtaReadByte (file, &c) && c != EOL)
+	{
+	  if (c == 13)
+	    line[len] = EOS;
+	  else
+	    line[len++] = (char)c;
+	}
+      line[len] = EOS;
+      endfile = !(c == EOL);
+
+      if (strcmp (line, "."))
+	{
+	  // goto next password record
+	  ok = FALSE;
+	}
+      else
+	ok = TRUE;
+
+      /* server/realm line */	
+      if (!endfile)
+	{
+	  if (TtaReadByte (file, &c) && c == '"')
+	    {
+	      /* server name */
+	      len = 0;
+	      while (TtaReadByte (file, &c) && c != EOL && c != '"')
+		line[len++] = (char)c;
+
+	      if (c == '"')
+		{
+		  line[len] = EOS;
+		  strcpy (server, line);
+		  /* skip spaces and the next first " */
+		  do
+		    {
+		      TtaReadByte (file, &c);
+		    }
+		  while (c != '"' && c != EOL);
+		  /* get the realm name */
+		  if (c == '"')
+		    {
+		      len = 0;
+		      while (TtaReadByte (file, &c) && c != EOL && c != '"')
+			line[len++] = (char)c;
+		      if (c == '"')
+			{
+			  line[len] = EOS;
+			  strcpy (realm, line);
+			  /* go to end of line " */
+			  do
+			    {
+			      TtaReadByte (file, &c);
+			    }
+			  while (c != EOL);
+			}
+		    }
+		  endfile = !(c == EOL);
+		}
+	    }
+	  else
+	    {
+	      /* no '"' character in first position */
+	      while (TtaReadByte (file, &c) && c != EOL)
+		line[len++] = (char)c;
+	      ok = FALSE;
+	    }
+	}
+      
+      /* name line */
+      len = 0;
+      while (!endfile && TtaReadByte (file, &c) && c != EOL)
+	{
+	  if (c == 13)
+	    line[len] = EOS;
+	  else
+	    line[len++] = (char)c;
+	}
+      line[len] = EOS;
+      endfile = !(c == EOL);
+      strcpy (name, line);
+
+      /* password line */
+      len = 0;
+      while (!endfile && TtaReadByte (file, &c) && c != EOL)
+	{
+	  if (c == 13)
+	    line[len] = EOS;
+	  else
+	    line[len++] = (char)c;
+	}
+      line[len] = EOS;
+      endfile = !(c == EOL);
+
+      /* Decode the passwd */
+      strcpy (inbuf, line);
+      EncodeBuf (&inbuf[0], &outbuf[0], FALSE);
+      strcpy (passwd, outbuf);
+
+      /* Store a record in password table */
+      if (ok)
+	NewPasswordTable (realm, server, name, passwd, 0, FALSE);
+   }
+
+  TtaReadClose (file);
+}
+
+/*----------------------------------------------------------------------
+  PasswordManagerStore
+  Store the name/password infos
+  ----------------------------------------------------------------------*/
+void WritePasswordTable ()
+{
+  int       i;
+  char      pwdname[MAX_LENGTH];
+  char      pwdname_tmp[MAX_LENGTH];
+  char      inbuf[MAX_LENGTH], outbuf[MAX_LENGTH];
+  char      server[MAX_LENGTH], realm[MAX_LENGTH];
+  char      name[MAX_LENGTH], passwd[MAX_LENGTH];
+  FILE     *f;
+
+  if (PM_Index == 0)
+      return;
+
+  if (PM_Save)
+    {
+      /* Open the new password file */
+      f = NULL;
+      sprintf (pwdname_tmp, "%s%c%s_tmp", TempFileDirectory, DIR_SEP, S_FILE);
+      f = TtaWriteOpen (pwdname_tmp);
+      if (f == NULL)
+	return;
+      
+      /* Write the password table */
+      for (i = 1; i <= PM_Index; i++)
+	{ 
+	  server[0]=EOS;
+	  realm[0]=EOS;
+	  name[0]=EOS;
+	  passwd[0]=EOS;
+	  if (PM_Server[i] != NULL)
+	    strcpy (server, PM_Server[i]);
+	  if (PM_Realm[i] != NULL)
+	    strcpy (realm, PM_Realm[i]);
+	  if (PM_Name[i] != NULL)
+	    strcpy (name, PM_Name[i]);
+	  if (PM_Passwd[i] != NULL)
+	    strcpy (passwd, PM_Passwd[i]);
+	  
+	  /* Free table */
+	  RemovePasswordTable (i, FALSE);
+	  
+	  /* Write a password */
+	  if (server[0] != EOS)
+	    {
+	      fprintf (f, "%c%c", '.', EOL);
+	      fprintf (f, "\"%s\" \"%s\" %c", server, realm, EOL);
+	      fprintf (f, "%s%c", name, EOL);
+	      /* Encode the passwd */
+	      strcpy (inbuf, passwd);
+	      EncodeBuf (&inbuf[0], &outbuf[0], TRUE);
+	      fprintf (f, "%s%c", outbuf, EOL);
+	    }
+	}  
+      /* Close the new password file */
+      if (f != NULL)
+	TtaWriteClose (f);
+      
+      /* Replace the password file with the new one */
+      /* Remove the old file */
+      sprintf (pwdname, "%s%c%s", TempFileDirectory, DIR_SEP, S_FILE);
+      if (TtaFileExist (pwdname))
+	TtaFileUnlink (pwdname);
+      /* Rename the new file */
+      TtaFileRename(pwdname_tmp, pwdname);
+    }
+  else
+    {
+      /* Free table */
+      for (i = 1; i <= PM_Index; i++)
+	RemovePasswordTable (i, FALSE);
+    }
+
+  PM_Index = 0;
+  
+  return;
+}
+
+/*----------------------------------------------------------------------
+  NewPasswordTable
+  Add an new password in  the table of passwords
+  ----------------------------------------------------------------------*/
+void NewPasswordTable (char *realm, char *server, char *name, char *pwd,
+		       int i_auth, ThotBool user)
+{
+  char      pm_name[MAX_LENGTH];
+  char      pm_passwd[MAX_LENGTH];
+  ThotBool  new_auth = TRUE;
+
+  if (i_auth != 0)
+  {
+    /* get the existing server/realm infos */
+    pm_name[0] = EOS;
+    pm_passwd[0] = EOS;
+    GetPasswordTable (i_auth, &pm_name[0], &pm_passwd[0]);
+
+    if ((name[0] != EOS && pm_name[0] != EOS && strcmp (name, pm_name)) ||
+	(pwd[0] != EOS  && pm_passwd[0] != EOS && strcmp (pwd, pm_passwd)))
+      {
+	/* the old record has been modified */
+	/* remove the old record */
+	RemovePasswordTable (i_auth, user);
+      }
+    else
+      /* same name/pwd infos - don't change the record */
+      new_auth = FALSE;
+  }
+
+  /* Store the new record */
+  if (new_auth)
+    {
+      PM_Index += 1;
+      if (PM_Index < MAX_PM_TABLE)
+	{
+	  PM_Server[PM_Index] = (char *) TtaGetMemory (strlen (server) + 1);
+	  strcpy (PM_Server[PM_Index], server);
+	  PM_Realm[PM_Index] = (char *) TtaGetMemory (strlen (realm) + 1);
+	  strcpy (PM_Realm[PM_Index], realm);
+	  PM_Name[PM_Index] = (char *) TtaGetMemory (strlen (name) + 1);
+	  strcpy (PM_Name[PM_Index], name);
+	  PM_Passwd[PM_Index] = (char *) TtaGetMemory (strlen (pwd) + 1);
+	  strcpy (PM_Passwd[PM_Index], pwd);
+	  if (user)
+	    PM_Save = TRUE;
+	}
+      else
+	{
+	  printf ("\nToo Many password in the Password Manager\n");
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
+  RemovePasswordTable
+  Remove a password from the table of passwords
+  ----------------------------------------------------------------------*/
+void RemovePasswordTable (int i_auth, ThotBool user)
+{
+
+  if (PM_Index < MAX_PM_TABLE)
+    {
+      if (PM_Server[i_auth] != NULL)
+	{
+	  TtaFreeMemory (PM_Server[i_auth]);
+	  PM_Server[i_auth] = NULL;
+	}
+      if (PM_Realm[i_auth] != NULL)
+	{
+	  TtaFreeMemory (PM_Realm[i_auth]);
+	  PM_Realm[i_auth] = NULL;
+	}
+      if (PM_Name[i_auth] != NULL)
+	{
+	  TtaFreeMemory (PM_Name[i_auth]);
+	  PM_Name[i_auth] = NULL;
+	}
+      if (PM_Passwd[i_auth] != NULL)
+	{
+	  TtaFreeMemory (PM_Passwd[i_auth]);
+	  PM_Passwd[i_auth] = NULL;
+	}
+      if (user)
+	PM_Save = TRUE;
+    }
+  else
+    {
+      printf ("\nPassword not found in the Password Manager\n");
+    }
+}
+
+/*----------------------------------------------------------------------
+  GetPasswordTable
+  Returns the name/password infos for the corresponding entry
+  ----------------------------------------------------------------------*/
+void GetPasswordTable (int i_auth, char* name, char *passwd)
+{
+  if (PM_Index == 0)
+    return;	
+
+  if (i_auth == 0)
+    return;	
+
+  /* Return the right name/password pair */
+  strcpy (name, PM_Name[i_auth]);
+  strcpy (passwd, PM_Passwd[i_auth]);
+
+  return;
+}
+/*----------------------------------------------------------------------
+  SearchPasswordTable
+  Search the corresponding entry for a realm/server pair
+  ----------------------------------------------------------------------*/
+int SearchPasswordTable (const char *realm, char *server)
+{
+  int        i;
+
+  if (*realm == EOS || *server == EOS)
+    return 0;
+
+  /* Is the password table already loaded ? */
+
+  if (PM_Index == 0)
+      LoadPasswordTable ();
+
+  /* Search the right server/realm pair within the password table */
+  for (i = 1; i <= PM_Index; i++)
+    { 
+      if (PM_Server[i] != NULL &&  PM_Realm[i] != NULL &&
+	 (!strcmp (server, PM_Server[i])) && (!strcmp (realm, PM_Realm[i])))
+	  return i;
+    }
+
+  return 0;
+}
+
+/*----------------------  Base64 Algorithm ------------------------------*/
+
+/*
+** Translation Table as described in RFC1113
+*/
+static const char cb64[]="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
+/*
+** Translation Table to decode (created by author)
+*/
+static const char cd64[]="|$$$}rstuvwxyz{$$$$$$$>?@ABCDEFGHIJKLMNOPQRSTUVW$$$$$$XYZ[\\]^_`abcdefghijklmnopq";
+
+/*
+** encodeblock
+**
+** encode 3 8-bit binary bytes as 4 '6-bit' characters
+*/
+void encodeblock( unsigned char in[3], unsigned char out[4], int len )
+{
+    out[0] = cb64[ in[0] >> 2 ];
+    out[1] = cb64[ ((in[0] & 0x03) << 4) | ((in[1] & 0xf0) >> 4) ];
+    out[2] = (unsigned char) (len > 1 ? cb64[ ((in[1] & 0x0f) << 2) | ((in[2] & 0xc0) >> 6) ] : '=');
+    out[3] = (unsigned char) (len > 2 ? cb64[ in[2] & 0x3f ] : '=');
+}
+
+void encode(char *inbuf, char *outbuf)
+{
+    unsigned char in[3], out[4];
+    int i = 0;
+    int j = 0;
+    int k = 0;
+    int len, blocksout = 0;
+
+    int lg;
+    lg = strlen (inbuf);
+ 
+    while( j < lg ) {
+        len = 0;
+        for( i = 0; i < 3; i++ ) {
+            if( j < lg ) {
+	        in[i] = inbuf[j++];
+		len++;
+            }
+            else {
+                in[i] = 0;
+            }
+        }
+        if( len ) {
+            encodeblock( in, out, len );
+            for( i = 0; i < 4; i++ ) {
+                outbuf[k++] = out[i];
+            }
+	    outbuf[k] = EOS;
+            blocksout++;
+        }
+    }
+}
+
+/*
+** decodeblock
+**
+** decode 4 '6-bit' characters into 3 8-bit binary bytes
+*/
+void decodeblock( unsigned char in[4], unsigned char out[3] )
+{   
+    out[ 0 ] = (unsigned char ) (in[0] << 2 | in[1] >> 4);
+    out[ 1 ] = (unsigned char ) (in[1] << 4 | in[2] >> 2);
+    out[ 2 ] = (unsigned char ) (((in[2] << 6) & 0xc0) | in[3]);
+}
+
+/*
+** decode
+**
+** decode a base64 encoded stream discarding padding, line breaks and noise
+*/
+void decode( char *inbuf, char *outbuf )
+{
+    unsigned char in[4], out[3], v;
+    int len=0;
+    int i=0;
+    int j=0;
+    int k=0;
+    int lg;
+    lg = strlen (inbuf);
+
+    while( j < lg ) {
+      for( len = 0, i = 0; i < 4 && (j < lg); i++ ) {
+            v = 0;
+            while( (j < lg) && v == 0 ) {
+	        v = (unsigned char) inbuf [j++];
+                v = (unsigned char) ((v < 43 || v > 122) ? 0 : cd64[ v - 43 ]);
+                if( v ) {
+                    v = (unsigned char) ((v == '$') ? 0 : v - 61);
+                }
+            }
+            if( (j <= lg)  && v != 0 ) {
+                len++;
+                if( v ) {
+                    in[i] = (unsigned char) (v - 1);
+                }
+            }
+            else {
+                in[i] = 0;
+            }
+        }
+        if( len ) {
+            decodeblock( in, out );
+            for( i = 0; i < len - 1; i++ ) {
+	      outbuf[k++] = out[i];
+            }
+        }
+	outbuf[k] = EOS;
+    }
+}
+
+/*
+** Base64 encoding
+**
+*/
+int EncodeBuf (char *inbuf, char *outbuf, ThotBool opt)
+{
+    int retcode = 0;
+
+    if( opt == TRUE ) {
+      encode( inbuf, outbuf );
+    }
+    else {
+      decode( inbuf, outbuf );
+    }
+    
+    return( retcode );
+}
+

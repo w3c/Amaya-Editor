@@ -21,7 +21,9 @@ public:
   AuthentDlgWX( int ref,
 	       wxWindow* parent,
 	       char *realm,
-	       char *server);
+	       char *server,
+	       char *name,
+	       char *pwd);
   
   // Destructor.                  
   virtual ~AuthentDlgWX();

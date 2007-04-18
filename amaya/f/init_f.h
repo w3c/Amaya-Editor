@@ -43,7 +43,8 @@ extern void SetWindowTitle ( Document sourceDoc,
 extern void InitFormAnswer ( Document document,
                              View view,
                              const char *auth_realm,
-                             char *server );
+                             char *server,
+                             int i_auth );
 extern void InitInfo ( char *label,
                        char *info );
 extern void ConfirmError ( Document document,
@@ -257,7 +258,8 @@ extern void SetWindowTitle ( Document sourceDoc,
 extern void InitFormAnswer ( Document document,
                                View view,
                                const char *auth_realm,
-                               char *server );
+                               char *server,
+                               int i_auth );
 extern void InitInfo ( char *label,
                          char *info );
 extern void ConfirmError ( Document document,

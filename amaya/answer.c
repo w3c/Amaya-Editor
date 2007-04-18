@@ -18,6 +18,7 @@
 #include "amaya.h"
 
 #include "init_f.h"
+#include "HTMLhistory_f.h"
 #include "query_f.h"
 #include "AHTURLTools_f.h"
 
@@ -33,9 +34,9 @@ struct _HTError
   HTErrorElement      element;	/* Index number into HTError */
   HTSeverity          severity;	/* A la VMS */
   BOOL                ignore;	/* YES if msg should not go to user */
-  void               *par;	        /* Explanation, e.g. filename  */
+  void               *par;	/* Explanation, e.g. filename  */
   int                 length;	/* For copying by generic routine */
-  char               *where;	        /* Which function */
+  char               *where;	/* Which function */
 };
 
 
@@ -303,14 +304,15 @@ BOOL AHTPrompt (HTRequest * request, HTAlertOpcode op, int msgnum, const char *d
   default value.						
   Initial value of *password is completely discarded.	
   ----------------------------------------------------------------------*/
-BOOL AHTPromptUsernameAndPassword (HTRequest *request, HTAlertOpcode op, int msgnum,
-                                   const char *dfault, 
-                                   void *input, HTAlertPar * reply)
+BOOL AHTPromptUsernameAndPassword (HTRequest *request, HTAlertOpcode op,
+				   int msgnum, const char *dfault,
+				   void *input, HTAlertPar * reply)
 {
   AHTReqContext      *me = (AHTReqContext *)HTRequest_context (request);
   const char         *realm = HTRequest_realm (request);
   char               *server;
   AHTReqStatus        old_reqStatus;
+  int                 i_auth = 0;
 
   if (reply && msgnum >= 0) 
     {
@@ -324,13 +326,12 @@ BOOL AHTPromptUsernameAndPassword (HTRequest *request, HTAlertOpcode op, int msg
       /* protection against having a stop kill this thread */
       old_reqStatus = me->reqStatus;
       me->reqStatus = HT_BUSY;
+      /* ask the password manager */
+      i_auth = SearchPasswordTable (realm, server);
       /* show the popup */
-      InitFormAnswer (me->docid, 1, realm, server);
+      InitFormAnswer (me->docid, 1, realm, server, i_auth);
       if (me->reqStatus != HT_ABORT)
         me->reqStatus = old_reqStatus;
-      /* free allocated memory */
-      if (server)
-        TtaFreeMemory (server);
 
       /* handle the user's answers back to the library */
       if (UserAnswer)
@@ -339,10 +340,24 @@ BOOL AHTPromptUsernameAndPassword (HTRequest *request, HTAlertOpcode op, int msg
           HTAlert_setReplyMessage (reply, Answer_name);
           /* set the password */
           HTAlert_setReplySecret (reply, Answer_password);
+	  /* Add the new password in the password table */
+	  NewPasswordTable ((char *)realm, server, Answer_name,
+			    Answer_password, i_auth, TRUE);
+	  if (server)
+	    TtaFreeMemory (server);
           return YES;
         }
       else
-        return NO;
+	{
+	  if (server)
+	    TtaFreeMemory (server);
+	  return NO;
+	}
+
+      /* free allocated memory */
+      if (server)
+        TtaFreeMemory (server);
+
     }
   return NO;
 }

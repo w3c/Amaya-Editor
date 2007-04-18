@@ -33,8 +33,8 @@ END_EVENT_TABLE()
     + parent : parent window
     + pathname : document location
   ----------------------------------------------------------------------*/
-AuthentDlgWX::AuthentDlgWX( int ref, wxWindow* parent, char * auth_realm,
-			    char * server) :
+AuthentDlgWX::AuthentDlgWX( int ref, wxWindow * parent, char *auth_realm,
+			    char *server, char *name, char *pwd) :
   AmayaDialog( parent, ref )
 {
   char    *ptr1, *ptr2, *label;
@@ -76,10 +76,17 @@ AuthentDlgWX::AuthentDlgWX( int ref, wxWindow* parent, char * auth_realm,
   XRCCTRL(*this, "wxID_LABEL_NAME", wxStaticText)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_NAME) ));
   XRCCTRL(*this, "wxID_LABEL_PASSWD", wxStaticText)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_PASSWORD) ));
 
+  /*
   wxString wx_name = TtaConvMessageToWX( Answer_name );
   XRCCTRL(*this, "wxID_AU", wxTextCtrl)->SetValue(wx_name);
   XRCCTRL(*this, "wxID_AU", wxTextCtrl)->SetSelection (0, -1);
   wxString wx_password = TtaConvMessageToWX( Answer_password );
+  XRCCTRL(*this, "wxID_PASSWD", wxTextCtrl)->SetValue(wx_password);
+  */
+  wxString wx_name = TtaConvMessageToWX( name );
+  XRCCTRL(*this, "wxID_AU", wxTextCtrl)->SetValue(wx_name);
+  XRCCTRL(*this, "wxID_AU", wxTextCtrl)->SetSelection (0, -1);
+  wxString wx_password = TtaConvMessageToWX( pwd );
   XRCCTRL(*this, "wxID_PASSWD", wxTextCtrl)->SetValue(wx_password);
 
   // buttons
