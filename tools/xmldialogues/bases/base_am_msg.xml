@@ -5799,4 +5799,27 @@
 <message xml:lang="en">Mail sent</message>
 <message xml:lang="fr">Courriel envoyé</message>
 </label>
-<label define="AMAYA_MSG_MAX"/></messages></base>
+<label define="AM_PASSWORDS">
+<message xml:lang="en">Passwords</message>
+<message xml:lang="fr">Mots de passe</message>
+</label>
+<label define="AM_PASSWORDS_SAVE">
+<message xml:lang="en">Do you want Amaya to remember this password ?</message>
+<message xml:lang="fr">Voulez-vous qu'Amaya se souvienne de ce mot de passe ?</message>
+</label>
+<label define="AM_PASSWORDS_SAVE_OPTION">
+<message xml:lang="en">Remember passwords by default</message>
+<message xml:lang="fr">Enregistrer les mots de passe par défaut</message>
+</label>
+<label define="AM_PASSWORDS_LIST">
+<message xml:lang="en">Sites</message>
+<message xml:lang="fr">Sites</message>
+</label>
+<label define="AM_PASSWORDS_EMPTY">
+<message xml:lang="en">Remove All</message>
+<message xml:lang="fr">Tout effacer</message>
+</label>
+<label define="AMAYA_MSG_MAX"/>
+</label>
+</messages>
+</base>
