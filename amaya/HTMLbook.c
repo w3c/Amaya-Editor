@@ -1767,8 +1767,8 @@ void MakeToc (Document doc, View view)
   ancest = el;
   found = FALSE;
   while (ancest &&
-         elType.ElSSchema != ulType.ElSSchema ||
-         elType.ElTypeNum != HTML_EL_Division)
+         (elType.ElSSchema != ulType.ElSSchema ||
+          elType.ElTypeNum != HTML_EL_Division))
     {
       if (!found && !strcmp (s, "Template"))
         // cross an enclosing XTiger element
