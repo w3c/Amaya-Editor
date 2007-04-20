@@ -5819,7 +5819,6 @@
 <message xml:lang="en">Remove All</message>
 <message xml:lang="fr">Tout effacer</message>
 </label>
-<label define="AMAYA_MSG_MAX"/>
-</label>
+<label define="AMAYA_MSG_MAX"></label>
 </messages>
 </base>
