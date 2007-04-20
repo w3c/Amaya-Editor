@@ -958,7 +958,11 @@ static Element NextRow (Element row)
             }
           while (child &&
                  !strcmp (TtaGetSSchemaName (elType.ElSSchema), "Template"));
-          return child;
+          if (child)
+            return child;
+          else
+            // ignore empty template elements
+            return NextRow (next);
         }
     }
   else
