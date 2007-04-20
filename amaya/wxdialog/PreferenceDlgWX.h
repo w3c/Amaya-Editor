@@ -106,17 +106,30 @@ private:
   void SetupLabelDialog_Emails();
   void SetupDialog_Emails( const Prop_Emails & prop );
   Prop_Emails GetValueDialog_Emails();
-
-
-
-
   int GetPagePosFromXMLID( const wxString & xml_id );
-
   void OnOk( wxCommandEvent& event );
   void OnCancel( wxCommandEvent& event );
   void OnDefault( wxCommandEvent& event );
   void OnPageChanged( wxListbookEvent& event );
   void OnClose(wxCloseEvent& event);
+
+  // "Passwords" tab
+  void SetupLabelDialog_Passwords();
+  void SetupDialog_Passwords( const Prop_Passwords & prop );
+  void UpdatePasswordList();
+  void GetValueDialog_Passwords();
+  void OnEmptyPassword( wxCommandEvent& event );
+
+  void OnPasswordChoose(wxCommandEvent& event);
+  void OnPasswordAdd(wxCommandEvent& event);
+  void OnPasswordDel(wxCommandEvent& event);
+  void OnPasswordMoveUp(wxCommandEvent& event);
+  void OnPasswordMoveDown(wxCommandEvent& event);
+  void OnUpdatePasswordAdd(wxUpdateUIEvent& event);
+  void OnUpdatePasswordDel(wxUpdateUIEvent& event);
+  void OnUpdatePasswordMoveUp(wxUpdateUIEvent& event);
+  void OnUpdatePasswordMoveDown(wxUpdateUIEvent& event);
+  void OnPasswordSelected(wxCommandEvent& event);
 
   // Any class wishing to process wxWindows events must use this macro
   DECLARE_EVENT_TABLE()

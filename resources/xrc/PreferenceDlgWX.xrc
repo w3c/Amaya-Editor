@@ -617,6 +617,94 @@
             </object>
           </object>
           <object class="listbookpage">
+            <label>*Passwords*</label>
+            <object class="wxPanel" name="wxID_PAGE_PASSWORDS">
+              <style>wxTAB_TRAVERSAL</style>
+              <object class="wxBoxSizer">
+                <orient>wxVERTICAL</orient>
+                <object class="sizeritem">
+                  <object class="wxStaticBoxSizer">
+                    <label>*List of saved passwords*</label>
+                    <orient>wxVERTICAL</orient>
+                    <object class="sizeritem">
+                      <object class="wxBoxSizer">
+                        <orient>wxHORIZONTAL</orient>
+                        <object class="sizeritem">
+                          <object class="wxListBox" name="wxID_LIST_PASWORDS">
+                            <content/>
+                            <style>wxLB_HSCROLL</style>
+                          </object>
+                          <option>1</option>
+                          <flag>wxEXPAND</flag>
+                        </object>
+                        <object class="sizeritem">
+                          <object class="wxBoxSizer">
+                            <orient>wxVERTICAL</orient>
+                            <object class="sizeritem">
+                              <object class="wxBitmapButton" name="wxID_BUTTON_DELETE_PASSWORD">
+                                <bitmap>../icons/16x16/editdelete.png</bitmap>
+                              </object>
+                              <option>1</option>
+                              <flag>wxEXPAND</flag>
+                            </object>
+                            <object class="sizeritem">
+                              <object class="wxStaticLine">
+                                <style>wxLI_HORIZONTAL</style>
+                              </object>
+                              <flag>wxTOP|wxBOTTOM|wxEXPAND</flag>
+                              <border>4</border>
+                            </object>
+                            <object class="sizeritem">
+                              <object class="wxBitmapButton" name="wxID_BUTTON_MOVEUP_PASSWORD">
+                                <bitmap>../icons/16x16/up.png</bitmap>
+                              </object>
+                              <option>1</option>
+                            </object>
+                            <object class="sizeritem">
+                              <object class="wxBitmapButton" name="wxID_BUTTON_MOVEDOWN_PASSWORD">
+                                <bitmap>../icons/16x16/down.png</bitmap>
+                              </object>
+                              <option>1</option>
+                            </object>
+                          </object>
+                          <flag>wxEXPAND</flag>
+                        </object>
+                      </object>
+                      <option>1</option>
+                      <flag>wxALL|wxEXPAND</flag>
+                      <border>4</border>
+                    </object>
+                  </object>
+                  <option>2</option>
+                  <flag>wxALL|wxEXPAND</flag>
+                  <border>10</border>
+                </object>
+                <object class="sizeritem">
+                  <object class="wxButton" name="wxID_BUTTON_EMPTY_PASSWORD">
+                    <label>*Flush the password file*</label>
+                  </object>
+                  <flag>wxALL</flag>
+                  <border>10</border>
+                </object>
+                <object class="sizeritem">
+                  <object class="wxBoxSizer">
+                    <orient>wxVERTICAL</orient>
+                    <object class="sizeritem">
+                      <object class="wxCheckBox" name="wxID_CHECK_DEF_PASSWORD">
+                        <label>*Save the password by default*</label>
+                      </object>
+                      <option>1</option>
+                      <flag>wxALL|wxEXPAND</flag>
+                    </object>
+                  </object>
+                  <option>1</option>
+                  <flag>wxALL|wxEXPAND</flag>
+                  <border>10</border>
+                </object>
+              </object>
+            </object>
+          </object>
+          <object class="listbookpage">
             <label>*Proxy*</label>
             <object class="wxPanel" name="wxID_PAGE_PROXY">
               <object class="wxBoxSizer">

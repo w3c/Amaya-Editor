@@ -70,6 +70,8 @@ BEGIN_EVENT_TABLE(PreferenceDlgWX, AmayaDialog)
   EVT_UPDATE_UI( XRCID("wxID_BUTTON_ADD_TEMPLATE"),   PreferenceDlgWX::OnUpdateTemplateAdd )
   EVT_LISTBOX(XRCID("wxID_LIST_TEMPLATE_REPOSITORIES"), PreferenceDlgWX::OnTemplateSelected)
 #endif /* TEMPLATES*/
+  // Passwords tab callbacks
+  EVT_BUTTON( XRCID("wxID_BUTTON_EMPTY_PASSWORD"), PreferenceDlgWX::OnEmptyPassword )
 END_EVENT_TABLE()
 
 
@@ -1440,6 +1442,235 @@ Prop_Emails PreferenceDlgWX::GetValueDialog_Emails()
 
   return prop;
 }
+
+
+/************************************************************************/
+/* Passwords tab                                                        */
+/************************************************************************/
+
+/*----------------------------------------------------------------------
+  OnEmptyPassword is called when the user click on flush password button
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+void PreferenceDlgWX::OnEmptyPassword( wxCommandEvent& event )
+{
+  ThotCallback (GetPrefPasswordBase() + PasswordsMenu, INTEGER_DATA, (char*) 3);
+}
+
+#ifdef TEST
+
+/*----------------------------------------------------------------------
+  SetupLabelDialog_Passwords inits Passwords labels
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+void PreferenceDlgWX::SetupLabelDialog_Passwords()
+{
+  // Setup notebook tab names :
+  int page_id;
+  wxListbook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxListbook);
+  page_id = GetPagePosFromXMLID( _T("wxID_PAGE_PASSWORDS") );
+  if (page_id >= 0)
+    p_notebook->SetPageText( page_id, TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_PASSWORDS)));
+
+  XRCCTRL(*this, "wxID_CHECK_DEF_PASSWORDS", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_CHECK_DEF_PASSWORDS)));
+  XRCCTRL(*this, "wxID_BUTTON_FLUSH_PASSWORD", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_SEL)));
+  wxStaticBoxSizer *sz = (wxStaticBoxSizer*)XRCCTRL(*this, "wxID_PAGE_PASSWORDS", wxPanel)->GetSizer()->GetItem((size_t)0)->GetSizer();
+  sz->GetStaticBox()->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_PASSWORDS)));
+}
+
+/*----------------------------------------------------------------------
+  SetupDialog_Passwordss inits password dialog
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+void PreferenceDlgWX::SetupDialog_Passwords( const Prop_Password & prop)
+{
+  XRCCTRL(*this, "wxID_CHECK_DEF_PASSWORD", wxCheckBox)->SetValue( prop.S_Password );
+  wxListBox *box = XRCCTRL(*this, "wxID_LIST_PASSWORDS", wxListBox);
+
+  /** ici **/
+  Prop_Templates_Path* path = prop.FirstPath;
+  while (path)
+    {
+      box->Append(TtaConvMessageToWX(path->Path));
+      path = path->NextPath;
+    }
+}
+
+/*----------------------------------------------------------------------
+  OnEmptyPassword is called when the user click on flush password button
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+void PreferenceDlgWX::OnEmptyPassword( wxCommandEvent& event )
+{
+  ThotCallback (GetPrefPasswordBase() + PasswordsMenu, INTEGER_DATA, (char*) 3);
+}
+
+/*----------------------------------------------------------------------
+  UpdatePasswordList updates the current list of passwords
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+void PreferenceDlgWX::UpdatePasswordsList()
+{
+  wxString             value;
+  Prop_Templates       prop = GetProp_Templates();
+  Prop_Templates_Path *element = NULL;
+  wxListBox           *box;
+  int                  i;
+
+  FreeTemplateRepositoryList(&(prop.FirstPath));
+  box = XRCCTRL(*this, "wxID_LIST_TEMPLATE_REPOSITORIES", wxListBox);
+  for (i = 0; i < (int)box->GetCount(); i++)
+    {
+    element = (Prop_Templates_Path*) AllocTemplateRepositoryListElement( (const char*) box->GetString(i).mb_str(*wxConvCurrent), element);
+    if (i == 0)
+       prop.FirstPath = element;
+    }
+  SetTemplateRepositoryList ((const Prop_Templates_Path**)&(prop.FirstPath));
+}
+
+/*----------------------------------------------------------------------
+  GetValueDialog_Templates gets the show template indicator
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+void PreferenceDlgWX::GetValueDialog_Templates()
+{
+  Prop_Templates       prop = GetProp_Templates();
+
+  prop.S_Templates = XRCCTRL(*this, "wxID_CHECK_SHOWTEMPLATES", wxCheckBox)->GetValue();
+}
+
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void PreferenceDlgWX::OnTemplateChoose(wxCommandEvent& event)
+{
+  static const wxString home = TtaGetHomeDir();
+  wxFileDialog  *p_dlg;
+  
+  wxString path = XRCCTRL(*this, "wxID_TEXT_NEW_TEMPLATE", wxTextCtrl)->GetValue();
+  if(!path.IsEmpty())
+    path.Replace(wxT("~"), home);
+  
+  p_dlg = new wxFileDialog(this,
+                           TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_OPEN_URL) ),
+                           _T(""), _T(""), _T("Templates (*.xtd)|*.xtd"),
+                           wxOPEN | wxCHANGE_DIR);
+  if (p_dlg->ShowModal() == wxID_OK)
+    {
+      path = p_dlg->GetPath();
+      XRCCTRL(*this, "wxID_TEXT_NEW_TEMPLATE", wxTextCtrl)->SetValue(path);
+    }
+  p_dlg->Destroy();
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void PreferenceDlgWX::OnTemplateAdd(wxCommandEvent& event)
+{
+  wxListBox *box = XRCCTRL(*this, "wxID_LIST_TEMPLATE_REPOSITORIES", wxListBox);
+  box->Append(XRCCTRL(*this, "wxID_TEXT_NEW_TEMPLATE", wxTextCtrl)->GetValue());
+  box->SetSelection(box->GetCount()-1);
+
+  // Update the list of templates
+  UpdateTemplateList();
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void PreferenceDlgWX::OnUpdateTemplateAdd(wxUpdateUIEvent& event)
+{
+  event.Enable(!XRCCTRL(*this, "wxID_TEXT_NEW_TEMPLATE", wxTextCtrl)->GetValue().IsEmpty());
+}
+
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void PreferenceDlgWX::OnTemplateDel(wxCommandEvent& event)
+{
+  wxListBox *box = XRCCTRL(*this, "wxID_LIST_TEMPLATE_REPOSITORIES", wxListBox);
+  int sel = box->GetSelection();
+  if (sel != wxNOT_FOUND)
+  {
+    box->Delete(sel);
+    // Update the list of templates
+    UpdateTemplateList();
+  }
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void PreferenceDlgWX::OnUpdateTemplateDel(wxUpdateUIEvent& event)
+{
+  event.Enable(XRCCTRL(*this, "wxID_LIST_TEMPLATE_REPOSITORIES",
+                       wxListBox)->GetSelection() != wxNOT_FOUND);
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void PreferenceDlgWX::OnTemplateMoveUp(wxCommandEvent& event)
+{
+  wxListBox *box = XRCCTRL(*this, "wxID_LIST_TEMPLATE_REPOSITORIES", wxListBox);
+  int sel = box->GetSelection();
+  if (sel!=wxNOT_FOUND && sel>0)
+  {
+    wxString str = box->GetString(sel);
+    box->Delete(sel);
+    box->Insert(str, sel-1);
+    box->SetSelection(sel-1);
+    // Update the list of templates
+    UpdateTemplateList();
+  }
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void PreferenceDlgWX::OnUpdateTemplateMoveUp(wxUpdateUIEvent& event)
+{
+  wxListBox *box = XRCCTRL(*this, "wxID_LIST_TEMPLATE_REPOSITORIES", wxListBox);
+  event.Enable (box->GetSelection() != wxNOT_FOUND && box->GetSelection() !=0 );
+}
+
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void PreferenceDlgWX::OnTemplateMoveDown(wxCommandEvent& event)
+{
+  wxListBox *box = XRCCTRL(*this, "wxID_LIST_TEMPLATE_REPOSITORIES", wxListBox);
+  int sel = box->GetSelection();
+  if (sel!=wxNOT_FOUND && sel<(int)box->GetCount()-2)
+  {
+    wxString str = box->GetString(sel);
+    box->Delete(sel);
+    box->Insert(str, sel+1);
+    box->SetSelection(sel+1);
+    // Update the list of templates
+    UpdateTemplateList();
+  }
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void PreferenceDlgWX::OnUpdateTemplateMoveDown(wxUpdateUIEvent& event)
+{
+  wxListBox *box = XRCCTRL(*this, "wxID_LIST_TEMPLATE_REPOSITORIES", wxListBox);
+  event.Enable (box->GetSelection() != wxNOT_FOUND && box->GetSelection() != (int)box->GetCount()-1);
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void PreferenceDlgWX::OnTemplateSelected(wxCommandEvent& event)
+{
+  if (event.IsSelection())
+    XRCCTRL(*this, "wxID_TEXT_NEW_TEMPLATE", wxTextCtrl)->SetValue(event.GetString());
+}
+#endif /* TEST */
+
 
 /************************************************************************/
 /* General events                                                       */

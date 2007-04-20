@@ -58,8 +58,19 @@
             <flag>wxEXPAND</flag>
             <border>5</border>
           </object>
+          <object class="spacer">
+            <size>0,5</size>
+          </object>
+          <object class="sizeritem">
+            <object class="wxCheckBox" name="wxID_CHECK_PWD">
+              <label>***Do you want Amaya to remember this password ?***</label>
+              <checked>0</checked>
+            </object>
+            <flag>wxTOP</flag>
+            <border>4</border>
+          </object>
         </object>
-        <option>1</option>
+       <option>1</option>
         <flag>wxALL|wxEXPAND</flag>
         <border>5</border>
       </object>

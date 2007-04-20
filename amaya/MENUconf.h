@@ -95,6 +95,10 @@
 #define mEmailsFromAddress       4
 #define MAX_EMAILSMENU_DLG       5
 
+#define PasswordsMenu              1
+#define mTogglePasswordsFrame      2
+#define MAX_PASSWORDMENU_DLG       3
+
 
 typedef struct Prop_General_t
 {
@@ -213,5 +217,10 @@ typedef struct Prop_Emails_t
   int  serverPort;
   char fromAddress[MAX_LENGTH];
 } Prop_Emails;
+
+typedef struct Prop_Passwords_t
+{
+  ThotBool S_Passwords;
+} Prop_Passwords;
 
 #endif /* _MENUCONF.h */

@@ -300,12 +300,15 @@ int       DAVBase;
 Prop_DAV  GProp_DAV;
 #endif /* DAV */
 
-
 /* ============> Templates menu option */
 #ifdef TEMPLATES
 int            TemplatesBase;
 Prop_Templates GProp_Templates;
 #endif /* TEMPLATES */
+
+/* ============> Passwords menu option */
+int            PasswordsBase;
+Prop_Passwords GProp_Passwords;
 
 /* ============> Emails menu option */
 int            EmailsBase;
@@ -4471,7 +4474,7 @@ void GetDefaultTemplatesConf ()
 
 /*----------------------------------------------------------------------
   TemplatesCallbackDialog
-  callback of the annotation configuration menu
+  callback of the templates configuration menu
   ----------------------------------------------------------------------*/
 static void TemplatesCallbackDialog (int ref, int typedata, char *data)
 {
@@ -4514,6 +4517,97 @@ static void TemplatesCallbackDialog (int ref, int typedata, char *data)
 #endif /* TEMPLATES */
 
 
+/**********************
+ ** Passwords Menu
+ **********************/
+/*----------------------------------------------------------------------
+  UpdateShowPasswords
+  ----------------------------------------------------------------------*/
+static void UpdateShowPasswords ()
+{
+}
+
+
+/*----------------------------------------------------------------------
+  GetPasswordsConf
+  Makes a copy of the current registry passwords values
+  ----------------------------------------------------------------------*/
+void GetPasswordsConf (void)
+{
+  TtaGetEnvBoolean ("SAVE_PASSWORDS", &(GProp_Passwords.S_Passwords));  
+}
+
+/*----------------------------------------------------------------------
+  SetPasswordsConf
+  Updates the registry Passwords values and calls the General functions
+  to take into account the changes
+  ----------------------------------------------------------------------*/
+void SetPasswordsConf (void)
+{
+  ThotBool    old;
+  TtaGetEnvBoolean ("SAVE_PASSWORDS", &old);
+  TtaSetEnvBoolean ("SAVE_PASSWORDS", GProp_Passwords.S_Passwords, TRUE);
+  if (old != GProp_Passwords.S_Passwords)
+    UpdateShowPasswords ();
+  TtaSaveAppRegistry ();
+}
+
+#ifdef _WX
+/*----------------------------------------------------------------------
+  GetDefaultPasswordsConf
+  Gets the registry default passwords values.
+  ----------------------------------------------------------------------*/
+void GetDefaultPasswordsConf ()
+{
+  /* read the default values */
+  TtaGetDefEnvBoolean ("SAVE_PASSWORDS", &(GProp_Passwords.S_Passwords));
+}
+
+/*----------------------------------------------------------------------
+  PasswordsCallbackDialog
+  callback of the passwords configuration menu
+  ----------------------------------------------------------------------*/
+static void PasswordsCallbackDialog (int ref, int typedata, char *data)
+{
+  intptr_t  val;
+#ifdef AMAYA_DEBUG
+  printf("PasswordsCallbackDialog : %d %d (%d)\n", ref, ref-PasswordsBase,
+         (intptr_t)data);
+#endif /* AMAYA_DEBUG */
+  if (ref==-1)
+    {
+    }
+  else
+    {
+      val = (intptr_t) data;
+      switch (ref - PasswordsBase)
+        {
+        case PasswordsMenu:
+          switch (val)
+            {
+            case 0: /* CANCEL */
+              TtaDestroyDialogue (ref);
+              break;
+            case 1: /* OK */
+              SetPasswordsConf();
+              //TtaDestroyDialogue (ref);
+              break;
+            case 2: /* DEFAULT */
+              GetDefaultPasswordsConf();
+              break;
+            case 3:
+              /* vide le cache */
+              break;
+            default:
+              break;
+            }
+          break;
+        default:
+          break;
+        }
+    }
+}
+#endif /* _WX */
 
 /*----------------------------------------------------------------------
   Returns a tab dialog reference (used into PreferenceDlgWX callbacks)
@@ -4613,6 +4707,14 @@ int GetPrefTemplatesBase()
 int GetPrefEmailsBase()
 {
   return EmailsBase;
+}
+
+/*----------------------------------------------------------------------
+  Returns a tab dialog reference (used into PreferenceDlgWX callbacks)
+  ----------------------------------------------------------------------*/
+int GetPrefPasswordBase()
+{
+  return PasswordsBase;
 }
 
 
@@ -4892,6 +4994,30 @@ Prop_Emails GetProp_Emails()
 }
 
 
+/*----------------------------------------------------------------------
+  Use to set the Amaya global variables (Passwords preferences)
+  ----------------------------------------------------------------------*/
+void SetProp_Passwords( const Prop_Passwords * prop )
+{
+#ifdef _WX 
+  GProp_Passwords = *prop;
+#endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
+  Use to get the Amaya global variables (Passwords preferences)
+  ----------------------------------------------------------------------*/
+Prop_Passwords GetProp_Passwords()
+{
+#ifdef _WX
+  return GProp_Passwords;
+#else /* _WX  */
+  Prop_Passwords prop;
+  memset(&prop, 0, sizeof(Prop_Passwords) );
+  return prop;
+#endif /* _WX  */
+}
+
 
 /*----------------------------------------------------------------------
   PreferenceMenu
@@ -4946,6 +5072,9 @@ void PreferenceMenu (Document document, View view)
 #endif /* TEMPLATES */
 
   GetEmailsConf();
+
+  /* ---> Passwords Tab */
+  GetPasswordsConf ();
 
   ThotBool created = CreatePreferenceDlgWX ( PreferenceBase,
                                              TtaGetViewFrame (document, view),
@@ -5007,6 +5136,7 @@ void InitConfMenu (void)
 #ifdef TEMPLATES  
   TemplatesBase = TtaSetCallback( (Proc)TemplatesCallbackDialog, MAX_TEMPLATEMENU_DLG );
 #endif /* TEMPLATES */  
+  PasswordsBase = TtaSetCallback( (Proc)PasswordsCallbackDialog, MAX_PASSWORDMENU_DLG );
 #endif /* _WX */
 
 #ifndef _WINGUI

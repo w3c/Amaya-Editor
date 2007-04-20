@@ -39,6 +39,7 @@ AuthentDlgWX::AuthentDlgWX( int ref, wxWindow * parent, char *auth_realm,
 {
   char    *ptr1, *ptr2, *label;
   int      len = 20;
+  ThotBool value;
 
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("AuthentDlgWX"));
   wxString wx_title = TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_GET_AUTHENTICATION) );
@@ -93,6 +94,15 @@ AuthentDlgWX::AuthentDlgWX( int ref, wxWindow * parent, char *auth_realm,
   XRCCTRL(*this, "wxID_OK", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_LIB_CONFIRM) ));
   XRCCTRL(*this, "wxID_CANCEL", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_CANCEL) ));
   
+  // 'Save password' checkbox
+  // XRCCTRL(*this, "wxID_CHECK_PWD",  wxCheckBox)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA ,AM_SAVE_PWD)));
+  XRCCTRL(*this, "wxID_CHECK_PWD",  wxCheckBox)->SetLabel(TtaConvMessageToWX( "Do you want Amaya to remember this password ?"));
+  // check if the user doesn't want to save it's password
+  wxCheckBox * p_cbox = XRCCTRL(*this, "wxID_CHECK_PWD", wxCheckBox);
+  TtaSetEnvBoolean("SHOW_CONFIRM_SAVE_PWD", FALSE, FALSE);
+  TtaGetEnvBoolean ("SHOW_CONFIRM_SAVE_PWD", &value);
+  p_cbox->SetValue( value );
+
   // Set focus to ...
   //  XRCCTRL(*this, "wxID_AU", wxTextCtrl)->SetFocus();
 
@@ -116,6 +126,13 @@ AuthentDlgWX::~AuthentDlgWX()
   ----------------------------------------------------------------------*/
 void AuthentDlgWX::OnConfirmButton( wxCommandEvent& event )
 {
+  wxCheckBox * p_cbox = XRCCTRL(*this, "wxID_CHECK_PWD", wxCheckBox);
+  if (!p_cbox->IsChecked())
+    // desactivate the save of password
+    TtaSetEnvBoolean("SHOW_CONFIRM_SAVE_PWD", FALSE, TRUE);
+  else
+    TtaSetEnvBoolean("SHOW_CONFIRM_SAVE_PWD", TRUE, TRUE);
+
   // return done
   Waiting = 0;
   ThotCallback (MyRef, INTEGER_DATA, (char*) 1);

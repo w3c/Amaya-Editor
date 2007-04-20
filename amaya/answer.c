@@ -313,6 +313,7 @@ BOOL AHTPromptUsernameAndPassword (HTRequest *request, HTAlertOpcode op,
   char               *server;
   AHTReqStatus        old_reqStatus;
   int                 i_auth = 0;
+  ThotBool            save_pwd = FALSE;
 
   if (reply && msgnum >= 0) 
     {
@@ -340,9 +341,11 @@ BOOL AHTPromptUsernameAndPassword (HTRequest *request, HTAlertOpcode op,
           HTAlert_setReplyMessage (reply, Answer_name);
           /* set the password */
           HTAlert_setReplySecret (reply, Answer_password);
-	  /* Add the new password in the password table */
-	  NewPasswordTable ((char *)realm, server, Answer_name,
-			    Answer_password, i_auth, TRUE);
+	  /* Add the new password in the password table if asked*/
+          TtaGetEnvBoolean ("SHOW_CONFIRM_SAVE_PWD", &save_pwd);
+          if (save_pwd)
+	      NewPasswordTable ((char *)realm, server, Answer_name,
+		    	         Answer_password, i_auth, TRUE);
 	  if (server)
 	    TtaFreeMemory (server);
           return YES;
