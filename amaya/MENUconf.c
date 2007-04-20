@@ -47,6 +47,7 @@
 #include "MENUconf_f.h"
 #include "print.h"
 #include "fileaccess.h"
+#include "HTMLhistory_f.h"
 #ifdef _WX
 #include "wxdialogapi_f.h"
 #endif /* _WX */
@@ -306,14 +307,13 @@ int            TemplatesBase;
 Prop_Templates GProp_Templates;
 #endif /* TEMPLATES */
 
-/* ============> Passwords menu option */
-int            PasswordsBase;
-Prop_Passwords GProp_Passwords;
-
 /* ============> Emails menu option */
 int            EmailsBase;
 Prop_Emails GProp_Emails;
 
+/* ============> Passwords menu option */
+int            PasswordsBase;
+Prop_Passwords GProp_Passwords;
 
 
 #include "HTMLsave_f.h"
@@ -4527,7 +4527,6 @@ static void UpdateShowPasswords ()
 {
 }
 
-
 /*----------------------------------------------------------------------
   GetPasswordsConf
   Makes a copy of the current registry passwords values
@@ -4596,7 +4595,8 @@ static void PasswordsCallbackDialog (int ref, int typedata, char *data)
               GetDefaultPasswordsConf();
               break;
             case 3:
-              /* vide le cache */
+              /* flush the password table */
+	      CleanPasswordTable();
               break;
             default:
               break;
@@ -4712,7 +4712,7 @@ int GetPrefEmailsBase()
 /*----------------------------------------------------------------------
   Returns a tab dialog reference (used into PreferenceDlgWX callbacks)
   ----------------------------------------------------------------------*/
-int GetPrefPasswordBase()
+int GetPrefPasswordsBase()
 {
   return PasswordsBase;
 }

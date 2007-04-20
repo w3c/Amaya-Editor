@@ -59,19 +59,20 @@ BEGIN_EVENT_TABLE(PreferenceDlgWX, AmayaDialog)
   EVT_CLOSE( PreferenceDlgWX::OnClose )
   // Templates tab callbacks
 #ifdef TEMPLATES
-  EVT_BUTTON( XRCID("wxID_BUTTON_DELETE_TEMPLATE"),   PreferenceDlgWX::OnTemplateDel )
-  EVT_BUTTON( XRCID("wxID_BUTTON_MOVEUP_TEMPLATE"),   PreferenceDlgWX::OnTemplateMoveUp )
-  EVT_BUTTON( XRCID("wxID_BUTTON_MOVEDOWN_TEMPLATE"),   PreferenceDlgWX::OnTemplateMoveDown )
-  EVT_BUTTON( XRCID("wxID_BUTTON_CHOOSE_TEMPLATE"),   PreferenceDlgWX::OnTemplateChoose )
-  EVT_BUTTON( XRCID("wxID_BUTTON_ADD_TEMPLATE"),   PreferenceDlgWX::OnTemplateAdd )
-  EVT_UPDATE_UI( XRCID("wxID_BUTTON_DELETE_TEMPLATE"),   PreferenceDlgWX::OnUpdateTemplateDel )
-  EVT_UPDATE_UI( XRCID("wxID_BUTTON_MOVEUP_TEMPLATE"),   PreferenceDlgWX::OnUpdateTemplateMoveUp )
-  EVT_UPDATE_UI( XRCID("wxID_BUTTON_MOVEDOWN_TEMPLATE"),   PreferenceDlgWX::OnUpdateTemplateMoveDown )
-  EVT_UPDATE_UI( XRCID("wxID_BUTTON_ADD_TEMPLATE"),   PreferenceDlgWX::OnUpdateTemplateAdd )
-  EVT_LISTBOX(XRCID("wxID_LIST_TEMPLATE_REPOSITORIES"), PreferenceDlgWX::OnTemplateSelected)
+  EVT_BUTTON( XRCID("wxID_BUTTON_DELETE_TEMPLATE"),    PreferenceDlgWX::OnTemplateDel )
+  EVT_BUTTON( XRCID("wxID_BUTTON_MOVEUP_TEMPLATE"),    PreferenceDlgWX::OnTemplateMoveUp )
+  EVT_BUTTON( XRCID("wxID_BUTTON_MOVEDOWN_TEMPLATE"),  PreferenceDlgWX::OnTemplateMoveDown )
+  EVT_BUTTON( XRCID("wxID_BUTTON_CHOOSE_TEMPLATE"),    PreferenceDlgWX::OnTemplateChoose )
+  EVT_BUTTON( XRCID("wxID_BUTTON_ADD_TEMPLATE"),       PreferenceDlgWX::OnTemplateAdd )
+  EVT_UPDATE_UI( XRCID("wxID_BUTTON_DELETE_TEMPLATE"), PreferenceDlgWX::OnUpdateTemplateDel )
+  EVT_UPDATE_UI( XRCID("wxID_BUTTON_MOVEUP_TEMPLATE"), PreferenceDlgWX::OnUpdateTemplateMoveUp )
+  EVT_UPDATE_UI( XRCID("wxID_BUTTON_MOVEDOWN_TEMPLATE"), PreferenceDlgWX::OnUpdateTemplateMoveDown )
+  EVT_UPDATE_UI( XRCID("wxID_BUTTON_ADD_TEMPLATE"),      PreferenceDlgWX::OnUpdateTemplateAdd )
+  EVT_LISTBOX(XRCID("wxID_LIST_TEMPLATE_REPOSITORIES"),  PreferenceDlgWX::OnTemplateSelected)
 #endif /* TEMPLATES*/
   // Passwords tab callbacks
-  EVT_BUTTON( XRCID("wxID_BUTTON_EMPTY_PASSWORD"), PreferenceDlgWX::OnEmptyPassword )
+  EVT_BUTTON( XRCID("wxID_BUTTON_EMPTY_PASSWORDS"), PreferenceDlgWX::OnEmptyPasswords )
+
 END_EVENT_TABLE()
 
 
@@ -129,6 +130,7 @@ END_EVENT_TABLE()
     p_notebook->DeletePage(templates_page_id );  
 #endif /* TEMPLATES */
   SetupLabelDialog_Emails();
+  SetupLabelDialog_Passwords();
 
   XRCCTRL(*this, "wxID_OK", wxButton)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_APPLY_BUTTON)));
   XRCCTRL(*this, "wxID_CANCEL", wxButton)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_CANCEL)));
@@ -151,6 +153,7 @@ END_EVENT_TABLE()
   SetupDialog_Templates( GetProp_Templates() );
 #endif /* TEMPLATES */
   SetupDialog_Emails( GetProp_Emails() );
+  SetupDialog_Passwords( GetProp_Passwords() );
 
   // give focus to ...
   //  XRCCTRL(*this, "wxID_COMBOBOX_HOMEPAGE", wxComboBox)->SetFocus();
@@ -1449,18 +1452,6 @@ Prop_Emails PreferenceDlgWX::GetValueDialog_Emails()
 /************************************************************************/
 
 /*----------------------------------------------------------------------
-  OnEmptyPassword is called when the user click on flush password button
-  params:
-  returns:
-  ----------------------------------------------------------------------*/
-void PreferenceDlgWX::OnEmptyPassword( wxCommandEvent& event )
-{
-  ThotCallback (GetPrefPasswordBase() + PasswordsMenu, INTEGER_DATA, (char*) 3);
-}
-
-#ifdef TEST
-
-/*----------------------------------------------------------------------
   SetupLabelDialog_Passwords inits Passwords labels
   params:
   returns:
@@ -1474,8 +1465,9 @@ void PreferenceDlgWX::SetupLabelDialog_Passwords()
   if (page_id >= 0)
     p_notebook->SetPageText( page_id, TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_PASSWORDS)));
 
-  XRCCTRL(*this, "wxID_CHECK_DEF_PASSWORDS", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_CHECK_DEF_PASSWORDS)));
-  XRCCTRL(*this, "wxID_BUTTON_FLUSH_PASSWORD", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_SEL)));
+  XRCCTRL(*this, "wxID_CHECK_DEF_PASSWORDS", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_PASSWORDS_SAVE_OPTION)));
+  XRCCTRL(*this, "wxID_BUTTON_EMPTY_PASSWORDS", wxButton)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_PASSWORDS_EMPTY)));
+
   wxStaticBoxSizer *sz = (wxStaticBoxSizer*)XRCCTRL(*this, "wxID_PAGE_PASSWORDS", wxPanel)->GetSizer()->GetItem((size_t)0)->GetSizer();
   sz->GetStaticBox()->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_PASSWORDS)));
 }
@@ -1485,29 +1477,48 @@ void PreferenceDlgWX::SetupLabelDialog_Passwords()
   params:
   returns:
   ----------------------------------------------------------------------*/
-void PreferenceDlgWX::SetupDialog_Passwords( const Prop_Password & prop)
+void PreferenceDlgWX::SetupDialog_Passwords( const Prop_Passwords & prop)
 {
-  XRCCTRL(*this, "wxID_CHECK_DEF_PASSWORD", wxCheckBox)->SetValue( prop.S_Password );
-  wxListBox *box = XRCCTRL(*this, "wxID_LIST_PASSWORDS", wxListBox);
+  XRCCTRL(*this, "wxID_CHECK_DEF_PASSWORDS", wxCheckBox)->SetValue( prop.S_Passwords );
+  // wxListBox *box = XRCCTRL(*this, "wxID_LIST_PASSWORDS", wxListBox);
 
   /** ici **/
+  /*
   Prop_Templates_Path* path = prop.FirstPath;
   while (path)
     {
       box->Append(TtaConvMessageToWX(path->Path));
       path = path->NextPath;
     }
+  */
 }
 
 /*----------------------------------------------------------------------
-  OnEmptyPassword is called when the user click on flush password button
+  OnEmptyPasswords is called when the user click on flush password button
   params:
   returns:
   ----------------------------------------------------------------------*/
-void PreferenceDlgWX::OnEmptyPassword( wxCommandEvent& event )
+void PreferenceDlgWX::OnEmptyPasswords( wxCommandEvent& event )
 {
-  ThotCallback (GetPrefPasswordBase() + PasswordsMenu, INTEGER_DATA, (char*) 3);
+  ThotCallback (GetPrefPasswordsBase() + PasswordsMenu, INTEGER_DATA, (char*) 3);
 }
+
+/*----------------------------------------------------------------------
+  GetValueDialog_Passwords gets the save passwords indicator
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+Prop_Passwords PreferenceDlgWX::GetValueDialog_Passwords()
+{
+  Prop_Passwords       prop = GetProp_Passwords();
+
+  prop.S_Passwords = XRCCTRL(*this, "wxID_CHECK_DEF_PASSWORDS", wxCheckBox)->GetValue();
+
+  return prop;
+}
+
+
+#ifdef TEST
 
 /*----------------------------------------------------------------------
   UpdatePasswordList updates the current list of passwords
@@ -1531,18 +1542,6 @@ void PreferenceDlgWX::UpdatePasswordsList()
        prop.FirstPath = element;
     }
   SetTemplateRepositoryList ((const Prop_Templates_Path**)&(prop.FirstPath));
-}
-
-/*----------------------------------------------------------------------
-  GetValueDialog_Templates gets the show template indicator
-  params:
-  returns:
-  ----------------------------------------------------------------------*/
-void PreferenceDlgWX::GetValueDialog_Templates()
-{
-  Prop_Templates       prop = GetProp_Templates();
-
-  prop.S_Templates = XRCCTRL(*this, "wxID_CHECK_SHOWTEMPLATES", wxCheckBox)->GetValue();
 }
 
 
@@ -1571,26 +1570,6 @@ void PreferenceDlgWX::OnTemplateChoose(wxCommandEvent& event)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void PreferenceDlgWX::OnTemplateAdd(wxCommandEvent& event)
-{
-  wxListBox *box = XRCCTRL(*this, "wxID_LIST_TEMPLATE_REPOSITORIES", wxListBox);
-  box->Append(XRCCTRL(*this, "wxID_TEXT_NEW_TEMPLATE", wxTextCtrl)->GetValue());
-  box->SetSelection(box->GetCount()-1);
-
-  // Update the list of templates
-  UpdateTemplateList();
-}
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-void PreferenceDlgWX::OnUpdateTemplateAdd(wxUpdateUIEvent& event)
-{
-  event.Enable(!XRCCTRL(*this, "wxID_TEXT_NEW_TEMPLATE", wxTextCtrl)->GetValue().IsEmpty());
-}
-
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
 void PreferenceDlgWX::OnTemplateDel(wxCommandEvent& event)
 {
   wxListBox *box = XRCCTRL(*this, "wxID_LIST_TEMPLATE_REPOSITORIES", wxListBox);
@@ -1609,57 +1588,6 @@ void PreferenceDlgWX::OnUpdateTemplateDel(wxUpdateUIEvent& event)
 {
   event.Enable(XRCCTRL(*this, "wxID_LIST_TEMPLATE_REPOSITORIES",
                        wxListBox)->GetSelection() != wxNOT_FOUND);
-}
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-void PreferenceDlgWX::OnTemplateMoveUp(wxCommandEvent& event)
-{
-  wxListBox *box = XRCCTRL(*this, "wxID_LIST_TEMPLATE_REPOSITORIES", wxListBox);
-  int sel = box->GetSelection();
-  if (sel!=wxNOT_FOUND && sel>0)
-  {
-    wxString str = box->GetString(sel);
-    box->Delete(sel);
-    box->Insert(str, sel-1);
-    box->SetSelection(sel-1);
-    // Update the list of templates
-    UpdateTemplateList();
-  }
-}
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-void PreferenceDlgWX::OnUpdateTemplateMoveUp(wxUpdateUIEvent& event)
-{
-  wxListBox *box = XRCCTRL(*this, "wxID_LIST_TEMPLATE_REPOSITORIES", wxListBox);
-  event.Enable (box->GetSelection() != wxNOT_FOUND && box->GetSelection() !=0 );
-}
-
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-void PreferenceDlgWX::OnTemplateMoveDown(wxCommandEvent& event)
-{
-  wxListBox *box = XRCCTRL(*this, "wxID_LIST_TEMPLATE_REPOSITORIES", wxListBox);
-  int sel = box->GetSelection();
-  if (sel!=wxNOT_FOUND && sel<(int)box->GetCount()-2)
-  {
-    wxString str = box->GetString(sel);
-    box->Delete(sel);
-    box->Insert(str, sel+1);
-    box->SetSelection(sel+1);
-    // Update the list of templates
-    UpdateTemplateList();
-  }
-}
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-void PreferenceDlgWX::OnUpdateTemplateMoveDown(wxUpdateUIEvent& event)
-{
-  wxListBox *box = XRCCTRL(*this, "wxID_LIST_TEMPLATE_REPOSITORIES", wxListBox);
-  event.Enable (box->GetSelection() != wxNOT_FOUND && box->GetSelection() != (int)box->GetCount()-1);
 }
 
 /*----------------------------------------------------------------------
@@ -1733,6 +1661,10 @@ void PreferenceDlgWX::OnOk( wxCommandEvent& event )
   Prop_Emails prop_emails = GetValueDialog_Emails();
   SetProp_Emails( &prop_emails );
   ThotCallback (GetPrefEmailsBase() + EmailsMenu, INTEGER_DATA, (char*) 1);
+
+  Prop_Passwords prop_passwords = GetValueDialog_Passwords();
+  SetProp_Passwords( &prop_passwords );
+  ThotCallback (GetPrefPasswordsBase() + PasswordsMenu, INTEGER_DATA, (char*) 1);
 
   ThotCallback (MyRef, INTEGER_DATA, (char*) 1);
   XRCCTRL(*this, "wxID_CANCEL", wxButton)->Enable();
@@ -1815,6 +1747,12 @@ void PreferenceDlgWX::OnDefault( wxCommandEvent& event )
       ThotCallback (GetPrefEmailsBase() + EmailsMenu, INTEGER_DATA, (char*) 2);
       SetupDialog_Emails( GetProp_Emails() );
     }
+  else if ( p_page->GetId() == wxXmlResource::GetXRCID(_T("wxID_PAGE_PASSWORDS")) )
+    {
+      ThotCallback (GetPrefPasswordsBase() + PasswordsMenu, INTEGER_DATA, (char*) 2);
+      SetupDialog_Passwords( GetProp_Passwords() );
+    }
+
   ThotCallback (MyRef, INTEGER_DATA, (char*) 2);
 }
 
@@ -1846,6 +1784,7 @@ void PreferenceDlgWX::OnCancel( wxCommandEvent& event )
   ThotCallback (GetPrefTemplatesBase() + TemplatesMenu, INTEGER_DATA, (char*) 0);
 #endif /* TEMPLATES */
   ThotCallback (GetPrefEmailsBase() + EmailsMenu, INTEGER_DATA, (char*) 0);
+  ThotCallback (GetPrefPasswordsBase() + PasswordsMenu, INTEGER_DATA, (char*) 0);
 
   ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
   m_OnApplyLock = FALSE;

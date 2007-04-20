@@ -6344,6 +6344,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
           Answer_text[0] = EOS;
           Answer_name[0] = EOS;
           Answer_password[0] = EOS;
+          Answer_save_password = 0;
           UserAnswer = 0;
         }
       else
@@ -6378,6 +6379,16 @@ void CallbackDialogue (int ref, int typedata, char *data)
         }
       else
         Answer_password[NAME_LENGTH - 1] = EOS;
+      break;
+#endif /* _WX */
+    case PasswordSave:
+      if (val == 0)
+         Answer_save_password = FALSE;
+      else
+         Answer_save_password = TRUE;
+      break;
+#ifdef _WX
+      i = strlen (data);
 #endif /* _WX */
 #ifdef _GTK
       strncpy (Answer_password, data, NAME_LENGTH);

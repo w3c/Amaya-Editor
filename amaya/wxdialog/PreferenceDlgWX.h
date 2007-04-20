@@ -77,13 +77,10 @@ private:
   void SetupDialog_Annot( const Prop_Annot & prop );
   Prop_Annot GetValueDialog_Annot();
 
-
-
   // "DAV" tab
   void SetupLabelDialog_DAV();
   void SetupDialog_DAV( const Prop_DAV & prop );
   Prop_DAV GetValueDialog_DAV();
-
 
   // "Templates" tab
   void SetupLabelDialog_Templates();
@@ -101,7 +98,6 @@ private:
   void OnUpdateTemplateMoveDown(wxUpdateUIEvent& event);
   void OnTemplateSelected(wxCommandEvent& event);
 
-
   // "Emails" tab
   void SetupLabelDialog_Emails();
   void SetupDialog_Emails( const Prop_Emails & prop );
@@ -117,18 +113,12 @@ private:
   void SetupLabelDialog_Passwords();
   void SetupDialog_Passwords( const Prop_Passwords & prop );
   void UpdatePasswordList();
-  void GetValueDialog_Passwords();
-  void OnEmptyPassword( wxCommandEvent& event );
+  Prop_Passwords GetValueDialog_Passwords();
+  void OnEmptyPasswords( wxCommandEvent& event );
 
   void OnPasswordChoose(wxCommandEvent& event);
-  void OnPasswordAdd(wxCommandEvent& event);
   void OnPasswordDel(wxCommandEvent& event);
-  void OnPasswordMoveUp(wxCommandEvent& event);
-  void OnPasswordMoveDown(wxCommandEvent& event);
-  void OnUpdatePasswordAdd(wxUpdateUIEvent& event);
   void OnUpdatePasswordDel(wxUpdateUIEvent& event);
-  void OnUpdatePasswordMoveUp(wxUpdateUIEvent& event);
-  void OnUpdatePasswordMoveDown(wxUpdateUIEvent& event);
   void OnPasswordSelected(wxCommandEvent& event);
 
   // Any class wishing to process wxWindows events must use this macro

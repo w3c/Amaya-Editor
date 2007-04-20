@@ -163,6 +163,7 @@ typedef enum _ClickEvent {
 /* do not add items before this entry */
 #define OptionMenu	54
 #define OpenTemplate    55
+#define PasswordSave    56
 
 /* MAX_SUBMENUS references reserved for submenus of Option menu */
 /* Do not insert new entries here */
@@ -349,6 +350,7 @@ THOT_EXPORT char       TempFileDirectory[MAX_LENGTH];
 THOT_EXPORT char       Answer_text[MAX_LENGTH];
 THOT_EXPORT char       Answer_name[NAME_LENGTH];
 THOT_EXPORT char       Answer_password[NAME_LENGTH];
+THOT_EXPORT ThotBool   Answer_save_password;
 THOT_EXPORT char       Display_password[NAME_LENGTH];
 THOT_EXPORT char       ScanFilter[NAME_LENGTH]; /* to scan directories    */
 THOT_EXPORT char       MathMLEntityName[MAX_LENGTH]; /* entity name typed by the user for a MathML expression */

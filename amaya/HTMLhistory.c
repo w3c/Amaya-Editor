@@ -1503,6 +1503,25 @@ void NewPasswordTable (char *realm, char *server, char *name, char *pwd,
 }
 
 /*----------------------------------------------------------------------
+  CleanPasswordTable
+  Clean the table of passwords
+  ----------------------------------------------------------------------*/
+void CleanPasswordTable ()
+{
+  int        i;
+
+  /* Is the password table loaded ? */
+  if (PM_Index == 0)
+      LoadPasswordTable ();
+
+  /* Remove every password */
+  for (i = 1; i <= PM_Index; i++)
+    RemovePasswordTable (i, TRUE);
+
+  return;
+}
+
+/*----------------------------------------------------------------------
   RemovePasswordTable
   Remove a password from the table of passwords
   ----------------------------------------------------------------------*/

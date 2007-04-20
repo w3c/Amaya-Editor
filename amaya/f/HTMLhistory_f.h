@@ -104,6 +104,7 @@ extern void NewPasswordTable ( char *realm,
                                char *pwd,
                                int i_auth,
                                ThotBool user );
+extern void CleanPasswordTable ( void );
 extern void RemovePasswordTable ( int i_auth,
                                   ThotBool user );
 extern void GetPasswordTable ( int i_auth,
@@ -224,6 +225,7 @@ extern void NewPasswordTable ( char *realm,
                                  char *pwd,
                                  int i_auth,
                                  ThotBool user );
+extern void CleanPasswordTable ( void );
 extern void RemovePasswordTable ( int i_auth,
                                     ThotBool user );
 extern void GetPasswordTable ( int i_auth,
