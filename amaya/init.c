@@ -3719,7 +3719,6 @@ Document LoadDocument (Document doc, char *pathname,
   ThotBool            isRDF;
 
   isRDF = FALSE;
-  docType = docText;
   unknown = TRUE;
   tempdir = localdoc = NULL;
   charsetname[0] = EOS;
@@ -3744,6 +3743,7 @@ Document LoadDocument (Document doc, char *pathname,
 
   CheckDocHeader (s, &xmlDec, &withDoctype, &isXML, &useMath, &isknown,
                   &docProfile, &charset, charsetname, &thotType);
+  docType = thotType;
 
   /* Check charset information in a meta */
   if (charset == UNDEFINED_CHARSET)
@@ -3844,7 +3844,9 @@ Document LoadDocument (Document doc, char *pathname,
           docType = docHTML;
           unknown = FALSE;
         }
-	  
+      else
+        unknown = (thotType != docHTML);
+
       /* Assign a content type to that local document */
       if (isRDF)
         strcpy (local_content_type , "application/xml+rdf");
