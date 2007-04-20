@@ -1000,6 +1000,10 @@
 <message xml:lang="tw">改為 HTML 4.01 Strict</message>
 <message xml:lang="sk">Zmeniť na HTML 4.01 Strict</message></label>
 <label define="BSetUpandPrint">
+<message xml:lang="en">Send by mail ...</message>
+<message xml:lang="fr">Envoyer par courriel ...</message>
+</label>
+<label define="BSetUpandPrint">
 <message xml:lang="en">Set&amp;up and Print...</message>
 <message xml:lang="fr">Paramétrer et imprimer(&amp;U)...</message>
 <message xml:lang="de">Dr&amp;uckoptionen...</message>
