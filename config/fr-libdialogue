@@ -65,7 +65,7 @@
 63 Fermer sans sauver
 64 Style des caractères
 65 Couleurs
-66 Eléments XHTML
+66 XHTML
 67 Supprimer
 68 Destination
 69 Fichier PostScript
@@ -130,8 +130,8 @@
 128 Attribut inconnu
 129 Annuler
 130 Erreur dans la traduction en PostScript
-131 Commande refusée par le spooler : %s
-132 Création impossible : %s
+131 Commande refusée par le spooler "%s"
+132 Impossible de créer "%s"
 133 Surligné
 134 Format de document
 135 Événements
@@ -175,7 +175,7 @@
 173 Droite
 174 Centré
 175 Justifié
-176 Classes
+176 Appliquer classe
 177 Sélectionner une classe ou une pseudo-classe
 178 Sélectionner
 179 Abandonner

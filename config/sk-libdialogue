@@ -1,0 +1,231 @@
+# encoding= utf8
+0 Chyba X11 : %s\n
+1 Potvrdiť
+2 Chýba súbor s abecedou
+3 Nové zobrazenie nemôže nahradiť staré
+4 Nekompatibilná schéma. Prekompilujte %s
+5 Kritická chyba: fonty neboli nájdené
+6 Pamäť vyčerpaná
+7 Nedá sa pripojiť k X
+8 Zobrazenie bolo vytvorené pred vytvorením
+9 Tabuľka pravidiel je plná.
+10 Nesprávny súbor: %s.STR
+11 Nesprávny súbor: %s.PRS
+12 Dokument %s bol vytlačený
+13 Dispozície
+14 1 strana/hárok
+15 2 strany/hárky
+16 4 strany/hárky
+17 %s
+18 Nedostatok pamäte
+19 *** Amaya: Neopraviteľná chyba ***
+20 ak dajaké dokumenty boli zmenené, budú uložené
+21 Nesprávny .TRA súbor: %s
+22 %s nie je platným súrodencom pre %s (%s)
+23 %s nie je platným rodičom pre %s (%s)
+24 %s, strana %d
+25 Jazyk
+26 Attribúty
+27 Štandardná prezentácia
+28 Nastaviť
+29 Písmo
+30 Podčiarknutie
+31 Grafika
+32 Formát
+33 Predvolené
+34 Zarovnanie
+35 Odsadenie
+36 Prebieha tlač
+37 Tlač
+38 Ručné zakladanie
+39 Nastavenia
+40 A4
+41 US
+42 Formát papiera
+43 Zatvoriť
+44 Priečinky
+45 Dokument %s už existuje. Chcete ho nahradiť?
+46 Ľavým tlačidlom nastavíte farbu textu
+47 Stredným alebo pravým tlačidlom nastavíte farbu pozadia
+48 Rodina písma
+49 Normálne
+50 Tučné
+51 Kurzíva
+52 Naklonené
+53 Normálne
+54 Hrúbka
+55 Normálna
+56 Podčiarknuté
+57 Prečiarknuté
+58 Veľkosť písmen (v bodoch)
+59 Osadenie (v bodoch)
+60 Riadkovanie (v bodoch)
+61 Riadkovanie
+62 Uložiť dokument
+63 Zatvoriť bez uloženia
+64 Štýl znakov
+65 Farby
+66 XHTML
+67 Odstrániť
+68 Výstup
+69 PostScriptový súbor
+70 Tlačiareň
+71 Hľadať výraz
+72 Nerozlišovať veľkosť písmen
+73 Nahradiť výrazom
+74 Nahradiť
+75 Nič nenahrádzať
+76 Potrvrdzovať nahradenie
+77 Automaticky nahradiť
+78 Kde hľadať
+79 Pred výberom
+80 Vo výbere
+81 Za výberom
+82 V celom dokumente
+83 Nenahrádzať
+84 Pôvodné farby
+85 pred zatvorením
+86 Zatvoriť dokumetn
+87 Matematické symboly
+88 Grafika
+89 Latinská abeceda
+90 Grécka abeceda
+91 Uložiť
+92 Text
+93 Grafika
+94 Symbol
+95 Obrázok
+96 XML prvku
+97 za
+98 pred
+99 okolo
+100 Zahrnúť
+101 Prilepiť
+102 vytvoriť
+103 Vložiť
+104 Koniec strany
+105 Jazyk prvku
+106 Prevzatý jazyk:
+107 Nenájdené
+108 Hľadať v
+109 Hľadať
+110 Prvok iba na čítanie
+111 Nie je čo nahrádzať
+112 Štandardné znaky
+113 Štandardná grafika
+114 Štandardný formát
+115 Štandardné rozmery
+116 body
+117 Štýl riadkov
+118 Šírka riadka
+119 Vzor výplne
+120 Rozdeliť
+121 Typ objektu
+122 Prejsť na stranu číslo:
+123 Ľubovoľný
+124 Hľadať atribút
+125 Hľadať typ
+126 Prirodzený
+127 Hodnota atríbútu
+128 Neznámy atribút
+129 Zrušiť
+130 Chyba v PostScriptovom preklade
+131 Príkaz odmietnutý tlačiarňou "%s"
+132 Nedá sa vytvoriť "%s"
+133 Pruh nad
+134 Formát dokumentu
+135 Udalosti
+136 Odstániť atribút
+137 Ľavým tlačidlom nastavíte farbu výberu
+138 Stredným alebo pravým tlačidlom nastavíte farbu bez označenia
+139 Ďalej ...
+140 Získať
+141 Farba
+142 Farba pozadia
+143 Farba popredia
+144 Zmeniť farby
+145 Vybrať základnú štruktúru XML
+146 Kontrola
+147 Hľadať/Preskočiť
+148 Nahradiť (+ slovník)
+149 Nahradiť a nájsť ďalšie
+150 Iný jazyk
+151 Pridať do slovníka
+152 slová obsahujúce:
+153 Kontrola pravopisu ...
+154 Rímske čísla
+155 Ignorovať
+156 slová napísané VEĽKÝMI písmenami
+157 slová s číslami
+158 Chyba súboru s parametrami
+159 Neexistuje súbor klávesnice
+160 Slovník sa nedá uložiť
+161 Nesprávne slovo "%s" bolo zamietnuté v tomto slovníku
+162 Slovo "%s" bolo pridané do slovníka
+163 Koniec kontroly pravopisu
+164 Kontrola pravopisu prerušená
+165 Prosím vyberte dokument
+166 Slovník bol uložený
+167 Nie je prístupné v tejto verzii
+168 Vysunúť/zasunúť nástrojovú lištu
+169 Nástroje
+170 Toto je povinný atribút, ktorý nemôže byť odstránený
+171 Obnoviť
+172 Doľava
+173 Doprava
+174 Centrovať
+175 Do bloku
+176 Aplikovať triedu (class)
+177 Vyberte triedu alebo pseudotriedu
+178 Vybrať
+179 Skartovať
+180 Vzorce
+181 Rôzne
+182 Relačné operátory
+183 Negované relačné operátory
+184 Operátory
+185 Grácka abeceda (veľké)
+186 Šipky
+187 Špeciálne znaky
+188 Prerušiť prenos
+189 Predchádzajúci dokument
+190 Nasledujúci dokument
+191 Načítať najnovšiu verziu stránky
+192 Uložiť
+193 Nový XHTML dokument
+194 Otvoriť dokument
+195 Tlačiť
+196 Hľadať
+197 Prejsť na domovskú stránku
+198 Zvýrazniť (em)
+199 Silno zvýrazniť (strong)
+200 Zdrojový kód (code)
+201 Obrázok (img)
+202 Nadpis úrovne 1 (h1)
+203 Nadpis úrovne 2 (h2)
+204 Nadpis úrovne 3 (h3)
+205 Odrážky (ul)
+206 Číslovanie (ol)
+207 Zoznam definícií (dl)
+208 Hypertextový odkaz
+209 Tabuľka (table)
+210 Chystáte sa zatoriť niekoľko otvorených kariet (%d). Chcete naozaj pokračovať?
+211 Varovať vždy, ak sa pokúšam zavrieť viac kariet naraz
+212 Zatvoriť karty
+213 Žiadne chyby neboli nájdené
+214 Zobraziť nájdené chyby
+215 Kolónky
+216 Oddelenie, vrstva (div)
+217 Záložka
+218 Novovložený text (ins)
+219 Text na odstránenie (del)
+220 Dolný index
+221 Horný index
+222 Termín (dt)
+223 Definícia termínu (dd)
+224 Objekt (object)
+225 CSS pravidlá
+226 Súbor
+227 Rozdeliť okno horizontálne
+228 Rozdeliť okno vertikálne
+229 Zobraziť/skryť nástroje

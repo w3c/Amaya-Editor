@@ -79,7 +79,7 @@
 77 Speichern auf Festplatte?
 78 Bilder kopieren
 79 URIs transformieren
-80 **Where to save
+80 Dokument
 81 Bilder
 82 Objektadresse
 83 Formatvorlagen
@@ -377,7 +377,7 @@
 375 Nicht möglich
 376 Geschütztes Element
 377 Die Auswahl darf ein solches Element nicht treffen
-378 Der aktuellen Auswahl folgen keine Titel
+378 Keine Titel
 379 Trotzdem sichern
 380 Der Host konnte nicht gefunden werden
 381 Das Dokument wurde verändert (412)

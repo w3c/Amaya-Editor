@@ -13,7 +13,8 @@
 <language encoding="utf8">hu</language>
 <language encoding="utf8">ka</language>
 <language encoding="utf8">cn</language>
-<language encoding="utf8">tw</language></control>
+<language encoding="utf8">tw</language>
+<language encoding="utf8">sk</language></control>
 <messages>
 <label define="File">
 <message xml:lang="en">&amp;File</message>
@@ -28,7 +29,8 @@
 <message xml:lang="hu">&amp;Fájl</message>
 <message xml:lang="ka">&amp;ფაილი</message>
 <message xml:lang="cn">文件(&amp;F)</message>
-<message xml:lang="tw">文件(&amp;F)</message></label>
+<message xml:lang="tw">文件(&amp;F)</message>
+<message xml:lang="en">&amp;Súbor</message></label>
 <label define="Context_">
 <message xml:lang="en">Context</message>
 <message xml:lang="fr">Context</message>
@@ -42,7 +44,8 @@
 <message xml:lang="hu">Context</message>
 <message xml:lang="ka">კონტექსტი</message>
 <message xml:lang="cn">上下文</message>
-<message xml:lang="tw">上下文</message></label>
+<message xml:lang="tw">上下文</message>
+<message xml:lang="sk">Kontext</message></label>
 <label define="Edit_">
 <message xml:lang="en">&amp;Edit</message>
 <message xml:lang="fr">&amp;Édition</message>
@@ -56,7 +59,8 @@
 <message xml:lang="hu">S&amp;zerkesztés</message>
 <message xml:lang="ka">&amp;რედაქტირება</message>
 <message xml:lang="cn">编辑(&amp;E)</message>
-<message xml:lang="tw">編輯(&amp;E)</message></label>
+<message xml:lang="tw">編輯(&amp;E)</message>
+<message xml:lang="sk">&amp;Upraviť</message></label>
 <label define="Types">
 <message xml:lang="en">XH&amp;TML</message>
 <message xml:lang="fr">X&amp;HTML</message>
@@ -70,7 +74,8 @@
 <message xml:lang="hu">X&amp;HTML</message>
 <message xml:lang="ka">XH&amp;TML</message>
 <message xml:lang="cn">XHTML(&amp;T)</message>
-<message xml:lang="tw">XHTML(&amp;T)</message></label>
+<message xml:lang="tw">XHTML(&amp;T)</message>
+<message xml:lang="sk">X&amp;HTML</message></label>
 <label define="XMLTypes">
 <message xml:lang="en">&amp;XML</message>
 <message xml:lang="fr">&amp;XML</message>
@@ -84,7 +89,8 @@
 <message xml:lang="hu">&amp;XML</message>
 <message xml:lang="ka">&amp;XML</message>
 <message xml:lang="cn">XML(&amp;X)</message>
-<message xml:lang="tw">XML(&amp;X)</message></label>
+<message xml:lang="tw">XML(&amp;X)</message>
+<message xml:lang="sk">&amp;XML</message></label>
 <label define="Links">
 <message xml:lang="en">&amp;Links</message>
 <message xml:lang="fr">&amp;Liens</message>
@@ -98,7 +104,8 @@
 <message xml:lang="hu">Ka&amp;pcsok</message>
 <message xml:lang="ka">ბმები</message>
 <message xml:lang="cn">链接(&amp;L)</message>
-<message xml:lang="tw">鏈接(&amp;L)</message></label>
+<message xml:lang="tw">鏈接(&amp;L)</message>
+<message xml:lang="sk">P&amp;repojenia</message></label>
 <label define="Views">
 <message xml:lang="en">&amp;Views</message>
 <message xml:lang="fr">&amp;Vues</message>
@@ -112,7 +119,8 @@
 <message xml:lang="hu">&amp;Nézet</message>
 <message xml:lang="ka">ხედი</message>
 <message xml:lang="cn">视图(&amp;V)</message>
-<message xml:lang="tw">視圖(&amp;V)</message></label>
+<message xml:lang="tw">視圖(&amp;V)</message>
+<message xml:lang="sk">&amp;Zobrazenia</message></label>
 <label define="Style">
 <message xml:lang="en">&amp;Style</message>
 <message xml:lang="fr">&amp;Style</message>
@@ -126,7 +134,8 @@
 <message xml:lang="hu">S&amp;tílus</message>
 <message xml:lang="ka">სტილი</message>
 <message xml:lang="cn">样式(&amp;S)</message>
-<message xml:lang="tw">樣式(&amp;S)</message></label>
+<message xml:lang="tw">樣式(&amp;S)</message>
+<message xml:lang="sk">Š&amp;týl</message></label>
 <label define="Attributes_">
 <message xml:lang="en">&amp;Attributes</message>
 <message xml:lang="fr">&amp;Attributs</message>
@@ -140,7 +149,8 @@
 <message xml:lang="hu">&amp;Attribútumok</message>
 <message xml:lang="ka">ატრიბუტები</message>
 <message xml:lang="cn">属性(&amp;A)</message>
-<message xml:lang="tw">屬性(&amp;A)</message></label>
+<message xml:lang="tw">屬性(&amp;A)</message>
+<message xml:lang="sk">&amp;Atribúty</message></label>
 <label define="Annotations_">
 <message xml:lang="en">A&amp;nnotations</message>
 <message xml:lang="fr">A&amp;nnotations</message>
@@ -154,7 +164,8 @@
 <message xml:lang="hu">&amp;Jegyzetek</message>
 <message xml:lang="ka">ანოტაციები</message>
 <message xml:lang="cn">注释</message>
-<message xml:lang="tw">注釋</message></label>
+<message xml:lang="tw">注釋</message>
+<message xml:lang="sk">&amp;Komentáre</message></label>
 <label define="Cooperation_">
 <message xml:lang="en">C&amp;ooperation</message>
 <message xml:lang="fr">C&amp;oopération</message>
@@ -168,7 +179,8 @@
 <message xml:lang="hu">&amp;Együttműködés</message>
 <message xml:lang="ka">ანოტაციები</message>
 <message xml:lang="cn">协作(&amp;O)</message>
-<message xml:lang="tw">協作(&amp;O)</message></label>
+<message xml:lang="tw">協作(&amp;O)</message>
+<message xml:lang="sk">Sp&amp;olupráca</message></label>
 <label define="Help_">
 <message xml:lang="en">&amp;Help</message>
 <message xml:lang="fr">A&amp;ide</message>
@@ -182,7 +194,8 @@
 <message xml:lang="hu">&amp;Súgó</message>
 <message xml:lang="ka">კარნახი</message>
 <message xml:lang="cn">帮助(&amp;H)</message>
-<message xml:lang="tw">幫助(&amp;H)</message></label>
+<message xml:lang="tw">幫助(&amp;H)</message>
+<message xml:lang="sk">&amp;Pomocník</message></label>
 <label define="New1">
 <message xml:lang="en">New</message>
 <message xml:lang="fr">Nouveau</message>
@@ -196,7 +209,8 @@
 <message xml:lang="hu">Új</message>
 <message xml:lang="ka">ახალი</message>
 <message xml:lang="cn">新建</message>
-<message xml:lang="tw">新建</message></label>
+<message xml:lang="tw">新建</message>
+<message xml:lang="sk">Nový</message></label>
 <label define="BHtml">
 <message xml:lang="en">New &amp;XHTML document...</message>
 <message xml:lang="fr">Nouveau document &amp;XHTML...</message>
@@ -210,7 +224,8 @@
 <message xml:lang="hu">Új &amp;XHTML dokumentum...</message>
 <message xml:lang="ka">ახალი XHTML დოკუმენტი...</message>
 <message xml:lang="cn">新建 XHTML 文档(&amp;X)...</message>
-<message xml:lang="tw">新建 XHTML 文檔(&amp;X)...</message></label>
+<message xml:lang="tw">新建 XHTML 文檔(&amp;X)...</message>
+<message xml:lang="sk">Nový &amp;XHTML dokument...</message></label>
 <label define="BHtml11">
 <message xml:lang="en">New X&amp;HTML 1.1 document...</message>
 <message xml:lang="fr">Nouveau document X&amp;HTML 1.1...</message>
@@ -224,7 +239,8 @@
 <message xml:lang="hu">Új X&amp;HTML 1.1 dokumentum...</message>
 <message xml:lang="ka">ახალი X(&amp;T)HTML 1.1 დოკუმენტი...</message>
 <message xml:lang="cn">新建 X(&amp;T)HTML 1.1 文...</message>
-<message xml:lang="tw">新建 X(&amp;T)HTML 1.1 文檔...</message></label>
+<message xml:lang="tw">新建 X(&amp;T)HTML 1.1 文檔...</message>
+<message xml:lang="sk">Nový X&amp;HTML 1.1 dokument...</message></label>
 <label define="BHtmlTransitional">
 <message xml:lang="en">New XHTML 1.0 &amp;Transitional document...</message>
 <message xml:lang="fr">Nouveau document XHTML 1.0 &amp;Transitional...</message>
@@ -238,7 +254,8 @@
 <message xml:lang="hu">Új XHTML 1.0 á&amp;tmeneti dokumentum...</message>
 <message xml:lang="ka">ახალი XHTML 1.0 დოკუმენტი(&amp;T)...</message>
 <message xml:lang="cn">新建 XHTML 1.0 Transitional 文档(&amp;T)...</message>
-<message xml:lang="tw">新建 XHTML 1.0 Transitional 文檔(&amp;T)...</message></label>
+<message xml:lang="tw">新建 XHTML 1.0 Transitional 文檔(&amp;T)...</message>
+<message xml:lang="sk">Nový XHTML 1.0 &amp;Transitional dokument...</message></label>
 <label define="BHtmlStrict">
 <message xml:lang="en">New XHTML 1.0 St&amp;rict document...</message>
 <message xml:lang="fr">Nouveau document XHTML 1.0 &amp;Strict...</message>
@@ -252,7 +269,8 @@
 <message xml:lang="hu">Új XHTML 1.0 &amp;kötött dokumentum...</message>
 <message xml:lang="ka">ახალი XHTML 1.0 დოკუმენტი...</message>
 <message xml:lang="cn">新建 XHTML 1.0 Strict 文档(&amp;R)...</message>
-<message xml:lang="tw">新建 XHTML 1.0 Strict 文檔(&amp;R)...</message></label>
+<message xml:lang="tw">新建 XHTML 1.0 Strict 文檔(&amp;R)...</message>
+<message xml:lang="sk">Nový XHTML 1.0 St&amp;rict dokument...</message></label>
 <label define="BHtmlBasic">
 <message xml:lang="en">New XHTML 1.0 &amp;Basic document...</message>
 <message xml:lang="fr">Nouveau document XHTML 1.0 &amp;Basic ...</message>
@@ -266,7 +284,8 @@
 <message xml:lang="hu">Új XHTML 1.0 &amp;alap dokumentum...</message>
 <message xml:lang="ka">ახალი XHTML 1.0 დოკუმენტი...</message>
 <message xml:lang="cn">新建 XHTML 1.0 Basic 文档(&amp;B)...</message>
-<message xml:lang="tw">新建 XHTML 1.0 Basic 文檔(&amp;B)...</message></label>
+<message xml:lang="tw">新建 XHTML 1.0 Basic 文檔(&amp;B)...</message>
+<message xml:lang="sk">Nový XHTML 1.0 &amp;Basic dokument...</message></label>
 <label define="BMathml">
 <message xml:lang="en">New &amp;MathML document...</message>
 <message xml:lang="fr">Nouveau document &amp;MathML...</message>
@@ -280,7 +299,8 @@
 <message xml:lang="hu">Új &amp;MathML dokumentum...</message>
 <message xml:lang="ka">ახალი MathML დოკუმენტი...</message>
 <message xml:lang="cn">新建 MathML 文档(&amp;M)...</message>
-<message xml:lang="tw">新建 MathML 文檔(&amp;M)...</message></label>
+<message xml:lang="tw">新建 MathML 文檔(&amp;M)...</message>
+<message xml:lang="sk">Nový &amp;MathML dokument...</message></label>
 <label define="BSvg">
 <message xml:lang="en">New SV&amp;G document...</message>
 <message xml:lang="fr">Nouveau document SV&amp;G...</message>
@@ -294,7 +314,8 @@
 <message xml:lang="hu">Új SV&amp;G dokumentum...</message>
 <message xml:lang="ka">ახალი SV&amp;G დოკუმენტი...</message>
 <message xml:lang="cn">新建 SVG 文档(&amp;G)...</message>
-<message xml:lang="tw">新建 SVG 文檔(&amp;G)...</message></label>
+<message xml:lang="tw">新建 SVG 文檔(&amp;G)...</message>
+<message xml:lang="sk">Nový SV&amp;G dokument...</message></label>
 <label define="BCss">
 <message xml:lang="en">New CSS s&amp;tyle sheet...</message>
 <message xml:lang="fr">Nouvelle feuille de s&amp;tyle...</message>
@@ -308,7 +329,8 @@
 <message xml:lang="hu">Új CSS s&amp;tíluslap...</message>
 <message xml:lang="ka">ახალი CSS სტილების ცხრილი(&amp;T)...</message>
 <message xml:lang="cn">新建 CSS 样式表(&amp;T)...</message>
-<message xml:lang="tw">新建 CSS 樣式表(&amp;T)...</message></label>
+<message xml:lang="tw">新建 CSS 樣式表(&amp;T)...</message>
+<message xml:lang="sk">Nový súbor &amp;CSS pravidiel...</message></label>
 <label define="BTemplate">
 <message xml:lang="en">From t&amp;emplate...</message>
 <message xml:lang="fr">A partir du Modèl&amp;e...</message>
@@ -322,7 +344,8 @@
 <message xml:lang="hu">&amp;Sablonból(&amp;E)</message>
 <message xml:lang="ka">თარგიდან(&amp;E)</message>
 <message xml:lang="cn">来自模板(&amp;E)...</message>
-<message xml:lang="tw">來自模板(&amp;E)...</message></label>
+<message xml:lang="tw">來自模板(&amp;E)...</message>
+<message xml:lang="sk">Zo &amp;šablóny...</message></label>
 <label define="BOpenDoc">
 <message xml:lang="en">&amp;Open document...</message>
 <message xml:lang="fr">&amp;Ouvrir...</message>
@@ -336,7 +359,8 @@
 <message xml:lang="hu">D&amp;okumentum megnyitása...</message>
 <message xml:lang="ka">დოკუმენტის გახსნა(&amp;O)...</message>
 <message xml:lang="cn">打开文档(&amp;O)...</message>
-<message xml:lang="tw">打開文檔(&amp;O)...</message></label>
+<message xml:lang="tw">打開文檔(&amp;O)...</message>
+<message xml:lang="sk">&amp;Otvoriť dokument...</message></label>
 <label define="BOpenInNewWindow">
 <message xml:lang="en">Open in new &amp;window...</message>
 <message xml:lang="fr">Ouvrir dans nou&amp;velle fenêtre...</message>
@@ -350,7 +374,8 @@
 <message xml:lang="hu">Új &amp;ablakban...</message>
 <message xml:lang="ka">დოკუმენტის გახსნა ახალ ფანჯარაში...</message>
 <message xml:lang="cn">在新窗口打开...</message>
-<message xml:lang="tw">在新窗口打開...</message></label>
+<message xml:lang="tw">在新窗口打開...</message>
+<message xml:lang="sk">Otvoriť v novom o&amp;kne...</message></label>
 <label define="BReload">
 <message xml:lang="en">&amp;Reload document</message>
 <message xml:lang="fr">&amp;Recharger le document</message>
@@ -364,7 +389,8 @@
 <message xml:lang="hu">Dokumentum újratöltése(&amp;R)</message>
 <message xml:lang="ka">დოკუმენტის განახლება(&amp;R)</message>
 <message xml:lang="cn">重新载入文档(&amp;R)</message>
-<message xml:lang="tw">重新載入文檔(&amp;R)</message></label>
+<message xml:lang="tw">重新載入文檔(&amp;R)</message>
+<message xml:lang="sk">&amp;Aktualizovať dokument</message></label>
 <label define="Charset1">
 <message xml:lang="en">Read as</message>
 <message xml:lang="fr">Lire comme</message>
@@ -375,7 +401,8 @@
 <message xml:lang="hu">Kényszerített karakter &amp;kódolás</message>
 <message xml:lang="ka">კოდირების მითითება</message>
 <message xml:lang="cn">强制字符编码</message>
-<message xml:lang="tw">強制字符編碼</message></label>
+<message xml:lang="tw">強制字符編碼</message>
+<message xml:lang="sk">Načítať s kódovaním</message></label>
 <label define="BUTF_8">
 <message xml:lang="en">Unicode (UTF-8)</message>
 <message xml:lang="fr">Unicode (UTF-8)</message>
@@ -389,7 +416,8 @@
 <message xml:lang="hu">Unicode (UTF-8)</message>
 <message xml:lang="ka">უნიკოდი (UTF-8)</message>
 <message xml:lang="cn">Unicode (UTF-8)</message>
-<message xml:lang="tw">Unicode (UTF-8)</message></label>
+<message xml:lang="tw">Unicode (UTF-8)</message>
+<message xml:lang="sk">Unicode (UTF-8)</message></label>
 <label define="BISO_8859_1">
 <message xml:lang="en">Western (ISO-8859-1)</message>
 <message xml:lang="fr">Occidental (ISO-8859-1)</message>
@@ -403,7 +431,8 @@
 <message xml:lang="hu">Nyugat-európai (ISO-8859-1)</message>
 <message xml:lang="ka">დასავლეთ ევროპული (ISO-8859-1)</message>
 <message xml:lang="cn">Western (ISO-8859-1)</message>
-<message xml:lang="tw">Western (ISO-8859-1)</message></label>
+<message xml:lang="tw">Western (ISO-8859-1)</message>
+<message xml:lang="sk">Západné (ISO-8859-1)</message></label>
 <label define="BISO_8859_15">
 <message xml:lang="en">Western (ISO-8859-15)</message>
 <message xml:lang="fr">Occidental (ISO-8859-15)</message>
@@ -417,7 +446,8 @@
 <message xml:lang="hu">Nyugat-európai (ISO-8859-15)</message>
 <message xml:lang="ka">დასავლეთ ევროპული (ISO-8859-15)</message>
 <message xml:lang="cn">Western (ISO-8859-15)</message>
-<message xml:lang="tw">Western (ISO-8859-15)</message></label>
+<message xml:lang="tw">Western (ISO-8859-15)</message>
+<message xml:lang="sk">Západné (ISO-8859-15)</message></label>
 <label define="BWINDOWS_1252">
 <message xml:lang="en">Western (Windows-1252)</message>
 <message xml:lang="fr">Occidental (Windows-1252)</message>
@@ -431,7 +461,8 @@
 <message xml:lang="hu">Nyugat-európai (Windows-1252)</message>
 <message xml:lang="ka">დასავლეთ ევროპული (Windows-1252)</message>
 <message xml:lang="cn">Western (Windows-1252)</message>
-<message xml:lang="tw">Western (Windows-1252)</message></label>
+<message xml:lang="tw">Western (Windows-1252)</message>
+<message xml:lang="sk">Západné (Windows-1252)</message></label>
 <label define="BISO_8859_2">
 <message xml:lang="en">Central Europe (ISO-8859-2)</message>
 <message xml:lang="fr">Europe centrale (ISO-8859-2)</message>
@@ -445,7 +476,8 @@
 <message xml:lang="hu">Közép-európai (ISO-8859-2)</message>
 <message xml:lang="ka">ცენტრალურ ევროპული (ISO-8859-2)</message>
 <message xml:lang="cn">Central Europe (ISO-8859-2)</message>
-<message xml:lang="tw">Central Europe (ISO-8859-2)</message></label>
+<message xml:lang="tw">Central Europe (ISO-8859-2)</message>
+<message xml:lang="sk">Stredoeurópske (ISO-8859-2)</message></label>
 <label define="BWINDOWS_1250">
 <message xml:lang="en">Central Europe (Windows-1250)</message>
 <message xml:lang="fr">Europe centrale (Windows-1250)</message>
@@ -459,7 +491,8 @@
 <message xml:lang="hu">Közép-európai (Windows-1250)</message>
 <message xml:lang="ka">ცენტრალურ ევროპული (Windows-1250)</message>
 <message xml:lang="cn">Central Europe (Windows-1250)</message>
-<message xml:lang="tw">Central Europe (Windows-1250)</message></label>
+<message xml:lang="tw">Central Europe (Windows-1250)</message>
+<message xml:lang="sk">Stredoeurópske (Windows-1250)</message></label>
 <label define="BISO_8859_3">
 <message xml:lang="en">South Europe (ISO-8859-3)</message>
 <message xml:lang="fr">Europe du sud (ISO-8859-3)</message>
@@ -473,7 +506,8 @@
 <message xml:lang="hu">Dél-európai (ISO-8859-3)</message>
 <message xml:lang="ka">სამხრეთ ევროპული (ISO-8859-3)</message>
 <message xml:lang="cn">South Europe (ISO-8859-3)</message>
-<message xml:lang="tw">South Europe (ISO-8859-3)</message></label>
+<message xml:lang="tw">South Europe (ISO-8859-3)</message>
+<message xml:lang="sk">Juhoeurópske (ISO-8859-3)</message></label>
 <label define="BISO_8859_4">
 <message xml:lang="en">Baltic (ISO-8859-4)</message>
 <message xml:lang="fr">Balte (ISO-8859-4)</message>
@@ -487,7 +521,8 @@
 <message xml:lang="hu">Balti (ISO-8859-4)</message>
 <message xml:lang="ka">ბალტიური (ISO-8859-4)</message>
 <message xml:lang="cn">Baltic (ISO-8859-4)</message>
-<message xml:lang="tw">Baltic (ISO-8859-4)</message></label>
+<message xml:lang="tw">Baltic (ISO-8859-4)</message>
+<message xml:lang="sk">Baltické (ISO-8859-3)</message></label>
 <label define="BWINDOWS_1257">
 <message xml:lang="en">Baltic (Windows-1257)</message>
 <message xml:lang="fr">Baltic (Windows-1257)</message>
@@ -501,7 +536,8 @@
 <message xml:lang="hu">Balti (Windows-1257)</message>
 <message xml:lang="ka">ბალტიური (Windows-1257)</message>
 <message xml:lang="cn">Baltic (Windows-1257)</message>
-<message xml:lang="tw">Baltic (Windows-1257)</message></label>
+<message xml:lang="tw">Baltic (Windows-1257)</message>
+<message xml:lang="sk">Baltické (Windows-1257)</message></label>
 <label define="BISO_8859_5">
 <message xml:lang="en">Cyrillic (ISO-8859-5)</message>
 <message xml:lang="fr">Cyrillique (ISO-8859-5)</message>
@@ -515,7 +551,8 @@
 <message xml:lang="hu">Cirill (ISO-8859-5)</message>
 <message xml:lang="ka">კირილიცა (ISO-8859-5)</message>
 <message xml:lang="cn">Cyrillic (ISO-8859-5)</message>
-<message xml:lang="tw">Cyrillic (ISO-8859-5)</message></label>
+<message xml:lang="tw">Cyrillic (ISO-8859-5)</message>
+<message xml:lang="sk">Cyrilika (ISO-8859-5)</message></label>
 <label define="BWINDOWS_1251">
 <message xml:lang="en">Cyrillic (Windows-1251)</message>
 <message xml:lang="fr">Cyrillique (Windows-1251)</message>
@@ -529,7 +566,8 @@
 <message xml:lang="hu">Cirill (Windows-1251)</message>
 <message xml:lang="ka">კირილიცა (Windows-1251)</message>
 <message xml:lang="cn">Cyrillic (Windows-1251)</message>
-<message xml:lang="tw">Cyrillic (Windows-1251)</message></label>
+<message xml:lang="tw">Cyrillic (Windows-1251)</message>
+<message xml:lang="sk">Cyrilika (Windows-1251)</message></label>
 <label define="BKOI8_R">
 <message xml:lang="en">Cyrillic (KOI8-R)</message>
 <message xml:lang="fr">Cyrillique (KOI8-R)</message>
@@ -543,7 +581,8 @@
 <message xml:lang="hu">Cirill (KOI8-R)</message>
 <message xml:lang="ka">კირილიცა (KOI8-R)</message>
 <message xml:lang="cn">Cyrillic (KOI8-R)</message>
-<message xml:lang="tw">Cyrillic (KOI8-R)</message></label>
+<message xml:lang="tw">Cyrillic (KOI8-R)</message>
+<message xml:lang="sk">Cyrilika (KOI8-R)</message></label>
 <label define="BISO_8859_6">
 <message xml:lang="en">Arabic (ISO-8859-6)</message>
 <message xml:lang="fr">Arabe (ISO-8859-6)</message>
@@ -557,7 +596,8 @@
 <message xml:lang="hu">Arab (ISO-8859-6)</message>
 <message xml:lang="ka">არაბული (ISO-8859-6)</message>
 <message xml:lang="cn">Arabic (ISO-8859-6)</message>
-<message xml:lang="tw">Arabic (ISO-8859-6)</message></label>
+<message xml:lang="tw">Arabic (ISO-8859-6)</message>
+<message xml:lang="sk">Arabské (ISO-8859-6)</message></label>
 <label define="BWINDOWS_1256">
 <message xml:lang="en">Arabic (Windows-1256)</message>
 <message xml:lang="fr">Arabe (Windows-1256)</message>
@@ -571,7 +611,8 @@
 <message xml:lang="hu">Arab (Windows-1256)</message>
 <message xml:lang="ka">არაბული (Windows-1256)</message>
 <message xml:lang="cn">Arabic (Windows-1256)</message>
-<message xml:lang="tw">Arabic (Windows-1256)</message></label>
+<message xml:lang="tw">Arabic (Windows-1256)</message>
+<message xml:lang="sk">Arabské (Windows-1256)</message></label>
 <label define="BISO_8859_7">
 <message xml:lang="en">Greek (ISO-8859-7)</message>
 <message xml:lang="fr">Grec (ISO-8859-7)</message>
@@ -585,7 +626,8 @@
 <message xml:lang="hu">Görög (ISO-8859-7)</message>
 <message xml:lang="ka">ბერძნული (ISO-8859-7)</message>
 <message xml:lang="cn">Greek (ISO-8859-7)</message>
-<message xml:lang="tw">Greek (ISO-8859-7)</message></label>
+<message xml:lang="tw">Greek (ISO-8859-7)</message>
+<message xml:lang="sk">Grécke (ISO-8859-7)</message></label>
 <label define="BWINDOWS_1253">
 <message xml:lang="en">Greek (Windows-1253)</message>
 <message xml:lang="fr">Grec (Windows-1253)</message>
@@ -599,7 +641,8 @@
 <message xml:lang="hu">Görög (Windows-1253)</message>
 <message xml:lang="ka">ბერძნული (Windows-1253)</message>
 <message xml:lang="cn">Greek (Windows-1253)</message>
-<message xml:lang="tw">Greek (Windows-1253)</message></label>
+<message xml:lang="tw">Greek (Windows-1253)</message>
+<message xml:lang="sk">Grécke (Windows-1253)</message></label>
 <label define="BISO_8859_8">
 <message xml:lang="en">Hebrew (ISO-8859-8)</message>
 <message xml:lang="fr">Hébreu (ISO-8859-8)</message>
@@ -613,7 +656,8 @@
 <message xml:lang="hu">Héber (ISO-8859-8)</message>
 <message xml:lang="ka">ივრითი (ISO-8859-8)</message>
 <message xml:lang="cn">Hebrew (ISO-8859-8)</message>
-<message xml:lang="tw">Hebrew (ISO-8859-8)</message></label>
+<message xml:lang="tw">Hebrew (ISO-8859-8)</message>
+<message xml:lang="sk">Hebrejské (ISO-8859-8)</message></label>
 <label define="BWINDOWS_1255">
 <message xml:lang="en">Hebrew (Windows-1255)</message>
 <message xml:lang="fr">Hébreu (Windows-1255)</message>
@@ -627,7 +671,8 @@
 <message xml:lang="hu">Héber (Windows-1255)</message>
 <message xml:lang="ka">ივრითი (Windows-1255)</message>
 <message xml:lang="cn">Hebrew (Windows-1255)</message>
-<message xml:lang="tw">Hebrew (Windows-1255)</message></label>
+<message xml:lang="tw">Hebrew (Windows-1255)</message>
+<message xml:lang="sk">Hebrejské (Windows-1255)</message></label>
 <label define="BISO_8859_9">
 <message xml:lang="en">Turkish (ISO-8859-9)</message>
 <message xml:lang="fr">Turc (ISO-8859-9)</message>
@@ -641,7 +686,8 @@
 <message xml:lang="hu">Török (ISO-8859-9)</message>
 <message xml:lang="ka">თურქული (ISO-8859-9)</message>
 <message xml:lang="cn">Turkish (ISO-8859-9)</message>
-<message xml:lang="tw">Turkish (ISO-8859-9)</message></label>
+<message xml:lang="tw">Turkish (ISO-8859-9)</message>
+<message xml:lang="sk">Turecké (ISO-8859-9)</message></label>
 <label define="BWINDOWS_1254">
 <message xml:lang="en">Turkish (Windows-1254)</message>
 <message xml:lang="fr">Turc (Windows-125)</message>
@@ -655,7 +701,8 @@
 <message xml:lang="hu">Török (Windows-1254)</message>
 <message xml:lang="ka">თურქული (Windows-1254)</message>
 <message xml:lang="cn">Turkish (Windows-1254)</message>
-<message xml:lang="tw">Turkish (Windows-1254)</message></label>
+<message xml:lang="tw">Turkish (Windows-1254)</message>
+<message xml:lang="sk">Turecké (ISO-8859-9)</message></label>
 <label define="BGB_2312">
 <message xml:lang="en">Chinese Simplified (GB-2312)</message>
 <message xml:lang="fr">Chinois simplifié (GB-2312)</message>
@@ -669,7 +716,8 @@
 <message xml:lang="hu">Chinese (GB-2312)</message>
 <message xml:lang="ka">Chinese (GB-2312)</message>
 <message xml:lang="cn">Chinese Simplified (GB-2312)</message>
-<message xml:lang="tw">Chinese Simplified (GB-2312)</message></label>
+<message xml:lang="tw">Chinese Simplified (GB-2312)</message>
+<message xml:lang="sk">Zjednodušená čínština (GB-2312)</message></label>
 <label define="BISO_2022_JP">
 <message xml:lang="en">Japanese (ISO-2022-JP)</message>
 <message xml:lang="fr">Japonais (ISO-2022-JP)</message>
@@ -683,7 +731,8 @@
 <message xml:lang="hu">Japán (ISO-2022-JP)</message>
 <message xml:lang="ka">იაპონური (ISO-2022-JP)</message>
 <message xml:lang="cn">Japanese (ISO-2022-JP)</message>
-<message xml:lang="tw">Japanese (ISO-2022-JP)</message></label>
+<message xml:lang="tw">Japanese (ISO-2022-JP)</message>
+<message xml:lang="sk">Japonské (ISO-2022-JP)</message></label>
 <label define="BEUC_JP">
 <message xml:lang="en">Japanese (EUC-JP)</message>
 <message xml:lang="fr">Japonais (EUC-JP)</message>
@@ -697,7 +746,8 @@
 <message xml:lang="hu">Japán (EUC-JP)</message>
 <message xml:lang="ka">იაპონური (EUC-JP)</message>
 <message xml:lang="cn">Japanese (EUC-JP)</message>
-<message xml:lang="tw">Japanese (EUC-JP)</message></label>
+<message xml:lang="tw">Japanese (EUC-JP)</message>
+<message xml:lang="sk">Japonské (EUC-JP)</message></label>
 <label define="BSHIFT_JIS">
 <message xml:lang="en">Japanese (Shift-JIS)</message>
 <message xml:lang="fr">Japonais (Shift-JIS)</message>
@@ -711,7 +761,8 @@
 <message xml:lang="hu">Japán (Shift-JIS)</message>
 <message xml:lang="ka">იაპონური (Shift-JIS)</message>
 <message xml:lang="cn">Japanese (Shift-JIS)</message>
-<message xml:lang="tw">Japanese (Shift-JIS)</message></label>
+<message xml:lang="tw">Japanese (Shift-JIS)</message>
+<message xml:lang="sk">Japonské (Shift-JIS)</message></label>
 <label define="BBack">
 <message xml:lang="en">&amp;Back</message>
 <message xml:lang="fr">Précédent(&amp;B)</message>
@@ -725,7 +776,8 @@
 <message xml:lang="hu">Vissza(&amp;B)</message>
 <message xml:lang="ka">უკან(&amp;B)</message>
 <message xml:lang="cn">后退(&amp;B)</message>
-<message xml:lang="tw">后退(&amp;B)</message></label>
+<message xml:lang="tw">后退(&amp;B)</message>
+<message xml:lang="sk">&amp;Späť</message></label>
 <label define="BForward">
 <message xml:lang="en">&amp;Forward</message>
 <message xml:lang="fr">Suivant(&amp;F)</message>
@@ -739,7 +791,8 @@
 <message xml:lang="hu">Előre(&amp;F)</message>
 <message xml:lang="ka">წინ(&amp;F)</message>
 <message xml:lang="cn">前进(&amp;F)</message>
-<message xml:lang="tw">前進(&amp;F)</message></label>
+<message xml:lang="tw">前進(&amp;F)</message>
+<message xml:lang="sk">&amp;Dopredu</message></label>
 <label define="BShowLogFile">
 <message xml:lang="en">Show parsing errors</message>
 <message xml:lang="fr">Montrer les erreurs</message>
@@ -753,7 +806,8 @@
 <message xml:lang="hu">Elemzési hibák mutatása</message>
 <message xml:lang="ka">შეცდომების დამუშავების ჩვენება</message>
 <message xml:lang="cn">显示解析错误</message>
-<message xml:lang="tw">顯示解析錯誤</message></label>
+<message xml:lang="tw">顯示解析錯誤</message>
+<message xml:lang="sk">Zobraziť chyby</message></label>
 <label define="BDocInfo">
 <message xml:lang="en">Document &amp;Info</message>
 <message xml:lang="fr">&amp;Info document</message>
@@ -767,7 +821,8 @@
 <message xml:lang="hu">Dokumentum adata&amp;i</message>
 <message xml:lang="ka">ინფორმაცია დოკუმენტზე(&amp;I)</message>
 <message xml:lang="cn">文档信息(&amp;I)</message>
-<message xml:lang="tw">文檔信息(&amp;I)</message></label>
+<message xml:lang="tw">文檔信息(&amp;I)</message>
+<message xml:lang="sk">&amp;Vlastnosti...</message></label>
 <label define="BSave">
 <message xml:lang="en">&amp;Save</message>
 <message xml:lang="fr">&amp;Sauver</message>
@@ -781,7 +836,8 @@
 <message xml:lang="hu">Mentés(&amp;S)</message>
 <message xml:lang="ka">შენახვა(&amp;S)</message>
 <message xml:lang="cn">保存(&amp;S)</message>
-<message xml:lang="tw">保存(&amp;S)</message></label>
+<message xml:lang="tw">保存(&amp;S)</message>
+<message xml:lang="sk">&amp;Uložiť</message></label>
 <label define="BSaveAs">
 <message xml:lang="en">Save &amp;as...</message>
 <message xml:lang="fr">S&amp;auver comme...</message>
@@ -795,7 +851,8 @@
 <message xml:lang="hu">Mentés másként(&amp;A)...</message>
 <message xml:lang="ka">შენახვა როგორც(&amp;A)...</message>
 <message xml:lang="cn">另存为(&amp;A)...</message>
-<message xml:lang="tw">另存為(&amp;A)...</message></label>
+<message xml:lang="tw">另存為(&amp;A)...</message>
+<message xml:lang="sk">Uložiť &amp;ako...</message></label>
 <label define="BSynchro">
 <message xml:lang="en">S&amp;ynchronize</message>
 <message xml:lang="fr">S&amp;ynchroniser</message>
@@ -809,7 +866,8 @@
 <message xml:lang="hu">Szinkronizálás(&amp;Y)</message>
 <message xml:lang="ka">სინქრონიზება(&amp;Y)</message>
 <message xml:lang="cn">同步(&amp;Y)</message>
-<message xml:lang="tw">同步(&amp;Y)</message></label>
+<message xml:lang="tw">同步(&amp;Y)</message>
+<message xml:lang="sk">S&amp;ynchronizovať</message></label>
 <label define="Doctype1">
 <message xml:lang="en">Change Doctype</message>
 <message xml:lang="fr">Changer le doctype</message>
@@ -823,7 +881,8 @@
 <message xml:lang="hu">Doctype megváltoztatása</message>
 <message xml:lang="ka">დოკუმენტის ტიპის შეცვლა</message>
 <message xml:lang="cn">改变文档类型</message>
-<message xml:lang="tw">改變文檔類型</message></label>
+<message xml:lang="tw">改變文檔類型</message>
+<message xml:lang="sk">Zmeniť typ dokumentu</message></label>
 <label define="BRemoveDoctype">
 <message xml:lang="en">Remove the doctype</message>
 <message xml:lang="fr">Supprimer le doctype</message>
@@ -837,7 +896,8 @@
 <message xml:lang="hu">doctype eltávolítása</message>
 <message xml:lang="ka">დოკუმენტის ტიპის ამოშლა</message>
 <message xml:lang="cn">删除doctype声明</message>
-<message xml:lang="tw">刪除doctype聲明</message></label>
+<message xml:lang="tw">刪除doctype聲明</message>
+<message xml:lang="sk">Odstrániť označenie dokumentu</message></label>
 <label define="BAddDoctype">
 <message xml:lang="en">Add a doctype</message>
 <message xml:lang="fr">Ajouter un doctype</message>
@@ -848,7 +908,8 @@
 <message xml:lang="hu">Doctype hozzáadása</message>
 <message xml:lang="ka">დოკუმენტის ტიპის დამატება</message>
 <message xml:lang="cn">添加doctype声明</message>
-<message xml:lang="tw">添加doctype聲明</message></label>
+<message xml:lang="tw">添加doctype聲明</message>
+<message xml:lang="sk">Pridať označenie dokumentu</message></label>
 <label define="BDoctypeXhtml11">
 <message xml:lang="en">Change to XHTML 1.1</message>
 <message xml:lang="fr">Changer pour XHTML 1.1</message>
@@ -862,7 +923,8 @@
 <message xml:lang="hu">Change to XHTML 1.1</message>
 <message xml:lang="ka">შეცვლა XHTML 1.1-ით</message>
 <message xml:lang="cn">改为XHTML 1.1</message>
-<message xml:lang="tw">改為 XHTML 1.1</message></label>
+<message xml:lang="tw">改為 XHTML 1.1</message>
+<message xml:lang="sk">Zmeniť na XHTML 1.1</message></label>
 <label define="BDoctypeXhtmlTransitional">
 <message xml:lang="en">Change to XHTML 1.0 Transitional</message>
 <message xml:lang="fr">Changer pour XHTML 1.0 Transitional</message>
@@ -875,7 +937,8 @@
 <message xml:lang="hu">XHTML 1.0 átmenetivé tétel</message>
 <message xml:lang="ka">შეცვლა გარდამავალი XHTML 1.0-ით</message>
 <message xml:lang="cn">改为 XHTML 1.0 Transitional</message>
-<message xml:lang="tw">改為 XHTML 1.0 Transitional</message></label>
+<message xml:lang="tw">改為 XHTML 1.0 Transitional</message>
+<message xml:lang="sk">Zmeniť na XHTML 1.0 Transitional</message></label>
 <label define="BDoctypeXhtmlStrict">
 <message xml:lang="en">Change to XHTML 1.0 Strict</message>
 <message xml:lang="fr">Changer pour XHTML 1.0 Strict</message>
@@ -889,7 +952,8 @@
 <message xml:lang="hu">XHTML 1.0 kötötté tétel</message>
 <message xml:lang="ka">შეცვლა ზუსტი XHTML 1.0-ით</message>
 <message xml:lang="cn">改为 XHTML 1.0 Strict</message>
-<message xml:lang="tw">改為 XHTML 1.0 Strict</message></label>
+<message xml:lang="tw">改為 XHTML 1.0 Strict</message>
+<message xml:lang="sk">Zmeniť na XHTML 1.0 Strict</message></label>
 <label define="BDoctypeXhtmlBasic">
 <message xml:lang="en">Change to XHTML 1.0 Basic</message>
 <message xml:lang="fr">Changer pour XHTML 1.0 Basic</message>
@@ -903,7 +967,8 @@
 <message xml:lang="hu">XHTML 1.0 alappá tétel</message>
 <message xml:lang="ka">შეცვლა ძირითადი XHTML 1.0-ით</message>
 <message xml:lang="cn">改为 XHTML 1.0 Basic</message>
-<message xml:lang="tw">改為 XHTML 1.0 Basic</message></label>
+<message xml:lang="tw">改為 XHTML 1.0 Basic</message>
+<message xml:lang="sk">Zmeniť na XHTML 1.0 Basic</message></label>
 <label define="BDoctypeHtmlTransitional">
 <message xml:lang="en">Change to HTML 4.01 Transitional</message>
 <message xml:lang="fr">Changer pour HTML 4.01 Transitional</message>
@@ -917,7 +982,8 @@
 <message xml:lang="hu">&amp;HTML 4.01 átmenetivé tétel</message>
 <message xml:lang="ka">შეცვლა გარდამავალი XHTML 4.01-ით</message>
 <message xml:lang="cn">改为 HTML 4.01 Transitional</message>
-<message xml:lang="tw">改為 HTML 4.01 Transitional</message></label>
+<message xml:lang="tw">改為 HTML 4.01 Transitional</message>
+<message xml:lang="sk">Zmeniť na HTML 4.01 Transitional</message></label>
 <label define="BDoctypeHtmlStrict">
 <message xml:lang="en">Change to HTML 4.01 Strict</message>
 <message xml:lang="fr">Changer pour HTML 4.01 Strict</message>
@@ -931,11 +997,8 @@
 <message xml:lang="hu">HTML 4.01 kötötté tétel</message>
 <message xml:lang="ka">შეცვლა ზუსტი HTML 4.01-ით</message>
 <message xml:lang="cn">改为 HTML 4.01 Strict</message>
-<message xml:lang="tw">改為 HTML 4.01 Strict</message></label>
-<label define="BSetUpandPrint">
-<message xml:lang="en">Send by mail ...</message>
-<message xml:lang="fr">Envoyer par courriel ...</message>
-</label>
+<message xml:lang="tw">改為 HTML 4.01 Strict</message>
+<message xml:lang="sk">Zmeniť na HTML 4.01 Strict</message></label>
 <label define="BSetUpandPrint">
 <message xml:lang="en">Set&amp;up and Print...</message>
 <message xml:lang="fr">Paramétrer et imprimer(&amp;U)...</message>
@@ -949,7 +1012,8 @@
 <message xml:lang="hu">Beállítás és nyomtatás(&amp;U)...</message>
 <message xml:lang="ka">გამართვა და ბეჭდვა(&amp;U)...</message>
 <message xml:lang="cn">打印设置(&amp;U)...</message>
-<message xml:lang="tw">打印設置(&amp;U)...</message></label>
+<message xml:lang="tw">打印設置(&amp;U)...</message>
+<message xml:lang="sk">T&amp;lačiť...</message></label>
 <label define="BPrint">
 <message xml:lang="en">&amp;Print</message>
 <message xml:lang="fr">Im&amp;primer</message>
@@ -963,7 +1027,8 @@
 <message xml:lang="hu">Nyomtatás(&amp;P)</message>
 <message xml:lang="ka">ბეჭდვა(&amp;P)</message>
 <message xml:lang="cn">打印(&amp;P)</message>
-<message xml:lang="tw">打印(&amp;P)</message></label>
+<message xml:lang="tw">打印(&amp;P)</message>
+<message xml:lang="sk">T&amp;lačiť</message></label>
 <label define="BCloseTab">
 <message xml:lang="en">&amp;Close tab</message>
 <message xml:lang="fr">Fermer l'onglet(&amp;C)</message>
@@ -974,7 +1039,8 @@
 <message xml:lang="hu">Lap bezárása(&amp;C)</message>
 <message xml:lang="ka">დაფის დახურვა(&amp;C)</message>
 <message xml:lang="cn">关闭标签(&amp;C)</message>
-<message xml:lang="tw">關閉標簽(&amp;C)</message></label>
+<message xml:lang="tw">關閉標簽(&amp;C)</message>
+<message xml:lang="sk">&amp;Zavrieť kartu</message></label>
 <label define="BCloseWindow">
 <message xml:lang="en">Close &amp;window</message>
 <message xml:lang="fr">Fermer la fenêtre(&amp;W)</message>
@@ -988,7 +1054,8 @@
 <message xml:lang="hu">Ablak bezárása(&amp;W)</message>
 <message xml:lang="ka">ფანჯრის დახურვა(&amp;W)</message>
 <message xml:lang="cn">关闭窗口(&amp;W)</message>
-<message xml:lang="tw">關閉窗口(&amp;W)</message></label>
+<message xml:lang="tw">關閉窗口(&amp;W)</message>
+<message xml:lang="sk">Zav&amp;rieť okno</message></label>
 <label define="BExit">
 <message xml:lang="en">E&amp;xit Amaya</message>
 <message xml:lang="fr">Quitter Amaya(&amp;X)</message>
@@ -1002,35 +1069,36 @@
 <message xml:lang="hu">Kilépés az Amayából(&amp;X)</message>
 <message xml:lang="ka">გასვლა Amaya-დან(&amp;X)</message>
 <message xml:lang="cn">退出(&amp;X)</message>
-<message xml:lang="tw">退出(&amp;X)</message></label>
+<message xml:lang="tw">退出(&amp;X)</message>
+<message xml:lang="sk">U&amp;končiť</message></label>
 <label define="BNewTab">
 <message xml:lang="en">New tab</message>
 <message xml:lang="fr">Nouvel onglet</message>
 <message xml:lang="es">Nueva pestaña</message>
 <message xml:lang="de">Eine neue Registerkarte erstellen</message>
 <message xml:lang="hu">Új fül</message>
-</label>
+<message xml:lang="sk">Nová karta</message></label>
 <label define="BRefreshTab">
 <message xml:lang="en">Refresh tab</message>
 <message xml:lang="fr">Recharger l'onglet</message>
 <message xml:lang="es">Actualizar pestaña</message>
 <message xml:lang="de">Registerkarte aktualisieren</message>
 <message xml:lang="hu">Fül frissítése</message>
-</label>
+<message xml:lang="sk">Aktualizovať kartu</message></label>
 <label define="BRefreshAllTabs">
 <message xml:lang="en">Refresh all tabs</message>
 <message xml:lang="fr">Recharger tous les onglets</message>
 <message xml:lang="es">Actualizar todas las pestañas</message>
 <message xml:lang="de">Alle Registerkarten aktualisieren</message>
 <message xml:lang="hu">Minden fül frissítése</message>
-</label>
+<message xml:lang="sk">Aktualizovať všetky karty</message></label>
 <label define="BCloseOtherTabs">
 <message xml:lang="en">Close other tabs</message>
 <message xml:lang="fr">Fermer les autres onglets</message>
 <message xml:lang="es">Cerrar las otras pestañas</message>
 <message xml:lang="de">Alle übrigen Registerkarten schließen</message>
 <message xml:lang="hu">Többi fül bezárása</message>
-</label>
+<message xml:lang="sk">Zatvoriť inú kartu</message></label>
 <label define="BUndo">
 <message xml:lang="en">&amp;Undo</message>
 <message xml:lang="fr">&amp;Défaire</message>
@@ -1044,7 +1112,8 @@
 <message xml:lang="hu">&amp;Visszavon</message>
 <message xml:lang="ka">დაბრუნება</message>
 <message xml:lang="cn">撤销(&amp;U)</message>
-<message xml:lang="tw">撤銷(&amp;U)</message></label>
+<message xml:lang="tw">撤銷(&amp;U)</message>
+<message xml:lang="sk">&amp;Späť</message></label>
 <label define="BRedo">
 <message xml:lang="en">&amp;Redo</message>
 <message xml:lang="fr">&amp;Refaire</message>
@@ -1058,7 +1127,8 @@
 <message xml:lang="hu">&amp;Újra</message>
 <message xml:lang="ka">გამეორება</message>
 <message xml:lang="cn">重做(&amp;R)</message>
-<message xml:lang="tw">重做(&amp;R)</message></label>
+<message xml:lang="tw">重做(&amp;R)</message>
+<message xml:lang="sk">&amp;Opakovať</message></label>
 <label define="BCut">
 <message xml:lang="en">Cu&amp;t</message>
 <message xml:lang="fr">Cou&amp;per</message>
@@ -1072,7 +1142,8 @@
 <message xml:lang="hu">&amp;Kivágás</message>
 <message xml:lang="ka">ამოჭრა</message>
 <message xml:lang="cn">剪切(&amp;T)</message>
-<message xml:lang="tw">剪切(&amp;T)</message></label>
+<message xml:lang="tw">剪切(&amp;T)</message>
+<message xml:lang="sk">&amp;Vystrihnúť</message></label>
 <label define="BCopy">
 <message xml:lang="en">&amp;Copy</message>
 <message xml:lang="fr">&amp;Copier</message>
@@ -1086,7 +1157,8 @@
 <message xml:lang="hu">&amp;Másolás</message>
 <message xml:lang="ka">კოპირება</message>
 <message xml:lang="cn">复制(&amp;C)</message>
-<message xml:lang="tw">復制(&amp;C)</message></label>
+<message xml:lang="tw">復制(&amp;C)</message>
+<message xml:lang="sk">&amp;Kopírovať</message></label>
 <label define="BPaste">
 <message xml:lang="en">&amp;Paste</message>
 <message xml:lang="fr">Co&amp;ller</message>
@@ -1100,7 +1172,8 @@
 <message xml:lang="hu">Be&amp;illesztés</message>
 <message xml:lang="ka">ჩასმა</message>
 <message xml:lang="cn">粘贴(&amp;P)</message>
-<message xml:lang="tw">粘貼(&amp;P)</message></label>
+<message xml:lang="tw">粘貼(&amp;P)</message>
+<message xml:lang="sk">&amp;Prilepiť</message></label>
 <label define="BClear">
 <message xml:lang="en">&amp;Delete</message>
 <message xml:lang="fr">Dé&amp;truire</message>
@@ -1114,7 +1187,8 @@
 <message xml:lang="hu">&amp;Törlés</message>
 <message xml:lang="ka">წაშლა</message>
 <message xml:lang="cn">删除(&amp;D)</message>
-<message xml:lang="tw">刪除(&amp;D)</message></label>
+<message xml:lang="tw">刪除(&amp;D)</message>
+<message xml:lang="sk">Vy&amp;mazať</message></label>
 <label define="BInsertBefore">
 <message xml:lang="en">&amp;Insert</message>
 <message xml:lang="fr">&amp;Insérer</message>
@@ -1125,7 +1199,8 @@
 <message xml:lang="hu">Be&amp;szúrás</message>
 <message xml:lang="ka">ჩამატება</message>
 <message xml:lang="cn">插入(&amp;I)</message>
-<message xml:lang="tw">插入(&amp;I)</message></label>
+<message xml:lang="tw">插入(&amp;I)</message>
+<message xml:lang="sk">Vložiť pre&amp;d</message></label>
 <label define="BInsertAfter">
 <message xml:lang="en">&amp;Append</message>
 <message xml:lang="fr">&amp;Ajouter</message>
@@ -1139,7 +1214,8 @@
 <message xml:lang="hu">&amp;Hozzáfűzés</message>
 <message xml:lang="ka">დამატება</message>
 <message xml:lang="cn">附加(&amp;A)</message>
-<message xml:lang="tw">附加(&amp;A)</message></label>
+<message xml:lang="tw">附加(&amp;A)</message>
+<message xml:lang="sk">Vložiť &amp;za</message></label>
 <label define="BFind">
 <message xml:lang="en">&amp;Find...</message>
 <message xml:lang="fr">Rec&amp;hercher...</message>
@@ -1153,7 +1229,8 @@
 <message xml:lang="hu">&amp;Keresés...</message>
 <message xml:lang="ka">პოვნა</message>
 <message xml:lang="cn">查找(&amp;F)...</message>
-<message xml:lang="tw">查找(&amp;F)...</message></label>
+<message xml:lang="tw">查找(&amp;F)...</message>
+<message xml:lang="sk">&amp;Hľadať</message></label>
 <label define="BSpellCheck">
 <message xml:lang="en">Chec&amp;k spelling...</message>
 <message xml:lang="fr">Vérifier &amp;orthographe...</message>
@@ -1167,7 +1244,8 @@
 <message xml:lang="hu">Szó&amp;elemző...</message>
 <message xml:lang="ka">მართლწერის შემოწმება...</message>
 <message xml:lang="cn">拼写检查(&amp;K)...</message>
-<message xml:lang="tw">拼寫檢查(&amp;K)...</message></label>
+<message xml:lang="tw">拼寫檢查(&amp;K)...</message>
+<message xml:lang="sk">Kontrola pravopi&amp;su</message></label>
 <label define="BTransform">
 <message xml:lang="en">Transfor&amp;m...</message>
 <message xml:lang="fr">Transfor&amp;mer...</message>
@@ -1181,7 +1259,8 @@
 <message xml:lang="hu">&amp;Átalakítás...</message>
 <message xml:lang="ka">გარდაქმნა...</message>
 <message xml:lang="cn">转换(&amp;M)...</message>
-<message xml:lang="tw">轉換(&amp;M)...</message></label>
+<message xml:lang="tw">轉換(&amp;M)...</message>
+<message xml:lang="sk">T&amp;ransformovať</message></label>
 <label define="NavGoto">
 <message xml:lang="en">Goto</message>
 <message xml:lang="fr">Aller à</message>
@@ -1192,7 +1271,8 @@
 <message xml:lang="ka">გადასვლა</message>
 <message xml:lang="ru">Перейти к</message>
 <message xml:lang="cn">跳转</message>
-<message xml:lang="tw">跳轉</message></label>
+<message xml:lang="tw">跳轉</message>
+<message xml:lang="sk">Prejsť na...</message></label>
 <label define="BParentElement">
 <message xml:lang="en">Parent element</message>
 <message xml:lang="fr">Élément parent</message>
@@ -1203,7 +1283,8 @@
 <message xml:lang="ka">ძირეული ელემენტზე</message>
 <message xml:lang="ru">Родительский элемент</message>
 <message xml:lang="cn">父元素</message>
-<message xml:lang="tw">父元素</message></label>
+<message xml:lang="tw">父元素</message>
+<message xml:lang="sk">Rodičovský prvok</message></label>
 <label define="BChildElement">
 <message xml:lang="en">First child</message>
 <message xml:lang="fr">Premier fils</message>
@@ -1214,7 +1295,8 @@
 <message xml:lang="ka">პირველ ქვეელემენტზე</message>
 <message xml:lang="ru">Первый потомок</message>
 <message xml:lang="cn">第一个子元素</message>
-<message xml:lang="tw">第一個子元素</message></label>
+<message xml:lang="tw">第一個子元素</message>
+<message xml:lang="sk">Prvý potomok</message></label>
 <label define="BPreviousElement">
 <message xml:lang="en">Previous element</message>
 <message xml:lang="fr">Élément précédent</message>
@@ -1225,7 +1307,8 @@
 <message xml:lang="ka">წინა ელემენტზე</message>
 <message xml:lang="ru">Предыдущий элемент</message>
 <message xml:lang="cn">上一元素</message>
-<message xml:lang="tw">上一元素</message></label>
+<message xml:lang="tw">上一元素</message>
+<message xml:lang="sk">Predchazajúci prvok</message></label>
 <label define="BNextElement">
 <message xml:lang="en">Next element</message>
 <message xml:lang="fr">Élément suivant</message>
@@ -1236,7 +1319,8 @@
 <message xml:lang="ka">შემდეგ ელემენტზე</message>
 <message xml:lang="ru">Следующий элемент</message>
 <message xml:lang="cn">下一元素</message>
-<message xml:lang="tw">下一元素</message></label>
+<message xml:lang="tw">下一元素</message>
+<message xml:lang="sk">Nasledujúci prvok</message></label>
 <label define="BConfigure">
 <message xml:lang="en">&amp;Preferences</message>
 <message xml:lang="fr">&amp;Préférences</message>
@@ -1250,7 +1334,8 @@
 <message xml:lang="hu">&amp;Beállítások</message>
 <message xml:lang="ka">პარამეტრები</message>
 <message xml:lang="cn">使用偏好(&amp;P)</message>
-<message xml:lang="tw">使用偏好(&amp;P)</message></label>
+<message xml:lang="tw">使用偏好(&amp;P)</message>
+<message xml:lang="sk">&amp;Možnosti</message></label>
 <label define="Coptions">
 <message xml:lang="en">&amp;Preferences</message>
 <message xml:lang="fr">&amp;Préférences</message>
@@ -1264,7 +1349,8 @@
 <message xml:lang="hu">&amp;Beállítások</message>
 <message xml:lang="ka">პარამეტრები</message>
 <message xml:lang="cn">使用偏好(&amp;P)</message>
-<message xml:lang="tw">使用偏好(&amp;P)</message></label>
+<message xml:lang="tw">使用偏好(&amp;P)</message>
+<message xml:lang="sk">&amp;Možnosti</message></label>
 <label define="BConfigGeneral">
 <message xml:lang="en">&amp;General...</message>
 <message xml:lang="fr">&amp;Générales...</message>
@@ -1278,7 +1364,8 @@
 <message xml:lang="hu">&amp;Általános...</message>
 <message xml:lang="ka">ძირითადი...</message>
 <message xml:lang="cn">一般(&amp;G)...</message>
-<message xml:lang="tw">一般(&amp;G)...</message></label>
+<message xml:lang="tw">一般(&amp;G)...</message>
+<message xml:lang="sk">&amp;Základné...</message></label>
 <label define="BConfigBrowse">
 <message xml:lang="en">&amp;Browsing...</message>
 <message xml:lang="fr">&amp;Navigation...</message>
@@ -1291,7 +1378,8 @@
 <message xml:lang="hu">&amp;Böngészés...</message>
 <message xml:lang="ka">ჩვენება...</message>
 <message xml:lang="cn">浏览(&amp;B)...</message>
-<message xml:lang="tw">瀏覽(&amp;B)...</message></label>
+<message xml:lang="tw">瀏覽(&amp;B)...</message>
+<message xml:lang="sk">&amp;Prehliadanie...</message></label>
 <label define="BConfigPublish">
 <message xml:lang="en">P&amp;ublishing...</message>
 <message xml:lang="fr">P&amp;ublication...</message>
@@ -1305,7 +1393,8 @@
 <message xml:lang="hu">&amp;Kiadás...</message>
 <message xml:lang="ka">გამოქვეყნება...</message>
 <message xml:lang="cn">发布(&amp;U)...</message>
-<message xml:lang="tw">發布(&amp;U)...</message></label>
+<message xml:lang="tw">發布(&amp;U)...</message>
+<message xml:lang="sk">P&amp;ublikovanie...</message></label>
 <label define="BConfigCache">
 <message xml:lang="en">&amp;Cache...</message>
 <message xml:lang="fr">&amp;Cache...</message>
@@ -1319,7 +1408,8 @@
 <message xml:lang="hu">&amp;Gyorstár...</message>
 <message xml:lang="ka">ბუფერი...</message>
 <message xml:lang="cn">缓存(&amp;C)...</message>
-<message xml:lang="tw">緩存(&amp;C)...</message></label>
+<message xml:lang="tw">緩存(&amp;C)...</message>
+<message xml:lang="sk">&amp;Cache...</message></label>
 <label define="BConfigProxy">
 <message xml:lang="en">Pro&amp;xy...</message>
 <message xml:lang="fr">Pro&amp;xy...</message>
@@ -1333,7 +1423,8 @@
 <message xml:lang="hu">Pro&amp;xy...</message>
 <message xml:lang="ka">პროქსი (proxy)...</message>
 <message xml:lang="cn">代理(&amp;X)...</message>
-<message xml:lang="tw">代理(&amp;X)...</message></label>
+<message xml:lang="tw">代理(&amp;X)...</message>
+<message xml:lang="sk">Pro&amp;xy...</message></label>
 <label define="BConfigColor">
 <message xml:lang="en">C&amp;olors...</message>
 <message xml:lang="fr">C&amp;ouleurs...</message>
@@ -1347,7 +1438,8 @@
 <message xml:lang="hu">&amp;Színek...</message>
 <message xml:lang="ka">ფერები...</message>
 <message xml:lang="cn">颜色(&amp;O)...</message>
-<message xml:lang="tw">顏色(&amp;O)...</message></label>
+<message xml:lang="tw">顏色(&amp;O)...</message>
+<message xml:lang="sk">&amp;Farby...</message></label>
 <label define="BConfigGeometry">
 <message xml:lang="en">&amp;Window Geometry...</message>
 <message xml:lang="fr">Géo&amp;métrie...</message>
@@ -1361,7 +1453,8 @@
 <message xml:lang="hu">&amp;Ablakok elhelyezése...</message>
 <message xml:lang="ka">ფანჯრის გეომეტრია...</message>
 <message xml:lang="cn">窗口位置(&amp;W)...</message>
-<message xml:lang="tw">窗口位置(&amp;W)...</message></label>
+<message xml:lang="tw">窗口位置(&amp;W)...</message>
+<message xml:lang="sk">&amp;Rozmery okna</message></label>
 <label define="BConfigureAnnotations">
 <message xml:lang="en">Annotations</message>
 <message xml:lang="fr">Annotations</message>
@@ -1374,7 +1467,8 @@
 <message xml:lang="ru">Аннотации</message>
 <message xml:lang="hu">Jegyzetek</message>
 <message xml:lang="cn">注释</message>
-<message xml:lang="tw">注釋</message></label>
+<message xml:lang="tw">注釋</message>
+<message xml:lang="sk">Komentáre</message></label>
 <label define="BCoopConfig">
 <message xml:lang="en">C&amp;ooperation</message>
 <message xml:lang="fr">C&amp;oopération</message>
@@ -1388,7 +1482,8 @@
 <message xml:lang="hu">&amp;Együttműködés</message>
 <message xml:lang="ka">თანამშრომლობა</message>
 <message xml:lang="cn">协作(&amp;O)</message>
-<message xml:lang="tw">協作(&amp;O)</message></label>
+<message xml:lang="tw">協作(&amp;O)</message>
+<message xml:lang="sk">&amp;Spolupráca</message></label>
 <label define="BTitle">
 <message xml:lang="en">Change Title...</message>
 <message xml:lang="fr">Changer le titre...</message>
@@ -1402,7 +1497,8 @@
 <message xml:lang="hu">Cím &amp;cseréje...</message>
 <message xml:lang="ka">დოკუმენტის სათაურის შეცვლა...</message>
 <message xml:lang="cn">更改标题...</message>
-<message xml:lang="tw">更改標題...</message></label>
+<message xml:lang="tw">更改標題...</message>
+<message xml:lang="sk">Zmeniť názov (title)</message></label>
 <label define="Heading">
 <message xml:lang="en">Heading</message>
 <message xml:lang="fr">En-tête</message>
@@ -1416,7 +1512,8 @@
 <message xml:lang="hu">&amp;Címsor</message>
 <message xml:lang="ka">სათაური</message>
 <message xml:lang="cn">标题</message>
-<message xml:lang="tw">標題</message></label>
+<message xml:lang="tw">標題</message>
+<message xml:lang="sk">Nadpis</message></label>
 <label define="BH1">
 <message xml:lang="en">h1</message>
 <message xml:lang="fr">Titre niveau 1 (h1)</message>
@@ -1430,7 +1527,8 @@
 <message xml:lang="hu">1. szint (h1)</message>
 <message xml:lang="ka">h1</message>
 <message xml:lang="cn">h1</message>
-<message xml:lang="tw">h1</message></label>
+<message xml:lang="tw">h1</message>
+<message xml:lang="sk">Nadpis úrovne 1 (h1)</message></label>
 <label define="BH2">
 <message xml:lang="en">h2</message>
 <message xml:lang="fr">Titre niveau 2 (h2)</message>
@@ -1444,7 +1542,8 @@
 <message xml:lang="hu">2. szint (h2)</message>
 <message xml:lang="ka">h2</message>
 <message xml:lang="cn">h2</message>
-<message xml:lang="tw">h2</message></label>
+<message xml:lang="tw">h2</message>
+<message xml:lang="sk">Nadpis úrovne 2 (h2)</message></label>
 <label define="BH3">
 <message xml:lang="en">h3</message>
 <message xml:lang="fr">Titre niveau 3 (h3)</message>
@@ -1458,7 +1557,8 @@
 <message xml:lang="hu">3. szint (h3)</message>
 <message xml:lang="ka">h3</message>
 <message xml:lang="cn">h3</message>
-<message xml:lang="tw">h3</message></label>
+<message xml:lang="tw">h3</message>
+<message xml:lang="sk">Nadpis úrovne 3 (h3)</message></label>
 <label define="BH4">
 <message xml:lang="en">h4</message>
 <message xml:lang="fr">Titre niveau 4 (h4)</message>
@@ -1472,7 +1572,8 @@
 <message xml:lang="hu">4. szint (h4)</message>
 <message xml:lang="ka">h4</message>
 <message xml:lang="cn">h4</message>
-<message xml:lang="tw">h4</message></label>
+<message xml:lang="tw">h4</message>
+<message xml:lang="sk">Nadpis úrovne 4 (h4)</message></label>
 <label define="BH5">
 <message xml:lang="en">h5</message>
 <message xml:lang="fr">Titre niveau 5 (h5)</message>
@@ -1486,7 +1587,8 @@
 <message xml:lang="hu">5. szint (h5)</message>
 <message xml:lang="ka">h5</message>
 <message xml:lang="cn">h5</message>
-<message xml:lang="tw">h5</message></label>
+<message xml:lang="tw">h5</message>
+<message xml:lang="sk">Nadpis úrovne 5 (h5)</message></label>
 <label define="BH6">
 <message xml:lang="en">h6</message>
 <message xml:lang="fr">Titre niveau 6 (h6)</message>
@@ -1500,7 +1602,8 @@
 <message xml:lang="hu">6. szint (h6)</message>
 <message xml:lang="ka">h6</message>
 <message xml:lang="cn">h6</message>
-<message xml:lang="tw">h6</message></label>
+<message xml:lang="tw">h6</message>
+<message xml:lang="sk">Nadpis úrovne 6 (h6)</message></label>
 <label define="Lists">
 <message xml:lang="en">List</message>
 <message xml:lang="fr">Liste</message>
@@ -1514,7 +1617,8 @@
 <message xml:lang="hu">&amp;Lista</message>
 <message xml:lang="ka">ჩამონათვალი</message>
 <message xml:lang="cn">列表</message>
-<message xml:lang="tw">列表</message></label>
+<message xml:lang="tw">列表</message>
+<message xml:lang="sk">Zoznam</message></label>
 <label define="BBulletedList">
 <message xml:lang="en">Unordered list (ul)</message>
 <message xml:lang="fr">Liste non ordonnée (ul)</message>
@@ -1528,7 +1632,8 @@
 <message xml:lang="hu">Listajeles lista (ul)</message>
 <message xml:lang="ka">ნიშნებით (ul)</message>
 <message xml:lang="cn">无序列表 (ul)</message>
-<message xml:lang="tw">無序列表 (ul)</message></label>
+<message xml:lang="tw">無序列表 (ul)</message>
+<message xml:lang="sk">Odrážky (ul)</message></label>
 <label define="BNumberedList">
 <message xml:lang="en">Ordered list (ol)</message>
 <message xml:lang="fr">Liste ordonnée (ol)</message>
@@ -1542,7 +1647,8 @@
 <message xml:lang="hu">Számozott lista (ol)</message>
 <message xml:lang="ka">გადანომვრა (ol)</message>
 <message xml:lang="cn">有序列表 (ol)</message>
-<message xml:lang="tw">有序列表 (ol)</message></label>
+<message xml:lang="tw">有序列表 (ol)</message>
+<message xml:lang="sk">Číslovanie (ol)</message></label>
 <label define="BDefinitionList">
 <message xml:lang="en">Definition list (dl)</message>
 <message xml:lang="fr">Liste de définitions (dl)</message>
@@ -1556,7 +1662,8 @@
 <message xml:lang="hu">Meghatározás lista (dl)</message>
 <message xml:lang="ka">განსაზღვრებებით (dl)</message>
 <message xml:lang="cn">定义性列表 (dl)</message>
-<message xml:lang="tw">定義性列表 (dl)</message></label>
+<message xml:lang="tw">定義性列表 (dl)</message>
+<message xml:lang="sk">Zoznam definícií (dl)</message></label>
 <label define="BTerm">
 <message xml:lang="en">Term (dt)</message>
 <message xml:lang="fr">Terme (dt)</message>
@@ -1570,7 +1677,8 @@
 <message xml:lang="hu">Szócikk (dt)</message>
 <message xml:lang="ka">ტერმინი (dt)</message>
 <message xml:lang="cn">条目 (dt)</message>
-<message xml:lang="tw">條目 (dt)</message></label>
+<message xml:lang="tw">條目 (dt)</message>
+<message xml:lang="sk">Termín (dt)</message></label>
 <label define="BDefinition">
 <message xml:lang="en">Definition (dd)</message>
 <message xml:lang="fr">Définition (dd)</message>
@@ -1584,7 +1692,8 @@
 <message xml:lang="hu">Meghatározás (dd)</message>
 <message xml:lang="ka">განსაზღვრება (dd)</message>
 <message xml:lang="cn">说明 (dd)</message>
-<message xml:lang="tw">說明 (dd)</message></label>
+<message xml:lang="tw">說明 (dd)</message>
+<message xml:lang="sk">Definícia (dd)</message></label>
 <label define="Form">
 <message xml:lang="en">Form</message>
 <message xml:lang="fr">Formulaire</message>
@@ -1598,7 +1707,8 @@
 <message xml:lang="hu">&amp;Űrlap</message>
 <message xml:lang="ka">ფორმა</message>
 <message xml:lang="cn">FORM 表单</message>
-<message xml:lang="tw">FORM 表單</message></label>
+<message xml:lang="tw">FORM 表單</message>
+<message xml:lang="sk">Formulár</message></label>
 <label define="BForm">
 <message xml:lang="en">Insert a form</message>
 <message xml:lang="fr">Insérer un formulaire (form)</message>
@@ -1612,7 +1722,8 @@
 <message xml:lang="hu">Űrlap beillesztése</message>
 <message xml:lang="ka">ფორმის ჩამატება</message>
 <message xml:lang="cn">插入 FORM 表单</message>
-<message xml:lang="tw">插入 FORM 表單</message></label>
+<message xml:lang="tw">插入 FORM 表單</message>
+<message xml:lang="sk">Vložiť formulár (form)</message></label>
 <label define="BPushButton">
 <message xml:lang="en">Button (input)</message>
 <message xml:lang="fr">Bouton (input)</message>
@@ -1626,7 +1737,8 @@
 <message xml:lang="hu">Gomb (input)</message>
 <message xml:lang="ka">ღილაკი (input)</message>
 <message xml:lang="cn">Button (input)</message>
-<message xml:lang="tw">Button (input)</message></label>
+<message xml:lang="tw">Button (input)</message>
+<message xml:lang="sk">Tlačidlo (input)</message></label>
 <label define="BToggle">
 <message xml:lang="en">Checkbox (input)</message>
 <message xml:lang="fr">Bouton bascule (input)</message>
@@ -1640,7 +1752,8 @@
 <message xml:lang="hu">Jelölőnégyzet (input)</message>
 <message xml:lang="ka">ჩამრთველი (input)</message>
 <message xml:lang="cn">Checkbox (input)</message>
-<message xml:lang="tw">Checkbox (input)</message></label>
+<message xml:lang="tw">Checkbox (input)</message>
+<message xml:lang="sk">Začiarkávacie políčko (input)</message></label>
 <label define="BFileInput">
 <message xml:lang="en">File selector (input)</message>
 <message xml:lang="fr">Sélecteur fichier (input)</message>
@@ -1654,7 +1767,8 @@
 <message xml:lang="hu">Fájlválasztó (input)</message>
 <message xml:lang="ka">ფაილების არჩევა (input)</message>
 <message xml:lang="cn">File selector (input)</message>
-<message xml:lang="tw">File selector (input)</message></label>
+<message xml:lang="tw">File selector (input)</message>
+<message xml:lang="sk">Výber súboru (input)</message></label>
 <label define="BHiddenInput">
 <message xml:lang="en">Hidden (input)</message>
 <message xml:lang="fr">Contrôle caché (input)</message>
@@ -1668,7 +1782,8 @@
 <message xml:lang="hu">Rejtett (input)</message>
 <message xml:lang="ka">ფარული (input)</message>
 <message xml:lang="cn">Hidden (input)</message>
-<message xml:lang="tw">Hidden (input)</message></label>
+<message xml:lang="tw">Hidden (input)</message>
+<message xml:lang="sk">Skryté pole (input)</message></label>
 <label define="BImageInput">
 <message xml:lang="en">Image (input)...</message>
 <message xml:lang="fr">Image (input)...</message>
@@ -1682,7 +1797,8 @@
 <message xml:lang="hu">Kép (input)...</message>
 <message xml:lang="ka">გამოსახულება (input)...</message>
 <message xml:lang="cn">Image (input)...</message>
-<message xml:lang="tw">Image (input)...</message></label>
+<message xml:lang="tw">Image (input)...</message>
+<message xml:lang="sk">Obrázok (input)</message></label>
 <label define="BPasswordInput">
 <message xml:lang="en">Password (input)</message>
 <message xml:lang="fr">Mot de passe (input)</message>
@@ -1696,7 +1812,8 @@
 <message xml:lang="hu">Jelszó (input)</message>
 <message xml:lang="ka">პაროლი (input)</message>
 <message xml:lang="cn">Password (input)</message>
-<message xml:lang="tw">Password (input)</message></label>
+<message xml:lang="tw">Password (input)</message>
+<message xml:lang="sk">Heslo (input)</message></label>
 <label define="BRadio">
 <message xml:lang="en">Radio (input)</message>
 <message xml:lang="fr">Bouton radio (input)</message>
@@ -1710,7 +1827,8 @@
 <message xml:lang="hu">Választógomb (input)</message>
 <message xml:lang="ka">გადამრთველი (input)</message>
 <message xml:lang="cn">Radio (input)</message>
-<message xml:lang="tw">Radio (input)</message></label>
+<message xml:lang="tw">Radio (input)</message>
+<message xml:lang="sk">Prepínacie políčko (input)</message></label>
 <label define="BReset">
 <message xml:lang="en">Reset (input)</message>
 <message xml:lang="fr">Réinitialisation (input)</message>
@@ -1724,7 +1842,8 @@
 <message xml:lang="hu">Alaphelyzet (input)</message>
 <message xml:lang="ka">აღდგენა (input)</message>
 <message xml:lang="cn">Reset (input)</message>
-<message xml:lang="tw">Reset (input)</message></label>
+<message xml:lang="tw">Reset (input)</message>
+<message xml:lang="sk">Tlačidlo Obnoviť (input)</message></label>
 <label define="BSubmit">
 <message xml:lang="en">Submit (input)</message>
 <message xml:lang="fr">Soumission (input)</message>
@@ -1738,7 +1857,8 @@
 <message xml:lang="hu">Küldés (input)</message>
 <message xml:lang="ka">დასტური (input)</message>
 <message xml:lang="cn">Submit (input)</message>
-<message xml:lang="tw">Submit (input)</message></label>
+<message xml:lang="tw">Submit (input)</message>
+<message xml:lang="sk">Tlačidlo Odoslať (input)</message></label>
 <label define="BTextInput">
 <message xml:lang="en">Text (input)</message>
 <message xml:lang="fr">Saisie de texte (input)</message>
@@ -1752,7 +1872,8 @@
 <message xml:lang="hu">Szöveg (input)</message>
 <message xml:lang="ka">ტექსტი (input)</message>
 <message xml:lang="cn">Text (input)</message>
-<message xml:lang="tw">Text (input)</message></label>
+<message xml:lang="tw">Text (input)</message>
+<message xml:lang="sk">Textové pole (input)</message></label>
 <label define="BFieldset">
 <message xml:lang="en">fieldset</message>
 <message xml:lang="fr">Groupe de champs (fieldset)</message>
@@ -1766,7 +1887,8 @@
 <message xml:lang="hu">Mező (fieldset)</message>
 <message xml:lang="ka">ველების ნაკრები (fieldset)</message>
 <message xml:lang="cn">fieldset</message>
-<message xml:lang="tw">fieldset</message></label>
+<message xml:lang="tw">fieldset</message>
+<message xml:lang="sk">Zoskupenie polí (fieldset)</message></label>
 <label define="BLabel">
 <message xml:lang="en">label</message>
 <message xml:lang="fr">Étiquette (label)</message>
@@ -1780,7 +1902,8 @@
 <message xml:lang="hu">Címke (label)</message>
 <message xml:lang="ka">წარწერა (label)</message>
 <message xml:lang="cn">label</message>
-<message xml:lang="tw">label</message></label>
+<message xml:lang="tw">label</message>
+<message xml:lang="sk">Menovka (label)</message></label>
 <label define="BOption">
 <message xml:lang="en">Menu (option)</message>
 <message xml:lang="fr">Menu (option)</message>
@@ -1794,7 +1917,8 @@
 <message xml:lang="hu">Menü (option)</message>
 <message xml:lang="ka">მენიუ (option)</message>
 <message xml:lang="cn">Menu (option)</message>
-<message xml:lang="tw">Menu (option)</message></label>
+<message xml:lang="tw">Menu (option)</message>
+<message xml:lang="sk">Rozbaľovacie pole (option)</message></label>
 <label define="BOptionGroup">
 <message xml:lang="en">Submenu (optgroup)</message>
 <message xml:lang="fr">Sous-menu (optgroup)</message>
@@ -1808,7 +1932,8 @@
 <message xml:lang="hu">Almenü (optgroup)</message>
 <message xml:lang="ka">ქვემენიუ (optgroup)</message>
 <message xml:lang="cn">Submenu (optgroup)</message>
-<message xml:lang="tw">Submenu (optgroup)</message></label>
+<message xml:lang="tw">Submenu (optgroup)</message>
+<message xml:lang="sk">Zoskupenie v roz. poli (optgroup)</message></label>
 <label define="BTextArea">
 <message xml:lang="en">textarea</message>
 <message xml:lang="fr">Zone de texte (textarea)</message>
@@ -1822,7 +1947,8 @@
 <message xml:lang="hu">Szövegmező (textarea)</message>
 <message xml:lang="ka">ტექსტური არე (textarea)</message>
 <message xml:lang="cn">textarea</message>
-<message xml:lang="tw">textarea</message></label>
+<message xml:lang="tw">textarea</message>
+<message xml:lang="sk">Textová oblasť (textarea)</message></label>
 <label define="Object">
 <message xml:lang="en">Object</message>
 <message xml:lang="fr">Objet</message>
@@ -1836,7 +1962,8 @@
 <message xml:lang="hu">&amp;Objektum</message>
 <message xml:lang="ka">ობიექტი</message>
 <message xml:lang="cn">OBJECT 对象</message>
-<message xml:lang="tw">OBJECT 對象</message></label>
+<message xml:lang="tw">OBJECT 對象</message>
+<message xml:lang="sk">Objekt</message></label>
 <label define="BObject">
 <message xml:lang="en">object</message>
 <message xml:lang="fr">Objet (object)</message>
@@ -1850,7 +1977,8 @@
 <message xml:lang="hu">Objektum (object)</message>
 <message xml:lang="ka">ობიექტი (object)</message>
 <message xml:lang="cn">object</message>
-<message xml:lang="tw">object</message></label>
+<message xml:lang="tw">object</message>
+<message xml:lang="sk">Objekt (object)</message></label>
 <label define="BParameter">
 <message xml:lang="en">Parameter (param)</message>
 <message xml:lang="fr">Paramètre (param)</message>
@@ -1864,7 +1992,8 @@
 <message xml:lang="hu">Paraméter (param)</message>
 <message xml:lang="ka">პარამეტრი (param)</message>
 <message xml:lang="cn">Parameter (param)</message>
-<message xml:lang="tw">Parameter (param)</message></label>
+<message xml:lang="tw">Parameter (param)</message>
+<message xml:lang="sk">Parameter (param)</message></label>
 <label define="Table">
 <message xml:lang="en">Table</message>
 <message xml:lang="fr">Table</message>
@@ -1878,7 +2007,8 @@
 <message xml:lang="hu">&amp;Táblázat</message>
 <message xml:lang="ka">ცხრილი</message>
 <message xml:lang="cn">TABLE 表格</message>
-<message xml:lang="tw">TABLE 表格</message></label>
+<message xml:lang="tw">TABLE 表格</message>
+<message xml:lang="sk">Tabuľka</message></label>
 <label define="BTable">
 <message xml:lang="en">table</message>
 <message xml:lang="fr">table</message>
@@ -1892,7 +2022,8 @@
 <message xml:lang="hu">&amp;Táblázat (table)</message>
 <message xml:lang="ka">ცხრილი (table)</message>
 <message xml:lang="cn">table</message>
-<message xml:lang="tw">table</message></label>
+<message xml:lang="tw">table</message>
+<message xml:lang="sk">Tabuľka (table)</message></label>
 <label define="BCaption">
 <message xml:lang="en">caption</message>
 <message xml:lang="fr">Légende (caption)</message>
@@ -1906,7 +2037,8 @@
 <message xml:lang="hu">Táblázat&amp;név (caption)</message>
 <message xml:lang="ka">სათაური (title)</message>
 <message xml:lang="cn">caption</message>
-<message xml:lang="tw">caption</message></label>
+<message xml:lang="tw">caption</message>
+<message xml:lang="sk">Menovka (caption)</message></label>
 <label define="BColgroup">
 <message xml:lang="en">colgroup</message>
 <message xml:lang="fr">colgroup</message>
@@ -1920,7 +2052,8 @@
 <message xml:lang="hu">Oszlop&amp;csoport (colgroup)</message>
 <message xml:lang="ka">სვეტები (colgroup)</message>
 <message xml:lang="cn">colgroup</message>
-<message xml:lang="tw">colgroup</message></label>
+<message xml:lang="tw">colgroup</message>
+<message xml:lang="sk">Zoskupenie stĺpcov (colgroup)</message></label>
 <label define="BCol">
 <message xml:lang="en">col</message>
 <message xml:lang="fr">Colonne (col)</message>
@@ -1934,7 +2067,8 @@
 <message xml:lang="hu">&amp;Oszlop (col)</message>
 <message xml:lang="ka">სვეტი (col)</message>
 <message xml:lang="cn">col</message>
-<message xml:lang="tw">col</message></label>
+<message xml:lang="tw">col</message>
+<message xml:lang="sk">Stĺpce (col)</message></label>
 <label define="BTHead">
 <message xml:lang="en">thead</message>
 <message xml:lang="fr">Têtière (thead)</message>
@@ -1948,7 +2082,8 @@
 <message xml:lang="hu">Táblázat&amp;fejléc (thead)</message>
 <message xml:lang="ka">თავსართი (thead)</message>
 <message xml:lang="cn">thead</message>
-<message xml:lang="tw">thead</message></label>
+<message xml:lang="tw">thead</message>
+<message xml:lang="sk">Hlavička tabuľky (thead)</message></label>
 <label define="BTBody">
 <message xml:lang="en">tbody</message>
 <message xml:lang="fr">Corps (tbody)</message>
@@ -1962,7 +2097,8 @@
 <message xml:lang="hu">Táblázat &amp;szöveg (tbody)</message>
 <message xml:lang="ka">შიგთავსი (tbody)</message>
 <message xml:lang="cn">tbody</message>
-<message xml:lang="tw">tbody</message></label>
+<message xml:lang="tw">tbody</message>
+<message xml:lang="sk">Telo tabuľky (tbody)</message></label>
 <label define="BTFoot">
 <message xml:lang="en">tfoot</message>
 <message xml:lang="fr">Pied (tfoot)</message>
@@ -1976,7 +2112,8 @@
 <message xml:lang="hu">Táblázat&amp;lábléc (tfoot)</message>
 <message xml:lang="ka">ქვესართი (tfoot)</message>
 <message xml:lang="cn">tfoot</message>
-<message xml:lang="tw">tfoot</message></label>
+<message xml:lang="tw">tfoot</message>
+<message xml:lang="sk">Päta tabuľky (tfoot)</message></label>
 <label define="BDataCell">
 <message xml:lang="en">Change to Data cell (td)</message>
 <message xml:lang="fr">Changer en cellule (td)</message>
@@ -1987,7 +2124,8 @@
 <message xml:lang="hu">&amp;Adatcellává tétel (td)</message>
 <message xml:lang="ka">შეცვლა მონაცემების უჯრით (td)</message>
 <message xml:lang="cn">改为数据单元格 (td)</message>
-<message xml:lang="tw">改為數據單元格 (td)</message></label>
+<message xml:lang="tw">改為數據單元格 (td)</message>
+<message xml:lang="sk">Zmeniť na bunku s dátami (dt)</message></label>
 <label define="BHeadingCell">
 <message xml:lang="en">Change to Heading cell (th)</message>
 <message xml:lang="fr">Changer en cellule titre (th)</message>
@@ -1998,7 +2136,8 @@
 <message xml:lang="hu">&amp;Fejléccé tétel (th)</message>
 <message xml:lang="ka">შეცვლა სათაურის უჯრით (th)</message>
 <message xml:lang="cn">改为表头单元格 (th)</message>
-<message xml:lang="tw">改為表頭單元格 (th)</message></label>
+<message xml:lang="tw">改為表頭單元格 (th)</message>
+<message xml:lang="sk">Zmeniť na bunku s nadpisom (th)</message></label>
 <label define="BCellHExtend">
 <message xml:lang="en">Join with the cell at the right</message>
 <message xml:lang="fr">Joindre avec la cellule de droite</message>
@@ -2009,7 +2148,8 @@
 <message xml:lang="hu">Egyesítés a &amp;jobbra lévő cellával</message>
 <message xml:lang="ka">შერწყმა მარჯვენა უჯრასთან</message>
 <message xml:lang="cn">与右侧单元格合并</message>
-<message xml:lang="tw">與右側單元格合并</message></label>
+<message xml:lang="tw">與右側單元格合并</message>
+<message xml:lang="sk">Zlúčiť s pravou bunkou</message></label>
 <label define="BCellVExtend">
 <message xml:lang="en">Join with the cell below</message>
 <message xml:lang="fr">Joindre avec la cellule au-dessous</message>
@@ -2020,7 +2160,8 @@
 <message xml:lang="hu">Egyesítés az &amp;alatta lévő cellával</message>
 <message xml:lang="ka">შერწყმა ქვედა უჯრასთან</message>
 <message xml:lang="cn">与下方单元格合并</message>
-<message xml:lang="tw">與下方單元格合并</message></label>
+<message xml:lang="tw">與下方單元格合并</message>
+<message xml:lang="sk">Zlúčiť s dolnou bunkou</message></label>
 <label define="BCellHShrink">
 <message xml:lang="en">Shrink horizontal extend</message>
 <message xml:lang="fr">Réduire extension horizontale</message>
@@ -2031,7 +2172,8 @@
 <message xml:lang="hu">Shrink &amp;horizontal extend</message>
 <message xml:lang="ka">განივი შეკუმშვა</message>
 <message xml:lang="cn">收缩水平范围</message>
-<message xml:lang="tw">收縮水平范圍</message></label>
+<message xml:lang="tw">收縮水平范圍</message>
+<message xml:lang="sk">Rozdeliť bunky horizontálne</message></label>
 <label define="BCellVShrink">
 <message xml:lang="en">Shrink vertical extend</message>
 <message xml:lang="fr">Réduire extension verticale</message>
@@ -2042,7 +2184,8 @@
 <message xml:lang="hu">Shrink &amp;vertical extend</message>
 <message xml:lang="ka">მართობი შეკუმშვა</message>
 <message xml:lang="cn">收缩垂直范围</message>
-<message xml:lang="tw">收縮垂直范圍</message></label>
+<message xml:lang="tw">收縮垂直范圍</message>
+<message xml:lang="sk">Rozdeliť bunky vertikálne</message></label>
 <label define="BSelectRow">
 <message xml:lang="en">Select the row</message>
 <message xml:lang="fr">Sélectionner la ligne</message>
@@ -2053,7 +2196,8 @@
 <message xml:lang="hu">Sor &amp;kijelölése</message>
 <message xml:lang="ka">მწკრივის არჩევა</message>
 <message xml:lang="cn">选择该行</message>
-<message xml:lang="tw">選擇該行</message></label>
+<message xml:lang="tw">選擇該行</message>
+<message xml:lang="sk">Označiť riadok</message></label>
 <label define="BCreateRowB">
 <message xml:lang="en">Insert a row</message>
 <message xml:lang="fr">Insérer une ligne</message>
@@ -2064,7 +2208,8 @@
 <message xml:lang="hu">Sor &amp;beillesztése</message>
 <message xml:lang="ka">მწკრივის ჩამატება</message>
 <message xml:lang="cn">插入新行</message>
-<message xml:lang="tw">插入新行</message></label>
+<message xml:lang="tw">插入新行</message>
+<message xml:lang="sk">Vložiť riadok nad</message></label>
 <label define="BCreateRowA">
 <message xml:lang="en">Append a row</message>
 <message xml:lang="fr">Ajouter une ligne</message>
@@ -2075,7 +2220,8 @@
 <message xml:lang="hu">Sor &amp;hozzáadása</message>
 <message xml:lang="ka">მწკრივის დამატება</message>
 <message xml:lang="cn">附加一行</message>
-<message xml:lang="tw">附加一行</message></label>
+<message xml:lang="tw">附加一行</message>
+<message xml:lang="sk">Vložiť riadok pod</message></label>
 <label define="BSelectColumn">
 <message xml:lang="en">Select the column</message>
 <message xml:lang="fr">Sélectionner la colonne</message>
@@ -2086,7 +2232,8 @@
 <message xml:lang="hu">Oszlop ki&amp;jelölése</message>
 <message xml:lang="ka">სვეტის არჩევა</message>
 <message xml:lang="cn">选择该列</message>
-<message xml:lang="tw">選擇該列</message></label>
+<message xml:lang="tw">選擇該列</message>
+<message xml:lang="sk">Označiť stĺpec</message></label>
 <label define="BCreateColumnB">
 <message xml:lang="en">Insert a column</message>
 <message xml:lang="fr">Insérer une colonne</message>
@@ -2097,7 +2244,8 @@
 <message xml:lang="hu">Oszlop be&amp;illesztése</message>
 <message xml:lang="ka">სვეტის ჩამატება</message>
 <message xml:lang="cn">插入新列</message>
-<message xml:lang="tw">插入新列</message></label>
+<message xml:lang="tw">插入新列</message>
+<message xml:lang="sk">Vložiť stĺpec vľavo</message></label>
 <label define="BCreateColumnA">
 <message xml:lang="en">Append a column</message>
 <message xml:lang="fr">Ajouter une colonne</message>
@@ -2108,7 +2256,8 @@
 <message xml:lang="hu">Oszlop hozzá&amp;adása</message>
 <message xml:lang="ka">სვეტის დამატება</message>
 <message xml:lang="cn">附加一列</message>
-<message xml:lang="tw">附加一列</message></label>
+<message xml:lang="tw">附加一列</message>
+<message xml:lang="sk">Vložiť stĺpec vpravo</message></label>
 <label define="BPasteBefore">
 <message xml:lang="en">Paste before</message>
 <message xml:lang="fr">Coller avant</message>
@@ -2119,7 +2268,8 @@
 <message xml:lang="hu">Beillesztés &amp;elé</message>
 <message xml:lang="ka">ჩასმა წინ</message>
 <message xml:lang="cn">粘贴在前</message>
-<message xml:lang="tw">粘貼在前</message></label>
+<message xml:lang="tw">粘貼在前</message>
+<message xml:lang="sk">Prilepiť pred</message></label>
 <label define="BPasteAfter">
 <message xml:lang="en">Paste after</message>
 <message xml:lang="fr">Coller après</message>
@@ -2130,7 +2280,8 @@
 <message xml:lang="hu">Beillesztés &amp;mögé</message>
 <message xml:lang="ka">ჩასმა შემდეგ</message>
 <message xml:lang="cn">粘贴在后</message>
-<message xml:lang="tw">粘貼在后</message></label>
+<message xml:lang="tw">粘貼在后</message>
+<message xml:lang="sk">Prilepiť za</message></label>
 <label define="AreaMap">
 <message xml:lang="en">Map area</message>
 <message xml:lang="fr">Plan</message>
@@ -2141,7 +2292,8 @@
 <message xml:lang="hu">T&amp;érkép terület</message>
 <message xml:lang="ka">რუკის არე</message>
 <message xml:lang="cn">MAP 区域</message>
-<message xml:lang="tw">MAP 區域</message></label>
+<message xml:lang="tw">MAP 區域</message>
+<message xml:lang="sk">Oblasť obrázka</message></label>
 <label define="BMap">
 <message xml:lang="en">Insert a map</message>
 <message xml:lang="fr">Insérer un plan (map)</message>
@@ -2152,7 +2304,8 @@
 <message xml:lang="hu">Térkép &amp;beillesztése</message>
 <message xml:lang="ka">რუკის ჩამატება</message>
 <message xml:lang="cn">插入 MAP</message>
-<message xml:lang="tw">插入 MAP</message></label>
+<message xml:lang="tw">插入 MAP</message>
+<message xml:lang="sk">Vložiť oblasť (map)</message></label>
 <label define="BCircle">
 <message xml:lang="en">Circle area</message>
 <message xml:lang="fr">Cercle (area)</message>
@@ -2166,7 +2319,8 @@
 <message xml:lang="hu">&amp;Kör</message>
 <message xml:lang="ka">წრიული არე</message>
 <message xml:lang="cn">圆形区域</message>
-<message xml:lang="tw">圓形區域</message></label>
+<message xml:lang="tw">圓形區域</message>
+<message xml:lang="sk">Kruhová oblasť (area)</message></label>
 <label define="BPoly">
 <message xml:lang="en">Polygon area</message>
 <message xml:lang="fr">Polygone (area)</message>
@@ -2180,7 +2334,8 @@
 <message xml:lang="hu">&amp;Sokszög</message>
 <message xml:lang="ka">მრავალკუთხედი არე</message>
 <message xml:lang="cn">多边形区域</message>
-<message xml:lang="tw">多邊形區域</message></label>
+<message xml:lang="tw">多邊形區域</message>
+<message xml:lang="sk">Mnohouholníková oblasť (area)</message></label>
 <label define="BRectangle">
 <message xml:lang="en">Rectangle area</message>
 <message xml:lang="fr">Rectangle (area)</message>
@@ -2194,7 +2349,8 @@
 <message xml:lang="hu">&amp;Téglalap</message>
 <message xml:lang="ka">მართკუთხედი არე</message>
 <message xml:lang="cn">矩形区域</message>
-<message xml:lang="tw">矩形區域</message></label>
+<message xml:lang="tw">矩形區域</message>
+<message xml:lang="sk">Obdĺžnikova oblasť (area)</message></label>
 <label define="StructTypes">
 <message xml:lang="en">&amp;Structure</message>
 <message xml:lang="fr">&amp;Structure</message>
@@ -2208,7 +2364,8 @@
 <message xml:lang="hu">&amp;Szerkezet</message>
 <message xml:lang="ka">სტრუქტურა</message>
 <message xml:lang="cn">框架(&amp;S)</message>
-<message xml:lang="tw">框架(&amp;S)</message></label>
+<message xml:lang="tw">框架(&amp;S)</message>
+<message xml:lang="sk">&amp;Štruktúra</message></label>
 <label define="BStyle">
 <message xml:lang="en">style</message>
 <message xml:lang="fr">style</message>
@@ -2222,7 +2379,8 @@
 <message xml:lang="hu">&amp;Stílus (style)</message>
 <message xml:lang="ka">სტილი</message>
 <message xml:lang="cn">style</message>
-<message xml:lang="tw">style</message></label>
+<message xml:lang="tw">style</message>
+<message xml:lang="sk">Vložiť CSS pravidlá (style)</message></label>
 <label define="BComment">
 <message xml:lang="en">Comment</message>
 <message xml:lang="fr">Commentaire</message>
@@ -2236,7 +2394,8 @@
 <message xml:lang="hu">&amp;Megjegyzés</message>
 <message xml:lang="ka">კომენტარი</message>
 <message xml:lang="cn">Comment</message>
-<message xml:lang="tw">Comment</message></label>
+<message xml:lang="tw">Comment</message>
+<message xml:lang="sk">Poznámka</message></label>
 <label define="BBase">
 <message xml:lang="en">base</message>
 <message xml:lang="fr">base</message>
@@ -2250,7 +2409,8 @@
 <message xml:lang="hu">&amp;Alap (base)</message>
 <message xml:lang="ka">ბაზა (base)</message>
 <message xml:lang="cn">base</message>
-<message xml:lang="tw">base</message></label>
+<message xml:lang="tw">base</message>
+<message xml:lang="sk">Základ pre relatívne odkazy (base)</message></label>
 <label define="BMeta">
 <message xml:lang="en">meta</message>
 <message xml:lang="fr">meta</message>
@@ -2264,7 +2424,8 @@
 <message xml:lang="hu">&amp;meta</message>
 <message xml:lang="ka">მეტა (meta)</message>
 <message xml:lang="cn">meta</message>
-<message xml:lang="tw">meta</message></label>
+<message xml:lang="tw">meta</message>
+<message xml:lang="sk">Vložiť meta značku (meta)</message></label>
 <label define="BLink">
 <message xml:lang="en">link</message>
 <message xml:lang="fr">Lien (link)</message>
@@ -2278,7 +2439,8 @@
 <message xml:lang="hu">&amp;Kapocs (link)</message>
 <message xml:lang="ka">ბმა (link)</message>
 <message xml:lang="cn">link</message>
-<message xml:lang="tw">link</message></label>
+<message xml:lang="tw">link</message>
+<message xml:lang="sk">Vložiť prepojenie (link)</message></label>
 <label define="BScript">
 <message xml:lang="en">script</message>
 <message xml:lang="fr">script</message>
@@ -2292,7 +2454,8 @@
 <message xml:lang="hu">&amp;script</message>
 <message xml:lang="ka">სცენარი (script)</message>
 <message xml:lang="cn">script</message>
-<message xml:lang="tw">script</message></label>
+<message xml:lang="tw">script</message>
+<message xml:lang="sk">Vložiť skript (script)</message></label>
 <label define="BNoScript">
 <message xml:lang="en">noscript</message>
 <message xml:lang="fr">noscript</message>
@@ -2306,7 +2469,8 @@
 <message xml:lang="hu">&amp;noscript</message>
 <message xml:lang="ka">უსცენაროდ (noscript)</message>
 <message xml:lang="cn">noscript</message>
-<message xml:lang="tw">noscript</message></label>
+<message xml:lang="tw">noscript</message>
+<message xml:lang="sk">Alternatíva pre skript (noscript)</message></label>
 <label define="BParagraph">
 <message xml:lang="en">Paragraph (p)</message>
 <message xml:lang="fr">Paragraphe (p)</message>
@@ -2320,7 +2484,8 @@
 <message xml:lang="hu">&amp;Bekezdés (p)</message>
 <message xml:lang="ka">პარაგრაფი (p)</message>
 <message xml:lang="cn">段落 (p)</message>
-<message xml:lang="tw">段落 (p)</message></label>
+<message xml:lang="tw">段落 (p)</message>
+<message xml:lang="sk">Odsek (p)</message></label>
 <label define="BPreformatted">
 <message xml:lang="en">Preformatted (pre)</message>
 <message xml:lang="fr">Préformaté (pre)</message>
@@ -2334,7 +2499,8 @@
 <message xml:lang="hu">&amp;Előformázott (pre)</message>
 <message xml:lang="ka">წინასწარ დაფორმატებული (pre)</message>
 <message xml:lang="cn">预格式化 (pre)</message>
-<message xml:lang="tw">預格式化 (pre)</message></label>
+<message xml:lang="tw">預格式化 (pre)</message>
+<message xml:lang="sk">Predformátovaný text (pre)</message></label>
 <label define="BAddress">
 <message xml:lang="en">address</message>
 <message xml:lang="fr">Adresse (address)</message>
@@ -2348,7 +2514,8 @@
 <message xml:lang="hu">&amp;Cím (address)</message>
 <message xml:lang="ka">მისამართი (address)</message>
 <message xml:lang="cn">ADDRESS (address)</message>
-<message xml:lang="tw">ADDRESS (address)</message></label>
+<message xml:lang="tw">ADDRESS (address)</message>
+<message xml:lang="sk">Adresa (address)</message></label>
 <label define="BRule">
 <message xml:lang="en">Horizontal rule (hr)</message>
 <message xml:lang="fr">Trait horizontal (hr)</message>
@@ -2362,7 +2529,8 @@
 <message xml:lang="hu">&amp;Vízszintes vonal (hr)</message>
 <message xml:lang="ka">განივი ხაზი (hr)</message>
 <message xml:lang="cn">水平标尺 (hr)</message>
-<message xml:lang="tw">水平標尺 (hr)</message></label>
+<message xml:lang="tw">水平標尺 (hr)</message>
+<message xml:lang="sk">Vodorovný oddelovač (hr)</message></label>
 <label define="BImage">
 <message xml:lang="en">Image (img)...</message>
 <message xml:lang="fr">Image (img)...</message>
@@ -2376,7 +2544,8 @@
 <message xml:lang="hu">&amp;Kép (img)...</message>
 <message xml:lang="ka">გამოსახულება (img)...</message>
 <message xml:lang="cn">图片 (img)...</message>
-<message xml:lang="tw">圖片 (img)...</message></label>
+<message xml:lang="tw">圖片 (img)...</message>
+<message xml:lang="sk">Obrázok (img)</message></label>
 <label define="BBreak">
 <message xml:lang="en">Break (br)</message>
 <message xml:lang="fr">Saut de ligne (br)</message>
@@ -2390,7 +2559,8 @@
 <message xml:lang="hu">&amp;Sortörés (br)</message>
 <message xml:lang="ka">წყვეტა (br)</message>
 <message xml:lang="cn">换行 (br)</message>
-<message xml:lang="tw">換行 (br)</message></label>
+<message xml:lang="tw">換行 (br)</message>
+<message xml:lang="sk">Zalomenie riadka (br)</message></label>
 <label define="BDivision">
 <message xml:lang="en">Division (div)</message>
 <message xml:lang="fr">Division (div)</message>
@@ -2404,7 +2574,8 @@
 <message xml:lang="hu">Fel&amp;osztás (div)</message>
 <message xml:lang="ka">განყოფილება (div)</message>
 <message xml:lang="cn">层 (div)</message>
-<message xml:lang="tw">層 (div)</message></label>
+<message xml:lang="tw">層 (div)</message>
+<message xml:lang="sk">Oddelenie, vrstva (div)</message></label>
 <label define="BBlockQuote">
 <message xml:lang="en">blockquote</message>
 <message xml:lang="fr">Citation (blockquote)</message>
@@ -2418,7 +2589,8 @@
 <message xml:lang="hu">&amp;Blokkidézet (blockquote)</message>
 <message xml:lang="ka">გრძელი ციტატა (blockquote)</message>
 <message xml:lang="cn">区域引用 (blockquote)</message>
-<message xml:lang="tw">區域引用 (blockquote)</message></label>
+<message xml:lang="tw">區域引用 (blockquote)</message>
+<message xml:lang="sk">Úryvok (blockquote)</message></label>
 <label define="BIFrame">
 <message xml:lang="en">Inline frame (iframe)</message>
 <message xml:lang="fr">Cadre en ligne (iframe)</message>
@@ -2432,7 +2604,8 @@
 <message xml:lang="hu">&amp;Sorbeli keret (iframe)</message>
 <message xml:lang="ka">ჩადგმული ბლოკი (iframe)</message>
 <message xml:lang="cn">内嵌 frame (iframe)</message>
-<message xml:lang="tw">內嵌 frame (iframe)</message></label>
+<message xml:lang="tw">內嵌 frame (iframe)</message>
+<message xml:lang="sk">Plávajúci rámec (iframe)</message></label>
 <label define="BRuby">
 <message xml:lang="en">ruby</message>
 <message xml:lang="fr">ruby</message>
@@ -2446,7 +2619,8 @@
 <message xml:lang="hu">&amp;Ruby</message>
 <message xml:lang="ka">ლალი (ruby)</message>
 <message xml:lang="cn">ruby</message>
-<message xml:lang="tw">ruby</message></label>
+<message xml:lang="tw">ruby</message>
+<message xml:lang="sk">Ruby poznámka (ruby)</message></label>
 <label define="Phrase">
 <message xml:lang="en">Information type</message>
 <message xml:lang="fr">Types information</message>
@@ -2460,7 +2634,8 @@
 <message xml:lang="hu">Adat &amp;fajtája</message>
 <message xml:lang="ka">ინფორმაციის ტიპი</message>
 <message xml:lang="cn">信息类型</message>
-<message xml:lang="tw">信息類型</message></label>
+<message xml:lang="tw">信息類型</message>
+<message xml:lang="sk">Druh informácie</message></label>
 <label define="TEmphasis">
 <message xml:lang="en">Emphasis (em)</message>
 <message xml:lang="fr">Accent (em)</message>
@@ -2474,7 +2649,8 @@
 <message xml:lang="hu">&amp;Hangsúlyos (em)</message>
 <message xml:lang="ka">აქცენტირება (em)</message>
 <message xml:lang="cn">强调 (em)</message>
-<message xml:lang="tw">強調 (em)</message></label>
+<message xml:lang="tw">強調 (em)</message>
+<message xml:lang="sk">Zvýraznená (em)</message></label>
 <label define="TStrong">
 <message xml:lang="en">strong</message>
 <message xml:lang="fr">Force (strong)</message>
@@ -2488,7 +2664,8 @@
 <message xml:lang="hu">&amp;Vastag (strong)</message>
 <message xml:lang="ka">მკვეთრი აქცენტირება (strong)</message>
 <message xml:lang="cn">加强 (strong)</message>
-<message xml:lang="tw">加強 (strong)</message></label>
+<message xml:lang="tw">加強 (strong)</message>
+<message xml:lang="sk">Silno zvýraznená (strong)</message></label>
 <label define="TCite">
 <message xml:lang="en">cite</message>
 <message xml:lang="fr">Citation (cite)</message>
@@ -2502,7 +2679,8 @@
 <message xml:lang="hu">&amp;Idézet (cite)</message>
 <message xml:lang="ka">ციტირება (cite)</message>
 <message xml:lang="cn">引用 (cite)</message>
-<message xml:lang="tw">引用 (cite)</message></label>
+<message xml:lang="tw">引用 (cite)</message>
+<message xml:lang="sk">Citácia (cite)</message></label>
 <label define="TDefinition">
 <message xml:lang="en">Definition (dfn)</message>
 <message xml:lang="fr">Définition (dfn)</message>
@@ -2516,7 +2694,8 @@
 <message xml:lang="hu">&amp;Definíció (dfn)</message>
 <message xml:lang="ka">განსაზღვრება (dfn)</message>
 <message xml:lang="cn">定义 (dfn)</message>
-<message xml:lang="tw">定義 (dfn)</message></label>
+<message xml:lang="tw">定義 (dfn)</message>
+<message xml:lang="sk">Poučka (dfn)</message></label>
 <label define="TCode">
 <message xml:lang="en">code</message>
 <message xml:lang="fr">Code (code)</message>
@@ -2530,7 +2709,8 @@
 <message xml:lang="hu">&amp;Kód (code)</message>
 <message xml:lang="ka">კოდი (code)</message>
 <message xml:lang="cn">代码 (code)</message>
-<message xml:lang="tw">代碼 (code)</message></label>
+<message xml:lang="tw">代碼 (code)</message>
+<message xml:lang="sk">Zdrojový kód (code)</message></label>
 <label define="TVariable">
 <message xml:lang="en">Variable (var)</message>
 <message xml:lang="fr">Variable (var)</message>
@@ -2544,7 +2724,8 @@
 <message xml:lang="hu">&amp;Változó (var)</message>
 <message xml:lang="ka">ცვლადი (var)</message>
 <message xml:lang="cn">变量 (var)</message>
-<message xml:lang="tw">變量 (var)</message></label>
+<message xml:lang="tw">變量 (var)</message>
+<message xml:lang="sk">Premenná (var)</message></label>
 <label define="TSample">
 <message xml:lang="en">Sample (samp)</message>
 <message xml:lang="fr">Exemple (samp)</message>
@@ -2558,7 +2739,8 @@
 <message xml:lang="hu">&amp;Minta (samp)</message>
 <message xml:lang="ka">ნიმუში (samp)</message>
 <message xml:lang="cn">样例 (samp)</message>
-<message xml:lang="tw">樣例 (samp)</message></label>
+<message xml:lang="tw">樣例 (samp)</message>
+<message xml:lang="sk">Príklad (samp)</message></label>
 <label define="TKeyboard">
 <message xml:lang="en">Keyboard (kbd)</message>
 <message xml:lang="fr">Clavier (kbd)</message>
@@ -2572,7 +2754,8 @@
 <message xml:lang="hu">&amp;Billentyű (kbd)</message>
 <message xml:lang="ka">კლავიატურა (kbd)</message>
 <message xml:lang="cn">键盘 (kbd)</message>
-<message xml:lang="tw">鍵盤 (kbd)</message></label>
+<message xml:lang="tw">鍵盤 (kbd)</message>
+<message xml:lang="sk">Vstup z klávesnice (kbd)</message></label>
 <label define="TAbbreviation">
 <message xml:lang="en">Abbreviation (abbr)</message>
 <message xml:lang="fr">Abréviation (abbr)</message>
@@ -2586,7 +2769,8 @@
 <message xml:lang="hu">&amp;Rövidítés (abbr)</message>
 <message xml:lang="ka">შემოკლება (abbr)</message>
 <message xml:lang="cn">所写 (abbr)</message>
-<message xml:lang="tw">所寫 (abbr)</message></label>
+<message xml:lang="tw">所寫 (abbr)</message>
+<message xml:lang="sk">Skratka (abbr)</message></label>
 <label define="TAcronym">
 <message xml:lang="en">acronym</message>
 <message xml:lang="fr">Acronyme (acronym)</message>
@@ -2600,7 +2784,8 @@
 <message xml:lang="hu">&amp;Betűszó (acronym)</message>
 <message xml:lang="ka">აკრონიმი (acronym)</message>
 <message xml:lang="cn">首字母 (acronym)</message>
-<message xml:lang="tw">首字母 (acronym)</message></label>
+<message xml:lang="tw">首字母 (acronym)</message>
+<message xml:lang="sk">Akronym (acronym)</message></label>
 <label define="TInsertion">
 <message xml:lang="en">Insertion (ins)</message>
 <message xml:lang="fr">Insertion (ins)</message>
@@ -2614,7 +2799,8 @@
 <message xml:lang="hu">&amp;Beillesztés (ins)</message>
 <message xml:lang="ka">ჩამატება (ins)</message>
 <message xml:lang="cn">插入 (ins)</message>
-<message xml:lang="tw">插入 (ins)</message></label>
+<message xml:lang="tw">插入 (ins)</message>
+<message xml:lang="sk">Novovložený text (ins)</message></label>
 <label define="TDeletion">
 <message xml:lang="en">Deletion (del)</message>
 <message xml:lang="fr">Suppression (del)</message>
@@ -2628,7 +2814,8 @@
 <message xml:lang="hu">&amp;Törlés (del)</message>
 <message xml:lang="ka">წაშლა (del)</message>
 <message xml:lang="cn">删除 (del)</message>
-<message xml:lang="tw">刪除 (del)</message></label>
+<message xml:lang="tw">刪除 (del)</message>
+<message xml:lang="sk">Text na odstránenie (del)</message></label>
 <label define="Font">
 <message xml:lang="en">Character element</message>
 <message xml:lang="fr">Éléments caractères</message>
@@ -2642,7 +2829,8 @@
 <message xml:lang="hu">&amp;Karakter &amp;elem</message>
 <message xml:lang="ka">ასო-ნიშანი</message>
 <message xml:lang="cn">字符元素</message>
-<message xml:lang="tw">字符元素</message></label>
+<message xml:lang="tw">字符元素</message>
+<message xml:lang="sk">Znakové prvky</message></label>
 <label define="TItalic">
 <message xml:lang="en">Italic (i)</message>
 <message xml:lang="fr">Italique (i)</message>
@@ -2656,7 +2844,8 @@
 <message xml:lang="hu">&amp;Dőlt (i)</message>
 <message xml:lang="ka">კურსივი (i)</message>
 <message xml:lang="cn">斜体 (i)</message>
-<message xml:lang="tw">斜體 (i)</message></label>
+<message xml:lang="tw">斜體 (i)</message>
+<message xml:lang="sk">Kurzíva (i)</message></label>
 <label define="TBold">
 <message xml:lang="en">Bold (b)</message>
 <message xml:lang="fr">Gras (b)</message>
@@ -2670,7 +2859,8 @@
 <message xml:lang="hu">&amp;Félkövér (b)</message>
 <message xml:lang="ka">მუქი (b)</message>
 <message xml:lang="cn">粗体 (b)</message>
-<message xml:lang="tw">粗體 (b)</message></label>
+<message xml:lang="tw">粗體 (b)</message>
+<message xml:lang="sk">Tučné (b)</message></label>
 <label define="TTeletype">
 <message xml:lang="en">Teletype (tt)</message>
 <message xml:lang="fr">Télétype (tt)</message>
@@ -2684,7 +2874,8 @@
 <message xml:lang="hu">&amp;Írógép (tt)</message>
 <message xml:lang="ka">ტელეტაიპი (tt)</message>
 <message xml:lang="cn">打字机风格 (tt)</message>
-<message xml:lang="tw">打字機風格 (tt)</message></label>
+<message xml:lang="tw">打字機風格 (tt)</message>
+<message xml:lang="sk">Písací stroj (tt)</message></label>
 <label define="TBig">
 <message xml:lang="en">big</message>
 <message xml:lang="fr">Gros (big)</message>
@@ -2698,7 +2889,8 @@
 <message xml:lang="hu">&amp;Nagy (big)</message>
 <message xml:lang="ka">დიდი ტექსტი (big)</message>
 <message xml:lang="cn">大号</message>
-<message xml:lang="tw">大號</message></label>
+<message xml:lang="tw">大號</message>
+<message xml:lang="sk">Veľké (big)</message></label>
 <label define="TSmall">
 <message xml:lang="en">small</message>
 <message xml:lang="fr">Petit (small)</message>
@@ -2712,7 +2904,8 @@
 <message xml:lang="hu">&amp;Kicsi (small)</message>
 <message xml:lang="ka">მცირე ტექსტი (small)</message>
 <message xml:lang="cn">小号</message>
-<message xml:lang="tw">小號</message></label>
+<message xml:lang="tw">小號</message>
+<message xml:lang="sk">Malé (small)</message></label>
 <label define="TSub">
 <message xml:lang="en">Subscript (sub)</message>
 <message xml:lang="fr">Indice (sub)</message>
@@ -2726,7 +2919,8 @@
 <message xml:lang="hu">&amp;Alsó index (sub)</message>
 <message xml:lang="ka">ქვედა ინდექსი (sub)</message>
 <message xml:lang="cn">桥表 (sub)</message>
-<message xml:lang="tw">橋表 (sub)</message></label>
+<message xml:lang="tw">橋表 (sub)</message>
+<message xml:lang="sk">Dolný index (sub)</message></label>
 <label define="TSup">
 <message xml:lang="en">Superscript (sup)</message>
 <message xml:lang="fr">Exposant (sup)</message>
@@ -2740,7 +2934,8 @@
 <message xml:lang="hu">&amp;Felső index (sup)</message>
 <message xml:lang="ka">ზედა ინდექსი (sup)</message>
 <message xml:lang="cn">上标 (sup)</message>
-<message xml:lang="tw">上標 (sup)</message></label>
+<message xml:lang="tw">上標 (sup)</message>
+<message xml:lang="sk">Horný index (sup)</message></label>
 <label define="TQuotation">
 <message xml:lang="en">Quotation (q)</message>
 <message xml:lang="fr">Citation (q)</message>
@@ -2754,7 +2949,8 @@
 <message xml:lang="hu">&amp;Idézet (q)</message>
 <message xml:lang="ka">ციტატა (q)</message>
 <message xml:lang="cn">Quotation 引用 (q)</message>
-<message xml:lang="tw">Quotation 引用 (q)</message></label>
+<message xml:lang="tw">Quotation 引用 (q)</message>
+<message xml:lang="sk">Krátky úryvok (q)</message></label>
 <label define="TBDO">
 <message xml:lang="en">BiDi override (bdo)</message>
 <message xml:lang="fr">BiDi (bdo)</message>
@@ -2768,7 +2964,8 @@
 <message xml:lang="hu">&amp;Kétirányúság felülbírálása (bdo)</message>
 <message xml:lang="ka">ბუსტროფედონის გაუქმება (bdo)</message>
 <message xml:lang="cn">文字反排 (bdo)</message>
-<message xml:lang="tw">文字反排 (bdo)</message></label>
+<message xml:lang="tw">文字反排 (bdo)</message>
+<message xml:lang="sk">Smer textu (bdo)</message></label>
 <label define="TSectionNumber">
 <message xml:lang="en">&amp;Section numbering</message>
 <message xml:lang="fr">&amp;Numéroter les sections</message>
@@ -2782,10 +2979,11 @@
 <message xml:lang="hu">&amp;Szakasz számozás</message>
 <message xml:lang="ka">სექციების გადანომვრა</message>
 <message xml:lang="cn">区域统计(&amp;S)</message>
-<message xml:lang="tw">區域統計(&amp;S)</message></label>
+<message xml:lang="tw">區域統計(&amp;S)</message>
+<message xml:lang="sk">&amp;Očíslovať podkapitoly</message></label>
 <label define="BMakeToc">
-<message xml:lang="en">&amp;Generate Table of contents</message>
-<message xml:lang="fr">&amp;Engendrer table des matières</message>
+<message xml:lang="en">&amp;Add Table of contents</message>
+<message xml:lang="fr">&amp;Ajouter table des matières</message>
 <message xml:lang="es">&amp;Generar índice de materias</message>
 <message xml:lang="ru">Создать оглавление</message>
 <message xml:lang="de">Inhaltsverzeichnis erzeugen</message>
@@ -2793,7 +2991,8 @@
 <message xml:lang="hu">&amp;Tartalomjegyzék létrehozása</message>
 <message xml:lang="ka">საძიებლის შექმნა</message>
 <message xml:lang="cn">生成内容列表(&amp;G)</message>
-<message xml:lang="tw">生成內容列表(&amp;G)</message></label>
+<message xml:lang="tw">生成內容列表(&amp;G)</message>
+<message xml:lang="sk">&amp;Vytvoriť obsah</message></label>
 <label define="BDate">
 <message xml:lang="en">Insert time stamp</message>
 <message xml:lang="fr">Insérer date de mise à jour</message>
@@ -2804,7 +3003,8 @@
 <message xml:lang="hu">Időbélyeg beilesztése</message>
 <message xml:lang="ka">დროის შტამპის ჩამატება</message>
 <message xml:lang="cn">插入时间戳</message>
-<message xml:lang="tw">插入時間戳</message></label>
+<message xml:lang="tw">插入時間戳</message>
+<message xml:lang="sk">Vložiť dnešný dátum</message></label>
 <label define="BMakeBook">
 <message xml:lang="en">&amp;Make book</message>
 <message xml:lang="fr">&amp;Construire un livre</message>
@@ -2818,7 +3018,8 @@
 <message xml:lang="hu">&amp;Kötet létrehozása</message>
 <message xml:lang="ka">წიგნის შექმნა</message>
 <message xml:lang="cn">制作书籍(&amp;M)</message>
-<message xml:lang="tw">制作書籍(&amp;M)</message></label>
+<message xml:lang="tw">制作書籍(&amp;M)</message>
+<message xml:lang="sk">&amp;Zostaviť knihu</message></label>
 <label define="BDisplayMath">
 <message xml:lang="en">New formula (math)</message>
 <message xml:lang="fr">Nouvelle formule (math)</message>
@@ -2832,7 +3033,8 @@
 <message xml:lang="hu">Új &amp;képlet (math)</message>
 <message xml:lang="ka">ახალი ფორმულა (math)</message>
 <message xml:lang="cn">新建数学公式 (math)</message>
-<message xml:lang="tw">新建數學公式 (math)</message></label>
+<message xml:lang="tw">新建數學公式 (math)</message>
+<message xml:lang="sk">Nový vzorec (math)</message></label>
 <label define="MathElement">
 <message xml:lang="en">Basic &amp;Elements</message>
 <message xml:lang="fr">&amp;Eléments de base</message>
@@ -2843,7 +3045,8 @@
 <message xml:lang="hu">&amp;Alapelemek</message>
 <message xml:lang="ka">ძირითადი ელემენტები</message>
 <message xml:lang="cn">基本元素(&amp;E)</message>
-<message xml:lang="tw">基本元素(&amp;E)</message></label>
+<message xml:lang="tw">基本元素(&amp;E)</message>
+<message xml:lang="sk">Základné &amp;prvky</message></label>
 <label define="BMText">
 <message xml:lang="en">Plain text (mtext)</message>
 <message xml:lang="fr">Texte (mtext)</message>
@@ -2857,7 +3060,8 @@
 <message xml:lang="hu">&amp;Közönséges szöveg (mtext)</message>
 <message xml:lang="ka">უბრალო ტექსტი (mtext)</message>
 <message xml:lang="cn">普通文本 (mtext)</message>
-<message xml:lang="tw">普通文本 (mtext)</message></label>
+<message xml:lang="tw">普通文本 (mtext)</message>
+<message xml:lang="sk">Text (mtext)</message></label>
 <label define="BMIdentifier">
 <message xml:lang="en">Identifier (mi)</message>
 <message xml:lang="fr">Identificateur (mi)</message>
@@ -2871,7 +3075,8 @@
 <message xml:lang="hu">&amp;Azonosító (mi)</message>
 <message xml:lang="ka">იდენტიფიკატორი (mi)</message>
 <message xml:lang="cn">识别符 (mi)</message>
-<message xml:lang="tw">識別符 (mi)</message></label>
+<message xml:lang="tw">識別符 (mi)</message>
+<message xml:lang="sk">Identifikátor (mi)</message></label>
 <label define="BMNumber">
 <message xml:lang="en">Number (mn)</message>
 <message xml:lang="fr">Nombre (mn)</message>
@@ -2885,7 +3090,8 @@
 <message xml:lang="hu">&amp;Szám (mn)</message>
 <message xml:lang="ka">რიცხვი (mn)</message>
 <message xml:lang="cn">数字 (mn)</message>
-<message xml:lang="tw">數字 (mn)</message></label>
+<message xml:lang="tw">數字 (mn)</message>
+<message xml:lang="sk">Číslo (mn)</message></label>
 <label define="BMOperator">
 <message xml:lang="en">Operator (mo)</message>
 <message xml:lang="fr">Opérateur (mo)</message>
@@ -2899,7 +3105,8 @@
 <message xml:lang="hu">&amp;Műveleti jel (mo)</message>
 <message xml:lang="ka">ოპერატორი (mo)</message>
 <message xml:lang="cn">算符 (mo)</message>
-<message xml:lang="tw">算符 (mo)</message></label>
+<message xml:lang="tw">算符 (mo)</message>
+<message xml:lang="sk">Operátor (mo)</message></label>
 <label define="BMSpace">
 <message xml:lang="en">Space (mspace)</message>
 <message xml:lang="fr">Espace (mspace)</message>
@@ -2913,21 +3120,23 @@
 <message xml:lang="hu">&amp;Szóköz (mspace)</message>
 <message xml:lang="ka">სივრცე (mspace)</message>
 <message xml:lang="cn">空格 (mspace)</message>
-<message xml:lang="tw">空格 (mspace)</message></label>
+<message xml:lang="tw">空格 (mspace)</message>
+<message xml:lang="sk">Medzera (mspace)</message></label>
 <label define="BMEntity">
-<message xml:lang="en">Character (&amp;&amp;xxx;)</message>
-<message xml:lang="fr">Caractère (&amp;&amp;xxx;)</message>
-<message xml:lang="de">Zeichen (&amp;&amp;xxx;)</message>
-<message xml:lang="it">Carattere (&amp;&amp;xxx;)</message>
-<message xml:lang="es">Carácter (&amp;&amp;xxx;)</message>
-<message xml:lang="pt">Carácter (&amp;&amp;xxx;)</message>
-<message xml:lang="fi">Merkki (&amp;&amp;xxx;)</message>
-<message xml:lang="tr">Karakter (&amp;&amp;xxx;)</message>
-<message xml:lang="ru">Символ (&amp;&amp;xxx;)</message>
-<message xml:lang="hu">&amp;Karakter (&amp;&amp;xxx;)</message>
-<message xml:lang="ka">სიმბოლო (&amp;&amp;xxx;)</message>
-<message xml:lang="cn">特殊字符 (&amp;&amp;xxx;)</message>
-<message xml:lang="tw">特殊字符 (&amp;&amp;xxx;)</message></label>
+<message xml:lang="en">Character (&amp;xxx;)</message>
+<message xml:lang="fr">Caractère (&amp;xxx;)</message>
+<message xml:lang="de">Zeichen (&amp;xxx;)</message>
+<message xml:lang="it">Carattere (&amp;xxx;)</message>
+<message xml:lang="es">Carácter (&amp;xxx;)</message>
+<message xml:lang="pt">Carácter (&amp;xxx;)</message>
+<message xml:lang="fi">Merkki (&amp;xxx;)</message>
+<message xml:lang="tr">Karakter (&amp;xxx;)</message>
+<message xml:lang="ru">Символ (&amp;xxx;)</message>
+<message xml:lang="hu">&amp;Karakter (&amp;xxx;)</message>
+<message xml:lang="ka">სიმბოლო (&amp;xxx;)</message>
+<message xml:lang="cn">特殊字符 (&amp;xxx;)</message>
+<message xml:lang="tw">特殊字符 (&amp;xxx;)</message>
+<message xml:lang="sk">Znaky (&amp;xxx;)</message></label>
 <label define="BMInvisibleTimes">
 <message xml:lang="en">InvisibleTimes</message>
 <message xml:lang="fr">InvisibleTimes</message>
@@ -2941,7 +3150,8 @@
 <message xml:lang="hu">&amp;InvisibleTimes</message>
 <message xml:lang="ka">უხილავი დრო (InvisibleTimes)</message>
 <message xml:lang="cn">不可见次数</message>
-<message xml:lang="tw">不可見次數</message></label>
+<message xml:lang="tw">不可見次數</message>
+<message xml:lang="sk">Neviditeľný multiplikátor (InvisibleTimes)</message></label>
 <label define="BMApplyFunction">
 <message xml:lang="en">ApplyFunction</message>
 <message xml:lang="fr">ApplyFunction</message>
@@ -2955,7 +3165,8 @@
 <message xml:lang="hu">&amp;ApplyFunction</message>
 <message xml:lang="ka">ფუნქციის გამოყენება (ApplyFunction)</message>
 <message xml:lang="cn">采用函数</message>
-<message xml:lang="tw">采用函數</message></label>
+<message xml:lang="tw">采用函數</message>
+<message xml:lang="sk">Aplikovanie funkcie (ApplyFunction)</message></label>
 <label define="MathConstruct">
 <message xml:lang="en">&amp;Constructions</message>
 <message xml:lang="fr">&amp;Constructions</message>
@@ -2966,7 +3177,8 @@
 <message xml:lang="hu">&amp;Szerkezetek</message>
 <message xml:lang="ka">კონსტრუქციები</message>
 <message xml:lang="cn">构架(&amp;C)</message>
-<message xml:lang="tw">構架(&amp;C)</message></label>
+<message xml:lang="tw">構架(&amp;C)</message>
+<message xml:lang="sk">&amp;Konštrukcie</message></label>
 <label define="BNthRoot">
 <message xml:lang="en">Root (mroot)</message>
 <message xml:lang="fr">Racine (mroot)</message>
@@ -2980,7 +3192,8 @@
 <message xml:lang="hu">&amp;Gyök (mroot)</message>
 <message xml:lang="ka">ფესვი (mroot)</message>
 <message xml:lang="cn">根 (mroot)</message>
-<message xml:lang="tw">根 (mroot)</message></label>
+<message xml:lang="tw">根 (mroot)</message>
+<message xml:lang="sk">Odmocnina (mroot)</message></label>
 <label define="BSquareRoot">
 <message xml:lang="en">Square root (msqrt)</message>
 <message xml:lang="fr">Racine carrée (msqrt)</message>
@@ -2994,7 +3207,8 @@
 <message xml:lang="hu">&amp;Négyzetgyök (msqrt)</message>
 <message xml:lang="ka">კვადრატული ფესვი (msqrt)</message>
 <message xml:lang="cn">平方根 (msqrt)</message>
-<message xml:lang="tw">平方根 (msqrt)</message></label>
+<message xml:lang="tw">平方根 (msqrt)</message>
+<message xml:lang="sk">Druhá odmocnina (msqrt)</message></label>
 <label define="BEnclose">
 <message xml:lang="en">Enclose (menclose)</message>
 <message xml:lang="fr">Englobe (menclose)</message>
@@ -3008,7 +3222,8 @@
 <message xml:lang="hu">&amp;Enclose (menclose)</message>
 <message xml:lang="ka">ჩარჩო-ჩანართი (menclose)</message>
 <message xml:lang="cn">封装 (menclose)</message>
-<message xml:lang="tw">封裝 (menclose)</message></label>
+<message xml:lang="tw">封裝 (menclose)</message>
+<message xml:lang="sk">Uzatvorenie (menclose)</message></label>
 <label define="BFraction">
 <message xml:lang="en">Fraction (mfrac)</message>
 <message xml:lang="fr">Fraction (mfrac)</message>
@@ -3022,7 +3237,8 @@
 <message xml:lang="hu">&amp;Tört (mfrac)</message>
 <message xml:lang="ka">წილადი (mfrac)</message>
 <message xml:lang="cn">分数 (mfrac)</message>
-<message xml:lang="tw">分數 (mfrac)</message></label>
+<message xml:lang="tw">分數 (mfrac)</message>
+<message xml:lang="sk">Zlomok (mfrac)</message></label>
 <label define="BSubscriptAndSuperscript">
 <message xml:lang="en">Subscript and superscript (msubsup)</message>
 <message xml:lang="fr">Indice et exposant (msubsup)</message>
@@ -3036,7 +3252,8 @@
 <message xml:lang="hu">Alsó és felső &amp;index (msubsup)</message>
 <message xml:lang="ka">ზედა და ქვედა ინდექსები (msubsup)</message>
 <message xml:lang="cn">上标下标 (msubsup)</message>
-<message xml:lang="tw">上標下標 (msubsup)</message></label>
+<message xml:lang="tw">上標下標 (msubsup)</message>
+<message xml:lang="sk">Horný a dolný index (msubsup)</message></label>
 <label define="BSubscript">
 <message xml:lang="en">Subscript (msub)</message>
 <message xml:lang="fr">Indice (msub)</message>
@@ -3050,7 +3267,8 @@
 <message xml:lang="hu">&amp;Alsó index (msub)</message>
 <message xml:lang="ka">ქვედა ინდექსი (msub)</message>
 <message xml:lang="cn">下标 (msub)</message>
-<message xml:lang="tw">下標 (msub)</message></label>
+<message xml:lang="tw">下標 (msub)</message>
+<message xml:lang="sk">Dolný index(msub)</message></label>
 <label define="BSuperscript">
 <message xml:lang="en">Superscript (msup)</message>
 <message xml:lang="fr">Exposant (msup)</message>
@@ -3064,7 +3282,8 @@
 <message xml:lang="hu">&amp;Felső index (msup)</message>
 <message xml:lang="ka">ზედა ინდექსი (msup)</message>
 <message xml:lang="cn">上标 (msup)</message>
-<message xml:lang="tw">上標 (msup)</message></label>
+<message xml:lang="tw">上標 (msup)</message>
+<message xml:lang="sk">Horný index (msup)</message></label>
 <label define="BUnderAndOver">
 <message xml:lang="en">Under and over (munderover)</message>
 <message xml:lang="fr">Dessous et dessus (munderover)</message>
@@ -3078,7 +3297,8 @@
 <message xml:lang="hu">&amp;Alá és fölé (munderover)</message>
 <message xml:lang="ka">ქვევიდან და ზემოდან (munderover)</message>
 <message xml:lang="cn">顶部底部标记 (munderover)</message>
-<message xml:lang="tw">頂部底部標記 (munderover)</message></label>
+<message xml:lang="tw">頂部底部標記 (munderover)</message>
+<message xml:lang="sk">Horná a dolná medza (munderover)</message></label>
 <label define="BUnder">
 <message xml:lang="en">Under (munder)</message>
 <message xml:lang="fr">Dessous (munder)</message>
@@ -3092,7 +3312,8 @@
 <message xml:lang="hu">&amp;Alá (munder)</message>
 <message xml:lang="ka">ქვევიდან (munder)</message>
 <message xml:lang="cn">底部标记 (munder)</message>
-<message xml:lang="tw">底部標記 (munder)</message></label>
+<message xml:lang="tw">底部標記 (munder)</message>
+<message xml:lang="sk">Horná medza (munder)</message></label>
 <label define="BOver">
 <message xml:lang="en">Over (mover)</message>
 <message xml:lang="fr">Dessus (mover)</message>
@@ -3106,7 +3327,8 @@
 <message xml:lang="hu">&amp;Fölé (mover)</message>
 <message xml:lang="ka">ზემოდან (mover)</message>
 <message xml:lang="cn">顶部标记 (mover)</message>
-<message xml:lang="tw">頂部標記 (mover)</message></label>
+<message xml:lang="tw">頂部標記 (mover)</message>
+<message xml:lang="sk">Dolná medza (mover)</message></label>
 <label define="BParentheses">
 <message xml:lang="en">Parentheses (mrow)</message>
 <message xml:lang="fr">Parenthèses (mrow)</message>
@@ -3120,7 +3342,8 @@
 <message xml:lang="hu">&amp;Zárójel (mrow)</message>
 <message xml:lang="ka">(მრგვალი) ფრჩხილები (mrow)</message>
 <message xml:lang="cn">括号 (mrow)</message>
-<message xml:lang="tw">括號 (mrow)</message></label>
+<message xml:lang="tw">括號 (mrow)</message>
+<message xml:lang="sk">Zátvorky (mrow)</message></label>
 <label define="BMultiscripts">
 <message xml:lang="en">Multiscripts (mmultiscripts)</message>
 <message xml:lang="fr">Multiscripts (mmultiscripts)</message>
@@ -3134,7 +3357,8 @@
 <message xml:lang="hu">&amp;Multiscripts (mmultiscripts)</message>
 <message xml:lang="ka">მრავალინდექსი (mmultiscripts)</message>
 <message xml:lang="cn">多重标记 (mmultiscripts)</message>
-<message xml:lang="tw">多重標記 (mmultiscripts)</message></label>
+<message xml:lang="tw">多重標記 (mmultiscripts)</message>
+<message xml:lang="sk">Multi index (mmultiscripts)</message></label>
 <label define="MathMatrix">
 <message xml:lang="en">&amp;Matrices</message>
 <message xml:lang="fr">&amp;Matrices</message>
@@ -3148,7 +3372,8 @@
 <message xml:lang="hu">&amp;Mátrixok</message>
 <message xml:lang="ka">მატრიცები</message>
 <message xml:lang="cn">矩阵</message>
-<message xml:lang="tw">矩陣</message></label>
+<message xml:lang="tw">矩陣</message>
+<message xml:lang="sk">&amp;Matice</message></label>
 <label define="BMatrix">
 <message xml:lang="en">New matrix (mtable)</message>
 <message xml:lang="fr">Nouvelle matrice (mtable)</message>
@@ -3162,7 +3387,8 @@
 <message xml:lang="hu">Új &amp;mátrix (mtable)</message>
 <message xml:lang="ka">ახალი მატრიცა (mtable)</message>
 <message xml:lang="cn">新建矩阵 (mtable)</message>
-<message xml:lang="tw">新建矩陣 (mtable)</message></label>
+<message xml:lang="tw">新建矩陣 (mtable)</message>
+<message xml:lang="sk">Nová matica (mtable)</message></label>
 <label define="BMCellHExtend">
 <message xml:lang="en">Join with the cell at the right</message>
 <message xml:lang="fr">Joindre avec la cellule de droite</message>
@@ -3173,7 +3399,8 @@
 <message xml:lang="hu">Egyesítés a &amp;jobbra lévő cellával</message>
 <message xml:lang="ka">შერწყმა მარჯვენა უჯრასთან</message>
 <message xml:lang="cn">与右侧单元格</message>
-<message xml:lang="tw">與右側單元格</message></label>
+<message xml:lang="tw">與右側單元格</message>
+<message xml:lang="sk">Zlúčiť s členom vpravo</message></label>
 <label define="BMCellVExtend">
 <message xml:lang="en">Join with the cell below</message>
 <message xml:lang="fr">Joindre avec la cellule au-dessous</message>
@@ -3184,7 +3411,8 @@
 <message xml:lang="hu">Egyesítés az &amp;alatta lévő cellával</message>
 <message xml:lang="ka">შერწყმა ქვედა უჯრასთან</message>
 <message xml:lang="cn">与下方单元格</message>
-<message xml:lang="tw">與下方單元格</message></label>
+<message xml:lang="tw">與下方單元格</message>
+<message xml:lang="sk">Zlúčiť s členom dole</message></label>
 <label define="BMCellHShrink">
 <message xml:lang="en">Shrink horizontal extend</message>
 <message xml:lang="fr">Réduire extension horizontale</message>
@@ -3195,7 +3423,8 @@
 <message xml:lang="hu">Shrink &amp;horizontal extend</message>
 <message xml:lang="ka">განივი შეკუმშვა</message>
 <message xml:lang="cn">收缩水平范围</message>
-<message xml:lang="tw">收縮水平范圍</message></label>
+<message xml:lang="tw">收縮水平范圍</message>
+<message xml:lang="sk">Rozdeliť člen horizontálne</message></label>
 <label define="BMCellVShrink">
 <message xml:lang="en">Shrink vertical extend</message>
 <message xml:lang="fr">Réduire extension verticale</message>
@@ -3206,7 +3435,8 @@
 <message xml:lang="hu">Shrink &amp;vertical extend</message>
 <message xml:lang="ka">მართობული შეკუმშვა</message>
 <message xml:lang="cn">收缩垂直范围</message>
-<message xml:lang="tw">收縮垂直范圍</message></label>
+<message xml:lang="tw">收縮垂直范圍</message>
+<message xml:lang="sk">Rozdeliť člen vertikálne</message></label>
 <label define="BMSelectRow">
 <message xml:lang="en">Select the row</message>
 <message xml:lang="fr">Sélectionner la ligne</message>
@@ -3217,7 +3447,8 @@
 <message xml:lang="hu">Sor &amp;kijelölése</message>
 <message xml:lang="ka">მწკრივის არჩევა</message>
 <message xml:lang="cn">选择该行</message>
-<message xml:lang="tw">選擇該行</message></label>
+<message xml:lang="tw">選擇該行</message>
+<message xml:lang="sk">Označiť riadok</message></label>
 <label define="BMCreateRowB">
 <message xml:lang="en">Insert a row</message>
 <message xml:lang="fr">Insérer une ligne</message>
@@ -3228,7 +3459,8 @@
 <message xml:lang="hu">Sor &amp;beillesztése</message>
 <message xml:lang="ka">მწკრივის ჩამატება</message>
 <message xml:lang="cn">插入新行</message>
-<message xml:lang="tw">插入新行</message></label>
+<message xml:lang="tw">插入新行</message>
+<message xml:lang="sk">Vložiť riadok nad</message></label>
 <label define="BMCreateRowA">
 <message xml:lang="en">Append a row</message>
 <message xml:lang="fr">Ajouter une ligne</message>
@@ -3239,7 +3471,8 @@
 <message xml:lang="hu">Sor &amp;hozzáadása</message>
 <message xml:lang="ka">მწკრივის დამატება</message>
 <message xml:lang="cn">附加一行</message>
-<message xml:lang="tw">附加一行</message></label>
+<message xml:lang="tw">附加一行</message>
+<message xml:lang="sk">Vložiť riadok pod</message></label>
 <label define="BMSelectColumn">
 <message xml:lang="en">Select the column</message>
 <message xml:lang="fr">Sélectionner la colonne</message>
@@ -3250,7 +3483,8 @@
 <message xml:lang="hu">Oszlop ki&amp;jelölése</message>
 <message xml:lang="ka">სვეტის არჩევა</message>
 <message xml:lang="cn">选择该列</message>
-<message xml:lang="tw">選擇該列</message></label>
+<message xml:lang="tw">選擇該列</message>
+<message xml:lang="sk">Označiť stĺpec</message></label>
 <label define="BMCreateColumnB">
 <message xml:lang="en">Insert a column</message>
 <message xml:lang="fr">Insérer une colonne</message>
@@ -3261,7 +3495,8 @@
 <message xml:lang="hu">Oszlop be&amp;illesztése</message>
 <message xml:lang="ka">სვეტის ჩამატება</message>
 <message xml:lang="cn">插入新列</message>
-<message xml:lang="tw">插入新列</message></label>
+<message xml:lang="tw">插入新列</message>
+<message xml:lang="sk">Vložiť stĺpec vľavo</message></label>
 <label define="BMCreateColumnA">
 <message xml:lang="en">Append a column</message>
 <message xml:lang="fr">Ajouter une colonne</message>
@@ -3272,7 +3507,8 @@
 <message xml:lang="hu">Oszlop hozzá&amp;adása</message>
 <message xml:lang="ka">სვეტის დამატება</message>
 <message xml:lang="cn">附加一列</message>
-<message xml:lang="tw">附加一列</message></label>
+<message xml:lang="tw">附加一列</message>
+<message xml:lang="sk">Vložiť stĺpec vpravo</message></label>
 <label define="BMPasteBefore">
 <message xml:lang="en">Paste before</message>
 <message xml:lang="fr">Coller avant</message>
@@ -3283,7 +3519,8 @@
 <message xml:lang="hu">Beillesztés &amp;elé</message>
 <message xml:lang="ka">ჩასმა წინ</message>
 <message xml:lang="cn">粘贴在前</message>
-<message xml:lang="tw">粘貼在前</message></label>
+<message xml:lang="tw">粘貼在前</message>
+<message xml:lang="sk">Prilepiť pred</message></label>
 <label define="BMPasteAfter">
 <message xml:lang="en">Paste after</message>
 <message xml:lang="fr">Coller après</message>
@@ -3294,7 +3531,8 @@
 <message xml:lang="hu">Beillesztés &amp;mögé</message>
 <message xml:lang="ka">ჩასმა შემდეგ</message>
 <message xml:lang="cn">粘贴在后</message>
-<message xml:lang="tw">粘貼在后</message></label>
+<message xml:lang="tw">粘貼在后</message>
+<message xml:lang="sk">Prilepiť za</message></label>
 <label define="BShowLibrary">
 <message xml:lang="en">Show SVG library</message>
 <message xml:lang="fr">Montrer la librairie SVG</message>
@@ -3306,7 +3544,8 @@
 <message xml:lang="hu">&amp;Képtár mutatása</message>
 <message xml:lang="ka">გრაფიკული ბიბლიოთეკის ჩვენება</message>
 <message xml:lang="cn">显示图形库</message>
-<message xml:lang="tw">顯示圖形庫</message></label>
+<message xml:lang="tw">顯示圖形庫</message>
+<message xml:lang="sk">Zobraziť SVG knižnicu</message></label>
 <label define="BAddNewModel">
 <message xml:lang="en">Add to SVG library</message>
 <message xml:lang="fr">Ajouter à la librairie SVG</message>
@@ -3318,7 +3557,8 @@
 <message xml:lang="hu">Kijelölt kép &amp;beillesztése</message>
 <message xml:lang="ka">შერჩეული გრაფიკის ბიბლიოთეკაში დამატება</message>
 <message xml:lang="cn">添加选中图形</message>
-<message xml:lang="tw">添加選中圖形</message></label>
+<message xml:lang="tw">添加選中圖形</message>
+<message xml:lang="sk">Pridať do SVG knižnice</message></label>
 <label define="BXMLComment">
 <message xml:lang="en">Comment</message>
 <message xml:lang="fr">Commentaire</message>
@@ -3332,7 +3572,8 @@
 <message xml:lang="hu">Meg&amp;jegyzés</message>
 <message xml:lang="ka">კომენტარი</message>
 <message xml:lang="cn">注释</message>
-<message xml:lang="tw">注釋</message></label>
+<message xml:lang="tw">注釋</message>
+<message xml:lang="sk">Poznámka</message></label>
 <label define="BXMLElement">
 <message xml:lang="en">XML elements...</message>
 <message xml:lang="fr">Éléments XML...</message>
@@ -3344,7 +3585,8 @@
 <message xml:lang="hu">XML &amp;elemek...</message>
 <message xml:lang="ka">XML ელემენტები...</message>
 <message xml:lang="cn">XML 元素...</message>
-<message xml:lang="tw">XML 元素...</message></label>
+<message xml:lang="tw">XML 元素...</message>
+<message xml:lang="sk">XML prvky...</message></label>
 <label define="BCopyLocation">
 <message xml:lang="en">Copy location</message>
 <message xml:lang="fr">Copier l'adresse</message>
@@ -3355,7 +3597,7 @@
 <message xml:lang="cn">复制地址</message>
 <message xml:lang="tw">復制地址</message>
 <message xml:lang="hu">Hely másolása</message>
-</label>
+<message xml:lang="sk">Kopírovať adresu odkazu</message></label>
 <label define="BPasteLocation">
 <message xml:lang="en">Paste location</message>
 <message xml:lang="fr">Coller l'adresse</message>
@@ -3366,7 +3608,7 @@
 <message xml:lang="cn">粘贴地址</message>
 <message xml:lang="tw">粘貼地址</message>
 <message xml:lang="hu">Hely beillesztése</message>
-</label>
+<message xml:lang="sk">Prilepiť adresu odkazu</message></label>
 <label define="BLinkTarget">
 <message xml:lang="en">&amp;Link to previous target</message>
 <message xml:lang="fr">&amp;Lier la cible créée</message>
@@ -3380,7 +3622,8 @@
 <message xml:lang="hu">&amp;Előző célponthoz kapcsolás</message>
 <message xml:lang="ka">ბმა წინა სამიზნეზე</message>
 <message xml:lang="cn">链接到上个目标(&amp;L)</message>
-<message xml:lang="tw">鏈接到上個目標(&amp;L)</message></label>
+<message xml:lang="tw">鏈接到上個目標(&amp;L)</message>
+<message xml:lang="sk">&amp;Prepojiť s predošlou záložkou</message></label>
 <label define="BCreateLink">
 <message xml:lang="en">&amp;Create or change link...</message>
 <message xml:lang="fr">&amp;Créer/changer lien...</message>
@@ -3394,7 +3637,8 @@
 <message xml:lang="hu">&amp;Kapocs létrehozása vagy megváltoztatása...</message>
 <message xml:lang="ka">ბმის შექმნა ან შეცვლა...</message>
 <message xml:lang="cn">创建或更改链接(&amp;C)...</message>
-<message xml:lang="tw">創建或更改鏈接(&amp;C)...</message></label>
+<message xml:lang="tw">創建或更改鏈接(&amp;C)...</message>
+<message xml:lang="sk">&amp;Vytvoriť alebo zmeniť odkaz...</message></label>
 <label define="BCreateTarget">
 <message xml:lang="en">Create &amp;target</message>
 <message xml:lang="fr">Créer ci&amp;ble</message>
@@ -3408,7 +3652,8 @@
 <message xml:lang="hu">&amp;Célpont létrehozása</message>
 <message xml:lang="ka">სამიზნის შექმნა</message>
 <message xml:lang="cn">创建目标(&amp;T)</message>
-<message xml:lang="tw">創建目標(&amp;T)</message></label>
+<message xml:lang="tw">創建目標(&amp;T)</message>
+<message xml:lang="sk">Vytvoriť &amp;záložku</message></label>
 <label define="BDeleteAnchor">
 <message xml:lang="en">&amp;Delete anchor</message>
 <message xml:lang="fr">&amp;Détruire ancre</message>
@@ -3422,7 +3667,8 @@
 <message xml:lang="hu">&amp;Horgony törlése</message>
 <message xml:lang="ka">ღუზის წაშლა</message>
 <message xml:lang="cn">删除 anchor(&amp;D)</message>
-<message xml:lang="tw">刪除 anchor(&amp;D)</message></label>
+<message xml:lang="tw">刪除 anchor(&amp;D)</message>
+<message xml:lang="sk">O&amp;dstrániť odkaz/záložku</message></label>
 <label define="BMakeID">
 <message xml:lang="en">&amp;Add/Remove IDs...</message>
 <message xml:lang="fr">&amp;Ajouter/Retirer des attributs ID...</message>
@@ -3436,7 +3682,8 @@
 <message xml:lang="hu">&amp;Azonosítók (id) hozzáadása/törlése...</message>
 <message xml:lang="ka">ID-ის დამატება/ამოშლა...</message>
 <message xml:lang="cn">添加/删除 ID(&amp;A)...</message>
-<message xml:lang="tw">添加/刪除 ID(&amp;A)...</message></label>
+<message xml:lang="tw">添加/刪除 ID(&amp;A)...</message>
+<message xml:lang="sk">&amp;Pridať/odstrániť ID...</message></label>
 <label define="TShowPanel">
 <message xml:lang="en">Show &amp;tools</message>
 <message xml:lang="fr">&amp;Montrer outils</message>
@@ -3447,7 +3694,8 @@
 <message xml:lang="hu">&amp;Eszközsor mutatása</message>
 <message xml:lang="ka">ხელსაწყოების ჩვენება</message>
 <message xml:lang="cn">显示工具栏(&amp;T)</message>
-<message xml:lang="tw">顯示工具欄(&amp;T)</message></label>
+<message xml:lang="tw">顯示工具欄(&amp;T)</message>
+<message xml:lang="sk">Panel s &amp;nástrojmi</message></label>
 <label define="BFullScreen">
 <message xml:lang="en">&amp;Fullscreen</message>
 <message xml:lang="fr">&amp;Plein écran</message>
@@ -3458,7 +3706,8 @@
 <message xml:lang="hu">&amp;Teljes képenyő</message>
 <message xml:lang="ka">სრულ ეკრანზე</message>
 <message xml:lang="cn">全屏显示(&amp;F)</message>
-<message xml:lang="tw">全屏顯示(&amp;F)</message></label>
+<message xml:lang="tw">全屏顯示(&amp;F)</message>
+<message xml:lang="sk">&amp;Celá obrazovka</message></label>
 <label define="TShowButtonbar">
 <message xml:lang="en">Show &amp;button bar</message>
 <message xml:lang="fr">Montrer &amp;boutons</message>
@@ -3472,7 +3721,8 @@
 <message xml:lang="hu">&amp;Gombsor mutatása</message>
 <message xml:lang="ka">ღილაკების პანელის ჩვენება</message>
 <message xml:lang="cn">显示按钮栏(&amp;B)</message>
-<message xml:lang="tw">顯示按鈕欄(&amp;B)</message></label>
+<message xml:lang="tw">顯示按鈕欄(&amp;B)</message>
+<message xml:lang="sk">&amp;Navigačný panel</message></label>
 <label define="TShowTextZone">
 <message xml:lang="en">Show a&amp;ddress</message>
 <message xml:lang="fr">Montrer a&amp;dresse</message>
@@ -3486,7 +3736,8 @@
 <message xml:lang="hu">&amp;Címek mutatása</message>
 <message xml:lang="ka">მისამართების ჩვენება</message>
 <message xml:lang="cn">显示 ADDRESS(&amp;D)</message>
-<message xml:lang="tw">顯示 ADDRESS(&amp;D)</message></label>
+<message xml:lang="tw">顯示 ADDRESS(&amp;D)</message>
+<message xml:lang="sk">Panel s a&amp;dresou</message></label>
 <label define="TShowMapAreas">
 <message xml:lang="en">Show &amp;map areas</message>
 <message xml:lang="fr">Montrer les &amp;zones actives</message>
@@ -3500,7 +3751,8 @@
 <message xml:lang="hu">&amp;Térképterületek mutatása</message>
 <message xml:lang="ka">რუკის არეების ჩვენება</message>
 <message xml:lang="cn">显示 MAP 区域(&amp;M)</message>
-<message xml:lang="tw">顯示 MAP 區域(&amp;M)</message></label>
+<message xml:lang="tw">顯示 MAP 區域(&amp;M)</message>
+<message xml:lang="sk">Oblasti &amp;obrázkov</message></label>
 <label define="TShowTargets">
 <message xml:lang="en">Show &amp;targets</message>
 <message xml:lang="fr">Montrer les &amp;cibles</message>
@@ -3514,7 +3766,8 @@
 <message xml:lang="hu">&amp;Célpontok mutatása</message>
 <message xml:lang="ka">სამიზნეების ჩვენება</message>
 <message xml:lang="cn">显示目标 (&amp;T)</message>
-<message xml:lang="tw">顯示目標 (&amp;T)</message></label>
+<message xml:lang="tw">顯示目標 (&amp;T)</message>
+<message xml:lang="sk">&amp;Záložky</message></label>
 <label define="TZoomIn">
 <message xml:lang="en">Zoom in</message>
 <message xml:lang="fr">Grossir</message>
@@ -3528,7 +3781,8 @@
 <message xml:lang="hu">Nagyítás</message>
 <message xml:lang="ka">გაზრდა</message>
 <message xml:lang="cn">放大</message>
-<message xml:lang="tw">放大</message></label>
+<message xml:lang="tw">放大</message>
+<message xml:lang="sk">Zväčšiť veľkosť textu</message></label>
 <label define="TZoomOut">
 <message xml:lang="en">Zoom out</message>
 <message xml:lang="fr">Réduire</message>
@@ -3542,7 +3796,8 @@
 <message xml:lang="hu">Kicsinyítés</message>
 <message xml:lang="ka">შემცირება</message>
 <message xml:lang="cn">缩小</message>
-<message xml:lang="tw">縮小</message></label>
+<message xml:lang="tw">縮小</message>
+<message xml:lang="sk">Zmenšiť veľkosť textu</message></label>
 <label define="BShowFormatted">
 <message xml:lang="en">Show &amp;formatted view</message>
 <message xml:lang="fr">Montrer la vue &amp;formatée</message>
@@ -3553,7 +3808,8 @@
 <message xml:lang="ka">ფორმატირებული ჩვენება</message>
 <message xml:lang="ru">Показать в &amp;форматированном виде</message>
 <message xml:lang="cn">显示格式化的视图(&amp;F)</message>
-<message xml:lang="tw">顯示格式化的視圖(&amp;F)</message></label>
+<message xml:lang="tw">顯示格式化的視圖(&amp;F)</message>
+<message xml:lang="sk">&amp;Normálne zobrazenie</message></label>
 <label define="BShowStructure">
 <message xml:lang="en">Show &amp;structure</message>
 <message xml:lang="fr">Montrer la &amp;structure</message>
@@ -3567,7 +3823,8 @@
 <message xml:lang="hu">&amp;Szerkezet mutatása</message>
 <message xml:lang="ka">სტრუქტურის ჩვენება</message>
 <message xml:lang="cn">显示结构(&amp;S)</message>
-<message xml:lang="tw">顯示結構(&amp;S)</message></label>
+<message xml:lang="tw">顯示結構(&amp;S)</message>
+<message xml:lang="sk">&amp;Štruktúru</message></label>
 <label define="BShowSource">
 <message xml:lang="en">Show so&amp;urce</message>
 <message xml:lang="fr">Montrer le s&amp;ource</message>
@@ -3581,7 +3838,8 @@
 <message xml:lang="hu">&amp;Forrás mutatása</message>
 <message xml:lang="ka">წყაროს ჩვენება</message>
 <message xml:lang="cn">显示源文件(&amp;U)</message>
-<message xml:lang="tw">顯示源文件(&amp;U)</message></label>
+<message xml:lang="tw">顯示源文件(&amp;U)</message>
+<message xml:lang="sk">Zdrojový kód stránky</message></label>
 <label define="BShowLinks">
 <message xml:lang="en">Show lin&amp;ks</message>
 <message xml:lang="fr">Montrer les lie&amp;ns</message>
@@ -3595,7 +3853,8 @@
 <message xml:lang="hu">&amp;Kapcsok mutatása</message>
 <message xml:lang="ka">ბმების ჩვენება</message>
 <message xml:lang="cn">显示链接(&amp;K)</message>
-<message xml:lang="tw">顯示鏈接(&amp;K)</message></label>
+<message xml:lang="tw">顯示鏈接(&amp;K)</message>
+<message xml:lang="sk">Hypertextové odkazy</message></label>
 <label define="BShowAlternate">
 <message xml:lang="en">Show &amp;alternate</message>
 <message xml:lang="fr">Montrer la vue &amp;alternée</message>
@@ -3609,7 +3868,8 @@
 <message xml:lang="hu">&amp;Szöveges böngészőnézet</message>
 <message xml:lang="ka">ალტერნატული ჩვენება</message>
 <message xml:lang="cn">显示候选(&amp;A)</message>
-<message xml:lang="tw">顯示候選(&amp;A)</message></label>
+<message xml:lang="tw">顯示候選(&amp;A)</message>
+<message xml:lang="sk">Len text</message></label>
 <label define="BShowToC">
 <message xml:lang="en">Show table &amp;of contents</message>
 <message xml:lang="fr">Montrer la table des &amp;matières</message>
@@ -3623,7 +3883,8 @@
 <message xml:lang="hu">&amp;Tartalomjegyzék mutatása</message>
 <message xml:lang="ka">საძიებლის ჩვენება</message>
 <message xml:lang="cn">显示表格内容(&amp;O)</message>
-<message xml:lang="tw">顯示表格內容(&amp;O)</message></label>
+<message xml:lang="tw">顯示表格內容(&amp;O)</message>
+<message xml:lang="sk">Obsah</message></label>
 <label define="BShowTimeLine">
 <message xml:lang="en">Show timeline</message>
 <message xml:lang="fr">Montrer la ligne de temps</message>
@@ -3636,7 +3897,8 @@
 <message xml:lang="hu">Idővonal mutatása</message>
 <message xml:lang="ka">განრიგის ჩვენება</message>
 <message xml:lang="cn">显示时间排列</message>
-<message xml:lang="tw">顯示時間排列</message></label>
+<message xml:lang="tw">顯示時間排列</message>
+<message xml:lang="sk">Časová os</message></label>
 <label define="BSplitHorizontally">
 <message xml:lang="en">Split view horizontally</message>
 <message xml:lang="fr">Partager horizontalement</message>
@@ -3647,7 +3909,8 @@
 <message xml:lang="ka">ხედის ჰორიზონტალური გაყოფა</message>
 <message xml:lang="ru">Разделить по горизонтали</message>
 <message xml:lang="cn">水平排列视图</message>
-<message xml:lang="tw">水平排列視圖</message></label>
+<message xml:lang="tw">水平排列視圖</message>
+<message xml:lang="sk">Rozdeliť okno horizontálne</message></label>
 <label define="BSplitVertically">
 <message xml:lang="en">Split view vertically</message>
 <message xml:lang="fr">Partager verticalement</message>
@@ -3658,7 +3921,8 @@
 <message xml:lang="ka">ხედის ვერტიკალური გაყოფა</message>
 <message xml:lang="ru">Разделить по вертикали</message>
 <message xml:lang="cn">垂直排列视图</message>
-<message xml:lang="tw">垂直排列視圖</message></label>
+<message xml:lang="tw">垂直排列視圖</message>
+<message xml:lang="sk">Rozdeliť okno vertikálne</message></label>
 <label define="BCharacterStyle">
 <message xml:lang="en">C&amp;haracter style...</message>
 <message xml:lang="fr">Style de &amp;caractères...</message>
@@ -3672,7 +3936,8 @@
 <message xml:lang="hu">&amp;Karakter stílus...</message>
 <message xml:lang="ka">სიმბოლოს სტილი...</message>
 <message xml:lang="cn">字符样式(&amp;H)...</message>
-<message xml:lang="tw">字符樣式(&amp;H)...</message></label>
+<message xml:lang="tw">字符樣式(&amp;H)...</message>
+<message xml:lang="sk">&amp;Formát písma...</message></label>
 <label define="BColors">
 <message xml:lang="en">C&amp;olors...</message>
 <message xml:lang="fr">C&amp;ouleurs...</message>
@@ -3686,7 +3951,8 @@
 <message xml:lang="hu">&amp;Színek...</message>
 <message xml:lang="ka">ფერები...</message>
 <message xml:lang="cn">颜色(&amp;O)...</message>
-<message xml:lang="tw">顏色(&amp;O)...</message></label>
+<message xml:lang="tw">顏色(&amp;O)...</message>
+<message xml:lang="sk">F&amp;arby...</message></label>
 <label define="BCSSStyle">
 <message xml:lang="en">CSS &amp;Style...</message>
 <message xml:lang="fr">&amp;Style CSS...</message>
@@ -3697,7 +3963,8 @@
 <message xml:lang="ka">CSS style...</message>
 <message xml:lang="ru">CSS style...</message>
 <message xml:lang="cn">CSS样式(&amp;S)...</message>
-<message xml:lang="tw">CSS樣式(&amp;S)...</message></label>
+<message xml:lang="tw">CSS樣式(&amp;S)...</message>
+<message xml:lang="sk">CSS &amp;pravidlá...</message></label>
 <label define="BFormat">
 <message xml:lang="en">&amp;Format...</message>
 <message xml:lang="fr">&amp;Format...</message>
@@ -3711,7 +3978,8 @@
 <message xml:lang="hu">&amp;Formátum...</message>
 <message xml:lang="ka">ფორმატი...</message>
 <message xml:lang="cn">格式(&amp;F)...</message>
-<message xml:lang="tw">格式(&amp;F)...</message></label>
+<message xml:lang="tw">格式(&amp;F)...</message>
+<message xml:lang="sk">&amp;Formátovať...</message></label>
 <label define="BBackgroundImage">
 <message xml:lang="en">&amp;Background image...</message>
 <message xml:lang="fr">&amp;Image de fond...</message>
@@ -3725,7 +3993,8 @@
 <message xml:lang="hu">&amp;Háttérkép...</message>
 <message xml:lang="ka">ფონის გამოსახულება...</message>
 <message xml:lang="cn">背景图片(&amp;B)...</message>
-<message xml:lang="tw">背景圖片(&amp;B)...</message></label>
+<message xml:lang="tw">背景圖片(&amp;B)...</message>
+<message xml:lang="sk">P&amp;ozadie...</message></label>
 <label define="BCreateClass">
 <message xml:lang="en">Create &amp;rule...</message>
 <message xml:lang="fr">Créer une &amp;règle...</message>
@@ -3739,7 +4008,8 @@
 <message xml:lang="hu">&amp;Szabály létrehozása...</message>
 <message xml:lang="ka">წესის შექმნა...</message>
 <message xml:lang="cn">创建规则(&amp;R)...</message>
-<message xml:lang="tw">創建規則(&amp;R)...</message></label>
+<message xml:lang="tw">創建規則(&amp;R)...</message>
+<message xml:lang="sk">Vytvoriť &amp;pravidlo...</message></label>
 <label define="BApplyClass">
 <message xml:lang="en">Apply &amp;class...</message>
 <message xml:lang="fr">A&amp;ppliquer une classe...</message>
@@ -3753,7 +4023,8 @@
 <message xml:lang="hu">&amp;Osztály alkalmazása...</message>
 <message xml:lang="ka">კლასის გამოყენება...</message>
 <message xml:lang="cn">应用CLASS(&amp;C)...</message>
-<message xml:lang="tw">應用CLASS(&amp;C)...</message></label>
+<message xml:lang="tw">應用CLASS(&amp;C)...</message>
+<message xml:lang="sk">Aplikovať &amp;triedu (class)...</message></label>
 <label define="BShowAppliedStyle">
 <message xml:lang="en">Show applied style...</message>
 <message xml:lang="fr">Montrer le style appliqué...</message>
@@ -3764,7 +4035,8 @@
 <message xml:lang="hu">&amp;Alkalmazott stílusok mutatása...</message>
 <message xml:lang="ka">გამოყენებული სტილის ჩვენება...</message>
 <message xml:lang="cn">显示已应用的样式...</message>
-<message xml:lang="tw">顯示已應用的樣式...</message></label>
+<message xml:lang="tw">顯示已應用的樣式...</message>
+<message xml:lang="sk">Zobraziť použité štýly...</message></label>
 <label define="BLinkCSS">
 <message xml:lang="en">Lin&amp;k...</message>
 <message xml:lang="fr">&amp;Ajouter...</message>
@@ -3778,7 +4050,8 @@
 <message xml:lang="hu">&amp;Kapocs...</message>
 <message xml:lang="ka">ბმა...</message>
 <message xml:lang="cn">链接(&amp;K)...</message>
-<message xml:lang="tw">鏈接(&amp;K)...</message></label>
+<message xml:lang="tw">鏈接(&amp;K)...</message>
+<message xml:lang="sk">P&amp;ripojiť súbor s CSS...</message></label>
 <label define="BOpenCSS">
 <message xml:lang="en">Ope&amp;n...</message>
 <message xml:lang="fr">O&amp;uvrir...</message>
@@ -3792,7 +4065,8 @@
 <message xml:lang="hu">Meg&amp;nyitás...</message>
 <message xml:lang="ka">გახსნა...</message>
 <message xml:lang="cn">打开(&amp;N)...</message>
-<message xml:lang="tw">打開(&amp;N)...</message></label>
+<message xml:lang="tw">打開(&amp;N)...</message>
+<message xml:lang="sk">&amp;Otvoriť súbor s CSS...</message></label>
 <label define="BDisableCSS">
 <message xml:lang="en">&amp;Disable...</message>
 <message xml:lang="fr">&amp;Désactiver...</message>
@@ -3806,7 +4080,8 @@
 <message xml:lang="hu">&amp;Tiltás...</message>
 <message xml:lang="ka">ამორთვა...</message>
 <message xml:lang="cn">禁用(&amp;D)...</message>
-<message xml:lang="tw">禁用(&amp;D)...</message></label>
+<message xml:lang="tw">禁用(&amp;D)...</message>
+<message xml:lang="sk">&amp;Vypnuť CSS pravidlá...</message></label>
 <label define="BEnableCSS">
 <message xml:lang="en">&amp;Enable...</message>
 <message xml:lang="fr">R&amp;éactiver...</message>
@@ -3820,7 +4095,8 @@
 <message xml:lang="hu">&amp;Engedélyezés...</message>
 <message xml:lang="ka">ჩართვა...</message>
 <message xml:lang="cn">启用(&amp;E)...</message>
-<message xml:lang="tw">啟用(&amp;E)...</message></label>
+<message xml:lang="tw">啟用(&amp;E)...</message>
+<message xml:lang="sk">&amp;Zapnúť CSS pravidlá...</message></label>
 <label define="BRemoveCSS">
 <message xml:lang="en">Remo&amp;ve...</message>
 <message xml:lang="fr">Re&amp;tirer...</message>
@@ -3834,7 +4110,8 @@
 <message xml:lang="hu">Eltá&amp;volítás...</message>
 <message xml:lang="ka">ამოშლა...</message>
 <message xml:lang="cn">移除(&amp;V)...</message>
-<message xml:lang="tw">移除(&amp;V)...</message></label>
+<message xml:lang="tw">移除(&amp;V)...</message>
+<message xml:lang="sk">O&amp;strániť súbor s CSS...</message></label>
 <label define="BAnnotateSelection">
 <message xml:lang="en">Annotate selection</message>
 <message xml:lang="fr">Annoter la sélection</message>
@@ -3848,7 +4125,8 @@
 <message xml:lang="hu">Jegyzet a &amp;kijelöléshez</message>
 <message xml:lang="ka">მონიშნულის ანოტაცია</message>
 <message xml:lang="cn">为选择区作注释</message>
-<message xml:lang="tw">為選擇區作注釋</message></label>
+<message xml:lang="tw">為選擇區作注釋</message>
+<message xml:lang="sk">Okomentovať výber</message></label>
 <label define="BAnnotateDocument">
 <message xml:lang="en">Annotate document</message>
 <message xml:lang="fr">Annoter le document</message>
@@ -3862,7 +4140,8 @@
 <message xml:lang="hu">Jegyzet a &amp;dokumentumhoz</message>
 <message xml:lang="ka">დოკუმენტის ანოტაცია</message>
 <message xml:lang="cn">为文档作注释</message>
-<message xml:lang="tw">為文檔作注釋</message></label>
+<message xml:lang="tw">為文檔作注釋</message>
+<message xml:lang="sk">Okomentovať dokument</message></label>
 <label define="BMoveAnnotSel">
 <message xml:lang="en">Move to selection</message>
 <message xml:lang="fr">Déplacer sur la sélection</message>
@@ -3876,7 +4155,8 @@
 <message xml:lang="hu">&amp;Ugrás a kijelöléshez</message>
 <message xml:lang="ka">მონიშნულში გადატანა</message>
 <message xml:lang="cn">移动到选择区</message>
-<message xml:lang="tw">移動到選擇區</message></label>
+<message xml:lang="tw">移動到選擇區</message>
+<message xml:lang="sk">Presunúť k výberu</message></label>
 <label define="BMemorizeXPtr">
 <message xml:lang="en">Store selection as &amp;XPointer</message>
 <message xml:lang="fr">Sauver la sélection comme &amp;XPointer</message>
@@ -3890,7 +4170,8 @@
 <message xml:lang="hu">Kijelölés tárolása &amp;XPointerként</message>
 <message xml:lang="ka">მონიშნულის შენახვა როგორც XPointer</message>
 <message xml:lang="cn">存储选择区为 XPointer(&amp;X)</message>
-<message xml:lang="tw">存儲選擇區為 XPointer(&amp;X)</message></label>
+<message xml:lang="tw">存儲選擇區為 XPointer(&amp;X)</message>
+<message xml:lang="sk">Uložiť výber ako &amp;XPointer</message></label>
 <label define="BMoveAnnotXPtr">
 <message xml:lang="en">Move to stored XPointer</message>
 <message xml:lang="fr">Déplacer sur le XPointer enregistré</message>
@@ -3904,7 +4185,8 @@
 <message xml:lang="hu">&amp;Tárolt XPointerhez ugrás</message>
 <message xml:lang="ka">გადატანა შენახულ XPointer-ში</message>
 <message xml:lang="cn">移动到已存储的 XPointer</message>
-<message xml:lang="tw">移動到已存儲的 XPointer</message></label>
+<message xml:lang="tw">移動到已存儲的 XPointer</message>
+<message xml:lang="sk">Presunúť k uloženému XPointeru</message></label>
 <label define="BReplyToAnnotation">
 <message xml:lang="en">Reply to annotation</message>
 <message xml:lang="fr">Répondre à l'annotation</message>
@@ -3918,7 +4200,8 @@
 <message xml:lang="hu">Jegyzetre &amp;válaszolás</message>
 <message xml:lang="ka">პასუხი ანოტაციაზე</message>
 <message xml:lang="cn">答复注释</message>
-<message xml:lang="tw">答復注釋</message></label>
+<message xml:lang="tw">答復注釋</message>
+<message xml:lang="sk">Reagovať na komentár</message></label>
 <label define="BPostAnnot">
 <message xml:lang="en">Post to server</message>
 <message xml:lang="fr">Enregister sur le serveur</message>
@@ -3932,7 +4215,8 @@
 <message xml:lang="hu">Küldés a &amp;kiszolgálóra</message>
 <message xml:lang="ka">სევერზე გამოქვეყნება (post)</message>
 <message xml:lang="cn">提交到服务器</message>
-<message xml:lang="tw">提交到服務器</message></label>
+<message xml:lang="tw">提交到服務器</message>
+<message xml:lang="sk">Odoslať na server</message></label>
 <label define="BDeleteAnnot">
 <message xml:lang="en">Delete</message>
 <message xml:lang="fr">Détruire</message>
@@ -3946,7 +4230,8 @@
 <message xml:lang="hu">&amp;Törlés</message>
 <message xml:lang="ka">წაშლა</message>
 <message xml:lang="cn">删除</message>
-<message xml:lang="tw">刪除</message></label>
+<message xml:lang="tw">刪除</message>
+<message xml:lang="sk">Odstrániť komentár</message></label>
 <label define="BLoadAnnotations">
 <message xml:lang="en">Load</message>
 <message xml:lang="fr">Charger annotations</message>
@@ -3960,7 +4245,8 @@
 <message xml:lang="hu">&amp;Betöltés</message>
 <message xml:lang="ka">ჩამოტვირთვა</message>
 <message xml:lang="cn">载入</message>
-<message xml:lang="tw">載入</message></label>
+<message xml:lang="tw">載入</message>
+<message xml:lang="sk">Nahrať komentár</message></label>
 <label define="BCustomQuery">
 <message xml:lang="en">Customize query...</message>
 <message xml:lang="fr">Personnaliser la requête...</message>
@@ -3974,7 +4260,8 @@
 <message xml:lang="hu">&amp;Lekérdezés testreszabása...</message>
 <message xml:lang="ka">მოთხოვნის მორგება...</message>
 <message xml:lang="cn">自定义查询...</message>
-<message xml:lang="tw">自定義查詢...</message></label>
+<message xml:lang="tw">自定義查詢...</message>
+<message xml:lang="sk">Zadefinovať požiadavku...</message></label>
 <label define="BFilterAnnotations">
 <message xml:lang="en">Local filter...</message>
 <message xml:lang="fr">Filtrer local...</message>
@@ -3988,7 +4275,8 @@
 <message xml:lang="hu">&amp;Helyi szűrő...</message>
 <message xml:lang="ka">ლოკალური ფილტრი...</message>
 <message xml:lang="cn">本地过滤器...</message>
-<message xml:lang="tw">本地過濾器...</message></label>
+<message xml:lang="tw">本地過濾器...</message>
+<message xml:lang="sk">Filtrovať komentáre...</message></label>
 <label define="BLock">
 <message xml:lang="en">Lock resource...</message>
 <message xml:lang="fr">Verrouiller la ressource...</message>
@@ -4002,7 +4290,8 @@
 <message xml:lang="hu">Erőforrás &amp;zárolása...</message>
 <message xml:lang="ka">რესურსის დაბლოკვა...</message>
 <message xml:lang="cn">锁定资源...</message>
-<message xml:lang="tw">鎖定資源...</message></label>
+<message xml:lang="tw">鎖定資源...</message>
+<message xml:lang="sk">Uzamknúť zdrojový súbor...</message></label>
 <label define="BUnlock">
 <message xml:lang="en">Unlock resource...</message>
 <message xml:lang="fr">Déverrouiller la ressource...</message>
@@ -4016,7 +4305,8 @@
 <message xml:lang="hu">Erőforrás &amp;felszabadítása...</message>
 <message xml:lang="ka">დაბლოკვის მოხსნა...</message>
 <message xml:lang="cn">取消锁定资源...</message>
-<message xml:lang="tw">取消鎖定資源...</message></label>
+<message xml:lang="tw">取消鎖定資源...</message>
+<message xml:lang="sk">Odomknúť zdrojový súbor...</message></label>
 <label define="BProp">
 <message xml:lang="en">View resource properties...</message>
 <message xml:lang="fr">Visualiser les propriétés de la ressource...</message>
@@ -4030,7 +4320,8 @@
 <message xml:lang="hu">Erőforrás &amp;tulajdonságai...</message>
 <message xml:lang="ka">რესურსის პარამეტრების დათვალიერება...</message>
 <message xml:lang="cn">查看资源属性...</message>
-<message xml:lang="tw">查看資源屬性...</message></label>
+<message xml:lang="tw">查看資源屬性...</message>
+<message xml:lang="sk">Zobraziť vlastnosti zdroja...</message></label>
 <label define="BCopyLock">
 <message xml:lang="en">Copy lock information...</message>
 <message xml:lang="fr">Copier les informations du verrou...</message>
@@ -4044,7 +4335,8 @@
 <message xml:lang="hu">Zárolási adatok &amp;másolása...</message>
 <message xml:lang="ka">დაბლოკვის ინფორმაციის კოპირება...</message>
 <message xml:lang="cn">复制锁定信息...</message>
-<message xml:lang="tw">復制鎖定信息...</message></label>
+<message xml:lang="tw">復制鎖定信息...</message>
+<message xml:lang="sk">Kopírovať informácie o uzamknutí...</message></label>
 <label define="BLockIndicator">
 <message xml:lang="en">Locked?</message>
 <message xml:lang="fr">Verrouillé ?</message>
@@ -4058,7 +4350,8 @@
 <message xml:lang="hu">&amp;Zárolt?</message>
 <message xml:lang="ka">დაბლოკილია?</message>
 <message xml:lang="cn">锁定了吗?</message>
-<message xml:lang="tw">鎖定了嗎?</message></label>
+<message xml:lang="tw">鎖定了嗎?</message>
+<message xml:lang="sk">Zamknutý?</message></label>
 <label define="BInformation">
 <message xml:lang="en">About Amaya</message>
 <message xml:lang="fr">À propos de Amaya</message>
@@ -4072,7 +4365,8 @@
 <message xml:lang="hu">Amaya &amp;névjegye</message>
 <message xml:lang="ka">პროგრამა Amaya-ს შესახებ</message>
 <message xml:lang="cn">关于 Amaya</message>
-<message xml:lang="tw">關于 Amaya</message></label>
+<message xml:lang="tw">關于 Amaya</message>
+<message xml:lang="sk">O programe Amaya</message></label>
 <label define="BAtW3C">
 <message xml:lang="en">About Amaya at W3C</message>
 <message xml:lang="fr">À propos de Amaya au W3C</message>
@@ -4086,7 +4380,8 @@
 <message xml:lang="hu">Az Amaya a W3C &amp;webhelyen</message>
 <message xml:lang="ka">პროგრამა Amaya-ს შესახებ W3C-ზე</message>
 <message xml:lang="cn">关于 Amaya at W3C</message>
-<message xml:lang="tw">關于 Amaya at W3C</message></label>
+<message xml:lang="tw">關于 Amaya at W3C</message>
+<message xml:lang="sk">Domoská stránka programu Amaya</message></label>
 <label define="BHelpIndex">
 <message xml:lang="en">Index</message>
 <message xml:lang="fr">Index</message>
@@ -4100,7 +4395,8 @@
 <message xml:lang="hu">&amp;Betűrendes mutató</message>
 <message xml:lang="ka">მაჩვენებელი</message>
 <message xml:lang="cn">索引</message>
-<message xml:lang="tw">索引</message></label>
+<message xml:lang="tw">索引</message>
+<message xml:lang="sk">Témy pomocníka</message></label>
 <label define="BHelpBrowsing">
 <message xml:lang="en">Browsing</message>
 <message xml:lang="fr">Navigation</message>
@@ -4114,7 +4410,8 @@
 <message xml:lang="hu">&amp;Böngészés</message>
 <message xml:lang="ka">ნუსხა</message>
 <message xml:lang="cn">Browsing</message>
-<message xml:lang="tw">Browsing</message></label>
+<message xml:lang="tw">Browsing</message>
+<message xml:lang="sk">Prehliadanie</message></label>
 <label define="BHelpViews">
 <message xml:lang="en">Views</message>
 <message xml:lang="fr">Vues</message>
@@ -4128,7 +4425,8 @@
 <message xml:lang="hu">&amp;Nézetek</message>
 <message xml:lang="ka">ხედები</message>
 <message xml:lang="cn">Views</message>
-<message xml:lang="tw">Views</message></label>
+<message xml:lang="tw">Views</message>
+<message xml:lang="sk">Zobrazenia</message></label>
 <label define="BHelpSelecting">
 <message xml:lang="en">Selecting</message>
 <message xml:lang="fr">Sélection</message>
@@ -4142,7 +4440,8 @@
 <message xml:lang="hu">&amp;Kijelölés</message>
 <message xml:lang="ka">შერჩევა</message>
 <message xml:lang="cn">Selecting</message>
-<message xml:lang="tw">Selecting</message></label>
+<message xml:lang="tw">Selecting</message>
+<message xml:lang="sk">Označovanie</message></label>
 <label define="BHelpDocument">
 <message xml:lang="en">Document</message>
 <message xml:lang="fr">Document</message>
@@ -4156,7 +4455,8 @@
 <message xml:lang="hu">&amp;Dokumentum</message>
 <message xml:lang="ka">დოკუმენტი</message>
 <message xml:lang="cn">Document</message>
-<message xml:lang="tw">Document</message></label>
+<message xml:lang="tw">Document</message>
+<message xml:lang="sk">Vytváranie dokumentu</message></label>
 <label define="BHelpCreating">
 <message xml:lang="en">Creating elements</message>
 <message xml:lang="fr">Création</message>
@@ -4170,7 +4470,8 @@
 <message xml:lang="hu">&amp;Elemek létrehozása</message>
 <message xml:lang="ka">ელემენტების შექმნა</message>
 <message xml:lang="cn">Creating elements</message>
-<message xml:lang="tw">Creating elements</message></label>
+<message xml:lang="tw">Creating elements</message>
+<message xml:lang="sk">Vkladanie prvkov</message></label>
 <label define="BHelpAttributes">
 <message xml:lang="en">Attributes</message>
 <message xml:lang="fr">Attributs</message>
@@ -4184,7 +4485,8 @@
 <message xml:lang="hu">&amp;Attribútumok</message>
 <message xml:lang="ka">ატრიბუტები</message>
 <message xml:lang="cn">Attributes</message>
-<message xml:lang="tw">Attributes</message></label>
+<message xml:lang="tw">Attributes</message>
+<message xml:lang="sk">Atribúty</message></label>
 <label define="BHelpText">
 <message xml:lang="en">Characters</message>
 <message xml:lang="fr">Caractères</message>
@@ -4198,7 +4500,8 @@
 <message xml:lang="hu">&amp;Karakterek</message>
 <message xml:lang="ka">სიმბოლოები</message>
 <message xml:lang="cn">Characters</message>
-<message xml:lang="tw">Characters</message></label>
+<message xml:lang="tw">Characters</message>
+<message xml:lang="sk">Vkladanie znakov</message></label>
 <label define="BHelpChanging">
 <message xml:lang="en">Restructuring</message>
 <message xml:lang="fr">Transformer</message>
@@ -4212,7 +4515,8 @@
 <message xml:lang="hu">&amp;Szerkezetátalakítás</message>
 <message xml:lang="ka">რესტრუქტურიზება</message>
 <message xml:lang="cn">Restructuring</message>
-<message xml:lang="tw">Restructuring</message></label>
+<message xml:lang="tw">Restructuring</message>
+<message xml:lang="sk">Úprava dokumentu</message></label>
 <label define="BHelpLinks">
 <message xml:lang="en">Links</message>
 <message xml:lang="fr">Liens</message>
@@ -4226,7 +4530,8 @@
 <message xml:lang="hu">&amp;Kapcsok</message>
 <message xml:lang="ka">ბმები</message>
 <message xml:lang="cn">Links</message>
-<message xml:lang="tw">Links</message></label>
+<message xml:lang="tw">Links</message>
+<message xml:lang="sk">Prepojenia</message></label>
 <label define="BHelpTables">
 <message xml:lang="en">Tables</message>
 <message xml:lang="fr">Tables</message>
@@ -4240,7 +4545,8 @@
 <message xml:lang="hu">&amp;Táblázatok</message>
 <message xml:lang="ka">ცხრილები</message>
 <message xml:lang="cn">Tables</message>
-<message xml:lang="tw">Tables</message></label>
+<message xml:lang="tw">Tables</message>
+<message xml:lang="sk">Tabuľky</message></label>
 <label define="BHelpImageMaps">
 <message xml:lang="en">Image maps</message>
 <message xml:lang="fr">Zones actives</message>
@@ -4254,7 +4560,8 @@
 <message xml:lang="hu">&amp;Térképek</message>
 <message xml:lang="ka">რუკის გამოსახულებები</message>
 <message xml:lang="cn">Image maps</message>
-<message xml:lang="tw">Image maps</message></label>
+<message xml:lang="tw">Image maps</message>
+<message xml:lang="sk">Oblasti obrázkov</message></label>
 <label define="BHelpMath">
 <message xml:lang="en">Math</message>
 <message xml:lang="fr">Math</message>
@@ -4268,7 +4575,8 @@
 <message xml:lang="hu">&amp;Matematika</message>
 <message xml:lang="ka">მათემატიკა</message>
 <message xml:lang="cn">Math</message>
-<message xml:lang="tw">Math</message></label>
+<message xml:lang="tw">Math</message>
+<message xml:lang="sk">Vzorce</message></label>
 <label define="BHelpSVG">
 <message xml:lang="en">Graphics</message>
 <message xml:lang="fr">Graphiques</message>
@@ -4282,7 +4590,8 @@
 <message xml:lang="hu">&amp;Grafika</message>
 <message xml:lang="ka">გრაფიკა</message>
 <message xml:lang="cn">Graphics</message>
-<message xml:lang="tw">Graphics</message></label>
+<message xml:lang="tw">Graphics</message>
+<message xml:lang="sk">Úprava SVG grafiky</message></label>
 <label define="BHelpXml">
 <message xml:lang="en">XML support</message>
 <message xml:lang="fr">Support XML</message>
@@ -4296,7 +4605,8 @@
 <message xml:lang="hu">&amp;XML támogatás</message>
 <message xml:lang="ka">XML მხარდაჭერა</message>
 <message xml:lang="cn">XML support</message>
-<message xml:lang="tw">XML support</message></label>
+<message xml:lang="tw">XML support</message>
+<message xml:lang="sk">XML podpora</message></label>
 <label define="BHelpStyleSheets">
 <message xml:lang="en">Style sheets</message>
 <message xml:lang="fr">Feuilles de style</message>
@@ -4310,7 +4620,8 @@
 <message xml:lang="hu">&amp;Stíluslapok</message>
 <message xml:lang="ka">სტილები</message>
 <message xml:lang="cn">Style sheets</message>
-<message xml:lang="tw">Style sheets</message></label>
+<message xml:lang="tw">Style sheets</message>
+<message xml:lang="sk">Kaskádové štýly</message></label>
 <label define="BSearching">
 <message xml:lang="en">Searching</message>
 <message xml:lang="fr">Chercher</message>
@@ -4324,7 +4635,8 @@
 <message xml:lang="hu">&amp;Keresés</message>
 <message xml:lang="ka">ძიება</message>
 <message xml:lang="cn">Searching</message>
-<message xml:lang="tw">Searching</message></label>
+<message xml:lang="tw">Searching</message>
+<message xml:lang="sk">Vyhľadávanie</message></label>
 <label define="BHelpSpellChecking">
 <message xml:lang="en">Spell Checking</message>
 <message xml:lang="fr">Corriger</message>
@@ -4338,7 +4650,8 @@
 <message xml:lang="hu">&amp;Szóellenőrzés</message>
 <message xml:lang="ka">მართლწერის შემოწმება</message>
 <message xml:lang="cn">Spell Checking</message>
-<message xml:lang="tw">Spell Checking</message></label>
+<message xml:lang="tw">Spell Checking</message>
+<message xml:lang="sk">Kontrola pravopisu</message></label>
 <label define="BHelpPublishing">
 <message xml:lang="en">Publishing</message>
 <message xml:lang="fr">Publier</message>
@@ -4352,7 +4665,8 @@
 <message xml:lang="hu">&amp;Kiadás</message>
 <message xml:lang="ka">გამოქვეყნება</message>
 <message xml:lang="cn">Publishing</message>
-<message xml:lang="tw">Publishing</message></label>
+<message xml:lang="tw">Publishing</message>
+<message xml:lang="sk">Publikovanie</message></label>
 <label define="BHelpWebDAV">
 <message xml:lang="en">WebDAV</message>
 <message xml:lang="fr">WebDAV</message>
@@ -4366,7 +4680,8 @@
 <message xml:lang="hu">&amp;WebDAV</message>
 <message xml:lang="ka">WebDAV</message>
 <message xml:lang="cn">WebDAV</message>
-<message xml:lang="tw">WebDAV</message></label>
+<message xml:lang="tw">WebDAV</message>
+<message xml:lang="sk">WebDAV</message></label>
 <label define="BHelpPrinting">
 <message xml:lang="en">Printing</message>
 <message xml:lang="fr">Imprimer</message>
@@ -4380,7 +4695,8 @@
 <message xml:lang="hu">&amp;Nyomtatás</message>
 <message xml:lang="ka">ბეჭდვა</message>
 <message xml:lang="cn">Printing</message>
-<message xml:lang="tw">Printing</message></label>
+<message xml:lang="tw">Printing</message>
+<message xml:lang="sk">Tlač</message></label>
 <label define="BHelpNumbering">
 <message xml:lang="en">Numbering</message>
 <message xml:lang="fr">Numéroter</message>
@@ -4394,7 +4710,8 @@
 <message xml:lang="hu">&amp;Számozás</message>
 <message xml:lang="ka">გადანომვრა</message>
 <message xml:lang="cn">Numbering</message>
-<message xml:lang="tw">Numbering</message></label>
+<message xml:lang="tw">Numbering</message>
+<message xml:lang="sk">Číslovanie podkapitol</message></label>
 <label define="BHelpMakeBook">
 <message xml:lang="en">Making books</message>
 <message xml:lang="fr">Construire un livre</message>
@@ -4408,7 +4725,8 @@
 <message xml:lang="hu">&amp;Kötetek</message>
 <message xml:lang="ka">წიგნების შექმნა</message>
 <message xml:lang="cn">Making books</message>
-<message xml:lang="tw">Making books</message></label>
+<message xml:lang="tw">Making books</message>
+<message xml:lang="sk">Vytváranie kníh</message></label>
 <label define="BHelpAnnotation">
 <message xml:lang="en">Annotations</message>
 <message xml:lang="fr">Annotations</message>
@@ -4422,7 +4740,8 @@
 <message xml:lang="hu">&amp;Jegyzetek</message>
 <message xml:lang="ka">ანოტაციები</message>
 <message xml:lang="cn">Annotations</message>
-<message xml:lang="tw">Annotations</message></label>
+<message xml:lang="tw">Annotations</message>
+<message xml:lang="sk">Komentáre</message></label>
 <label define="BHelpConfigure">
 <message xml:lang="en">Configuring Amaya</message>
 <message xml:lang="fr">Configurer Amaya</message>
@@ -4436,7 +4755,8 @@
 <message xml:lang="hu">&amp;Az Amaya beállítása</message>
 <message xml:lang="ka">Amaya-ს გამართვა</message>
 <message xml:lang="cn">Configuring Amaya</message>
-<message xml:lang="tw">Configuring Amaya</message></label>
+<message xml:lang="tw">Configuring Amaya</message>
+<message xml:lang="sk">Nastavenia programu</message></label>
 <label define="BHelpShortCuts">
 <message xml:lang="en">ShortCuts</message>
 <message xml:lang="fr">Raccourcis clavier</message>
@@ -4450,7 +4770,8 @@
 <message xml:lang="hu">&amp;Gyorsbillentyűk</message>
 <message xml:lang="ka">მალმხმობები</message>
 <message xml:lang="cn">ShortCuts</message>
-<message xml:lang="tw">ShortCuts</message></label>
+<message xml:lang="tw">ShortCuts</message>
+<message xml:lang="sk">Klávesové skratky</message></label>
 <label define="BHelpAccess">
 <message xml:lang="en">Accessibility in Amaya</message>
 <message xml:lang="fr">Accessibilité d'Amaya</message>
@@ -4464,5 +4785,6 @@
 <message xml:lang="hu">&amp;Kisegítő lehetőségek az Amayában</message>
 <message xml:lang="ka">Amaya-ს დამხმარე საშუალებები</message>
 <message xml:lang="cn">Accessibility in Amaya</message>
-<message xml:lang="tw">Accessibility in Amaya</message></label>
-<label define="MAX_EDITOR_LABEL"></label></messages></base>
+<message xml:lang="tw">Accessibility in Amaya</message>
+<message xml:lang="sk">Zjednodušenie ovládania</message></label>
+<label define="MAX_EDITOR_LABEL"/></messages></base>
