@@ -45,6 +45,7 @@ static char       *DisplayCategory[]={
 #define DisplayCategory_length 6
 #define String_length  4
 
+#include "MENUconf.h"
 #include "AHTURLTools_f.h"
 #include "EDITstyle_f.h"
 #include "EDITORactions_f.h"

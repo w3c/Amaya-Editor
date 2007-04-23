@@ -27,6 +27,7 @@
 #include "init_f.h"
 
 /* amaya includes */
+#include "MENUconf.h"
 #include "HTMLhistory_f.h"
 
 /* windows includes */

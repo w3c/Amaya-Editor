@@ -97,6 +97,10 @@ extern void HelpShortCuts ( Document document,
                             View view );
 extern void HelpAccess ( Document document,
                          View view );
+extern Prop_Passwords_Site * GetFirtsPasswordsSite ( void );
+extern void UpdatePasswordsSiteList ( int i_site,
+                                      const char *label_site );
+extern int LoadPasswordsSiteList ( void );
 extern void WritePasswordTable ( void );
 extern void NewPasswordTable ( char *realm,
                                char *server,
@@ -218,6 +222,10 @@ extern void HelpShortCuts ( Document document,
                               View view );
 extern void HelpAccess ( Document document,
                            View view );
+extern Prop_Passwords_Site * GetFirtsPasswordsSite ( void );
+extern void UpdatePasswordsSiteList ( int i_site,
+                                        const char *label_site );
+extern int LoadPasswordsSiteList ( void );
 extern void WritePasswordTable ( void );
 extern void NewPasswordTable ( char *realm,
                                  char *server,

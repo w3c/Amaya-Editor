@@ -17,6 +17,7 @@
 #define THOT_EXPORT extern
 #include "amaya.h"
 
+#include "MENUconf.h"
 #include "init_f.h"
 #include "HTMLhistory_f.h"
 #include "query_f.h"

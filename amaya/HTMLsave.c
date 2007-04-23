@@ -40,6 +40,7 @@
 #include "bookmarks.h"
 #include "BMevent_f.h"
 #endif /* BOOKMARKS */
+#include "MENUconf.h"
 #include "css_f.h"
 #include "EDITORactions_f.h"
 #include "fetchXMLname_f.h"

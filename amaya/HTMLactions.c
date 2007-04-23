@@ -38,6 +38,7 @@
 #endif /* TEMPLATES */
 
 #include "XML.h"
+#include "MENUconf.h"
 #include "anim_f.h"
 #include "css_f.h"
 #include "EDITORactions_f.h"

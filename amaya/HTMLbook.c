@@ -62,6 +62,7 @@ static int              Orientation;
 static int              PageSize;
 static int              PagePerSheet;
 
+#include "MENUconf.h"
 #include "EDITORactions_f.h"
 #include "init_f.h"
 #include "HTMLactions_f.h"

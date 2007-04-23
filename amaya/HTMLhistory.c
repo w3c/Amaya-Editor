@@ -19,6 +19,8 @@
 #include "amaya.h"
 #include "helpmenu.h"
 #include "css.h"
+#include "MENUconf.h"
+
 #ifdef _WINGUI
 #include "wininclude.h"
 #endif /* _WINGUI */
@@ -27,6 +29,7 @@
 #include "HTMLhistory_f.h"
 #include "HTMLsave_f.h"
 #include "init_f.h"
+#include "MENUconf_f.h"
 
 #ifdef _WX
 #include "wx/msgdlg.h"
@@ -78,6 +81,7 @@ static int PM_Index = 0;
 static int PM_Save = FALSE;
 
 #define S_FILE "2906642345.s"
+static Prop_Passwords_Site* Pass_FirstSite = NULL;
 
 /*----------------------------------------------------------------------
   InitDocHistory
@@ -1368,6 +1372,126 @@ static void LoadPasswordTable ()
 }
 
 /*----------------------------------------------------------------------
+  GetFirtsPasswordsSite: 
+  return the first password saved
+  ----------------------------------------------------------------------*/
+Prop_Passwords_Site * GetFirtsPasswordsSite()
+{
+  return Pass_FirstSite;
+}
+
+/*----------------------------------------------------------------------
+  FreePasswordSiteList
+  ----------------------------------------------------------------------*/
+static void FreePasswordsSiteList()
+{
+  Prop_Passwords_Site *element, *next = NULL;
+
+  if (Pass_FirstSite == NULL)
+      return;
+
+  element = Pass_FirstSite;
+  while (element)
+  {
+    next = element->NextSite;
+    TtaFreeMemory (element);
+    element = next;
+  }
+
+  Pass_FirstSite = NULL;
+  return;
+}
+
+/*----------------------------------------------------------------------
+  UpdatePasswordSiteList: Remove the corresponding entry 
+  in the password table
+  ----------------------------------------------------------------------*/
+void UpdatePasswordsSiteList (int i_site, const char *label_site)
+{
+  int             i = 0;
+  char            table_site [MAX_LENGTH];
+
+  if (i_site > PM_Index)
+      return;
+
+  /* Search the corresponding entry in the password table */
+  for (i = 1; i <= PM_Index; i++)
+    { 
+      if (PM_Server[i] != NULL &&  PM_Realm[i] != NULL)
+        {
+        /* we wearch first the same index */
+        if (i == i_site)
+          {
+            sprintf (table_site, "%s - (%s)", PM_Server[i], PM_Realm[i]);
+            /* verification of the site/realm pair */
+            if ((label_site != NULL) && (strcmp ((char *)label_site, table_site) == 0))
+               RemovePasswordTable (i, TRUE);
+          }
+        }
+    }
+
+#ifdef LOLO
+  /* Load each server/realm pair */
+  for (i = 1; i <= PM_Index; i++)
+    { 
+      if (PM_Server[i] != NULL &&  PM_Realm[i] != NULL)
+        {
+          sprintf (site, "%s - (%s)", PM_Server[i], PM_Realm[i]);
+          element  = (Prop_Passwords_Site*)TtaGetMemory (sizeof(Prop_Passwords_Site));
+          memset (element, 0, sizeof(Prop_Passwords_Site));
+          strncpy (element->Site, site, MAX_LENGTH - 1);
+          if (Pass_FirstSite == NULL)
+              Pass_FirstSite = element; 
+          else
+              current->NextSite = element;
+          current = element;
+          nb++;
+        }
+    }
+  return nb;
+#endif
+
+}
+
+/*----------------------------------------------------------------------
+  LoadPasswordSiteList: load the list of saved sites
+  return : number of sites saved
+  ----------------------------------------------------------------------*/
+int LoadPasswordsSiteList ()
+{
+  Prop_Passwords_Site *element, *current = NULL;
+  int             i;
+  int             nb;
+ char            site [MAX_LENGTH];
+
+  /* Is the password table already loaded */
+  if (PM_Index == 0)
+      LoadPasswordTable ();
+
+  /* Clean up the curent list */
+  FreePasswordsSiteList ();
+
+  /* Load each server/realm pair */
+  for (i = 1; i <= PM_Index; i++)
+    { 
+      if (PM_Server[i] != NULL &&  PM_Realm[i] != NULL)
+        {
+          sprintf (site, "%s - (%s)", PM_Server[i], PM_Realm[i]);
+          element  = (Prop_Passwords_Site*)TtaGetMemory (sizeof(Prop_Passwords_Site));
+          memset (element, 0, sizeof(Prop_Passwords_Site));
+          strncpy (element->Site, site, MAX_LENGTH - 1);
+          if (Pass_FirstSite == NULL)
+              Pass_FirstSite = element; 
+          else
+              current->NextSite = element;
+          current = element;
+          nb++;
+        }
+    }
+  return nb;
+}
+
+/*----------------------------------------------------------------------
   PasswordManagerStore
   Store the name/password infos
   ----------------------------------------------------------------------*/
@@ -1444,7 +1568,10 @@ void WritePasswordTable ()
     }
 
   PM_Index = 0;
-  
+
+  // Free the passwords list used by the Preferences  
+  FreePasswordsSiteList();
+
   return;
 }
 

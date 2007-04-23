@@ -39,6 +39,7 @@
 #include "wininclude.h"
 #endif /* _WINGUI */
 
+#include "MENUconf.h"
 #include "css_f.h"
 #include "html2thot_f.h"
 #include "init_f.h"

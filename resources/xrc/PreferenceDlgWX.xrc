@@ -631,7 +631,7 @@
                       <object class="wxBoxSizer">
                         <orient>wxHORIZONTAL</orient>
                         <object class="sizeritem">
-                          <object class="wxListBox" name="wxID_LIST_PASWORDS">
+                          <object class="wxListBox" name="wxID_LIST_PASSWORDS">
                             <content/>
                             <style>wxLB_HSCROLL</style>
                           </object>

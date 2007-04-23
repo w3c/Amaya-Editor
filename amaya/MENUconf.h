@@ -199,11 +199,10 @@ typedef struct Prop_DAV_t
   ThotBool toggleAwareness2;
 } Prop_DAV;
 
-
 typedef struct Prop_Templates_Path_t {
   char Path[MAX_LENGTH];
   struct Prop_Templates_Path_t* NextPath;
-}Prop_Templates_Path;
+} Prop_Templates_Path;
 
 typedef struct Prop_Templates_t
 {
@@ -217,6 +216,11 @@ typedef struct Prop_Emails_t
   int  serverPort;
   char fromAddress[MAX_LENGTH];
 } Prop_Emails;
+
+typedef struct Prop_Passwords_Site_t {
+  char Site[MAX_LENGTH];
+  struct Prop_Passwords_Site_t* NextSite;
+} Prop_Passwords_Site;
 
 typedef struct Prop_Passwords_t
 {

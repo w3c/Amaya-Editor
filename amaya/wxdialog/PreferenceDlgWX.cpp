@@ -22,6 +22,7 @@
 #include "templates.h"
 #include "Elemlist.h"
 #include "templates_f.h"
+#include "HTMLhistory_f.h"
 
 bool PreferenceDlgWX::m_OnApplyLock = FALSE;
 static int MyRef = 0;
@@ -72,6 +73,8 @@ BEGIN_EVENT_TABLE(PreferenceDlgWX, AmayaDialog)
   EVT_LISTBOX(XRCID("wxID_LIST_TEMPLATE_REPOSITORIES"), PreferenceDlgWX::OnTemplateSelected)
 #endif /* TEMPLATES*/
   // Passwords tab callbacks
+  EVT_LISTBOX(XRCID("wxID_LIST_PASSWORDS"),         PreferenceDlgWX::OnPasswordSelected)
+  EVT_BUTTON( XRCID("wxID_BUTTON_DELETE_PASSWORD"), PreferenceDlgWX::OnPasswordDeleted )
   EVT_BUTTON( XRCID("wxID_BUTTON_EMPTY_PASSWORDS"), PreferenceDlgWX::OnEmptyPasswords )
 
 END_EVENT_TABLE()
@@ -1269,7 +1272,6 @@ void PreferenceDlgWX::GetValueDialog_Templates()
   prop.S_Templates = XRCCTRL(*this, "wxID_CHECK_SHOWTEMPLATES", wxCheckBox)->GetValue();
 }
 
-
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void PreferenceDlgWX::OnTemplateChoose(wxCommandEvent& event)
@@ -1326,7 +1328,6 @@ void PreferenceDlgWX::OnUpdateTemplateAdd(wxUpdateUIEvent& event)
 {
   event.Enable(!XRCCTRL(*this, "wxID_TEXT_NEW_TEMPLATE", wxTextCtrl)->GetValue().IsEmpty());
 }
-
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -1496,17 +1497,17 @@ void PreferenceDlgWX::SetupLabelDialog_Passwords()
 void PreferenceDlgWX::SetupDialog_Passwords( const Prop_Passwords & prop)
 {
   XRCCTRL(*this, "wxID_CHECK_DEF_PASSWORDS", wxCheckBox)->SetValue( prop.S_Passwords );
-  // wxListBox *box = XRCCTRL(*this, "wxID_LIST_PASSWORDS", wxListBox);
-
+  wxListBox *box = XRCCTRL(*this, "wxID_LIST_PASSWORDS", wxListBox);
   /** ici **/
-  /*
-  Prop_Templates_Path* path = prop.FirstPath;
-  while (path)
+  /* construire la liste a partir de la table */
+  LoadPasswordsSiteList();
+  Prop_Passwords_Site* site;
+  site = GetFirtsPasswordsSite();
+  while (site)
     {
-      box->Append(TtaConvMessageToWX(path->Path));
-      path = path->NextPath;
+      box->Append(TtaConvMessageToWX(site->Site));
+      site = site->NextSite;
     }
-  */
 }
 
 /*----------------------------------------------------------------------
@@ -1529,27 +1530,40 @@ Prop_Passwords PreferenceDlgWX::GetValueDialog_Passwords()
   Prop_Passwords       prop = GetProp_Passwords();
 
   prop.S_Passwords = XRCCTRL(*this, "wxID_CHECK_DEF_PASSWORDS", wxCheckBox)->GetValue();
-
   return prop;
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void PreferenceDlgWX::OnPasswordSelected(wxCommandEvent& event)
+{
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void PreferenceDlgWX::OnPasswordDeleted(wxCommandEvent& event)
+{
+  wxListBox *box = XRCCTRL(*this, "wxID_LIST_PASSWORDS", wxListBox);
+  int sel = box->GetSelection();
+  if (sel != wxNOT_FOUND)
+  {
+    char buffer[MAX_LENGTH];
+    strcpy (buffer, (const char*)box->GetString(sel).mb_str(*wxConvCurrent) );
+    box->Delete(sel);
+    // Update the password table
+    sel++;
+    UpdatePasswordsSiteList(sel, &buffer[0]);
+  }
+}
 
 #ifdef TEST
 
-/*----------------------------------------------------------------------
-  UpdatePasswordList updates the current list of passwords
-  params:
-  returns:
-  ----------------------------------------------------------------------*/
-void PreferenceDlgWX::UpdatePasswordsList()
-{
   wxString             value;
   Prop_Templates       prop = GetProp_Templates();
   Prop_Templates_Path *element = NULL;
   wxListBox           *box;
   int                  i;
 
-  FreeTemplateRepositoryList(&(prop.FirstPath));
   box = XRCCTRL(*this, "wxID_LIST_TEMPLATE_REPOSITORIES", wxListBox);
   for (i = 0; i < (int)box->GetCount(); i++)
     {
@@ -1558,60 +1572,6 @@ void PreferenceDlgWX::UpdatePasswordsList()
        prop.FirstPath = element;
     }
   SetTemplateRepositoryList ((const Prop_Templates_Path**)&(prop.FirstPath));
-}
-
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-void PreferenceDlgWX::OnTemplateChoose(wxCommandEvent& event)
-{
-  static const wxString home = TtaGetHomeDir();
-  wxFileDialog  *p_dlg;
-  
-  wxString path = XRCCTRL(*this, "wxID_TEXT_NEW_TEMPLATE", wxTextCtrl)->GetValue();
-  if(!path.IsEmpty())
-    path.Replace(wxT("~"), home);
-  
-  p_dlg = new wxFileDialog(this,
-                           TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_OPEN_URL) ),
-                           _T(""), _T(""), _T("Templates (*.xtd)|*.xtd"),
-                           wxOPEN | wxCHANGE_DIR);
-  if (p_dlg->ShowModal() == wxID_OK)
-    {
-      path = p_dlg->GetPath();
-      XRCCTRL(*this, "wxID_TEXT_NEW_TEMPLATE", wxTextCtrl)->SetValue(path);
-    }
-  p_dlg->Destroy();
-}
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-void PreferenceDlgWX::OnTemplateDel(wxCommandEvent& event)
-{
-  wxListBox *box = XRCCTRL(*this, "wxID_LIST_TEMPLATE_REPOSITORIES", wxListBox);
-  int sel = box->GetSelection();
-  if (sel != wxNOT_FOUND)
-  {
-    box->Delete(sel);
-    // Update the list of templates
-    UpdateTemplateList();
-  }
-}
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-void PreferenceDlgWX::OnUpdateTemplateDel(wxUpdateUIEvent& event)
-{
-  event.Enable(XRCCTRL(*this, "wxID_LIST_TEMPLATE_REPOSITORIES",
-                       wxListBox)->GetSelection() != wxNOT_FOUND);
-}
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-void PreferenceDlgWX::OnTemplateSelected(wxCommandEvent& event)
-{
-  if (event.IsSelection())
-    XRCCTRL(*this, "wxID_TEXT_NEW_TEMPLATE", wxTextCtrl)->SetValue(event.GetString());
 }
 #endif /* TEST */
 
@@ -1766,7 +1726,6 @@ void PreferenceDlgWX::OnDefault( wxCommandEvent& event )
   else if ( p_page->GetId() == wxXmlResource::GetXRCID(_T("wxID_PAGE_PASSWORDS")) )
     {
       ThotCallback (GetPrefPasswordsBase() + PasswordsMenu, INTEGER_DATA, (char*) 2);
-      SetupDialog_Passwords( GetProp_Passwords() );
     }
 
   ThotCallback (MyRef, INTEGER_DATA, (char*) 2);

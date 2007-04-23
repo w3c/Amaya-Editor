@@ -112,14 +112,14 @@ private:
   // "Passwords" tab
   void SetupLabelDialog_Passwords();
   void SetupDialog_Passwords( const Prop_Passwords & prop );
-  void UpdatePasswordList();
+  void UpdatePasswordsList();
   Prop_Passwords GetValueDialog_Passwords();
   void OnEmptyPasswords( wxCommandEvent& event );
+  void OnPasswordDeleted(wxCommandEvent& event);
+  void OnPasswordSelected(wxCommandEvent& event);
 
   void OnPasswordChoose(wxCommandEvent& event);
-  void OnPasswordDel(wxCommandEvent& event);
   void OnUpdatePasswordDel(wxUpdateUIEvent& event);
-  void OnPasswordSelected(wxCommandEvent& event);
 
   // Any class wishing to process wxWindows events must use this macro
   DECLARE_EVENT_TABLE()

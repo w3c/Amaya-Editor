@@ -215,6 +215,7 @@ extern int       menu_item;
 
 #include "wininclude.h"
 #endif /* _WINGUI */
+#include "MENUconf.h"
 #include "AHTURLTools_f.h"
 #include "css_f.h"
 #include "EDITORactions_f.h"
