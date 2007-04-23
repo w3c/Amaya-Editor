@@ -64,11 +64,12 @@ BEGIN_EVENT_TABLE(PreferenceDlgWX, AmayaDialog)
   EVT_BUTTON( XRCID("wxID_BUTTON_MOVEDOWN_TEMPLATE"),  PreferenceDlgWX::OnTemplateMoveDown )
   EVT_BUTTON( XRCID("wxID_BUTTON_CHOOSE_TEMPLATE"),    PreferenceDlgWX::OnTemplateChoose )
   EVT_BUTTON( XRCID("wxID_BUTTON_ADD_TEMPLATE"),       PreferenceDlgWX::OnTemplateAdd )
+  //EVT_TEXT_ENTER( XRCID("wxID_TEXT_NEW_TEMPLATE"),     PreferenceDlgWX::OnTemplateAdd )
   EVT_UPDATE_UI( XRCID("wxID_BUTTON_DELETE_TEMPLATE"), PreferenceDlgWX::OnUpdateTemplateDel )
   EVT_UPDATE_UI( XRCID("wxID_BUTTON_MOVEUP_TEMPLATE"), PreferenceDlgWX::OnUpdateTemplateMoveUp )
   EVT_UPDATE_UI( XRCID("wxID_BUTTON_MOVEDOWN_TEMPLATE"), PreferenceDlgWX::OnUpdateTemplateMoveDown )
-  EVT_UPDATE_UI( XRCID("wxID_BUTTON_ADD_TEMPLATE"),      PreferenceDlgWX::OnUpdateTemplateAdd )
-  EVT_LISTBOX(XRCID("wxID_LIST_TEMPLATE_REPOSITORIES"),  PreferenceDlgWX::OnTemplateSelected)
+  EVT_UPDATE_UI( XRCID("wxID_BUTTON_ADD_TEMPLATE"),     PreferenceDlgWX::OnUpdateTemplateAdd )
+  EVT_LISTBOX(XRCID("wxID_LIST_TEMPLATE_REPOSITORIES"), PreferenceDlgWX::OnTemplateSelected)
 #endif /* TEMPLATES*/
   // Passwords tab callbacks
   EVT_BUTTON( XRCID("wxID_BUTTON_EMPTY_PASSWORDS"), PreferenceDlgWX::OnEmptyPasswords )
@@ -1277,7 +1278,7 @@ void PreferenceDlgWX::OnTemplateChoose(wxCommandEvent& event)
   wxFileDialog  *p_dlg;
   
   wxString path = XRCCTRL(*this, "wxID_TEXT_NEW_TEMPLATE", wxTextCtrl)->GetValue();
-  if(!path.IsEmpty())
+  if (!path.IsEmpty())
     path.Replace(wxT("~"), home);
   
   p_dlg = new wxFileDialog(this,
@@ -1296,8 +1297,23 @@ void PreferenceDlgWX::OnTemplateChoose(wxCommandEvent& event)
   ----------------------------------------------------------------------*/
 void PreferenceDlgWX::OnTemplateAdd(wxCommandEvent& event)
 {
+  wxString   path = XRCCTRL(*this, "wxID_TEXT_NEW_TEMPLATE", wxTextCtrl)->GetValue();
   wxListBox *box = XRCCTRL(*this, "wxID_LIST_TEMPLATE_REPOSITORIES", wxListBox);
-  box->Append(XRCCTRL(*this, "wxID_TEXT_NEW_TEMPLATE", wxTextCtrl)->GetValue());
+  int        i;
+  
+  if (path.IsEmpty())
+    return;
+  for (i = 0; i < (int)box->GetCount(); i++)
+    {
+      box->GetString(i).mb_str(*wxConvCurrent);
+      if (!strcmp (path.mb_str(wxConvUTF8), box->GetString(i).mb_str(wxConvUTF8)))
+        {
+          // this entry already exists
+          box->SetSelection(box->GetCount()-1);
+          return;
+        }
+    }
+  box->Append(path);
   box->SetSelection(box->GetCount()-1);
 
   // Update the list of templates
@@ -1340,7 +1356,7 @@ void PreferenceDlgWX::OnTemplateMoveUp(wxCommandEvent& event)
 {
   wxListBox *box = XRCCTRL(*this, "wxID_LIST_TEMPLATE_REPOSITORIES", wxListBox);
   int sel = box->GetSelection();
-  if (sel!=wxNOT_FOUND && sel>0)
+  if (sel != wxNOT_FOUND && sel > 0)
   {
     wxString str = box->GetString(sel);
     box->Delete(sel);
@@ -1366,7 +1382,7 @@ void PreferenceDlgWX::OnTemplateMoveDown(wxCommandEvent& event)
 {
   wxListBox *box = XRCCTRL(*this, "wxID_LIST_TEMPLATE_REPOSITORIES", wxListBox);
   int sel = box->GetSelection();
-  if (sel!=wxNOT_FOUND && sel<(int)box->GetCount()-2)
+  if (sel != wxNOT_FOUND && sel<(int)box->GetCount()-2)
   {
     wxString str = box->GetString(sel);
     box->Delete(sel);
