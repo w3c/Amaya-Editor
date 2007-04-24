@@ -499,11 +499,14 @@ void InitAmayaDefEnv (void)
     TtaSetEnvBoolean ("ANNOT_RAUTOLOAD", FALSE, TRUE);
 #endif /* ANNOTATIONS */
 
-  /* Emails. */
+  /* Emails */
   TtaSetDefEnvString ("EMAILS_SMTP_SERVER", "", FALSE);
   TtaSetDefEnvString ("EMAILS_SMTP_PORT", "25", FALSE);
   TtaSetDefEnvString ("EMAILS_FROM_ADDRESS", "", FALSE);
   TtaSetDefEnvString ("EMAILS_LAST_RCPT", "", FALSE);
+
+  /* Passwords */
+  TtaSetDefEnvString ("SAVE_PASSWORDS", FALSE, FALSE);
 
   /* appearance */
 }
@@ -4559,7 +4562,8 @@ void SetPasswordsConf (void)
 void GetDefaultPasswordsConf ()
 {
   /* read the default values */
-  TtaGetDefEnvBoolean ("SAVE_PASSWORDS", &(GProp_Passwords.S_Passwords));
+  GProp_Passwords.S_Passwords = FALSE;
+  TtaSetEnvBoolean ("SAVE_PASSWORDS", GProp_Passwords.S_Passwords, TRUE);
 }
 
 /*----------------------------------------------------------------------

@@ -1517,6 +1517,8 @@ void PreferenceDlgWX::SetupDialog_Passwords( const Prop_Passwords & prop)
   ----------------------------------------------------------------------*/
 void PreferenceDlgWX::OnEmptyPasswords( wxCommandEvent& event )
 {
+  wxListBox *box = XRCCTRL(*this, "wxID_LIST_PASSWORDS", wxListBox);
+  box->Clear();
   ThotCallback (GetPrefPasswordsBase() + PasswordsMenu, INTEGER_DATA, (char*) 3);
 }
 
@@ -1555,26 +1557,6 @@ void PreferenceDlgWX::OnPasswordDeleted(wxCommandEvent& event)
     UpdatePasswordsSiteList(sel, &buffer[0]);
   }
 }
-
-#ifdef TEST
-
-  wxString             value;
-  Prop_Templates       prop = GetProp_Templates();
-  Prop_Templates_Path *element = NULL;
-  wxListBox           *box;
-  int                  i;
-
-  box = XRCCTRL(*this, "wxID_LIST_TEMPLATE_REPOSITORIES", wxListBox);
-  for (i = 0; i < (int)box->GetCount(); i++)
-    {
-    element = (Prop_Templates_Path*) AllocTemplateRepositoryListElement( (const char*) box->GetString(i).mb_str(*wxConvCurrent), element);
-    if (i == 0)
-       prop.FirstPath = element;
-    }
-  SetTemplateRepositoryList ((const Prop_Templates_Path**)&(prop.FirstPath));
-}
-#endif /* TEST */
-
 
 /************************************************************************/
 /* General events                                                       */
@@ -1726,6 +1708,7 @@ void PreferenceDlgWX::OnDefault( wxCommandEvent& event )
   else if ( p_page->GetId() == wxXmlResource::GetXRCID(_T("wxID_PAGE_PASSWORDS")) )
     {
       ThotCallback (GetPrefPasswordsBase() + PasswordsMenu, INTEGER_DATA, (char*) 2);
+      SetupDialog_Passwords( GetProp_Passwords() );
     }
 
   ThotCallback (MyRef, INTEGER_DATA, (char*) 2);

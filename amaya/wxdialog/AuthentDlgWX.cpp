@@ -101,8 +101,7 @@ AuthentDlgWX::AuthentDlgWX( int ref, wxWindow * parent, char *auth_realm,
   SetAutoLayout( TRUE );
 }
 
-/*---------------------------------------------------------------------------
-  Destructor. (Empty, as we don't need anything special done when destructing).
+/*---------------------------------------------------------------------------bra  Destructor. (Empty, as we don't need anything special done when destructing).
   ---------------------------------------------------------------------------*/
 AuthentDlgWX::~AuthentDlgWX()
 {
@@ -117,6 +116,10 @@ AuthentDlgWX::~AuthentDlgWX()
   ----------------------------------------------------------------------*/
 void AuthentDlgWX::OnConfirmButton( wxCommandEvent& event )
 {
+  ThotBool check;
+  wxCheckBox * p_cbox = XRCCTRL(*this, "wxID_CHECK_PWD", wxCheckBox);
+  check = p_cbox->IsChecked();
+   ThotCallback (BaseDialog + PasswordSave, INTEGER_DATA, (char*) check );
   // return done
   Waiting = 0;
   ThotCallback (MyRef, INTEGER_DATA, (char*) 1);
@@ -137,14 +140,10 @@ void AuthentDlgWX::OnCancelButton( wxCommandEvent& event )
   ---------------------------------------------------------------*/
 void AuthentDlgWX::OnSavePasswordButton ( wxCommandEvent& event )
 {
+  ThotBool check;
   wxCheckBox * p_cbox = XRCCTRL(*this, "wxID_CHECK_PWD", wxCheckBox);
-  if (!p_cbox->IsChecked())
-    // disable the save of this password
-    ThotCallback (BaseDialog + PasswordSave, INTEGER_DATA, (char*) 0 );
-  else
-    // enable the save of this password
-    ThotCallback (BaseDialog + PasswordSave, INTEGER_DATA, (char*) 1 );
-
+  check = p_cbox->IsChecked();
+  ThotCallback (BaseDialog + PasswordSave, INTEGER_DATA, (char*) check );
 }
 
 /*---------------------------------------------------------------

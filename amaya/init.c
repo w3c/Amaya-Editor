@@ -6345,7 +6345,6 @@ void CallbackDialogue (int ref, int typedata, char *data)
           Answer_text[0] = EOS;
           Answer_name[0] = EOS;
           Answer_password[0] = EOS;
-          Answer_save_password = 0;
           UserAnswer = 0;
         }
       else
