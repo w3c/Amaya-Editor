@@ -6171,7 +6171,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
   int                att, kind;
   int                specificity, xmlType;
   int                skippedNL;
-  ThotBool           isHTML;
+  ThotBool           isHTML, noname;
   ThotBool           level, quoted, doubleColon;
 #define ATTR_ID 1
 #define ATTR_CLASS 2
@@ -6227,16 +6227,19 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
              !TtaIsBlank (selector))
         *cur++ = *selector++;
       *cur++ = EOS; /* close the first string  in sel[] */
+      noname = TRUE;
       if (deb[0] != EOS)
         /* the selector starts with an element name */
         {
           if (deb[0] <= 64 && deb[0] != '*')
             {
               CSSPrintError ("Invalid element", deb);
-              return NULL;
+              names[0] = NULL; /* no element name */
+              DoApply = FALSE;
             }
           else
             {
+              noname = FALSE;
               names[0] = deb;
               if (!strcmp (names[0], "html"))
                 /* give a greater priority to the backgoud color of html */
@@ -6251,7 +6254,6 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
         names[0] = NULL; /* no element name */
 
       rel[0] = RelVoid;
-
       /* now names[0] points to the beginning of the parsed item
          and cur to the next string to be parsed */
       while (*selector == '.' || *selector == ':' ||
@@ -6639,6 +6641,12 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
       selector = SkipBlanksAndComments (selector);
       NewLineSkipped = skippedNL;
 
+      if (noname && !pseudoFirstChild[0] && attrnums[0] == 0 && attrnames[0] == NULL)
+        {
+          *cur++ = EOS;
+          CSSPrintError ("Invalid Selector", deb);
+          DoApply = FALSE;	    
+        }
       /* is it a multi-level selector? */
       if (*selector == EOS)
         /* end of the selector */
@@ -6653,8 +6661,8 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
           if (*next == EOS)
             /* nothing after the comma. Invalid selector */
             {
-              /*CSSPrintError ("Syntax error:", selector);*/
-              return NULL;
+              CSSPrintError ("Syntax error:", selector);
+              selector = NULL;
             }
           break;
         }
@@ -7054,7 +7062,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
   isHTML = (strcmp (schemaName, "HTML") == 0);
   tsch = GetPExtension (doc, ctxt->schema, css, link);
   skippedNL = NewLineSkipped;
-  if (tsch && cssRule)
+  if (DoApply && tsch && cssRule)
     {
       if (css)
         {
