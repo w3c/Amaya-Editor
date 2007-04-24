@@ -2737,6 +2737,13 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
               if (!pAb->AbHorizEnclosing || pAb->AbNotInLine)
                 /* the inline rule doesn't act on this box */
                 ComputePosRelation (&pAb->AbHorizPos, pBox, frame, TRUE);
+              else if (pAb->AbPresentationBox && pAb->AbTypeNum == 0 &&
+                       pAb->AbHorizPos.PosAbRef && pAb->AbHorizPos.PosAbRef->AbFloat != 'N')
+                {
+                /* the inline rule doesn't act on this box */
+                ComputePosRelation (&pAb->AbHorizPos, pBox, frame, TRUE);
+                ComputePosRelation (&pAb->AbVertPos, pBox, frame, FALSE);
+                }
               else
                 /* the box position depends of its horizontal reference axis */
                 SetPositionConstraint (VertRef, pBox, &i);

@@ -87,7 +87,10 @@ PtrBox GetNextBox (PtrAbstractBox pAb, int frame)
           pNextAb = pNextAb->AbNext;
         else if (pNextAb->AbBox == NULL)
           pNextAb = pNextAb->AbNext;
-      /* Est-ce un pave compose eclate ? */
+        else if (pNextAb->AbPresentationBox && pNextAb->AbTypeNum == 0 &&
+                 pNextAb->AbHorizPos.PosAbRef && pNextAb->AbHorizPos.PosAbRef->AbFloat != 'N')
+          // skip not inline bullets
+          pNextAb = pNextAb->AbNext;
         else if (pNextAb->AbBox->BxType == BoGhost ||
                  pNextAb->AbBox->BxType == BoFloatGhost)
           {
@@ -156,7 +159,10 @@ static PtrBox GetPreviousBox (PtrAbstractBox pAb, int frame)
         pNextAb = pNextAb->AbPrevious;
       else if (pNextAb->AbBox == NULL)
         pNextAb = pNextAb->AbPrevious;
-      /* Est-ce un pave compose eclate ? */
+      else if (pNextAb->AbPresentationBox && pNextAb->AbTypeNum == 0 &&
+               pNextAb->AbHorizPos.PosAbRef && pNextAb->AbHorizPos.PosAbRef->AbFloat != 'N')
+        // skip not inline bullets
+        pNextAb = pNextAb->AbPrevious;
       else if (pNextAb->AbBox->BxType == BoGhost ||
                pNextAb->AbBox->BxType == BoFloatGhost)
         {
@@ -3026,7 +3032,7 @@ static void UpdateBlockWithFloat (int frame, PtrBox pBlock,
                                   ThotBool updateWidth, int *height)
 {
   PtrFloat            pfloat;
-  int                 y, x, x1, x2;
+  int                 y, x, x1, x2, w;
   int                 t = 0, b = 0, l = 0, r = 0;
   ThotBool            extensibleblock;
 
@@ -3051,11 +3057,13 @@ static void UpdateBlockWithFloat (int frame, PtrBox pBlock,
   pfloat = pBlock->BxLeftFloat;
   while (pfloat && pfloat->FlBox)
     {
-      if (extensibleblock)
-        x1 += pfloat->FlBox->BxWidth;
-      else if (pfloat->FlBox->BxXOrg + pfloat->FlBox->BxWidth - x > x1)
+      if (pfloat->FlBox->BxType == BoFloatBlock && pfloat->FlBox->BxContentWidth)
+        w = pfloat->FlBox->BxMaxWidth;
+      else
+        w = pfloat->FlBox->BxWidth;
+      if (pfloat->FlBox->BxXOrg + w - x > x1)
         /* float change the minimum width of the block */
-        x1 = pfloat->FlBox->BxXOrg + pfloat->FlBox->BxWidth - x;
+        x1 = pfloat->FlBox->BxXOrg + w - x;
       if (pfloat->FlBox->BxYOrg + pfloat->FlBox->BxHeight - y > *height)
         /* float change the height of the block */
         *height = pfloat->FlBox->BxYOrg + pfloat->FlBox->BxHeight - y;
@@ -3065,11 +3073,15 @@ static void UpdateBlockWithFloat (int frame, PtrBox pBlock,
   pfloat = pBlock->BxRightFloat;
   while (pfloat && pfloat->FlBox)
     {
-      if (extensibleblock)
-        x2 += pfloat->FlBox->BxWidth;
-      else if (pBlock->BxW - pfloat->FlBox->BxXOrg - x > x2)
+      if (pfloat->FlBox->BxType == BoFloatBlock && pfloat->FlBox->BxContentWidth)
+        w = pfloat->FlBox->BxMaxWidth;
+      else
+        w = pfloat->FlBox->BxWidth;
+      //if (pBlock->BxW - pfloat->FlBox->BxXOrg - x > x2)
+      //  x2 = pBlock->BxW - pfloat->FlBox->BxXOrg - x;
+      if (pfloat->FlBox->BxXOrg + w > x + pBlock->BxW + x2)
         /* float change the minimum width of the block */
-        x2 = pBlock->BxW - pfloat->FlBox->BxXOrg - x;
+        x2 = pfloat->FlBox->BxXOrg + w - x - pBlock->BxW;
       if (pfloat->FlBox->BxYOrg + pfloat->FlBox->BxHeight - y > *height)
         /* float change the height of the block */
         *height = pfloat->FlBox->BxYOrg + pfloat->FlBox->BxHeight - y;
@@ -3644,8 +3656,8 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
             }
           if (pParent && pParent->AbBox)
           {
-            //l += pParent->AbBox->BxLMargin + pParent->AbBox->BxLBorder + pParent->AbBox->BxLPadding;
-            //r += pParent->AbBox->BxRMargin + pParent->AbBox->BxRBorder + pParent->AbBox->BxRPadding;
+            l += pParent->AbBox->BxLMargin + pParent->AbBox->BxLBorder + pParent->AbBox->BxLPadding;
+            r += pParent->AbBox->BxRMargin + pParent->AbBox->BxRBorder + pParent->AbBox->BxRPadding;
           }
         }
       pCell = GetParentCell (pBox);
@@ -3730,13 +3742,16 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
       /* Is the abstract box dead? */
         else if (pChildAb->AbDead || pChildAb->AbNew || pChildAb->AbBox == NULL)
           pChildAb = pChildAb->AbNext;
-        else if  (pChildAb->AbNotInLine &&
-                  pChildAb->AbDisplay == 'U')
+        else if  (pChildAb->AbNotInLine && pChildAb->AbDisplay == 'U')
           pChildAb = pChildAb->AbNext;
         else if (pChildAb->AbBox->BxType == BoGhost ||
                  pChildAb->AbBox->BxType == BoFloatGhost)
           /* go down into the hierarchy */
           pChildAb = pChildAb->AbFirstEnclosed;
+        else if (pChildAb->AbPresentationBox && pChildAb->AbTypeNum == 0 &&
+                 pChildAb->AbHorizPos.PosAbRef && pChildAb->AbHorizPos.PosAbRef->AbFloat != 'N')
+          // skip not inline bullets
+          pChildAb = pChildAb->AbNext;
         else
           {
             /* keep the current box */
@@ -3940,10 +3955,10 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
                   pBox->BxContentWidth = TRUE;
                   pLine->LiXMax = pLine->LiRealLength;
                 }
-              if (!extensibleBox)
-                Align (pBox, pLine, frame, TRUE, xAbs, yAbs);
-              else
-                Align (pBox, pLine, frame, FALSE, xAbs, yAbs);
+              //if (!extensibleBox)
+              Align (pBox, pLine, frame, TRUE, xAbs, yAbs);
+              //else
+              // Align (pBox, pLine, frame, FALSE, xAbs, yAbs);
             }
         }
 

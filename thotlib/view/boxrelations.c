@@ -2429,10 +2429,11 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                    pAb->AbLeafType == LtCompound)
             {
               /* the height depends on its contents, check if it only
-                 includes one child which takes the encosing height */
+                 includes one child which takes the enclosing height */
               pChildAb = pAb->AbFirstEnclosed;
               while (pChildAb &&
-                     (pChildAb->AbDead || pChildAb->AbHeight.DimAbRef == pAb))
+                     (pChildAb->AbDead || pChildAb->AbHeight.DimAbRef == pAb ||
+                      pChildAb->AbHeight.DimUnit == UnPercent))
                 pChildAb = pChildAb->AbNext;
               if (pAb->AbFirstEnclosed && pChildAb == NULL &&
                   (pAb->AbFirstEnclosed->AbLeafType == LtSymbol ||
@@ -2444,6 +2445,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                   pDimAb->DimUnit = UnRelative;
                 }
             }
+
           /* Compute the delta width that must be substract to 100% width or enclosing width */
           GetExtraMargins (pBox, NULL, frame, &t, &b, &l, &r);
           dx += l + r;
@@ -2541,13 +2543,37 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                   else
                     {
                       pColumn = NULL;
-                      /* Detect when a block included within another block
+                      /* Detect a block included within another block
                          with auto and takes the width of the content */
                       if (pDimAb->DimUnit != UnAuto && inLine &&
                           pAb->AbFloat == 'N' &&
                           (pBox->BxType == BoGhost || pBox->BxType == BoFloatGhost) &&
                           pParentAb->AbWidth.DimAbRef)
                         pDimAb->DimUnit = UnAuto;
+                      else if (pDimAb->DimUnit == UnAuto && pAb->AbFloat != 'N' &&
+                               pParentAb->AbWidth.DimUnit != UnAuto &&
+                               (pParentAb->AbWidth.DimAbRef != NULL ||
+                                pParentAb->AbWidth.DimValue != -1))
+                        {
+                          // check if there is a previous or next element
+                          pChildAb = pAb->AbNext;
+                          while (pChildAb && pChildAb->AbPresentationBox)
+                            pChildAb = pChildAb->AbNext;
+                          if (pChildAb == NULL)
+                            {
+                              pChildAb = pAb->AbPrevious;
+                              while (pChildAb && pChildAb->AbPresentationBox)
+                                pChildAb = pChildAb->AbPrevious;
+                              if (pChildAb == NULL)
+                                {
+                                  /* this floated box has no sibling boxes */
+                                  pDimAb->DimAbRef = pParentAb;
+                                  pDimAb->DimValue = 0;
+                                  pDimAb->DimUnit = UnRelative;
+                                  pBox->BxContentWidth = FALSE;
+                                }
+                            }
+                        }
 
                       /* check how to manage auto */
                       if (pDimAb->DimUnit == UnAuto)
@@ -2559,13 +2585,13 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                             {
                               /* floated box or inline -> content width */
                               pDimAb->DimAbRef = NULL;
-                              pDimAb->DimValue = -1;		  
+                              pDimAb->DimValue = -1;
                               pBox->BxContentWidth = TRUE;
                             }
                           else if (pParentAb->AbFloat != 'N' &&
                                    pParentAb->AbWidth.DimUnit == UnAuto)
                             {
-                              /* witing a floated box -> content width */
+                              /* within a floated box -> content width */
                               pDimAb->DimAbRef = NULL;
                               pDimAb->DimValue = -1;		  
                               pBox->BxContentWidth = TRUE;

@@ -2128,10 +2128,12 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta,
             pBox->BxRuleWidth = pBox->BxW;
           /* outside width */
           pBox->BxWidth = pBox->BxWidth + delta + diff;
-          //if (!strcmp (pCurrentAb->AbElement->ElLabel, "L169"))
-          //  printf ("ResizeWidth L169 x=%d + %d delta=%d\n",pBox->BxXOrg,orgTrans,delta);
-          //if (!strcmp (pCurrentAb->AbElement->ElLabel, "L170"))
-          //  printf ("ResizeWidth L170 x=%d + %d delta=%d\n",pBox->BxXOrg,orgTrans,delta);
+#ifdef IV
+if (!strcmp (pCurrentAb->AbElement->ElLabel, "L169"))
+            printf ("ResizeWidth L169 x=%d + %d delta=%d\n",pBox->BxXOrg,orgTrans,delta);
+if (!strcmp (pCurrentAb->AbElement->ElLabel, "L170"))
+            printf ("ResizeWidth L170 x=%d + %d delta=%d\n",pBox->BxXOrg,orgTrans,delta);
+#endif
           pBox->BxXOrg += orgTrans;
 
           if (pBox->BxType == BoPicture || pCurrentAb->AbLeafType == LtGraphics)
