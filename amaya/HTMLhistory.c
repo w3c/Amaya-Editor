@@ -1429,28 +1429,6 @@ void UpdatePasswordsSiteList (int i_site, const char *label_site)
           }
         }
     }
-
-#ifdef LOLO
-  /* Load each server/realm pair */
-  for (i = 1; i <= PM_Index; i++)
-    { 
-      if (PM_Server[i] != NULL &&  PM_Realm[i] != NULL)
-        {
-          sprintf (site, "%s - (%s)", PM_Server[i], PM_Realm[i]);
-          element  = (Prop_Passwords_Site*)TtaGetMemory (sizeof(Prop_Passwords_Site));
-          memset (element, 0, sizeof(Prop_Passwords_Site));
-          strncpy (element->Site, site, MAX_LENGTH - 1);
-          if (Pass_FirstSite == NULL)
-              Pass_FirstSite = element; 
-          else
-              current->NextSite = element;
-          current = element;
-          nb++;
-        }
-    }
-  return nb;
-#endif
-
 }
 
 /*----------------------------------------------------------------------
