@@ -468,7 +468,7 @@ int FloatToInt (float e)
   Work with absolute positions when xAbs and yAbs are TRUE.
   ----------------------------------------------------------------------*/
 static void Align (PtrBox pParentBox, PtrLine pLine, int frame,
-                   ThotBool adjust, ThotBool xAbs, ThotBool yAbs)
+                   ThotBool xAbs, ThotBool yAbs)
 {
   PtrBox              pBox, pBoxInLine;
   PtrBox              boxes[200];
@@ -492,25 +492,19 @@ static void Align (PtrBox pParentBox, PtrLine pLine, int frame,
         x = pLine->LiXOrg + pLine->LiRealLength;
       else
         {
-          if (adjust)
-            {
-              if (pParentBox->BxAbstractBox->AbAdjust == AlignCenter)
-                delta = (pLine->LiXMax - pLine->LiRealLength) / 2;
-              else if (pParentBox->BxAbstractBox->AbAdjust == AlignLeft)
-                delta = pLine->LiXMax - pLine->LiRealLength;
-            }
+          if (pParentBox->BxAbstractBox->AbAdjust == AlignCenter)
+            delta = (pLine->LiXMax - pLine->LiRealLength) / 2;
+          else if (pParentBox->BxAbstractBox->AbAdjust == AlignLeft)
+            delta = pLine->LiXMax - pLine->LiRealLength;
           x = pLine->LiXOrg + pLine->LiXMax - delta;
         }
     }
   else
     {
-      if (adjust)
-        {
-          if (pParentBox->BxAbstractBox->AbAdjust == AlignCenter)
-            delta = (pLine->LiXMax - pLine->LiRealLength) / 2;
-          else if (pParentBox->BxAbstractBox->AbAdjust == AlignRight)
-            delta = pLine->LiXMax - pLine->LiRealLength;
-        }
+      if (pParentBox->BxAbstractBox->AbAdjust == AlignCenter)
+        delta = (pLine->LiXMax - pLine->LiRealLength) / 2;
+      else if (pParentBox->BxAbstractBox->AbAdjust == AlignRight)
+        delta = pLine->LiXMax - pLine->LiRealLength;
       x = pLine->LiXOrg + delta;
     }
   if (xAbs)
@@ -3955,10 +3949,8 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
                   pBox->BxContentWidth = TRUE;
                   pLine->LiXMax = pLine->LiRealLength;
                 }
-              //if (!extensibleBox)
-              Align (pBox, pLine, frame, TRUE, xAbs, yAbs);
-              //else
-              // Align (pBox, pLine, frame, FALSE, xAbs, yAbs);
+              if (!extensibleBox)
+                Align (pBox, pLine, frame, xAbs, yAbs);
             }
         }
 
@@ -4049,7 +4041,20 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
     left -= pBox->BxLMargin;
   if (pBox->BxRMargin < 0)
     right -= pBox->BxRMargin;
-  if (extensibleBox || pBox->BxShrink)
+  if (extensibleBox)
+    {
+      // Restore the previous width
+      pBox->BxW = width;
+      // align all lines content
+      pLine = pBox->BxFirstLine;
+      while (pLine)
+        {
+          pLine->LiXMax = pBox->BxMaxWidth;
+          Align (pBox, pLine, frame, xAbs, yAbs);
+          pLine = pLine->LiNext;
+        }
+    }
+  else if (pBox->BxShrink)
       // Restore the previous width
       pBox->BxW = width;
     

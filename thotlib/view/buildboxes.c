@@ -2006,6 +2006,7 @@ static ThotBool HasFloatingChild (PtrAbstractBox pAb, int frame,
               /* it's a floating child */
               found = TRUE;
               *directParent = TRUE;
+              nb ++;
             }
           else if (pChildAb->AbBox &&
                    pChildAb->AbBox->BxType == BoFloatGhost)
@@ -2032,7 +2033,7 @@ static ThotBool HasFloatingChild (PtrAbstractBox pAb, int frame,
           pChildAb = pChildAb->AbNext;
         }
     }
-  if (nb < 1 && !ExtraAbFlow (pAb, frame))
+  if (nb < 2 && !ExtraAbFlow (pAb, frame))
     /* there is only one child */
     *uniqueChild = TRUE;
   else
@@ -3345,11 +3346,21 @@ static void UpdateFloat (PtrAbstractBox pAb, PtrAbstractBox pParent,
     pAb->AbFloat = 'N';
   if (pAb->AbFloat == 'L' || pAb->AbFloat == 'R')
     {
+      // check if there is a previous or next element
+      pChild = pAb->AbPrevious;
+      while (pChild && pChild->AbPresentationBox)
+        pChild = pChild->AbPrevious;
+      if (pChild == NULL)
+        {
+          pChild = pAb->AbNext;
+          while (pChild && pChild->AbPresentationBox)
+            pChild = pChild->AbNext;
+        }
       if (pParent->AbFloat == 'N' && !ExtraAbFlow (pParent, frame) &&
           pParent->AbBox &&
           pParent->AbInLine &&
           pParent->AbEnclosing &&
-          pAb->AbNext == NULL &&
+          pChild == NULL && /* no previous or next */
           pAb->AbFloat != 'N' &&
           (pAb->AbLeafType == LtPicture ||
            (pAb->AbLeafType == LtCompound &&
