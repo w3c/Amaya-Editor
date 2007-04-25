@@ -262,7 +262,7 @@ MapEntry     Stix_OverBrace [] = {
 };
 #define Stix_OverBrace_length sizeof(Stix_OverBrace) / sizeof(MapEntry)
 
-
+#ifndef _GL
 /*----------------------------------------------------------------------
   DrawCompoundBraceStix
   Draw a big brace with several characters from the Esstix-eight font.
@@ -355,6 +355,7 @@ static void DrawCompoundBraceStix (int frame, int x, int y, int l, int h,
         }
     }
 }
+#endif
 
 /*----------------------------------------------------------------------
   DrawCompoundExtendedStix

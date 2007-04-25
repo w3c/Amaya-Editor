@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2005
+ *  (c) COPYRIGHT INRIA, 1996-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1122,7 +1122,7 @@ ThotBool CondPresentation (PtrCondition pCond, PtrElement pEl,
                            PtrDocument pDoc)
 {
   PtrPSchema          pSchP = NULL;
-  PtrElement          pAsc, pElem, pRoot;
+  PtrElement          pAsc = NULL, pElem, pRoot;
   PtrReference        pRef;
   PtrCondition        firstCondLevel;
   int                 valcompt, valmaxi, valmini;
@@ -5480,7 +5480,7 @@ PtrAbstractBox AbsBoxesCreate (PtrElement pEl, PtrDocument pDoc,
   RuleQueue           queue;
   Cascade             casc;
   AllRules*           rulesPseudo;
-  int                 vis, typePres;
+  int                 vis, typePres = 0;
   int                 viewSch;
   int                 index;
   int                 lqueue, pqueue;

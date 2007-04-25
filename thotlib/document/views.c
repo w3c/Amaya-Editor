@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2005
+ *  (c) COPYRIGHT INRIA, 1996-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -691,7 +691,7 @@ static ThotBool GetViewByName (PtrDocument pDoc, Name viewName, int *view,
 int OpenViewByName (PtrDocument pDoc, Name viewName, int X, int Y,
 		    int width, int height)
 {
-   PtrSSchema          pSS;
+   PtrSSchema          pSS = NULL;
    NotifyDialog        notifyDoc;
    int                 view, freeView, ret;
    int                 doc_id, schView, window_id, page_id, page_position;

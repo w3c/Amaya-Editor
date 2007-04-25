@@ -1335,7 +1335,7 @@ static void CreateMathConstruct (int construct, ...)
   NotifyElement      event;
   SSchema            docSchema, mathSchema;
   char              *name, *tmptext;
-  unsigned char     *symbol_name;
+  unsigned char     *symbol_name = NULL;
   Language           lang;
   DisplayMode        dispMode;
   int                c1, i, len, profile, selectedchild, lx, ly;

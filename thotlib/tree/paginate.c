@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2005
+ *  (c) COPYRIGHT INRIA, 1996-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1865,7 +1865,7 @@ void PaginateView (PtrDocument pDoc, int view)
   int                 val;
   int                 h, cpt;
 #else /*  PAGINEETIMPRIME */
-  PtrElement          firstSelection, lastSelection;
+  PtrElement          firstSelection = NULL, lastSelection = NULL;
   int                 FirstSelectedChar = 0, LastSelectedChar = 0;
   ThotBool            sel;
 #endif /* PAGINEETIMPRIME */

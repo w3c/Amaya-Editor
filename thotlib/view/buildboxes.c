@@ -3487,10 +3487,10 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
   PtrLine             pLine;
   PtrAbstractBox      pCurrentAb, pCell, pBlock, pParent, curr, table, pChild;
   PtrBox              pNextBox, pCurrentBox = NULL;
-  PtrBox              pMainBox, pLastBox, pBox, box;
+  PtrBox              pMainBox, pLastBox, pBox, box = NULL;
   PtrElement          pEl;
   TypeUnit            unit;
-  ThotPictInfo       *imageDesc;
+  ThotPictInfo       *imageDesc = NULL;
   Propagation         savpropage;
   ViewFrame          *pFrame;
   AbDimension        *pDimAb;

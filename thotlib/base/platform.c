@@ -192,14 +192,12 @@ ThotBool TtaFileRename( const char * oldname, const char * newname )
 }
 
 
+#ifndef _WX
 /*----------------------------------------------------------------------
    TtaFileOpen returns: ThotFile_BADHANDLE: error handle:		
   ----------------------------------------------------------------------*/
 static ThotFileHandle TtaFileOpen (CONST char *name, ThotFileMode mode)
 {
-#ifdef _WX
-   return 0;
-#else /* _WX */
    ThotFileHandle      ret;
 #ifdef _WINGUI
    DWORD               access = 0;	/* access (read-write) mode  */
@@ -228,8 +226,8 @@ static ThotFileHandle TtaFileOpen (CONST char *name, ThotFileMode mode)
    ret = open (name, mode, 0777);
 #endif /* _WINGUI */
    return ret;
-#endif /* _WX */
 }
+#endif /* _WX */
 
 /*----------------------------------------------------------------------
    TtaFileClose returns, 0: error, 1: OK.				

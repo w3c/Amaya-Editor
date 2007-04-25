@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2005
+ *  (c) COPYRIGHT INRIA, 1996-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -236,7 +236,7 @@ void TtaSetBenchmarkMark( int bench_id, const char * mark_name )
   FILE *fp = g_benchmark_timer[bench_id].fp;
   if (fp)
     {
-      fprintf (fp, "[%s] %s\tElapsed time=%d ms\tDelta time=%ld ms.\n",
+      fprintf (fp, "[%s] %s\tElapsed time=%ld ms\tDelta time=%ld ms.\n",
 	       g_benchmark_timer[bench_id].name,
 	       mark_name,
 	       (g_benchmark_timer[bench_id].time-g_benchmark_timer[bench_id].start_time)/(CLOCKS_PER_SEC/1000),

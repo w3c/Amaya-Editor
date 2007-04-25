@@ -2529,7 +2529,7 @@ ThotBool Ratio_Calculate (PtrAbstractBox pAb, ThotPictInfo *imageDesc,
 void ClipAndBoxUpdate (PtrAbstractBox pAb, PtrBox box, int w, int h,
                        int top, int bottom, int left, int right, int frame)
 {
-  PtrAbstractBox parent;
+  PtrAbstractBox parent = NULL;
 
   /* prepare the redisplay of the box */
   UpdateBoxRegion (frame, box, 0, 0, w, h);
