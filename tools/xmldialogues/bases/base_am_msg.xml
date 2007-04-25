@@ -5686,138 +5686,172 @@
 <label define="AM_BCOPY_CSS">
 <message xml:lang="en">Copy resources (styles and scripts)</message>
 <message xml:lang="fr">Copier les ressources (styles et scripts)</message>
+<message xml:lang="sk">Skopírovať zdroje (štýly a skripty)</message>
 </label>
 <label define="AM_WHERE_RESOURCE">
 <message xml:lang="en">Where to save resources</message>
 <message xml:lang="fr">Où sauver les ressources</message>
+<message xml:lang="sk">Umiestnenie zdrojov</message>
 </label>
 <label define="AM_WHERE_IMAGE">
 <message xml:lang="en">Where to save images</message>
 <message xml:lang="fr">Où sauver les images</message>
+<message xml:lang="sk">Umiestnenie obrázkov</message>
 </label>
 <label define="AM_QUICK_SAVE">
 <message xml:lang="en">Document</message>
 <message xml:lang="fr">Document</message>
+<message xml:lang="sk">Dokument</message>
 </label>
 <label define="AM_EXTENSION">
 <message xml:lang="en">Images, Styles and Scripts</message>
 <message xml:lang="fr">Images, Styles et Scripts</message>
+<message xml:lang="sk">Obrázky, štýly a skripty</message>
 </label>
 <label define="AM_EMAILS">
 <message xml:lang="en">Mail</message>
 <message xml:lang="fr">Courriel</message>
+<message xml:lang="sk">Mail</message>
 </label>
 <label define="AM_EMAILS_PROPERTIES">
 <message xml:lang="en">Common parameters for sending mails:</message>
 <message xml:lang="fr">Paramètres pour l'envoi de courriels :</message>
+<message xml:lang="sk">Spoločné parametre pre odosielanie mailov:</message>
 </label>
 <label define="AM_EMAILS_SERVER_ADDRESS">
 <message xml:lang="en">SMTP server address:</message>
 <message xml:lang="fr">Adresse du serveur SMTP :</message>
+<message xml:lang="sk">Adresa SMTP servera:</message>
 </label>
 <label define="AM_EMAILS_SERVER_PORT">
 <message xml:lang="en">Server port:</message>
 <message xml:lang="fr">Port :</message>
+<message xml:lang="sk">Port:</message>
 </label>
 <label define="AM_EMAILS_SERVER_DEFPORT">
 <message xml:lang="en">(25 by default)</message>
 <message xml:lang="fr">(25 par défaut)</message>
+<message xml:lang="sk">(štandardný je 25)</message>
 </label>
 <label define="AM_EMAILS_FROM_">
 <message xml:lang="en">Sending address (From field):</message>
 <message xml:lang="fr">Adresse d'envoi (champ Expéditeur) :</message>
+<message xml:lang="sk">Adresa odosielateľa (Od koho)</message>
 </label>
 <label define="AM_EMAILS_TO_">
 <message xml:lang="en">To:</message>
 <message xml:lang="fr">Destinataires :</message>
+<message xml:lang="sk">Komu:</message>
 </label>
 <label define="AM_EMAILS_SEND_BY_MAIL">
 <message xml:lang="en">Send by mail</message>
 <message xml:lang="fr">Envoyer par courriel</message>
+<message xml:lang="sk">Odoslať mailom</message>
 </label>
 <label define="AM_EMAILS_SUBJECT_">
 <message xml:lang="en">Subject:</message>
 <message xml:lang="fr">Sujet :</message>
+<message xml:lang="sk">Predmet :</message>
 </label>
 <label define="AM_EMAILS_SEND_AS_">
 <message xml:lang="en">Send as:</message>
 <message xml:lang="fr">Envoyer en tant que :</message>
+<message xml:lang="sk">Odoslať ako:</message>
 </label>
 <label define="AM_EMAILS_SEND_AS_MESSAGE">
 <message xml:lang="en">Message body</message>
 <message xml:lang="fr">Corps du message</message>
+<message xml:lang="sk">Text správy</message>
 </label>
 <label define="AM_EMAILS_SEND_AS_ATTACHMENT">
 <message xml:lang="en">Attachment</message>
 <message xml:lang="fr">Pièce jointe</message>
+<message xml:lang="sk">Príloha</message>
 </label>
 <label define="AM_EMAILS_DONT_SEND">
 <message xml:lang="en">Don't send</message>
 <message xml:lang="fr">Ne pas envoyer</message>
+<message xml:lang="sk">Neodosielať</message>
 </label>
 <label define="AM_EMAILS_SEND">
 <message xml:lang="en">Send</message>
 <message xml:lang="fr">Envoyer</message>
+<message xml:lang="sk">Odoslať</message>
 </label>
 <label define="AM_EMAILS_NO_SERVER">
 <message xml:lang="en">The server address and port must be set in Preferences</message>
 <message xml:lang="fr">L'adresse et le port du serveur doivent être renseignés dans les Préférences</message>
+<message xml:lang="sk">Adresa servera a port musia byť nastavené v nastaveniach.</message>
 </label>
 <label define="AM_EMAILS_MESSAGE_BODY">
 <message xml:lang="en">Message:</message>
 <message xml:lang="fr">Message :</message>
+<message xml:lang="sk">Správa:</message>
 </label>
 <label define="AM_EMAILS_MESSAGE_ALTERN">
 <message xml:lang="en">Alternate textual  message:</message>
 <message xml:lang="fr">Message textuel alternatif :</message>
+<message xml:lang="sk">Alternatívna textová správa:</message>
 </label>
 <label define="AM_EMAILS_ERR_SERVER_RESPOND">
 <message xml:lang="en">The server is unreachable or does not respond</message>
 <message xml:lang="fr">Le serveur est inaccessible ou ne répond pas</message>
+<message xml:lang="sk">Server je nedostupný alebo neodpovedá</message>
 </label>
 <label define="AM_EMAILS_ERR_SERVER_REJECT">
 <message xml:lang="en">The server has reject you</message>
 <message xml:lang="fr">Le serveur vous a rejeté</message>
+<message xml:lang="sk">Server prerušil spojenie</message>
 </label>
 <label define="AM_EMAILS_ERR_FROM_ADDR">
 <message xml:lang="en">The sender address is misformatted</message>
 <message xml:lang="fr">L'adresse de l'envoyeur est mal formatée</message>
+<message xml:lang="sk">Adredsa odosielateľa má nesprávny tvar</message>
 </label>
 <label define="AM_EMAILS_ERR_RCPT_ADDR">
 <message xml:lang="en">A recipient address is misformatted</message>
 <message xml:lang="fr">L'adresse d'un destinataire est mal formatée</message>
+<message xml:lang="sk">Adresa príjemcu má nesprávny tvar</message>
 </label>
 <label define="AM_EMAILS_ERR_BAD_CONTENT">
 <message xml:lang="en">The mail content is misformatted</message>
 <message xml:lang="fr">Le contenu du courriel est mal formatée</message>
+<message xml:lang="sk">Obsah mail má nesprávny tvar</message>
 </label>
 <label define="AM_EMAILS_ERR_UNKNOW">
 <message xml:lang="en">Mail not sent</message>
 <message xml:lang="fr">Courriel non envoyé</message>
+<message xml:lang="sk">Správa nebola odoslaná</message>
 </label>
 <label define="AM_EMAILS_SENT">
 <message xml:lang="en">Mail sent</message>
 <message xml:lang="fr">Courriel envoyé</message>
+<message xml:lang="sk">Správa bola odoslaná</message>
 </label>
 <label define="AM_PASSWORDS">
 <message xml:lang="en">Passwords</message>
 <message xml:lang="fr">Mots de passe</message>
+<message xml:lang="sk">Heslá</message>
 </label>
 <label define="AM_PASSWORDS_SAVE">
 <message xml:lang="en">Do you want Amaya to remember this password ?</message>
 <message xml:lang="fr">Voulez-vous qu'Amaya se souvienne de ce mot de passe ?</message>
+<message xml:lang="sk">Chcete aby si program Amaya zapamätal toto heslo</message>
 </label>
 <label define="AM_PASSWORDS_SAVE_OPTION">
 <message xml:lang="en">Remember passwords by default</message>
 <message xml:lang="fr">Enregistrer les mots de passe par défaut</message>
+<message xml:lang="sk">Pamätať si všetky heslá</message>
 </label>
 <label define="AM_PASSWORDS_LIST">
 <message xml:lang="en">Sites</message>
 <message xml:lang="fr">Sites</message>
+<message xml:lang="sk">Umiestnenia</message>
 </label>
 <label define="AM_PASSWORDS_EMPTY">
 <message xml:lang="en">Remove All</message>
 <message xml:lang="fr">Tout effacer</message>
+<message xml:lang="sk">Odstrániť všetky</message>
 </label>
 <label define="AMAYA_MSG_MAX"></label>
 </messages>

@@ -1002,6 +1002,7 @@
 <label define="BSetUpandPrint">
 <message xml:lang="en">Send by mail ...</message>
 <message xml:lang="fr">Envoyer par courriel ...</message>
+<message xml:lang="sk">Odoslať mailom ...</message>
 </label>
 <label define="BSetUpandPrint">
 <message xml:lang="en">Set&amp;up and Print...</message>
