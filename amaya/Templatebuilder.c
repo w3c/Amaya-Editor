@@ -37,7 +37,6 @@
 #include "html2thot_f.h"
 #include "HTMLactions_f.h"
 #include "css_f.h"
-#include "mydictionary_f.h"
 #include "templateDeclarations_f.h"
 #include "Xml2thot_f.h"
 #include "XHTMLbuilder_f.h"
