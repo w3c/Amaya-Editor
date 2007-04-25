@@ -3,6 +3,6 @@
 
 #ifdef TEMPLATES
 	//List of loaded templates and libraries
-	THOT_EXPORT DicDictionary Templates_Dic;
+  THOT_EXPORT HashMap Templates_Map;
 #endif
 #endif //TEMPLATE_DECLARATIONS

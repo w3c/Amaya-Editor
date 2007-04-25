@@ -13,6 +13,7 @@
 #include "containers.h"
 #include "application.h"
 
+#define HASHMAP_DEFAULT_NODE_NUMBER 32
 
 /*------------------------------------------------------------------------------
  * Generic container
@@ -99,7 +100,18 @@ ContainerNode ForwardIterator_GetNext(ForwardIterator iter)
   return iter->currentNode; 
 }
 
-
+/**
+ * Count the number of element in the iterator.
+ */
+long ForwardIterator_GetCount(ForwardIterator iter)
+{
+  long l = 0;
+  ContainerNode node = ForwardIterator_GetFirst(iter);
+  for(node = ForwardIterator_GetFirst(iter); node;
+        node = ForwardIterator_GetNext(iter))
+      l++;
+  return l;
+}
 
 /*------------------------------------------------------------------------------
  * Double linked list
@@ -125,6 +137,7 @@ DLList DLList_Create()
  * @param list List to empty.
  */
 void DLList_Empty(DLList list){
+  
   DLListNode node = list->first;
   
   while(node!=NULL)
@@ -132,6 +145,7 @@ void DLList_Empty(DLList list){
     DLListNode next = (DLListNode)node->next;
     if (list->destroyElement!=NULL)
       list->destroyElement(node->elem);
+    node->elem = NULL;
     TtaFreeMemory(node);
     node = next;
   }
@@ -147,6 +161,7 @@ void DLList_Destroy(DLList list)
 {
   DLList_Empty(list);
   TtaFreeMemory(list);
+  list = NULL;
 }
 
 /**
@@ -471,13 +486,18 @@ static HashMapKeyNode HashMap_CreateHashMapKeyNode(HashMap map)
  
 /*----------------------------------------------------------------------
   Create a new hash map.
-  @return Empty hash map. 
+  \nbNodes Number of hashing slot, 0 or negative to default node number.
+  \return Empty hash map. 
   -----------------------------------------------------------------------*/
 HashMap HashMap_Create(Container_DestroyElementFunction destroy,
                        HashMap_HashFunction hash,
                        int nbNodes)
 {
   HashMap map = (HashMap)TtaGetMemory (sizeof(sHashMap));
+  
+  if(nbNodes<1)   /* 0 or negative : Default node number.*/
+    nbNodes = 32; /* Default node number.*/
+  
   map->destroyElement = destroy;
   map->destroyKey     = HashMap_SimpleDestroyKey;
   map->compare        = HashMap_SimpleCompareKey;
@@ -513,9 +533,13 @@ void HashMap_Empty(HashMap map)
  */
 void HashMap_Destroy(HashMap map)
 {
-  HashMap_Empty(map);
-  TtaFreeMemory(map->nodes);
-  TtaFreeMemory(map);
+  if(map!=NULL)
+  {
+    HashMap_Empty(map);
+    TtaFreeMemory(map->nodes);
+    TtaFreeMemory(map);
+    map = NULL;
+  }
 }
 
 /**
@@ -593,7 +617,7 @@ ContainerElement HashMap_Set(HashMap map, HashMapKey key, ContainerElement elem)
  * Find an element of the map.
  * Return the element node or NULL if not found.
  */
-HashMapNode HashMap_Find(HashMap map, HashMapKey key)
+HashMapNode HashMap_Find(HashMap map, const HashMapKey key)
 {
   HashMapKeyNode keynode = HashMap_GetHashMapKeyNode(map, key, FALSE);
   if (keynode!=NULL)
@@ -615,7 +639,7 @@ HashMapNode HashMap_Find(HashMap map, HashMapKey key)
  * @param key Key of the element
  * @return The searched element or NULL if not found.
  */
-ContainerElement HashMap_Get(HashMap map, HashMapKey key)
+ContainerElement HashMap_Get(HashMap map, const HashMapKey key)
 {
   HashMapNode node = HashMap_Find(map, key);
   if (node!=NULL)
@@ -723,6 +747,21 @@ ForwardIterator  HashMap_GetForwardIterator(HashMap map)
           (ForwardIterator_GetNextFunction)HashMapIterator_GetNext);  
 }
 
+
+/**
+ * Swap the content of two HashMap.
+ * Usefull to move the content of a map (funtion param) to an empty map
+ * and to clean the first one.
+ */
+void HashMap_SwapContents(HashMap map1, HashMap map2)
+{
+  _sHashMap temp;
+  memcpy(&temp, map2, sizeof(_sHashMap));
+  memcpy(map2, map1, sizeof(_sHashMap));
+  memcpy(map1, &temp, sizeof(_sHashMap));
+}
+
+
 /*----------------------------------------------------------------------
   Pointer hash map
   -----------------------------------------------------------------------*/
@@ -744,11 +783,15 @@ HashMap PointerHashMap_Create(Container_DestroyElementFunction destroy, int nbNo
 static int StringHashMap_HashFunction(char* key)
 {
   int res = 0;
-  while(*key!=0){
-    res += *key;
-    key++;
-  }
-  res %= 256;
+  if (key!=NULL)
+    {
+      while (*key!=0)
+        {
+          res += *key;
+          key++;
+        }
+      res %= 256;
+    }
   return res;
 }
 
@@ -785,5 +828,42 @@ HashMap KeywordHashMap_Create(Container_DestroyElementFunction destroy,
   HashMap map = HashMap_Create(destroy,
                               (HashMap_HashFunction)KeywordHashMap_HashFunction, nbNodes);
   map->compare = StringHashMap_CompareKey;
+  return map;
+}
+
+
+static ThotBool isEOSorWhiteSpace (const char c)
+{
+  return c == SPACE || c == '\t' || c == '\n' || c == EOS;
+}
+
+HashMap KeywordHashMap_CreateFromList(Container_DestroyElementFunction destroy,
+                                      int nbNodes, const char *list)
+{
+  char temp[128];
+  int labelSize;
+
+  HashMap map = KeywordHashMap_Create(destroy, TRUE, nbNodes);
+  if (list!=NULL && *list!=0)
+    {
+      for (unsigned int i=0; i<strlen (list); i++)
+        {   
+          labelSize = 0;
+        
+          while (isEOSorWhiteSpace (list[i]))
+            ++i;
+    
+          while (!isEOSorWhiteSpace (list[i]))
+            {
+              temp[labelSize]=list[i];
+              ++i;
+              ++labelSize;
+            }
+    
+          temp[labelSize] = EOS;
+          HashMap_Set (map, TtaStrdup(temp), NULL);
+        }
+    }
+  
   return map;
 }

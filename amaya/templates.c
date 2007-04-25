@@ -290,7 +290,7 @@ void NewTemplate (Document doc, View view)
 #ifdef TEMPLATES
   ThotBool     created;
 
-  if (Templates_Dic == NULL)
+  if (Templates_Map == NULL)
     InitializeTemplateEnvironment ();
   created = CreateNewTemplateDocDlgWX (BaseDialog + OpenTemplate,
                                       /*TtaGetViewFrame (doc, view)*/NULL, doc,
@@ -344,7 +344,7 @@ void CreateInstanceOfTemplate (Document doc, char *templatename, char *docname)
 void PreventReloadingTemplate(char* template_url)
 {
 #ifdef TEMPLATES
-  XTigerTemplate t = (XTigerTemplate) Dictionary_Get (Templates_Dic, template_url);
+  XTigerTemplate t = GetXTigerTemplate (template_url);
   if (t)
     t->users++;
 #endif /* TEMPLATES */
@@ -358,12 +358,17 @@ void PreventReloadingTemplate(char* template_url)
 void AllowReloadingTemplate(char* template_url)
 {
 #ifdef TEMPLATES
-  XTigerTemplate t = (XTigerTemplate) Dictionary_Get (Templates_Dic, template_url);
+  XTigerTemplate t = GetXTigerTemplate (template_url);
   if (t)
     t->users--;  
 #endif /* TEMPLATES */  
 }
 
+
+ThotBool isEOSorWhiteSpace (const char c)
+{
+  return c == SPACE || c == '\t' || c == '\n' || c == EOS;
+}
 
 /*----------------------------------------------------------------------
   giveItems : Lists type items from string
@@ -494,7 +499,7 @@ void UseCreated (NotifyElement *event)
        instanciated */
     return;
 
-  t = (XTigerTemplate) Dictionary_Get (Templates_Dic, DocumentMeta[doc]->template_url);
+  t = GetXTigerTemplate (DocumentMeta[doc]->template_url);
   if (!t)
     return; // no template ?!?!
 
@@ -828,7 +833,7 @@ ThotBool RepeatButtonClicked (NotifyElement *event)
 
   TtaCancelSelection(doc);
   
-  t = (XTigerTemplate) Dictionary_Get (Templates_Dic, DocumentMeta[doc]->template_url);
+  t = GetXTigerTemplate (DocumentMeta[doc]->template_url);
   elType = TtaGetElementType(el);
   while (elType.ElTypeNum!=Template_EL_repeat)
   {
@@ -925,7 +930,7 @@ ThotBool UseButtonClicked (NotifyElement *event)
   
   TtaCancelSelection(doc);
   
-  t = (XTigerTemplate) Dictionary_Get (Templates_Dic, DocumentMeta[doc]->template_url);
+  t = GetXTigerTemplate (DocumentMeta[doc]->template_url);
   if (!t)
     return FALSE; /* let Thot perform normal operation */
   elType = TtaGetElementType(el);
@@ -1047,7 +1052,7 @@ ThotBool OptionButtonClicked (NotifyElement *event)
   if (!grandChild)
     /* the "use" element is empty. Instantiate it */
     {
-      t = (XTigerTemplate) Dictionary_Get (Templates_Dic, DocumentMeta[doc]->template_url);
+      t = GetXTigerTemplate (DocumentMeta[doc]->template_url);
       if (!t)
         return FALSE; // no template ?!?!
       InstantiateUse (t, child, doc, TRUE);
@@ -1078,7 +1083,7 @@ void CheckTemplate (Document doc)
 {
 #ifdef TEMPLATES
   if (DocumentMeta[doc] && DocumentMeta[doc]->template_url &&
-      !Dictionary_Get (Templates_Dic, DocumentMeta[doc]->template_url))
+      !GetXTigerTemplate (DocumentMeta[doc]->template_url))
     {
       // the template cannot be loaded
       InitConfirm (doc, 1, TtaGetMessage (AMAYA, AM_BAD_TEMPLATE));
@@ -1150,13 +1155,13 @@ void OpeningInstance (char *fileName, Document doc)
                 *ptr = EOS;
                 //Get now the template URI
                 DocumentMeta[doc]->template_url = TtaStrdup (content);
-                if (Templates_Dic == NULL)
+                if (Templates_Map == NULL)
                   InitializeTemplateEnvironment ();
-                t = (XTigerTemplate) Dictionary_Get (Templates_Dic, content);
+                t = GetXTigerTemplate (content);
                 if (!t)
                   {
                     LoadTemplate (doc, content);
-                    t = (XTigerTemplate) Dictionary_Get (Templates_Dic, content);
+                    t = GetXTigerTemplate(content);
                   }
                 AddUser (t);
                 *ptr = '"';
@@ -1182,7 +1187,7 @@ ThotBool ClosingInstance(NotifyDialog* dialog)
   char *turl = DocumentMeta[dialog->document]->template_url;
   if (turl)
   {
-    XTigerTemplate t = (XTigerTemplate) Dictionary_Get (Templates_Dic, turl);
+    XTigerTemplate t = GetXTigerTemplate(turl);
     if (t)
       RemoveUser (t);
     TtaFreeMemory (turl);
@@ -1334,7 +1339,7 @@ ThotBool TemplateElementWillBeDeleted (NotifyElement *event)
   {
     xtType = TtaGetElementType(xtElem);
     
-    t = (XTigerTemplate) Dictionary_Get (Templates_Dic, DocumentMeta[doc]->template_url);
+    t = GetXTigerTemplate(DocumentMeta[doc]->template_url);
 
     if (xtType.ElTypeNum==Template_EL_bag)
     {

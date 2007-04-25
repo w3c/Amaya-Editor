@@ -42,7 +42,7 @@ extern void InstantiateRepeat ( XTigerTemplate t,
                                 Document doc,
                                 ThotBool registerUndo );
 extern void DoInstanceTemplate ( char *templatename );
-extern void PreInstantiateComponents ( XTigerTemplate t );
+extern void Template_PreInstantiateComponents ( XTigerTemplate t );
 
 #else /* __STDC__ */
 
@@ -82,7 +82,7 @@ extern void InstantiateRepeat ( XTigerTemplate t,
                                   Document doc,
                                   ThotBool registerUndo );
 extern void DoInstanceTemplate ( char *templatename );
-extern void PreInstantiateComponents ( XTigerTemplate t );
+extern void Template_PreInstantiateComponents ( XTigerTemplate t );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

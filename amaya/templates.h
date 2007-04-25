@@ -4,31 +4,12 @@
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "document.h"
+#include "containers.h"
 
 #include "MENUconf.h"
 
 #define TEMPLATE_SSHEMA_NAME  "Template"
 
-typedef void  *DicElement;
-
-//A record contains an element and its key.
-struct sRecord;
-typedef struct sRecord *Record;
-struct sRecord
-{
-	char        *key;
-  DicElement   element;
-	Record       next;
-};
-
-//A dictionary contains a sequence of Records
-struct sDictionary;
-typedef struct sDictionary* DicDictionary;
-struct sDictionary
-{
-	Record first;
-	Record iter;
-};
 
 /* Structure of a template */
 struct _XTigerTemplate;
@@ -43,14 +24,18 @@ struct _XTigerTemplate
   ThotBool        isLibrary;			//Is this a library? (otherway it's a template)
   ThotBool        isPredefined;   //Is this the predefined library
   ThotBool        isLoaded;       //Is the template is loaded ?
-  DicDictionary   libraries;			//Imported libraries
-  DicDictionary   simpleTypes;		//All simple types declared in the document
-  DicDictionary   elements;				//All element types declared in the document
-  DicDictionary   components;			//All component types declared in the document
-  DicDictionary   unions;				  //All union types declared in the document
+  HashMap         libraries;			//Imported libraries (StringHashMap<XTigerTemplate>)
+  HashMap         simpleTypes;		//All simple types declared in the document (KeywordHashMap<Declaration>)
+  HashMap         elements;				//All element types declared in the document (KeywordHashMap<Declaration>)
+  HashMap         components;			//All component types declared in the document (KeywordHashMap<Declaration>)
+  HashMap         unions;				  //All union types declared in the document (KeywordHashMap<Declaration>)
   Document        doc;            //Use to store component structures
   int             users;          //Number of documents using this template
 };
+
+// Notes : 
+// All KeywordHashMap<Declaration> must embed their own copy of their keys
+// in order to prevent corruption.
 
 typedef enum _TypeNature {SimpleTypeNat, XmlElementNat, ComponentNat,
                           UnionNat} TypeNature;
@@ -77,9 +62,9 @@ typedef struct _Component
 
 typedef struct _Union
 {
-	DicDictionary  include;  //Dictionary<Declaration>
-	DicDictionary  exclude;  //Dictionary<Declaration>
-  DicDictionary  expanded; //Dictionary<Declaration>
+	HashMap  include;  //KeywordHashMap<Declaration>
+	HashMap  exclude;  //KeywordHashMap<Declaration>
+  HashMap  expanded; //KeywordHashMap<Declaration>
 } Union;
 
 /* Structure of a declaration */
@@ -90,7 +75,8 @@ struct _Declaration
 {
 	char          *name;
 	TypeNature     nature;
-	XTigerTemplate declaredIn;
+	XTigerTemplate declaredIn; // The template which declare the decl
+  XTigerTemplate usedIn;     // The template which embed the decl
 	union
 	{
 		SimpleType   simpleType;

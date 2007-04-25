@@ -262,7 +262,6 @@ AMAYA_OBJ = \
 	MENUconf.o \
 	XLinkbuilder.o \
 	XLinkedit.o \
-	mydictionary.o \
 	templates.o \
 	trans.o \
 	transparse.o \

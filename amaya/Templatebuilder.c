@@ -109,10 +109,10 @@ ThotBool NeedAMenu (Element el, Document doc)
 	AttributeType    attributeType;
   XTigerTemplate   t;
   Declaration      dec;
-  Record           rec;
 	int              size;
   char            *types, *ptr;
   ThotBool         res = FALSE;
+  ForwardIterator  iter;
 
   if(!TtaGetDocumentAccessMode(doc))
     return FALSE;
@@ -135,15 +135,17 @@ ThotBool NeedAMenu (Element el, Document doc)
     res = TRUE;
   else
     {
-      t = (XTigerTemplate) Dictionary_Get (Templates_Dic, DocumentMeta[doc]->template_url);
+      t = GetXTigerTemplate (DocumentMeta[doc]->template_url);
       if (t)
         {
           dec = Template_GetDeclaration (t, types);
           if (dec && dec->nature == UnionNat)
             {
-              rec = dec->unionType.include->first;
-              if (rec && rec->next)
+              /* TODO utiliser la liste étendue plutot que la liste d'inclusion.*/ 
+              iter = HashMap_GetForwardIterator(dec->unionType.include);
+              if(ForwardIterator_GetCount(iter)>1)
                 res = TRUE;
+              TtaFreeMemory(iter);
             }
         }
     }

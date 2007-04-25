@@ -25,7 +25,6 @@ typedef int (*Container_CompareFunction)(ContainerElement,ContainerElement);
 
 /**
  * Generic container.
- * Only destroy element capability.
  */
 typedef struct sContainer
 {
@@ -73,7 +72,15 @@ extern ForwardIterator ForwardIterator_Create(Container container,
                      ForwardIterator_GetNextFunction  getNext);
 extern ContainerNode ForwardIterator_GetFirst(ForwardIterator iter);
 extern ContainerNode ForwardIterator_GetNext(ForwardIterator iter);
+
+extern long ForwardIterator_GetCount(ForwardIterator iter);
+
 #endif /* __CEXTRACT__ */
+
+#define ITERATOR_FOREACH(iter, nodetype, node)\
+  for (node = (nodetype)ForwardIterator_GetFirst(iter); node!=NULL; \
+    node = (nodetype)ForwardIterator_GetNext(iter))
+
 /** @} */
 
 
@@ -199,10 +206,12 @@ extern void             HashMap_Destroy(HashMap map);
 extern void             HashMap_Empty(HashMap map);
 extern ThotBool         HashMap_IsEmpty(HashMap map);
 extern ContainerElement HashMap_Set(HashMap map, HashMapKey key, ContainerElement elem);
-extern ContainerElement HashMap_Get(HashMap map, HashMapKey key);
+extern ContainerElement HashMap_Get(HashMap map, const HashMapKey key);
+extern HashMapNode      HashMap_Find(HashMap map, const HashMapKey key);
 extern ContainerElement HashMap_Remove(HashMap map, HashMapKey key);
 extern void             HashMap_DestroyElement(HashMap map, HashMapKey key);
 extern ForwardIterator  HashMap_GetForwardIterator(HashMap map);
+extern void             HashMap_SwapContents(HashMap map1, HashMap map2);
 #endif /* __CEXTRACT__ */
 /** @} */
 
@@ -226,7 +235,6 @@ extern HashMap PointerHashMap_Create(Container_DestroyElementFunction destroy
 extern HashMap StringHashMap_Create(Container_DestroyElementFunction destroy,
                                       ThotBool keyIsStored, int nbNodes);
 #endif /* __CEXTRACT__ */
-/** @} */
 
 /**
  * Keyword hash map.
@@ -236,8 +244,18 @@ extern HashMap StringHashMap_Create(Container_DestroyElementFunction destroy,
 #ifndef __CEXTRACT__
 extern HashMap KeywordHashMap_Create(Container_DestroyElementFunction destroy,
                                       ThotBool keyIsStored, int nbNodes);
+
+/**
+ * Create a Keyword hash map initialized with a keyword list and NULL elements.
+ * Note that a such KeywordHashMap embed copies of keys. 
+ * \param list space-separated list of element names.
+ */
+extern HashMap KeywordHashMap_CreateFromList(Container_DestroyElementFunction destroy,
+                                      int nbNodes, const char *list);
+
 #endif /* __CEXTRACT__ */
-/** @} */
+
+
 
 
 #endif /*CONTAINERS_H_*/

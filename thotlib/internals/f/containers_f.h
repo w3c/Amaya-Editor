@@ -16,6 +16,7 @@ extern ForwardIterator ForwardIterator_Create ( Container container,
                                                 ForwardIterator_GetNextFunction getNext );
 extern ContainerNode ForwardIterator_GetFirst ( ForwardIterator iter );
 extern ContainerNode ForwardIterator_GetNext ( ForwardIterator iter );
+extern long ForwardIterator_GetCount ( ForwardIterator iter );
 extern DLList DLList_Create ( void );
 extern void DLList_Empty ( DLList list );
 extern void DLList_Destroy ( DLList list );
@@ -54,14 +55,16 @@ extern ContainerElement HashMap_Set ( HashMap map,
                                       HashMapKey key,
                                       ContainerElement elem );
 extern HashMapNode HashMap_Find ( HashMap map,
-                                  HashMapKey key );
+                                  const HashMapKey key );
 extern ContainerElement HashMap_Get ( HashMap map,
-                                      HashMapKey key );
+                                      const HashMapKey key );
 extern ContainerElement HashMap_Remove ( HashMap map,
                                          HashMapKey key );
 extern void HashMap_DestroyElement ( HashMap map,
                                      HashMapKey key );
 extern ForwardIterator HashMap_GetForwardIterator ( HashMap map );
+extern void HashMap_SwapContents ( HashMap map1,
+                                   HashMap map2 );
 extern HashMap PointerHashMap_Create ( Container_DestroyElementFunction destroy,
                                        int nbNodes );
 extern HashMap StringHashMap_Create ( Container_DestroyElementFunction destroy,
@@ -70,6 +73,9 @@ extern HashMap StringHashMap_Create ( Container_DestroyElementFunction destroy,
 extern HashMap KeywordHashMap_Create ( Container_DestroyElementFunction destroy,
                                        ThotBool keyIsStored,
                                        int nbNodes );
+extern HashMap KeywordHashMap_CreateFromList ( Container_DestroyElementFunction destroy,
+                                               int nbNodes,
+                                               const char *list );
 
 #else /* __STDC__ */
 
@@ -83,6 +89,7 @@ extern ForwardIterator ForwardIterator_Create ( Container container,
                                                   ForwardIterator_GetNextFunction getNext );
 extern ContainerNode ForwardIterator_GetFirst ( ForwardIterator iter );
 extern ContainerNode ForwardIterator_GetNext ( ForwardIterator iter );
+extern long ForwardIterator_GetCount ( ForwardIterator iter );
 extern DLList DLList_Create ( void );
 extern void DLList_Empty ( DLList list );
 extern void DLList_Destroy ( DLList list );
@@ -121,14 +128,16 @@ extern ContainerElement HashMap_Set ( HashMap map,
                                         HashMapKey key,
                                         ContainerElement elem );
 extern HashMapNode HashMap_Find ( HashMap map,
-                                    HashMapKey key );
+                                    const HashMapKey key );
 extern ContainerElement HashMap_Get ( HashMap map,
-                                        HashMapKey key );
+                                        const HashMapKey key );
 extern ContainerElement HashMap_Remove ( HashMap map,
                                            HashMapKey key );
 extern void HashMap_DestroyElement ( HashMap map,
                                        HashMapKey key );
 extern ForwardIterator HashMap_GetForwardIterator ( HashMap map );
+extern void HashMap_SwapContents ( HashMap map1,
+                                     HashMap map2 );
 extern HashMap PointerHashMap_Create ( Container_DestroyElementFunction destroy,
                                          int nbNodes );
 extern HashMap StringHashMap_Create ( Container_DestroyElementFunction destroy,
@@ -137,6 +146,9 @@ extern HashMap StringHashMap_Create ( Container_DestroyElementFunction destroy,
 extern HashMap KeywordHashMap_Create ( Container_DestroyElementFunction destroy,
                                          ThotBool keyIsStored,
                                          int nbNodes );
+extern HashMap KeywordHashMap_CreateFromList ( Container_DestroyElementFunction destroy,
+                                                 int nbNodes,
+                                                 const char *list );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

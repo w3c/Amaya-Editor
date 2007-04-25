@@ -17,7 +17,6 @@
 #include "HTMLsave_f.h"
 #include "HTMLtable_f.h"
 #include "init_f.h"
-#include "mydictionary_f.h"
 #include "templates_f.h"
 #include "templateDeclarations_f.h"
 #include "templateInstantiate_f.h"
@@ -54,7 +53,7 @@ void  CreateInstance(char *templatePath, char *instancePath)
   int          alreadyOnDoc = 0;
   ThotBool     alreadyViewing = FALSE;
 
-  XTigerTemplate t = (XTigerTemplate)Dictionary_Get (Templates_Dic, templatePath);
+  XTigerTemplate t = GetXTigerTemplate(templatePath);
   if (t == NULL)
     {
       // the template cannot be loaded
@@ -418,7 +417,7 @@ Element Template_InsertUseChildren(Document doc, Element el, Declaration dec)
         break;
       case ComponentNat:
         newEl = TtaCopyTree(dec->componentType.content, doc, doc, el);
-        ProcessAttr (dec->declaredIn, newEl, doc);        
+        ProcessAttr (dec->usedIn, newEl, doc);        
         /* Copy elements from new use to existing use. */
         while ((child = TtaGetFirstChild(newEl)))
         {
@@ -784,7 +783,7 @@ void DoInstanceTemplate (char *templatename)
   Document        doc;
 
 	//Instantiate all elements
-	t = (XTigerTemplate) Dictionary_Get (Templates_Dic, templatename);
+	t = GetXTigerTemplate(templatename);
   if (!t)
     return;
   
@@ -884,22 +883,25 @@ void DoInstanceTemplate (char *templatename)
 }
 
 /*----------------------------------------------------------------------
-  PreInstantiateComponents: Instantiates all components in order to improve
+  Template_PreInstantiateComponents: Instantiates all components in order to improve
   editing.
   ----------------------------------------------------------------------*/
-void PreInstantiateComponents (XTigerTemplate t)
+void Template_PreInstantiateComponents (XTigerTemplate t)
 {
 #ifdef TEMPLATES 
   if (!t)
     return;
 
-  DicDictionary components = GetComponents(t);
-  Declaration comp;
-
-  for(Dictionary_First(components);!Dictionary_IsDone(components);Dictionary_Next(components))
+  HashMap         components = GetComponents(t);
+  ForwardIterator iter = HashMap_GetForwardIterator(components);
+  Declaration     comp;
+  HashMapNode     node;
+  
+  ITERATOR_FOREACH(iter, HashMapNode, node)
     {
-      comp = (Declaration) Dictionary_CurrentElement(components);
+      comp = (Declaration) node->elem;
       ParseTemplate(t, GetComponentContent(comp), GetTemplateDocument(t), TRUE);
     }
+  TtaFreeMemory(iter);
 #endif /* TEMPLATES */
 }

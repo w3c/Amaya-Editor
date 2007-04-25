@@ -23,7 +23,6 @@
 #include "templates_f.h"
 #include "templateDeclarations.h"
 
-#include "mydictionary_f.h"
 #include "templateLoad_f.h"
 #include "templateDeclarations_f.h"
 #include "templateInstantiate_f.h"
@@ -122,11 +121,11 @@ static void FillUnionResolvedPossibleElement(XTigerTemplate t, const char* name,
   }
   else if (dec->nature==UnionNat)
   {
-    DLList tempList = ElemList_Create();
-    
-    Record first = dec->unionType.include->first;
-    Record rec = first;
-    
+    DLList          tempList = ElemList_Create();
+    ForwardIterator iter = HashMap_GetForwardIterator(dec->unionType.include);
+    HashMapNode     mapnode;
+    DLListNode      listnode;
+
     int len1 = 0 , len2 = strlen(dec->name);
     if (resolvedPath!=NULL)
       len1 = strlen(resolvedPath);
@@ -142,19 +141,21 @@ static void FillUnionResolvedPossibleElement(XTigerTemplate t, const char* name,
       strcpy(newPath, dec->name);
     }
     
-    while(rec)
-    {
-      FillUnionResolvedPossibleElement(t, rec->key, elem, newPath, tempList, level);
-      rec = rec->next;
-    }
+    ITERATOR_FOREACH(iter, DLListNode, listnode)
+      {
+        FillUnionResolvedPossibleElement(t, (char*)mapnode->key, elem, newPath, tempList, level);
+      }
+    TtaFreeMemory(iter);
     
-    ForwardIterator iter = DLList_GetForwardIterator(tempList);
-    DLListNode node = (DLListNode) ForwardIterator_GetFirst(iter);
-    while(node)
-    {
-      DLList_Append(list, node->elem);
-      node = (DLListNode) ForwardIterator_GetNext(iter);
-    }
+    iter = DLList_GetForwardIterator(tempList);
+    
+    
+    listnode = (DLListNode) ForwardIterator_GetFirst(iter);
+    for(listnode = (DLListNode) ForwardIterator_GetFirst(iter); listnode;
+          listnode = (DLListNode) ForwardIterator_GetNext(iter))
+      DLList_Append(list, listnode->elem);
+    TtaFreeMemory(iter);
+
     tempList->destroyElement = NULL;
     DLList_Destroy(tempList);
     
@@ -266,7 +267,7 @@ static void FillInsertableElemList(Document doc, Element elem, DLList list)
       doc = TtaGetDocument(elem);
 
 #ifdef TEMPLATES
-    t = (XTigerTemplate) Dictionary_Get (Templates_Dic, DocumentMeta[doc]->template_url);
+    t = GetXTigerTemplate(DocumentMeta[doc]->template_url);
 #endif/* TEMPLATES */
 
     level = 0;
