@@ -1091,13 +1091,36 @@ fi
 if test "$with_redland" = "yes" ; then
 	AMAYA_ANNOT_OPTIONS="$AMAYA_ANNOT_OPTIONS -DAM_REDLAND"
 	if test "$with_system_redland" != "yes" ; then
-		AMAYA_RAPTOR_SRC="amaya_comp_redland"
 		AMAYA_ANNOT_OPTIONS="$AMAYA_ANNOT_OPTIONS -I\$(THOTDIR)/../redland/librdf -I\$(THOTDIR)/../redland/raptor "
 		AMAYA_RAPTOR_LIBS="../redland/librdf/.libs/librdf.a ../redland/raptor/.libs/libraptor.a"
 		AMAYA_RAPTOR_INCLUDES="-I\$(THOTDIR)/../redland/librdf -I\$(THOTDIR)/../redland/raptor"
+		BUILDREDLAND="redland"
+		CURRENTPATH="`pwd`"
+		mkdir $BUILDREDLAND
+		cd $BUILDREDLAND &&
+			CC="$CC" CXX="$CXX" \
+			CPPFLAGS="-I$CURRENTPATH/../../libwww/modules/expat/lib" \
+			LDFLAGS="-L$CURRENTPATH/libwww/modules/expat -L$CURRENTPATH/libwww/modules/expat/.libs" \
+			../../../redland/configure \
+			--build=$build_alias --host=$host_alias --target=$target_alias \
+			--disable-shared \
+			--without-bdb \
+	 		--enable-parsers=raptor \
+	 		--with-raptor=internal \
+			--with-xml-parser=expat \
+			--with-www=none \
+			--without-libwww \
+			--without-openssl-digests \
+			--without-mysql
+			$ECHO "redland is configured"
+			$ECHO "Patching the raptor_config.h file to avoid including glib2-0"
+			$CP raptor/raptor_config.h raptor/raptor_config.h.orig
+			$SED "s/\(\#define HAVE_G_UTF8_NORMALIZE 1\)/\/* \1 *\//" \
+				raptor/raptor_config.h.orig > raptor/raptor_config.h
+			$RM raptor/raptor_config.h.orig
+			$ECHO "Raptor is patched"
+		cd ..
 	else
-		MAKEREDLAND=['#']
-		AMAYA_RAPTOR_SRC=
 		redland_includes=`$REDLAND_CONFIG --cflags`
 	  redland_libs=`$REDLAND_CONFIG --libs`
  		AMAYA_ANNOT_OPTIONS="$AMAYA_ANNOT_OPTIONS"
@@ -1110,6 +1133,8 @@ else
 fi
 
 ANNOTLIB_COMPILE_BM=['#']
+
+AC_SUBST(BUILDREDLAND)
 
 ###################End of Annotations Support####################
 
@@ -1325,9 +1350,7 @@ AC_SUBST(LIBDAV)
 AC_SUBST(WITHDAV)
 AC_SUBST(WWWDAV)
 
-AC_SUBST(MAKEREDLAND)
 AC_SUBST(ANNOTLIB_COMPILE_BM)
-AC_SUBST(AMAYA_RAPTOR_SRC)
 AC_SUBST(AMAYA_RAPTOR_LIBS)
 AC_SUBST(AMAYA_RAPTOR_INCLUDES)
 AC_SUBST(MAKE_LIBWWW_RDF_PARSER)
