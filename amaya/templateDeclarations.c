@@ -78,12 +78,9 @@ XTigerTemplate NewXTigerTemplate (const char *templatePath, const ThotBool addPr
 {	
 #ifdef TEMPLATES
 	XTigerTemplate t = (XTigerTemplate)TtaGetMemory (sizeof (_XTigerTemplate));
-	
+
+	memset (t, 0 ,sizeof (_XTigerTemplate));
   t->name = TtaStrdup(templatePath);
-  t->version = NULL;
-  t->templateVersion = NULL;
-	t->isLibrary = FALSE;
-  t->isLoaded = FALSE;
 	t->libraries   = StringHashMap_Create(NULL, FALSE, -1);
 	t->elements    = KeywordHashMap_Create((Container_DestroyElementFunction)
                                                 Declaration_Destroy, TRUE, -1);
@@ -200,6 +197,7 @@ static Declaration Declaration_Create(const XTigerTemplate t, const char *name,
   if (name == NULL || t == NULL)
     return NULL;
   dec = (Declaration) TtaGetMemory (sizeof (_Declaration));
+  memset (dec, 0, sizeof (_Declaration));
   dec->declaredIn = t;
   dec->usedIn     = t;
   dec->name = TtaStrdup (name);
@@ -266,26 +264,28 @@ Declaration Declaration_Clone (Declaration dec)
 void Declaration_Destroy (Declaration dec)
 {
 #ifdef TEMPLATES
-  if (dec->nature==XmlElementNat)
+  Document doc;
+
+  if (dec->nature == XmlElementNat)
   {
-    TtaFreeMemory(dec->elementType.name);
+    TtaFreeMemory (dec->elementType.name);
     dec->elementType.name = NULL;
   }
-  else if (dec->nature==ComponentNat)
+  else if (dec->nature == ComponentNat)
   {
-    TtaDeleteTree(dec->componentType.content, TtaGetDocument(dec->componentType.content));
+    doc = TtaGetDocument(dec->componentType.content);
+    TtaDeleteTree (dec->componentType.content, doc);
     dec->componentType.content = NULL;
   }
   else if (dec->nature==UnionNat)
   {
-printf ("Declaration_Destroy %s %s\n", dec->name, dec->usedIn->name);
-    HashMap_Destroy(dec->unionType.include);
+    HashMap_Destroy (dec->unionType.include);
     dec->unionType.include = NULL;
-    HashMap_Destroy(dec->unionType.exclude);
+    HashMap_Destroy (dec->unionType.exclude);
     dec->unionType.exclude = NULL;
     if (dec->unionType.expanded)
       {
-        HashMap_Destroy(dec->unionType.expanded);
+        HashMap_Destroy (dec->unionType.expanded);
         dec->unionType.expanded = NULL;
       }
   }
@@ -696,12 +696,12 @@ void Template_PrintUnion (Declaration dec, int indent, XTigerTemplate t, FILE *f
 		indentation [i] = TAB;
 	indentation [indent] = EOS;
 	
-	if (!HashMap_IsEmpty(dec->unionType.include))
+	if (!HashMap_IsEmpty (dec->unionType.include))
     {
       fprintf (file, "\n%sINCLUDE",indentation);
 		
-      iter = HashMap_GetForwardIterator(dec->unionType.include);
-      ITERATOR_FOREACH(iter, HashMapNode, node)
+      iter = HashMap_GetForwardIterator (dec->unionType.include);
+      ITERATOR_FOREACH (iter, HashMapNode, node)
         {
           aux = (Declaration) node->elem;
           if (aux==NULL)
@@ -995,13 +995,11 @@ HashMap Template_ExpandUnion(XTigerTemplate t, Declaration decl)
   if (t)
   {
     printf("Template_ExpandUnion %p %s\n", decl, decl->name);
-    
-    if (decl->unionType.expanded==NULL)
+    if (decl->unionType.expanded == NULL)
     {
       ForwardIterator iter;
       HashMapNode     node;
-      
-      HashMap expanded = KeywordHashMap_Create(NULL, FALSE, -1);
+      HashMap         expanded = KeywordHashMap_Create(NULL, FALSE, -1);
 
       iter = HashMap_GetForwardIterator(decl->unionType.include);
       /* For each element in include map */
@@ -1065,84 +1063,72 @@ char* Template_ExpandTypes (XTigerTemplate t, char* types)
   if (t)
   {
     /* Map of types to expand. */
-    HashMap     basemap = KeywordHashMap_CreateFromList(NULL, -1, types);
+    HashMap     basemap = KeywordHashMap_CreateFromList (NULL, -1, types);
     /* Map to store expanded types. */
-    HashMap     map     = KeywordHashMap_Create(NULL, TRUE, -1);
-
+    HashMap     map     = KeywordHashMap_Create (NULL, TRUE, -1);
     ForwardIterator iter;
     HashMapNode     node;
     ForwardIterator iterbase;
     HashMapNode     nodebase;
-    
-
     Declaration decl;
-    int         len  = strlen(types);
-    char*       type = (char*)TtaGetMemory(len+1);
-    int         pos = 0,
-                cur = 0;
+    int         pos = 0, cur = 0;
     char*       result;
     int         resLen;
 
-
     /* Fill map with expanded result from basemap.*/
-    iterbase = HashMap_GetForwardIterator(basemap);
-    ITERATOR_FOREACH(iterbase, HashMapNode, nodebase)
+    iterbase = HashMap_GetForwardIterator (basemap);
+    ITERATOR_FOREACH (iterbase, HashMapNode, nodebase)
       {
         decl = (Declaration) nodebase->elem;
         if (!decl)
-          decl = Template_GetDeclaration(t, (char*)nodebase->key);
+          decl = Template_GetDeclaration (t, (char*) nodebase->key);
         if (decl)
           {
             if (decl->nature == UnionNat)
               {
                 /* Expand a list element. */
-                HashMap unionDecl = Template_ExpandUnion(t, decl);
+                HashMap unionDecl = Template_ExpandUnion (t, decl);
                 if (unionDecl)
                   {
-                    iter = HashMap_GetForwardIterator(unionDecl);
-                    ITERATOR_FOREACH(iter, HashMapNode, node)
+                    iter = HashMap_GetForwardIterator (unionDecl);
+                    ITERATOR_FOREACH (iter, HashMapNode, node)
                       {
                         /* For each expanded element, add it to the final map.*/
                         HashMap_Set(map, TtaStrdup((char*)node->key), NULL);
                       }
-                    TtaFreeMemory(iter);
+                    TtaFreeMemory (iter);
                   }
-                HashMap_Destroy(unionDecl);
+                HashMap_Destroy (unionDecl);
               }
             else
               /* Add it without expansion.*/
-              HashMap_Set(map, TtaStrdup(decl->name), NULL);
+              HashMap_Set (map, TtaStrdup(decl->name), NULL);
           }
       }
     TtaFreeMemory(iterbase);
 
     /* Fill a string with results.*/
     resLen = 0;
-    
     iter = HashMap_GetForwardIterator(map);
     ITERATOR_FOREACH(iter, HashMapNode, node)
       {
         resLen += strlen((char*)node->key) + 1;
       }
     
-    result = (char*) TtaGetMemory(resLen+1);
+    result = (char*) TtaGetMemory (resLen+1);
     pos = 0;
-    
-    ITERATOR_FOREACH(iter, HashMapNode, node)
+    ITERATOR_FOREACH (iter, HashMapNode, node)
       {
-        strcpy(result+pos, (char*)node->key);
-        pos += strlen((char*)node->key);
+        strcpy (result + pos, (char*)node->key);
+        pos += strlen((char*) node->key);
         result[pos] = ' ';
         pos++;
       }
 
-    TtaFreeMemory(iter);
-
+    TtaFreeMemory (iter);
     result[pos] = 0;
-
-    HashMap_Destroy(map);
-    HashMap_Destroy(basemap);
-    TtaFreeMemory(type);
+    HashMap_Destroy (map);
+    HashMap_Destroy (basemap);
     return result;
   }
   else
