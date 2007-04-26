@@ -91,14 +91,18 @@ char *GetAttributeStringValueFromNum (Element el, int att, int* sz)
 {
 #ifdef TEMPLATES
 	AttributeType attType;
+  Attribute     attribute;
+  char         *aux;
+  int           size;
+
 	attType.AttrSSchema = TtaGetElementType(el).ElSSchema;
 	attType.AttrTypeNum = att;
+	attribute = TtaGetAttribute(el, attType);
 	
-	Attribute attribute = TtaGetAttribute(el, attType);
-	
-	int size = TtaGetTextAttributeLength(attribute);
-	char *aux = (char*) TtaGetMemory(size+1);
+	size = TtaGetTextAttributeLength(attribute);
+	aux = (char*) TtaGetMemory(size+1);
 	TtaGiveTextAttributeValue (attribute, aux, &size);
+  aux[size] = EOS;
   if(sz)
     *sz = size;
 	return aux;
@@ -115,7 +119,9 @@ char *GetAttributeStringValue (Element el, Attribute attribute, int* sz)
 #ifdef TEMPLATES
 	int size = TtaGetTextAttributeLength(attribute);
 	char *aux = (char*) TtaGetMemory(size+1);
+
 	TtaGiveTextAttributeValue (attribute, aux, &size);
+  aux[size] = EOS;
   if(sz)
     *sz = size;
 	return aux;

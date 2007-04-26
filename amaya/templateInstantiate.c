@@ -479,8 +479,11 @@ Element InstantiateUse (XTigerTemplate t, Element el, Document doc,
   cont = NULL;
   elType = TtaGetElementType (el);
   types = GetAttributeStringValueFromNum (el, Template_ATTR_types, &size);
-  if (!types)
-    return NULL;
+  if (!types || types[0] == EOS)
+    {
+      TtaFreeMemory (types);
+      return NULL;
+    }
   giveItems (types, size, &items, &nbitems);
   // No structure checking
   oldStructureChecking = TtaGetStructureChecking (doc);

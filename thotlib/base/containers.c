@@ -156,7 +156,7 @@ void DLList_Empty(DLList list){
   while(node!=NULL)
   {
     DLListNode next = (DLListNode)node->next;
-    if (list->destroyElement!=NULL)
+    if (list->destroyElement != NULL)
       list->destroyElement(node->elem);
     node->elem = NULL;
     TtaFreeMemory(node);
@@ -174,7 +174,6 @@ void DLList_Destroy(DLList list)
 {
   DLList_Empty(list);
   TtaFreeMemory(list);
-  list = NULL;
 }
 
 /**
@@ -551,7 +550,6 @@ void HashMap_Destroy(HashMap map)
     HashMap_Empty(map);
     TtaFreeMemory(map->nodes);
     TtaFreeMemory(map);
-    map = NULL;
   }
 }
 

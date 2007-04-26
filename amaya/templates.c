@@ -364,9 +364,15 @@ void AllowReloadingTemplate(char* template_url)
 }
 
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 ThotBool isEOSorWhiteSpace (const char c)
 {
-  return c == SPACE || c == '\t' || c == '\n' || c == EOS;
+  return c == SPACE || c == TAB || c ==  EOL || c ==__CR__ || c == EOS;
+}
+ThotBool isWhiteSpace (const char c)
+{
+  return c == SPACE || c == TAB || c == EOL || c ==__CR__;
 }
 
 /*----------------------------------------------------------------------
@@ -408,20 +414,22 @@ void giveItems (char *text, int size, struct menuType **items, int *nbitems)
 	for (i = 0; i < *nbitems; i++)
     {		
       labelSize = 0;
-      while (isEOSorWhiteSpace (*iter))
+      while (isWhiteSpace (*iter))
         iter++;
-
-      while (!isEOSorWhiteSpace (*iter))
+      if (*iter != EOS)
         {
-          temp[labelSize++] = *iter;
-          iter++;
-        }
+          while (!isEOSorWhiteSpace (*iter))
+            {
+              temp[labelSize++] = *iter;
+              iter++;
+            }
 
-      temp[labelSize] = EOS;
-      menu[i].label = (char *) TtaStrdup (temp);
-      menu[i].type = SimpleTypeNat;  /* @@@@@ ???? @@@@@ */
-      *items = menu;
+          temp[labelSize] = EOS;
+          menu[i].label = (char *) TtaStrdup (temp);
+          menu[i].type = SimpleTypeNat;  /* @@@@@ ???? @@@@@ */
+        }
     }
+  *items = menu;
 #endif /* TEMPLATES */
 }
 
@@ -851,6 +859,7 @@ ThotBool RepeatButtonClicked (NotifyElement *event)
       {
         listtypes = Template_ExpandTypes(t, types);
         result = QueryStringFromMenu(doc, listtypes);
+        TtaFreeMemory(listtypes);
         if (result)
         {
           decl = Template_GetDeclaration(t, result);
@@ -884,7 +893,6 @@ ThotBool RepeatButtonClicked (NotifyElement *event)
             }
           }
         }
-//        TtaFreeMemory(listtypes);
       }
       TtaFreeMemory(types);
       TtaFreeMemory(result);

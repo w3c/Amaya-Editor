@@ -278,6 +278,7 @@ void Declaration_Destroy (Declaration dec)
   }
   else if (dec->nature==UnionNat)
   {
+printf ("Declaration_Destroy %s %s\n", dec->name, dec->usedIn->name);
     HashMap_Destroy(dec->unionType.include);
     dec->unionType.include = NULL;
     HashMap_Destroy(dec->unionType.exclude);
