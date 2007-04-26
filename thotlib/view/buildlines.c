@@ -1867,7 +1867,6 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
 
   if (pLine == NULL)
     return;
-
   /* clear values */
   newFloat = FALSE;
   if (pBox && pBox->BxAbstractBox && pBox->BxAbstractBox->AbFloat != 'N')
@@ -1891,7 +1890,10 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
           pAb = box->BxAbstractBox;
           still = (pAb &&
                    (pAb->AbVisibility < ViewFrameTable[frame - 1].FrVisibility ||
-                    pAb->AbNotInLine || pAb->AbBox == NULL));
+                    pAb->AbNotInLine || pAb->AbBox == NULL ||
+                    (pAb->AbPresentationBox && pAb->AbTypeNum == 0 &&
+                     pAb->AbHorizPos.PosAbRef && pAb->AbHorizPos.PosAbRef->AbFloat != 'N')));
+          // skip not inline bullets
           if (still)
             box = GetNextBox (pAb, frame);
           else if (pAb &&
@@ -1951,10 +1953,12 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
     variable = TRUE;
 
   /* minimum width needed to format the line */
-  if (variable &&
-      (pBox->BxType == BoBlock ||
-       pBox->BxType == BoFloatBlock || pBox->BxType == BoCellBlock ||
-       pBox->BxType == BoTable))
+  if (!pBox)
+    width = 0;
+  else if (variable &&
+           (pBox->BxType == BoBlock ||
+            pBox->BxType == BoFloatBlock || pBox->BxType == BoCellBlock ||
+            pBox->BxType == BoTable))
     {
       width = pBox->BxMinWidth;
       if (width == 0)
@@ -1963,12 +1967,12 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
         else
           width = pBox->BxW + lbmp + rbmp;
     }
-  else if (pBox && (!variable || pBox->BxW < MIN_SPACE))
+  else if (pBox->BxType == BoTable)
+    width = pBox->BxMinWidth;
+  else if (!variable || pBox->BxW < MIN_SPACE)
     width = pBox->BxW + lbmp + rbmp;
-  else if (pBox)
-    width = lbmp + rbmp + MIN_SPACE;
   else
-    width = 0;
+    width = lbmp + rbmp + MIN_SPACE;
 
   if (floatL)
     {
@@ -2557,7 +2561,8 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
               /* the whole box can be inserted in the line */
               if (pNextBox->BxType == BoBlock ||
                   pNextBox->BxType == BoFloatBlock ||
-                  pNextBox->BxType == BoCellBlock)
+                  pNextBox->BxType == BoCellBlock||
+                  pNextBox->BxType == BoTable)
                 wordWidth = pNextBox->BxMinWidth;
               else if (pNextBox->BxAbstractBox->AbLeafType != LtText &&
                        !pNextBox->BxAbstractBox->AbWidth.DimIsPosition &&
@@ -3888,6 +3893,8 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
                                &full, &toAdjust, &breakLine, frame,
                                indent, top, bottom, left, right,
                                &floatL, &floatR);
+if (!strcmp (pBox->BxAbstractBox->AbElement->ElLabel, "L94"))
+  printf ("mniWidth=%d maxWidth=%d\n",minWidth, maxWidth);
           if (pBox->BxMinWidth < minWidth)
             pBox->BxMinWidth = minWidth;
           if (prevLine)
