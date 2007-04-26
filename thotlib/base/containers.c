@@ -877,7 +877,7 @@ HashMap StringHashMap_Create (Container_DestroyElementFunction destroy,
  ----------------------------------------------------------------------------*/
 static int KeywordHashMap_HashFunction(char* key)
 {
-  return *key;
+  return (int)key[0];
 }
  
 HashMap KeywordHashMap_Create(Container_DestroyElementFunction destroy,
