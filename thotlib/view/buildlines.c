@@ -3893,8 +3893,6 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
                                &full, &toAdjust, &breakLine, frame,
                                indent, top, bottom, left, right,
                                &floatL, &floatR);
-if (!strcmp (pBox->BxAbstractBox->AbElement->ElLabel, "L94"))
-  printf ("mniWidth=%d maxWidth=%d\n",minWidth, maxWidth);
           if (pBox->BxMinWidth < minWidth)
             pBox->BxMinWidth = minWidth;
           if (prevLine)
