@@ -1715,7 +1715,7 @@ void MakeToc (Document doc, View view)
   if (el == NULL || TtaIsReadOnly (el))
     {
       /* no selection */
-      TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NO_INSERT_POINT);
+      TtaDisplaySimpleMessage (CONFIRM, LIB, TMSG_EL_RO);
       return;
     }
   else if (TtaIsReadOnly (el))

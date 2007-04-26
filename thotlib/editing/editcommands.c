@@ -3626,11 +3626,18 @@ void TtcInsertChar (Document doc, View view, CHAR_T c)
     {
       /* start the undo sequence */
       GetCurrentSelection (&pDoc, &firstEl, &lastEl, &firstChar, &lastChar);
-      if (pDoc && pDoc->DocReadOnly)
-        {
-          //TtaDisplaySimpleMessage (CONFIRM, LIB, TMSG_EL_RO);
-          return;
-        }
+      if ((pDoc && pDoc->DocReadOnly) || firstEl == NULL)
+        return;
+      else if (ElementIsReadOnly (firstEl) && 
+               (firstEl != lastEl || firstChar != lastChar + 1 ||
+                (lastChar > 1 && lastChar < firstEl->ElVolume) ||
+                ElementIsReadOnly (firstEl->ElParent)))
+        return;
+      else if (firstEl != lastEl && firstEl->ElParent &&
+               (ElementIsReadOnly (lastEl) ||
+                ElementIsReadOnly (firstEl->ElParent)))
+        return;
+
       lock = TRUE;
       /* Check if we are changing the active frame */
       frame = GetWindowNumber (doc, view);
