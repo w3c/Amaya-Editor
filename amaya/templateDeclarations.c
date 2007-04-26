@@ -1113,7 +1113,7 @@ char* Template_ExpandTypes (XTigerTemplate t, char* types)
               HashMap_Set(map, TtaStrdup(decl->name), NULL);
           }
       }
-    TtaFreeMemory(iter);
+    TtaFreeMemory(iterbase);
 
     /* Fill a string with results.*/
     resLen = 0;
