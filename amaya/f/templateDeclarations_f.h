@@ -35,7 +35,10 @@ extern Declaration Template_GetDeclaration ( const XTigerTemplate t,
                                              const char *name );
 extern Declaration Template_GetSimpleTypeDeclaration ( const XTigerTemplate t,
                                                        const char *name );
+extern Declaration Template_GetComponentDeclaration ( const XTigerTemplate t,
+                                                      const char *name );
 extern void Template_Close ( XTigerTemplate t );
+extern void Template_FillDeclarations ( XTigerTemplate t );
 extern void Template_AddLibraryDeclarations ( XTigerTemplate t,
                                               XTigerTemplate lib );
 extern void Template_PrintUnion ( Declaration dec,
@@ -110,7 +113,10 @@ extern Declaration Template_GetDeclaration ( const XTigerTemplate t,
                                                const char *name );
 extern Declaration Template_GetSimpleTypeDeclaration ( const XTigerTemplate t,
                                                          const char *name );
+extern Declaration Template_GetComponentDeclaration ( const XTigerTemplate t,
+                                                        const char *name );
 extern void Template_Close ( XTigerTemplate t );
+extern void Template_FillDeclarations ( XTigerTemplate t );
 extern void Template_AddLibraryDeclarations ( XTigerTemplate t,
                                                 XTigerTemplate lib );
 extern void Template_PrintUnion ( Declaration dec,

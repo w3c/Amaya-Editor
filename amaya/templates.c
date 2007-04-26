@@ -884,9 +884,9 @@ ThotBool RepeatButtonClicked (NotifyElement *event)
             }
           }
         }
+//        TtaFreeMemory(listtypes);
       }
       TtaFreeMemory(types);
-      TtaFreeMemory(listtypes);
       TtaFreeMemory(result);
     }
     else /* if (Template_CanInsertRepeatChild(repeatEl)) */

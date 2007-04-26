@@ -212,6 +212,7 @@ extern ContainerElement HashMap_Remove(HashMap map, HashMapKey key);
 extern void             HashMap_DestroyElement(HashMap map, HashMapKey key);
 extern ForwardIterator  HashMap_GetForwardIterator(HashMap map);
 extern void             HashMap_SwapContents(HashMap map1, HashMap map2);
+extern void             HashMap_Dump(HashMap map, ThotBool isKeyString);
 #endif /* __CEXTRACT__ */
 /** @} */
 

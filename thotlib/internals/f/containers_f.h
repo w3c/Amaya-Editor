@@ -65,6 +65,8 @@ extern void HashMap_DestroyElement ( HashMap map,
 extern ForwardIterator HashMap_GetForwardIterator ( HashMap map );
 extern void HashMap_SwapContents ( HashMap map1,
                                    HashMap map2 );
+extern void HashMap_Dump ( HashMap map,
+                           ThotBool isKeyString );
 extern HashMap PointerHashMap_Create ( Container_DestroyElementFunction destroy,
                                        int nbNodes );
 extern HashMap StringHashMap_Create ( Container_DestroyElementFunction destroy,
@@ -138,6 +140,8 @@ extern void HashMap_DestroyElement ( HashMap map,
 extern ForwardIterator HashMap_GetForwardIterator ( HashMap map );
 extern void HashMap_SwapContents ( HashMap map1,
                                      HashMap map2 );
+extern void HashMap_Dump ( HashMap map,
+                             ThotBool isKeyString );
 extern HashMap PointerHashMap_Create ( Container_DestroyElementFunction destroy,
                                          int nbNodes );
 extern HashMap StringHashMap_Create ( Container_DestroyElementFunction destroy,

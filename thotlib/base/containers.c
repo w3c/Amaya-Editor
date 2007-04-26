@@ -85,8 +85,13 @@ ForwardIterator ForwardIterator_Create(Container container,
  */
 ContainerNode ForwardIterator_GetFirst(ForwardIterator iter)
 {
-  iter->currentNode = iter->getFirst(iter);
-  return iter->currentNode;
+  if (iter)
+    {
+      iter->currentNode = iter->getFirst(iter);
+      return iter->currentNode;
+    }
+  else
+    return NULL;
 }
 
 /**
@@ -96,8 +101,13 @@ ContainerNode ForwardIterator_GetFirst(ForwardIterator iter)
  */
 ContainerNode ForwardIterator_GetNext(ForwardIterator iter)
 {
-  iter->currentNode = iter->getNext(iter);
-  return iter->currentNode; 
+  if (iter)
+    {
+      iter->currentNode = iter->getNext(iter);
+      return iter->currentNode;
+    }
+  else
+    return NULL;
 }
 
 /**
@@ -106,10 +116,13 @@ ContainerNode ForwardIterator_GetNext(ForwardIterator iter)
 long ForwardIterator_GetCount(ForwardIterator iter)
 {
   long l = 0;
-  ContainerNode node = ForwardIterator_GetFirst(iter);
-  for(node = ForwardIterator_GetFirst(iter); node;
-        node = ForwardIterator_GetNext(iter))
-      l++;
+  if (iter)
+    {
+      ContainerNode node = ForwardIterator_GetFirst(iter);
+      for(node = ForwardIterator_GetFirst(iter); node;
+            node = ForwardIterator_GetNext(iter))
+          l++;
+    }
   return l;
 }
 
@@ -591,6 +604,7 @@ ContainerElement HashMap_Set(HashMap map, HashMapKey key, ContainerElement elem)
   {
     old = node->elem;
     node->elem = elem;
+    // TODO Probably a memory leak with stored key duplication.
   }
   else
   {
@@ -742,9 +756,12 @@ static HashMapNode HashMapIterator_GetNext(ForwardIterator iter)
  */
 ForwardIterator  HashMap_GetForwardIterator(HashMap map)
 {
-  return ForwardIterator_Create((Container)map,
-          (ForwardIterator_GetFirstFunction)HashMapIterator_GetFirst,
-          (ForwardIterator_GetNextFunction)HashMapIterator_GetNext);  
+  if (map)
+    return ForwardIterator_Create((Container)map,
+            (ForwardIterator_GetFirstFunction)HashMapIterator_GetFirst,
+            (ForwardIterator_GetNextFunction)HashMapIterator_GetNext);
+  else
+    return NULL;
 }
 
 
@@ -761,6 +778,47 @@ void HashMap_SwapContents(HashMap map1, HashMap map2)
   memcpy(map1, &temp, sizeof(_sHashMap));
 }
 
+/**
+ * Dump the content of a hashmap.
+ */
+void HashMap_Dump(HashMap map, ThotBool isKeyString)
+{
+  int i;
+  HashMapKeyNode keynode;
+  HashMapNode    node;
+  
+  printf("Dump of hashmap %p\n", map);
+  if (map)
+    {
+      printf("  destroyElement : %p\n", map->destroyElement);
+      printf("  destroyKey     : %p\n", map->destroyKey);
+      printf("  hash           : %p\n", map->hash);
+      printf("  compare        : %p\n", map->compare);
+      printf("  nodes          : %p\n", map->nodes);
+      printf("  nbNodes        : %d\n", map->nbNodes);
+      for(i=0; i<map->nbNodes; i++)
+        {
+          keynode = map->nodes[i];
+          if(keynode)
+            {
+              printf("  [%02d] %p (%p -> %p)\n", i,  keynode, keynode->first, keynode->last);
+              node = (HashMapNode) keynode->first;
+              while (node!=NULL)
+                {
+                  if(isKeyString)
+                    printf("      (%p>>) %p (>>%p) : %p %s - %p\n", node->prev, 
+                                        node, node->next,
+                                        node->key, (char*)node->key, node->elem);
+                  else
+                    printf("      (%p>>) %p (>>%p) : %p - %p\n", node->prev, 
+                                        node, node->next,
+                                        node->key, node->elem);
+                  node = node->next;
+                }
+            }
+        }
+    }
+}
 
 /*----------------------------------------------------------------------
   Pointer hash map

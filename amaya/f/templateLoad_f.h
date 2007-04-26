@@ -8,10 +8,6 @@
 
 extern void AddElementDeclaration ( XTigerTemplate t,
                                     Element el );
-extern void AddUnionDeclaration ( XTigerTemplate t,
-                                  Element el );
-extern void AddComponentDeclaration ( XTigerTemplate t,
-                                      Element el );
 extern void Template_AddLibraryToImport ( XTigerTemplate t,
                                           Element el );
 extern void CheckTypesAttribute ( XTigerTemplate t,
@@ -31,10 +27,6 @@ extern void Template_LoadXTigerTemplateLibrary ( XTigerTemplate t );
 
 extern void AddElementDeclaration ( XTigerTemplate t,
                                       Element el );
-extern void AddUnionDeclaration ( XTigerTemplate t,
-                                    Element el );
-extern void AddComponentDeclaration ( XTigerTemplate t,
-                                        Element el );
 extern void Template_AddLibraryToImport ( XTigerTemplate t,
                                             Element el );
 extern void CheckTypesAttribute ( XTigerTemplate t,

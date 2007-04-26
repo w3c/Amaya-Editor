@@ -53,49 +53,6 @@ void AddElementDeclaration (XTigerTemplate t, Element el)
 }
 
 /*----------------------------------------------------------------------
-  Creates a Union type and stores all needed information. 
-  ----------------------------------------------------------------------*/
-void AddUnionDeclaration (XTigerTemplate t, Element el)
-{
-#ifdef TEMPLATES
-	char *name, *include, *exclude;
-  
-  if(!t)
-    return;
-	
-	name	  = GetAttributeStringValueFromNum (el, Template_ATTR_name, NULL);
-	include   = GetAttributeStringValueFromNum (el, Template_ATTR_includeAt, NULL);
-	exclude   = GetAttributeStringValueFromNum (el, Template_ATTR_exclude, NULL);
-  
-  if(name && include)
-  	Template_DeclareNewUnion (t, name, include, exclude);
-
-  TtaFreeMemory (name);
-	TtaFreeMemory (include);
-	TtaFreeMemory (exclude);
-#endif /* TEMPLATES */
-}
-
-/*----------------------------------------------------------------------
-  Creates a Component type and stores all needed information. 
-  ----------------------------------------------------------------------*/
-void AddComponentDeclaration (XTigerTemplate t, Element el)
-{
-#ifdef TEMPLATES
-	char *name;
-  
-  if(!t)
-    return;
-	
-	name = GetAttributeStringValueFromNum (el, Template_ATTR_name, NULL);
-  if(name)
-  	Template_DeclareNewComponent (t, name, el);	
-	TtaFreeMemory (name);
-#endif /* TEMPLATES */
-}
-
-
-/*----------------------------------------------------------------------
   Template_AddLibraryToImport
   Declare libraries to import.
   Dont redeclare them if already loaded.
@@ -184,7 +141,10 @@ void Template_AddHeadParameters(XTigerTemplate t, Element el)
 void Template_ParseDeclarations (XTigerTemplate t, Element el)
 {
 #ifdef TEMPLATES
-	ElementType type;
+	ElementType  type;
+  char        *name = NULL,
+              *include = NULL,
+              *exclude = NULL;
   
   if(!t)
     return;
@@ -198,10 +158,22 @@ void Template_ParseDeclarations (XTigerTemplate t, Element el)
       switch (type.ElTypeNum)
         {
         case Template_EL_component:
-          AddComponentDeclaration (t,el);
+          name = GetAttributeStringValueFromNum (el, Template_ATTR_name, NULL);
+          if(name)
+            Template_DeclareNewComponent (t, name, el); 
+          TtaFreeMemory (name);
           break;
         case Template_EL_union:
-          AddUnionDeclaration (t,el);
+          name    = GetAttributeStringValueFromNum (el, Template_ATTR_name, NULL);
+          include   = GetAttributeStringValueFromNum (el, Template_ATTR_includeAt, NULL);
+          exclude   = GetAttributeStringValueFromNum (el, Template_ATTR_exclude, NULL);
+          
+          if(name)
+            Template_DeclareNewUnion (t, name, include, exclude);
+        
+          TtaFreeMemory (name);
+          TtaFreeMemory (include);
+          TtaFreeMemory (exclude);
           break;
         case Template_EL_bag:
           CheckTypesAttribute (t, el);
@@ -343,6 +315,7 @@ void LoadTemplate (Document doc, char* templatename)
           TtaFreeMemory(iter);
           
           Template_ParseDeclarations  (t, 0);
+          Template_FillDeclarations (t);
           Template_PreInstantiateComponents (t);
           
           ctx->t->isLoaded = TRUE;
@@ -417,6 +390,7 @@ void Template_LoadXTigerTemplateLibrary (XTigerTemplate t)
     TtaFreeMemory(iter);
 
     Template_ParseDeclarations  (t, 0);
+    Template_FillDeclarations (t);
     Template_PreInstantiateComponents (t);
     
     t->isLoaded = TRUE;

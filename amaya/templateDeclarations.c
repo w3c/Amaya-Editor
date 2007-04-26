@@ -231,11 +231,7 @@ Declaration Declaration_Clone (Declaration dec)
       newdec->elementType.name = TtaStrdup(dec->elementType.name);
       break;
     case ComponentNat:
-//  TODO Dont fill it now but in the same process that union content completion.
       newdec->componentType.content = NULL;
-//      el =  dec->componentType.content;
-//      newdec->componentType.content = TtaCopyTree (el, TtaGetDocument (el),
-//                                            TtaGetDocument (el), el);
       break;
     case UnionNat:
       newdec->unionType.include = KeywordHashMap_CreateFromList(NULL, -1, NULL);
@@ -373,46 +369,11 @@ Declaration Template_DeclareNewUnion (XTigerTemplate t, const char *name,
   if (!t)
     return NULL;
 
-//  ForwardIterator iter;
-//  HashMapNode     node;
-//  Declaration aux;
-  
   Declaration dec = Declaration_Create (t, name, UnionNat);
   
   dec->unionType.include  = KeywordHashMap_CreateFromList(NULL, -1, include);
   dec->unionType.exclude  = KeywordHashMap_CreateFromList(NULL, -1, exclude);
   dec->unionType.expanded = NULL;
-
-// TODO Move and change this code to other place to init hashmap node contents.
-//  //We initialize include
-//  if (include)
-//    {
-//      iter = HashMap_GetForwardIterator(include);
-//      ITERATOR_FOREACH(iter, HashMapNode, node)
-//        {
-//          aux = Template_GetDeclaration (t, (const char*)node->key);
-//          if (aux == NULL) //Unknown type > a new XML element
-//            aux = Template_DeclareNewElement (t, (const char*)node->key);
-//          if (aux != NULL)
-//            node->elem = aux;
-//        }
-//      TtaFreeMemory(iter);
-//    }
-//
-//  //We initialize exclude
-//  if (exclude)
-//    {
-//      iter = HashMap_GetForwardIterator(exclude);
-//      ITERATOR_FOREACH(iter, HashMapNode, node)
-//        {
-//          aux = Template_GetDeclaration (t, (const char*)node->key);
-//          if (aux == NULL) //Unknown type > a new XML element
-//            aux = Template_DeclareNewElement (t, (const char*)node->key);
-//          if (aux != NULL)
-//            node->elem = aux;
-//        }
-//      TtaFreeMemory(iter);
-//    }
 
   Template_AddDeclaration (t, dec);
   return dec;
@@ -502,6 +463,23 @@ Declaration Template_GetSimpleTypeDeclaration (const XTigerTemplate t, const cha
     return NULL;
 }
 
+/*----------------------------------------------------------------------
+  Template_GetComponentDeclaration
+  Find a declaration of a component in a specified template and return it.
+  \param t Template in which search the declaration
+  \param name Declaration name to find.
+  ----------------------------------------------------------------------*/
+Declaration Template_GetComponentDeclaration (const XTigerTemplate t, const char *name)
+{
+#ifdef TEMPLATES
+  if(t)
+     return (Declaration)HashMap_Get (t->components, (void*)name); 
+  else
+#endif /* TEMPLATES */
+    return NULL;
+}
+
+
 
 /*----------------------------------------------------------------------
   Close a template and free it.
@@ -558,6 +536,93 @@ static void Template_Destroy (XTigerTemplate t)
   TtaFreeMemory(t->templateVersion);
   TtaFreeMemory(t->name);
 	TtaFreeMemory (t);
+#endif /* TEMPLATES */
+}
+
+/*----------------------------------------------------------------------
+  Fill declaration contents if not already done.
+  Usefull when some declarations have been reported from libraries.
+  ----------------------------------------------------------------------*/
+static void Template_FillDeclarationContent(XTigerTemplate t, Declaration decl)
+{
+#ifdef TEMPLATES
+  Element el;
+  Declaration otherDecl;
+  ForwardIterator  iter;
+  HashMapNode      node;
+  
+  if(t && decl)
+    {
+      switch(decl->nature)
+        {
+        case ComponentNat:
+            otherDecl = Template_GetSimpleTypeDeclaration(decl->declaredIn, decl->name);
+            if(otherDecl)
+              {
+                el =  otherDecl->componentType.content;
+                decl->componentType.content = TtaCopyTree (el, TtaGetDocument (el),
+                                              TtaGetDocument (el), el);
+              }
+          break;
+        case UnionNat:
+          iter = HashMap_GetForwardIterator(decl->unionType.include);
+          ITERATOR_FOREACH(iter, HashMapNode, node)
+            {
+              node->elem = Template_GetDeclaration(decl->usedIn, (char*)node->key);
+            }
+          TtaFreeMemory(iter);
+          iter = HashMap_GetForwardIterator(decl->unionType.exclude);
+          ITERATOR_FOREACH(iter, HashMapNode, node)
+            {
+              node->elem = Template_GetDeclaration(decl->usedIn, (char*)node->key);
+            }
+          TtaFreeMemory(iter);
+          iter = HashMap_GetForwardIterator(decl->unionType.exclude);
+          ITERATOR_FOREACH(iter, HashMapNode, node)
+            {
+              node->elem = Template_GetDeclaration(decl->usedIn, (char*)node->key);
+            }
+          TtaFreeMemory(iter);
+          break;
+        default:
+          break;
+        }
+    }
+#endif /* TEMPLATES */  
+}
+
+
+/*----------------------------------------------------------------------
+  Fill declaration contents if not already done.
+  Usefull when some declarations have been reported from libraries.
+  Only component and union must be filled.
+  ----------------------------------------------------------------------*/
+void Template_FillDeclarations(XTigerTemplate t)
+{
+#ifdef TEMPLATES
+  ForwardIterator  iter;
+  HashMapNode      node;
+  
+  if(t)
+    {
+      /* Fill components.*/
+      iter = HashMap_GetForwardIterator(t->components);
+      ITERATOR_FOREACH(iter, HashMapNode, node)
+        {
+          if (node->elem)
+            Template_FillDeclarationContent(t, (Declaration)node->elem);
+        }
+      TtaFreeMemory(iter);
+
+      /* Fill unions.*/
+      iter = HashMap_GetForwardIterator(t->unions);
+      ITERATOR_FOREACH(iter, HashMapNode, node)
+        {
+          if (node->elem)
+            Template_FillDeclarationContent(t, (Declaration)node->elem);
+        }
+      TtaFreeMemory(iter);
+    }
 #endif /* TEMPLATES */
 }
 
@@ -720,7 +785,7 @@ void PrintDeclarations (XTigerTemplate t, FILE *file)
 
   if(!HashMap_IsEmpty(t->simpleTypes))
     {
-      fprintf (file, "\nSIMPLE TYPES\n");
+      fprintf (file, "\n\nSIMPLE TYPES\n");
       fprintf (file, "------------");
       iter = HashMap_GetForwardIterator(t->simpleTypes);
       ITERATOR_FOREACH(iter, HashMapNode, node)
@@ -736,7 +801,7 @@ void PrintDeclarations (XTigerTemplate t, FILE *file)
   /* XML elements : */
   if(!HashMap_IsEmpty(t->elements))
     {
-      fprintf (file, "\nXML ELEMENTS\n");
+      fprintf (file, "\n\nXML ELEMENTS\n");
       fprintf (file, "------------");
       iter = HashMap_GetForwardIterator(t->elements);
       ITERATOR_FOREACH(iter, HashMapNode, node)
@@ -752,7 +817,7 @@ void PrintDeclarations (XTigerTemplate t, FILE *file)
   /* Components : */
   if(!HashMap_IsEmpty(t->components))
     {
-      fprintf (file, "\nCOMPONENTS\n");
+      fprintf (file, "\n\nCOMPONENTS\n");
       fprintf (file, "------------");
       iter = HashMap_GetForwardIterator(t->components);
       ITERATOR_FOREACH(iter, HashMapNode, node)
@@ -768,7 +833,7 @@ void PrintDeclarations (XTigerTemplate t, FILE *file)
   /* Unions : */
   if(!HashMap_IsEmpty(t->unions))
     {
-      fprintf (file, "\nUNIONS\n");
+      fprintf (file, "\n\nUNIONS\n");
       fprintf (file, "------------");
       iter = HashMap_GetForwardIterator(t->unions);
       ITERATOR_FOREACH(iter, HashMapNode, node)
@@ -917,6 +982,7 @@ void RemoveUser (XTigerTemplate t)
 /*----------------------------------------------------------------------
   Template_ExpandUnion
   Expand union definition if not already done.
+  TODO anyElement and anySimple are not expanded.
   All included union are expanded and excluded elements are removed.
   \param t Template which embed the union
   \param decl Declaration of the union to expand.
@@ -927,6 +993,8 @@ HashMap Template_ExpandUnion(XTigerTemplate t, Declaration decl)
 #ifdef TEMPLATES
   if (t)
   {
+    printf("Template_ExpandUnion %p %s\n", decl, decl->name);
+    
     if (decl->unionType.expanded==NULL)
     {
       ForwardIterator iter;
@@ -985,6 +1053,7 @@ HashMap Template_ExpandUnion(XTigerTemplate t, Declaration decl)
 /*----------------------------------------------------------------------
   Template_ExpandTypes
   Expand a type list with resolving unions.
+  anyElement and anySimple are not expanded.
   \param t Template
   \param types String in which look for types.
   \return The resolved type string.
@@ -994,11 +1063,16 @@ char* Template_ExpandTypes (XTigerTemplate t, char* types)
 #ifdef TEMPLATES
   if (t)
   {
-    HashMap     map = KeywordHashMap_Create((Container_DestroyElementFunction)
-                                                NULL, FALSE, -1);
+    /* Map of types to expand. */
+    HashMap     basemap = KeywordHashMap_CreateFromList(NULL, -1, types);
+    /* Map to store expanded types. */
+    HashMap     map     = KeywordHashMap_Create(NULL, TRUE, -1);
 
     ForwardIterator iter;
     HashMapNode     node;
+    ForwardIterator iterbase;
+    HashMapNode     nodebase;
+    
 
     Declaration decl;
     int         len  = strlen(types);
@@ -1007,65 +1081,56 @@ char* Template_ExpandTypes (XTigerTemplate t, char* types)
                 cur = 0;
     char*       result;
     int         resLen;
-  
-    /* Fill a dict with all finded declarations */
-    while(pos<=len)
-    {
-      if (types[pos]==' ' || pos==len)
+
+
+    /* Fill map with expanded result from basemap.*/
+    iterbase = HashMap_GetForwardIterator(basemap);
+    ITERATOR_FOREACH(iterbase, HashMapNode, nodebase)
       {
-        if (cur>0)
-        {
-          type[cur] = 0;
-          decl = Template_GetDeclaration(t, type);
-          if (decl)
+        decl = (Declaration) nodebase->elem;
+        if (!decl)
+          decl = Template_GetDeclaration(t, (char*)nodebase->key);
+        if (decl)
           {
-            if (decl->nature==UnionNat)
-            {
-              HashMap         unionDecl = Template_ExpandUnion(t, decl);
-              if (unionDecl)
-                {
-                  iter = HashMap_GetForwardIterator(unionDecl);
-                  ITERATOR_FOREACH(iter, HashMapNode, node)
-                    {
-                      if(!HashMap_Get(map, node->key))
-                        HashMap_Set(map, node->key, node->elem);
-                    }
-                  TtaFreeMemory(iter);
-                }
-            }
+            if (decl->nature == UnionNat)
+              {
+                /* Expand a list element. */
+                HashMap unionDecl = Template_ExpandUnion(t, decl);
+                if (unionDecl)
+                  {
+                    iter = HashMap_GetForwardIterator(unionDecl);
+                    ITERATOR_FOREACH(iter, HashMapNode, node)
+                      {
+                        /* For each expanded element, add it to the final map.*/
+                        HashMap_Set(map, TtaStrdup((char*)node->key), NULL);
+                      }
+                    TtaFreeMemory(iter);
+                  }
+                HashMap_Destroy(unionDecl);
+              }
             else
-            {
-              if (!HashMap_Get(map, type))
-                HashMap_Set(map, type, decl);
-            }
+              /* Add it without expansion.*/
+              HashMap_Set(map, TtaStrdup(decl->name), NULL);
           }
-        }
-        cur = 0;
       }
-      else
-      {
-        type[cur++] = types[pos];
-      }
-      pos++;
-    }
-    
+    TtaFreeMemory(iter);
+
     /* Fill a string with results.*/
     resLen = 0;
     
     iter = HashMap_GetForwardIterator(map);
     ITERATOR_FOREACH(iter, HashMapNode, node)
       {
-        resLen += strlen(((Declaration)node->elem)->name) + 1;
+        resLen += strlen((char*)node->key) + 1;
       }
     
     result = (char*) TtaGetMemory(resLen+1);
     pos = 0;
     
-    for (node = (HashMapNode) ForwardIterator_GetFirst(iter); node;
-        node = (HashMapNode) ForwardIterator_GetNext(iter))
+    ITERATOR_FOREACH(iter, HashMapNode, node)
       {
-        strcpy(result+pos, ((Declaration)node->elem)->name);
-        pos += strlen(((Declaration)node->elem)->name);
+        strcpy(result+pos, (char*)node->key);
+        pos += strlen((char*)node->key);
         result[pos] = ' ';
         pos++;
       }
@@ -1075,6 +1140,7 @@ char* Template_ExpandTypes (XTigerTemplate t, char* types)
     result[pos] = 0;
 
     HashMap_Destroy(map);
+    HashMap_Destroy(basemap);
     TtaFreeMemory(type);
     return result;
   }
