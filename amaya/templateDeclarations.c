@@ -525,7 +525,7 @@ static void Template_Destroy (XTigerTemplate t)
   t->simpleTypes = NULL;
 
   //Freeing the document
-  if (t->doc)
+  if (t->doc>0)
     {
       FreeDocumentResource (t->doc);
       TtcCloseDocument (t->doc, 0);
