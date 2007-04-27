@@ -4167,7 +4167,7 @@ void TtcCopySelection (Document doc, View view)
         /* use the right frame */
         ActiveFrame = frame;
     }
-  if (SelPosition)
+  if (SelPosition && FirstSelectedElement->ElTerminal)
     return;
 #ifdef _WINGUI
   activeWnd = GetFocus ();

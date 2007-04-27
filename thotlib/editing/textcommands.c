@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2005
+ *  (c) COPYRIGHT INRIA, 1996-2007
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1425,6 +1425,8 @@ static int CopyXClipboard (unsigned char **buffer, View view)
           else
             maxLength = 7;
         }
+      else if (pFirstEl == pLastEl && pFirstEl->ElVolume == 0)
+        maxLength = 8;
       else
         {
           if (pFirstEl->ElTerminal)
@@ -1522,7 +1524,12 @@ static int CopyXClipboard (unsigned char **buffer, View view)
           i += 7;
         }
     }
-
+  else if (pFirstEl == pLastEl && pFirstEl->ElVolume == 0)
+    {
+      ustrcpy (&text[i], TEXT("<struct>"));
+      i += 8;
+    }
+ 
   /* copy the text of following elements */
   pOldBlock = NULL;
   pEl = pFirstEl;
@@ -1688,7 +1695,8 @@ void DoCopyToClipboard (Document doc, View view, ThotBool force, ThotBool primar
 #ifdef _WX
   // Don't change the clipboard buffer when a single click is done
   wxTheClipboard->UsePrimarySelection(primary);
-  if (!SelPosition && wxTheClipboard->Open())
+  if ((!SelPosition || (FirstSelectedElement && !FirstSelectedElement->ElTerminal)) &&
+      wxTheClipboard->Open())
     {
       unsigned char *  buffer = NULL;
       int              len;
