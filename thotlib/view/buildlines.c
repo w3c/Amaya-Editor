@@ -3203,7 +3203,6 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
     orgY += pBlock->BxYOrg;
 
   /* initial position */
-
   if (box->BxAbstractBox->AbFloat == 'L')
     {
       /* left float */
@@ -3221,7 +3220,7 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
     {
       y = orgY;
       y += pLine->LiYOrg;
-      if (pLine->LiXMax - pLine->LiRealLength < box->BxWidth)
+      if (pLine->LiRealLength > 0)
         /* it must be displayed under the current line */
         y += pLine->LiHeight;
       w = pBlock->BxW;
@@ -3235,7 +3234,7 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
   if  (boxPrevR && y < boxPrevR->BxYOrg + boxPrevR->BxHeight &&
        y + box->BxHeight >= boxPrevR->BxYOrg)
     /* can be inserted next to this previous float ? */
-    w = w + x - boxPrevR->BxXOrg;
+    w = boxPrevR->BxXOrg - x;
   if  (boxPrevL && y < boxPrevL->BxYOrg + boxPrevL->BxHeight &&
        y + box->BxHeight > boxPrevL->BxYOrg)
     /* can be inserted next to this previous float ? */

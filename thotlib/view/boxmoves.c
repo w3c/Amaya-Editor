@@ -2105,8 +2105,6 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta,
               middleTrans = pBox->BxWidth / 2 - (pBox->BxWidth + delta + diff) / 2;
               endTrans = 0;
             }
-if (!strcmp (pCurrentAb->AbElement->ElLabel, "L94"))
-            printf ("ResizeWidth L94 w=%d + %d\n",pBox->BxW,delta);
 	  
           if (ReadyToDisplay &&
               pBox->BxType != BoSplit &&
