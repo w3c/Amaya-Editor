@@ -1069,7 +1069,7 @@ ThotBool ComputePositioning (PtrBox pBox, int frame)
                   pRefBox->BxMoved = NULL;
                   MoveBoxEdge (pBox, pRefBox, OpWidth, x + lr + w + rr - r, frame, TRUE);
                 }
-              XMoveAllEnclosed (pBox, x + l - pBox->BxXOrg, frame);
+              XMoveAllEnclosed (pBox, x + lr + l - pBox->BxXOrg, frame);
               // register as a pos rule
               pPosAb = &pAb->AbHorizPos;
               pPosAb->PosAbRef = pRefAb;
@@ -1084,7 +1084,7 @@ ThotBool ComputePositioning (PtrBox pBox, int frame)
             {
               /* right positioning */
               pBox->BxHorizEdge = Right;
-              XMoveAllEnclosed (pBox, x + lr + w + rr - r - pBox->BxWidth - pBox->BxXOrg, frame);
+              XMoveAllEnclosed (pBox, x + lr + w /*+ rr*/ - r - pBox->BxWidth - pBox->BxXOrg, frame);
               // register as a pos rule
               pPosAb = &pAb->AbHorizPos;
               pPosAb->PosAbRef = pRefAb;
@@ -1120,7 +1120,7 @@ ThotBool ComputePositioning (PtrBox pBox, int frame)
                   ResizeHeight (pBox, pBox, NULL, tr + h + br - b - pBox->BxH, 0, 0, frame);
                   InsertDimRelation (pRefBox, pBox, OpSame, FALSE, FALSE);
                 }
-              YMoveAllEnclosed (pBox, y + t - pBox->BxYOrg, frame);
+              YMoveAllEnclosed (pBox, y + tr + t - pBox->BxYOrg, frame);
               // register as a pos rule
               pPosAb = &pAb->AbVertPos;
               pPosAb->PosAbRef = pRefAb;
@@ -1135,7 +1135,7 @@ ThotBool ComputePositioning (PtrBox pBox, int frame)
             {
               /* bottom positioning */
               pBox->BxVertEdge = Bottom;
-              YMoveAllEnclosed (pBox, y + tr + h + br - b - pBox->BxHeight - pBox->BxYOrg, frame);
+              YMoveAllEnclosed (pBox, y + tr + h /*+ br*/ - b - pBox->BxHeight - pBox->BxYOrg, frame);
               // register as a pos rule
               pPosAb = &pAb->AbVertPos;
               pPosAb->PosAbRef = pRefAb;
