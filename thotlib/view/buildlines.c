@@ -2393,15 +2393,15 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
                     {
                       if (pBlock->BxLeftFloat == NULL || !setinline)
                         l = l + pNextBox->BxLMargin + pNextBox->BxLPadding;
-                      else if (pLine->LiXOrg < shift + pNextBox->BxLMargin + pNextBox->BxLPadding)
-                        l = l + pNextBox->BxLMargin + pNextBox->BxLPadding - pLine->LiXOrg - shift;
+                      else if (pLine->LiXOrg < shift + pNextBox->BxLMargin)
+                        l = l + pNextBox->BxLMargin - pLine->LiXOrg - shift;
                     }
                   if (pNextBox->BxRMargin + pNextBox->BxRPadding > 0)
                     {
                       if (pBlock->BxRightFloat == NULL || !setinline)
                         l += pNextBox->BxRMargin + pNextBox->BxRPadding;
-                      else if (pNextBox->BxRMargin + pNextBox->BxRPadding > pBlock->BxW - val)
-                        l = l + pNextBox->BxRMargin + pNextBox->BxRPadding - pBlock->BxW + val;
+                      else if (pNextBox->BxRMargin > pBlock->BxW - val)
+                        l = l + pNextBox->BxRMargin - pBlock->BxW + val;
                    }
                   l = l + pNextBox->BxLBorder;
                   l = l + r + pNextBox->BxRBorder;
