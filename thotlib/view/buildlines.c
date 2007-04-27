@@ -1998,6 +1998,8 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
         {
           /* line at the right of the current left float */
           pLine->LiXOrg = floatL->BxXOrg + floatL->BxWidth + indent - orgX;
+          if (floatL->BxLMargin < 0)
+            pLine->LiXOrg += floatL->BxLMargin;
           if (pLine->LiYOrg + orgY < floatL->BxYOrg)
             pLine->LiYOrg = floatL->BxYOrg - orgY;
           bottomL = floatL->BxYOrg + floatL->BxHeight - orgY;
@@ -2021,8 +2023,9 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
           if (pfloatL && floatL)
             {
               /* line at the right of a previous left float */
-              //pLine->LiXOrg = floatL->BxXOrg + floatL->BxWidth + indent - orgX;
               pLine->LiXOrg = floatL->BxXOrg + floatL->BxWidth - floatL->BxRMargin + indent - orgX;
+              if (floatL->BxLMargin < 0)
+                pLine->LiXOrg += floatL->BxLMargin;
               bottomL = floatL->BxYOrg + floatL->BxHeight - orgY;
             }
           else
@@ -2035,7 +2038,7 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
           pLine->LiXOrg = left + indent;
           bottomL = pLine->LiYOrg;
         }
-      else //if (pBlock->BxType == BoFloatBlock)
+      else
         {
           /* keep the CSS2 minimun of margins and the current shift */
           if (pLine->LiXOrg > left + l)
@@ -2052,8 +2055,8 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
         {
           /* line extended to the left edge of the current right float */
           pLine->LiXMax = floatR->BxXOrg - pLine->LiXOrg - orgX;
-          //if (pLine->LiYOrg + orgY < floatR->BxYOrg)
-          //  pLine->LiYOrg = floatR->BxYOrg - orgY;
+          if (floatR->BxRMargin < 0)
+            pLine->LiXMax -= floatR->BxRMargin;
           bottomR = floatR->BxYOrg + floatR->BxHeight - orgY;
         }
       else if (floatR)
@@ -2077,6 +2080,8 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
             {
               /* line extended to the left edge of a previous right float */
               pLine->LiXMax = floatR->BxXOrg - pLine->LiXOrg - orgX;
+              if (floatR->BxRMargin < 0)
+                pLine->LiXMax -= floatR->BxRMargin;
               bottomR = floatR->BxYOrg + floatR->BxHeight - orgY;
             }
           else
@@ -3188,7 +3193,7 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
   PtrBox              boxPrevL, boxPrevR;
   PtrBox              pNextBox;
   int                 x, y, w, minWidth, ret, h;
-  int                 orgX, orgY;
+  int                 orgX, orgY, bw;
   ThotBool            clearl, clearr;
 
   boxPrevL = *floatL;
@@ -3203,18 +3208,17 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
     orgY += pBlock->BxYOrg;
 
   /* initial position */
+  bw = box->BxWidth;
+  if (box->BxAbstractBox->AbFloat == 'L' && box->BxLMargin < 0)
+    bw += box->BxLMargin;
+  else if (box->BxAbstractBox->AbFloat == 'R' && box->BxRMargin < 0)
+    bw += box->BxRMargin;
   if (box->BxAbstractBox->AbFloat == 'L')
-    {
-      /* left float */
-      x = left + orgX;
-    }
+    /* left float */
+    x = left + orgX;
   else
-    {
-      /* right float */
-      x = pBlock->BxWidth - right - box->BxWidth + orgX;
-      if (box->BxLMargin < 0)
-        x -= box->BxLMargin;
-    }
+    /* right float */
+    x = pBlock->BxWidth - right - bw + orgX;
 
   if (pLine)
     {
@@ -3256,15 +3260,27 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
   if ((boxPrevL && y < boxPrevL->BxYOrg + boxPrevL->BxHeight) ||
       (boxPrevR && y < boxPrevR->BxYOrg + boxPrevR->BxHeight))
     {
-      if (box->BxWidth <= w + 1)
+      if (bw <= w + 1)
         {
           /* it's possible to display the floating box at the current position */
           if (boxPrevL && y < boxPrevL->BxYOrg + boxPrevL->BxHeight &&
               box->BxAbstractBox->AbFloat == 'L')
-            x = boxPrevL->BxXOrg + boxPrevL->BxWidth;
+            {
+              x = boxPrevL->BxXOrg + boxPrevL->BxWidth;
+              if (boxPrevL->BxLMargin < 0)
+                x += boxPrevL->BxLMargin;
+              if (bw < boxPrevL->BxLMargin)
+                x = left + orgX;
+            }
           else if (boxPrevR && y < boxPrevR->BxYOrg + boxPrevR->BxHeight &&
                    box->BxAbstractBox->AbFloat == 'R')
-            x = boxPrevR->BxXOrg - box->BxWidth;
+            {
+              x = boxPrevR->BxXOrg - box->BxWidth;
+              if (boxPrevR->BxRMargin < 0)
+                x -= boxPrevR->BxRMargin;
+              if (bw < boxPrevR->BxRMargin)
+                x = pBlock->BxWidth - right - bw + orgX;
+            }
         }
       else
         {
@@ -3519,7 +3535,8 @@ static void RemoveBreaks (PtrBox pBox, int frame, ThotBool removed,
                         }
 #ifdef _GL
 #ifdef _TRACE_GL_BUGS_GLISLIST
-                      if (ibox1->DisplayList) printf ( "GLBUG - RemoveBreaks : glIsList=%s (pose prb sur certaines machines)\n", glIsList (ibox1->DisplayList) ? "yes" : "no" );
+if (ibox1->DisplayList)
+ printf ( "GLBUG - RemoveBreaks : glIsList=%s (pose prb sur certaines machines)\n", glIsList (ibox1->DisplayList) ? "yes" : "no" );
 #endif /* _TRACE_GL_BUGS_GLISLIST */
                       if (glIsList (ibox1->DisplayList))
                         {

@@ -2185,7 +2185,7 @@ static void AddFloatingBox (PtrAbstractBox pAb, int frame, ThotBool left)
     {
       box = pAb->AbBox;
       if (pAb->AbLeafType == LtCompound &&
-          (pAb->AbWidth.DimIsPosition || IsFlow (box, frame) ||
+          (pAb->AbWidth.DimIsPosition || ExtraFlow (box, frame) ||
            pAb->AbWidth.DimAbRef))
         /* cannot be a floated box */
         pAb->AbFloat = 'N';
