@@ -233,10 +233,12 @@ static void FillInsertableElementFromElemAttribute(XTigerTemplate t,
 static void FillInsertableElemList(Document doc, Element elem, DLList list)
 {
   ElementType      type;
+  Element          parent;
 #ifdef TEMPLATES
   Element          child;
   ElementType      childType;
   XTigerTemplate   t;
+  ThotBool         haveAncestorBag = FALSE;
 #endif/* TEMPLATES */
   int level;
   ThotBool cont;
@@ -247,17 +249,33 @@ static void FillInsertableElemList(Document doc, Element elem, DLList list)
 
 #ifdef TEMPLATES
     t = GetXTigerTemplate(DocumentMeta[doc]->template_url);
-#endif/* TEMPLATES */
+
+
+    if(!IsTemplateElement(elem))
+      elem = GetFirstTemplateParentElement(elem);
+
+    // Search for first xt:bag ancestor.
+    parent = elem;
+    while(parent!= NULL && cont)
+      {
+        type = TtaGetElementType(parent);
+        if(type.ElTypeNum==Template_EL_bag)
+          {
+            haveAncestorBag = TRUE;
+            cont = FALSE;
+          }
+        parent = GetFirstTemplateParentElement(parent);
+      }
 
     level = 0;
     cont = TRUE;
-    
+
+    // Process for each ancestor.
     while(elem!=NULL && cont)
     {
       type = TtaGetElementType(elem);
       switch(type.ElTypeNum)
-      {
-#ifdef TEMPLATES
+        {
         case Template_EL_repeat:
           child = TtaGetFirstChild(elem);
           childType = TtaGetElementType(child);
@@ -278,30 +296,27 @@ static void FillInsertableElemList(Document doc, Element elem, DLList list)
             default:
               break;
           }
-          cont = TRUE;
+          cont = haveAncestorBag;
           break;
         case Template_EL_useEl:
           // Fill for xt:use only if have no child.
           if (TtaGetFirstChild(elem)==NULL){
             FillInsertableElementFromElemAttribute(t, elem, elem,
                                                    Template_ATTR_types, list, level);
-            cont = TRUE;
+            cont = haveAncestorBag;
           }
           break;
         case Template_EL_bag:
           FillInsertableElementFromElemAttribute(t, elem, elem,
                                                  Template_ATTR_types, list, level);
-          cont = TRUE;
+          cont = FALSE;
           break;
-#endif /*TEMPLATES */
-        default:
-          break;
-      }
-      
-      elem = TtaGetParent(elem);
+        }
+      elem = GetFirstTemplateParentElement(elem);
       level ++;
-    }    
-  }  
+    }
+#endif/* TEMPLATES */
+  }
 }
 
 /*----------------------------------------------------------------------
