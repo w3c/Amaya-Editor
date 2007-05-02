@@ -320,7 +320,7 @@ void LoadTemplate (Document doc, char* templatename)
           
           ctx->t->isLoaded = TRUE;
           
-          DoInstanceTemplate (TtaStrdup(ctx->templatePath));
+          DoInstanceTemplate (ctx->templatePath);
           DocumentTypes[ctx->newdoc] = docTemplate;
         }
       TtaFreeMemory(ctx->templatePath);

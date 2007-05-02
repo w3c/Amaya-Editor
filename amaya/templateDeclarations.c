@@ -53,7 +53,7 @@ void InitializeTemplateEnvironment ()
 {
 #ifdef TEMPLATES
   Templates_Map = StringHashMap_Create((Container_DestroyElementFunction) 
-                                                    Template_Destroy, FALSE, -1);
+                                                    Template_Destroy, TRUE, -1);
   HashMap_Set (Templates_Map, (void*)PREDEFINED_LIB, CreatePredefinedTypesLibrary ());  
 #endif /* TEMPLATES */
 }

@@ -690,7 +690,7 @@ static void ParseTemplate (XTigerTemplate t, Element el, Document doc,
 	char         *name;
 	ElementType   elType = TtaGetElementType (el);
 	
-  if (!t)
+  if (!t || !el)
     return;
   
   name = TtaGetSSchemaName (elType.ElSSchema);
