@@ -26,7 +26,7 @@ body {padding-left: 2em}</style>
 <h1 id="Amaya">Amaya - Guide utilisateur</h1>
 
 <p class="head"><span class="author">Irène Vatton</span> <br />
-Dernière mise à jour : <!--$date=-->2007-04-19<!--$-->
+Dernière mise à jour : <!--$date=-->2007-04-27<!--$-->
  </p>
 </div>
 
@@ -35,16 +35,8 @@ plus de détail sur l'interface, il faut se reporter au <a
 href="Manual.html.fr">manuel de référence</a>.</p>
 
 <div>
-<h3>Plan</h3>
+<h3 id="Plan">Plan</h3>
 <ol>
-  <li><a href="#L85">Introduction</a> 
-    <ul>
-      <li>Pourquoi un éditeur structuré pour HTML ?</li>
-      <li>Pourquoi des familles HTML ?</li>
-      <li>Les familles HTML</li>
-      <li>Quelques règles d'accessibilité à suivre</li>
-    </ul>
-  </li>
   <li><a href="#L271">Présentation générale d'Amaya</a></li>
   <li><a href="#L483">Paramétrage de l'application</a></li>
   <li><a href="#L608">Création/Edition d'une page Web</a></li>
@@ -65,7 +57,7 @@ href="Manual.html.fr">manuel de référence</a>.</p>
 <div>
 <h2 id="L85">1. Introduction</h2>
 
-<p>L'objectif du Web est de permettre l'échange d'informations quelque soit
+<p>L'objectif du Web est de permettre l'échange d'informations quel que soit
 le support. XHTML et d'autres langages XML (MathML pour les formules
 mathématiques, SVG pour les graphiques vectoriels) définissent des formats
 standard qui permettent le partage de l'information par un grand nombre
@@ -75,7 +67,7 @@ d'outils (navigateurs, mail, etc.).</p>
 HTML et XML et permet la séparation entre la structure avec son contenu d'une
 part et la présentation d'autre part. L'auteur d'un document Web peut, s'il
 le désire, uniquement se concenter sur l'organisation de son document
-(titres, paragraphes, listes, contenu). Ultérieurement ou une autre personne
+(titres, paragraphes, listes, contenu). Ultérieurement une autre personne
 peut prendre en charge sa présentation (choix des couleurs, des polices de
 caractères, du formattage).</p>
 
@@ -89,7 +81,7 @@ caractères, du formattage).</p>
     taille de caractères plus petite qu'un h1 et plus grosse qu'un h3.</p>
   </li>
   <li><strong>Attributs</strong> : Ce sont des caractéristiques ajoutées aux
-    éléments
+    éléments 
     <p>Par exemple l'attribut class="section" ou class="sous-section"sur un
     élément division permet de distinguer les divisions du document.</p>
     <p>De même l'attribut href="http://www.w3.org/" sur un élément ancre
@@ -108,16 +100,16 @@ travaille sur un document, il peut accéder n'importe quel autre document
 Web.</p>
 
 <p>Lorsqu'il est utilisé comme navigateur, Amaya se comporte comme beaucoup
-d'autres navigateurs Web, excepté pour ce qui est d'activer les liens. Par
-défaut le simple clic est utilisé pour poser la sélection (définir le point
-d'insertion de texte) et il faut effectuer un double-clic sur un lien pour
-l'activer.</p>
+d'autres navigateurs Web, excepté pour l'activation des liens. Par défaut le
+simple clic est utilisé pour poser la sélection (définir le point d'insertion
+de texte) et il faut effectuer un double-clic sur un lien pour l'activer.
+Amaya n'a pas de support pour les langages de script.</p>
 
-<h3>La barre de menu</h3>
+<h3 id="barre">La barre de menu</h3>
 <ul>
   <li>Fichier : création de documents, navigation, impression, fermeture.</li>
   <li>Edition : édition de base, recherche/remplacement, correction
-    orthographique, paramétrage.</li>
+    orthographique, paramétrage (menu Amaya sous Mac OSX).</li>
   <li>XHTML : création/remplacement d'éléments (X)HTML.</li>
   <li>XML : création d'éléments XML.</li>
   <li>Liens : création et destruction des liens.</li>
@@ -127,7 +119,7 @@ l'activer.</p>
   <li>Aide : donne accès au manuel en ligne.</li>
 </ul>
 
-<h3>La barre de boutons</h3>
+<h3 id="barre1">La barre de boutons</h3>
 
 <p>Elle contient quelques boutons d'accès aux fonctions les plus utilisées</p>
 <ul>
@@ -163,7 +155,7 @@ l'activer.</p>
     d'édition de style CSS</li>
 </ul>
 
-<h3>Les outils</h3>
+<h3 id="outils">Les outils</h3>
 
 <p>Amaya présente sur la gauche une sous-fenêtre d'outils. Cette sous-fenêtre
 peut être ouverte ou fermée par l'utilisateur, (1) soit en double-cliquant
@@ -175,7 +167,7 @@ titre), ou bien détaché et rattaché (bouton à droite du titre).</p>
 <dl>
   <dt>Un outil pour faciliter l'accés aux fichiers locaux</dt>
     <dd>Un clic sur l'icône devant le nom du répertoire permet d'ouvrir et de
-      fermer le répertoire
+      fermer le répertoire 
       <p>Un double-clic sur un nom de fichier permet d'ouvrir le fichier dans
       un onglet d'Amaya</p>
     </dd>
@@ -228,7 +220,8 @@ titre), ou bien détaché et rattaché (bouton à droite du titre).</p>
       </ul>
     </dd>
   <dt>Un outil pour manipuler les attributs</dt>
-    <dd>Cette liste des attributs est mise à jour en fonction de la sélection.
+    <dd>Cette liste des attributs est mise à jour en fonction de la
+      sélection. 
       <ul>
         <li>une croix [x] précède les attributs activés.</li>
         <li>un clic sur [ ] active ou désactive l'attribut</li>
@@ -243,14 +236,17 @@ titre), ou bien détaché et rattaché (bouton à droite du titre).</p>
     <dd>Plus de 100 constructions mathématiques sont prédéfinies. Un simple
       clic sur un bouton permet d'insérer la construction mathématique
       correspondante. Les boutons utilisent la convention de couleur
-      suivante: (bleu) quand un formulaire permet de paraméter la
-      construcion, (rouge) pour indiquer la partie variable de la
+      suivante: (bleu) quand un formulaire permet de paramétrer la
+      construction, (rouge) pour indiquer la partie variable de la
       construction, (vert) pour les informations complémentaires non
       reproduites dans la construction.</dd>
   <dt>Un outil pour insérer des caractères spéciaux</dt>
-    <dd>Plusieurs listes de caractères spéciaux sont proposée. Un clic sur un
-      des onglets active la liste correspondante. Une fois le bon caractère
-      choisi dans la liste, </dd>
+    <dd>Plusieurs listes de caractères spéciaux sont proposées. Un clic sur
+      un des onglets active la liste correspondante. Une fois le bon
+      caractère choisi dans la liste, il vous suffit de cliquer sur le bouton
+      <img alt="bouton insérer"
+      src="../../resources/icons/16x16/MATHML_insert.png" width="16"
+      height="16" /> pour l'insérer.</dd>
   <dt>Un outil pour créer les éléments XML</dt>
 </dl>
 </div>
@@ -260,7 +256,7 @@ titre), ou bien détaché et rattaché (bouton à droite du titre).</p>
 
 <p>Voici les paramètres importants à régler :</p>
 
-<h4>Dans les préférences générales</h4>
+<h4 id="Dans">Dans les préférences générales</h4>
 <ul>
   <li><strong>Page de démarrage</strong> : Spécifie l'URI qu'Amaya chargera
     au démarrage ou quand l'utilisateur pressera le bouton <img
@@ -288,7 +284,7 @@ titre), ou bien détaché et rattaché (bouton à droite du titre).</p>
     l'espagnol (es), et l'allemand (de).</li>
 </ul>
 
-<h4>Dans les préférences de navigation</h4>
+<h4 id="Dans1">Dans les préférences de navigation</h4>
 <ul>
   <li><strong>Charger les images</strong> : Contrôle si les images doivent
     être chargées et affichées. Sinon, l'attribut ALT est visualisé à la
@@ -336,14 +332,14 @@ position courante. Si l'élément désiré ne peut pas être créé exactement à la
 position choisie. Amaya tente alors de créer l'élément à l'endroit le plus
 proche possible.</p>
 
-<h3>Définir le titre du document</h3>
+<h3 id="L496">Définir le titre du document</h3>
 
 <p>Par défaut Amaya donne le titre "No title" au document nouvellement créé
 parce que cet élément est obligatoire. Il ne faut pas oublier de mettre à
 jour ce titre en activant l'entrée <strong>XHTML/Changer le
 titre</strong>.</p>
 
-<h3>Définir la langue utilisée</h3>
+<h3 id="L503">Définir la langue utilisée</h3>
 
 <p>Il est important de définir la langue dans laquelle est écrit le document.
 Sans indication explicite, le document est supposé écrit en anglais. La
@@ -353,7 +349,7 @@ langue est utilisée par le correcteur orthographique.</p>
 l'élément &lt;body&gt; et lui appliquer l'attribut lang=fr (voir les
 attributs dans les outils).</p>
 
-<h4>Première méthode</h4>
+<h4 id="Premi">Première méthode</h4>
 
 <p>On pose la sélection n'importe où dans le document et on utilise la touche
 <kbd>F2</kbd> pour remonter la sélection sur l'élément &lt;body&gt;. La barre
@@ -361,31 +357,32 @@ de statut affiche l'élément sélectionné. A ce moment là on sélectionne
 l'entrée langue de l'outil <strong>Attributs</strong> pour afficher le
 formulaire de choix de la langue.</p>
 
-<h4>Deuxième méthode</h4>
+<h4 id="Deuxi">Deuxième méthode</h4>
 
 <p>On ouvre la vue Structure (entrée <strong>Vue/Montrer la
-structure</strong>), on sélectionne l'élément &lt;body&gt;.A ce moment là on
+structure</strong>), on sélectionne l'élément &lt;body&gt;. A ce moment là on
 sélectionne l'entrée langue de l'outil <strong>Attributs</strong> pour
 afficher le formulaire de choix de la langue.</p>
 </div>
 
 <div>
-<h3><a id="L1104">Sauver des documents en HTML</a></h3>
+<h3 id="Sauver"><a id="L1104">Sauver des documents en HTML</a></h3>
 
 <p><b>Amaya</b> ne fournit aucune vue d'ensemble des pages installées sur le
 serveur. Cependant il est possible de sauver ou copier des fichiers sur un
 serveur ou sur sur son disque local grâce aux commandes
 <strong>Sauver</strong> et <strong>Sauver comme</strong>. Pendant ces
-opérations, Amaya tient compte des images.</p>
+opérations, Amaya tient compte des images et des ressources liées au
+document.</p>
 
-<h4><a id="L1517">La commande Sauver</a></h4>
+<h4 id="commande"><a id="L1517">La commande Sauver</a></h4>
 
 <p>La commande sauver peut être invoquée soit en choisissant
 <strong>Sauver</strong> depuis le menu <strong>Fichier</strong> (<kbd>Ctrl
 s</kbd>) ou bien en cliquant sur le bouton <img alt="floppy"
 src="../../resources/icons/22x22/save.png" />.</p>
 
-<h4><a id="L1518">La commande Sauver comme</a></h4>
+<h4 id="commande1"><a id="L1518">La commande Sauver comme</a></h4>
 
 <p>Le fait de sélectionner l'entrée <strong>Sauver comme</strong> dans le
 menu <strong>Fichier</strong> ouvre une boîte de dialogue qui permet de
@@ -410,7 +407,7 @@ paragraphe,</p>
 <p>Quand l'insertion se fait au milieu du paragraphe, Amaya coupe le
 paragraphe existant en deux et insère l'en-tête au milieu.</p>
 
-<h3>Transformations</h3>
+<h3 id="Transforma">Transformations</h3>
 
 <p>Si une partie du paragraphe est sélectionnée au moment où on insère
 l'en-tête, ce texte sera supprimé dans le paragraphe et inséré dans l'en-tête
@@ -422,7 +419,7 @@ peuvent en fait se transformer en liste, table, préformaté en fonction de
 l'élément cible choisi. L'entrée de menu <strong>Edition/Transformer</strong>
 propose les cibles possibles pour la sélection courante.</p>
 
-<h3>Préformaté</h3>
+<h3 id="L6081">Préformaté</h3>
 
 <p>L'élément préformaté est un paragraphe particulier qui permet de préserver
 tous les caractères : espace, fin de ligne.</p>
@@ -439,13 +436,13 @@ en entier et on active l'entrée de menu <strong>XHTML/Paragraphe</strong>.</p>
 paragraphe après le &lt;pre&gt;, il faut sélectionner le &lt;pre&gt; en
 utilisant la touche <kbd>F2</kbd> puis <kbd>Enter</kbd>.</p>
 
-<h3>Division</h3>
+<h3 id="Division">Division</h3>
 
 <p>Il est possible de grouper une série de paragraphes, en-têtes, etc. dans
 une division. Pour cela, on sélectionne les éléments à grouper ainsi que
 l'entrée <strong>Division</strong> dans le menu XHTML.</p>
 
-<h3>La touche Enter</h3>
+<h3 id="touche">La touche Enter</h3>
 
 <p>La touche <kbd>Enter</kbd> (ou Return) joue un rôle particulier. En
 général elle clôt l'élément courant et crée un paragraphe juste après. Si un
@@ -453,7 +450,7 @@ général elle clôt l'élément courant et crée un paragraphe juste après. Si un
 instance de cet élément. Par exemple si on sélectionne un en-tête, la touche
 <kbd>Enter</kbd> va créer un en-tête vide après.</p>
 
-<h3><a id="Back">Les touches Back Space et Delete</a></h3>
+<h3 id="touches"><a id="Back">Les touches Back Space et Delete</a></h3>
 
 <p>Des éléments consécutifs peuvent être fusionnés, même s'ils ne sont pas au
 même niveau dans la structure du document. La fusion s'effectue à l'aide des
@@ -467,7 +464,7 @@ deux cas, ces touches n'effacent aucun caractère. Elles fusionnent des
 touches effacent comme d'habitude le caractère suivant ou le caractère
 précédent.</p>
 
-<h3>Caractères spéciaux</h3>
+<h3 id="Caract">Caractères spéciaux</h3>
 
 <p>Pour les caractères ISO-latin qui ne sont pas directement disponibles
 depuis le clavier, Amaya utilise le support standard fournit par le
@@ -485,7 +482,7 @@ disponibles au clavier comme :</p>
   <li>Pour obtenir un », vous devez taper <kbd>Shift Ctrl &gt;</kbd>.</li>
 </ul>
 
-<h3>Insérer une image</h3>
+<h3 id="image">Insérer une image</h3>
 
 <p>Pour insérer une image, on choisit l'entrée <strong>Image</strong> dans le
 menu <strong>XHTML</strong> (raccourci <kbd>Ctrl h Ctrl i</kbd>) ou on clique
@@ -507,7 +504,7 @@ l'image sélectionnée en modifiant l'alignement dans l'outil
 <strong>Format</strong> (il faut valider le changement de format avec le
 bouton <img alt="ok" src="../../resources/icons/16x16/ok.png" />).</p>
 
-<h3>Remplacer une image</h3>
+<h3 id="Remplacer">Remplacer une image</h3>
 
 <p>Pour remplacer une image il faut sélectionner cette image en draguant sur
 l'image avec la souris. Procédez alors comme pour l'ajout d'une image (voir
@@ -515,7 +512,7 @@ ci-dessus). Lorsqu'une image (et seulement une image) est entièrement
 sélectionnée, la boîte de dialogue des images effectue le remplacement de
 l'image sélectionnée au lieu d'insérer une nouvelle image.</p>
 
-<h3 style="clear: both">Copier/Coller, Défaire/Refaire</h3>
+<h3 style="clear: both" id="Copier">Copier/Coller, Défaire/Refaire</h3>
 
 <p>Amaya permet copier/coller non seulement du texte et des images, mais
 aussi une structure complexe comme une division ou une suite de paragraphes
@@ -528,9 +525,9 @@ modifications opérées dans le document.</p>
 
 <h2 id="L831">6. Les listes</h2>
 
-<h3>Editer les listes à puces ou les listes numérotées</h3>
+<h3 id="Editer">Editer les listes à puces ou les listes numérotées</h3>
 
-<h4>Première méthode</h4>
+<h4 id="Premi1">Première méthode</h4>
 
 <p>En cliquant sur <img alt="(Liste)"
 src="../../resources/icons/16x16/XHTML_Bullet.png" /> (ou <kbd>Ctrl h Ctrl
@@ -556,7 +553,7 @@ l'intérieur.</p>
 src="../../resources/icons/16x16/XHTML_Num.png" /> (ou <kbd>Ctrl h Ctrl
 n</kbd>) on crée une liste numérotée et un item de liste à l'intérieur.</p>
 
-<h4>Deuxième méthode</h4>
+<h4 id="Deuxi1">Deuxième méthode</h4>
 
 <p>On peut saisir du texte sans définir au préalable de type d'élément. Par
 défaut, Amaya crée un nouveau paragraphe chaque fois que l'on active la
@@ -568,7 +565,8 @@ l</kbd>) pour créer une liste à puces.</p>
 <p>Pour sélectionner tout le contenu d'une suite de paragraphes, on utilise
 la touche <kbd>F2</kbd>.</p>
 
-<h4>Transformation d'une liste à puces et en liste numérotée</h4>
+<h4 id="Transforma1">Transformation d'une liste à puces et en liste
+numérotée</h4>
 
 <p>On pose la sélection dans un item de liste, puis en doublant la touche
 <kbd>F2</kbd> on sélectionne la liste complète. En cliquant sur <img
@@ -623,7 +621,7 @@ ou des items de listes.</p>
 <p>Les liens hypertexte permettent de relier des parties de document
 entre-elles ou des documents entre-eux.</p>
 
-<h3>Création de cibles</h3>
+<h3 id="L948">Création de cibles</h3>
 
 <p>La cible d'un lien hypertexte peut être</p>
 <ul>
@@ -639,13 +637,13 @@ sélection porte sur un élément HTML entier, Amaya va lui associer un
 identificateur unique. Sinon, Amaya va englober le contenu de la sélection
 dans une ancre cible.</p>
 
-<h3>Création de liens</h3>
+<h3 id="L973">Création de liens</h3>
 
 <p>L'origine d'un lien est une ancre qui possède un attribut
 <code>href</code>. On procède de la même façon pour un lien vers un document
 entier ou une cible.</p>
 
-<h4>Lien vers un autre document édité par Amaya</h4>
+<h4 id="Lien">Lien vers un autre document édité par Amaya</h4>
 <ol>
   <li>On sélectionne le passage choisi.</li>
   <li>On clique sur le bouton <img alt="Link "
@@ -668,7 +666,7 @@ entier ou une cible.</p>
 <p>Dans tous les cas, une fois la cible choisie, Amaya va calculer l'URL
 relative qui permet d'aller du document source au document cible.</p>
 
-<h4>Lien vers une ancre cible d'un document édité par Amaya</h4>
+<h4 id="Lien1">Lien vers une ancre cible d'un document édité par Amaya</h4>
 
 <p>Pour créer un lien vers une ancre cible particulière ou vers un élément
 cible particulier d'un document édité par Amaya, il faut d'abord demander la
@@ -684,7 +682,7 @@ la vue des liens (entrée <strong>Montrer les liens</strong> du menu
   <li>On clique sur la cible choisie.</li>
 </ol>
 
-<h4>Lien vers un autre document non affiché</h4>
+<h4 id="Lien2">Lien vers un autre document non affiché</h4>
 
 <p>Pour créer un lien vers un autre document local ou distant :</p>
 <ol>
@@ -704,7 +702,7 @@ la vue des liens (entrée <strong>Montrer les liens</strong> du menu
   <li>On saisit l'URL du document cible et on confirme.</li>
 </ol>
 
-<h4><a id="Changing">Mettre à jour un lien</a></h4>
+<h4 id="Mettre"><a id="Changing">Mettre à jour un lien</a></h4>
 
 <p>Pour garder une ancre mais changer la cible du lien correspondant, on
 place la sélection dans l'ancre et on procède comme pour la création de lien
@@ -716,7 +714,8 @@ l'URI.</p>
 <p>Pour changer la cible d'un lien, on peut également éditer l'attribut
 <code>href</code> dans la vue structure.</p>
 
-<h4><a id="Removing">Supprimer un lien ou une ancre cible</a></h4>
+<h4 id="Supprimer"><a id="Removing">Supprimer un lien ou une ancre
+cible</a></h4>
 
 <p>Le menu <strong>Liens</strong> contient une entrée <strong>Détruire
 ancre</strong> qui permet de détruire l'ancre cible ou le lien sélectionné.
@@ -737,7 +736,7 @@ bascules (activée/désactivées).</p>
 <p>Souvent l'introduction de mises en évidence engendrent des problèmes de
 perte des blancs.</p>
 
-<h3>Traitement des blancs</h3>
+<h3 id="Traitement">Traitement des blancs</h3>
 
 <p>Le traitement des blancs est appliqué par Amaya lors du chargement d'un
 document et lors de l'édition de celui-ci. Par exemple, le code source
@@ -757,7 +756,7 @@ considérés comme non significatifs et sont donc supprimés.</p>
 <div>
 <h2 id="L12061">9. Les tables</h2>
 
-<h3><a id="Creating1">Créer une nouvelle table</a></h3>
+<h3 id="L1165"><a id="Creating1">Créer une nouvelle table</a></h3>
 
 <p>Quand on active le bouton table <img
 src="../../resources/icons/16x16/XHTML_Table.png" alt="Table button" /> ou
@@ -791,7 +790,7 @@ d'entre elles au hasard et y insérer du texte, des images et autre. On peut
 également déplacer le point d'insertion de cellule en cellule par
 l'intermédiaire des flèches du clavier.</p>
 
-<h3><a id="Adding3">Insérer/Ajouter une colonne</a></h3>
+<h3 id="Ajouter"><a id="Adding3">Insérer/Ajouter une colonne</a></h3>
 
 <p>Il n'existe deux commandes spécifiques pour créer une nouvelle
 colonne :</p>
@@ -808,7 +807,7 @@ colonne :</p>
 <kbd>Enter</kbd> crée une nouvelle cellule après et la colonne
 correspondante.</p>
 
-<h3>Détruire une colonne</h3>
+<h3 id="L1248">Détruire une colonne</h3>
 
 <p>Pour détruire une colonne de table, il faut sélectionner la colonne et
 utiliser la commande <kbd>Delete</kbd>. Il y a deux méthodes pour
@@ -839,7 +838,7 @@ sélectionner une colonne :</p>
   </tbody>
 </table>
 
-<h3>Copier/Coller ou Déplacer une colonne</h3>
+<h3 id="Copier1">Copier/Coller ou Déplacer une colonne</h3>
 
 <p>Pour déplacer ou copier/coller une colonne de table :</p>
 <ol>
@@ -864,7 +863,7 @@ sélectionner une colonne :</p>
   </li>
 </ol>
 
-<h3><a id="Adding11">Insérer/Ajouter une ligne</a></h3>
+<h3 id="Ajouter1"><a id="Adding11">Insérer/Ajouter une ligne</a></h3>
 
 <p>Il n'existe deux commandes spécifiques pour créer une nouvelle ligne :</p>
 <ul>
@@ -879,7 +878,7 @@ sélectionner une colonne :</p>
 <p>Si on a sélectionné une ligne complète par <kbd>F2</kbd> la touche Enter
 crée une nouvelle ligne après.</p>
 
-<h3>Détruire une ligne</h3>
+<h3 id="L1408">Détruire une ligne</h3>
 
 <p>Pour détruire une ligne de table, il faut sélectionner la ligne et
 utiliser la commande <kbd>Delete</kbd>. Il y a deux méthodes pour
@@ -892,7 +891,7 @@ sélectionner une ligne :</p>
     ligne.</li>
 </ol>
 
-<h3>Copier/Coller ou Déplacer une ligne</h3>
+<h3 id="Copier2">Copier/Coller ou Déplacer une ligne</h3>
 
 <p>Pour déplacer ou copier/coller une ligne de table :</p>
 <ol>
@@ -917,7 +916,7 @@ sélectionner une ligne :</p>
   </li>
 </ol>
 
-<h3>Cellules étendues</h3>
+<h3 id="Cellules">Cellules étendues</h3>
 
 <p>Il n'existe quatre commandes spécifiques pour étendre ou réduire
 l'extension de cellules :</p>
@@ -939,7 +938,7 @@ l'extension de cellules :</p>
 <p>On peut aussi éditer directement les attributs <strong>colspan</strong> et
 <strong>rowspan</strong> de la cellule.</p>
 
-<h3>Ajouter un nouveau corps de table (tbody)</h3>
+<h3 id="Ajouter2">Ajouter un nouveau corps de table (tbody)</h3>
 <ol>
   <li>Pour créer un nouveau corps de table en dessous d'un corps de table
     existant, il faut placer le curseur à la fin de la dernière cellule de la
@@ -957,7 +956,8 @@ sélectionné (il faut utiliser la touche <kbd>F2</kbd>), en tapant la touche
 <kbd>Enter</kbd> vous créez une nouveau corps de table après le corps de
 table sélectionné.</p>
 
-<h3><a id="Adding21">Ajouter quelque chose après une table</a></h3>
+<h3 id="Ajouter3"><a id="Adding21">Ajouter quelque chose après une
+table</a></h3>
 
 <p>De nombreux types d'éléments peuvent être inclus à l'intérieur des
 cellules de la table. Pour cette raison, Amaya pourrait mal comprendre vos
@@ -965,7 +965,7 @@ intentions quand vous sélectionnez un type d'élément (par exemple cliquant
 H1, H2, etc. ou sélectionnant une entrée dans le menu <strong>XHTML</strong>)
 pendant qu'un composant de la table est sélectionné.</p>
 
-<h3>Création d'un paragraphe après une table</h3>
+<h3 id="L1586">Création d'un paragraphe après une table</h3>
 
 <p>Quand la sélection se trouve dans une table, la touche <kbd>Enter</kbd>
 crée un nouveau paragraphe dans la table. Pour créer un paragraphe après la
@@ -977,7 +977,7 @@ si besoin est.</p>
 <div>
 <h2 id="L12281">10. Recherche/Remplacement - Correction orthographique</h2>
 
-<h3>Recherche et remplacement de texte</h3>
+<h3 id="Recherche">Recherche et remplacement de texte</h3>
 
 <p>La recherche/remplacement se lance, soit en cliquant sur le bouton <img
 src="../../resources/icons/22x22/find.png" alt="find " />, soit par l'entrée
@@ -1005,7 +1005,7 @@ deuxième zone de saisie sera pour le texte à remplacer.</p>
   </li>
 </ul>
 
-<h3>Correction orthographique</h3>
+<h3 id="Correction">Correction orthographique</h3>
 
 <p>La correction orthographique se réalise à l'aide d'une boite de dialogue
 activée par l'action <strong>Edition/Vérifier orthographe</strong>.</p>
@@ -1044,7 +1044,7 @@ activée par l'action <strong>Edition/Vérifier orthographe</strong>.</p>
   <li>La Vue structure</li>
 </ul>
 
-<h3><a id="L1073">Editer des attributs par le biais de l'outil
+<h3 id="Editer1"><a id="L1073">Editer des attributs par le biais de l'outil
 Attributs</a></h3>
 
 <p>L'outil <strong>Attributs</strong> donne une liste de tous les attributs
@@ -1059,7 +1059,8 @@ l'intérieur de l'élément. Pour cela, il faut utiliser la touche
 <strong>Attributs</strong> affiche la liste des attributs applicables. On
 peut voir rapidement si l'attribut a déjà une valeur ou non.</p>
 
-<h3><a id="Editing">Editer des attributs dans la Vue structure</a></h3>
+<h3 id="Editer2"><a id="Editing">Editer des attributs dans la Vue
+structure</a></h3>
 
 <p>Tous les attributs sont affichés dans la Vue structure. Les attributs dont
 la valeur peut être choisie librement sont affichés en rose et vous pouvez
@@ -1079,8 +1080,8 @@ l'attribut.</p>
 <div>
 <h2 id="L1232">12. Création de feuilles de style CSS</h2>
 
-<h3><a id="feuilles">Les feuilles de style CSS externes et les feuilles de
-style CSS utilisateur</a></h3>
+<h3 id="feuilles1"><a id="feuilles">Les feuilles de style CSS externes et les
+feuilles de style CSS utilisateur</a></h3>
 
 <p>Un document peut associer plusieurs feuilles de style externes qui sont
 chargées avec le document et lui sont appliquées. Une feuille de style
@@ -1101,7 +1102,8 @@ style utilisateur avec les règles CSS suivantes :</p>
  BODY {font-family: Helvetica}
 }</pre>
 
-<h3><a id="Managing">Gérer des feuilles de style CSS externes</a></h3>
+<h3 id="L1746"><a id="Managing">Gérer des feuilles de style CSS
+externes</a></h3>
 
 <p>L'entrée de feuilles de style donne accès à une série de commandes qui
 permettent de contrôler les feuilles de style CSS externes et celles qui
@@ -1136,7 +1138,7 @@ proposées pour la commande Ouvrir. Si aucune feuille de style CSS n'est
 actuellement appliquée à un document, une boîte de dialogue expliquera
 "qu'aucun fichier CSS n'est disponible".</p>
 
-<h3>Visualiser le style appliqué</h3>
+<h3 id="Visualiser">Visualiser le style appliqué</h3>
 
 <p>S'il y a beaucoup de feuilles de style attachées à un document, il est
 difficile de comprendre pourquoi un élément est visualisé avec cette couleur
@@ -1153,7 +1155,7 @@ change.</p>
 <p>En appuyant sur la touche <kbd>F2</kbd> sur les, l'utilisateur peut voir
 les propriétés CSS appliquées aux éléments englobants.</p>
 
-<h3>Créer des propriétés CSS</h3>
+<h3 id="L1798">Créer des propriétés CSS</h3>
 
 <p>Amaya ne fournit pas pour le moment une liste complète des propriétés CSS
 2 sauf pour les propriétés les plus courantes. En général l'utilisateur doit
@@ -1177,7 +1179,7 @@ la barre de statut en bas à droite.</p>
 </div>
 
 <div>
-<h4>On peut corriger les erreurs</h4>
+<h4 id="peut">On peut corriger les erreurs</h4>
 
 <p>On affiche le détail des erreurs détectées en sélectionnant l'entrée
 <strong>Montrer les erreurs</strong> du menu <strong>Fichier</strong> ou en
@@ -1188,7 +1190,7 @@ l'erreur dans le source.</p>
 <p>Une fois les erreurs corrigées on synchronise pour voir si tout est
 correct, on peut alors sauver le document corrigé.</p>
 
-<h4>On peut aussi modifier le type du document</h4>
+<h4 id="peut1">On peut aussi modifier le type du document</h4>
 
 <p>L'entrée <strong>Modifier le doctype</strong> du menu
 <strong>Fichier</strong> permet de modifier le type du document.</p>

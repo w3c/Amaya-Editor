@@ -646,7 +646,10 @@ static void GL_TexturePartialMap (ThotPictInfo *desc, int dx, int dy,
          to the size of the square */      
       /* lower left */
       texW = desc->TexCoordW * (float)(dx + w) / (float)desc->PicWidth;
-      texH = desc->TexCoordH * (float)(desc->PicHeight + 1 - dy - h) / (float)desc->PicHeight;
+      if (h == 1)
+        texH = desc->TexCoordH * (float)(desc->PicHeight - dy - h) / (float)desc->PicHeight;
+      else
+        texH = desc->TexCoordH * (float)(desc->PicHeight + 1 - dy - h) / (float)desc->PicHeight;
       texX = desc->TexCoordW * (float)(dx) / (float)desc->PicWidth;
       texY = desc->TexCoordH * (float)(desc->PicHeight - dy) / (float)desc->PicHeight;
       /* Texture coordinates are unrelative
@@ -1705,6 +1708,9 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
                   if (i + dw > w)
                     dw = w - i;
 #ifdef _GL
+                  /*if (dh == 1)
+                    GL_TextureMap (imageDesc, x+i, y+j,dw,dh, frame);
+                    else*/
                   GL_TexturePartialMap (imageDesc, dx, dy, x+i, y+j,
                                         /*dx+*/dw, /*dy+*/dh, frame);
 #else /* _GL */
